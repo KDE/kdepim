@@ -101,12 +101,12 @@
         </label>
         <default>false</default>
     </entry>
-    <entry name="SkipBackupDB" type="String">
+    <entry name="SkipBackupDB" type="StringList">
         <label>
         </label>
         <default>Arng,PmDB,lnch</default>
     </entry>
-    <entry name="SkipRestoreDB" type="String">
+    <entry name="SkipRestoreDB" type="StringList">
         <label>
         </label>
         <default>AvGo</default>

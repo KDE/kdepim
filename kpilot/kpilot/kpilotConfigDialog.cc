@@ -233,8 +233,8 @@ void SyncConfigPage::load()
 	fConfigWidget->fConflictResolution->setCurrentItem(KPilotSettings::conflictResolution());
 
 	/* Backup tab */
-	fConfigWidget->fBackupOnly->setText(KPilotSettings::skipBackupDB());
-	fConfigWidget->fSkipDB->setText(KPilotSettings::skipRestoreDB());
+	fConfigWidget->fBackupOnly->setText(KPilotSettings::skipBackupDB().join(CSL1(",")));
+	fConfigWidget->fSkipDB->setText(KPilotSettings::skipRestoreDB().join(CSL1(",")));
 	fConfigWidget->fRunConduitsWithBackup->setChecked(KPilotSettings::runConduitsWithBackup());
 	unmodified();
 }
@@ -257,8 +257,10 @@ void SyncConfigPage::load()
 	KPilotSettings::setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
 
 	/* Backup tab */
-	KPilotSettings::setSkipBackupDB(fConfigWidget->fBackupOnly->text());
-	KPilotSettings::setSkipRestoreDB(fConfigWidget->fSkipDB->text());
+	KPilotSettings::setSkipBackupDB(
+		QStringList::split(CSL1(","),fConfigWidget->fBackupOnly->text()));
+	KPilotSettings::setSkipRestoreDB(
+		QStringList::split(CSL1(","),fConfigWidget->fSkipDB->text()));
 	KPilotSettings::setRunConduitsWithBackup(fConfigWidget->fRunConduitsWithBackup->isChecked());
 
 	KPilotConfig::updateConfigVersion();

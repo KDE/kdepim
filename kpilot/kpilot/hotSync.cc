@@ -57,6 +57,7 @@ static const char *hotsync_id =
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
 #include "pilotDatabase.h"
+#include "kpilotSettings.h"
 
 #include "hotSync.moc"
 
@@ -281,6 +282,15 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	}
 
 	fDBIndex = info.index + 1;
+
+	QStringList nobackupdb = KPilotSettings::skipBackupDB();
+	if (nobackupdb.findIndex(QString::fromLatin1(info.name)))
+	{
+		QString s = i18n("Skipping %1")
+			.arg(QString::fromLatin1(info.name));
+		addSyncLogEntry(s);
+		return;
+	}
 
 	// Pretty sure all database names are latin1.
 	QString s = i18n("Backing up: %1")
