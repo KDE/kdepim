@@ -97,8 +97,8 @@ void Kleo::ObtainKeysJob::slotPerform( bool async ) {
 
   const QDir dir( KShell::tildeExpand( mKeyPaths[mIndex] ) );
 
-  if ( const QFileInfoList * xiaFiles = dir.entryInfoList( "*.xia;*.XIA", QDir::Files ) )
-    for ( QFileInfoList::const_iterator it = xiaFiles->begin(), end = xiaFiles->end() ; it != end ; ++it )
+  if ( const QFileInfoList * xisFiles = dir.entryInfoList( "*.xis;*.XIS", QDir::Files ) )
+    for ( QFileInfoList::const_iterator it = xisFiles->begin(), end = xisFiles->end() ; it != end ; ++it )
       if ( (*it)->isReadable() )
         mResult.push_back( (*it)->absFilePath() );
 
