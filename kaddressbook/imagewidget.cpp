@@ -358,7 +358,7 @@ void ImageBaseWidget::slotLoadingComplete( RSS::Loader *loader,
 
   if ( !doc.image() ) {
     KMessageBox::sorry( this,
-      i18n("Blog feed at '%1' doesn't contain an image.").arg( mBlogFeed ) );
+      i18n("Blog feed at '%1' does not contain an image.").arg( mBlogFeed ) );
     return;
   }
 
