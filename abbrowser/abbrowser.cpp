@@ -22,7 +22,8 @@
 Pab::Pab()
 {
   setCaption( i18n( "Address Book Browser" ));
-  document = new ContactEntryList( "entries.txt" );
+  //xxx  document = new ContactEntryList( "entries.txt" );
+  document = new ContactEntryList();
   view = new PabWidget( document, this, "Kontact" );
 
   // tell the KTMainWindow that this is indeed the main widget
@@ -125,7 +126,7 @@ void Pab::newContact()
 
 void Pab::save()
 {
-  document->save( "entries.txt" );
+  //xxx  document->save( "entries.txt" );
 }
 
 void Pab::readConfig()
@@ -146,11 +147,12 @@ void Pab::saveConfig()
 Pab::~Pab()
 {
   saveConfig();
+  delete document;
 }
 
 void Pab::saveCe() {
   debug( "saveCe()" );
-  ce->save( "entry.txt" );
+  //xxx  ce->save( "entry.txt" );
 }
 
 void Pab::saveProperties(KConfig *config)

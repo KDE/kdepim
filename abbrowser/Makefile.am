@@ -4,7 +4,7 @@ KDE_CXXFLAGS = $(USE_RTTI)
 
 APPSDIR = $(kde_appsdir)/Utilities
 
-INCLUDES= -I$(top_srcdir)/kab2/lib $(all_includes)
+INCLUDES= $(all_includes)
 
 SUBDIRS = pics
 
@@ -16,9 +16,9 @@ abbrowser_SOURCES = abbrowser.cpp undo.cpp attributes.cpp selectfields.cpp viewo
 
 abbrowser_METASOURCES = AUTO
 
-abbrowser_LDFLAGS = -L$(top_builddir)/kab2/lib $(all_libraries) $(KDE_RPATH)
+abbrowser_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
-abbrowser_LDADD = -lKAddressBook $(LIB_KFILE)
+abbrowser_LDADD = -lkab $(LIB_KFILE)
 
 noinst_HEADERS = abbrowser.h undo.h attributes.h selectfields.h viewoptions.h namevaluewidget.h entry.h browserentryeditor.h entryeditorwidget.h datepickerdialog.h browserwidget.h
 

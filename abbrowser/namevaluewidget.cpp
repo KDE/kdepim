@@ -122,7 +122,6 @@ void NameValueFrame::setSheet( NameValueSheet* vs )
 
 void NameValueFrame::resizeEvent(QResizeEvent* e) 
 { 
-  debug ( "hit meeeeee" );
   QScrollView::resizeEvent( e ); 
   vs->resize( visibleWidth(), vs->height() );
   lName->resize( vs->cellSize() );

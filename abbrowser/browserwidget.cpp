@@ -440,7 +440,6 @@ void PabListViewItem::refresh()
       if (ce->find( "X-Notes" ))
 	setPixmap( i, QPixmap( "abentry" ));
       else {
-  debug( "xx" );
 	setPixmap( i, QPixmap( "group" ));
       }
     if (ce->find( (*field)[i] ))
@@ -603,11 +602,18 @@ void PabWidget::repopulate()
     listView->addColumn( Attributes::instance()->fieldToName( field[i] ), 
 			 fieldWidth[i] );
 
+  //xxx
+  QStringList keys = cel->keys();
+  for ( QStringList::Iterator it = keys.begin(); it != keys.end(); ++it )
+    addEntry( *it );
+
+  /*
   QDictIterator<ContactEntry> it(*cel);
   while (it.current()) {
     addEntry( it.currentKey() );
     ++it;
   }
+  */
 }
 
 PabListViewItem* PabWidget::addEntry( QString entryKey )

@@ -12,9 +12,7 @@ Attributes* Attributes::attributes_ = 0;
 Attributes* Attributes::instance()
 {
   if (!attributes_) {
-    debug( "enter" );
     attributes_ = new Attributes();
-    debug( "exit" );
   }
   return attributes_;
 }
@@ -111,7 +109,7 @@ Attributes::Attributes()
     i18n( "Telex" ), i18n( "Title" ), i18n( "TTY/TDD Phone" ), 
     i18n( "User Field 1" ), i18n( "User Field 2" ), i18n( "User Field 3" ), 
     i18n( "User Field 4" ), i18n( "Web Page" ), i18n( "ZIP/Postal Code" ),
-    i18n( "Notes" ),
+    i18n( "Notes" ), i18n( "Business" ), i18n( "Home" ), i18n( "Other" ),
     ""
   };
 
@@ -144,7 +142,7 @@ Attributes::Attributes()
     "X-StreetAddress", "X-Subject", "X-Suffix", "X-Telex",
     "X-Title", "X-TtyTddPhone", "X-UserField1", "X-UserField2",
     "X-UserField3", "X-UserField4", "WEBPAGE", "X-ZIPPostalCode",
-    "X-Notes",
+    "X-Notes", "X-BusinessAddress", "X-HomeAddress", "X-OtherAddress",
     "" 
   };
 

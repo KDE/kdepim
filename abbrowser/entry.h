@@ -13,6 +13,7 @@
 #include <qtextstream.h>
 #include <qlist.h>
 #include <qstringlist.h>
+#include <addressbook.h>
 
 /**
  * The ContactEntry class is used to store the current state of an address
@@ -42,22 +43,53 @@
  **/
 
 class ContactEntry;
+class KabAPI;
+//class AddressBook;
+//class AddressBook::Entry;
+
 typedef QDictIterator<ContactEntry> ContactEntryListIterator;
 
+class ContactEntryList
+{
+public:
+  ContactEntryList();
+  ~ContactEntryList();
+
+  QString insert( ContactEntry *item );
+  void unremove( const QString &key, ContactEntry *item );
+  void remove( const QString &key );
+  ContactEntry* find( const QString &key );
+  void replace( const QString &key, ContactEntry *item );
+  QStringList keys();
+
+ protected:
+  ContactEntry *KabEntryToContactEntry( AddressBook::Entry entry );
+  AddressBook::Entry ContactEntryToKabEntry( ContactEntry *entry, AddressBook::Entry );
+
+  KabAPI *addrBook;
+  QStringList removedKeys;
+  QDict<ContactEntry> ceDict;
+  //  void save();
+  //  void load();
+};
+
+/*
 class ContactEntryList : public QDict<ContactEntry>
 {
 public:
-  ContactEntryList( const QString &filename );
-  QString key();
+  ContactEntryList();
+  //  ContactEntryList( const QString &filename );
+  //  QString key();
   QString insert( ContactEntry *item );
   void unremove( const QString &key, ContactEntry *item );
-  void save( const QString &filename );
-  void load( const QString &filename );
+  void save();
+  void load();
 
 protected:
   long kkey;
   QList<ContactEntry> list;
 };
+*/
 
 class ContactEntry : public QObject
 {
@@ -70,15 +102,6 @@ public:
   ContactEntry();
   ContactEntry( const ContactEntry &r );
   ContactEntry& operator=( const ContactEntry &r );
-
-/**
- * Creates a ContactEntry object from data stored in a file.
- * 
- * Arguments:
- *
- * @param the name of the file.
- */
-  ContactEntry( const QString &filename );
 
 /**
  * Creates a ContactEntry object from data stored in a textstream.
@@ -96,19 +119,9 @@ public:
   QStringList custom() const;
 
 /**
- * Saves the entry to a file with the given filename.
- */
-  void save( const QString &filename );
-
-/**
  * Saves the entry to a text stream with the given filename.
  */
   void save( QTextStream &t );
-
-/**
- * Loads the entry from a file with the given filename
- */
-  void load( const QString &filename );
 
 /**
  * Loads the entry from a text stream with the given filename
