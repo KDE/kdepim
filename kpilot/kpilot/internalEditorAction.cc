@@ -50,7 +50,7 @@
 
 using namespace KHE;
 
-InternalEditorAction::InternalEditorAction(KPilotDeviceLink * p, int mode) :
+InternalEditorAction::InternalEditorAction(KPilotDeviceLink * p, int) :
 	SyncAction(p, "internalSync")
 {
 	FUNCTIONSETUP;
