@@ -64,6 +64,11 @@ public slots:
 
 private slots:
 	void hideSplash();
+	void clearLog();
+	void saveLog();
+
+private:
+	bool saveFile(const QString &);
 
 private:
 	QTextView *fLog;
@@ -73,5 +78,8 @@ private:
 	KProgress *fProgress;
 } ;
 
-// $Log: $
+// $Log$
+// Revision 1.5  2001/11/18 16:59:55  adridg
+// New icons, DCOP changes
+//
 #endif

@@ -39,10 +39,15 @@ static const char *logw_id =
 #include <qlabel.h>
 #include <qpixmap.h>
 #include <qtimer.h>
+#include <qpushbutton.h>
+#include <qhbox.h>
+#include <qtextstream.h>
 
 #include <kglobal.h>
 #include <kstddirs.h>
 #include <kprogress.h>
+#include <kfiledialog.h>
+#include <kmessagebox.h>
 
 #include "logWidget.moc"
 
@@ -68,17 +73,35 @@ LogWidget::LogWidget(QWidget * parent) :
 	grid->setColStretch(2, 50);
 
 	fLog = new QTextView(this);
-	QToolTip::add(fLog, i18n("This lists all the messages received "
-			"during the current HotSync"));
+	QToolTip::add(fLog, i18n("<qt>This lists all the messages received "
+			"during the current HotSync</qt>"));
 	grid->addMultiCellWidget(fLog, 1, 1,1,2);
 
 	fLog->setText(i18n("<qt><B>HotSync Log</B></qt>"));
 
+	QHBox *h = new QHBox(this);
+	h->setSpacing(SPACING);
+	QPushButton *b = new QPushButton(
+		i18n("Clear the text of HotSync messages","Clear Log"),
+		h);
+	QToolTip::add(b,i18n("<qt>Clears the list of messages from the "
+		"current HotSync.</qt>"));
+	connect(b,SIGNAL(clicked()),this,SLOT(clearLog()));
+
+	b = new QPushButton(i18n("Save Log"),h);
+	QToolTip::add(b,i18n("<qt>You can save the list of messages received "
+		"during this HotSync to a file (for example for use in a "
+		"bug report) by clicking here.</qt>"));
+	connect(b,SIGNAL(clicked()),this,SLOT(saveLog()));
+
+	grid->addMultiCellWidget(h,2,2,1,2);
 
 	fLabel = new QLabel(i18n("Sync Progress:"),this);
-	grid->addWidget(fLabel,2,1);
+	grid->addWidget(fLabel,3,1);
 	fProgress = new KProgress(0,100,0,KProgress::Horizontal,this);
-	grid->addWidget(fProgress,2,2);
+	QToolTip::add(fProgress,i18n("<qt>The (estimated) percentage "
+		"completed in the current HotSync.</qt>"));
+	grid->addWidget(fProgress,3,2);
 
 
 	QString splashPath =
@@ -94,7 +117,7 @@ LogWidget::LogWidget(QWidget * parent) :
 		fSplash = new QLabel(this);
 		fSplash->setPixmap(QPixmap(splashPath));
 		QTimer::singleShot(3000,this,SLOT(hideSplash()));
-		grid->addMultiCellWidget(fSplash,1,2,1,2);
+		grid->addMultiCellWidget(fSplash,1,3,1,2);
 	}
 
 	(void) logw_id;
@@ -193,5 +216,78 @@ void LogWidget::hideSplash()
 	}
 }
 
+/* slot */ void LogWidget::clearLog()
+{
+	FUNCTIONSETUP;
 
-// $Log: $
+	if (fLog)
+	{
+		fLog->setText(QString::null);
+	}
+}
+
+/* slot */ void LogWidget::saveLog()
+{
+	FUNCTIONSETUP;
+
+	bool finished = false;
+
+	while (!finished)
+	{
+		QString saveFileName = KFileDialog::getSaveFileName(
+			QString::null,     /* default */
+			"*.log",           /* show log files by default */
+			this,
+			i18n("Save Log"));
+
+		if (saveFileName.isEmpty()) return;
+		if (QFile::exists(saveFileName))
+		{
+			int r = KMessageBox::warningYesNoCancel(
+				this,
+				i18n("The file exists. Do you want to "
+					"overwrite it?"),
+				i18n("File Exists"));
+			if (r==KMessageBox::Yes)
+			{
+				finished=saveFile(saveFileName);
+			}
+
+			if (r==KMessageBox::Cancel) return;
+		}
+		else
+		{
+			finished=saveFile(saveFileName);
+		}
+	}
+}
+
+
+bool LogWidget::saveFile(const QString &saveFileName)
+{
+	FUNCTIONSETUP;
+
+	QFile f(saveFileName);
+	if (!f.open(IO_WriteOnly))
+	{
+		int r = KMessageBox::questionYesNo(this,
+			i18n("<qt>Can't open the file &quot;%1&quot; "
+				"for writing. Try again?</qt>"),
+			i18n("Can't Save"));
+
+		if (r==KMessageBox::Yes) return false;
+		return true;
+	}
+	else
+	{
+		QTextStream t(&f);
+		t << fLog->text();
+	}
+
+	f.close();
+}
+
+// $Log$
+// Revision 1.7  2001/11/18 16:59:55  adridg
+// New icons, DCOP changes
+//
