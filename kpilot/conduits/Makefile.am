@@ -22,15 +22,17 @@ if include_python
 PYTHON_SUBDIR = pythonconduit
 endif
 
+#NOTEPAD_SUBDIR = notepadconduit
+NOTEPAD_SUBDIR=
+
 SUBDIRS = \
           docconduit \
           knotes \
           popmail \
           timeconduit \
           sysinfoconduit \
-	  notepadconduit \
 	  memofileconduit \
-          $(MAL_SUBDIR) $(ABC_SUBDIR)
+          $(MAL_SUBDIR) $(ABC_SUBDIR) $(NOTEPAD_SUBDIR)
 
 ###
 ### Subdirs you might have for experimental purposes:
