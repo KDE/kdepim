@@ -25,7 +25,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -131,16 +131,34 @@ extern KCmdLineOptions *debug_options;
 //
 //
 #ifdef __GNUC__
-#define FUNCTIONSETUP	static const char *fname=__FUNCTION__; \
-			if (debug_level) { DEBUGFUNC << \
-			fname << debug_spaces+(strlen(fname)) \
+#define KPILOT_FNAMEDEF	static const char *fname=__FUNCTION__
+#define KPILOT_LOCNDEF	debug_spaces+(strlen(fname)) \
 				<< "(" << __FILE__ << ":" << \
-				__LINE__ << ")\n"; }
+				__LINE__ << ")\n"
 #else
-#define FUNCTIONSETUP	static const char *fname=__FILE__ ":" "__LINE__"; \
-			if (debug_level) { DEBUGFUNC << \
-			fname << debug_spaces+(strlen(fname)) << "\n" ; }
+#define	KPILOT_FNAMEDEF	static const char *fname=__FILE__ ":" "__LINE__"
+#define KPILOT_LOCNDEF	"\n"
 #endif
+
+#define FUNCTIONSETUP	KPILOT_FNAMEDEF; \
+			if (debug_level) { DEBUGFUNC << \
+			fname << KPILOT_LOCNDEF ; }
+#define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF; \
+				if (debug_level>l) { DEBUGFUNC << \
+				fname << KPILOT_LOCNDEF; }
+
+class KConfig;
+
+// Next all kinds of specialty debugging functions,
+// added in an ad-hoc fashion.
+//
+//
+QString qstringExpansion(const QString &);
+QString charExpansion(const char *);
+
+class QSize;
+ostream& operator << (ostream&,const QSize &) ;
+kdbgstream& operator << (kdbgstream&,const QSize &);
 
 #else
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
@@ -198,6 +216,9 @@ kndbgstream& operator << (kndbgstream&,const QSize &);
 
 
 // $Log$
+// Revision 1.14  2002/06/10 21:20:47  adridg
+// Adjust version numbers in anticipation of release
+//
 // Revision 1.13  2002/05/23 17:08:32  adridg
 // Some compile fixes for non-debug mode, and KNotes syncing fixes
 //
