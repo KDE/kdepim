@@ -394,6 +394,7 @@ bool Base64Encoder::generic_finish( char* & dcursor, const char * const dend,
   default:
     assert( 0 );
   }
+return true; // asserts get compiled out
 }
 
 
