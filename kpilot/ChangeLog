@@ -14,15 +14,31 @@ Lots of internal stuff going on:
 * Finally fixed up the Makefile.ams for the standard conduits so
   that they run properly (without setting LD_LIBRARY_PATH).
 
+Visible changes:
+
+* Fixed up the documentation, the screenshots, the descriptions of the 
+  conduits, etc. etc. It's still not complete but at least it matches
+  what happens when you run KPilot.
+
 Still on the todo-list:
 
-* Fix up the documentation, the screenshots, the descriptions of the 
-  conduits, actually everything after section 2.
 * Really fix the vcal conduit. I've patched some things up and once
-  again I hop it works, but since I can't reproduce the error I'm
+  again I hope it works, but since I can't reproduce the error I'm
   a little stuck here.
+
+Still on the wish-list:
+
 * Actually *doing* a fast sync for Heiko
-* All of last week's wishlist
+* More and better information in the progress bar
+* The PilotMemo class is butt-ugly and filled with weird C-string
+  manipulations.
+* KPilot should display the sync log as well, just like the Pilot
+  does. This is useful for reporting the result of a sync to the
+  user (who then doesn't need to look at the Pilot)
+* I noticed Thomas Zander has submitted an official wishlist item:
+  DateBk3 (the new date book format in PalmOS3.5) support. I think
+  I'll get back to him on that when Mirko pans out with the free
+  hardware goodies from Palm :)
 
 
 KPilot Developer's notes for december 2nd 2000

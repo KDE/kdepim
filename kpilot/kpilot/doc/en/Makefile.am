@@ -42,6 +42,6 @@ datadir = $(kde_htmldir)/en/kpilot
 $(KPILOT_HTML) : .allhtml
 
 .allhtml : $(KPILOT_DOCBOOK)
-	echo "You need jw and the like to convert the docbook sources to HTML"
+	@echo "You need jw and the like to convert the docbook sources to HTML"
 	docbook "-o ." kpilot.docbook
 	touch .allhtml

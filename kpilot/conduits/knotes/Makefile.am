@@ -1,4 +1,4 @@
-INCLUDES= @all_includes@ -I$(top_srcdir)/kpilot/kpilot
+INCLUDES= $(all_includes) -I$(top_srcdir)/kpilot/kpilot
 METASOURCES = AUTO
 
 servicedir = $(kde_servicesdir)
@@ -16,6 +16,7 @@ conduitKNotes_SOURCES= knotes-conduit.cc setupDialog.cc
 
 # the library search path
 conduitKNotes_LDFLAGS = $(all_libraries) \
+	$(KDE_RPATH) \
 	-L../../kpilot
 
 # the libraries to link against. Be aware of the order. First the libraries,
