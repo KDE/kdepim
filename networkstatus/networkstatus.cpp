@@ -18,7 +18,7 @@ extern "C" {
 	{
 		return new NetworkStatusModule( obj );
 	}
-};
+}
 
 // INTERNALLY USED STRUCTS AND TYPEDEFS
 
