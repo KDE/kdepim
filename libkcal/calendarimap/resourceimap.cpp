@@ -22,6 +22,8 @@
 
 #include <kdebug.h>
 #include <dcopclient.h>
+#include <kapplication.h>
+#include <kdcopservicestarter.h>
 
 #include <libkcal/vcaldrag.h>
 #include <libkcal/vcalformat.h>
@@ -34,10 +36,15 @@
 #include <kresources/resourceconfigwidget.h>
 #include <kresources/resource.h>
 
+#include "kmailicalIface_stub.h"
+
 #include "resourceimapconfig.h"
 #include "resourceimap.h"
 
 using namespace KCal;
+
+static const QCString dcopObjectId = "KMailICalIface";
+
 
 extern "C"
 {
@@ -58,6 +65,12 @@ ResourceIMAP::ResourceIMAP( const KConfig* config )
     mServer = config->readEntry( "Servername" );
   }
   init();
+
+  // Make the connection to KMail ready
+  mKMailIcalIfaceStub = 0;
+  kapp->dcopClient()->setNotifications( true );
+  connect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QCString&)),
+	   this, SLOT( unregisteredFromDCOP( const QCString& )) );
 }
 
 void ResourceIMAP::writeConfig( KConfig* config )
@@ -77,31 +90,21 @@ void ResourceIMAP::init()
   mDCOPClient->registerAs( "resourceimap", true );
 
   // TODO: Make sure KMail is running!
-
-  // attach to KMail
-  if( !connectDCOPSignal( "kmail", "KmailICalIface", "incidenceAdded(QString,QString)",
-			  "addIncidence(QString,QString)", false ) ) {
-    kdError() << "DCOP connection to incidenceAdded failed" << endl;
-  }
-  if( !connectDCOPSignal( "kmail", "KmailICalIface", "incidenceDeleted(QString,QString)",
-			  "deleteIncidence(QString,QString)", false ) ) {
-    kdError() << "DCOP connection to incidenceDeleted failed" << endl;
-  }
-  if( !connectDCOPSignal( "kmail", "KmailICalIface", "signalRefresh(QString)",
-			  "slotRefresh(QString)", false ) ) {
-    kdError() << "DCOP connection to signalRefresh failed" << endl;
-  }
+  connectToKMail();
 }
 
 
 ResourceIMAP::~ResourceIMAP()
 {
+  kapp->dcopClient()->setNotifications( false );
+  delete mKMailIcalIfaceStub;
   close();
   delete mDCOPClient;
 }
 
 QStringList ResourceIMAP::getIncidenceList( const QString& type )
 {
+#if 0
   QByteArray data;
   QDataStream arg(data, IO_WriteOnly);
   arg << type;
@@ -114,6 +117,21 @@ QStringList ResourceIMAP::getIncidenceList( const QString& type )
   QStringList lst;
   QDataStream ret(reply, IO_ReadOnly);
   ret >> lst;
+  return lst;
+#endif
+
+  if( !connectToKMail() ) {
+    kdError() << "DCOP error during incidences(QString)\n";
+    return QStringList();
+  }
+
+  QStringList lst = mKMailIcalIfaceStub->incidences( type );
+  if ( !mKMailIcalIfaceStub->ok() ) {
+    kdError() << "Communication problem in ResourceIMAP::getIncidenceList()\n";
+    // Don't return something that might not be valid
+    return QStringList();
+  }
+
   return lst;
 }
 
@@ -179,13 +197,14 @@ bool ResourceIMAP::save()
 
 bool ResourceIMAP::addEvent(Event *anEvent)
 {
-  // kdDebug(5800) << "ResourceIMAP::addEvent" << endl;
+  kdDebug(5800) << "ResourceIMAP::addEvent" << endl;
   mCalendar.addEvent(anEvent);
   anEvent->registerObserver( this );
   
   if( mSilent ) return true;
 
   // Call kmail ...
+#if 0
   QByteArray data;
   QDataStream arg(data, IO_WriteOnly);
   arg << QString::fromLatin1("Calendar");
@@ -204,16 +223,34 @@ bool ResourceIMAP::addEvent(Event *anEvent)
     kdError() << "DCOP error during addIncidence(QString)" << endl;
   }
   mCurrentUID = QString::null;
+#endif
 
-  return true;
+  if( !connectToKMail() ) {
+    kdError() << "DCOP error during addIncidence(QString)\n";
+    return false;
+  }
+
+  mCurrentUID = anEvent->uid();
+  QString vCal = mFormat.createScheduleMessage( anEvent, Scheduler::Request );
+  bool rc = mKMailIcalIfaceStub->addIncidence( "Calendar", mCurrentUID, vCal );
+  mCurrentUID = QString::null;
+
+  if ( !mKMailIcalIfaceStub->ok() ) {
+    kdError() << "Communication problem in ResourceIMAP::getIncidenceList()\n";
+    return false;
+  }
+
+  return rc;
 }
 
 // probably not really efficient, but...it works for now.
 void ResourceIMAP::deleteEvent(Event *event)
 {
-  // kdDebug(5800) << "ResourceIMAP::deleteEvent" << endl;
+  kdDebug(5800) << "ResourceIMAP::deleteEvent" << endl;
+
   // Call kmail ...
   if( !mSilent ) {
+#if 0
     QByteArray data;
     QDataStream arg(data, IO_WriteOnly);
     arg << QString::fromLatin1("Calendar");
@@ -225,7 +262,16 @@ void ResourceIMAP::deleteEvent(Event *event)
 			    data, replyType, replyData )) {
       kdError() << "DCOP error during deleteIncidence(QString)" << endl;
     }
+#endif
+
+    if( !connectToKMail() ) {
+      kdError() << "DCOP error during deleteIncidence(QString)\n";
+    } else {
+      mCurrentUID = event->uid();
+      mKMailIcalIfaceStub->deleteIncidence( "Calendar", mCurrentUID );
+    }
   }
+
   mCalendar.deleteEvent(event);
   mCurrentUID = QString::null;
 }
@@ -275,6 +321,7 @@ bool ResourceIMAP::addTodo(Todo *todo)
 
   if( mSilent ) return true;
 
+#if 0
   // call kmail ..
   QByteArray data;
   QDataStream arg(data, IO_WriteOnly);
@@ -294,14 +341,31 @@ bool ResourceIMAP::addTodo(Todo *todo)
     kdError() << "DCOP error during addIncidence(QString)" << endl;
   }
   mCurrentUID = QString::null;
+#endif
 
-  return true;
+  if( !connectToKMail() ) {
+    kdError() << "DCOP error during addTodo(QString)\n";
+    return false;
+  }
+
+  mCurrentUID = todo->uid();
+  QString vCal = mFormat.createScheduleMessage( todo, Scheduler::Request );
+  bool rc = mKMailIcalIfaceStub->addIncidence( "Task", mCurrentUID, vCal );
+  mCurrentUID = QString::null;
+
+  if ( !mKMailIcalIfaceStub->ok() ) {
+    kdError() << "Communication problem in ResourceIMAP::getIncidenceList()\n";
+    return false;
+  }
+
+  return rc;
 }
 
 void ResourceIMAP::deleteTodo(Todo *todo)
 {
   // call kmail ...
   if( !mSilent ) {
+#if 0
     QByteArray data;
     QDataStream arg(data, IO_WriteOnly);
     arg << QString::fromLatin1("Task");
@@ -314,6 +378,15 @@ void ResourceIMAP::deleteTodo(Todo *todo)
       kdError() << "DCOP error during deleteIncidence(QString)" << endl;
     }
     mCurrentUID = QString::null;
+#endif
+
+    if( !connectToKMail() ) {
+      kdError() << "DCOP error during deleteTodo(QString)\n";
+    } else {
+      mCurrentUID = todo->uid();
+      mKMailIcalIfaceStub->deleteIncidence( "Task", mCurrentUID );
+      mCurrentUID = QString::null;
+    }
   }
   mCalendar.deleteTodo(todo);
 }
@@ -535,3 +608,58 @@ void ResourceIMAP::slotRefresh( const QString& type )
   else
     kdDebug(5800) << "ResourceIMAP::slotRefresh called with wrong type " << type << endl;
 }
+
+bool ResourceIMAP::connectToKMail() const
+{
+  if( !mKMailIcalIfaceStub ) {
+    QString error;
+    QCString dcopService;
+    int result = KDCOPServiceStarter::self()->findServiceFor( "DCOP/ResourceBackend/IMAP",
+							      QString::null, QString::null,
+							      &error, &dcopService );
+    if ( result != 0 ) {
+      kdDebug(5800) << "Couldn't connect to the IMAP resource backend\n";
+      // TODO: You might want to show "error" (if not empty) here, using e.g. KMessageBox
+      return false;
+    }
+
+    mKMailIcalIfaceStub = new KMailICalIface_stub( kapp->dcopClient(), dcopService,
+						   dcopObjectId );
+
+    // Attach to the KMail signals
+    if( !connectKMailSignal( "incidenceAdded(QString,QString)",
+			     "addIncidence(QString,QString)" ) ) {
+      kdError() << "DCOP connection to incidenceAdded failed" << endl;
+    }
+    if( !connectKMailSignal( "incidenceDeleted(QString,QString)",
+			     "deleteIncidence(QString,QString)" ) ) {
+      kdError() << "DCOP connection to incidenceDeleted failed" << endl;
+    }
+    if( !connectKMailSignal( "signalRefresh(QString)", "slotRefresh(QString)" ) ) {
+      kdError() << "DCOP connection to signalRefresh failed" << endl;
+    }
+  }
+
+  return ( mKMailIcalIfaceStub != 0 );
+}
+
+bool ResourceIMAP::connectKMailSignal( const QCString& signal, const QCString& method ) const
+{
+  ResourceIMAP* _this = const_cast<ResourceIMAP*>( this );
+  return _this->connectDCOPSignal( "kmail", dcopObjectId, signal, method, false );
+}
+
+void ResourceIMAP::unregisteredFromDCOP( const QCString& appId )
+{
+  if ( mKMailIcalIfaceStub && mKMailIcalIfaceStub->app() == appId )
+  {
+    // Delete the stub so that the next time we need the addressbook,
+    // we'll know that we need to start a new one.
+    delete mKMailIcalIfaceStub;
+    mKMailIcalIfaceStub = 0L;
+  }
+}
+
+
+#include "resourceimap.moc"
+

@@ -35,6 +35,7 @@
 #include "resourcecalendar.h"
 
 class DCOPClient;
+class KMailICalIface_stub;
 
 namespace KCal {
 
@@ -43,6 +44,7 @@ namespace KCal {
 */
   class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer, virtual public DCOPObject
 {
+  Q_OBJECT
   K_DCOP
 
   k_dcop:
@@ -156,12 +158,18 @@ namespace KCal {
     virtual void incidenceUpdated( IncidenceBase *i ) { update( i ); }
     /** Append alarms of incidence in interval to list of alarms. */
 
+  protected slots:
+    void unregisteredFromDCOP( const QCString& );
+
   private:
     void init();
     QStringList getIncidenceList( const QString& type );
+    bool connectKMailSignal( const QCString&, const QCString& ) const;
 
     bool loadAllEvents();
     bool loadAllTasks();
+
+    bool connectToKMail() const;
 
     KCal::Incidence* parseIncidence( const QString& str );
 
@@ -171,6 +179,8 @@ namespace KCal {
     DCOPClient* mDCOPClient;
     bool mSilent;
     QString mCurrentUID;
+
+    mutable KMailICalIface_stub* mKMailIcalIfaceStub;
 };  
 
 }
