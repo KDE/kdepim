@@ -34,6 +34,8 @@
 
 #include <qstring.h>
 
+class KConfig;
+
 class KAccount
 {
   public:
@@ -66,6 +68,13 @@ class KAccount
      */ 
     Type type() { return mType; }
     void setType( const Type type ) { mType = type; }
+
+    /**
+     * Save/Restore the settings
+     */
+    void writeConfig( KConfig *config, const QString &group ) const; 
+
+    void readConfig( KConfig *config, const QString &group ); 
 
   protected:
     uint mId;
