@@ -8,6 +8,9 @@ kolabwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kolabwizard_LDADD = ../kresources/imap/kcal/libkcal_imap.la \
   ../libkcal/libkcal.la ../libkdepim/libkdepim.la \
   $(LIB_KDECORE)
-kolabwizard_SOURCES = kolabwizard.cpp kolabconfig.kcfgc
+kolabwizard_SOURCES = main.cpp kolabwizard.cpp kmailchanges.cpp \
+	kolabconfig.kcfgc
+
+noinst_HEADERS = kolabwizard.h kmailchanges.h
 
 kde_kcfg_DATA = kolab.kcfg

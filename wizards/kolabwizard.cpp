@@ -19,24 +19,20 @@
     Boston, MA 02111-1307, USA.
 */
 
+#include "kolabwizard.h"
 #include "kolabconfig.h"
-
-#include <kconfigwizard.h>
 
 #include "kresources/imap/kcal/resourceimap.h"
 
 #include <libkcal/resourcecalendar.h>
 
-#include <kaboutdata.h>
-#include <kapplication.h>
-#include <kdebug.h>
-#include <klocale.h>
-#include <kcmdlineargs.h>
 #include <klineedit.h>
+#include <klocale.h>
 
 #include <qlayout.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
+
 
 class CreateImapResource : public KConfigPropagator::Change
 {
@@ -109,90 +105,56 @@ class KolabPropagator : public KConfigPropagator
     }
 };
 
-class KolabWizard : public KConfigWizard
+KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
 {
-  public:
-    KolabWizard() : KConfigWizard( new KolabPropagator )
-    {
-      QFrame *page = createWizardPage( "Kolab Server" );
+  QFrame *page = createWizardPage( "Kolab Server" );
 
-      QGridLayout *topLayout = new QGridLayout( page );
-      topLayout->setSpacing( spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( page );
+  topLayout->setSpacing( spacingHint() );
 
-      QLabel *label = new QLabel( i18n("Server Name"), page );
-      topLayout->addWidget( label, 0, 0 );
-      mServerEdit = new KLineEdit( page );
-      topLayout->addWidget( mServerEdit, 0, 1 );
-      
-      label = new QLabel( i18n("User Name"), page );
-      topLayout->addWidget( label, 1, 0 );
-      mUserEdit = new KLineEdit( page );
-      topLayout->addWidget( mUserEdit, 1, 1 );
-      
-      label = new QLabel( i18n("Password"), page );
-      topLayout->addWidget( label, 2, 0 );
-      mPasswordEdit = new KLineEdit( page );
-      mPasswordEdit->setEchoMode( KLineEdit::Password );
-      topLayout->addWidget( mPasswordEdit, 2, 1 );
+  QLabel *label = new QLabel( i18n("Server Name"), page );
+  topLayout->addWidget( label, 0, 0 );
+  mServerEdit = new KLineEdit( page );
+  topLayout->addWidget( mServerEdit, 0, 1 );
 
-      mSavePasswordCheck = new QCheckBox( i18n("Save Password"), page );
-      topLayout->addMultiCellWidget( mSavePasswordCheck, 3, 3, 0, 1 );
+  label = new QLabel( i18n("User Name"), page );
+  topLayout->addWidget( label, 1, 0 );
+  mUserEdit = new KLineEdit( page );
+  topLayout->addWidget( mUserEdit, 1, 1 );
 
-      topLayout->setRowStretch( 4, 1 );
+  label = new QLabel( i18n("Password"), page );
+  topLayout->addWidget( label, 2, 0 );
+  mPasswordEdit = new KLineEdit( page );
+  mPasswordEdit->setEchoMode( KLineEdit::Password );
+  topLayout->addWidget( mPasswordEdit, 2, 1 );
 
-      setupRulesPage();
-      setupChangesPage();
+  mSavePasswordCheck = new QCheckBox( i18n("Save Password"), page );
+  topLayout->addMultiCellWidget( mSavePasswordCheck, 3, 3, 0, 1 );
 
-      resize( 400, 300 );
-    }
-    
-    ~KolabWizard()
-    {
-    }
+  topLayout->setRowStretch( 4, 1 );
 
-    void usrReadConfig()
-    {
-      mServerEdit->setText( KolabConfig::self()->server() );
-      mUserEdit->setText( KolabConfig::self()->user() );
-      mPasswordEdit->setText( KolabConfig::self()->password() );
-      mSavePasswordCheck->setChecked( KolabConfig::self()->savePassword() );
-    }
+  setupRulesPage();
+  setupChangesPage();
 
-    void usrWriteConfig()
-    {
-      KolabConfig::self()->setServer( mServerEdit->text() );
-      KolabConfig::self()->setUser( mUserEdit->text() );
-      KolabConfig::self()->setPassword( mPasswordEdit->text() );
-      KolabConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );    
-    }
+  resize( 400, 300 );
+}
 
-  private:
-    KLineEdit *mServerEdit;
-    KLineEdit *mUserEdit;
-    KLineEdit *mPasswordEdit;
-    QCheckBox *mSavePasswordCheck;
-};
-
-static const KCmdLineOptions options[] =
+KolabWizard::~KolabWizard()
 {
-  {"verbose", "Verbose output", 0},
-  KCmdLineLastOption
-};
+}
 
-int main(int argc,char **argv)
+void KolabWizard::usrReadConfig()
 {
-  KAboutData aboutData( "kolabwizard", "Kolab Configuration Wizard", "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options );
+  mServerEdit->setText( KolabConfig::self()->server() );
+  mUserEdit->setText( KolabConfig::self()->user() );
+  mPasswordEdit->setText( KolabConfig::self()->password() );
+  mSavePasswordCheck->setChecked( KolabConfig::self()->savePassword() );
+}
 
-  KApplication app;
-
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-  bool verbose = false;
-  if ( args->isSet( "verbose" ) ) verbose = true;
-
-  KolabWizard wizard;
-  
-  wizard.exec();
+void KolabWizard::usrWriteConfig()
+{
+  KolabConfig::self()->setServer( mServerEdit->text() );
+  KolabConfig::self()->setUser( mUserEdit->text() );
+  KolabConfig::self()->setPassword( mPasswordEdit->text() );
+  KolabConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );    
 }
