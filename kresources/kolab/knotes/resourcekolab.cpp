@@ -214,6 +214,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
  */
 bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            const QString& resource,
+                                           Q_UINT32 sernum,
                                            const QString& note )
 {
   // Check if this is a note

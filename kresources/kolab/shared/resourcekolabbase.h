@@ -79,6 +79,7 @@ public:
   // These are the methods called by KMail when the resource changes
   virtual bool fromKMailAddIncidence( const QString& type,
                                       const QString& resource,
+                                      Q_UINT32 sernum,
                                       const QString& xml ) = 0;
   virtual void fromKMailDelIncidence( const QString& type,
                                       const QString& resource,

@@ -110,9 +110,9 @@ public:
   void fromKMailDelSubresource( const QString& type, const QString& id );
 
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                              const QString& ical );
+                              Q_UINT32 sernum, const QString& contact );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
-                        const QString& uid );
+                              const QString& contact );
   void slotRefresh( const QString& type, const QString& resource );
 
   /// Return the list of subresources.

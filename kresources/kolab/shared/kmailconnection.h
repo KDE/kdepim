@@ -53,18 +53,13 @@ class KMailConnection : public QObject, public DCOPObject {
 
   // These are the methods called by KMail when the resource changes
 k_dcop:
-  bool fromKMailAddIncidence( const QString& type,
-                              const QString& resource,
+  bool fromKMailAddIncidence( const QString& type, const QString& resource,
+                              Q_UINT32 sernum, const QString& xml );
+  void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& xml );
-  void fromKMailDelIncidence( const QString& type,
-                              const QString& resource,
-                              const QString& xml );
-  void slotRefresh( const QString& type,
-                    const QString& resource );
-  void fromKMailAddSubresource( const QString& type,
-                                const QString& resource );
-  void fromKMailDelSubresource( const QString& type,
-                                const QString& resource );
+  void slotRefresh( const QString& type, const QString& resource );
+  void fromKMailAddSubresource( const QString& type, const QString& resource );
+  void fromKMailDelSubresource( const QString& type, const QString& resource );
 
 public:
   KMailConnection( ResourceKolabBase* resource, const QCString& objId );
@@ -78,11 +73,9 @@ public:
   // Call the DCOP methods
   bool kmailSubresources( QMap<QString, bool>& lst,
                           const QString& contentsType );
-  bool kmailIncidences( QMap<Q_UINT32, QString>& lst,
-                        const QString& mimetype,
+  bool kmailIncidences( QMap<Q_UINT32, QString>& lst, const QString& mimetype,
                         const QString& resource );
-  bool kmailGetAttachment( KURL& url, const QString& resource,
-                           Q_UINT32 sernum,
+  bool kmailGetAttachment( KURL& url, const QString& resource, Q_UINT32 sernum,
                            const QString& filename );
   bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
   bool kmailUpdate( const QString& resource, Q_UINT32 sernum,

@@ -77,7 +77,7 @@ public:
 
   // The IMAPBase methods called by KMail
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                              const QString& note );
+                              Q_UINT32 sernum, const QString& note );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& note );
   void slotRefresh( const QString& type, const QString& resource );

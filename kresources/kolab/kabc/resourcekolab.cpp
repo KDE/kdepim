@@ -254,8 +254,10 @@ void KABC::ResourceKolab::removeAddressee( const Addressee& addr )
  */
 bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
                                                  const QString& resource,
-                                                 const QString& vCard )
+                                                 Q_UINT32 sernum,
+                                                 const QString& contact )
 {
+#if 0
   if( type == "Contact" ) {
     const bool silent = mSilent;
     mSilent = true;
@@ -272,6 +274,7 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
 
     return true;
   }
+#endif
 
   return false;
 }
