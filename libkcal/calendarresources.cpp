@@ -201,8 +201,8 @@ void CalendarResources::deleteEvent(Event *event)
   kdDebug(5800) << "CalendarResources::deleteEvent" << endl;
 
   if ( mResourceMap.find(event)!=mResourceMap.end() ) {
-    mResourceMap.remove( event );
     mResourceMap[event]->deleteEvent( event );
+    mResourceMap.remove( event );
   } else {
     CalendarResourceManager::ActiveIterator it;
     for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
