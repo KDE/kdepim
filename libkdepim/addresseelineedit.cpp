@@ -503,6 +503,8 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
     if ( !name.isEmpty() )
       addCompletionItem( addr.preferredEmail() + " (" + name + ")", weight );
 
+    if ( name.find( ',' ) ) return; // probably already of the form "Lastname, Firstname"
+
     bool bDone = false;
     int i = 1;
     do{
