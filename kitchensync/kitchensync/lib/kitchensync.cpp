@@ -49,9 +49,11 @@
 
 #include "konnectorbar.h"
 #include "konnectordialog.h"
-#include "kitchensync.h"
 #include "syncalgo.h"
 #include "mainwindow.h"
+#include "actionmanager.h"
+
+#include "kitchensync.h"
 
 using namespace KSync;
 
@@ -81,8 +83,8 @@ kdbgstream operator<<( kdbgstream str, const Notify& no )
 
 }
 
-KitchenSync::KitchenSync( MainWindow *mainWindow, const char *, WFlags )
-  : Core( mainWindow ), mMainWindow( mainWindow )
+KitchenSync::KitchenSync( ActionManager *actionManager, QWidget *parent )
+  : Core( parent ), mActionManager( actionManager )
 {
   m_syncAlg = 0;
   m_syncUi = 0;
@@ -369,7 +371,7 @@ void KitchenSync::slotConfigCur()
  */
 void KitchenSync::slotProfile()
 {
-    int item = mMainWindow->currentProfile();
+    int item = mActionManager->currentProfile();
     if ( item < 0 ) item = 0; // for initialisation
     if ( m_prof->count() == 0 ) return;
 
@@ -387,7 +389,7 @@ void KitchenSync::initProfileList()
     for (it = list.begin(); it != list.end(); ++it ) {
         lst << (*it).name();
     }
-    mMainWindow->setProfiles( lst );
+    mActionManager->setProfiles( lst );
 }
 
 SyncUi* KitchenSync::syncUi()

@@ -4,7 +4,7 @@ lib_LTLIBRARIES = libkitchensyncui.la
 
 libkitchensyncui_la_SOURCES = partbar.cpp manipulatorpart.cpp \
     configuredialog.cpp \
-    systemtray.cpp core.cpp mainwindow.cpp kitchensync.cpp \
+    systemtray.cpp core.cpp actionmanager.cpp mainwindow.cpp kitchensync.cpp \
     profile.cpp \
     manpartservice.cpp profilemanager.cpp \
     profilefilemanager.cpp konnectorprofile.cpp \
@@ -33,3 +33,10 @@ METASOURCES = AUTO
 
 servicetypedir = $(kde_servicetypesdir)
 servicetype_DATA = kitchensync.desktop
+
+kde_module_LTLIBRARIES = libkitchensyncpart.la
+
+libkitchensyncpart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
+libkitchensyncpart_la_LIBADD  = libkitchensyncui.la
+libkitchensyncpart_la_SOURCES = kitchensync_part.cpp
+ 

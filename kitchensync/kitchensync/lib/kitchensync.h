@@ -45,12 +45,13 @@ namespace KSync {
 
 class KonnectorBar;
 class MainWindow;
+class ActionManager;
 
 /**
- * The KitchenSync UI Shell
- * It's the MainWindow of the application. It'll load all parts
- * and do the basic communication between all parts
- */
+  The KitchenSync UI Shell
+  It's the MainWindow of the application. It'll load all parts
+  and do the basic communication between all parts
+*/
 class KitchenSync : public Core
 {
     Q_OBJECT
@@ -61,8 +62,7 @@ class KitchenSync : public Core
       @param name The name
       @param flags the flags
     */
-    KitchenSync( MainWindow *mainWindow, const char *name = 0,
-                 WFlags f = WType_TopLevel );
+    KitchenSync( ActionManager *, QWidget * );
     ~KitchenSync();
 
     /**
@@ -137,7 +137,7 @@ class KitchenSync : public Core
     void slotPartSyncStatus( ManipulatorPart *, int );
 
   private:
-    MainWindow *mMainWindow;
+    ActionManager *mActionManager;
 
     PartBar *m_bar;
     QWidgetStack *m_stack;

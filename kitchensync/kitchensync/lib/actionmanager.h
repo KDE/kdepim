@@ -1,8 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
-† † Copyright (c) 2002 Maximilian Reiﬂ <harlekin@handhelds.org>
+    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,8 +18,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KSYNC_MAINWINDOW_H
-#define KSYNC_MAINWINDOW_H
+#ifndef KSYNC_ACTIONMANAGER_H
+#define KSYNC_ACTIONMANAGER_H
 
 #include <qptrlist.h>
 #include <qmap.h>
@@ -36,35 +35,36 @@
 #include "manpartservice.h"
 #include "kitchensync.h"
 
-class PartBar;
-class QHBox;
-class QWidgetStack;
 class KSelectAction;
 
 namespace KSync {
 
 class KonnectorBar;
 class KitchenSync;
-class ActionManager;
 
-class MainWindow : public KParts::MainWindow
+/**
+ * The KitchenSync UI Shell
+ * It's the MainWindow of the application. It'll load all parts
+ * and do the basic communication between all parts
+ */
+class ActionManager
 {
-    Q_OBJECT
   public:
-    MainWindow( QWidget *widget = 0, const char *name = 0 );
-    ~MainWindow();
+    ActionManager( KActionCollection * );
+    ~ActionManager();
+
+    void setView( KitchenSync * );
 
     int currentProfile();
     void setProfiles( const QStringList &profiles );
 
+    void initActions();
+    
   private:
-    ActionManager *mActionManager;
-  
+    KActionCollection *mActionCollection;
     KitchenSync *mView;
 
     KSelectAction *m_profAct;
-
-    KonnectorBar *m_konBar;
 };
 
 }

@@ -51,6 +51,7 @@
 #include "konnectordialog.h"
 #include "kitchensync.h"
 #include "syncalgo.h"
+#include "actionmanager.h"
 
 #include "mainwindow.h"
 
@@ -59,10 +60,13 @@ using namespace KSync;
 MainWindow::MainWindow( QWidget *widget, const char *name )
   : KParts::MainWindow( widget, name )
 {
-  mView = new KitchenSync( this );
+  mActionManager = new ActionManager( actionCollection() );
+
+  mView = new KitchenSync( mActionManager, this );
   setCentralWidget( mView );
 
-  initActions();
+  mActionManager->setView( mView );
+  mActionManager->initActions();
   setXMLFile("ksyncgui.rc");
   createGUI( 0 );
 
@@ -80,32 +84,7 @@ MainWindow::MainWindow( QWidget *widget, const char *name )
 
 MainWindow::~MainWindow()
 {
-}
-
-void MainWindow::initActions()
-{
-  (void)new KAction( i18n("Synchronize" ), "reload", 0,
-                     mView, SLOT( slotSync() ),
-		     actionCollection(), "sync" );
-
-  (void)new KAction( i18n("Quit"), "exit", 0,
-                     mView, SLOT(slotQuit()),
-		     actionCollection(), "quit" );
-
-  (void)new KAction( i18n("Configure Profiles..."),  "configure", 0,
-                     mView, SLOT(slotConfigProf() ),
-                     actionCollection(), "config_profile" );
-
-  (void)new KAction( i18n("Configure Current Profile..."),  "configure", 0,
-                     mView, SLOT(slotConfigCur() ),
-                     actionCollection(), "config_current" );
-
-  m_profAct = new KSelectAction( i18n("Profile"), KShortcut(), mView,
-                                 SLOT(slotProfile() ),
-                                 actionCollection(), "select_prof");
-
-  KStdAction::preferences( mView, SLOT( slotPreferences() ),
-                           actionCollection() );
+  delete mActionManager;
 }
 
 int MainWindow::currentProfile()

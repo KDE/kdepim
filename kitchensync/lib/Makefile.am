@@ -1,5 +1,4 @@
-
-SUBDIRS = .  test
+SUBDIRS = . test
 
 KDE_OPTIONS = nofinal
 
