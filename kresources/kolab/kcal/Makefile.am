@@ -1,7 +1,7 @@
 METASOURCES = AUTO
 
 INCLUDES = -I$(top_srcdir)/kresources/kolab/shared -I$(top_srcdir) \
-        $(all_includes) -I$(top_builddir)/libkdepim
+        -I$(top_builddir)/libkdepim $(all_includes)
 
 # The kolab wizard links to this library too
 lib_LTLIBRARIES = libkcalkolab.la

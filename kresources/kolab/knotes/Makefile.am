@@ -1,7 +1,7 @@
 METASOURCES = AUTO
 
 INCLUDES = -I$(top_srcdir)/kresources/kolab/shared \
-	-I$(top_srcdir) -I$(top_srcdir)/knotes $(all_includes)  -I$(top_builddir)/libkdepim
+	-I$(top_srcdir) -I$(top_srcdir)/knotes -I$(top_builddir)/libkdepim $(all_includes)
 
 # The kolab wizard links to this library too
 lib_LTLIBRARIES = libknoteskolab.la

@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) $(all_includes) -I$(top_builddir)/libkdepim
+INCLUDES = -I$(top_srcdir) -I$(top_builddir)/libkdepim $(all_includes)
 
 
 lib_LTLIBRARIES = libkslox.la libkabc_slox.la libkcal_slox.la

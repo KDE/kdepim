@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes) -I$(top_builddir)/libkdepim
+INCLUDES = -I$(top_builddir)/libkdepim $(all_includes)
 
 if needs_gpgme_copy
 GPGME_COPY_SUBDIRS = libgpg-error-copy libgpgme-copy
