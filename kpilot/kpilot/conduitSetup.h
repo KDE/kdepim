@@ -1,3 +1,5 @@
+#ifndef CCONDUITSETUP_H
+#define CCONDUITSETUP_H
 /* conduitSetup.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -26,8 +28,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#ifndef CCONDUITSETUP_H
-#define CCONDUITSETUP_H
 
 /* Library Includes */
 #include <kdialogbase.h>
@@ -54,8 +54,13 @@ protected:
 	void writeInstalledConduits();
 	void fillLists();
 
-protected slots:
 	void conduitExecuted(QListViewItem *);
+
+protected slots:
+	virtual void slotUser1();
+	virtual void slotUser2();
+	virtual void slotUser3();
+	void conduitSelected(QListViewItem *);
 	void setupDone(KProcess *);
 	void slotOk();
 
@@ -68,13 +73,11 @@ private:
 	KProcess *conduitSetup;
 	QStringList conduitPaths;
 } ;
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
-#endif
 
 // $Log$
+// Revision 1.13  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.12  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //
@@ -87,3 +90,4 @@ private:
 // Revision 1.9  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //
+#endif

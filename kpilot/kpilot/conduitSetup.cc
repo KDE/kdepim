@@ -99,8 +99,15 @@ static const char *conduitsetup_id =
 #define CONDUIT_EXEC	(3)
 
 CConduitSetup::CConduitSetup(QWidget * parent,
-	const char *name):KDialogBase(parent, name, true,
-	i18n("External Conduit Setup"), Ok | Cancel, Cancel), conduitSetup(0L)
+	const char *name) :
+	KDialogBase(parent, name, true,
+		i18n("External Conduit Setup"), 
+		User1 | User2 | User3 | Ok | Cancel, Cancel,
+		true,
+		i18n("Activate"),
+		i18n("Deactivate"),
+		i18n("Configure")), 
+	conduitSetup(0L)
 {
 	FUNCTIONSETUP;
 
@@ -114,8 +121,9 @@ CConduitSetup::CConduitSetup(QWidget * parent,
 	available = categories->addCategory(i18n("Available"),
 		i18n("Conduits installed on your system but not active"));
 
-	connect(categories, SIGNAL(executed(QListViewItem *)),
-		this, SLOT(conduitExecuted(QListViewItem *)));
+	connect(categories, SIGNAL(selectionChanged(QListViewItem *)),
+		this, SLOT(conduitSelected(QListViewItem *)));
+
 	QToolTip::add(categories,
 		i18n("You can drag and drop conduits between the\n"
 			"active and available groups. Only the conduits\n"
@@ -124,6 +132,7 @@ CConduitSetup::CConduitSetup(QWidget * parent,
 
 	fillLists();
 	adjustSize();
+	conduitSelected(0L);
 
 	conduitPaths = KGlobal::dirs()->resourceDirs("conduits");
 }
@@ -131,6 +140,101 @@ CConduitSetup::CConduitSetup(QWidget * parent,
 /* virtual */ CConduitSetup::~CConduitSetup()
 {
 	FUNCTIONSETUP;
+}
+
+/* slot */ void CConduitSetup::slotUser1()
+{
+	FUNCTIONSETUP;
+
+	QListViewItem *p = categories->selectedItem();
+
+	if (!p)
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": No item selected, but activate clicked?"
+			<< endl;
+#endif
+		return;
+	}
+
+	if (p->parent() != available)
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": Active conduit selected, but activate clicked?"
+			<< endl;
+#endif
+		return;
+	}
+
+	categories->moveItem(p,active,0L);
+	categories->setSelected(p,true);
+	categories->ensureItemVisible(p);
+
+	conduitSelected(p);
+}
+
+/* slot */ void CConduitSetup::slotUser2()
+{
+	FUNCTIONSETUP;
+
+	QListViewItem *p = categories->selectedItem();
+
+	if (!p)
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": No item selected, but activate clicked?"
+			<< endl;
+#endif
+		return;
+	}
+
+	if (p->parent() != active)
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": InActive conduit selected, but deactivate clicked?"
+			<< endl;
+#endif
+		return;
+	}
+
+	categories->moveItem(p,available,0L);
+	categories->setSelected(p,true);
+	categories->ensureItemVisible(p);
+
+	conduitSelected(p);
+}
+
+/* slot */ void CConduitSetup::slotUser3()
+{
+	FUNCTIONSETUP;
+
+	QListViewItem *p = categories->selectedItem();
+
+	if (!p)
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": No item selected, but configure clicked?"
+			<< endl;
+#endif
+		return;
+	}
+
+	if (p->parent() != active)
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": Inactive conduti selected, but configure clicked?"
+			<< endl;
+#endif
+		return;
+	}
+
+	conduitExecuted(p);
 }
 
 void CConduitSetup::conduitExecuted(QListViewItem * p)
@@ -336,8 +440,8 @@ void CConduitSetup::writeInstalledConduits()
 
 	KPilotConfigSettings & config = KPilotConfig::getConfig();
 
-	config.setConduitGroup().setInstalledConduits(categories->
-		listSiblings(active->firstChild(), CONDUIT_DESKTOP));
+	config.setConduitGroup().setInstalledConduits(
+		categories->listSiblings(active->firstChild(), CONDUIT_DESKTOP));
 	config.setDatabaseGroup();
 
 	const QListViewItem *p = active->firstChild();
@@ -423,10 +527,47 @@ void CConduitSetup::writeInstalledConduits()
 					stripWhiteSpace(), m);
 			}
 		}
-	      nextConduit:
+nextConduit:
 		p = p->nextSibling();
 	}
 	config.sync();
+}
+
+void CConduitSetup::conduitSelected(QListViewItem *p)
+{
+	FUNCTIONSETUP;
+
+	if (!p)
+	{
+		enableButton(User1,false);
+		enableButton(User2,false);
+		enableButton(User3,false);
+		return;
+	}
+
+	if (!p->parent())
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": Selected a category?"
+			<< endl;
+#endif
+		return;
+	}
+
+
+	if (p->parent() == active)
+	{
+		enableButton(User1,false);
+		enableButton(User2,true);
+		enableButton(User3,true);
+	}
+	else
+	{
+		enableButton(User1,true);
+		enableButton(User2,false);
+		enableButton(User3,false);
+	}
 }
 
 
@@ -465,6 +606,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.27  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.26  2001/09/23 18:25:50  adridg
 // New config architecture
 //
