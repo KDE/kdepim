@@ -151,6 +151,9 @@ int main(int argc, char *argv[])
   // If multiple emails are there, only return the first one
   checkGetNameAndEmail( "\"Faure, David\" <faure@kde.org>, KHZ <khz@khz.khz>", "Faure, David", "faure@kde.org", true );
 
+  // domain literals also need to work
+  checkGetNameAndEmail( "Matt Douhan <matt@[123.123.123.123]>", "Matt Douhan", "matt@[123.123.123.123]", true );
+
   // No '@'
   checkGetNameAndEmail(  "foo <distlist>", "foo", "distlist", true );
 
@@ -220,6 +223,9 @@ int main(int argc, char *argv[])
   // and it makes sense since it is also a seperator of email addresses
   checkIsValidEmailAddress( "\"Douhan, Matt\" <matt@fruitsalad.org>", "AddressOk" );
 
+  // Domains literals also need to work
+  checkIsValidEmailAddress( "Matt Douhan <matt@[123.123.123.123]>", "AddressOk" );
+
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( QString::fromUtf8("test@täst.invalid"), "true" );
@@ -236,6 +242,9 @@ int main(int argc, char *argv[])
   checkIsValidSimpleEmailAddress( "matt@123.123.123.123]", "false" );
   checkIsValidSimpleEmailAddress( "\"matt@fruitsalad.org", "false" );
   checkIsValidSimpleEmailAddress( "matt\"@fruitsalad.org", "false" );
+
+  // and here some insane but still valid cases
+  checkIsValidSimpleEmailAddress( "\"m@tt\"@fruitsalad.org", "true" );
 
   printf("\nTest OK !\n");
 
