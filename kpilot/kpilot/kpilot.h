@@ -196,6 +196,12 @@ protected slots:
 	 * */
 	void slotSelectComponent(PilotComponent *);
 
+	/**
+	* Delayed initialization of the components.
+	* This improves perceived startup time.
+	*/
+	void initializeComponents();
+	
 signals:
 	void modeSelected(int selected);
 };
