@@ -227,7 +227,7 @@ void filter_pmail::importMailFolder(const char *file)
    fread(&pmm_head, sizeof(pmm_head), 1, f);
    folder = "PMail-";
    folder.append(pmm_head.folder);
-   msg = i18n("To")+": "+folder;
+   msg = i18n("To: %1").arg(folder);
    inf->to(msg);
    // The folder name might contain weird characters ...
    folder.replace(QRegExp("[^a-zA-Z0-9:.-]"), ":");
@@ -312,7 +312,7 @@ void filter_pmail::importUnixMailFolder(const char *file)
    fclose(f);
    folder = "PMail-";
    folder.append(pmg_head.folder);
-   inf->to(i18n("To")+": "+folder);
+   inf->to(i18n("To: %1").arg(folder));
    // The folder name might contain weird characters ...
    folder.replace(QRegExp("[^a-zA-Z0-9:.-]"), ":");
 
