@@ -65,7 +65,9 @@ namespace Kaplan
          *
          * The clients name is taken from the name argument in the constructor.
          * @note: The DCOPClient object will only be created when this method is
-         * called for the first time.
+         * called for the first time. Make sure that the part has been loaded
+         * before calling this method, if it's the one that contains the DCOP
+         * interface that other parts might use.
          */
         DCOPClient *dcopClient() const;
 
