@@ -31,6 +31,7 @@
 
 
 DwBoyerMoore::DwBoyerMoore(const char* aCstr)
+  : mPat( 0 )
 {
     size_t len = strlen(aCstr);
 	_Assign(aCstr, len);
@@ -38,6 +39,7 @@ DwBoyerMoore::DwBoyerMoore(const char* aCstr)
 
 
 DwBoyerMoore::DwBoyerMoore(const DwString& aStr)
+  : mPat( 0 )
 {
     _Assign(aStr.data(), aStr.length());
 }
@@ -45,6 +47,7 @@ DwBoyerMoore::DwBoyerMoore(const DwString& aStr)
 
 DwBoyerMoore::~DwBoyerMoore()
 {
+  delete[] mPat; mPat = 0;
 }
 
 
@@ -64,6 +67,7 @@ void DwBoyerMoore::Assign(const DwString& aStr)
 void DwBoyerMoore::_Assign(const char* aPat, size_t aPatLen)
 {
     mPatLen = 0;
+    delete[] mPat; mPat = 0;
     mPat = new char[aPatLen+1];
     if (mPat != 0) {
         mPatLen = aPatLen;
@@ -81,7 +85,7 @@ void DwBoyerMoore::_Assign(const char* aPat, size_t aPatLen)
 }
 
 
-size_t DwBoyerMoore::FindIn(const DwString& aStr, size_t aPos)
+size_t DwBoyerMoore::FindIn(const DwString& aStr, size_t aPos) const
 {
     if (aStr.length() <= aPos) {
         return (size_t) -1;

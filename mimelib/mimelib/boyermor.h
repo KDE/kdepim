@@ -62,7 +62,7 @@ public:
     void Assign(const DwString& aStr);
     //. Sets the string to search for.
 
-    size_t FindIn(const DwString& aStr, size_t aPos);
+    size_t FindIn(const DwString& aStr, size_t aPos) const;
     //. Searches for the search string in {\tt aStr} starting at position
     //. {\tt aPos}.  If found, the function returns the first position in
     //. {\tt aStr} where the search string was found.  If not found, the
