@@ -324,6 +324,7 @@ public:
 	KPilotUser *getPilotUser() { return fPilotUser; }
 	KPilotSysInfo *getSysInfo() { return fPilotSysInfo; }
 	KPilotCard *getCardInfo(int card=0);
+	void endOfSync();
 	void finishSync();
 
 /*

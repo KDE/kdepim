@@ -696,6 +696,12 @@ QString KPilotDeviceLink::statusString() const
 	return s;
 }
 
+void KPilotDeviceLink::endOfSync()
+{
+	dlp_EndOfSync(pilotSocket(), 0);
+	KPILOT_DELETE(fPilotSysInfo);
+	KPILOT_DELETE(fPilotUser);
+}
 
 void KPilotDeviceLink::finishSync()
 {
@@ -706,9 +712,7 @@ void KPilotDeviceLink::finishSync()
 
 	dlp_WriteUserInfo(pilotSocket(),getPilotUser()->pilotUser());
 	addSyncLogEntry(i18n("End of HotSync\n"));
-	dlp_EndOfSync(pilotSocket(), 0);
-	KPILOT_DELETE(fPilotSysInfo);
-	KPILOT_DELETE(fPilotUser);
+	endOfSync();
 }
 
 int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
