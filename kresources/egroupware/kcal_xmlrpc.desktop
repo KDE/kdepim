@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=XML-RPC
+X-KDE-Library=kcal_xmlrpc
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=calendar
+X-KDE-ResourceType=xmlrpc

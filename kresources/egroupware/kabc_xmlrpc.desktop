@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=XML-RPC
+Name[xx]=xxXML-RPCxx
+X-KDE-Library=kabc_xmlrpc
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=contact
+X-KDE-ResourceType=xmlrpc

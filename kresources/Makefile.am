@@ -1,1 +1,1 @@
-SUBDIRS=imap-kabc
+SUBDIRS = egroupware exchange imap imap-kabc
