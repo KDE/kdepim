@@ -155,17 +155,19 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
   }
   icalcomponent_add_property(vevent,icalproperty_new_dtstart(start));
 
-  // end time
-  icaltimetype end;
-  if (event->doesFloat()) {
-//    kdDebug(5800) << "§§ Event " << event->summary() << " floats." << endl;
-    // +1 day because end date is non-inclusive.
-    end = writeICalDate( event->dtEnd().date().addDays( 1 ) );
-  } else {
-//    kdDebug(5800) << "§§ Event " << event->summary() << " has time." << endl;
-    end = writeICalDateTime(event->dtEnd());
+  if (event->hasEndDate()) {
+    // end time
+    icaltimetype end;
+    if (event->doesFloat()) {
+//      kdDebug(5800) << "§§ Event " << event->summary() << " floats." << endl;
+      // +1 day because end date is non-inclusive.
+      end = writeICalDate( event->dtEnd().date().addDays( 1 ) );
+    } else {
+//      kdDebug(5800) << "§§ Event " << event->summary() << " has time." << endl;
+      end = writeICalDateTime(event->dtEnd());
+    }
+    icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
   }
-  icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
 
 // TODO: attachments, resources
 #if 0
