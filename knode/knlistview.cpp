@@ -75,7 +75,7 @@ QPixmap& KNLVItemBase::icon(pixmapType t)
       case PTstatusCanceled:  *pms[t]=UserIcon("stat_cncl");    break;
       case PTnntp:            *pms[t]=UserIcon("server");       break;
       case PTgroup:           *pms[t]=UserIcon("group");        break;
-      case PTfolder:          *pms[t]=UserIcon("folder");       break;
+      case PTfolder:          *pms[t]=SmallIcon("folder");       break;
       case PTnull:            break;
     }
   }

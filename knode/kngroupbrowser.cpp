@@ -67,8 +67,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
 
   pmGroup=UserIcon("group");
   pmNew=UserIcon("redball");
-  pmRight=UserIcon("arrow_right");
-  pmLeft=UserIcon("arrow_left");
+  pmRight=BarIcon("forward");
+  pmLeft=BarIcon("back");
 
   arrowBtn1=new QPushButton(page);
   arrowBtn1->setEnabled(false);

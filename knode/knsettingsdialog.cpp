@@ -83,11 +83,11 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
 
   list.clear();
   list << i18n("Reading News");
-  setFolderIcon(list, BarIcon("arrow_right"));
+  setFolderIcon(list, BarIcon("forward"));
 
   list.clear();
   list << i18n("Posting News");
-  setFolderIcon(list, BarIcon("arrow_right"));
+  setFolderIcon(list, BarIcon("forward"));
 
   // Identity
   QFrame *frame = addHBoxPage(i18n(" Identity"),i18n("Personal Information"), UserIcon("smile"));
@@ -107,19 +107,19 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
   widgets.append(new KNAccMailSettings(frame));
 
   // Appearance
-  frame = addHBoxPage(i18n("Appearance"), i18n("Customize visual appearance"), BarIcon("arrow_right"));
+  frame = addHBoxPage(i18n("Appearance"), i18n("Customize visual appearance"), BarIcon("forward"));
   widgets.append(new KNAppSettings(frame));
   
   // Read News / General
   list.clear();
   list << i18n("Reading News") << i18n("General");
-  frame = addHBoxPage(list, i18n("General Options"), BarIcon("arrow_right"));
+  frame = addHBoxPage(list, i18n("General Options"), BarIcon("forward"));
   widgets.append(new KNReadGenSettings(frame));
 
   // Read News // Headers
   list.clear();
   list << i18n("Reading News") << i18n("Headers");
-  frame = addHBoxPage(list, i18n("Customize displayed article headers"), BarIcon("arrow_right"));
+  frame = addHBoxPage(list, i18n("Customize displayed article headers"), BarIcon("forward"));
   widgets.append(new KNReadHdrSettings(frame));
 
   // Read News / Filters
@@ -131,23 +131,23 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
   // Post News / Technical
   list.clear();
   list << i18n("Posting News") << i18n("Technical");
-  frame = addHBoxPage(list, i18n("Technical Settings"), BarIcon("arrow_right"));
+  frame = addHBoxPage(list, i18n("Technical Settings"), BarIcon("forward"));
   widgets.append(new KNPostTechSettings(frame));
 
   // Post News / Composer
   list.clear();
   list << i18n("Posting News") << i18n("Composer");
-  frame = addHBoxPage(list, i18n("Customize composer behaviour"), BarIcon("arrow_right"));
+  frame = addHBoxPage(list, i18n("Customize composer behaviour"), BarIcon("forward"));
   widgets.append(new KNPostComSettings(frame));
 
   // Post News / Spelling
   list.clear();
   list << i18n("Posting News") << i18n("Spelling");
-  frame = addHBoxPage(list, i18n("Spell checker behavior"), BarIcon("arrow_right"));
+  frame = addHBoxPage(list, i18n("Spell checker behavior"), BarIcon("forward"));
   widgets.append(new KNPostSpellSettings(frame));
 
   // Cleanup
-  frame = addHBoxPage(i18n("Cleanup"),i18n("Preserving disk space"), BarIcon("arrow_right"));
+  frame = addHBoxPage(i18n("Cleanup"),i18n("Preserving disk space"), BarIcon("forward"));
   widgets.append(new KNCleanupSettings(frame));
 
   restoreWindowSize("settingsDlg", this, QSize(508,424));
