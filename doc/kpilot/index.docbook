@@ -201,9 +201,9 @@ both the &handheld; and the desktop.
 </para>
 
 <para>
-If you want to <link linkend="viewers">examine</link> the
+If you want to <link linkend="page-viewers">examine</link> the
 data stored on your &handheld;, the built in
-<link linkend="viewers">viewers</link> can be used.
+<link linkend="page-viewers">viewers</link> can be used.
 This allows you to view memos, addresses, &etc;.
 There is a generic hexadecimal database viewer for
 advanced use.

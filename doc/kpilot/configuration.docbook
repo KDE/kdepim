@@ -50,7 +50,6 @@ This is because it contains not only the configuration of the
 device for communicating with the &PalmPilot;, but also
 the configuration of all the installed conduits.
 Each group of configuration options (<link linkend="general-setup">general</link>,
-<link linkend="config-actions">actions</link>
 and <link linkend="config-conduits">conduits</link>) will be discussed separately.
 We will begin, however, by taking a look at the
 <link linkend="configwizard">configuration wizard</link>, which should make most of the
@@ -188,8 +187,7 @@ to be started.
 <term><guilabel>Pilot device</guilabel></term>
 <listitem>
 <para>
-This
-is the port that the cradle is connected to.
+The port that the cradle is connected to.
 By default it is
 set to <filename class="devicefile">/dev/pilot</filename>
 which should be a symbolic link to the real port.
@@ -233,7 +231,7 @@ linkend="faq-connection"><quote>&kpilot; says <errorname>Can't connect to pilot
 <term><guilabel>Speed</guilabel></term>
 <listitem>
 <para>
-This indicates the speed of the <emphasis>serial</emphasis>
+Indicate the speed of the <emphasis>serial</emphasis>
 connection to the &PalmPilot;.
 It has no meaning for &USB; devices.
 For an older model &PalmPilot;, choose 9600.
@@ -265,8 +263,7 @@ select CP1251, for instance.
 <term><guilabel>Pilot user</guilabel></term>
 <listitem>
 <para>
-This
-is the user name of the &PalmPilot;.  By default this name is the same as
+The user name of the &PalmPilot;.  By default this name is the same as
 your log on name.  When you sync with the &PalmPilot; &kpilot; will
 check to see if this name matches the one on the &PalmPilot;.  If they do
 not, you are asked to pick which you will use.  If you pick the local
@@ -322,13 +319,13 @@ on the &PalmPilot;, reducing greatly the time required for the sync
 operation. This also means that if something goes wrong with your &PalmPilot;,
 you may not be able to recover databases with no conduit. This is a classic
 trade-off between speed and safety.
-</para ></listitem >
+</para></listitem>
 
 <listitem><para>
-<guilabel>Normal sync, do a backup</guilabel>: syncs all new or modified
+<guilabel>Normal sync, do a backup</guilabel>: sync all new or modified
 records, and &kpilot; does a  back up on every &HotSync;, resulting
 in more data safety, but longer backup operation time.
-</para ></listitem >
+</para></listitem>
 
 <listitem><para>
 <guilabel>Special sync:</guilabel>
@@ -337,12 +334,12 @@ in more data safety, but longer backup operation time.
 <listitem><para>
 <guilabel>Full Sync (slow), backup</guilabel>: sync all databases, and performs
 a full backup. It is the safest option, but takes the longest time.
-</para ></listitem >
-</itemizedlist >
+</para></listitem>
+</itemizedlist>
 
-</para ></listitem >
+</para></listitem>
 
-</itemizedlist >
+</itemizedlist>
 
 </listitem>
 </varlistentry>
@@ -422,7 +419,7 @@ restore this information later.
 <para>In short, databases are all files stored in your &handheld;. A database
 can be either a record database, which stores dynamic information created by the
 user (for instance, the addresses or the todo information), or a resource
-database, which tend to be static (for instance the applications).</para >
+database, which tend to be static (for instance the applications).</para>
 
 <screenshot>
 <screeninfo>Backup Page</screeninfo>
@@ -455,14 +452,14 @@ here (the default should be OK though).
 operation. Some databases do not follow the standard database layout, and trying
 to backup them will result in errors.
 <!-- CW TODO: should this be "No Sync?" as it was before? This makes no sense to me--> 
-</para ></listitem>
+</para></listitem>
 
 <listitem><para>
 <guilabel>Not restored:</guilabel> Databases with volatile information, such as
 news or web pages, often do not need to be restored. Add here the databases
 you do not need to restore, in order to speed up the backup operation.
 <!-- CW TODO: should this be "No Backup?" --> 
-</para ></listitem>
+</para></listitem>
 </itemizedlist>
 
 <warning>
@@ -484,7 +481,7 @@ when you perform a &HotSync;.
 The backup typically updates the copy of the &handheld; databases.
 Conduits are programs that extend the &kpilot; functionality. Running them
 usually means syncing the &handheld; to other <acronym>PC</acronym> databases,
-like the addressbook or the calender. Check here to perform both operation on
+like the addressbook or the calender. Check this box to perform both operation on
 every backup.
 </para>
 </listitem>
@@ -496,92 +493,13 @@ every backup.
 </sect2>
 
 
-<sect2 id="viewerstab">
-<title>Viewers Tab</title>
 
-<para>
-In your &PalmPilot; you can mark some records
-as <quote>private</quote>.
-By default,
-&kpilot; does not
-display these records on the screen.
-If you want to see them, turn this
-option on.
-</para>
-
-
-<variablelist>
-
-<varlistentry><term><guilabel>Start
-daemon at login</guilabel></term>
-<listitem>
-<para>
-By enabling this a link to the daemon is placed in your autostart folder
-and will be started automatically.  Note that this is not normally
-needed if the daemon is docked in the panel.
-<!-- TODO: broken functionality -->
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Show daemon in panel</guilabel></term>
-<listitem>
-<para>
-This option instructs the daemon to place a &HotSync; icon
-<guiicon>HotSync icon
-<inlinemediaobject>
-<imageobject><imagedata fileref="toolbar_hotsync.png" format="PNG"/>
-</imageobject>
-</inlinemediaobject>
-</guiicon>.
-in
-the &kicker; system tray.
-This icon has a menu that can be brought up with
-the right mouse button.
-Without this option, the daemon is not visible to the user at all.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<anchor id="stopdaemononexit"/>
-<guilabel>Stop daemon on exit</guilabel>
-</term>
-<listitem>
-<para>
-Setting this option will cause the daemon to exit when you quit
-&kpilot;, leaving the device port free for other &PalmPilot;-syncing tools
-such as <application>malsync</application>
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Quit after HotSync</guilabel></term>
-<listitem>
-<para>
-When this option is enabled, both &kpilot; and the &kpilot; daemon
-will exit after the &HotSync; operation has completed,
-leaving the device port free for other tools.
-This may be needed on systems where the &USB; daemon
-starts &kpilot; automatically.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
-
-</sect2>
-
-<sect2 id="viewers">
-<title>Viewers configuration</title>
+<sect2 id="page-viewers">
+<title>Viewers Page</title>
 <para>
 &kpilot; contains <quote>viewers</quote> for
 presenting information from the &PalmPilot;.
-These viewers present the databases present on
+These viewers present the databases available on
 the &PalmPilot; in much the same way that the device
 itself does. Not all databases have an application-specific
 viewer, though you can use the generic database viewer for those.
@@ -591,28 +509,177 @@ These settings change the way in which the data is shown.
 </para>
 
 <screenshot>
-<screeninfo>Viewer page</screeninfo>
+<screeninfo>Viewers Page</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="setup-viewer.png" format="PNG"/></imageobject>
-<textobject><phrase>The Viewer setup page</phrase></textobject>
-<caption><para>The Viewer setup page</para></caption>
+<textobject><phrase>The Viewers Setup Page</phrase></textobject>
+<caption><para>The Viewers Setup Page</para></caption>
 </mediaobject>
 </screenshot>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Make internal viewers editable</guilabel></term>
+<listitem><para>
+The internal viewers can be read only and editable. The editable mode allows you
+to edit the records and sync your modifications back to the &handheld;. Check
+here to set the internal viewers to editable mode, uncheck to set them to read
+only mode.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show private records</guilabel></term>
+<listitem><para>
+In your &PalmPilot; you can mark some records as <quote>private</quote>. By
+default, &kpilot; does not display these records on the screen. Check this box
+if you want to see them.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Address Viewer</guilabel></term>
+<listitem><para>
+Set there the options for the address internal viewer.
+
+<itemizedlist>
+<listitem><para>
+<guilabel>Show as "Last, first"</guilabel> or 
+<guilabel>Show as "Company, last"</guilabel>: the order and display of the
+address records in the address internal viewer can be set to match the
+&handheld;. Select the option that suits better your personal preferences.
+</para></listitem>
+
+<listitem><para>
+<guilabel>Use key field</guilabel> : I have no idea what this means.
+</para></listitem>
+
+</itemizedlist>
+
+</para></listitem>
+</varlistentry>
+
+
+</variablelist>
+
 </sect2>
-</sect1>
 
 
-<sect1 id="config-actions">
-<title>Configuring Actions</title>
+
+<sect2 id="page-startup-exit">
+<title>Startup and Exit Page</title>
 
 <para>
-<quote>Actions</quote> are pieces of functionality that may be enabled to
-run during a &HotSync;. They tend not to have configuration options at all.
-You can enable or disable specific actions from taking place during a &HotSync;
-by checking, (or unchecking) the box next to the action's name.
+This pages present options related to the startup and exit of &kpilot; and 
+&kpilot; daemon.
 </para>
 
+<para>
+While &kpilot; is the front-end for the internal viewers, configuration options
+and logs, the sync operation is handled by the &kpilot; daemon. Even if &kpilot;
+is not running you can &HotSync; if the daemon is. Therefore, if you want to
+be able to sync your &handheld; at anytime, it is important to start the daemon
+at login, or the opposite, if you want to be able to sync only when &kpilot; is
+running, you have to stop the daemon on exit. The last option is especially
+usefull if you have other applications that use the same port as &kpilot;.
+</para>
+
+
+<screenshot>
+<screeninfo>Startup and Exit Page</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-startup-exit.png" format="PNG"/></imageobject>
+<textobject><phrase>The Startup and Exit Page</phrase></textobject>
+<caption><para>The Startup and Exit Page</para></caption>
+</mediaobject>
+</screenshot>
+
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Startup Options</guilabel></term>
+
+<listitem>
+<para>
+
+<itemizedlist>
+<listitem>
+<para>
+<guilabel>Start daemon at login</guilabel>:
+By checking this, a link to
+the daemon is placed in your autostart folder
+and will be started automatically.  Note that this is not normally
+needed if the daemon is docked in the panel.
+<!-- TODO: broken functionality -->
+</para>
+</listitem>
+
+<listitem>
+<para>
+<guilabel>Show daemon in panel</guilabel>:
+Check this box to instruct the daemon to place a &HotSync; icon 
+<guiicon>HotSync icon
+<inlinemediaobject>
+<imageobject><imagedata fileref="toolbar_hotsync.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+</guiicon>
+in the system tray. This icon has a menu that can be brought up with
+the right mouse button. Without this option, the daemon is not visible to the
+user at all.
+</para>
+</listitem>
+</itemizedlist>
+
+</para>
+</listitem>
+
+</varlistentry>
+
+<varlistentry>
+
+<term>
+<guilabel>Exit Options</guilabel>
+</term>
+
+<listitem>
+<para>
+
+
+<itemizedlist>
+<listitem>
+<para>
+<guilabel>Quit after HotSync</guilabel>:
+When this option is enabled, both &kpilot; and the &kpilot; daemon
+will exit after the &HotSync; operation has completed,
+leaving the device port free for other tools.
+This may be needed on systems where the &USB; daemon
+starts &kpilot; automatically.
+</para >
+</listitem>
+
+<listitem>
+<para>
+<anchor id="stopdaemononexit"/>
+<guilabel>Stop daemon on exit</guilabel>:
+Setting this option will cause the daemon to exit when you quit
+&kpilot;, leaving the device port free for other &PalmPilot;-syncing tools
+such as <application>malsync</application>
+</para>
+</listitem>
+</itemizedlist>
+
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+
+</sect2>
+
 </sect1>
+
 
 <sect1 id="config-conduits">
 <title>Configuring Conduits</title>
@@ -620,9 +687,9 @@ by checking, (or unchecking) the box next to the action's name.
 <para>
 The <quote>conduits</quote> heading in the configuration dialog
 collects all the installed conduits available to &kpilot;.
-Just like actions, the conduits can be enabled and disabled
+the conduits can be enabled and disabled
 by clicking on the check box to the left of the conduit's name.
-Unlike actions, conduits can have an extensive configuration of
+conduits can have an extensive configuration of
 their own, and may be supplied by third parties.
 The details of the configuration of the
 conduits can be found in the
@@ -714,5 +781,3 @@ The default conduits are the following:
 </sect1>
 
 </chapter>
-
-
