@@ -82,7 +82,7 @@ Base6::decrypt( Block& block, const char *passphrase )
       ///     by adding an additional '+verbose=2' to the command line
       if (!passphrase || !output.length())
       {
-	errMsg = i18n("Bad passphrase; couldn't decrypt");
+	errMsg = i18n("Bad passphrase; could not decrypt.");
 	//kdDebug(5100) << "Base: passphrase is bad" << endl;
         status |= BADPHRASE;
         status |= ERROR;
@@ -90,7 +90,7 @@ Base6::decrypt( Block& block, const char *passphrase )
     }
     else if( error.find("You do not have the secret key needed to decrypt this file.") != -1)
     {
-      errMsg = i18n("You do not have the secret key for this message");
+      errMsg = i18n("You do not have the secret key for this message.");
       //kdDebug(5100) << "Base: no secret key for this message" << endl;
       status |= NO_SEC_KEY;
       status |= ERROR;

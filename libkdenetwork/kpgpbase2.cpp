@@ -134,13 +134,13 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
         badkeys.stripWhiteSpace();
         if(num == recipients.count())
 	  errMsg = i18n("Could not find public keys matching the userid(s)\n"
-                        "%1.\n"
-                        "The message is not encrypted.")
+                        "%1;\n"
+                        "the message is not encrypted.")
                        .arg( badkeys.data() );
         else
           errMsg = i18n("Could not find public keys matching the userid(s)\n"
-                        "%1.\n"
-                        "These persons won't be able to read the message.")
+                        "%1;\n"
+                        "these persons will not be able to read the message.")
                        .arg( badkeys.data() );
         status |= MISSINGKEY;
         status |= ERROR;
@@ -172,8 +172,8 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
         else
 	  errMsg = i18n("Public keys not certified with trusted signature "
                         "for userid(s)\n"
-                        "%1.\n"
-                        "These persons won't be able to read the message.")
+                        "%1;\n"
+                        "these persons will not be able to read the message.")
                        .arg( badkeys.data() );
         status |= BADKEYS;
         status |= ERROR;
@@ -191,7 +191,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
     }
     if( error.find("Bad pass phrase") != -1)
     {
-      errMsg = i18n("Bad passphrase; couldn't sign.");
+      errMsg = i18n("Bad passphrase; could not sign.");
       status |= BADPHRASE;
       status |= ERR_SIGNING;
       status |= ERROR;
@@ -199,15 +199,15 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
   }
   if (error.find("Signature error") != -1)
   {
-    errMsg = i18n("Signing failed! Please check your PGP User Identity, "
-                  "the PGP setup and the key rings.");
+    errMsg = i18n("Signing failed: please check your PGP User Identity, "
+                  "the PGP setup, and the key rings.");
     status |= NO_SEC_KEY;
     status |= ERR_SIGNING;
     status |= ERROR;
   }
   if (error.find("Encryption error") != -1)
   {
-    errMsg = i18n("Encryption failed! Please check your PGP setup "
+    errMsg = i18n("Encryption failed: please check your PGP setup "
                   "and the key rings.");
     status |= NO_SEC_KEY;
     status |= BADKEYS;
@@ -293,7 +293,7 @@ Base2::decrypt( Block& block, const char *passphrase )
 
       if((passphrase != 0) && (error.find("Bad pass phrase") != -1))
       {
-        errMsg = i18n("Bad passphrase; couldn't decrypt.");
+        errMsg = i18n("Bad passphrase; could not decrypt.");
         kdDebug(5100) << "Base: passphrase is bad" << endl;
         status |= BADPHRASE;
         status |= ERROR;
@@ -304,7 +304,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       // no secret key fitting this message
       status |= NO_SEC_KEY;
       status |= ERROR;
-      errMsg = i18n("You don't have the secret key needed to decrypt this message.");
+      errMsg = i18n("You do not have the secret key needed to decrypt this message.");
       kdDebug(5100) << "Base: no secret key for this message" << endl;
     }
     // check for persons

@@ -222,7 +222,7 @@ Base5::decrypt( Block& block, const char *passphrase )
     {
       if(passphrase != 0)
       {
-	errMsg = i18n("Bad passphrase; couldn't decrypt.");
+	errMsg = i18n("Bad passphrase; could not decrypt.");
 	kdDebug(5100) << "Base: passphrase is bad" << endl;
 	status |= BADPHRASE;
 	status |= ERROR;
@@ -233,7 +233,7 @@ Base5::decrypt( Block& block, const char *passphrase )
       // we don't have the secret key
       status |= NO_SEC_KEY;
       status |= ERROR;
-      errMsg = i18n("You don't have the secret key needed to decrypt this message.");
+      errMsg = i18n("You do not have the secret key needed to decrypt this message.");
       kdDebug(5100) << "Base: no secret key for this message" << endl;
     }
     // check for persons

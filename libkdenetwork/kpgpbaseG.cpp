@@ -150,13 +150,13 @@ BaseG::encsign( Block& block, const KeyIDList& recipients,
       badkeys.stripWhiteSpace();
       if(num == recipients.count())
         errMsg = i18n("Could not find public keys matching the userid(s)\n"
-                      "%1.\n"
-                      "The message is not encrypted.")
+                      "%1;\n"
+                      "the message is not encrypted.")
                      .arg( badkeys.data() );
       else
         errMsg = i18n("Could not find public keys matching the userid(s)\n"
-                      "%1.\n"
-                      "These persons won't be able to read the message.")
+                      "%1;\n"
+                      "these persons will not be able to read the message.")
                      .arg( badkeys.data() );
       status |= MISSINGKEY;
       status |= ERROR;
@@ -253,7 +253,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
       {
         if( passphrase != 0 )
         {
-          errMsg = i18n( "Bad passphrase; couldn't decrypt." );
+          errMsg = i18n( "Bad passphrase; could not decrypt." );
           kdDebug(5100) << "Base: passphrase is bad" << endl;
           status |= BADPHRASE;
           status |= ERROR;
@@ -274,7 +274,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
         // no secret key fitting this message
         status |= NO_SEC_KEY;
         status |= ERROR;
-        errMsg = i18n("You don't have the secret key needed to decrypt this message.");
+        errMsg = i18n("You do not have the secret key needed to decrypt this message.");
         kdDebug(5100) << "Base: no secret key for this message" << endl;
       }
     }

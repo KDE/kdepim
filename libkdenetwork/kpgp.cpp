@@ -181,7 +181,7 @@ Module::prepare( bool needPassPhrase, Block* block )
 
   if(!havePgp)
   {
-    errMsg = i18n("Couldn't find PGP executable.\n"
+    errMsg = i18n("Could not find PGP executable.\n"
 		       "Please check your PATH is set correctly.");
     return 0;
   }
@@ -574,11 +574,11 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
   // some of the recipients
   if( recipientKeyIds.size() == emptyListCount + 1 ) { // (+1 because of the sender's key)
     QString str = ( recipients.count() == 1 )
-                  ? i18n("You didn't select an encryption key for the "
-                         "recipient of this message. Therefore the message "
+                  ? i18n("You did not select an encryption key for the "
+                         "recipient of this message; therefore, the message "
                          "will not be encrypted.")
-                  : i18n("You didn't select an encryption key for any of the "
-                         "recipients of this message. Therefore the message "
+                  : i18n("You did not select an encryption key for any of the "
+                         "recipients of this message; therefore, the message "
                          "will not be encrypted.");
     QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     int ret = KMessageBox::warningContinueCancel( 0, str,
@@ -593,11 +593,11 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
   }
   else if( emptyListCount > 0 ) {
     QString str = ( emptyListCount == 1 )
-                  ? i18n("You didn't select an encryption key for one of "
-                         "the recipients. This person will not be able to "
+                  ? i18n("You did not select an encryption key for one of "
+                         "the recipients; this person will not be able to "
                          "decrypt the message if you encrypt it.")
-                  : i18n("You didn't select encryption keys for some of "
-                         "the recipients. These persons will not be able to "
+                  : i18n("You did not select encryption keys for some of "
+                         "the recipients; these persons will not be able to "
                          "decrypt the message if you encrypt it." );
     QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     int ret = KMessageBox::warningYesNoCancel( 0, str,
@@ -918,7 +918,7 @@ Module::selectSecretKey( const QString& title,
     return selectKey( secretKeys(), title, text, keyId, SecretKeys );
   }
   else {
-    KMessageBox::sorry( 0, i18n("You either don't have GnuPG/PGP installed "
+    KMessageBox::sorry( 0, i18n("You either do not have GnuPG/PGP installed "
                                 "or you chose not to use GnuPG/PGP.") );
     return KeyID();
   }
@@ -953,7 +953,7 @@ Module::selectPublicKey( const QString& title,
     return keyId;
   }
   else {
-    KMessageBox::sorry( 0, i18n("You either don't have GnuPG/PGP installed "
+    KMessageBox::sorry( 0, i18n("You either do not have GnuPG/PGP installed "
                                 "or you chose not to use GnuPG/PGP.") );
     return KeyID();
   }
@@ -989,7 +989,7 @@ Module::selectPublicKeys( const QString& title,
     return keyIds;
   }
   else {
-    KMessageBox::sorry( 0, i18n("You either don't have GnuPG/PGP installed "
+    KMessageBox::sorry( 0, i18n("You either do not have GnuPG/PGP installed "
                                 "or you chose not to use GnuPG/PGP.") );
     return KeyIDList();
   }

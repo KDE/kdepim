@@ -143,7 +143,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 			       << i18n("PGP Version 2.x")
 			       << i18n("PGP Version 5.x")
 			       << i18n("PGP Version 6.x")
-			       << i18n("Don't use any encryption tool") );
+			       << i18n("Do not use any encryption tool") );
   label->setBuddy( toolCombo );
   hbox->setStretchFactor( toolCombo, 1 );
   connect( toolCombo, SIGNAL( activated( int ) ),
