@@ -1,6 +1,11 @@
 ChangeLog for KNotes
 ====================
 
+2002/05/21  Michael Brade <brade@kde.org>
+
+    * support for a note on different desktops: check position and
+      let KWin do the placement if it is illegal
+
 2002/10/04  Michael Brade <brade@kde.org>
 
     * fixed cut, paste, undo and redo activation
