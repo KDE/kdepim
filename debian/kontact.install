@@ -1,6 +1,6 @@
 debian/tmp/usr/bin/kontact
-debian/tmp/usr/lib/libkontact.*
-debian/tmp/usr/lib/libkpinterfaces.*
+debian/tmp/usr/lib/libkontact.so.*
+debian/tmp/usr/lib/libkpinterfaces.so.*
 debian/tmp/usr/lib/kde3/kcm_kontact.la
 debian/tmp/usr/lib/kde3/kcm_kontact.so
 debian/tmp/usr/lib/kde3/libkontact_kaddressbookplugin.so

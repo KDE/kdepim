@@ -36,3 +36,8 @@ debian/tmp/usr/lib/libksieve.so
 debian/tmp/usr/lib/libkaddressbook.so
 debian/tmp/usr/lib/libkabinterfaces.so
 debian/tmp/usr/lib/libkabinterfaces.la
+debian/tmp/usr/lib/libkontact.so
+debian/tmp/usr/lib/libkontact.la
+debian/tmp/usr/lib/libkpinterfaces.so
+debian/tmp/usr/lib/libkpinterfaces.la
+
