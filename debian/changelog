@@ -1,8 +1,8 @@
-kdepim (4:2.1-20001210-0) unstable; urgency=low
+kdepim (4:2.1-20001212-0) unstable; urgency=low
 
   * New upstream cvs version
 
- -- Ivan E. Moore II <rkrusty@debian.org>  Sun, 10 Dec 2000 16:00:00 -0700
+ -- Ivan E. Moore II <rkrusty@debian.org>  Tue, 12 Dec 2000 16:00:00 -0700
 
 kdepim (2.0-20001011-0) unstable; urgency=low
  
