@@ -570,7 +570,7 @@ IMAP4Protocol::listDir (const KURL & _url)
     }
   }
   if ( !selectInfo.alert().isNull() ) {
-    warning( selectInfo.alert() );
+    warning( i18n( "Message from %1: %2" ).arg( myHost ).arg( selectInfo.alert() ) );
     selectInfo.setAlert( 0 );
   }
 
@@ -827,7 +827,9 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
     }
     else
     {
-      error (ERR_COULD_NOT_WRITE, myHost);
+      //error (ERR_COULD_NOT_WRITE, myHost);
+      // Better ship the error message, e.g. "Over Quota"
+      error (ERR_SLAVE_DEFINED, cmd->resultInfo());
     }
 
     completeQueue.removeRef (cmd);
