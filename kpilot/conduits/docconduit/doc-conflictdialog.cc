@@ -110,7 +110,7 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 			cE.resolution->setCurrentItem((int)si.direction);
 			resolutionGroupBoxLayout->addWidget( cE.resolution, cE.index, 1);
 
-			cE.info = new QPushButton( i18n("More Infos..."), big_box );
+			cE.info = new QPushButton( i18n("More Info..."), big_box );
 			resolutionGroupBoxLayout->addWidget(cE.info, cE.index, 2);
 			bgroup->insert(cE.info);
 
