@@ -130,6 +130,13 @@ static bool checkSplitEmailAddrList( const QString& input, const QString& expRes
   return true;
 }
 
+static bool checkNormalizeAddressesAndEncodeIDNs( const QString& input, const QString& expResult )
+{
+  QString result = KPIM::normalizeAddressesAndEncodeIDNs( input );
+  check( "normalizeAddressesAndEncodeIDNs " + input + " result ", result, expResult );
+  return true;
+}
+
 int main(int argc, char *argv[])
 {
   KApplication::disableAutoDcopRegistration();
@@ -304,7 +311,13 @@ int main(int argc, char *argv[])
   checkSplitEmailAddrList( "Matt Douhan <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", "Matt Douhan <matt@fruitsalad.org>,Foo Bar <foo@bar.com>" );
   checkSplitEmailAddrList( "\"Matt, Douhan\" <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", "\"Matt, Douhan\" <matt@fruitsalad.org>,Foo Bar <foo@bar.com>" );
 
-
+  // check checkNormalizeAddressesAndEncodeIDNs
+  checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org", "matt@fruitsalad.org" );
+  checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan <matt@fruitsalad.org>", "Matt Douhan <matt@fruitsalad.org>" );
+  checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan (jongel) <matt@fruitsalad.org>", "Matt Douhan (jongel) <matt@fruitsalad.org>" );
+  checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan (jongel,fibbel) <matt@fruitsalad.org>", "Matt Douhan (jongel,fibbel) <matt@fruitsalad.org>" );
+  checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org (jongel,fibbel)", "\"jongel,fibbel\" <matt@fruitsalad.org>" );
+  checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org (\"jongel,fibbel\")", "\"jongel,fibbel\" <matt@fruitsalad.org>" );
 
   printf("\nTest OK !\n");
 
