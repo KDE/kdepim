@@ -70,8 +70,8 @@ kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-kpilot_LDADD		= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
-kpilotDaemon_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la -lkabc
+kpilot_LDADD		= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la $(LIB_KABC)
+kpilotDaemon_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la $(LIB_KABC)
 kpilotTest_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
 kpilotConfig_LDADD      = $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
 
