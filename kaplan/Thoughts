@@ -175,10 +175,15 @@ d their application using the native protocol (DCOP, Corba, etc).
 s It is only efficient in the sense that it won't do a roundtrip to the server but
 s dispatch locally. What remains is the datastream marshalling. Not necessarily
 s ueberfast. But I think the point is a different one: It is simply not as intuitive
-s to use as C++. Yes, DCOPRef already helps a lot for simple calls, but it stops
-s being intuitive (and fast) when using DCOP signals/slots (causing roundtrips) .
-s I have the impression that DCOP was used to work around an implementation detail
-s of certain applications.
+s to use as C++. Yes, DCOPRef already helps a lot for simple calls, but talking to
+s remote components still requires one to do error checking after each method call.
+s in addition the stub objects one deals with (AddressBookIface_stub for example)
+s are no real references. To the programmer they look like a reference to a
+s remote addressbook component, but it really isn't. there is no state involved.
+s like if between two method calls on the stub the addressbook process gets restarted,
+s the state is lost and the programmer on the client side has no way to find out
+s about that. you'll end up with really complex code on the caller side to handle things
+s like that.
 
 d Yes, but of course one should always prefer in-process IPC if possible. DCOP
 d currently _works_ for kaplan, but that's all about it. It isn't exactly elegant.
