@@ -127,6 +127,8 @@ public:
 
   bool isMultiDay() const {
     return ((fAppointmentInfo.repeatType == repeatDaily) &&
+            (fAppointmentInfo.repeatFrequency == 1) &&
+            (!fAppointmentInfo.repeatForever) &&
             fAppointmentInfo.event);
   }
 
@@ -151,6 +153,9 @@ private:
 
 
 // $Log$
+// Revision 1.5  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.4  2002/04/16 23:42:27  kainhofe
 // setExceptions now deletes the old exceptions array to prevent memory leaks
 //

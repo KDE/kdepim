@@ -391,9 +391,11 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 {
 	FUNCTIONSETUP;
 
-	if ((dateEntry->getRepeatType() == repeatNone) ||
-		(dateEntry->getRepeatType() == repeatDaily && dateEntry->isEvent()))
+	if ((dateEntry->getRepeatType() == repeatNone) || dateEntry->isMultiDay())
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": no recurrence to set"<<endl;
+#endif
 		return;
 	}
 
@@ -421,7 +423,7 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 	switch(dateEntry->getRepeatType())
 	{
 	case repeatDaily:
-		if (repeatsForever) recur->setDaily(freq,0);
+		if (repeatsForever) recur->setDaily(freq,-1);
 		else recur->setDaily(freq,endDate);
 		break;
 	case repeatWeekly:
@@ -446,41 +448,45 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 			if (days[i]) dayArray.setBit(i-1);
 		}
 
-		if (repeatsForever) recur->setWeekly(freq,dayArray,0);
+		if (repeatsForever) recur->setWeekly(freq,dayArray,-1);
 		else recur->setWeekly(freq,dayArray,endDate);
 		}
 		break;
 	case repeatMonthlyByDay:
 		if (repeatsForever)
 		{
-			recur->setMonthly(Recurrence_t::rMonthlyPos,freq,0);
+			recur->setMonthly(Recurrence_t::rMonthlyPos,freq,-1);
 		}
 		else
 		{
 			recur->setMonthly(Recurrence_t::rMonthlyPos,freq,endDate);
 		}
 
-		dayArray.setBit(dateEntry->getRepeatDay() % 7);
-		recur->addMonthlyPos((dateEntry->getRepeatDay() / 7) + 1,dayArray);
+		dayArray.setBit((dateEntry->getRepeatDay()-1) % 7);
+		recur->addMonthlyPos(( (dateEntry->getRepeatDay()-1) / 7) + 1, dayArray);
 		break;
 	case repeatMonthlyByDate:
 		if (repeatsForever)
 		{
-			recur->setMonthly(Recurrence_t::rMonthlyDay,freq,0);
+			recur->setMonthly(Recurrence_t::rMonthlyDay,freq,-1);
 		}
 		else
 		{
 			recur->setMonthly(Recurrence_t::rMonthlyDay,freq,endDate);
 		}
+		recur->addMonthlyDay( dateEntry->getEventStart().tm_mday );
 		break;
 	case repeatYearly:
 		if (repeatsForever)
 		{
-			recur->setYearly(Recurrence_t::rYearlyDay,freq,0);
+			recur->setYearly(Recurrence_t::rYearlyPos,freq,-1);
 		}
 		else
 		{
-			recur->setYearly(Recurrence_t::rYearlyDay,freq,endDate);                }
+			recur->setYearly(Recurrence_t::rYearlyPos,freq,endDate);
+		}
+		
+// TODO:		recur->addYearlyNum( dateEntry->getRepeatDay
 		break;
 	case repeatNone:
 	default :
@@ -498,28 +504,44 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *event)
 {
 	FUNCTIONSETUP;
+	bool isMultiDay=false;
+
+	//  first we have 'fake type of recurrence' when a multi-day event is passed to the pilot, it is converted to an event
+	// which recurs daily a number of times. if the event itself recurs, this will be overridden, and
+	// only the first day will be included in the event!!!!
+	QDateTime startDt(readTm(dateEntry->getEventStart())), endDt(readTm(dateEntry->getEventEnd()));
+	if (startDt.daysTo(endDt))
+	{
+		isMultiDay=true;
+		dateEntry->setRepeatType(repeatDaily);
+		dateEntry->setRepeatFrequency(1);
+		dateEntry->setRepeatEnd(dateEntry->getEventEnd());
+#ifdef DEBUG
+		DEBUGCONDUIT << fname <<": Setting single-day recurrence (" << startDt.toString() << " - " << endDt.toString() << ")" <<endl;
+#endif
+	}
+
 
 	KCal::Recurrence*r=event->recurrence();
 	if (!r) return;
-
 	ushort recType=r->doesRecur();
+	if (recType==KCal::Recurrence::rNone)
+	{
+		if (!isMultiDay) dateEntry->setRepeatType(repeatNone);
+		return;
+	}
+
+
 	int freq=r->frequency();
 	QDate endDate=r->endDate();
-	QDateTime startDt(readTm(dateEntry->getEventStart())), endDt(readTm(dateEntry->getEventEnd()));
 
-	// whether we have to recalc the end date depending on the duration and the recurrence type
-	bool needCalc=( (!endDate.isValid()) && (r->duration()>0));
-	// TODO: What if duration>0 and the date is valid???
-	if (r->duration()<=0)
+	if (!endDate.isValid())
 	{
-		if (!endDate.isValid())
-		{
-			dateEntry->setRepeatForever();
-		}
-		else
-		{
-			dateEntry->setRepeatEnd(writeTm(endDate));
-		}
+		dateEntry->setRepeatForever();
+	}
+	else
+	{
+		dateEntry->setRepeatEnd(writeTm(endDate));
 	}
 	dateEntry->setRepeatFrequency(freq);
 #ifdef DEBUG
@@ -527,31 +549,11 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 	DEBUGCONDUIT<< "duration: "<<r->duration() << ", endDate: "<<endDate.toString()<< ", ValidEndDate: "<<endDate.isValid()<<", NullEndDate: "<<endDate.isNull()<<endl;
 #endif
 
-	//  first we have 'fake type of recurrence' when a multi-day
-	// event is passed to the pilot, it is converted to an event
-	// which recurs daily a number of times.
-	// if the event itself recurs, this will be overridden, and
-	// only the first day will be included in the event!!!!
-	if (startDt.daysTo(endDt))
-	{
-		// multi day event
-		dateEntry->setRepeatType(repeatDaily);
-		dateEntry->setRepeatFrequency(1);
-		dateEntry->setRepeatEnd(dateEntry->getEventEnd());
-#ifdef DEBUG
-		DEBUGCONDUIT << fname <<": Setting single-day recurrence (" << startDt.toString() <<
-			" - " << endDt.toString() << ")" <<endl;
-#endif
-	}
 	QBitArray dayArray(7), dayArrayPalm(7);
 	switch(recType)
 	{
 	case KCal::Recurrence::rDaily:
 		dateEntry->setRepeatType(repeatDaily);
-		if (needCalc)
-		{
-			dateEntry->setRepeatEnd(writeTm( startDt.addDays(freq*r->duration()) ));
-		}
 		break;
 	case KCal::Recurrence::rWeekly:
 		dateEntry->setRepeatType(repeatWeekly);
@@ -562,10 +564,6 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 			dayArrayPalm.setBit( (i+1)%7, dayArray[i]);
 		}
 		dateEntry->setRepeatDays(dayArrayPalm);
-		if (needCalc)
-		{
-			dateEntry->setRepeatEnd(writeTm( startDt.addDays(freq*7*r->duration()) ));
-		}
 		break;
 	case KCal::Recurrence::rMonthlyPos:
 		dateEntry->setRepeatType(repeatMonthlyByDay);
@@ -581,27 +579,16 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 				if (dayArray[j]) pos=j;
 			dateEntry->setRepeatDay(static_cast<DayOfMonthType>(7*(mp->rPos-1) + pos));
 		}
-		if (needCalc)
-		{
-			dateEntry->setRepeatEnd(writeTm( startDt.addMonths(freq*r->duration()) ));
-		}
 		break;
 	case KCal::Recurrence::rMonthlyDay:
 		dateEntry->setRepeatType(repeatMonthlyByDate);
-		if (needCalc)
-		{
-			dateEntry->setRepeatEnd(writeTm( startDt.addMonths(freq*r->duration()) ));
-		}
+//TODO: is this needed?		dateEntry->setRepeatDay(static_cast<DayOfMonthType>(startDt.day()));
 		break;
 	case KCal::Recurrence::rYearlyDay:
 		dateEntry->setRepeatType(repeatYearly);
-		if (needCalc)
-		{
-			dateEntry->setRepeatEnd(writeTm( startDt.addYears(freq*r->duration()) ));
-		}
 		break;
 	case KCal::Recurrence::rNone:
-		dateEntry->setRepeatType(repeatNone);
+		if (!isMultiDay) dateEntry->setRepeatType(repeatNone);
 		break;
 	default:
 #ifdef DEBUG
@@ -621,8 +608,7 @@ void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry *dateEn
 	// At the end of the function, apply the (possibly empty) exception list.
 	KCal::DateList dl;
 
-	if ( !((dateEntry->getRepeatType() == repeatDaily) &&
-		dateEntry->getEvent()) || dateEntry->getExceptionCount()>0 )
+	if ( !(dateEntry->isMultiDay() ) && dateEntry->getExceptionCount()>0 )
 	{
 		for (int i = 0; i < dateEntry->getExceptionCount(); i++)
 		{
@@ -638,7 +624,7 @@ void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry *dateEn
 		<< dateEntry->getDescription()
 		<< endl ;
 #endif
-//		return;
+		return;
 	}
 	vevent->setExDates(dl);
 }
@@ -690,6 +676,11 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.69  2002/07/20 18:17:04  cschumac
+// Renamed Calendar::getAllEvents() to Calendar::events().
+// Removed get prefix from Calendar functions returning events.
+// Finally we now have a consistent naming scheme in Calendar.
+//
 // Revision 1.68  2002/06/12 22:11:17  kainhofe
 // Proper cleanup, libkcal still has some problems marking records modified on loading
 //

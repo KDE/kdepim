@@ -245,6 +245,7 @@ there are two special cases: a full and a first sync.
 		<<", conflictResolution = "<<conflictResolution<<", archive = "<<archive<<endl;
 #endif
 
+	addSyncLogEntry(i18n("Syncing with file \"%s\"").arg(fCalendarFile));
 	pilotindex=0;
 	switch (nextSyncAction)
 	{
@@ -365,7 +366,7 @@ void VCalConduitBase::syncPalmRecToPC()
 	// first, delete the dirty flag from the palm database. Prolly should do this after the record has been synced
 //	r->setAttrib(r->getAttrib() & ~dlpRecAttrDirty);
 //	fDatabase->writeRecord(r);
-	bool archiveRecord=(r->getAttrib() & dlpRecAttrArchived);
+	bool archiveRecord=(r->isArchived());//getAttrib() & dlpRecAttrArchived);
 
 	s = fLocalDatabase->readRecordById(r->getID());
 	if (!s || fFirstTime)
@@ -463,7 +464,7 @@ void VCalConduitBase::syncPCRecToPalm()
 
 void VCalConduitBase::syncDeletedIncidence()
 {
-//	FUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	PilotRecord *r = fLocalDatabase->readRecordByIndex(pilotindex++);
 	if (!r || fFullSync || fFirstTime)
@@ -475,17 +476,24 @@ void VCalConduitBase::syncDeletedIncidence()
 	KCal::Incidence *e = fP->findIncidence(r->getID());
 	if (!e)
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT<<"didn't find incidence with id="<<r->getID()<<", deleting it"<<endl;
+#endif
 		// entry was deleted from Calendar, so delete it from the palm
-		PilotRecord*s=fLocalDatabase->readRecordById(r->getID());
-		if (s)
-		{
-			// delete the record from the palm
-			s->setAttrib(s->getAttrib() & ~dlpRecAttrDeleted & ~dlpRecAttrDirty);
-			fDatabase->writeRecord(s);
-			KPILOT_DELETE(s);
-		}
-		r->setAttrib(r->getAttrib() & ~dlpRecAttrDeleted & ~dlpRecAttrDirty);
-		fLocalDatabase->writeRecord(r);
+//		PilotRecord*s=fLocalDatabase->readRecordById(r->getID());
+//		if (s)
+//		{
+//			// delete the record from the palm
+//			s->makeDeleted();
+////			s->setAttrib(s->getAttrib() & ~dlpRecAttrDeleted & ~dlpRecAttrDirty);
+//			fDatabase->writeRecord(s);
+//			KPILOT_DELETE(s);
+//		}
+		deletePalmRecord(NULL, r);
+//		r->makeDeleted();
+////		r->setAttrib(r->getAttrib() & ~dlpRecAttrDeleted & ~dlpRecAttrDirty);
+//		fLocalDatabase->writeRecord(r);
+//		fDatabase->writeRecord(r);
 	}
 
 	KPILOT_DELETE(r);
@@ -575,6 +583,7 @@ KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 		}
 		// no conflict or conflict resolution says, Palm overwrites, so do it:
 		incidenceFromRecord(e,de);
+		e->setSyncStatus(KCal::Incidence::SYNCNONE);
 		fLocalDatabase->writeRecord(r);
 	}
 	else
@@ -628,7 +637,8 @@ void VCalConduitBase::deletePalmRecord(KCal::Incidence*e, PilotRecord*s)
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": deleting record " << s->getID() << endl;
 #endif
-		s->setAttrib(s->getAttrib() & ~dlpRecAttrDeleted);
+		s->makeDeleted();
+//		s->setAttrib(s->getAttrib() & ~dlpRecAttrDeleted);
 		fDatabase->writeRecord(s);
 		fLocalDatabase->writeRecord(s);
 	}
@@ -653,6 +663,13 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 #endif
 		return;
 	}
+	if (e->syncStatus()==KCal::Incidence::SYNCDEL)
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": don't write deleted incidence "<<e->summary()<<" to the palm"<<endl;
+#endif
+		return;
+	}
 	PilotRecord*r=recordFromIncidence(de, e);
 
 	// TODO: Check for conflict!
@@ -660,7 +677,7 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 	{
 		recordid_t id=fDatabase->writeRecord(r);
 		r->setID(id);
-		r->setAttrib(r->getAttrib() & ~dlpRecAttrDeleted);
+//		r->setAttrib(r->getAttrib() & ~dlpRecAttrDeleted);
 		fLocalDatabase->writeRecord(r);
 //		fDatabase->writeRecord(r);
 		e->setSyncStatus(KCal::Incidence::SYNCNONE);
@@ -671,6 +688,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.14  2002/07/09 22:38:04  kainhofe
+// Implemented a first (not-yet-functional) version of the category sync
+//
 // Revision 1.13  2002/07/05 00:00:00  kainhofe
 // Add deleted record only if archived are supposed to be synced
 //

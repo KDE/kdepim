@@ -216,7 +216,7 @@ void TodoConduit::postSync()
 
 PilotRecord*TodoConduit::recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e)
 {
-	// don't need to chech for null pointers here, the recordFromIncidence(PTE*, KCal::Todo*) will do that.
+	// don't need to check for null pointers here, the recordFromIncidence(PTE*, KCal::Todo*) will do that.
 	return recordFromIncidence(dynamic_cast<PilotTodoEntry*>(de), dynamic_cast<const KCal::Todo*>(e));
 }
 
@@ -246,6 +246,10 @@ PilotRecord*TodoConduit::recordFromIncidence(PilotTodoEntry*de, const KCal::Todo
 	// TODO: take recurrence (code in VCAlConduit) from ActionNames
 	// TODO: take categories from the pilot
 	de->setCat(_getCat(de->getCat(), todo->categories()));
+#ifdef DEBUG
+	DEBUGCONDUIT<<"old Category="<<de->getCat()<<", new cat will be "<<_getCat(de->getCat(), todo->categories())<<endl;
+	DEBUGCONDUIT<<"Available Categories: "<<todo->categories().join(" - ")<<endl;
+#endif
 	
 	// TODO: sync the alarm from ActionNames. Need to extend PilotTodoEntry
 	de->setPriority(todo->priority());
@@ -363,6 +367,10 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 
 
 // $Log$
+// Revision 1.17  2002/07/20 17:40:34  cschumac
+// Renamed Calendar::getTodoList() to Calendar::todos().
+// Removed get prefix from Calendar functions returning todos.
+//
 // Revision 1.16  2002/07/09 22:38:04  kainhofe
 // Implemented a first (not-yet-functional) version of the category sync
 //
