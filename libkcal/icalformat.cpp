@@ -353,15 +353,25 @@ FreeBusy *ICalFormat::parseFreeBusy( const QString &str )
 
   if ( !message ) return 0;
 
+  FreeBusy *freeBusy = 0;
+
   icalcomponent *c;
-  c = icalcomponent_get_first_component( message, ICAL_VFREEBUSY_COMPONENT );
-  if ( c ) {
-    return mImpl->readFreeBusy( c );
-  } else {
+  for ( c = icalcomponent_get_first_component( message, ICAL_VFREEBUSY_COMPONENT );
+        c != 0; c = icalcomponent_get_next_component( message, ICAL_VFREEBUSY_COMPONENT ) ) {
+    FreeBusy *fb = mImpl->readFreeBusy( c );
+
+    if ( freeBusy ) {
+      freeBusy->merge( fb );
+      delete fb;
+    } else {
+      freeBusy = fb;
+    }
+  }
+
+  if ( !freeBusy )
     kdDebug(5800) << "ICalFormat:parseFreeBusy: object is not a freebusy."
                   << endl;
-    return 0;
-  }
+  return freeBusy;
 }
 
 ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,

@@ -109,7 +109,7 @@ class LIBKCAL_EXPORT ICalFormat : public CalFormat
       Parse FREEBUSY object.
     */
     FreeBusy *parseFreeBusy( const QString & );
-    
+
     /**
       Set id of used time zone and whether this time zone is UTC or not.
     */

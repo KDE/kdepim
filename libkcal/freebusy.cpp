@@ -223,3 +223,16 @@ void FreeBusy::addPeriod( const QDateTime &start, const Duration &dur )
   sortList();
 }
 
+void FreeBusy::merge( FreeBusy *freeBusy )
+{
+  if ( freeBusy->dtStart() < dtStart() )
+    setDtStart( freeBusy->dtStart() );
+
+  if ( freeBusy->dtEnd() > dtEnd() )
+    setDtEnd( freeBusy->dtEnd() );
+
+  QValueList<Period> periods = freeBusy->busyPeriods();
+  QValueList<Period>::ConstIterator it;
+  for ( it = periods.begin(); it != periods.end(); ++it )
+    addPeriod( (*it).start(), (*it).end() );
+}

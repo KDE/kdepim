@@ -57,6 +57,8 @@ class LIBKCAL_EXPORT FreeBusy : public IncidenceBase
     void addPeriod( const QDateTime &start, const QDateTime &end );
     void addPeriod( const QDateTime &start, const Duration &dur );
     void sortList();
+
+    void merge( FreeBusy *freebusy );
     
   private:
     bool accept( Visitor &v ) { return v.visit( this ); }
