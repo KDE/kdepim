@@ -258,7 +258,7 @@ bool KNProtocolClient::sendCommandWCheck(const QCString &cmd, int rep)
 bool KNProtocolClient::sendMsg(const QCString &msg)
 {
   const char *line = msg.data();
-  char *end;
+  const char *end;
   QCString buffer;
   size_t length;
   char inter[10000];
@@ -266,7 +266,7 @@ bool KNProtocolClient::sendMsg(const QCString &msg)
   progressValue = 100;
   predictedLines = msg.length()/80;   // rule of thumb
 
-  while ((end = strstr(line,"\r\n"))) {
+  while ((end = ::strstr(line,"\r\n"))) {
     if (line[0]=='.')                     // expand one period to double period...
       buffer.append(".");
     length = end-line+2;
