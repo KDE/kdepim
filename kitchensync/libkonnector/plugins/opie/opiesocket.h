@@ -31,9 +31,11 @@ Q_OBJECT
   void write(const QString &, const QByteArray & );
   void write(QPtrList<KSyncEntry> );
   void write(QValueList<KOperations> );
- signals:
+
+signals:
   void sync( QPtrList<KSyncEntry> );
   void errorKonnector(int, QString );
+  void stateChanged( bool );
 
  private:
     void newPartner();

@@ -100,6 +100,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     // Source
     m_lblSrcIp = new QLabel(i18n("Source Address: "),  m_grpConnection);
     m_conSrcIp = new QComboBox(m_grpConnection);
+    m_conSrcIp->setEditable( TRUE );
     m_lblSrcIp->setBuddy( m_conSrcIp );
     m_conLayout->addWidget(m_lblSrcIp, 1, 0 );
     m_conLayout->addWidget(m_conSrcIp, 1, 1 );
@@ -113,6 +114,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     //Destination
     m_lblDestIp = new QLabel(i18n("Destination Address: "),  m_grpConnection );
     m_conDestIp = new QComboBox(m_grpConnection);
+    m_conDestIp->setEditable( TRUE );
     m_lblDestIp->setBuddy( m_conDestIp );
     m_conLayout->addWidget( m_lblDestIp, 1, 3 );
     m_conLayout->addWidget( m_conDestIp, 1, 4 );
@@ -130,6 +132,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     //user
     m_lblUser = new QLabel(i18n("User:"), m_grpConnection );
     m_conUser = new QComboBox(m_grpConnection );
+    m_conUser->setEditable( TRUE );
     m_lblUser->setBuddy( m_conUser );
     m_conLayout->addWidget( m_lblUser,  2,  0 );
     m_conLayout->addWidget( m_conUser,  2,  1 );
@@ -137,6 +140,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     //pass
     m_lblPass = new QLabel(i18n("Password:"),  m_grpConnection );
     m_conPass = new QComboBox( m_grpConnection );
+    m_conPass->setEditable( TRUE );
     m_lblPass->setBuddy( m_conPass );
     m_conLayout->addWidget( m_lblPass,  2,  3 );
     m_conLayout->addWidget( m_conPass,  2,  4 );
@@ -159,6 +163,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     // port
     m_lblPort = new QLabel( i18n("Port:"),  m_grpConnection);
     m_conPort = new QComboBox( m_grpConnection );
+    m_conPort->setEditable(TRUE);
     m_lblPort->setBuddy( m_conPort );
     m_conLayout->addWidget( m_lblPort,  3,  0 );
     m_conLayout->addWidget( m_conPort,  3,  1 );
@@ -187,6 +192,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     // Devices
     m_lblDevice = new QLabel( i18n("Device: "), m_grpModel );
     m_cmbDevice = new QComboBox( m_grpModel );
+    m_cmbDevice->setEditable( TRUE );
     m_lblDevice->setBuddy( m_cmbDevice );
     m_grpLayout->addWidget( m_lblDevice, 1,  0 );
     m_grpLayout->addWidget( m_cmbDevice, 1,  1 );
@@ -203,6 +209,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     // Connection Mode usb, paralell, net,....
     m_lblConnection = new QLabel( i18n("Connection:"),  m_grpModel );
     m_cmbConnection = new QComboBox( m_grpModel );
+    m_cmbConnection->setEditable( TRUE );
     m_lblConnection->setBuddy( m_cmbConnection );
     m_grpLayout->addWidget( m_lblConnection, 2, 0 );
     m_grpLayout->addWidget( m_cmbConnection, 2, 1 );
@@ -220,6 +227,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     //Mode USER
     m_grpUser = new QLabel( i18n("User:"),  m_grpModel );
     m_cmbUser = new QComboBox( m_grpModel );
+    m_cmbUser->setEditable( TRUE );
     m_grpUser->setBuddy( m_cmbUser );
     m_grpLayout->addWidget(m_grpUser,  3, 0);
     m_grpLayout->addWidget(m_cmbUser,  3, 1);
@@ -230,6 +238,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_grpPass = new QLabel( i18n("Pass:"),  m_grpModel );
     m_cmbPass = new QComboBox( m_grpModel );
     m_grpPass->setBuddy( m_cmbPass );
+    m_cmbPass->setEditable( TRUE );
     m_grpLayout->addWidget( m_grpPass,  4, 0 );
     m_grpLayout->addWidget( m_cmbPass,  4, 1 );
     m_grpPass->setEnabled( false );

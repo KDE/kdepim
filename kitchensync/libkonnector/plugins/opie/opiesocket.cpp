@@ -115,6 +115,7 @@ void OpieSocket::startUp() // start the connection
     d->startSync = false;
     d->isConnecting = true;
     d->m_categories.clear();
+    d->isSyncing = false;
     d->socket->connectToHost(d->dest, 4243 );
 }
 bool OpieSocket::startSync()
@@ -175,6 +176,11 @@ void OpieSocket::write(QValueList<KOperations> )
 void OpieSocket::slotError(int error )
 {
     kdDebug() << "error" << endl;
+    d->isSyncing = false;
+    d->isConnecting = false;
+
+    emit stateChanged( false );
+    emit errorKonnector(error, "Connection Fehlschlag");
 }
 void OpieSocket::slotConnected()
 {
@@ -234,6 +240,7 @@ void OpieSocket::process()
 		    d->timer = new QTimer(this );
 		    connect(d->timer, SIGNAL(timeout() ), this, SLOT(slotNOOP() ) );
 		    d->timer->start(10000 );
+                    emit stateChanged( true );
 		}
 		break;
 	    }
@@ -363,7 +370,9 @@ void OpieSocket::manageCall(const QString &line )
 	    // done with fetching
             // come back to the normal mode
             // emit signal
+            emit sync( d->m_sync );
             stream << "call QPE/System stopSync()" << endl;
+            d->isSyncing = false;
             d->mode = d->NOOP;
 	    break;
 	}

@@ -32,9 +32,11 @@ OpiePlugin::OpiePlugin(QObject *obj, const char *name, const QStringList )
     kdDebug() << "OpiePlugin ";
     d = new OpiePluginPrivate;
     d->socket = new OpieSocket(this, "opiesocket");
+
     connect(d->socket, SIGNAL(sync(QPtrList<KSyncEntry> ) ),
 	    this, SLOT(slotSync(QPtrList<KSyncEntry> ) ) );
-    connect(d->socket, SIGNAL(errorKonnnector(int, QString ) ),
+
+    connect(d->socket, SIGNAL(errorKonnector(int, QString ) ),
 	    this, SLOT(slotErrorKonnector(int, QString) ) );
 }
 OpiePlugin::~OpiePlugin()

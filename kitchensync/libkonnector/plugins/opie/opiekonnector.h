@@ -34,10 +34,14 @@ Q_OBJECT
  private:
   class OpiePluginPrivate;
   OpiePluginPrivate *d;
-
+signals:
+    void sync(const QString&, QPtrList<KSyncEntry> );
+    void errorKonnector(const QString&, int, const QString& );
+    void stateChanged( const QString&,  bool );
  private slots:
   void slotSync( QPtrList<KSyncEntry> );
   void slotErrorKonnector(int , QString );
+
 };
 
 
