@@ -36,6 +36,29 @@ TODO LIST (Ignore the file TODO)
 * GJJ: Create good icons for the kpalmdoc converter application.
 
 
+KPilot Developer's notes for March 26th, 2003
+=============================================
+
+2003-3-26  Adriaan de Groot
+* pilotLocalDatabase.cc [BOTH] Qt 3.0 compatibility.
+* More merging: lib/ just spacing fixes.
+* kpilot/ In HEAD, muck about with the toggle actions that were removed
+  from kpilot.cc. This stuff is supposed to build in all KDE 3.x.
+* I've been thinking about _where_ to hack next. HEAD is evolving 
+  further under Reinhold's influence, and I feel pretty much stymied
+  in BRANCH because I can't touch strings and the like. However, I'm
+  still running KDE 3.1 and dedicated to KDE 3.0 compatibility as well.
+  Since the things I want to change are in lib/ and kpilot/ and affect
+  strings, I'm going to pick up those from HEAD, but stick to BRANCH
+  conduits for the next while. Then I can catch up with HEAD in the
+  conduits one by one. So initial KPilot 4.4.x tarballs will be from
+  a mix of CVS branches. We might consider doing the conduit releases
+  separately from KPilot itself - more 3rd party-ish - since the conduits
+  change far more drastically than KPilot itself.
+  
+  Initial plans for 4.4.0: disable editing in the viewers ; move the 
+  configuration things into the JanusWidget, and out of separate dialogs.
+
 2003-3-24  Reinhold Kainhofer
 * Adapted the layout of the addressbook conduit's setup dialog to
   resemble the one from the calendar/todo conduit
