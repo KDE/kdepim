@@ -235,8 +235,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
 
    f.setName(file);
    f.open(IO_ReadOnly);
-   Q_LONG linelen;
-   while ((linelen = f.readLine(line.data(), MAX_LINE))) {
+   while (f.readLine(line.data(), MAX_LINE)) {
       // Look for separator
       if (tempfile &&                                             // when we wrote to outfile
          (strncmp(line,MSG_SEPERATOR_START, msgSepLen)==0 &&  // quick compar
@@ -257,7 +256,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
          inf->current(i18n("Message %1").arg(n));
       }
 
-      tempfile->file()->writeBlock(line.data(), linelen);
+      tempfile->file()->writeBlock(line.data(), line.length());
    }
 
    if (tempfile) {
