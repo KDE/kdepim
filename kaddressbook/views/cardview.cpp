@@ -1606,7 +1606,6 @@ void CardView::tryShowFullText()
 
 void CardView::drawRubberBands( int pos )
 {
-qDebug("a");
   if ( pos && d && 
        (!d->span || ((pos-d->firstX)/d->span) - d->colspace - d->mSepWidth < MIN_ITEM_WIDTH) )
     return;
@@ -1621,28 +1620,23 @@ qDebug("a");
   p.setBrush( gray );
   uint n = d->first;
   // erase
-qDebug("b");
   if ( d->mRubberBandAnchor )
     do {
       p.drawRect( x, 0, 2, h );
       x += tmpcw;
       n++;
     } while ( x < visibleWidth() && n < d->mSeparatorList.count() );
-qDebug("c");
   // paint new
   if ( ! pos ) return;
   tmpcw = (pos - d->firstX)/d->span;
   n = d->first;
   x = d->firstX + tmpcw - d->mSepWidth - contentsX();
-qDebug("d");
   do {
       p.drawRect( x, 0, 2, h );
       x += tmpcw;
       n++;
   } while ( x < visibleWidth() && n < d->mSeparatorList.count() );
-qDebug("e");
   d->mRubberBandAnchor = pos;
-qDebug("f");
 }
 
 
