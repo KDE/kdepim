@@ -104,7 +104,7 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
   // Accounts / Mail
   list.clear();
   list << QString(" ")+i18n("Accounts") << i18n(" Mail");
-  frame = addHBoxPage(list, i18n("Mail Server"), BarIcon("mail_generic"));
+  frame = addHBoxPage(list, i18n("Mail Server (smtp)"), BarIcon("mail_generic"));
   widgets.append(new KNAccMailSettings(frame));
 
   // Appearance
