@@ -127,7 +127,7 @@ void TimeConduit::syncPCToPalm()
 	
 	if (major==3 && (minor==25 || minor==30)) 
 	{
-		emit logMessage(i18n("PalmOS 3.25 and 3.3 do not support setting the system time, so skipping the time conduit"));
+		emit logError(i18n("PalmOS 3.25 and 3.3 do not support setting the system time. Skipping the time conduit..."));
 		return;
 	}
 
@@ -140,6 +140,9 @@ void TimeConduit::syncPCToPalm()
 }
 
 // $Log$
+// Revision 1.5  2002/07/31 06:43:41  kainhofe
+// typographical errors
+//
 // Revision 1.4  2002/07/31 06:40:30  kainhofe
 // skip conduit for PalmOS 3.25 and 3.3, which don't support setting the time
 //
