@@ -10,6 +10,7 @@ libkleopatra_core_la_SOURCES = \
 	job.cpp \
 	\
 	multideletejob.cpp \
+	hierarchicalkeylistjob.cpp \
 	\
 	kconfigbasedkeyfilter.cpp \
 	keyfiltermanager.cpp
@@ -25,6 +26,7 @@ kleo_HEADERS = \
 	encryptjob.h decryptjob.h signjob.h verifydetachedjob.h verifyopaquejob.h \
 	decryptverifyjob.h signencryptjob.h \
 	multideletejob.h \
+	hierarchicalkeylistjob.h \
 	\
 	keyfilter.h \
 	keyfiltermanager.h
