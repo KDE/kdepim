@@ -93,6 +93,7 @@ void KAddressBookTableView::reconstructListView()
     }
 
   mListView = new ContactListView( this, core()->addressBook(), viewWidget() );
+  mListView->setFullWidth( true );
 
   // Add the columns
   KABC::Field::List fieldList = fields();
