@@ -114,6 +114,25 @@ KCal::Incidence *TodoConduitPrivate::findIncidence(recordid_t id)
 
 
 
+KCal::Incidence *TodoConduitPrivate::findIncidence(PilotAppCategory*tosearch)
+{
+	PilotTodoEntry*entry=dynamic_cast<PilotTodoEntry*>(tosearch);
+	if (!entry) return 0L;
+	
+	QString title=entry->getDescription();
+	QDateTime dt=readTm( entry->getDueDate() );
+	
+	KCal::Todo *event = fAllTodos.first();
+	while (event!=0)
+	{
+		if ( (event->dtDue().date() == dt.date()) && (event->summary() == title) ) return event;
+		event = fAllTodos.next();
+	}
+	return 0L;
+}
+
+
+
 KCal::Incidence *TodoConduitPrivate::getNextIncidence()
 {
 	if (reading) return fAllTodos.next();
@@ -420,6 +439,9 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 
 
 // $Log$
+// Revision 1.23  2002/08/23 11:13:28  adridg
+// Trying to be KDE 3.0.x compatible is hopeless
+//
 // Revision 1.22  2002/08/21 10:40:56  adridg
 // Whoops, bad assumptions on the version number in HEAD
 //

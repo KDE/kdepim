@@ -230,7 +230,7 @@ there are two special cases: a full and a first sync.
 
 	// don't do a first sync by default in any case, only when explicitely requested, or the backup
 	// database or the alendar are empty.
-	fFirstTime = (syncAction==SYNC_FIRST /*|| nextSyncAction!=0*/);
+	fFirstTime = (syncAction==SYNC_FIRST || nextSyncAction!=0);
 	usr=fHandle->getPilotUser();
 	// changing the PC or using a different Palm Desktop app causes a full sync
 	// Use gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
@@ -285,7 +285,6 @@ error:
 	fCalendarFile = fConfig->readEntry(VCalConduitFactoryBase::calendarFile);
 	syncAction = fConfig->readNumEntry(VCalConduitFactoryBase::syncAction);
 	nextSyncAction = fConfig->readNumEntry(VCalConduitFactoryBase::nextSyncAction);
-	fConfig->writeEntry(VCalConduitFactoryBase::nextSyncAction, 0);
 	conflictResolution = fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution);
 	archive = fConfig->readBoolEntry(VCalConduitFactoryBase::archive);
 }
@@ -312,8 +311,8 @@ error:
 		<< endl;
 #endif
 
-	emit logMessage(i18n("Using calendar file %1.")
-		.arg(fCalendarFile));
+//	emit logMessage(i18n("Using calendar file %1.")
+//		.arg(fCalendarFile));
 
 	fCalendar = new KCal::CalendarLocal(tz);
 	if ( !fCalendar)
@@ -337,7 +336,8 @@ error:
 	fP = newVCalPrivate(fCalendar);
 	if (!fP) return false;
 	fP->updateIncidences();
-	if (fP->count()<1) fFullSync=true;
+	if (fP->count()<1) //fFullSync=true;
+		fFirstTime=true;
 	
 	return (fCalendar && fP);
 }
@@ -377,16 +377,13 @@ void VCalConduitBase::syncPalmRecToPC()
 	// let subclasses do something with the record before we try to sync
 	preRecord(r);
 
-	// first, delete the dirty flag from the palm database. Prolly should do this after the record has been synced
-//	r->setAttrib(r->getAttrib() & ~dlpRecAttrDirty);
-//	fDatabase->writeRecord(r);
-	bool archiveRecord=(r->isArchived());//getAttrib() & dlpRecAttrArchived);
+	bool archiveRecord=(r->isArchived());
 
 	s = fLocalDatabase->readRecordById(r->getID());
 	if (!s || fFirstTime)
 	{
 #ifdef DEBUG
-		if (r->getID()>0)
+		if (r->getID()>0 && !s)
 		{
 			DEBUGCONDUIT<<"---------------------------------------------------------------------------"<<endl;
 			DEBUGCONDUIT<< fname<<": Could not read palm record with ID "<<r->getID()<<endl;
@@ -544,6 +541,15 @@ void VCalConduitBase::cleanup()
 }
 
 
+
+void VCalConduitBase::postSync()
+{
+	FUNCTIONSETUP;
+	fConfig->setGroup(configGroup());
+	fConfig->writeEntry(VCalConduitFactoryBase::nextSyncAction, 0);
+}
+
+
 KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 {
 	FUNCTIONSETUP;
@@ -554,13 +560,30 @@ KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 #endif
 
 	PilotAppCategory *de=newPilotEntry(r);
-	KCal::Incidence*e = newIncidence();
-	if (e && de)
+	KCal::Incidence*e =0L;
+	 
+	if (de) 
 	{
+		e=fP->findIncidence(de);
+		if (!e)
+		{
+			// no corresponding entry found, so create, copy and insert it.
+			e=newIncidence();
+			incidenceFromRecord(e,de);
+			fP->addIncidence(e);
+		}
+		else
+		{
+			// similar entry found, so just copy, no need to insert again
+			incidenceFromRecord(e,de);
+		}
+/*	if (e && de)
+	{
+		
 		incidenceFromRecord(e,de);
 		// TODO: find out if there is already an entry with this data...
 
-		fP->addIncidence(e);
+		fP->addIncidence(e);*/
 	}
 	KPILOT_DELETE(de);
 	return e;
@@ -706,6 +729,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.21  2002/08/23 22:59:30  kainhofe
+// Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
+//
 // Revision 1.20  2002/08/23 22:03:21  adridg
 // See ChangeLog - exec() becomes bool, debugging added
 //

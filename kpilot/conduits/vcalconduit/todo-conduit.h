@@ -67,6 +67,7 @@ public:
 	virtual void addIncidence(KCal::Incidence*);
 	virtual void removeIncidence(KCal::Incidence *);
 	virtual KCal::Incidence *findIncidence(recordid_t);
+	virtual KCal::Incidence *findIncidence(PilotAppCategory*tosearch);
 	virtual KCal::Incidence *getNextIncidence();
 	virtual KCal::Incidence *getNextModifiedIncidence();
 	virtual int count() {return fAllTodos.count();};
@@ -118,6 +119,9 @@ protected:
 } ;
 
 // $Log$
+// Revision 1.13  2002/08/15 10:47:56  kainhofe
+// Finished categories syncing for the todo conduit
+//
 // Revision 1.12  2002/07/28 17:27:54  cschumac
 // Move file loading/saving code from CalendarLocal to own class.
 //

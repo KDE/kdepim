@@ -63,6 +63,9 @@ public:
 	virtual void addIncidence(KCal::Incidence*);
 	virtual void removeIncidence(KCal::Incidence *);
 	virtual KCal::Incidence *findIncidence(recordid_t);
+	/** Find the incidence based on tosearch's description and date information. Returns 0L if no incidence could be found.
+	 */
+	virtual KCal::Incidence *findIncidence(PilotAppCategory*tosearch);
 	virtual KCal::Incidence *getNextIncidence();
 	virtual KCal::Incidence *getNextModifiedIncidence();
 	virtual int count() {return fAllEvents.count();};
@@ -112,6 +115,9 @@ protected:
 } ;
 
 // $Log$
+// Revision 1.27  2002/07/28 17:27:54  cschumac
+// Move file loading/saving code from CalendarLocal to own class.
+//
 // Revision 1.26  2002/05/14 23:07:49  kainhofe
 // Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
 //

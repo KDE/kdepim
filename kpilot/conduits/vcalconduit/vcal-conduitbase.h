@@ -68,6 +68,7 @@ public:
 	virtual void addIncidence(KCal::Incidence*)=0;
 	virtual void removeIncidence(KCal::Incidence *)=0;
 	virtual KCal::Incidence *findIncidence(recordid_t)=0;
+	virtual KCal::Incidence *findIncidence(PilotAppCategory*tosearch)=0;
 	virtual KCal::Incidence *getNextIncidence()=0;
 	virtual KCal::Incidence *getNextModifiedIncidence()=0;
 	virtual int count()=0;
@@ -138,7 +139,7 @@ protected:
 	// THESE *CAN* BE IMPLEMTED BY CHILD CLASSES
 	// execute something at the beginning or end of the sync.
 	virtual void preSync(){};
-	virtual void postSync(){};
+	virtual void postSync();
 	virtual void preRecord(PilotRecord*){};
 	virtual void preIncidence(KCal::Incidence *){};
 
@@ -159,6 +160,9 @@ protected:
 
 
 // $Log$
+// Revision 1.11  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.10  2002/08/15 10:47:56  kainhofe
 // Finished categories syncing for the todo conduit
 //

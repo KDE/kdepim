@@ -108,6 +108,24 @@ KCal::Incidence *VCalConduitPrivate::findIncidence(recordid_t id)
 	return 0L;
 }
 
+KCal::Incidence *VCalConduitPrivate::findIncidence(PilotAppCategory*tosearch)
+{
+	PilotDateEntry*entry=dynamic_cast<PilotDateEntry*>(tosearch);
+	if (!entry) return 0L;
+	
+	QString title=entry->getDescription();
+	QDateTime dt=readTm( entry->getEventStart() );
+	
+	KCal::Event *event = fAllEvents.first();
+	while (event!=0)
+	{
+		if ( (event->dtStart() == dt) && (event->summary() == title) ) return event;
+		event = fAllEvents.next();
+	}
+	return 0L;
+}
+
+
 
 KCal::Incidence *VCalConduitPrivate::getNextIncidence()
 {
@@ -688,6 +706,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.76  2002/08/23 11:13:28  adridg
+// Trying to be KDE 3.0.x compatible is hopeless
+//
 // Revision 1.75  2002/08/21 10:40:56  adridg
 // Whoops, bad assumptions on the version number in HEAD
 //
