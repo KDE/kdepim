@@ -41,7 +41,7 @@ class AddIncidenceVisitor : public Incidence::Visitor {
   public:
     /** Add incidence to calendar \a calendar. */
     AddIncidenceVisitor(Calendar *calendar) : mCalendar(calendar) {}
-    
+
     bool visit(Event *e) { mCalendar->addEvent(e); return true; }
     bool visit(Todo *t) { mCalendar->addTodo(t); return true; }
 
@@ -59,18 +59,19 @@ Calendar::Calendar()
 Calendar::Calendar(const QString &timeZoneId)
 {
   mTimeZoneId = timeZoneId;
-  
+
   init();
 }
 
 void Calendar::init()
 {
   mObserver = 0;
+  mNewObserver = false;
 
   mModified = false;
 
   mDndFormat = new VCalFormat(this);
-  
+
   mFormat = 0;
 
   mICalFormat = new ICalFormat(this);
@@ -104,8 +105,8 @@ void Calendar::init()
     hourOff += 1;
   QString tzStr;
   tzStr.sprintf("%.2d%.2d",
-		hourOff, 
-		abs((timezone / 60) % 60));
+      hourOff,
+      abs((timezone / 60) % 60));
 
   // if no time zone was in the config file, write what we just discovered.
   if (tmpStr.isEmpty()) {
@@ -113,7 +114,7 @@ void Calendar::init()
   } else {
     tzStr = tmpStr;
   }
-  
+
   // if daylight savings has changed since last load time, we need
   // to rewrite these settings to the config file.
   if ((now->tm_isdst && !dstSetting) ||
@@ -121,14 +122,14 @@ void Calendar::init()
     KOPrefs::instance()->mTimeZone = tzStr;
     KOPrefs::instance()->mDaylightSavings = now->tm_isdst;
   }
-  
+
   setTimeZone(tzStr);
 #endif
 
 //  KOPrefs::instance()->writeConfig();
 }
 
-Calendar::~Calendar() 
+Calendar::~Calendar()
 {
   delete mDefaultFilter;
   delete mICalFormat;
@@ -168,7 +169,7 @@ void Calendar::setTimeZone(const QString & tz)
   if (tmpStr.left(1) == "-" || tmpStr.left(1) == "+")
     tmpStr.remove(0, 1);
   hours = tmpStr.left(2).toInt();
-  if (tmpStr.length() > 2) 
+  if (tmpStr.length() > 2)
     minutes = tmpStr.right(2).toInt();
   else
     minutes = 0;
@@ -180,7 +181,7 @@ void Calendar::setTimeZone(const QString & tz)
   setModified( true );
 }
 
-QString Calendar::getTimeZoneStr() const 
+QString Calendar::getTimeZoneStr() const
 {
   if (mLocalTime)
     return QString();
@@ -190,8 +191,8 @@ QString Calendar::getTimeZoneStr() const
   bool neg = mTimeZone < 0;
 
   tmpStr.sprintf("%c%.2d%.2d",
-		 (neg ? '-' : '+'),
-		 hours, minutes);
+       (neg ? '-' : '+'),
+       hours, minutes);
   return tmpStr;
 }
 
@@ -302,11 +303,13 @@ QPtrList<Todo> Calendar::getFilteredTodoList()
 void Calendar::registerObserver( Observer *observer )
 {
   mObserver = observer;
+  mNewObserver = true;
 }
 
 void Calendar::setModified( bool modified )
 {
-  if ( modified != mModified ) {
+  if ( modified != mModified || mNewObserver ) {
+    mNewObserver = false;
     if ( mObserver ) mObserver->calendarModified( modified, this );
     mModified = modified;
   }
