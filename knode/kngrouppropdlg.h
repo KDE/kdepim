@@ -20,6 +20,7 @@
 #include <kdialogbase.h>
 
 class QCheckBox;
+class QComboBox;
 
 class KLineEdit;
 
