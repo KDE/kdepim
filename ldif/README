@@ -7,5 +7,33 @@ This parser works in a similar fashion to my vCard and Internet Mail Message
 parsing libraries which you'll find hanging around in CVS as pim/vCard and
 kdenonbeta/empath/rmm respectively.
 
-This is as of 4th July untested. Let me know if it works :)
+I've now tested this with an .ldif exported from Netscape Communicator 4.6
+(Linux glibc).
+
+It looks like folding is interpreted correctly, as is rebuilding of folded
+lines.
+
+I haven't implemented Base64 encoding / decoding as yet, but at least it
+recognises when something's encoded.
+
+Note that Communicator 4.6 isn't using the latest draft spec of ldif, which
+is called:
+"The LDAP Data Interchange Format (LDIF) - Technical Specification"
+Filename: draft-good-ldap-ldif-04.txt
+
+This spec was only released on 22nd June 1999, too late for Communicator 4.6
+
+Due to this, the format that is exported is slightly different, though not
+enough to confuse the parser. The new spec adds a compulsory 'version' line.
+
+The parser will generate its own version line using version '0' in this case.
+Using the current draft, the version should be set to 1.
+
+Also note that URL lines aren't recognised correctly as they are missing
+the '<' character that identifies them. I guess this is the fault of the old
+spec and not Communicator.
+
+Feedback is welcome !
+
+Rik <rik@kde.org>
 

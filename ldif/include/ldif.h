@@ -45,8 +45,8 @@ class Entity
 	public:
 		
 		Entity()
-			:	parsed_		(false),
-				assembled_	(true)
+			:	parsed_		(true),
+				assembled_	(false)
 		{
 			// empty
 		}
@@ -86,7 +86,11 @@ class Entity
 	
 			return *this;
 		}
-
+	
+		virtual ~Entity()
+		{
+			// empty
+		}
 		
 		bool operator == (Entity & e)
 		{ return asString() == e.asString(); }
@@ -99,12 +103,7 @@ class Entity
 
 		virtual bool operator != (const QCString & s)
 		{ return !(*this == s); }
-		
-		virtual ~Entity()
-		{
-			// empty
-		}
-		
+			
 		QCString asString()
 		{ assemble(); return strRep_; }
 		

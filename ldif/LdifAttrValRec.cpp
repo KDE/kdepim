@@ -29,6 +29,7 @@ using namespace LDIF;
 LdifAttrValRec::LdifAttrValRec()
 	:	Entity()
 {
+	attrValSpecList_.setAutoDelete(true);
 }
 
 LdifAttrValRec::LdifAttrValRec(const LdifAttrValRec & x)
@@ -36,11 +37,13 @@ LdifAttrValRec::LdifAttrValRec(const LdifAttrValRec & x)
 		dnSpec_			(x.dnSpec_),
 		attrValSpecList_(x.attrValSpecList_)
 {
+	attrValSpecList_.setAutoDelete(true);
 }
 
 LdifAttrValRec::LdifAttrValRec(const QCString & s)
 	:	Entity(s)
 {
+	attrValSpecList_.setAutoDelete(true);
 }
 
 	LdifAttrValRec &
@@ -85,18 +88,46 @@ LdifAttrValRec::_parse()
 	
 	if (l.count() == 0)
 		return; // Invalid.
-
-	dnSpec_ = l.at(0);
 	
-	l.remove(0u); // Done with that one.
+	QStrList refolded;
 	
 	QStrListIterator it(l);
 	
+	QCString cur;
+	
 	for (; it.current(); ++it) {
+	
+		cur = it.current();
 		
-		AttrValSpec * s = new AttrValSpec(it.current());
+		++it;
+		
+		while (
+			it.current()			&&
+			it.current()[0] == ' '	&&
+			strlen(it.current()) != 1)
+		{
+			cur += it.current() + 1;
+			++it;
+		}
+		
+		--it;
+		
+		refolded.append(cur);
+	}
+
+	dnSpec_ = refolded.at(0);
+	
+	refolded.remove(0u); // Done with that one.
+	
+	QStrListIterator it2(refolded);
+
+	for (; it2.current(); ++it2) {
+		
+		AttrValSpec * s = new AttrValSpec(it2.current());
 		
 		attrValSpecList_.append(s);
+		
+		s->parse();
 	}
 }
 
@@ -107,7 +138,23 @@ LdifAttrValRec::_assemble()
 	
 	AttrValSpecIterator it(attrValSpecList_);
 	
-	for (; it.current(); ++it)
-		strRep_ += it.current()->asString() + '\n';
+	for (; it.current(); ++it) {
+		
+		QCString s = it.current()->asString();
+		
+		if (s.length() > 76) { // Fold string.
+		
+			do {
+				
+				strRep_ += s.left(76) + "\n ";
+				s.remove(0, 76);
+				
+			} while (!s.isEmpty());
+
+		} else
+			strRep_ += s;
+		
+		strRep_ += '\n';
+	}
 }
 

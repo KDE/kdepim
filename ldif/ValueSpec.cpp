@@ -84,18 +84,16 @@ ValueSpec::_parse()
 	
 	s.remove(0, 1);
 	
-	char c = s.at(0);
-	
-	switch (c) {
-		case ' ':	default:	valueType_ = Plain;		break;
+	switch (s[0]) {
 		case ':':				valueType_ = Base64;	break;
 		case '<':				valueType_ = URL;		break;
+		case ' ':	default:	valueType_ = Plain;		break;
 	}
 	
 	s.remove(0, 1);
 	
-	while (s.at(0) == ' ')
-		strRep_.remove(0, 1);
+	while (s[0] == ' ')
+		s.remove(0, 1);
 	
 	while (s.at(s.length() - 1) == '\n')
 		s.truncate(s.length() - 1);
@@ -109,15 +107,14 @@ ValueSpec::_parse()
 	void
 ValueSpec::_assemble()
 {
-	strRep_ = ':';
-
+	strRep_ = ":";
+	
 	switch (valueType_) {
-		case Plain:		default:	strRep_ += ' ';		break;
 		case Base64:				strRep_ += ": ";	break;
 		case URL:					strRep_ += "< ";	break;
+		case Plain:		default:	strRep_ += " ";		break;
 	}
 	
 	strRep_ += value_;
-	strRep_ += '\n';
 }
 

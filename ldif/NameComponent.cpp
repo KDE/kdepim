@@ -29,17 +29,20 @@ using namespace LDIF;
 NameComponent::NameComponent()
 	:	Entity()
 {
+	attrTypeAndValueList_.setAutoDelete(true);
 }
 
 NameComponent::NameComponent(const NameComponent & x)
 	:	Entity					(x),
 		attrTypeAndValueList_	(x.attrTypeAndValueList_)
 {
+	attrTypeAndValueList_.setAutoDelete(true);
 }
 
 NameComponent::NameComponent(const QCString & s)
 	:	Entity(s)
 {
+	attrTypeAndValueList_.setAutoDelete(true);
 }
 
 	NameComponent &

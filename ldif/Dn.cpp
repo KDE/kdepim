@@ -28,6 +28,7 @@ using namespace LDIF;
 Dn::Dn()
 	:	Entity()
 {
+	nameComponentList_.setAutoDelete(true);
 }
 
 Dn::Dn(const Dn & x)
@@ -35,11 +36,13 @@ Dn::Dn(const Dn & x)
 		encoded_			(x.encoded_),
 		nameComponentList_	(x.nameComponentList_)
 {
+	nameComponentList_.setAutoDelete(true);
 }
 
 Dn::Dn(const QCString & s)
 	:	Entity(s)
 {
+	nameComponentList_.setAutoDelete(true);
 }
 
 	Dn &

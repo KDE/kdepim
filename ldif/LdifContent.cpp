@@ -28,16 +28,19 @@ using namespace LDIF;
 LdifContent::LdifContent()
 	:	Entity()
 {
+	attrValRecList_.setAutoDelete(true);
 }
 
 LdifContent::LdifContent(const LdifContent & x)
 	:	Entity(x)
 {
+	attrValRecList_.setAutoDelete(true);
 }
 
 LdifContent::LdifContent(const QCString & s)
 	:	Entity(s)
 {
+	attrValRecList_.setAutoDelete(true);
 }
 
 	LdifContent &
@@ -75,52 +78,80 @@ LdifContent::~LdifContent()
 	void
 LdifContent::_parse()
 {
-	lDebug("parse() called");
-	QStrList l;
+	// We need to handle 1*(blank lines) as a record separator
+	// We also need to ignore comments (^#)
 	
-	RTokenise(strRep_, "\r\n", l);
+	QCString versionStr;
 	
-	if (l.count() < 2) {
-		// Invalid ldif !
-		// Must have version line + at least one AttrValRec.
-		lDebug("Invalid ldif");
-		return;
-	}
+	int start = 0;
+	int lineEnd = strRep_.find('\n');
 	
-	versionSpec_ = l.at(0);
-	versionSpec_.parse();
+	if (lineEnd == -1)
+		return; // Invalid - no lines !
 	
-	// Trash the first (version) line as we have seen it.
-	l.remove(0u);
-
-	///////////////////////////////////////////////////////////////
-	// AttrValRec lines
-
-	lDebug("AttrValRec lines");
+	QCString buf;
 	
-	QStrListIterator it(l);
+	bool inRecord = false;
 	
-	for (; it.current(); ++it) {
+	while (lineEnd != -1) {
 		
-		lDebug("New AttrValRec using \"" + QCString(it.current()) + "\"");
-		LdifAttrValRec * r = new LdifAttrValRec(it.current());
-
-		r->parse();
+		QCString s = strRep_.mid(start, lineEnd - start);
 		
-		attrValRecList_.append(r);
+		if (!s.isEmpty() && s.at(s.length() - 1) == '\r')
+			s.truncate(s.length() - 1);
+
+		if (s[0] == '#') {
+			lDebug("Comment");
+			start = lineEnd + 1;
+			lineEnd = strRep_.find('\n', start);
+			continue;
+		}
+		
+		if (s.left(7) == "version") {
+			lDebug("Found version");
+			versionSpec_ = s;
+			start = lineEnd + 1;
+			lineEnd = strRep_.find('\n', start);
+			continue;
+		}
+		
+		if (s.isEmpty()) {
+			
+			if (inRecord) {
+			
+				inRecord = false;
+				LdifAttrValRec * r = new LdifAttrValRec(buf);
+				attrValRecList_.append(r);
+				r->parse();
+				buf.truncate(0);
+				start = lineEnd + 1;
+				lineEnd = strRep_.find('\n', start);
+				continue;
+
+			} else {
+				
+				start = lineEnd + 1;
+				lineEnd = strRep_.find('\n', start);
+				continue;
+			}
+		}
+		
+		inRecord = true;
+		buf += s + '\n';
+		
+		start = lineEnd + 1;
+		lineEnd = strRep_.find('\n', start);
 	}
 }
 
 	void
 LdifContent::_assemble()
 {
-	lDebug("Assembling ldif");
-
-	strRep_ = versionSpec_.asString();
+	strRep_ = versionSpec_.asString() + '\n';
 	
 	LdifAttrValRecIterator it(attrValRecList_);
 	
 	for (; it.current(); ++it)
-		strRep_ += it.current()->asString() + "\n";
+		strRep_ += it.current()->asString() + '\n';
 }
 

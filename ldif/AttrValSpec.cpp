@@ -81,7 +81,7 @@ AttrValSpec::_parse()
 		return; // Invalid.
 	
 	attributeDescription_	= strRep_.left(split);
-	valueSpec_				= strRep_.mid(split + 1);
+	valueSpec_				= strRep_.mid(split);
 	
 	attributeDescription_.parse();
 	valueSpec_.parse();

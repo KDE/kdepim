@@ -22,19 +22,21 @@
 
 using namespace LDIF;
 
-
 VersionSpec::VersionSpec()
-	:	Entity()
+	:	Entity	(),
+		number_	(0)
 {
 }
 
 VersionSpec::VersionSpec(const VersionSpec & x)
-	:	Entity(x)
+	:	Entity	(x),
+		number_	(0)
 {
 }
 
 VersionSpec::VersionSpec(const QCString & s)
-	:	Entity(s)
+	:	Entity	(s),
+		number_	(0)
 {
 }
 
@@ -42,6 +44,9 @@ VersionSpec::VersionSpec(const QCString & s)
 VersionSpec::operator = (VersionSpec & x)
 {
 	if (*this == x) return *this;
+	
+	x.parse();
+	number_ = x.number_;
 
 	Entity::operator = (x);
 	return *this;
@@ -58,7 +63,7 @@ VersionSpec::operator = (const QCString & s)
 VersionSpec::operator == (VersionSpec & x)
 {
 	x.parse();
-	return false;
+	return (number_ == x.number_);
 }
 
 VersionSpec::~VersionSpec()
@@ -68,10 +73,19 @@ VersionSpec::~VersionSpec()
 	void
 VersionSpec::_parse()
 {
+	int split = strRep_.find(':');
+	
+	if (split == -1) {
+		number_ = 0; // Invalid. Use version number 0.
+		return;
+	}
+	
+	number_ = strRep_.mid(split + 1).toInt();
 }
 
 	void
 VersionSpec::_assemble()
 {
+	strRep_ = "version: " + QCString().setNum(number_);
 }
 

@@ -1,7 +1,6 @@
 #include <iostream.h>
 #include <qfile.h>
 #include <qtextstream.h>
-#include <qdatetime.h>
 
 #include "ldif.h"
 
@@ -28,9 +27,11 @@ main(int argc, char * argv[])
 	
 	using namespace LDIF; 
 	
-	QTime start(QTime::currentTime());
 	LdifContent ldc(str);
+	
+	// Force a parse
 	ldc.parse();
-	while(true) {}
+	
+	cerr << ldc.asString();
 }
 
