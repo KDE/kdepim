@@ -31,7 +31,10 @@ namespace GpgME {
     Result( int error=0 ) : mError( error ) {}
     Result( const Result & other ) : mError( other.error() ) {}
 
-    const Result & operator=( const Result & other );
+    const Result & operator=( const Result & other ) {
+      mError = other.mError;
+      return *this;
+    }
 
     const Error & error() const { return mError; }
 

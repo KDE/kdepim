@@ -34,6 +34,7 @@ namespace GpgME {
   class VerificationResult : public Result {
   public:
     VerificationResult( gpgme_ctx_t ctx=0, int error=0 );
+    explicit VerificationResult( const Error & err );
     VerificationResult( const VerificationResult & other );
     ~VerificationResult();
 

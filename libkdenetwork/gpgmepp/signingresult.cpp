@@ -24,6 +24,7 @@
 
 #include <gpgmepp/signingresult.h>
 #include "shared.h"
+#include "result_p.h"
 
 #include <gpgme.h>
 
@@ -77,35 +78,7 @@ GpgME::SigningResult::SigningResult( gpgme_ctx_t ctx, int error )
   d->ref();
 }
 
-GpgME::SigningResult::SigningResult( const SigningResult & other )
-  : GpgME::Result( other ), d( other.d )
-{
-  if ( d )
-    d->ref();
-}
-
-const GpgME::SigningResult & GpgME::SigningResult::operator=( const SigningResult & other ) {
-  if ( this->d == other.d ) return *this;
-
-  if ( other.d )
-    other.d->ref();
-  if ( this->d )
-    this->d->unref();
-  this->d = other.d;
-
-  return *this;
-}
-
-GpgME::SigningResult::~SigningResult() {
-  if ( d )
-    d->unref();
-  d = 0;
-}
-
-bool GpgME::SigningResult::isNull() const {
-  return !d;
-}
-
+make_standard_stuff(SigningResult)
 
 GpgME::CreatedSignature GpgME::SigningResult::createdSignature( unsigned int idx ) const {
   return CreatedSignature( d, idx );

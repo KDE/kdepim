@@ -36,6 +36,7 @@ namespace GpgME {
   class SigningResult : public Result {
   public:
     SigningResult( gpgme_ctx_t ctx=0, int error=0 );
+    explicit SigningResult( const Error & err );
     SigningResult( const SigningResult & other );
     ~SigningResult();
 

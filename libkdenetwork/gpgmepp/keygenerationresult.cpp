@@ -24,6 +24,7 @@
 
 #include <gpgmepp/keygenerationresult.h>
 #include "shared.h"
+#include "result_p.h"
 
 #include <gpgme.h>
 
@@ -57,33 +58,7 @@ GpgME::KeyGenerationResult::KeyGenerationResult( gpgme_ctx_t ctx, int error )
   d->ref();
 }
 
-GpgME::KeyGenerationResult::KeyGenerationResult( const KeyGenerationResult & other )
-  : GpgME::Result( other ), d( other.d )
-{
-  if ( d )
-    d->ref();
-}
-
-const GpgME::KeyGenerationResult & GpgME::KeyGenerationResult::operator=( const KeyGenerationResult & other ) {
-  if ( this->d == other.d ) return *this;
-
-  if ( other.d )
-    other.d->ref();
-  if ( this->d )
-    this->d->unref();
-
-  return *this;
-}
-
-GpgME::KeyGenerationResult::~KeyGenerationResult() {
-  if ( d )
-    d->unref();
-  d = 0;
-}
-
-bool GpgME::KeyGenerationResult::isNull() const {
-  return !d;
-}
+make_standard_stuff(KeyGenerationResult)
 
 bool GpgME::KeyGenerationResult::primaryKeyGenerated() const {
   return d && d->res.primary;

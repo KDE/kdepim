@@ -32,6 +32,7 @@ namespace GpgME {
   class KeyListResult : public Result {
   public:
     KeyListResult( gpgme_ctx_t ctx=0, int error=0 );
+    explicit KeyListResult( const Error & err );
     KeyListResult( const KeyListResult & other );
     ~KeyListResult();
 

@@ -24,6 +24,7 @@
 
 #include <gpgmepp/keylistresult.h>
 #include "shared.h"
+#include "result_p.h"
 
 #include <gpgme.h>
 
@@ -48,33 +49,7 @@ GpgME::KeyListResult::KeyListResult( gpgme_ctx_t ctx, int error )
   d->ref();
 }
 
-GpgME::KeyListResult::KeyListResult( const KeyListResult & other )
-  : GpgME::Result( other ), d( other.d )
-{
-  if ( d )
-    d->ref();
-}
-
-const GpgME::KeyListResult & GpgME::KeyListResult::operator=( const KeyListResult & other ) {
-  if ( this->d == other.d ) return *this;
-
-  if ( other.d )
-    other.d->ref();
-  if ( this->d )
-    this->d->unref();
-
-  return *this;
-}
-
-GpgME::KeyListResult::~KeyListResult() {
-  if ( d )
-    d->unref();
-  d = 0;
-}
-
-bool GpgME::KeyListResult::isNull() const {
-  return !d;
-}
+make_standard_stuff(KeyListResult)
 
 bool GpgME::KeyListResult::isTruncated() const {
   return d && d->res.truncated;

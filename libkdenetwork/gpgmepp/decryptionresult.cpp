@@ -24,6 +24,7 @@
 
 #include <gpgmepp/decryptionresult.h>
 #include "shared.h"
+#include "result_p.h"
 
 #include <gpgme.h>
 
@@ -57,33 +58,7 @@ GpgME::DecryptionResult::DecryptionResult( gpgme_ctx_t ctx, int error )
   d->ref();
 }
 
-GpgME::DecryptionResult::DecryptionResult( const DecryptionResult & other )
-  : GpgME::Result( other ), d( other.d )
-{
-  if ( d )
-    d->ref();
-}
-
-const GpgME::DecryptionResult & GpgME::DecryptionResult::operator=( const DecryptionResult & other ) {
-  if ( this->d == other.d ) return *this;
-
-  if ( other.d )
-    other.d->ref();
-  if ( this->d )
-    this->d->unref();
-
-  return *this;
-}
-
-GpgME::DecryptionResult::~DecryptionResult() {
-  if ( d )
-    d->unref();
-  d = 0;
-}
-
-bool GpgME::DecryptionResult::isNull() const {
-  return !d;
-}
+make_standard_stuff(DecryptionResult)
 
 const char * GpgME::DecryptionResult::unsupportedAlgortihm() const {
   return d ? d->res.unsupported_algorithm : 0 ;

@@ -22,7 +22,7 @@ gpgmepp_HEADERS = context.h \
 		encryptionresult.h \
 		engineinfo.h
 
-noinst_HEADERS = context_p.h data_p.h shared.h callbacks.h gpgme-0-3-compat.h
+noinst_HEADERS = context_p.h data_p.h shared.h callbacks.h gpgme-0-3-compat.h result_p.h
 
 lib_LTLIBRARIES = libgpgmepp.la
 libgpgmepp_la_SOURCES = context.cpp \

@@ -34,6 +34,7 @@ namespace GpgME {
   class EncryptionResult : public Result {
   public:
     EncryptionResult( gpgme_ctx_t ctx=0, int error=0 );
+    explicit EncryptionResult( const Error & err );
     EncryptionResult( const EncryptionResult & other );
     ~EncryptionResult();
 

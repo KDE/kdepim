@@ -24,6 +24,7 @@
 
 #include <gpgmepp/verificationresult.h>
 #include "shared.h"
+#include "result_p.h"
 
 #include <gpgme.h>
 
@@ -96,35 +97,7 @@ GpgME::VerificationResult::VerificationResult( gpgme_ctx_t ctx, int error )
   d->ref();
 }
 
-GpgME::VerificationResult::VerificationResult( const VerificationResult & other )
-  : GpgME::Result( other ), d( other.d )
-{
-  if ( d )
-    d->ref();
-}
-
-const GpgME::VerificationResult & GpgME::VerificationResult::operator=( const VerificationResult & other ) {
-  if ( this->d == other.d ) return *this;
-
-  if ( other.d )
-    other.d->ref();
-  if ( this->d )
-    this->d->unref();
-  this->d = other.d;
-
-  return *this;
-}
-
-GpgME::VerificationResult::~VerificationResult() {
-  if ( d )
-    d->unref();
-  d = 0;
-}
-
-bool GpgME::VerificationResult::isNull() const {
-  return !d;
-}
-
+make_standard_stuff(VerificationResult)
 
 GpgME::Signature GpgME::VerificationResult::signature( unsigned int idx ) const {
   return Signature( d, idx );

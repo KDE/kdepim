@@ -31,6 +31,7 @@ namespace GpgME {
   class KeyGenerationResult : public Result {
   public:
     KeyGenerationResult( gpgme_ctx_t ctx=0, int error=0 );
+    explicit KeyGenerationResult( const Error & err );
     KeyGenerationResult( const KeyGenerationResult & other );
     ~KeyGenerationResult();
 

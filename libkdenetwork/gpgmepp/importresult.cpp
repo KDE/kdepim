@@ -24,6 +24,7 @@
 
 #include <gpgmepp/importresult.h>
 #include "shared.h"
+#include "result_p.h"
 
 #include <gpgme.h>
 
@@ -63,40 +64,7 @@ GpgME::ImportResult::ImportResult( gpgme_ctx_t ctx, int error )
   d->ref();
 }
 
-GpgME::ImportResult::ImportResult( const Error & error )
-  : GpgME::Result( error ), d( 0 )
-{
-
-}
-
-GpgME::ImportResult::ImportResult( const ImportResult & other )
-  : GpgME::Result( other ), d( other.d )
-{
-  if ( d )
-    d->ref();
-}
-
-const GpgME::ImportResult & GpgME::ImportResult::operator=( const ImportResult & other ) {
-  if ( this->d == other.d ) return *this;
-
-  if ( other.d )
-    other.d->ref();
-  if ( this->d )
-    this->d->unref();
-  this->d = other.d;
-
-  return *this;
-}
-
-GpgME::ImportResult::~ImportResult() {
-  if ( d )
-    d->unref();
-  d = 0;
-}
-
-bool GpgME::ImportResult::isNull() const {
-  return !d;
-}
+make_standard_stuff(ImportResult)
 
 int GpgME::ImportResult::numConsidered() const {
   return d ? d->res.considered : 0 ;
