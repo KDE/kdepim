@@ -171,7 +171,7 @@ void LDAPSearchDialog::restoreSettings()
   // then read the config file and register all selected 
   // server in the list
   KConfig* config = KABC::AddressLineEdit::config();
-  config->setGroup( "LDAP" );
+  KConfigGroupSaver saver( config, "LDAP" );
   mNumHosts = config->readUnsignedNumEntry( "NumSelectedHosts" ); 
   if ( !mNumHosts ) {
     KMessageBox::error( this, i18n( "You must select a LDAP server before searching.\nYou can do this from the menu Settings/Configure KAddressBook." ) );

@@ -63,9 +63,9 @@ ActionManager::ActionManager( KXMLGUIClient *client, KAddressBook *widget,
     initReadWriteActions();
 
   KConfig *config = ViewManager::config();
-  config->setGroup( "Views" );
+  KConfigGroupSaver viewSaver( config, "Views" );
   mActiveViewName = config->readEntry( "Active" );
-  config->setGroup( "MainWindow" );
+  KConfigGroupSaver mwSaver( config, "MainWindow" );
   mActionJumpBar->setChecked( config->readBoolEntry( "JumpBar", false ) );
   mActionExtensions->setCurrentItem( config->readNumEntry( "Extensions", 0 ) );
   mActionDetails->setChecked( config->readBoolEntry( "Details", true ) );
@@ -83,10 +83,10 @@ ActionManager::~ActionManager()
 {
   KConfig *config = ViewManager::config();
 
-  config->setGroup( "Views" );
+  KConfigGroupSaver viewSaver( config, "Views" );
   config->writeEntry( "Active", mActiveViewName );
 
-  config->setGroup( "MainWindow" );
+  KConfigGroupSaver mwSaver( config, "MainWindow" );
   config->writeEntry( "JumpBar", mActionJumpBar->isChecked() );
   config->writeEntry( "Extensions", mActionExtensions->currentItem() );
   config->writeEntry( "Details", mActionDetails->isChecked() );

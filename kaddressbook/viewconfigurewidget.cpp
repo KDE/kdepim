@@ -72,7 +72,7 @@ void ViewConfigureWidget::restoreSettings( KConfig *config )
 
 void ViewConfigureWidget::saveSettings( KConfig *config )
 {
-  mFilterPage->saveSettings( config );
+  mFieldsPage->saveSettings( config );
   mFilterPage->saveSettings( config );
 }
     

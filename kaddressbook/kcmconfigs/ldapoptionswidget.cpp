@@ -157,7 +157,7 @@ void LDAPOptionsWidget::slotRemoveHost()
 void LDAPOptionsWidget::restoreSettings()
 {
   KConfig *config = KABC::AddressLineEdit::config();
-  config->setGroup( "LDAP" );
+  KConfigGroupSaver saver( config, "LDAP" );
 
   QString host;
 
@@ -189,7 +189,7 @@ void LDAPOptionsWidget::saveSettings()
   KConfig *config = KABC::AddressLineEdit::config();
   config->deleteGroup( "LDAP" );
 
-  config->setGroup("LDAP");
+  KConfigGroupSaver saver( config, "LDAP" );
 
   uint selected = 0; uint unselected = 0;
   QListViewItemIterator it( mHostListView );

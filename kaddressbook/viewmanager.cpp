@@ -87,10 +87,9 @@ ViewManager::~ViewManager()
 
 void ViewManager::readConfig()
 {
-  // Read the view names
   mConfig->reparseConfiguration();
 
-  mConfig->setGroup( "Views" );
+  KConfigGroupSaver viewSaver( mConfig, "Views" );
   mViewNameList = mConfig->readListEntry( "Names" );
 
   if ( mViewNameList.size() == 0 )  // Add a default
@@ -101,7 +100,7 @@ void ViewManager::readConfig()
 
   emit filtersEdited();
 
-  mConfig->setGroup( "Filter" );
+  KConfigGroupSaver filterSaver( mConfig, "Filter" );
   if ( mConfig->hasKey( "Active" ) )
     emit currentFilterChanged( mConfig->readEntry( "Active" ) );
 
@@ -109,12 +108,12 @@ void ViewManager::readConfig()
   // been modified by global settings
   QDictIterator<KAddressBookView> it( mViewDict );
   for ( it.toFirst(); it.current(); ++it ) {
-    mConfig->setGroup( it.currentKey() );
+    KConfigGroupSaver saver( mConfig, it.currentKey() );
     it.current()->readConfig( mConfig );
   }
 
   QValueList<int> splitterSize;
-  mConfig->setGroup( "Splitter" );
+  KConfigGroupSaver splitterSaver( mConfig, "Splitter" );
   splitterSize = mConfig->readIntListEntry( "ExtensionsSplitter" );
   if ( splitterSize.count() == 0 ) {
     splitterSize.append( width() / 2 );
@@ -136,19 +135,19 @@ void ViewManager::writeConfig()
 {
   QDictIterator<KAddressBookView> it( mViewDict );
   for ( it.toFirst(); it.current(); ++it ) {
-    mConfig->setGroup( it.currentKey() );
+    KConfigGroupSaver saver( mConfig, it.currentKey() );
     (*it)->writeConfig( mConfig );
   }
 
   Filter::save( mConfig, QString( "Filter" ), mFilterList );
-  mConfig->setGroup( "Filter" );
+  KConfigGroupSaver filterSaver( mConfig, "Filter" );
   mConfig->writeEntry( "Active", mCurrentFilter.name() );
 
   // write the view name list
-  mConfig->setGroup( "Views" );
+  KConfigGroupSaver viewSaver( mConfig, "Views" );
   mConfig->writeEntry( "Names", mViewNameList );
 
-  mConfig->setGroup( "Splitter" );
+  KConfigGroupSaver splitterSaver( mConfig, "Splitter" );
   mConfig->writeEntry( "ExtensionsSplitter", mExtensionBarSplitter->sizes() );
   mConfig->writeEntry( "DetailsSplitter", mDetailsSplitter->sizes() );
 }
@@ -263,7 +262,7 @@ void ViewManager::setActiveView( const QString &name )
   // Check if we found the view. If we didn't, then we need to create it
   if ( view == 0 ) {
     KConfig *config = ViewManager::config();
-    config->setGroup( name );
+    KConfigGroupSaver saver( config, name );
     QString type = config->readEntry( "Type", "Table" );
 
     kdDebug(5720) << "ViewManager::setActiveView: creating view - " << name << endl;
@@ -342,7 +341,7 @@ void ViewManager::modifyView()
   if ( wdg ) {
     ViewConfigureDialog dlg( wdg, mActiveView->name(), this );
 
-    mConfig->setGroup( mActiveView->name() );
+    KConfigGroupSaver saver( mConfig, mActiveView->name() );
     dlg.restoreSettings( mConfig );
 
     if ( dlg.exec() ) {
@@ -415,7 +414,7 @@ void ViewManager::addView()
     // write the view to the config file,
     KConfig *config = ViewManager::config();
     config->deleteGroup( newName );
-    config->setGroup( newName );
+    KConfigGroupSaver saver( config, newName );
     config->writeEntry( "Type", type );
 
     // try to set the active view
@@ -785,7 +784,7 @@ void ViewManager::loadExtensions()
 
   // load the other extensions
   KConfig *config = ViewManager::config();
-  config->setGroup( "Extensions_General" );
+  KConfigGroupSaver saver( config, "Extensions_General" );
   QStringList activeExtensions = config->readListEntry( "activeExtensions" );
 
   KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/Extension" );

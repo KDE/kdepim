@@ -110,6 +110,7 @@ void KAddressBookTableView::reconstructListView()
           SIGNAL(startDrag()));
   connect(mListView, SIGNAL(addresseeDropped(QDropEvent*)), this,
           SIGNAL(dropped(QDropEvent*)));
+
   if (KABPrefs::instance()->mHonorSingleClick)
     connect(mListView, SIGNAL(executed(QListViewItem*)),
           this, SLOT(addresseeExecuted(QListViewItem*)));
@@ -134,16 +135,11 @@ void KAddressBookTableView::writeConfig(KConfig *config)
 
 void KAddressBookTableView::readConfig(KConfig *config)
 {
-  QString group = config->group();
-
-  KAddressBookView::readConfig(config);
+  KAddressBookView::readConfig( config );
 
   // The config could have changed the fields, so we need to reconstruct
   // the listview.
   reconstructListView();
-
-  // reconstructListView modifies config-group
-  config->setGroup( group );
 
   // Set the list view options
   mListView->setAlternateBackgroundEnabled(config->readBoolEntry("ABackground",
