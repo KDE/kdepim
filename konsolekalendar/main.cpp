@@ -43,10 +43,12 @@
 #include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
+#include <kurl.h>
 
 #include <libkcal/calformat.h>
 #include <libkcal/calendarresources.h>
 #include <libkcal/resourcelocal.h>
+#include <libkcal/resourceremote.h>
 
 #include <qdatetime.h>
 #include <qfile.h>
@@ -64,7 +66,7 @@ using namespace std;
 
 static const char progName[] = "konsolekalendar";
 static const char progDisplay[] = "KonsoleKalendar";
-static const char progVersion[] = "1.1.1";
+static const char progVersion[] = "1.1.3";
 static const char progDesc[] = "A command line interface to KDE calendars";
 static const char progURL[] = "pim.kde.org/components/konsolekalendar.php";
 
@@ -211,6 +213,7 @@ int main( int argc, char *argv[] )
   bool create = false;
   bool calendarFile = false;
   bool importFile = false;
+  bool remote = true;
 
   QString option;
 
@@ -625,14 +628,38 @@ int main( int argc, char *argv[] )
     calendarFile = true;
     option = args->getOption( "file" );
     variables.setCalendarFile( option );
+    bool exists = false;
+    
+    KURL url( variables.getCalendarFile() );
+     
+      // Sorry about this hack.. I just need to get this working
+      // So we can get along!
+      // TODO: howto check if this isn't there;)
+      // TODO: make it work with URLs in next round!!
+      
+     if( !url.isLocalFile() ){
+      kdDebug() << "main | Remote calendar | "
+                << "We have remote calendar?"
+                << endl;       
+       exists = true; 
+       remote = true;
+     
+     } else {
+      
+      kdDebug() << "main | Local calendar | "
+                << "We have local calendar?"
+                << endl;
 
+      remote = false;       
+    
     /*
      * All modes need to know if the calendar file exists
      * This must be done before we get to opening biz
      */
-    bool exists = QFile::exists( variables.getCalendarFile() );
-
-    if ( create ) {
+     exists = QFile::exists( variables.getCalendarFile() );
+    } 
+    
+    if ( create && !remote) {
 
       kdDebug() << "main | createcalendar | "
                 << "check if calendar file already exists"
@@ -655,6 +682,9 @@ int main( int argc, char *argv[] )
              << endl;
         return 1;
       }
+    } else if ( create && remote ) {
+       cout << i18n( "Currently we can't create remote calendars, i'm very sorry about that!" ).local8Bit()
+       << endl; 
     }
 
     if ( ! exists ) {
@@ -668,16 +698,42 @@ int main( int argc, char *argv[] )
   }
 
   CalendarResources *calendarResource = NULL;
-  CalendarLocal *localCalendar = NULL;
-
+  //CalendarLocal *localCalendar = NULL;
+  KCal::ResourceCalendar *calendar = 0;
   /*
    * Should we use local calendar or resource?
    */
   variables.setTimeZoneId();
-  if ( args->isSet( "file" ) ) {
-    localCalendar = new CalendarLocal( variables.getTimeZoneId() );
-    localCalendar->load( variables.getCalendarFile() );
-    variables.setCalendar( localCalendar  );
+    
+  if ( args->isSet( "file" ) && !remote ) {
+    
+    kdDebug() << "main | Open resource | "
+              << "Local calendar"
+              << endl;
+    
+    calendar = new KCal::ResourceLocal( variables.getCalendarFile() );
+    calendar->setTimeZoneId( variables.getTimeZoneId() );
+    
+    //calendar = new CalendarLocal( variables.getTimeZoneId() );
+    //calendar->load( variables.getCalendarFile() );
+    
+    calendar->load();
+    
+    variables.setCalendar( calendar  );
+  } else if( args->isSet( "file" ) && remote ) {
+    
+    kdDebug() << "main | Open resource | "
+              << "Remote calendar"
+              << endl;
+      
+    // TODO: only one URL.. i know..
+    KURL url( variables.getCalendarFile() );
+    calendar =  new KCal::ResourceRemote( url );      
+    calendar->setTimeZoneId( variables.getTimeZoneId() );
+    calendar->load();
+    
+    variables.setCalendar( calendar  );
+ 
   } else {
     calendarResource = new CalendarResources( variables.getTimeZoneId() );
     calendarResource->readConfig();
@@ -927,8 +983,8 @@ int main( int argc, char *argv[] )
   delete konsolekalendar;
 
   if ( calendarFile ) {
-    localCalendar->close();
-    delete localCalendar;
+    calendar->close();
+    delete calendar;
   } else {
     calendarResource->close();
     delete calendarResource;

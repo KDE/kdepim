@@ -99,13 +99,13 @@ bool KonsoleKalendarChange::changeEvent()
           .arg( event->summary() ).local8Bit()
              << endl;
 
-        if ( !m_variables->isCalendarResources() ) {
+        /*if ( !m_variables->isCalendarResources() ) {
           status =
             m_variables->getCalendar()->save( m_variables->getCalendarFile() );
         } else {
           m_variables->getCalendar()->save();
           status = true;
-        }
+        }*/
       } else {
         cout << i18n("Failure: \"%1\" not changed")
           .arg( event->summary() ).local8Bit()

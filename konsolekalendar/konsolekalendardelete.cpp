@@ -70,13 +70,13 @@ bool KonsoleKalendarDelete::deleteEvent()
         .arg( event->summary() ).local8Bit()
            << endl;
 
-      if ( !m_variables->isCalendarResources() ) {
+      /*if ( !m_variables->isCalendarResources() ) {
         status =
           m_variables->getCalendar()->save( m_variables->getCalendarFile() );
       } else {
-        m_variables->getCalendar()->save();
+        // m_variables->getCalendar()->save();
         status = true;
-      }
+      }*/
     }
   }
 

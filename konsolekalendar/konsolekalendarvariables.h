@@ -261,13 +261,13 @@ namespace KCal {
      * Set calendar file for global use
      */
 
-    void setCalendar( CalendarLocal *calendar );
+    void setCalendar( ResourceCalendar *calendar );
 
     /**
      * Get global calendar
      */
 
-    CalendarLocal *getCalendar();
+    ResourceCalendar *getCalendar();
 
     /**
      * Set output file
@@ -368,7 +368,7 @@ namespace KCal {
     // New resource stuff will over-ride old pne
     CalendarResources *m_resource;
     // We can use this from everywhere
-    CalendarLocal *m_calendarLocal;
+    ResourceCalendar *m_calendarLocal;
   };
 
 }

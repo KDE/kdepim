@@ -156,8 +156,10 @@ bool KonsoleKalendar::showInstance()
 	  for ( dt=firstdate;
                 dt<=lastdate && status != false;
                 dt=dt.addDays(1) ) {
-	    Event::List events = m_variables->getCalendar()->events( dt, true );
-	    status = printEventList( &ts, &events, dt );
+	    /*Event::List events;
+	    events = m_variables->getCalendar()->events( dt, true );
+	    
+	    status = printEventList( &ts, &events, dt );*/
 	  }
 
 	} else if ( m_variables->isUID() ) {
@@ -182,9 +184,10 @@ bool KonsoleKalendar::showInstance()
 	  for ( dt=m_variables->getStartDateTime().date();
                 dt<=datetime.date() && status != false;
                 dt=dt.addDays(1) ) {
-	    Event::List events = m_variables->getCalendar()->events( dt, true );
+	    //Event::List events = m_variables->getCalendar()->events( dt, true );
+	    Event::List events = m_variables->getCalendar()->rawEventsForDate( dt, true );
 	    status = printEventList( &ts, &events, dt );
-
+             
 	    // when we get next event we exit..
 	    if ( events.count() ) {
 	      kdDebug() << "konsolekalendar.cpp::showInstance() | "
@@ -202,7 +205,11 @@ bool KonsoleKalendar::showInstance()
 	  for ( dt=m_variables->getStartDateTime().date();
                 dt<=m_variables->getEndDateTime().date() && status != false;
                 dt=dt.addDays(1) ) {
-	    Event::List events = m_variables->getCalendar()->events( dt, true );
+	   kdDebug() << "PING" << endl;	    
+	    
+	    Event::List events = m_variables->getCalendar()->rawEventsForDate( dt, true );
+	   
+	  kdDebug() << "PING 2" << endl;	    
 	    status = printEventList( &ts, &events, dt );
 	  }
 	}
@@ -236,9 +243,9 @@ bool KonsoleKalendar::showInstance()
 
         KCal::HtmlExport *Export;
         if ( !m_variables->isCalendarResources() ) {
-          Export = new HtmlExport( m_variables->getCalendar() );
+	  //Export = new HtmlExport( m_variables->getCalendar() );
         } else {
-          Export = new HtmlExport( m_variables->getCalendarResources() );
+          //Export = new HtmlExport( m_variables->getCalendarResources() );
         }
 
 	title = "Appointments for " + firstdate.toString(Qt::TextDate);
