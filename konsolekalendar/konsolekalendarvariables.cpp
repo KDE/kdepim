@@ -161,14 +161,14 @@ QString KonsoleKalendarVariables::getImportFile()
 }
 
 
-void KonsoleKalendarVariables::setCalendar( Calendar *calendar )
+void KonsoleKalendarVariables::setCalendar( CalendarLocal *calendar )
 {
-  m_resourceCalendar = calendar;
+  m_calendarLocal = calendar;
 }
 
-Calendar *KonsoleKalendarVariables::getCalendar()
+CalendarLocal *KonsoleKalendarVariables::getCalendar()
 {
-  return m_resourceCalendar;
+  return m_calendarLocal;
 }
 
 
@@ -288,7 +288,7 @@ return true;
 void KonsoleKalendarVariables::setCalendarResources( CalendarResources *resource )
 {
   m_resource = resource;
-  m_resource->rawEvents();
+  setCalendar( ((CalendarLocal *)m_resource) );
 }
 
 CalendarResources *KonsoleKalendarVariables::getCalendarResources()

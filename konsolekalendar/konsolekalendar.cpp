@@ -323,7 +323,7 @@ bool KonsoleKalendar::isEvent( QDateTime startdate, QDateTime enddate, QString s
 
 Event::List KonsoleKalendar::allEventsSorted()
 {
-  Event::List *eventList = new Event::List ( m_Calendar->rawEvents( ) );
+  Event::List *eventList = new Event::List ( m_variables->getCalendar()->rawEvents( ) );
 
   // Sort based on dtStart.toTime_t()
   Event::List::ConstIterator it;

@@ -100,13 +100,13 @@ class KonsoleKalendarVariables
      * Set calendar file for global use
      */
 
-   void setCalendar( Calendar *calendar );
+   void setCalendar( CalendarLocal *calendar );
 
    /**
     * Get global calendar
     */
 
-   Calendar *getCalendar();
+   CalendarLocal *getCalendar();
 
    /**
     * Set output file
@@ -195,8 +195,8 @@ class KonsoleKalendarVariables
    // New resource stuff will over-ride old pne
    CalendarResources *m_resource;
    // We can use this from everywhere
-   //CalendarLocal *m_calendarLocal;   
-   Calendar *m_resourceCalendar;
+   CalendarLocal *m_calendarLocal;   
+
    
  
 
