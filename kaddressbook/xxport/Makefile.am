@@ -40,7 +40,7 @@ libkaddrbk_gnokii_xxport_la_SOURCES = gnokii_xxport.cpp
 libkaddrbk_gnokii_xxport_la_LIBADD = $(XPMLIB) $(LIB_GNOKII) $(top_builddir)/kaddressbook/libkaddressbook.la
 
 libkaddrbk_opera_xxport_la_SOURCES = opera_xxport.cpp
-libkaddrbk_opera_xxport_la_LIBADD = $(XPMLIB) $(LIB_GNOKII) $(top_builddir)/kaddressbook/libkaddressbook.la
+libkaddrbk_opera_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
 
 libkaddrbk_pab_xxport_la_SOURCES = pab_xxport.cpp pab_mapihd.cpp pab_pablib.cpp
 libkaddrbk_pab_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la

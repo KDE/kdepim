@@ -141,7 +141,7 @@ static QString businit(void)
 	error = gn_sm_functions(GN_OP_GetModel, &data, &state);
 	GNOKII_CHECK_ERROR(error);
 	if (model[0] == 0)
-		strcpy(model, i18n("unknown"));
+		strcpy(model, i18n("unknown").utf8());
 	data.model = NULL;
 
 	// revision
@@ -314,13 +314,13 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 						addr->setPostalCode(addrlist[2].simplifyWhiteSpace());
 						country = addrlist[3].simplifyWhiteSpace();
 						if (!country.isEmpty())
-							addr->setCountry(i18n(country));
+							addr->setCountry(i18n(country.utf8()));
 						break;
 			 case 3:	addr->setLocality(addrlist[0].simplifyWhiteSpace());
 						addr->setPostalCode(addrlist[1].simplifyWhiteSpace());
 						country = addrlist[2].simplifyWhiteSpace();
 						if (!country.isEmpty())
-							addr->setCountry(i18n(country));
+							addr->setCountry(i18n(country.utf8()));
 						break;
 			 default:	addr->setStreet(s.simplifyWhiteSpace());
 			}
