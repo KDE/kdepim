@@ -330,9 +330,9 @@ QCString KNArticleBase::articleStatusToString(articleStatus s)
 
 
 
-int KNArticleBase::stringToArticleStatus(const char *s)
+KNArticleBase::articleStatus KNArticleBase::stringToArticleStatus(const char *s)
 {
-  int ret;
+  articleStatus ret;
   if(strcasecmp(s, "toPost")==0)        ret=AStoPost;
 	else if(strcasecmp(s, "toMail")==0)   ret=AStoMail;
 	else if(strcasecmp(s,"posted")==0)    ret=ASposted;
@@ -378,7 +378,7 @@ QCString KNArticleBase::headerTypeToString(headerType t)
 
 
 
-int KNArticleBase::stringToHeaderType(const char *s)
+KNArticleBase::headerType KNArticleBase::stringToHeaderType(const char *s)
 {
 	headerType t;
 	
@@ -428,7 +428,7 @@ QCString KNArticleBase::encodingToString(encoding e)
 
 
 
-int KNArticleBase::stringToEncoding(const char *s)
+KNArticleBase::encoding KNArticleBase::stringToEncoding(const char *s)
 {
   encoding ret;
 

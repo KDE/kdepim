@@ -46,7 +46,7 @@ void KNSavedArticle::parse()
 	if(s_tatus==ASunknown) {
 		tmp=headerLine("X-KNode-Status");
 		if(tmp.isEmpty()) s_tatus=ASsaved;
-		else s_tatus=(articleStatus)stringToArticleStatus(tmp.data());
+		else s_tatus=stringToArticleStatus(tmp.data());
 	}
 	if(d_estination.isEmpty()) {
 		if((this->isMail())) d_estination=headerLine("To");

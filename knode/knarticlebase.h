@@ -95,13 +95,13 @@ class KNArticleBase {
 		static void removeQuots(QCString &str);
 		
 		static QCString articleStatusToString(articleStatus s);
-		static int stringToArticleStatus(const char *s);
+		static articleStatus stringToArticleStatus(const char *s);
 		
 		static QCString headerTypeToString(headerType t);
-		static int stringToHeaderType(const char *s);
+		static headerType stringToHeaderType(const char *s);
 		
 		static QCString encodingToString(encoding e);
-		static int stringToEncoding(const char *s);                	
+		static encoding stringToEncoding(const char *s);                	
 
 	protected:
 	  static bool allow8bit;

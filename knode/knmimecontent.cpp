@@ -668,7 +668,7 @@ void KNMimeContent::setHeader(headerType t, const QCString &value, bool encode)
 {
 	char *line;
 	int insPos=-1;
-	int ht;
+	headerType ht;
 	QCString hdr;
 	
 	for(line=h_ead->first(); line; line=h_ead->next()) {
