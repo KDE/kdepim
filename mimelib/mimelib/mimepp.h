@@ -129,9 +129,9 @@
 #include <mimelib/protocol.h>
 #endif
 
-#ifndef DW_SMTP_H
-#include <mimelib/smtp.h>
-#endif
+//#ifndef DW_SMTP_H
+//#include <mimelib/smtp.h>
+//#endif
 
 #ifndef DW_TEXT_H
 #include <mimelib/text.h>
