@@ -675,8 +675,7 @@ int main(int argc, char **argv)
 		KAboutData::License_GPL,
 		"Copyright (c) 1998-2000 Dan Pilone",
 		QString::null,
-		"http://www.slac.com/pilone/kpilot_home/",
-		"kpilot-list@slac.com");
+		"http://www.slac.com/pilone/kpilot_home/");
 
 	a->addAuthor("Dan Pilone",
 		I18N_NOOP("Project Leader"),
@@ -714,6 +713,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.20  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.19  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //
