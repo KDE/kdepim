@@ -57,6 +57,8 @@ namespace {
             record( entry->removed() );
             kdDebug() << prefix << "Added" << endl;
             record( entry->added() );
+        }else{
+            kdDebug() << prefix << "can not sync " << endl;
         }
     };
 
@@ -141,7 +143,7 @@ void OrganizerPart::processEntry( const KSyncEntryList& in,
             kdDebug() << "Found our type" << endl;
             our.append(  (KAlendarSyncEntry*) entry );
             //out.append(  entry->clone() );
-            entry2 = (KAlendarSyncEntry*) entry->clone() ;
+            entry2 = (KAlendarSyncEntry*) entry ; //not cloning
         }
     }
     if (entry2 == 0 )
@@ -179,6 +181,8 @@ void OrganizerPart::processEntry( const KSyncEntryList& in,
         m_conf->writeEntry("time", time );
         QString metaPath = m_conf->readEntry("metaPath" );
         calendar->calendar()->save( QDir::homeDirPath() + "/.kitchensync/meta/"+ metaPath + "/cal.vcf",  form);
+        kdDebug() << "Dumping Opie " << endl;
+        kdDebug() << "Sync mode == " << entry2->syncMode() << " first sync = " << entry2->firstSync() << endl;
         dump("Opie",  entry2);
         dump("KDE",  met );
     }

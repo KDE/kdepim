@@ -114,6 +114,7 @@ void KonnectorUIDHelper::save()
     for ( mapIt = m_ids.begin(); mapIt != m_ids.end(); ++mapIt ) {
         for ( kontainerIt = mapIt.data().begin(); kontainerIt != mapIt.data().end(); ++kontainerIt ) {
 //            AppName||%%||KonnectorId||%%||KDEID%%||%%AppName||%%||KonnectorId||%%||KDEID
+            kdDebug() << mapIt.key() << " " << (*kontainerIt).first() << " " << (*kontainerIt).second() << endl;
             string.append(mapIt.key()+ "||%%||" + (*kontainerIt).first() + "||%%||" + (*kontainerIt).second()+ "%%||%%");
         }
     }

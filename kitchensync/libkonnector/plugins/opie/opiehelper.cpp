@@ -21,18 +21,18 @@ QString categoryById(const QString &id, const QString &app, QValueList<OpieCateg
   QValueList<OpieCategories>::Iterator it;
   QString category;
   for( it = cate.begin(); it != cate.end(); ++it ){
-    kdDebug(5202) << "it :" << (*it).id() << "id:" << id << "ende"<<endl;
+//    kdDebug(5202) << "it :" << (*it).id() << "id:" << id << "ende"<<endl;
     if( id.stripWhiteSpace() == (*it).id().stripWhiteSpace() ){
       //if( app == (*it).app() ){
-      kdDebug(5202) << "found category" << endl;
+//      kdDebug(5202) << "found category" << endl;
       category = (*it).name();
       break;
       //}
     }else {
-      kdDebug(5202) << "not equal " << endl;
+//      kdDebug(5202) << "not equal " << endl;
     }
     }
-  kdDebug(5202) << "CategoryById: " << category << endl;
+//  kdDebug(5202) << "CategoryById: " << category << endl;
   return category;
 };
   void dump(const KABC::Addressee &test ){
@@ -57,8 +57,8 @@ OpieHelperClass* OpieHelperClass::self()
 
 void OpieHelperClass::toOpieDesktopEntry( const QString &str, KSyncEntryList *entry, OpieHelper::CategoryEdit *edit )
 {
-    if ( edit == 0)
-        kdDebug(5202) << "TO OPIEDEKSTOP Entry == 0 " << endl;
+//    if ( edit == 0)
+//        kdDebug(5202) << "TO OPIEDEKSTOP Entry == 0 " << endl;
     QString string ( str );
     string.remove(0, 35 );
     string.replace(QRegExp("&amp;"), "&" );
@@ -66,7 +66,7 @@ void OpieHelperClass::toOpieDesktopEntry( const QString &str, KSyncEntryList *en
     string.replace(QRegExp("&0x0d;"), "\n");
     string.replace(QRegExp("&0x0a;"), "\r");
     string.replace(QRegExp("\r\n"), "\n" ); // hell we're on unix
-    kdDebug(5202) << string << endl;
+//    kdDebug(5202) << string << endl;
     if(!string.contains("[Desktop Entry]")  )
 	return;
     QStringList list = QStringList::split('\n', string );
@@ -80,7 +80,7 @@ void OpieHelperClass::toOpieDesktopEntry( const QString &str, KSyncEntryList *en
     for( it = list.begin(); it != list.end(); ++it ){
 	QString con( (*it) );
 	con = con.stripWhiteSpace();
-	kdDebug(5202) << "CurrentLine " << con << endl;
+//	kdDebug(5202) << "CurrentLine " << con << endl;
 	if( con.startsWith("Categories = " ) ){ // FIXME for multiple Categories they're separated by a ;
 	    con = con.remove(0, 13 );
 	    con = con.remove( con.length() -1, 1 );
@@ -99,13 +99,13 @@ void OpieHelperClass::toOpieDesktopEntry( const QString &str, KSyncEntryList *en
 	    size = con.stripWhiteSpace();
 	}
 	if( (*it).stripWhiteSpace() == "[Desktop Entry]" ){ // ok next entry starts
-	    kdDebug(5202) << "File:" << fileName << ":Name:" << name << ":Type:" << type <<  ":Size:" << size << endl;
+//	    kdDebug(5202) << "File:" << fileName << ":Name:" << name << ":Type:" << type <<  ":Size:" << size << endl;
 	    entr = new OpieDesktopSyncEntry(category, fileName, name, type, size );
 	    entry->append( entr );
 	}
     }
 //ok here we got one more entry I guess I'm wrong here
-    kdDebug(5202) << "File:" << fileName << ":Name:" << name << ":Type:" << type <<  ":Size:" << size << endl;
+//    kdDebug(5202) << "File:" << fileName << ":Name:" << name << ":Type:" << type <<  ":Size:" << size << endl;
     entr = new OpieDesktopSyncEntry(category, fileName, name, type, size );
     entry->append( entr );
 }

@@ -1,4 +1,6 @@
 
+#include <kdebug.h>
+
 #include "helper.h"
 
 using namespace OpieHelper;
@@ -111,29 +113,36 @@ QStringList Base::categoriesToNumberList( const QStringList &list, const QString
 QString Base::konnectorId( const QString &appName,  const QString &uid )
 {
     QString id;
+    QString id2;
     // Konnector-.length() ==  10
     if ( uid.startsWith( "Konnector-" ) ) { // not converted
-        id =  uid.mid( 10 );
+        id2 =  uid.mid( 10 );
     }else if ( m_helper) {
         id =  m_helper->konnectorId( appName,  uid );
         //                        konnector kde
         if (id.isEmpty() ) { // generate new id
-            ;
-        }else if ( uid.startsWith( "Konnector-" ) ) { // not converted
-            id =  uid.mid( 10 );
+            kdDebug() << "Id is empty" << endl;
+        }else if ( id.startsWith( "Konnector-" ) ) { // not converted
+            kdDebug() << "prev " << id << endl;
+            id2 =  id.mid( 10 );
+            kdDebug() << "mid " << id << endl;
         }
         m_kde2opie.append( Kontainer( id,     uid ) );
     }
-
-    return id;
+    kdDebug() << "id " <<  id2 << endl;
+    return id2;
 }
 QString Base::kdeId( const QString &appName,  const QString &uid )
 {
     QString ret;
-    if ( m_helper == 0 )
+    if ( m_helper == 0 ) {
+        kdDebug() << "m_helper == 0" << endl;
         ret = QString::fromLatin1("Konnector-")  + uid;
-    else{ // only if meta
-        ret = m_helper->kdeId( appName, uid,  "Konnector-"+uid);
     }
+    else{ // only if meta
+        kdDebug() << "Ret else wet" << endl;
+        ret = m_helper->kdeId( appName, "Konnector-"+uid,  "Konnector-"+uid);
+    }
+    kdDebug() << "AppName " << appName << " kon " << ret << endl;
     return ret;
 }
