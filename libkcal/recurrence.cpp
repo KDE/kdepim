@@ -82,7 +82,7 @@ bool Recurrence::recursOnPure(const QDate &qd) const
     break;
   default:
     // catch-all.  Should never get here.
-    kdDebug() << "Control should never reach here in recursOn()!" << endl;
+    kdDebug(5800) << "Control should never reach here in recursOn()!" << endl;
     return FALSE;
     break;
   } // case

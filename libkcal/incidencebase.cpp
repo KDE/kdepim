@@ -129,9 +129,9 @@ void IncidenceBase::setFloats(bool f)
 
 void IncidenceBase::addAttendee(Attendee *a)
 {
-//  kdDebug() << "IncidenceBase::addAttendee()" << endl;
+//  kdDebug(5800) << "IncidenceBase::addAttendee()" << endl;
   if (mReadOnly) return;
-//  kdDebug() << "IncidenceBase::addAttendee() weiter" << endl;
+//  kdDebug(5800) << "IncidenceBase::addAttendee() weiter" << endl;
   if (a->name().left(7).upper() == "MAILTO:")
     a->setName(a->name().remove(0,7));
 

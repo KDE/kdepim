@@ -71,7 +71,7 @@ void Todo::setDtDue(const QDateTime &dtDue)
   }*/
   mDtDue = dtDue;
 
-  //kdDebug() << "setDtDue says date is " << mDtDue.toString() << endl;
+  //kdDebug(5800) << "setDtDue says date is " << mDtDue.toString() << endl;
 
   /*const QPtrList<Alarm>& alarms = alarms();
   for (Alarm* alarm = alarms.first(); alarm; alarm = alarms.next())
@@ -150,7 +150,7 @@ void Todo::setStatus(const QString &statStr)
   else if (ss == "DELEGATED")
     mStatus = DELEGATED;
   else
-    kdDebug() << "error setting status, unknown status!" << endl;
+    kdDebug(5800) << "error setting status, unknown status!" << endl;
 
   emit eventUpdated(this);
 }

@@ -58,7 +58,7 @@ bool VCalFormat::load(const QString &fileName)
 {
   clearException();
 
-  kdDebug() << "VCalFormat::load() " << fileName << endl;
+  kdDebug(5800) << "VCalFormat::load() " << fileName << endl;
 
   VObject *vcal = 0L;
 
@@ -89,7 +89,7 @@ bool VCalFormat::save(const QString &fileName)
   QString tmpStr;
   VObject *vcal, *vo;
 
-  kdDebug() << "VCalFormat::save(): " << fileName << endl;
+  kdDebug(5800) << "VCalFormat::save(): " << fileName << endl;
 
   vcal = newVObject(VCCalProp);
 
@@ -151,10 +151,10 @@ bool VCalFormat::save(const QString &fileName)
   cleanStrTbl();
 
   if (QFile::exists(fileName)) {
-    kdDebug() << "No error" << endl;
+    kdDebug(5800) << "No error" << endl;
     return true;
   } else  {
-    kdDebug() << "Error" << endl;
+    kdDebug(5800) << "Error" << endl;
     return false; // error
   }
 }
@@ -226,11 +226,11 @@ Event *VCalFormat::createDrop(QDropEvent *de)
              strcmp(vObjectName(curvo), VCTodoProp));
 
     if (strcmp(vObjectName(curvo), VCTodoProp) == 0) {
-      kdDebug() << "VCalFormat::createDrop(): Got todo instead of event." << endl;
+      kdDebug(5800) << "VCalFormat::createDrop(): Got todo instead of event." << endl;
     } else if (strcmp(vObjectName(curvo), VCEventProp) == 0) {
       event = VEventToEvent(curvo);
     } else {
-      kdDebug() << "VCalFormat::createDropTodo(): Unknown event type in drop." << endl;
+      kdDebug(5800) << "VCalFormat::createDropTodo(): Unknown event type in drop." << endl;
     }
     // get rid of temporary VObject
     deleteVObject(vcal);
@@ -241,7 +241,7 @@ Event *VCalFormat::createDrop(QDropEvent *de)
 
 Todo *VCalFormat::createDropTodo(QDropEvent *de)
 {
-  kdDebug() << "VCalFormat::createDropTodo()" << endl;
+  kdDebug(5800) << "VCalFormat::createDropTodo()" << endl;
 
   VObject *vcal;
   Todo *event = 0;
@@ -259,11 +259,11 @@ Todo *VCalFormat::createDropTodo(QDropEvent *de)
              strcmp(vObjectName(curvo), VCTodoProp));
 
     if (strcmp(vObjectName(curvo), VCEventProp) == 0) {
-      kdDebug() << "VCalFormat::createDropTodo(): Got event instead of todo." << endl;
+      kdDebug(5800) << "VCalFormat::createDropTodo(): Got event instead of todo." << endl;
     } else if (strcmp(vObjectName(curvo), VCTodoProp) == 0) {
       event = VTodoToEvent(curvo);
     } else {
-      kdDebug() << "VCalFormat::createDropTodo(): Unknown event type in drop." << endl;
+      kdDebug(5800) << "VCalFormat::createDropTodo(): Unknown event type in drop." << endl;
     }
     // get rid of temporary VObject
     deleteVObject(vcal);
@@ -361,15 +361,15 @@ Event *VCalFormat::pasteEvent(const QDate &newDate, const QTime *newTime)
 				  anEvent->dtEnd().time()));
       mCalendar->addEvent(anEvent);
     } else {
-      kdDebug() << "found a VEvent with no DTSTART/DTEND! Skipping" << endl;
+      kdDebug(5800) << "found a VEvent with no DTSTART/DTEND! Skipping" << endl;
     }
   } else if (strcmp(vObjectName(curVO), VCTodoProp) == 0) {
-    kdDebug() << "Trying to paste a Todo." << endl;
+    kdDebug(5800) << "Trying to paste a Todo." << endl;
 // TODO: check, if todos can be pasted
 //    Todo *aTodo = VTodoToEvent(curVO);
 //    mCalendar->addTodo(aTodo);
   } else {
-    kdDebug() << "unknown event type in paste!!!" << endl;
+    kdDebug(5800) << "unknown event type in paste!!!" << endl;
   }
   // get rid of temporary VObject
   deleteVObject(vcal);
@@ -437,7 +437,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
         tmpStr = "MAILTO: " + curAttendee->name();
       else if (curAttendee->name().isEmpty() &&
 	       curAttendee->email().isEmpty())
-	kdDebug() << "warning! this Event has an attendee w/o name or email!" << endl;
+	kdDebug(5800) << "warning! this Event has an attendee w/o name or email!" << endl;
       VObject *aProp = addPropValue(vtodo, VCAttendeeProp, tmpStr.local8Bit());
       addPropValue(aProp, VCRSVPProp, curAttendee->RSVP() ? "TRUE" : "FALSE");
       addPropValue(aProp, VCStatusProp, writeStatus(curAttendee->status()));
@@ -500,7 +500,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   }
 
   // alarm stuff
-  kdDebug() << "vcalformat::eventToVTodo was called" << endl;
+  kdDebug(5800) << "vcalformat::eventToVTodo was called" << endl;
   QPtrList<Alarm> alarms = anEvent->alarms();
   Alarm* alarm;
   for (alarm = alarms.first(); alarm; alarm = alarms.next()) {
@@ -593,7 +593,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
         tmpStr = "MAILTO: " + curAttendee->name();
       else if (curAttendee->name().isEmpty() &&
 	       curAttendee->email().isEmpty())
-	kdDebug() << "warning! this Event has an attendee w/o name or email!" << endl;
+	kdDebug(5800) << "warning! this Event has an attendee w/o name or email!" << endl;
       VObject *aProp = addPropValue(vevent, VCAttendeeProp, tmpStr.local8Bit());
       addPropValue(aProp, VCRSVPProp, curAttendee->RSVP() ? "TRUE" : "FALSE");;
       addPropValue(aProp, VCStatusProp, writeStatus(curAttendee->status()));
@@ -677,7 +677,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
       }
       break;
     default:
-      kdDebug() << "ERROR, it should never get here in eventToVEvent!" << endl;
+      kdDebug(5800) << "ERROR, it should never get here in eventToVEvent!" << endl;
       break;
     } // switch
 
@@ -954,7 +954,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
   // start time
   if ((vo = isAPropertyOf(vtodo, VCDTstartProp)) != 0) {
     anEvent->setDtStart(ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))));
-    //    kdDebug() << "s is " << //	  s << ", ISO is " << ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))).toString() << endl;
+    //    kdDebug(5800) << "s is " << //	  s << ", ISO is " << ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))).toString() << endl;
     deleteStr(s);
     anEvent->setHasStartDate(true);
   } else {
@@ -962,7 +962,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
   }
 
   /* alarm stuff */
-  //kdDebug() << "vcalformat::VTodoToEvent called" << endl;
+  //kdDebug(5800) << "vcalformat::VTodoToEvent called" << endl;
   if ((vo = isAPropertyOf(vtodo, VCDAlarmProp))) {
     Alarm* alarm = anEvent->newAlarm();
     VObject *a;
@@ -1136,7 +1136,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   // start time
   if ((vo = isAPropertyOf(vevent, VCDTstartProp)) != 0) {
     anEvent->setDtStart(ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))));
-    //    kdDebug() << "s is " << //	  s << ", ISO is " << ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))).toString() << endl;
+    //    kdDebug(5800) << "s is " << //	  s << ", ISO is " << ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))).toString() << endl;
     deleteStr(s);
     if (anEvent->dtStart().time().isNull())
       anEvent->setFloats(TRUE);
@@ -1369,7 +1369,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
 	  anEvent->recurrence()->setYearly(Recurrence::rYearlyDay, rFreq, rDuration);
       }
     } else {
-      kdDebug() << "we don't understand this type of recurrence!" << endl;
+      kdDebug(5800) << "we don't understand this type of recurrence!" << endl;
     } // if
   } // repeats
 
@@ -1699,7 +1699,7 @@ void VCalFormat::populate(VObject *vcal)
 	// check to see if event was deleted by the kpilot conduit
 	if (atoi(s) == Event::SYNCDEL) {
 	  deleteStr(s);
-	  kdDebug() << "skipping pilot-deleted event" << endl;
+	  kdDebug(5800) << "skipping pilot-deleted event" << endl;
 	  goto SKIP;
 	}
 	deleteStr(s);
@@ -1750,7 +1750,7 @@ void VCalFormat::populate(VObject *vcal)
 
       if ((!(curVOProp = isAPropertyOf(curVO, VCDTstartProp))) &&
 	  (!(curVOProp = isAPropertyOf(curVO, VCDTendProp)))) {
-	kdDebug() << "found a VEvent with no DTSTART and no DTEND! Skipping..." << endl;
+	kdDebug(5800) << "found a VEvent with no DTSTART and no DTEND! Skipping..." << endl;
 	goto SKIP;
       }
 
@@ -1773,7 +1773,7 @@ void VCalFormat::populate(VObject *vcal)
       // we have either already processed them or are ignoring them.
       ;
     } else {
-      kdDebug() << "Ignoring unknown vObject \"" << vObjectName(curVO) << "\"" << endl;
+      kdDebug(5800) << "Ignoring unknown vObject \"" << vObjectName(curVO) << "\"" << endl;
     }
   SKIP:
     ;
@@ -1835,7 +1835,7 @@ Attendee::PartStat VCalFormat::readStatus(const char *s) const
   else if (statStr== "DELEGATED")
     status = Attendee::Delegated;
   else {
-    kdDebug() << "error setting attendee mStatus, unknown mStatus!" << endl;
+    kdDebug(5800) << "error setting attendee mStatus, unknown mStatus!" << endl;
     status = Attendee::NeedsAction;
   }
 

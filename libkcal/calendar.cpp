@@ -87,7 +87,7 @@ void Calendar::init()
 
 #if 0
   tmpStr = KOPrefs::instance()->mTimeZone;
-//  kdDebug() << "Calendar::Calendar(): TimeZone: " << tmpStr << endl;
+//  kdDebug(5800) << "Calendar::Calendar(): TimeZone: " << tmpStr << endl;
   int dstSetting = KOPrefs::instance()->mDaylightSavings;
   extern long int timezone;
   struct tm *now;
@@ -152,7 +152,7 @@ Event *Calendar::createDrop(QDropEvent *de)
 
 Todo *Calendar::createDropTodo(QDropEvent *de)
 {
-  kdDebug() << "Calendar::createDropTodo()" << endl;
+  kdDebug(5800) << "Calendar::createDropTodo()" << endl;
   return mDndFormat->createDropTodo(de);
 }
 
@@ -256,7 +256,7 @@ void Calendar::showDialogs(bool d)
 // don't ever call this unless a kapp exists!
 void Calendar::updateConfig()
 {
-//  kdDebug() << "Calendar::updateConfig()" << endl;
+//  kdDebug(5800) << "Calendar::updateConfig()" << endl;
 
   bool updateFlag = FALSE;
   
@@ -279,7 +279,7 @@ void Calendar::updateConfig()
     // gotta skip over the first one, which is same as first. 
     // I know, bad coding.
     for (currEvent = prev(); currEvent; currEvent = prev()) {
-//      kdDebug() << "in Calendar::updateConfig(), currEvent summary: " << currEvent->getSummary() << endl;
+//      kdDebug(5800) << "in Calendar::updateConfig(), currEvent summary: " << currEvent->getSummary() << endl;
       if ((currEvent == firstEvent) && !atFirst) {
 	break;
       }

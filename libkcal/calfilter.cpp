@@ -45,7 +45,7 @@ void CalFilter::apply(QPtrList<Event> *eventlist)
 {
   if (!mEnabled) return;
 
-//  kdDebug() << "CalFilter::apply()" << endl;
+//  kdDebug(5800) << "CalFilter::apply()" << endl;
 
   Event *event = eventlist->first();
   while(event) {
@@ -57,7 +57,7 @@ void CalFilter::apply(QPtrList<Event> *eventlist)
     }
   }
 
-//  kdDebug() << "CalFilter::apply() done" << endl;
+//  kdDebug(5800) << "CalFilter::apply() done" << endl;
 }
 
 // TODO: avoid duplicating apply() code
@@ -65,7 +65,7 @@ void CalFilter::apply(QPtrList<Todo> *eventlist)
 {
   if (!mEnabled) return;
 
-//  kdDebug() << "CalFilter::apply()" << endl;
+//  kdDebug(5800) << "CalFilter::apply()" << endl;
 
   Todo *event = eventlist->first();
   while(event) {
@@ -77,12 +77,12 @@ void CalFilter::apply(QPtrList<Todo> *eventlist)
     }
   }
 
-//  kdDebug() << "CalFilter::apply() done" << endl;
+//  kdDebug(5800) << "CalFilter::apply() done" << endl;
 }
 
 bool CalFilter::filterEvent(Event *event)
 {
-//  kdDebug() << "CalFilter::filterEvent(): " << event->getSummary() << endl;
+//  kdDebug(5800) << "CalFilter::filterEvent(): " << event->getSummary() << endl;
 
   if (mCriteria & HideRecurring) {
     if (event->recurrence()->doesRecur()) return false;
@@ -93,7 +93,7 @@ bool CalFilter::filterEvent(Event *event)
 
 bool CalFilter::filterTodo(Todo *todo)
 {
-//  kdDebug() << "CalFilter::filterEvent(): " << event->getSummary() << endl;
+//  kdDebug(5800) << "CalFilter::filterEvent(): " << event->getSummary() << endl;
 
   if (mCriteria & HideCompleted) {
     if (todo->isCompleted()) return false;
@@ -104,7 +104,7 @@ bool CalFilter::filterTodo(Todo *todo)
 
 bool CalFilter::filterIncidence(Incidence *incidence)
 {
-//  kdDebug() << "CalFilter::filterEvent(): " << event->getSummary() << endl;
+//  kdDebug(5800) << "CalFilter::filterEvent(): " << event->getSummary() << endl;
 
   if (mCriteria & ShowCategories) {
     for (QStringList::Iterator it = mCategoryList.begin();
@@ -132,7 +132,7 @@ bool CalFilter::filterIncidence(Incidence *incidence)
     return true;
   }
     
-//  kdDebug() << "CalFilter::filterEvent(): passed" << endl;
+//  kdDebug(5800) << "CalFilter::filterEvent(): passed" << endl;
   
   return true;
 }

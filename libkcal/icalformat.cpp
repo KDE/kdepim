@@ -60,13 +60,13 @@ ICalFormat::~ICalFormat()
 
 bool ICalFormat::load(const QString &fileName)
 {
-  kdDebug() << "ICalFormat::load() " << fileName << endl;
+  kdDebug(5800) << "ICalFormat::load() " << fileName << endl;
 
   clearException();
 
   QFile file( fileName );
   if (!file.open( IO_ReadOnly ) ) {
-    kdDebug() << "ICalFormat::load() load error" << endl;
+    kdDebug(5800) << "ICalFormat::load() load error" << endl;
     setException(new ErrorFormat(ErrorFormat::LoadError));
     return false;
   }
@@ -80,22 +80,22 @@ bool ICalFormat::load(const QString &fileName)
   icalcomponent *calendar;
 
   calendar = icalcomponent_new_from_string( text.local8Bit().data());
-  //  kdDebug() << "Error: " << icalerror_perror() << endl;
+  //  kdDebug(5800) << "Error: " << icalerror_perror() << endl;
   if (!calendar) {
-    kdDebug() << "ICalFormat::load() parse error" << endl;
+    kdDebug(5800) << "ICalFormat::load() parse error" << endl;
     setException(new ErrorFormat(ErrorFormat::ParseErrorIcal));
     return false;
   }
 
   if (icalcomponent_isa(calendar) != ICAL_VCALENDAR_COMPONENT) {
-    kdDebug() << "ICalFormat::load(): No VCALENDAR component found" << endl;
+    kdDebug(5800) << "ICalFormat::load(): No VCALENDAR component found" << endl;
     setException(new ErrorFormat(ErrorFormat::NoCalendar));
     return false;
   }
 
   // put all objects into their proper places
   if (!mImpl->populate(calendar)) {
-    kdDebug() << "ICalFormat::load(): Could not populate calendar" << endl;
+    kdDebug(5800) << "ICalFormat::load(): Could not populate calendar" << endl;
     setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
     return false;
   }
@@ -106,7 +106,7 @@ bool ICalFormat::load(const QString &fileName)
 
 bool ICalFormat::save(const QString &fileName)
 {
-  kdDebug() << "ICalFormat::save(): " << fileName << endl;
+  kdDebug(5800) << "ICalFormat::save(): " << fileName << endl;
 
   clearException();
 
@@ -236,11 +236,11 @@ Event *ICalFormat::createDrop(QDropEvent */*de*/)
              strcmp(vObjectName(curvo), VCTodoProp));
 
     if (strcmp(vObjectName(curvo), VCTodoProp) == 0) {
-      kdDebug() << "ICalFormat::createDrop(): Got todo instead of event." << endl;
+      kdDebug(5800) << "ICalFormat::createDrop(): Got todo instead of event." << endl;
     } else if (strcmp(vObjectName(curvo), VCEventProp) == 0) {
       event = VEventToEvent(curvo);
     } else {
-      kdDebug() << "ICalFormat::createDropTodo(): Unknown event type in drop." << endl;
+      kdDebug(5800) << "ICalFormat::createDropTodo(): Unknown event type in drop." << endl;
     }
     // get rid of temporary VObject
     deleteVObject(vcal);
@@ -270,11 +270,11 @@ Todo *ICalFormat::createDropTodo(QDropEvent */*de*/)
              strcmp(vObjectName(curvo), VCTodoProp));
 
     if (strcmp(vObjectName(curvo), VCEventProp) == 0) {
-      kdDebug() << "ICalFormat::createDropTodo(): Got event instead of todo." << endl;
+      kdDebug(5800) << "ICalFormat::createDropTodo(): Got event instead of todo." << endl;
     } else if (strcmp(vObjectName(curvo), VCTodoProp) == 0) {
       event = VTodoToEvent(curvo);
     } else {
-      kdDebug() << "ICalFormat::createDropTodo(): Unknown event type in drop." << endl;
+      kdDebug(5800) << "ICalFormat::createDropTodo(): Unknown event type in drop." << endl;
     }
     // get rid of temporary VObject
     deleteVObject(vcal);
@@ -376,13 +376,13 @@ Event *ICalFormat::pasteEvent(const QDate &/*newDate*/,const QTime */*newTime*/)
 				  anEvent->dtEnd().time()));
       mCalendar->addEvent(anEvent);
     } else {
-      kdDebug() << "found a VEvent with no DTSTART/DTEND! Skipping" << endl;
+      kdDebug(5800) << "found a VEvent with no DTSTART/DTEND! Skipping" << endl;
     }
   } else if (strcmp(vObjectName(curVO), VCTodoProp) == 0) {
     anEvent = VTodoToEvent(curVO);
     mCalendar->addTodo(anEvent);
   } else {
-    kdDebug() << "unknown event type in paste!!!" << endl;
+    kdDebug(5800) << "unknown event type in paste!!!" << endl;
   }
   // get rid of temporary VObject
   deleteVObject(vcal);
@@ -399,7 +399,7 @@ QString ICalFormat::createScheduleMessage(Incidence *incidence,
   QString messageText = icalcomponent_as_ical_string(message);
 
 #if 0
-  kdDebug() << "ICalFormat::createScheduleMessage: message START\n"
+  kdDebug(5800) << "ICalFormat::createScheduleMessage: message START\n"
             << messageText
             << "ICalFormat::createScheduleMessage: message END" << endl;
 #endif
@@ -438,7 +438,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage(const QString &messageText)
 
   if (!incidence) return 0;
 
-  kdDebug() << "ICalFormat::parseScheduleMessage() getting method..." << endl;
+  kdDebug(5800) << "ICalFormat::parseScheduleMessage() getting method..." << endl;
 
   icalproperty_method icalmethod = icalproperty_get_method(m);
   Scheduler::Method method;
@@ -470,11 +470,11 @@ ScheduleMessage *ICalFormat::parseScheduleMessage(const QString &messageText)
       break;
     default:
       method = Scheduler::NoMethod;
-      kdDebug() << "ICalFormat::parseScheduleMessage(): Unknow method" << endl;
+      kdDebug(5800) << "ICalFormat::parseScheduleMessage(): Unknow method" << endl;
       break;
   }
 
-  kdDebug() << "ICalFormat::parseScheduleMessage() restriction..." << endl;
+  kdDebug(5800) << "ICalFormat::parseScheduleMessage() restriction..." << endl;
 
   if (!icalrestriction_check(message)) {
     setException(new ErrorFormat(ErrorFormat::Restriction,
@@ -502,11 +502,11 @@ ScheduleMessage *ICalFormat::parseScheduleMessage(const QString &messageText)
     calendarComponent = 0;
   }
 
-  kdDebug() << "ICalFormat::parseScheduleMessage() classify..." << endl;
+  kdDebug(5800) << "ICalFormat::parseScheduleMessage() classify..." << endl;
 
   icalclass result = icalclassify(message,calendarComponent,(char *)"");
   
-  kdDebug() << "ICalFormat::parseScheduleMessage() returning..." << endl;
+  kdDebug(5800) << "ICalFormat::parseScheduleMessage() returning..." << endl;
 
   ScheduleMessage::Status status;
 

@@ -46,7 +46,7 @@ Event::~Event()
 
 Incidence *Event::clone()
 {
-  kdDebug() << "Event::clone()" << endl;
+  kdDebug(5800) << "Event::clone()" << endl;
   return new Event(*this);
 }
 
@@ -67,7 +67,7 @@ QDateTime Event::dtEnd() const
   if (hasEndDate()) return mDtEnd;
   if (hasDuration()) return dtStart().addSecs(duration());
 
-  kdDebug() << "Warning! Event '" << summary()
+  kdDebug(5800) << "Warning! Event '" << summary()
             << "' does have neither end date nor duration." << endl;
   return QDateTime();
 }

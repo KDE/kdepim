@@ -77,7 +77,7 @@ CalendarLocal::~CalendarLocal()
 
 bool CalendarLocal::load(const QString &fileName)
 {
-  kdDebug() << "CalendarLocal::load(): '" << fileName << "'" << endl;
+  kdDebug(5800) << "CalendarLocal::load(): '" << fileName << "'" << endl;
 
   // do we want to silently accept this, or make some noise?  Dunno...
   // it is a semantical thing vs. a practical thing.
@@ -94,21 +94,21 @@ bool CalendarLocal::load(const QString &fileName)
 
   if (!success) {
     if (mFormat->exception()) {
-//      kdDebug() << "---Error: " << mFormat->exception()->errorCode() << endl;
+//      kdDebug(5800) << "---Error: " << mFormat->exception()->errorCode() << endl;
       if (mFormat->exception()->errorCode() == ErrorFormat::CalVersion1) {
         // Expected non vCalendar file, but detected vCalendar
-        kdDebug() << "CalendarLocal::load() Fallback to VCalFormat" << endl;
+        kdDebug(5800) << "CalendarLocal::load() Fallback to VCalFormat" << endl;
         delete mFormat;
         mFormat = new VCalFormat(this);
         return mFormat->load(fileName);
       }
       return false;
     } else {
-      kdDebug() << "Warning! There should be set an exception." << endl;
+      kdDebug(5800) << "Warning! There should be set an exception." << endl;
       return false;
     }
   } else {
-//    kdDebug() << "---Success" << endl;
+//    kdDebug(5800) << "---Success" << endl;
   }
 
   return true;
@@ -135,8 +135,8 @@ void CalendarLocal::close()
     QDate keyDate = keyToDate(qdi.currentKey());
     Event *ev;
     for(ev = tmpList->first();ev;ev = tmpList->next()) {
-//      kdDebug() << "-----FIRST.  " << ev->summary() << endl;
-//      kdDebug() << "---------MUL: " << (ev->isMultiDay() ? "Ja" : "Nein") << endl;
+//      kdDebug(5800) << "-----FIRST.  " << ev->summary() << endl;
+//      kdDebug(5800) << "---------MUL: " << (ev->isMultiDay() ? "Ja" : "Nein") << endl;
       bool del = false;
       if (ev->isMultiDay()) {
         if (ev->dtStart().date() == keyDate) {
@@ -146,7 +146,7 @@ void CalendarLocal::close()
         del = true;
       }
       if (del) {
-//        kdDebug() << "-----DEL  " << ev->summary() << endl;
+//        kdDebug(5800) << "-----DEL  " << ev->summary() << endl;
         delete ev;
       }
     }
@@ -169,18 +169,21 @@ void CalendarLocal::addEvent(Event *anEvent)
 {
   insertEvent(anEvent);
   if (anEvent->organizer() != getEmail()) {
-    kdDebug() << "Event " << anEvent->summary() << " Organizer: " << anEvent->organizer()
+    kdDebug(5800) << "Event " << anEvent->summary() << " Organizer: " << anEvent->organizer()
               << " Email: " << getEmail() << endl;
 //    anEvent->setReadOnly(true);
   }
+// TODO: Reenable eventUpdated (signature has changed)
+#if 0
   connect(anEvent,SIGNAL(eventUpdated(Incidence *)),this,SLOT(updateEvent(Incidence *)));
+#endif
   emit calUpdated(anEvent);
 }
 
 // probably not really efficient, but...it works for now.
 void CalendarLocal::deleteEvent(Event *event)
 {
-  kdDebug() << "CalendarLocal::deleteEvent" << endl;
+  kdDebug(5800) << "CalendarLocal::deleteEvent" << endl;
 
   QDate date(event->dtStart().date());
 
@@ -201,7 +204,7 @@ void CalendarLocal::deleteEvent(Event *event)
 	  tmpList->remove();
 	  goto FINISH;
 	} else {
-	  //kdDebug() << "deleting multi-day event" << endl;
+	  //kdDebug(5800) << "deleting multi-day event" << endl;
 	  // event covers multiple days.
 	  startDate = anEvent->dtStart().date();
 	  extraDays = startDate.daysTo(anEvent->dtEnd().date());
@@ -306,8 +309,11 @@ Event *CalendarLocal::getEvent(const QString &UniqueStr)
 void CalendarLocal::addTodo(Todo *todo)
 {
   mTodoList.append(todo);
+// TODO: Reenable eventUpdated (signature has changed)
+#if 0
   connect(todo, SIGNAL(eventUpdated(Incidence *)), this,
 	  SLOT(updateEvent(Incidence *)));
+#endif
   emit calUpdated(todo);
 }
 
@@ -365,7 +371,7 @@ int CalendarLocal::numEvents(const QDate &qd)
   for (anEvent = mRecursList.first(); anEvent; anEvent = mRecursList.next()) {
     if (anEvent->isMultiDay()) {
       extraDays = anEvent->dtStart().date().daysTo(anEvent->dtEnd().date());
-      //kdDebug() << "multi day event w/" << extraDays << " days" << endl;
+      //kdDebug(5800) << "multi day event w/" << extraDays << " days" << endl;
       for (i = 0; i <= extraDays; i++) {
 	if (anEvent->recursOn(qd.addDays(i))) {
 	  ++count;
@@ -415,7 +421,7 @@ bool CalendarLocal::checkNonRecurringAlarms(QPtrList<Event>& alarmEvents, bool a
            (alarm = it.current()) != 0;  ++it) {
 	if (alarm->enabled()) {
 	  tmpDT = alarm->time();
-	  //kdDebug() << "calendarlocal::checkNonRecurringAlarms - tmpDT of " << anEvent->summary() << " - " << tmpDT.date().toString() << endl;
+	  //kdDebug(5800) << "calendarlocal::checkNonRecurringAlarms - tmpDT of " << anEvent->summary() << " - " << tmpDT.date().toString() << endl;
 	  if (tmpDT.date() == now.date()
 	  &&  tmpDT.time().hour() == now.time().hour()
 	  &&  tmpDT.time().minute() == now.time().minute()) {
@@ -507,7 +513,7 @@ bool CalendarLocal::checkTodos(QPtrList<Todo>& alarmTodos, bool append)
          (alarm = it.current()) != 0;  ++it) {
       if (alarm->enabled()) {
 	tmpDT = alarm->time();
-	//kdDebug() << "calendarlocal::checkTodos - tmpDT of " << aTodo->summary() << " - " << tmpDT.date().toString() << endl;
+	//kdDebug(5800) << "calendarlocal::checkTodos - tmpDT of " << aTodo->summary() << " - " << tmpDT.date().toString() << endl;
 	if (tmpDT.date() == now.date()
 	&&  tmpDT.time().hour() == now.time().hour()
 	&&  tmpDT.time().minute() == now.time().minute()) {
@@ -540,7 +546,7 @@ void CalendarLocal::updateEvent(Incidence *incidence)
     al = incidence->attendees();
     for (a = al.first(); a; a = al.next()) {
       if ((a->flag()) && (a->RSVP())) {
-	//kdDebug() << "send appointment to " << a->getName() << endl;
+	//kdDebug(5800) << "send appointment to " << a->getName() << endl;
 	a->setFlag(false);
       }
     }
@@ -549,7 +555,7 @@ void CalendarLocal::updateEvent(Incidence *incidence)
 
   Event *anEvent = dynamic_cast<Event *>(incidence);
   if (!anEvent) {
-//    kdDebug() << "CalendarLocal::updateEvent(): Warning! Passed non-Event" << endl;
+//    kdDebug(5800) << "CalendarLocal::updateEvent(): Warning! Passed non-Event" << endl;
   } else {
     // we don't need to do anything to Todo events.
 
@@ -629,7 +635,7 @@ long int CalendarLocal::makeKey(const QDateTime &dt)
 
   tmpD = dt.date();
   tmpStr.sprintf("%d%.2d%.2d",tmpD.year(), tmpD.month(), tmpD.day());
-//  kdDebug() << "CalendarLocal::makeKey(): " << tmpStr << endl;
+//  kdDebug(5800) << "CalendarLocal::makeKey(): " << tmpStr << endl;
   return tmpStr.toLong();
 }
 
@@ -645,11 +651,11 @@ long int CalendarLocal::makeKey(const QDate &d)
 QDate CalendarLocal::keyToDate(long int key)
 {
   QString dateStr = QString::number(key);
-//  kdDebug() << "CalendarLocal::keyToDate(): " << dateStr << endl;
+//  kdDebug(5800) << "CalendarLocal::keyToDate(): " << dateStr << endl;
   QDate date(dateStr.mid(0,4).toInt(),dateStr.mid(4,2).toInt(),
              dateStr.mid(6,2).toInt());
 
-//  kdDebug() << "  QDate: " << date.toString() << endl;
+//  kdDebug(5800) << "  QDate: " << date.toString() << endl;
 
   return date;
 }
@@ -692,7 +698,7 @@ QPtrList<Event> CalendarLocal::eventsForDate(const QDate &qd, bool sorted)
     return eventList;
   }
 
-  //  kdDebug() << "Sorting getEvents for date\n" << endl;
+  //  kdDebug(5800) << "Sorting getEvents for date\n" << endl;
   // now, we have to sort it based on getDtStart.time()
   QPtrList<Event> eventListSorted;
   for (anEvent = eventList.first(); anEvent; anEvent = eventList.next()) {
@@ -818,22 +824,25 @@ QPtrList<Event> CalendarLocal::eventsForDate(const QDateTime &qdt)
 
 void CalendarLocal::addJournal(Journal *journal)
 {
-  kdDebug() << "Adding Journal on " << journal->dtStart().toString() << endl;
+  kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
 
   mJournalMap.insert(journal->dtStart().date(),journal);
 
+// TODO: Reenable eventUpdated (signature has changed)
+#if 0
   connect(journal, SIGNAL(eventUpdated(Incidence *)), this,
 	  SLOT(updateEvent(Incidence *)));
+#endif
 }
 
 Journal *CalendarLocal::journal(const QDate &date)
 {
-//  kdDebug() << "CalendarLocal::journal() " << date.toString() << endl;
+//  kdDebug(5800) << "CalendarLocal::journal() " << date.toString() << endl;
 
   QMap<QDate,Journal *>::ConstIterator it = mJournalMap.find(date);
   if (it == mJournalMap.end()) return 0;
   else {
-//    kdDebug() << "  Found" << endl;
+//    kdDebug(5800) << "  Found" << endl;
     return *it;
   }
 }

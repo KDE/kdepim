@@ -86,7 +86,7 @@ bool Scheduler::acceptTransaction(Incidence *incidence,Method method,ScheduleMes
   }
   else {
     if (method==Reply) {
-      kdDebug() << "Scheduler::acceptTransaction -REPLY-" << endl;
+      kdDebug(5800) << "Scheduler::acceptTransaction -REPLY-" << endl;
       //get event in calendar
       QPtrList<Event> eventList;
       eventList=mCalendar->getEvents(incidence->dtStart().date(),incidence->dtStart().date(),false);
@@ -94,7 +94,7 @@ bool Scheduler::acceptTransaction(Incidence *incidence,Method method,ScheduleMes
       for ( ev = eventList.first(); ev; ev = eventList.next() ) {
         if (ev->VUID()==incidence->VUID()) {
           //get matching attendee in calendar
-          kdDebug() << "Scheduler::acceptTransaction match found!" << endl;
+          kdDebug(5800) << "Scheduler::acceptTransaction match found!" << endl;
           QPtrList<Attendee> attendeesIn = incidence->attendees();
           QPtrList<Attendee> attendeesEv = ev->attendees();
           Attendee *attIn;
@@ -103,7 +103,7 @@ bool Scheduler::acceptTransaction(Incidence *incidence,Method method,ScheduleMes
             for ( attEv = attendeesEv.first(); attEv; attEv = attendeesEv.next() ) {
               if (attIn->email()==attEv->email()) {
                 //update attendee-info
-                kdDebug() << "Scheduler::acceptTransaction update attendee" << endl;
+                kdDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
                 attEv->setRole(attIn->role());
                 attEv->setStatus(attIn->status());
                 attEv->setRSVP(attIn->RSVP());
@@ -117,7 +117,7 @@ bool Scheduler::acceptTransaction(Incidence *incidence,Method method,ScheduleMes
     }
     else {
       if (method==Cancel) {
-        kdDebug() << "Scheduler::acceptTransaction -Cancel-" << endl;
+        kdDebug(5800) << "Scheduler::acceptTransaction -Cancel-" << endl;
         //get event in calendar
         QPtrList<Event> eventList;
         eventList=mCalendar->getEvents(incidence->dtStart().date(),incidence->dtStart().date(),false);
@@ -125,7 +125,7 @@ bool Scheduler::acceptTransaction(Incidence *incidence,Method method,ScheduleMes
         for ( ev = eventList.first(); ev; ev = eventList.next() ) {
           if (ev->VUID()==incidence->VUID()) {
             //get matching attendee in calendar
-            kdDebug() << "Scheduler::acceptTransaction match found!" << endl;
+            kdDebug(5800) << "Scheduler::acceptTransaction match found!" << endl;
             mCalendar->deleteEvent(ev);
           }
         }
