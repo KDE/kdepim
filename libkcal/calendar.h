@@ -229,6 +229,7 @@ class Calendar {
     QString mTimeZoneId;
 
     Observer *mObserver;
+    bool mNewObserver;
     
     bool mModified;
 };

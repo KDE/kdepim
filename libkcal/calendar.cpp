@@ -66,6 +66,7 @@ Calendar::Calendar(const QString &timeZoneId)
 void Calendar::init()
 {
   mObserver = 0;
+  mNewObserver = false;
 
   mModified = false;
 
@@ -300,11 +301,13 @@ QPtrList<Todo> Calendar::getFilteredTodoList()
 void Calendar::registerObserver( Observer *observer )
 {
   mObserver = observer;
+  mNewObserver = true;
 }
 
 void Calendar::setModified( bool modified )
 {
-  if ( modified != mModified ) {
+  if ( modified != mModified || mNewObserver ) {
+    mNewObserver = false;
     if ( mObserver ) mObserver->calendarModified( modified, this );
     mModified = modified;
   }
