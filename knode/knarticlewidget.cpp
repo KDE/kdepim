@@ -697,7 +697,7 @@ void KNArticleWidget::createHtmlPage()
 
   //Partial message
   if(ct->isPartial()) {
-    html+=i18n("<br><bodyblock><b>This article has the Mime-Type &quot;message/partial&quot;,\nwhich KNode cannot handle yet.<br>Meanwhile you can save the\narticle as a text-file and reassemble it by hand.</b></bodyblock></qt>");
+    html+=i18n("<br><bodyblock><b>This article has the Mime-Type &quot;message/partial&quot;, which KNode cannot handle yet.<br>Meanwhile you can save the article as a text-file and reassemble it by hand.</b></bodyblock></qt>");
     setText(html);
     h_tmlDone=true;
 
