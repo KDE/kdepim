@@ -114,7 +114,7 @@ bool ResourceKABC::doOpen()
 {
   kdDebug(5800) << "ResourceKABC::doOpen()" << endl;
 
-  mAddressbook = KABC::StdAddressBook::self();
+  mAddressbook = KABC::StdAddressBook::self( true );
   connect( mAddressbook, SIGNAL(addressBookChanged(AddressBook*)), SLOT( reload() ) );
 
   return true;
