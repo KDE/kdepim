@@ -465,9 +465,9 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 	}
 
 	switch(message)
-	{
-	case CStatusMessages::READ_APP_INFO :
-		{
+	    {
+	    case CStatusMessages::READ_APP_INFO :
+	        {
 		unsigned char *buf = new unsigned char[BUFSIZ];
 		int appLen = fCurrentDB->readAppBlock(buf,BUFSIZ);
 		write(cSocket->socket(),&appLen,sizeof(int));
@@ -490,15 +490,15 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 		{
 		tmpRec = fCurrentDB->readNextModifiedRec();
 		if(tmpRec)
-		{
-		writeRecord(cSocket, tmpRec);
-		delete tmpRec;
-		}
+		    {
+		    writeRecord(cSocket, tmpRec);
+		    delete tmpRec;
+		    }
 		else
-		{
-		CStatusMessages::write(cSocket->socket(), 
-		CStatusMessages::NO_SUCH_RECORD);
-		}
+		    {
+		    CStatusMessages::write(cSocket->socket(), 
+					   CStatusMessages::NO_SUCH_RECORD);
+		    }
 		}
 		break;
 	case CStatusMessages::NEXT_REC_IN_CAT :
@@ -507,13 +507,13 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 		read(cSocket->socket(), &cat, sizeof(int));
 		tmpRec = fCurrentDB->readNextRecInCategory(cat);
 		if(tmpRec)
-		{
-		writeRecord(cSocket, tmpRec);
-		delete tmpRec;
-		}
+		    {
+		    writeRecord(cSocket, tmpRec);
+		    delete tmpRec;
+		    }
 		else
-		CStatusMessages::write(cSocket->socket(), 
-		CStatusMessages::NO_SUCH_RECORD);
+		    CStatusMessages::write(cSocket->socket(), 
+					   CStatusMessages::NO_SUCH_RECORD);
 		}
 		break;
 	case CStatusMessages::READ_REC_BY_INDEX :
@@ -537,6 +537,7 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 		    CStatusMessages::write(cSocket->socket(), 
 					   CStatusMessages::NO_SUCH_RECORD);
 		    }
+		}
 		break;
 	case CStatusMessages::READ_REC_BY_ID :
 		{
@@ -544,23 +545,23 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 		read(cSocket->socket(), &id, sizeof(recordid_t));
 		tmpRec = fCurrentDB->readRecordById(id);
 		if(tmpRec)
-		{
-		writeRecord(cSocket, tmpRec);
-		delete tmpRec;
-		}
+		    {
+		    writeRecord(cSocket, tmpRec);
+		    delete tmpRec;
+		    }
 		else
-		CStatusMessages::write(cSocket->socket(), 
-		CStatusMessages::NO_SUCH_RECORD);
+		    CStatusMessages::write(cSocket->socket(), 
+					   CStatusMessages::NO_SUCH_RECORD);
 		}
 		break;
 	default :
-		kdWarning() << __FUNCTION__ << ": Unknown status message " 
+	    kdWarning() << __FUNCTION__ << ": Unknown status message " 
 			<< message
 			<< endl;
+		}
 	}
-}
-
-void
+	
+	void
 KPilotLink::slotConduitClosed(KSocket* theSocket)
 {
 	FUNCTIONSETUP;
@@ -1734,6 +1735,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 #endif
 
 // $Log$
+// Revision 1.46  2001/04/29 00:26:42  stern
+// Fixed nasty missing break statement
+//
 // Revision 1.45  2001/04/26 21:59:00  adridg
 // CVS_SILENT B0rkage with previous commit
 //
