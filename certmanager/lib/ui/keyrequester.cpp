@@ -80,7 +80,7 @@
 
 #include <assert.h>
 
-Kleo::KeyRequester::KeyRequester( const CryptoBackend * backend,
+Kleo::KeyRequester::KeyRequester( const CryptoBackend::Protocol * backend,
 				  unsigned int allowedKeys, bool multipleKeys,
 				  QWidget * parent, const char * name )
   : QWidget( parent, name ),
@@ -117,10 +117,10 @@ Kleo::KeyRequester::KeyRequester( const CryptoBackend * backend,
   setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
 			      QSizePolicy::Fixed ) );
 
-  if ( backend && backend->protocol() == "openpgp" ) {
+  if ( backend && backend->name() == "openpgp" ) {
     mDialogCaption = i18n("OpenPGP Key Selection");
     mDialogMessage = i18n("Please select an OpenPGP key to use.");
-  } else if ( backend && backend->protocol() == "smime" ) {
+  } else if ( backend && backend->name() == "smime" ) {
     mDialogCaption = i18n("S/MIME Key Selection");
     mDialogMessage = i18n("Please select an S/MIME key to use.");
   } else {
@@ -357,7 +357,7 @@ static inline unsigned int signingKeyUsage( bool trusted, bool valid ) {
   return result;
 }
 
-Kleo::EncryptionKeyRequester::EncryptionKeyRequester( const CryptoBackend * backend,
+Kleo::EncryptionKeyRequester::EncryptionKeyRequester( const CryptoBackend::Protocol * backend,
 						      bool multi, QWidget * parent, const char * name,
 						      bool onlyTrusted, bool onlyValid )
   : KeyRequester( backend, encryptionKeyUsage( onlyTrusted, onlyValid ), multi,
@@ -369,7 +369,7 @@ Kleo::EncryptionKeyRequester::EncryptionKeyRequester( const CryptoBackend * back
 Kleo::EncryptionKeyRequester::~EncryptionKeyRequester() {}
 
 
-Kleo::SigningKeyRequester::SigningKeyRequester( const CryptoBackend * backend,
+Kleo::SigningKeyRequester::SigningKeyRequester( const CryptoBackend::Protocol * backend,
 						bool multi, QWidget * parent, const char * name,
 						bool onlyTrusted, bool onlyValid )
   : KeyRequester( backend, signingKeyUsage( onlyTrusted, onlyValid ), multi,

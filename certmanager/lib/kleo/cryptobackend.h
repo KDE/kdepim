@@ -56,10 +56,30 @@ namespace Kleo {
 
   class CryptoBackend {
   public:
+    class Protocol;
+
     virtual ~CryptoBackend() {}
 
-    virtual QString protocol() const = 0;
-    virtual CryptoConfig      * config() const = 0;
+    virtual QString displayName() const = 0;
+    
+    virtual bool checkForOpenPGP( QString * reason=0 ) const = 0;
+    virtual bool checkForSMIME( QString * reason=0 ) const = 0;
+
+    virtual bool supportsOpenPGP() const = 0;
+    virtual bool supportsSMIME() const = 0;
+
+    virtual CryptoConfig * config() const = 0;
+    virtual Protocol * openpgp() const = 0;
+    virtual Protocol * smime() const = 0;
+  };
+
+  class CryptoBackend::Protocol {
+  public:
+    virtual ~Protocol() {}
+
+    virtual QString name() const = 0;
+
+    virtual QString displayName() const = 0;
 
     virtual KeyListJob        * keyListJob( bool remote=false, bool includeSigs=false, bool validate=false ) const = 0;
     virtual EncryptJob        * encryptJob( bool armor=false, bool textmode=false ) const = 0;

@@ -264,7 +264,7 @@ static const int sCheckSelectionDelay = 250;
 
 Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      const QString & text,
-					      const CryptoBackend * backend,
+					      const CryptoBackend::Protocol * backend,
 					      const std::vector<GpgME::Key> & selectedKeys,
 					      unsigned int keyUsage,
 					      bool extendedSelection,
@@ -703,8 +703,12 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
   if ( mBackend )
     startKeyListJobForBackend( mBackend );
   else
-    for ( CryptPlugWrapperListIterator it( CryptPlugFactory::instance()->list() ) ; it.current() ; ++it )
-      startKeyListJobForBackend( it.current() );
+    for ( unsigned int i = 0 ; const CryptoBackend * b = CryptPlugFactory::instance()->backend( i ) ; ++i ) {
+      if ( const CryptoBackend::Protocol * p = b->openpgp() )
+	startKeyListJobForBackend( p );
+      if ( const CryptoBackend::Protocol * p = b->smime() )
+	startKeyListJobForBackend( p );
+    }
 
   if ( mListJobCount == 0 ) {
     this->setEnabled( true );
@@ -725,7 +729,7 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
   KMessageBox::error( parent, msg, i18n( "Key Listing Failed" ) );
 }
 
-void Kleo::KeySelectionDialog::startKeyListJobForBackend( const CryptoBackend * backend ) {
+void Kleo::KeySelectionDialog::startKeyListJobForBackend( const CryptoBackend::Protocol * backend ) {
   assert( backend );
   KeyListJob * job = backend->keyListJob( false, false, false ); // local, w/o sigs, no validation
   if ( !job )
@@ -742,7 +746,7 @@ void Kleo::KeySelectionDialog::startKeyListJobForBackend( const CryptoBackend * 
     return showKeyListError( this, err );
 
   // FIXME: create a MultiProgressDialog:
-  (void)new ProgressDialog( job, i18n( "Fetching keys for %1" ).arg( backend->protocol() ), this );
+  (void)new ProgressDialog( job, i18n( "Fetching keys for %1" ).arg( backend->name() ), this );
   ++mListJobCount;
 }
 

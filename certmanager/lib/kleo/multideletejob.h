@@ -33,7 +33,8 @@
 #ifndef __KLEO_MULTIDELETEJOB_H__
 #define __KLEO_MULTIDELETEJOB_H__
 
-#include "job.h"
+#include <kleo/job.h>
+#include <kleo/cryptobackend.h>
 
 #include <vector>
 
@@ -43,7 +44,6 @@ namespace GpgME {
 }
 
 namespace Kleo {
-  class CryptoBackend;
   class DeleteJob;
 }
 
@@ -64,7 +64,7 @@ namespace Kleo {
   class MultiDeleteJob : public Job {
     Q_OBJECT
   public:
-    MultiDeleteJob( const CryptoBackend * backend );
+    MultiDeleteJob( const CryptoBackend::Protocol * protocol );
     ~MultiDeleteJob();
 
     /**
@@ -86,7 +86,7 @@ namespace Kleo {
     GpgME::Error startAJob();
 
   private:
-    const CryptoBackend * mBackend;
+    const CryptoBackend::Protocol * mProtocol;
     DeleteJob * mJob;
     std::vector<GpgME::Key> mKeys;
     std::vector<GpgME::Key>::const_iterator mIt;

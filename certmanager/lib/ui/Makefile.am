@@ -11,7 +11,8 @@ libkleopatra_ui_la_SOURCES = \
 	progressdialog.cpp \
 	keylistview.cpp \
 	keyselectiondialog.cpp \
-	keyrequester.cpp
+	keyrequester.cpp \
+	backendconfigwidget.cpp
 
 kleodir = $(includedir)/kleo
 kleo_HEADERS = \
@@ -19,6 +20,7 @@ kleo_HEADERS = \
 	progressdialog.h \
 	keylistview.h \
 	keyselectiondialog.h \
-	keyrequester.h
+	keyrequester.h \
+	backendconfigwidget.h
 
 METASOURCES = AUTO

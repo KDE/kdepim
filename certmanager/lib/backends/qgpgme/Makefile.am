@@ -7,6 +7,8 @@ noinst_LTLIBRARIES = libkleopatra_backend_qgpgme.la
 libkleopatra_backend_qgpgme_la_SOURCES = \
 			gnupgprocessbase.cpp \
 			\
+			qgpgmebackend.cpp \
+			\
 			qgpgmekeylistjob.cpp \
 			qgpgmekeygenerationjob.cpp \
 			qgpgmeimportjob.cpp \

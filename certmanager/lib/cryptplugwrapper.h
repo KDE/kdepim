@@ -447,7 +447,7 @@ private:
 /*!
     \brief This class provides C++ access to the CRYPTPLUG API.
 */
-class CryptPlugWrapper : public Kleo::CryptoBackend {
+class CryptPlugWrapper : public Kleo::CryptoBackend::Protocol {
 public:
     static QString errorIdToText( int errId, bool & isPassphraseError );
 
@@ -563,6 +563,10 @@ public:
 
     QString protocol() const;
 
+    QString name() const {
+      return protocol();
+    }
+
     /*! \ingroup groupAdmin
         \brief Set this CRYPTPLUG wrapper's internal \c active flag.
 
@@ -671,6 +675,7 @@ public:
     */
     void setUpdateURL( const QString& url );
 
+private:
     /*! \ingroup groupGeneral
     \brief This function does two things: (a) load the lib and (b) set up all internal structures.
 
@@ -690,6 +695,7 @@ public:
     */
     bool initialize( InitStatus* initStatus, QString* errorMsg );
 
+public:
     /*! \ingroup groupGeneral
     \brief This function unloads the lib and frees all internal structures.
 
@@ -1533,7 +1539,6 @@ public:
                                  bool *truncated = 0 );
 #endif // LIBKLEOPATRA_NO_COMPAT
 
-    Kleo::CryptoConfig * config() const;
     Kleo::KeyListJob * keyListJob( bool remote=false, bool includeSigs=false, bool validate=true ) const;
     Kleo::EncryptJob * encryptJob( bool armor=false, bool textmode=false ) const;
     Kleo::DecryptJob * decryptJob() const;

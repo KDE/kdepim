@@ -37,9 +37,12 @@
 
 #include <kleo/keylistjob.h>
 #include <kleo/keygenerationjob.h>
+#include <kleo/cryptobackend.h>
 
+#if 0
 #include <cryptplugwrapper.h>
 #include <cryptplugwrapperlist.h>
+#endif
 #include <cryptplugfactory.h>
 
 #include <ui/progressdialog.h>
@@ -111,14 +114,14 @@ void KeyGenerator::slotStartKeyGeneration() {
       params += keyParams[i] + ( ": " + mLineEdits[i]->text().stripWhiteSpace() ) + '\n';
   params += "</GnupgKeyParms>\n";
 
-  const CryptPlugWrapper * wrapper = Kleo::CryptPlugFactory::instance()->list().findForLibName( protocol );
-  if ( !wrapper )
-    wrapper = Kleo::CryptPlugFactory::instance()->smime();
-  assert( wrapper );
+  const Kleo::CryptoBackend::Protocol * proto = protocol == "openpgp" ? Kleo::CryptPlugFactory::instance()->openpgp() : Kleo::CryptPlugFactory::instance()->smime() ;
+  if ( !proto )
+    proto = Kleo::CryptPlugFactory::instance()->smime();
+  assert( proto );
 
-  kdDebug() << "Using protocol " << wrapper->protocol() << endl;
+  kdDebug() << "Using protocol " << proto->name() << endl;
 
-  Kleo::KeyGenerationJob * job = wrapper->keyGenerationJob();
+  Kleo::KeyGenerationJob * job = proto->keyGenerationJob();
   assert( job );
 
   connect( job, SIGNAL(result(const GpgME::KeyGenerationResult&,const QByteArray&)),

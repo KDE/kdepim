@@ -951,7 +951,7 @@ CryptPlugWrapper::CryptPlugWrapper( const QString& name,
                                     const QString& libName,
                                     const QString& update,
                                     bool           active )
-  : Kleo::CryptoBackend(),
+  : Kleo::CryptoBackend::Protocol(),
     _name( name ),
     _libName( libName ),
     _updateURL( update ),
@@ -961,6 +961,8 @@ CryptPlugWrapper::CryptPlugWrapper( const QString& name,
     _config( 0 ),
     _cryptoConfig( 0 )
 {
+  const bool ok = initialize( 0, 0 );
+  assert( ok );
 }
 
 
@@ -1016,9 +1018,9 @@ QString CryptPlugWrapper::displayName() const
     if ( !_name.isEmpty() )
       return _name;
     if ( _libName.contains( "smime" ) )
-      return "S/MIME";
+      return "gpgsm";
     if ( _libName.contains( "openpgp" ) )
-      return "OpenPGP";
+      return "gpg";
     return i18n("(Unknown Protocol)");
 }
 
@@ -1382,12 +1384,6 @@ GpgME::ImportResult CryptPlugWrapper::importCertificate( const char* data, size_
 
 
    return _cp->importCertificateFromMem( data, length );
-}
-
-Kleo::CryptoConfig * CryptPlugWrapper::config() const {
-    if ( !_cryptoConfig )
-        const_cast<CryptPlugWrapper*>( this )->_cryptoConfig = new QGpgMECryptoConfig;
-    return _cryptoConfig;
 }
 
 Kleo::KeyListJob * CryptPlugWrapper::keyListJob( bool remote, bool includeSigs, bool validate ) const {

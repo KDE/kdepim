@@ -1,1 +1,1 @@
-SUBDIRS = qgpgme
+SUBDIRS = qgpgme kpgp

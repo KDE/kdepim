@@ -50,13 +50,13 @@
 #define __KLEO_UI_KEYREQUESTER_H__
 
 #include <qwidget.h>
+#include <kleo/cryptobackend.h>
 
 #include <vector>
 
 namespace Kleo {
   class KeyListView;
   class KeyListViewItem;
-  class CryptoBackend;
 }
 
 namespace GpgME {
@@ -74,7 +74,7 @@ namespace Kleo {
   class KeyRequester : public QWidget {
     Q_OBJECT
   public:
-    KeyRequester( const CryptoBackend * backend,
+    KeyRequester( const CryptoBackend::Protocol * backend,
 		  unsigned int allowedKeys, bool multipleKeys=false,
 		  QWidget * parent=0, const char * name=0 );
     ~KeyRequester();
@@ -128,7 +128,7 @@ namespace Kleo {
     void slotEraseButtonClicked();
 
   private:
-    const CryptoBackend * mBackend;
+    const CryptoBackend::Protocol * mBackend;
     QLabel * mLabel;
     QPushButton * mEraseButton;
     QPushButton * mDialogButton;
@@ -149,7 +149,7 @@ namespace Kleo {
   class EncryptionKeyRequester : public KeyRequester {
     Q_OBJECT
   public:
-    EncryptionKeyRequester( const CryptoBackend * backend,
+    EncryptionKeyRequester( const CryptoBackend::Protocol * backend,
 			    bool multipleKeys=false,
 			    QWidget * parent=0, const char * name=0,
 			    bool onlyTrusted=true, bool onlyValid=true );
@@ -166,7 +166,7 @@ namespace Kleo {
   class SigningKeyRequester : public KeyRequester {
     Q_OBJECT
   public:
-    SigningKeyRequester( const CryptoBackend * backend,
+    SigningKeyRequester( const CryptoBackend::Protocol * backend,
 			bool multipleKeys=false,
 			QWidget * parent=0, const char * name=0,
 			bool onlyTrusted=true, bool onlyValid=true );

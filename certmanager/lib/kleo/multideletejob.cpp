@@ -48,12 +48,12 @@
 
 #include <assert.h>
 
-Kleo::MultiDeleteJob::MultiDeleteJob( const CryptoBackend * backend )
+Kleo::MultiDeleteJob::MultiDeleteJob( const CryptoBackend::Protocol * protocol )
   : Job( 0, "Kleo::MultiDeleteJob" ),
-    mBackend( backend ),
+    mProtocol( protocol ),
     mJob( 0 )
 {
-  assert( backend );
+  assert( protocol );
 }
 
 Kleo::MultiDeleteJob::~MultiDeleteJob() {
@@ -98,7 +98,7 @@ void Kleo::MultiDeleteJob::slotResult( const GpgME::Error & err ) {
 GpgME::Error Kleo::MultiDeleteJob::startAJob() {
   if ( mIt == mKeys.end() )
     return 0;
-  mJob = mBackend->deleteJob();
+  mJob = mProtocol->deleteJob();
   assert( mJob ); // FIXME: we need a way to generate errors ourselves,
 		  // but I don't like the dependency on gpg-error :/
 

@@ -51,6 +51,8 @@
 
 #include <kdialogbase.h>
 
+#include <kleo/cryptobackend.h>
+
 #include <vector>
 
 class QCheckBox;
@@ -63,7 +65,6 @@ class QPoint;
 namespace Kleo {
   class KeyListView;
   class KeyListViewItem;
-  class CryptoBackend;
 }
 
 namespace GpgME {
@@ -91,7 +92,7 @@ namespace Kleo {
 
     KeySelectionDialog( const QString & title,
                         const QString & text=QString::null,
-                        const Kleo::CryptoBackend * backend=0,
+                        const Kleo::CryptoBackend::Protocol * backend=0,
 			const std::vector<GpgME::Key> & selectedKeys=std::vector<GpgME::Key>(),
                         unsigned int keyUsage=AllKeys,
                         bool extendedSelection=false,
@@ -141,7 +142,7 @@ namespace Kleo {
     void connectSignals();
     void disconnectSignals();
 
-    void startKeyListJobForBackend( const Kleo::CryptoBackend * );
+    void startKeyListJobForBackend( const Kleo::CryptoBackend::Protocol * );
 
 #if 0
     QString keyInfo( const Kpgp::Key* ) const;
@@ -150,7 +151,7 @@ namespace Kleo {
 
   private:
     Kleo::KeyListView * mKeyListView;
-    const Kleo::CryptoBackend * mBackend;
+    const Kleo::CryptoBackend::Protocol * mBackend;
     QCheckBox * mRememberCB;
     QCheckBox * mHideInvalidKeys;
     std::vector<GpgME::Key> mSelectedKeys;
