@@ -38,7 +38,7 @@ test -f "$PLUGIN_PATH" || exit 1
 
 shift 2
 
-if nm "$PLUGIN_PATH" > "$TMP-1" ; then
+if nm --demangle "$PLUGIN_PATH" > "$TMP-1" ; then
 	echo `wc -l < "$TMP-1"` "symbols in $PLUGIN_PATH"
 else
 	echo "nm failed on $PLUGIN_PATH"
@@ -53,8 +53,8 @@ for LIBF in $T $* ; do
 	test -f "$LIBF" || echo "$LIBF: Not found"
 	test -f "$LIBF" || exit 1
 
-	if nm "$LIBF" > "$TMP-2" 2> /dev/null ; then
-		nm --dynamic "$LIBF" >> "$TMP-2" 2> /dev/null
+	if nm --demangle "$LIBF" > "$TMP-2" 2> /dev/null ; then
+		nm --demangle --dynamic "$LIBF" >> "$TMP-2" 2> /dev/null
 		# echo `wc -l < "$TMP-2"` "symbols defined in $LIBF"
 	else
 		echo "nm failed on $LIBF"
