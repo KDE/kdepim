@@ -134,9 +134,16 @@ private:
 
 
 CertManager::CertManager( bool remote, const QString& query, 
-			  QWidget* parent, const char* name ) :
-    KMainWindow( parent, name ),
-    dirmngrProc(0), _certBox(0), _remote( remote )
+			  QWidget* parent, const char* name )
+  : KMainWindow( parent, name ),
+    dirmngrProc(0),
+    _crlView(0),
+    _toolbar(0),
+    _leAction(0),
+    _comboAction(0),
+    _findAction(0),
+    _certBox(0),
+    _remote( remote )
 {
   (void)KStdAction::redisplay( this, SLOT( loadCertificates() ), actionCollection());
   (void)KStdAction::quit( this, SLOT( quit() ), actionCollection());
