@@ -10,7 +10,7 @@
 
 #include <numeric>
 
-#include "top.h"
+#include "mainwindow.h"
 #include <qstring.h>
 #include <qkeycode.h>
 #include <qlayout.h>
@@ -34,7 +34,7 @@
 #include <kdebug.h>
 
 #include "kaccelmenuwatch.h"
-#include "karm.h"
+#include "taskview.h"
 #include "print.h"
 #include "task.h"
 #include "preferences.h"
@@ -42,16 +42,16 @@
 #include "listviewiterator.h"
 #include "karmutility.h"
 
-KarmWindow::KarmWindow()
+MainWindow::MainWindow()
   : KMainWindow(0),
 	_accel( new KAccel( this ) ),
 	_watcher( new KAccelMenuWatch( _accel, this ) ),
-	_karm( new Karm( this ) ),
+	_taskView( new TaskView( this ) ),
 	_totalSum( 0 ),
         _sessionSum( 0 ),
         _hideOnClose( true )
 {
-  setCentralWidget( _karm );
+  setCentralWidget( _taskView );
   // status bar
   startStatusBar();
 
@@ -64,75 +64,75 @@ KarmWindow::KarmWindow()
   _watcher->updateMenus();
 
   // connections
-  connect( _karm, SIGNAL( sessionTimeChanged( long, long ) ),     this, SLOT( updateTime( long, long ) ) );
-  connect( _karm, SIGNAL( selectionChanged  ( QListViewItem * )), this, SLOT(slotSelectionChanged()));
-  connect( _karm, SIGNAL( updateButtons() ),                      this, SLOT(slotSelectionChanged()));
+  connect( _taskView, SIGNAL( sessionTimeChanged( long, long ) ),     this, SLOT( updateTime( long, long ) ) );
+  connect( _taskView, SIGNAL( selectionChanged  ( QListViewItem * )), this, SLOT(slotSelectionChanged()));
+  connect( _taskView, SIGNAL( updateButtons() ),                      this, SLOT(slotSelectionChanged()));
 
   _preferences->load();
   loadGeometry();
 
 
-  connect( _karm, SIGNAL(contextMenuRequested( QListViewItem*, const QPoint&, int )),
+  connect( _taskView, SIGNAL(contextMenuRequested( QListViewItem*, const QPoint&, int )),
            this,  SLOT(contextMenuRequest( QListViewItem*, const QPoint&, int )));
 
   _tray = new KarmTray( this );
   
-  connect( _karm, SIGNAL( timerActive() ),   _tray, SLOT( startClock() ) );
-  connect( _karm, SIGNAL( timerActive() ),    this, SLOT( enableStopAll() ) );
-  connect( _karm, SIGNAL( timerInactive() ), _tray, SLOT( stopClock() ) );
-  connect( _karm, SIGNAL( timerInactive() ),  this, SLOT( disableStopAll() ) );
-  connect( _karm, SIGNAL( tasksChanged( QPtrList<Task> ) ), _tray,
+  connect( _taskView, SIGNAL( timerActive() ),   _tray, SLOT( startClock() ) );
+  connect( _taskView, SIGNAL( timerActive() ),    this, SLOT( enableStopAll() ) );
+  connect( _taskView, SIGNAL( timerInactive() ), _tray, SLOT( stopClock() ) );
+  connect( _taskView, SIGNAL( timerInactive() ),  this, SLOT( disableStopAll() ) );
+  connect( _taskView, SIGNAL( tasksChanged( QPtrList<Task> ) ), _tray,
                    SLOT( updateToolTip( QPtrList<Task> ) ) );
   
   // FIXME: this shouldnt stay. We need to check whether the
   // file exists and if not, create a blank one and ask whether
   // we want to add a task.
-  _karm->load();
+  _taskView->load();
 
   slotSelectionChanged();
 
 }
 
-void KarmWindow::slotSelectionChanged()
+void MainWindow::slotSelectionChanged()
 {
-  Task* item= static_cast<Task *>(_karm->currentItem());
+  Task* item= static_cast<Task *>(_taskView->currentItem());
   actionDelete->setEnabled(item);
   actionEdit->setEnabled(item);
   actionStart->setEnabled(item && !item->isRunning());
   actionStop->setEnabled(item && item->isRunning());
 }
 
-void KarmWindow::save()
+void MainWindow::save()
 {
   kdDebug() << i18n("Saving time data to disk.") << endl;
-  _karm->save();
+  _taskView->save();
   saveGeometry();
 }
 
-void KarmWindow::quit()
+void MainWindow::quit()
 {
   kapp->quit();
 }
 
 
-KarmWindow::~KarmWindow()
+MainWindow::~MainWindow()
 {
   kdDebug() << i18n("Quitting karm.") << endl;
-  _karm->stopAllTimers();
+  _taskView->stopAllTimers();
   save();
 }
 
-void KarmWindow::enableStopAll()
+void MainWindow::enableStopAll()
 {
   actionStopAll->setEnabled(true);
 }
 
-void KarmWindow::disableStopAll()
+void MainWindow::disableStopAll()
 {
   actionStopAll->setEnabled(false);
 }
 
-void KarmWindow::hideOnClose( bool hide )
+void MainWindow::hideOnClose( bool hide )
 {
   _hideOnClose = hide;
 }
@@ -141,7 +141,7 @@ void KarmWindow::hideOnClose( bool hide )
  * Calculate the sum of the session time and the total time for all leaf tasks and put it in the statusbar.
  */
 
-void KarmWindow::updateTime( long sessionDiff, long totalDiff )
+void MainWindow::updateTime( long sessionDiff, long totalDiff )
 {
   _sessionSum += sessionDiff;
   _totalSum   += totalDiff;
@@ -149,41 +149,41 @@ void KarmWindow::updateTime( long sessionDiff, long totalDiff )
   updateStatusBar();
 }
 
-void KarmWindow::updateStatusBar()
+void MainWindow::updateStatusBar()
 {
   QString time;
 
-  time = Karm::formatTime( _sessionSum );
+  time = TaskView::formatTime( _sessionSum );
   statusBar()->changeItem( i18n("Session: %1").arg(time), 0 );
 
-  time = Karm::formatTime( _totalSum );
+  time = TaskView::formatTime( _totalSum );
   statusBar()->changeItem( i18n("Total: %1" ).arg(time), 1);
 }
 
-void KarmWindow::startStatusBar()
+void MainWindow::startStatusBar()
 {
   statusBar()->insertItem( i18n("Session"), 0, 0, true );
   statusBar()->insertItem( i18n("Total" ), 1, 0, true );
 }
 
-void KarmWindow::saveProperties( KConfig* )
+void MainWindow::saveProperties( KConfig* )
 {
-  _karm->stopAllTimers();
-  _karm->save();
+  _taskView->stopAllTimers();
+  _taskView->save();
 }
 
-void KarmWindow::keyBindings()
+void MainWindow::keyBindings()
 {
   KKeyDialog::configureKeys( actionCollection(), xmlFile());
 }
 
-void KarmWindow::resetSessionTime()
+void MainWindow::resetSessionTime()
 {
-  _karm->resetSessionTimeForAllTasks();
+  _taskView->resetSessionTimeForAllTasks();
 }
 
 
-void KarmWindow::makeMenus()
+void MainWindow::makeMenus()
 {
   KAction
     *actionKeyBindings,
@@ -205,39 +205,39 @@ void KarmWindow::makeMenus()
                                     "reset_session_time");
   actionStart = new KAction( i18n("&Start"),
                              QString::fromLatin1("1rightarrow"), Key_S,
-                             _karm,
+                             _taskView,
                              SLOT( startCurrentTimer() ), actionCollection(),
                              "start");
   actionStop = new KAction( i18n("S&top"),
                             QString::fromLatin1("stop"), Key_Escape,
-                            _karm,
+                            _taskView,
                             SLOT( stopCurrentTimer() ), actionCollection(),
                             "stop");
   actionStopAll = new KAction( i18n("Stop &All Timers"),
                                0,
-                               _karm,
+                               _taskView,
                                SLOT( stopAllTimers() ), actionCollection(),
                                "stopAll");
   actionStopAll->setEnabled(false);
 
   actionNew = new KAction( i18n("&New..."),
                            QString::fromLatin1("filenew"), CTRL+Key_N,
-                           _karm,
+                           _taskView,
                            SLOT( newTask() ), actionCollection(),
                            "new_task");
   actionNewSub = new KAction( i18n("New &Subtask..."),
                               QString::fromLatin1("kmultiple"), CTRL+ALT+Key_N,
-                              _karm,
+                              _taskView,
                               SLOT( newSubTask() ), actionCollection(),
                               "new_sub_task");
   actionDelete = new KAction( i18n("&Delete..."),
                               QString::fromLatin1("editdelete"), Key_Delete,
-                              _karm,
+                              _taskView,
                               SLOT( deleteTask() ), actionCollection(),
                               "delete_task");
   actionEdit = new KAction( i18n("&Edit..."),
                             QString::fromLatin1("edit"), CTRL + Key_E,
-                            _karm,
+                            _taskView,
                             SLOT( editTask() ), actionCollection(),
                             "edit_task");
 
@@ -274,13 +274,13 @@ void KarmWindow::makeMenus()
   slotSelectionChanged();
 }
 
-void KarmWindow::print()
+void MainWindow::print()
 {
-  MyPrinter printer(_karm);
+  MyPrinter printer(_taskView);
   printer.print();
 }
 
-void KarmWindow::loadGeometry()
+void MainWindow::loadGeometry()
 {
   KConfig &config = *kapp->config();
 
@@ -293,7 +293,7 @@ void KarmWindow::loadGeometry()
 }
 
 
-void KarmWindow::saveGeometry()
+void MainWindow::saveGeometry()
 {
   KConfig &config = *KGlobal::config();
   config.setGroup( QString::fromLatin1("Main Window Geometry"));
@@ -302,7 +302,7 @@ void KarmWindow::saveGeometry()
   config.sync();
 }
 
-bool KarmWindow::queryClose()
+bool MainWindow::queryClose()
 {
   if ( _hideOnClose ) {
     hide();
@@ -311,10 +311,10 @@ bool KarmWindow::queryClose()
   return KMainWindow::queryClose();
 }
 
-void KarmWindow::contextMenuRequest( QListViewItem*, const QPoint& point, int )
+void MainWindow::contextMenuRequest( QListViewItem*, const QPoint& point, int )
 {
     if ( QPopupMenu* pop = dynamic_cast<QPopupMenu*>( factory()->container( i18n( "taskContext" ), this ) ) )
         pop->popup( point );
 }
 
-#include "top.moc"
+#include "mainwindow.moc"

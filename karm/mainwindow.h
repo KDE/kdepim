@@ -1,5 +1,5 @@
-#ifndef KARM_TOP_H
-#define KARM_TOP_H
+#ifndef MAIN_WINDOW_H
+#define MAIN_WINDOW_H
 
 #include <kmainwindow.h>
 
@@ -8,7 +8,7 @@ class QPoint;
 
 class KDialogBase;
 
-class Karm;
+class TaskView;
 class KAccel;
 class KAccelMenuWatch;
 class Preferences;
@@ -18,14 +18,14 @@ class KarmTray;
  * Main window to tie the application together.
  */
 
-class KarmWindow : public KMainWindow
+class MainWindow : public KMainWindow
 {
   Q_OBJECT
 
 private:
   KAccel          *_accel;
   KAccelMenuWatch *_watcher;
-  Karm            *_karm;
+  TaskView        *_taskView;
   long            _totalSum;
   long            _sessionSum;
   Preferences     *_preferences;
@@ -33,8 +33,8 @@ private:
   KarmTray        *_tray;
 
   public:
-    KarmWindow();
-    virtual ~KarmWindow();
+    MainWindow();
+    virtual ~MainWindow();
 
   protected slots:
     void keyBindings();
