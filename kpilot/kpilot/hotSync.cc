@@ -221,7 +221,7 @@ static inline void initNoBackup(QStringList &dbnames,
 	for (QValueList<unsigned long>::const_iterator i = dbcreators.begin();
 		i != dbcreators.end(); ++i)
 	{
-		creatorids.append(CSL1("[%1]").arg(*i));
+		creatorids.append(CSL1("[%1]").arg(*i,0,16));
 	}
 	DEBUGDAEMON << fname << ": Will skip creators " << creatorids << endl;
 #endif
@@ -350,8 +350,8 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Checking database "
-		<< info.name << " [" << info.creator << "]" << endl;
+	DEBUGDAEMON << fname << ": Checking database " << info.name 
+		<< " [" << QString::number(info.creator,16) << "]" << endl;
 #endif
 	if (dontBackup(&info,fNoBackupDBs,fNoBackupCreators))
 	{
