@@ -152,29 +152,25 @@ const QCString& KNArticle::replyToEmail()
 
 
 
-// TODO: this should honor the global date format!!
 void KNArticle::setTimeT(time_t t)
 {
   t_imeT=t;
   if(t_imeString) {
-    //delete t_imeString;
-    //t_imeString=0;
-    DwDateTime dt;
-    dt.FromUnixTime(t_imeT);
-    t_imeString->sprintf("%.2d.%.2d.%.2d (%.2d:%.2d)",dt.Day(),dt.Month(),(dt.Year()%100),dt.Hour(),dt.Minute());
+    QDateTime dt;
+    dt.setTime_t(t_imeT);
+    *t_imeString = KGlobal::locale()->formatDateTime(dt);
   }
 }
 
 
 
-// TODO: this should honor the global date format!!
 const QString& KNArticle::timeString()
 {
   if(!t_imeString) {
-    DwDateTime dt;
-    dt.FromUnixTime(t_imeT);
+    QDateTime dt;
+    dt.setTime_t(t_imeT);
     t_imeString = new QString;
-    t_imeString->sprintf("%.2d.%.2d.%.2d (%.2d:%.2d)",dt.Day(),dt.Month(),(dt.Year()%100),dt.Hour(),dt.Minute());
+    *t_imeString = KGlobal::locale()->formatDateTime(dt);
   } 
   return *t_imeString;
 }
@@ -186,7 +182,7 @@ QString KNArticle::longTimeString()
 {
   QDateTime dt;
   dt.setTime_t(t_imeT);
-  return KGlobal::locale()->formatDateTime(dt);
+  return KGlobal::locale()->formatDateTime(dt,false,true);
 }
 
 
