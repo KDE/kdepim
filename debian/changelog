@@ -1,11 +1,11 @@
-kdepim (4:2.2-cvs20010528-1) unstable; urgency=low
+kdepim (4:2.2-cvs20010602-1) unstable; urgency=low
  
   * New upstream cvs pull
   * Adding in Enhances
   * abbrowser moved to kdelibs
   * New package: kandy
  
- -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 28 May 2001 14:46:00 -0700
+ -- Ivan E. Moore II <rkrusty@debian.org>  Sat, 02 Jun 2001 14:46:00 -0700
 
 kdepim (4:2.1.1-2) unstable; urgency=low
  
