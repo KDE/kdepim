@@ -63,8 +63,8 @@ namespace KABPrinting
         KABC::Addressee a;
         QStringList::ConstIterator iter;
 
-        progress->addMessage(i18n("preparing"));
-        progress->addMessage(i18n("printing"));
+        progress->addMessage(i18n("Preparing"));
+        progress->addMessage(i18n("Printing"));
 
         for (iter = printUids.begin(); iter != printUids.end(); ++iter)
         {
@@ -100,7 +100,7 @@ namespace KABPrinting
             // ----- set progress bar:
             // WORK_TO_DO: port to common progress display scheme
         }
-        progress->addMessage(i18n("done"));
+        progress->addMessage(i18n("Done"));
         // print the tag line on the last page
         p.save();
         p.translate(0, metrics.height()-fm.height()-5);

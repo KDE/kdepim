@@ -98,7 +98,7 @@ namespace KABPrinting {
         mBasicPage->plPreview->setPixmap(preview); // reset it if it is Null
         if(preview.isNull())
         {
-            mBasicPage->plPreview->setText(i18n("(No Preview available.)"));
+            mBasicPage->plPreview->setText(i18n("(No preview available.)"));
         }
         if(pageCount()<=1) // the style did not add pages
         {

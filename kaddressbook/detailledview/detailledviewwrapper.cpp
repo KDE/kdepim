@@ -20,8 +20,8 @@ QString DetailedViewWrapper::type() const
 
 QString DetailedViewWrapper::description() const
 {
-    return i18n("<qt>This view displays details of a selected contact "
-                "additionally to the compact overview.</qt>");
+    return i18n("<qt>This view displays details of a selected contact, "
+                "in addition to the compact overview.</qt>");
 }
 
 KAddressBookView* DetailedViewWrapper::createView(KABC::AddressBook *doc,

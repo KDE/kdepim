@@ -123,7 +123,7 @@ namespace KABPrinting {
     void DetailledPrintStyle::print(QStringList contacts, PrintProgress *progress)
     {
         mPrintProgress=progress;
-        progress->addMessage(i18n("setting up fonts and colors"));
+        progress->addMessage(i18n("Setting up fonts and colors"));
         progress->setProgress(0);
         bool useKDEFonts;
         KConfig *config;
@@ -203,7 +203,7 @@ namespace KABPrinting {
         KPrinter *printer=wizard()->printer();
         QPainter painter;
         // ----- variables used to define MINIMAL MARGINS entered by the user:
-        progress->addMessage(i18n("setting up margins and spacing"));
+        progress->addMessage(i18n("Setting up margins and spacing"));
         int marginTop=0,
            marginLeft=64, // to allow stapling, need refinement with two-side prints
           marginRight=0,
@@ -228,10 +228,10 @@ namespace KABPrinting {
         // ----- now do the printing:
         // this prepares for, like, two-up etc:
         painter.setViewport(left, top, width, height);
-        progress->addMessage(i18n("printing"));
+        progress->addMessage(i18n("Printing"));
         printEntries(contacts, printer, &painter,
                      QRect(0, 0, metrics.width(), metrics.height()));
-        progress->addMessage(i18n("done"));
+        progress->addMessage(i18n("Done"));
         painter.end();
         config->sync();
     }
