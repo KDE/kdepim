@@ -1462,6 +1462,7 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
   connect(n_ameE, SIGNAL(textChanged(const QString&)), SLOT(slotNameChanged(const QString&)));
 
   setHelp("anc-knode-headers");
+  slotNameChanged( n_ameE->text() );
 }
 
 
