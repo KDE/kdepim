@@ -280,7 +280,7 @@ void KNComposer::setConfig(bool onlyFonts)
 
   QFont fnt=knGlobals.cfgManager->appearance()->composerFont();
   if (!knGlobals.cfgManager->appearance()->useFontsForAllCS())
-    KGlobal::charsets()->setQFont(fnt, c_harset);
+    KGlobal::charsets()->setQFont(fnt, KGlobal::charsets()->charsetForEncoding(c_harset));
   v_iew->s_ubject->setFont(fnt);
   v_iew->t_o->setFont(fnt);
   v_iew->g_roups->setFont(fnt);

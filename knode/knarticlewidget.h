@@ -79,7 +79,6 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     void viewportMousePressEvent(QMouseEvent *e); // RMB for links
     void viewportMouseReleaseEvent(QMouseEvent *e); // automatic copy
     bool canDecode8BitText(const QCString &charset);
-    void setFontForCharset(QFont &f, const QCString &charset);
     QString toHtmlString(const QString &line, bool parseURLs=false, bool beautification=false, bool allowRot13=false);
     void openURL(const QString &url);
     void saveAttachment(int id);

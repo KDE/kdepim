@@ -176,8 +176,6 @@ class KNMimeContent : public KNMimeBase {
     QByteArray decodedContent();
     void decodedText(QString &s);
     void decodedText(QStringList &s);
-    //bool canDecode8BitText();
-    //void setFontForContent(QFont &f);
     void fromUnicodeString(const QString &s);
 
     KNMimeContent* textContent();

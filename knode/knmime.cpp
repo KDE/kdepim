@@ -928,23 +928,6 @@ void KNMimeContent::decodedText(QStringList &l)
 }
 
 
-/*bool KNMimeContent::canDecode8BitText()
-{
-  bool ok=true;
-  (void) KGlobal::charsets()->codecForName(contentType()->charset(),ok);
-  return ok;
-}
-
-
-void KNMimeContent::setFontForContent(QFont &f)
-{
-  //KCharsets *c=KGlobal::charsets();
-  //QFont::CharSet cs;
-  //cs=c->nameToID(contentType()->charset());
-  KGlobal::charsets()->setQFont(f, contentType()->charset());
-}*/
-
-
 void KNMimeContent::fromUnicodeString(const QString &s)
 {
   bool ok=true;

@@ -243,12 +243,6 @@ bool KNArticleWidget::canDecode8BitText(const QCString &charset)
 }
 
 
-void KNArticleWidget::setFontForCharset(QFont &f, const QCString &charset)
-{
-  KGlobal::charsets()->setQFont(f, charset);
-}
-
-
 void KNArticleWidget::applyConfig()
 {
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
@@ -728,14 +722,16 @@ void KNArticleWidget::createHtmlPage()
     else {
       QFont f=app->articleFont();
       if (!app->useFontsForAllCS())
-        setFontForCharset(f, text->contentType()->charset());
+        KGlobal::charsets()->setQFont(f, KGlobal::charsets()->charsetForEncoding(text->contentType()->charset()));
       setFont(f);
     }
   }
   else
     setFont(app->articleFont());
-  
-  kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-family = " << font().family() << endl;
+
+  //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-family = " << font().family() << endl;
+  //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-charset = " << (int)(font().charSet()) << endl;
+  //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : article-charset = " << text->contentType()->charset() << endl;
   
   html+="</table>";
 
