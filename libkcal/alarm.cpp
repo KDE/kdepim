@@ -275,7 +275,8 @@ QString Alarm::mailText() const
 void Alarm::setDisplayAlarm(const QString &text)
 {
   mType = Display;
-  mDescription = text;
+  if ( !text.isNull() )
+    mDescription = text;
   mParent->updated();
 }
 

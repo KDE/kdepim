@@ -78,7 +78,7 @@ class Alarm : public CustomProperties
       
       @param text text to display when the alarm is triggered.
     */
-    void setDisplayAlarm( const QString &text );
+    void setDisplayAlarm( const QString &text = QString::null );
     /**
       Set the text to be displayed when the alarm is triggered.
       Ignored if the alarm is not a display alarm.
