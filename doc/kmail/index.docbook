@@ -33,7 +33,7 @@
 
 </authorgroup>
 
-<date>2001-07-15</date>
+<date>2001-07-19</date>
 <releaseinfo>1.03.00</releaseinfo>
 
 <copyright>
@@ -197,7 +197,7 @@ a dial-up connection in the <link linkend="faq">FAQ</link> section.</para>
 <sect2 id="properties">
 <title>Properties</title>
 
-<para>The <guilabel>Properties</guilabel> section lets you customize 
+<para>The <guilabel>Properties</guilabel> section lets you configure
 how and when messages are sent.</para>
 
 <para><guilabel>Default send method</guilabel> lets you define what
@@ -1468,11 +1468,10 @@ setting's <guilabel>Security</guilabel> tab.</para>
 </sect1>
 </chapter>
 
-<chapter id="customizing">
-<title>Customizing &kmail;</title>
+<chapter id="configure">
+<title>Configure &kmail;</title>
 
-<para>&kmail;'s settings window gives you a number of ways to customize &kmail;
-to your needs.</para>
+<para>&kmail;'s settings window gives you a number of ways to configure &kmail;.</para>
 
 <sect1 id="identity-tab">
 <title>Identity Tab</title>
@@ -2679,7 +2678,7 @@ toolbar.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Opens the <link linkend="customizing">Configure</link> window.</para>
+<para>Opens the <link linkend="configure">Configure</link> window.</para>
 </listitem>
 </varlistentry>
 
