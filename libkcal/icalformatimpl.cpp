@@ -150,7 +150,7 @@ class TimezonePhase : private icaltimezonephase {
       // The Recurrance class's getPreviousDateTime() logic was not designed for
       // start times which are not aligned with a reference time, but a little
       // magic is sufficient to work around that...
-      // 
+      //
       // XXX: NO.... it's not. This NEEDS to be fixed!
       QDateTime previous = mRrule->getPreviousDateTime(tmp);
       if (mRrule->getNextDateTime(previous) < tmp)
@@ -356,7 +356,7 @@ class ICalFormatImpl::ToComponentVisitor : public IncidenceBase::Visitor
 icalcomponent *ICalFormatImpl::writeIncidence( IncidenceBase *incidence, Scheduler::Method method )
 {
   ToComponentVisitor v( this, method );
-  if ( incidence->accept(v) ) 
+  if ( incidence->accept(v) )
     return v.component();
   else return 0;
 }
@@ -865,7 +865,7 @@ icalproperty *ICalFormatImpl::writeAttachment(Attachment *att)
     icalproperty_add_parameter( p,
         icalparameter_new_encoding( ICAL_ENCODING_BASE64 ) );
   }
-	
+
   if ( att->showInline() ) {
     icalparameter* icalparameter_inline = icalparameter_new_x( "inline" );
     icalparameter_set_xname( icalparameter_inline, "X-CONTENT-DISPOSITION" );
@@ -1490,10 +1490,10 @@ Person ICalFormatImpl::readOrganizer( icalproperty *organizer )
     email = email.mid( 7 );
   }
   QString cn;
-  
-  icalparameter *p = icalproperty_get_first_parameter( 
+
+  icalparameter *p = icalproperty_get_first_parameter(
              organizer, ICAL_CN_PARAMETER );
-  
+
   if ( p ) {
     cn = QString::fromUtf8( icalparameter_get_cn( p ) );
   }
@@ -1532,23 +1532,22 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   if (p)
     attachment->setMimeType(QString(icalparameter_get_fmttype(p)));
 
-	QString paramvalue = QString::null;
+  QString paramvalue = QString::null;
   p = icalproperty_get_first_parameter( attach, ICAL_X_PARAMETER );
   while ( p ) {
-kdDebug() << "Reading Attachment X Parameter: " << icalparameter_get_xname(p) << ", value=" << icalparameter_get_xvalue(p) << endl;
     const QString &param = icalparameter_get_xname(p);
-		const QString &paramvalue = icalparameter_get_xvalue( p );
+    const QString &paramvalue = icalparameter_get_xvalue( p );
     if ( param == "X-CONTENT-DISPOSITION") {
-			if ( paramvalue == "inline" ) {
-				attachment->setShowInline( true );
-			}
-    } else 
-		if ( param == "X-LABEL") {
-			attachment->setLabel( paramvalue );
+      if ( paramvalue == "inline" ) {
+        attachment->setShowInline( true );
+      }
+    } else
+    if ( param == "X-LABEL") {
+      attachment->setLabel( paramvalue );
     }
     p = icalproperty_get_next_parameter( attach, ICAL_X_PARAMETER );
   }
-					
+
   return attachment;
 }
 
@@ -1642,7 +1641,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_PRIORITY_PROPERTY:  // priority
         intvalue = icalproperty_get_priority( p );
-        if ( mCompat ) 
+        if ( mCompat )
           intvalue = mCompat->fixPriority( intvalue );
         incidence->setPriority( intvalue );
         break;
@@ -2612,8 +2611,8 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
   /*
    * RFC 2446 states in section 3.4.3 ( REPLY to a VTODO ), that
    * a REQUEST-STATUS property has to be present. For the other two, event and
-   * free busy, it can be there, but is optional. Until we do more 
-   * fine grained handling, assume all is well. Note that this is the 
+   * free busy, it can be there, but is optional. Until we do more
+   * fine grained handling, assume all is well. Note that this is the
    * status of the _request_, not the attendee. Just to avoid confusion.
    * - till
    */
