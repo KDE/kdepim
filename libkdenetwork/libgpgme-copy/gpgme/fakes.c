@@ -11,7 +11,9 @@
 #endif*/
 
 #ifndef HAVE_PUTC_UNLOCKED
+#ifndef __FreeBSD__
 #include "putc_unlocked.c"
+#endif
 #endif
 
 #ifndef HAVE_MEMRCHR
