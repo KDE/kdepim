@@ -26,7 +26,7 @@ Preferences::Preferences() : KDialogBase(KDialogBase::Tabbed, i18n("Preferences"
   QVBox *autoSaveMenu = addVBoxPage(i18n("Saving"));
 
   QHBox *box3 = new QHBox(autoSaveMenu);
-  new QLabel(i18n("File to save time information to"), box3, "save label");
+  new QLabel(i18n("File to save time information to:"), box3, "save label");
   _saveFileW = new KURLRequester(box3, "_saveFileW");
 
   _doAutoSaveW = new QCheckBox(i18n("Automatically save tasks"), autoSaveMenu, "_doAutoSaveW");
@@ -34,7 +34,7 @@ Preferences::Preferences() : KDialogBase(KDialogBase::Tabbed, i18n("Preferences"
           this, SLOT(autoSaveCheckBoxChanged()));
 
   QHBox *box2 = new QHBox(autoSaveMenu);
-  _autoSaveLabelW = new QLabel(i18n("Minutes between each auto save"), box2,
+  _autoSaveLabelW = new QLabel(i18n("Minutes between each auto save:"), box2,
                                "_autoSaveLabelW");
   _autoSaveValueW = new QSpinBox(1, 60*24, 1, box2, "_autoSaveValueW");
 
@@ -49,7 +49,7 @@ Preferences::Preferences() : KDialogBase(KDialogBase::Tabbed, i18n("Preferences"
           this, SLOT(idleDetectCheckBoxChanged()));
 
   QHBox *box1 = new QHBox(idleMenu);
-  _idleDetectLabelW = new QLabel(i18n("Minutes before informing about idleness"), box1);
+  _idleDetectLabelW = new QLabel(i18n("Minutes before informing about idleness:"), box1);
   _idleDetectValueW = new QSpinBox(1,60*24, 1, box1, "_idleDetectValueW");
 }
 

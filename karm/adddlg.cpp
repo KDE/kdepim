@@ -53,7 +53,7 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)
 	lay1->addLayout(lay2);
 	
 	// The name of the widget
-  QLabel *label = new QLabel( i18n("Task name"), page, "name" );
+  QLabel *label = new QLabel( i18n("Task name:"), page, "name" );
   lay2->addWidget( label );
 	lay2->addSpacing(5);
 	
@@ -66,7 +66,7 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)
 
 	// The "Edit Absolut" radio button
 	lay1->addSpacing(10);lay1->addStretch(1);	
-	_absoluteRB = new QRadioButton( i18n( "Edit Absolute" ), page, "_absoluteRB" );
+	_absoluteRB = new QRadioButton( i18n( "Edit absolute" ), page, "_absoluteRB" );
 	lay1->addWidget( _absoluteRB );
 	connect( _absoluteRB, SIGNAL( clicked() ), this, SLOT(slotAbsolutePressed()) );
 	
@@ -96,7 +96,7 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)
 
 	// The "Edit relative" radio button
 	lay1->addSpacing(10);lay1->addStretch(1);
-	_relativeRB = new QRadioButton( i18n( "Edit Relative (Apply to both session and total)" ), page, "_relativeRB" );
+	_relativeRB = new QRadioButton( i18n( "Edit relative (Apply to both session and total)" ), page, "_relativeRB" );
 	lay1->addWidget( _relativeRB );
 	connect( _relativeRB, SIGNAL( clicked() ), this, SLOT(slotRelativePressed()) );
 	

@@ -166,16 +166,18 @@ void KarmWindow::makeMenus()
   actionStop = new KAction(i18n("S&top"), QString::fromLatin1("stop"),
                            Key_Escape,_karm,
                            SLOT(stopCurrentTimer()),actionCollection(),"stop");
-  actionNew = KStdAction::action( KStdAction::New, _karm,	SLOT(newTask()),
-                                  actionCollection(),"new_task");
-  actionNewSub = new KAction(i18n("New Subtask"), QString::fromLatin1("kmultiple"),
+  actionNew = new KAction(i18n("New..."), QString::fromLatin1("filenew"),
+                             CTRL+Key_N,
+                             _karm, SLOT(newTask()),
+                             actionCollection(), "new_task");
+  actionNewSub = new KAction(i18n("New Subtask..."), QString::fromLatin1("kmultiple"),
                              CTRL+ALT+Key_N,
                              _karm, SLOT(newSubTask()),
                              actionCollection(), "new_sub_task");
-  actionDelete = new KAction(i18n("&Delete"), QString::fromLatin1("editdelete"),
+  actionDelete = new KAction(i18n("&Delete..."), QString::fromLatin1("editdelete"),
                              Key_Delete,_karm,
                              SLOT(deleteTask()),actionCollection(),"delete_task");
-  actionEdit = new KAction(i18n("&Edit"), QString::fromLatin1("edit"),
+  actionEdit = new KAction(i18n("&Edit..."), QString::fromLatin1("edit"),
                            CTRL + Key_E,_karm,
                            SLOT(editTask()),actionCollection(),"edit_task");
   createGUI( QString::fromLatin1("karmui.rc") );
