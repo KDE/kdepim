@@ -36,13 +36,13 @@
 #include <kopenwith.h>
 #include <kcharsets.h>
 #include <kdebug.h>
-#include <kscoring.h>
 #include <kscoringeditor.h>
 #include <kpgp.h>
 #include <knuminput.h>
 #include <kspell.h>
 #include <klineedit.h>
 #include <kcombobox.h>
+#include <kseparator.h>
 
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
@@ -1382,19 +1382,21 @@ void KNConfig::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
 KNConfig::ScoringWidget::ScoringWidget(Scoring *d, QWidget *p, const char *n)
   : BaseWidget(p,n), d_ata(d)
 {
-  QGridLayout *topL = new QGridLayout(this,3,2, 5,5);
+  QGridLayout *topL = new QGridLayout(this,4,2, 5,5);
   ksc = new KScoringEditorWidget(knGlobals.scoreManager,this);
   topL->addMultiCellWidget(ksc, 0,0, 0,1);
 
+  topL->addRowSpacing(1, 10);
+
   i_gnored=new KIntSpinBox(-100000, 100000, 1, 0, 10, this);
   QLabel *l=new QLabel(i_gnored, i18n("Default score for &ignored threads:"), this);
-  topL->addWidget(l, 1, 0);
-  topL->addWidget(i_gnored, 1, 1);
+  topL->addWidget(l, 2, 0);
+  topL->addWidget(i_gnored, 2, 1);
 
   w_atched=new KIntSpinBox(-100000, 100000, 1, 0, 10, this);
   l=new QLabel(w_atched, i18n("Default score for &watched threads:"), this);
-  topL->addWidget(l, 2, 0);
-  topL->addWidget(w_atched, 2, 1);
+  topL->addWidget(l, 3, 0);
+  topL->addWidget(w_atched, 3, 1);
 
   topL->setColStretch(0, 1);
 
