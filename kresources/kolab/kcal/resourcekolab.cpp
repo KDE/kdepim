@@ -452,18 +452,17 @@ KCal::Journal::List ResourceKolab::journals()
 KCal::Alarm::List ResourceKolab::alarms( const QDateTime& from,
                                          const QDateTime& to )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return KCal::Alarm::List();
+  return mCalendar.alarms( from, to );
 }
+
 KCal::Alarm::List ResourceKolab::alarmsTo( const QDateTime& to )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return KCal::Alarm::List();
+  return mCalendar.alarmsTo(to);
 }
 
 void ResourceKolab::setTimeZoneId( const QString& tzid )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  mCalendar.setTimeZoneId( tzid );
 }
 
 
