@@ -224,7 +224,7 @@ void KonnectorProfile::loadFromConfig( KConfig* conf )
     lib = conf->readEntry("Lib");
     m_dev = Device( name, grp,  vend,  lib,  ident );
 
-#if fixloadconfig
+#ifdef fixloadconfig
     // get the udi
     QString udi = conf->readEntry("UDI");
     if (!udi.isEmpty() )
