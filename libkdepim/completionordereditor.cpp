@@ -208,8 +208,11 @@ CompletionOrderEditor::CompletionOrderEditor( KPIM::LdapSearch* ldapSearch,
                                                (*resit)->identifier() ) );
     }
   }
+
+#if 0 // done with the normal contacts now
   // Add an item for distribution lists
   mItems.append( new SimpleCompletionItem( this, i18n( "Distribution Lists" ), "DistributionLists" ) );
+#endif
 
   // Now sort the items, then create the GUI
   mItems.sort();
