@@ -267,9 +267,9 @@ void KNNetAccess::slotThreadSignal(int i)
   		case KNProtocolClient::TSprogressUpdate:
   		  byteCount = nntpClient->getByteCount();
   		  if (byteCount < 1000)
-  		    tmp = i18n("%1 Bytes").arg(KGlobal::locale()->formatNumber(byteCount, 0);
+  		    tmp = i18n("%1 Bytes").arg(KGlobal::locale()->formatNumber(byteCount, 0));
   		  else
-  		    tmp = i18n("%1 KB").arg(KGlobal::locale()->formatNumber(byteCount/1000.0, 1);
+  		    tmp = i18n("%1 KB").arg(KGlobal::locale()->formatNumber(byteCount/1000.0, 1));
   		  knGlobals.progressBar->setProgressBar(nntpClient->getProgressValue(),tmp);
   		break;
   	};
@@ -297,9 +297,9 @@ void KNNetAccess::slotThreadSignal(int i)
 	  	case KNProtocolClient::TSprogressUpdate:
   	  	byteCount = smtpClient->getByteCount();
   		  if (byteCount < 1000)
-  		    unshownByteCount = i18n("%1 Bytes").arg(KGlobal::locale()->formatNumber(byteCount, 0);
+  		    unshownByteCount = i18n("%1 Bytes").arg(KGlobal::locale()->formatNumber(byteCount, 0));
   		  else
-  		    unshownByteCount = i18n("%1 KB").arg(KGlobal::locale()->formatNumber(byteCount, 1);
+  		    unshownByteCount = i18n("%1 KB").arg(KGlobal::locale()->formatNumber(byteCount, 1));
   		  unshownProgress = smtpClient->getProgressValue();
  		   	if (!currentNntpJob)
     		  knGlobals.progressBar->setProgressBar(unshownProgress,unshownByteCount);
