@@ -89,9 +89,9 @@ KNNetAccess::~KNNetAccess()
   if(mSMTPProgressItem)
     mSMTPProgressItem->setComplete();
 
-  nntpClient->terminate();
+  nntpClient->terminateClient();
   nntpClient->wait();
-  smtpClient->terminate();
+  smtpClient->terminateClient();
   smtpClient->wait();
 
   delete nntpClient;

@@ -50,7 +50,8 @@ class KNProtocolClient : public QThread  {
     /** bytes in&out for the current connection */
     int getByteCount() const { return byteCount; };
     bool isInByteCountMode() const { return byteCountMode; };
-  
+
+    void terminateClient() { mTerminate = true; }
   protected:
 
     /** main loop, maintains connection and waits for next job */
@@ -114,6 +115,7 @@ class KNProtocolClient : public QThread  {
     /** bytes in&out for the current connection */
     int byteCount;
     QTime timer;
+    bool mTerminate;
 
 };
 
