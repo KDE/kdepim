@@ -39,6 +39,13 @@ namespace KIO {
   class DavJob;
 }
 
+namespace KPIM {
+  class CalendarAdaptor;
+  class GroupwareJob;
+  class GroupwareDownloadJob;
+  class GroupwareUploadJob;
+}
+
 namespace KCal {
 
 class GroupwarePrefsBase;
@@ -70,51 +77,24 @@ class OpenGroupware : public ResourceCached
     bool doSave();
 
     KABC::Lock *lock();
-    void downloadNextIncidence();
-    void uploadNextIncidence();
 
   protected:
     void init();
 
     bool confirmSave();
-    void doDeletions();
-
-    void listIncidences();
-    void deleteIncidencesGoneFromServer();
 
   protected slots:
-    void loadFinished();
-
-    void slotListJobResult( KIO::Job * );
-    void slotJobResult( KIO::Job * );
-    void slotUploadJobResult( KIO::Job * );
-    void slotDeletionResult( KIO::Job *job );
-    void slotJobData( KIO::Job *, const QByteArray & );
-
-    void cancelLoad();
-    void cancelSave();
+    void slotDownloadJobResult( KPIM::GroupwareJob * );
+    void slotUploadJobResult( KPIM::GroupwareJob * );
 
   private:
     OpenGroupwarePrefsBase *mPrefs;
     FolderLister *mFolderLister;
     KABC::LockNull mLock;
+    KPIM::CalendarAdaptor *mAdaptor;
 
-    KIO::TransferJob *mDownloadJob;
-    KIO::TransferJob *mUploadJob;
-    KIO::DeleteJob *mDeletionJob;
-    KIO::DavJob *mListEventsJob;
-    KPIM::ProgressItem *mProgress;
-    KPIM::ProgressItem *mUploadProgress;
-    QString mJobData;
-
-    QStringList mFoldersForDownload;
-    QStringList mCurrentlyOnServer;
-
-    QStringList mIncidencesForDownload;
-    QStringList mIncidencesForUpload;
-    QStringList mIncidencesForDeletion;
-
-    QString mCurrentGetUrl;
+    KPIM::GroupwareDownloadJob *mDownloadJob;
+    KPIM::GroupwareUploadJob *mUploadJob;
 
     bool mIsShowingError;
     KURL mBaseUrl;

@@ -4,7 +4,9 @@ lib_LTLIBRARIES = libkopengroupware.la libkcal_opengroupware.la \
   libkabc_opengroupware.la
 
 libkopengroupware_la_SOURCES = folderlister.cpp folderconfig.cpp \
-  webdavhandler.cpp
+  webdavhandler.cpp groupwaredataadaptor.cpp groupwaredownloadjob.cpp \
+  calendaradaptor.cpp addressbookadaptor.cpp groupwarejob.cpp \
+  groupwareuploadjob.cpp
 libkopengroupware_la_LDFLAGS = $(all_libraries)
 libkopengroupware_la_LIBADD  = $(top_builddir)/libkcal/libkcal.la \
                       $(top_builddir)/libkdepim/libkdepim.la

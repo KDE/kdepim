@@ -24,6 +24,9 @@
 #include "folderlister.h"
 #include "webdavhandler.h"
 #include "kabc_opengroupwareprefs.h"
+#include "addressbookadaptor.h"
+#include "groupwaredownloadjob.h"
+#include "groupwareuploadjob.h"
 
 #include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>
@@ -66,12 +69,19 @@ ResourceOpenGroupware::ResourceOpenGroupware( const KURL &url,
 void ResourceOpenGroupware::init()
 {
   mDownloadJob = 0;
-  mProgress = 0;
 
   mPrefs = new OpenGroupwarePrefs;
   mFolderLister = new KCal::FolderLister( KCal::FolderLister::AddressBook );
 
-  setType( "OpenGroupware" );
+  setType( "opengroupware" );
+
+  mAdaptor = new KPIM::AddressBookAdaptor();
+  mAdaptor->setFolderLister( mFolderLister );
+  mAdaptor->setDownloadProgressMessage( i18n("Downloading addressbook") );
+  mAdaptor->setUser( prefs()->user() );
+  mAdaptor->setPassword( prefs()->password() );
+  mAdaptor->setIdMapper( &idMapper() );
+  mAdaptor->setResource( this );
 }
 
 ResourceOpenGroupware::~ResourceOpenGroupware()
@@ -85,6 +95,10 @@ void ResourceOpenGroupware::readConfig( const KConfig *config )
   mPrefs->readConfig();
 
   mFolderLister->readConfig( config );
+
+  mBaseUrl = KURL( prefs()->url() );
+  mBaseUrl.setUser( prefs()->user() );
+  mBaseUrl.setPass( prefs()->password() );
 }
 
 void ResourceOpenGroupware::writeConfig( KConfig *config )
@@ -120,7 +134,7 @@ void ResourceOpenGroupware::doClose()
 {
   kdDebug() << "ResourceOpenGroupware::doClose()" << endl;
 
-  cancelLoad();
+  mDownloadJob->kill();
 }
 
 bool ResourceOpenGroupware::load()
@@ -138,139 +152,24 @@ bool ResourceOpenGroupware::asyncLoad()
   mAddrMap.clear();
   loadCache();
 
-  mFoldersForDownload = mFolderLister->activeFolderIds();
-  
-  mItemsForDownload.clear();
-
-  mProgress = KPIM::ProgressManager::instance()->createProgressItem(
-    KPIM::ProgressManager::getUniqueID(), i18n("Downloading addressbook") );
-  connect( mProgress,
-           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
-           SLOT( cancelLoad() ) );
-
-  listItems();
+  mDownloadJob = new KPIM::GroupwareDownloadJob( mAdaptor );
+  connect( mDownloadJob, SIGNAL( result( KPIM::GroupwareJob * ) ),
+    SLOT( slotJobResult( KPIM::GroupwareJob * ) ) );
 
   return true;
 }
 
-void ResourceOpenGroupware::listItems()
-{
-  if ( mFoldersForDownload.isEmpty() ) {
-    if ( mProgress ) {
-      mProgress->setTotalItems( mItemsForDownload.count() );
-      mProgress->setCompletedItems( 1 );
-      mProgress->updateProgress();
-    }
-    downloadItem();
-  } else {
-    QDomDocument props = WebdavHandler::createItemsAndVersionsPropsRequest();
-
-    KURL url = mFoldersForDownload.front();
-    mFoldersForDownload.pop_front();
-
-    url.setUser( prefs()->user() );
-    url.setPass( prefs()->password() );
-
-    kdDebug() << "OpenGroupware::listItems(): " << url << endl;
-
-    mListEventsJob = KIO::davPropFind( url, props, "1", false );
-
-    connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
-             SLOT( slotListJobResult( KIO::Job * ) ) );
-  }
-}
-
-void ResourceOpenGroupware::slotListJobResult( KIO::Job *job )
-{
-  kdDebug() << "ResourceOpenGroupware::slotListJobResult(): " << endl;
-
-  if ( job->error() ) {
-    kdError() << "Unable to list folders: " << job->errorString() << endl;
-    if ( mProgress ) {
-      mProgress->setComplete();
-      mProgress = 0;
-    }
-  } else {
-    QDomDocument doc = mListEventsJob->response();
-
-    //kdDebug(7000) << " Doc: " << doc.toString() << endl;
-
-    //kdDebug(7000) << idMapper().asString() << endl;
-
-    QDomNodeList entries = doc.elementsByTagNameNS( "DAV:", "href" );
-
-    QDomNodeList fingerprints = doc.elementsByTagNameNS( "DAV:", "getetag" );
-    int c = entries.count();
-    int i = 0;
-    while ( i < c ) {
-      QDomNode node = entries.item( i );
-      QDomElement e = node.toElement();
-      const QString &entry = e.text();
-      mItemsForDownload << entry;
-      
-      kdDebug() << "ITEM: " << entry << endl;
-      
-      i++;
-    }
-  }
-  mListEventsJob = 0;
-
-  listItems();
-}
-
-
-void ResourceOpenGroupware::downloadItem()
-{
-  if ( !mItemsForDownload.isEmpty() ) {
-    const QString entry = mItemsForDownload.front();
-    mItemsForDownload.pop_front();
-
-    KURL url( entry );
-    url.setProtocol( "webdav" );
-    url.setUser( mPrefs->user() );
-    url.setPass( mPrefs->password() );
-
-    mJobData = QString::null;
-
-    mDownloadJob = KIO::get( url, false, false );
-    connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-        SLOT( slotJobResult( KIO::Job * ) ) );
-    connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-        SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
-  } else {
-    if ( mProgress ) mProgress->setComplete();
-    mProgress = 0;
-    emit loadingFinished( this );
-  }
-}
-
-void ResourceOpenGroupware::slotJobResult( KIO::Job *job )
+void ResourceOpenGroupware::slotDownloadJobResult( KPIM::GroupwareJob *job )
 {
   kdDebug() << "ResourceOpenGroupware::slotJobResult(): " << endl;
 
   if ( job->error() ) {
     kdError() << "job failed: " << job->errorString() << endl;
   } else {
-    KABC::VCardConverter conv;
-    Addressee::List addressees = conv.parseVCards( mJobData );
-    Addressee::List::ConstIterator it;
-    for( it = addressees.begin(); it != addressees.end(); ++it ) {
-      KABC::Addressee addr = *it;
-      if ( !addr.isEmpty() ) {
-        addr.setResource( this );
-        insertAddressee( addr );
-      }
-    }
+    emit loadingFinished( this );
   }
 
-  if ( mProgress ) {
-    mProgress->incCompletedItems();
-    mProgress->updateProgress();
-  }
-  mJobData = QString::null;
   mDownloadJob = 0;
-
-  downloadItem();
 }
 
 bool ResourceOpenGroupware::save( Ticket *ticket )
@@ -280,52 +179,62 @@ bool ResourceOpenGroupware::save( Ticket *ticket )
 
 bool ResourceOpenGroupware::asyncSave( Ticket* )
 {
-#if 0
-  if ( !mServer->login() ) return false;
+  if ( mUploadJob ) {
+    kdWarning() << "Upload still in progress." << endl;
+    return false;
+  }
+
+  mUploadJob = new KPIM::GroupwareUploadJob( mAdaptor );
+  connect( mUploadJob, SIGNAL( result( KPIM::GroupwareJob * ) ),
+    SLOT( slotUploadJobResult( KPIM::GroupwareJob * ) ) );
+
+  mUploadJob->setBaseUrl( mBaseUrl );
 
   KABC::Addressee::List::Iterator it;
 
+
+  QStringList urlsForDeletion;
+
+  KABC::Addressee::List deletedList = deletedAddressees();
+  for ( it = deletedList.begin(); it != deletedList.end(); ++it ) {
+    KURL url( mBaseUrl );
+    url.setPath( (*it).custom( "KCalResourceOpengroupware", "storagelocation" ) );
+    urlsForDeletion << url.url();
+  }
+
+  mUploadJob->setUrlsForDeletion( urlsForDeletion );
+
+
+  QStringList dataForUpload;
+  KABC::VCardConverter vcard;
+
   KABC::Addressee::List addedList = addedAddressees();
   for ( it = addedList.begin(); it != addedList.end(); ++it ) {
-    if ( mServer->insertAddressee( mPrefs->writeAddressBook(), *it ) ) {
-      clearChange( *it );
-      idMapper().setRemoteId( (*it).uid(), (*it).custom( "GWRESOURCE", "UID" ) );
-    }
+    dataForUpload << vcard.createVCard( *it );
   }
 
   KABC::Addressee::List changedList = changedAddressees();
   for ( it = changedList.begin(); it != changedList.end(); ++it ) {
-    if ( mServer->changeAddressee( *it ) )
-      clearChange( *it );
+    dataForUpload << vcard.createVCard( *it );
   }
 
-  KABC::Addressee::List deletedList = deletedAddressees();
-  for ( it = deletedList.begin(); it != deletedList.end(); ++it ) {
-    if ( mServer->removeAddressee( *it ) )
-      clearChange( *it );
-  }
+  mUploadJob->setDataForUpload( dataForUpload );
 
-  saveCache();
-
-  mServer->logout();
-#endif
 
   return true;
 }
 
-void ResourceOpenGroupware::slotJobData( KIO::Job *, const QByteArray &data )
+void ResourceOpenGroupware::slotUploadJobResult( KPIM::GroupwareJob *job )
 {
-//  kdDebug() << "ResourceOpenGroupware::slotJobData()" << endl;
+  kdDebug() << "ResourceOpenGroupware::slotJobResult(): " << endl;
 
-  mJobData.append( data.data() );
+  if ( job->error() ) {
+    kdError() << "job failed: " << job->errorString() << endl;
+  } else {
+  }
+
+  mUploadJob = 0;
 }
 
-void ResourceOpenGroupware::cancelLoad()
-{
-  if ( mDownloadJob ) mDownloadJob->kill();
-  mDownloadJob = 0;
-  if ( mProgress ) mProgress->setComplete();
-  mProgress = 0;
-}
 
 #include "kabc_resourceopengroupware.moc"

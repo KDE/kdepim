@@ -33,8 +33,11 @@ namespace KCal {
 class FolderLister;
 }
 
-namespace KIO {
-class DavJob;
+namespace KPIM {
+class AddressBookAdaptor;
+class GroupwareJob;
+class GroupwareDownloadJob;
+class GroupwareUploadJob;
 }
 
 namespace KABC {
@@ -71,27 +74,19 @@ class ResourceOpenGroupware : public ResourceCached
   protected:
     void init();
 
-    void listItems();
-    void downloadItem();
-
   private slots:
-    void slotListJobResult( KIO::Job *job );
-    void slotJobResult( KIO::Job * );
-    void slotJobData( KIO::Job *, const QByteArray & );
-
-    void cancelLoad();
+    void slotDownloadJobResult( KPIM::GroupwareJob * );
+    void slotUploadJobResult( KPIM::GroupwareJob * );
 
   private:
     OpenGroupwarePrefs *mPrefs;
     KCal::FolderLister *mFolderLister;
+    KPIM::AddressBookAdaptor *mAdaptor;
 
-    QStringList mFoldersForDownload;
-    QStringList mItemsForDownload;
+    KPIM::GroupwareDownloadJob *mDownloadJob;
+    KPIM::GroupwareUploadJob *mUploadJob;
 
-    KIO::DavJob *mListEventsJob;
-    KIO::TransferJob *mDownloadJob;
-    KPIM::ProgressItem *mProgress;
-    QString mJobData;
+    KURL mBaseUrl;
 };
 
 }
