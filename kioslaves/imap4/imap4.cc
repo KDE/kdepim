@@ -1138,6 +1138,7 @@ IMAP4Protocol::del (const KURL & _url, bool isFile)
  * Subscribe: data = 'u' + URL (KURL)
  * Change the status: data = 'S' + URL (KURL) + Flags (QCString)
  * ACL commands: data = 'A' + command + URL (KURL) + command-dependent args
+ * Search: data = 'E' + URL (KURL)
  */
 void
 IMAP4Protocol::special (const QByteArray & aData)
@@ -1258,6 +1259,11 @@ IMAP4Protocol::special (const QByteArray & aData)
     finished();
     break;
   }
+  case 'E': // search
+  {
+    specialSearchCommand( stream );
+    break;
+  }
   default:
     kdWarning(7116) << "Unknown command in special(): " << tmp << endl;
     error( ERR_UNSUPPORTED_ACTION, QString(QChar(tmp)) );
@@ -1359,6 +1365,33 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
   default:
     kdWarning(7116) << "Unknown special ACL command:" << command << endl;
   }
+}
+
+void
+IMAP4Protocol::specialSearchCommand( QDataStream& stream )
+{
+  KURL _url;
+  stream >> _url;
+  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
+  parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
+  if (!assureBox(aBox, false)) return;
+
+  imapCommand *cmd = doCommand (imapCommand::clientSearch( aSection ));
+  if (cmd->result () != "OK")
+  {
+    error(ERR_SLAVE_DEFINED, i18n("Searching of folder %1 "
+          "failed. The server returned: %2")
+        .arg(aBox)
+        .arg(cmd->resultInfo()));
+    return;
+  }
+  completeQueue.removeRef(cmd);
+  QStringList lst = getResults();
+  kdDebug(7116) << "IMAP4Protocol::specialSearchCommand '" << aSection <<
+    "' returns " << lst << endl;
+  infoMessage( lst.join( " " ) );
+
+  finished();
 }
 
 void

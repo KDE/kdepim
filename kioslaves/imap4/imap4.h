@@ -163,7 +163,11 @@ protected:
   void doListEntry (const KURL & _url, const QString & myBox,
                     const imapList & item);
 
+  /** Send an ACL command which is identified by @p command */
   void specialACLCommand( int command, QDataStream& stream );
+
+  /** Search current folder, the search string is passed as SECTION */
+  void specialSearchCommand( QDataStream& );
 
 private:
 
