@@ -166,12 +166,14 @@ there are two special cases: a full and a first sync.
 	case SyncAction::eCopyPCToHH:
 		// TODO: Clear the palm and backup database??? Or just add the new items ignore
 		// the Palm->PC side and leave the existing items on the palm?
+		emit logMessage(i18n("Copying records to Pilot ..."));
 		QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
 		break;
 	case SyncAction::eCopyHHToPC:
 		// TODO: Clear the backup database and the calendar, update fP
 		//       or just add the palm items and leave the PC ones there????
 	default:
+		emit logMessage(i18n("Copying records to PC ..."));
 		QTimer::singleShot(0, this, SLOT(slotPalmRecToPC()));
 	}
 	return true;
@@ -217,7 +219,8 @@ error:
 
 	switch(config()->calendarType())
 	{
-		case VCalConduitSettings::eCalendarLocal:{
+		case VCalConduitSettings::eCalendarLocal:
+		{
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
 				<< "Using CalendarLocal, file="
@@ -227,7 +230,7 @@ error:
 			{
 #ifdef DEBUG
 				DEBUGCONDUIT << fname
-					<< "Empty calendar file name." 
+					<< "Empty calendar file name."
 					<< endl;
 #endif
 				emit logError(i18n("You selected to sync with the a iCalendar file, "
@@ -239,14 +242,14 @@ error:
 			fCalendar = new KCal::CalendarLocal(tz);
 			if ( !fCalendar)
 			{
-				kdWarning() << k_funcinfo 
+				kdWarning() << k_funcinfo
 					<< "Cannot initialize calendar object for file "
 					<< config()->calendarFile() << endl;
 				return false;
 			}
 #ifdef DEBUG
-			DEBUGCONDUIT << fname 
-				<< "Calendar's timezone: " 
+			DEBUGCONDUIT << fname
+				<< "Calendar's timezone: "
 				<< fCalendar->timeZoneId() << endl;
 			DEBUGCONDUIT << fname
 				<< "Calendar is local time: "
@@ -276,12 +279,12 @@ error:
 #ifdef DEBUG
 				DEBUGCONDUIT << fname
 					<< "Calendar file "
-					<< fCalendarFile 
+					<< fCalendarFile
 					<< " could not be opened. "
-					   "Will create a new one" 
+					   "Will create a new one"
 					<< endl;
 #endif
-				// Try to create empty file. if it fails, 
+				// Try to create empty file. if it fails,
 				// no valid file name was given.
 				QFile fl(fCalendarFile);
 				if (!fl.open(IO_WriteOnly | IO_Append))
@@ -301,7 +304,8 @@ error:
 				fFirstSync=true;
 			}
 			addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(config()->calendarFile()));
-			break;}
+			break;
+		}
 
 		case VCalConduitSettings::eCalendarResource:
 #ifdef DEBUG
@@ -337,12 +341,17 @@ error:
 		return false;
 	}
 	fP = newVCalPrivate(fCalendar);
-	if (!fP) return false;
+	if (!fP)
+	{
+		return false;
+	}
 	fP->updateIncidences();
 	if (fP->count()<1)
+	{
 		fFirstSync=true;
+	}
 
-	return (fCalendar && fP);
+	return true;
 }
 
 
@@ -367,11 +376,13 @@ void VCalConduitBase::slotPalmRecToPC()
 		fP->updateIncidences();
 		if (getSyncDirection()==SyncAction::eCopyHHToPC)
 		{
+			emit logMessage(i18n("Cleaning up ..."));
 			QTimer::singleShot(0, this, SLOT(cleanup()));
 			return;
 		}
 		else
 		{
+			emit logMessage(i18n("Copying records to Pilot ..."));
 			QTimer::singleShot(0 ,this,SLOT(slotPCRecToPalm()));
 			return;
 		}
