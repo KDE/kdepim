@@ -344,6 +344,7 @@ void AddresseeLineEdit::doCompletion( bool ctrlT )
       m_previousAddresses = prevAddr;
       QStringList items = s_completion->allMatches( s );
       items += s_completion->allMatches( "\"" + s );
+      //kdDebug(5300) << "     AddresseeLineEdit::doCompletion() found: " << items.join(" AND ") << endl;
       uint beforeDollarCompletionCount = items.count();
 
       if ( s.find( ' ' ) == -1 ) // one word, possibly given name
@@ -478,7 +479,44 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
     //kdDebug(5300) << "     AddresseeLineEdit::addContact() \"" << tmp << "\"" << endl;
     QString fullEmail = addr.fullEmail( tmp );
     //kdDebug(5300) << "                                     \"" << fullEmail << "\"" << endl;
+    //kdDebug(5300) << "                                     " << weight << endl;
     s_completion->addItem( fullEmail.simplifyWhiteSpace(), weight );
+    // Try to guess the last name: if found, we add an extra
+    // entry to the list to make sure completion works even
+    // if the user starts by typing in the last name.
+    QString name( addr.realName().simplifyWhiteSpace() );
+    if( name.endsWith("\"") )
+      name.truncate( name.length()-1 );
+    if( name.startsWith("\"") )
+      name = name.mid( 1 );
+    bool bDone = false;
+    int i = 1;
+    do{
+      i = name.findRev(' ');
+      if( 1 < i ){
+        QString sLastName( name.mid(i+1) );
+        if( ! sLastName.isEmpty() && 
+            2 <= sLastName.length() &&   // last names must be at least 2 chars long
+            ! sLastName.endsWith(".") ){ // last names must not end with a dot (like "Jr." or "Sr.")
+          name.truncate( i );
+          if( !name.isEmpty() ){
+            sLastName.prepend( "\"" );
+            sLastName.append( ", " + name + "\" <" );
+          }
+          QString sExtraEntry( sLastName );
+          sExtraEntry.append( tmp.isEmpty() ? addr.preferredEmail() : tmp );
+          sExtraEntry.append( ">" );
+          //kdDebug(5300) << "     AddresseeLineEdit::addContact() added extra \"" << sExtraEntry.simplifyWhiteSpace() << "\"" << endl;
+          s_completion->addItem( sExtraEntry.simplifyWhiteSpace(), weight );
+          bDone = true;
+        }
+      }
+      if( !bDone ){
+        name.truncate( i );
+        if( name.endsWith("\"") )
+          name.truncate( name.length()-1 );
+      }
+    }while( 1 < i && !bDone );
   }
 }
 
