@@ -46,6 +46,7 @@ public:
 
 	enum Status { Init,
 		ModifiedNotesToPilot,
+		DeleteNotesOnPilot,
 		NewNotesToPilot,
 		MemosToKNotes,
 		Cleanup,
@@ -73,6 +74,7 @@ protected:
 	void getAppInfo();
 	void getConfigInfo();
 	bool modifyNoteOnPilot();
+	bool deleteNoteOnPilot();
 	bool addNewNoteToPilot();
 	bool syncMemoToKNotes();
 	void cleanupMemos();

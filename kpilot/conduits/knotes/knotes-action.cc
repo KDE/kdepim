@@ -327,6 +327,13 @@ void KNotesAction::listNotes()
 		if (modifyNoteOnPilot())
 		{
 			resetIndexes();
+			fActionStatus = DeleteNotesOnPilot;
+		}
+		break;
+	case DeleteNotesOnPilot:
+		if (deleteNoteOnPilot())
+		{
+			resetIndexes();
 			fActionStatus = NewNotesToPilot;
 		}
 		break;
@@ -496,6 +503,35 @@ bool KNotesAction::modifyNoteOnPilot()
 
 	++(fP->fIndex);
 	return false;
+}
+
+bool KNotesAction::deleteNoteOnPilot()
+{
+	FUNCTIONSETUP;
+
+	QValueList<NoteAndMemo>::Iterator i = fP->fIdList.begin();
+	while ( i != fP->fIdList.end() )
+	{
+		if (fP->fNotes.contains((*i).note()))
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": Note " << (*i).note() << " still exists." << endl;
+#endif
+		}
+		else
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": Note " << (*i).note() << " is deleted." << endl;
+			fDatabase->deleteRecord((*i).memo());
+			fLocalDatabase->deleteRecord((*i).memo());
+			i = fP->fIdList.remove(i);
+			continue;
+#endif
+		}
+		++i;
+	}
+
+	return true;
 }
 
 bool KNotesAction::addNewNoteToPilot()
