@@ -1,0 +1,11 @@
+# KDE Config File
+[KDE Desktop Entry]
+Comment[]=mime type
+MimeType=palmpilot/database
+Comment=mime type
+DefaultApp=
+Comment[pl]=Typ mime
+Icon=kpilpdb.xpm
+Type=MimeType
+Patterns=*pdb,*PDB;
+Comment[de]=Mime Type

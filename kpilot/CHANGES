@@ -1,0 +1,12 @@
+1/21/99:
+	o Fixed a bug that may be causing the multiple sync thing.
+	o Installed the signal handler for kpilotDaemon.  It should clean
+	  after itself now.
+	o Added checkboxes for todoconduit and vcalconduit.
+8/16/98:
+	o Changed the sockets that KPilot and KPilotDaemon use so they 
+	  don't interfere with anything (hopefully) other programs.
+1/14/2000:
+	o KPilot now resides in the KDE CVS repository; release 3.1b12
+	  is the current release.
+

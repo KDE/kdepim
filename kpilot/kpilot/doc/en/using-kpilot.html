@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Using KPilot v2.0</title>
+  </head>
+
+  <body>
+    <A NAME="using"><H2>Using KPilot v2.0</H2></A>
+    <p>When KPilot is run for the first time it will display the
+      settings dialog.  The default device is /dev/pilot (which should be a
+      link to the proper device for the pilot) though this is configurable.
+      Please verify this is correct.  Other settings can be configured at
+      this time but are not mandatory (though HIGHLY recommended).  The one
+      setting that you might want to take notice
+      of is <B>Local overrides pilot</B>.  Setting this to true means that if
+      both the local record and the pilot record are modified, during the
+      next hot sync the local record will be considered the valid one and
+      both will be set to that. By default the Pilot is considered to be the
+      valid record and if both the local record and the pilot record have
+      been modified the local is overwritten by the pilot copy.  Hitting
+      "OK" will continue to the main KPilot screen.</p>
+    <p>It is recommended you preform a full backup of your Pilot at
+      this point so that all of the data visible in KPilot is accurate and
+      any importing or exporting is properly merged the next time you
+      hot-sync.  You can do a full backup of your Pilot by selecting Backup
+      from the File Menu.</p>
+
+    <A NAME="settings"><H2>Configuring KPilot</H2></A>
+
+    <H3>General Settings</H3>
+    <P>The settings dialog is accessible from the File menu.  The
+      first tab of the settings dialog is the general configuration
+      for KPilot.  <B>Pilot Device</B> refers to the device KPilot
+      should use to talk to the Palm Pilot.  By default this is
+      <TT>/dev/pilot</TT>, which should be a link to the appropriate
+      device.  <B>Pilot User</B> should be your user name, but at this 
+      point is unused.</P>
+    <P><B>Sync Mail</B> refers to whether or not KPilot should check
+      for new incoming mail on the POP server, and send any outgoing
+      mail from the Pilot during the next hot-sync.</P>
+    <P><B>Sync Files</B> refers to whether or not KPilot should
+      attempt to install any files pending in the <a
+	href="using-kpilot.html#installer">file install utility</a>
+      during the next hot-sync.</P>
+    <P><B>Local overrides Pilot</B> sets whether KPilot or the Palm
+      Pilot has the final say on modified records.  By this, if the
+      same record is changed on KPilot and on the Palm Pilot, which
+      one is kept as the most current.</P>
+    <p><B>Start Hot-Sync Daemon at login</b> setups up the daemon so
+      that it is run by KDE as soon as you log in.  This allows you to 
+      hot-sync by just hitting the hot-sync button without the need to 
+      launch KPilot. <BR><i>NOTE: You cannot do mail syncing without
+	KPilot running.  See the next setting.</i>
+    <p><b>Start KPilot at Hot-Sync</b> is only relavent if you are
+      running the daemon.  When you begin a hot-sync, if KPilot is not 
+      currently running the Daemon will start it up for you.  Note
+      that you will have to exit it after you are finished syncing.
+    <p><b>Show Daemon in KPanel</b> allows the daemon to dock itself
+      onto the Panel.  This gives you visual feedback to hot-syncing,
+      allows you to kill the daemon by right clicking and picking
+      exit, and will accept dropped files/urls to be installed during
+      the next hot-sync.
+
+    <H3>Email Settings</H3>
+
+    <P><b>Email Address</b> is simply your email address.</P>
+    <p><b>Signature</b> is the <i>name of the file</i> of your signature to 
+      be appended to any outgoing email. This is relative to your home 
+    directory.</p>
+    <p><b>Sendmail Cmd</b> is the command to be invoked to send any
+      outgoing email.  It is usually correct as is.</p>
+    <p><b>The Pop settings</b> are the server, port, and username to be
+      used to retrieve your mail.</p>
+    <p><b>Leave mail on server</b> instructs KPilot to leave any new 
+      mail on the POP server when syncing with the Palm Pilot.  This
+      allows you to grab the email using your regular browser
+      later.</p>
+    <p><b>Sync incoming and outgoing mail</b> refers to whether KPilot
+      should check for new mail on the POP server and send any pending 
+      mail from the Palm Pilot respectively.</p>
+
+    <H3>Address Settings</H3>
+
+    <p><b>Import and Export Format</b> are the formats any imported or 
+      exported addresses will have.  No spaces should appear in the
+      format specification.  The same delimeter should be used
+      throughout, for example, a comma.</p>
+    <p><b>Use Key Field</b> instructs KPilot to use the first field in 
+      the specification as a key field for finding already existing
+      addresses.  When addresses are imported into KPilot and <b>Use
+	Key Field</b> is turned on, a matching record will be updated
+      with the information read from the import file.  If it is turned 
+      off, a new address will be created for each entry in the import
+      file.  <i>Note that the first field in the import/export format is
+      the key field!</i></p>
+
+
+<A NAME="memo"><H2>The Memo Utility</H2></A>
+    
+    <p>The memo viewer allows you to view the memos on your pilot,
+      export them to text files, import new ones to be installed the next 
+      time you hot-sync, or edit existing ones.
+    
+<A NAME="address"><H2>The Address Utility</H2></A>
+    <p>The address viewer lets you view, import, export and edit
+      addresses to and from the Pilot.  The import and export format is
+      configurable via the <a
+	href="using-kpilot.html#settings">settings dialog</a>.  Note
+      that the first field in the 
+      import format is used as the key field.  That is, if <b>Use Key
+	Field</b> is 
+      turned on in the settings dialog, when importing if KPilot sees
+      another record with a matching "Key Field" the existing record is
+      updated to reflect the new data being read in.  If no such record
+      exists, a new record is created.  The default is not to use the key
+      field, so every record read in from the import file is created and
+      added to the database.</p>
+
+<A NAME="installer"><H2>The File Installer</H2></A>
+    <p>	To use the file installer supports dragging and dropping of
+      files into the file list area if you are using KFM, or just hit the
+      Add File button to add a file if you are not.  These files will
+      be installed on your Palm Pilot during the next hot sync if Sync
+      Files is checked in the settings dialog.  If you choose not to
+      install the files on the Palm Pilot, just hit Clear List to
+      remove any pending files.  <i>Note that an internal copy of the
+      file is kept, so you can even drag and drop URLs from KFM's
+      browser!</i>
+      <p>Also, if you are using the Hot-Sync Daemon you may drag and
+      drop files/urls onto the docked icon on the tool bar.  Provided
+      <b>Sync Files</b> is checked in the <a
+	href="using-kpilot.html#settings">settings dialog</a> they
+      will be installed the next time you hot-sync.
+    
+
+
+    <hr>
+    <address><a href="mailto:pilone@slac.com">Dan Pilone</a></address>
+<!-- Created: Sun Jan 25 03:54:45 EST 1998 -->
+<!-- hhmts start -->
+Last modified: Wed Feb 25 15:43:40 EST 1998
+<!-- hhmts end -->
+  </body>
+</html>

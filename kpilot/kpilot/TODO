@@ -1,0 +1,13 @@
+Done Date                    Description
+12/97           Add drag and drop support pending-install file list
+12/97           Add ability to actually sync with Palm Pilot.. :)
+01/98           Add memo app support.
+01/98		If record is marked as deleted on PP, delete it locally?
+01/98           Sort by category locally?
+01/98           Ability to know which PC it has been last synced with.
+ --             Owner configurations.
+01/98		E-mail support
+01/98		Full Backup/Restore of Pilot
+01/98		Partial Backups of apps
+01/98           Finish partial backups
+01/98		Write English Help File

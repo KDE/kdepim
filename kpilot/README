@@ -1,0 +1,123 @@
+	KPilot is software for syncing the 3Com Palm Pilot and IBM
+Workpad (UNTESTED!) with a machine running some flavor of unix. The
+actual PC->PP communcations was originally based on pilot-link.0.8.7.
+By default it attempts to connnect using /dev/pilot which should be a
+link to the actual serial port, however this is configurable in the
+settings dialog. 
+
+	This is the fouth release of KPilot.  The major change in this 
+release is conduit support.  There are currently two included
+conduits, a KOrganizer conduit (vcal syncing) and a PopMail conduit
+(this fixes the email bug with KPilot 2.1).  Also fixed in this
+release is the Address/Memo "off by one" bug.  This release _REQUIRES_ 
+KDE Beta 4 or better.  Please see:
+http://www.slac.com/pilone/kpilot_home/moreinfo.html 
+for more information on the conduits and requirements.
+
+Current features include:
+		* Plug in conduit support, currently including
+			KOrganizer and PopMail
+		* Beta 4 compliant
+	        o Hot-Sync daemon.  - Now hot-sync with just the push of the
+          	  Hot-Sync button on your cradle.  No need to launch KPilot.
+	        o Add/Delete/Edit memos.
+                o Add/Delete/Edit addresses.
+                o Full Category support for both memos and addresses.
+                o KPilot now respects secret data.
+                o More configuration options including port speed and docking control.
+                o Now supports signature files for email.
+                o Drag and drop to docked icon for file install.
+                o International Support
+		o Full Backup/Restore capabilities of Palm Pilot
+		o File (prc,pdb) installation
+		o Email syncing capabilities (via POP3 & sendmail)
+	        o SmartSync backing up modified data even
+			for databases KPilot doesn't recognize
+	        o Import/Export to/from virtually any text format for
+			Addresses.
+	        o Import/Export to/from text files for memos
+			
+		(* = new in v3.0)
+
+Installation
+============
+
+	KPilot _REQUIRES_ at least Beta 4 of KDE (http://www.kde.org/)
+and v1.33 or better of the QT widget set (http://www.troll.no/).
+
+	If you have these packages, a simple:
+
+	./configure
+	make
+	make install
+
+	from the kpilot-3.0 directory should configure and install
+KPilot.  If you are using KPanel (the panel that comes with KDE)
+restarting it should insert an icon into the Utilities submenu.  If
+you are not using KPanel, the executable is named kpilot and will be
+installed in either /opt/kde/bin/ or /usr/local/kde/bin (whichever is
+appropriate for your system).
+
+Using the software
+==================
+
+	When KPilot is run for the first time it will display the
+settings dialog.  The default device is /dev/pilot (which should be a
+link to the proper device for the pilot) though this is configurable.
+Please verify this is correct.  Other settings can be configured at
+this time but are not mandatory (though HIGHLY recommended).  The one
+setting that you might want to take notice
+of is "Local overrides pilot".  Setting this to true means that if
+both the local record and the pilot record are modified, during the
+next hot sync the local record will be considered the valid one and
+both will be set to that. By default the Pilot is considered to be the
+valid record and if both the local record and the pilot record have
+been modified the local is overwritten by the pilot copy.  Hitting
+"OK" will continue to the main KPilot screen.
+	It is recommended you preform a full backup of your Pilot at
+this point so that all of the data visible in KPilot is accurate and
+any importing or exporting is properly merged the next time you
+hot-sync.  You can do a full backup of your Pilot by selecting Backup
+from the File Menu.
+	The memo viewer allows you to view the memos on your pilot,
+export them to text files, or import new ones to be installed the next 
+time you hot-sync.  KPilot does not let you edit memos at this point.
+(However you may export them, edit, and reimport, though you will end
+up with two copies: the original, and the modified).
+	The address viewer likewise lets you view, import and export
+addressed to and from the Pilot.  The import and export format is
+configurable via the settings dialog.  Note that the first field in the
+import format is used as the key field.  That is, if Use Key Field is
+turned on in the settings dialog, when importing if KPilot sees
+another record with a matching "Key Field" the existing record is
+updated to reflect the new data being read in.  If no such record
+exists, a new record is created.  The default is not to use the key
+field, so every record read in from the import file is created and
+added to the database.
+	To use the file installer supports dragging and dropping of
+files into the file list area if you are using KFM, or just hit the
+Add File button to add a file.  These files will be installed on your
+Palm Pilot during the next hot sync if Sync Files is checked in the
+settings dialog.
+
+Standard Disclaimer, warnings, etc..
+====================================
+
+	THIS SOFTWARE HAS BUGS.  Use at your own risk.  It has not
+even been tested anywhere but on my machine and only with my Palm
+Pilot.  I have been using it against XCopilot for development then
+verifying it works with a real pilot with my Palm Pilot Professional
+running OS v2.0.4.  I make no claims that it will work, or even try to 
+work.  I take no responsibility for any data loss, damage, etc. done
+by this software.  ie:  Should your pilot burst into flames while
+trying to sync a new game.. sorry.
+	That being said, I _really_ want comments regarding the
+software as well as suggestions.  Bug fixes are even snazzier and code 
+contributions are welcome.  :)  This is being released so that it gets 
+some exposure to influences other than mine and so that I can be sure
+that it at least has a hope of running on something other than just my
+machine.  
+
+	Dan Pilone
+	pilone@slac.com
+	May 08, 1998

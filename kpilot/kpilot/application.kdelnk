@@ -1,0 +1,11 @@
+# KDE Config File
+[KDE Desktop Entry]
+Comment[]=mime type
+MimeType=palmpilot/application
+Comment=mime type
+DefaultApp=
+Comment[pl]=Typ mime
+Icon=kpilprc.xpm
+Type=MimeType
+Patterns=*prc,*PRC;
+Comment[de]=Mime Type
