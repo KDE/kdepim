@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Novell Groupwise
+Name=Novell Groupwise server
 X-KDE-Library=kabc_groupwise
 Type=Service
 ServiceTypes=KResources/Plugin
