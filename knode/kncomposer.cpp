@@ -1801,7 +1801,7 @@ void KNComposer::Editor::slotRot13()
 
 
 // don't use Tab for focus handling
-bool KNComposer::Editor::eventFilter(QObject*, QEvent* e)
+bool KNComposer::Editor::eventFilter(QObject* o, QEvent* e)
 {
   if (e->type() == QEvent::KeyPress) {
     QKeyEvent *k = static_cast<QKeyEvent*>(e);
@@ -1812,7 +1812,7 @@ bool KNComposer::Editor::eventFilter(QObject*, QEvent* e)
       return true;
     }
   }
-  return false;
+  return KEdit::eventFilter( o, e );
 }
 
 
