@@ -27,6 +27,7 @@
 #include <qobjectlist.h>
 #include <qpixmap.h>
 #include <qpushbutton.h>
+#include <qwhatsthis.h>
 #include <qwidgetfactory.h>
 
 #include <kaboutdata.h>
@@ -67,22 +68,24 @@ class PageItem : public QCheckListItem
         QObjectList *list = wdg->queryList( "QWidget" );
         QObjectListIt it( *list );
 
-        QStringList allowedTypes;
-        allowedTypes << "QLineEdit"
-                     << "QSpinBox"
-                     << "QCheckBox"
-                     << "QComboBox"
-                     << "QDateTimeEdit"
-                     << "KLineEdit"
-                     << "KDateTimeWidget"
-                     << "KDatePicker";
+        QMap<QString, QString> allowedTypes;
+        allowedTypes.insert( "QLineEdit", i18n( "Text" ) );
+        allowedTypes.insert( "QSpinBox", i18n( "Numeric Value" ) );
+        allowedTypes.insert( "QCheckBox", i18n( "Boolean" ) );
+        allowedTypes.insert( "QComboBox", i18n( "Selection" ) );
+        allowedTypes.insert( "QDateTimeEdit", i18n( "Date & Time" ) );
+        allowedTypes.insert( "KLineEdit", i18n( "Text" ) );
+        allowedTypes.insert( "KDateTimeWidget", i18n( "Date & Time" ) );
+        allowedTypes.insert( "KDatePicker", i18n( "Date" ) );
 
         while ( it.current() ) {
-          if ( allowedTypes.contains( it.current()->className() ) ) {
+          if ( allowedTypes.find( it.current()->className() ) != allowedTypes.end() ) {
             QString name = it.current()->name();
             if ( name.startsWith( "X_" ) ) {
-              QListViewItem *item = new QListViewItem( this, name );
-              item->setSelectable( false );
+              new QListViewItem( this, name, 
+                                 allowedTypes[ it.current()->className() ],
+                                 it.current()->className(),
+                                 QWhatsThis::textFor( static_cast<QWidget*>( it.current() ) ) );
             }
           }
 
@@ -147,12 +150,14 @@ void KCMKabCustomFields::load()
 {
   QStringList activePages = KABPrefs::instance()->mAdvancedCustomFields;
 
-  QListViewItemIterator it( mPageView, QListViewItemIterator::Selectable );
+  QListViewItemIterator it( mPageView );
   while ( it.current() ) {
-    PageItem *item = static_cast<PageItem*>( it.current() );
-    if ( activePages.find( item->name() ) != activePages.end() ) {
-      item->setOn( true );
-      item->setIsActive( true );
+    if ( it.current()->parent() == 0 ) {
+      PageItem *item = static_cast<PageItem*>( it.current() );
+      if ( activePages.find( item->name() ) != activePages.end() ) {
+        item->setOn( true );
+        item->setIsActive( true );
+      }
     }
 
     ++it;
@@ -166,8 +171,10 @@ void KCMKabCustomFields::save()
 
   QStringList activePages;
   while ( it.current() ) {
-    PageItem *item = static_cast<PageItem*>( it.current() );
-    activePages.append( item->name() );
+    if ( it.current()->parent() == 0 ) {
+      PageItem *item = static_cast<PageItem*>( it.current() );
+      activePages.append( item->name() );
+    }
 
     ++it;
   }
@@ -215,8 +222,27 @@ void KCMKabCustomFields::initGUI()
 void KCMKabCustomFields::updatePreview( QListViewItem *item )
 {
   if ( item ) {
-    PageItem *pageItem = static_cast<PageItem*>( item );
-    mPagePreview->setPixmap( pageItem->preview() );
+    if ( item->parent() ) {
+      QString details = QString( "<qt><ul>"
+                                 "<li><b>%1:</b> %2</li>"
+                                 "<li><b>%3:</b> %4</li>"
+                                 "<li><b>%5:</b> %6</li>"
+                                 "<li><b>%7:</b> %8</li>"
+                                 "</ul></qt>" )
+                                .arg( i18n( "vCard Key" ) )
+                                .arg( item->text( 0 ) )
+                                .arg( i18n( "Type" ) )
+                                .arg( item->text( 1 ) )
+                                .arg( i18n( "Classname" ) )
+                                .arg( item->text( 2 ) )
+                                .arg( i18n( "What's This" ) )
+                                .arg( item->text( 3 ) );
+
+      mPagePreview->setText( details );
+    } else {
+      PageItem *pageItem = static_cast<PageItem*>( item );
+      mPagePreview->setPixmap( pageItem->preview() );
+    }
 	} else {
     mPagePreview->setPixmap( QPixmap() );
   }
