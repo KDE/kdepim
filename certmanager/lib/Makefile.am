@@ -40,4 +40,4 @@ messages: #rc.cpp
 	ui/*.cpp ui/*.h \
 	backends/*/*.cpp backends/*/*.h -o $(podir)/libkleopatra.pot
 
-include ../../admin/Doxyfile.am
+include $(top_srcdir)/doc/api/Doxyfile.am

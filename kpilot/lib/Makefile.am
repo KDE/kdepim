@@ -34,4 +34,4 @@ kpilotinclude_HEADERS = kpilotlink.h uiDialog.h plugin.h syncAction.h recordCond
 
 kde_kcfg_DATA = kpilotlib.kcfg
 
-include ../../admin/Doxyfile.am
+include $(top_srcdir)/doc/api/Doxyfile.am

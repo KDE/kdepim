@@ -21,4 +21,4 @@ xdg_apps_DATA = konsolekalendar.desktop
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/konsolekalendar.pot
 
-include ../admin/Doxyfile.am
+include $(top_srcdir)/doc/api/Doxyfile.am

@@ -20,4 +20,4 @@ kdelnkdir = $(kde_servicesdir)
 messages:
 	$(XGETTEXT) *.cc -o $(podir)/kio_imap4.pot
 
-include ../../admin/Doxyfile.am
+include $(top_srcdir)/doc/api/Doxyfile.am

@@ -29,4 +29,4 @@ messages: rc.cpp
 	$(EXTRACTRC) conf/*.ui >> rc.cpp
 	$(XGETTEXT) conf/*.cpp *.cpp *.h -o $(podir)/kleopatra.pot
 
-include ../admin/Doxyfile.am
+include $(top_srcdir)/doc/api/Doxyfile.am

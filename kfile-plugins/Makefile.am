@@ -4,4 +4,4 @@ endif
 
 SUBDIRS=vcf ics $(PILOTPLUGIN)
 
-include ../admin/Doxyfile.am
+include $(top_srcdir)/doc/api/Doxyfile.am

@@ -11,4 +11,4 @@ kabc2mutt_SOURCES = kabc2mutt.cpp main.cpp
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kabc2mutt.pot
 
-include ../../admin/Doxyfile.am
+include $(top_srcdir)/doc/api/Doxyfile.am

@@ -27,4 +27,4 @@ update_SCRIPTS = kpgp-3.1-upgrade-address-data.pl
 messages: 
 	$(XGETTEXT) *.cpp *.h -o $(podir)/libkpgp.pot
 
-include ../admin/Doxyfile.am
+include $(top_srcdir)/doc/api/Doxyfile.am

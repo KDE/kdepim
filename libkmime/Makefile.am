@@ -29,4 +29,4 @@ METASOURCES = AUTO
 messages: 
 	$(XGETTEXT) *.cpp *.h -o $(podir)/libkmime.pot
 
-include ../admin/Doxyfile.am
+include $(top_srcdir)/doc/api/Doxyfile.am
