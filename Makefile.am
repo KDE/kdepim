@@ -1,7 +1,7 @@
 ## kdebase/Makefile.am
 ## (C) 1997 Stephan Kulow
 
-COMPILE_FIRST = rmm kab2
+COMPILE_FIRST = librmm kab2
 COMPILE_LAST = abbrowser
 SUBDIRS = $(COMPILE_FIRST) $(TOPSUBDIRS) $(COMPILE_LAST)
 
