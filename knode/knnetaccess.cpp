@@ -222,7 +222,8 @@ void KNNetAccess::startJobNntp()
   }
   
   mNNTPProgressItem = ProgressManager::createProgressItem( 
-      0, "NNTP", i18n("Knode NNTP"), QString::null, false, false );
+      0, "NNTP", i18n("Knode NNTP"), QString::null, true, false );
+  connect(mNNTPProgressItem, SIGNAL(progressItemCanceled(ProgressItem*)), SLOT(slotCancelNNTPJobs()));
 
   currentNntpJob = nntpJobQueue.take(0);
   currentNntpJob->prepareForExecution();
@@ -247,7 +248,8 @@ void KNNetAccess::startJobSmtp()
   unshownMsg = QString::null;
 
   mSMTPProgressItem = ProgressManager::createProgressItem( 
-      0, "SMTP", i18n("KNode SMTP"), QString::null, false, false );
+      0, "SMTP", i18n("KNode SMTP"), QString::null, true, false );
+  connect(mSMTPProgressItem, SIGNAL(progressItemCanceled(ProgressItem*)), SLOT(slotCancelSMTPJobs()));
 
   currentSmtpJob = smtpJobQueue.take(0);
   currentSmtpJob->prepareForExecution();
@@ -360,7 +362,7 @@ void KNNetAccess::cancelAllJobs()
 
 void KNNetAccess::slotThreadSignal(int i)
 {
-  int signal,byteCount;
+  int signal;
   QString tmp;
 
   //kdDebug(5003) << "KNNetAccess::slotThreadSignal() : signal received from net thread" << endl;

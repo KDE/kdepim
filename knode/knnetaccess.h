@@ -78,6 +78,8 @@ class KNNetAccess : public QObject  {
 
   protected slots:
     void slotThreadSignal(int i);
+    void slotCancelNNTPJobs() { stopJobsNntp(0); }
+    void slotCancelSMTPJobs() { stopJobsSmtp(0); }
 
   signals:
     void netActive(bool);
