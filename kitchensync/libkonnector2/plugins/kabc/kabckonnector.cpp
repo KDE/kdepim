@@ -70,9 +70,12 @@ KABCKonnector::KABCKonnector( const KConfig *config )
     }
   }
 
-  if ( mResource )
+  if ( mResource ) {
     connect( mResource, SIGNAL( loadingFinished( Resource* ) ),
              SLOT( loadingFinished() ) );
+
+    mResource->setAddressBook( &mAddressBook );
+  }
 }
 
 KABCKonnector::~KABCKonnector()
@@ -151,6 +154,10 @@ bool KABCKonnector::writeSyncees()
 {
   if ( !mResource )
     return false;
+
+  KABC::AddressBook::Iterator it;
+  for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it )
+    mResource->insertAddressee( *it );
 
   if ( !mResource->readOnly() ) {
     KABC::Ticket *ticket;
