@@ -10,7 +10,7 @@ libkcal_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 2:0:0 -module
 libkcal_la_LIBADD  = $(LIB_QT) versit/libversit.la $(LIB_KFILE) \
                      $(top_builddir)/libical/src/libical/libical.la \
                      $(top_builddir)/libical/src/libicalss/libicalss.la \
-                     -lkresources
+                     -lkresources -lkabc
 
 libkcal_la_COMPILE_FIRST = $(top_builddir)/libical/src/libical/ical.h $(top_builddir)/libical/src/libicalss/icalss.h
 libkcal_la_SOURCES = \
@@ -29,7 +29,8 @@ libkcal_la_SOURCES = \
 	resourcecalendar.cpp resourcelocal.cpp resourcelocalconfig.cpp \
 	calendarresources.cpp \
         qtopiaformat.cpp \
-	resourcecached.cpp
+	resourcecached.cpp \
+        htmlexport.cpp 
 
 kde_module_LTLIBRARIES = kcal_localdir.la kcal_remote.la kcal_kabc.la
 
