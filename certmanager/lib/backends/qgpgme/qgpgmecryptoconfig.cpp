@@ -297,7 +297,6 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   else
     rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
 
-  // ####### TODO error handling (message box).
   if ( rc == -1 )
   {
     QString wmsg = i18n( "Could not start gpgconf\nCheck that gpgconf is in the PATH and that it can be started" );
