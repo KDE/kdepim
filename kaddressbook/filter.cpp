@@ -76,19 +76,19 @@ void Filter::apply(KABC::Addressee::List &addresseeList)
 
 bool Filter::filterAddressee(const KABC::Addressee &a)
 {
-  bool matches = true;
-  
   QStringList::Iterator iter;
-  for (iter = mCategoryList.begin(); (iter != mCategoryList.end()) && matches; 
-       ++iter)
-  {
-    matches = a.hasCategory(*iter);
+  iter = mCategoryList.begin();
+  // empty filter always matches
+
+  if ( iter == mCategoryList.end() )
+    return true;
+
+  for (; iter != mCategoryList.end(); ++iter ) {
+    if ( a.hasCategory( *iter ) )
+      return ( mMatchRule == Matching );
   }
   
-  if (mMatchRule == Matching)
-    return matches;
-    
-  return !matches;
+  return !( mMatchRule == Matching );
 }
 
 void Filter::save(KConfig *config)
