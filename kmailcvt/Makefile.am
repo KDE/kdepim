@@ -3,21 +3,21 @@ bin_PROGRAMS = kmailcvt
 kmailcvt_SOURCES = kimportpagedlg.ui kimportpage.cpp kselfilterpagedlg.ui \
                    kselfilterpage.cpp pablib.cxx mapihd.cpp \
                    filters.cxx filter_pab.cxx filter_oe.cxx kmailcvt.cpp \
-                   main.cpp filter_eudora_ab.cxx \
-                   filter_pmail.cxx filter_plain.cxx filter_csv.cxx \
+                   main.cpp \
+                   filter_pmail.cxx filter_plain.cxx \
                    filter_mbox.cxx
 kmailcvt_LDADD   = -lkabc $(LIB_KFILE)
 
 EXTRA_DIST = main.cpp kmailcvt.cpp kimportpage.cpp kimportpage.h \
              kselfilterpage.cpp kselfilterpage.h kmailcvt.h \
              kmailcvt.desktop filter_oe.cxx filter_oe.hxx \
-             filter_eudora_ab.cxx filter_eudora_ab.hxx filter_pab.cxx \
+             filter_pab.cxx \
              filter_pab.hxx filters.cxx filters.hxx mapihd.cpp mapihd.h \
              pablib.cxx pablib.hxx pabtypes.h \
              PAB_format.html sv9429424.gif \
              filter_pmail.cxx filter_pmail.hxx \
              filter_plain.cxx filter_plain.hxx \
-             filter_csv.cxx filter_csv.hxx filter_mbox.cxx filter_mbox.hxx
+             filter_mbox.cxx filter_mbox.hxx
 
 install-data-local: uninstall.desktop
 	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Utilities
