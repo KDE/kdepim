@@ -44,6 +44,12 @@ public slots:
 	 * window
 	 */
         void newContact();
+        /* CS: abbrowser crashes, when newContact is called as a slot. The
+        indirection by slotNewContact prevents this crash. The problem seems to
+        be caused by the fact that newContact is defined in AbBrowserIface.
+        Don't know, what is the real problem and don't have the time to
+        investigate further right now. */
+        void slotNewContact() { newContact(); }
         QStringList getKeys() const;
         QDict<ContactEntry> getEntryDict() const;
         void changeEntry( QString key, ContactEntry changeEntry);
@@ -51,7 +57,8 @@ public slots:
         void addEntry( ContactEntry newEntry );
 		      
 	void saveCe();
-	void save();
+        void save();
+	void slotSave() { save(); }
 	void readConfig();
 	void saveConfig();
 	void undo();

@@ -33,8 +33,8 @@ Pab::Pab() : KMainWindow(0), DCOPObject("AbBrowserIface")
 
   // create a popup menu -- in this case, the File menu
   QPopupMenu* p = new QPopupMenu;
-  p->insertItem(i18n("&Sync"), this, SLOT(save()), CTRL+Key_S);
-  p->insertItem(i18n("&New Contact"), this, SLOT(newContact()), CTRL+Key_N);
+  p->insertItem(i18n("&Sync"), this, SLOT(slotSave()), CTRL+Key_S);
+  p->insertItem(i18n("&New Contact"), this, SLOT(slotNewContact()), CTRL+Key_N);
   /*  p->insertItem(i18n("New &Group"), this, SLOT(newGroup()), CTRL+Key_G); */
   p->insertSeparator();
   p->insertItem(i18n("Send &Mail"), view, SLOT(sendMail()), CTRL+Key_Return);
@@ -84,7 +84,7 @@ Pab::Pab() : KMainWindow(0), DCOPObject("AbBrowserIface")
   toolBar()->insertButton(BarIcon("filenew"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
-			  this, SLOT(newContact()), // result
+			  this, SLOT(slotNewContact()), // result
 			  true, i18n("Add a new entry"));      // tooltip text
   toolBar()->insertButton(BarIcon("edit"),   // icon
 			  1,                  // button id
