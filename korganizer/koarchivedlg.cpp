@@ -50,10 +50,17 @@ ArchiveDialog::ArchiveDialog(Calendar *cal,QWidget *parent, const char *name)
   mArchiveFile = new KURLRequester (KOPrefs::instance()->mArchiveFile,fileBox);
   mArchiveFile->fileDialog()->setMode(KFile::File);
   mArchiveFile->fileDialog()->setFilter(i18n("*.vcs|vCalendar Files"));
+  connect(mArchiveFile->lineEdit(),SIGNAL(textChanged ( const QString & )),this,SLOT(achiveFileChanged(const QString &)));
+  enableButton( KDialogBase::User1, !mArchiveFile->lineEdit()->text().isEmpty() );
 }
 
 ArchiveDialog::~ArchiveDialog()
 {
+}
+
+void ArchiveDialog::achiveFileChanged(const QString &file)
+{
+  enableButton( KDialogBase::User1, !file.isEmpty() );
 }
 
 // Archive old events
