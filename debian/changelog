@@ -1,6 +1,7 @@
 kdepim (4:2.2-alpha1-1) experimental; urgency=low
  
   * New upstream version
+  * New package: kandy
  
  -- Ivan E. Moore II <rkrusty@debian.org>  Tue, 10 Apr 2001 17:46:00 -0700
 

@@ -9,7 +9,7 @@ Package: korganizer
 Architecture: any
 Section: x11
 Replaces: kdepim, kdepim-common
-Depends: ${shlibs:Depends}, kdepim-libs, kdebase-libs
+Depends: ${shlibs:Depends}, kdebase-libs
 Suggests: kdebase, abbrowser, kpilot
 Conflicts: kdepim, task-kdepim
 Description: Personal organizer based on QT and KDE 
@@ -36,7 +36,7 @@ Package: abbrowser
 Architecture: any
 Section: utils
 Replaces: kdepim, kdepim-common
-Depends: ${shlibs:Depends}, kdepim-libs, kdebase-libs
+Depends: ${shlibs:Depends}, kdebase-libs
 Suggests: kdebase, korganizer
 Conflicts: kdepim, task-kdepim
 Description: Address book reader
@@ -45,15 +45,30 @@ Description: Address book reader
 Package: kpilot
 Architecture: any
 Section: utils
-Depends: ${shlibs:Depends}, pilot-link, kdepim-libs, kdebase-libs
+Depends: ${shlibs:Depends}, pilot-link, kdebase-libs
 Suggests: kdebase, korganizer, kab, knotes
 Description: Palm Pliot sync tool for KDE
  Palm Pilot sync tool for KDE
 
+Package: kandy
+Architecture: any
+Section: utils
+Depends: ${shlibs:Depends}, kdebase-libs
+Suggests: kdebase
+Description: Mobile phone utility for KDE
+ At the moment Kandy is more or less a terminal program with some special
+ features to store commands and their parameters, but is also has a simple 
+ GUI toaccess the phone-book of a mobile phone and it is able to save this 
+ phonebook tothe KDE address book.
+ .
+ Kandy is aimed at mobile phone with integrated (GSM) modems.
+
 Package: kdepim-libs
 Architecture: any
 Section: libs
+Replaces: korganizer (<< 4:2.2)
 Depends: ${shlibs:Depends}
+Conflicts: korganizer (<< 4:2.2)
 Description: KDE libraries amd modules for kdepim
  This package contains the different interface modules and libraries
  provided by the kdepim package.  These includes interfaces to imap and ical

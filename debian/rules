@@ -19,7 +19,7 @@ build-stamp:
 	  $(MAKE) -f admin/Makefile.common ;\
 	fi
 	./configure $(configkdepim)
-	make
+	$(MAKE)
 	touch build-stamp
 
 clean: debian-clean
@@ -28,9 +28,9 @@ clean: debian-clean
 debian-clean:
 	dh_testdir
 	if test -d CVS; then \
-	  make -f admin/Makefile.common cvs-clean ;\
+	  $(MAKE) -f admin/Makefile.common cvs-clean ;\
 	fi
-	-make distclean
+	-$(MAKE) distclean
 
 binary-indep: build
 	dh_testroot
@@ -40,8 +40,8 @@ binary-arch: build
 	dh_testdir
 	dh_testroot
 	dh_clean -k
-	dh_installdocs -a
-	make install DESTDIR=`pwd`/debian/korganizer/
+	dh_installdirs -a
+	$(MAKE) install DESTDIR=`pwd`/debian/korganizer/
 	cp debian/*.override debian/korganizer/usr/share/lintian/overrides/
 	for i in `ls debian/korganizer/usr/share/lintian/overrides/`; do \
 	  mv debian/korganizer/usr/share/lintian/overrides/$$i debian/korganizer/usr/share/lintian/overrides/`echo $$i | sed -e 's#.override##'`; \
@@ -52,7 +52,7 @@ binary-arch: build
 		ln -s ../common $$i ;\
 	done
 	dh_undocumented
-	dh_movefiles -a
+	dh_movefiles -a --sourcedir=debian/korganizer
 	dh_installdocs -a
 	dh_installmenu -a
 	dh_installmime -a
@@ -61,13 +61,14 @@ binary-arch: build
 	dh_installchangelogs -pkpilot kpilot/ChangeLog
 	dh_installchangelogs -pkdepim-libs
 	dh_installchangelogs -pkdepim-dev
+	dh_installchangelogs -pkandy
 	dh_strip -a
 	dh_compress -a
 	dh_fixperms -a
 	dh_makeshlibs -a -V
 	dh_perl -a
 	dh_installdeb -a
-	dh_shlibdeps -a
+	dh_shlibdeps -a -l`pwd`/debian/kdepim-libs/usr/lib
 	dh_gencontrol -a
 	dh_md5sums -a
 	dh_builddeb -a

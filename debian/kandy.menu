@@ -1,0 +1,8 @@
+?package(kandy):\
+	needs=x11\
+	section=Apps/Tools\
+	hints="KDE"\
+	kderemove="y"\
+	title="Kandy"\
+	command=/usr/bin/kandy
+

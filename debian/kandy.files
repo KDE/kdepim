@@ -1,0 +1,8 @@
+usr/bin/kandy
+usr/bin/kandy_client
+usr/share/icons/locolor/16x16/apps/kandy.png
+usr/share/icons/locolor/32x32/apps/kandy.png
+usr/share/applnk/Utilities/kandy.desktop
+usr/share/apps/kandy/*
+usr/share/doc/kde/HTML/en/kandy/*
+usr/share/lintian/overrides/kandy
