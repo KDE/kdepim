@@ -1,0 +1,7 @@
+Here are some nice example scripts how to use konsolekalendar.
+tcm2kcal.pl parses tcm movie stuff from the web site to ICS
+
+You need LYNX and Date::Calc to use this script (you can install 
+them from CPAN example 'perl -MCPAN -e 'install Date::Calc'
+
+testkalendar.sh is crappy test script.. 

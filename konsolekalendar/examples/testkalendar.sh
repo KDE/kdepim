@@ -59,7 +59,7 @@ done
 }
 
 
-KONSOLEKALENDAR=./konsolekalendar
+KONSOLEKALENDAR=../konsolekalendar
 ADDING="--add"
 REMOVE="--delete"
 CHANGE="--change"
