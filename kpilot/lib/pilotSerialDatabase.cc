@@ -43,9 +43,8 @@ static const char *pilotSerialDatabase_id =
 	"$Id$";
 
 PilotSerialDatabase::PilotSerialDatabase(int linksocket,
-	const QString &dbName,
-	QObject *p,const char *n) :
-	PilotDatabase(p,n),
+	const QString &dbName) :
+	PilotDatabase(dbName),
 	fDBName(QString::null),
 	fDBHandle(-1),
 	fDBSocket(linksocket)

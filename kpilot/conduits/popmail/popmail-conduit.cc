@@ -440,7 +440,7 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	else
 	{
 		fDatabase=new PilotSerialDatabase(pilotSocket(),
-			CSL1("MailDB"),this,"MailDB");
+			CSL1("MailDB"));
 
 		if (!fDatabase || !fDatabase->isDBOpen())
 		{

@@ -338,22 +338,22 @@ void SysInfoConduit::recNumberInfo()
 		fValues["events"] = "ERROR";
 		fValues["todos"] = "ERROR";
 		fValues["memos"] = "ERROR";
-		fDatabase = new PilotSerialDatabase(pilotSocket(), "AddressDB",  this);
+		fDatabase = new PilotSerialDatabase(pilotSocket(), "AddressDB");
 		if (fDatabase) {
 			fValues["addresses"] = QString::number(fDatabase->recordCount());
 			KPILOT_DELETE(fDatabase);
 		}
-		fDatabase = new PilotSerialDatabase(pilotSocket(), "DatebookDB",  this);
+		fDatabase = new PilotSerialDatabase(pilotSocket(), "DatebookDB");
 		if (fDatabase) {
 			fValues["events"] = QString::number(fDatabase->recordCount());
 			KPILOT_DELETE(fDatabase);
 		}
-		fDatabase = new PilotSerialDatabase(pilotSocket(), "ToDoDB",  this);
+		fDatabase = new PilotSerialDatabase(pilotSocket(), "ToDoDB");
 		if (fDatabase) {
 			fValues["todos"] = QString::number(fDatabase->recordCount());
 			KPILOT_DELETE(fDatabase);
 		}
-		fDatabase = new PilotSerialDatabase(pilotSocket(), "MemoDB",  this);
+		fDatabase = new PilotSerialDatabase(pilotSocket(), "MemoDB");
 		if (fDatabase) {
 			fValues["memos"] = QString::number(fDatabase->recordCount());
 			KPILOT_DELETE(fDatabase);

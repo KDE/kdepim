@@ -33,7 +33,7 @@
 #include "config.h"
 #endif
 
-#include <qobject.h>
+#include <qstring.h>
 #include <qvaluelist.h>
 
 // Handle all time.h variations properly.
@@ -64,15 +64,25 @@
  * PilotDatabase methods when finished with them!!
  */
 
-class PilotDatabase : public QObject
+class PilotDatabase
 {
-Q_OBJECT
 public:
-	PilotDatabase(QObject *,const char *);
+	PilotDatabase(const QString &name = QString::null);
 	virtual ~PilotDatabase();
 
 	enum { MAX_APPINFO_SIZE=8192
 		} Constants;
+
+
+	QString name() const { return fName; } ;
+
+	/**
+	* Debugging information: tally how many databases are created
+	* or destroyed. Returns the count of currently existing databases.
+	*/
+	static int count();
+
+	/* -------------------- Abstract interface for subclasses ----------------- */
 
 	/**
 	* Creates the database with the given creator, type and flags
@@ -169,6 +179,7 @@ protected:
 
 private:
 	bool fDBOpen;
+	QString fName;
 };
 
 #endif

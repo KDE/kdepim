@@ -1,6 +1,9 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-05-07  Adriaan de Groot
+* PilotDatabase was a QObject. I wonder why, it didn't have signals or slots.
+
 2004-04-30  Adriaan de Groot
 * Vrolijke koninginnedag!
 * Finally updated the site some.

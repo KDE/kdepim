@@ -49,9 +49,8 @@ static const char *pilotlocaldatabase_id =
 #include "pilotLocalDatabase.h"
 
 PilotLocalDatabase::PilotLocalDatabase(const QString & path,
-	const QString & dbName, bool useDefaultPath,
-	QObject *p, const char *n) :
-	PilotDatabase(p,n),
+	const QString & dbName, bool useDefaultPath) :
+	PilotDatabase(dbName),
 	fPathName(path),
 	fDBName(dbName),
 	fAppInfo(0L),
@@ -86,8 +85,8 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 }
 
 PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
-	bool useConduitDBs, QObject *p, const char *n) :
-	PilotDatabase(p,n),
+	bool useConduitDBs) :
+	PilotDatabase(dbName),
 	fPathName(QString::null),
 	fDBName(dbName),
 	fAppInfo(0L),

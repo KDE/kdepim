@@ -19,7 +19,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -30,21 +30,46 @@
 #include "options.h"
 
 #include <time.h> // Needed by pilot-link include
-
 #include <pi-appinfo.h>
 
-#include "pilotDatabase.moc"
+#include <qstringlist.h>
 
-PilotDatabase::PilotDatabase(QObject *o,const char *n) :
-	QObject(o,n),
-	fDBOpen(false)
+#include "pilotDatabase.h"
+
+static int creationCount = 0;
+static QStringList *createdNames = 0L;
+
+PilotDatabase::PilotDatabase(const QString &s) :
+	fDBOpen(false),
+	fName(s)
 {
 	FUNCTIONSETUP;
+	creationCount++;
+	if (!createdNames)
+	{
+		createdNames = new QStringList();
+	}
+	createdNames->append(s.isEmpty() ? CSL1("<empty>") : s);
 }
 
 /* virtual */ PilotDatabase::~PilotDatabase()
 {
 	FUNCTIONSETUP;
+	creationCount--;
+	if (createdNames)
+	{
+		createdNames->remove(fName.isEmpty() ? CSL1("<empty>") : fName);
+	}
+}
+
+/* static */ int PilotDatabase::count()
+{
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": " << creationCount << " databases." << endl;
+	DEBUGDAEMON << fname << ": " << createdNames->join(CSL1(",")) << endl;
+#endif
+	return creationCount;
 }
 
 /* static */ void PilotDatabase::listAppInfo(const struct CategoryAppInfo *category)

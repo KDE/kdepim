@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -38,14 +38,13 @@
 class PilotSerialDatabase : public PilotDatabase
 {
 public:
-	PilotSerialDatabase(int linksocket, const QString &dbName,
-		QObject * = 0L, const char * = 0L);
+	PilotSerialDatabase(int linksocket, const QString &dbName);
 	virtual ~PilotSerialDatabase();
 
 	/** Reads the application block info, returns size */
 	virtual int readAppBlock(unsigned char* buffer, int maxLen);
 	/** Writes the application block info. */
-	virtual int writeAppBlock(unsigned char* buffer, int len);  
+	virtual int writeAppBlock(unsigned char* buffer, int len);
 	/**  returns the number of records in the database */
 	virtual int recordCount();
 	/** Returns a QValueList of all record ids in the database. */
@@ -56,22 +55,22 @@ public:
 	virtual PilotRecord* readRecordByIndex(int index);
 	/** Reads the next record from database in category 'category' */
 	virtual PilotRecord* readNextRecInCategory(int category);
-	/** 
-	* Reads the next record from database that has the dirty flag set. 
-	* ind (if a valid pointer is given) will receive the index of the 
-	* returned record. 
+	/**
+	* Reads the next record from database that has the dirty flag set.
+	* ind (if a valid pointer is given) will receive the index of the
+	* returned record.
 	*/
 	virtual PilotRecord* readNextModifiedRec(int *ind=NULL);
 
-	/** 
-	* Writes a new record to database (if 'id' == 0, one will be 
-	* assigned to newRecord) 
+	/**
+	* Writes a new record to database (if 'id' == 0, one will be
+	* assigned to newRecord)
 	*/
 	virtual recordid_t writeRecord(PilotRecord* newRecordb);
 
-	/** 
-	* Deletes a record with the given recordid_t from the database, 
-	* or all records, if all is set to true. The recordid_t will be 
+	/**
+	* Deletes a record with the given recordid_t from the database,
+	* or all records, if all is set to true. The recordid_t will be
 	* ignored in this case. Return value is negative on error, 0 otherwise.
 	*/
 	virtual int deleteRecord(recordid_t id, bool all=false);
@@ -84,18 +83,18 @@ public:
 
 	virtual QString dbPathName() const;
 
-	/** 
-	* Deletes the database (by name, as given in the constructor and 
-	* stored in the fDBName field). 
+	/**
+	* Deletes the database (by name, as given in the constructor and
+	* stored in the fDBName field).
 	*/
 	virtual int deleteDatabase();
 
-	/** 
-	* Creates the database with the given creator, type and flags on 
-	* the given card (default is RAM). If the database already exists, 
-	* this function does nothing. 
+	/**
+	* Creates the database with the given creator, type and flags on
+	* the given card (default is RAM). If the database already exists,
+	* this function does nothing.
 	*/
-	virtual bool createDatabase(long creator=0, 
+	virtual bool createDatabase(long creator=0,
 		long type=0, int cardno=0, int flags=0, int version=0);
 	QString getDBName() { return fDBName; }
 

@@ -41,7 +41,7 @@ class PilotLocalDatabase : public PilotDatabase
 public:
 	/**
 	* Opens the local database. If the database cannot be found at the
-	* given position, a default path is used 
+	* given position, a default path is used
 	*     ($KDEHOME/share/apps/kpilot/DBBackup)
 	* and if the file is found there, it is opened. In some cases this should
 	* not be done, so the parameter useDefaultPath controls this behavior.
@@ -51,8 +51,7 @@ public:
 	* created explicitly at the specified location.
 	*/
 	PilotLocalDatabase( const QString& path,
-		const QString& name, bool useDefaultPath=true,
-		QObject *p=0L,const char *n=0L);
+		const QString& name, bool useDefaultPath=true);
 	/**
 	* Opens the local database. A default path is used
 	* ($KDEHOME/share/apps/kpilot/DBBackup)
@@ -63,23 +62,22 @@ public:
 	* the state of the previous conduit run,  useConduitDBs=true
 	* opens the database in $KDEHOME/share/apps/kpilot/conduits
 	*/
-	PilotLocalDatabase(const QString &name, bool useConduitDBs=false,
-		QObject *p=0L,const char *n=0L);
+	PilotLocalDatabase(const QString &name, bool useConduitDBs=false);
 
 
 	virtual ~PilotLocalDatabase();
 
-	/** Creates the database with the given creator, type and flags on 
-	* the given card (default is RAM). If the database already exists, 
-	* this function does nothing. 
+	/** Creates the database with the given creator, type and flags on
+	* the given card (default is RAM). If the database already exists,
+	* this function does nothing.
 	*/
-	virtual bool createDatabase(long creator=0, 
+	virtual bool createDatabase(long creator=0,
 		long type=0, int cardno=0, int flags=0, int version=0);
 
 
 
-	/** Deletes the database (by name, as given in the constructor 
-	* and stored in the fDBName field. ) 
+	/** Deletes the database (by name, as given in the constructor
+	* and stored in the fDBName field. )
 	*/
 	virtual int deleteDatabase();
 
@@ -103,7 +101,7 @@ public:
 	* returned record.
 	*/
 	virtual PilotRecord* readNextModifiedRec(int *ind=NULL);
-	// Writes a new record to database (if 'id' == 0, one will be 
+	// Writes a new record to database (if 'id' == 0, one will be
 	// assigned to newRecord)
 	virtual recordid_t writeRecord(PilotRecord* newRecord);
 	/**
@@ -120,7 +118,7 @@ public:
 	virtual int cleanup();
 
 
-	// Writes a new ID to the record specified. 
+	// Writes a new ID to the record specified.
 	virtual recordid_t writeID(PilotRecord* rec);
 	QString getDBName() const { return fDBName; }
 
