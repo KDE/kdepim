@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2004 Daniel Molkentin <molkentin@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -22,6 +23,8 @@
 #include "kolabwizard.h"
 #include "kolabconfig.h"
 
+#include "kmailchanges.h"
+
 #include <libkcal/resourcecalendar.h>
 #include <kabc/resource.h>
 
@@ -36,6 +39,31 @@
 #include <qcheckbox.h>
 #include <qlabel.h>
 
+class SetupLDAPSearchAccount : public KConfigPropagator::Change
+{
+  public:
+    SetupLDAPSearchAccount()
+      : KConfigPropagator::Change( i18n("Setup LDAP Search Account") )
+    {
+    }
+
+    void apply()
+    {
+      QString host = KolabConfig::self()->server();
+      QString basedn = host;
+      basedn.replace(".",",dc=");
+      basedn.prepend("dc=");
+
+      KConfig c( "kabldaprc" );
+      c.setGroup( "LDAP" );
+      uint selHosts = c.readNumEntry("NumSelectedHosts", 0);
+      c.writeEntry( "NumSelectedHosts", selHosts + 1 );
+      c.writeEntry( QString("SelectedHost%1").arg(selHosts), host);
+      c.writeEntry( QString("SelectedBase%1").arg(selHosts), basedn);
+      c.writeEntry( QString("SelectedPort%1").arg(selHosts), "389");
+    }
+
+};
 
 class CreateCalenderImapResource : public KConfigPropagator::Change
 {
@@ -47,8 +75,6 @@ class CreateCalenderImapResource : public KConfigPropagator::Change
 
     void apply()
     {
-      kdDebug() << "Creating Calender IMAP Resource" << endl;
-
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
       QString server = KolabConfig::self()->server();
@@ -136,7 +162,11 @@ class KolabPropagator : public KConfigPropagator
       c->name = "FreeBusyRetrieveUrl";
       c->value = freeBusyBaseUrl;
 
+      // KMail cruft has been outsourced
+      createKMailChanges( changes );
+
       changes.append( c );
+      changes.append( new SetupLDAPSearchAccount );
 
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
