@@ -1463,6 +1463,7 @@ int Recurrence::weeklyCalcEndDate(QDate &enddate, int daysPerWeek) const
   if (startDayOfWeek != rWeekStart) {
     // Check what remains of the start week
     for (int i = startDayOfWeek - 1;  i != rWeekStart - 1;  i = (i + 1) % 7) {
+	  ++daysGone;
       if (rDays.testBit((uint)i)) {
         ++countGone;
         if (--countTogo == 0)
@@ -1480,9 +1481,10 @@ int Recurrence::weeklyCalcEndDate(QDate &enddate, int daysPerWeek) const
     countTogo -= wholeWeeks * daysPerWeek;
     // Check the last week in the recurrence
     for (int i = rWeekStart - 1;  ;  i = (i + 1) % 7) {
+	  ++daysGone;
       if (rDays.testBit((uint)i)) {
         ++countGone;
-        if (--countTogo == 0)
+        if (--countTogo == 0) 
           break;
       }
     }
