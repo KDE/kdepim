@@ -18,17 +18,7 @@
 #define KNARTICLEWIDGET_H
 
 #include <qbitarray.h>
-
-#if QT_VERSION < 290
-#  define QPtrList QList
-#  define QPtrListIterator QListIterator
-#endif
-
-//bad hack, but we need access to QTextBrowser::anchorAt(). Obsolete with Qt 3.0.
-#define private protected
 #include <ktextbrowser.h>
-#undef private
-
 #include "knjobdata.h"
 
 class QWidget;

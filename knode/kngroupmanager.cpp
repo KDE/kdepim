@@ -487,6 +487,9 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
       if (list) {
         QFileInfoListIterator it( *list );
         while (it.current()) {
+          if (it.current()->fileName() == g->groupname()+".dynamic" ||
+              it.current()->fileName() == g->groupname()+".static" ||
+              it.current()->fileName() == g->groupname()+".grpinfo")
           dir.remove(it.current()->fileName());
           ++it;
         }

@@ -225,7 +225,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   if (selectedText.isEmpty()) {
     KMime::Content *tc = a->textContent();
     if(tc)
-      tc->decodedText(text, true);
+      tc->decodedText(text, true, knGlobals.cfgManager->readNewsViewer()->removeTrailingNewlines());
   }
   else
     text = QStringList::split('\n',selectedText,true);
@@ -314,7 +314,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   KMime::Content *text=a->textContent();
   if(text) {
     QStringList decodedLines;
-    text->decodedText(decodedLines, true);
+    text->decodedText(decodedLines, true, knGlobals.cfgManager->readNewsViewer()->removeTrailingNewlines());
     for(QStringList::Iterator it=decodedLines.begin(); it!=decodedLines.end(); ++it)
       fwd+=" "+(*it)+"\n";
   }

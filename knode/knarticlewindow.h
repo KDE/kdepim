@@ -19,11 +19,6 @@
 
 #include <kmainwindow.h>
 
-#if QT_VERSION < 290
-#  define QPtrList QList
-#  define QPtrListIterator QListIterator
-#endif
-
 class KToggleAction;
 class KNArticle;
 class KNArticleWidget;

@@ -14,27 +14,16 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#ifndef UTIL
-#define UTIL
-
+#ifndef UTILITIES_H
+#define UTILITIES_H
 
 #include <kurl.h>
 
 #include <qfile.h>
 
 #include <qglobal.h>
-#if QT_VERSION >= 290
-#  include <qptrvector.h>
-#  include <qptrlist.h>
-#else
-// remove once Qt3 becomes mandatory
-#  include <qvector.h>
-#  include <qlist.h>
-#  define QPtrList QList
-#  define QPtrListIterator QListIterator
-#  define QPtrVector QVector
-#  define QPtrCollection QCollection
-#endif
+#include <qptrvector.h>
+#include <qptrlist.h>
 
 class QWidget;
 class QString;

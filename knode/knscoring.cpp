@@ -16,13 +16,8 @@
 
 #include <qstring.h>
 
-#if QT_VERSION < 300
-#  define Q_ASSERT ASSERT
-#endif
-
 #include <kwin.h>
 #include <kscoringeditor.h>
-
 
 #include "knscoring.h"
 #include "knaccountmanager.h"

@@ -23,6 +23,7 @@
 #include <qpaintdevicemetrics.h>
 #include <qpainter.h>
 #include <qtimer.h>
+#include <qurl.h>
 
 #include <kprinter.h>
 #include <kiconloader.h>
@@ -78,6 +79,11 @@ KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
   style=new QStyleSheetItem(styleSheet(), "txt");
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
   style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
+  style->setFontFamily(app->articleFixedFont().family());
+  style->setFontSize(app->articleFixedFont().pointSize());
+  style->setFontUnderline(app->articleFixedFont().underline());
+  style->setFontWeight(app->articleFixedFont().weight());
+  style->setFontItalic(app->articleFixedFont().italic());
 
   setText(QString("<qt><txt>%1</txt></qt>").arg(htmlCode));
   KNHelper::restoreWindowSize("sourceWindow", this, QSize(500,300));
@@ -286,9 +292,10 @@ bool KNArticleWidget::eventFilter(QObject *o, QEvent *e)
 
 void KNArticleWidget::viewportMousePressEvent(QMouseEvent *e)
 {
-  QString a=QTextBrowser::anchorAt(e->pos());
+  QString a= anchorAt(viewportToContents(e->pos()));
+
   if(!a.isEmpty() && (e->button()==RightButton || e->button()==MidButton))
-    anchorClicked(a, e->button(), &(e->globalPos()));
+    anchorClicked(a, e->button(), &e->globalPos());
   else
     if (e->button()==RightButton)
       b_odyPopup->popup(e->globalPos());
@@ -312,34 +319,43 @@ void KNArticleWidget::applyConfig()
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
   KNConfig::ReadNewsViewer *rnv=knGlobals.cfgManager->readNewsViewer();
 
-  //custom tags <bodyblock> , <headerblock>, <txt_attachment>
+  QFont f=(a_ctToggleFixedFont->isChecked()? app->articleFixedFont():app->articleFont());
+
+  //custom tags <articlefont>, <bodyblock>, <txt_attachment>
   QStyleSheetItem *style;
+  style=new QStyleSheetItem(styleSheet(), "articlefont");
+  style->setDisplayMode(QStyleSheetItem::DisplayInline);
+  style->setFontFamily(f.family());
+  style->setFontSize(f.pointSize());
+  style->setFontUnderline(f.underline());
+  style->setFontWeight(f.weight());
+  style->setFontItalic(f.italic());
+
   style=new QStyleSheetItem(styleSheet(), "bodyblock");
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
-  if (rnv->showHeaderDecoration())
-    style->setMargin(QStyleSheetItem::MarginAll, 5);
-  else
+  if (rnv->showHeaderDecoration()) {
+    style->setMargin(QStyleSheetItem::MarginAll, 0);
+    style->setMargin(QStyleSheetItem::MarginLeft, 5);
+  } else
     style->setMargin(QStyleSheetItem::MarginAll, 0);
   if (rnv->rewrapBody())
     style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNormal);
   else
     style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
-
-  style=new QStyleSheetItem(styleSheet(), "headerblock");
-  style->setDisplayMode(QStyleSheetItem::DisplayBlock);
-  if (rnv->showHeaderDecoration()) {
-    style->setMargin(QStyleSheetItem::MarginLeft, 10);
-    style->setMargin(QStyleSheetItem::MarginVertical, 2);
-  } else {
-    style->setMargin(QStyleSheetItem::MarginLeft, 0);
-    style->setMargin(QStyleSheetItem::MarginRight, 0);
-    style->setMargin(QStyleSheetItem::MarginTop, 0);
-    style->setMargin(QStyleSheetItem::MarginBottom, 2);
-  }
+  style->setFontFamily(f.family());
+  style->setFontSize(f.pointSize());
+  style->setFontUnderline(f.underline());
+  style->setFontWeight(f.weight());
+  style->setFontItalic(f.italic());
 
   style=new QStyleSheetItem(styleSheet(), "txt_attachment");
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
   style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
+  style->setFontFamily(f.family());
+  style->setFontSize(f.pointSize());
+  style->setFontUnderline(f.underline());
+  style->setFontWeight(f.weight());
+  style->setFontItalic(f.italic());
 
   setPaper( QBrush( app->backgroundColor() ) );
   setColor( app->textColor() );
@@ -348,14 +364,12 @@ void KNArticleWidget::applyConfig()
     t_imer->stop();
 
   emuKMail = ((this==knGlobals.artWidget) && knGlobals.cfgManager->readNewsNavigation()->emulateKMail());
-
   updateContents();
 }
 
-
 QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool beautification, bool allowRot13)
 {
-  QString text,result;
+  QString text,result,enc;
   QRegExp regExp;
   uint len=line.length();
   int matchLen;
@@ -420,11 +434,13 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
               matchLen--;
             else if (text[startIdx+matchLen-1]==',')   // remove trailing comma
               matchLen--;
+            else if (text[startIdx+matchLen-1]==':')   // remove trailing colon
+              matchLen--;
             if (matchLen < 3)
               result+=text[idx];
             else {
               result.remove(result.length()-(idx-startIdx), idx-startIdx);
-              result+=QString::fromLatin1("<a href=\"addrOrId:") + text.mid(startIdx,matchLen) +
+              result+=QString::fromLatin1("<a href=\"addrOrId://") + text.mid(startIdx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(startIdx,matchLen) + QString::fromLatin1("</a>");
               idx=startIdx+matchLen-1;
               lastReplacement=idx;
@@ -438,12 +454,14 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'h' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'h'
-          regExp.setPattern("^https?://[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
-          if (regExp.search(text,idx)!=-1) {
+          regExp.setPattern("https?://[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
+          if (regExp.search(text,idx)==(int)idx) {
             matchLen = regExp.matchedLength();
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
             else if (text[idx+matchLen-1]==',')   // remove trailing comma
+              matchLen--;
+            else if (text[idx+matchLen-1]==':')   // remove trailing colon
               matchLen--;
             result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
@@ -458,13 +476,16 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'w' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='w')) {   // don't do all the stuff for every 'w'
-          regExp.setPattern("^www\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
-          if (regExp.search(text,idx)!=-1) {
+          regExp.setPattern("www\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
+          if (regExp.search(text,idx)==(int)idx) {
             matchLen = regExp.matchedLength();
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
             else if (text[idx+matchLen-1]==',')   // remove trailing comma
               matchLen--;
+            else if (text[idx+matchLen-1]==':')   // remove trailing colon
+              matchLen--;
+
             result+=QString::fromLatin1("<a href=\"http://") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
@@ -478,12 +499,14 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'f' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'f'
-          regExp.setPattern("^ftp://[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
-          if (regExp.search(text,idx)!=-1) {
+          regExp.setPattern("ftp://[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
+          if (regExp.search(text,idx)==(int)idx) {
             matchLen = regExp.matchedLength();
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
             else if (text[idx+matchLen-1]==',')   // remove trailing comma
+              matchLen--;
+            else if (text[idx+matchLen-1]==':')   // remove trailing colon
               matchLen--;
             result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
@@ -491,13 +514,16 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             lastReplacement=idx;
             break;
           }
-          regExp.setPattern("^ftp\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
-          if (regExp.search(text,idx)!=-1) {
+          regExp.setPattern("ftp\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
+          if (regExp.search(text,idx)==(int)idx) {
             matchLen = regExp.matchedLength();
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
             else if (text[idx+matchLen-1]==',')   // remove trailing comma
               matchLen--;
+            else if (text[idx+matchLen-1]==':')   // remove trailing colon
+              matchLen--;
+
             result+=QString::fromLatin1("<a href=\"ftp://") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
@@ -511,14 +537,23 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'n' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='e')) {   // don't do all the stuff for every 'e'
-          regExp.setPattern("^news:[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
-          if (regExp.search(text,idx)!=-1) {
+          regExp.setPattern("news:[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
+          if (regExp.search(text,idx)==(int)idx) {
             matchLen = regExp.matchedLength();
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
             else if (text[idx+matchLen-1]==',')   // remove trailing comma
               matchLen--;
-            result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
+            else if (text[idx+matchLen-1]==':')   // remove trailing colon
+              matchLen--;
+
+            // encode the given url, because a "news:foo" link has a different meaning than "news://foo",
+            // and QTextBrowser merges both cases
+            enc = text.mid(idx,matchLen);
+            QUrl::encode(enc);
+            enc.replace(QRegExp("/"), "%2F");
+
+            result+=QString::fromLatin1("<a href=\"news://") + enc +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
             lastReplacement=idx;
@@ -531,13 +566,16 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'm' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='a')) {   // don't do all the stuff for every 'm'
-          regExp.setPattern("^mailto:[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
-          if (regExp.search(text,idx)!=-1) {
+          regExp.setPattern("mailto:[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
+          if (regExp.search(text,idx)==(int)idx) {
             matchLen = regExp.matchedLength();
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
             else if (text[idx+matchLen-1]==',')   // remove trailing comma
               matchLen--;
+            else if (text[idx+matchLen-1]==':')   // remove trailing colon
+              matchLen--;
+
             result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
@@ -552,8 +590,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case '/' :
       case '*' :
         if(beautification) {
-          regExp=QString("^\\%1[^\\s%2]+\\%3").arg(text[idx]).arg(text[idx]).arg(text[idx]);
-          if (regExp.search(text,idx)!=-1) {
+          regExp=QString("\\%1[^\\s%2]+\\%3").arg(text[idx]).arg(text[idx]).arg(text[idx]);
+          if (regExp.search(text,idx)==(int)idx) {
             matchLen = regExp.matchedLength();
             if (( matchLen > 3 ) &&
                 ((idx==0)||text[idx-1].isSpace()||(text[idx-1] == '(')) &&
@@ -684,7 +722,7 @@ void KNArticleWidget::showBlankPage()
   h_tmlDone=false;
   a_ctSave->setEnabled(false);
   a_ctPrint->setEnabled(false);
-  a_ctCopy->setEnabled(false); //probaly not neede, but who knows ;-)
+  a_ctCopy->setEnabled(false); //probaly not needed, but who knows ;-)
   a_ctSelAll->setEnabled(false);
   a_ctReply->setEnabled(false);
   a_ctRemail->setEnabled(false);
@@ -702,17 +740,13 @@ void KNArticleWidget::showBlankPage()
 
 void KNArticleWidget::showErrorMessage(const QString &s)
 {
-  setFont(a_ctToggleFixedFont->isChecked()?
-                           knGlobals.cfgManager->appearance()->articleFixedFont()
-                         : knGlobals.cfgManager->appearance()->articleFont());  // switch back from possible obscure charsets
-
   delete f_actory;                          // purge old image data
   f_actory = new QMimeSourceFactory();
   setMimeSourceFactory(f_actory);
 
   QString errMsg=s;
   errMsg.replace(QRegExp("\n"),QString("<br>"));  // error messages can contain html-links, but are plain text otherwise
-  QString msg="<qt>"+i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>")+errMsg+"</qt>";
+  QString msg="<qt>"+i18n("<bodyblock><b><font size=+1 color=red>An error occured!</font></b><hr><br>")+errMsg+"</bodyblock></qt>";
   setText(msg);
 
   // mark article as read, typically the article is expired on the server, so its
@@ -769,12 +803,12 @@ void KNArticleWidget::setArticle(KNArticle *a)
   if(!a)
     showBlankPage();
   else {
-    if(a->hasContent()) //article is already loaded => just show it
+    if(a->hasContent()) { //article is already loaded => just show it
       createHtmlPage();
-    else {
+    } else {
       if( !knGlobals.artManager->loadArticle(a_rticle) )
         articleLoadError( a, i18n("Unable to load the article!") );
-      else if(a->hasContent()) // try again...
+      else if(a->hasContent() && !(a->type()==KMime::Base::ATremote)) // try again, but not for remote articles
         createHtmlPage();
     }
   }
@@ -857,12 +891,8 @@ void KNArticleWidget::createHtmlPage()
 
   //----------------------------------- <Header> ---------------------------------------
 
-  QString html, hLine;
-  if (rnv->showHeaderDecoration())
-    html=QString("<qt><table width=\"100%\" cellpadding=0 cellspacing=1><tr><td width=40 bgcolor=\"%1\" width=\"1%\"><headerblock><table cellpadding=0 cellspacing=0>")
-         .arg(app->headerDecoHexcode());
-  else
-    html="<qt><headerblock><table width=\"100%\" cellpadding=0 cellspacing=0><tr><td><table cellpadding=0 cellspacing=0>";
+  QString headerHtml;
+  int headerLines=0;
 
   if(a_ctToggleFullHdrs->isChecked()) {
     QCString head = a_rticle->head();
@@ -871,10 +901,13 @@ void KNArticleWidget::createHtmlPage()
     while(!head.isEmpty()) {
       header = a_rticle->getNextHeader(head);
       if (header) {
-        html+=QString("<tr><td align=right><b>%1</b></td><td width=\"100%\">%2</td></tr>")
+        if (headerLines > 0)
+          headerHtml += "<tr>";
+        headerHtml+=QString("<td align=right><articlefont><b>%1</b></articlefont></td><td width=\"100%\"><articlefont>%2</articlefont></td></tr>")
                       .arg(toHtmlString(header->type())+":")
                       .arg(toHtmlString(header->asUnicodeString(),true));
         delete header;
+        headerLines++;
       }
     }
   }
@@ -887,32 +920,44 @@ void KNArticleWidget::createHtmlPage()
       hb=a_rticle->getHeaderByType(dh->header().latin1());
       if(!hb) continue; //header not found
 
+      if (headerLines > 0)
+          headerHtml += "<tr>";
+
       if(dh->hasName()) {
-        html += QString("<tr><td align=right>") + i18n("%1%2:%3")
+        headerHtml += QString("<td align=\"right\"><articlefont>") + i18n("%1%2:%3")
         .arg(dh->nameOpenTag()).arg(toHtmlString(dh->translatedName()))
-        .arg(dh->nameCloseTag()) + "</td><td width=\"100%\">";
+        .arg(dh->nameCloseTag()) + "</articlefont></td><td width=\"100%\"><articlefont>";
       }
       else
-        html+="<tr><td colspan=2>";
+        headerHtml+="<td colspan=\"2\" width=\"100%\"><articlefont>";
 
-      html+=dh->headerOpenTag();
+      headerHtml+=dh->headerOpenTag();
 
       if(hb->is("From")) {
-        html+=QString("<a href=\"internal:author\">%1</a>")
+        headerHtml+=QString("<a href=\"internal://author\">%1</a>")
                 .arg(toHtmlString(hb->asUnicodeString()));
       } else if(hb->is("Date")) {
         KMime::Headers::Date *date=static_cast<KMime::Headers::Date*>(hb);
-        html+=toHtmlString(KGlobal::locale()->formatDateTime(date->qdt(), false, true));
+        headerHtml+=toHtmlString(KGlobal::locale()->formatDateTime(date->qdt(), false, true));
       }
       else
-        html+=toHtmlString(hb->asUnicodeString(),true);
+        headerHtml+=toHtmlString(hb->asUnicodeString(),true);
 
-      html += dh->headerCloseTag()+"</td></tr>";
+      headerHtml += dh->headerCloseTag()+"</articlefont></td></tr>";
+      headerLines++;
     }
   }
 
+  QString html;
+
+  if (rnv->showHeaderDecoration())
+    html=QString("<qt><table width=\"100%\" cellpadding=\"0\" cellspacing=\"1\"><tr><td width=\"40\" bgcolor=\"%1\" rowspan=\"%2\"></td>"+headerHtml)
+         .arg(app->headerDecoHexcode()).arg(headerLines);
+  else
+    html="<qt><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr>"+headerHtml;
+
   if (rnv->showHeaderDecoration()) {    // no decorations <=> no references
-    html+=QString("</table></headerblock></td></tr><tr><td colspan=2 bgcolor=\"%1\"><headerblock>")
+    html+=QString("<tr><td colspan=\"3\" bgcolor=\"%1\"><articlefont>")
           .arg(app->headerDecoHexcode());
 
     //References
@@ -924,7 +969,7 @@ void KNArticleWidget::createHtmlPage()
       html+=QString("<b>%1</b>").arg(i18n("References:"));
 
       while (i <= refCnt) {
-        html+=QString(" <a href=\"news:%1\">%2</a>").arg(id).arg(i);
+        html+=" <a href=\"news://news%3A"+QString("%1\">%2</a>").arg(id).arg(i);
         id = refs->next();
         id = id.mid(1, id.length()-2);  // remove <>
         i++;
@@ -932,42 +977,25 @@ void KNArticleWidget::createHtmlPage()
     }
     else html+=i18n("no references");
 
-    html+="</headerblock></td></tr>";
+    html+="</articlefont></td></tr>";
   }
 
   KMime::Content *text=a_rticle->textContent();
-  if(text) {
-    if(!canDecode8BitText(text->contentType()->charset())) {
+  if(text && !canDecode8BitText(text->contentType()->charset())) {
       if (rnv->showHeaderDecoration())
-        html+=QString("<tr><td colspan=3 bgcolor=red><font color=black><headerblock>%1</headerblock></font></td></tr>")
+      html+=QString("<tr><td colspan=\"3\" bgcolor=\"red\"><articlefont><font color=\"black\">%1</font></articlefont></td></tr>")
               .arg(i18n("Unknown charset! Default charset is used instead."));
       else
-        html+=QString("<tr><td colspan=2 bgcolor=red><font color=black>%1</font></td></tr>")
+      html+=QString("<tr><td colspan=\"2\" bgcolor=\"red\"><articlefont><font color=\"black\">%1</font></articlefont></td></tr>")
               .arg(i18n("Unknown charset! Default charset is used instead."));
 
       kdDebug(5003) << "KNArticleWidget::createHtmlPage() : unknown charset = " << text->contentType()->charset() << " not available!" << endl;
-      setFont(a_ctToggleFixedFont->isChecked()? app->articleFixedFont():app->articleFont());
     }
-    else {
-      QFont f=(a_ctToggleFixedFont->isChecked()? app->articleFixedFont():app->articleFont());
-#if QT_VERSION < 300
-      if (!app->useFontsForAllCS())
-        KGlobal::charsets()->setQFont(f, KGlobal::charsets()->charsetForEncoding(text->contentType()->charset()));
-#endif
-      setFont(f);
-    }
-  }
-  else
-    setFont(a_ctToggleFixedFont->isChecked()? app->articleFixedFont():app->articleFont());
-
-  //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-family = " << font().family() << endl;
-  //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-charset = " << (int)(font().charSet()) << endl;
-  //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : article-charset = " << text->contentType()->charset() << endl;
 
   if (rnv->showHeaderDecoration())
     html+="</table>";
   else
-    html+="</table></tr></td></table></headerblock>";
+    html+="</table></tr></td></table>";
 
   //----------------------------------- </Header> --------------------------------------
 
@@ -1018,7 +1046,7 @@ void KNArticleWidget::createHtmlPage()
 
           // HTMLize the signer's user id and create mailto: link
           signer = toHtmlString( signer, false, false, false );
-          signer = "<a href=\"mailto:" + signer + "\">" + signer + "</a>";
+          signer = "<a href=\"mailto://" + signer + "\">" + signer + "</a>";
 
           if( !signerKey.isEmpty() )
             html += i18n( "Message was signed by %1 (Key ID: 0x%2)." )
@@ -1104,7 +1132,7 @@ void KNArticleWidget::createHtmlPage()
     html+="<bodyblock>";
     if(text->contentType()->isHTMLText()) {
       QString htmlTxt;
-      text->decodedText(htmlTxt, true);
+      text->decodedText(htmlTxt, true, knGlobals.cfgManager->readNewsViewer()->removeTrailingNewlines());
       html+=htmlTxt+"</bodyblock>";
     }
     else {
@@ -1114,7 +1142,7 @@ void KNArticleWidget::createHtmlPage()
       bool isSig=false;
       QStringList lines;
       QString line;
-      text->decodedText(lines, true);
+      text->decodedText(lines, true, knGlobals.cfgManager->readNewsViewer()->removeTrailingNewlines());
       QString quoteChars = rnv->quoteCharacters().simplifyWhiteSpace();
       if (quoteChars.isEmpty()) quoteChars = ">";
 
@@ -1174,13 +1202,13 @@ void KNArticleWidget::createHtmlPage()
     int attCnt=0;
     QString path;
     if(!a_tt->isEmpty()) {
-      html+="<table border width=\"100%\">";
-      html+=QString("<tr><th>%1</th><th>%2</th><th>%3</th></tr>")
+      html+="<br><table border width=\"100%\">";
+      html+=QString("<tr><td align=\"center\"><articlefont><b>%1</b></articlefont></td><td align=\"center\"><articlefont><b>%2</b></articlefont></td><td align=\"center\"><articlefont><b>%3</b></articlefont></td></tr>")
                     .arg(i18n("name")).arg(i18n("mime-type")).arg(i18n("description"));
 
       for(KMime::Content *var=a_tt->first(); var; var=a_tt->next()) {
         ct=var->contentType();
-        html+=QString("<tr><td align=center><a href=\"internal:att=%1\">%2</a></td><td align=center>%3</td><td align=center>%4</td></tr>")
+        html+=QString("<tr><td align=center><articlefont><a href=\"internal://att=%1\">%2</a></articlefont></td><td align=center><articlefont>%3</articlefont></td><td align=center><articlefont>%4</articlefont></td></tr>")
               .arg(attCnt)
               .arg((ct->name().isEmpty())? i18n("unnamed"):ct->name())
               .arg(ct->mimeType())
@@ -1191,7 +1219,7 @@ void KNArticleWidget::createHtmlPage()
           if(ct->isImage()) { //image
             path=QString::number(attCnt)+"_"+QString::number((int)(a_rticle));
             f_actory->setData(path,new KNMimeSource(var->decodedContent(),ct->mimeType()));
-            html+=QString("<a href=\"internal:att=%1\"><img src=\"%2\"></a>").arg(attCnt).arg(path);
+            html+=QString("<a href=\"internal://att=%1\"><img src=\"%2\"></a>").arg(attCnt).arg(path);
           }
           else { //text
             QString tmp;
@@ -1213,6 +1241,8 @@ void KNArticleWidget::createHtmlPage()
 
   //display html
   html+="</qt>";
+
+  setText(QString::null);
   setText(html);
   h_tmlDone=true;
 
@@ -1253,11 +1283,11 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
   anchorType type=ATunknown;
   QString target;
 
-  if(a.left(15)=="internal:author") {
+  if(a.left(17)=="internal://author") {
     type=ATauthor;
   }
-  else if(a.left(13)=="internal:att=") {
-    target=a.mid(13, a.length()-13);
+  else if(a.left(15)=="internal://att=") {
+    target=a.mid(15, a.length()-15);
     type=ATattachment;
   }
   else if(a.left(7).lower()=="http://" || a.left(8).lower() == "https://" ||
@@ -1265,16 +1295,19 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     target=a;
     type=ATurl;
   }
-  else if(a.left(5).lower()=="news:") {
-    target=a;
+  else if(a.left(7).lower()=="news://") {
+    // news urls are encoded, because a "news:foo" link has a different meaning than "news://foo",
+    // and QTextBrowser merges both cases
+    target=a.mid(7, a.length()-7);
+    QUrl::decode(target);
     type=ATnews;
   }
   else if(a.left(7)=="mailto:") {
     target=a.mid(7, a.length()-7);
     type=ATmailto;
   }
-  else if(a.left(9)=="addrOrId:") {
-    target=a.mid(9, a.length()-9);
+  else if(a.left(11)=="addrOrId://") {
+    target=a.mid(11, a.length()-11);
 
     if ((button==LeftButton)||(button==MidButton)) {
       if (a_rticle->collection()->type()!=KNArticleCollection::CTgroup)
@@ -1293,6 +1326,10 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
       type=ATunknown;
     }
   }
+
+  QUrl::decode(target);
+  if (target.endsWith("/"))
+    target.truncate(target.length()-1);
 
   if((button==LeftButton)||(button==MidButton)) {
     KNGroup *g;
@@ -1454,7 +1491,7 @@ void KNArticleWidget::slotPrint()
     KMime::Content *txt=a_rticle->textContent();
 
     if(txt) {
-      txt->decodedText(lines, true);
+      txt->decodedText(lines, true, knGlobals.cfgManager->readNewsViewer()->removeTrailingNewlines());
       for(QStringList::Iterator it=lines.begin(); it!=lines.end(); ++it) {
 
         if(yPos+margin > metrics.height()) {
@@ -1545,7 +1582,7 @@ void KNArticleWidget::slotToggleFixedFont()
   // ok, this is a hack
   if (knGlobals.artWidget == this)
     knGlobals.cfgManager->readNewsViewer()->setUseFixedFont(!knGlobals.cfgManager->readNewsViewer()->useFixedFont());
-  updateContents();
+  applyConfig();
 }
 
 
@@ -1797,12 +1834,12 @@ void KNDisplayedHeader::setTranslatedName(const QString &s)
 
 void  KNDisplayedHeader::createTags()
 {
-  const char *tokens[] = {  "<large>","</large>","<b>","</b>",
+  const char *tokens[] = {  "<big>","</big>","<b>","</b>",
                             "<i>","</i>","<u>","</u>" };
 
   for(int i=0; i<4; i++) t_ags[i]=QString::null;
 
-  if(f_lags.at(0)) {    // <font>
+  if(f_lags.at(0)) {    // <big>
     t_ags[0]=tokens[0];
     t_ags[1]=tokens[1];
   }

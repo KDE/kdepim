@@ -1,3 +1,7 @@
+changes between 0.6 and 0.7
++ due personal reasons KNode 0.7 is just a port of
+  KNode 0.6 to KDE3
+
 changes between 0.4 and 0.6
 + New scoring system:
  - User definable scoring rules with conditions based

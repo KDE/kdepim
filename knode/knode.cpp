@@ -131,6 +131,7 @@ KNMainWindow::KNMainWindow()
   c_olView->addColumn(i18n("Unread"),48);
   c_olView->setColumnAlignment(1,AlignCenter);
   c_olView->setColumnAlignment(2,AlignCenter);
+  c_olView->setAlternateBackground(QColor());
 
   connect(c_olDock, SIGNAL(iMBeingClosed()), SLOT(slotGroupDockHidden()));
   connect(c_olDock, SIGNAL(hasUndocked()), SLOT(slotGroupDockHidden()));
@@ -510,7 +511,6 @@ void KNMainWindow::configChanged()
   KNConfig::Appearance *app=c_fgManager->appearance();
 
   c_olView->setFont(app->groupListFont());
-  KNHdrViewItem::clearFontCache();
   h_drView->setFont(app->articleListFont());
 
   QPalette p = palette();

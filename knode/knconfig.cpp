@@ -18,6 +18,7 @@
 
 #include <stdlib.h>
 
+#include <qtextcodec.h>
 
 #include <ksimpleconfig.h>
 #include <kmessagebox.h>
@@ -231,9 +232,6 @@ KNConfig::Appearance::Appearance()
   c_olorNames[selectedItem]=i18n("Selected Item Background");
 
   //fonts
-  u_seFontsForAllCS = c->readBoolEntry("useFontsForAllCS", false);
-  u_seFonts = c->readBoolEntry("customFonts", false);
-
   QFont defFont=KGlobalSettings::generalFont();
   f_onts[article]=c->readFontEntry("articleFont",&defFont);
   f_ontNames[article]=i18n("Article Body");
@@ -302,7 +300,6 @@ void KNConfig::Appearance::save()
   c->writeEntry("activeItemColor", c_olors[activeItem]);
   c->writeEntry("selectedItemColor", c_olors[selectedItem]);
 
-  c->writeEntry("useFontsForAllCS", u_seFontsForAllCS);
   c->writeEntry("customFonts", u_seFonts);
   c->writeEntry("articleFont", f_onts[article]);
   c->writeEntry("articleFixedFont", f_onts[articleFixed]);
@@ -523,19 +520,23 @@ QColor KNConfig::Appearance::defaultColor(int i)
     break;
 
     case unreadArticle:
-      return QColor(183,154,11);
+      return kapp->palette().active().text();
     break;
 
     case readArticle:
-      return QColor(136,136,136);
+      return kapp->palette().inactive().text();
+      break;
   }
 
   return kapp->palette().disabled().text();
 }
 
 
-QFont KNConfig::Appearance::defaultFont(int)
+QFont KNConfig::Appearance::defaultFont(int i)
 {
+  if (i == 1 || i == 2)
+    return KGlobalSettings::fixedFont();
+  else
   return KGlobalSettings::generalFont();
 }
 
@@ -933,7 +934,7 @@ KNConfig::XHeader::XHeader(const QString &s)
 
 
 KNConfig::PostNewsTechnical::PostNewsTechnical()
- : o_verrideAllow8BitHeaders(false), findComposerCSCache(113)
+ : findComposerCSCache(113)
 {
   findComposerCSCache.setAutoDelete(true);
 
@@ -949,17 +950,14 @@ KNConfig::PostNewsTechnical::PostNewsTechnical()
 
   c_harset=conf->readEntry("Charset").latin1();
   if (c_harset.isEmpty()) {
-#if QT_VERSION < 300
-    c_harset=findComposerCharset(KGlobal::charsets()->charsetForLocale());
+    c_harset=findComposerCharset(QTextCodec::codecForLocale()->mimeName());
     if (c_harset.isEmpty())
-#endif
       c_harset="iso-8859-1";  // shit
   }
 
   h_ostname=conf->readEntry("MIdhost").latin1();
   a_llow8BitBody=conf->readBoolEntry("8BitEncoding",true);
   u_seOwnCharset=conf->readBoolEntry("UseOwnCharset",true);
-  a_llow8BitHeaders=conf->readBoolEntry("allow8bitChars", false);
   g_enerateMID=conf->readBoolEntry("generateMId", false);
   d_ontIncludeUA=conf->readBoolEntry("dontIncludeUA", false);
   u_seExternalMailer=conf->readBoolEntry("useExternalMailer", false);
@@ -997,7 +995,6 @@ void KNConfig::PostNewsTechnical::save()
   conf->writeEntry("Charset", QString::fromLatin1(c_harset));
   conf->writeEntry("8BitEncoding", a_llow8BitBody);
   conf->writeEntry("UseOwnCharset", u_seOwnCharset);
-  conf->writeEntry("allow8bitChars", a_llow8BitHeaders);
   conf->writeEntry("generateMId", g_enerateMID);
   conf->writeEntry("MIdhost", QString::fromLatin1(h_ostname));
   conf->writeEntry("dontIncludeUA", d_ontIncludeUA);
@@ -1056,28 +1053,31 @@ QCString KNConfig::PostNewsTechnical::findComposerCharset(QCString cs)
   if (ret)
     return *ret;
 
-#if QT_VERSION < 300
-  QFont::CharSet qfcs = KGlobal::charsets()->charsetForEncoding(cs);
-#endif
   QCString s;
 
   QStringList::Iterator it;
   for( it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
-
     // match by name
     if ((*it).lower()==cs.lower().data()) {
       s = (*it).latin1();
       break;
     }
+  }
 
-#if QT_VERSION < 300
+  if (s.isEmpty()) {
+    for( it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
     // match by charset, avoid to return "us-ascii" for iso-8859-1
-    if (((*it).lower()!="us-ascii")&&
-        (KGlobal::charsets()->charsetForEncoding(*it)==qfcs)) {
+      if ((*it).lower()!="us-ascii") {
+        QTextCodec *composerCodec = QTextCodec::codecForName((*it).latin1());
+        QTextCodec *csCodec = QTextCodec::codecForName(cs);
+        if ((composerCodec != 0) &&
+            (csCodec != 0) &&
+            (0 == strcmp(composerCodec->name(), csCodec->name()))) {
       s = (*it).latin1();
       break;
     }
-#endif
+  }
+    }
   }
 
   if (s.isEmpty())
@@ -1088,34 +1088,6 @@ QCString KNConfig::PostNewsTechnical::findComposerCharset(QCString cs)
   return s;
 }
 
-
-#if QT_VERSION < 300
-QCString KNConfig::PostNewsTechnical::findComposerCharset(QFont::CharSet cs)
-{
-  if (cs==QFont::ISO_8859_1)  // avoid to return "us-ascii"
-    return "iso-8859-1";
-
-  QCString *ret=findComposerCSCache.find(QString::number((int)(cs)).latin1());
-  if (ret)
-    return *ret;
-
-  QCString s;
-  QStringList::Iterator it;
-  for( it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
-    if ((KGlobal::charsets()->charsetForEncoding(*it)==cs)) {
-      s = (*it).latin1();
-      break;
-    }
-  }
-
-  if (s.isEmpty())
-    s = "us-ascii";
-
-  findComposerCSCache.insert(QString::number((int)(cs)).latin1(), new QCString(s));
-
-  return s;
-}
-#endif
 
 //==============================================================================================================
 

@@ -346,6 +346,7 @@ bool KNProtocolClient::getNextLine()
       if (inputEnd[i] == 0) {
          memmove(inputEnd+i,inputEnd+i+1,received-i-1);
          received--;
+         i--;
       }
 
     inputEnd += received;

@@ -80,7 +80,7 @@ QString KNCollectionViewItem::key(int c, bool ascending) const
 }
 
 
-QDragObject* KNCollectionViewItem::dragObject() const
+QDragObject* KNCollectionViewItem::dragObject()
 {
   if (coll && coll->type()==KNCollection::CTfolder) {
     if ((static_cast<KNFolder*>(coll))->isStandardFolder())

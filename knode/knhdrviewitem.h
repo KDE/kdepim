@@ -35,20 +35,15 @@ class KNHdrViewItem : public KNLVItemBase  {
     QString key(int, bool) const;
 
     // DND
-    virtual QDragObject* dragObject() const;
+    virtual QDragObject* dragObject();
 
     KNArticle *art;
 
-    static void clearFontCache();
-    
   protected:
     bool greyOut();
     bool firstColBold();
     QColor normalColor();
     QColor greyColor();
-    virtual const QFont& fontForColumn(int col, const QFont &font);
-
-    static QCache<QFont> f_ontCache;
 
 };
 

@@ -20,11 +20,6 @@
 #include <qobject.h>
 #include <qsortedlist.h>
 
-#if QT_VERSION < 290
-#  define QPtrList QList
-#  define QPtrListIterator QListIterator
-#endif
-
 #include "knjobdata.h"
 #include "kngroup.h"
 

@@ -33,7 +33,7 @@ class KNCollectionViewItem : public KNLVItemBase  {
     QString key(int, bool) const;
 
     // DND
-    virtual QDragObject* dragObject() const;
+    virtual QDragObject* dragObject();
     virtual bool acceptDrag(QDropEvent* event) const;
     
     KNCollection *coll;

@@ -19,16 +19,12 @@
 
 #include <qbitarray.h>
 
-#if QT_VERSION < 290
-#  define QMemArray QArray
-#endif
-
 #include <klistview.h>
 
 class KNListView;
 class QPainter;
 
-class KNLVItemBase : public QListViewItem  {
+class KNLVItemBase : public KListViewItem  {
   
   public:
   /** restricted to KNListView to prevent that the
@@ -47,7 +43,7 @@ class KNLVItemBase : public QListViewItem  {
     void expandChildren();
 
     // DND
-    virtual QDragObject *dragObject() const             { return 0; };
+    virtual QDragObject *dragObject()              { return 0; };
     virtual bool acceptDrag(QDropEvent* ) const    { return false; };
 
   protected:
@@ -100,7 +96,7 @@ class KNListView : public KListView  {
     bool eventFilter(QObject *, QEvent *);
     void focusInEvent(QFocusEvent *e);
     void focusOutEvent(QFocusEvent *e);
-    QDragObject* dragObject() const;
+    virtual QDragObject* dragObject();
     bool acceptDrag(QDropEvent* event) const;
 
     bool s_ortAsc;

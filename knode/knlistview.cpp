@@ -25,13 +25,13 @@
 
 
 KNLVItemBase::KNLVItemBase(KNLVItemBase *item)
-  : QListViewItem(item), a_ctive(false)
+  : KListViewItem(item), a_ctive(false)
 {
 }
 
 
 KNLVItemBase::KNLVItemBase(KNListView *view)
-  : QListViewItem(view), a_ctive(false)
+  : KListViewItem(view), a_ctive(false)
 {
 }
 
@@ -66,7 +66,7 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
       pen.setColor(greyColor());
     else
       pen.setColor(normalColor());
-    base=cg.base();
+    base=backgroundColor();
   }
 
   p->setPen(pen);
@@ -420,7 +420,7 @@ void KNListView::focusOutEvent(QFocusEvent *e)
 }
 
 
-QDragObject* KNListView::dragObject() const
+QDragObject* KNListView::dragObject()
 {
   KNLVItemBase *item = static_cast<KNLVItemBase*>(itemAt(viewport()->mapFromGlobal(QCursor::pos())));
   if (item)

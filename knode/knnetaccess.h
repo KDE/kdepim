@@ -20,15 +20,7 @@
 #include <pthread.h>
 
 #include <qobject.h>
-#if QT_VERSION >= 290
-#  include <qptrqueue.h>
-#else
-// remove after Qt3 becomes mandatory
-// don't we need to include only q(ptr)list.h here?
-#  include <qqueue.h>
-#  define QPtrQueue QQueue
-#  define QPtrList QList
-#endif
+#include <qptrqueue.h>
 
 class QSocketNotifier;
 class KNJobData;

@@ -19,12 +19,6 @@
 
 #include <qasciidict.h>
 
-#if QT_VERSION < 290
-#  define QPtrList QList
-#  define QPtrListIterator QListIterator
-#endif
-
-
 #include <kdialogbase.h>
 
 #include "knwidgets.h"
@@ -354,8 +348,6 @@ class Appearance : public Base {
     const char* quotedTextHexcode(int i)  { return h_excodes[i]; }
     void updateHexcodes();
 
-    bool useFontsForAllCS()              { return u_seFontsForAllCS; }
-
     QFont articleFont();
     QFont articleFixedFont();
     QFont composerFont();
@@ -378,8 +370,7 @@ class Appearance : public Base {
     void recreateLVIcons();
 
     bool u_seColors,
-         u_seFonts,
-         u_seFontsForAllCS;
+         u_seFonts;
     QColor  c_olors[COL_CNT];
     QString c_olorNames[COL_CNT];
     QFont   f_onts[FNT_CNT];
@@ -444,8 +435,7 @@ class AppearanceWidget : public BaseWidget {
     KNDialogListBox *c_List,
               *f_List;
     QCheckBox *c_olorCB,
-              *f_ontCB,
-              *f_ontCSCB;
+              *f_ontCB;
     QPushButton *c_olDefBtn,
                 *c_olChngBtn,
                 *f_ntDefBtn,
@@ -917,14 +907,9 @@ class PostNewsTechnical : public Base {
     QStringList composerCharsets() { return c_omposerCharsets; }
     int indexForCharset(const QCString &str);
     QCString findComposerCharset(QCString cs);
-#if QT_VERSION < 300
-    QCString findComposerCharset(QFont::CharSet cs);
-#endif
 
     bool allow8BitBody()        { return a_llow8BitBody; }
     bool useOwnCharset()        { return u_seOwnCharset; }
-    bool allow8BitHeaders()     { return (a_llow8BitHeaders && !o_verrideAllow8BitHeaders); }
-    void disableAllow8BitHeaders(bool b)  { o_verrideAllow8BitHeaders = b; }
     bool generateMessageID()    { return g_enerateMID; }
     QCString hostname()         { return h_ostname; }
     XHeaders& xHeaders()        { return x_headers; }
@@ -938,8 +923,6 @@ class PostNewsTechnical : public Base {
 
     bool      a_llow8BitBody,
               u_seOwnCharset,
-              a_llow8BitHeaders,
-              o_verrideAllow8BitHeaders,
               g_enerateMID,
               d_ontIncludeUA,
               u_seExternalMailer;
@@ -964,7 +947,6 @@ class PostNewsTechnicalWidget : public BaseWidget {
     QComboBox   *c_harset,
                 *e_ncoding;
     QCheckBox   *u_seOwnCSCB,
-                *a_llow8bitCB,
                 *g_enMIdCB,
                 *i_ncUaCB;
     KNDialogListBox *l_box;
@@ -977,7 +959,6 @@ class PostNewsTechnicalWidget : public BaseWidget {
     PostNewsTechnical *d_ata;
 
   protected slots:
-    void slotHeadEncToggled(bool b);
     void slotGenMIdCBToggled(bool b);
     void slotSelectionChanged();
     void slotItemSelected(int id);

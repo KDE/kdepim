@@ -23,12 +23,6 @@
 #include <kdialogbase.h>
 #include <keditcl.h>
 
-#if QT_VERSION < 290
-#  define QPtrList QList
-#  define QPtrListIterator QListIterator
-#endif
-
-
 class QGroupBox;
 
 class KProcess;
@@ -37,7 +31,6 @@ class KSelectAction;
 class KToggleAction;
 
 class KNLocalArticle;
-//class KMime::Content;
 class KNAttachment;
 
 
@@ -234,15 +227,11 @@ class KNComposer::Editor : public KEdit {
     ~Editor();
     QString textLine(int line) const;
 
-    // inserts s at the current cursor position, deletes the current selection
-    void pasteString(const QString &s);
-
     virtual bool eventFilter(QObject*, QEvent* e);
 
   public slots:
     void slotPasteAsQuotation();
     void slotFind();
-    void slotFindNext();
     void slotReplace();
     void slotAddQuotes();
     void slotRemoveQuotes();

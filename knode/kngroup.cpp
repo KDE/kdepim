@@ -32,12 +32,6 @@
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"
 
-#if QT_VERSION < 300
-#  define QPtrList QList
-#  define QPtrListIterator QListIterator
-#  define Q_ASSERT ASSERT
-#endif
-
 
 #define SORT_DEPTH 5
 
@@ -491,9 +485,6 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 
     QTextStream ts(&f);
     ts.setEncoding(QTextStream::Latin1);
-    // ensure that the headers get properly encoded here, even
-    // if the user wants broken headers
-    knGlobals.cfgManager->postNewsTechnical()->disableAllow8BitHeaders(true);
 
     for(idx=length()-cnt; idx<length(); idx++) {
 
@@ -525,8 +516,6 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
       savedCnt++;
     }
 
-    // allow broken headers again
-    knGlobals.cfgManager->postNewsTechnical()->disableAllow8BitHeaders(false);
     f.close();
   }
 

@@ -707,7 +707,7 @@ int KNConfig::AppearanceWidget::FontListItem::width(const QListBox *lb ) const
 KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const char *n)
   : BaseWidget(p, n), d_ata(d)
 {
-  QGridLayout *topL=new QGridLayout(this, 9,2, 5,5);
+  QGridLayout *topL=new QGridLayout(this, 8,2, 5,5);
 
   //color-list
   c_List = new KNDialogListBox(false, this);
@@ -729,23 +729,21 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
 
   //font-list
   f_List = new KNDialogListBox(false, this);
-  topL->addMultiCellWidget(f_List,6,8,0,0);
+  topL->addMultiCellWidget(f_List,5,7,0,0);
   connect(f_List, SIGNAL(selected(QListBoxItem*)),SLOT(slotFontItemSelected(QListBoxItem*)));
   connect(f_List, SIGNAL(selectionChanged()),SLOT(slotFontSelectionChanged()));
 
-  f_ontCSCB = new QCheckBox(i18n("Use the configu&red fonts for all charsets"),this);
-  topL->addWidget(f_ontCSCB,4,0);
   f_ontCB = new QCheckBox(i18n("Use custom &fonts"),this);
-  topL->addWidget(f_ontCB,5,0);
+  topL->addWidget(f_ontCB,4,0);
   connect(f_ontCB, SIGNAL(toggled(bool)), this, SLOT(slotFontCheckBoxToggled(bool)));
 
   f_ntChngBtn=new QPushButton(i18n("Chang&e..."), this);
   connect(f_ntChngBtn, SIGNAL(clicked()), this, SLOT(slotFontChangeBtnClicked()));
-  topL->addWidget(f_ntChngBtn,6,1);
+  topL->addWidget(f_ntChngBtn,5,1);
 
   f_ntDefBtn=new QPushButton(i18n("Defaul&ts"), this);
   connect(f_ntDefBtn, SIGNAL(clicked()), this, SLOT(slotFontDefaultBtnClicked()));
-  topL->addWidget(f_ntDefBtn,7,1);
+  topL->addWidget(f_ntDefBtn,6,1);
 
   //init
   c_olorCB->setChecked(d->u_seColors);
@@ -753,7 +751,6 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
   for(int i=0; i<d->colorCount(); i++)
     c_List->insertItem(new ColorListItem(d->colorName(i), d->color(i)));
 
-  f_ontCSCB->setChecked(d->u_seFontsForAllCS);
   f_ontCB->setChecked(d->u_seFonts);
   slotFontCheckBoxToggled(d->u_seFonts);
   for(int i=0; i<d->fontCount(); i++)
@@ -775,7 +772,6 @@ void KNConfig::AppearanceWidget::apply()
   for(int i=0; i<d_ata->colorCount(); i++)
     d_ata->c_olors[i] = (static_cast<ColorListItem*>(c_List->item(i)))->color();
 
-  d_ata->u_seFontsForAllCS = f_ontCSCB->isChecked();
   d_ata->u_seFonts=f_ontCB->isChecked();
   for(int i=0; i<d_ata->fontCount(); i++)
     d_ata->f_onts[i] = (static_cast<FontListItem*>(f_List->item(i)))->font();
@@ -1814,7 +1810,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   // ==== General =============================================================
 
   QGroupBox *ggb=new QGroupBox(i18n("General"), this);
-  QGridLayout *ggbL=new QGridLayout(ggb, 7,2, 8,5);
+  QGridLayout *ggbL=new QGridLayout(ggb, 6,2, 8,5);
   topL->addWidget(ggb);
 
   ggbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
@@ -1824,27 +1820,23 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   ggbL->addWidget(c_harset, 1,1);
 
   e_ncoding=new QComboBox(ggb);
-  e_ncoding->insertItem("Allow 8-bit");
-  e_ncoding->insertItem("7-bit (Quoted-Printable)");
+  e_ncoding->insertItem(i18n("Allow 8-bit"));
+  e_ncoding->insertItem(i18n("7-bit (Quoted-Printable)"));
   ggbL->addWidget(new QLabel(e_ncoding, i18n("Enco&ding"), ggb), 2,0);
   ggbL->addWidget(e_ncoding, 2,1);
 
   u_seOwnCSCB=new QCheckBox(i18n("Use o&wn default charset when replying"), ggb);
   ggbL->addMultiCellWidget(u_seOwnCSCB, 3,3, 0,1);
 
-  a_llow8bitCB=new QCheckBox(i18n("Don't encode &8-bit characters in the header"), ggb);
-  connect(a_llow8bitCB, SIGNAL(toggled(bool)), this, SLOT(slotHeadEncToggled(bool)));
-  ggbL->addMultiCellWidget(a_llow8bitCB, 4,4, 0,1);
-
   g_enMIdCB=new QCheckBox(i18n("&Generate Message-Id"), ggb);
   connect(g_enMIdCB, SIGNAL(toggled(bool)), this, SLOT(slotGenMIdCBToggled(bool)));
-  ggbL->addMultiCellWidget(g_enMIdCB, 5,5, 0,1);
+  ggbL->addMultiCellWidget(g_enMIdCB, 4,4, 0,1);
   h_ost=new KLineEdit(ggb);
   h_ost->setEnabled(false);
   h_ostL=new QLabel(h_ost, i18n("Ho&stname:"), ggb);
   h_ostL->setEnabled(false);
-  ggbL->addWidget(h_ostL, 6,0);
-  ggbL->addWidget(h_ost, 6,1);
+  ggbL->addWidget(h_ostL, 5,0);
+  ggbL->addWidget(h_ost, 5,1);
   ggbL->setColStretch(1,1);
 
   // ==== X-Headers =============================================================
@@ -1882,9 +1874,6 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   c_harset->setCurrentItem(d->indexForCharset(d->charset()));
   e_ncoding->setCurrentItem(d->a_llow8BitBody? 0:1);
   u_seOwnCSCB->setChecked(d->u_seOwnCharset);
-  a_llow8bitCB->blockSignals(true); //avoid warning message on startup
-  a_llow8bitCB->setChecked(d->a_llow8BitHeaders);
-  a_llow8bitCB->blockSignals(false);
   g_enMIdCB->setChecked(d->g_enerateMID);
   h_ost->setText(d->h_ostname);
   i_ncUaCB->setChecked(d->d_ontIncludeUA);
@@ -1908,7 +1897,6 @@ void KNConfig::PostNewsTechnicalWidget::apply()
   d_ata->c_harset=c_harset->currentText().latin1();
   d_ata->a_llow8BitBody=(e_ncoding->currentItem()==0);
   d_ata->u_seOwnCharset=u_seOwnCSCB->isChecked();
-  d_ata->a_llow8BitHeaders=a_llow8bitCB->isChecked();
   d_ata->g_enerateMID=g_enMIdCB->isChecked();
   d_ata->h_ostname=h_ost->text().latin1();
   d_ata->d_ontIncludeUA=i_ncUaCB->isChecked();
@@ -1917,14 +1905,6 @@ void KNConfig::PostNewsTechnicalWidget::apply()
     d_ata->x_headers.append( XHeader(l_box->text(idx)) );
 
   d_ata->setDirty(true);
-}
-
-
-
-void KNConfig::PostNewsTechnicalWidget::slotHeadEncToggled(bool b)
-{
-  if (b)
-    KMessageBox::information(this,i18n("Please be aware that unencoded 8-bit characters\nare illegal in the header of a usenet message.\nUse this feature with extreme care!"));
 }
 
 

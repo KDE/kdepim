@@ -23,14 +23,7 @@
 #include <qfont.h>
 #include <qcolor.h>
 #include <qasciidict.h>
-
-#if QT_VERSION >= 290
-#  include <qptrlist.h>
-#else
-#  include <qlist.h>
-#  define QPtrList QList
-#  define QPtrListIterator QListIterator
-#endif
+#include <qptrlist.h>
 
 #include <kmime_headers.h>
 #include <kmime_newsarticle.h>

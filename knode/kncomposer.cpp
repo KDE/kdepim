@@ -127,8 +127,6 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   KStdAction::find(v_iew->e_dit, SLOT(slotFind()), actionCollection());
 
-  KStdAction::findNext(v_iew->e_dit, SLOT(slotFindNext()), actionCollection());
-
   KStdAction::replace(v_iew->e_dit, SLOT(slotReplace()), actionCollection());
 
   //attach menu
@@ -296,10 +294,6 @@ void KNComposer::setConfig(bool onlyFonts)
   }
 
   QFont fnt=knGlobals.cfgManager->appearance()->composerFont();
-#if QT_VERSION < 300
-  if (!knGlobals.cfgManager->appearance()->useFontsForAllCS())
-    KGlobal::charsets()->setQFont(fnt, KGlobal::charsets()->charsetForEncoding(c_harset));
-#endif
   v_iew->s_ubject->setFont(fnt);
   v_iew->t_o->setFont(fnt);
   v_iew->g_roups->setFont(fnt);
@@ -768,17 +762,17 @@ void KNComposer::insertFile(QFile *file, bool clear, bool box, QString boxTitle)
         temp+="| ";
       temp+=ts.readLine();
       if (!file->atEnd())
-        temp+="\n";
+        temp += "\n";
     }
   }
 
   if (box)
-    temp += QString::fromLatin1("\n`----");
+    temp += QString::fromLatin1("`----");
 
   if(clear)
     v_iew->e_dit->setText(temp);
   else
-    v_iew->e_dit->pasteString(temp);
+    v_iew->e_dit->insert(temp);
 }
 
 
@@ -837,7 +831,7 @@ void KNComposer::slotArtDelete()
 void KNComposer::slotAppendSig()
 {
   if(!s_ignature.isEmpty()) {
-    v_iew->e_dit->append(s_ignature);
+    v_iew->e_dit->append("\n"+s_ignature);
     v_iew->e_dit->setModified(true);
   }
 }
@@ -1635,15 +1629,6 @@ QString KNComposer::Editor::textLine(int line) const
 }
 
 
-// inserts s at the current cursor position, deletes the current selection
-void  KNComposer::Editor::pasteString(const QString &s)
-{
-  if (hasMarkedText())
-    del();
-  insertAt(s, currentLine(), currentColumn());
-}
-
-
 void KNComposer::Editor::slotPasteAsQuotation()
 {
   QString s = QApplication::clipboard()->text();
@@ -1654,7 +1639,7 @@ void KNComposer::Editor::slotPasteAsQuotation()
     }
     s.prepend("> ");
     s.replace(QRegExp("\n"),"\n> ");
-    pasteString(s);
+    insert(s);
   }
 }
 
@@ -1662,12 +1647,6 @@ void KNComposer::Editor::slotPasteAsQuotation()
 void KNComposer::Editor::slotFind()
 {
   search();
-}
-
-
-void KNComposer::Editor::slotFindNext()
-{
-  repeatSearch();
 }
 
 
@@ -1683,7 +1662,7 @@ void KNComposer::Editor::slotAddQuotes()
     QString s = markedText();
     s.prepend("> ");
     s.replace(QRegExp("\n"),"\n> ");
-    pasteString(s);
+    insert(s);
   } else {
     int l = currentLine();
     int c = currentColumn();
@@ -1703,7 +1682,7 @@ void KNComposer::Editor::slotRemoveQuotes()
     if (s.left(2) == "> ")
       s.remove(0,2);
     s.replace(QRegExp("\n> "),"\n");
-    pasteString(s);
+    insert(s);
   } else {
     int l = currentLine();
     int c = currentColumn();
@@ -1725,7 +1704,7 @@ void KNComposer::Editor::slotAddBox()
     s.prepend(",----[  ]\n");
     s.replace(QRegExp("\n"),"\n| ");
     s.append("\n`----");
-    pasteString(s);
+    insert(s);
   } else {
     int l = currentLine();
     int c = currentColumn();
@@ -1746,7 +1725,7 @@ void KNComposer::Editor::slotRemoveBox()
     s.replace(QRegExp("\n`----[^\n]*\n"),"\n");
     s.remove(0,1);
     s.truncate(s.length()-1);
-    pasteString(s);
+    insert(s);
   } else {
     int l = currentLine();
     int c = currentColumn();
@@ -1801,7 +1780,7 @@ void KNComposer::Editor::slotRemoveBox()
 void KNComposer::Editor::slotRot13()
 {
   if (hasMarkedText())
-    pasteString(KNHelper::rot13(markedText()));
+    insert(KNHelper::rot13(markedText()));
 }
 
 
