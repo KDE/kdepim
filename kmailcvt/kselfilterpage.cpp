@@ -2,7 +2,7 @@
                           kselfilterpage.cpp  -  description
                              -------------------
     begin                : Fri Jan 17 2003
-    copyright            : (C) 2003 by Laurence Anderso
+    copyright            : (C) 2003 by Laurence Anderson
     email                : l.d.anderson@warwick.ac.uk
  ***************************************************************************/
 
@@ -24,31 +24,28 @@ KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name ) : KSelFilterP
 
 	px_introSidebar->setPixmap(locate("data", "kmailcvt/pics/step1.png"));
 	kdDebug() << "KSelFilterPage::KSelFilterPage" << endl;
+	filterList.setAutoDelete( TRUE );
 }
 
 KSelFilterPage::~KSelFilterPage() {
-	int i;
-	for(i=0;i<F.len();i++) {
-		delete F[i];
-	}
 }
 
 void KSelFilterPage::addFilter(filter *f)
 {
-	F[F.len()]=f;
+	filterList.append(f);
 	_filters->insertItem(f->name());
 }
 
 filter * KSelFilterPage::getSelectedFilter(void)
 {
-	return F[_filters->currentItem()];
+	return filterList.at(_filters->currentItem());
 }
 
 void KSelFilterPage::setAuthors(KAboutData& data)
 {
-	int i;
-	for(i=0;i<F.len();i++) {
-		data.addAuthor(F[i]->author().latin1(), F[i]->name().latin1());
+	filter *filterItem;
+	for (filterItem = filterList.first(); filterItem; filterItem = filterList.next() ) {
+		data.addAuthor(filterItem->author().latin1(), filterItem->name().latin1());
 	}
 }
 

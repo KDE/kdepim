@@ -19,9 +19,9 @@
 #define KSELFILTERPAGE_H
 
 #include "kselfilterpagedlg.h"
-#include "harray.hxx"
 #include "filters.hxx"
 #include <kaboutdata.h>
+#include <qptrlist.h>
 
 class KSelFilterPage : public KSelFilterPageDlg  {
 	Q_OBJECT
@@ -33,7 +33,7 @@ public:
     filter *getSelectedFilter(void);
     void  setAuthors(KAboutData& data);
    private:
-     harray<filter *> F;
+     QPtrList<filter> filterList;
      QWidget *_parent;
      filterInfo *info;
 };
