@@ -209,13 +209,13 @@ void KNConfig::IdentityWidget::slotSignatureEdit()
   }
 
   KService::Ptr offer = KServiceTypeProfile::preferredService("text/plain", true);
-  KURL::List  lst(fileName);
+  KURL u(fileName);
 
   if (offer)
-    KRun::run(*offer, lst);
+    KRun::run(*offer, u);
   else {
     KFileOpenWithHandler *openhandler = new KFileOpenWithHandler();
-    openhandler->displayOpenWithDialog(lst);
+    openhandler->displayOpenWithDialog(u);
   }
 }
 
