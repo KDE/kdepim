@@ -17,6 +17,7 @@
 
 */
 
+#include <qglobal.h>
 #include "kapabilities.h"
 
 class Kapabilities::KapabilitiesPrivate 
@@ -66,10 +67,11 @@ void Kapabilities::setNeedsConnection(bool connection)
 {
   m_needConnection = connection;
 }
-bool Kapabilities::supportsListDir() const
+bool Kapabilities::supportsListDir() const 
 {
   return m_listdir;
 }
+
 void Kapabilities::setSupportsListDir(bool listDir)
 {
   m_listdir = listDir;
@@ -78,7 +80,7 @@ QStringList Kapabilities::ports()const
 {
   return m_ports;
 }
-void Kapabilities::setPorts(const QStringList& ports)
+void Kapabilities::setPorts(const QStringList & ports)
 {
   m_ports = ports;
 }
