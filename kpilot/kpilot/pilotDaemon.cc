@@ -1042,8 +1042,6 @@ static void queueConduits(ActionQueue *fSyncStack,
 	(void) PilotDatabase::count();
 #endif
 
-
-
 	fDaemonStatus = HOTSYNC_START ;
 	if (fTray)
 	{
@@ -1081,9 +1079,6 @@ static void queueConduits(ActionQueue *fSyncStack,
 	_kroupwareParts = checkKroupware(fSyncStack,pilotLink,conduits,s,syncWithKMail);
 	if (syncWithKMail) logMessage( i18n("Kroupware syncing is enabled.") );
 	if (!s.isEmpty()) logError(s);
-
-
-
 
 	conduits = KPilotSettings::installedConduits() ;
 
