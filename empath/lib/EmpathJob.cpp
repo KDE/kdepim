@@ -31,6 +31,7 @@ EmpathJobID EmpathJob::ID_ = 0;
 
 EmpathJob::EmpathJob(ActionType t)
     :
+    QObject(),
 #ifdef USE_QPTHREAD
     QpThread(),
 #endif
