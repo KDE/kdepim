@@ -333,7 +333,7 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 	}
 	// Should this also check for deleted?
 	while ((fCurrentRecord < fNumRecords)
-		&& !(fRecords[fCurrentRecord]->getAttrib() & dlpRecAttrDirty))
+		&& !(fRecords[fCurrentRecord]->getAttrib() & dlpRecAttrDirty)  && (fRecords[fCurrentRecord]->getID()>0 ))
 	{
 		fCurrentRecord++;
 	}
