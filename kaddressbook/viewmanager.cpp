@@ -369,7 +369,7 @@ void ViewManager::modifyView()
 
 void ViewManager::deleteView()
 {
-  QString text = i18n( "Are you sure that you want to delete the view <b>%1</b>?" ).arg( mActiveView->name() );
+  QString text = i18n( "<qt>Are you sure that you want to delete the view <b>%1</b>?</qt>" ).arg( mActiveView->name() );
   QString caption = i18n( "Confirm Delete" );
 
   if ( KMessageBox::questionYesNo( this, text, caption ) == KMessageBox::Yes ) {

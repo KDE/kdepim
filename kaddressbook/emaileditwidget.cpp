@@ -1,4 +1,4 @@
-/*                                                                      
+/*
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
                                                                         
@@ -13,7 +13,7 @@
     GNU General Public License for more details.                        
                                                                         
     You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
+    along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.           
                                                                         
     As a special exception, permission is given to link this program    
@@ -209,7 +209,7 @@ void EmailEditDialog::remove()
 {
   QString address = mEmailListBox->currentText();
 
-  QString text = i18n( "Are you sure that you want to remove the email address <b>%1</b>?" ).arg( address );
+  QString text = i18n( "<qt>Are you sure that you want to remove the email address <b>%1</b>?</qt>" ).arg( address );
   QString caption = i18n( "Confirm Remove" );
   
   if ( KMessageBox::questionYesNo( this, text, caption ) == KMessageBox::Yes ) {
