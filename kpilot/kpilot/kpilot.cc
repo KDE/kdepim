@@ -358,13 +358,25 @@ DEBUGKPILOT<<"comp="<<comp<<endl;
 void KPilotInstaller::slotSelectComponent(PilotComponent * c)
 {
 	FUNCTIONSETUP;
-	if (!c) { kdWarning() << k_funcinfo << ": Not a widget." << endl; return;}
+	if (!c)
+	{
+		kdWarning() << k_funcinfo << ": Not a widget." << endl;
+		return;
+	}
 
 	QObject *o = c->parent();
-	if (!o) { kdWarning() << k_funcinfo << ": No parent." << endl; return; }
+	if (!o)
+	{
+		kdWarning() << k_funcinfo << ": No parent." << endl;
+		return;
+	}
 
 	QWidget *parent = dynamic_cast<QWidget *>(o);
-	if (!parent) { kdWarning() << k_funcinfo << ": No widget parent." << endl; return; }
+	if (!parent)
+	{
+		kdWarning() << k_funcinfo << ": No widget parent." << endl;
+		return;
+	}
 
 	int index = fManagingWidget->pageIndex(parent);
 
