@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef __FILTER_PAB
-#define __FILTER_PAB
+#ifndef FILTER_PAB
+#define FILTER_PAB
 
 #include "filters.hxx"
 

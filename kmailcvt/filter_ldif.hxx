@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef __FILTER_LDIF
-#define __FILTER_LDIF
+#ifndef FILTER_LDIF
+#define FILTER_LDIF
 
 #include "filters.hxx"
 
