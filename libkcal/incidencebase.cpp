@@ -142,7 +142,7 @@ void IncidenceBase::setFloats(bool f)
 }
 
 
-void IncidenceBase::addAttendee(Attendee *a)
+void IncidenceBase::addAttendee(Attendee *a, bool doupdate)
 {
 //  kdDebug(5800) << "IncidenceBase::addAttendee()" << endl;
   if (mReadOnly) return;
@@ -151,7 +151,7 @@ void IncidenceBase::addAttendee(Attendee *a)
     a->setName(a->name().remove(0,7));
 
   mAttendees.append(a);
-  updated();
+  if (doupdate) updated();
 }
 
 #if 0
@@ -204,6 +204,26 @@ Attendee *IncidenceBase::attendeeByMail(const QString &email)
   while (qli) {
     if (qli.current()->email() == email)
       return qli.current();
+    ++qli;
+  }
+  return 0L;
+}
+
+Attendee *IncidenceBase::attendeeByMails(const QStringList &emails, QString email)
+{
+  QPtrListIterator<Attendee> qli(mAttendees);
+
+  QStringList mails = emails;
+  if (!email.isEmpty()) {
+    mails.append(email);
+  }
+  qli.toFirst();
+  while (qli) {
+    for ( QStringList::Iterator it = mails.begin(); it != mails.end(); ++it ) {
+      if (qli.current()->email() == *it)
+        return qli.current();
+     }
+
     ++qli;
   }
   return 0L;

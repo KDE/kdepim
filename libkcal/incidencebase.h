@@ -96,7 +96,7 @@ class IncidenceBase
     void setFloats(bool f);
 
     /** Add Attendee to this incidence. */
-    void addAttendee(Attendee *a);
+    void addAttendee(Attendee *a, bool doupdate=true );
 //    void removeAttendee(Attendee *a);
 //    void removeAttendee(const char *n);
     /** Remove all Attendees. */
@@ -107,6 +107,8 @@ class IncidenceBase
     int attendeeCount() const { return mAttendees.count(); };
     /** Return the Attendee with this email */
     Attendee* attendeeByMail(const QString &);
+    /** Return first Attendee with one of this emails */
+    Attendee* attendeeByMails(const QStringList &, QString email =0);
 
     /** pilot syncronization states */
     enum { SYNCNONE = 0, SYNCMOD = 1, SYNCDEL = 3 };
