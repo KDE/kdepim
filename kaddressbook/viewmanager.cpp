@@ -437,6 +437,8 @@ void ViewManager::createViewWrappers()
 
 void ViewManager::initGUI()
 {
+  mCurrentFeatureBarWidget = 0;
+
   QHBoxLayout *l = new QHBoxLayout( this );
   l->setSpacing( KDialogBase::spacingHint() );
 
@@ -481,8 +483,6 @@ void ViewManager::initGUI()
   connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
            SLOT( featureBarWidgetModified( KABC::Addressee::List ) ) );
   mFeatureBarWidgetList.append( wdg );
-
-  mCurrentFeatureBarWidget = 0;
 
   l->addWidget( mFeatureBarSplitter );
   l->setStretchFactor( mFeatureBarSplitter, 100 );
@@ -682,13 +682,10 @@ void ViewManager::showFeatureBarWidget( int id )
     if ( mCurrentFeatureBarWidget )
       mCurrentFeatureBarWidget->hide();
 
-    FeatureBarWidget *wdg = mFeatureBarWidgetList.at( id - 1 );
-    if ( wdg ) {
-      mCurrentFeatureBarWidget = wdg;
-      mCurrentFeatureBarWidget->show();
-    }
+    mCurrentFeatureBarWidget = mFeatureBarWidgetList.at( id - 1 );
 
     mFeatureBar->show();
+    mCurrentFeatureBarWidget->show();
   }
 }
 
