@@ -249,7 +249,7 @@ void KPilotDeviceLink::checkDevice()
 		// (relevant as long as we use only one device type)
 		//
 		emit logError(i18n("Pilot device %1 does not exist. "
-			"Assuming the device uses DevFS.")
+			"Probably it is a USB device and will appear during a HotSync.")
 				.arg(fPilotPath));
 	}
 }
