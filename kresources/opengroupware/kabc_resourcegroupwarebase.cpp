@@ -37,7 +37,7 @@ ResourceGroupwareBase::ResourceGroupwareBase( const KConfig *config )
   : ResourceCached( config ),
     mPrefs(0), mFolderLister(0), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
 {
-  readConfig( config );
+  if ( config ) readConfig( config );
 }
 
 ResourceGroupwareBase::ResourceGroupwareBase( const KURL &url,
