@@ -42,6 +42,8 @@
 #include <kdialogbase.h>
 #include <ktempfile.h>
 #include <kdebug.h>
+#include <kkeydialog.h>
+
 #ifdef KDE_NO_COMPAT
 #undef KDE_NO_COMPAT
 #endif
@@ -118,9 +120,16 @@ void KTNEFMain::setupActions()
 	createStandardStatusBarAction();
 	setStandardToolBarMenuEnabled(true);
 	KStdAction::configureToolbars(this, SLOT(slotEditToolbars()), actionCollection());
+        KStdAction::keyBindings( this, SLOT( slotConfigureKeys() ), actionCollection() );
 
 	createGUI();
 }
+
+void KTNEFMain::slotConfigureKeys()
+{
+  KKeyDialog::configure( actionCollection(), this );
+}
+
 
 void KTNEFMain::setupStatusbar()
 {

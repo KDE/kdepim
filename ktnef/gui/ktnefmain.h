@@ -55,7 +55,7 @@ protected slots:
 	void viewSelectionChanged();
 	void viewRightButtonPressed(QListViewItem *item, const QPoint& p, int c);
 	void viewDoubleClicked(QListViewItem*);
-
+    void slotConfigureKeys();
 //protected:
 //	void closeEvent(QCloseEvent *e);
 
@@ -66,7 +66,7 @@ private:
 	void enableExtractAll(bool on = true);
 	void enableSingleAction(bool on = true);
 	void cleanup();
-	
+
 	void extractTo(const QString& dirname);
 	QString extractTemp(KTNEFAttach *att);
 
