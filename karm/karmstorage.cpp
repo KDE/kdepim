@@ -490,106 +490,107 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
   kdDebug(5970)
     << "KarmStorage::exportcsvFile: " << rc.url << endl;
 
-  QFile f;
-  if (rc.url.isLocalFile())
+  QString title = i18n("Export Progress");
+  KProgressDialog dialog( taskview, 0, title );
+  dialog.setAutoClose( true );
+  dialog.setAllowCancel( true );
+  dialog.progressBar()->setTotalSteps( 2 * taskview->count() );
+
+  // The default dialog was not displaying all the text in the title bar.
+  int width = taskview->fontMetrics().width(title) * 3;
+  QSize dialogsize;
+  dialogsize.setWidth(width);
+  dialog.setInitialSize( dialogsize, true );
+   
+  if ( taskview->count() > 1 ) dialog.show();
+    
+  QString retval;
+
+  // Find max task depth
+  int tasknr = 0;
+  while ( tasknr < taskview->count() && !dialog.wasCancelled() )
+  { 
+    dialog.progressBar()->advance( 1 );
+    if ( tasknr % 15 == 0 ) kapp->processEvents(); // repainting is slow 
+    if ( taskview->item_at_index(tasknr)->depth() > maxdepth ) 
+      maxdepth = taskview->item_at_index(tasknr)->depth(); 
+    tasknr++;
+  } 
+
+  // Export to file
+  tasknr = 0;
+  while ( tasknr < taskview->count() && !dialog.wasCancelled() )
   {
-    f.setName( rc.url.path() );
+    task = taskview->item_at_index( tasknr );
+    dialog.progressBar()->advance( 1 );
+    if ( tasknr % 15 == 0 ) kapp->processEvents();
+
+    // indent the task in the csv-file:
+    for ( int i=0; i < task->depth(); ++i ) retval += delim;
+      
+    /*
+    // CSV compliance
+    // Surround the field with quotes if the field contains 
+    // a comma (delim) or a double quote
+    if (task->name().contains(delim) || task->name().contains(dquote))
+      to_quote = TRUE;
+    else
+      to_quote = FALSE;
+    */
+    to_quote = true;
+      
+    if (to_quote)
+      retval += dquote;
+        
+    // Double quotes replaced by a pair of consecutive double quotes 
+    retval += task->name().replace( dquote, double_dquote );
+      
+    if (to_quote)
+      retval += dquote;
+      
+    // maybe other tasks are more indented, so to align the columns:
+    for ( int i = 0; i < maxdepth - task->depth(); ++i ) retval += delim;
+      
+    retval += delim + formatTime( task->sessionTime(),
+                                   rc.decimalMinutes )
+           + delim + formatTime( task->time(),
+                                   rc.decimalMinutes )
+           + delim + formatTime( task->totalSessionTime(),
+                                   rc.decimalMinutes )
+           + delim + formatTime( task->totalTime(),
+                                   rc.decimalMinutes )
+           + "\n";
+    tasknr++;
+  }
+  
+  // save, either locally or remote
+  if (rc.url.isLocalFile())
+  {    
+    QFile f( rc.url.path() );
     if( !f.open( IO_WriteOnly ) ) {
-        err = i18n("Could not open \"%1\".").arg( rc.url.path() );
+        err = i18n( "Could not open \"%1\"." ).arg( rc.url.path() );
+    }
+    if (!err)
+    {
+      QTextStream stream(&f);
+      // Export to file
+      stream << retval;
+      f.close();
     }
   }
-  else
+  else // use remote file
   {
-    // create temporary file 
-    f.setName("/tmp/karmcsvexport.tmp"); // makes this function non-reentrant
-    if( !f.open(IO_WriteOnly) ) {
-        err = i18n("Could not open \"%1\".").arg( rc.url.path() );
+    KTempFile tmpFile;
+    if ( tmpFile.status() != 0 ) err = QString::fromLatin1( "Unable to get temporary file" ); 
+    else
+    {
+      QTextStream *stream=tmpFile.textStream();
+      *stream << retval;
+      tmpFile.close(); 
+      if (!KIO::NetAccess::upload( tmpFile.name(), rc.url, 0 )) err=QString::fromLatin1("Could not upload");
     }
   }
   
-  if (!err)
-  {
-    QString title = i18n("Export Progress");
-    KProgressDialog dialog( taskview, 0, title );
-    dialog.setAutoClose( true );
-    dialog.setAllowCancel( true );
-    dialog.progressBar()->setTotalSteps( 2 * taskview->count() );
-
-    // The default dialog was not displaying all the text in the title bar.
-    int width = taskview->fontMetrics().width(title) * 3;
-    QSize dialogsize;
-    dialogsize.setWidth(width);
-    dialog.setInitialSize( dialogsize, true );
-    
-    if ( taskview->count() > 1 ) dialog.show();
-
-    QTextStream stream(&f);
-
-    // Find max task depth
-    int tasknr = 0;
-    while ( tasknr < taskview->count() && !dialog.wasCancelled() )
-    { 
-      dialog.progressBar()->advance( 1 );
-      if ( tasknr % 15 == 0 ) kapp->processEvents(); // repainting is slow 
-      if ( taskview->item_at_index(tasknr)->depth() > maxdepth ) 
-        maxdepth = taskview->item_at_index(tasknr)->depth(); 
-      tasknr++;
-    } 
-
-    // Export to file
-    tasknr = 0;
-    while ( tasknr < taskview->count() && !dialog.wasCancelled() )
-    {
-      task = taskview->item_at_index( tasknr );
-
-      dialog.progressBar()->advance( 1 );
-      if ( tasknr % 15 == 0 ) kapp->processEvents();
-
-      // indent the task in the csv-file:
-      for ( int i=0; i < task->depth(); ++i ) stream << delim;
-      
-      /*
-      // CSV compliance
-      // Surround the field with quotes if the field contains 
-      // a comma (delim) or a double quote
-      if (task->name().contains(delim) || task->name().contains(dquote))
-        to_quote = TRUE;
-      else
-        to_quote = FALSE;
-      */
-      to_quote = true;
-
-      if (to_quote)
-        stream << dquote;
-        
-      // Double quotes replaced by a pair of consecutive double quotes 
-      stream << task->name().replace( dquote, double_dquote );
-
-      if (to_quote)
-        stream << dquote;
-      
-      // maybe other tasks are more indented, so to align the columns:
-      for ( int i = 0; i < maxdepth - task->depth(); ++i ) stream << delim;
-
-      stream << delim << formatTime( task->sessionTime(),
-                                     rc.decimalMinutes )
-             << delim << formatTime( task->time(),
-                                     rc.decimalMinutes )
-             << delim << formatTime( task->totalSessionTime(),
-                                     rc.decimalMinutes )
-             << delim << formatTime( task->totalTime(),
-                                     rc.decimalMinutes )
-             << endl;
-      tasknr++;
-    }
-    f.close();
-    
-    if (!rc.url.isLocalFile())
-    {
-      if (!KIO::NetAccess::upload( f.name(), rc.url, 0 )) err=QString("Could not upload");
-      f.remove();
-    }
-  }
   return err;
 }
 
@@ -894,6 +895,7 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
 
   // above taken from timekard.cpp
   
+  // save, either locally or remote
   if (rc.url.isLocalFile())
   {    
     QFile f( rc.url.path() );

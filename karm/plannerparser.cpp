@@ -52,7 +52,7 @@ test cases:
   {
     kdDebug() << "entering startElement" << endl;
     QString taskName;
-    int     taskComplete;
+    int     taskComplete=0;
     
     // only <task>s within <tasks> are processed
     if (qName == QString::fromLatin1("tasks")) withInTasks=true;
@@ -83,9 +83,9 @@ test cases:
       }
     
       task->setPercentComplete(taskComplete, _taskView->storage());
-      return TRUE;
     }
-  }
+    return TRUE;
+ }
     
   bool PlannerParser::endElement( const QString&, const QString&, const QString& qName)
   {
