@@ -69,7 +69,7 @@ class KNArticleFilter {
     
     KNStatusFilter status;
     KNRangeFilter score, age, lines;
-    KNStringFilter subject,from;      
+    KNStringFilter subject, from, messageId, references;
 };
 
 #endif

@@ -64,6 +64,8 @@ KNArticleFilter::KNArticleFilter(const KNArticleFilter& org)
   lines = org.lines;
   subject = org.subject;
   from = org.from;
+  messageId = org.messageId;
+  references = org.messageId;
 }
 
 
@@ -117,6 +119,12 @@ void KNArticleFilter::load()
   
   conf.setGroup("FROM");
   from.load(&conf);
+
+  conf.setGroup("MESSAGEID");
+  messageId.load(&conf);
+
+  conf.setGroup("REFERENCES");
+  references.load(&conf);
   
   l_oaded=true;
   
@@ -160,6 +168,12 @@ void KNArticleFilter::save()
   
   conf.setGroup("FROM");
   from.save(&conf);
+
+  conf.setGroup("MESSAGEID");
+  messageId.save(&conf);
+
+  conf.setGroup("REFERENCES");
+  references.save(&conf);
   
   kdDebug(5003) << "KNMessageFilter: filter saved \"" << n_ame << "\" " << endl;
 }
@@ -180,6 +194,8 @@ void KNArticleFilter::doFilter(KNGroup *g)
 
   subject.expand(g);  // replace placeholders
   from.expand(g);
+  messageId.expand(g);
+  references.expand(g);
 
   for(int idx=0; idx<g->length(); idx++) {
     art=g->at(idx);
@@ -187,8 +203,7 @@ void KNArticleFilter::doFilter(KNGroup *g)
     art->setVisibleFollowUps(false);
     art->setDisplayedReference(0);
   }
-  
-    
+
   for(int idx=0; idx<g->length(); idx++) {
   
     art=g->at(idx);
@@ -204,7 +219,6 @@ void KNArticleFilter::doFilter(KNGroup *g)
     }
 
   }
-
 
   for(int idx=0; idx<g->length(); idx++) {
 
@@ -320,6 +334,8 @@ bool KNArticleFilter::applyFilter(KNRemoteArticle *a)
     QString tmp = (a->from()->name()+"##") + QString(a->from()->email().data());
     result=from.doFilter(tmp);
   }
+  if(result) result=messageId.doFilter(a->messageID()->asUnicodeString());
+  if(result) result=references.doFilter(a->references()->asUnicodeString());
 
   a->setFilterResult(result);
   a->setFiltered(true);

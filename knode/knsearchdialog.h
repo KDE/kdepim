@@ -41,6 +41,7 @@ class KNSearchDialog : public QDialog {
 
     KNFilterConfigWidget *fcw;
     QPushButton *startBtn, *newBtn,  *closeBtn;
+    QCheckBox *completeThreads;
     KNArticleFilter *f_ilter;
     
   protected slots:

@@ -19,6 +19,7 @@
 #include <qpushbutton.h>
 #include <qcombobox.h>
 #include <qbitarray.h>
+#include <qcheckbox.h>
 
 #include <klocale.h>
 #include <kseparator.h>
@@ -46,20 +47,25 @@ KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
   startBtn->setDefault(true); 
   newBtn=new QPushButton(i18n("&New Search"), bg);
   closeBtn=new QPushButton(i18n("&Close"), bg);
-  
+
+  completeThreads=new QCheckBox(i18n("Sho&w complete threads"),this);
   fcw=new KNFilterConfigWidget(this);
   fcw->reset();
   
   QHBoxLayout *topL=new QHBoxLayout(this, 5);
+  QVBoxLayout *filterL=new QVBoxLayout(this, 0, 5);
   QVBoxLayout *btnL=new QVBoxLayout(bg, 8, 5);
-  
-  topL->addWidget(fcw, 1);
-  topL->addWidget(bg);
-  
+
+  filterL->addWidget(completeThreads);
+  filterL->addWidget(fcw,1);
+
   btnL->addWidget(startBtn);
   btnL->addWidget(newBtn);
   btnL->addStretch(1);
-  btnL->addWidget(closeBtn);  
+  btnL->addWidget(closeBtn);
+
+  topL->addLayout(filterL, 1);
+  topL->addWidget(bg);
 
   connect(startBtn, SIGNAL(clicked()), this, SLOT(slotStartClicked())); 
   connect(newBtn, SIGNAL(clicked()), this, SLOT(slotNewClicked()));
@@ -97,6 +103,9 @@ void KNSearchDialog::slotStartClicked()
   f_ilter->lines=fcw->lines->filter();
   f_ilter->subject=fcw->subject->filter();
   f_ilter->from=fcw->from->filter();
+  f_ilter->messageId=fcw->messageId->filter();
+  f_ilter->references=fcw->references->filter();
+  f_ilter->setApplyOn(completeThreads->isChecked()? 1:0);
   emit doSearch(f_ilter);
 }
 

@@ -78,6 +78,8 @@ KNFilterDialog::KNFilterDialog(KNArticleFilter *f, QWidget *parent, const char *
   fw->score->setFilter(f->score);
   fw->subject->setFilter(f->subject);
   fw->from->setFilter(f->from);
+  fw->messageId->setFilter(f->messageId);
+  fw->references->setFilter(f->references);
   
   setFixedHeight(sizeHint().height());
   KNHelper::restoreWindowSize("filterDLG", this, sizeHint());
@@ -110,6 +112,8 @@ void KNFilterDialog::slotOk()
       fltr->lines=fw->lines->filter();
       fltr->subject=fw->subject->filter();
       fltr->from=fw->from->filter();
+      fltr->messageId=fw->messageId->filter();
+      fltr->references=fw->references->filter();
       fltr->setApplyOn(apon->currentItem());  
     
       accept();

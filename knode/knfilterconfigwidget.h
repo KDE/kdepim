@@ -43,6 +43,8 @@ class KNFilterConfigWidget : public QTabWidget  {
     KNStatusFilterWidget *status;
     KNStringFilterWidget *subject;
     KNStringFilterWidget *from;
+    KNStringFilterWidget *messageId;
+    KNStringFilterWidget *references;
     KNRangeFilterWidget *age;
     KNRangeFilterWidget *lines;
     KNRangeFilterWidget *score;
