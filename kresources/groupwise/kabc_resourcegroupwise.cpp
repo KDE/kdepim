@@ -81,8 +81,9 @@ void ResourceGroupwise::initGroupwise()
   mServer = new GroupwiseServer( mPrefs->url(), mPrefs->user(),
                                  mPrefs->password(), this );
 
-  connect( mServer, SIGNAL( readAddressBooksFinished() ),
-           SLOT( loadFinished() ) );
+  // TODO: find out what this was meant to do.  the ReadAddressBooksJob could cause the server to emit this job when its run() ends
+  // connect( mServer, SIGNAL( readAddressBooksFinished() ),
+  //         SLOT( loadFinished() ) );
 }
 
 ResourceGroupwise::~ResourceGroupwise()
