@@ -1458,23 +1458,14 @@ void KNArticle::parse()
   KNMimeContent::parse();
 
   QCString raw;
-  if(s_ubject.isEmpty()) {
-    raw=rawHeader(s_ubject.type());
-    if(!raw.isEmpty())
-      s_ubject.from7BitString(raw);
-  }
+  if( !(raw=rawHeader(s_ubject.type())).isEmpty() )
+    s_ubject.from7BitString(raw);
 
-  if(d_ate.isEmpty()) {
-    raw=rawHeader(d_ate.type());
-    if(!raw.isEmpty())
-      d_ate.from7BitString(raw);
-  }
+  if( !(raw=rawHeader(d_ate.type())).isEmpty() )
+    d_ate.from7BitString(raw);
 
-  if(l_ines.isEmpty()) {
-    raw=rawHeader(l_ines.type());
-    if(!raw.isEmpty())
-      l_ines.from7BitString(raw);
-  }
+  if( !(raw=rawHeader(l_ines.type())).isEmpty() )
+    l_ines.from7BitString(raw);
 }
 
 
@@ -1648,15 +1639,6 @@ void KNArticle::setLocked(bool b)
 }
 
 
-void KNArticle::setForceDefaultCS(bool b)
-{
-  s_ubject.clear();
-  d_ate.clear();
-  l_ines.clear();
-  KNMimeContent::setForceDefaultCS(b);
-}
-
-
 //=========================================================================================
 
 
@@ -1685,13 +1667,13 @@ void KNRemoteArticle::parse()
 {
   KNArticle::parse();
   QCString raw;
-  if(m_essageID.isEmpty() && !(raw=rawHeader(m_essageID.type())).isEmpty() )
+  if( !(raw=rawHeader(m_essageID.type())).isEmpty() )
     m_essageID.from7BitString(raw);
 
-  if(f_rom.isEmpty() && !(raw=rawHeader(f_rom.type())).isEmpty() )
+  if( !(raw=rawHeader(f_rom.type())).isEmpty() )
     f_rom.from7BitString(raw);
 
-  if(r_eferences.isEmpty() && !(raw=rawHeader(r_eferences.type())).isEmpty() )
+  if( !(raw=rawHeader(r_eferences.type())).isEmpty() )
     r_eferences.from7BitString(raw);
 }
 
@@ -1858,9 +1840,6 @@ void KNRemoteArticle::setForceDefaultCS(bool b)
     else
       d_efaultCS = cachedCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
   }
-  m_essageID.clear();
-  f_rom.clear();
-  r_eferences.clear();
   KNArticle::setForceDefaultCS(b);
   initListItem();
 }
@@ -1887,10 +1866,10 @@ void KNLocalArticle::parse()
   KNArticle::parse();
   QCString raw;
 
-  if(n_ewsgroups.isEmpty() && !(raw=rawHeader(n_ewsgroups.type())).isEmpty() )
+  if( !(raw=rawHeader(n_ewsgroups.type())).isEmpty() )
     n_ewsgroups.from7BitString(raw);
 
-  if(t_o.isEmpty() && !(raw=rawHeader(t_o.type())).isEmpty() )
+  if( !(raw=rawHeader(t_o.type())).isEmpty() )
     t_o.from7BitString(raw);
 }
 
@@ -1994,8 +1973,6 @@ void KNLocalArticle::setForceDefaultCS(bool b)
 {
   if (!b)  // restore default
     d_efaultCS = cachedCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
-  n_ewsgroups.clear();
-  t_o.clear();
   KNArticle::setForceDefaultCS(b);
   updateListItem();
 }

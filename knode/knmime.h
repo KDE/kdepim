@@ -299,9 +299,6 @@ class KNArticle : public KNMimeContent, public KNJobItem {
     void setCollection(KNArticleCollection *c)  { c_ol=c; }
     bool isOrphant()                            { return (i_d==-1); }
 
-    //charset-handling
-    virtual void setForceDefaultCS(bool b);
-
   protected:
     //hardcoded headers
     KNHeaders::Subject s_ubject;
