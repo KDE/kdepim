@@ -144,8 +144,15 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, QWidget* parent,
   mFilterCombo->insertItem( i18n( "Work Number" ) );
   boxLayout->addWidget( mFilterCombo, 0, 3 );
 
-  mSearchButton = new QPushButton( i18n( "Search" ), groupBox );
-  mSearchButton->setDefault(true);
+  QSize buttonSize;
+  mSearchButton = new QPushButton( i18n( "Stop" ), groupBox );
+  buttonSize = mSearchButton->sizeHint();
+  mSearchButton->setText( i18n( "Search" ) );
+  if ( buttonSize.width() < mSearchButton->sizeHint().width() )
+    buttonSize = mSearchButton->sizeHint();
+  mSearchButton->setFixedWidth( buttonSize.width() );
+
+  mSearchButton->setDefault( true );
   boxLayout->addWidget( mSearchButton, 0, 4 );
 
   mRecursiveCheckbox = new QCheckBox( i18n( "Recursive search" ), groupBox  );
