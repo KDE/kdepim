@@ -42,7 +42,7 @@
 
 
 KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent, const char * name)
-  : QObject(parent, name), gManager(gm), set(0), view(v)
+  : QObject(parent, name), gManager(gm), view(v)
 {
 	accList=new QList<KNNntpAccount>;
 	accList->setAutoDelete(true);
@@ -160,19 +160,9 @@ void KNAccountManager::setCurrentAccount(KNNntpAccount *a)
 
 
 
-void KNAccountManager::startConfig(KNAccNewsSettings *s)
+// a is new account allocated and configured by the caller
+void KNAccountManager::newAccount(KNNntpAccount *a)
 {
-	set=s;
-	for(KNNntpAccount *a=accList->first(); a; a=accList->next())
-		set->addItem(a);
-}
-
-
-
-void KNAccountManager::newAccount(KNAccNewsConfDialog *dlg)
-{
-	KNNntpAccount *a=new KNNntpAccount();
-	
 	// find a unused id for the new account...
 	QString dir(KGlobal::dirs()->saveLocation("appdata"));
   if (dir==QString::null) {
@@ -191,11 +181,11 @@ void KNAccountManager::newAccount(KNAccNewsConfDialog *dlg)
 	dir = KGlobal::dirs()->saveLocation("appdata",QString("nntp.%1/").arg(a->id()));
 	if (dir!=QString::null) {
 		accList->append(a);
-		applySettings(a,dlg);
-		if (set) set->addItem(a);
+		applySettings(a);
 		KNCollectionViewItem *it = new KNCollectionViewItem(view);
   	it->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTnntp));
   	a->setListItem(it);
+  	emit(accountAdded(a));
 	}
 	else {
 		delete a;
@@ -205,22 +195,17 @@ void KNAccountManager::newAccount(KNAccNewsConfDialog *dlg)
 
 
 
-void KNAccountManager::applySettings(KNNntpAccount *a, KNAccNewsConfDialog *dlg)
+// commit changes on a the caller made
+void KNAccountManager::applySettings(KNNntpAccount *a)
 {
-	a->setName(dlg->name());
-	a->setServer(dlg->server().local8Bit());
-	a->setPort(dlg->port());
-	a->setHold(dlg->hold());
-	a->setTimeout(dlg->timeout());
-	a->setNeedsLogon(dlg->logonNeeded());
-	a->setUser(dlg->user().local8Bit());
-	a->setPass(dlg->pass().local8Bit());
 	a->saveInfo();
 	a->updateListItem();
-	if (set) set->updateItem(a);
+	emit(accountModified(a));
 }
 
 
+
+// a==0: remove current account
 void KNAccountManager::removeAccount(KNNntpAccount *a)
 {
 	if(!a) a=c_urrentAccount;
@@ -244,8 +229,6 @@ void KNAccountManager::removeAccount(KNNntpAccount *a)
 		  gManager->unsubscribeGroup(g);
 		delete lst;
 		
-		if (set) set->removeItem(a);    // remove entry in the settings dialog
-		
   	QDir dir(a->path());
   	if (dir.exists()) {
       const QFileInfoList *list = dir.entryInfoList();  // get list of matching files and delete all
@@ -262,17 +245,11 @@ void KNAccountManager::removeAccount(KNNntpAccount *a)
 		
   	if(c_urrentAccount==a) setCurrentAccount(0);
 		
-		accList->removeRef(a);		
+		emit(accountRemoved(a));
+		accList->removeRef(a);		  // finally delete a
 	}			
 }
 	
-
-
-void KNAccountManager::endConfig()
-{
-  set = 0;
-}
-
 
 
 void KNAccountManager::slotProperties()
@@ -281,7 +258,7 @@ void KNAccountManager::slotProperties()
     KNAccNewsConfDialog *confDlg = new KNAccNewsConfDialog(c_urrentAccount,knGlobals.top);
 
     if (confDlg->exec())
-      applySettings(c_urrentAccount, confDlg);
+      applySettings(c_urrentAccount);
 
     delete confDlg;
   }

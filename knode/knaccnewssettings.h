@@ -46,10 +46,11 @@ class KNAccNewsSettings : public KNSettingsWidget  {
 		KNAccNewsSettings(QWidget *p, KNAccountManager *am);
 		~KNAccNewsSettings();
 				
-		void addItem(KNNntpAccount *a);
-		void removeItem(KNNntpAccount *a);
-		void updateItem(KNNntpAccount *a);  // the settings dialog is not modal!
-				
+	public slots:
+		void slotAddItem(KNNntpAccount *a);
+		void slotRemoveItem(KNNntpAccount *a);
+		void slotUpdateItem(KNNntpAccount *a);
+						
 	protected:
 		KNListBox *lb;
 		QPushButton *addBtn, *delBtn, *editBtn;
@@ -74,24 +75,17 @@ class KNAccNewsConfDialog : public KDialogBase  {
   Q_OBJECT	
 
   public:
-    KNAccNewsConfDialog(KNNntpAccount* acc=0, QWidget *parent=0, const char *name=0);
+    KNAccNewsConfDialog(KNNntpAccount* acc, QWidget *parent=0, const char *name=0);
     ~KNAccNewsConfDialog();
-		
-    QString name()  const    { return n_ame->text(); }
-    QString server() const   { return s_erver->text(); }
-    int port() const         { return p_ort->text().toInt(); }
-    int hold() const         { return h_old->value(); }
-    int timeout() const      { return t_imeout->value(); }
-    bool logonNeeded() const { return authCB->isChecked(); }
-    QString user() const     { return u_ser->text(); }
-    QString pass() const     { return p_ass->text(); }
-				
+	 			
   protected:
     QLineEdit *n_ame, *s_erver, *u_ser, *p_ass, *p_ort;
     QSpinBox *h_old, *t_imeout;
     QCheckBox *authCB;
+    KNNntpAccount* acc;
 		
   protected slots:
+    void slotOk();
     void slotAuthChecked(bool b);
 		
 };

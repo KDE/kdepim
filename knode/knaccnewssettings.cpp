@@ -28,6 +28,7 @@
 #include <kconfig.h>
 #include <kiconloader.h>
 #include <knumvalidator.h>
+#include <kmessagebox.h>
 
 #include "knnntpaccount.h"
 #include "knlistbox.h"
@@ -70,20 +71,27 @@ KNAccNewsSettings::KNAccNewsSettings(QWidget *p, KNAccountManager *am)
   topL->setRowStretch(3,1);   // stretch the server listbox
   topL->activate();	
 
+	for(KNNntpAccount *a=aManager->first(); a; a=aManager->next())
+		slotAddItem(a);
+
+	// the settings dialog is non-modal, so we have to react to changes
+	// made outside of the dialog
+  connect(aManager, SIGNAL(accountAdded(KNNntpAccount*)), this, SLOT(slotAddItem(KNNntpAccount*)));
+  connect(aManager, SIGNAL(accountRemoved(KNNntpAccount*)), this, SLOT(slotRemoveItem(KNNntpAccount*)));
+  connect(aManager, SIGNAL(accountModified(KNNntpAccount*)), this, SLOT(slotUpdateItem(KNNntpAccount*)));
+		
   slotSelectionChanged();     // disable Delete & Edit initially
-	aManager->startConfig(this);
 }
 
 
 
 KNAccNewsSettings::~KNAccNewsSettings()
 {
-	aManager->endConfig();
 }
 
 
 
-void KNAccNewsSettings::addItem(KNNntpAccount *a)
+void KNAccNewsSettings::slotAddItem(KNNntpAccount *a)
 {
 	KNLBoxItem *it;
 	it=new KNLBoxItem(a->name(), a, &pm);
@@ -92,7 +100,7 @@ void KNAccNewsSettings::addItem(KNNntpAccount *a)
 
 
 
-void KNAccNewsSettings::removeItem(KNNntpAccount *a)
+void KNAccNewsSettings::slotRemoveItem(KNNntpAccount *a)
 {
 	KNLBoxItem *it;
 	for(uint i=0; i<lb->count(); i++) {
@@ -106,8 +114,7 @@ void KNAccNewsSettings::removeItem(KNNntpAccount *a)
 
 
 
-// the settings dialog is not modal!
-void KNAccNewsSettings::updateItem(KNNntpAccount *a)
+void KNAccNewsSettings::slotUpdateItem(KNNntpAccount *a)
 {
   KNLBoxItem *it;
   for(uint i=0; i<lb->count(); i++) {
@@ -149,10 +156,13 @@ void KNAccNewsSettings::slotItemSelected(int id)
 
 void KNAccNewsSettings::slotAddBtnClicked()
 {
-  KNAccNewsConfDialog *confDlg = new KNAccNewsConfDialog(0,this);
+  KNNntpAccount *acc = new KNNntpAccount();
+  KNAccNewsConfDialog *confDlg = new KNAccNewsConfDialog(acc,this);
 
   if (confDlg->exec())
-  	aManager->newAccount(confDlg);
+  	aManager->newAccount(acc);
+  else
+    delete acc;
 
   delete confDlg;
 }
@@ -178,7 +188,7 @@ void KNAccNewsSettings::slotEditBtnClicked()
     KNAccNewsConfDialog *confDlg = new KNAccNewsConfDialog(a,this);
 
     if (confDlg->exec())
-      aManager->applySettings(a, confDlg);  // calls KNAccNewsSettings::updateItem() for us ;-)
+      aManager->applySettings(a);   // the account manager will emit accountModified()...
 
     delete confDlg;
   }
@@ -188,9 +198,10 @@ void KNAccNewsSettings::slotEditBtnClicked()
 //===============================================================================
 
 
-KNAccNewsConfDialog::KNAccNewsConfDialog(KNNntpAccount *acc, QWidget *parent, const char *name)
-  : KDialogBase(Plain, (acc)? i18n("Properties of %1").arg(acc->name()) : i18n("New Server"),
-	              Ok|Cancel|Help, Ok, parent, name)
+KNAccNewsConfDialog::KNAccNewsConfDialog(KNNntpAccount *a, QWidget *parent, const char *name)
+  : KDialogBase(Plain, (a->id()!=-1)? i18n("Properties of %1").arg(a->name()):i18n("New Account"),
+	              Ok|Cancel|Help, Ok, parent, name),
+	  acc(a)
 {
   QFrame* page=plainPage();
   QGridLayout *topL=new QGridLayout(page, 9, 3, 5);
@@ -198,29 +209,27 @@ KNAccNewsConfDialog::KNAccNewsConfDialog(KNNntpAccount *acc, QWidget *parent, co
   QLabel *l=new QLabel(i18n("Name:"),page);	
   topL->addWidget(l, 0,0);	
   n_ame=new QLineEdit(page);
-  if (acc) n_ame->setText(acc->name());
+  n_ame->setText(acc->name());
   topL->addMultiCellWidget(n_ame, 0, 0, 1, 2);	
 
   l=new QLabel(i18n("Server:"), page);	
   topL->addWidget(l, 1,0);
   s_erver=new QLineEdit(page);	
-  if (acc) {
-    s_erver->setText(acc->server());
-    s_erver->setEnabled(false);
-  }
+  s_erver->setText(acc->server());
+  if (acc->id()!=-1) s_erver->setEnabled(false);
   topL->addMultiCellWidget(s_erver, 1, 1, 1, 2);
 	
   l=new QLabel(i18n("Port:"), page);	
   topL->addWidget(l, 2,0);
   p_ort=new QLineEdit(page);	
   p_ort->setValidator(new KIntValidator(0,65536,this));
-  p_ort->setText((acc)? QString::number(acc->port()):"119");	
+  p_ort->setText(QString::number(acc->port()));	
   topL->addWidget(p_ort, 2,1);
 
   l = new QLabel(i18n("Hold connection for:"), page);
   topL->addWidget(l,3,0);
   h_old = new QSpinBox(5,1800,5,page);
-  h_old->setValue((acc)? acc->hold():300);
+  h_old->setValue(acc->hold());
   topL->addWidget(h_old,3,1);
   l = new QLabel(i18n("secs"),page);
   topL->addWidget(l,3,2);
@@ -228,7 +237,7 @@ KNAccNewsConfDialog::KNAccNewsConfDialog(KNNntpAccount *acc, QWidget *parent, co
   l = new QLabel(i18n("Timeout:"), page);
   topL->addWidget(l,4,0);
   t_imeout = new QSpinBox(5,600,5,page);
-  t_imeout->setValue((acc)? acc->timeout():60);
+  t_imeout->setValue(acc->timeout());
   topL->addWidget(t_imeout,4,1);
   l = new QLabel(i18n("secs"),page);
   topL->addWidget(l,4,2);
@@ -240,17 +249,17 @@ KNAccNewsConfDialog::KNAccNewsConfDialog(KNNntpAccount *acc, QWidget *parent, co
   l=new QLabel(i18n("User:"), page);
   topL->addWidget(l, 6,0);
   u_ser=new QLineEdit(page);
-  if (acc) u_ser->setText(acc->user());
+  u_ser->setText(acc->user());
   topL->addMultiCellWidget(u_ser, 6,6, 1,2);
 	
   l=new QLabel(i18n("Password:"), page);
   topL->addWidget(l, 7,0);
   p_ass=new QLineEdit(page);
   p_ass->setEchoMode(QLineEdit::Password);
-  if (acc) p_ass->setText(acc->pass());		
+  p_ass->setText(acc->pass());		
   topL->addMultiCellWidget(p_ass, 7,7, 1,2);
 
-  slotAuthChecked((acc)? acc->needsLogon():false);
+  slotAuthChecked(acc->needsLogon());
 
   topL->setColStretch(2, 1);
 	topL->activate();
@@ -265,6 +274,25 @@ KNAccNewsConfDialog::~KNAccNewsConfDialog()
   saveWindowSize("accNewsPropDLG", size());
 }
 
+
+void KNAccNewsConfDialog::slotOk()
+{
+  if (n_ame->text().isEmpty() || s_erver->text().isEmpty()) {
+    KMessageBox::information(this, i18n("Please enter an arbitrary name for the account and the\nhostname of the news server."));
+    return;
+  }
+
+	acc->setName(n_ame->text());
+	acc->setServer(s_erver->text().local8Bit());
+	acc->setPort(p_ort->text().toInt());
+	acc->setHold(h_old->value());
+	acc->setTimeout(t_imeout->value());
+	acc->setNeedsLogon(authCB->isChecked());
+	acc->setUser(u_ser->text().local8Bit());
+	acc->setPass(p_ass->text().local8Bit());
+	
+	accept();
+}
 
 
 void KNAccNewsConfDialog::slotAuthChecked(bool b)

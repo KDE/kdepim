@@ -23,8 +23,6 @@
 
 #include <kaction.h>
 
-class KNAccNewsSettings;
-class KNAccNewsConfDialog;
 class KNGroupManager;
 class KNListView;
 class KNNntpAccount;
@@ -44,19 +42,22 @@ class KNAccountManager : public QObject
 		void saveYourself();
 		void setCurrentAccount(KNNntpAccount *a);
 		
-		void startConfig(KNAccNewsSettings *s);
-		
-		void newAccount(KNAccNewsConfDialog *dlg);
-		void applySettings(KNNntpAccount *a, KNAccNewsConfDialog *dlg);
-		void removeAccount(KNNntpAccount *a=0);
+		void newAccount(KNNntpAccount *a);       // a is new account allocated and configured by the caller
+		void applySettings(KNNntpAccount *a);    // commit changes on a the caller made
+		void removeAccount(KNNntpAccount *a=0);  // a==0: remove current account
 		void endConfig();
 		
 		bool hasCurrentAccount()							{ return (c_urrentAccount!=0); }
 		KNNntpAccount* currentAccount()				{ return c_urrentAccount; }
 		KNServerInfo*	smtp()									{ return s_mtp; }
 		KNNntpAccount* first()								{ return accList->first(); }
-		KNNntpAccount* next()									{ return accList->next(); }
+		KNNntpAccount* next()									{ return accList->next(); }		
 		KNNntpAccount* account(int i);	
+		
+	signals:
+	  void accountAdded(KNNntpAccount *a);
+	  void accountModified(KNNntpAccount *a);
+    void accountRemoved(KNNntpAccount *a);   // don't do anything with a, it will be deleted soon
 				
 	protected:
 		void loadAccounts();
@@ -65,7 +66,6 @@ class KNAccountManager : public QObject
 		KNNntpAccount *c_urrentAccount;
 		KNServerInfo *s_mtp;
 		
-		KNAccNewsSettings *set;
 		KNListView *view;		
 		KAction *actProperties, *actSubscribe, *actLoadHdrs, *actDelete, *actPostNewArticle;
 		KActionCollection actionCollection;

@@ -22,16 +22,15 @@
 #include "knnntpaccount.h"
 
 
-KNNntpAccount::KNNntpAccount() : KNCollection(0), KNServerInfo()
+KNNntpAccount::KNNntpAccount()
+  : KNCollection(0), KNServerInfo(), u_nsentCount(0)
 {
-	u_nsentCount=0;
 }
 
 
 
 KNNntpAccount::~KNNntpAccount()
 {
-	
 }
 
 
