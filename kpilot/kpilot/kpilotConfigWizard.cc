@@ -26,7 +26,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-static const char *conduitconfigdialog_id =
+static const char *conduitconfigdialog_id2 =
 	"$Id$";
 
 //#include "options.h"
