@@ -280,7 +280,7 @@ PilotRecord*TodoConduit::recordFromIncidence(PilotAppCategory*de, const KCal::In
 	PilotTodoEntry *tde = dynamic_cast<PilotTodoEntry*>(de);
 	const KCal::Todo *te = dynamic_cast<const KCal::Todo*>(e);
 
-	return recordFromIncidence(tde, te);
+	return recordFromTodo(tde, te);
 }
 
 
