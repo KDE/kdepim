@@ -17,75 +17,68 @@
 
 #include <qlayout.h>
 #include <qlabel.h>
-#include <qbuttongroup.h>
 #include <qradiobutton.h>
 #include <qspinbox.h>
-#include <qpushbutton.h>
+#include <qbuttongroup.h>
 
 #include <klocale.h>
 
+#include "utilities.h"
 #include "knscoredialog.h"
 
 
-KNScoreDialog::KNScoreDialog(short sc, QWidget *parent, const char *name ) :
-	QDialog(parent,name, true)
+KNScoreDialog::KNScoreDialog(short sc, QWidget *parent, const char *name )
+  : KDialogBase(Plain, i18n("Set Score"), Ok|Cancel, Ok, parent, name)
 {
-	bg=new QButtonGroup(this);
-	
-	iBtn=new QRadioButton("0", bg);
-	nBtn=new QRadioButton("50", bg);
-	wBtn=new QRadioButton("100", bg);
-	cBtn=new QRadioButton(i18n("custom"), bg);
-	spin=new QSpinBox(0,100,1,bg);
-	okBtn=new QPushButton(i18n("OK"), this);
-  okBtn->setMinimumSize(okBtn->sizeHint());
-	cancelBtn=new QPushButton(i18n("Cancel"), this);
-	cancelBtn->setMinimumSize(cancelBtn->sizeHint());
-		
-	//spin->setFixedHeight(spin->sizeHint().height());
-	//spin->setMinimumWidth(spin->sizeHint().width());
-		
-	QVBoxLayout *topL=new QVBoxLayout(this, 10);
-	QHBoxLayout *btnL=new QHBoxLayout(1);
-	QGridLayout *bgL=new QGridLayout(bg, 4,2,10);
-		
-	bgL->addWidget(iBtn, 0,0);
-	bgL->addWidget(nBtn, 1,0);
-	bgL->addWidget(wBtn, 2,0);
-	bgL->addWidget(cBtn, 3,0); bgL->addWidget(spin, 3,1);
-	topL->addWidget(bg, 1);
-	topL->addLayout(btnL);
-	btnL->addWidget(okBtn);
-	btnL->addWidget(cancelBtn);
-	topL->activate();
-	
-	this->resize(this->minimumSize());
-	
-	connect(okBtn, SIGNAL(clicked()), this, SLOT(accept()));
-	connect(cancelBtn, SIGNAL(clicked()), this, SLOT(reject()));
-	connect(cBtn, SIGNAL(toggled(bool)), spin, SLOT(setEnabled(bool)));
-	
-	int b;
-	
-	switch(sc) {
-	
-		case 0: 	b=0; break;
-		case 50: 	b=1; break;
-		case 100:	b=2; break;
-		default:	b=3; break;
-	}
-	
-	spin->setValue(sc);
-	bg->setButton(b);
-	spin->setEnabled(cBtn->isChecked());
-	
-	setCaption(i18n("score"));
+  QFrame* page=plainPage();
+  QVBoxLayout *topL=new QVBoxLayout(page, 10);
+
+  QButtonGroup *bg=new QButtonGroup(page);
+  topL->addWidget(bg);
+  
+  QGridLayout *bgL=new QGridLayout(bg, 4,2,10);
+  
+  iBtn=new QRadioButton("0", bg);
+  bgL->addWidget(iBtn, 0,0);
+  
+  nBtn=new QRadioButton("50", bg);
+  bgL->addWidget(nBtn, 1,0);
+
+  wBtn=new QRadioButton("100", bg);
+  bgL->addWidget(wBtn, 2,0);
+
+  cBtn=new QRadioButton(i18n("custom"), bg);
+  bgL->addWidget(cBtn, 3,0);
+  spin=new QSpinBox(0,100,1,bg);
+  connect(cBtn, SIGNAL(toggled(bool)), spin, SLOT(setEnabled(bool)));
+  bgL->addWidget(spin, 3,1);
+
+  bgL->setColStretch(1,1);    
+  topL->activate();
+  
+  int b;
+  
+  switch(sc) {
+  
+    case 0:   b=0; break;
+    case 50:  b=1; break;
+    case 100: b=2; break;
+    default:  b=3; break;
+  }
+  
+  spin->setValue(sc);
+  bg->setButton(b);
+  spin->setEnabled(cBtn->isChecked());
+
+  setFixedHeight(sizeHint().height());
+  restoreWindowSize("scoreDlg", this, sizeHint());
 }
 
 
 
 KNScoreDialog::~KNScoreDialog()
 {
+  saveWindowSize("scoreDlg", size());
 }
 
 
@@ -93,20 +86,17 @@ KNScoreDialog::~KNScoreDialog()
 short KNScoreDialog::score()
 {
   short ret=0;
-	
+  
   if (iBtn->isChecked())      ret=0;
   else if (nBtn->isChecked()) ret=50;
   else if (wBtn->isChecked()) ret=100;
   else if (cBtn->isChecked()) ret=spin->value();
-	
+  
   return ret;
 }
-
 
 
 //--------------------------------
 
 #include "knscoredialog.moc"
-
-
 

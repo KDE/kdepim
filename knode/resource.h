@@ -30,17 +30,17 @@
 
 //================= StatusBar ====================
 
-#define SB_MAIN			4000005	
-#define SB_GROUP			4000010
-#define SB_PROGR			4000020
-#define SB_FILTER		4000030
+#define SB_MAIN     4000005 
+#define SB_GROUP      4000010
+#define SB_PROGR      4000020
+#define SB_FILTER   4000030
 
 
 //================== Folders =====================
 
-#define FOLD_DRAFTS	200010
-#define FOLD_SENT		200020
-#define FOLD_OUTB		200030
+#define FOLD_DRAFTS 200010
+#define FOLD_SENT   200020
+#define FOLD_OUTB   200030
 
 
 #endif // RESOURCE_H

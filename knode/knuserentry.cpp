@@ -19,6 +19,7 @@
 #include <kconfig.h>
 #include <kmessagebox.h>
 
+#include "knglobals.h"
 #include "knarticlecollection.h"   // KNFile
 #include "knuserentry.h"
 
@@ -41,18 +42,18 @@ const QCString& KNUserEntry::getSignature()
 
   if (u_seSigFile) {
     if(!s_igPath.isEmpty()) {
-  	  KNFile sigFile(s_igPath);	
-  		if(sigFile.open(IO_ReadOnly)) {
-  			s_igContents=sigFile.readLineWnewLine();
-  			while(!sigFile.atEnd())
-  			  s_igContents += sigFile.readLineWnewLine();
-    		}
-  		else KMessageBox::error(0, i18n("Cannot open the signature file!"));
-  	}
+      KNFile sigFile(s_igPath); 
+      if(sigFile.open(IO_ReadOnly)) {
+        s_igContents=sigFile.readLineWnewLine();
+        while(!sigFile.atEnd())
+          s_igContents += sigFile.readLineWnewLine();
+        }
+      else KMessageBox::error(knGlobals.topWidget, i18n("Cannot open the signature file!"));
+    }
   } else
     s_igContents = s_igText;
-	
-	return s_igContents;
+  
+  return s_igContents;
 }
 
 
@@ -65,27 +66,27 @@ void KNUserEntry::load(KConfigBase *c)
   o_rga=c->readEntry("Org").local8Bit();
   u_seSigFile=c->readBoolEntry("UseSigFile",false);
   s_igPath=c->readEntry("sigFile");
-	s_igText=c->readEntry("sigText").local8Bit();	
+  s_igText=c->readEntry("sigText").local8Bit(); 
 }
 
 
 
 void KNUserEntry::save(KConfigBase *c)
 {
-	c->writeEntry("Name", n_ame.data());
-	c->writeEntry("Email", e_mail.data());
-	c->writeEntry("Reply-To", r_eplyTo.data());
-	c->writeEntry("Org", o_rga.data());
-	c->writeEntry("UseSigFile", u_seSigFile);
-	c->writeEntry("sigFile", s_igPath);
-	c->writeEntry("sigText", s_igText.data());
+  c->writeEntry("Name", n_ame.data());
+  c->writeEntry("Email", e_mail.data());
+  c->writeEntry("Reply-To", r_eplyTo.data());
+  c->writeEntry("Org", o_rga.data());
+  c->writeEntry("UseSigFile", u_seSigFile);
+  c->writeEntry("sigFile", s_igPath);
+  c->writeEntry("sigText", s_igText.data());
 }
 
 
 
 bool KNUserEntry::isEmpty()
 {
-	return (	n_ame.isEmpty() && 	e_mail.isEmpty() &&
-						r_eplyTo.isEmpty()	 && o_rga.isEmpty() &&
-						s_igPath.isEmpty() );
+  return (  n_ame.isEmpty() &&  e_mail.isEmpty() &&
+            r_eplyTo.isEmpty()   && o_rga.isEmpty() &&
+            s_igPath.isEmpty() );
 }

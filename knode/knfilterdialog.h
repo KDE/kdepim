@@ -19,7 +19,7 @@
 #ifndef KNFILTERDIALOG_H
 #define KNFILTERDIALOG_H
 
-#include <qsemimodal.h>
+#include <kdialogbase.h>
 
 class KNFilterConfigWidget;
 class KNArticleFilter;
@@ -28,42 +28,29 @@ class QComboBox;
 class QCheckBox;
 
 
-class KNFilterDialog : public QSemiModal {
-	
-	Q_OBJECT
+class KNFilterDialog : public KDialogBase {
+  
+  Q_OBJECT
 
-	friend class KNFilterManager;
-	
-	public:
-		KNFilterDialog(QWidget *parent=0, const char *name=0, KNArticleFilter *f=0);
-		~KNFilterDialog();
-		
-		KNArticleFilter* filter()	{ return fltr; }
- 	  		
-	protected:
-		void apply();
-				
-		KNFilterConfigWidget *fw;
-		QLineEdit *fname;
-		QComboBox *apon;
-		QCheckBox *enabled;
-		
-		KNArticleFilter *fltr;
-		QString savedName;
-	
-	protected slots:
-		void slotOK();
-		void slotCancel();
-		void slotHelp();
-		
-	signals:
-		void editDone(KNFilterDialog*);
-				
+  friend class KNFilterManager;
+  
+  public:
+    KNFilterDialog(KNArticleFilter *f=0, QWidget *parent=0, const char *name=0);
+    ~KNFilterDialog();
+    
+    KNArticleFilter* filter() { return fltr; }
+          
+  protected:
+    KNFilterConfigWidget *fw;
+    QLineEdit *fname;
+    QComboBox *apon;
+    QCheckBox *enabled;
+    
+    KNArticleFilter *fltr;
+
+  protected slots:
+    void slotOk();
+        
 };
 
 #endif
-
-
-
-
-

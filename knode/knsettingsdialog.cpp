@@ -152,12 +152,12 @@ void KNSettingsDialog::slotApply()
     if(sw) sw->apply();
   }
 
-	knGlobals.accManager->readConfig();                           // read changed config...
-	knGlobals.sArtManager->readConfig();
-	knGlobals.gManager->readConfig();
-	knGlobals.fArtManager->readConfig();
-	KNArticleWidget::readOptions();
-	KNArticleWidget::updateInstances();
+  knGlobals.accManager->readConfig();                           // read changed config...
+  knGlobals.sArtManager->readConfig();
+  knGlobals.gManager->readConfig();
+  knGlobals.fArtManager->readConfig();
+  KNArticleWidget::readOptions();
+  KNArticleWidget::updateInstances();
 }
 
 //--------------------------------

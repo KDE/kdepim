@@ -34,32 +34,32 @@ KNUserSettings::KNUserSettings(QWidget *p) : KNSettingsWidget(p)
   layout->addWidget(uw);
   init();
 
-	layout->setResizeMode(QLayout::Minimum);
+  layout->setResizeMode(QLayout::Minimum);
 }
 
 
 
 KNUserSettings::~KNUserSettings()
 {
-	delete user;
+  delete user;
 }
 
 
 
 void KNUserSettings::init()
 {
-	KConfig *conf=KGlobal::config();
-	conf->setGroup("IDENTITY");
-	user->load(conf);
-	uw->setData(user);
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("IDENTITY");
+  user->load(conf);
+  uw->setData(user);
 }
 
 
 
 void KNUserSettings::apply()
 {
-	KConfig *conf=KGlobal::config();
-	conf->setGroup("IDENTITY");
-	uw->applyData();
-	user->save(conf);
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("IDENTITY");
+  uw->applyData();
+  user->save(conf);
 }

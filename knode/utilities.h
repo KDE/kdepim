@@ -21,8 +21,8 @@ class QString;
 class QSize;
 
 /*
-#define SIZE(w) 		w->setMinimumSize(w->sizeHint())
-#define FSIZE(w) 		w->setFixedSize(w->sizeHint())
+#define SIZE(w)     w->setMinimumSize(w->sizeHint())
+#define FSIZE(w)    w->setFixedSize(w->sizeHint())
 #define WIDTH(w,s)  w->setMinimumWidth(s); w->setMinimumHeight(w->sizeHint().height())
 #define HEIGHT(w,s) w->setMinimumHeight(s); w->setMinimumWidth(w->sizeHint().width());
 
@@ -36,7 +36,7 @@ void restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize
 QCString encryptStr(const QCString& aStr);
 QCString decryptStr(const QCString& aStr);
 
-void displayInternalFileError();	 // use this for all internal files
+void displayInternalFileError();   // use this for all internal files
 void displayExternalFileError();   // use this for all external files
 void displayRemoteFileError();     // use this for remote files
 void displayTempFileError();       // use this for error on temporary files

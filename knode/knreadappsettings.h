@@ -30,27 +30,27 @@ class KColorButton;
 
 class KNReadAppSettings : public KNSettingsWidget  {
 
-	Q_OBJECT	
+  Q_OBJECT  
 
-	public:
-		KNReadAppSettings(QWidget *p);
-		~KNReadAppSettings();
-		
-		void apply();
-		
-	protected:
-  	void init();
-  	
-		QListBox *cList;
-		KColorButton *colBtn;
-		QComboBox *fntFam;
-		QComboBox *fntSize;
-		QColor colors[7];
-		
-	protected slots:
-		void slotCListChanged(int id);
-		void slotColorChanged(const QColor &col);
-		
+  public:
+    KNReadAppSettings(QWidget *p);
+    ~KNReadAppSettings();
+    
+    void apply();
+    
+  protected:
+    void init();
+    
+    QListBox *cList;
+    KColorButton *colBtn;
+    QComboBox *fntFam;
+    QComboBox *fntSize;
+    QColor colors[7];
+    
+  protected slots:
+    void slotCListChanged(int id);
+    void slotColorChanged(const QColor &col);
+    
 };
 
 #endif

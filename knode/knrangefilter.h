@@ -20,6 +20,7 @@
 
 #include <qgroupbox.h>
 
+class QLabel;
 class QSpinBox;
 class QComboBox;
 class QCheckBox;
@@ -28,71 +29,60 @@ class KSimpleConfig;
 
 
 class KNRangeFilter {
-	
-	friend class KNRangeFilterWidget;
+  
+  friend class KNRangeFilterWidget;
 
-	public:
-		KNRangeFilter()		{ op1=eq; op2=gt; val1=0; val2=0; enabled=false; }
-		~KNRangeFilter()	{}
-		
-		KNRangeFilter& operator=(const KNRangeFilter &nr)
-			{ val1=nr.val1; val2=nr.val2;
-			  op1=nr.op1; op2=nr.op2;
-			  enabled=nr.enabled;
-			  return (*this); }
-		
-		void load(KSimpleConfig *conf);
-		void save(KSimpleConfig *conf);			
-				
-		bool doFilter(int a);
-		
-		
-	protected:
-		enum Op { gt=0, gtoeq=1, eq=2 };
-		bool matchesOp(int v1, Op o, int v2);
-		
-		int val1, val2;
-		Op op1, op2;
-		bool enabled;
-			
+  public:
+    KNRangeFilter()   { op1=eq; op2=gt; val1=0; val2=0; enabled=false; }
+    ~KNRangeFilter()  {}
+    
+    KNRangeFilter& operator=(const KNRangeFilter &nr)
+      { val1=nr.val1; val2=nr.val2;
+        op1=nr.op1; op2=nr.op2;
+        enabled=nr.enabled;
+        return (*this); }
+    
+    void load(KSimpleConfig *conf);
+    void save(KSimpleConfig *conf);     
+        
+    bool doFilter(int a);
+    
+  protected:
+    enum Op { gt=0, gtoeq=1, eq=2 };
+    bool matchesOp(int v1, Op o, int v2);
+    
+    int val1, val2;
+    Op op1, op2;
+    bool enabled;
+      
 };
 
 
 //==================================================================================
- 	   	
+      
 
 class KNRangeFilterWidget : public QGroupBox {
- 			
-	Q_OBJECT
- 		
- 	public:
-		KNRangeFilterWidget(const QString& value, int min, int max, QWidget* parent);
- 		~KNRangeFilterWidget();
- 				
- 		KNRangeFilter filter();
- 		void setFilter(KNRangeFilter &f);
- 		void clear();
- 			 				
- 	protected:
-		QCheckBox *enabled;
- 		QSpinBox *val1, *val2;
- 		QComboBox *op1, *op2;
-
-	protected slots:
- 		void slotEnabled(bool e); 								
- 		void slotOp1Changed(int id);
- 		
+      
+  Q_OBJECT
+    
+  public:
+    KNRangeFilterWidget(const QString& value, int min, int max, QWidget* parent);
+    ~KNRangeFilterWidget();
+        
+    KNRangeFilter filter();
+    void setFilter(KNRangeFilter &f);
+    void clear();
+              
+  protected:
+    QCheckBox *enabled;
+    QLabel *des;
+    QSpinBox *val1, *val2;
+    QComboBox *op1, *op2;
+  
+  protected slots:
+    void slotEnabled(bool e);                 
+    void slotOp1Changed(int id);
+    
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-

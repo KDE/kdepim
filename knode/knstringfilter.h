@@ -28,24 +28,24 @@ class KSimpleConfig;
 
 
 class KNStringFilter {
-	
-	friend class KNStringFilterWidget;	
+  
+  friend class KNStringFilterWidget;  
 
-	public:
-		KNStringFilter()	{ enabled=false; con=true; regExp=false;}
-		~KNStringFilter() {}
-	
-		KNStringFilter& operator=(const KNStringFilter &sf);
-					
-		void load(KSimpleConfig *conf);
-		void save(KSimpleConfig *conf);			
-					
-		bool doFilter(const QCString &s);
-								
-	protected:
-		QCString data;
-		bool con, enabled, regExp;	
-		
+  public:
+    KNStringFilter()  { enabled=false; con=true; regExp=false;}
+    ~KNStringFilter() {}
+  
+    KNStringFilter& operator=(const KNStringFilter &sf);
+          
+    void load(KSimpleConfig *conf);
+    void save(KSimpleConfig *conf);     
+          
+    bool doFilter(const QCString &s);
+                
+  protected:
+    QCString data;
+    bool con, enabled, regExp;  
+    
 };
 
 
@@ -53,25 +53,25 @@ class KNStringFilter {
 
 
 class KNStringFilterWidget : public QGroupBox  {
-	
-	Q_OBJECT
+  
+  Q_OBJECT
 
-	public:
-		KNStringFilterWidget(const QString& title, QWidget *parent);
-		~KNStringFilterWidget();
-		
-		KNStringFilter filter();
-		void setFilter(KNStringFilter &f);
-		void clear();
-		
-	protected:
-		QCheckBox *enabled, *regExp;
-		QComboBox *fType;
-		QLineEdit *fString;
-	
-	protected slots:
-		void slotEnabled(bool e);
-		
+  public:
+    KNStringFilterWidget(const QString& title, QWidget *parent);
+    ~KNStringFilterWidget();
+    
+    KNStringFilter filter();
+    void setFilter(KNStringFilter &f);
+    void clear();
+    
+  protected:
+    QCheckBox *enabled, *regExp;
+    QComboBox *fType;
+    QLineEdit *fString;
+  
+  protected slots:
+    void slotEnabled(bool e);
+    
 };
 
 

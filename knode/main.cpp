@@ -27,15 +27,15 @@ void convert(const char*);
 
 static const KCmdLineOptions options[] =
 {
-	{ "convert <version>", I18N_NOOP("convert the database from <version>"), 0 },
-	{ "c", 0, 0},
-	{ 0, 0, 0}
+  { "convert <version>", I18N_NOOP("convert the database from <version>"), 0 },
+  { "c", 0, 0},
+  { 0, 0, 0}
 };
 
 int main(int argc, char* argv[])
 {
 
-	KAboutData aboutData("knode",
+  KAboutData aboutData("knode",
                         I18N_NOOP("KNode"),
                         KNODE_VERSION,
                         I18N_NOOP("A newsreader for KDE"),
@@ -43,26 +43,26 @@ int main(int argc, char* argv[])
                         "Copyright (C) 1999-2000, Christian Thurner",
                         0,
                         "http://knode.sourceforge.net/");
-    										
+                        
   aboutData.addAuthor("Christian Thurner",I18N_NOOP("Maintainer"),"cthurner@freepage.de");
   aboutData.addAuthor("Christian Gebauer",0,"gebauer@bigfoot.com");
   aboutData.addAuthor("Dirk Mueller",0,"mueller@kde.org");
   aboutData.addAuthor("Matthias Kalle Dalheimer",0,"kalle@kde.org");
   KCmdLineArgs::init( argc, argv, &aboutData );
-	KCmdLineArgs::addCmdLineOptions( options );
-	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  KCmdLineArgs::addCmdLineOptions( options );
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-	QCString val = args->getOption("convert");
-	if (val.length()) {
-	 	cout << I18N_NOOP("Converting ...\n");
-  	convert(val);
-	}
-	
-	args->clear();
-	
-	KApplication app;
+  QCString val = args->getOption("convert");
+  if (val.length()) {
+    cout << I18N_NOOP("Converting ...\n");
+    convert(val);
+  }
+  
+  args->clear();
+  
+  KApplication app;
 
-	if (app.isRestored()) {
+  if (app.isRestored()) {
     int n = 1;
     while (KTMainWindow::canBeRestored(n)){
       if (KTMainWindow::classNameOfToplevel(n)=="KNodeApp")
@@ -70,8 +70,8 @@ int main(int argc, char* argv[])
       n++;
     }
   } else {
-	 	KNodeApp* knode = new KNodeApp;
-   	knode->show();
+    KNodeApp* knode = new KNodeApp;
+    knode->show();
   }
 
   int ret=app.exec();

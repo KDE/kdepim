@@ -20,167 +20,168 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
+#include "knglobals.h"
 #include "knarticlecollection.h"
 #include "knarticle.h"
 
 
 KNArticleCollection::KNArticleCollection(KNCollection *p)
-	: KNCollection(p)
+  : KNCollection(p)
 {
-	lastID=0;
-	len=0;
-	siz=0;
-	list=0;
-	incr=50;
+  lastID=0;
+  len=0;
+  siz=0;
+  list=0;
+  incr=50;
 }
 
 
 
 KNArticleCollection::~KNArticleCollection()
 {
-	clearList();
+  clearList();
 }
 
 
 
 bool KNArticleCollection::resize(int s)
 {
-	KNArticle **bak=list;
-	int nSize;
-	
-	if(s==0) nSize=siz+incr;
-	else nSize=((s/incr)+1)*incr;
-	
-	list=(KNArticle**) realloc(list,sizeof(KNArticle*)*nSize);
+  KNArticle **bak=list;
+  int nSize;
+  
+  if(s==0) nSize=siz+incr;
+  else nSize=((s/incr)+1)*incr;
+  
+  list=(KNArticle**) realloc(list,sizeof(KNArticle*)*nSize);
 
   if(!list) {
-		KMessageBox::error(0,i18n("Memory allocation failed!\nYou should close this application now\n, to avoid data loss."));
-		list=bak;
-		return false;
-	}
-	else {
-		siz=nSize;
-		//qDebug("size : %d\n",siz);
-		return true;
-	}
+    KMessageBox::error(knGlobals.topWidget, i18n("Memory allocation failed!\nYou should close this application now\n, to avoid data loss."));
+    list=bak;
+    return false;
+  }
+  else {
+    siz=nSize;
+    //qDebug("size : %d\n",siz);
+    return true;
+  }
 }
 
 
 
 bool KNArticleCollection::append(KNArticle *a)
 {
-	if(len+1>siz)  //array too small
-		if (!resize()) return false; //try to realloc
+  if(len+1>siz)  //array too small
+    if (!resize()) return false; //try to realloc
 
-	if(a->id()==-1) a->setId(++lastID);
-	list[len]=a;
-	len++;
-	
-	return true;		 		
+  if(a->id()==-1) a->setId(++lastID);
+  list[len]=a;
+  len++;
+  
+  return true;        
 }
 
 
 
 void KNArticleCollection::clearList()
 {
-	if(list){
-		for(int i=0; i<len; i++) delete list[i];
-		free(list);
-	}
-	
-	list=0; len=0; siz=0; lastID=0;
+  if(list){
+    for(int i=0; i<len; i++) delete list[i];
+    free(list);
+  }
+  
+  list=0; len=0; siz=0; lastID=0;
 }
 
 
 
 void KNArticleCollection::compactList()
 {
-	int newLen, nullStart=0, nullCnt=0, ptrStart=0, ptrCnt=0;
-	
-	for(int idx=0; idx<len; idx++) {
-		if(list[idx]==0) {
-			ptrStart=-1;
-			ptrCnt=-1;
-			nullStart=idx;
-			nullCnt=1;
-			for(int idx2=idx+1; idx2<len; idx2++) {
-				if(list[idx2]==0) nullCnt++;
-				else {
-					ptrStart=idx2;
-					ptrCnt=1;
-					break;
-				}
-			}
-			if(ptrStart!=-1) {
-				for(int idx2=ptrStart+1; idx2<len; idx2++) {
-					if(list[idx2]!=0) ptrCnt++;
-					else break;
-				}
-			  memmove(&(list[nullStart]), &(list[ptrStart]), ptrCnt*sizeof(KNArticle*));
-			  for(int idx2=nullStart+ptrCnt; idx2<nullStart+ptrCnt+nullCnt; idx2++)
-			  	list[idx2]=0;
-			  idx=nullStart+ptrCnt-1;
-			  }
-			else break;
-		}
-	}
-	newLen=0;
-	while(list[newLen]!=0) newLen++;
-	len=newLen;
+  int newLen, nullStart=0, nullCnt=0, ptrStart=0, ptrCnt=0;
+  
+  for(int idx=0; idx<len; idx++) {
+    if(list[idx]==0) {
+      ptrStart=-1;
+      ptrCnt=-1;
+      nullStart=idx;
+      nullCnt=1;
+      for(int idx2=idx+1; idx2<len; idx2++) {
+        if(list[idx2]==0) nullCnt++;
+        else {
+          ptrStart=idx2;
+          ptrCnt=1;
+          break;
+        }
+      }
+      if(ptrStart!=-1) {
+        for(int idx2=ptrStart+1; idx2<len; idx2++) {
+          if(list[idx2]!=0) ptrCnt++;
+          else break;
+        }
+        memmove(&(list[nullStart]), &(list[ptrStart]), ptrCnt*sizeof(KNArticle*));
+        for(int idx2=nullStart+ptrCnt; idx2<nullStart+ptrCnt+nullCnt; idx2++)
+          list[idx2]=0;
+        idx=nullStart+ptrCnt-1;
+        }
+      else break;
+    }
+  }
+  newLen=0;
+  while(list[newLen]!=0) newLen++;
+  len=newLen;
 }
 
 
 
 int KNArticleCollection::findId(int id)
 {
-	int start=0, end=len, mid=0, currentId=0;
-	bool found=false;
-	end=len;
+  int start=0, end=len, mid=0, currentId=0;
+  bool found=false;
+  end=len;
 
   while (start!=end && !found) {
-  	mid=(start+end)/2;
-   	currentId=list[mid]->id();
-    	if (currentId==id) found=true;
-    	else
-    		if (currentId < id)	
-      	start=mid+1;
-    		else end=mid;
+    mid=(start+end)/2;
+    currentId=list[mid]->id();
+      if (currentId==id) found=true;
+      else
+        if (currentId < id) 
+        start=mid+1;
+        else end=mid;
   }
 
- 	if (found) return mid; 	
+  if (found) return mid;  
   else {
-  	qDebug("ID %d not found!\n", id);
-  	return -1;
-  }	
-  	
-	/*int start=0, end=len, mid=0, currentId=0;
-	bool found=false;
-	
+    qDebug("ID %d not found!\n", id);
+    return -1;
+  } 
+    
+  /*int start=0, end=len, mid=0, currentId=0;
+  bool found=false;
+  
   while (start!=end && !found) {
-  	mid=(start+end)/2;
-   	while(mid<len && list[mid]==0) mid++;
-   	if(mid==len || list[mid]==0) {
-   		mid=(start+end)/2;
-   	  while(mid>-1 && list[mid]==0) mid--;
-   	}
-   	
-   	if(mid==len || mid==-1 || list[mid]==0) {
-   		found=false;
-   		break;
-   	}   	
-   	else {
-   		currentId=list[mid]->id();
-   		if(currentId==id) found=true;
-    	else if (currentId < id) start=mid+1;
-    	else end=mid;
+    mid=(start+end)/2;
+    while(mid<len && list[mid]==0) mid++;
+    if(mid==len || list[mid]==0) {
+      mid=(start+end)/2;
+      while(mid>-1 && list[mid]==0) mid--;
     }
-	}
+    
+    if(mid==len || mid==-1 || list[mid]==0) {
+      found=false;
+      break;
+    }     
+    else {
+      currentId=list[mid]->id();
+      if(currentId==id) found=true;
+      else if (currentId < id) start=mid+1;
+      else end=mid;
+    }
+  }
 
- 	if (found) return list[mid]; 	
+  if (found) return list[mid];  
   else {
-  	qDebug("ID %d not found!\n", id);
-  	return 0;
-  }	*/
+    qDebug("ID %d not found!\n", id);
+    return 0;
+  } */
 }
 
 
@@ -194,20 +195,20 @@ void KNArticleCollection::setLastID()
 
 /*bool KNArticleCollection::setCurrent(KNArticle *a)
 {
-	if(a) {
-		if(byId(a->id())!=0) {
-			c_urrent=a;
-			return true;
-		}
-		else {
-			c_urrent=0;
-			return false;
-		}
-	}
-	else {
-		c_urrent=0;
-		return true;
-	}
+  if(a) {
+    if(byId(a->id())!=0) {
+      c_urrent=a;
+      return true;
+    }
+    else {
+      c_urrent=0;
+      return false;
+    }
+  }
+  else {
+    c_urrent=0;
+    return true;
+  }
 }  */
 
 

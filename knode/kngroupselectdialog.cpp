@@ -91,7 +91,7 @@ void KNGroupSelectDialog::updateItemState(CheckItem *it)
 }
 
 
-		
+    
 QCString KNGroupSelectDialog::selectedGroups()
 {
   QCString ret;

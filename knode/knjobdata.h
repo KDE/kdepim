@@ -23,40 +23,40 @@
 
 
 class KNJobData {
-	
-	public:
-		
-		enum jobType {	JTLoadGroups,
+  
+  public:
+    
+    enum jobType {  JTLoadGroups,
                     JTFetchGroups,
-		                JTCheckNewGroups,
-										JTfetchNewHeaders,
-										JTfetchArticle,
-										JTpostArticle,
-										JTmail };										
-		
-		KNJobData(jobType t, KNServerInfo *a, void *d);
-		~KNJobData();
-		
-		jobType type() const                  { return t_ype; }
-		
-		bool net() const                      { return (t_ype!=JTLoadGroups); }
-		KNServerInfo* account()	const         { return a_ccount; }
-		void* data() const 	                  { return d_ata; }
-		
-		const QString& errorString() const    { return e_rrorString; }
-		bool success() const                  { return e_rrorString.isEmpty(); }
-		bool canceled()	const                 { return c_anceled; }
-		
-		void setErrorString(const QString& s)	{ e_rrorString=s; }
-		void cancel()	{ c_anceled=true; }
-		
-	protected:
-		jobType t_ype;
-		void *d_ata;
-		KNServerInfo *a_ccount;
-		QString e_rrorString;
-		bool c_anceled;		
-				
+                    JTCheckNewGroups,
+                    JTfetchNewHeaders,
+                    JTfetchArticle,
+                    JTpostArticle,
+                    JTmail };                   
+    
+    KNJobData(jobType t, KNServerInfo *a, void *d);
+    ~KNJobData();
+    
+    jobType type() const                  { return t_ype; }
+    
+    bool net() const                      { return (t_ype!=JTLoadGroups); }
+    KNServerInfo* account() const         { return a_ccount; }
+    void* data() const                    { return d_ata; }
+    
+    const QString& errorString() const    { return e_rrorString; }
+    bool success() const                  { return e_rrorString.isEmpty(); }
+    bool canceled() const                 { return c_anceled; }
+    
+    void setErrorString(const QString& s) { e_rrorString=s; }
+    void cancel() { c_anceled=true; }
+    
+  protected:
+    jobType t_ype;
+    void *d_ata;
+    KNServerInfo *a_ccount;
+    QString e_rrorString;
+    bool c_anceled;   
+        
 };
 
 #endif

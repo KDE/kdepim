@@ -34,35 +34,35 @@ KNNntpClient::KNNntpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent, const
 
 KNNntpClient::~KNNntpClient()
 {}
-	
+  
 
 // examines the job and calls the suitable handling method
 void KNNntpClient::processJob()
 {
-	switch (job->type()) {
-		case KNJobData::JTLoadGroups :
-			doLoadGroups();
-			break;
-		case KNJobData::JTFetchGroups :
-			doFetchGroups();
-			break;			
-		case KNJobData::JTCheckNewGroups :
-			doCheckNewGroups();
-			break;			
-		case KNJobData::JTfetchNewHeaders :
-			doFetchNewHeaders();
-			break;
-		case KNJobData::JTfetchArticle :
-			doFetchArticle();
-			break;
-		case KNJobData::JTpostArticle :
-			doPostArticle();
-			break;
-		default:
-			qDebug("KNNntpClient::processJob(): mismatched job");		
-	}		
+  switch (job->type()) {
+    case KNJobData::JTLoadGroups :
+      doLoadGroups();
+      break;
+    case KNJobData::JTFetchGroups :
+      doFetchGroups();
+      break;      
+    case KNJobData::JTCheckNewGroups :
+      doCheckNewGroups();
+      break;      
+    case KNJobData::JTfetchNewHeaders :
+      doFetchNewHeaders();
+      break;
+    case KNJobData::JTfetchArticle :
+      doFetchArticle();
+      break;
+    case KNJobData::JTpostArticle :
+      doPostArticle();
+      break;
+    default:
+      qDebug("KNNntpClient::processJob(): mismatched job");   
+  }   
 }
-	
+  
 
 void KNNntpClient::doLoadGroups()
 {
@@ -77,19 +77,19 @@ void KNNntpClient::doLoadGroups()
 void KNNntpClient::doFetchGroups()
 {
   KNGroupListData *target = static_cast<KNGroupListData *>(job->data());
-	
+  
   sendSignal(TSdownloadGrouplist);
   errorPrefix = i18n("The group list could not be retrieved.\nThe following error occured:\n");
-	
+  
   progressValue = 100;
   predictedLines = 30000;     // rule of thumb ;-)
-	
+  
   if (!sendCommandWCheck("LIST",215))       // 215 list of newsgroups follows
     return;
-  	
+    
   char *s, *line;
   QStrList tmpList;
-	
+  
   while (getNextLine()) {
     line = getCurrentLine();
     if (line[0]=='.') {
@@ -106,12 +106,12 @@ void KNNntpClient::doFetchGroups()
       tmpList.append(line);
     }
     doneLines++;
-	}
+  }
   if (!job->success() || job->canceled())
     return;     // stopped...
 
-	if (target->getDescriptions) {
-	  errorPrefix = i18n("The group descriptions could not be retrieved.\nThe following error occured:\n");
+  if (target->getDescriptions) {
+    errorPrefix = i18n("The group descriptions could not be retrieved.\nThe following error occured:\n");
     progressValue = 100;
     doneLines = 0;
     predictedLines = tmpList.count();
@@ -120,7 +120,7 @@ void KNNntpClient::doFetchGroups()
     sendSignal(TSprogressUpdate);
 
     if (!sendCommandWCheck("LIST NEWSGROUPS",215))       // 215 informations follows
-      return;	
+      return; 
 
     while (getNextLine()) {
       line = getCurrentLine();
@@ -152,11 +152,11 @@ void KNNntpClient::doFetchGroups()
     }
     if (!job->success() || job->canceled())
       return;     // stopped...
-	}
-	
+  }
+  
   // now add all remaining groups in tmpList (those without description)
-		
-	while ((line=tmpList.getFirst())) {
+    
+  while ((line=tmpList.getFirst())) {
 
     if (target->subscribed.contains(line)) {
       target->subscribed.remove(line);    // group names are unique, we wont find it again anyway...
@@ -180,19 +180,19 @@ void KNNntpClient::doFetchGroups()
 void KNNntpClient::doCheckNewGroups()
 {
   KNGroupListData *target = static_cast<KNGroupListData *>(job->data());
-	
+  
   sendSignal(TSdownloadNewGroups);
   errorPrefix = i18n("New groups could not be retrieved.\nThe following error occured:\n");
-	
+  
   progressValue = 100;
   predictedLines = 30;     // rule of thumb ;-)
-	
+  
   QCString cmd;
   cmd.sprintf("NEWGROUPS %.2d%.2d%.2d 000000",target->fetchSince.year()%100,target->fetchSince.month(),target->fetchSince.day());
   if (!sendCommandWCheck(cmd,231))      // 231 list of new newsgroups follows
     return;
 
-  QStrList tmpList;			
+  QStrList tmpList;     
   char *s, *line;
 
   while (getNextLine()) {
@@ -211,15 +211,15 @@ void KNNntpClient::doCheckNewGroups()
       tmpList.append(line);
     }
     doneLines++;
-	}
-	if (!job->success() || job->canceled())
+  }
+  if (!job->success() || job->canceled())
     return;     // stopped...
 
-	QSortedList<KNGroupInfo> tempList;
-	tempList.setAutoDelete(true);
-	
-	if (target->getDescriptions) {
-	  errorPrefix = i18n("The group descriptions could not be retrieved.\nThe following error occured:\n");
+  QSortedList<KNGroupInfo> tempList;
+  tempList.setAutoDelete(true);
+  
+  if (target->getDescriptions) {
+    errorPrefix = i18n("The group descriptions could not be retrieved.\nThe following error occured:\n");
     progressValue = 100;
     doneLines = 0;
     predictedLines = tmpList.count()*3;
@@ -274,122 +274,122 @@ void KNNntpClient::doCheckNewGroups()
 
 void KNNntpClient::doFetchNewHeaders()
 {
-	KNGroup* target=static_cast<KNGroup*>(job->data());
-	char* s;
-	int first, last, oldlast, toFetch;
-	QCString cmd;
-	
-	sendSignal(TSdownloadNew);
-	errorPrefix=i18n("No new articles could have been retrieved!\nThe following error ocurred:\n");
-	
-	cmd="GROUP ";
-	cmd+=target->groupname();
-	if (!sendCommandWCheck(cmd,211))       // 211 n f l s group selected
-		return;
-		
-  progressValue = 90;	
-		
-	s = strchr(getCurrentLine(),' ');	
-	if (s) {
-	  s++;
-		s = strchr(s,' ');	
-	}
-	if (s) {
-	  s++;
-		first=atoi(s);
-		s = strchr(s,' ');
-	}
-	if (s) {
-		last=atoi(s);
-	} else {
-		QString tmp=i18n("No new articles could have been retrieved!\nThe server sent a malformated response:\n");
-		tmp+=getCurrentLine();
-		job->setErrorString(tmp);
-		return;
-	}
-	
-	if(target->lastNr()==0) {   //first fetch
-		if(first>0)
-			oldlast=first-1;
-		else
-			oldlast=first;
-	}	else
-		oldlast=target->lastNr();
-		
-	toFetch=last-oldlast;
-	qDebug("last %d  oldlast %d  toFetch %d\n",last,oldlast,toFetch);
-		
-	if(toFetch==0) {
-		qDebug("No new Articles in group\n");
-		return;
-	}
-	
-	if(toFetch>target->maxFetch()) {
-		toFetch=target->maxFetch();
-		qDebug("Fetching only %d articles\n",toFetch);
-	}
+  KNGroup* target=static_cast<KNGroup*>(job->data());
+  char* s;
+  int first, last, oldlast, toFetch;
+  QCString cmd;
+  
+  sendSignal(TSdownloadNew);
+  errorPrefix=i18n("No new articles could have been retrieved!\nThe following error ocurred:\n");
+  
+  cmd="GROUP ";
+  cmd+=target->groupname();
+  if (!sendCommandWCheck(cmd,211))       // 211 n f l s group selected
+    return;
+    
+  progressValue = 90; 
+    
+  s = strchr(getCurrentLine(),' '); 
+  if (s) {
+    s++;
+    s = strchr(s,' ');  
+  }
+  if (s) {
+    s++;
+    first=atoi(s);
+    s = strchr(s,' ');
+  }
+  if (s) {
+    last=atoi(s);
+  } else {
+    QString tmp=i18n("No new articles could have been retrieved!\nThe server sent a malformated response:\n");
+    tmp+=getCurrentLine();
+    job->setErrorString(tmp);
+    return;
+  }
+  
+  if(target->lastNr()==0) {   //first fetch
+    if(first>0)
+      oldlast=first-1;
+    else
+      oldlast=first;
+  } else
+    oldlast=target->lastNr();
+    
+  toFetch=last-oldlast;
+  qDebug("last %d  oldlast %d  toFetch %d\n",last,oldlast,toFetch);
+    
+  if(toFetch==0) {
+    qDebug("No new Articles in group\n");
+    return;
+  }
+  
+  if(toFetch>target->maxFetch()) {
+    toFetch=target->maxFetch();
+    qDebug("Fetching only %d articles\n",toFetch);
+  }
 
-  progressValue = 100;	
- 	predictedLines = toFetch;
-		
-	qDebug("KNNntpClient::doFetchNewHeaders() : xover %d-%d", last-toFetch+1, last);
-	cmd.sprintf("xover %d-%d",last-toFetch+1,last);
-	if (!sendCommandWCheck(cmd,224))       // 224 success
-		return;
-  	
-	QStrList headers;
-	if (!getMsg(headers))
-		return;
-	
-	progressValue = 1000;		
+  progressValue = 100;  
+  predictedLines = toFetch;
+    
+  qDebug("KNNntpClient::doFetchNewHeaders() : xover %d-%d", last-toFetch+1, last);
+  cmd.sprintf("xover %d-%d",last-toFetch+1,last);
+  if (!sendCommandWCheck(cmd,224))       // 224 success
+    return;
+    
+  QStrList headers;
+  if (!getMsg(headers))
+    return;
+  
+  progressValue = 1000;   
   sendSignal(TSprogressUpdate);
-  	
-	sendSignal(TSsortNew);
-	target->insortNewHeaders(&headers);
-	target->setLastNr(last);
+    
+  sendSignal(TSsortNew);
+  target->insortNewHeaders(&headers);
+  target->setLastNr(last);
 }
 
 
 void KNNntpClient::doFetchArticle()
 {
-	KNFetchArticle *target = static_cast<KNFetchArticle*>(job->data());
-	
-	sendSignal(TSdownloadArticle);
-	errorPrefix = i18n("Article could not been retrieved.\nThe following error occured:\n");
+  KNFetchArticle *target = static_cast<KNFetchArticle*>(job->data());
+  
+  sendSignal(TSdownloadArticle);
+  errorPrefix = i18n("Article could not been retrieved.\nThe following error occured:\n");
 
-	progressValue = 100;
-	predictedLines = target->lines()+10;
-		
-	QCString cmd = "ARTICLE " + target->messageId();
-	if (!sendCommandWCheck(cmd,220))       // 220 n <a> article retrieved - head and body follow
-		return;
-	
-	QStrList msg;
-	if (!getMsg(msg))
-		return;
-		
-	progressValue = 1000;		
+  progressValue = 100;
+  predictedLines = target->lines()+10;
+    
+  QCString cmd = "ARTICLE " + target->messageId();
+  if (!sendCommandWCheck(cmd,220))       // 220 n <a> article retrieved - head and body follow
+    return;
+  
+  QStrList msg;
+  if (!getMsg(msg))
+    return;
+    
+  progressValue = 1000;   
   sendSignal(TSprogressUpdate);
-		
+    
   target->setData(&msg,false);
-	target->parse();
+  target->parse();
 }
 
 
 void KNNntpClient::doPostArticle()
 {
-	KNSavedArticle *art = static_cast<KNSavedArticle*>(job->data());
-	
-	sendSignal(TSsendArticle);	
-	
-	if (!sendCommandWCheck("POST",340))       // 340 send article to be posted. End with <CR-LF>.<CR-LF>
-		return;
+  KNSavedArticle *art = static_cast<KNSavedArticle*>(job->data());
+  
+  sendSignal(TSsendArticle);  
+  
+  if (!sendCommandWCheck("POST",340))       // 340 send article to be posted. End with <CR-LF>.<CR-LF>
+    return;
 
-	if (!sendMsg(art->encodedData()))
-		return;
-		
-	if (!checkNextResponse(240))           	// 240 article posted ok
-		return;
+  if (!sendMsg(art->encodedData()))
+    return;
+    
+  if (!checkNextResponse(240))            // 240 article posted ok
+    return;
 }
 
 
@@ -398,24 +398,24 @@ bool KNNntpClient::openConnection()
   QString oldPrefix = errorPrefix;
   errorPrefix=i18n("Unable to connect.\nThe following error ocurred:\n");
 
-	if (!KNProtocolClient::openConnection())
-		return false;
-		
-	progressValue = 30;
-		
-	int rep;
-	if (!getNextResponse(rep))
-		return false;
-		
-	if ((rep!=200)&&(rep!=201)) {  // 200 server ready - posting allowed
-	  handleErrors();              // 201 server ready - no posting allowed
-	  return false;
-	}
-	
-	progressValue = 50;
+  if (!KNProtocolClient::openConnection())
+    return false;
+    
+  progressValue = 30;
+    
+  int rep;
+  if (!getNextResponse(rep))
+    return false;
+    
+  if ((rep!=200)&&(rep!=201)) {  // 200 server ready - posting allowed
+    handleErrors();              // 201 server ready - no posting allowed
+    return false;
+  }
+  
+  progressValue = 50;
 
-	if (!sendCommand("MODE READER",rep))
-		return false;
+  if (!sendCommand("MODE READER",rep))
+    return false;
 
   if (rep==500) {
     qDebug("\"MODE READER\" command not recognized.");
@@ -424,62 +424,62 @@ bool KNNntpClient::openConnection()
       handleErrors();             // 201 Hello, you can't post
       return false;
     }
-	
-	progressValue = 70;
-	
-	errorPrefix = oldPrefix;
-	return true;
+  
+  progressValue = 70;
+  
+  errorPrefix = oldPrefix;
+  return true;
 }
 
 
 // authentication on demand
 bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
 {
-	if (!KNProtocolClient::sendCommand(cmd,rep))
-		return false;
-	
-	if (rep==480) {            // 480 requesting authorization
-		qDebug("Authorization requested");
-		
-		if (!account.user().length()) {
-			job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
-			return false;
-		}
+  if (!KNProtocolClient::sendCommand(cmd,rep))
+    return false;
+  
+  if (rep==480) {            // 480 requesting authorization
+    qDebug("Authorization requested");
+    
+    if (!account.user().length()) {
+      job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
+      return false;
+    }
 
-		qDebug("user: %s",account.user().data());
-				
-		QCString command = "AUTHINFO USER ";
-		command += account.user();
-		if (!KNProtocolClient::sendCommand(command,rep))
-			return false;
-		
-		if (rep==381) {          // 381 PASS required
-			qDebug("Password required");
-			
-			if (!account.pass().length()) {
-				job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
-				return false;
-			}	
-					
-			qDebug("pass: %s",account.pass().data());
-			
-			command = "AUTHINFO PASS ";
-			command += account.pass();
-			if (!KNProtocolClient::sendCommand(command,rep))
-				return false;	
-		}
-		
-		if (rep==281) {         // 281 authorization success
-			qDebug("Authorization successful");			
-			if (!KNProtocolClient::sendCommand(cmd,rep))    // retry the original command
-				return false;
-		} else {
-			qDebug("Authorization failed");
-			handleErrors();
-			return false;
-		}
-	}
-	return true;			
+    qDebug("user: %s",account.user().data());
+        
+    QCString command = "AUTHINFO USER ";
+    command += account.user();
+    if (!KNProtocolClient::sendCommand(command,rep))
+      return false;
+    
+    if (rep==381) {          // 381 PASS required
+      qDebug("Password required");
+      
+      if (!account.pass().length()) {
+        job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
+        return false;
+      } 
+          
+      qDebug("pass: %s",account.pass().data());
+      
+      command = "AUTHINFO PASS ";
+      command += account.pass();
+      if (!KNProtocolClient::sendCommand(command,rep))
+        return false; 
+    }
+    
+    if (rep==281) {         // 281 authorization success
+      qDebug("Authorization successful");     
+      if (!KNProtocolClient::sendCommand(cmd,rep))    // retry the original command
+        return false;
+    } else {
+      qDebug("Authorization failed");
+      handleErrors();
+      return false;
+    }
+  }
+  return true;      
 }
 
 

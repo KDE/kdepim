@@ -36,25 +36,25 @@ static char chars[] = "0123456789abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUV
 
 QCString KNArticleBase::uniqueString()
 {
-	time_t now;
-	QCString ret;
-	char p[11];
-	int pos, ran;
-	unsigned int timeval;
-	
-	p[10]='\0';
-	now=time(0);
-	ran=1+(int) (1000.0*rand()/(RAND_MAX+1.0));
-	timeval=(now/ran)+getpid();
-	
-	for(int i=0; i<10; i++){
-		pos=(int) (61.0*rand()/(RAND_MAX+1.0));
-		//qDebug("%d", pos);
-		p[i]=chars[pos];
-	}
-	ret.sprintf("%d.%s", timeval, p);
-	
-	return ret;	
+  time_t now;
+  QCString ret;
+  char p[11];
+  int pos, ran;
+  unsigned int timeval;
+  
+  p[10]='\0';
+  now=time(0);
+  ran=1+(int) (1000.0*rand()/(RAND_MAX+1.0));
+  timeval=(now/ran)+getpid();
+  
+  for(int i=0; i<10; i++){
+    pos=(int) (61.0*rand()/(RAND_MAX+1.0));
+    //qDebug("%d", pos);
+    p[i]=chars[pos];
+  }
+  ret.sprintf("%d.%s", timeval, p);
+  
+  return ret; 
 }
 
 
@@ -161,7 +161,7 @@ QCString KNArticleBase::decodeRFC1522String(const QCString aStr)
       // get encoding and check delimiting question marks
       encoding = toupper(pos[1]);
       if (pos[2]!='?' || (encoding!='Q' && encoding!='B'))
-      	valid = FALSE;
+        valid = FALSE;
       pos+=3;
       i+=3;
     }
@@ -171,8 +171,8 @@ QCString KNArticleBase::decodeRFC1522String(const QCString aStr)
       // search for end of encoded part
       while (i<maxLen && *pos && !(*pos=='?' && *(pos+1)=='='))
       {
-      	i++;
-      	pos++;
+        i++;
+        pos++;
       }
       end = pos+2;//end now points to the first char after the encoded string
       if (i>=maxLen || !*pos) valid = FALSE;
@@ -184,19 +184,19 @@ QCString KNArticleBase::decodeRFC1522String(const QCString aStr)
       str = QCString(mid, (int)(mid - pos - 1));
       if (encoding == 'Q')
       {
-      	// decode quoted printable text
-      	for (i=str.length()-1; i>=0; i--)
-      	  if (str[i]=='_') str[i]=' ';
-          	str = decodeQuotedPrintable(str);
+        // decode quoted printable text
+        for (i=str.length()-1; i>=0; i--)
+          if (str[i]=='_') str[i]=' ';
+            str = decodeQuotedPrintable(str);
       }
       else
       {
-       	// decode base64 text
-      	str = decodeBase64(str);
+        // decode base64 text
+        str = decodeBase64(str);
       }
       *pos = ch;
       for (i=0; str[i]; i++)
-    	*dest++ = str[i];
+      *dest++ = str[i];
 
       pos = end -1;
     }
@@ -217,96 +217,96 @@ QCString KNArticleBase::decodeRFC1522String(const QCString aStr)
 
 QCString KNArticleBase::encodeRFC1522String(const QCString aStr)
 {
-	QCString result, tmp, chset;
-	bool usascii, isFirst;
-	KNStringSplitter split;
-	
-	split.init(aStr, " ");
-	
-	isFirst=true;
-	
-	/*lobal::config()->setGroup("POSTNEWS");
-	chset=KGlobal::config()->readEntry("Charset", "ISO-8859-1").upper().local8Bit();*/
-	if(defaultChSet=="US-ASCII") chset="ISO-8859-1";
-	else chset=defaultChSet;
-	
-	if(!split.first()) tmp=aStr;
-	else tmp=split.string();
-	
-	while(1) {
-	
-	  usascii=true;
-	  	
-		for(unsigned int i=0; i<tmp.length(); i++)
-			if(tmp[i]<0) {
-				usascii=false;
-				break;
-			}
-		
-		if(!isFirst) result+=" ";
-					
-		if(!usascii) {
-			
-			result+="=?"+chset+"?Q?"+encodeQuotedPrintable(tmp)+="?=";
-		}
-		else result+=tmp;
-		
-		isFirst=false;
-		
-		if(split.next()) tmp=split.string();
-		else break;
-		
-	}
-	
-	
-	return result;		
+  QCString result, tmp, chset;
+  bool usascii, isFirst;
+  KNStringSplitter split;
+  
+  split.init(aStr, " ");
+  
+  isFirst=true;
+  
+  /*lobal::config()->setGroup("POSTNEWS");
+  chset=KGlobal::config()->readEntry("Charset", "ISO-8859-1").upper().local8Bit();*/
+  if(defaultChSet=="US-ASCII") chset="ISO-8859-1";
+  else chset=defaultChSet;
+  
+  if(!split.first()) tmp=aStr;
+  else tmp=split.string();
+  
+  while(1) {
+  
+    usascii=true;
+      
+    for(unsigned int i=0; i<tmp.length(); i++)
+      if(tmp[i]<0) {
+        usascii=false;
+        break;
+      }
+    
+    if(!isFirst) result+=" ";
+          
+    if(!usascii) {
+      
+      result+="=?"+chset+"?Q?"+encodeQuotedPrintable(tmp)+="?=";
+    }
+    else result+=tmp;
+    
+    isFirst=false;
+    
+    if(split.next()) tmp=split.string();
+    else break;
+    
+  }
+  
+  
+  return result;    
 }
 
 
 
 bool KNArticleBase::stripCRLF(char *str)
 {
-	int pos=strlen(str)-1;
-	while(str[pos]!='\n' && pos>0) pos--;
-	if(pos>0) {
-		str[pos--]='\0';
-		if(str[pos]=='\r') str[pos]='\0';
-		return true;
-	}
-	else return false;
+  int pos=strlen(str)-1;
+  while(str[pos]!='\n' && pos>0) pos--;
+  if(pos>0) {
+    str[pos--]='\0';
+    if(str[pos]=='\r') str[pos]='\0';
+    return true;
+  }
+  else return false;
 }
 
 
 
 void KNArticleBase::removeQuots(QCString &str)
 {
-	/*int pos1=0, pos2=0;
-	unsigned int idx=0;
-	char firstChar, lastChar;
-		
-	do {
-		pos1=idx;
-		firstChar=str[idx++];
-	} while(firstChar==' ' && idx<str.length());
-		
-	idx=str.length();
-		
-	do {
-		lastChar=str[--idx];
-		pos2=idx-1;
-	} while(lastChar==' ' && idx>0);
-		
-	if(firstChar=='"' && lastChar=='"') {
-		str.remove(pos1,1);
-		str.remove(pos2,1);
-	}*/
-	
-	int pos1=0, pos2=0;
-	
-	if((pos1=str.find('"'))!=-1)
-	  if((pos2=str.findRev('"'))!=-1)
-	    if(pos1<pos2)
-	      str=str.mid(pos1+1, pos2-pos1-1);
+  /*int pos1=0, pos2=0;
+  unsigned int idx=0;
+  char firstChar, lastChar;
+    
+  do {
+    pos1=idx;
+    firstChar=str[idx++];
+  } while(firstChar==' ' && idx<str.length());
+    
+  idx=str.length();
+    
+  do {
+    lastChar=str[--idx];
+    pos2=idx-1;
+  } while(lastChar==' ' && idx>0);
+    
+  if(firstChar=='"' && lastChar=='"') {
+    str.remove(pos1,1);
+    str.remove(pos2,1);
+  }*/
+  
+  int pos1=0, pos2=0;
+  
+  if((pos1=str.find('"'))!=-1)
+    if((pos2=str.findRev('"'))!=-1)
+      if(pos1<pos2)
+        str=str.mid(pos1+1, pos2-pos1-1);
 }
 
 
@@ -334,78 +334,78 @@ KNArticleBase::articleStatus KNArticleBase::stringToArticleStatus(const char *s)
 {
   articleStatus ret;
   if(strcasecmp(s, "toPost")==0)        ret=AStoPost;
-	else if(strcasecmp(s, "toMail")==0)   ret=AStoMail;
-	else if(strcasecmp(s,"posted")==0)    ret=ASposted;
-	else if(strcasecmp(s,"mailed")==0)    ret=ASmailed;
-	else if(strcasecmp(s,"canceled")==0)  ret=AScanceled;
-	else                                  ret=ASsaved;
-	
-	return ret;
+  else if(strcasecmp(s, "toMail")==0)   ret=AStoMail;
+  else if(strcasecmp(s,"posted")==0)    ret=ASposted;
+  else if(strcasecmp(s,"mailed")==0)    ret=ASmailed;
+  else if(strcasecmp(s,"canceled")==0)  ret=AScanceled;
+  else                                  ret=ASsaved;
+  
+  return ret;
 }
 
 
 
 QCString KNArticleBase::headerTypeToString(headerType t)
 {
-	QCString s;
-	
-	switch(t) {
-		case HTmessageId: 		s="Message-ID";                 break;
-		case HTfrom:					s="From";                       break;
-		case HTsubject:				s="Subject";                    break;
-		case HTcontrol:				s="Control";                    break;
-		case HTto:						s="To";                         break;
-		case HTnewsgroups:		s="Newsgroups";                 break;
-		case HTfup2:					s="Followup-To";                break;
-		case HTreplyTo:				s="Reply-To";                   break;
-		case HTdate:          s="Date";                       break;
-		case HTreferences:		s="References";                 break;
-		case HTlines:         s="Lines";                      break;
-		case HTorga:         	s="Organization";               break;
-		case HTmimeVersion:   s="Mime-Version";               break;
-		case HTcontentType:   s="Content-Type";               break;
-		case HTencoding:      s="Content-Transfer-Encoding";  break;
-		case HTdescription:   s="Content-Description";        break;
-		case HTdisposition:   s="Content-Disposition";        break;
-		case HTuserAgent:   	s="User-Agent";                 break;
-		case HTxknstatus:     s="X-KNode-Status";             break;
-		case HTxkntempfile:   s="X-KNode-Tempfile";           break;
-		case HTsupersedes:    s="Supersedes";                 break;		
-		default:              s="X-Unknown";                  break;
-	}
-	return s;
+  QCString s;
+  
+  switch(t) {
+    case HTmessageId:     s="Message-ID";                 break;
+    case HTfrom:          s="From";                       break;
+    case HTsubject:       s="Subject";                    break;
+    case HTcontrol:       s="Control";                    break;
+    case HTto:            s="To";                         break;
+    case HTnewsgroups:    s="Newsgroups";                 break;
+    case HTfup2:          s="Followup-To";                break;
+    case HTreplyTo:       s="Reply-To";                   break;
+    case HTdate:          s="Date";                       break;
+    case HTreferences:    s="References";                 break;
+    case HTlines:         s="Lines";                      break;
+    case HTorga:          s="Organization";               break;
+    case HTmimeVersion:   s="Mime-Version";               break;
+    case HTcontentType:   s="Content-Type";               break;
+    case HTencoding:      s="Content-Transfer-Encoding";  break;
+    case HTdescription:   s="Content-Description";        break;
+    case HTdisposition:   s="Content-Disposition";        break;
+    case HTuserAgent:     s="User-Agent";                 break;
+    case HTxknstatus:     s="X-KNode-Status";             break;
+    case HTxkntempfile:   s="X-KNode-Tempfile";           break;
+    case HTsupersedes:    s="Supersedes";                 break;    
+    default:              s="X-Unknown";                  break;
+  }
+  return s;
 }
 
 
 
 KNArticleBase::headerType KNArticleBase::stringToHeaderType(const char *s)
 {
-	headerType t;
-	
-	if(strncasecmp(s, "Message-ID", 10)==0) 												t=HTmessageId;
-	else if(strncasecmp(s, "From", 4)==0) 													t=HTfrom;
-	else if(strncasecmp(s, "Subject", 7)==0)                        t=HTsubject;
-	else if(strncasecmp(s, "Control", 7)==0)                        t=HTcontrol;
-	else if(strncasecmp(s, "To", 2)==0)                             t=HTto;
-	else if(strncasecmp(s, "Newsgroups", 10)==0)                    t=HTnewsgroups;
-	else if(strncasecmp(s, "Followup-To", 11)==0)                   t=HTfup2;
-	else if(strncasecmp(s, "Reply-To", 8)==0)                   		t=HTreplyTo;
-	else if(strncasecmp(s, "Date", 4)==0)                           t=HTdate;
-	else if(strncasecmp(s, "References", 10)==0)                    t=HTreferences;
-	else if(strncasecmp(s, "Lines", 5)==0)                          t=HTlines;
-	else if(strncasecmp(s, "Organization", 12)==0)									t=HTorga;
-	else if(strncasecmp(s, "Mime-Version", 12)==0)                  t=HTmimeVersion;
-	else if(strncasecmp(s, "Content-Type", 12)==0)                  t=HTcontentType;
-	else if(strncasecmp(s, "Content-Transfer-Encoding", 25)==0)     t=HTencoding;
-	else if(strncasecmp(s, "Content-Description", 19)==0)           t=HTdescription;
-	else if(strncasecmp(s, "Content-Disposition", 19)==0)           t=HTdisposition;
-	else if(strncasecmp(s, "User-Agent", 10)==0)                    t=HTuserAgent;
-	else if(strncasecmp(s, "X-KNode-Status", 14)==0)                t=HTxknstatus;
-	else if(strncasecmp(s, "X-KNode-Tempfile", 16)==0)              t=HTxkntempfile;
-  else if(strncasecmp(s, "Supersedes", 10)==0)                    t=HTsupersedes;	
-	else                                                            t=HTunknown;
-	
-	return t;
+  headerType t;
+  
+  if(strncasecmp(s, "Message-ID", 10)==0)                         t=HTmessageId;
+  else if(strncasecmp(s, "From", 4)==0)                           t=HTfrom;
+  else if(strncasecmp(s, "Subject", 7)==0)                        t=HTsubject;
+  else if(strncasecmp(s, "Control", 7)==0)                        t=HTcontrol;
+  else if(strncasecmp(s, "To", 2)==0)                             t=HTto;
+  else if(strncasecmp(s, "Newsgroups", 10)==0)                    t=HTnewsgroups;
+  else if(strncasecmp(s, "Followup-To", 11)==0)                   t=HTfup2;
+  else if(strncasecmp(s, "Reply-To", 8)==0)                       t=HTreplyTo;
+  else if(strncasecmp(s, "Date", 4)==0)                           t=HTdate;
+  else if(strncasecmp(s, "References", 10)==0)                    t=HTreferences;
+  else if(strncasecmp(s, "Lines", 5)==0)                          t=HTlines;
+  else if(strncasecmp(s, "Organization", 12)==0)                  t=HTorga;
+  else if(strncasecmp(s, "Mime-Version", 12)==0)                  t=HTmimeVersion;
+  else if(strncasecmp(s, "Content-Type", 12)==0)                  t=HTcontentType;
+  else if(strncasecmp(s, "Content-Transfer-Encoding", 25)==0)     t=HTencoding;
+  else if(strncasecmp(s, "Content-Description", 19)==0)           t=HTdescription;
+  else if(strncasecmp(s, "Content-Disposition", 19)==0)           t=HTdisposition;
+  else if(strncasecmp(s, "User-Agent", 10)==0)                    t=HTuserAgent;
+  else if(strncasecmp(s, "X-KNode-Status", 14)==0)                t=HTxknstatus;
+  else if(strncasecmp(s, "X-KNode-Tempfile", 16)==0)              t=HTxkntempfile;
+  else if(strncasecmp(s, "Supersedes", 10)==0)                    t=HTsupersedes; 
+  else                                                            t=HTunknown;
+  
+  return t;
 }
 
 
@@ -449,17 +449,17 @@ KNArticleBase::encoding KNArticleBase::stringToEncoding(const char *s)
 
 KNArticleBase::FromLineParser::FromLineParser(const QCString &fLine)
 {
-	src=fLine.stripWhiteSpace();
-	is_broken=false;
+  src=fLine.stripWhiteSpace();
+  is_broken=false;
 }
 
 
 
 KNArticleBase::FromLineParser::FromLineParser(const char *fLine)
 {
-	src=fLine;
-	src=src.stripWhiteSpace();
-	is_broken=false;
+  src=fLine;
+  src=src.stripWhiteSpace();
+  is_broken=false;
 }
 
 
@@ -472,77 +472,77 @@ KNArticleBase::FromLineParser::~FromLineParser()
 
 void KNArticleBase::FromLineParser::parse()
 {
-	int pos1=0, pos2=0, type=0, idx;
-	QRegExp 	t0("*@*", false, true),
-						t1("*<*@*>", false, true),
-						t2("*@*(*)", false, true);
-	
-	idx=src.length();
-	
-	
-	if(src.find(t2)!=-1) type=2;
-	else if(src.find(t1)!=-1) type=1;
-	else if(src.find(t0)!=-1) type=0;
-	else {
-		is_broken=true;
-		return;
-	}
-	
-	
-	switch(type) {
-	
-		case 0:
-			e_mail=src.copy();
-		break;
-		
-		case 1:
-			pos1=0;
-			pos2=src.find('<');
-			if(pos2!=-1) {
-				f_rom=decodeRFC1522String(src.mid(pos1, pos2-pos1)).stripWhiteSpace();
-				pos1=pos2+1;
-				pos2=src.find('>', pos1);
-				if(pos2==-1) is_broken=true;
-				else e_mail=src.mid(pos1, pos2-pos1);
-			}
-			else is_broken=true;
-		break;
-		
-		case 2:
-			pos1=0;
-			pos2=src.find('(');
-			if(pos2!=-1) {
-				e_mail=src.mid(pos1, pos2-pos1).stripWhiteSpace();
-				pos1=pos2+1;
-				pos2=src.find(')', pos1);
-				if(pos2==-1) is_broken=true;
-				else f_rom=decodeRFC1522String(src.mid(pos1, pos2-pos1));
-			}
-			else is_broken=true;
-		break;
-	
-		default: is_broken=true; break;
-	}
-	
-	if(!is_broken && !f_rom.isEmpty()) removeQuots(f_rom);
-	
+  int pos1=0, pos2=0, type=0, idx;
+  QRegExp   t0("*@*", false, true),
+            t1("*<*@*>", false, true),
+            t2("*@*(*)", false, true);
+  
+  idx=src.length();
+  
+  
+  if(src.find(t2)!=-1) type=2;
+  else if(src.find(t1)!=-1) type=1;
+  else if(src.find(t0)!=-1) type=0;
+  else {
+    is_broken=true;
+    return;
+  }
+  
+  
+  switch(type) {
+  
+    case 0:
+      e_mail=src.copy();
+    break;
+    
+    case 1:
+      pos1=0;
+      pos2=src.find('<');
+      if(pos2!=-1) {
+        f_rom=decodeRFC1522String(src.mid(pos1, pos2-pos1)).stripWhiteSpace();
+        pos1=pos2+1;
+        pos2=src.find('>', pos1);
+        if(pos2==-1) is_broken=true;
+        else e_mail=src.mid(pos1, pos2-pos1);
+      }
+      else is_broken=true;
+    break;
+    
+    case 2:
+      pos1=0;
+      pos2=src.find('(');
+      if(pos2!=-1) {
+        e_mail=src.mid(pos1, pos2-pos1).stripWhiteSpace();
+        pos1=pos2+1;
+        pos2=src.find(')', pos1);
+        if(pos2==-1) is_broken=true;
+        else f_rom=decodeRFC1522String(src.mid(pos1, pos2-pos1));
+      }
+      else is_broken=true;
+    break;
+  
+    default: is_broken=true; break;
+  }
+  
+  if(!is_broken && !f_rom.isEmpty()) removeQuots(f_rom);
+  
 }
 
 
 
 bool KNArticleBase::FromLineParser::hasValidEmail()
 {
-	static QRegExp match("*@*", true, true);
-	
-	return (e_mail.find(match)!=-1);
-	
+  static QRegExp match("*@*", true, true);
+  
+  return (e_mail.find(match)!=-1);
+  
 }
 
 
 
 bool KNArticleBase::FromLineParser::hasValidFrom()
 {
-	return (!f_rom.isEmpty());
+  return (!f_rom.isEmpty());
 }
 
 
@@ -553,11 +553,11 @@ bool KNArticleBase::FromLineParser::hasValidFrom()
 
 KNArticleBase::MultiPartParser::MultiPartParser(QStrList *l, const QCString &b)
 {
-	src=l;
-	startBoundary="--"+b;
-	endBoundary="--"+b+"--";
-	p_art=0;
-	pos=0;
+  src=l;
+  startBoundary="--"+b;
+  endBoundary="--"+b+"--";
+  p_art=0;
+  pos=0;
 }
 
 
@@ -567,51 +567,51 @@ KNArticleBase::MultiPartParser::~MultiPartParser()
 }
 
 
-			
+      
 QStrList* KNArticleBase::MultiPartParser::nextPart()
 {
-	p_art=0;
-	
-	if(pos==-1) return 0;
-	
-	char *line=src->at(pos);
-	
-	while(line && !isStartBoundary(line)) line=src->next();
-	if(!line) {
-		pos=-1;
-		return 0;
-	}
-	else line=src->next();
-	
-	if(line) {
-		p_art=new QStrList(false);
-		p_art->setAutoDelete(false);
-		
-		while(line) {
-			if(isStartBoundary(line) || isEndBoundary(line)) break;
-			else {
-				p_art->append(line);
-				line=src->next();
-			}
-		}
-		pos=src->at();
-	}
-	
-	return p_art;
+  p_art=0;
+  
+  if(pos==-1) return 0;
+  
+  char *line=src->at(pos);
+  
+  while(line && !isStartBoundary(line)) line=src->next();
+  if(!line) {
+    pos=-1;
+    return 0;
+  }
+  else line=src->next();
+  
+  if(line) {
+    p_art=new QStrList(false);
+    p_art->setAutoDelete(false);
+    
+    while(line) {
+      if(isStartBoundary(line) || isEndBoundary(line)) break;
+      else {
+        p_art->append(line);
+        line=src->next();
+      }
+    }
+    pos=src->at();
+  }
+  
+  return p_art;
 }
 
 
 
 bool KNArticleBase::MultiPartParser::isStartBoundary(const char *line)
 {
-	return (	(strncmp(startBoundary, line, startBoundary.length())==0)	
-           	&&  (strncmp(endBoundary, line, endBoundary.length())!=0) );
+  return (  (strncmp(startBoundary, line, startBoundary.length())==0) 
+            &&  (strncmp(endBoundary, line, endBoundary.length())!=0) );
 }
 
 
 bool KNArticleBase::MultiPartParser::isEndBoundary(const char *line)
 {
-	return (strncmp(endBoundary, line, endBoundary.length())==0);
+  return (strncmp(endBoundary, line, endBoundary.length())==0);
 }
 
 
@@ -630,35 +630,35 @@ KNArticleBase::UUParser::UUParser(QStrList *l, const QCString &s) :
 
 KNArticleBase::UUParser::~UUParser()
 {
-	delete text;
-	delete bin;
+  delete text;
+  delete bin;
 }
 
 
 
 void KNArticleBase::UUParser::parse()
 {
-	int beginPos=-1, endPos=-1, end=0, pos=0, len=0;
-	char *line;
-	int MCnt=0, lineCnt=0, pos1=0;
-	QCString tmp;
-	QRegExp begin("begin [0-9][0-9][0-9] *");
-	
-	for(line=src->first(); line; line=src->next()) {
-		lineCnt++;
-		if(line[0]=='M') MCnt++;
-		if(beginPos==-1 && strncasecmp("begin", line, 5)==0 && begin.match(QString(line))!=-1) {
-			beginPos=src->at();
-			fName=&line[10];
-			MCnt=0;
-			lineCnt=0;
-		}
-		else if(endPos==-1 && strcasecmp("end", line)==0) {
-		  endPos=src->at();
-		  break;
-		}
+  int beginPos=-1, endPos=-1, end=0, pos=0, len=0;
+  char *line;
+  int MCnt=0, lineCnt=0, pos1=0;
+  QCString tmp;
+  QRegExp begin("begin [0-9][0-9][0-9] *");
+  
+  for(line=src->first(); line; line=src->next()) {
+    lineCnt++;
+    if(line[0]=='M') MCnt++;
+    if(beginPos==-1 && strncasecmp("begin", line, 5)==0 && begin.match(QString(line))!=-1) {
+      beginPos=src->at();
+      fName=&line[10];
+      MCnt=0;
+      lineCnt=0;
+    }
+    else if(endPos==-1 && strcasecmp("end", line)==0) {
+      endPos=src->at();
+      break;
+    }
   }
-	
+  
   if((lineCnt-MCnt)>5) return;
 
   if(beginPos==-1 || endPos==-1 && subject) {
@@ -671,11 +671,11 @@ void KNArticleBase::UUParser::parse()
       totalNr=tmp.right(tmp.length()-pos-1).toInt();
     }
     return;
-  }	
+  } 
 
-	if(beginPos!=-1) {
-	  if(beginPos!=0) {
-	    text=new QStrList(false);
+  if(beginPos!=-1) {
+    if(beginPos!=0) {
+      text=new QStrList(false);
       text->setAutoDelete(false);
       for(int idx=0; idx<beginPos; idx++)
         text->append(src->at(idx));
@@ -685,33 +685,33 @@ void KNArticleBase::UUParser::parse()
     //else end=endPos;
     endPos==-1 ? end=src->count() : end=endPos;
     bin=new QStrList(false);
-	  bin->setAutoDelete(false);
-	  for(int idx=beginPos; idx<end; idx++)
+    bin->setAutoDelete(false);
+    for(int idx=beginPos; idx<end; idx++)
       bin->append(src->at(idx));
 
   }
-	
+  
 
-	
-	/*line=src->next();
-	while(line!=0 && endPos==-1) {
-		lineCnt++;
-		if(strncmp(line, "M", 1)==0) MCnt++;
-		if(strncasecmp(line, "end", 3)==0) endPos=src->at();
-		line=src->next();
-	}	
-	if(beginPos==-1 || endPos==-1 || (lineCnt-MCnt)>5) return;
-	
-	text=new QStrList(false);
+  
+  /*line=src->next();
+  while(line!=0 && endPos==-1) {
+    lineCnt++;
+    if(strncmp(line, "M", 1)==0) MCnt++;
+    if(strncasecmp(line, "end", 3)==0) endPos=src->at();
+    line=src->next();
+  } 
+  if(beginPos==-1 || endPos==-1 || (lineCnt-MCnt)>5) return;
+  
+  text=new QStrList(false);
   text->setAutoDelete(false);
   for(int idx=0; idx<beginPos; idx++)
     text->append(src->at(idx));
 
-	bin=new QStrList(false);
-	bin->setAutoDelete(false);
-	for(int idx=beginPos; idx<=endPos; idx++)
-		bin->append(src->at(idx));*/
-	
+  bin=new QStrList(false);
+  bin->setAutoDelete(false);
+  for(int idx=beginPos; idx<=endPos; idx++)
+    bin->append(src->at(idx));*/
+  
   if(!fName.isEmpty()) {
     pos1=fName.findRev('.');
     if(pos1++ != -1) {

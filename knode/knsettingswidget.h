@@ -23,19 +23,19 @@
 
 
 class KNSettingsWidget : public QWidget  {
-	
-	Q_OBJECT	
+  
+  Q_OBJECT  
 
-	public:
-		KNSettingsWidget(QWidget *parent);
-		virtual ~KNSettingsWidget();
-		
-		virtual void apply() {}
-		
-	protected:
-	
-		virtual void init()  {}		
-		
+  public:
+    KNSettingsWidget(QWidget *parent);
+    virtual ~KNSettingsWidget();
+    
+    virtual void apply() {}
+    
+  protected:
+  
+    virtual void init()  {}   
+    
 };
 
 #endif

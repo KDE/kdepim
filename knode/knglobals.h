@@ -35,7 +35,8 @@ class KNGlobals {
 
   public:
 
-    KNodeApp              *top;
+    QWidget               *topWidget;    // topWidget == top, used for message boxes,
+    KNodeApp              *top;          // no need to include knode.h everywhere
     KNNetAccess           *netAccess;
     KNProgress            *progressBar;
     KNAccountManager      *accManager;

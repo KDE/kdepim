@@ -26,18 +26,18 @@ class KNUserEntry;
 
 
 class KNUserSettings : public KNSettingsWidget  {
-	
-	public:
-		KNUserSettings(QWidget *p);
-		virtual ~KNUserSettings();
-		
-		void apply();
-		
-	protected:
-		void init();	
-		KNUserWidget *uw;
-		KNUserEntry *user;
-		
+  
+  public:
+    KNUserSettings(QWidget *p);
+    virtual ~KNUserSettings();
+    
+    void apply();
+    
+  protected:
+    void init();  
+    KNUserWidget *uw;
+    KNUserEntry *user;
+    
 };
 
 #endif

@@ -31,42 +31,42 @@
 
 KNPostComSettings::KNPostComSettings(QWidget *p) : KNSettingsWidget(p)
 {
-	QGroupBox *ggb=new QGroupBox(i18n("General"), this);
-	QGroupBox *rgb=new QGroupBox(i18n("Reply"), this);
-	QLabel *l1, *l2, *l3;
-	
-	l1=new QLabel(i18n("max length of lines"), ggb);
-	maxLen=new QSpinBox(20, 100, 1, ggb);
-	ownSigCB=new QCheckBox(i18n("append signature automatically"), ggb);
-	fontCB=new QCheckBox(i18n("use same font as in the article-view"), ggb);
-	l2=new QLabel(i18n("Introduction:\n(%NAME=name,%DATE=date,%MSID=msgid)"), rgb);
-	intro=new QLineEdit(rgb);
-	l3=new QLabel(i18n("begin quoted lines with"), rgb);
-	quot=new QLineEdit(rgb);
-	authSigCB=new QCheckBox(i18n("include the authors signature"), rgb);
-		
-	QVBoxLayout *topL=new QVBoxLayout(this, 10);
-	QGridLayout *ggbL=new QGridLayout(ggb, 3,2, 20,10);
-	QGridLayout *rgbL=new QGridLayout(rgb, 4,2, 20,10);
-	
-	topL->addWidget(ggb);
-	topL->addWidget(rgb);
-	topL->addStretch(1);
-	ggbL->addWidget(l1, 0,0);
-	ggbL->addWidget(maxLen, 0,1);
-	ggbL->addWidget(ownSigCB, 1,0);
-	ggbL->addWidget(fontCB, 2,0);
-	ggbL->setColStretch(0,1);
-	rgbL->addMultiCellWidget(l2, 0,0, 0,1);
-	rgbL->addMultiCellWidget(intro, 1,1, 0,1);
-	rgbL->addWidget(l3, 2,0);
-	rgbL->addWidget(quot, 2,1);
-	rgbL->addMultiCellWidget(authSigCB, 3,3, 0,1);
-	rgbL->setColStretch(0,1);
-	topL->setResizeMode(QLayout::Minimum);
-	topL->activate();
-	
-	init();
+  QGroupBox *ggb=new QGroupBox(i18n("General"), this);
+  QGroupBox *rgb=new QGroupBox(i18n("Reply"), this);
+  QLabel *l1, *l2, *l3;
+  
+  l1=new QLabel(i18n("max length of lines"), ggb);
+  maxLen=new QSpinBox(20, 100, 1, ggb);
+  ownSigCB=new QCheckBox(i18n("append signature automatically"), ggb);
+  fontCB=new QCheckBox(i18n("use same font as in the article-view"), ggb);
+  l2=new QLabel(i18n("Introduction:\n(%NAME=name,%DATE=date,%MSID=msgid)"), rgb);
+  intro=new QLineEdit(rgb);
+  l3=new QLabel(i18n("begin quoted lines with"), rgb);
+  quot=new QLineEdit(rgb);
+  authSigCB=new QCheckBox(i18n("include the authors signature"), rgb);
+    
+  QVBoxLayout *topL=new QVBoxLayout(this, 10);
+  QGridLayout *ggbL=new QGridLayout(ggb, 3,2, 20,10);
+  QGridLayout *rgbL=new QGridLayout(rgb, 4,2, 20,10);
+  
+  topL->addWidget(ggb);
+  topL->addWidget(rgb);
+  topL->addStretch(1);
+  ggbL->addWidget(l1, 0,0);
+  ggbL->addWidget(maxLen, 0,1);
+  ggbL->addWidget(ownSigCB, 1,0);
+  ggbL->addWidget(fontCB, 2,0);
+  ggbL->setColStretch(0,1);
+  rgbL->addMultiCellWidget(l2, 0,0, 0,1);
+  rgbL->addMultiCellWidget(intro, 1,1, 0,1);
+  rgbL->addWidget(l3, 2,0);
+  rgbL->addWidget(quot, 2,1);
+  rgbL->addMultiCellWidget(authSigCB, 3,3, 0,1);
+  rgbL->setColStretch(0,1);
+  topL->setResizeMode(QLayout::Minimum);
+  topL->activate();
+  
+  init();
 }
 
 
@@ -79,8 +79,8 @@ KNPostComSettings::~KNPostComSettings()
 
 void KNPostComSettings::init()
 {
-	KConfig *conf=KGlobal::config();
-	conf->setGroup("POSTNEWS");
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("POSTNEWS");
 
   maxLen->setValue(conf->readNumEntry("maxLength", 76));
   ownSigCB->setChecked(conf->readBoolEntry("appSig",true));
@@ -95,13 +95,13 @@ void KNPostComSettings::init()
 
 void KNPostComSettings::apply()
 {
-	KConfig *conf=KGlobal::config();
-	conf->setGroup("POSTNEWS");
-	
-	conf->writeEntry("maxLength", maxLen->value());
-	conf->writeEntry("appSig", ownSigCB->isChecked());
-	conf->writeEntry("useViewFont", fontCB->isChecked());
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("POSTNEWS");
+  
+  conf->writeEntry("maxLength", maxLen->value());
+  conf->writeEntry("appSig", ownSigCB->isChecked());
+  conf->writeEntry("useViewFont", fontCB->isChecked());
   conf->writeEntry("Intro", intro->text());
   conf->writeEntry("QuotSign",quot->text());
-	conf->writeEntry("incSig", authSigCB->isChecked());
+  conf->writeEntry("incSig", authSigCB->isChecked());
 }

@@ -29,23 +29,23 @@ class KNRangeFilterWidget;
 class KNFilterConfigWidget : public QTabWidget  {
 
   Q_OBJECT
-	
+  
   friend class KNFilterDialog;
   friend class KNSearchDialog;
 
-	public:
-		KNFilterConfigWidget(QWidget *parent=0, const char *name=0);
-		~KNFilterConfigWidget();
-		
-		void reset();
-				
-	protected:
-		KNStatusFilterWidget *status;
-		KNStringFilterWidget *subject;
-		KNStringFilterWidget *from;
-		KNRangeFilterWidget *age;
-		KNRangeFilterWidget *lines;
-		KNRangeFilterWidget *score;
+  public:
+    KNFilterConfigWidget(QWidget *parent=0, const char *name=0);
+    ~KNFilterConfigWidget();
+    
+    void reset();
+        
+  protected:
+    KNStatusFilterWidget *status;
+    KNStringFilterWidget *subject;
+    KNStringFilterWidget *from;
+    KNRangeFilterWidget *age;
+    KNRangeFilterWidget *lines;
+    KNRangeFilterWidget *score;
 };
 
 #endif

@@ -27,16 +27,16 @@
 KNJobData::KNJobData(jobType t, KNServerInfo *a, void *d)
  : t_ype(t), d_ata(d), a_ccount(a), c_anceled(false)
 {
-	if(t_ype==JTfetchNewHeaders) ((KNGroup*)d_ata)->setLocked(true);
-	else if(t_ype==JTfetchArticle) ((KNFetchArticle*)d_ata)->setLocked(true);
-	else if(t_ype==JTpostArticle || t_ype==JTmail) ((KNSavedArticle*)d_ata)->setLocked(true);
+  if(t_ype==JTfetchNewHeaders) ((KNGroup*)d_ata)->setLocked(true);
+  else if(t_ype==JTfetchArticle) ((KNFetchArticle*)d_ata)->setLocked(true);
+  else if(t_ype==JTpostArticle || t_ype==JTmail) ((KNSavedArticle*)d_ata)->setLocked(true);
 }
 
 
 
 KNJobData::~KNJobData()
 {
-	if(t_ype==JTfetchNewHeaders) ((KNGroup*)d_ata)->setLocked(false);
-	else if(t_ype==JTfetchArticle) ((KNFetchArticle*)d_ata)->setLocked(false);
-	else if(t_ype==JTpostArticle || t_ype==JTmail) ((KNSavedArticle*)d_ata)->setLocked(false);
+  if(t_ype==JTfetchNewHeaders) ((KNGroup*)d_ata)->setLocked(false);
+  else if(t_ype==JTfetchArticle) ((KNFetchArticle*)d_ata)->setLocked(false);
+  else if(t_ype==JTpostArticle || t_ype==JTmail) ((KNSavedArticle*)d_ata)->setLocked(false);
 }

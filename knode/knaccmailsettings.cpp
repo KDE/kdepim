@@ -36,14 +36,14 @@ KNAccMailSettings::KNAccMailSettings(QWidget *p) : KNSettingsWidget(p)
 {
   QGridLayout *topL=new QGridLayout(this, 5, 3, 5);
 
-  QLabel *l=new QLabel(i18n("Server:"), this);	
+  QLabel *l=new QLabel(i18n("Server:"), this);  
   topL->addWidget(l, 0,0);
-  s_erver=new QLineEdit(this);	
+  s_erver=new QLineEdit(this);  
   topL->addMultiCellWidget(s_erver, 0, 0, 1, 2);
-	
-  l=new QLabel(i18n("Port:"), this);	
+  
+  l=new QLabel(i18n("Port:"), this);  
   topL->addWidget(l, 1,0);
-  p_ort=new QLineEdit(this);	
+  p_ort=new QLineEdit(this);  
   p_ort->setValidator(new KIntValidator(0,65536,this));
   topL->addWidget(p_ort, 1,1);
 
@@ -66,9 +66,9 @@ KNAccMailSettings::KNAccMailSettings(QWidget *p) : KNSettingsWidget(p)
   topL->activate();
 
   serverInfo=new KNServerInfo();
-	serverInfo->setType(KNServerInfo::STsmtp);
-  	
-  init();	
+  serverInfo->setType(KNServerInfo::STsmtp);
+    
+  init(); 
 }
 
 
@@ -85,9 +85,9 @@ void KNAccMailSettings::init()
   KConfig *conf=KGlobal::config();
   conf->setGroup("MAILSERVER");
   serverInfo->readConf(conf);
-	
+  
   s_erver->setText(serverInfo->server());
-  p_ort->setText(QString::number(serverInfo->port()));	
+  p_ort->setText(QString::number(serverInfo->port()));  
   h_old->setValue(serverInfo->hold());
   t_imeout->setValue(serverInfo->timeout());
 }

@@ -27,20 +27,20 @@ class QComboBox;
 
 
 class KNReadGenSettings : public KNSettingsWidget  {
-	
-	public:
-		KNReadGenSettings(QWidget *p);
-		~KNReadGenSettings();
-		
-		void apply();
+  
+  public:
+    KNReadGenSettings(QWidget *p);
+    ~KNReadGenSettings();
+    
+    void apply();
 
-	protected:
-		void init();
-		
-		QCheckBox *autoCB, *markCB, *sigCB, *inlineCB, *openAttCB, *expCB, *altAttCB;
-		QSpinBox *markSecs, *maxFetch;
-		QComboBox *browser;		
-		
+  protected:
+    void init();
+    
+    QCheckBox *autoCB, *markCB, *sigCB, *inlineCB, *openAttCB, *expCB, *altAttCB;
+    QSpinBox *markSecs, *maxFetch;
+    QComboBox *browser;   
+    
 };
 
 #endif

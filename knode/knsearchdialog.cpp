@@ -23,6 +23,7 @@
 
 #include <klocale.h>
 #include <kseparator.h>
+#include <kapp.h>
 
 #include "knfilterconfigwidget.h"
 #include "knstatusfilter.h"
@@ -34,39 +35,41 @@
 #include "knsearchdialog.h"
 
 
-KNSearchDialog::KNSearchDialog(searchType /*t*/) : QWidget()
+KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
+ : QDialog(parent)
 {
-	QGroupBox *bg=new QGroupBox(this);
-	startBtn=new QPushButton(i18n("Start search"), bg);
-	startBtn->setMinimumSize(startBtn->sizeHint());
-	newBtn=new QPushButton(i18n("New search"), bg);
-	newBtn->setMinimumSize(newBtn->sizeHint());
-	closeBtn=new QPushButton(i18n("Close"), bg);
-	closeBtn->setMinimumSize(closeBtn->sizeHint());
-	
-	fcw=new KNFilterConfigWidget(this);
-	
-	QHBoxLayout *topL=new QHBoxLayout(this, 10);
-	QVBoxLayout *btnL=new QVBoxLayout(bg, 10);
-	
-	topL->addWidget(fcw, 1);
-	topL->addWidget(bg);
-	
-	btnL->addWidget(startBtn);
-	btnL->addWidget(newBtn);
-	btnL->addStretch(1);
-	btnL->addWidget(closeBtn);	
-	topL->activate();
-		
-	connect(startBtn, SIGNAL(clicked()), this, SLOT(slotStartClicked()));
-	connect(newBtn, SIGNAL(clicked()), this, SLOT(slotNewClicked()));
-	connect(closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseClicked()));
-	
-	f_ilter=new KNArticleFilter();
-	f_ilter->setLoaded(true);
-	//if(t==STfolderSearch) fcw->setLimited();
-	
-	setCaption(i18n("Search articles"));
+  setCaption(kapp->makeStdCaption( i18n("Search for Articles") ));
+  QGroupBox *bg=new QGroupBox(this);
+  
+  startBtn=new QPushButton(i18n("St&art Search"), bg);
+  startBtn->setDefault(true); 
+  newBtn=new QPushButton(i18n("&New Search"), bg);
+  closeBtn=new QPushButton(i18n("&Close"), bg);
+  
+  fcw=new KNFilterConfigWidget(this);
+  fcw->reset();
+  
+  QHBoxLayout *topL=new QHBoxLayout(this, 8);
+  QVBoxLayout *btnL=new QVBoxLayout(bg, 10);
+  
+  topL->addWidget(fcw, 1);
+  topL->addWidget(bg);
+  
+  btnL->addWidget(startBtn);
+  btnL->addWidget(newBtn);
+  btnL->addStretch(1);
+  btnL->addWidget(closeBtn);  
+  topL->activate();
+  
+  connect(startBtn, SIGNAL(clicked()), this, SLOT(slotStartClicked())); 
+  connect(newBtn, SIGNAL(clicked()), this, SLOT(slotNewClicked()));
+  connect(closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseClicked()));
+
+  f_ilter=new KNArticleFilter();
+  f_ilter->setLoaded(true);
+  //if(t==STfolderSearch) fcw->setLimited();
+  
+  setFixedHeight(sizeHint().height());
   restoreWindowSize("searchDlg", this, sizeHint());
 }
 
@@ -82,37 +85,36 @@ KNSearchDialog::~KNSearchDialog()
 
 void KNSearchDialog::closeEvent(QCloseEvent *e)
 {
-	e->accept();
-	emit dialogDone();
+  e->accept();
+  emit dialogDone();
 }
 
 
 
 void KNSearchDialog::slotStartClicked()
 {
-	f_ilter->status=fcw->status->filter();
-	f_ilter->score=fcw->score->filter();
-	f_ilter->age=fcw->age->filter();
-	f_ilter->lines=fcw->lines->filter();
-	f_ilter->subject=fcw->subject->filter();
-	f_ilter->from=fcw->from->filter();
-	emit doSearch(f_ilter);
+  f_ilter->status=fcw->status->filter();
+  f_ilter->score=fcw->score->filter();
+  f_ilter->age=fcw->age->filter();
+  f_ilter->lines=fcw->lines->filter();
+  f_ilter->subject=fcw->subject->filter();
+  f_ilter->from=fcw->from->filter();
+  emit doSearch(f_ilter);
 }
 
 
 
 void KNSearchDialog::slotNewClicked()
 {
-	fcw->reset();
+  fcw->reset();
 }
 
 
 
 void KNSearchDialog::slotCloseClicked()
 {
-	emit dialogDone();
+  emit dialogDone();
 }
-
 
 
 //--------------------------------

@@ -22,23 +22,23 @@ class QPixMap;
 
 
 class KNLBoxItem : public QListBoxItem  {
-	
-	public:
-		KNLBoxItem(const QString& text, void *d=0, QPixmap *_pm=0);
-		~KNLBoxItem();
-		
-		void setPixmap(QPixmap _pm) { pm=_pm; }
-		void* data() {	return mData; }
-		void setData(void *d)	{ mData=d; }		
-		
-	private:
-		QPixmap pm;
-		void *mData;
-			
-	protected:
-		virtual void paint( QPainter * );
-		virtual int height( const QListBox * ) const;
-		virtual int width( const QListBox * ) const;
+  
+  public:
+    KNLBoxItem(const QString& text, void *d=0, QPixmap *_pm=0);
+    ~KNLBoxItem();
+    
+    void setPixmap(QPixmap _pm) { pm=_pm; }
+    void* data() {  return mData; }
+    void setData(void *d) { mData=d; }    
+    
+  private:
+    QPixmap pm;
+    void *mData;
+      
+  protected:
+    virtual void paint( QPainter * );
+    virtual int height( const QListBox * ) const;
+    virtual int width( const QListBox * ) const;
 };
 
 
@@ -46,12 +46,12 @@ class KNLBoxItem : public QListBoxItem  {
 
 
 class KNListBox : public QListBox  {
-	
-	public:
-		KNListBox(QWidget *parent=0, const char *name=0);
-		~KNListBox();
-		
-		KNLBoxItem *itemAt(int idx) {	return static_cast<KNLBoxItem*>(item(idx)); }
+  
+  public:
+    KNListBox(QWidget *parent=0, const char *name=0);
+    ~KNListBox();
+    
+    KNLBoxItem *itemAt(int idx) { return static_cast<KNLBoxItem*>(item(idx)); }
 };
 
 

@@ -30,27 +30,27 @@ class KNJobData;
 
 
 class KNSendErrorDialog : public QSemiModal  {
-	
-	Q_OBJECT	
+  
+  Q_OBJECT  
 
-	public:
-		KNSendErrorDialog();
-		~KNSendErrorDialog();
-		
-		void appendJob(KNJobData *job);
-		
-	protected:
-		KNListBox *jobs;
-		QLabel *error;
-		QPushButton *closeBtn;
-	  QList<KNJobData> jobList;
-		
-	protected slots:
-		void slotJobHighlighted(int idx);
+  public:
+    KNSendErrorDialog();
+    ~KNSendErrorDialog();
+    
+    void appendJob(KNJobData *job);
+    
+  protected:
+    KNListBox *jobs;
+    QLabel *error;
+    QPushButton *closeBtn;
+    QList<KNJobData> jobList;
+    
+  protected slots:
+    void slotJobHighlighted(int idx);
     void slotCloseBtnClicked();
 
-	signals:
-		void dialogDone();
+  signals:
+    void dialogDone();
 
 };
 

@@ -101,7 +101,7 @@ void KNProtocolClient::waitForWork()
 
   while (true) {
     if (isConnected()) {  // we are connected, hold the connection for xx secs
-    	FD_ZERO(&fdsR);
+      FD_ZERO(&fdsR);
       FD_SET(fdPipeIn, &fdsR);
       FD_SET(tcpSocket, &fdsR);
       FD_ZERO(&fdsE);
@@ -110,11 +110,11 @@ void KNProtocolClient::waitForWork()
       tv.tv_usec = 0;
       selectRet = select(FD_SETSIZE, &fdsR, NULL, &fdsE, &tv);
       if (selectRet == 0) {
-      	qDebug("KNProtocolClient::waitForWork(): hold time elapsed, closing connection.");
-				closeConnection();               // nothing happend...
+        qDebug("KNProtocolClient::waitForWork(): hold time elapsed, closing connection.");
+        closeConnection();               // nothing happend...
       } else {
-				if (((selectRet > 0)&&(!FD_ISSET(fdPipeIn,&fdsR)))||(selectRet == -1)) {
-        	qDebug("KNProtocolClient::waitForWork(): connection broken, closing it");
+        if (((selectRet > 0)&&(!FD_ISSET(fdPipeIn,&fdsR)))||(selectRet == -1)) {
+          qDebug("KNProtocolClient::waitForWork(): connection broken, closing it");
           closeSocket();
         }
       }
@@ -129,13 +129,13 @@ void KNProtocolClient::waitForWork()
 
     sendSignal(TSjobStarted);
     if (job) {
-    // 	qDebug("KNProtocolClient::waitForWork(): got job");  too verbose
+    //  qDebug("KNProtocolClient::waitForWork(): got job");  too verbose
 
       if (job->net()&&!account.isEqual(job->account())) {     // server changed
-      	account.copy(job->account());
-      	if (isConnected())
-				  closeConnection();
-			}
+        account.copy(job->account());
+        if (isConnected())
+          closeConnection();
+      }
 
       input[0] = 0;                 //terminate string
       thisLine = input;
@@ -147,16 +147,16 @@ void KNProtocolClient::waitForWork()
       byteCount = 0;
 
       if (!job->net())    // job needs no net access
- 				processJob();
- 			else {
+        processJob();
+      else {
         if (!isConnected())
-	  			openConnection();
+          openConnection();
 
         if (isConnected())         // connection is ready
-			  	processJob();
-			}
-			errorPrefix = "";
-				
+          processJob();
+      }
+      errorPrefix = "";
+        
       clearPipe();
     }
     sendSignal(TSworkDone);      // emit stopped signal
@@ -171,10 +171,10 @@ void KNProtocolClient::processJob()
 // connect, handshake and authorization
 bool KNProtocolClient::openConnection()
 {
-	sendSignal(TSconnect);
+  sendSignal(TSconnect);
 
- 	qDebug("KNProtocolClient::openConnection(): opening connection");
-	
+  qDebug("KNProtocolClient::openConnection(): opening connection");
+  
   if (account.server().isEmpty()) {
     job->setErrorString(i18n("Unable to resolve hostname"));
     return false;
@@ -210,7 +210,7 @@ bool KNProtocolClient::openConnection()
 
     if (NULL==hostData) {
       herror("connect(): ");
-	    job->setErrorString(i18n("Unable to resolve hostname"));
+      job->setErrorString(i18n("Unable to resolve hostname"));
       closeSocket();
       return false;
     }
@@ -233,7 +233,7 @@ void KNProtocolClient::closeConnection()
   fd_set fdsW;
   timeval tv;
 
- 	qDebug("KNProtocolClient::closeConnection(): closing connection");
+  qDebug("KNProtocolClient::closeConnection(): closing connection");
 
   FD_ZERO(&fdsW);
   FD_SET(tcpSocket, &fdsW);
@@ -253,11 +253,11 @@ void KNProtocolClient::closeConnection()
 // sends a command (one line), return code is written to rep
 bool KNProtocolClient::sendCommand(const QCString &cmd, int &rep)
 {
-	if (!sendStr(cmd + "\r\n"))
-	  return false;
-	if (!getNextResponse(rep))
-		return false;
-	return true;
+  if (!sendStr(cmd + "\r\n"))
+    return false;
+  if (!getNextResponse(rep))
+    return false;
+  return true;
 }
 
 
@@ -267,52 +267,52 @@ bool KNProtocolClient::sendCommandWCheck(const QCString &cmd, int rep)
   int code;
 
   if (!sendCommand(cmd,code))
-  	return false;
-	if (code!=rep) {
-		handleErrors();
-		return false;
-	}
-	return true;
+    return false;
+  if (code!=rep) {
+    handleErrors();
+    return false;
+  }
+  return true;
 }
 
 
 // sends a message (multiple lines)
 bool KNProtocolClient::sendMsg(const DwString &msg)
 {
-	const char *line = msg.c_str();
-	char *end;
-	QCString buffer;
-	size_t length;
-	char inter[10000];
-	
-	progressValue = 100;
-	predictedLines = msg.length()/80;	  // rule of thumb
-	
-	while ((end = strstr(line,"\r\n"))) {
-	  if (line[0]=='.')                     // expand one period to double period...
-	  	buffer.append(".");
-	  length = end-line+2;
-	  if ((buffer.length()>1)&&((buffer.length()+length)>1024)) {    // artifical limit, because I don't want to generate too large blocks
-   		if (!sendStr(buffer))
-			  return false;
-			buffer = "";
-		}
-		if (length > 9500) {
+  const char *line = msg.c_str();
+  char *end;
+  QCString buffer;
+  size_t length;
+  char inter[10000];
+  
+  progressValue = 100;
+  predictedLines = msg.length()/80;   // rule of thumb
+  
+  while ((end = strstr(line,"\r\n"))) {
+    if (line[0]=='.')                     // expand one period to double period...
+      buffer.append(".");
+    length = end-line+2;
+    if ((buffer.length()>1)&&((buffer.length()+length)>1024)) {    // artifical limit, because I don't want to generate too large blocks
+      if (!sendStr(buffer))
+        return false;
+      buffer = "";
+    }
+    if (length > 9500) {
       job->setErrorString(i18n("Message size exceeded the size of the internal buffer."));
       closeSocket();
       return false;
     }
-		memcpy(inter,line,length);
-		inter[length]=0;             // terminate string
-		buffer += inter;
-		line = end+2;
-		doneLines++;				
-	}
-	buffer += ".\r\n";
-	if (!sendStr(buffer))
+    memcpy(inter,line,length);
+    inter[length]=0;             // terminate string
+    buffer += inter;
+    line = end+2;
+    doneLines++;        
+  }
+  buffer += ".\r\n";
+  if (!sendStr(buffer))
     return false;
 
-	return true;
+  return true;
 }
 
 
@@ -370,21 +370,21 @@ bool KNProtocolClient::getNextLine()
 // receives a message (multiple lines)
 bool KNProtocolClient::getMsg(QStrList &msg)
 {
-	char *line;
-	
+  char *line;
+  
   while (getNextLine()) {
-  	line = getCurrentLine();
-  	if (line[0]=='.') {
-	  	if (line[1]=='.')
-	    	line++;        // collapse double period into one
-	    else
-	      return true;   // message complete
-	  }
-	  msg.append(line);
-	  doneLines++;
-	}
-	
-	return false;        // getNextLine() failed
+    line = getCurrentLine();
+    if (line[0]=='.') {
+      if (line[1]=='.')
+        line++;        // collapse double period into one
+      else
+        return true;   // message complete
+    }
+    msg.append(line);
+    doneLines++;
+  }
+  
+  return false;        // getNextLine() failed
 }
 
 
@@ -427,9 +427,9 @@ void KNProtocolClient::handleErrors()
 
 void KNProtocolClient::sendSignal(threadSignal s)
 {
-	int signal=(int)s;
-	// qDebug("KNProtcolClient::sendSignal() : sending signal to main thread"); too verbose
-	write(fdPipeOut, &signal, sizeof(int));
+  int signal=(int)s;
+  // qDebug("KNProtcolClient::sendSignal() : sending signal to main thread"); too verbose
+  write(fdPipeOut, &signal, sizeof(int));
 }
 
 
@@ -454,9 +454,9 @@ bool KNProtocolClient::waitForRead()
 
   if (ret == -1) {     // select failed
     if (job) {
-		  QString str = i18n("Communication error:\n");
-		  str += strerror(errno);
-		  job->setErrorString(str);
+      QString str = i18n("Communication error:\n");
+      str += strerror(errno);
+      job->setErrorString(str);
     }
     closeSocket();
     return false;
@@ -469,13 +469,13 @@ bool KNProtocolClient::waitForRead()
   }
   if (ret > 0) {
     if (FD_ISSET(fdPipeIn,&fdsR)) {  // stop signal
-     	qDebug("KNProtocolClient::waitForRead(): got stop signal");
+      qDebug("KNProtocolClient::waitForRead(): got stop signal");
       closeConnection();
       return false;
     }
     if (FD_ISSET(tcpSocket,&fdsE)||FD_ISSET(fdPipeIn,&fdsE)) {  // broken pipe, etc
       if (job)
-				job->setErrorString(i18n("The connection is broken."));
+        job->setErrorString(i18n("The connection is broken."));
       closeSocket();
       return false;
     }
@@ -484,7 +484,7 @@ bool KNProtocolClient::waitForRead()
   }
 
   if (job)
-		job->setErrorString(i18n("Communication error"));
+    job->setErrorString(i18n("Communication error"));
   closeSocket();
   return false;
 }
@@ -514,28 +514,28 @@ bool KNProtocolClient::waitForWrite()
 
   if (ret == -1) {     // select failed
     if (job) {
- 		  QString str = i18n("Communication error:\n");
-		  str += strerror(errno);
-		  job->setErrorString(str);
+      QString str = i18n("Communication error:\n");
+      str += strerror(errno);
+      job->setErrorString(str);
     }
     closeSocket();
     return false;
   }
   if (ret == 0) {      // nothing happend, timeout
-	  if (job)
+    if (job)
       job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
     closeConnection();
     return false;
   }
   if (ret > 0) {
     if (FD_ISSET(fdPipeIn,&fdsR)) {  // stop signal
-     	qDebug("KNProtocolClient::waitForWrite(): got stop signal");
+      qDebug("KNProtocolClient::waitForWrite(): got stop signal");
       closeConnection();
       return false;
     }
     if (FD_ISSET(tcpSocket,&fdsR)||FD_ISSET(tcpSocket,&fdsE)||FD_ISSET(fdPipeIn,&fdsE)) {  // broken pipe, etc
-	    if (job)
-				job->setErrorString(i18n("The connection is broken."));
+      if (job)
+        job->setErrorString(i18n("The connection is broken."));
       closeSocket();
       return false;
     }
@@ -544,7 +544,7 @@ bool KNProtocolClient::waitForWrite()
   }
 
   if (job)
-		job->setErrorString(i18n("Communication error"));
+    job->setErrorString(i18n("Communication error"));
   closeSocket();
   return false;
 }
@@ -556,7 +556,7 @@ bool KNProtocolClient::conRawIP(in_addr* ip)
   fd_set fdsR,fdsW;
   timeval tv;
 
-	job->setErrorString("");
+  job->setErrorString("");
   sockaddr_in address;
   address.sin_family = AF_INET;
   address.sin_port = htons(account.port());
@@ -575,56 +575,56 @@ bool KNProtocolClient::conRawIP(in_addr* ip)
       } while ((ret<0)&&(errno==EINTR));       // don't get tricked by signals
 
       if (ret == -1) {     // select failed
-				QString str = i18n("Communication error:\n");
-    		str += strerror(errno);
-    		job->setErrorString(str);
-				return false;				
+        QString str = i18n("Communication error:\n");
+        str += strerror(errno);
+        job->setErrorString(str);
+        return false;       
       }
 
       if (ret == 0) {      // nothing happend, timeout
-      	job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
-				return false;
+        job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
+        return false;
       }
 
       if ((ret > 0)&&(FD_ISSET(fdPipeIn,&fdsR)))   // stop signal
-				return false;
+        return false;
 
       int err = 0;
       unsigned int len = 1;
       if (getsockopt(tcpSocket,SOL_SOCKET,SO_ERROR,&err,&len)!=0) {
-       	QString str = i18n("Communication error:\n");
-    		str += strerror(errno);
-    		job->setErrorString(str);
-				return false;
+        QString str = i18n("Communication error:\n");
+        str += strerror(errno);
+        job->setErrorString(str);
+        return false;
       } else {
         QCString str;
-				switch (err) {
-					case 0: return true;   // success!!
-					case ECONNREFUSED:
-					  job->setErrorString(i18n("The server refused the connection."));
-					  return false;
-  				case ETIMEDOUT:
-	  				job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
-					  return false;
-					default:
+        switch (err) {
+          case 0: return true;   // success!!
+          case ECONNREFUSED:
+            job->setErrorString(i18n("The server refused the connection."));
+            return false;
+          case ETIMEDOUT:
+            job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
+            return false;
+          default:
                       job->setErrorString(i18n("Unable to connect:\n%1").arg(strerror(err)));
-					  return false;
-				}
+            return false;
+        }
       }
     } else {
       QCString str;
-			switch (errno) {
-				case 0: return true;   // success!!
-				case ECONNREFUSED:
-				  job->setErrorString(i18n("The server refused the connection."));
-				  return false;
-  			case ETIMEDOUT:
-	  			job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
-				  return false;
-				default:
-    			  job->setErrorString(i18n("Unable to connect:\n%1").arg(strerror(errno)));
-				  return false;
-			}
+      switch (errno) {
+        case 0: return true;   // success!!
+        case ECONNREFUSED:
+          job->setErrorString(i18n("The server refused the connection."));
+          return false;
+        case ETIMEDOUT:
+          job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
+          return false;
+        default:
+            job->setErrorString(i18n("Unable to connect:\n%1").arg(strerror(errno)));
+          return false;
+      }
     }
   }
   return true;
@@ -653,9 +653,9 @@ bool KNProtocolClient::sendStr(const QCString &str)
     ret = send(tcpSocket,&str.data()[done],todo, MSG_NOSIGNAL);
     if (ret <= 0) {
       if (job) {
-	 	    QString str = i18n("Communication error:\n");
-  	  	str += strerror(errno);
-    		job->setErrorString(str);
+        QString str = i18n("Communication error:\n");
+        str += strerror(errno);
+        job->setErrorString(str);
       }
       closeSocket();
       return false;
@@ -687,7 +687,7 @@ void KNProtocolClient::clearPipe()
     FD_SET(fdPipeIn,&fdsR);
     if (1==(selectRet=select(FD_SETSIZE,&fdsR,NULL,NULL,&tv)))
       if ( ::read(fdPipeIn, &buf, 1 ) == -1 )
-	::perror( "clearPipe()" );
+  ::perror( "clearPipe()" );
   } while (selectRet == 1);
 }
 

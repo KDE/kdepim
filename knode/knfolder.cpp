@@ -35,7 +35,7 @@
 
 KNFolder::KNFolder(KNCollection *p) : KNArticleCollection(p)
 {
-	t_oSync=false;
+  t_oSync=false;
 }
 
 
@@ -48,18 +48,18 @@ KNFolder::~KNFolder()
 
 QString KNFolder::path()
 {
-	QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
-	if (dir==QString::null)
-		displayInternalFileError();
-	return dir;
+  QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
+  if (dir==QString::null)
+    displayInternalFileError();
+  return dir;
 }
 
 
 
 void KNFolder::updateListItem()
 {
-	if(l_istItem)
-  	l_istItem->setText(1,QString::number(c_ount));
+  if(l_istItem)
+    l_istItem->setText(1,QString::number(c_ount));
 }
 
 
@@ -73,34 +73,34 @@ bool KNFolder::readInfo(const QString &confPath)
 
 void KNFolder::saveInfo()
 {
-	QString dir(path());
-	if (dir!=QString::null) {
-		int pId=-1;
-	  //if(p_arent) pId=p_arent->id();
-		KSimpleConfig info(dir+QString("folder%1.info").arg(i_d));
-		
-		info.writeEntry("foldername", n_ame);
-		info.writeEntry("id", i_d);
-		info.writeEntry("parentId", pId);
-		info.writeEntry("count", c_ount);
-	}
+  QString dir(path());
+  if (dir!=QString::null) {
+    int pId=-1;
+    //if(p_arent) pId=p_arent->id();
+    KSimpleConfig info(dir+QString("folder%1.info").arg(i_d));
+    
+    info.writeEntry("foldername", n_ame);
+    info.writeEntry("id", i_d);
+    info.writeEntry("parentId", pId);
+    info.writeEntry("count", c_ount);
+  }
 }
 
 
 
 void KNFolder::syncDynamicData(bool force)
 {
-	if(force) t_oSync=true;
-	if(t_oSync) saveDynamicData(0, len, true);
+  if(force) t_oSync=true;
+  if(t_oSync) saveDynamicData(0, len, true);
 }
-						
+            
 
 
 KNSavedArticle* KNFolder::byId(int id)
 {
-	int idx=findId(id);
-	if(idx!=-1) return ((KNSavedArticle*)list[idx]);
-	else return 0;
+  int idx=findId(id);
+  if(idx!=-1) return ((KNSavedArticle*)list[idx]);
+  else return 0;
 }
 
 
@@ -108,182 +108,182 @@ KNSavedArticle* KNFolder::byId(int id)
 
 bool KNFolder::loadHdrs()
 {
-	QString dir(path());
-	QCString tmp;
-	KNFile f;
-	KNStringSplitter split;
-	KNSavedArticle *art;
-	dynData dynamic;
-	int pos1=0, pos2=0, cnt=0, byteCount;
-	
-	if (dir==QString::null)
-		return false;
-		
-	if(c_ount>0 && len==0) {
-		qDebug("KNFolder::loadIndex() : loading headers");
-	  if(!resize(c_ount)) return false;
-		
-	  f.setName(dir+QString("folder%1.idx").arg(i_d));
-  	
-  	if(f.open(IO_ReadOnly)) {
-  		while(!f.atEnd()) {
-				byteCount = f.readBlock((char*)(&dynamic), sizeof(dynData));
-				if ((byteCount == -1)||(byteCount!=sizeof(dynData)))
-  				if (f.status() == IO_Ok) {
-  					qDebug("Found broken entry in dynamic-file: Ignored!");
-  					continue;
-  				} else {
-  				  qDebug("Corrupted dynamic file, IO-error!");
-  				  clearList();
-  				  return false;
-  				}  	  		    		
-    		art=new KNSavedArticle();
-    		art->setId(dynamic.id);
-    		art->setStatus((KNArticleBase::articleStatus)dynamic.status);
-    		art->setTimeT(dynamic.ti);
-    		art->setStartOffset(dynamic.so);
-    		art->setEndOffset(dynamic.eo);
-    		art->setServerId(dynamic.sId);
-    		art->setFolder(this);
-    	  cnt++;
-    	  if(!append(art)) {
-    			delete art;
-    			clearList();
-    			f.close();
-    			return false;
-    		}
-    	}
-    	f.close();
-    	setLastID();
-    	c_ount=cnt;
-    	updateListItem();
+  QString dir(path());
+  QCString tmp;
+  KNFile f;
+  KNStringSplitter split;
+  KNSavedArticle *art;
+  dynData dynamic;
+  int pos1=0, pos2=0, cnt=0, byteCount;
+  
+  if (dir==QString::null)
+    return false;
+    
+  if(c_ount>0 && len==0) {
+    qDebug("KNFolder::loadIndex() : loading headers");
+    if(!resize(c_ount)) return false;
+    
+    f.setName(dir+QString("folder%1.idx").arg(i_d));
+    
+    if(f.open(IO_ReadOnly)) {
+      while(!f.atEnd()) {
+        byteCount = f.readBlock((char*)(&dynamic), sizeof(dynData));
+        if ((byteCount == -1)||(byteCount!=sizeof(dynData)))
+          if (f.status() == IO_Ok) {
+            qDebug("Found broken entry in dynamic-file: Ignored!");
+            continue;
+          } else {
+            qDebug("Corrupted dynamic file, IO-error!");
+            clearList();
+            return false;
+          }                 
+        art=new KNSavedArticle();
+        art->setId(dynamic.id);
+        art->setStatus((KNArticleBase::articleStatus)dynamic.status);
+        art->setTimeT(dynamic.ti);
+        art->setStartOffset(dynamic.so);
+        art->setEndOffset(dynamic.eo);
+        art->setServerId(dynamic.sId);
+        art->setFolder(this);
+        cnt++;
+        if(!append(art)) {
+          delete art;
+          clearList();
+          f.close();
+          return false;
+        }
+      }
+      f.close();
+      setLastID();
+      c_ount=cnt;
+      updateListItem();
     }
     else {
-			displayInternalFileError();
-			return false;
-		}
+      displayInternalFileError();
+      return false;
+    }
 
-			
-	  f.setName(dir+QString("folder%1.mbox").arg(i_d));
+      
+    f.setName(dir+QString("folder%1.mbox").arg(i_d));
 
     if(f.open(IO_ReadOnly)) {
-			for(int idx=0; idx<len; idx++) {
-				art=at(idx);
-				if(f.at(art->startOffset())) {
-					tmp = f.readLine();		
-					if(tmp.isEmpty()){
-    				if (f.status() == IO_Ok) {
-    					qDebug("Found broken entry in mbox-file: Ignored!");
-    					removeArticle(art);
-    					delete art;
-    					continue;
-    				}  				
-	  			}
-					pos1=tmp.find(' ')+1;
-					pos2=tmp.find('\t', pos1);
-					art->setSubject(tmp.mid(pos1, pos2-pos1));
-					pos1=pos2+1;
-					art->setDestination(tmp.mid(pos1, tmp.length()-pos1));
-				}
-			}
-		}
-		else {
-			displayInternalFileError();
-			clearList();
-			return false;
-		}
-		return true;
-	}
-	else {
-		qDebug("KNFolder::loadIndex() : already loaded");
-		return true;
-	}
+      for(int idx=0; idx<len; idx++) {
+        art=at(idx);
+        if(f.at(art->startOffset())) {
+          tmp = f.readLine();   
+          if(tmp.isEmpty()){
+            if (f.status() == IO_Ok) {
+              qDebug("Found broken entry in mbox-file: Ignored!");
+              removeArticle(art);
+              delete art;
+              continue;
+            }         
+          }
+          pos1=tmp.find(' ')+1;
+          pos2=tmp.find('\t', pos1);
+          art->setSubject(tmp.mid(pos1, pos2-pos1));
+          pos1=pos2+1;
+          art->setDestination(tmp.mid(pos1, tmp.length()-pos1));
+        }
+      }
+    }
+    else {
+      displayInternalFileError();
+      clearList();
+      return false;
+    }
+    return true;
+  }
+  else {
+    qDebug("KNFolder::loadIndex() : already loaded");
+    return true;
+  }
 }
 
 
 
 void KNFolder::saveDynamicData(int start, int cnt, bool ovr)
 {
-	int mode;
-	KNSavedArticle *art;
-	dynData dynamic;
+  int mode;
+  KNSavedArticle *art;
+  dynData dynamic;
 
-	QString dir(path());	
-	if (dir != QString::null) {
-		QFile f(dir+QString("folder%1.idx").arg(i_d));
-	
-	  if(ovr) mode=IO_WriteOnly;
-	  else mode=IO_WriteOnly | IO_Append;
+  QString dir(path());  
+  if (dir != QString::null) {
+    QFile f(dir+QString("folder%1.idx").arg(i_d));
+  
+    if(ovr) mode=IO_WriteOnly;
+    else mode=IO_WriteOnly | IO_Append;
 
-	  if(f.open(mode)) {
-  		for(int idx=start; idx<(start+cnt); idx++) {
-	  		art=at(idx);
-	  		dynamic.setData(art);
-	  		f.writeBlock((char*)(&dynamic), sizeof(dynData));		
-			}
-			f.close();
-		}	else
-			displayInternalFileError();
-	}
+    if(f.open(mode)) {
+      for(int idx=start; idx<(start+cnt); idx++) {
+        art=at(idx);
+        dynamic.setData(art);
+        f.writeBlock((char*)(&dynamic), sizeof(dynData));   
+      }
+      f.close();
+    } else
+      displayInternalFileError();
+  }
 }
 
 
 
 bool KNFolder::loadArticle(KNSavedArticle *a)
 {
-	QCString line;	
-	bool isHead=true;
-	
-	if(a->hasContent()) return true;		
+  QCString line;  
+  bool isHead=true;
+  
+  if(a->hasContent()) return true;    
 
-	QString dir(path());
-	if (dir != QString::null) {
-		KNFile f(dir+QString("folder%1.mbox").arg(i_d));	
-	  if(f.open(IO_ReadOnly)) {
-	  	if(!f.at(a->startOffset())) {
-	  		f.close();
-	  		return false;
-	  	}
-	  	else {
-	  		a->initContent();
-	  		line=f.readLine();
-	  		while(f.at() < a->endOffset()) {
-	  			line=f.readLine();
-	  			if(line.isEmpty()) {
-	  			  if (f.status() != IO_Ok) {
-	  			    qDebug("Corrupted mbox file, IO-error!");
-	  			    return false;
-	  			  }
-	  			  else if(isHead) {
-	  				  isHead=false;
-	  				  continue;
-	  				}
-	  			}
-	  			if(isHead) a->addHeaderLine(line.data());
-	  			else a->addBodyLine(line.data());
-	  		}
-	  		a->parse();
-	  	}
-		 	return true;
-	  }
-	  else
-	  	return false;	 	
-	} else
-		return false;
+  QString dir(path());
+  if (dir != QString::null) {
+    KNFile f(dir+QString("folder%1.mbox").arg(i_d));  
+    if(f.open(IO_ReadOnly)) {
+      if(!f.at(a->startOffset())) {
+        f.close();
+        return false;
+      }
+      else {
+        a->initContent();
+        line=f.readLine();
+        while(f.at() < a->endOffset()) {
+          line=f.readLine();
+          if(line.isEmpty()) {
+            if (f.status() != IO_Ok) {
+              qDebug("Corrupted mbox file, IO-error!");
+              return false;
+            }
+            else if(isHead) {
+              isHead=false;
+              continue;
+            }
+          }
+          if(isHead) a->addHeaderLine(line.data());
+          else a->addBodyLine(line.data());
+        }
+        a->parse();
+      }
+      return true;
+    }
+    else
+      return false;   
+  } else
+    return false;
 }
 
 
 
 void KNFolder::saveStaticData(int start, int cnt, bool ovr)
 {
-	int mode;
-	KNSavedArticle *art;
-	
-	QString dir(path());	
-	if (dir == QString::null)
-		return;
-		
-	QFile f(dir+QString("folder%1.mbox").arg(i_d));			
+  int mode;
+  KNSavedArticle *art;
+  
+  QString dir(path());  
+  if (dir == QString::null)
+    return;
+    
+  QFile f(dir+QString("folder%1.mbox").arg(i_d));     
 
   if(ovr) mode=IO_WriteOnly;
   else mode=IO_WriteOnly | IO_Append;
@@ -291,19 +291,19 @@ void KNFolder::saveStaticData(int start, int cnt, bool ovr)
   if(f.open(mode)) {
     QTextStream ts(&f);
 
-  	for(int idx=len-cnt; idx<len; idx++) {
-  	  ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";  	
-  		art=at(idx);
-  		art->setStartOffset(f.at());
-  		ts << "X-KNode-Overview: ";
-  		ts << art->subject() << '\t';
+    for(int idx=len-cnt; idx<len; idx++) {
+      ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";    
+      art=at(idx);
+      art->setStartOffset(f.at());
+      ts << "X-KNode-Overview: ";
+      ts << art->subject() << '\t';
       ts << art->destination() << '\n';
-  		art->toStream(ts);
-  		ts << '\n';
-  		//f.flush();
-  		art->setEndOffset(f.at());
-  	}
-  	f.close();
+      art->toStream(ts);
+      ts << '\n';
+      //f.flush();
+      art->setEndOffset(f.at());
+    }
+    f.close();
   }
   else displayInternalFileError();
 }
@@ -312,91 +312,91 @@ void KNFolder::saveStaticData(int start, int cnt, bool ovr)
 
 bool KNFolder::addArticle(KNSavedArticle *a)
 {
-	KNFolder *oldFolder=a->folder();
-	if(!loadHdrs()) return false;
-	if(oldFolder==this) return true;
-	
-	if(!resize(siz+1)) return false;
-	
-	if(oldFolder) oldFolder->removeArticle(a);
-	a->setId(-1);
-	if(!append(a)) {
-		delete a;
-		return false;
-	}
-	else {
-		a->setFolder(this);
-		//if(!a->type()==KNArticleBase::ATcontrol) {
-  		saveStaticData(len-1, 1);
-  		saveDynamicData(len-1, 1);
-  	//}
-		c_ount++;
-		updateListItem();
-		delete a->listItem();
-		a->setListItem(0);
-		return true;
-	}	
+  KNFolder *oldFolder=a->folder();
+  if(!loadHdrs()) return false;
+  if(oldFolder==this) return true;
+  
+  if(!resize(siz+1)) return false;
+  
+  if(oldFolder) oldFolder->removeArticle(a);
+  a->setId(-1);
+  if(!append(a)) {
+    delete a;
+    return false;
+  }
+  else {
+    a->setFolder(this);
+    //if(!a->type()==KNArticleBase::ATcontrol) {
+      saveStaticData(len-1, 1);
+      saveDynamicData(len-1, 1);
+    //}
+    c_ount++;
+    updateListItem();
+    delete a->listItem();
+    a->setListItem(0);
+    return true;
+  } 
 }
 
 
 
 bool KNFolder::saveArticle(KNSavedArticle *a)
 {
-	int idx;
-	if(a->folder()!=this) return addArticle(a);
-	else {
-		idx=findId(a->id());
-		if(idx!=-1 && at(idx)==a) {
-			saveStaticData(len-1, 1);
-			t_oSync=true;
-			return true;
-		}
-		else {
-			qDebug("KNFolder::saveArticle() : article not in folder !!");
-			return false;
-		}
-	}			
+  int idx;
+  if(a->folder()!=this) return addArticle(a);
+  else {
+    idx=findId(a->id());
+    if(idx!=-1 && at(idx)==a) {
+      saveStaticData(len-1, 1);
+      t_oSync=true;
+      return true;
+    }
+    else {
+      qDebug("KNFolder::saveArticle() : article not in folder !!");
+      return false;
+    }
+  }     
 }
 
 
 
 void KNFolder::removeArticle(KNSavedArticle *a)
 {
-	int idx=findId(a->id());
-	
-	if(idx!=-1 && at(idx)==a) {
-		list[idx]=0;
-		compactList();
-		c_ount--;
-		updateListItem();
-		t_oSync=true;
-	}
+  int idx=findId(a->id());
+  
+  if(idx!=-1 && at(idx)==a) {
+    list[idx]=0;
+    compactList();
+    c_ount--;
+    updateListItem();
+    t_oSync=true;
+  }
 }
 
 
 
 void KNFolder::deleteAll()
 {
-	KNSavedArticle *a;
-	int lastId=-1;
-	KNNntpAccount *lastAcc=0;
-	for(int idx=0; idx<len; idx++) {
-		a=at(idx);
-		if(!a->sent() && !a->isMail()) {
-			if(a->serverId()!=lastId) {
-				lastId=a->serverId();
-				lastAcc=knGlobals.accManager->account(lastId);
-			}
-			if(lastAcc) lastAcc->decUnsentCount();
-		}
-	}
-	clearList();
-	saveStaticData(0,0, true);
-	saveDynamicData(0,0, true);
-	c_ount=0;
-	saveInfo();
-	t_oSync=false;
-	updateListItem();	
+  KNSavedArticle *a;
+  int lastId=-1;
+  KNNntpAccount *lastAcc=0;
+  for(int idx=0; idx<len; idx++) {
+    a=at(idx);
+    if(!a->sent() && !a->isMail()) {
+      if(a->serverId()!=lastId) {
+        lastId=a->serverId();
+        lastAcc=knGlobals.accManager->account(lastId);
+      }
+      if(lastAcc) lastAcc->decUnsentCount();
+    }
+  }
+  clearList();
+  saveStaticData(0,0, true);
+  saveDynamicData(0,0, true);
+  c_ount=0;
+  saveInfo();
+  t_oSync=false;
+  updateListItem(); 
 }
 
 
@@ -404,11 +404,11 @@ void KNFolder::deleteAll()
 
 void KNFolder::dynData::setData(KNSavedArticle *a)
 {
-	id=a->id();
-	status=(int)a->status();
-	so=a->startOffset();
-	eo=a->endOffset();
-	sId=a->serverId();
-	ti=a->timeT();
+  id=a->id();
+  status=(int)a->status();
+  so=a->startOffset();
+  eo=a->endOffset();
+  sId=a->serverId();
+  ti=a->timeT();
 }
 

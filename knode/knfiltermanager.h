@@ -59,48 +59,47 @@ class KNFilterSelectAction : public KAction
 
 class KNFilterManager : public QObject
 {
-	Q_OBJECT
+  Q_OBJECT
 
-	public:
-		KNFilterManager(QObject * parent=0, const char * name=0);
-		~KNFilterManager();
-		
-  	const KActionCollection& actions()      { return actionCollection; }
+  public:
+    KNFilterManager(QObject * parent=0, const char * name=0);
+    ~KNFilterManager();
+    
+    const KActionCollection& actions()      { return actionCollection; }
 
-		void readOptions();
-		void saveOptions();
-		
-		KNArticleFilter* currentFilter()	      { return currFilter; }		
-			
-		void startConfig(KNFilterSettings *fs);
-		void endConfig();
-		void newFilter();
-		void editFilter(KNArticleFilter *f);
-		void addFilter(KNArticleFilter *f);
-		void deleteFilter(KNArticleFilter *f);
-					
-	protected:
-		void loadFilters();
-		void saveFilterLists();
-		KNArticleFilter* setFilter(const int id);
-		KNArticleFilter* byID(int id);
-		bool nameIsOK(KNArticleFilter *f);
-		void updateMenu();
-		
-		QList<KNArticleFilter> fList;
-		KNFilterSettings *fset;
-	  KNArticleFilter *currFilter;
-		KNFilterSelectAction *actFilter;
-		QValueList<int> menuOrder;	
-		KActionCollection actionCollection;	
-	
-	protected slots:
-		void slotMenuActivated(int id);
-	  void slotEditDone(KNFilterDialog *fd);
-			
-	signals:
-		void filterChanged(KNArticleFilter *f); 		
-		
+    void readOptions();
+    void saveOptions();
+    
+    KNArticleFilter* currentFilter()        { return currFilter; }    
+      
+    void startConfig(KNFilterSettings *fs);
+    void endConfig();
+    void newFilter();
+    void editFilter(KNArticleFilter *f);
+    void addFilter(KNArticleFilter *f);
+    void deleteFilter(KNArticleFilter *f);
+    bool newNameIsOK(KNArticleFilter *f, const QString &newName);
+          
+  protected:
+    void loadFilters();
+    void saveFilterLists();
+    KNArticleFilter* setFilter(const int id);
+    KNArticleFilter* byID(int id);
+    void updateMenu();
+    
+    QList<KNArticleFilter> fList;
+    KNFilterSettings *fset;
+    KNArticleFilter *currFilter;
+    KNFilterSelectAction *actFilter;
+    QValueList<int> menuOrder;  
+    KActionCollection actionCollection; 
+  
+  protected slots:
+    void slotMenuActivated(int id);
+      
+  signals:
+    void filterChanged(KNArticleFilter *f);     
+    
 };
 
 #endif

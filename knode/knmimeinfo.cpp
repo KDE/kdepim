@@ -21,7 +21,7 @@
 
 KNMimeInfo::KNMimeInfo()
 {
-	clear();
+  clear();
 }
 
 
@@ -48,12 +48,12 @@ void KNMimeInfo::operator=(const KNMimeInfo &i)
 void KNMimeInfo::clear()
 {
   c_tMType=MTapplication;
-	c_tSType=SToctetStream;
-	c_tEncoding=ECsevenBit;
-	c_tDisposition=DPinline;
-	c_tCategory=CCsingle;
-	d_ecoded=false;
-	c_ontentType="";
+  c_tSType=SToctetStream;
+  c_tEncoding=ECsevenBit;
+  c_tDisposition=DPinline;
+  c_tCategory=CCsingle;
+  d_ecoded=false;
+  c_ontentType="";
 }
 
 
@@ -69,92 +69,92 @@ bool KNMimeInfo::decoded()
 {
   return ( c_tEncoding==ECsevenBit || c_tEncoding==ECeightBit || d_ecoded );
 }
-		
+    
 
 
 void KNMimeInfo::parse(KNMimeContent *c)
 {
   QCString tmp;
   tmp=c->headerLine("Content-Type");
-	c_ontentType=tmp;
-	if(tmp.isEmpty()) {
-	  if(c->type()==ATmimeContent) {
-	    c_tMType=MTapplication;
-	    c_tSType=SToctetStream;
-	  }
-	  else {
-	    c_tMType=MTtext;
+  c_ontentType=tmp;
+  if(tmp.isEmpty()) {
+    if(c->type()==ATmimeContent) {
+      c_tMType=MTapplication;
+      c_tSType=SToctetStream;
+    }
+    else {
+      c_tMType=MTtext;
       c_tSType=STplain;
     }
   }
-	else
-	  parseMimeType(tmp);		
-		
-	tmp=c->headerLine("Content-Transfer-Encoding");
-	parseEncoding(tmp);
-	
-	tmp=c->headerLine("Content-Disposition");
-	parseDisposition(tmp);
+  else
+    parseMimeType(tmp);   
+    
+  tmp=c->headerLine("Content-Transfer-Encoding");
+  parseEncoding(tmp);
+  
+  tmp=c->headerLine("Content-Disposition");
+  parseDisposition(tmp);
 }
 
 
 
 void KNMimeInfo::parseMimeType(const QCString &s)
 {
-  if(s.find("text", 0, false)!=-1) 							c_tMType=MTtext;
- 	else if(s.find("image", 0, false)!=-1) 				c_tMType=MTimage;
- 	else if(s.find("audio", 0, false)!=-1)      	c_tMType=MTaudio;
- 	else if(s.find("video", 0, false)!=-1)      	c_tMType=MTvideo;
- 	else if(s.find("multipart", 0, false)!=-1)		c_tMType=MTmultipart;
- 	else if(s.find("message", 0, false)!=-1)    	c_tMType=MTmessage;
- 	else if(s.find("application", 0, false)!=-1)	c_tMType=MTapplication;
- 	else                                          c_tMType=MTcustom;																						
-	
- 	switch(c_tMType) {
-	
- 		case MTtext:
- 			if(s.find("/plain", 0, false)!=-1)							c_tSType=STplain;
- 			else if(s.find("/html", 0, false)!=-1)					c_tSType=SThtml;
- 			else if(s.find("/enriched", 0, false)!=-1)			c_tSType=STenriched;
- 			else                                            c_tSType=STcustom;
- 		break;
-	
- 		case MTimage:
- 			if(s.find("/gif", 0, false)!=-1)								c_tSType=STgif;
- 			else if(s.find("/jpeg", 0, false)!=-1)					c_tSType=STjpeg;
- 			else                                            c_tSType=STcustom;
- 		break;
-	
- 		case MTaudio:
- 			if(s.find("/basic", 0, false)!=-1)							c_tSType=STbasic;
- 			else                                            c_tSType=STcustom;
- 		break;
-	
- 		case MTvideo:
- 			if(s.find("/mpeg", 0, false)!=-1)							  c_tSType=STmpeg;
- 			else                                            c_tSType=STcustom;
- 		break;
-			
- 		case MTapplication:
- 			if(s.find("/postscript", 0, false)!=-1)				  c_tSType=STPostScript;
- 			else if(s.find("/octet-stream", 0, false)!=-1)  c_tSType=SToctetStream;
- 			else                                            c_tSType=STcustom;
- 		break;
-	
- 		case MTmultipart:
- 			if(s.find("/alternative", 0, false)!=-1)				c_tSType=STalternative;
- 			else if(s.find("/parallel", 0, false)!=-1)			c_tSType=STparallel;
- 			else if(s.find("/digest", 0, false)!=-1)  			c_tSType=STdigest;
- 			else																					  c_tSType=STmixed;
- 		break;
-	
- 		case MTmessage:
- 			if(s.find("/partial", 0, false)!=-1)				    c_tSType=STpartial;
- 			else if(s.find("/external-body", 0, false)!=-1)	c_tSType=STexternalBody;
- 			else						                                c_tSType=STrfc822;
- 		break;
-		default: 																				  c_tSType=STcustom;
- 	}
+  if(s.find("text", 0, false)!=-1)              c_tMType=MTtext;
+  else if(s.find("image", 0, false)!=-1)        c_tMType=MTimage;
+  else if(s.find("audio", 0, false)!=-1)        c_tMType=MTaudio;
+  else if(s.find("video", 0, false)!=-1)        c_tMType=MTvideo;
+  else if(s.find("multipart", 0, false)!=-1)    c_tMType=MTmultipart;
+  else if(s.find("message", 0, false)!=-1)      c_tMType=MTmessage;
+  else if(s.find("application", 0, false)!=-1)  c_tMType=MTapplication;
+  else                                          c_tMType=MTcustom;                                            
+  
+  switch(c_tMType) {
+  
+    case MTtext:
+      if(s.find("/plain", 0, false)!=-1)              c_tSType=STplain;
+      else if(s.find("/html", 0, false)!=-1)          c_tSType=SThtml;
+      else if(s.find("/enriched", 0, false)!=-1)      c_tSType=STenriched;
+      else                                            c_tSType=STcustom;
+    break;
+  
+    case MTimage:
+      if(s.find("/gif", 0, false)!=-1)                c_tSType=STgif;
+      else if(s.find("/jpeg", 0, false)!=-1)          c_tSType=STjpeg;
+      else                                            c_tSType=STcustom;
+    break;
+  
+    case MTaudio:
+      if(s.find("/basic", 0, false)!=-1)              c_tSType=STbasic;
+      else                                            c_tSType=STcustom;
+    break;
+  
+    case MTvideo:
+      if(s.find("/mpeg", 0, false)!=-1)               c_tSType=STmpeg;
+      else                                            c_tSType=STcustom;
+    break;
+      
+    case MTapplication:
+      if(s.find("/postscript", 0, false)!=-1)         c_tSType=STPostScript;
+      else if(s.find("/octet-stream", 0, false)!=-1)  c_tSType=SToctetStream;
+      else                                            c_tSType=STcustom;
+    break;
+  
+    case MTmultipart:
+      if(s.find("/alternative", 0, false)!=-1)        c_tSType=STalternative;
+      else if(s.find("/parallel", 0, false)!=-1)      c_tSType=STparallel;
+      else if(s.find("/digest", 0, false)!=-1)        c_tSType=STdigest;
+      else                                            c_tSType=STmixed;
+    break;
+  
+    case MTmessage:
+      if(s.find("/partial", 0, false)!=-1)            c_tSType=STpartial;
+      else if(s.find("/external-body", 0, false)!=-1) c_tSType=STexternalBody;
+      else                                            c_tSType=STrfc822;
+    break;
+    default:                                          c_tSType=STcustom;
+  }
 }
 
 
@@ -162,27 +162,27 @@ void KNMimeInfo::parseMimeType(const QCString &s)
 void KNMimeInfo::parseEncoding(const QCString &s)
 {
   if(s.isEmpty()) {
-    if(c_tMType==MTtext)							            c_tEncoding=ECsevenBit;
+    if(c_tMType==MTtext)                          c_tEncoding=ECsevenBit;
     else                                          c_tEncoding=ECbinary;
   }
-	else
-	  c_tEncoding=stringToEncoding(s.data());
-	
-	/*if(strcasecmp(s,"7bit")==0)          			c_tEncoding=ECsevenBit;
-	else if(strcasecmp(s,"8bit")==0)          			c_tEncoding=ECeightBit;
-	else if(strcasecmp(s,"quoted-printable")==0)   	c_tEncoding=ECquotedPrintable;
-	else if(strcasecmp(s,"base64")==0)          		c_tEncoding=ECbase64;
-	else if(strcasecmp(s,"x-uuencode")==0)          c_tEncoding=ECuuencode;
-	else           																	c_tEncoding=ECbinary;*/
-				
+  else
+    c_tEncoding=stringToEncoding(s.data());
+  
+  /*if(strcasecmp(s,"7bit")==0)               c_tEncoding=ECsevenBit;
+  else if(strcasecmp(s,"8bit")==0)                c_tEncoding=ECeightBit;
+  else if(strcasecmp(s,"quoted-printable")==0)    c_tEncoding=ECquotedPrintable;
+  else if(strcasecmp(s,"base64")==0)              c_tEncoding=ECbase64;
+  else if(strcasecmp(s,"x-uuencode")==0)          c_tEncoding=ECuuencode;
+  else                                            c_tEncoding=ECbinary;*/
+        
 }
 
 
 
 void KNMimeInfo::parseDisposition(const QCString &s)
 {
-  if(s.isEmpty())											        c_tDisposition=DPinline;
-	else if(strcasecmp(s.data(),"inline")==0)   c_tDisposition=DPinline;
+  if(s.isEmpty())                             c_tDisposition=DPinline;
+  else if(strcasecmp(s.data(),"inline")==0)   c_tDisposition=DPinline;
   else                                        c_tDisposition=DPattached;
 }
 
@@ -240,19 +240,19 @@ QCString KNMimeInfo::contentDisposition()
 QCString KNMimeInfo::getCTParameter(const char* param)
 {
   QCString ret;
-	int pos1=0, pos2=0;
-	if(!c_ontentType.isEmpty()) {
-		pos1=c_ontentType.find(param, 0, false);
-		if(pos1!=-1) {
-			pos2=c_ontentType.find(';', pos1);
-			if (pos2==-1) pos2=c_ontentType.length();
-			pos1+=strlen(param)+1;
-			ret=c_ontentType.mid(pos1, pos2-pos1);
-			removeQuots(ret);
-		}
-	}
-	qDebug("KNMimeInfo::getCTParameter() : %s = %s", param, ret.data());
-	return ret;
+  int pos1=0, pos2=0;
+  if(!c_ontentType.isEmpty()) {
+    pos1=c_ontentType.find(param, 0, false);
+    if(pos1!=-1) {
+      pos2=c_ontentType.find(';', pos1);
+      if (pos2==-1) pos2=c_ontentType.length();
+      pos1+=strlen(param)+1;
+      ret=c_ontentType.mid(pos1, pos2-pos1);
+      removeQuots(ret);
+    }
+  }
+  qDebug("KNMimeInfo::getCTParameter() : %s = %s", param, ret.data());
+  return ret;
 }
 
 

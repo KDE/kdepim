@@ -21,32 +21,32 @@
 
 KNCollection::KNCollection(KNCollection *p)
 {
-	p_arent=p;
-	l_istItem=0;
-	c_ount=0;
+  p_arent=p;
+  l_istItem=0;
+  c_ount=0;
 }
 
 
 
 KNCollection::~KNCollection()
 {
-	delete l_istItem;
+  delete l_istItem;
 }
 
 
 
 void KNCollection::setListItem(KNCollectionViewItem *i)
 {
-	l_istItem=i;
-	if(i) {
-		i->coll=this;
-		i->setText(0, name());
-	}
+  l_istItem=i;
+  if(i) {
+    i->coll=this;
+    i->setText(0, name());
+  }
 }
 
 
 
 void KNCollection::updateListItem()
 {
-	if(l_istItem) l_istItem->setText(0, n_ame);
+  if(l_istItem) l_istItem->setText(0, n_ame);
 }

@@ -20,14 +20,14 @@
 //bool KNHdrViewItem::totalExpand=false;
 
 KNHdrViewItem::KNHdrViewItem(KNListView *ref, KNArticle *a) :
-	KNLVItemBase(ref), art(a)
+  KNLVItemBase(ref), art(a)
 {
 }
 
 
 
 KNHdrViewItem::KNHdrViewItem(KNLVItemBase *ref, KNArticle *a) :
-	KNLVItemBase(ref), art(a)
+  KNLVItemBase(ref), art(a)
 {
 }
 
@@ -35,55 +35,55 @@ KNHdrViewItem::KNHdrViewItem(KNLVItemBase *ref, KNArticle *a) :
 
 KNHdrViewItem::~KNHdrViewItem()
 {
-	if(art) art->setListItem(0);
+  if(art) art->setListItem(0);
 }
 
 
 
 /*void KNHdrViewItem::setOpen(bool o)
 {
-	QListViewItem *it;
-	QListViewItem::setOpen(o);
-	
-	
-	if(o && totalExpand) {
-		it=firstChild();
-		while(it) {
-			if(it->depth()==0) break;
-			else {
-				it->setOpen(true);
-				it=it->nextSibling();
-			}
-		}
-	}		
+  QListViewItem *it;
+  QListViewItem::setOpen(o);
+  
+  
+  if(o && totalExpand) {
+    it=firstChild();
+    while(it) {
+      if(it->depth()==0) break;
+      else {
+        it->setOpen(true);
+        it=it->nextSibling();
+      }
+    }
+  }   
 }*/
 
 
 
 QString KNHdrViewItem::key(int col, bool asc) const
 {
-	if(col==3)
+  if(col==3)
       return QString::number((uint) art->timeT());
-	
-	else return this->text(col);
-	
+  
+  else return this->text(col);
+  
 }
 
 
 
 bool KNHdrViewItem::greyOut()
 {
-	if(art->type()==KNArticleBase::ATfetch)
-		return ( 	!((KNFetchArticle*)art)->hasUnreadFollowUps() &&
-						 	((KNFetchArticle*)art)->isRead() );
-	else return false;	
+  if(art->type()==KNArticleBase::ATfetch)
+    return (  !((KNFetchArticle*)art)->hasUnreadFollowUps() &&
+              ((KNFetchArticle*)art)->isRead() );
+  else return false;  
 }
 
 
 
 bool KNHdrViewItem::firstColBold()
 {
-	return art->isNew();
+  return art->isNew();
 }
 
 

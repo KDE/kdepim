@@ -25,12 +25,12 @@
 #include <kglobal.h>
 #include <kconfig.h>
 
+#include "knode.h"
 #include "kngroupmanager.h"
 #include "knjobdata.h"
 #include "knnntpaccount.h"
 #include "knarticlewidget.h"
 #include "knsavedarticle.h"
-#include "knode.h"
 #include "knuserentry.h"
 #include "knhdrviewitem.h"
 #include "kngroup.h"
@@ -47,15 +47,15 @@
 
 
 KNSavedArticleManager::KNSavedArticleManager(KNListView *v, KNAccountManager *am, QObject * parent, const char * name) :
-	QObject(parent,name), KNArticleManager(v), f_older(0), sedlg(0), sDlg(0), accM(am)
+  QObject(parent,name), KNArticleManager(v), f_older(0), sedlg(0), sDlg(0), accM(am)
 {
-	//f_ilter=0;
+  //f_ilter=0;
 
-	defaultUser=new KNUserEntry();
-	comList=new QList<KNComposer>;
-		
-	readConfig();
-	
+  defaultUser=new KNUserEntry();
+  comList=new QList<KNComposer>;
+    
+  readConfig();
+  
   actSendOutbox = new KAction(i18n("Sen&d pending messages"), 0, this, SLOT(slotSendOutbox()),
                               &actionCollection, "net_sendPending");
   actSendOutbox->setEnabled(false);
@@ -77,36 +77,36 @@ KNSavedArticleManager::KNSavedArticleManager(KNListView *v, KNAccountManager *am
 
 KNSavedArticleManager::~KNSavedArticleManager()
 {
-	delete defaultUser;
-	delete sDlg;
-	delete sedlg;
-	delete comList;
+  delete defaultUser;
+  delete sDlg;
+  delete sedlg;
+  delete comList;
 }
 
 
 
 void KNSavedArticleManager::readConfig()
 {
-	KConfig *conf=KGlobal::config();
-	QCString tmp;
-	conf->setGroup("IDENTITY");
-	defaultUser->load(conf);
-	conf->setGroup("POSTNEWS");
-	incSig=conf->readBoolEntry("incSig",true);
-	quotSign=conf->readEntry("QuotSign",">").local8Bit();
-	intro=conf->readEntry("Intro", "%NAME wrote:").local8Bit();
-	KNArticleBase::setDefaultCharset(conf->readEntry("Charset", "US-ASCII").local8Bit());
-	KNArticleBase::setDefaultTextEncoding((KNArticleBase::encoding)(conf->readNumEntry("Encoding", 0)));
-	KNArticleBase::setAllow8bitHeaders(conf->readBoolEntry("allow8bitChars", false));
-	genMId=conf->readBoolEntry("generateMId", false);
-	MIdhost=conf->readEntry("MIdhost").local8Bit();
-	KNComposer::readConfig();
-	for(KNComposer *c=comList->first(); c; c=comList->next())
-		c->setConfig();
+  KConfig *conf=KGlobal::config();
+  QCString tmp;
+  conf->setGroup("IDENTITY");
+  defaultUser->load(conf);
+  conf->setGroup("POSTNEWS");
+  incSig=conf->readBoolEntry("incSig",true);
+  quotSign=conf->readEntry("QuotSign",">").local8Bit();
+  intro=conf->readEntry("Intro", "%NAME wrote:").local8Bit();
+  KNArticleBase::setDefaultCharset(conf->readEntry("Charset", "US-ASCII").local8Bit());
+  KNArticleBase::setDefaultTextEncoding((KNArticleBase::encoding)(conf->readNumEntry("Encoding", 0)));
+  KNArticleBase::setAllow8bitHeaders(conf->readBoolEntry("allow8bitChars", false));
+  genMId=conf->readBoolEntry("generateMId", false);
+  MIdhost=conf->readEntry("MIdhost").local8Bit();
+  KNComposer::readConfig();
+  for(KNComposer *c=comList->first(); c; c=comList->next())
+    c->setConfig();
 }
 
 
-		
+    
 void KNSavedArticleManager::setStandardFolders(KNFolder *d, KNFolder *o, KNFolder *s)
 {
   fDrafts=d;
@@ -119,364 +119,364 @@ void KNSavedArticleManager::setStandardFolders(KNFolder *d, KNFolder *o, KNFolde
 
 void KNSavedArticleManager::setFolder(KNFolder *f)
 {
-	if(f!=0) {
-		if(f_older==0) view->header()->setLabel(1, i18n("newsgroups / To"));
-		if(sDlg) {
-			//if(sDlg->filter()==f_ilter) slotDoSearch(0);
-			sDlg->hide();
-		}
-	}
-	f_older=f;
-	setCurrentArticle(0);	
+  if(f!=0) {
+    if(f_older==0) view->header()->setLabel(1, i18n("newsgroups / To"));
+    if(sDlg) {
+      //if(sDlg->filter()==f_ilter) slotDoSearch(0);
+      sDlg->hide();
+    }
+  }
+  f_older=f;
+  setCurrentArticle(0); 
 }
 
 
 
 void KNSavedArticleManager::showHdrs()
 {
-	KNSavedArticle *art;
-	KNHdrViewItem *it;
-	//bool filterResult=true;
-	if(!f_older) return;
-	
-	view->clear();
-	knGlobals.top->setCursorBusy(true);
-	knGlobals.top->setStatusMsg(i18n(" Creating list ..."));
-	for(int idx=0; idx<f_older->length(); idx++) {
-		art=f_older->at(idx);
-		//if(f_ilter) filterResult=f_ilter->applyFilter(art);
-		//if(filterResult) {
-			it=new KNHdrViewItem(view, art);
-			art->setListItem(it);
-			art->updateListItem();
-		//}
-	}
-	if(view->firstChild())
-	  view->setCurrentItem(view->firstChild());
-	
-	knGlobals.top->setStatusMsg();
-	knGlobals.top->setCursorBusy(false);
-	updateStatusString();
+  KNSavedArticle *art;
+  KNHdrViewItem *it;
+  //bool filterResult=true;
+  if(!f_older) return;
+  
+  view->clear();
+  knGlobals.top->setCursorBusy(true);
+  knGlobals.top->setStatusMsg(i18n(" Creating list ..."));
+  for(int idx=0; idx<f_older->length(); idx++) {
+    art=f_older->at(idx);
+    //if(f_ilter) filterResult=f_ilter->applyFilter(art);
+    //if(filterResult) {
+      it=new KNHdrViewItem(view, art);
+      art->setListItem(it);
+      art->updateListItem();
+    //}
+  }
+  if(view->firstChild())
+    view->setCurrentItem(view->firstChild());
+  
+  knGlobals.top->setStatusMsg();
+  knGlobals.top->setCursorBusy(false);
+  updateStatusString();
 }
 
 
 
 /*void KNSavedArticleManager::search()
 {
-	if(!f_older) return;
-	if(sDlg) sDlg->show();
-	else {
-		sDlg=new KNSearchDialog(KNSearchDialog::STfolderSearch);
-		connect(sDlg, SIGNAL(dialogDone()), this, SLOT(slotSearchDialogDone()));
-		connect(sDlg, SIGNAL(doSearch(KNArticleFilter*)),
-			this, SLOT(slotDoSearch(KNArticleFilter*)));
-		sDlg->show();
-	}
+  if(!f_older) return;
+  if(sDlg) sDlg->show();
+  else {
+    sDlg=new KNSearchDialog(KNSearchDialog::STfolderSearch, knGlobal.top);
+    connect(sDlg, SIGNAL(dialogDone()), this, SLOT(slotSearchDialogDone()));
+    connect(sDlg, SIGNAL(doSearch(KNArticleFilter*)),
+      this, SLOT(slotDoSearch(KNArticleFilter*)));
+    sDlg->show();
+  }
 }*/
 
 
 
 void KNSavedArticleManager::setCurrentArticle(KNSavedArticle *a)
 {
-	c_urrentArticle=a;
-	if(a) {
-		mainArtWidget->setData(a, f_older);
-		if(a->hasContent()) showArticle(a);
-		else {
-			if(a->folder() && a->folder()->loadArticle(a)) showArticle(a);
-			else showError(a, i18n("Cannot load the article!"));
-		}
-	}	else {
+  c_urrentArticle=a;
+  if(a) {
+    mainArtWidget->setData(a, f_older);
+    if(a->hasContent()) showArticle(a);
+    else {
+      if(a->folder() && a->folder()->loadArticle(a)) showArticle(a);
+      else showError(a, i18n("Cannot load the article!"));
+    }
+  } else {
     actEdit->setEnabled(false);
     actDelete->setEnabled(false);
     actSendNow->setEnabled(false);
     actSendLater->setEnabled(false);
-	}
+  }
 }
 
 
 
 void KNSavedArticleManager::post(KNNntpAccount *acc)
 {
-	if(!acc) return;
-	if(defaultUser->isValid()) {
-  	KNSavedArticle *art=newArticle(acc);
-  	if(!art) return;
-  	openInComposer(art);
+  if(!acc) return;
+  if(defaultUser->isValid()) {
+    KNSavedArticle *art=newArticle(acc);
+    if(!art) return;
+    openInComposer(art);
   }
-  else KMessageBox::information(0, i18n("Please set your name and email first."));	
+  else KMessageBox::information(knGlobals.topWidget, i18n("Please set your name and email first."));  
 }
 
 
 
 void KNSavedArticleManager::post(KNGroup *g)
 {
-	if(!g) return;
-	if(defaultUser->isValid()) {
-  	KNSavedArticle *art=newArticle(g->account());
-  	if(!art) return;
-  	art->setDestination(g->name().utf8().copy());
-  	openInComposer(art);
+  if(!g) return;
+  if(defaultUser->isValid()) {
+    KNSavedArticle *art=newArticle(g->account());
+    if(!art) return;
+    art->setDestination(g->name().utf8().copy());
+    openInComposer(art);
   }
-  else KMessageBox::information(0, i18n("Please set your name and email first."));			
+  else KMessageBox::information(knGlobals.topWidget, i18n("Please set your name and email first."));      
 }
 
 
 
 void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
 {
-	QCString tmp, refs, introStr;
-	int start=0, found=0;
-	bool asMail=(g==0);
-	KNSavedArticle *art;
-	KNMimeContent *text;
-	
-	if(!a) return;
-	if(asMail) art=newArticle();
-	else art=newArticle(g->account());
+  QCString tmp, refs, introStr;
+  int start=0, found=0;
+  bool asMail=(g==0);
+  KNSavedArticle *art;
+  KNMimeContent *text;
+  
+  if(!a) return;
+  if(asMail) art=newArticle();
+  else art=newArticle(g->account());
   if(!art) return;
-	
-	if(asMail) {
-		tmp=a->replyToEmail();
-		if(tmp.isEmpty()) tmp=a->fromEmail().copy();
-		art->setDestination(tmp);
-	}
-	else {
-		tmp=a->headerLine("Followup-To");
-		if(tmp.isEmpty()) tmp=a->headerLine("Newsgroups");
-		else if(strcasecmp(tmp, "poster")==0) {
-			art->setStatus(KNArticleBase::AStoMail);
-			art->setServerId(-1);
-			tmp=a->replyToEmail();
-			if(tmp.isEmpty()) tmp=a->fromEmail().copy();
-		}
-		art->setDestination(tmp);
-		tmp=a->headerLine("References");
-		if(tmp.isEmpty()) tmp=a->headerLine("Message-Id");
-		else tmp+=" "+a->headerLine("Message-Id");
-		art->references().setLine(tmp);
-	}
-	
-		
-	if(strncasecmp(a->subject(), "re:", 3)!=0) tmp="Re: "+a->subject();
-	else tmp=a->subject().copy();
-	art->setSubject(tmp);
-	
-	
-	introStr="";
-	while(found!=-1) {
-		found=intro.find('%',start);
-		if(found>-1) {
-			introStr+=intro.mid(start,found-start);
-			tmp=intro.mid(found+1,4);	
-		  if(tmp=="NAME") {
-		  	introStr+=a->fromName();
-		  	start=found+5;
-		  }		
-			else if(tmp=="DATE") {
-				introStr+=a->headerLine("Date");
-				start=found+5;
-			}
-			else if(tmp=="MSID") {
-				introStr+=a->headerLine("Message-ID");
-				start=found+5;
-			}
-			else {
-				introStr+='%';
-				start=found+1;
-			}
-		}		
-		else introStr+=intro.mid(start, intro.length());
-	}
-	art->addBodyLine(introStr);
-	art->addBodyLine("");
-	text=a->textContent();
-	if(!text->mimeInfo()->isReadable()) text->decodeText();
-	for(char *line=text->firstBodyLine(); line; line=text->nextBodyLine()) {
-		if(!incSig && strncmp("-- ", line, 3)==0) break;
-		tmp=quotSign+" ";
-		tmp+=line;
-		art->addBodyLine(tmp);
-	}
-	openInComposer(art);		
+  
+  if(asMail) {
+    tmp=a->replyToEmail();
+    if(tmp.isEmpty()) tmp=a->fromEmail().copy();
+    art->setDestination(tmp);
+  }
+  else {
+    tmp=a->headerLine("Followup-To");
+    if(tmp.isEmpty()) tmp=a->headerLine("Newsgroups");
+    else if(strcasecmp(tmp, "poster")==0) {
+      art->setStatus(KNArticleBase::AStoMail);
+      art->setServerId(-1);
+      tmp=a->replyToEmail();
+      if(tmp.isEmpty()) tmp=a->fromEmail().copy();
+    }
+    art->setDestination(tmp);
+    tmp=a->headerLine("References");
+    if(tmp.isEmpty()) tmp=a->headerLine("Message-Id");
+    else tmp+=" "+a->headerLine("Message-Id");
+    art->references().setLine(tmp);
+  }
+  
+    
+  if(strncasecmp(a->subject(), "re:", 3)!=0) tmp="Re: "+a->subject();
+  else tmp=a->subject().copy();
+  art->setSubject(tmp);
+  
+  
+  introStr="";
+  while(found!=-1) {
+    found=intro.find('%',start);
+    if(found>-1) {
+      introStr+=intro.mid(start,found-start);
+      tmp=intro.mid(found+1,4); 
+      if(tmp=="NAME") {
+        introStr+=a->fromName();
+        start=found+5;
+      }   
+      else if(tmp=="DATE") {
+        introStr+=a->headerLine("Date");
+        start=found+5;
+      }
+      else if(tmp=="MSID") {
+        introStr+=a->headerLine("Message-ID");
+        start=found+5;
+      }
+      else {
+        introStr+='%';
+        start=found+1;
+      }
+    }   
+    else introStr+=intro.mid(start, intro.length());
+  }
+  art->addBodyLine(introStr);
+  art->addBodyLine("");
+  text=a->textContent();
+  if(!text->mimeInfo()->isReadable()) text->decodeText();
+  for(char *line=text->firstBodyLine(); line; line=text->nextBodyLine()) {
+    if(!incSig && strncmp("-- ", line, 3)==0) break;
+    tmp=quotSign+" ";
+    tmp+=line;
+    art->addBodyLine(tmp);
+  }
+  openInComposer(art);    
 }
 
 
 
 void KNSavedArticleManager::forward(KNArticle *a)
 {
-	KNSavedArticle *art;
-	KNMimeContent *text;
-	QCString tmp;
-	
-	if(!a) return;
-	
-		
-	text=a->textContent();
-	art=newArticle();
-	if(!art) return;
-	  	
-	tmp="Fwd: "+a->subject();
-	art->setSubject(tmp);
-	art->addBodyLine("");
-	art->addBodyLine("======= Forwarded message (begin) =======");
-	tmp="Subject: " + a->subject();
-	art->addBodyLine(tmp);
-	tmp="Date: " + a->headerLine("Date");
-	art->addBodyLine(tmp);
-	tmp="From: " + a->headerLine("From");
-	art->addBodyLine(tmp);
-	art->addBodyLine("");
-	
+  KNSavedArticle *art;
+  KNMimeContent *text;
+  QCString tmp;
+  
+  if(!a) return;
+  
+    
+  text=a->textContent();
+  art=newArticle();
+  if(!art) return;
+      
+  tmp="Fwd: "+a->subject();
+  art->setSubject(tmp);
+  art->addBodyLine("");
+  art->addBodyLine("======= Forwarded message (begin) =======");
+  tmp="Subject: " + a->subject();
+  art->addBodyLine(tmp);
+  tmp="Date: " + a->headerLine("Date");
+  art->addBodyLine(tmp);
+  tmp="From: " + a->headerLine("From");
+  art->addBodyLine(tmp);
+  art->addBodyLine("");
+  
   if(text) {
     if(!text->mimeInfo()->isReadable())
       text->decodeText();
-  	for(char *line=text->firstBodyLine(); line; line=text->nextBodyLine())
-  		if(strcmp("-- ", line)==0) art->addBodyLine("--");
-  		else art->addBodyLine(line);
+    for(char *line=text->firstBodyLine(); line; line=text->nextBodyLine())
+      if(strcmp("-- ", line)==0) art->addBodyLine("--");
+      else art->addBodyLine(line);
   }
-	
+  
   art->addBodyLine("=======  Forwarded message (end)  =======");
   art->addBodyLine("");
   art->addBodyLine("");
-  openInComposer(art);	
+  openInComposer(art);  
 }
 
 
 
 void KNSavedArticleManager::editArticle(KNSavedArticle *a)
 {
-	if(!a) a=c_urrentArticle;
-	if(!a) return;
-	if(a->editable()) openInComposer(a);
-	else KMessageBox::information(0, i18n("Sorry this article cannot be edited!"));
+  if(!a) a=c_urrentArticle;
+  if(!a) return;
+  if(a->editable()) openInComposer(a);
+  else KMessageBox::information(knGlobals.topWidget, i18n("Sorry this article cannot be edited!"));
 }
 
 
 
 void KNSavedArticleManager::saveArticle(KNSavedArticle *a)
 {
-	if(a->id()==-1) {
-		if(!fDrafts->addArticle(a)) {
-			KMessageBox::error(0, i18n("Cannot save the article!"));
-			delete a;
-		}
-		else if(f_older==fDrafts) showHdrs();
-	}
-	else {
-		if(!a->folder()->saveArticle(a))
-			KMessageBox::error(0, i18n("Cannot save the article!"));
-	}
-	
-	a->updateListItem();
-	showArticle(a, true);		
+  if(a->id()==-1) {
+    if(!fDrafts->addArticle(a)) {
+      KMessageBox::error(knGlobals.topWidget, i18n("Cannot save the article!"));
+      delete a;
+    }
+    else if(f_older==fDrafts) showHdrs();
+  }
+  else {
+    if(!a->folder()->saveArticle(a))
+      KMessageBox::error(knGlobals.topWidget, i18n("Cannot save the article!"));
+  }
+  
+  a->updateListItem();
+  showArticle(a, true);   
 }
 
 
 
 bool KNSavedArticleManager::deleteArticle(KNSavedArticle *a, bool ask)
 {
-	KNNntpAccount *acc=0;
-	if(!a) a=c_urrentArticle;
-	if(!a) return false;
-	
-	if((!ask)||
-		 (KMessageBox::Yes==KMessageBox::questionYesNo(0,i18n("Do you really want to delete\n this article?")))) {
-		if(a->id()!=-1) a->folder()->removeArticle(a);
-		if(a->serverId()!=-1 && !a->sent()) {
-			acc=getAccount(a);
-			if(acc) acc->decUnsentCount();
-		}
-		delete a;
-	  if(a==c_urrentArticle)
-	    mainArtWidget->showBlankPage();
-	  updateStatusString();
-	  return true;
-	}
-	else return false;
+  KNNntpAccount *acc=0;
+  if(!a) a=c_urrentArticle;
+  if(!a) return false;
+  
+  if((!ask)||
+     (KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,i18n("Do you really want to delete\n this article?")))) {
+    if(a->id()!=-1) a->folder()->removeArticle(a);
+    if(a->serverId()!=-1 && !a->sent()) {
+      acc=getAccount(a);
+      if(acc) acc->decUnsentCount();
+    }
+    delete a;
+    if(a==c_urrentArticle)
+      mainArtWidget->showBlankPage();
+    updateStatusString();
+    return true;
+  }
+  else return false;
 }
 
 
 
 void KNSavedArticleManager::sendArticle(KNSavedArticle *a, bool now)
 {
-	KNJobData *job;
-	if(!a) a=c_urrentArticle;
-	if(!a) return;
-	
-	if(a->sent()) {
-		KMessageBox::information(0, i18n("This article has already been sent."));
-		return;
-	}	
-	
-	if(!a->hasContent() && a->folder())
-		if(!a->folder()->loadArticle(a)) {
-			KMessageBox::error(0, i18n("Cannot load the article"));
-			return;
-		}
-		
-	if(now) {
-		if(a->locked()) return;
-		
-		if(a->isMail()) job=new KNJobData(KNJobData::JTmail, accM->smtp(), a);
-		else job=new KNJobData(KNJobData::JTpostArticle, getAccount(a), a);
-		
-	  knGlobals.netAccess->addJob(job);
-	}
-	else {
-		fOutbox->addArticle(a);
-	  actSendOutbox->setEnabled(true);
-		if(f_older==fOutbox) showHdrs();
-	}
-	if(a==c_urrentArticle) mainArtWidget->showBlankPage();
+  KNJobData *job;
+  if(!a) a=c_urrentArticle;
+  if(!a) return;
+  
+  if(a->sent()) {
+    KMessageBox::information(knGlobals.topWidget, i18n("This article has already been sent."));
+    return;
+  } 
+  
+  if(!a->hasContent() && a->folder())
+    if(!a->folder()->loadArticle(a)) {
+      KMessageBox::error(knGlobals.topWidget, i18n("Cannot load the article"));
+      return;
+    }
+    
+  if(now) {
+    if(a->locked()) return;
+    
+    if(a->isMail()) job=new KNJobData(KNJobData::JTmail, accM->smtp(), a);
+    else job=new KNJobData(KNJobData::JTpostArticle, getAccount(a), a);
+    
+    knGlobals.netAccess->addJob(job);
+  }
+  else {
+    fOutbox->addArticle(a);
+    actSendOutbox->setEnabled(true);
+    if(f_older==fOutbox) showHdrs();
+  }
+  if(a==c_urrentArticle) mainArtWidget->showBlankPage();
 }
 
 
 
 void KNSavedArticleManager::sendOutbox()
 {
-	KNSavedArticle *art=0;
-	KNJobData *job;
-	
-	if(fOutbox->isEmpty()) {
-		KMessageBox::information(0, i18n("The outbox is empty"));
-		return;
-	}
-	
-	for(int idx=0; idx<fOutbox->length(); idx++) {
-		art=fOutbox->at(idx);
-		if(art->locked() || art->sent()) continue;
-		
-		if(art->isMail())
-			job=new KNJobData(KNJobData::JTmail, accM->smtp(), art);
-		else
-			job=new KNJobData(KNJobData::JTpostArticle, getAccount(art), art);
-				
-		if(!art->hasContent() && art->folder()) {
-			if(!art->folder()->loadArticle(art)) {
-				job->setErrorString(i18n("Could not load the article"));
-				jobDone(job);
-			}
-		}
-		else knGlobals.netAccess->addJob(job);
-	}
+  KNSavedArticle *art=0;
+  KNJobData *job;
+  
+  if(fOutbox->isEmpty()) {
+    KMessageBox::information(knGlobals.topWidget, i18n("The outbox is empty"));
+    return;
+  }
+  
+  for(int idx=0; idx<fOutbox->length(); idx++) {
+    art=fOutbox->at(idx);
+    if(art->locked() || art->sent()) continue;
+    
+    if(art->isMail())
+      job=new KNJobData(KNJobData::JTmail, accM->smtp(), art);
+    else
+      job=new KNJobData(KNJobData::JTpostArticle, getAccount(art), art);
+        
+    if(!art->hasContent() && art->folder()) {
+      if(!art->folder()->loadArticle(art)) {
+        job->setErrorString(i18n("Could not load the article"));
+        jobDone(job);
+      }
+    }
+    else knGlobals.netAccess->addJob(job);
+  }
 }
 
 
 
 void KNSavedArticleManager::cancel(KNSavedArticle *a)
 {
-	if (!a) a=c_urrentArticle;
-	if (!a) return;
-	
+  if (!a) a=c_urrentArticle;
+  if (!a) return;
+  
   if (cancelAllowed(a))         // check if we can cancel
     if (generateCancel(a,getAccount(a))) {
-   		a->setStatus(KNArticleBase::AScanceled);      // the user agreed...
-	  	a->setHeader(KNArticleBase::HTxknstatus, "canceled");
-  		saveArticle(a);
-  		a->updateListItem();
-  		a->folder()->setToSync(true);
-  	}
+      a->setStatus(KNArticleBase::AScanceled);      // the user agreed...
+      a->setHeader(KNArticleBase::HTxknstatus, "canceled");
+      saveArticle(a);
+      a->updateListItem();
+      a->folder()->setToSync(true);
+    }
 }
 
 
@@ -486,24 +486,24 @@ void KNSavedArticleManager::cancel(KNFetchArticle *a, KNGroup *g)
   if (!a || !g) return;
 
   if (cancelAllowed(a,g))
-		generateCancel(a,g->account());
+    generateCancel(a,g->account());
 }
 
 
 
 void KNSavedArticleManager::supersede(KNSavedArticle *a)
 {
-	if (!a) a=c_urrentArticle;
-	if (!a) return;
-	
+  if (!a) a=c_urrentArticle;
+  if (!a) return;
+  
   if (cancelAllowed(a))         // check if we can cancel
     if (generateSupersede(a,getAccount(a))) {
-   		a->setStatus(KNArticleBase::AScanceled);      // the user agreed...
-	  	a->setHeader(KNArticleBase::HTxknstatus, "canceled");
-  		saveArticle(a);
-  		a->updateListItem();
-  		a->folder()->setToSync(true);
-  	}
+      a->setStatus(KNArticleBase::AScanceled);      // the user agreed...
+      a->setHeader(KNArticleBase::HTxknstatus, "canceled");
+      saveArticle(a);
+      a->updateListItem();
+      a->folder()->setToSync(true);
+    }
 }
 
 
@@ -511,90 +511,90 @@ void KNSavedArticleManager::supersede(KNSavedArticle *a)
 void KNSavedArticleManager::supersede(KNFetchArticle *a, KNGroup *g)
 {
   if (!a || !g) return;
-	
+  
   if (cancelAllowed(a,g))
-		generateSupersede(a,g->account());
+    generateSupersede(a,g->account());
 }
 
 
 
 KNSavedArticle* KNSavedArticleManager::newArticle(KNNntpAccount *acc)
 {
-	QCString mid;
-	KNSavedArticle *a;
-	
-	if(genMId) {
-		if(MIdhost.isEmpty()) {
-			KMessageBox::information(0, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
-	  	return 0;
-	  }
-	  else {
-	  	mid="<"+KNArticleBase::uniqueString();
-			mid+="@"+MIdhost+">";
-		}
-	}
-	
-	if(acc) {
-		a=new KNSavedArticle(KNArticleBase::AStoPost);
-		a->setServerId(acc->id());
-		acc->incUnsentCount();
-	}
-	else a=new KNSavedArticle(KNArticleBase::AStoMail);
-	a->initContent();
-	if(genMId) a->setHeader(KNArticleBase::HTmessageId, mid);
-	
-	//x-headers
-	QString dir(KGlobal::dirs()->saveLocation("appdata"));
-	if (dir==QString::null)
-		displayInternalFileError();
-	else {
-		KNFile f(dir+"xheaders");
-		if(f.open(IO_ReadOnly)) {
-			while(!f.atEnd())
-				a->addHeaderLine(f.readLine(), true);		
-			f.close();
-		}		
-	}
-	
-	a->mimeInfo()->setCTMediaType(KNArticleBase::MTtext);
-	a->mimeInfo()->setCTSubType(KNArticleBase::STplain);
-	return a;	
+  QCString mid;
+  KNSavedArticle *a;
+  
+  if(genMId) {
+    if(MIdhost.isEmpty()) {
+      KMessageBox::information(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
+      return 0;
+    }
+    else {
+      mid="<"+KNArticleBase::uniqueString();
+      mid+="@"+MIdhost+">";
+    }
+  }
+  
+  if(acc) {
+    a=new KNSavedArticle(KNArticleBase::AStoPost);
+    a->setServerId(acc->id());
+    acc->incUnsentCount();
+  }
+  else a=new KNSavedArticle(KNArticleBase::AStoMail);
+  a->initContent();
+  if(genMId) a->setHeader(KNArticleBase::HTmessageId, mid);
+  
+  //x-headers
+  QString dir(KGlobal::dirs()->saveLocation("appdata"));
+  if (dir==QString::null)
+    displayInternalFileError();
+  else {
+    KNFile f(dir+"xheaders");
+    if(f.open(IO_ReadOnly)) {
+      while(!f.atEnd())
+        a->addHeaderLine(f.readLine(), true);   
+      f.close();
+    }   
+  }
+  
+  a->mimeInfo()->setCTMediaType(KNArticleBase::MTtext);
+  a->mimeInfo()->setCTSubType(KNArticleBase::STplain);
+  return a; 
 }
 
 
 
 KNNntpAccount* KNSavedArticleManager::getAccount(KNSavedArticle *a)
 {
-	KNNntpAccount *acc=0;
-		
-	if(!a->isMail()) {
-		acc=accM->account(a->serverId());
+  KNNntpAccount *acc=0;
+    
+  if(!a->isMail()) {
+    acc=accM->account(a->serverId());
   }
-	return acc;
+  return acc;
 }
 
 
 
 void KNSavedArticleManager::openInComposer(KNSavedArticle *a)
 {
-	if(!a->hasContent() && a->folder())
-		if(!a->folder()->loadArticle(a)) {
-			KMessageBox::error(0, i18n("Cannot load the article"));
-			return;
-		}
-	
-	KNNntpAccount *acc=getAccount(a);
-	KNUserEntry *user = defaultUser;
-	if(!a->isMail() && a->hasDestination()) {
-		KNGroup *g=knGlobals.gManager->group(a->firstDestination(), acc);
-		if  (g && g->user())
-		  user = g->user();
-	}
+  if(!a->hasContent() && a->folder())
+    if(!a->folder()->loadArticle(a)) {
+      KMessageBox::error(knGlobals.topWidget, i18n("Cannot load the article"));
+      return;
+    }
+  
+  KNNntpAccount *acc=getAccount(a);
+  KNUserEntry *user = defaultUser;
+  if(!a->isMail() && a->hasDestination()) {
+    KNGroup *g=knGlobals.gManager->group(a->firstDestination(), acc);
+    if  (g && g->user())
+      user = g->user();
+  }
 
-	KNComposer *com=new KNComposer(a, user->getSignature(), acc);
+  KNComposer *com=new KNComposer(a, user->getSignature(), acc);
   com->show();
   connect(com, SIGNAL(composerDone(KNComposer*)),
-  	this, SLOT(slotComposerDone(KNComposer*)));
+    this, SLOT(slotComposerDone(KNComposer*)));
   comList->append(com);
 }
 
@@ -602,67 +602,67 @@ void KNSavedArticleManager::openInComposer(KNSavedArticle *a)
 
 bool KNSavedArticleManager::getComposerData(KNComposer *c)
 {
-	KNSavedArticle *art=c->article();
-	KNUserEntry *guser=0, *usr=0;
-	KNGroup *g=0;
-	QCString tmp;
+  KNSavedArticle *art=c->article();
+  KNUserEntry *guser=0, *usr=0;
+  KNGroup *g=0;
+  QCString tmp;
 
-	if(!c->hasValidData()) {
-		KMessageBox::information(0, i18n("Please enter a subject and at least one\nnewsgroup or mail-address!"));
-		return false;
-	}
-	
-	//composer
-	c->applyChanges();
-	
-	//set time
-	art->setTimeT(time(0));
+  if(!c->hasValidData()) {
+    KMessageBox::information(knGlobals.topWidget, i18n("Please enter a subject and at least one\nnewsgroup or mail-address!"));
+    return false;
+  }
+  
+  //composer
+  c->applyChanges();
+  
+  //set time
+  art->setTimeT(time(0));
 
-	//set additional headers
-	if(!art->isMail()) {
-		g=knGlobals.gManager->group(art->firstDestination(), getAccount(art));
-		if(g) guser=g->user();
-	}
-	
-	//UserAgent
-	art->setHeader(KNArticleBase::HTuserAgent, "KNode " KNODE_VERSION);
-	
-	//Organization
-	if(guser && guser->hasOrga()) usr=guser;
-	else usr=defaultUser;
-	if(usr->hasOrga()) art->setHeader(KNArticleBase::HTorga, usr->orga(), true);
-	else art->removeHeader("Organization");
-			
-	//Reply-To
+  //set additional headers
+  if(!art->isMail()) {
+    g=knGlobals.gManager->group(art->firstDestination(), getAccount(art));
+    if(g) guser=g->user();
+  }
+  
+  //UserAgent
+  art->setHeader(KNArticleBase::HTuserAgent, "KNode " KNODE_VERSION);
+  
+  //Organization
+  if(guser && guser->hasOrga()) usr=guser;
+  else usr=defaultUser;
+  if(usr->hasOrga()) art->setHeader(KNArticleBase::HTorga, usr->orga(), true);
+  else art->removeHeader("Organization");
+      
+  //Reply-To
   if(guser && guser->hasReplyTo())
-		usr=guser;
-	else
-		usr=defaultUser;
-	if(usr->hasReplyTo())
-		art->setHeader(KNArticleBase::HTreplyTo, usr->replyTo(), true);
-	else
-		art->removeHeader("Reply-To");
-	
-	//From
-	if(guser && guser->hasName()) usr=guser;
-	else usr=defaultUser;
-	tmp=usr->name().copy()+" <";
-	if(guser && guser->hasEmail()) usr=guser;
-	else usr=defaultUser;
-	tmp+=usr->email()+">";			
-	art->setHeader(KNArticleBase::HTfrom, tmp, true);
-	
-	
-	art->assemble();
-		
-	return true;	
+    usr=guser;
+  else
+    usr=defaultUser;
+  if(usr->hasReplyTo())
+    art->setHeader(KNArticleBase::HTreplyTo, usr->replyTo(), true);
+  else
+    art->removeHeader("Reply-To");
+  
+  //From
+  if(guser && guser->hasName()) usr=guser;
+  else usr=defaultUser;
+  tmp=usr->name().copy()+" <";
+  if(guser && guser->hasEmail()) usr=guser;
+  else usr=defaultUser;
+  tmp+=usr->email()+">";      
+  art->setHeader(KNArticleBase::HTfrom, tmp, true);
+  
+  
+  art->assemble();
+    
+  return true;  
 }
 
 
 
 void KNSavedArticleManager::showArticle(KNArticle *a, bool force)
 {
-	KNArticleManager::showArticle(a, force);
+  KNArticleManager::showArticle(a, force);
   actEdit->setEnabled(true);
   actDelete->setEnabled(true);
   actSendNow->setEnabled(true);
@@ -684,111 +684,111 @@ void KNSavedArticleManager::showError(KNArticle *a, const QString &error)
 
 void KNSavedArticleManager::slotComposerDone(KNComposer *com)
 {
-	KNSavedArticle *art=com->article();
-	bool delCom=true;
-		
-	switch(com->result()) {
-		case KNComposer::CRsendNow:
-			delCom=getComposerData(com);
-			if(delCom) sendArticle(art, true);
-			  else com->setDoneSuccess(false);			
-		break;
-		case KNComposer::CRsendLater:
-			delCom=getComposerData(com);
-			if (delCom) sendArticle(art, false);
-			  else com->setDoneSuccess(false);
-		break;
-		case KNComposer::CRsave :
-			delCom=getComposerData(com);
-			if(delCom) saveArticle(art);
-			  else com->setDoneSuccess(false);			
-		break;
-		case KNComposer::CRdelAsk:
-			delCom=deleteArticle(art, true);
-		break;
-		case KNComposer::CRdel:
-			delCom=deleteArticle(art, false);
-		break;
-		default: break;
-	};
-	if(delCom) {
-		comList->removeRef(com);
-		delete com;
-	}	
+  KNSavedArticle *art=com->article();
+  bool delCom=true;
+    
+  switch(com->result()) {
+    case KNComposer::CRsendNow:
+      delCom=getComposerData(com);
+      if(delCom) sendArticle(art, true);
+        else com->setDoneSuccess(false);      
+    break;
+    case KNComposer::CRsendLater:
+      delCom=getComposerData(com);
+      if (delCom) sendArticle(art, false);
+        else com->setDoneSuccess(false);
+    break;
+    case KNComposer::CRsave :
+      delCom=getComposerData(com);
+      if(delCom) saveArticle(art);
+        else com->setDoneSuccess(false);      
+    break;
+    case KNComposer::CRdelAsk:
+      delCom=deleteArticle(art, true);
+    break;
+    case KNComposer::CRdel:
+      delCom=deleteArticle(art, false);
+    break;
+    default: break;
+  };
+  if(delCom) {
+    comList->removeRef(com);
+    delete com;
+  } 
 }
 
 
 
 void KNSavedArticleManager::slotSendErrorDialogDone()
 {
-	delete sedlg;
-	sedlg=0;
+  delete sedlg;
+  sedlg=0;
 }
 
 
 void KNSavedArticleManager::jobDone(KNJobData *job)
 {
-	KNSavedArticle *art;
-	KNNntpAccount *acc;
-	art=(KNSavedArticle*)job->data();
-	
-	if(!job->success()) {
-		if(!sedlg) {
-			sedlg=new KNSendErrorDialog();
-			connect(sedlg, SIGNAL(dialogDone()), this, SLOT(slotSendErrorDialogDone()));
-			sedlg->show();
-		}
-		sedlg->appendJob(job);
-		fOutbox->addArticle(art);
-		if(f_older==fOutbox) showHdrs();
+  KNSavedArticle *art;
+  KNNntpAccount *acc;
+  art=(KNSavedArticle*)job->data();
+  
+  if(!job->success()) {
+    if(!sedlg) {
+      sedlg=new KNSendErrorDialog();
+      connect(sedlg, SIGNAL(dialogDone()), this, SLOT(slotSendErrorDialogDone()));
+      sedlg->show();
+    }
+    sedlg->appendJob(job);
+    fOutbox->addArticle(art);
+    if(f_older==fOutbox) showHdrs();
     actSendOutbox->setEnabled(true);
-	}
+  }
   else {
-		if(art->isMail()) {
-			art->setHeader(KNArticleBase::HTxknstatus, "mailed");
-			art->setStatus(KNArticleBase::ASmailed);
-		}
-		else {
-			art->setHeader(KNArticleBase::HTxknstatus, "posted");
-			art->setStatus(KNArticleBase::ASposted);
-			acc=(KNNntpAccount*)job->account();
-			acc->decUnsentCount();
-		}
-		fSent->addArticle(art);
-		if(f_older==fSent) showHdrs();
-	  actSendOutbox->setEnabled(!fOutbox->isEmpty());
-    delete job;	
-	}
+    if(art->isMail()) {
+      art->setHeader(KNArticleBase::HTxknstatus, "mailed");
+      art->setStatus(KNArticleBase::ASmailed);
+    }
+    else {
+      art->setHeader(KNArticleBase::HTxknstatus, "posted");
+      art->setStatus(KNArticleBase::ASposted);
+      acc=(KNNntpAccount*)job->account();
+      acc->decUnsentCount();
+    }
+    fSent->addArticle(art);
+    if(f_older==fSent) showHdrs();
+    actSendOutbox->setEnabled(!fOutbox->isEmpty());
+    delete job; 
+  }
 }
 
 
 
 /*void KNSavedArticleManager::slotSearchDialogDone()
 {
-	sDlg->hide();
-	slotDoSearch(0);
+  sDlg->hide();
+  slotDoSearch(0);
 }
 
 
 
 void KNSavedArticleManager::slotDoSearch(KNArticleFilter *f)
 {
-	f_ilter=f;
-	showHdrs();
+  f_ilter=f;
+  showHdrs();
 }*/
 
 
 
 void KNSavedArticleManager::mailToClicked(KNArticleWidget *aw)
 {
-	QCString tmp;
-	KNSavedArticle *art;
-	art=newArticle();
+  QCString tmp;
+  KNSavedArticle *art;
+  art=newArticle();
   if(!art) return;
-	tmp=aw->article()->replyToEmail();
-	if(tmp.isEmpty()) tmp=aw->article()->fromEmail();
-	art->setDestination(tmp.copy());
-	openInComposer(art);
+  tmp=aw->article()->replyToEmail();
+  if(tmp.isEmpty()) tmp=aw->article()->fromEmail();
+  art->setDestination(tmp.copy());
+  openInComposer(art);
 }
 
 
@@ -809,10 +809,10 @@ bool KNSavedArticleManager::closeComposeWindows()
 
 void KNSavedArticleManager::updateStatusString()
 {
-	if(f_older) {
-	  knGlobals.top->setStatusMsg(i18n(" %1 : %2 messages").arg(f_older->name()).arg(f_older->length()), SB_GROUP);
-	  knGlobals.top->setCaption(f_older->name());
-	}
+  if(f_older) {
+    knGlobals.top->setStatusMsg(i18n(" %1 : %2 messages").arg(f_older->name()).arg(f_older->length()), SB_GROUP);
+    knGlobals.top->setCaption(f_older->name());
+  }
 }
 
 
@@ -822,26 +822,26 @@ bool KNSavedArticleManager::cancelAllowed(KNSavedArticle *a)
   if (!a)
     return false;
   if (a->isMail()) {
-		KMessageBox::information(0, i18n("Emails cannot be canceled or superseded!"));
-		return false;
+    KMessageBox::information(knGlobals.topWidget, i18n("Emails cannot be canceled or superseded!"));
+    return false;
   }
   if ((a->type()==KNArticleBase::ATcontrol) && (static_cast<KNControlArticle*>(a)->ctlType()==KNArticleBase::CTcancel)) {
-		KMessageBox::information(0, i18n("Cancel messages cannot be canceled or superseded!"));
-		return false;
+    KMessageBox::information(knGlobals.topWidget, i18n("Cancel messages cannot be canceled or superseded!"));
+    return false;
   }
-	if (!a->sent()) {
-		KMessageBox::information(0, i18n("Only sent articles can be canceled or superseded!"));
-		return false;
+  if (!a->sent()) {
+    KMessageBox::information(knGlobals.topWidget, i18n("Only sent articles can be canceled or superseded!"));
+    return false;
   }
-	if (a->canceled()) {
-		KMessageBox::information(0, i18n("This article has already been canceled or superseded!"));	
-		return false;
-  }		
-	if(a->headerLine("Message-ID").isEmpty()) {
-		KMessageBox::information(0, i18n("This article cannot be canceled or superseded,\nbecause it's message-id has not been created by KNode!\nBut you can look for your article in the newsgroup\nand cancel (or supersede) it there."));
-		return false;
-	}
-	return true;
+  if (a->canceled()) {
+    KMessageBox::information(knGlobals.topWidget, i18n("This article has already been canceled or superseded!")); 
+    return false;
+  }   
+  if(a->headerLine("Message-ID").isEmpty()) {
+    KMessageBox::information(knGlobals.topWidget, i18n("This article cannot be canceled or superseded,\nbecause it's message-id has not been created by KNode!\nBut you can look for your article in the newsgroup\nand cancel (or supersede) it there."));
+    return false;
+  }
+  return true;
 }
 
 
@@ -850,15 +850,15 @@ bool KNSavedArticleManager::cancelAllowed(KNFetchArticle *a, KNGroup *g)
 {
   if (!a || !g)
     return false;
-	KNUserEntry *user = defaultUser;
-	if (g->user())
-	  user = g->user();
+  KNUserEntry *user = defaultUser;
+  if (g->user())
+    user = g->user();
   if (user->name()!=a->fromName()||user->email()!=a->fromEmail()) {
-		KMessageBox::information(0, i18n("This article does not appear to be from you.\nYou can only cancel or supersede you own articles."));	
+    KMessageBox::information(knGlobals.topWidget, i18n("This article does not appear to be from you.\nYou can only cancel or supersede you own articles."));  
     return false;
   }
   if (!a->hasContent())  {
-  	KMessageBox::information(0, i18n("You have to download the article body\nbefore you can cancel or supersede the article."));	
+    KMessageBox::information(knGlobals.topWidget, i18n("You have to download the article body\nbefore you can cancel or supersede the article."));  
     return false;
   }
   return true;
@@ -869,108 +869,108 @@ bool KNSavedArticleManager::cancelAllowed(KNFetchArticle *a, KNGroup *g)
 // returns false if aborted by the user
 bool KNSavedArticleManager::generateCancel(KNArticle *a, KNNntpAccount *acc)
 {
-	if(KMessageBox::No==KMessageBox::questionYesNo(0, i18n("Do you really want to cancel this article?")))
-	  return false;
-  bool sendNow = (KMessageBox::Yes==KMessageBox::questionYesNo(0, i18n("Do you want to send the cancel\nmessage now or later?"),QString::null,i18n("&Now"),i18n("&Later")));
+  if(KMessageBox::No==KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to cancel this article?")))
+    return false;
+  bool sendNow = (KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you want to send the cancel\nmessage now or later?"),QString::null,i18n("&Now"),i18n("&Later")));
 
-	QCString mid;
-	if (genMId) {
-		if (MIdhost.isEmpty()) {
-			KMessageBox::information(0, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
-	  	return false;
-	  } else {
-	  	mid="<"+KNArticleBase::uniqueString();
-			mid+="@"+MIdhost+">";
-		}
-	}
-	
-	KNControlArticle *ca=new KNControlArticle(KNArticleBase::CTcancel, KNArticleBase::AStoPost);
+  QCString mid;
+  if (genMId) {
+    if (MIdhost.isEmpty()) {
+      KMessageBox::information(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
+      return false;
+    } else {
+      mid="<"+KNArticleBase::uniqueString();
+      mid+="@"+MIdhost+">";
+    }
+  }
+  
+  KNControlArticle *ca=new KNControlArticle(KNArticleBase::CTcancel, KNArticleBase::AStoPost);
   ca->setServerId(acc->id());
-	acc->incUnsentCount();
-	ca->initContent();
-	if(genMId) ca->setHeader(KNArticleBase::HTmessageId, mid);
-	
-	QCString id=a->headerLine("Message-ID");
-	ca->setSubject("cancel of "+id);
-	ca->setHeader(KNArticleBase::HTfrom, a->headerLine("From"));
-	ca->setDestination(a->headerLine("Newsgroups"));
-	ca->setTimeT(time(0));
-	ca->setHeader(KNArticleBase::HTcontrol,"cancel "+id);
-	ca->addBodyLine("cancel by original author");
-	
-	ca->mimeInfo()->setCTMediaType(KNArticleBase::MTtext);
-	ca->mimeInfo()->setCTSubType(KNArticleBase::STplain);
-	
-	ca->assemble();
-	
-	sendArticle(ca, sendNow);
+  acc->incUnsentCount();
+  ca->initContent();
+  if(genMId) ca->setHeader(KNArticleBase::HTmessageId, mid);
+  
+  QCString id=a->headerLine("Message-ID");
+  ca->setSubject("cancel of "+id);
+  ca->setHeader(KNArticleBase::HTfrom, a->headerLine("From"));
+  ca->setDestination(a->headerLine("Newsgroups"));
+  ca->setTimeT(time(0));
+  ca->setHeader(KNArticleBase::HTcontrol,"cancel "+id);
+  ca->addBodyLine("cancel by original author");
+  
+  ca->mimeInfo()->setCTMediaType(KNArticleBase::MTtext);
+  ca->mimeInfo()->setCTSubType(KNArticleBase::STplain);
+  
+  ca->assemble();
+  
+  sendArticle(ca, sendNow);
 
   return true;
 }
 
-	
+  
 
 // returns false if aborted by the user
 bool KNSavedArticleManager::generateSupersede(KNArticle *a, KNNntpAccount *acc)
 {
-	if(KMessageBox::No==KMessageBox::questionYesNo(0, i18n("Do you really want to supersede this article?")))
-	  return false;
+  if(KMessageBox::No==KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to supersede this article?")))
+    return false;
 
-	QCString mid;
-	if (genMId) {
-		if (MIdhost.isEmpty()) {
-			KMessageBox::information(0, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
-	  	return false;
-	  } else {
-	  	mid="<"+KNArticleBase::uniqueString();
-			mid+="@"+MIdhost+">";
-		}
-	}
-	
-	KNControlArticle *ca=new KNControlArticle(KNArticleBase::CTsupersede, KNArticleBase::AStoPost);	
+  QCString mid;
+  if (genMId) {
+    if (MIdhost.isEmpty()) {
+      KMessageBox::information(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
+      return false;
+    } else {
+      mid="<"+KNArticleBase::uniqueString();
+      mid+="@"+MIdhost+">";
+    }
+  }
+  
+  KNControlArticle *ca=new KNControlArticle(KNArticleBase::CTsupersede, KNArticleBase::AStoPost); 
   ca->setServerId(acc->id());
-	acc->incUnsentCount();
-	
-	ca->copyContent(a);
-	ca->setHeader(KNArticleBase::HTsupersedes, a->headerLine("Message-ID"));
-		
-	if(genMId)
-	  ca->setHeader(KNArticleBase::HTmessageId, mid);
-	else
-	  ca->removeHeader("Message-Id");
-	
-	ca->parse();
- 	/*/x-headers
-	QString dir(KGlobal::dirs()->saveLocation("appdata"));
-	if (dir==QString::null)
-		displayInternalFileError();
-	else {
-		KNFile f(dir+"xheaders");
-		if(f.open(IO_ReadOnly)) {
-			while(!f.atEnd())
-				a->addHeaderLine(f.readLine(), true);		
-			f.close();
-		}		
-	}*/
+  acc->incUnsentCount();
+
+  ca->copyContent(a);
+  ca->setHeader(KNArticleBase::HTsupersedes, a->headerLine("Message-ID"));
+    
+  if(genMId)
+    ca->setHeader(KNArticleBase::HTmessageId, mid);
+  else
+    ca->removeHeader("Message-Id");
+  
+  ca->parse();
+  /*/x-headers
+  QString dir(KGlobal::dirs()->saveLocation("appdata"));
+  if (dir==QString::null)
+    displayInternalFileError();
+  else {
+    KNFile f(dir+"xheaders");
+    if(f.open(IO_ReadOnly)) {
+      while(!f.atEnd())
+        a->addHeaderLine(f.readLine(), true);   
+      f.close();
+    }   
+  }*/
 
   /*ca->setSubject(a->headerLine("Subject"));
-	ca->setDestination(a->headerLine("Newsgroups"));
-	QCString ref = a->headerLine("References");
-	if (!ref.isEmpty())
-  	ca->references()->setLine(ref);	
+  ca->setDestination(a->headerLine("Newsgroups"));
+  QCString ref = a->headerLine("References");
+  if (!ref.isEmpty())
+    ca->references()->setLine(ref); 
 
-	
-  	
+  
+    
   KNMimeContent *body=a->mainContent();
-	if(!body->mimeInfo()->isReadable()) body->prepareForDisplay();
-	for(char *line=body->firstBodyLine(); line; line=body->nextBodyLine()) {
-		if(!incSig && strncmp("-- ", line, 3)==0) break;
-		ca->addBodyLine(line);
-	}*/
-		
-	
-	openInComposer(ca);
-			
+  if(!body->mimeInfo()->isReadable()) body->prepareForDisplay();
+  for(char *line=body->firstBodyLine(); line; line=body->nextBodyLine()) {
+    if(!incSig && strncmp("-- ", line, 3)==0) break;
+    ca->addBodyLine(line);
+  }*/
+    
+  
+  openInComposer(ca);
+      
   return true;
 }
 

@@ -29,32 +29,32 @@ class QLineEdit;
 
 
 class KNPostTechSettings : public KNSettingsWidget  {
-	
-	Q_OBJECT
+  
+  Q_OBJECT
 
-	public:
-		KNPostTechSettings(QWidget *p);
-		~KNPostTechSettings();
-		
-		void apply();
-		
-	protected:
+  public:
+    KNPostTechSettings(QWidget *p);
+    ~KNPostTechSettings();
+    
+    void apply();
+    
+  protected:
     void init();
-		void enableEdit(bool e);
-		QComboBox *charset, *encoding;
-		QCheckBox *allow8bitCB, *genMIdCB;
-		QListBox *lb;
-		QPushButton *addBtn, *delBtn, *okBtn;
-		QLineEdit *host, *hName, *hValue;
-		bool saveHdrs, editEnabled;
-		int currentItem;
-		
-	protected slots:
-		void slotGenMIdCBtoggled(bool b);
-		void slotAddBtnClicked();
-		void slotDelBtnClicked();
-		void slotOkBtnClicked();
-		void slotItemSelected(int i);	
+    void enableEdit(bool e);
+    QComboBox *charset, *encoding;
+    QCheckBox *allow8bitCB, *genMIdCB;
+    QListBox *lb;
+    QPushButton *addBtn, *delBtn, *okBtn;
+    QLineEdit *host, *hName, *hValue;
+    bool saveHdrs, editEnabled;
+    int currentItem;
+    
+  protected slots:
+    void slotGenMIdCBtoggled(bool b);
+    void slotAddBtnClicked();
+    void slotDelBtnClicked();
+    void slotOkBtnClicked();
+    void slotItemSelected(int i); 
 
 };
 

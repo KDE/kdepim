@@ -79,64 +79,64 @@ class KNGroupListData {
 
 class KNGroupManager : public QObject {
 
-	Q_OBJECT
- 			
-	public:
-		KNGroupManager(KNFetchArticleManager *a, QObject * parent=0, const char * name=0);
-		~KNGroupManager();
-		
-		const KActionCollection& actions()    { return actionCollection; }	
-		
-		void readConfig();		
-	 	void loadGroups(KNNntpAccount *a);
+  Q_OBJECT
+      
+  public:
+    KNGroupManager(KNFetchArticleManager *a, QObject * parent=0, const char * name=0);
+    ~KNGroupManager();
+    
+    const KActionCollection& actions()    { return actionCollection; }  
+    
+    void readConfig();    
+    void loadGroups(KNNntpAccount *a);
     void getSubscribed(KNNntpAccount *a, QStrList* l);
-	  void getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l);	 	
-	 	void showGroupDialog(KNNntpAccount *a);
-	  void subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a);
-		void unsubscribeGroup(KNGroup *g=0);
-		void showGroupProperties(KNGroup *g=0);
-		void checkGroupForNewHeaders(KNGroup *g=0);
-		void expireGroupNow(KNGroup *g=0);
-		void resortGroup(KNGroup *g=0);
-			
-	  void setAutoCheck(bool check)         { a_utoCheck=check;}
-		bool autoCheck()                      { return a_utoCheck;}
-	 		
-		KNGroup* group(const QCString &gName, const KNServerInfo *s);
-		KNGroup* currentGroup()               { return c_urrentGroup; }
-		bool hasCurrentGroup()                { return (c_urrentGroup!=0); }
-		void setCurrentGroup(KNGroup *g);
-		
-		void checkAll(KNNntpAccount *a);
-	  bool timeToExpire();
-	  void expireAll(KNPurgeProgressDialog *dlg=0);
-	  void syncGroups();		
-	  void jobDone(KNJobData *j);			
-	
-	public slots:
-	  void slotLoadGroupList(KNNntpAccount *a);      // load group list from disk (if this fails: ask user if we should fetch the list)
+    void getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l);   
+    void showGroupDialog(KNNntpAccount *a);
+    void subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a);
+    void unsubscribeGroup(KNGroup *g=0);
+    void showGroupProperties(KNGroup *g=0);
+    void checkGroupForNewHeaders(KNGroup *g=0);
+    void expireGroupNow(KNGroup *g=0);
+    void resortGroup(KNGroup *g=0);
+      
+    void setAutoCheck(bool check)         { a_utoCheck=check;}
+    bool autoCheck()                      { return a_utoCheck;}
+      
+    KNGroup* group(const QCString &gName, const KNServerInfo *s);
+    KNGroup* currentGroup()               { return c_urrentGroup; }
+    bool hasCurrentGroup()                { return (c_urrentGroup!=0); }
+    void setCurrentGroup(KNGroup *g);
+    
+    void checkAll(KNNntpAccount *a);
+    bool timeToExpire();
+    void expireAll(KNPurgeProgressDialog *dlg=0);
+    void syncGroups();    
+    void jobDone(KNJobData *j);     
+  
+  public slots:
+    void slotLoadGroupList(KNNntpAccount *a);      // load group list from disk (if this fails: ask user if we should fetch the list)
     void slotFetchGroupList(KNNntpAccount *a);     // fetch group list from server
     void slotCheckForNewGroups(KNNntpAccount *a, QDate date);    // check for new groups (created after the given date)
-		
-	protected:
-		QList<KNGroup>  *gList;
-		KNGroup *c_urrentGroup;
-		KNFetchArticleManager *aManager;
-		int defaultMaxFetch;
-		bool a_utoCheck;
-		KAction *actProperties, *actLoadHdrs, *actExpire, *actResort, *actUnsubscribe;
-		KActionCollection actionCollection;
-				
-	protected slots:	
-	  void slotProperties()                 { showGroupProperties(); }
-	  void slotLoadHdrs() 		              { checkGroupForNewHeaders(); }
- 	  void slotExpire() 		                { expireGroupNow(); }
- 	  void slotResort() 		                { resortGroup(); }
- 	  void slotUnsubscribe();	
- 	
- 	signals:
- 	  void newListReady(KNGroupListData* d);
- 	  	
+    
+  protected:
+    QList<KNGroup>  *gList;
+    KNGroup *c_urrentGroup;
+    KNFetchArticleManager *aManager;
+    int defaultMaxFetch;
+    bool a_utoCheck;
+    KAction *actProperties, *actLoadHdrs, *actExpire, *actResort, *actUnsubscribe;
+    KActionCollection actionCollection;
+        
+  protected slots:  
+    void slotProperties()                 { showGroupProperties(); }
+    void slotLoadHdrs()                   { checkGroupForNewHeaders(); }
+    void slotExpire()                     { expireGroupNow(); }
+    void slotResort()                     { resortGroup(); }
+    void slotUnsubscribe(); 
+  
+  signals:
+    void newListReady(KNGroupListData* d);
+      
 };
 
 

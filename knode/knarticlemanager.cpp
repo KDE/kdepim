@@ -25,7 +25,6 @@
 #include <kopenwith.h>
 #include <klocale.h>
 
-#include "knode.h"
 #include "knarticlewidget.h"
 #include "knarticle.h"
 #include "knglobals.h"
@@ -56,14 +55,14 @@ KNSaveHelper::~KNSaveHelper()
 
 QFile* KNSaveHelper::getFile()
 {
-  url = KFileDialog::getSaveURL(s_aveName,QString::null,knGlobals.top,i18n("Save Article"));
+  url = KFileDialog::getSaveURL(s_aveName,QString::null,knGlobals.topWidget,i18n("Save Article"));
 
   if (url.isEmpty())
     return 0;
 
   if (url.isLocalFile()) {
     file = new QFile(url.path());
-		if(!file->open(IO_WriteOnly)) {
+    if(!file->open(IO_WriteOnly)) {
       displayExternalFileError();
       delete file;
       file = 0;
@@ -90,8 +89,8 @@ QList<KTempFile> KNArticleManager::tempFiles;
 
 KNArticleManager::KNArticleManager(KNListView *v)
 {
-	view=v;
-	mainArtWidget=KNArticleWidget::mainWidget();
+  view=v;
+  mainArtWidget=KNArticleWidget::mainWidget();
 }
 
 
@@ -122,9 +121,9 @@ void KNArticleManager::saveContentToFile(KNMimeContent *c)
   QFile *file = helper.getFile();
 
   if (file) {
-		DwString data=c->decodedData();
-		file->writeBlock(data.data(), data.size());
-	}
+    DwString data=c->decodedData();
+    file->writeBlock(data.data(), data.size());
+  }
 }
 
 
@@ -134,20 +133,20 @@ void KNArticleManager::saveArticleToFile(KNArticle *a)
   KNSaveHelper helper(a->subject().data());
 
   QFile *file = helper.getFile();
-	KNMimeContent *text=0;
-	if (file) {
+  KNMimeContent *text=0;
+  if (file) {
     DwString tmp = "";
-	  for(char *line=a->firstHeaderLine(); line; line=a->nextHeaderLine()) {
-  		tmp+=line;
-  		tmp+="\n";
-  	}
-  	tmp+="\n";
-  	text=a->textContent();
-  	if(text)
-  	  tmp+=text->decodedData();
-  	else if(!a->isMultipart())
-  	  tmp+=a->decodedData();
-		file->writeBlock(tmp.data(), tmp.size());
+    for(char *line=a->firstHeaderLine(); line; line=a->nextHeaderLine()) {
+      tmp+=line;
+      tmp+="\n";
+    }
+    tmp+="\n";
+    text=a->textContent();
+    if(text)
+      tmp+=text->decodedData();
+    else if(!a->isMultipart())
+      tmp+=a->decodedData();
+    file->writeBlock(tmp.data(), tmp.size());
   }
 }
 
@@ -157,11 +156,11 @@ QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
 {
   QString path;
 
-	QCString tmp=c->headerLine("X-KNode-Tempfile");       // check for existing temp file
-	if(!tmp.isEmpty()) {
-	  path=QString(tmp);
-	  return path;
-	}
+  QCString tmp=c->headerLine("X-KNode-Tempfile");       // check for existing temp file
+  if(!tmp.isEmpty()) {
+    path=QString(tmp);
+    return path;
+  }
 
   KTempFile* tmpFile = new KTempFile(QString::null,c->ctName());    // prefix null, real filename as suffix
   if (tmpFile->status()!=0) {
@@ -172,9 +171,9 @@ QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
 
   tempFiles.append(tmpFile);
   QFile *f = tmpFile->file();
-	DwString data=c->decodedData();
- 	f->writeBlock(data.data(), data.size());
- 	tmpFile->close();
+  DwString data=c->decodedData();
+  f->writeBlock(data.data(), data.size());
+  tmpFile->close();
   path = tmpFile->name();
   c->setHeader(KNArticleBase::HTxkntempfile, path.local8Bit());
 
@@ -203,19 +202,19 @@ void KNArticleManager::openContent(KNMimeContent *c)
 
 void KNArticleManager::showArticle(KNArticle *a, bool force)
 {
-	KNArticleWidget *aw;
-	if(!force) KNArticleWidget::showArticle(a);
-	else {
-		aw=KNArticleWidget::find(a);
-		if(aw) aw->updateContents();
-	}
+  KNArticleWidget *aw;
+  if(!force) KNArticleWidget::showArticle(a);
+  else {
+    aw=KNArticleWidget::find(a);
+    if(aw) aw->updateContents();
+  }
 }
 
 
 
 void KNArticleManager::showError(KNArticle *a, const QString &error)
 {
-	KNArticleWidget *aw=KNArticleWidget::find(a);
-	if(aw) aw->showErrorMessage(error);
+  KNArticleWidget *aw=KNArticleWidget::find(a);
+  if(aw) aw->showErrorMessage(error);
 }
 

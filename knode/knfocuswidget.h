@@ -24,26 +24,26 @@
 
 class KNFocusWidget : public QWidget  {
 
-	Q_OBJECT
+  Q_OBJECT
 
-	public:
-		KNFocusWidget(QWidget *parent=0, const char *name=0);
-		~KNFocusWidget();
-		
-		void setWidget(QWidget *w);
-		QWidget* widget()						{ return w_idget; }
-		void setFocus(bool f)				{ f_ocus=f; update(); }
-		bool focus()								{ return f_ocus; }
-		
-	protected:
-		void resizeEvent(QResizeEvent *e);
-		void paintEvent(QPaintEvent *e);
-		
-		QWidget *w_idget;
-		bool f_ocus;
-		
-	protected slots:
-		void slotFocusChanged(QFocusEvent *e);
+  public:
+    KNFocusWidget(QWidget *parent=0, const char *name=0);
+    ~KNFocusWidget();
+    
+    void setWidget(QWidget *w);
+    QWidget* widget()           { return w_idget; }
+    void setFocus(bool f)       { f_ocus=f; update(); }
+    bool focus()                { return f_ocus; }
+    
+  protected:
+    void resizeEvent(QResizeEvent *e);
+    void paintEvent(QPaintEvent *e);
+    
+    QWidget *w_idget;
+    bool f_ocus;
+    
+  protected slots:
+    void slotFocusChanged(QFocusEvent *e);
 };
 
 #endif

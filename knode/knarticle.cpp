@@ -31,37 +31,37 @@ KNArticle::KNArticle()
 
 KNArticle::~KNArticle()
 {
-	delete i_tem;
-	delete t_imeString;
+  delete i_tem;
+  delete t_imeString;
 }
 
 
 
 void KNArticle::clear()
 {
-	KNMimeContent::clear();
-	s_ubject.resize(0);	
+  KNMimeContent::clear();
+  s_ubject.resize(0); 
 }
 
 
 
 void KNArticle::parse()
 {
-	QCString tmp;
-	if(s_ubject.isEmpty()) s_ubject=decodeRFC1522String(headerLine("Subject"));
-	
-	if(t_imeT==0) {
-		tmp=headerLine("Date");
-		if(!tmp.isEmpty()) parseDate(tmp);
-	}	
-	
-	if(r_eferences.isEmpty()) {
-	  tmp=headerLine("References");
-	  if(!tmp.isEmpty())
-	    r_eferences.setLine(tmp);
-	}
-	
-	KNMimeContent::parse();
+  QCString tmp;
+  if(s_ubject.isEmpty()) s_ubject=decodeRFC1522String(headerLine("Subject"));
+  
+  if(t_imeT==0) {
+    tmp=headerLine("Date");
+    if(!tmp.isEmpty()) parseDate(tmp);
+  } 
+  
+  if(r_eferences.isEmpty()) {
+    tmp=headerLine("References");
+    if(!tmp.isEmpty())
+      r_eferences.setLine(tmp);
+  }
+  
+  KNMimeContent::parse();
 }
 
 
@@ -69,9 +69,9 @@ void KNArticle::parse()
 void KNArticle::parseDate(const QCString &s)
 {
   DwDateTime dt;
-	dt.FromString(s.data());
-	dt.Parse();
-	t_imeT=dt.AsUnixTime();
+  dt.FromString(s.data());
+  dt.Parse();
+  t_imeT=dt.AsUnixTime();
 }
 
 
@@ -102,104 +102,104 @@ void KNArticle::assemble()
 
 const QCString& KNArticle::fromName()
 {
-	static QCString ret;
-	ret="";
-		
-	FromLineParser flp(headerLine("From"));
-	flp.parse();
-	
-	if(flp.hasValidFrom()) ret=flp.from();	
-	else if(flp.hasValidEmail()) ret=flp.email();
-	else ret="nobody";
-	
-	return ret;	
-	
+  static QCString ret;
+  ret="";
+    
+  FromLineParser flp(headerLine("From"));
+  flp.parse();
+  
+  if(flp.hasValidFrom()) ret=flp.from();  
+  else if(flp.hasValidEmail()) ret=flp.email();
+  else ret="nobody";
+  
+  return ret; 
+  
 }
 
 
 
 const QCString& KNArticle::fromEmail()
 {
-	static QCString ret;
-	ret="";
-	
-	FromLineParser flp(headerLine("From"));
-	flp.parse();
-	if(flp.hasValidEmail()) ret=flp.email();
-	else ret="no email";	
-	
-	return ret;	
+  static QCString ret;
+  ret="";
+  
+  FromLineParser flp(headerLine("From"));
+  flp.parse();
+  if(flp.hasValidEmail()) ret=flp.email();
+  else ret="no email";  
+  
+  return ret; 
 }
 
 
 
 const QCString& KNArticle::replyToEmail()
 {
-	static QCString str;
-	
-	str=headerLine("Reply-To");
-	if(!str.isEmpty()) {
-		FromLineParser flp(str);
-		flp.parse();
-		if(flp.hasValidEmail()) str=flp.email();
-	}	
-	return str;	
+  static QCString str;
+  
+  str=headerLine("Reply-To");
+  if(!str.isEmpty()) {
+    FromLineParser flp(str);
+    flp.parse();
+    if(flp.hasValidEmail()) str=flp.email();
+  } 
+  return str; 
 }
 
 
 
 void KNArticle::setTimeT(time_t t)
 {
-	t_imeT=t;
-	if(t_imeString) {
-		//delete t_imeString;
-		//t_imeString=0;
-		DwDateTime dt;
-	  dt.FromUnixTime(t_imeT);
-		t_imeString->sprintf("%.2d.%.2d.%.2d (%.2d:%.2d)",dt.Day(),dt.Month(),(dt.Year()%100),dt.Hour(),dt.Minute());
-	}
+  t_imeT=t;
+  if(t_imeString) {
+    //delete t_imeString;
+    //t_imeString=0;
+    DwDateTime dt;
+    dt.FromUnixTime(t_imeT);
+    t_imeString->sprintf("%.2d.%.2d.%.2d (%.2d:%.2d)",dt.Day(),dt.Month(),(dt.Year()%100),dt.Hour(),dt.Minute());
+  }
 }
 
 
 
 const QString& KNArticle::timeString()
 {
-	if(!t_imeString) {
-		DwDateTime dt;
-	  dt.FromUnixTime(t_imeT);
-		t_imeString = new QString;
-		t_imeString->sprintf("%.2d.%.2d.%.2d (%.2d:%.2d)",dt.Day(),dt.Month(),(dt.Year()%100),dt.Hour(),dt.Minute());
-	}	
-	return *t_imeString;
+  if(!t_imeString) {
+    DwDateTime dt;
+    dt.FromUnixTime(t_imeT);
+    t_imeString = new QString;
+    t_imeString->sprintf("%.2d.%.2d.%.2d (%.2d:%.2d)",dt.Day(),dt.Month(),(dt.Year()%100),dt.Hour(),dt.Minute());
+  } 
+  return *t_imeString;
 }
 
 
 
 int KNArticle::age()
 {
-	static QDate today=QDate::currentDate();
-	static QDateTime artDate;
-	int a=0;
-	artDate.setTime_t(t_imeT);
-	a=artDate.date().daysTo(today);
-	return a;
+  static QDate today=QDate::currentDate();
+  static QDateTime artDate;
+  int a=0;
+  artDate.setTime_t(t_imeT);
+  a=artDate.date().daysTo(today);
+  return a;
 }
 
 
 
 int KNArticle::lines()
 {
-	QCString tmp=headerLine("Lines");
-	if(tmp.isEmpty()) return 0;
-	else return tmp.toInt();
+  QCString tmp=headerLine("Lines");
+  if(tmp.isEmpty()) return 0;
+  else return tmp.toInt();
 }
 
 
 
 void KNArticle::setListItem(KNHdrViewItem *it)
 {
-	i_tem=it;
-	if(it) it->art=this;
+  i_tem=it;
+  if(it) it->art=this;
 }
 
 

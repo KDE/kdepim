@@ -34,22 +34,22 @@ class KNProtocolClient : public QObject  {
   Q_OBJECT
 
   public:
-  	enum threadSignal	{ TSworkDone=0, TSjobStarted=1, TSconnect=2, TSloadGrouplist=3,
-  	                    TSwriteGrouplist=4, TSdownloadGrouplist=5, TSdownloadNew=6,
-  	                    TSsortNew=7, TSdownloadArticle=8, TSsendArticle=9, TSsendMail=10,
-  	                    TSprogressUpdate=11, TSdownloadDesc=12, TSdownloadNewGroups=13 };
+    enum threadSignal { TSworkDone=0, TSjobStarted=1, TSconnect=2, TSloadGrouplist=3,
+                        TSwriteGrouplist=4, TSdownloadGrouplist=5, TSdownloadNew=6,
+                        TSsortNew=7, TSdownloadArticle=8, TSsendArticle=9, TSsendMail=10,
+                        TSprogressUpdate=11, TSdownloadDesc=12, TSdownloadNewGroups=13 };
 
-  	KNProtocolClient(int NfdPipeIn, int NfdPipeOut, QObject *parent=0, const char *name=0);
-	  ~KNProtocolClient();
-	
-  	static void* startThread(void* pseudoThis);
+    KNProtocolClient(int NfdPipeIn, int NfdPipeOut, QObject *parent=0, const char *name=0);
+    ~KNProtocolClient();
+  
+    static void* startThread(void* pseudoThis);
 
     void insertJob(KNJobData *newJob);
     void removeJob();
 
     int getProgressValue() const { return progressValue; };
     int getByteCount() const { return byteCount; };       // bytes in&out for the current connection
-	
+  
   protected:
 
     void waitForWork();         // main loop, maintains connection and waits for next job
@@ -64,10 +64,10 @@ class KNProtocolClient : public QObject  {
     bool sendMsg(const DwString &msg);     // sends a message (multiple lines)
 
     bool getNextLine();                 // reads next complete line of input
-    char* getCurrentLine()  { return thisLine; };  // returns pointer to current line of input	
+    char* getCurrentLine()  { return thisLine; };  // returns pointer to current line of input  
     bool getMsg(QStrList &msg);         // receives a message (multiple lines)
     bool getNextResponse(int &rep);     // reads next line and returns the response code
-    bool checkNextResponse(int rep);  	// checks return code and calls handleErrors() if necessary
+    bool checkNextResponse(int rep);    // checks return code and calls handleErrors() if necessary
 
     virtual void handleErrors();         // interprets error code, generates error message and closes the connection
 

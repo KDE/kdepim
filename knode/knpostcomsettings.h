@@ -27,19 +27,19 @@ class QLineEdit;
 
 
 class KNPostComSettings : public KNSettingsWidget  {
-	
-	public:
-		KNPostComSettings(QWidget *p);
-		~KNPostComSettings();
-		
-		void apply();
-		
-	protected:
+  
+  public:
+    KNPostComSettings(QWidget *p);
+    ~KNPostComSettings();
+    
+    void apply();
+    
+  protected:
     void init();
-		QSpinBox *maxLen;
-		QCheckBox *ownSigCB, *fontCB, *authSigCB;
-		QLineEdit *intro, *quot;
-		
+    QSpinBox *maxLen;
+    QCheckBox *ownSigCB, *fontCB, *authSigCB;
+    QLineEdit *intro, *quot;
+    
 };
 
 #endif

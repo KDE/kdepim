@@ -25,14 +25,14 @@ class KNSettingsWidget;
 
 
 class KNSettingsDialog : public KDialogBase  {
-	
-	Q_OBJECT	
+  
+  Q_OBJECT  
 
-	public:
-		KNSettingsDialog(QWidget *parent=0, const char *name=0);
-		~KNSettingsDialog();
-		
-	protected:
+  public:
+    KNSettingsDialog(QWidget *parent=0, const char *name=0);
+    ~KNSettingsDialog();
+    
+  protected:
     QList<KNSettingsWidget> widgets;
 
     virtual void slotOk();

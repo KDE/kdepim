@@ -35,55 +35,55 @@
 
 KNReadAppSettings::KNReadAppSettings(QWidget *p) : KNSettingsWidget(p)
 {
-	QGroupBox *cGrp=new QGroupBox(i18n("Colors"), this);
-	QGroupBox *fGrp=new QGroupBox(i18n("Font"), this);
-	cList=new QListBox(cGrp);
-	colBtn=new KColorButton(cGrp);
-	cList->setMinimumSize(200,100);
-	colBtn->setMinimumSize(100,40);
-		
-	cList->insertItem(i18n("normal text"));
-	cList->insertItem(i18n("links"));
-	cList->insertItem(i18n("background"));
-	cList->insertItem(i18n("foreground"));
-	cList->insertItem(i18n("quoted text 1"));
-	cList->insertItem(i18n("quoted text 2"));
-	cList->insertItem(i18n("quoted text 3"));
-	
-	QLabel *l1=new QLabel(i18n("Family:"), fGrp);
-	QLabel *l2=new QLabel(i18n("fontsize:"), fGrp);
-				
-	fntFam=new QComboBox(false, fGrp);
-	fntFam->setSizeLimit(10);
+  QGroupBox *cGrp=new QGroupBox(i18n("Colors"), this);
+  QGroupBox *fGrp=new QGroupBox(i18n("Font"), this);
+  cList=new QListBox(cGrp);
+  colBtn=new KColorButton(cGrp);
+  cList->setMinimumSize(200,100);
+  colBtn->setMinimumSize(100,40);
+    
+  cList->insertItem(i18n("normal text"));
+  cList->insertItem(i18n("links"));
+  cList->insertItem(i18n("background"));
+  cList->insertItem(i18n("foreground"));
+  cList->insertItem(i18n("quoted text 1"));
+  cList->insertItem(i18n("quoted text 2"));
+  cList->insertItem(i18n("quoted text 3"));
+  
+  QLabel *l1=new QLabel(i18n("Family:"), fGrp);
+  QLabel *l2=new QLabel(i18n("fontsize:"), fGrp);
+        
+  fntFam=new QComboBox(false, fGrp);
+  fntFam->setSizeLimit(10);
   QFontDatabase fb;
   fntFam->insertStringList(fb.families());
-	
-	fntSize=new QComboBox(true, fGrp);
-	fntSize->setInsertionPolicy(QComboBox::NoInsertion);
+  
+  fntSize=new QComboBox(true, fGrp);
+  fntSize->setInsertionPolicy(QComboBox::NoInsertion);
   fntSize->setValidator(new QIntValidator(2,200,this));
   static const char* sizes[] = { "4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","22","24","26","28","32","48","64",0 };
   fntSize->insertStrList(sizes);
-  		
-	QVBoxLayout *topL=new QVBoxLayout(this, 10,5);
-	QVBoxLayout *colL=new QVBoxLayout(cGrp, 20,5);
-	QGridLayout *fntL=new QGridLayout(fGrp, 2,3, 20,5);
-	topL->addWidget(cGrp,1);
-	topL->addWidget(fGrp);
-	colL->addWidget(cList, 1);
-	colL->addWidget(colBtn);
-	fntL->addWidget(l1, 0,0);
-	fntL->addMultiCellWidget(fntFam, 0,0, 1,2);
-	fntL->addWidget(l2, 1,0);
-	fntL->addWidget(fntSize, 1,1);
-	fntL->setColStretch(2,1);
-	topL->setResizeMode(QLayout::Minimum);
-	topL->activate();
-		
-	connect(cList, SIGNAL(highlighted(int)), this, SLOT(slotCListChanged(int)));
-	connect(colBtn, SIGNAL(changed(const QColor&)),
-		this, SLOT(slotColorChanged(const QColor&)));
-	
-	init();
+      
+  QVBoxLayout *topL=new QVBoxLayout(this, 10,5);
+  QVBoxLayout *colL=new QVBoxLayout(cGrp, 20,5);
+  QGridLayout *fntL=new QGridLayout(fGrp, 2,3, 20,5);
+  topL->addWidget(cGrp,1);
+  topL->addWidget(fGrp);
+  colL->addWidget(cList, 1);
+  colL->addWidget(colBtn);
+  fntL->addWidget(l1, 0,0);
+  fntL->addMultiCellWidget(fntFam, 0,0, 1,2);
+  fntL->addWidget(l2, 1,0);
+  fntL->addWidget(fntSize, 1,1);
+  fntL->setColStretch(2,1);
+  topL->setResizeMode(QLayout::Minimum);
+  topL->activate();
+    
+  connect(cList, SIGNAL(highlighted(int)), this, SLOT(slotCListChanged(int)));
+  connect(colBtn, SIGNAL(changed(const QColor&)),
+    this, SLOT(slotColorChanged(const QColor&)));
+  
+  init();
   cList->setCurrentItem(0);
 }
 
@@ -97,55 +97,55 @@ KNReadAppSettings::~KNReadAppSettings()
 
 void KNReadAppSettings::init()
 {
-	KConfig *c=KGlobal::config();
-	QColor w(white), b(black), g(gray);
-	QColor *dflt;	
-	
-	c->setGroup("FONTS-COLORS");
-	for(int i=0; i<7; i++) {
-		if (i==2) dflt=&w;
-		else if (i==3) dflt=&g;
-		else dflt=&b;
-		colors[i]=c->readColorEntry(QString("color%1").arg(i+1), dflt);
-	}
-	
-	QString s=c->readEntry("family","helvetica");
-	for(int i=0; i < fntFam->count(); i++)
-		if(fntFam->text(i) == s) {
-			fntFam->setCurrentItem(i);
-			break;
-		}
-	
-	fntSize->setEditText(QString::number(c->readNumEntry("size", 12)));
+  KConfig *c=KGlobal::config();
+  QColor w(white), b(black), g(gray);
+  QColor *dflt; 
+  
+  c->setGroup("FONTS-COLORS");
+  for(int i=0; i<7; i++) {
+    if (i==2) dflt=&w;
+    else if (i==3) dflt=&g;
+    else dflt=&b;
+    colors[i]=c->readColorEntry(QString("color%1").arg(i+1), dflt);
+  }
+  
+  QString s=c->readEntry("family","helvetica");
+  for(int i=0; i < fntFam->count(); i++)
+    if(fntFam->text(i) == s) {
+      fntFam->setCurrentItem(i);
+      break;
+    }
+  
+  fntSize->setEditText(QString::number(c->readNumEntry("size", 12)));
 }
 
 
 
 void KNReadAppSettings::apply()
 {
-	KConfig *c=KGlobal::config();
-	
-	c->setGroup("FONTS-COLORS");
-	for(int i=0; i<7; i++)
-		c->writeEntry(QString("color%1").arg(i+1), colors[i]);
-	
-	c->writeEntry("family", fntFam->currentText());
-	c->writeEntry("size", fntSize->currentText().toInt());
+  KConfig *c=KGlobal::config();
+  
+  c->setGroup("FONTS-COLORS");
+  for(int i=0; i<7; i++)
+    c->writeEntry(QString("color%1").arg(i+1), colors[i]);
+  
+  c->writeEntry("family", fntFam->currentText());
+  c->writeEntry("size", fntSize->currentText().toInt());
 }
 
 
 
 void KNReadAppSettings::slotCListChanged(int id)
 {
-	colBtn->setColor(colors[id]);
+  colBtn->setColor(colors[id]);
 }
 
 
 
 void KNReadAppSettings::slotColorChanged(const QColor &col)
 {
-	int idx=cList->currentItem();
-	if(idx!=-1) colors[idx]=col;
+  int idx=cList->currentItem();
+  if(idx!=-1) colors[idx]=col;
 }
 
 

@@ -36,47 +36,47 @@ KNSmtpClient::~KNSmtpClient()
 // examines the job and calls the suitable handling method
 void KNSmtpClient::processJob()
 {
-	switch (job->type()) {
-		case KNJobData::JTmail :
-			doMail();
-			break;
-		default:
-			qDebug("KNSmtpClient::processJob(): mismatched job");		
-	}
+  switch (job->type()) {
+    case KNJobData::JTmail :
+      doMail();
+      break;
+    default:
+      qDebug("KNSmtpClient::processJob(): mismatched job");   
+  }
 }
-	
+  
 
 void KNSmtpClient::doMail()
 {
-	KNSavedArticle *art=(KNSavedArticle*)job->data();
-	
-	sendSignal(TSsendMail);	
-	
-	QCString cmd = "MAIL FROM:";
-	//cmd += art->headerLine("From");
-	cmd += art->fromEmail();
-	if (!sendCommandWCheck(cmd,250))
-		return;
-		
-	progressValue = 80;
+  KNSavedArticle *art=(KNSavedArticle*)job->data();
+  
+  sendSignal(TSsendMail); 
+  
+  QCString cmd = "MAIL FROM:";
+  //cmd += art->headerLine("From");
+  cmd += art->fromEmail();
+  if (!sendCommandWCheck(cmd,250))
+    return;
+    
+  progressValue = 80;
 
-	cmd = "RCPT TO:";
-	cmd += art->headerLine("To");
-	if (!sendCommandWCheck(cmd,250))
-		return;
-		
-	progressValue = 90;
+  cmd = "RCPT TO:";
+  cmd += art->headerLine("To");
+  if (!sendCommandWCheck(cmd,250))
+    return;
+    
+  progressValue = 90;
 
-	if (!sendCommandWCheck("DATA",354))
-		return;
-		
-	progressValue = 100;
-	
-	if (!sendMsg(art->encodedData()))
-		return;
-		
-	if (!checkNextResponse(250))
-		return;
+  if (!sendCommandWCheck("DATA",354))
+    return;
+    
+  progressValue = 100;
+  
+  if (!sendMsg(art->encodedData()))
+    return;
+    
+  if (!checkNextResponse(250))
+    return;
 }
 
 
@@ -85,35 +85,35 @@ bool KNSmtpClient::openConnection()
   QString oldPrefix = errorPrefix;
   errorPrefix=i18n("Unable to connect.\nThe following error ocurred:\n");
 
-	if (!KNProtocolClient::openConnection())
-		return false;
-		
-	progressValue = 30;
-		
-	if (!checkNextResponse(220))
-		return false;
-		
-	progressValue = 50;
+  if (!KNProtocolClient::openConnection())
+    return false;
+    
+  progressValue = 30;
+    
+  if (!checkNextResponse(220))
+    return false;
+    
+  progressValue = 50;
 
-	char hostName[500];
+  char hostName[500];
 
-	QCString cmd = "HELO ";
-		
-	if (gethostname(hostName,490)==0) {
-	  cmd += hostName;
-  	qDebug("KNSmtpClient::openConnection(): %s",cmd.data());	
-	} else {
-		cmd += "foo";
-  	qDebug("KNSmtpClient::openConnection(): can't detect hostname, using foo");
-	}
-	
-	if (!sendCommandWCheck(cmd,250))
-		return false;
-		
-	progressValue = 70;
-	
-	errorPrefix = oldPrefix;
-	return true;
+  QCString cmd = "HELO ";
+    
+  if (gethostname(hostName,490)==0) {
+    cmd += hostName;
+    qDebug("KNSmtpClient::openConnection(): %s",cmd.data());  
+  } else {
+    cmd += "foo";
+    qDebug("KNSmtpClient::openConnection(): can't detect hostname, using foo");
+  }
+  
+  if (!sendCommandWCheck(cmd,250))
+    return false;
+    
+  progressValue = 70;
+  
+  errorPrefix = oldPrefix;
+  return true;
 }
 
 

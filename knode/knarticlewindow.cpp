@@ -33,14 +33,14 @@
 
 
 KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const char *name )
-	: KMainWindow(0, name)
+  : KMainWindow(0, name)
 {
-	if(art)
-		setCaption(art->subject());
+  if(art)
+    setCaption(art->subject());
   //setIcon(UserIcon("posting"));
 
-	artW=new KNArticleWidget(this);
-	artW->setData(art, col);
+  artW=new KNArticleWidget(this);
+  artW->setData(art, col);
   setCentralWidget(artW);
 
   *actionCollection() += artW->actions();        // include the actions of the article widget
@@ -70,56 +70,56 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
   guiFactory()->addClient(artW->part());
   conserveMemory();
 
-	restoreWindowSize("reader", this, QSize(500,400));
+  restoreWindowSize("reader", this, QSize(500,400));
 }
 
 
 
 KNArticleWindow::~KNArticleWindow()
 {
-	saveWindowSize("reader", size());	
+  saveWindowSize("reader", size()); 
 }
 
 
 
 void KNArticleWindow::slotFileClose()
 {
-	close();
+  close();
 }
 
 
 
 void KNArticleWindow::slotArtReply()
 {
-	knGlobals.sArtManager->reply(artW->article(),static_cast<KNGroup*>(artW->collection()));
+  knGlobals.sArtManager->reply(artW->article(),static_cast<KNGroup*>(artW->collection()));
 }
 
 
 
 void KNArticleWindow::slotArtRemail()
 {
-	knGlobals.sArtManager->reply(artW->article(), 0);
+  knGlobals.sArtManager->reply(artW->article(), 0);
 }
 
 
 
 void KNArticleWindow::slotArtForward()
 {
-	knGlobals.sArtManager->forward(artW->article());
+  knGlobals.sArtManager->forward(artW->article());
 }
 
 
 
 void KNArticleWindow::slotArtCancel()
 {
-	knGlobals.sArtManager->cancel(static_cast<KNFetchArticle*>(artW->article()),static_cast<KNGroup*>(artW->collection()));
+  knGlobals.sArtManager->cancel(static_cast<KNFetchArticle*>(artW->article()),static_cast<KNGroup*>(artW->collection()));
 }
 
 
 
 void KNArticleWindow::slotArtSupersede()
 {
-	knGlobals.sArtManager->supersede(static_cast<KNFetchArticle*>(artW->article()),static_cast<KNGroup*>(artW->collection()));
+  knGlobals.sArtManager->supersede(static_cast<KNFetchArticle*>(artW->article()),static_cast<KNGroup*>(artW->collection()));
 }
 
 
@@ -134,15 +134,15 @@ void KNArticleWindow::slotToggleToolBar()
 
 
 
-  	
+    
 void KNArticleWindow::slotConfKeys()
 {
   KKeyDialog::configureKeys(actionCollection(),xmlFile());
 }
 
- 	
+  
 
-  	
+    
 void KNArticleWindow::slotConfToolbar()
 {
   KEditToolbar dlg(actionCollection());

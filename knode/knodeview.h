@@ -31,45 +31,45 @@ class KNodeView : public QSplitter
 {
   Q_OBJECT
 
- 	friend class KNodeApp;
- 	
- 	public:
- 		 	
-		KNodeView(QWidget *parent=0,const char * name=0);
- 		~KNodeView();
- 		
-		const KActionCollection& actions()      { return actionCollection; } 		
- 		
-		void readOptions();
-		void saveOptions();				
- 		 			
+  friend class KNodeApp;
+  
+  public:
+      
+    KNodeView(QWidget *parent=0,const char * name=0);
+    ~KNodeView();
+    
+    const KActionCollection& actions()      { return actionCollection; }    
+    
+    void readOptions();
+    void saveOptions();       
+          
   protected:
- 		void initCollectionView();
+    void initCollectionView();
     void initHdrView();
- 		
- 		QSplitter *PanHorz;
- 	 	KNArticleWidget *artView;
- 	 	KNListView *hdrView;
-   	KNListView *collectionView;
+    
+    QSplitter *PanHorz;
+    KNArticleWidget *artView;
+    KNListView *hdrView;
+    KNListView *collectionView;
     int sPos1, sPos2;
 
     KSelectAction *actSortSelect;
     KAction *actNextArt, *actPrevArt, *actNextUnreadArt, *actReadThrough, *actNextUnreadThread,
             *actNextGroup, *actPrevGroup, *actToggleThread;
-		KActionCollection actionCollection;
+    KActionCollection actionCollection;
 
   protected slots:
-   	void slotSortMenuSelect(int newCol);   // select from KSelectAction
-   	void slotSortHdrSelect(int newCol);    // select from QListView header
-   	void slotNextArticle();
-   	void slotPrevArticle();
-   	void slotNextUnreadArticle();
-   	void slotReadThrough();
-   	void slotNextUnreadThread();
-   	void slotNextGroup();
-   	void slotPrevGroup();
-   	void slotToggleThread();
-   	
+    void slotSortMenuSelect(int newCol);   // select from KSelectAction
+    void slotSortHdrSelect(int newCol);    // select from QListView header
+    void slotNextArticle();
+    void slotPrevArticle();
+    void slotNextUnreadArticle();
+    void slotReadThrough();
+    void slotNextUnreadThread();
+    void slotNextGroup();
+    void slotPrevGroup();
+    void slotToggleThread();
+    
 };
 
 #endif // KNODEVIEW_H

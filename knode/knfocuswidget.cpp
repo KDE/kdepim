@@ -21,9 +21,9 @@
 
 
 KNFocusWidget::KNFocusWidget(QWidget *parent, const char *name)
-	: QWidget(parent, name)
+  : QWidget(parent, name)
 {
-	f_ocus=false;
+  f_ocus=false;
 }
 
 
@@ -36,42 +36,42 @@ KNFocusWidget::~KNFocusWidget()
 
 void KNFocusWidget::setWidget(QWidget *w)
 {
-	w_idget=w;
-	connect(w_idget, SIGNAL(focusChanged(QFocusEvent*)),
-		this, SLOT(slotFocusChanged(QFocusEvent*)));
+  w_idget=w;
+  connect(w_idget, SIGNAL(focusChanged(QFocusEvent*)),
+    this, SLOT(slotFocusChanged(QFocusEvent*)));
 }
 
 
 
 void KNFocusWidget::resizeEvent(QResizeEvent *)
 {
-	w_idget->setGeometry(0, 2, width(), height()-2);	
+  w_idget->setGeometry(0, 2, width(), height()-2);  
 }
 
 
 
 void KNFocusWidget::paintEvent(QPaintEvent *)
 {
-	if(f_ocus) {
-		QPainter p(this);
-		QPen pen(colorGroup().highlight(),2);
-		p.setPen(pen);
-		p.drawLine(0,1,width(),1);
-	}
+  if(f_ocus) {
+    QPainter p(this);
+    QPen pen(colorGroup().highlight(),2);
+    p.setPen(pen);
+    p.drawLine(0,1,width(),1);
+  }
 }
 
 
 
 void KNFocusWidget::slotFocusChanged(QFocusEvent *e)
 {
-	if(e->gotFocus()) {
-		setFocus(true);
-		//qDebug("focus in");
-	}
-	else if(e->lostFocus()) {
-		setFocus(false);
-		//qDebug("focus out");
-	}		
+  if(e->gotFocus()) {
+    setFocus(true);
+    //qDebug("focus in");
+  }
+  else if(e->lostFocus()) {
+    setFocus(false);
+    //qDebug("focus out");
+  }   
 }
 
 

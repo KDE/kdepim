@@ -31,76 +31,76 @@ class DwString;
 
 
 class KNMimeContent : public KNArticleBase  {
-	
-	public:
-		KNMimeContent();
-		virtual ~KNMimeContent();
-	
-	  void initContent();
-		virtual void parse();
-		virtual void assemble();
-		virtual void clear();
-		virtual void copyContent(KNMimeContent *c);
-		void clearAttachments()				  { if(ct_List) ct_List->clear(); }		
-		void clearHead()								{ if(h_ead) h_ead->clear(); }		
-		void clearBody()								{ if(b_ody) b_ody->clear(); }				
-		void decodeText();
-		//void prepareHtml();		
-		void changeEncoding(int e);
-		
-		//get
-		
-		//info
-		virtual articleType type()			{ return ATmimeContent; }
-		KNMimeInfo* mimeInfo();
-		bool isMultipart()							{ return mInfo->ctMediaType()==MTmultipart; }
-		bool hasContent()							  { return (  (b_ody!=0 && !b_ody->isEmpty()) ||
-		                                            (ct_List!=0 && !ct_List->isEmpty()) ); }	
-		QCString ctCharset();
-		QCString ctMimeType();
-		QCString ctEncoding();
-		QCString ctName();
-		QCString ctDescription();
-		int contentSize();
-		int contentLineCount();
-		
-		//content
-		KNMimeContent* textContent();
-		QString htmlCode();
-		void attachments(QList<KNMimeContent> *dst, bool incAlternatives=false);
-				
-		QCString headerLine(const char* name);				
-		char* firstHeaderLine()								{ if(h_ead) return h_ead->first();
-																						else return 0; }
-		char* nextHeaderLine()								{ if(h_ead) return h_ead->next();
-																						else return 0; }
-		char* firstBodyLine()									{ if(b_ody) return b_ody->first();
-																						else return 0; }
-		char* nextBodyLine()									{ if(b_ody) return b_ody->next();
-																						else return 0; }
-		virtual DwString decodedData();
-		virtual DwString encodedData();
-		void toStream(QTextStream &ts);			
-								
-		
-		//set	
-		void setData(QStrList *data, bool crfl=true);
-		void addBodyLine(const char* line) 	{ if(b_ody) b_ody->append(line); }
-		void addHeaderLine(const char *line, bool encode=false);
-		void setHeader(const char* name, const QCString &value, bool encode=false);
-		void setHeader(headerType t, const QCString &value, bool encode=false);
-		bool removeHeader(const char* name);
-		void addContent(KNMimeContent *c, bool prepend=false);
-		void removeContent(KNMimeContent *c, bool del=false);
-		
-		
-			
-						
-	protected:
-		QStrList      				*h_ead, *b_ody;
-		QList<KNMimeContent>  *ct_List;
-		KNMimeInfo *mInfo;
-				
+  
+  public:
+    KNMimeContent();
+    virtual ~KNMimeContent();
+  
+    void initContent();
+    virtual void parse();
+    virtual void assemble();
+    virtual void clear();
+    virtual void copyContent(KNMimeContent *c);
+    void clearAttachments()         { if(ct_List) ct_List->clear(); }   
+    void clearHead()                { if(h_ead) h_ead->clear(); }   
+    void clearBody()                { if(b_ody) b_ody->clear(); }       
+    void decodeText();
+    //void prepareHtml();   
+    void changeEncoding(int e);
+    
+    //get
+    
+    //info
+    virtual articleType type()      { return ATmimeContent; }
+    KNMimeInfo* mimeInfo();
+    bool isMultipart()              { return mInfo->ctMediaType()==MTmultipart; }
+    bool hasContent()               { return (  (b_ody!=0 && !b_ody->isEmpty()) ||
+                                                (ct_List!=0 && !ct_List->isEmpty()) ); }  
+    QCString ctCharset();
+    QCString ctMimeType();
+    QCString ctEncoding();
+    QCString ctName();
+    QCString ctDescription();
+    int contentSize();
+    int contentLineCount();
+    
+    //content
+    KNMimeContent* textContent();
+    QString htmlCode();
+    void attachments(QList<KNMimeContent> *dst, bool incAlternatives=false);
+        
+    QCString headerLine(const char* name);        
+    char* firstHeaderLine()               { if(h_ead) return h_ead->first();
+                                            else return 0; }
+    char* nextHeaderLine()                { if(h_ead) return h_ead->next();
+                                            else return 0; }
+    char* firstBodyLine()                 { if(b_ody) return b_ody->first();
+                                            else return 0; }
+    char* nextBodyLine()                  { if(b_ody) return b_ody->next();
+                                            else return 0; }
+    virtual DwString decodedData();
+    virtual DwString encodedData();
+    void toStream(QTextStream &ts);     
+                
+    
+    //set 
+    void setData(QStrList *data, bool crfl=true);
+    void addBodyLine(const char* line)  { if(b_ody) b_ody->append(line); }
+    void addHeaderLine(const char *line, bool encode=false);
+    void setHeader(const char* name, const QCString &value, bool encode=false);
+    void setHeader(headerType t, const QCString &value, bool encode=false);
+    bool removeHeader(const char* name);
+    void addContent(KNMimeContent *c, bool prepend=false);
+    void removeContent(KNMimeContent *c, bool del=false);
+    
+    
+      
+            
+  protected:
+    QStrList              *h_ead, *b_ody;
+    QList<KNMimeContent>  *ct_List;
+    KNMimeInfo *mInfo;
+        
 };
 
 
@@ -138,7 +138,7 @@ class KNAttachment {
     void detach(KNMimeContent *c);
 
 
-  protected:		
+  protected:    
     KNMimeContent *c_ontent;
     QString c_tName, c_tMimeType, c_tDescription;
     KNArticleBase::encoding c_te;

@@ -37,46 +37,46 @@ KNServerInfo::~KNServerInfo()
 
 void KNServerInfo::copy(KNServerInfo *i)
 {
-	t_ype=i->type();
+  t_ype=i->type();
     p_ort=i->port();
- 	h_old=i->hold();
- 	t_imeout=i->timeout();
-	s_erver=i->server().copy();
-	u_ser=i->user().copy();
-	p_ass=i->pass().copy();
+  h_old=i->hold();
+  t_imeout=i->timeout();
+  s_erver=i->server().copy();
+  u_ser=i->user().copy();
+  p_ass=i->pass().copy();
 }
 
 
 
 void KNServerInfo::clear()
 {
-	t_ype=STnntp;
+  t_ype=STnntp;
   p_ort=119;
   t_imeout=60;
   h_old=300;
-	s_erver = "";
-	
-	n_eedsLogon = false;
-	u_ser = "";
-	p_ass = "";
+  s_erver = "";
+  
+  n_eedsLogon = false;
+  u_ser = "";
+  p_ass = "";
 }
 
 
 
 bool KNServerInfo::isEqual(KNServerInfo *i)
 {
-	return (	(t_ype==i->type()) 	&&
-						(s_erver==i->server()) &&
-        		(p_ort==i->port()) &&
- 						(h_old==i->hold()) &&
- 						(t_imeout==i->timeout()) &&
- 						(n_eedsLogon==i->needsLogon()) &&
-						(u_ser==i->user()) &&
-						(p_ass==i->pass())						);
+  return (  (t_ype==i->type())  &&
+            (s_erver==i->server()) &&
+            (p_ort==i->port()) &&
+            (h_old==i->hold()) &&
+            (t_imeout==i->timeout()) &&
+            (n_eedsLogon==i->needsLogon()) &&
+            (u_ser==i->user()) &&
+            (p_ass==i->pass())            );
 }
 
 
-		
+    
 void KNServerInfo::readConf(KConfig *conf)
 {
   s_erver = conf->readEntry("server", "localhost").local8Bit();
@@ -87,7 +87,7 @@ void KNServerInfo::readConf(KConfig *conf)
   h_old = conf->readNumEntry("holdTime", 300);
   t_imeout = conf->readNumEntry("timeout", 60);
   if (t_ype==STnntp) {
-  	i_d = conf->readNumEntry("id", -1);
+    i_d = conf->readNumEntry("id", -1);
     n_eedsLogon = conf->readBoolEntry("needsLogon",false);
     u_ser = conf->readEntry("user").local8Bit();
     p_ass = decryptStr(conf->readEntry("pass").local8Bit());

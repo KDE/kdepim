@@ -26,23 +26,23 @@ class QSpinBox;
 
 
 class KNCleanupSettings : public KNSettingsWidget  {
-	
-	Q_OBJECT
+  
+  Q_OBJECT
 
-	public:
-		KNCleanupSettings(QWidget *p);
-		~KNCleanupSettings();
-		
-		void apply();
-		
-	protected:
-  	void init();
-		QCheckBox *folderCB, *groupCB, *thrCB;
-		QSpinBox *folderDays, *groupDays, *readDays, *unreadDays;
-		
-	protected slots:
-		void slotGroupCBtoggled(bool b);
-		void slotFolderCBtoggled(bool b);
+  public:
+    KNCleanupSettings(QWidget *p);
+    ~KNCleanupSettings();
+    
+    void apply();
+    
+  protected:
+    void init();
+    QCheckBox *folderCB, *groupCB, *thrCB;
+    QSpinBox *folderDays, *groupDays, *readDays, *unreadDays;
+    
+  protected slots:
+    void slotGroupCBtoggled(bool b);
+    void slotFolderCBtoggled(bool b);
 };
 
 #endif

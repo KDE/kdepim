@@ -21,6 +21,7 @@
 
 #include <qgroupbox.h>
 
+class QLabel;
 class QLineEdit;
 class QPushButton;
 class QRadioButton;
@@ -30,27 +31,28 @@ class KNUserEntry;
 
 
 class KNUserWidget : public QWidget  {
-	
-	Q_OBJECT
+  
+  Q_OBJECT
 
-	public:
-		KNUserWidget(QWidget *parent=0, const char *name=0);
-		~KNUserWidget();
-		
-		void setData(KNUserEntry *user);
-		void applyData();
-		
-	protected:
-		QLineEdit *name, *orga, *email, *replyTo, *sig;
-		QRadioButton *sigFile, *sigEdit;
-		QPushButton *chooseBtn, *editBtn;
-		QMultiLineEdit *sigEditor;
-		KNUserEntry *entry;
+  public:
+    KNUserWidget(QWidget *parent=0, const char *name=0);
+    ~KNUserWidget();
+    
+    void setData(KNUserEntry *user);
+    void applyData();
+    
+  protected:
+    QLabel *fileName;
+    QLineEdit *name, *orga, *email, *replyTo, *sig;
+    QRadioButton *sigFile, *sigEdit;
+    QPushButton *chooseBtn, *editBtn;
+    QMultiLineEdit *sigEditor;
+    KNUserEntry *entry;
 
-	protected slots:
-	  void slotSignatureType(int type);
-		void slotSignatureChoose();
-		void slotSignatureEdit();
+  protected slots:
+    void slotSignatureType(int type);
+    void slotSignatureChoose();
+    void slotSignatureEdit();
 
 };
 

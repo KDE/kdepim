@@ -19,9 +19,9 @@
 
 KNLBoxItem::KNLBoxItem(const QString& text, void *d, QPixmap *_pm)
 {
-	if(_pm) pm=*_pm;
-	setText(text);
-	mData=d;	
+  if(_pm) pm=*_pm;
+  setText(text);
+  mData=d;  
 }
 
 
@@ -32,39 +32,39 @@ KNLBoxItem::~KNLBoxItem()
 
 void KNLBoxItem::paint( QPainter *p )
 {
-	
-	QFontMetrics fm = p->fontMetrics();
-	
-	int tYPos=0, tXPos=3, pYPos=0;
-	
-	tYPos = fm.ascent() + fm.leading()/2; // vertical text position
-	
-	if(!pm.isNull()) {	
-		
-		tXPos=pm.width() + 6;	
-	
-		if ( pm.height() < fm.height() )  {
-			//tYPos = fm.ascent() + fm.leading()/2;
-			pYPos = (fm.height() - pm.height())/2;}
-		else {
-			tYPos = pm.height()/2 - fm.height()/2 + fm.ascent();
-			pYPos = 0;}
-	}
-	
-	p->drawPixmap( 3, pYPos ,  pm );	
-	p->drawText( tXPos, tYPos, text() );
+  
+  QFontMetrics fm = p->fontMetrics();
+  
+  int tYPos=0, tXPos=3, pYPos=0;
+  
+  tYPos = fm.ascent() + fm.leading()/2; // vertical text position
+  
+  if(!pm.isNull()) {  
+    
+    tXPos=pm.width() + 6; 
+  
+    if ( pm.height() < fm.height() )  {
+      //tYPos = fm.ascent() + fm.leading()/2;
+      pYPos = (fm.height() - pm.height())/2;}
+    else {
+      tYPos = pm.height()/2 - fm.height()/2 + fm.ascent();
+      pYPos = 0;}
+  }
+  
+  p->drawPixmap( 3, pYPos ,  pm );  
+  p->drawText( tXPos, tYPos, text() );
 }
 
 
 int KNLBoxItem::height(const QListBox *lb ) const
 {
-	return QMAX( pm.height(), lb->fontMetrics().lineSpacing() + 1 );	
+  return QMAX( pm.height(), lb->fontMetrics().lineSpacing() + 1 );  
 }
 
 
 int KNLBoxItem::width(const QListBox *lb ) const
 {
-	return pm.width() + lb->fontMetrics().width( text() ) + 6;
+  return pm.width() + lb->fontMetrics().width( text() ) + 6;
 }
 
 

@@ -57,37 +57,37 @@ bool KNNntpAccount::readInfo(const QString &confPath)
 
 void KNNntpAccount::saveInfo()
 {
-	QString dir(path());
-	if (dir == QString::null)
-		return;
-		
-	KSimpleConfig conf(dir+"info");
-	
-	conf.writeEntry("name", n_ame);
-	conf.writeEntry("unsentCnt", u_nsentCount);
-	conf.writeEntry("fetchDescriptions", f_etchDescriptions);
-	conf.writeEntry("lastNewFetch", QDateTime(l_astNewFetch));
-	KNServerInfo::saveConf(&conf);      // save not KNNntpAccount specific settings
+  QString dir(path());
+  if (dir == QString::null)
+    return;
+    
+  KSimpleConfig conf(dir+"info");
+  
+  conf.writeEntry("name", n_ame);
+  conf.writeEntry("unsentCnt", u_nsentCount);
+  conf.writeEntry("fetchDescriptions", f_etchDescriptions);
+  conf.writeEntry("lastNewFetch", QDateTime(l_astNewFetch));
+  KNServerInfo::saveConf(&conf);      // save not KNNntpAccount specific settings
 }
 
 
 
 void KNNntpAccount::syncInfo()
 {
-	QString dir(path());
-	if (dir == QString::null)
-		return;
-	KSimpleConfig conf(dir+"info");
-	conf.writeEntry("unsentCnt", u_nsentCount);
+  QString dir(path());
+  if (dir == QString::null)
+    return;
+  KSimpleConfig conf(dir+"info");
+  conf.writeEntry("unsentCnt", u_nsentCount);
 }
 
 
-		
+    
 QString KNNntpAccount::path()
 {
-	QString dir(KGlobal::dirs()->saveLocation("appdata",QString("nntp.%1/").arg(i_d)));
-	if (dir==QString::null)
-		displayInternalFileError();
+  QString dir(KGlobal::dirs()->saveLocation("appdata",QString("nntp.%1/").arg(i_d)));
+  if (dir==QString::null)
+    displayInternalFileError();
   return (dir);
 }
 

@@ -26,20 +26,20 @@ class KNGroupSelectDialog : public KNGroupBrowser {
 
   public:
     KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, QCString &act);
-		~KNGroupSelectDialog();
-		
-		QCString selectedGroups();
- 		void itemChangedState(CheckItem *it, bool s);
-		
-	protected:
-	  void updateItemState(CheckItem *it);
-	  QListView *selView;
-	
-	protected slots:
-	  void slotItemSelected(QListViewItem *it);
-	  void slotArrowBtn1();
-	  void slotArrowBtn2();	
-	  	  		
+    ~KNGroupSelectDialog();
+    
+    QCString selectedGroups();
+    void itemChangedState(CheckItem *it, bool s);
+    
+  protected:
+    void updateItemState(CheckItem *it);
+    QListView *selView;
+  
+  protected slots:
+    void slotItemSelected(QListViewItem *it);
+    void slotArrowBtn1();
+    void slotArrowBtn2(); 
+            
 };
 
 

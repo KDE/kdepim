@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="KNode" version="4">
+<kpartgui name="KNode" version="5">
 
 <ActionProperties>
 <Action name="options_configure" icon="settings"/>
@@ -154,6 +154,7 @@
   <Separator/>
   <Action name="thread_read"/>
   <Action name="thread_unread"/>
+  <Action name="thread_setScore"/>
   <Separator/>
   <Action name="article_ownWindow"/>
 </Menu>  

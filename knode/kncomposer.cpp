@@ -49,31 +49,31 @@
 
 
 KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)//, int textEnc)
-    :	KMainWindow(0), spellChecker(0), r_esult(CRsave), a_rticle(a), nntp(n),
+    : KMainWindow(0), spellChecker(0), r_esult(CRsave), a_rticle(a), nntp(n),
       externalEdited(false), attChanged(false), externalEditor(0), editorTempfile(0)//, textCTE(textEnc)
 {
-	if(!sig.isEmpty()) s_ignature=sig.copy();
-	 	
-	delAttList=new QList<KNAttachment>;
-	delAttList->setAutoDelete(true);
-		
+  if(!sig.isEmpty()) s_ignature=sig.copy();
+    
+  delAttList=new QList<KNAttachment>;
+  delAttList->setAutoDelete(true);
+    
   //init view
   view=new ComposerView(this, a_rticle->isMail());
-	setCentralWidget(view);
-	connect(view->subject, SIGNAL(textChanged(const QString&)),
-      		this, SLOT(slotSubjectChanged(const QString&)));
-	if(!a_rticle->isMail()) {
-		connect(view->fupCheck, SIGNAL(toggled(bool)),
-      			this, SLOT(slotFupCheckToggled(bool)));
+  setCentralWidget(view);
+  connect(view->subject, SIGNAL(textChanged(const QString&)),
+          this, SLOT(slotSubjectChanged(const QString&)));
+  if(!a_rticle->isMail()) {
+    connect(view->fupCheck, SIGNAL(toggled(bool)),
+            this, SLOT(slotFupCheckToggled(bool)));
   }
 
   connect(view->dest, SIGNAL(textChanged(const QString&)),
           this, SLOT(slotDestinationChanged(const QString&)));
   connect(view->destButton, SIGNAL(clicked()),
           this, SLOT(slotDestButtonClicked()));
-	connect(view->cancelEditorButton, SIGNAL(clicked()),
-          this, SLOT(slotCancelEditor()));      		
-		
+  connect(view->cancelEditorButton, SIGNAL(clicked()),
+          this, SLOT(slotCancelEditor()));          
+    
   // file menu
   new KAction(i18n("&Send Now"),"sendnow", 0 , this, SLOT(slotSendNow()),
               actionCollection(), "send_now");
@@ -98,7 +98,7 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
   actExternalEditor = new KAction(i18n("Start &External Editor"), 0, this, SLOT(slotExternalEditor()),
                                   actionCollection(), "external_editor");
   actSpellCheck = KStdAction::spelling (this, SLOT(slotSpellcheck()), actionCollection(), "spellcheck");
-		
+    
   // attach menu
   new KAction(i18n("Append &Signature"), "signature", 0 , this, SLOT(slotAppendSig()),
                    actionCollection(), "append_signature");
@@ -123,16 +123,16 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
   attPopup=static_cast<QPopupMenu*> (factory()->container("attachment_popup", this));
   slotAttachmentSelected(0);
 
-	//init data	
-	initData();
-	if (appSig) slotAppendSig();
-	
-	setConfig();
-	restoreWindowSize("composer", this, sizeHint());
+  //init data 
+  initData();
+  if (appSig) slotAppendSig();
+  
+  setConfig();
+  restoreWindowSize("composer", this, sizeHint());
 
-	view->edit->setModified(false);
-		
-	if (useExternalEditor) slotExternalEditor();
+  view->edit->setModified(false);
+    
+  if (useExternalEditor) slotExternalEditor();
 }
 
 
@@ -151,11 +151,11 @@ KNComposer::~KNComposer()
 
 void KNComposer::setConfig()
 {
-	view->edit->setWordWrap(QMultiLineEdit::FixedColumnWidth);
+  view->edit->setWordWrap(QMultiLineEdit::FixedColumnWidth);
   view->edit->setWrapColumnOrWidth(lineLen);
-	QFont fnt=KGlobalSettings::generalFont();
-	if(useViewFnt) fnt.setFamily(fntFam);
-	view->edit->setFont(fnt);
+  QFont fnt=KGlobalSettings::generalFont();
+  if(useViewFnt) fnt.setFamily(fntFam);
+  view->edit->setFont(fnt);
 }
 
 
@@ -163,7 +163,7 @@ void KNComposer::closeEvent(QCloseEvent *e)
 {
   if (!textChanged() && !attChanged) {  // nothing to save, don't show nag screen
     if (a_rticle->id()==-1) r_esult=CRdel;
-     	else r_esult=CRcancel;
+      else r_esult=CRcancel;
   } else {
     switch ( KMessageBox::warningYesNoCancel( this, i18n("Do you want to save this article in the draft folder?"),
                                               QString::null, i18n("&Save"), i18n("&Discard"))) {
@@ -171,7 +171,7 @@ void KNComposer::closeEvent(QCloseEvent *e)
         r_esult=CRsave;
         break;
       case KMessageBox::No :
-      	if (a_rticle->id()==-1) r_esult=CRdel;
+        if (a_rticle->id()==-1) r_esult=CRdel;
           else r_esult=CRcancel;
         break;
       default:            // cancel
@@ -179,7 +179,7 @@ void KNComposer::closeEvent(QCloseEvent *e)
         return;
     }
   }
-	
+  
   doneSuccess = true;
   emit composerDone(this);
   if (doneSuccess)
@@ -191,40 +191,40 @@ void KNComposer::closeEvent(QCloseEvent *e)
 
 void KNComposer::initData()
 {
-	KNMimeContent *text=a_rticle->textContent();
+  KNMimeContent *text=a_rticle->textContent();
 
-	d_estination=a_rticle->destination().copy();
-	view->dest->setText(d_estination);
-	if(!a_rticle->isMail()) slotDestinationChanged(d_estination);
-	
-	if(text) {
-	  int cnt = 0;
-		for(char *line=text->firstBodyLine(); line; line=text->nextBodyLine()) {
-			view->edit->insertLine(line);
-			cnt++;
-		}
-		if (appSig && (cnt==0))
-  	  view->edit->insertLine("");
-	}
-		
-	if(a_rticle->subject().isEmpty()) slotSubjectChanged(QString::null);
-	else view->subject->setText(a_rticle->subject());
-	
-	if(a_rticle->isMultipart()) {
-	  view->showAttachmentView();
-	  QList<KNMimeContent> attList;
-	  AttachmentItem *item=0;
-	  attList.setAutoDelete(false);
-	  a_rticle->attachments(&attList);
-	  for(KNMimeContent *c=attList.first(); c; c=attList.next())
-	    item=new AttachmentItem(view->attView, new KNAttachment(c));
-	}	
+  d_estination=a_rticle->destination().copy();
+  view->dest->setText(d_estination);
+  if(!a_rticle->isMail()) slotDestinationChanged(d_estination);
+  
+  if(text) {
+    int cnt = 0;
+    for(char *line=text->firstBodyLine(); line; line=text->nextBodyLine()) {
+      view->edit->insertLine(line);
+      cnt++;
+    }
+    if (appSig && (cnt==0))
+      view->edit->insertLine("");
+  }
+    
+  if(a_rticle->subject().isEmpty()) slotSubjectChanged(QString::null);
+  else view->subject->setText(a_rticle->subject());
+  
+  if(a_rticle->isMultipart()) {
+    view->showAttachmentView();
+    QList<KNMimeContent> attList;
+    AttachmentItem *item=0;
+    attList.setAutoDelete(false);
+    a_rticle->attachments(&attList);
+    for(KNMimeContent *c=attList.first(); c; c=attList.next())
+      item=new AttachmentItem(view->attView, new KNAttachment(c));
+  } 
 }
 
 
 bool KNComposer::hasValidData()
 {
-	return ( (!view->subject->text().isEmpty()) && (!d_estination.isEmpty()) );
+  return ( (!view->subject->text().isEmpty()) && (!d_estination.isEmpty()) );
 }
 
 
@@ -323,104 +323,104 @@ void KNComposer::applyChanges()
 
 void KNComposer::slotDestinationChanged(const QString &t)
 {
-	KNStringSplitter split;
-	bool splitOk;
-		
-	d_estination=t.local8Bit();
- 	
- 	if(!a_rticle->isMail()) {
-   	view->fup2->clear();
-   	split.init(d_estination, ",");
+  KNStringSplitter split;
+  bool splitOk;
+    
+  d_estination=t.local8Bit();
+  
+  if(!a_rticle->isMail()) {
+    view->fup2->clear();
+    split.init(d_estination, ",");
     splitOk=split.first();
     view->fupCheck->setEnabled(splitOk);
-  	view->fupCheck->setChecked(splitOk);
-  	view->fup2->setEnabled(splitOk);
+    view->fupCheck->setChecked(splitOk);
+    view->fup2->setEnabled(splitOk);
     while(splitOk) {
-     	view->fup2->insertItem(QString(split.string()));
-     	splitOk=split.next();
+      view->fup2->insertItem(QString(split.string()));
+      splitOk=split.next();
     }
-	}
+  }
 }
 
 
 /*void KNComposer::slotDestComboActivated(int idx)
 {
-	if(idx==0 && s_tatus!=KNArticleBase::AStoPost) {
-		s_tatus=KNArticleBase::AStoPost;
-		view->dest->clear();
-		view->fupCheck->setEnabled(true);
-		view->fup2->setEnabled(view->fupCheck->isChecked());
-	}
-	else if(idx==1 && s_tatus!=KNArticleBase::AStoMail) {
-		s_tatus=KNArticleBase::AStoMail;
-		view->dest->clear();
-		view->fup2->clear();
-		view->fupCheck->setChecked(false);
-		view->fupCheck->setEnabled(false);
-	}				
+  if(idx==0 && s_tatus!=KNArticleBase::AStoPost) {
+    s_tatus=KNArticleBase::AStoPost;
+    view->dest->clear();
+    view->fupCheck->setEnabled(true);
+    view->fup2->setEnabled(view->fupCheck->isChecked());
+  }
+  else if(idx==1 && s_tatus!=KNArticleBase::AStoMail) {
+    s_tatus=KNArticleBase::AStoMail;
+    view->dest->clear();
+    view->fup2->clear();
+    view->fupCheck->setChecked(false);
+    view->fupCheck->setEnabled(false);
+  }       
 } */
 
 
 void KNComposer::slotDestButtonClicked()
 {
-	KNGroupSelectDialog *gsdlg=0;
-	KabAPI *kab;
-	AddressBook::Entry entry;
-	KabKey key;
-	QString path;
-		
-	if(!a_rticle->isMail()) {
-		gsdlg=new KNGroupSelectDialog(this, nntp, d_estination);
-	
-		connect(gsdlg, SIGNAL(loadList(KNNntpAccount*)), knGlobals.gManager, SLOT(slotLoadGroupList(KNNntpAccount*)));		
+  KNGroupSelectDialog *gsdlg=0;
+  KabAPI *kab;
+  AddressBook::Entry entry;
+  KabKey key;
+  QString path;
+    
+  if(!a_rticle->isMail()) {
+    gsdlg=new KNGroupSelectDialog(this, nntp, d_estination);
+  
+    connect(gsdlg, SIGNAL(loadList(KNNntpAccount*)), knGlobals.gManager, SLOT(slotLoadGroupList(KNNntpAccount*)));    
     connect(knGlobals.gManager, SIGNAL(newListReady(KNGroupListData*)), gsdlg, SLOT(slotReceiveList(KNGroupListData*)));
-		
-		if(gsdlg->exec()) {
-	 		d_estination=gsdlg->selectedGroups();
-	 		view->dest->setText(d_estination);
-	 	}
-		delete gsdlg;
-	}
-	else {
-		kab=new KabAPI(this);
-		if(kab->init()!=AddressBook::NoError) {
-			KMessageBox::error(0, i18n("Cannot initialize the adressbook"));
-			delete kab;
-			return;
-		}
-		if(kab->exec()) {
-			if(kab->getEntry(entry, key)!=AddressBook::NoError) {
-				KMessageBox::error(0, i18n("Cannot read adressbook-entry"));
-			}
-			else {
-				if(!d_estination.isEmpty()) d_estination+=",";
-				d_estination+=entry.emails.first().local8Bit();
-				view->dest->setText(d_estination);
-				//qDebug("KabApi::getEntry() : name: %s, key: %s", entry.lastname.latin1(), ());
-			}
+    
+    if(gsdlg->exec()) {
+      d_estination=gsdlg->selectedGroups();
+      view->dest->setText(d_estination);
     }
-    delete kab;			
-	}
+    delete gsdlg;
+  }
+  else {
+    kab=new KabAPI(this);
+    if(kab->init()!=AddressBook::NoError) {
+      KMessageBox::error(this, i18n("Cannot initialize the adressbook"));
+      delete kab;
+      return;
+    }
+    if(kab->exec()) {
+      if(kab->getEntry(entry, key)!=AddressBook::NoError) {
+        KMessageBox::error(this, i18n("Cannot read adressbook-entry"));
+      }
+      else {
+        if(!d_estination.isEmpty()) d_estination+=",";
+        d_estination+=entry.emails.first().local8Bit();
+        view->dest->setText(d_estination);
+        //qDebug("KabApi::getEntry() : name: %s, key: %s", entry.lastname.latin1(), ());
+      }
+    }
+    delete kab;     
+  }
 }
 
 
 void KNComposer::slotFupCheckToggled(bool b)
 {
-	view->fup2->setEnabled(b);
+  view->fup2->setEnabled(b);
 }
 
 
 void KNComposer::slotSubjectChanged(const QString &t)
 {
-	if(!t.isEmpty()) setCaption(t);
-	else setCaption(i18n("No subject"));
+  if(!t.isEmpty()) setCaption(t);
+  else setCaption(i18n("No subject"));
 }
 
 
 void KNComposer::slotSendNow()
 {
-	r_esult=CRsendNow;
-	emit composerDone(this);
+  r_esult=CRsendNow;
+  emit composerDone(this);
 }
 
 
@@ -432,7 +432,7 @@ void KNComposer::slotSendLater()
 
 
 void KNComposer::slotSaveAsDraft()
-{			
+{     
   r_esult=CRsave;
   emit composerDone(this);
 }
@@ -447,13 +447,13 @@ void KNComposer::slotArtDelete()
 
 void KNComposer::slotFind()
 {
-	view->edit->search();
+  view->edit->search();
 }
 
 
 void KNComposer::slotFindNext()
 {
-	view->edit->repeatSearch();
+  view->edit->repeatSearch();
 }
 
 
@@ -469,7 +469,7 @@ void KNComposer::slotExternalEditor()
     return;
 
   if (externalEditorCommand.isEmpty())
-    KMessageBox::error(0, i18n("No editor configured.\nPlease do this in the settings dialog."));
+    KMessageBox::error(this, i18n("No editor configured.\nPlease do this in the settings dialog."));
 
   if (editorTempfile) {       // shouldn't happen...
     editorTempfile->unlink();
@@ -499,10 +499,10 @@ void KNComposer::slotExternalEditor()
   }
 
   externalEditor = new KProcess();
-	
-	KNStringSplitter split;       // construct command line...
- 	split.init(externalEditorCommand.local8Bit(), " ");	
- 	bool filenameAdded = false;
+  
+  KNStringSplitter split;       // construct command line...
+  split.init(externalEditorCommand.local8Bit(), " "); 
+  bool filenameAdded = false;
   bool splitOk=split.first();
   while(splitOk) {
     if (split.string()=="%f") {
@@ -510,14 +510,14 @@ void KNComposer::slotExternalEditor()
       filenameAdded = true;
     } else
       (*externalEditor) << split.string();
-   	splitOk=split.next();
+    splitOk=split.next();
   }
   if (!filenameAdded)    // no %f in the editor command
     (*externalEditor) << editorTempfile->name();
 
   connect(externalEditor, SIGNAL(processExited(KProcess *)),this, SLOT(slotEditorFinished(KProcess *)));
   if (!externalEditor->start()) {
-    KMessageBox::error(0, i18n("Unable to start external editor.\nPlease check your configuration in the settings dialog."));
+    KMessageBox::error(this, i18n("Unable to start external editor.\nPlease check your configuration in the settings dialog."));
     delete externalEditor;
     externalEditor = 0;
     editorTempfile->unlink();
@@ -525,7 +525,7 @@ void KNComposer::slotExternalEditor()
     editorTempfile = 0;
     return;
   }
-	
+  
   actExternalEditor->setEnabled(false);   // block other edit action while the editor is running...
   actSpellCheck->setEnabled(false);
   view->showExternalNotification();
@@ -554,23 +554,23 @@ void KNComposer::slotSpellcheck()
 
 void KNComposer::slotAppendSig()
 {
-	int pos=-1, cnt=0;
-	if(!s_ignature.isEmpty()) {
-		for(int i=view->edit->numLines()-1; i>=0; i--) {
-			cnt++;
-			if(view->edit->textLine(i).left(3) == "-- ") {
-				pos=i;
-				break;
-			}
-		}
-					
-		if(pos!=-1)
-			for(int i=0; i<cnt; i++) view->edit->removeLine(pos);
-		
-		view->edit->insertLine("-- ");
-  	view->edit->insertLine(s_ignature);
-  	view->edit->setModified(true);		
-	}
+  int pos=-1, cnt=0;
+  if(!s_ignature.isEmpty()) {
+    for(int i=view->edit->numLines()-1; i>=0; i--) {
+      cnt++;
+      if(view->edit->textLine(i).left(3) == "-- ") {
+        pos=i;
+        break;
+      }
+    }
+          
+    if(pos!=-1)
+      for(int i=0; i<cnt; i++) view->edit->removeLine(pos);
+    
+    view->edit->insertLine("-- ");
+    view->edit->insertLine(s_ignature);
+    view->edit->setModified(true);    
+  }
 }
 
 
@@ -663,8 +663,8 @@ void KNComposer::slotAttachmentSelected(QListViewItem *it)
   if(it && !it->isSelected())
     it->setSelected(true);
 }
- 	
-  	
+  
+    
 void KNComposer::slotToggleToolBar()
 {
   if(toolBar()->isVisible())
@@ -673,13 +673,13 @@ void KNComposer::slotToggleToolBar()
     toolBar()->show();
 }
 
-  	
+    
 void KNComposer::slotConfKeys()
 {
   KKeyDialog::configureKeys(actionCollection(),xmlFile());
 }
- 	
-  	
+  
+    
 void KNComposer::slotConfToolbar()
 {
   KEditToolbar dlg(actionCollection());
@@ -762,64 +762,64 @@ void KNComposer::slotCancelEditor()
 
 
 KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
-	: QSplitter(QSplitter::Vertical, parent, 0)
+  : QSplitter(QSplitter::Vertical, parent, 0)
 {
-	QLabel *l1, *l2;
-	int frameLines=2;
-	QWidget *editW=new QWidget(this);
-	QFrame *fr1=new QFrame(editW);
-	fr1->setFrameStyle(QFrame::Box | QFrame::Sunken);
-	subject=new QLineEdit(fr1);
-	l1=new QLabel(subject,i18n("S&ubject:"), fr1);
-	dest=new QLineEdit(fr1);
+  QLabel *l1, *l2;
+  int frameLines=2;
+  QWidget *editW=new QWidget(this);
+  QFrame *fr1=new QFrame(editW);
+  fr1->setFrameStyle(QFrame::Box | QFrame::Sunken);
+  subject=new QLineEdit(fr1);
+  l1=new QLabel(subject,i18n("S&ubject:"), fr1);
+  dest=new QLineEdit(fr1);
   if (mail)
     l2=new QLabel(dest, i18n("&To:"), fr1);
   else
     l2=new QLabel(dest, i18n("&Groups:"), fr1);
-	destButton=new QPushButton(i18n("&Browse..."), fr1);
-	if(!mail) {
-		fupCheck=new QCheckBox(i18n("Followup-&To:"), fr1);
-		fupCheck->setMinimumSize(fupCheck->sizeHint());
-		fup2=new QComboBox(true, fr1);
-		fup2->setMinimumSize(fup2->sizeHint());
-		frameLines=3;
-	}
-	
-	//SIZE(l1); SIZE(l2); SIZE(destButton);
-	//SIZE(subject); SIZE(dest); 	
+  destButton=new QPushButton(i18n("&Browse..."), fr1);
+  if(!mail) {
+    fupCheck=new QCheckBox(i18n("Followup-&To:"), fr1);
+    fupCheck->setMinimumSize(fupCheck->sizeHint());
+    fup2=new QComboBox(true, fr1);
+    fup2->setMinimumSize(fup2->sizeHint());
+    frameLines=3;
+  }
+  
+  //SIZE(l1); SIZE(l2); SIZE(destButton);
+  //SIZE(subject); SIZE(dest);  
 
-	edit=new KEdit(editW);
-	edit->setMinimumHeight(150);
-	
+  edit=new KEdit(editW);
+  edit->setMinimumHeight(150);
+  
   QVBoxLayout *l = new QVBoxLayout(edit);
   l->addStretch(1);
-	notification=new QGroupBox(2,Qt::Horizontal,edit);
-	new QLabel(i18n("You are currently editing the article body in an external editor.\nTo continue you have to close the external editor."),notification);
-	cancelEditorButton=new QPushButton(i18n("&Kill external editor"), notification);
-	notification->setFrameStyle(QFrame::Panel | QFrame::Raised);
-	notification->setLineWidth(2);
-	notification->hide();
-	l->addWidget(notification,0,Qt::AlignHCenter);
-	l->addStretch(1);
-		
-	QGridLayout *frameL1=new QGridLayout(fr1, frameLines,3, 10,10);
-	frameL1->addWidget(l1, 0,0);
-	frameL1->addMultiCellWidget(subject, 0,0,1,2);
-	frameL1->addWidget(l2, 1,0);
-	frameL1->addWidget(dest, 1,1);
-	frameL1->addWidget(destButton, 1,2);
-	if(!mail) {
-		frameL1->addWidget(fupCheck, 2,0);
-		frameL1->addMultiCellWidget(fup2, 2,2,1,2);
-	}
-	frameL1->setColStretch(1,1);
-		
-	QVBoxLayout *topL=new QVBoxLayout(editW, 5,5);
-	topL->addWidget(fr1);
-	topL->addWidget(edit, 1);
-	topL->activate();
-	
-	attView=0;
+  notification=new QGroupBox(2,Qt::Horizontal,edit);
+  new QLabel(i18n("You are currently editing the article body in an external editor.\nTo continue you have to close the external editor."),notification);
+  cancelEditorButton=new QPushButton(i18n("&Kill external editor"), notification);
+  notification->setFrameStyle(QFrame::Panel | QFrame::Raised);
+  notification->setLineWidth(2);
+  notification->hide();
+  l->addWidget(notification,0,Qt::AlignHCenter);
+  l->addStretch(1);
+    
+  QGridLayout *frameL1=new QGridLayout(fr1, frameLines,3, 10,10);
+  frameL1->addWidget(l1, 0,0);
+  frameL1->addMultiCellWidget(subject, 0,0,1,2);
+  frameL1->addWidget(l2, 1,0);
+  frameL1->addWidget(dest, 1,1);
+  frameL1->addWidget(destButton, 1,2);
+  if(!mail) {
+    frameL1->addWidget(fupCheck, 2,0);
+    frameL1->addMultiCellWidget(fup2, 2,2,1,2);
+  }
+  frameL1->setColStretch(1,1);
+    
+  QVBoxLayout *topL=new QVBoxLayout(editW, 5,5);
+  topL->addWidget(fr1);
+  topL->addWidget(edit, 1);
+  topL->activate();
+  
+  attView=0;
 }
 
 
@@ -832,24 +832,24 @@ KNComposer::ComposerView::~ComposerView()
 
 void KNComposer::ComposerView::showAttachmentView()
 {
-	if(!attView) {
-		attView=new QListView(this);
-		attView->addColumn(i18n("File"), 100);
-		attView->addColumn(i18n("Type")), 100;
-		attView->addColumn(i18n("Size"), 50);
-		attView->addColumn(i18n("Description"), 200);
-		attView->addColumn(i18n("Encoding"), 75);
-		attView->header()->setClickEnabled(false);
-		attView->setAllColumnsShowFocus(true);
-		
-		connect(attView, SIGNAL(currentChanged(QListViewItem*)),
-		  parent(), SLOT(slotAttachmentSelected(QListViewItem*)));
-		connect(attView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
-		  parent(), SLOT(slotAttachmentPopup(QListViewItem*, const QPoint&, int)));
-	}
-	
-	if(!attView->isVisible())
-	  attView->show();
+  if(!attView) {
+    attView=new QListView(this);
+    attView->addColumn(i18n("File"), 100);
+    attView->addColumn(i18n("Type")), 100;
+    attView->addColumn(i18n("Size"), 50);
+    attView->addColumn(i18n("Description"), 200);
+    attView->addColumn(i18n("Encoding"), 75);
+    attView->header()->setClickEnabled(false);
+    attView->setAllColumnsShowFocus(true);
+    
+    connect(attView, SIGNAL(currentChanged(QListViewItem*)),
+      parent(), SLOT(slotAttachmentSelected(QListViewItem*)));
+    connect(attView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
+      parent(), SLOT(slotAttachmentPopup(QListViewItem*, const QPoint&, int)));
+  }
+  
+  if(!attView->isVisible())
+    attView->show();
 }
 
 
@@ -899,9 +899,9 @@ KNComposer::AttachmentItem::~AttachmentItem()
 {
   delete attachment;
 }
-		
-		
-		
+    
+    
+    
 
 //===============================================================
 
@@ -916,15 +916,15 @@ QString KNComposer::externalEditorCommand;
 
 void KNComposer::readConfig()
 {
-	KConfig *conf=KGlobal::config();
-	conf->setGroup("POSTNEWS");
-	lineLen=conf->readNumEntry("maxLength", 72);
-	appSig=conf->readBoolEntry("appSig", true);
-	useViewFnt=conf->readBoolEntry("useViewFont", false);
-	useExternalEditor=conf->readBoolEntry("useExternalEditor",false);
-	externalEditorCommand=conf->readEntry("externalEditor","kwrite %f");
-	conf->setGroup("FONTS-COLORS");
-	fntFam=conf->readEntry("family", "helvetica");
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("POSTNEWS");
+  lineLen=conf->readNumEntry("maxLength", 72);
+  appSig=conf->readBoolEntry("appSig", true);
+  useViewFnt=conf->readBoolEntry("useViewFont", false);
+  useExternalEditor=conf->readBoolEntry("useExternalEditor",false);
+  externalEditorCommand=conf->readEntry("externalEditor","kwrite %f");
+  conf->setGroup("FONTS-COLORS");
+  fntFam=conf->readEntry("family", "helvetica");
 }
 
 

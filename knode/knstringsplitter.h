@@ -20,30 +20,30 @@
 
 
 class KNStringSplitter {
-	
-	public:
-		KNStringSplitter();
-		~KNStringSplitter();
-				
-		void reset()									{ start=0; end=0; sep=""; incSep=false;}
-		
-		void init(QCString &str, const char *s);
-		void init(const char *str, const char *s);
-		void setIncludeSep(bool inc) 	{ incSep=inc; }
-		
-		bool first();
-		bool last();
-		
-		bool next();
-		bool prev();	
-			
-		QCString& string()							{ return dst; }
-					
-	private:
-		QCString src, dst, sep;
-		int start,end;
-		bool incSep;
-			
+  
+  public:
+    KNStringSplitter();
+    ~KNStringSplitter();
+        
+    void reset()                  { start=0; end=0; sep=""; incSep=false;}
+    
+    void init(QCString &str, const char *s);
+    void init(const char *str, const char *s);
+    void setIncludeSep(bool inc)  { incSep=inc; }
+    
+    bool first();
+    bool last();
+    
+    bool next();
+    bool prev();  
+      
+    QCString& string()              { return dst; }
+          
+  private:
+    QCString src, dst, sep;
+    int start,end;
+    bool incSep;
+      
 };
 
 #endif

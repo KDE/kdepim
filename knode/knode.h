@@ -53,7 +53,7 @@ class KNProgress : public KProgress
     KNProgress (int desiredHeight, int minValue, int maxValue, int value, KProgress::Orientation orient, QWidget *parent=0, const char *name=0);
     ~KNProgress();
 
-    void disableProgressBar();		                                  // 0% and no text
+    void disableProgressBar();                                      // 0% and no text
     void setProgressBar(int value,const QString& = QString::null);  // manual operation
     void initProgressBar();                                         // display 0%
     void stepProgressBar();                                         // add 10%
@@ -70,13 +70,13 @@ class KNodeApp : public KMainWindow
 {
   Q_OBJECT
 
-	public:
-  				
+  public:
+          
     KNodeApp();
     ~KNodeApp();
-  	  	
+        
     //GUI
-  	void setStatusMsg(const QString& = QString::null, int id=SB_MAIN);
+    void setStatusMsg(const QString& = QString::null, int id=SB_MAIN);
     void setStatusHelpMsg(const QString& text);
     void setCursorBusy(bool b=true);
     void blockEvents();
@@ -88,40 +88,40 @@ class KNodeApp : public KMainWindow
   public slots:
 
     void slotSettings();
-    	
-	protected:
+      
+  protected:
 
-	  //init && update
-	  void initView();
-	  void initStatusBar();
-	  void initActions();
- 	  void initPopups();      	
-  	
-  	void saveOptions();
-  	 	
-  	//exit
+    //init && update
+    void initView();
+    void initStatusBar();
+    void initActions();
+    void initPopups();        
+    
+    void saveOptions();
+      
+    //exit
     void cleanup();
     bool queryClose();
 
     //even filter for kapp
     bool eventFilter(QObject*, QEvent *e);
 
-	  //actions
-	  KAction *actCancel, *actSupersede;
+    //actions
+    KAction *actCancel, *actSupersede;
     KToggleAction *actShowAllHdrs;
 
-   	//popups
-   	QPopupMenu 	*accPopup, *groupPopup, *folderPopup,
-   							*fetchPopup, *savedPopup;
+    //popups
+    QPopupMenu  *accPopup, *groupPopup, *folderPopup,
+                *fetchPopup, *savedPopup;
 
-   	KAccel *acc;
-   	KNodeView *view;
+    KAccel *acc;
+    KNodeView *view;
     KNProgress *progBar;
     KNSettingsDialog *setDialog;
-		
-    KNNetAccess	*NAcc;
+    
+    KNNetAccess *NAcc;
     KNAccountManager *AManager;
-    KNGroupManager	*GManager;
+    KNGroupManager  *GManager;
     KNFetchArticleManager *FAManager;
     KNFolderManager *FoManager;
     KNSavedArticleManager *SAManager;
@@ -129,22 +129,22 @@ class KNodeApp : public KMainWindow
 
   protected slots:
 
-  	//action-slots	  	
-  	void slotToggleShowAllHdrs();
-  	void slotCancel();
-  	void slotSupersede();
-   	void slotToggleToolBar();
-  	void slotToggleStatusBar();
-  	void slotConfKeys();
-  	void slotConfToolbar();
-  	void slotSettingsFinished();
-  	  	
-  	//view-slots  	
-	 	void slotCollectionSelected(QListViewItem *it);
-  	void slotHeaderSelected(QListViewItem *it);
-  	void slotHeaderDoubleClicked(QListViewItem *it);
-  	void slotArticlePopup(QListViewItem *it, const QPoint &p, int c);
-  	void slotCollectionPopup(QListViewItem *it, const QPoint &p, int c);
+    //action-slots      
+    void slotToggleShowAllHdrs();
+    void slotCancel();
+    void slotSupersede();
+    void slotToggleToolBar();
+    void slotToggleStatusBar();
+    void slotConfKeys();
+    void slotConfToolbar();
+    void slotSettingsFinished();
+        
+    //view-slots    
+    void slotCollectionSelected(QListViewItem *it);
+    void slotHeaderSelected(QListViewItem *it);
+    void slotHeaderDoubleClicked(QListViewItem *it);
+    void slotArticlePopup(QListViewItem *it, const QPoint &p, int c);
+    void slotCollectionPopup(QListViewItem *it, const QPoint &p, int c);
 
 };
 

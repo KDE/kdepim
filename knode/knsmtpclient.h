@@ -27,16 +27,16 @@ class KNSmtpClient : public KNProtocolClient  {
   Q_OBJECT
 
   public:
-  	KNSmtpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent=0, const char *name=0);
-  	~KNSmtpClient();
-	
+    KNSmtpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent=0, const char *name=0);
+    ~KNSmtpClient();
+  
   protected:
 
-  	virtual void processJob();				 // examines the job and calls the suitable handling method
-	
-  	void doMail();
-	
-  	virtual bool openConnection();     // connect, handshake
+    virtual void processJob();         // examines the job and calls the suitable handling method
+  
+    void doMail();
+  
+    virtual bool openConnection();     // connect, handshake
 
 };
 

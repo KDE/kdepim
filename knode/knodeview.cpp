@@ -33,29 +33,29 @@
 
 
 KNodeView::KNodeView(QWidget *parent, const char * name)
-	: QSplitter(parent,name)
+  : QSplitter(parent,name)
 {
   KNFocusWidget *colFocus=new KNFocusWidget(this);
-	collectionView=new KNListView(colFocus);
-	colFocus->setWidget(collectionView);
+  collectionView=new KNListView(colFocus);
+  colFocus->setWidget(collectionView);
   setResizeMode(colFocus, QSplitter::KeepSize);
-	
-	PanHorz=new QSplitter(QSplitter::Vertical,this);
-	
-	KNFocusWidget *hdrFocus=new KNFocusWidget(PanHorz);
-	hdrView=new KNListView(hdrFocus);
-	hdrFocus->setWidget(hdrView);
-	PanHorz->setResizeMode(hdrFocus, QSplitter::KeepSize);
-	
-	KNFocusWidget *artFocus=new KNFocusWidget(PanHorz);	
-	artView=new KNArticleWidget(artFocus);
-	artFocus->setWidget(artView);
-	
-	initCollectionView();
-	initHdrView();
-	
-	setTabOrder(hdrView, artView);
-	setTabOrder(artView, collectionView);
+  
+  PanHorz=new QSplitter(QSplitter::Vertical,this);
+  
+  KNFocusWidget *hdrFocus=new KNFocusWidget(PanHorz);
+  hdrView=new KNListView(hdrFocus);
+  hdrFocus->setWidget(hdrView);
+  PanHorz->setResizeMode(hdrFocus, QSplitter::KeepSize);
+  
+  KNFocusWidget *artFocus=new KNFocusWidget(PanHorz); 
+  artView=new KNArticleWidget(artFocus);
+  artFocus->setWidget(artView);
+  
+  initCollectionView();
+  initHdrView();
+  
+  setTabOrder(hdrView, artView);
+  setTabOrder(artView, collectionView);
 
   actSortSelect = new KSelectAction(i18n("&Sort"), 0, &actionCollection, "view_Sort");
   connect(actSortSelect, SIGNAL(activated(int)), this, SLOT(slotSortMenuSelect(int)));
@@ -66,8 +66,8 @@ KNodeView::KNodeView(QWidget *parent, const char * name)
   items += i18n("By S&core");
   items += i18n("By &Date");
   actSortSelect->setItems(items);
-   	
-	actNextArt = new KAction(i18n("&Next article"), Key_N , this, SLOT(slotNextArticle()),
+    
+  actNextArt = new KAction(i18n("&Next article"), Key_N , this, SLOT(slotNextArticle()),
                            &actionCollection, "go_nextArticle");
   actPrevArt = new KAction(i18n("&Previous article"), Key_B , this, SLOT(slotPrevArticle()),
                            &actionCollection, "go_prevArticle");
@@ -98,38 +98,38 @@ KNodeView::~KNodeView()
 
 void KNodeView::readOptions()
 {
-  KConfig *conf=KGlobal::config();   	
+  KConfig *conf=KGlobal::config();    
   conf->setGroup("APPEARANCE");
 
   #warning FIXME: define useful default sizes
   QValueList<int> lst = conf->readIntListEntry("Vert_SepPos");
-	if (lst.count()==2)
-		setSizes(lst);
-		
+  if (lst.count()==2)
+    setSizes(lst);
+    
   lst = conf->readIntListEntry("Horz_SepPos");
-	if (lst.count()==2)
-  	PanHorz->setSizes(lst);
-	
+  if (lst.count()==2)
+    PanHorz->setSizes(lst);
+  
   lst = conf->readIntListEntry("Hdrs_Size");
   if (lst.count()==7) {
     QValueList<int>::Iterator it = lst.begin();
 
     QHeader *h=collectionView->header();
-  	for (int i=0; i<3; i++) {
-  		h->resizeSection(i,(*it));
+    for (int i=0; i<3; i++) {
+      h->resizeSection(i,(*it));
       ++it;
-  	}	
-	
-  	h=hdrView->header();
-  	for (int i=0; i<4; i++) {
-  		h->resizeSection(i,(*it));
+    } 
+  
+    h=hdrView->header();
+    for (int i=0; i<4; i++) {
+      h->resizeSection(i,(*it));
       ++it;
-  	}		
+    }   
   }
 
   int sortCol = conf->readNumEntry("sortCol",3);
   bool sortAsc =conf->readBoolEntry("sortAscending", false);
-  hdrView->setColAsc(sortCol, sortAsc);	
+  hdrView->setColAsc(sortCol, sortAsc); 
   hdrView->setSorting(sortCol, sortAsc);
   actSortSelect->setCurrentItem(sortCol);
 }
@@ -138,7 +138,7 @@ void KNodeView::readOptions()
 
 void KNodeView::saveOptions()
 {
-  KConfig *conf=KGlobal::config();   	
+  KConfig *conf=KGlobal::config();    
   conf->setGroup("APPEARANCE");
 
   conf->writeEntry("Vert_SepPos",sizes());
@@ -146,12 +146,12 @@ void KNodeView::saveOptions()
 
   QValueList<int> lst;
   QHeader *h=collectionView->header();
- 	for (int i=0; i<3; i++)
- 	  lst << h->sectionSize(i);
+  for (int i=0; i<3; i++)
+    lst << h->sectionSize(i);
 
-	h=hdrView->header();
+  h=hdrView->header();
   for (int i=0; i<4; i++)
- 	  lst << h->sectionSize(i);
+    lst << h->sectionSize(i);
   conf->writeEntry("Hdrs_Size", lst);
 
   conf->writeEntry("sortCol", hdrView->sortColumn());
@@ -161,31 +161,31 @@ void KNodeView::saveOptions()
 
 void KNodeView::initCollectionView()
 {
- 	collectionView->setFrameStyle(QFrame::Panel | QFrame::Sunken);
- 	collectionView->setTreeStepSize(12);
- 	collectionView->setRootIsDecorated(true);
- 	collectionView->addColumn(i18n("Name"),150);
-	collectionView->addColumn(i18n("Total"),50);
-	collectionView->addColumn(i18n("Unread"),50);
-	collectionView->setColumnAlignment(1,AlignCenter);
-	collectionView->setColumnAlignment(2,AlignCenter);
-	collectionView->setSorting(0);
-	collectionView->header()->setClickEnabled(false);
-	collectionView->setColumnWidthMode(0,QListView::Maximum);
+  collectionView->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+  collectionView->setTreeStepSize(12);
+  collectionView->setRootIsDecorated(true);
+  collectionView->addColumn(i18n("Name"),150);
+  collectionView->addColumn(i18n("Total"),50);
+  collectionView->addColumn(i18n("Unread"),50);
+  collectionView->setColumnAlignment(1,AlignCenter);
+  collectionView->setColumnAlignment(2,AlignCenter);
+  collectionView->setSorting(0);
+  collectionView->header()->setClickEnabled(false);
+  collectionView->setColumnWidthMode(0,QListView::Maximum);
 }
 
 
 
 void KNodeView::initHdrView()
 {
-	hdrView->setFrameStyle(QFrame::Panel | QFrame::Sunken);
- 	hdrView->addColumn(i18n("Subject"),500);
-	hdrView->addColumn(i18n("From"),300);
-	hdrView->addColumn(i18n("Score"),50);
-	hdrView->addColumn(i18n("Date (Time)"),300);
-	hdrView->setRootIsDecorated(true);
+  hdrView->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+  hdrView->addColumn(i18n("Subject"),500);
+  hdrView->addColumn(i18n("From"),300);
+  hdrView->addColumn(i18n("Score"),50);
+  hdrView->addColumn(i18n("Date (Time)"),300);
+  hdrView->setRootIsDecorated(true);
   hdrView->setShowSortIndicator(true);
-	hdrView->setColumnAlignment(2, AlignCenter);
+  hdrView->setColumnAlignment(2, AlignCenter);
 }
 
 
@@ -193,7 +193,7 @@ void KNodeView::initHdrView()
 // select from KSelectAction
 void KNodeView::slotSortMenuSelect(int newCol)
 {
-	hdrView->slotSortList(newCol);
+  hdrView->slotSortList(newCol);
 }
 
 
@@ -208,76 +208,76 @@ void KNodeView::slotSortHdrSelect(int newCol)
 
 void KNodeView::slotNextArticle()
 {
-	QListViewItem *it=hdrView->currentItem();
-	
-	if(it) it=it->itemBelow();
-	else it=hdrView->firstChild();
-	
-	if(it) {
-		hdrView->setSelected(it, true);
-		hdrView->setCurrentItem(it);
-		hdrView->ensureItemVisible(it);
-	}		
+  QListViewItem *it=hdrView->currentItem();
+  
+  if(it) it=it->itemBelow();
+  else it=hdrView->firstChild();
+  
+  if(it) {
+    hdrView->setSelected(it, true);
+    hdrView->setCurrentItem(it);
+    hdrView->ensureItemVisible(it);
+  }   
 }
 
 
 
 void KNodeView::slotPrevArticle()
 {
-	QListViewItem *it=hdrView->currentItem();
-	
-	if(it) it=it->itemAbove();
-	else it=hdrView->firstChild();
-	
-	if(it) {
-		hdrView->setSelected(it, true);
-		hdrView->setCurrentItem(it);
-		hdrView->ensureItemVisible(it);
-	}
+  QListViewItem *it=hdrView->currentItem();
+  
+  if(it) it=it->itemAbove();
+  else it=hdrView->firstChild();
+  
+  if(it) {
+    hdrView->setSelected(it, true);
+    hdrView->setCurrentItem(it);
+    hdrView->ensureItemVisible(it);
+  }
 }
- 		
+    
 
 
 void KNodeView::slotNextUnreadArticle()
 {
-	KNHdrViewItem *next, *current;
-	KNFetchArticle *art;
-	
-	if (!knGlobals.foManager->hasCurrentFolder()) {   // don't do anything if this is a folder !!!
-	
-  	current=(KNHdrViewItem*)hdrView->currentItem();
-  	if(!current) current=(KNHdrViewItem*)hdrView->firstChild();	
-	
-  	if(!current) {               // no articles in the current group switch to next....
-  		slotNextGroup();
-  		return;
-  	}
+  KNHdrViewItem *next, *current;
+  KNFetchArticle *art;
+  
+  if (!knGlobals.foManager->hasCurrentFolder()) {   // don't do anything if this is a folder !!!
+  
+    current=(KNHdrViewItem*)hdrView->currentItem();
+    if(!current) current=(KNHdrViewItem*)hdrView->firstChild(); 
+  
+    if(!current) {               // no articles in the current group switch to next....
+      slotNextGroup();
+      return;
+    }
 
-	  art=(KNFetchArticle*)current->art;
-	
-   	if ((!current->isSelected())&&(!art->isRead()))   // take current article, if unread & not selected
-     	next = current;
-   	else {
-   		if(art->hasUnreadFollowUps()) hdrView->setOpen(current, true);
-   		next=(KNHdrViewItem*)current->itemBelow();
-   	}
+    art=(KNFetchArticle*)current->art;
+  
+    if ((!current->isSelected())&&(!art->isRead()))   // take current article, if unread & not selected
+      next = current;
+    else {
+      if(art->hasUnreadFollowUps()) hdrView->setOpen(current, true);
+      next=(KNHdrViewItem*)current->itemBelow();
+    }
 
-  	while(next) {
-  		art=(KNFetchArticle*)next->art;
-		
-  		if(!art->isRead()) break;	
-    	else {
-    		if(art->hasUnreadFollowUps()>0) hdrView->setOpen(next, true);
-    		next=(KNHdrViewItem*)next->itemBelow();
-    	}
+    while(next) {
+      art=(KNFetchArticle*)next->art;
+    
+      if(!art->isRead()) break; 
+      else {
+        if(art->hasUnreadFollowUps()>0) hdrView->setOpen(next, true);
+        next=(KNHdrViewItem*)next->itemBelow();
+      }
     }
     if(next) {
-   		hdrView->setSelected(next, true);
-  		hdrView->setCurrentItem(next);
-  		hdrView->ensureItemVisible(next);
-  	}
-  	else slotNextGroup();		
-  	
+      hdrView->setSelected(next, true);
+      hdrView->setCurrentItem(next);
+      hdrView->ensureItemVisible(next);
+    }
+    else slotNextGroup();   
+    
   }
 }
 
@@ -285,130 +285,130 @@ void KNodeView::slotNextUnreadArticle()
 
 void KNodeView::slotReadThrough()
 {
-	if (artView->scrollingDownPossible())
-		artView->scrollDown();
-	else
-		slotNextUnreadArticle();
+  if (artView->scrollingDownPossible())
+    artView->scrollDown();
+  else
+    slotNextUnreadArticle();
 }
 
 
 
 void KNodeView::slotNextUnreadThread()
 {
-	KNHdrViewItem *next, *current;
-	KNFetchArticle *art;
-	
+  KNHdrViewItem *next, *current;
+  KNFetchArticle *art;
+  
   if (!knGlobals.foManager->hasCurrentFolder()) {   // don't do anything if this is a folder !!!
-	
-  	current=(KNHdrViewItem*)hdrView->currentItem();
-  	if(!current) current=(KNHdrViewItem*)hdrView->firstChild();	
-  	
-  	if(!current) {               // no articles in the current group switch to next....
-  		slotNextGroup();
-  		return;
-  	}
-	
-  	art=(KNFetchArticle*)current->art;
-		
-  	if ((current->depth()==0)&&((!current->isSelected())&&(!art->isRead() || art->hasUnreadFollowUps())))
-  	  next=current;                           // take current article, if unread & not selected
-  	else	
-   		next=(KNHdrViewItem*)current->itemBelow();
-	
-  	while(next) {
-  		art=(KNFetchArticle*)next->art;
-			
-  		if(next->depth()==0) {
-  			if(!art->isRead() || art->hasUnreadFollowUps()) break;
-  		}
-	  	next=(KNHdrViewItem*)next->itemBelow();
-  	}
-	
-	  if(next) {	
-  	  hdrView->setCurrentItem(next);
-	
-	    if(art->isRead()) slotNextUnreadArticle();
-  	  else {
-	  		hdrView->setSelected(next, true);
-  		  hdrView->ensureItemVisible(next);
-  		}
-  	}	else slotNextGroup();
-  	
+  
+    current=(KNHdrViewItem*)hdrView->currentItem();
+    if(!current) current=(KNHdrViewItem*)hdrView->firstChild(); 
+    
+    if(!current) {               // no articles in the current group switch to next....
+      slotNextGroup();
+      return;
+    }
+  
+    art=(KNFetchArticle*)current->art;
+    
+    if ((current->depth()==0)&&((!current->isSelected())&&(!art->isRead() || art->hasUnreadFollowUps())))
+      next=current;                           // take current article, if unread & not selected
+    else  
+      next=(KNHdrViewItem*)current->itemBelow();
+  
+    while(next) {
+      art=(KNFetchArticle*)next->art;
+      
+      if(next->depth()==0) {
+        if(!art->isRead() || art->hasUnreadFollowUps()) break;
+      }
+      next=(KNHdrViewItem*)next->itemBelow();
+    }
+  
+    if(next) {  
+      hdrView->setCurrentItem(next);
+  
+      if(art->isRead()) slotNextUnreadArticle();
+      else {
+        hdrView->setSelected(next, true);
+        hdrView->ensureItemVisible(next);
+      }
+    } else slotNextGroup();
+    
   }
 }
 
 
 
 void KNodeView::slotNextGroup()
-{	
-	KNCollectionViewItem *current=static_cast<KNCollectionViewItem*>(collectionView->currentItem());
-	KNCollectionViewItem *next=0;
+{ 
+  KNCollectionViewItem *current=static_cast<KNCollectionViewItem*>(collectionView->currentItem());
+  KNCollectionViewItem *next=0;
 
-	if(!current) current=(KNCollectionViewItem*)collectionView->firstChild();	
-	if(!current) return;
+  if(!current) current=(KNCollectionViewItem*)collectionView->firstChild(); 
+  if(!current) return;
 
-	next=current;
- 	while(next) {
- 		if(!next->isSelected())
- 			break;
- 		if(next->childCount()>0 && !next->isOpen()) {
- 			next->setOpen(true);
- 			next=static_cast<KNCollectionViewItem*>(next->firstChild());
- 		}
- 		else next=static_cast<KNCollectionViewItem*>(next->itemBelow());
- 	}
-  	
-	if(next) {
-		collectionView->setCurrentItem(next);
-		collectionView->ensureItemVisible(next);
-		collectionView->setSelected(next, true);
-	}
+  next=current;
+  while(next) {
+    if(!next->isSelected())
+      break;
+    if(next->childCount()>0 && !next->isOpen()) {
+      next->setOpen(true);
+      next=static_cast<KNCollectionViewItem*>(next->firstChild());
+    }
+    else next=static_cast<KNCollectionViewItem*>(next->itemBelow());
+  }
+    
+  if(next) {
+    collectionView->setCurrentItem(next);
+    collectionView->ensureItemVisible(next);
+    collectionView->setSelected(next, true);
+  }
 }
 
 
 
 void KNodeView::slotPrevGroup()
 {
-	KNCollectionViewItem *current=static_cast<KNCollectionViewItem*>(collectionView->currentItem());
-	KNCollectionViewItem *prev;
+  KNCollectionViewItem *current=static_cast<KNCollectionViewItem*>(collectionView->currentItem());
+  KNCollectionViewItem *prev;
 
-	if(!current) current=static_cast<KNCollectionViewItem*>(collectionView->firstChild());	
-	if(!current) return;
-  	
+  if(!current) current=static_cast<KNCollectionViewItem*>(collectionView->firstChild());  
+  if(!current) return;
+    
   prev=current;
   while(prev) {
-  	if(!prev->isSelected())
- 			break;
- 		if(prev->childCount()>0 && !prev->isOpen()) {
- 			prev->setOpen(true);
- 			kapp->processEvents();
- 			current=prev;
- 			prev=static_cast<KNCollectionViewItem*>(current->firstChild());
- 			while(prev->itemBelow()->parent()==current)
- 				prev=static_cast<KNCollectionViewItem*>(prev->itemBelow());
- 		}
- 		else prev=static_cast<KNCollectionViewItem*>(prev->itemAbove());
- 	}		
+    if(!prev->isSelected())
+      break;
+    if(prev->childCount()>0 && !prev->isOpen()) {
+      prev->setOpen(true);
+      kapp->processEvents();
+      current=prev;
+      prev=static_cast<KNCollectionViewItem*>(current->firstChild());
+      while(prev->itemBelow()->parent()==current)
+        prev=static_cast<KNCollectionViewItem*>(prev->itemBelow());
+    }
+    else prev=static_cast<KNCollectionViewItem*>(prev->itemAbove());
+  }   
 
-	if(prev) {
-  	collectionView->setCurrentItem(prev);
-		collectionView->ensureItemVisible(prev);
-		collectionView->setSelected(prev, true);
-	}
+  if(prev) {
+    collectionView->setCurrentItem(prev);
+    collectionView->ensureItemVisible(prev);
+    collectionView->setSelected(prev, true);
+  }
 }
 
 
 
 void KNodeView::slotToggleThread()
 {
-	KNHdrViewItem *it=(KNHdrViewItem*)hdrView->currentItem();
-	
-	if(it!=0) {
-		if (it->isOpen())
-			it->setOpen(false);
-		else
-			it->setOpen(true);
-	}			
+  KNHdrViewItem *it=(KNHdrViewItem*)hdrView->currentItem();
+  
+  if(it!=0) {
+    if (it->isOpen())
+      it->setOpen(false);
+    else
+      it->setOpen(true);
+  }     
 }
 
 

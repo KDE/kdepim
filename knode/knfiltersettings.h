@@ -29,35 +29,35 @@ class KNArticleFilter;
 
 
 class KNFilterSettings : public KNSettingsWidget  {
-	
-	Q_OBJECT
+  
+  Q_OBJECT
 
-	public:
-		KNFilterSettings(KNFilterManager *fm, QWidget *p);
-		~KNFilterSettings();
-		
-		void addItem(KNArticleFilter *f);
-		void removeItem(KNArticleFilter *f);
-		void updateItem(KNArticleFilter *f);
-		void addMenuItem(KNArticleFilter *f);
-		void removeMenuItem(KNArticleFilter *f);
-		QValueList<int> menuOrder();
-			
-	protected:
-		int findItem(KNListBox *l, KNArticleFilter *f);
-		KNListBox *flb, *mlb;
-		QPushButton *addBtn, *delBtn, *editBtn, *upBtn, *downBtn, *sepAddBtn, *sepRemBtn;
-		KNFilterManager *fiManager;
-		
-	protected slots:
-		void slotAddBtnClicked();
-		void slotDelBtnClicked();
-		void slotEditBtnClicked();
-		void slotUpBtnClicked();
-		void slotDownBtnClicked();
-		void slotSepAddBtnClicked();
-		void slotSepRemBtnClicked();
-		void slotItemSelected(int i);
+  public:
+    KNFilterSettings(KNFilterManager *fm, QWidget *p);
+    ~KNFilterSettings();
+    
+    void addItem(KNArticleFilter *f);
+    void removeItem(KNArticleFilter *f);
+    void updateItem(KNArticleFilter *f);
+    void addMenuItem(KNArticleFilter *f);
+    void removeMenuItem(KNArticleFilter *f);
+    QValueList<int> menuOrder();
+      
+  protected:
+    int findItem(KNListBox *l, KNArticleFilter *f);
+    KNListBox *flb, *mlb;
+    QPushButton *addBtn, *delBtn, *editBtn, *upBtn, *downBtn, *sepAddBtn, *sepRemBtn;
+    KNFilterManager *fiManager;
+    
+  protected slots:
+    void slotAddBtnClicked();
+    void slotDelBtnClicked();
+    void slotEditBtnClicked();
+    void slotUpBtnClicked();
+    void slotDownBtnClicked();
+    void slotSepAddBtnClicked();
+    void slotSepRemBtnClicked();
+    void slotItemSelected(int i);
 };
 
 #endif

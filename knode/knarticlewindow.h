@@ -28,25 +28,25 @@ class KNArticleCollection;
 class KNArticleWindow : public KMainWindow  {
 
   Q_OBJECT
-	
-	public:
-		KNArticleWindow(KNArticle *art=0, KNArticleCollection *col=0, const char *name=0);
-		~KNArticleWindow();
-	 	KNArticleWidget* artWidget()				{ return artW; }
-			
-	protected:
-		KNArticleWidget *artW;
-		
-	protected slots:
-  	void slotFileClose();
-  	void slotArtReply();
-  	void slotArtRemail();
-  	void slotArtForward();
-  	void slotArtCancel();
-  	void slotArtSupersede();
-   	void slotToggleToolBar();
-  	void slotConfKeys();
-  	void slotConfToolbar();
+  
+  public:
+    KNArticleWindow(KNArticle *art=0, KNArticleCollection *col=0, const char *name=0);
+    ~KNArticleWindow();
+    KNArticleWidget* artWidget()        { return artW; }
+      
+  protected:
+    KNArticleWidget *artW;
+    
+  protected slots:
+    void slotFileClose();
+    void slotArtReply();
+    void slotArtRemail();
+    void slotArtForward();
+    void slotArtCancel();
+    void slotArtSupersede();
+    void slotToggleToolBar();
+    void slotConfKeys();
+    void slotConfToolbar();
 };
 
 #endif

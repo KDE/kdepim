@@ -27,21 +27,21 @@ class KNGroup;
 
 class KNGroupPropDlg : public KDialogBase  {
 
-	public:
-		KNGroupPropDlg(KNGroup *group, QWidget *parent=0, const char *name=0);
-		~KNGroupPropDlg();
-		
-		bool nickHasChanged()	{ return nChanged; }	
-		
-	protected:
-		KNGroup *grp;
-		bool nChanged;
-		KNUserWidget *uw;
-		QLineEdit *nick;
-		
-	protected slots:
-	  void slotOk();
-	
+  public:
+    KNGroupPropDlg(KNGroup *group, QWidget *parent=0, const char *name=0);
+    ~KNGroupPropDlg();
+    
+    bool nickHasChanged() { return nChanged; }  
+    
+  protected:
+    KNGroup *grp;
+    bool nChanged;
+    KNUserWidget *uw;
+    QLineEdit *nick;
+    
+  protected slots:
+    void slotOk();
+  
 };
 
 #endif

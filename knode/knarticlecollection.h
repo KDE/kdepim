@@ -27,30 +27,30 @@ class KNArticle;
 
 class KNArticleCollection : public KNCollection {
 
-	public:
-		KNArticleCollection(KNCollection *p=0);
-		~KNArticleCollection();
-		
-		bool resize(int s=0);
-		bool append(KNArticle *a);
-		void clearList();
-		void compactList();
-		
-		//get		
-		bool isEmpty()								{ return ( (list==0) || (len==0) ); }
-		bool isFilled()								{ return (!(c_ount>0 && len==0)); }
-		int size()										{ return siz; }
-		int length()									{ return len; }
-		int increment()								{ return incr; }
-		
-		//set
-		void setIncrement(int i)			{ incr=i; }
-		void setLastID(); 							
-					
-	protected:
-		int findId(int id);
-		int siz, len, lastID, incr;
-		KNArticle **list;
+  public:
+    KNArticleCollection(KNCollection *p=0);
+    ~KNArticleCollection();
+    
+    bool resize(int s=0);
+    bool append(KNArticle *a);
+    void clearList();
+    void compactList();
+    
+    //get   
+    bool isEmpty()                { return ( (list==0) || (len==0) ); }
+    bool isFilled()               { return (!(c_ount>0 && len==0)); }
+    int size()                    { return siz; }
+    int length()                  { return len; }
+    int increment()               { return incr; }
+    
+    //set
+    void setIncrement(int i)      { incr=i; }
+    void setLastID();               
+          
+  protected:
+    int findId(int id);
+    int siz, len, lastID, incr;
+    KNArticle **list;
 };
 
 

@@ -38,22 +38,22 @@ class KNArticleWidget : public QVBox  {
 
   Q_OBJECT
 
-	public:
-		enum browserType { BTkonqueror=0 , BTnetscape=1 };
+  public:
+    enum browserType { BTkonqueror=0 , BTnetscape=1 };
 
-		KNArticleWidget(QWidget *parent=0, const char *name=0 );
-		~KNArticleWidget();
+    KNArticleWidget(QWidget *parent=0, const char *name=0 );
+    ~KNArticleWidget();
 
 //=======================================
-  	static void readOptions();
-  	static void saveOptions();
-		static void updateInstances();
-		static KNArticleWidget* find(KNArticle *a);
-		static KNArticleWidget* mainWidget();
-		static void showArticle(KNArticle *a);
-		static void setFullHeaders(bool b);
-		static void toggleFullHeaders();
-		static bool fullHeaders();
+    static void readOptions();
+    static void saveOptions();
+    static void updateInstances();
+    static KNArticleWidget* find(KNArticle *a);
+    static KNArticleWidget* mainWidget();
+    static void showArticle(KNArticle *a);
+    static void setFullHeaders(bool b);
+    static void toggleFullHeaders();
+    static bool fullHeaders();
 //=======================================
 
     const KActionCollection& actions()      { return actionCollection; }
@@ -61,54 +61,54 @@ class KNArticleWidget : public QVBox  {
     bool scrollingDownPossible();       // needed for "read-through"
     void scrollDown();
 
-		void applyConfig();
+    void applyConfig();
 
-		void setData(KNArticle *a, KNArticleCollection *c);
-		void createHtmlPage();
-		void showBlankPage();
-		void showErrorMessage(const QString &s);
+    void setData(KNArticle *a, KNArticleCollection *c);
+    void createHtmlPage();
+    void showBlankPage();
+    void showErrorMessage(const QString &s);
 
-		void updateContents();
+    void updateContents();
 
-		KNArticle* article()							{ return a_rticle; }
-		KNArticleCollection* collection()	{ return c_oll; }
-   	KHTMLPart* part()                 { return p_art; }
+    KNArticle* article()              { return a_rticle; }
+    KNArticleCollection* collection() { return c_oll; }
+    KHTMLPart* part()                 { return p_art; }
 
   protected:
-		void focusInEvent(QFocusEvent *e);
-		void focusOutEvent(QFocusEvent *e);
-		void keyPressEvent(QKeyEvent *e);
-		void wheelEvent(QWheelEvent *e);
-		QString toHtmlString(const QString &line, bool parseURLs=true, bool beautification=true);
-		void openURL(const QString &url);
-		void saveAttachement(const QString &id);
-		void openAttachement(const QString &id);
-		bool inlinePossible(KNMimeContent *c);
-		KNArticle *a_rticle;
-		KNArticleCollection *c_oll;
-		QList<KNMimeContent> *att;
-		bool h_tmlDone;
-		QPopupMenu *urlPopup, *attPopup;
-		KHTMLPart *p_art;
-		QScrollView *view;
-		KAction *actSave, *actPrint, *actCopy;
-		KActionCollection actionCollection;
+    void focusInEvent(QFocusEvent *e);
+    void focusOutEvent(QFocusEvent *e);
+    void keyPressEvent(QKeyEvent *e);
+    void wheelEvent(QWheelEvent *e);
+    QString toHtmlString(const QString &line, bool parseURLs=true, bool beautification=true);
+    void openURL(const QString &url);
+    void saveAttachement(const QString &id);
+    void openAttachement(const QString &id);
+    bool inlinePossible(KNMimeContent *c);
+    KNArticle *a_rticle;
+    KNArticleCollection *c_oll;
+    QList<KNMimeContent> *att;
+    bool h_tmlDone;
+    QPopupMenu *urlPopup, *attPopup;
+    KHTMLPart *p_art;
+    QScrollView *view;
+    KAction *actSave, *actPrint, *actCopy;
+    KActionCollection actionCollection;
 
-		static bool showSig, fullHdrs, inlineAtt, openAtt, altAsAtt;
-		static QString hexColors[7];
-		static QString htmlFont;
-		static int htmlFontSize;
-		static browserType browser;
-		static QList<KNArticleWidget> instances;
+    static bool showSig, fullHdrs, inlineAtt, openAtt, altAsAtt;
+    static QString hexColors[7];
+    static QString htmlFont;
+    static int htmlFontSize;
+    static browserType browser;
+    static QList<KNArticleWidget> instances;
 
-	protected slots:
-		void slotURLRequest (const KURL &url, const KParts::URLArgs &args);
-		void slotPopup(const QString &url, const QPoint &p);
-		void slotSave();
- 		void slotEnableAction(const char *, bool);
+  protected slots:
+    void slotURLRequest (const KURL &url, const KParts::URLArgs &args);
+    void slotPopup(const QString &url, const QPoint &p);
+    void slotSave();
+    void slotEnableAction(const char *, bool);
 
-	signals:
-		void focusChanged(QFocusEvent*);
+  signals:
+    void focusChanged(QFocusEvent*);
 
 };
 

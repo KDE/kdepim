@@ -24,22 +24,22 @@ class KNFolder;
 
 
 class KNCleanUp {
-	
-	public:
-		KNCleanUp();
-		~KNCleanUp();
-		
-		void group(KNGroup *g, bool withGUI=false);
-		void folder(KNFolder *f);
-		
-		int deleted()								{ return delCnt; }
-		int left()                 	{ return leftCnt; }
-	
-	protected:
-		int delCnt, leftCnt;
-		int rDays, uDays;
-		bool saveThr;
-		
+  
+  public:
+    KNCleanUp();
+    ~KNCleanUp();
+    
+    void group(KNGroup *g, bool withGUI=false);
+    void folder(KNFolder *f);
+    
+    int deleted()               { return delCnt; }
+    int left()                  { return leftCnt; }
+  
+  protected:
+    int delCnt, leftCnt;
+    int rDays, uDays;
+    bool saveThr;
+    
 };
 
 #endif

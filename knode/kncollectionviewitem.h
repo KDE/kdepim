@@ -25,18 +25,18 @@ class KNCollection;
 
 
 class KNCollectionViewItem : public KNLVItemBase  {
-	
-	public:
-		KNCollectionViewItem(KNListView *vi);
-		KNCollectionViewItem(KNLVItemBase *it);
-		~KNCollectionViewItem();
-	
-		QString key(int, bool) const;
-		
-		KNCollection *coll;
-		
-	protected:
-		bool firstColBold();	
+  
+  public:
+    KNCollectionViewItem(KNListView *vi);
+    KNCollectionViewItem(KNLVItemBase *it);
+    ~KNCollectionViewItem();
+  
+    QString key(int, bool) const;
+    
+    KNCollection *coll;
+    
+  protected:
+    bool firstColBold();  
 };
 
 

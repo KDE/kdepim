@@ -19,7 +19,7 @@
 #ifndef KNSEARCHDIALOG_H
 #define KNSEARCHDIALOG_H
 
-#include <qwidget.h>
+#include <qdialog.h>
 
 class QPushButton;
 
@@ -27,32 +27,32 @@ class KNFilterConfigWidget;
 class KNArticleFilter;
 
 
-class KNSearchDialog : public QWidget  {
-	
-	Q_OBJECT	
+class KNSearchDialog : public QDialog {
 
-	public:
-		enum searchType { STfolderSearch, STgroupSearch };
-		KNSearchDialog(searchType t=STgroupSearch);
-		~KNSearchDialog();
-		
-		KNArticleFilter* filter()		{ return f_ilter; }
-			
-	protected:
-		void closeEvent(QCloseEvent *e);
-		KNFilterConfigWidget *fcw;
-		QPushButton *startBtn, *newBtn,  *closeBtn;
-		KNArticleFilter *f_ilter;
-		
-	protected slots:
-		void slotStartClicked();
-		void slotNewClicked();
-		void slotCloseClicked();
-		
-	signals:
-		void doSearch(KNArticleFilter *);
-		void dialogDone();
-	
+  Q_OBJECT  
+
+  public:
+    enum searchType { STfolderSearch, STgroupSearch };
+    KNSearchDialog(searchType t=STgroupSearch, QWidget *parent=0);
+    ~KNSearchDialog();
+    
+    KNArticleFilter* filter()   { return f_ilter; }
+      
+  protected:
+    void closeEvent(QCloseEvent *e);
+    KNFilterConfigWidget *fcw;
+    QPushButton *startBtn, *newBtn,  *closeBtn;
+    KNArticleFilter *f_ilter;
+    
+  protected slots:
+    void slotStartClicked();
+    void slotNewClicked();
+    void slotCloseClicked();
+    
+  signals:
+    void doSearch(KNArticleFilter *);
+    void dialogDone();
+  
 };
 
 #endif

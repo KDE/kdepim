@@ -33,45 +33,45 @@
 
 
 KNUserWidget::KNUserWidget(QWidget *parent, const char *n)
-	: QWidget(parent, n), entry(0)
+  : QWidget(parent, n), entry(0)
 {
   QGridLayout *topL=new QGridLayout(this,  9, 3, 5,5);
 
-  QLabel *l=new QLabel(i18n("Name:"), this);		
+  QLabel *l=new QLabel(i18n("Name:"), this);    
   topL->addWidget(l, 0,0);
   name=new QLineEdit(this);
   topL->addMultiCellWidget(name, 0,0, 1,2);
-	
+  
   l=new QLabel(i18n("Organization:"), this);
   topL->addWidget(l, 1,0);
-  orga=new QLineEdit(this);	
-  topL->addMultiCellWidget(orga, 1,1, 1,2);	
-	
+  orga=new QLineEdit(this); 
+  topL->addMultiCellWidget(orga, 1,1, 1,2); 
+  
   l=new QLabel(i18n("Email Address:"), this);
   topL->addWidget(l, 2,0);
   email=new QLineEdit(this);
-  topL->addMultiCellWidget(email, 2,2, 1,2);		
+  topL->addMultiCellWidget(email, 2,2, 1,2);    
 
-  l=new QLabel(i18n("Reply-To Address:"), this);	
+  l=new QLabel(i18n("Reply-To Address:"), this);  
   topL->addWidget(l, 3,0);
   replyTo=new QLineEdit(this);
   topL->addMultiCellWidget(replyTo, 3,3, 1,2);
 
   QButtonGroup *buttonGroup = new QButtonGroup(this);
   connect( buttonGroup, SIGNAL(clicked(int)),
-	         this, SLOT(slotSignatureType(int)) );
+           this, SLOT(slotSignatureType(int)) );
   buttonGroup->hide();
 
   sigFile = new QRadioButton( i18n("Use a signature from file"), this );
   buttonGroup->insert(sigFile);
   topL->addMultiCellWidget(sigFile, 4, 4, 0, 2);
 
-  l = new QLabel( i18n("Signature File:"), this);
-  topL->addWidget(l, 5, 0 );
+  fileName = new QLabel(i18n("Signature File:"), this);
+  topL->addWidget(fileName, 5, 0 );
   sig = new QLineEdit(this);
   topL->addWidget(sig, 5, 1 );
 
-  chooseBtn = new QPushButton( i18n("C&hoose..."), this);
+  chooseBtn = new QPushButton( i18n("Ch&oose..."), this);
   connect(chooseBtn, SIGNAL(clicked()),
           this, SLOT(slotSignatureChoose()));
   topL->addWidget(chooseBtn, 5, 2 );
@@ -87,10 +87,10 @@ KNUserWidget::KNUserWidget(QWidget *parent, const char *n)
   sigEditor = new QMultiLineEdit(this);
   topL->addMultiCellWidget(sigEditor, 8, 8, 0, 2);
 
-	topL->setColStretch(1,1);
-	topL->setRowStretch(5,1);
-	topL->setResizeMode(QLayout::Minimum);	
-	topL->activate();
+  topL->setColStretch(1,1);
+  topL->setRowStretch(5,1);
+  topL->setResizeMode(QLayout::Minimum);  
+  topL->activate();
 }
 
 
@@ -103,30 +103,30 @@ KNUserWidget::~KNUserWidget()
 
 void KNUserWidget::setData(KNUserEntry *user)
 {
-	entry=user;
-	
-	name->setText(user->name());
-	orga->setText(user->orga());	
-	email->setText(user->email());
-	replyTo->setText(user->replyTo());
-	sig->setText(user->sigPath());
-	sigEditor->setText(user->sigText());
-	slotSignatureType(user->useSigFile()? 0:1);	
+  entry=user;
+  
+  name->setText(user->name());
+  orga->setText(user->orga());  
+  email->setText(user->email());
+  replyTo->setText(user->replyTo());
+  sig->setText(user->sigPath());
+  sigEditor->setText(user->sigText());
+  slotSignatureType(user->useSigFile()? 0:1); 
 }
 
 
 
 void KNUserWidget::applyData()
 {
-	if(entry) {
-		entry->setName(name->text().local8Bit());
-		entry->setOrga(orga->text().local8Bit());		
-		entry->setEmail(email->text().local8Bit());
-		entry->setReplyTo(replyTo->text().local8Bit());
-		entry->setUseSigFile(sigFile->isChecked());
-		entry->setSigPath(sig->text());
-		entry->setSigText(sigEditor->text().local8Bit());
-	}
+  if(entry) {
+    entry->setName(name->text().local8Bit());
+    entry->setOrga(orga->text().local8Bit());   
+    entry->setEmail(email->text().local8Bit());
+    entry->setReplyTo(replyTo->text().local8Bit());
+    entry->setUseSigFile(sigFile->isChecked());
+    entry->setSigPath(sig->text());
+    entry->setSigText(sigEditor->text().local8Bit());
+  }
 }
 
 
@@ -136,6 +136,7 @@ void KNUserWidget::slotSignatureType(int type)
   bool sigFromFile = (type==0);
 
   sigFile->setChecked(sigFromFile);
+  fileName->setEnabled(sigFromFile);
   sig->setEnabled(sigFromFile);
   chooseBtn->setEnabled(sigFromFile);
   editBtn->setEnabled(sigFromFile);

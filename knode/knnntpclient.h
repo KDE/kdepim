@@ -27,24 +27,24 @@ class KNNntpClient : public KNProtocolClient  {
   Q_OBJECT
 
   public:
-		
-  	KNNntpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent=0, const char *name=0);
-  	~KNNntpClient();
-		
+    
+    KNNntpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent=0, const char *name=0);
+    ~KNNntpClient();
+    
   protected:
 
-  	virtual void processJob();				 // examines the job and calls the suitable handling method
-	
-  	void doLoadGroups();
-  	void doFetchGroups();
-  	void doCheckNewGroups();
-  	void doFetchNewHeaders();
-  	void doFetchArticle();
-  	void doPostArticle();
-	
-  	virtual bool openConnection();     // connect, handshake
-  	virtual bool sendCommand(const QCString &cmd, int &rep);  // authentication on demand
-  	
+    virtual void processJob();         // examines the job and calls the suitable handling method
+  
+    void doLoadGroups();
+    void doFetchGroups();
+    void doCheckNewGroups();
+    void doFetchNewHeaders();
+    void doFetchArticle();
+    void doPostArticle();
+  
+    virtual bool openConnection();     // connect, handshake
+    virtual bool sendCommand(const QCString &cmd, int &rep);  // authentication on demand
+    
 };
 
 #endif

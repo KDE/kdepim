@@ -25,31 +25,31 @@ class KNGroup;
 class KNFetchArticle;
 
 class KNThread {
-	
-	public:
-		KNThread();
-		KNThread(KNGroup *g, KNFetchArticle *a);
-		~KNThread();
-	
-		void setSource(KNGroup *g)						{ src=g; }
-		void createThreadOf(KNFetchArticle *a);
-		
-		int count()														{ return hdrs->count(); }
-		
-		KNFetchArticle* rootArticle()					{ return hdrs->first(); }
-		void add(KNFetchArticle *a)						{ hdrs->append(a); }
-		bool remove(KNFetchArticle *a)				{ return hdrs->remove(a); }
-		
-		int setRead(bool r, int &newCnt);
-		void setScore(short s);
-		void toggleWatched();
-		void toggleIgnored();
-		//void kill() {}
-				
+  
+  public:
+    KNThread();
+    KNThread(KNGroup *g, KNFetchArticle *a);
+    ~KNThread();
+  
+    void setSource(KNGroup *g)            { src=g; }
+    void createThreadOf(KNFetchArticle *a);
+    
+    int count()                           { return hdrs->count(); }
+    
+    KNFetchArticle* rootArticle()         { return hdrs->first(); }
+    void add(KNFetchArticle *a)           { hdrs->append(a); }
+    bool remove(KNFetchArticle *a)        { return hdrs->remove(a); }
+    
+    int setRead(bool r, int &newCnt);
+    void setScore(short s);
+    void toggleWatched();
+    void toggleIgnored();
+    //void kill() {}
+        
   protected:
-  	QList<KNFetchArticle> *hdrs;
-  	KNGroup *src;
-  	
+    QList<KNFetchArticle> *hdrs;
+    KNGroup *src;
+    
 };
 
 #endif

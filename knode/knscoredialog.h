@@ -19,30 +19,26 @@
 #ifndef KNSCOREDIALOG_H
 #define KNSCOREDIALOG_H
 
-#include <qdialog.h>
+#include <kdialogbase.h>
 
-class QButtonGroup;
 class QRadioButton;
 class QSpinBox;
-class QPushButton;
 
 
-class KNScoreDialog : public QDialog  {
+class KNScoreDialog : public KDialogBase  {
 
   Q_OBJECT
-	
-	public:
-		KNScoreDialog(short sc=50, QWidget *parent=0, const char *name=0);
-		~KNScoreDialog();
-		
-		short score();
-		
-	protected:
-		QButtonGroup *bg;
-		QRadioButton *iBtn, *nBtn, *wBtn, *cBtn;
-		QSpinBox *spin;
-		QPushButton *okBtn, *cancelBtn;
-		
+  
+  public:
+    KNScoreDialog(short sc=50, QWidget *parent=0, const char *name=0);
+    ~KNScoreDialog();
+    
+    short score();   // uhmm, sizeOf(int)==sizeOf(short) on most systems afaik
+    
+  protected:
+    QRadioButton *iBtn, *nBtn, *wBtn, *cBtn;
+    QSpinBox *spin;
+    
 };
 
 #endif

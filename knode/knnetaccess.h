@@ -39,39 +39,39 @@ class KNNetAccess : public QObject  {
 
   public:
 
-		KNNetAccess(QObject *parent=0, const char *name=0);
-		~KNNetAccess();
-		
-		const KActionCollection& actions()    { return actionCollection; }	
-		
-		void addJob(KNJobData *job);
-		void stopJobsNntp(int type);         // type==0 => all jobs
-		void stopJobsSmtp(int type);         // type==0 => all jobs		
+    KNNetAccess(QObject *parent=0, const char *name=0);
+    ~KNNetAccess();
+    
+    const KActionCollection& actions()    { return actionCollection; }  
+    
+    void addJob(KNJobData *job);
+    void stopJobsNntp(int type);         // type==0 => all jobs
+    void stopJobsSmtp(int type);         // type==0 => all jobs   
 
-	protected:
-		void triggerAsyncThread(int pipeFd);     // passes a signal through the ipc-pipe to the net-thread
-	  void startJobNntp();
-	  void startJobSmtp();
-	  void threadDoneNntp();
-	  void threadDoneSmtp();
-	   	  	  						
-		QString unshownMsg, unshownByteCount;    // messages from the nntp-client have priority
-		int unshownProgress;                     // unshown messages get stored here
-	
-		KNNntpClient *nntpClient;
-		KNSmtpClient *smtpClient;		
-	  QQueue<KNJobData> nntpJobQueue, smtpJobQueue;
-	  KNJobData *currentNntpJob, *currentSmtpJob;
-	  pthread_t nntpThread, smtpThread;
-	  int nntpInPipe[2], nntpOutPipe[2], smtpInPipe[2], smtpOutPipe[2];
-	  QSocketNotifier *nntpNotifier,*smtpNotifier;
-	  KAction* actNetStop;
-		KActionCollection actionCollection;
-	
-	protected slots:
-		void slotThreadSignal(int i);
-		void slotCancelAllJobs();
-		
+  protected:
+    void triggerAsyncThread(int pipeFd);     // passes a signal through the ipc-pipe to the net-thread
+    void startJobNntp();
+    void startJobSmtp();
+    void threadDoneNntp();
+    void threadDoneSmtp();
+                        
+    QString unshownMsg, unshownByteCount;    // messages from the nntp-client have priority
+    int unshownProgress;                     // unshown messages get stored here
+  
+    KNNntpClient *nntpClient;
+    KNSmtpClient *smtpClient;   
+    QQueue<KNJobData> nntpJobQueue, smtpJobQueue;
+    KNJobData *currentNntpJob, *currentSmtpJob;
+    pthread_t nntpThread, smtpThread;
+    int nntpInPipe[2], nntpOutPipe[2], smtpInPipe[2], smtpOutPipe[2];
+    QSocketNotifier *nntpNotifier,*smtpNotifier;
+    KAction* actNetStop;
+    KActionCollection actionCollection;
+  
+  protected slots:
+    void slotThreadSignal(int i);
+    void slotCancelAllJobs();
+    
 };
 
 #endif

@@ -21,40 +21,40 @@
 #include "knnntpaccount.h"
 
 KNCollectionViewItem::KNCollectionViewItem(KNListView *vi) :
-	KNLVItemBase(vi)
+  KNLVItemBase(vi)
 {
-	coll=0;
+  coll=0;
 }
 
 
 
 KNCollectionViewItem::KNCollectionViewItem(KNLVItemBase *it) :
-	KNLVItemBase(it)
+  KNLVItemBase(it)
 {
-	coll=0;
+  coll=0;
 }
 
 
 
 KNCollectionViewItem::~KNCollectionViewItem()
 {
-	if(coll) coll->setListItem(0);
+  if(coll) coll->setListItem(0);
 }
 
 
 
 QString KNCollectionViewItem::key(int c, bool) const
 {
-	if(coll->type()==KNCollection::CTfolder && c==0)
-		return QString("\xff\xff\xff\xff");
-	else return text(c);
+  if(coll->type()==KNCollection::CTfolder && c==0)
+    return QString("\xff\xff\xff\xff");
+  else return text(c);
 }
 
 
 
 bool KNCollectionViewItem::firstColBold()
 {
-	if(coll->type()==KNCollection::CTgroup)
-		return ( ((KNGroup*)coll)->newCount()>0 );
-	else return false;
+  if(coll->type()==KNCollection::CTgroup)
+    return ( ((KNGroup*)coll)->newCount()>0 );
+  else return false;
 }

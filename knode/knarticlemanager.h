@@ -40,19 +40,19 @@ class KNArticle;
 class KNSaveHelper {
 
 public:
-	
-	KNSaveHelper(QString saveName);
-	~KNSaveHelper();
-	
-	// returns a file open for writing
-	QFile* getFile();
-	
+  
+  KNSaveHelper(QString saveName);
+  ~KNSaveHelper();
+  
+  // returns a file open for writing
+  QFile* getFile();
+  
 private:
 
   QString s_aveName;
   KURL url;
   QFile* file;
-  KTempFile* tmpFile;	
+  KTempFile* tmpFile; 
 
 };
 
@@ -61,24 +61,24 @@ private:
 
 
 class KNArticleManager {
-	
-	public:
-		KNArticleManager(KNListView *v);
-		virtual ~KNArticleManager();
-		static void deleteTempFiles();
-		
-		static void saveContentToFile(KNMimeContent *c);
-		static void saveArticleToFile(KNArticle *a);
-		static QString saveContentToTemp(KNMimeContent *c);
-		static void openContent(KNMimeContent *c);
-		static void showArticle(KNArticle *a, bool force=false);
-		static void showError(KNArticle *a, const QString &error);
-		
-	protected:	
-		KNListView *view;
-		KNArticleWidget *mainArtWidget;
-		static QList<KTempFile> tempFiles;	
-			
+  
+  public:
+    KNArticleManager(KNListView *v);
+    virtual ~KNArticleManager();
+    static void deleteTempFiles();
+    
+    static void saveContentToFile(KNMimeContent *c);
+    static void saveArticleToFile(KNArticle *a);
+    static QString saveContentToTemp(KNMimeContent *c);
+    static void openContent(KNMimeContent *c);
+    static void showArticle(KNArticle *a, bool force=false);
+    static void showError(KNArticle *a, const QString &error);
+    
+  protected:  
+    KNListView *view;
+    KNArticleWidget *mainArtWidget;
+    static QList<KTempFile> tempFiles;  
+      
 };
 
 #endif

@@ -26,18 +26,18 @@ class QSpinBox;
 class KNServerInfo;
 
 class KNAccMailSettings : public KNSettingsWidget  {
-	
-	public:
-		KNAccMailSettings(QWidget *p);
-		~KNAccMailSettings();
-		
-		void apply();
-		
-	protected:
-		void init();
-		
-		KNServerInfo *serverInfo;
-		QLineEdit *s_erver, *p_ort;
+  
+  public:
+    KNAccMailSettings(QWidget *p);
+    ~KNAccMailSettings();
+    
+    void apply();
+    
+  protected:
+    void init();
+    
+    KNServerInfo *serverInfo;
+    QLineEdit *s_erver, *p_ort;
     QSpinBox *h_old, *t_imeout;
 };
 
