@@ -127,11 +127,19 @@ inline std::ostream& operator <<(std::ostream &o, const QString &s) { if (s.isEm
 inline std::ostream& operator <<(std::ostream &o, const QCString &s) { if (s.isEmpty()) return o<<"<empty>"; else return o << *s; }
 
 #else
+#ifdef DEBUG
 #define DEBUGSTREAM	kdbgstream
 #define DEBUGKPILOT	kdDebug(KPILOT_AREA) << fname_.string()
 #define DEBUGDAEMON	kdDebug(DAEMON_AREA) << fname_.string()
 #define DEBUGCONDUIT	kdDebug(CONDUIT_AREA) << fname_.string()
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA) << fname_.string()
+#else
+#define DEBUGSTREAM	kdbgstream
+#define DEBUGKPILOT	kdDebug(KPILOT_AREA)
+#define DEBUGDAEMON	kdDebug(DAEMON_AREA)
+#define DEBUGCONDUIT	kdDebug(CONDUIT_AREA)
+#define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
+#endif
 #endif
 
 #define KPILOT_VERSION	"4.4.7 (baby)"

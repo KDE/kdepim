@@ -620,8 +620,10 @@ void KPilotDeviceLink::acceptDevice()
 	/* Tell user (via Pilot) that we are starting things up */
 	if ((ret=dlp_OpenConduit(fCurrentPilotSocket)) < 0)
 	{
+#ifdef DEBUG
 		DEBUGDAEMON << k_funcinfo
 			<< ": dlp_OpenConduit returned " << ret << endl;
+#endif
 
 #if 0
 		fLinkStatus = SyncDone;

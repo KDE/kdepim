@@ -124,7 +124,9 @@ PilotLocalDatabase::~PilotLocalDatabase()
 	delete[]fAppInfo;
 	for (i = 0; i < fNumRecords; i++)
 	{
+#ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Deleting record " << i << endl;
+#endif
 		delete fRecords[i];
 	}
 }
@@ -288,7 +290,9 @@ PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 	fPendingRec = -1;
 	if (isDBOpen() == false)
 	{
+#ifdef DEBUG
 		DEBUGKPILOT << fDBName << ": DB not open!" << endl;
+#endif
 		return 0L;
 	}
 

@@ -121,7 +121,7 @@ struct tm writeTm(const QDate &dt)
   return t;
 }
 
-
+#ifdef DEBUG
 KPilotDepthCount::KPilotDepthCount() :
 	fDepth(depth)
 {
@@ -141,3 +141,4 @@ QString KPilotDepthCount::string() const
 }
 
 int KPilotDepthCount::depth = 0;
+#endif

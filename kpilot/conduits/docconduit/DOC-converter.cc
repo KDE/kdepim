@@ -78,11 +78,15 @@ int docMatchBookmark::findMatches(QString doctext, bmkList &fBookmarks) {
 	FUNCTIONSETUP;
 //	bmkList res;
 	int pos = 0, nr=0, found=0;
+#ifdef DEBUG
 	DEBUGCONDUIT<<"Finding matches of "<<pattern<<endl;
+#endif
 
 	while (pos >= 0 && found<to) {
 		pos = doctext.find(pattern, pos);
+#ifdef DEBUG
 		DEBUGCONDUIT<<"Result of search: pos="<<pos<<endl;
+#endif
 		if (pos >= 0)
 		{
 			++found;
@@ -107,7 +111,9 @@ int docRegExpBookmark::findMatches(QString doctext, bmkList &fBookmarks)
 	int pos = 0, nr=0, found=0;
 
 	while (pos>=0 && found<=to) {
+#ifdef DEBUG
 		DEBUGCONDUIT<<"Searching for bookmark "<<pattern<<endl;
+#endif
 		pos=rx.search(doctext, pos);
 		if (pos > -1) {
 			++found;

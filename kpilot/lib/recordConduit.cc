@@ -140,7 +140,9 @@ RecordConduit::~RecordConduit()
 /* virtual */ bool RecordConduit::exec()
 {
 	FUNCTIONSETUP;
+#ifdef DEBUG
 	DEBUGCONDUIT << id_record_conduit << endl;
+#endif
 
 	if ( !_prepare() ) return false;
 
