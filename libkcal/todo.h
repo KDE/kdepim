@@ -205,6 +205,12 @@ class Todo : public Incidence
     */
     virtual bool recursOn( const QDate &date );
 
+    /**
+      Returns true if this todo is overdue (e.g. due date is lower than today
+      and not completed), else false.
+     */
+      bool isOverdue();
+
   private:
     bool accept(Visitor &v) { return v.visit( this ); }
     /** Returns true if the todo got a new date, else false will be returned. */

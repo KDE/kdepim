@@ -276,3 +276,9 @@ bool Todo::recurTodo()
   return false;
 }
 
+bool Todo::isOverdue()
+{
+  bool inPast = doesFloat() ? mDtDue.date() < QDate::currentDate()
+                            : mDtDue < QDateTime::currentDateTime();
+  return ( inPast && !isCompleted() );
+}
