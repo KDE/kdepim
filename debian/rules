@@ -17,7 +17,7 @@ build-stamp:
 	if test ! -f configure; then \
 	  $(MAKE) -f admin/Makefile.common ;\
 	fi 
-	./configure $(configkde) --with-extra-includes=/usr/include/libpisock
+	./configure $(configkde) --with-extra-includes=/usr/include/libpisock 
 	make
 	touch build-stamp
 
@@ -57,24 +57,7 @@ binary-arch: build
 		ln -s ../common $$i ;\
 	done
 	dh_undocumented
-	list=`cd debian/tmp && find ./ -type l -name "lib*.so" | sed -e 's#^./##'` ;\
-	dh_movefiles -pkdepim-dev $$list usr/lib/*.a
-	dh_movefiles -pabbrowser usr/share/apps/abbrowser/* \
-		usr/share/icons/hicolor/32x32/apps/abbrowser.png \
-		usr/share/icons/locolor/16x16/apps/abbrowser.png \
-		usr/share/applnk/Utilities/abbrowser.desktop \
-		usr/share/man/man1/abbrowser* \
-		usr/bin/abbrowser
-	dh_movefiles -pkorganizer usr/bin/* usr/share/apps/korganizer/* \
-		usr/share/icons/hicolor/32x32/apps/korganizer.png \
-		usr/share/icons/hicolor/48x48/apps/korganizer.png \
-		usr/share/icons/locolor/16x16/apps/korganizer.png \
-		usr/share/icons/locolor/32x32/apps/korganizer.png \
-		usr/share/applnk/Applications/korganizer.desktop \
-		usr/share/doc/korganizer/* etc/kde2/korganizerrc \
-		usr/share/man/man1/korganizer* usr/lib/*korganizer* \
-		usr/share/man/man1/alarmd* \
-		usr/share/man/man1/ical2vcal*
+	dh_movefiles
 	dh_installdocs
 	dh_installmenu
 	dh_installmime
@@ -83,17 +66,11 @@ binary-arch: build
 	dh_compress
 	dh_fixperms
 	dh_suidregister
-	dh_makeshlibs
+	dh_makeshlibs -pkorganizer -V
 	dh_perl
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol
-	-for package in `cat debian/control | grep Package | grep -v kdepim | sed -e 's#^Package: ##'`; do \
-		cd debian/$$package ;\
-		find ./etc/kde2 -type f -print | sed -e 's#^./#/#' > DEBIAN/conffiles ;\
-		chmod 644 debian/$$package/DEBIAN/conffiles ;\
-		cd ../../ ;\
-	done
 	dh_md5sums
 	dh_builddeb       	
 
