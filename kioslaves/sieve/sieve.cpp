@@ -53,6 +53,8 @@ static inline
   kdbgstream ksDebug( bool cond ) { return kdDebug( cond, debugArea ); }
 #endif
 
+#define SIEVE_DEFAULT_PORT 2000
+  
 static const unsigned int SIEVE_DEFAULT_RECIEVE_BUFFER = 512;
 
 using namespace KIO;
@@ -162,7 +164,7 @@ void kio_sieveResponse::clear()
 
 /* ---------------------------------------------------------------------------------- */
 kio_sieveProtocol::kio_sieveProtocol(const QCString &pool_socket, const QCString &app_socket)
-	: TCPSlaveBase(2625, "sieve", pool_socket, app_socket, false)
+	: TCPSlaveBase( SIEVE_DEFAULT_PORT, "sieve", pool_socket, app_socket, false)
 	, m_connMode(NORMAL)
 	, m_supportsTLS(false)
 	, m_shouldBeConnected(false)
