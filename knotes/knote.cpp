@@ -71,7 +71,7 @@ KNote::KNote( KXMLGUIBuilder* builder, QDomDocument buildDoc, Journal *j,
     m_label( 0 ), m_button( 0 ), m_tool( 0 ), m_editor( 0 ),
     m_config( 0 ), m_journal( j )
 {
-    //actionCollection()->setWidget( this );
+    actionCollection()->setWidget( this );
 
     // if there is no title yet, use the start date if valid
     // (KOrganizer's journals don't have titles but a valid start date)

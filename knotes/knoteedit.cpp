@@ -85,17 +85,17 @@ KNoteEdit::KNoteEdit( QWidget *parent, const char *name )
     connect( m_textUnderline, SIGNAL(toggled(bool)), SLOT(setUnderline(bool)) );
     connect( m_textStrikeOut, SIGNAL(toggled(bool)), SLOT(textStrikeOut(bool)) );
 
-    m_textAlignLeft = new KToggleAction( QString::null, "text_left", CTRL + Key_L,
+    m_textAlignLeft = new KToggleAction( QString::null, "text_left", ALT + Key_L,
                                  this, SLOT(textAlignLeft()),
                                  actions, "format_alignleft" );
     m_textAlignLeft->setChecked( true ); // just a dummy, will be updated later
-    m_textAlignCenter = new KToggleAction( QString::null, "text_center", CTRL + ALT + Key_C,
+    m_textAlignCenter = new KToggleAction( QString::null, "text_center", ALT + Key_C,
                                  this, SLOT(textAlignCenter()),
                                  actions, "format_aligncenter" );
-    m_textAlignRight = new KToggleAction( QString::null, "text_right", CTRL + ALT + Key_R,
+    m_textAlignRight = new KToggleAction( QString::null, "text_right", ALT + Key_R,
                                  this, SLOT(textAlignRight()),
                                  actions, "format_alignright" );
-    m_textAlignBlock = new KToggleAction( QString::null, "text_block", CTRL + Key_J,
+    m_textAlignBlock = new KToggleAction( QString::null, "text_block", ALT + Key_B,
                                  this, SLOT(textAlignBlock()),
                                  actions, "format_alignblock" );
 
