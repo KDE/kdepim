@@ -932,7 +932,14 @@ QString PopMailConduit::getKMailOutbox() const
 	//
 	KSimpleConfig c("kmailrc",true);
 	c.setGroup("General");
-	return c.readEntry("outboxFolder","outbox");
+
+	outbox = c.readEntry("outboxFolder",QString::null);
+	if (outbox.isEmpty())
+	{
+		KConfigGroupSaver gs(fConfig,PopmailConduitFactory::group);
+		outbox = fConfig->readEntry("outboxFolder");
+	}
+	return outbox;
 }
 
 /*
@@ -1987,6 +1994,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.44.4.1  2003/01/08 23:09:52  adridg
+// COmpile fix from Bausi; seems to work on BSD too.
+//
 // Revision 1.44  2002/08/25 13:28:28  mhunter
 // CVS_SILENT Corrected typographical errors
 //
