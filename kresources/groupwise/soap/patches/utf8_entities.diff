@@ -1,0 +1,15 @@
+--- kresources/groupwise/soap/stdsoap2.cpp
++++ kresources/groupwise/soap/stdsoap2.cpp	2004/10/15 12:42:53
+@@ -6470,7 +6470,11 @@
+       }
+ #endif
+       if (c & mask)
+-      { if (soap_send_raw(soap, s, t - s - 1) || soap_pututf8(soap, (unsigned char)c))
++      {
++        char S[2];
++        S[0] = c;
++        S[1] = 0;
++        if (soap_send_raw(soap, s, t - s - 1) || soap_send(soap, S) )
+           return soap->error;
+         s = t;
+       }

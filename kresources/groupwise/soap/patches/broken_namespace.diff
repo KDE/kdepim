@@ -1,0 +1,20 @@
+--- /build/progs/gsoap-linux-2.7/stdsoap2.cpp	2004-10-10 20:33:26.000000000 +0200
++++ ../stdsoap2.cpp	2004-10-25 15:44:05.707573480 +0200
+@@ -2249,10 +2249,15 @@
+ SOAP_FMAC1
+ int
+ SOAP_FMAC2
+-soap_match_tag(struct soap *soap, const char *tag1, const char *tag2)
++soap_match_tag(struct soap *soap, const char *tag1, const char *tag2_)
+ { register const char *s, *t;
+-  if (!tag1 || !tag2 || !*tag2)
++  if (!tag1 || !tag2_ || !*tag2_)
+     return SOAP_OK;
++
++  const char *tag2;
++  if ( strncmp( tag2_, "ns1:", 4 ) == 0 ) tag2 = tag2_ + 4;
++  else tag2 = tag2_;
++
+   s = strchr(tag1, ':');
+   t = strchr(tag2, ':');
+   if (t)

@@ -1,0 +1,21 @@
+gSoap Patches
+=============
+
+This directory contains patches for gSoap required to make the GroupWise
+resource work with the real existing GroupWise server. They are already included
+in the gSoap or gSoap generated files in CVS, so if you don't create the stubs
+yourself or want to upgrade the gSoap version you don't have to care about these
+patches.
+
+Patch descriptions
+------------------
+
+broken_namespace.diff:
+
+  The GroupWise server doesn't correctly declare the default namespace. This
+  patch disables the namespace checking for the GroupWise namespace ns1.
+
+utf8_entities.diff:
+
+  gSoap encodes utf8 characters as XML entities, but the server doesn't seem to
+  be able to decode them. This patch makes gSoap send unencoded utf8 characters.

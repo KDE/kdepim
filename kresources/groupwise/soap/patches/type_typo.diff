@@ -1,0 +1,15 @@
+Index: soap/soapC.cpp
+===================================================================
+RCS file: /home/kde/kdepim/kresources/groupwise/soap/soapC.cpp,v
+retrieving revision 1.4.2.3
+diff -u -3 -p -r1.4.2.3 soapC.cpp
+--- soap/soapC.cpp	25 Oct 2004 13:58:20 -0000	1.4.2.3
++++ soap/soapC.cpp	29 Oct 2004 11:25:22 -0000
+@@ -6337,6 +6337,7 @@ static const struct soap_code_map soap_c
+ {	{ (long)User, "User" },
+ 	{ (long)PersonalGroup, "PersonalGroup" },
+ 	{ (long)SystemGroup, "SystemGroup" },
++	{ (long)SystemGroup, "SsytemGroup" },
+ 	{ (long)PersonalGroupMember, "PersonalGroupMember" },
+ 	{ (long)SystemGroupMember, "SystemGroupMember" },
+ 	{ 0, NULL }
