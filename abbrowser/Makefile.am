@@ -1,5 +1,7 @@
 KDE_ICON = abbrowser
 
+KDE_CXXFLAGS = -frtti
+
 APPSDIR = $(kde_appsdir)/Utilities
 
 INCLUDES= $(all_includes) -I../kab2/lib
