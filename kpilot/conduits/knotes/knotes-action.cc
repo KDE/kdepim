@@ -571,7 +571,7 @@ bool KNotesAction::syncMemoToKNotes()
 		//
 		if (fP->fDeleteNoteForMemo)
 		{
-			fP->fKNotes->killNote(m.note());
+			fP->fKNotes->killNote(m.note(),KNotesConduitSettings::suppressKNotesConfirm());
 			fP->fDeleteCounter++;
 		}
 

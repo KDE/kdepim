@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
-<kcfg><kcfgfile name="kpilotrc"/> 
+<kcfg><kcfgfile name="kpilotrc"/>
   <group name="KNotes-conduit">
     <entry name="DeleteNoteForMemo"  type="Bool">
         <default>false</default>
     </entry>
+    <entry name="SuppressKNotesConfirm" type="Bool">
+        <label>Suppress the confirmation KNotes normally shows when deleting a note.</label>
+        <default>false</default>
+    </entry>
+
+    <!-- remainder are for internal use only -->
+
     <entry name="MemoIds"  type="IntList">
         <label>list of the synced MemoDB records</label>
         <default></default>

@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
 <class>KNotesWidget</class>
 <widget class="QWidget">
     <property name="name">
@@ -9,41 +9,38 @@
             <x>0</x>
             <y>0</y>
             <width>436</width>
-            <height>388</height>
+            <height>394</height>
         </rect>
     </property>
-    <grid>
+    <property name="caption">
+        <string>Form3</string>
+    </property>
+    <widget class="QTabWidget">
         <property name="name">
-            <cstring>unnamed</cstring>
+            <cstring>tabWidget</cstring>
         </property>
-        <property name="margin">
-            <number>0</number>
+        <property name="geometry">
+            <rect>
+                <x>1</x>
+                <y>1</y>
+                <width>312</width>
+                <height>207</height>
+            </rect>
         </property>
-        <property name="spacing">
-            <number>6</number>
-        </property>
-        <widget class="QTabWidget" row="0" column="0">
+        <widget class="QWidget">
             <property name="name">
-                <cstring>tabWidget</cstring>
+                <cstring>tab</cstring>
             </property>
-            <widget class="QWidget">
+            <attribute name="title">
+                <string>General</string>
+            </attribute>
+            <grid>
                 <property name="name">
-                    <cstring>tab</cstring>
+                    <cstring>unnamed</cstring>
                 </property>
-                <attribute name="title">
-                    <string>General</string>
-                </attribute>
-                <widget class="QCheckBox">
+                <widget class="QCheckBox" row="0" column="0">
                     <property name="name">
                         <cstring>fDeleteNoteForMemo</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>18</x>
-                            <y>16</y>
-                            <width>361</width>
-                            <height>31</height>
-                        </rect>
                     </property>
                     <property name="text">
                         <string>Delete KNote when Pilot memo is deleted</string>
@@ -55,9 +52,34 @@
                         <string>&lt;qt&gt;Use this carefully&lt;/qt&gt;</string>
                     </property>
                 </widget>
-            </widget>
+                <widget class="QCheckBox" row="1" column="0">
+                    <property name="name">
+                        <cstring>fSuppressConfirm</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Suppress delete-confirmation in KNotes</string>
+                    </property>
+                </widget>
+                <spacer row="2" column="0">
+                    <property name="name">
+                        <cstring>spacer1</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>101</height>
+                        </size>
+                    </property>
+                </spacer>
+            </grid>
         </widget>
-    </grid>
+    </widget>
 </widget>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>
