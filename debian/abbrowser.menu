@@ -3,5 +3,5 @@
 	section=Apps/Tools\
 	title="abbrowser"\
 	command=abbrowser\
-	icon=""
+	icon="/usr/share/icons/locolor/16x16/apps/abbrowser.png"
 

@@ -3,5 +3,5 @@
 	section=Apps/Tools\
 	title="KOrganizer"\
 	command=korganizer\
-	icon=""
+	icon="/usr/share/icons/locolor/16x16/apps/korganizer.png"
 
