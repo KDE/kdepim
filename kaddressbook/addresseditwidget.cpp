@@ -80,6 +80,13 @@ AddressEditWidget::~AddressEditWidget()
 
 const KABC::Address::List &AddressEditWidget::addresses()
 {
+  KABC::Address::List::Iterator it;
+  for ( it = mAddressList.begin(); it != mAddressList.end(); ++it )
+    if ( (*it).isEmpty() ) {
+      it = mAddressList.remove( it );
+      --it;
+    }
+
   return mAddressList;
 }
 
@@ -87,19 +94,21 @@ void AddressEditWidget::setAddresses(const KABC::Address::List &list)
 {
   mAddressList.clear();
   
+  // Insert types for existing numbers.
+  mTypeCombo->insertTypeList( list );
+
   QValueList<int> defaultTypes;
   defaultTypes << KABC::Address::Home;
   defaultTypes << KABC::Address::Work;
 
-  // Insert default types and types for existing numbers.
+  // Insert default types.
   // Doing this for mPrefCombo is enough because the list is shared by all
   // combos.
   QValueList<int>::ConstIterator it;
   for( it = defaultTypes.begin(); it != defaultTypes.end(); ++it ) {
-    mTypeCombo->insertType( list, *it, Address( *it ) );
+    if ( !mTypeCombo->hasType( *it ) )
+      mTypeCombo->insertType( list, *it, Address( *it ) );
   }
-
-  mTypeCombo->insertTypeList( list );
 
   mTypeCombo->updateTypes();
   mTypeCombo->selectType( defaultTypes[ 0 ] );

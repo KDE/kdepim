@@ -115,23 +115,45 @@ void ViewManager::readConfig()
     mConfig->setGroup(iter.currentKey());
     iter.current()->readConfig(mConfig);
   }
+
+  QValueList<int> splitterSize;
+  mConfig->setGroup("Splitter");
+  splitterSize = mConfig->readIntListEntry("FeaturesSplitter");
+  if ( splitterSize.count() == 0 ) {
+    splitterSize.append( width() / 2 );
+    splitterSize.append( width() / 2 );
+  }
+  mQSpltFeatures->setSizes( splitterSize );
+
+  splitterSize = mConfig->readIntListEntry("DetailsSplitter");
+  if ( splitterSize.count() == 0 ) {
+    splitterSize.append( height() / 2 );
+    splitterSize.append( height() / 2 );
+  }
+  mQSpltDetails->setSizes( splitterSize );
+
 }
 
 void ViewManager::writeConfig()
 {
-    // Iterator through all the views
-    QDictIterator<KAddressBookView> iter(mViewDict);
-    for (iter.toFirst(); iter.current(); ++iter)
-    {
-        mConfig->setGroup(iter.currentKey());
-        (*iter)->writeConfig(mConfig);
-    }
-    Filter::save(mConfig, QString("Filter"), mFilterList);
-    mConfig->setGroup("Filter");
-    mConfig->writeEntry("Active", mCurrentFilter.name());
-    // write the view name list
-    mConfig->setGroup("Views");
-    mConfig->writeEntry("Names", mViewNameList);
+  // Iterator through all the views
+  QDictIterator<KAddressBookView> iter(mViewDict);
+  for ( iter.toFirst(); iter.current(); ++iter ) {
+    mConfig->setGroup( iter.currentKey() );
+    (*iter)->writeConfig( mConfig );
+  }
+
+  Filter::save( mConfig, QString( "Filter" ), mFilterList );
+  mConfig->setGroup( "Filter" );
+  mConfig->writeEntry( "Active", mCurrentFilter.name() );
+
+  // write the view name list
+  mConfig->setGroup( "Views" );
+  mConfig->writeEntry( "Names", mViewNameList );
+
+  mConfig->setGroup( "Splitter" );
+  mConfig->writeEntry( "FeaturesSplitter", mQSpltFeatures->sizes() );
+  mConfig->writeEntry( "DetailsSplitter", mQSpltDetails->sizes() );
 }
 
 QStringList ViewManager::selectedUids()

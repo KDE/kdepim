@@ -115,6 +115,9 @@ void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
 {
   mPhoneList.clear();
 
+  // Insert types for existing numbers.
+  mPrefCombo->insertTypeList( list );
+
   QValueList<int> defaultTypes;
   defaultTypes << KABC::PhoneNumber::Home;
   defaultTypes << KABC::PhoneNumber::Work;
@@ -122,15 +125,14 @@ void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
   defaultTypes << ( KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax );
   defaultTypes << ( KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
 
-  // Insert default types and types for existing numbers.
+  // Insert default types.
   // Doing this for mPrefCombo is enough because the list is shared by all
   // combos.
   QValueList<int>::ConstIterator it;
   for( it = defaultTypes.begin(); it != defaultTypes.end(); ++it ) {
-    mPrefCombo->insertType( list, *it, PhoneNumber( "", *it ) );
+    if ( !mPrefCombo->hasType( *it ) )
+      mPrefCombo->insertType( list, *it, PhoneNumber( "", *it ) );
   }
-
-  mPrefCombo->insertTypeList( list );
 
   updateCombos();
 
@@ -160,6 +162,13 @@ void PhoneEditWidget::updateCombos()
 
 const KABC::PhoneNumber::List &PhoneEditWidget::phoneNumbers()
 {
+  KABC::PhoneNumber::List::Iterator it;
+  for ( it = mPhoneList.begin(); it != mPhoneList.end(); ++it )
+    if ( (*it).number().isEmpty() ) {
+      it = mPhoneList.remove( it );
+      --it;
+    }
+
   return mPhoneList;
 }
 

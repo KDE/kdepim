@@ -55,6 +55,8 @@ class TypeCombo : public KComboBox
                      const T &defaultObject );
     void insertTypeList( const List &list );
 
+    bool hasType( int type );
+
   private:
     List &mTypeList;
     QLineEdit *mLineEdit;
@@ -78,16 +80,17 @@ void TypeCombo<T>::updateTypes()
 
   clear();
 
-  QMap<QString,int> labelCount;
+  QMap<int,int> labelCount;
 
   uint i;
   for( i = 0; i < mTypeList.count(); ++i ) {
-    QString label = mTypeList[ i ].typeLabel( mTypeList[ i ].type() );
+    int type = ( mTypeList[ i ].type() & ~( T::Pref ) );
+    QString label = mTypeList[ i ].typeLabel( type );
     int count = 1;
-    if ( labelCount.contains( label ) ) {
-      count = labelCount[ label ] + 1;
+    if ( labelCount.contains( type ) ) {
+      count = labelCount[ type ] + 1;
     }
-    labelCount[ label ] = count;
+    labelCount[ type ] = count;
     if ( count > 1 ) {
       label = i18n("label (number)", "%1 (%2)").arg( label )
                                            .arg( QString::number( count ) );
@@ -159,6 +162,17 @@ void TypeCombo<T>::insertTypeList( const TypeCombo::List &list )
       mTypeList.append( list[ i ] );
     }
   }
+}
+
+template <class T>
+bool TypeCombo<T>::hasType( int type )
+{
+  for( uint i = 0; i < mTypeList.count(); ++i ) {
+    if ( ( mTypeList[ i ].type() & ~T::Pref ) == type )
+      return true;
+  }
+
+  return false;
 }
 
 #endif
