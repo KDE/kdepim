@@ -318,11 +318,20 @@ bool KPilotDeviceLink::open(QString device)
 	fCurrentPilotSocket = (-1);
 
 	if ( device.isEmpty() )
+	{
 		device = pilotPath();
+	}
+	if (device.isEmpty())
+	{
+		kdWarning() << k_funcinfo
+			<< ": No point in trying empty device."
+			<< endl;
+
+		msg = i18n("The Pilot device is not configured yet.");
+		e = 0;
+		goto errInit;
+	}
 	fRealPilotPath = KStandardDirs::realPath ( device );
-//	if ( dv.exists() && dv.isSymLink() ) {
-//		fRealPilotPath = dv.readLink();
-//	}
 
 	if ( !KPilotDeviceLinkPrivate::self()->canBind( fRealPilotPath ) ) {
 		msg = i18n("Already listening on that device");
@@ -334,16 +343,6 @@ bool KPilotDeviceLink::open(QString device)
 
 	if (fPilotMasterSocket == -1)
 	{
-		if (device.isEmpty())
-		{
-			kdWarning() << k_funcinfo
-				<< ": No point in trying empty device."
-				<< endl;
-
-			msg = i18n("The Pilot device is not configured yet.");
-			e = 0;
-			goto errInit;
-		}
 #ifdef DEBUG
 		DEBUGDAEMON << fname << ": Typing to open " << fRealPilotPath << endl;
 #endif

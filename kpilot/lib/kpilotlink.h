@@ -270,7 +270,7 @@ protected slots:
 	* device. This indicates the beginning of a hotsync.
 	*/
 	void acceptDevice();
-
+	
 protected:
 	/**
 	* Does the low-level opening of the device and handles the
