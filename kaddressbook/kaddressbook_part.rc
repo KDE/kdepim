@@ -3,7 +3,6 @@
 
   <MenuBar>
     <Menu name="file" noMerge="1"><text>&amp;File</text>
-      <Action name="file_new_contact"/>
       <Action name="file_properties"/>
       <Separator/>
       <Action name="file_sync"/>
@@ -72,7 +71,6 @@
   </Menu>
 
   <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
-    <Action name="file_new_contact"/>
     <Action name="file_properties"/>
     <Separator/>
     <Action name="file_sync" />
