@@ -251,6 +251,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status sta
           //update attendee-info
           kdDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
           attEv->setStatus(attIn->status());
+	  attEv->setRSVP(false);
 	  // better to not update the sequence number with replys
           //if (ev) ev->setRevision(ev->revision()+1);
 	  //if (to) to->setRevision(to->revision()+1);
