@@ -122,6 +122,7 @@ void Preferences::makeStoragePage()
   QLabel* _iCalFileLabel = new QLabel( i18n("iCalendar file:"), storagePage);
   _iCalFileW = new KURLRequester(storagePage, "_iCalFileW");
   _iCalFileW->setFilter(QString::fromLatin1("*.ics"));
+  _iCalFileW->setMode(KFile::File);
 
   // Log time?
   _loggingW = new QCheckBox 
