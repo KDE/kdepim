@@ -61,6 +61,7 @@ Incidence::Incidence(const Incidence &i) : QObject()
   mVUID = i.mVUID;
   mRevision = i.mRevision;
 //  QPtrList<Attendee> mAttendees;     QPtrList<Attendee> mAttendees;
+  mAttendees = i.attendees();
   mLastModified = i.mLastModified;
   mCreated = i.mCreated;
   mDescription = i.mDescription;
@@ -272,6 +273,19 @@ Attendee *Incidence::getAttendee(const char *n) const
   return 0L;
 }
 #endif
+
+Attendee *Incidence::attendeeByMail(const QString &email)
+{
+  QPtrListIterator<Attendee> qli(mAttendees);
+
+  qli.toFirst();
+  while (qli) {
+    if (qli.current()->email() == email)
+      return qli.current();
+    ++qli;
+  }
+  return 0L;
+}
 
 void Incidence::setDescription(const QString &description)
 {

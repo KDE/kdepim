@@ -19,6 +19,6 @@ libkcal_la_SOURCES = \
         exceptions.cpp \
         scheduler.cpp imipscheduler.cpp dummyscheduler.cpp \
         calfilter.cpp \
-        person.cpp
+        person.cpp period.cpp duration.cpp
 
 METASOURCES = AUTO

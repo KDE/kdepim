@@ -166,6 +166,8 @@ class Incidence : public QObject
     QPtrList<Attendee> attendees() const { return mAttendees; };
     /** Return number of attendees. */
     int attendeeCount() const { return mAttendees.count(); };
+    /** Return the Attendee with this email */
+    Attendee* attendeeByMail(const QString &);
 
     /** sets the event's lengthy description. */
     void setDescription(const QString &description);

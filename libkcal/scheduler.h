@@ -100,14 +100,14 @@ class Scheduler {
       iTIP message with the current calendar and specifies the action to be
       taken for this incidence.
     */
-    bool acceptTransaction(Incidence *,ScheduleMessage::Status status);
+    bool acceptTransaction(Incidence *,Method method,ScheduleMessage::Status status);
 
     /** Return a human-readable name for a iTIP method. */
     static QString methodName(Method);
 
-  protected:
-  
     virtual bool deleteTransaction(Incidence *incidence);
+
+  protected:
 
     Calendar *mCalendar;
     ICalFormat *mFormat;

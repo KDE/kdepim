@@ -21,6 +21,7 @@
 // $Id$
 
 #include <klocale.h>
+#include <kdebug.h>
 
 #include "event.h"
 #include "icalformat.h"
@@ -63,9 +64,10 @@ Scheduler::~Scheduler()
 {
 }
 
-bool Scheduler::acceptTransaction(Incidence *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptTransaction(Incidence *incidence,Method method,ScheduleMessage::Status status)
 {
-  switch (status) {
+  if (method==Publish || method==Request) {
+    switch (status) {
     case ScheduleMessage::PublishNew:
       if (!mCalendar->getEvent(incidence->VUID())) {
         mCalendar->addIncidence(incidence);
@@ -80,7 +82,42 @@ bool Scheduler::acceptTransaction(Incidence *incidence,ScheduleMessage::Status s
       return true;
     default:
       return false;
+    }
   }
+  else {
+    if (method==Reply) {
+      kdDebug() << "Scheduler::acceptTransaction -REPLY-" << endl;
+      //get event in calendar
+      QPtrList<Event> eventList;
+      eventList=mCalendar->getEvents(incidence->dtStart().date(),incidence->dtStart().date(),false);
+      Event *ev;
+      for ( ev = eventList.first(); ev; ev = eventList.next() ) {
+        if (ev->VUID()==incidence->VUID()) {
+          //get matching attendee in calendar
+          kdDebug() << "Scheduler::acceptTransaction match found!" << endl;
+          QPtrList<Attendee> attendeesIn = incidence->attendees();
+          QPtrList<Attendee> attendeesEv = ev->attendees();
+          Attendee *attIn;
+          Attendee *attEv;
+          for ( attIn = attendeesIn.first(); attIn; attIn = attendeesIn.next() ) {
+            for ( attEv = attendeesEv.first(); attEv; attEv = attendeesEv.next() ) {
+              if (attIn->email()==attEv->email()) {
+                //update attendee-info
+                kdDebug() << "Scheduler::acceptTransaction update attendee" << endl;
+                attEv->setRole(attIn->role());
+                attEv->setStatus(attIn->status());
+                attEv->setRSVP(attIn->RSVP());
+              }
+            }
+          }
+        }
+        deleteTransaction(incidence);
+        return true;
+      }
+    }
+  }
+  deleteTransaction(incidence);
+  return false;
 }
 
 QString Scheduler::methodName(Method method)
