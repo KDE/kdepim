@@ -19,6 +19,7 @@ Q_OBJECT
   void setPassword(const QString &pass );
   void setSrcIP( const QHostAddress & );
   void setDestIP(const QHostAddress & );
+  void setMeta( bool );
   void startUp();
   bool startSync();
   bool isConnected();

@@ -119,12 +119,13 @@ public:
      * @param udi Device Id of the Konnector
      */
     bool isConnected(const QString &udi );
+    bool connectDevice(const QString &udi );
+    void disconnectDevice( const QString &udi );
     /**
      *  Pushes a sync to udi
      * @param udi Device Id
      */
     bool startSync(const QString &udi);
-
 public slots:
     /**
      * this will write a List of KSyncEntry

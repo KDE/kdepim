@@ -240,7 +240,22 @@ void Konnector::slotError(const QString &udi, int mode, const QString &
   emit konnectorError(udi, mode, info );
 
 }
+bool Konnector::connectDevice( const QString &udi )
+{
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if( plugin == 0l)
+        return false;
 
+    return plugin->connectDevice();
+}
+void Konnector::disconnectDevice( const QString &udi )
+{
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if( plugin == 0l)
+        return;
+
+    return plugin->disconnectDevice();
+}
 
 
 

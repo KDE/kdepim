@@ -17,6 +17,8 @@ Q_OBJECT
   virtual Kapabilities capabilities( );
   virtual void setCapabilities( const Kapabilities &kaps );
   virtual bool startSync();
+  virtual bool connectDevice() { return true; }
+  virtual void disconnectDevice() { }
   virtual bool isConnected();
   virtual bool insertFile(const QString &fileName );
   virtual QByteArray retrFile(const QString &path );

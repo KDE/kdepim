@@ -31,6 +31,7 @@ public:
     QSocket *socket;
     QTimer *timer;
     QString path;
+    bool meta:1;
     int mode;
     int getMode;
     enum Call{NOTSTARTED=0, HANDSHAKE=0, ABOOK, TODO, CALENDAR, TRANSACTIONS, FILES, DESKTOPS};
@@ -49,6 +50,7 @@ OpieSocket::OpieSocket(QObject *obj, const char *name )
     d->startSync = false;
     d->isSyncing = false;
     d->isConnecting = false;
+    d->meta = false;
 }
 void OpieSocket::setUser(const QString &user )
 {
@@ -66,6 +68,9 @@ void OpieSocket::setSrcIP(const QHostAddress &src )
 void OpieSocket::setDestIP(const QHostAddress &dest )
 {
     d->dest = dest;
+}
+void OpieSocket::setMeta( bool meta ) {
+    d->meta = meta;
 }
 void OpieSocket::startUp() // start the connection
 // and find out the the Homedir Path ;)

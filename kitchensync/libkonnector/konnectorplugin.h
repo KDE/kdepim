@@ -46,6 +46,8 @@ public:
     virtual Kapabilities capabilities( )  = 0 ;
     virtual void setCapabilities( const Kapabilities &kaps ) = 0;
     virtual bool startSync() = 0;
+    virtual bool connectDevice() = 0;
+    virtual void disconnectDevice() = 0;
     virtual bool isConnected() = 0;
     virtual bool insertFile(const QString &fileName ) = 0;
     virtual QByteArray retrFile(const QString &path ) = 0;

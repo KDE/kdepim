@@ -57,6 +57,7 @@ Kapabilities OpiePlugin::capabilities( )
   // create the capabilities Apply
   kdDebug() << "OpiePlugin capabilities" << endl;
   Kapabilities caps;
+  caps.setSupportMetaSyncing( true );
   caps.setSupportsPushSync( true );
   caps.setNeedsConnection( true );
   caps.setSupportsListDir( false );
@@ -83,11 +84,12 @@ Kapabilities OpiePlugin::capabilities( )
 
 void OpiePlugin::setCapabilities( const Kapabilities &kaps )
 {
-  // create 
+  // create
   d->socket->setSrcIP( kaps.srcIP() );
   d->socket->setDestIP( kaps.destIP() );
   d->socket->setUser( kaps.user() );
   d->socket->setPassword( kaps.password() );
+  d->socket->setMeta( kaps.isMetaSyncingEnabled() );
   d->socket->startUp();
 }
 bool OpiePlugin::startSync()
@@ -121,7 +123,7 @@ void OpiePlugin::slotSync(QPtrList<KSyncEntry> entry )
 void OpiePlugin::slotErrorKonnector( int mode, QString error )
 {
     emit errorKonnector(d->udi, mode, error );
-} 
+}
 void OpiePlugin::slotWrite(QValueList<KOperations> operations )
 {
     d->socket->write(operations );
