@@ -423,11 +423,10 @@ bool KNMimeBase::UUParser::parse()
 
   if( (endPos=s_rc.findRev("\nend"))==-1 )
     endPos=s_rc.length(); //no end found
-  else {
+  else
     containsEnd=true;
-  }
-  //printf("beginPos=%d , uuStart=%d , endPos=%d\n", beginPos, uuStart, endPos);
 
+  //printf("beginPos=%d , uuStart=%d , endPos=%d\n", beginPos, uuStart, endPos);
   //all lines in a uuencoded text start with 'M'
   for(int idx=uuStart; idx<endPos; idx++)
     if(s_rc[idx]=='\n') {
@@ -439,7 +438,7 @@ bool KNMimeBase::UUParser::parse()
     }
 
   //printf("lineCount=%d , MCount=%d\n", lineCount, MCount);
-  if( MCount==0 || (lineCount-MCount)>3 ) return false; //too many "non-M-Lines" found, we give up
+  if( MCount==0 || (lineCount-MCount)>10 ) return false; //too many "non-M-Lines" found, we give up
 
   if( (!containsBegin || !containsEnd) && s_ubject) {  // message may be split up => parse subject
     pos=QRegExp("[0-9]+/[0-9]+").match(QString(s_ubject), 0, &len);
@@ -609,7 +608,6 @@ void KNMimeContent::parse()
   KNHeaders::contentCategory cat;
 
   if(ct->isMultipart()) {   //this is a multipart message
-
     tmp=ct->boundary(); //get boundary-parameter
 
     if(!tmp.isEmpty()) {
@@ -644,7 +642,7 @@ void KNMimeContent::parse()
       }
     }
   }
-  else if(!isMimeCompliant()) { //non-mime body => check for uuencoded content
+  else { //non-mime body => check for uuencoded content
     UUParser uup(b_ody, rawHeader("Subject"));
 
     if(uup.parse()) { // yep, it is uuencoded
