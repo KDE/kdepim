@@ -33,6 +33,33 @@
 
 class KApplication;
 
+/**
+  K_EXPORT_KADDRESSBOOK_XXFILTER_CATALOG() creates the stub for a KAddressbook import/export filter.
+  @libname	filename of the shared library, e.g. libkaddrbk_bookmark_xxport
+  @XXPortClass	the import/export class - derived from the XXPort class
+  @catalog	catalog file to search for translation lookup (NULL if no catalog needed)
+  @see: K_EXPORT_COMPONENT_FACTORY()
+ */
+#define K_EXPORT_KADDRESSBOOK_XXFILTER_CATALOG( libname, XXPortClass, catalog ) \
+ class KDE_NO_EXPORT localXXPortFactory : public KAB::XXPortFactory { \
+	KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name ) \
+	 { const char *cat = catalog; \
+	   if (cat) KGlobal::locale()->insertCatalogue(cat); \
+	   return new XXPortClass( ab, parent, name ); \
+         } \
+ }; \
+ K_EXPORT_COMPONENT_FACTORY( libname, localXXPortFactory )
+
+/**
+  K_EXPORT_KADDRESSBOOK_XXFILTER() creates the stub for a KAddressbook import/export filter.
+  @libname	filename of the shared library, e.g. libkaddrbk_bookmark_xxport
+  @XXPortClass	the import/export class - derived from the XXPort class
+  @see: K_EXPORT_COMPONENT_FACTORY()
+ */
+#define K_EXPORT_KADDRESSBOOK_XXFILTER( libname, XXPortClass ) \
+	K_EXPORT_KADDRESSBOOK_XXFILTER_CATALOG( libname, XXPortClass, NULL )
+	
+
 namespace KAB {
 
 class XXPort : public QObject, virtual public KXMLGUIClient
@@ -143,6 +170,7 @@ class XXPortFactory : public KLibFactory
     }
 };
 
-}
+
+} /* namespace KAB */
 
 #endif
