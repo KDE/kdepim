@@ -1,9 +1,26 @@
-/***************************************************************************
- *   Copyright (C) 2004 by Sashmit Bhaduri                                 *
- *   smt@vfemail.net                                                       *
- *                                                                         *
- *   Licensed under GPL.                                                   *
- ***************************************************************************/
+/*
+    This file is part of Akregator.
+
+    Copyright (C) 2004 Sashmit Bhaduri <smt@vfemail.net>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
+    without including the source code for Qt in the source distribution.
+*/
 
 #include <qdatetime.h>
 #include <qevent.h>
@@ -58,7 +75,8 @@ ArticleViewer::ArticleViewer(QWidget *parent, const char *name)
 
     connect(kapp, SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotPaletteOrFontChanged()) );
     connect(kapp, SIGNAL(kdisplayFontChanged()), this, SLOT(slotPaletteOrFontChanged()) );
-    m_imageDir="file:"+KGlobal::dirs()->saveLocation("cache", "akregator/Media/");
+    
+    m_imageDir.setPath(KGlobal::dirs()->saveLocation("cache", "akregator/Media/"));
     m_htmlFooter = "</body></html>";
 }
 
@@ -217,7 +235,10 @@ QString ArticleViewer::formatArticle(Feed* feed, const MyArticle& article)
     if (feed && !feed->image().isNull())
     {
         QString url=feed->xmlUrl();
-        text += QString("<a href=\""+feed->htmlUrl()+"\"><img class=\"headimage\" src=\""+m_imageDir+url.replace("/", "_").replace(":", "_")+".png\"></a>\n");
+        QString file = url.replace("/", "_").replace(":", "_");
+        KURL u(m_imageDir);
+        u.setFileName(file);
+        text += QString("<a href=\"%1\"><img class=\"headimage\" src=\"%2.png\"></a>\n").arg(feed->htmlUrl()).arg(u.url());
     }
 
     
@@ -348,7 +369,10 @@ void ArticleViewer::showSummary(Feed *f)
     {
         text += QString("<div class=\"body\">");
         QString url=f->xmlUrl();
-        text += QString("<a href=\""+f->htmlUrl()+"\"><img class=\"headimage\" src=\""+m_imageDir+url.replace("/", "_").replace(":", "_")+".png\"></a>\n");
+        QString file = url.replace("/", "_").replace(":", "_");
+        KURL u(m_imageDir);
+        u.setFileName(file);
+        text += QString("<a href=\"%1\"><img class=\"headimage\" src=\"%2.png\"></a>\n").arg(f->htmlUrl()).arg(u.url());
     }
     else text += "<div class=\"body\">";
 
@@ -369,7 +393,7 @@ void ArticleViewer::showSummary(Feed *f)
     
     //text += i18n("<b>Unread articles:</b> %1").arg(f->unread());
     text += "</div>"; // /body
-    
+
     renderContent(text);
 }
 
