@@ -28,47 +28,54 @@
 #include <kxmlguiclient.h>
 
 class DCOPClient;
+class DCOPObject;
 
 namespace Kaplan
 {
-	class Core;
+    class Core;
 
     /**
-      * Base class for all Plugins in Kaplan. Inherit from it
-      * to get a plugin. It can insert an icon into the sidepane,
-      * add widgets to the widgetstack and add menu items via XMLGUI.
-      */
-	class Plugin : public QObject, virtual public KXMLGUIClient
-	{
+     * Base class for all Plugins in Kaplan. Inherit from it
+     * to get a plugin. It can insert an icon into the sidepane,
+     * add widgets to the widgetstack and add menu items via XMLGUI.
+     */
+    class Plugin : public QObject, virtual public KXMLGUIClient
+    {
 	Q_OBJECT
 
-	public:
+    public:
         /**
-          * Creates a new Plugin, note that @param name is required if
-          * you want your plugin to do dcop via it's own instance of 
-          * @ref DCOPClient by calling @ref dcopClient.
-          */
-		Plugin(Core *core, QObject *parent, const char *name);
-		~Plugin();
+         * Creates a new Plugin, note that @param name is required if
+         * you want your plugin to do dcop via it's own instance of
+         * @ref DCOPClient by calling @ref dcopClient.
+         */
+        Plugin(Core *core, QObject *parent, const char *name);
+        ~Plugin();
 
-		Core *core() const;
+        Core *core() const;
 
-        /** 
-          * Retrieve the current DCOP Client for the plugin.
-          *
-          * The clients name is taken from the name argument in the constructor.
-          * @note: The DCOPClient object will only be created when this method is
-          * called for the first time.
-          */
+        /**
+         * Create the DCOP interface for the given @p serviceType, if this
+         * plugin provides it. Return false otherwise.
+         */
+        virtual bool createDCOPInterface( const QString& /*serviceType*/ ) { return 0L; }
+
+        /**
+         * Retrieve the current DCOP Client for the plugin.
+         *
+         * The clients name is taken from the name argument in the constructor.
+         * @note: The DCOPClient object will only be created when this method is
+         * called for the first time.
+         */
         DCOPClient *dcopClient() const;
 
-	private:
-		class Private;
+    private:
+        class Private;
         Private *d;
 
-	};
+    };
 
-}
+};
 
 
 #endif
