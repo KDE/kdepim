@@ -38,6 +38,7 @@
 #include <kaboutdata.h>
 #include <kaccelmanager.h>
 #include <kapplication.h>
+#include <dcopclient.h>
 #include <kactionclasses.h>
 #include <kcmdlineargs.h>
 #include <kcmultidialog.h>
@@ -343,7 +344,17 @@ void KABCore::mailVCard()
 
 void KABCore::mailVCard( const QStringList& uids )
 {
-  QStringList urls;
+  // Normally this should not happen since KAddressbook fires up
+  // KMail upon startup automatically.
+  if( !kapp->dcopClient()->isApplicationRegistered("kmail") ){
+    if( KApplication::startServiceByDesktopName("kmail") ){
+      KMessageBox::error(0,i18n("No running instance of KMail found."));
+      return;
+    }
+  }
+  
+  //QStringList urls;
+  KURL::List urls;
 
   // Create a temp dir, so that we can put the files in it with proper names
   KTempFile tempDir;
@@ -379,15 +390,52 @@ void KABCore::mailVCard( const QStringList& uids )
 
       outFile.close();
 
-      urls.append( fileName );
+      KURL url( fileName );
+      url.setFileEncoding( "UTF-8" );
+      urls.append( url );
     }
   }
 
+  
+  QByteArray data, replyData;
+  QCString replyType;
+  QDataStream arg( data, IO_WriteOnly );
+  arg << ""; // to
+  arg << ""; // cc
+  arg << ""; // bcc
+  arg << ""; // subject
+  arg << ""; // body
+  arg << 0; // hidden
+  arg << KURL(); // messageFile
+  arg << urls;
+  if( kapp->dcopClient()->call(
+      "kmail",
+      "KMailIface",
+      //            to      cc      bcc     subject body    hi  fil  attachURLs 
+      "openComposer(QString,QString,QString,QString,QString,int,KURL,KURL::List)",
+      data,
+      replyType,
+      replyData ) ) {
+    if( replyType == "int" ){
+      QDataStream _reply_stream( replyData, IO_ReadOnly );
+      int result;
+      _reply_stream >> result;
+    }else{
+      kdDebug(5720) << "kmail openComposer() call failed (a)." << endl;
+    }
+  } else {
+    kdDebug(5720) << "kmail openComposer() call failed (b)." << endl;
+  }
+  /*
   kapp->invokeMailer( QString::null, QString::null, QString::null,
                       QString::null,  // subject
                       QString::null,  // body
                       QString::null,
                       urls );  // attachments
+  int openComposer (const QString &to, const QString &cc, const QString &bcc,
+                    const QString &subject, const QString &body, int hidden,
+                    const KURL &messageFile, const KURL::List &attachURLs);
+  */
 }
 
 void KABCore::browse( const QString& url )
