@@ -122,8 +122,8 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
         m_lblDestIp->setEnabled( false );
         m_conDestIp->setEnabled( false );
     }else{
-        QValueList<QString> ips = kaps.ipProposals();
-        QValueList<QString>::ConstIterator it;
+        QStringList ips = kaps.ipProposals();
+        QStringList::ConstIterator it;
         for ( it = ips.begin(); it != ips.end(); ++it ) {
             m_conDestIp->insertItem( (*it) );
         }

@@ -262,9 +262,9 @@ void KSyncMainWindow::initKonnector()
             this,  SLOT(slotKonnectorError( const QString&,  int, const QString&) ) );
 
     // ok now just load the Opie Konnector // FIXME Don't hard code
-    QValueList<KDevice> device;
+    KDeviceList device;
     device = m_konnector->query();
-    for(QValueList<KDevice>::Iterator it = device.begin(); it != device.end(); ++it ){
+    for(KDeviceList::Iterator it = device.begin(); it != device.end(); ++it ){
         kdDebug(5210) << "Identify "  << (*it).identify() << endl;
         kdDebug(5210) << "Group " << (*it).group() << endl;
         kdDebug(5210) << "Vendor " << (*it).vendor() << endl;
