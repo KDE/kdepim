@@ -13,4 +13,5 @@ usr/lib/libkgantt.la
 usr/lib/libkcal.so.1.0.0
 usr/lib/libkcal.so.1
 usr/lib/libkcal.la
+usr/share/lintian/overrides/kdepim-libs
 usr/share/apps/kgantt/*

@@ -1,4 +1,3 @@
 korganizer: menu-item-contains-unknown-tag kderemove /usr/lib/menu/korganizer:7
-korganizer: shlib-with-non-pic-code usr/lib/libkcal.so.1.0.0
 korganizer: shlib-with-non-pic-code usr/lib/libkorganizer.so.1.0.0
 
