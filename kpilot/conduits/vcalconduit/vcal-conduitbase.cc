@@ -315,7 +315,7 @@ error:
 					"object for ResourceCalendar"<<endl;
 				return false;
 			}
-#if KDE_IS_VERSION(3,2,2)
+#if LIBKCAL_VERSION >= 0x030300
 			rescal->readConfig();
 			rescal->load();
 #endif

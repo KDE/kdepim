@@ -189,5 +189,49 @@ AC_HEADER_TIME
 AC_CHECK_GETDOMAINNAME
 
 ])
-KPILOT_CHECK_PISOCK
 
+dnl Checks for version of KDEPIM we're compiling in
+
+AC_DEFUN([KPILOT_CHECK_LIBKCAL],[
+AC_LANG_PUSH(C++)
+
+kpilot_save_cflags="$CPPFLAGS"
+kpilot_save_ldflags="$LDFLAGS"
+
+
+CPPFLAGS="$CPPFLAGS $all_includes"
+LDFLAGS="$LDFLAGS $all_libraries"
+HAVE_KCAL_HEADERS=0
+AC_CHECK_HEADER([libkcal/calendar.h],[
+	AC_CHECK_HEADER([libkcal/calendarresources.h],[HAVE_KCAL_HEADERS=1])])
+
+if test "x$HAVE_KCAL_HEADERS" = "x0" ; then
+	AC_MSG_ERROR([No libkcal headers found. Please install them first.])
+fi
+
+AC_TRY_COMPILE([#include <libkcal/calendarresources.h>],
+	[KCal::CalendarResources*testing;
+	testing->readConfig();
+	]
+	,libkcal_version=0x030300
+	,libkcal_version=0x030000
+	)
+AC_DEFINE_UNQUOTED( LIBKCAL_VERSION, $libkcal_version, [The version of your libkcal library])
+
+CPPFLAGS="$kpilot_save_cflags"
+LDFLAGS="$kpilot_save_ldflags"
+unset kpilot_save_cflags
+unset kpilot_save_ldflags
+
+AC_LANG_POP(C++)
+
+])
+
+
+dnl
+dnl
+dnl Actually run the checks
+dnl
+dnl
+KPILOT_CHECK_PISOCK
+KPILOT_CHECK_LIBKCAL
