@@ -34,30 +34,30 @@
 using namespace KCal;
 using namespace std;
 
-static const char *description = I18N_NOOP("KonsoleKalendar");
+static const char *description = I18N_NOOP("A command line interface to KDE calendars");
 
 static KCmdLineOptions options[] =
 {
-  { "help", I18N_NOOP("Prints this help"), 0 },
-  { "verbose", I18N_NOOP("Output helpful (?) debug info"), 0 },
-  { "file <calendar-file>", I18N_NOOP("Specify which calendar you want to use."), 0 },
+  { "help", I18N_NOOP("Print this help and exit"), 0 },
+  { "verbose", I18N_NOOP("Print helpful runtime messages"), 0 },
+  { "file <calendar-file>", I18N_NOOP("Specify which calendar you want to use"), 0 },
   { "import <import-file>", I18N_NOOP("Import this calendar to main calendar"), 0 },
-  { "export-type <export-type>", I18N_NOOP("Export as.. "), 0 },
-  { "export-file <export-file>", I18N_NOOP("Export to file (Dedault: stdout)"), 0 },
-  { "export-types", I18N_NOOP("What export types supported"), 0 },
+  { "export-type <export-type>", I18N_NOOP("Export file type (Default: text)"), 0 },
+  { "export-file <export-file>", I18N_NOOP("Export to file (Default: stdout)"), 0 },
+  { "export-list", I18N_NOOP("Print list of export types supported and exit"), 0 },
   { "next", I18N_NOOP("Next activity in calendar"), 0 },
   { "date <date>", I18N_NOOP("Show selected day's calendar"), 0 },
   { "time <time>", I18N_NOOP("Show selected time at calendar"), 0 },
   { "start-date <start-date>", I18N_NOOP("Start from this day"), 0 },
   { "start-time <start-time>", I18N_NOOP("Start from this time [mm:hh]"), 0 },
-  { "end-date <end-date>", I18N_NOOP("End to this day"), 0 },
-  { "end-time <end-time>", I18N_NOOP("End to this time [mm:hh]"), 0 },
-  { "epoch-start <epoch-time>", I18N_NOOP("Start from this time [epoch format]"), 0 },
-  { "epoch-end <epoch-time>", I18N_NOOP("End to this time [epoch format]"), 0 },
+  { "end-date <end-date>", I18N_NOOP("End at this day"), 0 },
+  { "end-time <end-time>", I18N_NOOP("End at this time [mm:hh]"), 0 },
+  { "epoch-start <epoch-time>", I18N_NOOP("Start from this time [secs since epoch]"), 0 },
+  { "epoch-end <epoch-time>", I18N_NOOP("End at this time [secs since epoch]"), 0 },
   { "description <description>", I18N_NOOP("Add description to event (works with add and change)"), 0 },
-  { "summary <summary>", I18N_NOOP("Add description to event (works with add and change)"), 0 },
-  { "all", I18N_NOOP("Show all entries"), 0 },
-  { "create", I18N_NOOP("if calendar not available new caledar file"), 0 },
+  { "summary <summary>", I18N_NOOP("Add summary to event (works with add and change)"), 0 },
+  { "all", I18N_NOOP("Show all calendar entries"), 0 },
+  { "create", I18N_NOOP("Create new calendar file if one does not exist"), 0 },
   { "add", I18N_NOOP("Add an event"), 0 },
   { "change", I18N_NOOP("Change an event (currently not implemented)"), 0 },
   { "delete", I18N_NOOP("Delete an event (currently not implemented)"), 0 },
@@ -67,13 +67,30 @@ static KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
-  KAboutData aboutData( "konsolekalendar", I18N_NOOP( "KonsoleKalendar" ),
-                        "0.6", description, KAboutData::License_GPL,
-                        "(c) 2002-2003, Tuukka Pasanen", 0, 0,
-                        "illuusio@mailcity.com");
+  KAboutData aboutData(
+      "konsolekalendar",               // internal program name
+      I18N_NOOP( "KonsoleKalendar" ),  // displayable program name.
+      "0.6",                           // version string
+      description,                     // short porgram description
+      KAboutData::License_GPL,         // license type
+      "(c) 2002-2003, Tuukka Pasanen", // copyright statement
+      0,                               // any free form text
+      0,                               // program home page address
+      "illuusio@mailcity.com"          // bug report email address
+      );
 
-  aboutData.addAuthor("Tuukka Pasanen",0, "illuusio@mailcity.com");
-  aboutData.addAuthor("Allen Winter", 0, "winterz@earthlink.net");
+  aboutData.addAuthor(
+      "Tuukka Pasanen",                // developer's name
+      I18N_NOOP("Primary Author"),     // task or role
+      "illuusio@mailcity.com",         // email address
+      0                                // home page or relevant link
+      );
+  aboutData.addAuthor(
+      "Allen Winter",                  // developer's name
+      I18N_NOOP("Janitor"),            // task or role
+      "winterz@earthlink.net",         // email address
+      0                                // home page or relevant link
+      );
 
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
@@ -104,7 +121,10 @@ int main(int argc, char *argv[])
 
   QString option;
 
-  KApplication app( false, false );
+  KApplication app(
+      false, // do not allowstyles -- disable the loading on plugin based styles
+      false  // GUI is not enabled -- disable all GUI stuff
+      );
 
   KonsoleKalendarVariables variables;
   KonsoleKalendarEpoch epochs;
@@ -114,6 +134,35 @@ int main(int argc, char *argv[])
   }
 
   /*
+   *
+   *  Switch on export list
+   */
+  if ( args->isSet("export-list") ) {
+     cout << i18n("\nKonsoleKalendar supports these export formats:\n  Text\n  HTML (not working yet)\n  CSV (not working yet)").local8Bit() << endl;
+     return(0);
+  }
+
+  /*
+   *  Switch on exporting
+   *
+   */
+  // TODO: Just playing around.  This isn't real code.
+  if ( args->isSet("export-type") ) {
+     option = args->getOption("export-type");
+     if ( option.upper() == "HTML" ) {
+	kdDebug() << "main.cpp::int main(int argc, char *argv[] | Export to HTML" << endl;
+	// TODO: export to html
+     } else if (option.upper() == "CSV" ) {
+	kdDebug() << "main.cpp::int main(int argc, char *argv[] | Export to CSV" << endl;
+	// TODO: export to txt
+     } else if (option.upper() == "TXT" ) {
+	kdDebug() << "main.cpp::int main(int argc, char *argv[] | Export to TXT" << endl;
+	// TODO: export to txt
+     }
+  }
+
+
+  /*
    *  Switch on adding
    *
    */
@@ -121,11 +170,7 @@ int main(int argc, char *argv[])
     view=false;
     add=true;
 
-    if(variables.isVerbose()) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Add event" << endl;
-    }
-
-
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Add event" << endl;
   }
 
   /*
@@ -135,11 +180,7 @@ int main(int argc, char *argv[])
   if ( args->isSet("create") ) {
     create=true;
 
-    if(variables.isVerbose()) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Create event" << endl;
-    }
-
-
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Create event" << endl;
   }
 
 
@@ -152,9 +193,7 @@ int main(int argc, char *argv[])
     add=false;
     change=true;
 
-    if(variables.isVerbose()) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Change event" << endl;
-    }
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Change event" << endl;
 
 
   }
@@ -169,11 +208,7 @@ int main(int argc, char *argv[])
     change=false;
     del=true;
 
-    if( variables.isVerbose() ) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Delete event" << endl;
-    }
-
-
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Delete event" << endl;
   }
 
   /*
@@ -183,9 +218,7 @@ int main(int argc, char *argv[])
   if ( args->isSet("summary") ) {
     option = args->getOption("summary");
 
-    if( variables.isVerbose() ) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Summary: (" << option << ")" << endl;
-    }
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Summary: (" << option << ")" << endl;
 
     variables.setSummary(option);
 
@@ -199,9 +232,7 @@ int main(int argc, char *argv[])
   if ( args->isSet("description") ) {
     option = args->getOption("description");
 
-    if( variables.isVerbose() ) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Description: (" << option << ")" << endl;
-    }
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Description: (" << option << ")" << endl;
 
     variables.setDescription(option);
 
@@ -214,10 +245,8 @@ int main(int argc, char *argv[])
    */
   if ( args->isSet("next") )
   {
-
-    if( variables.isVerbose() ) {
       kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Show next happening in calendar and exit" << endl;
-    }
+
     variables.setNext(true);
   }
 
@@ -229,9 +258,7 @@ int main(int argc, char *argv[])
   {
     option = args->getOption("date");
 
-    if( variables.isVerbose() ) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Show date info and exit: (" << option << ")" << endl;
-    }
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Show date info and exit: (" << option << ")" << endl;
 
     date = variables.parseDate(option);
 
@@ -245,9 +272,7 @@ int main(int argc, char *argv[])
   if ( args->isSet("time") ) {
     option = args->getOption("time");
 
-    if( variables.isVerbose() ) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Show date info and exit: (" << option << ")" << endl;
-    }
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Show date info and exit: (" << option << ")" << endl;
 
     time = variables.parseTime(option);
 
@@ -262,9 +287,7 @@ int main(int argc, char *argv[])
   if ( args->isSet("start-date") ) {
     option = args->getOption("start-date");
 
-    if( variables.isVerbose() ) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Start date: (" << option << ")" << endl;
-    }
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Start date: (" << option << ")" << endl;
 
     startdate = variables.parseDate(option);
 
@@ -279,9 +302,7 @@ int main(int argc, char *argv[])
   if ( args->isSet("start-time") ) {
     option = args->getOption("start-time");
 
-    if( variables.isVerbose() ) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Start time: (" << option << ")" << endl;
-    }
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Start time: (" << option << ")" << endl;
 
     starttime = variables.parseTime(option);
 
@@ -296,9 +317,7 @@ int main(int argc, char *argv[])
   if ( args->isSet("end-date") ) {
     QString option = args->getOption("end-date");
 
-    if( variables.isVerbose() ) {
       kdDebug() << "main.cpp::int main(int argc, char *argv[]) | End date: (" << option << ")" << endl;
-    }
 
     enddate = variables.parseDate(option);
 
@@ -312,9 +331,7 @@ int main(int argc, char *argv[])
   if ( args->isSet("end-time") ) {
     option = args->getOption("end-time");
 
-    if( variables.isVerbose() ) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | End time: (" << option << ")" << endl;
-    }
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | End time: (" << option << ")" << endl;
 
     endtime = variables.parseTime(option);
 
@@ -327,11 +344,9 @@ int main(int argc, char *argv[])
    */
   time_t epochstart=0;
   if ( args->isSet("epoch-start") ) {
-      option = args->getOption("epoch-start");
+    option = args->getOption("epoch-start");
 
-    if( variables.isVerbose() ) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Epoch start: (" << option << ")" << endl;
-    }
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Epoch start: (" << option << ")" << endl;
 
     epochstart = (time_t) option.toULong(0,10);
   }
@@ -342,11 +357,9 @@ int main(int argc, char *argv[])
    */
   time_t epochend=0;
   if ( args->isSet("epoch-end") ) {
-      option = args->getOption("epoch-end");
+    option = args->getOption("epoch-end");
 
-    if( variables.isVerbose() ) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Epoch end: (" << option << ")" << endl;
-    }
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Epoch end: (" << option << ")" << endl;
 
     epochend = (time_t) option.toULong(0,10);
   }
@@ -362,9 +375,7 @@ int main(int argc, char *argv[])
     option = args->getOption("import");
     variables.setImportFile( option );
 
-    if( variables.isVerbose() ) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | importing file from: (" << option << ")" << endl;
-    } // if verbose
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | importing file from: (" << option << ")" << endl;
 
   } // if
 
@@ -374,9 +385,7 @@ int main(int argc, char *argv[])
     option = args->getOption("file");
     variables.setCalendarFile( option );
 
-    if( variables.isVerbose() ) {
       kdDebug() << "main.cpp::int main(int argc, char *argv[]) | using calendar at: (" << variables.getCalendarFile() << ")" << endl;
-    } // if verbose
 
   } else {
     KConfig cfg( locate( "config", "korganizerrc" ) );
@@ -414,22 +423,27 @@ int main(int argc, char *argv[])
   variables.setEndDate( enddatetime );
   variables.setDate( datetime );
 
-  if ( variables.isVerbose() ) {
-      // Tuukka, please fix so --verbose makes kdDebug print something.
-      kdDebug() << "DateTime=" << datetime.toString(Qt::TextDate) << endl;
-      kdDebug() << "StartDate=" << startdatetime.toString(Qt::TextDate) << endl;
-      kdDebug() << "EndDate=" << enddatetime.toString(Qt::TextDate) << endl;
-  } // if
+  // Some more debug prints
+  kdDebug() << "DateTime=" << datetime.toString(Qt::TextDate) << endl;
+  kdDebug() << "StartDate=" << startdatetime.toString(Qt::TextDate) << endl;
+  kdDebug() << "EndDate=" << enddatetime.toString(Qt::TextDate) << endl;
+  //cout << i18n("DateTime=").local8Bit() << datetime.toString(Qt::TextDate).local8Bit() << endl;
+  //cout << i18n("StartDate=").local8Bit() << startdatetime.toString(Qt::TextDate).local8Bit() << endl;
+  //cout << i18n("EndDate=").local8Bit() << enddatetime.toString(Qt::TextDate).local8Bit() << endl;
+
+  // Sanity checks
+  if ( startdatetime > enddatetime ) {
+    kdError() << i18n("Ending Date occurs before the Starting Date").local8Bit() << endl;
+    return(1);
+  }
 
   args->clear(); // Free up some memory.
 
   KonsoleKalendar *konsolekalendar = new KonsoleKalendar(variables);
 
-   if( calendarFile && create ) {
-     if( variables.isVerbose() ) {
-       kdDebug() << "main.cpp::int main(int argc, char *argv[]) | create file" << endl;
-     }
-     konsolekalendar->createCalendar();
+  if ( calendarFile && create ) {
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | create file" << endl;
+    konsolekalendar->createCalendar();
    } // if
 
   /*
@@ -439,36 +453,34 @@ int main(int argc, char *argv[])
    *
    * Adds it to konsolekalendarvariables also..
    */
-   if( konsolekalendar->openCalendar() ) {
+  if( konsolekalendar->openCalendar() ) {
 
-     if( importFile ) {
-       konsolekalendar->importCalendar();
-     }
+    if( importFile ) {
+      konsolekalendar->importCalendar();
+    }
 
-     if( add ) {
-       konsolekalendar->addEvent();
-     }
+    if( add ) {
+      konsolekalendar->addEvent();
+    }
 
-     if( change ) {
-       konsolekalendar->changeEvent();
-     }
+    if( change ) {
+      konsolekalendar->changeEvent();
+    }
 
-     if( del ) {
-       konsolekalendar->deleteEvent();
-     }
+    if( del ) {
+      konsolekalendar->deleteEvent();
+    }
 
-     if( view ) {
-       konsolekalendar->showInstance();
-     }
+    if( view ) {
+      konsolekalendar->showInstance();
+    }
 
-     konsolekalendar->closeCalendar();
-   }
-
-   delete konsolekalendar;
-
-  if( variables.isVerbose() ) {
-    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | exiting" << endl;
+    konsolekalendar->closeCalendar();
   }
+
+  delete konsolekalendar;
+
+  kdDebug() << "main.cpp::int main(int argc, char *argv[]) | exiting" << endl;
 
   return 0;
 }
