@@ -26,7 +26,6 @@
 #include <sys/stat.h>
 #include <sys/utsname.h>
 #include <unistd.h>
-#include <errno.h>
 
 #include <qstring.h>
 #include <qregexp.h>

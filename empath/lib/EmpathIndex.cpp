@@ -216,6 +216,11 @@ EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
         return false;
     }
 
+    if (key.isEmpty()) {
+        empathDebug("Key is empty !");
+        return false;
+    }
+
     QByteArray a;
     QDataStream s(a, IO_WriteOnly);
     s << rec;

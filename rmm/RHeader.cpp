@@ -224,7 +224,6 @@ RHeader::_parse()
 {
     int split = strRep_.find(':');
 
-    ASSERT(headerBody_ == 0);
     delete headerBody_;
     headerBody_ = 0;
     headerType_ = HeaderUnknown;

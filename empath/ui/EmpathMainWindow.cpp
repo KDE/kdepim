@@ -468,6 +468,7 @@ EmpathProgressIndicator::EmpathProgressIndicator
     (EmpathTask * t, QWidgetStack * parent)
     :   QWidget(parent, "ProgressIndicator")
 {
+    empathDebug("");
     parent->addWidget(this, (int)this);
 
     QHBoxLayout * layout = new QHBoxLayout(this, 0, 6);
@@ -514,6 +515,7 @@ EmpathProgressIndicator::s_setMaxValue(int v)
     void
 EmpathProgressIndicator::s_incValue()
 {
+    empathDebug("");
     ++pos_;
     progress_->advance(1);
     kapp->processEvents();
@@ -522,6 +524,7 @@ EmpathProgressIndicator::s_incValue()
     void
 EmpathProgressIndicator::s_finished()
 {
+    empathDebug("");
     delete this;
 }
 

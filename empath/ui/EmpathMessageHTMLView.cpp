@@ -140,6 +140,14 @@ EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
         toHTML(html);
         
         write("<HTML><BODY BGCOLOR="+bg+"><PRE>"+html+"</PRE></BODY></HTML>");
+
+        QFile f("message.html");
+
+        f.open(IO_WriteOnly);
+
+        QTextStream t(&f);
+        t << html;
+        f.close();
         
     } else {
         
@@ -199,6 +207,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
         // If so, copy what we've done so far into outStr and start at
         // the beginning of the buffer again.
         if ((bufpos - buf) > 32256) {
+
             *bufpos = '\0';
             outStr += buf;
             bufpos = buf;
@@ -211,40 +220,49 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                 
                 if (markDownQuotedLine) { // If this line was quoted.
                 
-                    strcpy(bufpos, "</FONT>\n");
-                    bufpos += 8;
+                    memcpy(bufpos, "</FONT>", 7);
+                    bufpos += 7;
                     markDownQuotedLine = false;
                 
-                } else *(bufpos++) = *pos;
+                }
+                
+                memcpy(bufpos, "<BR>\n", 5);
+                bufpos += 5;
                 
                 break;
 
             case '<':
-                strcpy(bufpos, "&lt;");
+                
+                memcpy(bufpos, "&lt;", 4);
                 bufpos += 4;
+                
                 break;
             
             case '-':
                 // Markup sig.
                 // Ensure first char on line, and following char is '-'
                 // Handle '\n--[ ]'
-                if (pos != start && *(pos - 1) == '\n' && *(pos + 1) == '-')
+                if (
+                    (pos != start)        &&
+                    (pos <  end - 2)      &&
+                    (*(pos - 1) == '\n')  &&
+                    (*(pos + 1) == '-')   &&
+                        (
+                            (*(pos + 2) == '\n')  ||
+                            ((*(pos + 2) == ' ') && (*(pos + 3) == '\n'))
+                        )
+                    )
                 {
-                    if (*(pos + 2) == '\n')
-                        pos += 2;
+                    memcpy(bufpos, "<BR><HR><BR>\n", 13);
+                    bufpos += 13;
                     
-                    else if (*(pos + 2) == ' ' && *(pos + 3) == '\n')
-                        pos += 3;
+                    pos += 2;
                     
-                    else {
-                        *(++bufpos) = *pos;
-                        break;
-                    }
-
-                    strcpy(bufpos, "<BR><HR><BR>");
-                    bufpos += 12;
-
-                } else *(bufpos++) = *pos;
+                    if (*(pos + 2) == ' ')
+                        ++pos;
+                }
+                else
+                    *(bufpos++) = *pos;
         
                 break;
                     
@@ -257,22 +275,22 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     while (pos < end && (*pos == '>' || *pos == ' '))
                         if (*pos++ == '>') ++quoteDepth;
 
-                    strcpy(bufpos, "<FONT COLOR=\"#");
+                    memcpy(bufpos, "<FONT COLOR=\"#", 14);
                     bufpos += 14;
                     
                     if (quoteDepth % 2 == 0)
-                        strcpy(bufpos, quoteOne);
+                        memcpy(bufpos, quoteOne, 6);
                     else
-                        strcpy(bufpos, quoteTwo);
+                        memcpy(bufpos, quoteTwo, 6);
                     
                     bufpos += 6;
                     
-                    strcpy(bufpos, "\">");
+                    memcpy(bufpos, "\">", 2);
                     
                     bufpos += 2;
                     
                     for (x = 0 ; x < quoteDepth; x++) {
-                        strcpy(bufpos, "&gt; ");
+                        memcpy(bufpos, "&gt; ", 5);
                         bufpos += 5;
                     }
 
@@ -282,14 +300,17 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     
                 } else {
                     
-                    strcpy(bufpos, "&gt;");
+                    memcpy(bufpos, "&gt;", 4);
                     bufpos += 4;
                 }
+                
                 break;
 
             case '&':
-                strcpy(bufpos, "&amp;");
+                
+                memcpy(bufpos, "&amp;", 5);
                 bufpos += 5;
+                
                 break;
 
             case 'g': // Match gopher URLs.
@@ -303,20 +324,26 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     while (x < 128 && *(pos + x) != ' ' && *(pos + x) != '\n')
                         ++x;
         
-                    strcpy(bufpos, "<A HREF=\"gopher://");
+                    memcpy(bufpos, "<A HREF=\"gopher://", 18);
                     bufpos += 18;
-                    strncpy(bufpos, pos, x);
+                
+                    memcpy(bufpos, pos, x);
                     bufpos += x;
-                    strcpy(bufpos, "\">gopher://");
+                
+                    memcpy(bufpos, "\">gopher://", 11);
                     bufpos += 11;
-                    strncpy(bufpos, pos, x); 
+                
+                    memcpy(bufpos, pos, x); 
                     bufpos += x;
-                    strcpy(bufpos, "</A>");
+                
+                    memcpy(bufpos, "</A>", 4);
                     bufpos += 4;
 
                     pos += x - 1; // -1 so that the last char is processed.
                     
-                } else *(bufpos++) = *pos;
+                }
+                else
+                    *(bufpos++) = *pos;
                 
                 break;
 
@@ -331,20 +358,26 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     while (x < 128 && *(pos + x) != ' ' && *(pos + x) != '\n')
                         ++x;
         
-                    strcpy(bufpos, "<A HREF=\"ftp://");
+                    memcpy(bufpos, "<A HREF=\"ftp://", 15);
                     bufpos += 15;
-                    strncpy(bufpos, pos, x);
+                    
+                    memcpy(bufpos, pos, x);
                     bufpos += x;
-                    strcpy(bufpos, "\">ftp://");
+                    
+                    memcpy(bufpos, "\">ftp://", 8);
                     bufpos += 8;
-                    strncpy(bufpos, pos, x); 
+                    
+                    memcpy(bufpos, pos, x); 
                     bufpos += x;
-                    strcpy(bufpos, "</A>");
+                    
+                    memcpy(bufpos, "</A>", 4);
                     bufpos += 4;
 
                     pos += x - 1; // -1 so that the last char is processed.
                     
-                } else *(bufpos++) = *pos;
+                }
+                else
+                    *(bufpos++) = *pos;
                 
                 break;
 
@@ -359,15 +392,19 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     while (x < 128 && *(pos + x) != ' ' && *(pos + x) != '\n')
                         ++x;
         
-                    strcpy(bufpos, "<A HREF=\"http://");
+                    memcpy(bufpos, "<A HREF=\"http://", 16);
                     bufpos += 16;
-                    strncpy(bufpos, pos, x);
+                    
+                    memcpy(bufpos, pos, x);
                     bufpos += x;
-                    strcpy(bufpos, "\">http://");
+                    
+                    memcpy(bufpos, "\">http://", 9);
                     bufpos += 9;
-                    strncpy(bufpos, pos, x); 
+                    
+                    memcpy(bufpos, pos, x); 
                     bufpos += x;
-                    strcpy(bufpos, "</A>");
+                    
+                    memcpy(bufpos, "</A>", 4);
                     bufpos += 4;
 
                     pos += x - 1; // -1 so that the last char is processed.
@@ -381,15 +418,19 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     while (x < 128 && *(pos + x) != ' ' && *(pos + x) != '\n')
                         ++x;
         
-                    strcpy(bufpos, "<A HREF=\"https://");
+                    memcpy(bufpos, "<A HREF=\"https://", 17);
                     bufpos += 17;
-                    strncpy(bufpos, pos, x);
+                    
+                    memcpy(bufpos, pos, x);
                     bufpos += x;
-                    strcpy(bufpos, "\">https://");
+                    
+                    memcpy(bufpos, "\">https://", 18);
                     bufpos += 10;
-                    strncpy(bufpos, pos, x); 
+                    
+                    memcpy(bufpos, pos, x); 
                     bufpos += x;
-                    strcpy(bufpos, "</A>");
+                    
+                    memcpy(bufpos, "</A>", 4);
                     bufpos += 4;
 
                     pos += x - 1; // -1 so that the last char is processed.
@@ -466,31 +507,31 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                 bufpos -= (pos - startAddress);
 
                 // Now replace from the cursor with <A HREF...
-                strcpy(bufpos, "<A HREF=\"empath://mailto:");
+                memcpy(bufpos, "<A HREF=\"empath://mailto:", 25);
                 bufpos += 25;
 
                 // Now add the start address after the markup
-                strncpy(bufpos, startAddress, pos - startAddress + 1);
+                memcpy(bufpos, startAddress, pos - startAddress + 1);
                 bufpos += pos - startAddress;
 
                 // Add the end address.
-                strncpy(bufpos, pos , endAddress - pos);
+                memcpy(bufpos, pos , endAddress - pos);
                 bufpos += endAddress - pos;
 
                 // Add the end of this part of the markup
-                strcpy(bufpos, "\">");
+                memcpy(bufpos, "\">", 2);
                 bufpos += 2;
 
                 // Add the startaddress bit again
-                strncpy(bufpos, startAddress, pos - startAddress + 1);
+                memcpy(bufpos, startAddress, pos - startAddress + 1);
                 bufpos += pos - startAddress;
 
                 // Add the end of the address again
-                strncpy(bufpos, pos, endAddress - pos);
+                memcpy(bufpos, pos, endAddress - pos);
                 bufpos += endAddress - pos;
 
                 // Add the end of the markup.
-                strcpy(bufpos, "</A>");
+                memcpy(bufpos, "</A>", 4);
                 bufpos += 4;
 
                 // Change the cursor in the source string to avoid the address.

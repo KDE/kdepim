@@ -226,7 +226,7 @@ RMM::mimeTypeEnum2Str(MimeType m)
     switch (m) {
 
         case MimeTypeNone:
-            s = "";
+            s = "Unknown";
             break;
 
         case MimeTypeUnknown:
@@ -234,35 +234,39 @@ RMM::mimeTypeEnum2Str(MimeType m)
             break;
 
         case MimeTypeText:
-            s =    "Text";
+            s = "Text";
             break;
 
         case MimeTypeMultiPart:
-            s =    "Multipart";
+            s = "Multipart";
             break;
 
         case MimeTypeMessage:
-            s =    "Message";
+            s = "Message";
             break;
 
         case MimeTypeImage:
-            s =    "Image";
+            s = "Image";
             break;
 
         case MimeTypeApplication:
-            s =    "Application";
+            s = "Application";
             break;
 
         case MimeTypeAudio:
-            s =    "Audio";
+            s = "Audio";
             break;
 
         case MimeTypeVideo:
-            s =    "Video";
+            s = "Video";
             break;
 
         case MimeTypeModel:
-            s =    "Model";
+            s = "Model";
+            break;
+
+        default:
+            s = "Unknown";
             break;
     }
 
@@ -540,7 +544,7 @@ RMM::mimeSubTypeEnum2Str(MimeSubType t)
     switch (t) {
 
         case MimeSubTypeNone:
-            s = "";
+            s = "Unknown";
             break;
 
 
@@ -872,6 +876,7 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
                 break;
 
                 default:
+                s = "unknown.png";
                     break;
             }
 
@@ -898,6 +903,7 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
                     break;
 
                 default:
+                s = "unknown.png";
                     break;
             }
                 
@@ -978,6 +984,7 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
                     break;
 
                 default:
+                s = "unknown.png";
                     break;
             }
 
@@ -1052,6 +1059,7 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
                     break;
 
                 default:
+                s = "unknown.png";
                     break;
             }
 
@@ -1082,6 +1090,7 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
                     break;
 
                 default:
+                s = "unknown.png";
                     break;
             }
     
@@ -1116,6 +1125,7 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
                     break;
 
                 default:
+                s = "unknown.png";
                     break;
             }
 
@@ -1131,6 +1141,7 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
                     break;
 
                 default:
+                s = "unknown.png";
                     break;
             }
             

@@ -41,7 +41,6 @@ RContentType::RContentType(const RContentType & cte)
         subType_(cte.subType_),
         parameterList_(cte.parameterList_)
 {
-    rmmDebug("copy ctor - param list count == "  + QCString().setNum(parameterList_.count()));
     parsed_ = true;
     assembled_    = false;
 }

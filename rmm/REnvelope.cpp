@@ -163,15 +163,17 @@ REnvelope::_createDefault(HeaderType t)
     RHeaderBody * b;
     switch (headerTypesTable[t]) {
 
-        case Address:            b = new RAddress;            break;
-        case AddressList:        b = new RAddressList;        break;
-        case DateTime:            b = new RDateTime;            break;
-        case DispositionType:    b = new RDispositionType;    break;
-        case Mailbox:            b = new RMailbox;            break;
-        case MailboxList:        b = new RMailboxList;        break;
-        case Mechanism:            b = new RMechanism;            break;
-        case MessageID:            b = new RMessageID;            break;
-        case Text: default:        b = new RText;                break;
+        case Address:           b = new RAddress;           break;
+        case AddressList:       b = new RAddressList;       break;
+        case ContentType:       b = new RContentType;       break;
+        case Cte:               b = new RCte;               break;
+        case DateTime:          b = new RDateTime;          break;
+        case DispositionType:   b = new RDispositionType;   break;
+        case Mailbox:           b = new RMailbox;           break;
+        case MailboxList:       b = new RMailboxList;       break;
+        case Mechanism:         b = new RMechanism;         break;
+        case MessageID:         b = new RMessageID;         break;
+        case Text: default:     b = new RText;              break;
     }
 
     b->createDefault();
@@ -234,46 +236,16 @@ REnvelope::get(HeaderType h)
     RHeaderListIterator it(headerList_);
 
     for (; it.current(); ++it)
-        if (it.current()->headerType() == h) {
-            rmmDebug("The header you asked for exists.");
-            rmmDebug("headerbody: \"" +
-                QCString(it.current()->headerBody()->asString()) + "\""); 
+        if (it.current()->headerType() == h)
             return it.current()->headerBody();
-        }
 
     // else make a new one, set it to default values, and return that.
 
     rmmDebug("Creating a new item as there wasn't one existing.");
-    HeaderDataType hdt = headerTypesTable[h];
 
-    RHeaderBody * d;
-
-    switch (hdt) {
-        case Address:            d = new RAddress;            break;
-        case AddressList:        d = new RAddressList;        break;
-        case DateTime:            d = new RDateTime;            break;
-        case DispositionType:    d = new RDispositionType;    break;
-        case Mailbox:            d = new RMailbox;            break;
-        case MailboxList:        d = new RMailboxList;        break;
-        case Mechanism:            d = new RMechanism;            break;
-        case MessageID:            d = new RMessageID;            break;
-        case Text: default:        d = new RText;                break;
-    }
-
-    CHECK_PTR(d);
-
-    rmmDebug("Making that item a default item");
-    d->createDefault();
-
-    RHeader * hdr = new RHeader;
-
-    hdr->setType(h);
-    hdr->setBody(d);
-
+    RHeader * hdr = new RHeader(headerNames[h] + ":");
     headerList_.append(hdr);
-
-    rmmDebug("..done creating new item");
-    return d;
+    return hdr->headerBody();
 }
 
     RText

@@ -249,9 +249,14 @@ EmpathMaildir::_messageData(const QString & filename, bool isFullName)
         
         QDir cur(path_ + "/cur/", filename + "*");
         
-        if (cur.count() != 1) {
+        if (cur.count() == 0) {
             empathDebug("Can't match the filename, giving up.");
             return "";
+        }
+        
+        if (cur.count() > 1) {
+            empathDebug("Duplicate messages with the name `" + filename + "'");
+            empathDebug("Using the first one I found.");
         }
 
         filename_ = cur[0];
@@ -540,6 +545,12 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
         } else {
  
             QCString messageData = _messageData(*it, true);
+
+            if (messageData.isEmpty()) {
+                empathDebug("Message data not retrieved !");
+                continue;
+            }
+
             RMM::RMessage m(messageData);
             EmpathIndexRecord ir(s, m);
             

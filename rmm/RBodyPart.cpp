@@ -178,6 +178,8 @@ RBodyPart::_parse()
     rmmDebug("=== RBodyPart parse start =====================================");
     
     body_.clear();
+    mimeType_       = MimeTypeUnknown;
+    mimeSubType_    = MimeSubTypeUnknown;
     
     // A body part consists of an envelope and a body.
     // The body may, again, consist of multiple body parts.
@@ -193,10 +195,11 @@ RBodyPart::_parse()
         
     } else {
         
-        rmmDebug("Setting envelope to:");
-        rmmDebug(strRep_.left(endOfHeaders));
-        envelope_    = strRep_.left(endOfHeaders);
-        data_        = strRep_.right(strRep_.length() - endOfHeaders);
+        // Add 1 to include eol of last header.
+        envelope_ = strRep_.left(endOfHeaders + 1);
+        
+        // Add 2 to ignore eol on last header plus empty line.
+        data_ = strRep_.mid(endOfHeaders + 2);
     }
     
 
@@ -205,8 +208,8 @@ RBodyPart::_parse()
     // If there is, we might be looking at a multipart message.
     if (!envelope_.has(HeaderContentType)) {
         
-        parsed_        = true;
-        assembled_    = false;
+        parsed_     = true;
+        assembled_  = false;
         rmmDebug("done parse(1)");
         rmmDebug("=== RBodyPart parse end   =================================");
         return;
@@ -218,86 +221,98 @@ RBodyPart::_parse()
     
     rmmDebug("contentType.type() == " + contentType.type());
     
-    // If the header say multipart, we'll need to know the boundary.
-    if (!stricmp(contentType.type(), "multipart")) {
-        
-        rmmDebug(" ==== This part is multipart ========================");
+    // If this isn't multipart, we've finished parsing.
+    if (stricmp(contentType.type(), "multipart") != 0) {
+        mimeType_       = mimeTypeStr2Enum(contentType.type());
+        mimeSubType_    = mimeSubTypeStr2Enum(contentType.subType());
+
+        rmmDebug("=== RBodyPart parse end   =================================");
+        return;
+    }
+ 
+    rmmDebug(" ==== This part is multipart ========================");
+
+    RParameterListIterator it(contentType.parameterList());
     
-        RParameterListIterator it(contentType.parameterList());
-        
-        rmmDebug("Looking for boundary");
-        for (; it.current(); ++it) {
-        
-            if (!stricmp(it.current()->attribute(), "boundary"))
-                boundary_ = it.current()->value();
-        }
-        
-        rmmDebug("boundary == \"" + boundary_ + "\"");
-        
+    rmmDebug("Looking for boundary");
+    for (; it.current(); ++it) {
+    
+        if (!stricmp(it.current()->attribute(), "boundary"))
+            boundary_ = it.current()->value();
+    }
+    
+    rmmDebug("boundary == \"" + boundary_ + "\"");
+    
+    if (boundary_.isEmpty()) {
+        rmmDebug("Boundary not found in ContentType header. Giving up.");
+        parsed_        = true;
+        assembled_    = false;
+        return;
+    }
+    
+    if (boundary_.at(0) == '\"') {
+        rmmDebug("Boundary is quoted. Removing quotes.");
+        boundary_.remove(boundary_.length() - 1, 1);
+        boundary_.remove(0, 1);
+
         if (boundary_.isEmpty()) {
-            parsed_        = true;
-            assembled_    = false;
-            return;
-        }
-        
-        if (boundary_.at(0) == '\"') {
-            boundary_.remove(boundary_.length() - 1, 1);
-            boundary_.remove(0, 1);
-        }
-        
-        if (boundary_.isEmpty()) {
-            rmmDebug("The boundary is empty ! Get out ! Run away !");
-            parsed_        = true;
+            rmmDebug("The (quoted) boundary is empty ! Giving up.");
+            parsed_       = true;
             assembled_    = false;
             rmmDebug("done parse(2)");
             rmmDebug("=== RBodyPart parse end   =============================");
             return;
         }
-
-        int i(strRep_.find(boundary_, endOfHeaders));
-
-        if (i == -1) {
-            // Let's just call it a plain text message.
-            rmmDebug("No boundary found in message. Assume plain ?");
-            parsed_        = true;
-            assembled_    = false;
-            rmmDebug("done parse (3)");
-            rmmDebug("=== RBodyPart parse end   =============================");
-            return;
-        }
-
-        preamble_ =
-            strRep_.mid(endOfHeaders + 2, i - endOfHeaders).stripWhiteSpace();
-
-        rmmDebug("preamble == \"" + preamble_ + "\"");
-
-        int oldi(i + boundary_.length());
-        // Now do the rest of the parts.
-        i = strRep_.find(boundary_, i + boundary_.length());
-
-        while (i != -1) {
-
-            rmmDebug(" ==== Creating new part ========================");
-            RBodyPart * newPart = new RBodyPart(strRep_.mid(oldi, i - oldi));
-            CHECK_PTR(newPart);
-            body_.append(newPart);
-            rmmDebug(" ==== Parsing new part =========================");
-            newPart->parse();
-            oldi = i + boundary_.length();
-            i = strRep_.find(boundary_, i + boundary_.length());
-            rmmDebug(" ==== Created new part OK ======================");
-        }
-
-        // No more body parts. Anything that's left is the epilogue.
-
-        epilogue_ =
-            strRep_.right(strRep_.length() - i + boundary_.length());
-        
-        data_ = "";
-            
     }
 
-    mimeType_        = mimeTypeStr2Enum(contentType.type());
+    int boundaryStart(strRep_.find(boundary_, endOfHeaders));
+
+    if (boundaryStart == -1) {
+        // Let's just call it a plain text message.
+        rmmDebug("No boundary found in message. Assume plain ?");
+        parsed_     = true;
+        assembled_  = false;
+        rmmDebug("done parse (3)");
+        rmmDebug("=== RBodyPart parse end   =============================");
+        return;
+    }
+
+    // We can now take whatever's before the first boundary as the preamble.
+
+    preamble_ = data_.left(boundaryStart).stripWhiteSpace();
+
+    rmmDebug("preamble == \"" + preamble_ + "\"");
+
+    int previousBoundaryEnd = boundaryStart + boundary_.length();
+
+    // Now find the rest of the parts.
+    
+    // We keep track of the end of the last boundary and the start of the next.
+
+    boundaryStart = data_.find(boundary_, previousBoundaryEnd);
+
+    while (boundaryStart != -1) {
+
+        RBodyPart * newPart =
+            new RBodyPart(strRep_.mid(
+                previousBoundaryEnd, boundaryStart - previousBoundaryEnd));
+
+        body_.append(newPart);
+        
+        newPart->parse();
+        
+        previousBoundaryEnd = boundaryStart + boundary_.length();
+        
+        boundaryStart = strRep_.find(boundary_, previousBoundaryEnd);
+    }
+
+    // No more body parts. Anything that's left is the epilogue.
+
+    epilogue_ = strRep_.right(strRep_.length() - previousBoundaryEnd);
+
+    rmmDebug("epilogue == \"" + epilogue_ + "\"");
+    
+    mimeType_       = mimeTypeStr2Enum(contentType.type());
     mimeSubType_    = mimeSubTypeStr2Enum(contentType.subType());
 
     rmmDebug("=== RBodyPart parse end   =====================================");
