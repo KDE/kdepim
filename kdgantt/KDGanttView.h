@@ -339,6 +339,8 @@ public:
     void setLinkItemsEnabled(bool on);
     bool isLinkItemsEnabled() const;
     
+    void setWeekStartDay(int day);
+    
 public slots:
     void editItem( KDGanttViewItem* );
     void zoomToSelection( const QDateTime& start,  const QDateTime&  end);

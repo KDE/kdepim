@@ -690,7 +690,9 @@ int KDTimeTableWidget::getCoordX( QDateTime dt ) {
 /* ***************************************************************
    KDTimeHeaderWidget:: KDTimeHeaderWidget
    ***************************************************************** */
-KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant ):QWidget (parent)
+KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant )
+    : QWidget (parent),
+      myWeekStartDay(7)
 {
     myToolTip = new KDTimeHeaderToolTip(this,this);
     mySizeHint = 0;
@@ -1928,7 +1930,7 @@ QDateTime KDTimeHeaderWidget::getEvenTimeDate(QDateTime tempdatetime ,Scale sc)
             break;
         case KDGanttView::Week:
             tempdate = tempdatetime.date();
-            while (tempdate.dayOfWeek ()!= 1 )
+            while (tempdate.dayOfWeek ()!= myWeekStartDay)
                 tempdate = tempdate.addDays(-1);
             //tempdate = tempdate.addDays(-7);
             tempdatetime = QDateTime (tempdate, QTime (0,0));
@@ -2261,7 +2263,7 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
                 tempDate = tempDate.addDays(tempMinorScaleCount);
             }
             tempDate = myRealStart.date();
-            while (tempDate.dayOfWeek() != 7)
+            while (tempDate.dayOfWeek() != myWeekStartDay)
                 tempDate = tempDate.addDays(1);
             while (tempDate < myRealEnd.date()) {
                 majorTicks.append( getCoordX(tempDate));

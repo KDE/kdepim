@@ -240,6 +240,7 @@ private:
     bool autoComputeTimeLine;
     QPixmap paintPix;
 
+    int myWeekStartDay;
 };
 
 /* KDTimeTableWidget */
