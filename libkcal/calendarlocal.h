@@ -137,6 +137,10 @@ class CalendarLocal : public Calendar, public IncidenceBase::Observer {
     void appendAlarms( Alarm::List &alarms, Incidence *incidence,
                        const QDateTime &from, const QDateTime &to );
   
+    /** Append alarms of recurring events in interval to list of alarms. */
+    void appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
+                       const QDateTime &from, const QDateTime &to );
+
   private:
     void init();
 
