@@ -219,15 +219,15 @@ QString Contact::profession() const
   return mProfession;
 }
 
-void Contact::setJobTitle( const QString& title )
-{
-  mJobTitle = title;
-}
+// void Contact::setJobTitle( const QString& title )
+// {
+//   mJobTitle = title;
+// }
 
-QString Contact::jobTitle() const
-{
-  return mJobTitle;
-}
+// QString Contact::jobTitle() const
+// {
+//   return mJobTitle;
+// }
 
 void Contact::setManagerName( const QString& name )
 {
@@ -568,7 +568,8 @@ bool Contact::loadAttribute( QDomElement& element )
   else if ( tagName == "profession" )
     setProfession( element.text() );
   else if ( tagName == "job-title" )
-    setJobTitle( element.text() );
+    // see saveAttributes: <job-title> is mapped to the Role field
+    setRole( element.text() );
   else if ( tagName == "manager-name" )
     setManagerName( element.text() );
   else if ( tagName == "assistant" )
@@ -636,7 +637,6 @@ bool Contact::saveAttributes( QDomElement& element ) const
   KolabBase::saveAttributes( element );
 
   saveNameAttribute( element );
-  writeString( element, "role", role() );
   writeString( element, "free-busy-url", freeBusyUrl() );
   writeString( element, "organization", organization() );
   writeString( element, "web-page", webPage() );
@@ -644,7 +644,11 @@ bool Contact::saveAttributes( QDomElement& element ) const
   writeString( element, "department", department() );
   writeString( element, "office-location", officeLocation() );
   writeString( element, "profession", profession() );
-  writeString( element, "job-title", jobTitle() );
+  // <role> is gone; jobTitle() is not shown in the addresseeeditor,
+  // so let's bind <job-title> to role()
+  //writeString( element, "role", role() );
+  //writeString( element, "job-title", jobTitle() );
+  writeString( element, "job-title", role() );
   writeString( element, "manager-name", managerName() );
   writeString( element, "assistant", assistant() );
   writeString( element, "nick-name", nickName() );
@@ -835,14 +839,14 @@ void Contact::setFields( const KABC::Addressee* addressee )
   setFullName( addressee->formattedName() );
   setPrefix( addressee->prefix() );
   setSuffix( addressee->suffix() );
-  setRole( addressee->role() );
   setOrganization( addressee->organization() );
   setWebPage( addressee->url().url() );
   setIMAddress( addressee->custom( "KADDRESSBOOK", "X-IMAddress" ) );
   setDepartment( addressee->custom( "KADDRESSBOOK", "X-Department" ) );
   setOfficeLocation( addressee->custom( "KADDRESSBOOK", "X-Office" ) );
   setProfession( addressee->custom( "KADDRESSBOOK", "X-Profession" ) );
-  setJobTitle( addressee->title() );
+  setRole( addressee->role() );
+  //setJobTitle( addressee->title() );
   setManagerName( addressee->custom( "KADDRESSBOOK", "X-ManagersName" ) );
   setAssistant( addressee->custom( "KADDRESSBOOK", "X-AssistantsName" ) );
   setNickName( addressee->nickName() );
@@ -968,14 +972,14 @@ void Contact::saveTo( KABC::Addressee* addressee )
   addressee->setFormattedName( fullName() );
   addressee->setPrefix( prefix() );
   addressee->setSuffix( suffix() );
-  addressee->setRole( role() );
   addressee->setOrganization( organization() );
   addressee->setUrl( webPage() );
   addressee->insertCustom( "KADDRESSBOOK", "X-IMAddress", imAddress() );
   addressee->insertCustom( "KADDRESSBOOK", "X-Department", department() );
   addressee->insertCustom( "KADDRESSBOOK", "X-Office", officeLocation() );
   addressee->insertCustom( "KADDRESSBOOK", "X-Profession", profession() );
-  addressee->setTitle( jobTitle() );
+  addressee->setRole( role() );
+  //addressee->setTitle( jobTitle() );
   addressee->insertCustom( "KADDRESSBOOK", "X-ManagersName", managerName() );
   addressee->insertCustom( "KADDRESSBOOK", "X-AssistantsName", assistant() );
   addressee->setNickName( nickName() );
