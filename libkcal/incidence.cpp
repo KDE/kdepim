@@ -482,3 +482,9 @@ QString Incidence::location() const
 {
   return mLocation;
 }
+
+ushort Incidence::doesRecur() const
+{
+  if ( mRecurrence ) return mRecurrence->doesRecur();
+  else return 0;
+}

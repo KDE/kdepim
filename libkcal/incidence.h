@@ -245,7 +245,12 @@ class Incidence : public IncidenceBase
       none, returns an appropriate (non-0) object.
     */
     Recurrence *recurrence() const;
-    
+
+    /**
+      Forward to Recurrence::doesRecur().
+    */
+    ushort doesRecur() const;
+
     /** set the event's/todo's location. Do _not_ use it with journal */
     void setLocation(const QString &location);
     /** return the event's/todo's location. Do _not_ use it with journal */
