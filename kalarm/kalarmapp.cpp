@@ -50,6 +50,8 @@
 #include "prefdlg.h"
 #include "kalarmapp.moc"
 
+#include <netwm.h>
+
 #define     DAEMON_APP_NAME_DEF       "kalarmd"
 const char* DCOP_OBJECT_NAME        = "display";
 const char* GUI_DCOP_OBJECT_NAME    = "tray";
@@ -80,8 +82,12 @@ KAlarmApp::KAlarmApp()
 	CalFormat::setApplication(aboutData()->programName(),
 	                          QString::fromLatin1("-//K Desktop Environment//NONSGML %1 " VERSION "//EN")
 	                                       .arg(aboutData()->programName()));
-	KWinModule wm;
-	mKDEDesktop             = wm.systemTrayWindows().count();
+
+	// Check if it's a KDE desktop by comparing the window manager name to "KWin"
+	NETRootInfo nri(qt_xdisplay(), NET::SupportingWMCheck);
+	const char* wmname = nri.wmName();
+	mKDEDesktop = wmname && !strcmp(wmname, "KWin");
+
 	mOldRunInSystemTray     = mKDEDesktop && mSettings->runInSystemTray();
 	mDisableAlarmsIfStopped = mOldRunInSystemTray && mSettings->disableAlarmsIfStopped();
 
