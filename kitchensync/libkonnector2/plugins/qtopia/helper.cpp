@@ -22,7 +22,6 @@
 #include <config.h>
 
 #include <kstandarddirs.h>
-#include <kdebug.h>
 
 #include "helper.h"
 

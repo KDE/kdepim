@@ -25,7 +25,6 @@
 #include "qtopiakonnector.h"
 
 #include <kapplication.h>
-#include <kdebug.h>
 #include <kdialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -43,8 +42,8 @@ void setCurrent( const QString &str, QComboBox *box, bool insert = true )
   uint b = box->count();
   for ( uint i = 0; i < b; i++ ) {
       if ( box->text(i) == str ) {
-          box->setCurrentItem(i );
-          return;
+        box->setCurrentItem(i );
+        return;
       }
   }
   if ( !insert ) return;
@@ -70,10 +69,9 @@ void QtopiaConfig::loadSettings( KRES::Resource *resource )
 {
   KSync::QtopiaKonnector *k =
       dynamic_cast<KSync::QtopiaKonnector *>( resource );
-  if ( !k ) {
-    kdError() << "QtopiConfig::loadSettings(): Wrong Konnector type." << endl;
+
+  if ( !k )
     return;
-  }
 
   setCurrent( k->userName(), m_cmbUser );
   m_cmbPass->insertItem( k->password() );
@@ -90,10 +88,8 @@ void QtopiaConfig::saveSettings( KRES::Resource *resource )
 {
   KSync::QtopiaKonnector *k =
       dynamic_cast<KSync::QtopiaKonnector *>( resource );
-  if ( !k ) {
-    kdError() << "QtopiConfig::loadSettings(): Wrong Konnector type." << endl;
+  if ( !k )
     return;
-  }
 
   k->setDestinationIP( m_cmbIP->currentText() );
   k->setUserName( m_cmbUser->currentText() );
@@ -166,7 +162,6 @@ void QtopiaConfig::initUI()
 void QtopiaConfig::slotTextChanged( const QString &str )
 {
   bool b = ( str == QString::fromLatin1("Sharp Zaurus ROM") );
-  kdDebug(5225) << "Text Changed to " << str << " " << b <<endl;
 
   m_name->setEnabled( b );
   m_lblName->setEnabled( b );

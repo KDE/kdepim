@@ -142,11 +142,6 @@ bool QtopiaKonnector::disconnectDevice()
   return true;
 }
 
-QString QtopiaKonnector::metaId() const
-{
-  return d->socket->metaId();
-}
-
 QIconSet QtopiaKonnector::iconSet() const
 {
   QPixmap logo;
@@ -188,8 +183,6 @@ KonnectorInfo QtopiaKonnector::info() const
 {
   return KonnectorInfo( QString::fromLatin1("Qtopia Konnector"),
                         iconSet(),
-                        QString::fromLatin1("Qtopia1.5"),
-                        metaId(),
                         iconName(),
                         d->socket->isConnected() );
 }

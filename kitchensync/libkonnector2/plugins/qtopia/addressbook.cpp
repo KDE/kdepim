@@ -22,7 +22,6 @@
 #include <qdom.h>
 #include <qfile.h>
 
-#include <kdebug.h>
 #include <klocale.h>
 
 

@@ -35,8 +35,6 @@ class KDE_EXPORT KonnectorInfo
   public:
     KonnectorInfo( const QString& name = QString::null,
                    const QIconSet& = QIconSet(),
-                   const QString& id       = QString::null,
-                   const QString& metaId   = QString::null,
                    const QString& iconName = QString::null,
                    bool isCon = false);
 
@@ -46,16 +44,12 @@ class KDE_EXPORT KonnectorInfo
 
     QString name() const;
     QIconSet iconSet() const;
-    QString id() const;
-    QString metaId() const;
     QString iconName() const;
     bool isConnected() const;
 
   private:
     QString m_na;
     QIconSet m_icon;
-    QString m_id;
-    QString m_meta;
     QString m_name;
     bool m_con : 1;
 

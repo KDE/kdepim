@@ -508,9 +508,6 @@ void QtopiaSocket::writeUnknown( KSync::UnknownSyncee *syncee )
   for ( KSync::UnknownSyncEntry* entry = syncee->firstEntry();
         entry; entry = syncee->nextEntry() ) {
     QString baseName = QFileInfo( entry->fileName() ).fileName();
-
-    kdDebug() << "Writing " << entry->fileName() << " "
-              << d->path+"/"+baseName << endl;
     KIO::NetAccess::upload(entry->fileName(),
                            url(d->path+"/"+baseName), 0 );
   }
@@ -896,7 +893,6 @@ void QtopiaSocket::readTimeZones()
     QString pref = KPimPrefs::timezone();
     d->tz = pref.isEmpty() ?
             QString::fromLatin1("Europe/London") : pref;
-    kdDebug() << "TimeZone is " << d->tz << endl;
 }
 
 bool QtopiaSocket::downloadFile( const QString& str, QString& dest )
@@ -929,6 +925,7 @@ void outputAll( int area, QPtrList<SyncEntry> list )
         kdDebug(area) << "State " << entry->state() << endl;
         kdDebug(area) << "Summary " << entry->name() << endl;
         kdDebug(area) << "Uid " << entry->id() << endl;
+	kdDebug(area) << "----" << endl;
     }
 }
 

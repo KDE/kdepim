@@ -176,8 +176,6 @@ KSync::KonnectorInfo LocalKonnector::info() const
 {
   return KonnectorInfo( i18n("Dummy Konnector"),
                         QIconSet(),
-                        QString::fromLatin1("LocalKonnector"),  // same as the .desktop file
-                        "Dummy Konnector",
                         "agenda", // icon name
                         false );
 }

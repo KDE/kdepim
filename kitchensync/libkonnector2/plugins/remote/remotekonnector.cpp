@@ -92,14 +92,9 @@ void RemoteKonnector::writeConfig( KConfig *config )
 
 bool RemoteKonnector::readSyncees()
 {
-  kdDebug() << "RemoteKonnector::readSyncees()" << endl;
-
   mSynceeReadCount = 0;
 
   if ( !mCalendarUrl.isEmpty() ) {
-    kdDebug() << "RemoteKonnector::readSyncees(): calendar: " << mCalendarUrl
-              << endl;
-
     mCalendarData = "";
 
     KIO::TransferJob *job = KIO::get( KURL( mCalendarUrl ) );
@@ -112,9 +107,6 @@ bool RemoteKonnector::readSyncees()
   }
 
   if ( !mAddressBookUrl.isEmpty() ) {
-    kdDebug() << "RemoteKonnector::readSyncees(): AddressBook: "
-              << mAddressBookUrl << endl;
-
     mAddressBookData = "";
 
     KIO::TransferJob *job = KIO::get( KURL( mAddressBookUrl ) );
@@ -147,12 +139,9 @@ void RemoteKonnector::slotCalendarReadResult( KIO::Job *job )
     mCalendar.close();
     ICalFormat ical;
     if ( ical.fromString( &mCalendar, mCalendarData ) ) {
-      kdDebug() << "Read succeeded." << endl;
       mCalendarSyncee->reset();
       mCalendarSyncee->setIdentifier( mCalendarUrl );
-      kdDebug() << "IDENTIFIER: " << mCalendarSyncee->identifier() << endl;
     } else {
-      kdDebug() << "Read failed." << endl;
       emit synceeReadError( this );
     }
   }
@@ -215,21 +204,15 @@ KSync::KonnectorInfo RemoteKonnector::info() const
 {
   return KonnectorInfo( i18n("Remote Konnector"),
                         QIconSet(),
-                        QString::fromLatin1("RemoteKonnector"),  // same as the .desktop file
-                        "Remote Konnector",
                         "agenda", // icon name
                         false );
 }
 
 bool RemoteKonnector::writeSyncees()
 {
-  kdDebug() << "RemoteKonnector::writeSyncees()" << endl;
-
   mSynceeWriteCount = 0;
 
   if ( !mCalendarUrl.isEmpty() ) {
-    kdDebug() << "RemoteKonnector::writeSyncees(): calendar: " << mCalendarUrl
-              << endl;
     purgeRemovedEntries( mCalendarSyncee );
 
     ICalFormat ical;
@@ -246,8 +229,6 @@ bool RemoteKonnector::writeSyncees()
   }
 
   if ( !mAddressBookUrl.isEmpty() ) {
-    kdDebug() << "RemoteKonnector::writeSyncees(): AddressBook: "
-              << mAddressBookUrl << endl;
     purgeRemovedEntries( mAddressBookSyncee );
 
     mAddressBookData = "";

@@ -66,7 +66,6 @@ class QtopiaKonnector : public Konnector
     void appendSyncee( KSync::Syncee * );
 
   protected:
-    QString metaId() const;
     QIconSet iconSet() const;
     QString iconName() const;
 

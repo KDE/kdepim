@@ -118,8 +118,6 @@ KSync::KonnectorInfo KABCKonnector::info() const
 {
   return KonnectorInfo( i18n( "Address Book Konnector" ),
                         QIconSet(),
-                        QString::fromLatin1( "KABCKonnector" ),
-                        "Address Book Konnector",
                         "kaddressbook",
                         false );
 }

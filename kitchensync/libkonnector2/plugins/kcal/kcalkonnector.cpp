@@ -111,8 +111,6 @@ KSync::KonnectorInfo KCalKonnector::info() const
 {
   return KonnectorInfo( i18n( "Calendar Konnector" ),
                         QIconSet(),
-                        QString::fromLatin1( "KCalKonnector" ),
-                        "Calendar Konnector",
                         "korganizer",
                         false );
 }

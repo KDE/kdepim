@@ -89,8 +89,6 @@ SynceeList DummyKonnector::syncees()
 
 bool DummyKonnector::readSyncees()
 {
-  kdDebug() << "DummyKonnector::readSyncees()" << endl;
-
   emit synceesRead( this );
 
   return true;
@@ -110,8 +108,6 @@ KSync::KonnectorInfo DummyKonnector::info() const
 {
   return KonnectorInfo( i18n("Dummy Konnector"),
                         QIconSet(),
-                        QString::fromLatin1("dummykonnector"),  // same as the .desktop file
-                        "Dummy Konnector",
                         "agenda", // icon name
                         false );
 }

@@ -23,8 +23,6 @@
 #include <qstylesheet.h>
 #include <qstringlist.h>
 
-#include <kdebug.h>
-
 #include "extramap.h"
 
 using namespace OpieHelper;

@@ -22,8 +22,6 @@
 
 #include "desktop.h"
 
-#include <kdebug.h>
-
 #include <qregexp.h>
 
 
