@@ -101,8 +101,9 @@ bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event ){
     *ts << ",,,";
   }
 
-  *ts << delim << event->summary().local8Bit();
-  *ts << delim << event->description().local8Bit();
+  QString rdelim = "\\" + delim;
+  *ts << delim << event->summary().replace(delim,rdelim).local8Bit();
+  *ts << delim << event->description().replace(delim,rdelim).local8Bit();
   *ts << delim << event->uid().local8Bit();
   *ts << endl;
 
