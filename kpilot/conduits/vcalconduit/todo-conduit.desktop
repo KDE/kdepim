@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Service
 Name=KOrganizer Todo Conduit
-Name[af]=KORGANIZER TE-DOEN PAD
 Name[az]=KOrganizer Planlar
 Name[ca]=Conducte de pendents KOrganizer
 Name[cs]=Propojení s plánovačem Organizéru
@@ -36,8 +35,8 @@ Name[sv]=Kfilofax att-göra-kanal
 Name[tr]=KOrganizer Yapılacaklar
 Name[uk]=Трубопровід плановика KOrganizer
 Name[vi]=Truyền dẫn KOrganizer Todo 
+Name[xh]=Umququzeleli we K Todo Kondiki
 Name[zh_CN.GB2312]=KOrganizer 任务管道
-Name[zh_TW.Big5]=KOrganizer 待辦事項 Conduit
 Implemented=file
 ServiceTypes=KPilotConduit
 Exec=todoconduit

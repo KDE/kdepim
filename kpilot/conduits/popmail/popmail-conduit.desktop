@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Service
 Name=KPilot POP Mail Conduit
-Name[af]=KPILOT POP POS PAD
 Name[az]=KPilot POP ePoçt Proqramı
 Name[ca]=Conducte de correu POP KPilot
 Name[cs]=Propojení s POP poštou
@@ -34,8 +33,8 @@ Name[sv]=POP e-postkanal för Kpilot
 Name[tr]=KPilot POP E-posta Programı
 Name[uk]=Трубопровід KPilot для пошти POP
 Name[vi]=Truyền dẫn KPilot POP Mail 
+Name[xh]=Umqhubi wenqwelo moya we K POP Ikodiki yeposi
 Name[zh_CN.GB2312]=KPilot POP 邮件管道
-Name[zh_TW.Big5]=KPilot POP 郵件 Conduit
 Implemented=file
 ServiceTypes=KPilotConduit
 Exec=popmail_conduit

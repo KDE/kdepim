@@ -1,12 +1,12 @@
 # KDE Config File
 [KDE Desktop Entry]
 Name=KPilot
-Name[af]=KPILOT
 Name[eo]=Palm-Piloto
 Name[fr]=Palm Pilot
 Name[lv]=KPilots
 Name[pt_BR]=Ferramenta para PalmPilot
 Name[sv]=Kpilot
+Name[xh]=Umqhubi wenqwelo moya we K
 Exec=kpilot
 Icon=kpilot
 Type=Application

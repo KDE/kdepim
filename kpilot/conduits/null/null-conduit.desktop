@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Service
 Name=KPilot NULL Conduit
-Name[af]=KPILOT NULL PAD
 Name[cs]=Nulové propojení KPilotu
 Name[de]=NULL-Leitung für KPilot
 Name[eo]=KPilota NUL-kanalo
@@ -27,8 +26,8 @@ Name[sl]=Veznik z NULL za KPilot
 Name[sv]=NOLL-kanal för Kpilot
 Name[uk]=Трубопровід NULL для KPilot
 Name[vi]=Truyền dẫn KPilot NULL 
+Name[xh]=Umqhubi wenqwelo moya we K NULL Kondiki
 Name[zh_CN.GB2312]=KPilot NULL 管道
-Name[zh_TW.Big5]=KPilot NULL 架座
 Implemented=file
 ServiceTypes=KPilotConduit
 Exec=null_conduit

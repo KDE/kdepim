@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Service
 Name=KOrganizer Calendar Conduit
-Name[af]=KORGANIZER KALENDER PAD
 Name[az]=KOrganizer Vaxt Cədvəli
 Name[ca]=Conducte de calendari KOrganizer
 Name[cs]=Propojení s kalendářem Organizéru
@@ -36,8 +35,8 @@ Name[sv]=Kfilofax kalenderkanal
 Name[tr]=KOrganizer Zaman Çizelgesi
 Name[uk]=Трубопровід календаря KOrganizer
 Name[vi]=Truyền dẫn KORganizer Calendar 
+Name[xh]=Umququzeleli we K Calendar Kondiki
 Name[zh_CN.GB2312]=KOrganizer 日历管道
-Name[zh_TW.Big5]=KOrganizer 行事曆 Conduit
 Implemented=file
 ServiceTypes=KPilotConduit
 Exec=vcalconduit

@@ -2,7 +2,6 @@
 [KDE Desktop Entry]
 MimeType=palmpilot/application
 Comment=mime type
-Comment[af]=MIME TIPE
 Comment[az]=mime növü
 Comment[bg]=тип mime
 Comment[br]=seurt mime
@@ -46,8 +45,8 @@ Comment[tr]=mime türü
 Comment[uk]=тип MIME
 Comment[vi]=Kiểu MIME 
 Comment[wa]=sôrte MIME
+Comment[xh]=uhlobo lwe mime
 Comment[zh_CN.GB2312]=MIME 类型
-Comment[zh_TW.Big5]=mime 類型
 DefaultApp=
 Icon=kpilprc.xpm
 Type=MimeType
