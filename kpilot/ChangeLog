@@ -29,6 +29,17 @@ TODO LIST (Ignore the file TODO)
 * GJJ: Add a flag to the log{Error,Message} function 
   to prevent the addition of the trailing <br> and the date
 
+
+
+2003-1-18  Reinhold Kainhofer
+* Removed several $Log: ... tags from the conduits I maintain
+* started implementing the custom fields sync of the addressbook conduit. 
+  I still have problems converting a string to a QDate using a custom format
+* Cleanup of includes in my conduits.
+* Some more work on the DOCConduit. There are still several open issues, but
+  the basic functionality works just fine!
+	
+
 KPilot Developer's notes for January 15th, 2003
 ===============================================
 
