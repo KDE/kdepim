@@ -1013,6 +1013,19 @@ sub menu you select.</para>
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Anti Spam Wizard...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>It starts a <link linkend="the-anti-spam-wizard">wizard</link> which can help 
+you to set up spam filtering.</para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 
 </sect2>
@@ -1057,19 +1070,6 @@ to compose a new message &etc;).</para>
 </term>
 <listitem>
 <para>Opens the <link linkend="popfilters">Configure Pop Filters</link> window.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Anti Spam Wizard...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>It starts a <link linkend="the-anti-spam-wizard">wizard</link> which can help 
-you to set up spam filtering.</para>
 </listitem>
 </varlistentry>
 

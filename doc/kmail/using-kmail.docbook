@@ -1349,7 +1349,7 @@ standard setup. Modifying existing filters is not yet possible in this version.
 </varlistentry>
 </variablelist>
 
-<para>You reach the wizard via <menuchoice><guimenu>Settings</guimenu>
+<para>You reach the wizard via <menuchoice><guimenu>Tools</guimenu>
 <guisubmenu>Anti Spam Wizard...</guisubmenu></menuchoice>.</para>
 
 </sect2>
