@@ -47,7 +47,8 @@ AddresseeIconView::AddresseeIconView(QWidget *parent, const char *name)
   setGridX( 100 );
   setItemsMovable(false);
   setSorting(true, true);
-  
+  setMode( KIconView::Select );
+
   connect(this, SIGNAL(dropped(QDropEvent*, const QValueList<QIconDragItem>&)),
           this, SLOT(itemDropped(QDropEvent*, const QValueList<QIconDragItem>&)));
 }
