@@ -341,15 +341,15 @@ public:
 	/**
 	 * Get the version number from the handheld
 	 */
-	long int ROMversion() const;
+	unsigned long ROMversion() const;
 	/**
 	 * Get the major PalmOS version number
 	 */
-	long int majorVersion() const;
+	unsigned long majorVersion() const;
 	/**
 	 * Get the minor PalmOS version number
 	 */
-	long int minorVersion() const;
+	unsigned long minorVersion() const;
 	 
 	
 } ;
@@ -358,6 +358,9 @@ bool operator < ( const struct db &, const struct db &) ;
 
 
 // $Log$
+// Revision 1.9  2002/07/30 17:17:48  kainhofe
+// added majorVersion, minorVersion and ROMversion functions
+//
 // Revision 1.8  2002/07/25 22:11:22  kainhofe
 // time sync conduit
 //

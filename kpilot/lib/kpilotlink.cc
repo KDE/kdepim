@@ -717,20 +717,20 @@ bool KPilotDeviceLink::setTime(const time_t &pctime)
 
 
 
-long int KPilotDeviceLink::ROMversion() const
+unsigned long KPilotDeviceLink::ROMversion() const
 {
-	long int rom;
+	unsigned long rom;
 	dlp_ReadFeature(pilotSocket(), makelong("psys"), 1, &rom);
 	return rom;
 }
-long int KPilotDeviceLink::majorVersion() const
+unsigned long KPilotDeviceLink::majorVersion() const
 {
-	long int rom=ROMversion();
+	unsigned long rom=ROMversion();
 	return (((rom >> 28) & 0xf) * 10)+ ((rom >> 24) & 0xf);
 }
-long int KPilotDeviceLink::minorVersion() const
+unsigned long KPilotDeviceLink::minorVersion() const
 {
-	long int rom=ROMversion();
+	unsigned long int rom=ROMversion();
 	return (((rom >> 20) & 0xf) * 10)+ ((rom >> 16) & 0xf);
 }
 
@@ -751,6 +751,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.18  2002/07/30 17:17:48  kainhofe
+// added majorVersion, minorVersion and ROMversion functions
+//
 // Revision 1.17  2002/07/25 22:11:22  kainhofe
 // time sync conduit
 //
