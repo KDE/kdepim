@@ -19,6 +19,7 @@
 
 #include <kconfig.h>
 
+#include "knnetaccess.h"
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
 #include "knarticlemanager.h"
@@ -33,6 +34,13 @@ KConfig* KNGlobals::config()
       c_onfig = KSharedConfig::openConfig( "knoderc" );
   }
   return c_onfig;
+}
+
+KNNetAccess* KNGlobals::netAccess()
+{
+  if(!mNetAccess)
+    mNetAccess = new KNNetAccess();
+  return mNetAccess;
 }
 
 KNAccountManager* KNGlobals::accountManager()

@@ -221,9 +221,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   //-------------------------------- <CORE> ------------------------------------
 
   //Network
-  n_etAccess=new KNNetAccess();
+  n_etAccess = knGlobals.netAccess();
   connect(n_etAccess, SIGNAL(netActive(bool)), this, SLOT(slotNetworkActive(bool)));
-  knGlobals.netAccess=n_etAccess;
 
   //Filter Manager
   f_ilManager = knGlobals.filterManager();
@@ -353,10 +352,10 @@ void KNMainWidget::setStatusMsg(const QString& text, int id)
     return;
   bar->clear();
   if (text.isEmpty() && (id==SB_MAIN))
-    if (knGlobals.netAccess->currentMsg().isEmpty())
+    if (knGlobals.netAccess()->currentMsg().isEmpty())
       s_tatusMain->setText(i18n(" Ready"));
     else
-      s_tatusMain->setText(knGlobals.netAccess->currentMsg());
+      s_tatusMain->setText(knGlobals.netAccess()->currentMsg());
   else if ( id == SB_GROUP ) {
     int statusWidth = s_tatusGroup->width();
     QString mtext = text;

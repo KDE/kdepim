@@ -36,7 +36,7 @@ void KNJobConsumer::emitJob(KNJobData *j)
 {
   if(j) {
     j_obs.append(j);
-    knGlobals.netAccess->addJob(j);
+    knGlobals.netAccess()->addJob(j);
   }
 }
 

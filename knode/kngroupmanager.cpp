@@ -635,8 +635,8 @@ void KNGroupManager::processJob(KNJobData *j)
         // ok, hack (?):
         // stop all other active fetch jobs, this prevents that
         // we show multiple error dialogs if a server is unavailable
-        knGlobals.netAccess->stopJobsNntp(KNJobData::JTfetchNewHeaders);
-	knGlobals.netAccess->stopJobsNntp(KNJobData::JTsilentFetchNewHeaders);
+        knGlobals.netAccess()->stopJobsNntp(KNJobData::JTfetchNewHeaders);
+        knGlobals.netAccess()->stopJobsNntp(KNJobData::JTsilentFetchNewHeaders);
         if(!(j->type()==KNJobData::JTsilentFetchNewHeaders)) {
           KMessageBox::error(knGlobals.topWidget, j->errorString());
         }
