@@ -92,6 +92,24 @@ struct tm writeTm(const QDateTime &dt)
   return t;
 }
 
+struct tm writeTm(const QDate &dt)
+{
+  struct tm t;
+
+  t.tm_wday = 0; // unimplemented
+  t.tm_yday = 0; // unimplemented
+  t.tm_isdst = 0; // unimplemented
+
+  t.tm_year = dt.year() - 1900;
+  t.tm_mon = dt.month() - 1;
+  t.tm_mday = dt.day();
+  t.tm_hour = 0;
+  t.tm_min = 0;
+  t.tm_sec = 0;
+
+  return t;
+}
+
 class VCalConduit::VCalPrivate
 {
 public:
@@ -386,6 +404,13 @@ void VCalConduit::syncRecord()
 	s = fBackupDatabase->readRecordById(r->getID());
 	if (!s || (fFirstTime && !r->isDeleted()) )
 	{
+#ifdef DEBUG
+		if (r->getID()>0)
+		{
+			DEBUGCONDUIT<<"---------------------------------------------------------------------------"<<endl;
+			DEBUGCONDUIT<< fname<<": Could not read palm record with ID "<<r->getID()<<endl;
+		}
+#endif
 		addRecord(r);
 	}
 	else
@@ -408,7 +433,7 @@ void VCalConduit::syncRecord()
 
 void VCalConduit::syncEvent()
 {
-// TODO: skip PC => Palm sync for now because it corrupts the palm data...
+// TODO: skip PC => Palm sync for now because the date is off by an hour (dst). Also, duplicates appear on the PC
 QTimer::singleShot(0,this,SLOT(deleteRecord()));
 return;
 
@@ -462,7 +487,7 @@ return;
 #undef DEBUG
 void VCalConduit::deleteRecord()
 {
-// TODO: use the backup db to findout which records have been deleted locally on the PC
+// TODO: This does not work currently yet (the Events with the PilotID are not yet found?!?!?!) Also happens with the Palm->PC sync.
 	QTimer::singleShot(0, this, SLOT(cleanup()));
 
 	FUNCTIONSETUP;
@@ -489,8 +514,8 @@ void VCalConduit::deleteRecord()
 			fCurrentDatabase->writeRecord(s);
 			KPILOT_DELETE(s);
 		}
-//		r->setAttrib(~dlpRecAttrDeleted);
-//		fBackupDatabase->writeRecord(r);
+		r->setAttrib(~dlpRecAttrDeleted);
+		fBackupDatabase->writeRecord(r);
 	}
 
 			KPILOT_DELETE(r);
@@ -510,12 +535,15 @@ void VCalConduit::cleanup()
 	emit syncDone(this);
 }
 
-
+#define DEBUG
 void VCalConduit::addRecord(PilotRecord *r)
 {
 	FUNCTIONSETUP;
 
-	fBackupDatabase->writeRecord(r);
+	recordid_t id=fBackupDatabase->writeRecord(r);
+#ifdef DEBUG
+	DEBUGCONDUIT<<fname<<": Pilot Record ID="<<r->getID()<<", backup ID="<<id<<endl;
+#endif
 
 	PilotDateEntry de(r);
 	KCal::Event *e = new KCal::Event;
@@ -524,7 +552,7 @@ void VCalConduit::addRecord(PilotRecord *r)
 
 	fCalendar->addEvent(e);
 }
-
+#undef DEBUG
 void VCalConduit::deleteRecord(PilotRecord *r, PilotRecord *s)
 {
 	FUNCTIONSETUP;
@@ -693,7 +721,7 @@ void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry &de)
 {
 	FUNCTIONSETUP;
 
-	if (!de.getAlarm() && !e) return;
+	if (!de.getAlarm() || !e) return;
 
 	QDateTime alarmDT = readTm(de.getEventStart());
 	int advanceUnits = de.getAdvanceUnits();
@@ -725,6 +753,7 @@ void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry &de)
 
 	alm->setTime(e->dtStart());
 	alm->setOffset(adv);
+	alm->setEnabled(true);
 	e->addAlarm(alm);
 	// TODO: Fix alarms
 }
@@ -740,6 +769,9 @@ void VCalConduit::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 #endif
 		return;
 	}
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": This event has "<<e->alarms().count()<<" alarms set.... "<<endl;
+#endif
 	if (e->alarms().count()<=0)
 	{
 		de->setAlarm(0);
@@ -1028,16 +1060,13 @@ void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry &dateEn
 		vevent->addExDate(readTm(dateEntry.getExceptions()[i]).date());
 	}
 }
-#define DEBUG
 
 void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *vevent )
 {
-// TODO: currently, this still crashes, so immediately return
-return;
 	FUNCTIONSETUP;
 	struct tm *ex_List;
-	
-	if (!dateEntry || !vevent) 
+
+	if (!dateEntry || !vevent)
 	{
 		kdWarning() << k_funcinfo << ": NULL dateEntry or NULL vevent given for exceptions. Skipping exceptions" << endl;
 		return;
@@ -1066,29 +1095,22 @@ return;
 		return;
 	}
 
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Exceptions, excount=" << excount<<endl;
-#endif
 	size_t n=0;
-	KCal::DateList::const_iterator it;
-	for ( it = vevent->exDates().begin(); (n<excount) && (it != vevent->exDates().end()); ++it )
-	{
-#ifdef DEBUG
-DEBUGCONDUIT<< fname << ": in loop, it("<<n<<")= "<<(*it).toString()<<endl;
-#endif
-		ex_List[n++]=writeTm(*it);
-#ifdef DEBUG
-DEBUGCONDUIT<< fname << ": end of loop"<<endl;
-#endif
+
+	KCal::DateList exDates = vevent->exDates();
+	KCal::DateList::ConstIterator dit;
+	for (dit = exDates.begin(); dit != exDates.end(); ++dit ) {
+		struct tm ttm=writeTm(*dit);
+		ex_List[n++]=ttm;
 	}
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Exceptions, before actually setting them" << endl ;
-#endif
 	dateEntry->setExceptionCount(excount);
 	dateEntry->setExceptions(ex_List);
 }
-#undef DEBUG
+
 // $Log$
+// Revision 1.58  2002/04/20 14:21:26  kainhofe
+// Alarms are now written to the palm. Some bug fixes, extensive testing. Exceptions still crash the palm ;-(((
+//
 // Revision 1.57  2002/04/19 19:34:11  kainhofe
 // didn't compile
 //
