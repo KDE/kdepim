@@ -21,61 +21,34 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
-#include <sys/types.h>
-#include <signal.h>
-#include <iostream.h>
 #include <stdlib.h>
-#include <time.h>
 
-#include <qbitarray.h>
-#include <qdir.h>
-#include <qdatetm.h>
-#include <qstring.h>
 #include <qmsgbox.h>
 
 #include <kconfig.h>
-#include <kdebug.h>
 
-#include "kpilotConfig.h"
-#include "pilotDatabase.h"
+#include "pilotRecord.h"
+#include "pilotSerialDatabase.h"
 #include "pilotDateEntry.h"
 
+#include "vcal-factory.h"
 #include "vcal-conduit.h"
-#include "vcal-setup.h"
-#include "conduitApp.h"
 
 static const char *id=
 	"$Id$";
 
 
-int main(int argc, char* argv[])
-{
-  ConduitApp a(argc,argv,"vcal_conduit","Calendar / Organizer conduit",
-               KPILOT_VERSION);
-  a.addAuthor("Preston Brown",I18N_NOOP("Organizer author"));
-  a.addAuthor("Adriaan de Groot",I18N_NOOP("Maintainer"),"adridg@cs.kun.nl");
-  a.addAuthor("Philipp Hullmann",I18N_NOOP("Bugfixer"));
-  a.addAuthor("Cornelius Schumacher",I18N_NOOP("iCalendar port"));
 
-  VCalConduit conduit(a.getMode(),a.getDBSource());
-  a.setConduit(&conduit);
-  return a.exec(false,true);
-
-  /* NOTREACHED */
-  (void) id;
-}
-
-
-VCalConduit::VCalConduit(eConduitMode mode,DatabaseSource source) :
-  VCalBaseConduit(mode,source)
+VCalConduit::VCalConduit(KPilotDeviceLink *d,
+	const char *n,
+	const QStringList &l) :
+	VCalBaseConduit(d,n,l)
 {
 }
 
@@ -85,45 +58,49 @@ VCalConduit::~VCalConduit()
 
 void VCalConduit::doBackup()
 {
-  FUNCTIONSETUP;
+	FUNCTIONSETUP;
 
-  if (!getCalendar(VCalSetup::VCalGroup))
-  {
-    noCalendarError(i18n("VCal Conduit"));
-    exit(ConduitMisconfigured);
-  }
-		
-  DEBUGCONDUIT << __FUNCTION__
-               << ": Performing full backup"
-               << endl;
+	if (!getCalendar(VCalConduitFactory::group))
+	{
+		noCalendarError(i18n("VCal Conduit"));
+		return;
+	}
 
-  // Get ALL entries from Pilot
-  int index = 0;
-  PilotRecord* rec;
-  while ((rec=readRecordByIndex(index++))) {
-    if (rec->isDeleted()) deleteRecord(rec);
-    else updateEvent(rec);
-  }
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Performing full backup"
+		<< endl;
+#endif
 
-  saveVCal();
+	// Get ALL entries from Pilot
+	int index = 0;
+	PilotRecord* rec;
+	while ((rec=fDatabase->readRecordByIndex(index++)))
+	{
+		if (rec->isDeleted()) deleteRecord(rec);
+		else updateEvent(rec);
+	}
+
+	saveVCal();
 }
 
 
 void VCalConduit::doSync()
 {
-  FUNCTIONSETUP;
+	FUNCTIONSETUP;
 
-  PilotRecord* rec;
-  int recordcount=0;
+	PilotRecord* rec;
+	int recordcount=0;
 
-  if (!getCalendar(VCalSetup::VCalGroup)) {
-    noCalendarError(i18n("VCal Conduit"));
-    exit(ConduitMisconfigured);
-  }
+	if (!getCalendar(VCalConduitFactory::group))
+	{
+		noCalendarError(i18n("VCal Conduit"));
+		return;
+	}
 
-  // get only MODIFIED entries from Pilot, compared with 
+  // get only MODIFIED entries from Pilot, compared with
   // the above (doBackup), which gets ALL entries
-  while ((rec=readNextModifiedRecord())) {
+  while ((rec=fDatabase->readNextModifiedRec())) {
     recordcount++;
     if (rec->isDeleted()) deleteRecord(rec);
     else {
@@ -175,7 +152,7 @@ void VCalConduit::updateEvent(PilotRecord *rec)
 		 << endl;
     vevent = new Event;
     vevent->setOrganizer(calendar()->getEmail());
-    
+
     calendar()->addEvent(vevent);
 
     vevent->setPilotId(dateEntry.getID());
@@ -408,7 +385,7 @@ void VCalConduit::doLocalSync()
       PilotDateEntry *dateEntry = 0;
 	
       if (id != 0) {
-        PilotRecord *pRec = readRecordById(id);
+        PilotRecord *pRec = fDatabase->readRecordById(id);
         // if this fails, somehow the record got deleted from the pilot
         // but we were never informed! bad pilot. naughty pilot.
 
@@ -434,7 +411,7 @@ void VCalConduit::doLocalSync()
         // multi day event
         DEBUGCONDUIT << __FUNCTION__
                      << ": multi-day event from "
-                     << (event->dtStart().toString()) << " to " 
+                     << (event->dtStart().toString()) << " to "
                      << (event->dtEnd().toString()) << endl;
         dateEntry->setRepeatType(repeatDaily);
         dateEntry->setRepeatFrequency(1);
@@ -472,7 +449,7 @@ void VCalConduit::doLocalSync()
       // put the pilotRec in the database...
       PilotRecord *pRec = dateEntry->pack();
       pRec->setAttrib(dateEntry->getAttrib() & ~dlpRecAttrDirty);
-      id = writeRecord(pRec);
+      id = fDatabase->writeRecord(pRec);
       ::free(pRec);
 
       delete dateEntry;
@@ -487,17 +464,24 @@ void VCalConduit::doLocalSync()
     }
   }
 
-  DEBUGCONDUIT << __FUNCTION__ << ": Read " << recordcount
-               << " records total." << endl;
-  
-  KConfig& config = KPilotConfig::getConfig(VCalSetup::VCalGroup);
-  bool deleteOnPilot = config.readBoolEntry("DeleteOnPilot", true);
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Read " << recordcount
+		<< " records total." << endl;
+#endif
 
-  if (firstTime()) firstSyncCopy(deleteOnPilot);
+	bool deleteOnPilot = false;
+	if (fConfig)
+	{
+		KConfigGroupSaver cfgs(fConfig,VCalConduitFactory::group);
+		deleteOnPilot = fConfig->readBoolEntry(VCalBaseConduit::deleteOnPilot,false);
+	}
 
-  if (deleteOnPilot) deleteFromPilot(VCalBaseConduit::TypeEvent);
+	if (isFirstTime()) firstSyncCopy(deleteOnPilot);
 
-  setFirstTime(config,false);
+	if (deleteOnPilot) deleteFromPilot(VCalBaseConduit::TypeEvent);
+
+	setFirstTime(fConfig,false);
 }
 
 
@@ -518,7 +502,7 @@ struct tm *VCalConduit::getExceptionDates(Event *vevent, int *n)
       kdFatal(CONDUIT_AREA) << __FUNCTION__
 			    << ": realloc() failed!" << endl;
     tmList[count-1] = extm;
-  
+
     date = dates.next();
   }
 
@@ -539,7 +523,8 @@ void VCalConduit::firstSyncCopy(bool DeleteOnPilot)
   // Get all entries from Pilot
   PilotRecord *rec;
   int index = 0;
-  while ((rec = readRecordByIndex(index++)) != 0) {
+  while ((rec = fDatabase->readRecordByIndex(index++)) != 0)
+  {
     PilotDateEntry *dateEntry = new PilotDateEntry(rec);
     
     if (!dateEntry) {
@@ -559,7 +544,7 @@ void VCalConduit::firstSyncCopy(bool DeleteOnPilot)
 	DEBUGCONDUIT << __FUNCTION__
 		     << ": Questioning event disposition."
 		     << endl;
-	
+
 	QString text = i18n("This is the first time that "
 			    "you have done a HotSync\n"
 			    "with the vCalendar conduit. "
@@ -569,22 +554,22 @@ void VCalConduit::firstSyncCopy(bool DeleteOnPilot)
 	text += i18n("Appointment: %1.\n\n"
 		     "What must be done with this appointment?")
 	  .arg(dateEntry->getDescription());
-	
-	int response =
-	  QMessageBox::information(0, 
-				   i18n("KPilot vCalendar Conduit"), 
-				   text, 
-				   i18n("&Insert"), 
-				   DeleteOnPilot ? i18n("&Delete") : 
-				   i18n("&Skip"),
-				   i18n("Insert &All"),
-				   0);
-	
-	DEBUGCONDUIT << __FUNCTION__ 
+
+	int response = QMessageBox::information(0,
+		i18n("KPilot vCalendar Conduit"),
+		text,
+		i18n("&Insert"),
+		( DeleteOnPilot ? i18n("&Delete") : i18n("&Skip") ),
+		i18n("Insert &All"),
+		0);
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
 		     << ": Event disposition "
 		     << response
 		     << endl;
-	
+#endif
+
 	switch (response) {
           case 0:
           default: 
@@ -762,20 +747,57 @@ void VCalConduit::setAlarms(PilotDateEntry *dateEntry,Event *vevent)
 }
 
 
-/* put up the about / setup dialog. */
-QWidget* VCalConduit::aboutAndSetup()
-{
-  return new VCalSetup();
-}
-
-
 void VCalConduit::doTest()
 {
   // TODO: dump calendar
 }
 
+/* virtual */ void VCalConduit::exec()
+{
+	FUNCTIONSETUP;
+
+	if (!fConfig) return;
+
+	KConfigGroupSaver cfgs(fConfig,VCalConduitFactory::group);
+	
+	fDatabase = new PilotSerialDatabase(pilotSocket(),
+		"DatebookDB",
+		this,
+		"DatebookDB");
+	if (!fDatabase || !fDatabase->isDBOpen())
+	{
+		kdWarning() << k_funcinfo
+			<< ": Couldn't open database."
+			<< endl;
+		KPILOT_DELETE(fDatabase);
+		emit syncDone(this);
+		return;
+	}
+
+	if (isTest())
+	{
+		doTest();
+	}
+	else if (isBackup())
+	{
+		doBackup();
+		fDatabase->resetSyncFlags();
+	}
+	else
+	{
+		doSync();
+		fDatabase->resetSyncFlags();
+	}
+
+	KPILOT_DELETE(fDatabase);
+	emit syncDone(this);
+	return;
+}
 
 // $Log$
+// Revision 1.44  2001/12/13 21:35:53  adridg
+// Gave all conduits a config dialog
+//
 // Revision 1.43  2001/06/18 19:51:40  cschumac
 // Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
 // They use libkcal now.

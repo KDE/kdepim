@@ -23,66 +23,45 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
 #include "options.h"
 
-#include <sys/types.h>
-#include <signal.h>
-#include <iostream.h>
-#include <stdlib.h>
-#include <time.h>
-
-#include <qbitarray.h>
-#include <qdir.h>
-#include <qdatetm.h>
-#include <qstring.h>
+#if QT_VERSION < 300
 #include <qmsgbox.h>
+#else
+#include <qmessagebox.h>
+#endif
 
-#include <kapp.h>
-#include <kmessagebox.h>
 #include <kconfig.h>
-#include <kdebug.h>
 
-#include "kpilotConfig.h"
-#include "pilotDatabase.h"
-#include "pilotTodoEntry.h"
-#include "todo-conduit.h"
-#include "todo-setup.h"
-#include "conduitApp.h"
-
+#if KDE_VERSION < 300
+#include <libkcal/todo.h>
+#else
 #include <todo.h>
+#endif
+
+#include "pilotRecord.h"
+#include "pilotSerialDatabase.h"
+#include "pilotTodoEntry.h"
+
+#include "todo-factory.h"
+#include "todo-conduit.h"
 
 using namespace KCal;
 
 static const char *todo_conduit_id = "$Id$";
 
 
-int main(int argc, char* argv[])
+
+TodoConduit::TodoConduit(KPilotDeviceLink *d,
+	const char *n,
+	const QStringList &l) :
+	VCalBaseConduit(d,n,l)
 {
-  ConduitApp a(argc,argv,"todo_conduit","ToDo-list conduit",KPILOT_VERSION);
-  a.addAuthor("Preston Brown",I18N_NOOP("Organizer author"));
-  a.addAuthor("Adriaan de Groot",I18N_NOOP("Maintainer"),"adridg@cs.kun.nl");
-  a.addAuthor("Philipp Hullmann",I18N_NOOP("Bugfixer"));
-  a.addAuthor("Cornelius Schumacher",I18N_NOOP("iCalendar port"));
-  
-  TodoConduit conduit(a.getMode(),a.getDBSource());
-  a.setConduit(&conduit);
-  return a.exec();
-
-  /* NOTREACHED */
-  (void) todo_conduit_id;
-}
-
-
-TodoConduit::TodoConduit(eConduitMode mode,DatabaseSource source)
-  : VCalBaseConduit(mode,source)
-{
-  FUNCTIONSETUP;
-  
-  kdDebug() << "TodoConduit()" << endl;
+	FUNCTIONSETUP;
 }
 
 
@@ -91,23 +70,18 @@ TodoConduit::~TodoConduit()
 }
 
 
-const char *TodoConduit::version()
-{
-  return "ToDo Conduit " KPILOT_VERSION;
-}
-
-
 void TodoConduit::doBackup()
 {
-   kdDebug() << "TodoConduit::doBackup()" << endl;
+	FUNCTIONSETUP;
 
-   if (!getCalendar(TodoSetup::TodoGroup)) {
-     noCalendarError(i18n("ToDo Conduit"));
-     exit(ConduitMisconfigured);
-   }
+	if (!getCalendar(ToDoConduitFactory::group))
+	{
+		noCalendarError(i18n("ToDo Conduit"));
+		return;
+	}
 
-   int index = 0;
-   PilotRecord *rec = readRecordByIndex(index++);
+	int index = 0;
+	PilotRecord *rec = fDatabase->readRecordByIndex(index++);
 
    // Get ALL entries from Pilot
    while(rec) {
@@ -119,15 +93,14 @@ void TodoConduit::doBackup()
 //       updateVObject(rec);
      }
      delete rec;
-     rec = readRecordByIndex(index++);
+     rec = fDatabase->readRecordByIndex(index++);
    }
 
-   // save the todoendar
-   saveVCal();
+	// save the todos
+	saveVCal();
 
-   // clear the "first time" flag
-   KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
-   setFirstTime(config, false);
+	// clear the "first time" flag
+	setFirstTime(fConfig, false);
 }
 
 void TodoConduit::doSync()
@@ -135,38 +108,47 @@ void TodoConduit::doSync()
   FUNCTIONSETUP;
   PilotRecord* rec;
 
-  if (!getCalendar(TodoSetup::TodoGroup)) {
-    noCalendarError(i18n("ToDo Conduit"));
-    exit(ConduitMisconfigured);
-  }
+	if (!getCalendar(ToDoConduitFactory::group))
+	{
+		noCalendarError(i18n("ToDo Conduit"));
+		return;
+	}
 
-  DEBUGCONDUIT << fname << ": Pilot -> Desktop" << endl;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Pilot -> Desktop" << endl;
+#endif
 
-  rec = readNextModifiedRecord();
+	rec = fDatabase->readNextModifiedRec();
 
-  // get only MODIFIED entries from Pilot, compared with the above (doBackup),
-  // which gets ALL entries
-  while (rec) {
-    if(rec->isDeleted()) deleteRecord(rec);
-    else {
-      bool pilotRecModified = (rec->getAttrib() & dlpRecAttrDirty);
-      if (pilotRecModified) {
-        updateTodo(rec);
-      } else {
-        DEBUGCONDUIT << fname
-		     << ": Asked for a modified record and got "
-		        "an unmodified one."
-		     << endl;
-      }
-    }
+	// get only MODIFIED entries from Pilot, compared with the above (doBackup),
+	// which gets ALL entries
+	while (rec)
+	{
+		if(rec->isDeleted()) deleteRecord(rec);
+		else
+		{
+			bool pilotRecModified = (rec->getAttrib() & dlpRecAttrDirty);
+			if (pilotRecModified)
+			{
+				updateTodo(rec);
+			}
+			else
+			{
+#ifdef DEBUG
+				DEBUGCONDUIT << fname
+					<< ": Asked for a modified record and got an unmodified one."
+					<< endl;
+#endif
+			}
+		}
 
-    delete rec;
-    rec = readNextModifiedRecord();
-  }
+		delete rec;
+		rec = fDatabase->readNextModifiedRec();
+	}
 
   // now, all the stuff that was modified/new on the pilot should be
   // added to the todoendar.  We now need to add stuff to the pilot
-  // that is modified/new in the todoendar (the opposite).	  
+  // that is modified/new in the todoendar (the opposite).
   DEBUGCONDUIT << fname << ": Desktop -> Pilot" << endl;
   doLocalSync();
 
@@ -174,8 +156,7 @@ void TodoConduit::doSync()
   saveVCal();
 
   // clear the "first time" flag
-  KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
-  setFirstTime(config, false);
+  setFirstTime(fConfig, false);
 }
 
 
@@ -186,7 +167,7 @@ void TodoConduit::doSync()
 void TodoConduit::updateTodo(PilotRecord *rec)
 {
   PilotTodoEntry todoEntry(rec);
-  
+
   Todo *vtodo=findTodo(rec->getID());
   if (!vtodo) {
     // no event was found, so we need to add one with some initial info
@@ -249,7 +230,7 @@ void TodoConduit::doLocalSync()
 
       // if id != 0, this is a modified event, otherwise it is new.
       if (id != 0) {
-	  pRec = readRecordById(id);
+	  pRec = fDatabase->readRecordById(id);
 	  /* If this fails, somehow the record got deleted from the
 	     pilot but we were never informed! bad pilot. naughty
 	     pilot.  Just crashing ain't right, though. The Right
@@ -273,7 +254,7 @@ void TodoConduit::doLocalSync()
         todoEntry->setIndefinite(0);
       } else {
         todoEntry->setIndefinite(1);
-      }	
+      }
 
       todoEntry->setPriority(todo->priority());
 
@@ -288,7 +269,7 @@ void TodoConduit::doLocalSync()
       // put the pilotRec in the database...
       pRec=todoEntry->pack();
       pRec->setAttrib(todoEntry->getAttrib() & ~dlpRecAttrDirty);
-      id = writeRecord(pRec);
+      id = fDatabase->writeRecord(pRec);
       delete(todoEntry);
       delete(pRec);
 
@@ -304,10 +285,14 @@ void TodoConduit::doLocalSync()
     }
   }
 
-  KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
-  bool deleteOnPilot = config.readBoolEntry("DeleteOnPilot", true);
+	bool deleteOnPilot = false;
+	if (fConfig)
+	{
+		deleteOnPilot = fConfig->readBoolEntry(VCalBaseConduit::deleteOnPilot,false);
+	}
 
-  if (firstTime()) firstSyncCopy(deleteOnPilot);
+
+  if (isFirstTime()) firstSyncCopy(deleteOnPilot);
 
   if (deleteOnPilot) deleteFromPilot(VCalBaseConduit::TypeTodo);
 }
@@ -315,33 +300,37 @@ void TodoConduit::doLocalSync()
 
 void TodoConduit::firstSyncCopy(bool DeleteOnPilot)
 {
+	FUNCTIONSETUP;
+
   bool insertall = false, skipall = false;
 
   // Get all entries from Pilot
   PilotRecord *rec;
   int index = 0;
-  while ((rec = readRecordByIndex(index++)) != 0) {
+  while ((rec = fDatabase->readRecordByIndex(index++)) != 0) {
     PilotTodoEntry *todoEntry = new PilotTodoEntry(rec);
-      
+
     if (!todoEntry) {
-      kdError(CONDUIT_AREA) << __FUNCTION__
+      kdError(CONDUIT_AREA) << k_funcinfo
 			    << ": Conversion to PilotTodoEntry failed"
 			    << endl;
       continue;
     }
-    
+
     Todo *todo = findTodo(rec->getID());
     if (!todo) {
-      DEBUGCONDUIT << __FUNCTION__
-		   << ": Entry found on pilot but not in vcalendar."
-		   << endl;
-	
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
+			<< ": Entry found on pilot but not in vcalendar."
+			<< endl;
+#endif
+
       // First hot-sync, ask user how to treat this event.
       if (!insertall && !skipall) {
 	DEBUGCONDUIT << __FUNCTION__
 		     << ": Questioning event disposition."
 		     << endl;
-	    
+
 	QString text = i18n("This is the first time that "
 			    "you have done a HotSync\n"
 			    "with the vCalendar conduit. "
@@ -351,22 +340,23 @@ void TodoConduit::firstSyncCopy(bool DeleteOnPilot)
 	text += i18n("Item: %1.\n\n"
 		     "What must be done with this item?")
 	  .arg(todoEntry->getDescription());
-    
+
 	int response =
-	  QMessageBox::information(0, 
-				   i18n("KPilot To-Do Conduit"), 
-				   text, 
-				   i18n("&Insert"), 
-				   DeleteOnPilot ? i18n("&Delete") 
-				   : i18n("&Skip"),
-				   i18n("Insert &All"),
-				   false);
-	    
-	DEBUGCONDUIT << __FUNCTION__ 
+		QMessageBox::information(0,
+			i18n("KPilot To-Do Conduit"),
+			text,
+			i18n("&Insert"),
+			( DeleteOnPilot ? i18n("&Delete") : i18n("&Skip") ),
+			i18n("Insert &All"),
+			false);
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
 		     << ": Event disposition "
 		     << response
 		     << endl;
-	    
+#endif
+
 	switch (response) {
           case 0:
           default: 
@@ -391,13 +381,52 @@ void TodoConduit::firstSyncCopy(bool DeleteOnPilot)
   }
 }
 
-/* put up the about / setup dialog. */
-QWidget* TodoConduit::aboutAndSetup()
+/* virtual */ void TodoConduit::exec()
 {
-  return new TodoSetup();
+	FUNCTIONSETUP;
+
+	if (!fConfig) return;
+
+	KConfigGroupSaver cfgs(fConfig,ToDoConduitFactory::group);
+	fDatabase = new PilotSerialDatabase(pilotSocket(),
+		"ToDoDB",
+		this,
+		"ToDoDB");
+	if (!fDatabase || !fDatabase->isDBOpen())
+	{
+		kdWarning() << k_funcinfo
+			<< ": Couldn't open database."
+			<< endl;
+		KPILOT_DELETE(fDatabase);
+		emit syncDone(this);
+		return;
+	}
+
+	if (isTest())
+	{
+		// Nothing: the todo conduit doesn't have a test mode.
+	}
+	else if (isBackup())
+	{
+		doBackup();
+		fDatabase->resetSyncFlags();
+	}
+	else
+	{
+		doSync();
+		fDatabase->resetSyncFlags();
+	}
+
+	KPILOT_DELETE(fDatabase);
+	emit syncDone(this);
+	return;
 }
 
 // $Log$
+// Revision 1.6  2001/06/18 19:51:40  cschumac
+// Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
+// They use libkcal now.
+//
 // Revision 1.5  2001/06/05 22:58:40  adridg
 // General rewrite, cleanup thx. Philipp Hullmann
 //

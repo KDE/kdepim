@@ -1,3 +1,6 @@
+#ifndef _TODOCONDUIT_H
+#define _TODOCONDUIT_H
+
 /* todo-conduit.h			KPilot
 **
 ** Copyright (C) 1998-2001 Dan Pilone
@@ -22,61 +25,44 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
-#ifndef _TODOCONDUIT_H
-#define _TODOCONDUIT_H
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <sys/time.h>
-#ifdef TIME_WITH_SYS_TIME
-#include <time.h>
-#endif
-
-#include <todo.h>
 
 #include "vcalBase.h"
-
-class QWidget;
-class PilotRecord;
 
 using namespace KCal;
 
 class TodoConduit : public VCalBaseConduit
 {
-  public:
-    TodoConduit(eConduitMode mode,DatabaseSource source=ConduitSocket);
-    virtual ~TodoConduit();
+public:
+	TodoConduit(KPilotDeviceLink *,
+		const char *n=0L,
+		const QStringList &l=QStringList());
+	virtual ~TodoConduit();
 
-    virtual void doSync();
-    virtual void doBackup();
-    virtual QWidget* aboutAndSetup();
+	virtual void doSync();
+	virtual void doBackup();
+	virtual void exec();
 
-    virtual const char* dbInfo() { return "ToDoDB"; }
-  
-    static const char *version();
+protected:
+	virtual void doLocalSync();
+	virtual void updateTodo(PilotRecord *rec);
 
-  protected:
-    virtual void doLocalSync();
-    virtual void updateTodo(PilotRecord *rec);
-//    virtual void updateVObject(PilotRecord *rec);
-
-   private:
-    void firstSyncCopy(bool DeleteOnPilot);
+private:
+	void firstSyncCopy(bool DeleteOnPilot);
 };
-
-#endif
 
 
 // $Log$
+// Revision 1.3  2001/06/18 19:51:40  cschumac
+// Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
+// They use libkcal now.
+//
 // Revision 1.2  2001/06/05 22:58:40  adridg
 // General rewrite, cleanup thx. Philipp Hullmann
 //
@@ -92,3 +78,4 @@ class TodoConduit : public VCalBaseConduit
 // Revision 1.8  2001/02/07 15:46:32  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //
+#endif

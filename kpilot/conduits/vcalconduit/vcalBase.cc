@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -26,83 +26,112 @@
 
 #include "options.h"
 
+
+
 #include <qfile.h>
 #include <qdatetime.h>
 
-#include <kmessagebox.h>
-#include <kdebug.h>
-
+#if KDE_VERSION < 300
+#include <libkcal/calendarlocal.h>
+#include <libkcal/icalformat.h>
+#else
 #include <calendarlocal.h>
 #include <icalformat.h>
+#endif
 
-#include "kpilotConfig.h"
+#include <kconfig.h>
+#include <kmessagebox.h>
+#include <kapplication.h>
+#include <dcopclient.h>
 
+#include "pilotDatabase.h"
+#include "pilotRecord.h"
 #include "vcalBase.h"
 
+const char * const VCalBaseConduit::calendarFile = "CalFile" ;
+const char * const VCalBaseConduit::firstTime = "FirstTime" ;
+const char * const VCalBaseConduit::deleteOnPilot = "DeleteOnPilot" ;
 
-VCalBaseConduit::VCalBaseConduit(BaseConduit::eConduitMode mode,
-                                 BaseConduit::DatabaseSource source) :
-  BaseConduit(mode,source),
-  fTimeZone(0), 
-  calName(),         // That's QString::null
-  fCalendar(0) 
+
+VCalBaseConduit::VCalBaseConduit(KPilotDeviceLink *d,
+	const char *n,
+	const QStringList &l) :
+	ConduitAction(d,n,l),
+	fTimeZone(0L),
+	fDatabase(0L),
+	fCalendar(0L)
 {
 }
 
 VCalBaseConduit::~VCalBaseConduit()
 {
-  delete fCalendar;
+	KPILOT_DELETE(fCalendar);
+	KPILOT_DELETE(fDatabase);
 }
 
 bool VCalBaseConduit::getCalendar(const QString &group)
 {
-  FUNCTIONSETUP;
-  
-  if (fCalendar) {
-    kdWarning() << __FUNCTION__
-		<< ": Already have a calendar file."
+	FUNCTIONSETUP;
+
+	if (fCalendar)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Already have a calendar file."
+			<< endl;
+		return true;
+	}
+
+	if (!fConfig)
+	{
+		kdWarning() << k_funcinfo
+			<< ": No config file set."
+			<< endl;
+		return false;
+	}
+
+	KConfigGroupSaver cfgs(fConfig,group);
+	calName = fConfig->readEntry(calendarFile);
+	fFirstTime = fConfig->readBoolEntry(firstTime,false);
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Calendar file is " << calName
+		<< ( fFirstTime ? " (first time!)" : "" )
 		<< endl;
-    return true;
-  }
-  
-  KConfig& config = KPilotConfig::getConfig(group);
-  (void) getDebugLevel(config);
-  calName = config.readEntry("CalFile");
-  fFirstTime = getFirstTime(config);
-  
-  DEBUGCONDUIT << fname
-	       << ": Calendar file is " << calName
-	       << ( fFirstTime ? " (first time!)" : "" )
-	       << endl;
-  
-  QCString s = QFile::encodeName(calName);
-  
-  fCalendar = new CalendarLocal();
-  
-  if(!fCalendar->load(s)) {
-    kdError(CONDUIT_AREA) << __FUNCTION__
+#endif
+
+	QCString s = QFile::encodeName(calName);
+	fCalendar = new CalendarLocal();
+
+	if(!fCalendar->load(s))
+	{
+		kdError(CONDUIT_AREA) << k_funcinfo
 			  << ": Couldn't open "
 			  << calName
 			  << endl;
-    
-    return false;
-  } else {
-    DEBUGCONDUIT << fname
-		 << ": Got calendar!"
-		 << endl;
-    fTimeZone = fCalendar->getTimeZone();
-    return true;
-  }
+
+		KPILOT_DELETE(fCalendar);
+		return false;
+	}
+	else
+	{
+		DEBUGCONDUIT << fname
+			 << ": Got calendar!"
+			<< endl;
+		fTimeZone = fCalendar->getTimeZone();
+		return true;
+	}
 }
 
 
 void VCalBaseConduit::saveVCal()
 {
-  if (fCalendar) {
-    fCalendar->save(QFile::encodeName(calName));
-  }
+	if (fCalendar)
+	{
+		fCalendar->save(QFile::encodeName(calName));
+	}
 
-  fFirstTime = false;
+	fFirstTime = false;
 }
 
 
@@ -114,7 +143,7 @@ void VCalBaseConduit::noCalendarError(const QString &conduitName)
       "filename and try again.")
       .arg(conduitName)
       .arg(calName);
-	
+
   KMessageBox::error(0, message,i18n("%1 Fatal Error").arg(conduitName));
 }
 
@@ -171,11 +200,11 @@ void VCalBaseConduit::deleteFromPilot(int entryType)
 
   /* Build a list of records in the pilot calendar that are not
      found in the vcal and thus probably have been deleted. */
-  
+
   // Get all entries from Pilot
   PilotRecord *rec;
   int index = 0;
-  while ((rec = readRecordByIndex(index++)) != 0) {
+  while ((rec = fDatabase->readRecordByIndex(index++)) != 0) {
     bool found = false;
     if ((entryType == TypeTodo) && findTodo(rec->getID())) found = true;
     if ((entryType == TypeEvent) && findEvent(rec->getID())) found = true;
@@ -199,12 +228,12 @@ void VCalBaseConduit::deleteFromPilot(int entryType)
   // Now process the list of deleted records. 
   for (QValueList<recordid_t>::Iterator it = deletedList.begin();
        it != deletedList.end(); ++it) {
-    PilotRecord *r = readRecordById(*it);
+    PilotRecord *r = fDatabase->readRecordById(*it);
     if (r) {
       DEBUGCONDUIT << __FUNCTION__ << ": deleting record " << *it
 		   << endl;
       r->setAttrib(~dlpRecAttrDeleted);
-      recordid_t rid = writeRecord(r);
+      recordid_t rid = fDatabase->writeRecord(r);
       delete r;
       if (rid != *it)
 	DEBUGCONDUIT << __FUNCTION__
@@ -243,7 +272,39 @@ Event *VCalBaseConduit::findEvent(recordid_t id)
   return 0;
 }
 
+void VCalBaseConduit::setFirstTime(KConfig *c, bool b)
+{
+	c->writeEntry(firstTime,b);
+}
+
+bool VCalBaseConduit::isKOrganizerRunning()
+{
+	DCOPClient *dcop = KApplication::kApplication()->dcopClient();
+	if (!dcop) return true;
+
+	QByteArray sendData;
+	QByteArray replyData;
+	QCString replyTypeStr;
+
+	if (dcop->call("alarmd",
+		"alarmd",
+		"interfaces()",
+		sendData,replyTypeStr,replyData))
+		return false;
+
+	if (dcop->call("korganizer",
+		"korganizer",
+		"interfaces()",
+		sendData,replyTypeStr,replyData))
+		return false;
+
+	return true;
+}
+
 // $Log$
+// Revision 1.10  2001/06/19 11:42:13  cschumac
+// Fixed memory leak.
+//
 // Revision 1.9  2001/06/18 19:51:40  cschumac
 // Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
 // They use libkcal now.

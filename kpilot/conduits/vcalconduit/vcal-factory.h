@@ -44,11 +44,7 @@ public:
 
 	static KAboutData *about() { return fAbout; } ;
 
-	static const char * const calendarFile,
-		* const firstTime,
-		* const deleteOnPilot,
-		* const group;
-
+	static const char * const group;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
@@ -68,6 +64,9 @@ void *init_libvcalconduit();
 } ;
 
 // $Log$
+// Revision 1.2  2001/12/27 16:43:36  adridg
+// Fixup configuration
+//
 // Revision 1.1  2001/12/13 21:40:40  adridg
 // New files for move to .so
 //

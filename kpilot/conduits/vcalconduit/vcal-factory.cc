@@ -48,9 +48,6 @@ void *init_libvcalconduit()
 // Configuration keys
 //
 //
-const char * const VCalConduitFactory::calendarFile = "CalFile" ;
-const char * const VCalConduitFactory::firstTime = "FirstTime" ;
-const char * const VCalConduitFactory::deleteOnPilot = "DeleteOnPilot" ;
 const char * const VCalConduitFactory::group = "vcalOptions" ;
 
 
@@ -68,9 +65,19 @@ VCalConduitFactory::VCalConduitFactory(QObject *p, const char *n) :
 		KAboutData::License_GPL,
 		"(C) 2001, Adriaan de Groot");
 	fAbout->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Primary Author"),
+		I18N_NOOP("Maintainer"),
 		"groot@kde.org",
 		"http://www.cs.kun.nl/~adridg/kpilot");
+	fAbout->addAuthor("Dan Pilone",
+		I18N_NOOP("Original Author"));
+	fAbout->addAuthor("Preston Brown",
+		I18N_NOOP("Original Author"));
+	fAbout->addAuthor("Herwin-Jan Steehouwer",
+		I18N_NOOP("Original Author"));
+	fAbout->addAuthor("Cornelius Schumacher",
+		I18N_NOOP("iCalendar port"));
+	fAbout->addCredit("Philipp Hullmann",
+		I18N_NOOP("Bugfixer"));
 }
 
 VCalConduitFactory::~VCalConduitFactory()
@@ -118,6 +125,9 @@ VCalConduitFactory::~VCalConduitFactory()
 }
 
 // $Log$
+// Revision 1.2  2001/12/27 16:43:36  adridg
+// Fixup configuration
+//
 // Revision 1.1  2001/12/13 21:40:40  adridg
 // New files for move to .so
 //

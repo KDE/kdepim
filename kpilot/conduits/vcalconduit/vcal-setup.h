@@ -1,10 +1,10 @@
-/* vcal-setup.h		-*- C++ -*-	VCal Conduit
+#ifndef _KPILOT_VCAL_SETUP_H
+#define _KPILOT_VCAL_SETUP_H
+/* vcal-setup.h                       KPilot
 **
-** Copyright (C) 1998-2001 Dan Pilone
+** Copyright (C) 2001 by Dan Pilone
 **
-** This file is part of the vcal conduit, a conduit for KPilot that
-** synchronises the Pilot's datebook application with the outside world,
-** which currently means KOrganizer.
+** It also defines the class for the behavior of the setup dialog.
 */
 
 /*
@@ -20,66 +20,40 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#ifndef __VCAL_SETUP_H
-#define __VCAL_SETUP_H
+#include "plugin.h"
 
-class QLineEdit;
-class QCheckBox;
-class QPushButton;
-class QGridLayout;
-class QLabel;
+class VCalWidget;
 
-#include "gsetupDialog.h"
-
-class VCalSetupPage : public setupDialogPage
+class VCalWidgetSetup : public ConduitConfig
 {
-	Q_OBJECT
-
+Q_OBJECT
 public:
-	VCalSetupPage(setupDialog *, KConfig&);
-	virtual ~VCalSetupPage();
-	virtual int commitChanges(KConfig&);
+	VCalWidgetSetup(QWidget *,const char *,const QStringList &);
+	virtual ~VCalWidgetSetup();
 
-public slots:
-	void slotBrowse();
+	virtual void readSettings();
+
+protected:
+	virtual void commitChanges();
+
+protected slots:
+	void slotBrowseCalendar();
 
 private:
-  QLineEdit *fCalendarFile;
-  QCheckBox *fPromptFirstTime;
-  QPushButton *fBrowseButton;
-  QCheckBox *fDeleteOnPilot;
-  QGridLayout *grid;
-  QLabel* FileLabel;
-};
-
-
-class VCalSetup : public setupDialog
-{
-  Q_OBJECT
-
-  //friend class VCalConduit;
-public:
-  VCalSetup(QWidget *parent=0L);
-  virtual ~VCalSetup();
-  static const QString VCalGroup;
-
-private:
-  VCalSetupPage *sPage;
-  setupInfoPage *iPage;
-};
-
-#endif
-
+	VCalWidget *fConfigWidget;
+} ;
 
 // $Log$
-// Revision 1.6  2001/02/07 15:46:32  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
+// Revision 1.1  2001/12/13 21:40:40  adridg
+// New files for move to .so
 //
+
+#endif

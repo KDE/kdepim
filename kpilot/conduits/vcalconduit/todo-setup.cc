@@ -1,11 +1,8 @@
-/* todo-setup.cc			KPilot
+/* todo-setup.cc                        KPilot
 **
-** Copyright (C) 1998-2001 Dan Pilone
-** Copyright (C) 1998-2000 Preston Brown
+** Copyright (C) 2001 by Dan Pilone
 **
-** This file is part of the todo conduit, a conduit for KPilot that
-** synchronises the Pilot's todo application with the outside world,
-** which currently means KOrganizer.
+** This file defines the factory for the todo-conduit plugin.
 */
 
 /*
@@ -21,126 +18,106 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
-static const char *todo_setup_id="$Id$";
+/*
+** Bug reports and questions can be sent to kde-pim@kde.org
+*/
 
 #include "options.h"
 
-#include <qdir.h>
-#include <qlabel.h>
-#include <qpushbutton.h>
-#include <qcheckbox.h>
+#include <qtabwidget.h>
 #include <qlineedit.h>
-#include <qlayout.h>
+#include <qcheckbox.h>
 
-#include <kapp.h>
-#include <klocale.h>
-#include <kdebug.h>
+#include <kconfig.h>
+#include <kinstance.h>
+#include <kaboutdata.h>
 #include <kfiledialog.h>
 
-#include "kpilotConfig.h"
-#include "todo-conduit.h"
-
-#include "todo-setup.h"
+#include "korganizertodoConduit.h"
+#include "todo-factory.h"
 #include "todo-setup.moc"
 
 
-const QString TodoSetup::TodoGroup("todoOptions");
 
-TodoSetup::TodoSetup(QWidget *parent)
-  : setupDialog(parent,TodoGroup,TodoConduit::version())
+ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n,
+	const QStringList & a) :
+	ConduitConfig(w,n,a)
 {
-  KConfig& config=KPilotConfig::getConfig(TodoGroup);
-  addPage(new TodoSetupPage(this,config));
-  addPage(new setupInfoPage(this));
-  setupDialog::setupWidget();
-  (void) todo_setup_id;
+	FUNCTIONSETUP;
+
+	fConfigWidget = new ToDoWidget(widget());
+	setTabWidget(fConfigWidget->tabWidget);
+	addAboutPage(false,ToDoConduitFactory::about());
+
+	fConfigWidget->tabWidget->adjustSize();
+	fConfigWidget->resize(fConfigWidget->tabWidget->size());
+
+	// This is a little hack to force the config dialog to the
+	// correct size, since the designer dialog is so small.
+	//
+	//
+	QSize s = fConfigWidget->size() + QSize(SPACING,SPACING);
+	fConfigWidget->resize(s);
+	fConfigWidget->setMinimumSize(s);
+
+	QObject::connect(fConfigWidget->fCalBrowse,SIGNAL(clicked()),
+		this,SLOT(slotBrowseCalendar()));
 }
 
-
-int TodoSetupPage::commitChanges(KConfig& config)
+ToDoWidgetSetup::~ToDoWidgetSetup()
 {
-  config.writeEntry("CalFile", fCalendarFile->text());
-  config.writeEntry("FirstTime", 
-                    fPromptFirstTime->isChecked() ? "true" : "false");
-  config.writeEntry("DeleteOnPilot",
-                    fDeleteOnPilot->isChecked() ? "true" : "false");
-
-  return 0;
+	FUNCTIONSETUP;
 }
 
-
-void TodoSetupPage::slotBrowse()
+/* virtual */ void ToDoWidgetSetup::commitChanges()
 {
-  QString fileName = KFileDialog::getOpenFileName(0, "*.vcs *ics");
-  if(fileName.isNull()) return;
-  fCalendarFile->setText(fileName);
+	FUNCTIONSETUP;
+
+	if (!fConfig) return;
+
+	KConfigGroupSaver s(fConfig,ToDoConduitFactory::group);
+
+	fConfig->writeEntry(ToDoConduitFactory::calendarFile,
+		fConfigWidget->fCalendarFile->text());
+	fConfig->writeEntry(ToDoConduitFactory::firstTime,
+		fConfigWidget->fPromptFirstTime->isChecked());
+	fConfig->writeEntry(ToDoConduitFactory::deleteOnPilot,
+		fConfigWidget->fDeleteOnPilot->isChecked());
+
 }
 
-TodoSetupPage::TodoSetupPage(setupDialog *parent,KConfig& config) :
-    setupDialogPage(i18n("ToDo File"),parent)
+/* virtual */ void ToDoWidgetSetup::readSettings()
 {
-  grid = new QGridLayout(this, 2, 3, SPACING);
+	FUNCTIONSETUP;
 
-  fCalFileLabel = new QLabel(i18n("Calendar File:"),
-			    this);
-  fCalFileLabel->adjustSize();
-  grid->addWidget(fCalFileLabel, 0, 0);
-  
-  fCalendarFile = new QLineEdit(this);
-  fCalendarFile->setText(config.readEntry("CalFile", ""));
-  fCalendarFile->resize(200, fCalendarFile->height());
-  grid->addWidget(fCalendarFile, 0, 1);
+	if (!fConfig) return;
 
-  fBrowseButton = new QPushButton(i18n("Browse"), this);
-  fBrowseButton->adjustSize();
-  connect(fBrowseButton, SIGNAL(clicked()), this, SLOT(slotBrowse()));
-  grid->addWidget(fBrowseButton, 0, 2);
+	KConfigGroupSaver s(fConfig,ToDoConduitFactory::group);
 
-  fPromptFirstTime =
-    new QCheckBox(i18n("&Prompt before changing data."), this);
-  fPromptFirstTime->adjustSize();
-  fPromptFirstTime->setChecked(config.readBoolEntry("FirstTime", TRUE));
-  grid->addWidget(fPromptFirstTime, 1, 1);
+	fConfigWidget->fCalendarFile->setText(
+		fConfig->readEntry(ToDoConduitFactory::calendarFile,QString::null));
 
-  fDeleteOnPilot = 
-    new QCheckBox(i18n("Delete locally deleted records on pilot"),
-		  this);
-  fDeleteOnPilot->adjustSize();
-  fDeleteOnPilot->setChecked(config.readBoolEntry("DeleteOnPilot", true));
-  grid->addWidget(fDeleteOnPilot, 2, 1);
+	fConfigWidget->fPromptFirstTime->setChecked(
+		fConfig->readBoolEntry(ToDoConduitFactory::firstTime,false));
+	fConfigWidget->fDeleteOnPilot->setChecked(
+		fConfig->readBoolEntry(ToDoConduitFactory::deleteOnPilot,false));
 }
 
-TodoSetupPage::~TodoSetupPage()
+void ToDoWidgetSetup::slotBrowseCalendar()
 {
-  delete fCalendarFile;
-  delete fPromptFirstTime;
-  delete fDeleteOnPilot;
-  delete fBrowseButton;
-  delete fCalFileLabel;
-  delete grid;
-}
+	FUNCTIONSETUP;
 
+	QString fileName = KFileDialog::getOpenFileName("::calendar", "*.vcs *ics|ICalendars",this);
+	if(fileName.isNull()) return;
+	fConfigWidget->fCalendarFile->setText(fileName);
+}
 
 // $Log$
-// Revision 1.2  2001/06/05 22:58:40  adridg
-// General rewrite, cleanup thx. Philipp Hullmann
+// Revision 1.1  2001/12/13 21:40:40  adridg
+// New files for move to .so
 //
-// Revision 1.1  2001/04/16 13:36:20  adridg
-// Moved todoconduit
-//
-// Revision 1.13  2001/04/01 17:32:05  adridg
-// Fiddling around with date properties
-//
-// Revision 1.12  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.11  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.10  2001/02/07 15:46:32  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//
+

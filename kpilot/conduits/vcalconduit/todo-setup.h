@@ -1,11 +1,10 @@
-/* todo-setup.h			KPilot
+#ifndef _KPILOT_TODO_SETUP_H
+#define _KPILOT_TODO_SETUP_H
+/* todo-setup.h                         KPilot
 **
-** Copyright (C) 1998-2001 Dan Pilone
-** Copyright (C) 1998-2000 Preston Brown
+** Copyright (C) 2001 by Dan Pilone
 **
-** This file is part of the todo conduit, a conduit for KPilot that
-** synchronises the Pilot's todo application with the outside world,
-** which currently means KOrganizer.
+** This file defines the class for the behavior of the setup dialog.
 */
 
 /*
@@ -21,66 +20,40 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#ifndef __TODO_SETUP_H
-#define __TODO_SETUP_H
 
-#include "gsetupDialog.h"
+#include "plugin.h"
 
-class QLineEdit;
-class QCheckBox;
-class QPushButton;
-class QGridLayout;
-class QLabel;
+class ToDoWidget;
 
-class TodoSetupPage : public setupDialogPage
+class ToDoWidgetSetup : public ConduitConfig
 {
-	Q_OBJECT
-
+Q_OBJECT
 public:
-	TodoSetupPage(setupDialog *,KConfig&);
-	virtual ~TodoSetupPage();
+	ToDoWidgetSetup(QWidget *,const char *,const QStringList &);
+	virtual ~ToDoWidgetSetup();
 
-	virtual int commitChanges(KConfig&);
-
-public slots:
-	void slotBrowse();
-
-private:
-	QLineEdit* fCalendarFile;
-	QCheckBox* fPromptFirstTime;
-	QCheckBox* fDeleteOnPilot;
-	QPushButton *fBrowseButton;
-	QLabel* fCalFileLabel;
-	QGridLayout* grid;
-} ;
-
-
-class TodoSetup : public setupDialog
-{
-	Q_OBJECT
-
-friend class TodoConduit;
-public:
-	TodoSetup(QWidget *parent=0L);
+	virtual void readSettings();
 
 protected:
-	static const QString TodoGroup;
-};
+	virtual void commitChanges();
 
-#endif
+protected slots:
+	void slotBrowseCalendar();
 
+private:
+	ToDoWidget *fConfigWidget;
+} ;
 
 // $Log$
-// Revision 1.1  2001/04/16 13:36:20  adridg
-// Moved todoconduit
+// Revision 1.1  2001/12/13 21:40:40  adridg
+// New files for move to .so
 //
-// Revision 1.6  2001/02/07 15:46:32  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//
+
+#endif

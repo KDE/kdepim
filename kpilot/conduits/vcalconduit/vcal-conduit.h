@@ -1,4 +1,6 @@
-/* vcal-conduit.c  VCalendar Conduit 
+#ifndef _VCAL_VCALCONDUIT_H
+#define _VCAL_VCALCONDUIT_H
+/* vcal-conduit.c  VCalendar Conduit
 **
 ** Copyright (C) 1998-2000 by Dan Pilone, Preston Brown, and
 **	Herwin Jan Steehouwer
@@ -21,24 +23,13 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
-
-#ifndef _VCAL_VCALCONDUIT_H
-#define _VCAL_VCALCONDUIT_H
-
-#include <time.h>
-
-#include <pi-datebook.h>
-
-#include <qbitarray.h>
-
-#include <event.h>
 
 #include "vcalBase.h"
 
@@ -49,24 +40,24 @@ using namespace KCal;
 
 class VCalConduit : public VCalBaseConduit
 {
-  public:
-    VCalConduit(eConduitMode mode,DatabaseSource source);
-    virtual ~VCalConduit();
-  
-    virtual void doSync();
-    virtual void doBackup();
-    virtual QWidget* aboutAndSetup();
-    virtual void doTest();
+public:
+	 VCalConduit(KPilotDeviceLink *,
+	 	const char * = 0L,
+		const QStringList & = QStringList() );
+	virtual ~VCalConduit();
 
-    virtual const char* dbInfo() { return "DatebookDB"; }
-  
-  protected:
-    void doLocalSync();
-    void updateEvent(PilotRecord *rec);
+	virtual void exec();
+	virtual void doSync();
+	virtual void doBackup();
+	virtual void doTest();
 
-  private:
-    void setAlarms(PilotDateEntry *dateEntry, Event *vevent);
-    void firstSyncCopy(bool DeleteOnPilot);
+protected:
+	void doLocalSync();
+	void updateEvent(PilotRecord *rec);
+
+private:
+	void setAlarms(PilotDateEntry *dateEntry, Event *vevent);
+	void firstSyncCopy(bool DeleteOnPilot);
     /** Copy the start and end times from @arg *vevent to @arg
       *dateEntry. */
     void setStartEndTimes(PilotDateEntry *dateEntry,Event *vevent);
@@ -107,10 +98,12 @@ class VCalConduit : public VCalBaseConduit
                             PeriodConstants period);
 };
 
-#endif
-
 
 // $Log$
+// Revision 1.17  2001/06/18 19:51:40  cschumac
+// Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
+// They use libkcal now.
+//
 // Revision 1.16  2001/06/05 22:58:40  adridg
 // General rewrite, cleanup thx. Philipp Hullmann
 //
@@ -126,3 +119,4 @@ class VCalConduit : public VCalBaseConduit
 // Revision 1.12  2001/02/07 15:46:32  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //
+#endif
