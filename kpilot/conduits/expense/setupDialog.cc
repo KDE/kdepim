@@ -106,8 +106,9 @@ ExpenseCSVPage::ExpenseCSVPage(setupDialog *p,KConfig& c) :
 
 	slotPolicyChanged();
 
+	grid->addColSpacing(0,SPACING);
 	grid->addRowSpacing(0,SPACING);
-	grid->addColSpacing(3,SPACING);
+	grid->addColSpacing(4,SPACING);
 	grid->setRowStretch(4,100);
 }
 
@@ -288,8 +289,10 @@ ExpenseDBPage::ExpenseDBPage(setupDialog *p,KConfig& c):
 
 
 	grid->addRowSpacing(0,SPACING);
-	grid->addColSpacing(3,SPACING);
-	grid->setRowStretch(4,100);
+	grid->addColSpacing(0,SPACING);
+	grid->addColSpacing(4,SPACING);
+	grid->addRowSpacing(7,SPACING);
+	grid->setRowStretch(7,100);
 
 }
 
@@ -332,6 +335,11 @@ ExpenseOptions::ExpenseOptions(QWidget *parent) :
 
   
 // $Log$
+// Revision 1.2  2001/03/14 16:56:02  molnarc
+//
+// CJM - Added browse button on csv export tab.
+// CJM - Added database export tab and required information.
+//
 // Revision 1.1  2001/03/04 21:47:04  adridg
 // New expense conduit, non-functional but it compiles
 //
