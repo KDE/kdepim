@@ -267,7 +267,7 @@ void CertificateWizardImpl::slotGenerateCertificate()
       KMessageBox::error( this,
 			  i18n( "Could not start certificate generation: %1" )
 			  .arg( QString::fromLocal8Bit( err.asString() ) ),
-			  i18n( "Cerificate Manager Error" ) );
+			  i18n( "Certificate Manager Error" ) );
     else {
       generatePB->setEnabled( false );
       setBackEnabled( generatePage, false );
