@@ -61,13 +61,13 @@ public:
 // Older pilot-link versions < 0.11.x don't have prodID, but name instead, 
 // and they also do not have the *Version members.
 	const int getProductIDLength() const { return fSysInfo.nameLength; }
-	const char* getProductID() const     { return fSysInfo.name; }
+	const char* getProductID() const     { return &fSysInfo.name[0]; }
 	void setProductID(char* prodid)
 	{
-		::memset(&fSysInfo.name, 0, sizeof(fSysInfo.name));
-		::strncpy(fSysInfo.name, prodid, sizeof(fSysInfo.name)-1);
+		::memset(&fSysInfo.name[0], 0, sizeof(fSysInfo.name));
+		::strncpy(&fSysInfo.name[0], prodid, sizeof(fSysInfo.name)-1);
 		boundsCheck();
-		fSysInfo.nameLength = ::strlen(fSysInfo.name);
+		fSysInfo.nameLength = ::strlen(&fSysInfo.name[0]);
 	}
 
         const unsigned short getMajorVersion() const {return 0;}
@@ -78,13 +78,13 @@ public:
 #else
 // Newer pilot-link versions have these fields, so use them:
 	const int getProductIDLength() const { return fSysInfo.prodIDLength; }
-	const char* getProductID() const     { return fSysInfo.prodID; }
+	const char* getProductID() const     { return &fSysInfo.prodID[0]; }
 	void setProductID(char* prodid)
 	{
-		::memset(&fSysInfo.prodID, 0, sizeof(fSysInfo.prodID));
-		::strncpy(fSysInfo.prodID, prodid, sizeof(fSysInfo.prodID)-1);
+		::memset(&fSysInfo.prodID[0], 0, sizeof(fSysInfo.prodID));
+		::strncpy(&fSysInfo.prodID[0], prodid, sizeof(fSysInfo.prodID)-1);
 		boundsCheck();
-		fSysInfo.prodIDLength = ::strlen(fSysInfo.prodID);
+		fSysInfo.prodIDLength = ::strlen(&fSysInfo.prodID[0]);
 	}
 
         const unsigned short getMajorVersion() const {return fSysInfo.dlpMajorVersion;}
