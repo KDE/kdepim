@@ -23,6 +23,7 @@
 #include <qlayout.h>
 #include <qcheckbox.h>
 #include <qspinbox.h>
+#include <qwhatsthis.h>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -51,6 +52,8 @@ AlarmDaemonCtrl::AlarmDaemonCtrl(QWidget *parent, const char *name) :
   mAutoStartCheck = new QCheckBox(
       i18n("Start alarm daemon automatically at login"), this );
   connect( mAutoStartCheck, SIGNAL( clicked() ), SLOT( changed() ) );
+  QWhatsThis::add( mAutoStartCheck,
+      i18n("Check to start the alarm daemon whenever you start a KDE session."));
   topLayout->addWidget( mAutoStartCheck );
   
   QBoxLayout *intervalLayout = new QHBoxLayout( topLayout );
@@ -61,6 +64,8 @@ AlarmDaemonCtrl::AlarmDaemonCtrl(QWidget *parent, const char *name) :
   mIntervalSpin = new QSpinBox( this );
   mIntervalSpin->setMinValue( 1 );
   connect( mIntervalSpin, SIGNAL( valueChanged( int ) ), SLOT( changed() ) );
+  QWhatsThis::add( mIntervalSpin,
+      i18n("How often (in minutes) the alarm daemon should check for alarms becoming due."));
   intervalLayout->addWidget( mIntervalSpin );
   
   topLayout->addStretch();
