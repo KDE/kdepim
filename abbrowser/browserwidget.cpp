@@ -602,7 +602,7 @@ PabWidget::PabWidget( ContactEntryList *cel,
 
   QBoxLayout *searchLayout = new QHBoxLayout( mainLayout, 2 );
 
-  QLabel *liSearch = new QLabel( "&Incremental Search", this );
+  QLabel *liSearch = new QLabel( i18n( "&Incremental Search" ), this );
   liSearch->resize( liSearch->sizeHint() );
   searchLayout->addWidget( liSearch, 0 );
 
