@@ -1,6 +1,30 @@
 KPilot Developer's notes for september 30th 2001
 ================================================
 
+2001-09-27  Adriaan de Groot
+* Added FUNCTIONSETUP everywhere.
+* Replaced email addresses with kde-pim@kde.org or groot@kde.org.
+* Removed qDebug everywhere.
+
+2001-09-26  Adriaan de Groot
+
+* Surrounded much debugging output with #ifdef DEBUG.
+* Replaced remaining calls to kdDebug() by macros with debug areas.
+* Applied indent everywhere.
+* Added some () where needed to resolve ambiguity.
+
+2001-09-25  Adriaan de Groot
+
+Wrestled with crashes (cerr << i ; debugstatement ; cerr << i ; gave
+two different values for i) caused by mixing debug conde and non-debug
+code. Discovered that qglobal.h defines DEBUG unless NO_DEBUG is 
+set. Hmph. Also found that gcc does a poor job in optimizing away 
+debugging statements with NDEBUG defined. Therefore, debugging statements
+will be once again surrounded by #ifdefs. The plan is that I'll get all
+the code formatting and this kind of silly issues out of the way in the
+next few days and then start to deal with the next problem, namely the
+existing conduits.
+
 2001-09-24  Adriaan de Groot
 * kpilot/uiDialog.{h,cc}
 * kpilot/kpilotConfigDialog.cc

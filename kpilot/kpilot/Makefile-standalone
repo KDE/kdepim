@@ -9,7 +9,7 @@ DCOPIDL=$(KDEDIR)/bin/dcopidl
 DCOPIDL2CPP=$(KDEDIR)/bin/dcopidl2cpp
 
 CXX=g++
-CXXFLAGS=-DDEBUG -DDEBUG_CERR
+CXXFLAGS=-DNDEBUG -DNO_DEBUG
 # INCLUDES=-I$(QTDIR)/include -I$(KDEDIR)/include
 #
 # Or, for stupid RH 7.1 systems:

@@ -12,3 +12,8 @@ are marked with a +, ignored issues get an o, and resolved issues a -.
 * Make pi_install_file amenable to use in a GUI program.
 * Port conduits to new setup.
 * Add malsync conduit.
+* baseConduit.cc needs lots of attention due to changed architecture,
+  as does conduitApp.cc.
+* Replace conduitSetup with a .ui based solution.
+* Document in fileInstaller.h that fileNames does not include dir name.
+* Remove more old code from hotSync.cc

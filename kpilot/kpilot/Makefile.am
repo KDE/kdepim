@@ -13,6 +13,7 @@
 
 noinst_PROGRAMS = kpilotTest kpilotConfig
 bin_PROGRAMS = kpilot kpilotDaemon
+subdirs = Icons
 
 METASOURCES = AUTO
 
@@ -20,9 +21,10 @@ INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH)
 
 ###
 ### On some platforms, such as stock RH 7.1, the KDE libraries are built without
-### kdDebug() support. You may need to add -DDEBUG_CERR to the CXXFLAGS.
+### kdDebug() support. You may need to add -DDEBUG_CERR to the CXXFLAGS, if
+### you want any debugging at all.
 ###
-CXXFLAGS+=-DDEBUG -DDEBUG_CERR
+CXXFLAGS+=-DNO_DEBUG -DNDEBUG -O3
 
 ###
 ### Non-automake variables
@@ -66,17 +68,10 @@ kpilotDaemon_LDADD	= $(LIB_KFILE) $(LIBPISOCK)
 kpilotTest_LDADD	= $(LIB_KDEUI) $(LIBPISOCK)
 kpilotConfig_LDADD      = $(LIB_KFILE)
 
-kpilotConfig_CXXADD = -DDEBUG -DDEBUG_CERR
-
 appsdir = $(kde_appsdir)/Utilities
 servicetypedir = $(kde_servicetypesdir)
 apps_DATA = kpilot.desktop kpilotdaemon.desktop
 servicetype_DATA = kpilotconduit.desktop
-
-kpiloticondir = $(kde_datadir)/kpilot/icons
-kpiloticon_ICON = backup fastsync hotsync restore
-
-KDE_ICON = kpilot
 
 rcdir = $(kde_datadir)/kpilot
 rc_DATA = kpilotui.rc
