@@ -1653,7 +1653,8 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Event *event )
              .arg( recurrence[event->recurrence()->frequency() ]);
 */
     if ( event->recurrence()->duration() > 0 ) {
-      mResult += i18n ("Repeats once\n", "Repeats %n times", event->recurrence()->duration());
+      mResult += i18n ("Repeats once", "Repeats %n times", event->recurrence()->duration());
+      mResult += '\n';
     } else {
       if ( event->recurrence()->duration() != -1 ) {
 //        mResult += i18n("Repeat until: %1")
