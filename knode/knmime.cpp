@@ -741,7 +741,7 @@ void KNMimeContent::parse()
     }
     else { //no, this doesn't look like uuencoded stuff => we treat it as "text/plain"
       ct->setMimeType("text/plain");
-      ct->setCharset("US-ASCII");
+      //ct->setCharset("US-ASCII");
       contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
    }
   }
