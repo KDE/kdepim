@@ -26,16 +26,17 @@ public:
   QString id;
   QString group;
   QString vendor;
-
+  QString library;
 };
 
 KDevice::KDevice(const QString &ident, const QString &group,
-	  const QString &vendor)
+		 const QString &vendor, const QString &library)
 {
   d = new KDevicePrivate();
   d->id = ident;
   d->group = group;
   d->vendor = vendor;
+  d->library = library;
 }
 KDevice::KDevice()
 {
@@ -63,6 +64,10 @@ QString KDevice::group() const
 QString KDevice::vendor() const
 {
   return d->vendor;
+}
+QString KDevice::library() const
+{
+  return d->library;
 }
 bool operator==(const KDevice &orig, const KDevice &dest ){
   if( orig.identify() == dest.identify() && orig.group() == dest.group() && dest.vendor() == orig.vendor() ){

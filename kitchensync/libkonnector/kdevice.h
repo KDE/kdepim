@@ -26,12 +26,13 @@ class KDevice {
  public:
   KDevice();
   KDevice(const QString &ident, const QString &group,
-	  const QString &vendor);
+	  const QString &vendor, const QString &library);
   KDevice( const KDevice & );
   ~KDevice();
   QString identify() const;
   QString group() const;
   QString vendor() const;
+  QString library() const;
   KDevice &operator=(const KDevice & );
  private:
   friend bool operator==(const KDevice &, const KDevice );

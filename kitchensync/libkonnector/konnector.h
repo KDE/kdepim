@@ -31,6 +31,7 @@
 class Kapabilities;
 class KDevice;
 class KOperations;
+class KonnectorPlugin;
 class Konnector : public QObject{
 Q_OBJECT
  public:
@@ -39,7 +40,7 @@ Q_OBJECT
   QValueList<KDevice> query(const QString &category= QString::null );
   QString /*runtime unique-dev-id*/ registerKonnector(const QString &DeviceIdentification );
   QString /*runtime unique-dev-id*/ registerKonnector(const KDevice &Device );
-  Kapabilities capabilities( const QString &udi ) const;
+  Kapabilities capabilities( const QString &udi ) ;
   void setCapabilities( const QString &udi, const Kapabilities& );
   QByteArray file( const QString &udi, const QString &path ); // this would allow some post processing
   void retrieveFile(const QString &udi, const QString &);
@@ -50,13 +51,17 @@ Q_OBJECT
   void write(const QString &udi, QValueList<KOperations> );
   void write(const QString &udi, const QString &dest, const QByteArray& ); // post processing
  signals:
-  void wantsToSync(int, int, QPtrList<KSyncEntry>);
+  void wantsToSync(QString, int, QPtrList<KSyncEntry>);
   void stateChanged(QString, bool ); // udi + state
 
  private:
   class KonnectorPrivate;
   KonnectorPrivate *d; 
+  void allDevices();
+  KonnectorPlugin* pluginByUDI(const QString &udi );
 
+ private slots:
+  void slotSync(QString, int, QPtrList<KSyncEntry> entry );
 };
 
 #endif

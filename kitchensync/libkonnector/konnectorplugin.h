@@ -37,16 +37,18 @@ Q_OBJECT
   virtual ~KonnectorPlugin() = 0;
   virtual void setUDI(const QString & ) = 0;
   virtual QString udi()const = 0;
-  virtual Kapabilities capabilities( ) const = 0 ;
+  virtual Kapabilities capabilities( )  = 0 ;
   virtual void setCapabilities( const Kapabilities &kaps ) = 0;
   virtual bool startSync() = 0;
+  virtual bool isConnected() = 0;
   virtual bool insertFile(const QString &fileName ) = 0;
+  virtual QByteArray retrFile(const QString &path ) = 0;
  public slots:
   virtual void slotWrite(const QString &, const QByteArray & ) = 0;
   virtual void slotWrite(QPtrList<KSyncEntry> ) = 0;
   virtual void slotWrite(QValueList<KOperations> ) = 0;
  signals:
-  void sync(QPtrList<KSyncEntry> ); 
+  void sync(QString, QPtrList<KSyncEntry> ); 
 };
 #endif
 
