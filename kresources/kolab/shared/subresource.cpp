@@ -84,3 +84,32 @@ int SubResource::completionWeight() const
 {
   return mCompletionWeight;
 }
+
+StorageReference::StorageReference( const QString& resource, Q_UINT32 sernum )
+  : mResource( resource ), mSerialNumber( sernum )
+{
+}
+
+StorageReference::~StorageReference()
+{
+}
+
+void StorageReference::setResource( const QString& resource )
+{
+  mResource = resource;
+}
+
+QString StorageReference::resource() const
+{
+  return mResource;
+}
+
+void StorageReference::setSerialNumber( Q_UINT32 serialNumber )
+{
+  mSerialNumber = serialNumber;
+}
+
+Q_UINT32 StorageReference::serialNumber() const
+{
+  return mSerialNumber;
+}

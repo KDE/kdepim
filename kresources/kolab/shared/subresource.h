@@ -39,6 +39,10 @@
 
 namespace Kolab {
 
+/**
+ * This class is used to store in a map from resource id to this, providing
+ * a lookup of the subresource settings.
+ */
 class SubResource {
 public:
   // This is just for QMap
@@ -73,6 +77,32 @@ private:
 };
 
 typedef QMap<QString, SubResource> ResourceMap;
+
+/**
+ * This class is used to store a mapping from the XML UID to the KMail
+ * serial number of the mail it's stored in and the resource. That provides
+ * a quick way to access the storage in KMail.
+ */
+class StorageReference {
+public:
+  // Just for QMap
+  StorageReference() {}
+
+  StorageReference( const QString& resource, Q_UINT32 sernum );
+  virtual ~StorageReference();
+
+  virtual void setResource( const QString& resource );
+  virtual QString resource() const;
+
+  virtual void setSerialNumber( Q_UINT32 serialNumber );
+  virtual Q_UINT32 serialNumber() const;
+
+private:
+  QString mResource;
+  Q_UINT32 mSerialNumber;
+};
+
+typedef QMap<QString, StorageReference> UidMap;
 
 }
 

@@ -136,6 +136,13 @@ protected:
 
   bool mSilent;
 
+  /**
+   * This is used to store a mapping from the XML UID to the KMail
+   * serial number of the mail it's stored in. That provides a quick way
+   * to access the storage in KMail.
+   */
+  UidMap mUidMap;
+
 private:
   mutable KMailConnection* mConnection;
 };
