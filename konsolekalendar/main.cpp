@@ -34,7 +34,7 @@ using namespace KCal;
 using namespace std;
 
 static const char *description = I18N_NOOP("KonsoleKalendar");
-	
+
 static KCmdLineOptions options[] =
 {
   { "help", I18N_NOOP("Prints this help"), 0 },
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
   QString option;
 
   KApplication app( false, false );
-	
+
   KalendarVariables variables;
 
   if ( args->isSet("verbose") ){
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
   if ( args->isSet("date") ) {
     option = args->getOption("date");
     if(variables.isVerbose()) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Show date info and exit: (" << option << ")" << endl;             
+      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Show date info and exit: (" << option << ")" << endl;
     }
 
     date = variables.parseDate(option);
@@ -111,11 +111,11 @@ int main(int argc, char *argv[])
   if ( args->isSet("startdate") ) {
     option = args->getOption("startdate");
     if(variables.isVerbose()){
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Shows all entries from this date 30 days or to enddate: (" << option << ")" << endl;              
+      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Shows all entries from this date 30 days or to enddate: (" << option << ")" << endl;
     }
 
     date = variables.parseDate(option);
-	
+
     variables.setStartDate(date);
   }
 
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
   if ( args->isSet("enddate") ) {
     QString option = args->getOption("enddate");
     if(variables.isVerbose()) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Shows all entries to this date: (" << option << ")" << endl;              
+      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Shows all entries to this date: (" << option << ")" << endl;
     }
 
     date = variables.parseDate(option);
@@ -145,8 +145,8 @@ int main(int argc, char *argv[])
     variables.setCalendarFile(option);
 
     if(variables.isVerbose()){
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | using calendar at: (" << variables.getCalendarFile() << ")" << endl;              
-    }    
+      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | using calendar at: (" << variables.getCalendarFile() << ")" << endl;
+    }
   } else {
     KConfig cfg( locate( "config", "korganizerrc" ) );
 
@@ -154,21 +154,21 @@ int main(int argc, char *argv[])
     KURL url( cfg.readEntry("Active Calendar") );
     if ( url.isLocalFile() ) {
       KalendarFile = url.path();
-    
+
       variables.setCalendarFile(KalendarFile);
-	
+
       if(variables.isVerbose()){
-        cout << "main.cpp::int main(int argc, char *argv[]) | Calendar file currently is " << variables.getCalendarFile() << endl;
+        kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Calendar file currently is " << variables.getCalendarFile() << endl;
       }
     } else {
-      cout << i18n("Remote files are not supported yet.") << endl;
+      kdDebug() << i18n("Remote files are not supported yet.") << endl;
     }
   }
 
   args->clear(); // Free up some memory.
 
   //variables->setCalendarFile(KalendarFile);
-	
+
   KonsoleKalendar *konsolekalendar = new KonsoleKalendar(variables);
   konsolekalendar->showInstance();
 
