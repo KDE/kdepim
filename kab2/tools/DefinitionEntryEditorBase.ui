@@ -11,7 +11,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>407</width>
+            <width>395</width>
             <height>362</height>
         </rect>
     </property>
@@ -43,21 +43,6 @@
                     <name>spacing</name>
                     <number>6</number>
                 </property>
-                <widget row="0"  column="0" >
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>TextLabel1</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>&amp;Name</string>
-                    </property>
-                    <property>
-                        <name>buddy</name>
-                        <cstring>le_name</cstring>
-                    </property>
-                </widget>
                 <widget row="1"  column="0" >
                     <class>QLabel</class>
                     <property stdset="1">
@@ -73,18 +58,37 @@
                         <cstring>le_caption</cstring>
                     </property>
                 </widget>
+                <widget row="0"  column="1" >
+                    <class>QLabel</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>l_name</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Entry name</string>
+                    </property>
+                </widget>
+                <widget row="0"  column="0" >
+                    <class>QLabel</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>TextLabel1</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Name</string>
+                    </property>
+                    <property>
+                        <name>buddy</name>
+                        <cstring>le_name</cstring>
+                    </property>
+                </widget>
                 <widget row="1"  column="1" >
                     <class>QLineEdit</class>
                     <property stdset="1">
                         <name>name</name>
                         <cstring>le_caption</cstring>
-                    </property>
-                </widget>
-                <widget row="0"  column="1" >
-                    <class>QLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>le_name</cstring>
                     </property>
                 </widget>
             </grid>
@@ -158,7 +162,7 @@
             <class>QCheckBox</class>
             <property stdset="1">
                 <name>name</name>
-                <cstring>CheckBox1</cstring>
+                <cstring>cb_list</cstring>
             </property>
             <property stdset="1">
                 <name>text</name>
@@ -169,7 +173,7 @@
             <class>QCheckBox</class>
             <property stdset="1">
                 <name>name</name>
-                <cstring>CheckBox2</cstring>
+                <cstring>cb_unique</cstring>
             </property>
             <property stdset="1">
                 <name>text</name>

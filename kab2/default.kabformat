@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kab_format>
+
+<kab-definition name="kab1">
+
+<field
+  name="URL"
+  caption="URL"
+  unique="true"
+  mimetype="text/uri"
+/>
+
+<field
+  name="additionalName"
+  caption="Additional name"
+  unique="true"   
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="address"
+  caption="Address"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="birthday"
+  caption="Birthday"
+  unique="true"
+  mimetype="date/ISO-8601"
+/>
+
+<field
+  name="comment"
+  caption="Comment"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="deliveryLabel"
+  caption="Delivery label"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="email"
+  caption="Email"
+  unique="true"
+  mimetype="address/rfc-822"
+/>
+
+<field
+  name="email2"
+  caption="Email two"
+  unique="true"
+  mimetype="address/rfc-822"
+/>
+
+<field
+  name="email3"
+  caption="Email three"
+  unique="true"
+  mimetype="address/rfc-822"
+/>
+
+<field
+  name="emails"
+  caption="Email list"
+  unique="true"
+  mimetype="address/rfc-822"
+  list="true"
+/>
+
+<field
+  name="fax"
+  caption="Fax"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="firstname"
+  caption="First name"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="fn"
+  caption="Full name"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="keywords"
+  caption="Keywords"
+  unique="true"
+  mimetype="text/UCS-2"
+  list="true"
+/>
+
+<field
+  name="modem"
+  caption="Modem"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="name"
+  caption="Name"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="namePrefix"
+  caption="Name prefix"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="org"
+  caption="Organization"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="orgSubUnit"
+  caption="Organizational sub-unit"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field name="orgUnit"
+  caption="Organizational unit"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="role"
+  caption="Rôle"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field name="talk"
+  caption="Talk address"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="telephone"
+  caption="Telephone"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="title"
+  caption="Title"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+<field
+  name="town"
+  caption="Town"
+  unique="true"
+  mimetype="text/UCS-2"
+/>
+
+</kab-definition>

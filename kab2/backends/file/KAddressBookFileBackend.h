@@ -24,8 +24,9 @@
 // KDE includes
 #include <klibloader.h>
 
-#include "KAddressBookBackend.h"
-#include "Entry.h"
+#include <kab2/Entry.h>
+
+#include <kab2/KAddressBookBackend.h>
 
 class KAddressBookFileBackendFactory : public KLibFactory
 {

@@ -28,14 +28,16 @@
 #include <qtextstream.h>
 
 // KDE includes
+#include <kdebug.h>
 #include <kinstance.h>
 #include <kurl.h>
 
 // Local includes
+#include <kab2/Command.h>
+#include <kab2/Entry.h>
+#include <kab2/Field.h>
+
 #include "KAddressBookFileBackend.h"
-#include "Command.h"
-#include "Entry.h"
-#include "Field.h"
 
 KAddressBookFileBackendFactory::KAddressBookFileBackendFactory
 (
@@ -87,7 +89,7 @@ KAddressBookFileBackend::KAddressBookFileBackend
 
   if (!dirsOk)
   {
-    qDebug("Cannot create dirs. I'm broken.");
+    kdDebug() << "Cannot create dirs. I'm broken." << endl;
     return;
   }
 
@@ -103,23 +105,23 @@ KAddressBookFileBackend::~KAddressBookFileBackend()
   void
 KAddressBookFileBackend::runCommand(KAB::Command * baseCommand)
 {
-  qDebug("KAddressBookFileBackend::runCommand()");
+  kdDebug() << "KAddressBookFileBackend::runCommand()" << endl;
 
   switch (baseCommand->type())
   {
     case KAB::CommandTypeEntry:
       {
-        qDebug("CommandTypeEntry");
+        kdDebug() << "CommandTypeEntry" << endl;
 
         KAB::CommandEntry * c(static_cast<KAB::CommandEntry *>(baseCommand));
 
-        qDebug("Doing index.find()");
+        kdDebug() << "Doing index.find()" << endl;
 
         QStringList::Iterator it(index_.find(c->entryID()));
 
         if (index_.end() == it)
         {
-          qDebug("**** KAddressBookFileBackend: can't find entry");
+          kdDebug() << "KAddressBookFileBackend: can't find entry" << endl;
           c->setEntry(KAB::Entry());
         }
         else
@@ -128,11 +130,12 @@ KAddressBookFileBackend::runCommand(KAB::Command * baseCommand)
 
           if (e.isNull())
           {
-            qDebug("**** KAddressBookFileBackend: entry read is null!");
+            kdDebug() << "KAddressBookFileBackend: entry read is null!" << endl;
           }
           else
           {
-            qDebug("**** KAddressBookFileBackend: entry is ok at this end");
+            kdDebug() << "KAddressBookFileBackend: entry is ok at this end"
+              << endl;
           }
           c->setEntry(e);
         }
@@ -142,7 +145,7 @@ KAddressBookFileBackend::runCommand(KAB::Command * baseCommand)
       break;
 
     case KAB::CommandTypeContains:
-      qDebug("CommandTypeContains");
+      kdDebug() << "CommandTypeContains" << endl;
       {
         KAB::CommandContains * c =
           static_cast<KAB::CommandContains *>(baseCommand);
@@ -154,7 +157,7 @@ KAddressBookFileBackend::runCommand(KAB::Command * baseCommand)
       break;
 
     case KAB::CommandTypeInsert:
-      qDebug("CommandTypeInsert");
+      kdDebug() << "CommandTypeInsert";
       {
         KAB::CommandInsert * c =
           static_cast<KAB::CommandInsert *>(baseCommand);
@@ -175,7 +178,7 @@ KAddressBookFileBackend::runCommand(KAB::Command * baseCommand)
       break;
 
     case KAB::CommandTypeRemove:
-      qDebug("CommandTypeRemove");
+      kdDebug() << "CommandTypeRemove" << endl;
       {
         KAB::CommandRemove * c =
           static_cast<KAB::CommandRemove *>(baseCommand);
@@ -195,12 +198,12 @@ KAddressBookFileBackend::runCommand(KAB::Command * baseCommand)
       break;
 
     case KAB::CommandTypeReplace:
-      qDebug("CommandTypeReplace");
+      kdDebug() << "CommandTypeReplace" << endl;
       {
         KAB::CommandReplace * c =
           static_cast<KAB::CommandReplace *>(baseCommand);
 
-        qDebug("STUB");
+        kdDebug() << "STUB" << endl;
 
         c->setSuccess(false);
 
@@ -209,23 +212,25 @@ KAddressBookFileBackend::runCommand(KAB::Command * baseCommand)
       break;
 
     case KAB::CommandTypeEntryList:
-      qDebug("CommandTypeEntryList");
+      kdDebug() << "CommandTypeEntryList" << endl;
       {
         KAB::CommandEntryList * c =
           static_cast<KAB::CommandEntryList *>(baseCommand);
 
-        qDebug("Setting entry list to index, which has %d entries", index_.count());
+        kdDebug() << "Setting entry list to index, which has "
+          << index_.count() << " entries" << endl;
+
         c->setEntryList(index_);
 
-        qDebug("Completed entry list");
-        qDebug("Emitting commandComplete");
+        kdDebug() << "Completed entry list" << endl;
+        kdDebug() << "Emitting commandComplete" << endl;
         emit(commandComplete(c));
       }
       break;
 
     default:
 
-      qDebug("Unknown command type");
+      kdDebug() << "Unknown command type" << endl;
 
       break;
   }
@@ -236,27 +241,34 @@ KAddressBookFileBackend::_checkDirs()
 {
   QDir base(path());
 
-  qDebug("KAddressBookFileBackend::_checkDirs(): path == %s", path().ascii());
+  kdDebug() << "KAddressBookFileBackend::_checkDirs(): path == "
+    << path() << endl;
 
   if (!base.exists())
-    if (!base.mkdir(path())) {
-      cerr << "Could not create dir `" + path() + "' - exiting" << endl;
+    if (!base.mkdir(path()))
+    {
+      kdDebug() << "Could not create dir `" + path() + "' - exiting" << endl;
       return false;
     }
 
   QDir tmp(path() + "/tmp");
   
   if (!tmp.exists())
-    if (!tmp.mkdir(path() + "/tmp")) {
-      cerr << "Could not create dir `" + path() + "/tmp' - exiting" << endl;
+    if (!tmp.mkdir(path() + "/tmp"))
+    {
+      kdDebug() << "Could not create dir `" + path() + "/tmp' - exiting"
+        << endl;
+
       return false;
     }
 
   QDir entries(path() + "/entries");
   
   if (!entries.exists())
-    if (!entries.mkdir(path() + "/entries")) {
-      cerr << "Could not create dir `" + path() + "/entries' - exiting" << endl;
+    if (!entries.mkdir(path() + "/entries"))
+    {
+      kdDebug() << "Could not create dir `" + path() + "/entries' - exiting"
+        << endl;
       return false;
     }
 
@@ -276,23 +288,27 @@ KAddressBookFileBackend::_initIndex()
   bool
 KAddressBookFileBackend::_writeEntry(const KAB::Entry & e)
 {
-  qDebug("KAddressBook::_writeEntry()");
+  kdDebug() << "KAddressBook::_writeEntry()" << endl;
+
   QString filename = path() + "/tmp" + e.id();
 
   QFile f(filename);
 
-  if (f.exists()) {
-    qDebug("File `" + filename + "' exists");
+  if (f.exists())
+  {
+    kdDebug() << "File `" << filename << "' exists" << endl;
     usleep(2000);
   }
 
-  if (f.exists()) {
-    qDebug("File `" + filename + "' still exists");
+  if (f.exists())
+  {
+    kdDebug() << "File `" << filename << "' still exists" << endl;
     return false;
   }
 
-  if (!f.open(IO_WriteOnly)) {
-    qDebug("Couldn't open file `" + filename + "' for writing");
+  if (!f.open(IO_WriteOnly))
+  {
+    kdDebug() << "Couldn't open file `" << filename << "' for writing" << endl;
     return false;
   }
 
@@ -300,7 +316,7 @@ KAddressBookFileBackend::_writeEntry(const KAB::Entry & e)
 
   e.insertInDomTree(doc, doc);
 
-  qDebug("Doc as string: %s", doc.toString().ascii());
+  kdDebug() << "Doc as string: " << doc.toString() << endl;
 
   QTextStream str(&f);
 
@@ -309,8 +325,9 @@ KAddressBookFileBackend::_writeEntry(const KAB::Entry & e)
   f.flush();
   f.close();
 
-  if (f.status() != IO_Ok) {
-    qDebug("Couldn't flush file `" + filename + "'");
+  if (f.status() != IO_Ok)
+  {
+    kdDebug() << "Couldn't flush file `" << filename << "'" << endl;
     f.remove();
     return false;
   }
@@ -318,8 +335,8 @@ KAddressBookFileBackend::_writeEntry(const KAB::Entry & e)
   QString linkTarget(path() + "/entries/" + e.id());
 
   if (::link(QFile::encodeName(filename), QFile::encodeName(linkTarget)) != 0) {
-    qDebug("Couldn't successfully link `" + filename +
-      "' to `" + linkTarget + "' - giving up");
+    kdDebug() << "Couldn't successfully link `" 
+      << filename  << "' to `"  << linkTarget << "' - giving up" << endl;
     return false;
   }
 
@@ -334,13 +351,15 @@ KAddressBookFileBackend::_readEntry(const QString & id) const
   QString filename = path() + "/entries/" + id;
   QFile f(filename);
 
-  if (!f.exists()) {
-    qDebug("File `" + filename + "' does not exist");
+  if (!f.exists())
+  {
+    kdDebug() << "File `" << filename << "' does not exist" << endl;
     return KAB::Entry();
   }
   
-  if (!f.open(IO_ReadOnly)) {
-    qDebug("Couldn't open `" + filename + "' for reading");
+  if (!f.open(IO_ReadOnly))
+  {
+    kdDebug() << "Couldn't open `" << filename << "' for reading" << endl;
     return KAB::Entry();
   }
   
@@ -348,7 +367,7 @@ KAddressBookFileBackend::_readEntry(const QString & id) const
 
   if (!doc.setContent(&f))
   {
-    qDebug("Couldn't set content to `" + filename + "'");
+    kdDebug() << "Couldn't set content to `" << filename << "'" << endl;
     return KAB::Entry();
   }
 
@@ -356,13 +375,13 @@ KAddressBookFileBackend::_readEntry(const QString & id) const
 
   if (docElem.isNull())
   {
-    qDebug("Can't parse file `" + filename + "'");
+    kdDebug() << "Can't parse file `" << filename << "'" << endl;
     return KAB::Entry();
   }
 
   if (docElem.tagName() != "kab:entry")
   {
-    qDebug("Can't parse file `" + filename + "'");
+    kdDebug() << "Can't parse file `" << filename << "'" << endl;
     return KAB::Entry();
   }
 

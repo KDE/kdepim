@@ -1,1 +1,1 @@
-SUBDIRS = file ldap # gdbm
+SUBDIRS = file # ldap gdbm
