@@ -212,7 +212,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 }
   else
     showKeyApprovalDlg = 0;
-    
+
   topLayout->addWidget( mpOptionsGroupBox );
 
   topLayout->addStretch(1);
@@ -381,6 +381,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
     connect( mListView, SIGNAL( selectionChanged( QListViewItem* ) ),
              this,      SLOT( slotSelectionChanged( QListViewItem* ) ) );
   }
+  connect( mListView, SIGNAL( doubleClicked ( QListViewItem *, const QPoint &, int ) ), this, SLOT( accept() ) );
 
   connect( mListView, SIGNAL( contextMenuRequested( QListViewItem*,
                                                     const QPoint&, int ) ),
@@ -596,7 +597,7 @@ QString KeySelectionDialog::beautifyFingerprint( const QCString& fpr ) const
   else { // unknown length of fingerprint
     result = fpr;
   }
-   
+
   return result;
 }
 
@@ -1118,7 +1119,7 @@ void KeySelectionDialog::filterByKeyIDOrUID( const QString & str )
     item->setVisible( item->text( 0 ).upper().startsWith( str )
 		      || rx.search( item->text( 1 ) ) >= 0
 		      || anyChildMatches( item, rx ) );
-  
+
 }
 
 void KeySelectionDialog::filterByUID( const QString & str )
