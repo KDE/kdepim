@@ -180,6 +180,13 @@ public:
   virtual int numberOfDayInYear (const QDate & date) = 0;
 
     /**
+     Gets the day of the week traditionaly associated with pray
+
+     @return day number 
+    */
+  virtual int weekDayOfPray () = 0;
+
+    /**
      Just a small debugging test ;)
     */
   virtual void printType () = 0;
@@ -214,6 +221,8 @@ public:
   int maxValidYear ();
   int day (const QDate & date);
   int numberOfDayInYear (const QDate & date);
+  virtual int weekDayOfPray ();
+
   void printType ();
 };
 

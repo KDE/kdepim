@@ -45,6 +45,7 @@ class KCalendarSystemHijri : public KCalendarSystem
     int day(const QDate& date);
     int month(const QDate& date);
     int numberOfDayInYear(const QDate& date) ;
+    int weekDayOfPray();
     void printType();
 
   private:

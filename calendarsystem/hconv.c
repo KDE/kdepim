@@ -22,12 +22,12 @@
 #define RPD     (0.01745329251994329577) /* radians per degree (pi/180) */
 
 const char	*dow[]= {
-	"Yaumul Ithnain", " Yaumu Zulatha", " Yaumul Arbi'a",
-	"Yaumul Khamees", "Yaumul Jumma", "Yaumu Sabt", "Yaumul Ahad"
+	"Yaum al-Ithnain", " Yau al-Thulatha", " Yaum al-Arbi'a",
+	"Yaum al-Khamees", "Yaum al-Jumma", "Yaum al-Sabt", "Yaum al-Ahad"
 };
 
 const char *sdow[] = {
-	 "Ith", "Zul", "Arb", "Kha", "Jum", "Sab", "Ahd"
+	 "Ith", "Thl", "Arb", "Kha", "Jum", "Sab", "Ahd"
 };
 
 const char	*mname[]= {
@@ -39,13 +39,13 @@ const char	*mname[]= {
 const char  *hmname[] = {
 	"Muharram", "Safar", "Rabi` al-Awal", "Rabi` al-Thaani",
 	"Jumaada al-Awal", "Jumaada al-Thaani", "Rajab", "Sha`ban",
-	"Ramadan", "Shawwal", "Zul al-Qi`dah", "Zul al-Hijjah"
+	"Ramadan", "Shawwal", "Thu al-Qi`dah", "Thu al-Hijjah"
 };
 
 const char  *hmnameshort[] = {
 	"Muharram", "Safar", "R. Awal", "R. Thaani",
 	"J. Awal", "J. Thaani", "Rajab", "Sha`ban",
-	"Ramadan", "Shawwal", "Z. Qi`dah", "Z. Hijjah"
+	"Ramadan", "Shawwal", "Qi`dah", "Hijjah"
 };
 /*
  * Given an integer _n_ and a phase selector (nph=0,1,2,3 for

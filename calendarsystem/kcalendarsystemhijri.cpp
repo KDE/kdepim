@@ -356,6 +356,9 @@ int KCalendarSystemHijri::numberOfDayInYear(const QDate& date)
   return day;
 }
 
+int KCalendarSystemHijri::weekDayOfPray() {
+   return 5; // friday
+}
 void KCalendarSystemHijri::printType()
 {
   kdDebug(5400) << "It's hijri!" << endl;

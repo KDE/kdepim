@@ -204,6 +204,10 @@ int KCalendarSystemGregorian::numberOfDayInYear(const QDate& date)
   return date.dayOfYear();
 }
 
+int KCalendarSystemGregorian::weekDayOfPray() {
+   return 7; // sunday
+}
+
 void KCalendarSystemGregorian::printType()
 {
   kdDebug(5400) << "It's Gregorian!" << endl;
