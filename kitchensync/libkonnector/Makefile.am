@@ -2,7 +2,7 @@
 
 lib_LTLIBRARIES= libksharedfile.la
 
-INCLUDES = $(all_includes) -I$(top_srcdir)/kitchensync/lib
+INCLUDES = -I$(top_srcdir)/kitchensync/lib $(all_includes)
 
 libksharedfile_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -version-info 0:0 -no-undefined
 libksharedfile_la_LIBADD = $(top_builddir)/kitchensync/lib/libksyncentries.la  $(LIB_KDECORE) $(LIB_QT) 
