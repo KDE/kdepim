@@ -24,7 +24,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <klocale.h>
 #include <ksimpleconfig.h>
 #include <kurl.h>

@@ -26,7 +26,7 @@
 #define _ALARMAPP_H
 // $Id$
 
-#include <kuniqueapp.h>
+#include <kuniqueapplication.h>
 
 class AlarmDaemon;
 

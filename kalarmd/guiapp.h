@@ -26,7 +26,7 @@
 #define _GUIAPP_H
 // $Id$
 
-#include <kuniqueapp.h>
+#include <kuniqueapplication.h>
 
 class AlarmGui;
 
