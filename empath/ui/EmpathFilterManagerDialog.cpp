@@ -182,7 +182,7 @@ EmpathFilterManagerDialog::s_addFilter()
 	EmpathFilterEditDialog filterEditDialog(newFilter,
 			this, "filterEditDialog");
 	
-	if (filterEditDialog.exec() == Cancel) {
+	if (filterEditDialog.exec() != QDialog::Accepted) {
 		empathDebug("Deleting unwanted filter");
 		delete newFilter;
 		return;
@@ -208,7 +208,7 @@ EmpathFilterManagerDialog::s_editFilter()
 	EmpathFilterEditDialog filterEditDialog(editedFilter,
 			this, "filterEditDialog");
 
-	if (filterEditDialog.exec() == Cancel) return;
+	if (filterEditDialog.exec() != QDialog::Accepted) return;
 	
 	update();
 }

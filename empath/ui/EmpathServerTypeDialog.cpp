@@ -156,13 +156,13 @@ EmpathServerTypeDialog::EmpathServerTypeDialog(
 	void
 EmpathServerTypeDialog::s_OK()
 {
-	done(OK);
+	accept();
 }
 
 	void
 EmpathServerTypeDialog::s_Cancel()
 {
-	done(Cancel);
+	reject();
 }
 
 	void

@@ -63,7 +63,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	QLineEdit	tempLineEdit((QWidget *)0);
 	Q_UINT32 h	= tempLineEdit.sizeHint().height();
 
-	rgb_queuing_	= new RikGroupBox(i18n("Queuing"), 8, this, "rgb_queuing");
+	rgb_queuing_	= new RikGroupBox(i18n("Queue and Store"), 8, this, "rgb_queuing");
 	CHECK_PTR(rgb_queuing_);
 	
 	rgb_server_	= new RikGroupBox(i18n("Server"), 8, this, "rgb_server");
@@ -96,6 +96,18 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	fcw_queueFolder_ =
 		new EmpathFolderChooserWidget(w_queuing_, "fcw_queueFolder");
 	CHECK_PTR(fcw_queueFolder_);
+	
+	// Sent mail
+	
+	l_sentFolder_ =
+		new QLabel(i18n("Sent mail folder"), w_queuing_, "l_sentFolder");
+	CHECK_PTR(l_sentFolder_);
+	
+	l_sentFolder_->setFixedHeight(h);
+	
+	fcw_sentFolder_ =
+		new EmpathFolderChooserWidget(w_queuing_, "fcw_sentFolder");
+	CHECK_PTR(fcw_sentFolder_);
 	
 	// Server
 
@@ -390,15 +402,17 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	topLevelLayout_				= new QGridLayout(this, 4, 1, 10, 10);
 	CHECK_PTR(topLevelLayout_);
 
-	topLevelLayout_->setRowStretch(0, 1);
+	topLevelLayout_->setRowStretch(0, 2);
 	topLevelLayout_->setRowStretch(1, 3);
 	topLevelLayout_->setRowStretch(2, 2);
 
-	queuingGroupLayout_		= new QGridLayout(w_queuing_,	1, 2, 0, 10);
+	queuingGroupLayout_		= new QGridLayout(w_queuing_,	2, 2, 0, 10);
 	CHECK_PTR(queuingGroupLayout_);
 	
 	queuingGroupLayout_->addWidget(l_queueFolder_,		0, 0);
 	queuingGroupLayout_->addWidget(fcw_queueFolder_,	0, 1);
+	queuingGroupLayout_->addWidget(l_sentFolder_,		1, 0);
+	queuingGroupLayout_->addWidget(fcw_sentFolder_,		1, 1);
 	
 	queuingGroupLayout_->activate();
 

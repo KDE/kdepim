@@ -55,6 +55,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 {
 	parent_ = (EmpathMainWindow *)parent;
 	wantScreenUpdates_ = false;
+	setMultiSelection(true);
 	
 	maybeDrag_ = false;
 	
@@ -239,6 +240,7 @@ EmpathMessageListWidget::addItem(EmpathIndexRecord * item)
 		CHECK_PTR(newItem);
 		empathDebug("Created OK");
 	}
+	itemList_.append(newItem);
 
 	setStatus(newItem, item->status());
 }
@@ -273,43 +275,54 @@ EmpathMessageListWidget::firstSelectedMessage()
 	return u;
 }
 
-// Message menu slots
+	void
+EmpathMessageListWidget::mark(RMM::MessageStatus status)
+{
+	empathDebug("mark() called");
+	// Don't bother auto-marking this as the user's done it.
+	markAsReadTimer_->cancel();
+	
+	EmpathURL u(url_.mailboxName(), url_.folderPath(), QString::null);
+	
+	EmpathTask * t(empath->addTask("Marking messages"));
+	t->setMax(itemList_.count());
+	
+	QListIterator<EmpathMessageListItem> it(itemList_);
+	
+	for (; it.current(); ++it) {
+	
+		t->doneOne();
 
+		if (!it.current()->isSelected())
+			continue;
+
+		u.setMessageID(it.current()->id());
+	
+		if (empath->mark(u,
+				RMM::MessageStatus(it.current()->status() ^ status)))
+			setStatus(it.current(),
+				RMM::MessageStatus(it.current()->status() ^ status));
+	}
+	t->done();
+
+}
 
 	void
 EmpathMessageListWidget::s_messageMark()
 {
-	empathDebug("s_messageMark() called");
-	if (currentItem() == 0) return;
-	EmpathMessageListItem * item = (EmpathMessageListItem *)currentItem();
-	EmpathURL u = EmpathURL(url_.mailboxName(), url_.folderPath(), item->id());
-	if (empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Marked))) {
-		setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Marked));
-	}
+	mark(RMM::Marked);
 }
 
 	void
 EmpathMessageListWidget::s_messageMarkRead()
 {
-	empathDebug("s_messageMark() called");
-	if (currentItem() == 0) return;
-	EmpathMessageListItem * item = (EmpathMessageListItem *)currentItem();
-	EmpathURL u = EmpathURL(url_.mailboxName(), url_.folderPath(), item->id());
-	if (empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Read))) {
-		setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Read));
-	}
+	mark(RMM::Read);
 }
 
 	void
 EmpathMessageListWidget::s_messageMarkReplied()
 {
-	empathDebug("s_messageMark() called");
-	if (currentItem() == 0) return;
-	EmpathMessageListItem * item = (EmpathMessageListItem *)currentItem();
-	EmpathURL u = EmpathURL(url_.mailboxName(), url_.folderPath(), item->id());
-	if (empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Replied))) {
-		setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Replied));
-	}
+	mark(RMM::Replied);
 }
 
 	void
@@ -544,7 +557,6 @@ EmpathMessageListWidget::setSignalUpdates(bool yn)
 	void
 EmpathMessageListWidget::markAsRead(EmpathMessageListItem * item)
 {
-	RMM::MessageStatus status(item->status());
 	EmpathURL u = EmpathURL(url_.mailboxName(), url_.folderPath(), item->id());
 	if (empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Read))) {
 		setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Read));
@@ -627,6 +639,7 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 			EmpathMessageListItem * newItem =
 				new EmpathMessageListItem(this, *it.current());
 			CHECK_PTR(newItem);
+			itemList_.append(newItem);
 			setStatus(newItem, it.current()->status());
 			t->doneOne();
 		}
@@ -636,6 +649,7 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 			c->readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true));
 		
 		setUpdatesEnabled(true);
+		triggerUpdate();
 		t->done();
 		
 		emit(showing());
@@ -659,12 +673,13 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	// don't want to do it so often. Therefore we do it every 10 times that
 	// we've had to do a processEvents().
 	
-	setUpdatesEnabled(false);
 	
 	QTime begin(QTime::currentTime());
 	QTime begin2(begin);
 	QTime now;
 	
+	setUpdatesEnabled(false);
+
 	for (; mit.current(); ++mit) {
 		
 		empathDebug("in s_showFolder() mit.current()->status == " +
@@ -691,10 +706,11 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	setSorting(
 		c->readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 3), sortType_);
 	
+	setUpdatesEnabled(true);
+	triggerUpdate();
+	
 	emit(showing());
 	t->done();
-
-	setUpdatesEnabled(true);
 }
 
 	void
@@ -804,9 +820,42 @@ EmpathMarkAsReadTimer::s_timeout()
 
 	parent_->markAsRead(item_);	
 }
+
+	bool
+EmpathMessageListWidget::eventFilter(QObject * o, QEvent * e)
+{
+	if (!o || !e)
+		return false;
+	
+	QMouseEvent * me = (QMouseEvent *) e;
+	
+	switch (me->type()) {
+		
+		case QEvent::MouseButtonPress:
+			mousePressEvent(me);
+			return true;
+			break;
+			
+		case QEvent::MouseButtonRelease:
+			mouseReleaseEvent(me);
+			return true;
+			break;
+
+		case QEvent::MouseMove:
+			mouseMoveEvent(me);
+			return true;
+			break;
+
+		default:
+			break;
+	}
+	return QListView::eventFilter(o, e);
+}
+
 	void
 EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 {
+	empathDebug("MOUSE PRESS EVENT");
 	// Ok, here's the method:
 	// 
 	// CASE 0:
@@ -940,17 +989,14 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 		
 		setMultiSelection(true);
 		
+		
 		if (!(e->state() & ControlButton)) {
 			
 			// CASE 5:
 			// Control button has not been held, so we must clear the
 			// selection.
-			
+			empathDebug("CASE 5");
 			clearSelection();
-			
-		} else {
-			
-			lastSelected_ = item;
 		}
 			
 		QListViewItem * i = lastSelected_;
@@ -976,8 +1022,16 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 			}
 		}
 
-		item->setSelected(true);
+		if (e->state() & ControlButton) {
+			
+			empathDebug("CASE 7");
+			lastSelected_ = item;
+		}
+
+		setSelected(item, true);
+		return;
 	}
+	QListView::contentsMousePressEvent(e);
 }
 
 	void
@@ -990,7 +1044,13 @@ EmpathMessageListWidget::mouseReleaseEvent(QMouseEvent *)
 EmpathMessageListWidget::mouseMoveEvent(QMouseEvent * e)
 {
 	empathDebug("Mouse move event in progress");
-	if (!maybeDrag_) return;
+	
+	return; // We're broken. Sod it.
+	
+	if (!maybeDrag_) {
+		QListView::contentsMouseMoveEvent(e);
+		return;
+	}
 	
 	empathDebug("We may be dragging");
 	
@@ -1003,6 +1063,7 @@ EmpathMessageListWidget::mouseMoveEvent(QMouseEvent * e)
 	
 	if ((deltax + deltay) < 30) { // FIXME: Hardcoded
 		// Ignore, we haven't moved the cursor far enough.
+		QListView::contentsMouseMoveEvent(e);
 		return;
 	}
 	
@@ -1014,6 +1075,7 @@ EmpathMessageListWidget::mouseMoveEvent(QMouseEvent * e)
 	
 	if (item == 0) {
 		empathDebug("Not over anything to drag");
+		QListView::contentsMouseMoveEvent(e);
 		return;
 	}
 	
@@ -1029,5 +1091,74 @@ EmpathMessageListWidget::mouseMoveEvent(QMouseEvent * e)
 	
 	empathDebug("Starting the drag copy");
 	u->dragCopy();
+	QWidget::mouseMoveEvent(e);
+}
+
+	void
+EmpathMessageListWidget::selectTagged()
+{
+	clearSelection();
+	setMultiSelection(true);
+	setUpdatesEnabled(false);
+	wantScreenUpdates_ = false;
+
+	QListIterator<EmpathMessageListItem> it(itemList_);
+	
+	for (; it.current(); ++it)
+		if (it.current()->status() & RMM::Marked)
+			it.current()->setSelected(true);
+	wantScreenUpdates_ = true;
+	setUpdatesEnabled(true);
+	triggerUpdate();
+}
+
+	void
+EmpathMessageListWidget::selectRead()
+{
+	clearSelection();
+	setMultiSelection(true);
+	setUpdatesEnabled(false);
+	wantScreenUpdates_ = false;
+
+	QListIterator<EmpathMessageListItem> it(itemList_);
+	
+	for (; it.current(); ++it)
+		if (it.current()->status() & RMM::Read)
+			it.current()->setSelected(true);
+	wantScreenUpdates_ = true;
+	setUpdatesEnabled(true);
+	triggerUpdate();
+}
+
+	void
+EmpathMessageListWidget::selectAll()
+{
+	setMultiSelection(true);
+	setUpdatesEnabled(false);
+	QListIterator<EmpathMessageListItem> it(itemList_);
+	wantScreenUpdates_ = false;
+	
+	for (; it.current(); ++it)
+		it.current()->setSelected(true);
+	wantScreenUpdates_ = true;
+	setUpdatesEnabled(true);
+	triggerUpdate();
+}	
+
+	void
+EmpathMessageListWidget::selectInvert()
+{
+	clearSelection();
+	setMultiSelection(true);
+	setUpdatesEnabled(false);
+	wantScreenUpdates_ = false;
+
+	QListIterator<EmpathMessageListItem> it(itemList_);
+	
+	for (; it.current(); ++it)
+		it.current()->setSelected(!it.current()->isSelected());
+	wantScreenUpdates_ = true;
+	setUpdatesEnabled(true);
+	triggerUpdate();
 }
 

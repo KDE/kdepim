@@ -310,7 +310,7 @@ EmpathMatchPropertiesDialog::s_OK()
 		matcher_->setMatchExpr(le_exprHeader_->text());
 	}
 	
-	done(OK);
+	accept();
 }
 
 	EmpathMatcher *
@@ -323,7 +323,7 @@ EmpathMatchPropertiesDialog::matcher()
 EmpathMatchPropertiesDialog::s_cancel()
 {
 	empathDebug("s_cancel() called");
-	done(Cancel);
+	reject();
 }
 	
 	void

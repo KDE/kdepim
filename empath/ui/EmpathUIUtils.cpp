@@ -25,6 +25,7 @@
 
 // Local includes
 #include "EmpathUIUtils.h"
+#include "EmpathConfig.h"
 #include "Empath.h"
 
 	QPixmap

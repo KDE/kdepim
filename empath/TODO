@@ -1,9 +1,26 @@
 Things you might want to VOLUNTEER for :)
 
-* Test sendmail sending. Add user feedback.
-* Test qmail sending. Add user feedback.
-* Implement simple (to one host) SMTP sending.
+Highest priority first.
+
+* Drag and drop - Working on this but I need HELP ! It's not working right !
+
+* Test sendmail and qmail sending. Queuing and sending is broken today. I'm
+  working on it but I'd like help. Add user feedback.
+
+* kioslaves need to be worked in for POP, IMAP, and possibly SMTP (where a
+  kioslave would have to be written !)
   
+* Find a way to both use a message cache, AND allow messages larger than the
+  maximum size for the cache. If I limit the cache to 1Mb to keep mem usage down
+  then I also end up refusing to show large messages ! If I resize the cache,
+  and then set it back down, the message will be deleted !
+ 
+* Use an OpenPart for the mail editor.
+
+* Come up with an intelligent solution to the password storage problem.
+
+* Implement simple (to one host) SMTP sending.
+
 * EmpathComposeWidget uses the fancy Netscape-alike thing where when you add
   headers, more widgets are created. What needs to happen is that when the user
   uses header names that aren't in the order of the base list, next time they
@@ -12,38 +29,17 @@ Things you might want to VOLUNTEER for :)
   remember that they wanted Reply-To: next and next time when they press enter
   after To:, they get Reply-To:
 
-* kioslaves need to be worked in for POP, IMAP, and possibly SMTP (where a
-  kioslave would have to be written !)
-
-* Find a way to both use a message cache, AND allow messages larger than the
-  maximum size for the cache. If I limit the cache to 1Mb to keep mem usage down
-  then I also end up refusing to show large messages ! If I resize the cache,
-  and then set it back down, the message will be deleted !
-
-* Come up with an intelligent solution to the password storage problem.
-
-* Sort out a way to rearrange the widgets in the main window. I might be doing
-  a konqueror style thing, but I can't really allow more than one of each of
-  FolderWidget, MessageListWidget and MessageViewWidget. They need to be
-  connected via signals and slots to update each other.
-  
-* Drag and drop - Working on this
-
 ===============================================================================
-Little things I need to do:
-
-* Make folder widgets set totals correctly.
-
-* Implement cut/copy/paste etc in editor. How ? I should be using an OpenPart
-  editor.
+Little things I need to do. Highest priority first.
 
 * Make reply to all work.
 
-* Make forwarding work properly. If only one plain body part -> just
-  add some text stating this is forwarded, else attach as message/rfc822 ?
-
 * Allow user to save, print etc the various parts of a message. When pressing
   'Message->Print', ask which part they want to print, unless there's only one.
+  EmpathMessageStructureWidget will be useful for this.
+
+* Make forwarding work properly. If only one plain body part -> just
+  add some text stating this is forwarded, else attach as message/rfc822 ?
 
 * Fix external editor.
 
@@ -52,8 +48,3 @@ Little things I need to do:
 * Make From: bit in header view widget active as HTML label - basically need
   some way to be able to mail to or add to non-existant address book.
 
-* Sod the 'View source' things, and simply allow switching to source view,
-  but only in the view window.
-
-* Fix the right-button-menu on the folder list. Tag -> Untag == OK. Mark as
-  read and replied don't seem to change for some reason unbeknownest to me.

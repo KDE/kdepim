@@ -79,18 +79,3 @@ EmpathIndex::sync()
 	folder_->update();
 }
 
-	void
-EmpathIndex::parseNewMail(EmpathMessageList * tempMessageList)
-{
-}
-
-	QString
-EmpathIndex::asString() const
-{
-	QString tempString;
-	EmpathIndexIterator it(*this);
-	for (; it.current(); ++it)
-		tempString += it.current()->id();
-	return tempString;
-}
-

@@ -160,7 +160,7 @@ EmpathConfigMaildirDialog::s_OK()
 	mailbox_->saveConfig();
 	
 	// That's it
-	done(OK);
+	accept();
 }
 
 	void
@@ -177,7 +177,7 @@ EmpathConfigMaildirDialog::fillInSavedData()
 	void
 EmpathConfigMaildirDialog::s_Cancel()
 {
-	done(Cancel);
+	reject();
 }
 
 	void

@@ -19,6 +19,10 @@
 */
 
 #include <RMM_Utility.h>
+#include <RMM_Defines.h>
+
+static const char * B64Chars =
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 	QCString
 RToCrLfEol(const QCString & in)
@@ -49,40 +53,7 @@ RToLocalEol(const QCString & in)
 }
 
 	QCString
-REncodeBase64(const QCString & in)
-{
-	QCString s;
-	return in;
-}
-
-	QCString
-RDecodeBase64(const QCString & in)
-{
-	QCString s;
-	return in;
-}
-
-	QCString
-REncodeQuotedPrintable(const QCString & in)
-{
-	QCString s;
-	return in;
-}
-
-	QCString
-RDecodeQuotedPrintable(const QCString & in)
-{
-	QCString s;
-	return in;
-}
-
-
-/*
-static const char * base64table =
-	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-	QCString
-encodeBase64(const QCString & input)
+REncodeBase64(const QCString & input)
 {
 	QCString out;
 
@@ -105,25 +76,25 @@ encodeBase64(const QCString & input)
 		}
 		
 		ch = c1 >> 2;
-		out += base64table[ch];
+		out += B64Chars[ch];
 		
-		if (c2 != EOF) {
+		if (c2 != '\0') {
 			ch = ((c1 & 0x3) << 4) | (c2 >> 4);
-			fputc (B64Chars[ch], fout);
+			out += B64Chars[ch];
 		} else {
 			ch = (c1 & 0x3) << 4;
-			fputc (B64Chars[ch], fout);
-			fputs("==", fout);
+			out += B64Chars[ch];
+			out += "==";
 			break;
 		}
 		
-		if (c3 != EOF) {
+		if (c3 != '\0') {
 			ch = ((c2 & 0xf) << 2) | (c3 >> 6);
-			fputc (B64Chars[ch], fout);
+			out += B64Chars[ch];
 		} else {
 			ch = (c2 & 0xf) << 2;
-			fputc(B64Chars[ch], fout);
-			fputc('=', fout);
+			out += B64Chars[ch];
+			out += '=';
 			break;
 		}
 		
@@ -132,10 +103,113 @@ encodeBase64(const QCString & input)
 		linelen += 4;
 	}
 	
-	fputc('\n', fout);
+	out += '\n';
+
+	return out;
+}
+
+	QCString
+RDecodeBase64(const QCString & in)
+{
+	QCString out;
+
+	const char * input = in.data();
+	register int cursor = 0;
+
+    static char inalphabet[256], decoder[256];
+	
+    int i, bits, c, char_count, errors = 0;
+
+    for (i = (sizeof B64Chars) - 1; i >= 0 ; i--) {
+	
+		inalphabet	[B64Chars[i]] = 1;
+		decoder		[B64Chars[i]] = i;
+    }
+
+    char_count = bits = 0;
+    
+	c = input[cursor];
+	
+	while (c != '\0') {
+	
+		if (c == '=')
+			break;
+		
+		if (c > 255 || ! inalphabet[c])
+	  		continue;
+		
+		bits += decoder[c];
+		
+		++char_count;
+		
+		if (char_count == 4) {
+	    
+			out += bits >> 16;
+			out += (bits >> 8) & 0xff;
+		   	out += bits & 0xff;
+			bits = char_count = 0;
+		
+		} else {
+			
+			bits <<= 6;
+		}
+    
+	}
+	
+    if (c == '\0') {
+	
+		if (char_count) {
+	    
+//			rmmDebug("base64 encoding incomplete: at least " +
+//				QCString().setNum((4 - char_count) * 6) + " bits truncated");
+			++errors;
+		}
+		
+    } else { // c == "="
+	
+		switch (char_count) {
+	
+		  	case 1:
+	  
+//			  	rmmDebug("base64 encoding incomplete: at least 2 bits missing");
+			 	++errors;
+				break;
+	  
+			case 2:
+	    
+				out += bits >> 10;
+				break;
+			
+			case 3:
+				
+				out += bits >> 16;
+				out += (bits >> 8) & 0xff;
+				break;
+		
+		}
+		
+		++cursor;
+    }
+
+	return out;
+}
+
+	QCString
+REncodeQuotedPrintable(const QCString & in)
+{
+	QCString s;
+	return in;
+}
+
+	QCString
+RDecodeQuotedPrintable(const QCString & in)
+{
+	QCString s;
+	return in;
 }
 
 
+/*
 int
 main()
 {

@@ -143,7 +143,7 @@ EmpathMessageViewWidget::go()
 	empathDebug(message.envelope().asString());
 	
 	if (message.body().count() == 0)
-		s = message.data();
+		s = message.decode().data();
 	
 	else if (message.body().count() == 1)
 		s = message.body().at(0)->decode().data();
@@ -228,6 +228,9 @@ EmpathMessageViewWidget::go()
 				} else {
 
 					empathDebug("Haven't decided what to do with this part yet");
+					RBodyPart p(*it.current());
+					s = p.decode().data();
+					messageWidget_->show(s);
 				}
 			}
 		}

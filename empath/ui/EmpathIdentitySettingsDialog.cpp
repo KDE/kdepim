@@ -320,10 +320,9 @@ EmpathIdentitySettingsDialog::s_chooseSig()
 	QTextStream t(&f);
 	QString s;
 	QString buf;
-	while (!t.eof()) {
-		t >> buf;
-		s += buf;
-	}
+
+	while (!t.eof())
+		s += t.readLine() + "\n";
 	
 	f.close();
 	mle_sigPreview_->setText(s);

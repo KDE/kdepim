@@ -37,7 +37,6 @@ class EmpathMailboxPOP3;
 class EmpathConfigPOP3Server;
 class EmpathConfigPOP3Logging;
 class EmpathConfigPOP3Password;
-class EmpathConfigPOP3LargeMsgs;
 class EmpathConfigPOP3General;
 class EmpathMailbox;
 
@@ -66,7 +65,6 @@ class EmpathConfigPOP3Widget : public KTabCtl
 		EmpathConfigPOP3Server		* serverWidget_;
 		EmpathConfigPOP3Logging		* loggingWidget_;
 		EmpathConfigPOP3Password	* passwordWidget_;
-		EmpathConfigPOP3LargeMsgs	* largeMsgsWidget_;
 		EmpathConfigPOP3General		* generalWidget_;
 };
 

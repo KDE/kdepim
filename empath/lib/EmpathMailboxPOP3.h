@@ -74,7 +74,6 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 		void setLogFileDisposalPolicy	(bool);
 		void setMaxLogFileSize			(Q_UINT32);
 		void setMessageSizeThreshold	(Q_UINT32);
-		void setLargeMessagePolicy		(LargeMessagePolicy);
 		void setSaveAllAddresses		(bool);
 		void setRetrieveIfHave			(bool);
 
@@ -91,7 +90,6 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 		bool				logFileDisposalPolicy();
 		Q_UINT32			maxLogFileSize();
 		Q_UINT32			messageSizeThreshold();
-		LargeMessagePolicy	largeMessagePolicy();
 		bool				autoGetNewMail();
 		bool				saveAllAddresses();
 		bool				retrieveIfHave();
@@ -121,7 +119,6 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 		bool				logFileDisposalPolicy_;
 		Q_UINT32			maxLogFileSize_;
 		Q_UINT32			messageSizeThreshold_;
-		LargeMessagePolicy	largeMessagePolicy_;
 		bool				saveAllAddresses_;
 		bool				retrieveIfHave_;
 		int					sock_fd; // socket fd

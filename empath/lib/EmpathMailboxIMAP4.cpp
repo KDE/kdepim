@@ -115,60 +115,6 @@ EmpathMailboxIMAP4::setMaxLogFileSize(Q_UINT32 maxSize)
 	maxLogFileSize_ = maxSize;
 }
 
-	void
-EmpathMailboxIMAP4::setMessageSizeThreshold(Q_UINT32 threshold)
-{
-	messageSizeThreshold_ = threshold;
-}
-
-	void
-EmpathMailboxIMAP4::setLargeMessagePolicy(LargeMessagePolicy policy)
-{
-	largeMessagePolicy_ = policy;
-}
-
-	void
-EmpathMailboxIMAP4::setCheckForNewMail(bool yn)
-{
-	checkMail_ = yn;
-}
-
-	void
-EmpathMailboxIMAP4::setMailCheckInterval(Q_UINT32 interval)
-{
-	checkMailInterval_ = interval;
-}
-
-	void
-EmpathMailboxIMAP4::setDeleteFromServer(bool yn)
-{
-	deleteFromServer_ = yn;
-}
-
-	void
-EmpathMailboxIMAP4::setAutoGetNewMail(bool yn)
-{
-	autoGetNewMail_ = yn;
-}
-
-	void
-EmpathMailboxIMAP4::setSaveAllAddresses(bool yn)
-{
-	saveAllAddresses_ = yn;
-}
-
-	void
-EmpathMailboxIMAP4::setNotify(bool yn)
-{
-	notify_ = yn;
-}
-
-	void
-EmpathMailboxIMAP4::setRetrieveIfHave(bool yn)
-{
-	retrieveIfHave_ = yn;
-}
-
 // Get methods
 		
 	QString
@@ -223,60 +169,6 @@ EmpathMailboxIMAP4::logFileDisposalPolicy()
 EmpathMailboxIMAP4::maxLogFileSize()
 {
 	return maxLogFileSize_;
-}
-
-	Q_UINT32
-EmpathMailboxIMAP4::messageSizeThreshold()
-{
-	return messageSizeThreshold_;
-}
-
-	LargeMessagePolicy
-EmpathMailboxIMAP4::largeMessagePolicy()
-{
-	return largeMessagePolicy_;
-}
-
-	bool
-EmpathMailboxIMAP4::checkForNewMail()
-{
-	return checkMail_;
-}
-
-	Q_UINT32
-EmpathMailboxIMAP4::mailCheckInterval()
-{
-	return checkMailInterval_;
-}
-
-	bool
-EmpathMailboxIMAP4::deleteFromServer()
-{
-	return deleteFromServer_;
-}
-
-	bool
-EmpathMailboxIMAP4::autoGetNewMail()
-{
-	return autoGetNewMail_;
-}
-
-	bool
-EmpathMailboxIMAP4::saveAllAddresses()
-{
-	return saveAllAddresses_;
-}
-
-	bool
-EmpathMailboxIMAP4::notify()
-{
-	return notify_;
-}
-
-	bool
-EmpathMailboxIMAP4::retrieveIfHave()
-{
-	return retrieveIfHave_;
 }
 
 	bool

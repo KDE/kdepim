@@ -83,7 +83,9 @@ class EmpathSendingSettingsDialog : public QDialog
 		RikGroupBox			* rgb_copies_;
 		
 		QLabel				* l_queueFolder_;
+		QLabel				* l_sentFolder_;
 		EmpathFolderChooserWidget	* fcw_queueFolder_;
+		EmpathFolderChooserWidget	* fcw_sentFolder_;
 	
 		QWidget				* w_queuing_;
 		QWidget				* w_server_;

@@ -186,6 +186,7 @@ EmpathMailboxMaildir::readConfig()
 	boxList_.clear();
 	
 	path_ = c->readEntry(EmpathConfig::KEY_LOCAL_MAILBOX_PATH);
+	if (path_.at(path_.length()) != '/') path_ += '/';
 	_recursiveReadFolders(path_);
 }
 
@@ -270,6 +271,7 @@ EmpathMailboxMaildir::getMail()
 	void
 EmpathMailboxMaildir::s_checkNewMail()
 {
+	syncIndex(url_);	
 }
 	
 	void

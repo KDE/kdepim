@@ -190,56 +190,6 @@ EmpathMainWindow::s_fileQuit()
 	delete this;
 }
 
-// Edit menu slots
-	
-	void
-EmpathMainWindow::s_editCut()
-{
-	empathDebug("s_editCut called");
-}
-
-	void
-EmpathMainWindow::s_editCopy()
-{
-	empathDebug("s_editCopy called");
-}
-
-	void
-EmpathMainWindow::s_editPaste()
-{
-	empathDebug("s_editPaste called");
-}
-
-	void
-EmpathMainWindow::s_editDelete()
-{
-	empathDebug("s_editDelete called");
-}
-
-	void
-EmpathMainWindow::s_editSelect()
-{
-	empathDebug("s_editSelect called");
-}
-
-	void
-EmpathMainWindow::s_editFindInMessage()
-{
-	empathDebug("s_editFindInMessage called");
-}
-
-	void
-EmpathMainWindow::s_editFind()
-{
-	empathDebug("s_editFind called");
-}
-
-	void
-EmpathMainWindow::s_editFindAgain()
-{
-	empathDebug("s_editFindAgain called");
-}
-
 // Folder menu slots
 
 	void
@@ -521,6 +471,30 @@ EmpathMainWindow::s_dumpWidgetList()
 EmpathMainWindow::_getFirstSelectedMessage() const
 {
 	return empath->message(messageListWidget_->firstSelectedMessage());
+}
+
+	void
+EmpathMainWindow::s_editSelectTagged()
+{
+	messageListWidget_->selectTagged();
+}
+
+	void
+EmpathMainWindow::s_editSelectRead()
+{
+	messageListWidget_->selectRead();
+}
+
+	void
+EmpathMainWindow::s_editSelectAll()
+{
+	messageListWidget_->selectAll();
+}
+
+	void
+EmpathMainWindow::s_editInvertSelection()
+{
+	messageListWidget_->selectInvert();
 }
 
 #include "EmpathMainWindowMenus.cpp"

@@ -314,8 +314,6 @@ EmpathFolderWidget::s_mailboxProperties()
 
 	if (m == 0) return;
 	
-	DialogRetval dlg_retval = Cancel;
-	
 	empathDebug("Mailbox name = " + m->name());
 
 	switch (m->type()) {
@@ -324,7 +322,8 @@ EmpathFolderWidget::s_mailboxProperties()
 			{
 				EmpathConfigMaildirDialog configDialog(
 						(EmpathMailboxMaildir *)m, this, "configDialog");
-				dlg_retval = (DialogRetval)configDialog.exec();
+				if (configDialog.exec() == QDialog::Accepted)
+					update();
 			}
 			break;
 
@@ -332,7 +331,8 @@ EmpathFolderWidget::s_mailboxProperties()
 			{
 				EmpathConfigPOP3Dialog configDialog(
 						(EmpathMailboxPOP3 *)m, true, this, "configDialog");
-				dlg_retval = (DialogRetval)configDialog.exec();
+				if (configDialog.exec() == QDialog::Accepted)
+					update();
 			}
 			break;
 
@@ -340,7 +340,8 @@ EmpathFolderWidget::s_mailboxProperties()
 			{
 				EmpathConfigIMAP4Dialog configDialog(
 						(EmpathMailboxIMAP4 *)m, this, "configDialog");
-				dlg_retval = (DialogRetval)configDialog.exec();
+				if (configDialog.exec() == QDialog::Accepted)
+					update();
 			}
 			break;
 

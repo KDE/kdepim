@@ -44,6 +44,8 @@ class EmpathMailSender : public QObject
 		EmpathMailSender();
 
 		virtual ~EmpathMailSender() = 0L;
+		
+		void queue(RMessage &);
 
 		/**
 		 * Send one message.
@@ -52,7 +54,10 @@ class EmpathMailSender : public QObject
 		 *
 		 * Message will be returned to user on failure. FIXME: How ?
 		 */
+		bool send(RMessage &);
+
 		virtual bool sendOne(RMessage & message) = 0L;
+		
 
 		/**
 		 * Send a batch of messages. This could be useful if there's
@@ -63,7 +68,7 @@ class EmpathMailSender : public QObject
 		 * that stores and despatches mail on their behalf. I know my old isp
 		 * did this, so I presume a lot of other peoples' isps do it too.
 		 */
-		bool sendQueued();
+		void sendQueued();
 
 		virtual void saveConfig() = 0;
 		virtual void readConfig() = 0;

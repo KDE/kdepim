@@ -23,27 +23,27 @@
 
 // Qt includes
 #include <qstring.h>
+#include <qobject.h>
+#include <qcache.h>
 
 // Local includes
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
 #include "EmpathMailboxList.h"
 #include "EmpathFilterList.h"
-#include "EmpathConfig.h"
-#include "EmpathMessageDataCache.h"
+#include "EmpathMailSender.h"
 
 #include "RMM_Enum.h"
-#include "RMM_MessageID.h"
 #include "RMM_Message.h"
-#include "RMM_Envelope.h"
 
 #define empath Empath::getEmpath()
 
 class EmpathFolder;
-class EmpathMailSender;
 class EmpathIndexRecord;
 class RMessage;
 class EmpathTask;
+
+typedef QCache<RMessage> EmpathMessageDataCache;
 
 /**
  * Empath is the main class for the app
@@ -66,6 +66,7 @@ class Empath : public QObject
 		 * dtor
 		 */
 		~Empath();
+
 		/**
 		 * In the style of KApplication and QApplication, this
 		 * saves me having to pass a pointer to the (single) object of
@@ -118,7 +119,10 @@ class Empath : public QObject
 		 */
 		EmpathFilterList & filterList() { return filterList_; }
 		
-		void statusMessage(const QString & message) const;
+		/**
+		 * Call this when you change the type of server for outgoing
+		 * messages.
+		 */
 		void updateOutgoingServer();
 	
 		/**
@@ -126,26 +130,46 @@ class Empath : public QObject
 		 * you can forget about it as it will be deleted later.
 		 * If the message can't be retrieved, returns 0.
 		 */
-		RMessage * message(const EmpathURL &);
+		RMessage 		* message(const EmpathURL &);
 		
 		/**
 		 * Gets a pointer to the folder specified in the url, or 0.
 		 */
-		EmpathFolder * folder(const EmpathURL &);
+		EmpathFolder	* folder(const EmpathURL &);
 		
 		/**
 		 * Gets a pointer to the mailbox specified in the url, or 0.
 		 */
-		EmpathMailbox * mailbox(const EmpathURL &);
+		EmpathMailbox	* mailbox(const EmpathURL &);
 		
-		EmpathTask * addTask(const QString & name);
+		/**
+		 * Create a new task and pass back the pointer.
+		 * Don't delete the task, just call done();
+		 */
+		EmpathTask		* addTask(const QString & name);
 		
-		void addPendingMessage(RMessage &);
+		/**
+		 * Queue a new message for sending later.
+		 */
+		void queue(RMessage &);
+		
+		/**
+		 * Send a message. If the user set queueing as the default,
+		 * it'll be queued, surprisingly.
+		 */
 		void send(RMessage &);
+		
+		/**
+		 * Attempt to send all queued messages.
+		 */
 		void sendQueued();
 		
 		static Empath * EMPATH;
 		
+		/**
+		 * This must be called after the constructor. You can initialise
+		 * the ui first, but be careful ;)
+		 */
 		void init();
 		
 	public slots:
@@ -164,26 +188,22 @@ class Empath : public QObject
 		/**
 		 * Compose a new message.
 		 */
-		void s_compose()
-		{ emit(newComposer(ComposeNormal, EmpathURL())); }
+		void s_compose();
 		
 		/**
 		 * @short Reply to the given message.
 		 */
-		void s_reply(const EmpathURL & url)
-		{ emit(newComposer(ComposeReply, url)); }
+		void s_reply(const EmpathURL & url);
 		
 		/**
 		 * @short Reply to the given message.
 		 */
-		void s_replyAll(const EmpathURL & url)
-		{ emit(newComposer(ComposeReplyAll, url)); }
+		void s_replyAll(const EmpathURL & url);
 		
 		/**
 		 * @short Forward given message.
 		 */
-		void s_forward(const EmpathURL & url)
-		{ emit(newComposer(ComposeForward, url)); }
+		void s_forward(const EmpathURL & url);
 		
 		/**
 		 * @short Remove given message.
@@ -193,7 +213,7 @@ class Empath : public QObject
 		/**
 		 * Bounce a message.
 		 */
-		void s_bounce(const EmpathURL &) {}
+		void s_bounce(const EmpathURL &);
 		
 		/**
 		 * Mark a message with a given status.
@@ -233,12 +253,6 @@ class Empath : public QObject
 		void _saveHostName();
 		void _setStartTime();
 		
-		// These objects will be contructed before the code in our contructor
-		// is run. That means they must NOT access anything 'global', including
-		// KApplication stuff when they are constructed. They will be told when
-		// to init themselves and will do what would normally be in their
-		// respective constructors at that point instead.
-		
 		EmpathMailboxList		mailboxList_;
 		EmpathFilterList		filterList_;
 		
@@ -248,6 +262,39 @@ class Empath : public QObject
 		pid_t					processID_;
 		Q_UINT32				startupSeconds_;
 };
+
+inline void Empath::send(RMessage & m)			{ mailSender_->send(m);		}
+inline void Empath::queue(RMessage & m)			{ mailSender_->queue(m);	}
+inline void Empath::sendQueued()				{ mailSender_->sendQueued();}
+inline void Empath::s_setupDisplay()			{ emit(setupDisplay());		}
+inline void Empath::s_setupIdentity()			{ emit(setupIdentity());	}
+inline void Empath::s_setupSending()			{ emit(setupSending());		}
+inline void Empath::s_setupComposing()			{ emit(setupComposing());	}
+inline void Empath::s_setupAccounts()			{ emit(setupAccounts());	}
+inline void Empath::s_setupFilters()			{ emit(setupFilters());		}
+inline void Empath::s_newMailArrived() 			{ emit(newMailArrived());	}
+inline void Empath::s_newTask(EmpathTask * t)	{ emit(newTask(t));			}
+inline void Empath::filter(const EmpathURL & m)	{ filterList_.filter(m);	}
+
+inline void 
+Empath::s_compose()
+{ emit(newComposer(ComposeNormal, EmpathURL())); }
+
+inline void
+Empath::s_reply(const EmpathURL & url)
+{ emit(newComposer(ComposeReply, url)); }
+
+inline void
+Empath::s_replyAll(const EmpathURL & url)
+{ emit(newComposer(ComposeReplyAll, url)); }
+
+inline void
+Empath::s_forward(const EmpathURL & url)
+{ emit(newComposer(ComposeForward, url)); }
+
+inline void
+Empath::s_bounce(const EmpathURL & url)
+{ emit(newComposer(ComposeBounce, url)); }
 
 #endif
 

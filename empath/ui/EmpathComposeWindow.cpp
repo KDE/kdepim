@@ -36,6 +36,7 @@
 #include "EmpathMailSender.h"
 #include "EmpathMenuMaker.h"
 #include "EmpathAboutBox.h"
+#include "EmpathConfig.h"
 #include "Empath.h"
 
 EmpathComposeWindow::EmpathComposeWindow(
@@ -185,7 +186,7 @@ EmpathComposeWindow::s_fileSendLater()
 
 	empathDebug("Sending message");
 
-	empath->addPendingMessage(outMessage);
+	empath->queue(outMessage);
 }
 
 	void

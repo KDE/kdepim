@@ -216,14 +216,14 @@ EmpathFilterEditDialog::s_OK()
 	empathDebug("s_OK() called");
 	filter_->setURL(fcw_arrivesFolder_->selectedURL());
 	filter_->save();
-	done(OK);
+	accept();
 }
 
 	void
 EmpathFilterEditDialog::s_cancel()
 {
 	empathDebug("s_cancel() called");
-	done(Cancel);
+	reject();
 }
 
 	void
@@ -239,7 +239,7 @@ EmpathFilterEditDialog::s_addExpr()
 	EmpathMatcher * m = new EmpathMatcher;
 	EmpathMatchPropertiesDialog mpd(this, m);
 	
-	if (mpd.exec() != OK) return;
+	if (mpd.exec() != QDialog::Accepted) return;
 
 	empathDebug("Adding matcher to filter's list");
 	filter_->matchExprList()->append(m);
@@ -284,7 +284,7 @@ EmpathFilterEditDialog::s_editAction()
 {
 	empathDebug("s_editAction() called");
 	EmpathFilterActionDialog fDlg(filter_, this, "filterActionDialog");
-	if (fDlg.exec() == Cancel) return;
+	if (fDlg.exec() != QDialog::Accepted) return;
 	ASSERT(filter_->actionDescription());
 	l_action_->setText(filter_->actionDescription());
 }

@@ -93,7 +93,7 @@ EmpathConfigIMAP4Dialog::EmpathConfigIMAP4Dialog(
 EmpathConfigIMAP4Dialog::s_OK()
 {
 	// That's it
-	done(OK);
+	accept();
 }
 
 	void
@@ -105,7 +105,7 @@ EmpathConfigIMAP4Dialog::fillInSavedData()
 	void
 EmpathConfigIMAP4Dialog::s_Cancel()
 {
-	done(Cancel);
+	reject();
 }
 
 	void

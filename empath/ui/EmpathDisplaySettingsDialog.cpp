@@ -226,7 +226,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 			"want to appear in the block above the message\n"
 			"you are reading. The default is:\n"
 			"From,Date,Subject\n"
-			"You must separate the header names by commas.\n"
+			"You must separate the header names by semicolons (;).\n"
 			"This is not case-sensitive, i.e. you can write\n"
 			"DATE and 'Date', 'date', 'DaTe' etc will all work\n"));
 	

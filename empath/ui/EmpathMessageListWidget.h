@@ -89,11 +89,14 @@ class EmpathMessageListWidget : public QListView
 		void setSignalUpdates(bool yn);
 		const EmpathURL & currentFolder() { return url_; }
 		
+		void selectTagged();
+		void selectRead();
+		void selectAll();
+		void selectInvert();
+		
 	protected:
 		
-		void mousePressEvent(QMouseEvent *);
-		void mouseMoveEvent(QMouseEvent *);
-		void mouseReleaseEvent(QMouseEvent *);
+		virtual bool eventFilter(QObject *, QEvent *);
 		
 	protected slots:
 	
@@ -125,6 +128,10 @@ class EmpathMessageListWidget : public QListView
 		
 	private:
 		
+		void mousePressEvent(QMouseEvent *);
+		void mouseMoveEvent(QMouseEvent *);
+		void mouseReleaseEvent(QMouseEvent *);
+		
 		void	_setupMessageMenu();
 
 		void getDescendants(
@@ -138,7 +145,7 @@ class EmpathMessageListWidget : public QListView
 		QPopupMenu			messageMarkMenu_;
 		
 		QList<EmpathIndexRecord> masterList_;
-		QList<EmpathMessageListItem> threadItemList_;
+		QList<EmpathMessageListItem> itemList_;
 
 		QPixmap px_;
 		QPixmap pxRead_;
@@ -169,6 +176,8 @@ class EmpathMessageListWidget : public QListView
 		EmpathMarkAsReadTimer * markAsReadTimer_;
 		
 		void markAsRead(EmpathMessageListItem *);
+		
+		void mark(RMM::MessageStatus);
 		
 		static QListViewItem * lastSelected_;
 		

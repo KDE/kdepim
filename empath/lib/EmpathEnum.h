@@ -21,28 +21,26 @@
 #ifndef EMPATHENUM_H
 #define EMPATHENUM_H
 
-enum WriteToDisk		{ Write, NoWrite };
-	
-enum OutgoingServerType	{ Sendmail, Qmail, SMTP, QMTP };
-enum DialogRetval		{ OK, Cancel, Help, Defaults };
-enum FontStyle			{ Fixed, Variable };
+enum OutgoingServerType	{ Sendmail, Qmail, SMTP };
 enum AccountType		{ Local, Maildir, POP3, IMAP4 };
 enum SendPolicy			{ SendNow, SendLater };
 enum SavePolicy			{ Forever, ThisSession, Never };
-enum LargeMessagePolicy	{ RetrieveMessage, LeaveOnServer, RetrieveHeader };
 enum ActionType			{ MoveFolder, CopyFolder, Delete, Ignore, Forward };
-enum MatchExprType		{ Size, BodyExpr, HeaderExpr, HasAttachments, AnyMessage };
-enum LockType			{ LockRead, LockWrite };
-enum ComposeType		{ ComposeReply, ComposeReplyAll, ComposeForward, ComposeNormal };
 
-enum SettingsSection	{
-	DisplaySettings		= 1 << 0,
-	IdentitySettings	= 1 << 1,
-	ComposeSettings		= 1 << 2,
-	SendingSettings		= 1 << 3,
-	AccountsSettings	= 1 << 4,
-	FilterSettings		= 1 << 5,
-	AllSettings			= 0xffffffff
+enum MatchExprType {
+	Size,
+	BodyExpr,
+	HeaderExpr,
+	HasAttachments,
+	AnyMessage
+};
+
+enum ComposeType {
+	ComposeReply,
+	ComposeReplyAll,
+	ComposeForward,
+	ComposeNormal,
+	ComposeBounce
 };
 
 #endif

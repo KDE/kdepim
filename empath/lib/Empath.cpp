@@ -46,7 +46,6 @@
 #include "EmpathMailSenderSendmail.h"
 #include "EmpathMailSenderQmail.h"
 #include "EmpathMailSenderSMTP.h"
-#include "EmpathMessageDataCache.h"
 #include "EmpathFilterList.h"
 #include "EmpathTask.h"
 #include "EmpathTaskTimer.h"
@@ -59,31 +58,25 @@ Empath::Empath()
 {
 	empathDebug("ctor");
 	EMPATH = this;
-	cache_.setMaxCost(1048576); // 1Mb cache
-	updateOutgoingServer(); // Must initialise the pointer.
+	cache_.setMaxCost(1048576);		// 1Mb cache
+	updateOutgoingServer();			// Must initialise the pointer.
 }
 
 	void
 Empath::init()
 {
+	empathDebug("====================== INIT  START ========================");	
 	processID_ = getpid();
 	_saveHostName();
 	_setStartTime();
-	empathDebug("===========================================================");	
-	empathDebug("Initialising mailboxes");
 	mailboxList_.init();
-	empathDebug("===========================================================");	
-	empathDebug("Initialising filters");
 	filterList_.load();
-	empathDebug("===========================================================");	
+	empathDebug("======================= INIT END =========================");	
 }
 
 Empath::~Empath()
 {
 	empathDebug("dtor");
-
-	ASSERT(mailSender_ != 0);
-	empathDebug("Deleting mail sender");
 	delete mailSender_;
 	mailSender_ = 0;
 }
@@ -97,112 +90,60 @@ Empath::s_saveConfig()
 }
 
 	void
-Empath::s_newMailArrived()
-{
-	empathDebug("Got new mail arrived signal");
-	emit(newMailArrived());
-}
-
-	void
 Empath::updateOutgoingServer()
 {
-	empathDebug("Updating outgoing server type");
-
-	if (mailSender_ == 0) {
-		empathDebug("There was no outgoing server. Not attempting to delete");
-	} else {
-		delete mailSender_;
-		mailSender_ = 0;
-	}
+	delete mailSender_;
+	mailSender_ = 0;
 	
 	KConfig * c = kapp->getConfig();
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
 	OutgoingServerType st =
 		(OutgoingServerType)
-		(c->readUnsignedNumEntry(EmpathConfig::KEY_OUTGOING_SERVER_TYPE));
+		(c->readUnsignedNumEntry(EmpathConfig::KEY_OUTGOING_SERVER_TYPE,
+								 Sendmail));
 	
 	switch (st) {
-	
-		case Sendmail:
-			mailSender_ = new EmpathMailSenderSendmail;
-			CHECK_PTR(mailSender_);
-			break;
-		
-		case Qmail:
-			mailSender_ = new EmpathMailSenderQmail;
-			CHECK_PTR(mailSender_);
-			break;
-		
-		case SMTP:
-			mailSender_ = new EmpathMailSenderSMTP;
-			CHECK_PTR(mailSender_);
-			break;
-		
-		default:
-			mailSender_ = 0;
-			return;
-			break;
+		case Sendmail:	mailSender_ = new EmpathMailSenderSendmail;	break;
+		case Qmail:		mailSender_ = new EmpathMailSenderQmail;	break;
+		case SMTP:		mailSender_ = new EmpathMailSenderSMTP;		break;
+		default:		mailSender_ = 0; return;					break;
 	}
 
+	CHECK_PTR(mailSender_);
+
 	mailSender_->readConfig();
-}
-
-	void
-Empath::_setStartTime()
-{
-	struct timeval timeVal;
-	struct timezone timeZone;
-	
-	gettimeofday(&timeVal, &timeZone);
-	startupSeconds_ = timeVal.tv_sec;
-}
-
-	void
-Empath::statusMessage(const QString & messageText) const
-{
-}
-
-	void
-Empath::filter(const EmpathURL & source)
-{
-	empathDebug("filter \"" + source.asString() + "\" called");
-	filterList_.filter(source);
-	kapp->processEvents();
-}
-
-	void
-Empath::_saveHostName()
-{
-	struct utsname utsName;
-	if (uname(&utsName) == 0)
-		hostName_ = utsName.nodename;
 }
 
 	RMessage *
 Empath::message(const EmpathURL & source)
 {
 	empathDebug("message(" + source.asString() + ") called");
+	
 	// Try and get the message from the cache.
+	
 	RMessage * message(cache_[source.messageID()]);
+	
 	if (message != 0) {
 		empathDebug("message \"" + source.asString() + "\" found in cache");
 		return message;
 	}
+	
 	empathDebug("message \"" + source.asString() + "\" not in cache");
 	
 	// It's not in the cache. Get it from the mailbox.
 	EmpathMailbox * m = mailbox(source);
+	
 	if (m == 0) return 0;
 	
 	message = m->message(source);
+	
 	if (message == 0) return 0;
 	
-	// Put the message in the cache, and return it.
+	// Put the message in the cache.
 	if (!cache_.insert(source.messageID(), message, message->size())) {
 		delete message;
 		message = 0;
-		return 0;
 	}
 
 	return message;
@@ -211,15 +152,12 @@ Empath::message(const EmpathURL & source)
 	EmpathMailbox *
 Empath::mailbox(const EmpathURL & url)
 {
-	empathDebug("mailbox() called, looking for \"" + url.mailboxName() + "\"");
 	EmpathMailboxListIterator it(mailboxList_);
-	for (; it.current(); ++it) {
-		empathDebug("Looking at mailbox \"" + it.current()->name() + "\"");
-		if (it.current()->name() == url.mailboxName()) {
-			empathDebug("... found !");
+	
+	for (; it.current(); ++it)
+		if (it.current()->name() == url.mailboxName())
 			return it.current();
-		}
-	}
+	
 	return 0;
 }
 
@@ -235,12 +173,8 @@ Empath::folder(const EmpathURL & url)
 	bool
 Empath::remove(const EmpathURL & url)
 {
-	empathDebug("remove(" + url.asString() + ") called");
 	EmpathMailbox * m = mailbox(url);
-	if (m == 0) {
-		empathDebug("Can't find mailbox \"" + url.mailboxName() + "\"");
-		return false;
-	}
+	if (m == 0) return false;
 	return m->removeMessage(url);
 }
 
@@ -252,87 +186,33 @@ Empath::mark(const EmpathURL & url, RMM::MessageStatus s)
 	return f->mark(url, s);
 }
 
-	void
-Empath::s_setupDisplay()
-{
-	emit(setupDisplay());
-}
-	void
-Empath::s_setupIdentity()
-{
-	emit(setupIdentity());
-}
-
-	void
-Empath::s_setupSending()
-{
-	emit(setupSending());
-}
-
-	void
-Empath::s_setupComposing()
-{
-	emit(setupComposing());
-}
-
-	void
-Empath::s_setupAccounts()
-{
-	emit(setupAccounts());
-}
-
-	void
-Empath::s_setupFilters()
-{
-	emit(setupFilters());
-}
 
 	EmpathTask *
 Empath::addTask(const QString & name)
 {
-	empathDebug("addTask(" + name + ") called");
 	EmpathTask * t = new EmpathTask(name);
 	CHECK_PTR(t);
 	EmpathTaskTimer * timer = new EmpathTaskTimer(t);
 	return t;
 }
 
-	void
-Empath::s_newTask(EmpathTask * t)
-{
-	emit(newTask(t));
-}
+
+// Private methods follow
 
 	void
-Empath::addPendingMessage(RMessage & message)
+Empath::_setStartTime()
 {
-	KConfig * c(kapp->getConfig());
-	c->setGroup(EmpathConfig::GROUP_SENDING);
+	struct timeval timeVal;
+	struct timezone timeZone;
 	
-	EmpathURL queueURL(c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));
-	
-	EmpathFolder *queueFolder(folder(queueURL));
-	
-	if (queueFolder == 0) {
-		empathDebug("Couldn't queue message - couldn't find queue folder !");
-		return;
-	}
-	
-	if (!queueFolder->writeMessage(message)) {
-		empathDebug("Couldn't queue message - folder won't accept !");
-		return;
-	}
+	gettimeofday(&timeVal, &timeZone);
+	startupSeconds_ = timeVal.tv_sec;
 }
-
 	void
-Empath::sendQueued()
+Empath::_saveHostName()
 {
-	mailSender_->sendQueued();
-}
-
-	void
-Empath::send(RMessage & message)
-{
-	mailSender_->sendOne(message);
+	struct utsname utsName;
+	if (uname(&utsName) == 0)
+		hostName_ = utsName.nodename;
 }
 

@@ -602,7 +602,7 @@ EmpathMaildir::_write(RMessage & msg)
 
 		for (int i = 0 ; i < 20 ; i++) {
 			usleep(100);
-			qApp->processEvents();
+			kapp->processEvents();
 		}
 	
 		// If it's still there. Give up.

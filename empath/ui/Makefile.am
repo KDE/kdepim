@@ -15,12 +15,10 @@ EmpathConfigIMAP4Dialog.cpp \
 EmpathConfigMaildirDialog.cpp \
 EmpathConfigPOP3Dialog.cpp \
 EmpathConfigPOP3General.cpp \
-EmpathConfigPOP3LargeMsgs.cpp \
 EmpathConfigPOP3Logging.cpp \
 EmpathConfigPOP3Password.cpp \
 EmpathConfigPOP3Server.cpp \
 EmpathConfigPOP3Widget.cpp \
-EmpathDebugDialog.cpp \
 EmpathDisplaySettingsDialog.cpp \
 EmpathFilterActionDialog.cpp \
 EmpathFilterEditDialog.cpp \

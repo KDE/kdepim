@@ -253,11 +253,8 @@ EmpathMailboxPOP3::saveConfig()
 	CWE(EmpathConfig::KEY_POP3_LOG_FILE_PATH,			logFilePath_);
 	CWE(EmpathConfig::KEY_POP3_LOG_FILE_DISPOSAL_POLICY,logFileDisposalPolicy_);
 	CWE(EmpathConfig::KEY_POP3_MAX_LOG_FILE_SIZE,		maxLogFileSize_);
-	CWE(EmpathConfig::KEY_POP3_MESSAGE_SIZE_THRESHOLD,	messageSizeThreshold_);
-	CWE(EmpathConfig::KEY_POP3_LARGE_MESSAGE_POLICY,	(int)largeMessagePolicy_);
 	CWE(EmpathConfig::KEY_POP3_CHECK_FOR_NEW_MAIL,		checkMail_);
 	CWE(EmpathConfig::KEY_POP3_MAIL_CHECK_INTERVAL,		checkMailInterval_);
-	CWE(EmpathConfig::KEY_POP3_SAVE_ALL_ADDRESSES,		saveAllAddresses_);
 	CWE(EmpathConfig::KEY_POP3_RETRIEVE_IF_HAVE,		retrieveIfHave_);
 #undef CWE
 }
@@ -313,21 +310,11 @@ EmpathMailboxPOP3::readConfig()
 	maxLogFileSize_ =
 		CRUNE(EmpathConfig::KEY_POP3_MAX_LOG_FILE_SIZE,	10);
 	
-	messageSizeThreshold_ =
-		CRUNE(EmpathConfig::KEY_POP3_MESSAGE_SIZE_THRESHOLD, 1024);
-	
-	largeMessagePolicy_ = 
-		(LargeMessagePolicy)
-		CRUNE(EmpathConfig::KEY_POP3_LARGE_MESSAGE_POLICY, RetrieveMessage);
-	
 	checkMail_ =
 		CRBE(EmpathConfig::KEY_POP3_CHECK_FOR_NEW_MAIL, true);
 	
 	checkMailInterval_ =
 		CRUNE(EmpathConfig::KEY_POP3_MAIL_CHECK_INTERVAL, 5);
-	
-	saveAllAddresses_ =
-		CRBE(EmpathConfig::KEY_POP3_LOG_FILE_DISPOSAL_POLICY, true);
 	
 	retrieveIfHave_ =
 		CRBE(EmpathConfig::KEY_POP3_RETRIEVE_IF_HAVE, false);
@@ -400,29 +387,11 @@ EmpathMailboxPOP3::setMaxLogFileSize(Q_UINT32 maxSize)
 }
 
 	void
-EmpathMailboxPOP3::setMessageSizeThreshold(Q_UINT32 threshold)
-{
-	messageSizeThreshold_ = threshold;
-}
-
-	void
-EmpathMailboxPOP3::setLargeMessagePolicy(LargeMessagePolicy policy)
-{
-	largeMessagePolicy_ = policy;
-}
-
-	void
 EmpathMailboxPOP3::setRetrieveIfHave(bool yn)
 {
 	retrieveIfHave_ = yn;
 }
 
-	void
-EmpathMailboxPOP3::setSaveAllAddresses(bool yn)
-{
-	saveAllAddresses_ = yn;
-}
-	
 // Get methods
 		
 	QString
@@ -483,24 +452,6 @@ EmpathMailboxPOP3::logFileDisposalPolicy()
 EmpathMailboxPOP3::maxLogFileSize()
 {
 	return maxLogFileSize_;
-}
-
-	Q_UINT32
-EmpathMailboxPOP3::messageSizeThreshold()
-{
-	return messageSizeThreshold_;
-}
-
-	LargeMessagePolicy
-EmpathMailboxPOP3::largeMessagePolicy()
-{
-	return largeMessagePolicy_;
-}
-
-	bool
-EmpathMailboxPOP3::saveAllAddresses()
-{
-	return saveAllAddresses_;
 }
 
 	bool

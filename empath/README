@@ -1,15 +1,5 @@
 OI !
 
-WARNING: If you've been using this (as if!) you need to remove your config
-file as I've changed the format slightly. Either that or simply reconfigure
-any mailboxes so the location is correct.
-
-IS anyone using this ? Anyone want to help development ? Am I saving the
-planet alone ?
-
-NEW: Dropped mbox and MMDF support due to it being impossible to guarantee
-safety of messages.
-
 Potential developers:
 
 See TODO for what you can help with.
@@ -19,17 +9,13 @@ This doesn't have to be coding, it can be providing input for the design of
 the system, drawing icons, writing docs, translating, testing, etc. The more
 the merrier.
 
-Obviously the more coders the faster this will stabilise, but I consider the
-system as a whole to be important - users will need docs to read, and to be
-able to use Empath in their native language.
-
 * GETTING STARTED *
 
 You need:
 
 a) A Maildir, with some mail in it. I suggest using mail from an existing
    Maildir (you can use mutt to do this). Back it up, then put it in place in
-   ~/Maildir
+   ~/Maildir/Inbox
    
 FOR INFORMATION ON THE DESIGN:
 

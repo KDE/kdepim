@@ -26,6 +26,7 @@
 #include "EmpathFolder.h"
 #include "EmpathURL.h"
 #include "EmpathIndex.h"
+#include "EmpathTask.h"
 #include "Empath.h"
 
 EmpathMailSender::EmpathMailSender()
@@ -40,7 +41,80 @@ EmpathMailSender::~EmpathMailSender()
 }
 
 	bool
+EmpathMailSender::send(RMessage & message)
+{
+	bool status = sendOne(message);
+
+	if (!status) {
+		empathDebug("Error sending message");
+	}
+	return status;
+}
+
+	void
 EmpathMailSender::sendQueued()
+{
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_SENDING);
+	
+	EmpathURL queueURL(c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));
+	EmpathURL sentURL(c->readEntry(EmpathConfig::KEY_SENT_FOLDER));
+	
+	EmpathFolder * queueFolder(empath->folder(queueURL));
+	EmpathFolder * sentFolder(empath->folder(sentURL));
+	
+	if (queueFolder == 0) {
+		empathDebug("Couldn't send messages - couldn't find queue folder !");
+		return;
+	}
+	
+	if (sentFolder == 0) {
+		empathDebug("Couldn't send messages - couldn't find sent folder !");
+		return;
+	}
+	
+	QList<EmpathURL> messageList;
+	
+	EmpathURL url;
+	
+	bool status = true;
+	
+	EmpathTask * t(empath->addTask("Sending messages"));
+	t->setMax(queueFolder->messageList().count());
+
+	EmpathIndexIterator it(queueFolder->messageList());
+	
+	for (; it.current(); ++it) {
+		
+		url = queueFolder->url();
+		url.setMessageID(it.current()->id());
+		
+		RMessage * m(empath->message(url));
+		
+		if (m == 0) {
+			empathDebug("Can't find message \"" + url.asString() + "\"");
+			t->done();
+			return;
+		}
+		
+		RMessage message(*m);
+		if (!sendOne(message))
+			status = false;
+		else
+			if (sentFolder->writeMessage(message))
+				queueFolder->removeMessage(url);
+		t->doneOne();
+	}
+	
+	t->done();
+	
+	if (!status) {
+		empathDebug("Error sending messages");
+	}
+}
+
+	void
+EmpathMailSender::queue(RMessage & message)
 {
 	KConfig * c(kapp->getConfig());
 	c->setGroup(EmpathConfig::GROUP_SENDING);
@@ -50,27 +124,13 @@ EmpathMailSender::sendQueued()
 	EmpathFolder *queueFolder(empath->folder(queueURL));
 	
 	if (queueFolder == 0) {
-		empathDebug("Couldn't send messages - couldn't find queue folder !");
-		return false;
+		empathDebug("Couldn't queue message - couldn't find queue folder !");
+		return;
 	}
 	
-	QList<EmpathURL> messageList;
-	
-	EmpathURL url;
-	
-	bool status = true;
-
-	EmpathIndexIterator it(queueFolder->messageList());
-	
-	for (; it.current(); ++it) {
-		url = queueFolder->url();
-		url.setMessageID(it.current()->id());
-		RMessage * m(empath->message(url));
-		if (m == 0) return false;
-		RMessage message(*m);
-		if (!sendOne(message)) status = false;
+	if (!queueFolder->writeMessage(message)) {
+		empathDebug("Couldn't queue message - folder won't accept !");
+		return;
 	}
-	
-	return status;
 }
 

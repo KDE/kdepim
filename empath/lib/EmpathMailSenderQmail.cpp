@@ -139,8 +139,6 @@ EmpathMailSenderQmail::qmailExited(KProcess * p)
 	if (error_) errorStr_ = "qmail exited abnormally";
 	
 	written_ = !error_;
-	
-	messageAsString_ = "";
 }
 
 	void

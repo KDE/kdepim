@@ -71,14 +71,10 @@ class EmpathMainWindow : public KTMainWindow
 		
 		// Edit menu slots
 	
-		void s_editCut();
-		void s_editCopy();
-		void s_editPaste();
-		void s_editDelete();
-		void s_editSelect();
-		void s_editFindInMessage();
-		void s_editFind();
-		void s_editFindAgain();
+		void s_editSelectTagged();
+		void s_editSelectRead();
+		void s_editSelectAll();
+		void s_editInvertSelection();
 		
 		// Folder menu slots
 		void s_folderNew();

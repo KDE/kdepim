@@ -63,7 +63,6 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
 		void setLogFileDisposalPolicy(bool policy);
 		void setMaxLogFileSize(Q_UINT32 maxSize);
 		void setMessageSizeThreshold(Q_UINT32 threshold);
-		void setLargeMessagePolicy(LargeMessagePolicy policy);
 		void setCheckForNewMail(bool yn);
 		void setMailCheckInterval(Q_UINT32 interval);
 		void setDeleteFromServer(bool yn);
@@ -85,19 +84,11 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
 		bool logFileDisposalPolicy();
 		Q_UINT32 maxLogFileSize();
 		Q_UINT32 messageSizeThreshold();
-		LargeMessagePolicy largeMessagePolicy();
-		bool checkForNewMail();
-		Q_UINT32 mailCheckInterval();
-		bool deleteFromServer();
-		bool autoGetNewMail();
-		bool saveAllAddresses();
-		bool notify();
-		bool retrieveIfHave();
 	
 	private:
 
 		QString				serverAddress_;
-		Q_UINT32		serverPort_;
+		Q_UINT32			serverPort_;
 		QString				username_;
 		QString				password_;
 		SavePolicy			passwordSavePolicy_;
@@ -105,15 +96,6 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
 		QString				logFilePath_;
 		bool				logFileDisposalPolicy_;
 		unsigned			int maxLogFileSize_;
-		unsigned			int messageSizeThreshold_;
-		LargeMessagePolicy	largeMessagePolicy_;
-		bool				checkMail_;
-		unsigned			int checkMailInterval_;
-		bool				deleteFromServer_;
-		bool				autoGetNewMail_;
-		bool				saveAllAddresses_;
-		bool				notify_;
-		bool				retrieveIfHave_;
 };
 
 #endif

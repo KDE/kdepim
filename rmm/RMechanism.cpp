@@ -29,7 +29,7 @@ RMechanism::RMechanism()
 }
 
 RMechanism::RMechanism(const RMechanism & m)
-	:	RHeaderBody()
+	:	RHeaderBody(m)
 {
 	rmmDebug("ctor");
 }

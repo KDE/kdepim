@@ -39,6 +39,7 @@ class EmpathIndex : public QDict<EmpathIndexRecord>
 		
 		EmpathIndex();
 		~EmpathIndex();
+
 		EmpathIndexRecord * messageDescription(RMessageID & id) const;
 		
 		void setFolder(EmpathFolder * parent) { folder_ = parent; }
@@ -53,13 +54,6 @@ class EmpathIndex : public QDict<EmpathIndexRecord>
 		 */
 		void sync();
 
-		/**
-		 * Append all messages in a list of messages.
-		 */
-		void parseNewMail(EmpathMessageList * tempMessageList);
-
-		QString asString() const;
-		
 		EmpathFolder * folder() { return folder_; }
 
 		const char * className() const { return "EmpathMessageList"; }

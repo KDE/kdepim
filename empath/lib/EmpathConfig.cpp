@@ -382,6 +382,12 @@ EmpathConfig::KEY_ENCRYPT = "Encrypt";
 EmpathConfig::KEY_QUEUE_FOLDER = "QueueFolder";
 
 	const QString
+EmpathConfig::KEY_SENT_FOLDER = "SentFolder";
+
+	const QString
+EmpathConfig::KEY_TRASH_FOLDER = "TrashFolder";
+
+	const QString
 EmpathConfig::KEY_MARK_AS_READ = "MarkMessagesAsRead";
 
 	const QString

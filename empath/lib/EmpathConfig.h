@@ -87,6 +87,9 @@ class EmpathConfig
 		static const QString		KEY_COPY_FOLDER_NAME;
 		static const QString		KEY_SEND_POLICY;
 		static const QString		KEY_QUEUE_FOLDER;
+		static const QString		KEY_SENT_FOLDER;
+		static const QString		KEY_TRASH_FOLDER;
+		static const QString		KEY_DRAFTS_FOLDER;
 		static const QString		KEY_USE_EXTERNAL_EDITOR;
 		static const QString		KEY_EXTERNAL_EDITOR;
 		static const QString		KEY_ACCOUNT_TYPE;

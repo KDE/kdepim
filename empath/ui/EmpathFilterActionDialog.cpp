@@ -282,14 +282,14 @@ EmpathFilterActionDialog::s_OK()
 	
 	filter_->setEventHandler(handler);
 	
-	done(OK);
+	accept();
 }
 
 	void
 EmpathFilterActionDialog::s_cancel()
 {
 	empathDebug("s_cancel() called");
-	done(Cancel);
+	reject();
 }
 	
 	void

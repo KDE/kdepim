@@ -44,11 +44,12 @@ EmpathHeaderViewWidget::useEnvelope(REnvelope & e)
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	QStrList l;
-	c->readListEntry(EmpathConfig::KEY_SHOW_HEADERS, l);
+	c->readListEntry(EmpathConfig::KEY_SHOW_HEADERS, l, ';');
 	
 	QStrListIterator it(l);
 	
-	for (; it.current() ; ++it) {	
+	for (; it.current() ; ++it) {
+		empathDebug("Using header: " + QString(it.current()));
 	
 		RHeader * h(e.get(it.current()));
 		if (h == 0) continue;

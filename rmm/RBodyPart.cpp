@@ -384,21 +384,24 @@ RBodyPart::setBody(QList<RBodyPart> & b)
 RBodyPart::decode()
 {
 	rmmDebug("decode()");
-	return *this;
 	REnvelope e;
 	RBodyPart x;
 	
 	if (envelope_.has(RMM::Cte)) {
+		
+		rmmDebug("This part has cte header");
 	
 		switch (envelope_.contentTransferEncoding().mechanism()) {
 			
 			case RMM::CteTypeBase64:
+				rmmDebug("This part is encoded in base 64");
 				e = envelope_;
 				e.set(RMM::HeaderContentTransferEncoding, "");
 				x = e.asString() + RDecodeBase64(data_);
 				break;
 
 			case RMM::CteTypeQuotedPrintable:
+				rmmDebug("This part is encoded in quoted-printable");
 				e = envelope_;
 				e.set(RMM::HeaderContentTransferEncoding, "");
 				x = e.asString() + RDecodeQuotedPrintable(data_);
@@ -409,11 +412,14 @@ RBodyPart::decode()
 			case RMM::CteTypeBinary:
 			case RMM::CteTypeXtension:
 			default:
+				rmmDebug("This part is not encoded");
 				return *this;
 				break;
 		}
 
 	} else {
+
+		rmmDebug("This part is not encoded");
 		return *this;
 	}
 

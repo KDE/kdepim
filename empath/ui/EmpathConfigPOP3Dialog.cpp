@@ -84,14 +84,14 @@ EmpathConfigPOP3Dialog::s_OK()
 {
 	empathDebug("s_OK called");
 	settingsWidget_->saveData();
-	done(OK);
+	accept();
 }
 
 	void
 EmpathConfigPOP3Dialog::s_Cancel()
 {
 	empathDebug("s_Cancel called");
-	done(Cancel);
+	reject();
 }
 
 	void

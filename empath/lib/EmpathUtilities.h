@@ -30,7 +30,6 @@
 #include "EmpathDefines.h"
 
 QString baseName(const QString & filename);
-bool	EmpathLockMailFile(QFile & f, LockType ltype);
 QCString QColorToHTML(const QColor & col);
 QCString quoteSeparators(const QCString & s, char separator);
 QString empathDir();

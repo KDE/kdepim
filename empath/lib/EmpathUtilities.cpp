@@ -18,11 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-// System includes
-#include <sys/file.h>
-#include <unistd.h>
-#include <fcntl.h>
-
 // Qt includes
 #include <qregexp.h>
 
@@ -35,22 +30,6 @@
 QString baseName(const QString & filename)
 {
 	return filename.right(filename.length() - filename.findRev('/') - 1);
-}
-
-	bool
-EmpathLockMailFile(QFile & f, LockType ltype)
-{
-#ifdef HAVE_FLOCK
-	return (flock(
-				f.handle(),
-				(ltype == LockWrite ? LOCK_EX : LOCK_SH) | LOCK_NB) != -1);
-#else
-	struct flock lock;
-	memset(&lock, 0, sizeof(struct flock));
-	lock.l_type = ltype == LockWrite ? F_WRLCK : F_RDLCK;
-	lock.l_whence = SEEK_SET;
-	return (fcntl(f.handle(), F_SETLK, &lock) != -1);
-#endif
 }
 
 	QCString

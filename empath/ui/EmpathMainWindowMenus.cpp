@@ -38,33 +38,17 @@ EmpathMainWindow::setupMenuBar()
 
 	// Edit menu
 	
-	editMenu_->insertItem(empathIcon("empath-cut.png"), i18n("Cu&t"),
-		this, SLOT(s_editCut()));
+	editMenu_->insertItem(empathIcon("tree-marked.png"), i18n("Select &Tagged"),
+		this, SLOT(s_editSelectTagged()));
 	
-	editMenu_->insertItem(empathIcon("copy.png"),i18n("&Copy"),
-		this, SLOT(s_editCopy()));
+	editMenu_->insertItem(empathIcon("tree-read.png"), i18n("Select &Read"),
+		this, SLOT(s_editSelectRead()));
 	
-	editMenu_->insertItem(empathIcon("empath-paste.png"), i18n("&Paste"),
-		this, SLOT(s_editPaste()));
+	editMenu_->insertItem(i18n("Select &All"),
+		this, SLOT(s_editSelectAll()));
 	
-	editMenu_->insertItem(i18n("&Delete"),
-		this, SLOT(s_editDelete()));
-
-	editMenu_->insertSeparator();
-	
-	editMenu_->insertItem(i18n("&Select") + "...",
-		this, SLOT(s_editSelect()));
-	
-	editMenu_->insertSeparator();
-	
-	editMenu_->insertItem(i18n("&Find In Message") + "...",
-		this, SLOT(s_editFindInMessage()));
-	
-	editMenu_->insertItem(i18n("Find In A&ll Messages") + "...",
-		this, SLOT(s_editFind()));
-
-	editMenu_->insertItem(i18n("Find &Again"),
-		this, SLOT(s_editFindAgain()));
+	editMenu_->insertItem(i18n("&Invert Selection"),
+		this, SLOT(s_editInvertSelection()));
 	
 	// Folder menu
 
@@ -183,12 +167,13 @@ EmpathMainWindow::setupMenuBar()
 		kapp, SLOT(aboutKDE()));
 	
 	menu_->insertItem(i18n("&File"), fileMenu_);
-//	menu_->insertItem(i18n("&Edit"), editMenu_);
+	menu_->insertItem(i18n("&Edit"), editMenu_);
 //	menu_->insertItem(i18n("F&older"), folderMenu_);
 	menu_->insertItem(i18n("&Message"), messageMenu_);
 	menu_->insertItem(i18n("&Options"), optionsMenu_);
 	menu_->insertSeparator();
 	menu_->insertItem(i18n("&Help"), helpMenu_);
 }
+
 
 

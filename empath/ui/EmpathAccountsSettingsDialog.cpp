@@ -190,7 +190,7 @@ EmpathAccountsSettingsDialog::s_newAccount()
 
 	empathDebug("s_newAccount called");
 	EmpathServerTypeDialog serverTypeDialog(this, "serverTypeDialog");
-	if (serverTypeDialog.exec() == Cancel) return;
+	if (serverTypeDialog.exec() != QDialog::Accepted) return;
 
 	switch (serverTypeDialog.accountType()) {
 
@@ -211,7 +211,7 @@ EmpathAccountsSettingsDialog::s_newAccount()
 						(EmpathMailboxMaildir *)tempMailbox,
 						this, "configDialog");
 
-				if (configDialog.exec() == Cancel) {
+				if (configDialog.exec() != QDialog::Accepted) {
 					empathDebug("Deleting unwanted mailbox");
 					delete tempMailbox;
 					return;
@@ -239,7 +239,7 @@ EmpathAccountsSettingsDialog::s_newAccount()
 						(EmpathMailboxPOP3 *)tempMailbox,
 						false, this, "configDialog");
 
-				if (configDialog.exec() == Cancel) {
+				if (configDialog.exec() == QDialog::Accepted) {
 					empathDebug("Deleting unwanted mailbox");
 					delete tempMailbox;
 					return;
@@ -265,7 +265,7 @@ EmpathAccountsSettingsDialog::s_newAccount()
 				EmpathConfigIMAP4Dialog configDialog(
 						(EmpathMailboxIMAP4 *)tempMailbox, this, "configDialog");
 
-				if (configDialog.exec() == Cancel) {
+				if (configDialog.exec() != QDialog::Accepted) {
 					empathDebug("Deleting unwanted mailbox");
 					delete tempMailbox;
 					return;
@@ -305,8 +305,6 @@ EmpathAccountsSettingsDialog::s_editAccount()
 
 	m->setName(led.text());
 
-	DialogRetval dlg_retval = Cancel;
-
 	empathDebug("Mailbox name = " + m->name());
 
 	switch (m->type()) {
@@ -315,7 +313,8 @@ EmpathAccountsSettingsDialog::s_editAccount()
 			{
 				EmpathConfigMaildirDialog configDialog(
 						(EmpathMailboxMaildir *)m, this, "configDialog");
-				dlg_retval = (DialogRetval)configDialog.exec();
+			   if (configDialog.exec() == QDialog::Accepted)
+				   updateMailboxList();
 			}
 		   break;
 
@@ -323,7 +322,8 @@ EmpathAccountsSettingsDialog::s_editAccount()
 		   {
 			   EmpathConfigPOP3Dialog configDialog(
 					   (EmpathMailboxPOP3 *)m, true, this, "configDialog");
-			   dlg_retval = (DialogRetval)configDialog.exec();
+			   if (configDialog.exec() == QDialog::Accepted)
+				   updateMailboxList();
 		   }
 		   break;
 
@@ -331,18 +331,15 @@ EmpathAccountsSettingsDialog::s_editAccount()
 		   {
 			   EmpathConfigIMAP4Dialog configDialog(
 					   (EmpathMailboxIMAP4 *)m, this, "configDialog");
-			   dlg_retval = (DialogRetval)configDialog.exec();
+			   if (configDialog.exec() == QDialog::Accepted)
+				   updateMailboxList();
 		   }
 		   break;
 
 	   default:
+		   return;
 		   break;
 	}
-
-	empathDebug("configDialog for mailbox '" + m->name() + "' returned" +
-			QString(dlg_retval == OK ? "OK" : "Cancel"));
-
-	if (dlg_retval == OK) updateMailboxList();
 }
 
 	void
