@@ -40,14 +40,6 @@
 
 using namespace KCal;
 
-Calendar::Calendar()
-{
-  mTimeZoneId = QString::fromLatin1( "UTC" );
-  mLocalTime = false;
-
-  init();
-}
-
 Calendar::Calendar( const QString &timeZoneId )
 {
   mTimeZoneId = timeZoneId;
@@ -555,7 +547,6 @@ Todo::List Calendar::todos( TodoSortField sortField,
 
 Todo::List Calendar::todos( const QDate &date )
 {
-  // @TODO: rewrite this for in-progress To-dos.  see doxy.
   Todo::List el = rawTodosForDate( date );
   mFilter->apply( &el );
   return el;

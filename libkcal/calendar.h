@@ -48,7 +48,7 @@
 /**
    @namespace KCal
    Namespace KCal is for global classes, objects and/or functions in libkcal.
- */
+*/
 namespace KCal {
 
 class CalFilter;
@@ -167,14 +167,9 @@ enum JournalSortField
 class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
                                 public IncidenceBase::Observer
 {
-  Q_OBJECT
+    Q_OBJECT
+
   public:
-    //TODO: combine constructors into
-    //      Calendar(const QString &timeZoneId = QString::fromLatin1( "UTC" ))
-    /**
-       Construct Calendar object using the UTC Time Zone.
-    */
-    Calendar();
 
     /**
        Construct Calendar object using a Time Zone.
@@ -190,7 +185,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        Do Not pass an empty timeZoneId string as this may cause unintended
        consequences when storing Incidences into the Calendar.
     */
-    Calendar( const QString &timeZoneId );
+    Calendar( const QString &timeZoneId = QString::fromLatin1( "UTC" ) );
 
     /**
        Destructor
@@ -306,18 +301,18 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
     /**
        Insert an Incidence into the Calendar.
 
-       @param incidence is a pointer to the Inicidence to insert.
+       @param incidence is a pointer to the Incidence to insert.
 
-       @return true on success, false on error.
+       @return true if the Incidence was successfully inserted; false otherwise.
     */
     virtual bool addIncidence( Incidence *incidence );
 
     /**
        Remove an Incidence from the Calendar.
 
-       @param incidence is a pointer to the Inicidence to remove.
+       @param incidence is a pointer to the Incidence to remove.
 
-       @return true on success, false on error.
+       @return true if the Incidence was successfully removed; false otherwise.
     */
     virtual bool deleteIncidence( Incidence *incidence );
 
@@ -417,7 +412,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @param event is a pointer to the Event to insert.
 
-       @return true on success, false on error.
+       @return true if the Event was successfully inserted; false otherwise.
     */
     virtual bool addEvent( Event *event ) = 0;
 
@@ -425,6 +420,8 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        Remove an Event from the Calendar.
 
        @param event is a pointer to the Event to remove.
+
+       @return true if the Event was successfully remove; false otherwise.
     */
     virtual bool deleteEvent( Event *event ) = 0;
 
@@ -561,7 +558,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @param todo is a pointer to the Todo to insert.
 
-       @return true on success, false on error.
+       @return true if the Todo was successfully inserted; false otherwise.
     */
     virtual bool addTodo( Todo *todo ) = 0;
 
@@ -569,6 +566,8 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        Remove a Todo from the Calendar.
 
        @param todo is a pointer to the Todo to remove.
+
+       @return true if the Todo was successfully removed; false otherwise.
     */
     virtual bool deleteTodo( Todo *todo ) = 0;
 
@@ -598,18 +597,13 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
       SortDirection sortDirection = SortDirectionAscending );
 
     /**
-       Return a filtered list of all Todos which are in-progress
-       on the specifed date.  A Todo in-progress is one which is
-       not completed, and whose starting date <= @a date <= due date.
+       Return a filtered list of all Todos which are due on the specified date.
 
-       @param date request filtered Todos in-progress on this QDate.
+       @param date request filtered Todos due on this QDate.
 
-       @return the list of filtered Todos in-progress on the specified date.
+       @return the list of filtered Todos due on the specified date.
     */
-    //TODO: rewrite todos() according to the description above
     virtual Todo::List todos( const QDate &date );
-
-    //TODO: do we need todosForDueDate() and/or todosForStartDate()?
 
     /**
        Return a sorted, unfiltered list of all Todos for this Calendar.
@@ -624,18 +618,13 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
       SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
-       Return an unfiltered list of all Todos which are in-progress
-       on the specifed date.  A Todo in-progress is one which is
-       not completed, and whose starting date <= @a date <= due date.
+       Return an unfiltered list of all Todos which due on the specified date.
 
-       @param date request unfiltered Todos in-progress on this QDate.
+       @param date request unfiltered Todos due on this QDate.
 
-       @return the list of unfiltered Todos in-progress on the specified date.
+       @return the list of unfiltered Todos due on the specified date.
     */
-    //TODO: rewrite rawTodosForDate() according to the description above
     virtual Todo::List rawTodosForDate( const QDate &date ) = 0;
-
-    //TODO: do we need rawTodosForDueDate() and/or rawTodosForStartDate()?
 
     /**
        Returns the Todo associated with the given unique identifier.
@@ -654,7 +643,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @param journal is a pointer to the Journal to insert.
 
-       @return true on success, false on error.
+       @return true if the Journal was successfully inserted; false otherwise.
     */
     virtual bool addJournal( Journal *journal ) = 0;
 
@@ -662,6 +651,8 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        Remove a Journal from the Calendar.
 
        @param journal is a pointer to the Journal to remove.
+
+       @return true if the Journal was successfully removed; false otherwise.
     */
     virtual bool deleteJournal( Journal *journal ) = 0;
 
@@ -791,8 +782,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
         /**
            Notify the Observer that a Calendar has been modified.
 
-           First parameter is true if the Calendar has been modified.
-
+           First parameter is true if the Calendar has been modified.\n
            Second parameter is a pointer to the Calendar object that
            is being observed.
         */
