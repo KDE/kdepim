@@ -1,3 +1,31 @@
+KPilot Developer's notes for september 16th 2001
+================================================
+
+2001-09-07  Adriaan de Groot
+* kpilot/pilotComponent.h
+  () Fixed up #ifdefs for new style
+* kpilot/kpilotlink.h
+  () Make many data members private with protected access functions.
+  (statusString) Made into a virtual function.
+
+2001-09-06  Adriaan de Groot
+
+* kpilot/Makefile.am
+  () Forgot to add logWidget.cc to kpilot_SOURCES
+* kpilot/kpilotOptions.cc
+  () Added more tooltips, switched most to <qt></qt> rich text.
+  () Changed default value for SyncFiles to true.
+* kpilot/kpilotlink.{h,cc}
+  () Added new state CreatedSocket and member fRetries
+  (open) Allow for retries on pi_bind(), since it may fail on
+  USB style devices.
+  () Added ASSERT() and member fDeviceLink to enforce singleton=ness.
+* kpilot/main-test.{h,cc}
+  () Added ASSERT() to enforce singleton-ness.
+* kpilot/hotSync.{h,cc}
+  () New files, containing most of the old HotSync code from 
+  kpilotlink.{h,cc}, now using the new KPilotDeviceLink base class.
+  
 KPilot Developer's notes for september 5th 2001
 ===============================================
 
