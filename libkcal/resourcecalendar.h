@@ -259,11 +259,6 @@ class ResourceCalendar : public KRES::Resource
     virtual void deleteJournal( Journal * ) = 0;
 
     /**
-      Return Journal for given date.
-    */
-    virtual Journal *journal( const QDate & ) = 0;
-
-    /**
       Return Journal with given unique id.
     */
     virtual Journal *journal( const QString &uid ) = 0;
@@ -272,9 +267,9 @@ class ResourceCalendar : public KRES::Resource
     */
     virtual Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
     /**
-      Returns the journal for the given date.
+      Returns list of journals for the given date.
     */
-    virtual Journal *rawJournalForDate( const QDate &date ) = 0;
+    virtual Journal::List rawJournalsForDate( const QDate &date ) = 0;
 
     /**
       Return all alarms, which ocur in the given time interval.

@@ -182,10 +182,6 @@ class CalendarResources : public Calendar,
     */
     Event *event(const QString &UniqueStr);
     /**
-      Return filtered list of all events in calendar.
-    */
-//    Event::List events();
-    /**
       Return unfiltered list of all events in calendar.
     */
     Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
@@ -226,18 +222,16 @@ class CalendarResources : public Calendar,
     void deleteJournal( Journal * ) KDE_DEPRECATED;
     /** Add Journal to a resource. */
     bool addJournal(Journal *journal, ResourceCalendar *resource) KDE_DEPRECATED;
-    /** Return Journal for given date */
-    Journal *journal(const QDate &);
     /** Return Journal with given UID */
-    Journal *journal(const QString &UID);
+    Journal *journal(const QString &uid);
     /**
       Return list of all journals.
     */
     Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
-      Returns the journal for the given date.
+      Returns list of journals for the given date.
     */
-    Journal *rawJournalForDate( const QDate &date );
+    Journal::List rawJournalsForDate( const QDate &date );
 
     /** Return all alarms, which ocur in the given time interval. */
     Alarm::List alarms( const QDateTime &from, const QDateTime &to );

@@ -206,10 +206,6 @@ class ResourceCached : public ResourceCalendar,
     */
     virtual void deleteJournal( Journal * );
     /**
-      Return Journal for given date.
-    */
-    virtual Journal *journal( const QDate & );
-    /**
       Return Journal with given unique id.
     */
     virtual Journal *journal( const QString &uid );
@@ -218,9 +214,9 @@ class ResourceCached : public ResourceCalendar,
     */
     Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted,SortDirection sortDirection = SortDirectionAscending );
     /**
-      Returns the journal for the given date.
+      Return list of journals for the given date.
     */
-    Journal *rawJournalForDate( const QDate &date );
+    Journal::List rawJournalsForDate( const QDate &date );
 
     /**
       Return all alarms, which ocur in the given time interval.

@@ -227,13 +227,6 @@ bool ResourceCached::addJournal( Journal *journal )
   return mCalendar.addJournal( journal );
 }
 
-Journal *ResourceCached::journal( const QDate &date )
-{
-//  kdDebug(5800) << "ResourceCached::journal() " << date.toString() << endl;
-
-  return mCalendar.journal( date );
-}
-
 Journal *ResourceCached::journal( const QString &uid )
 {
   return mCalendar.journal( uid );
@@ -244,9 +237,9 @@ Journal::List ResourceCached::rawJournals( JournalSortField sortField, SortDirec
   return mCalendar.rawJournals( sortField, sortDirection );
 }
 
-Journal *ResourceCached::rawJournalForDate( const QDate &date )
+Journal::List ResourceCached::rawJournalsForDate( const QDate &date )
 {
-  return mCalendar.rawJournalForDate( date );
+  return mCalendar.rawJournalsForDate( date );
 }
 
 

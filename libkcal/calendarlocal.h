@@ -136,24 +136,17 @@ class CalendarLocal : public Calendar
     */
     void deleteAllJournals();
     /**
-      Return Journal for given date.
-    */
-    Journal *journal( const QDate & );
-    /**
       Return Journal with given UID.
     */
     Journal *journal( const QString &uid );
     /**
-       Return unfiltered list of all journals in calendar.
+       Return list of all journals.
     */
     Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
-       Get unfiltered journal for a given date.
+       Get unfiltered journals for a given date.
     */
-    Journal *rawJournalForDate( const QDate &date );
-    /**
-      Return list of all Journals stored in calendar.
-    */
+    Journal::List rawJournalsForDate( const QDate &date );
 
     /**
       Return all alarms, which ocur in the given time interval.

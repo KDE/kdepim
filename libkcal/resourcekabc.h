@@ -77,10 +77,6 @@ class ResourceKABC : public ResourceCalendar
     */
     Event *event(const QString &UniqueStr);
     /**
-      Return filtered list of all events in calendar.
-    */
-//    Event::List events();
-    /**
       Return unfiltered list of all events in calendar.
     */
     Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
@@ -133,18 +129,16 @@ class ResourceKABC : public ResourceCalendar
     virtual bool addJournal(Journal *);
     /** Remove journal from the calendar. */
     void deleteJournal( Journal * );
-    /** Return Journal for given date */
-    virtual Journal *journal(const QDate &);
     /** Return Journal with given UID */
-    virtual Journal *journal(const QString &UID);
+    virtual Journal *journal(const QString &uid);
     /**
       Return list of all journals.
     */
     Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
-      Returns the journal for the given date.
+      Returns list of journals for the given date.
     */
-    Journal *rawJournalForDate( const QDate &date );
+    Journal::List rawJournalsForDate( const QDate &date );
 
     /** Return all alarms, which ocur in the given time interval. */
     Alarm::List alarms( const QDateTime &from, const QDateTime &to );

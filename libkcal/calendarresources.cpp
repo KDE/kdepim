@@ -550,35 +550,7 @@ bool CalendarResources::addJournal(Journal *journal, ResourceCalendar *resource)
   return addIncidence( journal, resource );
 }
 
-Journal *CalendarResources::journal(const QDate &date)
-{
-  kdDebug(5800) << "CalendarResources::journal() " << date.toString() << endl;
-  kdDebug(5800) << "FIXME: what to do with the multiple journals from multiple calendar resources?" << endl;
-
-  // If we're on a private resource, return that journal.
-  // Else, first see if the standard resource has a journal for this date. If it has, return that journal.
-  // If not, check all resources for a journal for this date.
-
-  if ( mManager->standardResource() ) {
-    Journal* journal = mManager->standardResource()->journal( date );
-    if ( journal ) {
-      mResourceMap[journal] = mManager->standardResource();
-      return journal;
-    }
-  }
-  CalendarResourceManager::ActiveIterator it;
-  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Journal* journal = (*it)->journal( date );
-    if ( journal ) {
-      mResourceMap[journal] = *it;
-      return journal;
-    }
-  }
-
-  return 0;
-}
-
-Journal *CalendarResources::journal(const QString &uid)
+Journal *CalendarResources::journal( const QString &uid )
 {
   kdDebug(5800) << "CalendarResources::journal(uid)" << endl;
 
@@ -612,14 +584,19 @@ Journal::List CalendarResources::rawJournals( JournalSortField sortField, SortDi
   return sortJournals( &result, sortField, sortDirection );
 }
 
-Journal *CalendarResources::rawJournalForDate( const QDate &date )
+Journal::List CalendarResources::rawJournalsForDate( const QDate &date )
 {
-  Journal *result = 0;
+
+  Journal::List result;
 
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    result = (*it)->rawJournalForDate( date );
-    mResourceMap[ result ] = *it;
+    Journal::List journals = (*it)->rawJournalsForDate( date );
+    Journal::List::ConstIterator it2;
+    for ( it2 = journals.begin(); it2 != journals.end(); ++it2 ) {
+      result.append( *it2 );
+      mResourceMap[ *it2 ] = *it;
+    }
   }
   return result;
 }

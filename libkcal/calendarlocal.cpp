@@ -520,18 +520,6 @@ void CalendarLocal::deleteAllJournals()
   mJournalList.setAutoDelete( false );
 }
 
-Journal *CalendarLocal::journal( const QDate &date )
-{
-//  kdDebug(5800) << "CalendarLocal::journal() " << date.toString() << endl;
-
-  Journal::List::ConstIterator it;
-  for ( it = mJournalList.begin(); it != mJournalList.end(); ++it )
-    if ( (*it)->dtStart().date() == date )
-      return *it;
-
-  return 0;
-}
-
 Journal *CalendarLocal::journal( const QString &uid )
 {
   Journal::List::ConstIterator it;
@@ -547,13 +535,17 @@ Journal::List CalendarLocal::rawJournals( JournalSortField sortField, SortDirect
   return sortJournals( &mJournalList, sortField, sortDirection );
 }
 
-Journal *CalendarLocal::rawJournalForDate( const QDate &date )
+Journal::List CalendarLocal::rawJournalsForDate( const QDate &date )
 {
+  Journal::List journals;
+
   Journal::List::ConstIterator it;
-  for ( it = mJournalList.begin(); it != mJournalList.end(); ++it )
-    if ( (*it)->dtStart().date() == date )
-      return *it;
+  for ( it = mJournalList.begin(); it != mJournalList.end(); ++it ) {
+    Journal *journal = *it;
+    if ( journal->dtStart().date() == date ) {
+      journals.append( journal );
+    }
+  }
 
-  return 0;
+  return journals;
 }
-

@@ -184,10 +184,7 @@ QStringList Calendar::incidenceCategories()
 
 Incidence::List Calendar::incidences( const QDate &qdt )
 {
-  Journal::List jnls;
-  Journal*jnl = journal(qdt);
-  if (jnl) jnls.append( journal(qdt) );
-  return mergeIncidenceList( events( qdt ), todos( qdt ), jnls );
+  return mergeIncidenceList( events( qdt ), todos( qdt ), journals( qdt ) );
 }
 
 Incidence::List Calendar::incidences()
@@ -644,6 +641,13 @@ Journal::List Calendar::journals( JournalSortField sortField, SortDirection sort
   Journal::List jl = rawJournals( sortField, sortDirection );
   mFilter->apply( &jl );
   return jl;
+}
+
+Journal::List Calendar::journals( const QDate &date )
+{
+  Journal::List el = rawJournalsForDate( date );
+  mFilter->apply(&el);
+  return el;
 }
 
 // When this is called, the todo have already been added to the calendar.

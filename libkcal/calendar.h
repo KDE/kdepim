@@ -281,37 +281,37 @@ class Calendar : public QObject, public CustomProperties,
     */
     virtual void deleteJournal( Journal * ) = 0;
     /**
-      Return Journal for given date.
-    */
-    virtual Journal *journal( const QDate & ) = 0;
-    /**
       Return Journal with given UID.
     */
-    virtual Journal *journal( const QString &UID ) = 0;
+    virtual Journal *journal( const QString &uid ) = 0;
     /**
       Return list of all Journal entries.
     */
     virtual Journal::List journals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
+      Returns list of journals for the specified date.
+    */
+    virtual Journal::List journals( const QDate &date );
+    /**
        Return unfiltered list of all journals in calendar.
     */
     virtual Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
     /**
-       Get unfiltered journal for a given date.
+      Return unfiltered list of journals for a given date.
     */
-    virtual Journal *rawJournalForDate( const QDate &date ) = 0;
+    virtual Journal::List rawJournalsForDate( const QDate &date ) = 0;
 
     /**
       Searches all incidence types for an incidence with this unique
       string identifier, returns a pointer or null.
     */
-    Incidence *incidence( const QString &UID );
+    Incidence *incidence( const QString &uid );
 
     /**
       Searches all events and todos for an incidence with this
       scheduling ID. Returns a pointer or null.
     */
-    Incidence *incidenceFromSchedulingID( const QString &UID );
+    Incidence *incidenceFromSchedulingID( const QString &uid );
 
     /**
       Setup relations for an incidence.

@@ -405,13 +405,6 @@ void ResourceKABC::deleteJournal(Journal*)
 {
 }
 
-Journal *ResourceKABC::journal(const QDate &date)
-{
-//  kdDebug(5800) << "ResourceKABC::journal() " << date.toString() << endl;
-
-  return mCalendar.journal( date );
-}
-
 Journal *ResourceKABC::journal(const QString &uid)
 {
   return mCalendar.journal( uid );
@@ -422,9 +415,9 @@ Journal::List ResourceKABC::rawJournals( JournalSortField sortField, SortDirecti
   return mCalendar.rawJournals( sortField, sortDirection );
 }
 
-Journal *ResourceKABC::rawJournalForDate( const QDate &date )
+Journal::List ResourceKABC::rawJournalsForDate( const QDate &date )
 {
-  return mCalendar.rawJournalForDate( date );
+  return mCalendar.rawJournalsForDate( date );
 }
 
 Alarm::List ResourceKABC::alarmsTo( const QDateTime &to )
