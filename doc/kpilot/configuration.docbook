@@ -316,10 +316,10 @@ view and edit the information from your &handheld;, so running the conduits only
 is not sufficient.
 </para>
 
-<warning>
+<warning><para>
 Remember, when &kpilot; does a &HotSync; and runs the conduits,
-the databases in the internal viewers are <emph>not</emph>
-updated. This will be fixed in a future release.
+the databases in the internal viewers are <emphasis>not</emphasis>
+updated. This will be fixed in a future release.</para>
 </warning>
 
 <screenshot>
@@ -507,7 +507,7 @@ here (the default should be OK though).
 Newer &PalmPilot; devices contain emulation code for
 the older 68k processor; this means that they have a large
 number of databases with names ending in
-<literal class="extension">_a68k</literal>.
+<literal role="extension">_a68k</literal>.
 These do not need to be backed up nor synced, so you could
 add <userinput>*_a68k</userinput>
 to the list of databases to skip.
