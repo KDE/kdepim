@@ -845,47 +845,11 @@ QString CryptPlugWrapper::libVersion() const {
 /* Some multi purpose functions ******************************************/
 
 QString CryptPlugWrapper::errorIdToText( int errId, bool & isPassphraseError ) {
-  /* The error numbers used by GPGME.  */
-  /*
-    typedef enum
-    {
-      GPGME_EOF                = -1,
-      GPGME_No_Error           = 0,
-      GPGME_General_Error      = 1,
-      GPGME_Out_Of_Core        = 2,
-      GPGME_Invalid_Value      = 3,
-      GPGME_Busy               = 4,
-      GPGME_No_Request         = 5,
-      GPGME_Exec_Error         = 6,
-      GPGME_Too_Many_Procs     = 7,
-      GPGME_Pipe_Error         = 8,
-      GPGME_No_Recipients      = 9,
-      GPGME_No_Data            = 10,
-      GPGME_Conflict           = 11,
-      GPGME_Not_Implemented    = 12,
-      GPGME_Read_Error         = 13,
-      GPGME_Write_Error        = 14,
-      GPGME_Invalid_Type       = 15,
-      GPGME_Invalid_Mode       = 16,
-      GPGME_File_Error         = 17,  // errno is set in this case.
-      GPGME_Decryption_Failed  = 18,
-      GPGME_No_Passphrase      = 19,
-      GPGME_Canceled           = 20,
-      GPGME_Invalid_Key        = 21,
-      GPGME_Invalid_Engine     = 22,
-      GPGME_Invalid_Recipients = 23
-    }
-  */
-
-  /*
-    NOTE:
-    The following hack *must* be changed into something
-    using an extra enum specified in the CryptPlug API
-    *and* the file error number (case 17) must be taken
-    into account.                     (khz, 2002/27/06)
-  */
-
-  isPassphraseError = false;
+  const GpgME::Error err( errId );
+  isPassphraseError = err.isCanceled()
+    || gpgme_err_code( errId ) == GPG_ERR_NO_SECKEY ; // FIXME: more?
+  return QString::fromLocal8Bit( err.asString() );
+#if 0
   switch( errId ){
   case /*GPGME_EOF                = */-1:
     return(i18n("End of File reached during operation."));
@@ -943,6 +907,7 @@ QString CryptPlugWrapper::errorIdToText( int errId, bool & isPassphraseError ) {
   default:
     return(i18n("Unknown error."));
   }
+#endif
 }
 
 /* some special functions ************************************************/
