@@ -63,6 +63,8 @@ namespace Kleo {
     CryptPlugWrapperList & list() const { return *mCryptPlugWrapperList; }
 #endif
 
+    bool hasBackends() const;
+
     void scanForBackends();
   private:
     void loadFromConfig( KConfig * );

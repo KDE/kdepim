@@ -93,6 +93,10 @@ CryptPlugWrapper * Kleo::CryptPlugFactory::openpgp() const {
 }
 
 
+bool Kleo::CryptPlugFactory::hasBackends() const {
+  return mCryptPlugWrapperList && !mCryptPlugWrapperList->isEmpty();
+}
+
 void Kleo::CryptPlugFactory::scanForBackends() {
   mCryptPlugWrapperList->clear();
 
