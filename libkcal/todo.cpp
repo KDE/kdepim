@@ -140,7 +140,7 @@ bool Todo::hasStartDate() const
   return mHasStartDate;
 }
 
-void Todo::setHasStartDate(bool f) // zie reinholds opmerking
+void Todo::setHasStartDate(bool f)
 {
   if (mReadOnly) return;
 
