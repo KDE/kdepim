@@ -4,7 +4,6 @@
 <!ENTITY sli    "slider">
 <!ENTITY dir    "directory">
 <!ENTITY kde    "K Desktop Environment">
-<!ENTITY ab     SYSTEM "ab.inc"> 
 <!ENTITY % addindex "IGNORE">
 <!ENTITY % ents PUBLIC "-//KDE//ENTITIES Application-Variable Entities V1.0//EN">
   %ents;
@@ -52,7 +51,7 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>08/20/2000</date>
+<date>10/10/2000</date>
 <releaseinfo>1.92.00</releaseinfo>
 
 <revhistory>
@@ -505,7 +504,10 @@ description</link>.</para></listitem>
 </varlistentry>
 </variablelist>
 
-&ab;
+<para>When you want to confirm, call off or revert the entered data, choose
+among the <link linkend="reference-action-buttons">Action Buttons</link>,
+<guibutton>Ok</guibutton>, <guibutton>Apply</guibutton> and
+<guibutton>Cancel</guibutton>.</para>
 
 </sect2>
 
@@ -516,7 +518,10 @@ description</link>.</para></listitem>
 more information in the <link linkend="reference-windows-attendees">Attendees
 section</link> of the Windows reference.</para>
  
-&ab;
+<para>When you want to confirm, call off or revert the entered data, choose
+among the <link linkend="reference-action-buttons">Action Buttons</link>,
+<guibutton>Ok</guibutton>, <guibutton>Apply</guibutton> and
+<guibutton>Cancel</guibutton>.</para>
 
 </sect2>
 
@@ -610,7 +615,10 @@ scheduled</emphasis>).  Pick a date with the date selector, and press
 <guibutton>Add</guibutton> to include it. For removing dates, highlight them in
 the box on the right side, and then click <guibutton>Delete</guibutton>.</para>
 
-&ab;
+<para>When you want to confirm, call off or revert the entered data, choose
+among the <link linkend="reference-action-buttons">Action Buttons</link>,
+<guibutton>Ok</guibutton>, <guibutton>Apply</guibutton> and
+<guibutton>Cancel</guibutton>.</para>
 
 </sect3>
 
@@ -738,7 +746,10 @@ another calendar understanding the vCalendar format.</para></listitem>
 </varlistentry>
 </variablelist>
 
-&ab;
+<para>When you want to confirm, call off or revert the entered data, choose
+among the <link linkend="reference-action-buttons">Action Buttons</link>,
+<guibutton>Ok</guibutton>, <guibutton>Apply</guibutton> and
+<guibutton>Cancel</guibutton>.</para>
 
 </sect2>
 
@@ -749,13 +760,17 @@ another calendar understanding the vCalendar format.</para></listitem>
 more information in the <link linkend="reference-windows-attendees">Attendees
 section</link> of the Windows reference.</para> 
 
-&ab; 
+<para>When you want to confirm, call off or revert the entered data, choose
+among the <link linkend="reference-action-buttons">Action Buttons</link>,
+<guibutton>Ok</guibutton>, <guibutton>Apply</guibutton> and
+<guibutton>Cancel</guibutton>.</para> 
 
 </sect2>
 
 </sect1>
 
 <sect1 id="entering-data-required-fields">
+
 <title>Required fields</title>
 
 <para>This is an overview of what fields are required and what fields can be
@@ -2282,10 +2297,10 @@ task.</para>
 <chapter id="faq">
 <title>Questions and Answers</title>
 
-<qandaset id="questions-and-answers">
+<qandaset id="faq-questions">
 <qandaentry>
 <question>
-<para>Can I import my old <application>Ical</application> data??</para>
+<para>Can I import my old <application>Ical</application> data?</para>
 </question>
 <answer><para>Sure! Follow the instructions in <link
 linkend="file-import-ical">Import From Ical section</link>.</para>
