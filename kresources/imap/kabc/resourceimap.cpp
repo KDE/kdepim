@@ -81,12 +81,12 @@ KABC::ResourceIMAP::~ResourceIMAP()
 bool KABC::ResourceIMAP::doOpen()
 {
   KConfig config( configFile() );
+  config.setGroup( "Contact" );
 
   // Read the calendar entries
   QStringList resources;
   if ( !kmailSubresources( resources, "Contact" ) )
     return false;
-  config.setGroup( "Contact" );
   QStringList::ConstIterator it;
   mResources.clear();
   for ( it = resources.begin(); it != resources.end(); ++it )
@@ -98,8 +98,8 @@ bool KABC::ResourceIMAP::doOpen()
 void KABC::ResourceIMAP::doClose()
 {
   KConfig config( configFile() );
-
   config.setGroup( "Contact" );
+
   QMap<QString, bool>::ConstIterator it;
   for ( it = mResources.begin(); it != mResources.end(); ++it )
     config.writeEntry( it.key(), it.data() );
@@ -120,33 +120,41 @@ void KABC::ResourceIMAP::releaseSaveTicket( Ticket* ticket )
   delete ticket;
 }
 
+bool KABC::ResourceIMAP::loadResource( const QString& resource )
+{
+  QStringList lst;
+  if ( !kmailIncidences( lst, "Contact", resource ) ) {
+    kdError() << "Communication problem in ResourceIMAP::load()\n";
+    return false;
+  }
+
+  for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
+    KABC::Addressee addr = mConverter.parseVCard( *it );
+    addr.setResource( this );
+    addr.setChanged( false );
+    Resource::insertAddressee( addr );
+    mUidmap[ addr.uid() ] = resource;
+  }
+
+  return true;
+}
+
 bool KABC::ResourceIMAP::load()
 {
   mUidmap.clear();
   mAddrMap.clear();
 
+  bool rc = true;
   QMap<QString, bool>::ConstIterator itR;
   for ( itR = mResources.begin(); itR != mResources.end(); ++itR ) {
     if ( !itR.data() )
       // This resource is disabled
       continue;
 
-    QStringList lst;
-    if ( !kmailIncidences( lst, "Contact", itR.key() ) ) {
-      kdError() << "Communication problem in ResourceIMAP::load()\n";
-      return false;
-    }
-
-    for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
-      KABC::Addressee addr = mConverter.parseVCard( *it );
-      addr.setResource( this );
-      addr.setChanged( false );
-      Resource::insertAddressee( addr );
-      mUidmap[ addr.uid() ] = itR.key();
-    }
+    rc &= loadResource( itR.key() );
   }
 
-  return true;
+  return rc;
 }
 
 bool KABC::ResourceIMAP::save( Ticket* )
@@ -277,15 +285,79 @@ void KABC::ResourceIMAP::slotRefresh( const QString& type,
 void KABC::ResourceIMAP::subresourceAdded( const QString& type,
                                            const QString& resource )
 {
-  // TODO: Optimize this
-  slotRefresh( type, resource );
+  if ( type != "Contact" )
+    // Not ours
+    return;
+
+  if ( !mResources.contains( resource ) )
+    // Already registered
+    return;
+
+  KConfig config( configFile() );
+  config.setGroup( "Contact" );
+
+  mResources[ resource ] = config.readBoolEntry( resource, true );
+  loadResource( resource );
+  addressBook()->emitAddressBookChanged();
+  emit signalSubresourceAdded( this, type, resource );
 }
 
 void KABC::ResourceIMAP::subresourceDeleted( const QString& type,
                                              const QString& resource )
 {
-  // TODO: Optimize this
-  slotRefresh( type, resource );
+  if ( type != "Contact" )
+    // Not ours
+    return;
+
+  if ( !mResources.contains( resource ) )
+    // Not registered
+    return;
+
+  // Ok, it's our job, and we have it here
+  mResources.erase( resource );
+
+  KConfig config( configFile() );
+  config.setGroup( "Contact" );
+  config.deleteEntry( resource );
+  config.sync();
+
+  // Make a list of all uids to remove
+  QMap<QString, QString>::ConstIterator mapIt;
+  QStringList uids;
+  for ( mapIt = mUidmap.begin(); mapIt != mUidmap.end(); ++mapIt )
+    if ( mapIt.data() == resource )
+      // We have a match
+      uids << mapIt.key();
+
+  // Finally delete all the incidences
+  if ( !uids.isEmpty() ) {
+    QStringList::ConstIterator it;
+    for ( it = uids.begin(); it != uids.end(); ++it ) {
+      mAddrMap.remove( *it );
+      mUidmap.remove( *it );
+    }
+
+    addressBook()->emitAddressBookChanged();
+  }
+
+  emit signalSubresourceRemoved( this, type, resource );
+}
+
+QStringList KABC::ResourceIMAP::subresources() const
+{
+  return mResources.keys();
+}
+
+bool KABC::ResourceIMAP::subresourceActive( const QString& subresource ) const
+{
+  if ( mResources.contains( subresource ) ) {
+    return mResources[ subresource ];
+  }
+
+  // Safe default bet:
+  kdDebug(5650) << "subresourceActive( " << subresource << " ): Safe bet\n";
+
+  return true;
 }
 
 

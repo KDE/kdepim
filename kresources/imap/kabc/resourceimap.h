@@ -114,9 +114,21 @@ public:
                         const QString& uid );
   void slotRefresh( const QString& type, const QString& resource );
 
+  /** Return the list of subresources. */
+  QStringList subresources() const;
+
+  /** Is this subresource active? */
+  bool subresourceActive( const QString& ) const;
+
+signals:
+  void signalSubresourceAdded( Resource*, const QString&, const QString& );
+  void signalSubresourceRemoved( Resource*, const QString&, const QString& );
+
 protected:
   void insertAddressee( const Addressee&, const QString& resource );
   void doClose();
+
+  bool loadResource( const QString& resource );
 
   QString configFile() const {
     return ResourceIMAPBase::ResourceIMAPShared::configFile( "kabc" );
