@@ -42,7 +42,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2004-04-26</date>
+<date>2004-05-07</date>
 <releaseinfo>1.01.00</releaseinfo>
 
 <abstract>
@@ -198,8 +198,8 @@ action.</para>
 <title>Creating a new alarm</title>
 
 <para>To create a new alarm, do one of the following. This displays
-the alarm edit dialog which is described in the
-<link linkend="edit-alarm">next section</link>.</para>
+the alarm edit dialog which is described
+<link linkend="alarm-edit-dialog">below</link>.</para>
 
 <itemizedlist>
 <listitem>
@@ -307,7 +307,16 @@ context menu.</para>
 </listitem>
 </itemizedlist>
 
-<para>This displays the alarm edit dialog:</para>
+<para>This displays the <link linkend="alarm-edit-dialog">alarm edit
+dialog</link>.</para>
+
+</sect2>
+
+<sect2 id="alarm-edit-dialog">
+<title>The alarm edit dialog</title>
+
+<para>The alarm edit dialog enables you to view and edit an
+alarm.</para>
 
 <screenshot>
 <screeninfo>Screenshot of the alarm edit dialog</screeninfo>
@@ -345,6 +354,27 @@ a beep is sounded; use the button on the right to select an audio file
 to play. To revert to a beep, click the button again. To see what your
 current sound selection is, hover the mouse above the button until a
 tooltip appears.</para>
+
+<para>If you have selected an audio file to play, there are further
+options to control the sound:</para>
+
+<itemizedlist>
+<listitem>
+<para>Check the <guilabel>Repeat</guilabel> checkbox to continually
+repeat the audio file for as long as the alarm is displayed. (The
+alarm message window contains a button to stop playing the sound
+should you need silence but still want to display the alarm.)</para>
+</listitem>
+
+<listitem>
+<para>Select <guilabel>Volume</guilabel> and adjust the slider
+control if you want to adjust the volume at which the audio file is
+played.</para>
+
+<tip><para>You can use the <guibutton>Try</guibutton> button to test out
+the resultant sound level.</para></tip>
+</listitem>
+</itemizedlist>
 </listitem>
 
 <listitem>
@@ -376,6 +406,34 @@ the message is displayed. (The default font can be set in the
 <link linkend="preferences">Preferences dialog</link>.) To choose a
 specific font for the message, uncheck
 <guilabel>Use default font</guilabel>.</para>
+</listitem>
+
+<listitem>
+<para>Use the <guibutton>Special Actions...</guibutton> button to
+specify shell commands to execute before or after displaying the
+alarm. In the <guilabel>Special Alarm Actions</guilabel>
+dialog:</para>
+
+<itemizedlist>
+<listitem>
+<para>In the <guilabel>Pre-alarm action</guilabel> field, enter a
+shell command to execute before the alarm is displayed.  Note that
+&kalarm; will wait for the command to complete before displaying the
+alarm.</para>
+</listitem>
+
+<listitem>
+<para>In the <guilabel>Post-alarm action</guilabel> field, enter a
+shell command to execute when the alarm window is closed.</para>
+</listitem>
+</itemizedlist>
+
+<para>See the description of Command alarms below for details of how
+shell commands are executed.</para>
+
+<para>Note that special actions are not executed if the alarm was
+displaying at the time you logged off and is then restored when you
+log in.</para>
 </listitem>
 </itemizedlist>
 </listitem>
@@ -563,6 +621,10 @@ hours of the start-of-day time on the date scheduled.</para>
 <note><para>An alarm can only be triggered while you are logged in,
 and while both X and the <application>alarm daemon</application> are
 running.</para></note>
+
+<para>Press the <guibutton>Try</guibutton> button to test the alarm
+and check whether it works correctly. The alarm is executed just as
+if it had been scheduled in the normal way.</para>
 
 <para>Press the <guibutton>OK</guibutton> button
 when all details are correct, to add the alarm to the scheduled
@@ -1484,7 +1546,8 @@ expired alarms.</para>
 <title>Edit</title>
 
 <para>The <guilabel>Edit</guilabel> section lets you choose
-default values for the options in the alarm edit dialog:</para>
+default values for the options in the
+<link linkend="alarm-edit-dialog">alarm edit dialog</link>:</para>
 <itemizedlist>
 
 <listitem><para>Set the text color used to show expired alarms in the
@@ -1505,6 +1568,9 @@ unchecked or <guilabel>Beep</guilabel> is checked.</para>
 </listitem>
 
 <listitem><para>Set the default reminder period units.</para>
+</listitem>
+
+<listitem><para>Set the default special display alarm actions.</para>
 </listitem>
 
 </itemizedlist>
@@ -1706,6 +1772,13 @@ time.</para>
   <replaceable>yyyy-mm-dd</replaceable>; specify a date and time by
   <replaceable>[[[yyyy-]mm-]dd-]hh:mm</replaceable> (where omitted,
   date fields default to the values for today).</entry>
+</row>
+<row>
+  <entry><option>-v</option>, <option>--volume
+  <replaceable>percentage</replaceable></option></entry>
+  <entry>Set the audio volume for playing the audio file. This option
+  can only be used when <option>--play</option> or
+  <option>--play-repeat</option> is specified.</entry>
 </row>
 <row>
   <entry><option>-u</option>, <option>--until
