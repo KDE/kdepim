@@ -919,34 +919,34 @@ int KPilotDeviceLink::openConduit()
 QString KPilotDeviceLink::statusString() const
 {
 	FUNCTIONSETUP;
-	QString s = QString::fromLatin1("KPilotDeviceLink=");
+	QString s = CSL1("KPilotDeviceLink=");
 
 
 	switch (fLinkStatus)
 	{
 	case Init:
-		s.append(QString::fromLatin1("Init"));
+		s.append(CSL1("Init"));
 		break;
 	case WaitingForDevice:
-		s.append(QString::fromLatin1("WaitingForDevice"));
+		s.append(CSL1("WaitingForDevice"));
 		break;
 	case FoundDevice:
-		s.append(QString::fromLatin1("FoundDevice"));
+		s.append(CSL1("FoundDevice"));
 		break;
 	case CreatedSocket:
-		s.append(QString::fromLatin1("CreatedSocket"));
+		s.append(CSL1("CreatedSocket"));
 		break;
 	case DeviceOpen:
-		s.append(QString::fromLatin1("DeviceOpen"));
+		s.append(CSL1("DeviceOpen"));
 		break;
 	case AcceptedDevice:
-		s.append(QString::fromLatin1("AcceptedDevice"));
+		s.append(CSL1("AcceptedDevice"));
 		break;
 	case SyncDone:
-		s.append(QString::fromLatin1("SyncDone"));
+		s.append(CSL1("SyncDone"));
 		break;
 	case PilotLinkError:
-		s.append(QString::fromLatin1("PilotLinkError"));
+		s.append(CSL1("PilotLinkError"));
 		break;
 	case WorkaroundUSB:
 		s.append(CSL1("WorkaroundUSB"));
