@@ -1,9 +1,0 @@
-Don Sanders' UI for editing address book records.
-
-Don doesn't have CVS access at the moment so post him diffs.
-
-You might want to do 'make libkabui.la' before 'make' as I can't write makefiles
-for toffee and it tries to make test first, which depends on the lib.
-
-Rik <rik@kde.org>
-
