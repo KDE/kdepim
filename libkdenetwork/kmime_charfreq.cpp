@@ -96,6 +96,10 @@ void CharFreq::count( const char * it, size_t len ) {
     prevChar = *it;
   }
 
+  // consider the length of the last line
+  if ( currentLineLength >= lineMax ) lineMax = currentLineLength;
+  if ( currentLineLength <= lineMin ) lineMin = currentLineLength;
+
   // check whether the last character is tab or space
   if ( isWS( prevChar ) )
     mTrailingWS = true;
