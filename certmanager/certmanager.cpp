@@ -178,7 +178,7 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
     slotStartCertificateListing();
 
   if ( !import.isEmpty() )
-    slotImportCertFromFile( import );
+    slotImportCertFromFile( KURL( import ) );
 
   updateStatusBarLabels();
 }
