@@ -1439,7 +1439,7 @@ void KNArticleWidget::createHtmlPage()
         if(rnv->showAttachmentsInline() && inlinePossible(var)) {
           html+="<tr><td colspan=3>";
           if(ct->isImage()) { //image
-            path=QString::number(attCnt)+"_"+QString::number((int)(a_rticle));
+            path=QString::number(attCnt)+"_"+QString::number((unsigned long)(a_rticle));
             f_actory->setData(path,new KNMimeSource(var->decodedContent(),ct->mimeType()));
             html+=QString("<a href=\"internal://att=%1\"><img src=\"%2\"></a>").arg(attCnt).arg(path);
           }
