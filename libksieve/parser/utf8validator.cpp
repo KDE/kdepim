@@ -35,12 +35,9 @@
 #include <qglobal.h>
 #include <qcstring.h>
 
-#ifndef KDE_USE_FINAL
-// duplicated code from lexer.cpp
 static inline bool is8Bit( signed char ch ) {
     return ch < 0;
 }
-#endif
 
 static inline bool isUtf8TupelIndicator( unsigned char ch ) {
     return (ch & 0xE0) == 0xC0; // 110x xxxx
