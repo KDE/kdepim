@@ -370,7 +370,7 @@ void KNotesApp::slotPreferences()
 
     // create a new preferences dialog...
     KNoteConfigDlg *dialog = new KNoteConfigDlg( m_defaultConfig,
-            i18n("Default Settings"), true, this, "KNotes Default Settings" );
+            i18n("KNotes Defaults"), true, this, "KNotes Default Settings" );
     dialog->show();
 }
 
@@ -449,13 +449,13 @@ void KNotesApp::saveNotes()
     {
         KMessageBox::error( 0,
                             i18n("<qt>Unable to save the notes backup to "
-                                 "<b>%1</b>. Check that there is sufficient "
-                                 "disk space.</qt>").arg( backup ) );
+                                 "<b>%1</b>! Check that there is sufficient "
+                                 "disk space!</qt>").arg( backup ) );
     }
     else if ( !m_calendar.save( file, new KCal::ICalFormat() ) )
     {
         KMessageBox::error( 0,
-                            i18n("<qt>Unable to save the notes to <b>%1</b>. "
+                            i18n("<qt>Unable to save the notes to <b>%1</b>! "
                                  "Check that there is sufficient disk space."
                                  "<br>There should be a backup in <b>%2</b> "
                                  "though.</qt>").arg( file ).arg( backup ) );
