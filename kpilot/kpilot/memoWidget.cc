@@ -28,9 +28,7 @@
 static const char *memowidget_id =
 	"$Id$";
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
 #include <time.h>
 

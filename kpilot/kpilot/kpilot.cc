@@ -678,7 +678,7 @@ void KPilotInstaller::slotNewToolbarConfig()
 {
 	// recreate our GUI
 	createGUI();
-#if KDE_VERSION >= 0x030100
+#if KDE_VERSION >= 0x030180
 	applyMainWindowSettings( KGlobal::config(), autoSaveGroup() );
 #endif
 }

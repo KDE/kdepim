@@ -110,7 +110,7 @@ using namespace std;
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.3.9 (BRANCH)"
+#define KPILOT_VERSION	"4.3.10 (BRANCH)"
 
 // * KPilot debugging code looks like:
 //
