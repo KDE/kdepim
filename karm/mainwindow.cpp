@@ -320,7 +320,7 @@ void MainWindow::makeMenus()
   actionAddComment->setToolTip( i18n("Add a comment to a task") );
   actionAddComment->setWhatsThis( i18n("This will bring up a dialog box where "
                                        "you can add a comment to a task. The "
-                                       "comment can f.ex. precise what you "
+                                       "comment can for instance add information on what you "
                                        "are currently doing. The comment will "
                                        "be logged in the log file."));
   slotSelectionChanged();
