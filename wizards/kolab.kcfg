@@ -23,12 +23,31 @@
     </entry>
   </group>
 
+  <group name="Constants">
+    <entry name="EnableFreeBusy">
+      <default>true</default>
+    </entry>
+  </group>
+
+  <propagation source="kolabrc/Constants/EnableFreeBusy"
+               target="korganizerrc/FreeBusy/FreeBusyPublishAuto" />
+  <propagation source="kolabrc/Constants/EnableFreeBusy"
+               target="korganizerrc/FreeBusy/FreeBusyRetrieveAuto" />
+
   <propagation source="kolabrc/General/User"
-               target="korganizerrc/Freebusy/FreeBusyPublishUser" />
+               target="korganizerrc/FreeBusy/FreeBusyPublishUser" />
   <propagation source="kolabrc/General/Password"
-               target="korganizerrc/Freebusy/FreeBusyPublishPassword"
+               target="korganizerrc/FreeBusy/FreeBusyPublishPassword"
                hidevalue="true" />
   <propagation source="kolabrc/General/SavePassword"
-               target="korganizerrc/Freebusy/FreeBusyPublishSavePassword" />
+               target="korganizerrc/FreeBusy/FreeBusyPublishSavePassword" />
+
+  <propagation source="kolabrc/General/User"
+               target="korganizerrc/FreeBusy/FreeBusyRetrieveUser" />
+  <propagation source="kolabrc/General/Password"
+               target="korganizerrc/FreeBusy/FreeBusyRetrievePassword"
+               hidevalue="true" />
+  <propagation source="kolabrc/General/SavePassword"
+               target="korganizerrc/FreeBusy/FreeBusyRetrieveSavePassword" />
 
 </kcfg>

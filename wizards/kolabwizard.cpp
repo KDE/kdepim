@@ -45,19 +45,27 @@ class KolabPropagator : public KConfigPropagator
   protected:
     void addCustomChanges( Change::List &changes )
     {
+      QString freeBusyBaseUrl = "webdavs://" + KolabConfig::self()->server() +
+                                "/freebusy/";
+
       Change c;
       c.file = "korganizerrc";
-      c.group = "Freebusy";
+      c.group = "FreeBusy";
+
       c.name = "FreeBusyPublishUrl";
       c.label = "";
-
-      c.value = "webdavs://" + KolabConfig::self()->server() + "/freebusy/";
 
       QString user = KolabConfig::self()->user();
       int pos = user.find( "@" );
       if ( pos > 0 ) user = user.left( pos );
 
-      c.value += user + ".vfb";
+      c.value = freeBusyBaseUrl + user + ".vfb";
+
+      changes.append( c );
+
+
+      c.name = "FreeBusyRetrieveUrl";
+      c.value = freeBusyBaseUrl;
 
       changes.append( c );
     }
