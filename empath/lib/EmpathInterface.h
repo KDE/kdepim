@@ -24,7 +24,7 @@ class EmpathInterface : virtual public DCOPObject
         virtual unsigned int sendQueued() = 0;
         virtual unsigned int checkMail() = 0;
         virtual unsigned int compose(QString recipient) = 0;
-        virtual unsigned int reply(QString url) = 0;
+        virtual unsigned int replySender(QString url) = 0;
         virtual unsigned int replyAll(QString url) = 0;
         virtual unsigned int forward(QString url) = 0;
         virtual unsigned int bounce(QString url) = 0;
