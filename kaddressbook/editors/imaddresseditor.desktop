@@ -1,17 +1,20 @@
 [Desktop Entry]
 Type=Service
 Name=Instant Messaging
-Name[da]=Instant Message
 Name[et]=Kiirsuhtlus
-Name[pt]=Mensageiro Instantâneo
-Name[pt_BR]=Mensageiro Instantâneo
+Name[sl]=Takojšno sporočanje
 Name[sv]=Direktmeddelanden
+Name[ta]=உடனடி செய்தி பரிமாற்றம்
+Name[xx]=xxInstant Messagingxx
 Comment=Instant Messaging Address Editor
-Comment[da]=Adresseeditor for Instant Message
-Comment[et]=Kiirsuhtlusrakenduse aadressiredaktor
-Comment[nl]=Instant-messaging-adresbeheer
+Comment[da]=Instant Messaging adresseeditor
+Comment[et]=Kiirsuhtluse aadresside redaktor
+Comment[nl]=Instant Messaging Adresbewerker
 Comment[pt]=Editor de Endereços do Mensageiro Instantâneo
 Comment[pt_BR]=Editor de Endereços do Mensageiro Instantâneo
-Comment[sv]=Addresseditor för direktmeddelanden
+Comment[sl]=Urejevalnik naslovov takojšnega sporočanja
+Comment[sv]=Adresseditor för direktmeddelanden
+Comment[ta]= உடனடி செய்தி பரிமாற்றதின் முகவரி தொகுப்பி
+Comment[xx]=xxInstant Messaging Address Editorxx
 ServiceTypes=KAddressBook/ContactEditorWidget
 X-KDE-Library=libkaddrbk_instantmessaging
