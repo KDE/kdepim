@@ -135,14 +135,14 @@ bool KonsoleKalendar::showInstance()
 	  status = printEvent ( &ts, event );
         } else if( m_variables->isNext() ) {
           kdDebug() << "konsolekalendar.cpp::showInstance() | Show next activity in calendar" << endl;
-          
+
           QDateTime datetime = m_variables->getStartDateTime();
           datetime = datetime.addDays( 90 );
-          eventList = new Event::List ( m_variables->getCalendar()->rawEvents( 
+          eventList = new Event::List ( m_variables->getCalendar()->rawEvents(
                                         m_variables->getStartDateTime().date(),
                                         datetime.date(),
                                         true ) );
-   
+
            if( eventList->count() ) {
                  Event::List::ConstIterator it = eventList->begin();
                  Event *singleEvent = *it;
@@ -151,10 +151,10 @@ bool KonsoleKalendar::showInstance()
                  // if no events
                  ts << "(no events in next 90 days)" << endl;
            }
-   
+
         } else {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | view raw events within date range list" << endl;
-	  eventList = new Event::List ( m_variables->getCalendar()->rawEvents( 
+	  eventList = new Event::List ( m_variables->getCalendar()->rawEvents(
 					  m_variables->getStartDateTime().date(),
 					  m_variables->getEndDateTime().date(),
 					  true ) );
@@ -176,7 +176,7 @@ bool KonsoleKalendar::showInstance()
 	} else if( m_variables->isUID() ) {
 	  // TODO
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | HTML view events by uid list" << endl;
-	  kdError() << i18n("Sorry, export to HTML by UID is not supported yet").local8Bit() << endl;
+	  cout << i18n("Sorry, export to HTML by UID is not supported yet").local8Bit() << endl;
 	  return( false );
 	} else {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | HTML view raw events within date range list" << endl;
@@ -264,7 +264,7 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event )
       kdDebug() << "konsolekalendar.cpp::printEvent() | CSV export" << endl;
     } else {  // Default ExportType is TEXT_KONSOLEKALENDAR
       status = exports.exportAsTxt( ts, event );
-      kdDebug() << "konsolekalendar.cpp::printEvent() | TEXT export" << endl;  
+      kdDebug() << "konsolekalendar.cpp::printEvent() | TEXT export" << endl;
     } //else
   } //if
 
@@ -302,9 +302,9 @@ bool KonsoleKalendar::isEvent( QDateTime startdate, QDateTime enddate, QString s
 
   Event *event;
   Event::List::ConstIterator it;
- 
+
   bool found = false;
-  
+
   Event::List eventList( m_variables->getCalendar()->
 			 rawEventsForDate( startdate.date(), true ));
   for ( it =  eventList.begin(); it != eventList.end(); ++it ) {
