@@ -322,17 +322,7 @@ void KAddressBook::importCSV()
   emit modified( true );
 }
 
-void KAddressBook::importVCard21()
-{
-  importVCard( KABC::VCardConverter::v2_1 );
-}
-
-void KAddressBook::importVCard30()
-{
-  importVCard( KABC::VCardConverter::v3_0 );
-}
-
-void KAddressBook::importVCard( KABC::VCardConverter::Version version )
+void KAddressBook::importVCard()
 {
   QString fileName = KFileDialog::getOpenFileName(QString::null,
                                                   "*.vcf|vCards", 0,
@@ -346,8 +336,15 @@ void KAddressBook::importVCard( KABC::VCardConverter::Version version )
     file.open( IO_ReadOnly );
     QByteArray rawData = file.readAll();
     QString data = QString::fromLatin1( rawData.data(), rawData.size() + 1 );
-    bool ok = converter.vCardToAddressee( data, a, version );
-
+    bool ok = false;
+    
+    if ( data.contains( "\r\nVERSION:3.0\r\n" ) ) {
+      ok = converter.vCardToAddressee( data, a, KABC::VCardConverter::v3_0 );
+      kdDebug() << "version 3.0" << endl;
+    } else if ( data.contains( "\r\nVERSION:2.1\r\n" ) ) {
+      ok = converter.vCardToAddressee( data, a, KABC::VCardConverter::v2_1 );
+      kdDebug() << "version 2.1" << endl;
+    }
     if (!a.isEmpty() && ok) {
       // Add it to the document, then let the user edit it. We use a
       // PwNewCommand so the user can undo it.

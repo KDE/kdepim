@@ -91,17 +91,9 @@ class KAddressBook : public QWidget
     */
     void importCSV();
 
-    /** Import VCard 2.1 files
+    /** Import VCard files, the version is detected automatically.
     */
-    void importVCard21();
-
-    /** Import VCard 3.0 files
-    */
-    void importVCard30();
-
-    /** Import VCard files with given version
-    */
-    void importVCard( KABC::VCardConverter::Version );
+    void importVCard();
 
     /** Export comma-seperated list of all addressbook entries.
     */

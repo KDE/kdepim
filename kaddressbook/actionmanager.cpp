@@ -139,11 +139,8 @@ void ActionManager::initReadOnlyActions()
     new KAction(i18n("Import &KDE 2 Address Book..."), 0, mWidget,
                 SLOT(importKDE2()), mACollection, "file_import_kde2");
 
-    new KAction(i18n("Import vCard 2.1..."), 0, mWidget, SLOT(importVCard21()),
-                mACollection, "file_import_vcard21");
-
-    new KAction(i18n("Import vCard 3.0..."), 0, mWidget, SLOT(importVCard30()),
-                mACollection, "file_import_vcard30");
+    new KAction(i18n("Import vCard..."), 0, mWidget, SLOT(importVCard()),
+                mACollection, "file_import_vcard");
 
     new KAction(i18n("&Import List..."), 0, mWidget, SLOT(importCSV()),
                 mACollection, "file_import_csv");
