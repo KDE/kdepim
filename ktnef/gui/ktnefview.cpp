@@ -21,8 +21,10 @@
 
 #include <qheader.h>
 #include <qpixmap.h>
+
 #include <kapplication.h>
 #include <kiconloader.h>
+#include <klocale.h>
 
 #include <kmimetype.h>
 
@@ -62,9 +64,9 @@ KTNEFView::KTNEFView(QWidget *parent, const char *name)
 	: KListView(parent,name)
 {
 	attachments_.setAutoDelete(false);
-	addColumn("File Name");
-	addColumn("File Type");
-	addColumn("Size");
+	addColumn(i18n("File Name"));
+	addColumn(i18n("File Type"));
+	addColumn(i18n("Size"));
 	setFrameStyle(QFrame::WinPanel|QFrame::Sunken);
 	setLineWidth(1);
 	setSelectionMode(QListView::Extended);

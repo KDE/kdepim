@@ -19,11 +19,11 @@
 #include <qmap.h>
 #include <klocale.h>
 
-static struct 
+static struct
 {
 	int tag;
 	const char *str;
-} MAPI_TagStrings[] = 
+} MAPI_TagStrings[] =
 {
 	{ 0x0002, I18N_NOOP( "Alternate Recipient Allowed" ) },
 	{ 0x001A, I18N_NOOP( "Message Class" ) },
@@ -153,24 +153,24 @@ static struct
 
 	{ 0, 0 }
 },
-MAPI_NamedTagStrings[] = 
+MAPI_NamedTagStrings[] =
 {
 	{ 0x8005, I18N_NOOP( "Contact File Under" ) },
 	{ 0x8017, I18N_NOOP( "Contact Last Name And First Name" ) },
 	{ 0x8018, I18N_NOOP( "Contact Company And Full Name" ) },
-  
+
 	{ 0x8080, I18N_NOOP( "Contact EMail-1 Full" ) },
 	{ 0x8082, I18N_NOOP( "Contact EMail-1 Address Type" ) },
 	{ 0x8083, I18N_NOOP( "Contact EMail-1 Address" ) },
 	{ 0x8084, I18N_NOOP( "Contact EMail-1 Display Name" ) },
 	{ 0x8085, I18N_NOOP( "Contact EMail-1 Entry ID" ) },
-  
+
 	{ 0x8090, I18N_NOOP( "Contact EMail-2 Full" ) },
 	{ 0x8092, I18N_NOOP( "Contact EMail-2 Address Type" ) },
 	{ 0x8093, I18N_NOOP( "Contact EMail-2 Address" ) },
 	{ 0x8094, I18N_NOOP( "Contact EMail-2 Display Name" ) },
 	{ 0x8095, I18N_NOOP( "Contact EMail-2 Entry ID" ) },
-  
+
 	{ 0x8208, I18N_NOOP( "Appointment Location" ) },
 	{ 0x8208, I18N_NOOP( "Appointment Location" ) },
 	{ 0x820D, I18N_NOOP( "Appointment Start Date" ) },
@@ -195,7 +195,7 @@ QString mapiTagString( int key )
 	if ( MAPI_TagMap.count() == 0 )
 	{
 		for ( int i=0; MAPI_TagStrings[ i ].str; i++ )
-			MAPI_TagMap[ MAPI_TagStrings[ i ].tag ] = MAPI_TagStrings[ i ].str;
+			MAPI_TagMap[ MAPI_TagStrings[ i ].tag ] = i18n(MAPI_TagStrings[ i ].str);
 	}
 	QMap<int,QString>::ConstIterator it = MAPI_TagMap.find( key );
 	if ( it == MAPI_TagMap.end() )
@@ -209,7 +209,7 @@ QString mapiNamedTagString( int key, int tag )
 	if ( MAPI_NamedTagMap.count() == 0 )
 	{
 		for ( int i=0; MAPI_NamedTagStrings[ i ].str; i++ )
-			MAPI_NamedTagMap[ MAPI_NamedTagStrings[ i ].tag ] = MAPI_NamedTagStrings[ i ].str;
+			MAPI_NamedTagMap[ MAPI_NamedTagStrings[ i ].tag ] = i18n(MAPI_NamedTagStrings[ i ].str);
 	}
 	QMap<int,QString>::ConstIterator it = MAPI_NamedTagMap.find( key );
 	if ( it == MAPI_NamedTagMap.end() )

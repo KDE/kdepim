@@ -163,7 +163,7 @@ void KTNEFMain::loadFile(const QString& filename)
 	{
 		QPtrList<KTNEFAttach>	list = parser_->message()->attachmentList();
 		QString			msg;
-		msg = i18n( "%1 attachments found" ).arg( list.count() );
+		msg = i18n( "%n attachment found", "%n attachments found", list.count() );
 		statusBar()->changeItem(msg, 0);
 		view_->setAttachments(&list);
 		enableExtractAll((list.count() > 0));
