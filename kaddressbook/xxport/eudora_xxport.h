@@ -1,6 +1,6 @@
 /*
     This file is part of KAddressbook.
-    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2003 Daniel Molkentin <molkentin@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,7 +38,6 @@ class EudoraXXPort : public XXPortObject
     QString identifier() const { return "eudora"; }
 
   public slots:
-    bool exportContacts( const KABC::AddresseeList &list, const QString &data );
     KABC::AddresseeList importContacts( const QString &data ) const;
 
   private:
@@ -46,9 +45,7 @@ class EudoraXXPort : public XXPortObject
     QString comment( const QString& line ) const;
     QString email( const QString& line ) const;
     QString key( const QString& line ) const;
-    int     find( const QString& key ) const;
-
-    void doExport( QFile *fp, const KABC::AddresseeList &list );
+    int find( const QString& key ) const;
 };
 
 #endif
