@@ -18,7 +18,7 @@
 
 lib_LTLIBRARIES = libopiekonnector.la
 
-INCLUDES = -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector $(all_includes)
+INCLUDES = -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/libkcal $(all_includes)
 
 libopiekonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib -I../../   $(all_includes)
 libopiekonnector_la_LIBDADD = ../../libkonnector.la ../../../libksyncentries.la
