@@ -33,6 +33,10 @@
 #include <libkcal/resourcelocal.h>
 #include <libkcal/resourcecalendar.h>
 #include <libkcal/event.h>
+#include <libkcal/todo.h>
+
+#include <qstring.h>
+#include <qdatetime.h>
 
 /*
  * Our export types
@@ -49,12 +53,38 @@
 
 namespace KCal {
 
-  class KonsoleKalendarVariables : KCal::Event
+  class KonsoleKalendarVariables
   {
   public:
     KonsoleKalendarVariables();
     ~KonsoleKalendarVariables();
 
+    /**
+     * New way to add events
+     */
+    void addEvent( QDateTime start,
+                   QDateTime end,
+                   QString summary,
+                   QString description,
+                   QString location,
+                   bool floating );
+    /**
+     * New way to add events
+     */
+    void addTodo( QDateTime start,
+                  QString summary,
+                  QString description,
+                  QString location );
+    /**
+     * Get events
+     */
+    Event::List *getEvent();
+     
+     /**
+     * Get todo
+     */
+    Todo::List *getTodo();
+    
     /**
      * Sets start date
      * @param start start date
@@ -329,10 +359,37 @@ namespace KCal {
      */
     bool loadCalendarResources( KConfig *config );
 
+    /**
+     * Set how many day should be seen
+     */
+    
     void setDaysCount( int count );
-    int getDaysCount();
+    
+    /**
+     * Is there some cound of days should be seen
+     */    
     bool isDaysCount();
-
+    
+    /**
+     * Get how many day should be seen
+     */    
+     
+    int getDaysCount();
+  
+    /**
+     * Set parsing string
+     */
+    
+    void setParseString( QString parsedtring );
+  
+    /**
+     * Set parsing string
+     */
+    
+    QString getParseString( );
+    
+      
+    bool isParseString();
 
   private:
     int findNumber( const QString &str, int &pos, int &startpos );
@@ -352,6 +409,7 @@ namespace KCal {
     QString m_summary;
     QString m_export_file;
     QString m_UID;
+    QString m_parseString;
     bool m_bSummary;
     bool m_bNext;
     bool m_bVerbose;
@@ -362,6 +420,7 @@ namespace KCal {
     bool m_bFloating;
     bool m_bDaysCount;
     bool m_bIsUID;
+    bool m_bParseString;
     int str_length;
     int m_export_type;
     int m_daysCount;
@@ -373,6 +432,8 @@ namespace KCal {
     CalendarResources *m_resource;
     // We can use this from everywhere
     CalendarLocal *m_calendarLocal;
+    Event::List m_eventList;
+    Todo::List m_todoList;
   };
 
 }

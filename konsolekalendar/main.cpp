@@ -68,7 +68,7 @@ using namespace std;
 
 static const char progName[] = "konsolekalendar";
 static const char progDisplay[] = "KonsoleKalendar";
-static const char progVersion[] = "1.2.0";
+static const char progVersion[] = "1.3.2";
 static const char progDesc[] = "A command line interface to KDE calendars";
 static const char progURL[] = "pim.kde.org/components/konsolekalendar.php";
 
@@ -98,7 +98,8 @@ static KCmdLineOptions options[] =
     I18N_NOOP( "  Create new calendar file if one does not exist" ), 0 },
   { "import <import-file>",
     I18N_NOOP( "  Import this calendar to main calendar" ), 0 },
-
+  { "parse-string <entries>",
+    I18N_NOOP( "  Parses many entries in same line [YYYY-MM-DD,HH:MM:SS,description,location]" ), 0 },
   { ":",
     I18N_NOOP( "Operation modifiers:" ), 0 },
   { "all",
@@ -275,6 +276,24 @@ int main( int argc, char *argv[] )
     }
   }
 
+  /*
+   * If we like to use new Parsing system
+   */ 
+  
+  if ( args->isSet( "parse-string" ) ) {
+    option = args->getOption( "parse-string" );
+
+    kdDebug() << "main | parse options | "
+              << "Parse String: "
+              << "(" << option << ")"
+              << endl;
+
+    variables.setParseString( option );
+  }
+  
+  //testing purposes only!!
+  //exit(0);
+  
   /*
    *  Switch on export file name
    *

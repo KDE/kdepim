@@ -73,6 +73,9 @@ bool KonsoleKalendarAdd::addEvent()
       printSpecs();
     }
 
+    
+  if( !m_variables->isParseString() ){  
+    
     Event *event = new Event();
 
     event->setDtStart( m_variables->getStartDateTime() );
@@ -82,7 +85,7 @@ bool KonsoleKalendarAdd::addEvent()
     event->setDescription( m_variables->getDescription() );
     event->setLocation( m_variables->getLocation() );
 
-    if ( m_variables->getCalendar()->addEvent( event ) ) {
+     if ( m_variables->getCalendar()->addEvent( event ) ) {
       cout << i18n("Success: \"%1\" inserted").
         arg( m_variables->getSummary() ).local8Bit()
            << endl;
@@ -94,14 +97,41 @@ bool KonsoleKalendarAdd::addEvent()
         m_variables->getCalendar()->save();
       }*/
 
-    } else {
+     } else {
       cout << i18n("Failure: \"%1\" not inserted").
         arg( m_variables->getSummary() ).local8Bit()
            << endl;
       status = false;
-    }
+     }
+   
+  } else {
+      kdDebug() << "konsolekalendaradd.cpp::addEvent | parsed event adding | "
+                << "adding event(s)"
+                << endl;
+       
+       Event::List::ConstIterator it;
+       for ( it = m_variables->getEvent()->begin(); it !=  m_variables->getEvent()->end(); ++it ) {
+  
+           if ( m_variables->getCalendar()->addEvent( (*it) ) ) {
+             cout << i18n("Success: \"%1\" inserted").
+                     arg( (*it)->summary() ).local8Bit()
+                  << endl;
+          } else {
+            cout << i18n("Failure: \"%1\" not inserted").
+            arg( (*it)->summary() ).local8Bit()
+               << endl;
+           status = false;
+        }
+       }// for      
+       
+     } // add events
+       
+  
   }
-
+  
+  
+  
+  
   kdDebug() << "konsolekalendaradd.cpp::addEvent() | Done " << endl;
   return status;
 }

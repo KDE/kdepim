@@ -69,6 +69,56 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_bIsCalendarResources = false;
 }
 
+void KonsoleKalendarVariables::addEvent( QDateTime start,
+               QDateTime end,
+               QString summary,
+               QString description,
+               QString location, 
+               bool floating ) {
+
+    Event *event = new Event();
+
+    
+    kdDebug() << "konsolekalendarvariables.cpp::addEvent | adding event | "
+              << start.toString() << ", " << end.toString() << ", " << summary 
+	      << ", " <<description << ", " << location
+              << endl;
+
+    
+    event->setDtStart( start );
+    event->setDtEnd( end );
+    event->setSummary( summary );
+    event->setDescription( description );
+    event->setLocation(location );
+    event->setFloats(floating);
+    
+    m_eventList.append( event );
+    
+}
+
+void KonsoleKalendarVariables::addTodo( QDateTime start,
+              QString summary,
+              QString description,
+              QString location ){
+
+    Todo *todo = new Todo();
+    
+    todo->setDtStart( start );
+    todo->setDescription( description );
+    todo->setSummary( summary );
+    todo->setLocation( location );
+    
+    m_todoList.append( todo );
+}
+
+Event::List *KonsoleKalendarVariables::getEvent(){
+  return &m_eventList;
+}
+
+Todo::List *KonsoleKalendarVariables::getTodo(){
+  return &m_todoList;
+}
+
 void KonsoleKalendarVariables::setTimeZoneId()
 {
   m_bIsTimeZoneId = true;
@@ -386,6 +436,62 @@ CalendarResources *KonsoleKalendarVariables::getCalendarResources()
 CalendarResourceManager *KonsoleKalendarVariables::getCalendarResourceManager( )
 {
   return m_resource->resourceManager();
+}
+
+   
+void KonsoleKalendarVariables::setParseString( QString parsestring ){
+  QString option;
+  QString temp;
+  
+  // Default values for start date/time (today at 07:00)
+  QDate startdate = QDate::currentDate();
+  QTime starttime( 7 ,0 );
+  // Default values for end date/time (today at 17:00)
+  QDate enddate = QDate::currentDate();
+  QTime endtime( 17, 0 );  
+  
+  QString summary;
+  QString description;
+  QString location;
+  bool floating;
+  int a = 0;
+  
+  m_bParseString = true;
+  m_parseString = parsestring;
+  
+  for( a=0; a < (m_parseString.contains(',')+1); a++){
+     option=m_parseString.section(",",a,a);
+     cout << option.local8Bit() << endl;
+  
+     if( a == 0 ){
+       startdate = QDate::fromString( option,  Qt::ISODate );
+     } else if ( a == 1 ) {
+       starttime = QTime::fromString( option,  Qt::ISODate );     
+     } else if( a == 2 ){
+       enddate = QDate::fromString( option,  Qt::ISODate );
+     } else if ( a == 3 ) {
+       endtime = QTime::fromString( option,  Qt::ISODate );     
+     } else if( a == 4 ){
+       summary = option;
+     } else if ( a == 5 ) {
+       description = option;
+     } else if ( a == 6 ) {
+       location = option;  
+     }
+
+  }
+
+  addEvent(QDateTime(startdate,starttime),QDateTime(enddate,endtime),summary,description,location,false);
+}
+  
+ 
+QString KonsoleKalendarVariables::getParseString(){
+  return m_parseString;
+}
+    
+      
+bool KonsoleKalendarVariables::isParseString(){
+  return m_bParseString;   
 }
 
 bool KonsoleKalendarVariables::loadCalendarResources( KConfig *config )

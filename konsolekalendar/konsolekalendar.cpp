@@ -118,7 +118,8 @@ bool KonsoleKalendar::showInstance()
     kdDebug() << "konsolekalendar.cpp::showInstance() | "
               << "open export file"
               << endl;
-
+   
+	      
     if ( m_variables->isExportFile() ) {
       f.setName( m_variables->getExportFile() );
       if ( !f.open( IO_WriteOnly ) ) {
