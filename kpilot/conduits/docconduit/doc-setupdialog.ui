@@ -1,0 +1,454 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>DOCWidget</class>
+<author>Reinhold Kainhofer</author>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>Form2</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>431</width>
+            <height>335</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Form2</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QTabWidget" row="0" column="0">
+            <property name="name">
+                <cstring>tabWidget</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>General</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fConvertBookmarks</cstring>
+                        </property>
+                        <property name="text">
+                            <string>convert &amp;bookmarks</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="1">
+                        <property name="name">
+                            <cstring>fBookmarksEndtags</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;tags at end of text</string>
+                        </property>
+                    </widget>
+                    <spacer row="2" column="0">
+                        <property name="name">
+                            <cstring>Spacer3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Fixed</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>16</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="6" column="1">
+                        <property name="name">
+                            <cstring>Spacer1</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>0</width>
+                                <height>207</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="0" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fCompress</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;compress</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Check this box, if the text should be compressed on the handheld to save memory. Most doc reader on the handheld support compressed texts.</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>The Palm doc format supports compressing the text to save memory. If you check this box, the text will consume about 50% less memory than in uncompressed state. Almost all DOC readers on the Palm support compressed texts.</string>
+                        </property>
+                    </widget>
+                    <spacer row="3" column="0">
+                        <property name="name">
+                            <cstring>Spacer3_2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Fixed</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>16</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="4" column="0">
+                        <property name="name">
+                            <cstring>Spacer3_3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Fixed</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>16</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QButtonGroup" row="5" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fSyncDirection</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Synchronization direction</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>11</number>
+                            </property>
+                            <property name="spacing">
+                                <number>6</number>
+                            </property>
+                            <widget class="QRadioButton" row="2" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton3</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>sync only P&amp;C to PDA</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>2</number>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>sync only P&amp;DA to PC</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="0" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton1</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>sync &amp;all</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>0</number>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="1">
+                        <property name="name">
+                            <cstring>fBookmarksInline</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;inline tags in text</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="4" column="1">
+                        <property name="name">
+                            <cstring>fBookmarksBmk</cstring>
+                        </property>
+                        <property name="text">
+                            <string>regular &amp;expressions in .bmk file</string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>file locations</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>TextLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Directory containing &amp;text files:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>fDOCDir</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fkeepPDBLocally</cstring>
+                        </property>
+                        <property name="text">
+                            <string>keep local copy of &amp;PDB files:</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                    </widget>
+                    <spacer row="5" column="1">
+                        <property name="name">
+                            <cstring>Spacer2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>0</width>
+                                <height>327</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KURLRequester" row="1" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fDOCDir</cstring>
+                        </property>
+                    </widget>
+                    <widget class="KURLRequester" row="3" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fPDBDir</cstring>
+                        </property>
+                    </widget>
+                    <spacer row="4" column="0">
+                        <property name="name">
+                            <cstring>Spacer7</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Maximum</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>21</width>
+                                <height>21</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="4" column="1">
+                        <property name="name">
+                            <cstring>CheckBox7</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Local sync (only sync the two dirs, no synchronization with handheld)</string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>conflicts</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QButtonGroup">
+                        <property name="name">
+                            <cstring>fConflictResolution</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Conflict resolution</string>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>11</number>
+                            </property>
+                            <property name="spacing">
+                                <number>6</number>
+                            </property>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>RadioButton5</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>P&amp;C overrides</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>RadioButton4</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>P&amp;DA overrides</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>RadioButton6</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>PC overrides if only &amp;bookmarks on PDA have changed</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>RadioButton7</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;ask the user</string>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>Spacer8</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>0</width>
+                                <height>307</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </vbox>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>fConvertBookmarks</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fBookmarksEndtags</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>fConvertBookmarks</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fBookmarksBmk</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>fConvertBookmarks</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fBookmarksInline</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>fkeepPDBLocally</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fPDBDir</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>fkeepPDBLocally</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>CheckBox7</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>tabWidget</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+</includehints>
+</UI>

@@ -1,0 +1,93 @@
+/* pilotDOCEntry.h	-*- C++ -*-		KPilot
+**
+** Copyright (C) 2002 by Reinhold Kainhofer
+**
+** See the .cc file for an explanation of what this file is for.
+*/
+
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** MA 02139, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to the mailinlist kde-pim@kde.org
+*/
+#ifndef _KPILOT_PILOTDOCENTRY_H
+#define _KPILOT_PILOTDOCENTRY_H
+
+#include <string.h>
+
+#ifndef _KPILOT_PILOTAPPCATEGORY_H
+#include "pilotAppCategory.h"
+#endif
+
+#ifndef _KPILOT_PILOTRECORD_H
+#include "pilotRecord.h"
+#endif
+
+#include "makedoc9.h"
+
+
+
+class PilotDOCEntry:public PilotAppCategory {
+private:
+	bool compress;
+	tBuf fText;
+public:
+	static const int TEXT_SIZE;
+	PilotDOCEntry();
+	PilotDOCEntry(PilotRecord * rec, bool compressed = false);
+	PilotDOCEntry(const PilotDOCEntry & e);
+	~PilotDOCEntry() {};
+	PilotDOCEntry & operator=(const PilotDOCEntry & e);
+
+	PilotRecord *pack() {
+		return PilotAppCategory::pack();
+	}
+
+	QString getText() {
+		fText.Decompress();
+		return QString((const char *) fText.text());
+	};
+	void setText(QString newtext, bool compressed = false) {
+		fText.setText((const unsigned char *) newtext.latin1(),
+			newtext.length(), compressed);
+	};
+
+	bool getCompress() const {
+		return compress;
+	}
+	void setCompress(bool compressed) {
+		compress = compressed;
+	};
+
+protected:
+	void *pack(void *, int *);
+	void unpack(const void *, int = 0) {
+	}
+};
+
+
+
+#else
+#ifdef DEBUG
+#warning "File doubly included"
+#endif
+#endif
+
+
+// $Log$
+//

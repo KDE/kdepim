@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=Palm DOC Conduit
+Implemented=file
+ServiceTypes=KPilotConduit
+X-KDE-Library=libdocconduit
