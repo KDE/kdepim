@@ -87,6 +87,7 @@ bool KNGroup::readInfo(const QString &confPath)
   n_ame = info.readEntry("name");
   c_ount = info.readNumEntry("count",0);
   r_eadCount = info.readNumEntry("read",0);
+  if (r_eadCount > c_ount) r_eadCount = c_ount;
   f_irstNr = info.readNumEntry("firstMsg",0);
   l_astNr = info.readNumEntry("lastMsg",0);
   d_ynDataFormat = info.readNumEntry("dynDataFormat",0);
