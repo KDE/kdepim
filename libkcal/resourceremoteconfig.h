@@ -1,5 +1,6 @@
 /*
-    This file is part of libkpimexchange.
+    This file is part of libkcal.
+
     Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
     Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
 
