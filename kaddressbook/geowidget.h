@@ -40,6 +40,12 @@ class QLabel;
 class QSpinBox;
 class QPushButton;
 
+typedef struct {
+  double latitude;
+  double longitude;
+  QString country;
+} GeoData;
+
 class GeoWidget : public QWidget
 {
   Q_OBJECT
@@ -93,6 +99,9 @@ class GeoDialog : public KDialogBase
     void cityInputChanged();
 
   private:
+    void loadCityList();
+    double calculateCoordinate( const QString& );
+
     GeoMapWidget *mMapWidget;
     KComboBox *mCityCombo;
 
@@ -108,6 +117,7 @@ class GeoDialog : public KDialogBase
 
     double mLatitude;
     double mLongitude;
+    QMap<QString, GeoData> mGeoDataMap;
 };
 
 class GeoMapWidget : public QWidget

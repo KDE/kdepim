@@ -30,6 +30,7 @@
 #include <knuminput.h>
 #include <kstandarddirs.h>
 
+#include <qfile.h>
 #include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -37,25 +38,10 @@
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <qpushbutton.h>
+#include <qregexp.h>
+#include <qstring.h>
 
 #include "geowidget.h"
-
-class GeoDataItem : public QListBoxItem
-{
-  public:
-    GeoDataItem( QListBox *parent )
-      : QListBoxItem( parent ) {}
-
-    void setLatitude( double latitude ) { mLatitude = latitude; }
-    double latitude() const { return mLatitude; }
-
-    void setLongtitude( double longitude ) { mLongitude = longitude; }
-    double longitude() const { return mLongitude; }
-
-  private:
-    double mLatitude;
-    double mLongitude;
-};
 
 GeoWidget::GeoWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
@@ -152,7 +138,7 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
 
   QGroupBox *sexagesimalGroup = new QGroupBox( 0, Vertical, i18n( "Sexagesimal" ), page );
   QGridLayout *sexagesimalLayout = new QGridLayout( sexagesimalGroup->layout(),
-                                                    2, 5 );
+                                                    2, 5, spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Latitude:" ), sexagesimalGroup );
   sexagesimalLayout->addWidget( label, 0, 0 );
@@ -196,6 +182,8 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
   sexagesimalLayout->addWidget( mLongDirection, 1, 4 );
 
   topLayout->addWidget( sexagesimalGroup, 1, 1 );
+
+  loadCityList();
 
   connect( mMapWidget, SIGNAL( changed() ),
            SLOT( geoMapChanged() ) );
@@ -270,6 +258,11 @@ void GeoDialog::geoMapChanged()
 
 void GeoDialog::cityInputChanged()
 {
+  GeoData data = mGeoDataMap[ mCityCombo->currentText() ];
+  mLatitude = data.latitude;
+  mLongitude = data.longitude;
+
+  updateInputs();
 }
 
 void GeoDialog::updateInputs()
@@ -324,6 +317,93 @@ void GeoDialog::updateInputs()
   mLongDirection->blockSignals( false );
 }
 
+void GeoDialog::loadCityList()
+{
+  mCityCombo->clear();
+  mGeoDataMap.clear();
+
+  QFile file( locate( "data", "kaddressbook/zone.tab" ) );
+
+  if ( file.open( IO_ReadOnly ) ) {
+    QTextStream s( &file );
+
+    QString line, country;
+    QRegExp coord( "[+-]\\d+[+-]\\d+" );
+    QRegExp name( "[^\\s]+/[^\\s]+" );
+    int len, pos;
+
+    while ( !s.eof() ) {
+      line = s.readLine().stripWhiteSpace();
+      if ( line.isEmpty() || line[ 0 ] == '#' )
+        continue;
+
+      country = line.left( 2 );
+      QString c, n;
+      pos = coord.match( line, 0, &len );
+      if ( pos >= 0 )
+        c = line.mid( pos, len );
+
+      pos = name.match(line, pos, &len);
+      if ( pos > 0 )
+        n = line.mid( pos, len ).stripWhiteSpace();
+
+      if ( !c.isEmpty() && !n.isEmpty() ) {
+        pos = c.find( "+", 1 );
+        if ( pos < 0 )
+          pos = c.find( "-", 1 );
+        if ( pos > 0 ) {
+          GeoData data;
+          data.latitude = calculateCoordinate( c.left( pos ) );
+          data.longitude = calculateCoordinate( c.mid( pos ) );
+          data.country = country;
+
+          mGeoDataMap.insert( n, data );
+        }
+      }
+    }
+    mCityCombo->insertStringList( mGeoDataMap.keys() );
+
+    file.close();
+  }
+}
+
+double GeoDialog::calculateCoordinate( const QString &coordinate )
+{
+  int neg;
+  int d = 0, m = 0, s = 0;
+  QString str = coordinate;
+
+  neg = str.left( 1 ) == "-";
+  str.remove( 0, 1 );
+
+  switch ( str.length() ) {
+    case 4:
+      d = str.left( 2 ).toInt();
+      m = str.mid( 2 ).toInt();
+      break;
+    case 5:
+      d = str.left( 3 ).toInt();
+      m = str.mid( 3 ).toInt();
+      break;
+    case 6:
+      d = str.left( 2 ).toInt();
+      m = str.mid( 2, 2 ).toInt();
+      s = str.right( 2 ).toInt();
+      break;
+    case 7:
+      d = str.left( 3 ).toInt();
+      m = str.mid( 3, 2 ).toInt();
+      s = str.right( 2 ).toInt();
+      break;
+    default:
+      break;
+  }
+
+  if ( neg )
+    return - ( d + m / 60.0 + s / 3600.0 );
+  else
+    return d + m / 60.0 + s / 3600.0;
+}
 
 
 GeoMapWidget::GeoMapWidget( QWidget *parent, const char *name )
