@@ -42,6 +42,9 @@ class WebdavHandler
     static QDomElement addSloxElement( QDomDocument &, QDomNode &,
                                        const QString &tag,
                                        const QString &text = QString::null );
+    static QDomText addTextNode( QDomDocument &doc, 
+                                 QDomNode &node, const QString &text );
+    
     /** 
      * Creates a request body which asks for the standard properties. Used as a stat.
      * */

@@ -63,6 +63,12 @@ QDomElement WebdavHandler::addDavElement( QDomDocument &doc, QDomNode &node,
   node.appendChild( el );
   return el;
 }
+QDomText WebdavHandler::addTextNode( QDomDocument &doc, QDomNode &node, const QString &text )
+{
+  QDomText el = doc.createTextNode( text );
+  node.appendChild( el );
+  return el;
+}
 
 QDomDocument WebdavHandler::createItemsAndVersionsPropsRequest()
 {
