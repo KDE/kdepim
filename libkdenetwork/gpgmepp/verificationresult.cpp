@@ -247,7 +247,7 @@ std::vector<GpgME::Signature::Notation> GpgME::Signature::notations() const {
   for ( unsigned int i = 0 ; i < d->nota[idx].size() ; ++i )
     result.push_back( Notation( d, idx, i ) );
   return result;
-};
+}
 
 
 GpgME::Signature::Notation::Notation( VerificationResult::Private * parent, unsigned int sindex, unsigned int nindex )
