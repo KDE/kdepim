@@ -131,7 +131,8 @@ QByteArray KNMimeSource::encodedData(const char *) const
 
 
 KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, const char *name )
-    : KTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false), emuKMail(false), f_inddialog(0), a_ctions(actColl)
+    : KTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false),
+      emuKMail(false), b_odyPopup(0), f_inddialog(0), a_ctions(actColl)
 {
   i_nstances.append(this);
   setNotifyClick( true );
@@ -382,7 +383,7 @@ void KNArticleWidget::viewportMousePressEvent(QMouseEvent *e)
   if(!a.isEmpty() && (e->button()==RightButton || e->button()==MidButton))
     anchorClicked(a, e->button(), &e->globalPos());
   else
-    if (e->button()==RightButton)
+    if (e->button()==RightButton && b_odyPopup)
       b_odyPopup->popup(e->globalPos());
 
   QTextBrowser::viewportMousePressEvent(e);
