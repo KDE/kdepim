@@ -91,6 +91,7 @@ KABC::AddresseeList EudoraXXPort::importContacts( const QString& ) const
   while(!stream.eof()) {
     line = stream.readLine();
     bytesRead += line.length();
+    QString tmp;
 
     if (line.startsWith("alias")) {
       if (a) { // Write it out
@@ -99,20 +100,31 @@ KABC::AddresseeList EudoraXXPort::importContacts( const QString& ) const
         a = 0;
         a = new KABC::Addressee();
       } else a = new KABC::Addressee();
-      a->setFormattedName(key(line));
-      a->insertEmail(email(line));
+      tmp = key(line);
+      if (!tmp.isEmpty()) a->setFormattedName(tmp);
+      tmp = email(line);
+      if (!tmp.isEmpty()) a->insertEmail(tmp);
     }
     else if (line.startsWith("note")) {
       if (!a) break; // Must have an alias before a note
-      a->setNote(comment(line));
-      a->setFamilyName(get(line, "name"));
-      KABC::Address addr;
-      QString addrStr = get(line, "address");
-      if (!addrStr.isEmpty())
-        kdDebug() << addrStr << endl; // dump complete address
-      addr.setLabel(addrStr);
-      a->insertAddress(addr);
-      a->insertPhoneNumber( KABC::PhoneNumber( get(line,"phone"), KABC::PhoneNumber::Voice ) );
+     
+      tmp = comment(line);
+      if (!tmp.isEmpty()) a->setNote(tmp);
+      
+      tmp = get(line, "name");
+      if (!tmp.isEmpty()) a->setFamilyName(tmp);
+      
+      tmp =  get(line, "address");
+      if (!tmp.isEmpty()){
+        KABC::Address addr;
+        kdDebug() << tmp << endl; // dump complete address
+        addr.setLabel(tmp);
+        a->insertAddress(addr);
+      }
+
+      tmp = get(line,"phone");
+      if (tmp.isEmpty())
+         a->insertPhoneNumber( KABC::PhoneNumber( tmp, KABC::PhoneNumber::Voice ));
     }
   }
 
