@@ -31,8 +31,12 @@
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <kapplication.h>
+
+#include "broadcaststatus.h"
 #include "recentaddresses.h"
+using KPIM::BroadcastStatus;
 using KRecentAddress::RecentAddresses;
+
 //GUI
 #include "knmainwidget.h"
 #include "knarticlewidget.h"
@@ -343,9 +347,9 @@ void KNMainWidget::setStatusMsg(const QString& text, int id)
   bar->clear();
   if (text.isEmpty() && (id==SB_MAIN))
     if (knGlobals.netAccess()->currentMsg().isEmpty())
-      bar->changeItem(i18n(" Ready"), 1);
+      BroadcastStatus::instance()->setStatusMsg(i18n(" Ready"));
     else
-      bar->changeItem(knGlobals.netAccess()->currentMsg(), 1);
+      BroadcastStatus::instance()->setStatusMsg(knGlobals.netAccess()->currentMsg());
   else if ( id == SB_GROUP ) {
     int statusWidth = s_tatusGroup->width();
     QString mtext = text;
@@ -357,7 +361,7 @@ void KNMainWidget::setStatusMsg(const QString& text, int id)
   else {
     switch(id) {
       case SB_MAIN:
-        bar->changeItem(text, 1); break;
+        BroadcastStatus::instance()->setStatusMsg(text); break;
       case SB_GROUP:
         s_tatusGroup->setText(text); break;
       case SB_FILTER:

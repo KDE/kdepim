@@ -61,6 +61,8 @@ private:
   KNMainWidget *m_mainWidget;
   StatusbarProgressWidget *mLittleProgress;
   ProgressDialog *mProgressDialog;
+private slots:
+  void slotShowStatusMsg( const QString& );
 };
 
 #endif // KNODE_H

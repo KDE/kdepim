@@ -27,6 +27,7 @@
 #include <klocale.h>
 #include <kapplication.h>
 
+#include "broadcaststatus.h"
 #include "progressdialog.h"
 #include "statusbarprogresswidget.h"
 
@@ -56,6 +57,8 @@ KNMainWindow::KNMainWindow( QWidget* pWidget )
            SLOT( setCaption(const QString&)) );
   setCentralWidget( m_mainWidget );
   setupStatusBar();
+  connect( KPIM::BroadcastStatus::instance(), SIGNAL(statusMsg(const QString&)),
+    this, SLOT(slotShowStatusMsg(const QString& )) );
   createGUI( "knodeui.rc" );
   knGlobals.instance = 0;
 
@@ -107,10 +110,14 @@ void KNMainWindow::setupStatusBar() {
 
   statusBar()->addWidget( mLittleProgress, 0 , true );
 
-  statusBar()->insertItem("", 1 /* item id equal to kontact */, 2);
+  statusBar()->insertItem("", 1, 2);
   statusBar()->setItemAlignment(1, AlignLeft | AlignVCenter);
   statusBar()->addWidget(m_mainWidget->statusBarLabelFilter(), 2);
   statusBar()->addWidget(m_mainWidget->statusBarLabelGroup(), 3);
+}
+
+void KNMainWindow::slotShowStatusMsg( const QString &msg ) {
+  statusBar()->changeItem( msg, 1 );
 }
 
 #include "knode.moc"
