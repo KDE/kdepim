@@ -750,8 +750,8 @@ folder will be selected in &kmail;'s main window.
 	    <para>
 	      If checked, your signature as defined in the <link
 	      linkend="configure-identity-signature">identity
-	      page</link> is automatically included at the end of the
-	      mail.  <!-- otherwise...? -->
+	      page</link> is automatically included at the end of
+              all messages you create (&ie; new messages, replies, &etc;).
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -796,6 +796,19 @@ folder will be selected in &kmail;'s main window.
 	    </para>
 	  </listitem>
 	</varlistentry>
+	<varlistentry id="configure-composer-general-autosave-interval">
+	  <term>
+	    <guilabel>Autosave interval</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+              A backup copy of the text in the composer window can be created
+	      regularly. This option lets you specify the interval used to 
+              create the backup. You can disable autosaving by setting it to 
+              the value <literal>0</literal>.
+	    </para>
+	  </listitem>
+	</varlistentry>
 	<varlistentry id="configure-composer-general-external-editor">
 	  <term>
 	    <guilabel>External Editor</guilabel>
@@ -832,7 +845,9 @@ character that is added in front of quoted text.
 There are special &percnt;-denoted characters that will insert certain
 values, which are also displayed at the top of the <guilabel>Phrases</guilabel> section.
 You can add reply phrases in languages other than
-your default &kde; language using the <guilabel>Language</guilabel> button.
+your default &kde; language using the <guibutton>Add...</guibutton> button.
+You can then choose between different languages with the
+<guilabel>Language</guilabel> drop down box.
 This will only work for languages whose i18n package you have installed.</para>
 
 </sect2>
@@ -844,8 +859,9 @@ This will only work for languages whose i18n package you have installed.</para>
 <quote>Forward</quote>. If you receive messages that use prefixes different
 to the standard ones, you can add them here so &kmail; will recognize 
 them. This way &kmail; can ignore them for sorting messages and
-when setting the subject of a reply, and optionally replace them 
-with <quote>Re:</quote>.</para>
+when setting the subject of a reply or a forwarded messages, and optionally 
+replace them with <quote>Re:</quote> or <quote>Fwd:</quote> 
+respectively.</para>
 
 </sect2>
 
@@ -861,7 +877,7 @@ a charset using
 </para>
 
 <para>If you select <guilabel>Keep original charset when replying
-or forwarding</guilabel>, the original message's charset
+or forwarding (if possible)</guilabel>, the original message's charset
 will be kept, unless there are now characters that cannot be
 represented using that charset.</para>
 
@@ -887,16 +903,37 @@ is only useful for advanced users.</para>
 
 </sect2>
 
+<sect2 id="configure-composer-attachments">
+<title>Attachments</title>
+
+<para>If you have to send attachments with filenames containing non-English 
+characters to users of Outlook(TM) or Outlook Express(TM) then you might want
+to check the <guilabel>Outlook-compatible attachment naming</guilabel> option.
+&kmail; will then encode the attachment names in a non-standard way that is
+understood by Outlook(TM).</para>
+<para>Note that &kmail; will create non-standard compliant messages, and
+consequently it is possible that your messages will not be understood by
+standard-compliant mail clients. So, unless you have no other choice, you
+should not enable this option.</para>
+
+<para>Check the <guilabel>Enable detection of missing attachments</guilabel>
+checkbox if you want &kmail; to warn you whenever you are about to send a
+message without attachments although the message text contains certain
+words which indicate that you wanted to include an attachment. The list
+of key words can be modified.</para>
+
+</sect2>
+
 </sect1>
 
   <sect1 id="configure-security">
     <title>
-      Security Page
+      <guilabel>Security</guilabel> Page
     </title>
 
     <sect2 id="configure-security-reading">
       <title>
-	Reading
+	<guilabel>Reading</guilabel>
       </title>
 
       <para>
@@ -1092,7 +1129,7 @@ is only useful for advanced users.</para>
 	    <para>
 	      This option supresses the sending of &mdn;s if the
 	      message is encrypted (partially or in whole). This
-	      thwards attempts to use &kmail;'s &mdn; feature as an
+	      thwarts attempts to use &kmail;'s &mdn; feature as an
 	      <emphasis>oracle</emphasis> to deduce whether you were
 	      able to decrypt the message or not.
 	    </para>
@@ -1117,7 +1154,7 @@ is only useful for advanced users.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	      If checked, automatically imports any attachments
+	      If checked, &kmail; automatically imports any attachments
 	      containing &openpgp; keys into your local keyring, and any
 	      attachments containing &smime; keys into your local key
 	      box.
@@ -1127,8 +1164,8 @@ is only useful for advanced users.</para>
 		Verifying &smime; signatures always involves importing
 		the contained certificates. This option thus does not
 		affect this. It is also unrelated to &gpg;'s
-		auto-key-retrieve feature, where &gpg; will try to
-		import unknown keys from a key server.
+		<option>auto-key-retrieve</option> feature, where &gpg;
+                will try to import unknown keys from a key server.
 	      </para>
 	    </note>
 	  </listitem>
@@ -1138,11 +1175,11 @@ is only useful for advanced users.</para>
 
     <sect2 id="configure-security-composing">
       <title>
-	Composing
+	<guilabel>Composing</guilabel>
       </title>
 
       <para>
-	On this tab you can configure security-relavant options for
+	On this tab you can configure security-relevant options for
 	composing messages.
       </para>
 
@@ -1271,7 +1308,7 @@ is only useful for advanced users.</para>
 	      encrypt messages that are merely saved to the
 	      <guilabel>drafts</guilabel> folder. This is more
 	      convenient, and does not result in a gross loss of
-	      security, provided the drafts folder is save. &imap;
+	      security, provided the drafts folder is safe. &imap;
 	      users might want this options turned off, if their
 	      <guilabel>drafts</guilabel> folder is on the server.
 	    </para>
@@ -1284,7 +1321,7 @@ is only useful for advanced users.</para>
 
     <sect2 id="configure-security-warnings">
       <title>
-	Warnings
+	<guilabel>Warnings</guilabel>
       </title>
 
       <para>
@@ -1403,7 +1440,7 @@ is only useful for advanced users.</para>
 
     <sect2 id="configure-security-smime-validation">
       <title>
-	&smime; Validation
+	<guilabel>&smime; Validation</guilabel>
       </title>
 
       <para>
@@ -1416,7 +1453,7 @@ is only useful for advanced users.</para>
 
     <sect2 id="configure-security-crypto-backends">
       <title>
-	Crypto Backends
+	<guilabel>Crypto Backends</guilabel>
       </title>
 
       <para>
@@ -1470,55 +1507,78 @@ is only useful for advanced users.</para>
 
   </sect1> <!-- configure-security -->
 
-<sect1 id="configure-folders">
-<title>Folders Page</title>
+<sect1 id="configure-misc">
+<title><guilabel>Misc</guilabel> Page</title>
+
+<sect2 id="configure-misc-folders">
+<title><guilabel>Folders</guilabel></title>
 
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Confirm before emptying folders</guilabel></term>
+<term><guilabel>Ask for confirmation before moving all messages to trash</guilabel></term>
 <listitem>
-<para>To empty a folder means that its messages get transferred to the
-<guilabel>trash</guilabel> folder (and only get deleted if they are already in the
-<guilabel>trash</guilabel> folder).  So although you normally will not lose any
-mail, you can still activate a confirmation dialog that will ask you if you
-really want to empty the folder.</para>
+<para>Enable this option if you want to be asked for confirmation whenever
+you use <menuchoice><guimenu>Folder</guimenu><guimenuitem>Move All Messages to Trash</guimenuitem></menuchoice>.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Warn before expiring messages</guilabel></term>
+<term><guilabel>Exclude important messages from expiry</guilabel></term>
 <listitem>
-<para>This will pop up a confirmation dialog before messages are expired
-(&eg; on exit).</para>
+<para>Enable this option if important messages should never be deleted
+during message expiration, &ie; during automatic deletion of old
+messages.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Loop in the current folder when trying to find unread mail</guilabel></term>
+<term><guilabel>When trying to find unread messages</guilabel></term>
 <listitem>
-<para>When you press one of the shortcuts to find new messages (&eg; <keycap>Space</keycap>)
-and this option is activated, &kmail; will not jump to the next folder, but instead
-try to find new messages at the top of the current folder.</para>
+<para>This option controls what happens if you press one of the shortcuts to
+go to the next or previous unread message (&eg; <keycap>Space</keycap>).
+If you ask &kmail; to go to the next unread message although there is no
+unread message below the currently selected message then the following happens:
+<itemizedlist>
+<listitem>
+<para>If <guilabel>Do not Loop</guilabel> is selected then nothing will happen.
+</para>
+</listitem>
+<listitem>
+<para>If <guilabel>Loop in Current Folder</guilabel> is selected then &kmail; 
+will search from the beginning of the current folder for an unread message. If
+none is found then nothing happens.</para>
+</listitem>
+<listitem>
+<para>If <guilabel>Loop in All Folders</guilabel> is selected then &kmail;
+will first search in the current folder for another unread message. If none
+is found then &kmail; will search the next folder containing unread messages.
+</para>
+</listitem>
+</itemizedlist>
+Correspondingly, if you ask &kmail; to go to the previous unread message.
+</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Jump to first unread message when entering a folder</guilabel></term>
 <listitem>
-<para>If this option is enabled &kmail; will go to the next unread message
- when you enter a folder; if it is not enabled, &kmail; will go to 
- the message that was selected when you last left the folder.</para>
+<para>If this option is enabled &kmail; will go to the first unread message
+when you enter a folder; if it is not enabled, &kmail; will go to first
+new message or, if there is no new message, to the message
+that was selected when you last left the folder.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Mark selected messages as read after...</guilabel></term>
+<term><guilabel>Mark selected message as read after...</guilabel></term>
 <listitem>
-<para>When you select a <guilabel>new</guilabel> message, &kmail; will change the
+<para>When you select a <guilabel>new</guilabel> or 
+<guilabel>unread</guilabel> message, &kmail; will change the
 message's status to <guilabel>read</guilabel> after the number of seconds
 entered here. If you disable this option, messages will keep their
-<guilabel>new</guilabel> status.</para>
+<guilabel>new</guilabel> or <guilabel>unread</guilabel> status.</para>
 </listitem>
 </varlistentry>
 
@@ -1526,7 +1586,7 @@ entered here. If you disable this option, messages will keep their
 <term><guilabel>Ask for action after dragging messages to another folder</guilabel></term>
 <listitem>
 <para>When you drag a message to a different folder, a small popup will ask
-you if you want to copy or move the message. If you disable this option,
+you if you want to move or copy the message. If you disable this option,
 the message will be moved immediately, without a popup.</para>
 </listitem>
 </varlistentry>
@@ -1539,39 +1599,28 @@ that is used when you create a new folder.</para>
 </listitem>
 </varlistentry>
 
-</variablelist>
-
-<!-- TODO: better structure needed: -->
-<para><guilabel>On program exit, perform the following tasks</guilabel>:</para>
-
-<variablelist>
-
 <varlistentry>
-<term><guilabel>Compact all folders</guilabel></term>
+<term><guilabel>Open this folder on startup</guilabel></term>
 <listitem>
-<para>This will compact all folders every time you exit &kmail;. Compacting
-folders means that the messages you deleted will really be
-removed.</para>
+<para>Here you can set the folder that should be selected by default if you
+start &kmail;. If you use only &imap; folders then you might want to set
+this to your &imap; inbox folder.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Empty trash</guilabel></term>
+<term><guilabel>Empty trash on program exit</guilabel></term>
 <listitem>
 <para>The trash folder is cleared of messages when you quit &kmail; if this
 option is selected.</para> 
 </listitem>
 </varlistentry>
 
-<varlistentry>
-<term><guilabel>Expire old messages</guilabel></term>
-<listitem>
-<para>Delete old messages from folders, according to the rules in
-each folder's <link linkend="folders-properties-window">Properties dialog</link>.</para>
-</listitem>
-</varlistentry>
-
 </variablelist>
+
+</sect2>
+
+<!-- FIXME: Add information about the Groupware tab -->
 
 </sect1>
 
