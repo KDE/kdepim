@@ -1,1 +1,12 @@
-debian/tmp/usr/lib/libkdenetwork.so.*
+debian/tmp/usr/lib/libkdenetwork.so.2
+debian/tmp/usr/lib/libkdenetwork.so.2.2.0
+debian/tmp/usr/share/apps/kconf_update/kpgp-3.1-upgrade-address-data.pl
+debian/tmp/usr/share/apps/kconf_update/kpgp.upd
+debian/tmp/usr/share/apps/kmail/pics/key.png
+debian/tmp/usr/share/apps/kmail/pics/key_bad.png
+debian/tmp/usr/share/apps/kmail/pics/key_ok.png
+debian/tmp/usr/share/apps/kmail/pics/key_unknown.png
+debian/tmp/usr/share/apps/knode/pics/key.png
+debian/tmp/usr/share/apps/knode/pics/key_bad.png
+debian/tmp/usr/share/apps/knode/pics/key_ok.png
+debian/tmp/usr/share/apps/knode/pics/key_unknown.png
