@@ -2,6 +2,8 @@
 [KDE Desktop Entry]
 Name=KPilot
 Name[eo]=Palm-Piloto
+Name[ko]=K파일럿
+Name[lv]=KPilots
 Name[pt_BR]=Ferramenta para PalmPilot
 Exec=kpilot
 Icon=kpilot.xpm
