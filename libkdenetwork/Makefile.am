@@ -1,6 +1,7 @@
 KDE_CXXFLAGS = $(USE_RTTI)
 INCLUDES= $(all_includes)
-SUBDIRS = . pics4kmail pics4knode 
+# make this pics/ again:
+SUBDIRS = . pics4kmail
 
 lib_LTLIBRARIES = libkdenetwork.la
 

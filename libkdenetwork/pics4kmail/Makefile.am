@@ -1,7 +1,9 @@
 
-data_DATA = key_ok.png key_bad.png key_unknown.png key.png
+kmaildata_DATA = key_ok.png key_bad.png key_unknown.png key.png
+knodedata_DATA = $(kmaildata_DATA)
 
-datadir = $(kde_datadir)/kmail/pics
+kmaildatadir = $(kde_datadir)/kmail/pics
+knodedatadir = $(kde_datadir)/knode/pics
 
-EXTRA_DIST = $(data_DATA)
+EXTRA_DIST = $(kmaildata_DATA)
 
