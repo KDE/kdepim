@@ -492,17 +492,17 @@ void KNArticleManager::setAllRead(bool r)
 }
 
 
-void KNArticleManager::setRead(KNRemoteArticle::List *l, bool r)
+void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r)
 {
-  if(l->isEmpty())
+  if(l.isEmpty())
     return;
 
-  KNRemoteArticle *a=l->first(), *ref=0;
+  KNRemoteArticle *a=l.first(), *ref=0;
   KNGroup *g=static_cast<KNGroup*>(a->collection() );
   int changeCnt=0, idRef=0;
 
 
-  for( ; a; a=l->next()) {
+  for( ; a; a=l.next()) {
 
     if(a->isRead()!=r) {
       changeCnt++;
@@ -554,10 +554,15 @@ void KNArticleManager::setRead(KNRemoteArticle::List *l, bool r)
 }
 
 
-void KNArticleManager::toggleWatched(KNRemoteArticle::List *l)
+void KNArticleManager::toggleWatched(KNRemoteArticle::List &l)
 {
-  for(KNRemoteArticle *a=l->first(); a; a=l->next()) {
-    if(a->score()==100)
+  KNRemoteArticle *a=l.first();
+  bool watch=true;
+  if (a && (a->score()==100))
+    watch=false;
+
+  for(KNRemoteArticle *a=l.first(); a; a=l.next()) {
+    if(!watch)
       a->setScore(50);
     else
       a->setScore(100);
@@ -567,10 +572,15 @@ void KNArticleManager::toggleWatched(KNRemoteArticle::List *l)
 }
 
 
-void KNArticleManager::toggleIgnored(KNRemoteArticle::List *l)
+void KNArticleManager::toggleIgnored(KNRemoteArticle::List &l)
 {
-  for(KNRemoteArticle *a=l->first(); a; a=l->next()) {
-    if(a->score()==0)
+  KNRemoteArticle *a=l.first();
+  bool ignore=true;
+  if (a && (a->score()==0))
+    ignore=false;
+
+  for(; a; a=l.next()) {
+    if(!ignore)
       a->setScore(50);
     else
       a->setScore(0);
@@ -580,9 +590,9 @@ void KNArticleManager::toggleIgnored(KNRemoteArticle::List *l)
 }
 
 
-void KNArticleManager::setScore(KNRemoteArticle::List *l, int score)
+void KNArticleManager::setScore(KNRemoteArticle::List &l, int score)
 {
-  for(KNRemoteArticle *a=l->first(); a; a=l->next())
+  for(KNRemoteArticle *a=l.first(); a; a=l.next())
     if(a->score()!=score) {
       a->setScore(score);
       a->updateListItem();

@@ -105,10 +105,10 @@ class KNArticleManager : public QObject {
 
     //article handling - RemoteArticles
     void setAllRead(bool r=true);
-    void setRead(KNRemoteArticle::List *l, bool r=true);
-    void toggleWatched(KNRemoteArticle::List *l);
-    void toggleIgnored(KNRemoteArticle::List *l);
-    void setScore(KNRemoteArticle::List *a, int score=-1);
+    void setRead(KNRemoteArticle::List &l, bool r=true);
+    void toggleWatched(KNRemoteArticle::List &l);
+    void toggleIgnored(KNRemoteArticle::List &l);
+    void setScore(KNRemoteArticle::List &l, int score=-1);
 
     //article handling - LocalArticles
     //soon to come ..

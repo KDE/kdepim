@@ -41,6 +41,7 @@ class KNArticleFactory;
 class KNFilterManager;
 class KNFilterSelectAction;
 class KNNetAccess;
+class KNRemoteArticle;
 
 
 class KNodeView : public QSplitter
@@ -75,6 +76,9 @@ class KNodeView : public QSplitter
     virtual void paletteChange ( const QPalette & );
     virtual void fontChange ( const QFont & );
 
+    void getSelectedArticles(QList<KNRemoteArticle> &l);
+    void getSelectedThreads(QList<KNRemoteArticle> &l);
+
     //GUI
     QSplitter       *s_ecSplitter;
     KNArticleWidget *a_rtView;
@@ -104,6 +108,7 @@ class KNodeView : public QSplitter
     //listview slots
     void slotArticleSelected(QListViewItem*);
     void slotArticleDoubleClicked(QListViewItem*);
+    void slotArticleSelectionChanged();
     void slotCollectionSelected(QListViewItem*);
     void slotArticleRMB(QListViewItem *i, const QPoint &p, int);
     void slotCollectionRMB(QListViewItem *i, const QPoint &p, int);

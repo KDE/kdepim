@@ -1211,7 +1211,7 @@ void KNArticleWidget::slotTimeout()
   if(a_rticle && a_rticle->type()==KNMimeBase::ATremote && !a_rticle->isOrphant()) {
     KNRemoteArticle::List l;
     l.append((static_cast<KNRemoteArticle*>(a_rticle)));
-    knGlobals.artManager->setRead(&l, true);
+    knGlobals.artManager->setRead(l, true);
   }
 }
 

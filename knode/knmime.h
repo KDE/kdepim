@@ -356,7 +356,7 @@ class KNRemoteArticle : public KNArticle {
     void setUnreadFollowUps(unsigned short s)     { u_nreadFups=s; }
     void incUnreadFollowUps(unsigned short s=1)   { u_nreadFups+=s; }
     void decUnreadFollowUps(unsigned short s=1)   { u_nreadFups-=s; }
-    void thread(List *f);
+    void thread(List &f);
 
     //filtering
     bool filterResult()                     { return f_lags.get(7); }

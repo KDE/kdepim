@@ -1649,7 +1649,7 @@ void KNRemoteArticle::updateListItem()
 }
 
 
-void KNRemoteArticle::thread(KNRemoteArticle::List *l)
+void KNRemoteArticle::thread(KNRemoteArticle::List &l)
 {
   KNRemoteArticle *tmp=0, *ref=this;
   KNGroup *g=static_cast<KNGroup*>(c_ol);
@@ -1663,7 +1663,7 @@ void KNRemoteArticle::thread(KNRemoteArticle::List *l)
   }
 
   topID=ref->id();
-  l->append(ref);
+  l.append(ref);
 
   for(int i=0; i<g->length(); i++) {
     tmp=g->at(i);
@@ -1674,7 +1674,7 @@ void KNRemoteArticle::thread(KNRemoteArticle::List *l)
         idRef=ref->idRef();
       }
       if(ref->id()==topID)
-        l->append(tmp);
+        l.append(tmp);
     }
   }
 }
