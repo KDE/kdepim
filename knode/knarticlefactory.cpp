@@ -140,14 +140,14 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
   KNHeaders::AddressField address;
   if(replyTo && !replyTo->isEmpty()) {
     if(replyTo->hasName())
-      address.setName(replyTo->name().copy());
+      address.setName(replyTo->name());
     if(replyTo->hasEmail())
       address.setEmail(replyTo->email().copy());
   }
   else {
     KNHeaders::From *from=a->from();
     if(from->hasName())
-      address.setName(from->name().copy());
+      address.setName(from->name());
     if(from->hasEmail())
       address.setEmail(from->email().copy());
   }
@@ -773,15 +773,20 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, bool with
   else
     id=defId;
   if(id->hasName())
-    from->setName(id->name().copy());
+    from->setName(id->name());
 
   //email
   if(grpId && grpId->hasEmail())
     id=grpId;
   else
     id=defId;
-  if(id->hasEmail())
-    from->setEmail(id->email().copy());
+  if(id->hasEmail()&&id->emailIsValid())
+    from->setEmail(id->email().latin1());
+  else {
+    KMessageBox::sorry(knGlobals.topWidget, i18n("Please enter a valid e-mail address."));
+    delete art;
+    return 0;
+  }
 
   //Reply-To
   if(grpId && grpId->hasReplyTo())
@@ -789,7 +794,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, bool with
   else
     id=defId;
   if(id->hasReplyTo())
-    art->replyTo()->fromUnicodeString(id->replyTo().copy(), cs);
+    art->replyTo()->fromUnicodeString(id->replyTo(), cs);
 
   //Organization
   if(grpId && grpId->hasOrga())
@@ -797,7 +802,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, bool with
   else
     id=defId;
   if(id->hasOrga())
-    art->organization()->fromUnicodeString(id->orga().copy(), cs);
+    art->organization()->fromUnicodeString(id->orga(), cs);
 
   //Date
   art->date()->setUnixTime(); //set current date+time
@@ -891,9 +896,9 @@ bool KNArticleFactory::cancelAllowed(KNArticle *a)
 
     if(ownArticle) {
       if(gid && gid->hasEmail())
-        ownArticle=( gid->email()==remArt->from()->email() );
+        ownArticle=( gid->email().latin1()==remArt->from()->email() );
       else
-        ownArticle=( defId->email()==remArt->from()->email() );
+        ownArticle=( defId->email().latin1()==remArt->from()->email() );
     }
 
     if(!ownArticle) {

@@ -63,7 +63,7 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   l=new QLabel(e_mail, i18n("Email A&ddress:"), this);
   topL->addWidget(l, 2,0);
   topL->addMultiCellWidget(e_mail, 2,2, 1,2);
-  e_mail->setText(QString(d_ata->e_mail));
+  e_mail->setText(d_ata->e_mail);
 
   r_eplyTo=new QLineEdit(this);
   l=new QLabel(r_eplyTo, i18n("&Reply-To Address:"), this);
@@ -123,7 +123,7 @@ void KNConfig::IdentityWidget::apply()
 
   d_ata->n_ame=n_ame->text();
   d_ata->o_rga=o_rga->text();
-  d_ata->e_mail=e_mail->text().latin1();
+  d_ata->e_mail=e_mail->text();
   d_ata->r_eplyTo=r_eplyTo->text();
   d_ata->u_seSigFile=s_igFile->isChecked();
   d_ata->s_igPath=s_ig->text();

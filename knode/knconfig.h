@@ -98,8 +98,9 @@ class Identity : public Base {
     bool hasName()                    { return (!n_ame.isEmpty()); }
     QString name()                    { return n_ame; }
     void setName(const QString &s)    { n_ame=s; }
+    bool emailIsValid();
     bool hasEmail()                   { return (!e_mail.isEmpty()); }
-    QCString email()                  { return e_mail; }
+    QString email()                   { return e_mail; }
     void setEmail(const QCString &s)  { e_mail=s; }
     bool hasReplyTo()                 { return (!r_eplyTo.isEmpty()); }
     QString replyTo()                 { return r_eplyTo; }
@@ -117,12 +118,12 @@ class Identity : public Base {
 
   protected:
     QString   n_ame,
+              e_mail,
               o_rga,
               r_eplyTo,
               s_igText,
               s_igContents,
               s_igPath;
-    QCString  e_mail;
     bool      u_seSigFile,
               g_lobal;
 };

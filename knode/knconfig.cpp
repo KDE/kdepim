@@ -57,7 +57,7 @@ KNConfig::Identity::~Identity()
 void KNConfig::Identity::loadConfig(KConfigBase *c)
 {
   n_ame=c->readEntry("Name");
-  e_mail=c->readEntry("Email").latin1();
+  e_mail=c->readEntry("Email");
   r_eplyTo=c->readEntry("Reply-To");
   o_rga=c->readEntry("Org");
   u_seSigFile=c->readBoolEntry("UseSigFile",false);
@@ -69,7 +69,7 @@ void KNConfig::Identity::loadConfig(KConfigBase *c)
 void KNConfig::Identity::saveConfig(KConfigBase *c)
 {
   c->writeEntry("Name", n_ame);
-  c->writeEntry("Email", e_mail.data());
+  c->writeEntry("Email", e_mail);
   c->writeEntry("Reply-To", r_eplyTo);
   c->writeEntry("Org", o_rga);
   c->writeEntry("UseSigFile", u_seSigFile);
@@ -94,6 +94,15 @@ bool KNConfig::Identity::isEmpty()
   return (  n_ame.isEmpty() &&  e_mail.isEmpty() &&
             r_eplyTo.isEmpty()   && o_rga.isEmpty() &&
             ( s_igPath.isEmpty() || s_igText.isEmpty() ) );
+}
+
+
+bool KNConfig::Identity::emailIsValid()
+{
+  if (e_mail.isEmpty())
+    return false;
+  else
+    return e_mail.contains(QRegExp("?*@?*.??*",true,true));
 }
 
 
