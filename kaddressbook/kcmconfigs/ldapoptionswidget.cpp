@@ -243,10 +243,8 @@ void LDAPOptionsWidget::initGUI()
   groupBoxLayout->addWidget( mHostListView );
 
   layout->addWidget( groupBox );
-  layout->addStretch();
 
   KButtonBox *buttons = new KButtonBox( this );
-  buttons->addStretch();
   buttons->addButton( i18n( "&Add Host..." ), this, SLOT( slotAddHost() ) );
   mEditButton = buttons->addButton( i18n( "&Edit Host..." ), this, SLOT( slotEditHost() ) );
   mEditButton->setEnabled( false );
