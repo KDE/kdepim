@@ -73,8 +73,6 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
     mExtensionManager( 0 ), mConfigureDialog( 0 ), mLdapSearchDialog( 0 ),
     mReadWrite( readWrite ), mModified( false )
 {
-  mIsPart = !parent->inherits( "KAddressBookMain" );
-
   mWidget = new QWidget( parent, name );
 
   mAddressBook = KABC::StdAddressBook::self();
@@ -915,18 +913,8 @@ void KABCore::initActions()
   KAction *action, *settingsAction;
 
   // file menu
-  if ( mIsPart ) {
-    mActionMail = new KAction( i18n( "&Mail" ), "mail_generic", 0, this,
-                               SLOT( sendMail() ), actionCollection(),
-                               "kaddressbook_mail" );
-
-    action = new KAction( i18n( "&Print" ), "fileprint", CTRL + Key_P, this,
-                          SLOT( print() ), actionCollection(),
-                          "kaddressbook_print" );
-  } else {
-    mActionMail = KStdAction::mail( this, SLOT( sendMail() ), actionCollection() );
-    action = KStdAction::print( this, SLOT( print() ), actionCollection() );
-  }
+  mActionMail = KStdAction::mail( this, SLOT( sendMail() ), actionCollection() );
+  action = KStdAction::print( this, SLOT( print() ), actionCollection() );
   mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
 
@@ -939,7 +927,7 @@ void KABCore::initActions()
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data of a person, including addresses and phonenumbers." ) );
 
   mActionMailVCard = new KAction( i18n("Send &Contact..."), "mail_post_to", 0,
-                                 this, SLOT( mailVCard() ),
+                                  this, SLOT( mailVCard() ),
                                   actionCollection(), "file_mail_vcard" );
   mActionMailVCard->setWhatsThis( i18n( "Send a mail with the selected contact as attachment." ) );
 
@@ -949,33 +937,12 @@ void KABCore::initActions()
   mActionEditAddressee->setWhatsThis( i18n( "Edit a contact<p>You will be presented with a dialog where you can change all data of a person, including addresses and phonenumbers." ) );
 
   // edit menu
-  if ( mIsPart ) {
-    mActionCopy = new KAction( i18n( "&Copy" ), "editcopy", CTRL + Key_C, this,
-                               SLOT( copyContacts() ), actionCollection(),
-                               "kaddressbook_copy" );
-    mActionCut = new KAction( i18n( "Cu&t" ), "editcut", CTRL + Key_X, this,
-                              SLOT( cutContacts() ), actionCollection(),
-                              "kaddressbook_cut" );
-    mActionPaste = new KAction( i18n( "&Paste" ), "editpaste", CTRL + Key_V, this,
-                                SLOT( pasteContacts() ), actionCollection(),
-                                "kaddressbook_paste" );
-    action = new KAction( i18n( "Select &All" ), CTRL + Key_A, this,
-                 SLOT( selectAllContacts() ), actionCollection(),
-                 "kaddressbook_select_all" );
-    mActionUndo = new KAction( i18n( "&Undo" ), "undo", CTRL + Key_Z, this,
-                               SLOT( undo() ), actionCollection(),
-                               "kaddressbook_undo" );
-    mActionRedo = new KAction( i18n( "Re&do" ), "redo", CTRL + SHIFT + Key_Z,
-                               this, SLOT( redo() ), actionCollection(),
-                               "kaddressbook_redo" );
-  } else {
-    mActionCopy = KStdAction::copy( this, SLOT( copyContacts() ), actionCollection() );
-    mActionCut = KStdAction::cut( this, SLOT( cutContacts() ), actionCollection() );
-    mActionPaste = KStdAction::paste( this, SLOT( pasteContacts() ), actionCollection() );
-    action = KStdAction::selectAll( this, SLOT( selectAllContacts() ), actionCollection() );
-    mActionUndo = KStdAction::undo( this, SLOT( undo() ), actionCollection() );
-    mActionRedo = KStdAction::redo( this, SLOT( redo() ), actionCollection() );
-  }
+  mActionCopy = KStdAction::copy( this, SLOT( copyContacts() ), actionCollection() );
+  mActionCut = KStdAction::cut( this, SLOT( cutContacts() ), actionCollection() );
+  mActionPaste = KStdAction::paste( this, SLOT( pasteContacts() ), actionCollection() );
+  action = KStdAction::selectAll( this, SLOT( selectAllContacts() ), actionCollection() );
+  mActionUndo = KStdAction::undo( this, SLOT( undo() ), actionCollection() );
+  mActionRedo = KStdAction::redo( this, SLOT( redo() ), actionCollection() );
   mActionCopy->setWhatsThis( i18n( "Copy the currently selected contact(s) to system clipboard in vCard format." ) );
   mActionCut->setWhatsThis( i18n( "Cuts the currently selected contact(s) to system clipboard in vCard format." ) );
   mActionPaste->setWhatsThis( i18n( "Paste the previously cut or copied contacts from clipboard." ) );
@@ -992,17 +959,8 @@ void KABCore::initActions()
   mActionRedo->setEnabled( false );
 
   // settings menu
-  if ( mIsPart ) {
-    action = new KAction( i18n( "&Configure KAddressBook..." ), "configure", 0, this,
-                 SLOT( openConfigDialog() ), actionCollection(),
-                 "kaddressbook_configure" );
-    settingsAction = new KAction( i18n( "Configure S&hortcuts..." ), "configure_shortcuts", 0,
-                 this, SLOT( configureKeyBindings() ), actionCollection(),
-                 "kaddressbook_configure_shortcuts" );
-  } else {
-    action = KStdAction::preferences( this, SLOT( openConfigDialog() ), actionCollection() );
-    settingsAction = KStdAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
-  }
+  action = KStdAction::preferences( this, SLOT( openConfigDialog() ), actionCollection() );
+  settingsAction = KStdAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
   action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possebilities to configure KAddressBook." ) );
   settingsAction->setWhatsThis( i18n( "You will be presented with a dialog, where you can configure the application wide shortcuts." ) );
 
@@ -1020,8 +978,8 @@ void KABCore::initActions()
   // only enable LDAP lookup if we can handle the protocol
   if ( KProtocolInfo::isKnownProtocol( KURL( "ldap://localhost" ) ) ) {
     action = new KAction( i18n( "&Lookup Addresses in Directory" ), "find", 0,
-                 this, SLOT( openLDAPDialog() ), actionCollection(),
-                 "ldap_lookup" );
+                          this, SLOT( openLDAPDialog() ), actionCollection(),
+                          "ldap_lookup" );
     action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );
   }
 

@@ -19,13 +19,20 @@
       <Action name="file_quit"/>
     </Menu>
 
-    <Menu name="edit"><text>&amp;Edit</text>
+    <Menu name="edit" noMerge="1"><text>&amp;Edit</text>
+      <Action name="edit_undo"/>
+      <Action name="edit_redo"/> 
+      <Separator/>
+      <Action name="edit_cut"/>
+      <Action name="edit_copy"/>
+      <Action name="edit_paste"/>
+      <Separator/>
       <Action name="edit_delete" append="edit_paste_merge"/>
       <Action name="edit_set_categories"/>
       <Action name="edit_set_personal"/>
     </Menu>
 
-    <Menu name="view"><text>&amp;View</text>
+    <Menu name="view" noMerge="1"><text>&amp;View</text>
       <Action name="select_view"/>
       <Action name="view_add"/>
       <Action name="view_modify"/>
@@ -34,11 +41,11 @@
       <Action name="view_refresh"/>
     </Menu>
 
-    <Menu name="tools"><text>Tools</text>
+    <Menu name="tools" noMerge="1"><text>Tools</text>
       <Action name="ldap_lookup"/>
     </Menu>
 
-    <Menu noMerge="1" name="settings"><text>&amp;Settings</text>
+    <Menu name="settings" noMerge="1"><text>&amp;Settings</text>
       <Merge name="StandardToolBarMenuHandler" />
       <Action name="options_show_extensions"/>
       <Action name="options_show_jump_bar"/>

@@ -77,7 +77,7 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
 
   new KParts::AboutDataExtension( createAboutData(), this, "AboutData" );
 
-  setXMLFile( "kaddressbook_part.rc" );
+  setXMLFile( "kaddressbookui.rc" );
 }
 
 KAddressbookPart::~KAddressbookPart()

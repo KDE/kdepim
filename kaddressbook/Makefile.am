@@ -66,9 +66,6 @@ noinst_HEADERS = \
 rcdir = $(kde_datadir)/kaddressbook
 rc_DATA = kaddressbookui.rc
 
-partdir = $(kde_datadir)/kaddressbook
-part_DATA = kaddressbook_part.rc
-
 kabdata_DATA = zone.tab
 kabdatadir = $(kde_datadir)/kaddressbook
 
