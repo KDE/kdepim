@@ -1,3 +1,5 @@
+#ifndef _KPILOT_PILOTUSER_H
+#define _KPILOT_PILOTUSER_H
 /* pilotUser.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -25,8 +27,6 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef _KPILOT_PILOTUSER_H
-#define _KPILOT_PILOTUSER_H
 
 #include <stdlib.h>
 #include <string.h>
@@ -37,50 +37,62 @@
 #endif
 
 class KPilotUser
-    {
-    public:
-    KPilotUser() { }
-    KPilotUser(const PilotUser* user) { fUser = *user; }
+{
+public:
+	KPilotUser() { }
+	KPilotUser(const PilotUser* user) { fUser = *user; }
+
+	PilotUser *pilotUser() { return &fUser; }
+
+	/**
+	* Ensures the names are properly terminated.  Needed incase we
+	* are syncing a new and bogus pilot.
+	*/
+	void boundsCheck() 
+	{ 
+		fUser.username[sizeof(fUser.username)-1] = 0; 
+		fUser.password[sizeof(fUser.password)-1] = 0; 
+	}
+
+	const char* getUserName() const     { return fUser.username; }
+	void setUserName(const char* name)  
+	{ 
+		strncpy(fUser.username, name,sizeof(fUser.username)-1); 
+		boundsCheck();
+	}
     
-    PilotUser *pilotUser() { return &fUser; }
-      
-    /**
-     * Ensures the names are properly terminated.  Needed incase we
-     * are syncing a new and bogus pilot.
-     */
-    void boundsCheck() { fUser.username[127] = 0; fUser.password[127] = 0; }
+	const int getPasswordLength() const { return fUser.passwordLength; }
+	const char* getPassword() const     { return fUser.password; }
+	void setPassword(char* password) 
+	{ 
+		strncpy(fUser.password, password,sizeof(fUser.password)-1); 
+		boundsCheck();
+		fUser.passwordLength = strlen(fUser.password); 
+	}
 
-    const char* getUserName() const     { return fUser.username; }
-    void setUserName(const char* name)  { strcpy(fUser.username, name); }
-    
-    const int getPasswordLength() const { return fUser.passwordLength; }
-    const char* getPassword() const     { return fUser.password; }
-    void setPassword(char* password) { strcpy(fUser.password, password); fUser.passwordLength = strlen(password); }
+	unsigned long getUserID() const     { return fUser.userID; }
+	unsigned long getViewerID() const   { return fUser.viewerID; }
 
-    unsigned long getUserID() const     { return fUser.userID; }
-    unsigned long getViewerID() const   { return fUser.viewerID; }
+	unsigned long getLastSyncPC() const { return fUser.lastSyncPC; }
+	void setLastSyncPC(unsigned long pc) { fUser.lastSyncPC = pc; }
 
-    unsigned long getLastSyncPC() const { return fUser.lastSyncPC; }
-    void setLastSyncPC(unsigned long pc) { fUser.lastSyncPC = pc; }
-    
-    time_t getLastSuccessfulSyncDate() { return fUser.successfulSyncDate; }
-    void setLastSuccessfulSyncDate(time_t when) { fUser.successfulSyncDate = when; }
+	time_t getLastSuccessfulSyncDate() { return fUser.successfulSyncDate; }
+	void setLastSuccessfulSyncDate(time_t when) 
+		{ fUser.successfulSyncDate = when; }
 
-    time_t getLastSyncDate()           { return fUser.lastSyncDate; }
-    void setLastSyncDate(time_t when) { fUser.lastSyncDate = when; }
+	time_t getLastSyncDate()           { return fUser.lastSyncDate; }
+	void setLastSyncDate(time_t when) { fUser.lastSyncDate = when; }
 
-    private:
-    struct PilotUser fUser;
-    };
+private:
+	struct PilotUser fUser;
+};
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
-#endif
 
 
 // $Log$
+// Revision 1.7  2001/09/05 22:15:34  adridg
+// Operator & is just *too* weird
+//
 // Revision 1.6  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //
@@ -90,3 +102,4 @@ class KPilotUser
 // Revision 1.4  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //
+#endif
