@@ -198,6 +198,14 @@ void LDAPSearchDialog::restoreSettings()
       if ( !base.isEmpty() )
         ldapClient->setBase( base );
 
+      QString bindDN = config->readEntry( QString( "SelectedBind%1" ).arg( j ), "" );
+      if ( !bindDN.isEmpty() )
+        ldapClient->setBindDN( bindDN );
+
+      QString pwdBindDN = config->readEntry( QString( "SelectedPwdBind%1" ).arg( j ), "" );
+      if ( !pwdBindDN.isEmpty() )
+        ldapClient->setPwdBindDN( pwdBindDN );
+
       QStringList attrs;
 
       for ( QMap<QString,QString>::Iterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )
