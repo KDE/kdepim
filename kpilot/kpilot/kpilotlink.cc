@@ -558,10 +558,10 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 	    kdWarning() << __FUNCTION__ << ": Unknown status message " 
 			<< message
 			<< endl;
-		}
-	}
+	    }
+}
 	
-	void
+void
 KPilotLink::slotConduitClosed(KSocket* theSocket)
 {
 	FUNCTIONSETUP;
@@ -1735,6 +1735,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 #endif
 
 // $Log$
+// Revision 1.47  2001/04/29 00:34:24  stern
+// Fixed mismatched brackes in switch
+//
 // Revision 1.46  2001/04/29 00:26:42  stern
 // Fixed nasty missing break statement
 //
