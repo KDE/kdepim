@@ -23,3 +23,7 @@ libtodoconduit_la_SOURCES = korganizertodoConduit.ui vcal-factorybase.cc todo-fa
 libtodoconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib -L../../../libkcal
 libtodoconduit_la_LIBADD = -lkpilot -lkcal
 
+# You may want to enable debugging like this on systems with broken kdelibs
+libtodoconduit_la_CFLAGS = -DDEBUG -DDEBUG_CERR
+libvcalconduit_la_CFLAGS = -DDEBUG -DDEBUG_CERR
+#

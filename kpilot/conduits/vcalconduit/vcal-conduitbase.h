@@ -90,11 +90,11 @@ protected slots:
 	/**
 	* This function is called to sync modified records from the Pilot to KOrganizer.
 	*/
-	void syncRecord();
+	void syncPalmRecToPC();
 	/**
 	* This function goes the other way around: KOrganizer -> Pilot.
 	*/
-	void syncIncidence();
+	void syncPCRecToPalm();
 	void syncDeletedIncidence();
 	void cleanup();
 
@@ -114,6 +114,9 @@ protected:
 	virtual void deletePalmRecord(KCal::Incidence*e, PilotRecord*s);
 
 	virtual void updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*de);
+	
+	virtual void readConfig();
+	virtual bool openCalendar();
 
 	// THESE NEED TO BE IMPLEMENTED BY CHILD CLASSES!!!!
 	
@@ -148,6 +151,10 @@ protected:
 
 
 // $Log$
+// Revision 1.6  2002/06/07 07:13:24  adridg
+// Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
+// Extend *Database classes with dbPathName() for consistency.
+//
 // Revision 1.5  2002/05/18 13:08:57  kainhofe
 // dirty flag is now cleared, conflict resolution shows the correct item title and asks the correct question
 //
