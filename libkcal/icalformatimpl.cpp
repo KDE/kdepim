@@ -190,13 +190,13 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy, Scheduler::Meth
   }
 
   icalcomponent_add_property(vfreebusy,icalproperty_new_dtstamp(
-      writeICalDateTime(QDateTime::currentDateTime(),1)));
+      writeICalDateTime(QDateTime::currentDateTime(),true)));
   
   icalcomponent_add_property(vfreebusy, icalproperty_new_dtstart(
-      writeICalDateTime(freebusy->dtStart(),1)));
+      writeICalDateTime(freebusy->dtStart(),true)));
 
   icalcomponent_add_property(vfreebusy, icalproperty_new_dtend(
-      writeICalDateTime(freebusy->dtEnd(),1)));
+      writeICalDateTime(freebusy->dtEnd(),true)));
 
   if (method == Scheduler::Request) {
     icalcomponent_add_property(vfreebusy,icalproperty_new_uid(
@@ -208,8 +208,8 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy, Scheduler::Meth
   QValueList<Period>::Iterator it;
   icalperiodtype period;
   for (it = list.begin(); it!= list.end(); ++it) {
-    period.start = writeICalDateTime((*it).start(), 1);
-    period.end = writeICalDateTime((*it).end(), 1);
+    period.start = writeICalDateTime((*it).start(), true);
+    period.end = writeICalDateTime((*it).end(), true);
     icalcomponent_add_property(vfreebusy, icalproperty_new_freebusy(period) ); 
   }
 
