@@ -148,7 +148,7 @@ protected:
 	bool isBackup() const { return fBackup; } ;
 	bool isLocal() const { return fLocal; } ;
 
-	int getSyncDirection() const { return fSyncDirection; };
+	SyncMode getSyncDirection() const { return fSyncDirection; };
 	ConflictResolution getConflictResolution() const
 		{ return fConflictResolution; };
 
