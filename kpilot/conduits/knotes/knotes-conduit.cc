@@ -19,12 +19,12 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
@@ -35,7 +35,6 @@
 // then Qt, then KDE, then local includes.
 //
 //
-#include <iostream.h>
 #ifndef QDIR_H
 #include <qdir.h>
 #endif
@@ -364,6 +363,9 @@ KNotesConduit::KNotesConduit(eConduitMode mode) :
 	fDeleteNoteForMemo(false)
 {
 	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGCONDUIT<<knotes_conduit_id<<endl;
+#endif
 
 }
 
@@ -412,7 +414,7 @@ KNotesConduit::doSync()
 		QString msg = i18n("Changed %1/%2 Memos/Notes")
 			.arg(newCount)
 			.arg(oldCount);
-		addSyncLogMessage(msg.local8Bit());
+		addSyncLogMessage(msg);
 
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
@@ -772,14 +774,14 @@ int KNotesConduit::pilotToNotes(NotesMap& m)
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
-			<< ": DCOP to KNotes succesful."
+			<< ": DCOP to KNotes successful."
 			<< endl;
 #endif
 	}
 	else
 	{
 		kdWarning() << __FUNCTION__
-			<< ": Couln't tell KNotes about new notes."
+			<< ": Couldn't tell KNotes about new notes."
 			<< endl;
 	}
 
@@ -844,7 +846,7 @@ KNotesConduit::doTest()
 			{
 #ifdef DEBUG
 				DEBUGCONDUIT << fname
-					<< ": DCOP send succesful"
+					<< ": DCOP send successful"
 					<< endl;
 #endif
 			}
@@ -876,56 +878,3 @@ KNotesConduit::doTest()
 	(void) knotes_conduit_id;
 }
 
-// $Log$
-// Revision 1.19  2001/12/28 13:03:29  adridg
-// Fixup some email addresses, random lil' things
-//
-// Revision 1.18  2001/09/24 22:40:27  adridg
-// Marginal extension of debugging info to track knotes-conduit bug
-//
-// Revision 1.17  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.16  2001/03/27 11:10:38  leitner
-// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
-// #ifdef DEBUG because qstringExpand etc. were not defined.
-//
-// Revision 1.15  2001/03/09 09:46:14  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.14  2001/03/05 23:57:53  adridg
-// Added KPILOT_VERSION
-//
-// Revision 1.13  2001/02/26 22:13:26  adridg
-// Removed misleading comments
-//
-// Revision 1.12  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.11  2001/02/09 15:59:28  habenich
-// replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
-//
-// Revision 1.10  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//
-// Revision 1.9  2001/01/06 13:23:12  adridg
-// Updated version numbers, fixed debugging stuff
-//
-// Revision 1.8  2001/01/02 15:02:59  bero
-// Fix build
-//
-// Revision 1.7  2000/12/30 20:28:11  adridg
-// Checksumming added
-//
-// Revision 1.6  2000/12/29 14:17:51  adridg
-// Added checksumming to KNotes conduit
-//
-// Revision 1.5  2000/12/22 07:47:04  adridg
-// Added DCOP support to conduitApp. Breaks binary compatibility.
-//
-// Revision 1.4  2000/12/05 07:44:01  adridg
-// Cleanup
-//
-// Revision 1.1  2000/11/20 00:22:28  adridg
-// New KNotes conduit
-//

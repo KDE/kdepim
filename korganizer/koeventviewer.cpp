@@ -26,6 +26,7 @@
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <krun.h>
+#include <kprocess.h>
 #ifndef KORG_NOKABC
  #include <kabc/stdaddressbook.h>
 #endif
@@ -81,7 +82,7 @@ void KOEventViewer::setSource(const QString& n)
       QString iconPath = iconLoader->iconPath("go",KIcon::Small);
       KOrganizer::setStartedKAddressBook(true);
       tmpStr = "kaddressbook --editor-only --uid ";
-      tmpStr += n.mid(6);
+      tmpStr += KProcess::quote(n.mid(6));
       KRun::runCommand(tmpStr,"KAddressBook",iconPath);
       return;
     }

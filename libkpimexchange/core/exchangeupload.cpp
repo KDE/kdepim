@@ -111,10 +111,9 @@ void ExchangeUpload::slotFindUidResult( KIO::Job * job )
   // Overwrite it with the new data
   QString href = hrefElement.text();
   KURL url(href);
-  url.setProtocol("webdav");
   kdDebug() << "Found URL with identical uid: " << url.prettyURL() << ", overwriting that one" << endl;
 
-  startUpload( url );  
+  startUpload( toDAV( url ) );  
 }  
 
 void ExchangeUpload::tryExist()
@@ -211,7 +210,7 @@ QString timezoneid( int offset ) {
 }
 
 
-void ExchangeUpload::startUpload( KURL& url )
+void ExchangeUpload::startUpload( const KURL& url )
 {
   KCal::Event* event = static_cast<KCal::Event *>( m_currentUpload );
   if ( ! event ) {
@@ -287,6 +286,16 @@ void ExchangeUpload::startUpload( KURL& url )
 //      QString date = zoneAsUtc( (*it), mTimeZoneId ).toString( Qt::ISODate );
       addElement( doc, exdate, "xml:", "v", date );
     }
+  }
+
+  QPtrList<KCal::Alarm> alarms = event->alarms();
+  if ( alarms.count() > 0 ) {
+    KCal::Alarm* alarm = alarms.first();
+    // TODO: handle multiple alarms
+    // TODO: handle end offsets and general alarm times
+    // TODO: handle alarm types
+    int offset = - alarm->offset().asSeconds();
+    addElement( doc, prop, "urn:schemas:calendar:", "reminderoffset", QString::number( offset ) );
   }
 
   kdDebug() << "Uploading event: " << endl;

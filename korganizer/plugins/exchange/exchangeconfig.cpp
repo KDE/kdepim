@@ -21,6 +21,8 @@
 #include <qlabel.h>
 #include <qcombobox.h>
 
+#include <kapplication.h>
+#include <kconfig.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
@@ -38,7 +40,7 @@ ExchangeConfig::ExchangeConfig( KPIM::ExchangeAccount* account, QWidget* parent 
       account->host() << ":" << account->account() << endl;
 
   QFrame *topFrame = plainPage();
-  QGridLayout *topLayout = new QGridLayout( topFrame, 3, 2, 3 );
+  QGridLayout *topLayout = new QGridLayout( topFrame, 5, 3, 3 );
 
   m_host = new KLineEdit( mAccount->host(), topFrame );
   topLayout->addWidget( new QLabel( i18n( "Exchange server:" ), topFrame ), 0, 0 );
@@ -52,18 +54,65 @@ ExchangeConfig::ExchangeConfig( KPIM::ExchangeAccount* account, QWidget* parent 
   topLayout->addWidget( new QLabel( i18n( "Password:" ), topFrame ), 2, 0 );
   topLayout->addWidget( m_password, 2, 1 );
   m_password->setEchoMode( QLineEdit::Password );
+
+  m_autoMailbox = new QCheckBox( i18n( "Determine mailbox automatically" ), topFrame );
+  topLayout->addMultiCellWidget( m_autoMailbox, 3, 3, 0, 1 );
+  connect( m_autoMailbox, SIGNAL(toggled(bool)), this, SLOT(slotToggleAuto(bool)) );
+
+  m_mailbox= new KLineEdit( mAccount->mailbox(), topFrame );
+  topLayout->addWidget( new QLabel( i18n( "Mailbox URL:" ), topFrame ), 4, 0 );
+  topLayout->addWidget( m_mailbox, 4, 1 );
+
+  m_tryFindMailbox = new QPushButton( "&Find", topFrame );
+  topLayout->addWidget( m_tryFindMailbox, 4, 2 );
+  connect( m_tryFindMailbox, SIGNAL(clicked()), this, SLOT(slotFindClicked()) );
+
+  kapp->config()->setGroup( "Calendar/Exchange Plugin" );
+  bool autoChecked = kapp->config()->readBoolEntry( "auto-mailbox", true );
+  m_autoMailbox->setChecked( autoChecked );
 }
 
 ExchangeConfig::~ExchangeConfig()
 {
 }
 
+void ExchangeConfig::slotToggleAuto( bool on )
+{
+  m_mailbox->setEnabled( ! on );
+}
+
 void ExchangeConfig::slotOk()
 {
+  if ( m_autoMailbox->isChecked() ) {
+    QString mailbox = mAccount->tryFindMailbox( m_host->text(), m_user->text(), m_password->text() );
+    if ( mailbox.isNull() ) {
+      kdWarning() << "Could not find Exchange mailbox URL, incomplete settings!"<< endl;
+      KMessageBox::sorry( this, "Could not determine mailbox URL" );
+      return; // Do not accept
+    } else {
+      mAccount->setMailbox( mailbox );
+    }
+  } else {
+    mAccount->setMailbox( m_mailbox->text() );
+  }
   mAccount->setHost( m_host->text() );
   mAccount->setAccount( m_user->text() );
   mAccount->setPassword( m_password->text() );
 
+  kapp->config()->setGroup( "Calendar/Exchange Plugin" );
+  kapp->config()->writeEntry( "auto-mailbox", m_autoMailbox->isChecked() );
+  
   accept();
 }
+
+void ExchangeConfig::slotFindClicked()
+{
+  QString mailbox = mAccount->tryFindMailbox( m_host->text(), m_user->text(), m_password->text() );
+  if ( mailbox.isNull() ) {
+    KMessageBox::sorry( this, "Could not determine mailbox URL" );
+  } else {
+    m_mailbox->setText( mailbox );
+  }
+}
+
 #include "exchangeconfig.moc"

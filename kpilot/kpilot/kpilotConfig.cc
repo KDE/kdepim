@@ -18,8 +18,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
@@ -56,7 +56,6 @@
 #include "kpilotConfig.h"
 #endif
 
-
 static const char *kpilotconfig_id =
 	"$Id$";
 
@@ -68,7 +67,7 @@ static const char *kpilotconfig_id =
 // (increase) this number.
 //
 //
-/* static */ const int KPilotConfig::ConfigurationVersion = 402;
+/* static */ const int KPilotConfig::ConfigurationVersion = 403;
 
 /* static */ int KPilotConfig::getConfigVersion(KConfig * config)
 {
@@ -117,9 +116,9 @@ static const char *kpilotconfig_id =
 {
 	FUNCTIONSETUP;
 	QString lastUser = getConfig().getUser();
-	QString dbsubpath = "kpilot/DBBackup/";
+	QString dbsubpath = CSL1("kpilot/DBBackup/");
 	QString defaultDBPath = KGlobal::dirs()->
-		saveLocation("data", dbsubpath + lastUser + "/");
+		saveLocation("data", dbsubpath + lastUser + CSL1("/"));
 	return defaultDBPath;
 }
 
@@ -189,7 +188,7 @@ KPilotConfigSettings & KPilotConfig::getConfig()
 	* stand.
 	*/
 	QString existingConfig =
-		KGlobal::dirs()->findResource("config", "kpilotrc");
+		KGlobal::dirs()->findResource("config", CSL1("kpilotrc"));
 
 
 	if (existingConfig.isNull())
@@ -197,14 +196,14 @@ KPilotConfigSettings & KPilotConfig::getConfig()
 #ifdef DEBUG
 		DEBUGDB << fname << ": Making a new config file" << endl;
 #endif
-		KSimpleConfig *c = new KSimpleConfig("kpilotrc", false);
+		KSimpleConfig *c = new KSimpleConfig(CSL1("kpilotrc"), false);
 
 		c->writeEntry("Configured", ConfigurationVersion);
 		c->writeEntry("NextUniqueID", 61440);
 		c->sync();
 		delete c;
 
-		theconfig = new KPilotConfigSettings("kpilotrc");
+		theconfig = new KPilotConfigSettings(CSL1("kpilotrc"));
 	}
 	else
 	{
@@ -273,7 +272,7 @@ KPilotConfigSettings::~KPilotConfigSettings()
 
 
 #define IntProperty_(a,key,defl,m) \
-	int KPilotConfigSettings::get##a(QComboBox *p) { \
+	int KPilotConfigSettings::get##a(QComboBox *p) const { \
 	int i = readNumEntry(key,defl); \
 	if ((i<0) || (i>m)) i=0; \
 	if (p) p->setCurrentItem(i); \
@@ -290,7 +289,7 @@ IntProperty_(Version, "Configured", 0, 100000)
 IntProperty_(Debug, "Debug", 0, 1023)
 
 #define BoolProperty_(a,key,defl) \
-	bool KPilotConfigSettings::get##a(QCheckBox *p) { \
+	bool KPilotConfigSettings::get##a(QCheckBox *p) const { \
 	bool b = readBoolEntry(key,defl); if (p) p->setChecked(b); return b; } \
 	void KPilotConfigSettings::set##a(QCheckBox *p) { \
 	set##a(p->isChecked()); } \
@@ -302,22 +301,26 @@ BoolProperty_(KillDaemonOnExit, "StopDaemonAtExit", false)
 BoolProperty_(StartDaemonAtLogin, "StartDaemonAtLogin", true)
 BoolProperty_(ShowSecrets, "ShowSecrets", false)
 BoolProperty_(SyncFiles, "SyncFiles", true)
+BoolProperty_(SyncWithKMail, "SyncWithKMail", false)
 BoolProperty_(UseKeyField, "UseKeyField", false)
 
 
 #define StringProperty_(a,key,defl) \
-	QString KPilotConfigSettings::get##a(QLineEdit *p) { \
+	QString KPilotConfigSettings::get##a(QLineEdit *p) const { \
 	QString s = readEntry(key,defl); if (p) p->setText(s); return s; } \
 	void  KPilotConfigSettings::set##a(QLineEdit *p) { \
 	set##a(p->text()); } \
 	void  KPilotConfigSettings::set##a(const QString &s) { \
 	writeEntry(key,s); }
-	StringProperty_(PilotDevice, "PilotDevice", "/dev/pilot")
 
+
+StringProperty_(PilotDevice, "PilotDevice", CSL1("/dev/pilot"))
+StringProperty_(Encoding, "Encoding", QString::null)
+IntProperty_(EncodingDD,"EncodingDD",0,7)
 
 StringProperty_(User, "UserName", QString::null)
-StringProperty_(BackupOnly, "BackupForSync", "Arng,PmDB,lnch")
-StringProperty_(Skip, "SkipSync", "AvGo")
+StringProperty_(BackupOnly, "BackupForSync", CSL1("Arng,PmDB,lnch"))
+StringProperty_(Skip, "SkipSync", CSL1("AvGo"))
 
 
 KPilotConfigSettings & KPilotConfigSettings::setAddressGroup()
@@ -364,39 +367,3 @@ void KPilotConfigSettings::setDatabaseConduit(const QString & database,
 }
 
 
-// $Log$
-// Revision 1.11  2001/10/02 17:48:50  adridg
-// No debugging when not debugging
-//
-// Revision 1.10  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.9  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.8  2001/09/23 21:44:56  adridg
-// Myriad small changes
-//
-// Revision 1.7  2001/09/23 18:25:50  adridg
-// New config architecture
-//
-// Revision 1.6  2001/09/05 21:53:51  adridg
-// Major cleanup and architectural changes. New applications kpilotTest
-// and kpilotConfig are not installed by default but can be used to test
-// the codebase. Note that nothing else will actually compile right now.
-//
-// Revision 1.5  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.4  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.3  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.2  2001/02/25 12:39:15  adridg
-// Removed stupid crash from ::fixed()
-//
-// Revision 1.1  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//

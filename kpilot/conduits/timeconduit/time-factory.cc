@@ -18,8 +18,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
  
 /*
@@ -133,9 +133,3 @@ TimeConduitFactory::~TimeConduitFactory()
 
 	return 0L;
 }
-
-
-// $Log$
-// Revision 1.1  2002/07/25 21:15:20  kainhofe
-// Added a conduit to sync the PC time to the handheld
-//

@@ -21,8 +21,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
@@ -64,12 +64,13 @@ static const char *fileinstaller_id =
 
 #include "fileInstaller.moc"
 
-FileInstaller::FileInstaller()
+FileInstaller::FileInstaller() :
+	enabled(true)
 {
 	FUNCTIONSETUP;
 
 	fDirName = KGlobal::dirs()->saveLocation("data",
-		"kpilot/pending_install/");
+		CSL1("kpilot/pending_install/"));
 	fPendingCopies = 0;
 
 	(void) fileinstaller_id;
@@ -111,7 +112,7 @@ void FileInstaller::clearPending()
 #endif
 
 	KURL srcName(s);
-	KURL destDir(fDirName + "/" + srcName.filename());
+	KURL destDir(fDirName + CSL1("/") + srcName.filename());
 
 	return KIO::NetAccess::copy(srcName, destDir);
 }
@@ -122,12 +123,14 @@ void FileInstaller::addFiles(QStrList & fileList)
 {
 	FUNCTIONSETUP;
 
+	if (!enabled) return;
+	
 	unsigned int i = 0;
 	unsigned int succ = 0;
 
 	while (i < fileList.count())
 	{
-		if (runCopy(fileList.at(i)))
+		if (runCopy(QFile::decodeName(fileList.at(i))))
 			succ++;
 		i++;
 	}
@@ -142,6 +145,8 @@ void FileInstaller::addFiles(QStringList & fileList)
 {
 	FUNCTIONSETUP;
 
+	if (!enabled) return;
+	
 	unsigned int i = 0;
 	unsigned int succ = 0;
 
@@ -162,6 +167,8 @@ void FileInstaller::addFile(const QString & file)
 {
 	FUNCTIONSETUP;
 
+	if (!enabled) return;
+	
 	if (runCopy(file))
 	{
 		emit(filesChanged());
@@ -183,15 +190,10 @@ const QStringList FileInstaller::fileNames() const
 		QDir::NoSymLinks | QDir::Readable);
 }
 
+/* slot */ void FileInstaller::setEnabled(bool b)
+{
+	FUNCTIONSETUP;
+	enabled=b;
+}
 
 
-// $Log$
-// Revision 1.3  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.2  2001/03/04 13:11:58  adridg
-// Actually use the fileInstaller object
-//
-// Revision 1.1  2001/03/01 20:41:11  adridg
-// Added class to factor out code in daemon and fileinstallwidget
-//

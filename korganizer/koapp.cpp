@@ -63,7 +63,7 @@ KOrganizerApp::~KOrganizerApp()
 void KOrganizerApp::displayImminent( const KURL &url, int numdays )
 {
   if (!url.isLocalFile()) {
-    printf(i18n("Unable to handle remote calendar.\n").local8Bit());
+    printf("%s", i18n("Unable to handle remote calendar.\n").local8Bit().data());
     return;
   }
 
@@ -75,7 +75,7 @@ void KOrganizerApp::displayImminent( const KURL &url, int numdays )
   FileStorage storage( cal, url.path() );
 
   if ( !storage.load() ) {
-    printf(i18n("Could not load calendar '%1'.\n").arg(url.path()).local8Bit());
+    printf("%s", i18n("Could not load calendar '%1'.\n").arg(url.path()).local8Bit().data());
     exit(0);
   }
 
@@ -94,7 +94,7 @@ void KOrganizerApp::displayImminent( const KURL &url, int numdays )
         printf("\n");
       }
     } else {
-      printf(i18n("(no events)\n").local8Bit());
+      printf("%s", i18n("(no events)\n").local8Bit().data());
     }
 
     printf("---------------------------------------------------------------\n");
@@ -109,7 +109,7 @@ void KOrganizerApp::displayImminent( const KURL &url, int numdays )
         printf("\n");
       }
     } else {
-      printf(i18n("(no todos)\n").local8Bit());
+      printf("%s", i18n("(no todos)\n").local8Bit().data());
     }
 
     printf("\n");

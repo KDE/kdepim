@@ -22,8 +22,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -50,30 +50,4 @@ protected:
 	PilotDatabase *fDatabase;
 };
 
-// $Log$
-// Revision 1.12  2002/08/21 19:24:50  adridg
-// Tail end of the license change: fixup wording and LGPL the NULL conduit.
-//
-// Revision 1.11  2002/01/17 16:24:09  adridg
-// Compile fixes on Solaris
-//
-// Revision 1.10  2001/12/18 13:11:55  cschumac
-// Make it compile.
-//
-// Revision 1.9  2001/12/18 07:43:25  adridg
-// Actually do a (null) sync
-//
-// Revision 1.8  2001/04/01 17:31:11  adridg
-// --enable-final and #include fixes
-//
-// Revision 1.7  2001/03/09 09:46:14  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.6  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//
-// Revision 1.5  2000/11/02 23:10:32  adridg
-// Added attach-to-database feature
-//
 #endif
-

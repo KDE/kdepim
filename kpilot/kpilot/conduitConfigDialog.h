@@ -21,8 +21,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
  
 /*
@@ -63,14 +63,5 @@ protected slots:
 private:
 	ConduitConfigWidget *fConfigWidget;
 } ;
-
-// $Log$
-// Revision 1.2  2001/11/18 16:59:55  adridg
-// New icons, DCOP changes
-//
-// Revision 1.1  2001/10/04 16:53:57  adridg
-// New files for newstyle config
-//
-//
 
 #endif

@@ -20,8 +20,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -43,8 +43,18 @@
 class PilotLocalDatabase : public PilotDatabase
 {
 public:
-	/** Opens the local database */
-	PilotLocalDatabase( const QString& path, const QString& name,
+	/**
+	* Opens the local database. If the database cannot be found at the
+	* given position, a default path is used ($KDEHOME/share/apps/kpilot/DBBackup)
+	* and if the file is found there, it is opened. In some cases this should
+	* not be done, so the parameter useDefaultPath controls this behavior.
+	* If it is set to true, the default path is used if the file cannot be
+	* found in the explicitely given location. If it is set to false and
+	* the database cannot be found, no database is opened. It can then be
+	* created explicitely at the specified location.
+	*/
+	PilotLocalDatabase( const QString& path,
+		const QString& name, bool useDefaultPath=true,
 		QObject *p=0L,const char *n=0L);
 	PilotLocalDatabase(const QString &name,
 		QObject *p=0L,const char *n=0L);
@@ -52,11 +62,15 @@ public:
 
 	virtual ~PilotLocalDatabase();
 
+	/** Creates the database with the given creator, type and flags on the given card (default is RAM). If the database already exists, this function does nothing. */
+	virtual bool createDatabase(long creator=0, long type=0, int cardno=0, int flags=0, int version=0);
+	/** Deletes the database (by name, as given in the constructor and stored in the fDBName field. ) */
+	virtual int deleteDatabase();
 	// Reads the application block info
 	virtual int readAppBlock(unsigned char* buffer, int maxLen);
 	// Writes the application block info.
-	virtual int writeAppBlock(unsigned char* buffer, int len);  
-	// returns the number of records in the database 
+	virtual int writeAppBlock(unsigned char* buffer, int len);
+	// returns the number of records in the database
 	virtual int recordCount();
 	// Returns a QValueList of all record ids in the database.
 	virtual QValueList<recordid_t> idList();
@@ -66,10 +80,20 @@ public:
 	virtual PilotRecord* readRecordByIndex(int index);
 	// Reads the next record from database in category 'category'
 	virtual PilotRecord* readNextRecInCategory(int category);
-	// Reads the next record from database that has the dirty flag set.
-	virtual PilotRecord* readNextModifiedRec();
+	/**
+	* Reads the next record from database that has the dirty flag set.
+	* ind (if a valid pointer is given) will receive the index of the
+	* returned record.
+	*/
+	virtual PilotRecord* readNextModifiedRec(int *ind=NULL);
 	// Writes a new record to database (if 'id' == 0, one will be assigned to newRecord)
 	virtual recordid_t writeRecord(PilotRecord* newRecord);
+	/**
+	* Deletes a record with the given recordid_t from the database,
+	* or all records, if all is set to true. The recordid_t will be
+	* ignored in this case. Return value is negative on error, 0 otherwise.
+	*/
+	virtual int deleteRecord(recordid_t id, bool all=false);
 	// Resets all records in the database to not dirty.
 	virtual int resetSyncFlags();
 	// Resets next record index to beginning
@@ -125,51 +149,4 @@ private:
 	static QString *fPathBase;
 };
 
-
-
-// $Log$
-// Revision 1.6  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.5  2002/06/07 07:13:25  adridg
-// Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
-// Extend *Database classes with dbPathName() for consistency.
-//
-// Revision 1.4  2002/05/22 20:40:13  adridg
-// Renaming for sensibility
-//
-// Revision 1.3  2002/05/19 15:01:49  adridg
-// Patches for the KNotes conduit
-//
-// Revision 1.2  2002/01/21 23:14:03  adridg
-// Old code removed; extra abstractions added; utility extended
-//
-// Revision 1.1  2001/10/10 22:01:24  adridg
-// Moved from ../kpilot/, shared files
-//
-// Revision 1.11  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.10  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.9  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.8  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.7  2001/02/27 15:39:21  adridg
-// Added dbPathName to make .pdb name construction consistent
-//
-// Revision 1.6  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.5  2001/02/07 14:21:51  brianj
-// Changed all include definitions for libpisock headers
-// to use include path, which is defined in Makefile.
-//
-// Revision 1.4  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

@@ -20,8 +20,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
@@ -41,10 +41,6 @@
 
 #ifndef _KPILOT_PILOTAPPCATEGORY_H
 #include "pilotAppCategory.h"
-#endif
-
-#ifndef _KPILOT_PILOTRECORD_H
-#include "pilotRecord.h"
 #endif
 
 /** @brief A wrapper class around the Address struct provided by pi-address.h
@@ -112,30 +108,29 @@ public:
 	*  entryTitle, entryCustom1, entryCustom2, entryCustom3, entryCustom4,
 	*  entryNote };
 	*/
-	void setField(int field, const char* text);
-	const char* getField(int field) const
-		{ return fAddressInfo.entry[field]; }
+	void setField(int field, const QString &text);
+	QString getField(int field) const;
 
-	const char *getCategoryLabel() const
-		{ return fAppInfo.category.name[getCat()]; }
+	QString getCategoryLabel() const;
+	
 	/** If the label already exists, uses the id; if not, adds the label
 	*  to the category list
 	*  @return false if category labels are full
 	*/
-	bool setCategory(const char *label);
+	bool setCategory(const QString &label);
 
 
 	/** @param checkCustom4 flag if true, checks the entryCustom4 field
 	*  for extra phone fields
 	*  @return the field associated with the type
 	*/
-	const char *getPhoneField(EPhoneType type, bool checkCustom4=true) const;
+	QString getPhoneField(EPhoneType type, bool checkCustom4=true) const;
 
 	/** @param overflowCustom is true, and entryPhone1 to entryPhone5 is full
 	*  it will use entryCustom4 field to store the field
 	*/
-	void setPhoneField(EPhoneType type, const char *field,
-	bool overflowCustom=true);
+	void setPhoneField(EPhoneType type, const QString &field,
+		bool overflowCustom=true);
 
 	/**
 	* Returns the (adjusted) index of the phone number
@@ -155,6 +150,13 @@ public:
 	void unpack(const void *, int = 0) { }
 
 	static const int APP_BUFFER_SIZE;
+
+protected:
+	// Get the pointers in cases where no conversion to
+	// unicode is desired.
+	//
+	const char *getFieldP(int field) const
+		{ return fAddressInfo.entry[field]; }
 
 private:
 	void _copyAddressInfo(const struct Address &copyFrom);
@@ -177,48 +179,4 @@ private:
 
 
 
-
-// $Log$
-// Revision 1.2  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.1  2001/10/10 22:01:24  adridg
-// Moved from ../kpilot/, shared files
-//
-// Revision 1.15  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.14  2001/05/07 22:14:47  stern
-// Fixed phone localization bug
-//
-// Revision 1.13  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.12  2001/04/13 22:13:38  stern
-// Added setShownPhoneField method
-//
-// Revision 1.11  2001/04/04 21:20:32  stern
-// Added support for category information and copy constructors
-//
-// Revision 1.10  2001/04/02 21:56:22  stern
-// Fixed bugs in getPhoneField and setPhoneField methods
-//
-// Revision 1.9  2001/03/29 21:40:55  stern
-// Added APP_BUFFER_SIZE to pilotAddress
-//
-// Revision 1.8  2001/03/19 23:12:39  stern
-// Made changes necessary for upcoming abbrowser conduit.
-//
-// Mainly, I added two public methods to PilotAddress that allow for easier
-// setting and getting of phone fields.
-//
-// I also have added some documentation throughout as I have tried to figure
-// out how everything works.
-//
-// Revision 1.7  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.6  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

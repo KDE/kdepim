@@ -22,8 +22,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
  
 /*
@@ -39,6 +39,7 @@
 #include <qdir.h>
 
 #include <dcopclient.h>
+#include <kapplication.h>
 
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
@@ -70,8 +71,9 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	fConfig(0L),
 	fDatabase(0L),
 	fLocalDatabase(0L),
-	fTest(args.contains("--test")),
-	fBackup(args.contains("--backup"))
+	fTest(args.contains(CSL1("--test"))),
+	fBackup(args.contains(CSL1("--backup"))),
+	fLocal(args.contains(CSL1("--local")))
 {
 	FUNCTIONSETUP;
 
@@ -92,7 +94,7 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	KPILOT_DELETE(fLocalDatabase);
 }
 
-bool ConduitAction::openDatabases_(const char *name, bool *retrieved)
+bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 {
 	FUNCTIONSETUP;
 
@@ -119,54 +121,59 @@ bool ConduitAction::openDatabases_(const char *name, bool *retrieved)
 		QString dbpath(dynamic_cast<PilotLocalDatabase*>(fLocalDatabase)->dbPathName());
 		KPILOT_DELETE(fLocalDatabase);
 #ifdef DEBUG
-		DEBUGCONDUIT << "Backup database "<< dbpath <<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
+		DEBUGCONDUIT << fname
+			<< ": Backup database "<< dbpath <<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
 #endif
 		struct DBInfo dbinfo;
-		if (fHandle->findDatabase(const_cast<char*>(name), &dbinfo)<0 ) 
+		if (fHandle->findDatabase(name.latin1(), &dbinfo)<0 )
 		{
 #ifdef DEBUG
-			DEBUGCONDUIT<<fname<<"Could not get DBInfo for "<<name<<"! "<<endl;
+			DEBUGCONDUIT << fname
+				<< ": Could not get DBInfo for "<<name<<"! "<<endl;
 #endif
 			return false;
 		}
 #ifdef DEBUG
-			DEBUGCONDUIT <<"Found Palm database: "<<dbinfo.name<<endl
+			DEBUGCONDUIT << fname
+					<< ": Found Palm database: "<<dbinfo.name<<endl
 					<<"type = "<< dbinfo.type<<endl
 					<<"creator = "<< dbinfo.creator<<endl
 					<<"version = "<< dbinfo.version<<endl
 					<<"index = "<< dbinfo.index<<endl;
 #endif
 		dbinfo.flags &= ~dlpDBFlagOpen;
-		
+
 		// make sure the dir for the backup db really exists!
 		QFileInfo fi(dbpath);
 		if (!fi.exists()) {
 			QDir d(fi.dir(TRUE));
 #ifdef DEBUG
-			DEBUGCONDUIT <<"Creating backup directory "<<d.absPath()<<endl;
+			DEBUGCONDUIT << fname << ": Creating backup directory "<<d.absPath()<<endl;
 #endif
 			d.mkdir(d.absPath());
 		}
-		if (!fHandle->retrieveDatabase(dbpath, &dbinfo) ) 
+		if (!fHandle->retrieveDatabase(dbpath, &dbinfo) )
 		{
 #ifdef DEBUG
-			DEBUGCONDUIT << "Could not retrieve database "<<name<<" from the handheld."<<endl;
+			DEBUGCONDUIT << fname << ": Could not retrieve database "<<name<<" from the handheld."<<endl;
 #endif
 			return false;
 		}
 		fLocalDatabase = new PilotLocalDatabase(name);
-		if (!fLocalDatabase || !fLocalDatabase->isDBOpen()) 
+		if (!fLocalDatabase || !fLocalDatabase->isDBOpen())
 		{
 #ifdef DEBUG
-			DEBUGCONDUIT<<"local backup of database "<<name<<" could not be initialized."<<endl;
+			DEBUGCONDUIT << fname << ": local backup of database "<<name<<" could not be initialized."<<endl;
 #endif
 			return false;
 		}
 		if (retrieved) *retrieved=true;
 	}
 
-	fDatabase = new PilotSerialDatabase(pilotSocket(), name, this, name);
-	
+	// These latin1()'s are ok, since database names are latin1-coded.
+	fDatabase = new PilotSerialDatabase(pilotSocket(), name /* On pilot */,
+		this, name.latin1() /* QObject name */);
+
 	if (!fDatabase)
 	{
 		kdWarning() << k_funcinfo
@@ -180,41 +187,92 @@ bool ConduitAction::openDatabases_(const char *name, bool *retrieved)
 	        fLocalDatabase && fLocalDatabase->isDBOpen() );
 }
 
-bool ConduitAction::openDatabases_(const char *dbName,const char *localPath)
+// This whole function is for debugging purposes only.
+bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPath)
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT << ": Doing local test mode for " << dbName << endl;
+	DEBUGCONDUIT << fname << ": Doing local test mode for " << dbName << endl;
 #endif
-	fDatabase = new PilotLocalDatabase(dbName,localPath);
+	if (localPath.isNull())
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
+			<< ": local mode test for one database only."
+			<< endl;
+#endif
+		fDatabase = new PilotLocalDatabase(dbName);
+		fLocalDatabase = 0L;
+		return false;
+	}
+
+	fDatabase = new PilotLocalDatabase(localPath,dbName);
 	fLocalDatabase= new PilotLocalDatabase(dbName); // From default
 	if (!fLocalDatabase || !fDatabase)
 	{
 		const QString *where2 = PilotLocalDatabase::getDBPath();
 
-		kdWarning() << k_funcinfo
+		QString none = CSL1("<null>");
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
 			<< ": Could not open both local copies of \""
 			<< dbName
 			<< "\"" << endl
 			<< "Using \""
-			<< (where2 ? *where2 : QString("<null>"))
+			<< (where2 ? *where2 : none)
 			<< "\" and \""
-			<< (localPath ? localPath : "<null>")
+			<< (localPath.isEmpty() ? localPath : none)
 			<< "\""
 			<< endl;
+#endif
 	}
+#ifdef DEBUG
+	if (fLocalDatabase)
+	{
+		DEBUGCONDUIT << fname
+			<< ": Opened local database "
+			<< fLocalDatabase->dbPathName()
+			<< (fLocalDatabase->isDBOpen() ? " OK" : "")
+			<< endl;
+	}
+	if (fDatabase)
+	{
+		DEBUGCONDUIT << fname
+			<< ": Opened database "
+			<< fDatabase->dbPathName()
+			<< (fDatabase->isDBOpen() ? " OK" : "")
+			<< endl;
+	}
+#endif
+
 	return (fDatabase && fLocalDatabase);
 }
 
-bool ConduitAction::openDatabases(const char *dbName, bool*retrieved)
+bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
 {
+	FUNCTIONSETUP;
+	
 	/*
 	** We should look into the --local flag passed
 	** to the conduit and act accordingly, but until
 	** that is implemented ..
 	*/
-	
-	return openDatabases_(dbName, retrieved);
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Mode="
+		<< (isTest() ? "test " : "")
+		<< (isLocal() ? "local " : "")
+		<< endl ;
+#endif
+		
+	if (isTest() && isLocal())
+	{
+		return openDatabases_(dbName,CSL1("/tmp/"));
+	}
+	else
+	{
+		return openDatabases_(dbName, retrieved);
+	}
 }
 
 int PluginUtility::findHandle(const QStringList &a)
@@ -225,18 +283,24 @@ int PluginUtility::findHandle(const QStringList &a)
 	for (QStringList::ConstIterator i = a.begin();
 		i != a.end(); ++i)
 	{
-		if ((*i).left(7) == "handle=")
+		if ((*i).left(7) == CSL1("handle="))
 		{
 			QString s = (*i).mid(7);
 			if (s.isEmpty()) continue;
 
-			handle = atoi((const char *)s);
+			handle = s.toInt();
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
 				<< ": Got handle "
 				<< handle
 				<< endl;
 #endif
+			if (handle<1)
+			{
+				kdWarning() << k_funcinfo
+					<< ": Improbable handle value found."
+					<< endl;
+			}
 			return handle;
 		}
 	}
@@ -252,7 +316,7 @@ int PluginUtility::findHandle(const QStringList &a)
 
 bool PluginUtility::isModal(const QStringList &a)
 {
-	return a.contains("modal");
+	return a.contains(CSL1("modal"));
 }
 
 /* static */ bool PluginUtility::isRunning(const QCString &n)
@@ -263,48 +327,3 @@ bool PluginUtility::isModal(const QStringList &a)
 	QCStringList apps = dcop->registeredApplications();
 	return apps.contains(n);
 }
-
-// $Log$
-// Revision 1.12  2002/07/05 00:15:22  kainhofe
-// Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
-//
-// Revision 1.11  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.10  2002/06/08 16:33:43  kainhofe
-// openDatabases fetches the database from the palm if it doesn't exist. openDatabases has an additional (optional) parameter (bool*) retrieved which is set to true if the database had to be downloaded from the handheld
-//
-// Revision 1.9  2002/05/22 20:42:09  adridg
-// Additional support for testing instrumentation
-//
-// Revision 1.8  2002/05/19 15:01:49  adridg
-// Patches for the KNotes conduit
-//
-// Revision 1.7  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.6.2.2  2002/05/09 22:29:33  adridg
-// Various small things not important for the release
-//
-// Revision 1.6.2.1  2002/04/09 21:51:50  adridg
-// Extra debugging, pilot-link 0.10.1 still needs workaround
-//
-// Revision 1.6  2002/02/02 20:53:53  leitner
-// removed re-definition of default arg.
-//
-// Revision 1.5  2002/01/21 23:14:03  adridg
-// Old code removed; extra abstractions added; utility extended
-//
-// Revision 1.4  2002/01/18 12:47:21  adridg
-// CVS_SILENT: More compile fixes
-//
-// Revision 1.3  2001/12/28 12:55:24  adridg
-// Fixed email addresses; added isBackup() to interface
-//
-// Revision 1.2  2001/10/17 08:46:08  adridg
-// Minor cleanups
-//
-// Revision 1.1  2001/10/08 21:56:02  adridg
-// Start of making a separate KPilot lib
-//
-

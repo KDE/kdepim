@@ -18,8 +18,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -28,68 +28,34 @@
 static const char *memowidget_id =
 	"$Id$";
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
 #include <time.h>
-#include <iostream.h>
+
 #include <pi-macros.h>
 #include <pi-dlp.h>
 
-#ifndef QDIR_H
 #include <qdir.h>
-#endif
-#ifndef QLIST_H
-#include <qlist.h>
-#endif
-#ifndef QLISTBOX_H
+#include <qptrlist.h>
 #include <qlistbox.h>
-#endif
-#ifndef QFILE_H
 #include <qfile.h>
-#endif
-#ifndef QPUSHBUTTON_H
 #include <qpushbutton.h>
-#endif
-#ifndef QLAYOUT_H
 #include <qlayout.h>
-#endif
-#ifndef QDOM_H
 #include <qdom.h>
-#endif
-#ifndef QTEXTSTREAM_H
 #include <qtextstream.h>
-#endif
-#ifndef QWHATSTHIS_H
 #include <qwhatsthis.h>
-#endif
-#ifndef QLABEL_H
 #include <qlabel.h>
-#endif
-#ifndef _KAPP_H
+#include <qtextcodec.h>
+
 #include <kapplication.h>
-#endif
-#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
-#endif
-#ifndef _KFILEDIALOG_H
 #include <kfiledialog.h>
-#endif
 
-#ifndef _KPILOT_KPILOT_H
 #include "kpilot.h"
-#endif
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
-#ifndef _KPILOT_LISTITEMS_H
 #include "listItems.h"
-#endif
-#ifndef _KPILOT_PILOTLOCALDATABASE_H
 #include "pilotLocalDatabase.h"
-#endif
-
+#include "pilotMemo.h"
 
 #include "memoWidget.moc"
 
@@ -108,19 +74,21 @@ static const char *memowidget_id =
 MemoWidget::MemoWidget(QWidget * parent,
 	const QString & path) :
 	PilotComponent(parent, "component_memo", path),
-	fTextWidget(0L)
+	fTextWidget(0L),
+	lastSelectedMemo(-1)
 {
 	FUNCTIONSETUP;
 
 	setGeometry(0, 0,
 		parent->geometry().width(), parent->geometry().height());
 	setupWidget();
-	initialize();
 	fMemoList.setAutoDelete(true);
 	slotUpdateButtons();
 
+#if 0
 	connect(fTextWidget, SIGNAL(textChanged()),
 		this, SLOT(slotTextChanged()));
+#endif
 
 	/* NOTREACHED */
 	(void) memowidget_id;
@@ -129,7 +97,7 @@ MemoWidget::MemoWidget(QWidget * parent,
 MemoWidget::~MemoWidget()
 {
 	FUNCTIONSETUP;
-
+	saveChangedMemo();
 }
 
 
@@ -209,7 +177,7 @@ void MemoWidget::initialize()
 	//
 	//
 	PilotLocalDatabase *memoDB =
-		new PilotLocalDatabase(dbPath(), "MemoDB");
+		new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 	if (memoDB == NULL || !memoDB->isDBOpen())
 	{
 		kdWarning() << k_funcinfo <<
@@ -294,17 +262,17 @@ void MemoWidget::setupWidget()
 		i18n("Select the category of addresses\n"
 			"to display here."));
 
-	label = new QLabel(i18n("Memos:"), this);
+	(void) i18n("Memos:");
+	label = new QLabel(i18n("Category:"), this);
 	label->setBuddy(fCatList);
 	grid->addWidget(label, 0, 0);
 
 	fListBox = new QListBox(this);
 	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
-	fListBox->setSelectionMode( QListBox::Extended );
 	connect(fListBox, SIGNAL(highlighted(int)),
 		this, SLOT(slotShowMemo(int)));
 	connect(fListBox, SIGNAL(selectionChanged()),
-		this, SLOT(slotUpdateButtons()));
+		this,SLOT(slotUpdateButtons()));
 	QWhatsThis::add(fListBox,
 		i18n("This list displays all the memos\n"
 			"in the selected category. Click on\n"
@@ -313,8 +281,9 @@ void MemoWidget::setupWidget()
 	label = new QLabel(i18n("Memo text:"), this);
 	grid->addWidget(label, 0, 2);
 
-	fTextWidget = new QMultiLineEdit(this, "textArea");
-	fTextWidget->setWordWrap(QMultiLineEdit::WidgetWidth);
+	fTextWidget = new KTextEdit(this, "textArea");
+	fTextWidget->setWordWrap(KTextEdit::WidgetWidth);
+	fTextWidget->setTextFormat(Qt::PlainText);
 	grid->addMultiCellWidget(fTextWidget, 1, 4, 2, 2);
 	QWhatsThis::add(fTextWidget,
 		i18n("The text of the selected memo appears here."));
@@ -344,19 +313,23 @@ void MemoWidget::slotUpdateButtons()
 {
 	FUNCTIONSETUP;
 
-	int item = fListBox->currentItem();
-
+	bool highlight = false;
+	
+	if ((fListBox->currentItem() != -1) &&
+		(fListBox->isSelected(fListBox->currentItem())))
+			highlight=true;
+	
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Selected item " << item << endl;
+	DEBUGKPILOT << fname << ": Selected items " << highlight << endl;
 #endif
 
 	if (fExportButton)
 	{
-		fExportButton->setEnabled(item != -1);
+		fExportButton->setEnabled(highlight);
 	}
 	if (fDeleteButton)
 	{
-		fDeleteButton->setEnabled(item != -1);
+		fDeleteButton->setEnabled(highlight);
 	}
 }
 
@@ -371,7 +344,7 @@ void MemoWidget::slotDeleteMemo()
 	FUNCTIONSETUP;
 
 	int item = fListBox->currentItem();
-
+	
 	if (item == -1)
 	{
 #ifdef DEBUG
@@ -412,13 +385,10 @@ void MemoWidget::slotDeleteMemo()
 		return;
 	}
 
-	// QADE: Apparently a PilotMemo is not some kind of PilotRecord,
-	// so the PilotRecord methods don't work on it.
-	//
-	//
 	selectedMemo->makeDeleted();
 	writeMemo(selectedMemo);
-	initialize();
+	fMemoList.remove(selectedMemo);
+	delete p;
 }
 
 
@@ -485,28 +455,42 @@ void MemoWidget::updateWidget()
 	fTextWidget->clear();
 
 	slotUpdateButtons();
+
+	lastSelectedMemo=-1;
 }
 
 void MemoWidget::slotShowMemo(int which)
 {
 	FUNCTIONSETUP;
-        if ( which == -1 )
-            return;
-	disconnect(fTextWidget, SIGNAL(textChanged()),
-		this, SLOT(slotTextChanged()));
-	fTextWidget->deselect();
+	if ( which == -1 )
+		return;
+
+	slotUpdateButtons();
+	if ( !fListBox->isSelected(which) )
+	{
+		// Handle unselecting a memo. This is easy.
+		fTextWidget->blockSignals(true);
+		fTextWidget->clear();
+		fTextWidget->blockSignals(false);
+		return;
+	}
+
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Displaying memo " << which << endl;
+#endif
+	fTextWidget->blockSignals(true);
 	PilotListItem *p = (PilotListItem *) fListBox->item(which);
 	PilotMemo *theMemo = (PilotMemo *) p->rec();
 	fTextWidget->setText(theMemo->text());
-	connect(fTextWidget, SIGNAL(textChanged()),
-		this, SLOT(slotTextChanged()));
+	fTextWidget->blockSignals(false);
 }
 
 void MemoWidget::writeMemo(PilotMemo * which)
 {
 	FUNCTIONSETUP;
 
-	PilotDatabase *memoDB = new PilotLocalDatabase(dbPath(), "MemoDB");
+	PilotDatabase *memoDB = new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 	PilotRecord *pilotRec = which->pack();
 
 	memoDB->writeRecord(pilotRec);
@@ -514,35 +498,32 @@ void MemoWidget::writeMemo(PilotMemo * which)
 	delete memoDB;
 }
 
-void MemoWidget::slotTextChanged()
+void MemoWidget::saveChangedMemo()
 {
 	FUNCTIONSETUP;
+	
+	if (-1 == lastSelectedMemo) return;
+	if (!fTextWidget->isModified()) return;
 
-	if (fListBox->currentItem() == -1)
-	{
-		kdWarning() << k_funcinfo
-			<< ": slotTextChanged with no memo selected!" << endl;
-		return;
-	}
-
+#ifdef DEBUG
+	DEBUGKPILOT << fname
+		<< ": Saving changed memo " << lastSelectedMemo << endl;
+#endif
+	
 	PilotListItem *p =
-		(PilotListItem *) fListBox->item(fListBox->currentItem());
+		(PilotListItem *) fListBox->item(lastSelectedMemo);
 	PilotMemo *currentMemo = (PilotMemo *) p->rec();
 
-	if (fListBox->currentItem() >= 0)
-	{
-		if (currentMemo->id() == 0x0)
-		{
-			KMessageBox::error(0L,
-				i18n
-				("New memo cannot be edited until\nHotSynced with pilot."),
-				i18n("HotSync Required"));
-			slotShowMemo(fListBox->currentItem());
-			return;
-		}
-		currentMemo->setText(fTextWidget->text().latin1());
-		writeMemo(currentMemo);
-	}
+	currentMemo->setText(PilotAppCategory::codec()->
+		fromUnicode(fTextWidget->text()));
+	writeMemo(currentMemo);
+}
+
+/* virtual */ bool MemoWidget::preHotSync(QString &)
+{
+	FUNCTIONSETUP;
+	saveChangedMemo();
+	return true;
 }
 
 void MemoWidget::slotImportMemo()
@@ -556,7 +537,7 @@ void MemoWidget::slotImportMemo()
 
 	QString fileName = KFileDialog::getOpenFileName();
 
-	if (fileName != NULL)
+	if (!fileName.isEmpty())
 	{
 		QFile importFile(fileName);
 
@@ -591,7 +572,7 @@ void MemoWidget::slotExportMemo()
 
 	QString data;
 
-	const QString filter = "*|Plain text output\n*.xml|XML output";
+	const QString filter = CSL1("*|Plain text output\n*.xml|XML output");
 	QString fileName;
 
 	KFileDialog kfile( QString::null , filter, fExportButton , "memoSave" , true );
@@ -612,7 +593,7 @@ void MemoWidget::slotExportMemo()
 		}
 	}
 
-	if (kfile.currentFilter() == "*.xml" )
+	if (kfile.currentFilter() == CSL1("*.xml") )
 	{
 		MemoWidget::saveAsXML( fileName , menu_items );
 	}
@@ -659,7 +640,7 @@ bool MemoWidget::saveAsText(const QString &fileName,const QList<PilotListItem> &
 
 bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &memo_list)
 {
-	QDomDocument doc( "kpilotmemos" );
+	QDomDocument doc( CSL1("kpilotmemos") );
 	QFile f( fileName );
 	QTextStream stream( &f );
 	QDomElement memos;
@@ -676,7 +657,7 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 		//
 		//Only if QDom can read the .xml file and set the doc object to be populated with it's contents
 			memos = doc.documentElement();
-			if ( memos.tagName()!="memos" )
+			if ( memos.tagName()!= CSL1("memos") )
 			{
 				return false;
 			}
@@ -719,7 +700,7 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 	}
 	else
 	{
-		memos = doc.createElement( "memos" );
+		memos = doc.createElement( CSL1("memos") );
 		doc.appendChild ( memos );
 	}
 
@@ -730,8 +711,8 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 		PilotMemo *theMemo = (PilotMemo *) p->rec();
 
 
-    	QDomElement memo = doc.createElement( "memo" );
-	    memo.setAttribute ( "pilotid" , mpilotid );
+    	QDomElement memo = doc.createElement( CSL1("memo") );
+	    memo.setAttribute ( CSL1("pilotid") , mpilotid );
 	    memos.appendChild ( memo );
 
 	    //QDomElement category = doc.createElement( "category" );
@@ -741,7 +722,7 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 		//category.appendChild ( categorytext );
 		//FIXME
 
-		QDomElement title = doc.createElement( "title" );
+		QDomElement title = doc.createElement(CSL1("title" ));
 		memo.appendChild ( title );
 
 		QDomText titletext = doc.createTextNode( theMemo->shortTitle() );
@@ -755,94 +736,3 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 	return true;
 }
 
-// $Log$
-// Revision 1.48  2002/07/20 22:08:19  mhunter
-// Hot-Sync -> HotSync
-//
-// Revision 1.47  2002/07/03 12:22:08  binner
-// CVS_SILENT Style guide fixes
-//
-// Revision 1.46  2002/05/15 17:15:33  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.45  2002/04/16 18:14:18  adridg
-// David Bishop's XML export patches
-//
-// Revision 1.44  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.43  2002/01/20 06:46:23  waba
-// Messagebox changes.
-//
-// Revision 1.42  2001/10/19 14:03:04  adridg
-// Qt3 include fixes
-//
-// Revision 1.41  2001/10/10 22:22:39  adridg
-// Removed really weird debugging
-//
-// Revision 1.40  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.39  2001/09/30 16:59:22  adridg
-// Cleaned up preHotSync
-//
-// Revision 1.38  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.37  2001/09/23 18:30:15  adridg
-// Adjusted widget for new config
-//
-// Revision 1.36  2001/09/06 22:33:43  adridg
-// Cruft cleanup
-//
-// Revision 1.35  2001/08/19 19:12:55  adridg
-// Fixed up some kdWarnings that were generated because connect() was called too soon
-//
-// Revision 1.34  2001/06/13 22:51:38  cschumac
-// Minor fixes reviewed on the mailing list.
-//
-// Revision 1.33  2001/06/13 21:26:54  adridg
-// Add cast to avoid comile warning
-//
-// Revision 1.32  2001/06/11 07:35:19  adridg
-// Cleanup before the freeze
-//
-// Revision 1.31  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.30  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.29  2001/04/14 15:21:35  adridg
-// XML GUI and ToolTips
-//
-// Revision 1.28  2001/04/01 17:32:52  adridg
-// I really don't remember
-//
-// Revision 1.27  2001/03/24 15:59:22  adridg
-// Some populateCategories changes for bug #22112
-//
-// Revision 1.26  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.25  2001/03/04 13:11:49  adridg
-// More response to bug 21392
-//
-// Revision 1.24  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.23  2001/02/08 08:13:44  habenich
-// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
-//
-// Revision 1.22  2001/02/07 14:21:43  brianj
-// Changed all include definitions for libpisock headers
-// to use include path, which is defined in Makefile.
-//
-// Revision 1.21  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//

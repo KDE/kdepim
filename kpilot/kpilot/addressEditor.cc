@@ -19,8 +19,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
@@ -119,7 +119,7 @@ QString AddressEditor::phoneLabelText(PilotAddress * addr, int i)
 		if ((s = fAppInfo->phoneLabels[idx]))
 		{
 			ret = s;
-			ret += ":";
+			ret += CSL1(":");
 		}
 	}
 
@@ -236,24 +236,24 @@ void AddressEditor::initLayout()
 	FUNCTIONSETUP;
 
 	// Commit changes here
-	fAddress->setField(entryLastname, fLastNameField->text().latin1());
-	fAddress->setField(entryFirstname, fFirstNameField->text().latin1());
-	fAddress->setField(entryCompany, fCompanyField->text().latin1());
-	fAddress->setField(entryPhone1, fPhoneField[0]->text().latin1());
-	fAddress->setField(entryPhone2, fPhoneField[1]->text().latin1());
-	fAddress->setField(entryPhone3, fPhoneField[2]->text().latin1());
-	fAddress->setField(entryPhone4, fPhoneField[3]->text().latin1());
-	fAddress->setField(entryPhone5, fPhoneField[4]->text().latin1());
-	fAddress->setField(entryAddress, fAddressField->text().latin1());
-	fAddress->setField(entryCity, fCityField->text().latin1());
-	fAddress->setField(entryState, fStateField->text().latin1());
-	fAddress->setField(entryZip, fZipField->text().latin1());
-	fAddress->setField(entryCountry, fCountryField->text().latin1());
-	fAddress->setField(entryTitle, fTitleField->text().latin1());
-	fAddress->setField(entryCustom1, fCustom1Field->text().latin1());
-	fAddress->setField(entryCustom2, fCustom2Field->text().latin1());
-	fAddress->setField(entryCustom3, fCustom3Field->text().latin1());
-	fAddress->setField(entryCustom4, fCustom4Field->text().latin1());
+	fAddress->setField(entryLastname, fLastNameField->text());
+	fAddress->setField(entryFirstname, fFirstNameField->text());
+	fAddress->setField(entryCompany, fCompanyField->text());
+	fAddress->setField(entryPhone1, fPhoneField[0]->text());
+	fAddress->setField(entryPhone2, fPhoneField[1]->text());
+	fAddress->setField(entryPhone3, fPhoneField[2]->text());
+	fAddress->setField(entryPhone4, fPhoneField[3]->text());
+	fAddress->setField(entryPhone5, fPhoneField[4]->text());
+	fAddress->setField(entryAddress, fAddressField->text());
+	fAddress->setField(entryCity, fCityField->text());
+	fAddress->setField(entryState, fStateField->text());
+	fAddress->setField(entryZip, fZipField->text());
+	fAddress->setField(entryCountry, fCountryField->text());
+	fAddress->setField(entryTitle, fTitleField->text());
+	fAddress->setField(entryCustom1, fCustom1Field->text());
+	fAddress->setField(entryCustom2, fCustom2Field->text());
+	fAddress->setField(entryCustom3, fCustom3Field->text());
+	fAddress->setField(entryCustom4, fCustom4Field->text());
 
 	emit(recordChangeComplete(fAddress));
 	KDialogBase::slotOk();
@@ -281,31 +281,3 @@ void AddressEditor::initLayout()
 	}
 }
 
-// $Log$
-// Revision 1.8  2001/08/27 22:51:41  adridg
-// MartinJ's beautification of the address viewer
-//
-// Revision 1.7  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.6  2001/04/04 21:20:32  stern
-// Added support for category information and copy constructors
-//
-// Revision 1.5  2001/03/19 23:12:39  stern
-// Made changes necessary for upcoming abbrowser conduit.
-//
-// Mainly, I added two public methods to PilotAddress that allow for easier
-// setting and getting of phone fields.
-//
-// I also have added some documentation throughout as I have tried to figure
-// out how everything works.
-//
-// Revision 1.4  2001/03/11 10:50:40  adridg
-// Make address editor reflect real field names
-//
-// Revision 1.3  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.2  2001/02/05 20:55:07  adridg
-// Fixed copyright headers for source releases. No code changed
-//

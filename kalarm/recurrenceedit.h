@@ -139,15 +139,15 @@ class RecurrenceEdit : public QFrame
 		// Yearly rule choices
 		QFrame*       yearlyFrame;
 		ButtonGroup*  yearlyButtonGroup;
+		QRadioButton* mYearRuleFeb29Button;
 		QRadioButton* yearMonthButton;
 //		QRadioButton* yearDayButton;
 		QRadioButton* yearlyOnNthTypeOfDayButton;
-		QLabel*       yearMonthDayLabel;
-		QLabel*       yearMonthLabel;
 //		QSpinBox*     yearDayEntry;
 		QComboBox*    yearlyNthNumberEntry;
 		QComboBox*    yearlyNthTypeOfDayEntry;
 		QComboBox*    yeardayMonthComboBox;
+		int           mYearRuleFeb29ButtonId;
 		int           yearMonthButtonId;
 //		int           yearDayButtonId;
 		int           yearlyOnNthTypeOfDayButtonId;

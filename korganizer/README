@@ -2,15 +2,33 @@
                        | K   O R G A N I Z E R |
                        +-----------------------+
 
-                            version pre3.1
+                            version 3.1.1
 
                        http://korganizer.kde.org
 
-* Next release: 3.1 (sometime in 2002)
-
 QUICK NOTES ON WHAT'S NEW IN THIS RELEASE:
 
-* Official 3.1 release
+* 3.1.2
+
+  - Bug fixes:
+    - Fix event duplication (#55999).
+    - Don't crash when setting todos to completed (#56348).
+    - Completed todo items are automatically marked modified (#43862).
+
+* Official 3.1.1 release (March 2003)
+  
+  - Bug fixes:
+    - Use correct default duration for events crossing a day boundary (#53477).
+    - Correctly save category colors (#54913).
+    - Don't show todos more than once in what's next view.
+    - Include todos in print output of month view (#53291).
+    - Don't restrict maximum size of search dialog (#54912).
+    - Make cancel button of template selection dialog work (#54852).
+    - Don't break sorting when changing todos by context menu (#53680).
+    - Update views on changes of todos directly in the todo list (#43162).
+    - Save state of statusbar (#55380).
+
+* Official 3.1 release (January 2003)
 
   - General:
     - User-definable templates for events and todos.
@@ -31,6 +49,7 @@ QUICK NOTES ON WHAT'S NEW IN THIS RELEASE:
     - Coloring of events in month view based on categories.
     - Coloring of due and overdue todos.
     - Improved "What's Next" view.
+    - Configurable cell height in week and day views
 
   - Group scheduling:
     - iMIP group scheduling functions for todos.

@@ -20,8 +20,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
  
 /*
@@ -84,22 +84,5 @@ private:
 	KNotesActionPrivate *fP;
 } ;
 
-// $Log$
-// Revision 1.5  2002/05/19 15:01:49  adridg
-// Patches for the KNotes conduit
-//
-// Revision 1.4  2002/01/20 22:42:43  adridg
-// CVS_SILENT: Administrative
-//
-// Revision 1.3  2001/12/20 22:55:44  adridg
-// Making conduits save their configuration and doing syncs
-//
-// Revision 1.2  2001/10/31 23:46:51  adridg
-// CVS_SILENT: Ongoing conduits ports
-//
-// Revision 1.1  2001/10/16 21:44:53  adridg
-// Split up some files, added behavior
-//
-//
 
 #endif
