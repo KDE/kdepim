@@ -151,33 +151,18 @@ ContactListViewItem::ContactListViewItem(const KABC::Addressee &a,
                                          KABC::AddressBook *doc,
                                          const KABC::Field::List &fields )
   : KListViewItem(parent), mAddressee(a), mFields( fields ),
-    parentListView( parent ), mDocument(doc), mBirthdayColumn( -1 )
+    parentListView( parent ), mDocument(doc)
 {
-  int counter = 0;
-  KABC::Field::List::ConstIterator it;
-  for ( it = fields.begin(); it != fields.end(); ++it, ++counter ) {
-    if ( (*it)->label() == KABC::Addressee::birthdayLabel() ) {
-      mBirthdayColumn = counter;
-      break;
-    }
-  }
-
   refresh();
 }
 
 QString ContactListViewItem::key(int column, bool ascending) const
 {
-  if ( mBirthdayColumn != -1 && mBirthdayColumn == column ) {
-    QDate date = mAddressee.birthday().date();
-    if ( !date.isValid() )
-      return QString( "00-00" );
-
-    QString key;
-    key.sprintf( "%02d-%02d", date.month(), date.day() );
-    return key;
-  }
-
+#if KDE_VERSION >= 319
+  return mFields[ column ]->sortKey( mAddressee );
+#else
   return QListViewItem::key( column, ascending ).lower();
+#endif
 }
 
 void ContactListViewItem::paintCell(QPainter * p,

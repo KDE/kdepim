@@ -50,7 +50,6 @@ private:
   KABC::Field::List mFields;
   ContactListView *parentListView;
   KABC::AddressBook *mDocument;
-  int mBirthdayColumn;
 };
 
 
