@@ -108,7 +108,7 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
 bool LDIFXXPort::exportContacts( const KABC::AddresseeList &list, const QString& )
 {
   KURL url = KFileDialog::getSaveURL( QDir::homeDirPath() + "/addressbook.ldif", 
-			"*.[lL][dD][iI][fF]|" + i18n( "LDIF file (*.ldif)" ) );
+			"*.LDIF *.ldif *.Ldif|" + i18n( "LDIF file (*.ldif)" ) );
   if ( url.isEmpty() )
       return true;
 
