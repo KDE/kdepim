@@ -25,6 +25,7 @@
 #endif
 
 // KDE includes
+#include <kaction.h>
 #include <klocale.h>
 #include <kconfig.h>
 #include <kapp.h>
@@ -39,7 +40,7 @@
 #include "Empath.h"
 
 EmpathAttachmentListWidget::EmpathAttachmentListWidget(QWidget * parent)
-    :    QListView(parent, "EmpathAttachmentListWidget")
+    :    EmpathListView(parent, "EmpathAttachmentListWidget")
 {
     setAllColumnsShowFocus(true);
 
@@ -49,6 +50,8 @@ EmpathAttachmentListWidget::EmpathAttachmentListWidget(QWidget * parent)
     addColumn(i18n("Character set"));
     addColumn(i18n("Encoding"));
     addColumn(i18n("Description"));
+
+    _initActions();
 }
 
 EmpathAttachmentListWidget::~EmpathAttachmentListWidget()
@@ -66,7 +69,7 @@ EmpathAttachmentListWidget::use(EmpathAttachmentSpecList l)
 }
 
     void
-EmpathAttachmentListWidget::addAttachment()
+EmpathAttachmentListWidget::s_attachmentAdd()
 {
     EmpathAttachmentEditDialog * e =
         new EmpathAttachmentEditDialog(this, "attachmentEditDialog");
@@ -78,7 +81,7 @@ EmpathAttachmentListWidget::addAttachment()
 }
 
     void
-EmpathAttachmentListWidget::editAttachment()
+EmpathAttachmentListWidget::s_attachmentEdit()
 {
     QListViewItem * item(currentItem());
     
@@ -97,7 +100,7 @@ EmpathAttachmentListWidget::editAttachment()
 }
     
     void
-EmpathAttachmentListWidget::removeAttachment()
+EmpathAttachmentListWidget::s_attachmentRemove()
 {
     if (currentItem() != 0)
         QListView::removeItem(currentItem());
@@ -120,6 +123,19 @@ EmpathAttachmentListWidget::attachments()
     }
 
     return l;
+}
+
+    void
+EmpathAttachmentListWidget::_initActions()
+{
+    actionCollection_ = new QActionCollection(this, "actionCollection");
+
+    ac_attachmentAdd = new KAction(i18n("&Add"), 0, 
+                    this, SLOT(s_attachmentAdd()), actionCollection(), "attachmentAdd");
+    ac_attachmentEdit = new KAction(i18n("&Edit"), 0, 
+                    this, SLOT(s_attachmentEdit()), actionCollection(), "attachmentEdit");
+    ac_attachmentRemove = new KAction(i18n("&Remove"), 0, 
+                    this, SLOT(s_attachmentRemove()), actionCollection(), "attachmentRemove");
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -31,6 +31,7 @@
 #include <kconfig.h>
 #include <kfiledialog.h>
 #include <kapp.h>
+#include <kaction.h>
 
 // Local includes
 #include "EmpathDefines.h"

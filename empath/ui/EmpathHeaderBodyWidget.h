@@ -21,53 +21,32 @@
 */
 
 #ifdef __GNUG__
-# pragma interface "EmpathAttachmentListWidget.h"
+# pragma interface "EmpathHeaderBodyWidget.h"
 #endif
 
-#ifndef EMPATHATTACHMENTLISTWIDGET_H
-#define EMPATHATTACHMENTLISTWIDGET_H
+#ifndef EMPATHHEADERBODYWIDGET_H
+#define EMPATHHEADERBODYWIDGET_H
 
-// Local includes
-#include "EmpathListView.h"
-#include "EmpathAttachmentSpec.h"
-
-class QActionCollection;
-
-class KAction;
+// Qt includes
+#include <qwidget.h>
 
 /**
- * This widget shows the structure of a message.
+ * Abstract base class for widgets in which the user can edit a header,
+ * such as EmpathAddressSelectionWidget for addresses and EmpathText-
+ * SelectionWidget for the subject. Both use a KLineEdit widget for this
+ * but if you are crazy enough you can use a combobox for example.
  */
-class EmpathAttachmentListWidget : public EmpathListView
+class EmpathHeaderBodyWidget : public QWidget
 {
     Q_OBJECT
     
     public:
-        
-        EmpathAttachmentListWidget(QWidget * parent);
-        ~EmpathAttachmentListWidget();
-
-        EmpathAttachmentSpecList attachments();
-
-        void use(EmpathAttachmentSpecList l);
-
-        QActionCollection * actionCollection() { return actionCollection_; }
-
-    protected slots:
     
-        void s_attachmentAdd();
-        void s_attachmentEdit();
-        void s_attachmentRemove();
-        
-    private:
+        EmpathHeaderBodyWidget(QWidget * parent = 0, const char * name = 0);
+        virtual ~EmpathHeaderBodyWidget();
 
-        void _initActions();
-
-        QActionCollection * actionCollection_;
-
-        KAction * ac_attachmentAdd;
-        KAction * ac_attachmentEdit;
-        KAction * ac_attachmentRemove;
+        virtual QString text() const = 0;
+        virtual void setText(const QString &) = 0;
 };
 
 #endif

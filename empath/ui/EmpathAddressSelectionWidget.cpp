@@ -25,7 +25,6 @@
 #endif
 
 // Qt includes
-#include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qmessagebox.h> 
 #include <qlayout.h> 
@@ -33,18 +32,26 @@
 // KDE includes
 #include <kiconloader.h>
 #include <klocale.h>
+#include <klineedit.h>
 
 // Local includes
 #include "EmpathDefines.h"
 #include "EmpathUIUtils.h"
 #include "EmpathAddressSelectionWidget.h"
+#include "Empath.h"
 
 EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(QWidget * parent)
-    :   QWidget(parent, "AddressSelectionWidget")
+    :   EmpathHeaderBodyWidget(parent, "AddressSelectionWidget")
 {
-    le_address_ = new QLineEdit(this, "le_address");
+    le_address_ = new KLineEdit(this, "le_address");
     pb_browse_  = new QPushButton(this, "pb_browse");
 
+    /*
+    le_address_->setCompletionKey(Qt::Key_Control + Qt::Key_Tab);
+    le_address_->setRotateUpKey(Qt::Key_Control + Qt::Key_Up);
+    le_address_->setRotateDownKey(Qt::Key_Control + Qt::Key_Down);
+    */
+    
     pb_browse_->setPixmap(empathIcon("misc-point")), 
     pb_browse_->setFixedWidth(pb_browse_->sizeHint().width());
 
@@ -55,13 +62,15 @@ EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(QWidget * parent)
 
     QObject::connect(le_address_, SIGNAL(textChanged(const QString&)),
             this, SLOT(s_textChanged(const QString&)));
-    
+
     // FIXME
     QObject::connect(le_address_, SIGNAL(returnPressed()),
             this, SLOT(s_lostFocus()));
 
     QObject::connect(pb_browse_, SIGNAL(clicked()),
             this, SLOT(s_browseClicked()));
+
+    setFocusProxy(le_address_);
 }
 
 EmpathAddressSelectionWidget::~EmpathAddressSelectionWidget()
@@ -90,7 +99,13 @@ EmpathAddressSelectionWidget::s_textChanged(const QString&)
     void
 EmpathAddressSelectionWidget::s_lostFocus()
 {
-    // STUB
+    // add a host part to the address if necessary
+    QString s = le_address_->text();
+    
+    if (!s.contains('@') && !s.isEmpty()) {
+        s += '@' + empath->hostName();
+        le_address_->setText(s);
+    }
 }
 
     void

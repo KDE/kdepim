@@ -11,6 +11,7 @@ EmpathMainWindow::_setupMenuBar()
     selectMenu_     = new QPopupMenu;
     goMenu_         = new QPopupMenu;
     folderMenu_     = new QPopupMenu;
+    threadMenu_     = new QPopupMenu;
     optionsMenu_    = new QPopupMenu;
     optionsMenu_->setCheckable(true);
 
@@ -71,7 +72,6 @@ EmpathMainWindow::_setupMenuBar()
     selectMenu_->insertItem(i18n("&Invert"),
         this, SLOT(s_editInvertSelection()));
   
-
     // Go menu
   
     actionCollection->action("goPrevious")->plug(goMenu_);
@@ -96,6 +96,11 @@ EmpathMainWindow::_setupMenuBar()
         i18n("Delete") + "...",
         this, SLOT(s_folderDelete()));
    
+    // Thread menu
+    
+    actionCollection->action("threadExpand")->plug(threadMenu_);
+    actionCollection->action("threadCollapse")->plug(threadMenu_);
+    
     // Options menu
 
     hideReadIndex_ = optionsMenu_->insertItem(empathIcon("tree"),
@@ -135,6 +140,7 @@ EmpathMainWindow::_setupMenuBar()
     menu_->insertItem(i18n("&Message"), messageMenu_);
     menu_->insertItem(i18n("&Select"), selectMenu_);
     menu_->insertItem(i18n("&Go"), goMenu_);
+    menu_->insertItem(i18n("&Thread"), threadMenu_);
     menu_->insertItem(i18n("&Options"), optionsMenu_);
     menu_->insertSeparator();
     menu_->insertItem(i18n("&Help"), helpMenu_);

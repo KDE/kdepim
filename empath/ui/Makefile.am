@@ -34,6 +34,7 @@ EmpathFolderChooserDialog.cpp \
 EmpathFolderChooserWidget.cpp \
 EmpathFolderListItem.cpp \
 EmpathFolderWidget.cpp \
+EmpathHeaderBodyWidget.cpp \
 EmpathHeaderSpecWidget.cpp \
 EmpathHeaderViewWidget.cpp \
 EmpathIdentitySettingsDialog.cpp \
@@ -54,6 +55,7 @@ EmpathMessageWidget.cpp \
 EmpathPathSelectWidget.cpp \
 EmpathPasswordEditWidget.cpp \
 EmpathTaskWidget.cpp \
+EmpathTextSelectionWidget.cpp \
 EmpathSubjectSpecWidget.cpp \
 EmpathSendingSettingsDialog.cpp \
 EmpathSetupWizard.cpp \

@@ -21,53 +21,45 @@
 */
 
 #ifdef __GNUG__
-# pragma interface "EmpathAttachmentListWidget.h"
+# pragma interface "EmpathTextSelectionWidget.h"
 #endif
 
-#ifndef EMPATHATTACHMENTLISTWIDGET_H
-#define EMPATHATTACHMENTLISTWIDGET_H
+#ifndef EMPATH_TEXT_SELECTION_WIDGET_H
+#define EMPATH_TEXT_SELECTION_WIDGET_H
 
-// Local includes
-#include "EmpathListView.h"
-#include "EmpathAttachmentSpec.h"
+// Qt includes
+#include <qwidget.h>
 
-class QActionCollection;
+#include "EmpathHeaderBodyWidget.h"
 
-class KAction;
+class KLineEdit;
 
 /**
- * This widget shows the structure of a message.
+ * Megawidget used to get an address from the user.
+ * Not yet implemented: Allows user to browse through address book.
  */
-class EmpathAttachmentListWidget : public EmpathListView
+class EmpathTextSelectionWidget : public EmpathHeaderBodyWidget
 {
     Q_OBJECT
     
     public:
-        
-        EmpathAttachmentListWidget(QWidget * parent);
-        ~EmpathAttachmentListWidget();
-
-        EmpathAttachmentSpecList attachments();
-
-        void use(EmpathAttachmentSpecList l);
-
-        QActionCollection * actionCollection() { return actionCollection_; }
-
-    protected slots:
     
-        void s_attachmentAdd();
-        void s_attachmentEdit();
-        void s_attachmentRemove();
+        EmpathTextSelectionWidget(QWidget * parent = 0);
+        virtual ~EmpathTextSelectionWidget();
+
+        QString text() const;
+        void setText(const QString &);
+
+        KLineEdit * lineEdit() { return le_text_; };
+        
+    protected slots:
+
+        void s_textChanged(const QString&);
+        void s_lostFocus();
         
     private:
 
-        void _initActions();
-
-        QActionCollection * actionCollection_;
-
-        KAction * ac_attachmentAdd;
-        KAction * ac_attachmentEdit;
-        KAction * ac_attachmentRemove;
+        KLineEdit   * le_text_;
 };
 
 #endif

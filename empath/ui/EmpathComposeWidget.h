@@ -47,6 +47,7 @@
 
 class QMultiLineEdit;
 class QSplitter;
+class QActionCollection;
 
 class EmpathEnvelopeWidget;
 class EmpathAttachmentListWidget;
@@ -85,6 +86,8 @@ class EmpathComposeWidget : public QWidget
         
         bool haveTo();
         bool haveSubject();
+
+        QActionCollection * actionCollection() { return actionCollection_; }
         
     protected slots:
         
@@ -96,14 +99,18 @@ class EmpathComposeWidget : public QWidget
         void    s_copy();
         void    s_paste();
         void    s_selectAll();
-        
+
+/*        
         void    s_addAttachment();
         void    s_editAttachment();
         void    s_removeAttachment();
+*/
         
     private:
 
-        void    _spawnExternalEditor(const QCString & text);
+        void _initActions();
+        
+        void _spawnExternalEditor(const QCString & text);
         
         QCString _body();
 
@@ -112,6 +119,8 @@ class EmpathComposeWidget : public QWidget
         EmpathEnvelopeWidget        * envelopeWidget_;
         QMultiLineEdit              * editorWidget_;
         EmpathAttachmentListWidget  * attachmentWidget_; // Iconview or listview
+
+        QActionCollection * actionCollection_;
         
         // QVBoxLayout      * headerLayout_;
         

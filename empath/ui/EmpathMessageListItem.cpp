@@ -76,7 +76,9 @@ EmpathMessageListItem::~EmpathMessageListItem()
 
     void
 EmpathMessageListItem::_init()
-{  
+{ 
+    setOpen(true);
+
     // Subject
     setText(0, m_.subject());
  
@@ -103,7 +105,7 @@ EmpathMessageListItem::_init()
     }
 
     // Date 
-    QString niceDate = KGlobal::locale()->formatDateTime(m_.date().qdt());
+    QString niceDate = KGlobal::locale()->formatDate(m_.date().qdt().date(), true);
     setText(3, niceDate);
    
     // Size

@@ -36,8 +36,9 @@
 #include "EmpathDefines.h"
 #include <RMM_Header.h>
 
-class QLineEdit;
 class QLabel;
+
+class EmpathHeaderBodyWidget;
 
 class EmpathHeaderSpecWidget : public QHBox
 {
@@ -59,8 +60,8 @@ class EmpathHeaderSpecWidget : public QHBox
 
     signals:
 
-        void lineUp();
-        void lineDown();
+        void goUp();
+        void goDown();
     
     protected:
        
@@ -73,12 +74,10 @@ class EmpathHeaderSpecWidget : public QHBox
         
     private:
 
-        QLabel      * headerNameWidget_;
-        QLineEdit   * headerBodyWidget_;
+        QLabel                  * headerNameWidget_;
+        EmpathHeaderBodyWidget  * headerBodyWidget_;
        
         RMM::RHeader header_;
-        
-        bool address_;
 };
 
 #endif

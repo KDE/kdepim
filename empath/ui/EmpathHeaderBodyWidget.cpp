@@ -21,51 +21,21 @@
 */
 
 #ifdef __GNUG__
-# pragma interface "EmpathAddressSelectionWidget.h"
+# pragma implementation "EmpathHeaderBodyWidget.h"
 #endif
 
-#ifndef EMPATH_ADDRESS_SELECTION_WIDGET_H
-#define EMPATH_ADDRESS_SELECTION_WIDGET_H
-
-// Qt includes
-#include <qwidget.h>
-
+// Local includes
 #include "EmpathHeaderBodyWidget.h"
 
-class QPushButton;
-
-class KLineEdit;
-
-/**
- * Megawidget used to get an address from the user.
- * Not yet implemented: Allows user to browse through address book.
- */
-class EmpathAddressSelectionWidget : public EmpathHeaderBodyWidget
+EmpathHeaderBodyWidget::EmpathHeaderBodyWidget(QWidget * parent, const char * name)
+    :   QWidget(parent, "HeaderBodyWidget")
 {
-    Q_OBJECT
-    
-    public:
-    
-        EmpathAddressSelectionWidget(QWidget * parent = 0);
-        virtual ~EmpathAddressSelectionWidget();
+    // Empty
+}
 
-        QString text() const;
-        void setText(const QString &);
-
-        KLineEdit * lineEdit() { return le_address_; };
-        
-    protected slots:
-
-        void s_textChanged(const QString&);
-        void s_lostFocus();
-        void s_browseClicked();
-        
-    private:
-
-        KLineEdit   * le_address_;
-        QPushButton * pb_browse_;
-};
-
-#endif
+EmpathHeaderBodyWidget::~EmpathHeaderBodyWidget()
+{
+    // Empty.
+}
 
 // vim:ts=4:sw=4:tw=78

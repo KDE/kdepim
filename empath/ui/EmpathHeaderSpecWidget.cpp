@@ -25,40 +25,38 @@
 #endif
 
 // Qt includes
-#include <qlineedit.h>
+#include <klineedit.h>
 #include <qlabel.h>
 
 // Local includes
 #include "EmpathHeaderSpecWidget.h"
+#include "EmpathHeaderBodyWidget.h"
 #include "EmpathAddressSelectionWidget.h"
+#include "EmpathTextSelectionWidget.h"
 #include "EmpathUIUtils.h"
 #include "Empath.h"
 
 #include <RMM_Enum.h>
 
 EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
-    RMM::RHeader header, QWidget * parent)
+        RMM::RHeader header, 
+        QWidget * parent)
     :
         QHBox(parent, "HeaderSpecWidget")
 {
-    headerNameWidget_ = new QLabel(this);
-    headerNameWidget_->setText(header.headerName() + ": ");
-    
-    address_ = false;
-
     RMM::HeaderDataType t = RMM::headerTypesTable[header.headerType()];
     
-    address_ =  t == RMM::AddressList || t == RMM::Address;
+    headerNameWidget_ = new QLabel(this);
+    
+    headerBodyWidget_ = (t == RMM::AddressList || t == RMM::Address) 
+        ? new EmpathAddressSelectionWidget(this)
+        : new EmpathTextSelectionWidget(this);
 
-    if (address_) {
-        EmpathAddressSelectionWidget * addressWidget = 
-                new EmpathAddressSelectionWidget(this);
-        headerBodyWidget_ = addressWidget->lineEdit();
-    } else 
-        headerBodyWidget_ = new QLineEdit(this, "headerBodyWidget");
-
+    headerNameWidget_->setText(header.headerName() + ": ");
     headerBodyWidget_->setText(header.headerBody()->asString());
+    
     headerNameWidget_->setFocusProxy(headerBodyWidget_);
+    setFocusProxy(headerBodyWidget_);
 }
 
 EmpathHeaderSpecWidget::~EmpathHeaderSpecWidget()
@@ -98,15 +96,7 @@ EmpathHeaderSpecWidget::headerName()
     QString
 EmpathHeaderSpecWidget::headerBody()
 {
-    QString s = headerBodyWidget_->text();
-
-    if (address_) {
-        if (!s.contains('@') && !s.isEmpty())
-            s += '@' + empath->hostName();
-        return s;
-    }
-    else
-        return s;
+    return headerBodyWidget_->text();
 }
 
     void
@@ -121,10 +111,10 @@ EmpathHeaderSpecWidget::keyPressEvent(QKeyEvent * e)
     if (e->state() & ControlButton) 
         switch (e->key()) {
         case Key_P:
-            emit lineUp();
+            emit goUp();
             break;
         case Key_N:
-            emit lineDown();
+            emit goDown();
             break;
         default:
             e->ignore();
@@ -132,10 +122,13 @@ EmpathHeaderSpecWidget::keyPressEvent(QKeyEvent * e)
     else
         switch (e->key()) {
         case Key_Up:
-            emit lineUp();
+            emit goUp();
             break;
         case Key_Down:
-            emit lineDown();
+            emit goDown();
+            break;
+        case Key_Return:
+            emit goDown();
             break;
         default:
             e->ignore();

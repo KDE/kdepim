@@ -33,6 +33,7 @@
 // Local includes
 #include "EmpathEnvelopeWidget.h"
 #include "EmpathAddressSelectionWidget.h"
+#include "EmpathHeaderSpecWidget.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
 #include "EmpathDefines.h"
@@ -112,10 +113,10 @@ EmpathEnvelopeWidget::_addHeader(RMM::RHeader header)
     
     if (!headerSpecList_.isEmpty()) {
         QObject::connect(
-            newHsw, SIGNAL(lineUp()),
+            newHsw, SIGNAL(goUp()),
             headerSpecList_.getLast(), SLOT(s_setFocus()));
         QObject::connect(
-            headerSpecList_.getLast(), SIGNAL(lineDown()),
+            headerSpecList_.getLast(), SIGNAL(goDown()),
             newHsw, SLOT(s_setFocus()));
     }
     

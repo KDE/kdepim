@@ -13,6 +13,9 @@ EmpathComposeWindow::setupMenuBar()
     messageMenu_    = new QPopupMenu;
     priorityMenu_   = new QPopupMenu;
 
+    QActionCollection * actionCollection 
+            = composeWidget_->actionCollection();
+
     // File menu
     
     fileMenu_->insertItem(empathIcon("menu-send"), i18n("&Send Message"),
@@ -62,7 +65,10 @@ EmpathComposeWindow::setupMenuBar()
 #endif
     
     // Attachment menu
-    
+  
+    actionCollection->action("attachmentAdd")->plug(attachmentMenu_);
+  
+/*   
     attachmentMenu_->insertItem(i18n("&Add attachment"),
         composeWidget_, SLOT(s_addAttachment()));
     
@@ -71,6 +77,7 @@ EmpathComposeWindow::setupMenuBar()
     
     attachmentMenu_->insertItem(i18n("&Remove attachment"),
         composeWidget_, SLOT(s_removeAttachment()));
+*/
     
     // Message Menu
     messageMenu_->insertItem(empathIcon("menu-compose"), i18n("&New"),

@@ -31,11 +31,14 @@
 #include <qvbox.h>
 
 // Local includes
-#include "EmpathHeaderSpecWidget.h"
 #include <RMM_Message.h>
 
+class EmpathHeaderSpecWidget;
+
 /**
- * Widget for specifying the headers when composing a message.
+ * Widget for specifying the headers when composing a message. It consists
+ * of several EmpathHeaderSpecWidgets. It takes care of the key navigation
+ * between the EmpathHeaderSpecWidgets.
  */
 class EmpathEnvelopeWidget : public QVBox
 {
@@ -43,15 +46,28 @@ class EmpathEnvelopeWidget : public QVBox
 
     public:
         
+        /**
+         * Constructor. An REnvelope containing the headers should be 
+         * given. 
+         */
         EmpathEnvelopeWidget(
             RMM::REnvelope headers,
             QWidget * parent = 0, const char * name = 0);
 
         ~EmpathEnvelopeWidget();
 
+        /** 
+         * Retrieve the headers when the user has finished composing.
+         */
         RMM::REnvelope headers();
         
+        /** 
+         * Check if the 'To' header is not empty.
+         */
         bool haveTo();
+        /* 
+         * Check if the subject is not empty.
+         */
         bool haveSubject();
         
     private:

@@ -28,6 +28,7 @@
 #include <qsplitter.h>
 #include <qmultilineedit.h>
 #include <qvaluelist.h>
+#include <qaction.h>
 
 // KDE includes
 #include <kprocess.h>
@@ -35,6 +36,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kapp.h>
+#include <kaction.h>
 
 // Local includes
 #include "EmpathComposeWidget.h"
@@ -59,13 +61,12 @@ EmpathComposeWidget::EmpathComposeWidget(
 {
     splitter_ = new QSplitter(Vertical, this, "splitter");
  
-    envelopeWidget_ = 
-        new EmpathEnvelopeWidget(
+    envelopeWidget_ = new EmpathEnvelopeWidget(
             composeForm_.visibleHeaders(), this, "envelopeWidget");
-
     editorWidget_ = new QMultiLineEdit(splitter_, "editorWidget");
-
     attachmentWidget_ = new EmpathAttachmentListWidget(splitter_);
+
+    _initActions();
     
     splitter_->setResizeMode(attachmentWidget_, QSplitter::FollowSizeHint);
     
@@ -211,10 +212,11 @@ EmpathComposeWidget::s_selectAll()
     editorWidget_->selectAll();
 }
 
+/*
     void
 EmpathComposeWidget::s_addAttachment()
 {
-    attachmentWidget_->addAttachment();
+    attachmentWidget_->s_attachmentAdd();
     QValueList<int> sizes;
     sizes   <<  editorWidget_->height()
             << attachmentWidget_->minimumSizeHint().height();
@@ -224,7 +226,7 @@ EmpathComposeWidget::s_addAttachment()
     void
 EmpathComposeWidget::s_editAttachment()
 {
-    attachmentWidget_->editAttachment();
+    attachmentWidget_->s_attachmentEdit();
 }
 
     void
@@ -236,6 +238,7 @@ EmpathComposeWidget::s_removeAttachment()
             << attachmentWidget_->minimumSizeHint().height();
     splitter_->setSizes(sizes);
 }
+*/
 
     bool 
 EmpathComposeWidget::haveTo()       
@@ -259,6 +262,19 @@ EmpathComposeWidget::s_undo()
 EmpathComposeWidget::s_redo()
 {
     editorWidget_->redo();
+}
+
+    void
+EmpathComposeWidget::_initActions()
+{
+    actionCollection_ = new QActionCollection(this, "actionCollection");
+
+    QValueList<QAction *> childActions( 
+            attachmentWidget_->actionCollection()->actions());
+
+    QValueListIterator<QAction *> it;
+    for (it = childActions.begin(); it != childActions.end(); ++it)
+        actionCollection_->insert(*it);
 }
 
 // vim:ts=4:sw=4:tw=78
