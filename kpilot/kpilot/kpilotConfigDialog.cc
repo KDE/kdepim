@@ -51,9 +51,9 @@ static const char *kpilotconfigdialog_id =
 #include "kpilotConfig.h"
 #include "kpilotSettings.h"
 
-#include "kpilotConfigDialog_base.h"
-#include "kpilotConfigDialog2_base.h"
-#include "kpilotConfigDialog3_base.h"
+#include "kpilotConfigDialog_device.h"
+#include "kpilotConfigDialog_sync.h"
+#include "kpilotConfigDialog_startup.h"
 #include "kpilotConfigDialog_viewers.h"
 #include "kpilotConfigDialog_backup.h"
 #include "kpilotConfigDialog.moc"

@@ -44,8 +44,8 @@ static const char *conduitconfigwizard_id =
 #include "kpilotConfig.h"
 #include "options.h"
 
-#include "kpilotConfigWizard_base2.h"
-#include "kpilotConfigWizard_base3.h"
+#include "kpilotConfigWizard_app.h"
+#include "kpilotConfigWizard_user.h"
 #include "kpilotConfigWizard_address.h"
 #include "kpilotConfigWizard_notes.h"
 #include "kpilotConfigWizard_vcal.h"
