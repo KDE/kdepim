@@ -92,16 +92,18 @@ void KWatchGnuPGMainWindow::slotClear()
 
 void KWatchGnuPGMainWindow::createActions()
 {
-  (void)new KAction( i18n("C&lear Log"), QString::fromLatin1("eraser"),
-					 CTRL+Key_L,
-					 this, SLOT( slotClear() ),
-					 actionCollection(), "clear_log" );
+  (void)new KAction( i18n("C&lear History"), "history_clear", CTRL+Key_L,
+		     this, SLOT( slotClear() ),
+		     actionCollection(), "clear_log" );
   (void)KStdAction::saveAs( this, SLOT(slotSaveAs()), actionCollection() );
   (void)KStdAction::close( this, SLOT(close()), actionCollection() );
   (void)KStdAction::quit( this, SLOT(slotQuit()), actionCollection() );
+  (void)KStdAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
+#if 0
   (void)new KAction( i18n("Configure KWatchGnuPG..."), QString::fromLatin1("configure"),
 					 0, this, SLOT( slotConfigure() ),
 					 actionCollection(), "configure" );
+#endif
 
 }
 
