@@ -10,16 +10,16 @@
  */
 class KOperations {
  public:
-    KOperations();
+   /**
+    * Typedef for convinience
+    */
+    typedef QValueList<KOperations> List;
+	
+	KOperations();
     ~KOperations();
  private:
     class KOperationsPrivate;
     KOperationsPrivate *d;
 };
-
-/**
- * Typedef for convinience
- */
-typedef QValueList<KOperations> KOperationsList;
 
 #endif

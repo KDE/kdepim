@@ -33,8 +33,8 @@ OpiePlugin::OpiePlugin(QObject *obj, const char *name, const QStringList )
     d = new OpiePluginPrivate;
     d->socket = new OpieSocket(this, "opiesocket");
 
-    connect(d->socket, SIGNAL(sync(KSyncEntryList ) ),
-	    this, SLOT(slotSync(KSyncEntryList ) ) );
+    connect(d->socket, SIGNAL(sync(KSyncEntry::List ) ),
+	    this, SLOT(slotSync(KSyncEntry::List ) ) );
 
     connect(d->socket, SIGNAL(errorKonnector(int, QString ) ),
 	    this, SLOT(slotErrorKonnector(int, QString) ) );
@@ -113,11 +113,11 @@ void OpiePlugin::slotWrite(const QString &path, const QByteArray &array )
 {
     d->socket->write(path, array );
 }
-void OpiePlugin::slotWrite(KSyncEntryList entry)
+void OpiePlugin::slotWrite(KSyncEntry::List entry)
 {
     d->socket->write(entry );
 };
-void OpiePlugin::slotSync(KSyncEntryList entry )
+void OpiePlugin::slotSync(KSyncEntry::List entry )
 {
     emit sync( d->udi, entry );
 }
@@ -125,7 +125,7 @@ void OpiePlugin::slotErrorKonnector( int mode, QString error )
 {
     emit errorKonnector(d->udi, mode, error );
 }
-void OpiePlugin::slotWrite(KOperationsList operations )
+void OpiePlugin::slotWrite(KOperations::List operations )
 {
     d->socket->write(operations );
 }

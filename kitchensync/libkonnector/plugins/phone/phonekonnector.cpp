@@ -34,8 +34,8 @@ PhonePlugin::PhonePlugin(QObject *obj, const char *name, const QStringList )
     d = new PhonePluginPrivate;
     d->modemHandler = new ModemHandler;
 /*
-	connect(d->socket, SIGNAL(sync(KSyncEntryList ) ),
-	    this, SLOT(slotSync(KSyncEntryList ) ) );
+	connect(d->socket, SIGNAL(sync(KSyncEntry::List ) ),
+	    this, SLOT(slotSync(KSyncEntry::List ) ) );
 
     connect(d->socket, SIGNAL(errorKonnector(int, QString ) ),
 	    this, SLOT(slotErrorKonnector(int, QString) ) );
@@ -116,11 +116,11 @@ void PhonePlugin::slotWrite(const QString &path, const QByteArray &array )
 {
     //d->socket->write(path, array );
 }
-void PhonePlugin::slotWrite(KSyncEntryList entry)
+void PhonePlugin::slotWrite(KSyncEntry::List entry)
 {
     //d->socket->write(entry );
 };
-void PhonePlugin::slotSync(KSyncEntryList entry )
+void PhonePlugin::slotSync(KSyncEntry::List entry )
 {
     emit sync( d->udi, entry );
 }
@@ -128,7 +128,7 @@ void PhonePlugin::slotErrorKonnector( int mode, QString error )
 {
     //emit errorKonnector(d->udi, mode, error );
 }
-void PhonePlugin::slotWrite(KOperationsList operations )
+void PhonePlugin::slotWrite(KOperations::List operations )
 {
     //d->socket->write(operations );
 }

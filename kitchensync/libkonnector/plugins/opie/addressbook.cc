@@ -154,8 +154,8 @@ QByteArray AddressBook::fromKDE( KAddressbookSyncEntry *entry )
 {
     //  ok lets write back the changes from the Konnector
     m_kde2opie.clear(); // clear the reference first
-    KontainerList newIds = entry->ids( "addressbook");
-    for ( KontainerList::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
+    Kontainer::List newIds = entry->ids( "addressbook");
+    for ( Kontainer::List::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
         m_helper->addId("addressbook",  (*idIt).first(),  (*idIt).second() );
     }
     QByteArray array;

@@ -4,7 +4,7 @@
 
 #include <qobject.h>
 
-#include <ksyncentry.h>
+#include "ksyncentry.h"
 #include "ksync_return.h"
 
 namespace KitchenSync {

@@ -21,7 +21,7 @@ klockfile:  Holger Freyther <freyther@kde.org>
 
 libkonnector:   Holger Freyther <freyther@kde.org>
 	    * contains the backend responsible for
-	      getting KSyncEntryList from a konnector
+	      getting KSyncEntry::List from a konnector
 	        
 libksync:  Cornelius Schumacher <schumacher@kde.org> / Holger Freyther
 	    * contains the syncbackend

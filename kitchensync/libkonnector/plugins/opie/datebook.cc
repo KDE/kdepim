@@ -206,8 +206,8 @@ QPtrList<KCal::Event> DateBook::toKDE( const QString& fileName )
 QByteArray DateBook::fromKDE( KAlendarSyncEntry* entry )
 {
     m_kde2opie.clear();
-    KontainerList newIds = entry->ids( "event");
-    for ( KontainerList::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
+    Kontainer::List newIds = entry->ids( "event");
+    for ( Kontainer::List::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
         m_helper->addId("event",  (*idIt).first(),  (*idIt).second() );
     }
     QByteArray array;

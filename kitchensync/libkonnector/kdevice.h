@@ -29,9 +29,13 @@
 
 class KDevice {
 public:
-   /**
-    *  C'TOR
-    */
+    /**
+     * Convinience typedef
+     */
+    typedef QValueList<KDevice> List;
+    /**
+     *  C'TOR
+     */
     KDevice();
     /**
      * C'tor
@@ -70,11 +74,5 @@ private:
     class KDevicePrivate;
     KDevicePrivate *d;
 };
-
-
-/**
- * Convinience typedef
- */
-typedef QValueList<KDevice> KDeviceList;
 
 #endif

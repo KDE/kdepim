@@ -18,18 +18,18 @@ class OpieHelperClass {
   OpieHelperClass() {};
   ~OpieHelperClass()  {};
   void toOpieDesktopEntry(  const QString &,
-			   KSyncEntryList *list,
+			   KSyncEntry::List *list,
 			   OpieHelper::CategoryEdit *edit );
 
   void toCalendar(const QString &timeStamp,
 		  const QString &todo,
 		  const QString &calendar ,
-		  KSyncEntryList *list,
+		  KSyncEntry::List *list,
 		  OpieHelper::CategoryEdit *edit);
 
   void toAddressbook( const QString &timeStamp,
 		      const QString &fileName,
-		      KSyncEntryList *list,
+		      KSyncEntry::List *list,
 		      OpieHelper::CategoryEdit *edit );
   static OpieHelperClass *self();
  private:

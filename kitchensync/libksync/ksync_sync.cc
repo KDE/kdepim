@@ -17,8 +17,8 @@ SyncManager::~SyncManager()
 
 }
 SyncReturn SyncManager::sync( int mode,
-                              const KSyncEntryList& first,
-                              const KSyncEntryList& out )
+                              const KSyncEntry::List& first,
+                              const KSyncEntry::List& out )
 {
 kdDebug() << "SyncManager" << endl;
     // HACK
@@ -42,8 +42,8 @@ kdDebug() << "SyncManager" << endl;
     return SyncReturn();
 }
 void SyncManager::syncAsync( int mode,
-                             const KSyncEntryList& first,
-                             const KSyncEntryList& out )
+                             const KSyncEntry::List& first,
+                             const KSyncEntry::List& out )
 {
     kdDebug() << "SyncManager" << endl;
     // HACK

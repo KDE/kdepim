@@ -23,7 +23,8 @@
 #include <kalendarsyncentry.h>
 #include <qptrlist.h>
 
-#include <ksync_sync.h>
+#include "ksync_return.h"
+#include "ksync_sync.h"
 
 typedef KParts::GenericFactory< KitchenSync::OrganizerPart> OrganizerPartFactory;
 K_EXPORT_COMPONENT_FACTORY( liborganizerpart, OrganizerPartFactory );
@@ -129,8 +130,8 @@ void OrganizerPart::slotConfigOk()
     m_conf->writeEntry( "Path",  m_path );
     m_conf->writeEntry( "Evo", m_evo );
 }
-void OrganizerPart::processEntry( const KSyncEntryList& in,
-                                  KSyncEntryList& out )
+void OrganizerPart::processEntry( const KSyncEntry::List& in,
+                                  KSyncEntry::List& out )
 {
     QPtrList<KAlendarSyncEntry> our;
     QPtrListIterator<KSyncEntry> it( in );
@@ -153,10 +154,10 @@ void OrganizerPart::processEntry( const KSyncEntryList& in,
 
     // sync
     SyncManager manager( this,  "SyncManager");
-    KSyncEntryList one;
+    KSyncEntry::List one;
     one.append( entry2 );
 
-    KSyncEntryList two;
+    KSyncEntry::List two;
     two.append( met );
     SyncReturn ret =  manager.sync( SYNC_INTERACTIVE,  one, two );
     QDateTime time = QDateTime::currentDateTime();
@@ -165,7 +166,7 @@ void OrganizerPart::processEntry( const KSyncEntryList& in,
     KAlendarSyncEntry *calendar=0;
 
     for ( entry = two.first(); entry != 0; entry = two.next() ) {
-        if ( entry->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
+        if ( entry->type() == QString::fromLatin1("KalendarSyncEntry") ) {
             calendar = (KAlendarSyncEntry*)entry;
             break;
         }

@@ -4,28 +4,28 @@
 
 #include <qptrlist.h>
 
-#include <ksyncentry.h>
-#include <konnector.h>
+#include "ksyncentry.h"
+#include "konnector.h"
 
 namespace KitchenSync {
     class SyncReturn{
     public:
         SyncReturn();
-        SyncReturn(const KSyncEntryList& synced,
-                   const KSyncEntryList& inNotSynced,
-                   const KSyncEntryList& ndNotSynced );
+        SyncReturn(const KSyncEntry::List& synced,
+                   const KSyncEntry::List& inNotSynced,
+                   const KSyncEntry::List& ndNotSynced );
         SyncReturn( const SyncReturn& );
         bool isEmpty() const;
         ~SyncReturn();
         SyncReturn &operator=( const SyncReturn& );
-        KSyncEntryList synced();
-        KSyncEntryList in1NotSynced();
-        KSyncEntryList in2NotSynced();
+        KSyncEntry::List synced();
+        KSyncEntry::List in1NotSynced();
+        KSyncEntry::List in2NotSynced();
     private:
         bool m_empty:1;
-        KSyncEntryList m_sycned;
-        KSyncEntryList m_1not;
-        KSyncEntryList m_2not;
+        KSyncEntry::List m_sycned;
+        KSyncEntry::List m_1not;
+        KSyncEntry::List m_2not;
     };
 };
 

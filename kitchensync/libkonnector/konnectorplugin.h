@@ -58,10 +58,10 @@ public:
     //virtual QString metaId()const = 0;
 public slots:
     virtual void slotWrite(const QString &, const QByteArray & ) = 0;
-    virtual void slotWrite(KSyncEntryList ) = 0;
-    virtual void slotWrite(KOperationsList ) = 0;
+    virtual void slotWrite(KSyncEntry::List ) = 0;
+    virtual void slotWrite(KOperations::List ) = 0;
 signals:
-    void sync(const QString&,  KSyncEntryList );
+    void sync(const QString&,  KSyncEntry::List );
     void errorKonnector(const QString&, int, const QString& );
 };
 #endif

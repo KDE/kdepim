@@ -76,7 +76,7 @@ namespace KitchenSync {
         virtual QWidget *configWidget(){ return 0l; };
 
         // take items
-        virtual void processEntry(const KSyncEntryList&, KSyncEntryList& ) {
+        virtual void processEntry(const KSyncEntry::List&, KSyncEntry::List& ) {
             kdDebug(5220) << "ProcessEntries " << name() << endl;
         };
     signals:

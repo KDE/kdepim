@@ -252,8 +252,8 @@ void KSyncMainWindow::initKonnector()
 {
     kdDebug(5210) << "init konnector" << endl;
     m_konnector = new Konnector(this,  "Konnector");
-    connect(m_konnector,SIGNAL(wantsToSync(const QString&, KSyncEntryList ) ),
-            this, SLOT(slotSync( const QString&,  KSyncEntryList) ) );
+    connect(m_konnector,SIGNAL(wantsToSync(const QString&, KSyncEntry::List ) ),
+            this, SLOT(slotSync( const QString&,  KSyncEntry::List) ) );
 
     connect(m_konnector, SIGNAL(stateChanged(const QString&,  bool) ),
             this,  SLOT(slotStateChanged(const QString&,  bool) ) );
@@ -262,9 +262,9 @@ void KSyncMainWindow::initKonnector()
             this,  SLOT(slotKonnectorError( const QString&,  int, const QString&) ) );
 
     // ok now just load the Opie Konnector // FIXME Don't hard code
-    KDeviceList device;
+    KDevice::List device;
     device = m_konnector->query();
-    for(KDeviceList::Iterator it = device.begin(); it != device.end(); ++it ){
+    for(KDevice::List::Iterator it = device.begin(); it != device.end(); ++it ){
         kdDebug(5210) << "Identify "  << (*it).identify() << endl;
         kdDebug(5210) << "Group " << (*it).group() << endl;
         kdDebug(5210) << "Vendor " << (*it).vendor() << endl;
@@ -282,9 +282,9 @@ void KSyncMainWindow::initKonnector()
 // do we need to change the Konnector first?
 // raise overview and then pipe informations
 void KSyncMainWindow::slotSync( const QString &udi,
-                                KSyncEntryList lis)
+                                KSyncEntry::List lis)
 {
-    KSyncEntryList ret;
+    KSyncEntry::List ret;
     kdDebug(5210) << "Some data arrived Yeah baby" << endl;
     kdDebug(5210) << "Lis got "  << lis.count() << "elements" << endl;
     KSyncEntry *entry=0;

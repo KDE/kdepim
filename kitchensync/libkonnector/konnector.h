@@ -61,10 +61,10 @@ public:
     /**
      *  @param  category the Category where Konnector should look \
      *          for konnector descriptions
-     *  @return KDeviceList this will return a list of \
+     *  @return KDevice::List this will return a list of \
      *          konnector descriptions
      */
-    KDeviceList query( const QString &category= QString::null );
+    KDevice::List query( const QString &category= QString::null );
 
     /** registers a konnector. register means it will load
      *  the plugin with the DeviceIdentification
@@ -143,13 +143,13 @@ public slots:
      * @param udi Device Id
      * @param param The list of KSyncEntries
      */
-    void write(const QString &udi, KSyncEntryList param );
+    void write(const QString &udi, KSyncEntry::List param );
     /**
      * This will do the KOperations
      * @param udi Device Id
      * @param ops Operations like delete
      */
-    void write(const QString &udi, KOperationsList );
+    void write(const QString &udi, KOperations::List );
     /**
      * Konnector will write to dest the array
      * @param udi Device Id
@@ -163,7 +163,7 @@ signals:
      * @param udi Device Id
      * @param param the List of KSyncEntry
      */
-    void wantsToSync(const QString &, KSyncEntryList);
+    void wantsToSync(const QString &, KSyncEntry::List);
     /**
      * The connection state of udi changes
      * @param udi Device Id
@@ -185,7 +185,7 @@ private:
     KonnectorPlugin* pluginByUDI(const QString &udi )const;
 
 private slots:
-    void slotSync(const QString&, KSyncEntryList entry );
+    void slotSync(const QString&, KSyncEntry::List entry );
     void slotError(const QString&, int, const QString&);
     void slotChanged(const QString&,  bool );
 };

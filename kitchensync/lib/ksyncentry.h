@@ -48,6 +48,13 @@ class QDateTime;
 class KSyncEntry
 {
   public:
+
+	/**
+	 * Convinience type definition
+     */
+	typedef QPtrList<KSyncEntry> List;
+	  
+	  
     /** SYNC_NORMAL = no metainformation available
      *  SYNC_META  = sync with Meta Data available
      *
@@ -139,25 +146,19 @@ class KSyncEntry
      * @param type The type for the ids to returned
      * @return the ids as QValueList
      */
-    KontainerList ids(const QString &type )const;
+    Kontainer::List ids(const QString &type )const;
 
     /**
      * @return all ids
      */
-    QMap<QString,  KontainerList > ids()const;
+    QMap<QString,  Kontainer::List > ids()const;
  private:
-    QMap<QString,  KontainerList > m_maps;
+    QMap<QString,  Kontainer::List > m_maps;
     class KSyncEntryPrivate;
     KSyncEntryPrivate *d;
     int m_mode;
     bool m_first:1;
 };
-
-/**
- * Convinience type definition
- */
-typedef QPtrList<KSyncEntry> KSyncEntryList;
-
 
 #endif
 

@@ -55,7 +55,7 @@ public:
     int getMode;
     enum Call{NOTSTARTED=0, HANDSHAKE=0, ABOOK, TODO, CALENDAR, TRANSACTIONS, FILES, DESKTOPS};
     enum Status {START=0, USER=1, PASS, CALL, NOOP, DONE , CONNECTED};
-    KSyncEntryList m_sync;
+    KSyncEntry::List m_sync;
     QValueList<OpieCategories> m_categories;
     QString partnerId;
     QStringList files;
@@ -219,7 +219,7 @@ void OpieSocket::write(const QString &path, const QByteArray &array )
     temp.unlink();
 }
 // write back to my iPAQ
-void OpieSocket::write(KSyncEntryList lis)
+void OpieSocket::write(KSyncEntry::List lis)
 {
 // ok the list
 //    kdDebug(5202) << "Write back" << endl;
@@ -311,7 +311,7 @@ void OpieSocket::write(KSyncEntryList lis)
     d->isSyncing = false; // do it in the write back later on
     lis.clear();
 }
-void OpieSocket::write(KOperationsList )
+void OpieSocket::write(KOperations::List )
 {
 //    kdDebug(5202) << "write KOperations not implemented yet" << endl;
 }

@@ -7,7 +7,12 @@
 
 class Kontainer {
 public:
-    friend bool operator== ( const Kontainer &a ,  const Kontainer &b );
+	/**
+	 * Convinience typedef
+     */
+	typedef QValueList<Kontainer> List;
+	
+	friend bool operator== ( const Kontainer &a ,  const Kontainer &b );
     Kontainer(const QString& = QString::null,
               const QString& = QString::null );
     Kontainer(const Kontainer & );
@@ -22,10 +27,5 @@ private:
     QString m_first;
     QString m_second;
 };
-
-/**
- * Convinience typedef
- */
-typedef QValueList<Kontainer> KontainerList;
 
 #endif

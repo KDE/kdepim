@@ -30,12 +30,12 @@ Q_OBJECT
   KSyncEntry* retrEntry( const QString& );
   bool insertFile(const QString &fileName );
   void write(const QString &, const QByteArray & );
-  void write(KSyncEntryList );
-  void write(KOperationsList );
+  void write(KSyncEntry::List );
+  void write(KOperations::List );
   QString metaId()const;
 
 signals:
-  void sync( KSyncEntryList );
+  void sync( KSyncEntry::List );
   void errorKonnector(int, QString );
   void stateChanged( bool );
 

@@ -29,18 +29,18 @@ Q_OBJECT
   virtual QString id()const { return QString::fromLatin1("Opie-1"); };
  public slots:
   virtual void slotWrite(const QString &, const QByteArray & ) ;
-  virtual void slotWrite(KSyncEntryList ) ;
-  virtual void slotWrite(KOperationsList ) ;
+  virtual void slotWrite(KSyncEntry::List ) ;
+  virtual void slotWrite(KOperations::List ) ;
 
  private:
   class OpiePluginPrivate;
   OpiePluginPrivate *d;
 signals:
-    void sync(const QString&, KSyncEntryList );
+    void sync(const QString&, KSyncEntry::List );
     void errorKonnector(const QString&, int, const QString& );
     void stateChanged( const QString&,  bool );
  private slots:
-  void slotSync( KSyncEntryList );
+  void slotSync( KSyncEntry::List );
   void slotErrorKonnector(int , QString );
     void slotChanged( bool );
 };

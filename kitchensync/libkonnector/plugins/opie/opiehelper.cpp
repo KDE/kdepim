@@ -55,7 +55,7 @@ OpieHelperClass* OpieHelperClass::self()
   return s_Self;
 };
 
-void OpieHelperClass::toOpieDesktopEntry( const QString &str, KSyncEntryList *entry, OpieHelper::CategoryEdit *edit )
+void OpieHelperClass::toOpieDesktopEntry( const QString &str, KSyncEntry::List *entry, OpieHelper::CategoryEdit *edit )
 {
 //    if ( edit == 0)
 //        kdDebug(5202) << "TO OPIEDEKSTOP Entry == 0 " << endl;
@@ -110,7 +110,7 @@ void OpieHelperClass::toOpieDesktopEntry( const QString &str, KSyncEntryList *en
     entry->append( entr );
 }
 
- void OpieHelperClass::toCalendar(const QString &timestamp, const QString &todo, const QString &calendar, KSyncEntryList *list, OpieHelper::CategoryEdit *edit )
+ void OpieHelperClass::toCalendar(const QString &timestamp, const QString &todo, const QString &calendar, KSyncEntry::List *list, OpieHelper::CategoryEdit *edit )
 {
   KAlendarSyncEntry *entry = new KAlendarSyncEntry();
   list->append( entry );
@@ -195,7 +195,7 @@ void OpieHelperClass::toOpieDesktopEntry( const QString &str, KSyncEntryList *en
     // start reading
   }
 }
-void OpieHelperClass::toAddressbook(const QString &timeStamp, const QString &fileName, KSyncEntryList *list, OpieHelper::CategoryEdit *edit)
+void OpieHelperClass::toAddressbook(const QString &timeStamp, const QString &fileName, KSyncEntry::List *list, OpieHelper::CategoryEdit *edit)
 {
     KAddressbookSyncEntry *entry = new KAddressbookSyncEntry();
     list->append( entry );
