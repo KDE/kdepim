@@ -177,7 +177,7 @@ bool ResourceSlox::asyncLoad()
            SLOT( slotProgress( KIO::Job *, unsigned long ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
-      "sloxkabcdownload", i18n("Downloading contacts") );
+      KPIM::ProgressManager::getUniqueID(), i18n("Downloading contacts") );
   connect( mProgress,
            SIGNAL( progressItemCanceled( ProgressItem * ) ),
            SLOT( cancelDownload() ) );

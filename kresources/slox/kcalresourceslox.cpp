@@ -147,7 +147,7 @@ bool KCalResourceSlox::doOpen()
 
 bool KCalResourceSlox::load()
 {
-  kdDebug() << "KCalResourceSlox::load()" << endl;
+  kdDebug() << "KCalResourceSlox::load() " << int( this ) << endl;
 
   if ( !mOpen ) {
     kdWarning() << "Warning: resource not open." << endl;
@@ -230,7 +230,7 @@ void KCalResourceSlox::requestEvents()
            SLOT( slotEventsProgress( KIO::Job *, unsigned long ) ) );
 
   mLoadEventsProgress = KPIM::ProgressManager::instance()->createProgressItem(
-      "sloxkcalevents", i18n("Downloading events") );
+      KPIM::ProgressManager::getUniqueID(), i18n("Downloading events") );
   connect( mLoadEventsProgress,
            SIGNAL( progressItemCanceled( ProgressItem * ) ),
            SLOT( cancelLoadEvents() ) );
@@ -267,11 +267,11 @@ void KCalResourceSlox::requestTodos()
   mLoadTodosJob = KIO::davPropFind( url, doc, "0", false );
   connect( mLoadTodosJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotLoadTodosResult( KIO::Job * ) ) );
-  connect( mLoadEventsJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
+  connect( mLoadTodosJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
            SLOT( slotTodosProgress( KIO::Job *, unsigned long ) ) );
 
   mLoadTodosProgress = KPIM::ProgressManager::instance()->createProgressItem(
-      "sloxkcaltodos", i18n("Downloading todos") );
+      KPIM::ProgressManager::getUniqueID(), i18n("Downloading todos") );
   connect( mLoadTodosProgress,
            SIGNAL( progressItemCanceled( ProgressItem * ) ),
            SLOT( cancelLoadTodos() ) );
@@ -363,7 +363,7 @@ void KCalResourceSlox::uploadIncidences()
            SLOT( slotUploadProgress( KIO::Job *, unsigned long ) ) );
 
   mUploadProgress = KPIM::ProgressManager::instance()->createProgressItem(
-      "sloxkcalupload", i18n("Uploading incidence") );
+      KPIM::ProgressManager::getUniqueID(), i18n("Uploading incidence") );
   connect( mUploadProgress,
            SIGNAL( progressItemCanceled( ProgressItem * ) ),
            SLOT( cancelUpload() ) );
@@ -590,7 +590,7 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
   if ( job->error() ) {
     job->showErrorDialog( 0 );
   } else {
-    kdDebug() << "KCalResourceSlox::slotLoadJobResult() success" << endl;
+    kdDebug() << "KCalResourceSlox::slotLoadTodosJobResult() success" << endl;
 
     QDomDocument doc = mLoadTodosJob->response();
 
@@ -653,7 +653,7 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 
 void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 {
-  kdDebug() << "KCalResourceSlox::slotLoadEventsResult()" << endl;
+  kdDebug() << "KCalResourceSlox::slotLoadEventsResult() " << int( this ) << endl;
 
   if ( job->error() ) {
     job->showErrorDialog( 0 );
