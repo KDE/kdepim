@@ -8,6 +8,8 @@
 *   (at your option) any later version.                                   *
 ***************************************************************************/
 
+#include <qfile.h>
+
 #include <kdebug.h>
 #include <kio/job.h>
 #include <klocale.h>
@@ -60,7 +62,7 @@ void Query::call( const QString &server, const QString &method,
                   const QValueList<QVariant> &args, const QString &userAgent )
 {
   const QString xmlMarkup = markupCall( method, args );
-  kdDebug() << "Message: " << xmlMarkup << endl;
+  kdError() << "\033[34;40m" << "Query: " << xmlMarkup  << "\033[0;0m" << endl;
   QByteArray postData;
   QDataStream stream( postData, IO_WriteOnly );
   stream.writeRawBytes( xmlMarkup.utf8(), xmlMarkup.utf8().length() );
@@ -94,13 +96,14 @@ void Query::slotResult( KIO::Job *job )
     delete this;
     return ;
   }
-  kdDebug() << "Error" << m_buffer.data() << endl;
+
+  QString data = QString::fromUtf8( m_buffer.data(), m_buffer.size() );
+  kdError() << "\033[35;40m" << "Result: " << data << "\033[0;0m" << endl;
 
   QDomDocument doc;
   QString errMsg;
   int errLine, errCol;
-  if ( !doc.setContent( QString::fromUtf8( m_buffer.data(), m_buffer.size() ), false,
-                        &errMsg, &errLine, &errCol  ) )
+  if ( !doc.setContent( data, false, &errMsg, &errLine, &errCol  ) )
   {
     emit fault( -1, i18n( "Received invalid XML markup: %1 at %2:%3" )
                         .arg( errMsg ).arg( errLine ).arg( errCol ), m_id );

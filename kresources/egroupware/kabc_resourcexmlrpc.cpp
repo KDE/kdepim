@@ -34,10 +34,9 @@
 
 using namespace KABC;
 
-static const QString ReadEntriesObject = "addressbook.boaddressbook.read_list";
-static const QString AddEntryObject = "addressbook.boaddressbook.add";
-static const QString UpdateEntryObject = "addressbook.boaddressbook.save";
-static const QString DeleteEntryObject = "addressbook.boaddressbook.delete";
+static const QString SearchContactsCommand = "addressbook.boaddressbook.search";
+static const QString AddContactCommand = "addressbook.boaddressbook.write";
+static const QString DeleteContactCommand = "addressbook.boaddressbook.delete";
 
 ResourceXMLRPC::ResourceXMLRPC( const KConfig *config )
   : Resource( config ), mServer( 0 )
@@ -157,65 +156,16 @@ bool ResourceXMLRPC::asyncLoad()
   if ( !mServer )
     return false;
 
-  QMap<QString, QVariant> fieldsMap;
-  fieldsMap.insert( "fn", "fn" );
-  fieldsMap.insert( "n_given", "n_given" );
-  fieldsMap.insert( "n_family", "n_family" );
-  fieldsMap.insert( "n_middle", "n_middle" );
-  fieldsMap.insert( "n_prefix", "n_prefix" );
-  fieldsMap.insert( "n_suffix", "n_suffix" );
-  fieldsMap.insert( "sound", "sound" );
-  fieldsMap.insert( "bday", "bday" );
-  fieldsMap.insert( "note", "note" );
-  fieldsMap.insert( "tz", "tz" );
-  fieldsMap.insert( "geo", "geo" );
-  fieldsMap.insert( "url", "url" );
-  fieldsMap.insert( "pubkey", "pubkey" );
-  fieldsMap.insert( "org_name", "org_name" );
-  fieldsMap.insert( "org_unit", "org_unit" );
-  fieldsMap.insert( "title", "title" );
-  fieldsMap.insert( "adr_one_street", "adr_one_street" );
-  fieldsMap.insert( "adr_one_locality", "adr_one_locality" );
-  fieldsMap.insert( "adr_one_region", "adr_one_region" );
-  fieldsMap.insert( "adr_one_postalcode", "adr_one_postalcode" );
-  fieldsMap.insert( "adr_one_countryname", "adr_one_countryname" );
-  fieldsMap.insert( "adr_one_type", "adr_one_type" );
-  fieldsMap.insert( "label", "label" );
-  fieldsMap.insert( "adr_two_street", "adr_two_street" );
-  fieldsMap.insert( "adr_two_locality", "adr_two_locality" );
-  fieldsMap.insert( "adr_two_region", "adr_two_region" );
-  fieldsMap.insert( "adr_two_postalcode", "adr_two_postalcode" );
-  fieldsMap.insert( "adr_two_countryname", "adr_two_countryname" );
-  fieldsMap.insert( "adr_two_type", "adr_two_type" );
-  fieldsMap.insert( "tel_work", "tel_work" );
-  fieldsMap.insert( "tel_home", "tel_home" );
-  fieldsMap.insert( "tel_voice", "tel_voice" );
-  fieldsMap.insert( "tel_fax", "tel_fax" );
-  fieldsMap.insert( "tel_msg", "tel_msg" );
-  fieldsMap.insert( "tel_cell", "tel_cell" );
-  fieldsMap.insert( "tel_pager", "tel_pager" );
-  fieldsMap.insert( "tel_bbs", "tel_bbs" );
-  fieldsMap.insert( "tel_modem", "tel_modem" );
-  fieldsMap.insert( "tel_car", "tel_car" );
-  fieldsMap.insert( "tel_isdn", "tel_isdn" );
-  fieldsMap.insert( "tel_video", "tel_video" );
-  fieldsMap.insert( "tel_prefer", "tel_prefer" );
-  fieldsMap.insert( "email", "email" );
-  fieldsMap.insert( "email_type", "email_type" );
-  fieldsMap.insert( "email_home", "email_home" );
-  fieldsMap.insert( "email_home_type", "email_home_type" );
-
   QMap<QString, QVariant> args;
   args.insert( "start", "1" );
   args.insert( "limit", "1000" );
-  args.insert( "fields", QVariant( fieldsMap ) );
   args.insert( "query", "" );
   args.insert( "filter", "" );
   args.insert( "sort", "" );
   args.insert( "order", "" );
 
-  mServer->call( ReadEntriesObject, args,
-                 this, SLOT( listEntriesFinished( const QValueList<QVariant>&, const QVariant& ) ),
+  mServer->call( SearchContactsCommand, args,
+                 this, SLOT( listContactsFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   return true;
@@ -235,20 +185,20 @@ bool ResourceXMLRPC::asyncSave( Ticket* )
 void ResourceXMLRPC::insertAddressee( const Addressee& addr )
 {
   QMap<QString, QVariant> args;
-  fillArgs( addr, args );
+  writeContact( addr, args );
 
   if ( mAddrMap.find( addr.uid() ) == mAddrMap.end() ) { // new entry
     mAddrMap.insert( addr.uid(), addr );
 
-    mServer->call( AddEntryObject, args,
-                   this, SLOT( addEntryFinished( const QValueList<QVariant>&, const QVariant& ) ),
+    mServer->call( AddContactCommand, args,
+                   this, SLOT( addContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
                    this, SLOT( fault( int, const QString&, const QVariant& ) ),
                    QVariant( addr.uid() ) );
   } else {
     mAddrMap[ addr.uid() ] = addr;
     args.insert( "id", mUidMap[ addr.uid() ] );
-    mServer->call( UpdateEntryObject, args,
-                   this, SLOT( updateEntryFinished( const QValueList<QVariant>&, const QVariant& ) ),
+    mServer->call( AddContactCommand, args,
+                   this, SLOT( updateContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
                    this, SLOT( fault( int, const QString&, const QVariant& ) ) );
   }
 
@@ -259,8 +209,8 @@ void ResourceXMLRPC::removeAddressee( const Addressee& addr )
 {
   int id = mUidMap[ addr.uid() ].toInt();
 
-  mServer->call( DeleteEntryObject, id,
-                 this, SLOT( deleteEntryFinished( const QValueList<QVariant>&, const QVariant& ) ),
+  mServer->call( DeleteContactCommand, id,
+                 this, SLOT( deleteContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ),
                  QVariant( addr.uid() ) );
 
@@ -306,152 +256,29 @@ void ResourceXMLRPC::logoutFinished( const QValueList<QVariant> &variant,
   exit_loop();
 }
 
-void ResourceXMLRPC::listEntriesFinished( const QValueList<QVariant> &mapList,
-                                          const QVariant& )
+void ResourceXMLRPC::listContactsFinished( const QValueList<QVariant> &mapList,
+                                           const QVariant& )
 {
   mUidMap.clear();
+  mCategoryMap.clear();
 
-  QMap<QString, QVariant> listMap = mapList[ 0 ].toMap();
-  QMap<QString, QVariant>::Iterator mapIt;
+  QValueList<QVariant> contactList = mapList[ 0 ].toList();
+  QValueList<QVariant>::Iterator contactIt;
 
-  for ( mapIt = listMap.begin(); mapIt != listMap.end(); ++mapIt ) {
-    QMap<QString, QVariant> entryMap = (*mapIt).toMap();
-    QMap<QString, QVariant>::Iterator entryIt;
+  for ( contactIt = contactList.begin(); contactIt != contactList.end(); ++contactIt ) {
+    QMap<QString, QVariant> map = (*contactIt).toMap();
 
-    for ( entryIt = entryMap.begin(); entryIt != entryMap.end(); ++entryIt ) {
-      QMap<QString, QVariant> map = (*entryIt).toMap();
-      QMap<QString, QVariant>::Iterator it;
+    Addressee addr;
+    QString uid;
 
-      Addressee addr;
-      Address addrOne, addrTwo;
-      QString uid;
+    readContact( map, addr, uid );
 
-      for ( it = map.begin(); it != map.end(); ++it ) {
-        if ( it.key() == "id" ) {
-          uid = it.data().toString();
-        } else if ( it.key() == "access" ) {
-          Secrecy secrecy;
-          if ( it.data().toString() == "private" )
-            secrecy.setType( Secrecy::Private );
-          else
-            secrecy.setType( Secrecy::Public );
+    if ( !addr.isEmpty() ) {
+      addr.setResource( this );
+      addr.setChanged( false );
 
-          addr.setSecrecy( secrecy );
-        } else if ( it.key() == "fn" ) {
-          addr.setFormattedName( it.data().toString() );
-        } else if ( it.key() == "n_given" ) {
-          addr.setGivenName( it.data().toString() );
-        } else if ( it.key() == "n_family" ) {
-          addr.setFamilyName( it.data().toString() );
-        } else if ( it.key() == "n_middle" ) {
-          addr.setAdditionalName( it.data().toString() );
-        } else if ( it.key() == "n_prefix" ) {
-          addr.setPrefix( it.data().toString() );
-        } else if ( it.key() == "n_suffix" ) {
-          addr.setSuffix( it.data().toString() );
-        } else if ( it.key() == "sound" ) {
-        } else if ( it.key() == "bday" ) {
-          addr.setBirthday( it.data().toDateTime() );
-        } else if ( it.key() == "note" ) {
-          addr.setNote( it.data().toString() );
-        } else if ( it.key() == "tz" ) {
-          int hour = it.data().toInt();
-          TimeZone timeZone( hour * 60 );
-          addr.setTimeZone( timeZone );
-        } else if ( it.key() == "geo" ) {
-        } else if ( it.key() == "url" ) {
-          addr.setUrl( KURL( it.data().toString() ) );
-        } else if ( it.key() == "pubkey" ) {
-        } else if ( it.key() == "org_name" ) {
-          addr.setOrganization( it.data().toString() );
-        } else if ( it.key() == "org_unit" ) {
-        } else if ( it.key() == "title" ) {
-          addr.setTitle( it.data().toString() );
-        } else if ( it.key() == "adr_one_street" ) {
-          addrOne.setStreet( it.data().toString() );
-        } else if ( it.key() == "adr_one_locality" ) {
-          addrOne.setLocality( it.data().toString() );
-        } else if ( it.key() == "adr_one_region" ) {
-          addrOne.setRegion( it.data().toString() );
-        } else if ( it.key() == "adr_one_postalcode" ) {
-          addrOne.setPostalCode( it.data().toString() );
-        } else if ( it.key() == "adr_one_countryname" ) {
-          addrOne.setCountry( it.data().toString() );
-        } else if ( it.key() == "adr_one_type" ) {
-          QStringList types = QStringList::split( ';', it.data().toString() );
-
-          int type = Address::Work;
-          for ( uint i = 0; i < types.count(); ++i )
-            type += mAddrTypes[ types[ i ] ];
-
-          addrOne.setType( type );
-        } else if ( it.key() == "label" ) {
-          addrOne.setLabel( it.data().toString() );
-        } else if ( it.key() == "adr_two_street" ) {
-          addrTwo.setStreet( it.data().toString() );
-        } else if ( it.key() == "adr_two_locality" ) {
-          addrTwo.setLocality( it.data().toString() );
-        } else if ( it.key() == "adr_two_region" ) {
-          addrTwo.setRegion( it.data().toString() );
-        } else if ( it.key() == "adr_two_postalcode" ) {
-          addrTwo.setPostalCode( it.data().toString() );
-        } else if ( it.key() == "adr_two_countryname" ) {
-          addrTwo.setCountry( it.data().toString() );
-        } else if ( it.key() == "adr_two_type" ) {
-          QStringList types = QStringList::split( ';', it.data().toString() );
-
-          int type = Address::Home;
-          for ( uint i = 0; i < types.count(); ++i )
-            type += mAddrTypes[ types[ i ] ];
-
-          addrTwo.setType( type );
-        } else if ( it.key() == "tel_work" ) {
-          addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Work ) );
-        } else if ( it.key() == "tel_home" ) {
-          addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Home ) );
-        } else if ( it.key() == "tel_voice" ) {
-          addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Voice ) );
-        } else if ( it.key() == "tel_fax" ) {
-          addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Fax ) );
-        } else if ( it.key() == "tel_msg" ) {
-          addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Msg ) );
-        } else if ( it.key() == "tel_cell" ) {
-          addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Cell ) );
-        } else if ( it.key() == "tel_pager" ) {
-          addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Pager ) );
-        } else if ( it.key() == "tel_bbs" ) {
-          addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Bbs ) );
-        } else if ( it.key() == "tel_modem" ) {
-          addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Modem ) );
-        } else if ( it.key() == "tel_car" ) {
-          addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Car ) );
-        } else if ( it.key() == "tel_isdn" ) {
-          addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Isdn ) );
-        } else if ( it.key() == "tel_video" ) {
-          addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Video ) );
-        } else if ( it.key() == "tel_prefer" ) {
-          addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Pref ) );
-        } else if ( it.key() == "email" ) {
-          addr.insertEmail( it.data().toString(), true );
-        } else if ( it.key() == "email_type" ) {
-        } else if ( it.key() == "email_home" ) {
-          addr.insertEmail( it.data().toString(), false );
-        } else if ( it.key() == "email_home_type" ) {
-        }
-      }
-
-      if ( !addrOne.isEmpty() )
-        addr.insertAddress( addrOne );
-      if ( !addrTwo.isEmpty() )
-        addr.insertAddress( addrTwo );
-
-      if ( !addr.isEmpty() ) {
-        addr.setResource( this );
-        addr.setChanged( false );
-
-        mAddrMap.insert( addr.uid(), addr );
-        mUidMap.insert( addr.uid(), uid );
-      }
+      mAddrMap.insert( addr.uid(), addr );
+      mUidMap.insert( addr.uid(), uid );
     }
   }
 
@@ -460,32 +287,25 @@ void ResourceXMLRPC::listEntriesFinished( const QValueList<QVariant> &mapList,
   emit loadingFinished( this );
 }
 
-void ResourceXMLRPC::deleteEntryFinished( const QValueList<QVariant>&,
-                                          const QVariant &id )
+void ResourceXMLRPC::deleteContactFinished( const QValueList<QVariant>&,
+                                            const QVariant &id )
 {
-  mAddrMap.erase( id.toString() );
-  mUidMap.erase( id.toString() );
+  mAddrMap.remove( id.toString() );
+  mUidMap.remove( id.toString() );
 
   exit_loop();
 }
 
-void ResourceXMLRPC::updateEntryFinished( const QValueList<QVariant> &list,
-                                          const QVariant& )
+void ResourceXMLRPC::updateContactFinished( const QValueList<QVariant>&,
+                                            const QVariant& )
 {
-  QMap<QString, QVariant> map = list[ 0 ].toMap();
-  bool ok = map[ "0" ].toBool();
-
-  if ( !ok )
-    addressBook()->error( "Unable to update contact." );
-
   exit_loop();
 }
 
-void ResourceXMLRPC::addEntryFinished( const QValueList<QVariant> &list,
-                                       const QVariant &id )
+void ResourceXMLRPC::addContactFinished( const QValueList<QVariant> &list,
+                                         const QVariant &id )
 {
-  QMap<QString, QVariant> map = list[ 0 ].toMap();
-  int uid = map[ "0" ].toInt();
+  int uid = list[ 0 ].toInt();
 
   mUidMap.insert( id.toString(), QString::number( uid ) );
 
@@ -574,7 +394,7 @@ void ResourceXMLRPC::exit_loop()
   }
 }
 
-void ResourceXMLRPC::fillArgs( const Addressee &addr, QMap<QString, QVariant> &args )
+void ResourceXMLRPC::writeContact( const Addressee &addr, QMap<QString, QVariant> &args )
 {
   args.insert( "access", ( addr.secrecy().type() == Secrecy::Private ? "private" : "public" ) );
   args.insert( "fn", addr.formattedName() );
@@ -594,6 +414,21 @@ void ResourceXMLRPC::fillArgs( const Addressee &addr, QMap<QString, QVariant> &a
   args.insert( "org_name", addr.organization() );
 //  args.insert( "org_unit", "org_unit" );
   args.insert( "title", addr.title() );
+
+  // CATEGORIES
+  QStringList::ConstIterator catIt;
+  QStringList categories = addr.categories();
+
+  QMap<QString, QVariant> catMap;
+  int counter = 0;
+  for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
+    QMap<QString, int>::Iterator it = mCategoryMap.find( *catIt );
+    if ( it == mCategoryMap.end() ) // new category
+      catMap.insert( QString::number( counter-- ), *catIt );
+    else
+      catMap.insert( QString::number( it.data() ), *catIt );
+  }
+  args.insert( "cat_id", catMap );
 
   Address workAddr = addr.address( Address::Work );
   if ( !workAddr.isEmpty() ) {
@@ -678,6 +513,139 @@ void ResourceXMLRPC::fillArgs( const Addressee &addr, QMap<QString, QVariant> &a
     args.insert( "email_home", addr.emails()[ 1 ] );
     args.insert( "email_home_type", "internet" );
   }
+}
+
+void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee &addr, QString &uid )
+{
+  Address addrOne, addrTwo;
+
+  QMap<QString, QVariant>::ConstIterator it;
+  for ( it = args.begin(); it != args.end(); ++it ) {
+    if ( it.key() == "id" ) {
+      uid = it.data().toString();
+    } else if ( it.key() == "access" ) {
+      Secrecy secrecy;
+      if ( it.data().toString() == "private" )
+        secrecy.setType( Secrecy::Private );
+      else
+        secrecy.setType( Secrecy::Public );
+
+      addr.setSecrecy( secrecy );
+    } else if ( it.key() == "fn" ) {
+      addr.setFormattedName( it.data().toString() );
+    } else if ( it.key() == "n_given" ) {
+      addr.setGivenName( it.data().toString() );
+    } else if ( it.key() == "n_family" ) {
+      addr.setFamilyName( it.data().toString() );
+    } else if ( it.key() == "n_middle" ) {
+      addr.setAdditionalName( it.data().toString() );
+    } else if ( it.key() == "n_prefix" ) {
+      addr.setPrefix( it.data().toString() );
+    } else if ( it.key() == "n_suffix" ) {
+      addr.setSuffix( it.data().toString() );
+    } else if ( it.key() == "sound" ) {
+    } else if ( it.key() == "bday" ) {
+      addr.setBirthday( it.data().toDateTime() );
+    } else if ( it.key() == "note" ) {
+      addr.setNote( it.data().toString() );
+    } else if ( it.key() == "tz" ) {
+      int hour = it.data().toInt();
+      TimeZone timeZone( hour * 60 );
+      addr.setTimeZone( timeZone );
+    } else if ( it.key() == "geo" ) {
+    } else if ( it.key() == "url" ) {
+      addr.setUrl( KURL( it.data().toString() ) );
+    } else if ( it.key() == "pubkey" ) {
+    } else if ( it.key() == "org_name" ) {
+      addr.setOrganization( it.data().toString() );
+    } else if ( it.key() == "org_unit" ) {
+    } else if ( it.key() == "title" ) {
+      addr.setTitle( it.data().toString() );
+    } else if ( it.key() == "adr_one_street" ) {
+      addrOne.setStreet( it.data().toString() );
+    } else if ( it.key() == "adr_one_locality" ) {
+      addrOne.setLocality( it.data().toString() );
+    } else if ( it.key() == "adr_one_region" ) {
+      addrOne.setRegion( it.data().toString() );
+    } else if ( it.key() == "adr_one_postalcode" ) {
+      addrOne.setPostalCode( it.data().toString() );
+    } else if ( it.key() == "adr_one_countryname" ) {
+      addrOne.setCountry( it.data().toString() );
+    } else if ( it.key() == "adr_one_type" ) {
+      QStringList types = QStringList::split( ';', it.data().toString() );
+
+      int type = Address::Work;
+      for ( uint i = 0; i < types.count(); ++i )
+        type += mAddrTypes[ types[ i ] ];
+
+      addrOne.setType( type );
+    } else if ( it.key() == "label" ) {
+      addrOne.setLabel( it.data().toString() );
+    } else if ( it.key() == "adr_two_street" ) {
+      addrTwo.setStreet( it.data().toString() );
+    } else if ( it.key() == "adr_two_locality" ) {
+      addrTwo.setLocality( it.data().toString() );
+    } else if ( it.key() == "adr_two_region" ) {
+      addrTwo.setRegion( it.data().toString() );
+    } else if ( it.key() == "adr_two_postalcode" ) {
+      addrTwo.setPostalCode( it.data().toString() );
+    } else if ( it.key() == "adr_two_countryname" ) {
+      addrTwo.setCountry( it.data().toString() );
+    } else if ( it.key() == "adr_two_type" ) {
+      QStringList types = QStringList::split( ';', it.data().toString() );
+
+      int type = Address::Home;
+      for ( uint i = 0; i < types.count(); ++i )
+        type += mAddrTypes[ types[ i ] ];
+
+      addrTwo.setType( type );
+    } else if ( it.key() == "tel_work" ) {
+      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Work ) );
+    } else if ( it.key() == "tel_home" ) {
+      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Home ) );
+    } else if ( it.key() == "tel_voice" ) {
+      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Voice ) );
+    } else if ( it.key() == "tel_fax" ) {
+      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Fax ) );
+    } else if ( it.key() == "tel_msg" ) {
+      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Msg ) );
+    } else if ( it.key() == "tel_cell" ) {
+      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Cell ) );
+    } else if ( it.key() == "tel_pager" ) {
+      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Pager ) );
+    } else if ( it.key() == "tel_bbs" ) {
+      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Bbs ) );
+    } else if ( it.key() == "tel_modem" ) {
+      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Modem ) );
+    } else if ( it.key() == "tel_car" ) {
+      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Car ) );
+    } else if ( it.key() == "tel_isdn" ) {
+      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Isdn ) );
+    } else if ( it.key() == "tel_video" ) {
+      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Video ) );
+    } else if ( it.key() == "tel_prefer" ) {
+      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Pref ) );
+    } else if ( it.key() == "email" ) {
+      addr.insertEmail( it.data().toString(), true );
+    } else if ( it.key() == "email_type" ) {
+    } else if ( it.key() == "email_home" ) {
+      addr.insertEmail( it.data().toString(), false );
+    } else if ( it.key() == "email_home_type" ) {
+    } else if ( it.key() == "cat_id" ) {
+      QMap<QString, QVariant> categories = it.data().toMap();
+      QMap<QString, QVariant>::Iterator it;
+
+      for ( it = categories.begin(); it != categories.end(); ++it ) {
+        mCategoryMap.insert( it.data().toString(), it.key().toInt() );
+        addr.insertCategory( it.data().toString() );
+      }
+    }
+  }
+
+  if ( !addrOne.isEmpty() )
+    addr.insertAddress( addrOne );
+  if ( !addrTwo.isEmpty() )
+    addr.insertAddress( addrTwo );
 }
 
 #include "kabc_resourcexmlrpc.moc"

@@ -79,10 +79,10 @@ class ResourceXMLRPC : public Resource
     void loginFinished( const QValueList<QVariant>&, const QVariant& );
     void logoutFinished( const QValueList<QVariant>&, const QVariant& );
 
-    void listEntriesFinished( const QValueList<QVariant>&, const QVariant& );
-    void addEntryFinished( const QValueList<QVariant>&, const QVariant& );
-    void updateEntryFinished( const QValueList<QVariant>&, const QVariant& );
-    void deleteEntryFinished( const QValueList<QVariant>&, const QVariant& );
+    void listContactsFinished( const QValueList<QVariant>&, const QVariant& );
+    void addContactFinished( const QValueList<QVariant>&, const QVariant& );
+    void updateContactFinished( const QValueList<QVariant>&, const QVariant& );
+    void deleteContactFinished( const QValueList<QVariant>&, const QVariant& );
 
     void fault( int, const QString&, const QVariant& );
 
@@ -91,7 +91,8 @@ class ResourceXMLRPC : public Resource
 
     void enter_loop();
     void exit_loop();
-    void fillArgs( const Addressee&, QMap<QString, QVariant>& );
+    void writeContact( const Addressee&, QMap<QString, QVariant>& );
+    void readContact( const QMap<QString, QVariant>&, Addressee &addr, QString& );
 
     KURL mURL;
     QString mDomain;
@@ -103,6 +104,7 @@ class ResourceXMLRPC : public Resource
     QString mLastAddUid;
 
     QMap<QString, QString> mUidMap;
+    QMap<QString, int> mCategoryMap;
     QMap<QString, int> mAddrTypes;
 
     KXMLRPC::Server *mServer;

@@ -45,8 +45,6 @@ class ResourceXMLRPCConfig : public KRES::ConfigWidget
     KLineEdit *mDomain;
     KLineEdit *mUser;
     KLineEdit *mPassword;
-    KIntSpinBox *mStartDay;
-    KIntSpinBox *mEndDay;
 };
 
 }

@@ -36,7 +36,7 @@ using namespace KCal;
 ResourceXMLRPCConfig::ResourceXMLRPCConfig( QWidget* parent,  const char* name )
   : KRES::ConfigWidget( parent, name )
 {
-  QGridLayout *mainLayout = new QGridLayout( this, 6, 2, 0, KDialog::spacingHint() );
+  QGridLayout *mainLayout = new QGridLayout( this, 4, 2, 0, KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "URL:" ), this );
   mURL = new KURLRequester( this );
@@ -62,20 +62,6 @@ ResourceXMLRPCConfig::ResourceXMLRPCConfig( QWidget* parent,  const char* name )
 
   mainLayout->addWidget( label, 3, 0 );
   mainLayout->addWidget( mPassword, 3, 1 );
-
-  label = new QLabel( i18n( "Calendar begin:" ), this );
-  mStartDay = new KIntSpinBox( 0, 100, 1, 0, 10, this );
-  mStartDay->setSuffix( i18n( " days" ) );
-
-  mainLayout->addWidget( label, 4, 0 );
-  mainLayout->addWidget( mStartDay, 4, 1 );
-
-  label = new QLabel( i18n( "Calendar end:" ), this );
-  mEndDay = new KIntSpinBox( 0, 100, 1, 0, 10, this );
-  mEndDay->setSuffix( i18n( " days" ) );
-
-  mainLayout->addWidget( label, 5, 0 );
-  mainLayout->addWidget( mEndDay, 5, 1 );
 }
 
 void ResourceXMLRPCConfig::loadSettings( KRES::Resource *res )
@@ -91,8 +77,6 @@ void ResourceXMLRPCConfig::loadSettings( KRES::Resource *res )
   mDomain->setText( resource->domain() );
   mUser->setText( resource->user() );
   mPassword->setText( resource->password() );
-  mStartDay->setValue( resource->startDay() );
-  mEndDay->setValue( resource->endDay() );
 }
 
 void ResourceXMLRPCConfig::saveSettings( KRES::Resource *res )
@@ -108,8 +92,6 @@ void ResourceXMLRPCConfig::saveSettings( KRES::Resource *res )
   resource->setDomain( mDomain->text() );
   resource->setUser( mUser->text() );
   resource->setPassword( mPassword->text() );
-  resource->setStartDay( mStartDay->value() );
-  resource->setEndDay( mEndDay->value() );
 }
 
 #include "kcal_resourcexmlrpcconfig.moc"

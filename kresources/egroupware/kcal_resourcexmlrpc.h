@@ -68,12 +68,6 @@ class ResourceXMLRPC : public ResourceCalendar
     void setPassword( const QString& password );
     QString password() const;
 
-    void setStartDay( int );
-    int startDay() const;
-
-    void setEndDay( int );
-    int endDay() const;
-
     bool load();
 
     bool save();
@@ -195,11 +189,15 @@ class ResourceXMLRPC : public ResourceCalendar
     void loginFinished( const QValueList<QVariant>&, const QVariant& );
     void logoutFinished( const QValueList<QVariant>&, const QVariant& );
 
-    void listEntriesFinished( const QValueList<QVariant>&, const QVariant& );
-    void rawDatesFinished( const QValueList<QVariant>&, const QVariant& );
-    void addEntryFinished( const QValueList<QVariant>&, const QVariant& );
-    void updateEntryFinished( const QValueList<QVariant>&, const QVariant& );
-    void deleteEntryFinished( const QValueList<QVariant>&, const QVariant& );
+    void listEventsFinished( const QValueList<QVariant>&, const QVariant& );
+    void addEventFinished( const QValueList<QVariant>&, const QVariant& );
+    void updateEventFinished( const QValueList<QVariant>&, const QVariant& );
+    void deleteEventFinished( const QValueList<QVariant>&, const QVariant& );
+
+    void listTodosFinished( const QValueList<QVariant>&, const QVariant& );
+    void addTodoFinished( const QValueList<QVariant>&, const QVariant& );
+    void updateTodoFinished( const QValueList<QVariant>&, const QVariant& );
+    void deleteTodoFinished( const QValueList<QVariant>&, const QVariant& );
 
     void fault( int, const QString&, const QVariant& );
 
@@ -216,6 +214,10 @@ class ResourceXMLRPC : public ResourceCalendar
     void init();
     void writeEvent( Event*, QMap<QString, QVariant>& );
     void readEvent( const QMap<QString, QVariant>&, Event*, QString& );
+
+    void writeTodo( Todo*, QMap<QString, QVariant>& );
+    void readTodo( const QMap<QString, QVariant>&, Todo*, QString& );
+
     void enter_loop();
     void exit_loop();
 
@@ -231,14 +233,15 @@ class ResourceXMLRPC : public ResourceCalendar
     QString mDomain;
     QString mUser;
     QString mPassword;
-    int mStartDay;
-    int mEndDay;
 
     QString mSessionID;
     QString mKp3;
     QString mLastAddUid;
-    QMap<QString, QString> mUidMap;
-    QMap<QString, int> mCategoryMap;
+    QMap<QString, QString> mEventUidMap;
+    QMap<QString, QString> mTodoUidMap;
+    QMap<QString, int> mEventCategoryMap;
+    QMap<QString, int> mTodoCategoryMap;
+    QMap<QString, QString> mTodoStateMap;
     QMap<QString, int> mRightsMap;
     QTimer *mQueueTimer;
     QValueList<QDate> mDateQueue;
