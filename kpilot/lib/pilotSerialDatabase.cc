@@ -29,7 +29,6 @@
 #include "options.h"
 
 #include <time.h>
-#include <iostream.h>
 
 #include <pi-dlp.h>
 
@@ -294,6 +293,9 @@ void PilotSerialDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.5.4.1  2002/12/20 19:56:09  kainhofe
+// Some bugfixes
+//
 // Revision 1.5  2002/08/20 21:18:31  adridg
 // License change in lib/ to allow plugins -- which use the interfaces and
 // definitions in lib/ -- to use non-GPL'ed libraries, in particular to

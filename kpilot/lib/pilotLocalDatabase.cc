@@ -34,7 +34,8 @@ static const char *pilotlocaldatabase_id =
 
 #include <stdio.h>
 #include <unistd.h>
-#include <iostream.h>
+
+#include <iostream>
 
 #include <qstring.h>
 #include <qfile.h>
@@ -514,6 +515,11 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 }
 
 // $Log$
+// Revision 1.7  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.6  2002/06/30 14:49:53  kainhofe
 // added a function idList, some minor bug fixes
 //

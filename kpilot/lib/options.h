@@ -74,7 +74,7 @@
 #endif
 
 // For ostream
-#include <iostream.h>
+#include <iostream>
 // For QString, and everything else needs it anyway.
 #include <qstring.h>
 // Dunno, really. Probably because everything needs it.
@@ -82,6 +82,7 @@
 // For the debug stuff.
 #include <kdebug.h>
 
+using namespace std;
 
 // KPilot will move towards the *standard* way of doing
 // debug messages soon. This means that we need some
