@@ -60,7 +60,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_mainLayout = new QGridLayout( this, 6, 3 );
 
     if (  kaps.supportsMetaSyncing() ) {
-        m_ckbMetaSyncing = new QCheckBox(i18n( "Enable Metasyncing"),  this );
+        m_ckbMetaSyncing = new QCheckBox(i18n( "Enable metasyncing"),  this );
         m_mainLayout->addWidget(m_ckbMetaSyncing,  0,  0);
         m_ckbMetaSyncing->setChecked( kaps.isMetaSyncingEnabled() );
     }

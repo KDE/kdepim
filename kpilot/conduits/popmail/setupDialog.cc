@@ -370,7 +370,7 @@ PopMailReceivePage::PopMailReceivePage(QWidget *parent) :
 	methodGroup=new QVButtonGroup(i18n("Retrieve Method"),
 		this,"bg");
 
-	fNoReceive=new QRadioButton(i18n("Do &Not receive mail"),
+	fNoReceive=new QRadioButton(i18n("Do &not receive mail"),
 		methodGroup);
 	fReceivePOP=new QRadioButton(i18n("Use &POP3 server"),
 		methodGroup);
@@ -674,6 +674,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.27  2002/07/03 12:22:07  binner
+// CVS_SILENT Style guide fixes
+//
 // Revision 1.26  2002/05/15 16:58:02  gioele
 // kapp.h -> kapplication.h
 //
