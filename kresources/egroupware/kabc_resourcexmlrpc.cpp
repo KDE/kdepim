@@ -140,6 +140,9 @@ void ResourceXMLRPC::doClose()
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   enter_loop();
+
+  delete mServer;
+  mServer = 0;
 }
 
 bool ResourceXMLRPC::load()
