@@ -1,8 +1,8 @@
 /*
-    This file is part of libkolabformat - the library implementing the
+    This file is part of the kolab resource - the implementation of the
     Kolab storage format. See www.kolab.org for documentation on this.
 
-    Copyright (c) 2004  Bo Thorsen <bo@sonofthor.dk>
+    Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,31 +18,50 @@
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
+
+    In addition, as a special exception, the copyright holders give
+    permission to link the code of this program with any edition of
+    the Qt library by Trolltech AS, Norway (or with modified versions
+    of Qt that use the same license as Qt), and distribute linked
+    combinations including the two.  You must obey the GNU General
+    Public License in all respects for all of the code used other than
+    Qt.  If you modify this file, you may extend this exception to
+    your version of the file, but you are not obligated to do so.  If
+    you do not wish to do so, delete this exception statement from
+    your version.
 */
 
 #include "journal.h"
 
 #include <libkcal/journal.h>
+#include <kdebug.h>
 
-using namespace KolabFormat;
+using namespace Kolab;
 
 
-Journal::Journal()
+KCal::Journal* Journal::xmlToJournal( const QString& xml )
 {
+  Journal journal;
+  journal.load( xml );
+  KCal::Journal* kcalJournal = new KCal::Journal();
+  journal.saveTo( kcalJournal );
+  return kcalJournal;
+}
+
+QString Journal::journalToXML( KCal::Journal* kcalJournal )
+{
+  Journal journal( kcalJournal );
+  return journal.saveXML();
+}
+
+Journal::Journal( KCal::Journal* journal )
+{
+  if ( journal )
+    setFields( journal );
 }
 
 Journal::~Journal()
 {
-}
-
-void Journal::setFields( KCal::Journal* journal )
-{
-  // Set baseclass fields
-  Base::setFields( journal );
-
-  // Set our own fields
-  setSummary( journal->summary() );
-  setStartDate( journal->dtStart() );
 }
 
 void Journal::setSummary( const QString& summary )
@@ -85,13 +104,13 @@ bool Journal::loadAttribute( QDomElement& element )
   }
 
   // Not handled here
-  return Base::loadAttribute( element );
+  return KolabBase::loadAttribute( element );
 }
 
 bool Journal::saveAttributes( QDomElement& element ) const
 {
   // Save the base class elements
-  Base::saveAttributes( element );
+  KolabBase::saveAttributes( element );
 
   // Save the elements
 #if 0
@@ -104,7 +123,7 @@ bool Journal::saveAttributes( QDomElement& element ) const
 }
 
 
-bool Journal::load( const QDomDocument& document )
+bool Journal::loadXML( const QDomDocument& document )
 {
   QDomElement top = document.documentElement();
 
@@ -129,7 +148,7 @@ bool Journal::load( const QDomDocument& document )
   return true;
 }
 
-QString Journal::save() const
+QString Journal::saveXML() const
 {
   QDomDocument document = domTree();
   QDomElement element = document.createElement( "journal" );
@@ -137,4 +156,18 @@ QString Journal::save() const
   saveAttributes( element );
   document.appendChild( element );
   return document.toString();
+}
+
+void Journal::saveTo( KCal::Journal* journal )
+{
+}
+
+void Journal::setFields( const KCal::Journal* journal )
+{
+  // Set baseclass fields
+  KolabBase::setFields( journal );
+
+  // Set our own fields
+  setSummary( journal->summary() );
+  setStartDate( journal->dtStart() );
 }

@@ -34,6 +34,7 @@
 #include "resourcekolab.h"
 #include "event.h"
 #include "task.h"
+#include "journal.h"
 
 #include <kabc/locknull.h>
 

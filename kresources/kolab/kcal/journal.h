@@ -1,8 +1,8 @@
 /*
-    This file is part of libkolabformat - the library implementing the
+    This file is part of the kolab resource - the implementation of the
     Kolab storage format. See www.kolab.org for documentation on this.
 
-    Copyright (c) 2004  Bo Thorsen <bo@sonofthor.dk>
+    Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,28 +18,53 @@
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
+
+    In addition, as a special exception, the copyright holders give
+    permission to link the code of this program with any edition of
+    the Qt library by Trolltech AS, Norway (or with modified versions
+    of Qt that use the same license as Qt), and distribute linked
+    combinations including the two.  You must obey the GNU General
+    Public License in all respects for all of the code used other than
+    Qt.  If you modify this file, you may extend this exception to
+    your version of the file, but you are not obligated to do so.  If
+    you do not wish to do so, delete this exception statement from
+    your version.
 */
 
 #ifndef KOLAB_JOURNAL_H
 #define KOLAB_JOURNAL_H
 
-#include "base.h"
+#include <kolabbase.h>
+
+class QDomElement;
 
 namespace KCal {
   class Journal;
 }
 
-namespace KolabFormat {
+namespace Kolab {
 
-class Journal : public Base {
+/**
+ * This class represents a journal entry, and knows how to load/save it
+ * from/to XML, and from/to a KCal::Journal.
+ * The instances of this class are temporary, only used to convert
+ * one to the other.
+ */
+class Journal : public KolabBase {
 public:
-  Journal();
+  /// Use this to parse an xml string to a journal entry
+  /// The caller is responsible for deleting the returned journal
+  static KCal::Journal* xmlToJournal( const QString& xml );
+
+  /// Use this to get an xml string describing this journal entry
+  static QString journalToXML( KCal::Journal* );
+
+  explicit Journal( KCal::Journal* journal = 0 );
   virtual ~Journal();
 
   virtual QString type() const { return "Journal"; }
 
-  /// Set the fields to hold this journals entries
-  void setFields( KCal::Journal* journal );
+  void saveTo( KCal::Journal* journal );
 
   virtual void setSummary( const QString& summary );
   virtual QString summary() const;
@@ -57,12 +82,15 @@ public:
   virtual bool saveAttributes( QDomElement& ) const;
 
   // Load this journal by reading the XML file
-  virtual bool load( const QDomDocument& xml );
+  virtual bool loadXML( const QDomDocument& xml );
 
   // Serialize this journal to an XML string
-  virtual QString save() const;
+  virtual QString saveXML() const;
 
 protected:
+  // Read all known fields from this ical journal
+  void setFields( const KCal::Journal* );
+
   QString mSummary;
   QDateTime mStartDate;
   QDateTime mEndDate;
