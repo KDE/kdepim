@@ -1,14 +1,7 @@
 ...for the next release:
 
-- GNKSA certification (http://www.xs4all.nl/~js/gnksa/)
-  KNode 0.2 should be compliant with all MUSTs, we
-  want to improve our score on the SHOULDs and then
-  apply for a review.
-- posting (and reading to some degree) is currently
-  broken for non iso-8895-X languagues/charsets.
-  We want to fix this, please contact us if you want
-  to help us testing.
-- internal code cleanup
+- real scoring
+- reduction and limitation of the memory usage
 
 and of course much more in the future,
 but we have no concrete plans yet. ;-)
