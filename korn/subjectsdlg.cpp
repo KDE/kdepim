@@ -277,6 +277,7 @@ bool KornSubjectsDlg::reload()
 {
 	_loadSubjectsCanceled = false;
 	_canDeleteMaildrop = false;
+	QValueVector<KornMailSubject> * subjects;
 
 	// clear list view
 	_list->clear();
@@ -311,7 +312,18 @@ bool KornSubjectsDlg::reload()
 		_subjects = 0;
 
 		// load the subjects
-		_subjects = _mailDrop->readSubjects(&_loadSubjectsCanceled);
+		/*
+		 * In case there are no messages, slotSubjectsReady() is called before a list with
+		 * subjects is made. For that case, _subjects must be available (and empty).
+		 * In all other cases, the return value of _mailDrop->readSubjects are placed
+		 * into _subjects afterwards.
+		 *
+		 * In the future, _subjects should be given as a reference argument.
+		 */
+		_subjects = new QValueVector<KornMailSubject>();
+		subjects = _mailDrop->readSubjects(&_loadSubjectsCanceled);
+		delete _subjects;
+		_subjects = subjects;
 
 		if( _mailDrop->synchrone() && !_loadSubjectsCanceled ) //Asynchone communication
 			deleteSubjectsProgress();

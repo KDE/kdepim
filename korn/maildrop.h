@@ -287,6 +287,14 @@ class KMailDrop : public QObject
      * Forcibly set the count to zero;
      */
     virtual void forceCountZero();
+    
+    /*
+     * The next slots are used by kio; the present at this places
+     * prevent warnings at runtime.
+     */
+    virtual void readSubjectsCanceled() {}
+    virtual void readMailCanceled() {}
+    virtual void deleteMailsCanceled() {}
 
     protected slots:
 
