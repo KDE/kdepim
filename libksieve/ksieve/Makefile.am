@@ -6,5 +6,3 @@ ksieve_HEADERS = \
 	lexer.h \
 	parser.h \
 	scriptbuilder.h
-
-noinst_HEADERS = utf8validator.h

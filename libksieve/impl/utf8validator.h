@@ -1,5 +1,5 @@
 /*  -*- c++ -*-
-    ksieve/utf8validator.h
+    impl/utf8validator.h
 
     This file is part of KSieve,
     the KDE internet mail/usenet news message filtering library.

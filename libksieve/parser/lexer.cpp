@@ -35,7 +35,7 @@
 #include <ksieve/lexer.h>
 #include <impl/lexer.h>
 
-#include <ksieve/utf8validator.h>
+#include <impl/utf8validator.h>
 #include <ksieve/error.h>
 
 #include <qstring.h>

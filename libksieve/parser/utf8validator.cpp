@@ -30,7 +30,7 @@
     your version.
 */
 
-#include <ksieve/utf8validator.h>
+#include <impl/utf8validator.h>
 
 #include <qglobal.h>
 #include <qcstring.h>
