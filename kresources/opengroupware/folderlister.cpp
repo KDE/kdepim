@@ -32,7 +32,8 @@
 
 using namespace KCal;
 
-FolderLister::FolderLister()
+FolderLister::FolderLister( Type type )
+  : mType( type )
 {
 }
 
@@ -101,7 +102,11 @@ void FolderLister::retrieveFolders( const KURL &u )
   kdDebug(7000) << "props: " << props.toString() << endl;
 
   KURL url = mUrl;
-  url.addPath( "Groups" );
+  if ( mType == Calendar ) {
+    url.addPath( "Groups" );
+  } else {
+    url.addPath( "Contacts" );
+  }
 
   mListEventsJob = KIO::davPropFind( url, props, "1", false );
 
@@ -122,15 +127,20 @@ void FolderLister::slotListJobResult( KIO::Job *job )
 
     mFolders.clear();
 
-    // Personal calendar
+    // Personal calendar/addressbook
     Entry personal;
-    personal.name = i18n("Personal Calendar");
+    personal.active = true;
     KURL url = mUrl;
     url.setUser( QString::null );
     url.setPass( QString::null );
-    personal.id = url.url();
-    personal.active = true;
-
+    if ( mType == Calendar ) {
+      personal.name = i18n("Personal Calendar");
+      personal.id = url.url();
+    } else {
+      personal.name = i18n("Personal Addressbook");
+      url.addPath( "Contacts" );
+      personal.id = url.url();
+    }
     mFolders.append( personal );
 
     QDomElement docElement = doc.documentElement();

@@ -51,8 +51,10 @@ class FolderLister : public QObject
         QString name;
         bool active;
     };
+
+    enum Type { AddressBook, Calendar };
   
-    FolderLister();
+    FolderLister( Type );
   
     void retrieveFolders( const KURL & );
   
@@ -72,6 +74,7 @@ class FolderLister : public QObject
     void slotListJobResult( KIO::Job * );
 
   private:
+    Type mType;
     KURL mUrl;
     Entry::List mFolders;
     QString mWriteDestinationId;

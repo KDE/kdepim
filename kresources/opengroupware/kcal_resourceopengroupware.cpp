@@ -89,7 +89,7 @@ void OpenGroupware::init()
   mIsShowingError = false;
 
   mPrefs = new OpenGroupwarePrefsBase();
-  mFolderLister = new FolderLister;
+  mFolderLister = new FolderLister( FolderLister::Calendar );
   
   setType( "opengroupware" );
 
