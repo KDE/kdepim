@@ -239,6 +239,42 @@ CalFilter *Calendar::filter()
   return mFilter;
 }
 
+QPtrList<Incidence> Calendar::incidences()
+{
+  QPtrList<Incidence> incidences;
+  
+  Incidence *i;
+
+  QPtrList<Event> e = events();
+  for( i = e.first(); i; i = e.next() ) incidences.append( i );
+
+  QPtrList<Todo> t = todos();
+  for( i = t.first(); i; i = t.next() ) incidences.append( i );
+
+  QPtrList<Journal> j = journals();
+  for( i = j.first(); i; i = j.next() ) incidences.append( i );
+
+  return incidences;
+}
+
+QPtrList<Incidence> Calendar::rawIncidences()
+{
+  QPtrList<Incidence> incidences;
+  
+  Incidence *i;
+
+  QPtrList<Event> e = rawEvents();
+  for( i = e.first(); i; i = e.next() ) incidences.append( i );
+
+  QPtrList<Todo> t = rawTodos();
+  for( i = t.first(); i; i = t.next() ) incidences.append( i );
+
+  QPtrList<Journal> j = journals();
+  for( i = j.first(); i; i = j.next() ) incidences.append( i );
+
+  return incidences;
+}
+
 QPtrList<Event> Calendar::events( const QDate &date, bool sorted )
 {
   QPtrList<Event> el = rawEventsForDate(date,sorted);

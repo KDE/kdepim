@@ -29,6 +29,7 @@
 #include "customproperties.h"
 #include "event.h"
 #include "todo.h"
+#include "journal.h"
 
 #define _TIME_ZONE "-0500" /* hardcoded, overridden in config file. */
 
@@ -131,6 +132,16 @@ class Calendar : public CustomProperties, public IncidenceBase::Observer
       Delete event from calendar.
     */
     virtual void deleteEvent( Event * ) = 0;
+
+    /**
+      Return filtered list of all incidences of this calendar.
+    */
+    virtual QPtrList<Incidence> incidences();
+
+    /**
+      Return unfiltered list of all incidences of this calendar.
+    */
+    virtual QPtrList<Incidence> rawIncidences();
 
     /**
       Retrieves an event on the basis of the unique string ID.
