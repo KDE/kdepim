@@ -1,3 +1,32 @@
+KPilot Developer's notes for november 11th 2001
+===============================================
+
+Much messing-about with hardware, OSsen and the like has delayed many
+things. I've discovered that the configure.in.in and Makefile.am for
+KPilot were really badly broken under anything non-Linux.
+
+* configure.in.in
+  Possibly fixed all kinds of shell-script breakage (under Solaris)
+  and not-finding pilot-link under FreeBSD. You will have to pass in
+  the --with-extra-libs and --with-extra-includes flags; configure now
+  looks there correctly.
+* All the Makefile.am's
+  Removed the extra spurious $(LIBPISOCK_PATH) which was breaking
+  things under FreeBSD.
+* lib/uiDialog.{h,cc}
+  Added a virtual bool function validate() so that when Okaying a 
+  dialog, you can check first for valid settings. The default implementation
+  is return true;
+* kpilot/kpilotConfigDialog.{h,cc}
+  Added validate(), check that string for Pilot device doesn't overflow
+  the buffer for it. Also enforce the length restriction for the device
+  name. This is all conditioned on pilot-link < 1.0.0.
+* kpilot/kpilot.{h,cc}
+  Use a KJanusWidget instead of a QWidgetStack and deprecate the View
+  menu to make it clearer which views / actions / things KPilot actually
+  *has*. Moved the Spash Screen to the log widget, and made it a real splash.
+
+
 KPilot Developer's notes for october 28th 2001
 ==============================================
 
