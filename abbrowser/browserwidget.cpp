@@ -32,6 +32,8 @@
 
 #include <qdragobject.h>
 #include <qevent.h>
+#include <qurl.h>
+#include <kurl.h>
 
 #include <klocale.h>
 #include <kconfig.h>
@@ -733,8 +735,39 @@ QString PabWidget::selectedEmails()
       first = false;
 
     emailAddrs += sFileAs + "<" + email + ">";
-  }      
+  }
   return emailAddrs;
+}
+
+
+void PabWidget::updateContact( QString addr, QString name )
+{
+  ContactEntryList *cel = contactEntryList();
+  QStringList keys = cel->keys();
+  for ( QStringList::Iterator it = keys.begin(); it != keys.end(); ++it ) {
+    ContactEntry *ce = cel->find( *it );
+    if (ce)
+      if (ce->find("EMAIL")  && ((*ce->find("EMAIL")).stripWhiteSpace() == addr)) {
+	if (!name.isEmpty())
+	  ce->replace( "N", new QString( name ) );
+	QString title = i18n( "Address Book Entry Editor" );
+	PabContactDialog *cd = new PabContactDialog( this, title, *it, ce );
+	QObject::connect( cd, SIGNAL( change( QString, ContactEntry* ) ), 
+			  this, SLOT( change( QString, ContactEntry* ) ));
+	cd->show();
+	return;
+      }
+  }
+  
+  ContactDialog *cd = new PabNewContactDialog( this, i18n( "Address Book Entry Editor" ));
+  ContactEntry *ce = cd->entry();
+  if (!name.isEmpty())
+    ce->replace( ".AUXCONTACT-N", new QString(name) );
+  ce->replace( "EMAIL", new QString( addr ) );
+  connect( cd, SIGNAL( add( ContactEntry* ) ), 
+	   this, SLOT( addNewEntry( ContactEntry* ) ));
+  cd->parseName();
+  cd->show();
 }
 
 void PabWidget::sendMail()
@@ -898,6 +931,8 @@ PabListView::PabListView( PabWidget *parent, const char *name )
     pabWidget( parent ),
     oldColumn( 0 )
 {
+  setAcceptDrops( true );
+  viewport()->setAcceptDrops( true );
   setAllColumnsShowFocus( true );
   setShowSortIndicator(true);
   setSelectionMode( Extended );
@@ -1098,7 +1133,6 @@ void PabListView::setSorting( int column, bool ascending )
   a.setNum( column );
   if (ascending)
     b = "ascending";
-  debug( "PabWidget::setSorting" + a + " " + b );
 
   oldColumn = column;
   QListView::setSorting( column, ascending );
@@ -1126,7 +1160,7 @@ void PabListView::contentsMousePressEvent(QMouseEvent* e)
 }
 
 
-  // To initiate a drag operation
+// To initiate a drag operation
 void PabListView::contentsMouseMoveEvent( QMouseEvent *e )
 {
   if ((e->state() & LeftButton) && (e->pos() - presspos).manhattanLength() > 4 ) {
@@ -1138,3 +1172,62 @@ void PabListView::contentsMouseMoveEvent( QMouseEvent *e )
     QListView::contentsMouseMoveEvent( e );
 }
 
+void PabListView::contentsDragEnterEvent( QDragEnterEvent *e )
+{
+  if ( !QUrlDrag::canDecode(e) ) {
+    e->ignore();
+    return;
+  }
+}
+
+void PabListView::addEmail(const QString& aStr)
+{
+  int i, j, len;
+  QString partA, partB, result;
+  char endCh = '>';
+
+  i = aStr.find('<');
+  if (i<0)
+  {
+    i = aStr.find('(');
+    endCh = ')';
+  }
+  if (i<0) {
+    pabWidget->updateContact( aStr, "" );
+    return;
+  }
+  partA = aStr.left(i).stripWhiteSpace();
+  j = aStr.find(endCh,i+1);
+  if (j<0) {
+    pabWidget->updateContact( aStr, "" );
+    return;
+  }
+  partB = aStr.mid(i+1, j-i-1).stripWhiteSpace();
+
+  if (partA.find('@') >= 0 && !partB.isEmpty()) result = partB;
+  else if (!partA.isEmpty()) result = partA;
+  else result = aStr;
+
+  len = result.length();
+  if (result[0]=='"' && result[len-1]=='"')
+    result = result.mid(1, result.length()-2);
+  else if (result[0]=='<' && result[len-1]=='>')
+    result = result.mid(1, result.length()-2);
+  else if (result[0]=='(' && result[len-1]==')')
+    result = result.mid(1, result.length()-2);
+
+  pabWidget->updateContact( partB, result );
+}
+
+void PabListView::contentsDropEvent( QDropEvent *e )
+{
+  QStrList strings;
+  if ( QUrlDrag::decode( e, strings ) ) {
+    QString m("Full URLs:\n");
+    for (const char* u=strings.first(); u; u=strings.next())
+      if (u && (KURL::decode_string(u).find( "mailto:" ) == 0)) {
+	addEmail( KURL::decode_string(u).mid(7) );
+	return;
+      }
+  }
+}

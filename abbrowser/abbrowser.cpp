@@ -113,32 +113,8 @@ void Pab::newContact()
 
 void Pab::updateContact( QString addr, QString name )
 {
-  ContactEntryList *cel = view->contactEntryList();
-  QStringList keys = cel->keys();
-  for ( QStringList::Iterator it = keys.begin(); it != keys.end(); ++it ) {
-    ContactEntry *ce = cel->find( *it );
-    if (ce)
-      if (ce->find("EMAIL")  && ((*ce->find("EMAIL")).stripWhiteSpace() == addr)) {
-	if (!name.isEmpty())
-	  ce->replace( "N", new QString( name ) );
-	QString title = i18n( "Address Book Entry Editor" );
-	PabContactDialog *cd = new PabContactDialog( this, title, *it, ce );
-	QObject::connect( cd, SIGNAL( change( QString, ContactEntry* ) ), 
-			  view, SLOT( change( QString, ContactEntry* ) ));
-	cd->show();
-	return;
-      }
-  }
-  
-  ContactDialog *cd = new PabNewContactDialog( this, i18n( "Address Book Entry Editor" ));
-  ContactEntry *ce = cd->entry();
-  if (!name.isEmpty())
-    ce->replace( ".AUXCONTACT-N", new QString(name) );
-  ce->replace( "EMAIL", new QString( addr ) );
-  connect( cd, SIGNAL( add( ContactEntry* ) ), 
-	   view, SLOT( addNewEntry( ContactEntry* ) ));
-  cd->parseName();
-  cd->show();
+  view->updateContact( addr, name );
+  return;
 }
 
 void Pab::save()

@@ -89,6 +89,9 @@ protected:
   virtual void backgroundColorChange( const QColor &color );
   virtual void contentsMousePressEvent(QMouseEvent*);
   void contentsMouseMoveEvent( QMouseEvent *e );
+  void contentsDragEnterEvent( QDragEnterEvent *e );
+  void contentsDropEvent( QDropEvent *e );
+  void addEmail(const QString& aStr);
 
 public slots:
   void incSearch( const QString &value );
@@ -129,6 +132,7 @@ public:
   virtual PabListView* pabListView();
   virtual QStringList *fields();
   virtual QString selectedEmails();
+  virtual void updateContact( QString addr, QString name );
 
 public slots:
   virtual void showSelectNameDialog();
