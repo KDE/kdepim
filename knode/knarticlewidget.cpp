@@ -842,9 +842,6 @@ void KNArticleWidget::slotEnableAction( const char * name, bool enabled )
 {
   if (!strcmp(name,"copy"))
     actCopy->setEnabled(enabled);		
-  else
-    if (!strcmp(name,"print"))
-      actPrint->setEnabled(enabled);		
 }
 
 
