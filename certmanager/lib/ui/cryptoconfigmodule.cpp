@@ -38,17 +38,25 @@
 #include <kdialogbase.h>
 #include <kdebug.h>
 #include <knuminput.h>
+#include <kiconloader.h>
+#include <kglobal.h>
 
 #include <qgrid.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qvbox.h>
 #include <qpushbutton.h>
+#include <qregexp.h>
 
 using namespace Kleo;
 
+inline QPixmap loadIcon( QString s ) {
+  return KGlobal::instance()->iconLoader()
+    ->loadIcon( s.replace( QRegExp( "[^a-zA-Z0-9_]" ), "_" ), KIcon::NoGroup, KIcon::SizeMedium );
+}
+
 Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent, const char * name )
-  : KJanusWidget( parent, name, KJanusWidget::TreeList ), mConfig( config )
+  : KJanusWidget( parent, name, KJanusWidget::IconList ), mConfig( config )
 {
 //  QVBoxLayout *vlay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
 //  mTabWidget = new QTabWidget( this );
@@ -61,7 +69,7 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
     Kleo::CryptoConfigComponent* comp = config->component( *compit );
     Q_ASSERT( comp );
     if ( !comp->groupList().isEmpty() ) {
-      QVBox* vbox = addVBoxPage( comp->description() );
+      QVBox* vbox = addVBoxPage( comp->description(), QString::null, loadIcon( *compit ) );
       CryptoConfigComponentGUI* compGUI =
         new CryptoConfigComponentGUI( this, comp, vbox, (*compit).local8Bit() );
       // KJanusWidget doesn't seem to have iterators, so we store a copy...
