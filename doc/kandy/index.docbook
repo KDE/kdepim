@@ -34,7 +34,7 @@ data on the desktop.</para>
 <chapter id="using-kandy">
 <title>Using Kandy</title>
 
-<sect1 id=mainwindow>
+<sect1 id="mainwindow">
 <title>The Main Window</title>
 
 <para>The main window provides a low level interface for controlling the mobile
@@ -55,14 +55,14 @@ button. You can load an existing file by selecting "Open" from the menu.</para>
 
 </sect1>
 
-<sect1 id=mobilegui>
+<sect1 id="mobilegui">
 <title>Mobile Interface Window</title>
 
 <para>By pressing the button at the lower left corner of the main window you
 open the Interface Window for your mobile phone. This shows a comprehensive view
 of the status and data present on the phone including.</para>
 
-<para>You can read the phone book by pressing the "Read" button. By üressing
+<para>You can read the phone book by pressing the "Read" button. By pressing
 "Save" you can store the phonebook as list of comma-seperated values to disk.
 The "Import to KAB" button writes the phonebook to the KDE address book. The
 "Export form KAB" button loads the KDE address book into the list of
@@ -71,7 +71,7 @@ mobile.</para>
 
 </sect1>
 
-<sect1 id=configuring>
+<sect1 id="configuring">
 <title>Configuring Kandy</title>
 
 <para>By selecting the entry "Configure Kandy" from the menu you get the
