@@ -112,8 +112,8 @@ void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
   } else {
     QDomDocument doc = mListEventsJob->response();
 
-    kdDebug(7000) << " Doc: " << doc.toString() << endl;
-    kdDebug(7000) << " IdMapper: " << adaptor()->idMapper()->asString() << endl;
+    //kdDebug(7000) << " Doc: " << doc.toString() << endl;
+    //kdDebug(7000) << " IdMapper: " << adaptor()->idMapper()->asString() << endl;
 
     QDomNodeList entries = doc.elementsByTagNameNS( "DAV:", "href" );
     QDomNodeList fingerprints = doc.elementsByTagNameNS( "DAV:", "getetag" );
@@ -135,9 +135,9 @@ void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
       mCurrentlyOnServer << location;
       /* if not locally present, download */
       const QString &localId = adaptor()->idMapper()->localId( location );
-      kdDebug(5006) << "Looking up remote: " << location << " found: " << localId << endl;
+      //kdDebug(5006) << "Looking up remote: " << location << " found: " << localId << endl;
       if ( localId.isEmpty() || !adaptor()->localItemExists( localId ) ) {
-         kdDebug(7000) << "Not locally present, download: " << location << endl;
+        //kdDebug(7000) << "Not locally present, download: " << location << endl;
         download = true;
       } else {
          kdDebug(7000) << "Locally present " << endl;
@@ -145,7 +145,7 @@ void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
         const QString &oldFingerprint =
           adaptor()->idMapper()->fingerprint( localId );
         if ( oldFingerprint != newFingerprint ) {
-          kdDebug(7000) << "Fingerprint changed old: " << oldFingerprint <<
+          //kdDebug(7000) << "Fingerprint changed old: " << oldFingerprint <<
             " new: " << newFingerprint << endl;
           // something changed on the server, let's see if we also changed it locally
           if ( adaptor()->localItemHasChanged( localId ) ) {
@@ -156,7 +156,7 @@ void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
             download = true;
           }
         } else {
-          kdDebug(7000) << "Fingerprint did not change, don't download this one " << endl;
+          //kdDebug(7000) << "Fingerprint did not change, don't download this one " << endl;
         }
       }
       if ( download ) {
