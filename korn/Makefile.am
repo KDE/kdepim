@@ -83,6 +83,3 @@ KDE_ICON = korn
 appsdir = $(kde_appsdir)/Internet/More
 apps_DATA = KOrn.desktop
 
-install-data-local: uninstall.desktop
-	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Internet
-	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_appsdir)/Internet/KOrn.desktop
