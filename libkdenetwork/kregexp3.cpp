@@ -160,6 +160,12 @@ QString KRegExp3::replace( const QString & str,
       kdDebug() << "    result == \"" + result + "\"" << endl;
 #endif
     }
+	if (matchedLength() == 0 && pos == 0) {
+	  // if we matched the begin of the string, then better avoid endless
+	  // recursion
+	  result += str.mid( oldpos );
+	  break;
+	}
     pos += matchedLength();
 #ifdef DEBUG_KREGEXP3
     kdDebug() << QString("  Setting new pos to %1.").arg(pos) << endl;
