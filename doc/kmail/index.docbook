@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>10/08/2000</date>
+<date>02/09/2000</date>
 <releaseinfo>1.01.90</releaseinfo>
 
 <abstract>
@@ -95,7 +95,7 @@ an archive of the developer's mailing list is at <ulink url="http://lists.kde.or
 working with it right away. For more in-depth information see the 
 <link linkend="secUsingKmail">Using &kmail;</link> section.</para>
 
-<para>Invoking &kmail; for the first time creates a directory called <filename class="Directory">Mail</filename> containing the initial
+<para>Invoking &kmail; for the first time creates a directory called <filename class="directory">Mail</filename> containing the initial
 files (<filename>inbox</filename>, <filename>outbox</filename>, <filename>sent-mail</filename> and 
 <filename>trash</filename>) in your home directory.  Use
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice> to enter some initial information so &kmail; will 
@@ -1477,7 +1477,7 @@ context sensitive help about that item (sorry, not implemented yet).</para>
 <listitem>
 <para>Open a window for you to report a bug. Please note that bug reports
 are only useful if you tell us exactly how to reproduce the bug. Also
-look at <ulink url="http://bugs.kde.org">http://bugs.kde.org</ulink> to
+look at <ulink url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink> to
 see if the bug has been reported already.</para>
 </listitem>
 </varlistentry>
@@ -1781,6 +1781,26 @@ Mailreader window</link>.
 </qandaentry>
 
 <qandaentry>
+ <question><para>Are there any known bugs in &kmail;?</para></question>
+ <answer><para>You can find a list of submitted bugs at <ulink url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink>.
+ Not all these bugs are "real", some apply only to old versions, some are based on misunderstanding
+ of features etc. Here's a real problem: &kmail; will not delete some temporary files if it crashes. In this
+ case, you should <command>cd</command> to <filename class="directory">~/.kde/share/apps/kmail/tmp/</filename>
+ and delete all the files and folders there.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>How can I use mail folders that are not in <filename class="directory">~/Mail/</filename>?</para></question>
+ <answer><para>Simply create a symlink in your <filename class="directory">~/Mail</filename> directory using 
+ <command>ln -s /somewhere/Mail/mymailboxfile ~/Mail/remote</command>. When you start &kmail; you will 
+ see a new folder with the name <guilabel>remote</guilabel> that contains the mails in your remote 
+ folder. If you want to add a whole remote mail directory use <command>ln -s /somewhere/Mail ~/Mail/.remotedir.directory</command>.
+ For that case you also need to create a new empty folder named <filename class="directory">remotedir</filename> 
+ with &kmail;. The folder <filename class="directory">remotedir</filename> will then contain all remote mailbox folders 
+ as subfolders.</para></answer>
+</qandaentry>
+
+<qandaentry>
  <question><para>My folders keep growing even when I delete messages.</para></question>
  <answer><para>To really remove deleted messages from disk, you have to compact your folders. To do so
 automatically, open up the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice> window,
@@ -1789,7 +1809,7 @@ on exit</guilabel>. Maybe you want to select <guilabel>Empty trash on exit</guil
 too. This will remove all the messages in the trash folder whenever you exit &kmail;.</para></answer>
 </qandaentry>
 
-<!-- doesn't see to be such a good idea, as a break will be in the content-type header
+<!-- doesn't seem to be such a good idea, as a break will be in the content-type header?!
 <qandaentry>
  <question><para>I'm using a non-English language to write my mails but &kmail;
  fails to set the charset.</para></question>
