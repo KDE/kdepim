@@ -7,6 +7,9 @@
 #define HAVE_BOOLEAN
 #endif
 
+/*
+ * OSF (Tru64) has no __FUNCTION__ and strange prototypes for these functions.
+ */
 #ifdef __osf__
 #ifndef __FUNCTION__
 #define __FUNCTION__ ""
@@ -14,12 +17,18 @@
 #ifdef __cplusplus  
 extern "C" void usleep(unsigned int);
 extern "C" long gethostid (void);
-extern "C" void getdomainname (char *name, int namelen);
 #else
 void usleep(unsigned int);
 extern long gethostid (void);
-extern void getdomainname (char *name, int namelen);
 #endif
 #endif
 
 
+/* this is needed for Solaris and others */
+#ifndef HAVE_GETDOMAINNAME_PROTO
+#define HAVE_GETDOMAINNAME_PROTO
+#ifdef __cplusplus
+extern "C"
+#endif
+int getdomainname (char *Name, int Namelen);
+#endif

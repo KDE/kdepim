@@ -34,7 +34,6 @@
 #include <kconfig.h>
 #include <dcopclient.h>
 #include <kdebug.h>
-#include <krun.h>
 
 // kpilot includes
 #include "abbrowser-conduit.h"
@@ -83,7 +82,7 @@ AbbrowserConduit::AbbrowserConduit(BaseConduit::eConduitMode mode,
 	fDcop(NULL),
 	fAddressAppInfo(), fSmartMerge(true), fConflictResolution(eUserChoose),
 	fPilotOtherMap(), fPilotStreetHome(true), fPilotFaxHome(false),
-	fCloseAbIfOpen(false), fBackupDone(false)
+	fBackupDone(false)
     {
     FUNCTIONSETUP;
 	
@@ -142,8 +141,7 @@ bool AbbrowserConduit::_startAbbrowser()
     if (!foundAbbrowser)
 	{
 	// abbrowser not running, start it
-	KURL::List noargs;
-	KRun::run(abbrowserName, noargs);
+	kapp->startServiceByDesktopName(abbrowserName, QString::null); 	
 	
 	kdDebug() << fname << "Waiting to run " << abbrowserName << endl;
 	alreadyRunning = false;
@@ -187,7 +185,7 @@ void AbbrowserConduit::_stopAbbrowser(bool abAlreadyRunning)
 	QCString abbrowserName(c.readEntry("AbbrowserName","kaddressbook"));
 	QCString abbrowserIface(c.readEntry("AbbrowserIface","KAddressBookIface"));
 
-    if (fCloseAbIfOpen && !abAlreadyRunning)
+    if (!abAlreadyRunning)
 	{
 	QByteArray sendData;
 	QByteArray replyData;

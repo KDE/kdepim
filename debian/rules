@@ -8,17 +8,9 @@ export DH_COMPAT=3
 tmp = $(shell pwd)/debian/korganizer
 ARCH = $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq ($(ARCH),alpha)
-  COMPILER_FLAGS=CXX=g++-3.0 CC=gcc-3.0 CFLAGS=-mieee CXXFLAGS=-mieee
+  COMPILER_FLAGS=CFLAGS="-O0 -mieee" CXXFLAGS="-O0 -mieee"
 else
   COMPILER_FLAGS=CXX=g++ CC=gcc
-endif
-ifeq ($(ARCH),hppa)
-  XINERAMA=
-else
-  XINERAMA=--with-xinerama
-endif
-ifeq ($(ARCH),i386)
-  OBJPRELINK=--enable-objprelink
 endif
 
 build: build-stamp
@@ -33,8 +25,9 @@ build-stamp:
 	if test ! -f configure; then \
 	  $(MAKE) -f admin/Makefile.common ;\
 	fi
+	-chmod 755 configure
 	$(COMPILER_FLAGS) \
-	./configure $(configkdepim) $(XINERAMA) $(OBJPRELINK)
+	./configure $(configkdepim)
 	$(MAKE)
 	touch build-stamp
 
@@ -43,6 +36,7 @@ clean: debian-clean
 
 debian-clean:
 	dh_testdir
+	-rm -f debian/libical* debian/debiandirs
 	if test -d CVS; then \
 	  $(MAKE) -f admin/Makefile.common cvs-clean ;\
 	fi
@@ -58,17 +52,16 @@ binary-arch: build
 	dh_clean -k
 	dh_installdirs -a
 	$(MAKE) install DESTDIR=$(tmp)/
-	cp debian/*.override $(tmp)/usr/share/lintian/overrides/
-	for i in `ls $(tmp)/usr/share/lintian/overrides/`; do \
-	  mv $(tmp)/usr/share/lintian/overrides/$$i $(tmp)/usr/share/lintian/overrides/`echo $$i | sed -e 's#.override##'`; \
-	done
 	for i in `find debian/ -type l -name "common"`; do \
 		rm $$i ;\
 		ln -s ../common $$i ;\
 	done
 	dh_undocumented
 	dh_installman -a
-	dh_movefiles -a --sourcedir=debian/korganizer
+	dh_movefiles -pkpilot --sourcedir=debian/korganizer
+	dh_movefiles -pkandy --sourcedir=debian/korganizer
+	dh_movefiles -pkdepim-libs --sourcedir=debian/korganizer
+	dh_movefiles -pkdepim-dev --sourcedir=debian/korganizer
 	dh_installdocs -a
 	dh_installmenu -a
 	dh_installmime -a
@@ -78,7 +71,7 @@ binary-arch: build
 	dh_installchangelogs -pkdepim-dev
 	dh_installchangelogs -pkandy
 	dh_strip -a
-	dh_compress -a -X.docbook
+	dh_compress -a -X.docbook -X.css -X-license -X.dcl -X.bz2
 	dh_fixperms -a
 	dh_makeshlibs -a -V
 	dh_perl -a

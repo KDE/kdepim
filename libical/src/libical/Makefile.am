@@ -26,7 +26,7 @@
 DESIGNDATA = $(top_srcdir)/design-data
 ICALSCRIPTS = $(top_srcdir)/scripts
 
-lib_LTLIBRARIES = libical.la
+noinst_LTLIBRARIES = libical.la
 
 AM_YFLAGS = -d -v -t -pical_yy
 AM_LFLAGS = -Pical_yy -olex.yy.c
@@ -92,9 +92,7 @@ libical_la_SOURCES =		\
 	icallangbind.h		\
 	icallangbind.c
 
-libicalincludedir = $(includedir)
-
-libicalinclude_HEADERS =  ical.h 
+noinst_HEADERS =  ical.h 
 
 # ORDERING OF HEADERS IS SIGNIFICANT. Don't change this ordering. It
 # is required to make the combined header ical.h properly

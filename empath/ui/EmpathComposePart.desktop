@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Service
 Comment=email message composer
-Comment[af]=E-POS BOODSKAP SAAMSTELLER
 Comment[az]=ePoçt göndəricisi
 Comment[bg]=Редактор на пощенски съобщения
 Comment[br]=aozer kemmenad postel
@@ -45,10 +44,9 @@ Comment[ta]=Á¢ýÉïºü ¦ºö¾¢ ¯ÕÅ¡ì¸¢
 Comment[tr]=e-posta göndericisi
 Comment[uk]=Повідомлення Email
 Comment[vi]=Trình soạn email 
+Comment[xh]=Umqambi womyalezo we email
 Comment[zh_CN.GB2312]=Email 消息写作程序
-Comment[zh_TW.Big5]=電子郵件訊息編輯器
 Name=EmpathComposeWidget
-Name[af]=EMPATHCOMPOSEWIDGET
 Name[az]=EmpathDüzəlt
 Name[cs]=Editor emailů Empath
 Name[de]=Empath-Schreibmodul
@@ -66,6 +64,7 @@ Name[sl]=SestavniGradnikEmpath
 Name[sv]=Empathskrivkomponent
 Name[ta]=EmpathComposeWidge
 Name[tr]=EmpathDüzenle
+Name[xh]=Iwidget yokuqamba yomendo wangaphambili
 Name[zh_CN.GB2312]=Empath 写作部件
 ServiceTypes=KParts/ReadWritePart
 X-KDE-Library=libEmpathComposeWidget

@@ -128,6 +128,7 @@ void TodoConduit::doBackup()
    // clear the "first time" flag
    KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
    setFirstTime(config, false);
+   config.sync();
 }
 
 void TodoConduit::doSync()
@@ -398,6 +399,10 @@ QWidget* TodoConduit::aboutAndSetup()
 }
 
 // $Log$
+// Revision 1.6  2001/06/18 19:51:40  cschumac
+// Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
+// They use libkcal now.
+//
 // Revision 1.5  2001/06/05 22:58:40  adridg
 // General rewrite, cleanup thx. Philipp Hullmann
 //

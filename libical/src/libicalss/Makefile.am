@@ -1,5 +1,5 @@
 
-lib_LTLIBRARIES = libicalss.la
+noinst_LTLIBRARIES = libicalss.la
 
 AM_YFLAGS =-d -v -p ss
 AM_LFLAGS = -Pss
@@ -33,8 +33,6 @@ libicalss_la_SOURCES =		\
 	icalcstpserver.c        \
 	icalcstp.c		
 
-libicalssincludedir = $(includedir)
-
 COMBINEDHEADERS = \
         $(srcdir)/icalgauge.h \
         $(srcdir)/icalset.h \
@@ -52,7 +50,7 @@ icalss.h: $(COMBINEDHEADERS) icalssyacc.c
 	cat $(COMBINEDHEADERS) | egrep -v "#include.*\"ical" \
 	| egrep -v "#include.*\"pvl\.h\"" > icalss.h
 
-libicalssinclude_HEADERS = icalss.h
+noinst_HEADERS = icalss.h
 
 CLEANFILES = y.output icalss.h icalssyacc.c icalssyacc.h
 

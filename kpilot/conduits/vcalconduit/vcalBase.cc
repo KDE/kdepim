@@ -191,11 +191,6 @@ void VCalBaseConduit::deleteFromPilot(int entryType)
     delete rec;
   }
 
-  // Disable deletion to prevent data loss in case of logs.
-  // Will be removed, when the todo and datebook conduits are thoroughly tested
-  // TODO: Reenable deleteFromPilot()
-  return;
-  
   // Now process the list of deleted records. 
   for (QValueList<recordid_t>::Iterator it = deletedList.begin();
        it != deletedList.end(); ++it) {
@@ -244,6 +239,9 @@ Event *VCalBaseConduit::findEvent(recordid_t id)
 }
 
 // $Log$
+// Revision 1.10  2001/06/19 11:42:13  cschumac
+// Fixed memory leak.
+//
 // Revision 1.9  2001/06/18 19:51:40  cschumac
 // Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
 // They use libkcal now.
