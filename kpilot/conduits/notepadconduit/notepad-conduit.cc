@@ -281,7 +281,9 @@ void NotepadActionThread::saveImage(struct NotePad *n)
 		}
 	}
 	QString imgname = QString("%1/%2.png").arg(NotepadConduitSettings::outputDirectory()).arg(n->name);
+#ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Notepad " << imgname << endl;
+#endif
 	if(!image.save(imgname, "PNG", -1))
 		++notSaved;
 	else
