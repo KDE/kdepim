@@ -23,7 +23,6 @@
 #ifndef KADDRESSBOOK_PART_H
 #define KADDRESSBOOK_PART_H
 
-#include <kparts/browserextension.h>
 #include <kparts/event.h>
 #include <kparts/factory.h>
 #include <kparts/part.h>
@@ -31,7 +30,6 @@
 #include "kaddressbookiface.h"
 
 class KAboutData;
-class KAddressbookBrowserExtension;
 class KInstance;
 
 class KABCore;
@@ -64,18 +62,6 @@ class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBook
 
   private:
     KABCore *mCore;
-    KAddressbookBrowserExtension *mExtension;
-};
-
-class KAddressbookBrowserExtension : public KParts::BrowserExtension
-{
-  Q_OBJECT
-
-  friend class KAddressbookPart;
-
-  public:
-    KAddressbookBrowserExtension( KAddressbookPart *parent );
-    virtual ~KAddressbookBrowserExtension();
 };
 
 #endif

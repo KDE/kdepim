@@ -60,8 +60,6 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
   canvas->setFocusPolicy( QWidget::ClickFocus );
   setWidget( canvas );
 
-  mExtension = new KAddressbookBrowserExtension( this );
-
   QVBoxLayout *topLayout = new QVBoxLayout( canvas );
 
   KGlobal::iconLoader()->addAppDir( "kaddressbook" );
@@ -156,16 +154,5 @@ void KAddressbookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
   kdDebug(5720) << "KAddressbookPart::guiActivateEvent" << endl;
   KParts::ReadOnlyPart::guiActivateEvent( e );
 }
-
-KAddressbookBrowserExtension::KAddressbookBrowserExtension( KAddressbookPart *parent )
-  : KParts::BrowserExtension( parent, "KAddressbookBrowserExtension" )
-{
-}
-
-KAddressbookBrowserExtension::~KAddressbookBrowserExtension()
-{
-}
-
-using namespace KParts;
 
 #include "kaddressbook_part.moc"
