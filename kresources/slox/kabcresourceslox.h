@@ -70,8 +70,7 @@ class ResourceSlox : public Resource
     void init();
     void initSlox();
 
-    void parseContactAttribute( const QDomElement &e, Addressee &a,
-                                QString &userId );
+    void parseContactAttribute( const QDomElement &e, Addressee &a );
 
   protected slots:
     void slotResult( KIO::Job *job );

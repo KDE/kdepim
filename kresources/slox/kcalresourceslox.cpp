@@ -46,6 +46,7 @@
 #include <libkcal/filestorage.h>
 
 #include <kabc/locknull.h>
+#include <kabc/stdaddressbook.h>
 
 #include <kresources/configwidget.h>
 
@@ -89,6 +90,8 @@ KCalResourceSlox::~KCalResourceSlox()
   if ( mUploadJob ) mUploadJob->kill();
 
   delete mLock;
+
+  kdDebug() << "~KCalResourceSlox() done" << endl;
 }
 
 void KCalResourceSlox::init()
@@ -150,6 +153,10 @@ bool KCalResourceSlox::load()
     kdWarning() << "Warning: resource not open." << endl;
     return true;
   }
+
+  // The SLOX contacts are loaded asynchronously, so make sure that they are
+  // actually loaded.
+  KABC::StdAddressBook::self()->asyncLoad();
 
   if ( mLoadEventsJob || mLoadTodosJob ) {
     kdWarning() << "KCalResourceSlox::load(): download still in progress."
@@ -372,12 +379,16 @@ void KCalResourceSlox::createIncidenceAttributes( QDomDocument &doc,
   WebdavHandler::addSloxElement( doc, parent, "S:description",
                                  incidence->description() );
 
-  // FIXME: create members
-#if 0
   if ( incidence->attendeeCount() > 0 ) {
-    WebdavHandler::addSloxElement( doc, parent, "S:members" );
+    QDomElement members = WebdavHandler::addSloxElement( doc, parent,
+                                                          "S:members" );
+    Attendee::List attendees = incidence->attendees();
+    Attendee::List::ConstIterator it;
+    for( it = attendees.begin(); it != attendees.end(); ++it ) {
+      QString userId = SloxAccounts::self()->lookupId( (*it)->email() );
+      WebdavHandler::addSloxElement( doc, members, "S:member", userId );
+    }
   }
-#endif
 
   // FIXME: create reminder
 }
@@ -436,6 +447,8 @@ void KCalResourceSlox::createTodoAttributes( QDomDocument &doc,
 void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
                                               Incidence *incidence )
 {
+  incidence->clearAttendees();
+
   QDomNode n;
   for( n = e.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     QDomElement memberElement = n.toElement();
@@ -913,6 +926,7 @@ void KCalResourceSlox::cancelLoadEvents()
   if ( mLoadEventsJob ) mLoadEventsJob->kill();
   mLoadEventsJob = 0;
   if ( mLoadEventsProgress ) mLoadEventsProgress->setComplete();
+  mLoadEventsProgress = 0;
 }
 
 void KCalResourceSlox::cancelLoadTodos()
@@ -920,6 +934,7 @@ void KCalResourceSlox::cancelLoadTodos()
   if ( mLoadTodosJob ) mLoadTodosJob->kill();
   mLoadTodosJob = 0;
   if ( mLoadTodosProgress ) mLoadTodosProgress->setComplete();
+  mLoadTodosProgress = 0;
 }
 
 void KCalResourceSlox::cancelUpload()

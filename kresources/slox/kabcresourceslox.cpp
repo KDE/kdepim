@@ -76,13 +76,19 @@ void ResourceSlox::init()
 void ResourceSlox::initSlox()
 {
   SloxAccounts::setServer( KURL( mPrefs->url() ).host() );
+
+  SloxAccounts::self();
 }
 
 ResourceSlox::~ResourceSlox()
 {
   kdDebug() << "KABC::~ResourceSlox()" << endl;
 
+  if ( mDownloadJob ) mDownloadJob->kill();
+
   delete mPrefs;
+
+  kdDebug() << "KABC::~ResourceSlox() done" << endl;
 }
 
 void ResourceSlox::readConfig( const KConfig * )
@@ -128,7 +134,12 @@ bool ResourceSlox::load()
 {
   kdDebug() << "KABC::ResourceSlox::load()" << endl;
 
+#if 0
+  return asyncLoad();
+#else
+  kdDebug() << "KABC::ResourceSlox::load() is a nop." << endl;
   return true;
+#endif
 }
 
 bool ResourceSlox::asyncLoad()
@@ -194,12 +205,10 @@ void ResourceSlox::slotResult( KIO::Job *job )
         Addressee a;
         a.setUid( uid );
 
-        QString userId;
-
         QDomNode n;
         for( n = item.domNode.firstChild(); !n.isNull(); n = n.nextSibling() ) {
           QDomElement e = n.toElement();
-          parseContactAttribute( e, a, userId );
+          parseContactAttribute( e, a );
         }
 
         a.setResource( this );
@@ -207,11 +216,7 @@ void ResourceSlox::slotResult( KIO::Job *job )
 
         mAddrMap.replace( a.uid(), a );
 
-        if ( userId.isEmpty() ) {
-          kdWarning() << "Empty user id for contact " << uid << endl;
-        } else {
-          SloxAccounts::self()->insertUser( userId, a );
-        }
+        // TODO: Do we need to try to associate addressees with slox accounts?
 
         changed = true;
       }
@@ -223,8 +228,7 @@ void ResourceSlox::slotResult( KIO::Job *job )
   emit loadingFinished( this );
 }
 
-void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a,
-                                          QString &userId )
+void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
 {
   // FIXME: Why is the text still UTF8 encoded?
   QString text = QString::fromUtf8( e.text().latin1() );
@@ -248,8 +252,6 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a,
     a.setGivenName( text );
   } else if ( tag == "email" ) {
     a.insertEmail( text, true );
-    int pos = text.find( "@" );
-    if ( pos > 0 ) userId = text.left( pos );
   } else if ( tag == "phone" || tag == "phone2" ) {
     a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Work ) );
   } else if ( tag == "mobile" || tag == "mobile2" ) {

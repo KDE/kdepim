@@ -22,10 +22,15 @@
 
 #include <libkcal/freebusyurlstore.h>
 
-#include <kabc/stdaddressbook.h>
-
 #include <kstaticdeleter.h>
 #include <kdebug.h>
+#include <kstandarddirs.h>
+#include <kio/job.h>
+#include <kstringhandler.h>
+#include <kconfig.h>
+
+#include <qfile.h>
+#include <qdom.h>
 
 QString SloxAccounts::mServer;
 QString SloxAccounts::mDomain;
@@ -45,10 +50,19 @@ SloxAccounts::SloxAccounts()
 {
   kdDebug() << "SloxAccounts()" << endl;
 
-#if 1
+#if 0
   KABC::AddressBook *ab = KABC::StdAddressBook::self();
   ab->asyncLoad();
 #endif
+
+  mDownloadJob = 0;
+
+  readAccounts();
+}
+
+SloxAccounts::~SloxAccounts()
+{
+  kdDebug() << "~SloxAccounts()" << endl;
 }
 
 void SloxAccounts::setServer( const QString &server )
@@ -63,9 +77,11 @@ void SloxAccounts::setServer( const QString &server )
 
 void SloxAccounts::insertUser( const QString &id, const KABC::Addressee &a )
 {
-  mUsers.replace( id, a.uid() );
+  kdDebug() << "SloxAccount::insertUser() " << id << endl;
 
-  QString email = id + "@" + mDomain;
+  mUsers.replace( id, a );
+
+  QString email = a.preferredEmail();
   
   QString url = "http://" + mServer + "/servlet/webdav.freebusy?username=";
   url += id + "&server=" + mDomain;
@@ -75,11 +91,120 @@ void SloxAccounts::insertUser( const QString &id, const KABC::Addressee &a )
 
 KABC::Addressee SloxAccounts::lookupUser( const QString &id )
 {
-  QMap<QString,QString>::ConstIterator it;
+  QMap<QString, KABC::Addressee>::ConstIterator it;
   it = mUsers.find( id );
   if ( it == mUsers.end() ) {
+    requestAccounts();
     return KABC::Addressee();
   } else {
-    return KABC::StdAddressBook::self()->findByUid( *it );
+    return *it;
   }
 }
+
+QString SloxAccounts::lookupId( const QString &email )
+{
+  kdDebug() << "SloxAccounts::lookupId() " << email << endl;
+
+  QMap<QString, KABC::Addressee>::ConstIterator it;
+  for( it = mUsers.begin(); it != mUsers.end(); ++it ) {
+    kdDebug() << "PREF: " << (*it).preferredEmail() << endl;
+    kdDebug() << "KEY: " << it.key() << endl;
+    if ( (*it).preferredEmail() == email ) return it.key();
+  }
+  requestAccounts();
+
+  int pos = email.find( '@' );
+  if ( pos < 0 ) return email;
+  else return email.left( pos );
+}
+
+void SloxAccounts::requestAccounts()
+{
+  kdDebug() << "SloxAccounts::requestAccounts()" << endl;
+
+  if ( mDownloadJob ) {
+    kdDebug() << "SloxAccount::requestAccounts(): Download still in progress"
+              << endl;
+    return;
+  }
+
+  KURL url( "http://" + mServer + "/servlet/webdav.groupuser?" +
+            "user=*&group=*&groupres=*&res=*&details=t" );
+
+  KConfig cfg( "sloxrc" );
+  cfg.setGroup( "General" );
+  QString user = cfg.readEntry( "User" );
+  QString password = KStringHandler::obscure( cfg.readEntry( "Password" ) );
+  
+  url.setUser( user );
+  url.setPass( password );
+
+  mDownloadJob = KIO::file_copy( url, cacheFile(), -1, true );
+  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
+           SLOT( slotResult( KIO::Job * ) ) );
+}
+
+void SloxAccounts::slotResult( KIO::Job *job )
+{
+  kdDebug() << "SloxAccounts::slotResult()" << endl;
+
+  if ( job->error() ) {
+    job->showErrorDialog( 0 );
+  } else {
+    kdDebug() << "SloxAccounts::slotResult() success" << endl;
+  
+    readAccounts();
+  }
+
+  mDownloadJob = 0;
+}
+
+QString SloxAccounts::cacheFile() const
+{
+  return locateLocal( "cache", "slox/accounts" );
+}
+
+void SloxAccounts::readAccounts()
+{
+  kdDebug() << "SloxAccounts::readAccounts()" << endl;
+
+  QFile f( cacheFile() );
+  if ( !f.open( IO_ReadOnly ) ) {
+    kdDebug() << "Unable to open '" << cacheFile() << "'" << endl;
+    requestAccounts();
+    return;
+  }
+
+  QDomDocument doc;
+  doc.setContent( &f );
+
+//  kdDebug() << "SLOX ACCOUNTS: " << doc.toString( 2 ) << endl;
+
+  QDomElement docElement = doc.documentElement();
+
+  mUsers.clear();  
+
+  QDomNode node;
+  for( node = docElement.firstChild(); !node.isNull();
+       node = node.nextSibling() ) {
+    QDomElement element = node.toElement();
+    if ( element.isNull() ) continue;
+    if ( element.tagName() == "user" ) {
+      QString id;
+      KABC::Addressee a;
+      QDomNode n;
+      for( n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+        QDomElement e = n.toElement();
+        QString tag = e.tagName();
+        QString value = e.text();
+        if ( tag == "uid" ) id = value;
+        else if ( tag == "mail" ) a.insertEmail( value );
+        else if ( tag == "forename" ) a.setGivenName( value );
+        else if ( tag == "surename" ) a.setFamilyName( value );
+      }
+      insertUser( id, a );
+    }
+  }
+}
+
+#include "sloxaccounts.moc"

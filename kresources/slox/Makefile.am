@@ -30,6 +30,13 @@ kabc_slox_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 kabc_slox_la_LIBADD  = libkabc_slox.la
 
 
+EXTRA_PROGRAMS = testsloxaccounts
+
+testsloxaccounts_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testsloxaccounts_LDADD = libkslox.la
+testsloxaccounts_SOURCES = testsloxaccounts.cpp
+
+
 kcal_servicedir = $(kde_servicesdir)/kresources/kcal
 kcal_service_DATA = kcal_slox.desktop
 

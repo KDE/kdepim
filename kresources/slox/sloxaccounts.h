@@ -22,16 +22,36 @@
 
 #include <kabc/addressee.h>
 
-class SloxAccounts
+#include <qobject.h>
+
+namespace KIO {
+class Job;
+}
+
+class SloxAccounts : public QObject
 {
+    Q_OBJECT
   public:
     static SloxAccounts *self();
+
+    ~SloxAccounts();
 
     static void setServer( const QString & );
 
     void insertUser( const QString &id, const KABC::Addressee &a );
   
     KABC::Addressee lookupUser( const QString &id );
+  
+    QString lookupId( const QString &email );
+
+  protected:
+    void requestAccounts();
+    void readAccounts();
+
+    QString cacheFile() const;
+    
+  protected slots:
+    void slotResult( KIO::Job * );
   
   private:
     SloxAccounts();
@@ -41,7 +61,9 @@ class SloxAccounts
     static QString mServer;
     static QString mDomain;
 
-    QMap<QString, QString> mUsers; // map users ids to kabc uids.
+    KIO::Job *mDownloadJob;
+
+    QMap<QString, KABC::Addressee> mUsers; // map users ids to addressees.
 };
 
 #endif
