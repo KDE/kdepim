@@ -45,14 +45,14 @@ KNFilterDialog::KNFilterDialog(KNArticleFilter *f, QWidget *parent, const char *
   QFrame* page=plainPage();
 
   QGroupBox *gb=new QGroupBox(page);
-  QLabel *l1=new QLabel(i18n("Name"), gb);
-  QLabel *l2=new QLabel(i18n("apply on"), gb);
   fname=new QLineEdit(gb);
-  enabled=new QCheckBox(i18n("show in menu"), gb);
+  QLabel *l1=new QLabel(fname, i18n("Na&me:"), gb);
   apon=new QComboBox(gb);
   apon->insertItem(i18n("single articles"));
-  apon->insertItem(i18n("whole threads"));  
-      
+  apon->insertItem(i18n("whole threads"));
+  QLabel *l2=new QLabel(apon, i18n("Apply o&n"), gb);
+  enabled=new QCheckBox(i18n("Sho&w in menu"), gb);
+
   fw=new KNFilterConfigWidget(page);
 
   QGridLayout *gbL=new QGridLayout(gb, 2,4,8,5);

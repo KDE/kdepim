@@ -409,12 +409,26 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
   a_utoMark=conf->readBoolEntry("autoMark", true);
   t_otalExpand=conf->readBoolEntry("totalExpand", true);
   s_howSig=conf->readBoolEntry("showSig", true);
+  i_nterpretFormatTags=conf->readBoolEntry("interpretFormatTags", true);
   i_nlineAtt=conf->readBoolEntry("inlineAtt", true);
   o_penAtt=conf->readBoolEntry("openAtt", false) ;
   s_howAlts=conf->readBoolEntry("showAlts", false);
   m_axFetch=conf->readNumEntry("maxFetch", 1000);
+  if (m_axFetch<0) m_axFetch = 0;
   m_arkSecs=conf->readNumEntry("markSecs", 5);
-  b_rowser=(browserType)(conf->readNumEntry("Browser", 0));
+  if (m_arkSecs<0) m_arkSecs = 0;
+  QString s = conf->readEntry("Browser","Konqueror");
+  if (s=="Netscape")
+    b_rowser = BTnetscape;
+  else if (s=="Mozilla")
+    b_rowser = BTmozilla;
+  else if (s=="Opera")
+    b_rowser = BTopera;
+  else if (s=="Other")
+    b_rowser = BTother;
+  else
+    b_rowser = BTkonq;
+  b_rowserCommand=conf->readEntry("BrowserCommand","netscape %u");
 }
 
 
@@ -434,13 +448,25 @@ void KNConfig::ReadNewsGeneral::save()
   conf->writeEntry("autoMark", a_utoMark);
   conf->writeEntry("totalExpand", t_otalExpand);
   conf->writeEntry("showSig", s_howSig);
+  conf->writeEntry("interpretFormatTags", i_nterpretFormatTags);
   conf->writeEntry("inlineAtt", i_nlineAtt);
   conf->writeEntry("openAtt", o_penAtt);
   conf->writeEntry("showAlts", s_howAlts);
   conf->writeEntry("maxFetch", m_axFetch);
   conf->writeEntry("markSecs", m_arkSecs);
-  conf->writeEntry("Browser", (int)b_rowser);
-
+  switch (b_rowser) {
+    case BTkonq: conf->writeEntry("Browser","Konqueror");
+                 break;
+    case BTnetscape: conf->writeEntry("Browser","Netscape");
+                     break;
+    case BTmozilla: conf->writeEntry("Browser","Mozilla");
+                    break;
+    case BTopera: conf->writeEntry("Browser","Opera");
+                  break;
+    case BTother: conf->writeEntry("Browser","Other");
+                  break;
+  }
+  conf->writeEntry("BrowserCommand", b_rowserCommand);
 }
 
 

@@ -91,14 +91,14 @@ bool KNGroup::readInfo(const QString &confPath)
   u_seCharset = info.readBoolEntry("useCharset", false);
   d_efaultChSet = info.readEntry("defaultChSet").latin1();
   QString s = info.readEntry("status","unknown");
-  if (s=="unknown")
-    s_tatus = unknown;
-  else if (s=="readOnly")
+  if (s=="readOnly")
     s_tatus = readOnly;
   else if (s=="postingAllowed")
     s_tatus = postingAllowed;
   else if (s=="moderated")
     s_tatus = moderated;
+  else
+    s_tatus = unknown;
 
   i_dentity=new KNConfig::Identity(false);
   i_dentity->loadConfig(&info);

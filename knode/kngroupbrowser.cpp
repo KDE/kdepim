@@ -126,6 +126,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   enableButton(User1,false);
   enableButton(User2,false);
 
+  filterEdit->setFocus();
+
   QTimer::singleShot(2, this, SLOT(slotLoadList()));
 }
 

@@ -418,7 +418,7 @@ class ReadNewsGeneral : public Base {
   friend class ReadNewsGeneralWidget;
 
   public:
-    enum browserType { BTkonq=0, BTnetscape=1, BTmozilla=2 };
+    enum browserType { BTkonq=0, BTnetscape=1, BTmozilla=2, BTopera=3, BTother=4 };
 
     ReadNewsGeneral();
     ~ReadNewsGeneral();
@@ -432,19 +432,21 @@ class ReadNewsGeneral : public Base {
 
     bool totalExpandThreads()        { return t_otalExpand; }
     bool showSignature()             { return s_howSig; }
+    bool interpretFormatTags()       { return i_nterpretFormatTags; }
 
     bool showAttachmentsInline()     { return i_nlineAtt; }
     bool openAttachmentsOnClick()    { return o_penAtt; }
     bool showAlternativeContents()   { return s_howAlts; }
 
     browserType browser()            { return b_rowser; }
-
+    QString browserCommand()         { return b_rowserCommand; }
 
   protected:
     bool  a_utoCheck,
           a_utoMark,
           t_otalExpand,
           s_howSig,
+          i_nterpretFormatTags,
           i_nlineAtt,
           o_penAtt,
           s_howAlts;
@@ -453,11 +455,14 @@ class ReadNewsGeneral : public Base {
           m_arkSecs;
 
     browserType b_rowser;
+    QString b_rowserCommand;
 
 };
 
 
 class ReadNewsGeneralWidget : public BaseWidget {
+
+  Q_OBJECT
 
   public:
     ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidget *p=0, const char *n=0);
@@ -472,12 +477,18 @@ class ReadNewsGeneralWidget : public BaseWidget {
                 *i_nlineCB,
                 *o_penAttCB,
                 *e_xpThrCB,
-                *a_ltAttCB;
+                *a_ltAttCB,
+                *f_ormatCB;
     KIntSpinBox *m_arkSecs,
                 *m_axFetch;
     QComboBox   *b_rowser;
+    QLineEdit   *b_rowserCommand;
 
     ReadNewsGeneral *d_ata;
+
+  protected slots:
+    void slotMarkReadToggled(bool);
+    void slotBrowserTypeChanged(int);
 
 };
 

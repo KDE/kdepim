@@ -47,27 +47,27 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
 {
   QGridLayout *topL=new QGridLayout(this,  9, 3, 5,5);
 
-  QLabel *l=new QLabel(i18n("Name:"), this);
-  topL->addWidget(l, 0,0);
   n_ame=new QLineEdit(this);
+  QLabel *l=new QLabel(n_ame, i18n("&Name:"), this);
+  topL->addWidget(l, 0,0);
   topL->addMultiCellWidget(n_ame, 0,0, 1,2);
   n_ame->setText(d_ata->n_ame);
 
-  l=new QLabel(i18n("Organization:"), this);
-  topL->addWidget(l, 1,0);
   o_rga=new QLineEdit(this);
+  l=new QLabel(o_rga, i18n("Organi&zation:"), this);
+  topL->addWidget(l, 1,0);
   topL->addMultiCellWidget(o_rga, 1,1, 1,2);
   o_rga->setText(d_ata->o_rga);
 
-  l=new QLabel(i18n("Email Address:"), this);
-  topL->addWidget(l, 2,0);
   e_mail=new QLineEdit(this);
+  l=new QLabel(e_mail, i18n("Email A&ddress:"), this);
+  topL->addWidget(l, 2,0);
   topL->addMultiCellWidget(e_mail, 2,2, 1,2);
   e_mail->setText(QString(d_ata->e_mail));
 
-  l=new QLabel(i18n("Reply-To Address:"), this);
-  topL->addWidget(l, 3,0);
   r_eplyTo=new QLineEdit(this);
+  l=new QLabel(r_eplyTo, i18n("&Reply-To Address:"), this);
+  topL->addWidget(l, 3,0);
   topL->addMultiCellWidget(r_eplyTo, 3,3, 1,2);
   r_eplyTo->setText(d_ata->r_eplyTo);
 
@@ -76,17 +76,17 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
            this, SLOT(slotSignatureType(int)) );
   buttonGroup->hide();
 
-  s_igFile = new QRadioButton( i18n("Use a signature from file"), this );
+  s_igFile = new QRadioButton( i18n("&Use a signature from file"), this );
   buttonGroup->insert(s_igFile);
   topL->addMultiCellWidget(s_igFile, 4, 4, 0, 2);
 
-  f_ileName = new QLabel(i18n("Signature File:"), this);
-  topL->addWidget(f_ileName, 5, 0 );
   s_ig = new QLineEdit(this);
+  f_ileName = new QLabel(s_ig, i18n("Signature &File:"), this);
+  topL->addWidget(f_ileName, 5, 0 );
   topL->addWidget(s_ig, 5, 1 );
   s_ig->setText(d_ata->s_igPath);
 
-  c_hooseBtn = new QPushButton( i18n("Ch&oose..."), this);
+  c_hooseBtn = new QPushButton( i18n("Choo&se..."), this);
   connect(c_hooseBtn, SIGNAL(clicked()),
           this, SLOT(slotSignatureChoose()));
   topL->addWidget(c_hooseBtn, 5, 2 );
@@ -95,7 +95,7 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
           this, SLOT(slotSignatureEdit()));
   topL->addWidget(e_ditBtn, 6, 2);
 
-  s_igEdit = new QRadioButton( i18n("Specify signature below"), this);
+  s_igEdit = new QRadioButton( i18n("Specify signature &below"), this);
   buttonGroup->insert(s_igEdit);
   topL->addMultiCellWidget(s_igEdit, 7, 7, 0, 2);
 
@@ -145,6 +145,11 @@ void KNConfig::IdentityWidget::slotSignatureType(int type)
   e_ditBtn->setEnabled(sigFromFile);
   s_igEdit->setChecked(!sigFromFile);
   s_igEditor->setEnabled(!sigFromFile);
+
+  if (sigFromFile)
+    f_ileName->setFocus();
+  else
+    s_igEditor->setFocus();
 }
 
 
@@ -205,7 +210,7 @@ KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n
   p_ortInfo = new QLabel(gb);
 
   // buttons
-  a_ddBtn=new QPushButton(i18n("&Add"), this);
+  a_ddBtn=new QPushButton(i18n("&New"), this);
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn, 0,1);
 
@@ -367,39 +372,39 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   QFrame* page=plainPage();
   QGridLayout *topL=new QGridLayout(page, 10, 3, 5);
 
-  QLabel *l=new QLabel(i18n("Name:"),page);
-  topL->addWidget(l, 0,0);
   n_ame=new QLineEdit(page);
+  QLabel *l=new QLabel(n_ame,i18n("&Name:"),page);
+  topL->addWidget(l, 0,0);
   n_ame->setText(a->name());
   topL->addMultiCellWidget(n_ame, 0, 0, 1, 2);
 
-  l=new QLabel(i18n("Server:"), page);
-  topL->addWidget(l, 1,0);
-  if (a->id()!=-1) l->setEnabled(false);
   s_erver=new QLineEdit(page);
-  s_erver->setText(a->server());
+  l=new QLabel(s_erver,i18n("&Server:"), page);
+  if (a->id()!=-1) l->setEnabled(false);
   if (a->id()!=-1) s_erver->setEnabled(false);
+  s_erver->setText(a->server());
+  topL->addWidget(l, 1,0);
   topL->addMultiCellWidget(s_erver, 1, 1, 1, 2);
 
-  l=new QLabel(i18n("Port:"), page);
-  topL->addWidget(l, 2,0);
   p_ort=new QLineEdit(page);
+  l=new QLabel(p_ort, i18n("&Port:"), page);
   p_ort->setValidator(new KIntValidator(0,65536,this));
   p_ort->setText(QString::number(a->port()));
+  topL->addWidget(l, 2,0);
   topL->addWidget(p_ort, 2,1);
 
-  l = new QLabel(i18n("Hold connection for:"), page);
-  topL->addWidget(l,3,0);
   h_old = new KIntSpinBox(5,1800,5,5,10,page);
+  l = new QLabel(h_old,i18n("Hol&d connection for:"), page);
   h_old->setSuffix(i18n(" sec"));
   h_old->setValue(a->hold());
+  topL->addWidget(l,3,0);
   topL->addWidget(h_old,3,1);
 
-  l = new QLabel(i18n("Timeout:"), page);
-  topL->addWidget(l,4,0);
   t_imeout = new KIntSpinBox(15,600,5,15,10,page);
+  l = new QLabel(t_imeout, i18n("&Timeout:"), page);
   t_imeout->setValue(a->timeout());
   t_imeout->setSuffix(i18n(" sec"));
+  topL->addWidget(l,4,0);
   topL->addWidget(t_imeout,4,1);
 
   f_etchDes=new QCheckBox(i18n("&Fetch group descriptions"), page);
@@ -410,17 +415,17 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   connect(a_uth, SIGNAL(toggled(bool)), this, SLOT(slotAuthChecked(bool)));
   topL->addMultiCellWidget(a_uth, 6,6, 0,3);
 
-  u_serLabel=new QLabel(i18n("User:"), page);
-  topL->addWidget(u_serLabel, 7,0);
   u_ser=new QLineEdit(page);
+  u_serLabel=new QLabel(u_ser,i18n("&User:"), page);
   u_ser->setText(a->user());
+  topL->addWidget(u_serLabel, 7,0);
   topL->addMultiCellWidget(u_ser, 7,7, 1,2);
 
-  p_assLabel=new QLabel(i18n("Password:"), page);
-  topL->addWidget(p_assLabel, 8,0);
   p_ass=new QLineEdit(page);
+  p_assLabel=new QLabel(p_ass, i18n("Pass&word:"), page);
   p_ass->setEchoMode(QLineEdit::Password);
   p_ass->setText(a->pass());
+  topL->addWidget(p_assLabel, 8,0);
   topL->addMultiCellWidget(p_ass, 8,8, 1,2);
 
   slotAuthChecked(a->needsLogon());
@@ -480,27 +485,27 @@ KNConfig::SmtpAccountWidget::SmtpAccountWidget(QWidget *p, const char *n) : Base
 {
   QGridLayout *topL=new QGridLayout(this, 5, 3, 5);
 
-  QLabel *l=new QLabel(i18n("Server:"), this);
-  topL->addWidget(l, 0,0);
   s_erver=new QLineEdit(this);
+  QLabel *l=new QLabel(s_erver, i18n("&Server:"), this);
+  topL->addWidget(l, 0,0);
   topL->addMultiCellWidget(s_erver, 0, 0, 1, 2);
 
-  l=new QLabel(i18n("Port:"), this);
-  topL->addWidget(l, 1,0);
   p_ort=new QLineEdit(this);
+  l=new QLabel(p_ort, i18n("&Port:"), this);
+  topL->addWidget(l, 1,0);
   p_ort->setValidator(new KIntValidator(0,65536,this));
   topL->addWidget(p_ort, 1,1);
 
-  l = new QLabel(i18n("Hold connection for:"), this);
-  topL->addWidget(l,2,0);
   h_old = new KIntSpinBox(0,300,5,0,10,this);
   h_old->setSuffix(i18n(" sec"));
+  l = new QLabel(h_old, i18n("Hol&d connection for:"), this);
+  topL->addWidget(l,2,0);
   topL->addWidget(h_old,2,1);
 
-  l = new QLabel(i18n("Timeout:"), this);
-  topL->addWidget(l,3,0);
   t_imeout = new KIntSpinBox(15,300,5,15,10,this);
   t_imeout->setSuffix(i18n(" sec"));
+  l = new QLabel(t_imeout, i18n("&Timeout:"), this);
+  topL->addWidget(l,3,0);
   topL->addWidget(t_imeout,3,1);
 
   topL->setColStretch(1,1);
@@ -628,9 +633,8 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
   QGridLayout *topL=new QGridLayout(this, 9,2, 5,5);
 
   //long group list
-  l_ongCB = new QCheckBox(i18n("Show long group list"),this);
+  l_ongCB = new QCheckBox(i18n("&Show long group list"),this);
   topL->addWidget(l_ongCB,0,0);
-
 
   //color-list
   c_List = new QListBox(this);
@@ -638,7 +642,7 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
   connect(c_List, SIGNAL(selected(QListBoxItem*)),SLOT(slotColItemSelected(QListBoxItem*)));
   connect(c_List, SIGNAL(selectionChanged()), SLOT(slotColSelectionChanged()));
 
-  c_olorCB = new QCheckBox(i18n("Use custom colors"),this);
+  c_olorCB = new QCheckBox(i18n("&Use custom colors"),this);
   topL->addWidget(c_olorCB,1,0);
   connect(c_olorCB, SIGNAL(toggled(bool)), this, SLOT(slotColCheckBoxToggled(bool)));
 
@@ -657,15 +661,15 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
   connect(f_List, SIGNAL(selected(QListBoxItem*)),SLOT(slotFontItemSelected(QListBoxItem*)));
   connect(f_List, SIGNAL(selectionChanged()),SLOT(slotFontSelectionChanged()));
 
-  f_ontCB = new QCheckBox(i18n("Use custom fonts"),this);
+  f_ontCB = new QCheckBox(i18n("Use custom &fonts"),this);
   topL->addWidget(f_ontCB,5,0);
   connect(f_ontCB, SIGNAL(toggled(bool)), this, SLOT(slotFontCheckBoxToggled(bool)));
 
-  f_ntChngBtn=new QPushButton(i18n("Chan&ge"), this);
+  f_ntChngBtn=new QPushButton(i18n("Chang&e"), this);
   connect(f_ntChngBtn, SIGNAL(clicked()), this, SLOT(slotFontChangeBtnClicked()));
   topL->addWidget(f_ntChngBtn,6,1);
 
-  f_ntDefBtn=new QPushButton(i18n("D&efaults"), this);
+  f_ntDefBtn=new QPushButton(i18n("Defaul&ts"), this);
   connect(f_ntDefBtn, SIGNAL(clicked()), this, SLOT(slotFontDefaultBtnClicked()));
   topL->addWidget(f_ntDefBtn,7,1);
 
@@ -715,6 +719,7 @@ void KNConfig::AppearanceWidget::slotColCheckBoxToggled(bool b)
   c_List->setEnabled(b);
   c_olDefBtn->setEnabled(b);
   c_olChngBtn->setEnabled(b && (c_List->currentItem()!=-1));
+  if (b) c_List->setFocus();
 }
 
 
@@ -763,6 +768,7 @@ void KNConfig::AppearanceWidget::slotFontCheckBoxToggled(bool b)
   f_List->setEnabled(b);
   f_ntDefBtn->setEnabled(b);
   f_ntChngBtn->setEnabled(b && (f_List->currentItem()!=-1));
+  if (b) f_List->setFocus();
 }
 
 
@@ -818,27 +824,35 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   QGroupBox *bgb=new QGroupBox(i18n("Browser"), this);
   QLabel *l1,*l3;
 
-  a_utoCB=new QCheckBox(i18n("check for new articles automatically"), mgb);
-  l1=new QLabel(i18n("max to fetch"), mgb);
-  m_axFetch=new KIntSpinBox(0, 9999, 1, 0, 10, mgb);
-  m_arkCB=new QCheckBox(i18n("mark article as read after"), mgb);
+  a_utoCB=new QCheckBox(i18n("Check for new articles a&utomatically"), mgb);
+  m_axFetch=new KIntSpinBox(0, 20000, 1, 0, 10, mgb);
+  l1=new QLabel(m_axFetch, i18n("&Maximal number of articles to fetch"), mgb);
+  m_arkCB=new QCheckBox(i18n("Mar&k article as read after"), mgb);
   m_arkSecs=new KIntSpinBox(0, 9999, 1, 0, 10, mgb);
-  connect(m_arkCB, SIGNAL(toggled(bool)), m_arkSecs, SLOT(setEnabled(bool)));
+  connect(m_arkCB, SIGNAL(toggled(bool)), SLOT(slotMarkReadToggled(bool)));
   m_arkSecs->setSuffix(i18n(" sec"));
-  l3=new QLabel(i18n("Open links with"), bgb);
+  e_xpThrCB=new QCheckBox(i18n("Show &whole thread on expanding"), vgb);
+  s_igCB=new QCheckBox(i18n("Show &signature"), vgb);
+  f_ormatCB=new QCheckBox(i18n("Interpret te&xt format tags"), vgb);
+
+  i_nlineCB=new QCheckBox(i18n("Show attachments &inline if possible"), agb);
+  o_penAttCB=new QCheckBox(i18n("Open a&ttachments on click"), agb);
+  a_ltAttCB=new QCheckBox(i18n("Show alternati&ve contents as attachments"), agb);
   b_rowser=new QComboBox(bgb);
   b_rowser->insertItem("Konqueror");
   b_rowser->insertItem("Netscape");
-  e_xpThrCB=new QCheckBox(i18n("show whole thread on expanding"), vgb);
-  s_igCB=new QCheckBox(i18n("show signature"), vgb);
-  i_nlineCB=new QCheckBox(i18n("show attachments inline if possible"), agb);
-  o_penAttCB=new QCheckBox(i18n("open attachments on click"), agb);
-  a_ltAttCB=new QCheckBox(i18n("show alternative contents as attachments"), agb);
+  b_rowser->insertItem("Mozilla");
+  b_rowser->insertItem("Opera");
+  b_rowser->insertItem("Other");
+  connect(b_rowser, SIGNAL(activated(int)), SLOT(slotBrowserTypeChanged(int)));
+  l3=new QLabel(b_rowser, i18n("Open &links with"), bgb);
+  b_rowserCommand = new QLineEdit(bgb);
+
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
   QGridLayout *mgbL=new QGridLayout(mgb, 4,2, 8,5);
   QVBoxLayout *vgbL=new QVBoxLayout(vgb, 8, 5);
   QVBoxLayout *agbL=new QVBoxLayout(agb, 8, 5);
-  QGridLayout *bgbL=new QGridLayout(bgb, 2,2, 8,5);
+  QGridLayout *bgbL=new QGridLayout(bgb, 3,2, 8,5);
 
   topL->addWidget(mgb);
   topL->addWidget(vgb);
@@ -855,6 +869,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   vgbL->addSpacing(fontMetrics().lineSpacing()-4);
   vgbL->addWidget(e_xpThrCB);
   vgbL->addWidget(s_igCB);
+  vgbL->addWidget(f_ormatCB);
   agbL->addSpacing(fontMetrics().lineSpacing()-4);
   agbL->addWidget(i_nlineCB);
   agbL->addWidget(o_penAttCB);
@@ -862,22 +877,24 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   bgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
   bgbL->addWidget(l3, 1,0);
   bgbL->addWidget(b_rowser, 1,1);
+  bgbL->addMultiCellWidget(b_rowserCommand,2,2,0,1);
   topL->setResizeMode(QLayout::Minimum);
 
   //init
   a_utoCB->setChecked(d->a_utoCheck);
   m_arkCB->setChecked(d->a_utoMark);
   b_rowser->setCurrentItem((int)(d->b_rowser));
+  b_rowserCommand->setText(d->b_rowserCommand);
+  b_rowserCommand->setEnabled(d->b_rowser==ReadNewsGeneral::BTother);
   i_nlineCB->setChecked(d->i_nlineAtt);
   o_penAttCB->setChecked(d->o_penAtt);
   a_ltAttCB->setChecked(d->s_howAlts);
   s_igCB->setChecked(d->s_howSig);
+  f_ormatCB->setChecked(d->i_nterpretFormatTags);
   e_xpThrCB->setChecked(d->t_otalExpand);
   m_axFetch->setValue(d->m_axFetch);
   m_arkSecs->setValue(d->m_arkSecs);
-
 }
-
 
 
 KNConfig::ReadNewsGeneralWidget::~ReadNewsGeneralWidget()
@@ -892,6 +909,7 @@ void KNConfig::ReadNewsGeneralWidget::apply()
 
   d_ata->a_utoCheck=a_utoCB->isChecked();
   d_ata->s_howSig=s_igCB->isChecked();
+  d_ata->i_nterpretFormatTags=f_ormatCB->isChecked();
   d_ata->t_otalExpand=e_xpThrCB->isChecked();
   d_ata->m_axFetch=m_axFetch->value();
   d_ata->a_utoMark=m_arkCB->isChecked();
@@ -900,10 +918,23 @@ void KNConfig::ReadNewsGeneralWidget::apply()
   d_ata->o_penAtt=o_penAttCB->isChecked();
   d_ata->s_howAlts=a_ltAttCB->isChecked();
   d_ata->b_rowser=(ReadNewsGeneral::browserType)(b_rowser->currentItem());
+  d_ata->b_rowserCommand=b_rowserCommand->text();
 
   d_ata->save();
 }
 
+
+void KNConfig::ReadNewsGeneralWidget::slotMarkReadToggled(bool b)
+{
+  m_arkSecs->setEnabled(b);
+  if (b) m_arkSecs->setFocus();
+}
+
+
+void KNConfig::ReadNewsGeneralWidget::slotBrowserTypeChanged(int i)
+{
+  b_rowserCommand->setEnabled((ReadNewsGeneral::browserType)(i)==ReadNewsGeneral::BTother);
+}
 
 //=============================================================================================
 
@@ -920,7 +951,7 @@ KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget(DisplayedHeaders *d, QW
   topL->addMultiCellWidget(l_box, 0,6, 0,0);
 
   // buttons
-  a_ddBtn=new QPushButton(i18n("&Add"), this);
+  a_ddBtn=new QPushButton(i18n("&New"), this);
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn, 0,1);
 
@@ -936,7 +967,7 @@ KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget(DisplayedHeaders *d, QW
   connect(u_pBtn, SIGNAL(clicked()), this, SLOT(slotUpBtnClicked()));
   topL->addWidget(u_pBtn, 4,1);
 
-  d_ownBtn=new QPushButton(i18n("D&own"), this);
+  d_ownBtn=new QPushButton(i18n("Do&wn"), this);
   connect(d_ownBtn, SIGNAL(clicked()), this, SLOT(slotDownBtnClicked()));
   topL->addWidget(d_ownBtn, 5,1);
 
@@ -1081,16 +1112,16 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
   QWidget *nameW = new QWidget(page);
   QGridLayout *nameL=new QGridLayout(nameW, 2, 2, 5);
 
-  nameL->addWidget(new QLabel(i18n("Header:"),nameW),0,0);
   h_drC=new QComboBox(true, nameW);
   h_drC->lineEdit()->setMaxLength(64);
   connect(h_drC, SIGNAL(activated(int)), this, SLOT(slotActivated(int)));
+  nameL->addWidget(new QLabel(h_drC, i18n("H&eader:"),nameW),0,0);
   nameL->addWidget(h_drC,0,1);
 
-  nameL->addWidget(new QLabel(i18n("Displayed Name:"),nameW),1,0);
   n_ameE=new QLineEdit(nameW);
   connect(n_ameE, SIGNAL(textChanged(const QString&)), SLOT(slotNameChanged(const QString&)));
   n_ameE->setMaxLength(64);
+  nameL->addWidget(new QLabel(n_ameE, i18n("Displayed Na&me:"),nameW),1,0);
   nameL->addWidget(n_ameE,1,1);
   nameL->setColStretch(1,1);
 
@@ -1100,20 +1131,20 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
   QVBoxLayout *ngbL = new QVBoxLayout(ngb, 8, 5);
   ngbL->setAutoAdd(true);
   ngbL->addSpacing(fontMetrics().lineSpacing()-4);
-  n_ameCB[0]=new QCheckBox(i18n("large"), ngb);
-  n_ameCB[1]=new QCheckBox(i18n("bold"), ngb);
-  n_ameCB[2]=new QCheckBox(i18n("italic"), ngb);
-  n_ameCB[3]=new QCheckBox(i18n("underlined"), ngb);
+  n_ameCB[0]=new QCheckBox(i18n("&large"), ngb);
+  n_ameCB[1]=new QCheckBox(i18n("&bold"), ngb);
+  n_ameCB[2]=new QCheckBox(i18n("&italic"), ngb);
+  n_ameCB[3]=new QCheckBox(i18n("&underlined"), ngb);
   topL->addWidget(ngb,1,0);
 
   QGroupBox *vgb=new QGroupBox(i18n("Value"), page);
   QVBoxLayout *vgbL = new QVBoxLayout(vgb, 8, 5);
   vgbL->setAutoAdd(true);
   vgbL->addSpacing(fontMetrics().lineSpacing()-4);
-  v_alueCB[0]=new QCheckBox(i18n("large"), vgb);
-  v_alueCB[1]=new QCheckBox(i18n("bold"), vgb);
-  v_alueCB[2]=new QCheckBox(i18n("italic"), vgb);
-  v_alueCB[3]=new QCheckBox(i18n("underlined"), vgb);
+  v_alueCB[0]=new QCheckBox(i18n("l&arge"), vgb);
+  v_alueCB[1]=new QCheckBox(i18n("bol&d"), vgb);
+  v_alueCB[2]=new QCheckBox(i18n("i&talic"), vgb);
+  v_alueCB[3]=new QCheckBox(i18n("u&nderlined"), vgb);
   topL->addWidget(vgb,1,1);
 
   topL->setColStretch(0,1);
@@ -1181,14 +1212,14 @@ KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
 
   // == Filters =================================================
 
-  topL->addWidget(new QLabel(i18n("<b>Filters:</b>"),this),0,0);
-
   f_lb=new QListBox(this);
+  topL->addWidget(new QLabel(f_lb, i18n("&Filters:"),this),0,0);
+
   connect(f_lb, SIGNAL(selectionChanged()), SLOT(slotSelectionChangedFilter()));
   connect(f_lb, SIGNAL(selected(int)), SLOT(slotItemSelectedFilter(int)));
   topL->addMultiCellWidget(f_lb,1,5,0,0);
 
-  a_ddBtn=new QPushButton(i18n("&Add"), this);
+  a_ddBtn=new QPushButton(i18n("&New"), this);
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn,1,1);
 
@@ -1200,15 +1231,15 @@ KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
   connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
   topL->addWidget(e_ditBtn,3,1);
 
-  c_opyBtn=new QPushButton(i18n("C&opy"), this);
+  c_opyBtn=new QPushButton(i18n("Co&py"), this);
   connect(c_opyBtn, SIGNAL(clicked()), this, SLOT(slotCopyBtnClicked()));
   topL->addWidget(c_opyBtn,4,1);
 
   // == Menu ====================================================
 
-  topL->addWidget(new QLabel(i18n("<b>Menu:</b>"),this),6,0);
-
   m_lb=new QListBox(this);
+  topL->addWidget(new QLabel(m_lb, i18n("&Menu:"),this),6,0);
+
   connect(m_lb, SIGNAL(selectionChanged()), SLOT(slotSelectionChangedMenu()));
   topL->addMultiCellWidget(m_lb,7,11,0,0);
 
@@ -1216,7 +1247,7 @@ KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
   connect(u_pBtn, SIGNAL(clicked()), this, SLOT(slotUpBtnClicked()));
   topL->addWidget(u_pBtn,7,1);
 
-  d_ownBtn=new QPushButton(i18n("D&own"), this);
+  d_ownBtn=new QPushButton(i18n("Do&wn"), this);
   connect(d_ownBtn, SIGNAL(clicked()), this, SLOT(slotDownBtnClicked()));
   topL->addWidget(d_ownBtn,8,1);
 
@@ -1453,46 +1484,31 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   topL->addWidget(ggb);
 
   ggbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  ggbL->addWidget(new QLabel(i18n("Charset"), ggb), 1,0);
   c_harset=new QComboBox(ggb);
-  /*c_harset->insertItem("US-ASCII");      // availableCharsetNames() returns the wrong format and
-  c_harset->insertItem("ISO-8859-1");    // posting of non-iso-8859 is currently broken...
-  c_harset->insertItem("ISO-8859-2");
-  c_harset->insertItem("ISO-8859-3");
-  c_harset->insertItem("ISO-8859-4");
-  c_harset->insertItem("ISO-8859-5");
-  c_harset->insertItem("ISO-8859-6");
-  c_harset->insertItem("ISO-8859-7");
-  c_harset->insertItem("ISO-8859-8");
-  c_harset->insertItem("ISO-8859-9");
-  c_harset->insertItem("ISO-8859-10");
-  c_harset->insertItem("ISO-8859-13");
-  c_harset->insertItem("ISO-8859-14");
-  c_harset->insertItem("ISO-8859-15");  */
   c_harset->insertStringList(KNMimeBase::availableCharsets());
+  ggbL->addWidget(new QLabel(c_harset, i18n("Cha&rset"), ggb), 1,0);
   ggbL->addWidget(c_harset, 1,1);
 
-  ggbL->addWidget(new QLabel(i18n("Encoding"), ggb), 2,0);
   e_ncoding=new QComboBox(ggb);
   e_ncoding->insertItem("7 bit");
   e_ncoding->insertItem("8 bit");
   e_ncoding->insertItem("quoted-printable");
+  ggbL->addWidget(new QLabel(e_ncoding, i18n("Enco&ding"), ggb), 2,0);
   ggbL->addWidget(e_ncoding, 2,1);
 
-  a_llow8bitCB=new QCheckBox(i18n("don't encode 8-bit characters in the header"), ggb);
+  a_llow8bitCB=new QCheckBox(i18n("Don't encode &8-bit characters in the header"), ggb);
   connect(a_llow8bitCB, SIGNAL(toggled(bool)), this, SLOT(slotHeadEncToggled(bool)));
   ggbL->addMultiCellWidget(a_llow8bitCB, 3,3, 0,1);
 
-  g_enMIdCB=new QCheckBox(i18n("generate Message-Id"), ggb);
+  g_enMIdCB=new QCheckBox(i18n("&Generate Message-Id"), ggb);
   connect(g_enMIdCB, SIGNAL(toggled(bool)), this, SLOT(slotGenMIdCBToggled(bool)));
   ggbL->addMultiCellWidget(g_enMIdCB, 4,4, 0,1);
-  h_ostL=new QLabel(i18n("Hostname"), ggb);
-  h_ostL->setEnabled(false);
-  ggbL->addWidget(h_ostL, 5,0);
   h_ost=new QLineEdit(ggb);
   h_ost->setEnabled(false);
+  h_ostL=new QLabel(h_ost, i18n("Ho&stname:"), ggb);
+  h_ostL->setEnabled(false);
+  ggbL->addWidget(h_ostL, 5,0);
   ggbL->addWidget(h_ost, 5,1);
-
   ggbL->setColStretch(1,1);
 
   // ==== X-Headers =============================================================
@@ -1508,11 +1524,11 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   connect(l_box, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()));
   xgbL->addMultiCellWidget(l_box, 1,4, 0,0);
 
-  a_ddBtn=new QPushButton(i18n("&Add"), xgb);
+  a_ddBtn=new QPushButton(i18n("&New"), xgb);
   connect(a_ddBtn, SIGNAL(clicked()), SLOT(slotAddBtnClicked()));
   xgbL->addWidget(a_ddBtn, 1,1);
 
-  d_elBtn=new QPushButton(i18n("&Delete"), xgb);
+  d_elBtn=new QPushButton(i18n("Dele&te"), xgb);
   connect(d_elBtn, SIGNAL(clicked()), SLOT(slotDelBtnClicked()));
   xgbL->addWidget(d_elBtn, 2,1);
 
@@ -1520,7 +1536,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   connect(e_ditBtn, SIGNAL(clicked()), SLOT(slotEditBtnClicked()));
   xgbL->addWidget(e_ditBtn, 3,1);
 
-  i_ncUaCB=new QCheckBox(i18n("don't add the \"User-Agent\" identification header"), xgb);
+  i_ncUaCB=new QCheckBox(i18n("Don't add the \"&User-Agent\" identification header"), xgb);
   xgbL->addMultiCellWidget(i_ncUaCB, 5,5, 0,1);
 
   xgbL->setRowStretch(4,1);
@@ -1708,13 +1724,13 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
 
   generalL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  w_ordWrapCB=new QCheckBox(i18n("word warp at column:"), generalB);
+  w_ordWrapCB=new QCheckBox(i18n("Word &warp at column:"), generalB);
   generalL->addWidget(w_ordWrapCB,1,0);
-  m_axLen=new KIntSpinBox(20, 100, 1, 20, 10, generalB);
+  m_axLen=new KIntSpinBox(20, 200, 1, 20, 10, generalB);
   generalL->addWidget(m_axLen,1,2);
   connect(w_ordWrapCB, SIGNAL(toggled(bool)), m_axLen, SLOT(setEnabled(bool)));
 
-  o_wnSigCB=new QCheckBox(i18n("append signature automatically"), generalB);
+  o_wnSigCB=new QCheckBox(i18n("Appe&nd signature automatically"), generalB);
   generalL->addMultiCellWidget(o_wnSigCB,2,2,0,1);
 
   generalL->setColStretch(1,1);
@@ -1727,15 +1743,15 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
 
   replyL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  replyL->addMultiCellWidget(new QLabel(i18n("Introduction Phrase:"), replyB),1,1,0,1);
   i_ntro=new QLineEdit(replyB);
+  replyL->addMultiCellWidget(new QLabel(i_ntro,i18n("&Introduction Phrase:"), replyB),1,1,0,1);
   replyL->addMultiCellWidget(i_ntro, 2,2,0,1);
   replyL->addMultiCellWidget(new QLabel(i18n("Placeholders: %NAME=name, %EMAIL=email address,\n%DATE=date, %MSID=msgid"), replyB),3,3,0,1);
 
-  r_ewrapCB=new QCheckBox(i18n("rewrap quoted text automatically"), replyB);
+  r_ewrapCB=new QCheckBox(i18n("Rewrap quoted te&xt automatically"), replyB);
   replyL->addMultiCellWidget(r_ewrapCB, 5,5,0,1);
 
-  a_uthSigCB=new QCheckBox(i18n("include the authors signature"), replyB);
+  a_uthSigCB=new QCheckBox(i18n("Include the a&uthors signature"), replyB);
   replyL->addMultiCellWidget(a_uthSigCB, 6,6,0,1);
 
   replyL->setColStretch(1,1);
@@ -1748,16 +1764,16 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
 
   editorL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  editorL->addWidget(new QLabel(i18n("Specify Editor:"), editorB),1,0);
   e_ditor=new QLineEdit(editorB);
+  editorL->addWidget(new QLabel(e_ditor, i18n("Specify Edi&tor:"), editorB),1,0);
   editorL->addWidget(e_ditor,1,1);
-  QPushButton *btn = new QPushButton(i18n("Ch&oose..."),editorB);
+  QPushButton *btn = new QPushButton(i18n("Choo&se..."),editorB);
   connect(btn, SIGNAL(clicked()), SLOT(slotChooseEditor()));
   editorL->addWidget(btn,1,2);
 
   editorL->addMultiCellWidget(new QLabel(i18n("%f will be replaced with the filename to edit."), editorB),2,2,0,2);
 
-  e_xternCB=new QCheckBox(i18n("start external editor automatically"), editorB);
+  e_xternCB=new QCheckBox(i18n("Start exte&rnal editor automatically"), editorB);
   editorL->addMultiCellWidget(e_xternCB, 3,3,0,2);
 
   editorL->setColStretch(1,1);
@@ -1857,29 +1873,29 @@ KNConfig::CleanupWidget::CleanupWidget(Cleanup *d, QWidget *p, const char *n) : 
 
   groupsL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  g_roupCB=new QCheckBox(i18n("remove old articles from newsgroups"), groupsB);
+  g_roupCB=new QCheckBox(i18n("&Remove old articles from newsgroups"), groupsB);
   connect(g_roupCB, SIGNAL(toggled(bool)), this, SLOT(slotGroupCBtoggled(bool)));
   groupsL->addMultiCellWidget(g_roupCB,1,1,0,1);
 
-  g_roupDaysL=new QLabel(i18n("purge groups every"), groupsB);
-  groupsL->addWidget(g_roupDaysL,2,0);
   g_roupDays=new KIntSpinBox(0, 999, 1, 0, 10, groupsB);
   g_roupDays->setSuffix(i18n(" days"));
+  g_roupDaysL=new QLabel(g_roupDays,i18n("&Purge groups every"), groupsB);
+  groupsL->addWidget(g_roupDaysL,2,0);
   groupsL->addWidget(g_roupDays,2,1,Qt::AlignRight);
 
-  r_eadDaysL=new QLabel(i18n("keep read articles"), groupsB);
-  groupsL->addWidget(r_eadDaysL,3,0);
   r_eadDays=new KIntSpinBox(0, 999, 1, 0, 10, groupsB);
   r_eadDays->setSuffix(i18n(" days"));
+  r_eadDaysL=new QLabel(r_eadDays, i18n("&Keep read articles"), groupsB);
+  groupsL->addWidget(r_eadDaysL,3,0);
   groupsL->addWidget(r_eadDays,3,1,Qt::AlignRight);
 
-  u_nreadDaysL=new QLabel(i18n("keep unread articles"), groupsB);
-  groupsL->addWidget(u_nreadDaysL,4,0);
   u_nreadDays=new KIntSpinBox(0, 999, 1, 0, 10, groupsB);
   u_nreadDays->setSuffix(i18n(" days"));
+  u_nreadDaysL=new QLabel(u_nreadDays, i18n("Keep u&nread articles"), groupsB);
+  groupsL->addWidget(u_nreadDaysL,4,0);
   groupsL->addWidget(u_nreadDays,4,1,Qt::AlignRight);
 
-  t_hrCB=new QCheckBox(i18n("preserve threads"), groupsB);
+  t_hrCB=new QCheckBox(i18n("Preser&ve threads"), groupsB);
   groupsL->addWidget(t_hrCB,5,0);
 
   groupsL->setColStretch(1,1);
@@ -1892,14 +1908,14 @@ KNConfig::CleanupWidget::CleanupWidget(Cleanup *d, QWidget *p, const char *n) : 
 
   foldersL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  f_olderCB=new QCheckBox(i18n("compact folders"), foldersB);
+  f_olderCB=new QCheckBox(i18n("Co&mpact folders"), foldersB);
   connect(f_olderCB, SIGNAL(toggled(bool)), this, SLOT(slotFolderCBtoggled(bool)));
   foldersL->addMultiCellWidget(f_olderCB,1,1,0,1);
 
-  f_olderDaysL=new QLabel(i18n("purge folders every"), foldersB);
-  foldersL->addWidget(f_olderDaysL,2,0);
   f_olderDays=new KIntSpinBox(0, 999, 1, 0, 10, foldersB);
   f_olderDays->setSuffix(i18n(" days"));
+  f_olderDaysL=new QLabel(f_olderDays,i18n("P&urge folders every"), foldersB);
+  foldersL->addWidget(f_olderDaysL,2,0);
   foldersL->addWidget(f_olderDays,2,1,Qt::AlignRight);
 
   foldersL->setColStretch(1,1);

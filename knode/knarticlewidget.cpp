@@ -240,6 +240,9 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
   else
     text = line;
 
+  if (!knGlobals.cfgManager->readNewsGeneral()->interpretFormatTags())
+    beautification=false;
+
   for(uint idx=0; idx<len; idx++){
     
     switch(text[idx].latin1()) {
@@ -359,9 +362,9 @@ void KNArticleWidget::openURL(const QString &url)
 {
   if(url.isEmpty()) return;
 
-  if(knGlobals.cfgManager->readNewsGeneral()->browser()==KNConfig::ReadNewsGeneral::BTkonq)
+  if (knGlobals.cfgManager->readNewsGeneral()->browser()==KNConfig::ReadNewsGeneral::BTkonq)
     kapp->invokeBrowser(url);
-  else {
+  else if (knGlobals.cfgManager->readNewsGeneral()->browser()==KNConfig::ReadNewsGeneral::BTnetscape){
     KProcess proc;
     proc << "netscape";
   
@@ -370,6 +373,36 @@ void KNArticleWidget::openURL(const QString &url)
       proc << "-remote" << QString("openURL(%1)").arg(url);
     else
       proc << url;  
+
+    proc.start(KProcess::DontCare);
+  }
+  else if (knGlobals.cfgManager->readNewsGeneral()->browser()==KNConfig::ReadNewsGeneral::BTmozilla){
+    KProcess proc;
+    proc << "run-mozilla.sh";
+    proc << "mozilla-bin";
+    proc << url;
+    proc.start(KProcess::DontCare);
+  }
+  else if (knGlobals.cfgManager->readNewsGeneral()->browser()==KNConfig::ReadNewsGeneral::BTopera){
+    KProcess proc;
+    proc << "opera";
+    proc << QString("-page=%1").arg(url);
+    proc << url;
+    proc.start(KProcess::DontCare);
+  } else {
+    KProcess proc;
+
+    QStringList command = QStringList::split(' ',knGlobals.cfgManager->readNewsGeneral()->browserCommand());
+    bool urlAdded=false;
+    for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it ) {
+      if ((*it).contains("%u")) {
+        (*it).replace(QRegExp("%u"),url);
+        urlAdded=true;
+      }
+      proc << (*it);
+    }
+    if(!urlAdded)    // no %u in the browser command
+      proc << url;
 
     proc.start(KProcess::DontCare);
   }
@@ -1133,35 +1166,35 @@ static const char *disp[] = { "Groups", 0 };
 
 void dummyHeader()
 {
-  i18n("it's not very important to translate this","Approved");
-  i18n("it's not very important to translate this","Content-Transfer-Encoding");
-  i18n("it's not very important to translate this","Content-Type");
-  i18n("it's not very important to translate this","Control");
-  i18n("it's not very important to translate this","Date");
-  i18n("it's not very important to translate this","Distribution");
-  i18n("it's not very important to translate this","Expires");
-  i18n("it's not very important to translate this","Followup-To");
-  i18n("it's not very important to translate this","From");
-  i18n("it's not very important to translate this","Lines");
-  i18n("it's not very important to translate this","Message-ID");
-  i18n("it's not very important to translate this","Mime-Version");
-  i18n("it's not very important to translate this","NNTP-Posting-Host");
-  i18n("it's not very important to translate this","Newsgroups");
-  i18n("it's not very important to translate this","Organization");
-  i18n("it's not very important to translate this","Path");
-  i18n("it's not very important to translate this","References");
-  i18n("it's not very important to translate this","Reply-To");
-  i18n("it's not very important to translate this","Sender");
-  i18n("it's not very important to translate this","Subject");
-  i18n("it's not very important to translate this","Supersedes");
-  i18n("it's not very important to translate this","To");
-  i18n("it's not very important to translate this","User-Agent");
-  i18n("it's not very important to translate this","X-Mailer");
-  i18n("it's not very important to translate this","X-Newsreader");
-  i18n("it's not very important to translate this","X-No-Archive");
-  i18n("it's not very important to translate this","XRef");
+  i18n("collection of article headers","Approved");
+  i18n("collection of article headers","Content-Transfer-Encoding");
+  i18n("collection of article headers","Content-Type");
+  i18n("collection of article headers","Control");
+  i18n("collection of article headers","Date");
+  i18n("collection of article headers","Distribution");
+  i18n("collection of article headers","Expires");
+  i18n("collection of article headers","Followup-To");
+  i18n("collection of article headers","From");
+  i18n("collection of article headers","Lines");
+  i18n("collection of article headers","Message-ID");
+  i18n("collection of article headers","Mime-Version");
+  i18n("collection of article headers","NNTP-Posting-Host");
+  i18n("collection of article headers","Newsgroups");
+  i18n("collection of article headers","Organization");
+  i18n("collection of article headers","Path");
+  i18n("collection of article headers","References");
+  i18n("collection of article headers","Reply-To");
+  i18n("collection of article headers","Sender");
+  i18n("collection of article headers","Subject");
+  i18n("collection of article headers","Supersedes");
+  i18n("collection of article headers","To");
+  i18n("collection of article headers","User-Agent");
+  i18n("collection of article headers","X-Mailer");
+  i18n("collection of article headers","X-Newsreader");
+  i18n("collection of article headers","X-No-Archive");
+  i18n("collection of article headers","XRef");
 
-  i18n("it's not very important to translate this","Groups");
+  i18n("collection of article headers","Groups");
 }
 
 
@@ -1194,8 +1227,8 @@ QString KNDisplayedHeader::translatedName()
   if (t_ranslateName) {
     // major hack alert !!!
     if (!n_ame.isEmpty()) {
-      if (i18n("it's not very important to translate this",n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
-        return i18n("it's not very important to translate this",n_ame.local8Bit());
+      if (i18n("collection of article headers",n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
+        return i18n("collection of article headers",n_ame.local8Bit());
       else
         return n_ame;
     } else
@@ -1210,7 +1243,7 @@ void KNDisplayedHeader::setTranslatedName(const QString &s)
 {
   bool retranslated = false;
   for (const char **c=predef;(*c)!=0;c++) {  // ok, first the standard header names
-    if (s==i18n("it's not very important to translate this",*c)) {
+    if (s==i18n("collection of article headers",*c)) {
       n_ame = QString::fromLatin1(*c);
       retranslated = true;
       break;
@@ -1219,7 +1252,7 @@ void KNDisplayedHeader::setTranslatedName(const QString &s)
 
   if (!retranslated) {
     for (const char **c=disp;(*c)!=0;c++)   // now our standard display names
-      if (s==i18n("it's not very important to translate this",*c)) {
+      if (s==i18n("collection of article headers",*c)) {
         n_ame = QString::fromLatin1(*c);
         retranslated = true;
         break;

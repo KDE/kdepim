@@ -42,7 +42,7 @@ KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
   setIcon(SmallIcon("knode"));
   QGroupBox *bg=new QGroupBox(this);
   
-  startBtn=new QPushButton(i18n("St&art Search"), bg);
+  startBtn=new QPushButton(i18n("Sta&rt Search"), bg);
   startBtn->setDefault(true); 
   newBtn=new QPushButton(i18n("&New Search"), bg);
   closeBtn=new QPushButton(i18n("&Close"), bg);
@@ -71,6 +71,7 @@ KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
   
   setFixedHeight(sizeHint().height());
   restoreWindowSize("searchDlg", this, sizeHint());
+  fcw->setStartFocus();
 }
 
 

@@ -56,11 +56,9 @@ KNFilterConfigWidget::KNFilterConfigWidget(QWidget *parent, const char *name ) :
 } 
 
 
-
 KNFilterConfigWidget::~KNFilterConfigWidget()
 {
 }
-
 
 
 void KNFilterConfigWidget::reset()
@@ -71,6 +69,12 @@ void KNFilterConfigWidget::reset()
   lines->clear();
   score->clear();
   status->clear();
+}
+
+
+void KNFilterConfigWidget::setStartFocus()
+{
+  subject->setStartFocus();
 }
 
 // -----------------------------------------------------------------------------

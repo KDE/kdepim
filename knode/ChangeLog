@@ -3,6 +3,9 @@ changes between 0.3.3 and 0.4
 - Followup and reply at same time now possible
 - selection of multiple articles/groups in the listview
 - rot13 decoding
+- improved keyboard handling in the configuration dialog
+- the interpretation of text format tags can now be disabled
+- support for other webbrowsers (Mozilla, Opera, user-defined)
 - improvements for the composer:
   + switching from news article to mail and back on the fly
   + paste as quotation

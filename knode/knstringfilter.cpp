@@ -33,7 +33,6 @@ KNStringFilter& KNStringFilter::operator=(const KNStringFilter &sf)
 {
   con=sf.con;
   data=sf.data.copy();
-  enabled=sf.enabled;
   regExp=sf.regExp;
     
   return (*this);
@@ -45,12 +44,11 @@ bool KNStringFilter::doFilter(const QString &s)
 {
   bool ret=true;
 
-  if(enabled) {
+  if(!expanded.isEmpty()) {
     if(regExp) ret=(s.contains(QRegExp(expanded)) > 0);
     else ret=(s.find(expanded,0,false)!=-1);
 
     if(!con) ret=!ret;
-
   }
 
   return ret;
@@ -65,7 +63,7 @@ void KNStringFilter::expand(KNGroup *g)
                       *defId=knGlobals.cfgManager->identity(),
                       *grpId=g->identity();
 
-  expanded = data.copy();
+  expanded = data;
 
   ((grpId) && grpId->hasName()) ? id=grpId : id=defId;
   expanded.replace(QRegExp("%MYNAME"), id->name());
@@ -78,7 +76,6 @@ void KNStringFilter::expand(KNGroup *g)
 
 void KNStringFilter::load(KSimpleConfig *conf)
 {
-  enabled=conf->readBoolEntry("enabled", false);
   con=conf->readBoolEntry("contains", true);
   data=conf->readEntry("Data");
   regExp=conf->readBoolEntry("regX", false);
@@ -88,7 +85,6 @@ void KNStringFilter::load(KSimpleConfig *conf)
 
 void KNStringFilter::save(KSimpleConfig *conf)
 {
-  conf->writeEntry("enabled", enabled);
   conf->writeEntry("contains", con);
   conf->writeEntry("Data", data);
   conf->writeEntry("regX", regExp);
@@ -100,9 +96,7 @@ void KNStringFilter::save(KSimpleConfig *conf)
 KNStringFilterWidget::KNStringFilterWidget(const QString& title, QWidget *parent)
   : QGroupBox(title, parent)
 {
-  enabled=new QCheckBox(this);
-  
-  fType=new QComboBox(this);
+   fType=new QComboBox(this);
   fType->insertItem(i18n("does contain"));
   fType->insertItem(i18n("does NOT contain"));
   
@@ -110,19 +104,13 @@ KNStringFilterWidget::KNStringFilterWidget(const QString& title, QWidget *parent
   
   regExp=new QCheckBox(i18n("regular expression"), this);
   
-  QGridLayout *topL=new QGridLayout(this, 3,4, 8,5 );
+  QGridLayout *topL=new QGridLayout(this, 3,3, 8,5 );
   topL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  topL->addWidget(enabled,1,0, Qt::AlignHCenter);
-  topL->addColSpacing(0, 30);
-  topL->addWidget(fType, 1,1);
-  topL->addColSpacing(2, 10);
-  topL->addWidget(regExp, 1,3);
-  topL->addMultiCellWidget(fString, 2,2, 1,3);
-  topL->setColStretch(3,1);
-
-  connect(enabled, SIGNAL(toggled(bool)), this, SLOT(slotEnabled(bool)));
-  enabled->setChecked(false);
-  slotEnabled(false);   
+  topL->addWidget(fType, 1,0);
+  topL->addColSpacing(1, 10);
+  topL->addWidget(regExp, 1,1);
+  topL->addMultiCellWidget(fString, 2,2, 0,2);
+  topL->setColStretch(2,1);
 }
 
 
@@ -138,7 +126,6 @@ KNStringFilter KNStringFilterWidget::filter()
   KNStringFilter ret;
   ret.con=(fType->currentItem()==0);
   ret.data=fString->text().local8Bit();
-  ret.enabled=enabled->isChecked();
   ret.regExp=regExp->isChecked();
   
   return ret;
@@ -148,7 +135,6 @@ KNStringFilter KNStringFilterWidget::filter()
 
 void KNStringFilterWidget::setFilter(KNStringFilter &f)
 {
-  enabled->setChecked(f.enabled);
   if(f.con) fType->setCurrentItem(0);
   else fType->setCurrentItem(1);
   fString->setText(f.data);
@@ -160,18 +146,14 @@ void KNStringFilterWidget::setFilter(KNStringFilter &f)
 void KNStringFilterWidget::clear()
 {
   fString->clear();
-  enabled->setChecked(false);
   fType->setCurrentItem(0);
   regExp->setChecked(false);
 }
 
 
-
-void KNStringFilterWidget::slotEnabled(bool e)
+void KNStringFilterWidget::setStartFocus()
 {
-  fType->setEnabled(e);
-  fString->setEnabled(e);
-  regExp->setEnabled(e);
+  fString->setFocus();
 }
 
 

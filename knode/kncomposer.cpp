@@ -759,18 +759,15 @@ void KNComposer::slotExternalEditor()
 
   e_xternalEditor=new KProcess();
 
-  KNStringSplitter split;       // construct command line...
-  split.init(editorCommand.latin1(), " ");
+  // construct command line...
+  QStringList command = QStringList::split(' ',editorCommand);
   bool filenameAdded=false;
-  bool splitOk=split.first();
-  while(splitOk) {
-    if(split.string()=="%f") {
-      (*e_xternalEditor) << e_ditorTempfile->name();
+  for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it ) {
+    if ((*it).contains("%f")) {
+      (*it).replace(QRegExp("%f"),e_ditorTempfile->name());
       filenameAdded=true;
     }
-    else
-      (*e_xternalEditor) << split.string();
-    splitOk=split.next();
+    (*e_xternalEditor) << (*it);
   }
   if(!filenameAdded)    // no %f in the editor command
     (*e_xternalEditor) << e_ditorTempfile->name();

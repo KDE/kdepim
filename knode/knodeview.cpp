@@ -404,7 +404,6 @@ void KNodeView::initActions()
   a_ctNavReadThrough        = new KAction(i18n("Read &through articles"), Key_Space , this,
                               SLOT(slotNavReadThrough()), a_ctions, "go_readThrough");
 
-
   //collection-view - accounts
   a_ctAccProperties         = new KAction(i18n("&Properties..."), 0, this,
                               SLOT(slotAccProperties()), a_ctions, "account_properties");
@@ -416,7 +415,6 @@ void KNodeView::initActions()
                               SLOT(slotAccDelete()), a_ctions, "account_delete");
   a_ctAccPostNewArticle     = new KAction(i18n("&Post new article"), "filenew", Key_P , this,
                               SLOT(slotAccPostNewArticle()), a_ctions, "article_postNew");
-
 
   //collection-view - groups
   a_ctGrpProperties         = new KAction(i18n("&Properties..."), 0, this,
@@ -434,15 +432,13 @@ void KNodeView::initActions()
 	a_ctGrpSetAllUnread       = new KAction(i18n("Mark all as u&nread"), 0, this,
 	                            SLOT(slotGrpSetAllUnread()), a_ctions, "group_allUnread");
 	
-	
 	//collection-view - folder
   a_ctFolCompact            = new KAction(i18n("&Compact Folder"), "wizard", 0, this,
                               SLOT(slotFolCompact()), a_ctions, "folder_compact");
   a_ctFolEmpty              = new KAction(i18n("&Empty Folder"), 0, this,
                               SLOT(slotFolEmpty()), a_ctions, "folder_empty");
   a_ctFolProperties         = 0;
-	
-  					
+	  					
   //header-view - list-handling
   a_ctArtSortHeaders        = new KSelectAction(i18n("&Sort"), 0, a_ctions, "view_Sort");
   QStringList items;
@@ -477,7 +473,7 @@ void KNodeView::initActions()
 	                            SLOT(slotArtSetThreadRead()), a_ctions, "thread_read");
 	a_ctArtSetThreadUnread    = new KAction(i18n("Mark thread as u&nread"), CTRL+Key_U , this,
 	                            SLOT(slotArtSetThreadUnread()), a_ctions, "thread_unread");
-	a_ctSetArtScore           = new KAction(i18n("Set &Score"), "rotate", Key_S , this,
+	a_ctSetArtScore           = new KAction(i18n("Set Sc&ore"), "rotate", Key_S , this,
 	                            SLOT(slotArtSetArtScore()), a_ctions, "article_setScore");
 	a_ctArtSetThreadScore     = new KAction(i18n("Set Score of &thread"), "rotate", CTRL+Key_S , this,
 	                            SLOT(slotArtSetThreadScore()), a_ctions, "thread_setScore");
@@ -485,9 +481,8 @@ void KNodeView::initActions()
 	                            SLOT(slotArtToggleIgnored()), a_ctions, "thread_ignore");
 	a_ctArtToggleWatched      = new KAction(i18n("&Watch"), "top", Key_W , this,
 	                            SLOT(slotArtToggleWatched()), a_ctions, "thread_watch");
-	a_ctArtOpenNewWindow      = new KAction(i18n("&Open in own window"), "viewmag+", Key_O , this,
-	                            SLOT(slotArtOpenNewWindow()), a_ctions, "article_ownWindow");
-							
+	a_ctArtOpenNewWindow      = new KAction(i18n("Open in own &window"), "viewmag+", Key_O , this,
+	                            SLOT(slotArtOpenNewWindow()), a_ctions, "article_ownWindow");							
 							
   //header-view local articles
   a_ctArtSendOutbox         = new KAction(i18n("Sen&d pending messages"), "mail_send", 0, this,
@@ -507,7 +502,7 @@ void KNodeView::initActions()
 }
 
 
-//called in KNodeApp's constructor
+// called after createGUI()
 void KNodeView::initPopups(KNMainWindow *w)
 {
   a_ccPopup = static_cast<QPopupMenu *>(w->factory()->container("account_popup", w));

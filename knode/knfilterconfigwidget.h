@@ -36,6 +36,8 @@ class KNFilterConfigWidget : public QTabWidget  {
     ~KNFilterConfigWidget();
     
     void reset();
+
+    void setStartFocus();      // useablity hack for the search dialog
         
   protected:
     KNStatusFilterWidget *status;

@@ -32,7 +32,7 @@ class KNStringFilter {
   friend class KNStringFilterWidget;  
 
   public:
-    KNStringFilter()  { enabled=false; con=true; regExp=false;}
+    KNStringFilter()  { con=true; regExp=false;}
     ~KNStringFilter() {}
 
     KNStringFilter& operator=(const KNStringFilter &sf);
@@ -46,7 +46,7 @@ class KNStringFilter {
                 
   protected:
     QString data, expanded;
-    bool con, enabled, regExp;  
+    bool con, regExp;
     
 };
 
@@ -65,15 +65,14 @@ class KNStringFilterWidget : public QGroupBox  {
     KNStringFilter filter();
     void setFilter(KNStringFilter &f);
     void clear();
+
+    void setStartFocus();        // useablity hack for the search dialog
     
   protected:
-    QCheckBox *enabled, *regExp;
+    QCheckBox *regExp;
     QComboBox *fType;
     QLineEdit *fString;
-  
-  protected slots:
-    void slotEnabled(bool e);
-    
+
 };
 
 
