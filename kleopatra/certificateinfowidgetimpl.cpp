@@ -75,6 +75,8 @@ void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo
     importButton->setEnabled( false );
   }
   // These will show in the opposite order
+  // disabled until supported
+  //new QListViewItem( listView, i18n("CRL Dist. Point"), info.crl );
   new QListViewItem( listView, i18n("Fingerprint"), info.fingerprint );
   new QListViewItem( listView, i18n("Can be used for certification"), 
 		     info.certify?i18n("Yes"):i18n("No") );
@@ -92,6 +94,7 @@ void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo
   new QListViewItem( listView, i18n("Organizational Unit"), info.dn["OU"] );
   new QListViewItem( listView, i18n("Organization"), info.dn["O"] );
   new QListViewItem( listView, i18n("Location"), info.dn["L"] );
+  new QListViewItem( listView, i18n("Serial Number"), info.serial );
   new QListViewItem( listView, i18n("Name"), info.dn["CN"] );
   new QListViewItem( listView, i18n("Issuer"), info.issuer.stripWhiteSpace() );
 
