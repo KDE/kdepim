@@ -114,6 +114,7 @@ void MainWindow::save()
 {
   kdDebug(5970) << i18n("Saving time data to disk.") << endl;
   _taskView->save();
+  statusBar()->message(i18n("Successfully saved tasks and history"),1807);
   saveGeometry();
 }
 
