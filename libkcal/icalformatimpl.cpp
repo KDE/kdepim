@@ -104,12 +104,6 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
   }
   icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
 
-// TODO: find correspondence to secrecy in iCal, DONE: it's CLASS
-// TODO: implement secrecy
-  // secrecy
-//  addPropValue(vevent, VCClassProp, anEvent->getSecrecyStr().ascii());
-
-
 // TODO: attachements, resources
 #if 0
   // attachments
@@ -232,6 +226,22 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 // TODO:
   // status
 //  addPropValue(parent, VCStatusProp, incidence->getStatusStr().ascii());
+
+  // secrecy
+  const char *classStr;
+  switch (incidence->secrecy()) {
+    case Incidence::SecrecyPublic:
+      classStr = "PUBLIC";
+      break;
+    case Incidence::SecrecyConfidential:
+      classStr = "CONFIDENTIAL";
+      break;
+    case Incidence::SecrecyPrivate:
+    default:
+      classStr = "PRIVATE";
+      break;
+  }
+  icalcomponent_add_property(parent,icalproperty_new_class(classStr));
 
   // priority
   icalcomponent_add_property(parent,icalproperty_new_priority(
@@ -940,6 +950,17 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
       case ICAL_EXDATE_PROPERTY:
         icaltime = icalproperty_get_exdate(p);
         incidence->addExDate(readICalDate(icaltime));
+        break;
+        
+      case ICAL_CLASS_PROPERTY:
+        text = icalproperty_get_class(p);
+        if (strcmp(text,"PUBLIC") == 0) {
+          incidence->setSecrecy(Incidence::SecrecyPublic);
+        } else if (strcmp(text,"CONFIDENTIAL") == 0) {
+          incidence->setSecrecy(Incidence::SecrecyConfidential);
+        } else {
+          incidence->setSecrecy(Incidence::SecrecyPrivate);
+        }
         break;
         
 
