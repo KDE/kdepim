@@ -204,6 +204,14 @@ class KolabPropagator : public KConfigPropagator
       c->name = "Use Groupware Communication";
       c->value = "true";
       changes.append( c );
+
+      // Use identity "from control center", i.e. from emaildefaults
+      c = new ChangeConfig;
+      c->file = "korganizerrc";
+      c->group = "Personal Settings";
+      c->name = "Use Control Center Email";
+      c->value = "true";
+      changes.append( c );
     }
 
     virtual void addCustomChanges( Change::List &changes )
