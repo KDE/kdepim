@@ -41,8 +41,7 @@
 
 extern "C" {
   KCModule *create_alarmdaemonctrl(QWidget *parent, const char *name) {
-    KGlobal::locale()->insertCatalogue("alarmdaemonctrl");
-    return new AlarmDaemonCtrl(parent, name);
+    return new AlarmDaemonCtrl(parent, "alarmdaemonctrl");
   }
 }
 
