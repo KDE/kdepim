@@ -42,7 +42,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2004-05-07</date>
+<date>2004-06-23</date>
 <releaseinfo>1.01.00</releaseinfo>
 
 <abstract>
@@ -1073,11 +1073,10 @@ missed alarms by selecting
 <sect2>
 <title>Enabling alarm monitoring</title>
 
-<para>First, if &kalarm;'s run mode is <quote>continuous</quote> and
-you have selected <guilabel>Disable alarms while not
-running</guilabel> in the Preferences dialog, you must ensure that
-&kalarm; is running in order for alarm monitoring to take
-place.</para>
+<para>If &kalarm;'s run mode is <quote>continuous</quote> and you
+have selected <guilabel>Disable alarms while not running</guilabel>
+in the Preferences dialog, you must first ensure that &kalarm; is
+running in order for alarm monitoring to take place.</para>
 
 <para>Then if alarm monitoring is currently disabled, do one of the
 following:</para>
@@ -1504,11 +1503,12 @@ running.</para>
 </itemizedlist>
 </sect1>
 
-<sect1 id="preferences-appearance">
-<title>Appearance</title>
+<sect1 id="preferences-fontcolour">
+<title>Font &amp; Color</title>
 
-<para>The <guilabel>Appearance</guilabel> section lets you set the
-default appearance of alarm messages:</para>
+<para>The <guilabel>Font &amp; Color</guilabel> section lets you set
+the default appearance of alarm messages, and the colors to be used in
+the alarm list:</para>
 <itemizedlist>
 
 <listitem><para>Select the default font and background color to use
