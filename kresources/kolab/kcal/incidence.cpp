@@ -41,6 +41,7 @@ using namespace Kolab;
 
 
 Incidence::Incidence( KCal::Incidence* incidence )
+  : mAlarm( 0 )
 {
   if ( incidence )
     setFields( incidence );
@@ -90,19 +91,14 @@ QDateTime Incidence::startDate() const
   return mStartDate;
 }
 
-void Incidence::setAlarm( int alarm )
+void Incidence::setAlarm( float alarm )
 {
   mAlarm = alarm;
 }
 
-int Incidence::alarm() const
+float Incidence::alarm() const
 {
   return mAlarm;
-}
-
-void Incidence::setRecurrence( const Recurrence& recurrence )
-{
-  mRecurrence = recurrence;
 }
 
 Incidence::Recurrence Incidence::recurrence() const
@@ -180,6 +176,67 @@ void Incidence::saveAttendees( QDomElement& element ) const
     saveAttendeeAttribute( element, *it );
 }
 
+void Incidence::saveRecurrence( QDomElement& element ) const
+{
+  QDomElement e = element.ownerDocument().createElement( "recurrence" );
+  element.appendChild( e );
+  e.setAttribute( "cycle", mRecurrence.cycle );
+  if ( !mRecurrence.type.isEmpty() )
+    e.setAttribute( "type", mRecurrence.type );
+  writeString( e, "interval", QString::number( mRecurrence.interval ) );
+  for( QStringList::ConstIterator it = mRecurrence.days.begin(); it != mRecurrence.days.end(); ++it ) {
+    writeString( e, "day", *it );
+  }
+  if ( !mRecurrence.dayNumber.isEmpty() )
+    writeString( e, "daynumber", mRecurrence.dayNumber );
+  if ( !mRecurrence.date.isEmpty() )
+    writeString( e, "date", mRecurrence.date );
+  if ( !mRecurrence.month.isEmpty() )
+    writeString( e, "month", mRecurrence.month );
+  if ( !mRecurrence.rangeType.isEmpty() ) {
+    QDomElement range = element.ownerDocument().createElement( "range" );
+    e.appendChild( range );
+    range.setAttribute( "type", mRecurrence.rangeType );
+    QDomText t = element.ownerDocument().createTextNode( mRecurrence.range );
+    range.appendChild( t );
+  }
+  // TODO exclusions
+}
+
+void Incidence::loadRecurrence( const QDomElement& element )
+{
+  mRecurrence.interval = 0;
+  mRecurrence.cycle = element.attribute( "cycle" );
+  mRecurrence.type = element.attribute( "type" );
+  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      QDomElement e = n.toElement();
+      QString tagName = e.tagName();
+
+      if ( tagName == "interval" )
+        mRecurrence.interval = e.text().toInt();
+      else if ( tagName == "day" ) // can be present multiple times
+        mRecurrence.days.append( e.text() );
+      else if ( tagName == "daynumber" )
+        mRecurrence.dayNumber = e.text();
+      else if ( tagName == "date" )
+        mRecurrence.date = e.text();
+      else if ( tagName == "month" )
+        mRecurrence.month = e.text();
+      else if ( tagName == "range" ) {
+        mRecurrence.rangeType = e.attribute( "type" );
+        mRecurrence.range = e.text();
+      } else if ( tagName == "exclusion" ) {
+        mRecurrence.exclusions.append( stringToDate( e.text() ) );
+      } else
+        // TODO: Unhandled tag - save for later storage
+        kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+    }
+  }
+}
+
 bool Incidence::loadAttribute( QDomElement& element )
 {
   QString tagName = element.tagName();
@@ -195,11 +252,11 @@ bool Incidence::loadAttribute( QDomElement& element )
       return true;
     } else
       return false;
-  } else if ( tagName == "start-date" )
+  } else if ( tagName == "start-date" ) {
     setStartDate( stringToDateTime( element.text() ) );
+  }
   else if ( tagName == "recurrence" )
-    // TODO
-    ;
+    loadRecurrence( element );
   else if ( tagName == "attendee" ) {
     Attendee attendee;
     if ( loadAttendeeAttribute( element, attendee ) ) {
@@ -207,7 +264,10 @@ bool Incidence::loadAttribute( QDomElement& element )
       return true;
     } else
       return false;
-  } else
+  } else if ( tagName == "alarm" ) {
+    setAlarm( element.text().toFloat() );
+  }
+  else
     return KolabBase::loadAttribute( element );
 
   // We handled this
@@ -223,8 +283,10 @@ bool Incidence::saveAttributes( QDomElement& element ) const
   writeString( element, "location", location() );
   saveEmailAttribute( element, organizer(), "organizer" );
   writeString( element, "start-date", dateTimeToString( startDate() ) );
-  // saveRecurrenceAttribute();
+  if ( !mRecurrence.cycle.isEmpty() )
+    saveRecurrence( element );
   saveAttendees( element );
+  writeString( element, "alarm", QString::number( alarm() ) );
   return true;
 }
 
@@ -291,15 +353,111 @@ static QString attendeeRoleToString( KCal::Attendee::Role role )
   return "required";
 }
 
+static const char *s_weekDayName[] =
+{
+  "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"
+};
+
+void Incidence::setRecurrence( KCal::Recurrence* recur )
+{
+  mRecurrence.interval = recur->frequency();
+  switch ( recur->doesRecur() ) {
+  case KCal::Recurrence::rMinutely: // Not handled by the kolab XML
+    mRecurrence.cycle = "minutely";
+    break;
+  case KCal::Recurrence::rHourly:  // Not handled by the kolab XML
+    mRecurrence.cycle = "hourly";
+    break;
+  case KCal::Recurrence::rDaily:
+    mRecurrence.cycle = "daily";
+    break;
+  case KCal::Recurrence::rWeekly: // every X weeks
+    mRecurrence.cycle = "weekly";
+    {
+      QBitArray arr = recur->days();
+      for ( uint idx = 0 ; idx < 7 ; ++idx )
+        if ( arr.testBit( idx ) )
+          mRecurrence.days.append( s_weekDayName[idx] );
+    }
+    break;
+  case KCal::Recurrence::rMonthlyPos: {
+    mRecurrence.cycle = "monthly";
+    mRecurrence.type = "weekday";
+    const QPtrList<KCal::Recurrence::rMonthPos> &monthPositions = recur->monthPositions();
+    if ( !monthPositions.isEmpty() ) {
+      KCal::Recurrence::rMonthPos monthPos = *monthPositions.getFirst();
+      QBitArray arr = monthPos.rDays;
+      for ( uint idx = 0 ; idx < 7 ; ++idx )
+        if ( arr.testBit( idx ) )
+          mRecurrence.days.append( s_weekDayName[idx] );
+      mRecurrence.dayNumber = QString::number( monthPos.rPos );
+      // Not handled: monthPos.negative (nth days before end of month)
+    }
+    break;
+  }
+  case KCal::Recurrence::rMonthlyDay: {
+    mRecurrence.cycle = "monthly";
+    mRecurrence.type = "daynumber";
+    const QPtrList<int> &monthDays = recur->monthDays();
+    // ####### Kolab XML limitation: only the first month day is used
+    if ( !monthDays.isEmpty() )
+      mRecurrence.date = QString::number( *monthDays.getFirst() );
+    break;
+  }
+  case KCal::Recurrence::rYearlyMonth: // (day n of Month Y)
+  {
+    mRecurrence.cycle = "yearly";
+    mRecurrence.type = "monthday";
+    QPtrList<int> rmd = recur->monthDays();
+    int day = !rmd.isEmpty() ? day = *rmd.first() : day = recur->parent()->dtStart().date().day();
+    mRecurrence.date = QString::number( day );
+    QValueList<int> monthlist;
+    QValueList<int> leaplist;
+    recur->getYearlyMonthMonths( day, monthlist, leaplist );
+    if ( !monthlist.isEmpty() ) {
+      mRecurrence.month = monthlist.first();
+    }
+    break;
+  }
+  case KCal::Recurrence::rYearlyDay: // YearlyDay (day N of the year)
+    mRecurrence.cycle = "yearly";
+    mRecurrence.type = "yearday";
+    mRecurrence.dayNumber = QString::number( *recur->yearNums().getFirst() );
+    break;
+  case KCal::Recurrence::rYearlyPos: // (weekday X of week N of month Y)
+    // ##### Not in Kolab XML
+    break;
+  }
+  int howMany = recur->duration();
+  if ( howMany > 0 ) {
+    mRecurrence.rangeType = "number";
+    mRecurrence.range = QString::number( howMany );
+  } else if ( howMany == 0 ) {
+    mRecurrence.rangeType = "date";
+    mRecurrence.range = dateToString( recur->endDate() );
+  } else {
+    mRecurrence.rangeType = "none";
+  }
+  // TODO exclusions
+}
+
 void Incidence::setFields( const KCal::Incidence* incidence )
 {
   KolabBase::setFields( incidence );
 
-  // TODO: Alarm and recurrence
-
   setStartDate( incidence->dtStart() );
   setSummary( incidence->summary() );
   setLocation( incidence->location() );
+  if ( incidence->isAlarmEnabled() ) {
+    const KCal::Alarm::List& alarms = incidence->alarms();
+    if ( !alarms.isEmpty() ) {
+      const KCal::Alarm* alarm = alarms.first();
+      if ( alarm->hasStartOffset() ) {
+        int dur = alarm->startOffset().asSeconds();
+        setAlarm( (float)dur / 60.0 );
+      }
+    }
+  }
 
   Email org;
   KPIM::getNameAndMail( incidence->organizer(), org.displayName,
@@ -319,24 +477,46 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     attendee.requestResponse = kcalAttendee->RSVP();
     // TODO: KCal::Attendee::mFlag is not accessible
     // attendee.invitationSent = kcalAttendee->mFlag;
+    // DF: Hmm? mFlag is set to true and never used at all.... Did you mean another field?
     attendee.role = attendeeRoleToString( kcalAttendee->role() );
 
     addAttendee( attendee );
   }
+
+  if ( incidence->doesRecur() )
+    setRecurrence( incidence->recurrence() );
 }
+
+static QBitArray daysListToBitArray( const QStringList& days )
+{
+  QBitArray arr( 7 );
+  arr.fill( false );
+  for( QStringList::ConstIterator it = days.begin(); it != days.end(); ++it ) {
+    for ( uint i = 0; i < 7 ; ++i )
+      if ( *it == s_weekDayName[i] )
+        arr.setBit( i, true );
+  }
+  return arr;
+}
+
 
 void Incidence::saveTo( KCal::Incidence* incidence )
 {
   KolabBase::saveTo( incidence );
 
-  // TODO: Alarm and recurrence
-
   QDateTime start = startDate();
   incidence->setDtStart( start );
-  incidence->setFloats( start.time().isNull() );
+  // floating events are currently not covered with the spec because it requires an explizit timezone
+  incidence->setFloats( false );
 
   incidence->setSummary( summary() );
   incidence->setLocation( location() );
+
+  if ( mAlarm != 0 ) {
+    KCal::Alarm* alarm = incidence->newAlarm();
+    alarm->setStartOffset( qRound( mAlarm * 60.0 ) );
+  }
+
   incidence->setOrganizer( organizer().displayName + "<"
                            + organizer().smtpAddress + ">" );
 
@@ -349,6 +529,49 @@ void Incidence::saveTo( KCal::Incidence* incidence )
                                                 (*it).smtpAddress,
                                                 (*it).requestResponse,
                                                 status, role ) );
+  }
+
+  if ( !mRecurrence.cycle.isEmpty() ) {
+    KCal::Recurrence* recur = incidence->recurrence(); // yeah, this creates it
+    // done below recur->setFrequency( mRecurrence.interval );
+    if ( mRecurrence.cycle == "minutely" ) {
+      recur->setMinutely( mRecurrence.interval, -1 );
+    } else if ( mRecurrence.cycle == "hourly" ) {
+      recur->setHourly( mRecurrence.interval, -1 );
+    } else if ( mRecurrence.cycle == "daily" ) {
+      recur->setDaily( mRecurrence.interval, -1 );
+    } else if ( mRecurrence.cycle == "weekly" ) {
+      QBitArray rDays = daysListToBitArray( mRecurrence.days );
+      recur->setWeekly( mRecurrence.interval, rDays, -1 );
+    } else if ( mRecurrence.cycle == "monthly" ) {
+      if ( mRecurrence.type == "weekday" ) {
+        recur->setMonthly( KCal::Recurrence::rMonthlyPos, mRecurrence.interval, -1 );
+        recur->addMonthlyPos( mRecurrence.dayNumber.toInt(), daysListToBitArray( mRecurrence.days ) );
+      } else if ( mRecurrence.type == "daynumber" ) {
+        recur->setMonthly( KCal::Recurrence::rMonthlyDay, mRecurrence.interval, -1 );
+        recur->addMonthlyDay( mRecurrence.date.toInt() );
+      } else kdWarning() << "Unhandled monthly recurrence type " << mRecurrence.type << endl;
+    } else if ( mRecurrence.cycle == "yearly" ) {
+      if ( mRecurrence.type == "monthday" ) {
+        recur->setYearly( KCal::Recurrence::rYearlyMonth, mRecurrence.interval, -1 );
+        recur->setYearlyByDate( mRecurrence.date.toInt(),
+                                KCal::Recurrence::rMar1, // whichever
+                                mRecurrence.interval,
+                                -1 );
+        recur->addYearlyNum( mRecurrence.month.toInt() );
+      } else if ( mRecurrence.type == "yearday" ) {
+        recur->setYearly( KCal::Recurrence::rYearlyDay, mRecurrence.interval, -1 );
+        recur->addYearlyNum( mRecurrence.dayNumber.toInt() );
+      } else kdWarning() << "Unhandled yearly recurrence type " << mRecurrence.type << endl;
+    } else kdWarning() << "Unhandled recurrence cycle " << mRecurrence.cycle << endl;
+
+    if ( mRecurrence.rangeType == "number" ) {
+      recur->setDuration( mRecurrence.range.toInt() );
+    } else if ( mRecurrence.rangeType == "date" ) {
+      recur->setEndDate( stringToDate( mRecurrence.range ) );
+    } // "none" is default since -1 is passed everywhere above
+
+    // TODO exceptions
   }
 }
 

@@ -40,6 +40,7 @@ class QDomElement;
 
 namespace KCal {
   class Incidence;
+  class Recurrence;
 }
 
 namespace Kolab {
@@ -52,7 +53,16 @@ namespace Kolab {
 class Incidence : public KolabBase {
 public:
   struct Recurrence {
-    // TODO: Recurrence;
+    QString cycle;
+    QString type;
+    int interval;
+    QStringList days; // list of days-of-the-week
+    QString dayNumber;
+    QString date;
+    QString month;
+    QString rangeType;
+    QString range; // date or number or nothing
+    QValueList<QDate> exclusions;
   };
 
   struct Attendee : Email {
@@ -80,10 +90,10 @@ public:
   virtual void setStartDate( const QDateTime& startDate );
   virtual QDateTime startDate() const;
 
-  virtual void setAlarm( int alarm );
-  virtual int alarm() const;
+  virtual void setAlarm( float alarm );
+  virtual float alarm() const;
 
-  virtual void setRecurrence( const Recurrence& recurrence );
+  virtual void setRecurrence( KCal::Recurrence* recur );
   virtual Recurrence recurrence() const;
 
   virtual void addAttendee( const Attendee& attendee );
@@ -105,11 +115,14 @@ protected:
                               const Attendee& attendee ) const;
   void saveAttendees( QDomElement& element ) const;
 
+  void loadRecurrence( const QDomElement& element );
+  void saveRecurrence( QDomElement& element ) const;
+
   QString mSummary;
   QString mLocation;
   Email mOrganizer;
   QDateTime mStartDate;
-  int mAlarm;
+  float mAlarm;
   Recurrence mRecurrence;
   QValueList<Attendee> mAttendees;
 };
