@@ -31,8 +31,8 @@
 
 static KCmdLineOptions options[] = 
 {
-    { "read", I18N_NOOP( "print a mutt alias configuration to stdout" ), 0 },
-    { "write", I18N_NOOP( "add an email address to kabc" ), 0 },
+    { "read", I18N_NOOP( "Print a mutt alias configuration to stdout" ), 0 },
+    { "write", I18N_NOOP( "Add an email address to kabc" ), 0 },
     { 0, 0, 0 }
 };
 
