@@ -9,7 +9,7 @@ libkabckolab_la_SOURCES = resourcekolab.cpp contact.cpp
 libkabckolab_la_LDFLAGS = $(all_libraries)
 libkabckolab_la_LIBADD =  \
 	$(top_builddir)/kresources/kolab/shared/libresourcekolabshared.la \
-	$(top_builddir)/libkdepim/libkdepim.la -lkresources -lkabc
+	-lkresources -lkabc
 
 kde_module_LTLIBRARIES = kabc_kolab.la
 

@@ -16,7 +16,7 @@ libknoteskolab_la_LIBADD = -lkresources -lkdeprint \
 kde_module_LTLIBRARIES = knotes_kolab.la
 
 knotes_kolab_la_SOURCES = resourcekolab_plugin.cpp
-knotes_kolab_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
+knotes_kolab_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN) -no-undefined
 knotes_kolab_la_LIBADD = libknoteskolab.la
 
 messages: rc.cpp

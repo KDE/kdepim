@@ -9,7 +9,7 @@ libresourcekolabshared_la_SOURCES = \
         subresource.cpp \
 	kmailconnection.skel kmailicalIface.stub
 libresourcekolabshared_la_METASOURCES = AUTO
-libresourcekolabshared_la_LIBADD = $(top_builddir)/libkcal/libkcal.la
+libresourcekolabshared_la_LIBADD = $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la
 libresourcekolabshared_la_LDFLAGS = -no-undefined
 
 kmailicalIface_DCOPIDLNG = true

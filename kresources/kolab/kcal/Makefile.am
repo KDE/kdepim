@@ -10,7 +10,7 @@ libkcalkolab_la_SOURCES = resourcekolab.cpp incidence.cpp event.cpp task.cpp jou
 libkcalkolab_la_LDFLAGS = $(all_libraries)
 libkcalkolab_la_LIBADD = $(top_builddir)/libkcal/libkcal.la \
 	$(top_builddir)/kresources/kolab/shared/libresourcekolabshared.la \
-	$(top_builddir)/libkdepim/libkdepim.la -lkresources
+	-lkresources
 
 kde_module_LTLIBRARIES = kcal_kolab.la
 
