@@ -40,6 +40,7 @@ static const char *vcalconduitbase_id = "$Id$";
 
 #include <pilotUser.h>
 #include <kconfig.h>
+#include <kmessagebox.h>
 
 #include <calendar.h>
 #include <calendarlocal.h>
@@ -202,8 +203,6 @@ there are two special cases: a full and a first sync.
 
 /* virtual */ void VCalConduitBase::exec()
 {
-// TODO: don't set
-	//debug_level=0;
 	FUNCTIONSETUP;
 
 //	bool loadSuccesful = true;
@@ -289,11 +288,6 @@ there are two special cases: a full and a first sync.
 	// Handle lots of error cases.
 	if (!fCurrentDatabase->isDBOpen() ||
 		 !fBackupDatabase->isDBOpen()) goto error;
-
-
-	// TODO: fix the time zone setting: How do I get the correct setting???
-	//       I have to set this explicitely, otherwise, all entries will be in GMT...
-//	fCalendar->setTimeZone(0);
 
 
 	// if there is no calendar yet, use a first sync..
@@ -393,7 +387,6 @@ void VCalConduitBase::syncRecord()
 	bool archiveRecord=(r->getAttrib() & dlpRecAttrArchived);
 
 	s = fBackupDatabase->readRecordById(r->getID());
-	// TODO: use the archive flag, too
 	if (!s || fFirstTime)
 	{
 #ifdef DEBUG
@@ -552,8 +545,20 @@ void VCalConduitBase::addRecord(PilotRecord *r)
 	KPILOT_DELETE(de);
 }
 
+// return how to resolve conflicts. for now PalmOverrides=0=false, PCOverrides=1=true, Ask=2-> ask the user using a messagebox
+int VCalConduitBase::resolveConflict(KCal::Incidence*e, PilotAppCategory*de) {
+	if (conflictResolution==RES_ASK)
+	{
+		return KMessageBox::warningYesNo(NULL, 
+			i18n("The following item was modified both on the palm and on your PC:\nPC entry:\n\t")+e->description()+i18n("\nPalm entry:\n\t")+getTitle(de)+
+				i18n("\n\nShall the Palm entry overwrite the PC entry? If you select \"No\", the PC entry will overwrite the Palm entry."),
+			i18n("Conflicting entries")
+		)==KMessageBox::Yes;
+	}
+	return conflictResolution;
+}
 
-void VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *s)
+void VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 {
 	FUNCTIONSETUP;
 
@@ -563,6 +568,17 @@ void VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *s)
 	if (e && de)
 	{
 		// TODO: check for conflict, and if there is one, ask for resolution
+		if ( (e->syncStatus()!=KCal::Incidence::SYNCNONE) && (r->getAttrib() &dlpRecAttrDirty) )
+		{
+			// TODO: I have not yet found a way to complete ignore an item
+			if (resolveConflict(e, de))
+			{
+				// PC record takes precedence:
+				KPILOT_DELETE(de);
+				return;
+			}
+		}
+		// no conflict or conflict resolution says, Palm overwrites, so do it:
 		incidenceFromRecord(e,de);
 		fBackupDatabase->writeRecord(r);
 	}
@@ -575,7 +591,7 @@ void VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *s)
 }
 
 
-void VCalConduitBase::deleteRecord(PilotRecord *r, PilotRecord *s)
+void VCalConduitBase::deleteRecord(PilotRecord *r, PilotRecord *)
 {
 	FUNCTIONSETUP;
 
@@ -658,6 +674,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.4  2002/05/03 19:19:57  kainhofe
+// Local timezone from KOrganizer is now used for the sync
+//
 // Revision 1.1.2.4  2002/05/03 19:08:52  kainhofe
 // Local timezone from KOrganizer is now used for the sync
 //

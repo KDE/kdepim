@@ -103,7 +103,7 @@ KCal::Incidence *TodoConduitPrivate::findIncidence(recordid_t id)
 	KCal::Todo *todo = fAllTodos.first();
 	while(todo)
 	{
-		if (todo->pilotId() == id) return todo;
+		if ((recordid_t)(todo->pilotId()) == id) return todo;
 		todo = fAllTodos.next();
 	}
 
@@ -158,6 +158,12 @@ TodoConduit::~TodoConduit()
 //	FUNCTIONSETUP;
 }
 
+const QString TodoConduit::getTitle(PilotAppCategory*de)
+{
+	PilotTodoEntry*d=dynamic_cast<PilotTodoEntry*>(de);
+	if (d) return QString(d->getDescription());
+	return "";
+}
 
 PilotRecord*TodoConduit::recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e)
 {
@@ -230,13 +236,6 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 		DEBUGCONDUIT<<fname<<": null todo entry given. skipping..."<<endl;
 #endif
 		return NULL;
-		// no event was found, so we need to add one with some initial info
-		// TODO: does this make sense and do I really have to add the todo, or just exit out of this function?
-//		vtodo = new KCal::Todo;
-//		fCalendar->addTodo(vtodo);
-//		calendar()->addTodo(vtodo);
-//		vtodo->setPilotId(de->getID());
-//		vtodo->setSyncStatus(KCal::Incidence::SYNCNONE);
 	}
 
 	e->setOrganizer(fCalendar->getEmail());
@@ -276,6 +275,9 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 
 
 // $Log$
+// Revision 1.13  2002/05/01 21:18:23  kainhofe
+// Reworked the settings dialog, added various different sync options
+//
 // Revision 1.10.2.1  2002/04/28 12:58:54  kainhofe
 // Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
 //

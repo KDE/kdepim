@@ -100,6 +100,9 @@ protected slots:
 
 	
 protected:
+
+	virtual int resolveConflict(KCal::Incidence*e, PilotAppCategory*de);
+
 	// add, change or delete events from the calendar
 	virtual void addRecord(PilotRecord *);
 	virtual void changeRecord(PilotRecord *,PilotRecord *);
@@ -125,6 +128,8 @@ protected:
 	// general settings, implemented by child classes for the conduits
 	virtual const QString configGroup()=0;
 	virtual const QString dbname()=0;
+	
+	virtual const QString getTitle(PilotAppCategory*de)=0;
 
 protected:
 	KCal::Calendar *fCalendar;
@@ -145,23 +150,14 @@ protected:
 
 
 // $Log$
+// Revision 1.3  2002/05/01 21:18:23  kainhofe
+// Reworked the settings dialog, added various different sync options
+//
 // Revision 1.1.2.2  2002/05/01 21:11:49  kainhofe
 // Reworked the settings dialog, added various different sync options
 //
 // Revision 1.1.2.1  2002/04/28 12:58:54  kainhofe
 // Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
-//
-// Revision 1.22  2002/04/19 19:10:29  kainhofe
-// added some comments describin the sync logic, deactivated the sync again (forgot it when I commited last time)
-//
-// Revision 1.21  2002/04/14 22:18:16  kainhofe
-// Implemented the second part of the sync (PC=>Palm), but disabled it, because it corrupts the Palm datebook
-//
-// Revision 1.20  2002/01/26 15:01:02  adridg
-// Compile fixes and more
-//
-// Revision 1.19  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //
 
 #endif

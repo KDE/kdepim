@@ -161,6 +161,14 @@ VCalConduitPrivateBase* VCalConduit::newVCalPrivate(KCal::Calendar *fCalendar) {
 	return new VCalConduitPrivate(fCalendar);
 };
 
+const QString VCalConduit::getTitle(PilotAppCategory*de)
+{
+	PilotDateEntry*d=dynamic_cast<PilotDateEntry*>(de);
+	if (d) return QString(d->getDescription());
+	return "";
+}
+
+
 
 PilotRecord*VCalConduit::recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e)
 {
@@ -679,6 +687,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.65  2002/05/01 21:18:23  kainhofe
+// Reworked the settings dialog, added various different sync options
+//
 // Revision 1.51.2.3  2002/04/28 12:58:54  kainhofe
 // Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
 //

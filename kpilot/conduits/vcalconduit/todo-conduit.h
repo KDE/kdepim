@@ -86,6 +86,8 @@ public:
 	virtual ~TodoConduit();
    
 protected:
+	virtual const QString getTitle(PilotAppCategory*de);
+	
 	virtual const QString configGroup() { return ToDoConduitFactory::group; };
 	virtual const QString dbname() { return "ToDoDB"; };
 
@@ -106,6 +108,9 @@ protected:
 
 // $Log$
 // Revision 1.7  2002/05/01 21:18:23  kainhofe
+// Reworked the settings dialog, added various different sync options
+//
+// Revision 1.4.2.2  2002/05/01 21:11:49  kainhofe
 // Reworked the settings dialog, added various different sync options
 //
 // Revision 1.4.2.1  2002/04/28 12:58:54  kainhofe

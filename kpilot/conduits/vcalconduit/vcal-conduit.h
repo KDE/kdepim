@@ -90,6 +90,7 @@ protected:
 
 	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) { if (r) return new PilotDateEntry(r);  else return new PilotDateEntry();};
 	virtual KCal::Incidence*newIncidence() { return new KCal::Event; };
+	virtual const QString getTitle(PilotAppCategory*de);
 
 protected:
 	virtual PilotRecord *recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e);
@@ -111,6 +112,9 @@ protected:
 } ;
 
 // $Log$
+// Revision 1.25  2002/05/01 21:18:23  kainhofe
+// Reworked the settings dialog, added various different sync options
+//
 // Revision 1.20.2.2  2002/05/01 21:11:49  kainhofe
 // Reworked the settings dialog, added various different sync options
 //
