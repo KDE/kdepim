@@ -701,7 +701,7 @@ mailHeader * imapParser::parseEnvelope (parseString & inWords)
   envelope->setDate(parseLiteralC(inWords));
 
   //subject
-  envelope->setSubjectEncoded(parseLiteralC(inWords));
+  envelope->setSubject(parseLiteralC(inWords));
 
   QPtrList<mailAddress> list;
   list.setAutoDelete(true);
