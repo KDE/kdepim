@@ -106,8 +106,9 @@ void JumpButtonBar::recreateButtons()
   KABC::AddressBook *ab = mViewManager->addressBook();
   KABC::AddressBook::Iterator it;
   for ( it = ab->begin(); it != ab->end(); ++it ) {
-    KABC::Field *field = mViewManager->currentSearchField();
-    if ( field && !field->value( *it ).isEmpty() )
+    KABC::Field *field = 0;
+    field = mViewManager->currentSearchField();
+    if ( ( field != 0 ) && !( field->value( *it ).isEmpty() ) )
       character = field->value( *it )[ 0 ];
 
     if ( !character.isEmpty() && !mCharacters.contains( character ) )

@@ -75,9 +75,6 @@ class AddresseeEditorWidget : public ExtensionWidget
 
     QString title() const;
     QString identifier() const;
-    
-  signals:
-    void modified( KABC::Addressee::List );
   
   protected slots:
     void textChanged( const QString& );

@@ -16,7 +16,7 @@
 class KAddressBookApp : public KUniqueApplication {
   public:
     KAddressBookApp() : mMainWin( 0 ) {}
-    ~KAddressBookApp() { delete mMainWin; }
+    ~KAddressBookApp() {}
 
     int newInstance();
 
