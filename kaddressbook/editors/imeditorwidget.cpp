@@ -237,15 +237,6 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
 
 void IMEditorWidget::storeContact( KABC::Addressee *addr )
 {
-	kdDebug( 0 ) << k_funcinfo << endl;
-	// Write all protocols, or track changed ones and just write them?
-	kdDebug( 0 ) << mChangedProtocols.count() << " Changed protocols are\n";
-	QValueList<IMProtocol>::iterator protocolIt;
-    for ( protocolIt = mChangedProtocols.begin(); protocolIt != mChangedProtocols.end(); ++protocolIt )
-		kdDebug( 0 ) << *protocolIt << ", \n" ;
-
-	kdDebug( 0 ) << endl;
-
 	// for each changed protocol, write a new custom field containing the current set of
 	// addresses
 	for ( protocolIt = mChangedProtocols.begin(); protocolIt != mChangedProtocols.end(); ++protocolIt )
@@ -260,7 +251,7 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
 			++addressIt;
 		}
 
-		kdDebug( 0 ) << QString::fromLatin1("messaging/%1").arg( protocolToString( *protocolIt ) ) <<
+		//kdDebug( 0 ) << QString::fromLatin1("messaging/%1").arg( protocolToString( *protocolIt ) ) <<
 							QString::fromLatin1("All") <<
 							lst.join( QChar( 0xE000 ) ) << endl;
 		if ( lst.count() > 0 )
@@ -302,7 +293,6 @@ void IMEditorWidget::slotUpdateButtons()
 
 void IMEditorWidget::slotAdd()
 {
-	kdDebug( 0 ) << k_funcinfo << endl;
 	KDialogBase *addDialog = new KDialogBase( this, "addaddress", true, i18n("Add Address"), KDialogBase::Ok|KDialogBase::Cancel );
 	IMAddressWidget *addressWid = new IMAddressWidget( addDialog );
 	addDialog->setMainWidget( addressWid );
@@ -334,7 +324,6 @@ void IMEditorWidget::slotAdd()
 
 void IMEditorWidget::slotEdit()
 {
-	kdDebug( 0 ) << k_funcinfo << endl;
 	if ( IMAddressLVI *current = static_cast<IMAddressLVI*>(mWidget->lvAddresses->selectedItem() ) )
 	{
 		KDialogBase *editDialog = new KDialogBase( this, "editaddress", true, i18n("Edit Address"), KDialogBase::Ok|KDialogBase::Cancel );
@@ -379,7 +368,6 @@ void IMEditorWidget::slotEdit()
 
 void IMEditorWidget::slotDelete()
 {
-	kdDebug( 0 ) << k_funcinfo << endl;
 	if ( mWidget->lvAddresses->selectedItem() && KMessageBox::questionYesNo( this, i18n("Do you really want to delete the selected address?"), i18n("Confirm delete") ) == KMessageBox::Yes  )
 	{
 		IMAddressLVI * current = static_cast<IMAddressLVI*>( mWidget->lvAddresses->selectedItem() );

@@ -82,7 +82,7 @@ IMProtocol IMAddressWidget::protocol()
 			break;
 		default:
 			protocol = Unknown;
-			kdDebug( 0 ) << k_funcinfo << "Unknown protocol selected! Check populateProtocol()" << endl;
+			kdDebug( 5720 ) << k_funcinfo << "Unknown protocol selected! Check populateProtocol()" << endl;
 		}
 	}
 	return protocol;
@@ -95,7 +95,6 @@ IMContext IMAddressWidget::context()
 	{
 		
 		int contextIndex = cmbContext->currentItem();
-		kdDebug( 0 ) << "current context is " << contextIndex << endl;
 		switch ( contextIndex )
 		{
 		case 0:
