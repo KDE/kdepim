@@ -378,7 +378,7 @@ void AddresseeEditorWidget::setupTab2()
   label->setBuddy( mBirthdayPicker );
   layout->addWidget( mBirthdayPicker, 4, 4 );
   
-  label = new QLabel( i18n( "Wedding date:" ), tab2 );
+  label = new QLabel( i18n( "Anniversary:" ), tab2 );
   layout->addWidget( label, 5, 3 );
   mAnniversaryPicker = new KDateEdit( tab2 );
   mAnniversaryPicker->setHandleInvalid( true );
