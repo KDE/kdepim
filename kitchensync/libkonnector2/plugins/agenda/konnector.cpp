@@ -7,7 +7,7 @@
 #include "konnector.h"
 
 typedef KGenericFactory<KSync::AgendaPlugin, QObject>  AgendaKonnectorPlugin;
-K_EXPORT_COMPONENT_FACTORY( libagendakonnector,  AgendaKonnectorPlugin );
+K_EXPORT_COMPONENT_FACTORY( libagendakonnector,  AgendaKonnectorPlugin )
 
 using namespace KSync;
 
