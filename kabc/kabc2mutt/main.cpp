@@ -29,11 +29,13 @@
 
 #include <stdio.h>
 
-static KCmdLineOptions options[] = 
+static KCmdLineOptions options[] =
 {
     { "read", I18N_NOOP( "Print a mutt alias configuration to stdout" ), 0 },
     { "write", I18N_NOOP( "Add an email address to kabc" ), 0 },
-    { 0, 0, 0 }
+    { "query <substring>", I18N_NOOP("Only show contacts where name or address matches <substring>"), 0 },
+    { "format <format>", I18N_NOOP("Default format is 'alias'. 'query' returns email<tab>name<tab>, as needed by mutt's query_command"), "alias" },
+    KCmdLineLastOption
 };
 
 int main(int argc, char **argv)
@@ -47,19 +49,50 @@ int main(int argc, char **argv)
 
     KABC::AddressBook *ab = KABC::StdAddressBook::self();
 
-    if ( args->isSet( "read" ) ) {
-        // print all addressees
+    if ( args->isSet( "read" ) || !args->getOption("query").isEmpty() ) {
+
+        // Handle --format option
+        QCString formatString = args->getOption("format");
+        enum { Aliases, QueryCommand } format;
+        if ( formatString == "query" )
+            format = QueryCommand;
+        else
+            format = Aliases;
+
+        // Handle --query option
+        QString subString = QString::fromLocal8Bit( args->getOption("query") );
+        if ( !subString.isEmpty() )
+        {
+            // Mutt wants a first line with some status message on it
+            // See http://mutt.org/doc/manual/manual-4.html#ss4.5
+            printf( "%s\n", i18n("Searching KDE addressbook...").local8Bit().data() );
+        }
+
+        // print addressees
 	KABC::AddressBook::Iterator it;
         for (it = ab->begin(); it != ab->end(); ++it) {
 	    if ( (*it).preferredEmail().isEmpty() )
 		continue;
+            QString name = (*it).givenName() + ' ' + (*it).familyName();
 
-	    QString key = (*it).givenName().left(3) + (*it).familyName().left(3);
-	
-	    printf("alias %s\t%s %s <%s>\n", key.local8Bit().data(),
-		    (*it).givenName().local8Bit().data(),
-		    (*it).familyName().local8Bit().data(),
-		    (*it).preferredEmail().local8Bit().data());
+            if ( !subString.isEmpty() )
+            {
+                bool match = (name.find(subString) > -1) || ((*it).preferredEmail().find(subString) > -1 );
+                if ( !match )
+                    continue;
+            }
+
+            if ( format == Aliases )
+            {
+                QString key = (*it).givenName().left( 3 ) + (*it).familyName().left( 3 );
+
+                printf( "alias %s\t%s <%s>\n", key.local8Bit().data(),
+                        name.local8Bit().data(),
+                        (*it).preferredEmail().local8Bit().data() );
+            } else {
+                printf( "%s\t%s\t\n", (*it).preferredEmail().local8Bit().data(),
+                        name.local8Bit().data() );
+            }
 	}
 
 	// print all ditribution lists
@@ -70,10 +103,23 @@ int main(int argc, char **argv)
 	for (QStringList::Iterator it = dists.begin(); it != dists.end(); ++it) {
 	    KABC::DistributionList *list = manager.list( (*it) );
 	    if ( list ) {
-		QStringList emails = list->emails();
-		printf("alias %s\t %s\n",
-			(*it).replace(QRegExp(" "), "_").local8Bit().data(),
-			emails.join(",").local8Bit().data());
+
+                if ( !subString.isEmpty() )
+                {
+                    bool match = ((*it).find(subString) > -1);
+                    if ( !match )
+                        continue;
+                }
+
+                QStringList emails = list->emails();
+                if ( format == Aliases )
+                    printf( "alias %s\t %s\n",
+                            (*it).replace( QRegExp( " " ), "_" ).local8Bit().data(),
+                            emails.join( "," ).local8Bit().data() );
+                else
+                    printf( "%s\t%s\t\n",
+                            emails.join( "," ).local8Bit().data(),
+                            (*it).local8Bit().data() );
 	    }
 	}
     } else if ( args->isSet( "write" ) ) {
