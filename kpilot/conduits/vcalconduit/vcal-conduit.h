@@ -30,6 +30,17 @@ public:
 	*/
 	static const char *version();
 
+public:
+	/**
+	* There are a whole bunch of methods that set particular
+	* properties on VObjects. Probably they don't belong here
+	* but in versit.
+	*/
+	void setSummary(VObject *vevent,const char *note);
+	void setNote(VObject *vevent,const char *note);
+	void setSecret(VObject *vevent,bool secret);
+	void setStatus(VObject *vevent,int status);                                                    
+
 protected:
   void doLocalSync();
   PilotRecord *findEntryInDB(unsigned int id);

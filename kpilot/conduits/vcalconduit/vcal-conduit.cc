@@ -107,25 +107,32 @@ void VCalConduit::getCalendar()
 	if ((getMode() == BaseConduit::HotSync) || 
 		(getMode() == BaseConduit::Backup)) 
 	{
-		const char *s=calName.ascii();
+		const char *s=calName.local8Bit();
 		fCalendar = Parse_MIME_FromFileName((char *)s);
 
+#ifdef DEBUG
 		if (debug_level & SYNC_MINOR)
 		{
 			kdDebug() << fname
 				<< ": Got calendar!"
 				<< endl;
 		}
+#endif
 
 
 		if(fCalendar == 0L) 
 		{
-			QString message(i18n(
+			QString message = i18n(
 				"The VCalConduit could not open the file `%1'. "
 				"Please configure the conduit with the correct "
-				"filename and try again."));
+				"filename and try again.")
+				.arg(calName);
+
+			kdError() << fname
+				<< message << endl;
+
 			KMessageBox::error(0, "vCalendar Conduit Fatal Error",
-			    message.arg(calName));                                                 
+			    message);                                                 
 			exit(-1);
 		}
 	}
@@ -177,33 +184,42 @@ void VCalConduit::doSync()
 	getCalendar();
 	if (fCalendar==0L)
 	{
-		kdDebug() << fname << ": No calendar to sync with."
+		kdError() << fname << ": No calendar to sync with."
 			<< endl;
 		return;
 	}
 
-   rec = readNextModifiedRecord();
-
-   // get only MODIFIED entries from Pilot, compared with the above (doBackup),
-   // which gets ALL entries
-   while (rec) {
+	// get only MODIFIED entries from Pilot, compared with 
+	// the above (doBackup), which gets ALL entries
+	//
+	//
+	while ((rec=readNextModifiedRecord())) 
+	{
 		recordcount++;
-     if(rec->getAttrib() & dlpRecAttrDeleted) {
-       deleteVObject(rec);
-     } else {
-       bool pilotRecModified = (rec->getAttrib() & dlpRecAttrDirty);
-       if (pilotRecModified) {
-	 updateVObject(rec);
-       } else {
-		kdDebug() << fname
-			<< "weird! we asked for a modified record and got one that wasn't.\n";
-       }
-     }
-     
-     delete rec;
-     rec = readNextModifiedRecord();
-   }
+		if (rec->isDeleted())
+		{
+			deleteVObject(rec);
+		} 
+		else 
+		{
+			bool pilotRecModified = 
+				(rec->getAttrib() & dlpRecAttrDirty);
+			if (pilotRecModified) 
+			{
+				updateVObject(rec);
+			} 
+			else 
+			{
+				kdWarning() << fname
+					<< "weird! we asked for a modified "
+					   "record and got one that wasn't"
+					<< endl;
+			}
+		}
+		delete rec;
+	}
    
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname
@@ -212,6 +228,7 @@ void VCalConduit::doSync()
 			<< " record from the pilot."
 			<< endl;
 	}
+#endif
 
    // now, all the stuff that was modified/new on the pilot should be
    // added to the vCalendar.  We now need to add stuff to the pilot
@@ -243,8 +260,8 @@ void VCalConduit::repeatForever(
 
 	dateEntry->setRepeatFrequency(rFreq);
 	dateEntry->setRepeatForever();
-	kdDebug() << fname
-		<< ": WARNING: repeat duration is forever for "
+	kdWarning() << fname
+		<< ": repeat duration is forever for "
 		<< s
 		<< endl;
 }
@@ -289,8 +306,26 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   }
   
   // determine whether the vobject has been modified since the last sync
+  bool vcalRecModified = true ;
   vo = isAPropertyOf(vevent, KPilotStatusProp);
-  bool vcalRecModified = (atol(fakeCString(vObjectUStringZValue(vo))) == 1);
+  if (vo)
+  {
+	const wchar_t *vp = 0;
+	const char *s = 0;
+	int status = 1;
+
+  	vp = vObjectUStringZValue(vo);
+	if (vp)
+	{
+		s = fakeCString(vp);
+	}
+	if (s)
+	{
+		status=atol(s);
+	}
+
+	vcalRecModified = (status==1);
+  }
   
   if (vcalRecModified) {
     // we don't want to modify the vobject with pilot info, because it has
@@ -301,6 +336,15 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   // otherwise, the vObject hasn't been touched.  Updated it with the
   // info from the PilotRec.
   
+#ifdef DEBUG
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		kdDebug() << fname
+			<< ": Updating start time"
+			<< endl;
+	}
+#endif
+
   // START TIME //
   vo = isAPropertyOf(vevent, VCDTstartProp);
   
@@ -340,6 +384,15 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 		addPropValue(vevent, VCDTstartProp, dateString.latin1());
 	}
 }
+
+#ifdef DEBUG
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		kdDebug() << fname
+			<< ": Updating end time"
+			<< endl;
+	}
+#endif
   
   // END TIME //
   vo = isAPropertyOf(vevent, VCDTendProp);
@@ -351,6 +404,9 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 		dateEntry.getEvent() );
 
   if (multiDay) {
+  	// I honestly don't know what was supposed to go here
+	//
+	//
   }
 
   QDateTime endDT;
@@ -408,6 +464,14 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   }
 
   
+#ifdef DEBUG
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		kdDebug() << fname
+			<< ": Updating alarms"
+			<< endl;
+	}
+#endif
   // ALARM(s) //
   vo = isAPropertyOf(vevent, VCDAlarmProp);
   if (dateEntry.getAlarm()) {
@@ -458,7 +522,14 @@ void VCalConduit::updateVObject(PilotRecord *rec)
       }
   }
    
-
+#ifdef DEBUG
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		kdDebug() << fname
+			<< ": Updating recurrence"
+			<< endl;
+	}
+#endif
   // RECURRENCE(S) //
   vo = isAPropertyOf(vevent, VCRRuleProp);
   // pilot entries that repeat daily are not what we consider daily
@@ -537,6 +608,14 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   }
 
 
+#ifdef DEBUG
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		kdDebug() << fname
+			<< ": Updating exceptions"
+			<< endl;
+	}
+#endif
   // EXCEPTION(S) //
 	if (multiDay && dateEntry.getExceptionCount())
 	{
@@ -563,60 +642,146 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   }
 
 
-  // SUMMARY //
-  vo = isAPropertyOf(vevent, VCSummaryProp);
-  tmpStr = dateEntry.getDescription();
-  // the following should take care of the multi-line summary bug.
-  tmpStr = tmpStr.simplifyWhiteSpace();
-  
-  // the vCalendar parser doesn't handle empty summaries very well...
-  if (!tmpStr.isEmpty()) {
-    if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
-    else
-      addPropValue(vevent, VCSummaryProp, tmpStr.latin1());
-  }
+	// The remainder of the updates are in individual methods
+	//
+	//
+	setSummary(vevent,dateEntry.getDescription());
+	setNote(vevent,dateEntry.getNote());
+	setSecret(vevent,(rec->getAttrib() & dlpRecAttrSecret));
+	setStatus(vevent,0);
 
-  
-  // DESCRIPTION (NOTE) //
-  vo = isAPropertyOf(vevent, VCDescriptionProp);
-  if (dateEntry.getNote() != 0L && strlen(dateEntry.getNote()) != 0) {
-    if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(dateEntry.getNote(), 0));
-    else
-      vo = addPropValue(vevent, VCDescriptionProp, dateEntry.getNote());
-    // if the description takes up more than one line, we need
-    // to add the Quoted-Printable property.
-    if (strchr(dateEntry.getNote(), '\n') &&
-	!isAPropertyOf(vo, VCQuotedPrintableProp))
-      addProp(vo, VCQuotedPrintableProp);
-  } else {
-    if (vo)
-      addProp(vo, KPilotSkipProp);
-  }
+#ifdef DEBUG
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		kdDebug() << fname
+			<< ": Done updating"
+			<< endl;
+	}
+#endif
+}
 
-  // CLASS (SECRECY) //
-  vo = isAPropertyOf(vevent, VCClassProp);
-  (rec->getAttrib() & dlpRecAttrSecret) ?
-    tmpStr = "PRIVATE" : tmpStr = "PUBLIC";
-  if (vo)
-    setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
-  else
-    addPropValue(vevent, VCClassProp, tmpStr.latin1());
-  
-  // PILOT STATUS //
-  vo = isAPropertyOf(vevent, KPilotStatusProp);
-  // TURN OFF MODIFIED
-  if (vo) {
-    // This variable is unused and Cornelius suspects it's
-    // totally useless (ie. no side effects in fakeCString).
-    //
-    //
-    // int voStatus = atol(fakeCString(vObjectUStringZValue(vo)));
-    setVObjectUStringZValue_(vo, fakeUnicode("0", 0));
-  } else
-  {
-    addPropValue(vevent, KPilotStatusProp, "0");
+void VCalConduit::setSummary(VObject *vevent,const char *summary)
+{
+	FUNCTIONSETUP;
+
+	VObject *vo = isAPropertyOf(vevent, VCSummaryProp);
+	QString qsummary (summary);
+	qsummary = qsummary.simplifyWhiteSpace();
+	if (qsummary.isEmpty())
+	{
+		// We should probably update (empty) the
+		// summary in the VObject if there
+		// is one.
+		//
+		//
+	}
+	else
+	{
+		if (vo)
+		{
+			setVObjectUStringZValue_(vo, 
+				fakeUnicode(qsummary.local8Bit(), 0));
+		}
+		else
+		{
+			addPropValue(vevent, VCSummaryProp, 
+				qsummary.local8Bit());
+		}
+	}
+}
+
+void VCalConduit::setNote(VObject *vevent,const char *s)
+{
+	FUNCTIONSETUP;
+
+	VObject *vo = isAPropertyOf(vevent, VCDescriptionProp);
+
+	if (s && *s)
+	{
+		// There is a note for this event
+		//
+		//
+		if (vo)
+		{
+			setVObjectUStringZValue_(vo, fakeUnicode(s,0));
+		}
+		else
+		{
+			vo = addPropValue(vevent, VCDescriptionProp,s);
+		}
+
+		// vo now certainly (?) points to the note property.
+		//
+		//
+		if (!vo)
+		{
+			kdError() << fname
+				<< ": No object for note property."
+				<< endl;
+			return;
+		}
+
+		if (strchr(s,'\n') && 
+			!isAPropertyOf(vo, VCQuotedPrintableProp))
+		{
+			// Note takes more than one line so we need
+			// to add the Quoted-Printable property
+			//
+			//
+			addProp(vo,VCQuotedPrintableProp);
+		}
+	}
+	else
+	{
+		// No note at all
+		//
+		//
+		if (vo)
+		{
+			// So skip existing note
+			//
+			//
+			addProp(vo,KPilotSkipProp);
+		}
+	}
+}
+
+void VCalConduit::setSecret(VObject *vevent,bool secret)
+{
+	FUNCTIONSETUP;
+
+	VObject *vo = isAPropertyOf(vevent, VCClassProp);
+	const char *s = secret ? "PRIVATE" : "PUBLIC" ;
+
+	if (vo)
+	{
+		setVObjectUStringZValue_(vo,fakeUnicode(s,0));
+	}
+	else
+	{	
+		addPropValue(vevent,VCClassProp,s);
+	}
+}
+
+void VCalConduit::setStatus(VObject *vevent,int status)
+{
+	FUNCTIONSETUP;
+
+	VObject *vo = isAPropertyOf(vevent, KPilotStatusProp);
+	char buffer[2+4*sizeof(int)];	// One byte produces at most 3 digits
+					// in decimal, add some slack and 
+					// space for a -
+
+	sprintf(buffer,"%d",status);
+
+	if (vo)
+	{
+
+		setVObjectUStringZValue_(vo,fakeUnicode(buffer,0));
+	}
+	else
+	{
+		addPropValue(vevent,KPilotStatusProp,buffer);
 	}
 }
 
@@ -668,6 +833,7 @@ int VCalConduit::getTimeZone() const
   
 	bool neg = FALSE;
 	int hours, minutes;
+	char *s;
 
 	QString tmpStr(s = fakeCString(vObjectUStringZValue(vo)));
 #ifdef DEBUG
@@ -1473,6 +1639,9 @@ int VCalConduit::numFromDay(const QString &day)
 } 
 
 // $Log$
+// Revision 1.15  2000/12/05 07:47:27  adridg
+// New debugging stuff
+//
 // Revision 1.14  2000/11/26 01:41:48  adridg
 // Last of Heiko's patches
 //
