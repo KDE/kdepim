@@ -44,7 +44,7 @@ KPilot's settings.</comment>
                         <string>S&amp;top daemon on exit</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Stop the KPilot daemon when you quit KPilot (only if KPilot started the daemon itself).&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Check this box to stop the KPilot daemon when you quit KPilot (only if KPilot started the daemon itself).&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QCheckBox" row="0" column="0">
@@ -55,8 +55,7 @@ KPilot's settings.</comment>
                         <string>Quit &amp;after HotSync</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Stop both KPilot and the KPilot daemon after the HotSync finishes.
-This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Check this box to stop both KPilot and the KPilot daemon after the HotSync finishes. This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt&gt;</string>
                     </property>
                 </widget>
             </grid>
@@ -80,7 +79,7 @@ This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt
                         <string>&amp;Start daemon at login</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Start up the KPilot daemon every time you log in to KDE.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Check this box to start up the KPilot daemon every time you log in to KDE.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QCheckBox" row="1" column="0">
@@ -91,7 +90,7 @@ This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt
                         <string>S&amp;how daemon in panel</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Places a HotSync icon in the system tray, which shows the daemon's status and allows you to configure KPilot.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Check this box to place a Kpilot icon in the system tray, which shows the daemon's status, and allows you to select the next sync type and to configure KPilot.&lt;/qt&gt;</string>
                     </property>
                 </widget>
             </grid>

@@ -75,6 +75,9 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                     <property name="buddy" stdset="0">
                         <cstring>fDeviceName</cstring>
                     </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Enter here the device the Pilot is attached to, for a serial or USB port. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device. Use the button below to automatically detect the device. You need write permission to successfully synchronize with the handheld.&lt;/qt&gt;</string>
+                    </property>
                 </widget>
                 <widget class="QPushButton" row="2" column="0" rowspan="1" colspan="2">
                     <property name="name">
@@ -82,6 +85,9 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                     </property>
                     <property name="text">
                         <string>&amp;Automatically Detect Handheld &amp;&amp; User Name...</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Click this button to open the detection dialog. The wizard will try to automatically find and display the correct device and user name for your handheld. If the wizard cannot retrieve this information, check if you have write permission for the device.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit" row="1" column="1">
@@ -91,10 +97,16 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                     <property name="text">
                         <string>/dev/pilot</string>
                     </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Enter here the device the Pilot is attached to, for a serial or USB port. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device. Use the button below to automatically detect the device. You need write permission to successfully synchronize with the handheld.&lt;/qt&gt;</string>
+                    </property>
                 </widget>
                 <widget class="QLineEdit" row="0" column="1">
                     <property name="name">
                         <cstring>fUserName</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Enter your user name here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting, or use the button below to automatically detect it.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLabel" row="0" column="0">
@@ -106,6 +118,9 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                     </property>
                     <property name="buddy" stdset="0">
                         <cstring>fUserName</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Enter your user name here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting, or use the button below to automatically detect it.&lt;/qt&gt;</string>
                     </property>
                 </widget>
             </grid>
@@ -121,9 +136,7 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                 <bool>true</bool>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>&lt;p&gt;
-This will make the kpilot daemon load when you first log in until you log out.  That means (in theory), that you shouldn't have to do anything other than connect your handheld and push "sync", and kpilot will appear and magically do your bidding. Hooray for magic!
-&lt;/p&gt;</string>
+                <string>&lt;qt&gt;Check this box to make the kpilot daemon load when you first log in until you log out.  That means (in theory), that you shouldn't have to do anything other than connect your handheld and push "sync", and kpilot will appear and magically do your bidding. &lt;/qt&gt;</string>
             </property>
         </widget>
         <spacer>
