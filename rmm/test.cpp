@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdlib.h>
 #include <qstring.h>
 #include <qdir.h>
 #include <qstringlist.h>
@@ -31,7 +32,7 @@
 #include "RMM_Token.h"
 #include "RMM_Utility.h"
 
-main(int argc, char ** argv)
+int main(int argc, char ** argv)
 {
   if (argc != 2) {
     cerr << "Usage: " << argv[0] << " <maildir path>" << endl;
@@ -82,5 +83,7 @@ main(int argc, char ** argv)
         << "."
         << t.msecsTo(t2) - t.secsTo(t2) * 1000
         << endl;
+
+  return 0;
 }
 
