@@ -31,7 +31,8 @@
 
 */
 
-
+#ifndef KSYNCMAINWINDOW_H
+#define KSYNCMAINWINDOW_H
 
 #include <qptrlist.h>
 #include <qmap.h>
@@ -99,3 +100,5 @@ namespace KitchenSync {
                                  const QString &id );
     };
 };
+
+#endif

@@ -194,8 +194,8 @@ void KSyncMainWindow::slotRestore() {
 }
 
 void KSyncMainWindow::slotConfigure() {
-  ConfigureDialog dlg(this);
-  ManipulatorPart *part=0l;
+  ConfigureDialog *dlg = new ConfigureDialog(this);
+  ManipulatorPart *part = 0l;
   // get the kapabilities and update with the ones from the Profile
   Kapabilities cap = m_konnector->capabilities( m_currentId );
   Kapabilities cap2 = m_profile.caps();
@@ -208,14 +208,14 @@ void KSyncMainWindow::slotConfigure() {
   cap.setCurrentConnectionMode( cap2.currentConnectionMode() );
   cap.setMetaSyncingEnabled( cap2.isMetaSyncingEnabled() );
 
-  ConfigPart par(cap , &dlg );
-  dlg.addWidget( &par, i18n("Configure"), &QPixmap() );
+  ConfigPart *par = new ConfigPart(cap , dlg );
+  dlg->addWidget( par, i18n("Configure"), &QPixmap() );
   for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
     if( part->configIsVisible() )
-      dlg.addWidget(part->configWidget(), part->name(), part->pixmap() );
+      dlg->addWidget(part->configWidget(), part->name(), part->pixmap() );
   }
-  if (dlg.exec()) {
-      m_profile.setCapability( par.capability() );
+  if (dlg->exec()) {
+      m_profile.setCapability( par->capability() );
       m_profile.setConfigured( true );
       m_konnector->setCapabilities( m_currentId,  m_profile.caps() );
       saveCurrentProfile();

@@ -31,7 +31,8 @@
 
 */
 
-
+#ifndef KSNYC_CONFIGPART_H
+#define KSNYC_CONFIGPART_H 
 
 #include <qwidget.h>
 #include <qmap.h>
@@ -111,4 +112,4 @@ namespace KitchenSync {
     };
 };
 
-
+#endif
