@@ -167,7 +167,7 @@ void Karm::save()
 
  if ( !f.open( IO_WriteOnly | IO_Truncate ) ) {
    QString msg = i18n( "There was an error trying to save your data file.\n"
-                       "Time accumulated this session will NOT be saved!\n");
+                       "Time accumulated during this session will NOT be saved!\n");
    KMessageBox::error(0, msg );
    return;
  }
@@ -222,8 +222,13 @@ void Karm::stopAllTimers()
 
 void Karm::resetSessionTimeForAllTasks()
 {
-  for(QListViewItem *child=firstChild(); child; child=child->itemBelow()) {
-    static_cast<Task*>(child)->setSessionTime(0);
+  QListViewItemIterator item( firstChild());
+  for ( ; item.current(); ++item ) {
+    Task * task = (Task *) item.current();
+    long sessionTime = task->sessionTime();
+    long totalTime   = task->totalTime();
+    task->setSessionTime(0);
+    task->setTotalTime(totalTime - sessionTime);
   }
 }
 

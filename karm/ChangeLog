@@ -1,3 +1,9 @@
+KArm 1.2
+--------
+- "Reset Session Times" wouldn't get reset correctly.
+  Thanks to dwayne for reporting and to Scott Monachello for
+  the fix.                                              closes: #34343
+
 KArm 1.1
 --------
 - clocks are stopped and times saved upon exit

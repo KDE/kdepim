@@ -159,7 +159,7 @@ void KarmWindow::makeMenus()
   actionKeyBindings = KStdAction::keyBindings(this, SLOT(keyBindings()),actionCollection());
   (void) KStdAction::preferences(_preferences, SLOT(showDialog()),actionCollection());
   (void) KStdAction::save(_preferences, SLOT(save()),actionCollection());
-  actionResetSession = new KAction(i18n("&Reset Session Time"), CTRL + Key_R,this,
+  actionResetSession = new KAction(i18n("&Reset Session Times"), CTRL + Key_R,this,
                                    SLOT(resetSessionTime()),actionCollection(),
                                    "reset_session_time");
   actionStart = new KAction(i18n("&Start"), QString::fromLatin1("1rightarrow"),
