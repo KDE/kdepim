@@ -16,6 +16,8 @@ static const KCmdLineOptions options[] =
   { "user <string>", I18N_NOOP("User"), 0 },
   { "p", 0, 0 },
   { "password <string>", I18N_NOOP("Password"), 0 },
+  { "f", 0, 0 },
+  { "freebusy-user <string>", I18N_NOOP("Free/Busy user name"), 0 },
   KCmdLineLastOption
 };
 
@@ -35,6 +37,7 @@ int main( int argc, char **argv )
   QString pass = args->getOption( "password" );
   QString url = args->getOption( "server" );
 
+#if 0
   if ( user.isEmpty() ) {
     kdError() << "Need user." << endl;
     return 1; 
@@ -47,6 +50,7 @@ int main( int argc, char **argv )
     kdError() << "Need server." << endl;
     return 1; 
   }
+#endif
 
   GroupwiseServer server( url, user, pass, 0 );
 
@@ -63,8 +67,21 @@ int main( int argc, char **argv )
   server.getCategoryList();
 #endif
 
-#if 1
+#if 0
   server.dumpFolderList();
+#endif
+
+#if 1
+  QString fbUser = args->getOption( "freebusy-user" );
+  if ( fbUser.isEmpty() ) {
+    kdError() << "Need user for which the freebusy data should be retrieved."
+              << endl;
+  } else {
+    KCal::FreeBusy *fb = new KCal::FreeBusy;
+
+    server.readFreeBusy( "user1",
+      QDate( 2004, 9, 1 ), QDate( 2004, 10, 31 ), fb );
+  }
 #endif
 
 #if 0    
