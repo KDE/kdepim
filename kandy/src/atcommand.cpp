@@ -78,7 +78,7 @@ void ATCommand::construct()
 
 ATCommand::~ATCommand()
 {
-//  kdDebug(5960) << "~ATCommand: " << cmdString() << endl;
+//  kdDebug() << "~ATCommand: " << cmdString() << endl;
 }
 
 
@@ -101,7 +101,7 @@ void ATCommand::setCmdString(const QString &cmdString)
   if (mId.startsWith("at")) mId = mId.mid(2);
   else mCmdString.prepend("at");
   
-//  kdDebug(5960) << "ATCommand: Id: " << mId << endl;
+//  kdDebug() << "ATCommand: Id: " << mId << endl;
 }
 
 QString ATCommand::cmdString()
@@ -113,12 +113,12 @@ QString ATCommand::cmd()
 {
   if (mParameters.count() > 0) {
     QString cmd = cmdString().left(cmdString().find("=") + 1);
-//    kdDebug(5960) << "--1-cmd: " << cmd << endl;
+//    kdDebug() << "--1-cmd: " << cmd << endl;
     for(uint i=0;i<mParameters.count();++i) {
       cmd += mParameters.at(i)->value();
       if (i < mParameters.count() - 1) cmd += ",";
     }
-//    kdDebug(5960) << "--2-cmd: " << cmd << endl;
+//    kdDebug() << "--2-cmd: " << cmd << endl;
     return cmd;
   } else {
     return cmdString();
@@ -154,21 +154,57 @@ void ATCommand::setResultString(const QString &resultString)
   }
 }
 
-void ATCommand::setResultFields(const QString &fieldsString)
+
+void ATCommand::setResultFields( QString fieldsString )
 {
-  QString id = mId.upper().left(mId.find('='));
+  QString id = mId.upper().left( mId.find( '=' ) );
+  
 
   // Truncate the command name prepended to the output by the modem.
-  QString rawFieldsString = fieldsString;
-  if ( fieldsString.startsWith( id ) ) {
-    rawFieldsString = fieldsString.mid(id.length() + 2);
-  }
+  if ( fieldsString.startsWith( id ) )
+    fieldsString = fieldsString.mid( id.length() + 2 );
+
+  // If modem output is enclosed by brackets, remove them, too
+  if ( ( fieldsString[ 0 ] == '(' ) && ( fieldsString[ fieldsString.length() - 1 ] == ')' ) )
+    fieldsString = fieldsString.mid( 1, fieldsString.length() - 2 );
 
   QStringList *fields = new QStringList;
-  *fields = QStringList::split( ',', rawFieldsString );
+  QStringList TmpFields = QStringList::split( ',', fieldsString );
+  QString TmpString = "";
+  
+
+  // Assume a phonebook entry of the mobile phone has the format
+  //   <familyname>, <givenname>
+  // Then, the above split() call separtes this entry into 2 distinct fields
+  // leading to an error in MobileGui::fillPhonebook since the number of
+  // fields is != 4.
+  // Hence, the fieldsString needs to be parsed a little bit. Names stored on
+  // the mobile phone are quoted. Commas within a quoted are of the fieldsString
+  // must not be divided into differend fields.
+  for ( QStringList::Iterator it = TmpFields.begin(); it != TmpFields.end(); it++ )
+  {
+    // Start of a quoted area
+    if ( ( (*it)[ 0 ] == '\"' ) && ( (*it)[ (*it).length() - 1 ] != '\"' ) )
+      TmpString = (*it).copy();
+    else
+    // End of a quoted area
+    if ( ( (*it)[ 0 ] != '\"' ) && ( (*it)[ (*it).length() - 1 ] == '\"' ) )
+    {
+      TmpString += "," + (*it).copy();
+      (*fields).append( TmpString.copy() );
+      TmpString = "";
+    } else
+    // Not within a quoted area
+    if (TmpString == "")
+      (*fields).append( *it );
+    else
+    // Within a quoted area
+      TmpString += "," + (*it).copy();
+  }
 
   mResultFieldsList.append( fields );
 }
+
 
 QString ATCommand::resultString()
 {
@@ -183,7 +219,7 @@ QString ATCommand::resultField(int index)
 
   QStringList::Iterator it = resultFields->at(index);
   if (it == resultFields->end()) {
-    kdDebug(5960) << "ATCommand::resultField: index " << index << " out of range."
+    kdDebug() << "ATCommand::resultField: index " << index << " out of range."
               << endl;
     return "";
   }
@@ -215,7 +251,7 @@ QPtrList<ATParameter> ATCommand::parameters()
 void ATCommand::setParameter(int index,const QString &value)
 {
   if (mParameters.count() <= (unsigned int)index) {
-    kdDebug(5960) << "ATCommand " << cmdName() << " has no Parameter " << index
+    kdDebug() << "ATCommand " << cmdName() << " has no Parameter " << index
               << endl;
     return;
   }
@@ -257,13 +293,13 @@ QString ATCommand::processOutput()
 
 void ATCommand::extractParameters()
 {
-//  kdDebug(5960) << "Arg String: " << cmdString() << endl;
+//  kdDebug() << "Arg String: " << cmdString() << endl;
   
   int pos = cmdString().find("=");
   if (pos < 0) return;
   
   QString paraString = cmdString().mid(pos+1);
-//  kdDebug(5960) << "Para String: " << paraString << endl;
+//  kdDebug() << "Para String: " << paraString << endl;
   QStringList paraList = QStringList::split(",",paraString);
   
   QStringList::ConstIterator it = paraList.begin();
