@@ -326,71 +326,6 @@ int CryptPlug::interfaceVersion (int *min_version)
   return 1;
 }
 
-bool CryptPlug::isEmailInCertificate( const char* searchEmail, const char* fingerprint )
-{
-  bool bOk = false;
-  if( searchEmail && fingerprint ){
-    gpgme_ctx_t ctx;
-    gpgme_error_t err;
-    gpgme_key_t rKey;
-    const char* attr_string;
-    const char* email = searchEmail;
-    int emailLen = strlen( email );
-    int emailCount = 0;
-
-    if (email && *email == '<'){
-      ++email;
-      emailLen -= 2;
-    }
-
-    fprintf( stderr, "gpgmeplug isEmailInCertificate looking address %s\nin certificate with fingerprint %s\n", email, fingerprint );
-
-    gpgme_new( &ctx );
-    gpgme_set_protocol( ctx, GPGMEPLUG_PROTOCOL );
-
-    err = gpgme_op_keylist_start( ctx, fingerprint, 0 );
-    if ( !err ) {
-      err = gpgme_op_keylist_next( ctx, &rKey );
-      gpgme_op_keylist_end( ctx );
-      if ( !err ) {
-        /* extract email(s) */
-	for ( gpgme_user_id_t uid = rKey->uids ; uid ; uid = uid->next ) {
-	  attr_string = uid->email && *uid->email ? uid->email : uid->uid ;
-          if( attr_string ){
-            if( *attr_string == '<' )
-              ++attr_string;
-            if( *attr_string ){
-              ++emailCount;
-              fprintf( stderr, "gpgmeplug isEmailInCertificate found email: %s\n", attr_string );
-              if( 0 == strncasecmp(attr_string, email, emailLen) ){
-                bOk = true;
-                break;
-              }
-            }
-          }
-        }
-        if( !emailCount )
-          fprintf( stderr, "gpgmeplug isEmailInCertificate found NO EMAIL\n" );
-        else if( !bOk )
-          fprintf( stderr, "gpgmeplug isEmailInCertificate found NO MATCHING email\n" );
-        my_gpgme_key_release( rKey );
-      }else{
-        fprintf( stderr, "gpgmeplug isEmailInCertificate found NO CERTIFICATE for fingerprint %s\n", fingerprint );
-      }
-    }else{
-      fprintf( stderr, "gpgmeplug isEmailInCertificate could NOT open KEYLIST for fingerprint %s\n", fingerprint );
-    }
-    gpgme_release( ctx );
-  }else{
-    if( searchEmail )
-      fprintf( stderr, "gpgmeplug isEmailInCertificate called with parameter FINGERPRINT being EMPTY\n" );
-    else
-      fprintf( stderr, "gpgmeplug isEmailInCertificate called with parameter EMAIL being EMPTY\n" );
-  }
-  return bOk;
-}
-
-
 static
 int getAttrExpireFormKey( gpgme_key_t* rKey)
 {
@@ -2010,11 +1945,13 @@ void obtain_signature_information( gpgme_ctx_t ctx,
     memset( &this_info, 0, sizeof (CryptPlug::SignatureMetaDataExtendedInfo) );
 
     /* the creation time */
-    this_info.creation_time = (tm*)malloc( sizeof( struct tm ) );
-    if ( this_info.creation_time ) {
-      struct tm * ctime_val = localtime( (time_t*)&signature->timestamp );
-      memcpy( this_info.creation_time,
-	      ctime_val, sizeof( struct tm ) );
+    if ( signature->timestamp ) {
+      this_info.creation_time = (tm*)malloc( sizeof( struct tm ) );
+      if ( this_info.creation_time ) {
+        struct tm * ctime_val = localtime( (time_t*)&signature->timestamp );
+        memcpy( this_info.creation_time,
+                ctime_val, sizeof( struct tm ) );
+      }
     }
 
     /* the extended signature verification status */

@@ -848,13 +848,6 @@ public:
     */
     bool warnNoCertificate();
 
-    /*!
-      \ingroup groupConfigSign
-      \brief Returns true if the specified email address is contained
-      in the specified certificate.
-    */
-    bool isEmailInCertificate( const char* email, const char* certificate );
-
     /*! \ingroup groupConfigSign
     \brief Specifies how often the PIN is requested when
                 accessing the secret signature key.

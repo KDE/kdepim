@@ -1111,11 +1111,6 @@ int CryptPlugWrapper::receiverCertificateDaysLeftToExpiry( const char* certifica
     return _cp ? _cp->receiverCertificateDaysLeftToExpiry( certificate ) : 0 ;
 }
 
-bool CryptPlugWrapper::isEmailInCertificate( const char* email, const char* certificate )
-{
-  return _cp && _cp->isEmailInCertificate( email, certificate );
-}
-
 bool CryptPlugWrapper::certificateValidity( const char* certificate,
                           int* level )
 {

@@ -377,7 +377,7 @@ public:
    If the plugins initialization fails the calling process might want
    to display the library version number to the user for checking if
    there is an old version of the library installed...
-   
+
    \note This function <b>must</b> be implemented by each plug-in using
    this API specification.
 */
@@ -411,7 +411,7 @@ const char* bugURL( void );
 
    This function may be called prior to initialize().
   */
-int interfaceVersion (int *min_version); 
+int interfaceVersion (int *min_version);
 
 
 /*! \ingroup groupGeneral
@@ -455,23 +455,15 @@ bool initialize( void );
 */
 bool hasFeature( Feature );
 
-
-/*!
-  \ingroup groupConfigSign
-  \brief Returns true if the specified email address is contained
-  in the specified certificate.
-*/
-bool isEmailInCertificate( const char* email, const char* certificate );
-
 /*! \ingroup groupConfigSign
    \brief Returns the number of days that are left until the
    specified certificate expires.
-   
+
    Negative values show how many days ago the certificate DID expire,
    a zero value means the certificate expires today,
    special value CRYPTPLUG_CERT_DOES_NEVER_EXPIRE means there is
    no expire date stored in this certificate.
-   
+
    \param certificate the certificate to check
 */
 int signatureCertificateDaysLeftToExpiry( const char* certificate );
@@ -1063,7 +1055,7 @@ bool findCertificates( const char* addressee,
                        bool secretOnly,
                        char** attrOrder,
                        const char* unknownAttrsHandling );
-                       
+
 /*! \ingroup groupCryptAct
    \brief Encrypts an email message in
           \c cleartext according to the \c addressee and
