@@ -87,7 +87,7 @@ void LookAndFeelPage::restoreSettings( KConfig *config )
   mLineButton->setChecked(config->readBoolEntry("SingleLine", false));
   mToolTipBox->setChecked(config->readBoolEntry("ToolTips", true));
       
-  if (!mAlternateButton->isChecked() & !mLineButton->isChecked())
+  if (!mAlternateButton->isChecked() && !mLineButton->isChecked())
     mNoneButton->setChecked(true);
   
   mBackgroundBox->setChecked(config->readBoolEntry("Background", false));
