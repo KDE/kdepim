@@ -71,7 +71,7 @@ deletion. You can also optionally view expired alarms.</para>
 the alarm message text, specify a text file to display, specify a
 command to execute, or enter an email to send. You can also choose the
 colour of the alarm message, whether it should repeat, whether to play
-a sound, and whether the alarm should be cancelled if it can't be
+a sound, and whether the alarm should be canceled if it can't be
 triggered at its scheduled time.</para>
 
 <para>Alarms may also be scheduled from the command line, or via &DCOP;
@@ -490,7 +490,7 @@ one minute after the right time.
 Leave the box unchecked to trigger the alarm at
 the first opportunity starting at the scheduled time. Date-only alarms,
 &ie; ones for which the <guilabel>Any time</guilabel> option is
-selected, will be cancelled if they cannot be displayed within 24
+selected, will be canceled if they cannot be displayed within 24
 hours of the start-of-day time on the date scheduled.</para>
 
 <note><para>An alarm can only be triggered while you are logged in,
@@ -1701,14 +1701,14 @@ void cancelEvent(const QString&amp; <replaceable>calendarFile</replaceable>, con
 <term><parameter>calendarFile</parameter></term>
 <listitem>
 <para>Specifies the &URL; of the calendar file containing the event to
-be cancelled.</para>
+be canceled.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><parameter>eventID</parameter></term>
 <listitem>
-<para>Specifies the unique ID of the event to be cancelled, as stored
+<para>Specifies the unique ID of the event to be canceled, as stored
 in <replaceable>calendarFile</replaceable>.</para>
 </listitem>
 </varlistentry>
@@ -1818,7 +1818,7 @@ void handleEvent(const QString&amp; <replaceable>calendarFile</replaceable>, con
 <term><parameter>calendarFile</parameter></term>
 <listitem>
 <para>Specifies the &URL; of the calendar file containing the event to
-be displayed/executed or cancelled.</para>
+be displayed/executed or canceled.</para>
 </listitem>
 </varlistentry>
 
@@ -1826,7 +1826,7 @@ be displayed/executed or cancelled.</para>
 <term><parameter>eventID</parameter></term>
 <listitem>
 <para>Specifies the unique ID of the event to be displayed/executed or
-cancelled, as stored in
+canceled, as stored in
 <replaceable>calendarFile</replaceable>.</para>
 </listitem>
 </varlistentry>

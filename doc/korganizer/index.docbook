@@ -1975,7 +1975,7 @@ could for example make a large to-do task like building a house, and make
 sub-tasks like choosing the right building site, hiring an architect, hiring
 workers and finally arranging a party for your friends.</para> 
 <para>When you choose <guilabel>New Todo</guilabel>, a new to-do will be created
-and you will be able to enter all neccessary <link
+and you will be able to enter all necessary <link
 linkend="entering-data-to-do">information</link>.</para> 
 <para>Click on any to-do task in the list to highlight it. If you click on the
 thick-line box on the left of the task description, you will change the

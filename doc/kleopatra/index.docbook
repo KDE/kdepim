@@ -110,7 +110,7 @@ CA).</para>
 <para>Whenever you are done with a step in the wizard, press
 <guibutton>Next</guibutton> to go to the next step (or
 <guibutton>Back</guibutton> to review steps that are already
-completed). The certificate request creation can be cancelled at any
+completed). The certificate request creation can be canceled at any
 point by pressing the <guibutton>Cancel</guibutton> button.
 </para>
 <para>The first step in the wizard is to type in your personal data

@@ -19,7 +19,7 @@
 
  <!-- Note:
 * please do not mix up the formatting more than necessary so that
-  "cvs diff" makes usefull output
+  "cvs diff" makes useful output
 * no short forms
 * use <warning> instead of <caution>
 $Id$

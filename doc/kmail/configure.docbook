@@ -283,7 +283,7 @@ button.</para>
 command. Thus, you can use programs such as
 <command>fortune</command> to create a new signature text for
 every message. Everything the program prints onto
-<acronym>stdout</acronym> is catched and used as the signature
+<acronym>stdout</acronym> is caught and used as the signature
 text.</para>
 
 <para>To read the text from the output of a command you select

@@ -1047,7 +1047,7 @@ The dialog to edit the scoring rules will be opened.</action>
 <listitem> 
 <para> 
 <action> 
-The scores will be resetted and recalculated.</action> 
+The scores will be reset and recalculated.</action> 
 </para> 
 </listitem> 
 </varlistentry> 

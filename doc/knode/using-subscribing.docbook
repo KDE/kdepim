@@ -46,7 +46,7 @@ on</guilabel> in a tree. This tree view  shows the
 newsgroup hierarchy.</para> 
 
 <tip> 
-<para>You find a short discription about the structure of the usenet
+<para>You find a short description about the structure of the usenet
 and the hierarchy of the single newsgroups at <ulink
 url="http://www.kirchwitz.de/~amk/dni/usenet-einfuehrung">http://www.kirchwitz.de/~amk/dni/usenet-einfuehrung</ulink>
 (german)</para> 
@@ -114,7 +114,7 @@ for these groups.</para>
 <title><guilabel>new only</guilabel></title> 
 
 <para>If <guilabel>new only</guilabel> is checked, the tree-view
-<guilabel>Groups on</guilabel> shows only the groups, wich are new
+<guilabel>Groups on</guilabel> shows only the groups, which are new
 since you last fetched the group-list. For this to be functional, you
 first have to fetch a new group-list with <guibutton>New
 List</guibutton>.</para> 
@@ -141,10 +141,10 @@ selection.</para>
 changes you made, since you opened the dialog.</para> 
 
 <para>The list <guilabel>subscribe to</guilabel> shows the newsgroups
-you have choosen to subscribe.</para> 
+you have chosen to subscribe.</para> 
 
 <para>Below you see the list <guilabel>unsubscribe
-from</guilabel>. This list shows all newsgroups you have choosen to
+from</guilabel>. This list shows all newsgroups you have chosen to
 unsubscribe. You can not unsubscribe from groups you are not
 subscribed to.</para> 
 
@@ -153,7 +153,7 @@ subscribed to.</para>
 <sect3> 
 <title><guilabel>New Groups</guilabel></title> 
 
-<para>This button opens a dialog wich allows you to configure the list
+<para>This button opens a dialog which allows you to configure the list
 of new groups. You can choose between showing all groups since the
 last refresh or all groups since a given date. With the date option,
 &knode; provides a more flexible posibility to check for new
@@ -187,7 +187,7 @@ deleted groups vanish from the grouplist.</para>
 providing all available newsgroups. Many newsserver refuse groups
 publishing binary attachments. Other groups are only available from
 special servers. &knode; provides you the possibility to use more than
-one news-server, if you want to acces alternative servers providing
+one news-server, if you want to access alternative servers providing
 these groups. You can read more about this in <xref
 linkend="multiple-news-accounts"/> .</para>
 
@@ -217,7 +217,7 @@ long as the dialog is not closed by clicking
 <para>As a &kde; and &knode; user you will probably want to subscribe
 to the group. So make sure you checked the box and press
 <guibutton>OK</guibutton>. This group now appears in the tree view
-under the server entry it was choosen from. In our example this is
+under the server entry it was chosen from. In our example this is
 <emphasis>My News Account</emphasis>. If you can not see the group,
 click on the cross next to the server entry or on the server entry
 itself. The list of subscribed newsgroups should appear.</para>
@@ -265,7 +265,7 @@ the mouse. If you click in a window it gets the focus. This is
 important, if you want to use &knode; with the keyboard. The
 <keycap>Tab</keycap> key changes the focus between the views. The
 currently active view is indicated by a small colored bar over the
-coloum headers.</para> 
+column headers.</para> 
 
 <para>This picture shows &knode; with the subscribed &kde;
 newsgroup.</para>
@@ -370,7 +370,7 @@ are marked as unread.</para>
 <title>The folder <guilabel>Outbox</guilabel></title> 
 
 <para>The folder <guilabel>Outbox</guilabel> contains all articles,
-wich are supposed to be sent later or which could not be sent because
+which are supposed to be sent later or which could not be sent because
 of an error. If you want to sent an article later, choose
 <menuchoice><guimenu>File</guimenu><guimenuitem>Send
 Later</guimenuitem></menuchoice> in the editor. The article is then
@@ -400,7 +400,7 @@ folder.</para>
 <sect4> 
 <title>The Folder <guilabel>Sent</guilabel></title> 
 
-<para>Selecting this folder shows you the articles you succesfully
+<para>Selecting this folder shows you the articles you successfully
 sent, including your e-mail replies. You can delete the messages in
 this folder, but this has no influence on the messages already
 sent.</para> 
@@ -429,13 +429,13 @@ leafnode was unable to send, are normally found in
 <para>The article view gives you a list of all articles in the
 selected newsgroup or folder. You can change the appearence of this
 view with the <guimenu>View</guimenu> menu. The uppermost row of the
-view contains the coloumn headers.</para> 
+view contains the column headers.</para> 
 
 <variablelist> 
 <varlistentry> 
 <term><guilabel>Subject</guilabel></term> 
 <listitem> 
-<para>The <guilabel>Subject</guilabel> coloumn shows the subjects of
+<para>The <guilabel>Subject</guilabel> column shows the subjects of
 an articles, which, most of the time give you a clue about the content
 of this article. The subject is chosen by the article author. You can
 find more about this in<link linkend="post-and-mail-news">How to post
@@ -451,7 +451,7 @@ your settings in
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
 KNode</guimenuitem><guilabel>Identity</guilabel></menuchoice>. When
 you publish an article &knode; will show these settings in the
-<guilabel>From</guilabel> coloumn.</para> 
+<guilabel>From</guilabel> column.</para> 
 </listitem> 
 </varlistentry> 
 <varlistentry> 
@@ -581,11 +581,11 @@ close threads with your mouse or keyboard.</para>
 article view gets colored. At the same time the header and body of
 this article appear in in the article window. If you want to read an
 other article, you can use the mouse for selecting it or you can use
-the cursor keys. When you use the coursor keys, you can move the
+the cursor keys. When you use the cursor keys, you can move the
 dashed frame to the article you want and then press
 <keycap>Enter</keycap> for marking and diplaying the article.</para>
 
-<para>There are many key commands, wich allow a comfortable navigation
+<para>There are many key commands, which allow a comfortable navigation
 in a news group and for switching between newsgroups. Here the most
 common key commands of the standard key configuration are listed. You
 can configure this key bindings in
@@ -708,13 +708,13 @@ criterias.</para>
 <para>Sorting your articles and the choice of sorting criterias is
 done with the column titles in the article view. Clicking on a cloumn
 title makes it the current sorting criteria. Another click on the same
-coloumn title changes the order of sorting.</para>
+column title changes the order of sorting.</para>
 
 <tip> 
 <para>The current sorting criteria is indicated with an arrow next to
-the titel. This gives you an easy sign, wich column is used for
-sorting, too. You have to make the coloumn wide enough, so that you
-can actually see the arrow. You can change the coloumn width by moving
+the titel. This gives you an easy sign, which column is used for
+sorting, too. You have to make the column wide enough, so that you
+can actually see the arrow. You can change the column width by moving
 the mouse pointer on the small area between two column titles. The
 pointer changes it's appeareance in two horizontal arrows. Clicking
 and holding the &LMB; mouse button allows you now to change the width
@@ -857,9 +857,9 @@ in more detail now.</para>
 
 <para>This part shows the header lines or a part of the header. You
 will recognize some informations here from the article view. For
-example the subject and the adress or name where the article
+example the subject and the address or name where the article
 originated. When you click on the <guilabel>From:</guilabel> address,
-&knode; opens an editor window. The email adress of the author and
+&knode; opens an editor window. The email address of the author and
 the subject of the refering article are already filled in for
 you. This enables you to reply to the author directly from her
 article.</para> 
@@ -888,7 +888,7 @@ highest number is the one the current article is refering to.</para>
 
 <para>When you click on a reference, the according article is loaded
 and shown in the article view. It can occure, &knode; is telling you,
-the refered article is no longer reachable. This always happens when
+the referred article is no longer reachable. This always happens when
 an article is older and the article management of &knode; or your
 newsserver decided to delete it from the newsgroup. How to get such an
 article, please refer to the <link linkend="faq">Frequently Asked
@@ -910,7 +910,7 @@ of an article possibly containing quotes from other articles, which
 are not always recognizable as quotes. This depends on the newseditor
 and the habits of the author.</para> 
 
-<para>&knode; provides some highlightings, wich are used in the
+<para>&knode; provides some highlightings, which are used in the
  article window. At the moment these are:</para>
 
 <simplelist>
@@ -965,7 +965,7 @@ News</guilabel><guilabel>Viewer</guilabel></menuchoice>.</para>
 </caution> 
 
 <para>When the body of an article contains links to internet adresses,
-you can invoke an internet browser, starting with this adress, by
+you can invoke an internet browser, starting with this address, by
 clicking on the link. Details about configuring this feature you can
 find in <link linkend="setting-news-general">General news
 settings</link>.</para>
@@ -1191,7 +1191,7 @@ article in usenet with &knode;.</para>
 <sect3> 
 <title>Post Reply</title> 
 
-<para>After succesfully publishing an article, we will now anwser to
+<para>After successfully publishing an article, we will now anwser to
 your own article. You want to anwser the question you asked, don't
 you?</para> 
 
@@ -1331,7 +1331,7 @@ with the quoted article.</para>
 <para>Subject and body are identical with posting an article, but
 the <guilabel>Groups:</guilabel> field is replaced by a
 <guilabel>To:</guilabel> field. Here appears the authors e-mail
-adress. In our example this should be your own email adress, if
+address. In our example this should be your own email address, if
 &knode; is set up correctly.</para> 
 
 <para>For emails apply the same rules for quoting and politness apply

@@ -735,7 +735,7 @@ the program with the parts of the mail: <symbol>&percnt;0</symbol>,
 the message parts. For common messages <symbol>&percnt;0</symbol> is the
 text, <symbol>&percnt;1</symbol> the first attachment and so
 on. Additionally, the whole message is fed into the program's
-<acronym>stdin</acronym>. In addition, every occurence of
+<acronym>stdin</acronym>. In addition, every occurrence of
 <symbol>&percnt;{foo}</symbol> is replaced by the content of the foo
 header.</para>
 

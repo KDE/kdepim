@@ -8,7 +8,7 @@
 
 <para>This chapter is supposed to glance over the World of Newsgroups
 and their<quote> inhabitants</quote> . Someone who never dared to go
-there will encounter some strange customs, wich may give you a feeling
+there will encounter some strange customs, which may give you a feeling
 of being a lonely alien without backup. But stay calm, it is not like
 this. The Usenet is a meeting place for all kinds of normal and
 not-so-normal folks. It is here where they are distributing a lot of
@@ -27,7 +27,7 @@ Resources</link></para>
 <sect2> 
 <title>... online-readers?</title> 
 
-<para>An online-reader connects to a newsserver and gives you acces to
+<para>An online-reader connects to a newsserver and gives you access to
 its content. &knode; is an online-reader. You are reading your News
 and publishing your own <glossterm>articles</glossterm>, while the
 online-reader stays connected.</para>
@@ -40,7 +40,7 @@ online-reader stays connected.</para>
 <para>An offline-reader connects to the Server and fetches only the
 headers of new articles. Then the connection is closed and you can
 offline mark the articles, you are really interested in. When you
-connent the next time, the offline-reader fetches the articles you
+connect the next time, the offline-reader fetches the articles you
 marked and sends the articles you have written offline.</para>
 
 <para>There is no connection while you are reading or writing
@@ -125,7 +125,7 @@ anwsering or publishing an article.</para>
 <title>The Usenet language</title> 
 <anchor id="anc-usenet-slang"/> 
 
-<para>You won't be surprised about English beeing the main language on
+<para>You won't be surprised about English being the main language on
 the Usenet. There are special trees with German (de.*), French (fr.*)
 and many other languages. If you are unable to determine the main
 language of a newsgroup, the only possibility is careful listenening

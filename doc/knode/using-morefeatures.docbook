@@ -7,7 +7,7 @@
 <sect2 id="using-filters">
 <title>Defining and Using Filters</title>
 
-<para>You alrady read about using Filters in the chapter explaining
+<para>You already read about using Filters in the chapter explaining
 the configuration of &knode;. We were talking about the built-in
 filters provided by &knode; there. You can configure the built-in
 filters like all the others. The screenshot shows the Dialog Box for
@@ -106,7 +106,7 @@ it.</para>
 <step>
 <para>Confirm the filter settings with
 <guibutton>OK</guibutton></para>
-<para>This filter shows all threads your are participating in, wich
+<para>This filter shows all threads your are participating in, which
 have unread messages. Also, you saw the possibility, to use already
 existing filters as a base for new ones. This makes life easier for
 complex filters.</para>
@@ -227,7 +227,7 @@ Reply-To address in the normal &knode; settings.</para>
 
 <para>Using <menuchoice><guimenu>Tools</guimenu><guimenuitem>Start
 External Editor</guimenuitem></menuchoice> you can start an editor of
-your choice, for editing the reply. So you can use your prefered
+your choice, for editing the reply. So you can use your preferred
 Editor for writing articles and e-mails.</para> 
 
 </sect3> 
@@ -328,7 +328,7 @@ criteria. The first tab contains the settings for the criterion
 tab contains the settings for the <guilabel>message-IDs</guilabel> of
 an article and its references. The third tab contains the settings for
 the <guilabel>Status</guilabel> of an
-article. <guilabel>Additional</guilabel> contains the criteria, wich
+article. <guilabel>Additional</guilabel> contains the criteria, which
 do not belong to the first or second tab.</para>
 
 <para>You probably already noticed the similarities between the Filter
@@ -369,7 +369,7 @@ comfort features of a newsreader.</para>
 
 <caution> 
 <para>Both functions need a news server prepared to handle
-them. You should remeber that there is no guarantee that no one has
+them. You should remember that there is no guarantee that no one has
 already read your article, before it is superseded or canceled.
 </para>
 
@@ -440,7 +440,7 @@ cancel messages from posters.  Even if your own <acronym>ISP</acronym>
 accepts the cancel and passes it on, many other servers will ignore it
 <emphasis>and will not pass it on</emphasis>.</para>
 
-<para>You should consider any previously sent article, cancelled or
+<para>You should consider any previously sent article, canceled or
 not, to be published and publicly available.</para>
 </warning>
 
@@ -669,7 +669,7 @@ so they won't appear in the article list.</para>
 
 <para>With &knode; you can use a different identity with every
 newsgroup you are subscribed to. This involves name, email, reply-to
-adress and signature.</para>
+address and signature.</para>
 
 <para>It is easy to set group identities. For setting up a group
 identity, select the according newsgroup. In the context menu, select
