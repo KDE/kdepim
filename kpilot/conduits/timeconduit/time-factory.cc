@@ -97,6 +97,19 @@ TimeConduitFactory::~TimeConduitFactory()
 		<< endl;
 #endif
 
+	if (qstrcmp(c,"ConduitConfigBase")==0)
+	{
+		QWidget *w = dynamic_cast<QWidget *>(p);
+		if (w)
+		{
+			return new TimeWidgetConfig(w,"ConduitConfigBase");
+		}
+		else
+		{
+			return 0L;
+		}
+	}
+	else
 	if (qstrcmp(c,"ConduitConfig")==0)
 	{
 		QWidget *w = dynamic_cast<QWidget *>(p);

@@ -51,6 +51,69 @@ void *init_libnullconduit()
 
 } ;
 
+class NullConduitConfig : public ConduitConfigBase
+{
+public:
+	NullConduitConfig(QWidget *parent=0L, const char *n=0L);
+	virtual void commit(KConfig *);
+	virtual void load(KConfig *);
+protected:
+	NullWidget *fConfigWidget;
+} ;
+
+NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
+	ConduitConfigBase(p,n),
+	fConfigWidget(new NullWidget(p))
+{
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,NullConduitFactory::about());
+	fWidget=fConfigWidget;
+}
+
+/* virtual */ void NullConduitConfig::commit(KConfig *fConfig)
+{
+	FUNCTIONSETUP;
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Message="
+		<< fConfigWidget->fLogMessage->text()
+		<< endl;
+	DEBUGCONDUIT << fname
+		<< ": Databases="
+		<< fConfigWidget->fDatabases->text()
+		<< endl;
+#endif
+
+	KConfigGroupSaver s(fConfig,NullConduitFactory::group);
+
+	fConfig->writeEntry(NullConduitFactory::message,fConfigWidget->fLogMessage->text());
+	fConfig->writeEntry(NullConduitFactory::databases,fConfigWidget->fDatabases->text());
+	fConfig->writeEntry(NullConduitFactory::failImmediately,
+		fConfigWidget->fFailImmediately->isChecked());
+}
+
+/* virtual */ void NullConduitConfig::load(KConfig *fConfig)
+{
+	FUNCTIONSETUP;
+
+	KConfigGroupSaver s(fConfig,NullConduitFactory::group);
+
+	fConfigWidget->fLogMessage->setText(
+		fConfig->readEntry(NullConduitFactory::message,i18n("KPilot was here!")));
+	fConfigWidget->fDatabases->setText(
+		fConfig->readEntry(NullConduitFactory::databases));
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Read Message="
+		<< fConfigWidget->fLogMessage->text()
+		<< endl;
+	DEBUGCONDUIT << fname
+		<< ": Read Database="
+		<< fConfigWidget->fDatabases->text()
+		<< endl;
+#endif
+}
 
 /* static */ const char * const NullConduitFactory::group = "Null-conduit";
 const char * const NullConduitFactory::databases = "Databases" ;
@@ -98,6 +161,19 @@ NullConduitFactory::~NullConduitFactory()
 		<< endl;
 #endif
 
+	if (qstrcmp(c,"ConduitConfigBase")==0)
+	{
+		QWidget *w = dynamic_cast<QWidget *>(p);
+		if (w)
+		{
+			return new NullConduitConfig(w);
+		}
+		else
+		{
+			return 0L;
+		}
+	}
+	else
 	if (qstrcmp(c,"ConduitConfig")==0)
 	{
 		QWidget *w = dynamic_cast<QWidget *>(p);
@@ -142,12 +218,7 @@ NullWidgetSetup::NullWidgetSetup(QWidget *w, const char *n,
 {
 	FUNCTIONSETUP;
 
-	fConfigWidget = new NullWidget(widget());
-	setTabWidget(fConfigWidget->tabWidget);
-	addAboutPage(false,NullConduitFactory::about());
-
-	fConfigWidget->tabWidget->adjustSize();
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
+	fConfigWidget = new NullConduitConfig(this);
 }
 
 NullWidgetSetup::~NullWidgetSetup()
@@ -158,49 +229,11 @@ NullWidgetSetup::~NullWidgetSetup()
 /* virtual */ void NullWidgetSetup::commitChanges()
 {
 	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
-		<< ": Message="
-		<< fConfigWidget->fLogMessage->text()
-		<< endl;
-	DEBUGCONDUIT << fname
-		<< ": Databases="
-		<< fConfigWidget->fDatabases->text()
-		<< endl;
-#endif
-
-	KConfigGroupSaver s(fConfig,NullConduitFactory::group);
-
-	fConfig->writeEntry(NullConduitFactory::message,fConfigWidget->fLogMessage->text());
-	fConfig->writeEntry(NullConduitFactory::databases,fConfigWidget->fDatabases->text());
-	fConfig->writeEntry(NullConduitFactory::failImmediately,
-		fConfigWidget->fFailImmediately->isChecked());
+	fConfigWidget->commit(fConfig);
 }
 
 /* virtual */ void NullWidgetSetup::readSettings()
 {
 	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,NullConduitFactory::group);
-
-	fConfigWidget->fLogMessage->setText(
-		fConfig->readEntry(NullConduitFactory::message,i18n("KPilot was here!")));
-	fConfigWidget->fDatabases->setText(
-		fConfig->readEntry(NullConduitFactory::databases));
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
-		<< ": Read Message="
-		<< fConfigWidget->fLogMessage->text()
-		<< endl;
-	DEBUGCONDUIT << fname
-		<< ": Read Database="
-		<< fConfigWidget->fDatabases->text()
-		<< endl;
-#endif
+	fConfigWidget->load(fConfig);
 }

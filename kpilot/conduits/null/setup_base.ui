@@ -11,8 +11,8 @@ the Null-conduit settings.</comment>
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>383</width>
-            <height>202</height>
+            <width>342</width>
+            <height>163</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -41,7 +41,7 @@ the Null-conduit settings.</comment>
             <cstring>unnamed</cstring>
         </property>
         <property name="margin">
-            <number>11</number>
+            <number>0</number>
         </property>
         <property name="spacing">
             <number>6</number>

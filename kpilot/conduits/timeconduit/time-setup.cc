@@ -39,6 +39,29 @@
 #include "time-factory.h"
 #include "time-setup.moc"
 
+TimeWidgetConfig::TimeWidgetConfig(QWidget *w, const char *n) :
+	ConduitConfigBase(w,n),
+	fConfigWidget(new TimeWidget(w))
+{
+	FUNCTIONSETUP;
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,TimeConduitFactory::about());
+	fWidget=fConfigWidget;
+}
+
+void TimeWidgetConfig::commit(KConfig *fConfig)
+{
+	FUNCTIONSETUP;
+	KConfigGroupSaver s(fConfig,TimeConduitFactory::group());
+	fConfig->writeEntry(TimeConduitFactory::direction(),
+		fConfigWidget->directionGroup->id(fConfigWidget->directionGroup->selected()));
+}
+
+void TimeWidgetConfig::load(KConfig *fConfig)
+{
+	FUNCTIONSETUP;
+	KConfigGroupSaver s(fConfig,TimeConduitFactory::group());
+	fConfigWidget->directionGroup->setButton(fConfig->readNumEntry(TimeConduitFactory::direction(), DIR_PCToPalm) );
+}
 
 TimeWidgetSetup::TimeWidgetSetup(QWidget *w, const char *n,
 	const QStringList & a) :
@@ -46,12 +69,7 @@ TimeWidgetSetup::TimeWidgetSetup(QWidget *w, const char *n,
 {
 	FUNCTIONSETUP;
 
-	fConfigWidget = new TimeWidget(widget());
-	setTabWidget(fConfigWidget->tabWidget);
-	addAboutPage(false,TimeConduitFactory::about());
-
-	fConfigWidget->tabWidget->adjustSize();
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
+	fConfigBase = new TimeWidgetConfig(widget(),"ConfigWidget");
 }
 
 TimeWidgetSetup::~TimeWidgetSetup()
@@ -64,11 +82,7 @@ TimeWidgetSetup::~TimeWidgetSetup()
 	FUNCTIONSETUP;
 
 	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,TimeConduitFactory::group());
-
-	fConfig->writeEntry(TimeConduitFactory::direction(),
-		fConfigWidget->directionGroup->id(fConfigWidget->directionGroup->selected()));
+	fConfigBase->commit(fConfig);
 }
 
 /* virtual */ void TimeWidgetSetup::readSettings()
@@ -76,9 +90,6 @@ TimeWidgetSetup::~TimeWidgetSetup()
 	FUNCTIONSETUP;
 
 	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,TimeConduitFactory::group());
-
-	fConfigWidget->directionGroup->setButton(fConfig->readNumEntry(TimeConduitFactory::direction(), DIR_PCToPalm) );
+	fConfigBase->load(fConfig);
 }
 

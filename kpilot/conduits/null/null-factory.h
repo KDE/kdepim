@@ -50,7 +50,7 @@ protected:
 	virtual void commitChanges();
 
 private:
-	NullWidget *fConfigWidget;
+	ConduitConfigBase *fConfigWidget;
 } ;
 
 class NullConduitFactory : public KLibFactory
