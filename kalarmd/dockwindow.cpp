@@ -31,6 +31,7 @@
 #include <kmessagebox.h>
 
 #include "dockwindow.h"
+#include <kurl.h>
 #include "dockwindow.moc"
 
 AlarmDockWindow::AlarmDockWindow(AlarmDaemon& ad, const QString& defltClient,

@@ -41,6 +41,7 @@
 #include "alarmdialog.h"
 
 #include "alarmdaemon.h"
+#include <dcopclient.h>
 #include "alarmdaemon.moc"
 
 
