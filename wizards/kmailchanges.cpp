@@ -159,7 +159,8 @@ void CreateDisconnectedImapAccount::apply()
   c.writeEntry( "login", mUser );
 
   c.writeEntry( "sieve-support", mEnableSieve ? "true" : "false" );
-  c.writeEntry( "sieve-vacation-filename", mSieveVacationFileName );
+  if ( !mSieveVacationFileName.isEmpty() )
+    c.writeEntry( "sieve-vacation-filename", mSieveVacationFileName );
 
   if ( mEncryption == SSL ) {
     c.writeEntry( "use-ssl", true );
