@@ -3,7 +3,7 @@ Build-Depends: autoconf2.13, automake, libtool, kdelibs-dev (>= 4:2.2.0-0), debh
 Section: x11
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
-Standards-Version: 3.5.4
+Standards-Version: 3.5.5
 
 Package: korganizer
 Architecture: any
