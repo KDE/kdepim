@@ -1,5 +1,5 @@
-KPilot Developer's notes for april 22nd 2001
-===========================================
+KPilot Developer's notes for april 19th 2001
+============================================
 
 * Martin Junius has contributed an XML GUI framework for KPilot, so
   it now finally uses the "modern" way of doing GUIs. This *does*
@@ -11,7 +11,16 @@ KPilot Developer's notes for april 22nd 2001
 * Fixed up more #include shenanigans for --enable-final. (Don't 
   forget the #ifndef conventions from HOWTO-CODE.txt!) KPilot now
   builds without warnings with --enable-final --disable-debug. [15-4]
-  
+
+Things to do:
+
+* Fixup the documentation.
+* Add QToolTips to the conduits setups, KPilot's setup, and the conduit setup.
+  This is already partially done, but someone else needs to finish this off.
+* Make KPilot installation and run easier -- JPilot seems to work out-of-the
+  box on systems where KPilot doesn't.
+* Look into bugs #23385 (crash in VCalConduit), #20318 (munged 8-bit chars)
+  and #24291 (doubled appointments). 
 
 KPilot Developer's notes for april 8th 2001
 ===========================================
