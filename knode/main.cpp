@@ -17,6 +17,7 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include "knode.h"
+#include "resource.h"
 
 void convert(const char*);
 
@@ -32,7 +33,7 @@ int main(int argc, char* argv[])
 
 	KAboutData aboutData("knode",
 												I18N_NOOP("KNode"),
-												"0.2",
+												KNODE_VERSION,
 												I18N_NOOP("A newsreader for KDE"),
 												KAboutData::License_GPL,
     										"(c) 1999-2000, Christian Thurner",

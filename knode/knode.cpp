@@ -63,7 +63,7 @@ KNodeApp::KNodeApp()
   xTop=this;
 
   //init the GUI
-  setPlainCaption("KNode " VERSION);
+  setPlainCaption("KNode " KNODE_VERSION);
 
   initView();	
   initStatusBar();
@@ -534,17 +534,17 @@ void KNodeApp::initActions()
   actSetShowThreads = new KToggleAction(i18n("Show th&reads"), 0 , this, SLOT(slotToggleShowThreads()),
                                         actionCollection(), "settings_showThreads");
   actSetExpandAll = new KAction(i18n("&Expand all threads"), 0 , this, SLOT(slotViewExpand()),
-              actionCollection(), "settings_ExpandAll");
+                                actionCollection(), "settings_ExpandAll");
   actSetCollapseAll = new KAction(i18n("&Collapse all threads"), 0 , this, SLOT(slotViewCollapse()),
-              actionCollection(), "settings_CollapseAll");
+                                  actionCollection(), "settings_CollapseAll");
   new KAction(i18n("&Refresh List"),"refresh", Key_F5 , this, SLOT(slotViewRefresh()),
               actionCollection(), "settings_CollapseAll");
   actSetShowAllHdrs = new KToggleAction(i18n("Show &all headers"), 0 , this, SLOT(slotToggleShowAllHdrs()),
                                         actionCollection(), "settings_showAllHdrs");
   actSetShowAllHdrs->setChecked(KNArticleWidget::fullHeaders());
   actSetFilters = new KNFilterSelectAction(i18n("&Filter"), "filter", 0 , actionCollection(), "settings_Filter");
-  actSetSort = new KSelectAction(i18n("&Sort"), 0 , this, SLOT(slotViewSort (int)),
-                                 actionCollection(), "settings_Sort");
+  actSetSort = new KSelectAction(i18n("&Sort"), 0 ,actionCollection(), "settings_Sort");
+  connect(actSetSort,SIGNAL(activated(int)),this,SLOT(slotViewSort (int)));
   QStringList items;
   items += i18n("By &Subject");
   items += i18n("By S&ender");

@@ -585,7 +585,7 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
 			f.close();
 		}		
 	}
-	art->setHeader(KNArticleBase::HTuserAgent, "KNode " VERSION);
+	art->setHeader(KNArticleBase::HTuserAgent, "KNode " KNODE_VERSION);
 	if(art->isMail())
 		art->setHeader(KNArticleBase::HTxknstatus, "toMail");
 	else

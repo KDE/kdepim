@@ -24,6 +24,9 @@
 #endif
 
 
+//========= KNode Version Information ============
+
+#define KNODE_VERSION "0.2"
 
 //================= StatusBar ====================
 
@@ -33,16 +36,11 @@
 #define SB_FILTER		4000030
 
 
-//================ Folders ================
+//================== Folders =====================
 
 #define FOLD_DRAFTS	200010
 #define FOLD_SENT		200020
 #define FOLD_OUTB		200030
-
-//=============== General application values ================
-
-
-
 
 
 #endif // RESOURCE_H
