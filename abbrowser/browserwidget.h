@@ -91,7 +91,6 @@ protected:
   void contentsMouseMoveEvent( QMouseEvent *e );
   void contentsDragEnterEvent( QDragEnterEvent *e );
   void contentsDropEvent( QDropEvent *e );
-  void addEmail(const QString& aStr);
 
 public slots:
   void incSearch( const QString &value );
@@ -133,6 +132,7 @@ public:
   virtual QStringList *fields();
   virtual QString selectedEmails();
   virtual void updateContact( QString addr, QString name );
+  virtual void addEmail(const QString& aStr);
 
 public slots:
   virtual void showSelectNameDialog();

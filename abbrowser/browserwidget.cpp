@@ -769,6 +769,45 @@ void PabWidget::updateContact( QString addr, QString name )
   cd->show();
 }
 
+void PabWidget::addEmail(const QString& aStr)
+{
+  int i, j, len;
+  QString partA, partB, result;
+  char endCh = '>';
+
+  i = aStr.find('<');
+  if (i<0)
+  {
+    i = aStr.find('(');
+    endCh = ')';
+  }
+  if (i<0) {
+    updateContact( aStr, "" );
+    return;
+  }
+  partA = aStr.left(i).stripWhiteSpace();
+  j = aStr.find(endCh,i+1);
+  if (j<0) {
+    updateContact( aStr, "" );
+    return;
+  }
+  partB = aStr.mid(i+1, j-i-1).stripWhiteSpace();
+
+  if (partA.find('@') >= 0 && !partB.isEmpty()) result = partB;
+  else if (!partA.isEmpty()) result = partA;
+  else result = aStr;
+
+  len = result.length();
+  if (result[0]=='"' && result[len-1]=='"')
+    result = result.mid(1, result.length()-2);
+  else if (result[0]=='<' && result[len-1]=='>')
+    result = result.mid(1, result.length()-2);
+  else if (result[0]=='(' && result[len-1]==')')
+    result = result.mid(1, result.length()-2);
+
+  updateContact( partB, result );
+}
+
 void PabWidget::sendMail()
 {
   QString emailAddrs = selectedEmails();
@@ -1177,45 +1216,7 @@ void PabListView::contentsDragEnterEvent( QDragEnterEvent *e )
     e->ignore();
     return;
   }
-}
-
-void PabListView::addEmail(const QString& aStr)
-{
-  int i, j, len;
-  QString partA, partB, result;
-  char endCh = '>';
-
-  i = aStr.find('<');
-  if (i<0)
-  {
-    i = aStr.find('(');
-    endCh = ')';
-  }
-  if (i<0) {
-    pabWidget->updateContact( aStr, "" );
-    return;
-  }
-  partA = aStr.left(i).stripWhiteSpace();
-  j = aStr.find(endCh,i+1);
-  if (j<0) {
-    pabWidget->updateContact( aStr, "" );
-    return;
-  }
-  partB = aStr.mid(i+1, j-i-1).stripWhiteSpace();
-
-  if (partA.find('@') >= 0 && !partB.isEmpty()) result = partB;
-  else if (!partA.isEmpty()) result = partA;
-  else result = aStr;
-
-  len = result.length();
-  if (result[0]=='"' && result[len-1]=='"')
-    result = result.mid(1, result.length()-2);
-  else if (result[0]=='<' && result[len-1]=='>')
-    result = result.mid(1, result.length()-2);
-  else if (result[0]=='(' && result[len-1]==')')
-    result = result.mid(1, result.length()-2);
-
-  pabWidget->updateContact( partB, result );
+  e->accept();
 }
 
 void PabListView::contentsDropEvent( QDropEvent *e )
@@ -1225,7 +1226,7 @@ void PabListView::contentsDropEvent( QDropEvent *e )
     QString m("Full URLs:\n");
     for (const char* u=strings.first(); u; u=strings.next())
       if (u && (KURL::decode_string(u).find( "mailto:" ) == 0)) {
-	addEmail( KURL::decode_string(u).mid(7) );
+	pabWidget->addEmail( KURL::decode_string(u).mid(7) );
 	return;
       }
   }

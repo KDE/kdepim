@@ -10,8 +10,6 @@ static KCmdLineOptions kmoptions[] =
 {
   { "a", 0 , 0 },
   { "addr <email>",	I18N_NOOP("Update entry with given email address"), 0 },
-  { "n", 0 , 0 },
-  { "name <full name>",	I18N_NOOP("Set full name of entry being updated"), 0 },
   { 0, 0, 0}
 };
 
@@ -37,11 +35,8 @@ int main(int argc, char *argv[])
   }
   else
   {
-    QString name, addr;
+    QString addr;
 
-    QCString nameStr = args->getOption("name");
-    if (!nameStr.isEmpty())
-      name = QString::fromLocal8Bit( nameStr );
     QCString addrStr = args->getOption("addr");
     if (!addrStr.isEmpty())
       addr = QString::fromLocal8Bit( addrStr );
@@ -51,7 +46,7 @@ int main(int argc, char *argv[])
     widget->show();
     
     if (!addr.isEmpty())
-      widget->updateContact( addr, name );
+      widget->addEmail( addr );
   }
 
   return app.exec();

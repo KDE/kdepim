@@ -112,9 +112,9 @@ void Pab::newContact()
   cd->show();
 }
 
-void Pab::updateContact( QString addr, QString name )
+void Pab::addEmail( QString addr )
 {
-  view->updateContact( addr, name );
+  view->addEntry( addr );
   return;
 }
 

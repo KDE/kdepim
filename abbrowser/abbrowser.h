@@ -41,7 +41,7 @@ public slots:
 	 * window
 	 */
         void newContact();
-        void updateContact( QString addr, QString name );
+        void addEmail( QString addr );
 	void saveCe();
 	void save();
 	void readConfig();
