@@ -239,6 +239,9 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
     kdDebug(5800) << "Considering this found event ("
                   << ( i->isReadOnly() ? "readonly" : "readwrite" )
                   << ") :" << mFormat->toString( i ) << endl;
+    // If it's readonly, we can't possible update it.
+    if ( i->isReadOnly() )
+      continue;
     if ( i->revision() <= inc->revision() ) {
       // The new incidence might be an update for the found one
       bool isUpdate = true;
@@ -270,11 +273,9 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
           deleteTransaction(incidence);
           return false;
         }
-        if ( !i->isReadOnly() ) {
-          kdDebug(5800) << "replacing existing incidence " << i->uid() << endl;
-          mCalendar->deleteIncidence( i );
-          break; // replacing one is enough
-        }
+        kdDebug(5800) << "replacing existing incidence " << i->uid() << endl;
+        mCalendar->deleteIncidence( i );
+        break; // replacing one is enough
       }
     } else {
       // This isn't an update - the found incidence has a bigger revision number
