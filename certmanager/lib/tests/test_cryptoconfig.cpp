@@ -136,6 +136,54 @@ int main( int argc, char** argv ) {
 
   {
     // Static querying of a single boolean option
+    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "Monitor", "quiet" );
+    if ( entry ) {
+      assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_None );
+      bool val = entry->boolValue();
+      cout << "quiet option: " << ( val ? "is set" : "is not set" ) << endl;
+
+      entry->setBoolValue( !val );
+      assert( entry->isDirty() );
+      config->sync( true );
+
+      // Clear cached values!
+      config->clear();
+
+      // Check new value
+      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "Monitor", "quiet" );
+      assert( entry );
+      assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_None );
+      cout << "quiet option: " << ( val ? "is set" : "is not set" ) << endl;
+      assert( entry->boolValue() == !val );
+
+      // Set to default
+      entry->resetToDefault();
+      assert( entry->boolValue() == false ); // that's the default
+      assert( entry->isDirty() );
+      assert( !entry->isSet() );
+      config->sync( true );
+      config->clear();
+
+      // Check value
+      entry = config->entry( "dirmngr", "Monitor", "quiet" );
+      assert( !entry->isDirty() );
+      assert( !entry->isSet() );
+      cout << "quiet option reset to default: " << ( entry->boolValue() ? "is set" : "is not set" ) << endl;
+      assert( entry->boolValue() == false );
+
+      // Reset old value
+      entry->setBoolValue( val );
+      assert( entry->isDirty() );
+      config->sync( true );
+
+      cout << "quiet option reset to initial: " << ( val ? "is set" : "is not set" ) << endl;
+    }
+    else
+      cout << "Entry dirmngr/Monitor/quiet not found" << endl;
+  }
+
+  {
+    // Static querying and setting of a single int option
     Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "LDAP", "ldaptimeout" );
     if ( entry ) {
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_UInt );
@@ -186,7 +234,7 @@ int main( int argc, char** argv ) {
   }
 
   {
-    // Static querying of a single string option
+    // Static querying and setting of a single string option
     Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "Debug", "log-file" );
     if ( entry ) {
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_Path );
@@ -224,7 +272,7 @@ int main( int argc, char** argv ) {
       assert( entry->isDirty() );
       config->sync( true );
 
-      cout << "Log-file reset to " << val.local8Bit() << endl;
+      cout << "Log-file reset to initial " << val.local8Bit() << endl;
     }
     else
       cout << "Entry dirmngr/Debug/log-file not found" << endl;

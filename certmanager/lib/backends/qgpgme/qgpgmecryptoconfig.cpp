@@ -376,7 +376,7 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( const QStringList& parsedLine 
   QString value;
   if ( mFlags & GPGCONF_FLAG_DEFAULT ) {
     value = *it; // get default value
-    mDefaultValue = stringToValue( value );
+    mDefaultValue = stringToValue( value, true );
   }
   ++it; // done with DEFAULT
   ++it; // ### skip ARGDEF for now. It's only for options with an "optional arg"
@@ -385,7 +385,7 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( const QStringList& parsedLine 
   if ( !(*it).isEmpty() ) {  // a real value was set
     mSet = true;
     value = *it;
-    mValue = stringToValue( value );
+    mValue = stringToValue( value, true );
   }
   else {
     mValue = mDefaultValue;
@@ -394,37 +394,39 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( const QStringList& parsedLine 
   mDirty = false;
 }
 
-QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& value ) const
+QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unescape ) const
 {
   bool isString = isStringType();
 
   if ( isList() ) {
     QValueList<QVariant> lst;
-    QStringList items = QStringList::split( ',', value );
+    QStringList items = QStringList::split( ',', str );
     for( QStringList::const_iterator valit = items.begin(); valit != items.end(); ++valit ) {
       QString val = *valit;
       if ( isString ) {
-        if ( val.isEmpty() )
+        if ( val.isEmpty() ) {
           lst << QString::null;
-        else {
-          Q_ASSERT( val[0] == '"' ); // see README.gpgconf
-          lst << QVariant( gpgconf_unescape( val.mid( 1 ) ) );
+          continue;
         }
-      } else
-        lst << QVariant( gpgconf_unescape( val ) );
+        else if ( unescape ) {
+          Q_ASSERT( val[0] == '"' ); // see README.gpgconf
+          val = val.mid( 1 );
+        }
+      }
+      lst << QVariant( unescape ? gpgconf_unescape( val ) : val );
     }
     return lst;
   } else { // not a list
+    QString val( str );
     if ( isString ) {
-      if ( value.isEmpty() )
+      if ( val.isEmpty() )
         return QVariant( QString::null ); // not set  [ok with lists too?]
-      else {
-        Q_ASSERT( value[0] == '"' ); // see README.gpgconf
-        return QVariant( gpgconf_unescape( value.mid( 1 ) ) );
+      else if ( unescape ) {
+        Q_ASSERT( val[0] == '"' ); // see README.gpgconf
+        val = val.mid( 1 );
       }
-    } else {
-      return QVariant( gpgconf_unescape( value ) );
     }
+    return QVariant( unescape ? gpgconf_unescape( val ) : val );
   }
 }
 
@@ -465,9 +467,7 @@ bool QGpgMECryptoConfigEntry::boolValue() const
 
 QString QGpgMECryptoConfigEntry::stringValue() const
 {
-  Q_ASSERT( isStringType() );
-  Q_ASSERT( !isList() );
-  return mValue.toString();
+  return toString( false );
 }
 
 int QGpgMECryptoConfigEntry::intValue() const
@@ -602,16 +602,16 @@ void QGpgMECryptoConfigEntry::setBoolValue( bool b )
 {
   Q_ASSERT( mArgType == ArgType_None );
   Q_ASSERT( !isList() );
+  // A "no arg" option is either set or not set.
+  // Being set means mSet==true + mValue==true, being unset means resetToDefault(), i.e. both false
   mValue = b;
-  mSet = true;
+  mSet = b;
   mDirty = true;
 }
 
 void QGpgMECryptoConfigEntry::setStringValue( const QString& str )
 {
-  Q_ASSERT( isStringType() );
-  Q_ASSERT( !isList() );
-  mValue = str;
+  mValue = stringToValue( str, false );
   mSet = true;
   mDirty = true;
 }
@@ -687,24 +687,29 @@ void QGpgMECryptoConfigEntry::setURLValueList( const KURL::List& urls )
   mDirty = true;
 }
 
-QString QGpgMECryptoConfigEntry::outputString() const
+QString QGpgMECryptoConfigEntry::toString( bool escape ) const
 {
-  Q_ASSERT( mSet );
-  // Basically the opposite of the constructor
+  // Basically the opposite of stringToValue
   if ( isStringType() ) {
     if ( mValue.isNull() )
       return QString::null;
     else if ( isList() ) { // string list
       QStringList lst = mValue.toStringList();
-      for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
-        if ( !(*it).isNull() )
-          *it = gpgconf_escape( *it ).prepend( "\"" );
+      if ( escape ) {
+        for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
+          if ( !(*it).isNull() )
+            *it = gpgconf_escape( *it ).prepend( "\"" );
+        }
       }
       QString res = lst.join( "," );
       kdDebug(5150) << res << endl;
       return res;
-    } else // normal string
-      return gpgconf_escape( mValue.toString() ).prepend( "\"" );
+    } else { // normal string
+      QString res = mValue.toString();
+      if ( escape )
+        res = gpgconf_escape( res ).prepend( "\"" );
+      return res;
+    }
   }
   if ( !isList() ) // non-list non-string
   {
@@ -716,7 +721,7 @@ QString QGpgMECryptoConfigEntry::outputString() const
     }
   }
 
-  // Lists
+  // Lists (of other types than strings)
   if ( mArgType == ArgType_None )
     return QString::number( numberOfTimesSet() );
   QStringList ret;
@@ -725,6 +730,12 @@ QString QGpgMECryptoConfigEntry::outputString() const
       ret << (*it).toString(); // QVariant does the conversion
   }
   return ret.join( "," );
+}
+
+QString QGpgMECryptoConfigEntry::outputString() const
+{
+  Q_ASSERT( mSet );
+  return toString( true );
 }
 
 bool QGpgMECryptoConfigEntry::isStringType() const

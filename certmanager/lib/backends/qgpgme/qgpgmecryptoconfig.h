@@ -160,7 +160,8 @@ public:
 
 protected:
   bool isStringType() const;
-  QVariant stringToValue( const QString& value ) const;
+  QVariant stringToValue( const QString& value, bool unescape ) const;
+  QString toString( bool escape ) const;
 private:
   QString mDescription;
   QVariant mDefaultValue;

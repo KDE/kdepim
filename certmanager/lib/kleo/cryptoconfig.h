@@ -118,7 +118,7 @@ namespace Kleo {
     virtual bool boolValue() const = 0;
 
     /**
-     * Return value as a string (mostly meaningful for String, Path and URL argtypes)
+     * Return value as a string (available for all argtypes)
      * The returned string can be empty (explicitely set to empty) or null (not set).
      */
     virtual QString stringValue() const = 0;
@@ -175,7 +175,7 @@ namespace Kleo {
     virtual void setBoolValue( bool ) = 0;
 
     /**
-     * Set string value (only allowed for String, Path and URL argtypes)
+     * Set string value (allowed for all argtypes)
      */
     virtual void setStringValue( const QString& ) = 0;
 
