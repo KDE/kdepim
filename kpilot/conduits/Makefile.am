@@ -16,6 +16,5 @@ SUBDIRS = knotes \
 	null \
 	vcalconduit \
 	popmail \
-	timeconduit \
-	$(MALSUBDIR)
+	timeconduit
 
