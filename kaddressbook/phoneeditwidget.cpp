@@ -55,7 +55,7 @@ PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
 
   mPrefCombo = new PhoneTypeCombo( mPhoneList, this );
   mPrefEdit = new KLineEdit( this );
-  mPrefEdit->setMinimumWidth( mPrefEdit->sizeHint().width() * 1.5 );
+  mPrefEdit->setMinimumWidth( int(mPrefEdit->sizeHint().width() * 1.5) );
   mPrefCombo->setLineEdit( mPrefEdit );
   layout->addWidget( mPrefCombo, 0, 0 );
   layout->addWidget( mPrefEdit, 0, 1 );
