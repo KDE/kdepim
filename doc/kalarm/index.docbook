@@ -27,7 +27,7 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 
 <copyright>
-<year>2001</year><year>2002</year>
+<year>2001</year><year>2002</year><year>2003</year>
 <holder>David Jarvie</holder>
 </copyright>
 
@@ -35,11 +35,11 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2002-12-16</date>
-<releaseinfo>0.09.00</releaseinfo>
+<date>2003-01-13</date>
+<releaseinfo>0.09.01</releaseinfo>
 
 <abstract>
-<para>&kalarm; is a personal alarm/reminder message, and command, scheduler for &kde;.</para>
+<para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
 </abstract>
 
 
@@ -125,10 +125,10 @@ alarms.</para>
 <application>alarm daemon</application> is running. If it is not
 already running, &kalarm; starts it.</para>
 
-<note><para>All spin boxes in &kalarm; have an acceleration facility.
+<tip><para>All spin boxes in &kalarm; have an acceleration facility.
 To make the value change by larger steps, hold down the
 <keycap>Shift</keycap> key while you click on the spin arrow
-buttons.</para></note>
+buttons.</para></tip>
 
 <sect2>
 <title>Alarm list</title>
@@ -182,9 +182,13 @@ highlight the existing alarm in the list and select <menuchoice>
 This displays the alarm edit dialog already filled in with a copy of
 the selected alarm's details.</para>
 
+<para>You can automatically create birthday alarms for people in
+&kaddressbook; as described in <link linkend="birthdays">Importing
+birthdays from &kaddressbook;</link>.</para>
+
 </sect2>
 
-<sect2>
+<sect2 id="edit-alarm">
 <title>Modifying an existing alarm</title>
 
 <para>To modify an existing pending alarm (expired alarms cannot be
@@ -247,6 +251,13 @@ a beep is sounded; use the button on the right to select an audio file
 to play. To revert to a beep, click the button again. To see what your
 current sound selection is, hover the mouse above the button until a
 tooltip appears.</para>
+</listitem>
+
+<listitem>
+<para>Check the <guilabel>Reminder</guilabel> checkbox if you want to
+display a reminder in advance of the main alarm and of each of its
+recurrences (if any). Enter how long in advance using the edit
+controls beside the checkbox.</para>
 </listitem>
 
 <listitem>
@@ -458,6 +469,46 @@ for how to acknowledge alarms.</para>
 
 </sect2>
 
+<sect2 id="birthdays">
+<title>Importing birthdays from &kaddressbook;</title>
+
+<para>You can set up display alarms for birthdays stored in
+&kaddressbook;, by <menuchoice><guimenu>File</guimenu>
+<guimenuitem>Import Birthdays...</guimenuitem></menuchoice>. This
+displays a dialog which allows you to select which birthdays to create
+alarms for.</para>
+
+<itemizedlist>
+<listitem>
+<para>In the <guilabel>Alarm Text</guilabel> group box, you can set up
+the text to be displayed in the birthday alarm messages. The message
+text is created by combining the <guilabel>Prefix</guilabel> text
+followed by the person's name followed by the
+<guilabel>Suffix</guilabel> text. No spaces are added, so remember to
+include any necessary trailing space in <guilabel>Prefix</guilabel>
+and leading space in <guilabel>Suffix</guilabel>.</para>
+
+<note><para>If you change the alarm text, the birthday selection list
+will be re-evaluated.</para></note>.
+</listitem>
+
+<listitem>
+<para>In the <guilabel>Select Birthdays</guilabel> list, select the
+birthdays which you want to create alarms for. Note that the list
+shows only those entries in &kaddressbook; which contain a birthday
+and which do not already have a birthday alarm in format currently
+defined in the <guilabel>Alarm Text</guilabel> group box.</para>
+</listitem>
+
+<listitem>
+<para>The remaining controls are the same as for
+<guilabel>Text</guilabel> alarms in the
+<link linkend="edit-alarm">Alarm Edit dialog</link>.</para>
+</listitem>
+</itemizedlist>
+
+</sect2>
+
 <sect2>
 <title>Displaying &kalarm; in the system tray</title>
 
@@ -646,7 +697,10 @@ their display when they become due.</para></tip>
 desktop and cannot be covered by ordinary windows, to ensure that
 you see it. The message window shows the time for which the alarm was
 scheduled, so that you can see when it popped up if you were away from
-the computer at the time.</para>
+the computer at the time. (For reminder messages, however, the
+date/time shown is that for the main alarm or its recurrence, not the
+reminder message time, and the window title is
+<quote>Reminder</quote>).</para>
 
 <para>In the case of a repeated alarm, if an unacknowledged message
 window remains from a previous occurrence of the alarm, the existing
@@ -674,8 +728,8 @@ time interval</guilabel> to enter how long after now (in hours and
 minutes) the message should be redisplayed. Then click
 <guibutton>Defer</guibutton> to defer the alarm message.</para>
 
-<note><para>If the alarm recurs regularly, the time it is deferred to
-must be earlier than its next scheduled repetition.</para></note>
+<note><para>The time the alarm is deferred to must be earlier than its
+next scheduled occurrence or next reminder.</para></note>
 
 <note><para>The <guibutton>Defer...</guibutton> button is not
 available for alarms which are displayed at login due to the
@@ -762,7 +816,7 @@ icon.</action></para>
 only, it also closes all &kalarm; main windows. It has no effect on
 the monitoring of alarms by the <application>alarm
 daemon</application>, if you have deselected <guilabel>Disable alarms
-while not running</guilabel> in the Preferences dialog).</para>
+while not running</guilabel> in the Preferences dialog.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -933,6 +987,9 @@ late</guilabel>, <guilabel>Confirm acknowledgement</guilabel> and
 alarms.</para>
 </listitem>
 
+<listitem><para>Set the default reminder period..</para>
+</listitem>
+
 <listitem><para>Set the text colour used to show expired alarms in the
 alarm list.</para>
 </listitem>
@@ -1071,8 +1128,21 @@ time.</para>
   <replaceable>count</replaceable></option></entry>
   <entry>The number of times the alarm should be triggered. Specify
   -1 to repeat the alarm indefinitely. <option>--interval</option>
-  must be, and<option>--until</option> cannot be, specified with this
+  must be, and <option>--until</option> cannot be, specified with this
   option.</entry>
+</row>
+<row>
+  <entry><option>-R</option>, <option>--reminder
+  <replaceable>period</replaceable></option></entry>
+  <entry>Output a reminder alarm the specified length of time before
+  the main alarm and each of its recurrences (if any). Hours/minutes are
+  specified in the format <replaceable>nHnM</replaceable>, where
+  <replaceable>n</replaceable> is a number, &eg; 3H30M. Other time
+  periods are specified in the format <replaceable>nX</replaceable>,
+  where <replaceable>n</replaceable> is a number and
+  <replaceable>X</replaceable> is one of the following letters: W
+  (weeks), D (days). This option cannot be specified with
+  <option>--exec</option> or <option>--mail</option>.</entry>
 </row>
 <row>
   <entry><option>-s</option>, <option>--sound <replaceable>URL</replaceable></option></entry>
@@ -1572,13 +1642,13 @@ ignored.</para></note>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>)
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
 </synopsis>
 
 <refsect2>
@@ -1620,6 +1690,15 @@ flag bits are those defined in class KAlarmEvent in
 <listitem>
 <para>Specifies the name or &URL; of an audio file which is to be
 played when the message is displayed.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>reminder</parameter></term>
+<listitem>
+<para>Specifies the number of minutes in advance of the main alarm
+and of each of its recurrences (if any) at which a reminder alarm
+should be displayed. Specify 0 if no reminder is required.</para>
 </listitem>
 </varlistentry>
 
@@ -1677,13 +1756,14 @@ QString message, audioFile;
 QDateTime dateTime;
 QColor bgColour;
 Q_UINT32 flags;
+Q_INT32 reminder;
 . . .
 QByteArray data;
 QDataStream arg(data, IO_WriteOnly);
 arg &lt;&lt; message;
 arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
 arg.writeRawBytes((char*)&amp;bgColour, sizeof(QColor));
-arg &lt;&lt; flags &lt;&lt; audioFile;
+arg &lt;&lt; flags &lt;&lt; audioFile &lt;&lt; reminder;
 </screen>
 
 <para>Use a code sequence similar to the following to set up the
@@ -1695,14 +1775,14 @@ QString message, audioFile;
 QDateTime dateTime;
 QColor bgColour;
 Q_UINT32 flags;
-Q_INT32 repeatType, repeatCount, repeatInterval;
+Q_INT32 reminder, repeatType, repeatCount, repeatInterval;
 . . .
 QByteArray data;
 QDataStream arg(data, IO_WriteOnly);
 arg &lt;&lt; message;
 arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
 arg.writeRawBytes((char*)&amp;bgColour, sizeof(QColor));
-arg &lt;&lt; flags &lt;&lt; audioFile &lt;&lt; repeatType &lt;&lt; repeatCount &lt;&lt; repeatInterval;
+arg &lt;&lt; flags &lt;&lt; audioFile &lt;&lt; reminder &lt;&lt; repeatType &lt;&lt; repeatCount &lt;&lt; repeatInterval;
 </screen>
 </refsect1>
 </refentry>
@@ -1718,13 +1798,13 @@ text file.</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>)
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
 </synopsis>
 
 <refsect2>
@@ -1767,6 +1847,15 @@ bits are those defined in class KAlarmEvent in
 <listitem>
 <para>Specifies the name or &URL; of an audio file which is to be
 played when the message is displayed.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>reminder</parameter></term>
+<listitem>
+<para>Specifies the number of minutes in advance of the main alarm
+and of each of its recurrences (if any) at which a reminder alarm
+should be displayed. Specify 0 if no reminder is required.</para>
 </listitem>
 </varlistentry>
 
@@ -2173,7 +2262,7 @@ previous to 3.1, there is a small application
 &kalarm;
 </para>
 <para>
-Program copyright 2001, 2002 David Jarvie <email>software@astrojar.org.uk</email>
+Program copyright 2001, 2002, 2003 David Jarvie <email>software@astrojar.org.uk</email>
 </para>
 <para>
 Alarm daemon authors:
@@ -2188,7 +2277,7 @@ Alarm daemon authors:
 </para>
 
 <para>
-Documentation copyright 2001, 2002 David Jarvie <email>software@astrojar.org.uk</email>
+Documentation copyright 2001, 2002, 2003 David Jarvie <email>software@astrojar.org.uk</email>
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
