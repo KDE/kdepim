@@ -19,10 +19,8 @@
 
 
 <!--
-    From [ade]: I've finally picked up the docs again, now that
-      years have passed and people are starting to notice the docs
-      stink. I'm glad that Carlos has stated his intention to work
-      on this, since it's needed. So anyway:
+    From [cw]: This document is nearly finished. I will submit it first to the
+    doc-english list before stating that it is ready for translation, so
 
       TRANSLATORS DON'T BOTHER WITH THIS RIGHT NOW
 -->
@@ -90,7 +88,6 @@
 &kpilot; &kpilotver;
 is the &kde; version of the Desktop &HotSync; software for
 the &ThreeCom; &PalmPilot; and similar products.
-This documentation is totally broken.
 </para>
 </abstract>
 
@@ -126,7 +123,7 @@ third-party software.
 
 <para>
 There is a web page for &kpilot;: the
-<ulink url="http://www.slac.com/~pilone/kpilot_home/">
+<ulink url="http://www.kpilot.org/">
 Official &kpilot; Home Page
 </ulink>.
 The
@@ -140,25 +137,16 @@ in general.
 kdepim-users mailing list,
 <email>kdepim-users@kde.org</email>.
 See
-<ulink url="http://lists.kde.org/">
+<ulink url="http://www.kde.org/mailinglists">
 the mailing lists page</ulink>
 for more information on subscribing and unsubscribing from the list.
 </para>
 
 <para>
 A word about version numbers:
-&kpilot; 4.4.x is current and still unstable as of March 2004.
-It works with &kde; 3.2 only.
+&kpilot; 4.4.x is current and still unstable as of June 2004.
+It does not work with KDE versions lower that 3.2.
 </para>
-
-<!-- TODO -->
-<warning>
-<para>
-This document still reflects &kpilot; version 4.2.2.
-The descriptions may be inaccurate and the screenshots misleading.
-Updated documentation may be released after the &kde; 3.2.2 release.
-</para>
-</warning>
 
 
 
@@ -209,7 +197,7 @@ can set up most things for you.
 Once &kpilot; is configured, you should make a <link linkend="backup">backup</link>
 of your &handheld; first. That is to be on the safe side. Once that is done, you
 can just leave the &kpilot; daemon running in the system tray, and all you need to
-do is press the &HotSync; button, and changes in the &handheld; and the &kde;
+do is press the &HotSync; button, and changes in the &handheld; data and the &kde;
 applications will be <link linkend="synchronization">synchronized</link>,
 so that the information matches again on
 both the &handheld; and the desktop.

@@ -6,15 +6,15 @@ This chapter describes the synchronization process
 that &kpilot; uses, focusing on the &kpilot; daemon functionality.
 You may sync your &handheld; using the <link linkend="builtin">internal
 viewers</link> and / or <link linkend="conduits">conduits</link>, depending
-on your personal preferences or if the applications you use daily can be
-interfaced with the data on your &handheld; using one of the conduits.
+on your personal preferences. Conduits allow external applications to interface
+with the data on your &handheld;.
 </para>
 
 <para>
 It is a good idea to make a <link linkend="backup">backup</link>
 of your &handheld; regularly. Other than making backups, it should rarely be
-necessary to do anything other than drop your &handheld; in the cradle and press
-the &HotSync; button. The &kpilot; daemon icon on the system tray will flash
+necessary to do anything other than drop your &handheld; on the cradle and press
+the &HotSync; button. The &kpilot; daemon icon in the system tray will flash
 indicating that a sync is under way.
 </para>
 
@@ -37,7 +37,7 @@ application
 <guimenu>File</guimenu>
 </menuchoice>
 menu</link>,
-or right click the &kpilot; daemon icon located in the panel's system tray,
+or right click the &kpilot; daemon icon located in the system tray,
 and select one of the menu items under the 
 <menuchoice>
 <guisubmenu>Next Sync</guisubmenu>
@@ -79,8 +79,8 @@ takes the longest time to complete.
 </para></listitem>
 
 <listitem><para>
-<guilabel>Restore</guilabel>: copy a previous backup data from the PC to the
-&handheld;, erasing the data previously held.
+<guilabel>Restore</guilabel>: copy the data from a previous backup from the PC to the
+&handheld;, erasing the data previously held there.
 
 <warning><para>
 Use the restore functionality with care, as you can lose all the new
@@ -103,7 +103,7 @@ To configure the conduits or the sync process, you do not need to open the main
 <menuchoice>
 <guimenuitem>Configure KPilot...</guimenuitem>
 </menuchoice>
-menu item is available in the &kpilot; daemon pop-up menu as well.
+menu item is available on the &kpilot; daemon pop-up menu as well.
 </para></note>
 
 </para>
@@ -127,12 +127,12 @@ the
 <guisubmenu>Next Sync</guisubmenu>
 <guimenuitem>Backup</guimenuitem>
 </menuchoice>
-in the &kpilot; daemon icon pop-up menu or the 
+on the &kpilot; daemon icon pop-up menu or the 
 <menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Backup</guimenuitem>
 </menuchoice>
-menu item in the main &kpilot; application in order 
+menu item on the main &kpilot; application menu in order 
 to make the next sync a backup. Then, just press the &HotSync; button.
 </para>
 
@@ -152,7 +152,7 @@ data entered on the &handheld; since the last backup.
 </para>
 
 <para>
-The data saved on the last backup is locates on the <filename class="directory">$KDEHOME/share/apps/kpilot/DBBackup/User Name/</filename>
+The data saved on the last backup is located on the <filename class="directory">$KDEHOME/share/apps/kpilot/DBBackup/User Name/</filename>
 folder. The <filename class="directory">$KDEHOME</filename> environment variable
 (typically <filename class="directory">/home/Login Name/.kde/</filename>) 
 points to the folder that contains your configuration and data for the &kde;
@@ -187,12 +187,12 @@ There are three ways to sync your &handheld;, <guilabel>HotSync</guilabel>,
 When you press the &HotSync; button on your &handheld;, &kpilot;'s will run the 
 default sync operation (usually a <guilabel>HotSync</guilabel>). You can select
 the default sync operation in the <link linkend="page-hotsync">HotSync
-configure dialog</link>. Alternatively, you can click one of these sync options in
+configure dialog</link>. Alternatively, you can click one of the sync options on
 the main &kpilot; application
 <menuchoice>
 <guimenu>File</guimenu>
 </menuchoice>
-menu or in the &kpilot; daemon pop-up 
+menu or on the &kpilot; daemon pop-up 
 <menuchoice>
 <guisubmenu>Next Sync</guisubmenu>
 </menuchoice>
@@ -205,12 +205,11 @@ The main &kpilot; application
 <menuchoice>
 <guimenu>File</guimenu>
 </menuchoice>
-menu items or in the &kpilot; daemon pop-up 
+menu items or the &kpilot; daemon pop-up 
 <menuchoice>
 <guisubmenu>Next Sync</guisubmenu>
 </menuchoice>
-submenu items change only what the <emphasis>next sync</emphasis> will
-be performed.
+submenu items change only the type of sync that will be performed <emphasis>next</emphasis>.
 </para></important>
 </para>
 
@@ -229,11 +228,11 @@ be performed.
 <listitem><para>
 <guilabel>HotSync</guilabel>: run all selected conduits and sync the databases
 with a modified flag set, updating the modified records only. This option offers
-a nice balance between speed and data safety. Available on the main application
+a nice balance between speed and data safety. It is available on the main application
 <menuchoice>
 <guimenu>File</guimenu>
 </menuchoice>
-menu and in the daemon pop-up menu
+menu and on the daemon pop-up menu
 <menuchoice>
 <guisubmenu>Next Sync</guisubmenu>
 </menuchoice>
@@ -245,12 +244,12 @@ submenu.
 databases that have conduits, and perform no backup of the data
 on the &PalmPilot;, reducing greatly the time required for the sync
 operation. This also means that if something goes wrong with your &PalmPilot;,
-you may not be able to recover databases with no conduits. This is a classic
+you may not be able to recover the databases. This is a classic
 trade-off between speed and safety. Available on the main application
 <menuchoice>
 <guimenu>File</guimenu>
 </menuchoice>
-menu and in the daemon pop-up menu
+menu and on the daemon pop-up menu
 <menuchoice>
 <guisubmenu>Next Sync</guisubmenu>
 </menuchoice>
@@ -304,11 +303,11 @@ menu item.
 </screenshot>
 
 <para>
-The <guilabel>Conduits</guilabel> three in the configuration dialog
-collects all the installed conduits available to &kpilot;.
-the conduits can be enabled and disabled
+The <guilabel>Conduits</guilabel> tree in the configuration dialog
+collects all the installed conduits available.
+The conduits can be enabled and disabled
 by clicking on the check box to the left of the conduit's name.
-conduits can have an extensive configuration of
+Conduits can have an extensive configuration of
 their own, and may be supplied by third parties.
 The details of the configuration of the
 conduits can be found in the
@@ -342,7 +341,8 @@ Useful for keeping the clock of the &handheld; accurate.
 <varlistentry>
 <term><guilabel>Calendar (KOrganizer)</guilabel></term>
 <listitem><para>
-Synchronizes the Datebook application with &korganizer;.
+Synchronizes the Datebook application with &korganizer; or with a iCalendar file of
+your choice.
 </para></listitem>
 </varlistentry>
 
@@ -358,7 +358,8 @@ applications on the &handheld;.
 <varlistentry>
 <term><guilabel>Addressbook</guilabel></term>
 <listitem><para>
-Synchronizes the Address application with &kaddressbook;.
+Synchronizes the Address application with &kaddressbook; or with a vCard file of
+your choice.
 </para></listitem>
 </varlistentry>
        
@@ -374,7 +375,8 @@ debugging purposes.
 <varlistentry>
 <term><guilabel>ToDo's (KOrganizer)</guilabel></term>
 <listitem><para>
-Synchronizes the Todo list application with &korganizer;.
+Synchronizes the Todo list application with &korganizer; or with a iCalendar file of
+your choice.
 </para></listitem>
 </varlistentry>
 
@@ -383,7 +385,7 @@ Synchronizes the Todo list application with &korganizer;.
 <listitem><para>
 Synchronizes your &handheld; with the &AvantGo; server. The &AvantGo; server
 offers general content (news, guides, stock quotes, &etc;) in a format that is
-suitable for a &handheld;. To use this conduit, you need to register, subscribe
+suitable for reading in a &handheld;. To use this conduit, you need to register, subscribe
 the channels you select and install the &AvantGo; software on your &handheld;.
 </para></listitem>
 </varlistentry>

@@ -230,7 +230,7 @@ words, to show it if hidden, or to hide it if shown.
 </term>
 <listitem>
 <para>
-Dispays &kpilot;'s shortcut configuration dialog, allowing you change or create
+Displays &kpilot;'s shortcut configuration dialog, allowing you change or create
 key bindings, which are associations between actions (for example, opening
 &kpilot;'s configuration dialog) and keys or key combinations (for instance,
 Ctrl + Shift + a).
@@ -268,8 +268,8 @@ toolbar.
 <para>
 Displays &kpilot;'s configuration dialog, allowing you to match your hardware
 with the configuration, so that &kpilot; can talk with your &handheld;, to
-configure the way &kpilot; will synchronize your &PalmPilot; with your &kde;
-desktop (through conduits) or view data from your &PalmPilot; with the
+configure the way &kpilot; synchronizes your &PalmPilot; with your
+desktop applications (through conduits) and the way it shows the data from your &PalmPilot; in the
 <link linkend="builtin">built-in viewers</link>. The <link linkend="configure">
 Configuring &kpilot;</link> chapter of this handbook offers detailed information
 about these configuration options.
@@ -329,11 +329,11 @@ window.
 You may use the viewer applications to edit the information, by enabling
 this option in the <link linkend="page-viewers">database viewer's
 configuration dialog</link>. The ability to view and edit private records is
-also configurable.
+configurable too.
 
 <important><para>
-In some versions of &kpilot; it is not possible to make internal viewers
-editable.
+In some versions of &kpilot; it is not possible to edit the databases with the
+internal.
 </para></important>
 
 Any changes you make to the &PalmPilot; databases with
@@ -341,7 +341,11 @@ the built-in applications (such as deleting a memo)
 do not take effect on the &PalmPilot; until the next HotSync.
 </para>
 
-
+<important><para>
+If the <guilabel>Make internal viewers editable</guilabel> option is
+not enabled, the changes in the viewers are not synchronized with your
+&handheld;, and will be lost.
+</para></important>
 
 <sect2 id="todo-app">
 
@@ -379,19 +383,23 @@ enabled in the <link linkend="page-viewers">viewers configuration page</link> yo
 can use the buttons <guibutton>Edit Record...</guibutton>,
 <guibutton>New Record...</guibutton> and <guibutton>Delete Record</guibutton>
 to edit the todo data from your &handheld;, and sync the data in the next
-&HotSync;.
+&HotSync;.</para>
 
-<important><para>
-If the <guilabel>Make internal viewers editable</guilabel> option is
-not enabled, the changes in the viewers are not synchronized with your
-&handheld;, and will be lost.
-</para></important>
+<note><para>
+If you create new todo and decide that
+you do not want to have it on the &PalmPilot;
+you must perform a &HotSync; (copying the todo
+to the &PalmPilot;) and then delete the todo record
+from the &PalmPilot; or the viewer, and &HotSync; again. It is not possible to
+delete newly-added records from the built-in applications.
+</para></note>
 
+<para>
 The <guibutton>Edit Record...</guibutton> button opens a dialog where you can 
 edit the details of the currently selected todo item, including description,
 priority and end date. Click the <guibutton>New Record...</guibutton> button to
 open the same dialog, but instead of editing the current selected record, a new
-todo will be added to the list. And finally click the
+todo will be added to the list. And finally, click the
 <guibutton>Delete Record</guibutton> button to remove the selected todo record
 from the list.
 </para>
@@ -425,19 +433,13 @@ the same, allowing you to select, view and edit an address
 as on the &PalmPilot;.
 </para>
 
-<important><para>
-If the <guilabel>Make internal viewers editable</guilabel> option is
-not enabled, the changes in the viewers are not synchronized with your
-&handheld;, and will be lost.
-</para></important>
-
 <para>
 The <guibutton>Edit Record...</guibutton> dialog allows you to edit the
 <guilabel>Last Name</guilabel>, <guilabel>First Name</guilabel>,
 <guilabel>Company</guilabel>, &etc; fields, just as if you where using your
 &handheld;.  Click the <guibutton>New Record...</guibutton> button to
 open the same dialog, but instead of editing the current selected record, a new
-address will be added to the list. And finally click the
+address will be added to the list. Click the
 <guibutton>Delete Record</guibutton> button to remove the selected address
 from the list.
 
@@ -563,35 +565,35 @@ normal usage scenario.
 <sect2 id="installer-app">
 <title>The File Installer</title>
 <para>
-The file installer supports dragging and dropping of
-files into the file list area
-or just hit the
-<guibutton>Add File...</guibutton> button to add a file if you are not.
-These files will
+Just hit the
+<guibutton>Add File...</guibutton> button to add a file to the
+<guilabel>Files to Install:</guilabel> list. These files will
 be installed on your &PalmPilot; during the next &HotSync; if
 <guilabel>Sync Files</guilabel>
 is checked in the conduits section of the
 <link linkend="configure">configuration dialog</link>.
 If you choose not to
-install the files on the &PalmPilot;, just hit
+install these files on the &PalmPilot;, just hit
 <guibutton>Clear List</guibutton>
 to remove any pending files.
 </para>
+
+<para>
+If you are using the &HotSync; Daemon you may drag and
+drop files or &URL;s
+onto the docked icon on the toolbar. The file installer application also
+supports dragging and dropping into the <guilabel>Files to Install:</guilabel>area.
+Provided <guilabel>Sync Files</guilabel> is checked in the
+<link linkend="page-general">settings dialog</link> they
+will be installed the next time you HotSync.
+</para>
+
 <tip>
 <para>An internal copy of the
 file is kept, so you can even drag and drop &URL;s from
 &konqueror;!
 </para>
 </tip>
-
-<para>
-Also, if you are using the &HotSync; Daemon you may drag and
-drop files or &URL;s
-onto the docked icon on the toolbar.  Provided
-<guilabel>Sync Files</guilabel> is checked in the
-<link linkend="page-general">settings dialog</link> they
-will be installed the next time you HotSync.
-</para>
 
 <screenshot>
 <screeninfo>The File Installer</screeninfo>

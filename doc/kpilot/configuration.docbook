@@ -20,12 +20,16 @@ the panel menu or from the command prompt for the first time
 it will prompt you with
 a dialog box to configure it.
 This configuration dialog can be requested later
-from the
+from the main application
 <menuchoice>
 <guimenu>Settings</guimenu>
 <guimenuitem>Configure &kpilot;</guimenuitem>
 </menuchoice>
-menu or by starting &kpilot;
+menu, from the &kpilot; daemon pop-up menu
+<menuchoice>
+<guimenuitem>Configure KPilot...</guimenuitem>
+</menuchoice>
+menu item or by starting &kpilot;
 from the shell
 as follows:
 <screen width="40"><prompt>$ </prompt> <userinput><command>kpilot</command> <option>--setup</option></userinput>
@@ -66,7 +70,7 @@ start for new users, and you can always fine tune your preferences later.
 </para>
 
 <para>
-In the pilot info dialog, type your <guilabel>User Name</guilabel>. It
+In the <guilabel>Pilot Info</guilabel> dialog, type your <guilabel>User Name</guilabel>. It
 should match the one from the &PalmPilot;. Next, type the file name of
 the <guilabel>Device</guilabel> you will use to connect the &PalmPilot; (The
 connection can be trough serial port, USB port, infrared, Bluetooth, network
@@ -78,14 +82,14 @@ to find the correct <guilabel>Device</guilabel> and
 <guilabel>User Name</guilabel>.
 </para>
 
-<para>
-<emphasis>Attention:</emphasis> if the
+<important><para>
+If the
 <guilabel>Device</guilabel> does not have the right permissions, the wizard will
 not be able to find it. Normal users must be able to read/write the correct
 device. To resolve this issue, please refer to <link
 linkend="faq-connection"><quote>&kpilot; says <errorname>Can't connect to pilot</errorname></quote>
 &FAQ; entry</link>, or contact your system administrator.
-</para>
+</para></important>
 
 
 <screenshot>
@@ -98,7 +102,7 @@ linkend="faq-connection"><quote>&kpilot; says <errorname>Can't connect to pilot<
 </screenshot>
 
 <para>
-Press the &HotSync; button of your &handheld; to let &kpilot; probe for the
+Press the &HotSync; button of your &handheld; to probe for the
 correct <guilabel>Device</guilabel> and <guilabel>User Name</guilabel>.
 </para>
 
@@ -113,7 +117,8 @@ correct <guilabel>Device</guilabel> and <guilabel>User Name</guilabel>.
 </screenshot>
 
 <para>
-KPilot has the ability to sync with other applications. The programs that
+KPilot has the ability to sync the data on your &handheld; with 
+applications or files on your <acronym>PC</acronym>. The programs that
 perform these actions are called conduits. The sync dialog configures in one
 step all applicable &kpilot; conduits to sync with widely used
 <acronym>PIM</acronym> suites. You can fine tune these settings later, from the
@@ -215,11 +220,11 @@ points to the right port no matter where you plug in your &PalmOS; device.
 the correct permissions.</emphasis>
 It
 must be read/write by all if &kpilot; is intended to be used by a
-normal user!  This could be done by doing a
-<userinput><command>chmod</command> <parameter>666</parameter> <replaceable>device</replaceable></userinput> where
-<replaceable>device</replaceable> is the correct port.
-&kpilot; will complain if the permissions are wrong, but you
-will need to fix the permissions by hand.
+normal user! &kpilot; will complain if the permissions are wrong, but you
+will need to fix the permissions by hand. This could be done by doing a
+<userinput><command>chmod</command> <parameter>666</parameter> <replaceable>device</replaceable></userinput>
+as root where <replaceable>device</replaceable> is the correct port.
+
 To resolve this issue, please refer to <link
 linkend="faq-connection"><quote>&kpilot; says <errorname>Can't connect to pilot
 </errorname></quote>
@@ -269,9 +274,13 @@ your log on name.  When you sync with the &PalmPilot; &kpilot; will
 check to see if this name matches the one on the &PalmPilot;.  If they do
 not, you are asked to pick which you will use.  If you pick the local
 name, the &PalmPilot; will be changed to match.
-The <guilabel>Pilot User</guilabel> entry  is also used to store
-the information synced from the &PalmPilot;, in a folder
-named <filename>DBBackup/<replaceable>Pilot User</replaceable></filename>.
+The <guilabel>Pilot User</guilabel> entry  is also used to name the folder that
+stores the information from the &PalmPilot;. This folder is created in the
+<filename class="directory">$KDEHOME/share/apps/kpilot/DBBackup/</filename>
+folder, where the <filename class="directory">$KDEHOME</filename> environment variable
+(typically <filename class="directory">/home/Login Name/.kde/</filename>) 
+points to the folder that contains your configuration and data for the &kde;
+applications.
 </para>
 </listitem>
 </varlistentry>
@@ -300,8 +309,9 @@ operation share the same copy. This distinction is important to choose your
 update method depending on your usage. If you use mainly the conduits to sync
 your &handheld; with external programs, you may choose as default synchronization
 method any option that runs the conduits. However, if you use mainly the internal
-viewers, you need to sync the backup copy of the databases as well in order to
-retrieve the information in your &handheld;.
+viewers, you need to update copy of the databases as well in order to
+view and edit the information from your &handheld;, so running the conduits only
+is not sufficient.
 </para>
 
 <screenshot>
@@ -336,7 +346,7 @@ a nice balance between speed and data safety.
 databases that have conduits, and perform no backup of the data
 on the &PalmPilot;, reducing greatly the time required for the sync
 operation. This also means that if something goes wrong with your &PalmPilot;,
-you may not be able to recover databases with no conduit. This is a classic
+you may not be able to recover the databases. This is a classic
 trade-off between speed and safety.
 </para></listitem>
 
@@ -401,7 +411,7 @@ on the <acronym>PC</acronym>. If one record has incompatible changes
 in both the &handheld; and the <acronym>PC</acronym>, (such as
 changing a phone number in different ways on both sides),
 the conflicting change needs to be resolved so
-that both the &handheld; and the <acronym>PC</acronym> are in sync again.
+that the &handheld; and the <acronym>PC</acronym> data are consistent again.
 Choices for conflict resolution are:
 </para>
 <itemizedlist>
@@ -487,12 +497,11 @@ here (the default should be OK though).
 <!-- [ade] TODO need examples -->
 
 <itemizedlist>
-<listitem>
-<para>
+<listitem><para>
 <guilabel>No backup</guilabel> List here databases that should be excluded from
 the backup operation. Some databases do not follow the standard database layout,
-and trying to backup and restore them will result in information loss.You may
-include databases with volatile information, such as news or web pages, that
+and trying to backup and restore them will result in information loss. You may
+include here databases with volatile information, such as news or web pages, that
 often do not require to be backed up.
 </para>
 </listitem>
@@ -501,7 +510,9 @@ often do not require to be backed up.
 <guilabel>Not restored</guilabel> List here databases that should be excluded
 from the restore operation, even if they were previously backed up. Databases
 included here can be installed manually later, using the
-<guilabel>File Installer</guilabel>.
+<guilabel>File Installer</guilabel>. You may
+include here databases with volatile information, such as news or web pages, that
+often do not require to be restored.
 </para></listitem>
 </itemizedlist>
 
@@ -524,7 +535,7 @@ when you perform a &HotSync;.
 The backup typically updates the copy of the &handheld; databases.
 Conduits are programs that extend the &kpilot; functionality. Running them
 usually means synchronization the &handheld; to other <acronym>PC</acronym> databases,
-like the addressbook or the calender. Check this box to perform both operation on
+like the addressbook or the calender. Check this box to perform both operations on
 every backup.
 </para>
 </listitem>
@@ -564,9 +575,15 @@ These settings change the way in which the data is shown.
 <term><guilabel>Make internal viewers editable</guilabel></term>
 <listitem><para>
 The internal viewers can be read only and editable. The editable mode allows you
-to edit the records and sync your modifications back to the &handheld;. Check
+to add new records, delete or edit the existing records and sync your
+modifications back to the &handheld;. Check
 here to set the internal viewers to editable mode, uncheck to set them to read
-only mode.</para></listitem>
+only mode.</para>
+<warning><para>
+On some &kpilot; versions, it is not possible check this box, and therefore to
+use the internal viewers as editors.
+</para></warning>
+</listitem>
 </varlistentry>
 
 <varlistentry>
@@ -595,8 +612,6 @@ address records in the address internal viewer can be set to match the
 <guilabel>Use key field</guilabel>Check this box to combine entries with the
 same last name.
 </para></listitem>
-<!-- TODO CW: last name as in the tooltip or key (first, last or company, last)?
-as in Adriaan e-mail? -->
 
 </itemizedlist>
 
