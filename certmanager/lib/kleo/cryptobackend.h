@@ -49,11 +49,15 @@ namespace Kleo {
   class DecryptVerifyJob;
 }
 
+class QString;
+
 namespace Kleo {
 
   class CryptoBackend {
   public:
     virtual ~CryptoBackend() {}
+
+    virtual QString protocol() const = 0;
 
     virtual KeyListJob        * keyListJob( bool remote=false, bool includeSigs=false ) const = 0;
     virtual EncryptJob        * encryptJob( bool armor=false, bool textmode=false ) const = 0;
