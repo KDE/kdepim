@@ -254,7 +254,7 @@ void KNConfig::IdentityWidget::slotSignatureEdit()
   QString fileName = c_ompletion->replacedPath(s_ig->text()).stripWhiteSpace();
 
   if (fileName.isEmpty()) {
-    KMessageBox::sorry(this, i18n("You must specify a file name."));
+    KMessageBox::sorry(this, i18n("You must specify a filename."));
     return;
   }
 
@@ -562,7 +562,7 @@ KNConfig::NntpAccountConfDialog::~NntpAccountConfDialog()
 void KNConfig::NntpAccountConfDialog::slotOk()
 {
   if (n_ame->text().isEmpty() || s_erver->text().stripWhiteSpace().isEmpty()) {
-    KMessageBox::sorry(this, i18n("Please enter an arbitrary name for the account and the\nhost name of the news server."));
+    KMessageBox::sorry(this, i18n("Please enter an arbitrary name for the account and the\nhostname of the news server."));
     return;
   }
 
@@ -2275,7 +2275,7 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
   connect(e_ditor, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()));
   editorL->addWidget(btn,1,2);
 
-  editorL->addMultiCellWidget(new QLabel(i18n("%f will be replaced with the file name to edit."), editorB),2,2,0,2);
+  editorL->addMultiCellWidget(new QLabel(i18n("%f will be replaced with the filename to edit."), editorB),2,2,0,2);
 
   e_xternCB=new QCheckBox(i18n("Start exte&rnal editor automatically"), editorB);
   editorL->addMultiCellWidget(e_xternCB, 3,3,0,2);

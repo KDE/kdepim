@@ -504,12 +504,12 @@ bool DOCConverter::convertPDBtoTXT()
 {
 	FUNCTIONSETUP;
 	if (txtfilename.isEmpty()) {
-		emit logError(i18n("No file name set for the conversion"));
+		emit logError(i18n("No filename set for the conversion"));
 		return false;
 	}
 	
 	if (!docdb) {
-		emit logError(i18n("Unable to open database for reading"));
+		emit logError(i18n("Unable to open Database for reading"));
 		return false;
 	}
 

@@ -159,7 +159,7 @@ void ConverterDlg::slotToText()
 		{
 			int res=KMessageBox::questionYesNo(this, 
 				i18n("<qt>You selected to sync folders, "
-				"but gave a file name instead (<em>%1</em>)."
+				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>").arg(pdburl)
 				.arg(pdbinfo.dirPath(true)));
 			if (res==KMessageBox::Yes)
@@ -195,7 +195,7 @@ void ConverterDlg::slotToText()
 		{
 			int res=KMessageBox::questionYesNo(this, 
 				i18n("<qt>You selected to sync folders, "
-				"but gave a file name instead (<em>%1</em>)."
+				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>").arg(txturl)
 				.arg(txtinfo.dirPath(true)));
 			if (res==KMessageBox::Yes) {
@@ -259,7 +259,7 @@ DEBUGCONDUIT<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", txtfile="<<txtfile<<", tx
 		if (!txtinfo.isFile())
 		{
 			KMessageBox::sorry(this, i18n("<qt>The filename <em>%1</em> for the "
-				"text is not a valid file name.</qt>").arg(txturl));
+				"text is not a valid filename.</qt>").arg(txturl));
 			return;
 		}*/
 		if (convertPDBtoTXT(pdbinfo.dirPath(true), pdbinfo.fileName(),
@@ -307,7 +307,7 @@ void ConverterDlg::slotToPDB()
 		{
 			int res=KMessageBox::questionYesNo(this, 
 				i18n("<qt>You selected to sync folders, "
-				"but gave a file name instead (<em>%1</em>)."
+				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>").arg(txturl)
 				.arg(txtinfo.dirPath(true)));
 			if (res==KMessageBox::Yes)
@@ -332,7 +332,7 @@ void ConverterDlg::slotToPDB()
 		{
 			int res=KMessageBox::questionYesNo(this, 
 				i18n("<qt>You selected to sync folders, "
-				"but gave a file name instead (<em>%1</em>)."
+				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>")
 				.arg(pdburl)
 				.arg(pdbinfo.dirPath(true)));

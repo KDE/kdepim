@@ -323,7 +323,7 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
 	if( _protocol->hasUsername() )
 	{
 		_kurl->setUser( cfg.readEntry(fu(UserConfigKey)) );
-		if( _kurl->user().isEmpty() ) { _valid = false; kdWarning() << i18n( "No user name specified" ) << endl; return false; }
+		if( _kurl->user().isEmpty() ) { _valid = false; kdWarning() << i18n( "No username specified" ) << endl; return false; }
 	}
 
 	if( _protocol->hasMailbox() )

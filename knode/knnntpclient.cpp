@@ -595,7 +595,7 @@ bool KNNntpClient::openConnection()
       //qDebug("knode: Password required");
 
       if (!account.pass().length()) {
-        job->setErrorString(i18n("Authentication failed.\nCheck your user name and password."));
+        job->setErrorString(i18n("Authentication failed.\nCheck your username and password."));
         job->setAuthError(true);
         return false;
       }
@@ -615,7 +615,7 @@ bool KNNntpClient::openConnection()
         #ifndef NDEBUG
         qDebug("knode: Authorization failed");
         #endif
-        job->setErrorString(i18n("Authentication failed.\nCheck your user name and password.\n\n%1").arg(getCurrentLine()));
+        job->setErrorString(i18n("Authentication failed.\nCheck your username and password.\n\n%1").arg(getCurrentLine()));
         job->setAuthError(true);
         closeConnection();
         return false;
@@ -655,7 +655,7 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
     //qDebug("knode: Authorization requested");
 
     if (!account.user().length()) {
-      job->setErrorString(i18n("Authentication failed.\nCheck your user name and password."));
+      job->setErrorString(i18n("Authentication failed.\nCheck your username and password."));
       job->setAuthError(true);
       closeConnection();
       return false;
@@ -672,7 +672,7 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
       //qDebug("knode: Password required");
 
       if (!account.pass().length()) {
-        job->setErrorString(i18n("Authentication failed.\nCheck your user name and password.\n\n%1").arg(getCurrentLine()));
+        job->setErrorString(i18n("Authentication failed.\nCheck your username and password.\n\n%1").arg(getCurrentLine()));
         job->setAuthError(true);
         closeConnection();
         return false;
@@ -693,7 +693,7 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
       if (!KNProtocolClient::sendCommand(cmd,rep))    // retry the original command
         return false;
     } else {
-      job->setErrorString(i18n("Authentication failed.\nCheck your user name and password.\n\n%1").arg(getCurrentLine()));
+      job->setErrorString(i18n("Authentication failed.\nCheck your username and password.\n\n%1").arg(getCurrentLine()));
       job->setAuthError(true);
       closeConnection();
       return false;

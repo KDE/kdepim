@@ -41,7 +41,7 @@ Error StdError::authenticationError()
 
 Error StdError::wrongUser( const QString& user )
 {
-    return Error( Error::WrongUser,  i18n("The user name '%1' was wrong").arg(user) );
+    return Error( Error::WrongUser,  i18n("The username '%1' was wrong").arg(user) );
 }
 
 Error StdError::wrongIP()

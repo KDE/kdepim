@@ -270,7 +270,7 @@
                             <string>Regular &amp;expressions in .bmk file</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>Use regular expressions in a file textname.bmk (textname.txt is the file name of the text) to search the text for bookmarks.See the documentation for a description of the format of the bmk file.</string>
+                            <string>Use regular expressions in a file textname.bmk (textname.txt is the filename of the text) to search the text for bookmarks.See the documentation for a description of the format of the bmk file.</string>
                         </property>
                     </widget>
                     <spacer row="5" column="1">
