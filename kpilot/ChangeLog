@@ -1,6 +1,13 @@
 KPilot Developer's notes for april 26th 2001
 ============================================
 
+Ahh, spring is in the air; the time when a young man's mind turns
+to nights of C++ hacking. This has been a great few weeks for open-
+source collaboration. I've had useful and helpful mail from Philipp
+Hullmann, Martin Junius, and Marko Gronoos (maybe more -- if i've 
+forgotten you please complain privately) with patches, hints, and
+offers of help. Thanks guys!
+
 * Fixed the non-initialization of the conduitCombo pointer by
   removing it completely. (Thanks Martin!) At compile-time you can
   choose between XML and traditional UI style. [19-4]
@@ -20,6 +27,12 @@ KPilot Developer's notes for april 26th 2001
   .po file. The TLs are now OK. Thanks to Marko for prodding me to sort
   this bug out (conduit in Finnish is "siirtokanava"). [24-4]
 * Added QToolTips and buddies to the NULL conduit setup. [24-4]
+* Fixed a bug in the KMail sending if you use a different outbox 
+  from "outbox". [26-4]
+* Made KPilotLink::addSyncLogEntry marginally more useful -- this
+  is to work towards a read log window. As a side effect (which 
+  obscures what I've done a little) I've reformatted kpilotlink.h
+  according to the coding style guide, and added docs. [26-4]
 
 Todo:
 
@@ -28,6 +41,41 @@ Todo:
   line *twice* each sync. This needs fixing. [19-4]
 * Add QToolTips to the remaining conduits. [24-4]
 * Add "buddies" to relevant entry fields (usually QLineEdits). [24-4]
+* Remove all the UI stuff from KPilotLink and put it somewhere sensible. [26-4]
+* Split KPilotLink into the client and server ends. [26-4]
+
+The following list is stuff from the ChangeLog that was once on
+the Todo list; I'm repeating it here because it was time we went
+through it again to see how things stand. I've added comments in
+[ ] after each.
+
+* Split KPilotLink into its separate functionalities: config management,
+  local database management, and link from daemon to conduits. [partly
+  done, but kpilotlink still serves both ends of a client-server link]
+* Make KPilot and KPilotDaemon communicate only through DCOP. [bad idea -
+  causes extra overhead, and the kpilotlink protocol is pretty good]
+* Add an extra message concerning NULL user on hotsync.
+* Make the progress bar show something during a conduit sync.
+* Should just use the KPilotLink::config object to store all kinds
+  of user settings instead of copying them from the config file to
+  local variables, since this is just asking for inconsistency.
+  [dunno -- as long as KPilot is the app for configuring what the
+  daemon does, we just have to get KPilot to tell the daemon to re-
+  read the config file when something changes.]
+* Clean up more of the butt-ugly parts of the code base [less of this now!]
+* KPilot is an i18n nightmare [less of this now!]
+* The password dialog in the popmail conduit is probably a very bad idea
+  I think kdesud should come into play here. [not looked into]
+* The messages need validation - Pilot vs pilot, HotSync vs whatever
+* Actually *doing* a fast sync for Heiko
+* More and better information in the progress bar
+* KPilot should display the sync log as well, just like the Pilot
+  does. This is useful for reporting the result of a sync to the
+  user (who then doesn't need to look at the Pilot)
+* I noticed Thomas Zander has submitted an official wishlist item:
+  DateBk3 (the new date book format in PalmOS3.5) support. I think
+  I'll get back to him on that when Mirko pans out with the free
+  hardware goodies from Palm :)
 
 KPilot Developer's notes for april 19th 2001
 ============================================

@@ -10,6 +10,8 @@ o The null conduit and KNotes conduit were written by Adriaan de Groot.
 
 o The XML GUI stuff was written by Martin Junius.
 
+o Philipp Hullmann fixed many bugs in the todo conduit.
+
 For more information, see:
 http://www.slac.com/pilone/kpilot_home/
 

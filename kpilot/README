@@ -1,4 +1,4 @@
-KPILOT 4.0.0 by Dan Pilone
+KPILOT 4.2.2 by Dan Pilone
 ===========================
 	Additional work by Robert Ambrose, 
 	Preston Brown, Adriaan de Groot, 
@@ -36,14 +36,14 @@ STANDARD DISCLAIMER, WARNINGS, ETC..
 	THIS SOFTWARE HAS BUGS.  Use at your own risk.  It has not even
 been tested anywhere but on my machine and only with my Palm Pilot.  I
 have been using it against XCopilot for development then verifying it
-works with a real pilot with my Palm Pilot Professional running OS v2.0.4.  
+works with a real Pilot with my Palm Pilot Professional running OS v2.0.4.  
 I make no claims that it will work, or even try to work.  I take no
 responsibility for any data loss, damage, etc. done by this software.  
-ie:  Should your pilot burst into flames while trying to sync a new game..
+ie:  Should your Pilot burst into flames while trying to sync a new game..
 sorry.
 	That being said, I _really_ want comments regarding the software
 as well as suggestions.  Bug fixes are even snazzier and code
-contributions are welcome.  :)  
+contributions are welcome.  :)  Send mail to kpilot-list@slac.com.
 
 	Dan Pilone
 	pilone@slac.com
