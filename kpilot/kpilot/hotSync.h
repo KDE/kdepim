@@ -86,6 +86,7 @@ private:
 	bool fFullBackup;
 	QStringList fNoBackupDBs;
 	QValueList<unsigned long> fNoBackupCreators;
+	QStringList mDeviceDBs;
 } ;
 
 class FileInstallAction : public SyncAction

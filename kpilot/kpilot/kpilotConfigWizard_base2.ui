@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>512</width>
-            <height>296</height>
+            <height>298</height>
         </rect>
     </property>
     <vbox>
@@ -130,7 +130,7 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                 <cstring>fPilotRunningPermanently</cstring>
             </property>
             <property name="text">
-                <string>KPilot should be &amp;running all the time</string>
+                <string>&amp;Start daemon at login</string>
             </property>
             <property name="checked">
                 <bool>true</bool>

@@ -66,6 +66,9 @@ ConfigWizard::ConfigWizard(QWidget *parent, const char *n, int m) :
 	page3=new ConfigWizard_base3(this);
 	addPage( page3, i18n("Application to Sync With") );
 	setFinishEnabled( page3, true );
+	
+	setHelpEnabled( page2, false );
+	setHelpEnabled( page3, false );
 
 	connect( page2->fProbeButton, SIGNAL( pressed() ),
 		this, SLOT( probeHandheld() ) );
@@ -90,7 +93,7 @@ void ConfigWizard::accept()
 //	int devicetype( page1->fConnectionType->selectedId() );
 	enum eSyncApp {
 		eAppKDE=0,
-		eAppKontact,
+		//eAppKontact,
 		eAppEvolution,
 		eAppNone
 	} app;
@@ -110,6 +113,8 @@ void ConfigWizard::accept()
 	KPilotSettings::setSyncType(0);
 	KPilotSettings::setFullSyncOnPCChange( true );
 	KPilotSettings::setConflictResolution(0);
+	if ( !mDBs.isEmpty() ) 
+		KPilotSettings::setDeviceDBs( mDBs );
 
 	KPilotWizard_vcalConfig*calendarConfig = new KPilotWizard_vcalConfig("Calendar");
 	KPilotWizard_vcalConfig*todoConfig = new KPilotWizard_vcalConfig("ToDo");
@@ -160,9 +165,9 @@ void ConfigWizard::accept()
 			APPEND_CONDUIT("internal_fileinstall");
 			applicationName=i18n("Kpilot will sync with nothing","nothing (it will backup only)");
 			break;
-		case eAppKontact:
-			applicationName=i18n("KDE's PIM suite", "Kontact");
+//		case eAppKontact:
 		case eAppKDE:
+			applicationName=i18n("KDE's PIM suite", "Kontact");
 		default:
 			APPEND_CONDUIT("knotes-conduit");
 			APPEND_CONDUIT("abbrowser_conduit");
@@ -213,11 +218,17 @@ void ConfigWizard::accept()
 
 void ConfigWizard::probeHandheld()
 {
-	ProbeDialog *probeDialog = new ProbeDialog( this );
-	if ( probeDialog->exec() && probeDialog->detected() ) {
-		page2->fUserName->setText( probeDialog->userName() );
-		page2->fDeviceName->setText( probeDialog->device() );
+// @TODO Post 3.3 enable this after the message freeze!
+//	if ( KMessageBox::warningContinueCancel( this, i18n("Please put the handheld in the cradle, "
+//			"press the hotsync button and click on \"Continue\".\n\nSome kernel versions (Linux 2.6.x) have problems with the visor kernel Module (for Sony Clie devices). Running an autodetection in that case might block the computer from doing hotsyncs until it is rebooted. In that case it might be advisable not to continue."), 
+//			i18n("Handheld detection") ) == KMessageBox::Continue ) {
+		ProbeDialog *probeDialog = new ProbeDialog( this );
+		if ( probeDialog->exec() && probeDialog->detected() ) {
+			page2->fUserName->setText( probeDialog->userName() );
+			page2->fDeviceName->setText( probeDialog->device() );
+			mDBs = probeDialog->dbs();
+//		}
+		KPILOT_DELETE(probeDialog);
 	}
-	KPILOT_DELETE(probeDialog);
 }
 

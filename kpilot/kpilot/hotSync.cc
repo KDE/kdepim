@@ -47,6 +47,7 @@ static const char *hotsync_id =
 #include <qvaluelist.h>
 #include <qregexp.h>
 #include <qtextcodec.h>
+#include <qstringlist.h>
 
 #include <kglobal.h>
 #include <kstandarddirs.h>
@@ -238,6 +239,8 @@ static inline void initNoBackup(QStringList &dbnames,
 {
 	FUNCTIONSETUP;
 
+	mDeviceDBs = KPilotSettings::deviceDBs();
+	
 	fBackupDir =
 		fDatabaseDir +
 		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
@@ -273,15 +276,15 @@ static inline void initNoBackup(QStringList &dbnames,
 		return false;
 	}
 
-	initNoBackup(fNoBackupDBs,fNoBackupCreators);
+	initNoBackup( fNoBackupDBs, fNoBackupCreators );
 
-	fTimer = new QTimer(this);
-	QObject::connect(fTimer, SIGNAL(timeout()),
-		this, SLOT(backupOneDB()));
+	fTimer = new QTimer( this );
+	QObject::connect( fTimer, SIGNAL( timeout() ),
+		this, SLOT( backupOneDB() ) );
 
 	fDBIndex = 0;
 
-	fTimer->start(0, false);
+	fTimer->start( 0, false );
 	return true;
 }
 
@@ -342,23 +345,37 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	}
 
 	// TODO: Is there a way to skip unchanged databases?
-	int res=fHandle->getNextDatabase(fDBIndex, &info);
+	int res = fHandle->getNextDatabase( fDBIndex, &info );
 	if (res < 0)
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Backup complete." << endl;
 #endif
 
-		if (fFullBackup)
-			addSyncLogEntry(i18n("Full backup complete."));
+		if ( fFullBackup )
+			addSyncLogEntry( i18n("Full backup complete.") );
 		else
-			addSyncLogEntry(i18n("Fast backup complete."));
+			addSyncLogEntry( i18n("Fast backup complete.") );
 		endBackup();
 		fActionStatus = BackupComplete;
 		return;
 	}
 
 	fDBIndex = info.index + 1;
+	
+	char buff[7];
+	buff[0] = '[';
+	set_long( &buff[1], info.creator );
+	buff[6] = ']';
+	buff[7] = '\0';
+	QString creator( buff );
+	info.name[33]='\0';
+	QString dbname( info.name );	
+	if ( !mDeviceDBs.contains( creator ) ) 
+		mDeviceDBs << creator;
+	if ( !mDeviceDBs.contains( dbname ) )
+		mDeviceDBs << dbname;
+kdDebug() << "Backup of db with creator "<<creator<<" and name "<<dbname<<endl;
 
 
 #ifdef DEBUG
@@ -485,6 +502,18 @@ void BackupAction::endBackup()
 	KPILOT_DELETE(fTimer);
 	fDBIndex = (-1);
 	fActionStatus = BackupEnded;
+	mDeviceDBs.sort();
+	QString old( QString::null ); 
+	QStringList::Iterator itr = mDeviceDBs.begin();
+	while ( itr != mDeviceDBs.end() ) {
+		if ( old == *itr ) {
+			itr = mDeviceDBs.remove( itr );
+		} else {
+			old = *itr;
+			++itr;
+		}
+	}
+	KPilotSettings::setDeviceDBs( mDeviceDBs );
 
 	emit syncDone(this);
 }

@@ -53,6 +53,7 @@ protected:
 	ConfigWizard_base3 *page3;
 
 	Mode fMode;
+	QStringList mDBs;
 } ;
 
 #endif

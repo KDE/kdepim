@@ -32,6 +32,7 @@
 #include <qlabel.h>
 #include <qvbox.h>
 #include <qtimer.h>
+#include <qptrlist.h>
 #include <qmap.h>
 #include <qvaluelist.h>
 
@@ -258,15 +259,14 @@ void ProbeDialog::connection( KPilotDeviceLink*lnk)
 {
 	FUNCTIONSETUP;
 
-	if (!lnk) return;
-	KPilotUser*usr( lnk->getPilotUser() );
+	mActiveLink = lnk;
+	if ( !mActiveLink ) return;
+	KPilotUser*usr( mActiveLink->getPilotUser() );
 
 	mUserName = usr->getUserName();
 	mUID = usr->getUserID();
-	mDevice = lnk->pilotPath();
-	lnk->endOfSync();
+	mDevice = mActiveLink->pilotPath();
 
-	QTimer::singleShot(0, this, SLOT(disconnectDevices()));
 	fStatus->setText( i18n("Found a connected device on %1").arg(mDevice) );
 	fUser->setText( mUserName );
 	fDevice->setText( mDevice );
@@ -274,8 +274,49 @@ void ProbeDialog::connection( KPilotDeviceLink*lnk)
 
 	fResultsGroup->setEnabled( true );
 	enableButtonOK(true);
+	
+	QTimer::singleShot(0, this, SLOT(retrieveDBList()));
 }
 
+void ProbeDialog::retrieveDBList()
+{
+	// @TODO: Retrieve list of databases on the handheld:
+	QPtrList<DBInfo> dbs = mActiveLink->getDBList();
+//	QStringList creators;
+//	QStringList dbnames;
+	mDBs.clear();
+	dbs.setAutoDelete( true );
+	char buff[7];
+	buff[0] = '[';
+
+	DBInfo *dbi;
+	for ( dbi = dbs.first(); dbi; dbi = dbs.next() ) {
+		if ( dbi ) {
+			set_long( &buff[1], dbi->creator );
+			buff[5] = ']';
+			buff[6] = '\0';
+			QString cr( buff );
+			mDBs << cr;
+			dbi->name[33]='\0';
+			mDBs << QString( dbi->name );
+		}
+	}
+	mDBs.sort();
+	
+	QString old( QString::null ); 
+	QStringList::Iterator itr = mDBs.begin();
+	while ( itr != mDBs.end() ) {
+		if ( old == *itr ) {
+			itr = mDBs.remove( itr );
+		} else {
+			old = *itr;
+			++itr;
+		}
+	}
+	mActiveLink->endOfSync();
+
+	QTimer::singleShot(0, this, SLOT(disconnectDevices()));
+}
 void ProbeDialog::disconnectDevices()
 {
 	FUNCTIONSETUP;

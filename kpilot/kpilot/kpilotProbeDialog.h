@@ -53,16 +53,18 @@ public:
 	ProbeDialog(QWidget *p=0L,const char *n=0L);
 	~ProbeDialog();
 	
-	bool detected() { return mDetected; }
-	QString userName() { return mUserName; }
-	QString device() { return mDevice; }
-	int userID() { return mUID; }
+	bool detected() const { return mDetected; }
+	QString userName() const { return mUserName; }
+	QString device() const { return mDevice; }
+	int userID() const { return mUID; }
+	QStringList dbs()  const { return mDBs; }
 	
 
 protected slots:
 	void startDetection();
 	void timeout();
 	void connection(KPilotDeviceLink*lnk);
+	void retrieveDBList();
 	void disconnectDevices();
 	void processEvents();
 	void progress();
@@ -94,11 +96,13 @@ protected:
 	PilotLinkList mDeviceLinks[3];
 	int mProbeDevicesIndex;
 //	PilotLinkMap mDeviceLinkMap;
+	KPilotDeviceLink *mActiveLink;
 	
 	bool mDetected;
 	QString mUserName;
 	QString mDevice;
 	int mUID;
+	QStringList mDBs;
 } ;
 
 #endif
