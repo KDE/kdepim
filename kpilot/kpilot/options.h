@@ -114,14 +114,11 @@
 // kdError() to make sure the right output is generated.
 
 
-// (Old-style) Debug level is set to some bit pattern; if any 
-// bit in one of the debug masks (SYNC_MAJOR, for
-// instance) is set print the messages corresponding
-// to that debug level.
-//
-//
 extern int debug_level;
 extern const char *debug_spaces;
+
+class KCmdLineOptions;
+extern KCmdLineOptions *debug_options;
 
 // Both old and new-style debugging suggest (insist?) that
 // every function be started with the macro FUNCTIONSETUP,
@@ -192,6 +189,9 @@ inline kndbgstream operator << (kndbgstream s, const debugName &d) { s << d.j; r
 
 
 // $Log$
+// Revision 1.32  2001/09/16 13:37:48  adridg
+// Large-scale restructuring
+//
 // Revision 1.31  2001/09/08 14:31:54  cschumac
 // qt3 include fix
 //

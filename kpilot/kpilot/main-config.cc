@@ -46,12 +46,6 @@ static const char *config_id="$Id$";
 #include "kpilotConfigDialog.h"
 #include "kpilotConfig.h"
 
-KCmdLineOptions kpilotoptions[] =
-{
-	{ "debug <level>", I18N_NOOP("Set debug level."), "0" },
-	{ 0,0,0 }
-} ;
-
 int main(int argc, char **argv)
 {
 	FUNCTIONSETUP;
@@ -71,13 +65,15 @@ int main(int argc, char **argv)
 		"http://www.cs.kun.nl/~adridg/kpilot/");
 
         KCmdLineArgs::init(argc, argv, &about);
-	KCmdLineArgs::addCmdLineOptions(kpilotoptions);
+#ifdef DEBUG
+	KCmdLineArgs::addCmdLineOptions(debug_options,"debug");
+#endif
 	KApplication::addCmdLineOptions();
 	KCmdLineArgs *p=KCmdLineArgs::parsedArgs();
 
 	KApplication a;
 
-	KPilotConfig::getDebugLevel(p);
+	KPilotConfig::getDebugLevel(false);
 
 	int r=0;
 
@@ -105,6 +101,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.2  2001/09/23 18:28:52  adridg
+// Adjusted tests to new .ui and config
+//
 // Revision 1.1  2001/09/05 21:53:51  adridg
 // Major cleanup and architectural changes. New applications kpilotTest
 // and kpilotConfig are not installed by default but can be used to test

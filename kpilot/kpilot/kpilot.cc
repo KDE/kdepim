@@ -205,6 +205,48 @@ void KPilotInstaller::killDaemonIfNeeded()
 	}
 }
 
+void KPilotInstaller::startDaemonIfNeeded()
+{
+	FUNCTIONSETUP;
+
+	QString daemonError;
+	QCString daemonDCOP;
+	int daemonPID;
+
+	QString s = getDaemon().statusString();
+
+	DEBUGKPILOT << fname
+		<< ": Daemon status is "
+		<< s
+		<< endl;
+
+	if ((s.isNull()) || (!getDaemon().ok()))
+	{
+		DEBUGKPILOT << fname
+			<< ": Daemon not responding."
+			<< endl;
+		fKillDaemonOnExit |= true;
+	}
+		
+	if (KApplication::startServiceByDesktopPath(
+		"Utilities/kpilotdaemon.desktop",
+		QString::null,
+		&daemonError,
+		&daemonDCOP,
+		&daemonPID
+#if (KDE_VERSION >= 220)
+		// Startup notification was added in 2.2
+		,
+		"0"
+#endif
+		))
+	{
+		kdError() << __FUNCTION__
+			<< ": Can't start daemon."
+			<< endl;
+	}
+}
+
 void KPilotInstaller::readConfig()
 {
 	FUNCTIONSETUP;
@@ -736,11 +778,10 @@ KPilotInstaller::slotConfigureConduits()
 //
 static KCmdLineOptions kpilotoptions[] =
 {
+	{ "s",0,0 },
 	{ "setup", I18N_NOOP("Setup the Pilot device and other parameters"),0L },
-	{ "cs", I18N_NOOP("Run conduit setup"),0L },
-#ifdef DEBUG
-	{ "debug <level>", I18N_NOOP("Set debug level to <level> (try 1023)"),"0" },
-#endif
+	{ "c",0,0 },
+	{ "conduit-setup", I18N_NOOP("Run conduit setup"),0L },
 	{ 0,0,0 }
 } ;
 
@@ -793,15 +834,15 @@ int main(int argc, char** argv)
 
 
         KCmdLineArgs::init(argc, argv, &about);
-	KCmdLineArgs::addCmdLineOptions(kpilotoptions);
+#ifdef DEBUG
+	KCmdLineArgs::addCmdLineOptions(debug_options,"debug","debug");
+#endif
+	KCmdLineArgs::addCmdLineOptions(kpilotoptions,"kpilot",0L,"debug");
 	KUniqueApplication::addCmdLineOptions();
 	KCmdLineArgs *p=KCmdLineArgs::parsedArgs();
 
-#ifdef DEBUG
-	debug_level=atoi(p->getOption("debug"));
-#endif
 	if (p->isSet("setup")) { run_mode='s'; } 
-	if (p->isSet("cs")) { run_mode='c'; }
+	if (p->isSet("conduit-setup")) { run_mode='c'; }
 
 	if (!KUniqueApplication::start())
 	{
@@ -809,8 +850,9 @@ int main(int argc, char** argv)
 	}
 	KUniqueApplication a(true,true);
 
+	KPilotConfig::getDebugLevel();
+
 	KPilotConfigSettings &c = KPilotConfig::getConfig();
-	(void)KPilotConfig::getDebugLevel(c);
 	if (c.getVersion() < KPilotConfig::ConfigurationVersion)
 	{
 		run_mode='S';
@@ -871,27 +913,6 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	QString daemonError;
-	QCString daemonDCOP;
-	int daemonPID;
-
-	if (KApplication::startServiceByDesktopPath(
-		"Utilities/kpilotdaemon.desktop",
-		QString::null,
-		&daemonError,
-		&daemonDCOP,
-		&daemonPID
-#if (KDE_VERSION >= 220)
-		// Startup notification was added in 2.2
-		,
-		"0"
-#endif
-		))
-	{
-		kdError() << __FUNCTION__
-			<< ": Can't start daemon."
-			<< endl;
-	}
 
         KPilotInstaller *tp = new KPilotInstaller();
 
@@ -902,6 +923,8 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
+	tp->startDaemonIfNeeded();
+
         KGlobal::dirs()->addResourceType("pilotdbs", "share/apps/kpilot/DBBackup");
 	tp->show();
 	a.setMainWidget(tp);
@@ -910,6 +933,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.59  2001/09/23 18:25:50  adridg
+// New config architecture
+//
 // Revision 1.58  2001/09/16 13:37:48  adridg
 // Large-scale restructuring
 //

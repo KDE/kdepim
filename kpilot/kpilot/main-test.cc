@@ -49,10 +49,10 @@ static const char *test_id="$Id$";
 
 static KCmdLineOptions kpilotoptions[] =
 {
-	{ "port <device>", I18N_NOOP("Path to Pilot device node"), 0},
-#ifdef DEBUG
-	{ "debug <level>", I18N_NOOP("Set debugging level"), "0" },
-#endif
+	{ "port <device>", 
+		I18N_NOOP("Path to Pilot device node"), 
+		"/dev/pilot"},
+	{ "test", I18N_NOOP("List DBs (default)"), 0},
 	{ "backup", I18N_NOOP("Backup instead of list DBs"), 0},
 	{ "restore", I18N_NOOP("Restore Pilot from backup"), 0},
 	{ 0,0,0}
@@ -72,7 +72,10 @@ int main(int argc, char **argv)
 		"http://www.cs.kun.nl/~adridg/kpilot/");
 	
 	KCmdLineArgs::init(argc,argv,&about);
-	KCmdLineArgs::addCmdLineOptions(kpilotoptions);
+	KCmdLineArgs::addCmdLineOptions(kpilotoptions,"test","test");
+#ifdef DEBUG
+	KCmdLineArgs::addCmdLineOptions(debug_options,"debug","debug","test");
+#endif
 	KApplication::addCmdLineOptions();
 
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
@@ -132,6 +135,9 @@ int main(int argc, char **argv)
 }
 
 // $Log$
+// Revision 1.4  2001/09/23 18:28:52  adridg
+// Adjusted tests to new .ui and config
+//
 // Revision 1.3  2001/09/16 13:37:48  adridg
 // Large-scale restructuring
 //

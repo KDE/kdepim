@@ -138,6 +138,13 @@ QString charExpansion(const char *s)
 	return t;
 }
 
+static KCmdLineOptions debug_options_[] =
+{
+	{ "debug <level>", I18N_NOOP("Set debugging level"), "0" },
+	{ 0,0,0 }
+} ;
+
+KCmdLineOptions *debug_options = debug_options_;
 
 
 #else
@@ -146,6 +153,11 @@ debugName const fname((int) options_id);
 
 
 // $Log$
+// Revision 1.15  2001/09/05 21:53:51  adridg
+// Major cleanup and architectural changes. New applications kpilotTest
+// and kpilotConfig are not installed by default but can be used to test
+// the codebase. Note that nothing else will actually compile right now.
+//
 // Revision 1.14  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //
