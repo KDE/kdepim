@@ -86,8 +86,9 @@ static QString emailTestParseResultToString( EmailParseResult errorCode )
     return "UnexpectedEnd";
   } else if( errorCode == UnopenedAngleAddr ) {
     return "UnopenedAngleAddr";
-  }
-  return "unknown errror code";
+  } else if( errorCode == UnexpectedComma ) {
+    return "UnexpectedComma";  }
+  return "unknown error code";
 }
 
 static QString simpleEmailTestParseResultToString( bool validEmail )
@@ -285,6 +286,9 @@ int main(int argc, char *argv[])
 
   // BUG 99657
   checkIsValidEmailAddress( "matt@jongel.fibbel.com", "AddressOk" );
+
+  // correct error msg when a comma is inside <>
+  checkIsValidEmailAddress( "Matt Douhan <matt@fruitsalad,org>", "UnexpectedComma" );
 
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
