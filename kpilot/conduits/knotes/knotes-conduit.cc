@@ -102,7 +102,7 @@ collectNotes()
 #ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS)
 		{
-			kdDebug() << ": Reading note " << *i << endl;
+			kdDebug() << fname << ": Reading note " << *i << endl;
 		}
 #endif
 		c = new KSimpleConfig( notedir.absFilePath(*i));
@@ -159,11 +159,34 @@ findID(NotesMap& m,unsigned long id)
 
 		if (r.pilotID()==id)
 		{
+#ifdef DEBUG
+			if (debug_level & SYNC_TEDIOUS)
+			{
+				kdDebug() << fname
+					<< ": Found ID "
+					<< id
+					<< " in note "
+					<< r.configPath()
+					<< endl;
+			}
+#endif
 			return i;
 		}
 	}
 
 	delete i;
+
+#ifdef DEBUG
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		kdDebug() << fname
+			<< ": ID "
+			<< id
+			<< " not found."
+			<< endl;
+	}
+#endif
+		
 	return 0L;
 }
 
@@ -179,8 +202,9 @@ findID(NotesMap& m,unsigned long id)
 // simple constructor and destructor.
 //
 //
-KNotesConduit::KNotesConduit(eConduitMode mode)
-	: BaseConduit(mode)
+KNotesConduit::KNotesConduit(eConduitMode mode) : 
+	BaseConduit(mode),
+	fDeleteNoteForMemo(false)
 {
 	FUNCTIONSETUP;
 
@@ -190,6 +214,26 @@ KNotesConduit::~KNotesConduit()
 {
 	FUNCTIONSETUP;
 
+}
+
+void
+KNotesConduit::readConfig()
+{
+	FUNCTIONSETUP;
+
+	KConfig& c = KPilotLink::getConfig(KNotesOptions::KNotesGroup);
+	getDebugLevel(c);
+	fDeleteNoteForMemo = c.readBoolEntry("DeleteNoteForMemo",false);
+#ifdef DEBUG
+	if (debug_level & SYNC_MINOR)
+	{
+		kdDebug() << fname
+			<< ": Settings "
+			<< "DeleteNoteForMemo="
+			<< fDeleteNoteForMemo
+			<< endl;
+	}
+#endif
 }
 
 // doSync should add a line to the logfile
@@ -205,43 +249,27 @@ KNotesConduit::doSync()
 {
 	FUNCTIONSETUP;
 
-	KConfig& c = KPilotLink::getConfig("knotesOptions");
-	getDebugLevel(c);
+	readConfig();
 
 	NotesMap m = collectNotes();
-	int newCount=0;
 
 	// First add all the new KNotes to the Pilot
 	//
 	//
-	newCount = notesToPilot(m);
-
-	if (newCount)
-	{
-		QString msg = i18n("Got %1 memos from KNotes.")
-			.arg(newCount);
-
-		addSyncLogMessage(msg.local8Bit());
-#ifdef DEBUG
-		if (debug_level & SYNC_MAJOR)
-		{
-			kdDebug() << fname
-				<< msg
-				<< endl;
-		}
-#endif
-	}
-
+	int newCount = notesToPilot(m);
 	int oldCount = pilotToNotes(m);
-	if (oldCount)
+
+	if (newCount || oldCount)
 	{
-		QString msg = i18n("Got %1 memos from Pilot.")
+		QString msg = i18n("Changed %1/%2 Memos/Notes")
+			.arg(newCount)
 			.arg(oldCount);
 		addSyncLogMessage(msg.local8Bit());
 #ifdef DEBUG
 		if (debug_level & SYNC_MAJOR)
 		{
 			kdDebug() << fname
+				<< ": "
 				<< msg
 				<< endl;
 		}
@@ -355,13 +383,11 @@ bool KNotesConduit::newMemo(NotesMap& m,unsigned long id,PilotMemo *memo)
 	QString dataName = "." + noteName + "_data" ;
 	bool success = false;
 #ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
+	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname
-			<< ": Writing memo to "
+			<< ": Creating note "
 			<< noteName
-			<< " and "
-			<< dataName
 			<< endl;
 	}
 #endif
@@ -409,12 +435,21 @@ bool KNotesConduit::changeMemo(NotesMap& m,NotesMap::Iterator i,PilotMemo *memo)
 	FUNCTIONSETUP;
 
 
-handle deleted memos (deleted on the pilot) here.
-since they're just copies of what's in knotes,
-delete the files.
+// handle deleted memos (deleted on the pilot) here.
+// since they're just copies of what's in knotes,
+// delete the files.
 
 	(void) m;
 	NotesSettings n = *i;
+#ifdef DEBUG
+	if (debug_level & SYNC_MAJOR)
+	{
+		kdDebug() << fname
+			<< ": Updating note "
+			<< n.configPath()
+			<< endl;
+	}
+#endif
 	QFile file(n.dataPath());
 	file.open(IO_WriteOnly | IO_Truncate);
 	if (file.isOpen())
@@ -438,19 +473,83 @@ delete the files.
 	}
 }
 
+bool KNotesConduit::deleteNote(NotesMap& m,NotesMap::Iterator *i,
+	unsigned long id)
+{
+	FUNCTIONSETUP;
+
+	if (!i)
+	{
+#ifdef DEBUG
+		if (debug_level & SYNC_TEDIOUS)
+		{
+			kdDebug() << fname
+				<< ": Unknown Pilot memo "
+				<< id
+				<< " has been deleted."
+				<< endl;
+		}
+#endif
+		return false;
+	}
+
+#ifdef DEBUG
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		if (fDeleteNoteForMemo)
+		{
+			kdDebug() << fname
+				<< ": Deleting pilot memo "
+				<< id
+				<< endl;
+		}
+		else
+		{
+			kdDebug() << fname
+				<< ": Pilot memo "
+				<< id
+				<< " has been deleted, note remains."
+				<< endl;
+			return false;
+		}
+	}
+#endif
+
+	NotesSettings n = *(*i);
+
+#ifdef DEBUG
+	if (debug_level & SYNC_MAJOR)
+	{
+		kdDebug() << fname
+			<< ": Deleting note "
+			<< n.configPath()
+			<< endl;
+	}
+#endif
+
+	QFile::remove(n.dataPath());
+	QFile::remove(n.configPath());
+
+	m.remove(*i);
+
+	return true;
+}
+
 
 int KNotesConduit::pilotToNotes(NotesMap& m)
 {
 	FUNCTIONSETUP;
 
 	PilotRecord *rec;
-	PilotMemo *memo;
 	int count=0;
 	NotesMap::Iterator *i;
 
 	while ((rec=readNextModifiedRecord()))
 	{
 		unsigned long id = rec->getID();
+		bool success;
+
+		success=false;
 
 		kdDebug() << fname 
 			<< ": Read Pilot record with ID "
@@ -458,21 +557,32 @@ int KNotesConduit::pilotToNotes(NotesMap& m)
 			<< endl;
 
 		i = findID(m,id);
-		memo = new PilotMemo(rec);
-		if (i)
+		if (rec->getAttrib() & dlpRecAttrDeleted)
 		{
-			changeMemo(m,*i,memo);
+			success=deleteNote(m,i,id);
 		}
 		else
 		{
-			newMemo(m,id,memo);
+			PilotMemo *memo = new PilotMemo(rec);
+			if (i)
+			{
+				success=changeMemo(m,*i,memo);
+			}
+			else
+			{
+				success=newMemo(m,id,memo);
+			}
+			delete memo;
 		}
-		delete memo;
+		delete rec;
 
-		count++;
+		if (success) 
+		{ 
+			count++;
+		}
 	}
 
-we also need to tell knotes that things have changed in the dirs it owns
+// we also need to tell knotes that things have changed in the dirs it owns
 
 	return count;
 }
@@ -485,8 +595,6 @@ QWidget*
 KNotesConduit::aboutAndSetup()
 {
 	FUNCTIONSETUP;
-
-	cerr << fname << ": Running!" << endl;
 
 	return new KNotesOptions(0L);
 }
@@ -524,6 +632,9 @@ KNotesConduit::doTest()
 }
 
 // $Log$
+// Revision 1.2  2000/11/24 17:54:28  adridg
+// Two-way sync
+//
 // Revision 1.1  2000/11/20 00:22:28  adridg
 // New KNotes conduit
 //

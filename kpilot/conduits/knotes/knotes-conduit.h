@@ -69,9 +69,35 @@ protected:
 
 	bool changeMemo(NotesMap&,NotesMap::Iterator,PilotMemo *);
 	bool newMemo(NotesMap&,unsigned long id,PilotMemo *);
+	/**
+	* Delete a KNote associated with a particular
+	* Pilot memo. The note to be deleted is the
+	* one the iterator points to. The note is also
+	* removed from the map.
+	*/
+	bool deleteNote(NotesMap&,NotesMap::Iterator *,unsigned long);
+
+private:
+	/**
+	* Read the global KPilot config file for settings
+	* particular to the KNotes conduit.
+	* @ref fDeleteNoteForMemo
+	*/
+	void readConfig();
+
+	/**
+	* This reflects the setting in the KNotes conduit
+	* setup whether or not to delete the KNote associated
+	* with a particular Pilot memo when the memo itself
+	* is deleted.
+	*/
+	bool fDeleteNoteForMemo;
 };
 
 // $Log$
+// Revision 1.2  2000/11/24 17:54:28  adridg
+// Two-way sync
+//
 // Revision 1.1  2000/11/20 00:22:28  adridg
 // New KNotes conduit
 //

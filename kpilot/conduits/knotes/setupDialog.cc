@@ -19,6 +19,9 @@
 #include "options.h"
 
 #include <stream.h>
+#include <qcheckbox.h>
+#include <qlayout.h>
+#include <kconfig.h>
 #include <kdebug.h>
 #include "kpilotlink.h"
 #include "setupDialog.moc"
@@ -29,17 +32,53 @@
 //
 static const char *id="$Id$";
 
+KNotesGeneralPage::KNotesGeneralPage(setupDialog *p,KConfig& c) :
+	setupDialogPage(i18n("General"),p)
+{
+	FUNCTIONSETUP;
+
+	QGridLayout *grid = new QGridLayout(this,3,3,0,SPACING);
+
+	fDeleteNoteForMemo = new QCheckBox(
+		i18n("Delete KNote when Pilot memo is deleted"),
+		this);
+	fDeleteNoteForMemo -> setChecked(
+		c.readBoolEntry("DeleteNoteForMemo",false));
+	grid->addWidget(fDeleteNoteForMemo,1,1);
+
+	grid->addRowSpacing(0,SPACING);
+	grid->addColSpacing(2,SPACING);
+	grid->setRowStretch(2,100);
+}
+
+int KNotesGeneralPage::commitChanges(KConfig& c)
+{
+	FUNCTIONSETUP;
+
+	c.writeEntry("DeleteNoteForMemo",
+		(bool)fDeleteNoteForMemo->isChecked());
+
+	return 0;
+}
 
 
 /* static */ const QString KNotesOptions::KNotesGroup("conduitKNote");
 
 KNotesOptions::KNotesOptions(QWidget *parent) :
-	setupDialog(parent, "conduitKNotes",0L)
+	setupDialog(parent,KNotesGroup,0L)
 {
 	FUNCTIONSETUP;
+	KConfig& c = KPilotLink::getConfig(KNotesGroup);
+
+	addPage(new KNotesGeneralPage(this,c));
 	addPage(new setupInfoPage(this));
-	adjustSize();
+	setupWidget();
+
+	(void) id;
 }
 
   
 // $Log$
+// Revision 1.1  2000/11/20 00:22:28  adridg
+// New KNotes conduit
+//
