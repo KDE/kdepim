@@ -52,7 +52,7 @@ public:
   struct Email {
   public:
     QString displayName;
-    QString address;
+    QString smtpAddress;
   };
 
   struct Address {

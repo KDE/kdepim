@@ -377,32 +377,126 @@ void Contact::setPreferredAddress( const QString& address )
 
 QString Contact::preferredAddress() const
 {
-  kdError() << "NYI: " << k_funcinfo << endl;
   return mPreferredAddress;
 }
 
 bool Contact::loadNameAttribute( QDomElement& element )
 {
-  kdError() << "NYI: " << k_funcinfo << endl;
-  return false;
+  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      QDomElement e = n.toElement();
+      QString tagName = e.tagName();
+
+      if ( tagName == "given-name" )
+        setGivenName( e.text() );
+      else if ( tagName == "middle-names" )
+        setMiddleNames( e.text() );
+      else if ( tagName == "last-name" )
+        setLastName( e.text() );
+      else if ( tagName == "full-name" )
+        setFullName( e.text() );
+      else if ( tagName == "initials" )
+        setInitials( e.text() );
+      else if ( tagName == "prefix" )
+        setPrefix( e.text() );
+      else if ( tagName == "suffix" )
+        setSuffix( e.text() );
+      else
+        // TODO: Unhandled tag - save for later storage
+        kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+    } else
+      kdDebug() << "Node is not a comment or an element???" << endl;
+  }
+
+  return true;
 }
 
 bool Contact::loadPhoneAttribute( QDomElement& element )
 {
-  kdError() << "NYI: " << k_funcinfo << endl;
-  return false;
+  PhoneNumber number;
+
+  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      QDomElement e = n.toElement();
+      QString tagName = e.tagName();
+
+      if ( tagName == "type" )
+        number.type = e.text();
+      else if ( tagName == "number" )
+        number.number = e.text();
+      else
+        // TODO: Unhandled tag - save for later storage
+        kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+    } else
+      kdDebug() << "Node is not a comment or an element???" << endl;
+  }
+
+  addPhoneNumber( number );
+  return true;
 }
 
 bool Contact::loadEmailAttribute( QDomElement& element )
 {
-  kdError() << "NYI: " << k_funcinfo << endl;
-  return false;
+  Email email;
+
+  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      QDomElement e = n.toElement();
+      QString tagName = e.tagName();
+
+      if ( tagName == "display-name" )
+        email.displayName = e.text();
+      else if ( tagName == "smtp-address" )
+        email.smtpAddress = e.text();
+      else
+        // TODO: Unhandled tag - save for later storage
+        kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+    } else
+      kdDebug() << "Node is not a comment or an element???" << endl;
+  }
+
+  addEmail( email );
+  return true;
 }
 
 bool Contact::loadAddressAttribute( QDomElement& element )
 {
-  kdError() << "NYI: " << k_funcinfo << endl;
-  return false;
+  Address address;
+
+  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      QDomElement e = n.toElement();
+      QString tagName = e.tagName();
+
+      if ( tagName == "type" )
+        address.type = e.text();
+      else if ( tagName == "street" )
+        address.street = e.text();
+      else if ( tagName == "city" )
+        address.city = e.text();
+      else if ( tagName == "state" )
+        address.state = e.text();
+      else if ( tagName == "zip" )
+        address.zip = e.text();
+      else if ( tagName == "country" )
+        address.country = e.text();
+      else
+        // TODO: Unhandled tag - save for later storage
+        kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+    } else
+      kdDebug() << "Node is not a comment or an element???" << endl;
+  }
+
+  addAddress( address );
+  return true;
 }
 
 bool Contact::loadAttribute( QDomElement& element )
