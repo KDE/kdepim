@@ -133,7 +133,7 @@ bool Note::loadXML( const QDomDocument& document )
   QDomElement top = document.documentElement();
 
   if ( top.tagName() != "note" ) {
-    qWarning( "XML error: Top tag was %s instead of the expected Note",
+    qWarning( "XML error: Top tag was %s instead of the expected note",
               top.tagName().ascii() );
     return false;
   }
