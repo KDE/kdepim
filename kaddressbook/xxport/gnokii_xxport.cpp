@@ -3,7 +3,7 @@
     Copyright (c) 2003-2004 Helge Deller <deller@kde.org>
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 as 
+    it under the terms of the GNU General Public License version 2 as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -20,7 +20,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-/* 
+/*
     Description:
     This filter allows you to import and export the KDE addressbook entries
     to/from a mobile phone, which is accessible via gnokii.
@@ -124,7 +124,7 @@ static QString businit(void)
 	gn_error error;
 	char *aux;
 
-#if defined(LIBGNOKII_VERSION) 
+#if defined(LIBGNOKII_VERSION)
 	if (gn_cfg_read_default()<0)
 #else
 	static char *BinDir;
@@ -190,7 +190,7 @@ static QString businit(void)
 	GNOKII_CHECK_ERROR(error);
 	data.revision = NULL;
 
-	// imei	
+	// imei
 	data.imei = imei;
 	imei[0] = 0;
 	if (m_progressDlg->wasCancelled())
@@ -201,7 +201,7 @@ static QString businit(void)
 	data.imei = NULL;
 
 	GNOKII_DEBUG( QString("Found mobile phone: Model: %1, Revision: %2, IMEI: %3\n")
-				.arg(model, revision, imei) ); 
+				.arg(model, revision, imei) );
 
 	PhoneProductId = QString("%1-%2-%3-%4").arg(APP).arg(model).arg(revision).arg(imei);
 
@@ -294,11 +294,11 @@ static QString buildMemoryTypeString( gn_memory_type memtype )
 }
 
 // read and evaluate all phone entries
-static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memtype, 
+static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memtype,
 			KABC::AddresseeList *addrList )
 {
   gn_error error;
-  
+
   if (m_progressDlg->wasCancelled())
 	return GN_ERR_NONE;
 
@@ -340,7 +340,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		GNOKII_DEBUG(QString("%1: %2, num=%3, location=%4, group=%5, count=%6\n").arg(i).arg(GN_FROM(entry.name))
 			.arg(GN_FROM(entry.number)).arg(entry.location).arg(entry.caller_group).arg(entry.subentries_count));
 		KABC::Addressee *a = new KABC::Addressee();
-		
+
 		// try to split Name into FamilyName and GivenName
 		s = GN_FROM(entry.name).simplifyWhiteSpace();
 		a->setFormattedName(s); // set formatted name as in Phone
@@ -375,7 +375,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		if (entry.date.year<1998)
 			datetime = QDateTime::currentDateTime();
 		else
-			datetime = QDateTime( QDate(entry.date.year, entry.date.month, entry.date.day), 
+			datetime = QDateTime( QDate(entry.date.year, entry.date.month, entry.date.day),
 							  QTime(entry.date.hour, entry.date.minute, entry.date.second) );
 		GNOKII_DEBUG(QString(" date=%1\n").arg(datetime.toString()));
 		a->setRevision(datetime);
@@ -513,7 +513,9 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 	m_progressDlg->show();
   	processEvents();
 
+#if (QT_VERSION >= 0x030300)
 	m_progressDlg->setCursor( Qt::BusyCursor );
+#endif
 	QString errStr = businit();
 	m_progressDlg->unsetCursor();
 
@@ -525,7 +527,7 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 
 	GNOKII_DEBUG("GNOKII import filter started.\n");
 	m_progressDlg->setButtonText(i18n("&Stop Import"));
-  
+
 	read_phone_entries("ME", GN_MT_ME, &addrList); // internal phone memory
 	read_phone_entries("SM", GN_MT_SM, &addrList); // SIM card
 
@@ -549,7 +551,7 @@ static QString makeValidPhone( const QString &number )
 	// allowed chars: 0-9, *, #, p, w, +
 	QString num = number.simplifyWhiteSpace();
 	QString allowed("0123456789*+#pw");
-	for (unsigned int i=num.length(); i>=1; i--) 
+	for (unsigned int i=num.length(); i>=1; i--)
 		if (allowed.find(num[i-1])==-1)
 			num.remove(i-1,1);
 	if (num.isEmpty())
@@ -557,7 +559,7 @@ static QString makeValidPhone( const QString &number )
 	return num;
 }
 
-static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type memtype, 
+static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type memtype,
 			const KABC::Addressee *addr)
 {
 	gn_phonebook_entry entry;
@@ -583,7 +585,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 	else
 		entry.caller_group = cg.toInt();
 	entry.location = phone_location;
-	
+
 	// set date/revision
 	QDateTime datetime = addr->revision();
 	QDate date(datetime.date());
@@ -757,7 +759,9 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 	gn_error error;
 	bool deleteLabelInitialized = false;
 
+#if (QT_VERSION >= 0x030300)
 	m_progressDlg->setCursor( Qt::BusyCursor );
+#endif
 	QString errStr = businit();
 	m_progressDlg->unsetCursor();
 
@@ -803,7 +807,7 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 			KGuiItem(i18n("&Replace current phonebook with new contacts")) ) )
 				overwrite_phone_entries = true;
 	}
-	
+
   	progress->setTotalSteps(list.count());
 	entries_written = 0;
 	progress->setProgress(entries_written);
