@@ -784,31 +784,48 @@ AbbrowserConduit::_findMatch(const QDict<ContactEntry> entries,
 			     const PilotAddress &pilotAddress,
 			     QString &contactKey) const
     {
+    bool piFirstEmpty = (pilotAddress.getField(entryFirstname) == 0L);
+    bool piLastEmpty = (pilotAddress.getField(entryLastname) == 0L);
+    bool piCompanyEmpty = (pilotAddress.getField(entryCompany) == 0L);
+    // return not found if not matching keys
+    if (piFirstEmpty && piLastEmpty && piCompanyEmpty)  
+	return 0L;
+
     contactKey = QString::null;
     // for now just loop throug all entries; in future, probably better
     // to create a map for first and last name, then just do O(1) calls
-    for (QDictIterator<ContactEntry> iter(entries);iter.current();
+    for (QDictIterator<ContactEntry> iter(entries); iter.current();
 	 ++iter)
 	{
 	ContactEntry *abEntry = iter.current();
-	if (abEntry->getLastName() != QString::null
-	     && abEntry->getFirstName() != QString::null)
+
+	// do quick empty check's
+	if (piFirstEmpty != abEntry->getFirstName().isEmpty() ||
+	    piLastEmpty != abEntry->getLastName().isEmpty() ||
+	    piCompanyEmpty != abEntry->getCompany().isEmpty())
+	    continue;
+	
+	if (piFirstEmpty && piLastEmpty)
 	    {
-	    if (abEntry->getLastName() == pilotAddress.getField(entryLastname)
-		&& abEntry->getFirstName() ==
-		pilotAddress.getField(entryFirstname))
+	    if (abEntry->getCompany() == pilotAddress.getField(entryCompany))
 		{
 		contactKey = iter.currentKey();
 		return abEntry;
 		}
 	    }
 	else
-	    if (abEntry->getCompany() != QString::null &&
-		abEntry->getCompany() == pilotAddress.getField(entryCompany))
+	    // the first and last name must be equal; they are equal
+	    // if they are both empty or the strings match
+	    if (((piLastEmpty && abEntry->getLastName().isEmpty()) ||
+		 (abEntry->getLastName()==pilotAddress.getField(entryLastname)))
+		&&
+		((piFirstEmpty && abEntry->getFirstName().isEmpty()) ||
+		 (abEntry->getFirstName()==pilotAddress.getField(entryFirstname) )))
 		{
 		contactKey = iter.currentKey();
 		return abEntry;
 		}
+		 
 	}
     return 0L;
     }
@@ -860,7 +877,7 @@ void AbbrowserConduit::doBackup()
 		// the kpilot id and save
 		if (_equal(pilotAddress, *abEntry))
 		    {
-		    qDebug("Abbrowser::doBackup both records already exist and are equal, just assigning the KPILOT_ID to the abbrowser entry");
+		    //qDebug("Abbrowser::doBackup both records already exist and are equal, just assigning the KPILOT_ID to the abbrowser entry");
 		    abEntry->setCustomField("KPILOT_ID", QString::number(pilotAddress.getID()));
 		    _saveAbEntry(*abEntry, abKey);
 		    }
@@ -872,7 +889,8 @@ void AbbrowserConduit::doBackup()
 		}
 	    else  // if not found in the abbrowser contacts, add it
 		{
-		qDebug("Abbrowser::doBackup adding new pilot record to abbrowser");
+		qDebug("Abbrowser::doBackup adding new pilot record to abbrowser => ");
+		showPilotAddress(pilotAddress);
 		_addToAbbrowser(pilotAddress);
 		}
 	    }
