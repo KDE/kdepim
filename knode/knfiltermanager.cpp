@@ -38,9 +38,40 @@
 #include "knarticlefilter.h"
 #include "knfilterdialog.h"
 #include "knfiltermanager.h"
-#include "knodeview.h"
 #include "knconfig.h"
 
+
+KNFilterSelectAction::KNFilterSelectAction( const QString& text, const QString& pix,
+                                            QObject* parent, const char *name )
+ : KActionMenu(text,pix,parent,name), currentItem(-42)
+{
+  popupMenu()->setCheckable(true);
+  connect(popupMenu(),SIGNAL(activated(int)),this,SLOT(slotMenuActivated(int)));
+  setDelayed(false);
+}
+
+
+
+KNFilterSelectAction::~KNFilterSelectAction()
+{
+}
+
+void KNFilterSelectAction::setCurrentItem(int id)
+{
+  popupMenu()->setItemChecked(currentItem, false);
+  popupMenu()->setItemChecked(id, true);
+  currentItem = id;
+}
+
+
+void KNFilterSelectAction::slotMenuActivated(int id)
+{
+  setCurrentItem(id);
+  emit(activated(id));
+}
+
+
+//==============================================================================
 
 
 KNFilterManager::KNFilterManager(KNFilterSelectAction *a, KAction *keybA, QObject * parent, const char * name)

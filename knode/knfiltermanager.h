@@ -27,7 +27,29 @@ class FilterListWidget;
 
 class KNArticleFilter;
 class KNFilterDialog;
-class KNFilterSelectAction;
+
+
+class KNFilterSelectAction : public KActionMenu
+{
+  Q_OBJECT
+
+  public:
+    KNFilterSelectAction( const QString& text, const QString& pix,
+                          QObject* parent, const char *name );
+    ~KNFilterSelectAction();
+
+    void setCurrentItem(int id);
+
+  protected slots:
+    void slotMenuActivated(int id);
+
+  signals:
+    void activated(int id);
+
+  private:
+    int currentItem;
+};
+
 
 class KNFilterManager : public QObject
 {

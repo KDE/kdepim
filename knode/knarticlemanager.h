@@ -88,6 +88,8 @@ class KNArticleManager : public QObject {
     void toggleShowThreads()          { s_howThreads=!s_howThreads; showHdrs(true); }
     void setShowThreads(bool b=true)  { s_howThreads=b; showHdrs(true); }
 
+    void updateStatusString();
+
     //filter
     KNArticleFilter* filter() const { return f_ilter; }
     void search();
@@ -113,7 +115,6 @@ class KNArticleManager : public QObject {
   protected:  
     void createHdrItem(KNRemoteArticle *a);
     void createThread(KNRemoteArticle *a);
-    void updateStatusString();
 
     KNListView *v_iew;
     KNGroup *g_roup;
@@ -124,15 +125,12 @@ class KNArticleManager : public QObject {
     QList<KTempFile> t_empFiles;
     bool s_howThreads;
 
-
   public slots:
     void slotFilterChanged(KNArticleFilter *f);
     void slotSearchDialogDone();
     void slotItemExpanded(QListViewItem *p);
 
 };
-
-
 
 
 #endif

@@ -610,6 +610,9 @@ void KNArticleManager::updateStatusString()
     knGlobals.top->setStatusMsg(i18n(" %1: %2 displayed")
       .arg(f_older->name()).arg(f_older->count()), SB_GROUP);
     knGlobals.top->setStatusMsg(QString::null, SB_FILTER);
+  } else {
+    knGlobals.top->setStatusMsg(QString::null, SB_GROUP);
+    knGlobals.top->setStatusMsg(QString::null, SB_FILTER);
   }
 }
 

@@ -30,6 +30,7 @@
 #include <kmenubar.h>
 
 #include "knode.h"
+#include "knfiltermanager.h"
 #include "knodeview.h"
 #include "knlistview.h"
 #include "utilities.h"

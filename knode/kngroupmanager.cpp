@@ -412,7 +412,10 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
     }
     kdDebug(5003) << "Files deleted!" << endl;
 
-    if(c_urrentGroup==g) setCurrentGroup(0);
+    if(c_urrentGroup==g) {
+      setCurrentGroup(0);
+      a_rticleMgr->updateStatusString();
+    }
 
     g_List->removeRef(g);
   }
@@ -489,7 +492,7 @@ void KNGroupManager::setCurrentGroup(KNGroup *g)
   if (g) {
     loaded=g->loadHdrs();
     if (loaded) {
-     a_rticleMgr->showHdrs();
+      a_rticleMgr->showHdrs();
       if(knGlobals.cfgManager->readNewsGeneral()->autoCheckGroups())
         checkGroupForNewHeaders(g);
     }

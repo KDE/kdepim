@@ -25,30 +25,6 @@
 #include <kaction.h>
 #include <qlistview.h>
 
-class KNFilterSelectAction : public KActionMenu
-{
-  Q_OBJECT
-
-  public:
-    KNFilterSelectAction( const QString& text, const QString& pix,
-                          QObject* parent, const char *name );
-    ~KNFilterSelectAction();
-
-    void setCurrentItem(int id);
-
-  protected slots:
-    void slotMenuActivated(int id);
-
-  signals:
-    void activated(int id);
-
-  private:
-    int currentItem;
-};
-
-
-//========================================================================================
-
 class KNArticleWidget;
 class KNListView;
 class KNFocusWidget;
@@ -56,7 +32,6 @@ class KNArticle;
 class KNNntpAccount;
 class KNGroup;
 class KNFolder;
-
 class KNConfigManager;
 class KNAccountManager;
 class KNGroupManager;
@@ -64,7 +39,9 @@ class KNFolderManager;
 class KNArticleManager;
 class KNArticleFactory;
 class KNFilterManager;
+class KNFilterSelectAction;
 class KNNetAccess;
+
 
 class KNodeView : public QSplitter
 {
@@ -103,12 +80,6 @@ class KNodeView : public QSplitter
     KNListView      *c_olView, *h_drView;
     KNFocusWidget   *c_olFocus, *h_drFocus, *a_rtFocus;
     bool l_ongView, b_lockui;
-
-    //Selected items
-    KNNntpAccount   *s_electedAccount;
-    KNGroup         *s_electedGroup;
-    KNFolder        *s_electedFolder;
-    KNArticle       *s_electedArticle;
 
     //Popups
     QPopupMenu  *a_ccPopup,
