@@ -44,6 +44,7 @@
 #include <kdebug.h>
 #include <kdialog.h>
 #include <kiconloader.h>
+#include <kinputdialog.h>
 #include <klineedit.h>
 #include <klistview.h>
 #include <klocale.h>
@@ -303,19 +304,22 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   mCountryCombo->setEditable( true );
   mCountryCombo->setDuplicatesEnabled( false );
 
+  QPushButton *labelButton = new QPushButton( i18n( "Edit Label..." ), page );
+  topLayout->addMultiCellWidget( labelButton, 7, 7, 0, 1 );
+
   fillCountryCombo();
   label->setBuddy( mCountryCombo );
   topLayout->addWidget( mCountryCombo, 6, 1 );
 
   mPreferredCheckBox = new QCheckBox( i18n( "This is the preferred address" ), page );
-  topLayout->addMultiCellWidget( mPreferredCheckBox, 7, 7, 0, 1 );
+  topLayout->addMultiCellWidget( mPreferredCheckBox, 8, 8, 0, 1 );
 
   KSeparator *sep = new KSeparator( KSeparator::HLine, page );
-  topLayout->addMultiCellWidget( sep, 8, 8, 0, 1 );
+  topLayout->addMultiCellWidget( sep, 9, 9, 0, 1 );
 
   QHBox *buttonBox = new QHBox( page );
   buttonBox->setSpacing( spacingHint() );
-  topLayout->addMultiCellWidget( buttonBox, 9, 9, 0, 1 );
+  topLayout->addMultiCellWidget( buttonBox, 10, 10, 0, 1 );
 
   QPushButton *addButton = new QPushButton( i18n( "New..." ), buttonBox );
   connect( addButton, SIGNAL( clicked() ), SLOT( addAddress() ) );
@@ -340,6 +344,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   connect( mPostalCodeEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mCountryCombo, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mPreferredCheckBox, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
+  connect( labelButton, SIGNAL( clicked() ), SLOT( editLabel() ) );
 
   KAcceleratorManager::manage( this );
 
@@ -416,6 +421,18 @@ void AddressEditDialog::changeType()
   }
 }
 
+void AddressEditDialog::editLabel()
+{
+  bool ok = false;
+  QString result = KInputDialog::getMultiLineText( KABC::Address::labelLabel(),
+                                                   KABC::Address::labelLabel(),
+                                                   mLabel, &ok, this );
+  if ( ok ) {
+    mLabel = result;
+    modified();
+  }
+}
+
 void AddressEditDialog::updateAddressEdits()
 {
   if ( mPreviousAddress )
@@ -433,6 +450,7 @@ void AddressEditDialog::updateAddressEdits()
   mPostalCodeEdit->setText( a.postalCode() );
   mPOBoxEdit->setText( a.postOfficeBox() );
   mCountryCombo->setCurrentText( a.country() );
+  mLabel = a.label();
 
   mPreferredCheckBox->setChecked( a.type() & KABC::Address::Pref );
 
@@ -457,6 +475,7 @@ void AddressEditDialog::saveAddress( KABC::Address &addr )
   addr.setCountry( mCountryCombo->currentText() );
   addr.setPostOfficeBox( mPOBoxEdit->text() );
   addr.setStreet( mStreetTextEdit->text() );
+  addr.setLabel( mLabel );
 
 
   if ( mPreferredCheckBox->isChecked() ) {

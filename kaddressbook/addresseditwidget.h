@@ -103,6 +103,7 @@ class AddressEditDialog : public KDialogBase
     void addAddress();
     void removeAddress();
     void changeType();
+    void editLabel();
 
     void updateAddressEdits();
     void modified();
@@ -127,6 +128,8 @@ class AddressEditDialog : public KDialogBase
     KABC::Address::List mAddressList;
     KABC::Address *mPreviousAddress;
     bool mChanged;
+
+    QString mLabel;
 };
 
 /**
