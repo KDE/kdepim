@@ -630,7 +630,7 @@ void CalPrinter::drawDayBox(QPainter &p, const QDate &qd,
 
   while (count <= 9 && (currEvent != NULL)) {
     if (currEvent->doesFloat() || currEvent->isMultiDay())
-      outStr += currEvent->summary();
+      outStr = currEvent->summary();
     
     else {
       QTime t1 = currEvent->dtStart().time();
