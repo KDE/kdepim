@@ -1,7 +1,8 @@
 #############################################################################
 
 SUBDIRS = pics lib parts ui
-APPSDIR = $(kde_appsdir)/Internet
+appsdir = $(kde_appsdir)/Internet
+apps_DATA = twister.desktop
 KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS) -DQT_NO_ASCII_CAST
 INCLUDES = -I$(srcdir)/lib -I$(srcdir)/ui $(all_includes)
 
@@ -12,15 +13,12 @@ INCLUDES = -I$(srcdir)/lib -I$(srcdir)/ui $(all_includes)
 lib_LTLIBRARIES = twister.la
 
 twister_la_SOURCES = main.cpp
-
 twister_la_LDFLAGS = \
 	$(all_libraries) -version-info 1:0:0 -module
 # Define this for testing.
 # -no-undefined
 
-twister_la_LIBADD = \
-	$(top_builddir)/twister/lib/libtwisterkernel.la \
-	$(top_builddir)/twister/ui/libtwisterui.la
+twister_la_LIBADD = lib/libtwisterkernel.la ui/libtwisterui.la
 
 #############################################################################
 # Compile as a binary
@@ -28,13 +26,15 @@ twister_la_LIBADD = \
 
 bin_PROGRAMS = twister
 
-twister_SOURCES = main.cpp
-
+twister_SOURCES = dummy.cpp
 twister_LDFLAGS = $(all_libraries)
+twister_LDADD = lib/libtwisterkernel.la ui/libtwisterui.la
 
-twister_LDADD = \
-	$(top_builddir)/twister/lib/libtwisterkernel.la \
-	$(top_builddir)/twister/ui/libtwisterui.la
+dummy.cpp:
+	echo > $@
+
+datadir = $(kde_datadir)/twister
+# data_DATA = twister_logo.png
 
 #############################################################################
 # i18n
@@ -43,22 +43,3 @@ twister_LDADD = \
 messages:
 	$(XGETTEXT) */*.cpp *.cpp -o $(podir)/twister.pot
 
-#############################################################################
-# Extra data to install
-#############################################################################
-
-install-data-local: 
-	$(mkinstalldirs) $(APPSDIR)
-	$(INSTALL_DATA) $(srcdir)/twister.desktop $(APPSDIR)
-	$(mkinstalldirs) $(kde_datadir)/twister
-#	$(INSTALL_DATA) $(srcdir)/twister_logo.png $(kde_datadir)/twister/twister_logo.png
-
-#############################################################################
-# How to uninstall
-#############################################################################
-	
-uninstall-local:
-	-rm -f $(APPSDIR)/twister.desktop
-	-rm -rf $(kde_datadir)/twister
-
-#############################################################################
