@@ -318,12 +318,25 @@ void KNotesAction::listNotes()
 		resetIndexes();
 		getAppInfo();
 		getConfigInfo();
-		fActionStatus = ModifiedNotesToPilot;
-		// TODO: Handle all varieties of special syncs
-		if (SyncAction::eCopyHHToPC == getSyncDirection())
+		switch(getSyncDirection())
 		{
-			listNotes();
+		case SyncAction::eDefaultSync:
+		case SyncAction::eTest:
+		case SyncAction::eBackup:
+		case SyncAction::eRestore:
+			// Impossible!
+			fActionStatus = Done;
+			break;
+		case SyncAction::eCopyHHToPC :
+			listNotes(); // Debugging
 			fActionStatus = MemosToKNotes;
+			break;
+		case SyncAction::eFastSync:
+		case SyncAction::eHotSync:
+		case SyncAction::eFullSync:
+		case SyncAction::eCopyPCToHH:
+			fActionStatus = ModifiedNotesToPilot;
+			break;
 		}
 		break;
 	case ModifiedNotesToPilot :
@@ -344,8 +357,26 @@ void KNotesAction::listNotes()
 		if (addNewNoteToPilot())
 		{
 			resetIndexes();
-			fActionStatus = MemosToKNotes;
 			fDatabase->resetDBIndex();
+			switch(getSyncDirection())
+			{
+			case SyncAction::eDefaultSync:
+			case SyncAction::eTest:
+			case SyncAction::eBackup:
+			case SyncAction::eRestore:
+			case SyncAction::eCopyHHToPC :
+				// Impossible!
+				fActionStatus = Done;
+				break;
+			case SyncAction::eFastSync:
+			case SyncAction::eHotSync:
+			case SyncAction::eFullSync:
+				fActionStatus = MemosToKNotes;
+				break;
+			case SyncAction::eCopyPCToHH:
+				fActionStatus = Cleanup;
+				break;
+			}
 		}
 		break;
 	case MemosToKNotes :
