@@ -18,16 +18,17 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+
 #ifndef KSYNC_VIEWER_H
 #define KSYNC_VIEWER_H
 
 #include <actionpart.h>
 
+#include <klistview.h>
 #include <klocale.h>
 
 #include <qpixmap.h>
 #include <qptrlist.h>
-#include <qlistview.h>
 
 class KAboutData;
 
@@ -35,11 +36,11 @@ namespace KSync {
 
 class Viewer : public ActionPart
 {
-   Q_OBJECT
+  Q_OBJECT
+
   public:
-    Viewer( QWidget *parent, const char *name,
-            QObject *object=0, const char *name2 = 0, // make GenericFactory loading possible
-            const QStringList & = QStringList() );
+    Viewer( QWidget *parent, const char *name, QObject *object = 0,
+            const char *name2 = 0, const QStringList & = QStringList() );
     virtual ~Viewer();
 
     static KAboutData *createAboutData();
@@ -56,16 +57,15 @@ class Viewer : public ActionPart
 
     bool needsKonnectorRead() const { return true; }
 
-  protected:
-
   protected slots:
     void expandAll();
     void collapseAll();
 
   private:
-    QPixmap m_pixmap;
+    QPixmap mPixmap;
     QWidget *mTopWidget;
-    QListView *mListView;
+
+    KListView *mListView;
 };
 
 }

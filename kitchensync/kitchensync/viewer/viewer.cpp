@@ -21,39 +21,38 @@
 
 #include "viewer.h"
 
-#include <konnector.h>
 #include <core.h>
 #include <engine.h>
+#include <konnector.h>
 
 #include <kaboutdata.h>
-#include <kiconloader.h>
-#include <kparts/genericfactory.h>
-#include <kmessagebox.h>
 #include <kdialog.h>
 #include <kdialogbase.h>
-#include <kstandarddirs.h>
+#include <kiconloader.h>
+#include <kmessagebox.h>
+#include <kparts/genericfactory.h>
 #include <kprocess.h>
+#include <kstandarddirs.h>
 
 #include <qlabel.h>
-#include <qlistview.h>
-#include <qpushbutton.h>
 #include <qlayout.h>
+#include <qpushbutton.h>
 
 using namespace KSync;
 
 typedef KParts::GenericFactory<Viewer> ViewerFactory;
 K_EXPORT_COMPONENT_FACTORY( libksync_viewer, ViewerFactory )
 
-Viewer::Viewer( QWidget *parent, const char *name,
-                    QObject *, const char *,const QStringList & )
+Viewer::Viewer( QWidget *parent, const char *name, QObject *, const char *,
+                const QStringList & )
   : ActionPart( parent, name ), mTopWidget( 0 )
 {
-  m_pixmap = KGlobal::iconLoader()->loadIcon("xmag", KIcon::Desktop, 48 );
+  mPixmap = KGlobal::iconLoader()->loadIcon( "xmag", KIcon::Desktop, 48 );
 }
 
 KAboutData *Viewer::createAboutData()
 {
-  return new KAboutData("KSyncViewer", I18N_NOOP("Sync Viewer Part"), "0.0" );
+  return new KAboutData( "KSyncViewer", I18N_NOOP( "Sync Viewer Part" ), "0.0" );
 }
 
 Viewer::~Viewer()
@@ -63,27 +62,27 @@ Viewer::~Viewer()
 
 QString Viewer::type() const
 {
-  return QString::fromLatin1("viewer");
+  return QString::fromLatin1( "viewer" );
 }
 
 QString Viewer::title() const
 {
-  return i18n("Data Viewer");
+  return i18n( "Data Viewer" );
 }
 
 QString Viewer::description() const
 {
-  return i18n("Viewer for data handled by KitchenSync.");
+  return i18n( "Viewer for data handled by KitchenSync." );
 }
 
 QPixmap *Viewer::pixmap()
 {
-  return &m_pixmap;
+  return &mPixmap;
 }
 
 QString Viewer::iconName() const
 {
-  return QString::fromLatin1("xmag");
+  return QString::fromLatin1( "xmag" );
 }
 
 bool Viewer::hasGui() const
@@ -93,27 +92,30 @@ bool Viewer::hasGui() const
 
 QWidget *Viewer::widget()
 {
-  if( !mTopWidget ) {
+  if ( !mTopWidget ) {
     mTopWidget = new QWidget;
     QBoxLayout *topLayout = new QVBoxLayout( mTopWidget );
     topLayout->setSpacing( KDialog::spacingHint() );
 
-    mListView = new QListView( mTopWidget );
+    mListView = new KListView( mTopWidget );
     mListView->setRootIsDecorated( true );
-    mListView->addColumn( i18n("Konnector Data" ) );
+    mListView->addColumn( i18n( "Konnector Data" ) );
+    mListView->setAllColumnsShowFocus( true );
+    mListView->setFullWidth( true );
     topLayout->addWidget( mListView );
 
     QBoxLayout *buttonLayout = new QHBoxLayout( topLayout );
-    QPushButton *button = new QPushButton( i18n("Expand All"), mTopWidget );
+    QPushButton *button = new QPushButton( i18n( "Expand All" ), mTopWidget );
     connect( button, SIGNAL( clicked() ), SLOT( expandAll() ) );
     buttonLayout->addWidget( button );
     
-    button = new QPushButton( i18n("Collapse All"), mTopWidget );
+    button = new QPushButton( i18n( "Collapse All" ), mTopWidget );
     connect( button, SIGNAL( clicked() ), SLOT( collapseAll() ) );
     buttonLayout->addWidget( button );
     
     buttonLayout->addStretch( 1 );
   }
+
   return mTopWidget;
 }
 
@@ -137,28 +139,22 @@ void Viewer::collapseAll()
 
 void Viewer::executeAction()
 {
-  kdDebug() << "Viewer::executeAction()" << endl;
-
   mListView->clear();
 
   Konnector::List konnectors = core()->engine()->konnectors();
   Konnector *k;
-  for( k = konnectors.first(); k; k = konnectors.next() ) {
+  for ( k = konnectors.first(); k; k = konnectors.next() ) {
     QListViewItem *topItem = new QListViewItem( mListView, k->resourceName() );
-//    kdDebug() << "Konnector: " << k->resourceName() << endl;
     SynceeList syncees = k->syncees();
-//    kdDebug() << syncees.count() << " Syncees found." << endl;
     SynceeList::ConstIterator it2;
-    for( it2 = syncees.begin(); it2 != syncees.end(); ++it2 ) {
+    for ( it2 = syncees.begin(); it2 != syncees.end(); ++it2 ) {
       Syncee *s = *it2;
       if ( !s->isValid() ) continue;
 
-//      kdDebug() << "Syncee " << s->identifier() << endl;
       QListViewItem *synceeItem = new QListViewItem( topItem,
                                                      s->identifier() );
       SyncEntry *entry;
-      for( entry = s->firstEntry(); entry; entry = s->nextEntry() ) {
-        kdDebug() << "  SyncEntry: " << entry->name() << endl;
+      for ( entry = s->firstEntry(); entry; entry = s->nextEntry() ) {
         new QListViewItem( synceeItem, entry->name() );
       }
     }
