@@ -26,6 +26,7 @@
 #include <qptrlist.h>
 #include <qregexp.h>
 
+#include <kabc/errorhandler.h>
 #include <kabc/field.h>
 #include <kabc/resource.h>
 #include <kabc/stdaddressbook.h>
@@ -67,6 +68,7 @@ KAddressBook::KAddressBook( QWidget *parent, const char *name )
 
   mAddressBook = KABC::StdAddressBook::self();
   KABC::StdAddressBook::setAutomaticSave( false );
+  mAddressBook->setErrorHandler( new KABC::GUIErrorHandler );
 
   connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook * ) ),
            SLOT( slotAddressBookChanged() ) );
