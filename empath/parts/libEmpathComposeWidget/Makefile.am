@@ -1,9 +1,9 @@
 KDE_CXXFLAGS = -DQT_NO_ASCII_CAST -DKPARTS_VERSION
 
-INCLUDES = $(all_includes) \
+INCLUDES = \
   -I$(top_srcdir)/empath/lib \
   -I$(top_srcdir)/empath/ui \
-  -I$(top_srcdir)/librmm
+  -I$(top_srcdir)/librmm $(all_includes)
 
 lib_LTLIBRARIES = libEmpathComposePart.la
 
