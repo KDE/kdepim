@@ -77,18 +77,6 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
 
   private:
 
-/*    enum GuiChangeType          // parameters to GUI client notification
-    {
-      CHANGE_STATUS,           // change of alarm daemon or calendar status
-      CHANGE_CLIENT,           // change to client application list
-      CHANGE_GUI,              // change to GUI client list
-      ADD_CALENDAR,            // addition to calendar list (KOrganizer-type calendar)
-      ADD_MSG_CALENDAR,        // addition to calendar list (KAlarm-type calendar)
-      DELETE_CALENDAR,         // deletion from calendar list
-      ENABLE_CALENDAR,         // calendar is now being monitored
-      DISABLE_CALENDAR,        // calendar is available but not being monitored
-      CALENDAR_UNAVAILABLE     // calendar is unavailable for monitoring
-    };*/
     struct GuiInfo
     {
       GuiInfo()  { }
@@ -123,11 +111,10 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     QTimer*           mSessionStartTimer;   // timer waiting for session startup to complete
     QString           mClientDataFile;      // path of file containing client data
     int               mCheckInterval;       // alarm check interval (minutes)
+    QDateTime         mLastCheck;           // last time at which alarms were checked
     bool              mEnabled;             // true if the alarm daemon is enabled
     bool              mAlarmTimerSyncing;   // true while alarm timer interval < 1 minute
     bool              mSessionStarted;      // true once session startup is complete
-
-    QDateTime mLastCheck;
 };
 
 #endif

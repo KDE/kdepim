@@ -340,10 +340,12 @@ void AlarmDaemon::checkAlarms(const QCString& appName)
 {
   if ( !mEnabled ) return;
 
+  QDateTime now = QDateTime::currentDateTime();
+
   for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
   {
     if (cal->appName() == appName)
-      checkAlarms( cal, mLastCheck.addSecs( 1 ), QDateTime::currentDateTime() );
+      checkAlarms( cal, mLastCheck.addSecs( 1 ), now );
   }
 }
 
