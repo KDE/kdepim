@@ -167,7 +167,8 @@ bool ResourceKolabBase::connectToKMail() const
   return mConnection->connectToKMail();
 }
 
-QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
+QString ResourceKolabBase::findWritableResource( const ResourceMap& resources,
+                                                 const QString& text )
 {
   // I have to use the label (shown in the dialog) as key here. But given how the
   // label is made up, it should be unique. If it's not, well the dialog would suck anyway...
@@ -190,11 +191,14 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
     // Just one found
     return possible.begin().data(); // yes this is the subresource key, i.e. location
 
+  QString t = text;
+  if ( t.isEmpty() )
+    i18n( "You have more than one writable resource folder. "
+          "Please select the one you want to write to." );
+
   // Several found, ask the user
   QString chosenLabel = KInputDialog::getItem( i18n( "Select Resource Folder" ),
-                                               i18n( "You have more than one writable resource folder. "
-                                                     "Please select the one you want to write to." ),
-                                               possible.keys() );
+                                               t, possible.keys() );
   if ( chosenLabel.isEmpty() ) // cancelled
     return QString::null;
   return possible[chosenLabel];

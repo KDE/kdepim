@@ -405,7 +405,37 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     // Find out if this event was previously stored in KMail
     bool newIncidence = _subresource.isEmpty();
     if ( newIncidence ) {
-      subResource = findWritableResource( *map );
+      // Add a description of the incidence
+      QString text = "<b><font size=\"+1\">";
+      if ( incidence->type() == "Event" )
+        text += i18n( "Choose the folder where you want to store this event" );
+      else if ( incidence->type() == "Todo" )
+        text += i18n( "Choose the folder where you want to store this task" );
+      else
+        text += i18n( "Choose the folder where you want to store this incidence" );
+      text += "<font></b><br>";
+      if ( !incidence->summary().isEmpty() )
+        text += i18n( "<b>Summary:</b> %1" ).arg( incidence->summary() ) + "<br>";
+      if ( !incidence->location().isEmpty() )
+        text += i18n( "<b>Location:</b> %1" ).arg( incidence->location() );
+      text += "<br>";
+      if ( !incidence->doesFloat() )
+        text += i18n( "<b>Start:</b> %1, %2" )
+                .arg( incidence->dtStartDateStr(), incidence->dtStartTimeStr() );
+      else
+        text += i18n( "<b>Start:</b> %1" ).arg( incidence->dtStartDateStr() );
+      text += "<br>";
+      if ( incidence->type() == "Event" ) {
+        Event* event = static_cast<Event*>( incidence );
+        if ( event->hasEndDate() )
+          if ( !event->doesFloat() )
+            text += i18n( "<b>End:</b> %1, %2" )
+                    .arg( event->dtEndDateStr(), event->dtEndTimeStr() );
+          else
+            text += i18n( "<b>End:</b> %1" ).arg( event->dtEndDateStr() );
+        text += "<br>";
+      }
+      subResource = findWritableResource( *map, text );
     }
     if ( subResource.isEmpty() )
       return false;

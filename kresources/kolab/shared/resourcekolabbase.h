@@ -151,7 +151,8 @@ protected:
   QString configFile( const QString& type ) const;
 
   /// If only one of these is writable, return that. Otherwise return null.
-  QString findWritableResource( const ResourceMap& resources );
+  QString findWritableResource( const ResourceMap& resources,
+                                const QString& text = QString::null );
 
   bool mSilent;
 
