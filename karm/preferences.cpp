@@ -34,7 +34,7 @@ Preferences::Preferences() : KDialogBase(KDialogBase::Tabbed, i18n("Preferences"
   connect(_doAutoSaveW, SIGNAL(clicked()),
           this, SLOT(autoSaveCheckBoxChanged()));
 
-   _doTimeLogingW = new QCheckBox(i18n("Do time loging"), autoSaveMenu,
+   _doTimeLogingW = new QCheckBox(i18n("Do time logging"), autoSaveMenu,
    								 "_doTimeLogingW");
    connect(_doTimeLogingW, SIGNAL(clicked()),
  		  this, SLOT(timeLogingCheckBoxChanged()));
