@@ -1,3 +1,3 @@
 ## $Id$
 
-SUBDIRS = sieve
+SUBDIRS = sieve imap4
