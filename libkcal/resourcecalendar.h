@@ -57,6 +57,8 @@ class ResourceCalendar : public KRES::Resource
     ResourceCalendar( const KConfig * );
     virtual ~ResourceCalendar();
 
+    void setResolveConflict( bool b);
+
     virtual void writeConfig( KConfig* config );
 
     /**
@@ -307,6 +309,8 @@ class ResourceCalendar : public KRES::Resource
     virtual void setSubresourceActive( const QString &, bool active );
 
   protected:
+
+    bool mResolveConflict;
     /**
       Do the actual loading of the resource data. Called by load().
     */

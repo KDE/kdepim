@@ -31,7 +31,7 @@
 using namespace KCal;
 
 ResourceCalendar::ResourceCalendar( const KConfig *config )
-    : KRES::Resource( config )
+    : KRES::Resource( config ),mResolveConflict( false )
 {
 }
 
@@ -39,6 +39,10 @@ ResourceCalendar::~ResourceCalendar()
 {
 }
 
+void ResourceCalendar::setResolveConflict( bool b)
+{
+ mResolveConflict = b;
+}
 QString ResourceCalendar::infoText() const
 {
   QString txt;
