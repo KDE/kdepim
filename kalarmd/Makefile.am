@@ -67,4 +67,4 @@ messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kalarmdgui.pot
 	$(XGETTEXT) alarmdaemonctrl.cpp -o $(podir)/alarmdaemonctrl.pot
 
-include ../admin/Doxyfile.am
+include $(top_srcdir)/admin/Doxyfile.am

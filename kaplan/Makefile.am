@@ -1,3 +1,3 @@
 SUBDIRS = interfaces plugins src
 
-include ../admin/Doxyfile.am
+include $(top_srcdir)/admin/Doxyfile.am
