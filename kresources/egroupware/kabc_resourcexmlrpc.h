@@ -34,17 +34,21 @@ class Server;
 
 namespace KABC {
 
+class EGroupwarePrefs;
+
 class ResourceXMLRPC : public Resource
 {
   Q_OBJECT
 
   public:
     ResourceXMLRPC( const KConfig* );
-    ResourceXMLRPC( const KURL &url, const QString &domain,
+    ResourceXMLRPC( const QString &url, const QString &domain,
                     const QString &user, const QString &password );
     ~ResourceXMLRPC();
 
     virtual void writeConfig( KConfig* );
+
+    EGroupwarePrefs *prefs() const { return mPrefs; }
 
     virtual bool doOpen();
     virtual void doClose();
@@ -60,21 +64,8 @@ class ResourceXMLRPC : public Resource
     virtual void insertAddressee( const Addressee &addr );
     virtual void removeAddressee( const Addressee& addr );
 
-    void setURL( const KURL &url );
-    KURL url() const;
-
-    void setDomain( const QString &domain );
-    QString domain() const;
-
-    void setUser( const QString &user );
-    QString user() const;
-
-    void setPassword( const QString &password );
-    QString password() const;
-
   protected:
-    void init( const KURL &url, const QString &domain,
-               const QString &user, const QString &password );
+    void init();
 
   protected slots:
     void loginFinished( const QValueList<QVariant>&, const QVariant& );
@@ -90,6 +81,8 @@ class ResourceXMLRPC : public Resource
     void fault( int, const QString&, const QVariant& );
 
   private:
+    void initEGroupware();
+
     QString addrTypesToTypeStr( int );
 
     void enter_loop();
@@ -97,10 +90,7 @@ class ResourceXMLRPC : public Resource
     void writeContact( const Addressee&, QMap<QString, QVariant>& );
     void readContact( const QMap<QString, QVariant>&, Addressee &addr, QString& );
 
-    KURL mURL;
-    QString mDomain;
-    QString mUser;
-    QString mPassword;
+    EGroupwarePrefs *mPrefs;
 
     QString mSessionID;
     QString mKp3;

@@ -32,6 +32,7 @@
 
 #include "knotes/resourcemanager.h"
 
+#include "knotes_egroupwareprefs.h"
 #include "knotes_resourcexmlrpc.h"
 #include "knotes_resourcexmlrpcconfig.h"
 
@@ -55,89 +56,47 @@ static const QString LoadNoteCategoriesCommand = "infolog.boinfolog.categories";
 ResourceXMLRPC::ResourceXMLRPC( const KConfig* config )
   : ResourceNotes( config ), mServer( 0 )
 {
+  init();
+
+  mPrefs->addGroupPrefix( identifier() );
+
   if ( config )
     readConfig( config );
-  else
-    mDomain = "default";
-
-  init();
 }
 
 ResourceXMLRPC::ResourceXMLRPC( )
   : ResourceNotes( 0 ), mServer( 0 )
 {
   init();
+
+  mPrefs->addGroupPrefix( identifier() );
 }
 
 ResourceXMLRPC::~ResourceXMLRPC()
 {
   delete mServer;
+  delete mPrefs;
 }
 
 void ResourceXMLRPC::init()
 {
   setType( "xmlrpc" );
 
+  mPrefs = new EGroupwarePrefs;
+
   mSyncComm = false;
 }
 
-void ResourceXMLRPC::readConfig( const KConfig* config )
+void ResourceXMLRPC::readConfig( const KConfig* )
 {
-  mURL = config->readEntry( "XmlRpcUrl" );
-  mDomain = config->readEntry( "XmlRpcDomain", "default" );
-  mUser = config->readEntry( "XmlRpcUser" );
-  mPassword = KStringHandler::obscure( config->readEntry( "XmlRpcPassword" ) );
+  mPrefs->readConfig();
 }
 
 void ResourceXMLRPC::writeConfig( KConfig* config )
 {
   ResourceNotes::writeConfig( config );
 
-  config->writeEntry( "XmlRpcUrl", mURL.url() );
-  config->writeEntry( "XmlRpcDomain", mDomain );
-  config->writeEntry( "XmlRpcUser", mUser );
-  config->writeEntry( "XmlRpcPassword", KStringHandler::obscure( mPassword ) );
-}
-
-
-void ResourceXMLRPC::setURL( const KURL& url )
-{
-  mURL = url;
-}
-
-KURL ResourceXMLRPC::url() const
-{
-  return mURL;
-}
-
-void ResourceXMLRPC::setDomain( const QString& domain )
-{
-  mDomain = domain;
-}
-
-QString ResourceXMLRPC::domain() const
-{
-  return mDomain;
-}
-
-void ResourceXMLRPC::setUser( const QString& user )
-{
-  mUser = user;
-}
-
-QString ResourceXMLRPC::user() const
-{
-  return mUser;
-}
-
-void ResourceXMLRPC::setPassword( const QString& password )
-{
-  mPassword = password;
-}
-
-QString ResourceXMLRPC::password() const
-{
-  return mPassword;
+  mPrefs->writeConfig();
 }
 
 bool ResourceXMLRPC::load()
@@ -148,13 +107,13 @@ bool ResourceXMLRPC::load()
     delete mServer;
 
   mServer = new KXMLRPC::Server( KURL(), this );
-    mServer->setUrl( mURL );
+  mServer->setUrl( KURL( mPrefs->url() ) );
   mServer->setUserAgent( "KDE-Notes" );
 
   QMap<QString, QVariant> args, columns;
-  args.insert( "domain", mDomain );
-  args.insert( "username", mUser );
-  args.insert( "password", mPassword );
+  args.insert( "domain", mPrefs->domain() );
+  args.insert( "username", mPrefs->user() );
+  args.insert( "password", mPrefs->password() );
 
   mServer->call( "system.login", QVariant( args ),
                  this, SLOT( loginFinished( const QValueList<QVariant>&, const QVariant& ) ),
@@ -236,7 +195,7 @@ void ResourceXMLRPC::loginFinished( const QValueList<QVariant>& variant,
 {
   QMap<QString, QVariant> map = variant[ 0 ].toMap();
 
-  KURL url = mURL;
+  KURL url = KURL( mPrefs->url() );
   if ( map[ "GOAWAY" ].toString() == "XOXO" ) { // failed
     mSessionID = mKp3 = "";
   } else {
@@ -259,7 +218,7 @@ void ResourceXMLRPC::logoutFinished( const QValueList<QVariant>& variant,
   if ( map[ "GOODBYE" ].toString() != "XOXO" )
     kdError() << "logout failed" << endl;
 
-  KURL url = mURL;
+  KURL url = KURL( mPrefs->url() );
   mSessionID = mKp3 = "";
   url.setUser( mSessionID );
   url.setPass( mKp3 );

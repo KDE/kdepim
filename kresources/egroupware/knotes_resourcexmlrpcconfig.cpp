@@ -28,6 +28,7 @@
 #include <knuminput.h>
 #include <kurlrequester.h>
 
+#include "knotes_egroupwareprefs.h"
 #include "knotes_resourcexmlrpc.h"
 #include "knotes_resourcexmlrpcconfig.h"
 
@@ -67,31 +68,31 @@ ResourceXMLRPCConfig::ResourceXMLRPCConfig( QWidget* parent,  const char* name )
 void ResourceXMLRPCConfig::loadSettings( KRES::Resource *res )
 {
   ResourceXMLRPC *resource = dynamic_cast<ResourceXMLRPC*>( res );
-  
+
   if ( !resource ) {
     kdDebug(5700) << "ResourceXMLRPCConfig::loadSettings(): cast failed" << endl;
     return;
   }
 
-  mURL->setURL( resource->url().url() );
-  mDomain->setText( resource->domain() );
-  mUser->setText( resource->user() );
-  mPassword->setText( resource->password() );
+  mURL->setURL( resource->prefs()->url() );
+  mDomain->setText( resource->prefs()->domain() );
+  mUser->setText( resource->prefs()->user() );
+  mPassword->setText( resource->prefs()->password() );
 }
 
 void ResourceXMLRPCConfig::saveSettings( KRES::Resource *res )
 {
   ResourceXMLRPC *resource = dynamic_cast<ResourceXMLRPC*>( res );
-  
+
   if ( !resource ) {
     kdDebug(5700) << "ResourceXMLRPCConfig::saveSettings(): cast failed" << endl;
     return;
   }
 
-  resource->setURL( KURL( mURL->url() ) );
-  resource->setDomain( mDomain->text() );
-  resource->setUser( mUser->text() );
-  resource->setPassword( mPassword->text() );
+  resource->prefs()->setUrl( mURL->url() );
+  resource->prefs()->setDomain( mDomain->text() );
+  resource->prefs()->setUser( mUser->text() );
+  resource->prefs()->setPassword( mPassword->text() );
 }
 
 #include "knotes_resourcexmlrpcconfig.moc"

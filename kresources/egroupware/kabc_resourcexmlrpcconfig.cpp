@@ -27,6 +27,7 @@
 #include <klineedit.h>
 #include <kurlrequester.h>
 
+#include "kabc_egroupwareprefs.h"
 #include "kabc_resourcexmlrpc.h"
 #include "kabc_resourcexmlrpcconfig.h"
 
@@ -72,10 +73,10 @@ void ResourceXMLRPCConfig::loadSettings( KRES::Resource *res )
     return;
   }
 
-  mURL->setURL( resource->url().url() );
-  mDomain->setText( resource->domain() );
-  mUser->setText( resource->user() );
-  mPassword->setText( resource->password() );
+  mURL->setURL( resource->prefs()->url() );
+  mDomain->setText( resource->prefs()->domain() );
+  mUser->setText( resource->prefs()->user() );
+  mPassword->setText( resource->prefs()->password() );
 }
 
 void ResourceXMLRPCConfig::saveSettings( KRES::Resource *res )
@@ -87,10 +88,10 @@ void ResourceXMLRPCConfig::saveSettings( KRES::Resource *res )
     return;
   }
 
-  resource->setURL( KURL( mURL->url() ) );
-  resource->setDomain( mDomain->text() );
-  resource->setUser( mUser->text() );
-  resource->setPassword( mPassword->text() );
+  resource->prefs()->setUrl( mURL->url() );
+  resource->prefs()->setDomain( mDomain->text() );
+  resource->prefs()->setUser( mUser->text() );
+  resource->prefs()->setPassword( mPassword->text() );
 }
 
 #include "kabc_resourcexmlrpcconfig.moc"

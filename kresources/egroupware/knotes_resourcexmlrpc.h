@@ -38,6 +38,8 @@ class Server;
 
 namespace KNotes {
 
+class EGroupwarePrefs;
+
 /**
   This class provides access to eGroupware notes via XML-RPC.
 */
@@ -53,17 +55,7 @@ class ResourceXMLRPC : public ResourceNotes
     void readConfig( const KConfig* config );
     void writeConfig( KConfig* config );
 
-    void setURL( const KURL& url );
-    KURL url() const;
-
-    void setDomain( const QString& domain );
-    QString domain() const;
-
-    void setUser( const QString& user );
-    QString user() const;
-
-    void setPassword( const QString& password );
-    QString password() const;
+    EGroupwarePrefs *prefs() const { return mPrefs; }
 
     bool load();
     bool save();
@@ -84,6 +76,7 @@ class ResourceXMLRPC : public ResourceNotes
 
   private:
     void init();
+    void initEGroupware();
 
     void writeNote( KCal::Journal*, QMap<QString, QVariant>& );
     void readNote( const QMap<QString, QVariant>&, KCal::Journal*, QString& );
@@ -94,10 +87,7 @@ class ResourceXMLRPC : public ResourceNotes
     KCal::CalendarLocal mCalendar;
     KXMLRPC::Server *mServer;
 
-    KURL mURL;
-    QString mDomain;
-    QString mUser;
-    QString mPassword;
+    EGroupwarePrefs *mPrefs;
 
     QString mSessionID;
     QString mKp3;

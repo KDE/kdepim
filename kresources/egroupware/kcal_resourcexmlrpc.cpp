@@ -48,6 +48,7 @@
 #include "libkcal/filestorage.h"
 #include "libkcal/alarm.h"
 
+#include "kcal_egroupwareprefs.h"
 #include "kcal_resourcexmlrpcconfig.h"
 #include "kcal_resourcexmlrpc.h"
 
@@ -116,18 +117,24 @@ static int rights( Event *event )
 ResourceXMLRPC::ResourceXMLRPC( const KConfig* config )
   : ResourceCached( config ), mServer( 0 ), mLock( 0 )
 {
+  init();
+
+  mPrefs->addGroupPrefix( identifier() );
+
   if ( config )
     readConfig( config );
-  else
-    mDomain = "default";
 
-  init();
+  initEGroupware();
 }
 
 ResourceXMLRPC::ResourceXMLRPC( )
   : ResourceCached( 0 ), mServer( 0 ), mLock( 0 )
 {
   init();
+
+  mPrefs->addGroupPrefix( identifier() );
+
+  initEGroupware();
 }
 
 ResourceXMLRPC::~ResourceXMLRPC()
@@ -146,17 +153,15 @@ ResourceXMLRPC::~ResourceXMLRPC()
 
   delete mServer;
   delete mLock;
+
+  delete mPrefs;
 }
 
 void ResourceXMLRPC::init()
 {
   setType( "xmlrpc" );
 
-  mEventUidMapper = new UIDMapper( locateLocal( "data", "kcal/egroupware_cache/" + mURL.host() + "/event_cache.dat" ) );
-  mEventUidMapper->load();
-
-  mTodoUidMapper = new UIDMapper( locateLocal( "data", "kcal/egroupware_cache/" + mURL.host() + "/todo_cache.dat" ) );
-  mTodoUidMapper->load();
+  mPrefs = new EGroupwarePrefs;
 
   mSyncComm = false;
   mLock = new KABC::LockNull( true );
@@ -164,12 +169,20 @@ void ResourceXMLRPC::init()
   mOpen = false;
 }
 
+void ResourceXMLRPC::initEGroupware()
+{
+  KURL url( mPrefs->url() );
+
+  mEventUidMapper = new UIDMapper( locateLocal( "data", "kcal/egroupware_cache/" + url.host() + "/event_cache.dat" ) );
+  mEventUidMapper->load();
+
+  mTodoUidMapper = new UIDMapper( locateLocal( "data", "kcal/egroupware_cache/" + url.host() + "/todo_cache.dat" ) );
+  mTodoUidMapper->load();
+}
+
 void ResourceXMLRPC::readConfig( const KConfig* config )
 {
-  mURL = config->readEntry( "XmlRpcUrl" );
-  mDomain = config->readEntry( "XmlRpcDomain", "default" );
-  mUser = config->readEntry( "XmlRpcUser" );
-  mPassword = KStringHandler::obscure( config->readEntry( "XmlRpcPassword" ) );
+  mPrefs->readConfig();
 
   ResourceCached::readConfig( config );
 }
@@ -178,10 +191,7 @@ void ResourceXMLRPC::writeConfig( KConfig* config )
 {
   ResourceCalendar::writeConfig( config );
 
-  config->writeEntry( "XmlRpcUrl", mURL.url() );
-  config->writeEntry( "XmlRpcDomain", mDomain );
-  config->writeEntry( "XmlRpcUser", mUser );
-  config->writeEntry( "XmlRpcPassword", KStringHandler::obscure( mPassword ) );
+  mPrefs->writeConfig();
 
   ResourceCached::writeConfig( config );
 }
@@ -202,13 +212,13 @@ bool ResourceXMLRPC::doOpen()
     delete mServer;
 
   mServer = new KXMLRPC::Server( KURL(), this );
-  mServer->setUrl( mURL );
+  mServer->setUrl( KURL( mPrefs->url() ) );
   mServer->setUserAgent( "KDE-Calendar" );
 
   QMap<QString, QVariant> args;
-  args.insert( "domain", mDomain );
-  args.insert( "username", mUser );
-  args.insert( "password", mPassword );
+  args.insert( "domain", mPrefs->domain() );
+  args.insert( "username", mPrefs->user() );
+  args.insert( "password", mPrefs->password() );
 
   mServer->call( "system.login", QVariant( args ),
                  this, SLOT( loginFinished( const QValueList<QVariant>&, const QVariant& ) ),
@@ -261,46 +271,6 @@ bool ResourceXMLRPC::doLoad()
                  this, SLOT( loadTodoCategoriesFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
   return true;
-}
-
-void ResourceXMLRPC::setURL( const KURL& url )
-{
-  mURL = url;
-}
-
-KURL ResourceXMLRPC::url() const
-{
-  return mURL;
-}
-
-void ResourceXMLRPC::setDomain( const QString& domain )
-{
-  mDomain = domain;
-}
-
-QString ResourceXMLRPC::domain() const
-{
-  return mDomain;
-}
-
-void ResourceXMLRPC::setUser( const QString& user )
-{
-  mUser = user;
-}
-
-QString ResourceXMLRPC::user() const
-{
-  return mUser;
-}
-
-void ResourceXMLRPC::setPassword( const QString& password )
-{
-  mPassword = password;
-}
-
-QString ResourceXMLRPC::password() const
-{
-  return mPassword;
 }
 
 bool ResourceXMLRPC::doSave()
@@ -530,7 +500,7 @@ void ResourceXMLRPC::loginFinished( const QValueList<QVariant>& variant,
 {
   QMap<QString, QVariant> map = variant[ 0 ].toMap();
 
-  KURL url = mURL;
+  KURL url = KURL( mPrefs->url() );
   if ( map[ "GOAWAY" ].toString() == "XOXO" ) { // failed
     mSessionID = mKp3 = "";
   } else {
@@ -553,7 +523,7 @@ void ResourceXMLRPC::logoutFinished( const QValueList<QVariant>& variant,
   if ( map[ "GOODBYE" ].toString() != "XOXO" )
     kdError() << "logout failed" << endl;
 
-  KURL url = mURL;
+  KURL url = KURL( mPrefs->url() );
   mSessionID = mKp3 = "";
   url.setUser( mSessionID );
   url.setPass( mKp3 );

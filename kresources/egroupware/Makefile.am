@@ -11,19 +11,22 @@ noinst_HEADERS = kabc_resourcexmlrpcconfig.h kcal_resourcexmlrpcconfig.h \
                  knotes_resourcexmlrpcconfig.h
 
 lib_LTLIBRARIES = libkabc_xmlrpc.la libkcal_xmlrpc.la libknotes_xmlrpc.la
-libkabc_xmlrpc_la_SOURCES = kabc_resourcexmlrpc.cpp kabc_resourcexmlrpcconfig.cpp xmlrpciface.cpp uidmapper.cpp
+libkabc_xmlrpc_la_SOURCES = kabc_resourcexmlrpc.cpp kabc_resourcexmlrpcconfig.cpp xmlrpciface.cpp uidmapper.cpp \
+                            kabc_egroupwareprefs.kcfgc
 libkabc_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libkabc_xmlrpc_la_LIBADD = $(LIB_KIO) -lkabc $(top_builddir)/libkdepim/libkdepim.la \
                            $(top_builddir)/kaddressbook/libkabcommon.la
 
-libkcal_xmlrpc_la_SOURCES = kcal_resourcexmlrpc.cpp kcal_resourcexmlrpcconfig.cpp xmlrpciface.cpp uidmapper.cpp
+libkcal_xmlrpc_la_SOURCES = kcal_resourcexmlrpc.cpp kcal_resourcexmlrpcconfig.cpp xmlrpciface.cpp uidmapper.cpp \
+                            kcal_egroupwareprefs.kcfgc
 libkcal_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libkcal_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la
 
-libknotes_xmlrpc_la_SOURCES = knotes_resourcexmlrpc.cpp knotes_resourcexmlrpcconfig.cpp xmlrpciface.cpp
+libknotes_xmlrpc_la_SOURCES = knotes_resourcexmlrpc.cpp knotes_resourcexmlrpcconfig.cpp xmlrpciface.cpp \
+                              knotes_egroupwareprefs.kcfgc
 libknotes_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libknotes_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la -lkdeprint \
-                             $(top_builddir)/knotes/libknotes.la
+                             $(top_builddir)/knotes/libknotes.la $(top_builddir)/libkdepim/libkdepim.la
 
 kabcincludedir = $(includedir)/kabc
 kabcinclude_HEADERS = kabc_resourcexmlrpc.h kcal_resourcexmlrpc.h

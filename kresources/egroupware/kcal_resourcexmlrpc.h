@@ -42,6 +42,8 @@ class QTimer;
 
 namespace KCal {
 
+class EGroupwarePrefs;
+
 /**
   This class provides access to php/eGroupware calendar via XML-RPC.
 */
@@ -57,28 +59,16 @@ class ResourceXMLRPC : public ResourceCached
     void readConfig( const KConfig* config );
     void writeConfig( KConfig* config );
 
+    EGroupwarePrefs *prefs() const { return mPrefs; }
+
     /**
       Return name of file used as cache for remote file.
     */
     QString cacheFile() const;
 
-    void setURL( const KURL& url );
-    KURL url() const;
-
-    void setDomain( const QString& domain );
-    QString domain() const;
-
-    void setUser( const QString& user );
-    QString user() const;
-
-    void setPassword( const QString& password );
-    QString password() const;
-
     bool isSaving();
 
     KABC::Lock *lock();
-
-    void changeIncidence( Incidence * );
 
     /**
       Add Event to calendar.
@@ -216,6 +206,8 @@ class ResourceXMLRPC : public ResourceCached
 
   private:
     void init();
+    void initEGroupware();
+
     void writeEvent( Event*, QMap<QString, QVariant>& );
     void readEvent( const QMap<QString, QVariant>&, Event*, QString& );
 
@@ -229,10 +221,7 @@ class ResourceXMLRPC : public ResourceCached
 
     bool mOpen;
 
-    KURL mURL;
-    QString mDomain;
-    QString mUser;
-    QString mPassword;
+    EGroupwarePrefs *mPrefs;
 
     QString mSessionID;
     QString mKp3;
@@ -242,7 +231,6 @@ class ResourceXMLRPC : public ResourceCached
     QMap<QString, int> mEventCategoryMap;
     QMap<QString, int> mTodoCategoryMap;
     QMap<QString, QString> mTodoStateMap;
-    QMap<QString, int> mRightsMap;
 
     bool mSyncComm;
 

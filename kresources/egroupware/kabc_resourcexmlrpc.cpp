@@ -31,6 +31,7 @@
 #include <libkcal/freebusyurlstore.h>
 #include <libkdepim/kpimprefs.h>
 
+#include "kabc_egroupwareprefs.h"
 #include "kabc_resourcexmlrpc.h"
 #include "kabc_resourcexmlrpcconfig.h"
 
@@ -49,37 +50,47 @@ static const QString LoadCustomFieldsCommand = "addressbook.boaddressbook.custom
 ResourceXMLRPC::ResourceXMLRPC( const KConfig *config )
   : Resource( config ), mServer( 0 )
 {
-  if ( config ) {
-    init( KURL( config->readEntry( "XmlRpcUrl" ) ),
-          config->readEntry( "XmlRpcDomain", "default" ),
-          config->readEntry( "XmlRpcUser" ),
-          KStringHandler::obscure( config->readEntry( "XmlRpcPassword" ) ) );
-  } else {
-    init( KURL(), "default", "", "" );
-  }
+  init();
+
+  mPrefs->addGroupPrefix( identifier() );
+
+  if ( config )
+    mPrefs->readConfig();
+
+  initEGroupware();
 }
 
-ResourceXMLRPC::ResourceXMLRPC( const KURL &url, const QString &domain,
+ResourceXMLRPC::ResourceXMLRPC( const QString &url, const QString &domain,
                                 const QString &user, const QString &password )
   : Resource( 0 ), mServer( 0 )
 {
-  init( url, domain, user, password );
+  init();
+
+  mPrefs->addGroupPrefix( identifier() );
+
+  mPrefs->setUrl( url );
+  mPrefs->setDomain( domain );
+  mPrefs->setUser( user );
+  mPrefs->setPassword( password );
+
+  initEGroupware();
 }
 
-void ResourceXMLRPC::init( const KURL &url, const QString &domain,
-                           const QString &user, const QString &password )
+void ResourceXMLRPC::init()
 {
   setType( "xmlrpc" );
 
   mSyncComm = false;
 
+  mPrefs = new EGroupwarePrefs;
+}
+
+void ResourceXMLRPC::initEGroupware()
+{
+  KURL url( mPrefs->url() );
+
   mUidMapper = new UIDMapper( locateLocal( "data", "kabc/egroupware_cache/" + url.host() + "/cache.dat" ) );
   mUidMapper->load();
-
-  mURL = url;
-  mDomain = domain;
-  mUser = user;
-  mPassword = password;
 
   mAddrTypes.insert( "dom", Address::Dom );
   mAddrTypes.insert( "intl", Address::Intl );
@@ -96,22 +107,21 @@ ResourceXMLRPC::~ResourceXMLRPC()
 
   delete mServer;
   mServer = 0;
+
+  delete mPrefs;
 }
 
 void ResourceXMLRPC::writeConfig( KConfig *config )
 {
   Resource::writeConfig( config );
 
-  config->writeEntry( "XmlRpcUrl", mURL.url() );
-  config->writeEntry( "XmlRpcDomain", mDomain );
-  config->writeEntry( "XmlRpcUser", mUser );
-  config->writeEntry( "XmlRpcPassword", KStringHandler::obscure( mPassword ) );
+  mPrefs->writeConfig();
 }
 
 Ticket *ResourceXMLRPC::requestSaveTicket()
 {
   if ( !addressBook() ) {
-	  kdDebug(5700) << "no addressbook" << endl;
+    kdDebug(5700) << "no addressbook" << endl;
     return 0;
   }
 
@@ -129,13 +139,13 @@ bool ResourceXMLRPC::doOpen()
     delete mServer;
 
   mServer = new KXMLRPC::Server( KURL(), this );
-	mServer->setUrl( KURL( mURL ) );
+  mServer->setUrl( KURL( mPrefs->url() ) );
   mServer->setUserAgent( "KDE-AddressBook" );
 
   QMap<QString, QVariant> args;
-  args.insert( "domain", mDomain );
-  args.insert( "username", mUser );
-  args.insert( "password", mPassword );
+  args.insert( "domain", mPrefs->domain() );
+  args.insert( "username", mPrefs->user() );
+  args.insert( "password", mPrefs->password() );
 
   mServer->call( "system.login", QVariant( args ),
                  this, SLOT( loginFinished( const QValueList<QVariant>&, const QVariant& ) ),
@@ -248,7 +258,7 @@ void ResourceXMLRPC::loginFinished( const QValueList<QVariant> &variant,
 {
   QMap<QString, QVariant> map = variant[0].toMap();
 
-  KURL url = mURL;
+  KURL url( mPrefs->url() );
   if ( map[ "GOAWAY" ].toString() == "XOXO" ) { // failed
     mSessionID = mKp3 = "";
     addressBook()->error( i18n( "Login failed, please check your username and password." ) );
@@ -272,7 +282,7 @@ void ResourceXMLRPC::logoutFinished( const QValueList<QVariant> &variant,
   if ( map[ "GOODBYE" ].toString() != "XOXO" )
     addressBook()->error( i18n( "Logout failed, please check your username and password." ) );
 
-  KURL url = mURL;
+  KURL url( mPrefs->url() );
   mSessionID = mKp3 = "";
   url.setUser( mSessionID );
   url.setPass( mKp3 );
@@ -345,47 +355,6 @@ void ResourceXMLRPC::fault( int error, const QString &errorMsg,
   addressBook()->error( msg );
 
   exit_loop();
-}
-
-
-void ResourceXMLRPC::setURL( const KURL &url )
-{
-  mURL = url;
-}
-
-KURL ResourceXMLRPC::url() const
-{
-  return mURL;
-}
-
-void ResourceXMLRPC::setDomain( const QString &domain )
-{
-  mDomain = domain;
-}
-
-QString ResourceXMLRPC::domain() const
-{
-  return mDomain;
-}
-
-void ResourceXMLRPC::setUser( const QString &user )
-{
-  mUser = user;
-}
-
-QString ResourceXMLRPC::user() const
-{
-  return mUser;
-}
-
-void ResourceXMLRPC::setPassword( const QString &password )
-{
-  mPassword = password;
-}
-
-QString ResourceXMLRPC::password() const
-{
-  return mPassword;
 }
 
 QString ResourceXMLRPC::addrTypesToTypeStr( int typeMask )
