@@ -44,7 +44,7 @@
     constructs are understood, which can be freely mixed in the
     replacement string:
 
-    @sect Sed syntax
+    @section Sed syntax
 
     Back references in the replacement string are made using \n
     (backslash-digit), where @p n is a single digit. With this mode of
@@ -54,7 +54,7 @@
     NOTE: Remember that C++ interprets the backslash in string
     constants, so you have to write a backslash as "\\".
 
-    @sect Perl syntax
+    @section Perl syntax
 
     Back references in the replacement string are made using $n
     (dollarsign-digit), where @p n is a single digit. With this mode
@@ -66,7 +66,7 @@
     can be a multi-digit number. 
 
     In all modes, counting of captured substrings starts with 1 (one)!
-    To reference the entire matched string, use $0, ${0} or \0.
+    To reference the entire matched string, use $0, ${0} or \\0.
 
     @short A QRegExp (Qt3.x) with a replace() method.
     @author Marc Mutz <mutz@kde.org>
