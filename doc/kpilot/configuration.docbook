@@ -1,0 +1,636 @@
+<chapter id="configure">
+<title>Configuring &kpilot;</title>
+
+<para>
+Once &kpilot; is installed it needs to be
+configured
+to match your hardware.
+The <link linkend="conduits">conduits</link>
+need to be configured as well.
+After that you can use &kpilot;
+to synchronize your &PalmPilot; with
+your &kde; desktop or view
+data from your &PalmPilot; with the
+<link linkend="builtin">builtin viewers</link>.
+</para>
+
+<para>
+When you run &kpilot; from either
+the panel menu or from the command prompt for the first time
+it will prompt you with
+a dialog box to configure it.
+This configuration dialog can be requested later
+from the
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure &kpilot;</guimenuitem>
+</menuchoice>
+menu or by starting &kpilot;
+from the shell
+as follows:
+<screen width="40"><prompt>$ </prompt> <userinput><command>kpilot</command> <option>--setup</option></userinput>
+</screen>
+In addition, if you upgrade &kpilot; and some new configuration
+options require your attention, this setup dialog will reappear.
+</para>
+
+<screenshot>
+<screeninfo>Configuration Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-tabs.png" format="PNG"/></imageobject>
+<textobject><phrase>The configuration dialog</phrase></textobject>
+<caption><para>The configuration dialog</para></caption>
+</mediaobject>
+</screenshot>
+
+
+<para>
+&kpilot;'s configuration dialog is a large one.
+This is because it contains not only the configuration of the
+device for communicating with the &PalmPilot;, but also
+the configuration of all the installed conduits.
+Each group of configuration options (<link linkend="general-setup">general</link>,
+<link linkend="config-actions">actions</link>
+and <link linkend="config-conduits">conduits</link>) will be discussed separately.
+We will begin, however, by taking a look at the
+<link linkend="configwizard">configuration wizard</link>, which should make most of the
+general group of configuration options superfluous.
+</para>
+
+<sect1 id="configwizard">
+<title>Using the Wizard</title>
+
+<para>
+This is stuff Reinhold made.
+I don't know anything about it.
+</para>
+
+</sect1>
+
+
+<sect1 id="general-setup">
+<title>General Setup</title>
+
+<para>
+The settings available in the &kpilot; configuration dialog
+under the heading &quot;general setup&quot;
+give you detailed control over the operation of &kpilot;:
+you can select a non-standard hardware device,
+set special encodings for foreign-language &handheld;s,
+and control how &kpilot; displays your data. There
+are five items under the &quot;general setup&quot;
+heading. You will need to expand the &quot;general setup&quot;
+heading to see them.
+</para>
+
+<screenshot>
+<screeninfo>Items under General Setup</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-items.png" format="PNG"/></imageobject>
+<textobject><phrase>The items under General Setup</phrase></textobject>
+<caption><para>The items under General Setup</para></caption>
+</mediaobject>
+</screenshot>
+
+
+<sect2 id="page-general">
+<title>Device</title>
+
+<para>
+This is a setup page that contains options describing
+the &PalmPilot; hardware, you, the user
+and how you want the various parts of &kpilot;
+to be started.
+</para>
+
+<screenshot>
+<screeninfo>Device page</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-general.png" format="PNG"/></imageobject>
+<textobject><phrase>The Device page</phrase></textobject>
+<caption><para>The Device page</para></caption>
+</mediaobject>
+</screenshot>
+
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Pilot device</guilabel></term>
+<listitem>
+<para>
+This
+is the port that the cradle is connected to.
+By default it is
+set to <filename class="devicefile">/dev/pilot</filename>
+which should be a symbolic link to the real port.
+The port might be a serial port, in which case
+<filename class="devicefile">/dev/pilot</filename>
+should point to
+something like
+<filename class="devicefile">/dev/cuaa0</filename>
+(in &FreeBSD;) or
+<filename class="devicefile">/dev/ttyS0</filename>
+(in &Linux;).
+For &USB; devices, it can be more difficult to
+determine where
+<filename class="devicefile">/dev/pilot</filename>
+should point.
+It may be possible to configure your &USB; daemon
+to set up the link automatically, so that
+<filename class="devicefile">/dev/pilot</filename>
+points to the right port no matter where you plug in your &PalmOS; device.
+</para>
+
+<para>
+<emphasis>Make sure the port has
+the correct permissions.</emphasis>
+It
+must be read/write by all if &kpilot; is intended to be used by a
+normal user!  This could be done by doing a
+<userinput><command>chmod</command> <parameter>666</parameter> <replaceable>device</replaceable></userinput> where
+<replaceable>device</replaceable> is the correct port.
+&kpilot; will complain if the permissions are wrong, but you
+will need to fix the permissions by hand.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Speed</guilabel></term>
+<listitem>
+<para>
+This indicates the speed of the <emphasis>serial</emphasis>
+connection to the &PalmPilot;.
+It has no meaning for &USB; devices.
+For an older model &PalmPilot;, choose 9600.
+Newer models may be able to handle speeds up to
+the maximum listed, 115200.
+You can experiment with the connection speed: the &PalmPilot;
+manual suggests starting at a speed of 19200 and trying faster
+speeds to see if they work.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><guilabel>Encoding</guilabel></term>
+<listitem>
+<para>
+&PalmOS; devices are available in
+many different languages.
+If your device uses a different encoding than
+ISO-latin1, you will need to select the
+correct encoding from the list in order to have &kpilot;
+display national characters correctly.
+If you can enter Russian in your &PalmPilot;,
+select CP1251, for instance.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Pilot user</guilabel></term>
+<listitem>
+<para>
+This
+is the user name of the &PalmPilot;.  By default this name is the same as
+your log on name.  When you sync with the &PalmPilot; &kpilot; will
+check to see if this name matches the one on the &PalmPilot;.  If they do
+not, you are asked to pick which you will use.  If you pick the local
+name, the &PalmPilot; will be changed to match.
+The <guilabel>Pilot User</guilabel> entry  is also used to store
+the information synced from the &PalmPilot;, in a folder
+named <filename>DBBackup/<replaceable>Pilot User</replaceable></filename>.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="page-hotsync">
+<title>HotSync page</title>
+
+<para>
+This page contains settings with which you can instruct
+&kpilot; to perform special kinds of &HotSync;,
+as well as direct how conflicts during a &HotSync; should be resolved.
+A conflict happens when both the desktop application and the &handheld; application
+change the same data.
+</para>
+
+<screenshot>
+<screeninfo>HotSync page</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-hotsync.png" format="PNG"/></imageobject>
+<textobject><phrase>The HotSync page</phrase></textobject>
+<caption><para>The HotSync page</para></caption>
+</mediaobject>
+</screenshot>
+
+
+<variablelist>
+
+<varlistentry>
+	<term><guilabel>Sync Mode</guilabel></term>
+	<listitem>
+	<para>
+	Select the kind of HotSync to do normally.
+	</para>
+	</listitem>
+</varlistentry>
+
+</variablelist>
+
+
+</sect2>
+
+
+<sect2 id="viewerstab">
+<title>Viewers Tab</title>
+
+
+<variablelist>
+
+<varlistentry><term><guilabel>Start
+daemon at login</guilabel></term>
+<listitem>
+<para>
+ By
+enabling this a link to the daemon is placed in your autostart folder
+and will be started automatically.  Note that this is not normally
+needed if the daemon is docked in the panel.
+<!-- TODO: broken functionality -->
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show daemon in panel</guilabel></term>
+<listitem>
+<para>
+This option instructs the daemon to place a &HotSync; icon
+<guiicon>HotSync icon
+<inlinemediaobject>
+<imageobject><imagedata fileref="toolbar_hotsync.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+</guiicon>.
+in
+the &kicker; system tray.
+This icon has a menu that can be brought up with
+the right mouse button.
+Without this option, the daemon is not visible to the user at all.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<anchor id="stopdaemononexit"/>
+<guilabel>Stop daemon on exit</guilabel>
+</term>
+<listitem>
+<para>
+Setting this option will cause the daemon to exit when you quit
+&kpilot;, leaving the device port free for other &PalmPilot;-syncing tools
+such as <application>malsync</application>
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Quit after HotSync</guilabel></term>
+<listitem>
+<para>
+When this option is enabled, both &kpilot; and the &kpilot; daemon
+will exit after the &HotSync; operation has completed,
+leaving the device port free for other tools.
+This may be needed on systems where the &USB; daemon
+starts &kpilot; automatically.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+
+</sect2>
+
+<sect2 id="viewers">
+<title>Viewers configuration</title>
+<para>
+&kpilot; contains &quot;viewers&quot; for
+presenting information from the &PalmPilot;.
+These viewers present the databases present on
+the &PalmPilot; in much the same way that the device
+itself does. Not all databases have an application-specific
+viewer, though you can use the generic database viewer for those.
+The viewers page contains settings for the internal viewers in
+&kpilot;.
+These settings change the way in which the data is shown.
+</para>
+
+<screenshot>
+<screeninfo>Viewer page</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-viewer.png" format="PNG"/></imageobject>
+<textobject><phrase>The Viewer setup page</phrase></textobject>
+<caption><para>The Viewer setup page</para></caption>
+</mediaobject>
+</screenshot>
+</sect2>
+
+
+<sect2 id="dbspecial">
+<title>
+DB Specials page
+</title>
+
+<para>
+This page contains settings specific to
+the &PalmPilot; databases &kpilot; works with.
+</para>
+
+<screenshot>
+<screeninfo>DB Specials page</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="setup-dbspecial.png" format="PNG"/>
+</imageobject>
+<textobject><phrase>The DB Setup page</phrase></textobject>
+<caption><para>The DB Setup page</para></caption>
+</mediaobject>
+</screenshot>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Show Secrets</guilabel></term>
+<listitem>
+<para>
+	In your &PalmPilot; you can mark some records
+	as <quote>private</quote>.
+	By default,
+	&kpilot; does not
+	display these records on the screen.
+	If you want to see them, turn this
+	option on.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Backup only:</guilabel></term>
+<listitem>
+<para>
+	This text field can be used to list databases
+	that should not be synced, only backed up.
+	Note that you have to fill in the database creator,
+	not the name of the product, so for Handbase
+	databases you fill in
+	<userinput>PmDB</userinput>.
+	Multiple databases should be separated by commas.
+	See the <link linkend="dbskip">FAQ</link>
+	for a list of databases that should be listed
+	here (the default should be OK though).
+</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term><guilabel>Skip</guilabel></term>
+<listitem>
+<para>
+	This text field lists databases that should not be backed up nor
+	synced, in the same format as the backup only field.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<warning>
+<para>
+Changing the contents of the <guilabel>Backup Only:</guilabel>
+or <guilabel>Skip</guilabel> fields, in particular removing
+the databases already listed there, can damage those databases
+when you perform a &HotSync;.
+</para>
+</warning>
+
+</sect2>
+
+<sect2 id="sync">
+<title>
+Sync page
+</title>
+
+<para>
+The sync page contains preferences relevant to
+the &HotSync; operation on your &PalmPilot;.
+</para>
+
+<screenshot>
+<screeninfo>Sync page</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="setup-sync.png" format="PNG"/>
+</imageobject>
+<textobject><phrase>The Sync page</phrase></textobject>
+<caption><para>The Sync page</para></caption>
+</mediaobject>
+</screenshot>
+
+<variablelist>
+<varlistentry><term><guilabel>Sync Files</guilabel></term>
+<listitem>
+<para>
+When
+this is enabled any files dropped into the file install (either the
+icon docked on the panel or into the file installer in &kpilot;)
+will be installed on the &PalmPilot; during the next HotSync.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><guilabel>Local overrides Pilot</guilabel></term>
+<listitem>
+<para>
+When
+a record has been modified on both the &PalmPilot; and the local side, only
+one can be kept.  By default &kpilot; assumes the &PalmPilot; has the most
+recent information and will keep that.  By enabling this option
+&kpilot; assumes <emphasis>it</emphasis> has the
+most recent information and will overwrite the &PalmPilot;'s copy.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Force first-time sync every time</guilabel></term>
+<listitem>
+<para>
+Under some circumstances &mdash; you have many
+<acronym>PC</acronym>s and many &PalmPilot;s &mdash;
+you may want to perform a &quot;cleaner&quot; HotSync every time
+instead of the &quot;quick-and-dirty&quot; HotSync that
+&kpilot; does if you just have one &PalmPilot; and one <acronym>PC</acronym>.
+Just <emphasis>when</emphasis> you want to enable this
+option is a matter of personal preference.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Do full backup when changing PCs</guilabel></term>
+<listitem>
+<para>
+If you have more than one <acronym>PC</acronym> and synchronize your &PalmPilot;
+with each of them you may want to disable this option.
+When you change <acronym>PC</acronym>s
+it is a good idea to perform a full backup,
+since otherwise your KDE desktop will not reflect
+the state of your &PalmPilot; accurately. (This is a limitation
+of the &PalmPilot; itself.) On the other hand, performing a full
+backup can be time-consuming and annoying, which is why
+you can disable such a backup here.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Prefer FastSync to HotSync</guilabel></term>
+<listitem>
+<para>
+While a HotSync is faster than a full backup,
+a FastSync is faster still than a HotSync and
+synchronizes only those databases that have conduits.
+This means that any database without a conduit is
+not backed up and not synchronized.
+This also means that if something goes wrong with your &PalmPilot;,
+you may not be able to recover databases with no
+conduit.
+This is a classic trade-off between speed and safety.
+</para>
+</listitem>
+</varlistentry>
+
+
+</variablelist>
+</sect2>
+
+</sect1>
+
+<sect1 id="config-actions">
+<title>Configuring Actions</title>
+
+<para>
+&quot;Actions&quot; are pieces of functionality that may be enabled to
+run during a &HotSync;. They tend not to have configuration options at all.
+You can enable or disable specific actions from taking place during a &HotSync;
+by checking, (or unchecking) the box next to the action's name.
+</para>
+
+</sect1>
+
+<sect1 id="config-conduits">
+<title>Configuring Conduits</title>
+
+<para>
+The &quot;conduits&quot; heading in the configuration dialog
+collects all the installed conduits available to &kpilot;.
+Just like actions, the conduits can be enabled and disabled
+by clicking on the check box to the left of the conduit's name.
+Unlike actions, conduits can have an extensive configuration of
+their own, and may be supplied by third parties.
+The details of the configuration of the
+conduits can be found in the
+<link linkend="conduits">section detailing the default conduits</link>.
+</para>
+
+
+<para>
+The default conduits are the following:
+</para>
+
+
+<variablelist>
+	<varlistentry>
+	<term><guilabel>System Information</guilabel></term>
+	<listitem><para>
+	Writes information about your &handheld;, (such as OS version,
+	RAM available, and the list of databases) to a file. Useful mostly for
+	debugging purposes.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term><guilabel>Time Synchronization</guilabel></term>
+	<listitem><para>
+	Sets the &handheld;'s time to that of the desktop machine.
+	Useful for keeping the clock of the &handheld; accurate.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term><guilabel>KNotes / Memos</guilabel></term>
+	<listitem><para>
+	Synchronizes the Memo Pad application with &knotes;.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term><guilabel>Calendar (KOrganizer)</guilabel></term>
+	<listitem><para>
+	Synchronizes the Datebook application with &korganizer;.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term><guilabel>ToDo's (KOrganizer)</guilabel></term>
+	<listitem><para>
+	Synchronizes the Todo list application with &korganizer;.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term><guilabel>Addressbook</guilabel></term>
+	<listitem><para>
+	Synchronizes the Address application with &kaddressbook;.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term><guilabel>Mail</guilabel></term>
+	<listitem><para>
+	Sends mail written on the &handheld; through &kmail;.
+	There is no provision for receiving mail, however.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term><guilabel>Palm DOC</guilabel></term>
+	<listitem><para>
+	Automatically converts and installs text files in the &PalmPilot;
+	DOC format, so you can read the text files with most DOC-capable
+	applications on the &handheld;.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term><guilabel>Perl</guilabel></term>
+	<term><guilabel>Python</guilabel></term>
+	<term><guilabel>NULL</guilabel></term>
+	<listitem><para>
+	These conduits are intended as a programming demonstration,
+	and serve no practical purpose during a &HotSync;.
+	They are not normally listed, but you may see them on some systems.
+	</para></listitem>
+	</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+</chapter>
