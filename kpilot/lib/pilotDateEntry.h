@@ -23,7 +23,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
 #ifndef _KPILOT_PILOTDATEENTRY_H
 #define _KPILOT_PILOTDATEENTRY_H
@@ -150,6 +150,9 @@ private:
 
 
 // $Log$
+// Revision 1.1  2001/12/27 23:08:30  adridg
+// Restored some deleted wrapper files
+//
 // Revision 1.11  2001/06/18 19:51:40  cschumac
 // Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
 // They use libkcal now.

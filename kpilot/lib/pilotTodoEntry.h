@@ -23,7 +23,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
 #ifndef _KPILOT_PILOTTODOENTRY_H
 #define _KPILOT_PILOTTODOENTRY_H
@@ -102,6 +102,9 @@ private:
 
 
 // $Log$
+// Revision 1.1  2001/12/27 23:08:30  adridg
+// Restored some deleted wrapper files
+//
 // Revision 1.9  2001/05/24 10:31:38  adridg
 // Philipp Hullmann's extensive memory-leak hunting patches
 //

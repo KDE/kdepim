@@ -89,11 +89,13 @@ public:
 
 protected:
 	bool isTest() const { return fTest; } ;
+	bool isBackup() const { return fBackup; } ;
 
 	KConfig *fConfig;
 
 private:
 	bool fTest;
+	bool fBackup;
 } ;
 
 class PluginUtility
@@ -151,6 +153,9 @@ public:
 */
 
 // $Log$
+// Revision 1.2  2001/10/17 08:46:08  adridg
+// Minor cleanups
+//
 // Revision 1.1  2001/10/08 21:56:02  adridg
 // Start of making a separate KPilot lib
 //

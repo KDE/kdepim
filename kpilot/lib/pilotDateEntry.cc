@@ -23,7 +23,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
 
 #include <stdlib.h>
@@ -205,6 +205,9 @@ void PilotDateEntry::setNote(const char *note)
 
 
 // $Log$
+// Revision 1.1  2001/12/27 23:08:30  adridg
+// Restored some deleted wrapper files
+//
 // Revision 1.8  2001/06/05 22:50:56  adridg
 // Avoid allocating empty notes and descriptions
 //
