@@ -61,6 +61,8 @@ protected:
 	*/
 	void listNotes();
 
+	void copyHHToPC();
+
 	/**
 	* For actual processing. These are called by process
 	* and it is critical that fP->fIndex is set properly.
@@ -76,7 +78,16 @@ protected:
 	void cleanupMemos();
 
 	void updateNote(const NoteAndMemo &,const PilotMemo *);
-	void addNote(const PilotMemo *);
+	/**
+	* Add the Memo to KNotes.
+	*/
+	void addMemoToKNotes(const PilotMemo *);
+	/**
+	* Add the Note currently being processed to the
+	* pilot as a new memo. Returns the id of the record.
+	*/
+	int addNoteToPilot();
+
 
 	void resetIndexes();
 
