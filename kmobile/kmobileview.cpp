@@ -33,8 +33,7 @@
 
 
 KMobileView::KMobileView(QWidget *parent, KConfig *_config)
-    : QIconView(parent),
-      DCOPObject("kmobileIface")
+    : DCOPObject("kmobileIface"), QIconView(parent)
 {
    m_config = _config;
    setSelectionMode(QIconView::Single);
