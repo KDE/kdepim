@@ -7,3 +7,4 @@
 - Restore folder subscriptions on folder list refresh
 - If the user cancels, we need to reset the mUploadJob variable to 0 in the abook resource.
 - Uploading changes need to change the protocol from http to webdav.
+- If an item was changed on the server (i.e. there's a local item, which cannot be found on the server), the local item needs to be removed on folder sync
