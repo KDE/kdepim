@@ -1,9 +1,9 @@
 Source: kdepim
-Build-Depends: automake, autoconf, libtool, kdelibs-dev (>= 4:2.2-0), debhelper (>> 3.0.0), gettext, bison | byacc, libpisock-dev, flex
+Build-Depends: automake, libtool, kdelibs-dev (>= 4:2.2-0), debhelper (>> 3.0.0), gettext, bison | byacc, libpisock-dev, flex
 Section: x11
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
-Standards-Version: 3.5.3
+Standards-Version: 3.5.4
 
 Package: korganizer
 Architecture: any
