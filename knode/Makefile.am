@@ -54,8 +54,6 @@ knode_SOURCES =   knconfigmanager.cpp \
                   \
                   utilities.cpp \
                   \
-                  knpgp.cpp \
-                  \
                   knscoring.cpp \
                   \
                   knwidgets.cpp \
@@ -113,8 +111,6 @@ noinst_HEADERS =  knconfigmanager.h \
                   knsearchdialog.h \
                   \
                   utilities.h \
-                  \
-                  knpgp.h \
                   \
                   knscoring.h \
                   \

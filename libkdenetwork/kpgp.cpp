@@ -31,6 +31,8 @@
 #include <signal.h>
 
 #include <qlabel.h>
+#include <qcursor.h>
+#include <qapplication.h>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -199,10 +201,9 @@ Module::prepare( bool needPassPhrase, Block* block )
       if( block )
         ID = block->requiredUserId();
       PassphraseDialog passdlg(0, i18n("OpenPGP Security Check"), true, ID);
-      int n = 0;
-      while (this->isBusy()) { n++; this->idle(); }
+      QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
       int passdlgResult = passdlg.exec();
-      for ( int j = 0 ; j < n ; j++ ) this->setBusy();
+      QApplication::restoreOverrideCursor();
       if (passdlgResult == QDialog::Accepted) {
         if (!setPassPhrase(passdlg.passphrase())) {
           if (strlen(passdlg.passphrase()) >= 1024)
@@ -276,14 +277,13 @@ Module::decrypt( Block& block )
     // loop on bad passphrase
     if( retval & BADPHRASE ) {
       wipePassPhrase();
-      int n = 0;
-      while (this->isBusy()) { n++; this->idle(); }
+      QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
       int ret = KMessageBox::warningContinueCancel(0,
 	     i18n("You just entered an invalid passphrase.\n"
 		  "Do you want to try again, or "
 		  "cancel and view the message undecrypted?"),
 	     i18n("PGP Warning"), i18n("&Retry"));
-      for (int j = 0; j < n; j++) this->setBusy();
+      QApplication::restoreOverrideCursor();
       if ( ret == KMessageBox::Cancel ) break;
     } else
       break;
@@ -339,13 +339,12 @@ Module::encrypt( Block& block,
     QString str = i18n("You entered an invalid passphrase.\n"
                        "Do you want to try again, continue and leave the "
                        "message unsigned, or cancel sending the message?");
-    int n = 0;
-    while( this->isBusy() ) { n++; this->idle(); }
+    QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     int ret = KMessageBox::warningYesNoCancel( 0, str,
                                                i18n("PGP Warning"),
                                                i18n("&Retry"),
                                                i18n("Send &Unsigned") );
-    for( int j = 0; j < n; j++ ) this->setBusy();
+    QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
     }
@@ -365,16 +364,15 @@ Module::encrypt( Block& block,
 
   // did signing fail?
   if( status & ERR_SIGNING ) {
-    QString str = i18n("%1 = 'signing failed' error message", 
+    QString str = i18n("%1 = 'signing failed' error message",
                        "%1\nDo you want to send the message unsigned, "
                        "or cancel sending the message?")
                   .arg( pgp->lastErrorMessage() );
-    int n = 0;
-    while( this->isBusy() ) { n++; this->idle(); }
+    QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     int ret = KMessageBox::warningContinueCancel( 0, str,
                                                   i18n("PGP Warning"),
                                                   i18n("Send &Unsigned") );
-    for( int j = 0; j < n; j++ ) this->setBusy();
+    QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
     }
@@ -384,17 +382,17 @@ Module::encrypt( Block& block,
 
   // check for bad keys
   if( status & BADKEYS ) {
-    QString str = i18n("%1 = 'bad keys' error message", 
+    QString str = i18n("%1 = 'bad keys' error message",
                        "%1\nDo you want to encrypt anyway, leave the "
                        "message as is, or cancel sending the message?")
                   .arg( pgp->lastErrorMessage() );
-    int n = 0;
-    while( this->isBusy() ) { n++; this->idle(); }
+
+    QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     int ret = KMessageBox::warningYesNoCancel( 0, str,
                                                i18n("PGP Warning"),
                                                i18n("Send &Encrypted"),
                                                i18n("Send &Unencrypted") );
-    for( int j = 0; j < n; j++ ) this->setBusy();
+    QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
     }
@@ -411,16 +409,15 @@ Module::encrypt( Block& block,
   }
 
   if( status & MISSINGKEY ) {
-    QString str = i18n("%1 = 'missing keys' error message", 
+    QString str = i18n("%1 = 'missing keys' error message",
                        "%1\nDo you want to leave the message as is, "
                        "or cancel sending the message?")
                   .arg( pgp->lastErrorMessage() );
-    int n = 0;
-    while( this->isBusy() ) { n++; this->idle(); }
+    QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     int ret = KMessageBox::warningContinueCancel( 0, str,
                                                   i18n("PGP Warning"),
                                                   i18n("&Send as is") );
-    for( int j = 0; j < n; j++ ) this->setBusy();
+    QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
     }
@@ -435,20 +432,18 @@ Module::encrypt( Block& block,
     QString details = i18n( "This is the error message of %1:\n%2" )
                       .arg( ( pgpType == tGPG ) ? "GnuPG" : "PGP" )
                       .arg( block.error().data() );
-    int n = 0;
-    while( this->isBusy() ) { n++; this->idle(); }
+    QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     KMessageBox::detailedSorry( 0, errMsg, details );
-    for( int j = 0; j < n; j++ ) this->setBusy();
+    QApplication::restoreOverrideCursor();
     return Kpgp::Failure;
   }
 
   if( showCipherText() ) {
     // show cipher text dialog
     CipherTextDialog *cipherTextDlg = new CipherTextDialog( block.text(), charset );
-    int n = 0;
-    while( this->isBusy() ) { n++; this->idle(); }
+    QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     bool result = ( cipherTextDlg->exec() == QDialog::Accepted );
-    for( int j = 0; j < n; j++ ) this->setBusy();
+    QApplication::restoreOverrideCursor();
     delete cipherTextDlg;
     return result == QDialog::Accepted ? Kpgp::Ok : Kpgp::Canceled;
   }
@@ -543,14 +538,16 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
     // show the recipients <-> key relation
     KeyApprovalDialog dlg( recipients, recipientKeyIds, allowedKeys );
 
-    int n = 0;
-    while( this->isBusy() ) { n++; this->idle(); }
+    QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     int ret = dlg.exec();
-    for( int j = 0; j < n; j++ ) this->setBusy();
-    if( ret == QDialog::Rejected )
-      return Kpgp::Canceled;
+
+    if( ret == QDialog::Rejected ) {
+        QApplication::restoreOverrideCursor();
+        return Kpgp::Canceled;
+    }
 
     recipientKeyIds = dlg.keys();
+    QApplication::restoreOverrideCursor();
   }
 
   // flatten the list of lists of key IDs and count empty key ID lists
@@ -583,12 +580,11 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
                   : i18n("You didn't select an encryption key for any of the "
                          "recipients of this message. Therefore the message "
                          "will not be encrypted.");
-    int n = 0;
-    while( this->isBusy() ) { n++; this->idle(); }
+    QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     int ret = KMessageBox::warningContinueCancel( 0, str,
                                                   i18n("PGP Warning"),
                                                   i18n("Send &Unencrypted") );
-    for( int j = 0; j < n; j++ ) this->setBusy();
+    QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
     }
@@ -601,13 +597,12 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
                   : i18n("You didn't select encryption keys for some of "
                          "the recipients. These persons will not be able to "
                          "decrypt the message if you encrypt it." );
-    int n = 0;
-    while( this->isBusy() ) { n++; this->idle(); }
+    QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     int ret = KMessageBox::warningYesNoCancel( 0, str,
                                                i18n("PGP Warning"),
                                                i18n("Send &Encrypted"),
                                                i18n("Send &Unencrypted") );
-    for( int j = 0; j < n; j++ ) this->setBusy();
+    QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
     }
@@ -624,7 +619,7 @@ int
 Module::encryptionPossible( const QStringList& recipients )
 {
   if( 0 == pgp ) assignPGPBase();
-  
+
   if( !usePGP() )
     return 0;
 
@@ -782,7 +777,7 @@ Module::keyTrust( const QString& userID )
 
   if( key == 0 )
     return KPGP_VALIDITY_UNKNOWN;
-  
+
   if( key->keyTrust() == KPGP_VALIDITY_UNKNOWN )
   {
     key = rereadKey( key->primaryKeyID(), true );
@@ -1106,7 +1101,7 @@ Module::haveTrustedEncryptionKey( const QString& person )
   if( 0 == pgp ) assignPGPBase();
 
   if( !usePGP() ) return false;
-  
+
   readPublicKeys();
 
   QString address = canonicalAddress( person ).lower();
@@ -1342,7 +1337,7 @@ Module::checkForPGP(void)
 
   haveGpg=FALSE;
   // lets try gpg
-  
+
   for ( it.toFirst() ; it.current() ; ++it )
   {
     path = (*it);
@@ -1509,7 +1504,7 @@ void
 Module::readPublicKeys( bool reread )
 {
   if( 0 == pgp ) assignPGPBase();
-  
+
   if( !usePGP() )
   {
     mPublicKeys.clear();
@@ -1524,7 +1519,7 @@ Module::readPublicKeys( bool reread )
       mPublicKeys = pgp->publicKeys();
     }
     else
-    { 
+    {
       KeyList newPublicKeyList = pgp->publicKeys();
 
       // merge the trust info from the old key list into the new key list
@@ -1542,7 +1537,7 @@ Module::readPublicKeys( bool reread )
 
       mPublicKeys = newPublicKeyList;
     }
-      
+
     mPublicKeysCached = true;
     mPublicKeys.setAutoDelete( true );
   }
@@ -1552,7 +1547,7 @@ void
 Module::readSecretKeys( bool reread )
 {
   if( 0 == pgp ) assignPGPBase();
-  
+
   if( !usePGP() )
   {
     mSecretKeys.clear();
@@ -1567,7 +1562,7 @@ Module::readSecretKeys( bool reread )
       mSecretKeys = pgp->secretKeys();
     }
     else
-    { 
+    {
       KeyList newSecretKeyList = pgp->secretKeys();
 
       // merge the trust info from the old key list into the new key list
@@ -1585,7 +1580,7 @@ Module::readSecretKeys( bool reread )
 
       mSecretKeys = newSecretKeyList;
     }
-      
+
     mSecretKeysCached = true;
     mSecretKeys.setAutoDelete( true );
   }
@@ -1603,15 +1598,14 @@ Module::selectKey( const KeyList& keys,
   KeySelectionDialog dlg( keys, title, text, KeyIDList( keyId ), false,
                           allowedKeys, false );
 
-  int n = 0;
-  while (this->isBusy()) { n++; this->idle(); }
+  QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
   bool rej = ( dlg.exec() == QDialog::Rejected );
-  for (int j = 0; j < n; j++) this->setBusy();
+  QApplication::restoreOverrideCursor();
 
   if( !rej ) {
     retval = dlg.key();
   }
-  
+
   return retval;
 }
 
@@ -1627,15 +1621,14 @@ Module::selectKeys( const KeyList& keys,
   KeySelectionDialog dlg( keys, title, text, keyIds, false, allowedKeys,
                           true );
 
-  int n = 0;
-  while (this->isBusy()) { n++; this->idle(); }
+  QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
   bool rej = ( dlg.exec() == QDialog::Rejected );
-  for (int j = 0; j < n; j++) this->setBusy();
+  QApplication::restoreOverrideCursor();
 
   if( !rej ) {
     retval = dlg.keys();
   }
-  
+
   return retval;
 }
 
@@ -1653,10 +1646,9 @@ Module::selectKey( bool& rememberChoice,
   KeySelectionDialog dlg( keys, title, text, KeyIDList( keyId ), false,
                           allowedKeys, false );
 
-  int n = 0;
-  while (this->isBusy()) { n++; this->idle(); }
+  QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
   bool rej = ( dlg.exec() == QDialog::Rejected );
-  for (int j = 0; j < n; j++) this->setBusy();
+  QApplication::restoreOverrideCursor();
 
   if( !rej ) {
     retval = dlg.key();
@@ -1682,10 +1674,9 @@ Module::selectKeys( bool& rememberChoice,
   KeySelectionDialog dlg( keys, title, text, keyIds, true, allowedKeys,
                           true );
 
-  int n = 0;
-  while (this->isBusy()) { n++; this->idle(); }
+  QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
   bool rej = ( dlg.exec() == QDialog::Rejected );
-  for (int j = 0; j < n; j++) this->setBusy();
+  QApplication::restoreOverrideCursor();
 
   if( !rej ) {
     retval = dlg.keys();
@@ -1763,7 +1754,7 @@ Module::writeAddressData()
 {
   KConfigGroup general( config, "General" );
   general.writeEntry( "addressEntries", addressDataDict.count() );
-  
+
   int i;
   AddressDataDict::Iterator it;
   for ( i=1, it = addressDataDict.begin();

@@ -55,7 +55,7 @@ using Syntaxhighlighter::SpellChecker;
 #include "knconfigmanager.h"
 #include "knaccountmanager.h"
 #include "knnntpaccount.h"
-#include "knpgp.h"
+#include <kpgp.h>
 #include "knarticlefactory.h"
 #include <kstatusbar.h>
 #include <klocale.h>

@@ -51,7 +51,7 @@
 #include "knfolder.h"
 #include "knnntpaccount.h"
 #include "utilities.h"
-#include "knpgp.h"
+#include <kpgp.h>
 #include "knode.h"
 #include <kpopupmenu.h>
 #include <kstandarddirs.h>
@@ -1174,7 +1174,7 @@ void KNArticleWidget::createHtmlPage()
   // signature, we show a nice header:
   if ( a_rticle->type() == KMime::Base::ATremote ) {
     KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rticle);
-    KNpgp *pgp = knGlobals.pgp;
+    Kpgp::Module *pgp = knGlobals.pgp;
 
     if (knGlobals.cfgManager->readNewsGeneral()->autoCheckPgpSigs() || ra->isPgpSigned()) {
       QPtrList<Kpgp::Block> pgpBlocks;

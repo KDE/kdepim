@@ -49,7 +49,9 @@ class KNScoringManager;
 class KNMemoryManager;
 class KNFilterSelectAction;
 class KNNetAccess;
-class KNpgp;
+namespace Kpgp {
+    class Module;
+}
 class KNArticleWidget;
 class KNArticle;
 class KNLocalArticle;
@@ -148,7 +150,7 @@ class KNMainWindow : public KDockMainWindow
     KNFilterManager   *f_ilManager;
     KNScoringManager  *s_coreManager;
     KNMemoryManager   *m_emManager;
-    KNpgp             *p_gp;
+    Kpgp::Module      *p_gp;
 
   protected slots:
     //listview slots

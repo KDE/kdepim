@@ -30,7 +30,9 @@ class KNFilterManager;
 class KNMainWindow;
 class KNScoringManager;
 class KNMemoryManager;
-class KNpgp;
+namespace Kpgp {
+   class Module;
+}
 class KNArticleWidget;
 
 
@@ -57,7 +59,7 @@ class KNGlobals {
     KNFilterManager       *filManager;
     KNScoringManager      *scoreManager;
     KNMemoryManager       *memManager;
-    KNpgp                 *pgp;
+    Kpgp::Module                 *pgp;
 };
 
 

@@ -45,7 +45,7 @@
 #include "knarticlefilter.h"
 #include "knscoring.h"
 #include "knconfigmanager.h"
-#include "knpgp.h"
+#include <kpgp.h>
 
 
 KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n) : BaseWidget(p, n), d_ata(d)

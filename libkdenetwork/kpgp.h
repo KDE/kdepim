@@ -68,9 +68,9 @@ enum { PublicKeys = 1,
 };
 
 enum Result
-{      
-       Failure = 0, 
-       Ok = 1, 
+{
+       Failure = 0,
+       Ok = 1,
        Canceled = 2
 };
 
@@ -84,19 +84,14 @@ class Module
 private:
     // the class running pgp
     Base *pgp;
-protected:
-    Module();
 
 public:
-  virtual ~Module();
+    Module();
+    virtual ~Module();
 
   /** the following virtual function form the interface to the
       application using Kpgp
   */
-  virtual void setBusy() =0;
-  virtual bool isBusy() =0;
-  virtual void idle() =0;
-
   virtual void readConfig();
   virtual void writeConfig(bool sync);
   virtual void init();
@@ -356,7 +351,7 @@ private:
   // transform an address into canonical form
   QString canonicalAddress( const QString& person );
 
-  /** Shows a dialog to let the user select a key from the given list of keys 
+  /** Shows a dialog to let the user select a key from the given list of keys
    */
   KeyID selectKey( const KeyList& keys,
                    const QString& title,
@@ -364,7 +359,7 @@ private:
                    const KeyID& keyId = KeyID(),
                    const unsigned int allowedKeys = AllKeys );
 
-  /** Shows a dialog to let the user select a key from the given list of keys 
+  /** Shows a dialog to let the user select a key from the given list of keys
    */
   KeyIDList selectKeys( const KeyList& keys,
                         const QString& title,

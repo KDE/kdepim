@@ -53,7 +53,7 @@ using KRecentAddress::RecentAddresses;
 #include "kncleanup.h"
 #include "utilities.h"
 #include "knscoring.h"
-#include "knpgp.h"
+#include <kpgp.h>
 #include "knmemorymanager.h"
 
 
@@ -246,7 +246,7 @@ KNMainWindow::KNMainWindow()
   knGlobals.memManager = m_emManager;
 
   // create a global pgp instance
-  p_gp = new KNpgp();
+  p_gp = new Kpgp::Module();
   knGlobals.pgp = p_gp;
 
   //-------------------------------- </CORE> -----------------------------------
