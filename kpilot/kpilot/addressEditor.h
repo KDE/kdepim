@@ -91,32 +91,3 @@ private:
 #endif
 #endif
 
-
-// $Log$
-// Revision 1.11  2001/08/27 22:51:41  adridg
-// MartinJ's beautification of the address viewer
-//
-// Revision 1.10  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.9  2001/04/04 21:20:32  stern
-// Added support for category information and copy constructors
-//
-// Revision 1.8  2001/03/19 23:12:39  stern
-// Made changes necessary for upcoming abbrowser conduit.
-//
-// Mainly, I added two public methods to PilotAddress that allow for easier
-// setting and getting of phone fields.
-//
-// I also have added some documentation throughout as I have tried to figure
-// out how everything works.
-//
-// Revision 1.7  2001/03/11 10:50:40  adridg
-// Make address editor reflect real field names
-//
-// Revision 1.6  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.5  2001/02/06 08:05:19  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//

@@ -226,22 +226,3 @@ void KPilotConfigDialog::setAddressDisplay(int i)
 	}
 }
 
-// $Log$
-// Revision 1.7.2.1  2002/10/11 09:16:24  rogowski
-// Implemented syncing of kpilot with kmail(only todos and calendars up to now). To enable syncing, choose in the sync config tab the option >sync with kmail<. But be careful with doing this with important data on your pilot: There are still bugs in kmail eating your data!
-//
-// Revision 1.7  2002/05/18 23:28:19  adridg
-// Compile fixes
-//
-// Revision 1.6  2001/11/11 22:20:23  adridg
-// Add workaround for pilot-link limitation <= 0.9.5
-//
-// Revision 1.5  2001/10/08 22:20:18  adridg
-// Changeover to libkpilot, prepare for lib-based conduits
-//
-// Revision 1.4  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.3  2001/09/29 16:26:18  adridg
-// The big layout change
-//

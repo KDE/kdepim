@@ -36,8 +36,6 @@ static const char *test_id =
 #include <stdlib.h>
 #include <time.h>
 
-#include <iostream>
-
 #include <qpushbutton.h>
 #include <qhbox.h>
 
@@ -93,7 +91,7 @@ void createLogWidget()
 	kapp->setMainWidget(w);
 	logWidget = w;
 
-	resetButton = new QPushButton(w->buttonBox(),i18n("Reset"));
+	resetButton = new QPushButton(i18n("Reset"),w->buttonBox());
 }
 
 static KPilotDeviceLink *deviceLink = 0L;
@@ -226,12 +224,12 @@ int listConduits(KCmdLineArgs *)
 	{
 		KSharedPtr < KService > o = (*availList).service();
 
-		cout << o->desktopEntryName() << endl;
-		cout << "\t" << o->name()  << endl;
+		cout << o->desktopEntryName().latin1() << endl;
+		cout << "\t" << o->name().latin1()  << endl;
 		if (!o->library().isEmpty())
 		{
 			cout << "\tIn "
-				<< o->library()
+				<< o->library().latin1()
 				<< endl;
 		}
 
@@ -291,93 +289,3 @@ int main(int argc, char **argv)
 }
 
 
-// $Log$
-// Revision 1.22  2003/01/18 00:30:18  kainhofe
-// Removed the Log: tags from the conduits I maintain.
-// Cleanup of the includes.
-// Started implementing the other field sync of the addressbookconduit. Still have trouble converting a string to a QDate using a custom format
-//
-// Revision 1.21  2002/08/30 22:24:55  adridg
-// - Improved logging, connected the right signals now
-// - Try to handle dlp_ReadUserInfo failures sensibly
-// - Trying to sort out failures reading the database list.
-//
-// Revision 1.20  2002/08/24 21:27:32  adridg
-// Lots of small stuff to remove warnings
-//
-// Revision 1.19  2002/08/23 22:03:21  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.18  2002/05/23 20:19:39  adridg
-// Add support for extra buttons to the logwidget; use it for reset in kpilottest
-//
-// Revision 1.17  2002/05/15 17:15:33  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.16  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.15.2.2  2002/04/13 11:54:43  adridg
-// Handle --test mode for conduits properly
-//
-// Revision 1.15.2.1  2002/04/04 20:28:28  adridg
-// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
-// when using PILOT_VERSION. kpilotTest defaults to list, like the options
-// promise. Always do old-style USB sync (also works with serial devices)
-// and runs conduits only for HotSync. KPilot now as it should have been
-// for the 3.0 release.
-//
-// Revision 1.15  2002/02/02 11:46:02  adridg
-// Abstracting away pilot-link stuff
-//
-// Revision 1.14  2002/01/31 13:20:09  hollomon
-//
-// fix some compile/configure errors unde KDE 3.
-// The configure.in.in fix was suggested by Waldo Bastian.
-//
-// Revision 1.13  2002/01/22 22:11:41  danimo
-// "link" clashes with a function from unistd/stdlib
-//
-// Revision 1.12  2001/12/29 15:36:57  adridg
-// Sanity checking and simplification
-//
-// Revision 1.11  2001/12/02 22:05:46  adridg
-// Minor tweaks for conduit exec()
-//
-// Revision 1.10  2001/10/10 22:20:52  adridg
-// Added --notest, --exec-conduit
-//
-// Revision 1.9  2001/10/08 22:20:18  adridg
-// Changeover to libkpilot, prepare for lib-based conduits
-//
-// Revision 1.8  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.7  2001/09/24 22:22:49  adridg
-// Modified to handle new interactive SyncActions
-//
-// Revision 1.6  2001/09/24 10:43:19  cschumac
-// Compile fixes.
-//
-// Revision 1.5  2001/09/23 21:42:35  adridg
-// Factored out debugging options
-//
-// Revision 1.4  2001/09/23 18:28:52  adridg
-// Adjusted tests to new .ui and config
-//
-// Revision 1.3  2001/09/16 13:37:48  adridg
-// Large-scale restructuring
-//
-// Revision 1.2  2001/09/06 22:05:00  adridg
-// Enforce singleton-ness
-//
-// Revision 1.1  2001/09/05 21:53:51  adridg
-// Major cleanup and architectural changes. New applications kpilotTest
-// and kpilotConfig are not installed by default but can be used to test
-// the codebase. Note that nothing else will actually compile right now.
-//

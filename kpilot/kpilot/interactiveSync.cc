@@ -287,7 +287,12 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 			<< ": Adding " << s << " to restore list." << endl;
 #endif
 
+#if KDE_VERSION < 306  /* 305 ok? */
+		strncpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name) - 1);
+		dbi.name[sizeof(dbi.name) - 1)] = '\0';
+#else
 		strlcpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name));
+#endif
 
 		f = pi_file_open(dbi.name);
 		if (!f)
@@ -491,57 +496,3 @@ nextFile:
 }
 
 
-// $Log$
-// Revision 1.16  2002/12/12 13:26:16  lunakl
-// strcpy -> strlcpy
-//
-// Revision 1.15  2002/11/27 21:29:06  adridg
-// See larger ChangeLog entry
-//
-// Revision 1.14  2002/08/23 22:03:21  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.13  2002/05/15 17:15:33  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.12  2002/04/20 13:03:31  binner
-// CVS_SILENT Capitalisation fixes.
-//
-// Revision 1.11  2002/02/23 20:51:33  adridg
-// Handle errors to _get_info better.
-//
-// Revision 1.10  2002/02/02 11:46:02  adridg
-// Abstracting away pilot-link stuff
-//
-// Revision 1.9  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.8  2001/12/31 09:37:27  adridg
-// Attempt to save the newly-set username
-//
-// Revision 1.7  2001/12/29 15:45:02  adridg
-// Lots of little changes for the syncstack
-//
-// Revision 1.6  2001/10/08 22:20:18  adridg
-// Changeover to libkpilot, prepare for lib-based conduits
-//
-// Revision 1.5  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.4  2001/09/29 16:24:30  adridg
-// Layout + Typos
-//
-// Revision 1.3  2001/09/27 17:28:32  adridg
-// Conflict management
-//
-// Revision 1.2  2001/09/25 08:22:29  cschumac
-// Make it compile with Qt3.
-//
-// Revision 1.1  2001/09/24 22:25:54  adridg
-// New SyncActions with support for interaction with the user
-//

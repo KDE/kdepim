@@ -259,34 +259,4 @@ protected:
 } ;
 
 
-// $Log$
-// Revision 1.6  2002/12/31 13:22:07  mueller
-// CVS_SILENT fixincludes
-//
-// Revision 1.5  2002/08/23 22:03:21  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.4  2002/05/19 15:01:49  adridg
-// Patches for the KNotes conduit
-//
-// Revision 1.3  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.2.2.2  2002/04/13 11:33:38  adridg
-// Make test mode for conduits independent of test mode for hotsync (needed to make kpilotTest sane)
-//
-// Revision 1.2.2.1  2002/04/04 20:28:28  adridg
-// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
-// when using PILOT_VERSION. kpilotTest defaults to list, like the options
-// promise. Always do old-style USB sync (also works with serial devices)
-// and runs conduits only for HotSync. KPilot now as it should have been
-// for the 3.0 release.
-//
-// Revision 1.2  2002/01/20 13:53:52  adridg
-// Added new sync types
-//
-// Revision 1.1  2001/12/29 15:41:36  adridg
-// Added unified sync-action handling for kpilotTest and daemon
-//
-//
 #endif

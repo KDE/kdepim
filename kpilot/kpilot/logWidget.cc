@@ -33,7 +33,7 @@ static const char *logw_id =
 
 #include <qfile.h>
 #include <qlayout.h>
-#include <qtextview.h>
+#include <qtextedit.h>
 #include <qwhatsthis.h>
 #include <qdatetime.h>
 #include <qlabel.h>
@@ -58,6 +58,13 @@ static const char *logw_id =
 
 #include "logWidget.moc"
 
+#if QT_VERSION < 0x030100
+#define TE_EOL "<br/>"
+#else
+#define TE_EOL "\n"
+#endif
+
+
 LogWidget::LogWidget(QWidget * parent) :
 	PilotComponent(parent, "component_log", QString::null),
 	DCOPObject("LogIface"),
@@ -80,7 +87,14 @@ LogWidget::LogWidget(QWidget * parent) :
 	grid->setRowStretch(1, 50);
 	grid->setColStretch(2, 50);
 
-	fLog = new QTextView(this);
+	fLog = new QTextEdit(this);
+	fLog->setReadOnly(true);
+#if QT_VERSION < 0x030100
+	/* nothing, use AutoText */
+#else
+	fLog->setTextFormat(Qt::LogText);
+#endif
+	
 	QWhatsThis::add(fLog, i18n("<qt>This lists all the messages received "
 			"during the current HotSync</qt>"));
 	grid->addMultiCellWidget(fLog, 1, 1,1,2);
@@ -88,8 +102,8 @@ LogWidget::LogWidget(QWidget * parent) :
 
 	QString initialText ;
 
-	initialText.append(QString("<b>Version:</b> KPilot %1<br/>").arg(KPILOT_VERSION));
-	initialText.append(QString("<b>Version:</b> pilot-link %1.%2.%3%4<br><br>")
+	initialText.append(QString("<b>Version:</b> KPilot %1" TE_EOL).arg(KPILOT_VERSION));
+	initialText.append(QString("<b>Version:</b> pilot-link %1.%2.%3%4" TE_EOL)
 		.arg(PILOT_LINK_VERSION)
 		.arg(PILOT_LINK_MAJOR)
 		.arg(PILOT_LINK_MINOR)
@@ -99,11 +113,20 @@ LogWidget::LogWidget(QWidget * parent) :
 		.arg(QString())
 #endif
 		);
+#ifdef KDE_VERSION_STRING
+	initialText.append(QString("<b>Version:</b> KDE %1" TE_EOL).arg(KDE_VERSION_STRING));
+#endif
+#ifdef QT_VERSION_STR
+	initialText.append(QString("<b>Version:</b> Qt %1" TE_EOL).arg(QT_VERSION_STR));
+#endif
 
+	initialText.append(TE_EOL);
 	initialText.append(i18n("<qt><B>HotSync Log</B></qt>"));
+	initialText.append(TE_EOL);
 
 
 	fLog->setText(initialText);
+	fLog->scrollToBottom();
 
 	QHBox *h = new QHBox(this);
 	h->setSpacing(SPACING);
@@ -194,25 +217,24 @@ void LogWidget::addMessage(const QString & s)
 	}
 
 	t.append(s);
-	t.append("<br>");
-
-//#ifdef KDE2
-//	fLog->setText(t);
-//#else
-//	fLog->append(t);
-//#endif
+	
+#if QT_VERSION < 0x030100
+	t.append(TE_EOL);
 	fLog->setText(fLog->text() + t);
-	fLog->contentsHeight();
-	fLog->verticalScrollBar()->setValue(fLog->verticalScrollBar()->maxValue() );
+	fLog->scrollToBottom();
+#else
+	fLog->append(t);
+#endif
 }
 
 void LogWidget::addError(const QString & s)
 {
 	FUNCTIONSETUP;
 
+	if (s.isEmpty()) return;
+	
 	kdWarning() << "KPilot error: " << s << endl;
 
-	if (s.isEmpty()) return;
 	if (!fLog) return;
 
 	QString t;
@@ -228,7 +250,7 @@ void LogWidget::addProgress(const QString &s,int i)
 {
 	FUNCTIONSETUP;
 
-	logMessage(s);
+	if (!s.isEmpty()) logMessage(s);
 
 	if ((i >= 0) && (i <= 100))
 	{
@@ -359,96 +381,3 @@ bool LogWidget::saveFile(const QString &saveFileName)
 	return true;
 }
 
-// $Log$
-// Revision 1.30  2002/12/04 10:55:37  thorsen
-// Kroupware merge to HEAD. 3.1 will follow when the issues with the patch have been worked out.
-//
-// Revision 1.26.2.3  2002/11/29 11:12:10  thorsen
-// Merged from head
-//
-// Revision 1.26.2.2  2002/11/24 11:44:07  mutz
-// merged from HEAD; doesn't compile for me, but then HEAD doesn't either (missing pi-{file,version,...}.h includes)
-//
-// Revision 1.26.2.1  2002/10/14 21:20:35  rogowski
-// Added syncing with addressbook of kmail. Fixed some bugs.
-//
-// Revision 1.28  2002/10/11 19:56:11  rnolden
-// ooops
-//
-// Revision 1.27  2002/10/11 19:09:31  rnolden
-// fix scrolling of the log messages so the user can actually see what's going on without scrolling down
-//
-// Revision 1.26  2002/08/15 21:51:00  kainhofe
-// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
-//
-// Revision 1.25  2002/07/03 12:22:08  binner
-// CVS_SILENT Style guide fixes
-//
-// Revision 1.24  2002/05/23 20:19:40  adridg
-// Add support for extra buttons to the logwidget; use it for reset in kpilottest
-//
-// Revision 1.23  2002/05/19 15:01:49  adridg
-// Patches for the KNotes conduit
-//
-// Revision 1.22  2002/05/18 23:28:19  adridg
-// Compile fixes
-//
-// Revision 1.21  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.20  2002/04/10 20:09:03  cschumac
-// Make it compile.
-//
-// Revision 1.19  2002/04/10 06:13:34  adridg
-// Show version of pilot-link in about
-//
-// Revision 1.18.2.3  2002/04/14 22:26:12  adridg
-// New TODO's for HEAD; cosmetic bugfix in logWidget; rectify misleading debug output when KPilot starts the daemon itself.
-//
-// Revision 1.18.2.2  2002/04/13 11:40:24  adridg
-// Simplification of logging code, display pilot-link version on startup
-//
-// Revision 1.18.2.1  2002/04/04 20:28:28  adridg
-// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
-// when using PILOT_VERSION. kpilotTest defaults to list, like the options
-// promise. Always do old-style USB sync (also works with serial devices)
-// and runs conduits only for HotSync. KPilot now as it should have been
-	// for the 3.0 release.
-//
-// Revision 1.18  2002/02/10 22:21:33  adridg
-// Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
-//
-// Revision 1.17  2002/02/02 11:46:02  adridg
-// Abstracting away pilot-link stuff
-//
-// Revision 1.16  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.15  2002/01/23 18:55:19  danimo
-// - xml tags in QTextEdit logwin
-// - new line for each entry in log
-//
-// Revision 1.14  2002/01/23 08:36:26  adridg
-// Handle KProgress::setValue vs setProgress decisively
-//
-// Revision 1.13  2002/01/22 19:42:25  bero
-// Fix build with current kdelibs
-//
-// Revision 1.12  2002/01/21 23:58:55  aseigo
-// KProgress updates
-//
-// Revision 1.11  2001/12/31 14:41:06  harald
-// Make it compile
-//
-// Revision 1.10  2001/12/31 09:38:09  adridg
-// Splash patch by Aaron
-//
-// Revision 1.9  2001/12/29 15:44:16  adridg
-// Missing progress slots
-//
-// Revision 1.8  2001/11/25 22:02:57  adridg
-// Save/clear the sync log
-//
-// Revision 1.7  2001/11/18 16:59:55  adridg
-// New icons, DCOP changes
-//

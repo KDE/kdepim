@@ -81,24 +81,3 @@ private:
 #warning "File doubly included"
 #endif
 #endif
-
-// $Log$
-// Revision 1.6  2001/10/10 22:13:01  adridg
-// Added important method docs
-//
-// Revision 1.5  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.4  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.3  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.2  2001/03/04 13:11:58  adridg
-// Actually use the fileInstaller object
-//
-// Revision 1.1  2001/03/01 20:41:11  adridg
-// Added class to factor out code in daemon and fileinstallwidget
-//
-

@@ -188,6 +188,12 @@ protected slots:
 	 * */
 	void slotSelectComponent(PilotComponent *);
 
+	/**
+	* Delayed initialization of the components.
+	* This improves perceived startup time.
+	*/
+	void initializeComponents();
+	
 signals:
 	void modeSelected(int selected);
 };
@@ -196,44 +202,4 @@ signals:
 
 
 
-// $Log$
-// Revision 1.37  2002/12/10 15:54:00  faure
-// Mainwindow settings and KEditToolbar fix, as usual. (untested, other than compilation)
-//
-// Revision 1.36  2002/11/27 21:29:06  adridg
-// See larger ChangeLog entry
-//
-// Revision 1.35  2001/11/18 16:59:55  adridg
-// New icons, DCOP changes
-//
-// Revision 1.34  2001/11/11 22:10:38  adridg
-// Switched to KJanuswidget
-//
-// Revision 1.33  2001/09/30 16:58:45  adridg
-// Cleaned up preHotSync interface, removed extra includes, added private-d-ptr.
-//
-// Revision 1.30  2001/09/23 18:25:50  adridg
-// New config architecture
-//
-// Revision 1.27  2001/08/19 19:25:57  adridg
-// Removed kpilotlink dependency from kpilot; added DCOP interfaces to make
-// that possible. Also fixed a connect() type mismatch that was harmless
-// but annoying.
-//
-//
-// Revision 1.23  2001/04/14 15:21:35  adridg
-// XML GUI and ToolTips
-//
-// Revision 1.21  2001/03/04 22:22:29  adridg
-// DCOP cooperation between daemon & kpilot for d&d file install
-//
-// Revision 1.20  2001/03/02 13:07:18  adridg
-// Completed switch to KAction
-//
-// Revision 1.18  2001/02/25 12:39:35  adridg
-// Fixed component names (src incompatible)
-//
-// Revision 1.16  2001/02/06 08:05:19  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

@@ -196,16 +196,3 @@ const QStringList FileInstaller::fileNames() const
 	enabled=b;
 }
 
-// $Log$
-// Revision 1.4  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.3  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.2  2001/03/04 13:11:58  adridg
-// Actually use the fileInstaller object
-//
-// Revision 1.1  2001/03/01 20:41:11  adridg
-// Added class to factor out code in daemon and fileinstallwidget
-//

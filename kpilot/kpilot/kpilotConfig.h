@@ -86,6 +86,8 @@ public:
 	IntProperty(PilotSpeed)
 	StringProperty(PilotDevice)
 	StringProperty(User)
+	// There's no GUI to access this one.
+	StringProperty(Encoding)
 
 
 	BoolProperty(StartDaemonAtLogin)
@@ -203,37 +205,4 @@ protected:
 
 
 
-// $Log$
-// Revision 1.9.4.1  2002/10/11 09:16:24  rogowski
-// Implemented syncing of kpilot with kmail(only todos and calendars up to now). To enable syncing, choose in the sync config tab the option >sync with kmail<. But be careful with doing this with important data on your pilot: There are still bugs in kmail eating your data!
-//
-// Revision 1.9  2001/10/08 22:20:18  adridg
-// Changeover to libkpilot, prepare for lib-based conduits
-//
-// Revision 1.8  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.7  2001/09/23 21:44:56  adridg
-// Myriad small changes
-//
-// Revision 1.6  2001/09/23 18:25:50  adridg
-// New config architecture
-//
-// Revision 1.5  2001/09/05 21:53:51  adridg
-// Major cleanup and architectural changes. New applications kpilotTest
-// and kpilotConfig are not installed by default but can be used to test
-// the codebase. Note that nothing else will actually compile right now.
-//
-// Revision 1.4  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.3  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.2  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.1  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
 #endif

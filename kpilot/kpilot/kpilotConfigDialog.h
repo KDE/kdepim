@@ -57,9 +57,4 @@ private:
 	void setAddressDisplay(int);
 } ;
 
-// $Log$
-// Revision 1.1  2001/09/23 18:38:07  adridg
-// Behavior for David's .ui file
-//
-
 #endif

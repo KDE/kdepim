@@ -85,27 +85,3 @@ PilotListItem::~PilotListItem()
 		counts();
 #endif
 }
-
-
-
-// $Log$
-// Revision 1.6  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.5  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.4  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.3  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.2  2001/03/04 20:51:21  adridg
-// Removed spurious .moc file
-//
-// Revision 1.1  2001/03/04 11:22:12  adridg
-// In response to bug 21392, replaced fixed-length lookup table by a subclass
-// of QListBoxItem inserted into list box. This subclass carries data to
-// lookup the relevant pilot record.
-//

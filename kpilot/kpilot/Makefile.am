@@ -25,7 +25,6 @@ INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 ### kdDebug() support. You may need to add -DDEBUG_CERR to the CXXFLAGS, if
 ### you want any debugging at all.
 ###
-### KDE_CXXFLAGS =-DDEBUG -DDEBUG_CERR -O3
 ### KDE_CXXFLAGS=-DNDEBUG -UDEBUG
 
 ###
@@ -40,7 +39,7 @@ kpilot_SOURCES	= \
 	pilotComponent.cc logWidget.cc memoWidget.cc addressWidget.cc \
 	addressEditor.cc \
 	fileInstaller.cc fileInstallWidget.cc \
-	conduitSetup.cc listCat.cc listItems.cc \
+	listItems.cc \
 	kroupware.cc
 
 

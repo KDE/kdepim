@@ -47,8 +47,6 @@ static const char *pilotdaemon_id =
 #include <dirent.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <iostream>
-#include <fstream.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -79,6 +77,8 @@ static const char *pilotdaemon_id =
 #include <ktempfile.h>
 #include <kprocess.h>
 #include <dcopclient.h>
+
+#include "pilotAppCategory.h"
 
 #include "fileInstaller.h"
 #include "kpilotConfig.h"
@@ -395,6 +395,8 @@ void PilotDaemon::showTray()
 	fPilotDevice = config.getPilotDevice();
 	fPilotType = KPilotDeviceLink::None;
 	int t = config.getPilotType();
+	
+	(void) PilotAppCategory::setupPilotCodec(config.getEncoding());
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -766,10 +768,7 @@ QString PilotDaemon::syncTypeString(int i) const
 
 /* slot */ void PilotDaemon::logMessage(const QString & s)
 {
-	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": " << s << endl;
-#endif
+	FUNCTIONSETUPL(2);
 
 	getLogger().logMessage(s);
 	updateTrayStatus(s);
@@ -778,9 +777,6 @@ QString PilotDaemon::syncTypeString(int i) const
 /* slot */ void PilotDaemon::logError(const QString & s)
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": " << s << endl;
-#endif
 
 	getLogger().logMessage(s);
 	updateTrayStatus(s);
@@ -788,10 +784,7 @@ QString PilotDaemon::syncTypeString(int i) const
 
 /* slot */ void PilotDaemon::logProgress(const QString & s, int i)
 {
-	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": " << s << " (" << i << "%)" << endl;
-#endif
+	FUNCTIONSETUPL(2);
 
 	getLogger().logProgress(s, i);
 	if (!s.isEmpty()) updateTrayStatus(s);
@@ -897,12 +890,16 @@ int main(int argc, char **argv)
 		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
 
 	KCmdLineArgs::init(argc, argv, &about);
-#ifdef DEBUG
-	KCmdLineArgs::addCmdLineOptions(debug_options, "debug");
-#endif
 	KUniqueApplication::addCmdLineOptions();
+#ifdef DEBUG
+	DEBUGDAEMON << fname 
+		<< ": Adding debug options." << endl;
+	// KCmdLineArgs::addCmdLineOptions(debug_options); // , "debug");
 
 
+
+	DEBUGDAEMON << fname << ": Starting app." << endl;
+#endif
 	if (!KUniqueApplication::start())
 	{
 		return 0;
@@ -910,7 +907,7 @@ int main(int argc, char **argv)
 	KUniqueApplication a(true, true);
 
 	// No options besides debug
-	KPilotConfig::getDebugLevel(false);
+	// KPilotConfig::getDebugLevel(false);
 
 	// A block just to keep variables local.
 	//
@@ -959,185 +956,3 @@ int main(int argc, char **argv)
 
 
 
-// $Log$
-// Revision 1.72  2003/01/31 14:38:01  adridg
-// Split out Kroupware stuff in a sensible way. Use modified syncStack
-//
-// Revision 1.71  2003/01/30 22:25:22  kainhofe
-// Style fixes
-//
-// Revision 1.70  2003/01/18 00:30:18  kainhofe
-// Removed the Log: tags from the conduits I maintain.
-// Cleanup of the includes.
-// Started implementing the other field sync of the addressbookconduit. Still have trouble converting a string to a QDate using a custom format
-//
-// Revision 1.69  2002/12/31 13:22:07  mueller
-// CVS_SILENT fixincludes
-//
-// Revision 1.68  2002/12/04 10:55:37  thorsen
-// Kroupware merge to HEAD. 3.1 will follow when the issues with the patch have been worked out.
-//
-// Revision 1.66.2.3  2002/11/29 11:12:10  thorsen
-// Merged from head
-//
-// Revision 1.66.2.2  2002/10/14 21:20:35  rogowski
-// Added syncing with addressbook of kmail. Fixed some bugs.
-//
-// Revision 1.66.2.1  2002/10/11 09:16:24  rogowski
-// Implemented syncing of kpilot with kmail(only todos and calendars up to now). To enable syncing, choose in the sync config tab the option >sync with kmail<. But be careful with doing this with important data on your pilot: There are still bugs in kmail eating your data!
-//
-// Revision 1.66  2002/08/30 22:24:55  adridg
-// - Improved logging, connected the right signals now
-// - Try to handle dlp_ReadUserInfo failures sensibly
-// - Trying to sort out failures reading the database list.
-//
-// Revision 1.65  2002/08/23 22:03:21  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.64  2002/08/15 21:51:00  kainhofe
-// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
-//
-// Revision 1.63  2002/07/25 15:44:03  kainhofe
-// LMB on tray icon starts kpilot, settings are reloaded when kpilot changes them
-//
-// Revision 1.62  2002/06/24 19:29:11  adridg
-// Allow daemon RW access to config file
-//
-// Revision 1.61  2002/06/08 09:17:07  adridg
-// Added tooltip for daemon
-//
-// Revision 1.60  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.59.2.3  2002/05/09 22:29:33  adridg
-// Various small things not important for the release
-//
-// Revision 1.59.2.2  2002/04/16 19:41:05  adridg
-// Make default sync a HotSync instead of Test
-//
-// Revision 1.59.2.1  2002/04/04 20:28:28  adridg
-// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
-// when using PILOT_VERSION. kpilotTest defaults to list, like the options
-// promise. Always do old-style USB sync (also works with serial devices)
-// and runs conduits only for HotSync. KPilot now as it should have been
-// for the 3.0 release.
-//
-// Revision 1.59  2002/02/02 11:46:02  adridg
-// Abstracting away pilot-link stuff
-//
-// Revision 1.58  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.57  2002/01/23 08:35:54  adridg
-// Remove K-menu dependency
-//
-// Revision 1.56  2002/01/20 13:53:52  adridg
-// Added new sync types
-//
-// Revision 1.55  2001/12/29 15:49:01  adridg
-// SyncStack changes
-//
-// Revision 1.54  2001/11/18 16:59:55  adridg
-// New icons, DCOP changes
-//
-// Revision 1.53  2001/10/10 13:40:07  cschumac
-// Compile fixes.
-//
-// Revision 1.52  2001/10/08 22:20:18  adridg
-// Changeover to libkpilot, prepare for lib-based conduits
-//
-// Revision 1.51  2001/10/08 12:49:11  cschumac
-// kde3 compile fixes.
-//
-// Revision 1.50  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.49  2001/09/30 16:58:08  adridg
-// Daemon reports name in statusString
-//
-// Revision 1.48  2001/09/29 16:23:31  adridg
-// Layout + icons changed
-//
-// Revision 1.47  2001/09/24 22:24:06  adridg
-// Use new SyncActions
-//
-// Revision 1.46  2001/09/23 21:44:56  adridg
-// Myriad small changes
-//
-// Revision 1.45  2001/09/23 18:46:11  adridg
-// Oops .. needed some extra work on the QStack part
-//
-// Revision 1.44  2001/09/23 18:24:59  adridg
-// New syncing architecture
-//
-// Revision 1.43  2001/09/16 13:37:48  adridg
-// Large-scale restructuring
-//
-// Revision 1.42  2001/08/27 22:54:27  adridg
-// Decruftifying; improve DCOP link between daemon & viewer
-//
-// Revision 1.41  2001/08/19 19:25:57  adridg
-// Removed kpilotlink dependency from kpilot; added DCOP interfaces to make that possible. Also fixed a connect() type mismatch that was harmless but annoying.
-//
-// Revision 1.40  2001/08/01 20:20:57  adridg
-// Fix for bug #29764
-//
-// Revision 1.39  2001/06/11 07:36:10  adridg
-// Cleanup char constant in <<
-//
-// Revision 1.38  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.37  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.36  2001/04/01 17:32:52  adridg
-// I really don't remember
-//
-// Revision 1.35  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.34  2001/03/05 23:44:39  adridg
-// KPILOT_VERSION added. Fixed double-sync (maybe). Extra monitor debugging.
-//
-// Revision 1.33  2001/03/04 21:22:00  adridg
-// Added drag 'n drop file install to daemon
-//
-// Revision 1.32  2001/03/04 11:23:04  adridg
-// Changed for bug 21392
-//
-// Revision 1.31  2001/02/26 22:09:49  adridg
-// Fixed some exit() calls; extra listener process debugging
-//
-// Revision 1.30  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.29  2001/02/08 13:17:19  adridg
-// Fixed crash when conduits run during a backup and exit after the
-// end of that backup (because the event loop is blocked by the backup
-// itself). Added better debugging error exit message (no i18n needed).
-//
-// Revision 1.28  2001/02/05 21:01:07  adridg
-// Fixed copyright headers for source releases. No code changed
-//
-// Revision 1.27  2001/02/05 19:16:32  adridg
-// Removing calls to exit() from internal functions
-//
-// Revision 1.26  2001/01/06 13:20:23  adridg
-// Cleaned up DCOP; changed version number
-//
-// Revision 1.25  2001/01/04 22:19:37  adridg
-// Stuff for Chris and Bug 18072
-//
-// Revision 1.24  2001/01/04 11:33:20  bero
-// Fix build
-//
-// Revision 1.23  2001/01/03 00:02:45  adridg
-// Added Heiko's FastSync
-//
-// Revision 1.22  2001/01/02 15:02:59  bero
-// Fix build
-//
-// Revision 1.21  2000/12/31 16:44:00  adridg
-// Patched up the debugging stuff again
-//

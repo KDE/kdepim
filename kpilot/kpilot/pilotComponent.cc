@@ -31,7 +31,6 @@
 #include "options.h"
 
 #include <time.h>
-#include <iostream>
 
 #ifndef _PILOT_APPINFO_H_
 #include <pi-appinfo.h>
@@ -129,7 +128,7 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 
 		currentCatID = 0;
 		while (strcmp(info->name[currentCatID],
-				selectedCategory.local8Bit()) &&
+				selectedCategory.latin1()) &&
 			(currentCatID < MAX_CATEGORIES))
 		{
 #ifdef DEBUG
@@ -297,70 +296,3 @@ void PilotComponent::slotShowComponent()
 	return true;
 }
 
-// $Log$
-// Revision 1.23  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.22  2001/09/30 17:19:02  adridg
-// Updated preHotSync
-//
-// Revision 1.21  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.20  2001/09/05 21:53:51  adridg
-// Major cleanup and architectural changes. New applications kpilotTest
-// and kpilotConfig are not installed by default but can be used to test
-// the codebase. Note that nothing else will actually compile right now.
-//
-// Revision 1.19  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.18  2001/04/14 15:21:35  adridg
-// XML GUI and ToolTips
-//
-// Revision 1.17  2001/04/11 21:39:22  adridg
-// Fix for bad-categories bug
-//
-// Revision 1.16  2001/04/03 09:55:13  adridg
-// Administrative, cleanup
-//
-// Revision 1.15  2001/04/01 17:32:20  adridg
-// Fix infinie loop when changing categories
-//
-// Revision 1.14  2001/03/27 11:10:39  leitner
-// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
-// #ifdef DEBUG because qstringExpand etc. were not defined.
-//
-// Revision 1.13  2001/03/24 15:59:22  adridg
-// Some populateCategories changes for bug #22112
-//
-// Revision 1.12  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.11  2001/03/04 21:27:07  adridg
-// Note to self: compile first, commit after
-//
-// Revision 1.10  2001/03/04 21:20:55  adridg
-// Attempt to fix poor matching of category names
-//
-// Revision 1.9  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.8  2001/02/19 04:04:52  rkrusty
-// [IEM] fix for compiling with glibc 2.2.2
-//
-// --- pilotComponent.cc   Sun Feb 18 19:27:29 2001
-// +++ pilotComponent.cc.new       Sun Feb 18 19:27:18 2001
-// @@ -30,7 +30,7 @@
-//
-//
-//  #include "options.h"
-// -#include <sys/time.h>
-// +#include <time.h>
-//  #include <iostream.h>
-//  #include <pi-appinfo.h>
-//  #include <qwidget.h>
-//
-// Revision 1.7  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//
