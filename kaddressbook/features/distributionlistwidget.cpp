@@ -226,9 +226,10 @@ void DistributionListWidget::editList()
   KABC::DistributionList *list = mManager->list( oldName );
   list->setName( newName );
 
+  int pos = mNameCombo->currentItem();
   mNameCombo->clear();
   mNameCombo->insertStringList( mManager->listNames() );
-  mNameCombo->setCurrentItem( mNameCombo->count() - 1 );
+  mNameCombo->setCurrentItem( pos );
 
   updateContactView();
 
