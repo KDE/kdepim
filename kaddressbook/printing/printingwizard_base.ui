@@ -52,7 +52,7 @@
                         </sizepolicy>
                     </property>
                     <property name="text">
-                        <string>Print Style:</string>
+                        <string>Print style:</string>
                     </property>
                     <property name="alignment">
                         <set>AlignVCenter|AlignRight</set>
@@ -86,7 +86,7 @@
                 </sizepolicy>
             </property>
             <property name="title">
-                <string>Print what contacts?</string>
+                <string>Print what Contacts</string>
             </property>
             <vbox>
                 <property name="name">

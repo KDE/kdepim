@@ -1,14 +1,11 @@
-<!DOCTYPE UI><UI>
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
 <class>ExpenseWidget</class>
 <author>David B?</author>
-<widget>
-    <class>QWidget</class>
-    <property stdset="1">
-        <name>name</name>
+<widget class="QWidget">
+    <property name="name">
         <cstring>Form2</cstring>
     </property>
-    <property stdset="1">
-        <name>geometry</name>
+    <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
@@ -16,18 +13,14 @@
             <height>480</height>
         </rect>
     </property>
-    <property stdset="1">
-        <name>caption</name>
+    <property name="caption">
         <string>Form2</string>
     </property>
-    <widget>
-        <class>QTabWidget</class>
-        <property stdset="1">
-            <name>name</name>
+    <widget class="QTabWidget">
+        <property name="name">
             <cstring>tabWidget</cstring>
         </property>
-        <property stdset="1">
-            <name>geometry</name>
+        <property name="geometry">
             <rect>
                 <x>0</x>
                 <y>0</y>
@@ -35,100 +28,62 @@
                 <height>340</height>
             </rect>
         </property>
-        <widget>
-            <class>QWidget</class>
-            <property stdset="1">
-                <name>name</name>
+        <widget class="QWidget">
+            <property name="name">
                 <cstring>tab</cstring>
             </property>
-            <attribute>
-                <name>title</name>
+            <attribute name="title">
                 <string>CSV Export</string>
             </attribute>
             <grid>
-                <property stdset="1">
-                    <name>margin</name>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
                     <number>11</number>
                 </property>
-                <property stdset="1">
-                    <name>spacing</name>
+                <property name="spacing">
                     <number>6</number>
                 </property>
-                <widget row="0"  column="0" >
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
                         <cstring>TextLabel1</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>CSV Filename:</string>
+                    <property name="text">
+                        <string>CSV filename:</string>
                     </property>
                 </widget>
-                <widget row="0"  column="1" >
-                    <class>QLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
                         <cstring>fCSVFilename</cstring>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;Full path to csv file containing expense data&lt;/qt&gt;</string>
                     </property>
                 </widget>
-                <widget row="0"  column="2" >
-                    <class>QPushButton</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QPushButton" row="0" column="2">
+                    <property name="name">
                         <cstring>fCSVBrowse</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>Browse</string>
+                    <property name="text">
+                        <string>Browse...</string>
                     </property>
                 </widget>
-                <widget row="1"  column="0"  rowspan="1"  colspan="3" >
-                    <class>QButtonGroup</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="3">
+                    <property name="name">
                         <cstring>fRotatePolicy</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>title</name>
+                    <property name="title">
                         <string>Rotate Policy</string>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;For an explanation of these options, please read the documentation!&lt;/qt&gt;</string>
                     </property>
-                    <widget>
-                        <class>QLabel</class>
-                        <property stdset="1">
-                            <name>name</name>
-                            <cstring>TextLabel2</cstring>
-                        </property>
-                        <property stdset="1">
-                            <name>geometry</name>
-                            <rect>
-                                <x>20</x>
-                                <y>140</y>
-                                <width>110</width>
-                                <height>31</height>
-                            </rect>
-                        </property>
-                        <property stdset="1">
-                            <name>text</name>
-                            <string>Rotate Depth:</string>
-                        </property>
-                    </widget>
-                    <widget>
-                        <class>QRadioButton</class>
-                        <property stdset="1">
-                            <name>name</name>
+                    <widget class="QRadioButton">
+                        <property name="name">
                             <cstring>fOverWrite</cstring>
                         </property>
-                        <property stdset="1">
-                            <name>geometry</name>
+                        <property name="geometry">
                             <rect>
                                 <x>20</x>
                                 <y>30</y>
@@ -136,19 +91,15 @@
                                 <height>28</height>
                             </rect>
                         </property>
-                        <property stdset="1">
-                            <name>text</name>
+                        <property name="text">
                             <string>&amp;Overwrite</string>
                         </property>
                     </widget>
-                    <widget>
-                        <class>QRadioButton</class>
-                        <property stdset="1">
-                            <name>name</name>
+                    <widget class="QRadioButton">
+                        <property name="name">
                             <cstring>fAppend</cstring>
                         </property>
-                        <property stdset="1">
-                            <name>geometry</name>
+                        <property name="geometry">
                             <rect>
                                 <x>20</x>
                                 <y>60</y>
@@ -156,23 +107,18 @@
                                 <height>31</height>
                             </rect>
                         </property>
-                        <property stdset="1">
-                            <name>text</name>
+                        <property name="text">
                             <string>&amp;Append</string>
                         </property>
-                        <property stdset="1">
-                            <name>checked</name>
+                        <property name="checked">
                             <bool>true</bool>
                         </property>
                     </widget>
-                    <widget>
-                        <class>QRadioButton</class>
-                        <property stdset="1">
-                            <name>name</name>
+                    <widget class="QRadioButton">
+                        <property name="name">
                             <cstring>fRotate</cstring>
                         </property>
-                        <property stdset="1">
-                            <name>geometry</name>
+                        <property name="geometry">
                             <rect>
                                 <x>20</x>
                                 <y>100</y>
@@ -180,23 +126,18 @@
                                 <height>20</height>
                             </rect>
                         </property>
-                        <property stdset="1">
-                            <name>text</name>
+                        <property name="text">
                             <string>&amp;Rotate</string>
                         </property>
-                        <property stdset="1">
-                            <name>checked</name>
+                        <property name="checked">
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <widget>
-                        <class>QSpinBox</class>
-                        <property stdset="1">
-                            <name>name</name>
+                    <widget class="QSpinBox">
+                        <property name="name">
                             <cstring>fRotateNumber</cstring>
                         </property>
-                        <property stdset="1">
-                            <name>geometry</name>
+                        <property name="geometry">
                             <rect>
                                 <x>140</x>
                                 <y>140</y>
@@ -204,140 +145,123 @@
                                 <height>31</height>
                             </rect>
                         </property>
-                        <property stdset="1">
-                            <name>maxValue</name>
+                        <property name="maxValue">
                             <number>10</number>
                         </property>
-                        <property stdset="1">
-                            <name>minValue</name>
+                        <property name="minValue">
                             <number>1</number>
                         </property>
-                        <property stdset="1">
-                            <name>value</name>
+                        <property name="value">
                             <number>3</number>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>TextLabel2</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>20</x>
+                                <y>140</y>
+                                <width>110</width>
+                                <height>31</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>Rotate depth:</string>
                         </property>
                     </widget>
                 </widget>
             </grid>
         </widget>
-        <widget>
-            <class>QWidget</class>
-            <property stdset="1">
-                <name>name</name>
+        <widget class="QWidget">
+            <property name="name">
                 <cstring>tab</cstring>
             </property>
-            <attribute>
-                <name>title</name>
+            <attribute name="title">
                 <string>Database Export</string>
             </attribute>
             <grid>
-                <property stdset="1">
-                    <name>margin</name>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
                     <number>11</number>
                 </property>
-                <property stdset="1">
-                    <name>spacing</name>
+                <property name="spacing">
                     <number>6</number>
                 </property>
-                <widget row="5"  column="0" >
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLabel" row="5" column="0">
+                    <property name="name">
                         <cstring>TextLabel7</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>DB Table:</string>
+                    <property name="text">
+                        <string>DB table:</string>
                     </property>
                 </widget>
-                <widget row="4"  column="0" >
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLabel" row="4" column="0">
+                    <property name="name">
                         <cstring>TextLabel6</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>DB Name:</string>
+                    <property name="text">
+                        <string>DB name:</string>
                     </property>
                 </widget>
-                <widget row="3"  column="0" >
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLabel" row="3" column="0">
+                    <property name="name">
                         <cstring>TextLabel5</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>DB Passwd:</string>
+                    <property name="text">
+                        <string>DB passwd:</string>
                     </property>
                 </widget>
-                <widget row="2"  column="0" >
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLabel" row="2" column="0">
+                    <property name="name">
                         <cstring>TextLabel4</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>DB Login:</string>
+                    <property name="text">
+                        <string>DB login:</string>
                     </property>
                 </widget>
-                <widget row="1"  column="0" >
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
                         <cstring>TextLabel3</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>DB Server:</string>
+                    <property name="text">
+                        <string>DB server:</string>
                     </property>
                 </widget>
-                <widget row="4"  column="1" >
-                    <class>QLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLineEdit" row="4" column="1">
+                    <property name="name">
                         <cstring>fDBName</cstring>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;Name of the database, like Expenses&lt;/qt&gt;</string>
                     </property>
                 </widget>
-                <widget row="5"  column="1" >
-                    <class>QLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLineEdit" row="5" column="1">
+                    <property name="name">
                         <cstring>fDBTable</cstring>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;Name of the table to update, like UsernameExpenses&lt;/qt&gt;</string>
                     </property>
                 </widget>
-                <widget row="0"  column="0"  rowspan="1"  colspan="2" >
-                    <class>QButtonGroup</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="2">
+                    <property name="name">
                         <cstring>fDatabaseType</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>title</name>
+                    <property name="title">
                         <string>Database Type</string>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;Select "None" if you are using a CSV file&lt;/qt&gt;</string>
                     </property>
-                    <widget>
-                        <class>QRadioButton</class>
-                        <property stdset="1">
-                            <name>name</name>
+                    <widget class="QRadioButton">
+                        <property name="name">
                             <cstring>fnone</cstring>
                         </property>
-                        <property stdset="1">
-                            <name>geometry</name>
+                        <property name="geometry">
                             <rect>
                                 <x>10</x>
                                 <y>30</y>
@@ -345,23 +269,18 @@
                                 <height>21</height>
                             </rect>
                         </property>
-                        <property stdset="1">
-                            <name>text</name>
+                        <property name="text">
                             <string>&amp;None</string>
                         </property>
-                        <property stdset="1">
-                            <name>checked</name>
+                        <property name="checked">
                             <bool>true</bool>
                         </property>
                     </widget>
-                    <widget>
-                        <class>QRadioButton</class>
-                        <property stdset="1">
-                            <name>name</name>
+                    <widget class="QRadioButton">
+                        <property name="name">
                             <cstring>fpostgresql</cstring>
                         </property>
-                        <property stdset="1">
-                            <name>geometry</name>
+                        <property name="geometry">
                             <rect>
                                 <x>10</x>
                                 <y>60</y>
@@ -369,19 +288,15 @@
                                 <height>21</height>
                             </rect>
                         </property>
-                        <property stdset="1">
-                            <name>text</name>
+                        <property name="text">
                             <string>&amp;PostgreSQL</string>
                         </property>
                     </widget>
-                    <widget>
-                        <class>QRadioButton</class>
-                        <property stdset="1">
-                            <name>name</name>
+                    <widget class="QRadioButton">
+                        <property name="name">
                             <cstring>fmysql</cstring>
                         </property>
-                        <property stdset="1">
-                            <name>geometry</name>
+                        <property name="geometry">
                             <rect>
                                 <x>10</x>
                                 <y>90</y>
@@ -389,50 +304,38 @@
                                 <height>21</height>
                             </rect>
                         </property>
-                        <property stdset="1">
-                            <name>text</name>
+                        <property name="text">
                             <string>&amp;MySQL</string>
                         </property>
                     </widget>
                 </widget>
-                <widget row="1"  column="1" >
-                    <class>QLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLineEdit" row="1" column="1">
+                    <property name="name">
                         <cstring>fDBServer</cstring>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>foo.bar.com</string>
                     </property>
                 </widget>
-                <widget row="2"  column="1" >
-                    <class>QLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLineEdit" row="2" column="1">
+                    <property name="name">
                         <cstring>fDBLogin</cstring>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>username</string>
                     </property>
                 </widget>
-                <widget row="3"  column="1" >
-                    <class>QLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLineEdit" row="3" column="1">
+                    <property name="name">
                         <cstring>fDBPasswd</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>autoMask</name>
+                    <property name="autoMask">
                         <bool>false</bool>
                     </property>
-                    <property stdset="1">
-                        <name>echoMode</name>
+                    <property name="echoMode">
                         <enum>Password</enum>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;Password, not echoed to the screen!&lt;/qt&gt;</string>
                     </property>
                 </widget>
@@ -453,4 +356,5 @@
     <tabstop>fDBName</tabstop>
     <tabstop>fDBTable</tabstop>
 </tabstops>
+<layoutdefaults spacing="6" margin="11"/>
 </UI>

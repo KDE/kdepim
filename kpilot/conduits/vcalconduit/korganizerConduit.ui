@@ -51,7 +51,7 @@
                             <cstring>TextLabel1</cstring>
                         </property>
                         <property name="text">
-                            <string>Calendar File:</string>
+                            <string>Calendar file:</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="3">
@@ -124,7 +124,7 @@
                             <cstring>fCalBrowse</cstring>
                         </property>
                         <property name="text">
-                            <string>Browse</string>
+                            <string>Browse...</string>
                         </property>
                         <property name="whatsThis" stdset="0">
                             <string>Open a file browser</string>
@@ -139,7 +139,7 @@
                         </property>
                     </widget>
                     <spacer row="3" column="1">
-                        <property name="name" stdset="0">
+                        <property name="name">
                             <cstring>Spacer1</cstring>
                         </property>
                         <property name="orientation">
@@ -147,12 +147,6 @@
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
                         </property>
                     </spacer>
                 </grid>
@@ -162,7 +156,7 @@
                     <cstring>tab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Conflict resolution</string>
+                    <string>Conflict Resolution</string>
                 </attribute>
                 <grid>
                     <property name="name">
@@ -179,7 +173,7 @@
                             <cstring>conflictResolution</cstring>
                         </property>
                         <property name="title">
-                            <string>Conflicting items</string>
+                            <string>Conflicting Items</string>
                         </property>
                         <vbox>
                             <property name="name">
@@ -196,7 +190,7 @@
                                     <cstring>RadioButton1</cstring>
                                 </property>
                                 <property name="focusPolicy">
-                                    <enum>TabFocus</enum>
+                                    <enum>NoFocus</enum>
                                 </property>
                                 <property name="text">
                                     <string>&amp;Pilot overrides desktop</string>
@@ -224,7 +218,7 @@
                         </vbox>
                     </widget>
                     <spacer row="1" column="0">
-                        <property name="name" stdset="0">
+                        <property name="name">
                             <cstring>Spacer3</cstring>
                         </property>
                         <property name="orientation">
@@ -232,12 +226,6 @@
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
                         </property>
                     </spacer>
                 </grid>
@@ -258,8 +246,5 @@
     <tabstop>RadioButton2</tabstop>
     <tabstop>RadioButton3</tabstop>
 </tabstops>
-<includes>
-    <include location="local" impldecl="in implementation">korganizerConduit.ui.h</include>
-</includes>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

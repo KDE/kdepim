@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>600</width>
-            <height>480</height>
+            <width>415</width>
+            <height>133</height>
         </rect>
     </property>
     <property name="caption">
@@ -79,7 +79,7 @@
                             <cstring>lblPath</cstring>
                         </property>
                         <property name="text">
-                            <string>Path</string>
+                            <string>Path:</string>
                         </property>
                     </widget>
                     <widget class="QLineEdit">
@@ -106,7 +106,7 @@
                 </hbox>
             </widget>
             <spacer>
-                <property name="name" stdset="0">
+                <property name="name">
                     <cstring>Spacer1</cstring>
                 </property>
                 <property name="orientation">
@@ -114,12 +114,6 @@
                 </property>
                 <property name="sizeType">
                     <enum>Expanding</enum>
-                </property>
-                <property name="sizeHint">
-                    <size>
-                        <width>20</width>
-                        <height>20</height>
-                    </size>
                 </property>
             </spacer>
         </vbox>

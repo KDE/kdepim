@@ -51,6 +51,12 @@
             <property name="name">
                 <cstring>GroupBox1</cstring>
             </property>
+            <property name="frameShape">
+                <enum>Box</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
             <property name="title">
                 <string>Search for Addresses in Directory</string>
             </property>
@@ -83,7 +89,7 @@
                                 <cstring>TextLabel1</cstring>
                             </property>
                             <property name="text">
-                                <string>Search for</string>
+                                <string>Search for:</string>
                             </property>
                         </widget>
                         <widget class="QLineEdit">
@@ -140,7 +146,7 @@
                             </property>
                         </widget>
                         <spacer>
-                            <property name="name" stdset="0">
+                            <property name="name">
                                 <cstring>Spacer2</cstring>
                             </property>
                             <property name="orientation">
@@ -148,12 +154,6 @@
                             </property>
                             <property name="sizeType">
                                 <enum>Expanding</enum>
-                            </property>
-                            <property name="sizeHint">
-                                <size>
-                                    <width>20</width>
-                                    <height>20</height>
-                                </size>
                             </property>
                         </spacer>
                     </hbox>
@@ -196,7 +196,7 @@
                     </property>
                 </widget>
                 <spacer>
-                    <property name="name" stdset="0">
+                    <property name="name">
                         <cstring>Spacer3</cstring>
                     </property>
                     <property name="orientation">
@@ -204,12 +204,6 @@
                     </property>
                     <property name="sizeType">
                         <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>20</height>
-                        </size>
                     </property>
                 </spacer>
                 <widget class="QPushButton">

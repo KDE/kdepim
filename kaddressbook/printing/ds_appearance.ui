@@ -85,7 +85,7 @@
                 </sizepolicy>
             </property>
             <property name="title">
-                <string>Font Settings:</string>
+                <string>Font Settings</string>
             </property>
             <vbox>
                 <property name="name">
@@ -102,7 +102,7 @@
                         <cstring>cbStandardFonts</cstring>
                     </property>
                     <property name="text">
-                        <string>Use Standard KDE Fonts</string>
+                        <string>Use standard KDE fonts</string>
                     </property>
                     <property name="checked">
                         <bool>true</bool>
@@ -136,7 +136,7 @@
                                 <cstring>labelDetailsFont</cstring>
                             </property>
                             <property name="text">
-                                <string>Details Font:</string>
+                                <string>Details font:</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignRight</set>
@@ -158,7 +158,7 @@
                                 <cstring>labelBodyFont</cstring>
                             </property>
                             <property name="text">
-                                <string>Body Font:</string>
+                                <string>Body font:</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignRight</set>
@@ -180,7 +180,7 @@
                                 <cstring>labelFixed</cstring>
                             </property>
                             <property name="text">
-                                <string>Fixed Font:</string>
+                                <string>Fixed font:</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignRight</set>
@@ -243,7 +243,7 @@
                                 <cstring>labelHeaderFont</cstring>
                             </property>
                             <property name="text">
-                                <string>Contact Header Font:</string>
+                                <string>Contact header font:</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignRight</set>
@@ -349,7 +349,7 @@
                         <cstring>cbBackgroundColor</cstring>
                     </property>
                     <property name="text">
-                        <string>Use Colored Contact Headers</string>
+                        <string>Use colored contact headers</string>
                     </property>
                     <property name="checked">
                         <bool>true</bool>
@@ -398,7 +398,7 @@
                                 <cstring>tlBackgroundColor</cstring>
                             </property>
                             <property name="text">
-                                <string>Headline Background Color:</string>
+                                <string>Headline background color:</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignRight</set>
@@ -409,7 +409,7 @@
                                 <cstring>tlHeaderColor</cstring>
                             </property>
                             <property name="text">
-                                <string>Headline Text Color:</string>
+                                <string>Headline text color:</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignRight</set>
@@ -475,8 +475,5 @@
         <slot>setDisabled(bool)</slot>
     </connection>
 </connections>
-<includes>
-    <include location="local" impldecl="in implementation">ds_appearance.ui.h</include>
-</includes>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

@@ -46,18 +46,18 @@
     </widget>
     <widget class="QPushButton">
         <property name="name">
-            <cstring>PushButton3</cstring>
+            <cstring>PushButton1</cstring>
         </property>
         <property name="geometry">
             <rect>
-                <x>220</x>
+                <x>40</x>
                 <y>60</y>
                 <width>150</width>
                 <height>29</height>
             </rect>
         </property>
         <property name="text">
-            <string>remove read lock</string>
+            <string>Read Lock</string>
         </property>
     </widget>
     <widget class="QPushButton">
@@ -73,7 +73,23 @@
             </rect>
         </property>
         <property name="text">
-            <string>write lock</string>
+            <string>Write Lock</string>
+        </property>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>PushButton3</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>220</x>
+                <y>60</y>
+                <width>150</width>
+                <height>29</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Remove Read Lock</string>
         </property>
     </widget>
     <widget class="QPushButton">
@@ -89,23 +105,7 @@
             </rect>
         </property>
         <property name="text">
-            <string>remove write lock</string>
-        </property>
-    </widget>
-    <widget class="QPushButton">
-        <property name="name">
-            <cstring>PushButton1</cstring>
-        </property>
-        <property name="geometry">
-            <rect>
-                <x>40</x>
-                <y>60</y>
-                <width>150</width>
-                <height>29</height>
-            </rect>
-        </property>
-        <property name="text">
-            <string>read lock</string>
+            <string>Remove Write Lock</string>
         </property>
     </widget>
 </widget>

@@ -1,16 +1,13 @@
-<!DOCTYPE UI><UI>
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
 <class>NullWidget</class>
 <comment>A tabWidget for configuring
 the Null-conduit settings.</comment>
 <author>Adriaan de Groot</author>
-<widget>
-    <class>QWidget</class>
-    <property stdset="1">
-        <name>name</name>
+<widget class="QWidget">
+    <property name="name">
         <cstring>Form1</cstring>
     </property>
-    <property stdset="1">
-        <name>geometry</name>
+    <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
@@ -18,149 +15,118 @@ the Null-conduit settings.</comment>
             <height>202</height>
         </rect>
     </property>
-    <property stdset="1">
-        <name>sizePolicy</name>
+    <property name="sizePolicy">
         <sizepolicy>
             <hsizetype>5</hsizetype>
             <vsizetype>5</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
         </sizepolicy>
     </property>
-    <property stdset="1">
-        <name>baseSize</name>
+    <property name="baseSize">
         <size>
             <width>570</width>
             <height>270</height>
         </size>
     </property>
-    <property stdset="1">
-        <name>caption</name>
+    <property name="caption">
         <string>Null-Conduit Options</string>
     </property>
-    <property>
-        <name>layoutMargin</name>
+    <property name="layoutMargin" stdset="0">
     </property>
-    <property>
-        <name>layoutSpacing</name>
+    <property name="layoutSpacing" stdset="0">
     </property>
     <grid>
-        <property stdset="1">
-            <name>margin</name>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
             <number>11</number>
         </property>
-        <property stdset="1">
-            <name>spacing</name>
+        <property name="spacing">
             <number>6</number>
         </property>
-        <widget row="0"  column="0" >
-            <class>QTabWidget</class>
-            <property stdset="1">
-                <name>name</name>
+        <widget class="QTabWidget" row="0" column="0">
+            <property name="name">
                 <cstring>tabWidget</cstring>
             </property>
-            <property stdset="1">
-                <name>sizePolicy</name>
+            <property name="sizePolicy">
                 <sizepolicy>
                     <hsizetype>7</hsizetype>
                     <vsizetype>7</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
                 </sizepolicy>
             </property>
-            <property>
-                <name>layoutMargin</name>
+            <property name="layoutMargin" stdset="0">
             </property>
-            <widget>
-                <class>QWidget</class>
-                <property stdset="1">
-                    <name>name</name>
+            <widget class="QWidget">
+                <property name="name">
                     <cstring>Widget2</cstring>
                 </property>
-                <attribute>
-                    <name>title</name>
+                <attribute name="title">
                     <string>General</string>
                 </attribute>
                 <grid>
-                    <property stdset="1">
-                        <name>margin</name>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
                         <number>11</number>
                     </property>
-                    <property stdset="1">
-                        <name>spacing</name>
+                    <property name="spacing">
                         <number>6</number>
                     </property>
-                    <widget row="0"  column="1" >
-                        <class>QLineEdit</class>
-                        <property stdset="1">
-                            <name>name</name>
+                    <widget class="QLineEdit" row="0" column="1">
+                        <property name="name">
                             <cstring>fLogMessage</cstring>
                         </property>
-                        <property stdset="1">
-                            <name>text</name>
+                        <property name="text">
                             <string>KPilot was here!</string>
                         </property>
-                        <property>
-                            <name>whatsThis</name>
+                        <property name="whatsThis" stdset="0">
                             <string>&lt;qt&gt;Enter the message to add to the Sync Log on your Pilot here.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget row="0"  column="0" >
-                        <class>QLabel</class>
-                        <property stdset="1">
-                            <name>name</name>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
                             <cstring>TextLabel1_2</cstring>
                         </property>
-                        <property stdset="1">
-                            <name>text</name>
-                            <string>&amp;Log Message:</string>
+                        <property name="text">
+                            <string>&amp;Log message:</string>
                         </property>
-                        <property>
-                            <name>buddy</name>
+                        <property name="buddy" stdset="0">
                             <cstring>fLogMessage</cstring>
                         </property>
                     </widget>
-                    <widget row="1"  column="0" >
-                        <class>QLabel</class>
-                        <property stdset="1">
-                            <name>name</name>
+                    <widget class="QLabel" row="1" column="0">
+                        <property name="name">
                             <cstring>TextLabel2_2</cstring>
                         </property>
-                        <property stdset="1">
-                            <name>text</name>
+                        <property name="text">
                             <string>&amp;Databases:</string>
                         </property>
-                        <property>
-                            <name>buddy</name>
+                        <property name="buddy" stdset="0">
                             <cstring>fDatabases</cstring>
                         </property>
                     </widget>
-                    <widget row="1"  column="1" >
-                        <class>QLineEdit</class>
-                        <property stdset="1">
-                            <name>name</name>
+                    <widget class="QLineEdit" row="1" column="1">
+                        <property name="name">
                             <cstring>fDatabases</cstring>
                         </property>
-                        <property>
-                            <name>whatsThis</name>
+                        <property name="whatsThis" stdset="0">
                             <string>&lt;qt&gt;The Null-conduit can be attached to several databases, effectively preventing them from Syncing. Enter the database names here.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <spacer row="2"  column="1" >
-                        <property>
-                            <name>name</name>
+                    <spacer row="2" column="1">
+                        <property name="name">
                             <cstring>Spacer4</cstring>
                         </property>
-                        <property stdset="1">
-                            <name>orientation</name>
+                        <property name="orientation">
                             <enum>Vertical</enum>
                         </property>
-                        <property stdset="1">
-                            <name>sizeType</name>
+                        <property name="sizeType">
                             <enum>Expanding</enum>
-                        </property>
-                        <property>
-                            <name>sizeHint</name>
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
                         </property>
                     </spacer>
                 </grid>
@@ -171,4 +137,5 @@ the Null-conduit settings.</comment>
 <tabstops>
     <tabstop>tabWidget</tabstop>
 </tabstops>
+<layoutdefaults spacing="6" margin="11"/>
 </UI>

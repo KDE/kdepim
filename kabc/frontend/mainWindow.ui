@@ -111,7 +111,7 @@
                             <cstring>TextLabel1</cstring>
                         </property>
                         <property name="text">
-                            <string>Name</string>
+                            <string>Name:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="1" column="0">
@@ -119,7 +119,7 @@
                             <cstring>TextLabel1_2</cstring>
                         </property>
                         <property name="text">
-                            <string>URL</string>
+                            <string>URL:</string>
                         </property>
                     </widget>
                     <widget class="QLineEdit" row="1" column="1">
@@ -167,7 +167,7 @@
                             <cstring>TextLabel7</cstring>
                         </property>
                         <property name="text">
-                            <string>Nickname</string>
+                            <string>Nickname:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="7" column="0">
@@ -175,7 +175,7 @@
                             <cstring>TextLabel5</cstring>
                         </property>
                         <property name="text">
-                            <string>Honorific Suffixes</string>
+                            <string>Honorific suffixes:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="6" column="0">
@@ -183,7 +183,7 @@
                             <cstring>TextLabel3_2</cstring>
                         </property>
                         <property name="text">
-                            <string>Family Name</string>
+                            <string>Family name:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="5" column="0">
@@ -191,7 +191,7 @@
                             <cstring>TextLabel4</cstring>
                         </property>
                         <property name="text">
-                            <string>Additional Names</string>
+                            <string>Additional names:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="4" column="0">
@@ -199,7 +199,7 @@
                             <cstring>TextLabel6</cstring>
                         </property>
                         <property name="text">
-                            <string>Given Name</string>
+                            <string>Given name:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="3" column="0">
@@ -207,7 +207,7 @@
                             <cstring>TextLabel1_3</cstring>
                         </property>
                         <property name="text">
-                            <string>Honorific Prefixes</string>
+                            <string>Honorific prefixes:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="2" column="0">
@@ -215,7 +215,7 @@
                             <cstring>TextLabel8</cstring>
                         </property>
                         <property name="text">
-                            <string>Formatted Name</string>
+                            <string>Formatted name:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="9" column="0">
@@ -223,7 +223,7 @@
                             <cstring>TextLabel15</cstring>
                         </property>
                         <property name="text">
-                            <string>Sort String</string>
+                            <string>Sort string:</string>
                         </property>
                     </widget>
                     <widget class="QLineEdit" row="9" column="1">
@@ -236,7 +236,7 @@
                             <cstring>TextLabel11</cstring>
                         </property>
                         <property name="text">
-                            <string>Role</string>
+                            <string>Role:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="12" column="0">
@@ -244,7 +244,7 @@
                             <cstring>TextLabel12</cstring>
                         </property>
                         <property name="text">
-                            <string>Organization</string>
+                            <string>Organization:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="10" column="0">
@@ -252,7 +252,7 @@
                             <cstring>TextLabel10</cstring>
                         </property>
                         <property name="text">
-                            <string>Title</string>
+                            <string>Title:</string>
                         </property>
                     </widget>
                     <widget class="QLineEdit" row="10" column="1">
@@ -271,7 +271,7 @@
                         </property>
                     </widget>
                     <spacer row="13" column="1">
-                        <property name="name" stdset="0">
+                        <property name="name">
                             <cstring>Spacer1</cstring>
                         </property>
                         <property name="orientation">
@@ -279,12 +279,6 @@
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
                         </property>
                     </spacer>
                 </grid>
@@ -364,7 +358,7 @@
                                 </property>
                             </widget>
                             <spacer row="0" column="1">
-                                <property name="name" stdset="0">
+                                <property name="name">
                                     <cstring>Spacer2</cstring>
                                 </property>
                                 <property name="orientation">
@@ -372,12 +366,6 @@
                                 </property>
                                 <property name="sizeType">
                                     <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
                                 </property>
                             </spacer>
                         </grid>
@@ -404,7 +392,7 @@
                                     <cstring>TextLabel2_3</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Id</string>
+                                    <string>Id:</string>
                                 </property>
                             </widget>
                             <widget class="QComboBox" row="0" column="1" rowspan="1" colspan="2">
@@ -438,7 +426,7 @@
                                     <cstring>TextLabel1_5</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Number</string>
+                                    <string>Number:</string>
                                 </property>
                             </widget>
                             <widget class="QButtonGroup" row="2" column="0" rowspan="1" colspan="5">
@@ -598,7 +586,7 @@
                             <cstring>TextLabel16</cstring>
                         </property>
                         <property name="text">
-                            <string>Id</string>
+                            <string>Id:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="2" column="0" rowspan="1" colspan="2">
@@ -606,7 +594,7 @@
                             <cstring>TextLabel1_4</cstring>
                         </property>
                         <property name="text">
-                            <string>Post Office Box</string>
+                            <string>Post office box:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="3" column="0" rowspan="1" colspan="2">
@@ -614,7 +602,7 @@
                             <cstring>TextLabel2_2</cstring>
                         </property>
                         <property name="text">
-                            <string>Extended</string>
+                            <string>Extended:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="4" column="0" rowspan="1" colspan="2">
@@ -622,7 +610,7 @@
                             <cstring>TextLabel3_3</cstring>
                         </property>
                         <property name="text">
-                            <string>Street</string>
+                            <string>Street:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="5" column="0" rowspan="1" colspan="2">
@@ -630,7 +618,7 @@
                             <cstring>TextLabel4_2</cstring>
                         </property>
                         <property name="text">
-                            <string>Locality</string>
+                            <string>Locality:</string>
                         </property>
                     </widget>
                     <widget class="QLineEdit" row="2" column="2" rowspan="1" colspan="3">
@@ -663,7 +651,7 @@
                             <cstring>TextLabel5_2</cstring>
                         </property>
                         <property name="text">
-                            <string>Region</string>
+                            <string>Region:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="8" column="0" rowspan="1" colspan="2">
@@ -671,7 +659,7 @@
                             <cstring>TextLabel7_2</cstring>
                         </property>
                         <property name="text">
-                            <string>Country</string>
+                            <string>Country:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="7" column="0" rowspan="1" colspan="2">
@@ -679,7 +667,7 @@
                             <cstring>TextLabel6_2</cstring>
                         </property>
                         <property name="text">
-                            <string>Postal Code</string>
+                            <string>Postal code:</string>
                         </property>
                     </widget>
                     <widget class="QTextEdit" row="10" column="0" rowspan="1" colspan="5">
@@ -891,7 +879,7 @@
                                 </property>
                             </widget>
                             <spacer row="0" column="1">
-                                <property name="name" stdset="0">
+                                <property name="name">
                                     <cstring>Spacer2_2</cstring>
                                 </property>
                                 <property name="orientation">
@@ -899,12 +887,6 @@
                                 </property>
                                 <property name="sizeType">
                                     <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
                                 </property>
                             </spacer>
                         </grid>
@@ -1008,7 +990,7 @@
                                 </property>
                             </widget>
                             <spacer row="0" column="1">
-                                <property name="name" stdset="0">
+                                <property name="name">
                                     <cstring>Spacer2_2_2</cstring>
                                 </property>
                                 <property name="orientation">
@@ -1016,12 +998,6 @@
                                 </property>
                                 <property name="sizeType">
                                     <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
                                 </property>
                             </spacer>
                         </grid>

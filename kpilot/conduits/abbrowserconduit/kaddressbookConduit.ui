@@ -1,13 +1,10 @@
-<!DOCTYPE UI><UI>
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
 <class>Form2</class>
-<widget>
-    <class>QWidget</class>
-    <property stdset="1">
-        <name>name</name>
+<widget class="QWidget">
+    <property name="name">
         <cstring>Form2</cstring>
     </property>
-    <property stdset="1">
-        <name>geometry</name>
+    <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
@@ -15,303 +12,238 @@
             <height>480</height>
         </rect>
     </property>
-    <property stdset="1">
-        <name>caption</name>
+    <property name="caption">
         <string>Form2</string>
     </property>
-    <widget>
-        <class>QTabWidget</class>
-        <property stdset="1">
-            <name>name</name>
+    <widget class="QTabWidget">
+        <property name="name">
             <cstring>TabWidget2</cstring>
         </property>
-        <property stdset="1">
-            <name>geometry</name>
+        <property name="geometry">
             <rect>
-                <x>10</x>
+                <x>11</x>
                 <y>10</y>
                 <width>522</width>
                 <height>292</height>
             </rect>
         </property>
-        <widget>
-            <class>QWidget</class>
-            <property stdset="1">
-                <name>name</name>
+        <widget class="QWidget">
+            <property name="name">
                 <cstring>tab</cstring>
             </property>
-            <attribute>
-                <name>title</name>
+            <attribute name="title">
                 <string>General</string>
             </attribute>
             <grid>
-                <property stdset="1">
-                    <name>margin</name>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
                     <number>11</number>
                 </property>
-                <property stdset="1">
-                    <name>spacing</name>
+                <property name="spacing">
                     <number>6</number>
                 </property>
-                <widget row="3"  column="0" >
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLabel" row="3" column="0">
+                    <property name="name">
                         <cstring>TextLabel1</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
+                    <property name="text">
                         <string>Handle conflict in addresses:</string>
                     </property>
-                    <property stdset="1">
-                        <name>alignment</name>
+                    <property name="alignment">
                         <set>AlignVCenter|AlignLeft</set>
                     </property>
-                    <property>
-                        <name>hAlign</name>
+                    <property name="hAlign" stdset="0">
                     </property>
                 </widget>
-                <widget row="3"  column="1"  rowspan="1"  colspan="2" >
-                    <class>QComboBox</class>
+                <widget class="QComboBox" row="3" column="1" rowspan="1" colspan="2">
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>User Choose</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Keep Both in Abbrowser</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>PDA Overrides</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Abbrowser Overrides</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Do Nothing</string>
                         </property>
                     </item>
-                    <property stdset="1">
-                        <name>name</name>
+                    <property name="name">
                         <cstring>ComboBox1</cstring>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;How to handle a situation where the pim's address book has conflicting information with the KDE's addressbook&lt;/qt&gt;</string>
                     </property>
                 </widget>
-                <widget row="5"  column="2" >
-                    <class>QComboBox</class>
+                <widget class="QComboBox" row="5" column="2">
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Home Address</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Business Address</string>
                         </property>
                     </item>
-                    <property stdset="1">
-                        <name>name</name>
+                    <property name="name">
                         <cstring>ComboBox8</cstring>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;What to map the pim's "Street Address" field to locally&lt;/qt&gt;</string>
                     </property>
                 </widget>
-                <widget row="4"  column="2" >
-                    <class>QComboBox</class>
+                <widget class="QComboBox" row="4" column="2">
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Other Phone</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Assistant</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Business Phone 2</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Business Fax</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Car Phone</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Email 2</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Home Fax</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Home Phone 2</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Telex</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>TTY/TTD Phone</string>
                         </property>
                     </item>
-                    <property stdset="1">
-                        <name>name</name>
+                    <property name="name">
                         <cstring>ComboBox3</cstring>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;What to map the pim's "Other" field to locally&lt;/qt&gt;</string>
                     </property>
                 </widget>
-                <widget row="4"  column="0"  rowspan="1"  colspan="2" >
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLabel" row="4" column="0" rowspan="1" colspan="2">
+                    <property name="name">
                         <cstring>TextLabel2</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>PDA "Other" -&gt; KAddressBook Phone</string>
+                    <property name="text">
+                        <string>PDA "Other" -&gt; KAddressBook phone:</string>
                     </property>
                 </widget>
-                <widget row="5"  column="0"  rowspan="1"  colspan="2" >
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLabel" row="5" column="0" rowspan="1" colspan="2">
+                    <property name="name">
                         <cstring>TextLabel4</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>PDA Street Address -&gt; KAddressBook Type</string>
+                    <property name="text">
+                        <string>PDA street address -&gt; KAddressBook type:</string>
                     </property>
                 </widget>
-                <widget row="6"  column="0"  rowspan="1"  colspan="2" >
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLabel" row="6" column="0" rowspan="1" colspan="2">
+                    <property name="name">
                         <cstring>TextLabel5</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>PDA Fax -&gt; KAddressBook Phone</string>
+                    <property name="text">
+                        <string>PDA fax -&gt; KAddressBook phone:</string>
                     </property>
                 </widget>
-                <widget row="6"  column="2" >
-                    <class>QComboBox</class>
+                <widget class="QComboBox" row="6" column="2">
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Home Fax</string>
                         </property>
                     </item>
                     <item>
-                        <property>
-                            <name>text</name>
+                        <property name="text">
                             <string>Business Fax</string>
                         </property>
                     </item>
-                    <property stdset="1">
-                        <name>name</name>
+                    <property name="name">
                         <cstring>ComboBox24</cstring>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;What to map the pim's "Fax" field to locally&lt;/qt&gt;</string>
                     </property>
                 </widget>
-                <widget row="1"  column="0"  rowspan="1"  colspan="3" >
-                    <class>QCheckBox</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="3">
+                    <property name="name">
                         <cstring>fCloseKab</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
+                    <property name="text">
                         <string>&amp;Close KAddressBook application if not already running</string>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;Close Kaddressbook if the conduit had to open it&lt;/qt&gt;</string>
                     </property>
                 </widget>
-                <widget row="2"  column="0"  rowspan="1"  colspan="3" >
-                    <class>QCheckBox</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="3">
+                    <property name="name">
                         <cstring>fSmartMerge</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
+                    <property name="text">
                         <string>&amp;Smartly merge new address by name or company</string>
                     </property>
-                    <property stdset="1">
-                        <name>checked</name>
+                    <property name="checked">
                         <bool>true</bool>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;Use key fields (like Name and Company) to merge address books&lt;/qt&gt;</string>
                     </property>
                 </widget>
-                <widget row="0"  column="0" >
-                    <class>QCheckBox</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QCheckBox" row="0" column="0">
+                    <property name="name">
                         <cstring>fFirstTimeSync</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>enabled</name>
+                    <property name="enabled">
                         <bool>false</bool>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
+                    <property name="text">
                         <string>&amp;First Time syncing</string>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
+                    <property name="whatsThis" stdset="0">
                         <string>Should be checked if your PDA has never been synced or backed up before</string>
                     </property>
                 </widget>
@@ -329,4 +261,5 @@
     <tabstop>ComboBox8</tabstop>
     <tabstop>ComboBox24</tabstop>
 </tabstops>
+<layoutdefaults spacing="6" margin="11"/>
 </UI>

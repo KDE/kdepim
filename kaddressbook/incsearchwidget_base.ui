@@ -30,7 +30,7 @@
                 <cstring>labelIncSearch</cstring>
             </property>
             <property name="text">
-                <string>Incremental Search:</string>
+                <string>Incremental search:</string>
             </property>
             <property name="alignment">
                 <set>AlignVCenter|AlignRight</set>
