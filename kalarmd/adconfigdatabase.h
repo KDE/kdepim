@@ -24,7 +24,7 @@
 #define ADCONFIGDATABASE_H
 
 #include "adcalendarbase.h"
-#include "calclient.h"
+#include "clientinfo.h"
 
 // Provides read-only access to the Alarm Daemon config data files
 class ADConfigDataBase

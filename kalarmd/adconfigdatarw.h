@@ -24,7 +24,7 @@
 
 #include <ksimpleconfig.h>
 
-#include "calclient.h"
+#include "clientinfo.h"
 #include "adcalendar.h"
 #include "adconfigdatabase.h"
 

@@ -32,7 +32,7 @@
 #include <libkcal/calendarlocal.h>
 
 #include "alarmguiiface.h"
-#include "calclient.h"
+#include "clientinfo.h"
 #include "adcalendar_gui.h"
 #include "adconfigdatabase.h"
 

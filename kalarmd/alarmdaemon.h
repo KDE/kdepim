@@ -28,7 +28,7 @@
 #include <libkcal/calendarlocal.h>
 
 #include "alarmdaemoniface.h"
-#include "calclient.h"
+#include "clientinfo.h"
 #include "adcalendar.h"
 #include "adconfigdatarw.h"
 
