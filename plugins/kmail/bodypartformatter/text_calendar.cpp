@@ -566,8 +566,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         setStatusOnMyself( incidence, myself, Attendee::Accepted, receiver );
         return mail( incidence, callback );
       } else {
-        ( new KMDeleteMsgCommand( callback.getMsg()->parent(), 
-                                  callback.getMsg() ) )->start();
+        ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
         return true;
       }
     }
@@ -591,8 +590,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         setStatusOnMyself( incidence, myself, Attendee::Tentative, receiver );
         return mail( incidence, callback );
       } else {
-        ( new KMDeleteMsgCommand( callback.getMsg()->parent(), 
-                                  callback.getMsg() ) )->start();
+        ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
         return true;
       }
 
@@ -614,8 +612,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         setStatusOnMyself( incidence, myself, Attendee::Declined, receiver );
         return mail( incidence, callback );
       } else {
-        ( new KMDeleteMsgCommand( callback.getMsg()->parent(), 
-                                  callback.getMsg() ) )->start();
+        ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
         return true;
       }
     }
@@ -623,7 +620,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool handleIgnore( const QString&, KMail::Callback& c ) const
     {
       // simply move the message to trash
-      ( new KMDeleteMsgCommand( c.getMsg()->parent(), c.getMsg() ) )->start();
+      ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
       return true;
     }
 
@@ -643,7 +640,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( path == "reply" || path == "cancel" )
         // These should just be saved with their type as the dir
         if ( saveFile( "Receiver Not Searched", iCal, path ) )
-          ( new KMDeleteMsgCommand( c.getMsg()->parent(), c.getMsg() ) )->start();
+          ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
 
       return false;
     }
