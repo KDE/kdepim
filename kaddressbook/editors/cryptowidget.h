@@ -31,6 +31,7 @@ class QComboBox;
 namespace Kleo {
   class KeyRequester;
 };
+class QCheckBox;
 
 class CryptoWidget : public KAB::ContactEditorWidget
 {
@@ -45,7 +46,8 @@ class CryptoWidget : public KAB::ContactEditorWidget
     void setReadOnly( bool readOnly );
 
   private:
-    QComboBox* mProtocol;
+    enum { NumberOfProtocols = 4 };
+    QCheckBox* mProtocolCB[NumberOfProtocols];
     QComboBox* mSignPref;
     QComboBox* mCryptPref;
     Kleo::KeyRequester* mPgpKey;

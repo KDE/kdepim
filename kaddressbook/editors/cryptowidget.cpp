@@ -21,10 +21,11 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "config.h" // ??
+#include <config.h>
 #include "certmanager/lib/ui/keyrequester.h"
 #include "certmanager/lib/cryptplugfactory.h"
 #include "certmanager/lib/cryptplugwrapper.h"
+#include "certmanager/lib/kleo/enum.h"
 
 #include "gpgmepp/data.h"
 #include "gpgmepp/key.h"
@@ -36,6 +37,7 @@
 
 #include <qlayout.h>
 #include <qlabel.h>
+#include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qpushbutton.h>
 #include <qvgroupbox.h>
@@ -67,16 +69,19 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   topLayout->setColStretch( 1, 1 );
   topLayout->setRowStretch( 4, 1 );
 
-  QLabel* l = new QLabel( i18n("Preferred protocol:"), this );
-  topLayout->addWidget( l,0,0 );
-  mProtocol = new QComboBox( false, this );
-  mProtocol->insertItem( i18n("Inline OpenPGP") );
-  mProtocol->insertItem( i18n("OpenPGP/MIME") );
-  mProtocol->insertItem( i18n("S/MIME") );
-  mProtocol->insertItem( i18n("S/MIME (opaque)") );
-  topLayout->addWidget( mProtocol,0,1 );
+  QVGroupBox* protGB = new QVGroupBox( i18n("Allowed protocols:"), this );
+  topLayout->addMultiCellWidget( protGB,0,0,0,1 );
 
-  l = new QLabel( i18n("Preferred OpenPGP encryption key:"), this );
+  uint msgFormat = 1;
+  for ( uint i = 0 ; i < NumberOfProtocols ; ++i ) {
+      Kleo::CryptoMessageFormat f = static_cast<Kleo::CryptoMessageFormat>( msgFormat );
+      mProtocolCB[i] = new QCheckBox( Kleo::cryptoMessageFormatToLabel( f ), protGB );
+      connect( mProtocolCB[i], SIGNAL( clicked() ), this, SLOT( setModified() ) );
+      // Iterating over a bitfield means *2 every time
+      msgFormat *= 2;
+  }
+
+  QLabel* l = new QLabel( i18n("Preferred OpenPGP encryption key:"), this );
   topLayout->addWidget( l,1,0 );
 
   mPgpKey =
@@ -119,7 +124,6 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   mCryptPref->insertItem( i18n("Never Encrypt") );
 
   // Emit "changed()" signal
-  connect( mProtocol, SIGNAL( activated(int) ), this, SLOT( setModified() ) );
   connect( mSignPref, SIGNAL( activated(int) ), this, SLOT( setModified() ) );
   connect( mCryptPref, SIGNAL( activated(int) ), this, SLOT( setModified() ) );
   // Not optimal, but KeyRequester doesn't emit any signals when the key changes
@@ -131,23 +135,6 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
 
 CryptoWidget::~CryptoWidget()
 {
-}
-
-static int proto_string_to_int( const QString& _str )
-{
-  QString str = _str.lower();
-  if( str == "openpgp(inline)" ) return 0;
-  if( str == "openpgp/mime" )    return 1;
-  if( str == "s/mime" )          return 2;
-  if( str == "s/mime(opaque)" )  return 3;
-  return 0; // default
-}
-
-static QString proto_int_to_string( int i )
-{
-  static const char* str[4] = { "openpgp(inline)", "openpgp/mime", "s/mime", "s/mime(opaque)" };
-  if( i >= 0 && i < 4 ) return QString::fromLatin1( str[i] );
-  else return QString::null;
 }
 
 // Keep in sync with certmanager/lib/kleo/enum.cpp
@@ -188,8 +175,15 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
   bool blocked = signalsBlocked();
   blockSignals( true );
 
-  mProtocol->setCurrentItem( proto_string_to_int(addr->custom( "KADDRESSBOOK",
-                                                               "CRYPTOPROTOPREF" )) );
+  QStringList lst = QStringList::split( ',', addr->custom( "KADDRESSBOOK",
+                                                           "CRYPTOPROTOPREF" ) );
+  uint cryptoFormats = Kleo::stringListToCryptoMessageFormats( lst );
+
+  uint msgFormat = 1;
+  for ( uint i = 0 ; i < NumberOfProtocols ; ++i, msgFormat *= 2 ) {
+      mProtocolCB[i]->setChecked( cryptoFormats & msgFormat );
+  }
+
   mSignPref->setCurrentItem( sign_pref_string_to_int(addr->custom( "KADDRESSBOOK",
                                                                    "CRYPTOSIGNPREF" )) );
   mCryptPref->setCurrentItem( encrypt_pref_string_to_int(addr->custom( "KADDRESSBOOK",
@@ -206,8 +200,15 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
 
 void CryptoWidget::storeContact( KABC::Addressee *addr )
 {
-  addr->insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF",
-                      proto_int_to_string(mProtocol->currentItem()) );
+  uint cryptoFormats = 0;
+  uint msgFormat = 1;
+  for ( uint i = 0 ; i < NumberOfProtocols ; ++i, msgFormat *= 2 ) {
+      if ( mProtocolCB[i]->isChecked() )
+          cryptoFormats |= msgFormat;
+  }
+  QStringList lst = Kleo::cryptoMessageFormatsToStringList(cryptoFormats);
+
+  addr->insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF", lst.join( "," ) );
   addr->insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF",
                       sign_pref_int_to_string(mSignPref->currentItem()) );
   addr->insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF",
@@ -233,7 +234,8 @@ void CryptoWidget::storeContact( KABC::Addressee *addr )
 void CryptoWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
-  mProtocol->setEnabled( !readOnly );
+  for ( uint i = 0 ; i < NumberOfProtocols ; ++i )
+      mProtocolCB[i]->setEnabled( !readOnly );
   mSignPref->setEnabled( !readOnly );
   mCryptPref->setEnabled( !readOnly );
   mPgpKey->setEnabled( !readOnly );
