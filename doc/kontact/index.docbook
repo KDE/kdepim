@@ -28,15 +28,22 @@
 <surname>Salazar</surname>
 <affiliation><address><email>savedfastcool@gmail.com</email></address></affiliation>
 </author>
+
+<author>
+<firstname>Daniel</firstname>
+<surname>Molkentin</surname>
+<affiliation><address><email>molkentin@kde.org</email></address></affiliation>
+</author>
 </authorgroup>
 
+
 <copyright>
-<year>2003</year><holder>Cornelius Schumacher</holder>
+<year>2003-2005</year><holder>Cornelius Schumacher</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2005-02-09</date>
+<date>2005-02-22</date>
 <releaseinfo>1.1</releaseinfo>
 
 <abstract><para>&kontact; is the integrated solution to your personal
@@ -166,6 +173,10 @@ Right-clicking on the side pane will give you the option to use Large,
 Normal, or Small icons, as well as the option to use text only
 instead of icons.</para>
 
+<para>If you dislike the sidebar, you can simply hide it by dragging the
+splitter. An alternative navigation between part is provided by the 
+<guilabel>navigator</guilabel> toolbar, which can be freely positioned.</para>
+
 </sect1>
 
 
@@ -197,7 +208,7 @@ time.</para>
 </screenshot>
 
 <para>In addition, there are two ways of overriding the component that &kontact;
-starts in. The first is as an argument to the Kontact program call
+starts in. The first is as an argument to the &kontact; program call
 (see <xref linkend="command-line"/>). The second is a setting in the
 &kontact; Settings dialog that will allow you to always start &kontact; in a 
 certain mode.</para>
@@ -290,7 +301,7 @@ object.</para>
 <sect1 id="side-pane-drag-and-drop">
 <title>Drag and Drop Functionality</title>
 
-<para>Kontact provides advanced drag and drop functionality between 
+<para>&kontact; provides advanced drag and drop functionality between 
 the programs it contains. Following is a brief description of each of
 the specific drag and drop operations that can be effected and the
 result of each.</para>
@@ -490,7 +501,7 @@ Rearranging &kontact;'s Summary View
 <sect1 id="main-config">
 <title>&kontact; Configuration Window</title>
 
-<para>When selecting the <guimenuitem>Configure Kontact</guimenuitem>
+<para>When selecting the <guimenuitem>Configure &kontact;</guimenuitem>
 action from the <guimenu>Settings</guimenu> menu, the &kontact;
 configuration dialog is shown. It provides a list of the
 configurations for all the active components of &kontact;. You can
@@ -887,7 +898,7 @@ documentation</ulink>.
 
 
 <chapter id="command-line">
-<title>Kontact On the Command Line</title>
+<title>&kontact; On the Command Line</title>
 
 <para>&kontact; has several command line arguments
 that can be used for certain actions.</para>
@@ -910,13 +921,13 @@ specific to it.</para>
 <sect2 id="command-line-module">
 <title>Module-related Arguments</title>
 
-<para>To get a list of available Kontact modules, you can type:</para>
+<para>To get a list of available &kontact; modules, you can type:</para>
 
 <para>
 <prompt>&percnt;</prompt> <command>kontact --list</command>
 </para>
 
-<para>Then, to start Kontact with a module active, type:</para>
+<para>Then, to start &kontact; with a module active, type:</para>
 
 <para>
 <prompt>&percnt;</prompt> <command>kontact --module <replaceable>moduleName</replaceable></command>
@@ -979,7 +990,7 @@ integrating. They did almost all the work.</para>
 </listitem>
 </itemizedlist>
 
-<para>Documentation copyright 2004</para>
+<para>Documentation copyright 2004-2005</para>
 
 <para>Contributors:
 
@@ -987,6 +998,8 @@ integrating. They did almost all the work.</para>
 <listitem><para>Cornelius Schumacher <email>schumacher@kde.org</email></para>
 </listitem>
 <listitem><para>Antonio Salazar <email>savedfastcool@gmail.com</email></para>
+</listitem>
+<listitem><para>Daniel Molkentin <email>molkentin@kde.org</email></para>
 </listitem>
 
 <listitem><para>All the members of the KDE documentation list who
