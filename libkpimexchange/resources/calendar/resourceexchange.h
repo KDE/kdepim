@@ -141,7 +141,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     /**
       Return list of all todos.
     */
-    QPtrList<Todo> rawTodos() const;
+    QPtrList<Todo> rawTodos();
     /**
       Returns list of todos due on the specified date.
     */
