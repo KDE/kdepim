@@ -186,24 +186,25 @@ void KABCore::restoreSettings()
   mActionDetails->setChecked( state );
   setDetailsVisible( state );
 
+  mViewManager->restoreSettings();
+  mExtensionManager->restoreSettings();
+
+  mIncSearchWidget->setCurrentItem( KABPrefs::instance()->mCurrentIncSearchField );
+
   QValueList<int> splitterSize = KABPrefs::instance()->mExtensionsSplitter;
   if ( splitterSize.count() == 0 ) {
-    splitterSize.append( mWidget->width() / 2 );
-    splitterSize.append( mWidget->width() / 2 );
+    splitterSize.append( mDetailsSplitter->height() / 2 );
+    splitterSize.append( mDetailsSplitter->height() / 2 );
   }
   mExtensionBarSplitter->setSizes( splitterSize );
 
   splitterSize = KABPrefs::instance()->mDetailsSplitter;
   if ( splitterSize.count() == 0 ) {
-    splitterSize.append( mWidget->height() / 2 );
-    splitterSize.append( mWidget->height() / 2 );
+    splitterSize.append( 360 );
+    splitterSize.append( 260 );
   }
   mDetailsSplitter->setSizes( splitterSize );
 
-  mViewManager->restoreSettings();
-  mExtensionManager->restoreSettings();
-
-  mIncSearchWidget->setCurrentItem( KABPrefs::instance()->mCurrentIncSearchField );
 }
 
 void KABCore::saveSettings()
