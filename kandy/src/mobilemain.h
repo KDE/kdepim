@@ -31,6 +31,8 @@
 #include <kapplication.h>
 #include <kmainwindow.h>
 
+#include "kandyprefs.h"
+
 class CommandScheduler;
 
 /**
@@ -48,22 +50,18 @@ class MobileMain : public KMainWindow
     /**
      * Default Constructor
      */
-    MobileMain(CommandScheduler *);
+    MobileMain(CommandScheduler *, KandyPrefs *prefs);
 
     /**
      * Default Destructor
      */
     virtual ~MobileMain();
 
-  public slots:
-    void setConnected(bool);
+    MobileGui *view() { return mView; };
 
   signals:
     void showTerminalWin();
     void showPreferencesWin();
-
-    void modemConnect();
-    void modemDisconnect();
 
   protected:
     /**
