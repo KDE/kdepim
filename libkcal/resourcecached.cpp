@@ -285,6 +285,8 @@ void ResourceCached::calendarIncidenceAdded( Incidence *i )
   if ( it == mAddedIncidences.end() ) {
     mAddedIncidences.insert( i, true );
   }
+
+  checkForAutomaticSave();
 }
 
 void ResourceCached::calendarIncidenceChanged( Incidence *i )
@@ -299,6 +301,8 @@ void ResourceCached::calendarIncidenceChanged( Incidence *i )
   if ( it == mChangedIncidences.end() ) {
     mChangedIncidences.insert( i, true );
   }
+
+  checkForAutomaticSave();
 }
 
 void ResourceCached::calendarIncidenceDeleted( Incidence *i )
@@ -313,6 +317,8 @@ void ResourceCached::calendarIncidenceDeleted( Incidence *i )
   if ( it == mDeletedIncidences.end() ) {
     mDeletedIncidences.insert( i, true );
   }
+
+  checkForAutomaticSave();
 }
 
 Incidence::List ResourceCached::addedIncidences() const
@@ -385,9 +391,12 @@ void ResourceCached::slotSave()
 void ResourceCached::checkForAutomaticSave()
 {
   if ( mSavePolicy == SaveAlways )  {
-    save();
+    kdDebug() << "ResourceCached::checkForAutomaticSave(): save now" << endl;
+    mSaveTimer.start( 1 * 1000, true ); // 1 second
   } else if ( mSavePolicy == SaveDelayed ) {
-    mSaveTimer.start( 60 * 1000, true ); // 1 minute
+    kdDebug() << "ResourceCached::checkForAutomaticSave(): save delayed"
+              << endl;
+    mSaveTimer.start( 15 * 1000, true ); // 15 seconds
   }
 }
 
