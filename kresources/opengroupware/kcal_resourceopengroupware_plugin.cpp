@@ -19,14 +19,14 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "kcal_resourcegroupware.h"
-#include "kcal_resourcegroupwareconfig.h"
+#include "kcal_resourceopengroupware.h"
+#include "kcal_resourceopengroupwareconfig.h"
 
 using namespace KCal;
 
 extern "C"
 {
-  void *init_kcal_groupware()
+  void *init_kcal_opengroupware()
   {
     return new KRES::PluginFactory< OpenGroupware,
                                     OpenGroupwareConfig >();
