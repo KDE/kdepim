@@ -23,8 +23,8 @@
 #======================================================================
 
 
-DESIGNDATA = $(top_srcdir)/design-data
-ICALSCRIPTS = $(top_srcdir)/scripts
+DESIGNDATA = $(top_srcdir)/libical/design-data
+ICALSCRIPTS = $(top_srcdir)/libical/scripts
 
 noinst_LTLIBRARIES = libical.la
 
@@ -32,9 +32,9 @@ AM_YFLAGS = -d -v -t -pical_yy
 AM_LFLAGS = -Pical_yy -olex.yy.c
 
 INCLUDES =			\
-	-I$(top_builddir)	\
-	-I$(top_srcdir)/src	\
-	-I$(top_builddir)/src	\
+	-I$(top_builddir)/libical	\
+	-I$(top_srcdir)/libical/src	\
+	-I$(top_builddir)/libical/src	\
 	-I$(srcdir)
 
 libical_la_LDFLAGS = -version-info 0:0:0

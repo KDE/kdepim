@@ -32,43 +32,5 @@ $(top_srcdir)/configure.files:
 
 MAINTAINERCLEANFILES = subdirs configure.in acinclude.m4 SUBDIRS
 
-cvs-local:
-	@echo "*** preparing libical" 
-	cp admin/libtool.m4.in libical/acinclude.m4 ;\
-	cp admin/config.sub admin/config.guess libical ;\
-	cp admin/install-sh admin/mkinstalldirs admin/missing admin/lt* libical ;\
-	cd  libical && \
-        $${ACLOCAL:-aclocal} && \
-        $${AUTOHEADER:-autoheader} && \
-        $${AUTOMAKE:-automake} && \
-        $${AUTOCONF:-autoconf}
-
-cvs-dist-local:
-	@cd  libical && $(AUTOMAKE) -i && $(AUTOCONF)
-
 include admin/Doxyfile.am
 
-apidox-am-toplevel-yes: apidox-am-toplevel-kdepim
-
-apidox-am-toplevel-kdepim: $(top_builddir)/apidocs/qt/qt.tag
-
-$(top_builddir)/apidocs/qt/qt.tag:
-	@qttag="`find $(DESTDIR)$(kde_htmldir)/en -type f -name qt.tag | head -1`" ; \
-	$(mkinstalldirs) $(top_builddir)/apidocs/qt; \
-	if test -n "$$qttag" ; then \
-		echo "*** Using global Qt tag file at $$qttag" ; \
-		cp $$qttag $(top_builddir)/apidocs/qt/qt.tag ; \
-	else \
-		echo "*** Creating a tag file for the Qt libraries:"; \
-		doxytag -t $(top_builddir)/apidocs/qt/qt.tag $(QTDOCDIR) ; \
-	fi
-
-install-data-local: install-apidox-kdepim
-
-## install the tag file for the Qt documentation
-install-apidox-kdepim:
-	if test -f $(top_builddir)/apidocs/qt/qt.tag; then \
-		$(mkinstalldirs) $(DESTDIR)$(kde_htmldir)/en/$(PACKAGE)-apidocs/qt ;\
-		echo $(INSTALL_DATA) $(top_builddir)/apidocs/qt/qt.tag $(DESTDIR)$(kde_htmldir)/en/$(PACKAGE)-apidocs/qt; \
-		$(INSTALL_DATA) $(top_builddir)/apidocs/qt/qt.tag $(DESTDIR)$(kde_htmldir)/en/$(PACKAGE)-apidocs/qt; \
-	fi

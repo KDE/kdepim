@@ -10,11 +10,11 @@ $(srcdir)/icalgauge.c: icalssyacc.h
 $(srcdir)/icalsslexer.c: icalssyacc.h 
 
 INCLUDES =			\
-	-I$(top_builddir)	\
-	-I$(top_srcdir)/src	\
-	-I$(top_builddir)/src	\
-	-I$(top_srcdir)/src/libical	\
-	-I$(top_builddir)/src/libical	\
+	-I$(top_builddir)/libical	\
+	-I$(top_srcdir)/libical/src	\
+	-I$(top_builddir)/libical/src	\
+	-I$(top_srcdir)/libical/src/libical	\
+	-I$(top_builddir)/libical/src/libical	\
 	-I$(srcdir)/libical
 
 libicalss_la_LDFLAGS = -version-info 0:0:0

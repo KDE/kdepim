@@ -3,7 +3,6 @@ AC_HEADER_DIRENT
 AC_HEADER_STDC
 AC_CHECK_HEADERS(fcntl.h sys/sysctl.h sys/param.h sys/time.h sys/types.h unistd.h)
 
-AC_CONFIG_SUBDIRS(libical)
 KDE_NEED_FLEX
 
 if test "$x_includes" != "NONE"; then
