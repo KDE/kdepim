@@ -64,10 +64,16 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
 {
   KABC::AddresseeList addrList;
 
-  // sanity checks
-  QFile file( QDir::homeDirPath() + QString::fromLatin1( "/.opera/contacts.adr" ) );
-  if ( !file.open( IO_ReadOnly ) )
+  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath() + QString::fromLatin1( "/.opera/contacts.adr" ) );
+  if ( fileName.isEmpty() )
     return addrList;
+
+  QFile file( fileName );
+  if ( !file.open( IO_ReadOnly ) ) {
+    QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>" );
+    KMessageBox::error( parentWidget(), msg.arg( fileName ) );
+    return addrList;
+  }
 
   QTextStream stream( &file );
   stream.setEncoding( QTextStream::UnicodeUTF8 );
@@ -86,8 +92,10 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
       continue;
     } else if ( line.isEmpty() ) {
       parseContact = false;
-      if ( !addr.isEmpty() )
+      if ( !addr.isEmpty() ) {
         addrList.append( addr );
+        addr = KABC::Addressee();
+      }
       continue;
     }
 
