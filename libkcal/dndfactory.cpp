@@ -43,27 +43,19 @@ DndFactory::DndFactory( Calendar *cal ) :
 {
 }
 
-ICalDrag *DndFactory::createDrag(Event *selectedEv, QWidget *owner)
+ICalDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
 {
   CalendarLocal cal;
   cal.setTimeZone( mCalendar->getTimeZoneStr() );
-  Event *ev = new Event( *selectedEv );
-  cal.addEvent(ev);
-  ICalDrag *icd = new ICalDrag(&cal, owner);
-  icd->setPixmap( BarIcon( "appointment" ) );
+  Incidence *i = incidence->clone();
+  cal.addIncidence( i );
 
-  return icd;
-}
-
-ICalDrag *DndFactory::createDragTodo(Todo *selectedEv, QWidget *owner)
-{
-  CalendarLocal cal;
-  cal.setTimeZone( mCalendar->getTimeZoneStr() );
-  Todo *ev = new Todo( *selectedEv );
-  cal.addTodo(ev);
-  ICalDrag *icd = new ICalDrag(&cal, owner);
-  icd->setPixmap( BarIcon( "todo" ) );
-
+  ICalDrag *icd = new ICalDrag( &cal, owner );
+  if ( i->type() == "Event" )
+    icd->setPixmap( BarIcon( "appointment" ) );
+  else if ( i->type() == "Todo" )
+    icd->setPixmap( BarIcon( "todo" ) );
+  
   return icd;
 }
 

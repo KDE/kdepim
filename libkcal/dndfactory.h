@@ -39,10 +39,11 @@ class DndFactory
   public:
     DndFactory( Calendar * );
 
-    /** create an object to be used with the Xdnd Drag And Drop protocol. */
-    ICalDrag *createDrag(Event *selectedEv, QWidget *owner);
-    /** create an object to be used with the Xdnd Drag And Drop protocol. */
-    ICalDrag *createDragTodo(Todo *selectedEv, QWidget *owner);
+    /**
+      Create a drag object.
+    */
+    ICalDrag *createDrag( Incidence *incidence, QWidget *owner );
+
     /** Create Todo object from drop event */
     Todo *createDropTodo(QDropEvent *de);
     /** Create Event object from drop event */
