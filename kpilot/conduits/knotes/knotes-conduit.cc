@@ -341,14 +341,6 @@ KNotesConduit::readConfig()
 #endif
 }
 
-// doSync should add a line to the logfile
-// with the indicated text, but the 
-// addSyncLogEntry() doesn't work (not
-// in any other conduit, either).
-//
-// Just print the message to error.
-//
-//
 void
 KNotesConduit::doSync()
 {
@@ -823,6 +815,9 @@ KNotesConduit::doTest()
 }
 
 // $Log$
+// Revision 1.12  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.11  2001/02/09 15:59:28  habenich
 // replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
 //
