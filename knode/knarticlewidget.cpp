@@ -1620,7 +1620,8 @@ void KNArticleWidget::slotPrint()
   kdDebug(5003) << "KNArticleWidget::slotPrint()" << endl;
   KPrinter *printer=new KPrinter();
 
-  if(printer->setup(this)) {
+  // FIXME: Add a better caption to the printingdialog
+  if(printer->setup(this, i18n("Print article"))) {
 
     QPaintDeviceMetrics metrics(printer);
     QPainter p;
