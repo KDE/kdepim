@@ -1528,7 +1528,7 @@ and enter your MAL server address, the <guilabel>User Name</guilabel> and
 <guilabel>Password</guilabel> you got while registering. The
 &AvantGo; server address is
 <userinput>sync.avantgo.com</userinput>, and its port is
-<userinput>80</userinput>. On some instalations, you should use the MobileLink
+<userinput>80</userinput>. On some installations, you should use the MobileLink
 instead of the AGConnect application on your &handheld;.
 </para>
 
@@ -1564,7 +1564,7 @@ page, you can set the proxy settings.
 <listitem><para>
 If you connect the internet directly, select <guilabel>No proxy</guilabel>,
 requiring no further configuration. But if you use a <guilabel>HTTP proxy</guilabel>
-or a <guilabel>SOCKS proxy</guilabel>, select it, to enebla the rest of the
+or a <guilabel>SOCKS proxy</guilabel>, select it, to enable the rest of the
 dialog and to make the conduit use it to connect the MAL server.
 </para></listitem>
 </varlistentry>
@@ -1587,7 +1587,7 @@ servers that do not need the use of a proxy, separated by commas. For instance,
 </para>
 <para>
 If your proxy require authentication, enter your <guilabel>User name</guilabel>
-and <guilabel>Password</guilabel> in the respecitve edit boxes.
+and <guilabel>Password</guilabel> in the respective edit boxes.
 </para>
 </listitem>
 </varlistentry>
