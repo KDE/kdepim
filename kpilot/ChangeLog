@@ -3,6 +3,23 @@ TODO LIST (Moved again to the file TODO)
 KPilot Developer's notes for June 15th, 2003
 ============================================
 
+2003-6-1  Adriaan de Groot
+* pilotComponent.cc Another fix for 52138 - I'd missed the category
+  drop-down box.
+* Woo. After months of wrestling, I actually managed to run KPilotTest
+  and list the contents of my m500. Sometimes, there is something
+  to be said for Linux and a working USB stack. This means I have
+  limited testing hardware available again. 
+
+2003-5-31  Adriaan de Groot
+* Updated my build environment to HEAD. This will leave some people
+  in the dust, for sure, since 4.4.0 will thus have an address conduit
+  that requires HEAD, not 3.1.x. Perhaps we can ship two tarballs,
+  but that's going to start to be messy again.
+* Talked to lioux about conduits and categories on IRC. It seems
+  that PC->Palm syncs usually respect categories and such, but Palm->PC
+  doesn't, among other little tidbits. He'll file bug reports.
+
 KPilot Developer's notes for May 30th, 2003
 ===========================================
 
