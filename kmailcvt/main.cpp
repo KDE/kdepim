@@ -40,9 +40,9 @@ int main(int argc, char *argv[])
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KApplication a;
-  Kmailcvt2 *kmailcvt2 = new Kmailcvt2();
-  a.setMainWidget(kmailcvt2);
-  kmailcvt2->show();  
+  KMailCVT *kmailcvt = new KMailCVT();
+  a.setMainWidget(kmailcvt);
+  kmailcvt->show();  
 
   DCOPClient *client=a.dcopClient();
   if (!client->attach()) {

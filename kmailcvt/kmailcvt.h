@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kmailcvt2.h  -  description
+                          kmailcvt.h  -  description
                              -------------------
     begin                : Wed Aug  2 11:23:04 CEST 2000
     copyright            : (C) 2000 by Hans Dijkema
@@ -32,11 +32,11 @@
 #include "kselfilterpage.h"
   
 /** KMailCVT is the base class of the project */
-class Kmailcvt2 : public KWizard {
+class KMailCVT : public KWizard {
 	Q_OBJECT
 public:
-	Kmailcvt2(QWidget* parent=0, const char *name=0);
-	~Kmailcvt2();
+	KMailCVT(QWidget* parent=0, const char *name=0);
+	~KMailCVT();
 
 	virtual void next();
 	virtual void back();

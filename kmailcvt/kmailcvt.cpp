@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kmailcvt2.cpp  -  description
+                          kmailcvt.cpp  -  description
                              -------------------
     begin                : Wed Aug  2 11:23:04 CEST 2000
     copyright            : (C) 2000 by Hans Dijkema
@@ -38,7 +38,7 @@
 #include "filter_eudora_ab.hxx"
 #include "filter_ldif.hxx"
 
-Kmailcvt2::Kmailcvt2(QWidget *parent, const char *name)
+KMailCVT::KMailCVT(QWidget *parent, const char *name)
 	: KWizard(parent, name, true) {
 
 	_parent = parent;
@@ -59,10 +59,10 @@ Kmailcvt2::Kmailcvt2(QWidget *parent, const char *name)
 	selfilterpage->addFilter(new FilterEudoraAb);
 }
 
-Kmailcvt2::~Kmailcvt2() {
+KMailCVT::~KMailCVT() {
 }
 
-void Kmailcvt2::next() {
+void KMailCVT::next() {
 	if(currentPage()==selfilterpage){
 		// Save selected filter
 		Filter *selectedFilter = selfilterpage->getSelectedFilter();
@@ -85,12 +85,12 @@ void Kmailcvt2::next() {
 	QWizard::next();
 }
 
-void Kmailcvt2::back() {
+void KMailCVT::back() {
 	QWizard::cancelButton()->setEnabled(true); // Re-enable cancel
 	QWizard::back();
 }
 
-void Kmailcvt2::help()
+void KMailCVT::help()
 {
 	KAboutData aboutData( "kmailcvt", I18N_NOOP("KMailCVT"),
 		KMAILCVT_VERSION, KMAILCVT, 
