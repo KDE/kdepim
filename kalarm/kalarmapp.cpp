@@ -732,7 +732,7 @@ void KAlarmApp::slotSettingsChanged()
 	if (newDisableIfStopped != mDisableAlarmsIfStopped)
 	{
 		mDisableAlarmsIfStopped = newDisableIfStopped;    // N.B. this setting is used by registerWithDaemon()
-		registerWithDaemon();     // re-register with the alarm daemon
+		registerWithDaemon(true);     // re-register with the alarm daemon
 	}
 
 	// Change alarm times for date-only alarms if the start of day time has changed
@@ -1328,7 +1328,7 @@ void KAlarmApp::startDaemon()
 	}
 
 	// Register this application with the alarm daemon
-	registerWithDaemon();
+	registerWithDaemon(false);
 
 	// Tell alarm daemon to load the calendar
 	{
@@ -1346,16 +1346,17 @@ void KAlarmApp::startDaemon()
 /******************************************************************************
 * Start the alarm daemon if necessary, and register this application with it.
 */
-void KAlarmApp::registerWithDaemon()
+void KAlarmApp::registerWithDaemon(bool reregister)
 {
-	kdDebug(5950) << "KAlarmApp::registerWithDaemon()\n";
+	kdDebug(5950) << (reregister ? "KAlarmApp::reregisterWithDaemon()" : "KAlarmApp::registerWithDaemon()") << endl;
 	QByteArray data;
 	QDataStream arg(data, IO_WriteOnly);
 	arg << QCString(aboutData()->appName()) << aboutData()->programName()
 	    << QCString(DCOP_OBJECT_NAME)
 	    << (int)(mDisableAlarmsIfStopped ? ClientInfo::NO_START_NOTIFY : ClientInfo::COMMAND_LINE_NOTIFY)
 	    << (Q_INT8)0;
-	if (!dcopClient()->send(DAEMON_APP_NAME, DAEMON_DCOP_OBJECT, "registerApp(QCString,QString,QCString,int,bool)", data))
+	const char* func = reregister ? "reregisterApp(QCString,QString,QCString,int,bool)" : "registerApp(QCString,QString,QCString,int,bool)";
+	if (!dcopClient()->send(DAEMON_APP_NAME, DAEMON_DCOP_OBJECT, func, data))
 		kdDebug(5950) << "KAlarmApp::registerWithDaemon(): registerApp dcop send failed" << endl;
 }
 
