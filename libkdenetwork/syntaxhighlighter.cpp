@@ -220,7 +220,11 @@ void DictSpellChecker::slotSpellReady( KSpell *spell )
 {
     connect( sDictionaryMonitor, SIGNAL( destroyed() ),
 	     this, SLOT( slotDictionaryChanged() ));
-    mSpell = spell;
+    if ( mSpell != spell )
+    {
+        delete spell;
+        mSpell = spell;
+    }
     QStringList l = SpellChecker::personalWords();
     for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
         mSpell->addPersonal( *it );
@@ -300,7 +304,7 @@ void DictSpellChecker::slotDictionaryChanged()
     mWordCount = 0;
     mErrorCount = 0;
     mAutoDict.clear();
-    new KSpell(0, i18n("Incremental Spellcheck"), this,
+    mSpell =  new KSpell(0, i18n("Incremental Spellcheck"), this,
 			 SLOT(slotSpellReady(KSpell*)));
 }
 
