@@ -71,6 +71,7 @@ class QLabel;
 
 namespace Kleo {
 
+  /// Base class for SigningKeyRequester and EncryptionKeyRequester
   class KeyRequester : public QWidget {
     Q_OBJECT
   public:
@@ -155,10 +156,19 @@ namespace Kleo {
   public:
     enum { OpenPGP = 1, SMIME = 2, AllProtocols = OpenPGP|SMIME };
 
+    /**
+     * Preferred constructor
+     */
     EncryptionKeyRequester( bool multipleKeys=false, unsigned int proto=AllProtocols,
 			    QWidget * parent=0, const char * name=0,
 			    bool onlyTrusted=true, bool onlyValid=true );
+    /**
+     * Constructor for Qt designer
+     */
+    EncryptionKeyRequester( QWidget * parent=0, const char * name=0 );
     ~EncryptionKeyRequester();
+
+    void setAllowedKeys( unsigned int proto, bool onlyTrusted=true, bool onlyValid=true );
 
   private:
     class Private;
@@ -173,10 +183,19 @@ namespace Kleo {
   public:
     enum { OpenPGP = 1, SMIME = 2, AllProtocols = OpenPGP|SMIME };
 
+    /**
+     * Preferred constructor
+     */
     SigningKeyRequester( bool multipleKeys=false, unsigned int proto=AllProtocols,
 			 QWidget * parent=0, const char * name=0,
 			 bool onlyTrusted=true, bool onlyValid=true );
+    /**
+     * Constructor for Qt designer
+     */
+    SigningKeyRequester( QWidget * parent=0, const char * name=0 );
     ~SigningKeyRequester();
+
+    void setAllowedKeys( unsigned int proto, bool onlyTrusted=true, bool onlyValid=true );
 
   private:
     class Private;

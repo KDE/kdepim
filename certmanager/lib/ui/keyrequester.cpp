@@ -119,21 +119,7 @@ Kleo::KeyRequester::KeyRequester( unsigned int allowedKeys, bool multipleKeys,
   setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
 			      QSizePolicy::Fixed ) );
 
-  if ( mKeyUsage & KeySelectionDialog::OpenPGPKeys )
-    mOpenPGPBackend = Kleo::CryptPlugFactory::instance()->openpgp();
-  if ( mKeyUsage & KeySelectionDialog::SMIMEKeys )
-    mSMIMEBackend = Kleo::CryptPlugFactory::instance()->smime();
-
-  if ( mOpenPGPBackend && !mSMIMEBackend ) {
-    mDialogCaption = i18n("OpenPGP Key Selection");
-    mDialogMessage = i18n("Please select an OpenPGP key to use.");
-  } else if ( !mOpenPGPBackend && mSMIMEBackend ) {
-    mDialogCaption = i18n("S/MIME Key Selection");
-    mDialogMessage = i18n("Please select an S/MIME key to use.");
-  } else {
-    mDialogCaption = i18n("Key Selection");
-    mDialogMessage = i18n("Please select an (OpenPGP or S/MIME) key to use.");
-  }
+  setAllowedKeys( mKeyUsage );
 }
 
 Kleo::KeyRequester::~KeyRequester() {
@@ -370,6 +356,22 @@ unsigned int Kleo::KeyRequester::allowedKeys() const {
 
 void Kleo::KeyRequester::setAllowedKeys( unsigned int keyUsage ) {
   mKeyUsage = keyUsage;
+
+  if ( mKeyUsage & KeySelectionDialog::OpenPGPKeys )
+    mOpenPGPBackend = Kleo::CryptPlugFactory::instance()->openpgp();
+  if ( mKeyUsage & KeySelectionDialog::SMIMEKeys )
+    mSMIMEBackend = Kleo::CryptPlugFactory::instance()->smime();
+
+  if ( mOpenPGPBackend && !mSMIMEBackend ) {
+    mDialogCaption = i18n("OpenPGP Key Selection");
+    mDialogMessage = i18n("Please select an OpenPGP key to use.");
+  } else if ( !mOpenPGPBackend && mSMIMEBackend ) {
+    mDialogCaption = i18n("S/MIME Key Selection");
+    mDialogMessage = i18n("Please select an S/MIME key to use.");
+  } else {
+    mDialogCaption = i18n("Key Selection");
+    mDialogMessage = i18n("Please select an (OpenPGP or S/MIME) key to use.");
+  }
 }
 
 QPushButton * Kleo::KeyRequester::dialogButton() {
@@ -413,6 +415,11 @@ Kleo::EncryptionKeyRequester::EncryptionKeyRequester( bool multi, unsigned int p
 Kleo::EncryptionKeyRequester::~EncryptionKeyRequester() {}
 
 
+void Kleo::EncryptionKeyRequester::setAllowedKeys( unsigned int proto, bool onlyTrusted, bool onlyValid )
+{
+  KeyRequester::setAllowedKeys( encryptionKeyUsage( proto & OpenPGP, proto & SMIME, onlyTrusted, onlyValid ) );
+}
+
 Kleo::SigningKeyRequester::SigningKeyRequester( bool multi, unsigned int proto,
 						QWidget * parent, const char * name,
 						bool onlyTrusted, bool onlyValid )
@@ -424,6 +431,10 @@ Kleo::SigningKeyRequester::SigningKeyRequester( bool multi, unsigned int proto,
 
 Kleo::SigningKeyRequester::~SigningKeyRequester() {}
 
+void Kleo::SigningKeyRequester::setAllowedKeys( unsigned int proto, bool onlyTrusted, bool onlyValid )
+{
+  KeyRequester::setAllowedKeys( signingKeyUsage( proto & OpenPGP, proto & SMIME, onlyTrusted, onlyValid ) );
+}
 
 void Kleo::KeyRequester::virtual_hook( int, void* ) {}
 void Kleo::EncryptionKeyRequester::virtual_hook( int id, void * data ) {
