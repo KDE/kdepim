@@ -1,0 +1,39 @@
+The KDE Mail Import tool - KMailCVT
+===================================
+
+This directory contains the sources for the kmailcvt program. It communicates
+with KMail via its DCOP interface to add messages.
+
+Writing a filter
+----------------
+
+...is very easy. Create two files filter_myformat.cxx and filter_myformat.hxx
+and add "filter_myformat.cxx" to the end of the kmailcvt_SOURCES line in
+Makefile.am and "filter_myformat.cxx filter_myformat.hxx" to the end of the
+EXTRA_DIST line in Makefile.am. Now run "make -f Makefile.cvs; ./configure" in
+your kdepim source directory.
+
+In the import method of your filter you are passed a FilterInfo object. This has
+the following methods that you may want to use:
+
+    void setFrom( const QString& from ); // Set to file importing from
+    void setTo( const QString& to ); // Set to folder importing into
+    void setCurrent( const QString& current ); // What we are doing
+    void setCurrent( int percent = 0 ); // Set percentage of current file
+    void setOverall( int percent = 0 ); // Set overall percentage
+    void addLog( const QString& log ); // Add a message for the user to see
+    void alert( const QString& message ); // Tell user something has gone wrong
+    QWidget *parent(); // The parent widget
+
+Also, every now and again you should check to see if the shouldTerminate method
+returns true, if it does the user has pressed cancel and your import method
+should return.
+
+To add messages, extract the email (including all headers) into a KTempFile.
+Then call the following inherited method:
+
+addMessage(info, folderName, tempfilepath);
+
+For a simple example, look at filter_plain
+
+                                                  Laurence Anderson, April 2003.
