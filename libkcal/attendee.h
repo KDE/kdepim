@@ -86,7 +86,6 @@ class Attendee : public Person
     /**
       Return unique id of the attendee.
     */
-    // FIXME: Do we use that?
     QString uid() const;
     /**
       Set unique id of attendee.

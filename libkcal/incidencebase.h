@@ -153,6 +153,10 @@ class IncidenceBase : public CustomProperties
     */
     Attendee *attendeeByMails( const QStringList &,
                                const QString &email = QString::null );
+    /**
+      Return attendee with given uid.
+    */
+    Attendee *attendeeByUid( const QString &uid );
 
     /**
       Pilot synchronization states

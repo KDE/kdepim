@@ -291,6 +291,16 @@ Attendee *IncidenceBase::attendeeByMails( const QStringList &emails,
   return 0;
 }
 
+Attendee *IncidenceBase::attendeeByUid( const QString &uid )
+{
+  Attendee::List::ConstIterator it;
+  for( it = mAttendees.begin(); it != mAttendees.end(); ++it ) {
+    if ( (*it)->uid() == uid ) return *it;
+  }
+
+  return 0;
+}
+
 void IncidenceBase::setDuration(int seconds)
 {
   mDuration = seconds;
