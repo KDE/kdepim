@@ -68,7 +68,7 @@ ContentLine::ContentLine(const ContentLine & x)
                 group_ (x.group_),
                 name_ (x.name_),
 		paramList_	(x.paramList_),
-		value_(x.value_)
+		value_(new Value(*(x.value_)))
 {
 }
 
@@ -84,7 +84,7 @@ ContentLine::operator = (ContentLine & x)
 	if (*this == x) return *this;
 	
 	paramList_ = x.paramList();
-	value_ = x.value_;
+	value_ = new Value(*(x.value_));
 
 	Entity::operator = (x);
 	return *this;
@@ -247,5 +247,6 @@ ContentLine::clear()
 	group_.truncate(0);
 	name_.truncate(0);
 	paramList_.clear();
+        delete value_;
 	value_ = 0;
 }
