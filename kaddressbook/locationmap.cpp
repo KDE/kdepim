@@ -74,7 +74,7 @@ QString LocationMap::createUrl( const KABC::Address &addr )
 
   QString urlTemplate = KABPrefs::instance()->mLocationMapURL.arg( KGlobal::locale()->country() );
   if ( urlTemplate.isEmpty() ) {
-    KMessageBox::error( 0, i18n( "No URL available for map lookup!\nPlease configure it in the configuration dialog." ) );
+    KMessageBox::error( 0, i18n( "No service provider available for map lookup!\nPlease add one in the configuration dialog." ) );
     return QString::null;
   }
 
