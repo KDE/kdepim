@@ -10,7 +10,7 @@ libknoteskolab_la_SOURCES = resourcekolab.cpp note.cpp
 libknoteskolab_la_LDFLAGS = $(all_libraries) -no-undefined
 libknoteskolab_la_LIBADD = -lkresources -lkdeprint \
 	$(top_builddir)/kresources/kolab/shared/libresourcekolabshared.la \
-	$(top_builddir)/knotes/libknote.la \
+	$(top_builddir)/knotes/libknotesresources.la \
 	$(top_builddir)/libkcal/libkcal.la
 
 kde_module_LTLIBRARIES = knotes_kolab.la
