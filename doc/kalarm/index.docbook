@@ -42,7 +42,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2004-08-27</date>
+<date>2004-09-25</date>
 <releaseinfo>1.02.00</releaseinfo>
 
 <abstract>
@@ -198,7 +198,7 @@ action.</para>
 <title>Creating a new alarm</title>
 
 <para>To create a new alarm, do one of the following. This displays
-the <link linkend="alarm-edit-dialog">alarm edit dialog</link> through
+the <link linkend="alarm-edit-dlg">alarm edit dialog</link> through
 which you configure the alarm.</para>
 
 <itemizedlist>
@@ -306,7 +306,7 @@ context menu.</para>
 </listitem>
 </itemizedlist>
 
-<para>This displays the <link linkend="alarm-edit-dialog">alarm edit
+<para>This displays the <link linkend="alarm-edit-dlg">alarm edit
 dialog</link>.</para>
 
 </sect2>
@@ -443,7 +443,7 @@ prevent accidental deletions.</para>
 <title>Template edit dialog</title>
 
 <para>The template edit dialog is similar to the
-<link linkend="alarm-edit-dialog">alarm edit dialog</link>. The
+<link linkend="alarm-edit-dlg">alarm edit dialog</link>. The
 following controls are different:</para>
 
 <itemizedlist>
@@ -521,14 +521,14 @@ defined in the <guilabel>Alarm Text</guilabel> group box.</para>
 <listitem>
 <para>The remaining controls are the same as for
 <guilabel>Text</guilabel> alarms in the
-<link linkend="alarm-edit-dialog">Alarm Edit dialog</link>.</para>
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link>.</para>
 </listitem>
 </itemizedlist>
 
 </sect2>
 </sect1>
 
-<sect1 id="alarm-edit-dialog">
+<sect1 id="alarm-edit-dlg">
 <title>The alarm edit dialog</title>
 
 <para>The alarm edit dialog enables you to view and edit an
@@ -590,8 +590,16 @@ silence but still want to display the alarm.)</para>
 control if you want to adjust the volume at which the audio file is
 played.</para>
 
+<note><para>When possible, &kmix; is used to set the volume. This
+ensures that the volume at which the alarm is played is unaffected by
+any changes in the computer's sound level. If &kmix; is not available
+(or is older than &kde; 3.1), the volume is set relative to the sound
+level current at the time the alarm triggers. So in this case, the
+volume at which the alarm is played will vary depending on any changes
+in the computer's sound level.</para></note>
+
 <tip><para>You can use the <guibutton>Try</guibutton> button to test out
-the resultant sound level.</para></tip>
+the selected sound level.</para></tip>
 </listitem>
 </itemizedlist>
 </listitem>
@@ -993,7 +1001,7 @@ reminder message time, and the window title is
 <para>Alarm message windows remain visible until you acknowledge them,
 unless <guilabel>Auto-close window after late-cancelation
 time</guilabel> was checked in the <link
-linkend="alarm-edit-dialog">Alarm Edit dialog</link>. In the case of a
+linkend="alarm-edit-dlg">Alarm Edit dialog</link>. In the case of a
 recurring alarm, if an unacknowledged message window remains from a
 previous occurrence of the alarm, the existing window is simply popped
 up when the alarm recurs. This avoids having to acknowledge multiple
@@ -1114,7 +1122,7 @@ for details.</para>
 <term><menuchoice><guimenuitem>New Alarm...</guimenuitem></menuchoice></term>
 <listitem><para><action>Opens the alarm edit dialog to create a
 new alarm.</action></para>
-<para>See <link linkend="alarm-edit-dialog">The alarm edit dialog</link>
+<para>See <link linkend="alarm-edit-dlg">The alarm edit dialog</link>
 for details.</para>
 </listitem>
 </varlistentry>
@@ -1772,7 +1780,7 @@ expired alarms.</para>
 
 <para>The <guilabel>Edit</guilabel> section lets you choose
 default values for the options in the
-<link linkend="alarm-edit-dialog">alarm edit dialog</link>:</para>
+<link linkend="alarm-edit-dlg">alarm edit dialog</link>:</para>
 <itemizedlist>
 
 <listitem><para>Set the text color used to show expired alarms in the
