@@ -53,6 +53,7 @@ class ADConfigDataBase
     ADCalendarBase*   getCalendar(const QString& calendarURL);
     static QString    expandURL(const QString& urlString);
     const QString&    clientDataFile() const  { return mClientDataFile; }
+    static const QDateTime& baseDateTime();
 
     static const QCString CLIENT_KEY;
     static const QString CLIENTS_KEY;

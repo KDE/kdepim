@@ -40,17 +40,19 @@ class ADCalendarBase : public CalendarLocal
     ADCalendarBase(const QString& url, const QCString& appname, Type);
     ~ADCalendarBase()  { }
 
-    const QString&  urlString() const   { return urlString_; }
-    const QCString&  appName() const     { return appName_; }
-    bool            loaded() const      { return loaded_; }
-    Type            actionType() const  { return actionType_; }
+    const QString&   urlString() const   { return mUrlString; }
+    const QCString&  appName() const     { return mAppName; }
+    int              rcIndex() const     { return mRcIndex; }
+    const QDateTime& lastCheck() const   { return mLastCheck; }
+    bool             loaded() const      { return mLoaded; }
+    Type             actionType() const  { return mActionType; }
 
     virtual void setEnabled( bool ) = 0;
-    virtual bool enabled() const = 0;   
+    virtual bool enabled() const = 0;
 
     virtual void setAvailable( bool ) = 0;
     virtual bool available() const = 0;
-  
+
     // client has registered since calendar was
     // constructed, but has not since added the
     // calendar. Monitoring is disabled.
@@ -59,11 +61,11 @@ class ADCalendarBase : public CalendarLocal
 
     virtual bool loadFile() = 0;
 
+    void         setRcIndex(int i)                  { mRcIndex = i; }
+    void         setLastCheck(const QDateTime& dt)  { mLastCheck = dt; }
+
     virtual void setEventHandled(const Event*, const QValueList<QDateTime> &) = 0;
     virtual bool eventHandled(const Event*, const QValueList<QDateTime> &) = 0;
-
-    virtual void setEventPending(const QString& ID) = 0;
-    virtual bool getEventPending(QString& ID) = 0;
 
     void dump() const;
 
@@ -80,22 +82,23 @@ class ADCalendarBase : public CalendarLocal
       EventItem() : eventSequence(0) { }
       EventItem(const QString& url, int seqno, const QValueList<QDateTime>& alarmtimes)
         : calendarURL(url), eventSequence(seqno), alarmTimes(alarmtimes) {}
-      
+
       QString   calendarURL;
       int       eventSequence;
       QValueList<QDateTime> alarmTimes;
     };
-    
+
     typedef QMap<QString, EventItem>  EventsMap;   // event ID, calendar URL/event sequence num
     static EventsMap  eventsHandled_; // IDs of displayed KALARM type events
 
   private:
-    QString           urlString_;     // calendar file URL
-    QCString          appName_;       // name of application owning this calendar
-    Type              actionType_;    // action to take on event
-    bool              loaded_;        // true if calendar file is currently loaded
-
-    bool mUnregistered;
+    QString           mUrlString;     // calendar file URL
+    QCString          mAppName;       // name of application owning this calendar
+    Type              mActionType;    // action to take on event
+    QDateTime         mLastCheck;     // time at which calendar was last checked for alarms
+    int               mRcIndex;       // index within 'clients' RC file for this calendar's entry
+    bool              mLoaded;        // true if calendar file is currently loaded
+    bool              mUnregistered;  // client has registered, but has not since added the calendar
 };
 
 typedef QPtrList<ADCalendarBase> CalendarList;
@@ -103,8 +106,7 @@ typedef QPtrList<ADCalendarBase> CalendarList;
 class ADCalendarBaseFactory
 {
   public:
-    virtual ADCalendarBase *create(const QString& url, const QCString& appname,
-                                   ADCalendarBase::Type) = 0;
+    virtual ADCalendarBase *create(const QString& url, const QCString& appname, ADCalendarBase::Type) = 0;
 };
 
 

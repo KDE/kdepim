@@ -140,8 +140,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
       QCString dcopObject = clientConfig.readEntry(CLIENT_DCOP_OBJECT_KEY).local8Bit();
       int      type       = clientConfig.readNumEntry(CLIENT_NOTIFICATION_KEY, 0);
       bool displayCalName = clientConfig.readBoolEntry(CLIENT_DISP_CAL_KEY, true);
-      info = ClientInfo( client, title, dcopObject, type, displayCalName,
-                         sessionStarting );
+      info = ClientInfo( client, title, dcopObject, type, displayCalName, sessionStarting );
       mClients.append( info );
 
       // Get the client's calendar files
@@ -154,14 +153,28 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
         {
           kdDebug(5900) << "ADConfigDataBase::readConfigData(): " << it.key() << "=" << it.data() << endl;
           bool ok;
-          it.key().mid(len).toInt(&ok);
+          int rcIndex = it.key().mid(len).toInt(&ok);
           if (ok)
           {
             // The config file key is CalendarN, so open the calendar file
-            int comma = it.data().find(',');
-            if (comma >= 0)
+            int comma1 = it.data().find(',');
+            if (comma1 >= 0)
             {
-              QString calname = it.data().mid(comma + 1);
+              QDateTime dateTime;    // default to invalid
+              int comma2 = it.data().find(',', comma1 + 1);
+              if (comma2 < 0)
+              {
+                // It's in the old format:  CalendarN=type,calendar
+                comma2 = comma1;
+              }
+              else
+              {
+                // It's in the format:  calendarN=type,[datetime],calendar
+                int secs = it.data().mid(comma1 + 1, comma2 - comma1 - 1).toInt(&ok);
+                if (ok)
+                  dateTime = baseDateTime().addSecs(secs);
+              }
+              QString calname = it.data().mid(comma2 + 1);
               if ( !calname.isEmpty() ) {
                 ADCalendarBase* cal = getCalendar(calname);
                 if (cal)
@@ -175,7 +188,9 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
                 {
                   // Add the calendar to the client's list
                   cal = calFactory->create(calname, client,
-                               static_cast<ADCalendarBase::Type>(it.data().left(comma).toInt()));
+                               static_cast<ADCalendarBase::Type>(it.data().left(comma1).toInt()));
+                  cal->setRcIndex(rcIndex);
+                  cal->setLastCheck(dateTime);
                   mCalendars.append(cal);
                   kdDebug(5900) << "ADConfigDataBase::readConfigData(): calendar " << cal->urlString() << endl;
                 }
@@ -218,7 +233,7 @@ void ADConfigDataBase::deleteConfigCalendar(const ADCalendarBase*)
 }
 
 /* Return the ClientInfo structure for the specified client application */
-ClientInfo ADConfigDataBase::getClientInfo(const QCString& appName) 
+ClientInfo ADConfigDataBase::getClientInfo(const QCString& appName)
 {
   ClientList::Iterator it;
   for( it = mClients.begin(); it != mClients.end(); ++it ) {
@@ -263,4 +278,10 @@ QString ADConfigDataBase::expandURL(const QString& urlString)
   if (urlString.isEmpty())
     return QString();
   return KURL(urlString).url();
+}
+
+const QDateTime& ADConfigDataBase::baseDateTime()
+{
+  static const QDateTime bdt(QDate(1970,1,1), QTime(0,0,0));
+  return bdt;
 }

@@ -92,10 +92,9 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void        reloadCal_(ADCalendarBase*);
     void        resetMsgCal_(const QCString& appname, const QString& urlString);
     void        removeCal_(const QString& urlString);
-    void        checkAlarms(ADCalendarBase*, const QDateTime &from, const QDateTime &to);
+    bool        checkAlarms(ADCalendarBase*);
     void        checkAlarms(const QCString& appName);
     void        checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes);
-    void        notifyPendingEvents(const QCString& appname);
     bool        notifyEvent(ADCalendarBase*, const QString& eventID);
     void        notifyGuiCalStatus(const ADCalendarBase*);
     void        notifyGui(AlarmGuiChangeType, const QString& calendarURL = QString::null);
@@ -112,7 +111,6 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     QTimer*           mSessionStartTimer;   // timer waiting for session startup to complete
     QString           mClientDataFile;      // path of file containing client data
     int               mCheckInterval;       // alarm check interval (minutes)
-    QDateTime         mLastCheck;           // last time at which alarms were checked
     bool              mEnabled;             // true if the alarm daemon is enabled
     bool              mAlarmTimerSyncing;   // true while alarm timer interval < 1 minute
     bool              mSessionStarted;      // true once session startup is complete

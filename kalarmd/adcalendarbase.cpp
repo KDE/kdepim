@@ -33,13 +33,14 @@
 ADCalendarBase::EventsMap ADCalendarBase::eventsHandled_;
 
 ADCalendarBase::ADCalendarBase(const QString& url, const QCString& appname, Type type)
-  : urlString_(url),
-    appName_(appname),
-    actionType_(type),
-    loaded_(false),
+  : mUrlString(url),
+    mAppName(appname),
+    mActionType(type),
+    mRcIndex(-1),
+    mLoaded(false),
     mUnregistered(false)
 {
-  if (appName_ == "korgac")
+  if (mAppName == "korgac")
   {
     KConfig cfg( locate( "config", "korganizerrc" ) );
     cfg.setGroup( "Time & Date" );
@@ -54,22 +55,22 @@ ADCalendarBase::ADCalendarBase(const QString& url, const QCString& appname, Type
  */
 bool ADCalendarBase::loadFile_(const QCString& appName)
 {
-  loaded_ = false;
-  KURL url(urlString_);
+  mLoaded = false;
+  KURL url(mUrlString);
   QString tmpFile;
   if (KIO::NetAccess::download(url, tmpFile))
   {
     kdDebug(5900) << "--- Downloaded to " << tmpFile << endl;
-    loaded_ = load(tmpFile);
+    mLoaded = load(tmpFile);
     KIO::NetAccess::removeTempFile(tmpFile);
-    if (!loaded_)
+    if (!mLoaded)
       kdDebug(5900) << "ADCalendarBase::loadFile_(): Error loading calendar file '" << tmpFile << "'\n";
     else
     {
       // Remove all now non-existent events from the handled list
       for (EventsMap::Iterator it = eventsHandled_.begin();  it != eventsHandled_.end();  )
       {
-        if (it.data().calendarURL == urlString_  &&  !event(it.key()))
+        if (it.data().calendarURL == mUrlString  &&  !event(it.key()))
         {
           // Event belonged to this calendar, but can't find it any more
           EventsMap::Iterator i = it;
@@ -87,7 +88,7 @@ bool ADCalendarBase::loadFile_(const QCString& appName)
                            .arg(url.prettyURL()), appName);
 #endif
   }
-  return loaded_;
+  return mLoaded;
 }
 
 void ADCalendarBase::dump() const
@@ -100,5 +101,5 @@ void ADCalendarBase::dump() const
   if (enabled() ) kdDebug(5900) << "    <enabled/>" << endl;
   else kdDebug(5900) << "    <disabled/>" << endl;
   if (available()) kdDebug(5900) << "    <available/>" << endl;
-  kdDebug(5900) << "  </calendar>" << endl;  
+  kdDebug(5900) << "  </calendar>" << endl;
 }

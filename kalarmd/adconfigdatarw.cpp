@@ -106,7 +106,10 @@ void ADConfigDataRW::writeConfigClient(const QCString& appName, const ClientInfo
   for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
   {
     if (cal->appName() == appName)
-      clientConfig.writeEntry(CLIENT_CALENDAR_KEY + QString::number(++i), QString("%1,").arg(cal->actionType()) + cal->urlString());
+    {
+      cal->setRcIndex(++i);
+      writeConfigCalendar(cal, clientConfig);
+    }
   }
 }
 
@@ -147,7 +150,7 @@ void ADConfigDataRW::addConfigClient(KSimpleConfig& clientConfig, const QCString
 }
 
 // Add a calendar file URL to the client data file for a specified application.
-void ADConfigDataRW::writeConfigCalendar(const QCString& appName, const ADCalendarBase* cal)
+void ADConfigDataRW::addConfigCalendar(const QCString& appName, ADCalendarBase* cal)
 {
   KSimpleConfig clientConfig(clientDataFile());
   QString groupKey = CLIENT_KEY + appName;
@@ -159,10 +162,34 @@ void ADConfigDataRW::writeConfigCalendar(const QCString& appName, const ADCalend
     if (entries.find(key) == entries.end())
     {
       // This calendar index is unused, so use it for the new calendar
-      clientConfig.setGroup(groupKey);
-      clientConfig.writeEntry(key, QString("%1,").arg(cal->actionType()) + cal->urlString());
+      cal->setRcIndex(i);
+      writeConfigCalendar(cal, clientConfig);
       return;
     }
+  }
+}
+
+// Update a calendar file entry in the client data file.
+void ADConfigDataRW::writeConfigCalendar(const ADCalendarBase* cal)
+{
+  if (cal->rcIndex() > 0)
+  {
+    KSimpleConfig clientConfig(clientDataFile());
+    writeConfigCalendar(cal, clientConfig);
+  }
+}
+
+// Update a calendar file entry in the client data file.
+void ADConfigDataRW::writeConfigCalendar(const ADCalendarBase* cal, KSimpleConfig& clientConfig)
+{
+  if (cal->rcIndex() > 0)
+  {
+    clientConfig.setGroup(CLIENT_KEY + cal->appName());
+    QString dt;
+    if (cal->lastCheck().isValid())
+      dt = QString::number(baseDateTime().secsTo(cal->lastCheck()));
+    clientConfig.writeEntry(CLIENT_CALENDAR_KEY + QString::number(cal->rcIndex()),
+                            QString("%1,%2,%3").arg(cal->actionType()).arg(dt).arg(cal->urlString()));
   }
 }
 
@@ -193,4 +220,13 @@ void ADConfigDataRW::deleteConfigCalendar(const ADCalendarBase* cal)
       }
     }
   }
+}
+
+/*
+ * Flush changes in the client data file to disc.
+ */
+void ADConfigDataRW::sync()
+{
+  KSimpleConfig clientConfig(clientDataFile());
+  clientConfig.sync();
 }

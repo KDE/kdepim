@@ -79,10 +79,6 @@ AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
 
   // set up the alarm timer
   mAlarmTimer = new QTimer(this);
-  KConfig* config = kapp->config();
-  config->setGroup("General");
-  QDateTime dt;
-  mLastCheck = config->readDateTimeEntry("Last Check", &dt);  
   setTimerStatus();
   checkAlarms();
 }
@@ -154,14 +150,14 @@ void AlarmDaemon::addCal_(const QCString& appname, const QString& urlString, boo
   cal = new ADCalendar(urlString, appname, (msgCal ? ADCalendar::KALARM : ADCalendar::KORGANIZER));
   mCalendars.append(cal);
 
-  writeConfigCalendar(appname, cal);
+  addConfigCalendar(appname, cal);
 
   if (cal->loaded())
     notifyGui((msgCal ? ADD_MSG_CALENDAR : ADD_CALENDAR), cal->urlString(), appname);
   kdDebug(5900) << "AlarmDaemon::addCal_(): calendar added" << endl;
 
   setTimerStatus();
-//  checkAlarms(cal);
+  checkAlarms(cal);
 }
 
 /*
@@ -218,7 +214,7 @@ void AlarmDaemon::resetMsgCal_(const QCString& appname, const QString& urlString
     ADCalendar::clearEventsHandled(urlString);
     ADCalendarBase* cal = getCalendar(urlString);
     if (cal)
-      checkAlarms(cal, QDateTime(), QDateTime::currentDateTime());
+      checkAlarms(cal);
   }
 }
 
@@ -266,7 +262,8 @@ void AlarmDaemon::registerApp(const QCString& appName, const QString& appTitle,
         }
         removeClientInfo(appName);
       }
-      ClientInfo cinfo(appName, appTitle, dcopObject, notificationType, displayCalendarName);
+      ClientInfo cinfo(appName, appTitle, dcopObject, notificationType,
+                        displayCalendarName);
       mClients.append(cinfo);
 
       writeConfigClient(appName, cinfo);
@@ -274,7 +271,6 @@ void AlarmDaemon::registerApp(const QCString& appName, const QString& appTitle,
       enableAutoStart(true);
       notifyGui(CHANGE_CLIENT);
       setTimerStatus();
-      checkAlarms(appName);
     }
   }
 }
@@ -355,17 +351,9 @@ void AlarmDaemon::checkAlarms()
 
   if ( !mEnabled ) return;
 
-  QDateTime now = QDateTime::currentDateTime();
-
-  ADCalendarBase *cal;
-  for( cal = mCalendars.first(); cal; cal = mCalendars.next() ) {
-    checkAlarms( cal, mLastCheck.addSecs( 1 ), now );
+  for( ADCalendarBase *cal = mCalendars.first(); cal; cal = mCalendars.next() ) {
+    checkAlarms( cal );
   }
-
-  mLastCheck = now;
-  KConfig* config = kapp->config();
-  config->setGroup("General");
-  config->writeEntry("Last Check", mLastCheck);
 }
 
 /*
@@ -376,43 +364,54 @@ void AlarmDaemon::checkAlarms(const QCString& appName)
 {
   if ( !mEnabled ) return;
 
-  QDateTime now = QDateTime::currentDateTime();
-
-  for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
-  {
-    if (cal->appName() == appName)
-      checkAlarms( cal, mLastCheck.addSecs( 1 ), now );
+  for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next()) {
+    if (cal->appName() == appName) {
+      checkAlarms( cal );
+    }
   }
 }
 
 /*
  * Check if any alarms are pending for a specified calendar, and
  * display the pending alarms.
- * Reply = true if there were any KORGANIZER type alarms.
+ * Reply = true if the calendar check time was updated.
  */
-void AlarmDaemon::checkAlarms( ADCalendarBase* cal, const QDateTime &from, const QDateTime &to)
+bool AlarmDaemon::checkAlarms( ADCalendarBase* cal )
 {
-  kdDebug(5901) << "AlarmDaemons::checkAlarms(): '" << cal->urlString() << "'" << endl;
+  kdDebug(5901) << "AlarmDaemons::checkAlarms(" << cal->urlString() << ")" << endl;
 
-  if ( !mEnabled  ||  !cal->loaded()  ||  !cal->enabled() ) return;
+  if ( !mEnabled  ||  !cal->loaded()  ||  !cal->enabled() )
+    return false;
+
+  QDateTime to = QDateTime::currentDateTime();
 
   QPtrList<Event> alarmEvents;
   QValueList<Alarm*> alarms;
   QValueList<Alarm*>::ConstIterator it;
   switch ( cal->actionType() ) {
-    case ADCalendar::KORGANIZER:
+    case ADCalendar::KORGANIZER: {
+      QDateTime from = cal->lastCheck().addSecs(1);
       kdDebug(5901) << "  From: " << from.toString() << "  To: " << to.toString() << endl;
+
+      bool pending = false;
       alarms = cal->alarms( from, to );
       for ( it = alarms.begin();  it != alarms.end();  ++it ) {
         kdDebug(5901) << "AlarmDaemon::checkAlarms(): KORGANIZER event "
                       << (*it)->parent()->uid() << endl;
         if (!notifyEvent(cal, (*it)->parent()->uid()))
-          cal->setEventPending((*it)->parent()->uid());
+          pending = true;
+      }
+
+      if (!pending) {
+        cal->setLastCheck(to);
+        writeConfigCalendar(cal);
+        return true;
       }
       break;
-
+    }
     case ADCalendar::KALARM:
-      alarms = cal->alarmsTo( QDateTime::currentDateTime() );
+      kdDebug(5901) << "  To: " << to.toString() << endl;
+      alarms = cal->alarmsTo( to );
       if (alarms.count()) {
         kdDebug(5901) << "Kalarm alarms=" << alarms.count() << endl;
         for ( it = alarms.begin(); it != alarms.end(); ++it ) {
@@ -426,13 +425,15 @@ void AlarmDaemon::checkAlarms( ADCalendarBase* cal, const QDateTime &from, const
               if (notifyEvent(cal, eventID))
                 cal->setEventHandled(event, alarmtimes);
               else
-                cal->setEventPending(eventID);
+                ;  // don't need to store last check time for this calendar type
             }
           }
         }
       }
       break;
   }
+
+  return false;
 }
 
 /*
@@ -468,113 +469,86 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
       kdDebug(5900) << "AlarmDaemon::notifyEvent(): unknown client" << endl;
       return false;
     }
-    else
+    if (client.waitForRegistration)
     {
-      if (client.waitForRegistration)
-      {
-        // Don't start the client application if the session manager is still
-        // starting the session, since if we start the client before the
-        // session manager does, a KUniqueApplication client will not then be
-        // able to restore its session.
-        // And don't contact a client which was started by the login session
-        // until it's ready to handle DCOP calls.
-        kdDebug(5900) << "AlarmDaemon::notifyEvent(): wait for session startup" << endl;
+      // Don't start the client application if the session manager is still
+      // starting the session, since if we start the client before the
+      // session manager does, a KUniqueApplication client will not then be
+      // able to restore its session.
+      // And don't contact a client which was started by the login session
+      // until it's ready to handle DCOP calls.
+      kdDebug(5900) << "AlarmDaemon::notifyEvent(): wait for session startup" << endl;
+      return false;
+    }
+
+    if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(calendar->appName())))
+    {
+      // The client application is not running
+      if (client.notificationType == ClientInfo::NO_START_NOTIFY
+      ||  client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY) {
+        kdDebug(5900) << "AlarmDaemon::notifyEvent(): don't start client\n";
         return false;
       }
 
-      if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(calendar->appName())))
+      // Start the client application
+      QString execStr = locate("exe", calendar->appName());
+      if (execStr.isEmpty()) {
+        kdDebug(5900) << "AlarmDaemon::notifyEvent(): '"
+                      << calendar->appName() << "' not found" << endl;
+        return true;
+      }
+      if (client.notificationType == ClientInfo::COMMAND_LINE_NOTIFY)
       {
-        // The client application is not running
-        if (client.notificationType == ClientInfo::NO_START_NOTIFY
-        ||  client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY) {
-          kdDebug(5900) << "AlarmDaemon::notifyEvent(): don't start client\n";
-          return false;
-        }
-
-        // Start the client application
-        QString execStr = locate("exe", calendar->appName());
-        if (execStr.isEmpty())
-        {
-          kdDebug(5900) << "AlarmDaemon::notifyEvent(): '"
-                        << calendar->appName() << "' not found" << endl;
-          return true;
-        }
-        if (client.notificationType == ClientInfo::COMMAND_LINE_NOTIFY)
-        {
-          // Use the command line to tell the client about the alarm
-          execStr += " --handleEvent ";
-          execStr += eventID;
-          execStr += " --calendarURL ";
-          execStr += calendar->urlString();
-          system(QFile::encodeName(execStr));
-          kdDebug(5900) << "AlarmDaemon::notifyEvent(): used command line" << endl;
-          return true;
-        }
+        // Use the command line to tell the client about the alarm
+        execStr += " --handleEvent ";
+        execStr += eventID;
+        execStr += " --calendarURL ";
+        execStr += calendar->urlString();
         system(QFile::encodeName(execStr));
-        kdDebug(5900) << "AlarmDaemon::notifyEvent(): started "
-                      << QFile::encodeName(execStr) << endl;
+        kdDebug(5900) << "AlarmDaemon::notifyEvent(): used command line" << endl;
+        return true;
+      }
+      system(QFile::encodeName(execStr));
+      kdDebug(5900) << "AlarmDaemon::notifyEvent(): started "
+                    << QFile::encodeName(execStr) << endl;
+    }
+
+    if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY)
+    {
+      Incidence *incidence = calendar->event( eventID );
+      if (!incidence) {
+        incidence = calendar->todo( eventID );
+        if(!incidence) {
+          kdDebug(5900) << "AlarmDaemon::notifyEvent(): null incidence\n";
+          return true;
+        }
       }
 
-      if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY)
-      {
-        Incidence *incidence = calendar->event( eventID );
-        if (!incidence) {
-          incidence = calendar->todo( eventID );
-          if(!incidence) {
-            kdDebug(5900) << "AlarmDaemon::notifyEvent(): null incidence\n";
-            return false;
-          }
-        }
+      kdDebug() << "--- DCOP send: handleEvent(): " << incidence->summary() << endl;
 
-        kdDebug() << "--- DCOP send: handleEvent(): " << incidence->summary() << endl;
+      CalendarLocal cal;
+      cal.addIncidence( incidence->clone() );
 
-        CalendarLocal cal;
-        cal.addIncidence( incidence->clone() );
+      ICalFormat format;
 
-        ICalFormat format;
-
-        AlarmGuiIface_stub stub( calendar->appName(), client.dcopObject );
-        stub.handleEvent( format.toString( &cal ) );
-        if ( !stub.ok() ) {
-          kdDebug(5900) << "AlarmDaemon::notifyEvent(): dcop send failed" << endl;
-          return false;
-        }
+      AlarmGuiIface_stub stub( calendar->appName(), client.dcopObject );
+      stub.handleEvent( format.toString( &cal ) );
+      if ( !stub.ok() ) {
+        kdDebug(5900) << "AlarmDaemon::notifyEvent(): dcop send failed" << endl;
+        return false;
       }
-      else
-      {
-        AlarmGuiIface_stub stub( calendar->appName(), client.dcopObject );
-        stub.handleEvent( calendar->urlString(), eventID );
-        if ( !stub.ok() ) {
-          kdDebug(5900) << "AlarmDaemon::notifyEvent(): dcop send failed" << endl;
-          return false;
-        }
+    }
+    else
+    {
+      AlarmGuiIface_stub stub( calendar->appName(), client.dcopObject );
+      stub.handleEvent( calendar->urlString(), eventID );
+      if ( !stub.ok() ) {
+        kdDebug(5900) << "AlarmDaemon::notifyEvent(): dcop send failed" << endl;
+        return false;
       }
     }
   }
   return true;
-}
-
-/* Notify the specified client of any pending alarms */
-void AlarmDaemon::notifyPendingEvents(const QCString& appname)
-{
-  kdDebug(5900) << "AlarmDaemon::notifyPendingEvents(" << appname
-                << ")" << endl;
-  for (ADCalendarBase* cal = mCalendars.first(); cal; cal = mCalendars.next())
-  {
-    if (cal->appName() == appname )
-//        && cal->actionType() == ADCalendar::KALARM)
-    {
-      QString eventID;
-      while (cal->getEventPending(eventID))
-      {
-        notifyEvent(cal, eventID);
-        const Event* event = cal->event(eventID);
-        QValueList<QDateTime> alarmtimes;
-        checkEventAlarms(*event, alarmtimes);
-        cal->setEventHandled(event, alarmtimes);
-      }
-    }
-  }
 }
 
 /*
@@ -596,10 +570,8 @@ void AlarmDaemon::checkIfSessionStarted()
     // Notify clients which are not yet running of pending alarms
     for (ClientList::Iterator client = mClients.begin();  client != mClients.end();  ++client)
     {
-      if (kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>((*client).appName)))
-      {
+      if (kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>((*client).appName))) {
         (*client).waitForRegistration = false;
-        notifyPendingEvents((*client).appName);
       }
     }
 
