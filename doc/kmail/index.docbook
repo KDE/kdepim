@@ -26,7 +26,7 @@
 </author>
 </authorgroup>
 
-<date>02/02/2001</date>
+<date>04/02/2001</date>
 <releaseinfo>1.2</releaseinfo>
 
 <copyright>
@@ -1233,10 +1233,13 @@ add them here so &kmail; will recognize (and optionally replace) them.</para>
 <sect2 id="composertab-charset">
 <title>Charset</title>
 
-<para>This section lets you choose the default charset for your own
-messages. In the composer you can still change the charset with
-<menuchoice><guimenu>Options</guimenu><guimenuitem>Set 
-Encoding</guimenuitem></menuchoice>. If you select <guilabel>Use own
+<para>In the <guilabel>Available charsets</guilabel> section you can manage
+the charsets available for your own messages. The charsets in this list
+appear in the composer's <menuchoice><guimenu>Options</guimenu><guimenuitem>Set 
+Encoding</guimenuitem></menuchoice> menu.</para>
+
+<para>The <guilabel>Default charset</guilabel> section lets you choose the
+default charset for your own messages. If you select <guilabel>Use own
 default charset when replying or forwarding</guilabel>, the original message's
 charset will be ignored and your charset will be used for replying and
 forwarding.</para>
