@@ -190,8 +190,12 @@ class ResourceCalendar : public KRES::Resource
     /**
      This signal is emitted when a subresource is added.
     */
-    void signalSubresourceAdded( ResourceCalendar *, const QString &,
-                                 const QString & );
+    void signalSubresourceAdded( ResourceCalendar *, const QString& type,
+                                 const QString& subresource, const QString& label );
+
+    // FIXME proko2: merge once we are back in HEAD by porting imap resource
+    void signalSubresourceAdded( ResourceCalendar *, const QString& type,
+                                 const QString& subresource );
 
     /**
      This signal is emitted when a subresource is removed.

@@ -567,6 +567,7 @@ void ResourceKolab::fromKMailRefresh( const QString& type,
 
 void ResourceKolab::fromKMailAddSubresource( const QString& type,
                                              const QString& subResource,
+                                             const QString& label,
                                              bool writable )
 {
   ResourceMap* map = 0;
@@ -592,9 +593,9 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
   config.setGroup( subResource );
 
   bool active = config.readBoolEntry( subResource, true );
-  (*map)[ subResource ] = Kolab::SubResource( active, writable, subResource );
+  (*map)[ subResource ] = Kolab::SubResource( active, writable, label );
   loadSubResource( subResource, mimetype );
-  emit signalSubresourceAdded( this, type, subResource );
+  emit signalSubresourceAdded( this, type, subResource, label );
 }
 
 void ResourceKolab::fromKMailDelSubresource( const QString& type,

@@ -98,8 +98,8 @@ bool KMailConnection::connectToKMail()
     if ( !connectKMailSignal( "signalRefresh(QString,QString)",
                               "fromKMailRefresh(QString,QString)" ) )
       kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
-    if ( !connectKMailSignal( "subresourceAdded(QString,QString)",
-                              "fromKMailAddSubresource(QString,QString)" ) )
+    if ( !connectKMailSignal( "subresourceAdded( QString, QString, QString )",
+                              "fromKMailAddSubresource( QString, QString, QString )" ) )
       kdError(5650) << "DCOP connection to subresourceAdded failed" << endl;
     if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
                               "fromKMailDelSubresource(QString,QString)" ) )
@@ -142,7 +142,8 @@ void KMailConnection::fromKMailRefresh( const QString& type, const QString& fold
 }
 
 void KMailConnection::fromKMailAddSubresource( const QString& type,
-                                               const QString& resource )
+                                               const QString& resource,
+                                               const QString& label )
 {
 //   kdDebug(5650) << "KMailConnection::fromKMailAddSubresource( " << type << ", "
 //                 << resource << " )\n";
@@ -152,7 +153,7 @@ void KMailConnection::fromKMailAddSubresource( const QString& type,
   if ( connectToKMail() )
     writable = mKMailIcalIfaceStub->isWritableFolder( type, resource );
 
-  mResource->fromKMailAddSubresource( type, resource, writable );
+  mResource->fromKMailAddSubresource( type, resource, label, writable );
 }
 
 void KMailConnection::fromKMailDelSubresource( const QString& type,

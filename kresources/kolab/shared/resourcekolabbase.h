@@ -88,6 +88,7 @@ public:
                                  const QString& resource ) = 0;
   virtual void fromKMailAddSubresource( const QString& type,
                                         const QString& resource,
+                                        const QString& label, 
                                         bool writable ) = 0;
   virtual void fromKMailDelSubresource( const QString& type,
                                         const QString& resource ) = 0;
