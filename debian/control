@@ -10,7 +10,7 @@ Standards-Version: 3.6.1.0
 Package: kdepim
 Section: kde
 Architecture: all
-Depends: kaddressbook (>= ${Source-Version}), kalarm (>= ${Source-Version}), kandy (>= ${Source-Version}), karm (>= ${Source-Version}), kdepim-kfile-plugins (>= ${Source-Version}), kdepim-kio-plugins (>= ${Source-Version}), kdepim-wizards (>= ${Source-Version}), kitchensync (>= ${Source-Version}), kleopatra (>= ${Source-Version}), kmail (>= ${Source-Version}), kmailcvt (>= ${Source-Version}), knode (>= ${Source-Version}), knotes (>= ${Source-Version}), konsolekalendar (>= ${Source-Version}), kontact (>= ${Source-Version}), korganizer (>= ${Source-Version}), korn (>= ${Source-Version}), kpilot (>= ${Source-Version}), ksync (>= ${Source-Version}), ktnef (>= ${Source-Version}), libkcal2 (>= ${Source-Version}), libkdenetwork2 (>= ${Source-Version}), libkdepim1 (>= ${Source-Version}), libkgantt0 (>= ${Source-Version}), libkleopatra0 (>= ${Source-Version}), libkpimexchange1 (>= ${Source-Version}), libkpimidentities1 (>= ${Source-Version}), libksieve0 (>= ${Source-Version}), libmimelib1 (>= ${Source-Version})
+Depends: kaddressbook (>= ${Source-Version}), kalarm (>= ${Source-Version}), kandy (>= ${Source-Version}), karm (>= ${Source-Version}), kdepim-kfile-plugins (>= ${Source-Version}), kdepim-kio-plugins (>= ${Source-Version}), kdepim-wizards (>= ${Source-Version}), kitchensync (>= ${Source-Version}), kleopatra (>= ${Source-Version}), kmail (>= ${Source-Version}), kmailcvt (>= ${Source-Version}), knode (>= ${Source-Version}), knotes (>= ${Source-Version}), konsolekalendar (>= ${Source-Version}), kontact (>= ${Source-Version}), korganizer (>= ${Source-Version}), korn (>= ${Source-Version}), kpilot (>= ${Source-Version}), ksync (>= ${Source-Version}), ktnef (>= ${Source-Version}), libkcal2 (>= ${Source-Version}), libkdepim1 (>= ${Source-Version}), libkgantt0 (>= ${Source-Version}), libkleopatra0 (>= ${Source-Version}), libkpimexchange1 (>= ${Source-Version}), libkpimidentities1 (>= ${Source-Version}), libksieve0 (>= ${Source-Version}), libmimelib1 (>= ${Source-Version})
 Suggests: kdepim-doc-html
 Description: KDE Personal Information Management metapackage
  kdepim is a collection of Personal Information Management (PIM) tools for the
@@ -22,7 +22,7 @@ Description: KDE Personal Information Management metapackage
 Package: kdepim-dev
 Section: devel
 Architecture: any
-Depends: kaddressbook (= ${Source-Version}), kalarm (= ${Source-Version}), kdepim-wizards (= ${Source-Version}), kmail (= ${Source-Version}), knode (= ${Source-Version}), knotes (= ${Source-Version}), kontact (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), ksync (= ${Source-Version}), ktnef (= ${Source-Version}), libkdenetwork2 (= ${Source-Version}), libkdepim1 (= ${Source-Version}), libkpimidentities1 (= ${Source-Version})
+Depends: kaddressbook (= ${Source-Version}), kalarm (= ${Source-Version}), kdepim-wizards (= ${Source-Version}), kmail (= ${Source-Version}), knode (= ${Source-Version}), knotes (= ${Source-Version}), kontact (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), ksync (= ${Source-Version}), ktnef (= ${Source-Version}), libkdepim1 (= ${Source-Version}), libkpimidentities1 (= ${Source-Version})
 Conflicts: libkdenetwork1 (<< 4:3.0.0), libkdenetwork2-dev (<< 4:3.2.0)
 Replaces: kmail (<< 4:3.2.0), knotes (<< 4:3.0.0), korganizer (<< 4:3.2.0), libkdenetwork1 (<< 4:3.0.0), libkdenetwork2-dev (<< 4:3.2.0)
 Description: KDE Personal Information Management [development]
@@ -335,16 +335,6 @@ Description: KDE calendaring library [development]
  .
  This is the development package which contains the headers for the libkcal
  library.
- .
- This package is part of the official KDE pim module.
-
-Package: libkdenetwork2
-Section: libs
-Architecture: any
-Depends: ${shlibs:Depends}, ${perl:Depends}
-Replaces: kgpgcertmanager (<< 4:3.2.0), kmail (<< 4:3.2.0), knode (<< 4:3.2.0)
-Description: KDE Network library
- This is the runtime package for programs that use the libkdenetwork library.
  .
  This package is part of the official KDE pim module.
 
