@@ -349,7 +349,7 @@ void AddresseeEditorWidget::setupTab2()
                                                      KIcon::SizeMedium ) );
   layout->addMultiCellWidget( label, 4, 5, 0, 0 );
   
-  label = new QLabel( i18n( "Nick name:" ), tab2 );
+  label = new QLabel( i18n( "Nickname:" ), tab2 );
   layout->addWidget( label, 4, 1 );
   mNicknameEdit = new KLineEdit( tab2 );
   connect( mNicknameEdit, SIGNAL( textChanged( const QString& ) ),
