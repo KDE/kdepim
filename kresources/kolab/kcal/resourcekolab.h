@@ -90,16 +90,16 @@ public:
 
 
   /// The ResourceKolabBase methods called by KMail
-  bool fromKMailAddIncidence( const QString& type, const QString& resource,
+  bool fromKMailAddIncidence( const QString& type, const QString& subResource,
                               Q_UINT32 sernum, const QString& xml );
-  void fromKMailDelIncidence( const QString& type, const QString& resource,
+  void fromKMailDelIncidence( const QString& type, const QString& subResource,
                               const QString& uid );
-  void slotRefresh( const QString& type, const QString& resource );
+  void slotRefresh( const QString& type, const QString& subResource );
 
   /// Listen to KMail changes in the amount of sub resources
-  void fromKMailAddSubresource( const QString& type, const QString& resource,
+  void fromKMailAddSubresource( const QString& type, const QString& subResource,
                                 bool writable );
-  void fromKMailDelSubresource( const QString& type, const QString& resource );
+  void fromKMailDelSubresource( const QString& type, const QString& subResource );
 
   /** Return the list of subresources. */
   QStringList subresources() const;
@@ -136,23 +136,21 @@ private:
 
   bool doLoadAll( ResourceMap& map, const char* mimetype );
 
-  /// Reimplemented from IncidenceBase::Observer to know when a note was changed
+  /// Reimplemented from IncidenceBase::Observer to know when an incidence was changed
   void incidenceUpdated( KCal::IncidenceBase* );
-
-  bool addNote( KCal::Journal* journal, const QString& resource,
-                Q_UINT32 sernum );
-  KCal::Journal* addNote( const QString& xml, const QString& subresource,
-                          Q_UINT32 sernum );
 
   bool openResource( KConfig& config, const char* contentType,
                      ResourceMap& map );
   void loadSubResourceConfig( KConfig& config, const QString& name,
                               bool writable, ResourceMap& subResource );
-  bool loadSubResource( const QString& resource, const char* mimetype );
+  bool loadSubResource( const QString& subResource, const char* mimetype );
 
   QString configFile() const {
     return ResourceKolabBase::configFile( "kcal" );
   }
+
+  ResourceMap* subResourceMap( const QString& contentsType );
+
 
   KCal::CalendarLocal mCalendar;
 

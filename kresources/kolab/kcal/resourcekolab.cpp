@@ -205,9 +205,58 @@ bool ResourceKolab::doSave()
   return true;
 }
 
-void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* )
+void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  QString type = incidencebase->type();
+  if ( type == "Event" ) type = "Calendar";
+  else if ( type == "Todo" ) type = "Task";
+  else if ( type != "Journal" ) return;
+
+  incidencebase->setSyncStatus( KCal::Event::SYNCMOD );
+  incidencebase->setLastModified( QDateTime::currentDateTime() );
+  // we should probably update the revision number here,
+  // or internally in the Event itself when certain things change.
+  // need to verify with ical documentation.
+
+  const QString uid = incidencebase->uid();
+  Q_ASSERT( mUidMap.contains( uid ) );
+
+  QString subResource;
+  Q_UINT32 sernum;
+  if ( mUidMap.contains( uid ) ) {
+    subResource = mUidMap[ uid ].resource();
+    sernum = mUidMap[ uid ].serialNumber();
+  } else { // just in case this code gets called from addFoo too.
+    ResourceMap* map = subResourceMap( type );
+    if ( !map )
+      return;
+    subResource = findWritableResource( *map );
+    sernum = 0;
+  }
+
+  const char* mimetype = 0;
+  QString xml;
+  if ( type == "Calendar" ) {
+    mimetype = eventAttachmentMimeType;
+    xml = Event::eventToXML( static_cast<KCal::Event *>(incidencebase) );
+  } else if ( type == "Task" ) {
+    mimetype = todoAttachmentMimeType;
+    xml = Task::taskToXML( static_cast<KCal::Todo *>(incidencebase) );
+  } else if ( type == "Journal" ) {
+    mimetype = journalAttachmentMimeType;
+    xml = Journal::journalToXML( static_cast<KCal::Journal *>(incidencebase ) );
+  } else {
+    kdWarning(5006) << "Can't happen: unhandled type=" << type << endl;
+  }
+
+  kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
+
+  if( !kmailUpdate( subResource, sernum, xml, mimetype, uid ) ) {
+    kdError(5500) << "Communication problem in ResourceKolab::incidenceUpdated()\n";
+    return;
+  }
+  if ( !subResource.isEmpty() && sernum != 0 )
+    mUidMap[ uid ] = StorageReference( subResource, sernum );
 }
 
 void ResourceKolab::addIncidence( const char* mimetype, const QString& xml,
@@ -237,32 +286,32 @@ void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
     addEvent( event, subresource, sernum );
 }
 
-bool ResourceKolab::addEvent( KCal::Event* event, const QString& subresource,
+bool ResourceKolab::addEvent( KCal::Event* event, const QString& _subresource,
                               Q_UINT32 sernum )
 {
   event->registerObserver( this );
 
   // Find out if this event was previously stored in KMail
-  bool newEvent = subresource.isEmpty();
+  bool newEvent = _subresource.isEmpty();
   mCalendar.addEvent( event );
 
-  QString resource =
-    newEvent ? findWritableResource( mEventSubResources ) : subresource;
-  Q_ASSERT( !resource.isEmpty() );
+  QString subResource =
+    newEvent ? findWritableResource( mEventSubResources ) : _subresource;
+  Q_ASSERT( !subResource.isEmpty() );
 
   if ( !mSilent ) {
     QString xml = Event::eventToXML( event );
     kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
 
-    if( !kmailUpdate( resource, sernum, xml, eventAttachmentMimeType,
+    if( !kmailUpdate( subResource, sernum, xml, eventAttachmentMimeType,
                       event->uid() ) ) {
       kdError(5500) << "Communication problem in ResourceKolab::addEvent()\n";
       return false;
     }
   }
 
-  if ( !resource.isEmpty() && sernum != 0 ) {
-    mUidMap[ event->uid() ] = StorageReference( resource, sernum );
+  if ( !subResource.isEmpty() && sernum != 0 ) {
+    mUidMap[ event->uid() ] = StorageReference( subResource, sernum );
     return true;
   }
 
@@ -322,32 +371,32 @@ void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
     addTodo( todo, subresource, sernum );
 }
 
-bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& subresource,
+bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& _subresource,
                              Q_UINT32 sernum )
 {
   todo->registerObserver( this );
 
   // Find out if this todo was previously stored in KMail
-  bool newTodo = subresource.isEmpty();
+  bool newTodo = _subresource.isEmpty();
   mCalendar.addTodo( todo );
 
-  QString resource =
-    newTodo ? findWritableResource( mTodoSubResources ) : subresource;
-  Q_ASSERT( !resource.isEmpty() );
+  QString subResource =
+    newTodo ? findWritableResource( mTodoSubResources ) : _subresource;
+  Q_ASSERT( !subResource.isEmpty() );
 
   if ( !mSilent ) {
     QString xml = Task::taskToXML( todo );
     kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
 
-    if( !kmailUpdate( resource, sernum, xml, todoAttachmentMimeType,
+    if( !kmailUpdate( subResource, sernum, xml, todoAttachmentMimeType,
                       todo->uid() ) ) {
       kdError(5500) << "Communication problem in ResourceKolab::addTodo()\n";
       return false;
     }
   }
 
-  if ( !resource.isEmpty() && sernum != 0 ) {
-    mUidMap[ todo->uid() ] = StorageReference( resource, sernum );
+  if ( !subResource.isEmpty() && sernum != 0 ) {
+    mUidMap[ todo->uid() ] = StorageReference( subResource, sernum );
     return true;
   }
 
@@ -395,31 +444,31 @@ void ResourceKolab::addJournal( const QString& xml, const QString& subresource,
 }
 
 bool ResourceKolab::addJournal( KCal::Journal* journal,
-                                const QString& subresource, Q_UINT32 sernum )
+                                const QString& _subresource, Q_UINT32 sernum )
 {
   journal->registerObserver( this );
 
   // Find out if this journal was previously stored in KMail
-  bool newJournal = subresource.isEmpty();
+  bool newJournal = _subresource.isEmpty();
   mCalendar.addJournal( journal );
 
-  QString resource =
-    newJournal ? findWritableResource( mJournalSubResources ) : subresource;
-  Q_ASSERT( !resource.isEmpty() );
+  QString subResource =
+    newJournal ? findWritableResource( mJournalSubResources ) : _subresource;
+  Q_ASSERT( !subResource.isEmpty() );
 
   if ( !mSilent ) {
     QString xml = Journal::journalToXML( journal );
     kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
 
-    if( !kmailUpdate( resource, sernum, xml, journalAttachmentMimeType,
+    if( !kmailUpdate( subResource, sernum, xml, journalAttachmentMimeType,
                       journal->uid() ) ) {
       kdError(5500) << "Communication problem in ResourceKolab::addJournal()\n";
       return false;
     }
   }
 
-  if ( !resource.isEmpty() && sernum != 0 ) {
-    mUidMap[ journal->uid() ] = StorageReference( resource, sernum );
+  if ( !subResource.isEmpty() && sernum != 0 ) {
+    mUidMap[ journal->uid() ] = StorageReference( subResource, sernum );
     return true;
   }
 
@@ -510,7 +559,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
 void ResourceKolab::slotRefresh( const QString& type,
                                  const QString& /*subResource*/ )
 {
-  // TODO: Only load the specified resource
+  // TODO: Only load the specified subResource
   if ( type == "Calendar" )
     loadAllEvents();
   else if ( type == "Task" )
@@ -554,26 +603,13 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
 void ResourceKolab::fromKMailDelSubresource( const QString& type,
                                              const QString& subResource )
 {
-  if ( type == kmailCalendarContentsType ) {
-    if ( mEventSubResources.contains( subResource ) )
-      mEventSubResources.erase( subResource );
-    else
-      // Not registered
-      return;
-  } else if ( type == kmailTodoContentsType ) {
-    if ( mTodoSubResources.contains( subResource ) )
-      mTodoSubResources.erase( subResource );
-    else
-      // Not registered
-      return;
-  } else if ( type == kmailJournalContentsType ) {
-    if ( mJournalSubResources.contains( subResource ) )
-      mJournalSubResources.erase( subResource );
-    else
-      // Not registered
-      return;
-  } else
-    // Not ours
+  ResourceMap* map = subResourceMap( type );
+  if ( !map ) // not ours
+    return;
+  if ( map->contains( subResource ) )
+    map->erase( subResource );
+  else
+    // Not registered
     return;
 
   // Delete from the config file
@@ -636,5 +672,18 @@ KABC::Lock* ResourceKolab::lock()
   return new KABC::LockNull( true );
 }
 
+
+ResourceMap* Kolab::ResourceKolab::subResourceMap( const QString& contentsType )
+{
+  if ( contentsType == kmailCalendarContentsType ) {
+    return &mEventSubResources;
+  } else if ( contentsType == kmailTodoContentsType ) {
+    return &mTodoSubResources;
+  } else if ( contentsType == kmailJournalContentsType ) {
+    return &mJournalSubResources;
+  }
+  // Not ours
+  return 0;
+}
 
 #include "resourcekolab.moc"
