@@ -56,7 +56,7 @@ namespace OpieHelper {
         KCal::Todo* dom2todo( QDomElement, ExtraMap&, const QStringList& );
         QString todo2String( KCal::Todo*, ExtraMap&  );
     };
-};
+}
 
 
 #endif

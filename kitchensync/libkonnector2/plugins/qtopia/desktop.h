@@ -34,6 +34,6 @@ namespace OpieHelper {
         ~Desktop();
         KSync::OpieDesktopSyncee* toSyncee( const QString& );
     };
-};
+}
 
 #endif

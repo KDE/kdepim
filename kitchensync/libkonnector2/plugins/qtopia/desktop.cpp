@@ -29,7 +29,7 @@ Desktop::Desktop( CategoryEdit* edit )
     : Base( edit ) {
 
 
-};
+}
 Desktop::~Desktop() {
 
 }

@@ -40,6 +40,6 @@ namespace OpieHelper {
         QString days( const QBitArray& );
 
     };
-};
+}
 
 #endif

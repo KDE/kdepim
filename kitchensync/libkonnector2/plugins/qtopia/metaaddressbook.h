@@ -33,7 +33,7 @@ namespace OpieHelper {
 
         QString string( KSync::AddressBookSyncEntry* );
     };
-};
+}
 
 
 #endif

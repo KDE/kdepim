@@ -54,7 +54,7 @@ namespace OpieHelper {
         QMap<int, bool> ids; // from tt Qtopia::UidGen
         QValueList<OpieCategories> m_categories;
     };
-};
+}
 
 
 #endif

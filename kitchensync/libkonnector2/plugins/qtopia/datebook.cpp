@@ -47,7 +47,7 @@ int week ( const QDate &start ) {
     return week;
 }
 
-};
+}
 
 DateBook::DateBook( CategoryEdit* edit,
                     KSync::KonnectorUIDHelper* helper,

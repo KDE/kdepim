@@ -107,7 +107,7 @@ class QtopiaSocket::Private
 
 namespace {
     void parseTZ( const QString& fileName,  QString& tz );
-};
+}
 
 /**
  * QtopiaSocket is somehow a state machine
@@ -349,19 +349,19 @@ void QtopiaSocket::process()
         //kdDebug(5225) << line << endl;
         //kdDebug(5225) << d->mode << endl;
         switch( d->mode ) {
-        case d->Start:
+        case QtopiaSocket::Private::Start:
             start(line);
             break;
-        case d->User:
+        case QtopiaSocket::Private::User:
             user(line);
             break;
-        case d->Pass:
+        case QtopiaSocket::Private::Pass:
             pass(line);
             break;
-        case d->Call:
+        case QtopiaSocket::Private::Call:
             call(line);
             break;
-        case d->Noop:
+        case QtopiaSocket::Private::Noop:
             noop(line);
             break;
         default:
@@ -686,16 +686,16 @@ void QtopiaSocket::call( const QString& line)
 
 
     switch( d->getMode ) {
-    case d->Handshake:
+    case QtopiaSocket::Private::Handshake:
         handshake( line );
         break;
-    case d->Flush:
+    case QtopiaSocket::Private::Flush:
         flush( line );
         break;
-    case d->ABook:
+    case QtopiaSocket::Private::ABook:
         download();
         break;
-    case d->Desktops:
+    case QtopiaSocket::Private::Desktops:
         initSync( line );
         break;
     }
@@ -823,7 +823,7 @@ QString QtopiaSocket::partnerIdPath() const
     str += d->partnerId;
 
     return str;
-};
+}
 
 /*
  * As long as Qtopia/Opie is broken

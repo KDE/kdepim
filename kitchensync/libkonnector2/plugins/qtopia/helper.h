@@ -88,7 +88,7 @@ namespace OpieHelper {
     /** escapes a whole string */
     QString escape(const QString&);
 
-};
+}
 
 
 #endif

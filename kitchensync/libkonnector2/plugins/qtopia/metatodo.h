@@ -34,6 +34,6 @@ namespace OpieHelper {
         QString string( KSync::TodoSyncEntry* );
 
     };
-};
+}
 
 #endif

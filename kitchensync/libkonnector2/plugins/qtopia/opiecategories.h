@@ -25,7 +25,7 @@
 
 namespace KSync {
     class OpieSocket;
-};
+}
 
 class OpieCategories {
  public:

@@ -132,7 +132,7 @@ namespace OpieHelper {
 
         return str;
     }
-};
+}
 
 
 #endif

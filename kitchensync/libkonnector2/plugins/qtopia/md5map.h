@@ -64,6 +64,6 @@ namespace OpieHelper {
         Map m_map;
         QString m_file;
     };
-};
+}
 
 #endif

@@ -28,7 +28,7 @@
 
 namespace KSync{
     class EventSyncee;
-};
+}
 class QDomElement;
 namespace OpieHelper {
     enum Days { Monday=1,
@@ -55,5 +55,5 @@ namespace OpieHelper {
         QString event2string( KCal::Event *event, ExtraMap& );
         KCal::Event* toEvent( QDomElement, ExtraMap&, const  QStringList& lst );
     };
-};
+}
 #endif
