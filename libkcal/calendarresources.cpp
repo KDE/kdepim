@@ -193,16 +193,15 @@ bool CalendarResources::addIncidence( Incidence *incidence )
   ResourceCalendar *resource = mDestinationPolicy->destination( incidence );
 
   if ( resource ) {
-    resource->addIncidence( incidence );
-    mResourceMap[ incidence ] = resource;
-  } else {
+    if ( resource->addIncidence( incidence ) ) {
+      mResourceMap[ incidence ] = resource;
+      setModified( true );
+      return true;
+    }
+  } else
     kdDebug(5800) << "CalendarResources::addIncidence(): no resource" << endl;
-    return false;
-  }
 
-  setModified( true );
-
-  return true;
+  return false;
 }
 
 bool CalendarResources::addEvent( Event *event )
@@ -217,14 +216,13 @@ bool CalendarResources::addEvent( Event *anEvent, ResourceCalendar *resource )
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
     if ( (*it) == resource ) validRes = true;
   }
-  if ( validRes ) {
-    resource->addEvent( anEvent );
+  if ( validRes && resource->addEvent( anEvent ) ) {
     mResourceMap[anEvent] = resource;
-  } else {
-    return false;
+    setModified( true );
+    return true;
   }
 
-  return true;
+  return false;
 }
 
 void CalendarResources::deleteEvent( Event *event )
@@ -277,14 +275,13 @@ bool CalendarResources::addTodo(Todo *todo, ResourceCalendar *resource)
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
     if ( (*it) == resource ) validRes = true;
   }
-  if ( validRes ) {
-    resource->addTodo( todo );
+  if ( validRes && resource->addTodo( todo ) ) {
     mResourceMap[todo] = resource;
-  } else {
-    return false;
+    setModified( true );
+    return true;
   }
 
-  return true;
+  return false;
 }
 
 void CalendarResources::deleteTodo( Todo *todo )
@@ -518,14 +515,13 @@ bool CalendarResources::addJournal(Journal *journal, ResourceCalendar *resource)
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
     if ( (*it) == resource ) validRes = true;
   }
-  if ( validRes ) {
-    resource->addJournal( journal );
+  if ( validRes && resource->addJournal( journal ) ) {
     mResourceMap[journal] = resource;
-  } else {
-    return false;
+    setModified( true );
+    return true;
   }
 
-  return true;
+  return false;
 }
 
 Journal *CalendarResources::journal(const QDate &date)
