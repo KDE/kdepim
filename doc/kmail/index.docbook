@@ -3,33 +3,34 @@
 ]>
 <book lang="en">
 <bookinfo>
-	<title>The Kmail Handbook</title>
+	<title>The KMail Handbook</title>
 
 	<authorgroup>
-	<!--
-	<author>
-		<firstname>Daniel</firstname>
-		<surname>Naber</surname>
-	</author>
-	-->
 	<author>
 		<firstname>David</firstname>
 		<surname>Rugge</surname>
 	</author>
+	<author>
+		<firstname>Daniel</firstname>
+		<surname>Naber</surname>
+	</author>
 	</authorgroup>
 
 	<abstract>
-	<para>This documentation was last updated for Kmail version 1.1.43.
-	<!-- fixme: --> Warning: This is currently work in progress.</para>
 	
-	<para>If you don't like reading documentation: Some very helpful hints you probably
-	don't want to miss are collected in the <link linkend="secGettingStarted">Getting Started</link>
+	<para>Even if you don't like reading documentation: Some very helpful hints you probably
+	don't want to miss are collected in the 
+	<link linkend="secintro">Introduction</link>
 	section.</para>
 	
-	<para>Please mail any comments and additions to <ulink url="kmail@kde.org">kmail@kde.org</ulink>.</para>
+	<para>Please mail any comments and additions to
+	<ulink url="kmail@kde.org">kmail@kde.org</ulink>.</para>
+
+	<para>This documentation was last updated for KMail version 1.1.45.</para>
+
 	</abstract>
 
-	<date>2000-05-15</date>
+	<date>2000-05-21</date>
 
 	<releaseinfo><!-- information about this particular version --></releaseinfo>
 
@@ -40,43 +41,42 @@
 	<keyword>Client</keyword>
 	<keyword>POP3</keyword>
 	<keyword>PGP</keyword>
-	<keyword>GnuPG</keyword>
 	</keywordset>
 </bookinfo>
 
 <chapter id="secintro">
 <title>Introduction</title>
 
-<para>The Kmail Team welcomes you to Kmail, a user-friendly mailer for the
+<para>The KMail Team welcomes you to KMail, a user-friendly mailer for the
 K Desktop Environment. Our goal is to make a mailer that is beautiful and intuitive
 without sacrificing power. </para>
 
 <para>If you have never set up an email client on a Unix system before, we suggest that you read through 
 the <link linkend="secGettingStarted">Getting Started</link> section first so that your setup goes smoothly.</para>
 
-<para>Since people don't read documentation anyway, here are some tips:</para>
+<para>Since people don't read documentation anyway, here is a collection of the most helpful tips:</para>
 <!-- It's probably a good idea to copy some contents from the "introduction email"
  here and vice versa -->
 
-<para>When you're writing a new mail and you're in the To: field, only type
-the first few characters of the receiver's address, then press Ctrl-T to get a list 
-of choices. These are taken from your addressbook, so keep you address book
+<para>When you're writing a new mail and you're in the <emphasis remap="bf">To:</emphasis> field, only type
+the first few characters of the receiver's address, then press Ctrl+T to get a list 
+of choices. These are taken from your addressbook, so keep your address book
 up to date and this feature will be very useful.</para>
 
-<para>You don't have to use your mouse to use Kmail. Everything
-should be possible with keys. Kmail supports all the standard key 
+<para>You don't have to use your mouse to use KMail. Everything
+should be possible with keys. KMail supports all the standard key 
 like TAB (switch between panes). The trick is: cursor left/right
 always jumps to the previous/next message, but when you hold down
-CTRL, you can use cursor left/right to navigate in the Folders pane
+Ctrl, you can use cursor left/right to navigate in the Folders pane
 or in the Headers pane (depending on what has the focus).</para>
 
 <!-- TODO: add other tips for "invisible" features here -->
 
-<para>Kmail's homepage is at <ulink url="http://devel-home.kde.org/~kmail/">http://devel-home.kde.org/~kmail/</ulink></para>
+<para>KMail's homepage is at <ulink url="http://devel-home.kde.org/~kmail/">http://devel-home.kde.org/~kmail/</ulink></para>
 
-<para>Bug reports and suggestions should go to kmail@kde.org.</para>
+<para>Bug reports and suggestions should go to <ulink url="mailto:kmail@kde.org">kmail@kde.org</ulink>.</para>
 
-<para>We hope you will enjoy Kmail!</para>
+<para>We hope you will enjoy KMail!</para>
 
 </chapter>
 
@@ -85,15 +85,15 @@ or in the Headers pane (depending on what has the focus).</para>
 <chapter id="secgettingstarted">
 <title>Getting Started</title>
 
-<para>This is a short introduction to Kmail and its usage so you can start
+<para>This is a short introduction to KMail and its usage so you can start
 working with it right away. For more in-depth information see the 
-<link linkend="secUsingKmail">Using Kmail</link> section.</para>
+<link linkend="secUsingKmail">Using KMail</link> section.</para>
 
-<para>Invoking Kmail for the first time creates a directory calles "Mail" containing the initial
-files (inbox, outbox, sent-mail, and trash) in your home directory.  Kmail then pops up
-the Settings window where you must enter some initial information so Kmail will 
-be able to properly retrieve and send your messages. <!-- (fixme: doesn't pop up
-automatically anymore!) --></para>
+<para>Invoking KMail for the first time creates a directory calles "Mail" containing the initial
+files (inbox, outbox, sent-mail, and trash) in your home directory.  Use
+<emphasis remap="bf">File &verbar; Settings..</emphasis> to enter some initial information so KMail will 
+be able to properly retrieve and send your messages. <!-- fixme: does it pop up
+automatically? --></para>
 
 <para>The Settings window consists of seven sections: 
 <emphasis remap="bf">Identity</emphasis>, <emphasis remap="bf">Network</emphasis>, 
@@ -113,19 +113,19 @@ with your full name (e.g. "Peter Sanders")
 and the <emphasis remap="bf">Organization</emphasis> field (optional) with the appropriate
 information. (If you don't want this information to be automatically included in the
 headers of any message that you send, you can leave these fields empty and
-Kmail will still work.)</para>
+KMail will still work.)</para>
 
 <para>Next, fill in the <emphasis remap="bf">Email Address</emphasis> and the 
 <emphasis remap="bf">Reply-To Address</emphasis> (optional) field 
 with your email address. Finally, set the location of your signature file in the
 <emphasis remap="bf">Signature File</emphasis> field. You can skip setting the 
 signature file if you do not have one, but every time you compose a new message,
-Kmail will ask you for your signature file. So if you don't want one, select
+KMail will ask you for your signature file. So if you don't want one, select
 <emphasis remap="bf">Specify signature below</emphasis> and just don't
 enter anything in the field below.</para>
 
 <para>If you want
-a random signature, you may specify a program like "fortune" <!-- (fixme: correct?) -->
+a random signature, you may specify a program <!-- TODO: like "fortune"? -->
 and check the <emphasis remap="bf">The file is a program</emphasis> box.</para>
 </sect1>
 
@@ -133,11 +133,30 @@ and check the <emphasis remap="bf">The file is a program</emphasis> box.</para>
 <title>Setting up your Account</title>
 
 <para>The <emphasis remap="bf">Network</emphasis> tab contains the settings that tell 
-Kmail how to send and receive your
+KMail how to send and receive your
 email. Many of these settings can vary greatly depending on the setup of your system
 and on the kind of network that your mail server is located. If you do not know what
 setting to pick or what to put in a field, consult your Internet Service Provider
 (ISP) or System Administrator.</para>
+
+<para>The <emphasis remap="bf">Properties</emphasis> section lets you customize 
+how and when messages are sent.</para>
+
+<para><emphasis remap="bf">Default send method</emphasis> lets you define what happens when
+a message is sent. If <emphasis remap="bf">Send now</emphasis> is
+selected, the message is sent to the mail server immediately, while if 
+<emphasis remap="bf">Send later</emphasis> is selected,
+the message is queued in the <emphasis remap="bf">outbox</emphasis> to be sent later with the
+<emphasis remap="bf">File &verbar; Send Queued</emphasis>
+command or automatically when you check your mail, depending on the settings in the
+<emphasis remap="bf">Miscellaneous</emphasis> tab.</para>
+
+<para><emphasis remap="bf">Message Property</emphasis> lets you select how your message will be encoded when it is 
+sent. <emphasis remap="bf">Allow 8-bit</emphasis> means that KMail will send your message in 8 bit ASCII,
+which means that all special characters such as accented letters will be sent as-is. If 
+<emphasis remap="bf">MIME Compliant (Quoted Printable)</emphasis> is selected,
+special characters will be encoded using standard MIME encodings, which may be more portable to
+other mailing systems than 8-bit ASCII.<!-- TODO: advise what's better --></para>
 
 <sect2 id="sendingmail">
 <title>Sending Mail</title>
@@ -169,22 +188,21 @@ information from your ISP or System Administrator. Again, you should not need to
 change the <emphasis remap="bf">Port</emphasis> setting.</para>
 
 <para>If you select <emphasis remap="bf">Store POP password in configuration file</emphasis>
-Kmail will remember your password so you won't have to type it every time you
-start Kmail and fecth new mail. Be warned that we cannot really encrypt the
+KMail will remember your password so you won't have to type it every time you
+start KMail and fecth new mail. Be warned that we cannot really encrypt the
 password, so people who can access your configuration files (e.g. system administrators)
 can see you password if you select this option.</para>
 
 <para>Select <emphasis remap="bf">Retrieve all mail from server</emphasis> if you
-want to get all mails, not only the new ones (if you have selected
-<emphasis remap="bf">Delete mail from server</emphasis> this has no effect)
-<!-- fixme: correct? --></para>
+want to get all mails, not only the new ones.
+<!-- todo/correct: "If you have selected 'Delete mail from server' this has no effect." --></para>
 
 <para>Select <emphasis remap="bf">Exclude from "Check Mail"</emphasis> if you
 don't want to check this account whenever you use <emphasis remap="bf">Check mail...</emphasis>.
 You can still check for new mail on this account with <emphasis remap="bf">File &verbar; Check Mail in...</emphasis>.</para>
 
 <para>Select <emphasis remap="bf">Enable interval mail checking</emphasis> if you
-want Kmail to check for new mail automatically. The interval can be specified below.</para>
+want KMail to check for new mail automatically. The interval can be specified below.</para>
 
 <para>Select <emphasis remap="bf">Delete mail from server</emphasis> if
 you don't want to leave your mail on the server. Leave the account's mailbox set to
@@ -217,13 +235,13 @@ recheck your settings by selecting <emphasis remap="bf">File &verbar; Settings..
 </chapter>
 
 <chapter id="secusingkmail">
-<title>Using Kmail</title>
+<title>Using KMail</title>
 
 <sect1 id="themailreaderwindow">
 <title>The Mail Reader Window</title>
 
 <para>The <emphasis remap="bf">Mail Reader</emphasis> window is the window that appears
-when Kmail is started. The <emphasis remap="bf">Mail Reader</emphasis> window 
+when KMail is started. The <emphasis remap="bf">Mail Reader</emphasis> window 
 is divided into three panes:</para>
 
 <para><variablelist>
@@ -249,10 +267,10 @@ folders.</para>
 information (message Status Flags, Sender, Subject, and the Date the message was
 sent) for the messages in the currently selected folder. Clicking on a header
 will select that message and display it in the Message Pane. You can also select
-a series of messages by clicking on one message, holding down the SHIFT key, and
+a series of messages by clicking on one message, holding down the Shift key, and
 clicking on another message. The two messages you just clicked on will be
-selected, along with all the messages in between. By holding down the CTRL key
-you can select any number of messages <!-- (fixme: distinction from SHIFT) -->. You may sort the messages by
+selected, along with all the messages in between. By holding down the Ctrl key
+you can select any number of messages without those in between. You may sort the messages by
 clicking on the column that you wish to sort. If you click on the same
 column more then once, sort order will toggle between ascending/descending.</para>
 </listitem>
@@ -324,15 +342,14 @@ If you have not set the location of your signature
 file and you have <emphasis remap="bf">Use a signature from file</emphasis> checked
 in the <emphasis remap="bf">Composer</emphasis> tab of the
 <emphasis remap="bf">Settings</emphasis> dialog, you will be prompted for the location of your
-signature file before the <emphasis remap="bf">Composer</emphasis> window opens.
-<!-- (fixme: correct?) --></para>
+signature file before the <emphasis remap="bf">Composer</emphasis> window opens.</para>
 
 <sect2 id="composingamessage">
 <title>Composing a Message</title>
 
 <para>To write your message, fill in the appropriate fields in the
 <emphasis remap="bf">Composer</emphasis> window.  There are a variety of
-shortcuts to help you with writing you messages.  The ellipses buttons
+shortcuts to help you with writing your messages.  The ellipses buttons
 next to the <emphasis remap="bf">To:</emphasis>,
 <emphasis remap="bf">Cc:</emphasis>, and <emphasis remap="bf">Bcc:</emphasis>
 fields will call up the addressbook so that you can select addresses
@@ -345,7 +362,7 @@ set up the header fields offered to you.</para>
 <sect2 id="attachments">
 <title>Attachments</title>
 
-<para>You can attach files to you message by using one of the methods below:
+<para>You can attach files to your message by using one of the methods below:
 <itemizedlist>
 <listitem>
 <para>Push the paper clip button and select the file you wish to attach.</para>
@@ -380,10 +397,10 @@ menu. PGP key attachments are handled like file attachements.</para>
 </sect2>
 
 <sect2 id="checkingthespellingofyoumessage">
-<title>Checking the Spelling of you Message</title>
+<title>Checking the Spelling of your Message</title>
 
 <para>To check the spelling of your message, select <emphasis remap="bf">Edit
-&verbar; Spelling...</emphasis>. Kmail uses KSpell to check spelling, which is
+&verbar; Spelling...</emphasis>. KMail uses KSpell to check spelling, which is
 the KDE frontend to the the ispell or aspell spelling checker.</para>
 </sect2>
 </sect1>
@@ -393,12 +410,12 @@ the KDE frontend to the the ispell or aspell spelling checker.</para>
 
 <para>Message Folders are used to organize your email messages. By default, all message folders are stored in 
 the directory <literal remap="tt">Mail</literal>, which is created in your home directory. When you first 
-start Kmail the inbox, outbox, sent-mail, and trash folders are created. 
+start KMail the inbox, outbox, sent-mail, and trash folders are created. 
 These folders each have special functions:</para>
 
 <para><itemizedlist>
 <listitem>
-<para><emphasis remap="bf">inbox:</emphasis> where Kmail puts your new messages when you ask it to check your mail. </para>
+<para><emphasis remap="bf">inbox:</emphasis> where KMail puts your new messages when you ask it to check your mail. </para>
 </listitem>
 <listitem>
 <para><emphasis remap="bf">outbox:</emphasis> where messages are put while they are waiting to be delivered. </para>
@@ -459,7 +476,7 @@ fields and selecting <emphasis remap="bf">Add to Addressbook</emphasis>.</para>
 <sect1 id="filters">
 <title>Filters</title>
 
-<para>After using Kmail for a while, you may find that you have trouble sorting out the new messages in 
+<para>After using KMail for a while, you may find that you have trouble sorting out the new messages in 
 your inbox when they arrive. Filters allow you to automatically perform certain actions on
 incoming messages and to manually perform actions on selected messages in a folder.</para>
 
@@ -468,7 +485,7 @@ up to eight actions in one
 filter. You can you the "Skip Rest" option to skip the rest of the actions
 in the list.  Only the transfer action and the skip rest action are
 supported at this time,  but expect to see more action options available
-in future releases of Kmail.
+in future releases of KMail.
 <!-- fixme: true? isn't "nothing" the same as "skip rest"??? -->
 </para>
 
@@ -563,7 +580,7 @@ sections.</para>
 <para>Multiple accounts are used to check mail from more than one email address and/or mail server. Select 
 <emphasis remap="bf">File &verbar; Settings...</emphasis> and click on the <emphasis remap="bf">Network</emphasis>
 tab to add or change 
-your account settings. See the <link linkend="secCustomizing">Customizing Kmail</link> section for more 
+your account settings. See the <link linkend="secCustomizing">Customizing KMail</link> section for more 
 information on the settings in the <emphasis remap="bf">Network</emphasis> tab.</para>
 
 <para>To check mail from a particular account, use the <emphasis remap="bf">Check Mail in...</emphasis>
@@ -571,19 +588,167 @@ submenu to select the account to use to check your mail.</para>
 </sect1>
 
 <sect1 id="secpgp">
-<title>Pretty good privacy -- fixme: andreas has written an update</title>
+<!-- This section is from Andreas Gungl, 2000-05-21 -->
+<title>Pretty Good Privacy / PGP</title>
 
-<para>Add Andreas' text here.</para>
+<!-- TODO: what about gnupg? -->
+
+<para>This is a short introduction on how to setup KMail's pgp support. It will
+give some hints on the use of pgp too. It's written for people, who are
+beginners in this area. If you are familiar with the use of pgp, you
+can skip most of the steps.</para>
+
+<para>To setup and use pgp support in KMail it is neccessary to have pgp installed
+and set up properly. Of course we cannot give you a full introduction of
+pgp here. We will only mention the steps you have to do to get pgp going. For
+details you should have a look at the excellent pgp command line
+documentation.</para>
+
+<para>It is certainly a good idea to study this documentation as well as an
+introduction into public key cryptography (e.g. out of the pgp 6.5.x package).
+There you can learn a lot about the basic concepts, which will help you to
+understand what is going on. As well, many security related issues you
+should know about are discussed there.</para>
+
+<para>Now let's start.</para>
+
+<sect2 id="secpgppreconditions">
+<title>PGP Preconditions</title>
+
+<para>If you haven't done so, you have to generate a key pair (secret and public
+key) for your identity. You must do this at the command line (use "pgp -kg").
+KMail has no internal support for pgp's key generation at this time. The
+identity (normally your name followed by your email address within brackets,
+such as "John Doe &lt;john@example.com&gt;") and your passphrase are important for
+the co-operation between KMail and pgp.</para>
+
+</sect2>
+
+<sect2 id="secpgpsettings">
+<title>KMail Settings</title>
+
+<para>Open the KMail settings dialog and go to the <emphasis remap="bf">Security</emphasis>
+settings page. Type your identity into the "PGP user identity" entry field. There are also
+two options:</para>
+
+<para><emphasis remap="bf">Keep passphrase in memory</emphasis>: When this option is off, then KMail will ask for
+your passphrase each time you sign a message (before sending) or decrypting a
+message (sent to you). If you turn this option on, KMail will remember your
+passphrase from after your first successfull input until you finish you KMail
+session. The passphrase is stored in memory and not written to the harddisk.
+Note that a user with enough privileges (e.g. root) might be able to catch your
+passphrase even from memory.</para>
+
+<para><emphasis remap="bf">Always encrypt to self</emphasis>: If this option is off and you want 
+send an encrypted message to somebody, then you can't read this message any longer after you have
+composed and encrypted it. Turn this option on to keep sent encrypted messages
+readable for you too. You can then read the plain text of this messages in the
+<emphasis remap="bf">Sent Mail</emphasis> folder.</para>
+
+<para>On the <emphasis remap="bf">Composer</emphasis> tab you can also check the
+<emphasis remap="bf">Automatically sign messages using PGP</emphasis> option. This means that all your
+messages will be signed before sent. (So you don't have to set the signing for
+each mail manually.)</para>
+
+<para>After step 2 you are able to sign outgoing messages. To let people send
+encrypted messages to you and to let them verify your signature you must send
+them your public key. To send encrypted mails to other people or to verify
+their signed messages you will need their public keys.  You can store your
+public key(s) on a public PGP key server such as <ulink url="http://www.pgp.net/">www.pgp.net</ulink>.</para>
+
+</sect2>
+
+<sect2 id="secpgpsignyourmessages">
+<title>Sign your Messages</title>
+
+<para>You compose your message as usual in the <emphasis remap="bf">Composer</emphasis>
+window of KMail. Before you
+send the message, check the button with the underlining icon on it in the
+toolbar of the composer window. Then, you can send the message. To sign it,
+KMail needs to know your pgp passphrase. If you didn't select <emphasis remap="bf">Keep
+passphrase in memory</emphasis> in the <emphasis remap="bf">Security</emphasis>
+settings tab, KMail will ask you for it.
+On the other hand, if you have already given the phrase to KMail, it will sign
+the message without any further prompt.
+In the <emphasis remap="bf">sent mail</emphasis> folder (or on the outbox, if you don't use 
+<emphasis remap="bf">"send immediately"</emphasis>) you can verify the result of pgp's
+signing process. There you should see your message wrapped by the info, 
+that it was signed by you.</para>
+
+</sect2>
+
+<sect2 id="secpgpsendyourpublickey">
+<title>Send your Public Key</title>
+
+<para>Prepare a message to the person you want to send your public key to. Then
+choose in the <emphasis remap="bf">Composer</emphasis> window's menu 
+<emphasis remap="bf">Attach &verbar; Attach My Public Key</emphasis>. This
+will attach your public key to the mail. Now you can send the mail.</para>
+
+<para>Remember, that it's not save at all, if you sign the message to make sure,
+that the receiver will get the correct key. There can be a man-in-the-middle
+attack, as somebody can change the key and sign the message with that other
+key. That's why the recipient should verify the attached key by checking the
+key's fingerprint against the value, he got in a secure way from you. Have a
+look at the pgp documentation for further details.</para>
+
+</sect2>
+
+<sect2 id="secpgpyougotanencryptedmessage">
+<title>You got an encrypted Message</title>
+
+<para>All you have to do is to select the message in KMail. KMail perhaps will prompt
+for your passphrase, if you haven't input it. Then KMail will try to decrypt
+the message and show you the plain text, if the message had been encrypted with
+your public key. (If not, then you won't be able to read it.) KMail stores 
+the messages encrypted, so nobody can read this mail without knowing
+your passphrase.</para>
+
+</sect2>
+
+<sect2 id="secpgpreceivingapublickey">
+<title>Receiving a Public Key</title>
+
+<para>You can get a public key as an attachment or simply by ftp or floppy. Before
+you can use this key to encrypt an e-mail to the owner of the key, you should
+verify the key (check it's fingerprint or look for trusted signatures). Then
+you can add this key to your public keyring by typing "pgp -ka &lt;filename&gt;" at
+the command line. If the key is not certified with a trusted signature, you
+can't use it with KMail to encrypt messages unless you have signed that key
+(use "pgp -ks &lt;identity of the key&gt;").</para>
+
+</sect2>
+
+<sect2 id="secpgpencryptyourmessages">
+<title>Use Public Keys of other People - Encrypt your Messages</title>
+
+<para>To send an encrypted message to somebody of whom you have a public key (see
+step 6), you simply create the message in the composer window. Before you
+send the message, check the button with the red key icon on it in the toolbar
+of the composer window. Then, you can send the message.</para>
+
+<para>If KMail can't find a key for any of the recipients, it will display a
+list for you containing all available keys. You can choose the
+appropriate key out of the list (or cancel the action).
+KMail will also inform you about errors throughout the encryption process.
+<!-- fixme:correct?? -->
+</para>
+
+<para>As mentioned above, you won't be able to read encrypted sent mails if you
+don't check <emphasis remap="bf">Always encrypt to self</emphasis> in the
+<emphasis remap="bf">Setting</emphasis>'s security tab.</para>
+
+</sect2>
 
 </sect1>
 </chapter>
 
 <chapter id="seccustomizing">
-<title>Customizing Kmail</title>
+<title>Customizing KMail</title>
 
-<para>Kmail's settings window gives you a number of ways to customize Kmail to your needs.</para>
+<para>KMail's settings window gives you a number of ways to customize KMail to your needs.</para>
 
-<para>Note that basic instruction on how to setup Kmail (using <emphasis remap="bf">Identity</emphasis>
+<para>Note that basic instruction on how to setup KMail (using <emphasis remap="bf">Identity</emphasis>
 and <emphasis remap="bf">Network</emphasis>) are featured in the
 <link linkend="secGettingStarted">Getting Started</link> section.</para>
 
@@ -603,8 +768,8 @@ more folders than in the default view, but it takes away some space for viewing 
 of your message. With <emphasis remap="bf">Display message sizes</emphasis> selected there
 will be another column in the Header pane that show the messages size in bytes.
 <emphasis remap="bf">Thread list of message headers</emphasis> will put all the messages in a kind
-of tree, so the replies to a mail are next to the mail. <emphasis remap="bf">Prefer plain tetx to HTML
-rendering</emphasis> will show even HTML mails as plain text. <!-- fixme: correct? --></para>
+of tree, so the replies to a mail are next to the mail. <emphasis remap="bf">Prefer plain text to HTML
+rendering</emphasis> will try to show even HTML mails as plain text.</para>
 
 <para>The <emphasis remap="bf">Profiles</emphasis> offer several common default settings
 for colors and font sizes.</para>
@@ -622,46 +787,26 @@ are shown at the top of the Phrases section: &percnt;D to insert the date, &perc
 space. The <emphasis remap="bf">Indentation</emphasis> field contains the character that
 will denote quoted text (you will probably want to use the default).</para>
 
-<para>
-<emphasis remap="bf">Automatically append
+<para><emphasis remap="bf">Automatically append
 signature</emphasis> and <emphasis remap="bf">Automatically sign messages using PGP</emphasis> let you toggle whether
 to automatically include
 your signature and PGP signature in all of your messages by default. <emphasis remap="bf">Word wrap at column</emphasis>
 lets you turn word wrapping on and off in the <emphasis remap="bf">Composer window</emphasis> and lets you set the
-column at which words will be wrapped. <!-- fixme: "Use smart quoting" --></para>
+column at which words will be wrapped.</para>
 
-<!-- fixme: move to getting started:
-<para>The <emphasis remap="bf">When Sending Mail</emphasis> section lets you customize 
-how and when messages are sent.</para>
-
-<para>The <emphasis remap="bf">Default Sending options</emphasis> lets you define what happens when
-a message is sent. If <emphasis remap="bf">Send now</emphasis> is
-selected, the message is sent to the mail server immediately, while if 
-<emphasis remap="bf">Send later</emphasis> is selected,
-the message is queued in the <emphasis remap="bf">outbox</emphasis> to be sent later with the
-<emphasis remap="bf">File &verbar; Send Queued</emphasis>
-command or automatically when you check your mail, depending on the settings in the
-<emphasis remap="bf">Miscellaneous</emphasis> tab.</para>
-
-<para>The <emphasis remap="bf">Send messages options</emphasis> let you select how your message will be encoded when it is 
-sent. <emphasis remap="bf">Allow 8 bits</emphasis> means that Kmail will send your message in 8 bit ASCII,
-which means that all special characters such as accented letters will be sent as-is.  If 
-<emphasis remap="bf">MIME-compliant (Quoted Printable)</emphasis> is selected,
-special characters will be encoded using standard MIME encodings, which may be more portable to
-other mailing systems than 8-bit ASCII.</para>
--->
+<para><emphasis remap="bf">Use smart quoting</emphasis> will break long lines but will
+keep the quoting correct (e.g. the "&gt;" will always be at the start of the line).</para>
 
 </sect1>
+
 
 <sect1 id="securitytab">
 <title>Security Tab</title>
 
-<para>This tab controls the PGP features. At a minimum, you must fill in the
-<emphasis remap="bf">PGP User Identity</emphasis> field so that Kmail
-can properly interface with PGP or GNU Privacy Guard.</para>
+<para>See the <link linkend="secpgpsettings">PGP section</link>.</para>
+
 </sect1>
 
-<!-- fixme: "Keep passphrase in memory", "Always encrypt to self" -->
 
 <sect1 id="misctab">
 <title>Miscellaneous Tab</title>
@@ -671,7 +816,7 @@ can properly interface with PGP or GNU Privacy Guard.</para>
 <varlistentry>
 <term>Empty Trash On Exit</term>
 <listitem>
-<para>The trash folder is cleared of messages when you quit Kmail if this option is selected.</para>
+<para>The trash folder is cleared of messages when you quit KMail if this option is selected.</para>
 </listitem>
 </varlistentry>
 
@@ -682,7 +827,23 @@ can properly interface with PGP or GNU Privacy Guard.</para>
 </listitem>
 </varlistentry>
 
-<!-- fixme: external editor, new mail notification-->
+<varlistentry>
+<term>Use external editor instead of composer</term>
+<listitem>
+<para>If you don't like the <emphasis remap="bf">Composer</emphasis> you can use any editor. Note that the 
+<emphasis remap="bf">Composer</emphasis> window will still open and the external editor will
+open as soon as you type one character in the body field.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>New Mail Notification</term>
+<listitem>
+<para>This let's you configure actions for the arrival of new mail. Note that
+automatically fetching mail can be configured in your account settings under
+<emphasis remap="bf">Network</emphasis>.</para>
+</listitem>
+</varlistentry>
 
 </variablelist>
 </para>
@@ -691,16 +852,16 @@ can properly interface with PGP or GNU Privacy Guard.</para>
 </chapter>
 
 <chapter id="secimporting">
-<title>Using other Mailbox files With Kmail</title>
+<title>Using other Mailbox files With KMail</title>
 
 <para>This section is for all of the users who need to move email messages from their previous
-email client over to Kmail. Kmail stores its mail using the <emphasis remap="bf">mbox</emphasis> format,
+email client over to KMail. KMail stores its mail using the <emphasis remap="bf">mbox</emphasis> format,
 one of the most widely used mailbox formats on UNIX
 systems. Mbox mailboxes store messages in one file, identifying where messages start and end with the
 FROM: header. For many Unix mailers, all you must do is move your mailboxes to
 <literal remap="tt">&tilde;/Mail</literal> (or make
- Mail a symbolic link to the folder containing you mailboxes) and launch Kmail.  The mailboxes should now 
-show up correctly in Kmail.</para>
+ Mail a symbolic link to the folder containing you mailboxes) and launch KMail.  The mailboxes should now 
+show up correctly in KMail.</para>
 
 <para>If your old mailboxes are not in mbox format, see below for instructions on importing some other common
 formats.</para>
@@ -709,10 +870,10 @@ formats.</para>
 <varlistentry>
 <term>Eudora Lite/Eudora Pro</term>
 <listitem>
-<para>Eudora uses the mbox format in its mail files. To use them with Kmail, make sure that your Eudora mailboxes have 
+<para>Eudora uses the mbox format in its mail files. To use them with KMail, make sure that your Eudora mailboxes have 
 been compacted, then copy the .mbx files (Windows Eudora) or Eudora mailbox files (Mac Eudora) to your 
 <literal remap="tt">&tilde;/Mail</literal> directory. You don't need to copy the index files. 
-Once you start Kmail, the mailboxes should appear in the Folders pane and the messages should be accessible in
+Once you start KMail, the mailboxes should appear in the Folders pane and the messages should be accessible in
 the Headers Pane.</para>
 <para>If messages do not appear in the Headers pane, your mailbox files may still contain Windows or Macintosh
 line feed characters.  Use your favorite text editor or scripting language to change the Windows or
@@ -723,10 +884,10 @@ Macintosh line feeds to Unix line feeds.</para>
 <varlistentry>
 <term>MMDF</term>
 <listitem>
-<para>This format is close enough to the mailbox format that Kmail should be able to use these mailboxes if you
+<para>This format is close enough to the mailbox format that KMail should be able to use these mailboxes if you
 just copy them to your <literal remap="tt">&tilde;/Mail</literal> directory. However, MMDF mailboxes have
-not been tested with Kmail,
-so your results may vary.  If you can get this format to work with Kmail, please let us know so we
+not been tested with KMail,
+so your results may vary.  If you can get this format to work with KMail, please let us know so we
 can include more specific directions in the next documentation release.</para>
 </listitem>
 </varlistentry>
@@ -736,7 +897,7 @@ can include more specific directions in the next documentation release.</para>
 <listitem>
 <para>MH mailboxes are directories containing files that correspond to each message in that mailbox. 
 A shell script to convert MH mailboxes to mbox mailboxes, <emphasis remap="bf">mh2kmail</emphasis>, is included in the source 
-releases of Kmail, but not currently in the packaged releases. (This may change in the future.) Running
+releases of KMail, but not currently in the packaged releases. (This may change in the future.) Running
 this script on a MH folder will convert it to an mbox file.  We strongly suggest that you back up your MH
 mail folders before you use this script.</para>
 </listitem>
@@ -745,7 +906,7 @@ mail folders before you use this script.</para>
 <varlistentry>
 <term>Maildir</term>
 <listitem>
-<para>Maildir mailboxes, used by the Qmail mail-transfer agent, are not supported by Kmail at this time. </para>
+<para>Maildir mailboxes, used by the Qmail mail-transfer agent, are not supported by KMail at this time. </para>
 </listitem>
 </varlistentry>
 
@@ -776,7 +937,7 @@ mail folders before you use this script.</para>
 </listitem>
 </orderedlist>
 </para>
-<para>When you open Kmail the new folder with appropriate messages will be there.</para>
+<para>When you open KMail the new folder with appropriate messages will be there.</para>
 </listitem>
 </varlistentry>
 
@@ -785,13 +946,13 @@ mail folders before you use this script.</para>
 <listitem>
 <para>Copy your Netscape Mailfiles from <literal remap="tt">&tilde;/nsmail/</literal> to
 <literal remap="tt">&tilde;/Mail</literal>
-folder. The mailboxes will show up in Kmail the next time you restart it.</para>
+folder. The mailboxes will show up in KMail the next time you restart it.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term>Pegasus Mail</term>
 <listitem>
-<para>Pegasus for win32 uses single files for Mail folders simmilar to Kmail. Pegasus mail
+<para>Pegasus for win32 uses single files for Mail folders simmilar to KMail. Pegasus mail
 folder files have the extension .pmm but they are the same format as
 mbox except the messages do not start with the From header, but with a control character.
 To work around this, replace each instance of the control character with
@@ -805,12 +966,12 @@ a text editor that lets you save the files in Unix format.</para>
 <varlistentry>
 <term>Microsoft Outlook, Lotus Notes, BeOS Mail files, cc: Mail, etc...</term>
 <listitem>
-<para> Other mail programs probably do not work with Kmail as they use
-specialized mail formats that Kmail cannot understand. However, there is no harm
+<para> Other mail programs probably do not work with KMail as they use
+specialized mail formats that KMail cannot understand. However, there is no harm
 in trying! If the mailbox file looks similar to the mbox format, try copying the
 mailbox file (remember, the index file is not needed) to your <literal remap="tt">&tilde;/Mail</literal>
 directory and see what happens.  If you get mailboxes from your favorite mail
-client to work in Kmail, please tell us how you did it so that we can include
+client to work in KMail, please tell us how you did it so that we can include
 directions in a future revision of this documentation. </para>
 </listitem>
 </varlistentry>
@@ -832,15 +993,6 @@ menu item function, it is listed after the menu item.</para>
 <title>File menu</title>
 
 <para><variablelist>
-
-<!-- fixme
-<varlistentry>
-<term>New Composer (Ctrl+N)</term>
-<listitem>
-<para>Creates a new <emphasis remap="bf">Composer</emphasis> window.</para>
-</listitem>
-</varlistentry>
--->
 
 <varlistentry>
 <term>New Mailreader</term>
@@ -882,9 +1034,7 @@ menu item function, it is listed after the menu item.</para>
 <varlistentry>
 <term>Settings...</term>
 <listitem>
-<para>Opens the <!-- fixme:link -->Settings window. You can configure the settings for your identity, accounts, network, PGP, 
-the appearance of the <emphasis remap="bf">Composer</emphasis> and
-<emphasis remap="bf">Mail Reader</emphasis> windows, and various other settings here.</para>
+<para>Opens the <link linkend="secGettingStarted">Settings</link> window.</para>
 </listitem>
 </varlistentry>
 
@@ -898,7 +1048,7 @@ the appearance of the <emphasis remap="bf">Composer</emphasis> and
 <varlistentry>
 <term>Filters...</term>
 <listitem>
-<para>Opens the <!-- fixme:link -->Filter Rules window.</para>
+<para>Opens the <link linkend="filters">Filter Rules</link> window.</para>
 </listitem>
 </varlistentry>
 
@@ -906,14 +1056,14 @@ the appearance of the <emphasis remap="bf">Composer</emphasis> and
 <term>Close (Ctrl+W)</term>
 <listitem>
 <para>Closes the current <emphasis remap="bf">Mail Reader</emphasis> window or exits
-Kmail if there's only this one window.</para>
+KMail if there's only this one window.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term>Quit (Ctrl+Q)</term>
 <listitem>
-<para>Exits Kmail.</para>
+<para>Exits KMail.</para>
 </listitem>
 </varlistentry>
 
@@ -979,7 +1129,20 @@ folder is the trash folder, the messages are permanently deleted.</para>
 </listitem>
 </varlistentry>
 
-<!-- fixme: two more entries -->
+<varlistentry>
+<term>Prefer plain text to HTML</term>
+<listitem>
+<para>This will try to show even HTML mails as plain text.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Don't thread messages <!-- fixme: wording up to date? --></term>
+<listitem>
+<para>This will show the messages in the <emphasis remap="bf">Header pane</emphasis>
+in a simple list, not in a tree-like list.</para>
+</listitem>
+</varlistentry>
 
 </variablelist>
 </para>
@@ -988,9 +1151,23 @@ folder is the trash folder, the messages are permanently deleted.</para>
 <sect2 id="messagemenu">
 <title>Message menu</title>
 
-<!-- fixme: continue update here -->
-
 <para><variablelist>
+
+<varlistentry>
+<term>New Message (Ctrl+N)</term>
+<listitem>
+<para>Opens the <emphasis remap="bf">Composer</emphasis> window so you can write a new mail.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Search (S)</term>
+<listitem>
+<para>Opens a search dialog that lets you search for messages. Note that
+this is not useful for searching a text in one certain message.</para>
+</listitem>
+</varlistentry>
+
 <varlistentry>
 <term>Next (N or the right arrow key)</term>
 <listitem>
@@ -1022,31 +1199,50 @@ folder is the trash folder, the messages are permanently deleted.</para>
 <varlistentry>
 <term>Reply... (R)</term>
 <listitem>
-<para>Opens up the <emphasis remap="bf">Composer</emphasis> window with the contents of the selected message's Reply-To field 
-in the To: field.</para>
+<para>Opens up the <emphasis remap="bf">Composer</emphasis> window with the contents of the
+selected message's Reply-To field  in the To: field.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term>Reply All... (A)</term>
 <listitem>
-<para>Opens up the <emphasis remap="bf">Composer</emphasis> window and copies the contents of the selected message's
-Reply-To and To fields into the To: field and the cc: and bcc: fields into the cc: and bcc: fields of
-the <emphasis remap="bf">Composer</emphasis> window.</para>
+<para>Opens up the <emphasis remap="bf">Composer</emphasis> window and copies the contents
+of the selected message's <emphasis remap="bf">Reply-To:</emphasis> and 
+<emphasis remap="bf">To:</emphasis> fields into the <emphasis remap="bf">To:</emphasis> field, and the
+<emphasis remap="bf">Cc:</emphasis> field into the <emphasis remap="bf">Cc:</emphasis>
+field of the <emphasis remap="bf">Composer</emphasis> window.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Forward (F)</term>
+<term>Forward... (F)</term>
 <listitem>
-<para>Forwards the message to a new recipient.</para>
+<para>Forwards the message to a new recipient. The message's text will be copied
+into the body of the new message with a text marking the forwarded part. Attachments
+will be forwarded, too.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Edit (T)</term>
+<term>Redirect... (E)</term>
 <listitem>
-<para>Edits the selected message if it is editable.</para>
+<para>fixme</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Bounce...</term>
+<listitem>
+<para>fixme</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Edit... (T)</term>
+<listitem>
+<para>Edits the selected message if it is editable. Only messages in the outbox
+folder can be edited.</para>
 </listitem>
 </varlistentry>
 
@@ -1086,37 +1282,47 @@ the <emphasis remap="bf">Composer</emphasis> window.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Move (M)</term>
+<term>Move to submenu</term>
 <listitem>
-<para>Moves all of the selected messages to a new folder.</para>
+<para>Moves all of the selected messages to a certain folder.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Copy (S)</term>
+<term>Copy to submenu</term>
 <listitem>
-<para>Copies the selected messages into a new folder.</para>
+<para>Copies all of the the selected messages to a certain folder.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term>Delete (D)</term>
 <listitem>
-<para>Moves the selected messages into the trash folder.</para>
+<para>Moves the selected messages into the trash folder. If the selected
+messages are already in the trash folder, they will really be deleted.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Undo (Ctrl+Z)</term>
+<listitem>
+<para>With this command, you can undo <emphasis remap="bf">Move</emphasis>
+and <emphasis remap="bf">Delete</emphasis> operations. <!-- todo: but not deletion in the
+trash, right? --></para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term>Send Again...</term>
 <listitem>
-<para>Sends the message again</para>
+<para>Sends the message again.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term>Apply Filters (Ctrl+J)</term>
 <listitem>
-<para>Applies your filters to the selected messages</para>
+<para>Applies your filters to the selected messages.</para>
 </listitem>
 </varlistentry>
 
@@ -1136,6 +1342,7 @@ the <emphasis remap="bf">Composer</emphasis> window.</para>
 <title>View menu</title>
 
 <para><variablelist>
+
 <varlistentry>
 <term>Brief, Fancy, Standard, Long, and All Headers</term>
 <listitem>
@@ -1143,12 +1350,14 @@ the <emphasis remap="bf">Composer</emphasis> window.</para>
 the Message pane.</para>
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term>Iconic, Smart, and Inlined Attachments</term>
 <listitem>
-<para>Changes the way that attachments appear in the Message pane.</para>
+<para>Changes the way that attachments appear in the Message pane. <!-- todo: explain! --></para>
 </listitem>
 </varlistentry>
+
 </variablelist>
 </para>
 </sect2>
@@ -1162,14 +1371,26 @@ the Message pane.</para>
 <varlistentry>
 <term>Contents (F1)</term>
 <listitem>
-<para>Invokes the KDE help system with the Kmail help pages displayed.</para>
+<para>Invokes the KDE help system with the KMail help pages displayed.</para>
+</listitem>
+</varlistentry>
+
+<!-- fixme: what's this -->
+
+<varlistentry>
+<term>Report Bug...</term>
+<listitem>
+<para>Open a window for you to report a bug. Please note that bug reports
+are only useful if you tell us exactly how to reproduce the bug. Also
+look at <ulink url="http://bugs.kde.org">http://bugs.kde.org</ulink> to
+see if the bug has been reported already.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>About Kmail...</term>
+<term>About KMail...</term>
 <listitem>
-<para>Displays information about Kmail.</para>
+<para>Displays information about KMail.</para>
 </listitem>
 </varlistentry>
 
@@ -1196,23 +1417,30 @@ the Message pane.</para>
 <para><variablelist>
 
 <varlistentry>
-<term>Send (Ctrl+Enter)</term>
-<listitem>
-<para>Queues the message in the outbox for sending it later.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Send Now</term>
+<term>Send (Ctrl+Return)</term>
 <listitem>
 <para>Sends the message immediately.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
+<term>Queue</term>
+<listitem>
+<para>Queues the message in the outbox for sending it later.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term>Insert File...</term>
 <listitem>
-<para>Inserts the selected text file into the message, starting at the cursor.</para>
+<para>Inserts the selected text file into the message, starting at the cursor position.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Print... (Ctrl+P)</term>
+<listitem>
+<para>Prints the current text.</para>
 </listitem>
 </varlistentry>
 
@@ -1224,13 +1452,6 @@ the Message pane.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Print</term>
-<listitem>
-<para>Prints the message.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term>New Composer (Ctrl+N)</term>
 <listitem>
 <para>Opens up a new <emphasis remap="bf">Composer</emphasis> window.</para>
@@ -1238,7 +1459,7 @@ the Message pane.</para>
 </varlistentry>
 
 <varlistentry>
-<term>New Mail Reader</term>
+<term>Open Mailreader</term>
 <listitem>
 <para>Opens up a new <emphasis remap="bf">Mail Reader</emphasis> window.</para>
 </listitem>
@@ -1260,15 +1481,25 @@ the Message pane.</para>
 <title>Edit menu</title>
 
 <para><variablelist>
+
 <varlistentry>
-<term>Cut (Ctrl+X), Copy (Ctrl+C&gt;, Paste (Ctrl+V)</term>
+<term>Undo (Ctrl+Z), Redo (Ctrl+Shift+Z)</term>
 <listitem>
-<para>These items are for cutting, copying, and pasting text. They work like in most editors.</para>
+<para>Undo or Redo your steps of editing the current mail.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Mark all</term>
+<term>Cut (Ctrl+X), Copy (Ctrl+C), Paste (Ctrl+V)</term>
+<listitem>
+<para>These items are for cutting, copying, and pasting text. They work like in most editors.
+Hint: You can also select text and drag it to a new position. If you hold down
+Ctrl while dragging the text, it will not be moved, but copied.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Select all</term>
 <listitem>
 <para>Selects all of the text in your message.</para>
 </listitem>
@@ -1289,14 +1520,31 @@ the Message pane.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Spellcheck...</term>
+<term>Clean Spaces</term>
 <listitem>
-<para>Uses KSpell to check the spelling in the body of your message.</para>
+<para>This replaces multiple spaces with single spaces in the current message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Spelling...</term>
+<listitem>
+<para>Uses KSpell to check the spelling in the body of your message. Note
+that you have to configure KSpell with Settings &verbar; Spellchecker... if you
+use it for the first time.</para>
 </listitem>
 </varlistentry>
 
 </variablelist>
 </para>
+</sect2>
+
+
+<sect2 id="viewmenu2">
+<title>View menu</title>
+
+<para>This menu lets you toggle the display of the header fields in the 
+<emphasis remap="bf">Composer</emphasis> window.</para>
 </sect2>
 
 
@@ -1316,7 +1564,7 @@ the Message pane.</para>
 <term>Confirm Delivery</term>
 <listitem>
 <para>If you choose this option, you will receive a confirmation email once your message is
-successfully delivered to its destination mail server. (fixme: only if supported by receiver?!)</para>
+successfully delivered to its destination mail server. (fixme: only if supported?!)</para>
 </listitem>
 </varlistentry>
 
@@ -1324,26 +1572,12 @@ successfully delivered to its destination mail server. (fixme: only if supported
 <term>Confirm Read</term>
 <listitem>
 <para>If you choose this option, you will receive a confirmation email once your message is
-downloaded and read by its recipient. </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Spellchecker...</term>
-<listitem>
-<para>Allows you to configure Kspell, KDE's spellchecker.</para>
+downloaded and read by its recipient. fixme: does this work?</para>
 </listitem>
 </varlistentry>
 
 </variablelist>
 </para>
-</sect2>
-
-<sect2 id="viewmenu2">
-<title>View menu</title>
-
-<para>This menu lets you toggle the display of the header fields in the 
-<emphasis remap="bf">Composer</emphasis> window.</para>
 </sect2>
 
 
@@ -1357,14 +1591,16 @@ downloaded and read by its recipient. </para>
 <varlistentry>
 <term>Append Signature</term>
 <listitem>
-<para>Appends the contents of your signature file to the end of the message.</para>
+<para>Appends the contents of your signature file to the end of the message.
+<!-- fixme: doesn't work?!?! -->
+</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Insert File...</term>
+<term>Attach Public Key / Attach My Public Key</term>
 <listitem>
-<para>Inserts the contents of the selected file into the message starting at the cursor.</para>
+<para>Attaches the corresponding PGP/GnuPG key to your message using the default encoding.</para>
 </listitem>
 </varlistentry>
 
@@ -1372,13 +1608,6 @@ downloaded and read by its recipient. </para>
 <term>Attach...</term>
 <listitem>
 <para>Attaches the selected file to the message using the encoding you select in the dialog.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Attach Public Key... and Attach My Public Key</term>
-<listitem>
-<para>Attaches the corresponding PGP key to your message using the default encoding.</para>
 </listitem>
 </varlistentry>
 
@@ -1408,249 +1637,115 @@ downloaded and read by its recipient. </para>
 </sect2>
 
 
-<sect2 id="helpmenu2">
-<title>Help menu</title>
-
+<sect2 id="settingsmenu2">
+<title>Settings menu</title>
 <para><variablelist>
 
 <varlistentry>
-<term>Contents (F1)</term>
+<term>Spellchecker...</term>
 <listitem>
-<para>Invokes the KDE help system with the Kmail help pages displayed.</para>
+<para>Allows you to configure KSpell, KDE's spellchecker.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>About Kmail...</term>
+<term>Configure Toolbars...</term>
 <listitem>
-<para>Displays essential information about Kmail.</para>
+<para>Opens a window that allows you to decide which icons appear in the toolbars.</para>
 </listitem>
 </varlistentry>
 
-<varlistentry>
-<term>About KDE...</term>
-<listitem>
-<para>Displays information about KDE.</para>
-</listitem>
-</varlistentry>
+</variablelist></para>
+</sect2>
 
-</variablelist>
+
+<sect2 id="helpmenu2">
+<title>Help menu</title>
+
+<para>
+These entries have the same meaning as <link linkend="helpmenu">the entries in the 
+Mailreader window</link>.
 </para>
+
 </sect2>
 </sect1>
 </chapter>
 
 
 <chapter id="questionsandanswers">
-<title>Questions and answers</title>
+<title>FAQ</title>
 
-<sect1 id="howdoiusemyeudoraxfmailotherrandommailclient">
-<title>How do I use my (Eudora, XFmail, other random mail client) mailboxes in Kmail?</title>
+<sect1 id="questionsandanswersstart">
+<title>Common Questions and Answers</title>
 
-<para>See the section <link linkend="secImporting">Using other Mailbox files With Kmail</link>.</para>
-</sect1>
+<para>This section contains the solution to common problems.
+Don't hesitate to mail <ulink url="kmail@kde.org">kmail@kde.org</ulink>
+if you think something is missing here.</para>
 
-<sect1 id="howdoileavemailontheserverfromthekdefaq">
+<sect2 id="howdoiusemyeudoraxfmailotherrandommailclient">
+<title>How do I use my (Eudora, XFmail, other random mail client) mailboxes in KMail?</title>
+
+<para>See the section <link linkend="secImporting">Using other Mailbox files With KMail</link>.</para>
+</sect2>
+
+<sect2 id="howdoileavemailontheserverfromthekdefaq">
 <title>How do I leave mail on the server? (from the KDE FAQ)</title>
 
 <para>Open up the Settings window from the file menu. Click on the Network tab. Select your account
 from the account list and click the Modify button. This dialog contains the "Delete mail from server"
 setting which you must not select. </para>
-</sect1>
+</sect2>
 
-<sect1 id="howdoiautomaticallyinsertatextfooterwithinth">
+<sect2 id="howdoiautomaticallyinsertatextfooterwithinth">
 <title>How do I automatically insert a text footer within the mail? (from the KDE FAQ)</title>
 
 <para>The text footer is called a signature file. What you need to do is
 open up a text editor (like kedit) and type in what you want to appear in
 the footer. Save the file under a name like signature or footer. Go into
-Kmail and select <emphasis remap="bf">File &verbar; Settings...</emphasis>
+KMail and select <emphasis remap="bf">File &verbar; Settings...</emphasis>
 Look in the "Identity" tab for the "signature file" field. Click on the
-ellipses button and select the file you just created. Now Kmail will
-automatically insert that file in any message you write.</para> </sect1>
+ellipses button and select the file you just created. Now KMail will
+automatically insert that file in any message you write.</para>
+</sect2>
 
-<sect1 id="whydoeskmailkeepaskingmeforthelocationofmysi">
-<title>Why does Kmail keep asking me for the location of my signature file?</title>
+<sect2 id="whydoeskmailkeepaskingmeforthelocationofmysi">
+<title>Why does KMail keep asking me for the location of my signature file?</title>
 
-<para>Kmail will ask you the location of your signature file if you have checked the
+<para>KMail will ask you the location of your signature file if you have checked the
 option <emphasis remap="bf">Use a signature from file</emphasis> in the <emphasis remap="bf">Composer</emphasis> tab of
 the <emphasis remap="bf">Settings</emphasis> dialog, but have not specified a signature file in the
 <emphasis remap="bf">Identity</emphasis> tab. You should either specify a signature file or uncheck
 <emphasis remap="bf">Use a signature from file</emphasis>.</para>
-</sect1>
+</sect2>
 
-<sect1 id="whydoesntwordwrapworkinthecomposerwindow">
+<sect2 id="whydoesntwordwrapworkinthecomposerwindow">
 <title>Why doesn't word wrap work in the Composer window?</title>
 
 <para>The word wrap setting is probably turned off. Word wrap can be toggled on and off in the 
 <emphasis remap="bf">Composer</emphasis> tab of the <emphasis remap="bf">Settings</emphasis> dialog box.</para>
-</sect1>
+</sect2>
 
-<sect1 id="howcanifindouthowmanyunreadmessagesihaveinam">
+<sect2 id="howcanifindouthowmanyunreadmessagesihaveinam">
 <title>How can I find out how many unread messages I have in a mail folder?</title>
 
 <para>The number of unread messages is conveniently displayed in the
 <emphasis remap="bf">Folders Pane</emphasis> after the folder name.</para>
-</sect1>
-
-<sect1 id="secqasendmail">
-<title>How do I set up sendmail to work with Kmail if I have a dial-up connection?</title>
-
-	<para>First you should check if your distribution can set this up for you (or
-	if it alreay did that). If that's not the case, you can follow these
-	instructions, which apply to sendmail version 8.6.x and 8.7.x.</para>
-
-	<para>These instructions were taken almost verbatim from the UCT Linux
-	User's group page on <ulink
-	url="http://www.leg.uct.ac.za/Articles/sendmail_dialup.html">configuring
-	Sendmail for Dial-up connections</ulink>.</para>
-
-	<sect2 id="step1masqueradehost">
-	<title>Step 1: Masquerade host</title>
-
-	<para>You now need to edit <literal remap="tt">/etc/sendmail.cf</literal> to tell it which host to masquerade as.
-	Look for a line which says something like:
-	<screen># who I masquerade as (null for no masquerading) (see also $=M)
-	DM
-	</screen>
-	</para>
-
-	<para>and add your address to the end of the line beginning "DM". Our user changed it to the following
-	<screen>DMhendrix.org
-	</screen>
-	</para>
-
-	<para>When our user sends mail, the <literal
-	remap="tt">Return-Path</literal> and <literal remap="tt">From:</literal>
-	fields will now say that the mail comes from hendrix.org. This prevents
-	"cannot route to sender" messages which certain hosts you send mail to may
-	generate because your machine does not have a DNS entry. We must still
-	change the user portion of the email address, because if our user sends
-	mail now, the <literal remap="tt">From:</literal> field will read <literal
-	remap="tt">mj@hendrix.org</literal>, which is not correct. If you login to
-	your home machine with the same username as the username portion of your
-	email address, you can skip ahead to restarting sendmail. If you have
-	different usernames (as our example does), you need to add a user
-	database.</para> </sect2>
-
-	<sect2 id="step2createauserdatabase">
-	<title>Step 2: Create a user database</title>
-
-	<para>Create a file modelled on the following:
-	<screen>loginname:mailname      First_Last
-	First_Last:maildrop     loginname
-	</screen>
-	</para>
-
-	<para>"loginname" is the name you login is on your machine at home (in this case mj),
-	"First&lowbar;Last" is the name portion of your
-	email address (in this case mjturner). In this case our user created a file called
-	<literal remap="tt">/etc/userdb</literal> containing the following:
-	<screen>mj:mailname     mjturner@hendrix.org
-	mjturner:maildrop       mj
-	</screen>
-	</para>
-
-	<para>Once you have done this, you need to convert the text file <literal remap="tt">/etc/userdb</literal>
-	into a Berkeley "db" database file which sendmail can
-	understand. To do this, you need to run makemap as follows:
-	<screen># makemap btree /etc/userdb.db &lt; /etc/userdb
-	</screen>
-	</para>
-
-	<para>This creates the database file <literal remap="tt">/etc/userdb.db</literal>
-	from the text file <literal remap="tt">/etc/userdb</literal>. You must remember do this every time you
-	change <literal remap="tt">/etc/userdb</literal> otherwise sendmail will not be using
-	your latest user database when sending mail.</para>
-	</sect2>
-
-	<sect2 id="step3adduserdatabasetosendmailcf">
-	<title>Step 3: Add user database to sendmail.cf</title>
-
-	<para>You must also tell sendmail to use your user database (<literal remap="tt">/etc/userdb.db</literal>)
-	when sending mail. The syntax differs slightly depending on whether you are using an 8.7.x/8.8.x or 8.6.x
-	config file. You can tell which version yours is by searching for
-	the string "DZ" (<literal remap="tt">grep &circ;DZ /etc/sendmail.cf</literal>). For example, an 8.8.0
-	config file would say <literal remap="tt">DZ8.8.0</literal>.</para>
-
-	<sect3 id="xconfigfile">
-	<title>8.6.x config file</title>
-
-	<para>If you are using an 8.6.x config file, look for a line beginning
-	<screen>    # list of locations of user database file (null means no lookup)
-	    OU
-	</screen>
-	</para>
-
-	<para>and add the location of your user database. Our user changed the above line to:
-	<screen>    OU/etc/userdb.db
-	</screen>
-	</para>
-	</sect3>
-
-	<sect3 id="xor88xconfigfile">
-	<title>8.7.x or 8.8.x config file</title>
-
-	<para>If you are using an 8.7.x or 8.8.x config file look for a line beginning
-	<screen>    # list of locations of user database file (null means no lookup)
-	    O UserDatabaseSpec=
-	</screen>
-	</para>
-
-	<para>and add the location of your user database to it. Our user changed it to the following:
-	<screen>    O UserDatabaseSpec=/etc/userdb.db
-	</screen>
-	</para>
-	</sect3>
-	</sect2>
-
-	<sect2 id="step4restartsendmail">
-	<title>Step 4: Restart sendmail</title>
-
-	<para>After making these changes, as root you need to restart sendmail:
-	<screen># ps aux | grep sendmail | grep -v grep
-	root        64  0.0  0.0  1208     0  ?  SW  11:45   0:00 (sendmail)
-
-	# kill -HUP 64
-	</screen>
-	</para>
-
-	<para>(use <literal remap="tt">ps -ef</literal> instead of <literal remap="tt">ps aux</literal>
-	if you're using SysV).</para>
-
-	<para>Sendmail will now re-read its config file (<literal remap="tt">/etc/sendmail.cf</literal>)
-	and everything should be working. When you send mail, the from
-	header field will be a valid email address and not the address you have on your machine. For example, when our user sends
-	mail, it will read <literal remap="tt">From: mjturner@hendrix.org</literal> in the headers. This works with all mail user agents (Mutt, Elm, Pine, mh,
-	etc) because the address translation is done at the mail transport agent level. Basically, you can use any program to send
-	mail and your address will be correct.</para>
-	</sect2>
-
-	<sect2 id="step5configureasmartrelay">
-	<title>Step 5: Configure a "smart" relay</title>
-
-	<para>It can take quite a while for mail to get delivered to its final destination, as sendmail has to connect to the mail servers of the
-	recipients of your mail. This time would have to be spent online, something which can prove to be costly. If, however, you
-	configure sendmail to use a "smart" relay, it will deliver all mail to that relay and the relay will then deliver it to its
-	destination. Your ISP's mail server makes an ideal "smart" relay.</para>
-
-	<para>Change
-	<screen># "Smart" relay host (may be null)
-	DS
-	</screen>
-	</para>
-
-	<para>to
-	<screen># "Smart" relay host (may be null)
-	DSmail.hendrix.org
-	</screen>
-	</para>
-
-	<para>Don't forget to restart sendmail after doing this (see restarting sendmail).
-	All non-local mail will now be sent to
-	<literal remap="tt">mail.hendrix.org</literal> which will then deliver it to its final destination.</para>
 </sect2>
+
+<sect2 id="secqasendmail">
+<title>How do I set up sendmail to work with KMail if I have a dial-up connection?</title>
+
+<para>First you should check if your Linux/BSD/whatever distribution can do this for
+you. Perhaps it has already been set up during installation.</para>
+
+<para>If that's not the case, you may want to have a look at
+<ulink url="http://www.linuxdoc.org/HOWTO/mini/Mail-Queue.html">the Mail Queue HOWTO</ulink>
+or at <ulink url="http://www.leg.uct.ac.za/Articles/sendmail_dialup.html">UCT Linux User's group page
+on configuring sendmail for Dial-up connections</ulink>.</para>
+</sect2>
+
 </sect1>
+
 </chapter>
 
 
@@ -1659,7 +1754,7 @@ the <emphasis remap="bf">Settings</emphasis> dialog, but have not specified a si
 
 <sect1 id="secdevelopers">
 <title>Original Developers</title>
-<!-- please keep in sync with the authors list webpage -->
+<!-- please keep in sync with the authors list on the webpage -->
 
 <para><itemizedlist>
 	<listitem><para>Stefan Taferner <ulink url="mailto:taferner@alpin.or.at">&lt;taferner@alpin.or.at&gt;</ulink></para></listitem>
@@ -1680,8 +1775,10 @@ the <emphasis remap="bf">Settings</emphasis> dialog, but have not specified a si
 	<listitem><para>Daniel Naber <ulink url="mailto:dnaber@mini.gt.owl.de">&lt;dnaber@mini.gt.owl.de&gt;</ulink></para></listitem>
 	<listitem><para>Sven Radej <ulink url="mailto:radej@kde.org">&lt;radej@kde.org&gt;</ulink></para></listitem>
 	<listitem><para>Espen Sand <ulink url="mailto:espen@kde.org">&lt;espen@kde.org&gt;</ulink></para></listitem>
-	<listitem><para>Don Sanders <ulink url="mailto:sanders@kde.org">&lt;sanders@kde.org&gt;</ulink>) (Active maintainer)</para></listitem>
+	<listitem><para>Don Sanders <ulink url="mailto:sanders@kde.org">&lt;sanders@kde.org&gt;</ulink> (Active maintainer)</para></listitem>
 	<listitem><para>George Staikos <ulink url="mailto:staikos@0wned.org">&lt;staikos@0wned.org&gt;</ulink></para></listitem>
+	<listitem><para>Mario Weilguni <ulink url="mailto:mweilguni@sime.com">&lt;mweilguni@sime.com&gt;</ulink></para></listitem>
+	<listitem><para>Robert D. Williams <ulink url="mailto:rwilliams@kde.org">&lt;rwilliams@kde.org&gt;</ulink></para></listitem>
 
 </itemizedlist></para>
 
@@ -1690,16 +1787,12 @@ the <emphasis remap="bf">Settings</emphasis> dialog, but have not specified a si
 <sect1 id="documentation">
 <title>Documentation</title>
 
-	<para>Update for Kmail 1.1 by Daniel Naber <ulink url="mailto:dnaber@mini.gt.owl.de">&lt;dnaber@mini.gt.owl.de&gt;</ulink></para>
-	<para>Kmail 1.0 documentation by David Rugge <ulink url="mailto:davidrugge@mindspring.com">&lt;davidrugge@mindspring.com&gt;</ulink></para>
+	<para>Update for KMail 1.1 by Daniel Naber <ulink url="mailto:dnaber@mini.gt.owl.de">&lt;dnaber@mini.gt.owl.de&gt;</ulink>,
+		PGP part by Andreas Gungl <ulink url="mailto:a.gungl@gmx.de">&lt;a.gungl@gmx.de&gt;</ulink></para>
+	<para>KMail 1.0 documentation by David Rugge <ulink url="mailto:davidrugge@mindspring.com">&lt;davidrugge@mindspring.com&gt;</ulink></para>
 	<para>Original documemtation by Markus Wuebben <ulink url="mailto:markus.wuebben@kde.org">&lt;markus.wuebben@kde.org&gt;</ulink></para>
 	<para>Robert Williams - Editor <ulink url="mailto:rwilliams@kde.org">&lt;rwilliams@kde.org&gt;</ulink></para>
-	<para>Some of the Kmail Questions and Answers were taken from the Kmail section of the KDE FAQ.</para>
-
-	<para>The section on Sendmail configuration for dial-up connections was copied almost
-	verbatim from UCT Linux User's group page on
-	<ulink url="http://www.leg.uct.ac.za/Articles/sendmail_dialup.html">configuring Sendmail for 
-	Dial-up connections</ulink></para>
+	<para>Some of the KMail Questions and Answers were taken from the KMail section of the KDE FAQ.</para>
 
 	<para>Thanks to Michael Elkins <ulink url="mailto:me@cs.hmc.edu">&lt;me@cs.hmc.edu&gt;</ulink> for his
 	excellent description of the different Unix mail formats in the Mutt documentation.</para>
@@ -1713,15 +1806,15 @@ the <emphasis remap="bf">Settings</emphasis> dialog, but have not specified a si
 	</itemizedlist></para>
 
 	<para>for providing directions on using other mail clients' mailboxes
-	with Kmail.</para>
+	with KMail.</para>
 </sect1>
 
 <sect1 id="copyright">
 <title>Copyright</title>
 
-<para>Kmail is copyright 1998-2000 Stefan Taferner.</para>
+<para>KMail is copyright 1998-2000 Stefan Taferner.</para>
 
-<para>The Kmail documentation is copyright 1999-2000 David Rugge.</para>
+<para>The KMail documentation is copyright 1999-2000 David Rugge.</para>
 
 <para>This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
