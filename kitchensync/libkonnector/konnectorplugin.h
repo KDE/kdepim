@@ -59,7 +59,7 @@ public:
 public slots:
     virtual void slotWrite(const QString &, const QByteArray & ) = 0;
     virtual void slotWrite(KSyncEntryList ) = 0;
-    virtual void slotWrite(QValueList<KOperations> ) = 0;
+    virtual void slotWrite(KOperationsList ) = 0;
 signals:
     void sync(const QString&,  KSyncEntryList );
     void errorKonnector(const QString&, int, const QString& );

@@ -139,14 +139,14 @@ class KSyncEntry
      * @param type The type for the ids to returned
      * @return the ids as QValueList
      */
-    QValueList<Kontainer> ids(const QString &type )const;
+    KontainerList ids(const QString &type )const;
 
     /**
      * @return all ids
      */
-    QMap<QString,  QValueList<Kontainer > > ids()const;
+    QMap<QString,  KontainerList > ids()const;
  private:
-    QMap<QString,  QValueList<Kontainer > > m_maps;
+    QMap<QString,  KontainerList > m_maps;
     class KSyncEntryPrivate;
     KSyncEntryPrivate *d;
     int m_mode;

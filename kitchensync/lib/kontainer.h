@@ -3,6 +3,7 @@
 #define kontainer_h
 
 #include <qstring.h>
+#include <qvaluelist.h>
 
 class Kontainer {
 public:
@@ -22,6 +23,9 @@ private:
     QString m_second;
 };
 
-
+/**
+ * Convinience typedef
+ */
+typedef QValueList<Kontainer> KontainerList;
 
 #endif

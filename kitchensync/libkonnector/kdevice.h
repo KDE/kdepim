@@ -20,6 +20,7 @@
 #define kdevice_h
 
 #include <qstring.h>
+#include <qvaluelist.h>
 
 /**
  *  KDevice stores informations about any konnector
@@ -69,5 +70,11 @@ private:
     class KDevicePrivate;
     KDevicePrivate *d;
 };
+
+
+/**
+ * Convinience typedef
+ */
+typedef QValueList<KDevice> KDeviceList;
 
 #endif

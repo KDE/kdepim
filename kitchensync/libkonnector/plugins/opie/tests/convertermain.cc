@@ -81,7 +81,7 @@ int main( int argc,  char *argv[] )
     kdDebug() << "KdeId for test-123 and -12346 is " << helper.kdeId("test-123",  "-12346") << endl;
     kdDebug() << "Konnector Id test-123 and Test-12345 " << helper.konnectorId( "test-123",  "Test-12345") << endl;
     kdDebug() << "Illegal group " << helper.konnectorId( "test-1234",  "ping-pong") << endl;
-    QValueList<Kontainer> kont;
+    KontainerList kont;
     //kont.append( Kontainer( "-12345",  "12345-Test") );
     //kont.append( Kontainer( "-12346",  "12346-Test") );
     //helper.replaceIds( "test-123",  kont );

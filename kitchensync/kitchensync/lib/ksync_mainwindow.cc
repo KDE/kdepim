@@ -35,10 +35,8 @@
 #include <kaction.h>
 #include <kapplication.h>
 #include <kconfig.h>
-#include <kdebug.h>
 #include <klocale.h>
 #include <kmenubar.h>
-#include <kdebug.h>
 #include <ktrader.h>
 #include <kstatusbar.h>
 

@@ -43,7 +43,7 @@ namespace OpieHelper {
         QString kdeId( const QString &appName, const QString &uid );
         CategoryEdit *m_edit;
         KonnectorUIDHelper *m_helper;
-        QValueList<Kontainer> m_kde2opie;
+        KontainerList m_kde2opie;
         bool m_metaSyncing : 1;
         QString m_tz;
     private:

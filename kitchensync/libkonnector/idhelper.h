@@ -25,7 +25,7 @@ public:
                const QString& konnectorId,
                const QString& kdeId);
     void replaceIds( const QString& appName,
-                     QValueList<Kontainer> );
+                     KontainerList );
     void removeId(const QString &app,  const QString &id);
     void clear();
     void save();
@@ -34,7 +34,7 @@ private:
     class KonnectorUIDHelperPrivate;
     KonnectorUIDHelperPrivate *d;
     KConfig *m_config;
-    QMap< QString,  QValueList<Kontainer> > m_ids;
+    QMap< QString,  KontainerList > m_ids;
 };
 
 #endif

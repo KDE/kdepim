@@ -18,7 +18,7 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <kconfig.h>
 
 #include <signal.h>

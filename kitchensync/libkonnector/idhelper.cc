@@ -29,11 +29,11 @@ KonnectorUIDHelper::~KonnectorUIDHelper()
 QString KonnectorUIDHelper::konnectorId( const QString &appName,  const QString &kdeId, const QString &defaultId )
 {
     kdDebug(5201) << "IdHelper: KonnectorIdAppName: " << appName << " KDE Id: " << kdeId << " defaultId " << defaultId << endl;
-    QMap<QString,  QValueList<Kontainer> >::Iterator it;
+    QMap<QString,  KontainerList >::Iterator it;
     it = m_ids.find( appName );
     if ( it != m_ids.end() ) {
-        QValueList<Kontainer> kontainer = it.data();
-        QValueList<Kontainer>::Iterator it;
+        KontainerList kontainer = it.data();
+        KontainerList::Iterator it;
         for ( it = kontainer.begin(); it != kontainer.end(); ++it ) {
             if ( kdeId.stripWhiteSpace() == (*it).second().stripWhiteSpace() ) {
                 kdDebug(5201) << "it.first = " << (*it).first() << endl;
@@ -46,11 +46,11 @@ QString KonnectorUIDHelper::konnectorId( const QString &appName,  const QString 
 QString KonnectorUIDHelper::kdeId( const QString &appName,  const QString &konnectorId, const QString &defaultId )
 {
     kdDebug(5201) << "kdeId: AppName: " << appName  << " konnectorId " << konnectorId << endl;
-    QMap<QString,  QValueList<Kontainer> >::Iterator it;
+    QMap<QString,  KontainerList >::Iterator it;
     it = m_ids.find( appName );
     if ( it != m_ids.end() ) {
-        QValueList<Kontainer> kontainer = it.data();
-        QValueList<Kontainer>::Iterator it;
+        KontainerList kontainer = it.data();
+        KontainerList::Iterator it;
         for ( it = kontainer.begin(); it != kontainer.end(); ++it ) {
             if ( konnectorId.stripWhiteSpace() == (*it).first().stripWhiteSpace() ) {
                 kdDebug(5201) << "it.second " << (*it).second() << endl;
@@ -65,16 +65,16 @@ void KonnectorUIDHelper::addId( const QString& appName,
                                 const QString& kdeId )
 {
     kdDebug(5201) << "addId " << appName << "  konId "  << konnectorId << " kdeId " << kdeId << endl;
-    QMap<QString,  QValueList<Kontainer> >::Iterator it;
+    QMap<QString,  KontainerList >::Iterator it;
     it = m_ids.find( appName );
     if ( it == m_ids.end() ) {
         kdDebug(5201) << "First insert" << endl;
-        QValueList<Kontainer> kontainer;
+        KontainerList kontainer;
         kontainer.append( Kontainer( konnectorId,  kdeId ) );
         m_ids.replace( appName,  kontainer );
     }else{
         kdDebug(5201) << "Already inserted" << endl;
-        QValueList<Kontainer> kontainer = it.data();
+        KontainerList kontainer = it.data();
         Kontainer kont( konnectorId,  kdeId );
         kontainer.remove( kont );
         kontainer.append( kont );
@@ -83,11 +83,11 @@ void KonnectorUIDHelper::addId( const QString& appName,
 }
 void KonnectorUIDHelper::removeId( const QString &appName,  const QString &id )
 {
-    QMap<QString,  QValueList<Kontainer> >::Iterator it;
+    QMap<QString,  KontainerList >::Iterator it;
     it = m_ids.find( appName );
     if ( it== m_ids.end() ) {
-        QValueList<Kontainer> kontainer = it.data();
-        QValueList<Kontainer>::Iterator it;
+        KontainerList kontainer = it.data();
+        KontainerList::Iterator it;
         for ( it = kontainer.begin(); it != kontainer.end(); ++it ) {
             if ( (*it).first() == id || (*it).second() == id ) {
                 it  = kontainer.remove( it );
@@ -97,7 +97,7 @@ void KonnectorUIDHelper::removeId( const QString &appName,  const QString &id )
     }
 }
 void KonnectorUIDHelper::replaceIds( const QString &app,
-                                     QValueList<Kontainer> ids )
+                                     KontainerList ids )
 {
     m_ids.replace( app,  ids );
 }
@@ -109,8 +109,8 @@ void KonnectorUIDHelper::clear()
 void KonnectorUIDHelper::save()
 {
     QString string;
-    QMap<QString,  QValueList<Kontainer> >::Iterator mapIt;
-    QValueList<Kontainer>::Iterator kontainerIt;
+    QMap<QString,  KontainerList >::Iterator mapIt;
+    KontainerList::Iterator kontainerIt;
     for ( mapIt = m_ids.begin(); mapIt != m_ids.end(); ++mapIt ) {
         for ( kontainerIt = mapIt.data().begin(); kontainerIt != mapIt.data().end(); ++kontainerIt ) {
 //            AppName||%%||KonnectorId||%%||KDEID%%||%%AppName||%%||KonnectorId||%%||KDEID

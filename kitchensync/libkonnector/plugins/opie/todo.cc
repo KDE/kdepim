@@ -101,8 +101,8 @@ QByteArray ToDo::fromKDE(KAlendarSyncEntry* entry )
 {
     // KDE ID clear bit first
     m_kde2opie.clear();
-    QValueList<Kontainer> newIds = entry->ids( "todo");
-    for ( QValueList<Kontainer>::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
+    KontainerList newIds = entry->ids( "todo");
+    for ( KontainerList::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
         m_helper->addId("todo",  (*idIt).first(),  (*idIt).second() );
     }
     // update m_helper first;

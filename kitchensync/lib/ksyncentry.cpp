@@ -34,20 +34,20 @@ void KSyncEntry::insertId( const QString &type,
                            const QString &konnectorId,
                            const QString &kdeId )
 {
-    QMap<QString,  QValueList<Kontainer > >::Iterator it;
+    QMap<QString,  KontainerList >::Iterator it;
     it = m_maps.find( type );
     if ( it == m_maps.end() ) { // not inserted yet anything
-        QValueList<Kontainer > list;
+        KontainerList list;
         list.append( Kontainer(konnectorId,  kdeId) );
         m_maps.replace( type, list);
     }else {
         it.data().append(Kontainer( konnectorId,  kdeId) );
     }
 }
-QValueList<Kontainer> KSyncEntry::ids(const QString &type )const
+KontainerList KSyncEntry::ids(const QString &type )const
 {
-    QValueList<Kontainer> id;
-    QMap<QString,  QValueList<Kontainer > >::ConstIterator it;
+    KontainerList id;
+    QMap<QString,  KontainerList >::ConstIterator it;
     it = m_maps.find( type );
     if ( it != m_maps.end() )
         id = it.data();

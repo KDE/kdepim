@@ -28,8 +28,8 @@
 #include <qcstring.h>
 #include <ksyncentry.h>
 
+#include <kdevice.h> 
 #include "koperations.h"
-#include "konnectorplugin.h" //typedefs
 
 class Kapabilities;
 class KDevice;
@@ -61,10 +61,10 @@ public:
     /**
      *  @param  category the Category where Konnector should look \
      *          for konnector descriptions
-     *  @return QValueList<KDevice> this will return a list of \
+     *  @return KDeviceList this will return a list of \
      *          konnector descriptions
      */
-    QValueList<KDevice> query( const QString &category= QString::null );
+    KDeviceList query( const QString &category= QString::null );
 
     /** registers a konnector. register means it will load
      *  the plugin with the DeviceIdentification
@@ -149,7 +149,7 @@ public slots:
      * @param udi Device Id
      * @param ops Operations like delete
      */
-    void write(const QString &udi, QValueList<KOperations> );
+    void write(const QString &udi, KOperationsList );
     /**
      * Konnector will write to dest the array
      * @param udi Device Id

@@ -35,9 +35,9 @@ int main(int argc, char *argv[] )
   KApplication a;
 
   Konnector *konnector = new Konnector(0,0);
-  QValueList<KDevice> device;
+  KDeviceList device;
   device = konnector->query();
-  for(QValueList<KDevice>::Iterator it = device.begin(); it != device.end(); ++it ){
+  for(KDeviceList::Iterator it = device.begin(); it != device.end(); ++it ){
     kdDebug(5201) << "KDevice: " <<  (*it).identify() << endl;
     QString outp = konnector->registerKonnector( (*it) );
     kdDebug(5202) << "UID " <<  outp;

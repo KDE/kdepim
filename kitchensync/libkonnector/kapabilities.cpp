@@ -160,11 +160,11 @@ void Kapabilities::setAutoHandle(bool handle)
 {
   m_canHandle = handle;
 }
-QValueList<QString >  Kapabilities::ipProposals() const
+QStringList  Kapabilities::ipProposals() const
 {
   return m_propsIPs;
 }
-void Kapabilities::setIpProposals( const QValueList<QString > &ips )
+void Kapabilities::setIpProposals( const QStringList &ips )
 {
   m_propsIPs = ips;
 }

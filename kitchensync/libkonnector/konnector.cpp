@@ -22,7 +22,7 @@ public:
 
   }
   QMap<QString, KonnectorPlugin*> m_konnectors;
-  QValueList<KDevice> m_devices;
+  KDeviceList m_devices;
 };
 
 Konnector::Konnector( QObject *object, const char *name ) : QObject( object, name )
@@ -39,7 +39,7 @@ Konnector::~Konnector()
     }
   delete d;
 };
-QValueList<KDevice> Konnector::query(const QString &category )
+KDeviceList Konnector::query(const QString &category )
 {
   // lets find
     kdDebug(5201) << "query " << category << endl;
@@ -48,8 +48,8 @@ QValueList<KDevice> Konnector::query(const QString &category )
       kdDebug(5201) << "no devices found" << endl;
     return d->m_devices;
   }
-  QValueList<KDevice> dev;
-  for(QValueList<KDevice>::Iterator it = d->m_devices.begin(); it != d->m_devices.end(); ++it ){
+  KDeviceList dev;
+  for(KDeviceList::Iterator it = d->m_devices.begin(); it != d->m_devices.end(); ++it ){
     if( (*it).group() == category){
       dev.append( (*it) );
       kdDebug(5201) << "searching" << endl;
@@ -60,7 +60,7 @@ QValueList<KDevice> Konnector::query(const QString &category )
 QString Konnector::registerKonnector(const QString &Device )
 {
     kdDebug(5201) << "registerKonnector " << Device << endl;
-  for(QValueList<KDevice>::Iterator it = d->m_devices.begin(); it != d->m_devices.end(); ++it ){
+  for(KDeviceList::Iterator it = d->m_devices.begin(); it != d->m_devices.end(); ++it ){
     if((*it).identify() == Device ){ // ok found
       // now load the lib
       QString randStr;
@@ -161,7 +161,7 @@ void Konnector::write( const QString &udi, KSyncEntryList entry)
 
   plugin->slotWrite( entry );
 }
-void Konnector::write( const QString &udi, QValueList<KOperations> operations)
+void Konnector::write( const QString &udi, KOperationsList operations)
 {
   KonnectorPlugin *plugin = pluginByUDI( udi );
   if( plugin == 0)

@@ -20,7 +20,7 @@
 #ifndef kapabilities_h
 #define kapabilities_h
 
-#include <qarray.h>
+#include <qmemarray.h>
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qvaluelist.h>
@@ -190,8 +190,8 @@ public:
      * ipPproposals gives you a pair of ip Addresses which the Konnector
      * think could work
      */
-    QValueList<QString > ipProposals() const;
-    void setIpProposals( const QValueList<QString>& );
+    QStringList ipProposals() const;
+    void setIpProposals( const QStringList& );
 
 
     /**
@@ -290,7 +290,7 @@ private:
     bool m_meta:1;
     QString m_src;
     QString m_dest;
-    QValueList<QString > m_propsIPs;
+    QStringList m_propsIPs;
     QValueList< QPair<QString, QString> > m_propAuth;
     bool m_canHandle;
     QArray<int> m_ports;
