@@ -115,27 +115,27 @@ void KABEntryPainter::setShowURLs( bool value )
   mShowURLs = value;
 }
 
-int KABEntryPainter::hitsEmail( QPoint p )
+int KABEntryPainter::hitsEmail( const QPoint &p )
 {
   return hits( mEmailRects, p );
 }
 
-int KABEntryPainter::hitsURL( QPoint p )
+int KABEntryPainter::hitsURL( const QPoint &p )
 {
   return hits( mURLRects, p );
 }
 
-int KABEntryPainter::hitsPhone( QPoint p )
+int KABEntryPainter::hitsPhone( const QPoint &p )
 {
   return hits( mPhoneRects, p );
 }
 
-int KABEntryPainter::hitsTalk( QPoint p )
+int KABEntryPainter::hitsTalk( const QPoint &p )
 {
   return hits( mTalkRects, p );
 }
 
-int KABEntryPainter::hits( const QRectList& list, QPoint p )
+int KABEntryPainter::hits( const QRectList& list, const QPoint &p )
 {
   QRectList::const_iterator pos;
   int count = 0;

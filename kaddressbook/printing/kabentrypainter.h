@@ -85,28 +85,28 @@ class KABEntryPainter
       email address in the emails list. If it does not point at one of
       the email addresses, -1 is returned.
      */
-    int hitsEmail( QPoint p );
+    int hitsEmail( const QPoint &p );
 
     /**
       Returns the index of the rectangle if the point p is inside of
       one of the telephone numbers. See @see hitsEmail
      */
-    int hitsPhone( QPoint p );
+    int hitsPhone( const QPoint &p );
 
     /**
       Returns the index of the rectangle if the point p is inside of
       one of the telephone numbers. See @see hitsEmail
      */
-    int hitsTalk( QPoint p );
+    int hitsTalk( const QPoint &p );
 
     /**
       Returns the index of the rectangle if the point p is inside of
       one of the telephone numbers. See @see hitsEmail
      */
-    int hitsURL( QPoint p );
+    int hitsURL( const QPoint &p );
 
   private:
-    int hits( const QRectList& rects, QPoint p );
+    int hits( const QRectList& rects, const QPoint &p );
 
     QColor mForegroundColor;
     QColor mBackgroundColor;
