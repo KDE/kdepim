@@ -60,7 +60,7 @@ class RMessageComponent {
 
         QCString asString() { assemble(); return strRep_; }
 
-        const char * className() const { return "RMessageComponent"; }
+        virtual const char * className() const { return "RMessageComponent"; }
         
     protected:
 
