@@ -80,11 +80,9 @@ KNMainWindow::KNMainWindow()
   sb->setItemAlignment (SB_MAIN,AlignLeft | AlignVCenter);
   sb->insertItem(QString::null, SB_FILTER,2);
   sb->setItemAlignment (SB_FILTER,AlignLeft | AlignVCenter);
-
-  s_tatusGroup = new KStatusBarLabel( QString::null, SB_GROUP, sb );
-  sb->addWidget( s_tatusGroup );
-//   sb->insertItem(QString::null,SB_GROUP,3);
-//   sb->setItemAlignment (SB_GROUP,AlignLeft | AlignVCenter);
+  s_tatusGroup = new KStatusBarLabel( QString::null, SB_GROUP, sb );  
+  s_tatusGroup->setAlignment(AlignLeft | AlignVCenter);
+  sb->addWidget( s_tatusGroup, 3 );   
 
   //setup splitter behaviour
   manager()->setSplitterHighResolution(true);
@@ -341,8 +339,8 @@ void KNMainWindow::setStatusMsg(const QString& text, int id)
     }
     s_tatusGroup->setText( mtext );
   }
-  else {
-    statusBar()->changeItem(text, id);
+  else {      
+    statusBar()->changeItem(text, id);  
   }
 }
 
@@ -590,7 +588,7 @@ void KNMainWindow::initActions()
                               SLOT(slotAccGetNewHdrs()), actionCollection(), "account_dnlHeaders");
   a_ctAccDelete             = new KAction(i18n("&Delete Account"), "editdelete", 0, this,
                               SLOT(slotAccDelete()), actionCollection(), "account_delete");
-  a_ctAccPostNewArticle     = new KAction(i18n("&Post to Newsgroup..."), "filenew", Key_P , this,
+  a_ctAccPostNewArticle     = new KAction(i18n("&Post to Newsgroup..."), "mail_new", Key_P , this,
                               SLOT(slotAccPostNewArticle()), actionCollection(), "article_postNew");
 
   //collection-view - groups
@@ -652,7 +650,7 @@ void KNMainWindow::initActions()
   a_ctArtFilter->setShortcutConfigurable(false);
   a_ctArtFilterKeyb         = new KAction(i18n("Filter"), Key_F6, actionCollection(), "view_Filter_Keyb");
   a_ctArtFilterKeyb->plugAccel(a_ccel);
-  a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"find" , Key_F4 , this,
+  a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"mail_find" , Key_F4 , this,
                               SLOT(slotArtSearch()), actionCollection(), "article_search");
   a_ctArtFind               = new KAction(i18n("F&ind in Article..."),KStdAccel::shortcut(KStdAccel::Find) , this,
                               SLOT(slotArtFind()), actionCollection(), "find_in_article");
