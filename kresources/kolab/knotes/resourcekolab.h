@@ -78,7 +78,7 @@ public:
 
   /// The ResourceKolabBase methods called by KMail
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                              Q_UINT32 sernum, const QString& note );
+                              Q_UINT32 sernum, int format, const QString& note );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& uid );
   void fromKMailRefresh( const QString& type, const QString& resource );

@@ -37,6 +37,7 @@
 #include <dcopobject.h>
 #include "../shared/resourcekolabbase.h"
 #include "../shared/subresource.h"
+#include <kmail/kmailicalIface.h>
 
 namespace KABC {
 
@@ -109,7 +110,7 @@ public:
   void fromKMailDelSubresource( const QString& type, const QString& id );
 
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                              Q_UINT32 sernum, const QString& contact );
+                              Q_UINT32 sernum, int format, const QString& contact );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& contact );
   void fromKMailRefresh( const QString& type, const QString& resource );
@@ -146,7 +147,9 @@ protected:
   void loadSubResourceConfig( KConfig& config, const QString& name,
                               const QString& label, bool writable );
   bool loadSubResource( const QString& subResource );
-  QString loadContact( const QString& contactXML, const QString& subResource, Q_UINT32 sernum );
+  bool loadSubResource( const QString& subResource, const char* mimetype );
+  QString loadContact( const QString& contactData, const QString& subResource, 
+                       Q_UINT32 sernum, const KMailICalIface::StorageFormat format );
 
   QString configFile() const {
     return Kolab::ResourceKolabBase::configFile( "kabc" );

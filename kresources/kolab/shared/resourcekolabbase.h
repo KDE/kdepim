@@ -80,7 +80,8 @@ public:
   virtual bool fromKMailAddIncidence( const QString& type,
                                       const QString& resource,
                                       Q_UINT32 sernum,
-                                      const QString& xml ) = 0;
+                                      int format,
+                                      const QString& data ) = 0;
   virtual void fromKMailDelIncidence( const QString& type,
                                       const QString& resource,
                                       const QString& xml ) = 0;
@@ -131,6 +132,8 @@ public: // for Contact
 protected:
   /// Delete an incidence.
   bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
+
+  KMailICalIface::StorageFormat kmailStorageFormat( const QString& folder ) const;
 
   typedef QMap<QCString, QString> CustomHeaderMap;
 

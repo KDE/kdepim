@@ -37,6 +37,7 @@
 #include "task.h"
 #include "journal.h"
 
+#include <libkcal/icalformat.h>
 #include <libkdepim/kincidencechooser.h>
 #include <kabc/locknull.h>
 #include <kmainwindow.h>
@@ -58,6 +59,7 @@ static const char* kmailJournalContentsType = "Journal";
 static const char* eventAttachmentMimeType = "application/x-vnd.kolab.event";
 static const char* todoAttachmentMimeType = "application/x-vnd.kolab.task";
 static const char* journalAttachmentMimeType = "application/x-vnd.kolab.journal";
+static const char* incidenceInlineMimeType = "text/calendar";
 
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
@@ -170,8 +172,9 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
 
     const bool silent = mSilent;
     mSilent = true;
-    for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it )
+    for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
       addIncidence( mimetype, it.data(), subResource, it.key() );
+    }
     mSilent = silent;
 
     progress.setProgress( startIndex );
@@ -181,10 +184,6 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
     if ( progress.wasCanceled() )
       return false;
   }
-
-  kdDebug() << "KCal Kolab resource: got " << count << " in "
-            << subResource << " of type " << mimetype << endl;
-
   return true;
 }
 
@@ -212,14 +211,19 @@ bool ResourceKolab::loadAllEvents()
 {
   removeIncidences( "Event" );
   mCalendar.deleteAllEvents();
-  return doLoadAll( mEventSubResources, eventAttachmentMimeType );
+  bool kolabStyle = doLoadAll( mEventSubResources, eventAttachmentMimeType );
+  bool icalStyle = doLoadAll( mEventSubResources, incidenceInlineMimeType );
+  return kolabStyle && icalStyle;
 }
 
 bool ResourceKolab::loadAllTodos()
 {
   removeIncidences( "Todo" );
   mCalendar.deleteAllTodos();
-  return doLoadAll( mTodoSubResources, todoAttachmentMimeType );
+  bool kolabStyle = doLoadAll( mTodoSubResources, todoAttachmentMimeType );
+  bool icalStyle = doLoadAll( mTodoSubResources, incidenceInlineMimeType );
+
+  return kolabStyle && icalStyle;
 }
 
 bool ResourceKolab::loadAllJournals()
@@ -332,17 +336,22 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
       mSilent = silent;
   }
 }
-void ResourceKolab::addIncidence( const char* mimetype, const QString& xml,
+void ResourceKolab::addIncidence( const char* mimetype, const QString& data,
                                   const QString& subResource, Q_UINT32 sernum )
 {
   // This uses pointer comparison, so it only works if we use the static
   // objects defined in the top of the file
   if ( mimetype == eventAttachmentMimeType )
-    addEvent( xml, subResource, sernum );
+    addEvent( data, subResource, sernum );
   else if ( mimetype == todoAttachmentMimeType )
-    addTodo( xml, subResource, sernum );
+    addTodo( data, subResource, sernum );
   else if ( mimetype == journalAttachmentMimeType )
-    addJournal( xml, subResource, sernum );
+    addJournal( data, subResource, sernum );
+  else if ( mimetype == incidenceInlineMimeType ) {
+    ICalFormat format;
+    Incidence *inc = format.fromString( data );
+    addIncidence( inc, subResource, sernum );
+  }
 }
 
 
@@ -351,31 +360,51 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
 {
   const QString& type = incidencebase->type();
   const char* mimetype = 0;
-  QString xml;
+  QString data;
+  ICalFormat format;
+  bool isXMLStorageFormat = kmailStorageFormat( subresource ) == KMailICalIface::StorageXML;
   if ( type == "Event" ) {
-    mimetype = eventAttachmentMimeType;
-    xml = Kolab::Event::eventToXML( static_cast<KCal::Event *>(incidencebase),
-                                    mCalendar.timeZoneId() );
+    if( isXMLStorageFormat ) {
+      mimetype = eventAttachmentMimeType;
+      data = Kolab::Event::eventToXML( static_cast<KCal::Event *>(incidencebase),
+          mCalendar.timeZoneId() );
+    } else {
+      mimetype = incidenceInlineMimeType;
+      data = format.createScheduleMessage( static_cast<KCal::Event *>(incidencebase), 
+          Scheduler::Request );
+    }
   } else if ( type == "Todo" ) {
-    mimetype = todoAttachmentMimeType;
-    xml = Kolab::Task::taskToXML( static_cast<KCal::Todo *>(incidencebase),
-                                  mCalendar.timeZoneId() );
+    if( isXMLStorageFormat ) {
+      mimetype = todoAttachmentMimeType;
+      data = Kolab::Task::taskToXML( static_cast<KCal::Todo *>(incidencebase),
+          mCalendar.timeZoneId() );
+    } else {
+      mimetype = incidenceInlineMimeType;
+      data = format.createScheduleMessage( static_cast<KCal::Todo *>(incidencebase), 
+          Scheduler::Request );
+    }
   } else if ( type == "Journal" ) {
-    mimetype = journalAttachmentMimeType;
-    xml = Kolab::Journal::journalToXML( static_cast<KCal::Journal *>(incidencebase ),
-                                        mCalendar.timeZoneId() );
+    if( isXMLStorageFormat ) {
+      mimetype = journalAttachmentMimeType;
+      data = Kolab::Journal::journalToXML( static_cast<KCal::Journal *>(incidencebase ),
+          mCalendar.timeZoneId() );
+    } else {
+      mimetype = incidenceInlineMimeType;
+      data = format.createScheduleMessage( static_cast<KCal::Journal *>(incidencebase), 
+          Scheduler::Request );
+    }
   } else {
     kdWarning(5006) << "Can't happen: unhandled type=" << type << endl;
   }
 
-//  kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
+//  kdDebug() << k_funcinfo << "Data string:\n" << data << endl;
 
   KCal::Incidence* incidence = static_cast<KCal::Incidence *>( incidencebase );
   CustomHeaderMap customHeaders;
   if ( incidence->schedulingID() != incidence->uid() )
     customHeaders.insert( "X-Kolab-SchedulingID", incidence->schedulingID() );
 
-  return kmailUpdate( subresource, sernum, xml, mimetype, incidencebase->uid(), customHeaders );
+  return kmailUpdate( subresource, sernum, data, mimetype, incidencebase->uid(), customHeaders );
 }
 
 bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _subresource,
@@ -444,7 +473,6 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       if ( !mUidsPendingAdding.contains( uid ) ) {
         mCalendar.addIncidence( incidence );
         incidence->registerObserver( this );
-      kdDebug(5650) << "Registering: " << this << " as Observer of: " << incidence << endl;
       }
       if ( !subResource.isEmpty() && sernum != 0 ) {
         mUidMap[ uid ] = StorageReference( subResource, sernum );
@@ -626,7 +654,8 @@ void ResourceKolab::setTimeZoneId( const QString& tzid )
 bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            const QString& subResource,
                                            Q_UINT32 sernum,
-                                           const QString& xml )
+                                           int format,
+                                           const QString& data )
 {
   bool rc = true;
   const bool silent = mSilent;
@@ -638,18 +667,27 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
     return false;
   if ( !subresourceActive( subResource ) ) return true;
 
-  // If this xml file is one of ours, load it here
-  if ( type == kmailCalendarContentsType )
-    addEvent( xml, subResource, sernum );
-  else if ( type == kmailTodoContentsType )
-    addTodo( xml, subResource, sernum );
-  else if ( type == kmailJournalContentsType )
-    addJournal( xml, subResource, sernum );
-  else
-    rc = false;
+  if ( format == KMailICalIface::StorageXML ) {
+    // If this data file is one of ours, load it here
+    if ( type == kmailCalendarContentsType )
+      addEvent( data, subResource, sernum );
+    else if ( type == kmailTodoContentsType )
+      addTodo( data, subResource, sernum );
+    else if ( type == kmailJournalContentsType )
+      addJournal( data, subResource, sernum );
+    else
+      rc = false;
+  } else {
+    ICalFormat f;
+    Incidence *inc = f.fromString( data );
+    if ( !inc ) 
+      rc = false;
+    else
+      addIncidence( inc, subResource, sernum );
+  }
 
   mSilent = silent;
- return rc;
+  return rc;
 }
 
 void ResourceKolab::fromKMailDelIncidence( const QString& type,

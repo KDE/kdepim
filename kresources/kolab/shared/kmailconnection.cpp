@@ -116,13 +116,14 @@ bool KMailConnection::fromKMailAddIncidence( const QString& type,
                                              const QString& folder,
                                              Q_UINT32 sernum,
                                              int format,
-                                             const QString& xml )
+                                             const QString& data )
 {
-  if ( format != KMailICalIface::StorageXML )
+  if ( format != KMailICalIface::StorageXML 
+      && format != KMailICalIface::StorageIcalVcard )
     return false;
 //   kdDebug(5650) << "KMailConnection::fromKMailAddIncidence( " << type << ", "
 //                 << folder << " ). iCal:\n" << ical << endl;
-  return mResource->fromKMailAddIncidence( type, folder, sernum, xml );
+  return mResource->fromKMailAddIncidence( type, folder, sernum, format, data );
 }
 
 void KMailConnection::fromKMailDelIncidence( const QString& type,
@@ -212,6 +213,7 @@ bool KMailConnection::kmailIncidences( QMap<Q_UINT32, QString>& lst,
   return mKMailIcalIfaceStub->ok();
 }
 
+
 bool KMailConnection::kmailGetAttachment( KURL& url,
                                           const QString& resource,
                                           Q_UINT32 sernum,
@@ -250,6 +252,15 @@ bool KMailConnection::kmailUpdate( const QString& resource,
   } else
     return false;
 }
+
+bool KMailConnection::kmailStorageFormat( KMailICalIface::StorageFormat& type, 
+                                          const QString& folder )
+{
+  bool ok = connectToKMail();
+  type = mKMailIcalIfaceStub->storageFormat( folder );
+  return ok && mKMailIcalIfaceStub->ok();
+}
+
 
 
 void KMailConnection::unregisteredFromDCOP( const QCString& appId )

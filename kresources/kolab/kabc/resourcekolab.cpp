@@ -38,6 +38,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktempfile.h>
+#include <kabc/vcardconverter.h>
 
 #include <qobject.h>
 #include <qtimer.h>
@@ -69,6 +70,7 @@ K_EXPORT_COMPONENT_FACTORY(kabc_kolab,KolabFactory);
 
 static const char* s_kmailContentsType = "Contact";
 static const char* s_attachmentMimeType = "application/x-vnd.kolab.contact";
+static const char* s_inlineMimeType = "text/x-vcard";
 
 KABC::ResourceKolab::ResourceKolab( const KConfig *config )
   : KPIM::ResourceABC( config ),
@@ -146,29 +148,48 @@ void KABC::ResourceKolab::releaseSaveTicket( Ticket* ticket )
   delete ticket;
 }
 
-QString KABC::ResourceKolab::loadContact( const QString& contactXML, const QString& subResource, Q_UINT32 sernum )
+QString KABC::ResourceKolab::loadContact( const QString& contactData, 
+                                          const QString& subResource, 
+                                          Q_UINT32 sernum,
+                                          KMailICalIface::StorageFormat format )
 {
-  Contact contact( contactXML, this, subResource, sernum ); // load
   KABC::Addressee addr;
-  contact.saveTo( &addr );
+  if ( format == KMailICalIface::StorageXML ) {
+    Contact contact( contactData, this, subResource, sernum ); // load
+    contact.saveTo( &addr );
+  } else {
+    KABC::VCardConverter converter;
+    addr = converter.parseVCard( contactData );
+  }
 
   addr.setResource( this );
   addr.setChanged( false );
   KABC::Resource::insertAddressee( addr ); // same as mAddrMap.insert( addr.uid(), addr );
   mUidMap[ addr.uid() ] = StorageReference( subResource, sernum );
-  kdDebug(5650) << "Loaded contact uid=" << addr.uid() << " sernum=" << sernum << " fullName=" << contact.fullName() << endl;
+  kdDebug(5650) << "Loaded contact uid=" << addr.uid() << " sernum=" << sernum << " fullName=" << addr.name() << endl;
   return addr.uid();
 }
 
 bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
 {
+  bool kolabstype = loadSubResource( subResource, s_attachmentMimeType );
+  bool vcardstyle = loadSubResource( subResource, s_inlineMimeType );
+  return kolabstype && vcardstyle;
+}
+
+bool KABC::ResourceKolab::loadSubResource( const QString& subResource, 
+                                           const char* mimetype )
+{
   int count = 0;
-  if ( !kmailIncidencesCount( count, s_attachmentMimeType, subResource ) ) {
+  if ( !kmailIncidencesCount( count, mimetype, subResource ) ) {
     kdError() << "Communication problem in ResourceKolab::load()\n";
     return false;
   }
   if ( !count )
     return true;
+
+  KMailICalIface::StorageFormat format = 
+    mimetype == s_attachmentMimeType ? KMailICalIface::StorageXML : KMailICalIface::StorageIcalVcard;
 
   // Read that many contacts at a time.
   // If this number is too small we lose time in kmail.
@@ -184,13 +205,13 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
   for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
     QMap<Q_UINT32, QString> lst;
 
-    if ( !kmailIncidences( lst, s_attachmentMimeType, subResource, startIndex, nbMessages ) ) {
+    if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
       kdError() << "Communication problem in ResourceKolab::load()\n";
       return false;
     }
 
     for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
-      loadContact( it.data(), subResource, it.key() );
+      loadContact( it.data(), subResource, it.key(), format );
     }
     progress.setProgress( startIndex );
     // Note that this is a case where processEvents is OK - we have a modal dialog,
@@ -290,17 +311,7 @@ void AttachmentList::updateAttachment( const QByteArray& data, const QString& na
 
 bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
 {
-  Contact contact( &addr );
   const QString uid = addr.uid();
-  // The addressee is converted to: 1) the xml  2) the optional picture 3) the optional logo 4) the optional sound
-  const QString xml = contact.saveXML();
-  AttachmentList att;
-  att.updatePictureAttachment( contact.picture(), contact.pictureAttachmentName() );
-  att.updatePictureAttachment( contact.logo(), contact.logoAttachmentName() );
-  // no way to know the mimetype. The addressee editor allows to attach _any_ kind of file,
-  // and the sound system sorts it out.
-  att.updateAttachment( contact.sound(), contact.soundAttachmentName(), "audio/unknown" );
-
   QString subResource;
   Q_UINT32 sernum;
   if ( mUidMap.contains( uid ) ) {
@@ -320,8 +331,26 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
       return false;
     sernum = 0;
   }
-
-  bool rc = kmailUpdate( subResource, sernum, xml, s_attachmentMimeType, uid /*subject*/,
+  QString data;
+  QString mimetype;
+  AttachmentList att;
+  bool isXMLStorageFormat = kmailStorageFormat( subResource ) == KMailICalIface::StorageXML;
+  if ( isXMLStorageFormat ) {
+    Contact contact( &addr );
+    // The addressee is converted to: 1) the xml  2) the optional picture 3) the optional logo 4) the optional sound
+    data = contact.saveXML();
+    att.updatePictureAttachment( contact.picture(), contact.pictureAttachmentName() );
+    att.updatePictureAttachment( contact.logo(), contact.logoAttachmentName() );
+    // no way to know the mimetype. The addressee editor allows to attach _any_ kind of file,
+    // and the sound system sorts it out.
+    att.updateAttachment( contact.sound(), contact.soundAttachmentName(), "audio/unknown" );
+    mimetype = s_attachmentMimeType;
+  } else {
+    mimetype = s_inlineMimeType;
+    KABC::VCardConverter converter;
+    data = converter.createVCard( addr );
+  }
+  bool rc = kmailUpdate( subResource, sernum, data, mimetype, uid /*subject*/,
                          CustomHeaderMap(),
                          att.attachmentURLs, att.attachmentMimeTypes, att.attachmentNames,
                          att.deletedAttachments );
@@ -382,6 +411,7 @@ void KABC::ResourceKolab::removeAddressee( const Addressee& addr )
 bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
                                                  const QString& subResource,
                                                  Q_UINT32 sernum,
+                                                 int format,
                                                  const QString& contactXML )
 {
   // Check if this is a contact
@@ -389,7 +419,8 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
     return false;
 
   // Load contact to find the UID
-  const QString uid = loadContact( contactXML, subResource, sernum );
+  const QString uid = loadContact( contactXML, subResource, sernum, 
+      ( KMailICalIface::StorageFormat )format );
 
   //kdDebug(5650) << k_funcinfo << uid << endl;
 
@@ -504,8 +535,10 @@ void KABC::ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString
                                                     const QString& /* type */,
                                                     const QString& folder )
 {
+  // FIXME
+  KMailICalIface::StorageFormat format = KMailICalIface::StorageXML;
   for( QMap<Q_UINT32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
-    loadContact( it.data(), folder, it.key() );
+    loadContact( it.data(), folder, it.key(), format );
   }
   if ( !addressBook() ){
     kdDebug(5650) << "asyncLoadResult() : addressBook() returning NULL pointer.\n";

@@ -83,6 +83,7 @@ public:
                         const QString& resource,
                         int startIndex,
                         int nbMessages );
+
   bool kmailGetAttachment( KURL& url, const QString& resource, Q_UINT32 sernum,
                            const QString& filename );
   bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
@@ -95,6 +96,8 @@ public:
                     const QStringList& attachmentMimetypes,
                     const QStringList& attachmentNames,
                     const QStringList& deletedAttachments );
+
+  bool kmailStorageFormat( KMailICalIface::StorageFormat& type, const QString& folder);
 
 private slots:
   virtual void unregisteredFromDCOP( const QCString& );

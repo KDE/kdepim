@@ -128,35 +128,42 @@ bool ResourceKolabBase::kmailUpdate( const QString& resource,
   if ( mSilent )
     return true;
 
-  // Save the xml file. Will be deleted at the end of this method
-  KTempFile file;
-  file.setAutoDelete( true );
-  QTextStream* stream = file.textStream();
-  stream->setEncoding( QTextStream::UnicodeUTF8 );
-  *stream << xml;
-  file.close();
-
-  // Add the xml file as an attachment
-  QStringList attachmentURLs = _attachmentURLs;
-  QStringList attachmentMimeTypes = _attachmentMimetypes;
-  QStringList attachmentNames = _attachmentNames;
-  KURL url;
-  url.setPath( file.name() );
-  url.setFileEncoding( "UTF-8" );
-  attachmentURLs.prepend( url.url() );
-  attachmentMimeTypes.prepend( mimetype );
-  attachmentNames.prepend( "kolab.xml" );
-
   QString subj = subject;
   if ( subj.isEmpty() )
     subj = i18n("Internal kolab data: Do not delete this mail.");
 
-  CustomHeaderMap customHeaders( _customHeaders );
-  customHeaders.insert( "X-Kolab-Type", mimetype );
+  if ( mimetype.startsWith( "application/x-vnd.kolab" ) ) {
 
-  return mConnection->kmailUpdate( resource, sernum, subj, plainTextBody(), customHeaders,
-                                   attachmentURLs, attachmentMimeTypes, attachmentNames,
-                                   deletedAttachments );
+    // Save the xml file. Will be deleted at the end of this method
+    KTempFile file;
+    file.setAutoDelete( true );
+    QTextStream* stream = file.textStream();
+    stream->setEncoding( QTextStream::UnicodeUTF8 );
+    *stream << xml;
+    file.close();
+
+    // Add the xml file as an attachment
+    QStringList attachmentURLs = _attachmentURLs;
+    QStringList attachmentMimeTypes = _attachmentMimetypes;
+    QStringList attachmentNames = _attachmentNames;
+    KURL url;
+    url.setPath( file.name() );
+    url.setFileEncoding( "UTF-8" );
+    attachmentURLs.prepend( url.url() );
+    attachmentMimeTypes.prepend( mimetype );
+    attachmentNames.prepend( "kolab.xml" );
+
+    CustomHeaderMap customHeaders( _customHeaders );
+    customHeaders.insert( "X-Kolab-Type", mimetype );
+
+    return mConnection->kmailUpdate( resource, sernum, subj, plainTextBody(), customHeaders,
+        attachmentURLs, attachmentMimeTypes, attachmentNames,
+        deletedAttachments );
+  } else {
+    // ical style, simply put the data inline
+    return mConnection->kmailUpdate( resource, sernum, subj, xml, _customHeaders,
+        _attachmentURLs, _attachmentMimetypes, _attachmentNames, deletedAttachments );
+  }
 }
 
 QString ResourceKolabBase::configFile( const QString& type ) const
@@ -203,3 +210,9 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
   return possible[chosenLabel];
 }
 
+KMailICalIface::StorageFormat ResourceKolabBase::kmailStorageFormat( const QString &folder ) const
+{
+  KMailICalIface::StorageFormat format = (KMailICalIface::StorageFormat) 3;
+  mConnection->kmailStorageFormat( format, folder );
+  return format;
+}
