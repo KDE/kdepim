@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2002,2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
 
     This library is free software; you can redistribute it and/or
@@ -43,12 +43,12 @@ class AddressBookSyncEntry : public SyncEntry
     QString type()const;
     bool mergeWith( SyncEntry* );
 
-    SyncEntry* clone();
+    AddressBookSyncEntry *clone();
     bool equals( SyncEntry *entry );
 
     KABC::Addressee addressee() { return mAddressee; }
     QString resource()const;
-    void setResource( const QString& str );
+    void setResource( const QString &str );
 
   private:
     KABC::Addressee mAddressee;
@@ -109,7 +109,9 @@ class AddressBookSyncee : public Syncee
         Email,
         Emails // more than one
     };
+
     AddressBookSyncee();
+    AddressBookSyncee( KABC::AddressBook * );
     ~AddressBookSyncee();
 
     AddressBookSyncEntry *firstEntry();
@@ -117,13 +119,13 @@ class AddressBookSyncee : public Syncee
 
 //    AddressBookSyncEntry *findEntry(const QString &id);
 
-    void addEntry(SyncEntry *);
-    void removeEntry(SyncEntry *);
+    void addEntry( SyncEntry * );
+    void removeEntry( SyncEntry * );
 
     SyncEntry::PtrList added();
     SyncEntry::PtrList modified();
     SyncEntry::PtrList removed();
-    Syncee* clone();
+//    Syncee *clone();
     QString type() const;
     QString newId()const;
 
@@ -134,8 +136,10 @@ class AddressBookSyncee : public Syncee
     AddressBookSyncEntry *createEntry( const KABC::Addressee & );
     SyncEntry::PtrList find( int state);
 
-
     QPtrList<AddressBookSyncEntry> mEntries;
+
+    KABC::AddressBook *mAddressBook;
+    bool mOwnAddressBook;
 };
 
 }

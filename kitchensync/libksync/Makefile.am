@@ -13,7 +13,8 @@ libksync2_la_SOURCES = \
   opiedesktopsyncee.cpp  todosyncee.cpp \
   eventsyncee.cpp \
   calendarsyncee.cpp \
-  synceelist.cpp
+  synceelist.cpp \
+  bookmarksyncee.cpp
  
 
 METASOURCES = AUTO

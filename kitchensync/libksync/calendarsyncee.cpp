@@ -54,11 +54,23 @@ bool CalendarSyncEntry::equals( SyncEntry *entry )
     return false;
   }
 
-  if (mIncidence->uid() != calEntry->incidence()->uid()) return false;
-  if (mIncidence->lastModified() != calEntry->incidence()->lastModified())
-    return false;
+  kdDebug() << "UID: " << mIncidence->uid() << " <-> "
+            << calEntry->incidence()->uid() << endl;
+  kdDebug() << "LAM: " << mIncidence->lastModified().toTime_t() << " <-> "
+            << calEntry->incidence()->lastModified().toTime_t() << endl;
 
-  return true;
+  if ( mIncidence->uid() != calEntry->incidence()->uid() ) {
+    kdDebug() << "UID unequal" << endl;
+    return false;
+  }
+  if ( mIncidence->lastModified() != calEntry->incidence()->lastModified() ) {
+    kdDebug() << "LAM unequal" << endl;
+    return false;
+  }
+
+  if ( *mIncidence == *( calEntry->incidence() ) ) return true;
+
+  return false;
 }
 
 CalendarSyncEntry *CalendarSyncEntry::clone()
@@ -124,11 +136,8 @@ void CalendarSyncee::addEntry( SyncEntry *entry )
       kdDebug() << "CalendarSyncee::addEntry(): Incidence is not of type Event."
                 << endl;
     } else {
-      kdDebug() << "Cloning..." << endl;
       Event *event = dynamic_cast<Event *>(sourceEvent->clone());
-      kdDebug() << "Cloning...." << endl;
       mCalendar->addEvent(event);
-      kdDebug() << "Cloning....." << endl;
     }
   }
 }

@@ -35,7 +35,7 @@ SyncEntry::SyncEntry( Syncee *sync )
 
 SyncEntry::SyncEntry( const SyncEntry &ent )
 {
-  kdDebug(5230) << "SyncEntry copy c'tor " << endl;
+//  kdDebug(5230) << "SyncEntry copy c'tor " << endl;
   mState = ent.mState;
   mSyncee = ent.mSyncee;
   mSyncState = ent.mSyncState;
@@ -83,7 +83,7 @@ bool SyncEntry::wasRemoved() const
 
 void SyncEntry::setState( int state )
 {
-  kdDebug(5230) << "State is " << state << endl;
+//  kdDebug(5230) << "State is " << state << endl;
   mState = state;
 }
 

@@ -25,6 +25,7 @@
 #include "addressbooksyncee.h"
 #include "eventsyncee.h"
 #include "todosyncee.h"
+#include "bookmarksyncee.h"
 
 using namespace KSync;
 
@@ -82,6 +83,19 @@ TodoSyncee *SynceeList::todoSyncee() const
   ConstIterator it;
   for( it = begin(); it != end(); ++it ) {
     syncee = dynamic_cast<TodoSyncee *>( *it );
+    if ( syncee ) return syncee;
+  }
+
+  return 0;
+}
+
+BookmarkSyncee *SynceeList::bookmarkSyncee() const
+{
+  BookmarkSyncee *syncee;
+
+  ConstIterator it;
+  for( it = begin(); it != end(); ++it ) {
+    syncee = dynamic_cast<BookmarkSyncee *>( *it );
     if ( syncee ) return syncee;
   }
 

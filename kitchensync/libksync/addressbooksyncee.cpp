@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2002,2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
 
     This library is free software; you can redistribute it and/or
@@ -33,14 +33,14 @@ using namespace KSync;
 AddressBookSyncEntry::AddressBookSyncEntry( const KABC::Addressee &a ) :
     SyncEntry()
 {
-    mAddressee = a;
+  mAddressee = a;
 }
 
 AddressBookSyncEntry::AddressBookSyncEntry( const AddressBookSyncEntry& entry )
   : SyncEntry( entry )
 {
-    mAddressee = entry.mAddressee;
-    m_res = entry.m_res;
+  mAddressee = entry.mAddressee;
+  m_res = entry.m_res;
 }
 
 QString AddressBookSyncEntry::name()
@@ -55,12 +55,12 @@ QString AddressBookSyncEntry::id()
 
 void AddressBookSyncEntry::setId(const QString& id)
 {
-    mAddressee.setUid( id );
+  mAddressee.setUid( id );
 }
 
-SyncEntry* AddressBookSyncEntry::clone()
+AddressBookSyncEntry *AddressBookSyncEntry::clone()
 {
-    return new AddressBookSyncEntry( *this );
+  return new AddressBookSyncEntry( *this );
 }
 
 QString AddressBookSyncEntry::timestamp()
@@ -70,7 +70,7 @@ QString AddressBookSyncEntry::timestamp()
 
 QString AddressBookSyncEntry::type() const
 {
-    return QString::fromLatin1("AddressBookSyncEntry");
+  return QString::fromLatin1("AddressBookSyncEntry");
 }
 
 bool AddressBookSyncEntry::equals( SyncEntry *entry )
@@ -94,12 +94,12 @@ bool AddressBookSyncEntry::equals( SyncEntry *entry )
 
 QString AddressBookSyncEntry::resource() const
 {
-    return m_res;
+  return m_res;
 }
 
-void AddressBookSyncEntry::setResource( const QString& str )
+void AddressBookSyncEntry::setResource( const QString &str )
 {
-    m_res = str;
+  m_res = str;
 }
 
 /*
@@ -111,7 +111,7 @@ void AddressBookSyncEntry::setResource( const QString& str )
 typedef void (*merge)(KABC::Addressee&, const KABC::Addressee& );
 typedef QMap<int, merge> MergeMap;
 
-static MergeMap* mergeMap= 0l;
+static MergeMap* mergeMap= 0;
 static KStaticDeleter<MergeMap> mergeMapDeleter;
 
     /* merge functions */
@@ -241,16 +241,31 @@ bool AddressBookSyncEntry::mergeWith( SyncEntry* ent)
 }
 
 AddressBookSyncee::AddressBookSyncee()
-    : Syncee(AddressBookSyncee::Emails+1) // set the support size
+  : Syncee( AddressBookSyncee::Emails + 1 ) // set the support size
 {
-//  mAddressBook = new KABC::AddressBook;
+  mAddressBook = new KABC::AddressBook;
+  mOwnAddressBook = true;
 
-  mEntries.setAutoDelete(true);
+  mEntries.setAutoDelete( true );
+}
+
+AddressBookSyncee::AddressBookSyncee( KABC::AddressBook *ab )
+  : Syncee( AddressBookSyncee::Emails + 1 ) // set the support size
+{
+  mAddressBook = ab;
+  mOwnAddressBook = false;
+
+  mEntries.setAutoDelete( true );
+  
+  KABC::AddressBook::Iterator it;
+  for ( it = ab->begin(); it != ab->end(); ++it ) {
+    createEntry( *it );
+  }
 }
 
 AddressBookSyncee::~AddressBookSyncee()
 {
-//  delete mAddressBook;
+  if ( mOwnAddressBook ) delete mAddressBook;
 }
 
 AddressBookSyncEntry *AddressBookSyncee::firstEntry()
@@ -273,17 +288,25 @@ AddressBookSyncEntry *AddressBookSyncee::findEntry(const QString &id)
 
 void AddressBookSyncee::addEntry( SyncEntry *entry )
 {
-  AddressBookSyncEntry *abEntry = dynamic_cast<AddressBookSyncEntry *>(entry);
-  if (!abEntry) {
+//  kdDebug() << "AddressBookSyncee::addEntry()" << endl;
+
+  AddressBookSyncEntry *abEntry = dynamic_cast<AddressBookSyncEntry *>( entry );
+  abEntry = abEntry->clone();
+  if ( !abEntry ) {
     kdDebug(5228) << "AddressBookSyncee::addEntry(): SyncEntry has wrong type."
-              << endl;
+                  << endl;
   } else {
-      abEntry->setSyncee( this ); // set the parent
-      if( abEntry->state() == SyncEntry::Undefined ) { // lets find out the state
-	if( hasChanged( abEntry ) )
-	    abEntry->setState( SyncEntry::Modified );
+    abEntry->setSyncee( this ); // set the parent
+    if( abEntry->state() == SyncEntry::Undefined ) { // lets find out the state
+      if( hasChanged( abEntry ) ) {
+        abEntry->setState( SyncEntry::Modified );
       }
-      mEntries.append( abEntry);
+    }
+    mEntries.append( abEntry );
+
+    KABC::Addressee a = abEntry->addressee();
+    a.setResource( 0 );
+    mAddressBook->insertAddressee( a );
   }
 }
 
@@ -292,9 +315,10 @@ void AddressBookSyncee::removeEntry( SyncEntry *entry )
   AddressBookSyncEntry *abEntry = dynamic_cast<AddressBookSyncEntry *>(entry);
   if ( !abEntry ) {
     kdDebug(5228) << "AddressBookSyncee::removeEntry(): SyncEntry has wrong type."
-              << endl;
+                  << endl;
   } else {
-      mEntries.remove( abEntry );
+    mAddressBook->removeAddressee( abEntry->addressee() );
+    mEntries.remove( abEntry );
   }
 }
 
@@ -302,6 +326,7 @@ AddressBookSyncEntry *AddressBookSyncee::createEntry( const KABC::Addressee &a )
 {
   if ( !a.isEmpty() ) {
     AddressBookSyncEntry *entry = new AddressBookSyncEntry( a );
+    entry->setSyncee( this );
     mEntries.append( entry );
     return entry;
   } else {
@@ -309,6 +334,7 @@ AddressBookSyncEntry *AddressBookSyncee::createEntry( const KABC::Addressee &a )
   }
 }
 
+#if 0
 /**
  * clone it now - could be inside the Syncee but then we would have to cast
  * -zecke
@@ -329,6 +355,7 @@ Syncee* AddressBookSyncee::clone()
     }
     return clone;
 }
+#endif
 
 SyncEntry::PtrList AddressBookSyncee::added()
 {

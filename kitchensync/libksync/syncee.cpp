@@ -36,7 +36,7 @@ Syncee::Syncee( uint size )
   mSyncMode = MetaLess;
   mFirstSync = false;
   mSupport.fill( true );
-  kdDebug(5230) << "Size is " << size << " " << mSupport.size() << endl;
+//  kdDebug(5230) << "Size is " << size << " " << mSupport.size() << endl;
 }
 
 Syncee::~Syncee()
@@ -88,7 +88,12 @@ bool Syncee::hasChanged( SyncEntry *entry )
 bool Syncee::loadLog()
 {
   delete mStatusLog;
-  mStatusLog = new KSimpleConfig( locateLocal( "appdata", statusLogName() ) );
+
+  QString logFile = locateLocal( "appdata", statusLogName() );
+
+  mStatusLog = new KSimpleConfig( logFile );
+
+  kdDebug() << "Syncee::loadLog() " << logFile << endl;
 
   return true;
 }

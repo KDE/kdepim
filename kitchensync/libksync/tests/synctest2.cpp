@@ -49,7 +49,7 @@ static const KCmdLineOptions options[] =
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "synctest1", "libksync test 1", "0.1" );
+  KAboutData aboutData( "synctest2", "libksync test 2", "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
 
@@ -63,7 +63,11 @@ int main( int argc, char **argv )
 
   QString outputDir = QFile::decodeName( args->arg( 0 ) );
 
-  SyncTestHelper helper( outputDir, false );
+  QDateTime dt1 = QDateTime( QDate( 2000, 1, 1 ), QTime( 12, 0 ) );
+  QDateTime dt2 = QDateTime( QDate( 2000, 2, 1 ), QTime( 12, 0 ) );
+  QDateTime dt3 = QDateTime( QDate( 2000, 3, 1 ), QTime( 12, 0 ) );
+
+  SyncTestHelper helper( outputDir, true );
 
   // Force save() to save in sorted order
   extern bool KCal_CalendarLocal_saveOrdered;
@@ -78,6 +82,7 @@ int main( int argc, char **argv )
   event1->setDtStart( QDateTime( QDate( 2004, 2, 15 ), QTime( 12, 0 ) ) );
   event1->setDtEnd( QDateTime( QDate( 2004, 2, 15 ), QTime( 13, 0 ) ) );
   event1->setFloats( false );
+  event1->setLastModified( dt1 );
   
   cal1.addEvent( event1 );
 
@@ -87,18 +92,21 @@ int main( int argc, char **argv )
   event2->setDtStart( QDateTime( QDate( 2004, 2, 15 ), QTime( 14, 0 ) ) );
   event2->setDtEnd( QDateTime( QDate( 2004, 2, 15 ), QTime( 15, 0 ) ) );
   event2->setFloats( false );
+  event2->setLastModified( dt1 );
 
   cal2.addEvent( event2 );
 
-  helper.sync( &cal1, &cal2, "001", "Calendar, sync new, no history." );
+  helper.sync( &cal1, &cal2, "011", "Calendar, sync new, with history." );
 
   event1->setSummary( "Modified event 1" );
+  event1->setLastModified( dt2 );
   
-  helper.sync( &cal1, &cal2, "002", "Calendar, sync changed 1, no history" );
+  helper.sync( &cal1, &cal2, "012", "Calendar, sync changed 1, with history" );
   
   event2->setSummary( "Modified event 2" );
+  event2->setLastModified( dt3 );
   
-  helper.sync( &cal1, &cal2, "003", "Calendar, sync changed 2, no history" );
+  helper.sync( &cal1, &cal2, "013", "Calendar, sync changed 2, with history" );
   
   return 0;
 }

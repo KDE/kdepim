@@ -22,9 +22,10 @@
 #include "synctesthelper.h"
 
 #include "syncer.h"
-#include "calendarsyncee.h"
+#include "addressbooksyncee.h"
 
-#include <libkcal/calendarlocal.h>
+#include <kabc/addressbook.h>
+#include <kabc/resourcefile.h>
 
 #include <kaboutdata.h>
 #include <kapplication.h>
@@ -33,11 +34,10 @@
 #include <kcmdlineargs.h>
 
 #include <qfile.h>
-#include <qfileinfo.h>
 
 #include <iostream>
 
-using namespace KCal;
+using namespace KABC;
 using namespace KSync;
 
 static const KCmdLineOptions options[] =
@@ -49,7 +49,7 @@ static const KCmdLineOptions options[] =
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "synctest1", "libksync test 1", "0.1" );
+  KAboutData aboutData( "synctest3", "libksync test 3", "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
 
@@ -65,40 +65,40 @@ int main( int argc, char **argv )
 
   SyncTestHelper helper( outputDir, false );
 
-  // Force save() to save in sorted order
-  extern bool KCal_CalendarLocal_saveOrdered;
-  KCal_CalendarLocal_saveOrdered = true;
+  KABC::AddressBook ab1;
+  KABC::Resource *res1 = new KABC::ResourceFile( "ab1" );
+  ab1.addResource( res1 );
+  KABC::AddressBook ab2;
+  KABC::Resource *res2 = new KABC::ResourceFile( "ab2" );
+  ab2.addResource( res2 );
 
-  CalendarLocal cal1;
-  CalendarLocal cal2;
+  Addressee a1;
+  a1.setResource( 0 );
+  a1.setUid( "SYNCTEST3_ADDRESSEE_1" );
+  a1.setNameFromString( "Hans Wurst" );
+  a1.insertEmail( "hw@abc.de" );
 
-  Event *event1 = new Event;
-  event1->setUid( "SYNCTEST1_EVENT_1" );
-  event1->setSummary( "Event 1" );
-  event1->setDtStart( QDateTime( QDate( 2004, 2, 15 ), QTime( 12, 0 ) ) );
-  event1->setDtEnd( QDateTime( QDate( 2004, 2, 15 ), QTime( 13, 0 ) ) );
-  event1->setFloats( false );
+  ab1.insertAddressee( a1 );
+
+  Addressee a2;
+  a2.setResource( 0 );
+  a2.setUid( "SYNCTEST3_ADDRESSEE_2" );
+  a2.setNameFromString( "Zwerg Nase" );
+  a2.insertEmail( "zn@abc.de" );
   
-  cal1.addEvent( event1 );
+  ab2.insertAddressee( a2 );
 
-  Event *event2 = new Event;
-  event2->setUid( "SYNCTEST1_EVENT_2" );
-  event2->setSummary( "Event 2" );
-  event2->setDtStart( QDateTime( QDate( 2004, 2, 15 ), QTime( 14, 0 ) ) );
-  event2->setDtEnd( QDateTime( QDate( 2004, 2, 15 ), QTime( 15, 0 ) ) );
-  event2->setFloats( false );
+  helper.sync( &ab1, &ab2, "101", "Addressbook, sync new, no history." );
 
-  cal2.addEvent( event2 );
-
-  helper.sync( &cal1, &cal2, "001", "Calendar, sync new, no history." );
-
-  event1->setSummary( "Modified event 1" );
+  a1.setNameFromString( "Haenschen Wuerstchen" );
+  ab1.insertAddressee( a1 );
   
-  helper.sync( &cal1, &cal2, "002", "Calendar, sync changed 1, no history" );
+  helper.sync( &ab1, &ab2, "102", "Addressbook, sync changed 1, no history" );
   
-  event2->setSummary( "Modified event 2" );
+  a2.setNameFromString( "Zwergchen Naeschen" );
+  ab2.insertAddressee( a2 );
   
-  helper.sync( &cal1, &cal2, "003", "Calendar, sync changed 2, no history" );
+  helper.sync( &ab1, &ab2, "103", "Addressbook, sync changed 2, no history" );
   
   return 0;
 }

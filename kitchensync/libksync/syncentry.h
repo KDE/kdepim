@@ -76,6 +76,9 @@ class SyncEntry
       id.
     */
     virtual QString id() = 0;
+
+    // We should remove the setId function. The id is determined by the
+    //underlying data, not by externally setting it.
     /**
       Set unique id.
     */

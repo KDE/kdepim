@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2002,2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
 
     This library is free software; you can redistribute it and/or
@@ -90,29 +90,30 @@ class Syncee
     /**
      * The type of the Syncee
      */
-    virtual QString type() const = 0;
+    // Do we really need this function?
+    virtual QString type() const { return QString::null; }
     /**
       Find an entry identified by a unique id. See @ref SyncEntry::id().
       @param id the Id to be found
     */
-    virtual SyncEntry *findEntry(const QString &id);
+    virtual SyncEntry *findEntry( const QString &id );
 
     /**
       Add a @ref SyncEntry object to this data set. Ownership of the object
       remains with the caller.
     */
-    virtual void addEntry(SyncEntry *) = 0;
+    virtual void addEntry( SyncEntry * ) = 0;
     /**
       Remove a @ref SyncEntry. The entry is removed from the data set, but the
       object is not deleted.
     */
-    virtual void removeEntry(SyncEntry *) = 0;
+    virtual void removeEntry( SyncEntry * ) = 0;
 
     /**
       Replace an entry of the data set by another. Ownership of the objects is
       handled as with the @ref addEntry() and @ref removeEntry() functions.
     */
-    void replaceEntry(SyncEntry *oldEntry, SyncEntry *newEntry);
+    void replaceEntry( SyncEntry *oldEntry, SyncEntry *newEntry );
 
     /**
       Set the identifier which can be used to uniquely identify this Syncee.
@@ -184,26 +185,26 @@ class Syncee
       more smooth later
     */
 
+    // Do we really need these functions here?
     /**
       What was added?
     */
-    virtual SyncEntry::PtrList added() = 0;
-
+    virtual SyncEntry::PtrList added() { return SyncEntry::PtrList(); }
     /**
       What was modified?
     */
-    virtual SyncEntry::PtrList modified() = 0;
-
+    virtual SyncEntry::PtrList modified() { return SyncEntry::PtrList(); };
     /**
       What was removed?
     */
-    virtual SyncEntry::PtrList removed() = 0;
+    virtual SyncEntry::PtrList removed() { return SyncEntry::PtrList(); }
 
     /**
       For some parts of memory management it would be good to
       deal with clones. This creates a direct clone of the Syncee
     */
-    virtual Syncee *clone() = 0;
+// Syncees are owned by the Konnectors, we won't allow to steal them by cloning.
+//    virtual Syncee *clone() = 0;
 
     /**
        A KSyncEntry is able to store the relative ids
@@ -225,17 +226,17 @@ class Syncee
       You might want a new uid to be generated. To later find
       an Entry again you'll need this map
     */
-    virtual QString newId()const;
+    virtual QString newId() const;
     /**
       @param type The type for the ids to returned
       @return the ids as QValueList
     */
-    Kontainer::ValueList ids(const QString &type )const;
+    Kontainer::ValueList ids( const QString &type ) const;
 
     /**
       @return all ids
     */
-    QMap<QString,  Kontainer::ValueList > ids()const;
+    QMap<QString,Kontainer::ValueList> ids() const;
 
     /**
       Set what the Syncee supports.
@@ -245,7 +246,7 @@ class Syncee
     /**
       Returns attributes supported by the Device.
     */
-    virtual QBitArray bitArray()const;
+    virtual QBitArray bitArray() const;
 
 
     /**

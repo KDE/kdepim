@@ -31,6 +31,7 @@ class CalendarSyncee;
 class AddressBookSyncee;
 class EventSyncee;
 class TodoSyncee;
+class BookmarkSyncee;
 
 /**
   This class provides a list of Syncees.
@@ -45,6 +46,7 @@ class SynceeList : public QValueList<Syncee *>
     AddressBookSyncee *addressBookSyncee() const;
     EventSyncee *eventSyncee() const;
     TodoSyncee *todoSyncee() const;
+    BookmarkSyncee *bookmarkSyncee() const;
 };
 
 }

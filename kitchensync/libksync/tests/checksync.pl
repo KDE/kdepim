@@ -21,10 +21,11 @@ if ( !opendir DATA, $dataDir ) {
 $failed = 0;
 
 @entries = readdir DATA;
-foreach $entry ( @entries ) {
-  if ( $entry !~ /(.*)\.test$/ ) { next; }
+foreach $entry ( sort @entries ) {
+  if ( $entry !~ /(.*)\.(.*)\.test$/ ) { next; }
   
   $testId = $1;
+  $testType = $2;
   
   $testFile = "$dataDir/$entry";
   
@@ -39,10 +40,12 @@ foreach $entry ( @entries ) {
 
   $testFailed = 0;
 
-  checkFile( "$dataDir/$testId.cal1.ics.out",
-             "$refDir/$testId.cal1.ics.out.ref" );
-  checkFile( "$dataDir/$testId.cal2.ics.out",
-             "$refDir/$testId.cal2.ics.out.ref" );
+  $fileHint = "1";
+  checkFile( "$dataDir/$testId.$testType.1.out",
+             "$refDir/$testId.$testType.1.out.ref" );
+  $fileHint = "2";
+  checkFile( "$dataDir/$testId.$testType.2.out",
+             "$refDir/$testId.$testType.2.out.ref" );
 
   print "TEST $testId: ";
   if ( $testFailed ) {
@@ -76,14 +79,19 @@ sub checkFile()
   while( <IN> ) {
     $lineIn = $_;
     $lineRef = <REF>;
+    if ( !$lineRef ) { $lineRef = "\n"; }
     
     if ( $lineIn ne $lineRef ) {
-      if ( $lineIn =~ /^DTSTAMP:/ && $lineRef =~ /^DTSTAMP:/ ) { next; }
-      if ( $lineIn =~ /^CREATED:/ && $lineRef =~ /^CREATED:/ ) { next; }
-      if ( $lineIn =~ /^LAST-MODIFIED:/ && $lineRef =~ /^LAST-MODIFIED:/ ) { next; }
+      if ( $testType eq "cal" ) {
+        if ( $lineIn =~ /^DTSTAMP:/ && $lineRef =~ /^DTSTAMP:/ ) { next; }
+        if ( $lineIn =~ /^CREATED:/ && $lineRef =~ /^CREATED:/ ) { next; }
+        if ( $lineIn =~ /^LAST-MODIFIED:/ && $lineRef =~ /^LAST-MODIFIED:/ ) { next; }
+      } elsif ( $testType eq "ab" ) {
+        if ( $lineIn =~ /^REV:/ && $lineRef =~ /^REV:/ ) { next; }
+      }
       $testFailed = 1;
-      print "EXPECTED: $lineRef";
-      print "OUTPUT  : $lineIn";
+      print "EXPECTED ($fileHint): $lineRef";
+      print "OUTPUT   ($fileHint): $lineIn";
     }
   }
 }
