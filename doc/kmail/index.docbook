@@ -17,8 +17,6 @@ $Id$
 
 <!-- TODO: 
 
-" fix: "between different version[s] of PGP"
-
 * document "check what the server supports"
 * document "pipelining..."
 * more about the "create folder" dialog (e.g. Sender/Receiver)
@@ -63,7 +61,7 @@ $Id$
 
 </authorgroup>
 
-<date>2002-02-26</date>
+<date>2002-03-29</date>
 <releaseinfo>1.04.00</releaseinfo>
 
 <copyright>
@@ -1360,7 +1358,7 @@ attachments manually, using a shell command or some other tool before you attach
 them.</para></warning>
 
 <warning><para>&kmail; has to rely on <application>PGP</application>'s
-output. This output is often different between different version of
+output. This output is often different between different versions of
 <application>PGP</application>, so it's important that you test if encryption
 really works with your setup before you start using it seriously. &kmail; might
 <emphasis>not</emphasis> warn you if something fails. You better enable 
@@ -2982,23 +2980,23 @@ text of the original message.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Forwards the message to a new recipient. The message's text will be copied
-into the body of the new message with a text marking the forwarded part. Attachments
-will be forwarded, too.</para>
+<para>Forwards the message to a new recipient. The message's text and some
+important header fields will be copied to the body of the new message 
+with a text marking the forwarded part. Attachments will be forwarded, too.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo action="simul">&Shift;<keycap>F</keycap></keycombo><keycap>F</keycap>
+<shortcut><keycombo action="simul">&Shift;<keycap>F</keycap></keycombo>
 </shortcut>
 <guimenu>Message</guimenu>
-<!-- fixme in kmail: "f" twice as accel -->
 <guimenuitem>Forward as Attachment</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
-<para>Forwards the message to a new recipient as an attachment. Attachments
+<para>Forwards the message to a new recipient as an attachment. The original message
+headers will be included in the forwarded message, too. Attachments
 in the original message will also be in the forwarded message's attachment.</para>
 </listitem>
 </varlistentry>
@@ -3185,7 +3183,6 @@ states are the same as for <menuchoice><guimenu>Message</guimenu>
 <term>
 <menuchoice>
 <guimenu>Message</guimenu>
-<!-- fixme in kmail: "c" is accel twice -->
 <guisubmenu>Copy To</guisubmenu>
 </menuchoice>
 </term>
@@ -3793,7 +3790,6 @@ to paste long lines that shouldn't wrap.</para>
 <term>
 <menuchoice>
 <guimenu>Attach</guimenu>
-<!-- fixme in kmail: "P" used twice -->
 <guimenuitem>Attach Public Key...</guimenuitem>
 </menuchoice>
 </term>
