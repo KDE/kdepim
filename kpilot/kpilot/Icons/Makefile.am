@@ -15,4 +15,5 @@ kpilotdata_DATA = kpilot-splash.png \
 	kpilot-address.png \
 	kpilot-fileinstaller.png \
 	kpilot-db.png \
-	kpilot-calendar.png
+	kpilot-calendar.png \
+	kpilot-todo.png
