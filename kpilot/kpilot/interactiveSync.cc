@@ -330,7 +330,12 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 			continue;
 		}
 
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 		if (!pi_file_get_info(f, &info))
+#else
+		pi_file_get_info(f,&info);
+		if (true)
+#endif
 		{
 			dbi = new RestoreInfo;
 			memcpy(&dbi->DBInfo,&info,sizeof(struct DBInfo));
@@ -437,7 +442,11 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		return;
 	}
 
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	if (pi_file_install(f, pilotSocket(), 0) < 0)
+#else
+	if (pi_file_install(f, pilotSocket(), 0, NULL) < 0)
+#endif
 	{
 		kdWarning() << k_funcinfo
 			<< ": Couldn't  restore " << dbi->path << endl;

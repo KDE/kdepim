@@ -36,45 +36,35 @@
 #include <unistd.h>
 #include <stdio.h>
 
+struct pi_buffer_t;
+
 #include <pi-file.h>
+
 
 class PilotRecord
 {
 public:
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	// This constructor makes a copy of the data buffer
 	PilotRecord(void* data, int len, int attrib, int cat, pi_uid_t uid);
-#ifdef HANDOFF_BUFFERS
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	// This constructor assumes ownership of the data buffer
-	PilotRecord(int len, void *data, int attrib, int cat, pi_uid_t uid) :
-		fData(data),fLen(len),fAttrib(attrib),
-		fCat(cat),fID(uid) { fAllocated++; } ;
-#endif
+	PilotRecord(pi_buffer_t *buf, int attrib, int cat, pi_uid_t uid) :
+		fData((char *)buf->data),fLen(buf->used),fAttrib(attrib),
+		fCat(cat),fID(uid),fBuffer(buf)
+	{ fAllocated++; }
+	~PilotRecord() 
+	{ 
+		if (fBuffer) { pi_buffer_free(fBuffer); } 
+		else { delete [] fData; } fDeleted++; 
+	}
+#else
 	~PilotRecord() { delete [] fData; fDeleted++; }
+#endif
 
 
 	char* getData() const { return fData; }
 	int   getLen() const { return fLen; }
 
-#else
-	PilotRecord(pi_buffer_t *b, int attrib, int cat, recordid_t id) :
-		fBuffer(b),
-		fAttrib(attrib),
-		fCat(cat),
-		fID(id)
-	{
-		fAllocated++;
-		if (b)
-		{
-			fLen = b->used;
-		}
-	}
-	~PilotRecord() { if (fBuffer) { pi_buffer_free(fBuffer); fBuffer=0L; } fDeleted++; }
-
-
-	char* getData() const { return fBuffer->data; }
-	int   getLen() const { return fBuffer->used; }
-#endif
 	PilotRecord(PilotRecord* orig);
 
 	enum { APP_BUFFER_SIZE = 0xffff } ;
@@ -96,15 +86,14 @@ public:
 	void setID(recordid_t id) { fID = id; }
 
 private:
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	char* fData;
 	int   fLen;
-#else
-	pi_buffer_t *fBuffer;
-#endif
 	int   fAttrib;
 	int   fCat;
 	recordid_t fID;
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+	pi_buffer_t *fBuffer;
+#endif
 
 public:
 	inline bool isDeleted() const { return fAttrib & dlpRecAttrDeleted; };

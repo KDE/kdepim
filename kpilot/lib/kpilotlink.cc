@@ -408,12 +408,17 @@ bool KPilotDeviceLink::open(QString device)
 	else
 	{
 #ifdef DEBUG
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 		DEBUGDAEMON << fname
 			<< ": Tried "
 			<< addr.pi_device
 			<< " and got "
 			<< strerror(errno)
 			<< endl;
+#else
+		DEBUGDAEMON << fname
+			<< ": Tried " << device << " and got " << strerror(errno) << endl;
+#endif
 #endif
 
 		if (fRetries < 5)

@@ -244,12 +244,16 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 				"application file %1.").arg(dbname));
 			return;
 		}
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 		if (pi_file_get_info(pf,&dbinfo))
 		{
 			fDBInfo->setText(i18n("<B>Warning:</B> Cannot read "
 				"application file %1.").arg(dbname));
 			return;
 		}
+#else
+		pi_file_get_info(pf,&dbinfo);
+#endif
 		display.append(i18n("<B>Application:</B> %1<BR><BR>").arg(dbname));
 	}
 	enableWidgets(currentDBtype==eDatabase);

@@ -135,9 +135,7 @@ QValueList<recordid_t> PilotSerialDatabase::idList()
 PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 {
 	FUNCTIONSETUP;
-	char buffer[PilotRecord::APP_BUFFER_SIZE];
 	int index, attr, category;
-	PI_SIZE_T size;
 
 	if (isDBOpen() == false)
 	{
@@ -150,9 +148,19 @@ PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 			<<id<<endl;;
 		return 0L;
 	}
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+	char buffer[PilotRecord::APP_BUFFER_SIZE];
+	PI_SIZE_T size;
 	if (dlp_ReadRecordById(fDBSocket, getDBHandle(), id, buffer, &index,
 			&size, &attr, &category) >= 0)
 		return new PilotRecord(buffer, size, attr, category, id);
+#else
+	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
+	if (dlp_ReadRecordById(fDBSocket,getDBHandle(),id,b,&index,&attr,&category) >= 0)
+	{
+		return new PilotRecord(b, attr, category, id);
+	}
+#endif
 	return 0L;
 }
 
@@ -174,22 +182,17 @@ PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	char buffer[PilotRecord::APP_BUFFER_SIZE];
 	PI_SIZE_T size;
-
 	if (dlp_ReadRecordByIndex(fDBSocket, getDBHandle(), index,
 			buffer, &id, &size, &attr, &category) >= 0)
 	{
 		rec = new PilotRecord(buffer, size, attr, category, id);
 	}
 #else
-	pi_buffer_t *bufptr = pi_buffer_new(PilotRecord::APP_BUFFER_SIZE);
+	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
 	if (dlp_ReadRecordByIndex(fDBSocket, getDBHandle(), index,
-		bufptr, &id, &attr, &category) >= 0)
+		b, &id, &attr, &category) >= 0)
 	{
-		rec = new PilotRecord(bufptr, size, attr, category, id);
-	}
-	else
-	{
-		pi_buffer_free(bufptr);
+		rec = new PilotRecord(b, attr, category, id);
 	}
 #endif
 
@@ -201,8 +204,6 @@ PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 {
 	FUNCTIONSETUP;
-	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	PI_SIZE_T size;
 	int index, attr;
 	recordid_t id;
 
@@ -211,9 +212,18 @@ PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
 	}
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+	char buffer[PilotRecord::APP_BUFFER_SIZE];
+	PI_SIZE_T size;
 	if (dlp_ReadNextRecInCategory(fDBSocket, getDBHandle(),
 			category, buffer, &id, &index, &size, &attr) >= 0)
 		return new PilotRecord(buffer, size, attr, category, id);
+#else
+	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
+	if (dlp_ReadNextRecInCategory(fDBSocket, getDBHandle(),
+		category,b,&id,&index,&attr) >= 0)
+		return new PilotRecord(b, attr, category, id);
+#endif
 	return 0L;
 }
 
@@ -221,8 +231,6 @@ PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 PilotRecord *PilotSerialDatabase::readNextModifiedRec(int *ind)
 {
 	FUNCTIONSETUP;
-	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	PI_SIZE_T size;
 	int index, attr, category;
 	recordid_t id;
 
@@ -231,12 +239,23 @@ PilotRecord *PilotSerialDatabase::readNextModifiedRec(int *ind)
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
 	}
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+	char buffer[PilotRecord::APP_BUFFER_SIZE];
+	PI_SIZE_T size;
 	if (dlp_ReadNextModifiedRec(fDBSocket, getDBHandle(), (void *) buffer,
 			&id, &index, &size, &attr, &category) >= 0)
 	{
 		if (ind) *ind=index;
 		return new PilotRecord(buffer, size, attr, category, id);
 	}
+#else
+	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
+	if (dlp_ReadNextModifiedRec(fDBSocket, getDBHandle(), b, &id, &index, &attr, &category) >= 0)
+	{
+		if (ind) *ind=index;
+		return new PilotRecord(b, attr, category, id);
+	}
+#endif
 	return 0L;
 }
 

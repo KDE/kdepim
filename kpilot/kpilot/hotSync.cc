@@ -617,7 +617,12 @@ FileInstallAction::~FileInstallAction()
 	f = pi_file_open(const_cast <char *>
 		((const char *) QFile::encodeName(filePath)));
 
+
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	if (pi_file_install(f, pilotSocket(), 0) < 0)
+#else
+	if (pi_file_install(f, pilotSocket(), 0, NULL) < 0)
+#endif
 	{
 		kdWarning() << k_funcinfo << ": failed to install." << endl;
 
@@ -665,12 +670,16 @@ bool FileInstallAction::resourceOK(const QString &fileName, const QString &fileP
 	}
 
 	struct DBInfo info;
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	if (pi_file_get_info(f,&info) < 0)
 	{
 		emit logError(i18n("Unable to read file &quot;%1&quot;.").
 			arg(fileName));
 		return false;
 	}
+#else
+	pi_file_get_info(f,&info);
+#endif
 
 	// Looks like strlen, but we can't be sure of a NUL
 	// termination.
