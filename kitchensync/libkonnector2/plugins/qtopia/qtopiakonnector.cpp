@@ -79,6 +79,7 @@ QtopiaKonnector::QtopiaKonnector( const KConfig *cfg )
 
   d = new Private;
   d->socket = new QtopiaSocket(this, "Opie Socket" );
+  d->socket->setStoragePath( storagePath() );
 
   /* now do some signal and slot connection */
   connect( d->socket, SIGNAL( sync( SynceeList ) ),
@@ -87,6 +88,8 @@ QtopiaKonnector::QtopiaKonnector( const KConfig *cfg )
            SLOT( slotError( const Error & ) ) );
   connect( d->socket, SIGNAL( prog( const Progress & ) ),
            SLOT( slotProg( const Progress & ) ) );
+  connect( this, SIGNAL(storagePathChanged(const QString&)),
+           d->socket, SLOT(setStoragePath(const QString&)) );
 
   d->socket->setDestIP( mDestinationIP );
   d->socket->setUser( mUserName );
@@ -104,7 +107,7 @@ QtopiaKonnector::~QtopiaKonnector()
 void QtopiaKonnector::writeConfig( KConfig *cfg )
 {
   Konnector::writeConfig( cfg );
-  
+
   cfg->writeEntry( "DestinationIP", mDestinationIP );
   cfg->writeEntry( "UserName", mUserName );
   cfg->writeEntry( "Password", KStringHandler::obscure( mPassword ) );

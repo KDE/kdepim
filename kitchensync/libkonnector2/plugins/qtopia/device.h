@@ -27,6 +27,10 @@
 
 #include <kstaticdeleter.h>
 
+namespace KSync{
+  class Merger;
+}
+
 namespace OpieHelper {
     class Device {
     public:
@@ -35,15 +39,15 @@ namespace OpieHelper {
         };
         enum PIM {
             Calendar,
-            Addressbook,
-            Todolist
+            Addressbook
         };
         Device();
         ~Device();
         int distribution()const;
         void setDistribution(int dis );
 
-        QBitArray supports( enum PIM )const;
+        KSync::Merger* merger( enum PIM );
+
         QString meta()const;
         void setMeta(const QString& str );
 
@@ -53,13 +57,16 @@ namespace OpieHelper {
         void setPassword( const QString& );
 
     private:
-        QBitArray opieCal()const;
-        QBitArray opieTo()const;
-        QBitArray opieAddr()const;
+        KSync::Merger* opieCal();
+        KSync::Merger* opieAddr();
+
         int m_model;
         QString m_meta;
         QString m_user;
         QString m_pass;
+
+        KSync::Merger *mAMerger;
+        KSync::Merger *mCMerger;
     };
 }
 

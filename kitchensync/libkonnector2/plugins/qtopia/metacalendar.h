@@ -18,28 +18,33 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef META_DATEBOOK_H
-#define META_DATEBOOK_H
 
-#include <qbitarray.h>
+#ifndef OPIE_META_CALENDAR_H
+#define OPIE_META_CALENDAR_H
 
 #include <calendarsyncee.h>
+
+#include <libkcal/todo.h>
+#include <libkcal/event.h>
 
 #include "md5metatemplate.h"
 
 namespace OpieHelper {
-    class MetaDatebook : public MD5Template<KSync::CalendarSyncee, KSync::CalendarSyncEntry> {
-    public:
-        MetaDatebook();
-        ~MetaDatebook();
 
-        QString string( KSync::CalendarSyncEntry* );
+class MetaCalendar : public MD5Template<KSync::CalendarSyncee, KSync::CalendarSyncEntry> 
+{
+public:
+    MetaCalendar( KSync::CalendarSyncee* sync, const QString& file );
+    ~MetaCalendar();
 
+protected:
+    QString entryToString( KSync::CalendarSyncEntry* );
+private:
+    QString todoToString ( KCal::Todo* );
+    QString eventToString( KCal::Event* );
+    static QString days( const QBitArray& ar );
+};
 
-    private:
-        QString days( const QBitArray& );
-
-    };
 }
 
 #endif

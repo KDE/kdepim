@@ -31,9 +31,8 @@ using namespace OpieHelper;
 Base::Base( CategoryEdit* edit,
             KSync::KonnectorUIDHelper* helper,
             const QString &tz,
-            bool metaSyncing, Device* dev )
+            Device* dev )
 {
-    m_metaSyncing = metaSyncing;
     m_edit = edit;
     m_helper = helper;
     m_tz = tz;
@@ -54,7 +53,6 @@ QDateTime Base::fromUTC( time_t time )
    if (!m_tz.isEmpty() )
        setenv( "TZ", m_tz.local8Bit(), true );
 
-   kdDebug(5229) << "TimeZone was " << real_TZ << " TimeZone now is " << m_tz << endl;
 #if defined(_OS_WIN32) || defined (Q_OS_WIN32) || defined (Q_OS_WIN64)
     _tzset();
 #else
@@ -70,7 +68,6 @@ QDateTime Base::fromUTC( time_t time )
         if (!real_TZ.isEmpty() )
             setenv("TZ",  real_TZ.local8Bit(), true );
     }
-    kdDebug(5229) << "DateTime is " << dt.toString() << endl;
     // done
     return dt;
 }
@@ -118,21 +115,14 @@ time_t Base::toUTC( const QDateTime& dt )
     }
     return tmp;
 }
-bool Base::isMetaSyncingEnabled()const
-{
-    return m_metaSyncing;
-}
-void Base::setMetaSyncingEnabled(bool meta )
-{
-    m_metaSyncing = meta;
-}
+
+
 KTempFile* Base::file() {
     KTempFile* fi = new KTempFile( locateLocal("tmp",  "opie-konnector"),  "new");
     return fi;
 }
 QString Base::categoriesToNumber( const QStringList &list, const QString &app )
 {
-    kdDebug(5226) << "categoriesToNumber " << list.join(";") << endl;
  startover:
     QStringList dummy;
     QValueList<OpieCategories>::ConstIterator catIt;
@@ -149,7 +139,6 @@ QString Base::categoriesToNumber( const QStringList &list, const QString &app )
 	     * if name matches and the id isn't already in dummy we'll add it
 	     */
             if ( (*catIt).name() == (*listIt) && !dummy.contains(( *catIt).id() )  ) { // the same name
-	        kdDebug(5226) << "Found " << (*listIt) << endl;
                 found= true;
                 dummy << (*catIt).id();
             }
@@ -161,7 +150,6 @@ QString Base::categoriesToNumber( const QStringList &list, const QString &app )
          */
 
         if ( !found && !(*listIt).isEmpty() ){
-            kdDebug(5226) << "Not Found category " << (*listIt) << endl;
             m_edit->addCategory( app, (*listIt) );  // generate a new category
             goto startover;
 	}
@@ -230,22 +218,38 @@ const Device* Base::device() {
     return m_device;
 }
 
+/**
+ * Append Text if text is not the default. This way we don't have
+ * empty attributes in the XML file, this makes the file smaller
+ * and transfer over slower connections faster
+ */
+QString Base::appendText( const QString& append, const QString& def )
+{
+  if ( append != def )
+    return append;
+
+  return QString::null;
+}
+
+
 // FROM TT QStyleSheet and StringUtil it's GPLed
 // we also need to escape '\"' for our xml files
-QString OpieHelper::escape( const QString& plain ) {
-    QString rich;
+QString OpieHelper::escape( const QString& plain )
+{
+  QString rich;
 
-    for ( int i = 0; i < int(plain.length()); ++i ) {
-	if ( plain[i] == '<' )
-	    rich +="&lt;";
-	else if ( plain[i] == '>' )
-	    rich +="&gt;";
-	else if ( plain[i] == '&' )
-	    rich +="&amp;";
-        else if ( plain[i] == '\"' )
-            rich += "&quot;";
-	else
-	    rich += plain[i];
-    }
-    return rich;
+  for ( int i = 0; i < int(plain.length()); ++i ) {
+    if ( plain[i] == '<' )
+      rich +="&lt;";
+    else if ( plain[i] == '>' )
+      rich +="&gt;";
+    else if ( plain[i] == '&' )
+      rich +="&amp;";
+    else if ( plain[i] == '\"' )
+      rich += "&quot;";
+    else
+      rich += plain[i];
+  }
+
+  return rich;
 }

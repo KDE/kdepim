@@ -23,6 +23,7 @@
 #include <qfile.h>
 
 #include <kdebug.h>
+#include <klocale.h>
 
 #include <calendarsyncee.h>
 #include <libkcal/calendarlocal.h>
@@ -53,8 +54,8 @@ int week ( const QDate &start ) {
 DateBook::DateBook( CategoryEdit* edit,
                     KSync::KonnectorUIDHelper* helper,
                     const QString& tz,
-                    bool meta, Device *dev )
-    : Base( edit,  helper,  tz, meta, dev )
+                    Device *dev )
+    : Base( edit,  helper,  tz, dev )
 {
 }
 DateBook::~DateBook(){
@@ -64,7 +65,7 @@ DateBook::~DateBook(){
  */
 KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QStringList& lst) {
     KCal::Event* event = new KCal::Event();
-    
+
     /* Category block */
     {
     QStringList list = QStringList::split(";",  e.attribute("categories") );
@@ -80,7 +81,7 @@ KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QString
     if (!categories.isEmpty() ) {
         event->setCategories( categories );
     }
-    
+
     }
 
     event->setSummary( e.attribute("description") );
@@ -201,10 +202,8 @@ KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QString
 
 bool DateBook::toKDE( const QString& fileName, ExtraMap& extraMap, KSync::CalendarSyncee *syncee )
 {
-    syncee->setSource( "Opie");
+    syncee->setTitle( i18n("Opie") );
     syncee->setIdentifier( "Opie" );
-    if( device() )
-	syncee->setSupports( device()->supports( Device::Calendar ) );
 
     QFile file( fileName );
     if ( !file.open( IO_ReadOnly ) ) {
@@ -255,7 +254,7 @@ KTempFile* DateBook::fromKDE( KSync::CalendarSyncee* syncee, ExtraMap& extraMap 
     Kontainer::ValueList newIds = syncee->ids( "EventSyncEntry");
     Kontainer::ValueList::ConstIterator idIt;
     for ( idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
-        m_helper->addId("EventSyncEntry",  (*idIt).first(),  (*idIt).second() );
+        m_helper->addId("EventSyncEntry",  (*idIt).first,  (*idIt).second );
     }
     KTempFile* tempFile = file();
     if ( tempFile->textStream() ) {
@@ -270,6 +269,9 @@ KTempFile* DateBook::fromKDE( KSync::CalendarSyncee* syncee, ExtraMap& extraMap 
               entry != 0;
               entry = (KSync::CalendarSyncEntry*) syncee->nextEntry() )
         {
+            /*  do not safe deleted records */
+            if ( entry->wasRemoved() )
+              continue;
             event = dynamic_cast<KCal::Event*>( entry->incidence() );
             if ( !event )
               continue;
@@ -293,12 +295,19 @@ QString DateBook::event2string( KCal::Event *event, ExtraMap& map )
     QString str;
     str.append( "<event ");
     str.append( "description=\"" +escape( event->summary() ) + "\" ");
-    str.append( "location=\"" + escape( event->location() ) + "\" ");
-    str.append( "categories=\"" +  categoriesToNumber( event->categories() ) + "\" ");
+
+    str.append( appendText( "location=\"" + escape( event->location() ) + "\" ",
+                            "location=\"\" ") );
+    str.append( appendText( "categories=\"" +
+                            categoriesToNumber( event->categories() ) + "\" ",
+                            "categories=\"\" ") );
+
     str.append( "uid=\"" + uid  + "\" ");
     str.append( "start=\"" +startDate( event->dtStart(), doesFloat ) + "\" ");
     str.append( "end=\"" +  endDate( event->dtEnd(), doesFloat) + "\" ");
-    str.append( "note=\"" + escape( event->description() ) + "\" "); //use escapeString copied from TT
+
+    str.append( appendText("note=\"" + escape( event->description() ) + "\" ",
+                           "note=\"\" ")); //use escapeString copied from TT
     if ( doesFloat )
         str.append( "type=\"AllDay\" ");
     // recurrence

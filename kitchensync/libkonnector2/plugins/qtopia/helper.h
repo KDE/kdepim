@@ -47,7 +47,7 @@ namespace OpieHelper {
         Base( CategoryEdit* edit =0,
               KSync::KonnectorUIDHelper* helper = 0,
               const QString &tz = QString::null,
-              bool metaSyncing = FALSE, Device* d = 0);
+              Device* d = 0);
         virtual ~Base();
     protected:
         // from tt GPLed
@@ -57,12 +57,14 @@ namespace OpieHelper {
 
 	/** returns a new KTempFile */
         KTempFile* file();
+
 	/** generates a new id */
         int newId();
+
         CategoryEdit* edit() { return m_edit; };
         KSync::KonnectorUIDHelper* helper() { return m_helper; };
-        bool isMetaSyncingEnabled()const;
-        void setMetaSyncingEnabled(bool meta);
+
+	QString appendText(const QString& text, const QString& def);
 
         // returns a ; separated list of real ids
         // will also add the value m_kde2opie
@@ -77,7 +79,6 @@ namespace OpieHelper {
 	CategoryEdit *m_edit;
         KSync::KonnectorUIDHelper *m_helper;
         Kontainer::ValueList m_kde2opie;
-        bool m_metaSyncing : 1;
         QString m_tz;
     private:
         Device* m_device;

@@ -23,15 +23,15 @@
 
 using namespace OpieHelper;
 
+MetaAddressbook::MetaAddressbook( KSync::AddressBookSyncee *async, const QString& file )
+  : MD5Template<KSync::AddressBookSyncee, KSync::AddressBookSyncEntry>( async, file )
+{}
 
-MetaAddressbook::MetaAddressbook()
-    : MD5Template<KSync::AddressBookSyncee, KSync::AddressBookSyncEntry>()
-{
-}
-MetaAddressbook::~MetaAddressbook() {
+MetaAddressbook::~MetaAddressbook()
+{}
 
-}
-QString MetaAddressbook::string( KSync::AddressBookSyncEntry* entry) {
+
+QString MetaAddressbook::entryToString( KSync::AddressBookSyncEntry* entry) {
     KABC::Addressee adr = entry->addressee();
 
     QString str;

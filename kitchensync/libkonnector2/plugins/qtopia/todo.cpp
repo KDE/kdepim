@@ -22,6 +22,7 @@
 #include <qfile.h>
 
 #include <kdebug.h>
+#include <klocale.h>
 
 #include <calendarsyncee.h>
 #include <idhelper.h>
@@ -36,12 +37,13 @@ using namespace OpieHelper;
 ToDo::ToDo( CategoryEdit* edit,
             KSync::KonnectorUIDHelper* helper,
             const QString &tz,
-            bool meta, Device* dev)
-    : Base( edit,  helper,  tz,  meta, dev )
+            Device* dev)
+    : Base( edit,  helper,  tz, dev )
 {
 }
 ToDo::~ToDo(){
 }
+
 KCal::Todo* ToDo::dom2todo( QDomElement e, ExtraMap& extra,const QStringList& lst ) {
     QString dummy;
     int Int;
@@ -81,22 +83,26 @@ KCal::Todo* ToDo::dom2todo( QDomElement e, ExtraMap& extra,const QStringList& ls
      * likcal sets percent completed to 0
      */
     Int = dummy.toInt();
-    kdDebug(5227) << " Completed " << dummy << " " << Int << endl;
+
 
     /* !0 */
-    if ( Int == 0) {
-        kdDebug(5227) << "Calling not completed " << endl;
+    if ( !Int ) {
         todo->setCompleted( false );
+
         /*
          * libkcal wants to be too smart again
          * 100% percent done but not completed
          * will be marked as completed...
+         * So let us save the completion status
+         * and apply it on writeback
          */
-        todo->setPercentComplete( e.attribute("Progress").toInt() );
-    }else{
-        kdDebug(5227) << "Todo is completed " << endl;
+        int prog =  e.attribute("Progress").toInt();
+        todo->setPercentComplete( prog );
+        extra.add("todo", "CompletionItem", e.attribute("Uid"),
+                  new TodoExtraItem( Int, prog ) );
+    }else
         todo->setCompleted(true );
-    }
+
 
 
 
@@ -135,11 +141,9 @@ KCal::Todo* ToDo::dom2todo( QDomElement e, ExtraMap& extra,const QStringList& ls
 
 bool ToDo::toKDE( const QString &fileName, ExtraMap& map, KSync::CalendarSyncee *syncee )
 {
-  syncee->setSource( "OpieTodo" );
+  syncee->setTitle( i18n("OpieTodo") );
   syncee->setIdentifier( "Opie" );
 
-  if ( device() )
-    syncee->setSupports( device()->supports( Device::Todolist ) );
 
   QFile file( fileName );
   if ( !file.open( IO_ReadOnly ) ) {
@@ -178,7 +182,7 @@ KTempFile* ToDo::fromKDE( KSync::CalendarSyncee* syncee, ExtraMap& map )
     m_kde2opie.clear();
     Kontainer::ValueList newIds = syncee->ids( "TodoSyncEntry");
     for ( Kontainer::ValueList::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
-        m_helper->addId("TodoSyncEntry",  (*idIt).first(),  (*idIt).second() );
+        m_helper->addId("TodoSyncEntry",  (*idIt).first,  (*idIt).second );
     }
     // update m_helper first;
     KTempFile* tmpFile = file();
@@ -193,7 +197,7 @@ KTempFile* ToDo::fromKDE( KSync::CalendarSyncee* syncee, ExtraMap& map )
               entry != 0l;
               entry = (KSync::CalendarSyncEntry*)syncee->nextEntry() )
         {
-            if ( entry->state() == KSync::SyncEntry::Removed )
+            if ( entry->wasRemoved() )
                 continue;
 
             KCal::Todo *todo = dynamic_cast<KCal::Todo*>( entry->incidence() );
@@ -218,13 +222,32 @@ void ToDo::setUid( KCal::Todo* todo,  const QString &uid )
 
 QString ToDo::todo2String( KCal::Todo* todo, ExtraMap& map )
 {
-    QString text;
+  // id hacking We don't want to have the ids growing and growing
+  // when an id is used again it will be put to the used list and after done
+  // with syncing we will replace the former
+  QString uid = konnectorId("TodoSyncEntry", todo->uid() );
+
+  QString text;
     text.append("<Task ");
     QStringList list = todo->categories();
-    text.append( "Categories=\"" + categoriesToNumber( list ) + "\" " );
-    kdDebug(5227) << " todo->isCompleted " << todo->isCompleted() << endl;
-    text.append( "Completed=\""+QString::number( todo->isCompleted()) + "\" " );
-    text.append( "Progress=\"" + QString::number( todo->percentComplete() ) + "\" ");
+    text.append( appendText( "Categories=\"" +
+                             categoriesToNumber( list ) + "\" ",
+                             "Categories=\"\" " ) );
+
+    {
+      bool comp     = todo->isCompleted();
+      int completed = todo->percentComplete();
+
+      if ( completed == 100 ) {
+        TodoExtraItem *item = static_cast<TodoExtraItem*>(
+                              map.item( "todo", "CompletionItem",
+                                        uid ) );
+        comp = (item &&item->completion==100) ? item->completed : comp;
+      }
+
+      text.append( "Completed=\""+QString::number(comp) + "\" " );
+      text.append( "Progress=\"" + QString::number(completed) + "\" ");
+    }
 
     /* if it is not a Stock Zaurus we will right the summary */
     if ( device() && device()->distribution() != Device::Zaurus )
@@ -252,10 +275,7 @@ QString ToDo::todo2String( KCal::Todo* todo, ExtraMap& map )
         text.append( "Description=\"" +escape( desc ) );
     }
 
-    // id hacking We don't want to have the ids growing and growing
-    // when an id is used again it will be put to the used list and after done
-    // with syncing we will replace the former
-    QString uid = konnectorId("TodoSyncEntry", todo->uid() );
+
     text.append("Uid=\"" +uid + "\" "  );
 
     /* add custom entries */

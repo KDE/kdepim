@@ -20,7 +20,9 @@ INCLUDES= -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/kitchensync/
 
 check_PROGRAMS = kdetest todometa contactmeta datebookmeta maintest
 
-kdetest_LDADD =  $(LIB_KDEUI) $(LIB_QT)
+kdetest_LDADD =  $(LIB_KDEUI) $(LIB_QT) \
+$(top_builddir)/kitchensync/libkonnector2/plugins/qtopia/libqtopiakonnector.la 
+
 kdetest_SOURCES =  kdetest.cpp
 kdetest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 

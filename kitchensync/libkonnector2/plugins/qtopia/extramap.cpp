@@ -29,23 +29,49 @@
 
 using namespace OpieHelper;
 
+/**
+ * d'tor
+ */
+CustomExtraItem::~CustomExtraItem() {}
 
-QString ExtraMap::toString( const CUID& cuid) {
+
+ExtraMap::~ExtraMap()
+{
+  clear();
+}
+
+void ExtraMap::clear()
+{
+  ExtraMapBase::clear();
+
+  for ( QMap<CUID, CustomExtraItem*>::Iterator it = m_custom.begin();
+        it != m_custom.end(); ++it )
+    delete it.data();
+
+  m_custom.clear();
+}
+
+
+QString ExtraMap::toString( const CUID& cuid)
+{
     if (!contains( cuid ) ) return QString::null;
 
     KeyValue val = (*this)[cuid];
     KeyValue::Iterator it;
     QString str;
-    for (it = val.begin(); it != val.end(); ++it ) {
+    for (it = val.begin(); it != val.end(); ++it )
         str += " "+it.key()+"=\""+escape( it.data() )+"\"";
-    }
+
 
     return str;
 }
-QString ExtraMap::toString( const QString& app, const QString& uid ) {
+QString ExtraMap::toString( const QString& app, const QString& uid )
+{
     return toString(app+uid);
 }
-void ExtraMap::add( const QString& app, const QString& uid, const QDomNamedNodeMap& map, const QStringList& lst ) {
+
+void ExtraMap::add( const QString& app, const QString& uid, const QDomNamedNodeMap& map, const QStringList& lst )
+{
     KeyValue val;
     uint count =  map.count();
     for ( uint i = 0; i < count; i++ ) {
@@ -58,6 +84,22 @@ void ExtraMap::add( const QString& app, const QString& uid, const QDomNamedNodeM
     }
     insert(app+uid, val );
 }
-QString ExtraMap::escape( const QString& str ) {
+
+QString ExtraMap::escape( const QString& str )
+{
     return QStyleSheet::escape( str );
+}
+
+
+void ExtraMap::add( const QString& app, const QString& type,
+                    const QString& uid, CustomExtraItem* item )
+{
+  m_custom.insert(app+type+uid, item );
+}
+
+CustomExtraItem* ExtraMap::item( const QString& app,
+                                 const QString& type,
+                                 const QString& uid )
+{
+  return m_custom[app+type+uid];
 }

@@ -30,7 +30,6 @@
 
 #include <addressbooksyncee.h>
 #include <calendarsyncee.h>
-#include <todosyncee.h>
 
 #include <idhelper.h>
 
@@ -40,8 +39,7 @@
 #include "addressbook.h"
 
 #include "metaaddressbook.h"
-#include "metadatebook.h"
-#include "metatodo.h"
+#include "metacalendar.h"
 
 #include "todo.h"
 
@@ -86,12 +84,12 @@ class QtopiaSocket::Private
     bool isSyncing    : 1;
     bool isConnecting : 1;
     bool first        : 1;
-    bool meta         : 1;
     QString src;
     QString dest;
     QSocket* socket;
     QTimer* timer;
     QString path;
+    QString storagePath;
     int mode;
     int getMode;
     SynceeList m_sync;
@@ -125,7 +123,6 @@ QtopiaSocket::QtopiaSocket( QObject* obj, const char* name )
     d->startSync    = false;
     d->isSyncing    = false;
     d->isConnecting = false;
-    d->meta         = true ;
     d->helper  = 0;
     d->edit    = 0;
     d->first   = false;
@@ -138,6 +135,17 @@ QtopiaSocket::~QtopiaSocket()
     delete d->device;
     delete d;
 }
+
+QString QtopiaSocket::storagePath()const
+{
+  return d->storagePath;
+}
+
+void QtopiaSocket::setStoragePath( const QString& str )
+{
+  d->storagePath = str;
+}
+
 
 void QtopiaSocket::setUser( const QString& user )
 {
@@ -272,11 +280,19 @@ void QtopiaSocket::write( SynceeList list )
     AddressBookSyncee *abSyncee = list.addressBookSyncee();
     if ( abSyncee ) writeAddressbook( abSyncee );
 
-    CalendarSyncee *evSyncee = list.calendarSyncee();
-    if ( evSyncee ) writeDatebook( evSyncee );
+    CalendarSyncee *calSyncee = list.calendarSyncee();
+    if ( calSyncee ) {
+      writeDatebook( calSyncee );
+      writeTodoList( calSyncee );
 
-    CalendarSyncee *toSyncee = list.calendarSyncee();
-    if ( toSyncee ) writeTodoList( toSyncee );
+      /*
+       * Now write the common meta information for
+       * todo/event as they're shared
+       */
+      OpieHelper::MetaCalendar  metaBook(calSyncee, storagePath() + "/" + d->partnerId + "/calendar_todolist.md5.qtopia" );
+      metaBook.save();
+    }
+
 
     /*
      * write new category information
@@ -423,7 +439,7 @@ void QtopiaSocket::writeCategory()
 void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee )
 {
     emit prog(Progress(i18n("Writing AddressBook back to the device") ) );
-    OpieHelper::AddressBook abDB(d->edit, d->helper, d->tz, d->meta, d->device );
+    OpieHelper::AddressBook abDB(d->edit, d->helper, d->tz, d->device );
     KTempFile* file = abDB.fromKDE( syncee, d->extras );
     KURL uri = url( AddressBook );
 
@@ -431,17 +447,14 @@ void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee )
     file->unlink();
     delete file;
 
-    if ( d->meta ) {
-        OpieHelper::MD5Map map(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/contacts.md5.qtopia");
-        OpieHelper::MetaAddressbook metaBook;
-        metaBook.saveMeta( syncee,  map );
-        map.save( );
-    }
+
+    OpieHelper::MetaAddressbook metaBook( syncee, storagePath() + "/" + d->partnerId + "/contacts.md5.qtopia" );
+    metaBook.save();
 }
 
 void QtopiaSocket::writeDatebook( CalendarSyncee* syncee )
 {
-    OpieHelper::DateBook dbDB(d->edit, d->helper, d->tz, d->meta, d->device );
+    OpieHelper::DateBook dbDB(d->edit, d->helper, d->tz, d->device );
     KTempFile* file = dbDB.fromKDE( syncee, d->extras );
     KURL uri = url( DateBook );
 
@@ -449,17 +462,15 @@ void QtopiaSocket::writeDatebook( CalendarSyncee* syncee )
     file->unlink();
     delete file;
 
-    if ( d->meta ) {
-        OpieHelper::MD5Map map(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/datebook.md5.qtopia");
-        OpieHelper::MetaDatebook metaBook;
-        metaBook.saveMeta( syncee,  map );
-        map.save( );
-    }
+    /*
+     * The SyncHistory is saved after both datebook and todo
+     * was written
+     */
 }
 
 void QtopiaSocket::writeTodoList( CalendarSyncee* syncee)
 {
-    OpieHelper::ToDo toDB(d->edit, d->helper, d->tz, d->meta, d->device );
+    OpieHelper::ToDo toDB(d->edit, d->helper, d->tz, d->device );
     KTempFile* file = toDB.fromKDE( syncee, d->extras );
     KURL uri = url( TodoList );
 
@@ -467,12 +478,10 @@ void QtopiaSocket::writeTodoList( CalendarSyncee* syncee)
     file->unlink();
     delete file;
 
-    if ( d->meta ) {
-        OpieHelper::MD5Map map(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/todolist.md5.qtopia");
-        OpieHelper::MetaTodo  metaBook;
-        metaBook.saveMeta( syncee,  map );
-        map.save();
-    }
+    /*
+     * The SyncHistory is saved after both datebook and todo
+     * was written
+     */
 }
 
 void QtopiaSocket::readAddressbook()
@@ -490,8 +499,9 @@ void QtopiaSocket::readAddressbook()
     emit prog( StdProgress::converting(i18n("Addressbook") ) );
 
     if (!syncee) {
-        OpieHelper::AddressBook abDB( d->edit, d->helper, d->tz, d->meta, d->device );
+        OpieHelper::AddressBook abDB( d->edit, d->helper, d->tz, d->device );
         syncee = abDB.toKDE( tempfile, d->extras );
+        syncee->setMerger( d->device ? d->device->merger( OpieHelper::Device::Addressbook ) : 0l );
     }
 
     if (!syncee ) {
@@ -500,19 +510,16 @@ void QtopiaSocket::readAddressbook()
         return;
     }
 
-    syncee->setFirstSync( d->first );
 
     /*
      * If in meta mode but not the first syncee
      * collect some meta infos
      */
-    if ( d->meta && !d->first ) {
-        emit prog( Progress(i18n("Not first sync collecting the changes now") ) );
-        syncee->setSyncMode( KSync::Syncee::MetaMode );
-        OpieHelper::MD5Map map( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/contacts.md5.qtopia" );
-        OpieHelper::MetaAddressbook metaBook;
-        metaBook.doMeta( syncee,  map );
-    }
+    emit prog( Progress(i18n("Collecting the changes now") ) );
+
+    OpieHelper::MetaAddressbook metaBook( syncee, storagePath() + "/" + d->partnerId + "/contacts.md5.qtopia" );
+    metaBook.load();
+
     d->m_sync.append( syncee );
 
     if (!tempfile.isEmpty() )
@@ -522,8 +529,12 @@ void QtopiaSocket::readAddressbook()
 CalendarSyncee *QtopiaSocket::defaultCalendarSyncee()
 {
   CalendarSyncee* syncee = d->m_sync.calendarSyncee();
-  if ( syncee == 0 )
+  if ( syncee == 0 ) {
     syncee = new KSync::CalendarSyncee( new KCal::CalendarLocal() );
+
+    /* if we've a device lets set the merger */
+    syncee->setMerger( d->device ? d->device->merger( OpieHelper::Device::Calendar ) : 0);
+  }
 
   return syncee;
 }
@@ -545,7 +556,7 @@ void QtopiaSocket::readDatebook()
      * and there is no need to parse a non existint file
      */
     if ( ok ) {
-      OpieHelper::DateBook dateDB( d->edit, d->helper, d->tz, d->meta, d->device );
+      OpieHelper::DateBook dateDB( d->edit, d->helper, d->tz, d->device );
       ok = dateDB.toKDE( tempfile, d->extras, syncee );
     }
 
@@ -555,20 +566,16 @@ void QtopiaSocket::readDatebook()
         return;
     }
 
-    syncee->setFirstSync( d->first );
-
     /*
      * for meta mode get meta info
      */
-    if ( d->meta && !d->first ) {
-        emit prog( StdProgress::converting(i18n("Datebook") ) );
-        syncee->setSyncMode( KSync::Syncee::MetaMode );
-        OpieHelper::MD5Map map( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/datebook.md5.qtopia" );
-        OpieHelper::MetaDatebook metaBook;
-        metaBook.doMeta( syncee,  map );
-        kdDebug(5229) << "Did Meta" << endl;
-        outputIt(5229, syncee );
-    }
+    emit prog( StdProgress::converting(i18n("Datebook") ) );
+
+    /*
+     * SyncHistory applying is done after both calendar and todo
+     * are read and before emitting the records
+     * in download() for now
+     */
 
     if ( d->m_sync.find( syncee ) == d->m_sync.end() )
       d->m_sync.append( syncee );
@@ -590,7 +597,7 @@ void QtopiaSocket::readTodoList()
     }
 
     if ( ok ) {
-        OpieHelper::ToDo toDB( d->edit, d->helper, d->tz, d->meta, d->device );
+        OpieHelper::ToDo toDB( d->edit, d->helper, d->tz, d->device );
         ok = toDB.toKDE( tempfile, d->extras, syncee );
     }
 
@@ -600,17 +607,13 @@ void QtopiaSocket::readTodoList()
         return;
     }
 
-    syncee->setFirstSync( d->first );
+    emit prog( Progress(i18n("Collection changes for todolist") ) );
 
-    if ( d->meta && !d->first ) {
-        emit prog( Progress(i18n("Not first sync collecting the changes now") ) );
-        syncee->setSyncMode( KSync::Syncee::MetaMode );
-        OpieHelper::MD5Map map( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/todolist.md5.qtopia" );
-        OpieHelper::MetaTodo metaBook;
-        metaBook.doMeta( syncee, map );
-        kdDebug(5227) << "Did Meta " << endl;
-        outputIt(5227, syncee );
-    }
+    /*
+     * SyncHistory applying is done after both calendar and todo
+     * are read and before emitting the records
+     * in download() for now
+     */
 
     if ( d->m_sync.find( syncee ) == d->m_sync.end() )
       d->m_sync.append( syncee );
@@ -769,6 +772,18 @@ void QtopiaSocket::handshake( const QString &line )
 
 void QtopiaSocket::download()
 {
+  /*
+   * As Calendar and Todo are shared in one Syncee we need
+   * to do the sync information getting and applying here
+   *
+   */
+  KSync::CalendarSyncee* syncee = defaultCalendarSyncee();
+  OpieHelper::MetaCalendar  metaBook(syncee, storagePath() + "/" + d->partnerId + "/calendar_todolist.md5.qtopia" );
+  metaBook.load();
+  kdDebug(5227) << "Did Meta " << endl;
+  outputIt(5227, syncee );
+
+
     /*
      * we're all set now
      * start sync
@@ -824,6 +839,7 @@ void QtopiaSocket::initFiles()
     dir.mkdir(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId );
 }
 
+
 QString QtopiaSocket::partnerIdPath() const
 {
     QString str = QDir::homeDirPath();
@@ -874,7 +890,7 @@ void QtopiaSocket::sendCommand( const QString& cmd )
 
 namespace {
 
-void forAll( int area, QPtrList<SyncEntry> list )
+void outputAll( int area, QPtrList<SyncEntry> list )
 {
     for (SyncEntry* entry = list.first(); entry != 0; entry = list.next() ) {
         kdDebug(area) << "State " << entry->state() << endl;
@@ -886,13 +902,13 @@ void forAll( int area, QPtrList<SyncEntry> list )
 void outputIt( int area, Syncee *s )
 {
     kdDebug(area) << "Added entries" << endl;
-    forAll( area, s->added() );
+    outputAll( area, s->added() );
 
     kdDebug(area) << "Modified " <<endl;
-    forAll( area, s->modified() );
+    outputAll( area, s->modified() );
 
     kdDebug(area) << "Removed " << endl;
-    forAll( area, s->removed() );
+    outputAll( area, s->removed() );
 }
 
 }

@@ -1,3 +1,6 @@
+#include "../socket.h"
+
+
 #include <qstring.h>
 
 #include <kapplication.h>
@@ -19,8 +22,7 @@ static KCmdLineOptions options[] =
 };
 
 void md5( const QString& str ) {
-    KMD5 test(str );
-    qWarning(str);
+    KMD5 test(str.local8Bit() );
     qWarning("%s", test.hexDigest().data() );
 }
 
@@ -37,5 +39,7 @@ int main(int argc, char *argv[] )
   md5( QString::fromLatin1("Test it") );
   md5( QString::fromLatin1("Test it ") );
   md5( QString::fromLatin1("Holger Freyther") );
+
+  QObject* obj = new KSync::QtopiaSocket( 0, 0 );
 
 }

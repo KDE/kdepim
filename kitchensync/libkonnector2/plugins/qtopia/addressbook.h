@@ -35,7 +35,7 @@ namespace OpieHelper {
         AddressBook( CategoryEdit* edit = 0,
                      KSync::KonnectorUIDHelper* helper = 0,
                      const QString &tz = QString::null,
-                     bool metaSyncing = FALSE , Device *dev = 0);
+                     Device *dev = 0);
         ~AddressBook();
         KSync::AddressBookSyncee * toKDE( const QString &fileName, ExtraMap& );
         KTempFile* fromKDE(KSync::AddressBookSyncee* syncee, ExtraMap& );

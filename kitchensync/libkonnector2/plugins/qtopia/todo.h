@@ -29,7 +29,6 @@
 #include <libkcal/todo.h>
 
 #include <kontainer.h>
-#include <todosyncee.h>
 
 #include "helper.h"
 
@@ -40,23 +39,33 @@ namespace KSync {
     class Syncee;
 }
 namespace OpieHelper {
+struct TodoExtraItem : public CustomExtraItem 
+{
+  TodoExtraItem( bool c, int co )
+    : completed( c ), completion( co ) 
+    {}
+  bool completed : 1;
+  int  completion;
+};
 
-    class ToDo  : public Base {
-    public:
-        ToDo( CategoryEdit* edit = 0,
-              KSync::KonnectorUIDHelper* helper= 0,
-              const QString& tz = QString::null,
-              bool meta = FALSE, Device* dev = 0);
-        ~ToDo();
-
-        bool toKDE( const QString &fileName, ExtraMap& map, KSync::CalendarSyncee* );
-        KTempFile* fromKDE( KSync::CalendarSyncee* entry, ExtraMap& map  );
-    private:
-        QStringList attributes()const;
-        void setUid( KCal::Todo*,  const QString &uid );
-        KCal::Todo* dom2todo( QDomElement, ExtraMap&, const QStringList& );
-        QString todo2String( KCal::Todo*, ExtraMap&  );
-    };
+class ToDo  : public Base 
+{
+public:
+  ToDo( CategoryEdit* edit = 0,
+        KSync::KonnectorUIDHelper* helper= 0,
+        const QString& tz = QString::null,
+        Device* dev = 0);
+  ~ToDo();
+    
+  bool toKDE( const QString &fileName, ExtraMap& map, KSync::CalendarSyncee* );
+  KTempFile* fromKDE( KSync::CalendarSyncee* entry, ExtraMap& map  );
+  
+private:
+  QStringList attributes()const;
+  void setUid( KCal::Todo*,  const QString &uid );
+  KCal::Todo* dom2todo( QDomElement, ExtraMap&, const QStringList& );
+  QString todo2String( KCal::Todo*, ExtraMap&  );
+};
 }
 
 

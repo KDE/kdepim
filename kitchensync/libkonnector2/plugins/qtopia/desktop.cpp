@@ -19,21 +19,26 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <qregexp.h>
 
 #include "desktop.h"
+
+#include <kdebug.h>
+
+#include <qregexp.h>
+
 
 using namespace OpieHelper;
 
 Desktop::Desktop( CategoryEdit* edit )
-    : Base( edit ) {
+    : Base( edit )
+{}
+
+Desktop::~Desktop()
+{}
 
 
-}
-Desktop::~Desktop() {
-
-}
-KSync::OpieDesktopSyncee* Desktop::toSyncee( const QString& str) {
+KSync::OpieDesktopSyncee* Desktop::toSyncee( const QString& str)
+{
     KSync::OpieDesktopSyncee* syncee;
     syncee = new KSync::OpieDesktopSyncee();
 

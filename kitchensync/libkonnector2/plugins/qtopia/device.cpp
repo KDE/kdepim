@@ -20,164 +20,185 @@
 */
 
 #include <addressbooksyncee.h>
-#include <todosyncee.h>
-#include <eventsyncee.h>
+#include <calendarsyncee.h>
+#include <calendarmerger.h>
+#include <addressbookmerger.h>
 
 #include "device.h"
 
-using KSync::EventSyncee;
 using KSync::AddressBookSyncee;
-using KSync::TodoSyncee;
+using KSync::CalendarSyncee;
 
 using namespace OpieHelper;
 
-Device::Device() {
+Device::Device()
+  : mAMerger( 0l ), mCMerger( 0l )
+{
     m_model = Opie;
 }
+
 Device::~Device() {
 }
+
 int Device::distribution()const {
     return m_model;
 }
+
 void Device::setDistribution( int dist ) {
     m_model = dist;
 }
-QBitArray Device::supports( enum PIM pim) const{
-    QBitArray ar;
+
+KSync::Merger* Device::merger( enum PIM pim){
+    KSync::Merger* m;
     switch( pim ) {
     case Calendar:
-        ar = opieCal();
+        m = opieCal();
         break;
     case Addressbook:
-        ar = opieAddr();
-        break;
-    case Todolist:
-        ar = opieTo();
+        m = opieAddr();
         break;
     }
-    return ar;
+    return m;
 }
-QBitArray Device::opieCal() const{
-    QBitArray ar( EventSyncee::DtEnd+1 );
-    ar[EventSyncee::Organizer] = false;
-    ar[EventSyncee::ReadOnly ] = false; // we do not support the read only attribute
-    ar[EventSyncee::DtStart  ] = true;
-    ar[EventSyncee::Duration ] = true;
-    ar[EventSyncee::Float    ] = true;
-    ar[EventSyncee::Attendee ] = false;
-    ar[EventSyncee::CreatedDate ] = false;
-    ar[EventSyncee::Revision ] = false;
-    ar[EventSyncee::Description ] = true;
-    ar[EventSyncee::Summary] = true; // ( m_model == Opie );  if we're in opie mode we do support the summary!
-    ar[EventSyncee::Category ] = true;
-    ar[EventSyncee::Relations ] = false;
-    ar[EventSyncee::ExDates ] = false; // currently we do not support the Exception to Recurrence
-    ar[EventSyncee::Attachments ] = false;
-    ar[EventSyncee::Secrecy ] = false;
-    ar[EventSyncee::Resources ] = false; // we do not support resources
-    ar[EventSyncee::Priority ] = false; // no priority for calendar
-    ar[EventSyncee::Alarms ] = false; // Opie/Qtopia alarms are so different in nature
-    ar[EventSyncee::Recurrence ] = true; // we do not support everything though...
-    ar[EventSyncee::Location] = true;
-    ar[EventSyncee::DtEnd ] = true;
 
-    return ar;
-}
-QBitArray Device::opieAddr() const{
-    QBitArray ar(AddressBookSyncee::Emails +1 );
+KSync::Merger* Device::opieCal(){
+  if ( mCMerger )
+    return mCMerger;
 
-    ar[AddressBookSyncee::FamilyName] = true;
-    ar[AddressBookSyncee::GivenName] = true;
-    ar[AddressBookSyncee::AdditionalName] = true;
-    ar[AddressBookSyncee::Prefix ] = false;
-    ar[AddressBookSyncee::Suffix] = true;
-    ar[AddressBookSyncee::NickName] = true;
-    ar[AddressBookSyncee::Birthday] = true;
-    ar[AddressBookSyncee::HomeAddress ] = true;
-    ar[AddressBookSyncee::BusinessAddress]= true;
-    ar[AddressBookSyncee::TimeZone] = false;
-    ar[AddressBookSyncee::Geo ] = false;
-    ar[AddressBookSyncee::Title ] = false;
-    ar[AddressBookSyncee::Role ] = true;
-    ar[AddressBookSyncee::Organization ] = true;
-    ar[AddressBookSyncee::Note ] = true;
-    ar[AddressBookSyncee::Url ] = false;
-    ar[AddressBookSyncee::Secrecy ] = false;
-    ar[AddressBookSyncee::Picture ] = false;
-    ar[AddressBookSyncee::Sound ] = false;
-    ar[AddressBookSyncee::Agent ] = false;
-    ar[AddressBookSyncee::HomeNumbers] = true;
-    ar[AddressBookSyncee::OfficeNumbers] = true;
-    ar[AddressBookSyncee::Messenger ] = false;
-    ar[AddressBookSyncee::PreferredNumber ] = false;
-    ar[AddressBookSyncee::Voice ] = false;
-    ar[AddressBookSyncee::Fax ] = false;
-    ar[AddressBookSyncee::Cell ] = false;
-    ar[AddressBookSyncee::Video ] = false;
-    ar[AddressBookSyncee::Mailbox ] = false;
-    ar[AddressBookSyncee::Modem ] = false;
-    ar[AddressBookSyncee::CarPhone ] = false;
-    ar[AddressBookSyncee::ISDN ] = false;
-    ar[AddressBookSyncee::PCS ] = false;
-    ar[AddressBookSyncee::Pager ] = false;
-    ar[AddressBookSyncee::HomeFax] = true;
-    ar[AddressBookSyncee::WorkFax] = true;
-    ar[AddressBookSyncee::OtherTel] = false;
-    ar[AddressBookSyncee::Category] = true;
-    ar[AddressBookSyncee::Custom] = true;
-    ar[AddressBookSyncee::Keys] = false;
-    ar[AddressBookSyncee::Logo] = false;
-    ar[AddressBookSyncee::Email] = true;
-    ar[AddressBookSyncee::Emails] = true;
-    return ar;
+  QBitArray cal( KSync::CalendarMerger::DtEnd+1 );
+  cal[KSync::CalendarMerger::Organizer] = false;
+  cal[KSync::CalendarMerger::ReadOnly ] = false; // we do not support the read only attribute
+  cal[KSync::CalendarMerger::DtStart  ] = true;
+  cal[KSync::CalendarMerger::Duration ] = true;
+  cal[KSync::CalendarMerger::Float    ] = true;
+  cal[KSync::CalendarMerger::Attendee ] = false;
+  cal[KSync::CalendarMerger::CreatedDate ] = false;
+  cal[KSync::CalendarMerger::Revision ] = false;
+  cal[KSync::CalendarMerger::Description ] = true;
+  cal[KSync::CalendarMerger::Summary] = true; // ( m_model == Opie );  if we're in opie mode we do support the summcaly!
+  cal[KSync::CalendarMerger::Category ] = true;
+  cal[KSync::CalendarMerger::Relations ] = false;
+  cal[KSync::CalendarMerger::ExDates ] = false; // currently we do not support the Exception to Recurrence
+  cal[KSync::CalendarMerger::Attachments ] = false;
+  cal[KSync::CalendarMerger::Secrecy ] = false;
+  cal[KSync::CalendarMerger::Resources ] = false; // we do not support resources
+  cal[KSync::CalendarMerger::Priority ] = false; // no priority for calendcal
+  cal[KSync::CalendarMerger::Alarms ] = false; // Opie/Qtopia alarms are so different in nature
+  cal[KSync::CalendarMerger::Recurrence ] = true; // we do not support everything though...
+  cal[KSync::CalendarMerger::Location] = true;
+  cal[KSync::CalendarMerger::DtEnd ] = true;
+
+  // todo stuff
+  QBitArray todo(KSync::CalendarMerger::Percent+1);
+  todo[KSync::CalendarMerger::Organizer] = false;
+  todo[KSync::CalendarMerger::ReadOnly] = false;
+  todo[KSync::CalendarMerger::DtStart] = ( m_model == Opie );
+  todo[KSync::CalendarMerger::Duration] = false;
+  todo[KSync::CalendarMerger::Float] = false; // check if DueDate less components...
+  todo[KSync::CalendarMerger::Attendee] = false;
+  todo[KSync::CalendarMerger::CreatedDate] = false;
+  todo[KSync::CalendarMerger::Revision] = false;
+  todo[KSync::CalendarMerger::Description] = true;
+  todo[KSync::CalendarMerger::Summary] = ( m_model == Opie );
+  todo[KSync::CalendarMerger::Category] = true;
+  todo[KSync::CalendarMerger::Relations] = false;
+  todo[KSync::CalendarMerger::ExDates] = false;
+  todo[KSync::CalendarMerger::Attachments] = false;
+  todo[KSync::CalendarMerger::Secrecy] = false;
+  todo[KSync::CalendarMerger::Priority] = true;
+  todo[KSync::CalendarMerger::Alarms] = false;
+  todo[KSync::CalendarMerger::Recurrence] = false;
+  todo[KSync::CalendarMerger::Location] = false;
+  todo[KSync::CalendarMerger::StartDate] = ( m_model == Opie );
+  todo[KSync::CalendarMerger::Completed] = true;
+  todo[KSync::CalendarMerger::Percent] = true;
+
+  mCMerger = new KSync::CalendarMerger(todo, cal );
+
+  return mCMerger;
 }
-QBitArray Device::opieTo() const{
-    QBitArray ar(TodoSyncee::Percent+1);
-    ar[TodoSyncee::Organizer] = false;
-    ar[TodoSyncee::ReadOnly] = false;
-    ar[TodoSyncee::DtStart] = ( m_model == Opie );
-    ar[TodoSyncee::Duration] = false;
-    ar[TodoSyncee::Float] = false; // check if DueDate less components...
-    ar[TodoSyncee::Attendee] = false;
-    ar[TodoSyncee::CreatedDate] = false;
-    ar[TodoSyncee::Revision] = false;
-    ar[TodoSyncee::Description] = true;
-    ar[TodoSyncee::Summary] = ( m_model == Opie );
-    ar[TodoSyncee::Category] = true;
-    ar[TodoSyncee::Relations] = false;
-    ar[TodoSyncee::ExDates] = false;
-    ar[TodoSyncee::Attachments] = false;
-    ar[TodoSyncee::Secrecy] = false;
-    ar[TodoSyncee::Priority] = true;
-    ar[TodoSyncee::Alarms] = false;
-    ar[TodoSyncee::Recurrence] = false;
-    ar[TodoSyncee::Location] = false;
-    ar[TodoSyncee::StartDate] = ( m_model == Opie );
-    ar[TodoSyncee::Completed] = true;
-    ar[TodoSyncee::Percent] = true;
-    return ar;
+
+KSync::Merger* Device::opieAddr(){
+  if ( mAMerger )
+    return mAMerger;
+
+  QBitArray ar(KSync::AddressBookMerger::Emails +1 );
+
+  ar[KSync::AddressBookMerger::FamilyName] = true;
+  ar[KSync::AddressBookMerger::GivenName] = true;
+  ar[KSync::AddressBookMerger::AdditionalName] = true;
+  ar[KSync::AddressBookMerger::Prefix ] = false;
+  ar[KSync::AddressBookMerger::Suffix] = true;
+  ar[KSync::AddressBookMerger::NickName] = true;
+  ar[KSync::AddressBookMerger::Birthday] = true;
+  ar[KSync::AddressBookMerger::HomeAddress ] = true;
+  ar[KSync::AddressBookMerger::BusinessAddress]= true;
+  ar[KSync::AddressBookMerger::TimeZone] = false;
+  ar[KSync::AddressBookMerger::Geo ] = false;
+  ar[KSync::AddressBookMerger::Title ] = false;
+  ar[KSync::AddressBookMerger::Role ] = true;
+  ar[KSync::AddressBookMerger::Organization ] = true;
+  ar[KSync::AddressBookMerger::Note ] = true;
+  ar[KSync::AddressBookMerger::Url ] = false;
+  ar[KSync::AddressBookMerger::Secrecy ] = false;
+  ar[KSync::AddressBookMerger::Picture ] = false;
+  ar[KSync::AddressBookMerger::Sound ] = false;
+  ar[KSync::AddressBookMerger::Agent ] = false;
+  ar[KSync::AddressBookMerger::HomeNumbers] = true;
+  ar[KSync::AddressBookMerger::OfficeNumbers] = true;
+  ar[KSync::AddressBookMerger::Messenger ] = false;
+  ar[KSync::AddressBookMerger::PreferredNumber ] = false;
+  ar[KSync::AddressBookMerger::Voice ] = false;
+  ar[KSync::AddressBookMerger::Fax ] = false;
+  ar[KSync::AddressBookMerger::Cell ] = false;
+  ar[KSync::AddressBookMerger::Video ] = false;
+  ar[KSync::AddressBookMerger::Mailbox ] = false;
+  ar[KSync::AddressBookMerger::Modem ] = false;
+  ar[KSync::AddressBookMerger::CarPhone ] = false;
+  ar[KSync::AddressBookMerger::ISDN ] = false;
+  ar[KSync::AddressBookMerger::PCS ] = false;
+  ar[KSync::AddressBookMerger::Pager ] = false;
+  ar[KSync::AddressBookMerger::HomeFax] = true;
+  ar[KSync::AddressBookMerger::WorkFax] = true;
+  ar[KSync::AddressBookMerger::OtherTel] = false;
+  ar[KSync::AddressBookMerger::Category] = true;
+  ar[KSync::AddressBookMerger::Custom] = true;
+  ar[KSync::AddressBookMerger::Keys] = false;
+  ar[KSync::AddressBookMerger::Logo] = false;
+  ar[KSync::AddressBookMerger::Email] = true;
+  ar[KSync::AddressBookMerger::Emails] = true;
+
+  mAMerger = new KSync::AddressBookMerger( ar );
+
+  return mAMerger;
 }
+
 QString Device::user()const {
     if(m_model == Opie )
 	return m_user;
     else
 	return QString::fromLatin1("root");
 }
+
 void Device::setUser( const QString& str ){
     m_user = str;
 }
+
 QString Device::password()const {
     if(m_model == Opie )
 	return m_pass;
     else
 	return QString::fromLatin1("Qtopia");
 }
+
 void Device::setPassword(const QString& pass ){
     m_pass = pass;
 }
+
 void Device::setMeta( const QString& str ){
     m_meta = str;
 }
+
 QString Device::meta()const{
     return m_meta;
 }

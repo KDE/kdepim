@@ -26,13 +26,15 @@
 #include "md5metatemplate.h"
 
 namespace OpieHelper {
-    class MetaAddressbook : public MD5Template<KSync::AddressBookSyncee, KSync::AddressBookSyncEntry> {
-    public:
-        MetaAddressbook();
-        ~MetaAddressbook();
+class MetaAddressbook : public MD5Template<KSync::AddressBookSyncee, KSync::AddressBookSyncEntry> 
+{
+public:
+    MetaAddressbook( KSync::AddressBookSyncee* syncee, const QString& str );
+    ~MetaAddressbook();
 
-        QString string( KSync::AddressBookSyncEntry* );
-    };
+protected:
+    QString entryToString( KSync::AddressBookSyncEntry* );
+};
 }
 
 
