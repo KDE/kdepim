@@ -12,9 +12,6 @@
             <height>461</height>
         </rect>
     </property>
-    <property name="caption">
-        <string>KSelFilterPageDlg</string>
-    </property>
     <grid>
         <property name="name">
             <cstring>unnamed</cstring>
@@ -105,7 +102,7 @@ This program will help you import your email from your previous email program in
                 <cstring>remDupMsg</cstring>
             </property>
             <property name="text">
-                <string>Remove duplicate messages during import.</string>
+                <string>Remove duplicate messages during import</string>
             </property>
             <property name="checked">
                 <bool>false</bool>
