@@ -1,9 +1,11 @@
 #include <qapplication.h>
 #include <qfontmetrics.h>
 #include <qpainter.h>
+#include <qdrawutil.h>
 
 #include <kglobal.h>
 #include <kiconloader.h>
+#include <klistbox.h>
 
 #include "partbar.h"
 
@@ -16,7 +18,7 @@ PartBarItem::PartBarItem( PartBar *parent, ManipulatorPart *part )
   m_Pixmap = m_Part->pixmap();
   setCustomHighlighting( true );
   setText( part->description() ); 
-  setTooltip(part->description() );
+  //tooltip(part->description() );
 }
 
 PartBarItem::~PartBarItem() {
@@ -26,12 +28,12 @@ ManipulatorPart* PartBarItem::part() {
   return m_Part;
 }
 
-QString PartBarItem::toolTip() const {
-  return ( m_Part->description() );
-}
+//QString PartBarItem::toolTip() const {
+//  return ( m_Part->description() );
+//}
 
 int PartBarItem::width( const QListBox *listbox) const {
-  return listbox->viewport()->width() :
+  return listbox->viewport()->width();
 }
 
 int PartBarItem::height( const QListBox *listbox) const {
@@ -69,18 +71,17 @@ void PartBarItem::paint(QPainter *p)
 }
 
 
-PartBar::PartBar(QWidget *parent) 
-  : QFrame ( parent ),
-    m_activeItem ( OL ),
-    m_listBox( OL ) {
+PartBar::PartBar(QWidget *parent, const char *name, WFlags f) 
+  : QFrame ( parent, name, f ),
+    m_listBox( 0L ),
+    m_activeItem ( 0L ) {
   
-  setListBox( OL );
+  setListBox( 0L );
   setSizePolicy( QSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred ) );
 }
 
-PartBarItem * PartBar::inserItem( ManipulatorPart *part) {
+PartBarItem * PartBar::insertItem( ManipulatorPart *part) {
   PartBarItem *item = new PartBarItem( this, part );
-  item->SetApplicationLocal ( applicationLocal );
   return item;
 }
 
@@ -92,7 +93,7 @@ void PartBar::setListBox(KListBox *view) {
   } else {
     m_listBox = view;
     if ( m_listBox->parentWidget() != this ) {
-      m_listBox->reparen( this, QPoint(0,0) );
+      m_listBox->reparent( this, QPoint(0,0) );
     }
     m_listBox->resize( width(), height() );
   }
@@ -104,7 +105,7 @@ void PartBar::setListBox(KListBox *view) {
   pal.setColor( QPalette::Inactive, QColorGroup::Base, gray );
   
   setPalette( pal );
-  m_listBox->viewport()->setBackgroudMode( PaletteMid);
+  m_listBox->viewport()->setBackgroundMode( PaletteMid);
 
   connect( m_listBox, SIGNAL( clicked (QListBoxItem *)),
 	   SLOT( slotSelected( QListBoxItem * )));
@@ -114,12 +115,13 @@ void PartBar::clear() {
   m_listBox->clear();
 }
 
-void PartBar::resizeEvent() {
+void PartBar::resizeEvent( QResizeEvent *e ) {
   QFrame::resizeEvent( e );
   m_listBox->resize( width(), height() );
 }
 
-QSize PartBar::sizeHint() {
+QSize PartBar::sizeHint() const {
+  
   int w = 0;
   int h = 0;
   
@@ -130,21 +132,21 @@ QSize PartBar::sizeHint() {
     h += item->height( m_listBox );
   }
 
-  if (m_listBox->verticalScroolBar->isVisible() ) {
+  if (m_listBox->verticalScrollBar()->isVisible() ) {
     w += m_listBox->verticalScrollBar()->width();
   }
-
-  if ( W == 0 && h == 0) {
+  
+  if ( w == 0 && h == 0) {
     return QSize(100, 200);
   } else {
     return QSize( 6 + w , h );
   }
 }
 
-QSize PartBar::minimumSizeHint() {
+QSize PartBar::minimumSizeHint() const {
   QSize s = sizeHint();
   int h = s.height() + m_listBox->horizontalScrollBar()->height();
-  int w = s.width() + m_listBox->verticalScroolBar()->width();
+  int w = s.width() + m_listBox->verticalScrollBar()->width();
   return QSize( w, h );
 }
 
@@ -156,12 +158,12 @@ void PartBar::slotSelected(QListBoxItem *item) {
   }
 }
 
-ParBarItem * PartBar::currentItem() const {
+PartBarItem * PartBar::currentItem() const {
   QListBoxItem *item = m_listBox->item(m_listBox->currentItem() );
   if ( item ) {
     return static_cast<PartBarItem *>( item );
   } else {
-    return OL;
+    return 0L;
   }
 }
 

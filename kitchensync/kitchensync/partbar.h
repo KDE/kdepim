@@ -38,6 +38,7 @@ namespace KitchenSync {
        */
       void setIcon( const QString& icon, KIcon::Group group = KIcon::Panel );
 
+      
       /**
        * returns the width of this item.
        */
@@ -51,20 +52,20 @@ namespace KitchenSync {
        * returns the pixmap.
        */
       virtual const QPixmap * pixmap() const {
-	return &m_pixmap; 
+	return &m_Pixmap; 
       }
       
     protected:
       virtual void paint( QPainter *p); 
 
     private:
-      QPixmap m_Pixmap;
-      ManipulatorPart m_Part;
+      QPixmap* m_Pixmap;
+      ManipulatorPart* m_Part;
       PartBar* m_Parents;
     };
   
   
-  class KListBox;
+  //class KListBox;
   
   /**
    * PartBar is a widget that displays icons together. 
@@ -74,7 +75,7 @@ namespace KitchenSync {
     {
       Q_OBJECT
     public:
-      PartPar( QWidget *parent = 0, const char *name = 0, WFlags f = 0 );
+      PartBar( QWidget *parent = 0, const char *name = 0, WFlags f = 0 );
       ~PartBar();
       
       virtual PartBarItem* insertItem( ManipulatorPart *part );
@@ -117,7 +118,7 @@ namespace KitchenSync {
 
     private:
       KListBox *m_listBox;
-      ParBarItem *m_activeItem;
+      PartBarItem *m_activeItem;
     };
   
 };
