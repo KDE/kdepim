@@ -55,6 +55,7 @@ public slots:
   void slotClear();
 
   void slotConfigure();
+  void slotConfigureToolbars();
 
   void slotReadConfig();
 

@@ -46,7 +46,7 @@
 #include <kprocio.h>
 #include <kconfig.h>
 #include <kfiledialog.h>
-
+#include <kedittoolbar.h>
 #include <qtextedit.h>
 #include <qdir.h>
 #include <qeventloop.h>
@@ -99,13 +99,22 @@ void KWatchGnuPGMainWindow::createActions()
   (void)KStdAction::close( this, SLOT(close()), actionCollection() );
   (void)KStdAction::quit( this, SLOT(slotQuit()), actionCollection() );
   (void)KStdAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
-   ( void )KStdAction::keyBindings(guiFactory(), SLOT(configureShortcuts()), actionCollection());
+  ( void )KStdAction::keyBindings(guiFactory(), SLOT(configureShortcuts()), actionCollection());
+  ( void )KStdAction::configureToolbars(this, SLOT(slotConfigureToolbars()), actionCollection());
+
 #if 0
   (void)new KAction( i18n("Configure KWatchGnuPG..."), QString::fromLatin1("configure"),
 					 0, this, SLOT( slotConfigure() ),
 					 actionCollection(), "configure" );
 #endif
 
+}
+
+void KWatchGnuPGMainWindow::slotConfigureToolbars()
+{
+    KEditToolbar dlg( factory() );
+
+    dlg.exec();
 }
 
 void KWatchGnuPGMainWindow::startWatcher()
