@@ -417,6 +417,7 @@ bool Contact::loadNameAttribute( QDomElement& element )
 void Contact::saveNameAttribute( QDomElement& element ) const
 {
   QDomElement e = element.ownerDocument().createElement( "name" );
+  element.appendChild( e );
 
   writeString( e, "given-name", givenName() );
   writeString( e, "middle-names", middleNames() );
@@ -458,6 +459,7 @@ void Contact::savePhoneAttributes( QDomElement& element ) const
   QValueList<PhoneNumber>::ConstIterator it = mPhoneNumbers.begin();
   for ( ; it != mPhoneNumbers.end(); ++it ) {
     QDomElement e = element.ownerDocument().createElement( "phone-number" );
+    element.appendChild( e );
     const PhoneNumber& p = *it;
     writeString( e, "type", p.type );
     writeString( e, "number", p.number );
@@ -495,6 +497,7 @@ void Contact::saveEmailAttributes( QDomElement& element ) const
   QValueList<Email>::ConstIterator it = mEmails.begin();
   for ( ; it != mEmails.end(); ++it ) {
     QDomElement e = element.ownerDocument().createElement( "email" );
+    element.appendChild( e );
     const Email& email = *it;
     writeString( e, "display-name", email.displayName );
     writeString( e, "smtp-address", email.smtpAddress );
@@ -540,6 +543,7 @@ void Contact::saveAddressAttributes( QDomElement& element ) const
   QValueList<Address>::ConstIterator it = mAddresses.begin();
   for ( ; it != mAddresses.end(); ++it ) {
     QDomElement e = element.ownerDocument().createElement( "address" );
+    element.appendChild( e );
     const Address& a = *it;
     writeString( e, "type", a.type );
     writeString( e, "street", a.street );
