@@ -2,7 +2,7 @@
     This file is part of libkcal.
 
     Copyright (c) 2003 Steffen Hansen <steffen@klaralvdalens-datakonsult.se>
-    Copyright (c) 2003 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+    Copyright (c) 2003 - 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -81,8 +81,6 @@ void ResourceIMAP::writeConfig( KConfig* config )
 
 void ResourceIMAP::init()
 {
-  kdDebug(5800) << "ResourceIMAP::init()" << endl;
-
   mSilent = false;
 
   mDCOPClient = new DCOPClient();
@@ -122,9 +120,6 @@ bool ResourceIMAP::doOpen()
 
 bool ResourceIMAP::load()
 {
-  kdDebug(5800) << "Loading resource " << resourceName() << " on "
-                << mServer << endl;
-
   // Load each resource. Note: It's intentional to use & instead of &&
   // so we try all three, even if the first failed
   return loadAllEvents() & loadAllTasks() & loadAllJournals();
@@ -230,7 +225,6 @@ KABC::Lock *ResourceIMAP::lock()
 
 bool ResourceIMAP::addEvent(Event *anEvent)
 {
-  kdDebug(5800) << "ResourceIMAP::addEvent" << endl;
   mCalendar.addEvent(anEvent);
   anEvent->registerObserver( this );
 
@@ -258,8 +252,6 @@ bool ResourceIMAP::addEvent(Event *anEvent)
 // probably not really efficient, but...it works for now.
 void ResourceIMAP::deleteEvent(Event *event)
 {
-  kdDebug(5800) << "ResourceIMAP::deleteEvent" << endl;
-
   // Call kmail ...
   if ( !mSilent ) {
     if ( !connectToKMail() ) {
@@ -378,8 +370,6 @@ Todo::List ResourceIMAP::todos( const QDate &date )
 
 bool ResourceIMAP::addJournal(Journal *journal)
 {
-  // kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString()
-  //               << endl;
   mCalendar.addJournal(journal);
   journal->registerObserver( this );
 
@@ -492,41 +482,59 @@ KCal::Incidence* ResourceIMAP::parseIncidence( const QString& str )
 
 bool ResourceIMAP::addIncidence( const QString& type, const QString& ical )
 {
-  // kdDebug() << "ResourceIMAP::addIncidence( " << type << ", "
-  //           << /*ical*/"..." << " )" << endl;
+  if( type != "Calendar" && type != "Task" && type != "Journal" )
+    // Not an ical for us
+    return false;
+
   Incidence* i = parseIncidence( ical );
   if ( !i ) return false;
   // Ignore events that come from us
   if ( !mCurrentUID.isNull() && mCurrentUID == i->uid() ) return true;
 
-  if ( type == "Calendar" ) {
-    if ( i && i->type() == "Event" ) {
-      mSilent = true;
-      addEvent( static_cast<Event*>(i) );
-      mSilent = false;
-    }
+  mSilent = true;
+  if ( type == "Calendar" && i->type() == "Event" ) {
+    addEvent( static_cast<Event*>(i) );
+    emit resourceChanged( this );
+  } else if ( type == "Task" && i->type() == "Todo" ) {
+    addTodo( static_cast<Todo*>(i) );
+    emit resourceChanged( this );
+  } else if ( type == "Journal" && i->type() == "Journal" ) {
+    addJournal( static_cast<Journal*>(i) );
+    emit resourceChanged( this );
   }
+  mSilent = false;
 
   return true;
 }
 
 void ResourceIMAP::deleteIncidence( const QString& type, const QString& uid )
 {
-  // kdDebug() << "ResourceIMAP::deleteIncidence( " << type << ", " << uid
-  //           << " )" << endl;
+  if( type != "Calendar" && type != "Task" && type != "Journal" )
+    // Not an ical for us
+    return;
+
   // Ignore events that come from us
   if ( !mCurrentUID.isNull() && mCurrentUID == uid ) return;
 
   mSilent = true;
   if ( type == "Calendar" ) {
-    Event* e = event(uid);
-    deleteEvent(e);
+    Event* e = event( uid );
+    if( e ) {
+      deleteEvent( e );
+      emit resourceChanged( this );
+    }
   } else if ( type == "Task" ) {
-    Todo* t = todo(uid);
-    deleteTodo(t);
+    Todo* t = todo( uid );
+    if( t ) {
+      deleteTodo( t );
+      emit resourceChanged( this );
+    }
   } else if ( type == "Journal" ) {
-    Journal* j = journal(uid);
-    deleteJournal(j);
+    Journal* j = journal( uid );
+    if( j ) {
+      deleteJournal( j );
+      emit resourceChanged( this );
+    }
   }
   mSilent = false;
 }
@@ -537,8 +545,8 @@ void ResourceIMAP::slotRefresh( const QString& type )
     loadAllEvents();
   else if ( type == "Task" )
     loadAllTasks();
-  else
-    kdDebug(5800) << "ResourceIMAP::slotRefresh called with wrong type " << type << endl;
+  else if ( type == "Journal" )
+    loadAllJournals();
 }
 
 bool ResourceIMAP::connectToKMail() const
