@@ -26,4 +26,13 @@
     </entry>
   </group>
 
+  <group name="Constants">
+    <entry name="EnableFreeBusy">
+      <default>true</default>
+    </entry>
+  </group>
+
+  <propagation source="sloxrc/Constants/EnableFreeBusy"
+               target="korganizerrc/FreeBusy/FreeBusyRetrieveAuto" />
+
 </kcfg>
