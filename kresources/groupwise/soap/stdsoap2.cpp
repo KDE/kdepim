@@ -9172,7 +9172,7 @@ soap_getmimehdr(struct soap *soap)
   if (soap->msgbuf[0] == '-' && soap->msgbuf[1] == '-')
   { char *s = soap->msgbuf + strlen(soap->msgbuf) - 1;
     /* remove white space */
-    while (soap_blank(*s))
+    while (soap_blank((signed char)*s))
       s--;
     s[1] = '\0';
     if (soap->mime.boundary)
