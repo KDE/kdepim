@@ -19,6 +19,13 @@ Depends: kalarmd (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot
 Description: KDE Personal Information Management (development files)
  This package contains development files needed to compile kdepim applications.
 
+Package: kaddressbook
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE NG addressbook application
+ KDE next generation addressbook application.
+
 Package: kalarm
 Section: utils
 Architecture: any
@@ -45,6 +52,14 @@ Description: KDE mobile phone utility
  .
  Kandy is aimed at mobile phones with integrated (GSM) modems.
 
+Package: kaplan
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE PIM shell
+ KDE PIM Shell application combining knode, kmail and korganizer
+
+
 Package: karm
 Section: utils
 Architecture: any
@@ -52,6 +67,20 @@ Depends: ${shlibs:Depends}
 Description: KDE time tracker tool
  KArm is a time tracker for busy people who need to keep track of the amount of
  time they spend on various tasks.
+
+Package: kdepim-kfile-plugins
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE File dialog plugins for vcf files.
+ File dialog plugins for vcf files.
+
+Package: kdepim-libs
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE PIM libraries
+ KDE PIM libraries used by the other programs in kdepim 
 
 Package: knotes
 Section: utils

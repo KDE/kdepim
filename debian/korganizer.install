@@ -3,6 +3,8 @@ debian/tmp/usr/bin/korganizer
 debian/tmp/usr/bin/korganizerIn
 debian/tmp/usr/lib/libkorganizer.la
 debian/tmp/usr/lib/libkorganizer.so.*
+debian/tmp/usr/lib/kde3/libkorg_birthdays.la
+debian/tmp/usr/lib/kde3/libkorg_birthdays.so
 debian/tmp/usr/lib/kde3/libkorg_datenums.la
 debian/tmp/usr/lib/kde3/libkorg_datenums.so
 debian/tmp/usr/lib/kde3/libkorg_holidays.la

@@ -8,3 +8,6 @@ debian/tmp/usr/share/applnk/Settings/System/alarmdaemonctrl.desktop
 debian/tmp/usr/share/apps/kalarmdgui
 debian/tmp/usr/share/autostart/kalarmd.autostart.desktop
 debian/tmp/usr/share/autostart/korgac.desktop
+debian/tmp/usr/share/doc/kde/HTML/en/kcontrol/kalarmd/common
+debian/tmp/usr/share/doc/kde/HTML/en/kcontrol/kalarmd/index.cache.bz2
+debian/tmp/usr/share/doc/kde/HTML/en/kcontrol/kalarmd/index.docbook
