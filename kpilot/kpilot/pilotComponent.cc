@@ -293,6 +293,8 @@ void PilotComponent::slotShowComponent()
 void PilotComponent::markDBDirty(const QString db)
 {
 	FUNCTIONSETUP;
-	KPilotConfig::getConfig().addDirtyDatabase(db);
+	KPilotConfigSettings&c=KPilotConfig::getConfig();
+	c.setDatabaseGroup().addDirtyDatabase(db);
+	c.sync();
 }
 

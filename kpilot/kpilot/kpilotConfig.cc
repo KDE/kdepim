@@ -367,9 +367,13 @@ void KPilotConfigSettings::setDirtyDatabases(const QStringList &l)
 
 void KPilotConfigSettings::addDirtyDatabase(QString db)
 {
+	FUNCTIONSETUP;
 	QStringList l(getDirtyDatabases());
-	l.append(db);
-	setDirtyDatabases(l);
+	if (!l.contains(db))
+	{
+		l.append(db);
+		setDirtyDatabases(l);
+	}
 }
 
 
@@ -390,8 +394,11 @@ void KPilotConfigSettings::setAppBlockChangedDatabases(const QStringList &l)
 void KPilotConfigSettings::addAppBlockChangedDatabase(QString db)
 {
 	QStringList l(getAppBlockChangedDatabases());
-	l.append(db);
-	setAppBlockChangedDatabases(l);
+	if (!l.contains(db))
+	{
+		l.append(db);
+		setAppBlockChangedDatabases(l);
+	}
 }
 
 
@@ -412,8 +419,11 @@ void KPilotConfigSettings::setFlagsChangedDatabases(const QStringList &l)
 void KPilotConfigSettings::addFlagsChangedDatabase(QString db)
 {
 	QStringList l(getFlagsChangedDatabases());
-	l.append(db);
-	setFlagsChangedDatabases(l);
+	if (!l.contains(db))
+	{
+		l.append(db);
+		setFlagsChangedDatabases(l);
+	}
 }
 
 
