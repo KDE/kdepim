@@ -257,7 +257,7 @@ public:
 } ;
 
 /**
-* All KPilot conduits should subclass KLibfActory like this.
+* All KPilot conduits should subclass KLibFactory like this.
 *
 * Boilerplate for inheritance:
 *
