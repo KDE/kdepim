@@ -424,12 +424,17 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 
 	// COMPLETED? //
 	e->setCompleted(de->getComplete());
+	if ( de->getComplete() && !e->hasCompletedDate() ) {
+		e->setCompleted( QDateTime::currentDateTime() );
+	}
 
 	e->setSummary(de->getDescription());
 	e->setDescription(de->getNote());
 
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 
+kdDebug()<<endl<<endl<<endl<<"Todo: "<<e->summary()<<endl;
+kdDebug()<<"rec->completed="<<de->getComplete() << ", e->Completed="<<e->completed()<<", e->CompletedStr="<<e->completedStr()<<endl;
 	return e;
 }
 
