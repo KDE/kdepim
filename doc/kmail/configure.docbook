@@ -551,14 +551,14 @@ should be sent. You can choose between:</para>
 <term><guilabel>On Manual Mail Checks</guilabel></term>
 <listitem><para>Queued messages will be sent after you have manually checked
 for new mail, &eg; with <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail</guimenuitem></menuchoice>. Of course, you can also
-manually sent the queued messages with
+manually send the queued messages with
 <menuchoice><guimenu>File</guimenu><guimenuitem>Send queued messages</guimenuitem></menuchoice>.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>On All Mail Checks</guilabel></term>
 <listitem><para>Queued messages will be sent after all checks for new mail,
 &ie; after automatic mail checks as well as after manual mail checks.
-Of course, you can also manually sent the queued messages with
+Of course, you can also manually send the queued messages with
 <menuchoice><guimenu>File</guimenu><guimenuitem>Send queued messages</guimenuitem></menuchoice>.</para></listitem>
 </varlistentry>
 </variablelist>
@@ -818,7 +818,7 @@ folder will be selected in &kmail;'s main window.
 	      If you do not like the Composer you can use a different
 	      editor. Note that the composer window will still open
 	      and the external editor will open as soon as you type
-	      just one character in the body of the message. If you're
+	      just one character in the body of the message. If you are
 	      done, save the text and exit the editor. The text will
 	      now appear in the composer window, where you can send
 	      it. Note that your editor may not return immediately,
@@ -960,7 +960,7 @@ of key words can be modified.</para>
 
 	<varlistentry id="configure-security-reading-external-references">
 	  <term>
-	    <guilabel>Allow messages to load external references from the internet</guilabel>
+	    <guilabel>Allow messages to load external references from the Internet</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
@@ -1127,7 +1127,7 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	      This option supresses the sending of &mdn;s if the
+	      This option suppresses the sending of &mdn;s if the
 	      message is encrypted (partially or in whole). This
 	      thwarts attempts to use &kmail;'s &mdn; feature as an
 	      <emphasis>oracle</emphasis> to deduce whether you were
@@ -1292,7 +1292,7 @@ of key words can be modified.</para>
 	      message.
 	    </para>
 	    <para>
-	      It is highly recommeded to turn this on, as it makes
+	      It is highly recommended to turn this on, as it makes
 	      encrypting messages really easy to use.
 	    </para>
 	  </listitem>
