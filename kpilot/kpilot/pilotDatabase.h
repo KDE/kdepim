@@ -30,7 +30,7 @@
 
 // Abstract base class for PalmPilot database access.
 
-#include "pi-macros.h" /* for recordid_t */
+#include <pi-macros.h> /* for recordid_t */
 #include "pilotRecord.h"
 
 class KPilotLink;
@@ -84,4 +84,7 @@ class PilotDatabase
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.4  2001/02/06 08:05:20  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

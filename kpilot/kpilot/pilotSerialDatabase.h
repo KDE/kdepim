@@ -31,9 +31,9 @@
 // Database class for a database on the pilot connected
 // via the serial port (ie: hot-sync cradle)
 
-#include "pi-macros.h" /* for recordid_t */
-#include "pilotDatabase.h"
-#include "pilotRecord.h"
+#include <pi-macros.h> /* for recordid_t */
+#include <pilotDatabase.h>
+#include <pilotRecord.h>
 
 class KPilotLink;
 
@@ -85,4 +85,7 @@ class PilotSerialDatabase : public PilotDatabase
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.4  2001/02/06 08:05:20  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

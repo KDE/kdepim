@@ -35,10 +35,10 @@ static const char *id="$Id$";
 #include "statusMessages.h"
 #include "kpilotlink.h"
 #include "messageDialog.h"
-#include "pi-source.h"
-#include "pi-socket.h"
-#include "pi-dlp.h"
-#include "pi-file.h"
+#include <pi-source.h>
+#include <pi-socket.h>
+#include <pi-dlp.h>
+#include <pi-file.h>
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -1733,6 +1733,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.33  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//
 // Revision 1.32  2001/02/05 19:16:32  adridg
 // Removing calls to exit() from internal functions
 //

@@ -41,9 +41,9 @@ static const char *id=
 #include <kaboutdata.h>
 
 #include "conduitApp.h"
-#include "pi-source.h"
-#include "pi-mail.h"
-#include "pi-dlp.h"
+#include <pi-source.h>
+#include <pi-mail.h>
+#include <pi-dlp.h>
 #include "passworddialog.h"
 #include "popmail-conduit.h"
 #include "setupDialog.h"

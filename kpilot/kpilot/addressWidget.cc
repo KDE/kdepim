@@ -37,8 +37,8 @@ static const char *id="$Id$";
 #include <stdlib.h>
 #include <time.h>
 #include <pi-macros.h>
-#include "pi-dlp.h"
-#include "pi-address.h"
+#include <pi-dlp.h>
+#include <pi-address.h>
 
 #include <qlist.h>
 #include <qlistbox.h>
@@ -919,6 +919,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.24  2001/02/05 20:55:07  adridg
+// Fixed copyright headers for source releases. No code changed
+//
 // Revision 1.23  2001/01/04 22:19:37  adridg
 // Stuff for Chris and Bug 18072
 //

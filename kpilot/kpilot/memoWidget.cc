@@ -45,7 +45,7 @@ static const char *id="$Id$";
 
 #include "kpilot.h"
 #include "memoWidget.moc"
-#include "pi-dlp.h"
+#include <pi-dlp.h>
 
 // QADE: Is this a Pilot limitation, or is it a KPilot limitation?
 int MemoWidget::MAX_MEMO_LEN = 8192;
@@ -527,4 +527,7 @@ MemoWidget::slotExportMemo()
     outFile.close();
     }
 
-// $Log:$
+// $Log$
+// Revision 1.21  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//

@@ -14,7 +14,7 @@
 #define _POPMAIL_CONDUIT_H
 
 #include "baseConduit.h"
-#include "pi-mail.h"
+#include <pi-mail.h>
 
 class PilotRecord;
 

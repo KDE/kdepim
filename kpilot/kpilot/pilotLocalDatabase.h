@@ -31,10 +31,10 @@
 // Database class for a local (file based) pilot datbase.
 
 #include <time.h>
-#include "pi-macros.h" /* for recordid_t */
-#include "pi-file.h"
-#include "pilotDatabase.h"
-#include "pilotRecord.h"
+#include <pi-macros.h> /* for recordid_t */
+#include <pi-file.h>
+#include <pilotDatabase.h>
+#include <pilotRecord.h>
 
 class PilotLocalDatabase : public PilotDatabase
     {
@@ -88,4 +88,7 @@ class PilotLocalDatabase : public PilotDatabase
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.4  2001/02/06 08:05:20  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

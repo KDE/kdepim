@@ -32,7 +32,7 @@
 #include <qmlined.h>
 #include <qcombo.h>
 #include <time.h>
-#include "pi-memo.h"
+#include <pi-memo.h>
 #include "pilotMemo.h"
 #include "kpilotlink.h"
 
@@ -93,4 +93,7 @@ private:
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.7  2001/02/06 08:05:19  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//
