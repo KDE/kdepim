@@ -1,0 +1,355 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>RingBinderStyleAppearanceForm</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>RingBinderStyleAppearanceForm</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>546</width>
+            <height>350</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Appearance</string>
+    </property>
+    <hbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>GroupBox1</cstring>
+            </property>
+            <property name="font">
+                <font>
+                </font>
+            </property>
+            <property name="title">
+                <string>Letter groups</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>11</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>TextLabel1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Here you can group letters together as they are grouped in your time planner. Press 'group letter' to combine the selected letter with the letter group above it, press 'ungroup letter' to remove the last letter from a selected group.</string>
+                    </property>
+                    <property name="textFormat">
+                        <enum>RichText</enum>
+                    </property>
+                    <property name="alignment">
+                        <set>WordBreak|AlignVCenter</set>
+                    </property>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout3</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="KListBox">
+                            <property name="name">
+                                <cstring>letterListBox</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>Layout2</cstring>
+                            </property>
+                            <vbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <property name="margin">
+                                    <number>0</number>
+                                </property>
+                                <property name="spacing">
+                                    <number>6</number>
+                                </property>
+                                <widget class="QPushButton">
+                                    <property name="name">
+                                        <cstring>groupButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>group letter</string>
+                                    </property>
+                                    <property name="whatsThis" stdset="0">
+                                        <string>press this button to combine the selected letter or letter group with the letter or letter group above it</string>
+                                    </property>
+                                </widget>
+                                <widget class="QPushButton">
+                                    <property name="name">
+                                        <cstring>ungroupButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>ungroup letter</string>
+                                    </property>
+                                    <property name="whatsThis" stdset="0">
+                                        <string>press this button to remove the last letter of a letter group from that group</string>
+                                    </property>
+                                </widget>
+                                <spacer>
+                                    <property name="name">
+                                        <cstring>Spacer1</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Vertical</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>Expanding</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>0</width>
+                                            <height>20</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                            </vbox>
+                        </widget>
+                    </hbox>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout7</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QGroupBox">
+                    <property name="name">
+                        <cstring>GroupBox2</cstring>
+                    </property>
+                    <property name="title">
+                        <string>Print contacts</string>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>11</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>cbPhoneNumbers</cstring>
+                            </property>
+                            <property name="text">
+                                <string>phone numbers</string>
+                            </property>
+                            <property name="accel">
+                                <string></string>
+                            </property>
+                            <property name="checked">
+                                <bool>true</bool>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>check this option to show phone numbers in printout</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>cbEmails</cstring>
+                            </property>
+                            <property name="text">
+                                <string>email addresses</string>
+                            </property>
+                            <property name="checked">
+                                <bool>true</bool>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>check this option to show email addresses in printout</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>cbStreetAddresses</cstring>
+                            </property>
+                            <property name="text">
+                                <string>street addresses</string>
+                            </property>
+                            <property name="checked">
+                                <bool>true</bool>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>check this option to show street address in printout</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>cbOrganization</cstring>
+                            </property>
+                            <property name="text">
+                                <string>organization</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>check this option to show the organization in printout</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>cbBirthday</cstring>
+                            </property>
+                            <property name="text">
+                                <string>birthday</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>check this option to show the birthday in printout</string>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+                <widget class="QGroupBox">
+                    <property name="name">
+                        <cstring>GroupBox3</cstring>
+                    </property>
+                    <property name="title">
+                        <string>Miscellaneous</string>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>11</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>cbFillEmpty</cstring>
+                            </property>
+                            <property name="text">
+                                <string>fill pages with empty address fields</string>
+                            </property>
+                            <property name="checked">
+                                <bool>true</bool>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>If this option is turned on, behind the contacts on a page the remaining space will be filled with empty fields so you can add contacts manually later</string>
+                            </property>
+                        </widget>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>Layout4</cstring>
+                            </property>
+                            <hbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <property name="margin">
+                                    <number>0</number>
+                                </property>
+                                <property name="spacing">
+                                    <number>6</number>
+                                </property>
+                                <widget class="QLabel">
+                                    <property name="name">
+                                        <cstring>sblabel</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>min. number of empty fields</string>
+                                    </property>
+                                    <property name="whatsThis" stdset="0">
+                                        <string>If you often add contacts to your printout manually before entering them into the KDE addressbook, you should set this option to a value greater than 0: it determines how many empty address fields must be printed; if this many do not fit onto the page, another page with empty fields only will be printed.</string>
+                                    </property>
+                                </widget>
+                                <widget class="QSpinBox">
+                                    <property name="name">
+                                        <cstring>sbMinNumFill</cstring>
+                                    </property>
+                                    <property name="whatsThis" stdset="0">
+                                        <string>This is the minimum number of empty fields that have to be printed in addition to real entries; if this number is not reached on the first page, more pages with empty fields only may be appended.</string>
+                                    </property>
+                                </widget>
+                            </hbox>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>cbAlwaysAllPages</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                            <property name="text">
+                                <string>always print pages for all tabs</string>
+                            </property>
+                            <property name="checked">
+                                <bool>true</bool>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>If this box is checked, at least one page will be printed for every letter group, regardless of whether entries exist for this letter group. This is normally only useful in conjunction with the option 'fill pages with empty address fields'.</string>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+            </vbox>
+        </widget>
+    </hbox>
+</widget>
+<connections>
+    <connection>
+        <sender>groupButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RingBinderStyleAppearanceForm</receiver>
+        <slot>groupLetter()</slot>
+    </connection>
+    <connection>
+        <sender>ungroupButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RingBinderStyleAppearanceForm</receiver>
+        <slot>ungroupLetter()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in implementation">rbs_appearance.ui.h</include>
+</includes>
+<slots>
+    <slot>groupLetter()</slot>
+    <slot>ungroupLetter()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>klistbox.h</includehint>
+</includehints>
+</UI>

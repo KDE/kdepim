@@ -9,21 +9,23 @@ libprinter_la_SOURCES = \
 	detailledstyle.cpp  \
 	ds_appearance.ui \
 	mikesstyle.cpp \
+	ringbinderstyle.cpp \
 	printingwizard.cpp \
 	printprogress.cpp \
 	printstyle.cpp \
+	rbs_appearance.ui \
 	selectionpage.cpp \
 	stylepage.cpp
 
 EXTRA_DIST = \
 	detailledstyle.cpp detailledstyle.h \
-	mikesstyle.cpp mikesstyle.h \
+	mikesstyle.cpp mikesstyle.h ringbinderstyle.h \
 	printingwizard.cpp printingwizard.h \
 	printprogress.cpp printprogress.h \
-	printstyle.cpp printstyle.h \
+	printstyle.cpp printstyle.h rbs_appearance.ui.h \
 	selectionpage.cpp selectionpage.h \
 	stylepage.cpp stylepage.h
 
-preview_DATA = detailed-style.png mike-style.png
+preview_DATA = detailed-style.png mike-style.png ringbinder-style.png
 
 previewdir = $(kde_datadir)/kaddressbook/printing
