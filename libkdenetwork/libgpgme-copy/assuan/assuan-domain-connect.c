@@ -30,7 +30,9 @@
 #include <sys/un.h>
 #include <unistd.h>
 #include <fcntl.h>
+#ifdef __Linux__
 #include <alloca.h>
+#endif
 #include <string.h>
 #include <assert.h>
 
@@ -471,3 +473,4 @@ assuan_domain_connect (ASSUAN_CONTEXT * r_ctx, int rendezvousfd, pid_t peer)
 
   return aerr;
 }
+
