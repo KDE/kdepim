@@ -23,7 +23,6 @@
 
 #include <RMM_Entity.h>
 #include <RMM_Envelope.h>
-#include <RMM_Body.h>
 #include <RMM_BodyPart.h>
 #include <RMM_Defines.h>
 #include <RMM_Enum.h>

@@ -23,7 +23,6 @@
 
 #include <RMM_Address.h>
 #include <RMM_AddressList.h>
-#include <RMM_Body.h>
 #include <RMM_BodyPart.h>
 #include <RMM_DateTime.h>
 #include <RMM_DispositionType.h>

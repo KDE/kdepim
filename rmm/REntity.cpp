@@ -22,7 +22,6 @@
 
 #include <RMM_Envelope.h>
 #include <RMM_Entity.h>
-#include <RMM_Body.h>
 #include <RMM_MimeType.h>
 
 REntity::REntity()
