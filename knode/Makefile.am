@@ -1,3 +1,4 @@
+KDE_CXXFLAGS = $(USE_THREADS)
 INCLUDES= $(all_includes) -DQT_NO_ASCII_CAST -DQT_NO_COMPAT -DQT_CLEAN_NAMESPACE
 SUBDIRS = toolbar pics filters
 
@@ -52,7 +53,7 @@ noinst_HEADERS = knaccmailsettings.h      knglobals.h              knrangefilter
 	knfoldermanager.h        knpurgeprogressdialog.h  kngroupbrowser.h
 
 knode_LDFLAGS = $(all_libraries) $(KDE_RPATH) 
-knode_LDADD   = $(LIB_KHTML) -lkspell -lmimelib $(LIB_KAB) $(LIB_KFILE) -lpthread $(LIBRESOLV)
+knode_LDADD   = $(LIB_KHTML) -lkspell -lmimelib $(LIB_KAB) $(LIB_KFILE) $(LIBPTHREAD) $(LIBRESOLV)
 knode_METASOURCES = AUTO
 
 appsdir = $(kde_appsdir)/Internet
