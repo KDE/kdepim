@@ -38,8 +38,9 @@ FilterOE::FilterOE() :
 Filter(	i18n("Import Outlook Express Emails"),
     "Laurence Anderson",
     i18n("<p><b>Outlook Express 4/5/6 import filter</b></p>"
-      "<p>This is an Outlook Express import filter which fully supports versions 4 to 6.</p>"
-      "<p>Outlook Express generally stores its mailboxes in C:\\Windows\\Application Data\\Identities\\\?\?\?\?\?\\Microsoft\\Outlook Express</p>"
+      "<p>You will need to locate the folder where the mailbox has been stored by searching for .dbx or .mbx files under "
+      "<ul><li><i>C:\\Windows\\Application Data</i> in Windows 9x"
+      "<li><i>Documents and Settings</i> in Windows 2000 or later</ul></p>"
       "<p><b>Note:</b> Emails will be imported into folders named after the file they came from, prefixed with OE-</p>"
       ))
 {
