@@ -4,7 +4,11 @@ are marked with a +, ignored issues get an o, and resolved issues a -.
 * Handle real devfs better (regular USB support seems OK now).
 * Handle difference between pi_bind() "no such file" error and others.
 * Look into possible buffer overflows in pi_socket structure.
-* Replace gsetupDialog with files that follow the class naming convention,
++ Replace gsetupDialog with files that follow the class naming convention,
   that subclass from KDialogBase, and provide better support for making
   dialogs based on Qt designer widgets.
-* Add behavior to the new .ui-based config dialog.
+- Add behavior to the new .ui-based config dialog.
+* Make daemon able to sync more than once in a run.
+* Make pi_install_file amenable to use in a GUI program.
+* Port conduits to new setup.
+* Add malsync conduit.

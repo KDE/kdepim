@@ -1,3 +1,37 @@
+KPilot Developer's notes for september 30th 2001
+================================================
+
+2001-09-24  Adriaan de Groot
+* kpilot/uiDialog.{h,cc}
+* kpilot/kpilotConfigDialog.cc
+* kpilot/kpilotConfigDialog_base.ui
+  Minor changes to get the dialog to size correctly when other fonts / other
+  settings are used. This solves David's complaint about ugly dialogs.
+* kpilot/hotSync.{h,cc}
+  () Removed lots of commented out code from previous incarnations.
+  () Added a cleanup action. 
+  () Removed a heap-corruption bug caused by using QStringList & and 
+  then deleting what it points to in FileInstallAction.
+  () Removed deadlock when last file to install couldn't be read.
+  () Moved RestoreAction to interactiveSync.{h,cc}, since I feel it
+  needs to ask "Are you sure?" at the very least.
+* kpilot/interactiveSync.{h,cc}
+  New files with support for, and some types of, interactive syncing.
+  Used for asking the user questions during a sync, for example confirm
+  dialogs. This means we can now update user settings &c, since we needed
+  some interaction for that. Moved RestoreAction to here.
+* kpilot/kpilotlink.{h,cc}
+  Made exec() pure virtual for SyncActions, since that makes more sense
+  than having an empty default action.
+* kpilot/Makefile.am
+  Added interactiveSync.cc to the list of sources.
+* kpilot/pilotUser.h
+  Squashed a buffer overflow. Squashed several buffer overflows. Yowk!
+  This code has been around since 1996?
+* kpilot/main-test.h
+  Added some extra code to make the sync cleaner; handled the move of
+  RestoreAction.
+
 KPilot Developer's notes for september 23rd 2001
 ================================================
 

@@ -41,12 +41,13 @@ kpilot_SOURCES	= options.cc \
 
 kpilotDaemon_SOURCES = options.cc \
 	pilotDaemonDCOP.skel kpilotDCOP.stub \
-	pilotDaemon.cc kpilotConfig.cc kpilotlink.cc hotSync.cc \
+	pilotDaemon.cc kpilotConfig.cc \
+	kpilotlink.cc hotSync.cc interactiveSync.cc \
 	fileInstaller.cc
 
 kpilotTest_SOURCES = options.cc kpilotConfig.cc kpilotlink.cc \
 	logWidget.cc pilotComponent.cc \
-	hotSync.cc main-test.cc
+	hotSync.cc interactiveSync.cc main-test.cc
 
 kpilotConfig_SOURCES = options.cc kpilotConfig.cc \
 	uiDialog.cc kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
