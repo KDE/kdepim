@@ -84,12 +84,12 @@ libgpgme_real_la_SOURCES =						\
 
 # libgpgme_la_SOURCES = ath.h ath.c
 #if HAVE_PTH
-  #ath_pth_src = ath-pth-compat.c
+#ath_pth_src = ath-pth-compat.c
 #else
-  #ath_pth_src =
+#ath_pth_src =
 #endif
 #if HAVE_PTHREAD
-  #ath_pthread_src = ath-pthread-compat.c
+#ath_pthread_src = ath-pthread-compat.c
 #else
   ath_pthread_src =
 #endif
