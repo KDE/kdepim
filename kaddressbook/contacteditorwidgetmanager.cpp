@@ -29,6 +29,7 @@
 #include <ktrader.h>
 
 // include non-plugin contact editor widgets
+#include "customfieldswidget.h"
 #include "geowidget.h"
 #include "imagewidget.h"
 #include "soundwidget.h"
@@ -98,6 +99,7 @@ void ContactEditorWidgetManager::reload()
   mFactories.append( new ImageWidgetFactory );
   mFactories.append( new SoundWidgetFactory );
   mFactories.append( new GeoWidgetFactory );
+  mFactories.append( new CustomFieldsWidgetFactory );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

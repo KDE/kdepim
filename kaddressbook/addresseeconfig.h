@@ -44,6 +44,9 @@ class AddresseeConfig
     void setNoDefaultAddrTypes( const QValueList<int> &types );
     QValueList<int> noDefaultAddrTypes() const;
 
+    void setCustomFields( const QStringList &fields );
+    QStringList customFields() const;
+
     void remove();
 
   private:

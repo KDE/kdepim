@@ -77,6 +77,21 @@ QValueList<int> AddresseeConfig::noDefaultAddrTypes() const
   return config.readIntListEntry( "NoDefaultAddrTypes" );
 }
 
+void AddresseeConfig::setCustomFields( const QStringList &fields )
+{
+  KConfig config( "kaddressbook_addrconfig" );
+  config.setGroup( mAddressee.uid() );
+  config.writeEntry( "LocalCustomFields", fields );
+  config.sync();
+}
+
+QStringList AddresseeConfig::customFields() const
+{
+  KConfig config( "kaddressbook_addrconfig" );
+  config.setGroup( mAddressee.uid() );
+  return config.readListEntry( "LocalCustomFields" );
+}
+
 void AddresseeConfig::remove()
 {
   KConfig config( "kaddressbook_addrconfig" );
