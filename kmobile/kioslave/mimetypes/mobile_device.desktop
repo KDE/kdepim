@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Comment=Mobile Device
+Comment[ar]= جهاز نقال
 Comment[be]=Мабільная прылада
 Comment[bg]=Мобилни устройства
+Comment[br]=Trobarzhell lem-laka
 Comment[bs]=Mobilni uređaj
 Comment[ca]=Dispositiu mòbil
 Comment[cs]=Mobilní zařízení
@@ -28,6 +30,7 @@ Comment[pt]=Dispositivo Móvel
 Comment[pt_BR]=Dispositivo Móvel
 Comment[ro]=Dispozitiv mobil
 Comment[ru]=Мобильное устройство
+Comment[se]=Mobilovttadat
 Comment[sk]=Prenosné zariadenie
 Comment[sl]=Mobilna naprava
 Comment[sr]=Мобилни уређај

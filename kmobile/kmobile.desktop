@@ -14,6 +14,7 @@ Name[sv]=Kmobile
 Name[ta]=கேநடமாடும் தொலைபேசி
 
 GenericName=Manage Mobile Devices
+GenericName[ar]=إدارة الأجهزة النقالة
 GenericName[be]=Кіраваньне мабільнымі прыладамі
 GenericName[bg]=Мобилни устройства
 GenericName[bs]=Upravljajte mobilnim uređajima
@@ -41,6 +42,7 @@ GenericName[pt]=Gestão dos Dispositivos Móveis
 GenericName[pt_BR]=Gerenciar Dispositivos Móveis
 GenericName[ro]=Manager dispozitive mobile
 GenericName[ru]=Управление мобильными устройствами
+GenericName[se]=Gieđahala mobilovttadagaid
 GenericName[sk]=Správa prenosných zariadení
 GenericName[sl]=Upravljaj mobilne naprave
 GenericName[sr]=Управљање мобилним уређајима
@@ -53,6 +55,7 @@ GenericName[uk]=Робота з мобільними пристроями
 GenericName[zh_CN]=管理移动设备
 
 Comment=A KDE Mobile Devices Manager
+Comment[ar]=مدير أجهزة KDE النقالة
 Comment[be]=Кіраваньне мабільнымі прыладамі KDE
 Comment[bg]=Управление на мобилни устройства
 Comment[bs]=KDE upravitelj mobilnim uređajima
