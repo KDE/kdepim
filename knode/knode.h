@@ -118,6 +118,7 @@ class KNodeApp : public KTMainWindow
 
 	  //actions
     KAction  *actFileSave, *actFilePrint, *actNetSendPending, *actNetStop, *actEditCopy, *actEditFind,
+             *actViewExpandAll,*actViewCollapseAll, *actViewRefresh,
              *actAccProperties, *actAccSubscribeGrps, *actAccLoadHdrs, *actAccDelete,
              *actGrpProperties, *actGrpLoadHdrs, *actGrpExpire, *actGrpResort, *actGrpAllRead,
              *actGrpAllUnread, *actGrpUnsubscribe, *actFolderCompact, *actFolderEmpty,
@@ -125,11 +126,11 @@ class KNodeApp : public KTMainWindow
              *actArtRead, *actArtUnread, *actArtOwnWindow, *actArtEdit, *actArtDelete,
              *actArtCancel, *actArtSendNow, *actArtSendLater, *actArtSearch,
              *actThreadRead, *actThreadUnread, *actThreadSetScore, *actThreadWatch,
-             *actThreadIgnore, *actThreadToggle,
-             *actSetExpandAll,*actSetCollapseAll;
-    KSelectAction *actSetSort;
-    KNFilterSelectAction *actSetFilters;
-    KToggleAction *actSetShowThreads, *actSetShowAllHdrs;
+             *actThreadIgnore, *actThreadToggle;
+
+    KSelectAction *actViewSort;
+    KNFilterSelectAction *actViewFilters;
+    KToggleAction *actViewShowThreads, *actViewShowAllHdrs;
 
    	//popups
    	QPopupMenu 	*accPopup, *groupPopup, *folderPopup,
@@ -158,6 +159,21 @@ class KNodeApp : public KTMainWindow
   	void slotNetSendPending();
   	void slotNetStop();
   	void slotFileQuit();
+  	
+  	void slotToggleShowThreads();       // view menu
+  	void slotToggleShowAllHdrs();
+  	void slotViewSort(int id);
+  	void slotViewRefresh();
+  	void slotViewExpand();
+  	void slotViewCollapse();
+  	
+  	void slotGotoNextArt();              // go menu
+  	void slotGotoPrevArt();  	
+  	void slotGotoNextUnreadArt();
+  	void slotReadThrough();
+  	void slotGotoNextThr();
+  	void slotGotoNextGroup();
+  	void slotGotoPrevGroup();
  	  	
   	void slotAccProperties();           // account menu
   	void slotAccSubscribeGrps();
@@ -193,23 +209,9 @@ class KNodeApp : public KTMainWindow
   	void slotArtThrWatch();
   	void slotArtThrIgnore();
   	void slotArtThrToggle();
-  	  	
-  	void slotGotoNextArt();              // go menu
-  	void slotGotoPrevArt();  	
-  	void slotGotoNextUnreadArt();
-  	void slotReadThrough();
-  	void slotGotoNextThr();
-  	void slotGotoNextGroup();
-  	void slotGotoPrevGroup();
-  	
+  	  		
   	void slotToggleToolBar();            // settings menu
   	void slotToggleStatusBar();
-  	void slotToggleShowThreads();
-  	void slotToggleShowAllHdrs();
-  	void slotViewSort(int id);
-  	void slotViewRefresh();
-  	void slotViewExpand();
-  	void slotViewCollapse();
   	void slotConfKeys();
   	void slotConfToolbar();
   	void slotSettings();  	  	

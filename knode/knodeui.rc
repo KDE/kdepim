@@ -2,13 +2,33 @@
 <kpartgui name="KNode">
 
 <ActionProperties>
-<Action name="options_configure" icon="settings"/> 
+<Action name="options_configure" icon="settings"/>
 </ActionProperties>
 
 <MenuBar>
   <Menu name="file"><text>&amp;File</text>
     <Action name="net_sendPending"/>
     <Action name="net_stop"/>
+  </Menu>
+  <Menu name="view"><text>&amp;View</text>
+    <Action name="view_showThreads"/>
+    <Action name="view_ExpandAll"/>
+    <Action name="view_CollapseAll"/>
+    <Action name="view_Refresh"/>
+    <Separator/>
+    <Action name="view_showAllHdrs"/>
+    <Action name="view_Filter"/>
+    <Action name="view_Sort"/>
+  </Menu>
+  <Menu name="go_news"><text>&amp;Go</text>
+    <Action name="go_nextArticle"/>
+    <Action name="go_prevArticle"/>
+    <Separator/>
+    <Action name="go_nextUnreadArticle"/>
+    <Action name="go_nextUnreadThread"/>
+    <Separator/>
+    <Action name="go_nextGroup"/>
+    <Action name="go_prevGroup"/>
   </Menu>
   <Menu name="account"><text>A&amp;ccount</text>
     <Action name="account_properties"/>
@@ -18,7 +38,7 @@
     <Separator/>
     <Action name="account_delete"/>
   </Menu>
-  <Menu name="group"><text>&amp;Group</text>
+  <Menu name="group"><text>G&amp;roup</text>
     <Action name="group_properties"/>
     <Separator/>
     <Action name="group_dnlHeaders"/>
@@ -65,27 +85,7 @@
     <Action name="article_sendLater"/>
     <Separator/>
     <Action name="article_search"/>
-  </Menu>  
-  <Menu name="go_news"><text>&amp;Go</text>
-    <Action name="go_nextArticle"/>
-    <Action name="go_prevArticle"/>
-    <Separator/>
-    <Action name="go_nextUnreadArticle"/>
-    <Action name="go_nextUnreadThread"/>
-    <Separator/>
-    <Action name="go_nextGroup"/>
-    <Action name="go_prevGroup"/>
-  </Menu>  
-  <Menu name="settings"><text>&amp;Settings</text>
-    <Action name="settings_showThreads"/>
-    <Action name="settings_ExpandAll"/>
-    <Action name="settings_CollapseAll"/>
-    <Action name="settings_Refresh"/>
-    <Separator/>
-    <Action name="settings_showAllHdrs"/>
-    <Action name="settings_Filter"/>
-    <Action name="settings_Sort"/>
-  </Menu>    
+  </Menu>
 </MenuBar>
 
 <ToolBar noMerge="1" name="mainToolBar">
@@ -100,9 +100,9 @@
   <Action name="go_nextUnreadArticle"/>
   <Action name="go_nextUnreadThread"/>
   <Separator/>
-  <Action name="settings_Filter"/>
+  <Action name="view_Filter"/>
   <Action name="article_search"/>
-  <Action name="settings_Refresh"/>
+  <Action name="view_Refresh"/>
   <Action name="account_subscribe"/>
   <Action name="options_configure"/>
 </ToolBar>

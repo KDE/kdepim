@@ -75,13 +75,13 @@ KNodeApp::KNodeApp()
 	xNet=NAcc;
 			
 	//init Filter Manager
-	FiManager=new KNFilterManager(actSetFilters);
+	FiManager=new KNFilterManager(actViewFilters);
 	
 	//init Fetch-Article Manager
 	FAManager=new KNFetchArticleManager(view->hdrView);
 	connect(FiManager, SIGNAL(filterChanged(KNArticleFilter*)),
 		FAManager, SLOT(slotFilterChanged(KNArticleFilter*)));	
-  actSetShowThreads->setChecked(FAManager->threaded());
+  actViewShowThreads->setChecked(FAManager->threaded());
 			
   //init Group Manager
 	GManager=new KNGroupManager(FAManager);
@@ -252,8 +252,6 @@ void KNodeApp::groupSelected(bool b)
 	if(status!=b) {
   	actGrpProperties->setEnabled(b);
   	actGrpUnsubscribe->setEnabled(b);
-  	actSetExpandAll->setEnabled(b);
-  	actSetCollapseAll->setEnabled(b);
 		status=b;
 	}
 }
@@ -271,6 +269,9 @@ void KNodeApp::groupDisplayed(bool b)
   	actGrpAllRead->setEnabled(b);
     actGrpAllUnread->setEnabled(b);
     actArtSearch->setEnabled(b);
+   	actViewExpandAll->setEnabled(b);
+  	actViewCollapseAll->setEnabled(b);
+  	actViewRefresh->setEnabled(b);
 		status=b;
 	}	
 }
@@ -427,7 +428,7 @@ void KNodeApp::initActions()
   actFilePrint = KStdAction::print(view->artView, SLOT(print()),actionCollection());
   actNetSendPending = new KAction(i18n("Sen&d pending messages"), 0, this, SLOT(slotNetSendPending()),
                                   actionCollection(), "net_sendPending");
-  actNetStop = new KAction(i18n("Stop &Network"),"cancel",0, this, SLOT(slotNetStop()),
+  actNetStop = new KAction(i18n("Stop &Network"),"stop",0, this, SLOT(slotNetStop()),
                            actionCollection(), "net_stop");
   KStdAction::quit(this, SLOT(slotFileQuit()),actionCollection());
 
@@ -436,6 +437,46 @@ void KNodeApp::initActions()
   actEditCopy->setEnabled(false);
   connect(view->artView->part(),SIGNAL(selectionChanged()),this,SLOT(slotSelectionChanged()));
   actEditFind = KStdAction::find(view->artView, SLOT(findText()),actionCollection());
+
+  // view menu
+  actViewShowThreads = new KToggleAction(i18n("Show th&reads"), 0 , this, SLOT(slotToggleShowThreads()),
+                                         actionCollection(), "view_showThreads");
+  actViewExpandAll = new KAction(i18n("&Expand all threads"), 0 , this, SLOT(slotViewExpand()),
+                                 actionCollection(), "view_ExpandAll");
+  actViewCollapseAll = new KAction(i18n("&Collapse all threads"), 0 , this, SLOT(slotViewCollapse()),
+                                  actionCollection(), "view_CollapseAll");
+  actViewRefresh = new KAction(i18n("&Refresh List"),"reload", KStdAccel::key(KStdAccel::Reload), this, SLOT(slotViewRefresh()),
+                               actionCollection(), "view_Refresh");
+  actViewShowAllHdrs = new KToggleAction(i18n("Show &all headers"), 0 , this, SLOT(slotToggleShowAllHdrs()),
+                                         actionCollection(), "view_showAllHdrs");
+  actViewShowAllHdrs->setChecked(KNArticleWidget::fullHeaders());
+  actViewFilters = new KNFilterSelectAction(i18n("&Filter"), "filter", 0 , actionCollection(), "view_Filter");
+  actViewSort = new KSelectAction(i18n("&Sort"), 0 ,actionCollection(), "view_Sort");
+  connect(actViewSort,SIGNAL(activated(int)),this,SLOT(slotViewSort (int)));
+  QStringList items;
+  items += i18n("By &Subject");
+  items += i18n("By S&ender");
+  items += i18n("By S&core");
+  items += i18n("By &Date");
+  actViewSort->setItems(items);
+
+  // go menu
+  new KAction(i18n("&Next article"), Key_N , this, SLOT(slotGotoNextArt()),
+              actionCollection(), "go_nextArticle");
+  new KAction(i18n("&Previous article"), Key_B , this, SLOT(slotGotoPrevArt()),
+              actionCollection(), "go_prevArticle");
+  new KAction(i18n("Next unread &article"),"nextart", ALT+Key_Space , this, SLOT(slotGotoNextUnreadArt()),
+              actionCollection(), "go_nextUnreadArticle");
+  new KAction(i18n("Next unread &thread"),"nextthr", CTRL+Key_Space , this, SLOT(slotGotoNextThr()),
+              actionCollection(), "go_nextUnreadThread");
+  new KAction(i18n("Ne&xt group"), Key_Plus , this, SLOT(slotGotoNextGroup()),
+              actionCollection(), "go_nextGroup");
+  new KAction(i18n("Pre&vious group"), Key_Minus , this, SLOT(slotGotoPrevGroup()),
+              actionCollection(), "go_prevGroup");
+  KAction *readthrough = new KAction(i18n("Read &through articles"), Key_Space , this, SLOT(slotReadThrough()),
+                                     actionCollection(), "go_readThrough");
+  acc=new KAccel(this);
+  readthrough->plugAccel(acc);
 
   // account menu
   actAccProperties = new KAction(i18n("&Properties..."), 0, this, SLOT(slotAccProperties()),
@@ -507,50 +548,12 @@ void KNodeApp::initActions()
   actArtSearch = new KAction(i18n("&Search"),"search" , Key_F4 , this, SLOT(slotArtSearch()),
                              actionCollection(), "article_search");
 
-  // go menu
-  new KAction(i18n("&Next article"), Key_N , this, SLOT(slotGotoNextArt()),
-              actionCollection(), "go_nextArticle");
-  new KAction(i18n("&Previous article"), Key_B , this, SLOT(slotGotoPrevArt()),
-              actionCollection(), "go_prevArticle");
-  new KAction(i18n("Next unread &article"),"nextart", ALT+Key_Space , this, SLOT(slotGotoNextUnreadArt()),
-              actionCollection(), "go_nextUnreadArticle");
-  new KAction(i18n("Next unread &thread"),"nextthr", CTRL+Key_Space , this, SLOT(slotGotoNextThr()),
-              actionCollection(), "go_nextUnreadThread");
-  new KAction(i18n("Ne&xt group"), Key_Plus , this, SLOT(slotGotoNextGroup()),
-              actionCollection(), "go_nextGroup");
-  new KAction(i18n("Pre&vious group"), Key_Minus , this, SLOT(slotGotoPrevGroup()),
-              actionCollection(), "go_prevGroup");
-  KAction *readthrough = new KAction(i18n("Read &through articles"), Key_Space , this, SLOT(slotReadThrough()),
-                                     actionCollection(), "go_readThrough");
-  acc=new KAccel(this);
-  readthrough->plugAccel(acc);
-
   // settings menu
   KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
   KStdAction::showStatusbar(this, SLOT(slotToggleStatusBar()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(this, SLOT(slotSettings()), actionCollection());
-  actSetShowThreads = new KToggleAction(i18n("Show th&reads"), 0 , this, SLOT(slotToggleShowThreads()),
-                                        actionCollection(), "settings_showThreads");
-  actSetExpandAll = new KAction(i18n("&Expand all threads"), 0 , this, SLOT(slotViewExpand()),
-                                actionCollection(), "settings_ExpandAll");
-  actSetCollapseAll = new KAction(i18n("&Collapse all threads"), 0 , this, SLOT(slotViewCollapse()),
-                                  actionCollection(), "settings_CollapseAll");
-  new KAction(i18n("&Refresh List"),"refresh", Key_F5 , this, SLOT(slotViewRefresh()),
-              actionCollection(), "settings_CollapseAll");
-  actSetShowAllHdrs = new KToggleAction(i18n("Show &all headers"), 0 , this, SLOT(slotToggleShowAllHdrs()),
-                                        actionCollection(), "settings_showAllHdrs");
-  actSetShowAllHdrs->setChecked(KNArticleWidget::fullHeaders());
-  actSetFilters = new KNFilterSelectAction(i18n("&Filter"), "filter", 0 , actionCollection(), "settings_Filter");
-  actSetSort = new KSelectAction(i18n("&Sort"), 0 ,actionCollection(), "settings_Sort");
-  connect(actSetSort,SIGNAL(activated(int)),this,SLOT(slotViewSort (int)));
-  QStringList items;
-  items += i18n("By &Subject");
-  items += i18n("By S&ender");
-  items += i18n("By S&core");
-  items += i18n("By &Date");
-  actSetSort->setItems(items);
 
   createGUI( "knodeui.rc" );
 }
@@ -615,17 +618,6 @@ void KNodeApp::initActions()
 		break;
 #endif
 
-*/
-
-/*
-	QString aboutText=QString("KNode %1\
-\n\nhttp://knode.sourceforge.net/\
-\n\n(c) 1999-2000 Christian Thurner\
-\n\nAuthors:\
-\n  Christian Thurner <cthurner@freepage.de>\
-\n  Christian Gebauer <gebauer@bigfoot.com>\
-\n  Dirk Mueller <mueller@kde.org>\
-\n\nThis is free software covered by the GPL.").arg(VERSION);
 */
 
 
@@ -694,7 +686,7 @@ void KNodeApp::readOptions()
   bool asc=conf->readBoolEntry("sortAscending", true);
   view->hdrView->setColAsc(sortCol, asc);
   view->hdrView->setSorting(sortCol, asc);	
-  actSetSort->setCurrentItem(sortCol);
+  actViewSort->setCurrentItem(sortCol);
   	  	
   conf->setGroup("READNEWS");
   FiManager->setFilter(conf->readNumEntry("lastFilterID", 1));
@@ -727,11 +719,95 @@ void KNodeApp::slotNetStop()
   NAcc->cancelAllJobs();
 }
 
-  	
+
 void KNodeApp::slotFileQuit()
 {
   cleanup();
   kapp->quit();
+}
+
+
+//======== VIEW MENU =================
+
+
+void KNodeApp::slotToggleShowThreads()
+{
+  FAManager->toggleThreaded();
+}
+
+  	
+void KNodeApp::slotToggleShowAllHdrs()
+{
+  KNArticleWidget::toggleFullHeaders();
+}
+
+
+void KNodeApp::slotViewSort(int id)
+{
+	view->hdrView->slotSortList(id);
+}
+
+
+void KNodeApp::slotViewRefresh()
+{
+	FAManager->showHdrs();
+}
+
+  	
+void KNodeApp::slotViewExpand()
+{
+  FAManager->expandAllThreads(true);
+}
+
+
+void KNodeApp::slotViewCollapse()
+{
+  FAManager->expandAllThreads(false);
+}
+
+
+//======== GO MENU =================  	
+
+
+void KNodeApp::slotGotoNextArt()
+{
+	view->nextArticle();
+}
+
+
+void KNodeApp::slotGotoPrevArt()
+{
+	view->prevArticle();
+}
+
+
+void KNodeApp::slotGotoNextUnreadArt()
+{
+	view->nextUnreadArticle();
+}
+
+
+void KNodeApp::slotReadThrough()
+{
+	view->readThrough();
+}
+
+
+void KNodeApp::slotGotoNextThr()
+{
+	view->nextUnreadThread();
+}
+
+
+void KNodeApp::slotGotoNextGroup()
+{
+	view->nextGroup();
+}
+
+
+void KNodeApp::slotGotoPrevGroup()
+{
+	view->prevGroup();
 }
 
 	
@@ -944,52 +1020,7 @@ void KNodeApp::slotArtThrIgnore()
 void KNodeApp::slotArtThrToggle()
 {
 	view->toggleThread();
-}
-
- 	  	
-//======== GO MENU =================  	
-
-
-void KNodeApp::slotGotoNextArt()
-{
-	view->nextArticle();
-}
-
-
-void KNodeApp::slotGotoPrevArt()
-{
-	view->prevArticle();
-}
-
-
-void KNodeApp::slotGotoNextUnreadArt()
-{
-	view->nextUnreadArticle();
-}
-
-
-void KNodeApp::slotReadThrough()
-{
-	view->readThrough();
-}
-
-
-void KNodeApp::slotGotoNextThr()
-{
-	view->nextUnreadThread();
-}
-
-
-void KNodeApp::slotGotoNextGroup()
-{
-	view->nextGroup();
-}
-
-
-void KNodeApp::slotGotoPrevGroup()
-{
-	view->prevGroup();
-}
+}	
 
   	  	
 //======== SETTINGS MENU =================
@@ -1010,44 +1041,7 @@ void KNodeApp::slotToggleStatusBar()
     statusBar()->hide();
   else
     statusBar()->show();
-}
-
-
-void KNodeApp::slotToggleShowThreads()
-{
-  FAManager->toggleThreaded();
-}
-
-  	
-void KNodeApp::slotToggleShowAllHdrs()
-{
-  KNArticleWidget::toggleFullHeaders();
-}
-
-
-void KNodeApp::slotViewSort(int id)
-{
-	view->hdrView->slotSortList(id);
-}
-
-
-void KNodeApp::slotViewRefresh()
-{
-	FAManager->showHdrs();
-}
-
-  	
-void KNodeApp::slotViewExpand()
-{
-  FAManager->expandAllThreads(true);
-}
-
-
-void KNodeApp::slotViewCollapse()
-{
-  FAManager->expandAllThreads(false);
-}
-  	
+}	
   	
   	
 void KNodeApp::slotConfKeys()
@@ -1156,7 +1150,7 @@ void KNodeApp::slotHeaderDoubleClicked(QListViewItem *it)
 
 void KNodeApp::slotSortingChanged(int sortCol)
 {
-  actSetSort->setCurrentItem(sortCol);
+  actViewSort->setCurrentItem(sortCol);
 }
 
 
