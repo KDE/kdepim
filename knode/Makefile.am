@@ -2,7 +2,7 @@ INCLUDES= $(all_includes) -DQT_NO_ASCII_CAST -DQT_NO_COMPAT -DQT_CLEAN_NAMESPACE
 SUBDIRS = toolbar pics filters
 
 bin_PROGRAMS = knode
-knode_SOURCES = knpurgeprogressdialog.cpp knsmtpclient.cpp \
+knode_SOURCES = kngroupbrowser.cpp knpurgeprogressdialog.cpp knsmtpclient.cpp \
 	knnntpclient.cpp knprotocolclient.cpp kncontrolarticle.cpp \
 	knaccountmanager.cpp knnntpaccount.cpp knserverinfo.cpp \
 	kncollection.cpp knviewheader.cpp knreadhdrsettings.cpp \
@@ -21,7 +21,7 @@ knode_SOURCES = knpurgeprogressdialog.cpp knsmtpclient.cpp \
 	kngrouppropdlg.cpp knuserwidget.cpp knuserentry.cpp \
 	knscoredialog.cpp knthread.cpp convert.cpp knfiltermanager.cpp \
 	knstatusfilter.cpp knstringfilter.cpp knrangefilter.cpp \
-	knfilterdialog.cpp kngroupdialog.cpp kngrouplistwidget.cpp \
+	knfilterdialog.cpp kngroupdialog.cpp \
 	knstringsplitter.cpp knhdrviewitem.cpp knlistview.cpp knlistbox.cpp \
 	knlboxitem.cpp knlvitembase.cpp utilities.cpp knodeview.cpp \
 	knode.cpp main.cpp
@@ -29,7 +29,7 @@ knode_SOURCES = knpurgeprogressdialog.cpp knsmtpclient.cpp \
 noinst_HEADERS = knaccmailsettings.h      knglobals.h              knrangefilter.h \
 	knaccnewssettings.h      kngroup.h                knreadappsettings.h \
 	knaccountmanager.h       kngroupdialog.h          knreadgensettings.h \
-	knarticle.h              kngrouplistwidget.h      knreadhdrsettings.h \
+	knarticle.h              knreadhdrsettings.h \
 	knarticlebase.h          kngroupmanager.h         knsavedarticle.h \
 	knarticlecollection.h    kngrouppropdlg.h         knsavedarticlemanager.h \
 	knarticlefilter.h        kngroupselectdialog.h    knscoredialog.h \
@@ -50,7 +50,7 @@ noinst_HEADERS = knaccmailsettings.h      knglobals.h              knrangefilter
 	knfiltersettings.h       knpostcomsettings.h \
 	knfocuswidget.h          knposttechsettings.h     resource.h \
 	knfolder.h               knprotocolclient.h       utilities.h \
-	knfoldermanager.h        knpurgeprogressdialog.h
+	knfoldermanager.h        knpurgeprogressdialog.h  kngroupbrowser.h
 
 knode_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 knode_LDADD   = $(LIB_KHTML) -lmimelib -lpthread $(LIB_KAB) $(LIB_KFILE)
