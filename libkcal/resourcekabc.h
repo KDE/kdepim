@@ -29,6 +29,7 @@
 
 #include "incidence.h"
 #include "calendarlocal.h"
+#include <kabc/addressbook.h>
 
 #include "resourcecalendar.h"
 
@@ -159,6 +160,9 @@ class ResourceKABC : public ResourceCalendar
      * consistent. */
     virtual void update(IncidenceBase *incidence);
 
+  private slots:
+    void reload();
+
   private:
     void init();
 
@@ -168,6 +172,7 @@ class ResourceKABC : public ResourceCalendar
 
     int mAlarmDays;
     bool mAlarm;
+    KABC::AddressBook *mAddressbook;
 };
 
 }

@@ -32,7 +32,6 @@
 #include <kio/job.h>
 #include <kstandarddirs.h>
 
-#include <kabc/addressbook.h>
 #include <kabc/stdaddressbook.h>
 
 #include "vcaldrag.h"
@@ -94,6 +93,9 @@ void ResourceKABC::init()
 
   mOpen = false;
   setReadOnly( true );
+
+  mAddressbook = KABC::StdAddressBook::self();
+  connect( mAddressbook, SIGNAL(addressBookChanged(AddressBook*)), SLOT( reload() ) );
 }
 
 void ResourceKABC::readConfig( const KConfig *config )
@@ -131,9 +133,8 @@ bool ResourceKABC::load()
   QDateTime birthdate;
   QString summary;
 
-  KABC::AddressBook *add_book = KABC::StdAddressBook::self();
   KABC::AddressBook::Iterator it;
-  for ( it = add_book->begin(); it != add_book->end(); ++it ) {
+  for ( it = mAddressbook->begin(); it != mAddressbook->end(); ++it ) {
     if ( (*it).birthday().date().isValid() ) {
       kdDebug() << "found a birthday " << (*it).birthday().toString() << endl;
 
@@ -339,6 +340,11 @@ void ResourceKABC::update(IncidenceBase *)
 void ResourceKABC::dump() const
 {
   ResourceCalendar::dump();
+}
+
+void ResourceKABC::reload()
+{
+  load();
 }
 
 #include "resourcekabc.moc"
