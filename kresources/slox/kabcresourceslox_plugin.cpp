@@ -21,9 +21,6 @@
 #include "kabcresourceslox.h"
 #include "kabcresourcesloxconfig.h"
 
-#include <kglobal.h>
-#include <klocale.h>
-
 using namespace KABC;
 
 extern "C"
