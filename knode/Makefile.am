@@ -60,10 +60,8 @@ knode_SOURCES =   knconfigmanager.cpp \
                   \
                   knscoring.cpp \
                   \
-                  knlistbox.cpp \
+                  knwidgets.cpp \
                   knlistview.cpp \
-                  knfocuswidget.cpp \
-                  knodeview.cpp \
                   knode.cpp \
                   knapplication.cpp \
                   main.cpp
@@ -125,16 +123,12 @@ noinst_HEADERS =  knconfigmanager.h \
                   \
                   knscoring.h \
                   \
-                  knlistbox.h \
+                  knwidgets.h \
                   knlistview.h \
-                  knfocuswidget.h \
-                  knodeview.h \
                   knode.h \
                   knapplication.h \
                   resource.h \
                   knglobals.h
-
-
 
 
 knode_LDFLAGS = -L../libkdenetwork $(all_libraries) $(KDE_RPATH)

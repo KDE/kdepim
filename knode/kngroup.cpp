@@ -34,7 +34,6 @@
 #include "utilities.h"
 #include "kngroup.h"
 #include "knconfigmanager.h"
-#include "knodeview.h"
 #include "knode.h"
 #include "knscoring.h"
 #include "knarticlemanager.h"
@@ -897,7 +896,7 @@ void KNGroup::reorganize()
   buildThreads(length());
   saveStaticData(length(), true);
   saveDynamicData(length(), true);
-  knGlobals.view->headerView()->repaint();
+  knGlobals.top->headerView()->repaint();
   knGlobals.top->setStatusMsg(QString::null);
   knGlobals.top->setCursorBusy(false);
 }

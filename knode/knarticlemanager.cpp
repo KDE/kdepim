@@ -36,10 +36,9 @@
 #include "utilities.h"
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"
-#include "knodeview.h"
 #include "knarticlewidget.h"
 #include "knsearchdialog.h"
-#include "knlistview.h"
+#include "knwidgets.h"
 #include "knfiltermanager.h"
 #include "kngroup.h"
 #include "knfolder.h"
@@ -197,11 +196,11 @@ void KNArticleManager::showHdrs(bool clear)
   if(g_roup) {
     KNRemoteArticle *art, *ref, *current;
 
-    current=static_cast<KNRemoteArticle*>(knGlobals.view->articleView()->article());
+    current=static_cast<KNRemoteArticle*>(knGlobals.top->articleView()->article());
 
     if(current && !current->listItem()) {
       current=0;
-      knGlobals.view->articleView()->setArticle(0);
+      knGlobals.top->articleView()->setArticle(0);
     }
 
     if(g_roup->isLocked()) {
@@ -314,7 +313,7 @@ void KNArticleManager::showHdrs(bool clear)
 
   if(setFirstChild && v_iew->firstChild()) {
     v_iew->setCurrentItem(v_iew->firstChild());
-    knGlobals.view->articleView()->setArticle(0);
+    knGlobals.top->articleView()->setArticle(0);
   }
 
   knGlobals.top->setStatusMsg(QString::null);

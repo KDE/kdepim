@@ -107,6 +107,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     void focusInEvent(QFocusEvent *e);
     void focusOutEvent(QFocusEvent *e);
     void keyPressEvent(QKeyEvent *e);
+    bool eventFilter(QObject *, QEvent *);
     void viewportMousePressEvent(QMouseEvent *e); // RMB for links
     void viewportMouseReleaseEvent(QMouseEvent *e); // automatic copy
     bool canDecode8BitText(const QCString &charset);
@@ -174,6 +175,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
 
   signals:
     void focusChanged(QFocusEvent*);
+    void focusChangeRequest(QWidget*);
 
   //----------------------- Static members -------------------------
   public:

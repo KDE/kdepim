@@ -15,20 +15,12 @@
 */
 
 #include <qheader.h>
-#include <qpixmap.h>
-
-#include <kapp.h>
-#include <kiconloader.h>
-#include <klocale.h>
-#include <kdebug.h>
-#include <kmessagebox.h>
+#include <qlayout.h>
 
 #include "knglobals.h"
+#include "knconfig.h"
 #include "knconfigmanager.h"
-#include "utilities.h"
 #include "knlistview.h"
-#include "knmime.h"
-#include "knhdrviewitem.h"
 
 
 KNLVItemBase::KNLVItemBase(KNLVItemBase *item)
@@ -193,6 +185,8 @@ KNListView::KNListView(QWidget *parent, const char *name)
   setDropHighlighter(true);
   setItemsRenameable(false);
   setItemsMovable(false);
+
+  installEventFilter(this);
 }
 
 
@@ -356,6 +350,17 @@ void KNListView::keyPressEvent(QKeyEvent *e)
     default:
       KListView::keyPressEvent (e);
   }
+}
+
+
+bool KNListView::eventFilter(QObject *o, QEvent *e)
+{
+  if ((e->type() == QEvent::KeyPress) && (static_cast<QKeyEvent*>(e)->key() == Key_Tab)) {
+    emit(focusChangeRequest(this));
+    if (!hasFocus())  // focusChangeRequest was successfull
+      return true;
+  }
+  return KListView::eventFilter(o, e);
 }
 
 

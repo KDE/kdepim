@@ -21,7 +21,7 @@
 
 #include <kdialogbase.h>
 
-#include <knlistbox.h>
+#include "knwidgets.h"
 
 class QRadioButton;
 class QMultiLineEdit;
@@ -316,8 +316,6 @@ class Appearance : public Base {
 
     void save();
 
-    bool longGroupList()              { return l_ongGroupList; }
-
     QColor backgroundColor();
     QColor textColor();
     QColor quoteColor1();
@@ -359,8 +357,7 @@ class Appearance : public Base {
 
     void recreateLVIcons();
 
-    bool l_ongGroupList,
-         u_seColors,
+    bool u_seColors,
          u_seFonts,
          u_seFontsForAllCS;
     QColor  c_olors[COL_CNT];
@@ -426,8 +423,7 @@ class AppearanceWidget : public BaseWidget {
 
     KNDialogListBox *c_List,
               *f_List;
-    QCheckBox *l_ongCB,
-              *c_olorCB,
+    QCheckBox *c_olorCB,
               *f_ontCB,
               *f_ontCSCB;
     QPushButton *c_olDefBtn,

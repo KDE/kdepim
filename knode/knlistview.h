@@ -91,6 +91,7 @@ class KNListView : public KListView  {
     void contentsMousePressEvent(QMouseEvent *e);
     void contentsMouseDoubleClickEvent(QMouseEvent *e);
     void keyPressEvent(QKeyEvent *e);
+    bool eventFilter(QObject *, QEvent *);
     void focusInEvent(QFocusEvent *e);
     void focusOutEvent(QFocusEvent *e);
     QDragObject* dragObject() const;
@@ -111,6 +112,7 @@ class KNListView : public KListView  {
     void middleMBClick(QListViewItem*);
     void sortingChanged(int);
     void focusChanged(QFocusEvent*);
+    void focusChangeRequest(QWidget*);
 
 };
 

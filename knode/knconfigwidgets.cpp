@@ -681,53 +681,47 @@ int KNConfig::AppearanceWidget::FontListItem::width(const QListBox *lb ) const
 KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const char *n)
   : BaseWidget(p, n), d_ata(d)
 {
-  QGridLayout *topL=new QGridLayout(this, 10,2, 5,5);
-
-  //long group list
-  l_ongCB = new QCheckBox(i18n("&Show long group list"),this);
-  topL->addWidget(l_ongCB,0,0);
+  QGridLayout *topL=new QGridLayout(this, 9,2, 5,5);
 
   //color-list
   c_List = new KNDialogListBox(false, this);
-  topL->addMultiCellWidget(c_List,2,4,0,0);
+  topL->addMultiCellWidget(c_List,1,3,0,0);
   connect(c_List, SIGNAL(selected(QListBoxItem*)),SLOT(slotColItemSelected(QListBoxItem*)));
   connect(c_List, SIGNAL(selectionChanged()), SLOT(slotColSelectionChanged()));
 
   c_olorCB = new QCheckBox(i18n("&Use custom colors"),this);
-  topL->addWidget(c_olorCB,1,0);
+  topL->addWidget(c_olorCB,0,0);
   connect(c_olorCB, SIGNAL(toggled(bool)), this, SLOT(slotColCheckBoxToggled(bool)));
 
   c_olChngBtn=new QPushButton(i18n("Cha&nge"), this);
   connect(c_olChngBtn, SIGNAL(clicked()), this, SLOT(slotColChangeBtnClicked()));
-  topL->addWidget(c_olChngBtn,2,1);
+  topL->addWidget(c_olChngBtn,1,1);
 
   c_olDefBtn=new QPushButton(i18n("&Defaults"), this);
   connect(c_olDefBtn, SIGNAL(clicked()), this, SLOT(slotColDefaultBtnClicked()));
-  topL->addWidget(c_olDefBtn,3,1);
+  topL->addWidget(c_olDefBtn,2,1);
 
   //font-list
   f_List = new KNDialogListBox(false, this);
-  topL->addMultiCellWidget(f_List,7,9,0,0);
+  topL->addMultiCellWidget(f_List,6,8,0,0);
   connect(f_List, SIGNAL(selected(QListBoxItem*)),SLOT(slotFontItemSelected(QListBoxItem*)));
   connect(f_List, SIGNAL(selectionChanged()),SLOT(slotFontSelectionChanged()));
 
   f_ontCSCB = new QCheckBox(i18n("Use the configu&red fonts for all charsets"),this);
-  topL->addWidget(f_ontCSCB,5,0);
+  topL->addWidget(f_ontCSCB,4,0);
   f_ontCB = new QCheckBox(i18n("Use custom &fonts"),this);
-  topL->addWidget(f_ontCB,6,0);
+  topL->addWidget(f_ontCB,5,0);
   connect(f_ontCB, SIGNAL(toggled(bool)), this, SLOT(slotFontCheckBoxToggled(bool)));
 
   f_ntChngBtn=new QPushButton(i18n("Chang&e"), this);
   connect(f_ntChngBtn, SIGNAL(clicked()), this, SLOT(slotFontChangeBtnClicked()));
-  topL->addWidget(f_ntChngBtn,7,1);
+  topL->addWidget(f_ntChngBtn,6,1);
 
   f_ntDefBtn=new QPushButton(i18n("Defaul&ts"), this);
   connect(f_ntDefBtn, SIGNAL(clicked()), this, SLOT(slotFontDefaultBtnClicked()));
-  topL->addWidget(f_ntDefBtn,8,1);
+  topL->addWidget(f_ntDefBtn,7,1);
 
   //init
-  l_ongCB->setChecked(d->l_ongGroupList);
-
   c_olorCB->setChecked(d->u_seColors);
   slotColCheckBoxToggled(d->u_seColors);
   for(int i=0; i<d->colorCount(); i++)
@@ -738,9 +732,7 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
   slotFontCheckBoxToggled(d->u_seFonts);
   for(int i=0; i<d->fontCount(); i++)
     f_List->insertItem(new FontListItem(d->fontName(i), d->font(i)));
-
 }
-
 
 
 KNConfig::AppearanceWidget::~AppearanceWidget()
@@ -752,8 +744,6 @@ void KNConfig::AppearanceWidget::apply()
 {
   if(!d_irty)
     return;
-
-  d_ata->l_ongGroupList=l_ongCB->isChecked();
 
   d_ata->u_seColors=c_olorCB->isChecked();
   for(int i=0; i<d_ata->colorCount(); i++)

@@ -27,7 +27,7 @@
 #include <ktempfile.h>
 #include <kfiledialog.h>
 
-#include "knlistbox.h"
+#include "knwidgets.h"
 #include "knglobals.h"
 #include "utilities.h"
 

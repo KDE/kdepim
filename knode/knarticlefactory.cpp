@@ -35,7 +35,7 @@
 #include "knfolder.h"
 #include "kncomposer.h"
 #include "knnntpaccount.h"
-#include "knlistbox.h"
+#include "knwidgets.h"
 #include "utilities.h"
 #include "resource.h"
 

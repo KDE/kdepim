@@ -181,8 +181,6 @@ KNConfig::Appearance::Appearance()
   KConfig *c=KGlobal::config();
   c->setGroup("VISUAL_APPEARANCE");
 
-  l_ongGroupList=c->readBoolEntry("longGroupList", true);
-
   //colors
   u_seColors=c->readBoolEntry("customColors", false);
 
@@ -294,8 +292,6 @@ void KNConfig::Appearance::save()
 
   KConfig *c=KGlobal::config();
   c->setGroup("VISUAL_APPEARANCE");
-
-  c->writeEntry("longGroupList", l_ongGroupList);
 
   c->writeEntry("customColors", u_seColors);
   c->writeEntry("backgroundColor", c_olors[background]);

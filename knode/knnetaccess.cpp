@@ -33,6 +33,7 @@
 #include "knsmtpclient.h"
 #include "knglobals.h"
 #include "knnetaccess.h"
+#include "knwidgets.h"
 
 
 KNNetAccess::KNNetAccess(QObject *parent, const char *name )

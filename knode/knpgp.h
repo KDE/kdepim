@@ -19,6 +19,7 @@
 
 #include <kpgp.h>
 
+
 class KNpgp : public Kpgp
 {
 public:

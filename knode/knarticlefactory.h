@@ -22,7 +22,7 @@
 
 #include "knjobdata.h"
 #include "knmime.h"
-#include "knlistbox.h"
+#include "knwidgets.h"
 
 class QLabel;
 

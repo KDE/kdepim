@@ -91,6 +91,7 @@ void KNAccountManager::loadAccounts()
       a->setListItem(cvit);
       cvit->setPixmap(0, pm);
       gManager->loadGroups(a);
+      cvit->setOpen(a->wasOpen());
     } else {
       delete a;
       kdError(5003) << "Unable to load account " << (*it) << "!" << endl;

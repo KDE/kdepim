@@ -149,6 +149,8 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
 
   setFocusPolicy(QWidget::WheelFocus);
 
+  installEventFilter(this);
+
   //popups
   u_rlPopup=new KPopupMenu();
   u_rlPopup->insertItem(SmallIcon("fileopen"),i18n("&Open Link"), PUP_OPEN);
@@ -269,6 +271,17 @@ void KNArticleWidget::keyPressEvent(QKeyEvent *e)
     default:
       QTextBrowser::keyPressEvent(e);
   }
+}
+
+
+bool KNArticleWidget::eventFilter(QObject *o, QEvent *e)
+{
+  if ((e->type() == QEvent::KeyPress) && (static_cast<QKeyEvent*>(e)->key() == Key_Tab)) {
+    emit(focusChangeRequest(this));
+    if (!hasFocus())  // focusChangeRequest was successfull
+      return true;
+  }
+  return KTextBrowser::eventFilter(o, e);
 }
 
 

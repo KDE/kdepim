@@ -27,7 +27,7 @@
 #include "knglobals.h"
 #include "knarticlewidget.h"
 #include "knarticlefactory.h"
-#include "knodeview.h"
+#include "knode.h"
 
 
 KNConfigManager::KNConfigManager(QObject *p, const char *n) : QObject(p, n), d_ialog(0)
@@ -226,7 +226,7 @@ void KNConfigDialog::slotApply()
   m_anager->syncConfig();
 
   KNArticleWidget::configChanged();
-  knGlobals.view->configChanged();
+  knGlobals.top->configChanged();
   knGlobals.artFactory->configChanged();
 }
 

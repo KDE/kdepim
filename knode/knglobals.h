@@ -28,7 +28,6 @@ class KNFolderManager;
 class QWidget;
 class KNFilterManager;
 class KNMainWindow;
-class KNodeView;
 class KNScoringManager;
 class KNMemoryManager;
 class KNpgp;
@@ -55,7 +54,6 @@ class KNGlobals {
     KNArticleFactory      *artFactory;
     KNFolderManager       *folManager;
     KNFilterManager       *filManager;
-    KNodeView             *view;
     KNScoringManager      *scoreManager;
     KNMemoryManager       *memManager;
     KNpgp                 *pgp;
