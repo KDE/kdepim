@@ -215,11 +215,20 @@ bool MALConduit::skip()
 
 	QString proxyServer( MALConduitSettings::proxyServer() );
 	int proxyPort( MALConduitSettings::proxyPort() );
+	QString syncMessage;
+	bool canContinue = true;
 	// Set all proxy settings
 	switch (MALConduitSettings::proxyType()) 
 	{
 		case MALConduitSettings::eProxyHTTP:
-			if (proxyServer.isEmpty()) break;
+			if (proxyServer.isEmpty()) 
+			{
+				canContinue = false;
+				syncMessage = i18n("No proxy server is set.");
+				break;
+			}
+			syncMessage = i18n("Using proxy server: %1").arg(proxyServer);
+
 #ifdef DEBUG
 			DEBUGCONDUIT<<" Using HTTP proxy server \""<<proxyServer<<
 				"\", Port "<<proxyPort<<", User "<<MALConduitSettings::proxyUser()<<
@@ -255,6 +264,13 @@ bool MALConduit::skip()
 			}
 			break;
 		case MALConduitSettings::eProxySOCKS:
+			if (proxyServer.isEmpty()) 
+			{
+				canContinue = false;
+				syncMessage = i18n("No SOCKS proxy is set.");
+				break;
+			}
+			syncMessage = i18n("Using SOCKS proxy: %1").arg(proxyServer);
 #ifdef DEBUG
 			DEBUGCONDUIT<<" Using SOCKS proxy server \""<<proxyServer<<"\",  Port "<<proxyPort<<", User "<<MALConduitSettings::proxyUser()<<", Password "<<( (MALConduitSettings::proxyPassword().isEmpty())?QString("not "):QString() )<<"set"<<endl;
 #endif
@@ -274,6 +290,13 @@ bool MALConduit::skip()
 			break;
 	}
 
+	logMessage(syncMessage);
+
+	if (!canContinue)
+	{
+		return false;
+	}
+
 #ifdef LIBMAL20
 	malsync( pilotSocket(), pInfo);
 #else
@@ -289,8 +312,7 @@ bool MALConduit::skip()
 #endif
 
 	saveConfig();
-	emit syncDone(this);
-	return true;
+	return delayDone();
 }
 
 void MALConduit::printLogMessage(QString msg)
