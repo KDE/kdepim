@@ -19,6 +19,7 @@ kalarmd_SOURCES = alarmdaemon.cpp main.cpp alarmapp.cpp \
         adcalendarbase.cpp adcalendar.cpp adconfigdatabase.cpp clientinfo.cpp \
         adconfigdatarw.cpp \
         alarmdaemoniface.skel
+kalamd_COMPILE_FIRST = alarmguiiface_stub.h
 
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
 	alarmguiiface.h adcalendarbase.h adcalendar.h \
