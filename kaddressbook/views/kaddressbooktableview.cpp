@@ -21,6 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <qapplication.h>
 #include <qlayout.h>
 #include <qheader.h>
 #include <qvbox.h>
@@ -384,5 +385,16 @@ void KAddressBookTableView::updatePresence( const QString &uid )
   if ( mListView->sortColumn() == mListView->imColumn() )
     mListView->sort();
 }
+
+void KAddressBookTableView::scrollUp()
+{
+  QApplication::postEvent( mListView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Up, 0, 0 ) );
+}
+
+void KAddressBookTableView::scrollDown()
+{
+  QApplication::postEvent( mListView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Down, 0, 0 ) );
+}
+
 
 #include "kaddressbooktableview.moc"

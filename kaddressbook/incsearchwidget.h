@@ -54,11 +54,24 @@ class IncSearchWidget : public QWidget
      */
     void doSearch( const QString& text );
 
+    /**
+      Emitted when the up key is pressed.
+     */
+    void scrollUp();
+
+    /**
+      Emitted when the down key is pressed.
+     */
+    void scrollDown();
+
   public slots:
     void setViewFields( const KABC::Field::List& );
 
   private slots:
     void announceDoSearch();
+
+  protected:
+    virtual void keyPressEvent( QKeyEvent* );
 
   private:
     void initFields();

@@ -156,6 +156,11 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   connect( mDetails, SIGNAL( highlightedMessage( const QString& ) ),
            SLOT( detailsHighlighted( const QString& ) ) );
 
+  connect( mIncSearchWidget, SIGNAL( scrollUp() ),
+           mViewManager, SLOT( scrollUp() ) );
+  connect( mIncSearchWidget, SIGNAL( scrollDown() ),
+           mViewManager, SLOT( scrollDown() ) );
+
   mAddressBookService = new KAddressBookService( this );
 
   mSearchManager->reload();

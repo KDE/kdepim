@@ -55,6 +55,9 @@ class KAddressBookCardView : public KAddressBookView
     
     virtual void readConfig(KConfig *config);
     virtual void writeConfig(KConfig *);
+
+    void scrollUp();
+    void scrollDown();
     
   public slots:
     void refresh(QString uid = QString::null);

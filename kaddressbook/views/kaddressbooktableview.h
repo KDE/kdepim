@@ -79,6 +79,9 @@ friend class ContactListView;
     virtual void writeConfig(KConfig *config);
     virtual QString type() const { return "Table"; }
 
+    void scrollUp();
+    void scrollDown();
+
   public slots:
     virtual void reconstructListView();
 

@@ -82,6 +82,8 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
 
   initFields();
 
+  mSearchText->installEventFilter( this );
+
   setFocusProxy( mSearchText );
 }
 
@@ -139,6 +141,17 @@ void IncSearchWidget::setViewFields( const KABC::Field::List &fields )
 void IncSearchWidget::clear()
 {
   mSearchText->clear();
+}
+
+void IncSearchWidget::keyPressEvent( QKeyEvent *event )
+{
+  if ( event->key() == Qt::Key_Up ) {
+    event->accept();
+    emit scrollUp();
+  } else if ( event->key() == Qt::Key_Down ) {
+    event->accept();
+    emit scrollDown();
+  }
 }
 
 #include "incsearchwidget.moc"

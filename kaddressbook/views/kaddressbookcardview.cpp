@@ -21,6 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <qapplication.h>
 #include <qdragobject.h>
 #include <qevent.h>
 #include <qiconview.h>
@@ -396,6 +397,16 @@ void KAddressBookCardView::addresseeSelected()
 void KAddressBookCardView::rmbClicked( CardViewItem*, const QPoint &point )
 {
   popup( point );
+}
+
+void KAddressBookCardView::scrollUp()
+{
+  QApplication::postEvent( mCardView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Up, 0, 0 ) );
+}
+
+void KAddressBookCardView::scrollDown()
+{
+  QApplication::postEvent( mCardView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Down, 0, 0 ) );
 }
 
 #include "kaddressbookcardview.moc"

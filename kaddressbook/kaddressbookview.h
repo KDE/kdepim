@@ -152,6 +152,9 @@ class KAddressBookView : public QWidget
      */
     virtual KABC::Field *sortField() const = 0;
 
+    virtual void scrollUp() = 0;
+    virtual void scrollDown() = 0;
+
   public slots:
     /**
       Must be overloaded in subclasses to refresh the view.

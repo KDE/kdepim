@@ -371,6 +371,18 @@ void ViewManager::addView()
   }
 }
 
+void ViewManager::scrollUp()
+{
+  if ( mActiveView )
+    mActiveView->scrollUp();
+}
+
+void ViewManager::scrollDown()
+{
+  if ( mActiveView )
+    mActiveView->scrollDown();
+}
+
 void ViewManager::createViewFactories()
 {
   const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/View", 

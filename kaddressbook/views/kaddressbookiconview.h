@@ -52,6 +52,9 @@ class KAddressBookIconView : public KAddressBookView
     virtual QString type() const { return "Icon"; }
     virtual KABC::Field *sortField() const;
     virtual void readConfig(KConfig *config);
+
+    void scrollUp();
+    void scrollDown();
     
   public slots:
     void refresh(QString uid = QString::null);

@@ -78,6 +78,9 @@ class ViewManager : public QWidget
     void deleteView();
     void addView();
 
+    void scrollUp();
+    void scrollDown();
+
   protected slots:
     /**
       Called whenever the user drops something in the active view.

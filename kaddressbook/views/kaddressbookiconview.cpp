@@ -21,6 +21,7 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#include <qapplication.h>
 #include <qiconview.h>
 #include <qlayout.h>
 #include <qstringlist.h>
@@ -97,10 +98,9 @@ QDragObject *AddresseeIconView::dragObject()
 class AddresseeIconViewItem : public KIconViewItem
 {
   public:
-    AddresseeIconViewItem(const KABC::Field::List &fields,
-                          KABC::AddressBook *doc, const KABC::Addressee &a, 
-                          QIconView *parent)
-      : KIconViewItem(parent), mDocument(doc), mAddressee(a)
+    AddresseeIconViewItem( const KABC::Field::List&, KABC::AddressBook *doc,
+                           const KABC::Addressee &a, QIconView *parent )
+      : KIconViewItem( parent ), mDocument( doc ), mAddressee( a )
       {
           refresh();
       }
@@ -315,6 +315,16 @@ void KAddressBookIconView::addresseeSelected()
 void KAddressBookIconView::rmbClicked( QIconViewItem*, const QPoint &point )
 {
   popup( point );
+}
+
+void KAddressBookIconView::scrollUp()
+{
+  QApplication::postEvent( mIconView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Up, 0, 0 ) );
+}
+
+void KAddressBookIconView::scrollDown()
+{
+  QApplication::postEvent( mIconView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Down, 0, 0 ) );
 }
 
 #include "kaddressbookiconview.moc"
