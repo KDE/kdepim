@@ -38,6 +38,7 @@ static const char *logw_id =
 #include <qdatetime.h>
 #include <qlabel.h>
 #include <qpixmap.h>
+#include <qtimer.h>
 
 #include <kglobal.h>
 #include <kstddirs.h>
