@@ -178,7 +178,6 @@ void Note::setFields( const KCal::Journal* journal )
 {
   KolabBase::setFields( journal );
 
-  // TODO: background and foreground
   setSummary( journal->summary() );
   setBackgroundColor( journal->customProperty( "KNotes", "BgColor" ) );
   setForegroundColor( journal->customProperty( "KNotes", "FgColor" ) );
