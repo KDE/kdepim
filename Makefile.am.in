@@ -7,9 +7,10 @@
 COMPILE_BEFORE_korganizer = libkdepim libkpimexchange kgantt kalarmd
 COMPILE_BEFORE_kaddressbook = libkdepim 
 COMPILE_BEFORE_kandy = libkdepim
-COMPILE_AFTER_libkcal = kalarm kalarmd kitchensync konsolekalendar korganizer ksync ibkpimexchange
+COMPILE_AFTER_libkcal = kalarm kalarmd kitchensync konsolekalendar korganizer ksync libkpimexchange kpilot
 COMPILE_BEFORE_libkcal = libical
 COMPILE_BEFORE_empath = librmm
+COMPILE_BEFORE_kaplan = kaddressbook knotes korganizer
 
 AUTOMAKE_OPTIONS = foreign 1.4
 DISTCLEANFILES = inst-apps
