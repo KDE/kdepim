@@ -28,7 +28,6 @@
 */
 
 
-#include "config.h"
 #include "options.h"
 
 #include <pi-file.h>
@@ -58,6 +57,7 @@
 #include "kpilotConfig.h"
 
 
+#include "dbviewerWidget.moc"
 
 
 GenericDBWidget::GenericDBWidget(QWidget *parent, const QString &dbpath) :
@@ -428,4 +428,3 @@ void GenericDBWidget::writeRecord(PilotRecord*r)
 
 
 
-#include "dbviewerWidget.moc"
