@@ -76,7 +76,7 @@ Kapabilities OpiePlugin::capabilities( )
   user.append(qMakePair(QString::fromLatin1("root"),  QString::fromLatin1("test123") ) );
   user.append(qMakePair(QString::fromLatin1("ich"), QString::fromLatin1("test321") ) );
   caps.setUserProposals( user );
-  QValueList< QString > ips;
+  QStringList ips;
   QString  src = "192.168.1.100";
   ips.append( src );
   caps.setIpProposals( ips );
