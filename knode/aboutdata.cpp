@@ -2,7 +2,7 @@
     aboutdata.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,8 @@ namespace KNode
   };
 
   static const about_authors authors[] = {
-    { "Roberto Selbach Teixeira", I18N_NOOP("Maintainer"), "roberto@robt.org" },
+    { "Volker Krause", I18N_NOOP("Maintainer"), "volker.krause@rwth-aachen.de" },
+    { "Roberto Selbach Teixeira", I18N_NOOP("Former maintainer"), "roberto@robt.org" },
     { "Christian Gebauer", 0, "gebauer@kde.org" },
     { "Christian Thurner", 0, "cthurner@web.de" },
     { "Dirk Mueller", 0, "mueller@kde.org" },
@@ -45,7 +46,7 @@ namespace KNode
                   KNODE_VERSION,
                   I18N_NOOP("A newsreader for KDE"),
                   KAboutData::License_GPL,
-                  I18N_NOOP("Copyright (c) 1999-2003 the KNode authors"),
+                  I18N_NOOP("Copyright (c) 1999-2004 the KNode authors"),
                   0,
                   "http://knode.sourceforge.net/" )
   {
