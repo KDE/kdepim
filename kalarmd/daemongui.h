@@ -26,10 +26,16 @@
 #include <qfont.h>
 #include <qstrlist.h>
 
+#include <kaboutdata.h>
+
 #include <libkcal/calendarlocal.h>
 
-#include "DaemonGuiiface.h"
+#include "daemonguiiface.h"
 #include "calclient.h"
+#include "adcalendarbase.h"
+#include "adconfigdatabase.h"
+#include "clientiteration.h"
+#include "calendariteration.h"
 
 class AlarmDialog;
 class AlarmDockWindow;
@@ -50,22 +56,7 @@ class ADConfigData : public ADConfigDataBase
                                       { readConfigData(false, deletedClients, deletedCalendars); }
 };
 
-// The ClientIteration class gives secure public access to AlarmGui::mClients
-class ClientIteration
-{
-  public:
-    ClientIteration(ClientMap& c)     : clients(c) { iter = clients.begin(); }
-    bool           ok() const         { return iter != clients.end(); }
-    bool           next()             { return ++iter != clients.end(); }
-    const QString& appName() const    { return iter.key(); }
-    const QString& title() const      { return iter.data().title; }
-    int            menuIndex() const  { return iter.data().menuIndex; }
-    void           menuIndex(int n)   { iter.data().menuIndex = n; }
-  private:
-    ClientMap&          clients;
-    ClientMap::Iterator iter;
-};
-
+/*
 // Alarm Daemon calendar access
 class ADCalendar : public ADCalendarBase
 {
@@ -98,7 +89,7 @@ class CalendarIteration
     CalendarList&  calendars;
     ADCalendar*    calendar;
 };
-
+*/
 
 
 class AlarmGui : public QObject, public ADConfigData, virtual public AlarmGuiIface
@@ -108,7 +99,7 @@ class AlarmGui : public QObject, public ADConfigData, virtual public AlarmGuiIfa
     explicit AlarmGui(QObject *parent = 0L, const char *name = 0L);
     virtual ~AlarmGui();
 
-    static bool       isDaemonRunning() const;
+    static bool       isDaemonRunning();
     ClientIteration   getClientIteration()     { return ClientIteration(mClients); }
     CalendarIteration getCalendarIteration()   { return CalendarIteration(mCalendars); }
     int               calendarCount() const    { return mCalendars.count(); }

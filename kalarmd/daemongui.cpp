@@ -81,7 +81,7 @@ AlarmGui::~AlarmGui()
   delete mDocker;
 }
 
-bool AlarmGui::isDaemonRunning() const
+bool AlarmGui::isDaemonRunning()
 {
   return kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>("kalarmd"));
 }

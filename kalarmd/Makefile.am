@@ -5,15 +5,20 @@ bin_PROGRAMS = kalarmd kalarmdgui
 kalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kalarmd_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
 kalarmd_SOURCES = alarmdaemon.cpp main.cpp alarmapp.cpp \
-	alarmdaemoniface.skel alarmdaemoniface.stub
+	alarmdaemoniface.skel alarmdaemoniface.stub \
+        adcalendarbase.cpp adcalendar.cpp adconfigdatabase.cpp calclient.cpp \
+        adconfigdatarw.cpp
+
 kalarmdgui_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kalarmdgui_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
-kalarmdgui_SOURCES = guimain.cpp alarmguiapp.cpp alarmdialog.cpp \
+kalarmdgui_SOURCES = guimain.cpp guiapp.cpp alarmdialog.cpp \
 	dockwindow.cpp daemonguiiface.skel daemonguiiface.stub \
-	koeventviewer.cpp
+	koeventviewer.cpp daemongui.cpp
+
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
-	alarmguiapp.h daemongui.h daemonguiiface.h alarmdialog.h \
-	dockwindow.h koeventviewer.h
+	guiapp.h daemongui.h daemonguiiface.h alarmdialog.h \
+	dockwindow.h koeventviewer.h \
+        acalendarbase.cpp adcalendar.h
 
 METASOURCES = AUTO
 

@@ -36,6 +36,8 @@
 
 #include <libkcal/calendarlocal.h>
 
+#include "alarmapp.h"
+
 #include "alarmdaemon.h"
 #include "alarmdaemon.moc"
 
@@ -43,6 +45,7 @@
 // Config file key strings
 const QString AUTOSTART_KEY("Autostart");
 
+const int LOGIN_DELAY( 5 );
 
 AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
   : QObject(parent, name), DCOPObject(name),
@@ -66,7 +69,7 @@ AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
 
   readDaemonData(!!mSessionStartTimer);
 
-  enableAutostart(true);    // switch autostart on whenever the program is run
+  enableAutoStart(true);    // switch autostart on whenever the program is run
 
   // set up the alarm timer
   mAlarmTimer = new QTimer(this);
@@ -92,7 +95,7 @@ void AlarmDaemon::quit()
  */
 void AlarmDaemon::enableCal_(const QString& urlString, bool enable)
 {
-  kdDebug() << "AlarmDaemon::addCal_(" << urlString << "): " << (msgCal ? "KALARM)" : "KORGANISER)") << endl;
+  kdDebug() << "AlarmDaemon::enableCal_(" << urlString << ")" << endl;
 
   ADCalendar* cal = getCalendar(urlString);
   if (cal)
@@ -240,7 +243,7 @@ void AlarmDaemon::registerApp(const QString& appName, const QString& appTitle,
 
       writeConfigClient(appName, cinfo);
 
-      enableAutostart(true);
+      enableAutoStart(true);
       notifyGui(CHANGE_CLIENT);
       setTimerStatus();
       checkAlarms(appName);
@@ -325,7 +328,7 @@ void AlarmDaemon::checkAlarms(ADCalendar* cal)
           for (Event* event = alarmEvents.first();  event;  event = alarmEvents.next())
           {
             kdDebug() << "AlarmDaemon::checkAlarms(): KORGANISER event " << event->VUID() << endl;
-            notifyEvent(cal, eventID);
+            notifyEvent(cal, event->VUID());
           }
         }
         break;
@@ -333,7 +336,7 @@ void AlarmDaemon::checkAlarms(ADCalendar* cal)
       case ADCalendar::KALARM:
         if (cal->checkAlarmsPast(alarmEvents))
         {
-kdDebug()<<"Kalarm alarms="<<alarmEvents.count()<<endl;
+          kdDebug()<<"Kalarm alarms="<<alarmEvents.count()<<endl;
           for (Event* event = alarmEvents.first();  event;  event = alarmEvents.next())
           {
             const QString& eventID = event->VUID();
@@ -361,9 +364,9 @@ kdDebug()<<"Kalarm alarms="<<alarmEvents.count()<<endl;
 void AlarmDaemon::checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes)
 {
   alarmtimes.clear();
-  const KOAlarm* alarm;
+  const Alarm* alarm;
   QDateTime now = QDateTime::currentDateTime();
-  for (QPtrListIterator<KOAlarm> it(event.alarms());  (alarm = it.current()) != 0;  ++it) {
+  for (QPtrListIterator<Alarm> it(event.alarms());  (alarm = it.current()) != 0;  ++it) {
     alarmtimes.append((alarm->enabled()  &&  alarm->time() <= now) ? alarm->time() : QDateTime());
   }
 }
@@ -398,7 +401,7 @@ bool AlarmDaemon::notifyEvent(const ADCalendar* calendar, const QString& eventID
       if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(calendar->appName())))
       {
         // The client application is not running
-        if (client->notificationType == NO_START_NOTIFY)
+        if (client->notificationType == ClientInfo::NO_START_NOTIFY)
           return true;
 
         // Start the client application
@@ -408,7 +411,7 @@ bool AlarmDaemon::notifyEvent(const ADCalendar* calendar, const QString& eventID
           kdDebug() << "AlarmDaemon::notifyEvent(): '" << calendar->appName() << "' not found" << endl;
           return true;
         }
-        if (client->notificationType == COMMAND_LINE_NOTIFY)
+        if (client->notificationType == ClientInfo::COMMAND_LINE_NOTIFY)
         {
           // Use the command line to tell the client about the alarm
           execStr += " --handleEvent ";
@@ -526,9 +529,10 @@ void AlarmDaemon::setTimerStatus()
  */
 void AlarmDaemon::registerGui(const QString& appName, const QString& dcopObject)
 {
-  kdDebug() << "AlarmDaemon::registerApp(): " << appName << ":" << appTitle << endl;
+  kdDebug() << "AlarmDaemon::registerGui(): " << appName << endl;
   if (!appName.isEmpty())
   {
+#if TODO_register_gui
     const GuiInfo* g = getGuiInfo(appName);
     if (g)
     {
@@ -540,6 +544,7 @@ void AlarmDaemon::registerGui(const QString& appName, const QString& dcopObject)
     writeConfigClientsGui(appName, dcopObject);
 
     ?// send list of alarms to new GUI app??
+#endif
   }
 }
 
@@ -558,7 +563,7 @@ void AlarmDaemon::notifyGuiCalStatus(const ADCalendar* cal)
  */
 void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL, const QString& appName)
 {
-  kdDebug() << "AlarmDaemon::guiNotify(): " << eventID << endl;
+  kdDebug() << "AlarmDaemon::notifyGui()" << endl;
 
   QString changeType;
   switch (change)
@@ -577,6 +582,7 @@ void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL, co
       return;
   }
 
+#if TODO_iterate_guis
   for (GuiMap::ConstIterator it = mGuis.begin();  it != mGuis.end();  ++it)
   {
     const QString& dcopObject = g.data();
@@ -592,293 +598,5 @@ void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL, co
         kdDebug() << "AlarmDaemon::guiNotify(): dcop send failed:" << g.key() << endl;
     }
   }
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// class ADCalendar
-///////////////////////////////////////////////////////////////////////////////
-ADCalendar::EventsMap  ADCalendar::eventsHandled_;
-
-
-ADCalendar::ADCalendar(const QString& url, const QString& appname, Type type)
-  : ADCalendarBase(url, appname, type),
-    enabled_(true),
-    unregistered(false)
-{
-  loadFile();
-}
-
-// A virtual "constructor"
-ADCalendarBase* ADCalendar::create(const QString& url, const QString& appname, Type type)
-{
-  return new ADCalendar(url, appname, type);
-}
-
-/*
- * Check whether all the alarms for the event with the given ID have already
- * been handled.
- */
-bool ADCalendar::eventHandled(const Event* event, const QValueList<QDateTime>& alarmtimes)
-{
-  EventsMap::ConstIterator it = eventsHandled_.find(event->VUID());
-  if (it == eventsHandled_.end())
-    return false;
-
-  int oldCount = it.data().alarmTimes.count();
-  int count = alarmtimes.count();
-  for (int i = 0;  i < count;  ++i) {
-    if (alarmtimes[i].isValid()) {
-      if (i >= oldCount                              // is it an additional alarm?
-      ||  !it.data().alarmTimes[i].isValid()         // or has it just become due?
-      ||  it.data().alarmTimes[i].isValid()          // or has it changed?
-       && alarmtimes[i] != it.data().alarmTimes[i])
-        return false;     // this alarm has changed
-    }
-  }
-  return true;
-}
-
-/*
- * Remember that the specified alarms for the event with the given ID have been
- * handled.
- */
-void ADCalendar::setEventHandled(const Event* event, const QValueList<QDateTime>& alarmtimes)
-{
-  if (event)
-  {
-    kdDebug() << "ADCalendar::setEventHandled(" << event->VUID() << ")\n";
-    EventsMap::Iterator it = eventsHandled_.find(event->VUID());
-    if (it != eventsHandled_.end())
-    {
-      // Update the existing entry for the event
-      it.data().alarmTimes = alarmtimes;
-      it.data().eventSequence = event->revision();
-    }
-    else
-      eventsHandled_.insert(event->VUID(), EventItem(urlString_, event->revision(), alarmtimes));
-  }
-}
-
-/*
- * Clear all memory of events handled for the specified calendar.
- */
-void ADCalendar::clearEventsHandled(const QString& calendarURL)
-{
-  for (EventsMap::Iterator it = eventsHandled_.begin();  it != eventsHandled_.end();  )
-  {
-    if (it.data().calendarURL == calendarURL)
-    {
-      EventsMap::Iterator i = it;
-      ++it;                      // prevent iterator becoming invalid with remove()
-      eventsHandled_.remove(i);
-    }
-    else
-      ++it;
-  }
-}
-
-/*
- * Note that the event with the given ID is pending
- * (i.e. waiting until the client can be notified).
- */
-void ADCalendar::setEventPending(const QString& ID)
-{
-  if (actionType_ == KALARM  &&  !eventsPending_.containsRef(&ID))
-  {
-    eventsPending_.append(&ID);
-    kdDebug() << "ADCalendar::setEventPending(): " << ID << endl;
-  }
-}
-
-/*
- * Get an event from the pending list, and remove it from the list.
- */
-bool ADCalendar::getEventPending(QString& ID)
-{
-  if (actionType_ == KALARM)
-  {
-    QString* eventID = eventsPending_.getFirst();
-    if (eventID)
-    {
-      eventsPending_.removeFirst();
-      ID = *eventID;
-      return true;
-    }
-  }
-  return false;
-}
-
-ADCalendar::EventItem::EventItem(const QString& url, int seqno, const QValueList<QDateTime>& alarmtimes)
-  : calendarURL(url),
-    eventSequence(seqno),
-    alarmTimes(alarmtimes)
-{
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// class ADConfigDataRW
-///////////////////////////////////////////////////////////////////////////////
-
-void ADConfigDataRW::readDaemonData(bool sessionStarting)
-{
-  kdDebug() << "ADConfigDataRW::readDaemonData()" << endl;
-  bool cls, cals;
-  QString newClients = readConfigData(sessionStarting, cls, cals);
-  if (!newClients.isEmpty())
-  {
-    // One or more clients in the Clients config entry was invalid, so rewrite the entry
-    clientConfig.setGroup("General");
-    clientConfig.writeEntry(CLIENTS_KEY, newClients);
-  }
-
-  // Read the GUI clients
-  QStringList guis = QStringList::split(',', clientConfig.readEntry(GUIS_KEY), true);
-  bool writeNewGuis = false;
-  QString newGuis;
-  for (unsigned int i = 0;  i < guis.count();  ++i)
-  {
-    kdDebug() << "ADConfigDataRW::readDaemonData(): gui: " << guis[i] << endl;
-    if (guis[i].isEmpty()
-    ||  KStandardDirs::findExe(guis[i]) == QString::null)
-    {
-      // Null client name, or application doesn't exist
-      if (!guis[i].isEmpty())
-        clientConfig.deleteGroup(GUI_KEY + guis[i], true);
-      writeNewGuis = true;
-    }
-    else
-    {
-      // Get this client's details from its own config section
-      QString groupKey = GUI_KEY + guis[i];
-      clientConfig.setGroup(groupKey);
-      QString dcopObject = clientConfig.readEntry("DCOP object");
-      mGuis.insert(guis[i], dcopObject);
-      if (!newGuis.isEmpty())
-        newGuis += ',';
-      newGuis += guis[i];
-    }
-  }
-  if (writeNewGuis)
-  {
-    // One or more clients in the Guis config entry was invalid, so rewrite the entry
-    clientConfig.setGroup("General");
-    clientConfig.writeEntry(GUIS_KEY, newGuis);
-  }
-}
-
-/*
- * Write a client application's details to the client data file.
- * Any existing entries relating to the application are deleted,
- * including calendar file information.
- */
-void ADConfigDataRW::writeConfigClient(const QString& appName, const ClientInfo& cinfo)
-{
-  KSimpleConfig clientConfig(clientDataFile());
-  addConfigClient(clientConfig, appName, CLIENTS_KEY);
-
-  QString groupKey = CLIENT_KEY + appName;
-  clientConfig.deleteGroup(groupKey, true);
-
-  clientConfig.setGroup(groupKey);
-  clientConfig.writeEntry("Title", cinfo.title);
-  if (!cinfo.dcopObject.isEmpty())
-    clientConfig.writeEntry("DCOP object", cinfo.dcopObject);
-  clientConfig.writeEntry("Notification", cinfo.notificationType);
-  clientConfig.writeEntry("Display calendar names", cinfo.displayCalName);
-  int i = 0;
-  for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
-  {
-    if (cal->appName() == appName)
-      clientConfig.writeEntry(CALENDAR_KEY + QString::number(++i), QString("%1,").arg(cal->actionType()) + cal->urlString());
-  }
-}
-
-/*
- * Write a GUI client application's details to the client data file.
- */
-void ADConfigDataRW::writeConfigClientGui(const QString& appName, const QString& dcopObject)
-{
-  KSimpleConfig clientConfig(clientDataFile());
-  addConfigClient(clientConfig, appName, GUIS_KEY);
-
-  QString groupKey = GUI_KEY + appName;
-
-  clientConfig.setGroup(groupKey);
-  clientConfig.writeEntry("DCOP object", dcopObject);
-}
-
-/*
- * Add a client application's name to the client data file list.
- */
-void ADConfigDataRW::addConfigClient(KSimpleConfig& clientConfig, const QString& appName, const QString& key)
-{
-  clientConfig.setGroup("General");
-  QStringList clients = QStringList::split(',', clientConfig.readEntry(key), true);
-  if (clients.find(appName) == clients.end())
-  {
-    // It's a new client, so add it to the Clients config file entry
-    for (QStringList::Iterator i = clients.begin();  i != clients.end();  )
-    {
-      if ((*i).isEmpty())
-        i = clients.remove(i);    // remove null entries
-      else
-        ++i;
-    }
-    clients.append(appName);
-    clientConfig.writeEntry(key, clients.join(","));
-  }
-}
-
-// Add a calendar file URL to the client data file for a specified application.
-void ADConfigDataRW::writeConfigCalendar(const QString& appName, const ADCalendar* cal)
-{
-  KSimpleConfig clientConfig(clientDataFile());
-  QString groupKey = CLIENT_KEY + appName;
-  QMap<QString, QString> entries = clientConfig.entryMap(groupKey);
-  // Find an unused CalendarN entry for this calendar
-  for (int i = 1;  ;  ++i)
-  {
-    QString key = CALENDAR_KEY + QString::number(i);
-    if (entries.find(key) == entries.end())
-    {
-      // This calendar index is unused, so use it for the new calendar
-      clientConfig.setGroup(groupKey);
-      clientConfig.writeEntry(key, QString("%1,").arg(cal->actionType()) + cal->urlString());
-      return;
-    }
-  }
-}
-
-/*
- * Delete all entries in the client data file for the specified calendar
- */
-void ADConfigDataRW::deleteConfigCalendar(const ADCalendar* cal)
-{
-  KSimpleConfig clientConfig(clientDataFile());
-  QString groupKey = CLIENT_KEY + cal->appName();
-  int len = CALENDAR_KEY.length();
-  QMap<QString, QString> entries = clientConfig.entryMap(groupKey);
-  for (int i = 1;  ;  ++i)
-  {
-    for (QMap<QString, QString>::ConstIterator it = entries.begin();  it != entries.end();  ++it)
-    {
-      if (it.key().startsWith(CALENDAR_KEY))
-      {
-        bool ok;
-        it.key().mid(len).toInt(&ok);
-        if (ok)
-        {
-          // The config file key is CalendarN
-          int comma = it.data().find(',');
-          if (comma >= 0  &&  it.data().mid(comma + 1) == cal->urlString())
-          {
-            clientConfig.setGroup(groupKey);
-            clientConfig.deleteEntry(it.key(), true);
-          }
-        }
-      }
-    }
-  }
+#endif
 }

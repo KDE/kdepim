@@ -24,7 +24,7 @@
 #include <ksystemtray.h>
 #include <kpopupmenu.h>
 
-#include "alarmdaemon.h"
+#include "daemongui.h"
 
 class AlarmDockWindow : public KSystemTray
 {
@@ -36,7 +36,7 @@ class AlarmDockWindow : public KSystemTray
     bool alarmsOn()        { return contextMenu()->isItemChecked(alarmsEnabledId); }
     bool autostartGuiOn()  { return contextMenu()->isItemChecked(autostartGuiId); }
 
-    void setGuiAutostart(bool on)      { contextMenu()->setItemChecked(autostartGuiId, on); }
+    void setGuiAutostart(bool on);
     void setDaemonAutostart(bool on)   { contextMenu()->setItemChecked(autostartDaemonId, on); }
     void updateMenuClients();
     void updateMenuCalendars(bool recreate);

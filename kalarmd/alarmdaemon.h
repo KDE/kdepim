@@ -23,68 +23,18 @@
 #ifndef _ALARMDAEMON_H
 #define _ALARMDAEMON_H
 
-#include <qfont.h>
-#include <qstrlist.h>
+#include <ksimpleconfig.h>
 
 #include <libkcal/calendarlocal.h>
 
 #include "alarmdaemoniface.h"
+#include "calclient.h"
+#include "adcalendar.h"
+#include "clientiteration.h"
+#include "calendariteration.h"
+#include "adconfigdatarw.h"
 
 using namespace KCal;
-
-
-// Provides read-write access to the Alarm Daemon config files
-class ADConfigDataRW : public ADConfigDataBase
-{
-  public:
-    ADConfigDataRW()  : ADConfigDataBase(true) { }
-    void           readDaemonData(bool sessionStarting);
-    void           writeConfigClient(const QString& appName, const ClientInfo&);
-    void           writeConfigClientGui(const QString& appName, const QString& dcopObject);
-    void           addConfigClient(KSimpleConfig&, const QString& appName, const QString& key);
-    void           writeConfigCalendar(const QString& appName, const ADCalendar*);
-
-    typedef QMap<QString, QString> GuiMap;  // maps GUI client names against DCOP object names
-
-    GuiMap         mGuis;                // client GUI application names and data
-
-  private:
-    virtual void   deleteConfigCalendar(const ADCalendar*);
-};
-
-// Alarm Daemon calendar access
-class ADCalendar : public ADCalendarBase
-{
-  public:
-    ADCalendar(const QString& url, const QString& appname, Type);
-    ~ADCalendar()  { }
-    virtual ADCalendarBase* create(const QString& url, const QString& appname, Type);
-    bool           enabled() const     { return enabled_ && !unregistered; }
-    bool           available() const   { return loaded_ && !unregistered; }
-    static bool    eventHandled(const Event*);
-    void           setEventHandled(const Event*);
-    static void    clearEventsHandled(const QString& calendarURL);
-    void           setEventPending(const QString& ID);
-    bool           getEventPending(QString& ID);
-    bool           loadFile()          { return loadFile_(QString()); }
-
-    bool              enabled_;       // events are currently manually enabled
-    bool              unregistered;   // client has registered since calendar was
-                                      // constructed, but has not since added the
-                                      // calendar. Monitoring is disabled.
-  private:
-    QPtrList<QString> eventsPending_; // IDs of pending KALARM type events
-    struct EventItem
-    {
-      EventItem() : eventSequence(0) { }
-      EventItem(const QString& url, int seqno)  : calendarURL(url), eventSequence(seqno) { }
-      QString   calendarURL;
-      int       eventSequence;
-    };
-    typedef QMap<QString, EventItem>  EventsMap;   // event ID, calendar URL/event sequence num
-    static EventsMap  eventsHandled_; // IDs of displayed KALARM type events
-};
-
 
 class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmDaemonIface
 {
@@ -96,11 +46,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     ClientIteration   getClientIteration()    { return ClientIteration(mClients); }
     CalendarIteration getCalendarIteration()  { return CalendarIteration(mCalendars); }
     int               calendarCount() const   { return mCalendars.count(); }
-    int               calendarCount() const   { return mCalendars.count(); }
 
-  public slots:
-    void    suspend(int minutes);
-    void    toggleAutostart();
   private slots:
     void    checkAlarmsSlot();
     void    checkIfSessionStarted();
@@ -123,7 +69,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void    resetMsgCal(const QString& appname, const QString& urlString)
                        { resetMsgCal_(appname, expandURL(urlString)); }
     void    registerApp(const QString& appName, const QString& appTitle,
-                        const QString& dcopObject, bool commandLineNotify,
+                        const QString& dcopObject, int notificationType,
                         bool displayCalendarName);
     void    registerGui(const QString& appName, const QString& dcopObject);
     void    quit();
@@ -149,18 +95,19 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void        resetMsgCal_(const QString& appname, const QString& urlString);
     void        removeCal_(const QString& urlString);
     void        checkAlarms();
-    bool        checkAlarms(ADCalendar*);
+    void        checkAlarms(ADCalendar*);
     void        checkAlarms(const QString& appName);
     bool        notifyEvent(const ADCalendar*, const QString& eventID);
     void        notifyGuiCalStatus(const ADCalendar*);
-    void        notifyGui(GuiChangeType, const QString& calendarURL = QString::null);
-    void        writeConfigClient(const QString& appName, const ClientInfo&);
+    void        notifyGui(GuiChangeType, const QString& calendarURL = QString::null,
+                          const QString &appname=QString::null);
     void        writeConfigClientGui(const QString& appName, const QString& dcopObject);
     void        addConfigClient(KSimpleConfig&, const QString& appName, const QString& key);
-    void        writeConfigCalendar(const QString& appName, const ADCalendar*);
-    void        deleteConfigCalendar(const ADCalendar*);
     bool        isSessionStarted();
     void        setTimerStatus();
+
+    void checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes);
+    void notifyPendingEvents(const QString& appname);
 
     typedef QMap<QString, QString> GuiMap;  // maps GUI client names against DCOP object names
 
