@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
 <class>CertificateInfoWidget</class>
 <widget class="QWidget">
     <property name="name">
@@ -13,9 +13,9 @@
         </rect>
     </property>
     <property name="caption">
-        <string></string>
+        <string>CertificateInfoWidget</string>
     </property>
-    <vbox>
+    <grid>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
@@ -25,20 +25,7 @@
         <property name="spacing">
             <number>6</number>
         </property>
-        <widget class="QLabel">
-            <property name="name">
-                <cstring>TextLabel1</cstring>
-            </property>
-            <property name="font">
-                <font>
-                    <bold>1</bold>
-                </font>
-            </property>
-            <property name="text">
-                <string>Certificate Information</string>
-            </property>
-        </widget>
-        <widget class="QFrame">
+        <widget class="QFrame" row="1" column="0" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>Frame3</cstring>
             </property>
@@ -49,9 +36,12 @@
                 <enum>Sunken</enum>
             </property>
         </widget>
-        <widget class="QTabWidget">
+        <widget class="QTabWidget" row="2" column="0" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>tabWidget</cstring>
+            </property>
+            <property name="margin">
+                <number>6</number>
             </property>
             <widget class="QWidget">
                 <property name="name">
@@ -64,12 +54,6 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
                     <widget class="QListView" row="0" column="0">
                         <column>
                             <property name="text">
@@ -78,7 +62,7 @@
                             <property name="clickable">
                                 <bool>true</bool>
                             </property>
-                            <property name="resizeable">
+                            <property name="resizable">
                                 <bool>true</bool>
                             </property>
                         </column>
@@ -89,7 +73,7 @@
                             <property name="clickable">
                                 <bool>true</bool>
                             </property>
-                            <property name="resizeable">
+                            <property name="resizable">
                                 <bool>true</bool>
                             </property>
                         </column>
@@ -123,77 +107,71 @@
                 <attribute name="title">
                     <string>&amp;Path</string>
                 </attribute>
-                <widget class="QListView">
-                    <column>
-                        <property name="text">
-                            <string>Path</string>
-                        </property>
-                        <property name="clickable">
-                            <bool>true</bool>
-                        </property>
-                        <property name="resizeable">
-                            <bool>true</bool>
-                        </property>
-                    </column>
+                <grid>
                     <property name="name">
-                        <cstring>pathView</cstring>
+                        <cstring>unnamed</cstring>
                     </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>11</x>
-                            <y>11</y>
-                            <width>429</width>
-                            <height>257</height>
-                        </rect>
-                    </property>
-                    <property name="rootIsDecorated">
-                        <bool>true</bool>
-                    </property>
-                </widget>
+                    <widget class="QListView" row="0" column="0">
+                        <column>
+                            <property name="text">
+                                <string>Path</string>
+                            </property>
+                            <property name="clickable">
+                                <bool>true</bool>
+                            </property>
+                            <property name="resizable">
+                                <bool>true</bool>
+                            </property>
+                        </column>
+                        <property name="name">
+                            <cstring>pathView</cstring>
+                        </property>
+                        <property name="rootIsDecorated">
+                            <bool>true</bool>
+                        </property>
+                    </widget>
+                </grid>
             </widget>
         </widget>
-        <widget class="QLayoutWidget">
+        <widget class="QPushButton" row="3" column="1">
             <property name="name">
-                <cstring>Layout2</cstring>
+                <cstring>importButton</cstring>
             </property>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <property name="margin">
-                    <number>0</number>
-                </property>
-                <property name="spacing">
-                    <number>6</number>
-                </property>
-                <spacer>
-                    <property name="name">
-                        <cstring>Spacer2</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>0</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>importButton</cstring>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Import to Local</string>
-                    </property>
-                </widget>
-            </hbox>
+            <property name="text">
+                <string>&amp;Import to Local</string>
+            </property>
         </widget>
-    </vbox>
+        <spacer row="3" column="0">
+            <property name="name">
+                <cstring>Spacer2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>321</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>TextLabel1</cstring>
+            </property>
+            <property name="font">
+                <font>
+                    <bold>1</bold>
+                </font>
+            </property>
+            <property name="text">
+                <string>Certificate Information</string>
+            </property>
+        </widget>
+    </grid>
 </widget>
 <layoutdefaults spacing="6" margin="0"/>
 </UI>
