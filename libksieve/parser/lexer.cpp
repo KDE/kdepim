@@ -336,7 +336,7 @@ namespace KSieve {
     // check that the caller plays by the rules:
     assert( *(mState.cursor-1) == '#' );
 
-    const char * commentStart = mState.cursor;
+    const char * const commentStart = mState.cursor;
 
     // find next CRLF:
     while ( !atEnd() ) {
@@ -344,7 +344,7 @@ namespace KSieve {
       ++mState.cursor;
     }
 
-    const char * commentEnd = mState.cursor - 1;
+    const char * const commentEnd = mState.cursor - 1;
 
     if ( commentEnd == commentStart ) return true; // # was last char in script...
 
@@ -371,9 +371,9 @@ namespace KSieve {
     assert( *(mState.cursor-2) == '/' );
     assert( *(mState.cursor-1) == '*' );
 
-    const char * commentStart = mState.cursor;
-    int commentCol = column() - 2;
-    int commentLine = line();
+    const char * const commentStart = mState.cursor;
+    const int commentCol = column() - 2;
+    const int commentLine = line();
 
     // find next asterisk:
     do {
@@ -391,7 +391,7 @@ namespace KSieve {
 
     assert( *mState.cursor == '/' );
 
-    int commentLength = mState.cursor - commentStart - 1;
+    const int commentLength = mState.cursor - commentStart - 1;
     if ( commentLength > 0 ) {
       if ( !isValidUtf8( commentStart, commentLength ) ) {
 	makeError( Error::InvalidUTF8 );
@@ -461,7 +461,7 @@ namespace KSieve {
 
     assert( isIText( *mState.cursor ) );
 
-    const char * identifierStart = mState.cursor;
+    const char * const identifierStart = mState.cursor;
 
     // first char:
     if ( isdigit( *mState.cursor ) ) { // no digits for the first
@@ -472,7 +472,7 @@ namespace KSieve {
     // rest of identifier chars ( now digits are allowed ):
     for ( ++mState.cursor ; !atEnd() && isIText( *mState.cursor ) ; ++mState.cursor );
 
-    int identifierLength = mState.cursor - identifierStart;
+    const int identifierLength = mState.cursor - identifierStart;
 
     // Can use the fast fromLatin1 here, since identifiers are always
     // in the us-ascii subset:
@@ -576,7 +576,7 @@ namespace KSieve {
     // Now, collect the single lines until one with only a single dot is found:
     QStringList lines;
     do {
-      const char * oldBeginOfLine = beginOfLine();
+      const char * const oldBeginOfLine = beginOfLine();
       if ( !skipToCRLF() )
 	return false;
       const int lineLength = mState.cursor - oldBeginOfLine;
@@ -612,9 +612,9 @@ namespace KSieve {
     const int qsBeginCol = column() - 1;
     const int qsBeginLine = line();
 
-    QTextCodec * codec = QTextCodec::codecForMib( 106 ); // UTF-8
+    const QTextCodec * const codec = QTextCodec::codecForMib( 106 ); // UTF-8
     assert( codec );
-    std::auto_ptr<QTextDecoder> dec( codec->makeDecoder() );
+    const std::auto_ptr<QTextDecoder> dec( codec->makeDecoder() );
     assert( dec.get() );
 
     while ( !atEnd() )
@@ -637,7 +637,7 @@ namespace KSieve {
 	if ( !is8Bit( *mState.cursor ) )
 	  result += *mState.cursor++;
 	else { // probably UTF-8
-	  const char * eightBitBegin = mState.cursor;
+	  const char * const eightBitBegin = mState.cursor;
 	  skipTo8BitEnd();
 	  const int eightBitLen = mState.cursor - eightBitBegin;
 	  assert( eightBitLen > 0 );

@@ -101,8 +101,7 @@ static inline unsigned long factorForQuantifier( char ch ) {
 }
 
 static inline bool willOverflowULong( unsigned long result, unsigned long add ) {
-  static const unsigned long maxULongByTen =
-    (unsigned long)( double(ULONG_MAX) / 10.0 );
+  static const unsigned long maxULongByTen = ULONG_MAX / 10.0 ;
   return result > maxULongByTen || ULONG_MAX - 10 * result < add ;
 }
 
@@ -154,7 +153,7 @@ namespace KSieve {
 	consumeToken();
 	break;
       case Lexer::LineFeeds:
-	for ( unsigned int i = tokenValue().toUInt() ; i > 0 ; --i )
+	for ( unsigned int i = 0, end = tokenValue().toUInt() ; i < end ; ++i )
 	  if ( scriptBuilder() ) // better check every iteration, b/c
 				 // we call out to ScriptBuilder,
 				 // where nasty things might happen!
@@ -619,10 +618,9 @@ namespace KSieve {
     // number:
     unsigned long result = 0;
     unsigned int i = 0;
-    QCString s = tokenValue().latin1();
-    unsigned int sLength = s.length();
-		for ( ; i < sLength && isdigit( s[i] ) ; ++i ) {
-      unsigned long digitValue = s[i] - '0' ;
+    const QCString s = tokenValue().latin1();
+    for ( const unsigned int len = s.length() ; i < len && isdigit( s[i] ) ; ++i ) {
+      const unsigned long digitValue = s[i] - '0' ;
       if ( willOverflowULong( result, digitValue ) ) {
 	makeError( Error::NumberOutOfRange );
 	return false;
@@ -634,9 +632,9 @@ namespace KSieve {
     // optional quantifier:
     char quantifier = '\0';
     if ( i < s.length() ) {
-      assert( i == sLength - 1 );
+      assert( i + 1 == s.length() );
       quantifier = s[i];
-      unsigned long factor = factorForQuantifier( quantifier );
+      const unsigned long factor = factorForQuantifier( quantifier );
       if ( result > double(ULONG_MAX) / double(factor) ) {
 	makeError( Error::NumberOutOfRange );
 	return false;
