@@ -307,6 +307,8 @@ void Karm::newTask(QString caption, QListViewItem *parent)
 void Karm::newSubTask()
 {
   QListViewItem *item = currentItem();
+  if(!item)
+    return;
   newTask(i18n("New Sub Task"), item);
   item->setOpen(true);
   setRootIsDecorated(true);
