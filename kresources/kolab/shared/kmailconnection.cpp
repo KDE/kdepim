@@ -110,21 +110,22 @@ bool KMailConnection::connectToKMail()
 }
 
 // TODO: Reimplement these
-bool KMailConnection::addIncidence( const QString& type, const QString& folder,
-                                    const QString& xml )
+bool KMailConnection::fromKMailAddIncidence( const QString& type,
+                                             const QString& folder,
+                                             const QString& xml )
 {
 //   kdDebug(5650) << "KMailConnection::addIncidence( " << type << ", "
 //                 << folder << " ). iCal:\n" << ical << endl;
-  return mResource->addIncidence( type, folder, xml );
+  return mResource->fromKMailAddIncidence( type, folder, xml );
 }
 
-void KMailConnection::deleteIncidence( const QString& type,
-                                       const QString& folder,
-                                       const QString& xml )
+void KMailConnection::fromKMailDelIncidence( const QString& type,
+                                             const QString& folder,
+                                             const QString& xml )
 {
 //   kdDebug(5650) << "KMailConnection::deleteIncidence( " << type << ", "
 //                 << folder << ", " << uid << " )\n";
-  mResource->deleteIncidence( type, folder, xml );
+  mResource->fromKMailDelIncidence( type, folder, xml );
 }
 
 void KMailConnection::slotRefresh( const QString& type, const QString& folder )
@@ -134,20 +135,20 @@ void KMailConnection::slotRefresh( const QString& type, const QString& folder )
   mResource->slotRefresh( type, folder );
 }
 
-void KMailConnection::subresourceAdded( const QString& type,
-                                        const QString& resource )
+void KMailConnection::fromKMailAddSubresource( const QString& type,
+                                               const QString& resource )
 {
 //   kdDebug(5650) << "KMailConnection::subresourceAdded( " << type << ", "
 //                 << resource << " )\n";
-  mResource->subresourceAdded( type, resource );
+  mResource->fromKMailAddSubresource( type, resource );
 }
 
-void KMailConnection::subresourceDeleted( const QString& type,
-                                          const QString& resource )
+void KMailConnection::fromKMailDelSubresource( const QString& type,
+                                               const QString& resource )
 {
 //   kdDebug(5650) << "KMailConnection::subresourceDeleted( " << type << ", "
 //                 << resource << " )\n";
-  mResource->subresourceDeleted( type, resource );
+  mResource->fromKMailDelSubresource( type, resource );
 }
 
 bool KMailConnection::connectKMailSignal( const QCString& signal,
@@ -164,7 +165,7 @@ bool KMailConnection::kmailSubresources( QMap<QString, bool>& lst,
     return false;
 
   // TODO: Add this when the iface is updated
-//  lst = mKMailIcalIfaceStub->subresourcesKolab( annotation );
+  lst = mKMailIcalIfaceStub->subresourcesKolab( annotation );
   return mKMailIcalIfaceStub->ok();
 }
 
@@ -176,7 +177,7 @@ bool KMailConnection::kmailIncidences( QMap<QString, QString>& lst,
     return false;
 
   // TODO: Add this when the iface is updated
-//  lst = mKMailIcalIfaceStub->incidencesKolab( mimetype, resource );
+  lst = mKMailIcalIfaceStub->incidencesKolab( mimetype, resource );
   return mKMailIcalIfaceStub->ok();
 }
 
@@ -189,7 +190,7 @@ bool KMailConnection::kmailGetAttachment( KURL& url,
     return false;
 
   // TODO: Add this when the iface is updated
-//  url = mKMailIcalIfaceStub->getAttachment( resource, sernum, filename );
+  url = mKMailIcalIfaceStub->getAttachment( resource, sernum, filename );
   return mKMailIcalIfaceStub->ok();
 }
 
@@ -198,7 +199,7 @@ bool KMailConnection::kmailDeleteIncidence( const QString& resource,
 {
   return connectToKMail()
   // TODO: Add this when the iface is updated
-//    && mKMailIcalIfaceStub->deleteIncidence( resource, sernum )
+    && mKMailIcalIfaceStub->deleteIncidenceKolab( resource, sernum )
     && mKMailIcalIfaceStub->ok();
 }
 
@@ -209,8 +210,8 @@ bool KMailConnection::kmailUpdate( const QString& resource,
 {
   return connectToKMail()
   // TODO: Add this when the iface is updated
-//    && mKMailIcalIfaceStub->update( resource, sernum, attachments,
-//                                    deletedAttachments )
+    && mKMailIcalIfaceStub->update( resource, sernum, attachments,
+                                    deletedAttachments )
     && mKMailIcalIfaceStub->ok();
 }
 
