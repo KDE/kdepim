@@ -60,7 +60,7 @@ ResourceIMAP::ResourceIMAP( const KConfig* config )
   init();
 }
 
-void ResourceIMAP::writeConfig( KConfig* config )
+void ResourceIMAP::writeConfig( KConfig* config ) const
 {
   ResourceCalendar::writeConfig( config );
   config->writeEntry( "Servername", mServer );

@@ -51,7 +51,7 @@ namespace KCal {
     ResourceIMAP( const KConfig * );
     virtual ~ResourceIMAP();
 
-    virtual void writeConfig( KConfig* config );
+    virtual void writeConfig( KConfig* config ) const;
 
     bool sync();
 

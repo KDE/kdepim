@@ -89,8 +89,10 @@ ResourceLocal::ResourceLocal( const QString& fileName )
 }
 
 
-void ResourceLocal::writeConfig( KConfig* config )
+void ResourceLocal::writeConfig( KConfig* config ) const
 {
+  kdDebug() << "ResourceLocal::writeConfig()" << endl;
+
   ResourceCalendar::writeConfig( config );
   config->writeEntry( "CalendarURL", mURL.prettyURL() );
   QString typeID = typeid( *mFormat ).name();
@@ -245,7 +247,7 @@ void ResourceLocal::update(IncidenceBase *)
 {
 }
 
-void ResourceLocal::dump()
+void ResourceLocal::dump() const
 {
   ResourceCalendar::dump();
   kdDebug(5800) << "  Url: " << mURL.url() << endl;

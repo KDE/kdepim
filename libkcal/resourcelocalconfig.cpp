@@ -61,7 +61,7 @@ ResourceLocalConfig::ResourceLocalConfig( QWidget* parent,  const char* name )
 
 void ResourceLocalConfig::loadSettings( KRES::Resource *resource )
 {
-  ResourceLocal* res = dynamic_cast<ResourceLocal*>( resource );
+  ResourceLocal* res = static_cast<ResourceLocal*>( resource );
   if ( res ) {
     mURL->setURL( res->mURL.prettyURL() );
     kdDebug() << "Format typeid().name(): " << typeid( res->mFormat ).name() << endl;
@@ -77,7 +77,7 @@ void ResourceLocalConfig::loadSettings( KRES::Resource *resource )
 
 void ResourceLocalConfig::saveSettings( KRES::Resource *resource )
 {
-  ResourceLocal* res = dynamic_cast<ResourceLocal*>( resource );
+  ResourceLocal* res = static_cast<ResourceLocal*>( resource );
   if (res) {
     res->mURL = mURL->url();
 

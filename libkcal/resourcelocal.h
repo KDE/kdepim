@@ -47,7 +47,7 @@ class ResourceLocal : public ResourceCalendar
     ResourceLocal( const QString& fileName );
     virtual ~ResourceLocal();
 
-    virtual void writeConfig( KConfig* config );
+    virtual void writeConfig( KConfig* config ) const;
 
     bool sync();
 
@@ -133,7 +133,7 @@ class ResourceLocal : public ResourceCalendar
     // Public because needed in MultiCalendar::load()
     bool doOpen();
 
-    void dump();
+    void dump() const;
 
   protected:
 

@@ -21,6 +21,7 @@
 */
 
 #include <kconfig.h>
+#include <kdebug.h>
 
 #include "calendar.h"
 
@@ -39,8 +40,10 @@ ResourceCalendar::~ResourceCalendar()
 {
 }
 
-void ResourceCalendar::writeConfig( KConfig* config )
+void ResourceCalendar::writeConfig( KConfig* config ) const
 {
+  kdDebug() << "ResourceCalendar::writeConfig()" << endl;
+
   KRES::Resource::writeConfig( config );
 }
 
