@@ -216,6 +216,7 @@ KNArticleWidget::~KNArticleWidget()
   delete u_rlPopup;
   delete f_actory;
   delete t_imer;
+  delete f_inddialog;
 }
 
 void KNArticleWidget::setText( const QString& text, const QString& context )
