@@ -72,15 +72,15 @@ static const char *conduitconfigdialog_id =
 
 extern "C"
 {
-  KCModule *create_kpilotconfig( QWidget *parent, const char * )
-  {
-    return new ConduitConfigWidget( parent, "kcmkpilotconfig" );
-  }
+	KCModule *create_kpilotconfig( QWidget *parent, const char * )
+	{
+		return new ConduitConfigWidget( parent, "kcmkpilotconfig" );
+	}
 
-  ConfigWizard *create_wizard(QWidget *parent, int m)
-  {
-    return new ConfigWizard(parent,"Wizard", m);
-  }
+	ConfigWizard *create_wizard(QWidget *parent, int m)
+	{
+		return new ConfigWizard(parent,"Wizard", m);
+	}
 }
 
 
@@ -139,6 +139,24 @@ ConduitTip::~ConduitTip()
 
 	tip(fListView->itemRect(l),s);
 }
+
+
+// implement our own check list items so we can detect if a given item was checked/unchecked. We need
+// this to prevent the modified signal if one only wants to display a conduit's config widget. Currently,
+// KListView doesn't provide any signal that indicates that the checked state of a checklist item was changed.
+class KPilotCheckListItem : public QCheckListItem 
+{
+public:
+	KPilotCheckListItem ( QListViewItem * parent, const QString & text, Type tt = RadioButtonController ) : QCheckListItem(parent, text, tt),mOriginalState(false) {}
+	~KPilotCheckListItem() {}
+
+	void setOriginalState(bool state) { mOriginalState=state; setOn(state);}
+	bool isOriginalState() { return isOn() == mOriginalState; }
+
+protected:
+	bool mOriginalState;
+};
+
 
 // Page numbers in the widget stack
 #define OLD_CONDUIT      (1)
@@ -342,7 +360,7 @@ void ConduitConfigWidget::fillLists()
 
 	// And two generic pointers for the rest.
 	QListViewItem *q = 0L;
-	QCheckListItem *p = 0L;
+	KPilotCheckListItem *p = 0L;
 
 	q = new QListViewItem(fConduitList, i18n("About"));
 	q->setText(CONDUIT_COMMENT, i18n("About KPilot. Credits."));
@@ -403,12 +421,12 @@ void ConduitConfigWidget::fillLists()
 	//
 	//
 
-#define IC(a,b,c) p = new QCheckListItem(conduits,i18n(a),QCheckListItem::CheckBox); \
+#define IC(a,b,c) p = new KPilotCheckListItem(conduits,i18n(a),QCheckListItem::CheckBox); \
 	p->setText(CONDUIT_COMMENT,i18n(c)); \
 	p->setText(CONDUIT_LIBRARY,"internal_" b); \
 	p->setText(CONDUIT_DESKTOP,"internal_" b); \
 	if (potentiallyInstalled.findIndex(p->text(CONDUIT_DESKTOP))>=0) \
-		p->setOn(true);
+		p->setOriginalState(true);
 
 	IC("Kroupware","kroupware",
 		"Sync the handheld with a Kroupware client (for example, KMail).");
@@ -440,7 +458,7 @@ void ConduitConfigWidget::fillLists()
 				<< endl;
 		}
 
-		p = new QCheckListItem(conduits,
+		p = new KPilotCheckListItem(conduits,
 			o->name(),
 			QCheckListItem::CheckBox);
 		p->setMultiLinesEnabled(true);
@@ -450,11 +468,11 @@ void ConduitConfigWidget::fillLists()
 
 		if (potentiallyInstalled.findIndex(o->desktopEntryName()) < 0)
 		{
-			p->setOn(false);
+			p->setOriginalState(false);
 		}
 		else
 		{
-			p->setOn(true);
+			p->setOriginalState(true);
 		}
 
 		++availList;
@@ -759,9 +777,11 @@ void ConduitConfigWidget::save()
 	QStringList activeConduits;
 	QListViewItemIterator it( fConduitList );
 	while ( it.current() ) {
-		const QCheckListItem*p = dynamic_cast<QCheckListItem*>(it.current());
-		if ( p && p->isOn() )
+		KPilotCheckListItem*p = dynamic_cast<KPilotCheckListItem*>(it.current());
+		if ( p )
 		{
+			p->setOriginalState( p->isOn() );
+			if ( p->isOn() )
 			activeConduits.append(p->text(CONDUIT_DESKTOP));
 		}
 		++it;
@@ -805,11 +825,10 @@ void ConduitConfigWidget::load()
 
 void ConduitConfigWidget::conduitsChanged(QListViewItem*item)
 {
-	QCheckListItem*i=dynamic_cast<QCheckListItem*>(item);
+	KPilotCheckListItem*i=dynamic_cast<KPilotCheckListItem*>(item);
 	if (i)
 	{
-		// TODO_Osnabrueck: find out if the item was actually checked/unchecked
-		emit changed(true);
+		if (!i->isOriginalState()) emit changed(true);
 	}
 }
 
