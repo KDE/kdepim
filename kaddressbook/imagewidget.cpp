@@ -41,7 +41,7 @@
 ImageWidget::ImageWidget( bool readOnly, QWidget *parent, const char *name )
   : QWidget( parent, name ), mReadOnly( readOnly )
 {
-  QGridLayout *topLayout = new QGridLayout( this, 2, 1, KDialog::marginHint(),
+  QGridLayout *topLayout = new QGridLayout( this, 1, 2, KDialog::marginHint(),
                                             KDialog::spacingHint() );
 
   QGroupBox *photoBox = new QGroupBox( 0, Qt::Vertical, i18n( "Photo" ), this );
@@ -53,7 +53,7 @@ ImageWidget::ImageWidget( bool readOnly, QWidget *parent, const char *name )
   mPhotoLabel->setFixedSize( 50, 70 );
   mPhotoLabel->setScaledContents( true );
   mPhotoLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
-  boxLayout->addMultiCellWidget( mPhotoLabel, 0, 2, 0, 0 );
+  boxLayout->addMultiCellWidget( mPhotoLabel, 0, 2, 0, 0, AlignTop );
 
   mPhotoUrl = new KURLRequester( photoBox );
   mPhotoUrl->setFilter( KImageIO::pattern() );
@@ -74,7 +74,7 @@ ImageWidget::ImageWidget( bool readOnly, QWidget *parent, const char *name )
   mLogoLabel->setFixedSize( 50, 70 );
   mLogoLabel->setScaledContents( true );
   mLogoLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
-  boxLayout->addMultiCellWidget( mLogoLabel, 0, 2, 0, 0 );
+  boxLayout->addMultiCellWidget( mLogoLabel, 0, 2, 0, 0, AlignTop );
 
   mLogoUrl = new KURLRequester( logoBox );
   mLogoUrl->setFilter( KImageIO::pattern() );
@@ -85,7 +85,7 @@ ImageWidget::ImageWidget( bool readOnly, QWidget *parent, const char *name )
   mUseLogoUrl->setEnabled( false );
   boxLayout->addWidget( mUseLogoUrl, 1, 1 );
 
-  topLayout->addWidget( logoBox, 1, 0 );
+  topLayout->addWidget( logoBox, 0, 1 );
 
   connect( mPhotoUrl, SIGNAL( textChanged( const QString& ) ),
            SIGNAL( changed() ) );

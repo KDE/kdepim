@@ -437,10 +437,9 @@ void AddresseeEditorWidget::setupTab3()
   // This is the Misc tab
   QWidget *tab3 = new QWidget( mTabWidget );
 
-  QGridLayout *layout = new QGridLayout( tab3, 2, 3 );
+  QGridLayout *layout = new QGridLayout( tab3, 3, 2 );
   layout->setMargin( KDialogBase::marginHint() );
   layout->setSpacing( KDialogBase::spacingHint() );
-  layout->setColStretch( 2, 1 );
   
   //////////////////////////////////////
   // Geo
@@ -456,12 +455,17 @@ void AddresseeEditorWidget::setupTab3()
   connect( mSoundWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
   layout->addWidget( mSoundWidget, 0, 1, Qt::AlignTop );
 
+  QFrame *separator = new QFrame( tab3 );
+  separator->setFrameShape( QFrame::HLine );
+  separator->setFrameShadow( QFrame::Sunken );
+  layout->addMultiCellWidget( separator, 1, 1, 0, 1 );
+
   //////////////////////////////////////
   // Images
   mImageWidget = new ImageWidget( mReadOnly, tab3 );
   mImageWidget->setMinimumSize( mImageWidget->sizeHint() );
   connect( mImageWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
-  layout->addWidget( mImageWidget, 1, 0, Qt::AlignTop );
+  layout->addMultiCellWidget( mImageWidget, 2, 2, 0, 1 );
 
 /* FIXME: will be enabled again when kgpg support is in kdelibs
   //////////////////////////////////////

@@ -25,12 +25,14 @@
 #include <kaudioplayer.h>
 #include <kdebug.h>
 #include <kdialog.h>
+#include <kiconloader.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
 #include <ktempfile.h>
 #include <kurlrequester.h>
 
 #include <qcheckbox.h>
+#include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
 
@@ -39,20 +41,26 @@
 SoundWidget::SoundWidget( bool readOnly, QWidget *parent, const char *name )
   : QWidget( parent, name ), mReadOnly( readOnly )
 {
-  QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(),
+  QGridLayout *topLayout = new QGridLayout( this, 2, 3, KDialog::marginHint(),
                                             KDialog::spacingHint() );
+
+  QLabel *label = new QLabel( this );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "multimedia",
+                    KIcon::Desktop, KIcon::SizeMedium ) );
+  label->setAlignment( Qt::AlignTop );
+  topLayout->addMultiCellWidget( label, 0, 1, 0, 0 );
 
   mPlayButton = new QPushButton( i18n( "Play..." ), this );
   mPlayButton->setEnabled( false );
-  topLayout->addWidget( mPlayButton, 0, 0 );
+  topLayout->addWidget( mPlayButton, 0, 1 );
 
   mSoundUrl = new KURLRequester( this );
   mSoundUrl->setEnabled( !mReadOnly );
-  topLayout->addWidget( mSoundUrl, 0, 1 );
+  topLayout->addWidget( mSoundUrl, 0, 2 );
   
   mUseSoundUrl = new QCheckBox( i18n( "Store as URL" ), this );
   mUseSoundUrl->setEnabled( false );
-  topLayout->addWidget( mUseSoundUrl, 1, 1 );
+  topLayout->addWidget( mUseSoundUrl, 1, 2 );
 
   connect( mSoundUrl, SIGNAL( textChanged( const QString& ) ),
            SIGNAL( changed() ) );

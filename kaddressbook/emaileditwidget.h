@@ -27,8 +27,6 @@
 #include <kabc/addressee.h>
 #include <kdialogbase.h>
 
-#include "addresseeconfig.h"
-
 class QButtonGroup;
 class QCheckBox;
 class QListView;
