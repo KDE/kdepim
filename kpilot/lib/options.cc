@@ -127,17 +127,20 @@ KPilotDepthCount::KPilotDepthCount(int level, const char *s) :
 	fLevel(level),
 	fName(s)
 {
-#ifdef DEBUG
-	if (debug_level>=fLevel) { DEBUGKPILOT << indent() << ">" << name() << endl; }
+	if (debug_level>=fLevel) 
+	{ 
+#ifdef DEBUG_CERR
+		DEBUGKPILOT 
+#else
+		debug(5510)
 #endif
+		<< indent() << ">" << name() << endl; 
+	}
 	depth++;
 }
 
 KPilotDepthCount::~KPilotDepthCount()
 {
-#ifdef DEBUG
-	if (debug_level>fLevel) { DEBUGKPILOT << indent() << "<" << name() << endl; }
-#endif
 	depth--;
 }
 

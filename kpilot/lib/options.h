@@ -137,11 +137,7 @@ extern KDE_EXPORT int debug_level;
 #define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF(l)
 
 #ifdef DEBUG_CERR
-//#include <ostream>
 #include <iostream>
-#define DEBUGSTREAM std::ostream
-#else
-#define DEBUGSTREAM kdbgstream
 #endif
 
 class KPilotDepthCount 
@@ -154,7 +150,7 @@ public:
 	// if DEBUG_CERR is defined, we can't return std::cerr (by value), 
 	// since the copy constructor is private!
 #ifndef DEBUG_CERR
-	inline DEBUGSTREAM debug(int area=0)
+	inline kdbgstream debug(int area=0)
 	{ return kdDebug(debug_level >= fLevel, area); }
 #endif
 
@@ -170,7 +166,6 @@ protected:
 //
 #ifdef DEBUG_CERR
 #include <iostream>
-#define DEBUGSTREAM	std::ostream
 #define DEBUGKPILOT	std::cerr
 #define DEBUGDAEMON	std::cerr
 #define DEBUGCONDUIT	std::cerr
@@ -193,14 +188,13 @@ inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
 // kddebug based debugging
 //
 //
-#define DEBUGSTREAM	kdbgstream
 #define DEBUGKPILOT	fname.debug(5510)
 #define DEBUGDAEMON	fname.debug(5511)
 #define DEBUGCONDUIT	fname.debug(5512)
 #define DEBUGDB         fname.debug(5513)
 
 inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d) 
-	{ return o << d.indent() << ":" ; }
+	{ return o << d.indent() ; }
 
 #endif
 
@@ -223,7 +217,7 @@ inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 #define FUNCTIONSETUPL(a)
 #endif
 
-#define KPILOT_VERSION	"4.4.7 (baby)"
+#define KPILOT_VERSION	"4.4.7 (Delfzijl)"
 
 
 // Function to expand newlines in rich text to <br>\n
