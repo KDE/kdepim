@@ -190,6 +190,12 @@ class KNodeView : public QSplitter
             *a_ctArtToggleIgnored,
             *a_ctArtToggleWatched,
             *a_ctArtOpenNewWindow;
+
+    // scoring
+    KAction *a_ctScoresEdit,
+            *a_ctReScore,
+            *a_ctScoreLower,
+            *a_ctScoreRaise;
                             
     //header-view local articles
     KAction *a_ctArtSendOutbox,
@@ -253,7 +259,12 @@ class KNodeView : public QSplitter
     void slotArtToggleIgnored();
     void slotArtToggleWatched();
     void slotArtOpenNewWindow();
-    
+
+    void slotScoreEdit();
+    void slotReScore();
+    void slotScoreRaise();
+    void slotScoreLower();
+
     void slotArtSendOutbox();
     void slotArtDelete();
     void slotArtSendNow();

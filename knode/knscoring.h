@@ -19,11 +19,11 @@
 
 #include <kscoring.h>
 
-
+class KDialogBase;
 class KNRemoteArticle;
 class KNGroup;
 
-//----------------------------------------------------------------------------
+
 class KNScorableArticle : public ScorableArticle
 {
 public:
@@ -47,18 +47,30 @@ public:
   virtual ~KNScorableGroup();    
 };
 
+
 // class KNScorableServer : public ScorableServer
 // {
 // public:
 //   virtual ~KNScorableServer();
 // };
 
+
 class KNScoringManager : public KScoringManager
 {
-public:
-  KNScoringManager();
-  virtual ~KNScoringManager();
-  virtual QStringList getGroups() const;
+  Q_OBJECT
+
+  public:
+    KNScoringManager();
+    virtual ~KNScoringManager();
+    virtual QStringList getGroups() const;
+
+    void configure();
+
+  protected:
+    KDialogBase  *c_onfDialog;
+
+  protected slots:
+    void slotDialogDone();
 };
 
 #endif

@@ -37,7 +37,6 @@
 #include <kstdaction.h>
 #include <kprocess.h>
 #include <kcharsets.h>
-#include <kscoringeditor.h>
 
 #include "resource.h"
 #include "knmime.h"
@@ -189,27 +188,12 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                           SLOT(slotSupersede()), a_ctions, "article_supersede");
   a_ctVerify            = new KAction(i18n("&Verify PGP Signature"), 0, this,
                           SLOT(slotVerify()), a_ctions, "article_verify");
-  a_ctToggleFullHdrs    = new KToggleAction(i18n("Show &all headers"), "text_block", 0 , this,
+  a_ctToggleFullHdrs    = new KToggleAction(i18n("Show &All Headers"), "text_block", 0 , this,
                           SLOT(slotToggleFullHdrs()), a_ctions, "view_showAllHdrs");
   a_ctToggleRot13       = new KToggleAction(i18n("&Unscramble (Rot 13)"), "decrypted", 0 , this,
                           SLOT(slotToggleRot13()), a_ctions, "view_rot13");
   a_ctViewSource        = new KAction(i18n("&View Source..."),  0 , this,
                           SLOT(slotViewSource()), a_ctions, "article_viewSource");
-
-    // scoring
-  a_ctScoresEdit            = new KAction(i18n("&Edit Scores..."), CTRL+Key_E,this,
-                                          SLOT(slotScoreEdit()), a_ctions, "scoreedit");
-  a_ctScoreLower            = new KAction(i18n("&Lower Score..."), CTRL+Key_L,this,
-                                          SLOT(slotScoreLower()), a_ctions, "scorelower");
-  a_ctScoreLower->setEnabled(false);
-  a_ctScoreRaise            = new KAction(i18n("&Raise Score..."), CTRL+Key_I,
-                                          this, SLOT(slotScoreRaise()),a_ctions,"scoreraise");
-  a_ctScoreRaise->setEnabled(false);
-  
-  a_ctReScore            = new KAction(i18n("Re&Score..."), 0,
-                                       this, SLOT(slotReScore()),a_ctions,"rescore");
-  
-  
 
   a_ctSetCharset = new KSelectAction(i18n("Chars&et"), 0, a_ctions, "set_charset");
   QStringList cs=KGlobal::charsets()->availableEncodingNames();
@@ -688,8 +672,6 @@ void KNArticleWidget::showBlankPage()
   a_ctSetCharset->setEnabled(false);
   a_ctSetCharsetKeyb->setEnabled(false);
   a_ctViewSource->setEnabled(false);
-  a_ctScoreLower->setEnabled(false);
-  a_ctScoreRaise->setEnabled(false);
 }
 
 
@@ -733,8 +715,6 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   a_ctSetCharset->setEnabled(false);
   a_ctSetCharsetKeyb->setEnabled(false);
   a_ctViewSource->setEnabled(false);
-  a_ctScoreLower->setEnabled(false);
-  a_ctScoreRaise->setEnabled(false);
 }
 
 
@@ -1108,8 +1088,6 @@ void KNArticleWidget::createHtmlPage()
   a_ctSetCharset->setEnabled(true);
   a_ctSetCharsetKeyb->setEnabled(true);
   a_ctViewSource->setEnabled(true);
-  a_ctScoreLower->setEnabled(true);
-  a_ctScoreRaise->setEnabled(true);
 
   //start automark-timer
   if(a_rticle->type()==KNMimeBase::ATremote && knGlobals.cfgManager->readNewsGeneral()->autoMark())
@@ -1477,47 +1455,8 @@ void KNArticleWidget::slotVerify()
 }
 
 
-void KNArticleWidget::slotScoreEdit()
-{
-  kdDebug(5003) << "KNArticleWidget::slotScoreEdit()" << endl;
-  KDialogBase *dlg = new KDialogBase(0,0,false,"Edit Scores",KDialogBase::Close,KDialogBase::Close,true);
-  KScoringRulesConfig *c = new KScoringRulesConfig(knGlobals.scoreManager,dlg);
-  dlg->setMainWidget(c);
-  dlg->show();
-}
-
-
-void KNArticleWidget::slotReScore()
-{
-  kdDebug(5003) << "KNArticleWidget::slotReScore()" << endl;
-  if (a_rticle) {
-    KNGroup *g=static_cast<KNGroup*>(a_rticle->collection());
-    g->reorganize();
-  }
-}
-
-
-void KNArticleWidget::slotScoreLower()
-{
-  kdDebug(5003) << "KNArticleWidget::slotScoreLower() start" << endl;
-  KNGroup *g=static_cast<KNGroup*>(a_rticle->collection());
-  KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rticle);
-  knGlobals.scoreManager->addRule(KNScorableArticle(ra), g->groupname() , -10 );
-  kdDebug(5003) << "KNArticleWidget::slotScoreLower() end" << endl;
-}
-
-
-void KNArticleWidget::slotScoreRaise()
-{
-  kdDebug(5003) << "KNArticleWidget::slotScoreRaise() start" << endl;
-  KNGroup *g=static_cast<KNGroup*>(a_rticle->collection());
-  KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rticle);
-  knGlobals.scoreManager->addRule(KNScorableArticle(ra), g->groupname() , +10 );
-  kdDebug(5003) << "KNArticleWidget::slotScoreRaise() end" << endl;
-}
-
-
 //--------------------------------------------------------------------------------------
+
 
 QList<KNArticleWidget> KNArticleWidget::i_nstances;
 

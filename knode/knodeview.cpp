@@ -487,19 +487,19 @@ void KNodeView::initActions()
 {
 
   //navigation
-  a_ctNavNextArt            = new KAction(i18n("&Next article"), "next", Key_N , this,
+  a_ctNavNextArt            = new KAction(i18n("&Next Article"), "next", Key_N , this,
                               SLOT(slotNavNextArt()), a_ctions, "go_nextArticle");
-  a_ctNavPrevArt            = new KAction(i18n("&Previous article"), "previous", Key_B , this,
+  a_ctNavPrevArt            = new KAction(i18n("&Previous Article"), "previous", Key_B , this,
                               SLOT(slotNavPrevArt()), a_ctions, "go_prevArticle");
-  a_ctNavNextUnreadArt      = new KAction(i18n("Next unread &article"), "1rightarrow", ALT+Key_Space , this,
+  a_ctNavNextUnreadArt      = new KAction(i18n("Next Unread &Article"), "1rightarrow", ALT+Key_Space , this,
                               SLOT(slotNavNextUnreadArt()), a_ctions, "go_nextUnreadArticle");
-  a_ctNavNextUnreadThread   = new KAction(i18n("Next unread &thread"),"2rightarrow", CTRL+Key_Space , this,
+  a_ctNavNextUnreadThread   = new KAction(i18n("Next Unread &Thread"),"2rightarrow", CTRL+Key_Space , this,
                               SLOT(slotNavNextUnreadThread()), a_ctions, "go_nextUnreadThread");
-  a_ctNavNextGroup          = new KAction(i18n("Ne&xt group"), "down", Key_Plus , this,
+  a_ctNavNextGroup          = new KAction(i18n("Ne&xt Group"), "down", Key_Plus , this,
                               SLOT(slotNavNextGroup()), a_ctions, "go_nextGroup");
-  a_ctNavPrevGroup          = new KAction(i18n("Pre&vious group"), "up", Key_Minus , this,
+  a_ctNavPrevGroup          = new KAction(i18n("Pre&vious Group"), "up", Key_Minus , this,
                               SLOT(slotNavPrevGroup()), a_ctions, "go_prevGroup");
-  a_ctNavReadThrough        = new KAction(i18n("Read &through articles"), Key_Space , this,
+  a_ctNavReadThrough        = new KAction(i18n("Read &Through Articles"), Key_Space , this,
                               SLOT(slotNavReadThrough()), a_ctions, "go_readThrough");
 
   //collection-view - accounts
@@ -525,29 +525,29 @@ void KNodeView::initActions()
                               SLOT(slotGrpReorganize()), a_ctions, "group_reorg");
   a_ctGrpUnsubscribe        = new KAction(i18n("&Unsubscribe"), "news_unsubscribe", 0, this,
                               SLOT(slotGrpUnsubscribe()), a_ctions, "group_unsubscribe");
-  a_ctGrpSetAllRead         = new KAction(i18n("Mark all as &read"), "goto", 0, this,
+  a_ctGrpSetAllRead         = new KAction(i18n("Mark All as &Read"), "goto", 0, this,
                               SLOT(slotGrpSetAllRead()), a_ctions, "group_allRead");
-  a_ctGrpSetAllUnread       = new KAction(i18n("Mark all as u&nread"), 0, this,
+  a_ctGrpSetAllUnread       = new KAction(i18n("Mark All as U&nread"), 0, this,
                               SLOT(slotGrpSetAllUnread()), a_ctions, "group_allUnread");
   
   //collection-view - folder
   a_ctFolNew                = new KAction(i18n("&New"), 0, this,
                               SLOT(slotFolNew()), a_ctions, "folder_new");
-  a_ctFolNewChild           = new KAction(i18n("New &child"), 0, this,
+  a_ctFolNewChild           = new KAction(i18n("New &Subfolder"), 0, this,
                               SLOT(slotFolNewChild()), a_ctions, "folder_newChild");
   a_ctFolDelete             = new KAction(i18n("&Delete"), 0, this,
                               SLOT(slotFolDelete()), a_ctions, "folder_delete");
   a_ctFolRename             = new KAction(i18n("&Rename"), 0, this,
                               SLOT(slotFolRename()), a_ctions, "folder_rename");
-  a_ctFolMakeTopLevel       = new KAction(i18n("&Move to toplevel"), 0, this,
+  a_ctFolMakeTopLevel       = new KAction(i18n("&Move to Toplevel"), 0, this,
                               SLOT(slotFolMakeTopLevel()), a_ctions, "folder_maketoplevel");
   a_ctFolCompact            = new KAction(i18n("C&ompact"), "wizard", 0, this,
                               SLOT(slotFolCompact()), a_ctions, "folder_compact");
   a_ctFolEmpty              = new KAction(i18n("&Empty"), 0, this,
                               SLOT(slotFolEmpty()), a_ctions, "folder_empty");
-  a_ctFolMboxImport         = new KAction(i18n("&Import mbox folder"), 0, this,
+  a_ctFolMboxImport         = new KAction(i18n("&Import MBox Folder"), 0, this,
                               SLOT(slotFolMBoxImport()), a_ctions, "folder_MboxImport");
-  a_ctFolMboxExport         = new KAction(i18n("E&xport as mbox folder"), 0, this,
+  a_ctFolMboxExport         = new KAction(i18n("E&xport as MBox Folder"), 0, this,
                               SLOT(slotFolMBoxExport()), a_ctions, "folder_MboxExport");
 
   //header-view - list-handling
@@ -570,9 +570,9 @@ void KNodeView::initActions()
                               SLOT(slotArtSearch()), a_ctions, "article_search");
   a_ctArtRefreshList        = new KAction(i18n("&Refresh List"),"reload", KStdAccel::key(KStdAccel::Reload), this,
                               SLOT(slotArtRefreshList()), a_ctions, "view_Refresh");
-  a_ctArtCollapseAll        = new KAction(i18n("&Collapse all threads"), 0 , this,
+  a_ctArtCollapseAll        = new KAction(i18n("&Collapse All Threads"), 0 , this,
                               SLOT(slotArtCollapseAll()), a_ctions, "view_CollapseAll");
-  a_ctArtExpandAll          = new KAction(i18n("E&xpand all threads"), 0 , this,
+  a_ctArtExpandAll          = new KAction(i18n("E&xpand All Threads"), 0 , this,
                               SLOT(slotArtExpandAll()), a_ctions, "view_ExpandAll");
   a_ctArtToggleThread       = new KAction(i18n("&Toggle Subthread"), Key_T, this,
                               SLOT(slotArtToggleThread()), a_ctions, "thread_toggle");
@@ -580,31 +580,41 @@ void KNodeView::initActions()
                               SLOT(slotArtToggleShowThreads()), a_ctions, "view_showThreads");      
                                   
   //header-view - remote articles
-  a_ctArtSetArtRead         = new KAction(i18n("Mark as &read"), Key_D , this,
+  a_ctArtSetArtRead         = new KAction(i18n("Mark as &Read"), Key_D , this,
                               SLOT(slotArtSetArtRead()), a_ctions, "article_read");
-  a_ctArtSetArtUnread       = new KAction(i18n("Mar&k as unread"), Key_U , this,
+  a_ctArtSetArtUnread       = new KAction(i18n("Mar&k as Unread"), Key_U , this,
                               SLOT(slotArtSetArtUnread()), a_ctions, "article_unread");
-  a_ctArtSetThreadRead      = new KAction(i18n("Mark thread as r&ead"), CTRL+Key_D , this,
+  a_ctArtSetThreadRead      = new KAction(i18n("Mark Thread as R&ead"), CTRL+Key_D , this,
                               SLOT(slotArtSetThreadRead()), a_ctions, "thread_read");
-  a_ctArtSetThreadUnread    = new KAction(i18n("Mark thread as u&nread"), CTRL+Key_U , this,
+  a_ctArtSetThreadUnread    = new KAction(i18n("Mark Thread as U&nread"), CTRL+Key_U , this,
                               SLOT(slotArtSetThreadUnread()), a_ctions, "thread_unread");
   a_ctSetArtScore           = new KAction(i18n("Set Sc&ore..."), "rotate", Key_S , this,
                               SLOT(slotArtSetArtScore()), a_ctions, "article_setScore");
-  a_ctArtSetThreadScore     = new KAction(i18n("Set Score of &thread..."), "rotate", CTRL+Key_T , this,
+  a_ctArtSetThreadScore     = new KAction(i18n("Set Score of &Thread..."), "rotate", CTRL+Key_T , this,
                               SLOT(slotArtSetThreadScore()), a_ctions, "thread_setScore");
   a_ctArtToggleIgnored      = new KAction(i18n("&Ignore"), "bottom", Key_I , this,
                               SLOT(slotArtToggleIgnored()), a_ctions, "thread_ignore");
   a_ctArtToggleWatched      = new KAction(i18n("&Watch"), "top", Key_W , this,
                               SLOT(slotArtToggleWatched()), a_ctions, "thread_watch");
   a_ctArtOpenNewWindow      = new KAction(i18n("Open in own &window"), "viewmag+", Key_O , this,
-                              SLOT(slotArtOpenNewWindow()), a_ctions, "article_ownWindow");             
+                              SLOT(slotArtOpenNewWindow()), a_ctions, "article_ownWindow");
+
+  // scoring
+  a_ctScoresEdit            = new KAction(i18n("&Edit Scoring Rules..."), CTRL+Key_E, this,
+                              SLOT(slotScoreEdit()), a_ctions, "scoreedit");
+  a_ctReScore               = new KAction(i18n("Recalculate &Scores..."), 0, this,
+                              SLOT(slotReScore()),a_ctions,"rescore");
+  a_ctScoreLower            = new KAction(i18n("&Lower Score for Author..."), CTRL+Key_L, this,
+                              SLOT(slotScoreLower()), a_ctions, "scorelower");
+  a_ctScoreRaise            = new KAction(i18n("&Raise Score for Author..."), CTRL+Key_I, this,
+                              SLOT(slotScoreRaise()),a_ctions,"scoreraise");
               
   //header-view local articles
-  a_ctArtSendOutbox         = new KAction(i18n("Sen&d pending messages"), "mail_send", 0, this,
+  a_ctArtSendOutbox         = new KAction(i18n("Sen&d Pending Messages"), "mail_send", 0, this,
                               SLOT(slotArtSendOutbox()), a_ctions, "net_sendPending");
   a_ctArtDelete             = new KAction(i18n("&Delete"), "editdelete", Key_Delete, this,
                               SLOT(slotArtDelete()), a_ctions, "article_delete");
-  a_ctArtSendNow            = new KAction(i18n("Send &now"),"mail_send", 0 , this,
+  a_ctArtSendNow            = new KAction(i18n("Send &Now"),"mail_send", 0 , this,
                               SLOT(slotArtSendNow()), a_ctions, "article_sendNow");
   a_ctArtEdit               = new KAction(i18n("edit article","&Edit..."), "signature", Key_E , this,
                               SLOT(slotArtEdit()), a_ctions, "article_edit");
@@ -720,6 +730,8 @@ void KNodeView::slotArticleSelected(QListViewItem *i)
     a_ctArtSetThreadScore->setEnabled(enabled);
     a_ctArtToggleIgnored->setEnabled(enabled);
     a_ctArtToggleWatched->setEnabled(enabled);
+    a_ctScoreLower->setEnabled(enabled);
+    a_ctScoreRaise->setEnabled(enabled);
   }
 
   a_ctArtOpenNewWindow->setEnabled( selectedArticle && (f_olManager->currentFolder()!=f_olManager->outbox())
@@ -851,7 +863,8 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
     a_ctArtRefreshList->setEnabled(enabled);
     a_ctArtCollapseAll->setEnabled(enabled);
     a_ctArtExpandAll->setEnabled(enabled);
-    a_ctArtToggleShowThreads->setEnabled(enabled);    
+    a_ctArtToggleShowThreads->setEnabled(enabled);
+    a_ctReScore->setEnabled(enabled);
   }
   
   enabled=( selectedFolder!=0 );
@@ -1329,11 +1342,11 @@ void KNodeView::slotFolEmpty()
   if(f_olManager->currentFolder()) {
     if(f_olManager->currentFolder()->lockedArticles()>0) {
       KMessageBox::sorry(knGlobals.topWidget,
-      i18n("This Folder cannot be emptied at the moment\nbecause some of it's articles are currently in use.") );
+      i18n("This folder cannot be emptied at the moment\nbecause some of it's articles are currently in use.") );
       return;
     }
     if( KMessageBox::Yes == KMessageBox::questionYesNo(
-        knGlobals.topWidget, i18n("Do you really want to empty this folder?")) )
+        knGlobals.topWidget, i18n("Do you really want to delete all articles in %1?").arg(f_olManager->currentFolder()->name())) )
       f_olManager->currentFolder()->deleteAll();
   }
 }
@@ -1544,6 +1557,49 @@ void KNodeView::slotArtToggleWatched()
   KNRemoteArticle::List l;
   getSelectedThreads(l);
   a_rtManager->toggleWatched(l);
+}
+
+
+void KNodeView::slotScoreEdit()
+{
+  kdDebug(5003) << "KNodeView::slotScoreEdit()" << endl;
+  s_coreManager->configure();
+}
+
+
+void KNodeView::slotReScore()
+{
+  kdDebug(5003) << "KNodeView::slotReScore()" << endl;
+  if( !g_rpManager->currentGroup() )
+    return;
+
+  g_rpManager->currentGroup()->reorganize();
+}
+
+
+void KNodeView::slotScoreLower()
+{
+  kdDebug(5003) << "KNodeView::slotScoreLower() start" << endl;
+  if( !g_rpManager->currentGroup() )
+    return;
+
+  if (a_rtView->article() && a_rtView->article()->type()==KNMimeBase::ATremote) {
+    KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rtView->article());
+    s_coreManager->addRule(KNScorableArticle(ra), g_rpManager->currentGroup()->groupname(), -10);
+  }
+}
+
+
+void KNodeView::slotScoreRaise()
+{
+  kdDebug(5003) << "KNodeView::slotScoreRaise() start" << endl;
+  if( !g_rpManager->currentGroup() )
+    return;
+
+  if (a_rtView->article() && a_rtView->article()->type()==KNMimeBase::ATremote) {
+    KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rtView->article());
+    s_coreManager->addRule(KNScorableArticle(ra), g_rpManager->currentGroup()->groupname(), +10);
+  }
 }
 
 
