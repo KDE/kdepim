@@ -332,24 +332,19 @@ void CertManager::createActions() {
   // disable action if no kwatchgnupg binary is around
   if (KStandardDirs::findExe("kwatchgnupg").isEmpty()) action->setEnabled(false);
 
-  // Toolbar
-  KToolBar * _toolbar = toolBar( "searchToolBar" );
+  (void)new LabelAction( i18n("Search:"), actionCollection(), "label_action" );
 
-  (new LabelAction( i18n("Search:"), actionCollection(), "label_action"))->plug( _toolbar );
   mLineEditAction = new LineEditAction( QString::null, actionCollection(), this,
 					SLOT(slotSearch()),
 					"query_lineedit_action");
-  mLineEditAction->plug( _toolbar );
 
   QStringList lst;
   lst << i18n("In Local Certificates") << i18n("In External Certificates");
   mComboAction = new ComboAction( lst, actionCollection(), this, SLOT( slotToggleRemote(int) ),
                                   "location_combo_action");
-  mComboAction->plug( _toolbar );
 
   mFindAction = new KAction( i18n("Find"), "find", 0, this, SLOT(slotSearch()),
 			     actionCollection(), "find" );
-  mFindAction->plug( _toolbar );
 
   KStdAction::keyBindings( this, SLOT(slotEditKeybindings()), actionCollection() );
   KStdAction::preferences( this, SLOT(slotShowConfigurationDialog()), actionCollection() );
