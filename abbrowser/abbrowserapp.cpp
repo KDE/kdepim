@@ -2,6 +2,7 @@
 
 #include <kdebug.h>
 #include <kcmdlineargs.h>
+#include <kwin.h>
 
 #include "abbrowser.h"
 
@@ -36,13 +37,7 @@ int AbBrowserApp::newInstance()
 
     if (mAbBrowser) {
       kdDebug() << "AbBrowser already running." << endl;
-      if (mAbBrowser->isMinimized()) {
-        kdDebug() << "AbBrowser window is minimized." << endl;
-        // TODO: Restoring minimized window does not work.
-        mAbBrowser->showNormal();
-      } else {
-        mAbBrowser->raise();
-      }
+      KWin::setActiveWindow(mAbBrowser->winId());
     } else {
       mAbBrowser = new Pab;
       mAbBrowser->show();
