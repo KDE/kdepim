@@ -104,7 +104,7 @@ void KNStringFilter::save(KSimpleConfig *conf)
 KNStringFilterWidget::KNStringFilterWidget(const QString& title, QWidget *parent)
   : QGroupBox(title, parent)
 {
-   fType=new QComboBox(this);
+  fType=new QComboBox(this);
   fType->insertItem(i18n("does contain"));
   fType->insertItem(i18n("does NOT contain"));
   
@@ -133,7 +133,7 @@ KNStringFilter KNStringFilterWidget::filter()
 {
   KNStringFilter ret;
   ret.con=(fType->currentItem()==0);
-  ret.data=fString->text().local8Bit();
+  ret.data=fString->text();
   ret.regExp=regExp->isChecked();
   
   return ret;
