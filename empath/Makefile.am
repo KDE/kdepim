@@ -42,7 +42,6 @@ empath_SOURCES = \
 	EmpathFolder.cpp \
 	EmpathFolderChooserDialog.cpp \
 	EmpathFolderChooserWidget.cpp \
-	EmpathFolderList.cpp \
 	EmpathFolderListItem.cpp \
 	EmpathFolderWidget.cpp \
 	EmpathHeaderBodyWidget.cpp \
@@ -60,6 +59,7 @@ empath_SOURCES = \
 	EmpathMailboxList.cpp \
 	EmpathMailboxMMDF.cpp \
 	EmpathMailboxMaildir.cpp \
+	EmpathMaildir.cpp \
 	EmpathMailboxMbox.cpp \
 	EmpathMailboxNameDialog.cpp \
 	EmpathMailboxPOP3.cpp \
@@ -152,6 +152,7 @@ noinst_HEADERS = \
 	EmpathMailboxList.h \
 	EmpathMailboxMMDF.h \
 	EmpathMailboxMaildir.h \
+	EmpathMaildir.h \
 	EmpathMailboxMbox.h \
 	EmpathMailboxNameDialog.h \
 	EmpathMailboxPOP3.h \

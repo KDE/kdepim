@@ -4,7 +4,7 @@ Version: 1.0
 Release: 1
 Copyright: GPL
 Group: Applications/Mail
-Source: ftp://without.netpedia.net/empath/empath-1.0.tar.bz2
+Source: ftp://without.netpedia.net/empath/
 BuildRoot: /tmp/empath_build
 
 %description
