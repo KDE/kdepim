@@ -33,6 +33,15 @@
 <address><email>dsanders@kde.org</email></address>
 </affiliation>
 </author>
+<author>
+<firstname>Michel</firstname>
+<surname>Boyer de la Giroday</surname>
+<affiliation>
+<address><email>michel@klaralvdalens-datakonsult.se</email>
+</address>
+</affiliation>
+</author>
+
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
@@ -163,7 +172,7 @@ on a remote server (for example, through HTTP, WebDAV, FTP or Fish).</para></lis
 </variablelist>
 
 <para>After selecting the type of resource another dialog appears where you can configure the resource-specific settings.</para>
-<para>The <guilabel>file</guilabel> and <guilabel>dir</guilabel> resource
+<para>The <guilabel>File</guilabel> and <guilabel>Directory</guilabel> resource
 supports different formats for storing the contacts:</para>
 
 <variablelist>
@@ -355,7 +364,8 @@ data; the result is shown in a <acronym>HTML</acronym> view.</para></listitem>
 lists: just create a new list and select a contact in the view; then, after
 clicking <guibutton>Add contact</guibutton>, the selected contact is part
 of the distribution list.  A simpler way is to drag a contact from the
-view and drop it over the distribution list manager.</para></listitem>
+view and drop it over the distribution list manager. See <link linkend="settings-menu"> Settings Menu</link> about how to add an extension.</para>
+</listitem>
 </varlistentry>
 </variablelist>
 
