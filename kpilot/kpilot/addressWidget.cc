@@ -284,6 +284,12 @@ void AddressWidget::setupWidget()
 		i18n("<qt>Delete the selected address from the address book.</qt>") :
 		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
 
+	button = new QPushButton(i18n("Export..."), this);
+	grid->addWidget(button, 3,1);
+	connect(button, SIGNAL(clicked()), this, SLOT(slotExport()));
+	QWhatsThis::add(button,
+		i18n("<qt>Export all addresses in the selected category to CSV format.</qt>") );
+
 	QWhatsThis::add(fDeleteButton,wt);
 }
 
@@ -662,5 +668,70 @@ void AddressWidget::writeAddress(PilotAddress * which,
 	{
 		KPILOT_DELETE( myDB );
 	}
+}
+
+#define plu_quiet 1
+#include "pilot-addresses.c"
+
+void AddressWidget::slotExport()
+{
+	FUNCTIONSETUP;
+	
+	int currentCatID = findSelectedCategory(fCatList,
+		&(fAddressAppInfo.category));
+
+	QString saveFile = KFileDialog::getSaveFileName(
+		QString::null,
+		CSL1("*.csv|Comma Separated Values"),
+		this,
+		( (currentCatID==-1) ?
+			i18n("Export All Addresses") :
+			i18n("Export Address Category %1").arg(PilotAppCategory::codec()->toUnicode(fAddressAppInfo.category.name[currentCatID]))));
+
+	if (saveFile.isEmpty())
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname << ": No save file selected." << endl;
+#endif
+		return;
+	}
+	if (QFile::exists(saveFile) &&
+		KMessageBox::warningContinueCancel(this,
+			i18n("The file <i>%1</i> exists. Overwrite?").arg(saveFile),
+			i18n("Overwrite File?"),
+			i18n("Overwrite"))!=KMessageBox::Continue)
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname << ": Overwrite file canceled." << endl;
+#endif
+		return;
+	}
+
+	FILE *f = fopen(QFile::encodeName(saveFile),"w");
+	if (!f)
+	{
+		KMessageBox::sorry(this,
+			i18n("The file <i>%1</i> could not be opened for writing.").arg(saveFile));
+		return;
+	}
+	fAddressList.first();
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Adding records..." << endl;
+#endif
+
+	while (fAddressList.current())
+	{
+		const PilotAddress *a = fAddressList.current();
+		if ((currentCatID == -1) ||
+			(a->getCat() == currentCatID))
+		{
+			write_record_CSV(f, &fAddressAppInfo, a->address(),
+				a->getAttrib(), a->getCat(), 0);
+		}
+		fAddressList.next();
+	}
+
+	fclose(f);
 }
 

@@ -65,6 +65,7 @@ public slots:
 	void slotCreateNewRecord();
 	void slotDeleteRecord();
 	void slotEditCancelled();
+	void slotExport();
 
 	void slotUpdateButtons();	// Enable/disable buttons
 
