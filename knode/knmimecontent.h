@@ -45,7 +45,7 @@ class KNMimeContent : public KNArticleBase  {
 		void clearHead()								{ if(h_ead) h_ead->clear(); }		
 		void clearBody()								{ if(b_ody) b_ody->clear(); }				
 		void decodeText();
-		void prepareHtml();		
+		//void prepareHtml();		
 		void changeEncoding(int e);
 		
 		//get
@@ -66,6 +66,7 @@ class KNMimeContent : public KNArticleBase  {
 		
 		//content
 		KNMimeContent* textContent();
+		QString htmlCode();
 		void attachments(QList<KNMimeContent> *dst, bool incAlternatives=false);
 				
 		QCString headerLine(const char* name);				

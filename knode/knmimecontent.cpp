@@ -369,7 +369,7 @@ void KNMimeContent::decodeText()
 
 
 
-void KNMimeContent::prepareHtml()
+/*void KNMimeContent::prepareHtml()
 {
 	if(!b_ody) return;
 	QCString tmp;
@@ -402,7 +402,7 @@ void KNMimeContent::prepareHtml()
 			break;
 		}
 	}
-}
+}*/
 
 
 
@@ -465,6 +465,78 @@ KNMimeContent* KNMimeContent::textContent()
 	}
 	return ret;
 }
+
+
+
+QString KNMimeContent::htmlCode()
+{
+  QString html;
+  QCString tmp;
+  int htmlPos1=-1,
+      htmlPos2=-1,
+      bodyPos1=-1,
+      bodyPos2=-1,
+      pos=0;
+
+  if(b_ody) {
+    for(char *line=b_ody->first(); line; line=b_ody->next()) {
+
+      if(htmlPos1==-1 && (strstr(line, "<html>") || strstr(line, "<HTML>")))
+        htmlPos1=b_ody->at();
+      else if(htmlPos2==-1 && (strstr(line, "</html>") || strstr(line, "</HTML>")))
+        htmlPos2=b_ody->at();
+      else if(bodyPos1==-1 && (strstr(line, "<body") || strstr(line, "<BODY")))
+        bodyPos1=b_ody->at();
+      else if(bodyPos2==-1 && (strstr(line, "</body>") || strstr(line, "</BODY>")))
+        bodyPos2=b_ody->at();
+    }
+
+    for(int idx=0; idx < (int)(b_ody->count()); idx++) {
+
+      if(idx<htmlPos1 || idx<bodyPos1)
+        continue;
+
+      if(idx==htmlPos1 && bodyPos1==-1) {
+        tmp=b_ody->at(idx);
+        pos=tmp.find("<html>", 0, false)+6;
+        tmp=tmp.right(tmp.length()-pos);
+        if(!tmp.isEmpty())
+          html+=tmp;
+      }
+      else if(idx==bodyPos1) {
+        tmp=b_ody->at(idx);
+        pos=tmp.find("<body", 0, false)+6;
+        pos=tmp.find('>', pos)+1;
+        if(pos!=-1) {
+          tmp=tmp.right(tmp.length()-pos);
+          if(!tmp.isEmpty())
+            html+=tmp;
+        }
+      }
+      else if(idx==bodyPos2) {
+        tmp=b_ody->at(idx);
+        pos=tmp.find("</body>", 0, false);
+        tmp=tmp.left(pos);
+        if(!tmp.isEmpty())
+          html+=tmp;
+        break;
+      }
+      else if(idx==htmlPos2) {
+        tmp=b_ody->at(idx);
+        pos=tmp.find("</html>", 0, false);
+        tmp=tmp.left(pos);
+        if(!tmp.isEmpty())
+          html+=tmp;
+        break;
+      }
+      else
+        html+=b_ody->at(idx);
+    }
+  }
+
+  return html;
+}
+
 
 
 void KNMimeContent::attachments(QList<KNMimeContent> *dst, bool incAlternatives)

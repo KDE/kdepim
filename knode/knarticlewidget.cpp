@@ -689,11 +689,12 @@ void KNArticleWidget::createHtmlPage()
 	
 	if(text) {
   	if(text->mimeInfo()->ctSubType()==KNArticleBase::SThtml) {
-  		text->prepareHtml();
+  		/*text->prepareHtml();
   		for(char* l=text->firstBodyLine(); l; l=text->nextBodyLine()) {
   		  //qDebug("KNArticleWidget::createHtmlPage() : HTML-Line = %s", l);
   			buffer+=l;
-  		}
+  		}*/
+  		buffer+=text->htmlCode();
   	}
   	else {
 			char firstChar;
@@ -765,9 +766,7 @@ void KNArticleWidget::createHtmlPage()
   			  else if(var->mimeInfo()->ctMediaType()==KNArticleBase::MTtext) {
   			    var->decodeText();
   			    if(var->mimeInfo()->ctSubType()==KNArticleBase::SThtml) {
-  			      var->prepareHtml();
-  			      for(char *line=var->firstBodyLine(); line; line=var->nextBodyLine())
-  			        buffer+=line;
+  			      buffer+=var->htmlCode();
   			    }
   			    else {
   			      buffer+="<pre>";
