@@ -18,8 +18,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */ 
 
-#ifndef ASYNC_IMAP_CLIENT_H
-#define ASYNC_IMAP_CLIENT_H
+#ifndef IMAP_CLIENT_H
+#define IMAP_CLIENT_H
 
 // Qt includes
 #include <qstring.h>
@@ -383,6 +383,19 @@ class AsyncClient : public QObject
     ~AsyncClient();
 
     /**
+     * Connect to an IMAP server.
+     * Will emit hostFound() at the appropriate time, and connected()
+     * when ready.
+     */
+    void connectToHost(const QString & server, uint port);
+
+    /**
+     * Disconnect from IMAP server.
+     * No response given.
+     */
+    void disconnectFromHost();
+
+    /**
      * @return greeting message given by server at connect.
      * @see RFC
      */
@@ -564,6 +577,26 @@ class AsyncClient : public QObject
         bool usingUID = false
     );
 
+  signals:
+
+    void hostFound();
+    void connected();
+    void loginComplete(bool ok);
+    void authenticateComplete(bool ok);
+    void capabilityComplete(bool ok, const QString & data);
+    void noopComplete(bool ok);
+    void selectMailboxComplete(bool ok, const MailboxInfo & data);
+    void examineMailboxComplete(bool ok, const MailboxInfo & data);
+    void createMailboxComplete(bool ok);
+    void subscribeMailboxComplete(bool ok);
+    void listComplete(bool ok, const ListResponse & data);
+    void appendMessageComplete(bool ok);
+    void closeComplete(bool ok);
+    void searchComplete(bool ok, const QValueList<ulong> data);
+    void fetchComplete(bool ok, const QString & data);
+    void setFlagsComplete(bool ok);
+    void copyComplete(bool ok);
+
   protected:
 
     /**
@@ -572,11 +605,9 @@ class AsyncClient : public QObject
      */
     void runCommand(const QString & cmd);
 
-    /**
-     * Reads response from server. Usually passed to the ctor of
-     * class Response for initial parsing.
-     */
-    QString response(const QString & endIndicator);
+  protected slots:
+
+    void slotDataReady();
 
   private:
 

@@ -20,6 +20,7 @@
 
 #include <sys/time.h>
 #include <unistd.h> // For usleep
+#include <qsocket.h>
 #include "IMAPClient.h"
 
 using namespace IMAP;
@@ -29,20 +30,25 @@ class AsyncClientPrivate
   public:
 
     QString greeting_;
-    QIODevice * device_;
+    QSocket * socket_;
     IMAP::State state_;
     ulong commandCount_;
     QString selected_;
+    QString endIndicator_;
+    QString buffer_;
 };
 
 AsyncClient::AsyncClient(QObject * parent, const char * name)
   : QObject(parent, name)
 {
   d = new AsyncClientPrivate;
-  d->device_ = 0;
+  d->socket_ = new QSocket(this, "IMAP::AsyncClient socket");
   d->state_ = NotAuthenticated;
   d->commandCount_ = 0;
-  d->greeting_ = response(QString::null);
+
+  QObject::connect(d->socket_, SIGNAL(readyRead()),  this, SLOT(slotDataReady()));
+  QObject::connect(d->socket_, SIGNAL(hostFound()),  this, SIGNAL(hostFound()));
+  QObject::connect(d->socket_, SIGNAL(connect()),    this, SIGNAL(connected()));
 }
 
 AsyncClient::~AsyncClient()
@@ -61,7 +67,7 @@ AsyncClient::greeting() const
   void
 AsyncClient::capability()
 {
-  if (!d->device_->isOpen()) {
+  if (d->socket_->state() != QSocket::Connection) {
     qDebug("AsyncClient::capability(): Not connected to server");
     return;
   }
@@ -72,7 +78,7 @@ AsyncClient::capability()
   void
 AsyncClient::noop()
 {
-  if (!d->device_->isOpen()) {
+  if (d->socket_->state() != QSocket::Connection) {
     qDebug("AsyncClient::noop(): Not connected to server");
     return;
   }
@@ -83,7 +89,7 @@ AsyncClient::noop()
   void
 AsyncClient::logout()
 {
-  if (!d->device_->isOpen()) {
+  if (d->socket_->state() != QSocket::Connection) {
     qDebug("AsyncClient::logout(): Not connected to server");
     return;
   }
@@ -414,7 +420,7 @@ AsyncClient::copy(ulong start, ulong end, const QString & to, bool usingUID)
   void
 AsyncClient::runCommand(const QString & cmd)
 {
-  if (!d->device_->isOpen()) {
+  if (d->socket_->state() != QSocket::Connection) {
     qDebug("AsyncClient::runCommand(): Socket is not connected");
     return;
   }
@@ -422,76 +428,41 @@ AsyncClient::runCommand(const QString & cmd)
   QString id;
   id.sprintf("EMPATH_%08ld", d->commandCount_++);
 
+  d->endIndicator_ = id;
+
   QString command(id + " " + cmd + "\r\n");
-  d->device_->writeBlock(command.ascii(), command.length());
+  d->socket_->writeBlock(command.ascii(), command.length());
 
   log("> " + command);
 }
 
-  QString
-AsyncClient::response(const QString & endIndicator)
+  void
+AsyncClient::slotDataReady()
 {
-  QString out;
+  if (!d->socket_->canReadLine())
+    return;
 
-  int max(4096);
-  QByteArray buf(max);
+  QString s = d->socket_->readLine();
 
-  int pos(0);
+  log("< " + s);
 
-#if 0
-  timeval t, t2;
-  gettimeofday(&t, NULL);
-#endif
+  if (!d->endIndicator_)
+    d->greeting_ = s;
+  else
+    d->buffer_ += s + "\r\n";
 
-  while (true) 
+  if (s.left(d->endIndicator_.length()) == d->endIndicator_)
   {
-    int bytesRead = d->device_->readBlock(buf.data(), buf.size());
+    Response r(d->buffer_);
+    d->buffer_ = QString::null;
 
-    if (bytesRead > 0) {
-
-      out += QString::fromUtf8(buf.data(), bytesRead);
-
-      if (!endIndicator && out.right(out.length() - pos).contains("\r\n"))
-          break;
-
-      if (out.right(2) == "\r\n")
-      {
-        int prevNewLine = out.findRev("\r\n", out.length() - 2);
-
-        if (-1 == prevNewLine)
-          break;
-
-        qDebug("PREVNEWLINE == %d", prevNewLine);
-        qDebug("IND LEN == %d", endIndicator.length());
-
-        QString interestingStartOfLastLine =
-            out.mid(prevNewLine + 2, endIndicator.length() + 2);
-
-        qDebug("INTERESTING: `%s'", interestingStartOfLastLine.ascii());
-        qDebug("END_INDICATOR: `%s'", endIndicator.ascii());
-
-        if (interestingStartOfLastLine == endIndicator)
-          break;
-      }
-
-      pos += bytesRead;
-
-    } else {
-
-      usleep(100);
-    }
+    qDebug("Got a response.");
   }
-
-#if 0
-  gettimeofday(&t2, NULL);
-
-  int uselapsed = 1000000 * (t2.tv_sec - t.tv_sec) + t2.tv_usec - t.tv_usec;
-  qDebug("uselapsed = %d", uselapsed);
-#endif
-
-  log("< " + out);
-
-  return out;
 }
 
+  void
+AsyncClient::connectToHost(const QString & host, uint port)
+{
+  d->socket_->connectToHost(host, port);
+}
 
