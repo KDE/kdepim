@@ -70,6 +70,10 @@ void Query::call( const QString &server, const QString &method,
   stream.writeRawBytes( xmlMarkup.utf8(), xmlMarkup.utf8().length() );
 
   KIO::TransferJob *job = KIO::http_post( KURL( server ), postData, false );
+  if ( !job ) {
+    kdWarning() << "Unable to create KIO job for " << server << endl;
+    return;
+  }
   job->addMetaData( "UserAgent", userAgent );
   job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
   job->addMetaData( "ConnectTimeout", "50" );
@@ -346,10 +350,7 @@ void Server::call( const QString &method, const QValueList<QVariant> &args,
                    QObject* faultObj, const char* faultSlot, const QVariant &id )
 {
   if ( m_url.isEmpty() )
-  {
     kdWarning() << "Cannot execute call to " << method << ": empty server URL" << endl;
-    return ;
-  }
 
   Query *query = Query::create( id, this );
   connect( query, SIGNAL( message( const QValueList<QVariant> &, const QVariant& ) ), msgObj, messageSlot );
