@@ -61,6 +61,15 @@ QStringList FolderLister::activeFolderIds() const
   return ids;
 }
 
+bool FolderLister::isActive( const QString &id ) const
+{
+  FolderLister::Entry::List::ConstIterator it;
+  for( it = mFolders.begin(); it != mFolders.end(); ++it ) {
+    if ( (*it).id == id ) return (*it).active;
+  }
+  return false;  
+}
+
 void FolderLister::readConfig( const KConfig *config )
 {
   kdDebug() << "FolderLister::readConfig()" << endl;
@@ -139,11 +148,12 @@ void FolderLister::slotListJobResult( KIO::Job *job )
 
     kdDebug(7000) << " Doc: " << doc.toString() << endl;
 
-    mFolders.clear();
+    bool firstRetrieve = mFolders.isEmpty();
+
+    Entry::List newFolders;
 
     // Personal calendar/addressbook
     Entry personal;
-    personal.active = true;
     KURL url = mUrl;
     url.setUser( QString::null );
     url.setPass( QString::null );
@@ -155,7 +165,12 @@ void FolderLister::slotListJobResult( KIO::Job *job )
       url.addPath( "Contacts" );
       personal.id = url.url();
     }
-    mFolders.append( personal );
+    if ( firstRetrieve ) {
+      personal.active = true;
+    } else {
+      personal.active = isActive( personal.id );
+    }
+    newFolders.append( personal );
 
     QDomElement docElement = doc.documentElement();
     QDomNode n;
@@ -195,12 +210,15 @@ void FolderLister::slotListJobResult( KIO::Job *job )
         Entry entry;
         entry.id = href;
         entry.name = displayName;
+        entry.active = isActive( entry.id );
         
-        mFolders.append( entry );
+        newFolders.append( entry );
       
         kdDebug() << "FOLDER: " << displayName << endl;
       }
     }
+
+    mFolders = newFolders;
 
     emit foldersRead();
   }

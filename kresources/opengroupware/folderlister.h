@@ -62,6 +62,7 @@ class FolderLister : public QObject
     Entry::List folders() const { return mFolders; }
 
     QStringList activeFolderIds() const;
+    bool isActive( const QString &id ) const;
 
     void setWriteDestinationId( const QString & );
     QString writeDestinationId() const { return mWriteDestinationId; }
