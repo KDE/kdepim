@@ -252,7 +252,7 @@ void KFolderTree::contentsMousePressEvent( QMouseEvent *e )
 //-----------------------------------------------------------------------------
 void KFolderTree::contentsMouseReleaseEvent( QMouseEvent *e )
 {
-    KListView::contentsMousePressEvent(e);
+    KListView::contentsMouseReleaseEvent(e);
     setSelectionModeExt(Extended);
 }
 
