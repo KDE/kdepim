@@ -27,17 +27,21 @@ libkcal_la_SOURCES = \
 	resourcecalendar.cpp resourcelocal.cpp resourcelocalconfig.cpp \
 	calendarresources.cpp
 
-kde_module_LTLIBRARIES = libkcm_kcalendars.la 
+kde_module_LTLIBRARIES = libkcm_kcalendars.la kcal_dir.la
 
 libkcm_kcalendars_la_SOURCES = kcmcalendars.cpp
 libkcm_kcalendars_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
 libkcm_kcalendars_la_LIBADD = libkcal.la -lkderesources
 
+kcal_dir_la_SOURCES = resourcelocaldir.cpp resourcelocaldirconfig.cpp
+kcal_dir_la_LDFLAGS    = $(all_libraries) -module $(KDE_PLUGIN)
+kcal_dir_la_LIBADD     = libkcal.la -lkderesources
+
 datadir = $(kde_appsdir)/Settings/Components
 data_DATA = kcalendars.desktop
 
 linkdir= $(kde_datadir)/kresources/calendar
-link_DATA = local.desktop
+link_DATA = local.desktop localdir.desktop
 
 METASOURCES = AUTO
 
