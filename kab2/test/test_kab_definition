@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE kab-def:definition>
-
-<kab-def:definition xmlns:kab-def="http://kde.org/kab_definition/">
-  <kab-def:field name="username"  mimetype="text/UCS-2"                     />
-  <kab-def:field name="name"      mimetype="text/UCS-2"         unique="no" />
-  <kab-def:field name="email"     mimetype="address/rfc822"                 />
-</kab-def:definition>
-
