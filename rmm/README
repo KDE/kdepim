@@ -1,3 +1,0 @@
-Test.cpp will compile by:
-
-g++ -o rmmtest test.cpp -I. -I$QTDIR/include -L.libs -L$QTDIR/lib -lrmm -lqt
