@@ -135,7 +135,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 
 
-	QObject *object = factory->create(fHandle,0L,"SyncAction",l);
+	QObject *object = factory->create(fHandle,name(),"SyncAction",l);
 
 	if (!object)
 	{
@@ -286,17 +286,17 @@ void ActionQueue::prepare(int m)
 		fReady=false;
 		return;
 	}
-	
+
 	if (m & WithInstaller)
 		queueInstaller(fInstallerDir,fInstallerFiles);
-		
+
 	queueCleanup();
 }
 
 void ActionQueue::queueInit(int m)
 {
 	FUNCTIONSETUP;
-	
+
 	addAction(new WelcomeAction(fHandle));
 
 	if (m & WithUserCheck)
@@ -308,7 +308,7 @@ void ActionQueue::queueInit(int m)
 void ActionQueue::queueConduits(KConfig *config,const QStringList &l,int m)
 {
 	FUNCTIONSETUP;
-	
+
 	// Add conduits here ...
 	//
 	//
