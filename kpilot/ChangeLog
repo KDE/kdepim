@@ -1,12 +1,6 @@
 TODO LIST (Ignore the file TODO)
 
-* Factor the Kroupware stuff into a conduit instead of
-  hardcoding it in the daemon.
-* GJJ: Remove all the Log: CVS tags from files. This is just dumbwork,
-  but will save us on merge conflicts later. This has already been
-  done in kpilot/
 * GJJ: move the file install widget to an iconview.
-* GJJ: lose the QMultiLineEdit in MemoWidget.
 * GJJ: Add a menuitem "Configure conduits" to the kpilotDaemon RMB Menu
 * GJJ: Show the sync log as a KPassivePopup
 * Good junior job: move the conduit configuration dialog (for the
@@ -33,9 +27,57 @@ TODO LIST (Ignore the file TODO)
 KPilot Developer's notes for January 30th, 2003
 ===============================================  
 
+* Ugh. Looked at jpilot source. Now I remember why doing C often
+  seemed a little unproductive. But it does give some very useful
+  information: We need a combo box to choose the Pilot's encoding. 
+  We can use the list from JPilot. Next, we need to make _all_ the
+  QString::fromLatin1() and QString::latin1() -- also all the 
+  implicit ones -- that refer to pilot records use the right codec.
+  This will require some possibly major work on the database classes.
+* The logging is still lousy for many conduits. I ran the
+  notes and address conduits, and the log was less than enlightening.
+* We need to sync _all_ databases, not just the conduited ones.
+* Encoding and decoding non-latin1 Pilots is a priority.
+
+2003-2-1  Adriaan de Groot
+* memoWidget.{h,cc} [BRANCH] Applied patch from David Mott for the GJJ
+  "Lose QMLE". Good job!
+
+2003-1-31  Adriaan de Groot
+* Let's do the time-warp again!
+* syncAction.{h,cc} [HEAD] Added a delayDone() function for use from
+  exec() to avoid possible stack growth as follows:
+  conduitExec()
+    exec()
+      syncDone()
+        SyncStack::conduitDone()
+          delete syncAction   // The one whose exec() we're still in!
+          conduitExec()       // Another conduit!
+            ...
+    return true;
+  I'm not sure I trust all the pointers to still be OK when this happens.
+  Using delayDone() makes sure that exec() and conduitExec() return
+  first and we get back to the main event loop.    
+* syncStack.{h,cc} [HEAD] Using a stack instead of a queue has some
+  comp-sci chique, but little practical value. Break up the API
+  to make it more easy to use elsewhere and practical to insert
+  extra items (like Kroupware) into the sync order.
+
 2003-1-30  Adriaan de Groot
 * Removing local8bit() calls in the code. They're not wanted.
 * Marked conduitSetup.{h,cc} as deprecated and removed from build.
+* Looked into bug #52138 again, and I just can't see it. My Pilot
+  syncs fine with KAddressbook and KNotes, both ways, with names
+  and memos with any latin1 character. [Update: aha! The bug is
+  about Japanese language Sony Clie's. So it turns out there are
+  Pilots that don't use latin1 at all. I'll take a look at how
+  jpilot deals with them.]
+* I'd like to change the About box tag-line for KPilot to:
+        KPilot - HotSync software for KDE
+  for a variety of consistency reasons. This can only happen
+  in HEAD, though.
+* Reversed some confusing accidental commits by me in the 
+  debugging department for the daemon.
 
 
 2003-1-26  Adriaan de Groot
