@@ -49,13 +49,9 @@ class EmpathComposeWindow : public KTMainWindow
 
     public:
         
-        EmpathComposeWindow();
-        EmpathComposeWindow(Empath::ComposeType t, const EmpathURL &);
-        EmpathComposeWindow(const QString &);
+        EmpathComposeWindow(const EmpathComposer::Form &);
         ~EmpathComposeWindow();
         
-        void bugReport();
-
     protected slots:
 
         // File menu slots
@@ -106,22 +102,21 @@ class EmpathComposeWindow : public KTMainWindow
         void _askForRecipient();
         void _askForSubject();
     
-        QPopupMenu        * fileMenu_;
-        QPopupMenu        * editMenu_;
-        QPopupMenu        * attachmentMenu_;
-        QPopupMenu        * messageMenu_;
-        QPopupMenu        * priorityMenu_;
-        QPopupMenu        * helpMenu_;
+        QPopupMenu  * fileMenu_;
+        QPopupMenu  * editMenu_;
+        QPopupMenu  * headersMenu_;
+        QPopupMenu  * attachmentMenu_;
+        QPopupMenu  * messageMenu_;
+        QPopupMenu  * priorityMenu_;
+        QPopupMenu  * helpMenu_;
 
         // Empath stuff
 
-        EmpathComposeWidget        * composeWidget_;
+        EmpathComposeWidget * composeWidget_;
         
         // Setup methods
         void setupMenuBar();
-
         void setupToolBar();
-
         void setupStatusBar();
         
         int id_confirmDelivery_;

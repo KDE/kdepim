@@ -77,11 +77,13 @@ class REnvelope : public RMessageComponent
          * Set the specified header to the string value.
          */
         void set(RMM::HeaderType t, const QCString & s);
-        void set(const QCString headerName, const QCString & s);
+        void set(const QCString & headerName, const QCString & s);
         void addHeader(RHeader);
         void addHeader(const QCString &);
         void _createDefault(RMM::HeaderType t);
-        
+       
+        RHeaderList headerList() { return headerList_; }
+           
         /**
          * @short Provides the 'default' sender.
          * Provides the 'default' sender. That is, if there's a 'From' header,
@@ -106,7 +108,7 @@ class REnvelope : public RMessageComponent
         RHeader        * get(const QCString &);
 
         RHeaderBody    * get(RMM::HeaderType h);
-
+        
         /**
          * This applies to all similar methods:
          * Returns an reference to an object of the given return type.

@@ -35,40 +35,35 @@
 #include <RMM_Enum.h>
 
 EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
-        const QString & headerName,
-        const QString & headerBody,
+        RMM::RHeader & header,
         QWidget * parent,
         const char * name)
     :
         QHBox(parent, "HeaderSpecWidget"),
-        headerName_(headerName),
-        headerBody_(headerBody)
+        header_(header)
 {
+    empathDebug("header: " + header.asString());
+    
     headerNameWidget_ = new QLabel(this);
-    setHeaderName(headerName_);
+    headerNameWidget_->setText(header_.headerName() + ": ");
     
     address_ = false;
 
-    RMM::HeaderDataType t(RMM::headerNameToType(headerName_.latin1()));
+    RMM::HeaderDataType t = RMM::headerTypesTable[header_.headerType()];
     
-    if (t == RMM::AddressList    ||
-        t == RMM::Address        ||
-        t == RMM::MailboxList    ||
-        t == RMM::Mailbox)
-        address_ = true;
+    address_ =  t == RMM::AddressList    ||
+                t == RMM::Address        ||
+                t == RMM::MailboxList    ||
+                t == RMM::Mailbox;
 
     if (address_) {
-
         EmpathAddressSelectionWidget * addressWidget = 
                 new EmpathAddressSelectionWidget(this);
-
         headerBodyWidget_ = addressWidget->lineEdit();
-        
     } else 
-
         headerBodyWidget_ = new QLineEdit(this, "headerBodyWidget");
 
-    headerBodyWidget_->setText(headerBody_);
+    headerBodyWidget_->setText(header_.headerBody()->asString());
     headerBodyWidget_->setFocus();
 }
 
@@ -77,24 +72,13 @@ EmpathHeaderSpecWidget::~EmpathHeaderSpecWidget()
     // Empty.
 }
 
-    void
-EmpathHeaderSpecWidget::setHeaderName(const QString & headerName)
-{
-    headerName_ = headerName;
-    headerNameWidget_->setText(headerName_ + ":");
-}
-
-    QString
+    RMM::RHeader &
 EmpathHeaderSpecWidget::header()
 {
-    return (headerName() + ": " + headerBody());
-}
-
-    void
-EmpathHeaderSpecWidget::setHeaderBody(const QString & headerBody)
-{
-    headerBody_ = headerBody;
-    headerBodyWidget_->setText(headerBody_);
+    QCString headerName = headerNameWidget_->text().local8Bit();
+    QCString headerBody = headerBodyWidget_->text().local8Bit();
+    header_ = headerName + headerBody;
+    return header_;
 }
 
     int

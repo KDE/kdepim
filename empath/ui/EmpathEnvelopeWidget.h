@@ -19,56 +19,59 @@
 */
 
 #ifdef __GNUG__
-# pragma interface "EmpathUI.h"
+# pragma interface "EmpathEnvelopeWidget.h"
 #endif
 
-#ifndef EMPATH_UI_H
-#define EMPATH_UI_H
+#ifndef EMPATHENVELOPEWIDGET_H
+#define EMPATHENVELOPEWIDGET_H
 
 // Qt includes
-#include <qobject.h>
+#include <qvbox.h>
 
 // Local includes
 #include "Empath.h"
+#include "EmpathDefines.h"
 #include "EmpathURL.h"
+#include "EmpathHeaderSpecWidget.h"
+#include <RMM_Message.h>
 
 /**
- * @short A KDE interface to Empath
- * A KDE interface to Empath.
+ * Widget for specifying the headers when composing a message.
  */
-class EmpathUI : public QObject
+class EmpathEnvelopeWidget : public QVBox
 {
-    Q_OBJECT
+    // Q_OBJECT
 
     public:
+        
+        /**
+         * Standard ctor
+         */
+        EmpathEnvelopeWidget(
+            RMM::REnvelope & headers,
+            QWidget * parent = 0, const char * name = 0);
 
-        EmpathUI();
-        ~EmpathUI();
-        
-    protected slots:
-    
-        void s_setupDisplay     (QWidget *);
-        void s_setupIdentity    (QWidget *);
-        void s_setupSending     (QWidget *);
-        void s_setupComposing   (QWidget *);
-        void s_setupAccounts    (QWidget *);
-        void s_setupFilters     (QWidget *);
-        void s_about            (QWidget *);
-        
-        void s_configureMailbox(const EmpathURL &, QWidget *);
+        /**
+         * dtor
+         */
+        ~EmpathEnvelopeWidget();
 
-        void s_getSaveName(const EmpathURL &, QWidget *);
+        RMM::REnvelope & headers();
         
-        void s_infoMessage(const QString &);
+        bool haveTo();
+        bool haveSubject();
         
-        void s_newComposer(const EmpathComposer::Form &);
-
     private:
 
-        void _connectUp();
-        void _wizard();
+        void    _addHeader(RMM::RHeader &);
+        void    _lineUpHeaders();
+       
+        RMM::REnvelope headers_;
+        
+        QList<EmpathHeaderSpecWidget> headerSpecList_;
+
+        int maxSizeColOne_;
 };
 
 #endif
-
 // vim:ts=4:sw=4:tw=78

@@ -45,6 +45,7 @@
 #include "EmpathDefines.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
+#include "EmpathComposer.h"
 #include "EmpathMailboxList.h"
 #include "EmpathIndexRecord.h"
 #include "EmpathMailSenderSendmail.h"
@@ -71,6 +72,8 @@ Empath::shutdown()
 {
     delete mailSender_;
     mailSender_ = 0;
+    delete composer_;
+    composer_ = 0;
 
     delete this;
 }
@@ -82,6 +85,11 @@ Empath::Empath()
 {
     EMPATH = this;
     updateOutgoingServer(); // Must initialise the pointer.
+    
+    composer_ = new EmpathComposer;
+    QObject::connect(
+        composer_, SIGNAL(composeFormComplete(const EmpathComposer::Form &)),
+        SIGNAL(newComposer(const EmpathComposer::Form &)));
 }
 
     void
@@ -591,7 +599,6 @@ void Empath::queue(RMM::RMessage & m)    { mailSender_->queue(m);    }
 void Empath::sendQueued()                { mailSender_->sendQueued();}
 void Empath::s_newMailArrived()          { emit(newMailArrived());   }
 void Empath::filter(const EmpathURL & m) { filterList_.filter(m);    }
-void Empath::s_bugReport()               { emit(bugReport());        }
 
 void Empath::s_setupDisplay(QWidget * parent)  { emit(setupDisplay(parent));   }
 void Empath::s_setupIdentity(QWidget * parent) { emit(setupIdentity(parent));  }
@@ -605,23 +612,27 @@ void Empath::s_newTask(EmpathTask * t) { emit(newTask(t)); }
 
     void 
 Empath::s_compose(const QString & recipient)
-{ emit(newComposer(recipient)); }
+{ composer_->newComposeForm(recipient); }
 
     void
 Empath::s_reply(const EmpathURL & url)
-{ emit(newComposer(ComposeReply, url)); }
+{ composer_->newComposeForm(EmpathComposer::ComposeReply, url); }
 
     void
 Empath::s_replyAll(const EmpathURL & url)
-{ emit(newComposer(ComposeReplyAll, url)); }
+{ composer_->newComposeForm(EmpathComposer::ComposeReplyAll, url); }
 
     void
 Empath::s_forward(const EmpathURL & url)
-{ emit(newComposer(ComposeForward, url)); }
+{ composer_->newComposeForm(EmpathComposer::ComposeForward, url); }
 
     void
 Empath::s_bounce(const EmpathURL & url)
-{ emit(newComposer(ComposeBounce, url)); }
+{ composer_->newComposeForm(EmpathComposer::ComposeBounce, url); }
+
+    void
+Empath::s_bugReport()
+{ composer_->bugReport(); }
 
     void
 Empath::saveMessage(const EmpathURL & url, QWidget * parent)
@@ -630,7 +641,6 @@ Empath::saveMessage(const EmpathURL & url, QWidget * parent)
     void
 Empath::s_configureMailbox(const EmpathURL & u, QWidget * w)
 { emit(configureMailbox(u, w)); }
-
 
     void
 Empath::s_infoMessage(const QString & s)

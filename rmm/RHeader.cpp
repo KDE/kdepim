@@ -37,9 +37,6 @@
 #include <RMM_MessageID.h>
 #include <RMM_Text.h>
 
-// TODO: Put the switch-case statement used to create a new headerBody in
-// a common private method.
-
 using namespace RMM;
 
 RHeader::RHeader()
@@ -56,34 +53,7 @@ RHeader::RHeader(const RHeader & h)
         headerType_(h.headerType_)
 {
     rmmDebug("copy ctor");
-   
-    // Can the following be done simpler?
-    switch (headerTypesTable[headerType_]) {
-        case Address:           
-            headerBody_ = new RAddress(*(RAddress *)h.headerBody_);                 break;
-        case AddressList:       
-            headerBody_ = new RAddressList(*(RAddressList *)h.headerBody_);         break;
-        case ContentType:       
-            headerBody_ = new RContentType(*(RContentType *)h.headerBody_);         break;
-        case Cte:               
-            headerBody_ = new RCte(*(RCte *)h.headerBody_);                         break;
-        case DateTime:          
-            headerBody_ = new RDateTime(*(RDateTime *)h.headerBody_);               break;
-        case DispositionType:   
-            headerBody_ = new RDispositionType(*(RDispositionType *)h.headerBody_); break;
-        case Mailbox:           
-            headerBody_ = new RMailbox(*(RMailbox *)h.headerBody_);                 break;
-        case MailboxList:       
-            headerBody_ = new RMailboxList(*(RMailboxList *)h.headerBody_);         break;
-        case Mechanism:         
-            headerBody_ = new RMechanism(*(RMechanism *)h.headerBody_);             break;
-        case MessageID:         
-            headerBody_ = new RMessageID(*(RMessageID *)h.headerBody_);             break;
-        case Text: 
-        default:     
-            headerBody_ = new RText(*(RText *)h.headerBody_);                       break;
-    }
-    CHECK_PTR(headerBody_);
+    headerBody_ = _newHeaderBody(headerType_, h.headerBody_);   
 }
 
 RHeader::~RHeader()
@@ -109,7 +79,7 @@ RHeader::operator = (const QCString & s)
 
     RMessageComponent::operator = (s);
     parsed_ = false;
-    assembled_    = false;
+    assembled_ = false;
     return *this;
 }
 
@@ -123,34 +93,8 @@ RHeader::operator = (const RHeader & h)
     headerType_ = h.headerType_;
 
     delete headerBody_;
-     
-    switch (headerTypesTable[headerType_]) {
-        case Address:           
-            headerBody_ = new RAddress(*(RAddress *)h.headerBody_);                 break;
-        case AddressList:       
-            headerBody_ = new RAddressList(*(RAddressList *)h.headerBody_);         break;
-        case ContentType:       
-            headerBody_ = new RContentType(*(RContentType *)h.headerBody_);         break;
-        case Cte:               
-            headerBody_ = new RCte(*(RCte *)h.headerBody_);                         break;
-        case DateTime:          
-            headerBody_ = new RDateTime(*(RDateTime *)h.headerBody_);               break;
-        case DispositionType:   
-            headerBody_ = new RDispositionType(*(RDispositionType *)h.headerBody_); break;
-        case Mailbox:           
-            headerBody_ = new RMailbox(*(RMailbox *)h.headerBody_);                 break;
-        case MailboxList:       
-            headerBody_ = new RMailboxList(*(RMailboxList *)h.headerBody_);         break;
-        case Mechanism:         
-            headerBody_ = new RMechanism(*(RMechanism *)h.headerBody_);             break;
-        case MessageID:         
-            headerBody_ = new RMessageID(*(RMessageID *)h.headerBody_);             break;
-        case Text: 
-        default:     
-            headerBody_ = new RText(*(RText *)h.headerBody_);                       break;
-    }
-    CHECK_PTR(headerBody_);
-   
+    headerBody_ = _newHeaderBody(headerType_, h.headerBody_);
+  
     RMessageComponent::operator = (h);
     parsed_ = true;
     assembled_    = false;
@@ -165,9 +109,9 @@ RHeader::operator == (RHeader & h)
     
     if (headerBody_ != 0 && h.headerBody_ != 0)
         return (
-            *headerBody_    == *h.headerBody_    &&
-            headerName_        == h.headerName_    &&
-            headerType_        == h.headerType_);
+            *headerBody_    == *h.headerBody_   &&
+            headerName_     == h.headerName_    &&
+            headerType_     == h.headerType_);
     
     if (headerBody_ == 0 && h.headerBody_ == 0)
         return (
@@ -244,22 +188,7 @@ RHeader::_parse()
         rmmDebug("I'm an unknown header, \"" + headerName_ + "\"");
     }
 
-    RHeaderBody * b;
-    switch (headerTypesTable[headerType_]) {
-        case Address:           b = new RAddress;           break;
-        case AddressList:       b = new RAddressList;       break;
-        case ContentType:       b = new RContentType;       break;
-        case Cte:               b = new RCte;               break;
-        case DateTime:          b = new RDateTime;          break;
-        case DispositionType:   b = new RDispositionType;   break;
-        case Mailbox:           b = new RMailbox;           break;
-        case MailboxList:       b = new RMailboxList;       break;
-        case Mechanism:         b = new RMechanism;         break;
-        case MessageID:         b = new RMessageID;         break;
-        case Text: default:     b = new RText;              break;
-    }
-    CHECK_PTR(b);
-
+    RHeaderBody * b = _newHeaderBody(headerType_);
     QCString hb = strRep_.right(strRep_.length() - split - 1);
     hb = hb.stripWhiteSpace();
     *b = hb;
@@ -290,6 +219,62 @@ RHeader::_assemble()
     void
 RHeader::createDefault()
 {
+}
+
+    RHeaderBody *
+RHeader::_newHeaderBody(HeaderType headerType)
+{    
+    RHeaderBody * b;
+    switch (headerTypesTable[headerType]) {
+        case Address:           b = new RAddress;           break;
+        case AddressList:       b = new RAddressList;       break;
+        case ContentType:       b = new RContentType;       break;
+        case Cte:               b = new RCte;               break;
+        case DateTime:          b = new RDateTime;          break;
+        case DispositionType:   b = new RDispositionType;   break;
+        case Mailbox:           b = new RMailbox;           break;
+        case MailboxList:       b = new RMailboxList;       break;
+        case Mechanism:         b = new RMechanism;         break;
+        case MessageID:         b = new RMessageID;         break;
+        case Text: default:     b = new RText;              break;
+    }
+    CHECK_PTR(b);
+
+    return b;
+}
+
+    RHeaderBody *
+RHeader::_newHeaderBody(HeaderType headerType, RHeaderBody * headerBody)
+{    
+    RHeaderBody * b;
+    switch (headerTypesTable[headerType]) {
+        case Address:           
+            b = new RAddress(*(RAddress *)headerBody);                 break;
+        case AddressList:       
+            b = new RAddressList(*(RAddressList *)headerBody);         break;
+        case ContentType:       
+            b = new RContentType(*(RContentType *)headerBody);         break;
+        case Cte:               
+            b = new RCte(*(RCte *)headerBody);                         break;
+        case DateTime:          
+            b = new RDateTime(*(RDateTime *)headerBody);               break;
+        case DispositionType:   
+            b = new RDispositionType(*(RDispositionType *)headerBody); break;
+        case Mailbox:           
+            b = new RMailbox(*(RMailbox *)headerBody);                 break;
+        case MailboxList:       
+            b = new RMailboxList(*(RMailboxList *)headerBody);         break;
+        case Mechanism:         
+            b = new RMechanism(*(RMechanism *)headerBody);             break;
+        case MessageID:         
+            b = new RMessageID(*(RMessageID *)headerBody);             break;
+        case Text: 
+        default:     
+            b = new RText(*(RText *)headerBody);                       break;
+    }
+    CHECK_PTR(b);
+
+    return b;
 }
 
 // vim:ts=4:sw=4:tw=78

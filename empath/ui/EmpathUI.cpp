@@ -73,16 +73,10 @@ EmpathUI::~EmpathUI()
 {
 }
 
-    void
-EmpathUI::s_newComposer(Empath::ComposeType t, const EmpathURL & m)
-{
-    (new EmpathComposeWindow(t, m))->show();
-}
-
     void    
-EmpathUI::s_newComposer(const QString & recipient)
+EmpathUI::s_newComposer(const EmpathComposer::Form & composeForm)
 {
-    (new EmpathComposeWindow(recipient))->show();
+    (new EmpathComposeWindow(composeForm))->show();
 }
 
     void
@@ -140,14 +134,6 @@ EmpathUI::s_about(QWidget * parent)
         "Hey !",
         i18n("Is it raining icepicks on your steel shore ?"),
         i18n("Yes/No"));
-}
-
-    void
-EmpathUI::s_bugReport()
-{
-    EmpathComposeWindow * w = new EmpathComposeWindow;
-    w->bugReport();
-    w->show();
 }
 
     void
@@ -223,12 +209,8 @@ EmpathUI::_connectUp()
         this,   SLOT(s_infoMessage(const QString &)));
 
     QObject::connect(
-        empath, SIGNAL(newComposer(Empath::ComposeType, const EmpathURL &)),
-        this,   SLOT(s_newComposer(Empath::ComposeType, const EmpathURL &)));
-    
-    QObject::connect(
-        empath, SIGNAL(newComposer(const QString &)),
-        this,   SLOT(s_newComposer(const QString &)));
+        empath, SIGNAL(newComposer(const EmpathComposer::Form &)),
+        this,   SLOT(s_newComposer(const EmpathComposer::Form &)));
     
     QObject::connect(
         empath, SIGNAL(configureMailbox(const EmpathURL &, QWidget *)),

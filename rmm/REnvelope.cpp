@@ -505,19 +505,21 @@ REnvelope::set(HeaderType t, const QCString & s)
     assembled_ = false;
 }
 
-#if 0
     void
 REnvelope::set(const QCString & headerName, const QCString & s)
 {
+    parse();
     RHeaderListIterator it(headerList_);
 
     for (; it.current(); ++it)
         if (!stricmp(it.current()->headerName(), headerName))
             headerList_.remove(it.current());
     
+    RHeader * hdr = new RHeader(headerName + ": " + s);
 
+    headerList_.append(hdr);
+    assembled_ = false;
 }
-#endif
 
     void
 REnvelope::addHeader(RHeader h)

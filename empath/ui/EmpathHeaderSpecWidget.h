@@ -32,6 +32,7 @@
 
 // Local includes
 #include "EmpathDefines.h"
+#include <RMM_Header.h>
 
 class QLineEdit;
 class QLabel;
@@ -43,8 +44,7 @@ class EmpathHeaderSpecWidget : public QHBox
     public:
         
         EmpathHeaderSpecWidget(
-            const QString & headerName = QString::null,
-            const QString & headerBody = QString::null,
+            RMM::RHeader & header,
             QWidget * parent = 0, const char * name = 0);
 
         ~EmpathHeaderSpecWidget();
@@ -52,11 +52,10 @@ class EmpathHeaderSpecWidget : public QHBox
         int         sizeOfColumnOne();
         void        setColumnOneSize(int);
 
-        QString     header();
+        RMM::RHeader & header();
+
         QString     headerName();
         QString     headerBody();
-        void        setHeaderName(const QString & headerName);
-        void        setHeaderBody(const QString & headerBody);
 
     signals:
 
@@ -72,9 +71,8 @@ class EmpathHeaderSpecWidget : public QHBox
 
         QLabel      * headerNameWidget_;
         QLineEdit   * headerBodyWidget_;
-        
-        QString headerName_;
-        QString headerBody_;
+       
+        RMM::RHeader header_;
         
         bool address_;
 };

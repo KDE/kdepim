@@ -44,6 +44,7 @@
 #include "Empath.h"
 #include <RMM_Message.h>
 
+/*
 EmpathComposeWindow::EmpathComposeWindow()
     : KTMainWindow()
 {
@@ -52,23 +53,14 @@ EmpathComposeWindow::EmpathComposeWindow()
     
     _init();
 }
+*/
 
-EmpathComposeWindow::EmpathComposeWindow(
-        Empath::ComposeType t, const EmpathURL & m)
+EmpathComposeWindow::EmpathComposeWindow(const EmpathComposer::Form & f)
     :    KTMainWindow()
 {
     composeWidget_    =
-        new EmpathComposeWidget(t, m, this, "composeWidget");
+        new EmpathComposeWidget(f, this, "composeWidget");
     
-    _init();
-}
-
-EmpathComposeWindow::EmpathComposeWindow(const QString & recipient)
-    : KTMainWindow()
-{
-    composeWidget_    =
-        new EmpathComposeWidget(recipient, this, "composeWidget");
-
     _init();
 }
 
@@ -95,7 +87,6 @@ EmpathComposeWindow::_init()
     setupToolBar();
     setupStatusBar();
     setView(composeWidget_, false);
-    composeWidget_->init();
     setCaption(i18n("Compose Message"));
     updateRects();
 }
@@ -198,6 +189,7 @@ EmpathComposeWindow::setupStatusBar()
     void
 EmpathComposeWindow::s_fileSendMessage()
 {
+    /*
     if (!composeWidget_->haveTo()) {
         _askForRecipient();
         return;
@@ -213,11 +205,13 @@ EmpathComposeWindow::s_fileSendMessage()
     hide();
     empath->send(outMessage);
     delete this;
+    */
 }
 
     void
 EmpathComposeWindow::s_fileSendLater()
-{
+{   
+    /*
     if (!composeWidget_->haveTo()) {
         _askForRecipient();
         return;
@@ -234,6 +228,7 @@ EmpathComposeWindow::s_fileSendLater()
 //        outMessage.addAttachmentList(composeWidget_->messageAttachments());
 
     empath->queue(outMessage);
+    */
 }
 
     void
@@ -324,6 +319,7 @@ EmpathComposeWindow::s_editFindAgain()
     void
 EmpathComposeWindow::s_messageSaveAs()
 {
+    /*
     RMM::RMessage message(composeWidget_->message());
     
     QString saveFilePath =
@@ -349,12 +345,13 @@ EmpathComposeWindow::s_messageSaveAs()
     d << message.asString();
 
     f.close();
-    
+    */
 }
 
     void
 EmpathComposeWindow::s_messageCopyTo()
 {
+    /*
     RMM::RMessage message(composeWidget_->message());
     
     EmpathFolderChooserDialog fcd(this);
@@ -363,6 +360,7 @@ EmpathComposeWindow::s_messageCopyTo()
         return;
 
     empath->write(fcd.selected(), message);
+    */
 }
 
     void
@@ -411,13 +409,6 @@ EmpathComposeWindow::s_digitallySign(bool)
 EmpathComposeWindow::s_encrypt(bool)
 {
     // STUB
-}
-
-    void
-EmpathComposeWindow::bugReport()
-{
-    setCaption(i18n("Bug Report"));
-    composeWidget_->bugReport();
 }
 
     void

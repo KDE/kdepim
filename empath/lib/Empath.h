@@ -38,6 +38,7 @@
 #include "EmpathMailboxList.h"
 #include "EmpathFilterList.h"
 #include "EmpathCachedMessage.h"
+#include "EmpathComposer.h"
 
 #include "RMM_Enum.h"
 #include "RMM_Message.h"
@@ -63,14 +64,6 @@ class Empath : public QObject
 
     public:
     
-        enum ComposeType {
-            ComposeReply,
-            ComposeReplyAll,
-            ComposeForward,
-            ComposeNormal,
-            ComposeBounce
-        };
-       
         /** 
          * Creates an Empath object.
          */
@@ -453,7 +446,6 @@ class Empath : public QObject
             QString ixinfo,
             QString xinfo);
 
-
         /**
          * @internal
          */
@@ -663,19 +655,11 @@ class Empath : public QObject
         void newMailArrived();
         /**
          * Signals that we want to compose a message.
-         * The URL is provided to refer to a message which may be quoted
-         * when replying.
+         * All the info about the message is kept in the composeform.
          * Usually connected to a slot in the UI module.
          */
-        void newComposer
-            (Empath::ComposeType, const EmpathURL &);
-        /**
-         * Signals that we want to compose a message to the given
-         * recipient.
-         * Usually connected to a slot in the UI module.
-         */
-        void newComposer(const QString &);
-        /**
+        void newComposer(const EmpathComposer::Form &);
+       /**
          * Signals that the display settings should be provided for
          * review. In other words, bring up the display settings dialog.
          * Usually connected to a slot in the UI module.
@@ -713,12 +697,6 @@ class Empath : public QObject
         void setupFilters(QWidget *);
         
         /**
-         * Signals that we want to file a bug report.
-         * Usually connected to a slot in the UI module.
-         */
-        void bugReport();
-
-        /**
          * Signals that we want to see who's responsible for this stuff.
          * Usually connected to a slot in the UI module.
          */
@@ -746,6 +724,7 @@ class Empath : public QObject
         EmpathFilterList        filterList_;
         
         EmpathMailSender        * mailSender_;
+        EmpathComposer          * composer_;
 
         QString                 hostName_;
         pid_t                   processID_;
