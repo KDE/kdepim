@@ -30,10 +30,11 @@ def kill_then_start_karm( filename, delete_file = True ):
   os.popen2( "killall karm" )
   time.sleep( 1 )
 
-  if delete_file and os.path.exists( os.path.expanduser( filename ) ):
-    os.remove( os.path.expanduser( filename ) )
+  _filename = os.path.expanduser( filename )
 
-  pid = os.spawnlp( os.P_NOWAIT, "karm", "karm", os.path.expanduser( filename ) )
+  if delete_file and os.path.exists( _filename ): os.remove( _filename )
+
+  pid = os.spawnlp( os.P_NOWAIT, "karm", "karm", _filename )
 
   id, n = "", 0
   while not id and n < 1000:
@@ -53,10 +54,10 @@ def kill_then_start_karm( filename, delete_file = True ):
     f, n = None, 0
     while not f and n < 10:
       time.sleep( 1 )
-      try: f = open( filename, "r" )
+      try: f = open( _filename, "r" )
       except IOError: pass
       n += 1
-    if not f: raise KarmTestError( "%s was not created" % filename )
+    if not f: raise KarmTestError( "%s was not created" % _filename )
     else: f.close()
 
   # strip trailing newline from dcop id
