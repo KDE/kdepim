@@ -21,6 +21,7 @@
 
 #include <klocale.h>
 #include <kconfig.h>
+#include <kglobalsettings.h>
 #include <kmessagebox.h>
 #include <kiconloader.h>
 #include <kmenubar.h>
@@ -109,7 +110,7 @@ void KNComposer::setConfig()
 {
 	view->edit->setWordWrap(QMultiLineEdit::FixedColumnWidth);
   view->edit->setWrapColumnOrWidth(lineLen);
-	QFont fnt=KGlobal::generalFont();
+	QFont fnt=KGlobalSettings::generalFont();
 	if(useViewFnt) fnt.setFamily(fntFam);
 	view->edit->setFont(fnt);
 }
