@@ -70,8 +70,7 @@ public:
 	PilotDatabase(const QString &name = QString::null);
 	virtual ~PilotDatabase();
 
-	enum { MAX_APPINFO_SIZE=8192
-		} Constants;
+	static const int MAX_APPINFO_SIZE=8192;
 
 
 	QString name() const { return fName; } ;

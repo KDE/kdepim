@@ -40,16 +40,12 @@
 
 // #define QT_NO_ASCII_CAST		(1)
 // #define QT_NO_CAST_ASCII		(1)
-//#define DEBUG				(1)
+// #define DEBUG			(1)
 // #define DEBUG_CERR			(1)
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
-
-#ifndef QT_VERSION
 #include <qglobal.h>
-#endif
+#include <pi-version.h>
 
 #if (QT_VERSION < 0x030200)
 #error "This is KPilot for KDE3.2 and won't compile with Qt < 3.2.0"
@@ -62,6 +58,20 @@
 #if !(KDE_IS_VERSION(3,2,0))
 #error "This is KPilot for KDE 3.2 and won't compile with KDE < 3.2.0"
 #endif
+
+
+#ifndef PILOT_LINK_VERSION
+#error "You need at least pilot-link version 0.9.5"
+#endif
+
+#define PILOT_LINK_NUMBER	((1000*PILOT_LINK_VERSION) + \
+				(100*PILOT_LINK_MAJOR)+PILOT_LINK_MINOR)
+#if PILOT_LINK_NUMBER < 1200
+#define PI_SIZE_T int
+#else
+#define PI_SIZE_T size_t
+#endif
+
 
 // Turn ON as much debugging as possible with -DDEBUG -DDEBUG_CERR
 // Some systems have changed kdWarning() and kdDebug() into nops,

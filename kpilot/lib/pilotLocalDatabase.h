@@ -28,11 +28,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-// Database class for a local (file based) pilot datbase.
-
-#include <time.h>	/* for broken pilot-link libraries */
-
-#include <pi-macros.h>	/* for recordid_t */
+#include "options.h"    /* for PI_SIZE_T */
 
 #include "pilotDatabase.h"
 
@@ -149,7 +145,7 @@ private:
 	struct DBInfo fDBInfo;
 	QString fPathName,fDBName;
 	char*       fAppInfo;
-	size_t      fAppLen;
+	PI_SIZE_T   fAppLen;
 	int         fNumRecords;
 	int         fCurrentRecord;
 	PilotRecord* fRecords[10000]; // Current max records in DB.. hope it's enough

@@ -32,14 +32,6 @@ static const char *kpilotlink_id = "$Id$";
 #include <pi-socket.h>
 #include <pi-dlp.h>
 #include <pi-file.h>
-#include <pi-version.h>
-
-#ifndef PILOT_LINK_VERSION
-#error "You need at least pilot-link version 0.9.5"
-#endif
-
-#define PILOT_LINK_NUMBER	((100*PILOT_LINK_VERSION) + \
-				PILOT_LINK_MAJOR)
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -684,7 +676,7 @@ void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool log)
 
 	QString t(entry);
 
-#if (PILOT_LINK_VERSION * 1000 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 110
+#if PILOT_LINK_NUMBER < 1100
 	t.append("X");
 #endif
 

@@ -547,7 +547,7 @@ void PilotLocalDatabase::openDatabase()
 
 	void *tmpBuffer;
 	pi_file *dbFile;
-	size_t size;
+	PI_SIZE_T size;
 	int attr, cat;
 	pi_uid_t id;
 

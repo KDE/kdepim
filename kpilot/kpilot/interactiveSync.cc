@@ -378,7 +378,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 
 	for (int i = 0; i < max; i++)
 	{
-		int size;
+		PI_SIZE_T size;
 
 		if (dbi.flags & dlpDBFlagResource)
 		{

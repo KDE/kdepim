@@ -136,7 +136,7 @@ PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 	FUNCTIONSETUP;
 	char buffer[PilotRecord::APP_BUFFER_SIZE];
 	int index, attr, category;
-	size_t size;
+	PI_SIZE_T size;
 
 	if (isDBOpen() == false)
 	{
@@ -160,7 +160,7 @@ PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 {
 	FUNCTIONSETUP;
 	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	size_t size;
+	PI_SIZE_T size;
 	int attr, category;
 	recordid_t id;
 
