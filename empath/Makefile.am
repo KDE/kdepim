@@ -18,7 +18,7 @@ empath_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module
 empath_la_LIBADD = \
 	$(top_builddir)/empath/lib/libempathkernel.la \
 	$(top_builddir)/empath/ui/libempathui.la \
-	$(top_builddir)/rmm/librmm.la
+	$(top_builddir)/librmm/librmm.la
 
 #############################################################################
 # Compile as a binary
