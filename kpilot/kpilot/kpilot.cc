@@ -216,8 +216,8 @@ void KPilotInstaller::startDaemonIfNeeded()
 		{
 			int wordoffset;
 			s.remove(0,12);
-			wordoffset=s.find(' ');
-			if (wordoffset>0) s.remove(wordoffset,60);
+			wordoffset=s.find(';');
+			if (wordoffset>0) s.truncate(wordoffset);
 
 			fLogWidget->addMessage(
 				i18n("Daemon status is `%1'")

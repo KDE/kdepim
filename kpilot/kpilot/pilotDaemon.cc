@@ -474,7 +474,7 @@ void PilotDaemon::showTray()
 	QString s = CSL1("PilotDaemon=");
 	s.append(shortStatusString());
 
-	s.append(CSL1(" NextSync="));
+	s.append(CSL1("; NextSync="));
 	s.append(syncTypeString(fNextSyncType));
 
 	s.append(CSL1(" ("));
@@ -482,7 +482,7 @@ void PilotDaemon::showTray()
 	{
 		s.append(fPilotLink->statusString());
 	}
-	s.append(CSL1(")"));
+	s.append(CSL1(");"));
 
 	return s;
 }
