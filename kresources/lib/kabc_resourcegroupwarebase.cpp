@@ -187,7 +187,6 @@ void ResourceGroupwareBase::slotDownloadJobResult( KPIM::GroupwareJob *job )
     emit loadingFinished( this );
     if ( addressBook() )
       addressBook()->emitAddressBookChanged();
-//     emit addressbookChanged();
   }
 
   mDownloadJob = 0;

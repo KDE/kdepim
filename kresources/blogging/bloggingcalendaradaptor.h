@@ -1,8 +1,6 @@
  /*
     This file is part of kdepim.
 
-    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2004 Till Adam <adam@kde.org>
     Copyright (C) 2004-05 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
