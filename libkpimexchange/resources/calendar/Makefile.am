@@ -8,7 +8,6 @@ INCLUDES = -I$(top_srcdir)/korganizer/interfaces \
     -I$(top_srcdir)/interfaces \
     -I$(top_srcdir) \
     -I$(top_srcdir)/libkpimexchange/core -I$(top_builddir)/libkpimexchange/core \
-    -I$(top_srcdir)/libkdepim/resources/calendar -I$(top_builddir)/libkdepim/resources/calendar \
     -I$(top_srcdir)/libical/src/libical -I$(top_srcdir)/libical/src/libicalss \
     -I$(top_builddir)/libical/src/libical -I$(top_builddir)/libical/src/libicalss \
     $(all_includes)
@@ -21,5 +20,5 @@ resourcecalendarexchange_la_LIBADD= -lkderesources \
                                     $(top_builddir)/libkcal/libkcal.la \
                                     $(top_builddir)/libkpimexchange/libkpimexchange.la 
 
-linkdir= $(kde_datadir)/resources/calendar
+linkdir= $(kde_datadir)/kresources/calendar
 link_DATA= exchange.desktop
