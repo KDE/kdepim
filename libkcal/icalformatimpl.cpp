@@ -1647,7 +1647,8 @@ icalcomponent *ICalFormatImpl::createCalendarComponent(Calendar *cal)
   icalcomponent_add_property(calendar,p);
 
   // Custom properties
-  writeCustomProperties(calendar, cal);
+  if( cal != 0 )
+    writeCustomProperties(calendar, cal);
 
   return calendar;
 }
