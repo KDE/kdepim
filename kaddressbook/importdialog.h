@@ -44,15 +44,22 @@ class ContactImportDialog : public KImportDialog
   private:
     KImportColumn *mFirstName;
     KImportColumn *mLastName;
+    KImportColumn *mAdditionalName;
+    KImportColumn *mNamePrefix;
+    KImportColumn *mNameSuffix;
+    KImportColumn *mNickName;
     KImportColumn *mBirthday;
     KImportColumn *mEmail;
     KImportColumn *mJobTitle;
+    KImportColumn *mRole;
     KImportColumn *mPhoneBusiness;
     KImportColumn *mPhoneHome;
     KImportColumn *mPhoneMobile;
     KImportColumn *mFaxBusiness;
     KImportColumn *mFaxHome;
     KImportColumn *mCompany;
+    KImportColumn *mMailClient;
+    KImportColumn *mUrl;
 
     KImportColumn *mAddressHomeStreet;
     KImportColumn *mAddressHomeCity;

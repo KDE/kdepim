@@ -35,6 +35,10 @@ ContactImportDialog::ContactImportDialog(KABC::AddressBook *doc,
 {
     mFirstName = new KImportColumn(this, KABC::Addressee::givenNameLabel(), 1);
     mLastName = new KImportColumn(this, KABC::Addressee::familyNameLabel(), 1);
+    mAdditionalName = new KImportColumn(this, KABC::Addressee::additionalNameLabel());
+    mNamePrefix = new KImportColumn(this, KABC::Addressee::prefixLabel());
+    mNameSuffix = new KImportColumn(this, KABC::Addressee::suffixLabel());
+    mNickName = new KImportColumn(this, KABC::Addressee::nickNameLabel());
     mBirthday = new KImportColumn(this, KABC::Addressee::birthdayLabel());
     mEmail = new KImportColumn(this, KABC::Addressee::emailLabel());
     mPhoneHome = new KImportColumn(this, KABC::Addressee::homePhoneLabel());
@@ -43,7 +47,10 @@ ContactImportDialog::ContactImportDialog(KABC::AddressBook *doc,
     mFaxHome = new KImportColumn(this, KABC::Addressee::homeFaxLabel());
     mFaxBusiness = new KImportColumn(this, KABC::Addressee::businessFaxLabel());
     mJobTitle = new KImportColumn(this, KABC::Addressee::titleLabel());
+    mRole = new KImportColumn(this, KABC::Addressee::roleLabel());
     mCompany = new KImportColumn(this, KABC::Addressee::organizationLabel());
+    mMailClient = new KImportColumn(this, KABC::Addressee::mailerLabel());
+    mUrl = new KImportColumn(this, KABC::Addressee::urlLabel());
 
     mAddressHomeCity = new KImportColumn(this, KABC::Addressee::homeAddressLocalityLabel());
     mAddressHomeStreet = new KImportColumn(this, KABC::Addressee::homeAddressStreetLabel());
@@ -65,10 +72,17 @@ void ContactImportDialog::convertRow()
   KABC::Addressee a;
   a.setGivenName(mFirstName->convert());
   a.setFamilyName(mLastName->convert());
+  a.setAdditionalName(mAdditionalName->convert());
+  a.setPrefix(mNamePrefix->convert());
+  a.setSuffix(mNameSuffix->convert());
+  a.setNickName(mNickName->convert());
   a.setBirthday( QDateTime::fromString( mBirthday->convert() ) );
   a.insertEmail(mEmail->convert(), true);
-  a.setRole(mJobTitle->convert());
-  
+  a.setRole(mRole->convert());
+  a.setTitle(mJobTitle->convert());
+  a.setMailer(mMailClient->convert());
+  a.setUrl(mUrl->convert());
+
   KABC::PhoneNumber p(mPhoneBusiness->convert(), KABC::PhoneNumber::Work);
   a.insertPhoneNumber(p);
   
