@@ -380,8 +380,6 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
 
   s_erver=new QLineEdit(page);
   l=new QLabel(s_erver,i18n("&Server:"), page);
-  if (a->id()!=-1) l->setEnabled(false);
-  if (a->id()!=-1) s_erver->setEnabled(false);
   s_erver->setText(a->server());
   topL->addWidget(l, 1,0);
   topL->addMultiCellWidget(s_erver, 1, 1, 1, 2);

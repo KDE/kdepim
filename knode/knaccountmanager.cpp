@@ -219,7 +219,7 @@ void KNAccountManager::editProperties(KNNntpAccount *a)
 
   KNConfig::NntpAccountConfDialog *confDlg = new KNConfig::NntpAccountConfDialog(a, knGlobals.topWidget);
   if (confDlg->exec())
-    applySettings(c_urrentAccount);
+    applySettings(a);
 
   delete confDlg;
 }

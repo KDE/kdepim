@@ -359,8 +359,9 @@ void KNNntpClient::doFetchNewHeaders()
   toFetch=last-oldlast;
   //qDebug("knode: last %d  oldlast %d  toFetch %d\n",last,oldlast,toFetch);
     
-  if(toFetch==0) {
+  if(toFetch<=0) {
     //qDebug("knode: No new Articles in group\n");
+    target->setLastNr(last);     // don't get stuck when the article numbers wrap
     return;
   }
   

@@ -147,7 +147,6 @@ KNGroupBrowser::~KNGroupBrowser()
 
 void KNGroupBrowser::slotReceiveList(KNGroupListData* d)
 {
-  leftLabel->setText(i18n("Groups on %1:").arg(a_ccount->name()));
   enableButton(User1,true);
   enableButton(User2,true);
 
@@ -309,6 +308,8 @@ void KNGroupBrowser::slotFilter(const QString &txt)
     }
   } else
     createListItems();
+
+  leftLabel->setText(i18n("Groups on %1: (%2 displayed)").arg(a_ccount->name()).arg(matchList->count()));
 
   arrowBtn1->setEnabled(false);
   arrowBtn2->setEnabled(false);
