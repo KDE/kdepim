@@ -39,9 +39,6 @@ class IncSearchWidget : public QWidget
     IncSearchWidget( QWidget *parent, const char *name = 0 );
     ~IncSearchWidget();
 
-    void setFields( const KABC::Field::List &list );
-    KABC::Field::List fields() const;
-
     KABC::Field *currentField() const;
 
     void setCurrentItem( int pos );
@@ -55,16 +52,12 @@ class IncSearchWidget : public QWidget
      */
     void doSearch( const QString& text );
 
-    /**
-      This signal is emmited whenever the search field changes.
-     */
-    void fieldChanged();
-
   private slots:
     void announceDoSearch();
-    void announceFieldChanged();
 
   private:
+    void initFields();
+
     QComboBox* mFieldCombo;
     KLineEdit* mSearchText;
     KABC::Field::List mFieldList;

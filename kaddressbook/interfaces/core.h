@@ -71,11 +71,6 @@ class Core : public QObject
     virtual KXMLGUIClient *guiClient() const { return mGUIClient; }
 
     /**
-      Returns the current search field.
-     */
-    virtual KABC::Field *currentSearchField() const = 0;
-
-    /**
       Returns the current sort field.
      */
     virtual KABC::Field *currentSortField() const = 0;
@@ -109,11 +104,6 @@ class Core : public QObject
       Is called whenever a contact is selected in the view.
      */
     virtual void setContactSelected( const QString &uid ) = 0;
-
-    /**
-      Sets the current search field list.
-     */
-    virtual void setSearchFields( const KABC::Field::List &fields ) = 0;
 
     /**
       DCOP METHOD: Adds the given email address to address book.

@@ -105,11 +105,6 @@ class KABCore : public KAB::Core
     KActionCollection *actionCollection() const;
 
     /**
-      Returns the current search field of the Incremental Search Widget.
-     */
-    KABC::Field *currentSearchField() const;
-
-    /**
       Returns the current sort field of the view.
      */
     KABC::Field *currentSortField() const;
@@ -214,11 +209,6 @@ class KABCore : public KAB::Core
       selected contacts.
      */
     void setCategories();
-
-    /**
-      Sets the field list of the Incremental Search Widget.
-     */
-    void setSearchFields( const KABC::Field::List &fields );
 
     /**
       Search with the current search field for a contact, that matches

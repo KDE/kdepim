@@ -36,8 +36,6 @@
 IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
     : QWidget( parent, name )
 {
-  setCaption( i18n( "Incremental Search" ) );
-
   QHBoxLayout *layout = new QHBoxLayout( this, 2, KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Search:" ), this );
@@ -55,16 +53,14 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   QToolTip::add( mFieldCombo, i18n( "Select incremental search field" ) );
   QWhatsThis::add( mFieldCombo, i18n( "Here you can choose the field, which shall be used for incremental search." ) );
 
-  resize( QSize(420, 50).expandedTo( sizeHint() ) );
-
   connect( mSearchText, SIGNAL( textChanged( const QString& ) ),
            SLOT( announceDoSearch() ) );
   connect( mSearchText, SIGNAL( returnPressed() ),
            SLOT( announceDoSearch() ) );
   connect( mFieldCombo, SIGNAL( activated( const QString& ) ),
            SLOT( announceDoSearch() ) );
-  connect( mFieldCombo, SIGNAL( activated( const QString& ) ),
-           SLOT( announceFieldChanged() ) );
+
+  initFields();
 
   setFocusProxy( mSearchText );
 }
@@ -78,32 +74,21 @@ void IncSearchWidget::announceDoSearch()
   emit doSearch( mSearchText->text() );
 }
 
-void IncSearchWidget::announceFieldChanged()
+void IncSearchWidget::initFields()
 {
-  emit fieldChanged();
-}
+  mFieldList = KABC::Field::allFields();
 
-void IncSearchWidget::setFields( const KABC::Field::List &list )
-{
   mFieldCombo->clear();
   mFieldCombo->insertItem( i18n( "All Fields" ) );
 
   KABC::Field::List::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it )
+  for ( it = mFieldList.begin(); it != mFieldList.end(); ++it )
     mFieldCombo->insertItem( (*it)->label() );
 
-  mFieldList = list;
-
   announceDoSearch();
-  announceFieldChanged();
 }
 
-KABC::Field::List IncSearchWidget::fields() const
-{
-  return mFieldList;
-}
-
-KABC::Field *IncSearchWidget::currentField()const
+KABC::Field *IncSearchWidget::currentField() const
 {
   if ( mFieldCombo->currentItem() == -1 || mFieldCombo->currentItem() == 0 )
     return 0;  // for error or 'use all fields'
@@ -114,7 +99,6 @@ KABC::Field *IncSearchWidget::currentField()const
 void IncSearchWidget::setCurrentItem( int pos )
 {
   mFieldCombo->setCurrentItem( pos );
-  announceFieldChanged();
 }
 
 int IncSearchWidget::currentItem() const

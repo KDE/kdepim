@@ -229,7 +229,6 @@ void ViewManager::setActiveView( const QString &name )
 
     // Update the inc search widget to show the fields in the new active
     // view.
-    mCore->setSearchFields( mActiveView->fields() );
     mActiveView->refresh();
 
   } else
@@ -281,7 +280,6 @@ void ViewManager::editView()
         setActiveFilter( pos );
       }
 
-      mCore->setSearchFields( mActiveView->fields() );
       mActiveView->refresh();
     }
   }

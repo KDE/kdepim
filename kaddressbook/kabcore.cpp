@@ -212,11 +212,6 @@ KActionCollection *KABCore::actionCollection() const
   return guiClient()->actionCollection();
 }
 
-KABC::Field *KABCore::currentSearchField() const
-{
-  return mIncSearchWidget->currentField();
-}
-
 KABC::Field *KABCore::currentSortField() const
 {
   return mViewManager->currentSortField();
@@ -486,11 +481,6 @@ void KABCore::setWhoAmI()
     static_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self( true ) )->setWhoAmI( addrList[ 0 ] );
 }
 
-void KABCore::setSearchFields( const KABC::Field::List &fields )
-{
-  mIncSearchWidget->setFields( fields );
-}
-
 void KABCore::incrementalTextSearch( const QString& text )
 {
   SearchManager::self()->search( text, mIncSearchWidget->currentField() );
@@ -499,7 +489,7 @@ void KABCore::incrementalTextSearch( const QString& text )
 void KABCore::incrementalJumpButtonSearch( const QStringList& characters )
 {
   SearchManager::self()->searchList( characters, mViewManager->currentSortField(), 
-                                 SearchManager::StartsWith );
+                                     SearchManager::StartsWith );
 }
 
 void KABCore::setModified()
