@@ -180,7 +180,7 @@ PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 {
 	FUNCTIONSETUP;
 	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	size_t size;
+	PI_SIZE_T size;
 	int index, attr;
 	recordid_t id;
 
@@ -200,7 +200,7 @@ PilotRecord *PilotSerialDatabase::readNextModifiedRec(int *ind)
 {
 	FUNCTIONSETUP;
 	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	size_t size;
+	PI_SIZE_T size;
 	int index, attr, category;
 	recordid_t id;
 
