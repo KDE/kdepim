@@ -92,7 +92,7 @@ void KNSmtpClient::doMail()
 bool KNSmtpClient::openConnection()
 {
   QString oldPrefix = errorPrefix;
-  errorPrefix=i18n("Unable to connect.\nThe following error ocurred:\n");
+  errorPrefix=i18n("Unable to connect.\nThe following error occurred:\n");
 
   if (!KNProtocolClient::openConnection())
     return false;

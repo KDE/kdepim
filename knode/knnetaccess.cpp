@@ -42,14 +42,14 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
      (pipe(nntpOutPipe)==-1)||
      (pipe(smtpInPipe)==-1)||
      (pipe(smtpOutPipe)==-1)) {
-    KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nFailed to open pipes for internal communcation!"));
+    KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nFailed to open pipes for internal communication!"));
     kapp->exit(1);
   }
   if((fcntl(nntpInPipe[0],F_SETFL,O_NONBLOCK)==-1)||
      (fcntl(nntpOutPipe[0],F_SETFL,O_NONBLOCK)==-1)||
      (fcntl(smtpInPipe[0],F_SETFL,O_NONBLOCK)==-1)||
      (fcntl(smtpOutPipe[0],F_SETFL,O_NONBLOCK)==-1)) {
-    KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nFailed to open pipes for internal communcation!"));
+    KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nFailed to open pipes for internal communication!"));
     kapp->exit(1);
   } 
 

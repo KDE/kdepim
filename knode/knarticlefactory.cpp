@@ -1065,7 +1065,7 @@ KNSendErrorDialog::KNSendErrorDialog() : QDialog(knGlobals.topWidget, 0, true)
 
   QVBoxLayout *topL=new QVBoxLayout(this, 5,5);
 
-  QLabel *l=new QLabel(QString("<b>%1</b><br>%2").arg(i18n("Errors occured while sending these articles:"))
+  QLabel *l=new QLabel(QString("<b>%1</b><br>%2").arg(i18n("Errors occurred while sending these articles:"))
                                                  .arg(i18n("The unsent articles are stored in the \"Outbox\" folder.")), this);
   topL->addWidget(l);
 
