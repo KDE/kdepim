@@ -250,7 +250,7 @@ KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn, 0,1);
 
-  d_elBtn=new QPushButton(i18n("&Delete...A"), this);
+  d_elBtn=new QPushButton(i18n("&Delete..."), this);
   connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(d_elBtn, 1,1);
 

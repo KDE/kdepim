@@ -43,8 +43,8 @@ class TableViewWrapper : public ViewWrapper
     virtual QString description() const
     {
       // Needs a better description.
-      QString desc = i18n("A listing of contacts in a table. Each cell of ");
-      desc += i18n("the the table holds a field of the contact.");
+      QString desc = i18n("A listing of contacts in a table. Each cell of "
+                          "the table holds a field of the contact.");
       
       return desc;
     }
