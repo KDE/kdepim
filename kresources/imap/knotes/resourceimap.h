@@ -52,38 +52,48 @@ namespace KNotesIMAP {
   Q_OBJECT
 
 public:
-    ResourceIMAP( const KConfig* );
-    virtual ~ResourceIMAP();
+  ResourceIMAP( const KConfig* );
+  virtual ~ResourceIMAP();
 
-    /**
-     * Load resource data.
-     */
-    virtual bool load();
+  /** Load resource data. */
+  bool load();
 
-    /**
-     * Save resource data.
-     */
-    virtual bool save();
+  /** Save resource data. */
+  bool save();
 
-    virtual bool addNote( KCal::Journal* );
+  /** Open the notes resource. */
+  bool doOpen();
+  /** Close the notes resource. */
+  void doClose();
 
-    virtual bool deleteNote( KCal::Journal* );
+  bool addNote( KCal::Journal* );
 
-    virtual void incidenceUpdated( KCal::IncidenceBase* );
+  bool deleteNote( KCal::Journal* );
 
-    // The IMAPBase methods called by KMail
-    virtual bool addIncidence( const QString& type, const QString& notes );
-    virtual void deleteIncidence( const QString& type, const QString& uid );
-    virtual void slotRefresh( const QString& type );
+  void incidenceUpdated( KCal::IncidenceBase* );
 
-    // Listen to KMail changes in the amount of sub resources
-    void subresourceAdded( const QString& type, const QString& id );
-    void subresourceDeleted( const QString& type, const QString& id );
+  // The IMAPBase methods called by KMail
+  bool addIncidence( const QString& type, const QString& resource,
+                     const QString& notes );
+  void deleteIncidence( const QString& type, const QString& resource,
+                        const QString& uid );
+  void slotRefresh( const QString& type, const QString& resource );
+
+  // Listen to KMail changes in the amount of sub resources
+  void subresourceAdded( const QString& type, const QString& resource );
+  void subresourceDeleted( const QString& type, const QString& resource );
 
 private:
-    // Parse a journal from a string
-    KCal::Journal* parseJournal( const QString& str );
-    KCal::CalendarLocal mCalendar;
+  bool addNote( KCal::Journal* journal, const QString& resource );
+
+  // Parse a journal from a string
+  KCal::Journal* parseJournal( const QString& str );
+  KCal::CalendarLocal mCalendar;
+
+  // The list of subresources
+  QMap<QString, bool> mResources;
+  // Mapping from uid to resource
+  QMap<QString, QString> mUidmap;
 };
 
 }

@@ -155,7 +155,12 @@ public:
   */
   virtual QStringList subresources() const;
 
-  // Listen to KMail changes in the amount of sub resources
+  // Listen to KMail changes
+  bool addIncidence( const QString& type, const QString& resource,
+                     const QString& ical );
+  void deleteIncidence( const QString& type, const QString& resource,
+                        const QString& uid );
+  void slotRefresh( const QString& type, const QString& resource );
   void subresourceAdded( const QString& type, const QString& id );
   void subresourceDeleted( const QString& type, const QString& id );
 
@@ -171,13 +176,10 @@ protected:
   virtual void incidenceUpdated( IncidenceBase *i ) { update( i ); }
   /** Append alarms of incidence in interval to list of alarms. */
 
-  virtual bool addIncidence( const QString& type, const QString& ical );
-  virtual void deleteIncidence( const QString& type, const QString& uid );
-  virtual void deleteIncidence( const QString& type, const QString& uid,
-                                bool silence );
-  virtual void slotRefresh( const QString& type );
+  void deleteIncidence( const QString& type, const QString& uid,
+                        bool silence );
 
-  virtual void doClose();
+  void doClose();
 
 private:
   void init();

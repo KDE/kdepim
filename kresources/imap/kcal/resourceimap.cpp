@@ -476,7 +476,8 @@ KCal::Incidence* ResourceIMAP::parseIncidence( const QString& str )
  return mFormat.fromString( str );
 }
 
-bool ResourceIMAP::addIncidence( const QString& type, const QString& ical )
+bool ResourceIMAP::addIncidence( const QString& type, const QString& resource,
+                                 const QString& ical )
 {
   if( type != "Calendar" && type != "Task" && type != "Journal" )
     // Not an ical for us
@@ -490,13 +491,13 @@ bool ResourceIMAP::addIncidence( const QString& type, const QString& ical )
   const bool silent = mSilent;
   mSilent = true;
   if ( type == "Calendar" && i->type() == "Event" ) {
-    addEvent( static_cast<Event*>(i) );
+    addEvent( static_cast<Event*>(i), resource );
     emit resourceChanged( this );
   } else if ( type == "Task" && i->type() == "Todo" ) {
-    addTodo( static_cast<Todo*>(i) );
+    addTodo( static_cast<Todo*>(i), resource );
     emit resourceChanged( this );
   } else if ( type == "Journal" && i->type() == "Journal" ) {
-    addJournal( static_cast<Journal*>(i) );
+    addJournal( static_cast<Journal*>(i), resource );
     emit resourceChanged( this );
   }
   mSilent = silent;
@@ -504,7 +505,9 @@ bool ResourceIMAP::addIncidence( const QString& type, const QString& ical )
   return true;
 }
 
-void ResourceIMAP::deleteIncidence( const QString& type, const QString& uid )
+void ResourceIMAP::deleteIncidence( const QString& type,
+                                    const QString& /*resource*/,
+                                    const QString& uid )
 {
   deleteIncidence( type, uid, true );
 }
@@ -540,8 +543,10 @@ void ResourceIMAP::deleteIncidence( const QString& type, const QString& uid,
   mSilent = silent;
 }
 
-void ResourceIMAP::slotRefresh( const QString& type )
+void ResourceIMAP::slotRefresh( const QString& type,
+                                const QString& /*resource*/ )
 {
+  // TODO: Only load the specified resource
   if ( type == "Calendar" )
     loadAllEvents();
   else if ( type == "Task" )
@@ -569,15 +574,15 @@ void ResourceIMAP::setSubresourceActive( const QString& subresource,
   if ( mEventResources.contains( subresource ) ) {
     config.setGroup( "Calendar" );
     config.writeEntry( subresource, active );
-    slotRefresh( "Calendar" );
+    slotRefresh( "Calendar", subresource );
   } else if ( mTaskResources.contains( subresource ) ) {
     config.setGroup( "Task" );
     config.writeEntry( subresource, active );
-    slotRefresh( "Task" );
+    slotRefresh( "Task", subresource );
   } else if ( mJournalResources.contains( subresource ) ) {
     config.setGroup( "Journal" );
     config.writeEntry( subresource, active );
-    slotRefresh( "Journal" );
+    slotRefresh( "Journal", subresource );
   }
 }
 

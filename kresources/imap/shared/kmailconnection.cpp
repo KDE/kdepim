@@ -101,7 +101,7 @@ bool KMailConnection::addIncidence( const QString& type, const QString& folder,
 {
 //   kdDebug(5650) << "KMailConnection::addIncidence( " << type << ", "
 //                 << folder << " ). iCal:\n" << ical << endl;
-  return mResource->addIncidence( type, ical );
+  return mResource->addIncidence( type, folder, ical );
 }
 
 void KMailConnection::deleteIncidence( const QString& type,
@@ -110,14 +110,14 @@ void KMailConnection::deleteIncidence( const QString& type,
 {
 //   kdDebug(5650) << "KMailConnection::deleteIncidence( " << type << ", "
 //                 << folder << ", " << uid << " )\n";
-  mResource->deleteIncidence( type, uid );
+  mResource->deleteIncidence( type, folder, uid );
 }
 
 void KMailConnection::slotRefresh( const QString& type, const QString& folder )
 {
 //   kdDebug(5650) << "KMailConnection::slotRefresh( " << type << ", "
 //                 << folder << " )\n";
-  mResource->slotRefresh( type );
+  mResource->slotRefresh( type, folder );
 }
 
 void KMailConnection::subresourceAdded( const QString& type,

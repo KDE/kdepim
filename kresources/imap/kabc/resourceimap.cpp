@@ -226,6 +226,7 @@ void KABC::ResourceIMAP::removeAddressee( const Addressee& addr )
  * changed.
  */
 bool KABC::ResourceIMAP::addIncidence( const QString& type,
+                                       const QString& resource,
 				       const QString& vCard )
 {
   if( type == "Contact" ) {
@@ -236,6 +237,7 @@ bool KABC::ResourceIMAP::addIncidence( const QString& type,
     addr.setResource( this );
     addr.setChanged( false );
     mAddrMap.insert( addr.uid(), addr );
+    mUidmap[ addr.uid() ] = resource;
 
     addressBook()->emitAddressBookChanged();
 
@@ -248,6 +250,7 @@ bool KABC::ResourceIMAP::addIncidence( const QString& type,
 }
 
 void KABC::ResourceIMAP::deleteIncidence( const QString& type,
+                                          const QString& /*resource*/,
 					  const QString& uid )
 {
   if( type == "Contact" ) {
@@ -262,7 +265,8 @@ void KABC::ResourceIMAP::deleteIncidence( const QString& type,
   }
 }
 
-void KABC::ResourceIMAP::slotRefresh( const QString& type )
+void KABC::ResourceIMAP::slotRefresh( const QString& type,
+                                      const QString& /*resource*/ )
 {
   if( type == "Contact" ) {
     const bool silent = mSilent;
@@ -276,17 +280,17 @@ void KABC::ResourceIMAP::slotRefresh( const QString& type )
 }
 
 void KABC::ResourceIMAP::subresourceAdded( const QString& type,
-                                           const QString& )
+                                           const QString& resource )
 {
   // TODO: Optimize this
-  slotRefresh( type );
+  slotRefresh( type, resource );
 }
 
 void KABC::ResourceIMAP::subresourceDeleted( const QString& type,
-                                             const QString& )
+                                             const QString& resource )
 {
   // TODO: Optimize this
-  slotRefresh( type );
+  slotRefresh( type, resource );
 }
 
 

@@ -39,13 +39,16 @@ class ResourceIMAPShared {
     virtual ~ResourceIMAPShared();
 
     // These are the methods called by KMail when the resource changes
-    virtual bool addIncidence( const QString& type, const QString& ical ) = 0;
-    virtual void deleteIncidence( const QString& type, const QString& uid ) = 0;
-    virtual void slotRefresh( const QString& type ) = 0;
-    virtual void subresourceAdded( const QString& /*type*/,
-                                   const QString& /*id*/ ) {}
-    virtual void subresourceDeleted( const QString& /*type*/,
-                                     const QString& /*id*/ ) {}
+    virtual bool addIncidence( const QString& type, const QString& resource,
+                               const QString& ical ) = 0;
+    virtual void deleteIncidence( const QString& type, const QString& resource,
+                                  const QString& uid ) = 0;
+    virtual void slotRefresh( const QString& type,
+                              const QString& resource ) = 0;
+    virtual void subresourceAdded( const QString& type,
+                                   const QString& resource ) = 0;
+    virtual void subresourceDeleted( const QString& type,
+                                     const QString& resource ) = 0;
 
   protected:
     /**

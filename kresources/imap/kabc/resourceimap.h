@@ -65,7 +65,7 @@ public:
   virtual ~ResourceIMAP();
 
   /**
-   * Make sure KMail is able to run.
+   * Open the contacts list
    */
   virtual bool doOpen();
 
@@ -108,12 +108,15 @@ public:
   void subresourceAdded( const QString& type, const QString& id );
   void subresourceDeleted( const QString& type, const QString& id );
 
-protected:
-  virtual bool addIncidence( const QString& type, const QString& ical );
-  virtual void deleteIncidence( const QString& type, const QString& uid );
-  virtual void slotRefresh( const QString& type );
+  bool addIncidence( const QString& type, const QString& resource,
+                     const QString& ical );
+  void deleteIncidence( const QString& type, const QString& resource,
+                        const QString& uid );
+  void slotRefresh( const QString& type, const QString& resource );
 
-  virtual void doClose();
+protected:
+  void insertAddressee( const Addressee&, const QString& resource );
+  void doClose();
 
   FormatPlugin* mFormat;
   QStringList mDeletedAddressees;
