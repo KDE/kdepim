@@ -237,9 +237,9 @@ void KitchenSync::addPart( const ActionPartService &service )
 
 void KitchenSync::initSystray( void )
 {
-    m_tray = new KSyncSystemTray( this, "KSyncSystemTray");
-    KPopupMenu *popMenu = m_tray->getContextMenu();
-    popMenu->insertSeparator();
+  m_tray = new KSyncSystemTray( parentWidget() );
+  KPopupMenu *popMenu = m_tray->getContextMenu();
+  popMenu->insertSeparator();
 }
 
 void KitchenSync::slotSync()
