@@ -5,10 +5,14 @@ Name=KitchenSync Konnectors
 Name[bg]=Конектори KitchenSync
 Name[et]=KitchenSynci Konnectorid
 Name[pt]=Conectores KitchenSync
-Name[pt_BR]=Conectores KitchenSync
+Name[pt_BR]=Konnectors do KitchenSync
 Name[ru]=Коннекторы KitchenSync
+Name[sr]=KitchenSync Konnector-и
+Name[sr@Latn]=KitchenSync Konnector-и
 Name[sv]=Kitchensync-anslutningar
+Name[tr]=KitchenSync Konnector bileşenleri
 Name[uk]=Конектори KitchenSync
+Name[xx]=xxKitchenSync Konnectorsxx
 Type=Service
 ServiceTypes=KResources/Manager
 
