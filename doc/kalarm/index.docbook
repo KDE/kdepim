@@ -1468,8 +1468,8 @@ versions of &kalarm; 0.5 contain copies of the libraries from
 </listitem>
 </itemizedlist>
 
-<para>&kalarm; uses about 8 Mb and the alarm daemon uses about 5 Mb of
-memory to run, but this may vary depending on your platform and
+<para>&kalarm; uses about 12 Mb and the alarm daemon uses about 2.5 Mb
+of memory to run, but this may vary depending on your platform and
 configuration.</para>
 
 <para>You can find a list of changes in the
