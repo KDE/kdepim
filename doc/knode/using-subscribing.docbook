@@ -42,17 +42,17 @@ Newsgroups</guilabel></para>
 
 <para>After some time, &knode; has fetched the list of available
 newsgroups and shows them in the left window <guilabel>Groups
-on</guilabel> in a tree. This tree view  shows the
-newsgroup hierarchy.</para> 
+on</guilabel> in a tree. This tree view shows the
+newsgroup hierarchy.</para>
 
-<tip> 
+<tip>
 <para>You find a short description about the structure of the usenet
 and the hierarchy of the single newsgroups at <ulink
 url="http://www.kirchwitz.de/~amk/dni/usenet-einfuehrung">http://www.kirchwitz.de/~amk/dni/usenet-einfuehrung</ulink>
-(german)</para> 
-</tip> 
+(german)</para>
+</tip>
 
-<sect3> 
+<sect3>
 <title><guilabel>Search</guilabel></title>
 
 <para>The simplest method to navigate in the tree is the input
@@ -156,7 +156,7 @@ subscribed to.</para>
 <para>This button opens a dialog which allows you to configure the list
 of new groups. You can choose between showing all groups since the
 last refresh or all groups since a given date. With the date option,
-&knode; provides a more flexible posibility to check for new
+&knode; provides a more flexible possibility to check for new
 groups. You can even check for new groups before the last refresh of
 the grouplist.</para> 
 
@@ -198,7 +198,7 @@ linkend="multiple-news-accounts"/> .</para>
 
 <para>We now want to subscribe to the &kde; group. Mark the the box
 beside the name. You can now see the group in the list labelled
-<guilabel>subscribe to</guilabel>. Another posibility is to use the
+<guilabel>subscribe to</guilabel>. Another possibility is to use the
 arrows between the two windows.</para> 
 
 <para>If you picked the wrong newsgroup by mistake, you can undo your
@@ -229,7 +229,7 @@ newsgroup. When you have in
 KNode</guimenuitem><guimenuitem>Reading
 news</guimenuitem><guimenuitem>General</guimenuitem></menuchoice>, the
 check box <guilabel>Check for new article automatically</guilabel>
-checked, &knode; trys to fetch the articles from the server, when the
+checked, &knode; tries to fetch the articles from the server, when the
 newsgroup is first selected. If this is unchecked, you have to use
 <menuchoice><guimenu>Account</guimenu><guimenuitem>Get new
 articles</guimenuitem></menuchoice>.</para>
@@ -238,7 +238,7 @@ articles</guimenuitem></menuchoice>.</para>
 <para>When you are using <application>leafnode</application> as a
 server, there will be a single article in the
 group. <application>leafnode</application> generates an article in
-every new subcribed group. This indicates
+every new subscribed group. This indicates
 <application>leafnode</application> will consider this group the next
 time it fetches articles. You can ignore an error message saying the
 article can not be found. If you select this article you tell
@@ -310,7 +310,7 @@ selection.</para>
 <para>The folder views contains not only the accounts you configured
 &mdash; in our example this is <emphasis>My News Account</emphasis>
 &mdash; but also three other folders. When you are subscribed to some
-newsgroups ther will be cross next to the name of the
+newsgroups there will be cross next to the name of the
 account. Clicking on the cross or the name of the account opens the
 tree.</para>
 
@@ -324,7 +324,7 @@ this particular group. You can find more about this in the chapter
 
 <para>When you select a newsgroup with your mouse, a list of articles
 of this group appears in the upper right window. If there are no
-articles in the upper left window, there are two posibilities. There
+articles in the upper left window, there are two possibilities. There
 are no articles for this newsgroup on the newsserver or the newsserver
 did not fetch them yet. Select
 <menuchoice><guimenu>Account</guimenu><guimenuitem>Get new articles in
@@ -347,13 +347,13 @@ the newsserver already got them from the internet. When you are using
 <title>The Newsgroup Folders</title> 
 
 <para>The newsgroup folders appear with the name the are given by the
-hierarchy on the newsserver. In our exapmle this is
+hierarchy on the newsserver. In our example this is
 <guilabel>comp.windows.x.kde</guilabel>. You can change the name shown
 in this view. In the context menu (click with the &RMB; on the
 newsgroups name) choose <menuchoice><guimenuitem>Rename
 group</guimenuitem></menuchoice>, then you can change the name in the
 inputfield. A good name for <guilabel>comp.windows.x.kde</guilabel>
-would be for eample <guilabel>The KDE Newsgroup</guilabel>.</para>
+would be for example <guilabel>The KDE Newsgroup</guilabel>.</para>
 
 <para>If you don't change this, the hierarchical name is shown.</para>
 
@@ -427,7 +427,7 @@ leafnode was unable to send, are normally found in
 <title>The Article View</title> 
 
 <para>The article view gives you a list of all articles in the
-selected newsgroup or folder. You can change the appearence of this
+selected newsgroup or folder. You can change the appearance of this
 view with the <guimenu>View</guimenu> menu. The uppermost row of the
 view contains the column headers.</para> 
 
@@ -491,7 +491,7 @@ count</guilabel></menuchoice> is activated.</para>
 </variablelist> 
 
 <sect4> 
-<title>The Symbols and Highlighting Used</title> 
+<title>The Symbols and Highlighting Used</title>
 
 <para>This is a short explanation of the different symbols for
 labeling articles.</para> 
@@ -552,7 +552,7 @@ corresponds to a score of 100.</para>
 </itemizedlist> 
 
 <para>Besides different symbols, &knode; is using the following
-highlighting:</para> 
+highlighting:</para>
 
 <variablelist> 
 <varlistentry> 
@@ -597,7 +597,7 @@ Shortcuts</guimenuitem></menuchoice>.</para>
 <term>Toggle Subthreads <keycap>T</keycap> 
 </term> 
 <listitem> 
-<para>The replies on an article are either shown or hiddden by
+<para>The replies on an article are either shown or hidden by
 multiply pressing this key. Another possibility for opening threads is
 using the <keycap>Right Arrow</keycap> key.</para> 
 </listitem> 
@@ -642,11 +642,11 @@ browse through all subscribed newsgroups like this.</para>
 </varlistentry>
 <varlistentry>
 <term>Next unread article <keycombo
-action="simul">&Alt;<keycap>Space</keycap></keycombo> 
+action="simul">&Alt;<keycap>Space</keycap></keycombo>
 </term> 
 <listitem> 
 <para>This key binding jumps to the next unread article. The sequence
-follows the order of articles in the article view. A thread is opend
+follows the order of articles in the article view. A thread is opened
 if needed to do so.</para>
 </listitem> 
 </varlistentry> 
@@ -706,22 +706,22 @@ possibility to keep track is sorting your articles with certain
 criterias.</para>
 
 <para>Sorting your articles and the choice of sorting criterias is
-done with the column titles in the article view. Clicking on a cloumn
+done with the column titles in the article view. Clicking on a column
 title makes it the current sorting criteria. Another click on the same
 column title changes the order of sorting.</para>
 
 <tip> 
 <para>The current sorting criteria is indicated with an arrow next to
-the titel. This gives you an easy sign, which column is used for
+the title. This gives you an easy sign, which column is used for
 sorting, too. You have to make the column wide enough, so that you
 can actually see the arrow. You can change the column width by moving
 the mouse pointer on the small area between two column titles. The
-pointer changes it's appeareance in two horizontal arrows. Clicking
+pointer changes it's appearance in two horizontal arrows. Clicking
 and holding the &LMB; mouse button allows you now to change the width
 of the column left to the mouse pointer.</para>
 </tip>
 
-<para>&knode; gives you the posibility to reduce the flood of
+<para>&knode; gives you the possibility to reduce the flood of
 articles. You can show only the articles fitting in your specific
 criterias. &knode; uses filters for this task. In this paragraphs we
 are just dealing with the predefined filters. For defining and using
@@ -776,7 +776,7 @@ connection. You can choose this filter by selecting
 <listitem> 
 <para>This shows only threads chosen as watched threads by you. For
 example, because you are participating in this thread or you are
-particular interested in the anwsers. You can choose this filter by
+particular interested in the answers. You can choose this filter by
 selecting
 <menuchoice><guimenu>View</guimenu><guisubmenu>Filter</guisubmenu><guimenuitem>Watched</guimenuitem></menuchoice></para> 
 
@@ -843,7 +843,7 @@ end it is a matter of taste which filter to select.</para>
 
 <para>The article window shows the currently selected article. You can
 scroll in it like in a normal text editor window. The difference is,
-you can not change the article. The article window ist for read
+you can not change the article. The article window is for read
 only.</para> 
 
 <para>By pressing the &RMB; in the article viewer you can access the
@@ -860,11 +860,11 @@ will recognize some informations here from the article view. For
 example the subject and the address or name where the article
 originated. When you click on the <guilabel>From:</guilabel> address,
 &knode; opens an editor window. The email address of the author and
-the subject of the refering article are already filled in for
+the subject of the referring article are already filled in for
 you. This enables you to reply to the author directly from her
 article.</para> 
 
-<para>The appeareance and content of the shown header shown by default
+<para>The appearance and content of the shown header shown by default
 can be configured by choosing <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuring
 KNode...</guimenuitem><guilabel>Reading
 News</guilabel><guilabel>Headers</guilabel></menuchoice>.  You can
@@ -881,13 +881,13 @@ window.</para>
 
 <para>The last lines of the header contain, if necessary, some
 references to other articles, shown as numbers in the range from 1 to
-n. These References are articles refering to the current article. The
+n. These References are articles referring to the current article. The
 article labled with 1 is the oldest article. This means it is the
-first one refering to the current article. The article with the
-highest number is the one the current article is refering to.</para>
+first one referring to the current article. The article with the
+highest number is the one the current article is referring to.</para>
 
 <para>When you click on a reference, the according article is loaded
-and shown in the article view. It can occure, &knode; is telling you,
+and shown in the article view. It can occur, &knode; is telling you,
 the referred article is no longer reachable. This always happens when
 an article is older and the article management of &knode; or your
 newsserver decided to delete it from the newsgroup. How to get such an
@@ -932,7 +932,7 @@ every line. There are other possible signs. If you can not directly
 recognize a quote, the author did not obey the rules of proper
 quoting.</para> 
 
-<para>Furthermore it is usual to start an anwser with a
+<para>Furthermore it is usual to start an answer with a
 introductionary line.</para>
  
 <para>Something like:</para> 
@@ -943,7 +943,7 @@ introductionary line.</para>
 
 <tip> 
 <para>Normally you do not have to bother with these introductionary
-lines. &knode; does this automaticaly, when you reply to an
+lines. &knode; does this automatically, when you reply to an
 article. How to configure this line, you can read in chapter</para> 
 </tip> 
 
@@ -964,7 +964,7 @@ KNode...</guimenuitem><guilabel>Reading
 News</guilabel><guilabel>Viewer</guilabel></menuchoice>.</para>
 </caution> 
 
-<para>When the body of an article contains links to internet adresses,
+<para>When the body of an article contains links to internet addresses,
 you can invoke an internet browser, starting with this address, by
 clicking on the link. Details about configuring this feature you can
 find in <link linkend="setting-news-general">General news
@@ -976,7 +976,7 @@ settings</link>.</para>
 <title>The Signature</title> 
 
 <para>Below the main text of an article, you find the signature of the
-author. Provided you did not turn this behaviour off in
+author. Provided you did not turn this behavior off in
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
 KNode...</guimenuitem><guilabel>Reading
 News</guilabel><guilabel>General</guilabel></menuchoice>.  The
@@ -1002,7 +1002,7 @@ KNode...</guimenuitem><guilabel>Reading
 News</guilabel><guilabel>Viewer</guilabel><guilabel>Show alternative
 contents as attachments</guilabel></menuchoice>. When this option is
 checked, all alternative formats are shown as attachments and can be
-opend and viewed like them.</para> 
+opened and viewed like them.</para> 
 
 <para>When this option is unchecked, you do not see the different text
 formats and &knode; decides which one is best to be shown.</para>
@@ -1033,7 +1033,7 @@ you want, without bothering somebody. Some groups even send you error
 messages back.</para> 
 
 <para>Here you can easily identify obvious mistakes like a missing or
-a wron e-mail address or a wrong configured charset, which doesn't
+a wrong e-mail address or a wrong configured charset, which doesn't
 show all special characters.</para> 
 
 <para>You can find a selection of test groups in <link
@@ -1046,7 +1046,7 @@ their own test groups, which are probably less crowded.</para>
 <para>Remember, you have to download the articles of the new
 subscribed group. Perhaps there are many articles in these groups, so
 it will take some time to fetch them the first time. The only
-important articles are yours and the anwsers by the check handler. If
+important articles are yours and the answers by the check handler. If
 you want to reduce the amount of fetched articles during the test. you
 can configure this in
 <menuchoice><guimenu>Settings</guimenu><guilabel>Configure
@@ -1055,7 +1055,7 @@ News</guilabel><guilabel>General</guilabel><guilabel>Maximal number of
 articles to fetch</guilabel></menuchoice>. If you reduce this
 dramatically, you should not wait too long for fetching the new
 articles after sending your test article, otherwise your article can
-be a vicitim of your limitations. A tolerably fast newsserver, should
+be a victim of your limitations. A tolerably fast newsserver, should
 provide your article right after you sent it. Maybe you have to wait a
 while, in worst case 1 or 2 days. Feel free to send another article,
 if can not see your initial one. This is what the test groups are
@@ -1101,7 +1101,7 @@ information about the content of your article.</para>
 </tip> 
 
 <para>The <guilabel>Groups:</guilabel> field already contains the test
-newsgroup you selected befor. Do not change this.</para> 
+newsgroup you selected before. Do not change this.</para> 
 
 <para>Below the input field for the <glossterm>newsgroup</glossterm>
 there is an other inactive option-field. This function is explained
@@ -1167,7 +1167,7 @@ linkend="faq">Frequently Asked Questions</link>.</para>
 <important> 
 <para>Even when you are using a local newsserver, you have to check
 for new articles. The local newsserver just sends the article, it does
-not store it in the local newsgroup. So you have to synchronise with
+not store it in the local newsgroup. So you have to synchronize with
 an external newsserver, if you want to see if your test article
 arrived.</para> 
 </important> 
@@ -1191,8 +1191,8 @@ article in usenet with &knode;.</para>
 <sect3> 
 <title>Post Reply</title> 
 
-<para>After successfully publishing an article, we will now anwser to
-your own article. You want to anwser the question you asked, don't
+<para>After successfully publishing an article, we will now answer to
+your own article. You want to answer the question you asked, don't
 you?</para> 
 
 <para>Select your article in the article view and press the &RMB;. You
@@ -1226,7 +1226,7 @@ branch in the original discussion. This happens, when a new topic
 occurs in the original discussion or the original subject changed for
 some reason.</para> 
 
-<para>If you anwser to an article with such a subject, delete the
+<para>If you answer to an article with such a subject, delete the
 parenthesized part of the subject. The first part with a prefixed
 <emphasis>Re:</emphasis> remains.</para>
 
@@ -1240,7 +1240,7 @@ we want to reply to has already been copied to the Editor by &knode;
 To indicate the text is a quote, every line is prefixed with a
 <emphasis>&gt;</emphasis>.</para> 
 
-<para>In front of the quoted text, &knode; has put a introduction
+<para>In front of the quoted text, &knode; has put an introduction
 line. The content of this line refers to the original author. You can
 change the standard text of this line in
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
@@ -1249,7 +1249,7 @@ News</guilabel><guilabel>Composer</guilabel><guilabel>Introduction
 Phrase:</guilabel></menuchoice>.</para> 
 
 <para>The original article contains the question: <emphasis>Did it
-work?</emphasis> We want to anwser this question now.</para>
+work?</emphasis> We want to answer this question now.</para>
 
 <para>Place the cursor below the quoted question and write in the next
 line:</para>
@@ -1260,7 +1260,7 @@ line:</para>
 
 <para>We are not finished now. It is considered polite to begin with
 greeting like <quote>Hello</quote> in the first line. If you call the
-atuthor by his name or not, depends on your habits. Watch the
+author by his name or not, depends on your habits. Watch the
 newsgroup to get used to the habits there.</para> 
 
 <para>Next we delete all not mandatory parts of the quoted article. In
@@ -1316,7 +1316,7 @@ you want to send an email, a news article or both.</para>
 
 <para>The Mail Reply follows the same lines as posting a reply in a
 newsgroup. The Mail Reply is sent directly to the author and does not
-apear in any newsgroup. This is the only difference.</para> 
+appear in any newsgroup. This is the only difference.</para> 
 
 <para>Sometimes it is better to use an emailed reply instead of
 posting a reply to newsgroup. Primarily, when you want to correct an
@@ -1334,7 +1334,7 @@ the <guilabel>Groups:</guilabel> field is replaced by a
 address. In our example this should be your own email address, if
 &knode; is set up correctly.</para> 
 
-<para>For emails apply the same rules for quoting and politness apply
+<para>For emails apply the same rules for quoting and politeness apply
 as for posting an article in a newsgroup.</para> 
 
 <para>After finishing your Reply, you can send it.</para> 

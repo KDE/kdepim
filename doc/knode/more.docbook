@@ -1,4 +1,4 @@
-<!-- <?xml version="1.0" ?> 
+<!-- <?xml version="1.0" ?>
 <!DOCTYPE chapter PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd"> -->
 	
 <chapter id="knode-more-info"> 
@@ -48,12 +48,12 @@ it.</para>
 &ie; after successfully configuring &knode; you should post some
 articles to those groups to test your settings.</para>
 
-<para>Some groups support automatic replys thru email to enable you to
-test whether your entered identity is correct and mail-replys actually
+<para>Some groups support automatic replies thru email to enable you to
+test whether your entered identity is correct and mail-replies actually
 arrive in your mailbox.</para>
 
 <para>In addition, some scripts are offered which check your articles
-for errorous settings and generate a followup with useful
+for erroneous settings and generate a followup with useful
 hints.</para> 
 
 <simplelist> 
@@ -91,7 +91,7 @@ url="http://www.kirchwitz.de/~amk/dni/erste-schritte">http://www.kirchwitz.de/~a
 <member>Questions and answers from von de.newusers.questions: <ulink
 url="http://www.kirchwitz.de/~amk/dni/faq">http://www.kirchwitz.de/~amk/dni/faq</ulink>
 (german)</member> 
-<member>Seven thesises about behaviour in the internet: <ulink
+<member>Seven thesises about behavior in the internet: <ulink
 url="http://www.kirchwitz.de/~amk/dni/hoeflichkeit">http://www.kirchwitz.de/~amk/dni/hoeflichkeit</ulink>
 (german)</member> 
 <member>Introduction to the usenet: <ulink

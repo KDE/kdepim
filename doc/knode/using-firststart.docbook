@@ -139,7 +139,7 @@ later by your Internet provider.</para>
 </sect3> 
 
 <sect3> 
-<title><guilabel>Email address</guilabel></title> 
+<title><guilabel>Email address</guilabel></title>
 
 <para>The email address you enter here will be used as sender in news
 articles, &ie; as actual address of the author, in conjunction with
@@ -223,7 +223,7 @@ whole world with every article) or just a cool quote. The signature is
 your brand, so to speak, which will mark all your articles. Therefore
 your signature should be designed sloppily or in the long run annoying
 to others. An old joke that one would have to read over and over again
-does not foster sympathy or the interes of the other newsgroup
+does not foster sympathy or the interest of the other newsgroup
 subscribers.</para> 
 
 <para>You can directly enter the file name of the signature file but
@@ -259,7 +259,7 @@ signature directly in the input field below.</para>
 <tip> 
 <para>Please make sure that in this case also your
 <glossterm>signature</glossterm> should not contain more than 4
-lines. A separation line is not neccesary as &knode; inserts it
+lines. A separation line is not necessary as &knode; inserts it
 automatically.</para>
 </tip> 
 </sect3> 
@@ -364,7 +364,7 @@ established a connection to the news server and if, for whatever
 reason, no data is received from or transmitted to the news
 server. After the specified time has expired, &knode; automatically
 disconnects. This, among other things, relieves the server of
-unneccessay connections which reduce its availibilty for other
+unnecessary connections which reduce its availibility for other
 subscribers. It also makes sure that an automatically established
 Internet connection is not held unnecessarily although no data is
 being sent or received.</para>
@@ -487,12 +487,12 @@ following Dialog Box appears.</para>
 account settings Dialog Box. But why do we need an email account in a
 newsreader?</para>
 
-<para>Sometimes you need to anwser to the author of an article
+<para>Sometimes you need to answer to the author of an article
 directly, without posting to the newsgroup. For example, when you want
 to make a very personal comment or want to correct an error. Sometimes
 a dialog is more appropriate than a public remark.</para>
 
-<para>Thats why &knode; provides the posssibility to reply by
+<para>Thats why &knode; provides the possibility to reply by
 email. If you want to use this feature, you must tell &knode; how to
 send emails. You just need to insert the mailserver. When you have
 already configured an email account, &ie; with &kmail;, you can reuse
@@ -549,11 +549,11 @@ connection to your mailserver after this amount of time.</para>
 <title><guilabel>Timeout</guilabel></title> 
 
 <para>When &knode; tries to connect to the mail server, it waits this
-long for a reply by the the server. Is this time execceded, you get a
+long for a reply by the the server. Is this time exceeded, you get a
 error message.</para> 
 
 <tip> 
-<para>Depending on the quality of your connnection and the actual load
+<para>Depending on the quality of your connection and the actual load
 of your mail server, you can get long reply times. If &knode; cancels
 the connection due to this, you should increase the timeout.</para> 
 </tip> 
@@ -693,7 +693,7 @@ articles</guimenuitem></menuchoice> is appropriate.</para>
 
 <para>This sets the restriction of the articles, which are requested
 from the server while downloading. The value configured here is for
-each Newsgroup seperately. Set this for instance to 300, so that only
+each Newsgroup separately. Set this for instance to 300, so that only
 the 300 newest articles of the newsgroup are requested. Other articles
 are discarded!</para> 
 
@@ -800,8 +800,8 @@ kind of navigation you can change it.</para>
 <title><guilabel>General</guilabel></title>
 
 <para>The keyboard behavior between &knode; and &kmail; is a bit
-different. With the switch <guilabel>Emulate the keyboard behaviour of
-KMail</guilabel> you can activate the same keyboard behaviour as in
+different. With the switch <guilabel>Emulate the keyboard behavior of
+KMail</guilabel> you can activate the same keyboard behavior as in
 &kmail; for &knode;.</para>
 
 </sect3>
@@ -881,7 +881,7 @@ that follow up the thread.</para>
 <sect3> 
 <title><guilabel>Default score for watched threads</guilabel></title> 
 
-<para>If an article is interisting, it will get a score above 0. Here
+<para>If an article is interesting, it will get a score above 0. Here
 you can enter the default score for those articles. Choosing the menu
 item <menuchoice><guimenu>Scoring</guimenu><guimenuitem>Watch
 Thread</guimenuitem></menuchoice> will give this score to all the
@@ -925,7 +925,7 @@ no longer needed. We skip this feature for now, because it is not
 essential for the setup of &knode;</para> 
 
 <para>You can find more detailed informations about filters in <link
-linkend="using-filters">Definig and using filters</link>.</para>
+linkend="using-filters">Defining and using filters</link>.</para>
 
 <para>The lower list, labeled <guilabel>Menu</guilabel>, shows the
 appearance of the menu <menuchoice><guimenu>View</guimenu>
@@ -947,8 +947,8 @@ position.</para>
 optically. The separators are shown as <literal>====</literal>
 in the list. In the Menu they show up as some more appealing
 horizontal lines. Try to add a separator. Then you select the
-seperator and remove it by pressing <guibutton>Remove
-seperator</guibutton> wider.</para> 
+separator and remove it by pressing <guibutton>Remove
+separator</guibutton> wider.</para> 
 
 <para>Any changes you make here, you can see in
 <menuchoice><guimenu>View</guimenu><guisubmenu>Filter</guisubmenu></menuchoice>
@@ -1099,7 +1099,7 @@ list.</para>
 
 <para>Now you can select any attribute for the display of the field
 and it's content. Next, acknowledge your input with the
-<guibutton>OK</guibutton>. The new header line appers now in the list
+<guibutton>OK</guibutton>. The new header line appears now in the list
 and will later be shown in the article window.</para>
 
 </example>
@@ -1111,9 +1111,9 @@ headers in the article window.</para>
 <tip> 
 <para>The statement that the new header line will be shown in the
 article window is actually pretty optimistic, because the entry
-X-Newsreader isn't required for Usenet artciles. Therefore, not all
+X-Newsreader isn't required for Usenet articles. Therefore, not all
 articles will contain that header line. If the line doesn't exist, the
-according entry simply won't be shown. You will get more informationen
+according entry simply won't be shown. You will get more informations
 about headers at <ulink
 url="http://www.kirchwitz.de/~amk/dni/headerzeilen">http://www.kirchwitz.de/~amk/dni/headerzeilen</ulink>
 (german)</para> 
@@ -1141,7 +1141,7 @@ automatically corrected.</para>
 </sect3> 
 
 <sect3> 
-<title><guilabel>Remove trailing empty lines</guilabel></title> 
+<title><guilabel>Remove trailing empty lines</guilabel></title>
 
 <para>If this is active, empty lines at the end of the article will
 automatically hidden.</para> 
@@ -1157,15 +1157,15 @@ article window, if it isn't, the signature is surpressed.</para>
 
 <caution> 
 <para>Please notice that &knode; can display the signature
-correctly only if it can be seperated correctly from the article
+correctly only if it can be separated correctly from the article
 content in the current article. There are newsreaders which do this
-seperation incorrectly. Two <quote>-</quote> with a following
+separation incorrectly. Two <quote>-</quote> with a following
 <quote>&nbsp;</quote> (space) are correct.</para>
 </caution> 
 
 <tip> 
 <para>Many participants in the newsgroups give hints on their homepage
-or intentionally erroneous specified Email adresses in the header in
+or intentionally erroneous specified Email addresses in the header in
 the signature. If you disable displaying the signature, you might
 loose this information. On the other hand you might save yourself
 from reading strange quotes.</para> 
@@ -1277,13 +1277,13 @@ settings.</para>
 <title><guilabel>Charset</guilabel></title>
 
 <para>Here you can choose the charset used for encoding your
-articles. Normally this is <acronym>US-ASCII</acronym> for english
+articles. Normally this is <acronym>US-ASCII</acronym> for English
 speaking countries, but your charset may differ. The default is the
 charset used in your global &kde; settings, so you should not have to
 change this.</para>
 
 <para>When you want to post articles in newsgroups with other charsets
-(&eg; eastern european or asian) you can set the required charset
+(&eg; eastern European or Asian) you can set the required charset
 here.</para>
 
 </sect3>
@@ -1299,7 +1299,7 @@ transfer. You can choose between 8-bit and 7-bit
 transfered correctly. This is for example the normal option for the
 German groups (de.*).</para> 
 
-<para>When you choose quoted-printable, 8-bit charcters (&eg; german
+<para>When you choose quoted-printable, 8-bit characters (&eg; german
 umlauts or special characters) are send as encoded 7-bit
 charcaters.</para>
 
@@ -1334,8 +1334,8 @@ article was already received.</para>
 
 <para>A Message-ID consists of a valid <acronym>FQDN</acronym> (Full
 Qualified Domain Name). This means it looks similar to an email
-address with a identification before the <literal>@</literal> and the
-domain.</para>  
+address with an identification before the <literal>@</literal> and the
+domain.</para>
 
 <para>The identification is generated by &knode; automatically, but
 you must provide a valid domain name in <guilabel>Hostname</guilabel>
@@ -1346,7 +1346,7 @@ option. Let the newsserver generate a Message-ID for you.</para>
 <title>Message-ID</title>
 
 <para>An example for a valid domain would be:
-<literal>kde.org</literal>. A Message-ID gernerated with this domain
+<literal>kde.org</literal>. A Message-ID generated with this domain
 will look like:</para> 
 
 <screen>934lek9934@kde.org</screen> 
@@ -1431,11 +1431,11 @@ line. Besides you can deactivate the automatic word-wrapping
 completely.</para> 
 
 <tip> 
-<para>It is recomended to use no more than 76 characters. Even when
-you are able to diable more. Many Usenet users will use a text-based
+<para>It is recommended to use no more than 76 characters. Even when
+you are able to disable more. Many Usenet users will use a text-based
 newsreader which can not display more than 80 characters. It is
 difficult to read your articles in such a newsreader, if you increase
-this value. This reduces the probatility of your articles to be read
+this value. This reduces the probability of your articles to be read
 at all.</para> 
 </tip> 
 </sect3> 
@@ -1454,8 +1454,8 @@ KNode...</guimenuitem><guilabel>Identity</guilabel></menuchoice>.</para>
 <sect3> 
 <title><guilabel>Introduction Phrase:</guilabel></title> 
 
-<para>When you write a followup, &knode; inserts an introdutionary
-phrase befor the quoted orginal Text. You can put an aribrary text
+<para>When you write a followup, &knode; inserts an introductionary
+phrase before the quoted original Text. You can put an aribrary text
 here. You can use variables, which &knode; extracts from the original
 article, &eg; the name of the author or the date the article was
 written.</para>
@@ -1498,7 +1498,7 @@ comes from.</para>
 
 <tip> 
 <para>Keep this short, because this introductory line appears in
-every followup. A too long introducionary line can be as repelling as
+every followup. A too long iintroductionaryline can be as repelling as
 a too long signature.</para> 
 </tip> 
 
@@ -1521,7 +1521,7 @@ then insert the following introductionary line.</para>
 <sect3> 
 <title><guilabel>Rewrap quoted text automatically</guilabel></title> 
 
-<para>When this is checked, the quoted text is wraped at the correct
+<para>When this is checked, the quoted text is wwrappedat the correct
 border value. So, every new line is in the correct quoting
 level.</para> 
 
@@ -1562,7 +1562,7 @@ selecting <menuchoice><guimenu>Tools</guimenu><guimenuitem>Start
 external editor</guimenuitem></menuchoice> in the Composer
 window.</para> 
 
-<para>When <guilabel>Start external editor auotmatically</guilabel> is
+<para>When <guilabel>Start external editor automatically</guilabel> is
 checked, the external editor is opened directly.</para>
 
 <caution>
@@ -1605,7 +1605,7 @@ editing articles.</para>
 <sect2>
 <title><guilabel>Spelling</guilabel></title>
 
-<para>Here you can configure the behaviour of the spell
+<para>Here you can configure the bbehaviorof the spell
 checker.</para>
 
 <sect3>
@@ -1622,7 +1622,7 @@ be automatically accepted as a new word.</para>
 errors</guilabel></title>
 
 <para>Here you can toggle if two known words that run together and are
-unknown if they run together should be treaten as an error or
+unknown if they run together should be tthreatenas an error or
 not.</para>
 
 </sect3>
@@ -1754,7 +1754,7 @@ documentation to handle expiring the articles on the server &mdash;
 <sect3> 
 <title><guilabel>Expire old articles automatically</guilabel></title> 
 
-<para>When this option is active, all subcribed groups are checked for
+<para>When this option is active, all ssubscribedgroups are checked for
 old articles in the time interval set here. The old articles are
 deleted at this time.</para>
 
@@ -1817,7 +1817,7 @@ the dicussion is ended.</para>
 <caution> 
 <para>&knode; can not predict, if there is a reply, after the set
 conditions are fulfilled. You have to find your own settings for
-this. Some newgroups have days between replys, others only hours. Use
+this. Some newgroups have days between rreplies others only hours. Use
 your own judgement.</para> 
 </caution> 
 </sect3> 

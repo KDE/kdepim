@@ -1,4 +1,4 @@
-<glossary id="glossary"> 
+<glossary id="glossary">
 <title>Glossary</title>
 
 <glossdiv>
@@ -46,7 +46,7 @@ the newsgroups.</para>
 because of harddisk limits. Because of this there is usually a program
 called <application>expire</application> on the most computer
 systems. This program deletes all articles which are older than a
-configured number of days. &knode; includes this functionality on it's
+configured number of days. &knode; includes this functionality on its
 own.</para>
 </glossdef> 
 </glossentry> 
@@ -168,7 +168,7 @@ defines how the articles in the usenet are spread.</para>
 <glossterm>Port</glossterm>
 <glossdef> 
 <para>A kind of address for the application to listen for datas and
-for connecting to an other computer. The standard-port for the
+for connecting to another computer. The standard-port for the
 connection between the newsreader and the newsserver is 119.</para>
 </glossdef> 
 </glossentry> 

@@ -1,4 +1,4 @@
-<chapter id="credits"> 
+<chapter id="credits">
 <title>Credits and License</title>
 
 <para>&knode;</para>
@@ -49,7 +49,7 @@ Michael McBride, always there to help me out with
 documentation-related and general stuff, and everybody else in the
 &kde; Team who contributed to the creation of this document.</para>
 
-&underFDL;       <!-- FDL licence for the documentation -->
+&underFDL;       <!-- FDL license for the documentation -->
 &underGPL;       <!-- GPL License for the application --> 
 
 </chapter> 

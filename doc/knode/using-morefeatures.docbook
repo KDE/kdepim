@@ -1,7 +1,7 @@
 <!-- <?xml version="1.0" ?>
 <!DOCTYPE sect1 PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd">
 -->
-<sect1 id="more-knode-features"> 
+<sect1 id="more-knode-features">
 <title>The Advanced &knode; Features</title>
 
 <sect2 id="using-filters">
@@ -11,20 +11,20 @@
 the configuration of &knode;. We were talking about the built-in
 filters provided by &knode; there. You can configure the built-in
 filters like all the others. The screenshot shows the Dialog Box for
-confguring the Filters.</para>
+configuring the Filters.</para>
 
-<screenshot> 
-<screeninfo>The dialog <guilabel>New Filter</guilabel></screeninfo> 
-<mediaobject> 
-<imageobject> 
-<imagedata fileref="knode-edit-filter.png" format="PNG"/> </imageobject> 
-<textobject> 
-<phrase>The dialog <guilabel>New Filter</guilabel></phrase> 
+<screenshot>
+<screeninfo>The dialog <guilabel>New Filter</guilabel></screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="knode-edit-filter.png" format="PNG"/> </imageobject>
+<textobject>
+<phrase>The dialog <guilabel>New Filter</guilabel></phrase>
 </textobject>
-<caption> 
-<para>The dialog <guilabel>New Filter</guilabel></para> 
-</caption> 
-</mediaobject> 
+<caption>
+<para>The dialog <guilabel>New Filter</guilabel></para>
+</caption>
+</mediaobject>
 </screenshot>
 
 <para>First we will create a new filter. There will be the case, that
@@ -179,7 +179,7 @@ in.</para>
 <caution> 
 <para>It is generally undesirable to post articles in multiple
 newsgroups. Please think about it twice. If you are not sure, where to
-post your article, ask in one of the possible groups. Sombody will
+post your article, ask in one of the possible groups. Somebody will
 tell you were to post.</para> 
 </caution> 
 </sect3> 
@@ -201,7 +201,7 @@ group.</para>
 
 <para>Another reason for using <guilabel>Followup-To:</guilabel> is a
 possible crossposting in multiple newsgroups. You should take care
-that the replys will be posted in one single newsgroup.</para> 
+that the replies will be posted in one single newsgroup.</para> 
 
 <para>You can activate this by filling the text box
 <guilabel>Followups - To:</guilabel>. Here you can enter the suitable
@@ -278,7 +278,7 @@ sending.</para>
 </caution> 
 
 <tip> 
-<para>The english word attachment is used all over the world, you can
+<para>The English word attachment is used all over the world, you can
 use it in your language, too.</para> 
 </tip> 
 
@@ -292,7 +292,7 @@ email.</para>
 for most groups anyway, and those that do accept attachments will
 normally have the word <quote>binaries</quote> in their name. Some
 news servers even stop carrying non-binaries news groups that
-continually receive attachments.</para>
+continuous receive attachments.</para>
 </important> 
 </sect3> 
 </sect2> 
@@ -347,7 +347,7 @@ the old view of the newsgroup appears again.</para>
 <title><guilabel>Start Search</guilabel></title> 
 
 <para>With this button you start the Search with the search criteria
-you defined. All articles in the selcted newsgroup, fullfilling this
+you defined. All articles in the selected newsgroup, fulfilling this
 criterias, appear in the article view.</para> 
 
 </sect3> 
@@ -419,7 +419,7 @@ article.</para>
 <caution> 
 <para>Keep in mind, an article can only be identified by his
 Message-ID. You need this Message-ID if you want to cancel an
-article. Normaly your article gets this Message-ID when it arrives at
+article. Normally your article gets this Message-ID when it arrives at
 the newsserver. Thats why you can only cancel an article, when it is
 already published. The articles in the folder
 <guilabel>Sent</guilabel> have no Message-ID, so you can not cancel
@@ -463,7 +463,7 @@ ask you, if you really want to overwrite this article. Confirm with
 
 <para>In the Composer you can now make the wanted corrections and
 changes. You can publish this article in the same way as you post
-every other article. When the newsserver recives this article, it
+every other article. When the newsserver receives this article, it
 reads some special lines in the header which tell the newsserver to
 supersede the older article. Select
 <menuchoice><guimenu>File</guimenu><guimenuitem>Send
@@ -482,7 +482,7 @@ new article.</para>
 
 <para>Besides this Supersede is used for periodical posted articles, &eg;
  a <acronym>FAQ</acronym>. The new article supersedes the old one and
- the newsgoups do not end up with lots of different versions.</para> 
+ the newsgroups do not end up with lots of different versions.</para> 
 
 <caution> 
 <para>Again, using this function is only possible, if the article
@@ -579,7 +579,7 @@ only the rules for a special <glossterm>newsgroup</glossterm>.</para>
 <para>If you chose a rule-name in the list you will see the rule on
 the right side. Now you can edit the rule. At the top you can change
 the name and set the newsgroups this rule is for. You can chose one or
-more than one group. Several groups must be seperated by a
+more than one group. Several groups must be separated by a
 semicolon. Furthermore you can chose from the subscribed groups with
 the drop down list and the <guibutton>Add group</guibutton> button or
 use regular expressions and wild cards, &eg; <quote>.*</quote> for all
@@ -654,7 +654,7 @@ article or colorize the header in the article list, You can make
 interesting articles screeming pink, so you will see them very
 quickly.</para> 
 
-<para>When leaving the editor or chosing the menu item
+<para>When leaving the editor or choosing the menu item
 <menuchoice><guimenu>Scoring</guimenu><guimenuitem>Recalculate
 scores</guimenuitem></menuchoice> the rules are executed. Furthermore
 the rules are automatically used for new
@@ -690,7 +690,7 @@ used.</para>
 <sect2 id="multiple-news-accounts"> 
 <title>Managing Multiple News Accounts</title> 
 
-<para>&knode; can handle a unlimited number of news server accounts in
+<para>&knode; can handle an unlimited number of news server accounts in
 addition to your main news server. Most users don't need this feature,
 but it can be very handy to if your main newsserver doesn't provide
 all groups you want to read. Typical cases are support groups for
@@ -698,7 +698,7 @@ commercial software that are hosted on a special server or binary
 newsgroups.</para> 
 
 <para>Another example why you sometimes need more than one newsserver
-is, that there are sometimes not all interisting newsgroups on one
+is, that there are sometimes not all interesting newsgroups on one
 server. In fact, there are very often only a selection of
 newsgroups. For example very many servers doesn't support binary
 groups with pictures or programs. If you want such a newsgroup and
@@ -706,7 +706,7 @@ your newsserver provider don't want to serve it, you can configure
 &knode; to get it from another server.</para>
 
 <para>Or, perhaps you find you are just subscribed to too many
-newsgroups, and would like to organise them a little better.  You
+newsgroups, and would like to organize them a little better.  You
 could set up several accounts for the same server, perhaps one for
 groups you read every day, and one for groups you read less often, so
 that you don't have to search for your <quote>everyday</quote> groups
@@ -734,9 +734,9 @@ newsserver.</para>
 </tip>
 </sect2>
 
-<sect2 id="pgp-support">
+<sect2 id="PGP-support">
 <title>Sign and Verify Articles with <acronym>PGP</acronym></title>
-<anchor id="anc-pgp-support"/>
+<anchor id="anc-PGP-support"/>
 
 <para><acronym>PGP</acronym> is the most spread method to encrypt or
 sign datas. With the <glossterm>PGP-signature</glossterm> you can

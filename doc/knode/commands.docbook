@@ -1,4 +1,4 @@
-<!-- <?xml version="1.0" ?> 
+<!-- <?xml version="1.0" ?>
 <!DOCTYPE chapter PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd">	-->
 
 <chapter id="commands">
@@ -103,9 +103,9 @@ Quits &knode;.</action>
 <sect2>
 <title>
 The <guimenu>Edit</guimenu> menu</title>
- 
-<variablelist> 
-<varlistentry> 
+
+<variablelist>
+<varlistentry>
 <term>
 <menuchoice>
 <shortcut>
@@ -199,7 +199,7 @@ When this is activated, &knode; shows discussions as a tree view in the article 
 <listitem>
 <para>
 When this is activated, &knode; shows the complete threads. This is
-only funtional when <guilabel>Show threads</guilabel>
+only functional when <guilabel>Show threads</guilabel>
 is active.</para>
 </listitem>
 </varlistentry>
@@ -213,7 +213,7 @@ is active.</para>
 <listitem>
 <para>
 When this is activated, &knode; shows no threads. This is only
-funtional when <guilabel>Show threads</guilabel> is active.</para>
+functional when <guilabel>Show threads</guilabel> is active.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -270,7 +270,7 @@ Allows you to sort the article view.</action>
 <listitem>
 <para>
 <action>
-Refeshes the article view</action>
+Refreshes the article view</action>
 </para>
 </listitem>
 </varlistentry>
@@ -395,7 +395,7 @@ Jumps to next article in the article view.</action>
 <listitem>
 <para>
 <action>
-Jumps to the next unread article and to the first unread article of the next newsgroup if nessecarry.</action>
+Jumps to the next unread article and to the first unread article of the next newsgroup if necessary.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -410,7 +410,7 @@ Jumps to the next unread article and to the first unread article of the next new
 <listitem>
 <para>
 <action>
-Jumps to the next unread thread and to the next unread thread in the next newsgroup, if nessecary.</action>
+Jumps to the next unread thread and to the next unread thread in the next newsgroup, if necessary.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -587,7 +587,7 @@ Rebuilds the article view by using the configured sortings.</action>
 <listitem>
 <para>
 <action>
-Sets the status of all aticles in the active newsgroup to read.</action>
+Sets the status of all articles in the active newsgroup to read.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -601,7 +601,7 @@ Sets the status of all aticles in the active newsgroup to read.</action>
 <listitem>
 <para>
 <action>
-Sets the status of all aticles in the active newsgroup to unread.</action>
+Sets the status of all articles in the active newsgroup to unread.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -872,7 +872,7 @@ unread</quote>
 <term>
 <menuchoice>
 <shortcut><keycombo action="simul">&Ctrl;<keycap>D</keycap></keycombo></shortcut>
-<guimenu>Artcle</guimenu>
+<guimenu>Article</guimenu>
 <guisubmenu>Mark Thread as Read</guisubmenu>
 </menuchoice>
 </term>
@@ -938,7 +938,7 @@ Opens the Composer with the content of the active article. When this article is 
 <listitem>
 <para>
 <action>
-The active article is opend in a new window.</action>
+The active article is opened in a new window.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -952,7 +952,7 @@ The active article is opend in a new window.</action>
 <listitem>
 <para>
 <action>
-The sourcecode of the active article is opend in a new window.</action>
+The sourcecode of the active article is opened in a new window.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1586,7 +1586,7 @@ Toggles the sending of the message as an article on/off. If it's configured, an 
 <listitem>
 <para>
 <action>
-Here you can configure the charset used for this article. Normally you use us-ascii for the english speaking area.</action>
+Here you can configure the charset used for this article. Normally you use us-ASCII for the English speaking area.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1707,7 +1707,7 @@ Rebuilds the original posting when answering to an article.</action>
 <listitem>
 <para>
 <action>
-Encrypts the marked text by rotating every character 13 caracters of the alphabet.</action>
+Encrypts the marked text by rotating every character 13 characters of the alphabet.</action>
 </para>
 </listitem>
 </varlistentry>
