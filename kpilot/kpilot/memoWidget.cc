@@ -309,7 +309,7 @@ MemoWidget::slotDeleteMemo()
 		}
 
 		KMsgBox::message(this, klocale->translate("Hot-Sync Required"), 
-			klocale->translate("Cannot delete new memo until \r\n" 
+			klocale->translate("Cannot delete new memo until \n" 
 				"Hot-Synced with pilot."), 
 			KMsgBox::STOP);
 		return;
@@ -484,7 +484,7 @@ MemoWidget::slotTextChanged()
       if(currentMemo->id() == 0x0)
 	{
 	  KMsgBox::message(0L, klocale->translate("Hot-Sync Required"), 
-			   klocale->translate("Cannot edit new memo until \r\n Hot-Synced with pilot."), 
+			   klocale->translate("Cannot edit new memo until \n Hot-Synced with pilot."), 
 			   KMsgBox::STOP);
 	  slotShowMemo(fListBox->currentItem());
 	  return;

@@ -130,7 +130,7 @@ KPilotLink::initPilotSocket(const char* devicePath)
   if(ret == -1) 
     {
       KMsgBox::message(fOwningWidget, klocale->translate("Error Initializing?"), 
-		       klocale->translate("Cannot connect to pilot.\r\n(check pilot path)"), KMsgBox::STOP);
+		       klocale->translate("Cannot connect to pilot.\n(check pilot path)"), KMsgBox::STOP);
       exit(1);
     }
 }
@@ -963,7 +963,7 @@ void KPilotLink::checkPilotUser()
   if (guiUserName != getPilotUser().getUserName())
     {
       QString message;
-      message.sprintf("The Palm Pilot thinks the user name is %s, however KPilot says you are %s.\r\n  Should I assume the Pilot is right?",
+      message.sprintf("The Palm Pilot thinks the user name is %s, however KPilot says you are %s.\n  Should I assume the Pilot is right?",
 		      getPilotUser().getUserName(), guiUserName.data());
       if (KMsgBox::yesNo(0, "Different User?", message) == 1)
 	  config->writeEntry("UserName", getPilotUser().getUserName());

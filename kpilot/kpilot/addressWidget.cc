@@ -332,7 +332,7 @@ AddressWidget::slotEditRecord()
     if(fAddressList.at(item)->id() == 0x0)
       {
 	KMsgBox::message(0L, klocale->translate("Hot-Sync Required"), 
-			 klocale->translate("Cannot edit new records until \r\n Hot-Synced with pilot."), 
+			 klocale->translate("Cannot edit new records until \n Hot-Synced with pilot."), 
 			 KMsgBox::STOP);
 	return;
       }
@@ -396,7 +396,7 @@ AddressWidget::slotDeleteRecord()
   if(fAddressList.at(item)->id() == 0x0)
     {
       KMsgBox::message(0L, klocale->translate("Hot-Sync Required"), 
-		       klocale->translate("Cannot delete new records until \r\n Hot-Synced with pilot."), 
+		       klocale->translate("Cannot delete new records until \n Hot-Synced with pilot."), 
 		       KMsgBox::STOP);
       return;
     }
