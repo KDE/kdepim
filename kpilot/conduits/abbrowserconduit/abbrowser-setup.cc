@@ -117,14 +117,14 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	fConfigWidget->fSyncDestination->setButton(
 		fConfig->readNumEntry(AbbrowserConduitFactory::fAbookType, 0));
 #ifdef DEBUG
-        DEBUG_CONDUIT << fname << ": abookType=" 
+        DEBUGCONDUIT << fname << ": abookType=" 
 		<< fConfig->readNumEntry(AbbrowserConduitFactory::fAbookType, 0)
 		<< endl;
 #endif
 	fConfigWidget->fAbookFile->setURL(
 		fConfig->readEntry(AbbrowserConduitFactory::fAbookFile));
 #ifdef DEBUG
-	DEBUG_CONDUIT << fname << ": ABookFile="
+	DEBUGCONDUIT << fname << ": ABookFile="
 		<< fConfig->readEntry(AbbrowserConduitFactory::fAbookFile)
 		<< endl;
 #endif
