@@ -33,7 +33,7 @@ class KonnectorPlugin : public QObject
 {
 Q_OBJECT
  public:
-  KonnectorPlugin(QWidget *obj, const char *name, const QStringList &args=QStringList() );
+  KonnectorPlugin(QObject *obj, const char *name, const QStringList &args=QStringList() );
   virtual ~KonnectorPlugin() = 0;
   virtual void setUDI(const QString & ) = 0;
   virtual QString udi()const = 0;
@@ -48,7 +48,8 @@ Q_OBJECT
   virtual void slotWrite(QPtrList<KSyncEntry> ) = 0;
   virtual void slotWrite(QValueList<KOperations> ) = 0;
  signals:
-  void sync(QString, QPtrList<KSyncEntry> ); 
+  void sync(QString, int, QPtrList<KSyncEntry> ); 
+  void errorKonnector(QString, int, QString );
 };
 #endif
 

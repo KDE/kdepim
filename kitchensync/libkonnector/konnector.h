@@ -35,6 +35,7 @@ class KonnectorPlugin;
 class Konnector : public QObject{
 Q_OBJECT
  public:
+  Konnector();
   Konnector(QObject *, const char*);
   ~Konnector();
   QValueList<KDevice> query(const QString &category= QString::null );
@@ -45,6 +46,7 @@ Q_OBJECT
   QByteArray file( const QString &udi, const QString &path ); // this would allow some post processing
   void retrieveFile(const QString &udi, const QString &);
   bool isConnected(const QString &udi );
+  bool startSync(const QString &udi);
 
  public slots:
   void write(const QString &udi, QPtrList<KSyncEntry> );
@@ -53,7 +55,7 @@ Q_OBJECT
  signals:
   void wantsToSync(QString, int, QPtrList<KSyncEntry>);
   void stateChanged(QString, bool ); // udi + state
-
+  void konnectorError(QString, int, QString ); // udi + code + string
  private:
   class KonnectorPrivate;
   KonnectorPrivate *d; 
@@ -62,6 +64,7 @@ Q_OBJECT
 
  private slots:
   void slotSync(QString, int, QPtrList<KSyncEntry> entry );
+ void slotError(QString, int, QString);
 };
 
 #endif

@@ -19,7 +19,7 @@
 
 #include "konnectorplugin.h"
 
-KonnectorPlugin::KonnectorPlugin( QWidget *obj, const char *name, const QStringList &args)
+KonnectorPlugin::KonnectorPlugin( QObject *obj, const char *name, const QStringList &args)
   : QObject(obj, name )
 {
 

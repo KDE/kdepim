@@ -33,6 +33,10 @@ Konnector::Konnector( QObject *object, const char *name ) : QObject( object, nam
 {
   // initialize
 }
+Konnector::Konnector()
+{
+
+}
 Konnector::~Konnector()
 {
 
@@ -67,6 +71,7 @@ QString Konnector::registerKonnector(const QString &Device )
 	return QString::null;
       }
       plugin->setUDI( randStr );
+      connect(plugin, SIGNAL(sync(QString, int, QPtrLsit<KSyncEntry> ) ), this, SLOT(slotSync(QString, int, QPtrList<KSyncEntry> ) ) );
       d->m_konnectors.insert(randStr, plugin  );
       return randStr;
     }
@@ -85,6 +90,7 @@ QString Konnector::registerKonnector(const KDevice &Device )
     return QString::null;
   }
   plugin->setUDI(randStr);
+  connect(plugin, SIGNAL(sync(QString, int, QPtrLsit<KSyncEntry> ) ), this, SLOT(slotSync(QString, int, QPtrList<KSyncEntry> ) ) );
   d->m_konnectors.insert(randStr, plugin  );
   return randStr;
 }
@@ -151,6 +157,14 @@ bool Konnector::isConnected(const QString &udi ){
 
   return plugin->isConnected();
 }
+bool Konnector::startSync(const QString &udi )
+{
+  KonnectorPlugin *plugin = pluginByUDI( udi );
+  if( plugin == 0)
+    return false;
+
+  return plugin->startSync();
+}
 void Konnector::allDevices()
 {
   d->m_devices.clear();
@@ -189,7 +203,11 @@ void Konnector::slotSync(QString udi, int mode, QPtrList<KSyncEntry> entry)
   emit wantsToSync(udi, mode, entry );
 }
 
+void Konnector::slotError(QString, int, QString )
+{
 
+
+}
 
 
 

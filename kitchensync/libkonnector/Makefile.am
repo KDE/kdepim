@@ -1,17 +1,17 @@
 #SUBDIRS = test
 
-lib_LTLIBRARIES= libksharedfile.la
+lib_LTLIBRARIES= libkonnector.la
 
 INCLUDES = -I$(top_srcdir)/kitchensync/lib $(all_includes)
 
-libksharedfile_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -version-info 0:0 -no-undefined
-libksharedfile_la_LIBADD = $(top_builddir)/kitchensync/lib/libksyncentries.la  $(LIB_KDECORE) $(LIB_QT) 
-libksharedfile_la_SOURCES = konnectorplugin.cpp kapabilities.cpp kdevice.cpp konnector.cpp
+libkonnector_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -version-info 0:0 -no-undefined
+libkonnector_la_LIBADD = $(top_builddir)/kitchensync/lib/libksyncentries.la  $(LIB_KDECORE) $(LIB_QT) 
+libkonnector_la_SOURCES = konnectorplugin.cpp kapabilities.cpp kdevice.cpp konnector.cpp
 
 
 #servicesdir = $(kde_servicesdir)/kded
 #services_DATA = ksharedfile.desktop
 
 METASOURCES = AUTO
-
+SUBDIRS = test
 include_HEADERS = kapabilities.h kdevice.h konnector.h konnectorplugin.h
