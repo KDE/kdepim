@@ -144,6 +144,9 @@ private slots:
 	pattern. */
     void slotSearch();
 
+    void slotExpandAll();
+    void slotCollapseAll();
+
 private:
     void createStatusBar();
     void createActions();

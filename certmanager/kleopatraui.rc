@@ -1,4 +1,4 @@
-<!DOCTYPE kpartgui ><kpartgui name="kleopatra" version="15" >
+<!DOCTYPE kpartgui ><kpartgui name="kleopatra" version="16" >
 <MenuBar>
 	<Menu name="file">
 		<text>File</text>
@@ -19,6 +19,9 @@
 		<Action name="view_certificate_details"/>
 		<Separator/>
 		<Action name="view_hierarchical"/>
+		<Separator/>
+		<Action name="view_expandall"/>
+		<Action name="view_collapseall"/>
 	</Menu>
 	<Menu name="certMenu">
 		<text>&amp;Certificates</text>

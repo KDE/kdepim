@@ -93,6 +93,8 @@
 // other
 #include <assert.h>
 
+static const bool startWithHierarchicalKeyListing = false;
+
 namespace {
 
   class DisplayStrategy : public Kleo::KeyListView::DisplayStrategy{
@@ -177,6 +179,8 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
 
   // Main Window --------------------------------------------------
   mKeyListView = new CertKeyListView( new ColumnStrategy(), new DisplayStrategy(), this, "mKeyListView" );
+  mKeyListView->setHierarchical( startWithHierarchicalKeyListing );
+  mKeyListView->setRootIsDecorated( startWithHierarchicalKeyListing );
   mKeyListView->setSelectionMode( QListView::Extended );
   setCentralWidget( mKeyListView );
 
@@ -244,6 +248,15 @@ void CertManager::createActions() {
   connect( new KToggleAction( i18n("Hierarchical Key List"), 0,
 			      actionCollection(), "view_hierarchical" ),
 	   SIGNAL(toggled(bool)), SLOT(slotToggleHierarchicalView(bool)) );
+
+  action = new KAction( i18n("Expand All"), 0, CTRL+Key_Period,
+			this, SLOT(slotExpandAll()),
+			actionCollection(), "view_expandall" );
+  action->setEnabled( startWithHierarchicalKeyListing );
+  action = new KAction( i18n("Collapse All"), 0, CTRL+Key_Comma,
+			this, SLOT(slotCollapseAll()),
+			actionCollection(), "view_collapseall" );
+  action->setEnabled( startWithHierarchicalKeyListing );
 
 #ifdef NOT_IMPLEMENTED_ANYWAY
   mRevokeCertificateAction = new KAction( i18n("Revoke"), 0,
@@ -359,8 +372,22 @@ void CertManager::slotToggleRemote( int idx ) {
 void CertManager::slotToggleHierarchicalView( bool hier ) {
   mKeyListView->setHierarchical( hier );
   mKeyListView->setRootIsDecorated( hier );
+  if ( KAction * act = action("view_expandall") )
+    act->setEnabled( hier );
+  if ( KAction * act = action("view_collapseall" ) )
+    act->setEnabled( hier );
   if ( hier && !mCurrentQuery.isEmpty() )
     startRedisplay( false );
+}
+
+void CertManager::slotExpandAll() {
+  for ( QListViewItemIterator it( mKeyListView ) ; it.current() ; ++it )
+    it.current()->setOpen( true );
+}
+
+void CertManager::slotCollapseAll() {
+  for ( QListViewItemIterator it( mKeyListView ) ; it.current() ; ++it )
+    it.current()->setOpen( false );
 }
 
 void CertManager::connectJobToStatusBarProgress( Kleo::Job * job, const QString & initialText ) {
