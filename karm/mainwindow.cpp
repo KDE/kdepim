@@ -39,7 +39,6 @@
 #include "task.h"
 #include "preferences.h"
 #include "tray.h"
-#include "listviewiterator.h"
 #include "karmutility.h"
 
 MainWindow::MainWindow()

@@ -26,8 +26,6 @@
 #include "idletimedetector.h"
 #include "preferences.h"
 #include "kdebug.h"
-#include "listviewiterator.h"
-#include "subtreeiterator.h"
 #include "karmutility.h"
 
 #define T_LINESIZE 1023
