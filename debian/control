@@ -37,6 +37,8 @@ Package: kalarmd
 Section: utils
 Architecture: any
 Depends: ${shlibs:Depends}
+Conflicts: kalarm (<< 4:3.1.94)
+Replaces: kalarm (<< 4:3.1.94)
 Description: KDE alarm scheduler daemon
  KDE alarm scheduler daemon.
 
