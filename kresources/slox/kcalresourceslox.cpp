@@ -311,6 +311,8 @@ void KCalResourceSlox::uploadIncidences()
   } else {
     if ( mUploadIsDelete ) {
       kdError() << "Incidence to delete doesn't have a SLOX id" << endl;
+      clearChange( mUploadedIncidence );
+      uploadIncidences();
       return;
     }
   }
