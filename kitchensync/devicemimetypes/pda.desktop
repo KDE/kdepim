@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=pda_black
+Type=MimeType
+MimeType=kdedevice/pda
+Comment=Connected PDA
+Patterns=
+
+X-KDE-AutoEmbed=true

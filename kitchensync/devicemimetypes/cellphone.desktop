@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=pda_blue
+Type=MimeType
+MimeType=kdedevice/cellphone
+Comment=Connected cellular phone
+Patterns=
+
+X-KDE-AutoEmbed=true
