@@ -23,6 +23,7 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <qregexp.h>
+#include <ktempfile.h>
 
 #include "filter_pmail.hxx"
 
@@ -186,7 +187,7 @@ void FilterPMail::importMailFolder(const char *file)
    int state = 0;
    int n = 0;
    FILE *temp = NULL;
-   char tempname[128];
+   KTempFile *tempfile = 0;
 
 
    // Format of a PMM file:
@@ -234,13 +235,8 @@ void FilterPMail::importMailFolder(const char *file)
       // new message state
       case 0:
          // open temp output file
-
-         // XXX this is UGLY. Some people have the stuff in /var/tmp ...
-         // However, KTempFile is also ugly, because it does not return
-         // the full path of the created file (and creates it in the
-         // current directory) :-(
-         snprintf(tempname, sizeof(tempname), "/tmp/pmail_pmm.%d",getpid());
-         temp = fopen(tempname,"wb");
+         tempfile = new KTempFile;
+         temp = tempfile->fstream();
          state = 1;
          n++;
          msg.sprintf("Message %d", n);
@@ -251,9 +247,10 @@ void FilterPMail::importMailFolder(const char *file)
       case 1:
          if (ch == 0x1a) {
             // close file, send it
-            fclose(temp);
-            kmailMessage((FilterInfo *) inf, folder, tempname);
-            unlink(tempname);
+            tempfile->close();
+            kmailMessage((FilterInfo *) inf, folder, tempfile->name());
+            tempfile->unlink();
+            delete tempfile;
             state = 0;
             break;
          }
@@ -267,9 +264,10 @@ void FilterPMail::importMailFolder(const char *file)
 
    // did Folder end without 0x1a at the end?
    if (state != 0) {
-      fclose(temp);
-      kmailMessage((FilterInfo *) inf, folder, tempname);
-      unlink(tempname);
+      tempfile->close();
+      kmailMessage((FilterInfo *) inf, folder, tempfile->name());
+      tempfile->unlink();
+      delete tempfile;
    }
 
    fclose(f);
@@ -293,7 +291,7 @@ void FilterPMail::importUnixMailFolder(const char *file)
 
    char line[MAX_LINE];
    FILE *temp = NULL;
-   char tempname[128];
+   KTempFile *tempfile = 0;
    int n = 0;
    QRegExp regexp(MSG_SEPERATOR_REGEX);
 
@@ -315,7 +313,6 @@ void FilterPMail::importUnixMailFolder(const char *file)
    // Messages are separated by "From " lines. We use a logic similar
    // to KMail's kmfolder.cpp to find the boundaries.
 
-   snprintf(tempname, sizeof(tempname), "/tmp/pmail_mbx.%d",getpid());
    f = fopen(file, "rb");
    while (fgets(line, MAX_LINE, f)) {
       // Look for separator
@@ -323,17 +320,17 @@ void FilterPMail::importUnixMailFolder(const char *file)
          (strncmp(line,MSG_SEPERATOR_START, msgSepLen)==0 &&  // quick compar
          regexp.search(line) >= 0))                            // slower regexp
       {
-         fclose(temp);
-         kmailMessage((FilterInfo *) inf, folder, tempname);
-         unlink(tempname);
+         tempfile->close();
+         kmailMessage((FilterInfo *) inf, folder, tempfile->name());
+         tempfile->unlink();
+         delete tempfile;
          temp = NULL;
       }
 
       // Do we need to open/reopen output file?
       if (!temp) {
-         // XXX again, direct usage of '/tmp' is ugly, but again KTempFile is not good
-         // enought for us -- as of early Januar 2001
-         temp = fopen(tempname,"w");
+         tempfile = new KTempFile;
+         temp = tempfile->fstream();
          // Notify progress
          n++;
          s.sprintf("Message %d", n);
@@ -344,9 +341,10 @@ void FilterPMail::importUnixMailFolder(const char *file)
    }
 
    if (temp) {
-      fclose(temp);
-      kmailMessage((FilterInfo *) inf, folder, tempname);
-      unlink(tempname);
+      tempfile->close();
+      kmailMessage((FilterInfo *) inf, folder, tempfile->name());
+      tempfile->unlink();
+      delete tempfile;
    }
 
    fclose(f);
