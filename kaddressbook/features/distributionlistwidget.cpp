@@ -213,7 +213,7 @@ void DistributionListWidget::editList()
 {
   QString oldName = mNameCombo->currentText();
 
-  QString newName = KInputDialog::getText( i18n( "New Distribution List" ),
+  QString newName = KInputDialog::getText( i18n( "Rename Distribution List" ),
                                            i18n( "Please enter name:" ),
                                            oldName, 0, this );
 
@@ -226,9 +226,10 @@ void DistributionListWidget::editList()
   KABC::DistributionList *list = mManager->list( oldName );
   list->setName( newName );
 
+  int pos = mNameCombo->currentItem();
   mNameCombo->clear();
   mNameCombo->insertStringList( mManager->listNames() );
-  mNameCombo->setCurrentItem( mNameCombo->count() - 1 );
+  mNameCombo->setCurrentItem( pos );
 
   updateContactView();
 
