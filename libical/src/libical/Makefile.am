@@ -209,9 +209,9 @@ EXTRA_DIST =			\
 
 $(srcdir)/icalattendee.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 $(srcdir)/icalcomponent.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icalderivedparameter.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icalderivedproperty.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icalderivedvalue.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalderivedparameter.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalderivedproperty.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalderivedvalue.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 $(srcdir)/icalduration.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 $(srcdir)/icallangbind.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 $(srcdir)/icallexer.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
