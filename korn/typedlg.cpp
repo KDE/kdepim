@@ -1,13 +1,13 @@
 /*
 * typedlg.cpp -- Implementation of class TypeDialog.
 * Author:	Sirtaj Singh Kang
-* Version:	$Id$
 * Generated:	Sun May 10 09:01:23 EST 1998
 */
 
 
 #include <qlistbox.h>
-#include <qpushbutton.h>
+#include <kpushbutton.h>
+#include <kstdguiitem.h>
 #include <qgroupbox.h>
 #include <qlayout.h>
 
@@ -48,12 +48,12 @@ TypeDialog::TypeDialog( const QStringList& types, QWidget *parent,
     connect( _list, SIGNAL(highlighted(const QString&)),
              this, SLOT(setType(const QString&)) );
 
-    btOk = new QPushButton( i18n( "&OK" ),  aGroup );
+    btOk = new KPushButton( KStdGuiItem::ok(),  aGroup );
     layout->addWidget( btOk, 1, 1);
 
     connect( btOk, SIGNAL(clicked()), this, SLOT(accept()) );
 
-    QPushButton *btCancel = new QPushButton( i18n( "&Cancel" ), aGroup );
+    KPushButton *btCancel = new KPushButton( KStdGuiItem::cancel(), aGroup );
     layout->addWidget( btCancel, 3, 1);
 
     connect(btCancel, SIGNAL(clicked()), this, SLOT(reject()) );

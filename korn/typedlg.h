@@ -10,7 +10,7 @@
 #include <qstringlist.h>
 
 class QListBox;
-class QPushButton;
+class KPushButton;
 
 /**
 * Allows selection of a mailbox type
@@ -24,7 +24,7 @@ class TypeDialog : public QDialog
 private:
 	TypeDialog& operator=( TypeDialog& );
 	TypeDialog( const TypeDialog& );
-	QPushButton *btOk;
+	KPushButton *btOk;
 	QListBox  *_list;
 	QString	_type;
 public:
