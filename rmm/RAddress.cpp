@@ -200,8 +200,11 @@ RAddress::_assemble()
     else if (group_ != 0)
         strRep_ = group_->asString();
     
-    else
+    else {
         strRep_ = "foo@bar";
+        rmmDebug("_assemble() assigns foo@bar!!!!!!!!!!!!");
+    }
+    
 }
 
     void

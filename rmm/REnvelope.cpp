@@ -54,7 +54,7 @@ REnvelope::REnvelope(const QCString & s)
     REnvelope &
 REnvelope::operator = (const REnvelope & e)
 {
-    rmmDebug("operator =");
+    rmmDebug("operator = (const REnvelope &e)");
     if (this == &e) return *this; // Don't do a = a.
     headerList_ = e.headerList_;
     RMessageComponent::operator = (e);
@@ -64,7 +64,7 @@ REnvelope::operator = (const REnvelope & e)
     REnvelope &
 REnvelope::operator = (const QCString & s)
 {
-    rmmDebug("operator = (" + s + ")");
+    rmmDebug("operator = (const QCString&)");
     RMessageComponent::operator = (s);
     parsed_ = false;
     assembled_ = false;
@@ -121,7 +121,7 @@ REnvelope::_parse()
 
         if ((*c == '\n' && (c != end - 1) && (c[1] != ' ') && (c[1] != '\t')) ||
             (c == end - 1) ||
-            r - start == 1024) {
+            r - rstart == 1020) {
 
             if (c == end - 1) *r++ = *c++;
             *r = '\0'; // NUL-terminate buffer.
@@ -134,7 +134,6 @@ REnvelope::_parse()
                 RHeader * h = new RHeader(s);
                 h->parse();
                 headerList_.append(h);
-                rmmDebug(".");
             }
 
             r = rstart;
