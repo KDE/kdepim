@@ -32,6 +32,21 @@
 Mark - 3.2
 --------------------------
 
+  * 2003-09-26: Decide on a page width and ltrim task descriptions.  Use
+    either 7pt Courier in KEdit to figure this out.
+
+  * 2003-09-26: Add day totals at bottom of each week.
+
+  * 2003-09-26: Add totals table across entire date range.
+
+  * 2003-09-26: Don't print hours for days that are not in range.  Right now,
+    I print for all days in every week.  If just one day, print totals.
+
+  * 2003-09-26: Don't print rows for tasks with zero hours???  How to keep
+    hierary?
+
+  * 2003-09-19: If task active, editing task stops timer.  Necessary?
+
   * 2003-09-17: BUG: entering a negative time increments total session time
     (maybe only if session time is zero?)
 
@@ -42,19 +57,14 @@ Mark - 3.2
 
   * 2003-09-24: UPDATE DOCS!!
 
-  * ONGOING: Update feature plan.
+  * 2003-09-24: Generate man page (look for script mentioned on kde-devel).
 
-X * 2003-09-24: Add new task action--mark as complete.  Don't load completed
-    tasks.
+  * ONGOING: Update feature plan.
 
   * 2003-09-24: Change menu entry from KArm to Time Clock.
 
-  * 2003-09-24: Generate man page (look for script mentioned on kde-devel).
-
   * 2003-09-23: Auto-save should write events.
   
-X  * 2003-09-03: Replace all string concatenations with .arg (for i18n).
-    
   * 2003-08-15: Remove code that is causing compiler warnings.
 
   * 2003-08-15: Go over code and delete all cruft.  In particular, take a look
@@ -68,11 +78,6 @@ X  * 2003-09-03: Replace all string concatenations with .arg (for i18n).
 
   * 2003-09-17: Run through Valgrind.
 
-  * 2003-08-15: Add ability to import tasks from an iCalendar file.
-      - TaskView::load()
-
-  * 2003-09-19: If task active, editing task stops timer.  Necessary?
-
 Mark - 3.3
 --------------------------
 
@@ -85,6 +90,9 @@ Mark - 3.3
     task dialog.  (TaskView::load).
 
   * 2003-09-03: Use file menu and delete storeage page in preferences.
+
+  * 2003-08-15: Add ability to import tasks from an iCalendar file.
+      - TaskView::load()
 
 
 
