@@ -286,6 +286,9 @@ int main(int argc, char *argv[])
   checkGetEmailAddress( "Matt Douhan (jongel) <matt@fruitsalad.org", QString() );
   checkGetEmailAddress( "Matt Douhan (m@tt) <matt@fruitsalad.org>", "matt@fruitsalad.org" );
   checkGetEmailAddress( "\"Douhan, Matt\" <matt@fruitsalad.org>", "matt@fruitsalad.org" );
+  checkGetEmailAddress( "\"Matt Douhan (m@tt)\" <matt@fruitsalad.org>", "matt@fruitsalad.org" );
+  checkGetEmailAddress( "\"Matt Douhan\" (matt <matt@fruitsalad.org>", QString() );
+  checkGetEmailAddress( "Matt Douhan <matt@[123.123.123.123]>", "matt@[123.123.123.123]" );
  
   // check the splitEmailAddrList method
   checkSplitEmailAddrList( "Matt Douhan <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", "Matt Douhan <matt@fruitsalad.org>,Foo Bar <foo@bar.com>" );
