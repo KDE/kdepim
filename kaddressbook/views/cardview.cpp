@@ -1283,7 +1283,7 @@ void CardView::contentsMouseMoveEvent( QMouseEvent *e )
     int m = e->x()%colw;
     if ( m >= colcontentw && m > 0 )
     {
-      setCursor( SplitVCursor ); // Why does this fail sometimes?
+      setCursor( SplitHCursor );
       d->mOnSeparator = true;
     }
     else
