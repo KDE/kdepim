@@ -31,7 +31,6 @@
 #include <kbuttonbox.h>
 #include <klineedit.h>
 #include <klocale.h>
-#include <kpassdlg.h>
 
 #include "addhostdialog.h"
 
@@ -77,7 +76,8 @@ AddHostDialog::AddHostDialog( QWidget* parent,  const char* name )
   label->setBuddy( mBindEdit );
   layout->addWidget( label, 3, 0 );
 
-  mPwdBindEdit = new KPasswordEdit( page );
+  mPwdBindEdit = new KLineEdit( page );
+  mPwdBindEdit->setEchoMode( QLineEdit::Password );
   layout->addMultiCellWidget( mPwdBindEdit, 4, 4, 1, 2 );
 
   label = new QLabel( i18n( "Password:" ), page );
