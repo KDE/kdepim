@@ -1,9 +1,9 @@
-<!DOCTYPE book PUBLIC  "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [  
+<?xml version="1.0" ?><!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [  
  <!ENTITY kappname "&knode;">
  <!ENTITY % English "INCLUDE">
  <!ENTITY % addindex "IGNORE">
- <!ENTITY % ents PUBLIC "-//KDE//ENTITIES Documentation V1.0//EN">
- %ents;
+ 
+ 
 ]>
 
 <book lang="&language;">
@@ -168,7 +168,7 @@ shown. On first start, the settings dialog will be invoked.</para>
 <screeninfo>Setting up &knode;</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-start.png" format="PNG">
+	    <imagedata fileref="knode-start.png" format="PNG"/>
 	  </imageobject>
           <textobject>
           <phrase>&knode; after first start</phrase>
@@ -219,7 +219,7 @@ preferences dialog of &knode;. The figure shows the dialog.</para>
 <screenshot>
 <screeninfo>Dialog for entering the personal information</screeninfo>
 <mediaobject><imageobject>
-	    <imagedata fileref="knode-identity.png" format="PNG">
+	    <imagedata fileref="knode-identity.png" format="PNG"/>
 	  </imageobject>
           <textobject>
 	  <phrase>Entering the personal information</phrase> 	  </textobject>
@@ -397,7 +397,7 @@ following dialog appears: </para>
 <screeninfo>The dialog <guilabel>New Account</guilabel></screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-news-account.png" format="PNG">
+	    <imagedata fileref="knode-news-account.png" format="PNG"/>
 	  </imageobject>
 	  <textobject>
 	    <phrase>The dialog <guilabel>New Account</guilabel></phrase>
@@ -547,7 +547,7 @@ Dialog Box appears on the right.</para>
 <screeninfo>Dialog Box for setting up the mail-account</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-mail-account.png" format="PNG">
+	    <imagedata fileref="knode-mail-account.png" format="PNG"/>
 	  </imageobject>
 	  <textobject>
 	<phrase>Dialog Box for setting up the mail-account</phrase>
@@ -645,7 +645,7 @@ you can configure there.</para>
 <screeninfo>Dialog General Preferences</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-read-news-settings.png" format="PNG">
+	    <imagedata fileref="knode-read-news-settings.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>The dialog General Preferences</phrase>
@@ -797,7 +797,7 @@ in the article window.</para>
 <screeninfo>The dialog "Customize displayed article headers"</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-header-settings.png" format="PNG">
+	    <imagedata fileref="knode-header-settings.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>The dialog "Customize displayed article headers"</phrase>
@@ -822,7 +822,7 @@ list and open the dialog for editing the header display by clicking on
 <screeninfo>The dialog Header Properties</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-edit-header1.png" format="PNG">
+	    <imagedata fileref="knode-edit-header1.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>The dialog Header Properties</phrase>
@@ -897,7 +897,7 @@ a new header line to the display.</para>
 <screeninfo>The dialog Header Display</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-edit-header2.png" format="PNG">
+	    <imagedata fileref="knode-edit-header2.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>The dialog Header Display</phrase>
@@ -946,7 +946,7 @@ article window. The picture shows the dialog.</para>
 <screeninfo>Setting up the dialog Appearance</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-colors-fonts.png" format="PNG">
+	    <imagedata fileref="knode-colors-fonts.png" format="PNG"/>
 	  </imageobject>
 	 <textobject>
 	<phrase>Setting up the dialog Appearance</phrase>
@@ -1022,7 +1022,7 @@ but will use the fonts defined here instead.</para></caution>
 <screeninfo>The filter settings</screeninfo>
          <mediaobject>
           <imageobject>
-            <imagedata fileref="knode-filters.png" format="PNG">
+            <imagedata fileref="knode-filters.png" format="PNG"/>
           </imageobject>
           <textobject><phrase>The filter settings</phrase></textobject>
           <caption><para>The filter settings</para></caption>
@@ -1079,7 +1079,7 @@ Box is used.</para>
 <screeninfo>The Dialog Box Technical Settings</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-post-settings.png" format="PNG">
+	    <imagedata fileref="knode-post-settings.png" format="PNG"/>
 	  </imageobject>
 	  <textobject>
 	 <phrase>The Dialog Box Technical Settings</phrase>
@@ -1222,7 +1222,7 @@ hide.</para>
 <screeninfo> The Composer settings Dialog Box</screeninfo>
          <mediaobject>
           <imageobject>
-            <imagedata fileref="knode-composer-settings.png" format="PNG">
+            <imagedata fileref="knode-composer-settings.png" format="PNG"/>
           </imageobject>
          <textobject>
          <phrase>The Composer settings Dialog Box</phrase>
@@ -1378,7 +1378,7 @@ Dejanews and Altavista make archiving needless.</para>
 <screeninfo>The cleanup settings</screeninfo>
          <mediaobject>
           <imageobject>
-            <imagedata fileref="knode-cleanup.png" format="PNG">
+            <imagedata fileref="knode-cleanup.png" format="PNG"/>
           </imageobject>
          <textobject>
          <phrase>The cleanup settings</phrase>
@@ -1469,7 +1469,7 @@ following dialog.</para>
 <screeninfo>The Dialog Box "Subscribe to Newsgroups"</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-subscribe.png" format="PNG">
+	    <imagedata fileref="knode-subscribe.png" format="PNG"/>
 	  </imageobject>
 	 <textobject>
 	<phrase>The Dialog Box "Subscribe to Newsgroups"</phrase>
@@ -1579,7 +1579,7 @@ available newsgroups. Many newsserver refuse groups publishing binary
 attachments. Other groups are only available from special servers.  &knode;
 provides you the possibility to use more than one news-server, if you want to
 acces alternative servers providing these groups. You can read more about this
-in <xref linkend="multiple-news-accounts">.</para>
+in <xref linkend="multiple-news-accounts"/>.</para>
 
 </sect3>
 
@@ -1666,7 +1666,7 @@ bar over the coloum headers.</para>
 <screeninfo>The three views of &knode;</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-views.png" format="PNG">
+	    <imagedata fileref="knode-views.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>The three views of &knode;</phrase>
@@ -1688,7 +1688,7 @@ tree.</para>
 item (folders or newsgroups). If you select a newsgroup and choose Properties,
 you can, among other things, specify your identity for this particular
 group. You can find more about this in <xref
-linkend="group-identity"></para></tip>
+linkend="group-identity"/></para></tip>
 
 <para>When you select a newsgroup with your mouse, a list of articles of this
 group appears in the upper right window. If there are no articles in the upper
@@ -1834,30 +1834,30 @@ articles.</para>
 <itemizedlist>
 
 <listitem><para> <inlinemediaobject><imageobject> <imagedata
-fileref="greyball.png" format="PNG"></imageobject> </inlinemediaobject> Already
+fileref="greyball.png" format="PNG"/></imageobject> </inlinemediaobject> Already
 read articles are labeled with this symbol.</para></listitem>
 
 <listitem><para><inlinemediaobject><imageobject><imagedata
-fileref="greyballchk.png" format="PNG"> </imageobject> </inlinemediaobject>
+fileref="greyballchk.png" format="PNG"/> </imageobject> </inlinemediaobject>
 Articles labeled with this symbol are read and the body was fetched from the
 server.</para></listitem> 
 
 <listitem><para><inlinemediaobject><imageobject><imagedata fileref="redball.png"
-format="png"> </imageobject></inlinemediaobject> Articles labeled with
+format="png"/> </imageobject></inlinemediaobject> Articles labeled with
 this symbol are unread and the body has not yet been fetched.</para></listitem>
 
 <listitem><para><inlinemediaobject><imageobject><imagedata
-fileref="redballchk.png" format="PNG"></imageobject></inlinemediaobject>
+fileref="redballchk.png" format="PNG"/></imageobject></inlinemediaobject>
 Articles labled with this symbol are unread but the body has already been
 already fetched.</para></listitem>
 
 <listitem><para><inlinemediaobject><imageobject><imagedata fileref="newsubs.png"
-format="png"></imageobject></inlinemediaobject> Articles labeled with this
+format="png"/></imageobject></inlinemediaobject> Articles labeled with this
 symbol are part of a thread with new and unread articles in
 it.</para></listitem>
 
 <listitem><para><inlinemediaobject><imageobject><imagedata fileref="eyes.png"
-format="png"></imageobject></inlinemediaobject> Articles labled with
+format="png"/></imageobject></inlinemediaobject> Articles labled with
 this symbol are parts of a guarded thread. This corresponds to a score of
 100.</para></listitem>
 
@@ -1988,7 +1988,7 @@ now to change the width of the column left to the mouse pointer.</para></tip>
 show only the articles fitting in your specific criterias. &knode; uses filters
 for this task. In this paragraphs we are just dealing with the predefined
 filters. For defining and using your own filters, please refer to the chapter
-<xref linkend="using-filters"></para>
+<xref linkend="using-filters"/></para>
 
 <para>Normally you will read most articles only once, and then never again.
 &knode; labels the articles which are unread, but when there are more articles
@@ -2175,7 +2175,7 @@ article. </para>
 <guilabel>Headers</guilabel>
 </menuchoice>
 You can find a more detailed view on this in <xref
-linkend="knode-headers"></para>
+linkend="knode-headers"/></para>
 
 <para>
 By selecting
@@ -2242,14 +2242,14 @@ line.</para>
 <tip><para>Normally you do not have to bother with these introductionary lines.
 &knode; does this automaticaly, when you reply to an article. How to configure
 this line, you can read in chapter <xref
-linkend="knode-composer-settings"></para></tip>
+linkend="knode-composer-settings"/></para></tip>
 
 <para>In <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Preferences</guimenuitem> <guilabel>Reading News </guilabel>
 <guilabel>Appearance</guilabel></menuchoice> you can choose how the articles are
 shown.  In particular &knode; provides the smat coloring of different reply
 levels.  You can read more about this in th chapter <xref
-linkend="knode-appearance">.</para>
+linkend="knode-appearance"/>.</para>
 
 <caution><para>&knode; provides smart colouring of quotes, but at the moment,
 only quotes starting with &gt; are coloured.</para></caution>
@@ -2257,7 +2257,7 @@ only quotes starting with &gt; are coloured.</para></caution>
 <para>When the body of an article contains links to internet adresses, you can
 invoke an internet browser, starting with this adress, by clicking on the
 link.  Details about configuring this feature you can find in <xref
-linkend="setting-news-general">.</para> 
+linkend="setting-news-general"/>.</para> 
 
 </sect4>
 
@@ -2309,7 +2309,7 @@ and &knode; decides which one is best to be shown. </para>
 
 <para>Before you start writing article or replying to other Usenet users, be
 sure you understand the habits in the current newsgroup. Again, reading <xref
-linkend="knode-journey"> would be a good idea.</para>
+linkend="knode-journey"/> would be a good idea.</para>
 
 <para>For testing the Settings of &knode; please resist sending an article to a
 random newsgroup. It is not very friendly to bother people with test
@@ -2403,7 +2403,7 @@ testing your configuration. Just write it.</para>
 <screeninfo>Your first article</screeninfo>
  <mediaobject>
   <imageobject>
-    <imagedata fileref="knode-new-article.png" format="PNG">
+    <imagedata fileref="knode-new-article.png" format="PNG"/>
   </imageobject>
   <textobject>
    <phrase>Your first article</phrase>
@@ -2549,7 +2549,7 @@ get smaller and use less space on the server.</para>
 <screeninfo>Your answer on your article</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-followup.png" format="PNG">
+	    <imagedata fileref="knode-followup.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Your answer on your article</phrase>
@@ -2594,7 +2594,7 @@ posting an article in a newsgroup.</para>
 <screeninfo>A Mail Reply</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-reply.png" format="PNG">
+	    <imagedata fileref="knode-reply.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>A Mail Reply</phrase>
@@ -2630,7 +2630,7 @@ screenshot shows the Dialog Box for confguring the Filters.</para>
 <screeninfo>The dialog <guilabel>New Filter</guilabel></screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-edit-filter.png" format="PNG">
+	    <imagedata fileref="knode-edit-filter.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>The dialog <guilabel>New Filter</guilabel></phrase>
@@ -2937,7 +2937,7 @@ file and a PNG-picture.
 <screeninfo>Sending attachments</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-composer-attachments.png" format="PNG">
+	    <imagedata fileref="knode-composer-attachments.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Sending attachments</phrase>
@@ -2973,7 +2973,7 @@ The screenshot below shows the Search Dialog Box.
 <screeninfo>The Search Dialog Box</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-search.png" format="PNG">
+	    <imagedata fileref="knode-search.png" format="PNG"/>
 	  </imageobject>
 	 <textobject>
 	<phrase>The Search Dialog Box</phrase>
@@ -5101,7 +5101,7 @@ configuration files can not be imported. </para>
 
 
 <!-- martin end -->
-<![ %addindex; [ &documentation.index; ]]>
+&documentation.index; 
 </book>
 <!--
 Local Variables:
@@ -5119,3 +5119,4 @@ sgml-local-catalogs:nil
 sgml-local-ecat-files:nil
 End:
 -->
+
