@@ -28,14 +28,14 @@
 
 #define MODELS	"AT 1611 2110i 2148i 2711 2731 3110 3210 3310 3330 3360 3410 3810 " \
 		"5100 5110 5120 5130 5160 5190 540 550 6110 6120 6130 6150 616x " \
-		"6185 6190 6210 6250 6310 6310i 6360 640 650 6510 6610 7110 7190 " \
+		"6185 6190 6210 6230 6250 6310 6310i 6360 640 650 6510 6610 7110 7190 " \
 		"7650 8110 8210 8250 8290 8310 8810 9110 9210 RPM-1"
 
 #define CONNECTIONS "serial infrared irda dau9p dlr3p m2bus bluetooth tekram tcp"
 
 #if defined(__linux__) || defined(__linux)
 #define AVAILABLE_PORTS	"/dev/ttyS0 /dev/ttyS1 /dev/ttyS2 /dev/ttyS3 " \
-			"/dev/ircomm0 /dev/ircomm1 /dev/irda"
+			"/dev/ircomm0 /dev/ircomm1 /dev/irda /dev/rfcomm0 /dev/rfcomm1"
 #else
 #define AVAILABLE_PORTS	"/dev/ttyS0"
 #endif 

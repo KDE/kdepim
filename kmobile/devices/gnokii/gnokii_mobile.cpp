@@ -526,8 +526,12 @@ bool KMobileGnokii::configDialog(QWidget *parent)
   }
   dialog->getValues(model, connection, port, baud);
   delete dialog;
-  if (ok) {
-     
+  if (ok == QDialog::Accepted) {
+	m_modelnr = model;
+	m_connection = connection;
+	m_port = port;
+	m_baud = baud;
+	saveDeviceConfiguration();
   };
   return true;
 }
