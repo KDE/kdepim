@@ -43,9 +43,6 @@ class KCMKabLdapConfig : public KCModule
     virtual void defaults();
     virtual const KAboutData* aboutData() const;
 
-  signals:
-    void changed( bool );
-
   private:
     LDAPOptionsWidget *mConfigWidget;
 };
