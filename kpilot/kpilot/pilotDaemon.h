@@ -107,19 +107,19 @@ Q_OBJECT
 // The tray must be our friend so that we can let it stop the daemon.
 friend class PilotDaemonTray;
 
-  
+
 public:
 	PilotDaemon();
 	~PilotDaemon();
 
-	enum DaemonStatus 
-  	{ 
+	enum DaemonStatus
+  	{
 		HOTSYNC_START,    // Hotsync is running
 		HOTSYNC_END,      // Hotsync is cleaning up
 		FILE_INSTALL_REQ, // A file is being saved for installation
-		ERROR, 
+		ERROR,
 		READY,            // Connected to device and ready for Sync
-		INIT 
+		INIT
 	};
 
 	DaemonStatus status() const { return fStatus; } ;
@@ -145,7 +145,13 @@ public:
 
 protected:
 	DaemonStatus fStatus;
-	bool fQuitAfterSync;
+
+	enum postSyncActions {
+		None=0,
+		ReloadSettings = 1,
+		Quit = 2
+		} ;
+	int fPostSyncAction;
 
 protected slots:
 	void startHotSync();
@@ -203,6 +209,9 @@ private:
 
 
 // $Log$
+// Revision 1.32  2002/01/25 21:43:13  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.31  2001/12/29 15:49:01  adridg
 // SyncStack changes
 //

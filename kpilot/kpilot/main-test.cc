@@ -45,14 +45,10 @@ static const char *test_id =
 #include <kservice.h>
 #include <kservicetype.h>
 #include <kuserprofile.h>
-// #include <klibloader.h>
 
 #include "logWidget.h"
 #include "kpilotConfig.h"
 
-//#include "hotSync.h"
-//#include "interactiveSync.h"
-//#include "plugin.h"
 #include "syncStack.h"
 
 static KCmdLineOptions kpilotoptions[] = {
@@ -269,6 +265,11 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.14  2002/01/31 13:20:09  hollomon
+//
+// fix some compile/configure errors unde KDE 3.
+// The configure.in.in fix was suggested by Waldo Bastian.
+//
 // Revision 1.13  2002/01/22 22:11:41  danimo
 // "link" clashes with a function from unistd/stdlib
 //

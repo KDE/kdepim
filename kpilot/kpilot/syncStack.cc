@@ -200,7 +200,7 @@ SyncStack::SyncStack(KPilotDeviceLink *d,
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	listStrList(DEBUGCONDUIT,conduits);
+	DEBUGCONDUIT << fname << ": Conduits : " << conduits.join(" + ") << endl;
 #endif
 }
 
@@ -330,6 +330,9 @@ void SyncStack::nextAction(SyncAction *b)
 }
 
 // $Log$
+// Revision 1.2  2002/01/25 21:43:13  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.1  2001/12/29 15:41:36  adridg
 // Added unified sync-action handling for kpilotTest and daemon
 //

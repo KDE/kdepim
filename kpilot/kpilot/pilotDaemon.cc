@@ -274,7 +274,7 @@ void PilotDaemonTray::slotShowBusy()
 PilotDaemon::PilotDaemon() :
 	DCOPObject("KPilotDaemonIface"),
 	fStatus(INIT),
-	fQuitAfterSync(false),
+	fPostSyncAction(None),
 	fPilotLink(0L),
 	fPilotDevice(QString::null),
 	fNextSyncType(0),
@@ -395,6 +395,22 @@ void PilotDaemon::showTray()
 /* DCOP ASYNC */ void PilotDaemon::reloadSettings()
 {
 	FUNCTIONSETUP;
+
+	switch (fStatus)
+	{
+	case INIT:
+	case HOTSYNC_END:
+	case ERROR:
+	case READY:
+		// It's OK to reload settings in these states.
+		break;
+	case HOTSYNC_START:
+	case FILE_INSTALL_REQ:
+		// Postpone the reload till the sync finishes.
+		fPostSyncAction |= ReloadSettings;
+		return;
+		break;
+	}
 
 	KPilotConfigSettings & config = KPilotConfig::getConfig();
 
@@ -540,7 +556,7 @@ bool PilotDaemon::setupPilotLink()
 	case READY:
 	case HOTSYNC_START:
 	case FILE_INSTALL_REQ:
-		fQuitAfterSync = true;
+		fPostSyncAction |= Quit;
 		break;
 	}
 }
@@ -603,6 +619,8 @@ QString PilotDaemon::syncTypeString(int i) const
 
 		fTray->changeIcon(PilotDaemonTray::Busy);
 	}
+
+	fStatus = HOTSYNC_START ;
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -695,16 +713,22 @@ QString PilotDaemon::syncTypeString(int i) const
 
 	getKPilot().logProgress(i18n("HotSync Completed."), 100);
 
-	if (!fQuitAfterSync)
-	{
-		fStatus = HOTSYNC_END;
-	}
-	else
+	fStatus = HOTSYNC_END;
+
+	if (fPostSyncAction & Quit)
 	{
 		kapp->quit();
 	}
+	if (fPostSyncAction & ReloadSettings)
+	{
+		reloadSettings();
+	}
+	else
+	{
+		QTimer::singleShot(2000,fPilotLink,SLOT(reset()));
+	}
 
-	QTimer::singleShot(2000,fPilotLink,SLOT(reset()));
+	fPostSyncAction = None;
 }
 
 
@@ -822,6 +846,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.58  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.57  2002/01/23 08:35:54  adridg
 // Remove K-menu dependency
 //

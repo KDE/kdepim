@@ -215,20 +215,6 @@ public:
 	int fDBIndex;
 };
 
-bool operator < (const db & a, const db & b) {
-	if (a.creator == b.creator)
-	{
-		if (a.type != b.type)
-		{
-			if (a.type == pi_mktag('a', 'p', 'p', 'l'))
-				return false;
-			else
-				return true;
-		}
-	}
-
-	return a.maxblock < b.maxblock;
-}
 
 RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	InteractiveAction(p, visible, "restoreAction")
@@ -427,7 +413,7 @@ nextFile:
 		fStatus = Done;
 	}
 
-	if (dlp_OpenConduit(pilotSocket()) < 0)
+	if (openConduit() < 0)
 	{
 		kdWarning() << k_funcinfo
 			<< ": Restore apparently cancelled." << endl;
@@ -492,6 +478,9 @@ nextFile:
 
 
 // $Log$
+// Revision 1.9  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.8  2001/12/31 09:37:27  adridg
 // Attempt to save the newly-set username
 //

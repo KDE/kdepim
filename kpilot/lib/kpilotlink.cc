@@ -148,7 +148,6 @@ void KPilotDeviceLink::reset()
 	fStatus = WaitingForDevice;
 }
 
-
 void KPilotDeviceLink::openDevice()
 {
 	FUNCTIONSETUP;
@@ -488,7 +487,7 @@ void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool suppress)
 	QString t(entry);
 
 #if defined(PILOT_LINK_VERSION) && defined(PILOT_LINK_MAJOR) && defined(PILOT_LINK_MINOR)
-#if (PILOT_LINK_VERSION * 100 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 100 
+#if (PILOT_LINK_VERSION * 100 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 100
 	t.append("X");
 #endif
 #else
@@ -564,8 +563,84 @@ QString KPilotDeviceLink::statusString() const
 }
 
 
+void KPilotDeviceLink::finishSync()
+{
+	FUNCTIONSETUP ;
+
+	getPilotUser()->setLastSyncPC((unsigned long) gethostid());
+	getPilotUser()->setLastSyncDate(time(0));
+
+	dlp_WriteUserInfo(pilotSocket(),getPilotUser()->pilotUser());
+	addSyncLogEntry(i18n("End of Hot-Sync\n"));
+	dlp_EndOfSync(pilotSocket(), 0);
+}
+
+int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
+{
+	FUNCTIONSETUP;
+
+	return dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,index,dbinfo);
+}
+
+bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName, 
+	DBInfo *info)
+{
+	FUNCTIONSETUP;
+
+	// The casts here look funny because:
+	//
+	// fullBackupName is a QString
+	// QFile::encodeName() gives us a QCString
+	// which needs an explicit cast to become a const char *
+	// which needs a const cast to become a char *
+	//
+	//
+	struct pi_file *f;
+	f = pi_file_create(const_cast < char *>
+		((const char *) (QFile::encodeName(fullBackupName))),
+		info);
+
+	if (f == 0)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Failed, unable to create file" << endl;
+		return false;
+	}
+
+	if (pi_file_retrieve(f, pilotSocket(), 0) < 0)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Failed, unable to back up database" << endl;
+
+		pi_file_close(f);
+		return false;
+	}
+
+	pi_file_close(f);
+	return true;
+}
+
+
+
+bool operator < (const db & a, const db & b) {
+	if (a.creator == b.creator)
+	{
+		if (a.type != b.type)
+		{
+			if (a.type == pi_mktag('a', 'p', 'p', 'l'))
+				return false;
+			else
+				return true;
+		}
+	}
+
+	return a.maxblock < b.maxblock;
+}
 
 // $Log$
+// Revision 1.6  2002/01/25 21:43:13  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.5  2002/01/21 23:14:03  adridg
 // Old code removed; extra abstractions added; utility extended
 //

@@ -30,16 +30,8 @@
 static const char *options_id =
 	"$Id$";
 
-#ifdef NDEBUG
-#undef NDEBUG
-#endif
-#ifndef DEBUG
-#define DEBUG
-#endif
-
 #include "options.h"
 
-#ifdef DEBUG
 
 #include <iostream.h>
 
@@ -53,66 +45,16 @@ static const char *options_id =
 // to align FUNCTIONSETUP output.
 //
 //
+#ifdef DEBUG
+int debug_level = 1;
+#else
 int debug_level = 0;
+#endif
 const char *debug_spaces =
 	"                                                    ";
 
-void listConfig(DEBUGSTREAM & s, KConfig & c)
-{
-	FUNCTIONSETUP;
-
-	QMap < QString, QString > m;
-	QStringList l = c.groupList();
-
-	QStringList::Iterator i;
-
-	s << fname << ": Listing groups in config file" << endl;
-	for (i = l.begin(); i != l.end(); ++i)
-	{
-		s << fname << ": " << *i << endl;
-
-		m = c.entryMap(*i);
-		QMap < QString, QString >::ConstIterator j;
-
-		for (j = m.begin(); j != m.end(); ++j)
-		{
-			s << fname
-				<< ": " << j.key() << "=" << j.data() << endl;
-		}
-	}
-	/* NOTREACHED */
-	(void) options_id;
-}
-
-void listStrList(DEBUGSTREAM & s, const QStringList & l)
-{
-	FUNCTIONSETUP;
-
-	QStringList::ConstIterator i;
-	s << fname << ": Elements of string list:" << endl;
-
-	for (i = l.begin(); i != l.end(); ++i)
-	{
-		s << fname << ": " << *i << endl;
-	}
-}
-
-void listStrList(DEBUGSTREAM & s, QStrList & l)
-{
-	FUNCTIONSETUP;
-
-	s << fname << ": Elements of string list:" << endl;
-
-	for (char *p = l.first(); p; p = l.next())
-	{
-		s << fname << ":\t" << p << endl;
-	}
-}
-
-
 QString qstringExpansion(const QString & s)
 {
-	FUNCTIONSETUP;
 	QString t;
 
 	for (unsigned i = 0; i < s.length(); i++)
@@ -128,7 +70,6 @@ QString qstringExpansion(const QString & s)
 
 QString charExpansion(const char *s)
 {
-	FUNCTIONSETUP;
 	QString t;
 
 	while (*s)
@@ -163,12 +104,13 @@ static KCmdLineOptions debug_options_[] = {
 KCmdLineOptions *debug_options = debug_options_;
 
 
-#else
 int const fname = ((int) options_id);
-#endif
 
 
 // $Log$
+// Revision 1.3  2002/01/18 10:08:00  adridg
+// CVS_SILENT: Fixing my compile fixes again
+//
 // Revision 1.2  2002/01/16 22:24:16  adridg
 // Avoid lib incompatibility crashes
 //

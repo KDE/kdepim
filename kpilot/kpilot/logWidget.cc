@@ -80,6 +80,15 @@ LogWidget::LogWidget(QWidget * parent) :
 
 	fLog->setText(i18n("<qt><B>HotSync Log</B></qt>"));
 
+	// TODO: disable once the beta-stage has been left.
+	//
+	//
+	fLog->append(i18n("<qt>%1 is an <B>alpha</B> version of the software "
+		"and should be used with even more caution than usual. "
+		"There is no point in sending in bug reports unless you "
+		"include a backtrace and the debugging output."
+		"</qt>"));
+
 	QHBox *h = new QHBox(this);
 	h->setSpacing(SPACING);
 	QPushButton *b = new QPushButton(
@@ -329,6 +338,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.16  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.15  2002/01/23 18:55:19  danimo
 // - xml tags in QTextEdit logwin
 // - new line for each entry in log

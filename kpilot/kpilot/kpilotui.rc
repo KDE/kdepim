@@ -10,13 +10,6 @@
     <Separator />
     <Action name="file_quit" />
   </Menu>
-  <Menu name="view" noMerge="1"><text>&amp;View</text>
-    <Action name="view_kpilot" />
-    <Action name="view_memo" />
-    <Action name="view_address" />
-    <Action name="view_files" />
-    <Action name="view_log" />
-  </Menu>
   <Menu name="settings" noMerge="1"><text>&amp;Settings</text>
     <Action name="options_show_statusbar" />
     <Action name="options_show_toolbar" />

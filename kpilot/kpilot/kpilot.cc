@@ -666,7 +666,12 @@ void KPilotInstaller::slotConfigureConduits()
 	ConduitConfigDialog *conSetup = 0L;
 
 	conSetup = new ConduitConfigDialog(this,0L,true);
-	conSetup->exec();
+	int r = conSetup->exec();
+	if (r)
+	{
+		KPilotConfig::getConfig().sync();
+		getDaemon().reloadSettings();
+	}
 	delete conSetup;
 }
 
@@ -856,6 +861,10 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.73  2002/01/31 16:25:28  hollomon
+//
+// If we can't start the daemon. tell the user why not.
+//
 // Revision 1.72  2002/01/31 15:36:33  hollomon
 //
 // KPilotInstaller::startDaemonIfNeeded was trying to start the daemon

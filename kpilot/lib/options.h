@@ -154,9 +154,6 @@ class KConfig;
 // added in an ad-hoc fashion.
 //
 //
-void listConfig(DEBUGSTREAM &, KConfig &);
-void listStrList(DEBUGSTREAM &, const QStringList &);
-void listStrList(DEBUGSTREAM &, QStrList &);
 QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
 
@@ -164,6 +161,9 @@ class QSize;
 ostream& operator << (ostream&,const QSize &) ;
 kdbgstream& operator << (kdbgstream&,const QSize &);
 
+// class QStringList;
+// ostream& operator <<(ostream&,const QStringList &);
+// kdbgstream& operator <<(kdbgstream&,const QStringList &);
 #else
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
 // In particular it doesn't give functions a local variable fname,
@@ -204,6 +204,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.7  2002/01/18 10:08:00  adridg
+// CVS_SILENT: Fixing my compile fixes again
+//
 // Revision 1.6  2002/01/16 22:24:16  adridg
 // Avoid lib incompatibility crashes
 //

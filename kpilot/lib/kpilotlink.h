@@ -41,6 +41,7 @@
 class QTimer;
 class QSocketNotifier;
 class KPilotUser;
+struct DBInfo;
 
 /*
 ** The KPilotLink class was originally a kind of C++ wrapper
@@ -283,9 +284,12 @@ public:
 	/**
 	* Returns the user information as set in the KPilot settings dialog.
 	* The user information can also be set by the Pilot, and at the
-	* end of a HotSync the two user informations are synced as well.
+	* end of a HotSync the two user informations can be synced as well
+	* with finishSync -- this writes fPilotUser again, so don't make
+	* local copies of the KPilotUser structure and modify them.
 	*/
 	KPilotUser *getPilotUser() { return fPilotUser; }
+	void finishSync();
 
 protected:
 	KPilotUser  *fPilotUser;
@@ -295,14 +299,25 @@ protected:
 */
 protected:
 	/**
-	* Notify the Pilot user which conduit is running now. 
+	* Notify the Pilot user which conduit is running now.
 	*/
 	int openConduit();
+public:
+	int getNextDatabase(int index,struct DBInfo *);
+	/**
+	* Retrieve the database indicated by DBInfo *db into the
+	* local file @p path.
+	*/
+	bool retrieveDatabase(const QString &path, struct DBInfo *db);
 } ;
 
+bool operator < ( const struct db &, const struct db &) ;
 
 
 // $Log$
+// Revision 1.2  2002/01/21 23:14:03  adridg
+// Old code removed; extra abstractions added; utility extended
+//
 // Revision 1.1  2001/10/08 21:56:02  adridg
 // Start of making a separate KPilot lib
 //

@@ -73,8 +73,7 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 
 	addSyncLogEntry(i18n("Testing.\n"));
 
-	while ((i = dlp_ReadDBList(pilotSocket(), 0, dlpDBListRAM,
-				dbindex, &db)) > 0)
+	while ((i = fHandle->getNextDatabase(dbindex,&db)) > 0)
 	{
 		count++;
 		dbindex = db.index + 1;
@@ -178,7 +177,7 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 		return;
 	}
 
-	if (dlp_ReadDBList(pilotSocket(), 0, 0x80, fDBIndex, &info) < 0)
+	if (fHandle->getNextDatabase(fDBIndex, &info) < 0)
 	{
 #ifdef DEBUG
 		DEBUGDAEMON << fname << ": Backup complete." << endl;
@@ -214,7 +213,6 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 	FUNCTIONSETUP;
 
 	int j;
-	struct pi_file *f;
 
 	QString fullBackupDir =
 		fDatabaseDir + fHandle->getPilotUser()->getUserName() + "/";
@@ -277,36 +275,7 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 	/* Ensure that DB-open flag is not kept */
 	info->flags &= ~dlpDBFlagOpen;
 
-	// The casts here look funny because:
-	//
-	// fullBackupName is a QString
-	// QFile::encodeName() gives us a QCString
-	// which needs an explicit cast to become a const char *
-	// which needs a const cast to become a char *
-	//
-	//
-	f = pi_file_create(const_cast < char *>
-		((const char *) (QFile::encodeName(fullBackupName))),
-		info);
-
-	if (f == 0)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Failed, unable to create file" << endl;
-		return false;
-	}
-
-	if (pi_file_retrieve(f, pilotSocket(), 0) < 0)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Failed, unable to back up database" << endl;
-
-		pi_file_close(f);
-		return false;
-	}
-
-	pi_file_close(f);
-	return true;
+	return fHandle->retrieveDatabase(fullBackupName,info);
 }
 
 void BackupAction::endBackup()
@@ -491,19 +460,15 @@ void CleanupAction::exec()
 {
 	FUNCTIONSETUP;
 
-	fHandle->getPilotUser()->setLastSyncPC((unsigned long) gethostid());
-	fHandle->getPilotUser()->setLastSyncDate(time(0));
-
-	dlp_WriteUserInfo(pilotSocket(),
-		fHandle->getPilotUser()->pilotUser());
-	addSyncLogEntry("End of Hot-Sync\n");
-	dlp_EndOfSync(pilotSocket(), 0);
-
+	fHandle->finishSync();
 	emit syncDone(this);
 }
 
 
 // $Log$
+// Revision 1.13  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.12  2002/01/23 02:56:23  mhunter
 // CVS_SILENT Removed extra space after full-stop
 //
