@@ -48,7 +48,8 @@ int main(int argc, char* argv[])
 #else
   logfile = fopen("/dev/null", "w+");
 #endif
-  ConduitApp a(argc, argv, "vcal_conduit");
+  ConduitApp a(argc, argv, "vcal_conduit",
+  	"\t\tvcal_conduit -- A conduit for KPilot\n");
   VCalConduit conduit(a.getMode());
   a.setConduit(&conduit);
   return a.exec();
@@ -58,8 +59,7 @@ VCalConduit::VCalConduit(eConduitMode mode)
   : BaseConduit(mode)
 {
   fCalendar = 0L;
-  KConfig* config = kapp->getConfig();
-  config->setGroup("VCal Conduit");
+  KConfig* config = KPilotLink::getConfig(VCalSetup::VCalGroup);
   QString calName = config->readEntry("CalFile");
   first = config->readBoolEntry("FirstTime", TRUE);
 
@@ -90,7 +90,7 @@ VCalConduit::~VCalConduit()
 
 /* static */ const char *VCalConduit::version()
 {
-	return i18n("VCal Conduit 3.5");
+	return i18n("VCal Conduit v" VERSION);
 }
 
 void VCalConduit::doBackup()
@@ -538,11 +538,14 @@ void VCalConduit::deleteVObject(PilotRecord *rec)
 
 void VCalConduit::saveVCal()
 {
-  KConfig* config = kapp->getConfig();
-  config->setGroup("VCal Conduit");
-  QString calName = config->readEntry("CalFile");
-  if (fCalendar)
-    writeVObjectToFile(calName.data(), fCalendar);  
+	FUNCTIONSETUP;
+
+	KConfig* config = KPilotLink::getConfig(VCalSetup::VCalGroup);
+	QString calName = config->readEntry("CalFile");
+	if (fCalendar)
+	{
+		writeVObjectToFile(calName.data(), fCalendar);  
+	}
 }
 
 void VCalConduit::doLocalSync()
@@ -576,9 +579,13 @@ void VCalConduit::doLocalSync()
 	}
 	else
 	{
-		KConfig *config=kapp->getConfig();
+		// We need one of KPilot's global 
+		// settings.
+		//
+		KConfig *config=KPilotLink::getConfig();
 		config->setGroup(0L);
 		LocalOverridesPilot=config->readNumEntry("OverwriteRemote",0);
+		delete config;
 	}
 
   
@@ -1080,34 +1087,55 @@ void VCalConduit::doLocalSync()
     if (vevent == 0L) {
       fprintf(logfile,"found event in pilot which can't be found in vcalendar\n");
       fflush(logfile);
+
       if (first == FALSE) {
-	// add event to list of pilot events to delete
-	deletedList.append(new int(rec->getID()));
+		// add event to list of pilot events to delete
+		deletedList.append(new int(rec->getID()));
+
+		// In this case we want it entered into the vcalendar
+		if (!LocalOverridesPilot) {
+	   	 	updateVObject(rec);
+		}
       } else { 
 	if (insertall == 0) {
-	  QString text;
-	  text = "This is the first time than you have done a HotSync\n"
-	    "with the vCalendar conduit. There is an appointment\n"
-	    "in the PalmPilot which is not in the vCalendar (KOrganizer).\n\n";
-	  text += "Appointment: ";
-	  text += dateEntry->getDescription();
-	  text += "\n\nWhat must be done with this appointment?";
+		QString text;
+		text = i18n("This is the first time that "
+			"you have done a HotSync\n"
+			"with the vCalendar conduit. "
+			"There is an appointment\n"
+			"in the PalmPilot which is not "
+			"in the vCalendar (KOrganizer).\n\n");
+		text += i18n("Appointment: ");
+		text += dateEntry->getDescription();
+		text += i18n("\n\nWhat must be done with this appointment?");
 
-	  response = QMessageBox::information(0, "KPilot vCalendar Conduit",
-					      text.data(), "&Insert","&Delete",
-					      "Insert &All",0);
-	  switch(response) {
-	  case 0:
-	    updateVObject(rec);
-	    break;
-	  case 1:
-	    deletedList.append(new int(rec->getID()));
-	    break;
-	  case 2:
-	    insertall = 1;
-	    updateVObject(rec);
-	    break;
-	  }
+		response = QMessageBox::information(0, 
+			i18n("KPilot vCalendar Conduit"), 
+			text, 
+			i18n("&Insert"),i18n("&Delete"), i18n("Insert &All")
+			,0);
+
+		if (debug_level & SYNC_MINOR)
+		{
+			cerr << fname 
+				<< ": Event disposition "
+				<< response
+				<< endl;
+		}
+
+		switch(response) 
+		{
+		case 0:
+			updateVObject(rec);
+			break;
+		case 1:
+			deletedList.append(new int(rec->getID()));
+			break;
+		case 2:
+			insertall = 1;
+			updateVObject(rec);
+			break;
+		}
 	} else {
 	  // all records are to be inserted.
 	  updateVObject(rec);

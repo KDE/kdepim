@@ -29,7 +29,6 @@ public:
 	VCalSetupPage(setupDialog *,KConfig *);
 
 	virtual int commitChanges(KConfig *);
-	virtual const char *tabName();
 
 public slots:
 	void slotBrowse();
@@ -47,12 +46,12 @@ class VCalSetup : public setupDialog
 {
   Q_OBJECT
 
+friend class VCalConduit;
 public:
 	VCalSetup(QWidget *parent=0L);
-  
-	static const char *configGroup();
-	virtual const char *groupName();
 
+protected:
+	static const QString VCalGroup;
 };
 
 #endif

@@ -25,7 +25,7 @@
 #include "kpilot.h"
 
 VCalSetupPage::VCalSetupPage(setupDialog *parent,KConfig *config) :
-	setupDialogPage(parent,config)
+	setupDialogPage(i18n("Calendar"),parent,config)
 {
 	FUNCTIONSETUP;
 
@@ -71,10 +71,6 @@ int VCalSetupPage::commitChanges(KConfig *config)
 	return 0;
 }
 
-/* virtual */ const char *VCalSetupPage::tabName()
-{
-	return i18n("Calendar");
-}
 
 
 void VCalSetupPage::slotBrowse()
@@ -88,22 +84,13 @@ void VCalSetupPage::slotBrowse()
 
 
 
-/* virtual */ const char *VCalSetup::groupName()
-{
-	return configGroup();
-}
-
-/* static */ const char *VCalSetup::configGroup()
-{
-	return "VCal Conduit";
-}
+/* static */ const QString VCalSetup::VCalGroup("vcalOptions");
 
 VCalSetup::VCalSetup(QWidget *parent) :
-	setupDialog(parent,"vcalOptions",VCalConduit::version())
+	setupDialog(parent,VCalGroup,VCalConduit::version())
 {
 	FUNCTIONSETUP;
-	KConfig *config=kapp->getConfig();
-	config->setGroup(configGroup());
+	KConfig *config=KPilotLink::getConfig(VCalGroup);
 	addPage(new VCalSetupPage(this,config));
 	addPage(new setupInfoPage(this,
 		VCalConduit::version(),
