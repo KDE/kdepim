@@ -64,13 +64,13 @@ void filter_pmail::import(filterInfo *info)
    info->alert(CAP,msg);
 
    // Select directory from where I have to import files
-   sprintf(dir,getenv("HOME"));
+   sprintf(dir,getenv("HOME"));	//lukas: noooooo! this breaks i18n, no sprintf please! use QDir instead
    choosen=KFileDialog::getExistingDirectory(dir,par);
    if (choosen.length()==0) { return; } // No directory choosen here!
    strcpy(dir,choosen.latin1());
 
    // Count total number of files to be processed
-   info->log(i18n("Couting files ..."));
+   info->log(i18n("Counting files ..."));
    totalFiles = countFiles(".cnm");
    totalFiles += countFiles(".pmm");
    totalFiles += countFiles(".mbx");
@@ -153,7 +153,7 @@ void filter_pmail::processFiles(const char *mask, void(filter_pmail::* workFunc)
          path.append(file);
 
          // call worker function, increase progressbar
-         (this->*workFunc)(path.latin1());
+         (this->*workFunc)(path.latin1());	//lukas: noooooo! no .latin1() in paths!!!
          nextFile();
       }
       entry=readdir(d);
@@ -308,7 +308,7 @@ void filter_pmail::importUnixMailFolder(const char *file)
    // Get folder name
    s.replace( QRegExp("mbx$"), "pmg");
    s.replace( QRegExp("MBX$"), "PMG");
-   f = fopen(s.latin1(), "rb");
+   f = fopen(s.latin1(), "rb");		//lukas: noooooo! no fopen nor .latin1() for files!!!
    fread(&pmg_head, sizeof(pmg_head), 1, f);
    fclose(f);
    folder = "PMail-";
