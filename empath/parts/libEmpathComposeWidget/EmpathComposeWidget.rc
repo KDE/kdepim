@@ -1,0 +1,31 @@
+<!DOCTYPE kpartgui>
+<kpartgui name="EmpathComposeWidget">
+<MenuBar>
+    <Menu name="message"><text>&amp;Message</text>
+        <Action name="messageCompose"/>
+        <Separator/>
+        <Action name="messageSendNow"/>
+        <Action name="messageSendLater"/>
+        <Action name="messagePostpone"/>
+        <Separator/>
+        <Action name="messageConfirmDelivery"/>
+        <Action name="messageConfirmReading"/>
+        <Action name="messageEncrypt"/>
+        <Action name="messageDigitalSign"/>
+        <Action name="messageSign"/>
+    </Menu>
+</MenuBar>
+
+<ToolBar name="mainToolBar" fullWidth="false">
+    <Action name="messageCompose"/>
+    <Separator/>
+    <Action name="messageSendNow"/>
+    <Action name="messageSendLater"/>
+    <Action name="messagePostpone"/>
+    <Separator/>
+    <Action name="messageConfirmDelivery"/>
+    <Action name="messageConfirmReading"/>
+    <Action name="messageEncrypt"/>
+</ToolBar>
+</kpartgui>
+

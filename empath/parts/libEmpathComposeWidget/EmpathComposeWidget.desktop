@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Service
+Comment=email message composer
+Name=EmpathComposeWidget
+ServiceTypes=KParts/ReadWritePart
+X-KDE-Library=libEmpathComposeWidget
