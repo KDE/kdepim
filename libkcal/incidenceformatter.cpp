@@ -361,8 +361,7 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
   return tmpStr;
 }
 
-namespace KCal {
-class EventViewerVisitor : public IncidenceBase::Visitor
+class IncidenceFormatter::EventViewerVisitor : public IncidenceBase::Visitor
 {
   public:
     EventViewerVisitor() { mResult = ""; }
@@ -393,7 +392,6 @@ class EventViewerVisitor : public IncidenceBase::Visitor
   protected:
     QString mResult;
 };
-}
 
 QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 {
@@ -741,8 +739,7 @@ static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
   }
 }
 
-namespace KCal {
-class ScheduleMessageVisitor : public IncidenceBase::Visitor
+class IncidenceFormatter::ScheduleMessageVisitor : public IncidenceBase::Visitor
 {
   public:
     ScheduleMessageVisitor() : mMessage(0) { mResult = ""; }
@@ -754,7 +751,8 @@ class ScheduleMessageVisitor : public IncidenceBase::Visitor
     ScheduleMessage *mMessage;
 };
 
-class InvitationHeaderVisitor : public ScheduleMessageVisitor
+class IncidenceFormatter::InvitationHeaderVisitor : 
+      public IncidenceFormatter::ScheduleMessageVisitor
 {
   protected:
     bool visit( Event *event )
@@ -779,7 +777,8 @@ class InvitationHeaderVisitor : public ScheduleMessageVisitor
     }
 };
 
-class InvitationBodyVisitor : public ScheduleMessageVisitor
+class IncidenceFormatter::InvitationBodyVisitor : 
+      public IncidenceFormatter::ScheduleMessageVisitor
 {
   protected:
     bool visit( Event *event )
@@ -803,7 +802,7 @@ class InvitationBodyVisitor : public ScheduleMessageVisitor
       return !mResult.isEmpty();
     }
 };
-}
+
 
 QString InvitationFormatterHelper::makeLink( const QString &id, const QString &text )
 {
@@ -1386,8 +1385,7 @@ QString IncidenceFormatter::formatTNEFInvitation( const QByteArray& tnef,
  *  Helper functions for the Incidence tooltips
  *******************************************************************/
 
-namespace KCal {
-class ToolTipVisitor : public IncidenceBase::Visitor
+class IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
 {
   public:
     ToolTipVisitor() : mRichText( true ), mResult( "" ) {}
@@ -1417,9 +1415,8 @@ class ToolTipVisitor : public IncidenceBase::Visitor
     bool mRichText;
     QString mResult;
 };
-}
 
-QString ToolTipVisitor::dateRangeText( Event*event )
+QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event*event )
 {
   QString ret;
   QString tmp;
@@ -1459,7 +1456,7 @@ QString ToolTipVisitor::dateRangeText( Event*event )
   return ret;
 }
 
-QString ToolTipVisitor::dateRangeText( Todo*todo )
+QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo*todo )
 {
   QString ret;
   bool floats( todo->doesFloat() );
@@ -1484,7 +1481,7 @@ QString ToolTipVisitor::dateRangeText( Todo*todo )
   return ret;
 }
 
-QString ToolTipVisitor::dateRangeText( Journal*journal )
+QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal*journal )
 {
   QString ret;
   if (journal->dtStart().isValid() ) {
@@ -1493,7 +1490,7 @@ QString ToolTipVisitor::dateRangeText( Journal*journal )
   return ret;
 }
 
-QString ToolTipVisitor::dateRangeText( FreeBusy *fb )
+QString IncidenceFormatter::ToolTipVisitor::dateRangeText( FreeBusy *fb )
 {
   QString tmp( "<br>" + i18n("<i>Period start:</i>&nbsp;1") );
   QString ret = tmp.arg( KGlobal::locale()->formatDateTime( fb->dtStart() ) );
@@ -1504,25 +1501,25 @@ QString ToolTipVisitor::dateRangeText( FreeBusy *fb )
 
 
 
-bool ToolTipVisitor::visit( Event *event )
+bool IncidenceFormatter::ToolTipVisitor::visit( Event *event )
 {
   mResult = generateToolTip( event, dateRangeText( event ) );
   return !mResult.isEmpty();
 }
 
-bool ToolTipVisitor::visit( Todo *todo )
+bool IncidenceFormatter::ToolTipVisitor::visit( Todo *todo )
 {
   mResult = generateToolTip( todo, dateRangeText( todo ) );
   return !mResult.isEmpty();
 }
 
-bool ToolTipVisitor::visit( Journal *journal )
+bool IncidenceFormatter::ToolTipVisitor::visit( Journal *journal )
 {
   mResult = generateToolTip( journal, dateRangeText( journal ) );
   return !mResult.isEmpty();
 }
 
-bool ToolTipVisitor::visit( FreeBusy *fb )
+bool IncidenceFormatter::ToolTipVisitor::visit( FreeBusy *fb )
 {
   mResult = "<qt><b>" + i18n("Free/Busy information for %1")
         .arg(fb->organizer().fullName()) + "</b>";
@@ -1531,7 +1528,7 @@ bool ToolTipVisitor::visit( FreeBusy *fb )
   return !mResult.isEmpty();
 }
 
-QString ToolTipVisitor::generateToolTip( Incidence* incidence, QString dtRangeText )
+QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence* incidence, QString dtRangeText )
 {
   QString tmp = "<qt><b>"+ incidence->summary().replace("\n", "<br>")+"</b>";
 
@@ -1569,8 +1566,7 @@ QString IncidenceFormatter::toolTipString( IncidenceBase *incidence, bool richTe
  *  Helper functions for the Incidence tooltips
  *******************************************************************/
 
-namespace KCal {
-class MailBodyVisitor : public IncidenceBase::Visitor
+class IncidenceFormatter::MailBodyVisitor : public IncidenceBase::Visitor
 {
   public:
     MailBodyVisitor() : mResult( "" ) {}
@@ -1590,7 +1586,7 @@ class MailBodyVisitor : public IncidenceBase::Visitor
   protected:
     QString mResult;
 };
-}
+
 
 static QString mailBodyIncidence( Incidence *incidence )
 {
@@ -1605,7 +1601,7 @@ static QString mailBodyIncidence( Incidence *incidence )
   return body;
 }
 
-bool MailBodyVisitor::visit( Event *event )
+bool IncidenceFormatter::MailBodyVisitor::visit( Event *event )
 {
   QString recurrence[]= {i18n("no recurrence", "None"),
     i18n("Minutely"), i18n("Hourly"), i18n("Daily"),
@@ -1650,7 +1646,7 @@ bool MailBodyVisitor::visit( Event *event )
   return !mResult.isEmpty();
 }
 
-bool MailBodyVisitor::visit( Todo *todo )
+bool IncidenceFormatter::MailBodyVisitor::visit( Todo *todo )
 {
   mResult = mailBodyIncidence( todo );
 
@@ -1673,7 +1669,7 @@ bool MailBodyVisitor::visit( Todo *todo )
   return !mResult.isEmpty();
 }
 
-bool MailBodyVisitor::visit( Journal *journal )
+bool IncidenceFormatter::MailBodyVisitor::visit( Journal *journal )
 {
   mResult = journal->summary() + "\n" + journal->description() + "\n";
   return !mResult.isEmpty();

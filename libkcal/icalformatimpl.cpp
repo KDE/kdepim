@@ -325,8 +325,7 @@ ICalFormatImpl::~ICalFormatImpl()
   delete mCompat;
 }
 
-namespace KCal {
-class ToComponentVisitor : public IncidenceBase::Visitor
+class ICalFormatImpl::ToComponentVisitor : public IncidenceBase::Visitor
 {
   public:
     ToComponentVisitor( ICalFormatImpl *impl, Scheduler::Method m ) : mImpl( impl ), mComponent( 0 ), mMethod( m ) {}
@@ -343,7 +342,6 @@ class ToComponentVisitor : public IncidenceBase::Visitor
     icalcomponent *mComponent;
     Scheduler::Method mMethod;
 };
-}
 
 icalcomponent *ICalFormatImpl::writeIncidence( IncidenceBase *incidence, Scheduler::Method method )
 {
@@ -1455,7 +1453,7 @@ Person ICalFormatImpl::readOrganizer( icalproperty *organizer )
 {
   QString email = QString::fromUtf8(icalproperty_get_organizer(organizer));
   if ( email.startsWith("mailto:", false ) ) {
-    email = email.remove(0,7);
+    email = email.mid( 7 );
   }
   QString cn;
   

@@ -114,6 +114,7 @@ class ICalFormatImpl
 
     Compat *mCompat;
 
+    class ToComponentVisitor;
     class Private;
     Private *d;
 };

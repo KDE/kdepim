@@ -58,6 +58,13 @@ class IncidenceFormatter
                                          InvitationFormatterHelper *helper );
     // Transform a TNEF attachment to an iCal or vCard
     static QString msTNEFToVPart( const QByteArray& tnef );
+  private:
+    class EventViewerVisitor;
+    class ScheduleMessageVisitor;
+    class InvitationHeaderVisitor;
+    class InvitationBodyVisitor;
+    class ToolTipVisitor;
+    class MailBodyVisitor;
 };
 
 }

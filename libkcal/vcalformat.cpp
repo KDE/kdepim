@@ -914,7 +914,6 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   // organizer
   // if our extension property for the event's ORGANIZER exists, add it.
   if ((vo = isAPropertyOf(vevent, ICOrganizerProp)) != 0) {
-    // @TODO: Fix this to remove the mailto:
     anEvent->setOrganizer( s = fakeCString(vObjectUStringZValue(vo) ) );
     deleteStr(s);
   } else {
