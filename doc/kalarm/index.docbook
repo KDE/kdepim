@@ -634,8 +634,8 @@ includes options relating to the &kalarm; system tray icon.</para>
 <varlistentry>
 <term><menuchoice><guimenuitem>Control Alarm Daemon...</guimenuitem></menuchoice></term>
 <listitem><para><action>Displays the Service Manager dialog which
-allows you to control the <application>alarm
-daemon</application>.</action></para>
+allows you to control the alarm
+daemon.</action></para>
 <para>See
 <link linkend="daemon-control">Controlling the alarm daemon with the
 Service Manager</link> for details.</para>
