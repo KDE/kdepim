@@ -106,6 +106,9 @@ Q_OBJECT
     bool hasReplyTo()                 { return (!r_eplyTo.isEmpty()); }
     QString replyTo()                 { return r_eplyTo; }
     void setReplyTo(const QString &s) { r_eplyTo=s; }
+    bool hasMailCopiesTo()            { return (!m_ailCopiesTo.isEmpty()); }
+    QString mailCopiesTo()            { return m_ailCopiesTo; }
+    void setMailCopiesTo(const QString &s) { m_ailCopiesTo=s; }
     bool hasOrga()                    { return (!o_rga.isEmpty()); }
     QString orga()                    { return o_rga; }
     void setOrga(const QString &s)    { o_rga=s; }
@@ -127,6 +130,7 @@ Q_OBJECT
               e_mail,
               o_rga,
               r_eplyTo,
+              m_ailCopiesTo,
               s_igText,
               s_igContents,
               s_igPath;
@@ -153,6 +157,7 @@ class IdentityWidget : public BaseWidget {
                     *o_rga,
                     *e_mail,
                     *r_eplyTo,
+                    *m_ailCopiesTo,
                     *s_ig;
     QRadioButton    *s_igFile,
                     *s_igEdit;

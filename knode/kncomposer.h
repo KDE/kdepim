@@ -46,7 +46,7 @@ class KNComposer : public KMainWindow  {
 
     // unwraped == original, not rewraped text
     // firstEdit==true: place the cursor at the end of the article
-    KNComposer(KNLocalArticle *a, const QString &text=QString::null, const QString &sig=QString::null, const QString &unwraped=QString::null, bool firstEdit=false);
+    KNComposer(KNLocalArticle *a, const QString &text=QString::null, const QString &sig=QString::null, const QString &unwraped=QString::null, bool firstEdit=false, bool dislikesCopies=false, bool createCopy=false);
     ~KNComposer();
     void setConfig(bool onlyFonts);
     void setMessageMode(MessageMode mode);
@@ -92,7 +92,8 @@ class KNComposer : public KMainWindow  {
     MessageMode m_ode;
     bool d_oneSuccess,
          n_eeds8Bit,    // false: fall back to us-ascii
-         v_alidated;    // hasValidData was run and found no problems, n_eeds8Bit is valid
+         v_alidated,    // hasValidData was run and found no problems, n_eeds8Bit is valid
+         a_uthorDislikesMailCopies;
 
     //edit
     bool e_xternalEdited;

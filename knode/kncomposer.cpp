@@ -57,10 +57,10 @@
 #include "knarticlefactory.h"
 
 
-KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit)
+KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy)
     : KMainWindow(0,"composerWindow"), r_esult(CRsave), a_rticle(a), s_ignature(sig), u_nwraped(unwraped),
-      n_eeds8Bit(true), v_alidated(false), e_xternalEdited(false), e_xternalEditor(0), e_ditorTempfile(0),
-      s_pellChecker(0), a_ttChanged(false)
+      n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
+      e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false)
 {
   d_elAttList.setAutoDelete(true);
 
@@ -249,6 +249,11 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   if(firstEdit && knGlobals.cfgManager->postNewsComposer()->appendOwnSignature())
     slotAppendSig();
+
+  if (createCopy && (m_ode==news)) {
+    a_ctDoMail->setChecked(true);
+    slotToggleDoMail();
+  }
 
   v_iew->e_dit->setModified(false);
 
@@ -876,7 +881,18 @@ void KNComposer::slotToggleDoPost()
 void KNComposer::slotToggleDoMail()
 {
   if (a_ctDoMail->isChecked()) {
+    if (a_uthorDislikesMailCopies) {
+      if (!(KMessageBox::warningContinueCancel(this, i18n("The poster doesn't want a mail copy of your reply (Mail-Copies-To: nobody).\nPlease respect his request."),
+                                               QString::null, i18n("&Send Copy")) == KMessageBox::Continue)) {
+        a_ctDoMail->setChecked(false); //revert
+        return;
+      }
+    }
+
     if (knGlobals.cfgManager->postNewsTechnical()->useExternalMailer()) {
+      QString s = v_iew->e_dit->textLine(0);
+      if (!s.contains(i18n("<posted & mailed>")))
+        v_iew->e_dit->insertAt(i18n("<posted & mailed>\n\n"),0,0);
       QString tmp;
       for(int i=0; i < v_iew->e_dit->numLines(); i++) {
         if (v_iew->e_dit->textLine(i) == "-- ")   // try to be smart, don't include the signature,
@@ -884,7 +900,8 @@ void KNComposer::slotToggleDoMail()
         tmp+=v_iew->e_dit->textLine(i)+"\n";
       }
       knGlobals.artFactory->sendMailExternal(v_iew->t_o->text(), v_iew->s_ubject->text(), tmp);
-      a_ctDoMail->setChecked(true); //revert
+      a_ctDoMail->setChecked(false); //revert
+      return;
     } else {
       if (a_ctDoPost->isChecked())
         m_ode=news_mail;

@@ -65,6 +65,7 @@ void KNConfig::Identity::loadConfig(KConfigBase *c)
   n_ame=c->readEntry("Name");
   e_mail=c->readEntry("Email");
   r_eplyTo=c->readEntry("Reply-To");
+  m_ailCopiesTo=c->readEntry("Mail-Copies-To");
   o_rga=c->readEntry("Org");
   u_seSigFile=c->readBoolEntry("UseSigFile",false);
   u_seSigGenerator=c->readBoolEntry("UseSigGenerator",false);
@@ -78,6 +79,7 @@ void KNConfig::Identity::saveConfig(KConfigBase *c)
   c->writeEntry("Name", n_ame);
   c->writeEntry("Email", e_mail);
   c->writeEntry("Reply-To", r_eplyTo);
+  c->writeEntry("Mail-Copies-To", r_eplyTo);
   c->writeEntry("Org", o_rga);
   c->writeEntry("UseSigFile", u_seSigFile);
   c->writeEntry("UseSigGenerator",u_seSigGenerator);
@@ -100,8 +102,8 @@ void KNConfig::Identity::save()
 bool KNConfig::Identity::isEmpty()
 {
   return (  n_ame.isEmpty() &&  e_mail.isEmpty() &&
-            r_eplyTo.isEmpty() && o_rga.isEmpty() &&
-            s_igPath.isEmpty() && s_igText.isEmpty() );
+            r_eplyTo.isEmpty() && m_ailCopiesTo.isEmpty() &&
+            o_rga.isEmpty() && s_igPath.isEmpty() && s_igText.isEmpty() );
 }
 
 

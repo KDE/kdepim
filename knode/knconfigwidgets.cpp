@@ -60,7 +60,7 @@
 
 KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n) : BaseWidget(p, n), d_ata(d)
 {
-  QGridLayout *topL=new QGridLayout(this,  9, 3, 5,5);
+  QGridLayout *topL=new QGridLayout(this,  10, 3, 5,5);
 
   n_ame=new KLineEdit(this);
   QLabel *l=new QLabel(n_ame, i18n("&Name:"), this);
@@ -86,6 +86,12 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   topL->addMultiCellWidget(r_eplyTo, 3,3, 1,2);
   r_eplyTo->setText(d_ata->r_eplyTo);
 
+  m_ailCopiesTo=new KLineEdit(this);
+  l=new QLabel(r_eplyTo, i18n("&Mail-Copies-To:"), this);
+  topL->addWidget(l, 4,0);
+  topL->addMultiCellWidget(m_ailCopiesTo, 4,4, 1,2);
+  m_ailCopiesTo->setText(d_ata->m_ailCopiesTo);
+
   QButtonGroup *buttonGroup = new QButtonGroup(this);
   connect( buttonGroup, SIGNAL(clicked(int)),
            this, SLOT(slotSignatureType(int)) );
@@ -93,37 +99,37 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
 
   s_igFile = new QRadioButton( i18n("&Use a signature from file"), this );
   buttonGroup->insert(s_igFile);
-  topL->addMultiCellWidget(s_igFile, 4, 4, 0, 2);
+  topL->addMultiCellWidget(s_igFile, 5, 5, 0, 2);
 
   s_ig = new KLineEdit(this);
   f_ileName = new QLabel(s_ig, i18n("Signature &File:"), this);
-  topL->addWidget(f_ileName, 5, 0 );
-  topL->addWidget(s_ig, 5, 1 );
+  topL->addWidget(f_ileName, 6, 0 );
+  topL->addWidget(s_ig, 6, 1 );
   s_ig->setText(d_ata->s_igPath);
 
   c_hooseBtn = new QPushButton( i18n("Choo&se..."), this);
   connect(c_hooseBtn, SIGNAL(clicked()),
           this, SLOT(slotSignatureChoose()));
-  topL->addWidget(c_hooseBtn, 5, 2 );
+  topL->addWidget(c_hooseBtn, 6, 2 );
   e_ditBtn = new QPushButton( i18n("&Edit File"), this);
   connect(e_ditBtn, SIGNAL(clicked()),
           this, SLOT(slotSignatureEdit()));
-  topL->addWidget(e_ditBtn, 6, 2);
+  topL->addWidget(e_ditBtn, 7, 2);
 
   s_igGenerator = new QCheckBox(i18n("&The file is a program"), this);
-  topL->addMultiCellWidget(s_igGenerator, 6, 6, 0, 1);
+  topL->addMultiCellWidget(s_igGenerator, 7, 7, 0, 1);
   s_igGenerator->setChecked(d_ata->useSigGenerator());
 
   s_igEdit = new QRadioButton( i18n("Specify signature &below"), this);
   buttonGroup->insert(s_igEdit);
-  topL->addMultiCellWidget(s_igEdit, 7, 7, 0, 2);
+  topL->addMultiCellWidget(s_igEdit, 8, 8, 0, 2);
 
   s_igEditor = new QMultiLineEdit(this);
-  topL->addMultiCellWidget(s_igEditor, 8, 8, 0, 2);
+  topL->addMultiCellWidget(s_igEditor, 9, 9, 0, 2);
   s_igEditor->setText(d_ata->s_igText);
 
   topL->setColStretch(1,1);
-  topL->setRowStretch(5,1);
+  topL->setRowStretch(6,1);
   topL->setResizeMode(QLayout::Minimum);
 
   slotSignatureType(d_ata->useSigFile()? 0:1);
@@ -144,6 +150,7 @@ void KNConfig::IdentityWidget::apply()
   d_ata->o_rga=o_rga->text();
   d_ata->e_mail=e_mail->text();
   d_ata->r_eplyTo=r_eplyTo->text();
+  d_ata->m_ailCopiesTo=m_ailCopiesTo->text();
   d_ata->u_seSigFile=s_igFile->isChecked();
   d_ata->u_seSigGenerator=s_igGenerator->isChecked();
   d_ata->s_igPath=s_ig->text();

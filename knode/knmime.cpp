@@ -1238,6 +1238,8 @@ KNHeaders::Base* KNMimeContent::getHeaderByType(const char *type)
       h=new KNHeaders::Organization(this, raw);
     else if(strcasecmp("Reply-To", type)==0)
       h=new KNHeaders::ReplyTo(this, raw);
+    else if(strcasecmp("Mail-Copies-To", type)==0)
+      h=new KNHeaders::MailCopiesTo(this, raw);
     else if(strcasecmp("To", type)==0)
       h=new KNHeaders::To(this, raw);
     else if(strcasecmp("CC", type)==0)
@@ -1462,7 +1464,11 @@ void KNArticle::assemble()
 
   //Reply-To
   if( (h=replyTo(false))!=0 )
-      newHead+=h->as7BitString()+"\n";
+    newHead+=h->as7BitString()+"\n";
+
+  //Mail-Copies-To
+  if( (h=mailCopiesTo(false))!=0 )
+    newHead+=h->as7BitString()+"\n";
 
   //Date
   h=date(); // "Date" is mandatory

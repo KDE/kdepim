@@ -258,6 +258,7 @@ class KNArticle : public KNMimeContent, public KNJobItem {
     virtual KNHeaders::From* from(bool create=true)                  { KNHeaders::From *p=0; return getHeaderInstance(p, create); }
     virtual KNHeaders::Organization* organization(bool create=true)  { KNHeaders::Organization *p=0; return getHeaderInstance(p, create); }
     virtual KNHeaders::ReplyTo* replyTo(bool create=true)            { KNHeaders::ReplyTo *p=0; return getHeaderInstance(p, create); }
+    virtual KNHeaders::MailCopiesTo* mailCopiesTo(bool create=true)  { KNHeaders::MailCopiesTo *p=0; return getHeaderInstance(p, create); }
     virtual KNHeaders::To* to(bool create=true)                      { KNHeaders::To *p=0; return getHeaderInstance(p, create); }
     virtual KNHeaders::CC* cc(bool create=true)                      { KNHeaders::CC *p=0; return getHeaderInstance(p, create); }
     virtual KNHeaders::BCC* bcc(bool create=true)                    { KNHeaders::BCC *p=0; return getHeaderInstance(p, create); }

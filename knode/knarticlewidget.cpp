@@ -1106,8 +1106,10 @@ void KNArticleWidget::createHtmlPage()
   a_ctReply->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
   a_ctRemail->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
   a_ctForward->setEnabled(true);
-  a_ctCancel->setEnabled(knGlobals.folManager->currentFolder()==knGlobals.folManager->sent());
-  a_ctSupersede->setEnabled(knGlobals.folManager->currentFolder()==knGlobals.folManager->sent());
+  a_ctCancel->setEnabled( (a_rticle->type()==KNMimeBase::ATremote) ||
+                          (a_rticle->collection()==knGlobals.folManager->sent()));
+  a_ctSupersede->setEnabled( (a_rticle->type()==KNMimeBase::ATremote) ||
+                             (a_rticle->collection()==knGlobals.folManager->sent()));
   a_ctVerify->setEnabled(true);
   a_ctToggleFullHdrs->setEnabled(true);
   a_ctToggleRot13->setEnabled(true);
@@ -1547,9 +1549,9 @@ void KNArticleWidget::cleanup()
 
 // some standard headers
 static const char *predef[] = { "Approved","Content-Transfer-Encoding","Content-Type","Control","Date","Distribution",
-                                "Expires","Followup-To","From","Lines","Message-ID","Mime-Version","NNTP-Posting-Host",
-                                "Newsgroups","Organization","Path","References","Reply-To","Sender","Subject","Supersedes",
-                                "To", "User-Agent","X-Mailer","X-Newsreader","X-No-Archive","XRef",0 };
+                                "Expires","Followup-To","From","Lines","Mail-Copies-To","Message-ID","Mime-Version","NNTP-Posting-Host",
+                                "Newsgroups","Organization","Path","References","Reply-To", "Sender","Subject",
+                                "Supersedes","To", "User-Agent","X-Mailer","X-Newsreader","X-No-Archive","XRef",0 };
 
 // default display names KNode uses
 static const char *disp[] = { "Groups", 0 };
@@ -1566,6 +1568,7 @@ void dummyHeader()
   i18n("collection of article headers","Followup-To");
   i18n("collection of article headers","From");
   i18n("collection of article headers","Lines");
+  i18n("collection of article headers","Mail-Copies-To");
   i18n("collection of article headers","Message-ID");
   i18n("collection of article headers","Mime-Version");
   i18n("collection of article headers","NNTP-Posting-Host");

@@ -315,6 +315,26 @@ class ReplyTo : public AddressField {
 };
 
 
+/* Represents a "Mail-Copies-To" header */
+/* http://www.newsreaders.com/misc/mail-copies-to.html */
+class MailCopiesTo : public AddressField {
+
+  public:
+    MailCopiesTo() : AddressField()  {}
+    MailCopiesTo(KNMimeContent *p) : AddressField(p)  {}
+    MailCopiesTo(KNMimeContent *p, const QCString &s) : AddressField(p,s)  {}
+    MailCopiesTo(KNMimeContent *p, const QString &s, const QCString &cs) : AddressField(p,s,cs)  {}
+    ~MailCopiesTo()  {}
+
+    bool isValid();
+    bool alwaysCopy();
+    bool neverCopy();
+
+    virtual const char* type()      { return "Mail-Copies-To"; }
+
+};
+
+
 /* Represents a "Organization" header */
 class Organization : public Base {
 

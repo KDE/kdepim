@@ -90,6 +90,7 @@ void KNNntpAccount::saveInfo()
     conf.deleteEntry("Name", false);
     conf.deleteEntry("Email", false);
     conf.deleteEntry("Reply-To", false);
+    conf.deleteEntry("Mail-Copies-To", false);
     conf.deleteEntry("Org", false);
     conf.deleteEntry("UseSigFile", false);
     conf.deleteEntry("UseSigGenerator", false);

@@ -333,7 +333,7 @@ void KNHeaders::AddressField::fromUnicodeString(const QString &s, const QCString
   else if(s.find( QRegExp("*<*@*>", false, true) )!=-1) type=1;  // From: John Doe <foo@bar.com>
   else if(s.find( QRegExp("*@*", false, true) )!=-1) type=0;     // From: foo@bar.com
   else { //broken From header => just copy it
-    n_ame=s.copy();
+    n_ame=s;
     return;
   }
 
@@ -402,6 +402,36 @@ void KNHeaders::AddressField::setNameFrom7Bit(const QCString &s)
 
 //-----</AddressField>-------------------------
 
+
+//-----<MailCopiesTo>--------------------------
+
+bool KNHeaders::MailCopiesTo::isValid()
+{
+  if (hasEmail())
+    return true;
+
+  if ((n_ame == "nobody") ||
+      (n_ame == "never") ||
+      (n_ame == "poster") ||
+      (n_ame == "always"))
+    return true;
+  else
+    return false;
+}
+
+
+bool KNHeaders::MailCopiesTo::alwaysCopy()
+{
+  return (hasEmail() || (n_ame == "poster") || (n_ame == "always"));
+}
+
+
+bool KNHeaders::MailCopiesTo::neverCopy()
+{
+  return ((n_ame == "nobody") || (n_ame == "never"));
+}
+
+//-----</MailCopiesTo>-------------------------
 
 
 //-----<Organization>--------------------------

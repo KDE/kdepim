@@ -154,6 +154,7 @@ void KNGroup::saveInfo()
       info.deleteEntry("Name", false);
       info.deleteEntry("Email", false);
       info.deleteEntry("Reply-To", false);
+      info.deleteEntry("Mail-Copies-To", false);
       info.deleteEntry("Org", false);
       info.deleteEntry("UseSigFile", false);
       info.deleteEntry("UseSigGenerator", false);

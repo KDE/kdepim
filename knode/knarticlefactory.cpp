@@ -183,6 +183,25 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   art->references()->from7BitString(refs);
   art->references()->append(a->messageID()->as7BitString(false));
 
+  //Mail-Copies-To
+  bool authorDislikesMailCopies=false;
+  bool authorWantsMailCopies=false;
+  KNHeaders::MailCopiesTo *mailCopiesTo=a->mailCopiesTo(false);
+
+  if(mailCopiesTo && !mailCopiesTo->isEmpty() && mailCopiesTo->isValid()) {
+    authorDislikesMailCopies = mailCopiesTo->neverCopy();
+    authorWantsMailCopies = mailCopiesTo->alwaysCopy();
+    if (authorWantsMailCopies)         // warn the user
+      KMessageBox::information(knGlobals.topWidget,i18n("The author requested a mail copy of your reply (Mail-Copies-To header)."),
+                               QString::null,"mailCopiesToWarning");
+    if (authorWantsMailCopies && mailCopiesTo->hasEmail()) {
+      address.setName(mailCopiesTo->name());
+      address.setEmail(mailCopiesTo->email());
+      art->to()->clear();
+      art->to()->addAddress(address);
+    }
+  }
+
   //------------------------- </Headers> ---------------------------
 
   //--------------------------- <Body> -----------------------------
@@ -244,7 +263,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   }
 
   //open composer
-  KNComposer *c=new KNComposer(art, quoted, sig, notRewraped, true);
+  KNComposer *c=new KNComposer(art, quoted, sig, notRewraped, true, authorDislikesMailCopies, authorWantsMailCopies);
   c_ompList.append(c);
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -813,8 +832,22 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
     id=grpId;
   else
     id=((accId) && accId->hasReplyTo())? accId:defId;
-  if(id->hasReplyTo())
+  if(id->hasReplyTo()) {
     art->replyTo()->fromUnicodeString(id->replyTo(), pnt->charset());
+    if (!art->replyTo()->hasEmail())   // the header is invalid => drop it
+      art->removeHeader("Reply-To");
+  }
+
+  //Mail-Copies-To
+  if(grpId && grpId->hasMailCopiesTo())
+    id=grpId;
+  else
+    id=((accId) && accId->hasMailCopiesTo())? accId:defId;
+  if(id->hasMailCopiesTo()) {
+    art->mailCopiesTo()->fromUnicodeString(id->mailCopiesTo(), pnt->charset());
+    if (!art->mailCopiesTo()->isValid())   // the header is invalid => drop it
+      art->removeHeader("Mail-Copies-To");
+  }
 
   //Organization
   if(grpId && grpId->hasOrga())
