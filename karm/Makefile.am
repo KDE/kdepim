@@ -15,7 +15,7 @@ karm_SOURCES =  kaccelmenuwatch.cpp main.cpp desktoptracker.cpp \
 		csvexportdialog_base.ui csvexportdialog.cpp plannerparser.cpp
 karm_LDADD = -lkdeprint $(top_builddir)/libkcal/libkcal.la \
              $(top_builddir)/libkdepim/libkdepim.la $(LIBXSS)
-karm_LDFLAGS = $(all_libraries)
+karm_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 noinst_HEADERS = desktoptracker.h edittaskdialog.h printdialog.h \
                  idletimedetector.h kaccelmenuwatch.h timekard.h \
 		 karmutility.h ktimewidget.h karmstorage.h mainwindow.h \
