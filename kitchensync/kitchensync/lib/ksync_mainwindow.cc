@@ -52,6 +52,8 @@
 #include "ksync_configuredialog.h"
 #include "manipulatorpart.h"
 #include "partbar.h"
+#include "profiledialog.h"
+
 
 #include "konnectordialog.h"
 #include "ksync_mainwindow.h"
@@ -129,21 +131,33 @@ void KSyncMainWindow::initActions()
                      this, SLOT(slotQuit()),
 		     actionCollection(), "quit" );
 
-  (void)new KAction( i18n("Configure Kitchensync"), "configure" , 0,
+  (void)new KAction( i18n("Configure Connections"), "configure" , 0,
                      this, SLOT (slotConfigure() ),
                      actionCollection(), "configure" );
+
+  (void)new KAction( i18n("Configure Profiles"),  "configure", 0,
+                     this, SLOT(slotConfigProf() ),
+                     actionCollection(), "config_profile" );
+
+  (void)new KAction( i18n("Configure current Profile"),  "configure", 0,
+                     this, SLOT(slotConfigCur() ),
+                     actionCollection(), "config_current" );
+  (void)new KSelectAction( this, "select_kon");
+  (void)new KSelectAction( this, "select_prof");
 }
+/*
+ * we search for all installed plugins here
+ * and add them to the ManPartService List
+ * overview is special for us
+ */
 void KSyncMainWindow::initPlugins()
 {
   KTrader::OfferList offers = KTrader::self()->query(QString::fromLatin1("KitchenSync/Manipulator"),
 						     QString::null);
 
   for (KTrader::OfferList::ConstIterator it = offers.begin(); it != offers.end(); ++it){
-      ManipulatorPart *plugin = KParts::ComponentFactory
-	::createInstanceFromService<ManipulatorPart>(*it, this);
-      if (!plugin)
-	continue;
-      addModPart( plugin );
+      ManPartService ser( (*it) );
+      m_partsLst.append( ser );
   }
 
 }
@@ -231,6 +245,10 @@ void KSyncMainWindow::loadUnloaded( const KonnectorProfile::ValueList& list,
         }
     }
 }
+/*
+ * unloadLoaded unloads loaded KonnectorPlugins
+ * through the KonnectorManager
+ */
 void KSyncMainWindow::unloadLoaded( const KonnectorProfile::ValueList& list,
                                     KonnectorProfile::ValueList& all ) {
     KonnectorProfile::ValueList::ConstIterator itList;
@@ -381,10 +399,45 @@ void KSyncMainWindow::slotStateChanged( const QString &udi,
         statusBar()->message(i18n("Connected") );
     statusBar()->show();
 }
+/*
+ * Show a KmessageBox
+ */
 void KSyncMainWindow::slotKonnectorError( const QString& udi,
                                           int error,
                                           const QString& id )
 {
+
+}
+/*
+ * configure profiles
+ */
+void KSyncMainWindow::slotConfigProf() {
+    ProfileDialog dlg(m_prof->profiles(), m_partsLst ) ;
+    if ( dlg.exec() ) {
+        m_prof->setProfiles( dlg.profiles() );
+        m_prof->save();
+        // switch profile
+    }
+}
+void KSyncMainWindow::switchProfile( const Profile& prof ) {
+    m_bar->clear();
+    m_parts.setAutoDelete( true );
+    m_parts.clear();
+    ManPartService::ValueList lst = prof.manParts();
+    ManPartService::ValueList::Iterator it;
+    for (it = lst.begin(); it != lst.end(); ++it ) {
+        addPart( (*it) );
+    }
+    m_prof->setCurrentProfile( prof );
+}
+void KSyncMainWindow::addPart( const ManPartService& service ) {
+    ManipulatorPart *part = KParts::ComponentFactory
+                            ::createInstanceFromLibrary<ManipulatorPart>( service.libname().local8Bit(),
+                                                         this );
+    if (part )
+        addModPart( part );
+}
+void KSyncMainWindow::switchProfile( const KonnectorProfile& prof ) {
 
 }
 #include "ksync_mainwindow.moc"

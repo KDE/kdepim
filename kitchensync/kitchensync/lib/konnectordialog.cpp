@@ -129,6 +129,7 @@ void KonnectorDialog::slotAdd() {
 }
 void KonnectorDialog::slotRemove() {
     KonnectorCheckItem* item = (KonnectorCheckItem*) m_base->lstView->selectedItem();
+    if (!item) return;
     m_base->lstView->takeItem( item );
     delete item;
 }

@@ -45,7 +45,7 @@
 #include <ksync_systemtray.h>
 #include <profilemanager.h>
 #include <konnectorprofilemanager.h>
-
+#include <manpartservice.h>
 
 class PartBar;
 class QHBox;
@@ -79,6 +79,7 @@ namespace KSync {
 
     private:
         virtual void initActions();
+        void addPart( const ManPartService& );
         void addModPart( ManipulatorPart * );
         void initSystray ( void );
         void removeDeleted( const KonnectorProfile::ValueList& );
@@ -91,10 +92,13 @@ namespace KSync {
         PartBar *m_bar;
         QHBox *m_lay;
         QWidgetStack *m_stack;
+        // loaded parts
         QPtrList<ManipulatorPart> m_parts;
+        ManPartService::ValueList m_partsLst;
         KSyncSystemTray *m_tray;
+
         KonnectorManager *m_konnector;
-        KonnectorProfileManager* m_konprof;
+        KonnectorProfileManager* m_konprof        ;
         ProfileManager* m_prof;
         QString m_currentId;
         // udi + Identify
@@ -106,6 +110,9 @@ namespace KSync {
         void konnectorChanged( const KonnectorProfile& oldProf );
         void konnectorStateChanged( const QString &,  int mode );
    private slots:
+        void switchProfile( const Profile& prof );
+        void switchProfile( const KonnectorProfile& prof );
+        void slotConfigProf();
         void initKonnector();
         void initPlugins();
         void initProfiles();

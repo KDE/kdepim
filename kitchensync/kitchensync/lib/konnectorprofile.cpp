@@ -157,7 +157,7 @@ void KonnectorProfile::loadFromConfig( KConfig* conf ) {
     if (!udi.isEmpty() )
         m_wasLoaded = true;
 
-    readKaps( conf );
+    m_caps = readKaps( conf );
 }
 Kapabilities KonnectorProfile::readKaps( KConfig* conf) {
     Kapabilities caps;

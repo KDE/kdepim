@@ -50,11 +50,19 @@ ManPartService &ManPartService::operator=( const ManPartService& man1 ) {
     m_lib = man1.m_lib;
     return *this;
 }
-bool operator== ( const ManPartService& par1, const ManPartService& par2 ) {
-    if ( par1.name() == par2.name() &&
-         par1.comment() == par2.comment() &&
-         par1.icon() == par2.icon() &&
-         par1.libname() == par2.libname() )
+bool ManPartService::operator== ( const ManPartService& par2 ) {
+    if ( name() == par2.name() &&
+         comment() == par2.comment() &&
+         icon() == par2.icon() &&
+         libname() == par2.libname() )
+        return true;
+    else return false;
+}
+bool ManPartService::operator== ( const ManPartService& par2 )const {
+    if ( name() == par2.name() &&
+         comment() == par2.comment() &&
+         icon() == par2.icon() &&
+         libname() == par2.libname() )
         return true;
     else return false;
 }

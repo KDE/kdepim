@@ -23,6 +23,8 @@ namespace KSync {
         ManPartService( const KService::Ptr& service );
         ManPartService( const ManPartService& );
         ~ManPartService();
+        bool operator==( const ManPartService& );
+        bool operator==( const ManPartService& )const;
         QString name()const;
         QString comment()const;
         QString libname()const;
@@ -40,7 +42,6 @@ namespace KSync {
         QString m_icon;
         QString m_lib;
     };
-    bool operator== ( const ManPartService&, const ManPartService& );
 };
 
 
