@@ -197,7 +197,7 @@ void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
    * needed when there is the unread column, special case that. */
   if ( ft->isUnreadActive() ) {
     if ( (column == 0 || column == ft->unreadIndex())
-          && countUnreadRecursive() > 0 )
+          && (mUnread > 0 || (!isOpen() && countUnreadRecursive() > 0)) )
     {
       QFont f = p->font();
       f.setWeight(QFont::Bold);
@@ -233,8 +233,8 @@ void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
     if ( !t.isEmpty() )
     {
       // use a bold-font for the folder- and the unread-columns
-      if ( countUnreadRecursive() > 0 &&
-          (column == 0 || column == ft->unreadIndex()) )
+      if ( (column == 0 || column == ft->unreadIndex())
+            && (mUnread > 0 || (!isOpen() && countUnreadRecursive() > 0)) )
       {
         QFont f = p->font();
         f.setWeight(QFont::Bold);
