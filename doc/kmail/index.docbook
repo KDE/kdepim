@@ -7,7 +7,7 @@
 <title>The KMail Handbook</title>
 
 <!-- note from dnaber@mini.gt.owl.de, 2000-05-21: I'm working on this
-"by hand" (using nedit) so please don't mix up the formatting to much. -->
+"by hand" (using nedit) so please don't mix up the formatting too much. -->
 
 <authorgroup>
 <author>
@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>23/05/2000</date>
+<date>01/07/2000</date>
 <releaseinfo>1.01.45</releaseinfo>
 
 <abstract>
@@ -32,8 +32,6 @@ section.</para>
 	
 <para>Please mail any comments and additions to
 <email>kmail@kde.org</email>.</para>
-
-<para>This documentation was last updated for KMail version 1.1.45.</para>
 
 </abstract>
 
@@ -61,17 +59,17 @@ the <link linkend="secGettingStarted">Getting Started</link> section first so th
 
 <itemizedlist>
 
-<listitem><para>When you're writing a new mail and you're in the <emphasis remap="bf">To:</emphasis> field, only type
-the first few characters of the receiver's address, then press Ctrl+T to get a list 
-of choices. These are taken from your addressbook, so keep your address book
-up to date and this feature will be very useful.</para></listitem>
-
 <listitem><para>You don't have to use your mouse to use KMail. Everything
 should be possible with keys. KMail supports all the standard keys
 like TAB (switch between panes). The trick is: cursor left/right
 always jumps to the previous/next message, but when you hold down
 Ctrl, you can use cursor left/right to navigate in the Folders pane
 or in the Headers pane (depending on what has the focus).</para></listitem>
+
+<listitem><para>When you're writing a new mail and you're in the <emphasis remap="bf">To:</emphasis> field, only type
+the first few characters of the receiver's address, then press Ctrl+T to get a list 
+of choices. These are taken from your addressbook, so keep your address book
+up to date and this feature will be very useful.</para></listitem>
 
 <listitem><para>In the <emphasis remap="bf">Composer</emphasis> you can select text and
 drag it around with the mouse.</para></listitem>
@@ -82,7 +80,7 @@ drag it around with the mouse.</para></listitem>
 <para>KMail's homepage is at <ulink url="http://devel-home.kde.org/~kmail/">http://devel-home.kde.org/~kmail/</ulink>,
 an archive of the developer's mailing list is at <ulink url="http://lists.kde.org/?l=kde-kmail&amp;r=1&amp;w=2">lists.kde.org</ulink>.</para>
 
-<para>Bug reports and suggestions should go to <email>kmail@kde.org</email>.</para>
+<para>Please report bugs in KMail using <emphasis remap="bf">Help | Report bug...</emphasis>.</para>
 
 <para>We hope you will enjoy KMail!</para>
 
@@ -1693,34 +1691,68 @@ if you think something is missing here.</para>
 
 <!-- todo: IMAP support? -->
 
+<sect2 id="myfolderskeepgrowingevenwhenideletemessages">
+<title>My folders keep growing even when I delete messages.</title>
+
+<para>To really remove deleted messages from disk, you have to compact your folders. To do so
+automatically, open up the <emphasis remap="bf">File | Settings</emphasis> window,
+select the Miscellaneous tab and select <emphasis remap="bf">Compact all folders
+on exit</emphasis>. Maybe you want to select <emphasis remap="bf">Empty trash on exit</emphasis>,
+too. This will remove all the messages in the trash folder whenever you exit KMail.</para>
+</sect2>
+
+
+<sect2 id="spellcheckingdoesntrecognize">
+<title>Spellchecking doesn't recognize non-english characters.</title>
+
+<para>Before you can use spellchecking the first time, you have to configure it.
+You can do so in the <emphasis remap="bf">Composer</emphasis> window's 
+menu under <emphasis remap="bf">Settings | Spellchecker...</emphasis>.</para>
+</sect2>
+
+
+<sect2 id="canuuseencryption">
+<title>Can I use encryption with my normal (non-SSL) POP3 account?</title>
+
+<para>If your POP3 server runs an ssh daemon, you can use ssh to tunnel your POP3 connection
+using this command:</para>
+
+<para><UserInput>ssh -L 110:127.0.0.1:110 user@host</UserInput></para>
+
+<para>Note that this often doesn't make things more secure if your
+mails have already been sent through the Internet.
+</para>
+</sect2>
+
+
 <sect2 id="howdoiusemyeudoraxfmailotherrandommailclient">
 <title>How do I use my (Eudora, XFmail, other random mail client) mailboxes in KMail?</title>
 
 <para>See the section <link linkend="secImporting">Using other Mailbox files With KMail</link>.</para>
 </sect2>
 
-<sect2 id="howdoileavemailontheserverfromthekdefaq">
-<title>How do I leave mail on the server? (from the KDE FAQ)</title>
 
-<para>Open up the <emphasis remap="bf">Settings</emphasis> window from the file menu. Click
+<sect2 id="howdoileavemailontheserverfromthekdefaq">
+<title>How do I leave mail on the server?</title>
+
+<para>Open up the <emphasis remap="bf">File | Settings</emphasis> window. Click
 on the <emphasis remap="bf">Network</emphasis> tab. Select your account
 from the account list and click the <emphasis remap="bf">Modify</emphasis> button. This
 dialog contains the <emphasis remap="bf">Delete mail from server</emphasis> setting which
 you must not select. </para>
 </sect2>
 
-<sect2 id="howdoiautomaticallyinsertatextfooterwithinth">
-<title>How do I automatically insert a text footer within the mail? (from the KDE FAQ)</title>
 
-<para>The text footer is called a signature file. What you need to do is
-open up a text editor (like kedit) and type in what you want to appear in
-the footer. Save the file under a name like signature or footer. Go into
-KMail and select <emphasis remap="bf">File | Settings...</emphasis>
+<sect2 id="howdoiautomaticallyinsertatextfooterwithinth">
+<title>How do I automatically insert a text footer within my mails?</title>
+
+<para>The text footer is called a signature file. Select 
+<emphasis remap="bf">File | Settings...</emphasis>
 Look in the <emphasis remap="bf">Identity</emphasis> tab for the
-<emphasis remap="bf">Signature file</emphasis> field. Click on the
-ellipses button and select the file you just created. Now KMail will
-automatically insert that file in any message you write.</para>
+<emphasis remap="bf">Specify signature below</emphasis> field.
+Select the radio button and type your signature below.</para>
 </sect2>
+
 
 <sect2 id="whydoeskmailkeepaskingmeforthelocationofmysi">
 <title>Why does KMail keep asking me for the location of my signature file?</title>
@@ -1732,6 +1764,7 @@ the <emphasis remap="bf">Settings</emphasis> dialog, but have not specified a si
 <emphasis remap="bf">Use a signature from file</emphasis>.</para>
 </sect2>
 
+
 <sect2 id="whydoesntwordwrapworkinthecomposerwindow">
 <title>Why doesn't word wrap work in the Composer window?</title>
 
@@ -1739,12 +1772,14 @@ the <emphasis remap="bf">Settings</emphasis> dialog, but have not specified a si
 <emphasis remap="bf">Composer</emphasis> tab of the <emphasis remap="bf">Settings</emphasis> dialog box.</para>
 </sect2>
 
+
 <sect2 id="howcanifindouthowmanyunreadmessagesihaveinam">
 <title>How can I find out how many unread messages I have in a mail folder?</title>
 
 <para>The number of unread messages is conveniently displayed in the
 <emphasis remap="bf">Folders Pane</emphasis> after the folder name.</para>
 </sect2>
+
 
 <sect2 id="secqasendmail">
 <title>How do I set up sendmail to work with KMail if I have a dial-up connection?</title>
