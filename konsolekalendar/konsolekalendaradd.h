@@ -29,7 +29,10 @@ public:
     ~KonsoleKalendarAdd();
 
    bool addEvent();
-   
+
+   bool addImportedCalendar();
+
+
 private:
    KonsoleKalendarVariables *m_variables;
    

@@ -60,7 +60,7 @@ bool KonsoleKalendarAdd::addEvent()
     kdDebug() << "Event added!" << endl;
   } else {
     kdDebug() << "Can't add event" << endl;
-  }
+  } // else
 
   m_variables->getCalendar()->save( m_variables->getCalendarFile() );
 
@@ -68,3 +68,37 @@ bool KonsoleKalendarAdd::addEvent()
 
   return true;
 }
+
+bool KonsoleKalendarAdd::addImportedCalendar()
+{
+
+ CalendarLocal importCalendar;
+
+ if( !importCalendar.load( m_variables->getImportFile() ) ){
+   kdDebug() << "Can't open file: " << m_variables->getImportFile() << endl;
+   return false;
+ } else {
+   kdDebug() << "Succefully opened file: " << m_variables->getImportFile() << endl;
+ } // else
+
+ QPtrList<Event> eventList( importCalendar.rawEvents() );
+ Event *singleEvent;
+
+ if( eventList.count() ) {
+
+   for ( singleEvent = eventList.first(); singleEvent != 0; singleEvent =
+         eventList.next() ) {
+
+     kdDebug() << "Add event" << endl;
+     m_variables->getCalendar()->addEvent( singleEvent );
+
+   } // for
+
+ } // if
+
+ importCalendar.close();
+ m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+
+ return true;
+}
+
