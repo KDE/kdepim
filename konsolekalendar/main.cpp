@@ -42,6 +42,9 @@ static KCmdLineOptions options[] =
   { "verbose", I18N_NOOP("Output helpful (?) debug info"), 0 },
   { "file <calendar-file>", I18N_NOOP("Specify which calendar you want to use."), 0 },
   { "import <import-file>", I18N_NOOP("Import this calendar to main calendar"), 0 },
+  { "export-type <export-type>", I18N_NOOP("Export as.. "), 0 },
+  { "export-file <export-file>", I18N_NOOP("Export to file (Dedault: stdout)"), 0 },
+  { "export-types", I18N_NOOP("What export types supported"), 0 },
   { "next", I18N_NOOP("Next activity in calendar"), 0 },
   { "date <date>", I18N_NOOP("Show selected day's calendar"), 0 },
   { "time <time>", I18N_NOOP("Show selected time at calendar"), 0 },
@@ -49,14 +52,14 @@ static KCmdLineOptions options[] =
   { "start-time <start-time>", I18N_NOOP("Start from this time [mm:hh]"), 0 },
   { "end-date <end-date>", I18N_NOOP("End to this day"), 0 },
   { "end-time <end-time>", I18N_NOOP("End to this time [mm:hh]"), 0 },
-  { "epoch-end <epoch-time>", I18N_NOOP("End time in epoch format"), 0 },
-  { "epoch-start <epoch-time>", I18N_NOOP("Start time in epoch format"), 0 },
+  { "epoch-start <epoch-time>", I18N_NOOP("Start from this time [epoch format]"), 0 },
+  { "epoch-end <epoch-time>", I18N_NOOP("End to this time [epoch format]"), 0 },
   { "description <description>", I18N_NOOP("Add description to event (works with add and change)"), 0 },
   { "summary <summary>", I18N_NOOP("Add description to event (works with add and change)"), 0 },
   { "all", I18N_NOOP("Show all entries"), 0 },
   { "create", I18N_NOOP("if calendar not available new caledar file"), 0 },
   { "add", I18N_NOOP("Add an event"), 0 },
-  { "change", I18N_NOOP("Delete an event (currently not implemented)"), 0 },
+  { "change", I18N_NOOP("Change an event (currently not implemented)"), 0 },
   { "delete", I18N_NOOP("Delete an event (currently not implemented)"), 0 },
 
   KCmdLineLastOption
@@ -70,7 +73,7 @@ int main(int argc, char *argv[])
                         "illuusio@mailcity.com");
 
   aboutData.addAuthor("Tuukka Pasanen",0, "illuusio@mailcity.com");
-  aboutData.addAuthor("Allen D. Winter", 0, "winterz@earthlink.net");
+  aboutData.addAuthor("Allen Winter", 0, "winterz@earthlink.net");
 
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
@@ -78,15 +81,19 @@ int main(int argc, char *argv[])
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   QString KalendarFile;
+
+  // Default values (Now!) for which date and time to show
+  QDate date = QDate::currentDate();
+  QTime time = QTime::currentTime();
+
+  // Default values for start (today at 0700) and end (today at 1700) timestamps
   QDate startdate = QDate::currentDate();
   QTime starttime(7,0);
 
   QDate enddate = QDate::currentDate();
   QTime endtime(17,0);
 
-  QDate date = QDate::currentDate();
-  QTime time = QTime::currentTime();
-
+  // Default values for switches
   bool view = true;
   bool add = false;
   bool change = false;
@@ -100,6 +107,7 @@ int main(int argc, char *argv[])
   KApplication app( false, false );
 
   KonsoleKalendarVariables variables;
+  KonsoleKalendarEpoch epochs;
 
   if ( args->isSet("verbose") ) {
      variables.setVerbose(true);
@@ -152,7 +160,7 @@ int main(int argc, char *argv[])
   }
 
   /*
-   *  Switch on deleting
+   *  Switch on Delete
    *
    */
   if ( args->isSet("delete") ) {
@@ -199,26 +207,6 @@ int main(int argc, char *argv[])
 
     //variables.setDate(date);
   }
-
-/*
-   *  Show next happening and exit
-   *
-   */
-  if ( args->isSet("epoch-start") )
-  {
-     option = args->getOption("epoch-start");
-
-    if( variables.isVerbose() ) {
-      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Show next happening in calendar and exit" << endl;
-    }
-
-    // KonsoleKalendarEpoch::epoch2QDateTime( option );
-
-    //variables.setNext(true);
-  }
-
-
-
 
   /*
    *  Show next happening and exit
@@ -322,7 +310,7 @@ int main(int argc, char *argv[])
    *
    */
   if ( args->isSet("end-time") ) {
-    option = args->getOption("start-time");
+    option = args->getOption("end-time");
 
     if( variables.isVerbose() ) {
       kdDebug() << "main.cpp::int main(int argc, char *argv[]) | End time: (" << option << ")" << endl;
@@ -333,8 +321,35 @@ int main(int argc, char *argv[])
     // variables.setStartDate(date);
   }
 
+  /*
+   *  Set start date/time from epoch
+   *
+   */
+  time_t epochstart=0;
+  if ( args->isSet("epoch-start") ) {
+      option = args->getOption("epoch-start");
 
+    if( variables.isVerbose() ) {
+      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Epoch start: (" << option << ")" << endl;
+    }
 
+    epochstart = (time_t) option.toULong(0,10);
+  }
+
+  /*
+   *  Set end date/time from epoch
+   *
+   */
+  time_t epochend=0;
+  if ( args->isSet("epoch-end") ) {
+      option = args->getOption("epoch-end");
+
+    if( variables.isVerbose() ) {
+      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Epoch end: (" << option << ")" << endl;
+    }
+
+    epochend = (time_t) option.toULong(0,10);
+  }
 
   if( args->isSet("all") ) {
     variables.setAll( true );
@@ -383,14 +398,30 @@ int main(int argc, char *argv[])
     } // else
   } // else
 
-  args->clear(); // Free up some memory.
-
-  QDateTime startdatetime(startdate, starttime);
-  QDateTime enddatetime(enddate, endtime);
+  QDateTime startdatetime, enddatetime;
+  if ( args->isSet("epoch-start") ) {
+    startdatetime = epochs.epoch2QDateTime(epochstart);
+  } else {
+    startdatetime = QDateTime::QDateTime(startdate, starttime);
+  }
+  if ( args->isSet("epoch-end") ) {
+    enddatetime = epochs.epoch2QDateTime(epochend);
+  } else {
+    enddatetime = QDateTime::QDateTime(enddate, endtime);
+  }
   QDateTime datetime( date, time );
   variables.setStartDate( startdatetime );
   variables.setEndDate( enddatetime );
   variables.setDate( datetime );
+
+  if ( variables.isVerbose() ) {
+      // Tuukka, please fix so --verbose makes kdDebug print something.
+      kdDebug() << "DateTime=" << datetime.toString(Qt::TextDate) << endl;
+      kdDebug() << "StartDate=" << startdatetime.toString(Qt::TextDate) << endl;
+      kdDebug() << "EndDate=" << enddatetime.toString(Qt::TextDate) << endl;
+  } // if
+
+  args->clear(); // Free up some memory.
 
   KonsoleKalendar *konsolekalendar = new KonsoleKalendar(variables);
 
@@ -403,7 +434,7 @@ int main(int argc, char *argv[])
 
   /*
    * Opens calendar file so we can use it;)
-   * Because at this point we don't know what well
+   * Because at this point we don't know what we'll
    * Do with it..
    *
    * Adds it to konsolekalendarvariables also..
@@ -416,6 +447,14 @@ int main(int argc, char *argv[])
 
      if( add ) {
        konsolekalendar->addEvent();
+     }
+
+     if( change ) {
+       konsolekalendar->changeEvent();
+     }
+
+     if( del ) {
+       konsolekalendar->deleteEvent();
      }
 
      if( view ) {
