@@ -23,6 +23,10 @@
 ** along with this program in a file called COPYING; if not, write to
 ** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
+**
+**
+** Specific permission is granted for this code to be linked to libmal
+** (this is necessary because the libmal license is not GPL-compatible).
 */
  
 /*
@@ -50,5 +54,8 @@ private:
 } ;
 
 // $Log$
+// Revision 1.1  2002/08/15 23:07:37  kainhofe
+// First official version of the malconduit
+//
 
 #endif

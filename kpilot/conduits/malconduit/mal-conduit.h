@@ -1,15 +1,21 @@
 #ifndef _MAL_CONDUIT_H
 #define _MAL_CONDUIT_H
-// MAL-conduit.cc
-//
-// Copyright (C) 2002 by Reinhold Kainhofer
-//
-// This file is distributed under the Gnu General Public Licence (GPL).
-// The GPL should have been included with this file in a file called
-// COPYING. 
-//
-// $Revision$
-//
+/* MAL-conduit.cc
+**
+** Copyright (C) 2002 by Reinhold Kainhofer
+*/
+
+/* This file is distributed under the Gnu General Public Licence (GPL).
+** The GPL should have been included with this file in a file called
+** COPYING. 
+**
+**
+** Specific permission is granted for this code to be linked to libmal
+** (this is necessary because the libmal license is not GPL-compatible).
+*/
+
+/* $Revision$
+*/
 
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
@@ -70,5 +76,8 @@ private:
 
 
 // $Log$
+// Revision 1.1  2002/08/15 23:07:37  kainhofe
+// First official version of the malconduit
+//
 
 #endif
