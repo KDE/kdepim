@@ -56,7 +56,7 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
   for( QStringList::Iterator compit = components.begin(); compit != components.end(); ++compit ) {
     //kdDebug(5150) << "Component " << (*compit).local8Bit() << ":" << endl;
     Kleo::CryptoConfigComponent* comp = config->component( *compit );
-    assert( comp );
+    Q_ASSERT( comp );
     if ( !comp->groupList().isEmpty() ) {
       QVBox* vbox = addVBoxPage( comp->description() );
       CryptoConfigComponentGUI* compGUI =
@@ -119,7 +119,7 @@ Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
   QStringList groups = mComponent->groupList();
   for( QStringList::Iterator groupit = groups.begin(); groupit != groups.end(); ++groupit ) {
     Kleo::CryptoConfigGroup* group = mComponent->group( *groupit );
-    assert( group );
+    Q_ASSERT( group );
     CryptoConfigGroupGUI* gg = new CryptoConfigGroupGUI( module, group, this );
 #ifdef USE_TABS
     addTab( gg, group->description() );
@@ -170,7 +170,7 @@ Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
   QStringList entries = mGroup->entryList();
   for( QStringList::Iterator entryit = entries.begin(); entryit != entries.end(); ++entryit ) {
     Kleo::CryptoConfigEntry* entry = group->entry( *entryit );
-    assert( entry );
+    Q_ASSERT( entry );
     CryptoConfigEntryGUI* entryGUI =
       CryptoConfigEntryGUIFactory::createEntryGUI( module, entry, *entryit, this );
     if ( entryGUI ) {
