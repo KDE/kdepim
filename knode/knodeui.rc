@@ -103,6 +103,7 @@
   <Action name="view_Filter"/>
   <Action name="article_search"/>
   <Action name="view_Refresh"/>
+  <Separator/>
   <Action name="account_subscribe"/>
   <Action name="options_configure"/>
 </ToolBar>

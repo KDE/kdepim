@@ -19,32 +19,33 @@
 #ifndef KNARTICLEWINDOW_H
 #define KNARTICLEWINDOW_H
 
-#include <qwidget.h>
-
-class KMenuBar;
+#include <ktmainwindow.h>
+#include <kaction.h>
 
 class KNArticle;
 class KNArticleWidget;
 class KNArticleCollection;
 
-class KNArticleWindow : public QWidget  {
+class KNArticleWindow : public KTMainWindow  {
 
   Q_OBJECT
 	
 	public:
-		KNArticleWindow(KNArticle *art=0, KNArticleCollection *col=0, QWidget *parent=0, const char *name=0);
+		KNArticleWindow(KNArticle *art=0, KNArticleCollection *col=0, const char *name=0);
 		~KNArticleWindow();
 	 	KNArticleWidget* artWidget()				{ return artW; }
 			
 	protected:
-		void resizeEvent(QResizeEvent *e);
-		void closeEvent(QCloseEvent *e);
+		KAction  *actEditCopy;
 		KNArticleWidget *artW;
-		KMenuBar *menu;
 		
 	protected slots:
-		void slotMenu(int ID);
-		
+  	void slotFileSave();
+  	void slotFileClose();
+  	void slotArtReply();
+  	void slotArtRemail();
+  	void slotArtForward();
+		void slotSelectionChanged();		
 };
 
 #endif

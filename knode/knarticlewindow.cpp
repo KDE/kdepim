@@ -15,111 +15,101 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <kmenubar.h>
-
+#include <kstdaction.h>
 #include <klocale.h>
-#include <qpopupmenu.h>
+
 #include "knarticlewindow.h"
 #include "knarticlewidget.h"
 #include "knglobals.h"
 #include "knsavedarticlemanager.h"
-
-#define ID_SAVE	10
-#define ID_PRINT 20
-#define ID_CLOSE 30
-#define ID_PREPLY 40
-#define ID_MREPLY 50
-#define ID_FWD 60
+#include "utilities.h"
 
 
-KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, QWidget *parent, const char *name )
-	: QWidget(parent,name)
+KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const char *name )
+	: KTMainWindow(name)
 {
-	if(art){
-		QCString title="KNode: "+art->subject();
-		setCaption(title);
-	}
+	if(art)
+		setCaption(art->subject());
+  //setIcon(UserIcon("posting"));
+
 	artW=new KNArticleWidget(this);
 	artW->setData(art, col);
-	
-	menu=new KMenuBar(this);
-	//menu->setLineWidth(1);
-	//menu->setFrameStyle(QFrame::Panel | QFrame::Raised);
-		
-	QPopupMenu *file=new QPopupMenu();
-	file->insertItem(i18n("&Save"), ID_SAVE);
-	file->insertItem(i18n("&Print"), ID_PRINT);
-	file->insertItem(i18n("&Close"), ID_CLOSE);
-	
-	QPopupMenu *article=new QPopupMenu();
-	article->insertItem(i18n("&Post reply"), ID_PREPLY);
-	article->insertItem(i18n("&Mail reply"), ID_MREPLY);
-	article->insertItem(i18n("&Forward"), ID_FWD);
-		
-	menu->insertItem(i18n("&File"), file);
-	menu->insertItem(i18n("&Article"), article);
-		
-	connect(menu, SIGNAL(activated(int)), this, SLOT(slotMenu(int)));	
-	setIcon(UserIcon("posting"));
+  setView(artW);
+
+  // file menu
+  KStdAction::save(this, SLOT(slotFileSave()),actionCollection());
+  KStdAction::print(artW, SLOT(print()),actionCollection());
+  KStdAction::close(this, SLOT(slotFileClose()),actionCollection());
+
+  // edit menu
+  actEditCopy = KStdAction::copy(artW, SLOT(copySelection()),actionCollection());
+  actEditCopy->setEnabled(false);
+  connect(artW->part(),SIGNAL(selectionChanged()),this,SLOT(slotSelectionChanged()));
+  KStdAction::find(artW, SLOT(findText()),actionCollection());
+
+  // article menu
+  new KAction(i18n("Post &reply"),"reply", Key_R , this, SLOT(slotArtReply()),
+              actionCollection(), "article_postReply");
+  new KAction(i18n("&Mail reply"),"remail", Key_A , this, SLOT(slotArtRemail()),
+              actionCollection(), "article_mailReply");
+  new KAction(i18n("&Forward"),"fwd", Key_F , this, SLOT(slotArtForward()),
+              actionCollection(), "article_forward");
+
+  createGUI( "knreaderui.rc" );
+
+  resize(500,400);                      // default value
+	setDialogSize("reader", this);	
 }
 
 
 
 KNArticleWindow::~KNArticleWindow()
 {
+	saveDialogSize("reader", this->size());	
 }
 
 
 
-void KNArticleWindow::slotMenu(int ID)
+void KNArticleWindow::slotFileSave()
 {
-	switch(ID) {
-	
-		case ID_SAVE :
-			if(artW->article()) {
-				KNArticleManager::saveArticleToFile(artW->article());
-			}
-		break;
-		
-		case ID_PRINT :
-#warning FIXME printing not yet implemented in khtml
-//			artW->view()->print();
-		break;
-		
-		case ID_CLOSE :
-			delete this;
-		break;
-	
-		case ID_PREPLY :
-			xTop->sArtManager()->reply(artW->article(), (KNGroup*)artW->collection());
-		break;
-		
-		case ID_MREPLY :
-			xTop->sArtManager()->reply(artW->article(), 0);
-		break;
-		
-		case ID_FWD :
-			xTop->sArtManager()->forward(artW->article());
-		break;	
-	}	
+  if(artW->article())
+		KNArticleManager::saveArticleToFile(artW->article());
 }
 
 
 
-void KNArticleWindow::resizeEvent(QResizeEvent *)
+void KNArticleWindow::slotFileClose()
 {
-	menu->setGeometry(0,0, width(), menu->height());
-	artW->setGeometry(0, menu->height()+1, width(), height()-menu->height()-1);
+  delete this;
 }
 
 
 
-void KNArticleWindow::closeEvent(QCloseEvent *)
+void KNArticleWindow::slotArtReply()
 {
-	delete this;
+	xTop->sArtManager()->reply(artW->article(), (KNGroup*)artW->collection());
 }
 
 
+
+void KNArticleWindow::slotArtRemail()
+{
+	xTop->sArtManager()->reply(artW->article(), 0);
+}
+
+
+
+void KNArticleWindow::slotArtForward()
+{
+	xTop->sArtManager()->forward(artW->article());
+}
+
+
+
+void KNArticleWindow::slotSelectionChanged()
+{
+  actEditCopy->setEnabled(artW->part()->hasSelection());		
+}
 
 
 //--------------------------------
