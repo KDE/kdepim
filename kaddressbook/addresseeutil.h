@@ -41,16 +41,10 @@ class AddresseeUtil
 {
   public:
    /**
-     Convert an addressee into a string capable of being pushed into the
-     clipboard. This format is a vCard.
-    */
-   static QString addresseeToClipboard( KABC::Addressee& );
-   
-   /**
      Same as above function, except that an entire list of KABC::Addressee
      objects will be converted to vCard and put in the string.
     */
-   static QString addresseesToClipboard( KABC::Addressee::List &addrList );
+   static QString addresseesToClipboard( const KABC::Addressee::List &addrList );
    
    /**
      Convert a string from the clipboard into a list of addressee objects.

@@ -7,9 +7,11 @@
 #include <kapplication.h>
 #include <kabc/addressbook.h>
 
-#include "undocmds.h"
 #include "addresseeutil.h"
 #include "addresseeconfig.h"
+#include "kabcore.h"
+
+#include "undocmds.h"
 
 /////////////////////////////////
 // PwDelete Methods
@@ -61,9 +63,8 @@ void PwDeleteCommand::redo()
 /////////////////////////////////
 // PwPaste Methods
 
-PwPasteCommand::PwPasteCommand( KABC::AddressBook *doc, 
-                                const QString &clipboard )
-  : Command(), mDocument(doc), mUidList(), mClipboard(clipboard)
+PwPasteCommand::PwPasteCommand( KABCore *core, const KABC::Addressee::List &list )
+  : Command(), mCore( core ), mAddresseeList( list )
 {
   redo();
 }
@@ -75,28 +76,27 @@ QString PwPasteCommand::name()
 
 void PwPasteCommand::undo()
 {
-  KABC::Addressee a;
-  QStringList::Iterator it;
-  for( it = mUidList.begin(); it != mUidList.end(); ++it ) 
-  {
-    a = mDocument->findByUid(*it);
-    if (!a.isEmpty())
-      mDocument->removeAddressee( a );
-  }
-  
-  mUidList.clear();
+  KABC::Addressee::List::Iterator it;
+  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) 
+    mCore->addressBook()->removeAddressee( *it );
 }
 
 void PwPasteCommand::redo()
 {
-  KABC::Addressee::List list = AddresseeUtil::clipboardToAddressees(mClipboard);
-  
-  KABC::Addressee::List::Iterator iter;
-  for (iter = list.begin(); iter != list.end(); ++iter)
-  {
-    mDocument->insertAddressee(*iter);
-    mUidList.append((*iter).uid());
+  QStringList uids;
+  KABC::Addressee::List::Iterator it;
+  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
+    /* we have to set a new uid for the contact, otherwise insertAddressee()
+       ignore it.
+     */ 
+    (*it).setUid( KApplication::randomString( 10 ) );
+    uids.append( (*it).uid() );
+    mCore->addressBook()->insertAddressee( *it );
   }
+
+  QStringList::Iterator uidIt;
+  for ( uidIt = uids.begin(); uidIt != uids.end(); ++uidIt )
+    mCore->editContact( *uidIt );
 }
 
 /////////////////////////////////

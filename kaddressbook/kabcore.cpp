@@ -356,7 +356,10 @@ void KABCore::cutContacts()
 void KABCore::pasteContacts()
 {
   QClipboard *cb = QApplication::clipboard();
-  PwPasteCommand *command = new PwPasteCommand( mAddressBook, cb->text() );
+
+  KABC::Addressee::List list = AddresseeUtil::clipboardToAddressees( cb->text() );
+
+  PwPasteCommand *command = new PwPasteCommand( this, list );
   UndoStack::instance()->push( command );
   RedoStack::instance()->clear();
 

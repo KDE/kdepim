@@ -22,9 +22,11 @@
 */
 
 #include <kabc/addressbook.h>
+#include <kabc/resource.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kresources/resourceselectdialog.h>
 #include <ktrader.h>
 
 #include "undocmds.h"
@@ -67,9 +69,30 @@ void XXPortManager::slotImport( const QString &identifier, const QString &data )
     return;
   }
 
+  QPtrList<KABC::Resource> kabcResources = mCore->addressBook()->resources();
+
+  QPtrList<KRES::Resource> kresResources;
+  QPtrListIterator<KABC::Resource> resIt( kabcResources );
+  KABC::Resource *resource;
+  while ( ( resource = resIt.current() ) != 0 ) {
+    ++resIt;
+    if ( !resource->readOnly() ) {
+      KRES::Resource *res = static_cast<KRES::Resource*>( resource );
+      if ( res )
+        kresResources.append( res );
+    }
+  }
+
+  KRES::Resource *res = KRES::ResourceSelectDialog::getResource( kresResources, mCore );
+  resource = static_cast<KABC::Resource*>( res );
+
+  if ( !resource )
+    return;
+
   KABC::AddresseeList list = obj->importContacts( data );
   KABC::AddresseeList::Iterator it;
   for ( it = list.begin(); it != list.end(); ++it ) {
+    (*it).setResource( resource );
     // We use a PwNewCommand so the user can undo it.
     PwNewCommand *command = new PwNewCommand( mCore->addressBook(), *it );
     UndoStack::instance()->push( command );

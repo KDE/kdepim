@@ -22,30 +22,46 @@
 */                                                                      
 
 #include <kabc/stdaddressbook.h>
+#include <kabc/vcardconverter.h>
 #include <kdebug.h>
+#include <klocale.h>
+#include <kmessagebox.h>
 
 #include "addresseeutil.h"
 
-QString AddresseeUtil::addresseeToClipboard( KABC::Addressee &addr )
+QString AddresseeUtil::addresseesToClipboard( const KABC::Addressee::List &list )
 {
-  return addr.uid();
-}
-   
-QString AddresseeUtil::addresseesToClipboard( KABC::Addressee::List &list )
-{
-  QStringList emails;
+  KABC::VCardConverter converter;
+  QString vcard;
 
-  KABC::Addressee::List::Iterator it;
+  KABC::Addressee::List::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it ) {
-    if ( !(*it).fullEmail().isEmpty() )
-      emails.append( (*it).fullEmail() );
+    QString tmp;
+    if ( converter.addresseeToVCard( *it, tmp ) )
+      vcard += tmp + "\r\n";
   }
 
-  return emails.join( "," );
+  return vcard;
 }
 
-KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString& )
+KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString &data )
 {
-  kdDebug(5720) << "Not yet implemented" << endl;
-  return KABC::Addressee::List();
+  KABC::VCardConverter converter;
+
+  uint numVCards = data.contains( "BEGIN:VCARD", false );
+  QStringList dataList = QStringList::split( "\r\n\r\n", data );
+
+  KABC::Addressee::List addrList;
+  for ( uint i = 0; i < numVCards && i < dataList.count(); ++i ) {
+    KABC::Addressee addr;
+
+    if ( !converter.vCardToAddressee( dataList[ i ], addr ) ) {
+      KMessageBox::error( 0, i18n( "Invalid vcard format in clipboard" ) );
+      continue;
+    }
+
+    addrList.append( addr );
+  }
+
+  return addrList;
 }

@@ -14,6 +14,8 @@ namespace KABC {
   class AddressBook;
 }
 
+class KABCore;
+
 class PwDeleteCommand : public Command
 {
 public:
@@ -31,16 +33,15 @@ private:
 
 class PwPasteCommand : public Command
 {
-public:
-  PwPasteCommand(KABC::AddressBook *doc, const QString &clipboard );
-  virtual QString name();
-  virtual void undo();
-  virtual void redo();
+  public:
+    PwPasteCommand( KABCore *core, const KABC::Addressee::List &list );
+    virtual QString name();
+    virtual void undo();
+    virtual void redo();
 
-private:
-    KABC::AddressBook *mDocument;
-    QStringList mUidList;
-    QString mClipboard;
+  private:
+    KABCore *mCore;
+    KABC::Addressee::List mAddresseeList;
 };
 
 class PwCutCommand : public Command
