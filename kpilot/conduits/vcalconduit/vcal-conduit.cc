@@ -479,14 +479,13 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 	case repeatYearly:
 		if (repeatsForever)
 		{
-			recur->setYearly(Recurrence_t::rYearlyPos,freq,-1);
+			recur->setYearly(Recurrence_t::rYearlyDay,freq,-1);
 		}
 		else
 		{
-			recur->setYearly(Recurrence_t::rYearlyPos,freq,endDate);
+			recur->setYearly(Recurrence_t::rYearlyDay,freq,endDate);
 		}
-		
-// TODO:		recur->addYearlyNum( dateEntry->getRepeatDay
+		recur->addYearlyNum( readTm(dateEntry->getEventStart()).date().dayOfYear() );
 		break;
 	case repeatNone:
 	default :
@@ -619,6 +618,7 @@ void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry *dateEn
 	else
 	{
 #ifdef DEBUG
+	if (dateEntry->getExceptionCount()>0)
 	DEBUGCONDUIT << fname
 		<< ": WARNING Exceptions ignored for multi-day event "
 		<< dateEntry->getDescription()
@@ -676,6 +676,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.70  2002/07/23 00:45:18  kainhofe
+// Fixed several bugs with recurrences.
+//
 // Revision 1.69  2002/07/20 18:17:04  cschumac
 // Renamed Calendar::getAllEvents() to Calendar::events().
 // Removed get prefix from Calendar functions returning events.
