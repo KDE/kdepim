@@ -48,6 +48,12 @@ struct ClientInfo
       COMMAND_LINE_NOTIFY = 2,  // start client and use command line arguments to notify about events
       DCOP_SIMPLE_NOTIFY  = 3   // Use simple DCOP call to notify about events
     };
+    enum Status
+    {
+      UNKNOWN,    // don't know whether client is running
+      REGISTERED, // client is registered, but don't know if its DCOP object is ready
+      READY       // client is registered and its DCOP object is ready
+    };
     ClientInfo() : mValid( false ) { }
     ClientInfo(const QCString &appName, const QString &title,
                const QCString &dcopObj, int notifyType, bool disp,
@@ -63,6 +69,7 @@ struct ClientInfo
     // Data which is not used by all alarm daemon applications
     bool     waitForRegistration; // don't notify any events until client has registered
     int      menuIndex;           // context menu index to this client's entry
+    Status   status;
 
     bool isValid() const { return mValid; }
 

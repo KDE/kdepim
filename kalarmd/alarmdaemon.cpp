@@ -49,6 +49,17 @@
 #include "alarmdaemon.h"
 #include "alarmdaemon.moc"
 
+struct NotifyGuiData
+{
+  NotifyGuiData() { }
+  NotifyGuiData(AlarmGuiChangeType c, const QString& cal, const QCString& a)
+     : change(c), calendarURL(cal), appName(a) { }
+  AlarmGuiChangeType change;
+  QString            calendarURL;
+  QCString           appName;
+};
+static QValueList<NotifyGuiData> notifyGuiQueue;
+
 
 AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
   : DCOPObject(name), QObject(parent, name)
@@ -141,7 +152,7 @@ void AlarmDaemon::addCal_(const QCString& appname, const QString& urlString, boo
   kdDebug(5900) << "AlarmDaemon::addCal_(): calendar added" << endl;
 
   setTimerStatus();
-  checkAlarms(cal);
+  checkAlarmsLater(cal);
 }
 
 /*
@@ -190,7 +201,7 @@ void AlarmDaemon::calendarLoaded(ADCalendarBase* cal, bool success)
       kdDebug(5900) << "Calendar reloaded" << endl;
     notifyGuiCalStatus(cal);
     setTimerStatus();
-    checkAlarms(cal);
+    checkAlarmsLater(cal);
 }
 
 /*
@@ -207,7 +218,7 @@ void AlarmDaemon::resetMsgCal_(const QCString& appname, const QString& urlString
     ADCalendar::clearEventsHandled(urlString);
     ADCalendarBase* cal = getCalendar(urlString);
     if (cal)
-      checkAlarms(cal);
+      checkAlarmsLater(cal);
   }
 }
 
@@ -231,41 +242,53 @@ void AlarmDaemon::removeCal_(const QString& urlString)
  * DCOP call to add an application to the list of client applications,
  * and add it to the config file.
  */
-bool AlarmDaemon::registerApp_(const QCString& appName, const QString& appTitle,
+void AlarmDaemon::registerApp_(const QCString& appName, const QString& appTitle,
                               const QCString& dcopObject, int notificationType,
                               bool displayCalendarName, bool reregister)
 {
   kdDebug(5900) << "AlarmDaemon::registerApp_(" << appName << ", " << appTitle << ", "
                 <<  dcopObject << ", " << notificationType << ", " << reregister << ")" << endl;
+  bool result = true;
   if (appName.isEmpty())
-    return false;
-  if (KStandardDirs::findExe(appName).isNull()) {
+    result = false;
+  else if (KStandardDirs::findExe(appName).isNull()) {
     kdError() << "AlarmDaemon::registerApp(): app not found\n";
-    return false;
+    result = false;
   }
-  ClientInfo c = getClientInfo(appName);
-  if (c.isValid())
-  {
-    // The application is already in the clients list.
-    if (!reregister) {
-      // Mark all its calendar files as unregistered and remove it from the list.
-      for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
-      {
-        if (cal->appName() == appName)
-          cal->setUnregistered( true );
+  else {
+    ClientInfo c = getClientInfo(appName);
+    if (c.isValid())
+    {
+      // The application is already in the clients list.
+      if (!reregister) {
+        // Mark all its calendar files as unregistered and remove it from the list.
+        for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
+        {
+          if (cal->appName() == appName)
+            cal->setUnregistered( true );
+        }
       }
+      removeClientInfo(appName);
     }
-    removeClientInfo(appName);
+    ClientInfo cinfo(appName, appTitle, dcopObject, notificationType, displayCalendarName);
+    cinfo.status = ClientInfo::READY;   // client is assumed to be ready to receive DCOP calls
+    mClients.append(cinfo);
+
+    writeConfigClient(appName, cinfo);
+
+    enableAutoStart(true);
+    notifyGui(CHANGE_CLIENT);
+    setTimerStatus();
   }
-  ClientInfo cinfo(appName, appTitle, dcopObject, notificationType, displayCalendarName);
-  mClients.append(cinfo);
-
-  writeConfigClient(appName, cinfo);
-
-  enableAutoStart(true);
-  notifyGui(CHANGE_CLIENT);
-  setTimerStatus();
-  return true;
+  /*
+   * Notify the client of whether registration succeeded.
+   * N.B. This method must not return a bool because DCOPClient::call()
+   *      can cause hangs if daemon and client both happen to call each
+   *      other at the same time.
+   */
+  AlarmGuiIface_stub stub( appName, dcopObject );
+  stub.registered( reregister, result );
+  kdDebug(5900) << "AlarmDaemon::registerApp_() -> " << result << endl;
 }
 
 /*
@@ -360,6 +383,36 @@ void AlarmDaemon::checkAlarms(const QCString& appName)
 }
 
 /*
+ * Queue a check of a specific alarm calendar.
+ * Don't actually check it yet, since if we're in the middle of processing a
+ * DCOP request from a client, notifying the same client of pending alarms via
+ * DCOP is likely to cause the application to hang.
+ */
+void AlarmDaemon::checkAlarmsLater( ADCalendarBase* cal )
+{
+  kdDebug(5901) << "AlarmDaemons::checkAlarmsLater(" << cal->urlString() << ")" << endl;
+
+  if ( !cal->loaded()  ||  !cal->enabled() )
+    return;
+  cal->setToBeChecked(true);
+  QTimer::singleShot(0, this, SLOT(slotCheckSelectedAlarms()));
+}
+
+/*
+ * Check if any alarms are pending calendars which are marked for checking
+ * before the next scheduled check.
+ */
+void AlarmDaemon::slotCheckSelectedAlarms()
+{
+  kdDebug(5901) << "AlarmDaemons::slotCheckSelectedAlarms()\n";
+
+  for( ADCalendarBase *cal = mCalendars.first(); cal; cal = mCalendars.next() ) {
+    if ( cal->toBeChecked() )
+      checkAlarms( cal );
+  }
+}
+
+/*
  * Check if any alarms are pending for a specified calendar, and
  * display the pending alarms.
  * Reply = true if the calendar check time was updated.
@@ -367,6 +420,7 @@ void AlarmDaemon::checkAlarms(const QCString& appName)
 bool AlarmDaemon::checkAlarms( ADCalendarBase* cal )
 {
   kdDebug(5901) << "AlarmDaemons::checkAlarms(" << cal->urlString() << ")" << endl;
+  cal->setToBeChecked( false );
 
   if ( !cal->loaded()  ||  !cal->enabled() )
     return false;
@@ -470,21 +524,24 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
       return false;
     }
 
-    bool registered = kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(calendar->appName()));
-    bool ready = registered;
-    if (registered)
+    if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(calendar->appName())))
+      client.status = ClientInfo::UNKNOWN;
+    else if (client.status != ClientInfo::READY)
     {
-      QCStringList objects = kapp->dcopClient()->remoteObjects(calendar->appName());
-      if (objects.find(client.dcopObject) == objects.end())
-        ready = false;
+      client.status = ClientInfo::READY;
+//kdDebug(5900) << "AlarmDaemon::notifyEvent(): findRemoteObjects\n";
+//      QCStringList objects = kapp->dcopClient()->remoteObjects(calendar->appName());
+//      client.status = (objects.find(client.dcopObject) == objects.end())
+//                    ? ClientInfo::REGISTERED : ClientInfo::READY;
+//kdDebug(5900) << "AlarmDaemon::notifyEvent(): findRemoteObjects -> "<<(client.status == ClientInfo::READY)<<endl;
     }
-    if (!ready)
+    if (client.status != ClientInfo::READY)
     {
       // The client application is not running, or is not yet ready
       // to receive notifications.
       if (client.notificationType == ClientInfo::NO_START_NOTIFY
       ||  client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY) {
-        if (registered)
+        if (client.status == ClientInfo::REGISTERED)
           kdDebug(5900) << "AlarmDaemon::notifyEvent(): client not ready\n";
         else
           kdDebug(5900) << "AlarmDaemon::notifyEvent(): don't start client\n";
@@ -512,11 +569,7 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
       // Notification type = DCOP_NOTIFY: start client and then use DCOP
       p.start(KProcess::Block);
       kdDebug(5900) << "AlarmDaemon::notifyEvent(): started " << cmd << endl;
-      if (!ready)
-      {
-        kdDebug(5900) << "AlarmDaemon::notifyEvent(): client not ready\n";
-        return false;
-      }
+      return false;
     }
 
     if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY)
@@ -626,22 +679,39 @@ void AlarmDaemon::notifyGui(AlarmGuiChangeType change, const QString& calendarUR
   notifyGui( change, calendarURL, "" );
 }
 
+/*
+ * Queue up a GUI notification.
+ * Don't actually send it yet, since if we're in the middle of processing a
+ * DCOP request from a client, sending the same client a DCOP notification
+ * is likely to cause the application to hang.
+ */
 void AlarmDaemon::notifyGui(AlarmGuiChangeType change, const QString& calendarURL, const QCString& appName)
 {
   kdDebug(5900) << "AlarmDaemon::notifyGui(" << change << ")\n";
+  notifyGuiQueue.append(NotifyGuiData(change, calendarURL, appName));
+  QTimer::singleShot(0, this, SLOT(slotNotifyGui()));
+}
 
-  for (GuiMap::ConstIterator g = mGuis.begin();  g != mGuis.end();  ++g)
+void AlarmDaemon::slotNotifyGui()
+{
+  kdDebug(5900) << "AlarmDaemon::slotNotifyGui()\n";
+  while (notifyGuiQueue.count())
   {
-    QCString dcopObject = g.data().dcopObject;
-    if (kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(g.key())))
+    NotifyGuiData& entry = notifyGuiQueue.first();
+    for (GuiMap::ConstIterator g = mGuis.begin();  g != mGuis.end();  ++g)
     {
-      kdDebug(5900)<<"AlarmDaemon::notifyGui() sending:" << g.key()<<" ->" << dcopObject <<endl;
+      QCString dcopObject = g.data().dcopObject;
+      if (kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(g.key())))
+      {
+        kdDebug(5900)<<"AlarmDaemon::notifyGui() sending:" << g.key()<<" ->" << dcopObject <<endl;
 
-      AlarmGuiIface_stub stub( g.key(), dcopObject );
-      stub.alarmDaemonUpdate( change, calendarURL, appName );
-      if ( !stub.ok() )
-        kdDebug(5900) << "AlarmDaemon::guiNotify(): dcop send failed:" << g.key() << endl;
+        AlarmGuiIface_stub stub( g.key(), dcopObject );
+        stub.alarmDaemonUpdate( entry.change, entry.calendarURL, entry.appName );
+        if ( !stub.ok() )
+          kdDebug(5900) << "AlarmDaemon::guiNotify(): dcop send failed:" << g.key() << endl;
+      }
     }
+    notifyGuiQueue.remove(notifyGuiQueue.begin());
   }
 }
 

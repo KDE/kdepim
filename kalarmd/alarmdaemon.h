@@ -47,6 +47,8 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void    calendarLoaded( ADCalendarBase *, bool success );
     void    checkAlarmsSlot();
     void    checkAlarms();
+    void    slotCheckSelectedAlarms();
+    void    slotNotifyGui();
 
   private:
     // DCOP interface
@@ -65,16 +67,16 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
                        { removeCal_(expandURL(urlString)); }
     void    resetMsgCal(const QCString& appname, const QString& urlString)
                        { resetMsgCal_(appname, expandURL(urlString)); }
-    bool    registerApp(const QCString& appName, const QString& appTitle,
+    void    registerApp(const QCString& appName, const QString& appTitle,
                         const QCString& dcopObject, int notificationType,
                         bool displayCalendarName)
-                       { return registerApp_(appName, appTitle, dcopObject,
-                                             notificationType, displayCalendarName, false); }
-    bool    reregisterApp(const QCString& appName, const QString& appTitle,
+                       { registerApp_(appName, appTitle, dcopObject,
+                                      notificationType, displayCalendarName, false); }
+    void    reregisterApp(const QCString& appName, const QString& appTitle,
                         const QCString& dcopObject, int notificationType,
                         bool displayCalendarName)
-                       { return registerApp_(appName, appTitle, dcopObject,
-                                             notificationType, displayCalendarName, true); }
+                       { registerApp_(appName, appTitle, dcopObject,
+                                      notificationType, displayCalendarName, true); }
     void    registerGui(const QCString& appName, const QCString& dcopObject);
     void    readConfig();
     void    quit();
@@ -92,7 +94,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     };
     typedef QMap<QCString, GuiInfo> GuiMap;  // maps GUI client names against their data
 
-    bool        registerApp_(const QCString& appName, const QString& appTitle,
+    void        registerApp_(const QCString& appName, const QString& appTitle,
                         const QCString& dcopObject, int notificationType,
                         bool displayCalendarName, bool reregister);
     void        enableCal_(const QString& urlString, bool enable);
@@ -102,6 +104,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void        resetMsgCal_(const QCString& appname, const QString& urlString);
     void        removeCal_(const QString& urlString);
     bool        checkAlarms(ADCalendarBase*);
+    void        checkAlarmsLater(ADCalendarBase*);
     void        checkAlarms(const QCString& appName);
     void        checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes);
     bool        notifyEvent(ADCalendarBase*, const QString& eventID);

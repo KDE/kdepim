@@ -31,6 +31,10 @@
 // Don't use #include "alarmdaemoniface.h" so that programs other than kalarmd can compile
 #include <kalarmd/alarmdaemoniface.h>
 
+/**
+ * Client applications should inherit from this class to receive notifications
+ * from the alarm daemon.
+ */
 class AlarmGuiIface : virtual public DCOPObject
 {
     K_DCOP
@@ -41,6 +45,8 @@ class AlarmGuiIface : virtual public DCOPObject
     virtual ASYNC handleEvent(const QString& calendarURL,
                               const QString& eventID) = 0;
     virtual ASYNC handleEvent( const QString &iCalendarString ) = 0;
+    /** Called to indicate success/failure of (re)register() call */
+    virtual ASYNC registered( bool reregister, bool success ) = 0;
 };
 
 #endif

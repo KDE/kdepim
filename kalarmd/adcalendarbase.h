@@ -56,6 +56,9 @@ class ADCalendarBase : public CalendarLocal
     virtual void setAvailable( bool ) = 0;
     virtual bool available() const = 0;
 
+    void         setToBeChecked( bool tbc ) { mToBeChecked = tbc; }
+    bool         toBeChecked() const        { return mToBeChecked; }
+
     // client has registered since calendar was
     // constructed, but has not since added the
     // calendar. Monitoring is disabled.
@@ -115,6 +118,7 @@ class ADCalendarBase : public CalendarLocal
     bool              mLoaded;        // true if calendar file is currently loaded
     bool              mLoadedConnected; // true if the loaded() signal has been connected to AlarmDaemon
     bool              mUnregistered;  // client has registered, but has not since added the calendar
+    bool              mToBeChecked;   // calendar should be checked before next scheduled check
 };
 
 typedef QPtrList<ADCalendarBase> CalendarList;
