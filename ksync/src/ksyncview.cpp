@@ -62,7 +62,7 @@ KSyncView::KSyncView(QWidget *parent, const char *name) :
   removeButton = new QPushButton(i18n("Remove Source"),this);
   connect(removeButton,SIGNAL(clicked()),SLOT(removeSource()));
 
-  showButton = new QPushButton(i18n("Show Source..."),this);
+  showButton = new QPushButton(i18n("Show Source"),this);
   connect(showButton,SIGNAL(clicked()),SLOT(showSource()));
 
   mSourceListView = new QListView(this);
