@@ -12,14 +12,9 @@
       <Action name="file_sync"/>
       
       <Menu name="file_import"><text>&amp;Import</text>
-        <Action name="file_import_kde2"/>
-        <Action name="file_import_vcard"/>
-        <Action name="file_import_csv"/>
       </Menu>
-      
+
       <Menu name="file_export"><text>&amp;Export</text>
-        <Action name="file_export_csv"/>
-        <Action name="file_export_vcard30"/>
       </Menu>
     </Menu>
     
@@ -81,12 +76,12 @@
   </ToolBar>
   
   <ToolBar name="addresseeToolBar" noMerge="1"><text>Contact Toolbar</text>
-    <Action name="edit_undo"/>
-    <Action name="edit_redo"/>
+    <Action name="kaddressbook_undo"/>
+    <Action name="kaddressbook_redo"/>
     <Separator/>
-    <Action name="edit_cut"/>
-    <Action name="edit_copy"/>
-    <Action name="edit_paste"/>
+    <Action name="kaddressbook_cut"/>
+    <Action name="kaddressbook_copy"/>
+    <Action name="kaddressbook_paste"/>
     <Separator/>
     <Action name="edit_delete"/>
   </ToolBar>
