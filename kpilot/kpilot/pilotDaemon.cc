@@ -465,6 +465,13 @@ PilotDaemon::setupSubProcesses()
 {
 	FUNCTIONSETUP;
 
+	if (fMonitorProcess)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": There is already a listener process!"
+			<< endl;
+	}
+
 	fMonitorProcess = new KProcess();
 	if (fMonitorProcess)
 	{
@@ -678,9 +685,29 @@ PilotDaemon::slotDBBackupFinished()
 }
 
 void 
-PilotDaemon::slotProcFinished(KProcess*)
+PilotDaemon::slotProcFinished(KProcess *p)
 {
 	FUNCTIONSETUP;
+
+	if (!fMonitorProcess)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": No monitor process, but pid="
+			<< p->pid()
+			<< " exited."
+			<< endl;
+		return;
+	}
+
+	if (p != fMonitorProcess)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Process other than monitor process, pid="
+			<< p->pid()
+			<< " exited."
+			<< endl;
+		return;
+	}
 
 	startHotSync();
 }
@@ -718,7 +745,8 @@ PilotDaemon::slotEndHotSync()
 
 	if(!quit())
 	{
-		fMonitorProcess->start(KProcess::NotifyOnExit);
+		killMonitor(false);
+		setupSubProcesses();
 	}
 	else
 	{
@@ -1172,7 +1200,7 @@ int main(int argc, char* argv[])
 	FUNCTIONSETUP;
 
         KAboutData about("kpilotDaemon", I18N_NOOP("KPilot"),
-                         "4.0b2",
+			 KPILOT_VERSION,
                          "KPilot - Hot-sync software for unix\n\n",
                          KAboutData::License_GPL,
                          "(c) 1998-2000, Dan Pilone");
@@ -1265,6 +1293,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.33  2001/03/04 21:22:00  adridg
+// Added drag 'n drop file install to daemon
+//
 // Revision 1.32  2001/03/04 11:23:04  adridg
 // Changed for bug 21392
 //
