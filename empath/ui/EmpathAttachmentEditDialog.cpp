@@ -213,7 +213,7 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
     pb_browse_ = new QPushButton(w_main_);
     CHECK_PTR(pb_browse_);
     
-    pb_browse_->setPixmap(empathIcon("browse.png"));
+    pb_browse_->setPixmap(empathIcon("browse"));
     pb_browse_->setFixedSize(h, h);
     
     QObject::connect(

@@ -2,7 +2,7 @@ INCLUDES= $(all_includes) -I ../rmm/include/ -I ../lib/
 
 noinst_LIBRARIES = libempathui.a
 
-libempathui_a_METASOURCES = USE_AUTOMOC
+libempathui_a_METASOURCES = AUTO
 
 libempathui_a_SOURCES = \
 EmpathAccountsSettingsDialog.cpp \
@@ -36,6 +36,7 @@ EmpathHeaderNameWidget.cpp \
 EmpathHeaderSpecWidget.cpp \
 EmpathHeaderViewWidget.cpp \
 EmpathIdentitySettingsDialog.cpp \
+EmpathListView.cpp \
 EmpathLeftSideWidget.cpp \
 EmpathMainWidget.cpp \
 EmpathMainWindow.cpp \

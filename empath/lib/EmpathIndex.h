@@ -26,6 +26,7 @@
 
 // Qt includes
 #include <qdict.h>
+#include <qdatetime.h>
 
 // Local includes
 #include "RMM_MessageID.h"
@@ -44,6 +45,8 @@ class EmpathIndex
     public:
         
         EmpathIndex();
+        EmpathIndex(const EmpathURL & folder);
+								
         ~EmpathIndex();
 
         /**
@@ -85,6 +88,7 @@ class EmpathIndex
          * Insert entry. Will overwrite any existing.
          */
         bool insert(const QCString &, EmpathIndexRecord &);
+		
         /**
          * Remove entry.
          */
@@ -94,7 +98,11 @@ class EmpathIndex
          * @return URL of the related folder.
          */
         const EmpathURL & folder() { return folder_; }
-        
+		
+        QString indexFileName() { return filename_; }
+		
+        QDateTime lastModified() const;
+		
         QStrList allKeys();
 
         void setStatus(const QString & id, RMM::MessageStatus status);
@@ -106,12 +114,16 @@ class EmpathIndex
         void _open();
         void _close();
         
+        int blockSize_;
         EmpathURL folder_;
         QDateTime mtime_;
-        int blockSize_;
         int mode_;
         QString filename_;
         GDBM_FILE dbf_;
+        
+        bool touched_;
+        Q_UINT32 count_;
+        Q_UINT32 unreadCount_;
 };
 
 #endif

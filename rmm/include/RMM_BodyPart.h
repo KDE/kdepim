@@ -48,12 +48,12 @@ class RBodyPart : public REntity {
     
         virtual QCString data();
         
-        RMM::MimeType mimeType();
-        RMM::MimeSubType mimeSubType();
+        RMM::MimeType       mimeType();
+        RMM::MimeSubType    mimeSubType();
         
-        REnvelope &            envelope();
+        REnvelope &         envelope();
         void                setEnvelope(REnvelope);
-        QList<RBodyPart> &    body();
+        QList<RBodyPart> &  body();
         
         void            setBody(QList<RBodyPart> &);
         void            setData(const QCString &);
@@ -67,7 +67,7 @@ class RBodyPart : public REntity {
         void            setMimeSubType(const QCString &);
 
         QCString        description();
-        RMM::DispType    disposition();
+        RMM::DispType   disposition();
         
         void            setDescription(const QCString &);
         void            setDisposition(RMM::DispType);
@@ -75,20 +75,20 @@ class RBodyPart : public REntity {
         void            setEncoding(RMM::CteType);
         Q_UINT32        size();
         PartType        type();
-        RBodyPart        decode();
+        RBodyPart       decode();
 
     protected:
         
         void                _update();
 
-        REnvelope            envelope_;
+        REnvelope           envelope_;
         QCString            data_;
         QList<RBodyPart>    body_;
         RMM::CteType        encoding_;
-        RMM::MimeType        mimeType_;
+        RMM::MimeType       mimeType_;
         RMM::MimeSubType    mimeSubType_;
         QCString            contentDescription_;
-        RMM::DispType        disposition_;
+        RMM::DispType       disposition_;
         QCString            boundary_;
         PartType            type_;
         QCString            preamble_;

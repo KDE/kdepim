@@ -20,6 +20,12 @@
 
 // Qt includes
 #include <qdatastream.h>
+#include <qregexp.h>
+#include <qfileinfo.h>
+
+// KDE includes
+#include <kglobal.h>
+#include <kstddirs.h>
 
 // Local includes
 #include "EmpathIndexRecord.h"
@@ -33,10 +39,36 @@
 // This saves us the time it takes to [de]serialise records.
 
 EmpathIndex::EmpathIndex()
-    :   blockSize_(1024)
+    :   blockSize_(1024),
+        touched_(true),
+        count_(0),
+        unreadCount_(0)
 {
-    empathDebug("");
+    empathDebug("ctor");
     // Empty.
+}
+
+EmpathIndex::EmpathIndex(const EmpathURL & folder)
+	:	blockSize_(1024), folder_(folder)
+{
+    empathDebug("ctor");
+    QString resDir =
+        KGlobal::dirs()->getSaveLocation("indices", folder.mailboxName(), true);
+
+    empathDebug("saveLocation: " + resDir);
+
+    if (resDir.isEmpty()) {
+        empathDebug("Serious problem with local indices dir");
+    }
+
+    QString legalName = folder.folderPath().replace(QRegExp("/"), "_");
+
+    // filename_ = resDir + "/" + legalName;  
+    filename_ = "/tmp/" + legalName;
+	
+    empathDebug("Index filename: " + filename_);
+
+    _open();
 }
 
 EmpathIndex::~EmpathIndex()
@@ -99,51 +131,54 @@ EmpathIndex::record(const QCString & key)
     Q_UINT32
 EmpathIndex::countUnread()
 {
-    empathDebug("");
+    if (!touched_)
+        return unreadCount_;
     
     if (!dbf_) {
         empathDebug("dbf is not open");
         return 0;
     }
 
-    Q_UINT32 count = 0;
+    unreadCount_ = 0;
     
     datum key = gdbm_firstkey(dbf_);
     
     while (key.dptr) {
 
         if (!((RMM::MessageStatus)(key.dptr[0]) & RMM::Read))
-            ++count;
+            ++unreadCount_;
 
         key = gdbm_nextkey(dbf_, key);
     }
     
     empathDebug("done");
-    return count;
+    touched_ = false;
+    return unreadCount_;
 }
 
     Q_UINT32
 EmpathIndex::count()
 {
-    empathDebug("");
+    if (!touched_)
+        return count_;
     
     if (!dbf_) {
         empathDebug("dbf is not open");
         return 0;
     }
 
-    Q_UINT32 count = 0;
+    count_ = 0;
     
     datum key = gdbm_firstkey(dbf_);
     
     while (key.dptr) {
 
-        ++count;
+        ++count_;
         key = gdbm_nextkey(dbf_, key);
     }
     
-    return count;
-
+    touched_ = false;
+    return count_;
 }
 
 
@@ -190,6 +225,9 @@ EmpathIndex::_open()
     
     if (!dbf_) {
         empathDebug(gdbm_strerror(gdbm_errno));
+        touched_ = false;
+    } else {
+        touched_ = true;
     }
 }
 
@@ -250,8 +288,9 @@ EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
     
     int retval = gdbm_store(dbf_, k, d, GDBM_REPLACE);
     
+    touched_ = true;
+    
     return (retval != -1);
-
 }
 
     bool
@@ -270,6 +309,7 @@ EmpathIndex::remove(const QCString & key)
     k.dptr  = const_cast<char *>(key.data());
     k.dsize = key.length();
     
+    touched_ = true;
     return (gdbm_delete(dbf_, k) == 0);
 }
 
@@ -291,6 +331,7 @@ EmpathIndex::clear()
         key = gdbm_nextkey(dbf_, key);
     }
 
+    touched_ = true;
 }
 
     void
@@ -316,9 +357,19 @@ EmpathIndex::setStatus(const QString & id, RMM::MessageStatus status)
 
     int retval = gdbm_store(dbf_, k, changer, GDBM_REPLACE);
 
+    touched_ = true;
+
     if (retval == -1) {
         empathDebug("Couldn't replace record");
     }
 }
+    
+    QDateTime
+EmpathIndex::lastModified() const
+{
+    QFileInfo fi(filename_);
+    return fi.lastModified();
+}	 
+	
 
 // vim:ts=4:sw=4:tw=78

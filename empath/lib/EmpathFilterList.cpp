@@ -148,14 +148,14 @@ EmpathFilterList::remove(EmpathFilter * f)
         if (it.current()->priority() > f->priority())
             it.current()->setPriority(it.current()->priority() - 1);
         
-    QList::remove(f);
+    QList<EmpathFilter>::remove(f);
 }
 
     void
 EmpathFilterList::append(EmpathFilter * f)
 {
     f->setPriority(count());
-    QList::append(f);
+    QList<EmpathFilter>::append(f);
 }
 
 // vim:ts=4:sw=4:tw=78

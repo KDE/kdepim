@@ -61,6 +61,7 @@ EmpathMessageViewWindow::EmpathMessageViewWindow(
     updateRects();
     kapp->processEvents();
     show();
+    messageView_->s_setMessage(url_);
 }
 
 EmpathMessageViewWindow::~EmpathMessageViewWindow()
@@ -95,30 +96,30 @@ EmpathMessageViewWindow::setupMenuBar()
     
     empathDebug("setting up edit menu");
 
-    editMenu_->insertItem(empathIcon("empath-copy.png"), i18n("&Copy"),
+    editMenu_->insertItem(empathIcon("empath-copy"), i18n("&Copy"),
         this, SLOT(s_editCopy()));
     
     editMenu_->insertSeparator();
     
-    editMenu_->insertItem(empathIcon("findf.png"), i18n("Find..."),
+    editMenu_->insertItem(empathIcon("findf"), i18n("Find..."),
         this, SLOT(s_editFind()));
     
-    editMenu_->insertItem(empathIcon("find.png"), i18n("Find &Again"),
+    editMenu_->insertItem(empathIcon("find"), i18n("Find &Again"),
         this, SLOT(s_editFindAgain()));
     
     // Message Menu
     empathDebug("setting up message menu");
 
-    messageMenu_->insertItem(empathIcon("mini-view.png"), i18n("&View source"),
+    messageMenu_->insertItem(empathIcon("mini-view"), i18n("&View source"),
         messageView_, SLOT(s_switchView()));
     
-    messageMenu_->insertItem(empathIcon("mini-view.png"), i18n("&New"),
+    messageMenu_->insertItem(empathIcon("mini-view"), i18n("&New"),
         this, SLOT(s_messageNew()));
 
-    messageMenu_->insertItem(empathIcon("mini-save.png"), i18n("Save &As"),
+    messageMenu_->insertItem(empathIcon("mini-save"), i18n("Save &As"),
         this, SLOT(s_messageSaveAs()));
 
-    messageMenu_->insertItem(empathIcon("editcopy.png"), i18n("&Copy to..."),
+    messageMenu_->insertItem(empathIcon("editcopy"), i18n("&Copy to..."),
         this, SLOT(s_messageCopyTo()));
     
     helpMenu_->insertItem(
@@ -150,7 +151,7 @@ EmpathMessageViewWindow::setupToolBar()
 {
     empathDebug("setting up tool bar");
 
-    QPixmap p = empathIcon("compose.png");
+    QPixmap p = empathIcon("compose");
     int i = QMAX(p.width(), p.height());
 
     KToolBar * tb = new KToolBar(this, "tooly", i + 4);
@@ -158,19 +159,19 @@ EmpathMessageViewWindow::setupToolBar()
     
     this->addToolBar(tb, 0);
 
-    tb->insertButton(empathIcon("compose.png"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("compose"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageNew()), true, i18n("Compose"));
     
-    tb->insertButton(empathIcon("reply.png"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("reply"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageReply()), true, i18n("Reply"));
     
-    tb->insertButton(empathIcon("forward.png"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("forward"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageForward()), true, i18n("Forward"));
     
-    tb->insertButton(empathIcon("delete.png"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("delete"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageDelete()), true, i18n("Delete"));
     
-    tb->insertButton(empathIcon("save.png"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("save"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageSaveAs()), true, i18n("Save"));
 }
 

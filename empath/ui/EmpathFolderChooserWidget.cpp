@@ -48,7 +48,7 @@ EmpathFolderChooserWidget::EmpathFolderChooserWidget(
     
     pb_selectFolder_    = new QPushButton(this, "pb_selectFolder_");
     CHECK_PTR(pb_selectFolder_);
-    pb_selectFolder_->setPixmap(empathIcon("browse.png"));
+    pb_selectFolder_->setPixmap(empathIcon("browse"));
     
     layout_                = new QGridLayout(this, 1, 2, 2, 10);
     CHECK_PTR(layout_);

@@ -27,11 +27,12 @@
 
 // Qt includes
 #include <qpixmap.h>
-#include <qlistview.h>
 #include <qlist.h>
 #include <qpopupmenu.h>
+#include <qpoint.h>
 
 // Local includes
+#include "EmpathListView.h"
 #include "EmpathDefines.h"
 #include "EmpathFolder.h"
 #include "EmpathMailbox.h"
@@ -39,7 +40,7 @@
 #include "EmpathURL.h"
 #include "Empath.h"
 
-class EmpathFolderWidget : public QListView
+class EmpathFolderWidget : public EmpathListView
 {
     Q_OBJECT
 
@@ -58,8 +59,6 @@ class EmpathFolderWidget : public QListView
 
     protected slots:
 
-        void s_showing();
-        void s_currentChanged(QListViewItem *);
         void s_rightButtonPressed(QListViewItem *, const QPoint &, int);
         void s_folderProperties();
         void s_mailboxCheck();
@@ -69,17 +68,21 @@ class EmpathFolderWidget : public QListView
         void s_removeFolder();
         void s_setUpAccounts();
         void s_openChanged();
-    
+        void s_openCurrent();
+        void s_showLink(QListViewItem *);
+        
     signals:
 
         void showFolder(const EmpathURL & url);
 
     protected:
-    
-        void dragMoveEvent    (QDragMoveEvent *);
-        void dragEnterEvent    (QDragMoveEvent *);
-        void dragLeaveEvent    (QDragMoveEvent *);
-        void dropEvent        (QDropEvent *);
+
+        void startDrag(QListViewItem *);
+        
+        void contentsDragMoveEvent      (QDragMoveEvent *);
+        void contentsDragEnterEvent     (QDragEnterEvent *);
+        void contentsDragLeaveEvent     (QDragLeaveEvent *);
+        void contentsDropEvent          (QDropEvent *);
 
     private:
 
@@ -100,6 +103,15 @@ class EmpathFolderWidget : public QListView
         OverType                popupMenuOverType;
         
         bool    waitForShown_;
+        bool    wantScreenUpdates_;
+
+        QTimer *        autoOpenTimer;
+        int             autoOpenTime;
+        QListViewItem * dropItem;
+        
+        int autoscrollMargin;
+        void startAutoScroll();
+        void stopAutoScroll();
 };
 
 #endif

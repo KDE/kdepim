@@ -18,10 +18,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMailboxPOP3.h"
-#endif
-
 #ifndef EMPATHMAILBOXPOP3_H
 #define EMPATHMAILBOXPOP3_H
 
@@ -52,19 +48,23 @@ class EmpathPOPCommand
         
         enum Type { Stat, List, UIDL, Get, Remove };
 
-        EmpathPOPCommand(Type, int = -1);
+        EmpathPOPCommand(Type, int, QString, QString);
         ~EmpathPOPCommand(); 
         
-        QString    command();
+        QString command();
         Type    type();
+        QString xinfo();
+        QString xxinfo();
         
         const char * className() const { return "EmpathPOPCommand"; }
 
     private:
     
-        QString    command_;
-        Type    type_;
-        int        msgNo_;
+        QString     command_;
+        Type        type_;
+        int         msgNo_;
+        QString     xxinfo_;
+        QString     xinfo_;
 };
 
 /**
@@ -138,36 +138,36 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 
         // Set methods
         
-        void setServerAddress            (const QString &);
-        void setServerPort                (Q_UINT32);
+        void setServerAddress           (const QString &);
+        void setServerPort              (Q_UINT32);
         void setUsername                (const QString &);
         void setPassword                (const QString &);
-        void setUseAPOP                    (bool);
-        void setPasswordSavePolicy        (SavePolicy);
-        void setLoggingPolicy            (bool);
-        void setLogFilePath                (const QString &);
-        void setLogFileDisposalPolicy    (bool);
-        void setMaxLogFileSize            (Q_UINT32);
+        void setUseAPOP                 (bool);
+        void setPasswordSavePolicy      (SavePolicy);
+        void setLoggingPolicy           (bool);
+        void setLogFilePath             (const QString &);
+        void setLogFileDisposalPolicy   (bool);
+        void setMaxLogFileSize          (Q_UINT32);
         void setMessageSizeThreshold    (Q_UINT32);
         void setSaveAllAddresses        (bool);
-        void setRetrieveIfHave            (bool);
+        void setRetrieveIfHave          (bool);
 
         // Get methods
         
-        QString                serverAddress();
-        Q_UINT32            serverPort();
-        QString                username();
-        QString                password();
-        bool                useAPOP();
-        SavePolicy            passwordSavePolicy();
-        bool                loggingPolicy();
-        QString                logFilePath();
-        bool                logFileDisposalPolicy();
-        Q_UINT32            maxLogFileSize();
-        Q_UINT32            messageSizeThreshold();
-        bool                autoGetNewMail();
-        bool                saveAllAddresses();
-        bool                retrieveIfHave();
+        QString     serverAddress();
+        Q_UINT32    serverPort();
+        QString     username();
+        QString     password();
+        bool        useAPOP();
+        SavePolicy  passwordSavePolicy();
+        bool        loggingPolicy();
+        QString     logFilePath();
+        bool        logFileDisposalPolicy();
+        Q_UINT32    maxLogFileSize();
+        Q_UINT32    messageSizeThreshold();
+        bool        autoGetNewMail();
+        bool        saveAllAddresses();
+        bool        retrieveIfHave();
 
     private:
 
@@ -176,42 +176,43 @@ class EmpathMailboxPOP3 : public EmpathMailbox
         // We, on the other hand, have another state -
         // Not connected to the server.
     
-        void _enqueue(EmpathPOPCommand::Type, int = -1);
+        void _enqueue(
+            EmpathPOPCommand::Type, int i, QString xxinfo, QString xinfo);
         void _nextCommand();
     
         // Order dependency
-        QString                serverAddress_;
-        Q_UINT32            serverPort_;
-        QString                username_;
-        QString                password_;
-        bool                logging_;
-        Q_UINT32            numMessages_;
-        Q_UINT32            mailboxSize_;
-        bool                logFileOpen_;
-        Q_UINT32            authenticationTries_;
+        QString     serverAddress_;
+        Q_UINT32    serverPort_;
+        QString     username_;
+        QString     password_;
+        bool        logging_;
+        Q_UINT32    numMessages_;
+        Q_UINT32    mailboxSize_;
+        bool        logFileOpen_;
+        Q_UINT32    authenticationTries_;
         // End order dependency
         
-        bool                useAPOP_;
-        SavePolicy            passwordSavePolicy_;
-        bool                loggingPolicy_;
-        QString                logFilePath_;
-        bool                logFileDisposalPolicy_;
-        Q_UINT32            maxLogFileSize_;
-        Q_UINT32            messageSizeThreshold_;
-        bool                saveAllAddresses_;
-        bool                retrieveIfHave_;
-        int                    sock_fd; // socket fd
-        QCString            errorStr;
-        bool                connected_;
-        bool                loggedIn_;
-        QString                timeStamp_;
-        QFile                logFile_;
-        QCString            greeting_;
+        bool        useAPOP_;
+        SavePolicy  passwordSavePolicy_;
+        bool        loggingPolicy_;
+        QString     logFilePath_;
+        bool        logFileDisposalPolicy_;
+        Q_UINT32    maxLogFileSize_;
+        Q_UINT32    messageSizeThreshold_;
+        bool        saveAllAddresses_;
+        bool        retrieveIfHave_;
+        int         sock_fd; // socket fd
+        QCString    errorStr;
+        bool        connected_;
+        bool        loggedIn_;
+        QString     timeStamp_;
+        QFile       logFile_;
+        QCString    greeting_;
         
         KIOJob * job;
         
-        EmpathPOPIndex    index_;
-        EmpathPOPQueue    commandQueue_;
+        EmpathPOPIndex  index_;
+        EmpathPOPQueue  commandQueue_;
         
         unsigned int msgsInSpool_;
         unsigned int octetsInSpool_;

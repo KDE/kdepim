@@ -18,10 +18,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMailboxPOP3.h"
-#endif
-
 // Qt includes
 #include <qregexp.h>
 #include <qdir.h>
@@ -42,29 +38,27 @@
 
 
 EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
-    :    EmpathMailbox        (name),
-        serverPort_            (110),
+    :   EmpathMailbox       (name),
+        serverPort_         (110),
         logging_            (false),
         numMessages_        (0),
         mailboxSize_        (0),
         logFileOpen_        (false),
         authenticationTries_(8)
 {
-    empathDebug("ctor");
-
-    type_    = POP3;
+    type_ = POP3;
     
-    job        = new KIOJob();
+    job = 0;
+    job = new KIOJob();
     CHECK_PTR(job);
     
-//    job->setGUImode(KIOJob::LIST);
+    job->setGUImode(KIOJob::LIST);
     
     commandQueue_.setAutoDelete(true);
 }
 
 EmpathMailboxPOP3::~EmpathMailboxPOP3()
 {
-    empathDebug("dtor");
     delete job;
     job = 0;
 }
@@ -72,31 +66,30 @@ EmpathMailboxPOP3::~EmpathMailboxPOP3()
     void
 EmpathMailboxPOP3::init()
 {
-    empathDebug("init() called");
-    
     readConfig();
     
     QObject::connect(
         job,    SIGNAL(sigFinished(int)),
-        this,    SLOT(s_jobFinished(int)));
+        this,   SLOT(s_jobFinished(int)));
     
     QObject::connect(
         job,    SIGNAL(sigCanceled(int)),
-        this,    SLOT(s_jobCancelled(int)));
+        this,   SLOT(s_jobCancelled(int)));
   
     QObject::connect(
         job,    SIGNAL(sigError(int, int, const char *)),
-        this,    SLOT(s_jobError(int, int, const char *)));
+        this,   SLOT(s_jobError(int, int, const char *)));
     
     QObject::connect(
         job,    SIGNAL(sigData(int, const char *, int)),
-        this,    SLOT(s_jobData(int, const char *, int)));
+        this,   SLOT(s_jobData(int, const char *, int)));
     
     EmpathURL url(url_);
     url.setFolderPath(i18n("Inbox"));
     
     EmpathFolder * folder_inbox = new EmpathFolder(url);
     folderList_.append(folder_inbox);
+    
     emit(updateFolderLists());
 }
 
@@ -107,11 +100,11 @@ EmpathMailboxPOP3::alreadyHave()
 }
 
     void
-EmpathMailboxPOP3::_enqueue(EmpathPOPCommand::Type t, int i)
+EmpathMailboxPOP3::_enqueue(
+    EmpathPOPCommand::Type t, int i, QString xxinfo, QString xinfo)
 {
-    empathDebug("enqueue() called");
-    EmpathPOPCommand * p = new EmpathPOPCommand(t, i);
-    commandQueue_.enqueue(p);
+    commandQueue_.enqueue(new EmpathPOPCommand(t, i, xxinfo, xinfo));
+    
     if (commandQueue_.count() == 1)
         _nextCommand();
 }
@@ -119,8 +112,6 @@ EmpathMailboxPOP3::_enqueue(EmpathPOPCommand::Type t, int i)
     void
 EmpathMailboxPOP3::_nextCommand()
 {
-    empathDebug("nextCommand() called");
-
     if (commandQueue_.isEmpty())
         return;
 
@@ -130,9 +121,7 @@ EmpathMailboxPOP3::_nextCommand()
     
     QString command = prefix + commandQueue_.head()->command();
     
-    empathDebug("command == " + command);
-    
-    ASSERT(job);
+    ASSERT(job != 0);
     job->get(command);
 }
 
@@ -146,21 +135,24 @@ EmpathMailboxPOP3::getMail()
     void
 EmpathMailboxPOP3::s_checkNewMail()
 {
-    empathDebug("checkNewMail() called");
-    _enqueue(EmpathPOPCommand::Stat);
+    _enqueue(EmpathPOPCommand::Stat, -1, QString::null, QString::null);
     
     EmpathPOPIndexIterator it(index_);
 
     for (; it.current(); ++it)
-        _enqueue(EmpathPOPCommand::Get, it.current()->number());
+        _enqueue(
+            EmpathPOPCommand::Get,
+            it.current()->number(),
+            QString::null,
+            QString::null);
 }
 
     QString
-EmpathMailboxPOP3::_write(const EmpathURL & url, RMM::RMessage &, QString xinfo)
+EmpathMailboxPOP3::_write(
+    const EmpathURL & url, RMM::RMessage &, QString xxinfo, QString xinfo)
 {
-    empathDebug("writeMessage() called");
     empathDebug("This mailbox is READ ONLY !");
-    emit(writeComplete( false, url, xinfo));
+    emit(writeComplete( false, url, xxinfo, xinfo));
     return QString::null;
 }
     
@@ -186,13 +178,15 @@ EmpathMailboxPOP3::path()
 }
     
     void
-EmpathMailboxPOP3::_retrieve(const EmpathURL &, const EmpathURL &, QString, QString)
+EmpathMailboxPOP3::_retrieve(
+    const EmpathURL &, const EmpathURL &, QString, QString)
 {
     // STUB
 }
 
     void
-EmpathMailboxPOP3::_retrieve(const EmpathURL & url, QString)
+EmpathMailboxPOP3::_retrieve(
+    const EmpathURL & url, QString xxinfo, QString xinfo)
 {
     QString inID = url.messageID();
     
@@ -223,11 +217,12 @@ EmpathMailboxPOP3::_retrieve(const EmpathURL & url, QString)
     } else // 'LIST%d'
         messageIndex = inID.mid(4).toInt();
 
-    _enqueue(EmpathPOPCommand::Get, messageIndex);
+    _enqueue(EmpathPOPCommand::Get, messageIndex, xxinfo, xinfo);
 }
 
     void
-EmpathMailboxPOP3::_removeMessage(const EmpathURL & url, const QStringList & l, QString xinfo)
+EmpathMailboxPOP3::_removeMessage(
+    const EmpathURL & url, const QStringList & l, QString xxinfo, QString xinfo)
 {
     EmpathURL u(url);
 
@@ -235,15 +230,16 @@ EmpathMailboxPOP3::_removeMessage(const EmpathURL & url, const QStringList & l, 
     
     for (; it != l.end(); ++it) {
         u.setMessageID(*it);
-//        _enqueue(EmpathPOPCommand::Remove, *it);
-        emit (removeComplete(false, u, xinfo));
+//        _enqueue(EmpathPOPCommand::Remove, *it, xxinfo, xinfo);
+        emit (removeComplete(false, u, xxinfo, xinfo));
     }
 }
 
     void
-EmpathMailboxPOP3::_removeMessage(const EmpathURL & url, QString xinfo)
+EmpathMailboxPOP3::_removeMessage(
+    const EmpathURL & url, QString xxinfo, QString xinfo)
 {
-    emit (removeComplete(false, url, xinfo));
+    emit (removeComplete(false, url, xxinfo, xinfo));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -347,25 +343,29 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
 //////////////////////////////////////////////////////////////////////////////
 
     void
-EmpathMailboxPOP3::_createFolder(const EmpathURL & url, QString xinfo)
+EmpathMailboxPOP3::_createFolder(
+    const EmpathURL & url, QString xxinfo, QString xinfo)
 {
-    emit (createFolderComplete(false, url, xinfo));
+    emit (createFolderComplete(false, url, xxinfo, xinfo));
 }
 
     void
-EmpathMailboxPOP3::_removeFolder(const EmpathURL & url, QString xinfo)
+EmpathMailboxPOP3::_removeFolder(const EmpathURL & url,
+    QString xxinfo, QString xinfo)
 {
-    emit (removeFolderComplete(false, url, xinfo));
+    emit (removeFolderComplete(false, url, xxinfo, xinfo));
 }
     void
-EmpathMailboxPOP3::_mark(const EmpathURL & url, RMM::MessageStatus, QString xinfo)
+EmpathMailboxPOP3::_mark(const EmpathURL & url, RMM::MessageStatus,
+    QString xxinfo, QString xinfo)
 {
-    emit (markComplete(false, url, xinfo));
+    emit (markComplete(false, url, xxinfo, xinfo));
 }
 
     void
 EmpathMailboxPOP3::_mark(
-    const EmpathURL & url, const QStringList & l, RMM::MessageStatus, QString xinfo)
+    const EmpathURL & url, const QStringList & l, RMM::MessageStatus,
+    QString xxinfo, QString xinfo)
 {
     EmpathURL u(url);
     
@@ -373,7 +373,7 @@ EmpathMailboxPOP3::_mark(
     
     for (it = l.begin(); it != l.end(); ++it) {
         u.setMessageID(*it);
-        emit (markComplete(false, u, xinfo));
+        emit (markComplete(false, u, xxinfo, xinfo));
     }
 }
 
@@ -600,9 +600,12 @@ EmpathMailboxPOP3::setLogging(bool policy)
 /////////////////////////////// COMMANDS /////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-EmpathPOPCommand::EmpathPOPCommand(EmpathPOPCommand::Type t, int n)
-    :    type_(t),
-        msgNo_(n)
+EmpathPOPCommand::EmpathPOPCommand(
+    EmpathPOPCommand::Type t, int n, QString xxinfo, QString xinfo)
+    :   type_(t),
+        msgNo_(n),
+        xxinfo_(xxinfo),
+        xinfo_(xinfo)
 {
     empathDebug("ctor");
 

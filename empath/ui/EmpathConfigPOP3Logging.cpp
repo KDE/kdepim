@@ -62,7 +62,7 @@ EmpathConfigPOP3Logging::EmpathConfigPOP3Logging(QWidget * parent, const char * 
     
     pb_browseLogFile_        = new QPushButton(this, "pb_browseLogFile");
     CHECK_PTR(pb_browseLogFile_);
-    pb_browseLogFile_->setPixmap(empathIcon("browse.png"));
+    pb_browseLogFile_->setPixmap(empathIcon("browse"));
     
     pb_browseLogFile_->setMaximumHeight(h);
     pb_browseLogFile_->setMinimumHeight(h);

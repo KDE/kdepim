@@ -57,7 +57,7 @@ EmpathMailboxList::~EmpathMailboxList()
 EmpathMailboxList::append(EmpathMailbox * mailbox)
 {
     empathDebug("append(" +  mailbox->name() + ") called");
-    QList::append(mailbox);
+    QList<EmpathMailbox>::append(mailbox);
 
     empathDebug("Saving mailbox list count = " + QString().setNum(count()));
 
@@ -81,7 +81,7 @@ EmpathMailboxList::remove(EmpathMailbox * mailbox)
 {
     empathDebug("remove \"" + mailbox->name() + "\" called");
 
-    if (!QList::remove(mailbox)) {
+    if (!QList<EmpathMailbox>::remove(mailbox)) {
         empathDebug("Couldn't remove mailbox");
         return false;
     }
@@ -201,27 +201,38 @@ EmpathMailboxList::readConfig()
         }
         
         empathDebug("Adding mailbox with name = " + m->name());
-        QList::append(m);
+        QList<EmpathMailbox>::append(m);
         m->init();
 
         QObject::connect(
-            m, SIGNAL(retrieveComplete(
-                bool, const EmpathURL &, const EmpathURL &, QString, QString)),
-            empath, SLOT(s_retrieveComplete(
-                bool, const EmpathURL &, const EmpathURL &, QString, QString)));
-        
+            m,
+            SIGNAL(retrieveComplete(bool, const EmpathURL &, const EmpathURL &,
+                    QString, QString)),
+            empath,
+            SLOT(s_retrieveComplete(bool, const EmpathURL &, const EmpathURL &,
+                    QString, QString)));
         QObject::connect(
-            m, SIGNAL(retrieveComplete(bool, const EmpathURL &, QString)),
-            empath, SLOT(s_retrieveComplete(bool, const EmpathURL &, QString)));
+            m,
+            SIGNAL(retrieveComplete(bool, const EmpathURL &,
+                    QString, QString)),
+            empath,
+            SLOT(s_retrieveComplete(bool, const EmpathURL &,
+                    QString, QString)));
         QObject::connect(
-            m, SIGNAL(removeComplete(bool, const EmpathURL &, QString)),
-            empath, SLOT(s_removeComplete(bool, const EmpathURL &, QString)));
+            m,
+            SIGNAL(removeComplete(bool, const EmpathURL &, QString, QString)),
+            empath, SLOT(
+            s_removeComplete(bool, const EmpathURL &, QString, QString)));
         QObject::connect(
-            m, SIGNAL(writeComplete(bool, const EmpathURL &, QString)),
-            empath, SLOT(s_writeComplete(bool, const EmpathURL &, QString)));
+            m,
+            SIGNAL(writeComplete(bool, const EmpathURL &, QString, QString)),
+            empath,
+            SLOT(s_writeComplete(bool, const EmpathURL &, QString, QString)));
         QObject::connect(
-            m, SIGNAL(markComplete(bool, const EmpathURL &, QString)),
-            empath, SLOT(s_markComplete(bool, const EmpathURL &, QString)));
+            m,
+            SIGNAL(markComplete(bool, const EmpathURL &, QString, QString)),
+            empath,
+            SLOT(s_markComplete(bool, const EmpathURL &, QString, QString)));
     }
 }
 

@@ -88,7 +88,6 @@ Empath::Empath()
 {
     empathDebug("ctor");
     EMPATH = this;
-    cache_.setMaxCost(1048576);        // 1Mb cache
     updateOutgoingServer();            // Must initialise the pointer.
 }
 
@@ -102,6 +101,8 @@ Empath::init()
     _setStartTime();
     mailboxList_.init();
     filterList_.load();
+    // FIXME: Duh.. find local maildir
+    cache_ = new EmpathCache("$HOME/Maildir");
 
     QString userName = KGlobal::config()->readEntry(EmpathConfig::KEY_NAME);
     if (!userName)
@@ -166,7 +167,7 @@ Empath::message(const EmpathURL & source)
     
     // Try and get the message from the cache.
     
-    RMM::RMessage * message(cache_[source.messageID()]);
+    RMM::RMessage * message(cache_.retrieve(source.messageID()));
     
     if (message != 0) {
         empathDebug("message \"" + source.asString() + "\" found in cache");
@@ -215,7 +216,7 @@ Empath::copy(const EmpathURL & from, const EmpathURL & to, QString xinfo)
         return;
     }
 
-    m_from->retrieve(from, to, "copy", xinfo);
+    m_from->retrieve(from, to.asString(), xinfo);
 }
 
     void
@@ -229,7 +230,7 @@ Empath::move(const EmpathURL & from, const EmpathURL & to, QString xinfo)
         return;
     }
 
-    m_from->retrieve(from, to, "move", xinfo);
+    m_from->retrieve(from, to.asString(), xinfo);
 }
 
     void
@@ -243,7 +244,7 @@ Empath::retrieve(const EmpathURL & url, QString xinfo)
         return;
     }
 
-    m->retrieve(url, xinfo);
+    m->retrieve(url, QString::null, xinfo);
 }
 
     EmpathURL
@@ -256,7 +257,7 @@ Empath::write(const EmpathURL & url, RMM::RMessage & msg, QString xinfo)
         emit(writeComplete(false, url, xinfo));
         return EmpathURL("");
     }
-    return m->write(url, msg, xinfo);
+    return m->write(url, msg, QString::null, xinfo);
 }
 
     void
@@ -269,7 +270,7 @@ Empath::createFolder(const EmpathURL & url, QString xinfo)
         emit(createFolderComplete(false, url, xinfo));
     }
 
-    m->createFolder(url, xinfo);
+    m->createFolder(url, QString::null, xinfo);
 }
 
     void
@@ -285,7 +286,7 @@ Empath::remove(const EmpathURL & url, QString xinfo)
             emit(removeComplete(false, url, xinfo));
         return;
     }
-    m->remove(url, xinfo);
+    m->remove(url, QString::null, xinfo);
 }
 
     void
@@ -302,7 +303,7 @@ Empath::remove(const EmpathURL & url, const QStringList & l, QString xinfo)
         return;
     }
 
-    return m->remove(url, l, xinfo);
+    return m->remove(url, l, QString::null, xinfo);
 }
 
     void
@@ -318,7 +319,7 @@ Empath::mark(const EmpathURL & url, RMM::MessageStatus s, QString xinfo)
         return;
     }
 
-    m->mark(url, s, xinfo);
+    m->mark(url, s, QString::null, xinfo);
 }
 
     void
@@ -338,7 +339,7 @@ Empath::mark(
         return;
     }
 
-    m->mark(url, l, s, xinfo);
+    m->mark(url, l, s, QString::null, xinfo);
 }
 
     EmpathTask *
@@ -393,7 +394,7 @@ Empath::generateUnique()
     void
 Empath::cacheMessage(const EmpathURL & url, RMM::RMessage * m)
 {
-    cache_.insert(url.messageID(), m);
+    cache_.store(url.messageID(), m);
 }
 
     void
@@ -404,6 +405,7 @@ Empath::s_retrieveComplete(
     QString /* ixinfo */,
     QString xinfo)
 {
+    empathDebug("emitting retrieveComplete");
     emit(retrieveComplete(status, from, to, xinfo));
 }
 
@@ -411,8 +413,10 @@ Empath::s_retrieveComplete(
 Empath::s_retrieveComplete(
     bool status,
     const EmpathURL & url,
+    QString /* ixinfo */,
     QString xinfo)
 {
+    empathDebug("emitting retrieveComplete");
     emit(retrieveComplete(status, url, xinfo));
 }
 
@@ -491,35 +495,56 @@ Empath::s_removeFolderComplete(
     void
 Empath::saveMessage(const EmpathURL & url)
 {
-#if 0
-    QString saveFilePath =
-        KFileDialog::getSaveFileName(
-            QString::null, QString::null, this,
-            i18n("Empath: Save Message").ascii());
-    empathDebug(saveFilePath);
+    emit(getSaveName(url));
+}
+
+    void
+Empath::s_saveNameReady(const EmpathURL & url, QString name)
+{
+    EmpathMailbox * m = mailbox(url);
     
-    if (saveFilePath.isEmpty()) {
-        empathDebug("No filename given");
+    if (m == 0) {
+        empathDebug("Can't find mailbox " + url.mailboxName());
         return;
     }
+
+    m->retrieve(url, name, "save");
+
+}
+
+    void
+Empath::s_messageReadyForSave(
+    bool status, const EmpathURL & url, QString name, QString xinfo)
+{
+    if (xinfo != "save")
+        return;
     
-    QFile f(saveFilePath);
+    if (!status) {
+        empathDebug("Couldn't retrieve message for saving");
+        abort();
+    }
+    
+    QFile f(name);
+
     if (!f.open(IO_WriteOnly)) {
-        // Warn user file cannot be opened.
-        empathDebug("Couldn't open file for writing");
-        QMessageBox::information(this, "Empath",
-            i18n("Sorry I can't write to that file. "
-                "Please try another filename."), i18n("OK"));
+
+        empathDebug("Couldn't write to file \"" + name + "\"");
+//        QMessageBox::information(this, "Empath",
+//            i18n("Sorry I can't write to that file. "
+//                "Please try another filename."), i18n("OK"));
+
         return;
     }
-    empathDebug("Opened " + saveFilePath + " OK");
     
-    // FIXME: Here we should ask for the message, wait for the signal,
-    // then do the actual writing.
+    RMM::RMessage * m = message(url);
     
-    QCString s =
-        message->asString();
+    if (m == 0) {
+        empathDebug("Couldn't get message that supposedly retrieved");
+        abort();
+    }
     
+    QString s(m->asString());
+  
     unsigned int blockSize = 1024; // 1k blocks
     
     unsigned int fileLength = s.length();
@@ -535,23 +560,65 @@ Empath::saveMessage(const EmpathURL & url)
         
         if (f.writeBlock(outStr, outStr.length()) != (int)outStr.length()) {
             // Warn user file not written.
-            QMessageBox::information(this, "Empath",
-                i18n("Sorry I couldn't write the file successfully. "
-                    "Please try another file."), i18n("OK"));
-            delete message; message = 0;
+            
+            empathDebug("Couldn't save message !");
+//            QMessageBox::information(this, "Empath",
+//                i18n("Sorry I couldn't write the file successfully. "
+//                    "Please try another file."), i18n("OK"));
             return;
         }
-        qApp->processEvents();
     }
 
     f.close();
     
-    QMessageBox::information(this, "Empath",
-        i18n("Message saved to") + " " + saveFilePath + " " + i18n("OK"),
-        i18n("OK"));
-    delete message; message = 0;
-#endif
-
+    empathDebug("Message saved OK");
+//    QMessageBox::information(this, "Empath",
+//        i18n("Message saved to") + " " + saveFilePath + " " + i18n("OK"),
+//        i18n("OK"));
 }
+
+void Empath::send(RMM::RMessage & m)     { mailSender_->send(m);     }
+void Empath::queue(RMM::RMessage & m)    { mailSender_->queue(m);    }
+void Empath::sendQueued()                { mailSender_->sendQueued();}
+void Empath::s_setupDisplay()            { emit(setupDisplay());     }
+void Empath::s_setupIdentity()           { emit(setupIdentity());    }
+void Empath::s_setupSending()            { emit(setupSending());     }
+void Empath::s_setupComposing()          { emit(setupComposing());   }
+void Empath::s_setupAccounts()           { emit(setupAccounts());    }
+void Empath::s_setupFilters()            { emit(setupFilters());     }
+void Empath::s_newMailArrived()          { emit(newMailArrived());   }
+void Empath::s_newTask(EmpathTask * t)   { emit(newTask(t));         }
+void Empath::s_about()                   { emit(about());            }
+void Empath::s_bugReport()               { emit(bugReport());        }
+void Empath::filter(const EmpathURL & m) { filterList_.filter(m);    }
+
+    void 
+Empath::compose(const QString & recipient)
+{ emit(newComposer(recipient)); }
+
+    void 
+Empath::s_compose()
+{ emit(newComposer(ComposeNormal, EmpathURL())); }
+
+    void
+Empath::s_reply(const EmpathURL & url)
+{ emit(newComposer(ComposeReply, url)); }
+
+    void
+Empath::s_replyAll(const EmpathURL & url)
+{ emit(newComposer(ComposeReplyAll, url)); }
+
+    void
+Empath::s_forward(const EmpathURL & url)
+{ emit(newComposer(ComposeForward, url)); }
+
+    void
+Empath::s_bounce(const EmpathURL & url)
+{ emit(newComposer(ComposeBounce, url)); }
+
+    void
+Empath::s_infoMessage(const QString & s)
+{ emit(infoMessage(s)); }
+
 
 // vim:ts=4:sw=4:tw=78

@@ -190,7 +190,7 @@ EmpathMaildir::removeMessage(const QString & id)
     if (!f.remove())
         return false;
     
-    folder->index().remove(id.ascii());
+    folder->index()->remove(id.ascii());
 
     return true;
 }
@@ -405,7 +405,8 @@ EmpathMaildir::_write(RMM::RMessage & msg)
         return QString::null;
     }
 
-    QString linkTarget(path_ + "/new/" + canonName);
+    // FIXME: Test this new idea of adding flags when linking
+    QString linkTarget(path_ + "/new/" + canonName + ":2," + flags);
     
     if (::link(path.ascii(), linkTarget.ascii()) != 0) {
         empathDebug("Couldn't successfully link file - giving up");
@@ -445,9 +446,9 @@ EmpathMaildir::s_timerBeeped()
 EmpathMaildir::_touched(EmpathFolder * f)
 {
     QFileInfo fiDir(path_ + "/cur/");
-    QFileInfo fiIndex(f->indexFileName());
+    QFileInfo fiIndex(f->index()->indexFileName());
     
-    if (fiDir.lastModified() < fiIndex.lastModified()) {
+    if (fiDir.lastModified() < f->index()->lastModified()) {
         empathDebug("Not modified");
         return false;
     }
@@ -500,7 +501,7 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
         
         s.replace(re_flags, QString::null);
         
-        EmpathIndexRecord * rec = f->index().record(s);
+        EmpathIndexRecord * rec = f->index()->record(s);
         
         if (rec != 0) {
         
@@ -516,13 +517,13 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
             ir.tag(true);
             ir.setStatus(status);
             
-            f->index().insert(s, ir);
+            f->index()->insert(s, ir);
             f->itemCome(s);
         }
-        
+
         t->doneOne();
     }
-    
+
     t->done();
 }
 
@@ -531,7 +532,7 @@ EmpathMaildir::_removeUntagged(EmpathFolder * f)
 {
     EmpathTask * t(empath->addTask(i18n("Clearing")));
 
-    QStrList l(f->index().allKeys());
+    QStrList l(f->index()->allKeys());
     
     t->setMax(l.count());
 
@@ -541,7 +542,7 @@ EmpathMaildir::_removeUntagged(EmpathFolder * f)
         
         t->doneOne();
         
-        EmpathIndexRecord * i = f->index().record(iit.current());
+        EmpathIndexRecord * i = f->index()->record(iit.current());
         
         if (i == 0) {
 
@@ -552,7 +553,7 @@ EmpathMaildir::_removeUntagged(EmpathFolder * f)
         if (!i->isTagged()) {
             
             f->itemGone(iit.current());
-            f->index().remove(iit.current());
+            f->index()->remove(iit.current());
         }
     }
     

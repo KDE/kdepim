@@ -385,7 +385,7 @@ EmpathAccountsSettingsDialog::updateMailboxList()
         
         CHECK_PTR(newItem);
         
-        newItem->setPixmap(0, empathIcon("settings-accounts.png"));
+        newItem->setPixmap(0, empathIcon("settings-accounts"));
         
     }
 }

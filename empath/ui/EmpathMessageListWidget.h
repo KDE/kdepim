@@ -28,7 +28,6 @@
 // Qt includes
 #include <qpixmap.h>
 #include <qlist.h>
-#include <qlistview.h>
 #include <qstring.h>
 #include <qpopupmenu.h>
 #include <qtimer.h>
@@ -37,6 +36,7 @@
 #include <qpoint.h>
 
 // Local includes
+#include "EmpathListView.h"
 #include "EmpathDefines.h"
 #include "EmpathIndexRecord.h"
 #include "EmpathMessageListItem.h"
@@ -73,7 +73,7 @@ class EmpathMarkAsReadTimer : public QObject
 /**
  * This is the widget that shows the threaded mail list.
  */
-class EmpathMessageListWidget : public QListView
+class EmpathMessageListWidget : public EmpathListView
 {
     Q_OBJECT
 
@@ -81,7 +81,7 @@ class EmpathMessageListWidget : public QListView
     
         EmpathMessageListWidget(QWidget * parent = 0, const char * name = 0);
         
-        ~EmpathMessageListWidget();
+        virtual ~EmpathMessageListWidget();
         
         EmpathMessageListItem * find(RMM::RMessageID & msgId);
         EmpathMessageListItem * findRecursive(
@@ -98,6 +98,9 @@ class EmpathMessageListWidget : public QListView
         void selectAll();
         void selectInvert();
         
+        virtual void setSelected(QListViewItem *, bool);
+        virtual void clearSelection();
+
     public slots:
 
         void s_messageDelete();
@@ -120,7 +123,7 @@ class EmpathMessageListWidget : public QListView
         
         void s_rightButtonPressed    (QListViewItem *, const QPoint &, int);
         void s_doubleClicked        (QListViewItem *);
-        void s_currentChanged        (QListViewItem *);
+        void s_showLink             (QListViewItem *);
         
         void s_showFolder        (const EmpathURL &);
         void s_headerClicked    (int);
@@ -138,15 +141,11 @@ class EmpathMessageListWidget : public QListView
         void _fillThreading        (EmpathFolder *);
         void _fillNonThreading    (EmpathFolder *);
 
-        void contentsMousePressEvent    (QMouseEvent *);
-        void contentsMouseMoveEvent        (QMouseEvent *);
-        void contentsMouseReleaseEvent    (QMouseEvent *);
+        void startDrag(QListViewItem *);
         
         void _setupMessageMenu();
         
         void _setSelected(EmpathMessageListItem *, bool);
-        void _setSelected(QListViewItem *, bool);
-        void _clearSelection();
         Q_UINT32 _nSelected();
         
         EmpathMessageListItem *
@@ -213,10 +212,8 @@ class EmpathMessageListWidget : public QListView
         
         EmpathMessageListItemList selected_;
         
-        QPoint dragStart_;
         
         // Order dependency
-        bool                maybeDrag_;
         bool                wantScreenUpdates_;
         bool                filling_;
         Q_UINT32            itemListCount_;

@@ -18,6 +18,9 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+// Qt includes
+#include <qregexp.h>
+
 // KDE includes
 #include <kglobal.h>
 #include <kstddirs.h>
@@ -38,7 +41,7 @@ EmpathFolder::EmpathFolder()
         unreadMessageCount_(0)
 {
     empathDebug("default ctor !");
-    pixmapName_ = "mini-folder-grey.png";
+    pixmapName_ = "mini-folder-grey";
 }
 
 EmpathFolder::EmpathFolder(const EmpathURL & url)
@@ -49,29 +52,12 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
 {
     empathDebug("ctor with url == \"" + url_.asString() + "\"");
     
-    index_.setFolder(url_);
-    
-    QString resDir =
-        KGlobal::dirs()->getSaveLocation("indices", url.mailboxName(), true);
-    
-    empathDebug("saveLocation: " + resDir);
-
-    if (resDir.isEmpty()) {
-        empathDebug("Serious problem with local indices dir");
-    }
-    
-    QString legalName = url.folderPath().replace(QRegExp("/"), "_");
-    
-    indexFileName_ = resDir + "/" + legalName;
-    
-    empathDebug("Index filename: " + indexFileName_);
-
-    index_.setFilename(indexFileName_);
-    
+    index_ = new EmpathIndex(url);
+	
     QObject::connect(this, SIGNAL(countUpdated(int, int)),
         empath->mailbox(url_), SLOT(s_countUpdated(int, int)));
     
-    pixmapName_ = "mini-folder-grey.png";
+    pixmapName_ = "mini-folder-grey";
 }
 
     bool
@@ -95,7 +81,7 @@ EmpathFolder::setPixmap(const QString & p)
     const EmpathIndexRecord *
 EmpathFolder::record(const QCString & key)
 {
-    return index_.record(key);
+    return index_->record(key);
 }
 
     void
@@ -104,7 +90,7 @@ EmpathFolder::update()
     EmpathMailbox * m = empath->mailbox(url_);
     if (m == 0) return;
     m->sync(url_);
-    emit(countUpdated(index_.countUnread(), index_.count()));
+    emit(countUpdated(index_->countUnread(), index_->count()));
 }
 
     EmpathFolder *

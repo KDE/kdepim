@@ -152,7 +152,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
     pb_sendmailBrowse_    =
         new QPushButton(w_server_, "pb_sendmailBrowse");
     CHECK_PTR(pb_sendmailBrowse_);
-    pb_sendmailBrowse_->setPixmap(empathIcon("browse.png"));
+    pb_sendmailBrowse_->setPixmap(empathIcon("browse"));
     
     pb_sendmailBrowse_->setFixedSize(h, h);
 
@@ -200,7 +200,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
     pb_qmailBrowse_    =
         new QPushButton(w_server_, "pb_qmailBrowse");
     CHECK_PTR(pb_qmailBrowse_);
-    pb_qmailBrowse_->setPixmap(empathIcon("browse.png"));
+    pb_qmailBrowse_->setPixmap(empathIcon("browse"));
     
     pb_qmailBrowse_->setFixedSize(h, h);
 

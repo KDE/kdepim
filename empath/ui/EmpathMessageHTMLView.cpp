@@ -549,7 +549,7 @@ EmpathMessageHTMLWidget::s_popupMenu(QString s, const QPoint &)
     empathDebug("URL clicked was: \"" + s + "\"");
     
     if (s.left(16) == "empath://mailto:") {
-        popup_.insertItem(empathIcon("mini-compose.png"),
+        popup_.insertItem(empathIcon("mini-compose"),
             i18n("New message to"), empath, SLOT(s_compose()));
     }
     
@@ -559,10 +559,10 @@ EmpathMessageHTMLWidget::s_popupMenu(QString s, const QPoint &)
         s.left(9) == "gopher://")
     {
         
-        popup_.insertItem(empathIcon("mini-view.png"), i18n("Browse"),
+        popup_.insertItem(empathIcon("mini-view"), i18n("Browse"),
             parent(), SLOT(s_URLSelected()));
         
-        popup_.insertItem(empathIcon("mini-view.png"), i18n("Bookmark"),
+        popup_.insertItem(empathIcon("mini-view"), i18n("Bookmark"),
             parent(), SLOT(s_URLSelected()));
     }
     

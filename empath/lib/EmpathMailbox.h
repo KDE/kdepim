@@ -44,22 +44,27 @@ class Action
 {
     public:
         
-        Action(ActionType t, const EmpathURL & url, QString xinfo)
+        Action(
+            ActionType t, const EmpathURL & url, QString xxinfo, QString xinfo)
             :   actionType_(t),
                 url_(url),
+                xxinfo_(xxinfo),
                 xinfo_(xinfo)
         {
             // Empty.
         }
 
         ActionType actionType() { return actionType_; }
-        EmpathURL url() { return url_; }
-        QString xinfo() { return xinfo_; }
+        EmpathURL url()     { return url_; }
+
+        QString xinfo()     { return xinfo_; }
+        QString xxinfo()    { return xinfo_; }
                 
     private:
         
         ActionType actionType_;
         EmpathURL url_;
+        QString xxinfo_;
         QString xinfo_;
 };
 
@@ -67,8 +72,12 @@ class MarkAction : public Action
 {
     public:
 
-        MarkAction(const EmpathURL & url, RMM::MessageStatus s, QString xinfo)
-            :   Action(MarkMessage, url, xinfo),
+        MarkAction(
+            const EmpathURL & url,
+            RMM::MessageStatus s,
+            QString xxinfo,
+            QString xinfo)
+            :   Action(MarkMessage, url, xxinfo, xinfo),
                 status_(s)
         {
             // Empty.
@@ -85,8 +94,12 @@ class WriteAction : public Action
 {
     public:
 
-        WriteAction(const EmpathURL & url, RMM::RMessage & msg, QString xinfo)
-            :   Action(WriteMessage, url, xinfo),
+        WriteAction(
+            const EmpathURL & url,
+            RMM::RMessage & msg,
+            QString xxinfo,
+            QString xinfo)
+            :   Action(WriteMessage, url, xxinfo, xinfo),
                 message_(msg)
         {
             // Empty.
@@ -138,29 +151,32 @@ class EmpathMailbox : public QObject
         /**
          * Ask for a message to be retrieved.
          */
-        void retrieve(const EmpathURL &, QString xinfo);
+        void retrieve(const EmpathURL &, QString, QString xinfo);
         void retrieve(const EmpathURL &, const EmpathURL &, QString, QString);
         /**
          * Write a new message to the specified folder.
          */
         EmpathURL write(
-            const EmpathURL & folder, RMM::RMessage & msg, QString xinfo);
+            const EmpathURL & folder,
+            RMM::RMessage & msg, QString, QString xinfo);
         /**
          * Attempt to remove the message / folder specified in the url.
          */
-        void remove(const EmpathURL &, QString xinfo);
+        void remove(const EmpathURL &, QString, QString xinfo);
         /**
          * Attempt to remove the messages specified in the url list.
          */
-        void remove(const EmpathURL &, const QStringList &, QString xinfo);
+        void remove(
+            const EmpathURL &, const QStringList &, QString, QString xinfo);
         /**
          * Attempt to create a new folder as specified in the url.
          */
-        void createFolder(const EmpathURL &, QString xinfo);
+        void createFolder(const EmpathURL &, QString, QString xinfo);
         /**
          * Mark the message specified with the given status.
          */
-        void mark(const EmpathURL &, RMM::MessageStatus, QString xinfo);
+        void mark(
+            const EmpathURL &, RMM::MessageStatus, QString, QString xinfo);
         /**
          * Mark the messages specified with the given status.
          */
@@ -168,6 +184,7 @@ class EmpathMailbox : public QObject
             const EmpathURL &,
             const QStringList &,
             RMM::MessageStatus,
+            QString xxinfo,
             QString xinfo);
 
         // End async methods
@@ -199,35 +216,36 @@ class EmpathMailbox : public QObject
         /**
          * Retrieve a message.
          */
-        virtual void _retrieve(const EmpathURL &, QString) = 0;
+        virtual void _retrieve(const EmpathURL &, QString, QString) = 0;
         virtual void _retrieve(
             const EmpathURL &, const EmpathURL &, QString, QString) = 0;
         /**
          * Write a new message to the specified folder.
          */
         virtual QString _write
-            (const EmpathURL & folder, RMM::RMessage & msg, QString) = 0;
+         (const EmpathURL & folder, RMM::RMessage & msg, QString, QString) = 0;
         /**
          * Attempt to remove the message specified in the url.
          */
-        virtual void _removeMessage(const EmpathURL &, QString) = 0;
+        virtual void _removeMessage(const EmpathURL &, QString, QString) = 0;
         /**
          * Attempt to remove the messages specified in the url list.
          */
         virtual void _removeMessage(
-            const EmpathURL &, const QStringList &, QString) = 0;
+            const EmpathURL &, const QStringList &, QString, QString) = 0;
         /**
          * Attempt to create a new folder as specified in the url.
          */
-        virtual void _createFolder(const EmpathURL &, QString) = 0;
+        virtual void _createFolder(const EmpathURL &, QString, QString) = 0;
         /**
          * Attempt to remove the folder specified in the url.
          */
-        virtual void _removeFolder(const EmpathURL &, QString) = 0;
+        virtual void _removeFolder(const EmpathURL &, QString, QString) = 0;
         /**
          * Mark the message specified with the given status.
          */
-        virtual void _mark(const EmpathURL &, RMM::MessageStatus, QString) = 0;
+        virtual void _mark(
+            const EmpathURL &, RMM::MessageStatus, QString, QString) = 0;
 
     public slots:
 
@@ -311,12 +329,12 @@ class EmpathMailbox : public QObject
 
         void retrieveComplete(
             bool, const EmpathURL &, const EmpathURL &, QString, QString);
-        void retrieveComplete(bool, const EmpathURL &, QString);
-        void removeComplete(bool, const EmpathURL &, QString);
-        void writeComplete(bool, const EmpathURL &, QString);
-        void markComplete(bool, const EmpathURL &, QString);
-        void createFolderComplete(bool, const EmpathURL &, QString);
-        void removeFolderComplete(bool, const EmpathURL &, QString);
+        void retrieveComplete(bool, const EmpathURL &, QString, QString);
+        void removeComplete(bool, const EmpathURL &, QString, QString);
+        void writeComplete(bool, const EmpathURL &, QString, QString);
+        void markComplete(bool, const EmpathURL &, QString, QString);
+        void createFolderComplete(bool, const EmpathURL &, QString, QString);
+        void removeFolderComplete(bool, const EmpathURL &, QString, QString);
         
         void updateFolderLists();
         void newMailArrived();
@@ -331,7 +349,7 @@ class EmpathMailbox : public QObject
         
         EmpathFolderList    folderList_;
 
-        EmpathIndex index_;
+        EmpathIndex * index_;
 
         EmpathURL   url_;
 
@@ -349,13 +367,13 @@ class EmpathMailbox : public QObject
 
     private:
 
-        void _enqueue(const EmpathURL &, RMM::MessageStatus, QString);
-        void _enqueue(const EmpathURL &, RMM::RMessage &, QString);
-        void _enqueue(ActionType, const EmpathURL &, QString);
+        void _enqueue(const EmpathURL &, RMM::MessageStatus, QString, QString);
+        void _enqueue(const EmpathURL &, RMM::RMessage &, QString, QString);
+        void _enqueue(ActionType, const EmpathURL &, QString, QString);
+        void _enqueue(Action *);
 
         QQueue<Action> queue_;
         
-        void _enqueue(Action *);
         void _runQueue();
 };
 

@@ -74,7 +74,7 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
     pb_browseMailboxPath_ =
         new QPushButton(w_server_, "pb_browseMailboxPath");
     CHECK_PTR(pb_browseMailboxPath_);
-    pb_browseMailboxPath_->setPixmap(empathIcon("browse.png"));
+    pb_browseMailboxPath_->setPixmap(empathIcon("browse"));
     
     pb_browseMailboxPath_->setFixedWidth(pb_browseMailboxPath_->sizeHint().height());
     pb_browseMailboxPath_->setFixedHeight(pb_browseMailboxPath_->sizeHint().height());

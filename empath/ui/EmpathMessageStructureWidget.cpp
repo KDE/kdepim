@@ -60,7 +60,7 @@ EmpathMessageStructureWidget::EmpathMessageStructureWidget
         this,
         SLOT(s_rightButtonPressed(QListViewItem *, const QPoint &, int)));
     
-    popup_.insertItem(empathIcon("mini-save.png"),
+    popup_.insertItem(empathIcon("mini-save"),
             i18n("Save &As"),
             this, SLOT(s_saveAs()));
     

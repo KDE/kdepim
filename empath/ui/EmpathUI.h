@@ -18,10 +18,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathUI.h"
-#endif
-
 #ifndef EMPATH_UI_H
 #define EMPATH_UI_H
 
@@ -53,6 +49,7 @@ class EmpathUI : public QObject
         void s_about();
         void s_bugReport();
         void s_infoMessage(const QString &);
+        void s_getSaveName(const EmpathURL &);
         
         void s_newComposer(Empath::ComposeType, const EmpathURL &);
         void s_newComposer(const QString &);

@@ -32,10 +32,12 @@
 EmpathMailbox::EmpathMailbox(const QString & name)
     :    url_(name, QString::null, QString::null)
 {
-    empathDebug("ctor - url == \"" + url_.asString() + "\"");
-    pixmapName_ = "mailbox.png";
+    pixmapName_ = "mailbox";
+    
     folderList_.setAutoDelete(true);
-    QObject::connect(this, SIGNAL(updateFolderLists()),
+    
+    QObject::connect(
+        this,   SIGNAL(updateFolderLists()),
         empath, SLOT(s_updateFolderLists()));
 }
 
@@ -47,25 +49,19 @@ EmpathMailbox::~EmpathMailbox()
     void
 EmpathMailbox::setCheckMail(bool yn)
 {
-    empathDebug(QString("Setting check mail to ") + (yn ? "true" : "false"));
     checkMail_ = yn;
-    if (checkMail_) {
-        empathDebug("Switching on timer");
-        timer_.stop();
+    
+    timer_.stop();
+    
+    if (checkMail_)
         timer_.start(checkMailInterval_ * 60000);
-    }
-    else {
-        empathDebug("Switching off timer");
-        timer_.stop();
-    }
 }
 
     void
 EmpathMailbox::setCheckMailInterval(Q_UINT32 checkMailInterval)
 {
-    empathDebug("Setting timer interval to  " +
-            QString().setNum(checkMailInterval));
     checkMailInterval_ = checkMailInterval;
+
     if (checkMail_) {
         timer_.stop();
         timer_.start(checkMailInterval_ * 60000);
@@ -81,8 +77,6 @@ EmpathMailbox::setName(const QString & name)
     Q_UINT32
 EmpathMailbox::messageCount() const
 {
-    empathDebug("messageCount() called");
-
     Q_UINT32 c = 0;
     
     EmpathFolderListIterator it(folderList_);
@@ -96,13 +90,9 @@ EmpathMailbox::messageCount() const
     Q_UINT32
 EmpathMailbox::unreadMessageCount() const
 {
-    empathDebug("unreadMessageCount() called");
-
     Q_UINT32 c = 0;
     
     EmpathFolderListIterator it(folderList_);
-    empathDebug("There are " + QString().setNum(folderList_.count()) +
-        "folders to count messages in");
     
     for (; it.current(); ++it)
         c += it.current()->unreadMessageCount();
@@ -113,68 +103,62 @@ EmpathMailbox::unreadMessageCount() const
     void
 EmpathMailbox::s_countUpdated(int, int)
 {
-    empathDebug("s_countUpdated() called");
-    empathDebug("emitting(" + QString().setNum(unreadMessageCount()) +
-       ", " + QString().setNum(messageCount()) + ")");
     emit(countUpdated((int)unreadMessageCount(), (int)messageCount()));
 }
 
     EmpathFolder *
 EmpathMailbox::folder(const EmpathURL & url)
 {
-    empathDebug("folder(" + url.asString() + ") called");
     QString fp(url.folderPath());
 
-    if (fp.at(0) == '/') fp.remove(0, 1);
-    if (fp.at(fp.length() - 1) == '/') fp.remove(fp.length() - 1, 1);
+    // If the first char is '/', remove it.
+    if (fp.at(0) == '/')
+        fp.remove(0, 1);
+    
+    // If the last char is '/', remove it.
+    if (fp.at(fp.length() - 1) == '/')
+        fp.remove(fp.length() - 1, 1);
     
     EmpathFolderListIterator it(folderList_);
-    for (; it.current(); ++it) {
-        if (it.current()->url().folderPath() == fp) {
+
+    for (; it.current(); ++it)
+        if (it.current()->url().folderPath() == fp)
             return it.current();
-        }
-    }
     
-    empathDebug("nothing found!");
     return 0;
 }
 
     void
-EmpathMailbox::retrieve(const EmpathURL & url, QString xinfo)
+EmpathMailbox::retrieve(const EmpathURL & url, QString xxinfo, QString xinfo)
 {
-    _enqueue(RetrieveMessage, url, xinfo);
-}
-
-    void
-EmpathMailbox::retrieve(
-    const EmpathURL &, const EmpathURL &, QString, QString)
-{
-    _enqueue(RetrieveMessage, from, to, xxinfo, xinfo);
+    _enqueue(RetrieveMessage, url, xxinfo, xinfo);
 }
 
     EmpathURL
 EmpathMailbox::write(
-    const EmpathURL & folder, RMM::RMessage & msg, QString xinfo)
+   const EmpathURL & folder, RMM::RMessage & msg, QString xxinfo, QString xinfo)
 {
     QString id = empath->generateUnique();
+    
     EmpathURL u(folder);
     u.setMessageID(id);
-    _enqueue(u, msg, xinfo);
+    
+    _enqueue(u, msg, xxinfo, xinfo);
+    
     return u;
 }
     
     void
-EmpathMailbox::remove(const EmpathURL & url, QString xinfo)
+EmpathMailbox::remove(const EmpathURL & url, QString xxinfo, QString xinfo)
 {
-    if (url.hasMessageID())
-        _enqueue(RemoveMessage, url, xinfo);
-    else
-        _enqueue(RemoveFolder, url, xinfo);
+    _enqueue(
+        url.hasMessageID() ? RemoveMessage : RemoveFolder,
+        url, xxinfo, xinfo);
 }
     
     void
 EmpathMailbox::remove(
-    const EmpathURL & url, const QStringList & l, QString xinfo)
+    const EmpathURL & url, const QStringList & l, QString xxinfo, QString xinfo)
 {
     EmpathURL u(url);
     
@@ -182,20 +166,22 @@ EmpathMailbox::remove(
 
     for (it = l.begin(); it != l.end(); ++it) {
         u.setMessageID(*it);
-        _enqueue(RemoveMessage, u, xinfo);
+        _enqueue(RemoveMessage, u, xxinfo, xinfo);
     }
 }
     
     void
-EmpathMailbox::createFolder(const EmpathURL & url, QString xinfo)
+EmpathMailbox::createFolder(
+    const EmpathURL & url, QString xxinfo, QString xinfo)
 {
-    _enqueue(CreateFolder, url, xinfo);
+    _enqueue(CreateFolder, url, xxinfo, xinfo);
 }
     
     void
-EmpathMailbox::mark(const EmpathURL & url, RMM::MessageStatus s, QString xinfo)
+EmpathMailbox::mark(
+    const EmpathURL & url, RMM::MessageStatus s, QString xxinfo, QString xinfo)
 {
-    _enqueue(url, s, xinfo);
+    _enqueue(url, s, xxinfo, xinfo);
 }
     
     void
@@ -203,6 +189,7 @@ EmpathMailbox::mark(
     const EmpathURL & url,
     const QStringList & l,
     RMM::MessageStatus s,
+    QString xxinfo,
     QString xinfo)
 {
     EmpathURL u(url);
@@ -211,28 +198,29 @@ EmpathMailbox::mark(
 
     for (it = l.begin(); it != l.end(); ++it) {
         u.setMessageID(*it);
-        _enqueue(u, s, xinfo);
+        _enqueue(u, s, xxinfo, xinfo);
     }
 }
 
     void
 EmpathMailbox::_enqueue(
-    const EmpathURL & url, RMM::MessageStatus s, QString xinfo)
+    const EmpathURL & url, RMM::MessageStatus s, QString xxinfo, QString xinfo)
 {
-    _enqueue(new MarkAction(url, s, xinfo));
-}
-
-    void
-EmpathMailbox::_enqueue(ActionType t, const EmpathURL & url, QString xinfo)
-{
-    _enqueue(new Action(t, url, xinfo));
+    _enqueue(new MarkAction(url, s, xxinfo, xinfo));
 }
 
     void
 EmpathMailbox::_enqueue(
-    const EmpathURL & url, RMM::RMessage & msg, QString xinfo)
+    ActionType t, const EmpathURL & url, QString xxinfo, QString xinfo)
 {
-    _enqueue(new WriteAction(url, msg, xinfo));
+    _enqueue(new Action(t, url, xxinfo, xinfo));
+}
+
+    void
+EmpathMailbox::_enqueue(
+    const EmpathURL & url, RMM::RMessage & msg, QString xxinfo, QString xinfo)
+{
+    _enqueue(new WriteAction(url, msg, xxinfo, xinfo));
 }
 
     void
@@ -256,27 +244,27 @@ EmpathMailbox::_runQueue()
         switch (a->actionType())
         {
             case RetrieveMessage:
-                _retrieve(u, a->xinfo());
+                _retrieve(u, a->xxinfo(), a->xinfo());
                 break;
         
             case MarkMessage:
-                _mark(u, ((MarkAction *)a)->status(), a->xinfo());
+                _mark(u, ((MarkAction *)a)->status(), a->xxinfo(), a->xinfo());
                 break;
         
             case WriteMessage:
-                _write(u, ((WriteAction *)a)->msg(), a->xinfo());
+                _write(u, ((WriteAction *)a)->msg(), a->xxinfo(), a->xinfo());
                 break;
         
             case RemoveMessage:
-                _removeMessage(u, a->xinfo());
+                _removeMessage(u, a->xxinfo(), a->xinfo());
                 break;
         
             case CreateFolder:
-                _createFolder(u, a->xinfo());
+                _createFolder(u, a->xxinfo(), a->xinfo());
                 break;
         
             case RemoveFolder:
-                _removeFolder(u, a->xinfo());
+                _removeFolder(u, a->xxinfo(), a->xinfo());
                 break;
                 
             default:

@@ -37,13 +37,13 @@
 #include "EmpathURL.h"
 #include "EmpathMailboxList.h"
 #include "EmpathFilterList.h"
-#include "EmpathMailSender.h"
 
 #include "RMM_Enum.h"
 #include "RMM_Message.h"
 
 #define empath Empath::getEmpath()
 
+class EmpathMailSender;
 class EmpathFolder;
 class EmpathIndexRecord;
 class EmpathTask;
@@ -159,8 +159,7 @@ class Empath : public QObject
          * just use it. Actually, you should be using send(), queue() and
          * sendQueued() instead, so this is being marked internal.
          */
-        EmpathMailSender & mailSender() const
-        { return *mailSender_; }
+        EmpathMailSender * mailSender() const { return mailSender_; }
 
         /**
          * The filter list.
@@ -405,6 +404,11 @@ class Empath : public QObject
          */
         void s_saveConfig();
 
+        /**
+         * @internal
+         */
+        void s_saveNameReady(const EmpathURL & url, QString path);
+ 
     protected slots:        
 
         /**
@@ -423,6 +427,7 @@ class Empath : public QObject
         void s_retrieveComplete(
             bool status,
             const EmpathURL & url,
+            QString ixinfo,
             QString xinfo);
 
 
@@ -490,8 +495,19 @@ class Empath : public QObject
             const EmpathURL & url,
             QString ixinfo,
             QString xinfo);
- 
+       
+        /**
+         * @internal
+         */
+        void s_messageReadyForSave(bool, const EmpathURL &, QString, QString);
+        
     signals:
+        
+        /**
+         * Please ask the user to enter a path to save this message
+         * under.
+         */
+        void getSaveName(const EmpathURL &);
         
         /**
          * Please ask the user to enter their information !
@@ -696,49 +712,6 @@ class Empath : public QObject
         QString startupSecondsStr_;
         QString pidStr_;
 };
-
-inline void Empath::send(RMM::RMessage & m)     { mailSender_->send(m);     }
-inline void Empath::queue(RMM::RMessage & m)    { mailSender_->queue(m);    }
-inline void Empath::sendQueued()                { mailSender_->sendQueued();}
-inline void Empath::s_setupDisplay()            { emit(setupDisplay());     }
-inline void Empath::s_setupIdentity()           { emit(setupIdentity());    }
-inline void Empath::s_setupSending()            { emit(setupSending());     }
-inline void Empath::s_setupComposing()          { emit(setupComposing());   }
-inline void Empath::s_setupAccounts()           { emit(setupAccounts());    }
-inline void Empath::s_setupFilters()            { emit(setupFilters());     }
-inline void Empath::s_newMailArrived()          { emit(newMailArrived());   }
-inline void Empath::s_newTask(EmpathTask * t)   { emit(newTask(t));         }
-inline void Empath::s_about()                   { emit(about());            }
-inline void Empath::s_bugReport()               { emit(bugReport());        }
-inline void Empath::filter(const EmpathURL & m) { filterList_.filter(m);    }
-
-inline void 
-Empath::compose(const QString & recipient)
-{ emit(newComposer(recipient)); }
-
-inline void 
-Empath::s_compose()
-{ emit(newComposer(ComposeNormal, EmpathURL())); }
-
-inline void
-Empath::s_reply(const EmpathURL & url)
-{ emit(newComposer(ComposeReply, url)); }
-
-inline void
-Empath::s_replyAll(const EmpathURL & url)
-{ emit(newComposer(ComposeReplyAll, url)); }
-
-inline void
-Empath::s_forward(const EmpathURL & url)
-{ emit(newComposer(ComposeForward, url)); }
-
-inline void
-Empath::s_bounce(const EmpathURL & url)
-{ emit(newComposer(ComposeBounce, url)); }
-
-inline void
-Empath::s_infoMessage(const QString & s)
-{ emit(infoMessage(s)); }
 
 #endif
 

@@ -18,10 +18,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathUI.h"
-#endif
-
 // Qt includes
 #include <qstring.h>
 #include <qwidgetlist.h>
@@ -38,6 +34,7 @@
 #include <klocale.h>
 #include <ktmainwindow.h>
 #include <kaboutdialog.h>
+#include <kfiledialog.h>
 
 // Local includes
 #include "Empath.h"
@@ -64,6 +61,10 @@ EmpathUI::EmpathUI()
     KConfig * c(KGlobal::config());
     
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
+    
+    QObject::connect(
+        empath, SIGNAL(getSaveName(const EmpathURL &)),
+        this,   SLOT(s_getSaveName(const EmpathURL &)));
     
     QObject::connect(
         empath, SIGNAL(infoMessage(const QString &)),
@@ -163,7 +164,7 @@ EmpathUI::s_about()
         i18n("Susie is a bitch. She wants to be spanked."), i18n("Administer spanking"));
 #if 0
     KAboutDialog * about = new KAboutDialog;
-    about->setLogo(KGlobal::iconLoader()->loadIcon("empath.png"));
+    about->setLogo(KGlobal::iconLoader()->loadIcon("empath"));
     about->setAuthor(
         "Rik Hemsley", "rik@kde.org", "http://without.netpedia.net", "");
     about->addContributor("Dirk A. Mueller",    "", "", "");
@@ -214,6 +215,19 @@ EmpathUI::s_sendEmail(const QString & name, const QString & email)
 EmpathUI::s_setupWizard()
 {
     EmpathSetupWizard::create();
+}
+
+    void
+EmpathUI::s_getSaveName(const EmpathURL & url)
+{
+    QString saveFilePath =
+        KFileDialog::getSaveFileName(QString::null, QString::null, 0, 0);
+    
+    if (saveFilePath.isEmpty())
+        return;
+    
+   
+    empath->s_saveNameReady(url, saveFilePath);
 }
 
 // vim:ts=4:sw=4:tw=78

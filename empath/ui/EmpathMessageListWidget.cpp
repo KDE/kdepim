@@ -56,8 +56,7 @@ QListViewItem * EmpathMessageListWidget::lastSelected_ = 0;
 
 EmpathMessageListWidget::EmpathMessageListWidget(
         QWidget * parent, const char * name)
-    :    QListView            (parent, name),
-        maybeDrag_            (false),
+    :    EmpathListView            (parent, name),
         wantScreenUpdates_    (false),
         filling_            (false)
 {
@@ -67,14 +66,14 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 
     wantScreenUpdates_ = false;
     
-    maybeDrag_ = false;
-    
     lastHeaderClicked_ = -1;
 
     setAllColumnsShowFocus(true);
     setRootIsDecorated(true);
     
     setSorting(-1);
+
+    setMultiSelection(true);
 
     addColumn(i18n("Subject"));
     addColumn(i18n("Sender"));
@@ -102,9 +101,12 @@ EmpathMessageListWidget::EmpathMessageListWidget(
     }
 
     _setupMessageMenu();
+   
+    QObject::connect(this, SIGNAL(showLink(QListViewItem *)),
+            this, SLOT(s_showLink(QListViewItem *)));
     
-    QObject::connect(this, SIGNAL(currentChanged(QListViewItem *)),
-            this, SLOT(s_currentChanged(QListViewItem *)));
+    // QObject::connect(this, SIGNAL(currentChanged(QListViewItem *)),
+    //         this, SLOT(s_currentChanged(QListViewItem *)));
 
     // Connect return press to view.
     QObject::connect(this, SIGNAL(returnPressed(QListViewItem *)),
@@ -191,29 +193,15 @@ EmpathMessageListWidget::addItem(EmpathIndexRecord * item)
         return;
     }
 
-    if (item->parentID().localPart().isEmpty()) {
-        EmpathMessageListItem * newItem = _addItem(this, *item);
-        setStatus(newItem, item->status());
-        return;
-    }
-
-    // Find parent of this item.
-    
-//    empathDebug("Message has parentID, looking for parent");
-//    empathDebug("PARENTID: \"" + item->parentID().asString() + "\"");
-        
     EmpathMessageListItem * parentItem = 0;
     
-    QListViewItemIterator it(this);
-    
-    for (; it.current(); ++it) {
-//        empathDebug("Looking at message id \"" +
-//            it.current()->messageID().asString() + "\"");
-        EmpathMessageListItem * i = (EmpathMessageListItem *)it.current();
-        if (i->messageID() == item->parentID()) {
-            parentItem = (EmpathMessageListItem *)it.current();
-            break;
-        }
+    if (!item->parentID().localPart().isEmpty()) {
+        // Find parent of this item.
+        QListViewItemIterator it(this); 
+        // should try to use EmpathMessageListItemIterator to avoid ugly casts.
+        while (it.current() && 
+            ((EmpathMessageListItem *)it.current())->messageID() != item->parentID()) ++it;
+        parentItem = (EmpathMessageListItem *)it.current();
     }
 
     EmpathMessageListItem * newItem;
@@ -408,18 +396,18 @@ EmpathMessageListWidget::s_rightButtonPressed(
 {
     if (item == 0) return;
 
-    wantScreenUpdates_ = false;
-    
-//    if (_nSelected() == 0)
-        _setSelected(item, true);
-    
-#if 0
-    if (_nSelected() != 1) {
+    if (!item->isSelected()) {
+        clearSelection();
+        setSelected(item, true);
+    }
+
+    setCurrentItem(item);
+   
+    if (_nSelected() > 1) {
         multipleMessageMenu_.exec(pos);
         wantScreenUpdates_ = true;
         return;
     }
-#endif
 
     EmpathMessageListItem * i = (EmpathMessageListItem *)item;
 
@@ -445,7 +433,6 @@ EmpathMessageListWidget::s_rightButtonPressed(
             i18n("Tag"));
 
     messageMenu_.exec(pos);
-    wantScreenUpdates_ = true;
 }
 
     void
@@ -456,18 +443,16 @@ EmpathMessageListWidget::s_doubleClicked(QListViewItem *)
 }
 
     void
-EmpathMessageListWidget::s_currentChanged(QListViewItem * i)
+EmpathMessageListWidget::s_showLink(QListViewItem *i)
 {
     empathDebug("Current message changed - updating message widget");
     markAsReadTimer_->cancel();
-    
+
     // Make sure we highlight the current item.
     kapp->processEvents();
-    
-    if (wantScreenUpdates_) {
-        emit(changeView(firstSelectedMessage()));
-        markAsReadTimer_->go((EmpathMessageListItem *)i);
-    }
+
+    emit(changeView(firstSelectedMessage()));
+    markAsReadTimer_->go((EmpathMessageListItem *)i);
 }
 
     void
@@ -563,14 +548,16 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
         emit(showing());
         return;
     }
-    
+   
     clear();
+    empathDebug("pass");
     masterList_.clear();
     
-    f->index().sync();
+    f->index()->sync();
     
     _fillDisplay(f);
 }
+
     void
 EmpathMessageListWidget::s_headerClicked(int i)
 {
@@ -698,258 +685,33 @@ EmpathMarkAsReadTimer::s_timeout()
     parent_->markAsRead(item_);    
 }
 
-    void
-EmpathMessageListWidget::contentsMousePressEvent(QMouseEvent * e)
+    void 
+EmpathMessageListWidget::startDrag(QListViewItem * item)
 {
-    QListView::contentsMousePressEvent(e);
-    return;
-#if 0
-    empathDebug("MOUSE PRESS EVENT");
-    
-    if (!isUpdatesEnabled()) {
-        empathDebug("UPDATES ARE NOT ENABLED!!!!!!!!!!");
-    }
-    
-    QPoint pos = contentsToViewport(e->pos());
-    
-    // Ok, here's the method:
-    // 
-    // CASE 0:
-    // If a button other than right or left has been used, ignore.
-    // 
-    // CASE 1:
-    // If the right button has been used, we popup the menu.
-    // 
-    // So, we've got the left button.
-    // 
-    // CASE 2:
-    // If no modifier keys were used, deselect all, and select under
-    // cursor.
-    // 
-    // CASE 3:
-    // If just control key is pressed, toggle selection state of
-    // item under cursor.
-    // 
-    // CASE 4:
-    // If just shift key is pressed, find item above the one under cursor
-    // that's selected. If there is none, deselect all items (that means
-    // ones below that under cursor) and select item under cursor.
-    // 
-    // CASE 5:
-    // If there IS an item selected above that under cursor, deselect all
-    // items but that one, and then select all items from that one down to
-    // the one under cursor.
-    // 
-    // CASE 6:
-    // If control AND shift keys are pressed, find item above one under
-    // cursor that's selected. If there is none, clear all and select item
-    // under cursor.
-    // 
-    // CASE 7:
-    // If there IS an item selected above that under cursor, select all
-    // items from that above, to that under cursor.
-    
-    
-    // CASE 0: Neither right nor left buttons pressed
-    if (e->button() != LeftButton && e->button() != RightButton) {
-        empathDebug("CASE 0");
-        return;
-    }
-    
-    QListViewItem * item = itemAt(pos);
-
-    if (!item) {
-        empathDebug("No item under cursor");
-        return;
-    }
-    
-    // CASE 1: Right button pressed
-    
-    if (e->button() == RightButton) {
-        empathDebug("CASE 1");
-        s_rightButtonPressed(itemAt(pos), QCursor::pos(), 0); 
-        return;
-    }
-    
-    // Ok, it's the left button. We'll interject here and just set the
-    // flag to say we may be about to drag.
-    maybeDrag_ = true;
-    dragStart_ = e->pos();
-    
-
-    // CASE 2: Left button pressed, but no modifier keys.
-    
-    if (e->state() == 0) {
-        
-        empathDebug("CASE 2");
-        
-        _clearSelection();
-        
-        _setSelected(item, true);
-        lastSelected_ = item;
-        
-        s_currentChanged(item);
-        
-        return;
-    }
-        
-    // CASE 3: Left button + control pressed
-    if (e->state() == ControlButton) {
-        empathDebug("CASE 3");
-        
-        if (!item->isSelected())
-            lastSelected_ = item;
-
-        _setSelected(item, !(item->isSelected()));
-
-        return;
-    }
-    
-    if ((e->state() & ShiftButton) && (lastSelected_ == 0)) {
-        
-        // CASE 4 and CASE 6:
-        // Shift button pressed, but no prior selection.
-        // Clear all selections, and select this only.
-        // For CASE 6, if control is pressed, toggle instead.
-        
-        empathDebug("CASE 4/6");
-        
-        _clearSelection();
-        
-        // For CASE 6:
-        if (e->state() & ControlButton) {
-        
-            if (!item->isSelected())
-                lastSelected_ = item;
-
-            _setSelected(item, !(item->isSelected()));
-            
-        } else {
-        
-            // For CASE 4:
-            _setSelected(item, true);
-            lastSelected_ = item;
-        }
-        
-        return;
-    }
-    
-    if (e->state() & ShiftButton) {
-        
-        // CASE 5, CASE 7:
-        // There is an item already selected, as the above test didn't
-        // hold.
-        
-        if (!(e->state() & ControlButton)) {
-            
-            // CASE 5:
-            // Control button has not been held, so we must clear the
-            // selection.
-            empathDebug("CASE 5");
-            _clearSelection();
-        }
-            
-        QListViewItem * i = lastSelected_;
-        
-        // First see if the item we're looking at is below the last selected.
-        // If so, work down. Otherwise, er... work up.
-        if (i->itemPos() < item->itemPos()) {
-        
-            while (i && i != item) {
-                
-                _setSelected(i, true);
-
-                i = i->itemBelow();
-            }
-            
-        } else {
-    
-            while (i && i != item) {
-                
-                _setSelected(i, true);
-
-                i = i->itemAbove();
-            }
-        }
-
-        if (e->state() & ControlButton) {
-            
-            empathDebug("CASE 7");
-            lastSelected_ = item;
-        }
-
-        _setSelected(item, true);
-        return;
-    }
-#endif
-}
-
-    void
-EmpathMessageListWidget::contentsMouseReleaseEvent(QMouseEvent * e)
-{
-    maybeDrag_ = false;
-    QListView::contentsMouseReleaseEvent(e);
-}
-
-    void
-EmpathMessageListWidget::contentsMouseMoveEvent(QMouseEvent * e)
-{
-    empathDebug("Mouse move event in progress");
-    
-    QListView::contentsMouseMoveEvent(e);
-    return; // XXX: Still broken.
-#if 0
-    
-    if (!maybeDrag_) {
-        return;
-    }
-    
-    empathDebug("We may be dragging");
-    
-    QPoint p = e->pos();
-    
-    int deltax = abs(dragStart_.x() - p.x());
-    int deltay = abs(dragStart_.y() - p.y());
-    
-    empathDebug("The delta is " + QString().setNum(deltax + deltay));
-    
-    if ((deltax + deltay) < 30) { // FIXME: Hardcoded
-        // Ignore, we haven't moved the cursor far enough.
-        QListView::contentsMouseMoveEvent(e);
-        return;
-    }
-    
-    empathDebug("Ok, we're dragging");
-    
-    maybeDrag_ = false;
-    
-    QListViewItem * item = itemAt(dragStart_);
-    
-    if (item == 0) {
-        empathDebug("Not over anything to drag");
-        QListView::contentsMouseMoveEvent(e);
-        return;
-    }
-    
     EmpathMessageListItem * i = (EmpathMessageListItem *)item;
-        
+
     empathDebug("Starting a drag");
-    char * c = new char[i->id().length() + 1];
-    strcpy(c, i->id().ascii());
-    QTextDrag * u  = new QTextDrag(c, this);
+
+    QStrList uriList;
+
+    uriList.append(i->id());
+
+    // char * c = new char[i->id().length() + 1];
+    // strcpy(c, i->id().ascii());
+    
+    QUriDrag * u  = new QUriDrag(uriList, this);
     CHECK_PTR(u);
-    
-    u->setPixmap(empathIcon("tree")); 
-    
-    empathDebug("Starting the drag copy");
+
+    u->setPixmap(empathIcon("tree"));
+
+    empathDebug("Starting the drag copy: " + i->id());
     u->drag();
-#endif
 }
 
     void
 EmpathMessageListWidget::selectTagged()
 {
-    _clearSelection();
+    clearSelection();
 
     viewport()->setUpdatesEnabled(false);
     
@@ -974,7 +736,7 @@ EmpathMessageListWidget::selectTagged()
     void
 EmpathMessageListWidget::selectRead()
 {
-    _clearSelection();
+    clearSelection();
 
     viewport()->setUpdatesEnabled(false);
     
@@ -1005,7 +767,7 @@ EmpathMessageListWidget::selectAll()
     wantScreenUpdates_ = false;
     
     for (; it.current(); ++it)
-        _setSelected(it.current(), true);
+        setSelected(it.current(), true);
     
     wantScreenUpdates_ = true;
     viewport()->setUpdatesEnabled(true);
@@ -1023,9 +785,9 @@ EmpathMessageListWidget::selectInvert()
     
     for (; it.current(); ++it) {
         if (!it.current()->isSelected()) {
-            _setSelected(it.current(), true);
+            setSelected(it.current(), true);
         } else {
-            _setSelected(it.current(), false);
+            setSelected(it.current(), false);
         }
     }
     
@@ -1063,7 +825,7 @@ EmpathMessageListWidget::s_itemCome(const QString & s)
     if (f == 0)
         return;
         
-    EmpathIndexRecord * i(f->index().record(s.ascii()));
+    EmpathIndexRecord * i(f->index()->record(s.ascii()));
 
     if (i == 0) {
         empathDebug("Can't find index record for \"" + s + "\"");
@@ -1116,7 +878,7 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
 
     t->setMax(f->messageCount());
     
-    QStrList l(f->index().allKeys());
+    QStrList l(f->index()->allKeys());
     
     empathDebug("There are " + QString().setNum(l.count()) + " keys");
 
@@ -1124,7 +886,7 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
 
     for (; it.current(); ++it) {
         
-        EmpathIndexRecord * rec = f->index().record(it.current());
+        EmpathIndexRecord * rec = f->index()->record(it.current());
 
         if (rec == 0) {
             empathDebug("Can't find index record.");
@@ -1162,13 +924,13 @@ EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
 
     t->setMax(f->messageCount());
     
-    QStrList l(f->index().allKeys());
+    QStrList l(f->index()->allKeys());
     
     QStrListIterator it(l);
     
     for (; it.current(); ++it) {
         
-        EmpathIndexRecord * rec = f->index().record(it.current());
+        EmpathIndexRecord * rec = f->index()->record(it.current());
         
         if (rec == 0) {
             continue;
@@ -1260,19 +1022,18 @@ EmpathMessageListWidget::s_messageMarkMany()
 }
 
     void
-EmpathMessageListWidget::_clearSelection()
+EmpathMessageListWidget::clearSelection()
 {
-    viewport()->setUpdatesEnabled(false);
-    clearSelection();
+    empathDebug("");
+    QListView::clearSelection();
     selected_.clear();
-    viewport()->setUpdatesEnabled(true);
-    triggerUpdate();
 }
 
     void
-EmpathMessageListWidget::_setSelected(QListViewItem * item, bool b)
+EmpathMessageListWidget::setSelected(QListViewItem * item, bool b)
 {
-    _setSelected((EmpathMessageListItem *)item, b);
+    if (item)
+        _setSelected((EmpathMessageListItem *)item, b);
 }
 
     void
@@ -1283,14 +1044,15 @@ EmpathMessageListWidget::_setSelected(EmpathMessageListItem * item, bool b)
         if (!item->isSelected())
             selected_.append(item);
         
-        item->setSelected(true);
+        QListView::setSelected(item, true);
         
     } else {
         
         selected_.remove(item);
-        item->setSelected(false);
+        QListView::setSelected(item, false);
     }
-    
+
+    // triggerUpdate();
 }
 
     Q_UINT32
@@ -1321,8 +1083,8 @@ EmpathMessageListWidget::_addItem(
 EmpathMessageListWidget::_removeItem(EmpathMessageListItem * i)
 {
     itemList_.remove(i);
-    delete i;
     selected_.remove(i);
+    delete i;
 }
 
 // vim:ts=4:sw=4:tw=78

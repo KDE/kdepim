@@ -49,7 +49,7 @@ EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(
     pb_browse_    = new QPushButton(this, "pb_browse");
     CHECK_PTR(pb_browse_);
 
-    pb_browse_->setPixmap(empathIcon("point.png")), 
+    pb_browse_->setPixmap(empathIcon("point")), 
        
     pb_browse_->setFixedWidth(le_address_->sizeHint().height());
     

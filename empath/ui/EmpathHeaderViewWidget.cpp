@@ -25,8 +25,8 @@ EmpathHeaderViewWidget::EmpathHeaderViewWidget(
         glowing_(false)
 {
     empathDebug("ctor");
-    clipIcon_ = empathIcon("clip.png");
-    clipGlow_ = empathIcon("clip-glow.png");
+    clipIcon_ = empathIcon("clip");
+    clipGlow_ = empathIcon("clip-glow");
     setMouseTracking(true);
     setFixedHeight(0);
 }
