@@ -25,6 +25,7 @@ public:
   bool autoSave();
   int autoSavePeriod();
   bool hideOnClose();
+  bool promptDelete();
 
 public slots:
   void showDialog();
@@ -60,13 +61,13 @@ private:
   bool _unsavedChanges;
 
   // Widgets in the dialog (All variables ends in W to indicate that they are Widgets)
-  QCheckBox *_doIdleDetectionW, *_doAutoSaveW, *_doTimeLogingW, *_hideOnCloseW;
+  QCheckBox *_doIdleDetectionW, *_doAutoSaveW, *_doTimeLogingW, *_hideOnCloseW, *_promptDeleteW;
   QLabel    *_idleDetectLabelW, *_autoSaveLabelW, *_saveFileLabelW, *_timeLogingLabelW;
   QSpinBox  *_idleDetectValueW, *_autoSaveValueW;
   KURLRequester *_saveFileW, *_timeLogW;
   
   // Values for the preferences. (All variables in in V to indicate they are Values)
-  bool _doIdleDetectionV, _doAutoSaveV, _doTimeLogingV, _hideOnCloseV;
+  bool _doIdleDetectionV, _doAutoSaveV, _doTimeLogingV, _hideOnCloseV, _promptDeleteV;
   int  _idleDetectValueV, _autoSaveValueV;
   QString _saveFileV, _timeLogV;
   

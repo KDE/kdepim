@@ -432,17 +432,19 @@ void Karm::deleteTask()
     return;
   }
 
-  int response;
-  if (item->childCount() == 0) {
-    response = KMessageBox::questionYesNo(0,
-                 i18n( "Are you sure you want to delete the task named\n\"%1\"").arg(item->name()),
-                 i18n( "Deleting Task"));
-  }
-  else {
-    response = KMessageBox::questionYesNo(0,
-                 i18n( "Are you sure you want to delete the task named\n\"%1\"\n"
-                       "NOTE: all its subtasks will also be deleted!").arg(item->name()),
-                 i18n( "Deleting Task"));
+  int response = KMessageBox::Yes;
+  if ( _preferences->promptDelete() ) {
+      if (item->childCount() == 0) {
+          response = KMessageBox::questionYesNo(0,
+                  i18n( "Are you sure you want to delete the task named\n\"%1\"").arg(item->name()),
+                  i18n( "Deleting Task"));
+      }
+      else {
+          response = KMessageBox::questionYesNo(0,
+                  i18n( "Are you sure you want to delete the task named\n\"%1\"\n"
+                      "NOTE: all its subtasks will also be deleted!").arg(item->name()),
+                  i18n( "Deleting Task"));
+      }
   }
 
   if (response == KMessageBox::Yes) {

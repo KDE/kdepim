@@ -53,6 +53,11 @@ Preferences::Preferences() : KDialogBase(KDialogBase::Tabbed, i18n("Preferences"
         _idleDetectValueW = new QSpinBox(1,60*24, 1, hbox, "_idleDetectValueW");
     }
 
+    {
+        QHBox* hbox = new QHBox(tab);
+        _promptDeleteW = new QCheckBox( i18n( "Prompt before deleting tasks" ), hbox, "_promptDeleteW" );
+    }
+
     connect(_doAutoSaveW, SIGNAL(clicked()), this, SLOT(autoSaveCheckBoxChanged()));
     connect(_doTimeLogingW, SIGNAL(clicked()), this, SLOT(timeLogingCheckBoxChanged()));
     connect(_hideOnCloseW, SIGNAL(clicked()), this, SLOT(hideOnCloseCheckBoxChanged()));
@@ -141,6 +146,7 @@ void Preferences::showDialog()
   _autoSaveValueW->setValue(_autoSaveValueV);
 
   _hideOnCloseW->setChecked(_hideOnCloseV);
+  _promptDeleteW->setChecked(_promptDeleteV);
 
   idleDetectCheckBoxChanged();
   timeLogingCheckBoxChanged();
@@ -159,6 +165,7 @@ void Preferences::slotOk()
   _doAutoSaveV    = _doAutoSaveW->isChecked();
   _autoSaveValueV = _autoSaveValueW->value();
   _hideOnCloseV = _hideOnCloseW->isChecked();
+  _promptDeleteV = _promptDeleteW->isChecked();
 
   emitSignals();
   save();
@@ -250,6 +257,11 @@ bool Preferences::hideOnClose()
     return _hideOnCloseV;
 }
 
+bool Preferences::promptDelete()
+{
+    return _promptDeleteV;
+}
+
 //--------------------------------------------------------------------------------
 //                                  Load and Save
 //--------------------------------------------------------------------------------
@@ -268,6 +280,7 @@ void Preferences::load()
   _doAutoSaveV    = config.readBoolEntry(QString::fromLatin1("auto save"), true);
   _autoSaveValueV = config.readNumEntry(QString::fromLatin1("auto save period"), 5);
   _hideOnCloseV = config.readBoolEntry(QString::fromLatin1("hide on close"), true);
+  _promptDeleteV = config.readBoolEntry(QString::fromLatin1("prompt delete"), true);
 
   emitSignals();
 }
@@ -287,6 +300,7 @@ void Preferences::save()
   config.writeEntry( QString::fromLatin1("auto save"), _doAutoSaveV);
   config.writeEntry( QString::fromLatin1("auto save period"), _autoSaveValueV);
   config.writeEntry( QString::fromLatin1("hide on close"), _hideOnCloseV);
+  config.writeEntry( QString::fromLatin1("prompt delete"), _promptDeleteV);
 
   config.sync();
 
