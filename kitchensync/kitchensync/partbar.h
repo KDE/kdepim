@@ -52,7 +52,7 @@ namespace KitchenSync {
        * returns the pixmap.
        */
       virtual const QPixmap * pixmap() const {
-	return &m_Pixmap; 
+	return m_Pixmap; 
       }
       
     protected:
