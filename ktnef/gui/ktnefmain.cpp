@@ -157,7 +157,7 @@ void KTNEFMain::loadFile(const QString& filename)
 	setCaption(filename_);
 	if (!parser_->openFile(filename))
 	{
-		QMessageBox::critical(this, i18n("Error"), i18n("Unable to open file"), QMessageBox::Ok|QMessageBox::Default, 0);
+		QMessageBox::critical(this, i18n("Error"), i18n("Unable to open file."), QMessageBox::Ok|QMessageBox::Default, 0);
 		view_->setAttachments(0);
 		enableExtractAll(false);
 	}
