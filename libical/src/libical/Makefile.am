@@ -37,7 +37,7 @@ INCLUDES =			\
 	-I$(top_builddir)/libical/src	\
 	-I$(srcdir)
 
-libical_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libical_la_LDFLAGS = -no-undefined
 
 # Order is important!
 libical_la_SOURCES =		\

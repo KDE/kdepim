@@ -17,8 +17,6 @@ INCLUDES =			\
 	-I$(top_builddir)/libical/src/libical	\
 	-I$(srcdir)/libical
 
-libicalss_la_LDFLAGS = -version-info 0:0:0
-
 libicalss_la_SOURCES =		\
 	icalclassify.c		\
 	icalgauge.c		\
