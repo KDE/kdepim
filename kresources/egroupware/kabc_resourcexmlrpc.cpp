@@ -43,12 +43,12 @@ ResourceXMLRPC::ResourceXMLRPC( const KConfig *config )
   : Resource( config ), mServer( 0 )
 {
   if ( config ) {
-    init( config->readEntry( "XmlRpcUrl" ),
+    init( KURL( config->readEntry( "XmlRpcUrl" ) ),
           config->readEntry( "XmlRpcDomain", "default" ),
           config->readEntry( "XmlRpcUser" ),
           KStringHandler::obscure( config->readEntry( "XmlRpcPassword" ) ) );
   } else {
-    init( "", "default", "", "" );
+    init( KURL(), "default", "", "" );
   }
 }
 
@@ -111,8 +111,8 @@ bool ResourceXMLRPC::doOpen()
   if ( mServer )
     delete mServer;
 
-  mServer = new KXMLRPC::Server( "", this );
-	mServer->setUrl( mURL );
+  mServer = new KXMLRPC::Server( KURL(), this );
+	mServer->setUrl( KURL( mURL ) );
   mServer->setUserAgent( "KDE-AddressBook" );
 
   QMap<QString, QVariant> args;
@@ -355,7 +355,7 @@ void ResourceXMLRPC::listEntriesFinished( const QValueList<QVariant> &mapList,
           addr.setTimeZone( timeZone );
         } else if ( it.key() == "geo" ) {
         } else if ( it.key() == "url" ) {
-          addr.setUrl( it.data().toString() );
+          addr.setUrl( KURL( it.data().toString() ) );
         } else if ( it.key() == "pubkey" ) {
         } else if ( it.key() == "org_name" ) {
           addr.setOrganization( it.data().toString() );

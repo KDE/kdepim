@@ -160,7 +160,7 @@ bool ResourceXMLRPC::doOpen()
   if ( mServer )
     delete mServer;
 
-  mServer = new KXMLRPC::Server( "", this );
+  mServer = new KXMLRPC::Server( KURL(), this );
 	mServer->setUrl( mURL );
   mServer->setUserAgent( "KDE-Calendar" );
 

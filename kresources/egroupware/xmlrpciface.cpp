@@ -65,7 +65,7 @@ void Query::call( const QString &server, const QString &method,
   QDataStream stream( postData, IO_WriteOnly );
   stream.writeRawBytes( xmlMarkup.utf8(), xmlMarkup.utf8().length() );
 
-  KIO::TransferJob *job = KIO::http_post( server, postData, false );
+  KIO::TransferJob *job = KIO::http_post( KURL( server ), postData, false );
   job->addMetaData( "UserAgent", userAgent );
   job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
 
