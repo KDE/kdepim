@@ -542,12 +542,26 @@ EmpathFolderWidget::contentsDropEvent(QDropEvent * e)
             // str = "Unknown";
             break;
     }
+        
+    EmpathFolderListItem * i = static_cast<EmpathFolderListItem *>(item);
+    
+    if (!i->url().isFolder()) {
+        empathDebug("Funny, url of EmpathFolderListItem is not a folder");
+        return;
+    }
     
     // str += "\n\n";
     QStrListIterator it(l);
+
     while (it.current()) {
+
         empathDebug("Got: " + QString(it.current()) + " " + s );
-        // empath->move(it.current(), selected());
+
+        EmpathURL u(QString(it.current()));
+
+        if (u.isMessage())
+            empath->move(u, i->url());
+
         ++it;
     }
     

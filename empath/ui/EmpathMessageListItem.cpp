@@ -157,9 +157,8 @@ EmpathMessageListItem::_init()
 EmpathMessageListItem::setup()
 {
     widthChanged();
-    int ph = pixmap(1) ? pixmap(1)->height() : 0;
     int th = QFontMetrics(KGlobal::generalFont()).height();
-    setHeight(QMAX(ph, th));
+    setHeight(QMAX(20, th)); // 20 is just a little bigger than our icons.
 }
 
     QString
@@ -257,7 +256,7 @@ EmpathMessageListItem::initStatic()
     px_read_                = BOLLOX("tree-read");
     px_marked_              = BOLLOX("tree-marked");
     px_replied_             = BOLLOX("tree-replied");
-    px_attachments_         = BOLLOX("tree-read");
+    px_attachments_         = BOLLOX("tree-attachments");
 
 #undef BOLLOX
 
