@@ -181,6 +181,7 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
     slotImportCertFromFile( KURL( import ) );
 
   updateStatusBarLabels();
+  slotSelectionChanged(); // initial state for selection-dependent actions
 }
 
 void CertManager::createStatusBar() {
@@ -221,13 +222,11 @@ void CertManager::createActions() {
   mRevokeCertificateAction = new KAction( i18n("Revoke Certificate"), 0,
                                           this, SLOT(revokeCertificate()),
                                           actionCollection(), "edit_revoke_certificate" );
-  mRevokeCertificateAction->setEnabled( false );
   connectEnableOperationSignal( this, mRevokeCertificateAction );
 
   mExtendCertificateAction = new KAction( i18n("Extend Certificate"), 0,
                                           this, SLOT(extendCertificate()),
                                           actionCollection(), "edit_extend_certificate" );
-  mExtendCertificateAction->setEnabled( false );
   connectEnableOperationSignal( this, mExtendCertificateAction );
 #endif
 
@@ -249,17 +248,15 @@ void CertManager::createActions() {
   mExportCertificateAction = new KAction( i18n("Export Certificate..."), "export", 0,
 					  this, SLOT(slotExportCertificate()),
 					  actionCollection(), "file_export_certificate" );
-  mExportCertificateAction->setEnabled( false ); // needs a selection
 
-  action = new KAction( i18n("Export Secret Keys..."), "export", 0,
-			this, SLOT(slotExportSecretKey()),
-			actionCollection(), "file_export_secret_keys" );
-  connectEnableOperationSignal( this, action );
+  mExportSecretKeyAction = new KAction( i18n("Export Secret Keys..."), "export", 0,
+                                        this, SLOT(slotExportSecretKey()),
+                                        actionCollection(), "file_export_secret_keys" );
+  connectEnableOperationSignal( this, mExportSecretKeyAction );
 
   mViewCertDetailsAction = new KAction( i18n("View Certificate Details..."), 0, 0,
                                         this, SLOT(slotViewDetails()), actionCollection(),
                                         "view_certificate_details" );
-  mViewCertDetailsAction->setEnabled( false ); // needs a selection
 
   const QString dirmngr = KStandardDirs::findExe( "gpgsm" );
   mDirMngrFound = !dirmngr.isEmpty();
@@ -338,6 +335,7 @@ void CertManager::disconnectJobFromStatusBarProgress( const GpgME::Error & err )
 
   action("view_stop_operations")->setEnabled( false );
   emit enableOperations( true );
+  slotSelectionChanged();
 }
 
 void CertManager::updateStatusBarLabels() {
@@ -409,7 +407,9 @@ void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {
   disconnectJobFromStatusBarProgress( res.error() );
 }
 
-void CertManager::slotContextMenu(Kleo::KeyListViewItem*, const QPoint& point) {
+void CertManager::slotContextMenu(Kleo::KeyListViewItem* item, const QPoint& point) {
+  if ( !item )
+    return;
   QPopupMenu *popup = static_cast<QPopupMenu*>(factory()->container("listview_popup",this));
   if ( popup ) {
     popup->exec( point );
@@ -783,6 +783,7 @@ void CertManager::slotSelectionChanged()
 {
   bool b = mKeyListView->hasSelection();
   mExportCertificateAction->setEnabled( b );
+  mExportSecretKeyAction->setEnabled( b );
   mViewCertDetailsAction->setEnabled( b );
   mDeleteCertificateAction->setEnabled( b );
 #ifdef NOT_IMPLEMENTED_ANYWAY

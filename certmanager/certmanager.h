@@ -158,6 +158,7 @@ private:
     KAction * mDeleteCertificateAction;
     KAction * mRevokeCertificateAction;
     KAction * mExtendCertificateAction;
+    KAction * mExportSecretKeyAction;
 
     QString mImportCRLTempFile;
     bool     mRemote;
