@@ -472,7 +472,7 @@ void ResourceIMAP::incidenceUpdated( IncidenceBase *incidencebase )
 
 KCal::Incidence* ResourceIMAP::parseIncidence( const QString& str )
 {
- return mFormat.fromString( str );
+  return mFormat.fromString( str );
 }
 
 bool ResourceIMAP::addIncidence( const QString& type, const QString& resource,
@@ -695,6 +695,7 @@ bool ResourceIMAP::subresourceActive( const QString& subresource ) const
 void ResourceIMAP::setTimeZoneId( const QString& tzid )
 {
   mCalendar.setTimeZoneId( tzid );
+  mFormat.setTimeZone( tzid, true );
 }
 
 void ResourceIMAP::asyncLoadResult( const QStringList& lst, const QString& type,
