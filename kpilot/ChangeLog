@@ -1,3 +1,28 @@
+KPilot Developer's notes for august 27th 2001
+=============================================
+
+Hm. Long time no notes. Which is not to say that nothing happened,
+since while I was away at a conference in Finland I dropped in at
+Marko G's place (see patches listed way down below) and we had a great
+time talking about KPilot, hacking, etc. I forget what I patched
+there, though.
+
+2001-08-27  Adriaan de Groot
+* kpilot/addressWidget.*
+  Fixed up Martin's patch to make it comply with the KPilot coding
+  style, added some more docs, did a bunch of re-layouting. I read
+  somewhere that there is a direct correlation between shoddy indenting
+  style and bug density.
+* kpilot/pilotDaemon.h
+  Added a missing class declaration for KServerSocket.
+* kpilot/kpilot.{h,cc}
+  Removed all remaining KPilotLink cruft. KPilot now communicates with
+  the daemon through DCOP only.
+
+Still very much on the TODO list: 
+- actually make the daemon quit when that's relevant
+- ditch pilotListener (backport from kitchensync)
+
 KPilot Developer's notes for august 2nd 2001
 ============================================
 
