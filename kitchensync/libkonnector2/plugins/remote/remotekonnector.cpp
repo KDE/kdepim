@@ -59,7 +59,9 @@ RemoteKonnector::RemoteKonnector( const KConfig *config )
   }
 
   mAddressBookSyncee =	new AddressBookSyncee( &mAddressBook );
+  mAddressBookSyncee->setSource( i18n( "Remote" ) );
   mCalendarSyncee = new CalendarSyncee( &mCalendar );
+  mCalendarSyncee->setSource( i18n( "Remote" ) );
   
   mSyncees.append( mCalendarSyncee );
   mSyncees.append( mAddressBookSyncee );
