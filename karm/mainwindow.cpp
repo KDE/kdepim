@@ -447,8 +447,7 @@ QString MainWindow::version() const
 
 QString MainWindow::setStorage( const QString &storage )
 {
-  return "1";
-
+  return "stubbed";
 }
 
 #include "mainwindow.moc"
