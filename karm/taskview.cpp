@@ -447,14 +447,14 @@ void TaskView::deleteTask(bool markingascomplete)
     if (task->childCount() == 0) {
       response = KMessageBox::warningYesNo( 0,
           i18n( "Are you sure you want to delete "
-          "the task named\n\"%1\" and it's entire history?")
+          "the task named\n\"%1\" and its entire history?")
           .arg(task->name()), 
           i18n( "Deleting Task"));
     }
     else {
       response = KMessageBox::warningYesNo( 0,
           i18n( "Are you sure you want to delete the task named"
-          "\n\"%1\" and it's entire history?\n" 
+          "\n\"%1\" and its entire history?\n" 
           "NOTE: all its subtasks and their history will also "
           "be deleted!").arg(task->name()),
           i18n( "Deleting Task"));
@@ -602,7 +602,7 @@ void TaskView::clipTotals()
   if (current_item() && current_item()->isRoot())
   {
     int response = KMessageBox::questionYesNo( 0,
-        i18n("Copy totals for just this task and it's subtasks?"
+        i18n("Copy totals for just this task and its subtasks?"
           "  (Click No to copy totals for all tasks.)"));
     if (response == KMessageBox::Yes)
     {
