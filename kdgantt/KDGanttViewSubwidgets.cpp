@@ -52,7 +52,10 @@
 #include <qdragobject.h>
 #include <qptrlist.h>
 
+#include <kglobal.h>
 #include <klocale.h>
+#include <kcalendarsystem.h>
+#include <kdebug.h>
 
 KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):QCanvas (parent)
 {
@@ -691,8 +694,7 @@ int KDTimeTableWidget::getCoordX( QDateTime dt ) {
    KDTimeHeaderWidget:: KDTimeHeaderWidget
    ***************************************************************** */
 KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant )
-    : QWidget (parent),
-      myWeekStartDay(7)
+    : QWidget (parent)
 {
     myToolTip = new KDTimeHeaderToolTip(this,this);
     mySizeHint = 0;
@@ -1930,7 +1932,7 @@ QDateTime KDTimeHeaderWidget::getEvenTimeDate(QDateTime tempdatetime ,Scale sc)
             break;
         case KDGanttView::Week:
             tempdate = tempdatetime.date();
-            while (tempdate.dayOfWeek ()!= myWeekStartDay)
+            while (tempdate.dayOfWeek ()!= KGlobal::locale()->weekStartDay())
                 tempdate = tempdate.addDays(-1);
             //tempdate = tempdate.addDays(-7);
             tempdatetime = QDateTime (tempdate, QTime (0,0));
@@ -2197,6 +2199,7 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
     QTime tempTime = myRealStart.time();
     QDateTime tempDateTime;
     int i;
+    const KCalendarSystem * calendar = KGlobal::locale()->calendar();
     switch (myRealScale)
         {
         case KDGanttView::Minute:
@@ -2213,11 +2216,11 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
                 majorTicks.append( getCoordX(tempDateTime));
                 tempStr.setNum(tempDateTime.date().day());
                 if ( yearFormat() == KDGanttView::NoDate ) {
-                    tempStr = QDate::longDayName (tempDateTime.date().dayOfWeek() )+", "
+                    tempStr = calendar->weekDayName( tempDateTime.date() )+", "
                         +getHour(tempDateTime.time());
                 } else {
-                    tempStr = QDate::shortDayName (tempDateTime.date().dayOfWeek() )+" "+
-                        QDate::shortMonthName(tempDateTime.date().month())+ " "+
+                    tempStr = calendar->weekDayName( tempDateTime.date(), true )+" "+
+                        calendar->monthName( tempDateTime.date().month(), tempDateTime.date().year(), true)+ " "+
                         tempStr+", "+getHour(tempDateTime.time());
                 }
 
@@ -2242,10 +2245,10 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
                 majorTicks.append( getCoordX(tempDateTime));
                 tempStr.setNum(tempDateTime.date().day());
                 if ( yearFormat() == KDGanttView::NoDate ) {
-                    tempStr = QDate::longDayName (tempDateTime.date().dayOfWeek() );
+                    tempStr = calendar->weekDayName( tempDateTime.date() );
                 } else {
-                    tempStr = QDate::shortDayName (tempDateTime.date().dayOfWeek() )+" "+
-                        QDate::shortMonthName(tempDateTime.date().month())+ " "+
+                    tempStr = calendar->weekDayName( tempDateTime.date(), true )+" "+
+                        calendar->monthName( tempDateTime.date().month(), tempDateTime.date().year(), true)+ " "+
                         tempStr+", "+getYear(tempDateTime.date());
                 }
                 majorText.append(tempStr);
@@ -2257,18 +2260,18 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
             myRealEnd = myRealEnd.addDays(minorItems*tempMinorScaleCount);
             for ( i = 0; i < minorItems;++i) {
                 if (tempMinorScaleCount == 1)
-                    minorText.append((QDate::shortDayName(tempDate.dayOfWeek())).left(1));
+                    minorText.append((calendar->weekDayName(tempDate, true)).left(1)); //TODO: BIDI
                 else
                     minorText.append(QString::number(tempDate.day()));
                 tempDate = tempDate.addDays(tempMinorScaleCount);
             }
             tempDate = myRealStart.date();
-            while (tempDate.dayOfWeek() != myWeekStartDay)
+            while (tempDate.dayOfWeek() != KGlobal::locale()->weekStartDay())
                 tempDate = tempDate.addDays(1);
             while (tempDate < myRealEnd.date()) {
                 majorTicks.append( getCoordX(tempDate));
                 tempStr.setNum(tempDate.day());
-                tempStr = QDate::shortMonthName(tempDate.month())+ " "+
+                tempStr = calendar->monthName(tempDate.month(), tempDate.year(), true)+ " "+
                     tempStr+", "+getYear(tempDate);
                 majorText.append(tempStr);
                 tempDate = tempDate.addDays(7*tempMajorScaleCount);
@@ -2283,11 +2286,11 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
                 tempDate = tempDate.addDays(7*tempMinorScaleCount);
             }
             tempDate = myRealStart.date();
-            while (tempDate.day() != 1)
+            while (tempDate.day() != KGlobal::locale()->weekStartDay())
                 tempDate = tempDate.addDays(1);
             while (tempDate < myRealEnd.date()) {
                 majorTicks.append( getCoordX(tempDate));
-                tempStr = QDate::shortMonthName(tempDate.month())+ " "+getYear(tempDate);
+                tempStr = calendar->monthName(tempDate.month(), tempDate.year(), true)+ " "+getYear(tempDate);
                 majorText.append(tempStr);
                 tempDate = tempDate.addMonths(tempMajorScaleCount);
             }
@@ -2296,7 +2299,7 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
         case KDGanttView::Month:
             myRealEnd = myRealEnd.addMonths(minorItems*tempMinorScaleCount);
             for ( i = 0; i < minorItems;++i) {
-                minorText.append((QDate::shortMonthName(tempDate.month())).left(1));
+                minorText.append((calendar->monthName(tempDate.month(), tempDate.year(), true)).left(1)); //TODO: BIDI
                 tempDate = tempDate.addMonths(tempMinorScaleCount);
             }
             tempDate = myRealStart.date();

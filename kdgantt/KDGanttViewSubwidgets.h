@@ -239,8 +239,6 @@ private:
     int endMouseDown;
     bool autoComputeTimeLine;
     QPixmap paintPix;
-
-    int myWeekStartDay;
 };
 
 /* KDTimeTableWidget */

@@ -4830,11 +4830,3 @@ bool KDGanttView::isLinkItemsEnabled() const
   enumeration.
 */
 
-/*!
-  Sets which day is the first weekday
-*/
-void KDGanttView::setWeekStartDay(int day)
-{
-    if (day >= 1 && day <= 7)
-        myTimeHeader->myWeekStartDay = day;
-}
