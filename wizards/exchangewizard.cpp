@@ -235,7 +235,7 @@ ExchangeWizard::ExchangeWizard() : KConfigWizard( new ExchangePropagator )
   QLabel *label = new QLabel( i18n("Server name:"), page );
   topLayout->addWidget( label, 0, 0 );
   mServerEdit = new KLineEdit( page );
-  topLayout->addWidget( mServerEdit, 0, 2 );
+  topLayout->addWidget( mServerEdit, 0, 1 );
 
   label = new QLabel( i18n("Port:"), page );
   topLayout->addWidget( label, 1, 0 );
@@ -243,9 +243,9 @@ ExchangeWizard::ExchangeWizard() : KConfigWizard( new ExchangePropagator )
   topLayout->addWidget( mPortEdit, 1, 1 );
 
   label = new QLabel( i18n("User name:"), page );
-  topLayout->addWidget( label, 1, 0 );
+  topLayout->addWidget( label, 2, 0 );
   mUserEdit = new KLineEdit( page );
-  topLayout->addWidget( mUserEdit, 2, 2 );
+  topLayout->addWidget( mUserEdit, 2, 1 );
 
   label = new QLabel( i18n("Password:"), page );
   topLayout->addWidget( label, 3, 0 );
