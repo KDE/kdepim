@@ -385,7 +385,7 @@ void AddresseeEditorWidget::load()
   // won't work in QuickEdit mode
   mFormattedNameBox->clear();
 
-  mNameEdit->setText(mAddressee.realName());
+  mNameEdit->setText(mAddressee.assembledName());
   mRoleEdit->setText(mAddressee.role());
   mOrgEdit->setText(mAddressee.organization());
   mURLEdit->setURL(mAddressee.url());
@@ -541,7 +541,7 @@ void AddresseeEditorWidget::nameBoxChanged()
   mFormattedNameBox->clear();
   QStringList options;
   options << mAddressee.formattedName()
-          << QString( addr.realName() ).simplifyWhiteSpace()
+          << QString( addr.assembledName() ).simplifyWhiteSpace()
           << QString( addr.givenName() + QString(" ") + addr.familyName() ).simplifyWhiteSpace()
           << addr.familyName() + QString(", ") + addr.givenName();
   mFormattedNameBox->insertStringList(options);
@@ -566,7 +566,7 @@ void AddresseeEditorWidget::nameButtonClicked()
     // Update the name edit.
     bool block = mNameEdit->signalsBlocked();
     mNameEdit->blockSignals( true );
-    mNameEdit->setText( mAddressee.realName() );
+    mNameEdit->setText( mAddressee.assembledName() );
     mNameEdit->blockSignals( block );
 
     // Update the combo box.
