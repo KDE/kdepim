@@ -176,6 +176,7 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
   mLatDegrees = new QSpinBox( 0, 90, 1, sexagesimalGroup );
   mLatDegrees->setSuffix( "°" );
   mLatDegrees->setWrapping( false );
+  label->setBuddy( mLatDegrees );
   sexagesimalLayout->addWidget( mLatDegrees, 0, 1 );
 
   mLatMinutes = new QSpinBox( 0, 59, 1, sexagesimalGroup );
@@ -196,6 +197,7 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
 
   mLongDegrees = new QSpinBox( 0, 180, 1, sexagesimalGroup );
   mLongDegrees->setSuffix( "°" );
+  label->setBuddy( mLongDegrees );
   sexagesimalLayout->addWidget( mLongDegrees, 1, 1 );
 
   mLongMinutes = new QSpinBox( 0, 59, 1, sexagesimalGroup );
