@@ -211,20 +211,26 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 		return false;
 
 	}
-	if (!PluginUtility::isRunning("knotes"))
+	
+	
+	QCString knotesAppname = "knotes" ;
+	if (!PluginUtility::isRunning(knotesAppname))
 	{
+		knotesAppname = "kontact" ;
+		if (!PluginUtility::isRunning(knotesAppname))
+		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname
-			<< ": KNotes not running." << endl;
+			DEBUGCONDUIT << fname << ": KNotes not running." << endl;
 #endif
-		emit logError(i18n("KNotes is not running. The conduit must "
-			"be able to make a DCOP connection to KNotes "
-			"for synchronization to take place. "
-			"Please start KNotes and try again."));
-		return false;
+			emit logError(i18n("KNotes is not running. The conduit must "
+				"be able to make a DCOP connection to KNotes "
+				"for synchronization to take place. "
+				"Please start KNotes and try again."));
+			return false;
+		}
 	}
 
-	fP->fKNotes = new KNotesIface_stub("knotes","KNotesIface");
+	fP->fKNotes = new KNotesIface_stub(knotesAppname,"KNotesIface");
 
 	fP->fNotes = fP->fKNotes->notes();
 	if (fP->fKNotes->status() != DCOPStub::CallSucceeded)
