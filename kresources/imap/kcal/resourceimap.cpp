@@ -37,7 +37,8 @@ ResourceIMAP::ResourceIMAP( const QString &server )
 
 ResourceIMAP::ResourceIMAP( const KConfig* config )
   : ResourceCalendar( config ),
-    ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" )
+    ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" ),
+     mOpen( false )
 {
   init();
 
@@ -74,8 +75,10 @@ bool ResourceIMAP::doOpen()
 
   // Read the calendar entries
   QStringList resources;
-  if ( !kmailSubresources( resources, "Calendar" ) )
+  if ( !kmailSubresources( resources, "Calendar" ) ) {
+    kdError(5650) << "Couldn't talk to KMail\n";
     return false;
+  }
   config.setGroup( "Calendar" );
   QStringList::ConstIterator it;
   mEventResources.clear();
@@ -564,6 +567,7 @@ void ResourceIMAP::slotRefresh( const QString& type,
 
 QStringList ResourceIMAP::subresources() const
 {
+  // TODO: This is not needed - make the list out of the mXResources instead
   QStringList calendar, tasks, journal;
   if ( kmailSubresources( calendar, "Calendar" ) )
     if ( kmailSubresources( tasks, "Task" ) )
@@ -686,21 +690,12 @@ bool ResourceIMAP::subresourceActive( const QString& subresource ) const
   // before it opens the resource :-( Make sure we are open
   const_cast<ResourceIMAP*>( this )->doOpen();
 
-  if ( mEventResources.contains( subresource ) ) {
-    kdDebug(5650) << "subresourceActive/Event( " << subresource << " ): "
-                  << mEventResources[ subresource ] << endl;
+  if ( mEventResources.contains( subresource ) )
     return mEventResources[ subresource ];
-  }
-  if ( mTaskResources.contains( subresource ) ) {
-    kdDebug(5650) << "subresourceActive/Task( " << subresource << " ): "
-                  << mTaskResources[ subresource ] << endl;
+  if ( mTaskResources.contains( subresource ) )
     return mTaskResources[ subresource ];
-  }
-  if ( mJournalResources.contains( subresource ) ) {
-    kdDebug(5650) << "subresourceActive/Journal( " << subresource << " ): "
-                  << mJournalResources[ subresource ] << endl;
+  if ( mJournalResources.contains( subresource ) )
     return mJournalResources[ subresource ];
-  }
 
   // Safe default bet:
   kdDebug(5650) << "subresourceActive( " << subresource << " ): Safe bet\n";
