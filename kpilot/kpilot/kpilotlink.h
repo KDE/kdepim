@@ -197,6 +197,10 @@ public:
 #else
 	static KConfig *getConfig(const QString &group=QString());
 #endif
+	/**
+	* Reads the configuration version from a standard location.
+	*/
+	static int getConfigVersion(KConfig *);
 
 private:
 	/**
@@ -207,6 +211,13 @@ private:
 
   PilotRecord* readRecord(KSocket*);
   void writeRecord(KSocket*, PilotRecord*);
+
+	/**
+	* Write a single-word response message to the command
+	* connection. This is typically used to respond to 
+	* requests from conduits. Pass one of the CStatusMessages.
+	*/
+	int writeResponse(KSocket *, int m);
 
   /**
    * Starts syncing the next (could be first) database, either by firing up a conduit, or

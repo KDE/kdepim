@@ -1055,7 +1055,7 @@ int main(int argc, char** argv)
 	KApplication a(true,true);
 
 	KConfig *c=KPilotLink::getConfig();
-	if (c->readNumEntry("Configured",0)<KPilotLink::ConfigurationVersion)
+	if (KPilotLink::getConfigVersion(c)<KPilotLink::ConfigurationVersion)
 	{
 		run_mode='s';
 	}
@@ -1077,12 +1077,17 @@ int main(int argc, char** argv)
 		options->show();
 		// gsetupDialog uses result 0 for cancel
 		//
-		//
 		if (!options->result()) return 0;
+
+		// The options dialog may have changed the group
+		// while reading or writing settings (still a
+		// bad idea, actually).
+		//
+		c->setGroup(QString::null);
 	}
 
 #ifdef KDE2
-	if (c->readNumEntry("Configured",0)<KPilotLink::ConfigurationVersion)
+	if (KPilotLink::getConfigVersion(c)<KPilotLink::ConfigurationVersion)
 	{
 		cerr << fname << ": Is still not configured for use."
 			<< endl;

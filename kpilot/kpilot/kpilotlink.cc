@@ -107,24 +107,42 @@ const int CStatusMessages::LOG_MESSAGE = 17;
 //
 /* static */ const int KPilotLink::ConfigurationVersion = 320;
 
-void KPilotLink::readConfig()
+int KPilotLink::getConfigVersion(KConfig *config)
 {
 	FUNCTIONSETUP;
-	int version=0;
 
-	// When KPilot starts up we want to be able to find 
-	// the last synced users data.
-	//
-	//
-	KConfig* config = getConfig();
-	config->setGroup(QString());
-	version=config->readNumEntry("Configured",0);
+	config->setGroup(QString::null);
+	int version=config->readNumEntry("Configured",0);
 	if (version<ConfigurationVersion)
 	{
 		kdDebug() << fname << ": Config file has old version "
 			<< version
 			<< endl;
 	}
+	else
+	{
+		if (debug_level & UI_MINOR)
+		{
+			kdDebug() << fname
+				<< ": Config file has version "
+				<< version
+				<< endl;
+		}
+	}
+
+	return version;
+}
+
+void KPilotLink::readConfig()
+{
+	FUNCTIONSETUP;
+
+	// When KPilot starts up we want to be able to find 
+	// the last synced users data.
+	//
+	//
+	KConfig* config = getConfig();
+	int version = getConfigVersion(config);
 	getPilotUser().setUserName(config->readEntry("UserName").latin1());
 	delete config;
 }
@@ -321,6 +339,19 @@ KPilotLink::writeRecord(KSocket* theSocket, PilotRecord* rec)
   write(theSocket->socket(), data, len);
 }
 
+int KPilotLink::writeResponse(KSocket *k,int m)
+{
+	// I have a bad feeling about using pointers
+	// to parameters passed to me, so I'm going 
+	// to copy the value parameter to a local (stack)
+	// variable and use a pointer to that variable.
+	//
+	//
+	int i=m;
+
+	return write(k->socket(), &i, sizeof(int));
+}
+
 void
 KPilotLink::slotConduitRead(KSocket* cSocket)
 {
@@ -330,6 +361,45 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
   PilotRecord* tmpRec = 0L;
 
   read(cSocket->socket(), &message, sizeof(int));
+
+	// This one message doesn't require a database to be open.
+	//
+	//
+	if (message == CStatusMessages::LOG_MESSAGE)
+	{
+		int i;
+		char *s;
+		read(cSocket->socket(),&i,sizeof(int));
+		s=new char[i+1];
+		memset(s,0,i);
+		read(cSocket->socket(),s,i);
+		s[i]=0;
+		if (debug_level & SYNC_TEDIOUS)
+		{
+			kdDebug() << fname << ": Message length "
+				<< i << " => "
+				<< s
+				<< endl;
+		}
+		addSyncLogEntry(s);
+		delete s;
+
+		return;
+	}
+
+	// The remaining messages all require a databse.
+	//
+	//
+	if (!fCurrentDB)
+	{
+		writeResponse(cSocket,CStatusMessages::NO_SUCH_RECORD);
+		return;
+	}
+
+	// This whole nested-if thing should become
+	// a switch() statement, that tends to be clearer.
+	//
+	//
   if(message ==  CStatusMessages::WRITE_RECORD)
     {
       //       cout <<"Writing Record..." << endl;
@@ -356,6 +426,7 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 	}
       else
 	{
+		writeResponse(cSocket,CStatusMessages::NO_SUCH_RECORD);
 	  write(cSocket->socket(), &CStatusMessages::NO_SUCH_RECORD, sizeof(int));
 	  // 	cout << "KPilotLink::NEXT_MODIFIED_RECORD - No more modified records." << endl;
 	}
@@ -402,26 +473,6 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
       else
 	write(cSocket->socket(), &CStatusMessages::NO_SUCH_RECORD, sizeof(int));
     }
-  else if (message == CStatusMessages::LOG_MESSAGE)
-    {
-      int i;
-      char *s;
-      read(cSocket->socket(),&i,sizeof(int));
-      s=new char[i+1];
-      memset(s,0,i);
-      read(cSocket->socket(),s,i);
-      s[i]=0;
-      if (debug_level & SYNC_TEDIOUS)
-	{
-	  kdDebug() << fname << ": Message length "
-	       << i << " => "
-	       << s
-	       << endl;
-	}
-      addSyncLogEntry(s);
-      delete s;
-    }
-      
   else
     {
       kdDebug() << fname << ": Unknown status message " 
