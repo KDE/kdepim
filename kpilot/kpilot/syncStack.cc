@@ -111,16 +111,17 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 
 	QStringList l;
-	switch(fMode)
+	switch(fMode && SyncStack::ActionMask)
 	{
-	case SyncStack::Test :
-		l.append("test");
-		break;
 	case SyncStack::Backup :
 		l.append("backup");
 		break;
 	default:
 		;
+	}
+	if (fMode & SyncStack::FlagTest)
+	{
+		l.append("test");
 	}
 
 
@@ -212,6 +213,12 @@ SyncStack::~SyncStack()
 void SyncStack::prepare(int m)
 {
 	FUNCTIONSETUP;
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname
+		<< ": Using sync mode " << m
+		<< endl;
+#endif
 
 	switch ( m & (Test | Backup | Restore | HotSync))
 	{
@@ -330,6 +337,13 @@ void SyncStack::actionCompleted(SyncAction *b)
 }
 
 // $Log$
+// Revision 1.3.2.1  2002/04/04 20:28:28  adridg
+// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
+// when using PILOT_VERSION. kpilotTest defaults to list, like the options
+// promise. Always do old-style USB sync (also works with serial devices)
+// and runs conduits only for HotSync. KPilot now as it should have been
+// for the 3.0 release.
+//
 // Revision 1.3  2002/02/02 11:46:02  adridg
 // Abstracting away pilot-link stuff
 //
