@@ -98,6 +98,13 @@ private:
 	QPixmap icon,busyicon;
 	KAboutApplication *kap;
 
+	/**
+	* Remember which item in the context menu
+	* is "Run KPilot" so we can enable / disable
+	* it as necessary.
+	*/
+	int menuKPilotItem;
+
 private slots:
  void slotProcFinished(KProcess*);
   void slotAccepted(KSocket* connection);
@@ -108,6 +115,7 @@ private slots:
   void slotEndHotSync();
   void quitImmediately();
   void slotShowAbout();
+	void slotRunKPilot();
 
   void slotSyncingDatabase(char* dbName);
   void slotDBBackupFinished();

@@ -210,6 +210,12 @@ PilotDaemon::setupConnections()
 {
 	FUNCTIONSETUP;
 
+	fPilotLink = new KPilotLink(0L, 0L, fPilotDevice.latin1());
+	connect(fPilotLink, SIGNAL(databaseSyncComplete()),
+		this, SLOT(slotDBBackupFinished()));
+	connect(this, SIGNAL(endHotSync()), this, SLOT(slotEndHotSync()));
+
+
 	fCommandSocket = new KServerSocket(PilotDaemon::COMMAND_PORT);
 	connect(fCommandSocket, SIGNAL(accepted(KSocket*)), 
 		this, SLOT(slotAccepted(KSocket*)));
@@ -232,11 +238,6 @@ PilotDaemon::setupConnections()
 		fStatus=ERROR;
 		return;
 	}
-
-	fPilotLink = new KPilotLink(0L, 0L, fPilotDevice.latin1());
-	connect(fPilotLink, SIGNAL(databaseSyncComplete()),
-		this, SLOT(slotDBBackupFinished()));
-	connect(this, SIGNAL(endHotSync()), this, SLOT(slotEndHotSync()));
 }
 
 void
@@ -286,6 +287,8 @@ PilotDaemon::setupWidget()
 
 	KPopupMenu* menu = contextMenu();
 	menu->insertItem(i18n("&About"), this, SLOT(slotShowAbout()));
+	menuKPilotItem=menu->insertItem(i18n("Start &KPilot"),this,
+		SLOT(slotRunKPilot()));
 }
 
 void PilotDaemon::slotShowAbout()
@@ -299,6 +302,31 @@ void PilotDaemon::slotShowAbout()
 
 	kap->show();
 }
+
+void PilotDaemon::slotRunKPilot()
+{
+	FUNCTIONSETUP;
+
+	if (fCurrentSocket)
+	{
+		kdDebug() << fname 
+			<< ": Only one KPilot at a time."
+			<< endl;
+		return;
+	}
+
+	KProcess *k=new KProcess();
+
+	*k << "kpilot";
+	if (debug_level)
+	{
+		*k << "--debug" ;
+		*k << QString::number(debug_level);
+	}
+
+	k->start(KProcess::DontCare);
+}
+
 
 void PilotDaemon::killMonitor(bool finishsync)
 {
@@ -492,6 +520,8 @@ PilotDaemon::slotAccepted(KSocket* connection)
   connect(fCurrentSocket, SIGNAL(readEvent(KSocket*)),
 	  this, SLOT(slotCommandReceived(KSocket*)));
   fCurrentSocket->enableRead(true);
+
+	contextMenu()->setItemEnabled(menuKPilotItem,false);
 }
 
 void
@@ -574,6 +604,7 @@ PilotDaemon::slotConnectionClosed(KSocket* connection)
 		}
 
 		fCurrentSocket = 0L;
+		contextMenu()->setItemEnabled(menuKPilotItem,true);
 	}
 	emit(endHotSync());
 }
