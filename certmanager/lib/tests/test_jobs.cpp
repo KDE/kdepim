@@ -75,7 +75,7 @@ static void testSign()
   QCString cText = "Hallo Leute\n"; // like gpgme's t-sign.c
   QByteArray plainText;
   plainText.duplicate( cText.data(), cText.length() ); // hrmpf...
-  kdDebug() << k_funcinfo << "plainText=" << plainText << endl;
+  kdDebug() << k_funcinfo << "plainText=" << cText.data() << endl;
 
   kdDebug() << k_funcinfo << " signing with " << signingKeys[0].primaryFingerprint() << endl;
 
@@ -90,7 +90,8 @@ static void testSign()
     kdDebug() << "signing failed: " << res.error().asString() << endl;
     return;
   }
-  kdDebug() << k_funcinfo << "signing resulted in signature=" << signature << endl;
+  kdDebug() << k_funcinfo << "signing resulted in signature="
+	    << QCString( signature.data(), signature.size() + 1 ) << endl;
 }
 
 int main( int argc, char** argv ) {
