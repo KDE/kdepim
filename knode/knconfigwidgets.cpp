@@ -18,6 +18,7 @@
 
 #include <qlayout.h>
 #include <qbuttongroup.h>
+#include <qvbox.h>
 
 #include <klocale.h>
 #include <knumvalidator.h>
@@ -43,6 +44,7 @@
 #include "knfiltermanager.h"
 #include "knarticlefilter.h"
 #include "knmime.h"
+
 
 KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n) : BaseWidget(p, n), d_ata(d)
 {
@@ -198,7 +200,7 @@ KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n
   QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
 
   // account listbox
-  l_box=new KNDialogListBox(this);
+  l_box=new KNDialogListBox(false, this);
   connect(l_box, SIGNAL(selected(int)), this, SLOT(slotItemSelected(int)));
   connect(l_box, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
   topL->addMultiCellWidget(l_box, 0,4, 0,0);
@@ -316,14 +318,11 @@ void KNConfig::NntpAccountListWidget::slotItemSelected(int)
 void KNConfig::NntpAccountListWidget::slotAddBtnClicked()
 {
   KNNntpAccount *acc = new KNNntpAccount();
-  NntpAccountConfDialog *confDlg = new NntpAccountConfDialog(acc, this);
 
-  if(confDlg->exec())
+  if(acc->editProperties(this))
     a_ccManager->newAccount(acc);
   else
     delete acc;
-
-  delete confDlg;
 }
 
 
@@ -343,12 +342,8 @@ void KNConfig::NntpAccountListWidget::slotEditBtnClicked()
   LBoxItem *it = static_cast<LBoxItem*>(l_box->item(l_box->currentItem()));
 
   if(it) {
-    NntpAccountConfDialog *confDlg = new NntpAccountConfDialog(it->account, this);
-
-    if(confDlg->exec())
-      a_ccManager->applySettings(it->account);   // the account manager will emit accountModified()...
-
-    delete confDlg;
+    it->account->editProperties(this);
+    slotUpdateItem(it->account);
   }
 }
 
@@ -366,12 +361,12 @@ void KNConfig::NntpAccountListWidget::slotSubBtnClicked()
 
 
 KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget *p, const char *n)
-  : KDialogBase(Plain, (a->id()!=-1)? i18n("Properties of %1").arg(a->name()):i18n("New Account"),
+  : KDialogBase(Tabbed, (a->id()!=-1)? i18n("Properties of %1").arg(a->name()):i18n("New Account"),
                 Ok|Cancel|Help, Ok, p, n),
     a_ccount(a)
 {
-  QFrame* page=plainPage();
-  QGridLayout *topL=new QGridLayout(page, 10, 3, 5);
+  QFrame* page=addPage(i18n("Ser&ver"));
+  QGridLayout *topL=new QGridLayout(page, 11, 3, 5);
 
   n_ame=new QLineEdit(page);
   QLabel *l=new QLabel(n_ame,i18n("&Name:"),page);
@@ -432,7 +427,9 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   topL->setColStretch(1, 1);
   topL->setColStretch(2, 1);
 
-  setFixedHeight(sizeHint().height());
+  // Specfic Identity tab =========================================
+  i_dWidget=new KNConfig::IdentityWidget(a->identity(), addVBoxPage(i18n("&Identity")));
+
   restoreWindowSize("accNewsPropDLG", this, sizeHint());
 
   setHelp("anc-setting-the-news-account");
@@ -462,6 +459,8 @@ void KNConfig::NntpAccountConfDialog::slotOk()
   a_ccount->setNeedsLogon(a_uth->isChecked());
   a_ccount->setUser(u_ser->text());
   a_ccount->setPass(p_ass->text());
+
+  i_dWidget->apply();
 
   accept();
 }
@@ -636,7 +635,7 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
   topL->addWidget(l_ongCB,0,0);
 
   //color-list
-  c_List = new KNDialogListBox(this);
+  c_List = new KNDialogListBox(false, this);
   topL->addMultiCellWidget(c_List,2,4,0,0);
   connect(c_List, SIGNAL(selected(QListBoxItem*)),SLOT(slotColItemSelected(QListBoxItem*)));
   connect(c_List, SIGNAL(selectionChanged()), SLOT(slotColSelectionChanged()));
@@ -655,7 +654,7 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
 
 
   //font-list
-  f_List = new KNDialogListBox(this);
+  f_List = new KNDialogListBox(false, this);
   topL->addMultiCellWidget(f_List,6,8,0,0);
   connect(f_List, SIGNAL(selected(QListBoxItem*)),SLOT(slotFontItemSelected(QListBoxItem*)));
   connect(f_List, SIGNAL(selectionChanged()),SLOT(slotFontSelectionChanged()));
@@ -1014,7 +1013,7 @@ KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget(DisplayedHeaders *d, QW
   QGridLayout *topL=new QGridLayout(this, 7,2, 5,5);
 
   //listbox
-  l_box=new KNDialogListBox(this);
+  l_box=new KNDialogListBox(false, this);
   connect(l_box, SIGNAL(selected(int)), this, SLOT(slotItemSelected(int)));
   connect(l_box, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
   topL->addMultiCellWidget(l_box, 0,6, 0,0);
@@ -1281,7 +1280,7 @@ KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
 
   // == Filters =================================================
 
-  f_lb=new KNDialogListBox(this);
+  f_lb=new KNDialogListBox(false, this);
   topL->addWidget(new QLabel(f_lb, i18n("&Filters:"),this),0,0);
 
   connect(f_lb, SIGNAL(selectionChanged()), SLOT(slotSelectionChangedFilter()));
@@ -1306,7 +1305,7 @@ KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
 
   // == Menu ====================================================
 
-  m_lb=new KNDialogListBox(this);
+  m_lb=new KNDialogListBox(false, this);
   topL->addWidget(new QLabel(m_lb, i18n("&Menu:"),this),6,0);
 
   connect(m_lb, SIGNAL(selectionChanged()), SLOT(slotSelectionChangedMenu()));
@@ -1590,7 +1589,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
 
   xgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  l_box=new KNDialogListBox(xgb);
+  l_box=new KNDialogListBox(false, xgb);
   connect(l_box, SIGNAL(selected(int)), SLOT(slotItemSelected(int)));
   connect(l_box, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()));
   xgbL->addMultiCellWidget(l_box, 1,4, 0,0);
@@ -1853,9 +1852,7 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
   m_axLen->setValue(d->m_axLen);
   i_ntro->setText(d->i_ntro);
   e_ditor->setText(d->e_xternalEditor);
-
 }
-
 
 
 KNConfig::PostNewsComposerWidget::~PostNewsComposerWidget()

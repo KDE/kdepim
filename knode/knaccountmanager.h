@@ -19,11 +19,11 @@
 
 #include <qlist.h>
 
-
 class KNGroupManager;
 class KNListView;
 class KNNntpAccount;
 class KNServerInfo;
+
 
 class KNAccountManager : public QObject
 {
@@ -36,7 +36,6 @@ class KNAccountManager : public QObject
     void setCurrentAccount(KNNntpAccount *a);
     
     bool newAccount(KNNntpAccount *a);       // a is new account allocated and configured by the caller
-    void applySettings(KNNntpAccount *a);    // commit changes on a the caller made
     void removeAccount(KNNntpAccount *a=0);  // a==0: remove current account
     void editProperties(KNNntpAccount *a=0);
 
@@ -47,7 +46,6 @@ class KNAccountManager : public QObject
     KNNntpAccount* next()                 { return accList->next(); }   
     KNNntpAccount* account(int i);  
 
-
   protected:
     void loadAccounts();
     KNGroupManager *gManager;
@@ -56,11 +54,11 @@ class KNAccountManager : public QObject
     KNServerInfo *s_mtp;
     KNListView *view;
 
-
   signals:
     void accountAdded(KNNntpAccount *a);
-    void accountModified(KNNntpAccount *a);
     void accountRemoved(KNNntpAccount *a);   // don't do anything with a, it will be deleted soon
+    void accountModified(KNNntpAccount *a);
+
 };
 
 #endif

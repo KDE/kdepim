@@ -77,8 +77,8 @@ int KNListBoxItem::width(const QListBox *lb) const
 
 // **** listbox for dialogs **************************************************
 
-KNDialogListBox::KNDialogListBox(QWidget * parent, const char * name)
- : QListBox(parent, name)
+KNDialogListBox::KNDialogListBox(bool alwaysIgnore, QWidget * parent, const char * name)
+ : QListBox(parent, name), a_lwaysIgnore(alwaysIgnore)
 {
 }
 
@@ -90,7 +90,7 @@ KNDialogListBox::~KNDialogListBox()
 
 void KNDialogListBox::keyPressEvent(QKeyEvent *e)
 {
-  if ((e->key()==Key_Enter)||(e->key()==Key_Return))
+  if ((a_lwaysIgnore || !(hasFocus()&&isVisible()))&&((e->key()==Key_Enter)||(e->key()==Key_Return)))
     e->ignore();
   else
     QListBox::keyPressEvent(e);

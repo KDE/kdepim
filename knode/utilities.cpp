@@ -37,7 +37,7 @@ int selectDialog(QWidget *parent, const QString &caption, const QStringList &opt
   QFrame *page = dlg->plainPage();
   QHBoxLayout *pageL = new QHBoxLayout(page,8,5);
 
-  KNDialogListBox *list = new KNDialogListBox(page);
+  KNDialogListBox *list = new KNDialogListBox(true, page);
   pageL->addWidget(list);
 
   QString s;

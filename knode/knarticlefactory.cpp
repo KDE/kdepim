@@ -486,8 +486,10 @@ void KNArticleFactory::edit(KNLocalArticle *a)
     if(acc) {
       KNHeaders::Newsgroups *grps=a->newsgroups();
       KNGroup *grp=g_rpManager->group(grps->firstGroup(), acc);
-      if(grp && grp->identity() && grp->identity()->hasSignature())
+      if (grp && grp->identity() && grp->identity()->hasSignature())
         id=grp->identity();
+      else if (acc->identity() && acc->identity()->hasSignature())
+        id=acc->identity();
     }
   }
 
@@ -726,13 +728,16 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString 
   KNLocalArticle *art=new KNLocalArticle(0);
   KNConfig::Identity  *grpId=0,
                       *defId=0,
+                      *accId=0,
                       *id=0;
   QFont::CharSet cs=KGlobal::charsets()->charsetForEncoding(pnt->charset());
 
   if(!g)
     grpId=0;
-  else
+  else {
     grpId=g->identity();
+    accId=g->account()->identity();
+  }
 
   defId=knGlobals.cfgManager->identity();
 
@@ -748,7 +753,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString 
   if(grpId && grpId->hasName())
     id=grpId;
   else
-    id=defId;
+    id=((accId) && accId->hasName())? accId:defId;
   if(id->hasName())
     from->setName(id->name());
 
@@ -756,7 +761,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString 
   if(grpId && grpId->hasEmail())
     id=grpId;
   else
-    id=defId;
+    id=((accId) && accId->hasEmail())? accId:defId;
   if(id->hasEmail()&&id->emailIsValid())
     from->setEmail(id->email().latin1());
   else {
@@ -769,7 +774,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString 
   if(grpId && grpId->hasReplyTo())
     id=grpId;
   else
-    id=defId;
+    id=((accId) && accId->hasReplyTo())? accId:defId;
   if(id->hasReplyTo())
     art->replyTo()->fromUnicodeString(id->replyTo(), cs);
 
@@ -777,7 +782,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString 
   if(grpId && grpId->hasOrga())
     id=grpId;
   else
-    id=defId;
+    id=((accId) && accId->hasOrga())? accId:defId;
   if(id->hasOrga())
     art->organization()->fromUnicodeString(id->orga(), cs);
 
@@ -811,12 +816,11 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString 
   if(grpId && grpId->hasSignature())
     id=grpId;
   else
-    id=defId;
+    id=((accId) && accId->hasSignature())? accId:defId;
   if(id->hasSignature())
     sig=id->getSignature();
   else
     sig=QString::null;
-
 
   return art;
 }
@@ -864,19 +868,26 @@ bool KNArticleFactory::cancelAllowed(KNArticle *a)
     KNRemoteArticle *remArt=static_cast<KNRemoteArticle*>(a);
     KNGroup *g=static_cast<KNGroup*>(a->collection());
     KNConfig::Identity  *defId=knGlobals.cfgManager->identity(),
-                        *gid=g->identity();
+                        *gid=g->identity(),
+                        *accId=g->account()->identity();
     bool ownArticle=true;
 
     if(gid && gid->hasName())
       ownArticle=( gid->name()==remArt->from()->name() );
     else
-      ownArticle=( defId->name()==remArt->from()->name() );
+      if (accId && accId->hasName())
+        ownArticle=( accId->name()==remArt->from()->name() );
+      else
+        ownArticle=( defId->name()==remArt->from()->name() );
 
     if(ownArticle) {
       if(gid && gid->hasEmail())
         ownArticle=( gid->email().latin1()==remArt->from()->email() );
       else
-        ownArticle=( defId->email().latin1()==remArt->from()->email() );
+        if (accId && accId->hasEmail())
+          ownArticle=( accId->email().latin1()==remArt->from()->email() );
+        else
+          ownArticle=( defId->email().latin1()==remArt->from()->email() );
     }
 
     if(!ownArticle) {
@@ -981,7 +992,7 @@ KNSendErrorDialog::KNSendErrorDialog() : QSemiModal(knGlobals.topWidget, 0, true
   QLabel *l=new QLabel(QString("<b>%1</b>").arg(i18n("Failed tasks:")), this);
   topL->addWidget(l);
 
-  j_obs=new KNDialogListBox(this);
+  j_obs=new KNDialogListBox(true,this);
   topL->addWidget(j_obs, 1);
 
   e_rror=new QLabel(this);

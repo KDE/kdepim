@@ -197,7 +197,6 @@ class NntpAccountListWidget : public BaseWidget {
     void slotRemoveItem(KNNntpAccount *a);
     void slotUpdateItem(KNNntpAccount *a);
 
-
   protected slots:
     void slotSelectionChanged();
     void slotItemSelected(int id);
@@ -229,6 +228,7 @@ class NntpAccountConfDialog : public KDialogBase  {
                 *t_imeout;
     QCheckBox   *f_etchDes,
                 *a_uth;
+    KNConfig::IdentityWidget* i_dWidget;
 
     KNNntpAccount *a_ccount;
 

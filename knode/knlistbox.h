@@ -41,11 +41,14 @@ class KNListBoxItem : public QListBoxItem  {
 class KNDialogListBox : public QListBox
 {
    public:
-    KNDialogListBox(QWidget * parent=0, const char * name=0);
+    // alwaysIgnore==false: enter is ignored when the widget isn't visible/out of focus
+    KNDialogListBox(bool alwaysIgnore=false, QWidget * parent=0, const char * name=0);
     ~KNDialogListBox();
 
   protected:
     void keyPressEvent( QKeyEvent *e );
+
+    bool a_lwaysIgnore;
 };
 
 #endif

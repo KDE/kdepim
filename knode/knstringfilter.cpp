@@ -24,6 +24,7 @@
 #include <ksimpleconfig.h>
 
 #include "kngroup.h"
+#include "knnntpaccount.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "knstringfilter.h"
@@ -61,14 +62,21 @@ void KNStringFilter::expand(KNGroup *g)
 {
   KNConfig::Identity  *id=0,
                       *defId=knGlobals.cfgManager->identity(),
-                      *grpId=g->identity();
+                      *grpId=g->identity(),
+                      *accId=g->account()->identity();
 
   expanded = data;
 
-  ((grpId) && grpId->hasName()) ? id=grpId : id=defId;
+  if ((grpId) && grpId->hasName())
+    id=grpId;
+  else
+    id= ((accId) && accId->hasName())? accId:defId;
   expanded.replace(QRegExp("%MYNAME"), id->name());
 
-  ((grpId) && grpId->hasEmail()) ? id=grpId : id=defId;
+  if ((grpId) && grpId->hasEmail())
+    id=grpId;
+  else
+    id= ((accId) && accId->hasEmail())? accId:defId;
   expanded.replace(QRegExp("%MYEMAIL"), id->email());
 }
 

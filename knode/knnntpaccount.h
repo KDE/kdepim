@@ -22,6 +22,10 @@
 #include "kncollection.h"
 #include "knserverinfo.h"
 
+namespace KNConfig {
+class Identity;
+};
+
 
 class KNNntpAccount : public KNCollection , public KNServerInfo {
   
@@ -36,17 +40,20 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     void saveInfo();    
     //void syncInfo();
     QString path();
+    bool editProperties(QWidget *parent);   // returns true when the user accepted
     
     //get
     bool fetchDescriptions()          { return f_etchDescriptions; }
     QDate lastNewFetch()              { return l_astNewFetch; }
     bool wasOpen()                    { return w_asOpen; }
-  
+    KNConfig::Identity* identity()    { return i_dentity; }
+
     //set
     void setFetchDescriptions(bool b) { f_etchDescriptions = b; }
     void setLastNewFetch(QDate date)  { l_astNewFetch = date; }
   
   protected:
+    KNConfig::Identity *i_dentity;    // server specific identity
     bool f_etchDescriptions;          // use an additional "list newsgroups" command to fetch the newsgroup descriptions
     QDate l_astNewFetch;              // last use of "newgroups"
     bool w_asOpen;                    // was the server open in the listview on the last shutdown?

@@ -46,5 +46,5 @@ void KNCollection::setListItem(KNCollectionViewItem *i)
 
 void KNCollection::updateListItem()
 {
-  if(l_istItem) l_istItem->setText(0, n_ame);
+  if(l_istItem) l_istItem->setText(0, name());
 }

@@ -39,6 +39,7 @@
 #include "knfoldermanager.h"
 #include "knconfig.h"
 
+
 KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent, const char * name)
   : QObject(parent, name), gManager(gm), c_urrentAccount(0), view(v)
 {
@@ -53,7 +54,6 @@ KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * 
 
   loadAccounts();
 }
-
 
 
 KNAccountManager::~KNAccountManager()
@@ -95,7 +95,6 @@ void KNAccountManager::loadAccounts()
 }
 
 
-
 KNNntpAccount* KNAccountManager::account(int i)
 {
   KNNntpAccount *ret=0;
@@ -112,12 +111,10 @@ KNNntpAccount* KNAccountManager::account(int i)
 }
 
 
-
 void KNAccountManager::setCurrentAccount(KNNntpAccount *a)
 {
   c_urrentAccount=a;
 }
-
 
 
 // a is new account allocated and configured by the caller
@@ -142,7 +139,6 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
   dir = KGlobal::dirs()->saveLocation("appdata",QString("nntp.%1/").arg(a->id()));
   if (dir!=QString::null) {
     accList->append(a);
-    applySettings(a);
     KNCollectionViewItem *it = new KNCollectionViewItem(view);
     it->setPixmap(0, knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::nntp));
     a->setListItem(it);
@@ -154,16 +150,6 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
     return false;
   }
 }
-
-
-
-// commit changes on a the caller made
-void KNAccountManager::applySettings(KNNntpAccount *a)
-{
-  a->updateListItem();
-  emit(accountModified(a));
-}
-
 
 
 // a==0: remove current account
@@ -217,14 +203,10 @@ void KNAccountManager::editProperties(KNNntpAccount *a)
   if(!a) a=c_urrentAccount;
   if(!a) return;
 
-  KNConfig::NntpAccountConfDialog *confDlg = new KNConfig::NntpAccountConfDialog(a, knGlobals.topWidget);
-  if (confDlg->exec())
-    applySettings(a);
-
-  delete confDlg;
+  a->editProperties(knGlobals.topWidget);
+  emit(accountModified(a));
 }
 
 //--------------------------------
 
 #include "knaccountmanager.moc"
-

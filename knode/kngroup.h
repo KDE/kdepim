@@ -92,7 +92,6 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void setIdentity(KNConfig::Identity *i) { i_dentity=i; }
     void setLocked(bool l)                  { l_ocked=l; }
 
-                
   protected:
     void sortHdrs(int cnt);
     int findRef(KNRemoteArticle *a, int from, int to, bool reverse=false);

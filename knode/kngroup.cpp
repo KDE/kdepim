@@ -148,7 +148,9 @@ void KNGroup::saveInfo()
       info.deleteEntry("Email", false);
       info.deleteEntry("Reply-To", false);
       info.deleteEntry("Org", false);
+      info.deleteEntry("UseSigFile", false);
       info.deleteEntry("sigFile", false);
+      info.deleteEntry("sigText", false);
     }
   }
 }

@@ -95,8 +95,8 @@ void KNConfig::Identity::save()
 bool KNConfig::Identity::isEmpty()
 {
   return (  n_ame.isEmpty() &&  e_mail.isEmpty() &&
-            r_eplyTo.isEmpty()   && o_rga.isEmpty() &&
-            ( s_igPath.isEmpty() || s_igText.isEmpty() ) );
+            r_eplyTo.isEmpty() && o_rga.isEmpty() &&
+            s_igPath.isEmpty() && s_igText.isEmpty() );
 }
 
 
