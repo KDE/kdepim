@@ -55,6 +55,7 @@
 #include <kapplication.h>
 
 #include <iterator>
+#include <algorithm>
 
 #include <cassert>
 
