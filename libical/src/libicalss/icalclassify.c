@@ -52,11 +52,11 @@ struct icalclassify_parts {
 char* icalclassify_lowercase(const char* str)
 {
     char* p = 0;
-    char* new = icalmemory_strdup(str);
 
     if(str ==0){
 	return 0;
     }
+    char* new = icalmemory_strdup(str);
 
     for(p = new; *p!=0; p++){
 	*p = tolower(*p);
@@ -147,6 +147,7 @@ icalproperty* icalclassify_find_attendee(icalcomponent *c,
     {
 	const char* this_attendee
 	    = icalclassify_lowercase(icalproperty_get_attendee(p));
+        if ( !this_attendee ) continue;
 	char* this_upn = strchr(this_attendee,':');
 
         if(this_upn == 0){
