@@ -307,7 +307,7 @@ void LDAPSearchDialog::slotSetScope( bool rec )
 QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr,
                                       bool startsWith )
 {
-  if( query.isEmpty() )
+  if ( query.isEmpty() )
     // Return a filter that matches everything
     return QString( "|(cn=*)(sn=*)" );
 
@@ -353,9 +353,8 @@ void LDAPSearchDialog::slotStartSearch()
 
    // loop in the list and run the KPIM::LdapClients 
   mResultListView->clear();
-  for( KPIM::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
+  for ( KPIM::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() )
     client->startQuery( filter );
-  }
 
   saveSettings();
 }

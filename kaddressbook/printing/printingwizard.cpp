@@ -196,7 +196,7 @@ void PrintingWizard::print()
     } else {
       // create a string list of all entries:
       KABC::AddressBook::ConstIterator it;
-      for( it = addressBook()->begin(); it != addressBook()->end(); ++it )
+      for ( it = addressBook()->begin(); it != addressBook()->end(); ++it )
         list.append( *it );
     }
 

@@ -1,9 +1,9 @@
 /*    
-	imaddresswidget.cpp
-	
-	IM address editor widget for KAddressbook
-	
-	Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
+  imaddresswidget.cpp
+  
+  IM address editor widget for KAddressbook
+  
+  Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,12 +35,12 @@
 
 #include "imaddresswidget.h"
 
-IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols ) : IMAddressBase( parent )
+IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols )
+  : IMAddressBase( parent )
 {
-	//New Address
-	mProtocols = protocols;
-	populateProtocols();
-	init();
+  mProtocols = protocols;
+  populateProtocols();
+  init();
 }
 
 IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols,
@@ -49,85 +49,91 @@ IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> pro
   : IMAddressBase( parent )
 {
   Q_UNUSED( context );
-  	//Edit Address
 
-	mProtocols = protocols;
-	populateProtocols();
-	cmbProtocol->setCurrentItem( mProtocols.findIndex( protocol ) );
-	/*cmbContext->setCurrentItem( (int)context );*/
-	
-	edtAddress->setText( address.section(QChar(0xE120),0,0) );
-	edtNetwork->setText( address.section(QChar(0xE120),1) );
-	init();
+  mProtocols = protocols;
+  populateProtocols();
+  cmbProtocol->setCurrentItem( mProtocols.findIndex( protocol ) );
+  
+  edtAddress->setText( address.section( QChar( 0xE120 ), 0, 0 ) );
+  edtNetwork->setText( address.section( QChar( 0xE120 ), 1 ) );
+
+  init();
 }
 
-void IMAddressWidget::init() {
-        connect( cmbProtocol, SIGNAL( activated(const QString&) ), this, SLOT( slotProtocolChanged() ) );
-	connect( edtAddress, SIGNAL( textChanged(const QString&) ), this, SLOT( slotAddressChanged(const QString &) ) );
-	slotProtocolChanged();
-}
-
-void IMAddressWidget::slotAddressChanged(const QString &text) {
-	emit inValidState(!text.stripWhiteSpace().isEmpty());
-}	
-
-KPluginInfo * IMAddressWidget::protocol()
+void IMAddressWidget::init()
 {
-	int protocolIndex = cmbProtocol->currentItem();
-	return mProtocols[ protocolIndex ];
+  connect( cmbProtocol, SIGNAL( activated( const QString& ) ),
+           this, SLOT( slotProtocolChanged() ) );
+  connect( edtAddress, SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( slotAddressChanged( const QString& ) ) );
+
+  slotProtocolChanged();
 }
 
-IMContext IMAddressWidget::context()
+void IMAddressWidget::slotAddressChanged( const QString &text )
 {
-	IMContext context = Any;
-/*	if ( cmbContext->currentItem() )
-	{
-		
-		int contextIndex = cmbContext->currentItem();
-		switch ( contextIndex )
-		{
-		case 0:
-			context = Any;
-			break;
-		case 1:
-			context = Home;
-			break;
-		case 2:
-			context = Work;
-			break;
-		}
-	}
-	*/
-	return context;
+  emit inValidState( !text.stripWhiteSpace().isEmpty() );
+}  
+
+KPluginInfo * IMAddressWidget::protocol() const
+{
+  int protocolIndex = cmbProtocol->currentItem();
+
+  return mProtocols[ protocolIndex ];
 }
 
-QString IMAddressWidget::address()
+IMContext IMAddressWidget::context() const
 {
-	//The protocol irc is a special case and hard coded in.  It's not nice, but the simplest way
-	//that I can see.
-	if(protocol()->name() == "IRC" && !edtNetwork->text().stripWhiteSpace().isEmpty())
-		return edtAddress->text().stripWhiteSpace() + QChar(0xE120) + edtNetwork->text().stripWhiteSpace();
-	else
-		return edtAddress->text().stripWhiteSpace();
+  IMContext context = Any;
+/*  if ( cmbContext->currentItem() )
+  {
+    
+    int contextIndex = cmbContext->currentItem();
+    switch ( contextIndex )
+    {
+    case 0:
+      context = Any;
+      break;
+    case 1:
+      context = Home;
+      break;
+    case 2:
+      context = Work;
+      break;
+    }
+  }
+  */
+
+  return context;
+}
+
+QString IMAddressWidget::address() const
+{
+  // The protocol irc is a special case and hard coded in.
+  // It's not nice, but the simplest way that I can see.
+  if ( protocol()->name() == "IRC" && !edtNetwork->text().stripWhiteSpace().isEmpty() )
+    return edtAddress->text().stripWhiteSpace() + QChar( 0xE120 ) + edtNetwork->text().stripWhiteSpace();
+  else
+    return edtAddress->text().stripWhiteSpace();
 }
 
 void IMAddressWidget::populateProtocols()
 {
-	// insert the protocols in order
-	QValueList<KPluginInfo *>::ConstIterator it;
-	for ( it = mProtocols.begin(); it != mProtocols.end(); ++it )
-		cmbProtocol->insertItem( SmallIcon( (*it)->icon() ), (*it)->name() );
+  // insert the protocols in order
+  QValueList<KPluginInfo *>::ConstIterator it;
+  for ( it = mProtocols.begin(); it != mProtocols.end(); ++it )
+    cmbProtocol->insertItem( SmallIcon( (*it)->icon() ), (*it)->name() );
 }
 
-void IMAddressWidget::slotProtocolChanged() {
-	if(protocol()->name() == "IRC") {
-		edtNetwork->show();
-		labelNetwork->show();
-	} else {
-		edtNetwork->hide();
-		labelNetwork->hide();
-	}
+void IMAddressWidget::slotProtocolChanged()
+{
+  if ( protocol()->name() == "IRC" ) {
+    edtNetwork->show();
+    labelNetwork->show();
+  } else {
+    edtNetwork->hide();
+    labelNetwork->hide();
+  }
 }
 
 #include "imaddresswidget.moc"
-

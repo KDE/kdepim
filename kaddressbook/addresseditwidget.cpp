@@ -144,7 +144,7 @@ void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
   // Insert default types.
   // Doing this for mPrefCombo is enough because the list is shared by all
   // combos.
-  for( it = defaultTypes.begin(); it != defaultTypes.end(); ++it ) {
+  for ( it = defaultTypes.begin(); it != defaultTypes.end(); ++it ) {
     if ( !mTypeCombo->hasType( *it ) )
       mTypeCombo->insertType( list, *it, Address( *it ) );
   }

@@ -76,57 +76,54 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   topLayout->setColStretch( 1, 1 );
   topLayout->setRowStretch( 4, 1 );
 
-  QVGroupBox* protGB = new QVGroupBox( i18n("Allowed Protocols"), this );
-  topLayout->addMultiCellWidget( protGB,0,0,0,1 );
+  QVGroupBox* protGB = new QVGroupBox( i18n( "Allowed Protocols" ), this );
+  topLayout->addMultiCellWidget( protGB, 0, 0, 0, 1 );
 
   uint msgFormat = 1;
   for ( uint i = 0 ; i < NumberOfProtocols ; ++i ) {
-      Kleo::CryptoMessageFormat f = static_cast<Kleo::CryptoMessageFormat>( msgFormat );
-      mProtocolCB[i] = new QCheckBox( Kleo::cryptoMessageFormatToLabel( f ), protGB );
-      connect( mProtocolCB[i], SIGNAL( clicked() ), this, SLOT( setModified() ) );
-      // Iterating over a bitfield means *2 every time
-      msgFormat *= 2;
+    Kleo::CryptoMessageFormat f = static_cast<Kleo::CryptoMessageFormat>( msgFormat );
+    mProtocolCB[ i ] = new QCheckBox( Kleo::cryptoMessageFormatToLabel( f ), protGB );
+    connect( mProtocolCB[i], SIGNAL( clicked() ), this, SLOT( setModified() ) );
+
+    // Iterating over a bitfield means *2 every time
+    msgFormat *= 2;
   }
 
-  QLabel* l = new QLabel( i18n("Preferred OpenPGP encryption key:"), this );
-  topLayout->addWidget( l,1,0 );
+  QLabel* l = new QLabel( i18n( "Preferred OpenPGP encryption key:" ), this );
+  topLayout->addWidget( l, 1, 0 );
 
-  mPgpKey =
-	new Kleo::EncryptionKeyRequester( true, Kleo::EncryptionKeyRequester::OpenPGP, this );
-  topLayout->addWidget( mPgpKey,1,1 );
+  mPgpKey = new Kleo::EncryptionKeyRequester( true, Kleo::EncryptionKeyRequester::OpenPGP, this );
+  topLayout->addWidget( mPgpKey, 1, 1 );
 
-  l = new QLabel( i18n("Preferred S/MIME encryption certificate:"), this );
-  topLayout->addWidget( l,2,0 );
+  l = new QLabel( i18n( "Preferred S/MIME encryption certificate:" ), this );
+  topLayout->addWidget( l, 2, 0 );
 
-  mSmimeCert =
-	new Kleo::EncryptionKeyRequester( true, Kleo::EncryptionKeyRequester::SMIME, this );
-  topLayout->addWidget( mSmimeCert,2,1 );
+  mSmimeCert = new Kleo::EncryptionKeyRequester( true, Kleo::EncryptionKeyRequester::SMIME, this );
+  topLayout->addWidget( mSmimeCert, 2, 1 );
 
-  QGroupBox* box = new QVGroupBox( i18n("Message Preference"), this );
-  topLayout->addMultiCellWidget( box, 3,3,0,1 );
+  QGroupBox* box = new QVGroupBox( i18n( "Message Preference" ), this );
+  topLayout->addMultiCellWidget( box, 3, 3, 0, 1 );
 
 
-  //send preferences/sign (see certmanager/lib/kleo/enum.h)
-  QHBox* hbox = new QHBox(box);
+  // Send preferences/sign (see certmanager/lib/kleo/enum.h)
+  QHBox* hbox = new QHBox( box );
 
-  l = new QLabel( i18n("Sign:"), hbox );
+  l = new QLabel( i18n( "Sign:" ), hbox );
 
   mSignPref = new QComboBox( false, hbox );
-  for ( unsigned int i = Kleo::UnknownSigningPreference ;
-        i < Kleo::MaxSigningPreference ; ++i )
-      mSignPref->insertItem( Kleo::signingPreferenceToLabel(
-                                 static_cast<Kleo::SigningPreference>( i ) ) );
+  for ( unsigned int i = Kleo::UnknownSigningPreference; i < Kleo::MaxSigningPreference ; ++i )
+    mSignPref->insertItem( Kleo::signingPreferenceToLabel(
+                           static_cast<Kleo::SigningPreference>( i ) ) );
 
-  //send preferences/encrypt (see certmanager/lib/kleo/enum.h)
-  hbox = new QHBox(box);
+  // Send preferences/encrypt (see certmanager/lib/kleo/enum.h)
+  hbox = new QHBox( box );
 
   l = new QLabel( i18n("Encrypt:"), hbox );
 
   mCryptPref = new QComboBox( false, hbox );
-  for ( unsigned int i = Kleo::UnknownPreference ;
-        i < Kleo::MaxEncryptionPreference ; ++i )
-      mCryptPref->insertItem(
-          Kleo::encryptionPreferenceToLabel( static_cast<Kleo::EncryptionPreference>( i ) ) );
+  for ( unsigned int i = Kleo::UnknownPreference; i < Kleo::MaxEncryptionPreference ; ++i )
+    mCryptPref->insertItem( Kleo::encryptionPreferenceToLabel(
+                            static_cast<Kleo::EncryptionPreference>( i ) ) );
 
   // Emit "changed()" signal
   connect( mSignPref, SIGNAL( activated(int) ), this, SLOT( setModified() ) );
@@ -153,13 +150,13 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
 
   uint msgFormat = 1;
   for ( uint i = 0 ; i < NumberOfProtocols ; ++i, msgFormat *= 2 ) {
-      mProtocolCB[i]->setChecked( cryptoFormats & msgFormat );
+    mProtocolCB[i]->setChecked( cryptoFormats & msgFormat );
   }
 
-  mSignPref->setCurrentItem( Kleo::stringToSigningPreference(addr->custom( "KADDRESSBOOK",
-                                                                           "CRYPTOSIGNPREF" )) );
-  mCryptPref->setCurrentItem( Kleo::stringToEncryptionPreference(addr->custom( "KADDRESSBOOK",
-                                                                               "CRYPTOENCRYPTPREF" )) );
+  mSignPref->setCurrentItem( Kleo::stringToSigningPreference( addr->custom( "KADDRESSBOOK",
+                                                                            "CRYPTOSIGNPREF" ) ) );
+  mCryptPref->setCurrentItem( Kleo::stringToEncryptionPreference( addr->custom( "KADDRESSBOOK",
+                                                                                "CRYPTOENCRYPTPREF" ) ) );
 
   // We dont use the contents of addr->key(...) because we want just a ref.
   // to the key/cert. stored elsewhere.
@@ -175,54 +172,52 @@ void CryptoWidget::storeContact( KABC::Addressee *addr )
   uint cryptoFormats = 0;
   uint msgFormat = 1;
   for ( uint i = 0 ; i < NumberOfProtocols ; ++i, msgFormat *= 2 ) {
-      if ( mProtocolCB[i]->isChecked() )
-          cryptoFormats |= msgFormat;
+    if ( mProtocolCB[ i ]->isChecked() )
+      cryptoFormats |= msgFormat;
   }
-  QStringList lst = Kleo::cryptoMessageFormatsToStringList(cryptoFormats);
 
+  QStringList lst = Kleo::cryptoMessageFormatsToStringList( cryptoFormats );
   if ( !lst.isEmpty() )
-      addr->insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF", lst.join( "," ) );
+    addr->insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF", lst.join( "," ) );
   else
-      addr->removeCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF" );
+    addr->removeCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF" );
 
   Kleo::SigningPreference signPref =
       static_cast<Kleo::SigningPreference>( mSignPref->currentItem() );
   if ( signPref != Kleo::UnknownSigningPreference )
-      addr->insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF",
-                          Kleo::signingPreferenceToString( signPref ) );
+    addr->insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF",
+                        Kleo::signingPreferenceToString( signPref ) );
   else
-      addr->removeCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF" );
+    addr->removeCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF" );
 
   Kleo::EncryptionPreference encryptPref =
       static_cast<Kleo::EncryptionPreference>( mCryptPref->currentItem() );
   if ( encryptPref != Kleo::UnknownPreference )
-      addr->insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF",
-                          Kleo::encryptionPreferenceToString( encryptPref ) );
+    addr->insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF",
+                        Kleo::encryptionPreferenceToString( encryptPref ) );
   else
-      addr->removeCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF" );
+    addr->removeCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF" );
 
   QStringList pfp = mPgpKey->fingerprints();
   QStringList sfp = mSmimeCert->fingerprints();
 
-  if( !pfp.isEmpty() ) {
-	addr->insertCustom( "KADDRESSBOOK", "OPENPGPFP", pfp.join( "," ) );
-  } else {
-	addr->removeCustom( "KADDRESSBOOK", "OPENPGPFP" );
-  }
+  if ( !pfp.isEmpty() )
+    addr->insertCustom( "KADDRESSBOOK", "OPENPGPFP", pfp.join( "," ) );
+  else
+    addr->removeCustom( "KADDRESSBOOK", "OPENPGPFP" );
 
-  if( !sfp.isEmpty() ) {
-	addr->insertCustom( "KADDRESSBOOK", "SMIMEFP", sfp.join( "," ) );
-  } else {
-	addr->removeCustom( "KADDRESSBOOK", "SMIMEFP" );
-  }
-
+  if ( !sfp.isEmpty() )
+    addr->insertCustom( "KADDRESSBOOK", "SMIMEFP", sfp.join( "," ) );
+  else
+    addr->removeCustom( "KADDRESSBOOK", "SMIMEFP" );
 }
 
 void CryptoWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
   for ( uint i = 0 ; i < NumberOfProtocols ; ++i )
-      mProtocolCB[i]->setEnabled( !readOnly );
+    mProtocolCB[ i ]->setEnabled( !readOnly );
+
   mSignPref->setEnabled( !readOnly );
   mCryptPref->setEnabled( !readOnly );
   mPgpKey->setEnabled( !readOnly );

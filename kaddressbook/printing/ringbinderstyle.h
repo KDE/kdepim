@@ -35,15 +35,16 @@ namespace KABPrinting
 
 class RingBinderPrintStyle : public PrintStyle
 {
-    Q_OBJECT
+  Q_OBJECT
 
   public:
     RingBinderPrintStyle( PrintingWizard* parent, const char* name = 0 );
     ~RingBinderPrintStyle();
-    void print( KABC::Addressee::List &contacts, PrintProgress* );
+
+    void print( const KABC::Addressee::List &contacts, PrintProgress* );
 
   protected:
-    bool printEntries( KABC::Addressee::List &contacts, KPrinter *printer, 
+    bool printEntries( const KABC::Addressee::List &contacts, KPrinter *printer, 
                        QPainter *painter, const QRect& window );
     void fillEmpty( const QRect& window, KPrinter *printer, QPainter* painter, 
                     int top, int grpnum );
@@ -66,10 +67,10 @@ class RingBinderPrintStyle : public PrintStyle
 class RingBinderPrintStyleFactory : public PrintStyleFactory
 {
   public:
-    RingBinderPrintStyleFactory( PrintingWizard* parent_,
-                                 const char* name_ = 0 );
-    PrintStyle *create();
-    QString description();
+    RingBinderPrintStyleFactory( PrintingWizard *parent, const char *name = 0 );
+
+    PrintStyle *create() const;
+    QString description() const;
 };
 
 }

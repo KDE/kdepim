@@ -138,7 +138,7 @@ int KABEntryPainter::hits( const QRectList& list, const QPoint &p )
   QRectList::const_iterator pos;
   int count = 0;
 
-  for( pos = list.begin(); pos != list.end(); ++pos ) {
+  for ( pos = list.begin(); pos != list.end(); ++pos ) {
     if ( (*pos).contains( p ) )
       return count;
 

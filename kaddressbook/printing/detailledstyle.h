@@ -33,36 +33,35 @@ class AppearancePage;
 
 namespace KABPrinting {
 
-    class DetailledPrintStyle : public PrintStyle
-    {
-        Q_OBJECT
-    public:
-        DetailledPrintStyle(PrintingWizard* parent, const char* name=0);
-        ~DetailledPrintStyle();
-        void print( KABC::Addressee::List &contacts, PrintProgress* );
-    protected:
-        bool printEntries( KABC::Addressee::List &contacts,
-                          KPrinter *printer,
-                          QPainter *painter,
-                          const QRect& window);
-        bool printEntry(const KABC::Addressee& contact,
-                        const QRect& window,
-                        QPainter *painter,
-                        int top, bool fake, QRect *brect);
-    private:
-        AppearancePage *mPageAppearance;
-        KABEntryPainter *mEPntr;
-        PrintProgress *mPrintProgress;
-    };
+class DetailledPrintStyle : public PrintStyle
+{
+  Q_OBJECT
 
-    class DetailledPrintStyleFactory : public PrintStyleFactory
-    {
-    public:
-        DetailledPrintStyleFactory(PrintingWizard* parent_,
-                                   const char* name_=0);
-        PrintStyle *create();
-        QString description();
-    };
+  public:
+    DetailledPrintStyle( PrintingWizard *parent, const char *name = 0 );
+    ~DetailledPrintStyle();
+
+    void print( const KABC::Addressee::List &contacts, PrintProgress* );
+
+  protected:
+    bool printEntries( const KABC::Addressee::List &contacts, KPrinter *printer,
+                       QPainter *painter, const QRect &window );
+    bool printEntry( const KABC::Addressee &contact, const QRect &window,
+                     QPainter *painter, int top, bool fake, QRect *brect );
+  private:
+    AppearancePage *mPageAppearance;
+    KABEntryPainter *mPainter;
+    PrintProgress *mPrintProgress;
+};
+
+class DetailledPrintStyleFactory : public PrintStyleFactory
+{
+  public:
+    DetailledPrintStyleFactory( PrintingWizard *parent, const char *name = 0 );
+
+    PrintStyle *create() const;
+    QString description() const;
+};
 
 }
 

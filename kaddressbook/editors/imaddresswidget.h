@@ -1,9 +1,9 @@
 /*    
-	imaddresswidget.h
-	
-	IM address editor widget for KAddressbook
-	
-	Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
+  imaddresswidget.h
+  
+  IM address editor widget for KAddressbook
+  
+  Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -43,30 +43,34 @@ class KPluginInfo;
  */
 class IMAddressWidget : public IMAddressBase
 {
-Q_OBJECT
-public:
-	IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols);
-	IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols, KPluginInfo *protocol, const QString& address, const IMContext& context = Any );
-	KPluginInfo * protocol();
-	IMContext context();
-	QString address();
-	QValueList<KPluginInfo *> mProtocols;
-	
-signals:
-	void inValidState(bool );
-protected:
-	/**
-	 * Populate combobox with protocols
-	 */
-	void populateProtocols();
-	
-protected slots:
-	void slotProtocolChanged();
+  Q_OBJECT
 
-	void slotAddressChanged(const QString &text);
-private:
-	void init();
+  public:
+    IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols);
+    IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols,
+                     KPluginInfo *protocol, const QString& address,
+                     const IMContext& context = Any );
+
+    KPluginInfo * protocol() const;
+    IMContext context() const;
+    QString address() const ;
+    QValueList<KPluginInfo *> mProtocols;
+  
+  signals:
+    void inValidState( bool );
+
+  protected:
+    /**
+     * Populate combobox with protocols
+     */
+    void populateProtocols();
+  
+  protected slots:
+    void slotProtocolChanged();
+    void slotAddressChanged( const QString &text );
+
+  private:
+    void init();
 };
 
 #endif
-

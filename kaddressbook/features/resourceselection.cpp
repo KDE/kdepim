@@ -180,7 +180,7 @@ void ResourceSelection::add()
 
   // Create new resource
   KABC::Resource *resource = mManager->createResource( type );
-  if( !resource ) {
+  if ( !resource ) {
     KMessageBox::error( this, i18n("<qt>Unable to create an address book of type <b>%1</b>.</qt>")
                               .arg( type ) );
     return;

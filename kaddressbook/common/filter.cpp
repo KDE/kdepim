@@ -79,7 +79,7 @@ bool Filter::filterAddressee( const KABC::Addressee &a ) const
   // empty filter always matches
 
   if ( iter == mCategoryList.end() ) {
-    if( mMatchRule == Matching )
+    if ( mMatchRule == Matching )
       return true;
     else {
       if ( a.categories().empty() )

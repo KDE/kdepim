@@ -68,7 +68,7 @@ class PrintStyle : public QObject
     /**
      Reimplement this method to actually print.
      */
-    virtual void print( KABC::Addressee::List &contacts, PrintProgress* ) = 0;
+    virtual void print( const KABC::Addressee::List &contacts, PrintProgress* ) = 0;
 
     /**
      Reimplement this method to provide a preview of what will
@@ -142,23 +142,24 @@ class PrintStyle : public QObject
 
 
 /**
- The factories are used to have all object of the respective
- print style created in one place.
- This will maybe be changed to a template because of its simple
- nature :-)
+  The factories are used to have all object of the respective
+  print style created in one place.
+  This will maybe be changed to a template because of its simple
+  nature :-)
 */
 class PrintStyleFactory
 {
   public:
     PrintStyleFactory( PrintingWizard* parent, const char* name = 0 );
     virtual ~PrintStyleFactory();
-    virtual PrintStyle *create() = 0;
+
+    virtual PrintStyle *create() const = 0;
 
     /**
-     Overload this method to provide a one-liner description
-     for your print style.
+      Overload this method to provide a one-liner description
+      for your print style.
      */
-    virtual QString description() = 0;
+    virtual QString description() const = 0;
 
   protected:
     PrintingWizard* mParent;

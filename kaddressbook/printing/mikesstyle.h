@@ -31,34 +31,34 @@
 
 namespace KABPrinting {
 
-    class PrintProgress;
+class PrintProgress;
 
-    class MikesStyle : public PrintStyle
-    {
-        Q_OBJECT
-    public:
-        MikesStyle(PrintingWizard* parent, const char* name);
-        ~MikesStyle();
-        void print(KABC::Addressee::List&, PrintProgress*);
-    protected:
-        void doPaint(QPainter &painter, const KABC::Addressee &a,
-                     int maxHeight,
-                     const QFont& font, const QFont& bFont);
-        int calcHeight(const KABC::Addressee &a,
-                       const QFont& font, const QFont& bFont);
-        void paintTagLine(QPainter &p, const QFont& font);
-        QString trimString(const QString &text, int width,
-                           QFontMetrics &fm);
-    };
+class MikesStyle : public PrintStyle
+{
+  Q_OBJECT
 
-    class MikesStyleFactory : public PrintStyleFactory
-    {
-    public:
-        MikesStyleFactory(PrintingWizard* parent_,
-                                   const char* name_=0);
-        PrintStyle *create();
-        QString description();
-    };
+  public:
+    MikesStyle( PrintingWizard *parent, const char *name );
+    ~MikesStyle();
+
+    void print( const KABC::Addressee::List&, PrintProgress* );
+
+  protected:
+    void doPaint( QPainter &painter, const KABC::Addressee &addr, int maxHeight,
+                  const QFont &font, const QFont &bFont );
+    int calcHeight( const KABC::Addressee &addr, const QFont &font, const QFont &bFont);
+    void paintTagLine( QPainter &p, const QFont &font);
+    QString trimString( const QString &text, int width, QFontMetrics &fm);
+};
+
+class MikesStyleFactory : public PrintStyleFactory
+{
+  public:
+    MikesStyleFactory( PrintingWizard *parent, const char *name = 0 );
+
+    PrintStyle *create() const;
+    QString description() const;
+};
 
 }
 

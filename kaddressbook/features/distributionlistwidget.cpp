@@ -108,7 +108,7 @@ class ContactItem : public QListViewItem
       mEmail( email )
     {
       setText( 0, addressee.realName() );
-      if( email.isEmpty() ) {
+      if ( email.isEmpty() ) {
         setText( 1, addressee.preferredEmail() );
         setText( 2, i18n( "Yes" ) );
       } else {
@@ -368,7 +368,7 @@ void DistributionListWidget::updateContactView()
   uint entryCount = 0;
   const KABC::DistributionList::Entry::List entries = list->entries();
   KABC::DistributionList::Entry::List::ConstIterator it;
-  for( it = entries.begin(); it != entries.end(); ++it, ++entryCount )
+  for ( it = entries.begin(); it != entries.end(); ++it, ++entryCount )
     new ContactItem( mContactView, (*it).addressee, (*it).email );
 
   ContactItem *contactItem =

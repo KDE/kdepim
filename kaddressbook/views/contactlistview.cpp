@@ -225,9 +225,9 @@ void ContactListViewItem::refresh()
   int i = 0;
   if ( mHasIM )
     setPixmap( parentListView->imColumn(), mIMProxy->presenceIcon( mAddressee.uid() ) );
-  
+
   KABC::Field::List::ConstIterator it;
-  for( it = mFields.begin(); it != mFields.end(); ++it ) {
+  for ( it = mFields.begin(); it != mFields.end(); ++it ) {
     if ( (*it)->label() == KABC::Addressee::birthdayLabel() ) {
       QDate date = mAddressee.birthday().date();
       if ( date.isValid() )

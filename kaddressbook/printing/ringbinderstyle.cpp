@@ -30,6 +30,7 @@
 #include <qspinbox.h>
 #include <qstringlist.h>
 
+#include <kabc/addresseelist.h>
 #include <kapplication.h>
 #include <kcombobox.h>
 #include <kconfig.h>
@@ -38,7 +39,6 @@
 #include <klocale.h>
 #include <kprinter.h>
 #include <kstandarddirs.h>
-#include <kabc/addresseelist.h>
 
 #include "printingwizard.h"
 #include "printprogress.h"
@@ -46,8 +46,7 @@
 
 #include "rbs_appearance.h"
 
-namespace KABPrinting
-{
+using namespace KABPrinting;
 
 const char* RingBinderConfigSectionName = "RingBinderPrintStyle";
 const char* ShowPhoneNumbers = "ShowPhoneNumbers";
@@ -59,21 +58,17 @@ const char* FillWithEmptyFields = "FillWithEmptyFields";
 const char* MinNumberOfEmptyFields = "MinNumberOfEmptyFields";
 const char* LetterGroups = "LetterGroups";
 
-RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent,
-    const char* name )
-    : PrintStyle( parent, name ),
-    mPageAppearance( new RingBinderStyleAppearanceForm( parent, 
-          "AppearancePage" ) ),
+RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent, const char* name )
+  : PrintStyle( parent, name ),
+    mPageAppearance( new RingBinderStyleAppearanceForm( parent, "AppearancePage" ) ),
     mPrintProgress( 0 )
 {
-  KConfig * config;
   setPreview( "ringbinder-style.png" );
-  // how is this done? : setPreferredSortOptions(  );
 
   addPage( mPageAppearance, i18n( "Ring Binder Printing Style - Appearance" ) );
 
   // applying previous settings
-  config = kapp->config();
+  KConfig * config = kapp->config();
   config->setGroup( RingBinderConfigSectionName );
   mPageAppearance->cbPhoneNumbers->setChecked( config->readBoolEntry( ShowPhoneNumbers, true ) );
   mPageAppearance->cbEmails->setChecked( config->readBoolEntry( ShowEmailAddresses, true ) );
@@ -82,17 +77,19 @@ RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent,
   mPageAppearance->cbBirthday->setChecked( config->readBoolEntry( ShowBirthday, false ) );
   mPageAppearance->cbFillEmpty->setChecked( config->readBoolEntry( FillWithEmptyFields, true ) );
   mPageAppearance->sbMinNumFill->setValue( config->readUnsignedNumEntry( MinNumberOfEmptyFields, 0 ) );
+
   QStringList tabNames = config->readListEntry( LetterGroups, ',' );
-  if ( tabNames.isEmpty() ) {
+  if ( tabNames.isEmpty() )
     tabNames = QStringList::split( ',', QString( "AB,CD,EF,GH,IJK,LM,NO,PQR,S,TU,VW,XYZ" ) );
-  }
+
   mPageAppearance->letterListBox->insertStringList( tabNames );
 }
 
 RingBinderPrintStyle::~RingBinderPrintStyle()
-{}
+{
+}
 
-void RingBinderPrintStyle::print( KABC::Addressee::List &contacts, PrintProgress *progress )
+void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintProgress *progress )
 {
   mPrintProgress = progress;
   progress->addMessage( i18n( "Setting up fonts and colors" ) );
@@ -127,26 +124,16 @@ void RingBinderPrintStyle::print( KABC::Addressee::List &contacts, PrintProgress
       marginBottom = 0;
   register int left, top, width, height;
 
-  // ----- we expect the printer to be set up (it is, before the wizard is started):
   painter.begin( printer );
   painter.setPen( Qt::black );
   printer->setFullPage( true ); // use whole page
   QPaintDeviceMetrics metrics( printer );
-  kdDebug(5720) << "RingBinderPrintStyle::print: printing on a "
-  << metrics.width() << "x" << metrics.height()
-  << " size area," << endl << "   "
-  << "margins are "
-  << printer->margins().width() << " (left/right) and "
-  << printer->margins().height() << " (top/bottom)." << endl;
-  left = QMAX( printer->margins().width(), marginLeft ); // left margin
-  top = QMAX( printer->margins().height(), marginTop ); // top margin
-  width = metrics.width() - left
-          - QMAX( printer->margins().width(), marginRight ); // page width
-  height = metrics.height() - top
-           - QMAX( printer->margins().height(), marginBottom ); // page height
 
-  // ----- now do the printing:
-  // this prepares for, like, two-up etc:
+  left = QMAX( printer->margins().width(), marginLeft );
+  top = QMAX( printer->margins().height(), marginTop );
+  width = metrics.width() - left - QMAX( printer->margins().width(), marginRight );
+  height = metrics.height() - top - QMAX( printer->margins().height(), marginBottom );
+
   painter.setViewport( left, top, width, height );
   progress->addMessage( i18n( "Printing" ) );
   printEntries( contacts, printer, &painter,
@@ -156,10 +143,9 @@ void RingBinderPrintStyle::print( KABC::Addressee::List &contacts, PrintProgress
   config->sync();
 }
 
-bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
-    KPrinter *printer,
-    QPainter *painter,
-    const QRect& window )
+bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
+                                         KPrinter *printer, QPainter *painter,
+                                         const QRect& window )
 {
   // FIXME: handle following situations
   // - handle situation in which we sort descending. In this case the
@@ -177,17 +163,16 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
   // reverse the sorting of the groups:
   QStringList ltgroups;
   if ( !tmpl->reverseSorting() ) {
-      for ( unsigned int i = 0; i < mPageAppearance->letterListBox->count(); i++ ) {
-          ltgroups.append( mPageAppearance->letterListBox->text( i ) );
-      }
+    for ( unsigned int i = 0; i < mPageAppearance->letterListBox->count(); i++ )
+      ltgroups.append( mPageAppearance->letterListBox->text( i ) );
   } else {
-      for ( unsigned int i = mPageAppearance->letterListBox->count() - 1; i > 0; i-- ) {
-          ltgroups.append( mPageAppearance->letterListBox->text( i ) );
-      }
+    for ( unsigned int i = mPageAppearance->letterListBox->count() - 1; i > 0; i-- )
+      ltgroups.append( mPageAppearance->letterListBox->text( i ) );
   }
 
   // the yposition of the current entry
   int ypos = 0;
+
   // counter variable for the progress widget
   int count = 0;
 
@@ -197,8 +182,9 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
   // iterate through the contacts
   printPageHeader( ltgroups[ grpnum ], window, painter );
   ypos = pageHeaderMetrics( window, painter ).height();
-  for ( KABC::AddresseeList::ConstIterator it = contacts.begin(); 
-        it != contacts.end(); ++it ) {
+
+  KABC::AddresseeList::ConstIterator it;
+  for ( it = contacts.begin(); it != contacts.end(); ++it ) {
     KABC::Addressee addressee = ( *it );
     if ( !addressee.isEmpty() ) {
       // let's see if we have to open the next group:
@@ -219,8 +205,9 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
             nowchar = tmpstr.at( 0 ).upper();
           }
         }
-        if (    ( !tmpl->reverseSorting() && nowchar >= nextchar )
-             || (  tmpl->reverseSorting() && nowchar <= nextchar ) ) {
+
+        if ( ( !tmpl->reverseSorting() && nowchar >= nextchar )
+             || ( tmpl->reverseSorting() && nowchar <= nextchar ) ) {
           // we have reached the next letter group:
           //
           // first check if we should fill the rest of the page or even more
@@ -244,37 +231,34 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
       // get the bounding rect:
       int entryheight = entryMetrics( addressee, window, painter, ypos ).height();
 
-      if (   entryheight > ( window.height() - ypos ) 
-          && !( entryheight > window.height() ) ) { 
+      if ( entryheight > ( window.height() - ypos ) && !( entryheight > window.height() ) ) { 
         // it does not fit on the page beginning at ypos:
         printer->newPage();
-        printPageHeader( mPageAppearance->letterListBox->text( grpnum )
-                       , window, painter );
+        printPageHeader( mPageAppearance->letterListBox->text( grpnum ), window, painter );
         ypos = pageHeaderMetrics( window, painter ).height();
       }
+
       printEntry( addressee, window, painter, ypos );
       ypos += entryheight;
     } else {
       kdDebug(5720) << "RingBinderPrintStyle::printEntries: strange, addressee "
       << "with UID " << addressee.uid() << " not available." << endl;
     }
-    mPrintProgress->setProgress( ( count++*100 ) / contacts.count() );
+
+    mPrintProgress->setProgress( (count++ * 100) / contacts.count() );
   }
 
   // check again if we should fill the last page with empty fields
   // (as the above call won't be reached for the last letter group)
   fillEmpty( window, printer, painter, ypos, grpnum );
-  // ----- set progress:
+
   mPrintProgress->setProgress( 100 );
+
   return true;
 }
 
-void RingBinderPrintStyle::fillEmpty( const QRect& window
-                                      , KPrinter *printer
-                                      , QPainter* painter
-                                      , int top
-                                      , int grpnum
-                                    )
+void RingBinderPrintStyle::fillEmpty( const QRect& window, KPrinter *printer,
+                                      QPainter* painter, int top, int grpnum )
 {
   if ( mPageAppearance->cbFillEmpty->isChecked() ) {
     // print as many empty fields as fit on the page
@@ -297,18 +281,14 @@ void RingBinderPrintStyle::fillEmpty( const QRect& window
   }
 }
 
-bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact
-                                       , const QRect& window
-                                       , QPainter* painter
-                                       , int top
-                                       , bool fake
-                                       , QRect* brect
-                                     )
+bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact, const QRect& window,
+                                       QPainter* painter, int top, bool fake, QRect* brect )
 {
   QFont normfont( "Helvetica", 10, QFont::Normal );
   QFontMetrics fmnorm( normfont );
   QPen thickpen( Qt::black, 0 );
   QPen thinpen ( Qt::black, 0 );
+
   // store at which line we are and how many lines we have for this entry:
   int linenum = 0;
   int maxlines = 0;
@@ -343,7 +323,7 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact
       if ( !( *it ).isEmpty() ) {
         //FIXME:draw type label somehow
         // linenum++;
-        // if(!fake) 
+        // if ( !fake ) 
         //   painter->drawText(5, top + (linenum*fmnorm.lineSpacing()) 
         //                            - fmnorm.leading(), (*it).typeLabel());
         painter->setFont( normfont );
@@ -433,26 +413,20 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact
   return true;
 }
 
-QRect RingBinderPrintStyle::entryMetrics( const KABC::Addressee& contact
-    , const QRect& window
-    , QPainter* painter
-    , int top
-                                        )
+QRect RingBinderPrintStyle::entryMetrics( const KABC::Addressee& contact,
+                                          const QRect& window, QPainter* painter,
+                                          int top )
 {
   QRect ret;
   printEntry( contact, window, painter, top, true, &ret );
   return ret;
 }
 
-bool RingBinderPrintStyle::printEmptyEntry(
-  const QRect& window
-  , QPainter* painter
-  , int top
-)
+bool RingBinderPrintStyle::printEmptyEntry( const QRect& window, QPainter* painter,
+                                            int top )
 {
   QFont normfont( "Helvetica", 10, QFont::Normal );
   QFontMetrics fmnorm( normfont );
-  // QPen thickpen(Qt::black, 1);
   QPen thickpen( Qt::black, 0 );
   QPen thinpen ( Qt::black, 0 );
   painter->setFont( normfont );
@@ -465,19 +439,15 @@ bool RingBinderPrintStyle::printEmptyEntry(
   }
   painter->drawLine( (int)( window.width() * 0.5 ), top, 
         (int)( window.width() * 0.5 ), top + ( 3 * fmnorm.lineSpacing() ) );
+
   // this line not as deep as we need room for the email field
   painter->drawLine( (int)( window.width() * 0.75 ), top, 
         (int)( window.width() * 0.75 ), top + ( 2 * fmnorm.lineSpacing() ) );
-  // painter->drawText((window.width()*0.5) + 5, 
-  //                   top+3*fmnorm.lineSpacing() -4, "email");
+
   return true;
 }
 
-QRect RingBinderPrintStyle::emptyEntryMetrics(
-  const QRect& window
-  , QPainter* /*painter*/
-  , int top
-)
+QRect RingBinderPrintStyle::emptyEntryMetrics( const QRect& window, QPainter*, int top )
 {
   QFont normfont( "Helvetica", 10, QFont::Normal );
   QFontMetrics fmnorm( normfont );
@@ -485,50 +455,42 @@ QRect RingBinderPrintStyle::emptyEntryMetrics(
 }
 
 
-bool RingBinderPrintStyle::printPageHeader(
-  const QString section
-  , const QRect& window
-  , QPainter* painter
-)
+bool RingBinderPrintStyle::printPageHeader( const QString section, const QRect& window,
+                                            QPainter* painter )
 {
   QFont sectfont( "Helvetica", 16, QFont::Normal );
   QFontMetrics fmsect( sectfont );
   painter->setFont( sectfont );
   painter->drawText( QRect( 0, 0, window.width(), fmsect.height() ), 
-      Qt::AlignRight, section );
+                     Qt::AlignRight, section );
   return true;
 }
 
-QRect RingBinderPrintStyle::pageHeaderMetrics(
-  const QRect& window
-  , QPainter* /*painter*/
-)
+QRect RingBinderPrintStyle::pageHeaderMetrics( const QRect& window, QPainter* )
 {
   QFont sectfont( "Helvetica", 16, QFont::Normal );
   QFont normfont( "Helvetica", 12, QFont::Normal );
   QFontMetrics fmsect( sectfont );
   QFontMetrics fmnorm( normfont );
+
   return QRect( 0, 0, window.width(), fmsect.height() + 10 );
 }
 
 
-RingBinderPrintStyleFactory::RingBinderPrintStyleFactory(
-  PrintingWizard* parent,
-  const char* name )
-    : PrintStyleFactory( parent, name )
-{}
+RingBinderPrintStyleFactory::RingBinderPrintStyleFactory( PrintingWizard *parent,
+                                                          const char *name )
+  : PrintStyleFactory( parent, name )
+{
+}
 
-
-PrintStyle *RingBinderPrintStyleFactory::create()
+PrintStyle *RingBinderPrintStyleFactory::create() const
 {
   return new RingBinderPrintStyle( mParent, mName );
 }
 
-QString RingBinderPrintStyleFactory::description()
+QString RingBinderPrintStyleFactory::description() const
 {
   return i18n( "Printout for Ring Binders" );
-}
-
 }
 
 #include "ringbinderstyle.moc"

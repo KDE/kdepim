@@ -69,7 +69,7 @@ void ViewConfigureFieldsPage::restoreSettings( KConfig *config )
     fields = KABC::Field::defaultFields();
 
   KABC::Field::List::ConstIterator it;
-  for( it = fields.begin(); it != fields.end(); ++it )
+  for ( it = fields.begin(); it != fields.end(); ++it )
     new FieldItem( mSelectedBox, *it );
 
   slotShowFields( mCategoryCombo->currentItem() );
@@ -79,7 +79,7 @@ void ViewConfigureFieldsPage::saveSettings( KConfig *config )
 {
   KABC::Field::List fields;
 
-  for( uint i = 0; i < mSelectedBox->count(); ++i ) {
+  for ( uint i = 0; i < mSelectedBox->count(); ++i ) {
     FieldItem *fieldItem = static_cast<FieldItem *>( mSelectedBox->item( i ) );
     fields.append( fieldItem->field() );
   }
@@ -150,7 +150,7 @@ void ViewConfigureFieldsPage::slotButtonsEnabled()
 {
   bool state = false;
   // add button: enabled if any items are selected in the unselected list
-  for( uint i = 0; i < mUnSelectedBox->count(); ++i )
+  for ( uint i = 0; i < mUnSelectedBox->count(); ++i )
     if ( mUnSelectedBox->item( i )->isSelected() ) {
       state = true;
       break;

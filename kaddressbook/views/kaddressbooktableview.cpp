@@ -126,7 +126,7 @@ void KAddressBookTableView::reconstructListView()
   KABC::Field::List::ConstIterator it;
 
   int c = 0;
-  for( it = fieldList.begin(); it != fieldList.end(); ++it ) {
+  for ( it = fieldList.begin(); it != fieldList.end(); ++it ) {
       mListView->addColumn( (*it)->label() );
       mListView->setColumnWidthMode(c++, QListView::Manual);
   }

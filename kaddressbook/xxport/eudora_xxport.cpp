@@ -155,7 +155,7 @@ QString EudoraXXPort::email( const QString& line ) const
   b = line.findRev( '\"' );
   if ( b == -1 ) { 
     b = line.findRev( ' ' );
-    if( b == -1 )
+    if ( b == -1 )
       return result;
   }
   result = line.mid( b + 1 );

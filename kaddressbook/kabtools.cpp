@@ -62,7 +62,7 @@ void KABTools::mailVCards( const QStringList &uids, KABC::AddressBook *ab )
   }
 
   QStringList existingFiles;
-  for( QStringList::ConstIterator it = uids.begin(); it != uids.end(); ++it ) {
+  for ( QStringList::ConstIterator it = uids.begin(); it != uids.end(); ++it ) {
     KABC::Addressee addressee = ab->findByUid( *it );
 
     if ( addressee.isEmpty() )

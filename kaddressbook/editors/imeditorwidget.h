@@ -1,9 +1,9 @@
 /*
-	imeditorwidget.h
+  imeditorwidget.h
 
-	IM addresses editor widget for KAddressbook
+  IM addresses editor widget for KAddressbook
 
-	Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
+  Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ class IMEditorWidget : public KDialogBase
     void setReadOnly( bool readOnly );
     QValueList<KPluginInfo *> availableProtocols() const; 
     bool isModified() const;
-    QString preferred();
+    QString preferred() const;
 
   protected slots:
     void slotUpdateButtons();
@@ -79,7 +79,7 @@ class IMEditorWidget : public KDialogBase
     /**
      * Find a protocol that matches the KABC key, or 0 if none found
      */
-    KPluginInfo * protocolFromString( const QString fieldValue );
+    KPluginInfo * protocolFromString( const QString &fieldValue ) const;
 
   private:
     bool mReadOnly;
@@ -108,6 +108,7 @@ class IMAddressLVI : public KListViewItem
     void setProtocol( KPluginInfo * protocol );
     void setContext( const IMContext &context );
     void activate();
+
     KPluginInfo * protocol() const;
     QString address() const;
     IMContext context() const;
@@ -116,8 +117,8 @@ class IMAddressLVI : public KListViewItem
     bool preferred() const;
   
   protected:
-    virtual void paintCell( QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
-	   
+    virtual void paintCell( QPainter *p, const QColorGroup &cg, int column, int width, int alignment );
+     
   private:
     KPluginInfo * mProtocol;
     bool mPreferred;
