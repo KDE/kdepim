@@ -229,7 +229,7 @@ class KABCore : public KAB::Core
      */
     void incrementalTextSearch( const QString& text );
 
-    void incrementalJumpButtonSearch( const QString& characters );
+    void incrementalJumpButtonSearch( const QStringList& characters );
 
     /**
       Marks the address book as modified.
@@ -341,7 +341,6 @@ class KABCore : public KAB::Core
     void extensionModified( const KABC::Addressee::List &list );
     void clipboardDataChanged();
     void updateActionMenu();
-    void updateIncSearchWidget();
 
     void slotEditorDestroyed( const QString &uid );
     void addressBookChanged();
