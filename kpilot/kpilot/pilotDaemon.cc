@@ -1021,7 +1021,7 @@ static void queueConduits(ActionQueue *fSyncStack,
 		if ( (fNextSyncType == SyncAction::eHotSync) ||
 			(fNextSyncType == SyncAction::eFullSync))
 		{
-			fSyncStack->addAction(new BackupAction(pilotLink, (fNextSyncType == SyncAction::eHotSync)));
+			fSyncStack->addAction(new BackupAction(pilotLink, (fNextSyncType == SyncAction::eFullSync)));
 		}
 		break;
 	case SyncAction::eCopyPCToHH:
