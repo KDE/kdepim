@@ -1,8 +1,8 @@
-/* perl-factory.cc                      KPilot
+/* notepad-factory.cc                      KPilot
 **
-** Copyright (C) 2004 by Adriaan de Groot
+** Copyright (C) 2004 by Adriaan de Groot, Joern Ahrens
 **
-** This file defines the factory for the perl-conduit plugin.
+** This file defines the factory for the notepad-conduit plugin.
 */
 
 /*
@@ -31,6 +31,7 @@
 #include <kconfig.h>
 #include <kinstance.h>
 #include <kaboutdata.h>
+#include <kurlrequester.h>
 #include <qlineedit.h>
 
 #include "notepad-conduit.h"     // Conduit action
@@ -43,55 +44,63 @@ extern "C"
 
 void *init_conduit_notepad()
 {
-	return new PerlConduitFactory;
+	return new NotepadConduitFactory;
 }
 
 }
 
-class PerlConduitConfig : public ConduitConfigBase
+class NotepadConduitConfig : public ConduitConfigBase
 {
 public:
-	PerlConduitConfig(QWidget *parent=0L, const char *n=0L);
+	NotepadConduitConfig(QWidget *parent=0L, const char *n=0L);
 	virtual void commit();
 	virtual void load();
-	static ConduitConfigBase *create(QWidget *p,const char *n)
-		{ return new PerlConduitConfig(p,n); } ;
+	static ConduitConfigBase *create(QWidget *p, const char *n)
+	{ 
+		return new NotepadConduitConfig(p, n); 
+	};
+	
 protected:
-	PerlWidget *fConfigWidget;
+	NotepadWidget *fConfigWidget;
 } ;
 
-PerlConduitConfig::PerlConduitConfig(QWidget *p, const char *n) :
-	ConduitConfigBase(p,n),
-	fConfigWidget(new PerlWidget(p))
+NotepadConduitConfig::NotepadConduitConfig(QWidget *p, const char *n) :
+	ConduitConfigBase(p, n),
+	fConfigWidget(new NotepadWidget(p))
 {
 	FUNCTIONSETUP;
-	fConduitName = i18n("Perl");
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,PerlConduitFactory::about());
+	
+	fConduitName = i18n("Notepad");
+	UIDialog::addAboutPage(fConfigWidget->tabWidget, NotepadConduitFactory::about());
 	fWidget=fConfigWidget;
-	QObject::connect(fConfigWidget->fExpression,SIGNAL(textChanged(const QString&)),
-		this,SLOT(modified()));
+	QObject::connect(fConfigWidget->fOutputDirectory, SIGNAL(textChanged(const QString&)),
+		this, SLOT(modified()));
+	fConfigWidget->fOutputDirectory->setMode(KFile::Directory | 
+											KFile::ExistingOnly |
+											KFile::LocalOnly);
 }
 
-/* virtual */ void PerlConduitConfig::commit()
+/* virtual */ void NotepadConduitConfig::commit()
 {
 	FUNCTIONSETUP;
 
-	NotepadConduitSettings::setExpression( fConfigWidget->fExpression->text() );
+	NotepadConduitSettings::setOutputDirectory(fConfigWidget->fOutputDirectory->url());
 	NotepadConduitSettings::self()->writeConfig();
 }
 
-/* virtual */ void PerlConduitConfig::load()
+/* virtual */ void NotepadConduitConfig::load()
 {
 	FUNCTIONSETUP;
+	
 	NotepadConduitSettings::self()->readConfig();
 
-	fConfigWidget->fExpression->setText( NotepadConduitSettings::expression() );
+	fConfigWidget->fOutputDirectory->setURL(NotepadConduitSettings::outputDirectory());
 
 	fModified=false;
 }
 
-KAboutData *PerlConduitFactory::fAbout = 0L;
-PerlConduitFactory::PerlConduitFactory(QObject *p, const char *n) :
+KAboutData *NotepadConduitFactory::fAbout = 0L;
+NotepadConduitFactory::NotepadConduitFactory(QObject *p, const char *n) :
 	KLibFactory(p,n)
 {
 	FUNCTIONSETUP;
@@ -109,7 +118,7 @@ PerlConduitFactory::PerlConduitFactory(QObject *p, const char *n) :
 		"http://www.jokele.de/");
 }
 
-PerlConduitFactory::~PerlConduitFactory()
+NotepadConduitFactory::~NotepadConduitFactory()
 {
 	FUNCTIONSETUP;
 
@@ -117,7 +126,7 @@ PerlConduitFactory::~PerlConduitFactory()
 	KPILOT_DELETE(fAbout);
 }
 
-/* virtual */ QObject *PerlConduitFactory::createObject( QObject *p,
+/* virtual */ QObject *NotepadConduitFactory::createObject( QObject *p,
 	const char *n,
 	const char *c,
 	const QStringList &a)
@@ -136,7 +145,7 @@ PerlConduitFactory::~PerlConduitFactory()
 		QWidget *w = dynamic_cast<QWidget *>(p);
 		if (w)
 		{
-			return new PerlConduitConfig(w);
+			return new NotepadConduitConfig(w);
 		}
 		else
 		{
@@ -150,7 +159,7 @@ PerlConduitFactory::~PerlConduitFactory()
 
 		if (d)
 		{
-			return new PerlConduit(d,n,a);
+			return new NotepadConduit(d,n,a);
 		}
 		else
 		{

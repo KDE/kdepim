@@ -1,10 +1,10 @@
-#ifndef _KPILOT_PERL_FACTORY_H
-#define _KPILOT_PERL_FACTORY_H
-/* perl-factory.h                       KPilot
+#ifndef _KPILOT_NOTEPAD_FACTORY_H
+#define _KPILOT_NOTEPAD_FACTORY_H
+/* notepad-factory.h                       KPilot
 **
-** Copyright (C) 2004 by Adriaan de Groot
+** Copyright (C) 2004 by Adriaan de Groot, Joern Ahrens
 **
-** This file defines the factory for the perl-conduit plugin.
+** This file defines the factory for the notepad-conduit plugin.
 */
 
 /*
@@ -33,21 +33,21 @@
 class KInstance;
 class KAboutData;
 
-class PerlConduitFactory : public KLibFactory
+class NotepadConduitFactory : public KLibFactory
 {
 Q_OBJECT
 
 public:
-	PerlConduitFactory(QObject * = 0L,const char * = 0L);
-	virtual ~PerlConduitFactory();
+	NotepadConduitFactory(QObject * = 0L, const char * = 0L);
+	virtual ~NotepadConduitFactory();
 
 	static KAboutData *about() { return fAbout; } ;
 
 protected:
-	virtual QObject* createObject( QObject* parent = 0,
+	virtual QObject* createObject(QObject* parent = 0,
 		const char* name = 0,
 		const char* classname = "QObject",
-		const QStringList &args = QStringList() );
+		const QStringList &args = QStringList());
 private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
@@ -56,7 +56,7 @@ private:
 extern "C"
 {
 
-void *init_conduit_perl();
+void *init_conduit_notepad();
 
 }
 

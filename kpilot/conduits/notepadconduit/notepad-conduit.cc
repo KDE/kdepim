@@ -1,9 +1,9 @@
-/* perl-conduit.cc			KPilot
+/* notepad-conduit.cc			KPilot
 **
-** Copyright (C) 2004 by Adriaan de Groot
+** Copyright (C) 2004 by Adriaan de Groot, Joern Ahrens
 **
-** This file is part of the Perl conduit, a conduit for KPilot that
-** is intended to showcase how to use perl code inside a conduit.
+** This file is part of the Notepad conduit, a conduit for KPilot that
+** stores the notepad drawings to files.
 */
 
 /*
@@ -45,93 +45,38 @@
 
 extern "C"
 {
-long version_conduit_perl = KPILOT_PLUGIN_API;
-const char *id_conduit_perl =
+long version_conduit_notepad = KPILOT_PLUGIN_API;
+const char *id_conduit_notepad =
 	"$Id$";
 }
 
-/* From the cvs log mailing list:
-Am Dienstag, 13. April 2004 22:26 schrieb Adriaan de Groot:
-> On Tuesday 13 April 2004 20:53, Reinhold Kainhofer wrote:
-> > rename fPerl to my_perl to make it compile again...
->
-> Note that the renaming is needed because perl 5.8 is a brain-dead abortion,
-> and the code works fine with perl 5.6.
-*/
-class PerlThread : public QThread
-{
-public:
-	PerlThread(QObject *parent) : fParent(parent) { } ;
-	virtual void run();
-
-	QString result() const { return fResult; } ;
-
-protected:
-	QObject *fParent;
-
-	QString fResult;
-} ;
-
-
-PerlConduit::PerlConduit(KPilotDeviceLink *d,
+NotepadConduit::NotepadConduit(KPilotDeviceLink *d,
 	const char *n,
 	const QStringList &l) :
 	ConduitAction(d,n,l)
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT << id_conduit_perl << endl;
+	DEBUGCONDUIT << id_conduit_notepad << endl;
 #endif
-	fConduitName=i18n("Perl");
+	fConduitName=i18n("Notepad");
 
-	(void) id_conduit_perl;
+	(void) id_conduit_notepad;
 }
 
-PerlConduit::~PerlConduit()
+NotepadConduit::~NotepadConduit()
 {
 	FUNCTIONSETUP;
 }
 
-/* virtual */ bool PerlConduit::exec()
+/* virtual */ bool NotepadConduit::exec()
 {
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": In exec() @" << (unsigned long) this << endl;
 #endif
-
-	fThread = new PerlThread(this) ;
-	fThread->start();
-	return true;
+	return delayDone();
 }
 
-/* virtual */ bool PerlConduit::event(QEvent *e)
-{
-	FUNCTIONSETUP;
-
-	if (e->type() == QEvent::User)
-	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Perl thread done." << endl;
-#endif
-		QString r;
-		addSyncLogEntry(i18n("Perl returned %1.").arg(fThread->result()));
-		delayDone();
-		return true;
-	}
-	else return ConduitAction::event(e);
-}
-
-static const char *perl_args[] = { "", "-e", "0" } ;
-
-void PerlThread::run()
-{
-	FUNCTIONSETUP;
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Thread starting." << endl;
-#endif
-
-	QApplication::postEvent(fParent,new QEvent(QEvent::User));
-}
 

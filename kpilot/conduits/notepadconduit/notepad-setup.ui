@@ -1,68 +1,35 @@
 <!DOCTYPE UI><UI version="3.2" stdsetdef="1">
-<class>PerlWidget</class>
-<comment>A tabWidget for configuring
-the Perl-conduit settings.</comment>
-<author>Adriaan de Groot</author>
+<class>NotepadWidget</class>
+<author>Jörn Ahrens</author>
 <widget class="QWidget">
     <property name="name">
-        <cstring>Form1</cstring>
+        <cstring>Form2</cstring>
     </property>
     <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>342</width>
-            <height>167</height>
+            <width>435</width>
+            <height>391</height>
         </rect>
     </property>
-    <property name="sizePolicy">
-        <sizepolicy>
-            <hsizetype>5</hsizetype>
-            <vsizetype>5</vsizetype>
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-        </sizepolicy>
-    </property>
-    <property name="baseSize">
-        <size>
-            <width>570</width>
-            <height>270</height>
-        </size>
-    </property>
     <property name="caption">
-        <string>Perl-Conduit Options</string>
+        <string>Form2</string>
     </property>
-    <property name="layoutMargin" stdset="0">
-    </property>
-    <property name="layoutSpacing" stdset="0">
+    <property name="whatsThis" stdset="0">
+        <string>Path to the directory, where the pictures should be exported.</string>
     </property>
     <grid>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <property name="margin">
-            <number>0</number>
-        </property>
-        <property name="spacing">
-            <number>6</number>
-        </property>
         <widget class="QTabWidget" row="0" column="0">
             <property name="name">
                 <cstring>tabWidget</cstring>
             </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>7</hsizetype>
-                    <vsizetype>7</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="layoutMargin" stdset="0">
-            </property>
             <widget class="QWidget">
                 <property name="name">
-                    <cstring>Widget2</cstring>
+                    <cstring>tab</cstring>
                 </property>
                 <attribute name="title">
                     <string>General</string>
@@ -71,37 +38,9 @@ the Perl-conduit settings.</comment>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <widget class="QLineEdit" row="0" column="1">
+                    <spacer row="2" column="1">
                         <property name="name">
-                            <cstring>fExpression</cstring>
-                        </property>
-                        <property name="text">
-                            <string>$a = 17;</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Enter the Perl expression to be evaluated during a HotSync here.&lt;/qt&gt;</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="0" column="0">
-                        <property name="name">
-                            <cstring>TextLabel1_2</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Perl Expression:</string>
-                        </property>
-                        <property name="buddy" stdset="0">
-                            <cstring>fExpression</cstring>
-                        </property>
-                    </widget>
-                    <spacer row="3" column="1">
-                        <property name="name">
-                            <cstring>Spacer4</cstring>
+                            <cstring>spacer1</cstring>
                         </property>
                         <property name="orientation">
                             <enum>Vertical</enum>
@@ -112,17 +51,32 @@ the Perl-conduit settings.</comment>
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>20</height>
+                                <height>250</height>
                             </size>
                         </property>
                     </spacer>
+                    <widget class="KURLRequester" row="1" column="1">
+                        <property name="name">
+                            <cstring>fOutputDirectory</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="1" column="0">
+                        <property name="name">
+                            <cstring>textLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Output</string>
+                        </property>
+                    </widget>
                 </grid>
             </widget>
         </widget>
     </grid>
 </widget>
-<tabstops>
-    <tabstop>tabWidget</tabstop>
-</tabstops>
 <layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+</includehints>
 </UI>
