@@ -53,7 +53,7 @@ libical_la_SOURCES =		\
 	icalenums.h		\
 	icalerror.c		\
 	icalerror.h		\
-	icallexer.l		\
+	icallexer.c		\
 	icalmemory.c		\
 	icalmemory.h		\
 	icalmime.c		\
@@ -83,7 +83,7 @@ libical_la_SOURCES =		\
 	icalderivedvalue.c	\
 	icalderivedvalue.h	\
 	icalyacc.h		\
-	icalyacc.y		\
+	icalyacc.c		\
 	pvl.c			\
 	pvl.h			\
 	sspm.c			\
@@ -91,6 +91,9 @@ libical_la_SOURCES =		\
 	vsnprintf.c		\
 	icallangbind.h		\
 	icallangbind.c
+
+#	icalyacc.y		
+#	icallexer.l		
 
 noinst_HEADERS =  ical.h 
 
