@@ -1,0 +1,64 @@
+Kandy 0.5
+---------
+
++ Kandy now supports different types of phone numbers associated with KAB
+  addressees. A config dialog was added where the user can specify whether
+  to exclude e.g. fax numbers or not. For every type of number, a suffix which
+  is appended to the name can be defined. This way, the e.g. office and cell
+  numbes of a person can be clearly distinguished in the mobile phone book.
+  Older version of Kandy prior to 0.5 simply grabbed the first phone number
+  attached to an addressee and dumped that one to the mobile phone...
+
++ Names from the KDE address book are formatted intelligently. Basically, the
+  ordering "Family Name, Given Name" is used. If "Family Name" only is a unique
+  string, it is used in order to save characters of the narrow mobile phone
+  display. If several people with the same family name (e.g. Meyer, Jens and
+  Meyer, Andy) exist, only the first letter of the given names are used if they
+  are unique (i.e. Meyer, J. and Meyer, A.). Depending on the allowed maximum
+  width of a name entry which is extracted from the mobile phone, names are
+  truncated in order to fit onto the mobile device.
+
++ A rudimentary conversion between "normal ASCII" characters and the strange
+  7-bit GSM charset is implemented. Hence, names with e.g. german Umlauts are
+  now transfered correctly to the mobile phone and back. (Exception: the capital
+  "Ö" does not work and leads to modem errors. FIXME!)
+
++ If a suffix for a certain phone numbe type is quoted in the configuration
+  dialog (e.g. Cell suffix = "17"), then the unquoted suffix is interpreted as
+  the hexadecimal number of the desired character of the GSM charset. (The Cell
+  suffix "17" has the effect that every mobile phone entry of the KAB will be
+  followed by an antenna-like symbol in the display of the mobile phone). See
+  http://www.nobbi.com/atgsm.html for an illustration of the GSM charset.
+
++ The serial interface configuration dialog now contains the option to
+  specify in which directory the LOCK file should be generated (the old
+  hard-coded /var/lock directory doesn't exist on my Sun box).
+
++ The serial interface configuration dialog and the GUI offer the possibility
+  to set the mobile's clock according to the desktop's system time.
+
++ The maximum number of entries for the mobile phone book which was hard-coded
+  before (150) now is extracted dynamically from the mobile phone.
+
++ The sync mechanism of Kandy is completely rewritten.
+
++ The current states of the KAB and mobile phonebooks (unchanged or modified)
+  are properly reflected in the GUI.
+
++ Saving a modified phone book back to the mobile is done very efficiently by
+  just writing back only modified entries and not the whole phone book as was
+  the case before.
+
++ Deleting of mobile phone book items is supported now.
+
++ The GUI is heavily restructured and simplified.
+
++ All the improvements of Kandy 0.5 were tested with the following devices:
+   + Phones:
+      - Siemens ME45
+      - Siemens C65
+   + Host Machines:
+      - Sun UltraSparc 10, Solaris 9
+   + KDE versions:
+      - 3.2.3 (built with Sun's Workshop compiler)
+      - 3.3.1 (built with gcc 3.3.3)
