@@ -70,7 +70,6 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent, const char* name 
 		   this, SLOT( slotReadStdout() ) );
   
   slotReadConfig();
-  setGnuPGConfig();
   mSysTray = new KWatchGnuPGTray( this );
   mSysTray->show();
   connect( mSysTray, SIGNAL( quitSelected() ),
@@ -223,6 +222,7 @@ void KWatchGnuPGMainWindow::slotReadConfig()
 							   ?QTextEdit::WidgetWidth
 							   :QTextEdit::NoWrap );
   mCentralWidget->setMaxLogLines( config->readNumEntry( "MaxLogLen", 10000 ) ); 
+  setGnuPGConfig();
   startWatcher();
 }
 
