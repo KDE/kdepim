@@ -17,6 +17,7 @@ class OpieSocket : public QObject
 Q_OBJECT
  public:
   OpieSocket(QObject *obj, const char *name );
+    ~OpieSocket();
   void setUser(const QString &user );
   void setPassword(const QString &pass );
   void setSrcIP( const QHostAddress & );
@@ -40,7 +41,6 @@ Q_OBJECT
     QString randomString( int len );
   class OpieSocketPrivate;
   OpieSocketPrivate *d;
-    OpieHelper::CategoryEdit m_categories;
 
  private slots:
   void slotError(int );
@@ -50,8 +50,6 @@ Q_OBJECT
   void slotNOOP();
   void slotStartSync();
   void manageCall(const QString &line );
-  void parseCategory(const QString &tempFile );
-  QString categoryById(const QString &id, const QString &app = QString::null );
 };
 
 
