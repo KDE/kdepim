@@ -2,47 +2,5 @@
 AC_HEADER_DIRENT
 AC_HEADER_STDC
 AC_CHECK_HEADERS(fcntl.h sys/sysctl.h sys/param.h sys/time.h sys/types.h unistd.h)
-AC_LANG_SAVE
-KDE_CHECK_LIBPTHREAD
-
-AC_MSG_CHECKING(for libqpthr) 
-
-AC_CACHE_VAL(kdepim_cv_have_libqpthr,
-[
-AC_LANG_CPLUSPLUS
-
-kdepim_ldflags_safe="$LDFLAGS"
-kdepim_libs_safe="$LIBS"
-kdepim_cxxflags_safe="$CXXFLAGS"
-
-LDFLAGS="$LIBPTHREAD $USER_LDFLAGS"
-LIBS="-lqpthr"
-CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS -D_REENTRANT"
-
-AC_TRY_LINK([
-#include <qpthr/qp.h>
-],
-[
-QpInit init;
-],
-    AC_DEFINE(USE_QPTHREAD, 1, [Define if the QpThread library is available])
-    LIBQPTHREAD_CXXFLAGS="$USE_EXCEPTIONS -D_REENTRANT"
-    LIBQPTHREAD="-lqpthr"
-    kdepim_cv_have_libqpthr="yes",
-    LIBQPTHREAD_CXXFLAGS=
-    LIBQPTHREAD=
-    kdepim_cv_have_libqpthr="no"
-)
-AC_SUBST(LIBQPTHREAD_CXXFLAGS)
-AC_SUBST(LIBQPTHREAD)
-LDFLAGS=$kdepim_ldflags_safe
-LIBS=$kdepim_libs_safe
-CXXFLAGS=$kdepim_cxxflags_safe
-AC_LANG_RESTORE
-])
-
-AC_MSG_RESULT($kdepim_cv_have_libqpthr)
-
-CXXFLAGS="$CXXFLAGS -DQT_CLEAN_NAMESPACE -DQT_NO_COMPAT -DQT_NO_ASCII_CAST"
 
 AC_CONFIG_SUBDIRS(libical)
