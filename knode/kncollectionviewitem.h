@@ -29,8 +29,8 @@ class KNCollectionViewItem : public KNLVItemBase  {
     KNCollectionViewItem(KNLVItemBase *it);
     ~KNCollectionViewItem();
 
-    void setNumber ( int column, int number );  // avoid converting back and forth in key()
-    QString key(int, bool) const;
+    void setNumber(int column, int number);  // cache the values for compare()
+    virtual int compare(QListViewItem *i, int col, bool ascending) const;    
 
     // DND
     virtual QDragObject* dragObject();

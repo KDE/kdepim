@@ -56,27 +56,40 @@ void KNCollectionViewItem::setNumber(int column, int number)
 }
 
 
-QString KNCollectionViewItem::key(int c, bool ascending) const
+int KNCollectionViewItem::compare(QListViewItem *i, int col, bool ascending) const
 {
-  if (!coll)
-    return text(c);
+  KNCollection *otherColl = static_cast<KNCollectionViewItem*>(i)->coll;
 
-  QString prefix;
+  // folders should be always on the bottom
+  if (!coll || coll->type()==KNCollection::CTfolder) {
+    if (otherColl && otherColl->type()!=KNCollection::CTfolder)
+      return ascending? 1 : -1;
+  }
 
-  if (coll->type()==KNCollection::CTfolder) {   // folders should be always on the bottom
-    if ((static_cast<KNFolder*>(coll))->isStandardFolder())  // put the standard folders above the custom folders
-      prefix = (ascending)? QString("ba"):QString("ab");
-    else
-      prefix = (ascending)? QString("bb"):QString("aa");
-  } else
-    prefix = (ascending)? QString("aa"):QString("bb");
+  // news servers should be always on top
+  if (coll && coll->type()!=KNCollection::CTfolder) {
+    if (!otherColl || otherColl->type()==KNCollection::CTfolder)
+      return ascending? -1 : 1;
+  }
 
-  if ((c >= 1)&&(c <= 2)&&(num[c] != -1)) {
-    QString tmpString;
-    return prefix+tmpString.sprintf("%07d", num[c]);
-  } else
-    return prefix+text(0);
+  // put the standard folders above the custom folders
+  if (coll && coll->type()==KNCollection::CTfolder &&
+      otherColl && coll->type()==KNCollection::CTfolder) {
+    if ((static_cast<KNFolder*>(coll))->isStandardFolder() &&
+        !(static_cast<KNFolder*>(otherColl))->isStandardFolder())
+      return ascending? -1 : 1;
+    if (!(static_cast<KNFolder*>(coll))->isStandardFolder() &&
+        (static_cast<KNFolder*>(otherColl))->isStandardFolder())
+      return ascending? 1 : -11;
+  }
 
+  // compare text if we have to compare the text column or one
+  // of the lvItems has no collection
+  if (col==0 || !coll || !otherColl)
+    return text(col).localeAwareCompare(i->text(col));
+
+  int diff = num[col] - static_cast<KNCollectionViewItem*>(i)->num[col];
+  return (diff < 0 ? -1 : diff > 0 ? 1 : 0);
 }
 
 
