@@ -1,3 +1,19 @@
+/* -*- C++ -*-
+   This file implements the detailed print style.
+
+   the KDE addressbook
+
+   $ Author: Mirko Boehm $
+   $ Copyright: (C) 1996-2002, Mirko Boehm $
+   $ Contact: mirko@kde.org
+         http://www.kde.org $
+   $ License: LGPL with the following explicit clarification:
+         This code may be linked against any version of the Qt toolkit
+         from Troll Tech, Norway. $
+
+   $Revision$
+*/
+
 #include <kdebug.h>
 #include <kapplication.h>
 #include <kstandarddirs.h>

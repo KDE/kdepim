@@ -1,3 +1,20 @@
+/* -*- C++ -*-
+   This file declares Mike Pilone's printing style.
+
+   the KDE addressbook
+
+   $ Author: Mirko Boehm $
+   (C) 2002, Mike Pilone
+   $ Copyright: (C) 1996-2002, Mirko Boehm $
+   $ Contact: mirko@kde.org
+         http://www.kde.org $
+   $ License: LGPL with the following explicit clarification:
+         This code may be linked against any version of the Qt toolkit
+         from Troll Tech, Norway. $
+
+   $Revision$
+*/
+
 #ifndef MIKESSTYLE_H
 #define MIKESSTYLE_H
 
