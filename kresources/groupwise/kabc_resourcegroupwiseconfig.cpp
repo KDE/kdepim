@@ -44,10 +44,10 @@ class AddressBookItem : public QCheckListItem
         mId( ab.id )
     {
       setText( 0, ab.name );
-      if ( ab.isPersonal ) setText( 1, "Yes" );
-      else setText( 1, "No" );
-      if ( ab.isFrequentContacts ) setText( 2, "Yes" );
-      else setText( 2, "No" );
+      if ( ab.isPersonal ) setText( 1, i18n("Yes") );
+      else setText( 1, i18n("No") );
+      if ( ab.isFrequentContacts ) setText( 2, i18n("Yes") );
+      else setText( 2, i18n("No") );
     }
 
     QString id() const { return mId; }

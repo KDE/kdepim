@@ -24,7 +24,19 @@
 #include "kcal_resourcegroupdav.h"
 #include "kcal_resourcegroupwarebaseconfig.h"
 
+#include <kglobal.h>
+#include <klocale.h>
+
 using namespace KCal;
 
 typedef KRES::PluginFactory< ResourceGroupDav, ResourceGroupwareBaseConfig > GroupDavFactory;
-K_EXPORT_COMPONENT_FACTORY( kcal_groupdav, GroupDavFactory )
+// FIXME: Use K_EXPORT_COMPONENT_FACTORY( kcal_groupdav, GroupDavFactory ); here
+// Problem: How do I insert the catalogue???
+extern "C"
+{
+  void *init_kcal_groupdav()
+  {
+    KGlobal::locale()->insertCatalogue( "kdepimresources" );
+    return new GroupDavFactory;
+  }
+}

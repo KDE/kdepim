@@ -21,7 +21,20 @@
 #include "kabc_resourcegroupwise.h"
 #include "kabc_resourcegroupwiseconfig.h"
 
+#include <kglobal.h>
+#include <klocale.h>
+
 using namespace KABC;
 
 typedef KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig> GroupwiseFactory;
-K_EXPORT_COMPONENT_FACTORY(kabc_groupwise, GroupwiseFactory )
+// FIXME: Use K_EXPORT_COMPONENT_FACTORY( kabc_groupwise, GroupwiseFactory ); here
+// Problem: How do I insert the catalogue???
+extern "C"
+{
+  void *init_kabc_groupwise()
+  {
+    KGlobal::locale()->insertCatalogue( "libkcal" );
+    KGlobal::locale()->insertCatalogue( "kres_groupwise" );
+    return new GroupwiseFactory;
+  }
+}
