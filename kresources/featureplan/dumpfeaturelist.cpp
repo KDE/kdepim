@@ -91,4 +91,9 @@ int main( int argc, char **argv )
     QValueList<Category *> categories = features->categoryList();
     displayCategory( categories );
   }
+
+  QString out = filename + ".out";
+  if ( !features->writeFile( out ) ) {
+    kdError() << "Write error" << endl;
+  }
 }

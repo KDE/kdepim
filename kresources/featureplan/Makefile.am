@@ -24,6 +24,7 @@ kcal_servicedir = $(kde_servicesdir)/kresources/kcal
 kcal_service_DATA = kcal_resourcefeatureplan.desktop
 
 check_PROGRAMS = dumpfeaturelist
+
 dumpfeaturelist_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 dumpfeaturelist_LDADD   = $(LIB_KDECORE)
 dumpfeaturelist_SOURCES = dumpfeaturelist.cpp kde-features.cpp
