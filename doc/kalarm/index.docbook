@@ -489,7 +489,7 @@ include any necessary trailing space in <guilabel>Prefix</guilabel>
 and leading space in <guilabel>Suffix</guilabel>.</para>
 
 <note><para>If you change the alarm text, the birthday selection list
-will be re-evaluated.</para></note>.
+will be re-evaluated.</para></note>
 </listitem>
 
 <listitem>
