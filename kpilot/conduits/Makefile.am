@@ -17,6 +17,7 @@ endif
 SUBDIRS = \
           docconduit \
           knotes \
+	  popmail \
           timeconduit \
           sysinfoconduit \
           $(MAL_SUBDIR) $(ABC_SUBDIR)
