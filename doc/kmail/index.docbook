@@ -11,12 +11,15 @@
 <title>The &kmail; Handbook</title>
 
 <!-- note from daniel.naber@t-online.de, 2002-01-18: I'm working on this
-"by hand" (using nedit) so please don't mix up the formatting too much. -->
+"by hand" (using nedit) so please don't mix up the formatting too much.
+$Id: $
+ -->
 
 <!-- TODO: 
 * document "check what the server supports"
 * document "pipelining..."
 * more about the "create folder" dialog
+
 * better markup instead of 'quote'
 * fix my adverb vs. adjective mistakes
 * does the "lists.kde.org?..." link work correctly/completely again?
@@ -52,7 +55,7 @@
 
 </authorgroup>
 
-<date>2002-02-04</date>
+<date>2002-02-09</date>
 <releaseinfo>1.04.00</releaseinfo>
 
 <copyright>
@@ -401,7 +404,8 @@ when &kmail; is started. It is divided into three panes:</para>
 <listitem>
 <para>This pane contains a list of your message folders (other email programs
 may call them mailboxes). If there is a number after the folder name this indicates
-that this folder contains unread messages.<!-- fixme: except outbox -->
+that this folder contains unread messages, except for the <guilabel>outbox</guilabel>
+which shows the number of total messages.
  To select a folder, simply click on
 it. The messages contained in the folder will now appear in the Headers
 pane. The number of unread messages and the total number of messages in the
@@ -707,13 +711,18 @@ there's no way to get the contents of the folder back.</para>
 </sect1>
 
 <sect1 id="filters">
-<title>Filters</title>
+<title>Message Filters</title>
 <anchor id="filters-id"/>
 
 <para>After using &kmail; for a while, you may find that you have trouble
 sorting out the new messages in your inbox when they arrive. Filters allow you
 to automatically perform certain actions on incoming messages and to manually
 perform actions on selected messages in a folder.</para>
+
+<para>Please note that the filters described in this section are
+applied <emphasis>after</emphasis> the messages have been downloaded
+from your account. If you want to filter messages on the server, see
+<link linkend="popfilters">Download Filters</link>.</para>
 
 <para>Filters consist of a search pattern, whose rules are used as
 criteria to determine whether this filter should be applied to a given
@@ -1172,12 +1181,128 @@ that are from fj@anywhere.com.</para>
 </sect2>
 </sect1>
 
-<!-- ###fixme
 <sect1 id="popfilters">
-<title>POP Filters</title>
-<para></para>
+<title>Download Filters</title>
+
+<para>Download Filters can be used to filter mails from a POP server,
+<emphasis>before</emphasis> they are completely downloaded. You can use
+it to prevent &kmail; from downloading huge mails and save time this
+way.</para>
+
+<!-- fixme in kmail: Filter mail on server: bytes!! -->
+
+<para>In the configuration dialog of the POP account you can enable 
+download filtering by checking the <guilabel>Filter mail on
+server</guilabel> box. Once you did that, you can specify a size 
+which is used as a threshold. Messages exceeding this size will be
+checked against the filter rules you defined. If no filter rule
+matches, they will be shown in a confirmation dialog and you can
+decide what to do with them. The default size for filtering is 50000
+Bytes. This is a good value as the overhead is kept to a minimum.
+Every message that is looked at by the filter causes additional
+traffic because the header of the mail is downloaded twice. The
+default action is <guilabel>Download mail</guilabel> to prevent the
+loss of messages.</para>
+
+<warning><para>Be careful with the <guilabel>Delete mail from
+server</guilabel> option since once a mail is deleted on the server
+there is no way to get it back.</para></warning>
+
+<para>With a really good set of filter rules, it is possible that all
+messages that exceeds the threshold size are automatically tagged
+(&ie; downloaded, kept on the server or deleted) and you would never
+be bugged by the confirmation dialog. Be careful though, since once a
+message is matched by a filter rule, you have no guarantee that you
+can change the action before it is executed. Only if there is a
+message left that was not matched by a filter rule the confirmation
+dialog will show up.</para>
+
+<sect2 id="popfilters-dialog">
+<title>The <guilabel>Configure Pop Filter</guilabel> Dialog</title>
+
+<para>Adding filter rules work similar as for <link
+linkend="filters">message  filters</link>. On the left hand side you
+can manage the existing filters. Use the <guiicon>New</guiicon>
+button to add a filter. On the right hand side you can configure
+under which conditions the current filter should match. <!-- fixme:
+(in kmail?): no 'body' option??? --> Using <guilabel>Filter
+Action</guilabel> you specify what will happen to a message that is 
+matched by this rule. The available options are:</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Download mail</guilabel></term>
+<listitem>
+<para>Will download the messages matched by the filter, just as any other message
+that does not exceed the threshold size.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Download mail later</guilabel></term>
+<listitem>
+<para>Will tag the messages for later download. This means the messages matched
+will stay on the POP server until you choose to download them by
+changing the action manually.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Delete mail from server</guilabel></term>
+<listitem>
+<para>Will delete the message from the server and does not download it. Once you 
+deleted a message from the server, there is <emphasis>no</emphasis> way you can undo this.
+Be careful, as rules could match messages you actually want, too.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>The option <guilabel>Always show matched 'Download Later' messages in
+confirmation  dialog</guilabel> will cause the confirmation dialog to
+show up during mailbox check if at least one message was tagged for
+<guilabel>Download Later</guilabel> - even if all messages exceeding
+the threshold size were matched by a rule. This option is useful in the
+case you have messages matched by a rule and tagged for
+<guilabel>Download Later</guilabel>, but you don't get any message
+exceeding the size limit for a very long time. Without this option,
+the confirmation dialog would never show up and you would never have
+a chance to get the queued message by changing the action manually.</para>
+
+</sect2>
+
+<sect2 id="popfilters-confirmation">
+<title>Confirmation Dialog</title>
+
+<para>This dialog shows up whenever you have POP filtering switched
+on and  messages were found on the server that exceed the threshold
+size you defined for the POP account. Now you have the chance to
+decide what you want to do with that message. The options are
+<guilabel>download</guilabel> (green), <guilabel>download
+later</guilabel> (yellow with eggwatch) and <guilabel>delete from
+server</guilabel> (red <quote>x</quote>). Be cautious with the delete
+option, since once you deleted a mail from the server, there is no
+way to undelete it again.</para>
+
+<para>In the <guilabel>Filtered Messages</guilabel> section you can
+check the box if you got messages that were automatically tagged for
+a certain action (download, download later, delete) by a filter rule.
+The checkbox is only enabled if you got some messages that were
+matched by a filter rule. Once you check it, a list similar to the
+one for the not automatically tagged messages will show up and you 
+can change the action for every single message.</para>
+
+<para>Please note that if there is a message exceeding the size
+limit, but all messages are matched by a filter rule the dialog will
+not show up. One exception occurs if you have checked 
+<guilabel>Always show matched 'Download Later' messages</guilabel> in
+the <guilabel>Global Options</guilabel> section of the POP filter
+configuration dialog. Then the dialog will also show up if you only
+have matched messages, but at least one got tagged for
+<guilabel>download later</guilabel>.</para>
+
+</sect2>
+
 </sect1>
--->
 
 <sect1 id="multiple-accounts">
 <title>Multiple Accounts</title>
@@ -1652,7 +1777,7 @@ when using this identity.</para>
 
 <tip><para>You can exercise more fine-grained control over where to
 file sent messages by creating a corresponding <link
-linkend="filters">filter</link> that is applied to outgoing
+linkend="filters">message filter</link> that is applied to outgoing
 messages.</para></tip>
 
 </listitem>
@@ -1699,17 +1824,6 @@ completely different things.</para></note>
 
 <para>Check the <guilabel>Enable Signature</guilabel> option if you
 want to append signatures when using this identity.</para>
-
-<!-- fixme: move
-<para>Check the <guilabel>Automatically append signature</guilabel>
-option if you want the signature to be appended automatically to each
-message you compose using this identity. Else, choose
-<menuchoice><guimenuitem>Append signature</guimenuitem></menuchoice> in
-the <link
-linkend="composer-attach-menu">composer</link>'s
-<guimenu>Attach</guimenu> menu</link> whenever you want to append the
-signature.</para>
--->
 
 <para>&kmail; can obtain the signature text from various sources. The
 traditional way on Unix is to read the text from a file called
@@ -1920,7 +2034,7 @@ column will appear in the Headers pane of that folder. Each rule has a
 name, a list of folders where it is active, one or more conditions that
 decide whether the rule matches a message, and one or more actions that get
 triggered if a condition is matched. This concept is very similar to that
-of <link linkend="filters">filters</link>.</para>
+of <link linkend="filters">message filters</link>.</para>
 
 <para>The most useful action is <guilabel>adjust score</guilabel>. It will
 increase or decrease the score of a message. The idea is that important
@@ -2519,7 +2633,7 @@ headers in the <guilabel>Message pane</guilabel>.</para>
 </menuchoice>
 <menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>Smart Attachments</guimenuitem><!-- fixme: what's this? -->
+<guimenuitem>Smart Attachments</guimenuitem>
 </menuchoice>
 <menuchoice>
 <guimenu>View</guimenu>
@@ -2528,7 +2642,14 @@ headers in the <guilabel>Message pane</guilabel>.</para>
 </term>
 <listitem>
 <para>Changes the way that attachments appear in the <guilabel>Message
-pane</guilabel>.</para>
+pane</guilabel>. With <guimenuitem>Iconic Attachments</guimenuitem>
+all attachments appear as icons at the bottom of the message.
+<guimenuitem>Inlined Attachments</guimenuitem> shows the attachments
+at the bottom of the message. Attachments that cannot be displayed, &eg;
+compressed files, will still be shown as an icon.
+<guimenuitem>Smart Attachments</guimenuitem> will show attachments as
+icons, unless they are so-called inline attachments.</para>
+<!-- fixme: what's that? -->
 </listitem>
 </varlistentry>
 
@@ -2540,7 +2661,6 @@ pane</guilabel>.</para>
 </menuchoice>
 </term>
 <listitem>
-<!-- fixme: doesn't work for me -->
 <para>Uses a fixed width (monospace) font to display the messages
 in the current folder. The font to be used can be configured in the
 <guilabel>Appearance</guilabel> section of &kmail;'s configuration
@@ -3166,7 +3286,7 @@ toolbar.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Opens the <link linkend="filters">Configure Filters</link> window.</para>
+<para>Opens the <link linkend="filters">Message Filters</link> window.</para>
 </listitem>
 </varlistentry>
 
@@ -3273,7 +3393,6 @@ position.</para>
 <term>
 <menuchoice>
 <guimenu>Message</guimenu>
-<!-- fixme in kmail: address book or addressbook -->
 <guimenuitem>Addressbook...</guimenuitem>
 </menuchoice>
 </term>
@@ -3511,7 +3630,6 @@ menu.</para>
 </menuchoice>
 </term>
 <listitem>
-<!-- fixme: doesn't work for me -->
 <para>Uses a fixed width (monospace) font to display the messages
 in the current folder. The font to be used can be configured in the
 <guilabel>Appearance</guilabel> section of &kmail;'s configuration
@@ -4166,14 +4284,13 @@ used.</para>
 
 <qandaentry>
 <question><para>How do I leave mail on the server?</para></question>
-<!-- fixme: add pop filter section -->
+<!-- fixme: ###add pop filter section -->
 <answer><para>Open up the
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>
 </menuchoice> window. Click on the <guilabel>Network</guilabel> tab. Select your
 account from the account list and click the <guilabel>Modify...</guilabel>
 button. This dialog contains the <guilabel>Delete mail from server</guilabel>
 setting which you must not select.</para></answer>
-<!-- fixme: update / libnk to pop3-filter -->
 </qandaentry>
 
 <qandaentry>
@@ -4472,10 +4589,12 @@ revision of this documentation. </para>
 <title>Documentation</title>
 
 <para>Update for &kmail; 1.2 to 1.4 by Daniel Naber
-<email>daniel.naber@t-online.de</email>, <application>OpenPGP</application> part by
-Andreas Gungl <email>a.gungl@gmx.de</email>, filter part by
-Marc Mutz <email>mutz@kde.org</email>. Other parts
-have been contributed by the various &kmail; developers.</para>
+<email>daniel.naber@t-online.de</email>,
+<application>OpenPGP</application> chapter by Andreas Gungl
+<email>a.gungl@gmx.de</email>, message filter chapter by Marc Mutz
+<email>mutz@kde.org</email>, download filter chapter by Thorsten
+Zachmann <email>T.Zachmann@zagge.de</email>. Other parts have been
+contributed by various &kmail; developers.</para>
 
 <para>&kmail; 1.0
 documentation by David Rugge <email>davidrugge@mediaone.net</email>.
