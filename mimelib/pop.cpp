@@ -29,6 +29,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <mimelib/pop.h>
+#include <config.h>
 
 #define POP_PORT 110
 #define RECV_BUFFER_SIZE  8192

@@ -55,7 +55,7 @@ libmimelib_la_SOURCES = \
     uuencode.cpp \
     binhex.cpp
 
-libmimelib_la_LDFLAGS = -version-info 1:1 -no-undefined
+libmimelib_la_LDFLAGS = -L$(kde_libraries) -lkdefakes -version-info 1:1 -no-undefined
 
 check_PROGRAMS = test_boyermor
 

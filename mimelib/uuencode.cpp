@@ -30,6 +30,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <mimelib/uuencode.h>
+#include <config.h>
 
 #if defined(DW_TESTING_UUENCODE)
 #include <stdlib.h>
