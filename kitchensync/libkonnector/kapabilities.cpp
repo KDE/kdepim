@@ -167,7 +167,7 @@ void Kapabilities::setIpProposals( const QValueList<QString > &ips )
 {
   m_propsIPs = ips;
 }
-bool Kapabilities::needAuthentication()
+bool Kapabilities::needAuthentication() const
 {
   return m_needsAuthent;
 }
@@ -191,7 +191,7 @@ QString Kapabilities::user() const
 {
   return m_user;
 }
-QValueList<QPair<QString,QString> > Kapabilities::userProposals()
+QValueList<QPair<QString,QString> > Kapabilities::userProposals() const
 {
   return m_propAuth;
 }
@@ -199,7 +199,7 @@ void Kapabilities::setUserProposals( QValueList< QPair<QString, QString> > auth 
 {
   m_propAuth = auth;
 }
-void Kapabilities::setExtraOption( const QString &extra, const QVariant &variant )
+void Kapabilities::setExtraOption( const QString &extra, const QString &variant )
 {
   m_extras.replace( extra, variant );
 }

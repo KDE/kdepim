@@ -21,6 +21,7 @@
 #define konnectorplugin_h
 
 #include <qcstring.h>
+#include <qiconset.h>
 #include <qwidget.h>
 #include <qstringlist.h>
 #include <ksyncentry.h>
@@ -52,6 +53,7 @@ public:
     virtual bool insertFile(const QString &fileName ) = 0;
     virtual QByteArray retrFile(const QString &path ) = 0;
     virtual KSyncEntry* retrEntry( const QString &path ) = 0;
+    virtual QIconSet iconSet()const = 0;
 public slots:
     virtual void slotWrite(const QString &, const QByteArray & ) = 0;
     virtual void slotWrite(QPtrList<KSyncEntry> ) = 0;

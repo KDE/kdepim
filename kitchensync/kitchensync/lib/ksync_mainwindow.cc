@@ -170,6 +170,7 @@ void KSyncMainWindow::slotConfigure() {
   ConfigureDialog dlg(this);
   ManipulatorPart *part;
   Kapabilities cap;
+  cap.setExtraOption("test",  "test123");
   ConfigPart par( cap, &dlg );
   for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
     if( part->configIsVisible() )

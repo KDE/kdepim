@@ -80,6 +80,13 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     // column 0 = Label, 1= ComboBox, 2 = Space, 3 = Label, 4 = Combo
     m_grpConnection = new QGroupBox( i18n("Connection"),  this );
     m_conLayout = new QGridLayout(m_grpConnection,  4,  5);
+
+    if ( !kaps.needsNetworkConnection() || !kaps.canAutoHandle() ) {
+        m_grpConnection->setEnabled( false );
+    }else{
+        m_grpConnection->setEnabled( true );
+    }
+
     m_conLayout->setMargin( 12 );
     QSpacerItem *iti1b = new QSpacerItem(2, 10, QSizePolicy::Fixed,
                                          QSizePolicy::Fixed );
@@ -91,6 +98,10 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_lblSrcIp->setBuddy( m_conSrcIp );
     m_conLayout->addWidget(m_lblSrcIp, 1, 0 );
     m_conLayout->addWidget(m_conSrcIp, 1, 1 );
+    if (!kaps.needsIPs() || !kaps.needsSrcIP() ) {
+        m_lblSrcIp->setEnabled( false );
+        m_conSrcIp->setEnabled( false );
+    }
 
     //Destination
     m_lblDestIp = new QLabel(i18n("Destination Address: "),  m_grpConnection );
@@ -98,6 +109,10 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_lblDestIp->setBuddy( m_conDestIp );
     m_conLayout->addWidget( m_lblDestIp, 1, 3 );
     m_conLayout->addWidget( m_conDestIp, 1, 4 );
+    if (!kaps.needsIPs() || !kaps.needsDestIP() ) {
+        m_lblDestIp->setEnabled( false );
+        m_conDestIp->setEnabled( false );
+    }
 
     //user
     m_lblUser = new QLabel(i18n("User:"), m_grpConnection );
@@ -113,12 +128,35 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_conLayout->addWidget( m_lblPass,  2,  3 );
     m_conLayout->addWidget( m_conPass,  2,  4 );
 
+    if ( kaps.needAuthentication() ) {
+        QValueList<QPair<QString, QString> > list = kaps.userProposals();
+        QValueList<QPair<QString, QString> >::ConstIterator it;
+        for (it = list.begin(); it != list.end(); ++it ) {
+            m_conUser->insertItem( (*it).first );
+            m_conPass->insertItem( (*it).second);
+        }
+    }else{
+        m_lblPass->setEnabled( false );
+        m_conPass->setEnabled( false );
+        m_lblUser->setEnabled( false );
+        m_conUser->setEnabled( false );
+    }
     // port
     m_lblPort = new QLabel( i18n("Port:"),  m_grpConnection);
     m_conPort = new QComboBox( m_grpConnection );
     m_lblPort->setBuddy( m_conPort );
     m_conLayout->addWidget( m_lblPort,  3,  0 );
     m_conLayout->addWidget( m_conPort,  3,  1 );
+    QArray<int> ints = kaps.ports();
+    if ( ints.isEmpty() ) {
+        m_lblPort->setEnabled( false );
+        m_conPort->setEnabled( false );
+    }else{
+        for (uint i = 0; i < ints.size(); i++ ) {
+            m_conPort->insertItem( QString::number( ints[i] ) );
+        }
+    }
+
     // add the Connection Groupbox
     m_mainLayout->addWidget( m_grpConnection,  3,  0 );
 
@@ -136,20 +174,39 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_lblDevice->setBuddy( m_cmbDevice );
     m_grpLayout->addWidget( m_lblDevice, 1,  0 );
     m_grpLayout->addWidget( m_cmbDevice, 1,  1 );
-
+    QStringList devices = kaps.models();
+    if ( devices.isEmpty() ) {
+        m_lblDevice->setEnabled( false );
+        m_cmbDevice->setEnabled( false );
+    }else{
+        for ( QStringList::ConstIterator it = devices.begin(); it != devices.end(); ++it ) {
+            m_cmbDevice->insertItem( (*it) );
+        }
+    }
     // Connection Mode usb, paralell, net,....
     m_lblConnection = new QLabel( i18n("Connection:"),  m_grpModel );
     m_cmbConnection = new QComboBox( m_grpModel );
     m_lblConnection->setBuddy( m_cmbConnection );
     m_grpLayout->addWidget( m_lblConnection, 2, 0 );
     m_grpLayout->addWidget( m_cmbConnection, 2, 1 );
+    QStringList conList = kaps.connectionModes();
+    if ( conList.isEmpty() ) {
+        m_lblConnection->setEnabled( false );
+        m_cmbConnection->setEnabled( false );
+    }else{
+        for ( QStringList::ConstIterator it = conList.begin(); it != conList.end(); ++it ) {
+            m_cmbConnection->insertItem( (*it) );
+        }
 
+    }
     //Mode USER
     m_grpUser = new QLabel( i18n("User:"),  m_grpModel );
     m_cmbUser = new QComboBox( m_grpModel );
     m_grpUser->setBuddy( m_cmbUser );
     m_grpLayout->addWidget(m_grpUser,  3, 0);
     m_grpLayout->addWidget(m_cmbUser,  3, 1);
+    m_grpUser->setEnabled( false );
+    m_cmbUser->setEnabled( false );
 
     // MODE PASS
     m_grpPass = new QLabel( i18n("Pass:"),  m_grpModel );
@@ -157,13 +214,73 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_grpPass->setBuddy( m_cmbPass );
     m_grpLayout->addWidget( m_grpPass,  4, 0 );
     m_grpLayout->addWidget( m_cmbPass,  4, 1 );
+    m_grpPass->setEnabled( false );
+    m_cmbPass->setEnabled( false );
 
     m_mainLayout->addWidget( m_grpModel,  4,  0 );
-}
 
+    QMap<QString, QString> specs = kaps.extras();
+    if ( !specs.isEmpty() ) {
+        m_grpDevice = new QGroupBox( i18n("Device specefic"),  this );
+        m_devLay = new QGridLayout(m_grpDevice, specs.count()+1, 2);
+        QSpacerItem *iti1d = new QSpacerItem(4, 14, QSizePolicy::Fixed,
+                                             QSizePolicy::Fixed );
+        m_devLay->setMargin( 12 );
+        m_devLay->addItem( iti1d,  0,  0 );
+        int i = 0;
+        QLabel *lbl;
+        QLineEdit *edit;
+        m_devGroup.clear();
+        for ( QMap<QString,  QString>::ConstIterator it = specs.begin(); it != specs.end(); ++it ) {
+            lbl = new QLabel(i18n(it.key() ), m_grpDevice );
+            edit = new QLineEdit(m_grpDevice,  it.key().latin1() );
+            edit->setText( it.data() );
+            lbl->setBuddy(edit);
+            m_devGroup.insert(it.key(),  edit);
+
+            m_devLay->addWidget( lbl,  i,  0 );
+            m_devLay->addWidget( edit, i,  1 );
+            ++i;
+        }
+        m_mainLayout->addWidget( m_grpDevice,  5,  0 );
+    }
+}
 Kapabilities ConfigPart::capability()
 {
+    Kapabilities kaps;
+    // ok first read all the extras which is fairly easy
+    if ( !m_devGroup.isEmpty() ) {
+        for ( QMap<QString, QLineEdit*>::ConstIterator it = m_devGroup.begin(); it != m_devGroup.end(); ++it ) {
+            kaps.setExtraOption( it.key(), it.data()->text() );
+        }
+    }
+    // meta syncing
+    if ( m_ckbMetaSyncing != 0 ) {
+        kaps.setMetaSyncingEnabled( m_ckbMetaSyncing->isChecked() );
+    }
+    // GRP IPs + User + Password
+    if ( m_grpConnection != 0 && m_grpConnection->isEnabled() ) {
+        if ( m_conSrcIp->isEnabled() )
+            kaps.setSrcIP( m_conSrcIp->currentText() );
+        if ( m_conDestIp->isEnabled( ) )
+            kaps.setDestIP(m_conDestIp->currentText() );
+        if ( m_conUser->isEnabled() )
+            kaps.setUser( m_conUser->currentText() );
+        if ( m_conPass->isEnabled() )
+            kaps.setPassword( m_conPass->currentText() );
+        if ( m_conPort->isEnabled() )
+            kaps.setCurrentPort( m_conPort->currentText().toInt() );
+    }
+    if ( m_cmbPass != 0 && m_cmbPass->isEnabled() )
+        ;
+    if ( m_cmbUser != 0 && m_cmbUser->isEnabled() )
+        ;
+    if ( m_cmbDevice != 0 && m_cmbDevice->isEnabled() )
+        kaps.setCurrentModel(m_cmbDevice->currentText() );
+    if ( m_cmbConnection != 0 && m_cmbConnection->isEnabled() )
+        kaps.setCurrentConnectionMode( m_cmbConnection->currentText() );
 
+    return kaps;
 }
 
 void ConfigPart::init()

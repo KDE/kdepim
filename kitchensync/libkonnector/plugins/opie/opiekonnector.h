@@ -2,6 +2,7 @@
 #ifndef opieplugin_h
 #define opieplugin_h
 
+#include <qiconset.h>
 #include <qptrlist.h>
 #include <konnectorplugin.h>
 
@@ -23,6 +24,7 @@ Q_OBJECT
   virtual bool insertFile(const QString &fileName );
   virtual QByteArray retrFile(const QString &path );
     virtual KSyncEntry* retrEntry(const QString &path) { return 0l;};
+    virtual QIconSet iconSet() const { return QIconSet(); };
  public slots:
   virtual void slotWrite(const QString &, const QByteArray & ) ;
   virtual void slotWrite(QPtrList<KSyncEntry> ) ;

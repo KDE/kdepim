@@ -229,6 +229,17 @@ KonnectorPlugin* Konnector::pluginByUDI(const QString &udi )
    }
   return plugin;
 }
+KonnectorPlugin* Konnector::pluginByUDI(const QString &udi )const
+{
+  KonnectorPlugin* plugin=0l;
+  if( d->m_konnectors.contains(udi ) ){
+    QMap<QString, KonnectorPlugin*>::ConstIterator it;
+    it = d->m_konnectors.find( udi );
+    plugin = it.data();
+    kdDebug() << "UDIS " << udi << " " << plugin->udi() << endl;
+   }
+  return plugin;
+}
 void Konnector::slotSync(const QString &udi,  QPtrList<KSyncEntry> entry)
 {
   emit wantsToSync(udi, entry );
@@ -256,7 +267,14 @@ void Konnector::disconnectDevice( const QString &udi )
 
     return plugin->disconnectDevice();
 }
+QIconSet Konnector::iconSet(const QString& udi )const
+{
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if( plugin == 0l)
+        return QIconSet();
 
+    return plugin->iconSet();
+}
 
 
 

@@ -198,7 +198,7 @@ public:
      * If the device need some kind of authentification first.
      * @return bool
      */
-    bool needAuthentication();
+    bool needAuthentication()const;
 
     /**
      * Set if the device needs authentification or not.
@@ -234,7 +234,7 @@ public:
      * this is a proposal of possible user and passwords
      * @return the pair username , password
      */
-    QValueList< QPair<QString, QString> > userProposals();
+    QValueList< QPair<QString, QString> > userProposals() const;
 
     /**
      * If the device has a "shipping" username and password, the connector can
@@ -272,8 +272,8 @@ public:
     /**
      *
      */
-    void setExtraOption( const QString &, const QVariant & );
-    QMap<QString, QVariant> extras()const { return m_extras; };
+    void setExtraOption( const QString &, const QString & );
+    QMap<QString, QString> extras()const { return m_extras; };
 
 private:
     class KapabilitiesPrivate;
@@ -297,7 +297,7 @@ private:
     int m_current;
     QString m_user;
     QString m_pass;
-    QMap<QString,QVariant> m_extras;
+    QMap<QString,QString> m_extras;
     QString m_currModell;
     QStringList m_models;
     QString m_currMode;

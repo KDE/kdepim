@@ -20,6 +20,7 @@
 #ifndef konnector_h
 #define konnector_h
 
+#include <qiconset.h>
 #include <qobject.h>
 #include <qvaluelist.h>
 #include <qptrlist.h>
@@ -126,6 +127,10 @@ public:
      * @param udi Device Id
      */
     bool startSync(const QString &udi);
+    /**
+     * Returns an IconSet for the given udi
+     */
+    QIconSet iconSet(const QString& udi )const;
 public slots:
     /**
      * this will write a List of KSyncEntry
@@ -172,6 +177,7 @@ private:
     KonnectorPrivate *d;
     void allDevices();
     KonnectorPlugin* pluginByUDI(const QString &udi );
+    KonnectorPlugin* pluginByUDI(const QString &udi )const;
 
 private slots:
     void slotSync(const QString&, QPtrList<KSyncEntry> entry );

@@ -100,7 +100,7 @@ namespace KitchenSync {
 
         QGroupBox *m_grpDevice; // Device specific options
         QGridLayout *m_devLay;
-        QMap<QString,  QWidget*> m_devGroup;
+        QMap<QString,  QLineEdit*> m_devGroup;
 
         QGroupBox *m_grpFetch;
         QPushButton* m_fetchAdd;
