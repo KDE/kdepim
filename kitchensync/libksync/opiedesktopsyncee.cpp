@@ -24,6 +24,12 @@
 
 using namespace KSync;
 
+OpieDesktopSyncEntry::OpieDesktopSyncEntry( Syncee *parent )
+  : SyncEntry( parent )
+{
+  setType( QString::fromLatin1("OpieDesktopSyncEntry") );
+}
+
 OpieDesktopSyncEntry::OpieDesktopSyncEntry( const QStringList& category,
                                             const QString& file,
                                             const QString& name,
@@ -33,6 +39,7 @@ OpieDesktopSyncEntry::OpieDesktopSyncEntry( const QStringList& category,
     : SyncEntry( parent ), mCategory( category ),  mFile( file ),
       mName( name ), mType( type ), mSize( size )
 {
+    setType( QString::fromLatin1("OpieDesktopSyncEntry") );
 }
 
 OpieDesktopSyncEntry::OpieDesktopSyncEntry( const OpieDesktopSyncEntry& opie )
@@ -43,6 +50,8 @@ OpieDesktopSyncEntry::OpieDesktopSyncEntry( const OpieDesktopSyncEntry& opie )
     mSize = opie.mSize;
     mFile = opie.mFile;
     mCategory = opie.mCategory;
+
+    //  type is copied by the SyncEntry c'tor
 }
 
 OpieDesktopSyncEntry::~OpieDesktopSyncEntry()
@@ -110,33 +119,19 @@ SyncEntry* OpieDesktopSyncEntry::clone()
     return new OpieDesktopSyncEntry( *this );
 }
 
-OpieDesktopSyncee::OpieDesktopSyncee()
-    : Syncee()
+
+///////////
+/// Syncee implementation
+///
+OpieDesktopSyncee::OpieDesktopSyncee(Merger *m)
+    : Syncee(m)
 {
+    setType( QString::fromLatin1("OpieDesktopSyncee") );
     mList.setAutoDelete( true );
 }
 
 OpieDesktopSyncee::~OpieDesktopSyncee()
 {
-}
-
-QString OpieDesktopSyncee::type() const
-{
-    return QString::fromLatin1("OpieDesktopSyncee");
-}
-
-Syncee* OpieDesktopSyncee::clone()
-{
-    OpieDesktopSyncee* syncee = new OpieDesktopSyncee();
-    syncee->setSyncMode( syncMode() );
-    syncee->setFirstSync( firstSync() );
-    syncee->setSupports( bitArray() );
-    syncee->setSource( source() );
-    OpieDesktopSyncEntry* entry;
-    for ( entry = mList.first(); entry != 0; entry =mList.next() ) {
-        syncee->addEntry( entry->clone() );
-    }
-    return syncee;
 }
 
 void OpieDesktopSyncee::addEntry( SyncEntry* entry )
@@ -166,25 +161,4 @@ SyncEntry* OpieDesktopSyncee::firstEntry()
 SyncEntry* OpieDesktopSyncee::nextEntry()
 {
     return mList.next();
-}
-
-SyncEntry::PtrList OpieDesktopSyncee::added()
-{
-    return voidi();
-}
-
-SyncEntry::PtrList OpieDesktopSyncee::modified()
-{
-    return voidi();
-}
-
-SyncEntry::PtrList OpieDesktopSyncee::removed()
-{
-    return voidi();
-}
-
-SyncEntry::PtrList OpieDesktopSyncee::voidi()
-{
-    SyncEntry::PtrList list;
-    return list;
 }

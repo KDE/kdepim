@@ -29,11 +29,15 @@
 
 namespace KSync {
 
+class AddressBookMerger;
 class AddressBookSyncEntry : public SyncEntry
 {
+    friend class AddressBookMerger;
+    friend class AddressBookSyncee;
   public:
     typedef QPtrList<AddressBookSyncEntry> PtrList;
 
+    AddressBookSyncEntry( Syncee* parent );
     AddressBookSyncEntry( const KABC::Addressee &, Syncee *parent );
     AddressBookSyncEntry( const AddressBookSyncEntry & );
 
@@ -41,7 +45,6 @@ class AddressBookSyncEntry : public SyncEntry
     QString id();
     void setId( const QString &id );
     QString timestamp();
-    QString type() const;
     bool mergeWith( SyncEntry * );
 
     AddressBookSyncEntry *clone();
@@ -54,6 +57,7 @@ class AddressBookSyncEntry : public SyncEntry
     KPIM::DiffAlgo* diffAlgo( SyncEntry*, SyncEntry* );
 
   private:
+    void setAddressee( const KABC::Addressee& addr );
     KABC::Addressee mAddressee;
     QString m_res;
     struct Data;
@@ -67,54 +71,9 @@ class AddressBookSyncEntry : public SyncEntry
 class AddressBookSyncee : public Syncee
 {
   public:
-    enum Supports {
-        FamilyName,
-        GivenName,
-        AdditionalName,
-        Prefix,
-        Suffix,
-        NickName,
-        Birthday,
-        HomeAddress,
-        BusinessAddress,
-        TimeZone,
-        Geo,
-        Title,
-        Role,
-        Organization,
-        Note,
-        Url,
-        Secrecy,
-        Picture,
-        Sound,
-        Agent,
-        HomeNumbers,
-        OfficeNumbers,
-        Messenger,
-        PreferredNumber,
-        Voice,
-        Fax,
-        Cell,
-        Video,
-        Mailbox,
-        Modem,
-        CarPhone,
-        ISDN,
-        PCS,
-        Pager,
-        HomeFax,
-        WorkFax,
-        OtherTel,
-        Category,
-        Custom,
-        Keys,
-        Logo,
-        Email,
-        Emails // more than one
-    };
 
-    AddressBookSyncee();
-    AddressBookSyncee( KABC::AddressBook * );
+    AddressBookSyncee( AddressBookMerger* m = 0);
+    AddressBookSyncee( KABC::AddressBook *, AddressBookMerger* m = 0 );
     ~AddressBookSyncee();
 
     void reset();
@@ -122,15 +81,10 @@ class AddressBookSyncee : public Syncee
     AddressBookSyncEntry *firstEntry();
     AddressBookSyncEntry *nextEntry();
 
-//    AddressBookSyncEntry *findEntry(const QString &id);
 
     void addEntry( SyncEntry * );
     void removeEntry( SyncEntry * );
 
-    SyncEntry::PtrList added();
-    SyncEntry::PtrList modified();
-    SyncEntry::PtrList removed();
-//    Syncee *clone();
     QString type() const;
     QString newId() const;
 
@@ -144,7 +98,7 @@ class AddressBookSyncee : public Syncee
     QPtrList<AddressBookSyncEntry> mEntries;
 
     KABC::AddressBook *mAddressBook;
-    bool mOwnAddressBook;
+    bool mOwnAddressBook : 1;
 };
 
 }

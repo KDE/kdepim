@@ -30,11 +30,13 @@ using namespace KSync;
 BookmarkSyncEntry::BookmarkSyncEntry( KBookmark bm, Syncee *parent )
   : SyncEntry( parent ), mBookmark( bm )
 {
+  setType( QString::fromLatin1("BookmarkSyncEntry") );
 }
 
-QString BookmarkSyncEntry::type() const
+BookmarkSyncEntry::BookmarkSyncEntry( Syncee *parent )
+  : SyncEntry( parent )
 {
-  return "BookmarkSyncEntry";
+  setType( QString::fromLatin1("BookmarkSyncEntry") );
 }
 
 QString BookmarkSyncEntry::name()
@@ -68,7 +70,7 @@ bool BookmarkSyncEntry::equals( SyncEntry *entry )
   if ( mBookmark.fullText() != bmEntry->bookmark().fullText() ) return false;
   if ( mBookmark.url() != bmEntry->bookmark().url() ) return false;
   // TODO: Compare grouping
-  
+
   return true;
 }
 
@@ -77,17 +79,25 @@ BookmarkSyncEntry *BookmarkSyncEntry::clone()
   return new BookmarkSyncEntry( *this );
 }
 
-
-BookmarkSyncee::BookmarkSyncee()
+void BookmarkSyncEntry::setBookmark( const KBookmark& bk )
 {
+    mBookmark = bk;
+}
+
+BookmarkSyncee::BookmarkSyncee( Merger* m)
+  : Syncee(m)
+{
+  setType( QString::fromLatin1("BookmarkSyncee") );
   mBookmarkManager = 0;
   mOwnBookmarkManager = true;
 
   init();
 }
 
-BookmarkSyncee::BookmarkSyncee( KBookmarkManager *bmm )
+BookmarkSyncee::BookmarkSyncee( KBookmarkManager *bmm ,  Merger* m)
+  : Syncee( m )
 {
+  setType( QString::fromLatin1("BookmarkSyncee") );
   mBookmarkManager = bmm;
   mOwnBookmarkManager = false;
 
@@ -97,14 +107,17 @@ BookmarkSyncee::BookmarkSyncee( KBookmarkManager *bmm )
 BookmarkSyncee::~BookmarkSyncee()
 {
   if ( mOwnBookmarkManager ) delete mBookmarkManager;
+  
+  /* clear the created and owned sync entries */
+  for(QMap<QString,BookmarkSyncEntry*>::Iterator it = mEntries.begin(); it != mEntries.end(); ++it)
+    delete it.data();
+    
 }
 
 void BookmarkSyncee::init()
 {
-  mEntries.setAutoDelete( true );
-
   mBookmarks.clear();
-  
+
   listGroup( mBookmarkManager->root() );
 
   mBookmarkIterator = mBookmarks.begin();
@@ -161,7 +174,10 @@ void BookmarkSyncee::addEntry( SyncEntry *entry )
     KBookmarkGroup bmGroup = findGroup( bm.parentGroup() );
     KBookmark newBookmark = bmGroup.addBookmark( mBookmarkManager,
                                                  bm.fullText(), bm.url() );
+						 
+    bmEntry->setBookmark( newBookmark );						 
     mBookmarks.append( newBookmark.internalElement() );
+    mEntries.insert(bmEntry->id(), bmEntry );
   }
 }
 
@@ -173,6 +189,10 @@ void BookmarkSyncee::removeEntry( SyncEntry *entry )
   } else {
     KBookmark bm = bmEntry->bookmark();
     kdDebug() << "Remove " << bm.text() << endl;
+    
+    mEntries.remove(bmEntry->id() );
+    /* don't delete bmEntry here */
+    
     // TODO: implement
 /*
     KBookmarkGroup bmGroup = findGroup(bm.parentGroup());
@@ -195,7 +215,7 @@ KBookmarkGroup BookmarkSyncee::findGroup( KBookmarkGroup group )
     ++bmIt;
   }
   KBookmarkGroup newGroup =
-      mBookmarkManager->root().createNewFolder( mBookmarkManager, 
+      mBookmarkManager->root().createNewFolder( mBookmarkManager,
                                                 group.fullText() );
   mBookmarks.append( newGroup.internalElement() );
 
@@ -205,9 +225,11 @@ KBookmarkGroup BookmarkSyncee::findGroup( KBookmarkGroup group )
 BookmarkSyncEntry *BookmarkSyncee::createEntry( KBookmark bm )
 {
   if ( !bm.isNull() ) {
-    BookmarkSyncEntry *entry = new BookmarkSyncEntry( bm, this );
-    mEntries.append( entry );
-    return entry;    
+    if( !mEntries.contains( bm.url().url() ) ){
+        BookmarkSyncEntry *entry = new BookmarkSyncEntry( bm, this );
+	mEntries.insert( entry->id(), entry );
+    }
+    return mEntries[bm.url().url()];
   } else {
     return 0;
   }

@@ -40,11 +40,11 @@ ConflictDialog::ConflictDialog( SyncEntry *syncEntry, SyncEntry *targetEntry,
 
   mDiffAlgo = syncEntry->diffAlgo( syncEntry, targetEntry );
 
-  mDisplay->setLeftSourceTitle( syncEntry->syncee()->source() );
-  mDisplay->setRightSourceTitle( targetEntry->syncee()->source() );
+  mDisplay->setLeftSourceTitle( syncEntry->syncee()->title() );
+  mDisplay->setRightSourceTitle( targetEntry->syncee()->title() );
 
-  setButtonText( User1, targetEntry->syncee()->source() );
-  setButtonText( User2, syncEntry->syncee()->source() );
+  setButtonText( User1, targetEntry->syncee()->title() );
+  setButtonText( User2, syncEntry->syncee()->title() );
   setButtonText( Cancel, i18n( "Keep both" ) );
 
   if ( mDiffAlgo ) {

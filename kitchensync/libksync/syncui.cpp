@@ -49,7 +49,7 @@ bool SyncUi::confirmDelete( SyncEntry *, SyncEntry *target )
 {
   kdDebug(5231) << "Entry with name " << target->name() << " was deleted "
                 << endl;
-  kdDebug(5231) << "From " << target->syncee()->source() << endl;
+  kdDebug(5231) << "From " << target->syncee()->title() << endl;
 
   return true;
 }

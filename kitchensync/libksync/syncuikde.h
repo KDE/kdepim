@@ -33,6 +33,8 @@ class SyncUiKde : public SyncUi
     SyncUiKde( QWidget *parent, bool confirmDelete, bool inform = false );
     virtual ~SyncUiKde();
 
+    void setConfirmDelete( bool b);
+
     SyncEntry *deconflict( SyncEntry *syncEntry, SyncEntry *target );
     bool confirmDelete( SyncEntry *entry, SyncEntry *target );
     void informBothDeleted( SyncEntry *syncEntry, SyncEntry *target );

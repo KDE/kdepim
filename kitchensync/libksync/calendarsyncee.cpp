@@ -2,6 +2,7 @@
     This file is part of KitchenSync.
 
     Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2004 Holger Hans Peter Freyther <freyther@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -21,9 +22,13 @@
 
 #include <kdebug.h>
 #include <libkcal/filestorage.h>
+#include <libkcal/calformat.h>
+
 #include <libkdepim/calendardiffalgo.h>
 
+#include "calendarmerger.h"
 #include "calendarsyncee.h"
+
 
 using namespace KSync;
 using namespace KCal;
@@ -31,7 +36,21 @@ using namespace KCal;
 CalendarSyncEntry::CalendarSyncEntry( Incidence *incidence, Syncee *parent )
   : SyncEntry( parent ), mIncidence( incidence )
 {
+  setType( QString::fromLatin1( "CalendarSyncEntry" ) );
 }
+
+CalendarSyncEntry::CalendarSyncEntry( Syncee* parent )
+  : SyncEntry( parent )
+{
+  /* that is hard, use todo or calendar as the default? */
+  mIncidence = new KCal::Todo;
+  setType( QString::fromLatin1( "CalendarSyncEntry" ) );
+}
+
+
+CalendarSyncEntry::CalendarSyncEntry( const CalendarSyncEntry& ent )
+  : SyncEntry( ent ), mIncidence( ent.mIncidence->clone() )
+{}
 
 QString CalendarSyncEntry::name()
 {
@@ -43,10 +62,19 @@ QString CalendarSyncEntry::id()
   return mIncidence->uid();
 }
 
+void CalendarSyncEntry::setId(const QString& id)
+{
+  mIncidence->setUid( id );
+}
+
 QString CalendarSyncEntry::timestamp()
 {
   // FIXME: last modified isn't sufficient to tell if an event has changed.
   return mIncidence->lastModified().toString();
+}
+
+KCal::Incidence *CalendarSyncEntry::incidence()const {
+    return mIncidence;
 }
 
 bool CalendarSyncEntry::equals( SyncEntry *entry )
@@ -92,9 +120,12 @@ KPIM::DiffAlgo* CalendarSyncEntry::diffAlgo( SyncEntry *syncEntry, SyncEntry *ta
   return new KPIM::CalendarDiffAlgo( calSyncEntry->incidence(), calTargetEntry->incidence() );
 }
 
-CalendarSyncee::CalendarSyncee( Calendar *calendar )
-  : mIteratingEvents( true )
+
+/// Syncee starts here
+CalendarSyncee::CalendarSyncee( Calendar *calendar, CalendarMerger* merger )
+    : Syncee( merger ), mIteratingEvents( true )
 {
+  setType( QString::fromLatin1( "CalendarSyncee" ) );
   mCalendar = calendar;
 }
 
@@ -131,6 +162,7 @@ CalendarSyncEntry *CalendarSyncee::firstEntry()
     }
     return createEntry( *mCurrentTodo );
   }
+
   return createEntry( *mCurrentEvent );
 }
 
@@ -168,10 +200,7 @@ CalendarSyncEntry *CalendarSyncee::findEntry(const QString &id)
 void CalendarSyncee::addEntry( SyncEntry *entry )
 {
   CalendarSyncEntry *calEntry = dynamic_cast<CalendarSyncEntry *>(entry);
-  if (!calEntry) {
-    kdDebug() << "CalendarSyncee::addEntry(): SyncEntry has wrong type."
-              << endl;
-  } else {
+  if (calEntry) {
     Event *sourceEvent = dynamic_cast<Event *>(calEntry->incidence());
     if (!sourceEvent) {
         Todo *sourceTodo = dynamic_cast<Todo*>(calEntry->incidence());
@@ -179,22 +208,21 @@ void CalendarSyncee::addEntry( SyncEntry *entry )
            kdDebug() << "CalendarSyncee::addEntry(): Incidence is not of type Event or Todo."
                 << endl;
         }
-        Todo *todo = dynamic_cast<Todo *>(sourceTodo->clone());
+        Todo *todo = dynamic_cast<Todo *>(sourceTodo);
         mCalendar->addTodo(todo);
     } else {
-      Event *event = dynamic_cast<Event *>(sourceEvent->clone());
+      Event *event = dynamic_cast<Event *>(sourceEvent);
       mCalendar->addEvent(event);
     }
+    /* do not lose the syncStatus and insert the Entry directly */
+    mEntries.insert(calEntry->incidence(), calEntry);
   }
 }
 
 void CalendarSyncee::removeEntry( SyncEntry *entry )
 {
   CalendarSyncEntry *calEntry = dynamic_cast<CalendarSyncEntry *>( entry );
-  if ( !calEntry ) {
-    kdDebug() << "CalendarSyncee::removeEntry(): SyncEntry has wrong type."
-              << endl;
-  } else {
+  if ( calEntry ) {
     Event *ev = dynamic_cast<Event *>( calEntry->incidence() );
     if ( ev ) {
       mCalendar->deleteEvent( ev );
@@ -206,6 +234,7 @@ void CalendarSyncee::removeEntry( SyncEntry *entry )
       }
       mCalendar->deleteTodo( td );
     }
+    mEntries.remove( calEntry->incidence() );
   }
 }
 
@@ -250,4 +279,8 @@ bool CalendarSyncee::restoreBackup( const QString &filename )
   clearEntries();
 
   return ok;
+}
+
+QString CalendarSyncee::newId() const {
+    return KCal::CalFormat::createUniqueId();
 }

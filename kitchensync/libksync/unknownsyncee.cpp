@@ -23,10 +23,17 @@
 
 using namespace KSync;
 
+UnknownSyncEntry::UnknownSyncEntry( Syncee *parent )
+  : SyncEntry( parent )
+{
+  setType( QString::fromLatin1("UnknownSyncEntry") );
+}
+
 UnknownSyncEntry::UnknownSyncEntry( const QByteArray &array,
                                     const QString &path, Syncee *parent )
     : SyncEntry( parent ), mArray( array ), mPath( path )
 {
+    setType( QString::fromLatin1("UnknownSyncEntry") );
     mHasAccess = false;
     mMode = ByteArray;
     mTime = QDateTime::currentDateTime();
@@ -36,6 +43,7 @@ UnknownSyncEntry::UnknownSyncEntry( const QString &fileName,
                                     const QString &path, Syncee *parent )
     : SyncEntry( parent ), mPath( path ), mFileName( fileName )
 {
+    setType( QString::fromLatin1("UnknownSyncEntry") );
     mHasAccess = false;
     mMode = Tempfile;
     mTime = QDateTime::currentDateTime();
@@ -44,6 +52,7 @@ UnknownSyncEntry::UnknownSyncEntry( const QString &fileName,
 UnknownSyncEntry::UnknownSyncEntry( const UnknownSyncEntry& entry)
     : SyncEntry( entry )
 {
+    //  type is copied by the SyncEntry c'tor
     mMode = entry.mMode;
     mHasAccess = entry.mHasAccess;
     mPath = entry.mPath;
@@ -107,11 +116,6 @@ QString UnknownSyncEntry::timestamp()
         return id();
 }
 
-QString UnknownSyncEntry::type() const
-{
-    return QString::fromLatin1("UnknownSyncEntry");
-}
-
 bool UnknownSyncEntry::equals( SyncEntry* entry )
 {
     UnknownSyncEntry* unEntry = dynamic_cast<UnknownSyncEntry*> ( entry );
@@ -139,8 +143,9 @@ SyncEntry* UnknownSyncEntry::clone()
 }
 
 
-UnknownSyncee::UnknownSyncee() : Syncee()
+UnknownSyncee::UnknownSyncee( Merger* merger) : Syncee(merger)
 {
+    setType( QString::fromLatin1("UnknownSyncee") );
     mList.setAutoDelete( true );
 }
 
@@ -158,31 +163,6 @@ SyncEntry *UnknownSyncee::nextEntry()
     return mList.next();
 }
 
-QString UnknownSyncee::type() const
-{
-    return QString::fromLatin1("UnknownSyncee");
-}
-
-SyncEntry::PtrList UnknownSyncee::added()
-{
-    return voidi();
-}
-
-SyncEntry::PtrList UnknownSyncee::modified()
-{
-    return voidi();
-}
-
-SyncEntry::PtrList UnknownSyncee::removed()
-{
-    return voidi();
-}
-
-SyncEntry::PtrList UnknownSyncee::voidi()
-{
-    SyncEntry::PtrList list;
-    return list;
-}
 
 void UnknownSyncee::addEntry( SyncEntry *entry )
 {
@@ -203,14 +183,10 @@ void UnknownSyncee::removeEntry( SyncEntry *entry )
     mList.remove( unEntry );
 }
 
-Syncee *UnknownSyncee::clone()
-{
-    UnknownSyncee *syncee;
-    syncee = new UnknownSyncee();
-    // always FirstMode
-    UnknownSyncEntry *entry;
-    for ( entry = mList.first(); entry != 0; entry = mList.next() ) {
-        syncee->addEntry( entry->clone() ); // should be casted up to UnknownSyncEntry again...
-    }
-    return syncee;
+bool UnknownSyncee::writeBackup( const QString&  ) {
+    return false;
+}
+
+bool UnknownSyncee::restoreBackup( const QString&  ) {
+    return false;
 }

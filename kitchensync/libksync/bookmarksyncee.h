@@ -26,6 +26,7 @@
 #include <kbookmarkmanager.h>
 
 #include <qvaluelist.h>
+#include <qmap.h>
 
 class KBookmarkManager;
 
@@ -33,14 +34,15 @@ namespace KSync {
 
 class BookmarkSyncEntry : public SyncEntry
 {
+    friend class BookmarkSyncee;
   public:
-    BookmarkSyncEntry( KBookmark, Syncee *parent );
-  
-    QString type() const;
+    BookmarkSyncEntry( KBookmark , Syncee *parent );
+    BookmarkSyncEntry( Syncee* parent );
+
     QString name();
     QString id();
     QString timestamp();
-    
+
     bool equals( SyncEntry *entry );
 
     BookmarkSyncEntry *clone();
@@ -48,6 +50,7 @@ class BookmarkSyncEntry : public SyncEntry
     KBookmark bookmark() const { return mBookmark; }
 
   private:
+    void setBookmark( const KBookmark& );
     KBookmark mBookmark;
 };
 
@@ -58,15 +61,14 @@ class BookmarkSyncEntry : public SyncEntry
 class BookmarkSyncee : public Syncee
 {
   public:
-    BookmarkSyncee();
-    BookmarkSyncee( KBookmarkManager * );
+    BookmarkSyncee(Merger * m= 0);
+    BookmarkSyncee( KBookmarkManager *, Merger* m = 0);
     ~BookmarkSyncee();
-  
-    QString type() const { return "BookmarkSyncee"; }
-  
+
+
     BookmarkSyncEntry *firstEntry();
     BookmarkSyncEntry *nextEntry();
-    
+
 //    BookmarkSyncEntry *findEntry( const QString &id );
 
     void addEntry( SyncEntry * );
@@ -77,7 +79,7 @@ class BookmarkSyncee : public Syncee
 
   private:
     void init();
-  
+
     BookmarkSyncEntry *createEntry( KBookmark );
     void listGroup( KBookmarkGroup );
     KBookmarkGroup findGroup( KBookmarkGroup group );
@@ -86,7 +88,7 @@ class BookmarkSyncee : public Syncee
     bool mOwnBookmarkManager;
     QValueList<QDomElement> mBookmarks;
     QValueList<QDomElement>::ConstIterator mBookmarkIterator;
-    QPtrList<BookmarkSyncEntry> mEntries;
+    QMap<QString, BookmarkSyncEntry*> mEntries;
 };
 
 }

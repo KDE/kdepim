@@ -11,12 +11,13 @@ libksync2_la_SOURCES = \
   syncer.cpp syncee.cpp syncentry.cpp syncui.cpp syncuikde.cpp kontainer.cpp \
   syncalgorithm.cpp standardsync.cpp \
   addressbooksyncee.cpp unknownsyncee.cpp \
-  opiedesktopsyncee.cpp  todosyncee.cpp \
-  eventsyncee.cpp \
+  opiedesktopsyncee.cpp \
   calendarsyncee.cpp \
   synceelist.cpp \
+  merger.cpp addressbookmerger.cpp calendarmerger.cpp \
   bookmarksyncee.cpp \
-  conflictdialog.cpp
+  conflictdialog.cpp \
+  synchistory.cpp
  
 
 METASOURCES = AUTO

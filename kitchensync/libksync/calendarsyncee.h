@@ -2,6 +2,7 @@
     This file is part of KitchenSync.
 
     Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2004 Holger Hans Peter Freyther <freyther@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -26,22 +27,24 @@
 #include "syncee.h"
 
 namespace KSync {
-
+class CalendarMerger;
 class CalendarSyncEntry : public SyncEntry
 {
   public:
+    CalendarSyncEntry( Syncee* parent );
     CalendarSyncEntry( KCal::Incidence *, Syncee *parent );
-  
-    QString type() const { return "CalendarSyncEntry"; }
+    CalendarSyncEntry( const CalendarSyncEntry& );    
+
     QString name();
     QString id();
     QString timestamp();
-    
+
     bool equals( SyncEntry *entry );
 
     CalendarSyncEntry *clone();
 
-    KCal::Incidence *incidence() { return mIncidence; }
+    KCal::Incidence *incidence()const;
+    void setId(const QString &id);
 
     KPIM::DiffAlgo* diffAlgo( SyncEntry*, SyncEntry* );
 
@@ -56,43 +59,39 @@ class CalendarSyncEntry : public SyncEntry
 class CalendarSyncee : public Syncee
 {
   public:
-    CalendarSyncee( KCal::Calendar* );
+    CalendarSyncee( KCal::Calendar*, CalendarMerger* merger = 0);
     ~CalendarSyncee();
 
-    QString type() const { return "CalendarSyncee"; }
-
     void reset();
-    
+
     CalendarSyncEntry *firstEntry();
     CalendarSyncEntry *nextEntry();
-    
+
 //    CalendarSyncEntry *findEntry( const QString &id );
 
     void addEntry( SyncEntry * );
     void removeEntry( SyncEntry * );
 
-    SyncEntry::PtrList added() { return SyncEntry::PtrList(); }
-    SyncEntry::PtrList modified() { return SyncEntry::PtrList(); }
-    SyncEntry::PtrList removed() { return SyncEntry::PtrList(); }
-    Syncee *clone() { return 0; }
 
     KCal::Calendar *calendar() const { return mCalendar; }
 
     bool writeBackup( const QString & );
     bool restoreBackup( const QString & );
 
+    QString newId() const;
+
   private:
     CalendarSyncEntry *createEntry( KCal::Incidence * );
 
     void clearEntries();
-  
+
     KCal::Calendar *mCalendar;
     KCal::Event::List mEvents;
     KCal::Event::List::ConstIterator mCurrentEvent;
     KCal::Todo::List mTodos;
     KCal::Todo::List::ConstIterator mCurrentTodo;
-    bool mIteratingEvents;
-    
+    bool mIteratingEvents : 1;
+
     QMap<KCal::Incidence *,CalendarSyncEntry *> mEntries;
 };
 

@@ -62,15 +62,6 @@ void Syncer::clear()
 
 void Syncer::sync()
 {
-  Syncee *s = mSyncees.first();
-  while( s ) {
-    if ( !s->loadLog() ) {
-      kdError() << "Syncer::sync(): Unable to load sync log for Syncee '"
-                << s->identifier() << "'" << endl;
-    }
-    s = mSyncees.next();
-  }
-
   Syncee *target = mSyncees.last();
 
   if ( !target ) {
@@ -83,15 +74,11 @@ void Syncer::sync()
     syncToTarget( syncee, target );
     syncee = mSyncees.next();
   }
-  if ( !target->saveLog() ) {
-    kdDebug() << "Syncer::sync() failed to save target log." << endl;
-  }
+
   syncee = mSyncees.first();
   while ( syncee != target ) {
     syncToTarget( target, syncee, true );
-    if ( !syncee->saveLog() ) {
-      kdDebug() << "Syncer::sync() failed to save syncee log." << endl;
-    }
+
     syncee = mSyncees.next();
   }
 }
@@ -104,9 +91,6 @@ void Syncer::syncAllToTarget( Syncee *target, bool writeback )
     syncee = mSyncees.next();
   }
 
-  if ( !target->saveLog() ) {
-    kdDebug() << "Syncer::syncAllToTarget() failed to save target log." << endl;
-  }
 
   if ( writeback ) {
     for ( Syncee *syncee = mSyncees.first(); syncee;

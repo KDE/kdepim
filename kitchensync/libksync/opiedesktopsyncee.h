@@ -24,9 +24,7 @@
 #include <qstringlist.h>
 #include <qstring.h>
 
-#include "syncer.h"
-
-#include "synctemplate.h"
+#include <syncee.h>
 
 namespace KSync {
 
@@ -42,6 +40,8 @@ class OpieDesktopSyncEntry  : public SyncEntry
 {
   public:
     typedef QPtrList<OpieDesktopSyncEntry> PtrList;
+
+    OpieDesktopSyncEntry( Syncee *parent );
     OpieDesktopSyncEntry( const QStringList& category,
                           const QString& file,
                           const QString& name,
@@ -75,24 +75,20 @@ class OpieDesktopSyncEntry  : public SyncEntry
 class OpieDesktopSyncee : public Syncee
 {
   public:
-    OpieDesktopSyncee();
+    OpieDesktopSyncee( Merger* m= 0);
     ~OpieDesktopSyncee();
-    QString type() const;
-    Syncee* clone();
+
+
     void addEntry( SyncEntry* entry );
     void removeEntry( SyncEntry* entry);
     SyncEntry* firstEntry();
     SyncEntry* nextEntry();
-    SyncEntry::PtrList added();
-    SyncEntry::PtrList modified();
-    SyncEntry::PtrList removed();
 
     bool writeBackup( const QString & ) { return false; }
     bool restoreBackup( const QString & ) { return false; }
 
   private:
     OpieDesktopSyncEntry::PtrList mList;
-    SyncEntry::PtrList voidi();
 };
 
 }

@@ -24,8 +24,7 @@
 #include <qdatetime.h>
 #include <qcstring.h>
 
-#include "syncentry.h"
-#include "syncee.h"
+#include <syncee.h>
 
 namespace KSync {
 
@@ -46,6 +45,8 @@ class UnknownSyncEntry : public SyncEntry
     */
     enum DownLoadMode { Tempfile = 0, ByteArray };
     typedef QPtrList<UnknownSyncEntry> PtrList;
+
+    UnknownSyncEntry( Syncee *parent );
 
     /**
       c'tor
@@ -103,7 +104,6 @@ class UnknownSyncEntry : public SyncEntry
     QString name();
     QString id();
     QString timestamp();
-    QString type()const;
     bool equals( SyncEntry* entry );
     SyncEntry* clone();
 
@@ -122,7 +122,7 @@ class UnknownSyncEntry : public SyncEntry
 class UnknownSyncee : public Syncee
 {
   public:
-    UnknownSyncee();
+    UnknownSyncee( Merger* m = 0);
     ~UnknownSyncee();
 
     SyncEntry* firstEntry();
@@ -130,17 +130,12 @@ class UnknownSyncee : public Syncee
     QString type()const;
     void addEntry( SyncEntry*  );
     void removeEntry( SyncEntry* );
-    SyncEntry::PtrList added();
-    SyncEntry::PtrList modified();
-    SyncEntry::PtrList removed();
-    Syncee* clone();
 
-    bool writeBackup( const QString & ) { return false; }
-    bool restoreBackup( const QString & ) { return false; }
+    bool writeBackup( const QString & );
+    bool restoreBackup( const QString & );
 
   private:
     /** voidi returns an empty PtrList */
-    SyncEntry::PtrList voidi();
     UnknownSyncEntry::PtrList mList;
 
     class UnknownSynceePrivate;
