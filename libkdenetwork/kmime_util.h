@@ -113,7 +113,7 @@ namespace KMime {
               or a null QCString if no such header was found.
   */
   extern QCString extractHeader(const QCString &src, const char *name);
-  /** Converts all occurences of "\r\n" (CRLF) in @p s to "\n" (LF).
+  /** Converts all occurrences of "\r\n" (CRLF) in @p s to "\n" (LF).
 
       This function is expensive and should be used only if the mail
       will be stored locally. All decode functions can cope with both
@@ -123,7 +123,7 @@ namespace KMime {
       @see CRLFtoLF(const char*) LFtoCRLF
   */
   extern QCString CRLFtoLF(const QCString &s);
-  /** Converts all occurences of "\r\n" (CRLF) in @p s to "\n" (LF).
+  /** Converts all occurrences of "\r\n" (CRLF) in @p s to "\n" (LF).
 
       This function is expensive and should be used only if the mail
       will be stored locally. All decode functions can cope with both
@@ -133,7 +133,7 @@ namespace KMime {
       @see CRLFtoLF(const QCString&) LFtoCRLF
   */
   extern QCString CRLFtoLF(const char *s);
-  /** Converts all occurences of "\n" (LF) in @p s to "\r\n" (CRLF).
+  /** Converts all occurrences of "\n" (LF) in @p s to "\r\n" (CRLF).
 
       This function is expensive and should be used only if the mail
       will be transmitted as an RFC822 message later. All decode

@@ -310,7 +310,7 @@ Base6::pubKeys()
 
       if( (index3 >index2) || (index3 == -1) )
       {
-	// second adress for the same key
+	// second address for the same key
 	line = error.mid(index+1,index2-index-1);
 	line = line.stripWhiteSpace();
       } else {

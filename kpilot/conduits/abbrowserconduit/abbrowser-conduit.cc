@@ -1702,7 +1702,7 @@ bool AbbrowserConduit::_buildResolutionTable(ResolutionTable*tab, const Addresse
 	appendGenPhone(i18n("Email"), pcAddr.preferredEmail(), eEmail);
 
 	KABC::Address abAddress = getAddress(pcAddr);
-	appendAddr(i18n("Adress"), abAddress.street(), entryAddress);
+	appendAddr(i18n("Address"), abAddress.street(), entryAddress);
 	appendAddr(i18n("City"), abAddress.locality(), entryCity);
 	appendAddr(i18n("Region"), abAddress.region(), entryState);
 	appendAddr(i18n("Postal code"), abAddress.postalCode(), entryZip);
@@ -1821,7 +1821,7 @@ bool AbbrowserConduit::_smartMergeTable(ResolutionTable*tab)
 		// try to merge the three strings
 		item->fResolved=_smartMergeString(item->fEntries[0],
 			item->fEntries[2], item->fEntries[1], fConflictResolution);
-		// if a conflict occured, set the default to something sensitive:
+		// if a conflict occurred, set the default to something sensitive:
 		if (item->fResolved.isNull() && !(item->fEntries[0].isEmpty() &&
 			item->fEntries[1].isEmpty() && item->fEntries[2].isEmpty() ) )
 		{

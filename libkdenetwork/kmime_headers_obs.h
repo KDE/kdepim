@@ -60,7 +60,7 @@ class Supersedes : public MessageID {
 };
 
 /** This class encapsulates an address-field, containing
-    an email-adress and a real name */
+    an email-address and a real name */
 class AddressField : public Base {
 
   public:

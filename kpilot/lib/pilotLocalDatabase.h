@@ -49,9 +49,9 @@ public:
 	* and if the file is found there, it is opened. In some cases this should
 	* not be done, so the parameter useDefaultPath controls this behavior.
 	* If it is set to true, the default path is used if the file cannot be
-	* found in the explicitely given location. If it is set to false and
+	* found in the explicitly given location. If it is set to false and
 	* the database cannot be found, no database is opened. It can then be
-	* created explicitely at the specified location.
+	* created explicitly at the specified location.
 	*/
 	PilotLocalDatabase( const QString& path,
 		const QString& name, bool useDefaultPath=true,

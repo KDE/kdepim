@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname
-			<< ": Configuration was cancelled." << endl;
+			<< ": Configuration was canceled." << endl;
 #endif
 	}
 

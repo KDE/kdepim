@@ -96,7 +96,7 @@ public:
       @param start Start position for the search.
              If @p start is negative, starts @p -(start) positions
 	     from the end of @p str.
-      @param global If @p TRUE, requests to replace all occurences
+      @param global If @p TRUE, requests to replace all occurrences
              of the regexp with @p replacementStr; if @p FALSE,
 	     only the first occurrence will be replaced.
 	     Equivalent to the /g switch to perl's s/// operator.

@@ -5,7 +5,7 @@ Summary: This conduit syncs the handheld with
          MAL servers such as AvantGo. 
 Author: Reinhold Kainhofer, reinhold@kainhofer.com
 Date: August 15, 2002
-License: GPL, linking to libmal (MPL) is explicitely allowed
+License: GPL, linking to libmal (MPL) is explicitly allowed
 Depends: The conduits needs libmal >=0.20 installed 
          (otherwise it will not be compiled). libmal 
          can be downloaded from

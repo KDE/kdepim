@@ -77,7 +77,7 @@ Address Book) would return AddressDB.  This is specific to the pilot
 application and you'll need to know the name the pilot app uses for
 it's database.  (You might be able to guess if you look at the
 ~/.kde/share/apps/kpilot/DBBackup/<user> directory and find one that
-looks close.  Note that you don't use any extention in the dbInfo
+looks close.  Note that you don't use any extension in the dbInfo
 string.)
 	The doSync() method makes use of the protected methods of base 
 conduit.  These can be used to request the next modified record, the

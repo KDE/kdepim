@@ -170,7 +170,7 @@ KPilot Developer's notes for July 9th
   lacking an operator << for QString. (Nicer is probably to add
   such an operator, but hey.)
 * Removed uselessly virtual conduitName() function from conduit classes.
-  Noone was overriding it anyway.
+  No-one was overriding it anyway.
 * The vcal and abbrowser conduits shouldn't be compiled if you're building
   KPilot HEAD on older systems.
 
@@ -249,7 +249,7 @@ KPilot Developer's notes for June 15th, 2003
   was never executed on my machine, and I didn't detect the bug myself.
 
 2003-6-1   Reinhold Kainhofer
-* Fixed several (possible  and really occuring) null pointer crashes
+* Fixed several (possible  and really occurring) null pointer crashes
 * Submited most of the items in our TODO list as bugs or wishes on
   bugs.kde.org
 
@@ -483,7 +483,7 @@ KPilot Developer's notes for March 26th, 2003
   are welcome to improve them.
 * Tried to implement a configure option for libmal, and use autoconf's
   built-in functionality to detect libmal. Doesn't work yet, so I
-  haven't commited it yet.
+  haven't committed it yet.
 
 2003-3-23  Adriaan de Groot
 * More merging .. conduits today:
@@ -1330,7 +1330,7 @@ I can sit on the couch and do devel work :)
   - Removed some messy #ifdef DEBUG stuff, with debugging enabled
     call tracing is now default on.
 * kpilot/logWidget.cc
-  - Added some text stating that KPilot is really alpha. Noone will read
+  - Added some text stating that KPilot is really alpha. No-one will read
     this, of course, and it will only piss off the translators.
 
 KPilot Developer's notes for january 25th 2002

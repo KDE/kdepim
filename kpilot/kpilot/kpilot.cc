@@ -951,7 +951,7 @@ int main(int argc, char **argv)
 
 		if (r)
 		{
-			return 1;	// Dialog cancelled
+			return 1;	// Dialog canceled
 		}
 		else
 		{
@@ -976,7 +976,7 @@ int main(int argc, char **argv)
 			"configDialog", true);
 		int r = options->exec();
 
-		// If cancelled, always fail.
+		// If canceled, always fail.
 		if (!r) return 1;
 		// User expected configure only.
 		if (run_mode == ConfigureKPilot)

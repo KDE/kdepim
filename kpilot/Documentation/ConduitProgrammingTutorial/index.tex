@@ -666,12 +666,12 @@ of this class that you might need in your conduit:
 \item
     \code{bool installFile(const QString \&, bool deleteFile=true)}\qquad ... Installs the .prc 
     or .pdb database from the PC to the handheld. Returns true on success.
-    If deleteFile is set true or left out, the local file is deleted after successfull installation.
+    If deleteFile is set true or left out, the local file is deleted after successful installation.
 \item
     \code{int installFiles(const QStringList \&, bool deleteFiles=true)}\qquad ... Installs 
     several .prc or .pdb databases from the PC to the handheld. Returns 
     the number of successfully installed databases. If deleteFiles is set true 
-    or left out, the local files are deleted after successfull installation.
+    or left out, the local files are deleted after successful installation.
 
 
 
@@ -938,7 +938,7 @@ bool MALConduit::skip() {
 \end{verbatim}
 }
 
-When you use an external library to do the sync, the external functions need a reference to the current connection to the handheld. In the pilot-link library, which is the base for all of KPilot's communication with the handheld, this is implemented via an integer identifier, which can be obtained by the funciton \texttt{pilotSocket()} of the SyncAction class.
+When you use an external library to do the sync, the external functions need a reference to the current connection to the handheld. In the pilot-link library, which is the base for all of KPilot's communication with the handheld, this is implemented via an integer identifier, which can be obtained by the function \texttt{pilotSocket()} of the SyncAction class.
 
 The libmal also needs some internal data structed "PalmSyncInfo", which is obtained by its own syncInfoNew() function, but this part is libmal-specific.
 
@@ -1625,7 +1625,7 @@ But this is needed and will be added as soon as I find the time to do it.
 
 The KonnectorManager does allow you to either push QByteArrays or files behind 
 filenames to the device. 
-There is one short comming with it. It's asynchronus and currently no success 
+There is one short coming with it. It's asynchronus and currently no success 
 or failure is emmitted.
 But when taking in consideration that you want to fetch anything from the 
 device. You will need a special layer in Konnector which loads plugins for 

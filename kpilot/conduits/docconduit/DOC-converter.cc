@@ -400,7 +400,7 @@ bool DOCConverter::convertTXTtoPDB() {
 		findBmkFile(text, fBookmarks);
 	}
 
-	// Process the bookmarks: find the occurences of the regexps, and sort them if requested:
+	// Process the bookmarks: find the occurrences of the regexps, and sort them if requested:
 	bmkSortedList pdbBookmarks;
 	pdbBookmarks.setAutoDelete(TRUE);
 	docBookmark*bmk;

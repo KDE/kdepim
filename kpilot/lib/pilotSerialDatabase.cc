@@ -329,7 +329,7 @@ bool PilotSerialDatabase::createDatabase(long creator, long type, int cardno, in
 			<< i18n("Cannot create database %1 on the handheld").arg(getDBName())<<endl;
 		return false;
 	}
-	// TODO: Do I have to open it explicitely???
+	// TODO: Do I have to open it explicitly???
 	setDBHandle(db);
 	setDBOpen(true);
 	return true;

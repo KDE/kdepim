@@ -1881,7 +1881,7 @@ int
 endListCertificates( struct CertIterator* );
 
 /*!
-  Import a certificate that was a result from a search-operation using the startListCertificates(), nextCertificate() funtions.
+  Import a certificate that was a result from a search-operation using the startListCertificates(), nextCertificate() functions.
 
   The fingerprint must be passed to identify the key.
 

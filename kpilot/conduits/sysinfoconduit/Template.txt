@@ -47,7 +47,7 @@ KPilot System Information Page
 <!--#ifsync#
 -) Synchronization Information
      Last sync attempt:      #lastsync#
-     Last successfull sync:  #lastsuccsync#
+     Last successful sync:  #lastsuccsync#
      Last sync with PC (ID): #lastsyncpc#
 #endifsync#-->
 

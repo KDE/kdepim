@@ -1477,7 +1477,7 @@ Module::canonicalAddress( const QString& _adress )
   QString address = _adress.simplifyWhiteSpace();
   address = address.stripWhiteSpace();
 
-  // just leave pure e-mail adress.
+  // just leave pure e-mail address.
   if((index = address.find("<")) != -1)
     if((index2 = address.find("@",index+1)) != -1)
       if((index2 = address.find(">",index2+1)) != -1)

@@ -98,7 +98,7 @@ const QString SysInfoConduit::defaultpage = QString("KPilot System Information P
 "<!--#ifsync#\n"
 "-) Synchronization Information\n"
 "     Last sync attempt:      #lastsync#\n"
-"     Last successfull sync:  #lastsuccsync#\n"
+"     Last successful sync:  #lastsuccsync#\n"
 "     Last sync with PC (ID): #lastsyncpc#\n"
 "#endifsync#-->\n"
 "\n"

@@ -150,12 +150,12 @@ there are two special cases: a full and a first sync.
 
 -) a full sync is done if
 	a) there is a backupdb and a calendar, but the PC id number changed
-	b) it was explicitely requested by pressing the full sync button in KPilot
+	b) it was explicitly requested by pressing the full sync button in KPilot
 	c) the setting "always full sync" was selected in the configuration dlg
 -) a first sync is done if
 	a) either the calendar or the backup DB does not exist.
 	b) the calendar and the backup DB exists, but the sync is done for a different User name
-	c) it was explicitely requested in KPilot
+	c) it was explicitly requested in KPilot
 
 */
 
@@ -174,7 +174,7 @@ there are two special cases: a full and a first sync.
 
 	readConfig();
 
-	// don't do a first sync by default in any case, only when explicitely requested, or the backup
+	// don't do a first sync by default in any case, only when explicitly requested, or the backup
 	// database or the alendar are empty.
 	fFirstSync = false;
 
