@@ -219,9 +219,13 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
     }
 
     if ( !XXPortManager::importURL.isEmpty() ) { // a vcard was passed via cmd
-      VCardViewerDialog dlg( addrList, parentWidget() );
-      dlg.exec();
-      addrList = dlg.contacts();
+      if ( addrList.isEmpty() ) {
+        KMessageBox::information( parentWidget(), i18n( "The vCard does not contain any contacts." ) );
+      } else {
+        VCardViewerDialog dlg( addrList, parentWidget() );
+        dlg.exec();
+        addrList = dlg.contacts();
+      }
     }
   }
 
