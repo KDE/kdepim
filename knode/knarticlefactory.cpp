@@ -146,6 +146,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
                                  QString::null,"followupToPosterWarning");
       art->setDoPost(false);
       art->setDoMail(true);
+      art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false));
     }
     else
       art->newsgroups()->from7BitString(fup2->as7BitString(false));
