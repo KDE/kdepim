@@ -41,10 +41,10 @@
 <!-- Don't change format of date and version of the documentation -->
 
 <date>2001-11-28</date>
-<releaseinfo>0.03.02</releaseinfo>
+<releaseinfo>0.04.00</releaseinfo>
 
 <abstract>
-<para>This handbook describes &kalarm; version 0.3.5.</para>
+<para>This handbook describes &kalarm; version 0.4.</para>
 
 <para>&kalarm; is an alarm/reminder message scheduler for &kde;.</para>
 </abstract>
@@ -104,6 +104,12 @@ displayed again later. An example of an alarm message:</para>
 </textobject>
 </mediaobject>
 </screenshot>
+
+<para>This document makes various references to the "alarm daemon".
+This is an application which runs in the background, checking
+pending alarms and telling &kalarm; to display them when they
+become due.</para>
+
 </chapter>
 
 <chapter id="using-kalarm">
@@ -114,7 +120,7 @@ displayed again later. An example of an alarm message:</para>
 
 <para>When it is run with no command line parameters, &kalarm; starts
 in graphical mode. It displays the current list of outstanding alarms,
-showing their times, repetitions counts, colours, and message texts or
+showing their times, repetition counts, colours, and message texts or
 names of files to display.</para>
 
 <screenshot>
@@ -547,32 +553,36 @@ display was not selected for that alarm message.</para>
 
 <para>The alarm daemon may also be used by other applications.</para>
 
-<para>The alarm daemon runs as a &kde; panel application. It may be
-controlled via its menu which is accessed by
-<mousebutton>right</mousebutton> clicking on its icon in the &kde;
+<para>The alarm daemon runs in the background. A separate &kde; panel
+application, the alarm daemon GUI, provides both a status indication
+and a control menu for the alarm daemon. The menu is accessed by
+<mousebutton>right</mousebutton> clicking on the icon in the &kde;
 panel.</para>
 
 <para>You can activate &kalarm; by left-clicking on the alarm daemon
-icon in the &kde; panel, provided either that &kalarm; is the only
+GUI icon in the &kde; panel, provided either that &kalarm; is the only
 application which uses the daemon, or that &kalarm; is selected for
-activation in the alarm daemon's menu.</para>
+activation in the alarm daemon GUI's menu.</para>
 
 <sect2>
-<title>Alarm daemon menu</title>
+<title>Alarm daemon GUI menu</title>
 
 <variablelist>
 <varlistentry>
 <term><menuchoice><guimenuitem>Alarms Enabled</guimenuitem></menuchoice></term>
 <listitem><para><action>Toggles alarms enabled / disabled.</action></para>
-<para>When alarms are enabled, the calendar files marked in the menu
-as selected will be monitored for alarms becoming due. When alarms are
-not enabled, no alarm monitoring is performed, and &kalarm; will not
-display any alarms.</para>
+<para>When alarms are enabled, the alarm daemon is started and calendar
+files marked in the menu as selected will be monitored for alarms
+becoming due. When alarms are not enabled, the alarm daemon is halted
+and no further alarm monitoring is performed and &kalarm; will not
+display any alarms, until the alarm daemon is restarted.</para>
+<warning><para>Changing this option will also affect the functioning
+of any other applications which use the alarm daemon.</para></warning>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice><guimenuitem>Auto start at login</guimenuitem></menuchoice></term>
+<term><menuchoice><guimenuitem>Start alarm daemon automatically at login</guimenuitem></menuchoice></term>
 <listitem><para><action>Toggles on / off automatically running the
 alarm daemon at login.</action></para>
 <para>When auto start is enabled, the alarm daemon will automatically
@@ -590,15 +600,28 @@ while.</para></note>
 </varlistentry>
 
 <varlistentry>
+<term><menuchoice><guimenuitem>Display this tray icon at login</guimenuitem></menuchoice></term>
+<listitem><para><action>Toggles on / off automatically running the
+alarm daemon GUI at login.</action></para>
+<para>When this option is enabled, the alarm daemon GUI will
+automatically be displayed in the system tray whenever you log
+on.</para>
+<note><para>This option has no effect on the the alarm daemon, so you
+may safely switch off display of the alarm daemon GUI without
+affecting the monitoring and display of alarms.</para></note>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><menuchoice><guimenuitem>Click starts <replaceable>application</replaceable></guimenuitem></menuchoice></term>
 <listitem><para><action>Selects the application to be activated</action> when
 the panel icon is <mousebutton>left</mousebutton> clicked.</para>
 
 <note><para>There is one menu entry for each application registered
 with the alarm daemon. If &kalarm; is the only application registered
-with the alarm daemon, this menu option will not appear, and &kalarm;
-will be activated whenever the icon is <mousebutton>left</mousebutton>
-clicked.</para></note>
+with the alarm daemon GUI, this menu option will not appear, and
+&kalarm; will be activated whenever the icon is
+<mousebutton>left</mousebutton> clicked.</para></note>
 </listitem>
 </varlistentry>
 
@@ -620,11 +643,9 @@ daemon.</para></note>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>Quit</guimenuitem></menuchoice></term>
-<listitem><para><action>Quits the alarm daemon.</action></para>
-<para>No further alarm monitoring will be performed, and &kalarm; will
-not display any alarms, until the alarm daemon is restarted.</para>
-<warning><para>Quitting will also affect the functioning of any
-other applications which use the alarm daemon.</para></warning>
+<listitem><para><action>Quits the alarm daemon GUI.</action></para>
+<para>This has no effect on the monitoring of alarms by the alarm
+daemon.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -634,9 +655,9 @@ other applications which use the alarm daemon.</para></warning>
 <title>Starting, resetting and stopping the alarm daemon</title>
 
 <para>The alarm daemon is normally started at &kde; session login
-(unless you use the context menu to disable auto start), and runs
-continuously until logout. If for any reason it is not running, alarm
-monitoring will not occur and &kalarm; will not display any
+(unless you use the alarm daemon GUI menu to disable auto start), and
+runs continuously until logout. If for any reason it is not running,
+alarm monitoring will not occur and &kalarm; will not display any
 alarms.</para>
 
 <sect3>
@@ -644,7 +665,8 @@ alarms.</para>
 <para>To start the alarm daemon, you can either run &kalarm; in its
 default graphical mode (&ie; without any command line parameters),
 reset the daemon as described <link linkend="daemon-reset">below</link>,
-or you can run the alarm daemon directly from the command line:</para>
+enable alarms using the alarm daemon GUI's menu, or you can run the
+alarm daemon directly from the command line:</para>
 
 <screen width="40">
 <prompt>%</prompt> <command>kalarmd</command>
@@ -696,9 +718,8 @@ scheduled alarm messages until the daemon is restarted.</para>
 applications which also use the alarm daemon. Consider resetting the
 daemon instead.</para></warning>
 
-<para>To stop the alarm daemon, either use the alarm daemon's
-<guimenuitem>Quit</guimenuitem> menu option, or type the following
-command:</para>
+<para>To stop the alarm daemon, either use the alarm daemon GUI's
+menu to disable alarms, or type the following command:</para>
 
 <screen width="40">
 <prompt>%</prompt> <command>kalarm --stop</command>
@@ -1190,11 +1211,14 @@ a different calendar file is specified in the preferences file.</para>
 
 <qandaentry>
 <question>
-<para>What configuration files does the alarm daemon use?</para>
+<para>What configuration files do the alarm daemon and the alarm
+daemon GUI use?</para>
 </question>
 <answer>
 <para>The file <filename>~/.kde2/share/config/kalarmdrc</filename>
-holds your alarm daemon preferences.</para>
+holds your alarm daemon preferences, and
+<filename>~/.kde2/share/config/kalarmdguirc</filename>
+holds your alarm daemon GUI preferences.</para>
 
 <para>The file <filename>~/.kde2/share/apps/kalarmd/clients</filename>
 holds details of client applications which have previously been
@@ -1204,12 +1228,14 @@ registered with the alarm daemon, and their calendar files.</para>
 
 <qandaentry>
 <question>
-<para>What are the application names of &kalarm; and the alarm daemon?</para>
+<para>What are the application names of &kalarm;, the alarm daemon and
+the alarm daemon GUI?</para>
 </question>
 <answer>
 <para>&kalarm;'s application name is <application>kalarm</application>,
-and the alarm daemon's application name is
-<application>kalarmd</application>.</para>
+the alarm daemon's application name is
+<application>kalarmd</application>, and the alarm daemon GUI's
+application name is <application>kalarmdgui</application>.</para>
 </answer>
 </qandaentry>
 
@@ -1240,11 +1266,13 @@ simply reinstall &kalarm;.</para>
 Program copyright 2001 David Jarvie <email>software@astrojar.org.uk</email>
 </para>
 <para>
-Contributors (original KOrganizer alarm daemon):
+Alarm daemon and alarm daemon GUI authors:
 <itemizedlist>
-<listitem><para>Cornelius Schumacher <email>schumacher@kde.org</email></para>
-</listitem>
 <listitem><para>Preston Brown <email>pbrown@kde.org</email></para>
+</listitem>
+<listitem><para>David Jarvie <email>software@astrojar.org.uk</email></para>
+</listitem>
+<listitem><para>Cornelius Schumacher <email>schumacher@kde.org</email></para>
 </listitem>
 </itemizedlist>
 </para>
@@ -1274,7 +1302,7 @@ allow the name &kalarm; to be used by this KDE2 application.
 
 &install.intro.documentation;
 
-<para>&kalarm; is available as a separate package from
+<para>&kalarm; is available as a standalone package from
 <ulink url="http://www.astrojar.org.uk/linux">http://www.astrojar.org.uk/linux</ulink>
 </para>
 </sect1>
@@ -1297,8 +1325,8 @@ the &kde; package &package;.</para>
 2.0 or later. &kalarm; comes in different standalone versions which
 include the appropriate sets of &package; libraries depending on
 which version, if any, of &package; you have installed. The standalone
-versions of &kalarm; 0.3 contain copies of the libraries from
-&package; 2.2.1 (including a slightly updated
+versions of &kalarm; 0.4 contain copies of the libraries from
+&package; 2.2.2 (including a slightly updated
 <filename>libkcal</filename>).</para>
 </listitem>
 </itemizedlist>
@@ -1327,7 +1355,7 @@ to that directory and enter the following:</para>
 
 &install.compile.documentation;
 
-<note><para>If you have both more than one version of &kde; installed
+<note><para>If you have more than one version of &kde; installed
 (e.g. KDE1 and KDE2), this may possibly install &kalarm; into the
 wrong &kde; directory. If necessary, you can give the &kde; directory
 as a parameter to
