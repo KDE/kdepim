@@ -17,13 +17,15 @@ $Id$
 
 <!-- TODO: 
 
-* better/longer headlines (e.g.. for PGP section)
-* add section for drag'n'drop?
+" fix: "between different version[s] of PGP"
 
 * document "check what the server supports"
 * document "pipelining..."
 * more about the "create folder" dialog (e.g. Sender/Receiver)
 * Configure KMail: "page" or "tab", but no mix of both!
+
+* add section for drag'n'drop?
+* "Using other mailbox..." -> sounds strange?
  
 * use better markup instead of 'quote'
 * fix my adverb vs. adjective mistakes
@@ -61,7 +63,7 @@ $Id$
 
 </authorgroup>
 
-<date>2002-02-20</date>
+<date>2002-02-26</date>
 <releaseinfo>1.04.00</releaseinfo>
 
 <copyright>
@@ -191,7 +193,7 @@ Service Provider (<acronym>ISP</acronym>) or system
 administrator.</para>
 
 <sect2 id="sending-mail">
-<title>Sending</title>
+<title>Sending Messages</title>
 
 <para>The <guilabel>Sending</guilabel> tab provides a list of
 ways to send messages. The first item in the list is the default
@@ -231,7 +233,7 @@ chapter.</para>
 </sect2>
 
 <sect2 id="receiving-mail">
-<title>Receiving</title>
+<title>Receiving Messages</title>
 
 <para>To set up an account so you can receive mail, press the
 <guibutton>Add...</guibutton> button in the <guilabel>Receiving</guilabel>
@@ -571,7 +573,7 @@ Message</guiicon> icons in the toolbar.
 </sect2>
 
 <sect2 id="attachments">
-<title>Attachments</title>
+<title>Adding Attachments</title>
 
 <para>You can attach files to your message by using one of the methods
 below:</para>
@@ -1280,7 +1282,7 @@ a chance to get the queued message by changing the action manually.</para>
 </sect2>
 
 <sect2 id="popfilters-confirmation">
-<title>Confirmation Dialog</title>
+<title>The Confirmation Dialog</title>
 
 <para>This dialog shows up whenever you have POP filtering switched
 on and  messages were found on the server that exceed the threshold
@@ -1314,7 +1316,7 @@ have matched messages, but at least one got tagged for
 </sect1>
 
 <sect1 id="multiple-accounts">
-<title>Multiple Accounts</title>
+<title>Using multiple Accounts</title>
 
 <para>Multiple accounts are used to check for messages from more than one email address
 and/or mail server. Select <menuchoice><guimenu>Settings</guimenu>
@@ -1333,17 +1335,18 @@ Mail</guiicon> icon for some time to get a list of accounts.</para>
 
 <sect1 id="pgp">
 <!-- This section is from Andreas Gungl, 2000-05-21, updated 2002-01-xy -->
-<title><application>Pretty Good Privacy</application>
-(<application>PGP</application>) / <application>GNU Privacy Guard</application>
-(<application>GnuPG</application>)</title>
+<title>Signing and Encrypting Messages with <application>PGP</application> 
+or <application>GnuPG</application></title>
 
 <para>This is a short introduction on how to setup &kmail;'s
-<application>PGP</application> support. It will give some hints on the use of
+<application>PGP</application> (<application>Pretty Good Privacy</application>) support. 
+It will give some hints on the use of
 <application>PGP</application> too. It's written for people who are beginners in
 this area. If you are familiar with the use of <application>PGP</application>, you can
 skip most of the steps. This documentation (and the &kmail; user interface) 
 generally talks only about  <quote>PGP</quote>, but it applies to 
-both <application>PGP</application> and <application>GnuPG</application>, 
+both <application>PGP</application> and <application>GnuPG</application> 
+(<application>GNU Privacy Guard</application>), 
 although some <application>GnuPG</application> command line parameters 
 may be different.</para>
 
@@ -1498,7 +1501,7 @@ message without any further prompt.</para>
 </sect2>
 
 <sect2 id="pgp-encrypt-your-messages">
-<title>Use Public Keys of other People - Encrypt your Messages</title>
+<title>Encrypt your Messages</title>
 
 <para>To send an encrypted message to somebody of whom you have a
 public key, you simply create the message in the composer window.
@@ -1685,7 +1688,7 @@ entry in the <guilabel>Existing identities</guilabel> popup.</para>
 </sect2>
 
 <sect2 id="configure-identity-general">
-<title><guilabel>General</guilabel> Tab</title>
+<title><guilabel>General</guilabel></title>
 
 <para>The <guilabel>General</guilabel> tab allows you to specify some
 basic settings for the currently selected identity.</para>
@@ -1724,7 +1727,7 @@ Address</guilabel> field.</para>
 </sect2>
 
 <sect2 id="configure-identity-advanced">
-<title><guilabel>Advanced</guilabel> Tab</title>
+<title><guilabel>Advanced</guilabel></title>
 
 <para>The <guilabel>Advanced</guilabel> tab allows you to specify some
 rarely used or otherwise specialized settings for the currently
@@ -1818,7 +1821,7 @@ tab</link> of the <link linkend="configure-network">
 </sect2>
 
 <sect2 id="configure-identity-signature">
-<title><guilabel>Signature</guilabel> Tab</title>
+<title><guilabel>Signature</guilabel></title>
 
 <para>This tab allows you to specify a signature (footer/disclaimer)
 to be appended to each message sent using this identity.</para>
@@ -1880,7 +1883,7 @@ text yourself.</para>
 </sect1>
 
 <sect1 id="configure-network">
-<title>The <guilabel>Network</guilabel> Page</title>
+<title><guilabel>Network</guilabel> Page</title>
 
 <para>You can find a quick introduction to the
 <guilabel>Network</guilabel> page in the <link
@@ -1897,7 +1900,7 @@ linkend="configure-identity">identities</link> or decide on a per-message
 basis.</para>
 
 <sect2 id="configure-network-sending">
-<title><guilabel>Sending</guilabel> Tab</title>
+<title><guilabel>Sending</guilabel></title>
 
 <para>The <guilabel>Sending</guilabel> tab allows you to define new
 outgoing mail servers and set some common options.</para>
@@ -1934,7 +1937,7 @@ do not need to change the default.<!-- TODO: advise what's better --></para>
 </sect2>
 
 <sect2 id="configure-network-receiving">
-<title><guilabel>Receiving</guilabel> Tab</title>
+<title><guilabel>Receiving</guilabel></title>
 
 <para>For basic information, see <link
 linkend="receiving-mail">Setting up your Account: Receiving</link>.</para>
@@ -3345,7 +3348,11 @@ toolbar.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Sends the message immediately.</para>
+<para>Sends the message immediately. If you use SMTP to send your
+messages and the SMTP server is not reachable, the message will be put
+into the outbox and you will get an error message. You can then later send
+the messages in the outbox using <menuchoice><guimenu>File</guimenu><guimenuitem>Send
+Queued</guimenuitem></menuchoice>.</para>
 </listitem>
 </varlistentry>
 
@@ -3357,7 +3364,10 @@ toolbar.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Queues the message in the outbox for sending it later.</para>
+<para>Queues the message in the outbox for sending it later using 
+<menuchoice><guimenu>File</guimenu><guimenuitem>Send
+Queued</guimenuitem></menuchoice>.
+</para>
 </listitem>
 </varlistentry>
 
@@ -3564,8 +3574,8 @@ cut.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>This replaces multiple spaces with single spaces in the current
-selection or in the complete message if there is no selection.</para>
+<para>This replaces multiple line breaks resp. spaces with single line breaks resp. spaces.
+It works on the current selection or on the complete message if there is no selection.</para>
 </listitem>
 </varlistentry>
 
@@ -4283,21 +4293,21 @@ files With &kmail;</link>.</para></answer>
 
 <qandaentry>
 <question><para>Can I use encryption with my normal (non-<acronym>SSL</acronym>)
-<acronym>POP3</acronym> account?</para></question>
-<answer><para>If your <acronym>POP3</acronym> server runs an
+POP3 account?</para></question>
+<answer><para>If your POP3 server runs an
 <application>ssh</application> daemon, you can use ssh to tunnel your
-<acronym>POP3</acronym> connection using the following command:</para>
+POP3 connection using the following command:</para>
 
 <para><userinput><command>ssh</command> <option>-L 11000:127.0.0.1:110
 user@host</option></userinput></para>
 
 <para>Modify your &kmail; configuration to fetch the mail via
-<acronym>POP3</acronym> from <userinput>localhost</userinput> and ssh will tunnel
+POP3 from <userinput>localhost</userinput> and ssh will tunnel
 the connection for you.
 
 <note><para>If non-encrypted messages have already been sent
 via Internet, the only advantage of using <application>ssh</application> is
-that your <emphasis>password</emphasis> will be sent encrypted to the <acronym>POP3</acronym>
+that your <emphasis>password</emphasis> will be sent encrypted to the POP3
 server.</para></note>
 
 <!-- fixme: add link to http://www.linuxdoc.org/HOWTO/mini/Secure-POP+SSH.html -->
