@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=KitchenSync/Konnector
+X-KDE-Library=libdummykonnector
+
+Name=Dummy Konnector
+Group=Test
+Vendor=KDE Team
+Id=dummykonnector
