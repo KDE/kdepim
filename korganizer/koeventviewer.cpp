@@ -27,6 +27,7 @@
 #include <libkcal/todo.h>
 #include <kdebug.h>
 #include <kiconloader.h>
+#include <kprocess.h>
 #include <krun.h>
 
 #ifndef KORG_NODCOP
