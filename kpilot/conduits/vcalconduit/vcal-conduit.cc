@@ -329,8 +329,8 @@ void VCalConduit::syncRecord()
 void VCalConduit::syncEvent()
 {
 // TODO: skip PC => Palm sync for now because it corrupts the palm data...
-QTimer::singleShot(0,this,SLOT(deleteRecord()));
-return;
+//QTimer::singleShot(0,this,SLOT(deleteRecord()));
+//return;
 
 
 	FUNCTIONSETUP;
@@ -502,7 +502,7 @@ PilotRecord*VCalConduit::entryFromEvent(PilotDateEntry*de, const KCal::Event*e)
 	setStartEndTimes(de, e);
 	setAlarms(de, e);
 	setRecurrence(de, e);
-//TODO enable:	setExceptions(de, e);
+	setExceptions(de, e);
 	de->setDescription(e->summary());
 	de->setNote(e->description());
 	return de->pack();
@@ -576,7 +576,7 @@ void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry &de)
 {
 	FUNCTIONSETUP;
 
-	if (!de.getAlarm()) return;
+	if (!de.getAlarm() && !e) return;
 
 	QDateTime alarmDT = readTm(de.getEventStart());
 	int advanceUnits = de.getAdvanceUnits();
@@ -602,14 +602,61 @@ void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry &de)
 		advanceUnits=1;
 	}
 
+	KCal::Duration adv(60*advanceUnits*de.getAdvance());
+	KCal::Alarm*alm=new KCal::Alarm(e);
+	if (!alm) return;
+
+	alm->setTime(e->dtStart());
+	alm->setOffset(adv);
+	e->addAlarm(alm);
 	// TODO: Fix alarms
 }
 
 void VCalConduit::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 {
 	FUNCTIONSETUP;
+	
+	if (!de || !e ) 
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": NULL entry given to setAlarms. "<<endl;
+#endif
+		return;
+	}
+	if (e->alarms().count()<=0)
+	{
+		de->setAlarm(0);
+		return;
+	}
 
-	// TODO: ....
+	const KCal::Alarm *alm=e->alarms().first();
+	if (!alm || !alm->enabled())
+	{
+		de->setAlarm(0);
+		return;
+	}
+	
+	int offs=alm->offset().asSeconds()/60;
+	
+	// find the best Advance Unit
+	if (offs>=120 || offs==60) 
+	{
+		offs/=60;
+		if (offs>=48 || offs==24) 
+		{
+			offs/=24;
+			de->setAdvanceUnits(advDays);
+		}
+		else
+		{
+			de->setAdvanceUnits(advHours);
+		}
+	}
+	else
+	{
+		de->setAdvanceUnits(advMinutes);
+	}
+	de->setAdvance(offs);
 }
 
 void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry &dateEntry)
@@ -746,6 +793,10 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 		}
 	}
 	dateEntry->setRepeatFrequency(freq);
+#ifdef DEBUG
+	DEBUGCONDUIT<<" Event: "<<event->summary()<<" ("<<event->description()<<")"<<endl;
+	DEBUGCONDUIT<< "duration: "<<r->duration() << ", endDate: "<<endDate.toString()<< ", ValidEndDate: "<<endDate.isValid()<<", NullEndDate: "<<endDate.isNull()<<endl;
+#endif
 
 	//  first we have 'fake type of recurrence' when a multi-day
 	// event is passed to the pilot, it is converted to an event 
@@ -763,7 +814,7 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 			" - " << endDt.toString() << ")" <<endl;
 #endif
 	}
-	QBitArray dayArray;
+	QBitArray dayArray(7), dayArrayPalm(7);
 	switch(recType)
 	{
 	case KCal::Recurrence::rDaily:
@@ -776,8 +827,13 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 	case KCal::Recurrence::rWeekly:
 		dateEntry->setRepeatType(repeatWeekly);
 		dayArray=r->days();
-		// TODO: Do I have to rotate the bits by one?
-		dateEntry->setRepeatDays(dayArray);
+		// rotate the bits by one
+		for (int i=0; i<7; i++)
+		{
+			dayArrayPalm.setBit( (i+1)%7, dayArray[i]);
+
+		}
+		dateEntry->setRepeatDays(dayArrayPalm);
 		if (needCalc)
 		{
 			dateEntry->setRepeatEnd(writeTm( startDt.addDays(7*r->duration()) ));
@@ -853,6 +909,11 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 	FUNCTIONSETUP;
 	struct tm *ex_List;
 	
+	if (!dateEntry || !vevent) 
+	{
+		kdWarning() << k_funcinfo << ": NULL dateEntry or NULL vevent given for exceptions. Skipping exceptions" << endl;
+		return;
+	}
 	// first, we need to delete the old exceptions list, if it existed...
 	// This is no longer needed, as I fixed PilotDateEntry::setExceptions to do this automatically
 /*	ex_List=const_cast<structdateEntry->getExceptions();
@@ -867,6 +928,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 		return;
 	}
 
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Exceptions, before new struct tm" << endl ;
+#endif
 	// we have exceptions, so allocate mem and copy them there...
 	ex_List=new struct tm[excount];
 	if (!ex_List)
@@ -877,17 +941,26 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 		return;
 	}
 
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Exceptions, before iterator" << endl ;
+#endif
 	size_t n=0;
 	KCal::DateList::const_iterator it;
 	for ( it = vevent->exDates().begin(); it != vevent->exDates().end(); ++it )
 	{
 		ex_List[n++]=writeTm(*it);
 	}
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Exceptions, before actually setting them" << endl ;
+#endif
 	dateEntry->setExceptionCount(excount);
 	dateEntry->setExceptions(ex_List);
 }
 
 // $Log$
+// Revision 1.54  2002/04/17 00:28:11  kainhofe
+// Removed a few #ifdef DEBUG clauses I had inserted for debugging purposes
+//
 // Revision 1.53  2002/04/16 23:40:36  kainhofe
 // Exceptions no longer crash the daemon, recurrences are correct now, end date is set correctly. Problems: All events are off 1 day, lots of duplicates, exceptions are duplicate, too.
 //
