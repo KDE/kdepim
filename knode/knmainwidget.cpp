@@ -475,7 +475,7 @@ void KNMainWidget::openURL(const KURL &url)
 
     // lets see if we already have an account for this host...
     for(acc=a_ccManager->first(); acc; acc=a_ccManager->next())
-      if( acc->server()==host && (port==0 || acc->port()==port) )
+      if( acc->server().lower()==host.lower() && (port==0 || acc->port()==port) )
         break;
 
     if(!acc) {
