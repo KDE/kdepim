@@ -15,6 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <netinet/in.h>
@@ -28,6 +31,15 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <klocale.h>
+
+#ifndef MSG_NOSIGNAL
+/* bloody glibc 2.0 doesn't define MSG_NOSIGNAL */
+#ifdef __linux
+#define MSG_NOSIGNAL 0x4000
+#else
+#define MSG_NOSIGNAL 0
+#endif
+#endif
 
 #include "knprotocolclient.h"
 
