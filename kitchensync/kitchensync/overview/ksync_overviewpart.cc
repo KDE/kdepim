@@ -11,14 +11,14 @@
 #include "overviewwidget.h"
 #include "ksync_overviewpart.h"
 
-typedef KParts::GenericFactory< KitchenSync::OverviewPart> OverviewPartFactory;
+typedef KParts::GenericFactory< KSync::OverviewPart> OverviewPartFactory;
 K_EXPORT_COMPONENT_FACTORY( liboverviewpart, OverviewPartFactory );
 
-using namespace KitchenSync ;
+using namespace KSync ;
 
 OverviewPart::OverviewPart(QWidget *parent, const char *name,
 			   QObject *par, const char *na,const QStringList & )
-  : KitchenSync::ManipulatorPart( parent, name ) {
+  : ManipulatorPart( parent, name ) {
 //  setInstance(OverviewPartFactory::instance() );
   m_pixmap = KGlobal::iconLoader()->loadIcon("kcmsystem", KIcon::Desktop, 48 );
   m_widget=0;

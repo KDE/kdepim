@@ -39,7 +39,7 @@
 
 #include "ksync_splash.h"
 
-using namespace KitchenSync;
+using namespace KSync;
 
 Splash::Splash()
   : QWidget( 0, "splash", WStyle_NoBorderEx | WStyle_Customize | WDestructiveClose )

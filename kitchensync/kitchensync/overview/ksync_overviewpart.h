@@ -6,8 +6,10 @@
 
 #include <manipulatorpart.h>
 
-namespace KitchenSync {
-    class OverviewWidget;
+namespace KSync {
+
+  class OverviewWidget;
+  
   class OverviewPart : public ManipulatorPart {
    Q_OBJECT
   public:

@@ -18,7 +18,7 @@ class QFrame;
 class QLabel;
 class newProgress;
 
-namespace KitchenSync{
+namespace KSync{
     class ManipulatorPart;
     class NewProgress;
   class OverviewWidget : public QWidget
@@ -78,7 +78,7 @@ namespace KitchenSync{
       /**
        *
        */
-      void clearProgress(const Profile&,  Konnector* con,  const QString& id);
+      void clearProgress(const Profile&,  KonnectorManager* con,  const QString& id);
       void addProgress( ManipulatorPart* part );
       void currentDone();
     };

@@ -24,7 +24,7 @@
 
 #include <manipulatorpart.h>
 
-using namespace KitchenSync;
+using namespace KSync;
 
 OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
     : QWidget( parent, name, fl ) {
@@ -101,7 +101,7 @@ void OverviewWidget::showList(QPtrList<ManipulatorPart> list) {
         sv->addChild(test);
     }
 }
-void OverviewWidget::clearProgress(const Profile& prof,  Konnector* con,  const QString& id){
+void OverviewWidget::clearProgress(const Profile& prof,  KonnectorManager* con,  const QString& id){
     m_progress.setAutoDelete( true );
     setDeviceName( con->id( id ) );
     setNameField( prof.name() );

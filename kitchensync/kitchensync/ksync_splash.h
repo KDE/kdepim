@@ -37,7 +37,7 @@
 
 #include <qwidget.h>
 
-namespace KitchenSync {
+namespace KSync {
 
   class Splash : public QWidget{
   public:

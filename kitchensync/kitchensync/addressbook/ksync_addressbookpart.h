@@ -8,8 +8,8 @@
 class KAboutData;
 class KConfig;
 class AddressBookConfigBase;
-class KAddressbookSyncEntry;
-namespace KitchenSync {
+
+namespace KSync {
 
     class AddressBookPart : public ManipulatorPart{
         Q_OBJECT
@@ -28,11 +28,10 @@ namespace KitchenSync {
         bool partIsVisible() const { return false; };
         QWidget* widget();
         QWidget* configWidget();
-        void processEntry( const KSyncEntry::List&,  KSyncEntry::List& );
+        void processEntry( const Syncee::PtrList&,  Syncee::PtrList& );
     public:
         void slotConfigOk();
     private:
-        KAddressbookSyncEntry* meta();
         QPixmap m_pixmap;
         AddressBookConfigBase* m_widget;
         QString m_path;

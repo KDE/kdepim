@@ -11,9 +11,8 @@
 
 class KAboutData;
 class KConfig;
-class KAlendarSyncEntry;
 //class OrganizerDialogBase;
-namespace KitchenSync {
+namespace KSync {
 
   class OrganizerPart : public ManipulatorPart {
   Q_OBJECT
@@ -33,11 +32,10 @@ namespace KitchenSync {
     bool partIsVisible()const { return false; };
     QWidget* widget();
     QWidget* configWidget();
-    void processEntry( const KSyncEntry::List&,  KSyncEntry::List& );
+    void processEntry( const Syncee::PtrList&,  Syncee::PtrList& );
   public:
       void slotConfigOk();
   private:
-    KAlendarSyncEntry* meta();
     QPixmap m_pixmap;
     QWidget *m_widget;
     OrganizerDialogBase *m_config;

@@ -69,6 +69,9 @@ int main(int argc,  char* argv[] )
 		      "zecke@handhelds.org");
   aboutData.addCredit("Alexandra Chalupka",
 		      I18N_NOOP("For her understanding that I'm an addict."), 0 );
+  aboutData.addCredit("HP ( former Compaq )",
+		      I18N_NOOP("For all the support HP is giving OpenSource projects"
+		    		"at handhelds.org. Thanks a lot."), 0 );		    
 
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
@@ -82,8 +85,8 @@ int main(int argc,  char* argv[] )
   };
   KUniqueApplication a;
   // time for a Widget
-  KitchenSync::Splash *splash = new KitchenSync::Splash;
-  KitchenSync::KSyncMainWindow *mainwindow = new KitchenSync::KSyncMainWindow;
+  KSync::Splash *splash = new KSync::Splash;
+  KSync::KSyncMainWindow *mainwindow = new KSync::KSyncMainWindow;
   delete splash;
   mainwindow->show();
 //  QWidget *wid = new KitchenSync::OverviewWidget();
