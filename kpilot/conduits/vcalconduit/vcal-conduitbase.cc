@@ -310,7 +310,7 @@ error:
 				return false;
 			}
 			// rescal->readConfig();
-			rescal->load();
+			// rescal->load();
 			break;
 		default:
 			break;
