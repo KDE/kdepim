@@ -22,7 +22,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -42,6 +42,8 @@ class QTimer;
 class QDateTime;
 class QSocketNotifier;
 class KPilotUser;
+class KPilotSysInfo;
+class KPilotCard;
 struct DBInfo;
 
 /*
@@ -50,7 +52,7 @@ struct DBInfo;
 ** until it was finally cleaned up again in 2001. In the meantime
 ** it had become something that wrapped a lot more than just
 ** pilot-link. This class currently does:
-** 
+**
 ** * Client (ie. conduit) handling of kpilotlink protocol connections
 ** * Pilot-link handling
 **
@@ -68,7 +70,7 @@ struct DBInfo;
 ** tag. The tag lnch is used by the Pilot's launcher app. Some
 ** parts of KPilot require such a tag.
 */
-struct db 
+struct db
 {
 	char name[256];
 	int flags;
@@ -141,7 +143,7 @@ public:
 	* (ie. the physical Pilot is waiting for sync commands)
 	*/
 	bool getConnected() const { return fStatus == AcceptedDevice; }
-	
+
 public slots:
 	/**
 	* Tickle the palm to reset the timeout
@@ -217,7 +219,7 @@ protected:
 	* pilot-link library initialisation.
 	*/
 	bool open();
-	
+
 	/**
 	* Check for device permissions and existence, emitting
 	* warnings for weird situations. This is primarily intended
@@ -234,7 +236,7 @@ protected:
 	int messages;
 	int messagesMask;
 	static const int messagesType;
-	
+
 	void shouldPrint(int,const QString &);
 
 signals:
@@ -321,6 +323,9 @@ signals:
 /*
 ** Pilot User Identity functions.
 */
+protected:
+	KPilotUser  *fPilotUser;
+        KPilotSysInfo *fPilotSysInfo;
 public:
 	/**
 	* Returns the user information as set in the KPilot settings dialog.
@@ -330,10 +335,9 @@ public:
 	* local copies of the KPilotUser structure and modify them.
 	*/
 	KPilotUser *getPilotUser() { return fPilotUser; }
+        KPilotSysInfo *getSysInfo() { return fPilotSysInfo; }
+        KPilotCard *getCardInfo(int card=0);
 	void finishSync();
-
-protected:
-	KPilotUser  *fPilotUser;
 
 /*
 ** Actions intended just to abstract away the pilot-link library interface.
@@ -345,7 +349,7 @@ protected:
 	int openConduit();
 public:
 	int getNextDatabase(int index,struct DBInfo *);
-	int findDatabase(const char *name, struct DBInfo*, 
+	int findDatabase(const char *name, struct DBInfo*,
 		int index=0, long type=0, long creator=0);
 
 	/**
@@ -353,7 +357,8 @@ public:
 	* local file @p path.
 	*/
 	bool retrieveDatabase(const QString &path, struct DBInfo *db);
-	
+	QPtrList<DBInfo> getDBList(int cardno=0, int flags=dlpDBListRAM);
+
 public:
 	/**
 	 * Get the time from the handheld device into a QDateTime
@@ -363,7 +368,7 @@ public:
 	 * Set the time on the handheld to the give QDateTime
 	 */
 	bool setTime(const time_t &pctime);
-	
+
 	/**
 	 * Get the version number from the handheld
 	 */
@@ -376,8 +381,8 @@ public:
 	 * Get the minor PalmOS version number
 	 */
 	unsigned long minorVersion() const;
-	 
-	
+
+
 } ;
 
 bool operator < ( const struct db &, const struct db &) ;

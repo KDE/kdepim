@@ -59,6 +59,8 @@ static const char *kpilotlink_id = "$Id$";
 #include <kmessagebox.h>
 
 #include "pilotUser.h"
+#include "pilotSysInfo.h"
+#include "pilotCard.h"
 
 #include "kpilotlink.moc"
 
@@ -71,7 +73,7 @@ QDateTime readTm(const struct tm &t)
 	dt.setTime(QTime(t.tm_hour, t.tm_min, t.tm_sec));
 	return dt;
  }
- 
+
  struct tm writeTm(const QDateTime &dt)
  {
  	struct tm t;
@@ -436,7 +438,7 @@ void KPilotDeviceLink::acceptDevice()
 
 	int ret;
 
-	if (!fSocketNotifierActive) 
+	if (!fSocketNotifierActive)
 	{
 		if (!fAcceptedCount)
 		{
@@ -512,8 +514,8 @@ void KPilotDeviceLink::acceptDevice()
 
 	emit logProgress(QString::null, 30);
 
-	struct SysInfo sys_info;
-	if (dlp_ReadSysInfo(fCurrentPilotSocket,&sys_info) < 0)
+        fPilotSysInfo = new KPilotSysInfo;
+        if (dlp_ReadSysInfo(fCurrentPilotSocket, fPilotSysInfo->sysInfo()) < 0)
 	{
 		emit logError(i18n("Unable to read system information from Pilot"));
 		fStatus=PilotLinkError;
@@ -523,17 +525,18 @@ void KPilotDeviceLink::acceptDevice()
 	else
 	{
 		DEBUGDAEMON << fname
-			<< ": RomVersion=" << sys_info.romVersion
-			<< " Locale=" << sys_info.locale
+			<< ": RomVersion=" << fPilotSysInfo.romVersion()
+			<< " Locale=" << fPilotSysInfo.locale()
 #if PILOT_LINK_NUMBER < 10
 			/* No prodID member */
 #else
-			<< " Product=" << sys_info.prodID
+			<< " Product=" << fPilotSysInfo.prodID()
 #endif
 			<< endl;
 	}
 #endif
-	
+	fPilotSysInfo->boundsCheck();
+
 	emit logProgress(QString::null, 60);
 	fPilotUser = new KPilotUser;
 
@@ -658,7 +661,7 @@ void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool log)
 #if (PILOT_LINK_VERSION * 1000 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 110
 	t.append("X");
 #endif
-	
+
 	dlp_AddSyncLogEntry(fCurrentPilotSocket,
 		const_cast < char *>(t.latin1()));
 	if (log)
@@ -749,14 +752,14 @@ int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
 
 // Find a database with the given name. Info about the DB is stored into dbinfo (e.g. to be used later on with retrieveDatabase).
 int KPilotDeviceLink::findDatabase(const char *name, struct DBInfo *dbinfo,
-	int index, long type, long creator) 
+	int index, long type, long creator)
 {
 	FUNCTIONSETUP;
-	return dlp_FindDBInfo(pilotSocket(), 0, index, 
+	return dlp_FindDBInfo(pilotSocket(), 0, index,
 		const_cast<char *>(name), type, creator, dbinfo);
 }
 
-bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName, 
+bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 	DBInfo *info)
 {
 	FUNCTIONSETUP;
@@ -795,11 +798,41 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 }
 
 
+QPtrList<DBInfo> KPilotDeviceLink::getDBList(int cardno, int flags)
+{
+  bool cont=true;
+  QPtrList<DBInfo>dbs;
+  int index=0;
+  while (cont)
+  {
+    DBInfo*dbi=new DBInfo();
+    if (dlp_ReadDBList(pilotSocket(), cardno, flags, index, dbi)<0) {
+      KPILOT_DELETE(dbi);
+      cont=false;
+    } else {
+      index=dbi->index+1;
+      dbs.append(dbi);
+    }
+  }
+  return dbs;
+}
+
+KPilotCard *KPilotDeviceLink::getCardInfo(int card)
+{
+	KPilotCard *cardinfo=new KPilotCard();
+	if (dlp_ReadStorageInfo(pilotSocket(), card, cardinfo->cardInfo())<0)
+	{
+	  KPILOT_DELETE(cardinfo);
+	  return 0L;
+	};
+	return cardinfo;
+}
+
 QDateTime KPilotDeviceLink::getTime()
 {
 	QDateTime time;
 	time_t palmtime;
-	if (dlp_GetSysDateTime(pilotSocket(), &palmtime)) 
+	if (dlp_GetSysDateTime(pilotSocket(), &palmtime))
 	{
 		time.setTime_t(palmtime);
 	}
@@ -818,7 +851,7 @@ bool KPilotDeviceLink::setTime(const time_t &pctime)
 unsigned long KPilotDeviceLink::ROMversion() const
 {
 	unsigned long rom;
-	dlp_ReadFeature(pilotSocket(), 
+	dlp_ReadFeature(pilotSocket(),
 		makelong(const_cast<char *>("psys")), 1, &rom);
 	return rom;
 }
@@ -835,7 +868,7 @@ unsigned long KPilotDeviceLink::minorVersion() const
 
 /* static */ const int KPilotDeviceLink::messagesType=
 	(int)OpenFailMessage ;
-	
+
 void KPilotDeviceLink::shouldPrint(int m,const QString &s)
 {
 	if (!(messages & m))
