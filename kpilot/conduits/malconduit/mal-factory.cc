@@ -119,24 +119,6 @@ MALConduitFactory::~MALConduitFactory()
 		}
 	}
 
-	if (qstrcmp(c,"ConduitConfig")==0)
-	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-
-		if (w)
-		{
-			return new ConduitConfigImplementation(w,n,a,
-				MALWidgetSetup::create);
-		}
-		else
-		{
-			kdError() << k_funcinfo
-				<< ": Couldn't cast parent to widget."
-				<< endl;
-			return 0L;
-		}
-	}
-
 	if (qstrcmp(c,"SyncAction")==0)
 	{ 
 		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
