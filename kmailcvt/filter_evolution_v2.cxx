@@ -187,7 +187,6 @@ void FilterEvolution_v2::importMBox(FilterInfo *info, const QString& mboxName, c
       */
       QByteArray input(MAX_LINE);
       QCString seperate;
-      mbox.readLine(input.data(),MAX_LINE);
 	
       long l = mbox.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
       tmp.file()->writeBlock( input, l );
