@@ -342,10 +342,10 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd, bool sorted )
         int extraDays = event->dtStart().date().daysTo( event->dtEnd().date() );
         int i;
         for ( i = 0; i <= extraDays; i++ ) {
-	  if ( event->recursOn( qd.addDays( -i ) ) ) {
+          if ( event->recursOn( qd.addDays( -i ) ) ) {
             eventList.append( event );
             break;
-	  }
+          }
         }
       } else {
         if ( event->recursOn( qd ) )
