@@ -85,6 +85,13 @@ static const char *popmail_conduit_id=
 #include <kaboutdata.h>
 #endif
 
+#ifndef _KTEMPFILE_H
+#include <ktempfile.h>
+#endif
+
+#ifndef _DCOPCLIENT_H
+#include <dcopclient.h>
+#endif
 
 #ifndef _PILOT_SOURCE_H_
 #include <pi-source.h>
@@ -394,7 +401,7 @@ PopMailConduit::aboutAndSetup()
 int PopMailConduit::sendPendingMail(int mode)
 {
 	FUNCTIONSETUP;
-	int count=0;
+	int count=-1;
 
 
 	if (mode == PopMailConduit::SEND_SMTP)
@@ -405,15 +412,25 @@ int PopMailConduit::sendPendingMail(int mode)
 	{
 		count=sendViaSendmail();
 	}
-
-#ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
+	if (mode==PopMailConduit::SEND_KMAIL)
 	{
-		kdDebug() << fname << ": Sent "
-			<< count << " messages"
+		count=sendViaKMail();
+	}
+
+	if (count < 0)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Mail was not sent at all!"
 			<< endl;
 	}
-#endif
+	else
+	{
+		DEBUGCONDUIT << fname 
+			<< ": Sent "
+			<< count 
+			<< " messages"
+			<< endl;
+	}
 
 	return count;
 }
@@ -505,12 +522,34 @@ int PopMailConduit::sendViaSMTP()
 	// longer than 1024 characters.
 	//
 	//
-	getdomainname(buffer+1024,1024);
+	ret = getdomainname(buffer+1024,1024);
+	if (ret)
+	{
+		ret=errno;
+		kdWarning() << __FUNCTION__
+			<< ": getdomainname: "
+			<< strerror(ret)
+			<< endl;
+	}
+	else
+	{
+		DEBUGCONDUIT << fname
+			<< ": Got domain name "
+			<< buffer+1024
+			<< endl;
+	}
+
 	sprintf(buffer, "EHLO %s\r\n",buffer+1024);
 #else
 	{
 		struct utsname u;
 		(void) uname(&u);
+
+		DEBUGCONDUIT << fname
+			<< ": Got uname.nodename "
+			<< u.nodename
+			<< endl;
+
 		sprintf(buffer,"EHLO %s\r\n",u.nodename);
 	}
 #endif
@@ -745,7 +784,7 @@ int PopMailConduit::sendViaSendmail()
 	    }
 	  currentDest = "Mailing: ";
 	  currentDest += theMail.to;
-	  sendMessage(sendf, theMail);
+	  writeMessageToFile(sendf, theMail);
 	  pclose(sendf);
 	  // Mark it as filed...
 	  pilotRec->setCat(3);
@@ -770,11 +809,154 @@ int PopMailConduit::sendViaSendmail()
 	return count;
 }
 
+
+
+
+/*
+ * This function uses KMail's DCOP interface to put all the
+ * outgoing mail into the outbox.
+ */
+int PopMailConduit::sendViaKMail() 
+{
+	FUNCTIONSETUP;
+	int count=0;
+	bool sendImmediate = true;
+
+	{
+	KConfig& config = KPilotConfig::getConfig(PopMailOptions::PopGroup);
+	sendImmediate = config.readBoolEntry("SendImmediate",true);
+	}
+
+
+
+	DCOPClient *dcopptr = KApplication::kApplication()->
+		dcopClient();
+	if (!dcopptr)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Can't get DCOP client."
+			<< endl;
+		KMessageBox::error(0L, 
+			i18n("Couldn't connect to DCOP server for\n"
+				"the KMail connection."),
+			i18n("Error Sending Mail"));
+		return -1;
+	}
+
+	while (PilotRecord *pilotRec = readNextRecordInCategory(1))
+	{
+		DEBUGCONDUIT << fname 
+			<< ": Reading " 
+			<< count + 1
+			<< "th message" 
+			<< endl;
+
+		if (pilotRec->isDeleted() || pilotRec->isArchived())
+		{
+			DEBUGCONDUIT << fname
+				<< ": Skipping record."
+				<< endl;
+			continue;
+		}
+
+		struct Mail theMail;
+		KTempFile t;
+		t.setAutoDelete(true);
+
+		if (t.status())
+		{
+			kdWarning() << __FUNCTION__
+				<< ": Can't open temp file."
+				<< endl;
+			KMessageBox::error(0L, 
+				i18n("Cannot open temporary file to store\n"
+					"mail from Pilot in."),
+				i18n("Error Sending Mail"));
+			continue;
+		}
+
+		FILE *sendf = t.fstream();
+
+		if (!sendf)
+		{
+			kdWarning() << __FUNCTION__
+				<< ": Can't open temporary file for writing!"
+				<< endl;
+			KMessageBox::error(0L, 
+				i18n("Cannot open temporary file to store\n"
+					"mail from Pilot in."),
+				i18n("Error Sending Mail"));
+			continue;
+		}
+
+		unpack_Mail(&theMail, 
+			(unsigned char*)pilotRec->getData(),
+			pilotRec->getLen());
+		writeMessageToFile(sendf, theMail);
+
+
+		QByteArray data,returnValue;
+		QCString returnType;
+		QDataStream arg(data,IO_WriteOnly);
+
+		arg << QString("outbox")
+			<< t.name();
+
+		if (dcopptr->call("kmail",
+			"KMailIface",
+			"dcopAddMessage",
+			data,
+			returnType,
+			returnValue,
+			true))
+		{
+			kdWarning() << __FUNCTION__
+				<< ": DCOP call failed."
+				<< endl;
+
+			KMessageBox::error(0L, 
+				i18n("DCOP connection with KMail failed."),
+				i18n("Error Sending Mail"));
+			continue;
+		}
+
+		DEBUGCONDUIT << fname
+			<< ": DCOP call returned "
+			<< returnType
+			<< " of "
+			<< (const char *)returnValue
+			<< endl;
+
+		// Mark it as filed...
+		pilotRec->setCat(3);
+		pilotRec->setAttrib(pilotRec->getAttrib() & ~dlpRecAttrDirty);
+		writeRecord(pilotRec);
+		delete pilotRec;
+		// This is ok since we got the mail with unpack mail..
+		free_Mail(&theMail);
+
+		count++;
+	}
+
+	if ((count > 0)  && sendImmediate)
+	{
+		QByteArray data;
+		if (dcopptr->send("kmail","KMailIface","sendQueued",data))
+		{
+			kdWarning() << __FUNCTION__
+				<< ": Couldn't flush queue."
+				<< endl;
+		}
+	}
+
+	return count;
+}
+
 // From pilot-link-0.8.7 by Kenneth Albanowski
 // additional changes by Michael Kropfberger
 
 void
-PopMailConduit::sendMessage(FILE* sendf, struct Mail& theMail)
+PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 {
 	FUNCTIONSETUP;
 
@@ -1672,11 +1854,17 @@ int main(int argc, char* argv[])
 	a.setConduit(&conduit);
 
 	return a.exec();
+
+	/* NOTREACHED */
+	(void) popmail_conduit_id;
 }
 
 
 
 // $Log$
+// Revision 1.19  2001/03/09 09:46:14  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.18  2001/03/06 12:13:32  adridg
 // Fixed Solaris compilation problems (again?)
 //
