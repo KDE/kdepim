@@ -1,10 +1,19 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
+  <!ENTITY kalarm '<application>KAlarm</application>'>
+  <!ENTITY DCOP "DCOP">
+  <!ENTITY kalarmd "kalarmd">
   <!ENTITY kappname "&kalarm;">
   <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"><!-- change language only here -->
+  
+  
+  <!-- Do not define any other entities; instead, use the entities
+       from kde-genent.entities and $LANG/user.entities. -->
 ]>
+
+<!-- The language must NOT be changed here. -->
 
 <book lang="&language;">
 
@@ -28,16 +37,24 @@
 <year>2001</year>
 <holder>David Jarvie</holder>
 </copyright>
+<!-- Translators: put here the copyright notice of the translation -->
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2001-10-17</date>
-<releaseinfo>0.02.00</releaseinfo>
+<!-- Don't change format of date and version of the documentation -->
+
+<date>2001-11-1</date>
+<releaseinfo>0.03.00</releaseinfo>
 
 <abstract>
+<para>This handbook describes &kalarm; version 0.3.</para>
+
 <para>&kalarm; is an alarm/reminder message scheduler for &kde;.</para>
 </abstract>
 
+<!-- This is a set of Keywords for indexing by search engines.
+Please at least include KDE, the KDE package it is in, the name
+ of your application, and a few relevant keywords. -->
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -48,6 +65,7 @@
 </keywordset>
 
 </bookinfo>
+
 
 <chapter id="introduction">
 <title>Introduction</title>
@@ -61,10 +79,11 @@ pending alarms, showing their times and message texts.  You can create
 new alarms, or alternatively you can select existing alarms in order
 to modify or delete them.</para>
 
-<para>When setting up or modifying an alarm, you can choose the colour
-of the alarm message, whether it should repeat, whether to sound an
-audible beep, and whether the alarm should be cancelled if it can't be
-displayed at its scheduled time.</para>
+<para>When setting up or modifying an alarm, you may either type in
+the alarm message text or specify a text file to display. You can also
+choose the colour of the alarm message, whether it should repeat,
+whether to sound an audible beep, and whether the alarm should be
+cancelled if it can't be displayed at its scheduled time.</para>
 
 <para>Alarms may also be scheduled on the command line, or via &DCOP;
 calls from programs.</para>
@@ -74,7 +93,8 @@ desktop to ensure that you don't miss it should you happen to be
 switching desktops just at that moment. The message window shows the
 time for which the alarm was scheduled, which could be useful to know
 if it was displayed late or if you were away from the computer when it
-popped up. An example of an alarm message:</para>
+popped up. It has a defer option to ask for the alarm to be displayed
+again later. An example of an alarm message:</para>
 
 <screenshot>
 <screeninfo>Screenshot of the &kalarm; message window</screeninfo>
@@ -96,8 +116,9 @@ popped up. An example of an alarm message:</para>
 <title>Graphical mode</title>
 
 <para>When it is run with no command line parameters, &kalarm; starts
-in graphical mode. It displays the current list of outstanding
-alarms.</para>
+in graphical mode. It displays the current list of outstanding alarms,
+showing their times, repetitions counts, colours, and message texts or
+names of files to display.</para>
 
 <screenshot>
 <screeninfo>Screenshot of the &kalarm; main window</screeninfo>
@@ -116,9 +137,8 @@ display and the number of times which it is due to repeat after
 that.</para>
 
 <para>The alarms may be ordered by date/time, repeat count, colour or
-message text by clicking on the title bar for the appropriate
-column. To reverse the sort order, click the column title bar
-again.</para>
+message text by clicking on the title bar for the appropriate column.
+To reverse the sort order, click the column title bar again.</para>
 
 <para>When &kalarm; starts in graphical mode, it checks whether the
 alarm daemon is running.  If it is not already running, &kalarm;
@@ -128,11 +148,13 @@ starts it.</para>
 <title>Adding a new alarm</title>
 
 <para>To add a new alarm message, select <menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>New</guimenuitem></menuchoice>.
+<shortcut><keycap>Ins</keycap></shortcut>
+<guimenu><accel>A</accel>ctions</guimenu><guimenuitem><accel>N</accel>ew</guimenuitem>
+</menuchoice>.
 This displays the alarm message edit window:</para>
 
 <screenshot>
-<screeninfo>Screenshot of the Alarm edit window</screeninfo>
+<screeninfo>Screenshot of the alarm edit window</screeninfo>
 <mediaobject>
 <imageobject>
 <imagedata fileref="editwindow.png" format="PNG"/>
@@ -143,16 +165,24 @@ This displays the alarm message edit window:</para>
 </mediaobject>
 </screenshot>
 
-<para>Enter the message text in the <guilabel>Message</guilabel> edit
-box. The message text may include newlines.</para>
+<para>In the <guilabel>Message</guilabel> group box, select either
+<guilabel>Text</guilabel> in order to enter the message text (which
+may include newlines) in the edit box, or <guilabel>File</guilabel>
+to enter the name or &URL; of a text file whose contents are to be
+displayed in the alarm message.  When <guilabel>File</guilabel> is
+selected, <guibutton><accel>B</accel>rowse...</guibutton> may be used
+to display a file selection dialog.</para>
 
-<para>Enter the date and time when the message is to be
+<para>In the <guilabel>Time</guilabel> group box, select <guilabel>At
+date/time</guilabel> to enter the date and time when the message is to
+be displayed, or select <guilabel>Time from now</guilabel> to enter
+how long after now (in hours and minutes) the message should be
 displayed.</para>
 
-<para>If you want the alarm to be repeated, enter the number of
-repetitions (after the initial display) and the interval (in hours and
-minutes, in the range 1 minute to 99 hours) between
-repetitions.</para>
+<para>If you want the alarm to be repeated, enter in the
+<guilabel>Repetition</guilabel> group box the number of repetitions
+(after the initial display) and the interval (in hours and minutes, in
+the range 1 minute to 99 hours) between repetitions.</para>
 
 <para>The <guilabel>Cancel if late</guilabel> checkbox determines what
 happens if the alarm can't be displayed at its scheduled time. Check
@@ -167,10 +197,11 @@ and while both X and the alarm daemon are running.</para></note>
 audible alarm to sound when the alarm message is displayed.</para>
 
 <para>Select the background colour for the alarm message
-window. </para>
+window.</para>
 
-<para>Press the <guibutton>Set Alarm</guibutton> button when all
-details are correct, to add the alarm to the scheduled list.</para>
+<para>Press the <guibutton><accel>S</accel>et Alarm</guibutton> button
+when all details are correct, to add the alarm to the scheduled
+list.</para>
 
 </sect2>
 
@@ -180,18 +211,21 @@ details are correct, to add the alarm to the scheduled list.</para>
 <para>To modify an existing alarm message, do one of the
 following:</para>
 
-<procedure>
-<step>
+<itemizedlist>
+<listitem>
 <para>Select it by clicking on its entry in the alarm list. Then choose
-<menuchoice><guimenu>Actions</guimenu><guimenuitem>Modify</guimenuitem></menuchoice>from
+<menuchoice><shortcut><keycombo><keycap>Ctrl</keycap><keycap>M</keycap></keycombo></shortcut>
+<guimenu><accel>A</accel>ctions</guimenu>
+<guimenuitem><accel>M</accel>odify</guimenuitem></menuchoice> from
 the menu.</para>
-</step>
-<step>
+</listitem>
+
+<listitem>
 <para><mousebutton>Right</mousebutton> click on its entry in the alarm
-list and choose <menuchoice><guimenuitem>Modify</guimenuitem></menuchoice>
+list and choose <menuchoice><guimenuitem><accel>M</accel>odify</guimenuitem></menuchoice>
 from the context menu.</para>
-</step>
-</procedure>
+</listitem>
+</itemizedlist>
 
 <para>This displays the alarm message edit window as described
 above.</para>
@@ -204,21 +238,53 @@ above.</para>
 <para>To delete an existing alarm message, do one of the
 following:</para>
 
-<procedure>
-<step>
-<para>Select it by clicking on its entry in the alarm list. Then
-choose
-<menuchoice><guimenu>Actions</guimenu>
-<guimenuitem>Delete</guimenuitem></menuchoice>from the menu.</para>
-</step>
-<step>
+<itemizedlist>
+<listitem>
+<para>Select it by clicking on its entry in the alarm list. Then choose
+<menuchoice>
+<shortcut><keycap>Del</keycap></shortcut>
+<guimenu><accel>A</accel>ctions</guimenu><guimenuitem><accel>D</accel>elete</guimenuitem>
+</menuchoice>
+from the menu.</para>
+</listitem>
+<listitem>
 <para><mousebutton>Right</mousebutton> click on its entry in the alarm
 list and choose
-<menuchoice><guimenuitem>Delete</guimenuitem></menuchoice> from the
-context menu.</para>
+<menuchoice><guimenuitem><accel>D</accel>elete</guimenuitem></menuchoice>
+from the context menu.</para>
+</listitem>
+</itemizedlist>
 
-</step>
-</procedure>
+</sect2>
+
+<sect2>
+<title>Acknowledging an alarm</title>
+
+<para>When an alarm message window is displayed, do one of the
+following:</para>
+
+<itemizedlist>
+<listitem>
+<para>Acknowledge it by clicking the <guibutton><accel>O</accel>K</guibutton>
+button. This closes the alarm message window.</para>
+</listitem>
+
+<listitem>
+<para>Display options to defer the alarm by clicking the
+<guibutton><accel>D</accel>efer...</guibutton> button. Then select
+<guilabel>Defer to date/time</guilabel> to enter the date and time
+when the message is to be redisplayed, or select <guilabel>Defer for
+time interval</guilabel> to enter how long after now (in hours and
+minutes) the message should be redisplayed. Then click
+<guibutton><accel>D</accel>efer</guibutton> to defer the alarm
+message. If you don't want to defer it after all, just click
+<guibutton><accel>O</accel>K</guibutton>.</para>
+</listitem>
+</itemizedlist>
+
+<para>The button with the &kalarm; icon provides a convenient way to
+activate &kalarm;. Clicking it has no effect on the alarm message
+window.</para>
 
 </sect2>
 
@@ -226,8 +292,9 @@ context menu.</para>
 <title>Resetting the alarm daemon</title>
 
 <para>To reset the alarm daemon, select
-<menuchoice><guimenu>Actions</guimenu><guimenuitem>Reset
-Daemon</guimenuitem></menuchoice>.</para>
+<menuchoice><shortcut><keycombo><keycap>Ctrl</keycap><keycap>R</keycap></keycombo></shortcut>
+<guimenu><accel>A</accel>ctions</guimenu><guimenuitem><accel>R</accel>eset Daemon</guimenuitem>
+</menuchoice>.</para>
 
 <para>See the <link linkend="daemon-reset">Alarm daemon</link> section
 for a discussion about resetting the alarm daemon.</para>
@@ -238,38 +305,24 @@ for a discussion about resetting the alarm daemon.</para>
 <title>Configuring default options</title>
 
 <para>To set default options for &kalarm;, select
-<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kalarm;
-...</guimenuitem></menuchoice>. This displays the configuration
-dialog:</para>
-
-<screenshot>
-<screeninfo>Screenshot of the &kalarm; configuration window</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="configwindow.png" format="PNG"/>
-</imageobject>
-<textobject>
-<phrase>Configuration window</phrase>
-</textobject>
-</mediaobject>
-</screenshot>
-
-<para>Here, you can set the default font and background colour to use
-for alarm message display.</para>
+<menuchoice><guimenu><accel>S</accel>ettings</guimenu><guimenuitem><accel>C</accel>onfigure &kalarm; ...</guimenuitem>
+</menuchoice>. This displays the configuration dialog. Here, you can
+set the default font and background colour to use for alarm message
+display.</para>
 
 </sect2>
 
 <sect2>
 <title>Quitting the program</title>
 
-<para>To exit from &kalarm;, select<menuchoice><guimenu>File</guimenu>
-<guimenuitem>Quit</guimenuitem></menuchoice>.</para>
+<para>To exit from &kalarm;, select <menuchoice>
+<shortcut><keycombo><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo></shortcut>
+<guimenu><accel>F</accel>ile</guimenu><guimenuitem><accel>Q</accel>uit</guimenuitem>
+</menuchoice>.</para>
 
-<tip>
-<para>This has no effect on the alarm daemon, which if already active
+<tip><para>This has no effect on the alarm daemon, which if already active
 will continue to monitor scheduled alarms and request their display
-when they become due.</para>
-</tip>
+when they become due.</para></tip>
 
 </sect2>
 </sect1>
@@ -320,28 +373,40 @@ display by &kalarm;:</para>
   <entry>Make an audible beep when the message is displayed.</entry>
 </row>
 <row>
-  <entry><option>-c</option>, <option>--color</option>, <option>--colour
-  <replaceable>colour</replaceable></option></entry>
-  <entry>Set the message background colour to the specified QT colour name or hex code 0xRRGGBB.</entry>
+  <entry><option>-c</option>, <option>--color</option>, <option>--colour</option>
+  <replaceable>colour</replaceable></entry>
+  <entry>Set the message background colour to the specified &Qt;
+  colour name or hex code 0xRRGGBB.</entry>
 </row>
 <row>
-  <entry><option>-i</option>, <option>--interval
-  <replaceable>minutes</replaceable></option></entry>
-  <entry>Set the interval between repetitions of the alarm to the specified number of minutes. Mandatory if <option>--repeat</option> is specified.</entry>
+  <entry><option>-f</option>, <option>--file</option> <replaceable>URL</replaceable></entry>
+  <entry>Specify the name or &URL; of a text file whose contents are to form the alarm message.
+  <replaceable>message</replaceable> must not be present if this option is specified.</entry>
+</row>
+<row>
+  <entry><option>-i</option>, <option>--interval</option>
+  <replaceable>minutes</replaceable></entry>
+  <entry>Set the interval between repetitions of the alarm to the
+  specified number of minutes. Mandatory if <option>--repeat</option>
+  is specified.</entry>
 </row>
 <row>
   <entry><option>-l</option>, <option>--late-cancel</option></entry>
-  <entry>Cancel the message if it cannot be displayed at the correct time.</entry>
+  <entry>Cancel the message if it cannot be displayed at the correct
+  time.</entry>
 </row>
 <row>
-  <entry><option>-r</option>, <option>--repeat
-  <replaceable>minutes</replaceable></option></entry>
-  <entry>The number of times the alarm should be repeated, after its initial display. Mandatory if <option>--interval</option> is specified.</entry>
+  <entry><option>-r</option>, <option>--repeat</option>
+  <replaceable>minutes</replaceable></entry>
+  <entry>The number of times the alarm should be repeated, after its
+  initial display. Mandatory if <option>--interval</option> is
+  specified.</entry>
 </row>
 <row>
-  <entry><option>-t</option>, <option>--time
-  <replaceable>time</replaceable></option></entry>
-  <entry>Display message at 'time' [[[yyyy-]mm-]dd-]hh:mm (default is immediately).</entry>
+  <entry><option>-t</option>, <option>--time</option>
+  <replaceable>time</replaceable></entry>
+  <entry>Display message at 'time' [[[yyyy-]mm-]dd-]hh:mm (default is
+  immediately).</entry>
 </row>
 <row>
   <entry><replaceable>message</replaceable></entry>
@@ -351,14 +416,16 @@ display by &kalarm;:</para>
 </tgroup>
 </informaltable>
 
-<para>A message text must be specified; except as noted, all the
-options are optional.</para>
+<para>Either a message text or <option>--file</option> must be
+specified; except as noted, all the options are optional.</para>
 
 <para>Two alternative examples which display a multi-line message with
 a red background at 10 p.m. on the 27th of this month are:</para>
 
-<informalexample><screen><prompt>%</prompt> <userinput><command>kalarm</command> <option>-c <replaceable>red</replaceable></option> <option>-t <replaceable>27-22:00</replaceable></option> <option><replaceable>"Remember to\nSTOP"</replaceable></option></userinput>
-<prompt>%</prompt> <userinput><command>kalarm</command> <option>-c <replaceable>0xFF0000</replaceable></option> <option>-t <replaceable>27-22:00</replaceable></option> <option><replaceable>"Remember to\nSTOP"</replaceable></option></userinput></screen>
+<informalexample><screen>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>-c <replaceable>red</replaceable></option> <option>-t <replaceable>27-22:00</replaceable></option> <option><replaceable>"Remember to\nSTOP"</replaceable></option></userinput>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>-c <replaceable>0xFF0000</replaceable></option> <option>-t <replaceable>27-22:00</replaceable></option> <option><replaceable>"Remember to\nSTOP"</replaceable></option></userinput>
+</screen>
 </informalexample>
 
 </sect2>
@@ -395,14 +462,16 @@ for a discussion about resetting and stopping the alarm daemon.</para>
 
 <para>The following command will reset the alarm daemon.</para>
 
-<informalexample>
-<screen><prompt>%</prompt> <userinput><command>kalarm</command> <option>--reset</option></userinput></screen>
+<informalexample><screen>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>--reset</option></userinput>
+</screen>
 </informalexample>
 
 <para>The following command will halt the alarm daemon.</para>
 
-<informalexample>
-<screen><prompt>%</prompt> <userinput><command>kalarm</command> <option>--stop</option></userinput></screen>
+<informalexample><screen>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>--stop</option></userinput>
+</screen>
 </informalexample>
 
 </sect2>
@@ -469,13 +538,14 @@ display was not selected for that alarm message.</para>
 <para>The alarm daemon may also be used by other applications.</para>
 
 <para>The alarm daemon runs as a &kde; panel application. It may be
-controlled via its menu which is accessed by right-clicking on its
-icon in the &kde; panel.</para>
+controlled via its menu which is accessed by
+<mousebutton>right</mousebutton> clicking on its icon in the &kde;
+panel.</para>
 
-<para>You can activate &kalarm; by <mousebutton>left</mousebutton>
-clicking on the alarm daemon icon in the &kde; panel, provided either
-that &kalarm; is the only application which uses the daemon, or that
-&kalarm; is selected for activation in the alarm daemon's menu.</para>
+<para>You can activate &kalarm; by left-clicking on the alarm daemon
+icon in the &kde; panel, provided either that &kalarm; is the only
+application which uses the daemon, or that &kalarm; is selected for
+activation in the alarm daemon's menu.</para>
 
 <sect2>
 <title>Alarm daemon menu</title>
@@ -510,15 +580,15 @@ while.</para></note>
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice><guimenuitem>Click starts application</guimenuitem></menuchoice></term>
+<term><menuchoice><guimenuitem>Click starts <replaceable>application</replaceable></guimenuitem></menuchoice></term>
 <listitem><para><action>Selects the application to be activated</action> when
-the panel icon is <mousebutton>left</mousebutton>
-clicked.</para>
+the panel icon is <mousebutton>left</mousebutton> clicked.</para>
 
 <note><para>There is one menu entry for each application registered
 with the alarm daemon. If &kalarm; is the only application registered
 with the alarm daemon, this menu option will not appear, and &kalarm;
-will be activated whenever the icon is left-clicked.</para></note>
+will be activated whenever the icon is <mousebutton>left</mousebutton>
+clicked.</para></note>
 </listitem>
 </varlistentry>
 
@@ -529,7 +599,7 @@ disabled.</action></para>
 <para>When the given calendar file is enabled, it will be monitored
 for alarms becoming due. When it is not enabled, no alarm monitoring
 is performed for that calendar file, and &kalarm; will not display any
-alarms from it.</para> 
+alarms from it.</para>
 <note><para>There is one menu entry for each calendar file being
 monitored by the alarm daemon. &kalarm; always uses a single calendar
 file. Any additional calendar files shown in the menu will belong to
@@ -542,10 +612,9 @@ daemon.</para></note>
 <term><menuchoice><guimenuitem>Quit</guimenuitem></menuchoice></term>
 <listitem><para><action>Quits the alarm daemon.</action></para>
 <para>No further alarm monitoring will be performed, and &kalarm; will
-not display any alarms, until the alarm daemon is restarted.</para> 
+not display any alarms, until the alarm daemon is restarted.</para>
 <warning><para>Quitting will also affect the functioning of any
-other applications which use the alarm daemon.
-</para></warning>
+other applications which use the alarm daemon.</para></warning>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -554,18 +623,19 @@ other applications which use the alarm daemon.
 <sect2>
 <title>Starting, resetting and stopping the alarm daemon</title>
 
-<para>The alarm daemon is normally started at KDE session login (unless you use the context menu to
-disable auto start), and runs continuously until logout.
-If for any reason it is not running, alarm monitoring will not occur and &kalarm; will not display any
-alarms.
-</para>
+<para>The alarm daemon is normally started at &kde; session login
+(unless you use the context menu to disable auto start), and runs
+continuously until logout. If for any reason it is not running, alarm
+monitoring will not occur and &kalarm; will not display any
+alarms.</para>
 
 <sect3>
 <title>Starting the alarm daemon</title>
-<para>To start the alarm daemon, you can either run &kalarm; in its default graphical mode (i.e. without any
-command line parameters), reset the daemon as described <link linkend="daemon-reset">below</link>,
-or you can run the alarm daemon directly from the command line:
-</para>
+<para>To start the alarm daemon, you can either run &kalarm; in its
+default graphical mode (&ie; without any command line parameters),
+reset the daemon as described <link linkend="daemon-reset">below</link>,
+or you can run the alarm daemon directly from the command line:</para>
+
 <screen width="40">
 <prompt>%</prompt> <command>kalarmd</command>
 </screen>
@@ -592,11 +662,17 @@ applications which use the alarm daemon.</para>
 running.</para></tip>
 
 <para>To reset the alarm daemon, either use the menu command
-<menuchoice><guimenu>Actions</guimenu><guimenuitem>Reset
-Daemon</guimenuitem></menuchoice>, or type the following
-command:</para>
+<menuchoice>
+<shortcut>
+<keycombo><keycap>Ctrl</keycap><keycap>R</keycap></keycombo>
+</shortcut>
+<guimenu>Actions</guimenu><guimenuitem>Reset Daemon</guimenuitem>
+</menuchoice>,
+or type the following command:</para>
 
-<screen width="40"><prompt>%</prompt><userinput><command>kalarm</command> <option>--reset</option></userinput></screen>
+<screen width="40">
+<prompt>%</prompt> <command>kalarm --reset</command>
+</screen>
 
 </sect3>
 
@@ -614,7 +690,9 @@ daemon instead.</para></warning>
 <guimenuitem>Quit</guimenuitem> menu option, or type the following
 command:</para>
 
-<screen width="40"><prompt>%</prompt> <userinput><command>kalarm</command> <option>&#45;&#45;stop</option></userinput></screen>
+<screen width="40">
+<prompt>%</prompt> <command>kalarm --stop</command>
+</screen>
 </sect3>
 
 </sect2>
@@ -642,38 +720,6 @@ and by the command line. &DCOP; calls should be used in preference if
 <sect1 id="dcop-interface">
 <title>&DCOP; interface</title>
 
-<para>&DCOP; calls are provided to enable other programs to request
-the following functions:</para>
-
-<variablelist>
-<varlistentry>
-<term><function>scheduleMessage</function></term>
-<listitem>
-<para><action>schedule a new alarm message</action></para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><function>handleEvent</function></term>
-<listitem>
-<para><action>display or cancel an already scheduled alarm
-message</action></para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><function>cancelMessage</function></term>
-<listitem><para><action>cancel an already scheduled alarm
-message</action></para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><function>displayMessage</function></term>
-<listitem><para><action>display an already scheduled alarm
-message</action></para></listitem>
-</varlistentry>
-</variablelist>
-
 <refentry id="cancelMessage">
 <refmeta>
 <refentrytitle>cancelMessage</refentrytitle>
@@ -699,7 +745,7 @@ be cancelled.</para>
 </varlistentry>
 
 <varlistentry>
-<term><replaceable>eventID</replaceable></term>
+<term><parameter>eventID</parameter></term>
 <listitem>
 <para>Specifies the unique ID of the event to be cancelled, as stored
 in <replaceable>calendarFile</replaceable>.</para>
@@ -749,7 +795,7 @@ be displayed.</para>
 </varlistentry>
 
 <varlistentry>
-<term><replaceable>eventID</replaceable></term>
+<term><parameter>eventID</parameter></term>
 <listitem>
 <para>Specifies the unique ID of the event to be displayed, as stored
 in <replaceable>calendarFile</replaceable>.</para>
@@ -802,7 +848,7 @@ be displayed or cancelled.</para>
 </varlistentry>
 
 <varlistentry>
-<term><replaceable>eventID</replaceable></term>
+<term><parameter>eventID</parameter></term>
 <listitem>
 <para>Specifies the unique ID of the event to be displayed or
 cancelled, as stored in
@@ -858,6 +904,7 @@ bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, cons
 <para>Specifies the text of the message to be scheduled.</para>
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term><parameter>dateTime</parameter></term>
 <listitem>
@@ -872,6 +919,130 @@ should be displayed.</para>
 <para>Specifies the background colour for displaying the message.</para>
 </listitem>
 </varlistentry>
+
+<varlistentry>
+<term><parameter>flags</parameter></term>
+<listitem>
+<para>Specifies the logical OR of the desired alarm message flags. The
+flag bits are those defined in <filename>msgevent.h</filename></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>repeatCount</parameter></term>
+<listitem>
+<para>Specifies the number of times that the alarm message should be
+repeated, after its initial display.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>interval</parameter></term>
+<listitem>
+<para>Specifies the interval in minutes between repetitions of the
+alarm message.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+</refsynopsisdiv>
+
+<refsect1 id="scheduleMessage-descrip">
+<title>Description</title>
+<para><function>scheduleMessage()</function> is a &DCOP; call to
+schedule the specified alarm message for display at the specified date
+and time. It has two forms: one for a non-repeating alarm, and another
+for a repeating alarm.</para>
+
+<para>If the scheduled time (including any repetitions) has already
+passed, &kalarm; immediately displays the message or, if the
+LATE_CANCEL flag bit is set, ignores the request. If the scheduled
+time is in the future, &kalarm; adds the alarm message to the calendar
+file for later display.</para>
+
+<para>Use a code sequence similar to the following to set up the
+parameter data for the &DCOP; call to
+<function>scheduleMessage()</function> for a non-repeating
+alarm:</para>
+
+<screen>
+QString message;
+QDateTime dateTime;
+QColor bgColour;
+Q_UINT32 flags;
+. . .
+QByteArray data;
+QDataStream arg(data, IO_WriteOnly);
+arg &lt;&lt;  message;
+arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
+arg.writeRawBytes((char*)&amp;bgColour, sizeof(QColor));
+arg &lt;&lt; flags;
+</screen>
+
+<para>Use a code sequence similar to the following to set up the
+parameter data for the &DCOP; call to
+<function>scheduleMessage()</function> for a repeating alarm:</para>
+
+<screen>
+QString message;
+QDateTime dateTime;
+QColor bgColour;
+Q_UINT32 flags;
+Q_INT32 repeatCount, repeatInterval;
+. . .
+QByteArray data;
+QDataStream arg(data, IO_WriteOnly);
+arg &lt;&lt; message;
+arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
+arg.writeRawBytes((char*)&amp;bgColour, sizeof(QColor));
+arg &lt;&lt; flags &lt;&lt; repeatCount &lt;&lt; repeatInterval;
+</screen>
+</refsect1>
+</refentry>
+
+<refentry id="scheduleFile">
+<refmeta>
+<refentrytitle>scheduleFile</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>scheduleFile</refname>
+<refpurpose>schedule a new alarm message which displays the contents
+of a text file.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime* <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>)
+</synopsis>
+<synopsis>
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime* <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>repeat_count</replaceable>, int <replaceable>interval</replaceable>)
+</synopsis>
+
+<refsect2>
+<title>Parameters</title>
+<variablelist>
+<varlistentry>
+<term><parameter>URL</parameter></term>
+<listitem>
+<para>Specifies the name or &URL; of a text file whose contents are to
+be displayed in the message to be scheduled.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>dateTime</parameter></term>
+<listitem>
+<para>Specifies the scheduled date and time at which the message
+should be displayed.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>bg</parameter></term>
+<listitem>
+<para>Specifies the background colour for displaying the message.</para>
+</listitem>
+</varlistentry>
+
 <varlistentry>
 <term><parameter>flags</parameter></term>
 <listitem>
@@ -901,51 +1072,11 @@ alarm message.</para>
 
 <refsect1>
 <title>Description</title>
-<para><function>scheduleMessage()</function> is a &DCOP; call to
-schedule the specified alarm message for display at the specified date
-and time. It has two forms: one for a non-repeating alarm, and another
-for a repeating alarm.</para>
-
-<para>If the scheduled time (including any repetitions) has already
-passed, &kalarm; immediately displays the message or, if the
-LATE_CANCEL flag bit is set, ignores the request. If the scheduled
-time is in the future, &kalarm; adds the alarm message to the calendar
-file for later display.</para>
-
-<para>Use a code sequence similar to the following to set up the
-parameter data for the &DCOP; call to
-<function>scheduleMessage()</function> for a non-repeating
-alarm:</para>
-
-<screen>QString message;
-QDateTime dateTime;
-QColor bgColour;
-Q_UINT32 flags;
-. . .
-QByteArray data;
-QDataStream arg(data, IO_WriteOnly);
-arg &lt;&lt;  message;
-arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
-arg.writeRawBytes((char*)&amp;bgColour, sizeof(QColor));
-arg &lt;&lt; flags;</screen>
-
-<para>Use a code sequence similar to the following to set up the
-parameter data for the &DCOP; call to
-<function>scheduleMessage()</function> for a repeating alarm:</para>
-
-<screen>QString message;
-QDateTime dateTime;
-QColor bgColour;
-Q_UINT32 flags;
-Q_INT32 repeatCount, repeatInterval;
-. . .
-QByteArray data;
-QDataStream arg(data, IO_WriteOnly);
-arg &lt;&lt; message;
-arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
-arg.writeRawBytes((char*)&amp;bgColour, sizeof(QColor));
-arg &lt;&lt; flags &lt;&lt; repeatCount &lt;&lt; repeatInterval;</screen>
-
+<para><function>scheduleFile()</function> is a &DCOP; call to schedule
+the specified text file for display at the specified date and time.
+Apart from specifying a file name or &URL;, its usage is identical to
+the <link linkend="scheduleMessage-descrip"><function>scheduleMessage</function></link>
+- see the description of that function for further details.</para>
 </refsect1>
 </refentry>
 </sect1>
@@ -964,16 +1095,16 @@ inter-program request.</para>
 
 <note><para>Programs should first check whether &kalarm; is already
 running; if it is, they should instead use &DCOP; calls to request these
-operations. </para></note>
+operations.</para></note>
 
 <para>The command line options for scheduling a new alarm message are
-as described in the chapter <link linkend="cmdline-interface">Using
+as described in the chapter <link linkend="cmdline-operation">Using
 &kalarm;</link>. The options for displaying and cancelling scheduled
 messages are as follows:</para>
 
 <note><para>Normal users may also if they wish use these command line
 options (assuming that they can supply the necessary parameter
-information).  </para></note>
+information).</para></note>
 
 <informaltable>
 <tgroup cols="2">
@@ -1002,7 +1133,8 @@ information).  </para></note>
 <row>
   <entry><option>--handleEvent</option> <replaceable>eventID</replaceable></entry>
   <entry>Display or cancel the event with the specified event
-  ID. &kalarm; determines which action   to take in the same way as for the <link linkend="handleEvent">handleEvent()</link> &DCOP; call.</entry>
+  ID. &kalarm; determines which action to take in the same way as for
+  the <link linkend="handleEvent">handleEvent()</link> &DCOP; call.</entry>
 </row>
 </tbody>
 </tgroup>
@@ -1011,12 +1143,14 @@ information).  </para></note>
 <para><option>--cancelEvent</option>, <option>--displayEvent</option>
 and <option>--handleEvent</option> are mutually
 exclusive. <option>--calendarURL</option> is optional, but can only be
-used with one of the other three options. </para>
+used with one of the other three options.</para>
 
 <para>Examples are:</para>
 
-<informalexample><screen><prompt>%</prompt> <userinput><command>kalarm</command> <option>--displayEvent <replaceable>&kalarm;-387486299.702</replaceable></option> <option>--calendarURL <replaceable>file:/home/zaphod/hydra.ics</replaceable></option></userinput>
-<prompt>%</prompt> <userinput><command>kalarm</command> <option>--cancelEvent <replaceable>&kalarm;-388886299.793</replaceable></option></userinput></screen>
+<informalexample><screen>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>--displayEvent <replaceable>&kalarm;-387486299.702</replaceable></option> <option>--calendarURL <replaceable>file:/home/zaphod/hydra.ics</replaceable></option></userinput>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>--cancelEvent <replaceable>&kalarm;-388886299.793</replaceable></option></userinput>
+</screen>
 </informalexample>
 
 </sect1>
@@ -1035,12 +1169,12 @@ used with one of the other three options. </para>
 <para>What configuration files does &kalarm; use?</para>
 </question>
 <answer>
-<para>The file <filename>~/.kde2/share/config/kalarmrc</filename> holds your &kalarm; preferences.
-</para>
+<para>The file <filename>~/.kde2/share/config/kalarmrc</filename>
+holds your &kalarm; preferences.</para>
+
 <para>The calendar file which stores your scheduled alarm messages is
 <filename>~/.kde2/share/apps/kalarm/calendar.ics</filename>, unless
-a different calendar file is specified in the preferences file.
-</para>
+a different calendar file is specified in the preferences file.</para>
 </answer>
 </qandaentry>
 
@@ -1049,11 +1183,12 @@ a different calendar file is specified in the preferences file.
 <para>What configuration files does the alarm daemon use?</para>
 </question>
 <answer>
-<para>The file <filename>~/.kde2/share/config/kalarmdrc</filename> holds your alarm daemon preferences.
-</para>
-<para>The file <filename>~/.kde2/share/apps/kalarmd/clients</filename> holds details of client
-applications which have previously been registered with the alarm daemon, and their calendar files.
-</para>
+<para>The file <filename>~/.kde2/share/config/kalarmdrc</filename>
+holds your alarm daemon preferences.</para>
+
+<para>The file <filename>~/.kde2/share/apps/kalarmd/clients</filename>
+holds details of client applications which have previously been
+registered with the alarm daemon, and their calendar files.</para>
 </answer>
 </qandaentry>
 
@@ -1062,11 +1197,24 @@ applications which have previously been registered with the alarm daemon, and th
 <para>What are the application names of &kalarm; and the alarm daemon?</para>
 </question>
 <answer>
-<para>&kalarm;'s application name is <application>kalarm</application>, and the alarm daemon's
-application name is <application>kalarmd</application>.
-</para>
+<para>&kalarm;'s application name is <application>kalarm</application>,
+and the alarm daemon's application name is
+<application>kalarmd</application>.</para>
 </answer>
 </qandaentry>
+
+<qandaentry>
+<question>
+<para>Why doesn't &kalarm; work since I installed &package; 2.2.x?</para>
+</question>
+<answer>
+<para>&kalarm; uses a slightly updated version of the &package; 2.2.x
+library <filename>libkcal</filename>. &package; will work happily with
+&kalarm;'s version, but the reverse is not true. To cure this problem,
+simply reinstall &kalarm;.</para>
+</answer>
+</qandaentry>
+
 </qandaset>
 </chapter>
 
@@ -1114,21 +1262,41 @@ allow the name &kalarm; to be used by this KDE2 application.
 <sect1 id="getting-kalarm">
 <title>How to obtain &kalarm;</title>
 
-&install.intro.documentation;
-
-<para>&kalarm; is available as a separate package from
+<para>&kalarm; is available as a standalone package from
 <ulink url="http://www.astrojar.org.uk/linux">http://www.astrojar.org.uk/linux</ulink>
+</para>
+
+<para>&kalarm; will be part of the &kde; project
+<ulink url="http://www.kde.org">http://www.kde.org</ulink> from &kde;
+3.0 onwards, in the <ulink url="http://pim.kde.org">&package;</ulink>
+package. The main download site of the &kde; project is
+<ulink url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>.
 </para>
 </sect1>
 
 <sect1 id="requirements">
 <title>Requirements</title>
 
-<para>In order to use &kalarm;, you need &kde; 2.0 or later. &kalarm;
-uses the libraries <filename>libkcal</filename>,
+<para> &kalarm; requires the libraries <filename>libkcal</filename>,
 <filename>libical</filename> and <filename>libicalss</filename> from
-the &kde; package kdepim. Copies of these are included in the standalone
-&kalarm; package. </para>
+the &kde; package &package;.</para>
+
+<itemizedlist>
+<listitem>
+<para>If you install a version of &package; which includes &kalarm;,
+&kalarm;'s requirements are automatically met.</para>
+</listitem>
+
+<listitem>
+<para>For the standalone version of &kalarm;, you need to run &kde;
+2.0 or later. &kalarm; comes in different standalone versions which
+include the appropriate sets of &package; libraries depending on
+which version, if any, of &package; you have installed. The standalone
+versions of &kalarm; 0.3 contain copies of the libraries from
+&package; 2.2.1 (including a slightly updated
+<filename>libkcal</filename>).</para>
+</listitem>
+</itemizedlist>
 
 <para>&kalarm; uses about 8 Mb and the alarm daemon uses about 5 Mb of
 memory to run, but this may vary depending on your platform and
@@ -1142,34 +1310,41 @@ url="http://www.astrojar.org.uk/linux/kalarm.html">http://www.astrojar.org.uk/li
 <sect1 id="compilation">
 <title>Compilation and installation</title>
 
-<para>If &kalarm; is not installed and if you are the administrator of
-your system, your best bet is to use a precompiled binary file.</para>
-
-<itemizedlist>
-
-<listitem><para>If your system understands the RPM binary package
-format, you should get a file <filename>kdepim2.i386.rpm</filename> or
-<filename>kalarm.i386.rpm</filename> (or similar), depending on
-whether you want to install kdepim or just &kalarm;. The command to
-install is: <userinput><command>rpm</command> <option>-i</option>
-<replaceable>package.i386.rpm</replaceable></userinput>, and the
-command to upgrade is: <userinput><command>rpm</command>
-<option>-U</option><replaceable>package.i386.rpm</replaceable></userinput></para></listitem>
-
-<listitem><para>If your system uses a different binary package format,
-you need to read the instructions that came with your
-system.</para></listitem>
-</itemizedlist>
-
 <para>If you cannot obtain a suitable precompiled binary package, you
-will need to compile &kalarm; yourself from source files. Find the
-source package file <filename>kdepim2.tar.gz</filename> or
-<filename>kalarm.tar.gz</filename> (or similar), depending on whether
-you want to install kdepim or just &kalarm;.  Unpack it in a new
-directory, change to that directory and enter the following:</para>
+need to compile &kalarm; yourself from source files. Get the source
+package file <filename>kdepim-x.x.tar.gz</filename> or
+<filename>kalarm-x.x.tar.gz</filename> (or similar), depending on
+whether you want to install &package; or just &kalarm;. Unpack it in a
+new directory using the command <userinput><command>tar</command>
+<option>xvfz</option>
+<replaceable>package.tar.gz</replaceable></userinput>, change to that
+directory and enter the following:</para>
 
-&install.compile.documentation;
+<screen width="40">
+<prompt>%</prompt> <command>./configure</command>
+<prompt>%</prompt> <command>make</command>
+<prompt>%</prompt> <command>make <option>install</option></command>
+</screen>
 
+<note><para>If you have both more than one version of &kde; installed
+(e.g. KDE1 and KDE2), this may possibly install &kalarm; into the
+wrong &kde; directory. If necessary, you can give the &kde; directory
+as a parameter to
+<userinput><command>./configure</command></userinput> . For example,
+if your &kde; is installed in <filename>/opt/kde2</filename>:</para>
+
+<para><userinput><command>./configure</command> --prefix=<replaceable>/opt/kde2</replaceable></userinput></para>
+</note>
+
+<para>Since &kalarm; uses <application>autoconf</application> and
+<application>automake</application> you should have no trouble
+compiling it. Should you run into problems please report them to the
+<ulink url="http://lists.kde.org">&kde; mailing lists</ulink>.</para>
+
+<important><para>If you install &kalarm; as a standalone package along
+with &package; 2.2.x, you must install &package; first and &kalarm;
+last to ensure that the correct library versions are
+installed.</para></important>
 </sect1>
 
 <sect1 id="configuration">
@@ -1194,3 +1369,4 @@ sgml-indent-step:0
 sgml-indent-data:nil
 End:
 -->
+
