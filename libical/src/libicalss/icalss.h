@@ -567,7 +567,7 @@ icalcomponent* icalmessage_new_decline_reply(icalcomponent* c,
 
 /* New is modified version of old */
 icalcomponent* icalmessage_new_counterpropose_reply(icalcomponent* old,
-						    icalcomponent* new,
+						    icalcomponent* newc,
 						    const char* user,
 						    const char* msg);
 
