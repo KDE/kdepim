@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <assert.h>
 #include <iostream.h>
+#include <time.h>
 
 #include <qdir.h>
 
