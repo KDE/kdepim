@@ -15,20 +15,11 @@ KPilot's settings. Use Qt2 designer only!</comment>
             <height>283</height>
         </rect>
     </property>
-    <property name="minimumSize">
-        <size>
-            <width>400</width>
-            <height>274</height>
-        </size>
-    </property>
     <property name="caption">
         <string>KPilot Options</string>
     </property>
-    <property name="layoutMargin" stdset="0">
-    </property>
-    <property name="layoutSpacing" stdset="0">
-    </property>
-    <widget class="QTabWidget">
+     <grid>
+    <widget class="QTabWidget" row="0" column="0">
         <property name="name">
             <cstring>tabWidget</cstring>
         </property>
@@ -39,8 +30,6 @@ KPilot's settings. Use Qt2 designer only!</comment>
                 <width>427</width>
                 <height>281</height>
             </rect>
-        </property>
-        <property name="layoutMargin" stdset="0">
         </property>
         <widget class="QWidget">
             <property name="name">
@@ -63,12 +52,6 @@ KPilot's settings. Use Qt2 designer only!</comment>
                     <grid>
                         <property name="name">
                             <cstring>unnamed</cstring>
-                        </property>
-                        <property name="margin">
-                            <number>11</number>
-                        </property>
-                        <property name="spacing">
-                            <number>6</number>
                         </property>
                         <widget class="QCheckBox" row="0" column="0">
                             <property name="name">
@@ -121,12 +104,6 @@ KPilot's settings. Use Qt2 designer only!</comment>
                     <grid>
                         <property name="name">
                             <cstring>unnamed</cstring>
-                        </property>
-                        <property name="margin">
-                            <number>11</number>
-                        </property>
-                        <property name="spacing">
-                            <number>6</number>
                         </property>
                         <widget class="QLabel" row="1" column="2">
                             <property name="name">
@@ -304,12 +281,6 @@ KPilot's settings. Use Qt2 designer only!</comment>
                         <property name="name">
                             <cstring>unnamed</cstring>
                         </property>
-                        <property name="margin">
-                            <number>11</number>
-                        </property>
-                        <property name="spacing">
-                            <number>6</number>
-                        </property>
                         <widget class="QRadioButton" row="1" column="0">
                             <property name="name">
                                 <cstring>fCompanyDisplay</cstring>
@@ -377,12 +348,6 @@ KPilot's settings. Use Qt2 designer only!</comment>
                     <grid>
                         <property name="name">
                             <cstring>unnamed</cstring>
-                        </property>
-                        <property name="margin">
-                            <number>11</number>
-                        </property>
-                        <property name="spacing">
-                            <number>6</number>
                         </property>
                         <widget class="QLabel" row="0" column="0">
                             <property name="name">
@@ -584,6 +549,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
             </grid>
         </widget>
     </widget>
+		  </grid>
 </widget>
 <tabstops>
     <tabstop>tabWidget</tabstop>
