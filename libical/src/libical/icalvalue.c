@@ -678,7 +678,6 @@ char* icalvalue_text_as_ical_string(icalvalue* value) {
 		break;
 	    }
 
-	    case '"':
 	    case '\'':
 	    case ';':
 	    case ',':{
