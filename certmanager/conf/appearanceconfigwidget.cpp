@@ -174,7 +174,13 @@ static const struct {
 } defaultCategoriesList[] = {
   { I18N_NOOP( "Revoked key" ), "is-revoked", "true" },
   { I18N_NOOP( "Expired key" ), "is-expired", "true" },
-  { I18N_NOOP( "Disabled key" ), "is-disabled", "true" }
+  { I18N_NOOP( "Disabled key" ), "is-disabled", "true" },
+  { I18N_NOOP( "Can encrypt" ), "can-encrypt", "true" },
+  { I18N_NOOP( "Can sign" ), "can-sign", "true" },
+  { I18N_NOOP( "Can authenticate" ), "can-authenticate", "true" },
+  { I18N_NOOP( "Has secret key" ), "has-secret-key", "true" },
+  { I18N_NOOP( "OpenPGP key" ), "is-openpgp-key", "true" },
+  { I18N_NOOP( "Key was validated" ), "was-validated", "true" }
 };
 
 QStringList AppearanceConfigWidget::createDefaultCategories( KConfig* config )
