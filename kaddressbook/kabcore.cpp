@@ -34,6 +34,7 @@
 #include <kabc/stdaddressbook.h>
 #include <kabc/vcardtool.h>
 #include <kaboutdata.h>
+#include <kaccelmanager.h>
 #include <kapplication.h>
 #include <kactionclasses.h>
 #include <kcmultidialog.h>
@@ -135,6 +136,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   mAddressBookService = new KAddressBookService( this );
 
   setModified( false );
+
+  KAcceleratorManager::manage( mWidget );
 }
 
 KABCore::~KABCore()

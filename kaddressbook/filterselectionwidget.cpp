@@ -34,9 +34,10 @@ FilterSelectionWidget::FilterSelectionWidget( QWidget *parent, const char *name 
 {
   setSpacing( KDialog::spacingHint() );
 
-  new QLabel( i18n( "Filter:" ), this );
-  
+  QLabel *label = new QLabel( i18n( "Filter:" ), this );
+
   mFilterCombo = new KComboBox( this );
+  label->setBuddy( mFilterCombo );
   connect( mFilterCombo, SIGNAL( activated( int ) ),
            this, SIGNAL( filterActivated( int ) ) );
 }
