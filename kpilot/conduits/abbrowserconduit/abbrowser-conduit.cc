@@ -34,7 +34,6 @@
 #include <kconfig.h>
 #include <dcopclient.h>
 #include <kdebug.h>
-#include <krun.h>
 
 // kpilot includes
 #include "abbrowser-conduit.h"
@@ -142,8 +141,7 @@ bool AbbrowserConduit::_startAbbrowser()
     if (!foundAbbrowser)
 	{
 	// abbrowser not running, start it
-	KURL::List noargs;
-	KRun::run(abbrowserName, noargs);
+	kapp->startServiceByDesktopName(abbrowserName, QString::null); 	
 	
 	kdDebug() << fname << "Waiting to run " << abbrowserName << endl;
 	alreadyRunning = false;
