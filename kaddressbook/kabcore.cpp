@@ -744,10 +744,21 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
 {
   if ( list.count() != 0 ) {
     KABC::Addressee::List::ConstIterator it;
-    for ( it = list.begin(); it != list.end(); ++it )
-      mAddressBook->insertAddressee( *it );
+    for ( it = list.begin(); it != list.end(); ++it ) {
+      Command *command = 0;
 
-    setModified();
+      // check if it exists already
+      KABC::Addressee origAddr = mAddressBook->findByUid( (*it).uid() );
+      if ( origAddr.isEmpty() )
+        command = new PwNewCommand( mAddressBook, *it );
+      else
+        command = new PwEditCommand( mAddressBook, origAddr, *it );
+
+      UndoStack::instance()->push( command );
+      RedoStack::instance()->clear();
+    }
+
+    setModified( true );
   }
 
   if ( list.count() == 0 )
