@@ -88,11 +88,13 @@
 #define LIBPILOTDB_AREA	5513
 
 #ifdef DEBUG_CERR
+#define DEBUGSTREAM	ostream
 #define DEBUGKPILOT	cerr
 #define DEBUGDAEMON	cerr
 #define DEBUGCONDUIT	cerr
 #define DEBUGDB		cerr
 #else
+#define DEBUGSTREAM	kdbgstream
 #define DEBUGKPILOT	kdDebug(KPILOT_AREA)
 #define DEBUGDAEMON	kdDebug(DAEMON_AREA)
 #define DEBUGCONDUIT	kdDebug(CONDUIT_AREA)
@@ -137,11 +139,14 @@ class KConfig;
 // added in an ad-hoc fashion.
 //
 //
-void listConfig(kdbgstream &, KConfig &);
-void listStrList(kdbgstream &, const QStringList &);
-void listStrList(kdbgstream &, QStrList &);
+void listConfig(DEBUGSTREAM &, KConfig &);
+void listStrList(DEBUGSTREAM &, const QStringList &);
+void listStrList(DEBUGSTREAM &, QStrList &);
 QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
+
+class QSize;
+DEBUGSTREAM& operator << (DEBUGSTREAM&,const QSize &) ;
 
 #else
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
@@ -168,7 +173,7 @@ public:
 	int j;
 };
 extern const debugName fname;
-inline kndbgstream operator << (kndbgstream s, const debugName &d) { s << d.j; return s; } ;
+inline kndbgstream &operator << (kndbgstream &s, const QSize &) { return s; }
 #endif
 
 
@@ -189,6 +194,9 @@ inline kndbgstream operator << (kndbgstream s, const debugName &d) { s << d.j; r
 
 
 // $Log$
+// Revision 1.33  2001/09/23 21:42:35  adridg
+// Factored out debugging options
+//
 // Revision 1.32  2001/09/16 13:37:48  adridg
 // Large-scale restructuring
 //

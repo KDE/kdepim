@@ -37,6 +37,8 @@ static const char *options_id="$Id$";
 
 #include <iostream.h>
 
+#include <qsize.h>
+
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kcmdlineargs.h>
@@ -48,7 +50,7 @@ static const char *options_id="$Id$";
 int debug_level=0;
 const char *debug_spaces="                                                            ";
 
-void listConfig(kdbgstream& s,KConfig &c)
+void listConfig(DEBUGSTREAM& s,KConfig &c)
 {
 	FUNCTIONSETUP;
 
@@ -81,7 +83,7 @@ void listConfig(kdbgstream& s,KConfig &c)
 	(void) options_id;
 }
 
-void listStrList(kdbgstream& s,const QStringList& l)
+void listStrList(DEBUGSTREAM& s,const QStringList& l)
 {
 	FUNCTIONSETUP;
 
@@ -94,7 +96,7 @@ void listStrList(kdbgstream& s,const QStringList& l)
 	}
 }
 
-void listStrList(kdbgstream& s,QStrList &l)
+void listStrList(DEBUGSTREAM& s,QStrList &l)
 {
 	FUNCTIONSETUP;
 
@@ -138,6 +140,12 @@ QString charExpansion(const char *s)
 	return t;
 }
 
+DEBUGSTREAM &operator <<(DEBUGSTREAM &o,const QSize &s)
+{
+	o << s.width() << "x" << s.height();
+	return o;
+}
+
 static KCmdLineOptions debug_options_[] =
 {
 	{ "debug <level>", I18N_NOOP("Set debugging level"), "0" },
@@ -153,6 +161,9 @@ debugName const fname((int) options_id);
 
 
 // $Log$
+// Revision 1.16  2001/09/23 21:42:35  adridg
+// Factored out debugging options
+//
 // Revision 1.15  2001/09/05 21:53:51  adridg
 // Major cleanup and architectural changes. New applications kpilotTest
 // and kpilotConfig are not installed by default but can be used to test
