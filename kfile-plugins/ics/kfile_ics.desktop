@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=ICS information
+ServiceTypes=KFilePlugin
+X-KDE-Library=kfile_ics
+MimeType=text/calendar
+PreferredGroups=ICSInfo
+PreferredItems=Events,Todos,Journals

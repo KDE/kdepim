@@ -2,6 +2,6 @@ if compile_kpilot
 PILOTPLUGIN = palm-databases
 endif
 
-SUBDIRS=vcf $(PILOTPLUGIN)
+SUBDIRS=vcf ics $(PILOTPLUGIN)
 
 include ../admin/Doxyfile.am
