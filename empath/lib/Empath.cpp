@@ -101,8 +101,8 @@ Empath::init()
     _setStartTime();
     mailboxList_.init();
     filterList_.load();
-    // FIXME: Duh.. find local maildir
-    cache_ = new EmpathCache("$HOME/Maildir");
+    // FIXME: Duh..
+    cache_ = new EmpathCache("/tmp/.empath");
 
     QString userName = KGlobal::config()->readEntry(EmpathConfig::KEY_NAME);
     if (!userName)
