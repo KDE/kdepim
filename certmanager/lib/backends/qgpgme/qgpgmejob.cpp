@@ -161,7 +161,7 @@ char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*d
   msg += i18n( "This dialog will reappear every time the passphrase is needed. For a more secure solution that also allows caching the passphrase, use gpg-agent." ) + "<br/>";
   const QString gpgAgent = KStandardDirs::findExe( "gpg-agent" );
   if ( !gpgAgent.isEmpty() ) {
-    msg += i18n( "gpg-agent was found in %1, but doesn't appear to be running." );
+    msg += i18n( "gpg-agent was found in %1, but does not appear to be running." );
   } else {
     msg += i18n( "gpg-agent is part of gnupg-%1, which you can download from %2" )
            .arg( "1.9" )
