@@ -41,14 +41,16 @@ AppearanceConfigurationPage::AppearanceConfigurationPage( QWidget * parent, cons
     : KCModule( parent, name )
 {
   QVBoxLayout* lay = new QVBoxLayout( this );
-  mWidget = new Kleo::AppearanceConfigWidget( this);
+  mWidget = new Kleo::AppearanceConfigWidget( this );
   lay->addWidget( mWidget );
   connect( mWidget, SIGNAL( changed() ), this, SLOT( slotChanged() ) );
+  kdDebug() << k_funcinfo << endl;
 }
 
 
 void AppearanceConfigurationPage::load()
 {
+  kdDebug() << k_funcinfo << endl;
   mWidget->load();
 }
 

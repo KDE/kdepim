@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>AppearanceConfigWidgetBase</class>
 <widget class="QWidget">
     <property name="name">
@@ -15,210 +15,110 @@
     <property name="caption">
         <string>Color and Font Configuration</string>
     </property>
-    <grid>
+    <hbox>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QLayoutWidget" row="0" column="0">
+        <widget class="QListView">
+            <column>
+                <property name="text">
+                    <string>Key categories</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
             <property name="name">
-                <cstring>layout10</cstring>
+                <cstring>categoriesLV</cstring>
             </property>
-            <hbox>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout5</cstring>
+            </property>
+            <vbox>
                 <property name="name">
                     <cstring>unnamed</cstring>
                 </property>
-                <widget class="QLayoutWidget">
+                <widget class="QPushButton">
                     <property name="name">
-                        <cstring>layout9</cstring>
+                        <cstring>foregroundButton</cstring>
                     </property>
-                    <vbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="QListView">
-                            <column>
-                                <property name="text">
-                                    <string>Available categories</string>
-                                </property>
-                                <property name="clickable">
-                                    <bool>true</bool>
-                                </property>
-                                <property name="resizable">
-                                    <bool>true</bool>
-                                </property>
-                            </column>
-                            <property name="name">
-                                <cstring>categoriesLV</cstring>
-                            </property>
-                        </widget>
-                        <widget class="QLayoutWidget">
-                            <property name="name">
-                                <cstring>layout3</cstring>
-                            </property>
-                            <hbox>
-                                <property name="name">
-                                    <cstring>unnamed</cstring>
-                                </property>
-                                <spacer>
-                                    <property name="name">
-                                        <cstring>spacer6_2</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Horizontal</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>40</width>
-                                            <height>20</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <widget class="QPushButton">
-                                    <property name="name">
-                                        <cstring>addCategoryPB</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>&amp;Add Category...</string>
-                                    </property>
-                                    <property name="accel">
-                                        <string>Alt+A</string>
-                                    </property>
-                                </widget>
-                                <spacer>
-                                    <property name="name">
-                                        <cstring>spacer7</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Horizontal</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>40</width>
-                                            <height>20</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <widget class="QPushButton">
-                                    <property name="name">
-                                        <cstring>removeCategoryPB</cstring>
-                                    </property>
-                                    <property name="enabled">
-                                        <bool>false</bool>
-                                    </property>
-                                    <property name="text">
-                                        <string>&amp;Remove Category</string>
-                                    </property>
-                                    <property name="accel">
-                                        <string>Alt+R</string>
-                                    </property>
-                                </widget>
-                                <spacer>
-                                    <property name="name">
-                                        <cstring>spacer8</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Horizontal</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>40</width>
-                                            <height>20</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                            </hbox>
-                        </widget>
-                    </vbox>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Set &amp;Text Color...</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+T</string>
+                    </property>
                 </widget>
-                <widget class="QLayoutWidget">
+                <widget class="QPushButton">
                     <property name="name">
-                        <cstring>layout5</cstring>
+                        <cstring>backgroundButton</cstring>
                     </property>
-                    <vbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="QLabel">
-                            <property name="name">
-                                <cstring>configureLabel</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Configure:</string>
-                            </property>
-                        </widget>
-                        <widget class="QPushButton">
-                            <property name="name">
-                                <cstring>foregroundButton</cstring>
-                            </property>
-                            <property name="enabled">
-                                <bool>false</bool>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Foreground</string>
-                            </property>
-                            <property name="accel">
-                                <string>Alt+F</string>
-                            </property>
-                        </widget>
-                        <widget class="QPushButton">
-                            <property name="name">
-                                <cstring>backgroundButton</cstring>
-                            </property>
-                            <property name="enabled">
-                                <bool>false</bool>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Background</string>
-                            </property>
-                            <property name="accel">
-                                <string>Alt+B</string>
-                            </property>
-                        </widget>
-                        <widget class="QPushButton">
-                            <property name="name">
-                                <cstring>fontButton</cstring>
-                            </property>
-                            <property name="enabled">
-                                <bool>false</bool>
-                            </property>
-                            <property name="text">
-                                <string>F&amp;ont</string>
-                            </property>
-                            <property name="accel">
-                                <string>Alt+O</string>
-                            </property>
-                        </widget>
-                        <spacer>
-                            <property name="name">
-                                <cstring>spacer6</cstring>
-                            </property>
-                            <property name="orientation">
-                                <enum>Vertical</enum>
-                            </property>
-                            <property name="sizeType">
-                                <enum>Expanding</enum>
-                            </property>
-                            <property name="sizeHint">
-                                <size>
-                                    <width>20</width>
-                                    <height>180</height>
-                                </size>
-                            </property>
-                        </spacer>
-                    </vbox>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Set &amp;Background Color...</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+B</string>
+                    </property>
                 </widget>
-            </hbox>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>fontButton</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Set F&amp;ont...</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+O</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>defaultLookPB</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Default appearance</string>
+                    </property>
+                    <property name="accel">
+                        <string></string>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer6</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>140</height>
+                        </size>
+                    </property>
+                </spacer>
+            </vbox>
         </widget>
-    </grid>
+    </hbox>
 </widget>
 <connections>
     <connection>
@@ -246,28 +146,10 @@
         <slot>slotSelectionChanged(QListViewItem*)</slot>
     </connection>
     <connection>
-        <sender>categoriesLV</sender>
-        <signal>doubleClicked(QListViewItem*)</signal>
-        <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotCategorySelected(QListViewItem*)</slot>
-    </connection>
-    <connection>
-        <sender>categoriesLV</sender>
-        <signal>returnPressed(QListViewItem*)</signal>
-        <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotCategorySelected(QListViewItem*)</slot>
-    </connection>
-    <connection>
-        <sender>removeCategoryPB</sender>
+        <sender>defaultLookPB</sender>
         <signal>clicked()</signal>
         <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotDeleteCategory()</slot>
-    </connection>
-    <connection>
-        <sender>addCategoryPB</sender>
-        <signal>clicked()</signal>
-        <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotAddCategory()</slot>
+        <slot>slotDefaultClicked()</slot>
     </connection>
 </connections>
 <slots>
@@ -275,9 +157,7 @@
     <slot access="protected">slotBackgroundClicked()</slot>
     <slot access="protected">slotFontClicked()</slot>
     <slot access="protected">slotSelectionChanged( QListViewItem * )</slot>
-    <slot access="protected">slotCategorySelected( QListViewItem * )</slot>
-    <slot access="protected">slotAddCategory()</slot>
-    <slot access="protected">slotDeleteCategory()</slot>
+    <slot access="protected">slotDefaultClicked()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

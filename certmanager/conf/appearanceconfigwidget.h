@@ -36,6 +36,7 @@
 
 #include "appearanceconfigwidgetbase.h"
 #include <qstringlist.h>
+class KConfig;
 
 namespace Kleo {
 
@@ -50,10 +51,6 @@ namespace Kleo {
     void load();
     void save();
 
-    void setInitialConfiguration( const QStringList& categories);
-    QStringList categoriesList();
-    void clear();
-
   public slots:
     void defaults();
 
@@ -62,16 +59,14 @@ namespace Kleo {
 
   protected slots:
     // reimplemented from the base class
-    virtual void slotAddCategory();
-    virtual void slotDeleteCategory();
+    virtual void slotDefaultClicked();
     virtual void slotSelectionChanged( QListViewItem * );
-    virtual void slotCategorySelected( QListViewItem * );
     virtual void slotForegroundClicked();
     virtual void slotBackgroundClicked();
     virtual void slotFontClicked();
 
   private:
-
+    QStringList createDefaultCategories( KConfig* config );
   };
 }
 

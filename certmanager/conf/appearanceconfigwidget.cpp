@@ -38,6 +38,7 @@
 #include "appearanceconfigwidget.h"
 
 #include <klistview.h>
+#include <kconfig.h>
 #include <kdialog.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -52,48 +53,73 @@
 #include <qfont.h>
 #include <qstring.h>
 #include <qpainter.h>
+#include <qregexp.h>
 
 #include <assert.h>
+#include <cryptplugfactory.h>
 
 using namespace Kleo;
 
 class CategoryListViewItem : public QListViewItem
 {
 public:
- CategoryListViewItem( QListView* lv, QListViewItem* prev,
-                     const QString& categoryName, QColor fg, QColor bg )
-    : QListViewItem( lv, prev, categoryName )  {
-    setName( categoryName );
-    setForegroundColor( fg );
-    setBackgroundColor( bg );
+ CategoryListViewItem( QListView* lv, QListViewItem* prev )
+    : QListViewItem( lv, prev ) {}
+
+  void load( const KConfigBase& config ) {
+    setName( config.readEntry( "name", i18n("<unnamed>") ) );
+    mForegroundColor = config.readColorEntry( "foreground-color" );
+    mBackgroundColor = config.readColorEntry( "background-color" );
+    mHasFont = config.hasKey( "font" );
+    if ( mHasFont )
+      mFont = config.readFontEntry( "font" );
+    mIsExpired = config.readBoolEntry( "is-expired", false );
+    // TODO support for partial font changes (italic, bold, strikeout) (see kconfigbasedkeyfilter)
   }
 
-  void setForegroundColor( QColor foreground ) { mForegroundColor = foreground; }
-  void setBackgroundColor( QColor background ) { mBackgroundColor = background; }
-  void setFont( QFont font ) { mFont = font; }
+  void save( KConfigBase& config ) {
+    config.writeEntry( "name", text( 0 ) );
+    config.writeEntry( "foreground-color", mForegroundColor );
+    config.writeEntry( "background-color", mBackgroundColor );
+    if ( mHasFont )
+      config.writeEntry( "font", mFont );
+    else
+      config.deleteEntry( "font" );
+  }
+
+  void setForegroundColor( const QColor& foreground ) { mForegroundColor = foreground; }
+  void setBackgroundColor( const QColor& background ) { mBackgroundColor = background; }
+  void setFont( const QFont& font ) { mFont = font; }
+
+  void setDefaultAppearance() {
+    mForegroundColor = mIsExpired ? Qt::red : QColor();
+    mBackgroundColor = QColor();
+    mHasFont = false;
+    mFont = QFont();
+  }
+
+private:
   void setName( const QString& name ) {
-    mName = name;
-    setText( 0, mName );
+    setText( 0, name );
   }
-
-  QString categoryName() const { return mName; }
-  QColor getForegroundColor() const { return mForegroundColor; }
-  QColor getBackgroundColor() const { return mBackgroundColor; }
-  QFont  getFont() const { return mFont; }
 
   void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
 
 private:
-  QString mName;
   QColor mForegroundColor, mBackgroundColor;
   QFont mFont;
+  bool mHasFont;
+  bool mIsExpired; // used for default settings
 };
 
 void CategoryListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
   QColorGroup _cg = cg;
-   p->setFont( mFont );
-  _cg.setColor( QColorGroup::Text, mForegroundColor );
-  _cg.setColor( QColorGroup::Base, mBackgroundColor );
+  if ( mHasFont )
+    p->setFont( mFont );
+  if ( mForegroundColor.isValid() )
+    _cg.setColor( QColorGroup::Text, mForegroundColor );
+  if ( mBackgroundColor.isValid() )
+    _cg.setColor( QColorGroup::Base, mBackgroundColor );
 
   QListViewItem::paintCell( p, _cg, column, width, alignment );
 }
@@ -121,138 +147,105 @@ AppearanceConfigWidget::~AppearanceConfigWidget()
 
 void AppearanceConfigWidget::slotSelectionChanged( QListViewItem* item )
 {
-  if( item ) {
-    foregroundButton->setEnabled( true );
-    backgroundButton->setEnabled( true );
-    fontButton->setEnabled( true );
-    removeCategoryPB->setEnabled( true );
-  }
-  else {
-    foregroundButton->setEnabled( false );
-    backgroundButton->setEnabled( false );
-    fontButton->setEnabled( false );
-    removeCategoryPB->setEnabled( false );
-  }
+  bool sel = item != 0;
+  foregroundButton->setEnabled( sel );
+  backgroundButton->setEnabled( sel );
+  fontButton->setEnabled( sel );
+  defaultLookPB->setEnabled( sel );
 }
 
 /*
- * protected slot
+ * set default appearance for selected category
  */
-void AppearanceConfigWidget::slotCategorySelected( QListViewItem* item )
+void AppearanceConfigWidget::slotDefaultClicked()
 {
-  if( item ) {
-    foregroundButton->setEnabled( true );
-    backgroundButton->setEnabled( true );
-    fontButton->setEnabled( true );
-    removeCategoryPB->setEnabled( true );
+  CategoryListViewItem* item = static_cast<CategoryListViewItem*>(categoriesLV->selectedItem() );
+  if ( !item )
+    return;
+  item->setDefaultAppearance();
+  emit changed();
+}
+
+static const struct {
+  const char* categoryName;
+  // This is limited to one key (with its value)
+  const char* configKey;
+  const char* value;
+} defaultCategoriesList[] = {
+  { I18N_NOOP( "Revoked key" ), "is-revoked", "true" },
+  { I18N_NOOP( "Expired key" ), "is-expired", "true" },
+  { I18N_NOOP( "Disabled key" ), "is-disabled", "true" }
+};
+
+QStringList AppearanceConfigWidget::createDefaultCategories( KConfig* config )
+{
+  QStringList groups;
+  for( unsigned int i = 0; i < sizeof defaultCategoriesList / sizeof *defaultCategoriesList; ++i ) {
+    const QString name = QString::fromLatin1( "Key Filter #" ) + QString::number( i );
+    KConfigGroup group( config, name );
+    group.writeEntry( "name", i18n( defaultCategoriesList[i].categoryName ) );
+    group.writeEntry( defaultCategoriesList[i].configKey, defaultCategoriesList[i].value );
+    groups << name;
   }
-  else {
-    foregroundButton->setEnabled( false );
-    backgroundButton->setEnabled( false );
-    fontButton->setEnabled( false );
-    removeCategoryPB->setEnabled( false );
-  }
-
-}
-
-
-
-/*
- * protected slot
- */
-void AppearanceConfigWidget::slotAddCategory()
-{
-  /*
-   * pending MICHEL: We should be able to do that - create a dialog ?
-   */
-  /*
-    AddCategoryDialog* dlg = new AddCategoryDialog( this );
-    if( dlg->exec() == QDialog::Accepted ) {
-        (void)new  CategoryListViewItem( categoriesLV,
-	   categoriesLV->lastItem(), dlg->nameED->text() );
-        emit changed();
-    }
-  */
-}
-
-
-/*
- * protected slot
- */
-void AppearanceConfigWidget::slotDeleteCategory()
-{
-    QListViewItem* item = categoriesLV->selectedItem();
-    Q_ASSERT( item );
-    if( !item )
-        return;
-    else
-        delete item;
-    categoriesLV->triggerUpdate();
-    slotSelectionChanged( categoriesLV->selectedItem() );
-    emit changed();
-}
-
-
-void AppearanceConfigWidget::setInitialConfiguration( const QStringList& categories )
-{
-    categoriesLV->clear();
-    for( QStringList::const_iterator it = categories.begin(); it != categories.end(); ++it ) {
-        QString catName = *it;
-        (void)new CategoryListViewItem( categoriesLV, categoriesLV->lastItem(), catName, Qt::black, Qt::white );
-    }
-}
-
-QStringList AppearanceConfigWidget::categoriesList()
-{
-    QStringList lst;
-    QListViewItemIterator it( categoriesLV );
-    for ( ; it.current() ; ++it ) {
-        QListViewItem* item = it.current();
-        QString name = item->text( 0 );
-
-        kdDebug() << name << endl;
-        lst << name;
-    }
-    return lst;
-}
-
-
-void AppearanceConfigWidget::clear()
-{
-    categoriesLV->clear();
-    emit changed();
+  kdDebug() << k_funcinfo << groups << endl;
+  return groups;
 }
 
 void AppearanceConfigWidget::load()
 {
-  // PENDING Michel ( dummy data ) - should be read from the config file
-  QStringList list;
-  list.append( "Times" );
-  list += "Courier";
-  list += "Courier New";
-  list << "Helvetica [Cronyx]" << "Helvetica [Adobe]";
-  setInitialConfiguration( list );
+  KConfig * config = Kleo::CryptPlugFactory::instance()->configObject();
+  if ( !config )
+    return;
+  QStringList groups = config->groupList().grep( QRegExp( "^Key Filter #\\d+$" ) );
+  kdDebug() << k_funcinfo << groups << endl;
+  bool setDefaults = groups.isEmpty();
+  if ( setDefaults )
+    groups = createDefaultCategories( config );
 
+  for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
+    KConfigGroup cfg( config, *it );
+    CategoryListViewItem* item = new CategoryListViewItem( categoriesLV, categoriesLV->lastItem() );
+    item->load( cfg );
+  }
+  if ( setDefaults )
+    defaults(); // set the default colors for the default categories
 }
 
 void AppearanceConfigWidget::save()
 {
-  //PENDING Michel : save to the config file.
+  KConfig * config = Kleo::CryptPlugFactory::instance()->configObject();
+  if ( !config )
+    return;
+  // We know (assume) that the groups in the config object haven't changed,
+  // so we just iterate over them and over the listviewitems, and map one-to-one.
+  QStringList groups = config->groupList().grep( QRegExp( "^Key Filter #\\d+$" ) );
+  if ( groups.isEmpty() ) {
+    // If we created the default categories ourselves just now, then we need to make up their list
+    QListViewItemIterator lvit( categoriesLV );
+    for ( ; lvit.current() ; ++lvit )
+      groups << lvit.current()->text( 0 );
+  }
+
+  QListViewItemIterator lvit( categoriesLV );
+  for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() && lvit.current(); ++it, ++lvit ) {
+    CategoryListViewItem* item = static_cast<CategoryListViewItem*>(lvit.current() );
+    KConfigGroup cfg( config, *it );
+    item->save( cfg );
+  }
 }
 
 
 void AppearanceConfigWidget::slotForegroundClicked() {
+  CategoryListViewItem* item = static_cast<CategoryListViewItem*>(categoriesLV->selectedItem() );
+  Q_ASSERT( item );
+  if( !item )
+    return;
   QColor fg;
   int result = KColorDialog::getColor( fg );
   if ( result == KColorDialog::Accepted ) {
-     CategoryListViewItem* item = static_cast<CategoryListViewItem*>(categoriesLV->selectedItem() );
-     Q_ASSERT( item );
-     if( !item )
-        return;
-     else {
-       item->setForegroundColor( fg );
-       item->repaint();
-     }
+    item->setForegroundColor( fg );
+    item->repaint();
+    emit changed();
   }
 }
 
@@ -266,6 +259,7 @@ void AppearanceConfigWidget::slotBackgroundClicked() {
   if ( result == KColorDialog::Accepted ) {
     item->setBackgroundColor( bg );
     item->repaint();
+    emit changed();
   }
 }
 
@@ -279,11 +273,19 @@ void AppearanceConfigWidget::slotFontClicked() {
   if ( result == KFontDialog::Accepted ) {
     item->setFont( font );
     item->repaint();
+    emit changed();
   }
 }
+
 void AppearanceConfigWidget::defaults()
 {
-  //Pending Michel : which defaults ?
+  // This simply means "default look for every category"
+  QListViewItemIterator lvit( categoriesLV );
+  for ( ; lvit.current() ; ++lvit ) {
+    CategoryListViewItem* item = static_cast<CategoryListViewItem *>( lvit.current() );
+    item->setDefaultAppearance();
+  }
+
 }
 
 #include "appearanceconfigwidget.moc"
