@@ -49,15 +49,15 @@ class GroupwareJob : public QObject
   protected:
     void success();
     void error( const QString & );
+    GroupwareDataAdaptor *adaptor() { return mAdaptor; }
+    const GroupwareDataAdaptor *adaptor() const { return mAdaptor; }
 
   protected slots:
     virtual void run() = 0;
 
-  protected:
-    GroupwareDataAdaptor *mAdaptor;
-
   private:
     QString mErrorString;
+    GroupwareDataAdaptor *mAdaptor;
 };
 
 }

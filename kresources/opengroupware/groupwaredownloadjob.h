@@ -67,8 +67,6 @@ class GroupwareDownloadJob : public GroupwareJob
     void slotJobData( KIO::Job *, const QByteArray & );
   
   private:
-    GroupwareDataAdaptor *mAdaptor;
-
     QStringList mFoldersForDownload;
     QStringList mCurrentlyOnServer;
 

@@ -50,14 +50,14 @@ GroupwareDownloadJob::GroupwareDownloadJob( GroupwareDataAdaptor *adaptor )
 
 void GroupwareDownloadJob::run()
 {
-  mFoldersForDownload = mAdaptor->folderLister()->activeFolderIds();
+  mFoldersForDownload = adaptor()->folderLister()->activeFolderIds();
 
   mItemsForDownload.clear();
   mCurrentlyOnServer.clear();
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(),
-    mAdaptor->downloadProgressMessage() );
+    adaptor()->downloadProgressMessage() );
   connect( mProgress,
            SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
            SLOT( cancelLoad() ) );
@@ -86,8 +86,8 @@ void GroupwareDownloadJob::listItems()
     KURL url = mFoldersForDownload.front();
     mFoldersForDownload.pop_front();
 
-    mAdaptor->setUserPassword( url );
-    mAdaptor->adaptDownloadUrl( url );
+    adaptor()->setUserPassword( url );
+    adaptor()->adaptDownloadUrl( url );
 
     kdDebug() << "OpenGroupware::listIncidences(): " << url << endl;
 
@@ -133,20 +133,20 @@ void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
 
       mCurrentlyOnServer << location;
       /* if not locally present, download */
-      const QString &localId = mAdaptor->idMapper()->localId( location );
-      if ( !localId.isNull() && mAdaptor->localItemExists( localId ) ) {
+      const QString &localId = adaptor()->idMapper()->localId( location );
+      if ( !localId.isNull() && adaptor()->localItemExists( localId ) ) {
          //kdDebug(7000) << "Not locally present, download: " << location << endl;
         download = true;
       } else {
          //kdDebug(7000) << "Locally present " << endl;
         /* locally present, let's check if it's newer than what we have */
         const QString &oldFingerprint =
-          mAdaptor->idMapper()->fingerprint( localId );
+          adaptor()->idMapper()->fingerprint( localId );
         if ( oldFingerprint != newFingerprint ) {
           kdDebug(7000) << "Fingerprint changed old: " << oldFingerprint <<
             " new: " << newFingerprint << endl;
           // something changed on the server, let's see if we also changed it locally
-          if ( mAdaptor->localItemHasChanged( localId ) ) {
+          if ( adaptor()->localItemHasChanged( localId ) ) {
             // TODO conflict resolution
             kdDebug(7000) << "TODO conflict resolution" << endl;
             download = true;
@@ -170,7 +170,7 @@ void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
 
 void GroupwareDownloadJob::deleteIncidencesGoneFromServer()
 {
-  QMap<QString, QString> remoteIds( mAdaptor->idMapper()->remoteIdMap() );
+  QMap<QString, QString> remoteIds( adaptor()->idMapper()->remoteIdMap() );
   QStringList::ConstIterator it = mCurrentlyOnServer.begin();
   while ( it != mCurrentlyOnServer.end() ) {
     remoteIds.remove( (*it) );
@@ -178,7 +178,7 @@ void GroupwareDownloadJob::deleteIncidencesGoneFromServer()
   }
   QMap<QString, QString>::ConstIterator it2;
   for (it2 = remoteIds.begin(); it2 != remoteIds.end(); ++it2) {
-    mAdaptor->deleteItem( remoteIds[ it2.key() ] );
+    adaptor()->deleteItem( remoteIds[ it2.key() ] );
   }
 }
 
@@ -192,12 +192,12 @@ void GroupwareDownloadJob::downloadItem()
     KURL url( entry );
     url.setProtocol( "webdav" );
     mCurrentGetUrl = url.url(); // why can't I ask the job?
-    mAdaptor->setUserPassword( url );
+    adaptor()->setUserPassword( url );
 
     mJobData = QString::null;
 
     mDownloadJob = KIO::get( url, false, false );
-    mDownloadJob->addMetaData( "accept", mAdaptor->mimeType() );
+    mDownloadJob->addMetaData( "accept", adaptor()->mimeType() );
     mDownloadJob->addMetaData( "PropagateHttpHeader", "true" );
     connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
         SLOT( slotJobResult( KIO::Job * ) ) );
@@ -221,17 +221,17 @@ void GroupwareDownloadJob::slotJobResult( KIO::Job *job )
     const QString& etag = WebdavHandler::getEtagFromHeaders( headers );
 
     const QString &remote = KURL( mCurrentGetUrl ).path();
-    const QString &local = mAdaptor->idMapper()->localId( remote );
+    const QString &local = adaptor()->idMapper()->localId( remote );
 
-    QString id = mAdaptor->addItem( mJobData, local, remote );
+    QString id = adaptor()->addItem( mJobData, local, remote );
 
     if ( id.isEmpty() ) {
       error( i18n("Error parsing calendar data.") );
     } else {
       if ( local.isEmpty() ) {
-        mAdaptor->idMapper()->setRemoteId( id, remote );
+        adaptor()->idMapper()->setRemoteId( id, remote );
       }
-      mAdaptor->idMapper()->setFingerprint( id, etag );
+      adaptor()->idMapper()->setFingerprint( id, etag );
     }
   }
 

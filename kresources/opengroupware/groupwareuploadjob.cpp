@@ -77,9 +77,9 @@ void GroupwareUploadJob::slotDeletionResult( KIO::Job *job )
     for ( ; it != mIncidencesForDeletion.end(); ++it ) {
       KURL url( *it );
       const QString &remote = url.path();
-      const QString &local = mAdaptor->idMapper()->localId( remote );
+      const QString &local = adaptor()->idMapper()->localId( remote );
       if ( !local.isEmpty() ) {
-        mAdaptor->deleteItem( local );
+        adaptor()->deleteItem( local );
       }
     }
     
@@ -90,15 +90,15 @@ void GroupwareUploadJob::slotDeletionResult( KIO::Job *job )
 void GroupwareUploadJob::uploadItem()
 {
   if ( !mDataForUpload.isEmpty() ) {
-    QString uid = mAdaptor->extractUid( mDataForUpload.front() );
-    const QString remote = mAdaptor->idMapper()->remoteId( uid );
+    QString uid = adaptor()->extractUid( mDataForUpload.front() );
+    const QString remote = adaptor()->idMapper()->remoteId( uid );
     KURL url;
     if ( !remote.isEmpty() ) {
       url = KURL( mBaseUrl );
       url.setPath( remote );
     } else {
-      url = KURL( mAdaptor->folderLister()->writeDestinationId() );
-      mAdaptor->adaptUploadUrl( url );
+      url = KURL( adaptor()->folderLister()->writeDestinationId() );
+      adaptor()->adaptUploadUrl( url );
       kdDebug() << "Put new URL: " << url.url() << endl;
     }
     const QString inc = mDataForUpload.front();
@@ -106,13 +106,13 @@ void GroupwareUploadJob::uploadItem()
     //kdDebug(7000) << "Uploading: " << url.prettyURL() << endl;
     mUploadJob = KIO::storedPut( inc.utf8(), url, -1, true, false, false );
     mUploadJob->addMetaData( "PropagateHttpHeader", "true" );
-    mUploadJob->addMetaData( "content-type", mAdaptor->mimeType() );
+    mUploadJob->addMetaData( "content-type", adaptor()->mimeType() );
     connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
       SLOT( slotUploadJobResult( KIO::Job * ) ) );
 
     mUploadProgress = KPIM::ProgressManager::instance()->createProgressItem(
       KPIM::ProgressManager::getUniqueID(),
-      mAdaptor->uploadProgressMessage() );
+      adaptor()->uploadProgressMessage() );
     connect( mUploadProgress,
       SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
       SLOT( cancelSave() ) );
@@ -131,12 +131,12 @@ void GroupwareUploadJob::slotUploadJobResult( KIO::Job *job )
   if ( job->error() ) {
     error( job->errorString() );
   } else {
-    QString uid = mAdaptor->extractUid( mDataForUpload.front() );
-    mAdaptor->clearChange( uid );
+    QString uid = adaptor()->extractUid( mDataForUpload.front() );
+    adaptor()->clearChange( uid );
 
     const QString& headers = job->queryMetaData( "HTTP-Headers" );
     const QString& etag = WebdavHandler::getEtagFromHeaders( headers );
-    mAdaptor->idMapper()->setFingerprint( uid, etag );
+    adaptor()->idMapper()->setFingerprint( uid, etag );
 
     mDataForUpload.pop_front();
   }
