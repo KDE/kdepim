@@ -90,7 +90,7 @@ void LookAndFeelPage::restoreSettings( KConfig *config )
     mNoneButton->setChecked(true);
   
   mBackgroundBox->setChecked(config->readBoolEntry("Background", false));
-  mBackgroundName->lineEdit()->setText(config->readEntry("BackgroundName"));
+  mBackgroundName->lineEdit()->setText(config->readPathEntry("BackgroundName"));
 }
     
 void LookAndFeelPage::saveSettings( KConfig *config )
@@ -99,7 +99,7 @@ void LookAndFeelPage::saveSettings( KConfig *config )
   config->writeEntry("SingleLine", mLineButton->isChecked());
   config->writeEntry("ToolTips", mToolTipBox->isChecked());
   config->writeEntry("Background", mBackgroundBox->isChecked());
-  config->writeEntry("BackgroundName", mBackgroundName->lineEdit()->text());
+  config->writePathEntry("BackgroundName", mBackgroundName->lineEdit()->text());
 }
     
 void LookAndFeelPage::initGUI()

@@ -150,7 +150,7 @@ void KAddressBookTableView::readConfig(KConfig *config)
   mListView->setToolTipsEnabled(config->readBoolEntry("ToolTips", true));
 
   if (config->readBoolEntry("Background", false))
-    mListView->setBackgroundPixmap(config->readEntry("BackgroundName"));
+    mListView->setBackgroundPixmap(config->readPathEntry("BackgroundName"));
 
   // Restore the layout of the listview
   mListView->restoreLayout(config, config->group());
