@@ -787,7 +787,7 @@ QString AddresseeEditorWidget::title() const
 
 QString AddresseeEditorWidget::identifier() const
 {
-  return i18n( "contact_editor" );
+  return "contact_editor";
 }
 
 void AddresseeEditorWidget::setReadOnly( bool readOnly )

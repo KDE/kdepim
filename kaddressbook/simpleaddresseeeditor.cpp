@@ -126,8 +126,7 @@ QString SimpleAddresseeEditor::title() const
 
 QString SimpleAddresseeEditor::identifier() const
 {
-  // ### Why is this i18n'ed? Isn't that what title() is for?
-  return i18n( "simple_contact_editor" );
+  return "simple_contact_editor";
 }
 
 void SimpleAddresseeEditor::emitModified()
