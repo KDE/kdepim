@@ -45,7 +45,6 @@ OverviewPart::OverviewPart(QWidget *parent, const char *name,
   connectKonnectorProgress(SLOT(slotKonnectorProgress(Konnector *, const Progress& ) ) );
   connectKonnectorError(SLOT(slotKonnectorError(Konnector *, const Error& ) ) );
   connectProfileChanged(SLOT(slotProfileChanged(const Profile& ) ) );
-  connectKonnectorChanged(SLOT(slotKonnectorChanged( Konnector * ) ) );
   connectSyncProgress(SLOT(slotSyncProgress( ManipulatorPart*, int, int) ) );
   connectStartSync(SLOT(slotStartSync() ) );
   connectDoneSync(SLOT(slotDoneSync() ) );
@@ -128,21 +127,10 @@ void OverviewPart::slotKonnectorError( Konnector *k, const Error& prog)
     m_widget->addError( k, prog );
 }
 
-void OverviewPart::slotProfileChanged(const Profile& )
+void OverviewPart::slotProfileChanged( const Profile & )
 {
     m_widget->setProfile( core()->currentProfile() );
-    slotKonnectorChanged( core()->currentKonnectorProfile().konnector() );
     kdDebug(5210) << "Profile changed " << endl;
-}
-
-void OverviewPart::slotKonnectorChanged( Konnector * )
-{
-    KonnectorProfile prof = core()->currentKonnectorProfile();
-    if ( prof.konnector() ) {
-      QPixmap pix = DesktopIcon( prof.konnector()->info().iconName(), KIcon::User );
-      m_widget->setProfile( prof.name(), pix );
-      kdDebug(5210) << "Konnector Changed " << endl;
-    }
 }
 
 void OverviewPart::slotSyncProgress( ManipulatorPart* part, int status, int percent )

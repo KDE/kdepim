@@ -54,75 +54,50 @@ class KSyncMainWindow : public Core
 {
     Q_OBJECT
   public:
-
     /**
-     * The KSyncMainWindow C'tor
-     * @param widget parent widget
-     * @param name The name
-     * @param flags the flags
-     */
-    KSyncMainWindow( QWidget *widget = 0,
-                     const char *name = 0,
+      The KSyncMainWindow C'tor
+      @param widget parent widget
+      @param name The name
+      @param flags the flags
+    */
+    KSyncMainWindow( QWidget *widget = 0, const char *name = 0,
                      WFlags f = WType_TopLevel );
     ~KSyncMainWindow();
 
     /**
-     * @return the parent for KPart widgets
-     */
-    QWidget* widgetStack();
+      @return the parent for KPart widgets
+    */
+    QWidget *widgetStack();
 
     /**
-     * @return the SystemTray of KitchenSync
-     */
+      @return the SystemTray of KitchenSync
+    */
     KSyncSystemTray *tray();
 
     /**
-     * REMOVE
-     * @deprecated
-     */
-    QString  currentId() const;
-
-    /**
-     * REMOVE
-     * @deprecated
-     */
-    QMap<QString,QString> ids() const;
-
-    /**
-     * @return the currently enabled Profile
-     */
+      @return the currently enabled Profile
+    */
     Profile currentProfile() const;
 
     /**
-     * @return access to the profilemanager
-     * @FIXME make const pointer to const object
-     */
+      @return access to the profilemanager
+      @FIXME make const pointer to const object
+    */
     ProfileManager *profileManager() const;
 
     /**
-     * @return the current KonnectorProfile
-     */
-    KonnectorProfile currentKonnectorProfile() const;
-
-    /**
-     * @return the KonnectorProfileManager
-     * @FIXME make const pointer to const object
-     */
-    KonnectorProfileManager *konnectorProfileManager() const;
-
-    /**
-     * @return a SyncUi
-     */
+      @return a SyncUi
+    */
     SyncUi *syncUi();
 
     /**
-     * @return the preferred syncAlgorithm of KitchenSync
-     */
+      @return the preferred syncAlgorithm of KitchenSync
+    */
     SyncAlgorithm *syncAlgorithm();
 
     /**
-     * @return the all loaded ManipulatorParts
-     */
+      @return the all loaded ManipulatorParts
+    */
     const QPtrList<ManipulatorPart> parts() const;
 
   private:
@@ -130,30 +105,19 @@ class KSyncMainWindow : public Core
     void addPart( const ManPartService& );
     void addModPart( ManipulatorPart * );
     void initSystray ( void );
-    void removeDeleted( const KonnectorProfile::ValueList& );
-    void unloadLoaded( const KonnectorProfile::ValueList& toUnload,
-                       KonnectorProfile::ValueList& items );
-    void loadUnloaded( const KonnectorProfile::ValueList& toLoad,
-                       KonnectorProfile::ValueList& items );
-    void updateEdited( const KonnectorProfile::ValueList& edited );
 
   private slots:
-    void slotKonnectorProfile();
     void slotProfile();
     void initProfileList();
-    void initKonnectorList();
-    void switchProfile( const Profile& prof );
-    void switchProfile( KonnectorProfile& prof );
+    void switchProfile( const Profile &prof );
     void slotConfigProf();
     void slotConfigCur();
-    void initKonnector();
     void initPlugins();
     void initProfiles();
     void slotSync();
-    void slotBackup();
-    void slotRestore();
-    void slotConfigure();
-    void slotActivated(ManipulatorPart *);
+// obsolete:    void slotBackup();
+// obsolete:    void slotRestore();
+    void slotActivated( ManipulatorPart * );
     void slotQuit();
     void slotKonnectorBar(bool );
 
@@ -162,7 +126,7 @@ class KSyncMainWindow : public Core
 
     /* slots for the KonnectorManager */
   private slots:
-    void slotSync( Konnector *, SynceeList );
+// obsolete:    void slotSync( Konnector *, SynceeList );
     void slotKonnectorProg( Konnector *, const Progress & );
     void slotKonnectorErr( Konnector *, const Error & );
 
@@ -179,20 +143,15 @@ class KSyncMainWindow : public Core
     // loaded parts
     QPtrList<ManipulatorPart> m_parts;
     QPtrListIterator<ManipulatorPart> *m_partsIt;
-    SynceeList m_outSyncee;
-    SynceeList m_inSyncee;
     bool m_isSyncing;
 
     ManPartService::ValueList m_partsLst;
     KSyncSystemTray *m_tray;
 
-    KonnectorProfileManager *m_konprof;
-    KSelectAction *m_konAct;
     KSelectAction *m_profAct;
     ProfileManager *m_prof;
     SyncUi *m_syncUi;
     SyncAlgorithm *m_syncAlg;
-    QString m_currentId;
     KonnectorBar *m_konBar;
 };
 

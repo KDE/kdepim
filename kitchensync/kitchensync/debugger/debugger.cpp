@@ -324,6 +324,8 @@ void Debugger::logMessage( const QString &message )
   QString text = "<b>" + QTime::currentTime().toString() + "</b>: ";
   text += message;
 
+  kdDebug() << "LOG: " << text << endl;
+
   mLogView->append( text );
 }
 

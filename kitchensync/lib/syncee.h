@@ -70,7 +70,7 @@ class Syncee
   public:
     enum SyncMode { MetaLess=0, MetaMode=2 };
 
-    Syncee( uint supportSize = 0);
+    Syncee( uint supportSize = 0 );
     virtual ~Syncee();
 
     /**

@@ -30,28 +30,27 @@
 
 #include "splash.h"
 
-
 static KCmdLineOptions options[] =
 {
   { 0, 0, 0}
 };
 
-int main(int argc,  char* argv[] )
+int main( int argc, char *argv[] )
 {
-
-//  KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
-
   KAboutData aboutData("kitchensync",I18N_NOOP("KitchenSync"),
 		       "0.0.6-1",
 		       I18N_NOOP("Synchronize Data with KDE"),
 		       KAboutData::License_GPL,
-		       "(c) 2001-2002 Holger Freyther\n(c) 2002 Maximilian Reiss",
+		       "(c) 2001-2002 Holger Freyther\n"
+		       "(c) 2002 Maximilian Reiss\n"
+		       "(c) 2003 Cornelius Schumacher",
 		       0,
 		       "http://opie.handhelds.org" );
   aboutData.addAuthor("Maximilian Reiss",I18N_NOOP("Current Maintainer"),
                       "harlekin@handhelds.org");
   aboutData.addAuthor("Holger Freyther", I18N_NOOP("Current Maintainer"),
 		      "zecke@handhelds.org");
+  aboutData.addAuthor("Cornelius Schumacher", "", "schumacher@kde.org" );
   aboutData.addCredit("Alexandra Chalupka",
 		      I18N_NOOP("For her understanding that I'm an addict."), 0 );
   aboutData.addCredit("HP ( former Compaq )",
@@ -70,10 +69,11 @@ int main(int argc,  char* argv[] )
 
   KUniqueApplication::addCmdLineOptions();
 
-  if( !KUniqueApplication::start() ){
-    kdDebug(5210) << "Could not start" << endl;
-    exit(0 );
+  if( !KUniqueApplication::start() ) {
+    kdDebug(5210) << "KitchenSync already runs." << endl;
+    exit( 0 );
   };
+
   KUniqueApplication a;
   // time for a Widget
   KSync::Splash *splash = new KSync::Splash;

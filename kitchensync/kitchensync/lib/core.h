@@ -64,17 +64,6 @@ class Core : public KParts::MainWindow
     virtual ProfileManager *profileManager() const = 0;
 
     /**
-     * @return the current KonnectorProfile
-     */
-    virtual KonnectorProfile currentKonnectorProfile() const = 0;
-
-    /**
-     * @return the KonnectorProfileManager
-     * @FIXME make const pointer to const object
-     */
-    virtual KonnectorProfileManager *konnectorProfileManager() const = 0;
-
-    /**
      * @return a SyncUi
      */
     virtual SyncUi *syncUi() = 0;

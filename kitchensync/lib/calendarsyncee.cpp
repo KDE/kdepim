@@ -90,12 +90,14 @@ CalendarSyncEntry *CalendarSyncee::firstEntry()
 {
   mEvents = mCalendar->events();
   mCurrentEvent = mEvents.begin();
+  if( mCurrentEvent == mEvents.end() ) return 0;
   return createEntry( *mCurrentEvent );
 }
 
 CalendarSyncEntry *CalendarSyncee::nextEntry()
 {
   ++mCurrentEvent;
+  if ( mCurrentEvent == mEvents.end() ) return 0;
   return createEntry( *mCurrentEvent );
 }
 
