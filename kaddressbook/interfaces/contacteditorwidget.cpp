@@ -52,10 +52,9 @@ void ContactEditorWidget::setModified()
 
 void ContactEditorWidget::setModified( bool modified )
 {
+  mModified = modified;
   if ( modified )
     emit changed();
-
-  mModified = modified;
 }
 
 #include "contacteditorwidget.moc"
