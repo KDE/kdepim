@@ -164,27 +164,38 @@ class KolabPropagator : public KConfigPropagator
   protected:
     void addKorganizerChanges( Change::List &changes )
     {
-      KURL freeBusyBaseUrl = "webdavs://" + KolabConfig::self()->server() +
-                                "/freebusy/";
+      KURL freeBusyBaseUrl;
+      // usrWriteConfig() is called first, so kolab1Legacy is correct
+      if ( KolabConfig::self()->kolab1Legacy() ) {
+        freeBusyBaseUrl = "webdavs://" + KolabConfig::self()->server() +
+                          "/freebusy/";
+
+        ChangeConfig *c = new ChangeConfig;
+        c->file = "korganizerrc";
+        c->group = "FreeBusy";
+
+        c->name = "FreeBusyPublishUrl";
+
+        QString user = KolabConfig::self()->user();
+        // We now use the full email address in the freebusy URL
+        //int pos = user.find( "@" );
+        //if ( pos > 0 ) user = user.left( pos );
+
+        KURL publishURL = freeBusyBaseUrl;
+        publishURL.addPath( user + ".ifb" ); // this encodes the '@' in the username
+        c->value = publishURL.url();
+
+        changes.append( c );
+
+      } else {
+          // Kolab2: only need FreeBusyRetrieveUrl
+          // "Uploading" is done by triggering a server-side script with an HTTP GET
+          // (done by kmail)
+          freeBusyBaseUrl = "https://" + KolabConfig::self()->server() +
+                            "/freebusy/";
+      }
 
       ChangeConfig *c = new ChangeConfig;
-      c->file = "korganizerrc";
-      c->group = "FreeBusy";
-
-      c->name = "FreeBusyPublishUrl";
-
-      QString user = KolabConfig::self()->user();
-      // We now use the full email address in the freebusy URL
-      //int pos = user.find( "@" );
-      //if ( pos > 0 ) user = user.left( pos );
-
-      KURL publishURL = freeBusyBaseUrl;
-      publishURL.addPath( user + ".ifb" ); // this encodes the '@' in the username
-      c->value = publishURL.url();
-
-      changes.append( c );
-
-      c = new ChangeConfig;
       c->file = "korganizerrc";
       c->group = "FreeBusy";
       c->name = "FreeBusyRetrieveUrl";
