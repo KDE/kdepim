@@ -88,7 +88,7 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	fStatus->setAlignment( QLabel::WordBreak );
 	fStatusGroupLayout->addWidget( fStatus, 0, 0 );
 
-	fProgress = new KProgress( 60, fStatusGroup, "fProgress" );
+	fProgress = new KProgress( 100, fStatusGroup, "fProgress" );
 	fStatusGroupLayout->addWidget( fProgress, 1, 0 );
 
 
@@ -184,7 +184,7 @@ void ProbeDialog::startDetection()
 	processEvents();
 	if (!fTimeoutTimer->start( 30000, true ) ) kdDebug()<<"Could not start fTimeoutTimer"<<endl;
 	if (!fProcessEventsTimer->start( 100, false ) ) kdDebug()<<"Could not start fProcessEventsTimer"<<endl;
-	if (!fProgressTimer->start( 500, false) ) kdDebug()<<"Could not start Progress timer"<<endl;
+	if (!fProgressTimer->start( 300, false) ) kdDebug()<<"Could not start Progress timer"<<endl;
 
 	KPilotDeviceLink*link;
 	for (int i=0; i<3; i++) 
