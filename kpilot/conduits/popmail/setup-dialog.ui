@@ -129,7 +129,6 @@
 <includehints>
     <includehint>klineedit.h</includehint>
     <includehint>kurlrequester.h</includehint>
-    <includehint>klineedit.h</includehint>
     <includehint>kpushbutton.h</includehint>
 </includehints>
 </UI>

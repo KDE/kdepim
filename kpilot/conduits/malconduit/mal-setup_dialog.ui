@@ -3,7 +3,7 @@
 <author>Reinhold Kainhofer</author>
 <widget class="QWidget">
     <property name="name">
-        <cstring>Form2</cstring>
+        <cstring>MalWidget</cstring>
     </property>
     <property name="geometry">
         <rect>
@@ -18,7 +18,7 @@
             <cstring>unnamed</cstring>
         </property>
         <property name="margin">
-            <number>11</number>
+            <number>0</number>
         </property>
         <property name="spacing">
             <number>6</number>
@@ -40,12 +40,6 @@
                 <grid>
                     <property name="name">
                         <cstring>unnamed</cstring>
-                    </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
                     </property>
                     <widget class="QButtonGroup" row="0" column="0">
                         <property name="name">

@@ -2,7 +2,7 @@
 <class>KNotesWidget</class>
 <widget class="QWidget">
     <property name="name">
-        <cstring>Form3</cstring>
+        <cstring>KNotesWidget</cstring>
     </property>
     <property name="geometry">
         <rect>
@@ -12,17 +12,19 @@
             <height>394</height>
         </rect>
     </property>
+        <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
     <widget class="QTabWidget">
         <property name="name">
             <cstring>tabWidget</cstring>
-        </property>
-        <property name="geometry">
-            <rect>
-                <x>1</x>
-                <y>1</y>
-                <width>312</width>
-                <height>207</height>
-            </rect>
         </property>
         <widget class="QWidget">
             <property name="name">
@@ -77,6 +79,7 @@
             </grid>
         </widget>
     </widget>
+    </grid>
 </widget>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>
