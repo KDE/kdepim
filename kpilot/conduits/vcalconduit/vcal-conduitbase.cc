@@ -226,7 +226,7 @@ there are two special cases: a full and a first sync.
 		emit syncDone(this);
 		return;
 	}
-	
+
 	readConfig();
 
 	// don't do a first sync by default in any case, only when explicitely requested, or the backup
@@ -241,7 +241,7 @@ there are two special cases: a full and a first sync.
 
 	if (!openDatabases(dbname(), &fFullSync) ) goto error;
 	if (!openCalendar() ) goto error;
-	
+
 	preSync();
 
 
@@ -296,7 +296,7 @@ error:
 /* virtual */ bool VCalConduitBase::openCalendar()
 {
 	FUNCTIONSETUP;
-	
+
 	KConfig korgcfg( locate( "config", "korganizerrc" ) );
 	// this part taken from adcalendarbase.cpp:
 	korgcfg.setGroup( "Time & Date" );
@@ -313,8 +313,11 @@ error:
 		<< endl;
 #endif
 
+	emit logMessage(i18n("Using calendar file %1.")
+		.arg(fCalendarFile));
+
 	fCalendar = new KCal::CalendarLocal(tz);
-	if ( !fCalendar) 
+	if ( !fCalendar)
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ":Cannot initialize calendar object"<<endl;
@@ -704,6 +707,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.18  2002/08/15 21:51:00  kainhofe
+// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
+//
 // Revision 1.17  2002/08/15 10:47:56  kainhofe
 // Finished categories syncing for the todo conduit
 //
