@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>490</width>
-            <height>343</height>
+            <height>331</height>
         </rect>
     </property>
     <property name="caption">
@@ -127,7 +127,7 @@ The certificates can either be generated in a centralized or a non-centralized m
                             <cstring>countryLA</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Country Code:</string>
+                            <string>&amp;Country code:</string>
                         </property>
                         <property name="buddy" stdset="0">
                             <cstring>countryED</cstring>
@@ -214,56 +214,104 @@ The certificates can either be generated in a centralized or a non-centralized m
             <property name="spacing">
                 <number>6</number>
             </property>
-            <widget class="QLabel">
+            <widget class="QLayoutWidget">
                 <property name="name">
-                    <cstring>TextLabel4</cstring>
-                </property>
-                <property name="text">
-                    <string>On this page, you will select whether certificate generation is done centralized or decentralized. Please check with your local help desk if you are unsure what to select here.&lt;br&gt;Once you are done with your settings, click &lt;em&gt;Generate Certificate&lt;/em&gt; in order to generate your certificate.</string>
-                </property>
-                <property name="alignment">
-                    <set>WordBreak|AlignVCenter</set>
-                </property>
-            </widget>
-            <widget class="QButtonGroup">
-                <property name="name">
-                    <cstring>ButtonGroup7</cstring>
-                </property>
-                <property name="title">
-                    <string>Certificate &amp;Generation</string>
+                    <cstring>Layout16</cstring>
                 </property>
                 <vbox>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
                     <property name="margin">
-                        <number>11</number>
+                        <number>0</number>
                     </property>
                     <property name="spacing">
                         <number>6</number>
                     </property>
-                    <widget class="QRadioButton">
+                    <widget class="QLabel">
                         <property name="name">
-                            <cstring>centralizedRB</cstring>
+                            <cstring>TextLabel4</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Centralized Generation</string>
+                            <string>On this page, you will select whether certificate generation is done centralized or decentralized. Please check with your local help desk if you are unsure what to select here.&lt;br&gt;Once you are done with your settings, click &lt;em&gt;Generate Certificate&lt;/em&gt; in order to generate your certificate.</string>
+                        </property>
+                        <property name="alignment">
+                            <set>WordBreak|AlignVCenter</set>
                         </property>
                     </widget>
-                    <widget class="QRadioButton">
+                    <widget class="QButtonGroup">
                         <property name="name">
-                            <cstring>decentralizedRB</cstring>
+                            <cstring>ButtonGroup7</cstring>
                         </property>
-                        <property name="text">
-                            <string>&amp;Decentralized Generation</string>
+                        <property name="title">
+                            <string>Certificate &amp;generation</string>
                         </property>
-                        <property name="checked">
-                            <bool>true</bool>
-                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>11</number>
+                            </property>
+                            <property name="spacing">
+                                <number>6</number>
+                            </property>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>centralizedRB</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Centralized generation</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>decentralizedRB</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Decentralized generation</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>Layout9</cstring>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <property name="margin">
+                                        <number>0</number>
+                                    </property>
+                                    <property name="spacing">
+                                        <number>6</number>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>TextLabel5</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>&amp;Email address of the CA that issues certificates</string>
+                                        </property>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>caEmailED</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLineEdit">
+                                        <property name="name">
+                                            <cstring>caEmailED</cstring>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                        </vbox>
                     </widget>
                     <widget class="QLayoutWidget">
                         <property name="name">
-                            <cstring>Layout9</cstring>
+                            <cstring>Layout21</cstring>
                         </property>
                         <hbox>
                             <property name="name">
@@ -275,83 +323,51 @@ The certificates can either be generated in a centralized or a non-centralized m
                             <property name="spacing">
                                 <number>6</number>
                             </property>
-                            <widget class="QLabel">
+                            <spacer>
+                                <property name="name" stdset="0">
+                                    <cstring>Spacer13</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QPushButton">
                                 <property name="name">
-                                    <cstring>TextLabel5</cstring>
+                                    <cstring>generatePB</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Email address of the CA that issues certificates</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>caEmailED</cstring>
+                                    <string>&amp;Generate certificate</string>
                                 </property>
                             </widget>
-                            <widget class="QLineEdit">
-                                <property name="name">
-                                    <cstring>caEmailED</cstring>
+                            <spacer>
+                                <property name="name" stdset="0">
+                                    <cstring>Spacer12</cstring>
                                 </property>
-                            </widget>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
                         </hbox>
                     </widget>
                 </vbox>
-            </widget>
-            <widget class="QLayoutWidget">
-                <property name="name">
-                    <cstring>Layout21</cstring>
-                </property>
-                <hbox>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <property name="margin">
-                        <number>0</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <spacer>
-                        <property name="name" stdset="0">
-                            <cstring>Spacer13</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QPushButton">
-                        <property name="name">
-                            <cstring>generatePB</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Generate Certificate</string>
-                        </property>
-                    </widget>
-                    <spacer>
-                        <property name="name" stdset="0">
-                            <cstring>Spacer12</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                </hbox>
             </widget>
         </vbox>
     </widget>
