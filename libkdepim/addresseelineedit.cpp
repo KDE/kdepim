@@ -89,6 +89,7 @@ AddresseeLineEdit::AddresseeLineEdit( QWidget* parent, bool useCompletion,
   m_useCompletion = useCompletion;
   m_completionInitialized = false;
   m_smartPaste = false;
+  m_addressBookConnected = false;
 
   init();
 
@@ -492,10 +493,10 @@ void AddresseeLineEdit::loadContacts()
 
   QApplication::restoreOverrideCursor();
 
-  disconnect( addressBook, SIGNAL( addressBookChanged( AddressBook* ) ),
-              this, SLOT( loadContacts() ) );
-
-  connect( addressBook, SIGNAL( addressBookChanged( AddressBook* ) ), SLOT( loadContacts() ) );
+  if ( !m_addressBookConnected ) {
+    connect( addressBook, SIGNAL( addressBookChanged( AddressBook* ) ), SLOT( loadContacts() ) );
+    m_addressBookConnected = true;
+  }
 }
 
 void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
@@ -510,6 +511,7 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
   QStringList::ConstIterator it;
   for ( it = emails.begin(); it != emails.end(); ++it ) {
     int len = (*it).length();
+    if ( len == 0 ) continue;
     if( '\0' == (*it)[len-1] )
       --len;
     const QString tmp = (*it).left( len );
