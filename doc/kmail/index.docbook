@@ -420,7 +420,8 @@ you may need to configure the spellchecker using <menuchoice><guimenu>Settings</
 
 <para>Message Folders are used to organize your email messages. By default, all message folders are stored in 
 the directory <filename>Mail</filename>, which is created in your home directory. When you first 
-start &kmail; the inbox, outbox, sent-mail, and trash folders are created. 
+start &kmail; the <guilabel>inbox</guilabel>, <guilabel>outbox</guilabel>, <guilabel>sent-mail</guilabel>, 
+and <guilabel>trash</guilabel> folders are created. 
 These folders each have special functions:</para>
 
 <para><itemizedlist>
@@ -632,7 +633,7 @@ passphrase even from the computer's memory.</para>
 send an encrypted message to somebody, then you can't read this message any longer after you have
 composed and encrypted it. Turn this option on to keep sent encrypted messages
 readable for you too. You can then read the plain text of this messages in the
-<guilabel>Sent Mail</guilabel> folder.</para>
+<guilabel>sent-mail</guilabel> folder.</para>
 
 <para>On the <guilabel>Composer</guilabel> tab you can also check the
 <guilabel>Automatically sign messages using PGP</guilabel> option. This means that all your
@@ -659,7 +660,7 @@ passphrase in memory</guilabel> in the <guilabel>Security</guilabel>
 settings tab, &kmail; will ask you for it.
 On the other hand, if you have already given the phrase to &kmail;, it will sign
 the message without any further prompt.
-In the <guilabel>sent mail</guilabel> folder (or on the outbox, if you don't use 
+In the <guilabel>sent-mail</guilabel> folder (or on the outbox, if you don't use 
 <guilabel>send immediately</guilabel>) you can verify the result of pgp's
 signing process. There you should see your message wrapped by the info
 that it was signed by you.</para>
