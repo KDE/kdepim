@@ -101,6 +101,7 @@ void FolderConfig::retrieveFolderList( const KURL &url )
 void FolderConfig::updateFolderList()
 {
   mFolderList->clear();
+  mWriteCombo->clear();
 
   QStringList write;
 
