@@ -22,8 +22,10 @@
 
 #include <qlistview.h>
 #include <qtextedit.h>
-#include <klocale.h>
 #include <qheader.h>
+
+#include <klocale.h>
+#include <kdialogbase.h>
 
 #include "certificateinfowidgetimpl.h"
 #include "certmanager.h"
@@ -45,6 +47,11 @@ CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( CertManager* manager,
   pathView->setColumnWidthMode( 0, QListView::Manual );
   pathView->setResizeMode( QListView::LastColumn );
   pathView->header()->hide();
+
+  connect( pathView, SIGNAL( doubleClicked( QListViewItem* ) ),
+	   this, SLOT( slotShowCertPathDetails( QListViewItem* ) ) );
+  connect( pathView, SIGNAL( returnPressed( QListViewItem* ) ),
+	   this, SLOT( slotShowCertPathDetails( QListViewItem* ) ) );
 }
 
 void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo& info )
@@ -79,7 +86,7 @@ void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo
   ++it;
   while( it != info.userid.end() ) {
     if( (*it)[0] == '<' ) {
-      item = new QListViewItem( listView, item, i18n("Email"), (*it).mid(1,(*it).length()-2));
+      item = new QListViewItem( listView, item, i18n("EMail"), (*it).mid(1,(*it).length()-2));
     } else {
       item = new QListViewItem( listView, item, i18n("Aka"), (*it).stripWhiteSpace() );
     }
@@ -124,5 +131,23 @@ void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo
 void CertificateInfoWidgetImpl::slotShowInfo( QListViewItem* item )
 {
   textView->setText( item->text(1) );
+}
+
+void CertificateInfoWidgetImpl::slotShowCertPathDetails( QListViewItem* item )
+{
+  if( !_manager ) return;
+  const CryptPlugWrapper::CertificateInfoList& lst = _manager->certList();
+  for( CryptPlugWrapper::CertificateInfoList::ConstIterator it = lst.begin();
+       it != lst.end(); ++it ) {
+    if( (*it).userid[0] == item->text(0) ) {
+      KDialogBase* dialog = new KDialogBase( this, "dialog", true, i18n("Additional Information for Key"), KDialogBase::Close, KDialogBase::Close );
+
+      CertificateInfoWidgetImpl* top = new CertificateInfoWidgetImpl( _manager, dialog );
+      dialog->setMainWidget( top );
+      top->setCert( *it ); 
+      dialog->exec();
+      delete dialog;
+    }
+  }
 }
 #include "certificateinfowidgetimpl.moc"

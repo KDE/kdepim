@@ -1,10 +1,12 @@
 #include "certitem.h"
-#include <kdialogbase.h>
 #include <qvbox.h>
 #include <qlabel.h>
-#include <klocale.h>
-#include "agent.h"
 #include <qframe.h>
+
+#include <klocale.h>
+#include <kdialogbase.h>
+
+#include "agent.h"
 
 #include "certificateinfowidgetimpl.h"
 

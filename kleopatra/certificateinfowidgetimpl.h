@@ -1,6 +1,6 @@
 /* -*- Mode: C -*-
 
-  $Id:$
+  $Id$
 
   Copyright (C) 2001 by Klarälvdalens Datakonsult AB
 
@@ -36,6 +36,7 @@ public:
   void setCert( const CryptPlugWrapper::CertificateInfo& info );
 protected slots:
   void slotShowInfo( QListViewItem* );
+  void slotShowCertPathDetails( QListViewItem* ); 
 private:
   CertManager* _manager; 
 };
