@@ -1,3 +1,15 @@
+changes between 0.3.3 and 0.4
+- full support for non iso-8859-x charsets
+- Followup and reply at same time now possible
+- improvements for the composer:
+  + switching from news article to mail and back on the fly
+  + paste as quotation
+  + add/remove quotation
+  + box quote support
+  * rot13
+  + status bar
+- code cleanups
+
 changes between 0.3.2 and 0.3.3
 - bugfix for networking on solaris
 - bugfix for continuous reconnection on
@@ -6,6 +18,7 @@ changes between 0.3.2 and 0.3.3
 - correct default for the smtp-server port
 - bugfix for a problem with some smtp servers
 - fixes for non-iso-8859-x users
+- buxfix for the display of plain text attachments
 
 changes between 0.1.13 and 0.3.2
 - ported to KDE2, new style guide compilant XML-GUI
