@@ -1,5 +1,8 @@
 KAlarm
 
+=== Version 1.0.8 --- 22 May 2004 ===
+Fix "Warn before quitting" configuration option.
+
 === Version 1.0.7 --- 18 Apr 2004 ===
 Fix scheduleCommand() and scheduleEmail() DCOP handling.
 Make KAlarm build for "./configure --without-arts".

@@ -331,7 +331,7 @@ bool Preferences::notifying(const QString& messageID, bool yesNoMessage)
 	KConfig* config = kapp->config();
 	config->setGroup(QString::fromLatin1("Notification Messages"));
 	if (yesNoMessage)
-		return config->readEntry(messageID) != QString::fromLatin1("Yes");
+		return config->readEntry(messageID).lower() != QString::fromLatin1("yes");
 	else
 		return config->readBoolEntry(messageID, true);
 }
