@@ -1490,7 +1490,7 @@ differences between your version of &kmail; and the previous one.</para>
 messages and the SMTP server is not reachable, the message will be put
 into the outbox and you will get an error message. You can then later send
 the messages in the outbox using <menuchoice><guimenu>File</guimenu><guimenuitem>Send
-Later</guimenuitem></menuchoice>.</para>
+Queued Messages</guimenuitem></menuchoice>.</para>
 </listitem>
 </varlistentry>
 
