@@ -112,9 +112,9 @@ void ViewOptions::pickPixmap()
 //					             this );
   KURL u = KFileDialog::getOpenURL( leBackPixmap->text(), //QDir::currentDirPath(),
                                     QString::null,this );
-  QString fileName = u.decodedURL();
-  if (fileName.isEmpty())
+  if (u.isEmpty() || !u.isLocalFile())
     return;
+  QString fileName = u.path();
   leBackPixmap->setText( fileName );
 }
 
