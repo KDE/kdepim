@@ -74,7 +74,7 @@ MemofileConduit::MemofileConduit(KPilotDeviceLink *d,
 	DEBUGCONDUIT<<memofile_conduit_id<<endl;
 #endif
 	fConduitName=i18n("Memofile");
-	fMemoList.setAutoDelete(true);	
+	fMemoList.setAutoDelete(true);
 }
 
 MemofileConduit::~MemofileConduit()
@@ -110,7 +110,7 @@ MemofileConduit::~MemofileConduit()
 	if (SyncAction::eCopyHHToPC == getSyncDirection() || fFirstSync) {
 		addSyncLogEntry(" Copying Pilot to PC...");
 #ifdef DEBUG
-		DEBUGCONDUIT << _funcame_ << ": copying Pilot to PC." << endl;
+		DEBUGCONDUIT << fname << ": copying Pilot to PC." << endl;
 #endif
 		copyHHToPC();
 	} else if (SyncAction::eCopyPCToHH == getSyncDirection()) {
@@ -324,7 +324,7 @@ void MemofileConduit::getModifiedFromPilot()
 		} else {
 			fLocalDatabase->writeRecord(pilotRec);
 		}
-		
+
 		if ((!pilotRec->isSecret()) || _sync_private) {
 			fMemoList.append(memo);
 
@@ -536,7 +536,7 @@ QString MemofileConduit::getResults()
 void MemofileConduit::cleanup()
 {
 	FUNCTIONSETUP;
-	
+
 	fDatabase->cleanup();
 	fDatabase->resetSyncFlags();
 	fLocalDatabase->cleanup();
