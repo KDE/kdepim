@@ -279,12 +279,23 @@ void KNArticleManager::showHdrs(bool clear)
   else { //folder
 
     KNLocalArticle *art;
+    if(f_ilter) {
+      f_ilter->doFilter(f_older);
+    } else {
+      for(int i=0; i<f_older->length(); i++) {
+        art=f_older->at(i);
+        art->setFilterResult(true);
+      }
+    }
+
     for(int idx=0; idx<f_older->length(); idx++) {
       art=f_older->at(idx);
-      if(!art->listItem()) {
+
+      if(!art->listItem() &&  art->filterResult()) {
         art->setListItem( new KNHdrViewItem(v_iew, art) );
         art->updateListItem();
-      }
+      } else if(art->listItem())
+        art->updateListItem();
     }
 
   }
@@ -345,7 +356,6 @@ void KNArticleManager::setAllThreadsOpen(bool b)
 
 void KNArticleManager::search()
 {
-  if(!g_roup) return;
   if(s_earchDlg) {
     s_earchDlg->show();
     KWin::setActiveWindow(s_earchDlg->winId());
@@ -802,8 +812,12 @@ void KNArticleManager::updateStatusString()
       knGlobals.top->setStatusMsg(QString::null, SB_FILTER);
   }
   else if(f_older) {
+    if(f_ilter)
+      displCnt=f_ilter->count();
+    else
+      displCnt=f_older->count();
     knGlobals.top->setStatusMsg(i18n(" %1: %2 displayed")
-      .arg(f_older->name()).arg(f_older->count()), SB_GROUP);
+      .arg(f_older->name()).arg(displCnt), SB_GROUP);
     knGlobals.top->setStatusMsg(QString::null, SB_FILTER);
   } else {
     knGlobals.top->setStatusMsg(QString::null, SB_GROUP);

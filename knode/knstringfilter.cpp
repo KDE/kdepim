@@ -66,8 +66,8 @@ void KNStringFilter::expand(KNGroup *g)
 {
   KNConfig::Identity  *id=0,
                       *defId=knGlobals.cfgManager->identity(),
-                      *grpId=g->identity(),
-                      *accId=g->account()->identity();
+                      *grpId=(g!=0)?g->identity():0,
+                      *accId=(g!=0)?g->account()->identity():0;
 
   expanded = data;
 

@@ -20,6 +20,7 @@
 #include <kdebug.h>
 
 #include "kngroup.h"
+#include "knfolder.h"
 #include "knmime.h"
 #include "utilities.h"
 #include "knarticlefilter.h"
@@ -47,14 +48,14 @@ void dummyFilter()
 
 
 KNArticleFilter::KNArticleFilter(int id)
-: i_d(id), c_ount(0), l_oaded(false), e_nabled(true), translateName(true), apon(articles)
+: i_d(id), c_ount(0), l_oaded(false), e_nabled(true), translateName(true), s_earchFilter(false), apon(articles)
 {}
 
 
 
 // constructs a copy of org
 KNArticleFilter::KNArticleFilter(const KNArticleFilter& org)
-: i_d(-1), c_ount(0), l_oaded(false), e_nabled(org.e_nabled), translateName(true), apon(org.apon)
+: i_d(-1), c_ount(0), l_oaded(false), e_nabled(org.e_nabled), translateName(true), s_earchFilter(org.s_earchFilter), apon(org.apon)
 {
   status = org.status;
   score = org.score;
@@ -187,7 +188,6 @@ void KNArticleFilter::doFilter(KNGroup *g)
   int mergeCnt=0;
   bool inThread=false;
 
-
   if(!l_oaded) load();
 
   subject.expand(g);  // replace placeholders
@@ -280,6 +280,25 @@ void KNArticleFilter::doFilter(KNGroup *g)
 }
 
 
+void KNArticleFilter::doFilter(KNFolder *f)
+{
+  c_ount=0;
+  KNLocalArticle *art=0;
+
+  if(!l_oaded) load();
+
+  subject.expand(0);  // replace placeholders
+  from.expand(0);
+  messageId.expand(0);
+  references.expand(0);
+
+  for(int idx=0; idx<f->length(); idx++) {
+    art=f->at(idx);
+    if (applyFilter(art))
+      c_ount++;
+  }
+}
+
 
 // *trys* to translate the name
 QString KNArticleFilter::translatedName()
@@ -342,14 +361,23 @@ bool KNArticleFilter::applyFilter(KNRemoteArticle *a)
 }
 
 
-
-/*bool KNArticleFilter::applyFilter(KNSavedArticle *a)
+bool KNArticleFilter::applyFilter(KNLocalArticle *a)
 {
   bool result=true;
-  
-  if(result) result=age.doFilter(a->age()); 
-  if(result) result=subject.doFilter(a->subject());
-  //if(result) result=from.doFilter(a->fromName());
-      
+
+  if (isSearchFilter()) {
+    if(result) result=lines.doFilter(a->lines()->numberOfLines());
+    if(result) result=age.doFilter(a->date()->ageInDays());
+    if(result) result=subject.doFilter(a->subject()->asUnicodeString());
+    if(result) {
+      QString tmp = (a->from()->name()+"##") + QString(a->from()->email().data());
+      result=from.doFilter(tmp);
+    }
+    if(result) result=messageId.doFilter(a->messageID()->asUnicodeString());
+    if(result) result=references.doFilter(a->references()->asUnicodeString());
+  }
+
+  a->setFilterResult(result);
+
   return result;
-} */
+}

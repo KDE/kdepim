@@ -901,7 +901,6 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
     a_ctGrpSetAllUnread->setEnabled(enabled);
     a_ctArtFilter->setEnabled(enabled);
     a_ctArtFilterKeyb->setEnabled(enabled);
-    a_ctArtSearch->setEnabled(enabled);
     a_ctArtRefreshList->setEnabled(enabled);
     a_ctArtCollapseAll->setEnabled(enabled);
     a_ctArtExpandAll->setEnabled(enabled);

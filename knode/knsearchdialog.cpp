@@ -72,8 +72,8 @@ KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
 
   f_ilter=new KNArticleFilter();
   f_ilter->setLoaded(true);
-  //if(t==STfolderSearch) fcw->setLimited();
-  
+  f_ilter->setSearchFilter(true);
+
   setFixedHeight(sizeHint().height());
   KNHelper::restoreWindowSize("searchDlg", this, sizeHint());
   fcw->setStartFocus();

@@ -484,6 +484,10 @@ class KNLocalArticle : public KNArticle {
     bool editDisabled()               { return f_lags.get(7); }
     void setEditDisabled(bool b=true) { f_lags.set(7, b); }
 
+    //search
+    bool filterResult()                { return f_lags.get(8); }
+    void setFilterResult(bool b=true)  { f_lags.set(8, b); }
+
     //MBOX infos
     int startOffset()             { return s_Offset; }
     void setStartOffset(int so)   { s_Offset=so; }

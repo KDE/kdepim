@@ -22,7 +22,9 @@
 #include "knstringfilter.h"
 
 class KNRemoteArticle;
+class KNLocalArticle;
 class KNGroup;
+class KNFolder;
 
 
 class KNArticleFilter {
@@ -41,7 +43,7 @@ class KNArticleFilter {
     void save();
                 
     void doFilter(KNGroup *g);
-    //bool applyFilter(KNSavedArticle *a);
+    void doFilter(KNFolder *f);
     int count()                     { return c_ount; }
     int id()                        { return i_d; }
     int applyOn()                   { return static_cast<int>(apon); }
@@ -49,6 +51,7 @@ class KNArticleFilter {
     QString translatedName();        // *trys* to translate the name
     bool isEnabled()                { return e_nabled; }
     bool loaded()                   { return l_oaded; }
+    bool isSearchFilter()           { return s_earchFilter; }
 
     void setId(int i)               { i_d=i; }
     void setApplyOn(int i)          { apon=(ApOn)i; }
@@ -56,15 +59,17 @@ class KNArticleFilter {
     void setName(const QString &s)  { n_ame=s; }
     void setTranslatedName(const QString &s);     // *trys* to retranslate the name to english
     void setEnabled(bool l)         { e_nabled=l; }
+    void setSearchFilter(bool b)    { s_earchFilter = b; }
     
   protected:
     
     enum ApOn { articles=0 , threads=1 };
     bool applyFilter(KNRemoteArticle *a);
+    bool applyFilter(KNLocalArticle *a);
       
     QString n_ame;
     int i_d, c_ount;
-    bool l_oaded, e_nabled, translateName;
+    bool l_oaded, e_nabled, translateName, s_earchFilter;
     ApOn apon;
     
     KNStatusFilter status;
