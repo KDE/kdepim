@@ -265,7 +265,7 @@ default formatted name type for new contacts, use the <link linkend="preferences
 <sect2 id="managing-contacts-im-addresses">
 <title>Instant Messaging</title>
 <para>
-  The <guilabel>IM Address</guilabel> box holds the preferred Instant Messaging Address for this contact.  Further IM Addresses can be viewed, added and editted by choosing <guilabel>Edit IM Addresses...</guilabel>.  
+  The <guilabel>IM Address</guilabel> text box holds the preferred Instant Messaging Address for this contact.  To add, view and edit additional IM Addresses, click the <guilabel>Edit IM Addresses...</guilabel> button.  The Edit IM Addresses Dialog appears.
 </para>
 <screenshot>
 <screeninfo>The Edit IM Addresses Dialog</screeninfo>
