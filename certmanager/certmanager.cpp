@@ -1,4 +1,4 @@
-/*  -*- mode: C++; c-file-style: "gnu" -*-
+/*  -*- mode: C++; c-file-style: "gnu"; c-basic-offset: 2 -*-
     certmanager.cpp
 
     This file is part of Kleopatra, the KDE keymanager
@@ -79,6 +79,7 @@
 
 // other
 #include <assert.h>
+#include <kdcopservicestarter.h>
 
 namespace {
   class ColumnStrategy : public Kleo::KeyListView::ColumnStrategy {
@@ -184,7 +185,7 @@ void CertManager::createActions() {
   extendCert->setEnabled( false );
 
   // Delete Certificate
-  (void)new KAction( i18n("Delete Certificate"), "editdelete", Key_Delete, this, 
+  (void)new KAction( i18n("Delete Certificate"), "editdelete", Key_Delete, this,
                      SLOT(slotDeleteCertificate()), actionCollection(), "delCert" );
 
   // Import Certificates
@@ -212,14 +213,14 @@ void CertManager::createActions() {
   KToolBar * _toolbar = toolBar( "mainToolBar" );
 
   (new LabelAction( i18n("Search:"), actionCollection(), "label_action"))->plug( _toolbar );
-  mLineEditAction = new LineEditAction( QString::null, actionCollection(), this, 
-					SLOT(slotStartCertificateListing()), 
+  mLineEditAction = new LineEditAction( QString::null, actionCollection(), this,
+					SLOT(slotStartCertificateListing()),
 					"query_lineedit_action");
   mLineEditAction->plug( _toolbar );
 
   QStringList lst;
   lst << i18n("in local certificates") << i18n("in external certificates");
-  mComboAction = new ComboAction( lst, actionCollection(), this, SLOT( slotToggleRemote(int) ), 
+  mComboAction = new ComboAction( lst, actionCollection(), this, SLOT( slotToggleRemote(int) ),
 		       "location_combo_action");
   mComboAction->plug( _toolbar );
 
@@ -290,7 +291,7 @@ void CertManager::slotStartCertificateListing()
 }
 
 
-void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {  
+void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {
   if ( res.error() )
     showKeyListError( this, res.error() );
   else if ( res.isTruncated() )
@@ -313,6 +314,47 @@ void CertManager::updateStatusBarLabels() {
 			       "%n Keys.", mKeyListView->childCount() ) );
 }
 
+static const QCString dcopObjectId = "KMailIface";
+/**
+  Send the new certificate by mail using KMail
+ */
+void CertManager::sendCertificate( const QString& email, const QByteArray& certificateData )
+{
+  QString error;
+  QCString dcopService;
+  int result = KDCOPServiceStarter::self()->
+    findServiceFor( "DCOP/Mailer", QString::null,
+                    QString::null, &error, &dcopService );
+  if ( result != 0 ) {
+    kdDebug(5800) << "Couldn't connect to KMail\n";
+    KMessageBox::error( this,
+                        i18n( "DCOP Communication Error, unable to send certificate using KMail\n%1" ).arg( error ) );
+    return;
+  }
+
+  QCString dummy;
+  // OK, so kmail (or kontact) is running. Now ensure the object we want is available.
+  // This is kind of a limitation of findServiceFor, which should do this by itself,
+  // for that it needs to know the dcop object ID -> requires kdelibs API change.
+  if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dcopService, dummy ) ) {
+    KDCOPServiceStarter::self()->startServiceFor( "DCOP/Mailer", QString::null,
+                                                  QString::null, &error, &dcopService );
+    assert( kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dcopService, dummy ) );
+  }
+
+  DCOPClient* dcopClient = kapp->dcopClient();
+  QByteArray data;
+  QDataStream arg( data, IO_WriteOnly );
+  arg << email;
+  arg << certificateData;
+  if( !dcopClient->send( dcopService, dcopObjectId,
+                         "sendCertificate(QString,QByteArray)", data ) ) {
+    KMessageBox::error( this,
+                        i18n( "DCOP Communication Error, unable to send certificate using KMail" ) );
+    return;
+  }
+}
+
 /**
   This slot is invoked when the user selects "New certificate"
  */
@@ -322,18 +364,8 @@ void CertManager::newCertificate()
   if( wizard->exec() == QDialog::Accepted ) {
     if( wizard->sendToCA() ) {
           // Ask KMail to send this key to the CA.
-          DCOPClient* dcopClient = kapp->dcopClient();
-          QByteArray data;
-          QDataStream arg( data, IO_WriteOnly );
-          arg << wizard->caEMailAddress();
-          arg << wizard->keyData();
-          if( !dcopClient->send( "kmail*", "KMailIface",
-                                 "sendCertificate(QString,QByteArray)", data ) ) {
-              KMessageBox::error( this,
-                                  i18n( "DCOP Communication Error, unable to send certificate using KMail" ) );
-              return;
-          }
-      } else {
+          sendCertificate( wizard->caEMailAddress(), wizard->keyData() );
+    } else {
           // Store in file
           QFile file( wizard->saveFileUrl() );
           if( file.open( IO_WriteOnly ) ) {
@@ -538,7 +570,7 @@ void CertManager::importCRLFromFile() {
 						       QString::null,
 						       this,
 						       i18n( "Select CRL File" ) );
-  
+
   if ( !filename.isEmpty() ) {
     mDirmngrProc = new KProcess();
     *mDirmngrProc << "gpgsm" << "--call-dirmngr" << "loadcrl" << filename;
@@ -547,7 +579,7 @@ void CertManager::importCRLFromFile() {
 	     this, SLOT(slotDirmngrExited()) );
     connect( mDirmngrProc, SIGNAL(receivedStderr(KProcess*,char*,int) ),
 	     this, SLOT(slotStderr(KProcess*,char*,int)) );
-    if( !mDirmngrProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) { 
+    if( !mDirmngrProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) {
       KMessageBox::error( this, i18n( "Unable to start gpgsm process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
       delete mDirmngrProc; mDirmngrProc = 0;
     }

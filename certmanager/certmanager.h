@@ -69,7 +69,7 @@ namespace GpgME {
 class CertManager : public KMainWindow {
   Q_OBJECT
 public:
-    CertManager( bool remote = false, const QString& query = QString::null, 
+    CertManager( bool remote = false, const QString& query = QString::null,
 		 const QString& import=QString::null,
 		 QWidget* parent = 0, const char* name = 0);
 
@@ -101,7 +101,7 @@ private slots:
     void slotStderr( KProcess*, char*, int );
 
     void slotToggleRemote(int idx);
-  
+
     void slotViewCRLs();
 
     void slotListViewItemActivated( Kleo::KeyListViewItem * item );
@@ -115,6 +115,7 @@ private:
     void createStatusBar();
     void createActions();
     void updateStatusBarLabels();
+    void sendCertificate( const QString& email, const QByteArray& certificateData );
 
 private:
     Kleo::KeyListView * mKeyListView;
