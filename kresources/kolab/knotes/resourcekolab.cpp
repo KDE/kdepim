@@ -52,7 +52,7 @@ static const char* inlineMimeType = "text/calendar";
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceNotes( config ), ResourceKolabBase( "ResourceKolab-KNotes" )
 {
-  setType( "kolab" );
+  setType( "imap" );
 }
 
 ResourceKolab::~ResourceKolab()
