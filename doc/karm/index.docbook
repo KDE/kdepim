@@ -139,10 +139,10 @@ task/time window and status bar.</para>
 time accumulated for each in the current session and in total. Tasks
 being timed have a small clock icon next to the session time.</para>
 
-<para>Subtasks can be created for each task. Double-clicking on a task
-displays or collapses its associated subtasks. The total time accrued
-for a task includes the times for its subtasks, as well as its own
-accumulated time.</para>
+<para>Subtasks can be created for each task. Clicking the plus sign and 
+minus sign in front of the maintask toggles the view of its associated
+subtasks. The total time accrued for a task includes the times for its 
+subtasks, as well as its own accumulated time.</para>
 
 </sect1>
 
@@ -354,7 +354,7 @@ given period to the &kde; clipboard</para>
 <listitem>
 <para><action>Change the name or accumulated time</action> for the
 current task</para><para>There are two options for changing the time: Edit
-Absolute, in which the session and total names can be changed separately;
+Absolute, in which the session and total times can be changed separately;
 and Edit Relative, in which a certain change is added to or subtracted from
 both the session and total times.</para><para>The Auto tracking option allows 
 timing to start and stop automatically when you switch to or from a particular 
