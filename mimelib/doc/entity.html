@@ -1,0 +1,168 @@
+<HTML>
+<HEAD>
+  <TITLE> DwEntity Man Page </TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H2>
+  <FONT COLOR="navy"> NAME </FONT>
+</H2>
+<P>
+DwEntity -- Abstract class representing a MIME entity
+<H2>
+  <FONT COLOR="navy"> SYNOPSIS </FONT>
+</H2>
+<PRE>class DW_EXPORT DwEntity : public <A HREF="msgcmp.html">DwMessageComponent</A> {
+
+public:
+
+    <A HREF="entity.html#DwEntity">DwEntity</A>();
+    <A HREF="entity.html#DwEntity">DwEntity</A>(const DwEntity&amp; aEntity);
+    <A HREF="entity.html#DwEntity">DwEntity</A>(const DwString&amp; aStr, DwMessageComponent* aParent=0);
+    virtual ~DwEntity();
+    const DwEntity&amp; <A HREF="entity.html#op_eq">operator =</A> (const DwEntity&amp; aEntity);
+    virtual void <A HREF="entity.html#Parse">Parse</A>();
+    virtual void <A HREF="entity.html#Assemble">Assemble</A>();
+    DwHeaders&amp; <A HREF="entity.html#Headers">Headers</A>() const;
+    DwBody&amp; <A HREF="entity.html#Body">Body</A>() const;
+
+protected:
+
+    DwHeaders* mHeaders;
+    DwBody*    mBody;
+
+public:
+
+    virtual void <A HREF="entity.html#PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm, int aDepth=0) const;
+    virtual void <A HREF="entity.html#CheckInvariants">CheckInvariants</A>() const;
+
+protected:
+
+    void _PrintDebugInfo(ostream&amp; aStrm) const;
+};
+</PRE>
+<H2>
+  <FONT COLOR="navy"> DESCRIPTION </FONT>
+</H2>
+<P>
+RFC-2045 defines an <I>entity</I> as either a <I>message</I> or a <I>body
+part</I>, both of which have a collection of headers and a <I>body</I>. In
+MIME++, an entity is represented by the class <B><TT>DwEntity</TT></B>, which
+contains both a <B><TT><A HREF="headers.html">DwHeaders</A></TT></B> object
+and a <B><TT><A HREF="body.html">DwBody</A></TT></B> object.
+<P>
+In the tree (broken-down) representation of message, a
+<B><TT>DwEntity</TT></B> object may be either a root node, having child nodes
+but no parent node, or an intermediate node, having both a parent node and
+child nodes. A <B><TT>DwEntity</TT></B> object that is a root node must also
+be a <B><TT><A HREF="message.html">DwMessage</A></TT></B> object. If a
+<B><TT>DwEntity</TT></B> object is an intermediate node, its parent must
+be a <B><TT>DwBody</TT></B> object. The child nodes of a
+<B><TT>DwEntity</TT></B> object are the <B><TT>DwHeaders</TT></B> and
+<B><TT>DwBody</TT></B> objects it contains.
+<P>
+Since <B><TT>DwEntity</TT></B> is an abstract base class, you cannot create
+instances of it directly. <B><TT>DwEntity</TT></B> has two derived classes,
+<B><TT><A HREF="message.html">DwMessage</A></TT></B> and
+<B><TT><A HREF="bodypart.html">DwBodyPart</A></TT></B>, which are concrete
+classes.
+<P>
+To access the contained <B><TT>DwHeaders</TT></B> object, use the member
+function <B><TT>Headers()</TT></B>. To access the contained
+<B><TT>DwBody</TT></B> object, use the member function
+<B><TT>Body()</TT></B>.
+<H2>
+  <FONT COLOR="navy"> Public Member Functions </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> <A NAME="DwEntity">DwEntity</A>() <BR>
+DwEntity(const DwEntity&amp; aEntity) <BR>
+DwEntity(const DwString&amp; aStr, DwMessageComponent* aParent=0) </B></FONT>
+<P>
+The first constructor is the default constructor, which sets the
+<B><TT>DwEntity</TT></B> object's string representation to the empty string
+and sets its parent to <B><TT>NULL</TT></B>.
+<P>
+The second constructor is the copy constructor, which performs a deep copy
+of <B><TT>aEntity</TT></B>. The parent of the new
+<B><TT>DwEntity</TT></B> object is set to <B><TT>NULL</TT></B>.
+<P>
+The third constructor copies <B><TT>aStr</TT></B> to the
+<B><TT>DwEntity</TT></B> object's string representation and sets
+<B><TT>aParent</TT></B> as its parent. The virtual member function
+<B><TT>Parse()</TT></B> should be called immediately after this constructor
+in order to parse the string representation. Unless it is
+<B><TT>NULL</TT></B>, <B><TT>aParent</TT></B> should point to an object of
+a class derived from <B><TT>DwBody</TT></B>.
+<P>
+<FONT COLOR="teal"><B> const DwEntity&amp; <A NAME="op_eq">operator =</A>
+(const DwEntity&amp; aEntity) </B></FONT>
+<P>
+This is the assignment operator, which performs a deep copy of
+<B><TT>aEntity</TT></B>. The parent node of the <B><TT>DwEntity</TT></B>
+object is not changed.
+<P>
+<FONT COLOR="teal"><B> virtual void <A NAME="Parse">Parse</A>() </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+executes the parse method for <B><TT>DwEntity</TT></B> objects. The parse
+method creates or updates the broken-down representation from the string
+representation. For <B><TT>DwEntity</TT></B> objects, the parse method parses
+the string representation and sets the values of the
+<B><TT>DwHeaders</TT></B> and <B><TT>DwBody</TT></B> objects it contains.
+This member function also calls the <B><TT>Parse()</TT></B> member functions
+of the contained <B><TT>DwHeaders</TT></B> and <B><TT>DwBody</TT></B> objects.
+<P>
+You should call this member function after you set or modify the string
+representation, and before you access either the contained headers or body.
+<P>
+This function clears the is-modified flag.
+<P>
+<FONT COLOR="teal"><B> virtual void <A NAME="Assemble">Assemble</A>()
+</B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+executes the assemble method for <B><TT>DwEntity</TT></B> objects. The assemble
+method creates or updates the string representation from the broken-down
+representation. In more concrete terms, the assemble method builds the string
+representation from the string representations of the contained
+<B><TT>DwHeaders</TT></B> and <B><TT>DwBody</TT></B> objects. This member
+function calls the <B><TT>Assemble()</TT></B> member functions of its
+<B><TT>DwHeaders</TT></B> and <B><TT>DwBody</TT></B> objects.
+<P>
+You should call this member function after you modify either the contained
+headers or body, and before you retrieve the string representation.
+<P>
+This function clears the is-modified flag.
+<P>
+<FONT COLOR="teal"><B> Dw<A NAME="Headers">Headers</A>&amp; Headers() const
+</B></FONT>
+<P>
+This function returns the <B><TT>DwHeaders</TT></B> object contained by this
+object.
+<P>
+<FONT COLOR="teal"><B> Dw<A NAME="Body">Body</A>&amp; Body() const
+</B></FONT>
+<P>
+This function returns the <B><TT>DwBody</TT></B> object contained by this
+object.
+<P>
+<FONT COLOR="teal"><B> virtual void
+<A NAME="PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm, int aDepth=0)
+const </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+prints debugging information about this object to <B><TT>aStrm</TT></B>.
+It will also call <B><TT>PrintDebugInfo()</TT></B> for any of its child
+components down to a level of <B><TT>aDepth</TT></B>.
+<P>
+This member function is available only in the debug version of the library.
+<P>
+<FONT COLOR="teal"><B> virtual void
+<A NAME="CheckInvariants">CheckInvariants</A>() const </B></FONT>
+<P>
+Aborts if one of the invariants of the object fails. Use this member function
+to track down bugs.
+<P>
+This member function is available only in the debug version of the library.
+<P>
+</BODY></HTML>

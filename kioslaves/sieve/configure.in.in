@@ -1,0 +1,18 @@
+AC_MSG_CHECKING(if we need to talk to broken timsieved's)
+AC_ARG_ENABLE(broken-timsieved-workaround,
+[AC_HELP_STRING([--enable-broken-timsieved-workaround],
+                [versions <= 1.1.0 of the timsieved (part of the Cyrus
+		IMAP suite) do not interpret the HAVESPACE command of
+		the sieve protocol. This option makes the sieve
+		KIO::Slave simply omit that command.])],
+[case "${enableval}" in
+      yes) AC_MSG_RESULT(yes)
+	   need_broken_timsieved_support="yes" ;;
+      no) AC_MSG_RESULT(no) ;;
+      *) AC_MSG_ERROR([bad value ${enableval} for --enable-broken-timsieved-workaround]) ;;
+esac],[AC_MSG_RESULT(no)])
+
+if test "$need_broken_timsieved_support" = "yes"; then
+   AC_SUBST(HAVE_BROKEN_TIMSIEVED)
+   AC_DEFINE(HAVE_BROKEN_TIMSIEVED,1,[Define if the sieve KIO::Slave must be able to talk to timsieved <= 1.1.0])
+fi

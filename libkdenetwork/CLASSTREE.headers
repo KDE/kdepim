@@ -1,0 +1,87 @@
+* indicates abstract classes (in namespace Generics)
++ on leaves: indicates non-trivial subclassing
+<blank line> indicates progress ;-)
+
+r indicates rfc2822/822 standard headers
+m indicates rfc2045/et al. proposed standard headers
+u indicates usefor headers
+
++ Base*                 // defines common interface
+  + GUnstructured*      // Base Class for unstructured header fields
+    + Generic+          // can hold any header field
+r   + Subject
+r   + Comment
+m   + ContentDescription
+    + Organization     // must also be registered as "Organisation"
+    + UserAgent
+  + GStructured*       // Base Class for structured header fields
+    + GAddress*        // Base Class for address-type header fields
+      + MailboxList*   // doesn't allow groups: From
+r       + From
+	+ SingleMailbox* // only allows a single mailbox: Sender
+r         + Sender
+      + AddressList*   // allows groups: ReplyTo, To, Cc, Bcc
+r       + ReplyTo
+r       + To
+r       + Cc
+r       + Bcc
+	+ MailCopiesTo // ??? listed in usefor ???
+r     + ReturnPath+    // allows only a single angle-addr
+      + GIdent*        // Base Class for "Identification Fields"
+	+ GSingleIdent* // allows only a single msg-id
+r         + MessageID
+m         + ContentID
+u?        + Supersedes
+r       + InReplyTo
+r       + References
+    + GToken*          // Base Class for single-token headers: CTE
+m     + ContentTransferEncoding
+    + GDotAtom*        // Base Class for single-dot-atom headers: MIME-Version
+m     + MIMEVersion
+    + GPhraseList*     // Base Class for phrase list headers: Keywords
+r     + Keywords
+    + GParametrized*   // Base Class for parametrizable headers: Content-type
+      + GContentType*
+m       + ContentType
+      + GTokenWithParameterList*
+m       + ContentDisposition
+
+    + GDate*           // Base class for date headers: Date
+r     + Date
+    + GNameValPairs*   // Base Class for name-value list headers: Received
+r     + Received
+
+
+common interface:
+
+bool     isValid()
+bool     isEmpty()
+
+const char* type();
+
+Entity* parent();
+void     setParent( Content* );
+
+
+//
+// input/output:
+//
+
+// 7bit:
+QCString as7BitString()
+bool     from7BitString( const QCString & ) // deep copy
+bool     from7BitString( const char * begin, const char * end ) // shallow
+bool     from7BitString( const char * begin, int length ) // shallow
+bool     from7BitString( QByteArray &, int pos, int len ) // shallow
+QStringList validate( const QCString & str );
+
+
+// for dialogs:
+QString asUnicodeString()
+bool    fromUnicodeString()
+QStringList validate( const QString & str );
+
+// for reader display:
+QString asHtmlString()
+bool    fromHtmlString() // ???
+

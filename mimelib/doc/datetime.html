@@ -1,0 +1,340 @@
+<HTML>
+<HEAD>
+  <TITLE> DwDateTime Man Page </TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H2>
+  <FONT COLOR="navy"> NAME </FONT>
+</H2>
+<P>
+DwDateTime -- Class representing an RFC-822 date-time
+<H2>
+  <FONT COLOR="navy"> SYNOPSIS </FONT>
+</H2>
+<PRE>class DW_EXPORT DwDateTime : public <A HREF="fieldbdy.html">DwFieldBody</A> {
+
+public:
+
+    <A HREF="datetime.html#DwDateTime">DwDateTime</A>();
+    <A HREF="datetime.html#DwDateTime">DwDateTime</A>(const DwDateTime&amp; aDateTime);
+    <A HREF="datetime.html#DwDateTime">DwDateTime</A>(const DwString&amp; aStr, DwMessageComponent* aParent=0);
+    virtual ~DwDateTime();
+    const DwDateTime&amp; <A HREF="datetime.html#op_eq">operator =</A> (const DwDateTime&amp; aDateTime);
+    virtual void <A HREF="datetime.html#Parse">Parse</A>();
+    virtual void <A HREF="datetime.html#Assemble">Assemble</A>();
+    virtual DwMessageComponent* <A HREF="datetime.html#Clone">Clone</A>() const;
+    DwUint32 <A HREF="datetime.html#AsUnixTime">AsUnixTime</A>() const;
+    void <A HREF="datetime.html#FromUnixTime">FromUnixTime</A>(DwUint32 aTime);
+    time_t <A HREF="datetime.html#AsCalendarTime">AsCalendarTime</A>() const;
+    void <A HREF="datetime.html#FromCalendarTime">FromCalendarTime</A>(time_t aTime);
+    DwInt32 <A HREF="datetime.html#DateAsJulianDayNum">DateAsJulianDayNum</A>() const;
+    void <A HREF="datetime.html#DateFromJulianDayNum">DateFromJulianDayNum</A>(DwInt32 aJdn);
+    DwInt32 <A HREF="datetime.html#TimeAsSecsPastMidnight">TimeAsSecsPastMidnight</A>() const;
+    void <A HREF="datetime.html#TimeFromSecsPastMidnight">TimeFromSecsPastMidnight</A>(DwInt32 aSecs);
+    int <A HREF="datetime.html#Year">Year</A>() const;
+    void <A HREF="datetime.html#SetYear">SetYear</A>(int aYear);
+    int <A HREF="datetime.html#Month">Month</A>() const;
+    void <A HREF="datetime.html#SetMonth">SetMonth</A>(int aMonth);
+    int <A HREF="datetime.html#Day">Day</A>() const;
+    void <A HREF="datetime.html#SetDay">SetDay</A>(int aDay);
+    int <A HREF="datetime.html#Hour">Hour</A>() const;
+    void <A HREF="datetime.html#SetHour">SetHour</A>(int aHour);
+    int <A HREF="datetime.html#Minute">Minute</A>() const;
+    void <A HREF="datetime.html#SetMinute">SetMinute</A>(int aMinute);
+    int <A HREF="datetime.html#Second">Second</A>() const;
+    void <A HREF="datetime.html#SetSecond">SetSecond</A>(int aSecond);
+    int <A HREF="datetime.html#Zone">Zone</A>() const;
+    void <A HREF="datetime.html#SetZone">SetZone</A>(int aZone);
+    static void <A HREF="datetime.html#SetDefaultZone">SetDefaultZone</A>(int aZone);
+    static DwDateTime* <A HREF="datetime.html#NewDateTime">NewDateTime</A>(const DwString&amp;, DwMessageComponent*);
+    static DwDateTime* (*<A HREF="datetime.html#sNewDateTime">sNewDateTime</A>)(const DwString&amp;, DwMessageComponent*);
+
+protected:
+
+    void <A HREF="datetime.html#_FromUnixTime">_FromUnixTime</A>(DwUint32 aTime);
+    void <A HREF="datetime.html#_FromCalendarTime">_FromCalendarTime</A>(time_t aTime);
+    int  mYear;
+    int  mMonth;
+    int  mDay;
+    int  mHour;
+    int  mMinute;
+    int  mSecond;
+    int  mZone;
+    static int sDefaultZone;
+    static int sIsDefaultZoneSet;
+
+public:
+
+    virtual void <A HREF="datetime.html#PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm, int aDepth=0) const;
+    virtual void <A HREF="datetime.html#CheckInvariants">CheckInvariants</A>() const;
+
+protected:
+
+    void _PrintDebugInfo(ostream&amp; aStrm) const;
+};
+</PRE>
+<H2>
+  <FONT COLOR="navy"> DESCRIPTION </FONT>
+</H2>
+<P>
+<B><TT>DwDatetime</TT></B> represents a <I>date-time</I> as described in
+RFC-822 and RFC-1123. The parse method for <B><TT>DwDateTime</TT></B> parses
+the string representation to extract the year, month, day, hour, minute,
+second, and time zone. <B><TT>DwDateTime</TT></B> provides member functions
+to set or get the individual components of the date-time.
+<H2>
+  <FONT COLOR="navy"> Public Member Functions </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> <A NAME="DwDateTime">DwDateTime</A>() <BR>
+DwDateTime(const DwDateTime&amp; aDateTime) <BR>
+DwDateTime(const DwString&amp; aStr, DwMessageComponent* aParent=0)
+</B></FONT>
+<P>
+The first constructor is the default constructor, which assigns the current
+date and time as reported by the operating system.
+<P>
+The second constructor is the copy constructor. The parent of the new
+<B><TT>DwDateTime</TT></B> object is set to <B><TT>NULL</TT></B>.
+<P>
+The third constructor sets <B><TT>aStr</TT></B> as the
+<B><TT>DwDateTime</TT></B> object's string representation and sets
+<B><TT>aParent</TT></B> as its parent. The virtual member function
+<B><TT>Parse()</TT></B> should be called after this constructor to extract
+the date and time information from the string representation. Unless it is
+<B><TT>NULL</TT></B>, <B><TT>aParent</TT></B> should point to an object of
+a class derived from <B><TT>DwField</TT></B>.
+<P>
+<FONT COLOR="teal"><B> const DwDateTime&amp; <A NAME="op_eq">operator =</A>
+(const DwDateTime&amp; aDateTime) </B></FONT>
+<P>
+This is the assignment operator, which sets this
+<B><TT>DwDateTime</TT></B> object to the same value as
+<B><TT>aDateTime</TT></B>.
+<P>
+<FONT COLOR="teal"><B> virtual void <A NAME="Parse">Parse</A>() </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+executes the parse method for <B><TT>DwDateTime</TT></B> objects. The parse
+method creates or updates the broken-down representation from the string
+representation. For <B><TT>DwDateTime</TT></B> objects, the parse method
+parses the string representation to extract the year, month, day, hour, minute,
+second, and time zone.
+<P>
+This function clears the is-modified flag.
+<P>
+<FONT COLOR="teal"><B> virtual void <A NAME="Assemble">Assemble</A>()
+</B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+executes the assemble method for <B><TT>DwDateTime</TT></B> objects. It should
+be called whenever one of the object's attributes is changed in order to
+assemble the string representation from its broken-down representation. It
+will be called automatically for this object by the parent object's
+<B><TT>Assemble()</TT></B> member function if the is-modified flag is set.
+<P>
+This function clears the is-modified flag.
+<P>
+<FONT COLOR="teal"><B> virtual DwMessageComponent*
+<A NAME="Clone">Clone</A>() const </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+creates a new <B><TT>DwDateTime</TT></B> on the free store that has the same
+value as this <B><TT>DwDateTime</TT></B> object. The basic idea is that of
+a virtual copy constructor.
+<P>
+<FONT COLOR="teal"><B> DwUint32 <A NAME="AsUnixTime">AsUnixTime</A>() const
+</B></FONT>
+<P>
+Returns the date and time as a UNIX (POSIX) time, defined as the number of
+seconds elapsed since 1 Jan 1970 00:00:00 UTC.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="FromUnixTime">FromUnixTime</A>(DwUint32
+aTime) </B></FONT>
+<P>
+Sets the date and time from <B><TT>aTime</TT></B>, interpreted as the number
+of of seconds elapsed since 1 Jan 1970 00:00:00 UTC.
+<P>
+<FONT COLOR="teal"><B> time_t <A NAME="AsCalendarTime">AsCalendarTime</A>()
+const </B></FONT>
+<P>
+Returns the date and time as a value of type <B><TT>time_t</TT></B> that
+conforms to the native format returned by the <B><TT>time()</TT></B> ANSI
+C function. On most UNIX systems, this function returns the same value as
+<B><TT>AsUnixTime()</TT></B>. (For efficiency, use
+<B><TT>AsUnixTime()</TT></B> instead of <B><TT>AsCalendarTime()</TT></B>
+if possible).
+<P>
+<FONT COLOR="teal"><B> void
+<A NAME="FromCalendarTime">FromCalendarTime</A>(time_t aTime) </B></FONT>
+<P>
+Sets the date and time from <B><TT>aTime</TT></B>, which is assumed to be
+in a format compatible with the native <B><TT>time()</TT></B> ANSI C function.
+For most UNIX systems, this function is the same as the function
+<B><TT>FromUnixTime()</TT></B>. (For efficiency, use
+<B><TT>FromUnixTime()</TT></B> instead of
+<B><TT>FromCalendarTime()</TT></B> if possible).
+<P>
+<FONT COLOR="teal"><B> DwInt32
+<A NAME="DateAsJulianDayNum">DateAsJulianDayNum</A>() const </B></FONT>
+<P>
+Returns the Julian Day Number, defined as the number of days elapsed since
+1 Jan 4713 BC. The JDN is calculated directly from the values of the year,
+month, and day; time zone information is ignored.
+<P>
+<FONT COLOR="teal"><B> void
+<A NAME="DateFromJulianDayNum">DateFromJulianDayNum</A>(DwInt32 aJdn)
+</B></FONT>
+<P>
+Sets the year, month, and day from <B><TT>aJdn</TT></B>, interpreted as a
+Julian Day Number. By definition, the JDN is the number of days elapsed since
+1 Jan 4713 BC. This member function ignores time zone information.
+<P>
+<FONT COLOR="teal"><B> DwInt32
+<A NAME="TimeAsSecsPastMidnight">TimeAsSecsPastMidnight</A>() const
+</B></FONT>
+<P>
+Returns the number of seconds past midnight. The value is calculated directly
+from the values of the hour, minute, and second; time zone information is
+ignored.
+<P>
+<FONT COLOR="teal"><B> void
+<A NAME="TimeFromSecsPastMidnight">TimeFromSecsPastMidnight</A>(DwInt32 aSecs)
+</B></FONT>
+<P>
+Sets the hour, minute, and second from <B><TT>aSecs</TT></B>, interpreted
+as the number of seconds elapsed since midnight. This member function ignores
+time zone information. The argument <B><TT>aSecs</TT></B> should be in the
+range 0 to 86399, inclusive.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Year">Year</A>() const </B></FONT>
+<P>
+Returns the four digit year, e.g. 1997.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="SetYear">SetYear</A>(int aYear)
+</B></FONT>
+<P>
+Sets the year from <B><TT>aYear</TT></B>, which should be a four digit year.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Month">Month</A>() const </B></FONT>
+<P>
+Returns the month. Values range from 1 to 12.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="SetMonth">SetMonth</A>(int aMonth)
+</B></FONT>
+<P>
+Sets the month from <B><TT>aMonth</TT></B>, which should be in the range
+1 to 12.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Day">Day</A>() const </B></FONT>
+<P>
+Returns the day of the month. Values range from 1 to 31.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="SetDay">SetDay</A>(int aDay) </B></FONT>
+<P>
+Sets the day of the month from <B><TT>aDay</TT></B>.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Hour">Hour</A>() const </B></FONT>
+<P>
+Returns the hour according to the 24 hour clock. Values range from 0 to 23.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="SetHour">SetHour</A>(int aHour)
+</B></FONT>
+<P>
+Sets the hour from <B><TT>aHour</TT></B> based on the 24-hour clock.
+<B><TT>aHour</TT></B> should be in the range 0 to 23.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Minute">Minute</A>() const </B></FONT>
+<P>
+Returns the minute. Values range from 0 to 59.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="SetMinute">SetMinute</A>(int aMinute)
+</B></FONT>
+<P>
+Sets the minute from <B><TT>aMinute</TT></B>, which should be in the range
+0 to 59.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Second">Second</A>() const </B></FONT>
+<P>
+Returns the second. Values range from 0 to 59.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="SetSecond">SetSecond</A>(int aSecond)
+</B></FONT>
+<P>
+Sets the second from <B><TT>aSecond</TT></B>, which should be in the range
+0 to 59.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Zone">Zone</A>() const </B></FONT>
+<P>
+Returns the time zone as the diffence in minutes between local time and
+Coordinated Universal Time (UTC or GMT).
+<P>
+<FONT COLOR="teal"><B> void <A NAME="SetZone">SetZone</A>(int aZone)
+</B></FONT>
+<P>
+Sets the time zone from <B><TT>aZone</TT></B>, interpreted as the time difference
+in minutes between local time and Coordinated Universal Time (UTC, or GMT).
+<P>
+<FONT COLOR="teal"><B> static void
+<A NAME="SetDefaultZone">SetDefaultZone</A>(int aZone) </B></FONT>
+<P>
+Sets the default time zone. <B><TT>aZone</TT></B> should be the time difference
+in minutes between local time and Coordinated Universal Time (UTC, or GMT).
+The value is used to set the time zone for any objects created using the
+default constructor.
+<P>
+<FONT COLOR="teal"><B> static DwDateTime*
+<A NAME="NewDateTime">NewDateTime</A>(const DwString&amp;, DwMessageComponent*)
+</B></FONT>
+<P>
+Creates a new <B><TT>DwDateTime</TT></B> object on the free store. If the
+static data member <B><TT>sNewDateTime</TT></B> is <B><TT>NULL</TT></B>,
+this member function will create a new <B><TT>DwDateTime</TT></B> and return
+it. Otherwise, <B><TT>NewDateTime()</TT></B> will call the user-supplied
+function pointed to by <B><TT>sNewDateTime</TT></B>, which is assumed to
+return an object from a class derived from <B><TT>DwDateTime</TT></B>, and
+return that object.
+<P>
+<FONT COLOR="teal"><B> virtual void
+<A NAME="PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm, int aDepth=0)
+const </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+prints debugging information about this object to <B><TT>aStrm</TT></B>.
+<P>
+This member function is available only in the debug version of the library.
+<P>
+<FONT COLOR="teal"><B> virtual void
+<A NAME="CheckInvariants">CheckInvariants</A>() const </B></FONT>
+<P>
+Aborts if one of the invariants of the object fails. Use this member function
+to track down bugs.
+<P>
+This member function is available only in the debug version of the library.
+<H2>
+  <FONT COLOR="navy"> Public Data Members </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> static DwDateTime*
+(*<A NAME="sNewDateTime">sNewDateTime</A>)(const DwString&amp;,
+DwMessageComponent*) </B></FONT>
+<P>
+If <B><TT>sNewDateTime</TT></B> is not <B><TT>NULL</TT></B>, it is assumed
+to point to a user-supplied function that returns an object from a class
+derived from <B><TT>DwDateTime</TT></B>.
+<H2>
+  <FONT COLOR="navy"> Protected Member Functions </FONT>
+</H2>
+<P>
+<B><FONT COLOR="teal"> void
+<A NAME="_FromUnixTime">_FromUnixTime</A>(DwUint32 aTime) </FONT></B>
+<P>
+Like <B><TT>FromUnixTime()</TT></B>, but doesn't set the is-modified flag.
+<P>
+<B><FONT COLOR="teal"> void
+<A NAME="_FromCalendarTime">_FromCalendarTime</A>(time_t aTime) </FONT></B>
+<P>
+Like <B><TT>FromCalendarTime()</TT></B>, but doesn't set the is-modified
+flag.
+<P>
+</BODY></HTML>

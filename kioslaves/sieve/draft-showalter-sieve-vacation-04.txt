@@ -1,0 +1,396 @@
+
+
+
+
+
+
+Network Working Group                                       T. Showalter
+Internet Draft: Sieve: Vacation Extension                      Mirapoint
+Document: draft-showalter-sieve-vacation-04.txt           August 8, 2000
+Expire in six months
+
+
+                       Sieve: Vacation Extension
+
+
+Status of this memo
+
+   This document is an Internet-Draft and is in full conformance with
+   all provisions of Section 10 of RFC2026.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF), its areas, and its working groups.  Note that
+   other groups may also distribute working documents as Internet-
+   Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   The list of current Internet-Drafts can be accessed at
+   http://www.ietf.org/ietf/1id-abstracts.txt
+
+   The list of Internet-Draft Shadow Directories can be accessed at
+   http://www.ietf.org/shadow.html
+
+Copyright
+
+   Copyright (C) The Internet Society 2000.  All Rights Reserved.
+
+Abstract
+
+   This document describes an extension to the Sieve mail filtering
+   language for an autoresponder similar to that of the Unix "vacation"
+   command for replying to messages with certain safety features to
+   prevent problems.
+
+
+
+
+
+
+
+
+
+
+
+Showalter                 Expire in Six Months                  [Page 1]
+
+Internet DRAFT         Sieve: Vacation Extension          August 8, 2000
+
+
+0. Meta-information on this draft
+
+   This information is intended to facilitate discussion.  It will be
+   removed when this document leaves the Internet-Draft stage.
+
+0.1. Discussion
+
+   This draft is intended to be an extension to the Sieve mail filtering
+   language, avaliable from the Internet-Drafts repository as
+   <ftp://ftp.ietf.org/internet-drafts/draft-showalter-sieve-10.txt>
+   (where 10 is the version number, which is currently 10).
+
+   This draft and the Sieve language itself are being discussed on the
+   MTA Filters mailing list at <ietf-mta-filters@imc.org>.  Subscription
+   requests can be sent to <ietf-mta-filters-request@imc.org> (send an
+   email message with the word "subscribe" in the body).  More
+   information on the mailing list along with a WWW archive of back
+   messages is available at <http://www.imc.org/ietf-mta-filters/>.
+
+1. Introduction
+
+   This is an extension to the Sieve language defined by [SIEVE] for
+   notification that messages will not be immediately answered.
+
+   Conventions for notations are as in [SIEVE] section 1.1.
+
+   The key words "MUST", "MUST NOT", "SHOULD", "SHOULD NOT", "CAN", and
+   "MAY" in this document are to be interpreted as defined in
+   [KEYWORDS].
+
+2. Capability Identifier
+
+   Sieve implementations that implement vacation have an identifier of
+   "vacation" for use with the capability mechanism.
+
+3. Vacation Action
+
+   Syntax:   vacation [":days" number] [":addresses" string-list]
+             [":subject" string] [":mime"] <reason: string>
+
+   The "vacation" action implements a vacation autoresponder similar to
+   the vacation command  available under many versions of Unix.  Its
+   purpose is to provide correspondents with notification that the user
+   is away for an extended period of time and that they should not
+   expect quick responses.
+
+   "Vacation" is used to respond to a message with another message.
+   Vacation's messages are always addressed to the Return-Path address
+
+
+
+Showalter                 Expire in Six Months                  [Page 2]
+
+Internet DRAFT         Sieve: Vacation Extension          August 8, 2000
+
+
+   (that is, the envelope from address) of the message being responded
+   to.
+
+3.1. Days Parameter
+
+   The ":days" argument is used to specify the period in which addresses
+   are kept and are not responded to, and is always specified in days.
+   The minimum value used for this parameter is 1.  Sites MAY define a
+   different minimum value.  Sites MAY also define a maximum days value,
+   which MUST be greater than 7, and SHOULD be greater than 30.
+
+   If ":days" is omitted, the default value is either 7 or the minimum
+   value (as defined above), whichever is greater.
+
+   If the parameter given to ":days" is less than the minimum value,
+   then the minimum value is used instead.
+
+   If ":days" exceeds the site-defined maximum, the site-defined maximum
+   is used instead.
+
+3.2. Previous Response Tracking
+
+   "Vacation" keeps track of all of the addresses that it has responded
+   to in some period (as specified by the :days optional argument).  If
+   vacation has not previously responded to this address within that
+   time period, it sends the "reason" argument to the Return-Path
+   address of the message that is being responded to.
+
+   Vacation responses are not just per address, but are per address per
+   vacation command.  For instance, If coyote@desert sends mail to
+   roadrunner@acme, once with the subject "Cyrus bug" and once with the
+   subject "come over for dinner", and roadrunner@acme has the script
+   below, coyote@desert would receive two responses, once with the first
+   message, once with the second.
+
+   Example:  require "vacation";
+             if subject :contains "cyrus" {
+                        vacation "I'm out -- send mail to cyrus-bugs";
+             } else {
+                        vacation "I'm out -- call me at 304 555 1212";
+             }
+
+
+   Note that coyote@desert gets the second message despite having gotten
+   the first one because separate vacation responses have been
+   triggered.  This behavior is REQUIRED.
+
+   If a sieve script changes, implementations MAY reset the records of
+
+
+
+Showalter                 Expire in Six Months                  [Page 3]
+
+Internet DRAFT         Sieve: Vacation Extension          August 8, 2000
+
+
+   who has been responded to and when they have been responded to.
+   Alternatively, implementations can store records of who has received
+   which message, perhaps by storing a hash of the message and the
+   recipient.
+
+3.3. Subject Parameter
+
+   Users can specify the subject of the reply with the ":subject"
+   parameter.  If the :subject parameter is not supplied, then the
+   subject is generated as follows: The subject is set to the characters
+   "Re: " followed by the original subject with all leading occurrence
+   of the characters "Re: " stripped off.
+
+3.4. MIME Parameter
+
+   The ":mime" parameter, if supplied, specifies that the reason string
+   is, in fact, a MIME part, including MIME headers (see section 2.4.2.4
+   of [SIEVE]).
+
+   If the optional :mime parameter is not supplied, the reason string is
+   considered to be a UTF-8 string.
+
+3.5. In-Reply-To
+
+   Replies MUST have the In-Reply-To field set to the Message-ID of the
+   original message.
+
+3.6. Address Parameter and Limiting Replies to Personal Messages
+
+   "Vacation" MUST NOT respond to a message unless the user's email
+   address is in the "To", "Cc", or "Bcc" line of the original message.
+   Implementations are assumed to know the user's email address, but
+   users may have additional addresses beyond the control of the local
+   mail system.
+
+   Users can supply additional mail addresses that are theirs with the
+   ":addresses" argument, which takes a string-list listing additional
+   addresses that a user might have.  These addresses are considered in
+   addition to the addresses that the implementation knows.
+
+3.7. Restricting Replies to Automated Processes and Mailing Lists
+
+   Implementations MUST have a list of addresses that "vacation" MUST
+   NOT send mail to.  However, the contents of this list are
+   implementation defined.  The purpose of this list is to stop mail
+   from going to addresses used by system daemons that would not care if
+   the user is actually reading her mail.
+
+
+
+
+Showalter                 Expire in Six Months                  [Page 4]
+
+Internet DRAFT         Sieve: Vacation Extension          August 8, 2000
+
+
+   Implementations are encouraged, however, to include well-known
+   addresses like "MAILER-DAEMON", "LISTSERV", "majordomo", and other
+   addresses typically used only by automated systems.  Additionally,
+   addresses ending in "-request" or beginning in "owner-", i.e.,
+   reserved for mailing list software, are also suggested.
+
+   Implementors may take guidance from [MAILBOXNAMES], but should be
+   careful.  Some addresses, like "POSTMASTER", are generally actually
+   managed by people, and people do care if the user is going to be
+   unavailable.
+
+   Implementations SHOULD NOT not to respond to any message with a
+   header that begins with "List-".
+
+3.8. Interaction with Other Sieve Actions
+
+   Vacation does not affect the implicit keep.
+
+   Vacation can only be executed once per script.  If vacation  is  used
+   with another vacation, the script fails.
+
+   Implementations MUST NOT consider vacation used with  discard,  keep,
+   fileinto, or redirect an error.
+
+3.9. Examples
+
+   Here is a simple use of vacation.
+
+   Example:  require "vacation";
+             vacation :days 23
+                :addresses                           ["tjs@example.edu",
+                "ts4z@landru.example.edu"]
+                "I'm away until October 19.
+                If it's an emergency, call 911, I guess." ;
+
+   By mingling vacation with other rules, users can  do  something  more
+   selective.
+
+   Example:  require "vacation";
+             if header :contains "from" "boss@example.edu" {
+                redirect "pleeb@isp.example.org";
+             } else {
+                vacation "Sorry, I'm away, I'll read your message
+                   when I get around to it.";
+             }
+
+
+
+
+
+
+Showalter                 Expire in Six Months                  [Page 5]
+
+Internet DRAFT         Sieve: Vacation Extension          August 8, 2000
+
+
+4. Security Considerations
+   It is critical that implementations correctly implement the
+   limitations described above.  Replies MUST NOT be sent out in
+   response to messages not sent directly to the user, and replies MUST
+   NOT be sent out more often than the :days argument states.
+
+5. Author's Address
+
+   Tim Showalter
+   Mirapoint, Inc.
+   909 Hermosa Court
+   Sunnyvale, CA 94085
+
+   E-Mail: tjs@mirapoint.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Showalter                 Expire in Six Months                  [Page 6]
+
+Internet DRAFT         Sieve: Vacation Extension          August 8, 2000
+
+
+Appendix A.  References
+
+   [IMAIL] Crocker, D., "Standard for the Format of ARPA  Internet  Text
+   Messages", STD 11, RFC 822, University of Delaware, August 1982.
+
+   [KEYWORDS] Bradner, S., "Key  words  for  use  in  RFCs  to  Indicate
+   Requirement Levels", RFC 2119, Harvard University, March 1997.
+
+   [MAILBOXNAMES] Crocker, D. "Mailbox Names for Common Services, Roles,
+   and Functions", RFC 2142, Internet Mail Consortium, May, 1997.
+
+   [MIME] Freed, N., and  N.  Borenstein,  "Multipurpose  Internet  Mail
+   Extensions  (MIME)  Part One: Format of Internet Message Bodies", RFC
+   2045, Innosoft and First Virtual, November 1996.
+
+   [SIEVE]  Showalter,  T.,   "Sieve:  A   Mail   Filtering   Language",
+   Mirapoint, Inc., Work in Progress.
+
+Appendix B. Full Copyright Statement
+
+   Copyright (C) The Internet Society 2000. All Rights Reserved.
+
+   This document and translations of it may be copied and  furnished  to
+   others,  and derivative works that comment on or otherwise explain it
+   or assist in its implementation may be  prepared,  copied,  published
+   and  distributed,  in  whole  or  in part, without restriction of any
+   kind, provided that the above copyright notice and this paragraph are
+   included  on  all  such  copies  and derivative works.  However, this
+   document itself may not be modified in any way, such as  by  removing
+   the  copyright  notice or references to the Internet Society or other
+   Internet  organizations,  except  as  needed  for  the   purpose   of
+   developing  Internet  standards  in  which  case  the  procedures for
+   copyrights  defined  in  the  Internet  Standards  process  must   be
+   followed,  or  as  required to translate it into languages other than
+   English.
+
+   The limited permissions granted above are perpetual and will  not  be
+   revoked by the Internet Society or its successors or assigns.
+
+   This document and the information contained herein is provided on  an
+   "AS  IS"  basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+   TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS  OR  IMPLIED,  INCLUDING
+   BUT  NOT  LIMITED  TO  ANY  WARRANTY  THAT THE USE OF THE INFORMATION
+   HEREIN WILL NOT INFRINGE ANY RIGHTS  OR  ANY  IMPLIED  WARRANTIES  OF
+   MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+
+
+
+Showalter                 Expire in Six Months                  [Page 7]
+
+

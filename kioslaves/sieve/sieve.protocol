@@ -1,0 +1,14 @@
+[Protocol]
+exec=kio_sieve
+protocol=sieve
+input=none
+output=filesystem
+listing=Name,Access,Type,MimeType,
+reading=true
+writing=true
+makedir=false
+deleting=true
+linking=false
+moving=false
+Icon=remote
+Description=An ioslave for the Sieve mail filtering protocol

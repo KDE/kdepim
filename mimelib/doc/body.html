@@ -1,0 +1,308 @@
+<HTML>
+<HEAD>
+  <TITLE> DwBody Man Page </TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H2>
+  <FONT COLOR="navy"> NAME </FONT>
+</H2>
+<P>
+DwBody -- Class representing a MIME message body
+<H2>
+  <FONT COLOR="navy"> SYNOPSIS </FONT>
+</H2>
+<PRE>class DW_EXPORT DwBody : public <A HREF="msgcmp.html">DwMessageComponent</A> {
+
+    friend class DwHeaders;
+    friend class DwEntity;
+    friend class DwBodyPart;
+
+public:
+
+    <A HREF="body.html#DwBody">DwBody</A>();
+    <A HREF="body.html#DwBody">DwBody</A>(const DwBody&amp; aBody);
+    <A HREF="body.html#DwBody">DwBody</A>(const DwString&amp; aStr, DwMessageComponent* aParent=0);
+    virtual ~DwBody();
+    const DwBody&amp; <A HREF="body.html#op_eq">operator =</A> (const DwBody&amp; aBody);
+    virtual void <A HREF="body.html#Parse">Parse</A>();
+    virtual void <A HREF="body.html#Assemble">Assemble</A>();
+    virtual DwMessageComponent* <A HREF="body.html#Clone">Clone</A>() const;
+    DwBodyPart* <A HREF="body.html#FirstBodyPart">FirstBodyPart</A>() const;
+    void <A HREF="body.html#AddBodyPart">AddBodyPart</A>(DwBodyPart* aPart);
+    DwMessage* <A HREF="body.html#Message">Message</A>() const;
+    void <A HREF="body.html#SetMessage">SetMessage</A>(DwMessage* aMessage);
+    static DwBody* <A HREF="body.html#NewBody">NewBody</A>(const DwString&amp; aStr, DwMessageComponent* aParent);
+    static DwBody* (*<A HREF="body.html#sNewBody">sNewBody</A>)(const DwString&amp;, DwMessageComponent*);
+
+protected:
+
+    DwString    <A HREF="body.html#mBoundaryStr">mBoundaryStr</A>;
+    DwString    <A HREF="body.html#mPreamble">mPreamble</A>;
+    DwString    <A HREF="body.html#mEpilogue">mEpilogue</A>;
+    DwBodyPart* <A HREF="body.html#mFirstBodyPart">mFirstBodyPart</A>;
+    DwMessage*  <A HREF="body.html#mMessage">mMessage</A>;
+    static const char* const sClassName;
+    void <A HREF="body.html#_AddBodyPart">_AddBodyPart</A>(DwBodyPart*);
+    void <A HREF="body.html#_SetMessage">_SetMessage</A>(DwMessage*);
+    void DeleteBodyParts();
+    void CopyBodyParts(const DwBodyPart* aFirst);
+
+public:
+
+    virtual void <A HREF="body.html#PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm, int aDepth=0) const;
+    virtual void <A HREF="body.html#CheckInvariants">CheckInvariants</A>() const;
+
+protected:
+
+    void _PrintDebugInfo(ostream&amp; aStrm) const;
+};
+</PRE>
+<H2>
+  <FONT COLOR="navy"> DESCRIPTION </FONT>
+</H2>
+<P>
+<B><TT>DwBody</TT></B> represents a <I>body</I>, as described in RFC-2045.
+A body is always part of an <I>entity</I>, which could be either a
+<I>message</I> or a <I>body part</I>. An entity has a collection of <I>header
+fields</I> and a body. If the content type of a body is ``multipart,'' then
+the body contains one or more body parts. If the content type is ``message,''
+then the body contains an encapsulated message. In all content types, the
+body contains a string of characters.
+<P>
+In MIME++, a <B><TT>DwBody</TT></B> object is contained in a
+<B><TT><A HREF="entity.html">DwEntity</A></TT></B> object. The
+<B><TT>DwBody</TT></B> object may contain a discrete body consisting only
+of a string of characters, or it may be a composite body, consisting of several
+contained <B><TT><A HREF="bodypart.html">DwBodyPart</A></TT></B> objects
+or a single contained
+<B><TT><A HREF="message.html">DwMessage</A></TT></B> object. The only reliable
+way to determine the type of <B><TT>DwBody</TT></B> is to access the Content-Type
+header field from the
+<B><TT><A HREF="headers.html">DwHeaders</A></TT></B> object of the
+<B><TT>DwEntity</TT></B> that contains it. For this reason, a
+<B><TT>DwBody</TT></B> should always be part of a
+<B><TT>DwEntity</TT></B>.
+<P>
+In the tree (broken-down) representation of a message, a
+<B><TT>DwBody</TT></B> object can be an intermediate node, having both a
+parent node and one or more child nodes, or a leaf node, having a parent
+but no child nodes. In either case, the parent node is the
+<B><TT>DwEntity</TT></B> object that contains it. If it is an intermediate
+node, it must be of type multipart with <B><TT>DwBodyPart</TT></B> objects
+as child nodes, or of type message with a single
+<B><TT>DwMessage</TT></B> object as its child node.
+<P>
+Normally, you do not create a <B><TT>DwBody</TT></B> object directly, but
+you access it through the <B><TT>Body()</TT></B> member function of
+<B><TT>DwEntity</TT></B>, which creates the <B><TT>DwBody</TT></B> object
+for you.
+<P>
+To add a <B><TT>DwBodyPart</TT></B> to a multipart
+<B><TT>DwBody</TT></B>, use the member function
+<B><TT>AddBodyPart()</TT></B>. To iterate over the
+<B><TT>DwBodyParts</TT></B> contained in multipart
+<B><TT>DwBody</TT></B>, get the first <B><TT>DwBodyPart</TT></B> by calling
+<B><TT>FirstBodyPart()</TT></B>. Then get the following
+<B><TT>DwBodyParts</TT></B> by calling <B><TT>DwBodyPart::Next()</TT></B>
+on the current <B><TT>DwBodyPart</TT></B>. To get the
+<B><TT>DwMessage</TT></B> contained in a <B><TT>Body</TT></B> with message
+content type, call <B><TT>Message()</TT></B>.
+<H2>
+  <FONT COLOR="navy"> Public Member Functions </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> <A NAME="DwBody">DwBody</A>() <BR>
+DwBody(const DwBody&amp; aBody) <BR>
+DwBody(const DwString&amp; aStr, DwMessageComponent* aParent=0) </B></FONT>
+<P>
+The first constructor is the default constructor, which sets the
+<B><TT>DwBody</TT></B> object's string representation to the empty string
+and sets its parent to <B><TT>NULL</TT></B>.
+<P>
+The second constructor is the copy constructor, which performs a deep copy
+of <B><TT>aBody</TT></B>. The parent of the new <B><TT>DwBody</TT></B> object
+is set to <B><TT>NULL</TT></B>.
+<P>
+The third constructor copies <B><TT>aStr</TT></B> to the
+<B><TT>DwBody</TT></B> object's string representation and sets
+<B><TT>aParent</TT></B> as its parent. The virtual member function
+<B><TT>Parse()</TT></B> should be called immediately after this constructor
+in order to parse the string representation. Unless it is
+<B><TT>NULL</TT></B>, <B><TT>aParent</TT></B> should point to an object of
+a class derived from <B><TT>DwEntity</TT></B>.
+<P>
+<FONT COLOR="teal"><B> const DwBody&amp; <A NAME="op_eq">operator =</A> (const
+DwBody&amp; aBody) </B></FONT>
+<P>
+This is the assignment operator, which performs a deep copy of
+<B><TT>aBody</TT></B>. The parent node of the <B><TT>DwBody</TT></B> object
+is not changed.
+<P>
+<FONT COLOR="teal"><B> virtual void <A NAME="Parse">Parse</A>() </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+executes the parse method for <B><TT>DwBody</TT></B> objects. The parse method
+creates or updates the broken-down representation from the string representation.
+For a multipart <B><TT>DwBody</TT></B> object, the parse method creates a
+collection of <B><TT>DwBodyPart</TT></B> objects. For a message
+<B><TT>DwBody</TT></B>, the parse method creates a single
+<B><TT>DwMessage</TT></B> object. For any other type of
+<B><TT>DwBody</TT></B>, the parse method does nothing. This member function
+calls the <B><TT>Parse()</TT></B> member function of any objects it creates.
+<P>
+Note: If the <B><TT>DwBody</TT></B> object has no parent node -- that is,
+it is not contained by a <B><TT>DwEntity</TT></B> object -- then the parse
+method does nothing, since it is unable to determine the type of body.
+<P>
+You should call this member function after you set or modify the string
+representation, and before you access a contained
+<B><TT>DwBodyPart</TT></B> or <B><TT>DwMessage</TT></B>.
+<P>
+This function clears the is-modified flag.
+<P>
+<FONT COLOR="teal"><B> virtual void <A NAME="Assemble">Assemble</A>()
+</B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+executes the assemble method for <B><TT>DwBody</TT></B> objects. The assemble
+method creates or updates the string representation from the broken-down
+representation. Only <B><TT>DwBody</TT></B> objects with content type of
+multipart or message require assembling. In either case, the
+<B><TT>DwBody</TT></B> object must be able to find the headers of the message
+or body part that contains it. Therefore, if the <B><TT>DwBody</TT></B> object
+is not the child of a <B><TT>DwEntity</TT></B> (<I>i.e.</I>,
+<B><TT>DwMessage</TT></B> or <B><TT>DwBodyPart</TT></B>) object, the
+<B><TT>DwBody</TT></B> cannot be assembled because the content type cannot
+be determined.
+<P>
+This function calls the <B><TT>Parse()</TT></B> member function of any
+<B><TT>DwBodyPart</TT></B> or <B><TT>DwMessage</TT></B> object it contains.
+<P>
+You should call this member function after you add a
+<B><TT>DwBodyPart</TT></B> object to a multipart body, or add a
+<B><TT>DwMessage</TT></B> object to a message body, and before you access
+the object's string representation.
+<P>
+This function clears the is-modified flag.
+<P>
+<FONT COLOR="teal"><B> virtual DwMessageComponent*
+<A NAME="Clone">Clone</A>() const </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+creates a new <B><TT>DwBody</TT></B> on the free store that has the same
+value as this <B><TT>DwBody</TT></B> object. The basic idea is that of a
+virtual copy constructor.
+<P>
+<FONT COLOR="teal"><B> DwBodyPart*
+<A NAME="FirstBodyPart">FirstBodyPart</A>() const </B></FONT>
+<P>
+For a multipart <B><TT>DwBody</TT></B>, this member function returns the
+first contained <B><TT>DwBodyPart</TT></B> object. Use
+<B><TT>DwBodyPart::Next()</TT></B> to iterate through the list of
+<B><TT>DwBodyPart</TT></B>s.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="AddBodyPart">AddBodyPart</A>(DwBodyPart*
+aPart) </B></FONT>
+<P>
+For a multipart <B><TT>DwBody</TT></B>, this member function appends a
+<B><TT>DwBodyPart</TT></B> object to the list. Any
+<B><TT>DwBodyPart</TT></B> objects added to a <B><TT>DwBody</TT></B> object's
+list will be deleted by the <B><TT>DwBody</TT></B> object's destructor.
+<P>
+<FONT COLOR="teal"><B> Dw<A NAME="Message">Message</A>* Message() const
+</B></FONT>
+<P>
+For a <B><TT>DwBody</TT></B> with content type of message, this member function
+returns the <B><TT>DwMessage</TT></B> encapsulated in it.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="SetMessage">SetMessage</A>(DwMessage*
+aMessage) </B></FONT>
+<P>
+For a <B><TT>DwBody</TT></B> with content type of message, this member function
+sets the <B><TT>DwMessage</TT></B> object it contains.
+<P>
+<FONT COLOR="teal"><B> static DwBody* <A NAME="NewBody">NewBody</A>(const
+DwString&amp; aStr, DwMessageComponent* aParent) </B></FONT>
+<P>
+Creates a new <B><TT>DwBody</TT></B> object on the free store. If the static
+data member <B><TT>sNewBody</TT></B> is <B><TT>NULL</TT></B>, this member
+function will create a new <B><TT>DwBody</TT></B> and return it. Otherwise,
+<B><TT>NewBody()</TT></B> will call the user-supplied function pointed to
+by <B><TT>sNewBody</TT></B>, which is assumed to return an object from a
+class derived from <B><TT>DwBody</TT></B>, and return that object.
+<P>
+<FONT COLOR="teal"><B> virtual void
+<A NAME="PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm, int aDepth=0)
+const </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+prints debugging information about this object to <B><TT>aStrm</TT></B>.
+It will also call <B><TT>PrintDebugInfo()</TT></B> for any of its child
+components down to a level of <B><TT>aDepth</TT></B>.
+<P>
+This member function is available only in the debug version of the library.
+<P>
+<FONT COLOR="teal"><B> virtual void
+<A NAME="CheckInvariants">CheckInvariants</A>() const </B></FONT>
+<P>
+Aborts if one of the invariants of the object fails. Use this member function
+to track down bugs.
+<P>
+This member function is available only in the debug version of the library.
+<H2>
+  <FONT COLOR="navy"> Public Data Members </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> static DwBody*
+(*<A NAME="sNewBody">sNewBody</A>)(const DwString&amp;, DwMessageComponent*)
+</B></FONT>
+<P>
+If <B><TT>sNewBody</TT></B> is not <B><TT>NULL</TT></B>, it is assumed to
+point to a user-supplied function that returns an object from a class derived
+from <B><TT>DwBody</TT></B>.
+<H2>
+  <FONT COLOR="navy"> Protected Member Functions </FONT>
+</H2>
+<P>
+<B><FONT COLOR="teal"> void
+<A NAME="_AddBodyPart">_AddBodyPart</A>(DwBodyPart*) </FONT></B>
+<P>
+Adds a body part to a multipart body. This function differs from
+<B><TT>AddBodyPart</TT></B> in that it does not set the is-modified flag.
+<P>
+<B><FONT COLOR="teal"> void <A NAME="_SetMessage">_SetMessage</A>(DwMessage*)
+</FONT></B>
+<P>
+Sets a message to a body. This function differs from
+<B><TT>SetMessage()</TT></B> in that it does not set the is-modified flag.
+<H2>
+  <FONT COLOR="navy"> Protected Data Members </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> DwString <A NAME="mBoundaryStr">mBoundaryStr</A>
+</B></FONT>
+<P>
+A cache for the boundary string, which is obtained from the headers associated
+with this body.
+<P>
+<FONT COLOR="teal"><B> DwString <A NAME="mPreamble">mPreamble</A> </B></FONT>
+<P>
+Contains the preamble -- the text preceding the first boundary -- in a
+``multipart/*'' media type.
+<P>
+<FONT COLOR="teal"><B> DwString <A NAME="mEpilogue">mEpilogue</A> </B></FONT>
+<P>
+Contains the epilogue -- the text following the last boundary -- in a
+``multipart/*'' media type.
+<P>
+<FONT COLOR="teal"><B> DwBodyPart*
+<A NAME="mFirstBodyPart">mFirstBodyPart</A> </B></FONT>
+<P>
+Points to the first body part in a ``multipart/*'' media type. Is
+<B><TT>NULL</TT></B> if there are no body parts.
+<P>
+<FONT COLOR="teal"><B> DwMessage* <A NAME="mMessage">mMessage</A> </B></FONT>
+<P>
+Points to the contained message, in a ``message/*'' media type.
+<P>
+</BODY></HTML>

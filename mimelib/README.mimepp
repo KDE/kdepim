@@ -1,0 +1,38 @@
+This is the README file for the MIME++ library.
+
+**** Important: Please read the file LICENSE for information about using
+mime++. mime++ may be used for non-commercial use without paying a license
+fee; however, by downloading or using the software, you agree to abide by
+the terms of the Non-Commercial License. ****
+
+MIME++ is a C++ class library for creating, parsing, and modifying messages
+in MIME format.
+
+See the file INSTALL for information about how to compile the library.
+
+The library classes themselves are somewhat low-level.  The example programs
+use wrapper classes.  This technique of using wrapper classes is the
+recommended way to use MIME++ for two reasons.  First, it will isolate your
+application from the low-level, implementation details of the library.
+Second, it will help to isolate your application from future changes in
+the library classes.  If you are familiar with the idea of design patterns,
+the wrapper classes implement the facade pattern.
+
+To learn the library, I suggest you first take a look at the text file
+"Tutorial", which contains a tutorial.  Then, I suggest browsing the HTML
+man pages, which can all be referenced from doc/mimepp.html.  If you do
+not have an HTML browser available, use your favorite editor to view the
+.h files.  All the text of the man pages is embedded as comments in the .h
+files.  Look especially at the man pages for DwString and
+DwMessageComponent, the base class of nearly all MIME components.  Also,
+look at the example programs.  As a starting point for your own
+application, I suggest you start with the source code for one or more of
+the wrapper classes (BasicMessage, declared and defined in basicmsg.*;
+MultipartMessage, declared and defined in multipar.*; and
+MessageWithAttachments, declared and defined in attach.*) and modify it
+for your own use.
+
+Please send me any comments, questions, bug reports, or whatever.
+
+Doug Sauder
+dwsauder@fwb.gulf.net

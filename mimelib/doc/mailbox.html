@@ -1,0 +1,238 @@
+<HTML>
+<HEAD>
+  <TITLE> DwMailbox Man Page </TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H2>
+  <FONT COLOR="navy"> NAME </FONT>
+</H2>
+<P>
+DwMailbox -- Class representing an RFC-822 mailbox
+<H2>
+  <FONT COLOR="navy"> SYNOPSIS </FONT>
+</H2>
+<PRE>class DW_EXPORT DwMailbox : public <A HREF="address.html">DwAddress</A> {
+
+    friend class DwMailboxList;
+
+public:
+
+    <A HREF="mailbox.html#DwMailbox">DwMailbox</A>();
+    <A HREF="mailbox.html#DwMailbox">DwMailbox</A>(const DwMailbox&amp; aMailbox);
+    <A HREF="mailbox.html#DwMailbox">DwMailbox</A>(const DwString&amp; aStr, DwMessageComponent* aParent=0);
+    virtual ~DwMailbox();
+    const DwMailbox&amp; <A HREF="mailbox.html#op_eq">operator =</A> (const DwMailbox&amp; aMailbox);
+    virtual void <A HREF="mailbox.html#Parse">Parse</A>();
+    virtual void <A HREF="mailbox.html#Assemble">Assemble</A>();
+    virtual DwMessageComponent* <A HREF="mailbox.html#Clone">Clone</A>() const;
+    const DwString&amp; <A HREF="mailbox.html#FullName">FullName</A>() const;
+    void <A HREF="mailbox.html#SetFullName">SetFullName</A>(const DwString&amp; aFullName);
+    const DwString&amp; <A HREF="mailbox.html#Route">Route</A>() const;
+    void <A HREF="mailbox.html#SetRoute">SetRoute</A>(const DwString&amp; aRoute);
+    const DwString&amp; <A HREF="mailbox.html#LocalPart">LocalPart</A>() const;
+    void <A HREF="mailbox.html#SetLocalPart">SetLocalPart</A>(const DwString&amp; aLocalPart);
+    const DwString&amp; <A HREF="mailbox.html#Domain">Domain</A>() const;
+    void <A HREF="mailbox.html#SetDomain">SetDomain</A>(const DwString&amp; aDomain);
+    static DwMailbox* <A HREF="mailbox.html#NewMailbox">NewMailbox</A>(const DwString&amp; aStr, DwMessageComponent*
+        aParent);
+    static DwMailbox* (*<A HREF="mailbox.html#sNewMailbox">sNewMailbox</A>)(const DwString&amp;, DwMessageComponent*);
+
+public:
+
+    virtual void <A HREF="mailbox.html#PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm, int aDepth=0) const;
+    virtual void <A HREF="mailbox.html#CheckInvariants">CheckInvariants</A>() const;
+
+protected:
+
+    void _PrintDebugInfo(ostream&amp; aStrm) const;
+};
+</PRE>
+<H2>
+  <FONT COLOR="navy"> DESCRIPTION </FONT>
+</H2>
+<P>
+RFC-822 defines a <I>mailbox</I> as an entity that can be the recipient of
+a message. A mailbox is more specific than an <I>address</I>, which may be
+either a mailbox or a <I>group</I>. An RFC-822 mailbox contains a full name,
+a <I>local-part</I>, an optional <I>route</I>, and a <I>domain</I>. For example,
+in the mailbox
+<P>
+Joe Schmoe &lt;jschmoe@aol.co&gt;
+<P>
+"Joe Schmoe" is the full name, "jschmoe" is the local-part, and "aol.com"
+is the domain. The optional route is rarely seen in current usage, and is
+deprecated according to RFC-1123.
+<P>
+In MIME++, an RFC-822 mailbox is represented by a
+<B><TT>DwMailbox</TT></B> object. <B><TT>DwMailbox</TT></B> is a subclass
+of <B><TT><A HREF="address.html">DwAddress</A></TT></B>, which reflects the
+fact that a mailbox is also an address. A <B><TT>DwMailbox</TT></B> contains
+strings representing the full name, local-part, route, and domain of a mailbox.
+<P>
+In the tree (broken-down) representation of message, a
+<B><TT>DwMailbox</TT></B> object may be only a leaf node, having a parent
+but no child nodes. Its parent node must be a
+<B><TT><A HREF="field.html">DwField</A></TT></B>, a
+<B><TT><A HREF="addrlist.html">DwAddressList</A></TT></B>, or a
+<B><TT><A HREF="mboxlist.html">DwMailboxList</A></TT></B> object.
+<P>
+<B><TT>DwMailbox</TT></B> has member functions for getting or setting the
+strings it contains.
+<P>
+<B><TT>DwMailbox</TT></B> object can be included in a list of
+<B><TT>DwMailbox</TT></B> objects. To get the next
+<B><TT>DwMailbox</TT></B> object in a list, use the inherited member function
+<B><TT>DwAddress::Next()</TT></B>.
+<H2>
+  <FONT COLOR="navy"> Public Member Functions </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> <A NAME="DwMailbox">DwMailbox</A>() <BR>
+DwMailbox(const DwMailbox&amp; aMailbox) <BR>
+DwMailbox(const DwString&amp; aStr, DwMessageComponent* aParent=0)
+</B></FONT>
+<P>
+The first constructor is the default constructor, which sets the
+<B><TT>DwMailbox</TT></B> object's string representation to the empty string
+and sets its parent to <B><TT>NULL</TT></B>.
+<P>
+The second constructor is the copy constructor, which performs a deep copy
+of <B><TT>aMailbox</TT></B>. The parent of the new
+<B><TT>DwMailbox</TT></B> is set to <B><TT>NULL</TT></B>.
+<P>
+The third constructor copies <B><TT>aStr</TT></B> to the
+<B><TT>DwMailbox</TT></B> object's string representation and sets
+<B><TT>aParent</TT></B> as its parent. The virtual member function
+<B><TT>Parse()</TT></B> should be called immediately after this constructor
+in order to parse the string representation. Unless it is
+<B><TT>NULL</TT></B>, <B><TT>aParent</TT></B> should point to an object of
+a class derived from <B><TT>DwField</TT></B>.
+<P>
+<FONT COLOR="teal"><B> const DwMailbox&amp; <A NAME="op_eq">operator =</A>
+(const DwMailbox&amp; aMailbox) </B></FONT>
+<P>
+This is the assignment operator, which performs a deep copy of
+<B><TT>aMailbox</TT></B>. The parent node of the
+<B><TT>DwMailbox</TT></B> object is not changed.
+<P>
+<FONT COLOR="teal"><B> virtual void <A NAME="Parse">Parse</A>() </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+executes the parse method for <B><TT>DwMailbox</TT></B> objects. The parse
+method creates or updates the broken-down representation from the string
+representation. For <B><TT>DwMailbox</TT></B> objects, the parse method parses
+the string representation into the substrings for the full name, local-part,
+route, and domain.
+<P>
+You should call this member function after you set or modify the string
+representation, and before you retrieve the full name, local-part, route,
+or domain.
+<P>
+This function clears the is-modified flag.
+<P>
+<FONT COLOR="teal"><B> virtual void <A NAME="Assemble">Assemble</A>()
+</B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+executes the assemble method for <B><TT>DwMailbox</TT></B> objects. The assemble
+method creates or updates the string representation from the broken-down
+representation. For <B><TT>DwMailbox</TT></B> objects, the assemble method
+builds the string representation from the full name, local-part, route, and
+domain strings.
+<P>
+You should call this member function after you modify the full name, local-part,
+route, or domain, and before you retrieve the string representation.
+<P>
+This function clears the is-modified flag.
+<P>
+<FONT COLOR="teal"><B> virtual DwMessageComponent*
+<A NAME="Clone">Clone</A>() const </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+creates a new <B><TT>DwMailbox</TT></B> on the free store that has the same
+value as this <B><TT>DwMailbox</TT></B> object. The basic idea is that of
+a virtual copy constructor.
+<P>
+<FONT COLOR="teal"><B> const DwString&amp; <A NAME="FullName">FullName</A>()
+const </B></FONT>
+<P>
+Returns the full name for this <B><TT>DwMailbox</TT></B> object.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="SetFullName">SetFullName</A>(const
+DwString&amp; aFullName) </B></FONT>
+<P>
+Sets the full name for this <B><TT>DwMailbox</TT></B> object.
+<P>
+<FONT COLOR="teal"><B> const DwString&amp; <A NAME="Route">Route</A>() const
+</B></FONT>
+<P>
+Returns the route for this <B><TT>DwMailbox</TT></B> object.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="SetRoute">SetRoute</A>(const DwString&amp;
+aRoute) </B></FONT>
+<P>
+Sets the route for this <B><TT>DwMailbox</TT></B> object.
+<P>
+<FONT COLOR="teal"><B> const DwString&amp;
+<A NAME="LocalPart">LocalPart</A>() const </B></FONT>
+<P>
+Returns the local-part for this <B><TT>DwMailbox</TT></B> object.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="SetLocalPart">SetLocalPart</A>(const
+DwString&amp; aLocalPart) </B></FONT>
+<P>
+Sets the local-part for this <B><TT>DwMailbox</TT></B> object.
+<P>
+<FONT COLOR="teal"><B> const DwString&amp; <A NAME="Domain">Domain</A>()
+const </B></FONT>
+<P>
+Returns the domain for this <B><TT>DwMailbox</TT></B> object.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="SetDomain">SetDomain</A>(const
+DwString&amp; aDomain) </B></FONT>
+<P>
+Sets the domain for this <B><TT>DwMailbox</TT></B> object.
+<P>
+<FONT COLOR="teal"><B> static DwMailbox*
+<A NAME="NewMailbox">NewMailbox</A>(const DwString&amp; aStr, DwMessageComponent*
+aParent) </B></FONT>
+<P>
+Creates a new <B><TT>DwMailbox</TT></B> object on the free store. If the
+static data member <B><TT>sNewMailbox</TT></B> is <B><TT>NULL</TT></B>, this
+member function will create a new <B><TT>DwMailbox</TT></B> and return it.
+Otherwise, <B><TT>NewMailbox()</TT></B> will call the user-supplied function
+pointed to by <B><TT>sNewMailbox</TT></B>, which is assumed to return an
+object from a class derived from <B><TT>DwMailbox</TT></B>, and return that
+object.
+<P>
+<FONT COLOR="teal"><B> virtual void
+<A NAME="PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm, int aDepth=0)
+const </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+prints debugging information about this object to <B><TT>aStrm</TT></B>.
+It will also call <B><TT>PrintDebugInfo()</TT></B> for any of its child
+components down to a level of <B><TT>aDepth</TT></B>.
+<P>
+This member function is available only in the debug version of the library.
+<P>
+<FONT COLOR="teal"><B> virtual void
+<A NAME="CheckInvariants">CheckInvariants</A>() const </B></FONT>
+<P>
+Aborts if one of the invariants of the object fails. Use this member function
+to track down bugs.
+<P>
+This member function is available only in the debug version of the library.
+<H2>
+  <FONT COLOR="navy"> Public Data Members </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> static DwMailbox*
+(*<A NAME="sNewMailbox">sNewMailbox</A>)(const DwString&amp;,
+DwMessageComponent*) </B></FONT>
+<P>
+If <B><TT>sNewMailbox</TT></B> is not <B><TT>NULL</TT></B>, it is assumed
+to point to a user-supplied function that returns an object from a class
+derived from <B><TT>DwMailbox</TT></B>.
+<P>
+</BODY></HTML>

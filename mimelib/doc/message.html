@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+  <TITLE> DwMessage Man Page </TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H2>
+  <FONT COLOR="navy"> NAME </FONT>
+</H2>
+<P>
+DwMessage -- Class representing an RFC-822/MIME message
+<H2>
+  <FONT COLOR="navy"> SYNOPSIS </FONT>
+</H2>
+<PRE>class DW_EXPORT DwMessage : public <A HREF="entity.html">DwEntity</A> {
+
+public:
+
+    <A HREF="message.html#DwMessage">DwMessage</A>();
+    <A HREF="message.html#DwMessage">DwMessage</A>(const DwMessage&amp; aMessage);
+    <A HREF="message.html#DwMessage">DwMessage</A>(const DwString&amp; aStr, DwMessageComponent* aParent=0);
+    virtual ~DwMessage();
+    const DwMessage&amp; <A HREF="message.html#op_eq">operator =</A> (const DwMessage&amp; aMessage);
+    virtual DwMessageComponent* <A HREF="message.html#Clone">Clone</A>() const;
+    static DwMessage* <A HREF="message.html#NewMessage">NewMessage</A>(const DwString&amp; aStr,
+        DwMessageComponent* aParent);
+    static DwMessage* (*<A HREF="message.html#sNewMessage">sNewMessage</A>)(const DwString&amp;, DwMessageComponent*);
+
+public:
+
+    virtual void <A HREF="message.html#PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm, int aDepth=0) const;
+
+protected:
+
+    void _PrintDebugInfo(ostream&amp; aStrm) const;
+};
+</PRE>
+<H2>
+  <FONT COLOR="navy"> DESCRIPTION </FONT>
+</H2>
+<P>
+<B><TT>DwMessage</TT></B> represents an RFC-822/MIME <I>message</I>.
+<P>
+A <I>message</I> contains both a collection of <I>header fields</I> and a
+<I>body</I>. In the terminology of RFC-2045, the general term for the
+headers-body combination is <I>entity</I>. In MIME++,
+<B><TT>DwMessage</TT></B> is a direct subclass of
+<B><TT><A HREF="entity.html">DwEntity</A></TT></B>, and therefore contains
+both a <B><TT><A HREF="headers.html">DwHeaders</A></TT></B> object and a
+<B><TT><A HREF="body.html">DwBody</A></TT></B> object.
+<P>
+In the tree (broken-down) representation of message, a
+<B><TT>DwMessage</TT></B> object is almost always a root node, having child
+nodes but no parent node. The child nodes are the
+<B><TT>DwHeaders</TT></B> object and the <B><TT>DwBody</TT></B> object it
+contains. A <B><TT>DwMessage</TT></B> may sometimes be an intermediate node.
+In this special case, the parent node is a <B><TT>DwBody</TT></B> object
+of type "message/*" and the <B><TT>DwMessage</TT></B> object represents an
+encapsulated message.
+<P>
+To access the contained <B><TT>DwHeaders</TT></B> object, use the inherited
+member function <B><TT>DwEntity::Headers()</TT></B>. To access the contained
+<B><TT>DwBody</TT></B> object, use the inherited member function
+<B><TT>DwEntity::Body()</TT></B>.
+<H2>
+  <FONT COLOR="navy"> Public Member Functions </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> <A NAME="DwMessage">DwMessage</A>() <BR>
+DwMessage(const DwMessage&amp; aMessage) <BR>
+DwMessage(const DwString&amp; aStr, DwMessageComponent* aParent=0)
+</B></FONT>
+<P>
+The first constructor is the default constructor, which sets the
+<B><TT>DwMessage</TT></B> object's string representation to the empty string
+and sets its parent to <B><TT>NULL</TT></B>.
+<P>
+The second constructor is the copy constructor, which performs a deep copy
+of <B><TT>aMessage</TT></B>. The parent of the new
+<B><TT>DwMessage</TT></B> object is set to <B><TT>NULL</TT></B>.
+<P>
+The third constructor copies <B><TT>aStr</TT></B> to the
+<B><TT>DwMessage</TT></B> object's string representation and sets
+<B><TT>aParent</TT></B> as its parent. The virtual member function
+<B><TT>Parse()</TT></B> should be called immediately after this constructor
+in order to parse the string representation.
+<P>
+<FONT COLOR="teal"><B> const DwMessage&amp; <A NAME="op_eq">operator =</A>
+(const DwMessage&amp; aMessage) </B></FONT>
+<P>
+This is the assignment operator, which performs a deep copy of
+<B><TT>aMessage</TT></B>. The parent node of the
+<B><TT>DwMessage</TT></B> object is not changed.
+<P>
+<FONT COLOR="teal"><B> virtual DwMessageComponent*
+<A NAME="Clone">Clone</A>() const </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+creates a new <B><TT>DwMessage</TT></B> on the free store that has the same
+value as this <B><TT>DwMessage</TT></B> object. The basic idea is that of
+a ``virtual copy constructor.''
+<P>
+<FONT COLOR="teal"><B> static DwMessage*
+<A NAME="NewMessage">NewMessage</A>(const DwString&amp; aStr, DwMessageComponent*
+aParent) </B></FONT>
+<P>
+Creates a new <B><TT>DwMessage</TT></B> object on the free store. If the
+static data member <B><TT>sNewMessage</TT></B> is <B><TT>NULL</TT></B>, this
+member function will create a new <B><TT>DwMessage</TT></B> and return it.
+Otherwise, <B><TT>NewMessage()</TT></B> will call the user-supplied function
+pointed to by <B><TT>sNewMessage</TT></B>, which is assumed to return an
+object from a class derived from <B><TT>DwMessage</TT></B>, and return that
+object.
+<P>
+<FONT COLOR="teal"><B> virtual void
+<A NAME="PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm, int aDepth=0)
+const </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+prints debugging information about this object to <B><TT>aStrm</TT></B>.
+It will also call <B><TT>PrintDebugInfo()</TT></B> for any of its child
+components down to a level of <B><TT>aDepth</TT></B>.
+<P>
+This member function is available only in the debug version of the library.
+<H2>
+  <FONT COLOR="navy"> Public Data Members </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> static DwMessage*
+(*<A NAME="sNewMessage">sNewMessage</A>)(const DwString&amp;,
+DwMessageComponent*) </B></FONT>
+<P>
+If <B><TT>sNewMessage</TT></B> is not <B><TT>NULL</TT></B>, it is assumed
+to point to a user supplied function that returns an object from a class
+derived from <B><TT>DwMessage</TT></B>.
+<P>
+</BODY></HTML>

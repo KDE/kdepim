@@ -1,0 +1,20 @@
+Trailing spaces should be stripped:
+Here, only five trailing spaces should appear:    
+Trailing tabs should be stripped:
+Here, only five trailing spaces should appear:    
+Trailing mixture of tabs and spaces should be stripped:
+Trailing mixture of tabs and spaces should be stripped:
+Tab, space, space, tab:	  	
+Space, tab, tab, space: 		 
+
+Trailing spaces should be stripped:
+Trailing tabs should be stripped:
+Trailing mixture of tabs and spaces should be stripped:
+Tab, space, space, tab:	  	Space, tab, tab, space: 		 The end.
+
+A = wasn't properly encoded (should be kept): APE=MAN MAN=APE
+A = wasn't properly encoded (lowercase): ape=man man=ape
+Lowercase hexchars: »¡KDE rulez!«
+Mixed-case hexchars: »¡KDE rulez!«
+A misplaced (unencoded =), followed by whitespace: =  not at end!
+Two consecutive = at the end of the line: =Same, followed by trailing whitespace: =A misplaced (unencoded =), as the ultimate character: =
