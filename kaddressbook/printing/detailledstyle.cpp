@@ -15,6 +15,8 @@
 #include <qpaintdevicemetrics.h>
 #include "detailledstyle.h"
 #include "printingwizard.h"
+#include "printstyle.h"
+#include "printprogress.h"
 
 // ----- the wizard pages:
 #include "ds_appearance.h"
@@ -42,7 +44,8 @@ namespace KABPrinting {
                                              const char* name)
         : PrintStyle(parent, name),
           mPageAppearance(new AppearancePage(parent, "AppearancePage")),
-          mEPntr(0)
+          mEPntr(0),
+          mPrintProgress(0)
     {
         KConfig *config;
         QFont font;
@@ -101,8 +104,11 @@ namespace KABPrinting {
         if(mEPntr!=0) delete mEPntr;
     }
 
-    void DetailledPrintStyle::print(QStringList contacts)
+    void DetailledPrintStyle::print(QStringList contacts, PrintProgress *progress)
     {
+        mPrintProgress=progress;
+        progress->addMessage(i18n("setting up fonts and colors"));
+        progress->setProgress(0);
         bool useKDEFonts;
         KConfig *config;
         QFont font;
@@ -181,6 +187,7 @@ namespace KABPrinting {
         KPrinter *printer=wizard()->printer();
         QPainter painter;
         // ----- variables used to define MINIMAL MARGINS entered by the user:
+        progress->addMessage(i18n("setting up margins and spacing"));
         int marginTop=0,
            marginLeft=64, // to allow stapling, need refinement with two-side prints
           marginRight=0,
@@ -205,8 +212,10 @@ namespace KABPrinting {
         // ----- now do the printing:
         // this prepares for, like, two-up etc:
         painter.setViewport(left, top, width, height);
+        progress->addMessage(i18n("printing"));
         printEntries(contacts, printer, &painter,
                      QRect(0, 0, metrics.width(), metrics.height()));
+        progress->addMessage(i18n("done"));
         painter.end();
         config->sync();
     }
@@ -219,7 +228,7 @@ namespace KABPrinting {
         KABC::Addressee addressee;
         QStringList::ConstIterator it;
         QRect brect;
-        int ypos=0;
+        int ypos=0, count=0;
         // -----
         for(it=contacts.begin(); it!=contacts.end(); ++it)
         {
@@ -242,7 +251,10 @@ namespace KABPrinting {
                 kdDebug() << "DetailledPrintStyle::printEntries: strange, addressee "
                           << "with UID " << *it << " not available." << endl;
             }
+            // ----- set progress:
+            mPrintProgress->setProgress((count++*100)/contacts.count());
         }
+        mPrintProgress->setProgress(100);
         return true;
     }
 
@@ -263,6 +275,7 @@ namespace KABPrinting {
     {
         return i18n("Detailled Style");
     }
+
 }
 
 #include "detailledstyle.moc"

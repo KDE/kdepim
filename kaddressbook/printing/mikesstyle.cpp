@@ -9,6 +9,8 @@
 #include <kabc/addressee.h>
 
 #include "printingwizard.h"
+#include "printstyle.h"
+#include "printprogress.h"
 #include "mikesstyle.h"
 
 namespace KABPrinting
@@ -25,25 +27,15 @@ namespace KABPrinting
     {
     }
 
-    void MikesStyle::print(QStringList printUids)
+    void MikesStyle::print(QStringList printUids, PrintProgress *progress)
     {
         QFont mFont;
         QFont mBoldFont;
         QPainter p;
         p.begin(wizard()->printer());
-        int yPos = 0;
+        int yPos = 0, count=0;
         int spacingHint = 10;
         // Now do the actual printing
-        KProgressDialog pDialog
-            (wizard(), 0, i18n("Printing Progress"),
-             i18n("Please wait while the contacts are prepared "
-                  "for the printer."));
-        pDialog.setAutoClose(true);
-        pDialog.setAllowCancel(false);
-        KProgress *progressBar = pDialog.progressBar();
-        progressBar->setRange(1, printUids.count());
-        pDialog.show();
-
         mFont = p.font();
         mBoldFont = p.font();
         mBoldFont.setBold(true);
@@ -52,17 +44,15 @@ namespace KABPrinting
 
         int height = 0;
         KABC::Addressee a;
-        int index = 1;
         QStringList::ConstIterator iter;
 
-        kdDebug() << "MikesStyle::print: now printing." << endl;
-
+        progress->addMessage(i18n("preparing"));
+        progress->addMessage(i18n("printing"));
 
         for (iter = printUids.begin(); iter != printUids.end(); ++iter)
         {
-            // Update the progress bar
-            progressBar->setValue(index++);
-            kapp->processEvents(); // Mirko: do I like this :-) ?
+            progress->setProgress((count++*100)/printUids.count());
+            kapp->processEvents();
 
             // find the addressee
             a = wizard()->document()->findByUid(*iter);
@@ -90,7 +80,10 @@ namespace KABPrinting
             doPaint(p, a, height, mFont, mBoldFont);
             p.restore();
             yPos += height;
+            // ----- set progress bar:
+            // WORK_TO_DO: port to common progress display scheme
         }
+        progress->addMessage(i18n("done"));
         // print the tag line on the last page
         p.save();
         p.translate(0, metrics.height()-fm.height()-5);
@@ -129,8 +122,6 @@ namespace KABPrinting
                              int maxHeight,
                              const QFont& font, const QFont& bFont)
     {
-        kdDebug() << "MikesStyle::doPaint -->" << endl;
-
         QFontMetrics fm(font);
         QFontMetrics bfm(bFont);
         QPaintDeviceMetrics metrics(painter.device());
@@ -194,13 +185,10 @@ namespace KABPrinting
             xPos = margin + width/2;
         }
 
-        kdDebug() << "MikesStyle::doPaint <--" << endl;
     }
 
     void MikesStyle::paintTagLine(QPainter &p, const QFont& font)
     {
-        kdDebug() << "MikesStyle::paintTagLine: -->" << endl;
-
         QFontMetrics fm(font);
 
         QString text =
@@ -210,13 +198,11 @@ namespace KABPrinting
         p.setPen(Qt::black);
         p.drawText(0, fm.height(), text);
 
-        kdDebug() << "MikesStyle::paintTagLine: <--" << endl;
     }
 
     int MikesStyle::calcHeight(const KABC::Addressee &a,
                                const QFont& font, const QFont& bFont)
     {
-        kdDebug() << "MikesStyle::calcHeight: -->" << endl;
 
         QFontMetrics fm(font);
         QFontMetrics bfm(bFont);
@@ -249,7 +235,6 @@ namespace KABPrinting
         // Add the title and the spacing
         height += bfm.height() + ((numFields/2 + 3)*mFieldSpacingHint);
 
-        kdDebug() << "MikesStyle::calcHeight: <--" << endl;
         return height;
 
     }

@@ -3,14 +3,18 @@
 #include <qlayout.h>
 #include <qpixmap.h>
 #include <qlabel.h>
+#include <qpushbutton.h>
 
 #include <kdebug.h>
 #include <kprinter.h>
 #include <klocale.h>
 #include <kdialog.h>
+#include <kdialogbase.h>
+#include <kapplication.h>
 
 #include "printingwizard.h"
 #include "printstyle.h"
+#include "printprogress.h"
 #include "detailledstyle.h"
 #include "mikesstyle.h"
 
@@ -39,6 +43,12 @@ namespace KABPrinting {
 
     PrintingWizardImpl::~PrintingWizardImpl()
     {
+    }
+
+    void PrintingWizardImpl::accept()
+    { // progress display needs to be implemented here:
+        print();
+        close();
     }
 
     void PrintingWizardImpl::registerStyles()
@@ -93,6 +103,12 @@ namespace KABPrinting {
     // WORK_TO_DO: select contacts for printing
     void PrintingWizardImpl::print()
     {
+        // ----- create and show print progress widget:
+        PrintProgress *progress=new PrintProgress(this);
+        insertPage(progress, i18n("Print Progress"), -1);
+        showPage(progress);
+        kapp->processEvents();
+        // ----- prepare list of contacts to print:
         QStringList contacts;
         if(style!=0)
         {
@@ -108,10 +124,13 @@ namespace KABPrinting {
                 }
             }
         }
-        kdDebug() << "MikesStyle::print: printing "
+        kdDebug() << "PrintingWizardImpl::print: printing "
                   << contacts.count() << " contacts." << endl;
         // ... print:
-        style->print(contacts);
+        setBackEnabled(progress, false);
+        cancelButton()->setEnabled(false);
+        style->print(contacts, progress);
+        // ----- done - all GUI elements will disappear
     }
 
 }

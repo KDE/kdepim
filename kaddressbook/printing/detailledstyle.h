@@ -16,7 +16,7 @@ namespace KABPrinting {
     public:
         DetailledPrintStyle(PrintingWizard* parent, const char* name=0);
         ~DetailledPrintStyle();
-        void print(QStringList contacts);
+        void print(QStringList contacts, PrintProgress*);
     protected:
         bool printEntries(const QStringList& contacts,
                           KPrinter *printer,
@@ -29,6 +29,7 @@ namespace KABPrinting {
     private:
         AppearancePage *mPageAppearance;
         KABEntryPainter *mEPntr;
+        PrintProgress *mPrintProgress;
     };
 
     class DetailledPrintStyleFactory : public PrintStyleFactory

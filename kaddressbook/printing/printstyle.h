@@ -8,6 +8,7 @@
 namespace KABPrinting {
 
     class PrintingWizard;
+    class PrintProgress;
 
     /** The class PrintStyle implements the abstract interface to the
         PrintingWizards style objects.
@@ -37,7 +38,7 @@ namespace KABPrinting {
         PrintStyle(PrintingWizard* parent, const char* name=0);
         virtual ~PrintStyle();
         /** Reimplement this method to actually print. */
-        virtual void print(QStringList contacts)=0;
+        virtual void print(QStringList contacts, PrintProgress*)=0;
         /** Reimplement this method to provide a preview of what will
             be printed. It returns an invalid QPixmap by default,
             resulting in a message that no preview is available.

@@ -51,6 +51,13 @@ namespace KABPrinting {
         /** The general page. */
         BasicPage *mBasicPage;
         QVBoxLayout* pageLayout;
+        /** Overloaded accept slot. This is used to do the actual
+            printing without having the wizard disappearing
+            before. What happens is actually up to the print style,
+            since it does the printing. It could display a progress
+            window, for example (hint, hint).
+        */
+        void accept();
     };
 
 }

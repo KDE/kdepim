@@ -7,13 +7,15 @@
 
 namespace KABPrinting {
 
+    class PrintProgress;
+
     class MikesStyle : public PrintStyle
     {
         Q_OBJECT
     public:
         MikesStyle(PrintingWizard* parent, const char* name);
         ~MikesStyle();
-        void print(QStringList);
+        void print(QStringList, PrintProgress*);
     protected:
         void doPaint(QPainter &painter, const KABC::Addressee &a,
                      int maxHeight,
