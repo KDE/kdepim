@@ -1,9 +1,7 @@
 /*
     Empath - Mailer for KDE
 
-    Copyright 1999, 2000
-        Rik Hemsley <rik@kde.org>
-        Wilco Greven <j.w.greven@student.utwente.nl>
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -92,7 +90,7 @@ REnvelope::~REnvelope()
 REnvelope::_parse()
 {
     const char * c = strRep_.data();
-    const char * end = static_cast<const char *>(c + strlen(c));
+    const char * end = c + strlen(c);
     char * r = new char[1024]; // rfc821 -> max length 1000 ? Can't remember.
     char * rstart = r;
 

@@ -51,6 +51,7 @@ EmpathCachedMessage::refCount() const
     void
 EmpathCachedMessage::ref(const QString & r)
 {
+    empathDebug("Adding `" + r + "' to refs");
     references_.append(r);
 }
 
@@ -63,6 +64,7 @@ EmpathCachedMessage::deref(const QString & r)
         empathDebug("Not dereferencing this - can't find ref by `" + r + "'");
         return;
     }
+    empathDebug("Removing reference `" + *firstRefByCaller + "'");
     references_.remove(firstRefByCaller);
 }
 

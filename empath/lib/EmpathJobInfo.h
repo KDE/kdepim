@@ -59,6 +59,8 @@ class EmpathJobInfo
     public:
 
         EmpathJobInfo();
+        EmpathJobInfo(const EmpathJobInfo &);
+        EmpathJobInfo(EmpathJobInfoPrivate &);
 
         // Copy / Move message
         EmpathJobInfo(
@@ -102,10 +104,6 @@ class EmpathJobInfo
             ActionType t,
             const EmpathURL folder,
             const QString & extraInfo = QString::null);
-
-        EmpathJobInfo(const EmpathJobInfo & j);
-
-        EmpathJobInfo(EmpathJobInfoPrivate &);
 
         virtual ~EmpathJobInfo();
 

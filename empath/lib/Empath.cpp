@@ -203,7 +203,6 @@ Empath::message(const EmpathURL & source, const QString & xinfo)
     void
 Empath::finishedWithMessage(const EmpathURL & url, const QString & xinfo)
 {
-    empathDebug(url.asString()); 
     EmpathCachedMessage * m = cache_[url.asString()];
 
     if (m == 0) {
@@ -211,13 +210,15 @@ Empath::finishedWithMessage(const EmpathURL & url, const QString & xinfo)
         return;
     }
 
-    if (!m->referencedBy(xinfo)) {
-        empathDebug("xinfo == `" + xinfo + "'");
-        empathDebug("Hey, you don't OWN this message ! It's staying cached !");
-        return;
-    }
+    empathDebug("xinfo == `" + xinfo + "'");
 
-    m->deref(xinfo);
+    if (m->referencedBy(xinfo)) {
+        m->deref(xinfo);
+        return;
+
+    } else {
+       empathDebug("Hey, you don't OWN this message ! It's staying cached !");
+    }
 
     if (m->refCount() == 0) {
         empathDebug("Refcount has dropped to 0. Deleting.");
@@ -290,6 +291,7 @@ Empath::cacheMessage
     if (cached == 0) {
 
         empathDebug("Not in cache. Adding");
+        empathDebug(url.asString());
         cache_.insert(url.asString(), new EmpathCachedMessage(m, xinfo));
 
     } else {

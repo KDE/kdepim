@@ -44,11 +44,18 @@ main(int argc, char ** argv)
     // Pick a sensible umask for everything Empath does.
     int prev_umask = umask(077);
     
-//    if (!KUniqueApplication::start(argc, argv, "empath"))
-//        exit(0);
+#ifdef NDEBUG
+
+    if (!KUniqueApplication::start(argc, argv, "empath"))
+        exit(0);
     
-//    KUniqueApplication app(argc, argv, "empath");
+    KUniqueApplication app(argc, argv, "empath");
+
+#else
+
     KApplication app(argc, argv, "empath");
+
+#endif
     
     // Create the kernel.
     Empath::start();

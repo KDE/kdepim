@@ -30,6 +30,47 @@ EmpathJobInfo::EmpathJobInfo()
     haveOriginal_ = false;
 }
 
+EmpathJobInfo::EmpathJobInfo(const EmpathJobInfo & ji)
+{
+    original_.type           = ji.original_.type;
+    original_.url1           = ji.original_.url1;
+    original_.url2           = ji.original_.url2;
+    original_.xinfo          = ji.original_.xinfo;
+    original_.IDList         = ji.original_.IDList;
+    original_.messageID      = ji.original_.messageID;
+    original_.message        = ji.original_.message;
+    original_.successMap     = ji.original_.successMap;
+    original_.status         = ji.original_.status;
+    original_.generalSuccess = ji.original_.generalSuccess;
+
+    current_.type           = ji.current_.type;
+    current_.url1           = ji.current_.url1;
+    current_.url2           = ji.current_.url2;
+    current_.xinfo          = ji.current_.xinfo;
+    current_.IDList         = ji.current_.IDList;
+    current_.messageID      = ji.current_.messageID;
+    current_.message        = ji.current_.message;
+    current_.successMap     = ji.current_.successMap;
+    current_.status         = ji.current_.status;
+    current_.generalSuccess = ji.current_.generalSuccess;
+
+    haveOriginal_ = ji.haveOriginal_; 
+}
+
+EmpathJobInfo::EmpathJobInfo(EmpathJobInfoPrivate & jip)
+{
+    current_.type           = jip.type;
+    current_.url1           = jip.url1;
+    current_.url2           = jip.url2;
+    current_.xinfo          = jip.xinfo;
+    current_.IDList         = jip.IDList;
+    current_.messageID      = jip.messageID;
+    current_.message        = jip.message;
+    current_.successMap     = jip.successMap;
+    current_.status         = jip.status;
+    current_.generalSuccess = jip.generalSuccess;
+}
+
 // Copy / Move message
 EmpathJobInfo::EmpathJobInfo(
     ActionType t,
@@ -125,27 +166,6 @@ EmpathJobInfo::EmpathJobInfo(
         current_.IDList << folder.messageID();
     
     haveOriginal_ = false;
-}
-
-EmpathJobInfo::EmpathJobInfo(const EmpathJobInfo & j)
-    :   current_(j.current_),
-        original_(j.original_)
-{
-    haveOriginal_ = j.haveOriginal_; 
-}
-
-EmpathJobInfo::EmpathJobInfo(EmpathJobInfoPrivate & jip)
-{
-    current_.type           = jip.type;
-    current_.url1           = jip.url1;
-    current_.url2           = jip.url2;
-    current_.xinfo          = jip.xinfo;
-    current_.IDList         = jip.IDList;
-    current_.messageID      = jip.messageID;
-    current_.message        = jip.message;
-    current_.successMap     = jip.successMap;
-    current_.status         = jip.status;
-    current_.generalSuccess = jip.generalSuccess;
 }
 
 EmpathJobInfo::~EmpathJobInfo()

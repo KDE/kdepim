@@ -87,9 +87,11 @@ EmpathMailboxMaildir::_runJob(EmpathJobInfo & jobInfo)
                 RMM::RMessage * message =
                     m->message(jobInfo.from().messageID());
 
-                if (message != 0)
+                if (message != 0) {
+                    empathDebug("Caching message with jobinfo " + jobInfo.xinfo());
                     empath->cacheMessage(
                         jobInfo.from(), message, jobInfo.xinfo());
+                }
                 
                 jobInfo.done(message != 0);
             }
