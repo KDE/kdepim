@@ -43,6 +43,10 @@ void icalvalue_set_x(icalvalue* value, const char* v);
 icalvalue* icalvalue_new_x(const char* v);
 const char* icalvalue_get_x(icalvalue* value);
 
+icalvalue* icalvalue_new_attach (struct icalattachtype* v);
+void icalvalue_set_attach(icalvalue* value, struct icalattachtype* v);
+struct icalattachtype* icalvalue_get_attach(icalvalue* value);
+
 icalvalue* icalvalue_new_recur (struct icalrecurrencetype v);
 void icalvalue_set_recur(icalvalue* value, struct icalrecurrencetype v);
 struct icalrecurrencetype icalvalue_get_recur(icalvalue* value);

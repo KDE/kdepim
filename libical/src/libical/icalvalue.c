@@ -252,8 +252,9 @@ icalvalue* icalvalue_new_from_string_with_error(icalvalue_kind kind,const char* 
 	
     case ICAL_ATTACH_VALUE:
         attach = icalattachtype_new();
-	icalattachtype_set_url( attach, str );
-      	value = icalvalue_new_attach( *attach );
+      	value = icalvalue_new_attach( attach );
+        icalattachtype_free( attach );
+	icalattachtype_set_url( value->data.v_attach, str );
 	break;
     case ICAL_BINARY_VALUE:	
     case ICAL_BOOLEAN_VALUE:
@@ -507,8 +508,10 @@ icalvalue_free (icalvalue* value)
     }
 
     switch (v->kind){
-	case ICAL_BINARY_VALUE: 
-	case ICAL_ATTACH_VALUE: {
+	case ICAL_ATTACH_VALUE:
+	    icalattachtype_free( v->data.v_attach );
+	    break;
+	case ICAL_BINARY_VALUE: {
 	    /* HACK ugh. This will be tough to implement */
 	}
 	case ICAL_TEXT_VALUE:
@@ -728,21 +731,21 @@ char* icalvalue_text_as_ical_string(icalvalue* value) {
 
 char* icalvalue_attach_as_ical_string(icalvalue* value) {
 
-    struct icalattachtype a;
+    struct icalattachtype *a;
     char * str;
 
     icalerror_check_arg_rz( (value!=0),"value");
 
     a = icalvalue_get_attach(value);
 
-    if (a.binary != 0) {
+    if (a->binary != 0) {
 	return  icalvalue_binary_as_ical_string(value);
-    } else if (a.base64 != 0) {
-	str = (char*)icalmemory_tmp_buffer(strlen(a.base64)+1);
-	strcpy(str,a.base64);
+    } else if (a->base64 != 0) {
+	str = (char*)icalmemory_tmp_buffer(strlen(a->base64)+1);
+	strcpy(str,a->base64);
 	return str;
-    } else if (a.url != 0){
-        icalvalue *v = icalvalue_new_text( a.url );
+    } else if (a->url != 0){
+        icalvalue *v = icalvalue_new_text( a->url );
       	char *icalstring = icalvalue_string_as_ical_string(v);
 	icalvalue_free( v );
 	return icalstring;

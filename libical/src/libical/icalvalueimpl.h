@@ -46,7 +46,7 @@ struct icalvalue_impl {
     const char* x_value;
 
     union data {
-	struct icalattachtype v_attach;		
+	struct icalattachtype *v_attach;		
 	/* void *v_binary; */ /* use v_attach */
 	const char *v_string;
 	/*char *v_text;*/

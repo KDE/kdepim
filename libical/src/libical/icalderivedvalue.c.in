@@ -118,6 +118,45 @@ const char* icalvalue_get_x(icalvalue* value) {
     return ((struct icalvalue_impl*)value)->x_value;
 }
 
+/* Attachment is a special case, so it is not auto generated. */
+icalvalue*
+icalvalue_new_attach (struct icalattachtype *v)
+{
+   struct icalvalue_impl* impl = icalvalue_new_impl(ICAL_ATTACH_VALUE);
+    
+   icalvalue_set_attach((icalvalue*)impl,v);
+
+   return (icalvalue*)impl;
+}
+
+void
+icalvalue_set_attach(icalvalue* value, struct icalattachtype *v)
+{
+    struct icalvalue_impl* impl; 
+    
+    icalerror_check_arg_rv( (value!=0),"value");
+    icalerror_check_value_type(value, ICAL_ATTACH_VALUE);
+
+    impl = (struct icalvalue_impl*)value;
+
+    if (impl->data.v_attach != 0){
+	icalattachtype_free(impl->data.v_attach);
+    }
+
+    impl->data.v_attach = v;
+    icalattachtype_add_reference(v);
+}
+
+struct icalattachtype*
+icalvalue_get_attach(icalvalue* value)
+{
+    icalerror_check_arg( (value!=0),"value");
+    icalerror_check_value_type(value, ICAL_ATTACH_VALUE);
+  
+    return ((struct icalvalue_impl*)value)->data.v_attach;
+}
+
+
 /* Recur is a special case, so it is not auto generated. */
 icalvalue*
 icalvalue_new_recur (struct icalrecurrencetype v)
