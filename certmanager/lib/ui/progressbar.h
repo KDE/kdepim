@@ -50,13 +50,13 @@ namespace Kleo {
   public slots:
     void slotProgress( const QString & message, int type, int current, int total );
     void slotProgress( const QString & message, int current, int total );
-    /*! \reimp to support self-powered busy indicator */ 
+    /*! reimplementation to support self-powered busy indicator */
     void setProgress( int progress );
-    /*! \reimp to support self-powered busy indicator */ 
+    /*! reimplementation to support self-powered busy indicator */
     void setTotalSteps( int total );
-    /*! \reimp to support self-powered busy indicator */ 
+    /*! reimplementation to support self-powered busy indicator */
     void reset();
-    /*! \reimp to preserve visibility */
+    /*! reimplementation to preserve visibility */
     void setProgress( int cur, int tot ) { QProgressBar::setProgress( cur, tot ); }
 
   private slots:

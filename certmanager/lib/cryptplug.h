@@ -1126,9 +1126,9 @@ struct CertificateInfo {
   struct DnPair *dnarray; /* parsed values from userid[0] */
 };
 
-/*! \function struct CertIterator*  startListCertificates( const char* pattern );
-    \function struct CertificateInfo*  nextCertificate( struct CertIterator* );
-    \function void endListCertificates( struct CertIterator* );
+/*! \fn struct CertIterator*  startListCertificates( const char* pattern );
+    \fn struct CertificateInfo*  nextCertificate( struct CertIterator* );
+    \fn void endListCertificates( struct CertIterator* );
 
     \ingroup certList
   Example that runs through certs matching "Steffen":

@@ -46,11 +46,11 @@ class DNOrderConfigPage : public KCModule {
 public:
   DNOrderConfigPage( QWidget * parent=0, const char * name=0 );
 
-  /*! \reimp */
+  /*! reimplementation */
   void load();
-  /*! \reimp */
+  /*! reimplementation */
   void save();
-  /*! \reimp */
+  /*! reimplementation */
   void defaults();
 
 private slots:
