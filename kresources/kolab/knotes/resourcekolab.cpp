@@ -50,6 +50,7 @@ static const char* attachmentMimeType = "application/x-vnd.kolab.note";
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceNotes( config ), ResourceKolabBase( "ResourceKolab-KNotes" )
 {
+  setType( "kolab" );
 }
 
 ResourceKolab::~ResourceKolab()

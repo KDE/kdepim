@@ -74,6 +74,7 @@ KABC::ResourceKolab::ResourceKolab( const KConfig *config )
   : KPIM::ResourceABC( config ),
     Kolab::ResourceKolabBase( "ResourceKolab-KABC" )
 {
+  setType( "kolab" );
 }
 
 KABC::ResourceKolab::~ResourceKolab()
