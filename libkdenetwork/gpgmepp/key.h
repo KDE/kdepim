@@ -43,6 +43,8 @@ namespace GpgME {
     Key( const Key & key );
     ~Key();
 
+    static Key null;
+
     const Key & operator=( const Key & other );
 
     bool isNull() const;

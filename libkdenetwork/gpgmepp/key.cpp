@@ -25,6 +25,8 @@
 
 #include <gpgme.h>
 
+GpgME::Key GpgME::Key::null;
+
 namespace GpgME {
 
   using std::vector;
