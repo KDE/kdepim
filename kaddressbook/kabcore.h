@@ -339,7 +339,6 @@ class KABCore : public KAB::Core
     KSettings::Dialog *mConfigureDialog;
     LDAPSearchDialog *mLdapSearchDialog;
     QDict<AddresseeEditorDialog> mEditorDict;
-    QMap<KABC::Resource*, ResourceMapEntry> mResourceMap;
 
     bool mReadWrite;
     bool mModified;

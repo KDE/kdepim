@@ -30,6 +30,8 @@
 
 #include <kabc/addressbook.h>
 
+#include "kablock.h"
+
 class Command
 {
   public:
@@ -42,6 +44,7 @@ class Command
 
   protected:
     KABC::AddressBook *addressBook() const { return mAddressBook; }
+    KABLock *lock() const { return KABLock::self( mAddressBook ); }
 
   private:
     KABC::AddressBook *mAddressBook;

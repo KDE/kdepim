@@ -60,6 +60,7 @@
 #include "filterselectionwidget.h"
 #include "incsearchwidget.h"
 #include "jumpbuttonbar.h"
+#include "kablock.h"
 #include "kabprefs.h"
 #include "kaddressbookservice.h"
 #include "ldapsearchdialog.h"
@@ -616,22 +617,9 @@ void KABCore::newContact()
     KABC::Addressee addr;
     addr.setResource( resource );
 
+    if ( !KABLock::self( mAddressBook )->lock( addr.resource() ) )
+      return;
 
-    if ( mResourceMap.find( addr.resource() ) != mResourceMap.end() ) {
-      ResourceMapEntry &entry = mResourceMap[ addr.resource() ];
-      entry.counter++;
-    } else {
-      KABC::Ticket *ticket = mAddressBook->requestSaveTicket( addr.resource() );
-      if ( !ticket ) {
-        KMessageBox::error( mWidget, i18n( "Address book is locked by other process!" ) );
-        return;
-      } else {
-        ResourceMapEntry entry;
-        entry.ticket = ticket;
-        entry.counter = 1;
-        mResourceMap.insert( addr.resource(), entry );
-      }
-    }
     dialog = createAddresseeEditorDialog( false, mWidget );
     dialog->setAddressee( addr );
   } else
@@ -699,23 +687,10 @@ void KABCore::editContact( const QString &uid )
   if ( !addr.isEmpty() ) {
     AddresseeEditorDialog *dialog = mEditorDict.find( addr.uid() );
     if ( !dialog ) {
-      if ( mResourceMap.find( addr.resource() ) != mResourceMap.end() ) {
-        ResourceMapEntry &entry = mResourceMap[ addr.resource() ];
-        entry.counter++;
-      } else {
-        if ( !addr.resource()->readOnly() ) {
-          KABC::Ticket *ticket = mAddressBook->requestSaveTicket( addr.resource() );
-          if ( !ticket ) {
-            KMessageBox::error( mWidget, i18n( "Address book is locked by other process!" ) );
-            return;
-          } else {
-            ResourceMapEntry entry;
-            entry.ticket = ticket;
-            entry.counter = 1;
-            mResourceMap.insert( addr.resource(), entry );
-          }
-        }
-      }
+
+      if ( !addr.resource()->readOnly() )
+        if ( !KABLock::self( mAddressBook )->lock( addr.resource() ) )
+          return;
 
       dialog = createAddresseeEditorDialog( addr.resource()->readOnly(), mWidget );
 
@@ -894,22 +869,7 @@ void KABCore::slotEditorDestroyed( const QString &uid )
 
   KABC::Addressee addr = mAddressBook->findByUid( uid );
 
-  if ( mResourceMap.find( addr.resource() ) == mResourceMap.end() ) {
-    // read-only resource
-    return;
-  } else {
-    ResourceMapEntry &entry = mResourceMap[ addr.resource() ];
-
-    entry.counter--;
-    if ( entry.counter == 0 ) {
-      if ( !mAddressBook->save( entry.ticket ) )
-        KMessageBox::error( mWidget, i18n( "Saving contact failed!" ) );
-
-      mAddressBook->releaseSaveTicket( entry.ticket );
-
-      mResourceMap.remove( addr.resource() );
-    }
-  }
+  KABLock::self( mAddressBook )->unlock( addr.resource() );
 }
 
 void KABCore::initGUI()

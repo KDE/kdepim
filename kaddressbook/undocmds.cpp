@@ -33,6 +33,7 @@
 #include "addresseeutil.h"
 #include "addresseeconfig.h"
 #include "core.h"
+#include "kablock.h"
 
 #include "undocmds.h"
 
@@ -60,7 +61,9 @@ bool PwDeleteCommand::undo()
   // Put it back in the document
   KABC::Addressee::List::Iterator it;
   for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
+    lock()->lock( (*it).resource() );
     addressBook()->insertAddressee( *it );
+    lock()->unlock( (*it).resource() );
   }
 
   mAddresseeList.clear();
@@ -76,7 +79,9 @@ bool PwDeleteCommand::redo()
   QStringList::Iterator it;
   for ( it = mUIDList.begin(); it != mUIDList.end(); ++it ) {
     addr = addressBook()->findByUid( *it );
+    lock()->lock( addr.resource() );
     addressBook()->removeAddressee( addr );
+    lock()->unlock( addr.resource() );
     mAddresseeList.append( addr );
     AddresseeConfig cfg( addr );
     cfg.remove();
@@ -103,8 +108,11 @@ QString PwPasteCommand::name()
 bool PwPasteCommand::undo()
 {
   KABC::Addressee::List::Iterator it;
-  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) 
+  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
+    lock()->lock( (*it).resource() );
     addressBook()->removeAddressee( *it );
+    lock()->unlock( (*it).resource() );
+  }
 
   return true;
 }
@@ -119,7 +127,9 @@ bool PwPasteCommand::redo()
      */ 
     (*it).setUid( KApplication::randomString( 10 ) );
     uids.append( (*it).uid() );
+    lock()->lock( (*it).resource() );
     addressBook()->insertAddressee( *it );
+    lock()->unlock( (*it).resource() );
   }
 
   QStringList::Iterator uidIt;
@@ -149,14 +159,18 @@ QString PwNewCommand::name()
 
 bool PwNewCommand::undo()
 {
+  lock()->lock( mAddr.resource() );
   addressBook()->removeAddressee( mAddr );
+  lock()->unlock( mAddr.resource() );
 
   return true;
 }
 
 bool PwNewCommand::redo()
 {
+  lock()->lock( mAddr.resource() );
   addressBook()->insertAddressee( mAddr );
+  lock()->unlock( mAddr.resource() );
 
   return true;
 }
@@ -183,14 +197,18 @@ QString PwEditCommand::name()
 
 bool PwEditCommand::undo()
 {
+  lock()->lock( mOldAddr.resource() );
   addressBook()->insertAddressee( mOldAddr );
+  lock()->unlock( mOldAddr.resource() );
 
   return true;
 }
 
 bool PwEditCommand::redo()
 {
+  lock()->lock( mNewAddr.resource() );
   addressBook()->insertAddressee( mNewAddr );
+  lock()->unlock( mNewAddr.resource() );
 
   return true;
 }
@@ -213,7 +231,9 @@ bool PwCutCommand::undo()
 {
   KABC::Addressee::List::Iterator it;
   for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
+    lock()->lock( (*it).resource() );
     addressBook()->insertAddressee( *it );
+    lock()->unlock( (*it).resource() );
   }
 
   mAddresseeList.clear();
@@ -231,7 +251,9 @@ bool PwCutCommand::redo()
   QStringList::Iterator it;
   for ( it = mUIDList.begin(); it != mUIDList.end(); ++it ) {
     addr = addressBook()->findByUid( *it );
+    lock()->lock( addr.resource() );
     addressBook()->removeAddressee( addr );
+    lock()->unlock( addr.resource() );
     mAddresseeList.append( addr );
   }
 
