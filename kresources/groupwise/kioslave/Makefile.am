@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kresources/groupwise/soap \
-  $(all_includes)
+  -I$(top_srcdir)/libkdepim $(all_includes)
 
 noinst_HEADERS = groupwise.h
 
