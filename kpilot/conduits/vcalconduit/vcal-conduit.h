@@ -30,6 +30,7 @@
 */
 
 #include <libkcal/event.h>
+#include <pi-datebook.h>
 #include "vcal-conduitbase.h"
 
 class PilotRecord;
@@ -73,8 +74,12 @@ public:
 protected:
 	virtual const QString dbname() { return CSL1("DatebookDB"); };
 
+	virtual void preSync() {_getAppInfo(); };
 	virtual VCalConduitPrivateBase*newVCalPrivate(KCal::Calendar *fCalendar);
 
+	void _getAppInfo();
+	void _setAppInfo();
+	QString _getCat(const QStringList cats, const QString curr) const;
 
 	virtual PilotAppCategory*newPilotEntry(PilotRecord*r);
 	virtual KCal::Incidence*newIncidence();
@@ -97,6 +102,10 @@ protected:
 	void setAlarms(PilotDateEntry *, const KCal::Event * );
 	void setRecurrence(PilotDateEntry *, const KCal::Event * );
 	void setExceptions(PilotDateEntry *, const KCal::Event * );
+
+	void setCategory(PilotDateEntry *, const KCal::Event *);
+	void setCategory(KCal::Event *, const PilotDateEntry *);
+	struct AppointmentAppInfo fAppointmentAppInfo;
 
 } ;
 

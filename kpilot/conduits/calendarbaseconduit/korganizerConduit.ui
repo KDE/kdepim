@@ -1,0 +1,277 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>VCalWidget</class>
+<author>Adriaan de Groot</author>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>Form1</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>593</width>
+            <height>211</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>5</hsizetype>
+            <vsizetype>5</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="baseSize">
+        <size>
+            <width>570</width>
+            <height>270</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>Calendar-Conduit Options</string>
+    </property>
+    <property name="layoutMargin" stdset="0">
+    </property>
+    <property name="layoutSpacing" stdset="0">
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QTabWidget" row="0" column="0">
+            <property name="name">
+                <cstring>tabWidget</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>7</hsizetype>
+                    <vsizetype>7</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="layoutMargin" stdset="0">
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>Widget2</cstring>
+                </property>
+                <attribute name="title">
+                    <string>&amp;General</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <spacer row="2" column="0">
+                        <property name="name">
+                            <cstring>Spacer4</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QButtonGroup" row="0" column="0">
+                        <property name="name">
+                            <cstring>fSyncDestination</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Sync Destination</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>fSyncStdCalendar</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Standard calendar</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Select this option to synchronize with the calendar specified by the KDE calendar settings.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>fSyncFile</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Calendar &amp;file:</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Select this option to use a specific calendar file, instead of the standard KDE calendar. This file must be in the in the vCalendar or iCalendar format. Enter the location of this file in the edit box or select it clicking the file picker button.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="KURLRequester" row="1" column="1">
+                                <property name="name">
+                                    <cstring>fCalendarFile</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>3</hsizetype>
+                                        <vsizetype>5</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Enter here the location and filename of the calendar file or select it clicking the file picker button. This file must be in the iCalendar or vCalendar format.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <widget class="QCheckBox" row="1" column="0">
+                        <property name="name">
+                            <cstring>fArchive</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Store &amp;archived records in the KDE calendar</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>When this box is checked, archived records will still
+be saved in the calendar on the PC.</string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>C&amp;onflicts</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>fTextLabel</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>4</hsizetype>
+                                <vsizetype>5</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="text">
+                            <string>Conflict &amp;resolution:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>fConflictResolution</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="0" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Use KPilot's Global Setting</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Ask User</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Do Nothing</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Handheld Overrides</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>PC Overrides</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Values From Last Sync (if possible)</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Use Both Entries</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>fConflictResolution</cstring>
+                        </property>
+                        <property name="currentItem">
+                            <number>6</number>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Select in this list how conflicting entries (entries which were edited both on your handheld and on the PC) are resolved. Possibly values are "Use KPilot's Global Setting" to use the settings defined in KPilot HotSync configuration, "Ask User" to let you decide case by case, "Do Nothing" to allow the entries to be different, "PC overrides", "Handheld overrides", "Use values from last sync" and "Use both entries" to create a new entry on both the PC and handheld. Note that this does &lt;i&gt;not&lt;/i&gt; handle double-scheduling conflicts.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <spacer row="1" column="1">
+                        <property name="name">
+                            <cstring>spacer2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>31</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </grid>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<customwidgets>
+</customwidgets>
+<connections>
+    <connection>
+        <sender>fSyncFile</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fCalendarFile</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>tabWidget</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+</includehints>
+</UI>

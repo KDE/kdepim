@@ -25,8 +25,8 @@
 #include <qdir.h>
 #include <qfile.h>
 #include <qlayout.h>
+#include <qptrlist.h>
 #include <qregexp.h>
-#include <qstatusbar.h>
 #include <qvbox.h>
 
 #include <kabc/addresseelist.h>
@@ -51,6 +51,7 @@
 #include <kprotocolinfo.h>
 #include <kresources/selectdialog.h>
 #include <kstandarddirs.h>
+#include <kstatusbar.h>
 #include <kstdguiitem.h>
 #include <ktempfile.h>
 #include <kxmlguiclient.h>
@@ -137,18 +138,18 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
            SLOT( setModified() ) );
   connect( mViewManager, SIGNAL( urlDropped( const KURL& ) ),
            mXXPortManager, SLOT( importVCard( const KURL& ) ) );
+  connect( mViewManager, SIGNAL( viewFieldsChanged() ),
+           SLOT( updateIncSearchWidget() ) );
   connect( mExtensionManager, SIGNAL( modified( const KABC::Addressee::List& ) ),
            this, SLOT( extensionModified( const KABC::Addressee::List& ) ) );
 
   connect( mXXPortManager, SIGNAL( modified() ),
            SLOT( setModified() ) );
 
-  connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QStringList& ) ),
-           SLOT( incrementalJumpButtonSearch( const QStringList& ) ) );
+  connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QString& ) ),
+           SLOT( incrementalJumpButtonSearch( const QString& ) ) );
   connect( mViewManager, SIGNAL( sortFieldChanged() ),
            mJumpButtonBar, SLOT( updateButtons() ) );
-  connect( mIncSearchWidget, SIGNAL( doReset() ),
-           mJumpButtonBar, SLOT( reset() ) );
 
   connect( mDetails, SIGNAL( highlightedMessage( const QString& ) ),
            SLOT( detailsHighlighted( const QString& ) ) );
@@ -169,6 +170,13 @@ KABCore::~KABCore()
   saveSettings();
   KABPrefs::instance()->writeConfig();
 
+  QPtrList<KABC::Resource> resources = mAddressBook->resources();
+  QPtrListIterator<KABC::Resource> it( resources );
+  while ( it.current() ) {
+    it.current()->close();
+    ++it;
+  }
+
   mAddressBook->disconnect();
 
   mAddressBook = 0;
@@ -178,46 +186,48 @@ KABCore::~KABCore()
 
 void KABCore::restoreSettings()
 {
-  bool state = KABPrefs::instance()->mJumpButtonBarVisible;
+  bool state = KABPrefs::instance()->jumpButtonBarVisible();
   mActionJumpBar->setChecked( state );
   setJumpButtonBarVisible( state );
 
-  state = KABPrefs::instance()->mDetailsPageVisible;
+  state = KABPrefs::instance()->detailsPageVisible();
   mActionDetails->setChecked( state );
   setDetailsVisible( state );
-
-  QValueList<int> splitterSize = KABPrefs::instance()->mExtensionsSplitter;
-  if ( splitterSize.count() == 0 ) {
-    splitterSize.append( mWidget->width() / 2 );
-    splitterSize.append( mWidget->width() / 2 );
-  }
-  mExtensionBarSplitter->setSizes( splitterSize );
-
-  splitterSize = KABPrefs::instance()->mDetailsSplitter;
-  if ( splitterSize.count() == 0 ) {
-    splitterSize.append( mWidget->height() / 2 );
-    splitterSize.append( mWidget->height() / 2 );
-  }
-  mDetailsSplitter->setSizes( splitterSize );
 
   mViewManager->restoreSettings();
   mExtensionManager->restoreSettings();
 
-  mIncSearchWidget->setCurrentItem( KABPrefs::instance()->mCurrentIncSearchField );
+  updateIncSearchWidget();
+  mIncSearchWidget->setCurrentItem( KABPrefs::instance()->currentIncSearchField() );
+
+  QValueList<int> splitterSize = KABPrefs::instance()->extensionsSplitter();
+  if ( splitterSize.count() == 0 ) {
+    splitterSize.append( mDetailsSplitter->height() / 2 );
+    splitterSize.append( mDetailsSplitter->height() / 2 );
+  }
+  mExtensionBarSplitter->setSizes( splitterSize );
+
+  splitterSize = KABPrefs::instance()->detailsSplitter();
+  if ( splitterSize.count() == 0 ) {
+    splitterSize.append( 360 );
+    splitterSize.append( 260 );
+  }
+  mDetailsSplitter->setSizes( splitterSize );
+
 }
 
 void KABCore::saveSettings()
 {
-  KABPrefs::instance()->mJumpButtonBarVisible = mActionJumpBar->isChecked();
-  KABPrefs::instance()->mDetailsPageVisible = mActionDetails->isChecked();
+  KABPrefs::instance()->setJumpButtonBarVisible( mActionJumpBar->isChecked() );
+  KABPrefs::instance()->setDetailsPageVisible( mActionDetails->isChecked() );
 
-  KABPrefs::instance()->mExtensionsSplitter = mExtensionBarSplitter->sizes();
-  KABPrefs::instance()->mDetailsSplitter = mDetailsSplitter->sizes();
+  KABPrefs::instance()->setExtensionsSplitter( mExtensionBarSplitter->sizes() );
+  KABPrefs::instance()->setDetailsSplitter( mDetailsSplitter->sizes() );
 
   mExtensionManager->saveSettings();
   mViewManager->saveSettings();
 
-  KABPrefs::instance()->mCurrentIncSearchField = mIncSearchWidget->currentItem();
+  KABPrefs::instance()->setCurrentIncSearchField( mIncSearchWidget->currentItem() );
 }
 
 KABC::AddressBook *KABCore::addressBook() const
@@ -273,7 +283,7 @@ QWidget *KABCore::widget() const
 KAboutData *KABCore::createAboutData()
 {
   KAboutData *about = new KAboutData( "kaddressbook", I18N_NOOP( "KAddressBook" ),
-                                      "3.2", I18N_NOOP( "The KDE Address Book" ),
+                                      "3.3", I18N_NOOP( "The KDE Address Book" ),
                                       KAboutData::License_GPL_V2,
                                       I18N_NOOP( "(c) 1997-2004, The KDE PIM Team" ) );
   about->addAuthor( "Tobias Koenig", I18N_NOOP( "Current maintainer" ), "tokoe@kde.org" );
@@ -293,12 +303,12 @@ KAboutData *KABCore::createAboutData()
   return about;
 }
 
-void KABCore::setStatusBar( QStatusBar *statusBar )
+void KABCore::setStatusBar( KStatusBar *statusBar )
 {
   mStatusBar = statusBar;
 }
 
-QStatusBar *KABCore::statusBar() const
+KStatusBar *KABCore::statusBar() const
 {
   return mStatusBar;
 }
@@ -322,8 +332,10 @@ void KABCore::setContactSelected( const QString &uid )
   mActionCopy->setEnabled( selected );
   mActionDelete->setEnabled( selected );
   mActionEditAddressee->setEnabled( selected );
+  mActionStoreAddresseeIn->setEnabled( selected );
   mActionMail->setEnabled( selected );
   mActionMailVCard->setEnabled( selected );
+  mActionChat->setEnabled( selected );
   mActionWhoAmI->setEnabled( selected );
   mActionCategories->setEnabled( selected );
   mActionMerge->setEnabled( selected );
@@ -427,7 +439,8 @@ void KABCore::deleteContacts( const QStringList &uids )
     QStringList names;
     QStringList::ConstIterator it = uids.begin();
     while ( it != uids.end() ) {
-      names.append( mAddressBook->findByUid( *it ).formattedName() );
+      KABC::Addressee addr = mAddressBook->findByUid( *it );
+      names.append( addr.realName().isEmpty() ? addr.preferredEmail() : addr.realName() );
       ++it;
     }
 
@@ -529,12 +542,26 @@ void KABCore::setWhoAmI()
 
 void KABCore::incrementalTextSearch( const QString& text )
 {
-  mSearchManager->search( text, mIncSearchWidget->currentField() );
+  setContactSelected( QString::null );
+  mSearchManager->search( text, mIncSearchWidget->currentFields() );
 }
 
-void KABCore::incrementalJumpButtonSearch( const QStringList& characters )
+void KABCore::incrementalJumpButtonSearch( const QString& character )
 {
-  mSearchManager->setJumpButtonFilter( characters, mViewManager->currentSortField() );
+  mViewManager->setSelected( QString::null, false );
+
+  KABC::AddresseeList list = mSearchManager->contacts();
+  KABC::Field *field = mViewManager->currentSortField();
+  if ( field ) {
+    list.sortByField( field );
+    KABC::AddresseeList::Iterator it;
+    for ( it = list.begin(); it != list.end(); ++it ) {
+      if ( field->value( *it ).startsWith( character, false ) ) {
+        mViewManager->setSelected( (*it).uid(), true );
+        return;
+      }
+    }
+  }
 }
 
 void KABCore::setModified()
@@ -673,8 +700,9 @@ void KABCore::editContact( const QString &uid )
     if ( !dialog ) {
 
       if ( !addr.resource()->readOnly() )
-        if ( !KABLock::self( mAddressBook )->lock( addr.resource() ) )
+        if ( !KABLock::self( mAddressBook )->lock( addr.resource() ) ) {
           return;
+        }
 
       dialog = createAddresseeEditorDialog( mWidget );
 
@@ -688,8 +716,59 @@ void KABCore::editContact( const QString &uid )
   }
 }
 
+void KABCore::storeContactIn( const QString &uid )
+{
+  // First, locate the contact entry
+  QStringList uidList;
+  if ( uid.isNull() ) {
+    uidList = mViewManager->selectedUids();
+  } else {
+    uidList << uid;
+  }
+  KABC::Resource *resource = requestResource( mWidget );
+  if ( !resource ) return;
+  KABLock::self( mAddressBook )->lock( resource );
+  QStringList::Iterator it( uidList.begin() );
+  while ( it != uidList.end() ) {
+    KABC::Addressee addr = mAddressBook->findByUid( *it++ );
+    if ( !addr.isEmpty() ) {
+      KABC::Addressee newAddr( addr );
+      // We need to set a new uid, otherwise the insert below is
+      // ignored. This is bad for syncing, but unavoidable, afaiks
+      newAddr.setUid( KApplication::randomString( 10 ) );
+      newAddr.setResource( resource );
+      addressBook()->insertAddressee( newAddr );
+      KABLock::self( mAddressBook )->lock( addr.resource() );
+      addressBook()->removeAddressee( addr );
+      KABLock::self( mAddressBook )->unlock( addr.resource() );
+    }
+  }
+  KABLock::self( mAddressBook )->unlock( resource );
+}
+
 void KABCore::save()
 {
+  QPtrList<KABC::Resource> resources = mAddressBook->resources();
+  QPtrListIterator<KABC::Resource> it( resources );
+  while ( it.current() && !it.current()->readOnly() ) {
+    KABC::Ticket *ticket = mAddressBook->requestSaveTicket( it.current() );
+    if ( ticket ) {
+      if ( !mAddressBook->save( ticket ) ) {
+        KMessageBox::error( mWidget,
+                            i18n( "<qt>Unable to save address book <b>%1</b></qt>." ).arg( it.current()->resourceName() ) );
+        mAddressBook->releaseSaveTicket( ticket );
+      } else {
+        setModified( false );
+      }
+    } else {
+      KMessageBox::error( mWidget,
+                          i18n( "<qt>Unable to get access for saving the address book <b>%1</b></qt>." )
+                          .arg( it.current()->resourceName() ) );
+    }
+
+    ++it;
+  }
+/*
   KABC::StdAddressBook *b = dynamic_cast<KABC::StdAddressBook*>( mAddressBook );
   if ( b ) {
     if ( !b->save() ) {
@@ -719,6 +798,7 @@ void KABCore::save()
                                "book.") );
     }
   }
+*/
 }
 
 void KABCore::undo()
@@ -796,7 +876,7 @@ QString KABCore::getNameByPhone( const QString &phone )
           ++phoneIter) {
       // Get rid of separator chars so just the numbers are compared.
       if ( (*phoneIter).number().replace( r, "" ) == localPhone.replace( r, "" ) ) {
-        ownerName = (*iter).formattedName();
+        ownerName = (*iter).realName();
         found = true;
       }
     }
@@ -817,7 +897,7 @@ void KABCore::openLDAPDialog()
   if ( !mLdapSearchDialog ) {
     mLdapSearchDialog = new LDAPSearchDialog( mAddressBook, mWidget );
     connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ), mSearchManager,
-            SLOT( reload() ) );
+            SLOT( addressBookChanged() ) );
     connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ),
             SLOT( setModified() ) );
   } else
@@ -857,8 +937,8 @@ void KABCore::print()
 
 void KABCore::detailsHighlighted( const QString &msg )
 {
-  if ( statusBar() )
-    statusBar()->message( msg );
+  if ( mStatusBar )
+    mStatusBar->changeItem( msg, 1 );
 }
 
 void KABCore::showContactsAddress( const QString &addrUid )
@@ -883,7 +963,6 @@ void KABCore::showContactsAddress( const QString &addrUid )
 void KABCore::configurationChanged()
 {
   mExtensionManager->reconfigure();
-  mSearchManager->reconfigure();
   mViewManager->refreshView();
 }
 
@@ -891,6 +970,8 @@ void KABCore::addressBookChanged()
 {
   mJumpButtonBar->updateButtons();
   mSearchManager->reload();
+  mViewManager->setSelected( QString::null, false );
+  setContactSelected( QString::null );
 }
 
 AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,
@@ -908,15 +989,15 @@ AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,
 
 void KABCore::slotEditorDestroyed( const QString &uid )
 {
-  mEditorDict.remove( uid );
+  AddresseeEditorDialog *dialog = mEditorDict.take( uid );
 
-  KABC::Addressee addr = mAddressBook->findByUid( uid );
+  KABC::Addressee addr = dialog->addressee();
 
-  QApplication::setOverrideCursor( Qt::waitCursor );
-
-  KABLock::self( mAddressBook )->unlock( addr.resource() );
-
-  QApplication::restoreOverrideCursor();
+  if ( !addr.resource()->readOnly() ) {
+    QApplication::setOverrideCursor( Qt::waitCursor );
+    KABLock::self( mAddressBook )->unlock( addr.resource() );
+    QApplication::restoreOverrideCursor();
+  }
 }
 
 void KABCore::initGUI()
@@ -982,7 +1063,7 @@ void KABCore::initActions()
   KAction *action;
 
   // file menu
-  mActionMail = new KAction( i18n( "&Send Email to Contact" ), "mail_send", 0,
+  mActionMail = new KAction( i18n( "&Send Email to Contact..." ), "mail_send", 0,
                              this, SLOT( sendMail() ), actionCollection(), "file_mail" );
   action = KStdAction::print( this, SLOT( print() ), actionCollection() );
   mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
@@ -992,7 +1073,7 @@ void KABCore::initActions()
                              SLOT( save() ), actionCollection(), "file_sync" );
   mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 
-  action = new KAction( i18n( "&New Contact..." ), "filenew", CTRL+Key_N, this,
+  action = new KAction( i18n( "&New Contact..." ), "identity", CTRL+Key_N, this,
                SLOT( newContact() ), actionCollection(), "file_new_contact" );
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers." ) );
 
@@ -1001,7 +1082,7 @@ void KABCore::initActions()
                                   actionCollection(), "file_mail_vcard" );
   mActionMailVCard->setWhatsThis( i18n( "Send a mail with the selected contact as attachment." ) );
 
-  mActionChat = new KAction( i18n("Chat &With..."), "chat", 0,
+  mActionChat = new KAction( i18n("Chat &With..."), 0,
                                   this, SLOT( startChat() ),
                                   actionCollection(), "file_chat" );
   mActionChat->setWhatsThis( i18n( "Start a chat with the selected contact." ) );
@@ -1034,6 +1115,13 @@ void KABCore::initActions()
                                actionCollection(), "edit_delete" );
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
+  
+  mActionStoreAddresseeIn = new KAction( i18n( "St&ore Contact in..." ), "", 0,
+                                      this, SLOT( storeContactIn() ),
+                                      actionCollection(), "edit_store_in" );
+  mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." ) );
+
+
   mActionUndo->setEnabled( false );
   mActionRedo->setEnabled( false );
 
@@ -1041,17 +1129,14 @@ void KABCore::initActions()
   mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,
                                       actionCollection(), "options_show_jump_bar" );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
+  mActionJumpBar->setCheckedState( i18n( "Hide Jump Bar") );
   connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );
 
   mActionDetails = new KToggleAction( i18n( "Show Details" ), 0, 0,
                                       actionCollection(), "options_show_details" );
   mActionDetails->setWhatsThis( i18n( "Toggle whether the details page shall be visible." ) );
-  connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
-
-#if KDE_IS_VERSION(3,2,90)
-  mActionJumpBar->setCheckedState( i18n( "Hide Jump Bar") );
   mActionDetails->setCheckedState( i18n( "Hide Details") );
-#endif
+  connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
 
   if ( mIsPart )
     action = new KAction( i18n( "&Configure KAddressBook..." ), "configure", 0,
@@ -1067,7 +1152,7 @@ void KABCore::initActions()
                         this, SLOT( openLDAPDialog() ), actionCollection(), "ldap_lookup" );
   action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );
 
-  mActionWhoAmI = new KAction( i18n( "Set 'Who Am I'" ), "personal", 0, this,
+  mActionWhoAmI = new KAction( i18n( "Set as Personal Contact Data" ), "personal", 0, this,
                                SLOT( setWhoAmI() ), actionCollection(),
                                "edit_set_personal" );
   mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you do not have to input your personal data several times." ) );
@@ -1107,6 +1192,11 @@ void KABCore::updateActionMenu()
     mActionRedo->setText( i18n( "Redo %1" ).arg( redo->top()->name() ) );
 
   mActionRedo->setEnabled( !redo->isEmpty() );
+}
+
+void KABCore::updateIncSearchWidget()
+{
+  mIncSearchWidget->setViewFields( mViewManager->viewFields() );
 }
 
 KABC::Addressee KABCore::mergeContacts( const KABC::Addressee::List &list )
