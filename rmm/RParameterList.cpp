@@ -100,7 +100,7 @@ RParameterList::_parse()
         RParameter * p =
             new RParameter(QCString(it.current()).stripWhiteSpace());
         p->parse();
-        QList::append(p);
+        QList<RParameter>::append(p);
     }
 }
 

@@ -92,7 +92,7 @@ RGroup::operator == (RGroup & g)
 }
 
     QDataStream &
-operator >> (QDataStream & s, RGroup & group)
+RMM::operator >> (QDataStream & s, RGroup & group)
 {
     s    >> group.name_
         >> group.phrase_;
@@ -101,7 +101,7 @@ operator >> (QDataStream & s, RGroup & group)
 }
     
     QDataStream &
-operator << (QDataStream & s, RGroup & group)
+RMM::operator << (QDataStream & s, RGroup & group)
 {
     s    << group.name_
         << group.phrase_;
