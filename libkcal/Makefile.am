@@ -52,8 +52,8 @@ convertqtopia_SOURCES = convertqtopia.cpp
 convertqtopia_LDFLAGS = $(all_libraries)
 convertqtopia_LDADD = libkcal.la
 
-datadir = $(kde_appsdir)/Settings/Components
-data_DATA = kcalendars.desktop
+appsdir = $(kde_appsdir)/Settings/Components
+apps_DATA = kcalendars.desktop
 
 linkdir= $(kde_datadir)/kresources/calendar
 link_DATA = local.desktop localdir.desktop remote.desktop kabc.desktop
