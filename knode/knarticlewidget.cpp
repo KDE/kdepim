@@ -184,7 +184,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, KXMLGUIClient* guiC
                           SLOT(slotSupersede()), a_ctions, "article_supersede");
   a_ctVerify            = new KAction(i18n("&Verify PGP Signature"), 0, this,
                           SLOT(slotVerify()), a_ctions, "article_verify");
-  a_ctToggleFullHdrs    = new KToggleAction(i18n("Show &All Headers"), "text_block", 0 , this,
+  a_ctToggleFullHdrs    = new KToggleAction(i18n("Show &All Headers"), "text_block", Key_V , this,
                           SLOT(slotToggleFullHdrs()), a_ctions, "view_showAllHdrs");
 #if KDE_IS_VERSION(3,2,90)
   a_ctToggleFullHdrs->setCheckedState(i18n("Hide &All Headers"));
