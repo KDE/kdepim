@@ -202,8 +202,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
           SLOT(slotArticleSelectionChanged()));
   connect(h_drView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
           SLOT(slotArticleRMB(QListViewItem*, const QPoint&, int)));
-  connect(h_drView, SIGNAL(middleMBClick(QListViewItem *)),
-          SLOT(slotArticleMMB(QListViewItem *)));
+  connect(h_drView, SIGNAL(doubleClick(QListViewItem *)),
+          SLOT(slotOpenArticle(QListViewItem *)));
   connect(h_drView, SIGNAL(sortingChanged(int)),
           SLOT(slotHdrViewSortingChanged(int)));
   // KMail emulation...
@@ -1364,7 +1364,7 @@ void KNMainWidget::slotCollectionRMB(QListViewItem *i, const QPoint &p, int)
 }
 
 
-void KNMainWidget::slotArticleMMB(QListViewItem *item)
+void KNMainWidget::slotOpenArticle(QListViewItem *item)
 {
   if(b_lockui)
     return;

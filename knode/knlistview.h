@@ -2,7 +2,7 @@
     knlistview.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -120,7 +120,7 @@ class KNListView : public KListView  {
 
   signals:
     void itemSelected(QListViewItem*);
-    void middleMBClick(QListViewItem*);
+    void doubleClick( QListViewItem* );
     void sortingChanged(int);
     void focusChanged(QFocusEvent*);
     void focusChangeRequest(QWidget*);
@@ -136,3 +136,5 @@ class KNListView : public KListView  {
 };
 
 #endif
+
+// kate: space-indent on; indent-width 2;

@@ -2,7 +2,7 @@
     knlistview.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -343,11 +343,6 @@ void KNListView::contentsMousePressEvent(QMouseEvent *e)
     return;
   }
 
-  if ((e->button() == MidButton) && i) {
-    emit middleMBClick(i);
-    return;
-  }
-
   // hack: block clearSelection()...
   if (i && i->isSelected() && !selectMode &&
       ((vp.x() < header()->sectionPos(0)) ||
@@ -369,7 +364,15 @@ void KNListView::contentsMousePressEvent(QMouseEvent *e)
 
 void KNListView::contentsMouseDoubleClickEvent(QMouseEvent *e)
 {
-  QListView::contentsMouseDoubleClickEvent(e);
+  if (!e) return;
+
+  QListViewItem *i = itemAt( contentsToViewport(e->pos()) );
+  if (i) {
+    emit doubleClick(i);
+    return;
+  }
+
+  KListView::contentsMouseDoubleClickEvent(e);
 }
 
 
@@ -500,3 +503,5 @@ void KNListView::reparent(QWidget *parent, WFlags f, const QPoint &p, bool showI
 
 //--------------------------------
 #include "knlistview.moc"
+
+// kate: space-indent on; indent-width 2;

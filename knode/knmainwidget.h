@@ -217,7 +217,8 @@ protected slots:
   void slotCollectionViewDrop(QDropEvent* e, QListViewItem* after);
   void slotArticleRMB(QListViewItem *i, const QPoint &p, int);
   void slotCollectionRMB(QListViewItem *i, const QPoint &p, int);
-  void slotArticleMMB(QListViewItem *item);
+  /** Open selected article in own composer/reader window */
+  void slotOpenArticle(QListViewItem *item);
   void slotHdrViewSortingChanged(int i);
 
   void slotReparented();
@@ -324,7 +325,7 @@ protected:
   KAction *a_ctSwitchToGroupView,
     *a_ctSwitchToHeaderView,
     *a_ctSwitchToArticleViewer;
-    
+
 protected slots:
   void slotNavNextArt();
   void slotNavPrevArt();
