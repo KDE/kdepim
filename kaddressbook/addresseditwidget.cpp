@@ -264,7 +264,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   mTypeCombo = new AddressTypeCombo( mAddressList, page );
   topLayout->addMultiCellWidget( mTypeCombo, 0, 0, 0, 1 );
 
-  QLabel *label = new QLabel( KABC::Address::streetLabel() + ":", page );
+  QLabel *label = new QLabel( i18n( "<streetLabel>:", "%1:" ).arg( KABC::Address::streetLabel() ), page );
   label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
   topLayout->addWidget( label, 1, 0 );
   mStreetTextEdit = new QTextEdit( page );
@@ -274,31 +274,31 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   TabPressEater *eater = new TabPressEater( this );
   mStreetTextEdit->installEventFilter( eater );
 
-  label = new QLabel( KABC::Address::postOfficeBoxLabel() + ":", page );
+  label = new QLabel( i18n( "<postOfficeBoxLabel>:", "%1:" ).arg( KABC::Address::postOfficeBoxLabel() ), page );
   topLayout->addWidget( label, 2 , 0 );
   mPOBoxEdit = new KLineEdit( page );
   label->setBuddy( mPOBoxEdit );
   topLayout->addWidget( mPOBoxEdit, 2, 1 );
 
-  label = new QLabel( KABC::Address::localityLabel() + ":", page );
+  label = new QLabel( i18n( "<localityLabel>:", "%1:" ).arg( KABC::Address::localityLabel() ), page );
   topLayout->addWidget( label, 3, 0 );
   mLocalityEdit = new KLineEdit( page );
   label->setBuddy( mLocalityEdit );
   topLayout->addWidget( mLocalityEdit, 3, 1 );
 
-  label = new QLabel( KABC::Address::regionLabel() + ":", page );
+  label = new QLabel( i18n( "<regionLabel>:", "%1:" ).arg( KABC::Address::regionLabel() ), page );
   topLayout->addWidget( label, 4, 0 );
   mRegionEdit = new KLineEdit( page );
   label->setBuddy( mRegionEdit );
   topLayout->addWidget( mRegionEdit, 4, 1 );
 
-  label = new QLabel( KABC::Address::postalCodeLabel() + ":", page );
+  label = new QLabel( i18n( "<postalCodeLabel>:", "%1:" ).arg( KABC::Address::postalCodeLabel() ), page );
   topLayout->addWidget( label, 5, 0 );
   mPostalCodeEdit = new KLineEdit( page );
   label->setBuddy( mPostalCodeEdit );
   topLayout->addWidget( mPostalCodeEdit, 5, 1 );
 
-  label = new QLabel( KABC::Address::countryLabel() + ":", page );
+  label = new QLabel( i18n( "<countryLabel>:", "%1:" ).arg( KABC::Address::countryLabel() ), page );
   topLayout->addWidget( label, 6, 0 );
   mCountryCombo = new KComboBox( page );
   mCountryCombo->setEditable( true );

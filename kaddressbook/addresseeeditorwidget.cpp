@@ -169,7 +169,7 @@ void AddresseeEditorWidget::setupTab1()
   layout->addWidget( button, 0, 1 );
   layout->addWidget( mNameEdit, 0, 2 );
   layout->addWidget( mNameLabel, 0, 2 );
-  label = new QLabel( i18n( "%1:" ).arg( KABC::Addressee::roleLabel() ), tab1 );
+  label = new QLabel( i18n( "<roleLabel>:", "%1:" ).arg( KABC::Addressee::roleLabel() ), tab1 );
   mRoleEdit = new KLineEdit( tab1 );
   connect( mRoleEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
@@ -178,7 +178,7 @@ void AddresseeEditorWidget::setupTab1()
   layout->addWidget( mRoleEdit, 1, 2 );
 
   // Organization
-  label = new QLabel( i18n( "%1:" ).arg( KABC::Addressee::organizationLabel() ), tab1 );
+  label = new QLabel( i18n( "<organizationLabel>:", "%1:" ).arg( KABC::Addressee::organizationLabel() ), tab1 );
   mOrgEdit = new KLineEdit( tab1 );
   label->setBuddy( mOrgEdit );
   connect( mOrgEdit, SIGNAL( textChanged( const QString& ) ),
@@ -244,7 +244,7 @@ void AddresseeEditorWidget::setupTab1()
                                                      KIcon::SizeMedium ) );
   homePageLayout->addWidget( label );
 
-  label = new QLabel( i18n( "%1:" ).arg( KABC::Addressee::urlLabel() ), tab1 );
+  label = new QLabel( i18n( "<urlLabel>:", "%1:" ).arg( KABC::Addressee::urlLabel() ), tab1 );
   mURLEdit = new KLineEdit( tab1 );
   connect( mURLEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
@@ -357,7 +357,7 @@ void AddresseeEditorWidget::setupTab2()
   label->setBuddy( mAssistantEdit );
   layout->addMultiCellWidget( mAssistantEdit, 1, 1, 4, 5 );
 
-  label = new QLabel( i18n( "%1:" ).arg( KABC::Addressee::titleLabel() ), tab2 );
+  label = new QLabel( i18n( "<titleLabel>:", "%1:" ).arg( KABC::Addressee::titleLabel() ), tab2 );
   layout->addWidget( label, 2, 3 );
   mTitleEdit = new KLineEdit( tab2 );
   connect( mTitleEdit, SIGNAL( textChanged( const QString& ) ),
