@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Service
+Name=Konnector Backup
+Icon=
+ServiceTypes=KitchenSync/Manipulator
+X-KDE-Library=libksync_backup

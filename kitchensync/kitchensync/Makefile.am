@@ -1,5 +1,5 @@
 
-SUBDIRS = lib overview debugger syncerpart
+SUBDIRS = lib overview debugger syncerpart backup
 
 INCLUDES = -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/kitchensync/kitchensync/lib $(all_includes)
 
