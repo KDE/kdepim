@@ -378,9 +378,8 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 			  "</p></qt>") );
   }
 
-  if ( extendedSelection )
-    connect( mCheckSelectionTimer, SIGNAL(timeout()),
-             SLOT(slotCheckSelection()) );
+  connect( mCheckSelectionTimer, SIGNAL(timeout()),
+	   SLOT(slotCheckSelection()) );
   connectSignals();
 
   connect( mKeyListView,
