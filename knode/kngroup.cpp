@@ -178,6 +178,7 @@ bool KNGroup::loadHdrs()
         f.close();
         return false;
       }
+
       while(!f.atEnd()) {
         buff=f.readLine();    
         if(buff.isEmpty()){
@@ -188,7 +189,7 @@ bool KNGroup::loadHdrs()
             kdError(5003) << "Corrupted static file, IO-error!" << endl;
             clearList();
             return false;
-          }         
+          }
         }
         
         split.init(buff, "\t");
@@ -239,10 +240,10 @@ bool KNGroup::loadHdrs()
         else {
           f.close();
           clearList();
-          return false;     
+          return false;
         }
-  
       }
+
       setLastID();
       f.close();
     }
@@ -791,25 +792,10 @@ void KNGroup::showProperties()
   if(!u_ser) u_ser=new KNUserEntry();
   KNGroupPropDlg *d=new KNGroupPropDlg(this, knGlobals.topWidget);
   
-  if(d->exec()) {
-    if(d->nickHasChanged()) {
-      KNCollectionViewItem *p=p_arent->listItem();
-      QListView *v=l_istItem->listView();
-      QPixmap pm=*(l_istItem->pixmap(0));
-      bool sel=l_istItem->isSelected();
-    
-      delete l_istItem;
-      l_istItem=new KNCollectionViewItem(p);
-      l_istItem->coll=this;
-    
-      l_istItem->setPixmap(0, pm);
+  if(d->exec())
+    if(d->nickHasChanged())
       l_istItem->setText(0, name());
-      
-      updateListItem();
-      v->setSelected(l_istItem, sel);
-    }
-  }
-  
+
   if(u_ser->isEmpty()) {
     delete u_ser;
     u_ser=0;

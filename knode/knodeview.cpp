@@ -22,37 +22,38 @@
 #include <kglobalsettings.h>
 #include <kapp.h>
 
+#include "knode.h"
 #include "knappmanager.h"
 #include "knfoldermanager.h"
 #include "knarticlewidget.h"
-#include "knodeview.h"
 #include "knarticlecollection.h"
 #include "kncollectionviewitem.h"
 #include "knhdrviewitem.h"
 #include "knfocuswidget.h"
 #include "knfetcharticle.h"
 #include "knglobals.h"
+#include "knodeview.h"
 
 
 KNodeView::KNodeView(QWidget *parent, const char * name)
   : QSplitter(parent,name), longView(true)
 {
   setOpaqueResize(true);
-  colFocus=new KNFocusWidget(this);
-  collectionView=new KNListView(colFocus);
+  colFocus=new KNFocusWidget(this,"colFocus");
+  collectionView=new KNListView(colFocus,"collectionView");
   colFocus->setWidget(collectionView);
   setResizeMode(colFocus, QSplitter::KeepSize);
   
-  secSplitter=new QSplitter(QSplitter::Vertical,this);
+  secSplitter=new QSplitter(QSplitter::Vertical,this,"secSplitter");
   secSplitter->setOpaqueResize(true);
 
-  hdrFocus=new KNFocusWidget(secSplitter);
-  hdrView=new KNListView(hdrFocus);
+  hdrFocus=new KNFocusWidget(secSplitter,"hdrFocus");
+  hdrView=new KNListView(hdrFocus,"hdrViewFocus");
   hdrFocus->setWidget(hdrView);
   secSplitter->setResizeMode(hdrFocus, QSplitter::KeepSize);
 
-  artFocus=new KNFocusWidget(secSplitter);
-  artView=new KNArticleWidget(artFocus);
+  artFocus=new KNFocusWidget(secSplitter,"artFocus");
+  artView=new KNArticleWidget(artFocus,"artView");
   artFocus->setWidget(artView);
   
   initCollectionView();
@@ -457,6 +458,7 @@ void KNodeView::slotNextGroup()
       break;
     if(next->childCount()>0 && !next->isOpen()) {
       next->setOpen(true);
+      knGlobals.top->secureProcessEvents();
       next=static_cast<KNCollectionViewItem*>(next->firstChild());
     }
     else next=static_cast<KNCollectionViewItem*>(next->itemBelow());
@@ -483,15 +485,7 @@ void KNodeView::slotPrevGroup()
   while(prev) {
     if(!prev->isSelected())
       break;
-    if(prev->childCount()>0 && !prev->isOpen()) {
-      prev->setOpen(true);
-      kapp->processEvents();
-      current=prev;
-      prev=static_cast<KNCollectionViewItem*>(current->firstChild());
-      while(prev->itemBelow()->parent()==current)
-        prev=static_cast<KNCollectionViewItem*>(prev->itemBelow());
-    }
-    else prev=static_cast<KNCollectionViewItem*>(prev->itemAbove());
+    prev=static_cast<KNCollectionViewItem*>(prev->itemAbove());
   }   
 
   if(prev) {

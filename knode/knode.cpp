@@ -27,6 +27,7 @@
 #include <khtml_part.h>
 #include <kwin.h>
 #include <kdebug.h>
+#include <kmenubar.h>
 
 #include "knuserentry.h"
 #include "knjobdata.h"
@@ -146,7 +147,7 @@ QSize KNProgress::sizeHint() const
 
 
 KNodeApp::KNodeApp()
-  : KMainWindow(0), setDialog(0)
+  : KMainWindow(0,"mainWindow"), setDialog(0), blockInput(false)
 {
   bool is_first_start = firstStart();
 
@@ -254,7 +255,6 @@ void KNodeApp::setStatusMsg(const QString& text, int id)
     statusBar()->changeItem(i18n(" Ready"),SB_MAIN);
   else
     statusBar()->changeItem(text, id);
-  kapp->processEvents();
 }
 
 
@@ -274,18 +274,28 @@ void KNodeApp::setCursorBusy(bool b)
 
 
 
-void KNodeApp::blockEvents()
+void KNodeApp::blockUI(bool b)
 {
-  kapp->installEventFilter(this);
-  setCursorBusy(true);
+  blockInput = b;
+  menuBar()->setEnabled(!b);
+  acc->setEnabled(!b);
+  setCursorBusy(b);
 }
 
 
 
-void KNodeApp::unblockEvents()
+// processEvents with some blocking
+void KNodeApp::secureProcessEvents()
 {
-  kapp->removeEventFilter(this);
-  setCursorBusy(false);
+  blockInput = true;
+  menuBar()->setEnabled(false);
+  acc->setEnabled(false);
+
+  kapp->processEvents();
+
+  blockInput = false;
+  menuBar()->setEnabled(true);
+  acc->setEnabled(true);
 }
 
 
@@ -297,7 +307,7 @@ void KNodeApp::initView()
 {
   KNArticleWidget::readOptions();
   KNViewHeader::loadAll();
-  view = new KNodeView(this);
+  view = new KNodeView(this,"knodeView");
   setCentralWidget(view);
 
   connect(view->collectionView, SIGNAL(clicked(QListViewItem *)),
@@ -305,6 +315,9 @@ void KNodeApp::initView()
 
   connect(view->collectionView, SIGNAL(selectionChanged(QListViewItem *)),
     this, SLOT(slotCollectionSelected(QListViewItem *)));
+
+  connect(view->collectionView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
+    this, SLOT(slotCollectionPopup(QListViewItem*, const QPoint&, int)));
 
   connect(view->hdrView, SIGNAL(selectionChanged(QListViewItem *)),
     this, SLOT(slotHeaderSelected(QListViewItem *)));
@@ -314,9 +327,6 @@ void KNodeApp::initView()
 
   connect(view->hdrView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
     this, SLOT(slotArticlePopup(QListViewItem*, const QPoint&, int)));
-
-  connect(view->collectionView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
-    this, SLOT(slotCollectionPopup(QListViewItem*, const QPoint&, int)));
 }
 
 
@@ -344,11 +354,9 @@ void KNodeApp::initActions()
 
   acc=new KAccel(this);
   view->actReadThrough->plugAccel(acc);
-
   actShowAllHdrs = new KToggleAction(i18n("Show &all headers"), 0 , this, SLOT(slotToggleShowAllHdrs()),
                                      actionCollection(), "view_showAllHdrs");
   actShowAllHdrs->setChecked(KNArticleWidget::fullHeaders());
-
 
   actCancel = new KAction(i18n("article","&Cancel"), 0 , this, SLOT(slotCancel()),
                           actionCollection(), "article_cancel");
@@ -540,11 +548,13 @@ void KNodeApp::slotCollectionClicked(QListViewItem *it)
 
 void KNodeApp::slotCollectionSelected(QListViewItem *it)
 {
+  if (blockInput)
+    return;
+
   KNGroup *grp=0;
   KNFolder *fldr=0;
   KNNntpAccount *acc=0;
   view->hdrView->clear();
-  kapp->processEvents();
 
   if(it) {
     KNCollectionViewItem* collI = static_cast<KNCollectionViewItem*>(it);
@@ -583,6 +593,9 @@ void KNodeApp::slotCollectionSelected(QListViewItem *it)
 
 void KNodeApp::slotHeaderSelected(QListViewItem *it)
 {
+  if (blockInput)
+    return;
+
   KNFetchArticle *fart=0;
   KNSavedArticle *sart=0;
   if(it) {
@@ -601,6 +614,9 @@ void KNodeApp::slotHeaderSelected(QListViewItem *it)
 
 void KNodeApp::slotHeaderDoubleClicked(QListViewItem *it)
 {
+  if (blockInput)
+    return;
+
   KNFetchArticle *fart=0;
   KNSavedArticle *sart=0;
   if(it) {
@@ -619,6 +635,9 @@ void KNodeApp::slotHeaderDoubleClicked(QListViewItem *it)
 
 void KNodeApp::slotArticlePopup(QListViewItem *it, const QPoint &p, int)
 {
+  if (blockInput)
+    return;
+
   if (it) {
     if (static_cast<KNHdrViewItem*>(it)->art->type()==KNArticleBase::ATfetch)
       fetchPopup->popup(p);
@@ -631,6 +650,9 @@ void KNodeApp::slotArticlePopup(QListViewItem *it, const QPoint &p, int)
 
 void KNodeApp::slotCollectionPopup(QListViewItem *it, const QPoint &p, int c)
 {
+  if (blockInput)
+    return;
+
   if (it) {
     if ((static_cast<KNCollectionViewItem*>(it))->coll->type()==KNCollection::CTgroup) {
       groupPopup->popup(p);
@@ -683,6 +705,8 @@ void KNodeApp::cleanup()
 
 bool KNodeApp::queryClose()
 {
+  if (blockInput)
+    return false;
   if (!SAManager->closeComposeWindows())
     return false;
   cleanup();
@@ -722,22 +746,6 @@ void KNodeApp::paletteChange( const QPalette & )
 {
   progBar->setPalette(palette());    // should be called automatically?
 }
-
-
-
-
-bool KNodeApp::eventFilter(QObject* o, QEvent *e)
-{
-/*  if( (e->type()>1 && e->type()<10)  || //mouse and key events
-       e->type()==30 || //accel events
-       e->type()==31 // wheel events
-    )
-    return true;
-*/
-
-  return KMainWindow::eventFilter( o, e );
-}
-
 
 
 //--------------------------------

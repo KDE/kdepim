@@ -28,6 +28,7 @@
 #include <kurl.h>
 #include <kdebug.h>
 
+#include "knode.h"
 #include "knglobals.h"
 #include "knfolder.h"
 #include "kncollectionviewitem.h"
@@ -268,8 +269,11 @@ void KNFolderManager::compactAll(KNPurgeProgressDialog *dlg)
 {
   KNCleanUp cup;
   
-  if(dlg) dlg->init(i18n("Compacting folders ..."), fList->count());
-  
+  if (dlg) {
+    knGlobals.top->blockUI(true);
+    dlg->init(i18n("Compacting folders ..."), fList->count());
+  }
+
   for(KNFolder *var=fList->first(); var; var=fList->next()) {
     if(dlg) {
       dlg->setInfo(var->name());
@@ -279,7 +283,10 @@ void KNFolderManager::compactAll(KNPurgeProgressDialog *dlg)
     kdDebug(5003) << var->name() << " => " << cup.deleted() << " deleted , " << cup.left() << " left" << endl;
     if(dlg) dlg->progress();
   }
-  if(dlg) kapp->processEvents();
+  if (dlg) {
+    knGlobals.top->blockUI(false);
+    kapp->processEvents();
+  }
   
   KConfig *c=KGlobal::config();
   c->setGroup("EXPIRE");

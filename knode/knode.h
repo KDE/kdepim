@@ -80,8 +80,8 @@ class KNodeApp : public KMainWindow
     void setStatusMsg(const QString& = QString::null, int id=SB_MAIN);
     void setStatusHelpMsg(const QString& text);
     void setCursorBusy(bool b=true);
-    void blockEvents();
-    void unblockEvents();
+    void blockUI(bool b=true);
+    void secureProcessEvents();  // processEvents with some blocking
 
     //network
     void jobDone(KNJobData *j);
@@ -109,9 +109,6 @@ class KNodeApp : public KMainWindow
 
     virtual void paletteChange ( const QPalette & );
 
-    //even filter for kapp
-    bool eventFilter(QObject*, QEvent *e);
-
     //actions
     KAction *actCancel, *actSupersede;
     KToggleAction *actShowAllHdrs;
@@ -133,6 +130,8 @@ class KNodeApp : public KMainWindow
     KNSavedArticleManager *SAManager;
     KNFilterManager *FiManager;
     KNAppManager *AppManager;
+
+    bool blockInput;
 
   protected slots:
 

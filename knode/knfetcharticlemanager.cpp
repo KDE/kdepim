@@ -153,6 +153,8 @@ void KNFetchArticleManager::showHdrs(bool clear)
 
   knGlobals.top->setCursorBusy(true);
   knGlobals.top->setStatusMsg(i18n(" Creating list ..."));
+  knGlobals.top->secureProcessEvents();
+
   if(clear) {
     view->clear();
     setCurrentArticle(0);
@@ -182,14 +184,12 @@ void KNFetchArticleManager::showHdrs(bool clear)
         art->updateListItem();
     }
   }
-
   if(view->firstChild())
     view->setCurrentItem(view->firstChild());
 
   knGlobals.top->setStatusMsg("");
-  knGlobals.top->setCursorBusy(false);
-
   updateStatusString();
+  knGlobals.top->setCursorBusy(false);
 }
 
 
@@ -429,12 +429,10 @@ void KNFetchArticleManager::showArticle(KNArticle *a)
 
 void KNFetchArticleManager::showCancel(KNArticle *a)
 {
-//  KNArticleWidget *aw=KNArticleWidget::find(a);
   if(a==c_urrent) {
     timer->stop();
 //    knGlobals.top->fetchArticleDisplayed(false);
   }
-//  if(aw) aw->showCancelMessage();             // I think we don't need this, check later (CG)
 }
 
 

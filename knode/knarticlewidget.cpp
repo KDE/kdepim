@@ -514,7 +514,6 @@ bool KNArticleWidget::inlinePossible(KNMimeContent *c)
 
 void KNArticleWidget::showBlankPage()
 {
-
   kdDebug(5003) << "KNArticleWidget::showBlankPage()" << endl;
   setText(QString::null);
 
@@ -708,7 +707,7 @@ void KNArticleWidget::createHtmlPage()
       for(bool b=codec.setFirstLine(); b; b=codec.setNextLine()) {
         line=codec.currentUnicodeLine();
         if(!line.isNull()) {
-          if(!isSig && line.left(3)=="-- ") {
+          if(!isSig && line=="-- ") {
             isSig=true;
             if(newLevel>0) {
               newLevel=0;

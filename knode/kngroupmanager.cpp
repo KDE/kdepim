@@ -327,8 +327,11 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
 {
   KNCleanUp cup;
   
-  if(dlg) dlg->init(i18n("Deleting expired articles ..."), gList->count());
-  
+  if (dlg) {
+    knGlobals.top->blockUI(true);
+    dlg->init(i18n("Deleting expired articles ..."), gList->count());
+  }
+
   for(KNGroup *var=gList->first(); var; var=gList->next()) {
     if(dlg) {
       dlg->setInfo(var->name());
@@ -338,7 +341,10 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
     kdDebug() << var->name() << " => " << cup.deleted() << " expired , " << cup.left() << " left" << endl;
     if(dlg) dlg->progress();
   }
-  if(dlg) kapp->processEvents();
+  if (dlg) {
+    knGlobals.top->blockUI(false);
+    kapp->processEvents();
+  }
   
   KConfig *c=KGlobal::config();
   c->setGroup("EXPIRE");
@@ -494,9 +500,7 @@ void KNGroupManager::setCurrentGroup(KNGroup *g)
   kdDebug(5003) << "KNGroupManager::setCurrentGroup() : group changed" << endl;
   
   if (g) {
-    knGlobals.top->setCursorBusy(true);
     loaded=g->loadHdrs();
-    knGlobals.top->setCursorBusy(false);  
     if (loaded) {
       aManager->showHdrs();
       if(a_utoCheck) checkGroupForNewHeaders(g);

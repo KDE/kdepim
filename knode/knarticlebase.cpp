@@ -227,7 +227,7 @@ QCString KNArticleBase::encodeRFC1522String(const QCString aStr)
   
   /*lobal::config()->setGroup("POSTNEWS");
   chset=KGlobal::config()->readEntry("Charset", "ISO-8859-1").upper().local8Bit();*/
-  if(defaultChSet=="US-ASCII") chset="ISO-8859-1";
+  if(defaultChSet.upper()=="US-ASCII") chset="ISO-8859-1";
   else chset=defaultChSet;
   
   if(!split.first()) tmp=aStr;

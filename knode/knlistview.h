@@ -85,6 +85,7 @@ class KNListView : public QListView  {
     int sCol; 
       
   signals:
+    void exSelectionChanged(QListViewItem *);
     void sortingChanged(int);
     void focusChanged(QFocusEvent*);  
     

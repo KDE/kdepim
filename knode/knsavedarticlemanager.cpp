@@ -138,10 +138,12 @@ void KNSavedArticleManager::showHdrs()
   KNHdrViewItem *it;
   //bool filterResult=true;
   if(!f_older) return;
-  
-  view->clear();
+
   knGlobals.top->setCursorBusy(true);
   knGlobals.top->setStatusMsg(i18n(" Creating list ..."));
+  knGlobals.top->secureProcessEvents();
+
+  view->clear();
   for(int idx=0; idx<f_older->length(); idx++) {
     art=f_older->at(idx);
     //if(f_ilter) filterResult=f_ilter->applyFilter(art);
@@ -155,8 +157,8 @@ void KNSavedArticleManager::showHdrs()
     view->setCurrentItem(view->firstChild());
   
   knGlobals.top->setStatusMsg();
-  knGlobals.top->setCursorBusy(false);
   updateStatusString();
+  knGlobals.top->setCursorBusy(false);
 }
 
 

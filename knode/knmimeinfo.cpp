@@ -295,7 +295,7 @@ void KNMimeInfo::setCTParameter(const QCString &name, const QCString &value, boo
 
 void KNMimeInfo::setCharsetParameter(const QCString &p)
 {
-  setCTParameter("charset", p);
+  setCTParameter("charset", p, false);
 }
 
 
