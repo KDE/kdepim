@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>02/08/2000</date>
+<date>03/08/2000</date>
 <releaseinfo>1.01.62</releaseinfo>
 
 <abstract>
@@ -524,11 +524,6 @@ other actions a filter can start:</para>
 	<listitem><para><guilabel>set transport</guilabel> will set the method of transport (e.g. <acronym>SMTP</acronym>)
 		if you reply to the message.</para></listitem>
 	<listitem><para><guilabel>transfer</guilabel> will move the message to another folder.</para></listitem>
-	<listitem><para><guilabel>skip rest</guilabel> will ignore the other rules. You can use this to make
-		a rule more important than others. Move your important rule to the top of
-		the list and select <guilabel>skip rest</guilabel> (of course you should still
-		additionally select another rule that actually <emphasis>does</emphasis> something).
-		Other rules won't be applied to this message then.</para></listitem>
 	<listitem><para><guilabel>forward to</guilabel> will forward the message to another email address.</para></listitem>
 	<listitem><para><guilabel>execute</guilabel> will execute a program, but will not modify the message.
 		Specify the full path to any program you want to execute. &kmail; will block
@@ -596,11 +591,6 @@ sections.</para>
 <guilabel>From</guilabel>, <guilabel>contains</guilabel>. Now, type 
 <userinput>fj@anywhere.com</userinput> in the text field.</para>
 </listitem>
-<!-- can be ignored, right?:
-<listitem>
-<para>Select "Skip Rest" from the next pull-down menu.</para>
-</listitem>
--->
 </orderedlist>
 </para>
 
