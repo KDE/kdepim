@@ -38,6 +38,7 @@
     <Menu name="view"><text>&amp;View</text>
       <ActionList name="view_loadedviews"/> 
       <Separator/>
+      <Action name="select_view"/>
       <Action name="view_add"/>
       <Action name="view_modify"/>
       <Action name="view_delete"/>
