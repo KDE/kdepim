@@ -32,7 +32,7 @@
 #include "knglobals.h"
 
 //----------------------------------------------------------------------------
-static NotifyCollection* KNScorableArticle::notifyC = 0;
+NotifyCollection* KNScorableArticle::notifyC = 0;
 
 KNScorableArticle::KNScorableArticle(KNRemoteArticle* a)
   : ScorableArticle(), _a(a)
