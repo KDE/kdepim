@@ -47,6 +47,8 @@
 #include <gpgmepp/context.h>
 #include <gpgmepp/data.h>
 
+#include <gpg-error.h>
+
 #include <iterator>
 #include <algorithm>
 
@@ -54,7 +56,7 @@
 
 Kleo::HierarchicalKeyListJob::HierarchicalKeyListJob( const CryptoBackend::Protocol * protocol,
 						      bool remote, bool includeSigs, bool validating )
-  : Job( 0, "Kleo::HierarchicalKeyListJob" ),
+  : KeyListJob( 0, "Kleo::HierarchicalKeyListJob" ),
     mProtocol( protocol ),
     mRemote( remote ),
     mIncludeSigs( includeSigs ),
@@ -70,13 +72,21 @@ Kleo::HierarchicalKeyListJob::~HierarchicalKeyListJob() {
 
 }
 
-GpgME::Error Kleo::HierarchicalKeyListJob::start( const QStringList & patterns ) {
+GpgME::Error Kleo::HierarchicalKeyListJob::start( const QStringList & patterns, bool secretOnly ) {
+  if ( secretOnly || patterns.empty() )
+    return gpg_err_make( GPG_ERR_SOURCE_GPGME, GPG_ERR_UNSUPPORTED_OPERATION );
   qCopy( patterns.begin(), patterns.end(),
 	 std::inserter( mNextSet, mNextSet.begin() ) );
   const GpgME::Error err = startAJob();
   if ( err )
     deleteLater();
   return err;
+}
+
+GpgME::KeyListResult Kleo::HierarchicalKeyListJob::exec( const QStringList &, bool,
+							 std::vector<GpgME::Key> & keys ) {
+  keys.clear();
+  return GpgME::KeyListResult( gpg_err_make( GPG_ERR_SOURCE_GPGME, GPG_ERR_UNSUPPORTED_OPERATION ) );
 }
 
 void Kleo::HierarchicalKeyListJob::slotNextKey( const GpgME::Key & key ) {

@@ -33,7 +33,7 @@
 #ifndef __KLEO_HIERARCHICALKEYLISTJOB_H__
 #define __KLEO_HIERARCHICALKEYLISTJOB_H__
 
-#include <kleo/job.h>
+#include <kleo/keylistjob.h>
 #include <kleo/cryptobackend.h>
 
 #include <gpgmepp/keylistresult.h>
@@ -66,7 +66,7 @@ namespace Kleo {
      After result() is emitted, the HierarchicalKeyListJob will
      schedule its own destruction by calling QObject::deleteLater().
   */
-  class HierarchicalKeyListJob : public Job {
+  class HierarchicalKeyListJob : public KeyListJob {
     Q_OBJECT
   public:
     HierarchicalKeyListJob( const CryptoBackend::Protocol * protocol,
@@ -74,18 +74,18 @@ namespace Kleo {
     ~HierarchicalKeyListJob();
 
     /**
-       Starts the keylist operation. \a pattern is a list of patterns
+       Starts the keylist operation. \a patterns is a list of patterns
        used to restrict the list of keys returned. Empty patterns are
-       ignored. If \a pattern is empty or contains only empty strings,
-       all keys are returned (however, the backend is free to truncate
-       the result and should do so; when this happens, it will be
-       reported by the reult object).
-    */
-    GpgME::Error start( const QStringList & patterns );
+       ignored. \a patterns must not be empty or contain only empty
+       patterns; use the normal KeyListJob for a full listing.
 
-  signals:
-    void nextKey( const GpgME::Key & key );
-    void result( const GpgME::KeyListResult & result );
+       The \a secretOnly parameter is ignored by
+       HierarchicalKeyListJob and must be set to false.
+    */
+    GpgME::Error start( const QStringList & patterns, bool secretOnly=false );
+
+    GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly,
+			       std::vector<GpgME::Key> & keys );
 
   private slots:
     void slotResult( const GpgME::KeyListResult & );
