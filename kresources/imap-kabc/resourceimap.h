@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2002 Klarälvdalens Datakonsult AB 
+    Copyright (c) 2002 - 2004 Klarälvdalens Datakonsult AB 
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 #ifndef RESOURCEIMAP_H
 #define RESOURCEIMAP_H
 
+#include <kabc/vcardconverter.h>
 #include <kabc/resource.h>
 #include <dcopobject.h>
 
@@ -58,14 +59,9 @@ public:
   virtual ~ResourceIMAP();
 
   /**
-   * Open the resource and returns if it was successfully
+   * Make sure KMail is able to run.
    */
   virtual bool doOpen();
-
-  /**
-   * Close the resource and returns if it was successfully
-   */
-  virtual void doClose();
 
   /**
    * Request a ticket, you have to pass through save() to
@@ -80,36 +76,16 @@ public:
   virtual void releaseSaveTicket( Ticket* );
 
   /**
-   * Load all addressees to the addressbook
+  * Load all addressees to the addressbook
    */
   virtual bool load();
 
   /**
-     Loads all addressees asyncronously. You have to make sure that either
-     the loadingFinished() or loadingError() signal is emitted from within
-     this function.
-
-     @return Whether the synchronous part of loading was successfully.
-  */
-  virtual bool asyncLoad();
-
-  /**
-   * Save all addressees to the addressbook.
+  * Save all addressees to the addressbook.
    *
    * @param ticket The ticket you get by requestSaveTicket()
    */
   virtual bool save( Ticket *ticket );
-
-  /**
-     Saves all addressees asynchronously. You have to make sure that either
-     the savingFinished() or savingError() signal is emitted from within
-     this function.
-
-     @param ticket You have to release the ticket later with
-     releaseSaveTicket() explicitely.
-     @return Whether the saving was successfully.
-  */
-  virtual bool asyncSave( Ticket *ticket );
 
   /**
      Insert an addressee into the resource.
@@ -135,6 +111,8 @@ private:
   FormatPlugin* mFormat;
   QStringList mDeletedAddressees;
   QCString mAppId;
+
+  KABC::VCardConverter mConverter;
 
   mutable KMailICalIface_stub* mKMailIcalIfaceStub;
 };
