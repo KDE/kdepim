@@ -856,6 +856,9 @@ static KCmdLineOptions kpilotoptions[] = {
 		0L},
 	{"c", 0, 0},
 	{"conduit-setup", I18N_NOOP("Run conduit setup"), 0L},
+#ifdef DEBUG
+	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
+#endif
 	{0, 0, 0}
 };
 
@@ -905,12 +908,16 @@ int main(int argc, char **argv)
 
 
 	KCmdLineArgs::init(argc, argv, &about);
-#ifdef DEBUG
-	KCmdLineArgs::addCmdLineOptions(debug_options, "debug", "debug");
-#endif
-	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilot", 0L, "debug");
+	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilot");
 	KUniqueApplication::addCmdLineOptions();
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
+
+#ifdef DEBUG
+	{
+		QString s = p->getOption("debug");
+		debug_level = s.toInt();
+	}
+#endif
 
 	if (p->isSet("setup"))
 	{

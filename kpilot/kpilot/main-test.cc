@@ -79,6 +79,9 @@ static KCmdLineOptions kpilotoptions[] = {
 	{ "test-local",
 		"Run the conduit in file-test mode.",
 		0 } ,
+#ifdef DEBUG
+	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
+#endif
 	{0, 0, 0}
 };
 
@@ -281,11 +284,7 @@ int main(int argc, char **argv)
 		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
 
 	KCmdLineArgs::init(argc, argv, &about);
-#ifdef DEBUG
-	KCmdLineArgs::addCmdLineOptions(debug_options, "debug", "debug");
-#endif
-	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilottest", 0L,
-		"debug");
+	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilottest");
 	KApplication::addCmdLineOptions();
 
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
@@ -293,7 +292,7 @@ int main(int argc, char **argv)
 
 	KApplication a;
 #ifdef DEBUG
-	debug_level = -1;
+	debug_level = p->getOption("debug").toInt();
 #endif
 
 	if (p->isSet("backup") || p->isSet("restore") || p->isSet("list"))

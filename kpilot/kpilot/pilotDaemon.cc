@@ -992,6 +992,14 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 		);
 }
 
+static KCmdLineOptions daemonoptions[] = {
+	{ "dummy", I18N_NOOP("Dummy command line argument."), 0},
+#ifdef DEBUG
+	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
+#endif
+	{ 0,0,0 }
+} ;
+
 
 int main(int argc, char **argv)
 {
@@ -1010,24 +1018,19 @@ int main(int argc, char **argv)
 		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
 
 	KCmdLineArgs::init(argc, argv, &about);
+	KCmdLineArgs::addCmdLineOptions(daemonoptions,"kpilotconfig");
 	KUniqueApplication::addCmdLineOptions();
+	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
+
 #ifdef DEBUG
-	DEBUGDAEMON << fname
-		<< ": Adding debug options." << endl;
-	// KCmdLineArgs::addCmdLineOptions(debug_options); // , "debug");
-
-
-
-	DEBUGDAEMON << fname << ": Starting app." << endl;
+	debug_level = p->getOption("debug").toInt();
 #endif
+
 	if (!KUniqueApplication::start())
 	{
 		return 0;
 	}
 	KUniqueApplication a(true, true);
-
-	// No options besides debug
-	// KPilotConfig::getDebugLevel(false);
 
 	// A block just to keep variables local.
 	//

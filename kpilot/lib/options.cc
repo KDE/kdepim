@@ -143,14 +143,6 @@ struct tm writeTm(const QDate &dt)
   return t;
 }
 
-static KCmdLineOptions debug_options_[] = {
-	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
-	{0, 0, 0}
-};
-
-KCmdLineOptions *debug_options = debug_options_;
-
-
 int const fname = ((int) options_id);
 
 

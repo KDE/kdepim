@@ -127,9 +127,6 @@ using namespace std;
 extern int debug_level;
 extern const char *debug_spaces;
 
-class KCmdLineOptions;
-extern KCmdLineOptions *debug_options;
-
 #ifdef DEBUG
 // Both old and new-style debugging suggest (insist?) that
 // every function be started with the macro FUNCTIONSETUP,

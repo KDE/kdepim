@@ -51,6 +51,9 @@ static const char *config_id =
 static KCmdLineOptions kpilotoptions[] = {
 	{ "c",0,0 },
 	{ "conduits", I18N_NOOP("Configure conduits instead."), 0},
+#ifdef DEBUG
+	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
+#endif
 	{ 0,0,0 }
 } ;
 
@@ -70,15 +73,15 @@ int main(int argc, char **argv)
 		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
 
 	KCmdLineArgs::init(argc, argv, &about);
-#ifdef DEBUG
-	KCmdLineArgs::addCmdLineOptions(debug_options, "debug", "debug");
-#endif
-	KCmdLineArgs::addCmdLineOptions(kpilotoptions,"kpilotconfig",0L,"debug");
+	KCmdLineArgs::addCmdLineOptions(kpilotoptions,"kpilotconfig");
 	KApplication::addCmdLineOptions();
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 
 	KApplication a;
 
+#ifdef DEBUG
+	debug_level = p->getOption("debug").toInt();
+#endif
 	KPilotConfig::getDebugLevel(true);
 
 	int r = 0;
