@@ -45,6 +45,8 @@
 #include <backends/qgpgme/qgpgmeexportjob.h>
 #include <backends/qgpgme/qgpgmedownloadjob.h>
 #include <backends/qgpgme/qgpgmedeletejob.h>
+#include <backends/qgpgme/qgpgmesignencryptjob.h>
+#include <backends/qgpgme/qgpgmedecryptverifyjob.h>
 
 // qgpgme
 #include <qgpgme/dataprovider.h>
@@ -1430,24 +1432,28 @@ Kleo::SignJob * CryptPlugWrapper::signJob( int includedCerts, bool armor, bool t
   return new Kleo::QGpgMESignJob( context );
 }
 
-Kleo::VerifyDetachedJob * CryptPlugWrapper::verifyDetachedJob() const {
+Kleo::VerifyDetachedJob * CryptPlugWrapper::verifyDetachedJob( bool textMode ) const {
   if ( !_cp )
     return 0;
 
   GpgME::Context * context = GpgME::Context::createForProtocol( _cp->mProtocol );
   if ( !context )
     return 0;
+
+  context->setTextMode( textMode );
 
   return new Kleo::QGpgMEVerifyDetachedJob( context );
 }
 
-Kleo::VerifyOpaqueJob * CryptPlugWrapper::verifyOpaqueJob() const {
+Kleo::VerifyOpaqueJob * CryptPlugWrapper::verifyOpaqueJob( bool textMode ) const {
   if ( !_cp )
     return 0;
 
   GpgME::Context * context = GpgME::Context::createForProtocol( _cp->mProtocol );
   if ( !context )
     return 0;
+
+  context->setTextMode( textMode );
 
   return new Kleo::QGpgMEVerifyOpaqueJob( context );
 }
@@ -1510,4 +1516,32 @@ Kleo::DeleteJob * CryptPlugWrapper::deleteJob() const {
     return 0;
 
   return new Kleo::QGpgMEDeleteJob( context );
+}
+
+Kleo::SignEncryptJob * CryptPlugWrapper::signEncryptJob( int includedCerts, bool armor, bool textMode ) const {
+  if ( !_cp )
+    return 0;
+
+  GpgME::Context * context = GpgME::Context::createForProtocol( _cp->mProtocol );
+  if ( !context )
+    return 0;
+
+  context->setIncludeCertificates( includedCerts );
+  context->setArmor( armor );
+  context->setTextMode( textMode );
+
+  return new Kleo::QGpgMESignEncryptJob( context );
+}
+
+Kleo::DecryptVerifyJob * CryptPlugWrapper::decryptVerifyJob( bool textMode ) const {
+  if ( !_cp )
+    return 0;
+
+  GpgME::Context * context = GpgME::Context::createForProtocol( _cp->mProtocol );
+  if ( !context )
+    return 0;
+
+  context->setTextMode( textMode );
+
+  return new Kleo::QGpgMEDecryptVerifyJob( context );
 }

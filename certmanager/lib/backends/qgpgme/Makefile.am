@@ -15,7 +15,9 @@ libkleopatra_backend_qgpgme_la_SOURCES = \
 			qgpgmedecryptjob.cpp \
 			qgpgmesignjob.cpp \
 			qgpgmeverifydetachedjob.cpp \
-			qgpgmeverifyopaquejob.cpp
+			qgpgmeverifyopaquejob.cpp \
+			qgpgmesignencryptjob.cpp \
+			qgpgmedecryptverifyjob.cpp
 
 #libkleopatra_backend_qgpgme_la_LIBADD = ../../kleo/libkleopatra_core.la
 #libkleopatra_backend_qgpgme_la_LDFLAGS = $(all_libraries)
