@@ -29,8 +29,8 @@
 #include <klineedit.h>
 #include <knuminput.h>
 
-#include "resource.h"
-#include "resourceconfigwidget.h"
+#include <kresources/resource.h>
+#include <kresources/resourceconfigwidget.h>
 
 namespace KCal {
 

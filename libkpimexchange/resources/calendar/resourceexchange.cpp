@@ -33,7 +33,7 @@
 #include <libkcal/calendar.h>
 #include <libkcal/journal.h>
 
-#include <resourceconfigwidget.h>
+#include <kresources/resourceconfigwidget.h>
 
 #include "dateset.h"
 #include "exchangeaccount.h"
