@@ -86,8 +86,6 @@ class KNodeApp : public KMainWindow
     void blockUI(bool b=true);
     void secureProcessEvents();  // processEvents with some blocking
 
-    virtual QSize sizeHint() const;   // useful default value
-
     //network
     void jobDone(KNJobData *j);
 

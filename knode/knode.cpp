@@ -200,6 +200,7 @@ KNodeApp::KNodeApp()
 
   KConfig *conf = KGlobal::config();
   conf->setGroup("mainWindow_options");
+  resize(759,478);  // default optimized for 800x600
   applyMainWindowSettings(conf);
   actShowToolbar->setChecked(!toolBar()->isHidden());
   actShowStatusbar->setChecked(!statusBar()->isHidden());
@@ -359,13 +360,6 @@ void KNodeApp::secureProcessEvents()
 }
 
 
-
-QSize KNodeApp::sizeHint() const
-{
-  return QSize(759,478);    // default optimized for 800x600
-}
-
-
 //============================ INIT && UPDATE ============================
 
 
@@ -500,6 +494,7 @@ bool KNodeApp::firstStart()
   KNServerInfo *serverInfo=new KNServerInfo();
   serverInfo->setType(KNServerInfo::STsmtp);
   serverInfo->setServer(emailConf.readEntry("Outgoing").local8Bit());
+  serverInfo->setPort(25);
   conf->setGroup("MAILSERVER");
   serverInfo->saveConf(conf);
   delete serverInfo;

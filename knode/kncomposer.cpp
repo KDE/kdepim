@@ -151,6 +151,7 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, bool firstEdit, K
 
   KConfig *conf = KGlobal::config();
   conf->setGroup("composerWindow_options");
+  resize(535,450);    // default optimized for 800x600
   applyMainWindowSettings(conf);
   actShowToolbar->setChecked(!toolBar()->isHidden());
 
@@ -169,11 +170,6 @@ KNComposer::~KNComposer()
   }
 }
 
-
-QSize KNComposer::sizeHint() const
-{
-  return QSize(535,450);    // default optimized for 800x600
-}
 
 
 void KNComposer::setConfig()

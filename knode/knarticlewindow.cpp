@@ -90,6 +90,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col)
 
   KConfig *conf = KGlobal::config();
   conf->setGroup("articleWindow_options");
+  resize(500,400);    // default optimized for 800x600
   applyMainWindowSettings(conf);
   actShowToolbar->setChecked(!toolBar()->isHidden());
 }
@@ -99,13 +100,6 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col)
 KNArticleWindow::~KNArticleWindow()
 {
   instances.removeRef(this);
-}
-
-
-
-QSize KNArticleWindow::sizeHint() const
-{
-  return QSize(500,400);    // default optimized for 800x600
 }
 
 

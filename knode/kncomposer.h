@@ -65,8 +65,6 @@ class KNComposer : public KMainWindow  {
     void setConfig();
     void applyChanges();      
 
-    virtual QSize sizeHint() const;   // useful default value
-            
   protected:
     void closeEvent(QCloseEvent *e);
     void initData();    

@@ -36,8 +36,6 @@ class KNArticleWindow : public KMainWindow  {
     ~KNArticleWindow();
     KNArticleWidget* artWidget()        { return artW; }
 
-    virtual QSize sizeHint() const;   // useful default value
-
     static void closeAllWindowsForCollection(KNArticleCollection *col);
       
   protected:
