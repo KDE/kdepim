@@ -83,8 +83,8 @@ ReportCriteria CSVExportDialog::reportCriteria()
   // moment.
   rc.allTasks = true;
 
-  QString t = grpTimeFormat->selected()->text(); 
-  rc.decimalMinutes = ( t == i18n( "Decimal" ) );
+  QString t = grpTimeFormat->selected()->name(); 
+  rc.decimalMinutes = ( t == i18n( "radioDecimal" ) );
 
   QString d = grpDelimiter->selected()->name(); 
   if      ( d == i18n( "radioComma" ) )     rc.delimiter = ",";
