@@ -21,7 +21,7 @@ bool operator < (mapitag_t & a,mapitag_t & b)  { return a._order<b._order; }
 bool operator > (mapitag_t & a,mapitag_t & b)  { return a._order>b._order; }
 bool operator == (mapitag_t & a,mapitag_t & b) { return a._order==b._order; }
 
-word_t
+static word_t
 map_givenname[]=
    { pr_givenname,
           SET_MS_GIVEN_NAME,
@@ -127,7 +127,7 @@ map_notused[]=
    };
 
 
-word_t *mapi_map[]={ map_givenname, map_email,
+static word_t *mapi_map[]={ map_givenname, map_email,
                      map_firstname, map_lastname, map_additionalname,map_title,
                      map_address,   map_town, map_zip, map_state, map_country,
                      map_tel, map_mobile, map_fax,
