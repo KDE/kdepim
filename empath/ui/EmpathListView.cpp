@@ -21,15 +21,14 @@
 */
 
 // TODO: Make shift key work, document this class, have an indicator
-// to show when the mouse pointer is over an item. For the latter I 
-// think of a different text color like in qiconview, but that's not
-// easy to implement.
+// to show when the mouse pointer is over an item. 
 
 #ifdef __GNUG__
 # pragma implementation "EmpathListView.h"
 #endif
 
 // QT includes
+#include <qapplication.h>
 #include <qtimer.h>
 
 // Local includes
@@ -37,7 +36,7 @@
 
 EmpathListView::EmpathListView(
     QWidget * parent, const char * name)
-    :   QListView(parent, name),
+    :   KListView(parent, name),
         delayedLink_(false),
         waitForLink_(false),
         dragEnabled_(true),
@@ -275,7 +274,8 @@ EmpathListView::contentsMouseMoveEvent(QMouseEvent *e)
 
     QPoint p = e->pos();
 
-    if ( (p - pressPos_).manhattanLength() < 10) { // FIXME: Hardcoded
+    if ( (p - pressPos_).manhattanLength() < 
+                QApplication::startDragDistance()) {
         // Ignore, we haven't moved the cursor far enough.
         // QListView::contentsMouseMoveEvent(e);
         return;
@@ -308,15 +308,17 @@ EmpathListView::contentsMouseMoveEvent(QMouseEvent *e)
 
     void
 EmpathListView::keyPressEvent(QKeyEvent *e)
-{  
+{ 
+    /*
     delayedLink_ = true;
 
     if (e->key() == Key_Escape && isMultiSelection()) {
         clearSelection();
         return;
     }
+    */
     
-    QListView::keyPressEvent(e);
+    KListView::keyPressEvent(e);
 }
 
 // vim:ts=4:sw=4:tw=78

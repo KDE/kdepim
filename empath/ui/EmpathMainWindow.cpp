@@ -142,14 +142,19 @@ EmpathMainWindow::_setupToolBar()
     QObject::connect(tb, SIGNAL(moved(BarPosition)),
             this, SLOT(s_toolbarMoved(BarPosition)));
 
-    messageListWidget_->messageCompose->plug(tb);
-    messageListWidget_->messageReply->plug(tb);
-    messageListWidget_->messageForward->plug(tb);
+    messageListWidget_->a_messageCompose->plug(tb);
+    messageListWidget_->a_messageReply->plug(tb);
+    messageListWidget_->a_messageForward->plug(tb);
 
     tb->insertSeparator();
 
-    messageListWidget_->messageDelete->plug(tb);
-    messageListWidget_->messageSaveAs->plug(tb);
+    messageListWidget_->a_messageDelete->plug(tb);
+    messageListWidget_->a_messageSaveAs->plug(tb);
+    
+    tb->insertSeparator();
+
+    messageListWidget_->a_goPrevious->plug(tb);
+    messageListWidget_->a_goNext->plug(tb);
 }
 
     void

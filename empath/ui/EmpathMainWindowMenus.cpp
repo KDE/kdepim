@@ -9,6 +9,7 @@ EmpathMainWindow::_setupMenuBar()
 {
     fileMenu_       = new QPopupMenu;
     selectMenu_     = new QPopupMenu;
+    goMenu_         = new QPopupMenu;
     folderMenu_     = new QPopupMenu;
     messageMenu_    = new QPopupMenu;
     optionsMenu_    = new QPopupMenu;
@@ -35,6 +36,13 @@ EmpathMainWindow::_setupMenuBar()
     
     selectMenu_->insertItem(i18n("&Invert"),
         this, SLOT(s_editInvertSelection()));
+  
+
+    // Go menu
+  
+    messageListWidget_->a_goPrevious->plug(goMenu_);
+    messageListWidget_->a_goNext->plug(goMenu_);
+    messageListWidget_->a_goNextUnread->plug(goMenu_);
     
     // Folder menu
 
@@ -53,54 +61,25 @@ EmpathMainWindow::_setupMenuBar()
     folderMenu_->insertItem(
         i18n("Delete") + "...",
         this, SLOT(s_folderDelete()));
-
-    
-    messageMenu_->insertItem(empathIcon("menu-view"),
-        i18n("&View"),
-        this, SLOT(s_messageView()));
+   
+    // Message menu
+   
+    messageListWidget_->a_messageView->plug(messageMenu_);
     
     messageMenu_->insertSeparator();
 
-    messageListWidget_->messageCompose->plug(messageMenu_);
-    messageListWidget_->messageReply->plug(messageMenu_);
-    messageListWidget_->messageReplyAll->plug(messageMenu_);
-    messageListWidget_->messageForward->plug(messageMenu_);
+    messageListWidget_->a_messageCompose->plug(messageMenu_);
+    messageListWidget_->a_messageReply->plug(messageMenu_);
+    messageListWidget_->a_messageReplyAll->plug(messageMenu_);
+    messageListWidget_->a_messageForward->plug(messageMenu_);
     
-/*
-    messageMenu_->insertItem(empathIcon("menu-compose"),
-        i18n("&New"),
-        this, SLOT(s_messageNew()));
-
-    messageMenu_->insertItem(empathIcon("menu-reply"),
-        i18n("&Reply"),
-        this, SLOT(s_messageReply()));
-
-    messageMenu_->insertItem(empathIcon("menu-reply"),
-        i18n("Reply to &All"),
-        this, SLOT(s_messageReplyAll()));
-
-    messageMenu_->insertItem(empathIcon("menu-forward"),
-        i18n("&Forward"),
-        this, SLOT(s_messageForward()));
-*/
-
     messageMenu_->insertItem(empathIcon("menu-bounce"),
         i18n("&Bounce"),
         this, SLOT(s_messageBounce()));
 
-    messageListWidget_->messageDelete->plug(messageMenu_);
-    messageListWidget_->messageSaveAs->plug(messageMenu_);
+    messageListWidget_->a_messageDelete->plug(messageMenu_);
+    messageListWidget_->a_messageSaveAs->plug(messageMenu_);
 
-/*
-    messageMenu_->insertItem(empathIcon("menu-delete"),
-        i18n("&Delete"),
-        this, SLOT(s_messageDelete()));
-
-    messageMenu_->insertItem(empathIcon("menu-save"),
-        i18n("Save &As"),
-        this, SLOT(s_messageSaveAs()));
-*/
-    
     messageMenu_->insertItem(empathIcon("menu-copy"),
         i18n("&Copy to..."),
         this, SLOT(s_messageCopyTo()));
@@ -155,6 +134,7 @@ EmpathMainWindow::_setupMenuBar()
     
     menu_->insertItem(i18n("&File"), fileMenu_);
     menu_->insertItem(i18n("&Select"), selectMenu_);
+    menu_->insertItem(i18n("&Go"), goMenu_);
     menu_->insertItem(i18n("&Message"), messageMenu_);
     menu_->insertItem(i18n("&Options"), optionsMenu_);
     menu_->insertSeparator();

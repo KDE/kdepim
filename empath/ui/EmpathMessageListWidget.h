@@ -105,27 +105,37 @@ class EmpathMessageListWidget : public EmpathListView
 
         void listenTo(unsigned int);
 
+        // TODO: move the actions to a better place, and maybe use kparts
+        
+        // Navigation actions
+        KAction * a_goPrevious;
+        KAction * a_goNext;
+        KAction * a_goNextUnread;
+        
         // Message related actions
-        // TODO: move them to a better place, and use kparts.
-        KAction	* messageCompose;
-        KAction	* messageReply;
-        KAction	* messageReplyAll;
-        KAction	* messageForward;
-        KAction	* messageBounce;
-        KAction	* messageDelete;
-        KAction	* messageSaveAs;
-        KAction	* messageCopyTo;
-        KAction	* messageMoveTo;
-        KAction	* messagePrint;
-        KAction	* messageFilter;
-        KAction	* messageView;
+        KAction * a_messageView;
+        KAction	* a_messageCompose;
+        KAction	* a_messageReply;
+        KAction	* a_messageReplyAll;
+        KAction	* a_messageForward;
+        KAction	* a_messageBounce;
+        KAction	* a_messageDelete;
+        KAction	* a_messageSaveAs;
+        KAction	* a_messageCopyTo;
+        KAction	* a_messageMoveTo;
+        KAction	* a_messagePrint;
+        KAction	* a_messageFilter;
 
     public slots:
 
         void s_messageDelete();
 
     protected slots:
-    
+   
+        void s_goPrevious();
+        void s_goNext();
+        void s_goNextUnread();
+        
         void s_messageMark();
         void s_messageMarkRead();
         void s_messageMarkReplied();
@@ -210,7 +220,6 @@ class EmpathMessageListWidget : public EmpathListView
         int messageMenuItemMark;
         int messageMenuItemMarkRead;
         int messageMenuItemMarkReplied;
-        int messageMenuItemView;
 
         int sortColumn_;
         bool sortAscending_;

@@ -28,7 +28,7 @@
 #define EMPATHLISTVIEW_H
 
 // Qt includes
-#include <qlistview.h>
+#include <klistview.h>
 #include <qlist.h>
 
 // Local includes
@@ -41,7 +41,7 @@ class QTimer;
  * 
  * @author Wilco Greven
  */
-class EmpathListView : public QListView
+class EmpathListView : public KListView
 {
     Q_OBJECT
 

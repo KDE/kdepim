@@ -144,12 +144,13 @@ class EmpathMainWindow : public KTMainWindow
         // General
         KMenuBar        * menu_;
         
-        QPopupMenu        * fileMenu_;
-        QPopupMenu        * selectMenu_;
-        QPopupMenu        * folderMenu_;
-        QPopupMenu        * messageMenu_;
-        QPopupMenu        * optionsMenu_;
-        QPopupMenu        * helpMenu_;
+        QPopupMenu      * fileMenu_;
+        QPopupMenu      * selectMenu_;
+        QPopupMenu      * goMenu_;
+        QPopupMenu      * folderMenu_;
+        QPopupMenu      * messageMenu_;
+        QPopupMenu      * optionsMenu_;
+        QPopupMenu      * helpMenu_;
 
         // Empath stuff
 

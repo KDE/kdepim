@@ -117,7 +117,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
 
     // Connect return press to view.
     QObject::connect(this, SIGNAL(returnPressed(QListViewItem *)),
-            this, SLOT(s_messageView()));
+            this, SLOT(s_linkChanged(QListViewItem *)));
     
     // Connect right button up so we can produce the popup context menu.
     QObject::connect(
@@ -286,6 +286,53 @@ EmpathMessageListWidget::mark(RMM::MessageStatus status)
     
     for (it.toFirst(); it.current(); ++it)
         setStatus(it.current(), status);
+}
+
+    void
+EmpathMessageListWidget::s_goPrevious()
+{    
+    QListViewItem * i = currentItem()->itemAbove();
+    
+    if (!i) 
+        i = firstChild();
+    
+    if (i) {
+        setCurrentItem(i);
+        setLinkItem(i);
+        ensureItemVisible(i);
+    }
+}
+
+    void
+EmpathMessageListWidget::s_goNext()
+{
+    QListViewItem * i = currentItem()->itemBelow();
+    
+    if (!i) 
+        i = currentItem();
+    
+    if (i) {
+        setCurrentItem(i);
+        setLinkItem(i);
+        ensureItemVisible(i);
+    }
+}
+
+    void
+EmpathMessageListWidget::s_goNextUnread()
+{
+    for (QListViewItemIterator it(currentItem()->nextSibling()); it.current(); ++it) {
+        
+        EmpathMessageListItem * i =
+            static_cast<EmpathMessageListItem *>(it.current());
+
+        if (!(i->status() & RMM::Read)) {
+            setCurrentItem(i);
+            setLinkItem(currentItem());
+            ensureItemVisible(currentItem());
+            break;
+        }
+    }
 }
 
     void
@@ -584,26 +631,33 @@ EmpathMessageListWidget::s_headerClicked(int i)
     void
 EmpathMessageListWidget::_initActions()
 {
-    messageCompose = new KAction(i18n("&Compose"), empathIconSet("compose"), 0, 
+    a_goPrevious = new KAction(i18n("&Previous"), QIconSet(BarIcon("up")), CTRL+Key_P, 
+                    this, SLOT(s_goPrevious()), this, "goPrevious");
+    a_goNext = new KAction(i18n("&Next"), QIconSet(BarIcon("down")), CTRL+Key_N,
+                    this, SLOT(s_goNext()), this, "goNext");
+    a_goNextUnread = new KAction(i18n("Next &Unread"), QIconSet(BarIcon("forward")), 0, 
+                    this, SLOT(s_goNextUnread()), this, "goNextUnread");
+                    
+    a_messageView = new KAction(i18n("&View"), empathIconSet("view"), 0, 
+                    this, SLOT(s_messageCompose()), this, "messageView");
+    a_messageCompose = new KAction(i18n("&Compose"), empathIconSet("compose"), 0, 
                     this, SLOT(s_messageCompose()), this, "messageCompose");
-    messageReply = new KAction(i18n("&Reply"), empathIconSet("reply"), 0,
+    a_messageReply = new KAction(i18n("&Reply"), empathIconSet("reply"), 0,
                     this, SLOT(s_messageReply()), this, "messageReply");
-    messageReplyAll = new KAction(i18n("Reply to &All"), empathIconSet("reply"), 0,
+    a_messageReplyAll = new KAction(i18n("Reply to &All"), empathIconSet("reply"), 0,
                     this, SLOT(s_messageReplyAll()), this, "messageReplyAll");
-    messageForward = new KAction(i18n("&Forward"), empathIconSet("forward"), 0,
+    a_messageForward = new KAction(i18n("&Forward"), empathIconSet("forward"), 0,
                     this, SLOT(s_messageForward()), this, "messageForward");
-    messageDelete = new KAction(i18n("&Delete"), empathIconSet("delete"), 0,
+    a_messageDelete = new KAction(i18n("&Delete"), empathIconSet("delete"), 0,
                     this, SLOT(s_messageDelete()), this, "messageDelete");
-    messageSaveAs = new KAction(i18n("Save &As"), empathIconSet("save"), 0,
+    a_messageSaveAs = new KAction(i18n("Save &As"), empathIconSet("save"), 0,
                     this, SLOT(s_messageSaveAs()), this, "messageSaveAs");
 }
 
     void
 EmpathMessageListWidget::_setupMessageMenu()
 {
-    messageMenuItemView =
-        messageMenu_.insertItem(empathIcon("menu-view"), i18n("View"),
-        this, SLOT(s_messageView()));
+    a_messageView->plug(&messageMenu_);
     
     messageMenu_.insertSeparator();
     
@@ -624,18 +678,18 @@ EmpathMessageListWidget::_setupMessageMenu()
         
     messageMenu_.insertSeparator();
 
-    messageReply->plug(&messageMenu_);
-    messageReplyAll->plug(&messageMenu_);
-    messageForward->plug(&messageMenu_);
-    messageDelete->plug(&messageMenu_);
-    messageSaveAs->plug(&messageMenu_);
+    a_messageReply->plug(&messageMenu_);
+    a_messageReplyAll->plug(&messageMenu_);
+    a_messageForward->plug(&messageMenu_);
+    a_messageDelete->plug(&messageMenu_);
+    a_messageSaveAs->plug(&messageMenu_);
 
     multipleMessageMenu_.insertItem(i18n("Mark..."),
         this, SLOT(s_messageMarkMany()));
     
-    messageForward->plug(&multipleMessageMenu_);
-    messageDelete->plug(&multipleMessageMenu_);
-    messageSaveAs->plug(&multipleMessageMenu_);
+    a_messageForward->plug(&multipleMessageMenu_);
+    a_messageDelete->plug(&multipleMessageMenu_);
+    a_messageSaveAs->plug(&multipleMessageMenu_);
 
     threadMenu_.insertItem(i18n("Expand"),
         this, SLOT(s_expandThread()));
