@@ -67,7 +67,7 @@ void CalFilter::apply( Todo::List *eventlist )
   Todo::List::Iterator it = eventlist->begin();
   while( it != eventlist->end() ) {
     if ( !filterTodo( *it ) ) {
-      eventlist->remove( it );
+      it = eventlist->remove( it );
     } else {
       ++it;
     }
