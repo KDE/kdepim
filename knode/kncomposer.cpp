@@ -1762,32 +1762,32 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg(KNAttachment *a, QW
 
   //file info
   QGroupBox *fileGB=new QGroupBox(i18n("File"), page);
-  QGridLayout *fileL=new QGridLayout(fileGB, 2,2, 20,10);
+  QGridLayout *fileL=new QGridLayout(fileGB, 3,2, 15,5);
 
-  fileL->addWidget(new QLabel(i18n("Name:"), fileGB) ,0,0);
-  fileL->addWidget(new QLabel(QString("<b>%1</b>").arg(a->name()), fileGB), 0,1, Qt::AlignLeft);
-  fileL->addWidget(new QLabel(i18n("Size:"), fileGB), 1,0);
-  fileL->addWidget(new QLabel(a->contentSize(), fileGB), 1,1, Qt::AlignLeft);
+  fileL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
+  fileL->addWidget(new QLabel(i18n("Name:"), fileGB) ,1,0);
+  fileL->addWidget(new QLabel(QString("<b>%1</b>").arg(a->name()), fileGB), 1,1, Qt::AlignLeft);
+  fileL->addWidget(new QLabel(i18n("Size:"), fileGB), 2,0);
+  fileL->addWidget(new QLabel(a->contentSize(), fileGB), 2,1, Qt::AlignLeft);
 
   fileL->setColStretch(1,1);
   topL->addWidget(fileGB);
 
-
   //mime info
   QGroupBox *mimeGB=new QGroupBox(i18n("Mime"), page);
-  QGridLayout *mimeL=new QGridLayout(mimeGB, 3,2, 20,10);
+  QGridLayout *mimeL=new QGridLayout(mimeGB, 4,2, 15,5);
 
-  mimeL->addWidget(new QLabel(i18n("Mime-Type:"), mimeGB), 0,0);
+  mimeL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
   m_imeType=new QLineEdit(mimeGB);
-  mimeL->addWidget(m_imeType, 0,1);
   m_imeType->setText(a->mimeType());
+  mimeL->addWidget(m_imeType, 1,1);
+  mimeL->addWidget(new QLabel(m_imeType, i18n("&Mime-Type:"), mimeGB), 1,0);
 
-  mimeL->addWidget(new QLabel(i18n("Description:"), mimeGB), 1,0);
   d_escription=new QLineEdit(mimeGB);
-  mimeL->addWidget(d_escription, 1,1);
   d_escription->setText(a->description());
+  mimeL->addWidget(d_escription, 2,1);
+  mimeL->addWidget(new QLabel(d_escription, i18n("&Description:"), mimeGB), 2,0);
 
-  mimeL->addWidget(new QLabel(i18n("Encoding:"), mimeGB), 2,0);
   e_ncoding=new QComboBox(false, mimeGB);
   e_ncoding->insertItem("7Bit");
   e_ncoding->insertItem("8Bit");
@@ -1799,16 +1799,15 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg(KNAttachment *a, QW
   }
   else
     e_ncoding->setCurrentItem(a->cte());
-  mimeL->addWidget(e_ncoding, 2,1);
+  mimeL->addWidget(e_ncoding, 3,1);
+  mimeL->addWidget(new QLabel(e_ncoding, i18n("&Encoding:"), mimeGB), 3,0);
 
   mimeL->setColStretch(1,1);
   topL->addWidget(mimeGB);
 
-
   //connections
   connect(m_imeType, SIGNAL(textChanged(const QString&)),
     this, SLOT(slotMimeTypeTextChanged(const QString&)));
-
 
   //finish GUI
   setFixedHeight(sizeHint().height());
@@ -1841,7 +1840,6 @@ void KNComposer::AttachmentPropertiesDlg::accept()
        KMessageBox::warningYesNo(this,
        i18n("You have changed the mime-type of this non-textual attachment\nto text. This might cause an error while loading or encoding the file.\nProceed?")
        ) == KMessageBox::No) return;
-
 
   KDialogBase::accept();
 }
