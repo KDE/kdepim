@@ -1291,9 +1291,14 @@ void KNArticleWidget::createHtmlPage()
 
       for(KMime::Content *var=a_tt->first(); var; var=a_tt->next()) {
         ct=var->contentType();
+        QString att_name = ct->name();
+        if ( att_name.isEmpty() ) att_name = i18n("unnamed" );
+        // if att_name consists of only whitespace replace them by underscores
+        if ( ( uint )att_name.contains( ' ' ) == att_name.length() )
+          att_name.replace( QRegExp( " ", true, true ), "_" );
         html+=QString("<tr><td align=center><articlefont><a href=\"internal://att=%1\">%2</a></articlefont></td><td align=center><articlefont>%3</articlefont></td><td align=center><articlefont>%4</articlefont></td></tr>")
               .arg(attCnt)
-              .arg((ct->name().isEmpty())? i18n("unnamed"):ct->name())
+              .arg( att_name )
               .arg(ct->mimeType())
               .arg(toHtmlString(var->contentDescription()->asUnicodeString()));
 
