@@ -40,30 +40,18 @@ noinst_PROGRAMS = null_conduit
 # KDE magic file
 MAGIC=$(kde_mimedir)/magic
 
+METASOURCES = AUTO
+
 # Which sources should be compiled for vcalconduit
 null_conduit_SOURCES= null-conduit.cc setupDialog.cc
 
 # the library search path
-null_conduit_LDFLAGS = @all_libraries@ -L`pwd`/../../kpilot -L/usr/local/lib
+null_conduit_LDFLAGS = $(all_libraries) -L$(srcdir)/../../kpilot
 
-# the libraries to link against. Be aware of the order. First the libraries,
-# that depend on the following ones.
-null_conduit_LDADD   =  -lconduit \
-	-lkfm -lkdeui -lkdecore -lqt -lX11 -lXext @LIBSOCKET@ -lpisock
+null_conduit_LDADD   =  -lconduit $(LIB_KDEUI) -lpisock
 
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = null-conduit.h setupDialog.h
-
-# just to make sure, automake makes them 
-BUILTSOURCES = 
-
-# if you "make distclean", this files get removed. If you want to remove
-# them while "make clean", use CLEANFILES
-DISTCLEANFILES = $(BUILTSOURCES)
-
-# make messages.po. Move this one to ../po/ and "make merge" in po
-messages:
-	$(XGETTEXT) -C -ktranslate $(kpilot_SOURCES)
 
 # just install datas here. Use install-exec-data for scripts and etc.
 # the binary itself is already installed from automake
@@ -71,7 +59,6 @@ messages:
 # don't install a list of file. Just one file per install.
 # if you have more of them, create a subdirectory with an extra Makefile 
 install-data-local: 
-	$(mkinstalldirs) $(kde_datadir)/kpilot
 	$(mkinstalldirs) $(kde_datadir)/kpilot/conduits
 	$(INSTALL_PROGRAM) popmail_conduit $(kde_datadir)/kpilot/conduits
 
@@ -79,8 +66,3 @@ install-data-local:
 uninstall-local:
 	-rm -f $(kde_datadir)/kpilot/conduits/popmail_conduit
 
-# add a dependency for every moc file to be full portable
-# I've added a key binding to emacs for this. 
-setupDialog.cc: setupDialog.moc
-setupDialog.moc: setupDialog.h
-	$(MOC) setupDialog.h -o setupDialog.moc
