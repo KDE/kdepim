@@ -1,0 +1,13 @@
+General:
+ - check encoding (utf8 seems not to work correctly)
+ - asynchronous access
+ - keep groupwise.wsdl up to date
+
+AddressBook:
+ - support for IM addresses
+
+Calendar:
+ - extract description from CalendarItem
+ - support for recurrences
+ - support for attendees
+ - freebusy list
