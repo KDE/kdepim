@@ -26,7 +26,7 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-static const char *id = "$Revision:$" ;
+static const char *md5wrap_id = "$Id$" ;
 
 #include "md5wrap.h"
 
@@ -54,4 +54,7 @@ QString MD5Context::finalize()
 }
 
 
-// $Log:$
+// $Log$
+// Revision 1.1  2000/12/29 14:17:51  adridg
+// Added checksumming to KNotes conduit
+//

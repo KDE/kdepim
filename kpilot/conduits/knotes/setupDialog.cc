@@ -40,7 +40,7 @@
 // the modules are that make up a binary distribution.
 //
 //
-static const char *id="$Id$";
+static const char *setupDialog_id="$Id$";
 
 KNotesGeneralPage::KNotesGeneralPage(setupDialog *p,KConfig& c) :
 	setupDialogPage(i18n("General"),p)
@@ -84,11 +84,14 @@ KNotesOptions::KNotesOptions(QWidget *parent) :
 	addPage(new setupInfoPage(this));
 	setupWidget();
 
-	(void) id;
+	(void) setupDialog_id;
 }
 
   
 // $Log$
+// Revision 1.3  2001/02/07 15:46:31  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//
 // Revision 1.2  2000/11/26 01:43:21  adridg
 // Two-way syncs
 //

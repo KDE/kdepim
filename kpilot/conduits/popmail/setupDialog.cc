@@ -33,7 +33,7 @@
 // make up a binary distribution.
 //
 //
-static const char *id=
+static const char *setupDialog_id=
 	"$Id$";
 
 
@@ -572,6 +572,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.12  2001/02/07 15:46:31  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//
 // Revision 1.11  2001/01/03 00:05:13  adridg
 // Administrative
 //

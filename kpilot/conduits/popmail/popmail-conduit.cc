@@ -33,7 +33,7 @@
 
 
 
-static const char *id=
+static const char *popmail_conduit_id=
 	"$Id$";
 
 
@@ -1622,4 +1622,7 @@ int main(int argc, char* argv[])
 
 
 
-// $Log:$
+// $Log$
+// Revision 1.14  2001/02/07 15:46:31  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//

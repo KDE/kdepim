@@ -36,7 +36,7 @@
 // make up a binary distribution.
 //
 //
-static char *id="$Id$";
+static char *passworddialog_id="$Id$";
 
 
 
@@ -140,4 +140,7 @@ const char * PasswordDialog::password()
 
 
 
-// $Log:$
+// $Log$
+// Revision 1.7  2001/02/07 15:46:31  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//

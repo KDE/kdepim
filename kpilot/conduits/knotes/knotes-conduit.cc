@@ -59,7 +59,7 @@
 // the modules are that make up a binary distribution.
 //
 //
-static const char *id=
+static const char *knotes_conduit_id=
 	"$Id$";
 
 
@@ -819,10 +819,13 @@ KNotesConduit::doTest()
 			<< endl;
 	}
 
-	(void) id;
+	(void) knotes_conduit_id;
 }
 
 // $Log$
+// Revision 1.10  2001/02/07 15:46:31  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//
 // Revision 1.9  2001/01/06 13:23:12  adridg
 // Updated version numbers, fixed debugging stuff
 //
