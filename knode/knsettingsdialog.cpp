@@ -61,7 +61,7 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
 
   // Set up the folder bitmaps
   list << i18n("Accounts");
-  setFolderIcon(list, BarIcon("arrow_right"));
+  setFolderIcon(list, UserIcon("server"));
 
   list.clear();
   list << i18n("Read News");
@@ -72,20 +72,20 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
   setFolderIcon(list, BarIcon("arrow_right"));
 
   // Identity
-  QFrame *frame = addHBoxPage(i18n("Identity"),i18n("Personal Information"), BarIcon("arrow_right"));
+  QFrame *frame = addHBoxPage(i18n(" Identity"),i18n("Personal Information"), UserIcon("smile"));
   widgets.append(new KNUserSettings(frame));
 
   // Accounts / News
   list.clear();
-  list << i18n("Accounts") << i18n("News"); 
-  frame = addHBoxPage(list, i18n("News"), BarIcon("arrow_right"));
+  list << i18n("Accounts") << i18n(" News");
+  frame = addHBoxPage(list, i18n("News"), UserIcon("group"));
   
   widgets.append(new  KNAccNewsSettings(frame, knGlobals.accManager));
   
   // Accounts / Mail
   list.clear();
-  list << i18n("Accounts") << i18n("Mail");
-  frame = addHBoxPage(list, i18n("Mail"), BarIcon("arrow_right"));
+  list << i18n("Accounts") << i18n(" Mail");
+  frame = addHBoxPage(list, i18n("Mail"), UserIcon("accmail"));
   widgets.append(new KNAccMailSettings(frame));
   
   // Read News / General
