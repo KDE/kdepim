@@ -116,8 +116,8 @@ using namespace std;
 #define DEBUGCONDUIT	std::cerr
 #define DEBUGDB		std::cerr
 
-inline std::ostream& operator <<(std::ostream &o, const QString &s) { if (s.isEmpty()) return o; else return o<<s.latin1(); }
-inline std::ostream& operator <<(std::ostream &o, const QCString &s) { return (o << *s ); }
+inline std::ostream& operator <<(std::ostream &o, const QString &s) { if (s.isEmpty()) return o<<"<empty>"; else return o<<s.latin1(); }
+inline std::ostream& operator <<(std::ostream &o, const QCString &s) { if (s.isEmpty()) return o<<"<empty>"; else return o << *s; }
 
 #else
 #define DEBUGSTREAM	kdbgstream
@@ -156,20 +156,16 @@ QString rtExpand(const QString &s, bool richText=true);
 //
 #ifdef __GNUC__
 #define KPILOT_FNAMEDEF	static const char *fname=__FUNCTION__
-#define KPILOT_LOCNDEF	debug_spaces+(::strlen(fname)) \
-				<< "(" << __FILE__ << ":" << \
-				__LINE__ << ")\n"
+#define KPILOT_LOCNDEF __FILE__ << ":" << __LINE__
 #else
 #define	KPILOT_FNAMEDEF	static const char *fname=__FILE__ ":" "__LINE__"
-#define KPILOT_LOCNDEF	"\n"
+#define KPILOT_LOCNDEF	""
 #endif
 
 #define FUNCTIONSETUP	KPILOT_FNAMEDEF; \
-			if (debug_level) { DEBUGFUNC << \
-			fname << KPILOT_LOCNDEF ; }
+			if (debug_level) { DEBUGFUNC << KPILOT_LOCNDEF << ":" << fname << endl; }
 #define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF; \
-				if (debug_level>l) { DEBUGFUNC << \
-				fname << KPILOT_LOCNDEF; }
+				if (debug_level>l) { DEBUGFUNC << KPILOT_LOCNDEF << fname << endl; }
 
 
 #else
