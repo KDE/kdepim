@@ -70,11 +70,11 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   layout->addMultiCellWidget( button, 4, 4, 0, 3 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardKolab() ) );
 
-  button = new QPushButton( i18n("SLOX"), this );
+  button = new QPushButton( i18n("SUSE Linux Openexchange (SLOX)"), this );
   layout->addMultiCellWidget( button, 5, 5, 0, 3 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardSlox() ) );
 
-  button = new QPushButton( i18n("Groupwise"), this );
+  button = new QPushButton( i18n("Novell Groupwise"), this );
   layout->addMultiCellWidget( button, 6, 6, 0, 3 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardGroupwise() ) );
 
