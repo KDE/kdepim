@@ -1,0 +1,36 @@
+[Key Filter #0]
+is-revoked=true
+Name=Revoked key
+
+[Key Filter #1]
+is-expired=true
+foreground-color=255,0,0
+Name=Expired key
+
+[Key Filter #2]
+is-disabled=true
+Name=Disabled key
+
+[Key Filter #3]
+can-encrypt=true
+Name=Can encrypt
+
+[Key Filter #4]
+can-sign=true
+Name=Can sign
+
+[Key Filter #5]
+can-authenticate=true
+Name=Can authenticate
+
+[Key Filter #6]
+has-secret-key=true
+Name=Has secret key
+
+[Key Filter #7]
+is-openpgp-key=true
+Name=OpenPGP key
+
+[Key Filter #8]
+Name=Key was validated
+was-validated=true

@@ -23,6 +23,14 @@ libkleopatra_la_LDFLAGS = $(all_libraries) -version-info 0:0:0 -no-undefined
 
 METASOURCES = AUTO
 
+# remove the .desktop suffix on install (which is needed for translation)
+install-data-local:
+	$(mkinstalldirs) $(DESTDIR)$(kde_confdir)
+	$(INSTALL_DATA) $(srcdir)/libkleopatrarc.desktop $(DESTDIR)$(kde_confdir)/libkleopatrarc
+
+uninstall-data-local:
+	rm -f $(DESTDIR)$(kde_confdir)/libkleopatrarc
+
 messages: rc.cpp
 	$(XGETTEXT) *.cpp *.h \
 	kleo/*.cpp kleo/*.h \
