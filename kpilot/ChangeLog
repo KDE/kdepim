@@ -1,11 +1,33 @@
-KPilot Developer's notes for october 14th 2001
+KPilot Developer's notes for october 21st 2001
 ==============================================
+
+2001-10-16  Adriaan de Groot
+
+* lib/options.h
+  Upped the version number to 4.2.9b just because.
+* kpilot/kpilot.cc
+  Changed some credits around, copyright notice, etc.
+* kpilot/Makefile.am kpilot/Makefile-standalone
+  Fixed some breakage caused by all the moving around of files. You may
+  need to make clean ; make in KPilot some time to get things back to normal.
+
+KPilot Developer's notes for october 16th 2001
+==============================================
+
+2001-10-16  Adriaan de Groot
+
+Well, the b-day party got in the way of actually releasing something,
+and there's quite a lot of polish still to apply -- ie. the KNotes conduit
+still does nothing more than install new notes to the Pilot. So I'm going
+to start keeping the TODO list more up to date, including assignments for
+various people, and keeping the ChangeLog more up-to-date according to
+the ChangeLog standard, instead of these long rambling stories.
+
+2001-10-14  Adriaan de Groot
 
 Whee! It's KDE's birthday today. What a fitting day to finally release
 a version of KPilot that actually works, has useful features, and 
-doesn't gum up your Pilot hopelessly. This is KPilot 4.2.9, and it
-works with KDE 2.1, 2.2 and 3.0. Whether or not it reaches the
-distro's I don't know.
+doesn't gum up your Pilot hopelessly.
 
 2001-10-10  Adriaan de Groot
 
