@@ -205,7 +205,7 @@ error:
 	korgcfg.setGroup( "Time & Date" );
 	QString tz(korgcfg.readEntry( "TimeZoneId" ) );
 #ifdef DEBUG
-	DEBUGCONDUIT << fname<<": KOrganizer's time zone = "<<tz<<endl;
+	DEBUGCONDUIT << fname << ": KOrganizer's time zone = " << tz << endl;
 #endif
 
 	// Need a subclass ptr. for the ResourceCalendar methods
@@ -219,29 +219,43 @@ error:
 	{
 		case VCalConduitSettings::eCalendarLocal:{
 #ifdef DEBUG
-			DEBUGCONDUIT<<"Using CalendarLocal, file="<<config()->calendarFile()<<endl;
+			DEBUGCONDUIT << fname
+				<< "Using CalendarLocal, file="
+				<< config()->calendarFile() << endl;
 #endif
 			if (config()->calendarFile().isEmpty() )
 			{
 #ifdef DEBUG
-				DEBUGCONDUIT<<"empty calendar file name, cannot open"<<endl;
+				DEBUGCONDUIT << fname
+					<< "Empty calendar file name." 
+					<< endl;
 #endif
 				emit logError(i18n("You selected to sync with the a iCalendar file, "
 						"but did not give a filename. Please select a valid file name in "
 						"the conduit's configuration dialog"));
 				return false;
 			}
+
 			fCalendar = new KCal::CalendarLocal(tz);
 			if ( !fCalendar)
 			{
-				kdWarning() << k_funcinfo <<
-				    "Cannot initialize calendar object for file "<<config()->calendarFile()<<endl;
+				kdWarning() << k_funcinfo 
+					<< "Cannot initialize calendar object for file "
+					<< config()->calendarFile() << endl;
 				return false;
 			}
 #ifdef DEBUG
-			DEBUGCONDUIT<<"Calendar's timezone: "<<fCalendar->timeZoneId()<<endl;
-			DEBUGCONDUIT<<"Calendar is local time: "<<fCalendar->isLocalTime()<<endl;
+			DEBUGCONDUIT << fname 
+				<< "Calendar's timezone: " 
+				<< fCalendar->timeZoneId() << endl;
+			DEBUGCONDUIT << fname
+				<< "Calendar is local time: "
+				<< fCalendar->isLocalTime() << endl;
 #endif
+			emit logMessage(i18n("Using %1 time zone: %2")
+				.arg(fCalendar->isLocalTime() ?
+					i18n("non-local") : i18n("local"))
+				.arg(tz));
 
 			KURL kurl(config()->calendarFile());
 			if(!KIO::NetAccess::download(config()->calendarFile(), fCalendarFile, 0L) &&
@@ -260,15 +274,22 @@ error:
 			if (!dynamic_cast<KCal::CalendarLocal*>(fCalendar)->load(fCalendarFile) )
 			{
 #ifdef DEBUG
-				DEBUGCONDUIT << "calendar file "<<fCalendarFile <<
-						" could not be opened. Will create a new one"<<endl;
+				DEBUGCONDUIT << fname
+					<< "Calendar file "
+					<< fCalendarFile 
+					<< " could not be opened. "
+					   "Will create a new one" 
+					<< endl;
 #endif
-				// Try to create empty file. if it fails, no valid file name was given.
+				// Try to create empty file. if it fails, 
+				// no valid file name was given.
 				QFile fl(fCalendarFile);
 				if (!fl.open(IO_WriteOnly | IO_Append))
 				{
 #ifdef DEBUG
-					DEBUGCONDUIT<<"Invalid calendar file name "<<fCalendarFile<<endl;
+					DEBUGCONDUIT << fname
+						<< "Invalid calendar file name "
+						<< fCalendarFile << endl;
 #endif
 					emit logError(i18n("You chose to sync with the file \"%1\", which "
 							"cannot be opened or created. Please make sure to supply a "
@@ -284,7 +305,7 @@ error:
 
 		case VCalConduitSettings::eCalendarResource:
 #ifdef DEBUG
-			DEBUGCONDUIT<<"Using CalendarResource!"<<endl;
+			DEBUGCONDUIT << "Using CalendarResource!" << endl;
 #endif
 			rescal = new KCal::CalendarResources( tz );
 			fCalendar = rescal;
@@ -299,6 +320,10 @@ error:
 			rescal->load();
 #endif
 			addSyncLogEntry(i18n("Syncing with standard calendar resource."));
+			emit logMessage(i18n("Using %1 time zone: %2")
+				.arg(fCalendar->isLocalTime() ?
+					i18n("non-local") : i18n("local"))
+				.arg(tz));
 			break;
 		default:
 			break;
