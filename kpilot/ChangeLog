@@ -1,6 +1,19 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2005-01-05  Adriaan de Groot
+* Pilot-link 0.12, when it comes out, is source incompatible with 0.11,
+  but KPilot is already ported to it.
+* Fixed up silly conflict resolution question in the datebook, but
+  really it needs the field-by-field resolution that the addressbook has.
+* In KPilotDeviceLink, move around check for unconfigured device to
+  notice earlier, before doing any work. Minor coding style fixes.
+* Revamped debugging (again) so it's now much more 7 * 191; the call trace
+  is pretty readable now.
+
+2004-12-27  Adriaan de Groot
+* Quitting and having the daemon go with you works now.
+
 2004-12-07  Adriaan de Groot
 * Tried to make conduit descriptions more consistent. Remember: "handheld",
   not "Pilot". Removed ugly const_cast. Added depth indication to the
