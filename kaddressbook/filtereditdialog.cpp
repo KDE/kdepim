@@ -163,23 +163,11 @@ void FilterDialog::setFilters(const Filter::List &list)
   mFilterList.clear();
   mFilterList = list;
 
-  Filter::List::Iterator it;
-  for ( it = mFilterList.begin(); it != mFilterList.end(); ++it ) {
-    QString tmp = (*it).name();
-    (*it).setName( tmp.replace( QRegExp( "&&" ), "&") );
-  }
-
   refresh();
 }
 
 Filter::List &FilterDialog::filters()
 {
-  Filter::List::Iterator it;
-  for ( it = mFilterList.begin(); it != mFilterList.end(); ++it ) {
-    QString tmp = (*it).name();
-    (*it).setName( tmp.replace( QRegExp( "&" ), "&&") );
-  }
-
   return mFilterList;
 }
 
