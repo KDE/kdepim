@@ -143,7 +143,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
     }
     return syncee;
 }
-void AddressBook::fromKDE( KSync::AddressBookSyncee *syncee, const QString& fileName )
+KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
 {
     kdDebug(5210 ) << "From KDE " << endl;
     //  ok lets write back the changes from the Konnector
@@ -152,14 +152,14 @@ void AddressBook::fromKDE( KSync::AddressBookSyncee *syncee, const QString& file
     for ( Kontainer::ValueList::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
         m_helper->addId("AddressBookSyncEntry",  (*idIt).first(),  (*idIt).second() ); // FIXME update this name later
     }
-    QFile file(fileName);
-    if ( file.open( IO_WriteOnly) ) {
-        QTextStream stream( &file );
-        stream.setEncoding( QTextStream::UnicodeUTF8 );
-        stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE Addressbook ><AddressBook>" << endl;
-        stream << " <Groups>" << endl;
-        stream << " </Groups>" << endl;
-        stream << " <Contacts> " << endl;
+    KTempFile* tempFile = file();
+    if ( tempFile->textStream() ) {
+        QTextStream *stream = tempFile->textStream();
+        stream->setEncoding( QTextStream::UnicodeUTF8 );
+        *stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE Addressbook ><AddressBook>" << endl;
+        *stream << " <Groups>" << endl;
+        *stream << " </Groups>" << endl;
+        *stream << " <Contacts> " << endl;
 // for all entries
         KABC::Addressee ab;
         KSync::AddressBookSyncEntry *entry;
@@ -167,77 +167,80 @@ void AddressBook::fromKDE( KSync::AddressBookSyncee *syncee, const QString& file
             if (entry->state() == KSync::SyncEntry::Removed )
                 continue;
             ab = entry->addressee();
-            stream << "<Contact ";
-            stream << "FirstName=\"" << ab.givenName() << "\" ";
-            stream << "MiddleName=\"" << ab.additionalName() << "\" ";
-            stream << "LastName=\"" << ab.familyName() << "\" ";
-            stream << "Suffix=\"" << ab.suffix() << "\" ";
+            *stream << "<Contact ";
+            *stream << "FirstName=\"" << ab.givenName() << "\" ";
+            *stream << "MiddleName=\"" << ab.additionalName() << "\" ";
+            *stream << "LastName=\"" << ab.familyName() << "\" ";
+            *stream << "Suffix=\"" << ab.suffix() << "\" ";
             QString sortStr;
             sortStr = ab.sortString();
             if (sortStr.isEmpty() )
                 sortStr = ab.formattedName();
-            stream << "FileAs=\"" << sortStr << "\" ";
-            stream << "JobTitle=\"" << ab.role() << "\" ";
-            stream << "Department=\"" << ab.custom( "opie", "Department" ) << "\" ";
-            stream << "Company=\"" << ab.organization() << "\" ";
+            *stream << "FileAs=\"" << sortStr << "\" ";
+            *stream << "JobTitle=\"" << ab.role() << "\" ";
+            *stream << "Department=\"" << ab.custom( "opie", "Department" ) << "\" ";
+            *stream << "Company=\"" << ab.organization() << "\" ";
 
             KABC::PhoneNumber businessPhoneNum = ab.phoneNumber(KABC::PhoneNumber::Work );
-            stream << "BusinessPhone=\"" <<businessPhoneNum.number() << "\" ";
+            *stream << "BusinessPhone=\"" <<businessPhoneNum.number() << "\" ";
 
             KABC::PhoneNumber businessFaxNum = ab.phoneNumber(KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax );
-            stream << "BusinessFax=\"" << businessFaxNum.number() << "\" ";
+            *stream << "BusinessFax=\"" << businessFaxNum.number() << "\" ";
 
             KABC::PhoneNumber businessMobile = ab.phoneNumber(KABC::PhoneNumber::Work | KABC::PhoneNumber::Cell );
-            stream << "BusinessMobile=\"" << businessMobile.number() << "\" ";
-            stream << "DefaultEmail=\"" << ab.preferredEmail() << "\" ";
+            *stream << "BusinessMobile=\"" << businessMobile.number() << "\" ";
+            *stream << "DefaultEmail=\"" << ab.preferredEmail() << "\" ";
             QStringList list = ab.emails();
             if ( list.count() > 0 )
-                stream << "Emails=\"" << list[0] << "\" ";
+                *stream << "Emails=\"" << list[0] << "\" ";
 
             KABC::PhoneNumber homePhoneNum = ab.phoneNumber(KABC::PhoneNumber::Home );
-            stream << "HomePhone=\"" << homePhoneNum.number() << "\" ";
+            *stream << "HomePhone=\"" << homePhoneNum.number() << "\" ";
 
             KABC::PhoneNumber homeFax = ab.phoneNumber( KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
-            stream << "HomeFax=\"" << homeFax.number() << "\" ";
+            *stream << "HomeFax=\"" << homeFax.number() << "\" ";
 
             KABC::PhoneNumber homeMobile = ab.phoneNumber( KABC::PhoneNumber::Home | KABC::PhoneNumber::Cell );
-            stream << "HomeMobile=\"" << homeMobile.number() << "\" ";
+            *stream << "HomeMobile=\"" << homeMobile.number() << "\" ";
 
             KABC::Address business = ab.address(KABC::Address::Work  );
-            stream << "BusinessStreet=\"" << business.street() << "\" ";
-            stream << "BusinessCity=\"" << business.locality() << "\" ";
-            stream << "BusinessZip=\"" << business.postalCode() << "\" ";
-            stream << "BusinessCountry=\"" << business.country() << "\" ";
-            stream << "BusinessState=\"" << business.region() << "\" ";
+            *stream << "BusinessStreet=\"" << business.street() << "\" ";
+            *stream << "BusinessCity=\"" << business.locality() << "\" ";
+            *stream << "BusinessZip=\"" << business.postalCode() << "\" ";
+            *stream << "BusinessCountry=\"" << business.country() << "\" ";
+            *stream << "BusinessState=\"" << business.region() << "\" ";
             //stream << "BusinessPager=\"" << << "\" ";
-            stream << "Office=\"" << ab.custom( "opie",  "Office" ) << "\" ";
-            stream << "Profession=\"" << ab.custom( "opie",  "Profession" )<< "\" ";
-            stream << "Assistant=\"" << ab.custom( "opie",  "Assistant") << "\" ";
-            stream << "Manager=\"" << ab.custom( "opie",  "Manager" ) << "\" ";
+            *stream << "Office=\"" << ab.custom( "opie",  "Office" ) << "\" ";
+            *stream << "Profession=\"" << ab.custom( "opie",  "Profession" )<< "\" ";
+            *stream << "Assistant=\"" << ab.custom( "opie",  "Assistant") << "\" ";
+            *stream << "Manager=\"" << ab.custom( "opie",  "Manager" ) << "\" ";
 
             KABC::Address home = ab.address( KABC::Address::Home );
-            stream << "HomeStreet=\"" << home.street() << "\" ";
-            stream << "HomeCity=\"" << home.locality() << "\" ";
-            stream << "HomeState=\"" << home.region() << "\" ";
-            stream << "HomeZip=\"" << home.postalCode() << "\" ";
-            stream << "HomeCountry=\"" << home.country() << "\" ";
+            *stream << "HomeStreet=\"" << home.street() << "\" ";
+            *stream << "HomeCity=\"" << home.locality() << "\" ";
+            *stream << "HomeState=\"" << home.region() << "\" ";
+            *stream << "HomeZip=\"" << home.postalCode() << "\" ";
+            *stream << "HomeCountry=\"" << home.country() << "\" ";
 
-            stream << "HomeWebPage=\"" << ab.custom( "opie", "HomeWebPage" ) << "\" ";
-            stream << "Spouse=\"" << ab.custom( "opie",  "Spouse") << "\" ";
-            stream << "Gender=\"" << ab.custom( "opie",  "Gender") << "\" ";
-            stream << "Birthday=\"" << ab.custom( "opie",  "Birthday" ) << "\" ";
-            stream << "Anniversary=\"" << ab.custom( "opie",  "Anniversary" ) << "\" ";
-            stream << "Nickname=\"" << ab.nickName() << "\" ";
-            stream << "Children=\"" << ab.custom("opie", "Children" ) << "\" ";
-            stream << "Notes=\"" << ab.note() << "\" ";
-            stream << "Categories=\"" << categoriesToNumber( ab.categories(),  "Contacts") << "\" ";
-            stream << "Uid=\"" << konnectorId( "AddressBookSyncEntry", ab.uid() ) << "\" ";
-            stream << " />" << endl;
+            *stream << "HomeWebPage=\"" << ab.custom( "opie", "HomeWebPage" ) << "\" ";
+            *stream << "Spouse=\"" << ab.custom( "opie",  "Spouse") << "\" ";
+            *stream << "Gender=\"" << ab.custom( "opie",  "Gender") << "\" ";
+            *stream << "Birthday=\"" << ab.custom( "opie",  "Birthday" ) << "\" ";
+            *stream << "Anniversary=\"" << ab.custom( "opie",  "Anniversary" ) << "\" ";
+            *stream << "Nickname=\"" << ab.nickName() << "\" ";
+            *stream << "Children=\"" << ab.custom("opie", "Children" ) << "\" ";
+            *stream << "Notes=\"" << ab.note() << "\" ";
+            *stream << "Categories=\"" << categoriesToNumber( ab.categories(),  "Contacts") << "\" ";
+            *stream << "Uid=\"" << konnectorId( "AddressBookSyncEntry", ab.uid() ) << "\" ";
+            *stream << " />" << endl;
         } // off for
-        stream << "</Contacts>" << endl;
-        stream << "</AddressBook>" << endl;
+        *stream << "</Contacts>" << endl;
+        *stream << "</AddressBook>" << endl;
     }
     // now replace the UIDs for us
     m_helper->replaceIds( "AddressBookSyncEntry",  m_kde2opie ); // to keep the use small
-    file.close();
+
+    tempFile->close();
+
+    return tempFile;
 }

@@ -28,7 +28,7 @@ namespace OpieHelper {
                   bool meta = FALSE );
         ~DateBook();
         KSync::EventSyncee* toKDE( const QString & fileName );
-        void fromKDE( KSync::EventSyncee* syncee, const QString& file );
+        KTempFile* fromKDE( KSync::EventSyncee* syncee );
     private:
         QString event2string( KCal::Event *event );
         KCal::Event* toEvent( QDomElement );

@@ -106,7 +106,7 @@ KSync::TodoSyncee* ToDo::toKDE( const QString &fileName )
     } // off open
     return syncee;
 }
-void ToDo::fromKDE( KSync::TodoSyncee* syncee, const QString& fileName )
+KTempFile* ToDo::fromKDE( KSync::TodoSyncee* syncee )
 {
     // KDE ID clear bit first
     m_kde2opie.clear();
@@ -115,28 +115,30 @@ void ToDo::fromKDE( KSync::TodoSyncee* syncee, const QString& fileName )
         m_helper->addId("TodoSyncEntry",  (*idIt).first(),  (*idIt).second() );
     }
     // update m_helper first;
-    QFile file( fileName );
-    if ( file.open( IO_WriteOnly )) {
+    KTempFile* tmpFile = file();
+    if (tmpFile->textStream() ) {
         // clear list
         KSync::TodoSyncEntry* entry;
-        QTextStream stream( &file );
-        stream.setEncoding( QTextStream::UnicodeUTF8 );
-        stream << "<!DOCTYPE Tasks>" << endl;
-        stream << "<Tasks>" << endl;
+        QTextStream *stream = tmpFile->textStream();
+        stream->setEncoding( QTextStream::UnicodeUTF8 );
+        *stream << "<!DOCTYPE Tasks>" << endl;
+        *stream << "<Tasks>" << endl;
         for ( entry = (KSync::TodoSyncEntry*)syncee->firstEntry();
               entry != 0l;
               entry = (KSync::TodoSyncEntry*)syncee->nextEntry() )
         {
             if ( entry->state() == KSync::SyncEntry::Removed )
                 continue;
-            stream << todo2String( entry->todo() ) << endl;
+            *stream << todo2String( entry->todo() ) << endl;
         }
-        stream << "</Tasks>" << endl;
+        *stream << "</Tasks>" << endl;
     }
     if (m_helper)
         m_helper->replaceIds( "TodoSyncEntry",  m_kde2opie );
 
-    file.close();
+    tmpFile->close();
+
+    return tmpFile;
 }
 void ToDo::setUid( KCal::Todo* todo,  const QString &uid )
 {

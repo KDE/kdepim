@@ -223,7 +223,7 @@ KSync::EventSyncee* DateBook::toKDE( const QString& fileName )
     return syncee;
 }
 
-void DateBook::fromKDE( KSync::EventSyncee* syncee, const QString& fileName )
+KTempFile* DateBook::fromKDE( KSync::EventSyncee* syncee )
 {
     m_kde2opie.clear();
     Kontainer::ValueList newIds = syncee->ids( "EventSyncEntry");
@@ -231,15 +231,15 @@ void DateBook::fromKDE( KSync::EventSyncee* syncee, const QString& fileName )
     for ( idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
         m_helper->addId("EventSyncEntry",  (*idIt).first(),  (*idIt).second() );
     }
-    QFile file( fileName );
-    if ( file.open(IO_WriteOnly ) ) {
-        QTextStream stream( &file );
-        stream.setEncoding( QTextStream::UnicodeUTF8 );
-        stream <<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
-        stream << "<!DOCTYPE DATEBOOK><DATEBOOK>" << endl;
+    KTempFile* tempFile = file();
+    if ( tempFile->textStream() ) {
+        QTextStream *stream = tempFile->textStream();
+        stream->setEncoding( QTextStream::UnicodeUTF8 );
+        *stream <<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
+        *stream << "<!DOCTYPE DATEBOOK><DATEBOOK>" << endl;
         KSync::EventSyncEntry *entry;
         KCal::Event *event;
-        stream << "<events>" << endl;
+        *stream << "<events>" << endl;
         for ( entry = (KSync::EventSyncEntry*) syncee->firstEntry();
               entry != 0;
               entry = (KSync::EventSyncEntry*) syncee->nextEntry() )
@@ -247,16 +247,17 @@ void DateBook::fromKDE( KSync::EventSyncee* syncee, const QString& fileName )
             if (entry->state() == KSync::SyncEntry::Removed )
                 continue;
             event = entry->incidence();
-            stream << event2string( event ) << endl;
+            *stream << event2string( event ) << endl;
         }
-        stream << "</events>" << endl;
-        stream << "</DATEBOOK>" << endl;
+        *stream << "</events>" << endl;
+        *stream << "</DATEBOOK>" << endl;
 
     }
     if (m_helper )
         m_helper->replaceIds( "EventSyncEntry",  m_kde2opie );
 
-    file.close();
+    tempFile->close();
+    return tempFile;
 }
 QString DateBook::event2string( KCal::Event *event )
 {

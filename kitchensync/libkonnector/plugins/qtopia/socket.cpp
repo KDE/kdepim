@@ -335,10 +335,10 @@ KURL QtopiaSocket::url( const QString& path ) {
  * write the categories file
  */
 void QtopiaSocket::writeCategory() {
-    QString fileName = QDir::homeDirPath() + "/.kitchensync/meta/" +d->partnerId;
+    QString fileName = QDir::homeDirPath() + "/.kitchensync/meta/" +d->partnerId + "/categories.xml";
     d->edit->save( fileName );
     KURL uri = url(  d->path + "/Settings/Categories.xml" );
-    KIO::NetAccess::upload( fileName + "/categories.xml",  uri );
+    KIO::NetAccess::upload( fileName,  uri );
 }
 void QtopiaSocket::writeAddressbook( AddressBookSyncee* ) {
 
@@ -350,7 +350,29 @@ void QtopiaSocket::writeTodoList( TodoSyncee* ) {
 
 }
 void QtopiaSocket::readAddressbook() {
+    QString tempfile;
+    if (!downloadFile( "/Applications/addressbook/addressbook.xml", tempfile ) )
+        return;
 
+    OpieHelper::AddressBook abDB( d->edit, d->helper, d->tz, d->meta );
+    KSync::AddressBookSyncee* syncee = abDB.toKDE( tempfile );
+    if (!syncee ) {
+        KIO::NetAccess::removeTempFile( tempfile );
+        return;
+    }
+
+    syncee->setFirstSync( d->first );
+
+    /*
+     * If in meta mode but not the first syncee
+     * collect some meta infos
+     */
+    if ( d->meta && !d->first ) {
+        syncee->setSyncMode( KSync::Syncee::MetaMode );
+
+    }
+    d->m_sync.append( syncee );
+    KIO::NetAccess::removeTempFile( tempfile );
 }
 void QtopiaSocket::readDatebook() {
 
@@ -380,6 +402,7 @@ void QtopiaSocket::start(const QString& line ) {
         QString uid = list[1];
         uid = uid.mid(11, uid.length()-12 );
         d->partnerId = uid;
+        initFiles();
         stream << "USER " << d->user << endl;
         d->mode = d->User;
     }
@@ -488,6 +511,7 @@ void QtopiaSocket::initSync( const QString& ) {
     d->getMode  = d->ABook;
 }
 void QtopiaSocket::initFiles() {
+    d->first = true;
     QDir di( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId );
     /*
      * if our meta path exists do not recreate it
@@ -495,6 +519,7 @@ void QtopiaSocket::initFiles() {
     if (di.exists()  )
         return;
 
+    d->first = false;
     QDir dir;
     dir.mkdir(QDir::homeDirPath() + "/.kitchensync");
     dir.mkdir(QDir::homeDirPath() + "/.kitchensync/meta");

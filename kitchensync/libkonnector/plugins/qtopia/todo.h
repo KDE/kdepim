@@ -30,7 +30,7 @@ namespace OpieHelper {
         ~ToDo();
 
         KSync::TodoSyncee* toKDE( const QString &fileName );
-        void fromKDE( KSync::TodoSyncee* entry, const QString&  );
+        KTempFile* fromKDE( KSync::TodoSyncee* entry  );
     private:
         void setUid( KCal::Todo*,  const QString &uid );
         KCal::Todo* dom2todo( QDomElement );

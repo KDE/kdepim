@@ -11,6 +11,8 @@
 #include <qstringlist.h>
 #include <qvaluelist.h>
 
+#include <ktempfile.h>
+
 #include <kontainer.h>
 #include <syncer.h>
 
@@ -33,7 +35,7 @@ namespace OpieHelper {
         time_t toUTC( const QDateTime& dt );
         QDateTime fromUTC( time_t time );
         // off tt code
-
+        KTempFile* file();
         int newId();
         CategoryEdit* edit() { return m_edit; };
         KSync::KonnectorUIDHelper* helper() { return m_helper; };

@@ -1,4 +1,7 @@
 
+#include <klocale.h>
+#include <kstandarddirs.h>
+#include <kglobal.h>
 #include <kdebug.h>
 
 #include "helper.h"
@@ -22,11 +25,10 @@ Base::~Base()
 QDateTime Base::fromUTC( time_t time )
 {
    struct tm *lt;
-   // set tz
    QString real_TZ = QString::fromLocal8Bit( getenv("TZ") );
    if (!m_tz.isEmpty() )
        setenv( "TZ", m_tz, true );
-// let's set the tz
+
 #if defined(_OS_WIN32) || defined (Q_OS_WIN32) || defined (Q_OS_WIN64)
     _tzset();
 #else
@@ -34,11 +36,9 @@ QDateTime Base::fromUTC( time_t time )
 #endif
     lt = localtime( &time );
     QDateTime dt;
-//    kdDebug() << "tz " << m_tz << " year " << lt->tm_year  << " month " << lt->tm_mon << " day " << lt->tm_mday << endl;
     dt.setDate( QDate( lt->tm_year + 1900, lt->tm_mon + 1, lt->tm_mday ) );
     dt.setTime( QTime( lt->tm_hour, lt->tm_min, lt->tm_sec ) );
-//    kdDebug() << "From " << time << " To " << dt.toString() << endl;
-    // unset tz
+
     if (!m_tz.isEmpty() ) {
         unsetenv("TZ");
         setenv("TZ",  real_TZ, true );
@@ -87,6 +87,10 @@ bool Base::isMetaSyncingEnabled()const
 void Base::setMetaSyncingEnabled(bool meta )
 {
     m_metaSyncing = meta;
+}
+KTempFile* Base::file() {
+    KTempFile* fi = new KTempFile( locateLocal("tmp",  "opie-konnector"),  "new");
+    return fi;
 }
 QString Base::categoriesToNumber( const QStringList &list, const QString &app )
 {

@@ -16,24 +16,23 @@
 #    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 #    Boston, MA 02111-1307, USA.
 
-#SUBDIRS = tests
+INCLUDES= -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib $(all_includes)
+#LDADD = $(top_builddir)/kitchensync/libkonnector/libkonnector.la
+LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
-lib_LTLIBRARIES = libqtopiakonnector.la
+check_PROGRAMS = kdetest todometa contactmeta datebookmeta
 
-INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/libkcal $(all_includes)
+kdetest_LDADD =  $(LIB_KDEUI) $(LIB_QT)
+kdetest_SOURCES =  kdetest.cpp
 
-libqtopiakonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib -I../../   $(all_includes)
-libqtopiakonnector_la_LIBDADD = ../../libkonnector.la ../../../libksync.la
-libqtopiakonnector_la_LDFLAGS = $(all_libraries)  $(KDE_RPATH) -module 
-libqtopiakonnector_la_SOURCES = konnector.cpp socket.cpp addressbook.cpp \
-				categoryedit.cpp datebook.cpp helper.cpp \
-				opiecategories.cpp todo.cpp \
-				md5map.cpp metaaddressbook.cpp
+todometa_LDADD = $(LIB_KDEUI) $(LIB_QT)
+todometa_SOURCES = todometa.cpp
 
-qtopiadatadir = $(kde_datadir)/kitchensync
-qtopiadata_DATA = qtopia.desktop
+contactmeta_LDADD = $(LIB_KDEUI) $(LIB_QT)
+contactmeta_SOURCES = contactmeta.cpp
 
-SUBDIRS = test
+datebookmeta_LDADD = $(LIB_KDEUI) $(LIB_QT)
+datebookmeta_SOURCES = datebookmeta.cpp
 
 METASOURCES = AUTO
- 
+

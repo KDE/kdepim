@@ -20,7 +20,7 @@ namespace OpieHelper {
         ~AddressBook();
         KSync::AddressBookSyncee * toKDE( const QString &fileName );
         /* it must be deleted but not by this one here */
-        void fromKDE(KSync::AddressBookSyncee* syncee, const QString& );
+        KTempFile* fromKDE(KSync::AddressBookSyncee* syncee );
     private:
         enum Fields {
             Uid = 0,
