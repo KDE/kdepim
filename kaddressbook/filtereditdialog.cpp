@@ -71,9 +71,8 @@ void FilterEditDialog::setFilter( const Filter &filter )
   QListViewItem *item = mCategoriesView->firstChild();
   while ( item != 0 ) {
     if ( categories.contains( item->text( 0 ) ) ) {
-      QCheckListItem *checkItem = dynamic_cast<QCheckListItem*>( item );
-      if ( checkItem )
-        checkItem->setOn( true );
+      QCheckListItem *checkItem = static_cast<QCheckListItem*>( item );
+      checkItem->setOn( true );
     }
 
     item = item->nextSibling();
@@ -94,8 +93,8 @@ Filter FilterEditDialog::filter()
   QStringList categories;
   QListViewItem *item = mCategoriesView->firstChild();
   while ( item != 0 ) {
-    QCheckListItem *checkItem = dynamic_cast<QCheckListItem*>( item );
-    if ( checkItem && checkItem->isOn() )
+    QCheckListItem *checkItem = static_cast<QCheckListItem*>( item );
+    if ( checkItem->isOn() )
       categories.append( item->text( 0 ) );
 
     item = item->nextSibling();

@@ -145,7 +145,7 @@ QStringList XXPortSelectDialog::categories() const
 
   QListViewItemIterator it( mCategoriesView );
   for ( ; it.current(); ++it ) {
-    QCheckListItem* qcli = dynamic_cast<QCheckListItem*>(it.current());
+    QCheckListItem* qcli = static_cast<QCheckListItem*>(it.current());
     if ( qcli->isOn() )
       list.append( it.current()->text( 0 ) );
   }
@@ -160,8 +160,8 @@ void XXPortSelectDialog::filterChanged( int )
 
 void XXPortSelectDialog::categoryClicked( QListViewItem *i )
 {
-  QCheckListItem qcli = dynamic_cast<QCheckListItem*>( i );
-  if ( i && qcli->isOn() )
+  QCheckListItem *qcli = static_cast<QCheckListItem*>( i );
+  if ( qcli->isOn() )
     mUseCategories->setChecked( true );
 }
 
