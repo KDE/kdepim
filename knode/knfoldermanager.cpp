@@ -203,6 +203,10 @@ bool KNFolderManager::moveFolder(KNFolder *f, KNFolder *p)
   // recreate list-item
   delete f->listItem();
   showListItems();
+  if(c_urrentFolder==f) {
+    v_iew->setActive(f->listItem(), true);
+    v_iew->ensureItemVisible(f->listItem());
+  }
 
   return true;
 }

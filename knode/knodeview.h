@@ -162,6 +162,7 @@ class KNodeView : public QSplitter
               *a_ctFolNewChild,
               *a_ctFolDelete,
               *a_ctFolRename,
+              *a_ctFolMakeTopLevel,
               *a_ctFolCompact,
               *a_ctFolEmpty;
 
@@ -227,6 +228,7 @@ class KNodeView : public QSplitter
     void slotFolNewChild();
     void slotFolDelete();
     void slotFolRename();
+    void slotFolMakeTopLevel();
     void slotFolCompact();
     void slotFolEmpty();
 

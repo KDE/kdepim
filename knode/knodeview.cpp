@@ -539,6 +539,8 @@ void KNodeView::initActions()
                               SLOT(slotFolDelete()), a_ctions, "folder_delete");
   a_ctFolRename             = new KAction(i18n("&Rename"), 0, this,
                               SLOT(slotFolRename()), a_ctions, "folder_rename");
+  a_ctFolMakeTopLevel       = new KAction(i18n("&Move to toplevel"), 0, this,
+                              SLOT(slotFolMakeTopLevel()), a_ctions, "folder_maketoplevel");
   a_ctFolCompact            = new KAction(i18n("C&ompact"), "wizard", 0, this,
                               SLOT(slotFolCompact()), a_ctions, "folder_compact");
   a_ctFolEmpty              = new KAction(i18n("&Empty"), 0, this,
@@ -853,6 +855,7 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
   if(a_ctFolNewChild->isEnabled() != enabled) {
     a_ctFolNewChild->setEnabled(enabled);
     a_ctFolRename->setEnabled(enabled);
+    a_ctFolMakeTopLevel->setEnabled(enabled);
     a_ctFolDelete->setEnabled(enabled);
     a_ctFolCompact->setEnabled(enabled);
     a_ctFolEmpty->setEnabled(enabled);
@@ -1296,6 +1299,14 @@ void KNodeView::slotFolRename()
     else
       f_olManager->renameFolder(f_olManager->currentFolder());
   }
+}
+
+
+void KNodeView::slotFolMakeTopLevel()
+{
+  kdDebug(5003) << "KNodeView::slotFolMakeTopLevel()" << endl;
+  if(f_olManager->currentFolder())
+    f_olManager->moveFolder(f_olManager->currentFolder(), 0);
 }
 
 
