@@ -13,6 +13,9 @@ libkonnector_la_SOURCES = filter.cpp idhelper.cpp konnector.cpp \
 servicetype_DATA = konnector.desktop filter.desktop
 servicetypedir = $(kde_servicetypesdir)
 
+manager_DATA = konnector_manager.desktop
+managerdir = $(kde_servicesdir)/kresources
+
 METASOURCES = AUTO
 SUBDIRS = .  plugins test
 ksincludedir      = $(includedir)/kitchensync/
