@@ -123,5 +123,3 @@ MALConduitFactory::~MALConduitFactory()
     return 0L;
 }
 
-
-// $Log$
