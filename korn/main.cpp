@@ -11,7 +11,7 @@
 #include"kornshell.h"
 
 static const char description[] = I18N_NOOP("KDE mail checker");
-static const char version[] = "0.2";
+static const char version[] = "0.3";
 
 
 int main(int argc, char *argv[])
