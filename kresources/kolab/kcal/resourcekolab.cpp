@@ -178,20 +178,45 @@ bool ResourceKolab::doLoadAll( ResourceMap& map, const char* mimetype )
 
 bool ResourceKolab::loadAllEvents()
 {
+  removeIncidences( "Event" );
   mCalendar.deleteAllEvents();
   return doLoadAll( mEventSubResources, eventAttachmentMimeType );
 }
 
 bool ResourceKolab::loadAllTodos()
 {
+  removeIncidences( "Todo" );
   mCalendar.deleteAllTodos();
   return doLoadAll( mTodoSubResources, todoAttachmentMimeType );
 }
 
 bool ResourceKolab::loadAllJournals()
 {
+  removeIncidences( "Journal" );
   mCalendar.deleteAllJournals();
   return doLoadAll( mJournalSubResources, journalAttachmentMimeType );
+}
+
+void ResourceKolab::removeIncidences( const QCString& incidenceType )
+{
+  Kolab::UidMap::Iterator mapIt = mUidMap.begin();
+  while ( mapIt != mUidMap.end() )
+  {
+    Kolab::UidMap::Iterator it = mapIt++;
+    // Check the type of this uid: event, todo or journal.
+    // Need to look up in mCalendar for that. Given the implementation of incidence(uid),
+    // better call event(uid), todo(uid) etc. directly.
+
+    // A  faster but hackish way would probably be to check the type of the resource,
+    // like mEventSubResources.find( it.data().resource() ) != mEventSubResources.end() ?
+    const QString& uid = it.key();
+    if ( incidenceType == "Event" && mCalendar.event( uid ) )
+      mUidMap.remove( it );
+    else if ( incidenceType == "Todo" && mCalendar.todo( uid ) )
+      mUidMap.remove( it );
+    else if ( incidenceType == "Journal" && mCalendar.journal( uid ) )
+      mUidMap.remove( it );
+  }
 }
 
 bool ResourceKolab::doSave()
@@ -621,6 +646,8 @@ void ResourceKolab::fromKMailRefresh( const QString& type,
     loadAllTodos();
   else if ( type == "Journal" )
     loadAllJournals();
+  else
+    kdWarning(5006) << "KCal Kolab resource: fromKMailRefresh: unknown type " << type << endl;
   mResourceChangedTimer.changeInterval( 100 );
 }
 
@@ -771,7 +798,7 @@ void ResourceKolab::setSubresourceActive( const QString &subresource, bool v )
 
 void ResourceKolab::slotEmitResourceChanged()
 {
-   kdDebug(5650) << "Emitting resource changed " << endl;
+   kdDebug(5650) << "KCal Kolab resource: emitting resource changed " << endl;
    emit resourceChanged( this );
    mResourceChangedTimer.stop();
 }
