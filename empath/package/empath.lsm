@@ -1,0 +1,15 @@
+Begin3
+Title: empath
+Version: 1.0
+Entered-date:
+Description: Mailer for the KDE project.
+Keywords: KDE, Qt, mail, POP, IMAP, POP3, IMAP4, Maildir, maildir, MH, MMDF, mmdf, mbox, MBOX, arse
+Author: Rik Hemsley <rikkus@postmaster.co.uk>
+Maintained-by: Rik Hemsley <rikkus@postmaster.co.uk>
+Primary-site: http://www.rikkus.demon.co.uk
+Alternate-site:
+Original-site:
+Platform: KDE 1.1 Qt 1.4
+Copying-policy: GPL
+End
+

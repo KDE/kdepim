@@ -1,0 +1,163 @@
+<HTML>
+<CENTER><H1>Locking</H1></CENTER>
+
+<H2>Advisory locking</H2>
+
+<I>Description</I><BR>
+Process have to agree on a semaphore.<BR>
+When the semaphore is set, a process should not attempt to access the
+shared resource.<P>
+	
+<H3>Implementation</H3>
+
+<UL>
+	<LI>Kernel semaphores<BR>
+
+	Process increments a variable in shared memory when wanting to lock the
+	resource. Other process (/thread) must wait for variable to get back to
+	the 'unlocked' value before incrementing the variable itself (obviously
+	the increment must be an atomic operation within the kernel).<P>
+
+	<I>Disadvantages</I>
+	<UL>
+		<LI>Cannot be enforced.
+		<LI>Don't usually have shared memory across machines.
+		<LI>What happens when a process dies and doesn't release its lock ?
+	</UL>
+	<P>
+	<I>Advantages</I>
+	<UL>
+		<LI>Fast.
+		<LI>Kernel believes it has some control ;)
+	</UL>
+	<P>
+	<LI>Lockfile<BR>
+		When a process (or thread) wants to access the shared resource,
+		it creates the lockfile (whose name is agreed upon).<BR>
+		When it is finished, it unlinks the file.<P>
+
+	<I>Disadvantages</I>
+	<UL>
+		<LI>Cannot be enforced.
+		<LI>Processes on other machines must have some way to access the file,
+		e.g. NFS, which is as reliable as a bus timetable.
+	</UL>
+	<I>Advantages</I>
+	<UL>
+		<LI>Works across a network, though this is unreliable
+	</UL>
+	<P>
+</UL>
+<P>
+<H2>Mandatory locking</H2>
+
+<I>Description</I><BR>
+Processes request locks from an arbitrator<BR>
+When locks are set, they are enforced by the arbitrator<BR>
+Locks may be shared/exclusive (put simply: read/write)<P>
+
+<H3>Implementation</H3>
+<UL>
+	<LI>flock() (BSD)<BR>
+	flock() provides mandatory locking - both shared and exclusive.<BR>
+	However, when up/downgrading the lock type, the existing lock is released
+	and then an attempt to acquire the new lock is made.
+	<P>
+	<I>Disadvantages</I>
+	<UL>
+		<LI>no-op over NFS, though returns SUCCESS !
+		<LI>Problem with up/downgrading mentioned above.
+	</UL>
+	<P>
+	<I>Advantages</I>
+	<UL>
+		<LI>Apart from over NFS, and when programmers correctly understand the
+		behaviour when changing lock type, flock() is reliable and secure.
+		<LI>The kernel will remove locks when a process exits. Note: what
+		happens with threads ? With Linux, a thread is really a process, so
+		should still work, but what about on e.g. Solaris ?
+	</UL>
+	<P>
+	<LI>fcntl() (SYSV/POSIX)<BR>
+	fcntl() allows not only whole file locking, but portion-of-file locking.
+	You may ask for the lock status on a file and lock/unlock a part / the
+	whole of a file.
+	Like flock(), locks may be shared or exclusive.
+	<P>
+	<I>Disadvantages</I>
+	<UL>
+		<LI>You may not acquire an exclusive lock unless you have already
+		opened the file. So if you have the file open read-only, you must
+		re-open it with write access.
+		<LI>If you unlock a resource, and have it open at another point in your
+		process, you lose the lock. So your app will silently fail. Lovely.
+		<LI>Over NFS, it's necessary to have server processes running that
+		serve up locks. If they're not running, fcntl() will block.
+		<LI>Same might apply for local systems if there's no kernel support for
+		fcntl() (It's handled by daemons only).
+		<LI>If the server daemons die... guess.
+	</UL>
+	<P>
+	<I>Advantages</I>
+	<UL>
+		<LI>Er.. it's POSIX ?
+	</UL>
+</UL>
+
+<H2>Locking in Empath</H2>
+As the reader can see from the above list, there is no locking mechanism that
+can be considered reliable. If you're screaming 'but flock() is reliable'
+you're just plain wrong. Reliable on the local host but not over NFS is not
+reliable. Sometimes NFS is your only option, or removing NFS from a system
+would be extreme overkill to give reliable mail.<P>
+
+I'm not going to introduce ``it'll probably work'' into Empath. If
+Empath loses / corrupts mail, I'll be held responsible. People do read their
+mail over NFS. I've worked at places where that's how the system was set up
+when I arrived. The only way to fix it was to move everyone to local mailboxes,
+run all the mail clients on one system, or switch everyone to a
+Maildir-compliant MUA.<P>
+
+Unfortunately, due to certain management difficulties, changing the mail
+clients was impossible, so mailboxes had to be moved onto the host that the
+users' MUA was running on (changing the delivery routines and managing the new
+storage needed on each host). This was obviously impractical, as anyone who's
+managed a huge homogenous system will know.<P>
+
+The answer was to POP mail. Not ideal, I know, but at that point there were no
+graphical mailers (no decent ones) that supported Maildir. POP is easy - the
+user's mailbox is written wherever they want. I would have put everyone on
+mutt, but corporate policy dictated that everyone would have a graphical
+desktop. Pig ignorance and indifference to the technical difficulties involved
+is difficult to argue with.<P>
+
+Ok, so POP wasn't the best idea. It was easy, and worked, and wasn't going to
+be going for long (hahaha where did I hear that before ?) IMAP would have been
+a better solution, but again there weren't many IMAP-aware mailers about.<P>
+
+So, you say, why don't you use flock() for local mailboxes ?<BR>
+Firstly, how do I know it's a local mailbox and not on NFS ?<BR>
+Note: I think I could test:
+<PRE>
+fstat(fd, stat *) with ustat(statbuf.st_dev, ustat *) and ustatbuf[1].f_tinode
+</PRE>
+Whatever, it's not worth it if I can't be sure.<BR>
+Secondly, flock() might not exist on the target system, or be implemented via
+emulation (fcntl()).<P>
+
+There is an answer.<P>
+Don't use locks.<P>
+
+Maildir doesn't require locks, and therefore works over NFS too. The
+implementation must check writes for success - that's all. If you can't write
+to a mail file, it's not a drastic problem. The message is just considered to
+be undelivered, rather than lost.<P>
+
+So how do I handle people's mailboxes (mbox, MMDF et al) ?<BR>
+Just treat them as read-only. I can't damage a mailbox if I don't write to
+it.<P>
+
+Sorted.<P>
+
+</HTML>
+
