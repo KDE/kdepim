@@ -179,13 +179,26 @@ void CryptoWidget::storeContact( KABC::Addressee *addr )
   }
   QStringList lst = Kleo::cryptoMessageFormatsToStringList(cryptoFormats);
 
-  addr->insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF", lst.join( "," ) );
-  addr->insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF",
-                      Kleo::signingPreferenceToString(
-                          static_cast<Kleo::SigningPreference>( mSignPref->currentItem() )) );
-  addr->insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF",
-                      Kleo::encryptionPreferenceToString(
-                          static_cast<Kleo::EncryptionPreference>( mCryptPref->currentItem()) ) );
+  if ( !lst.isEmpty() )
+      addr->insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF", lst.join( "," ) );
+  else
+      addr->removeCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF" );
+
+  Kleo::SigningPreference signPref =
+      static_cast<Kleo::SigningPreference>( mSignPref->currentItem() );
+  if ( signPref != Kleo::UnknownSigningPreference )
+      addr->insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF",
+                          Kleo::signingPreferenceToString( signPref ) );
+  else
+      addr->removeCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF" );
+
+  Kleo::EncryptionPreference encryptPref =
+      static_cast<Kleo::EncryptionPreference>( mCryptPref->currentItem() );
+  if ( encryptPref != Kleo::UnknownPreference )
+      addr->insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF",
+                          Kleo::encryptionPreferenceToString( encryptPref ) );
+  else
+      addr->removeCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF" );
 
   QStringList pfp = mPgpKey->fingerprints();
   QStringList sfp = mSmimeCert->fingerprints();
