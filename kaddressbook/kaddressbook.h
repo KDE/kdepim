@@ -6,6 +6,7 @@
 #include <qdict.h>
 
 #include <kabc/vcardconverter.h>
+
 #include "kaddressbookiface.h"
 
 class ViewManager;

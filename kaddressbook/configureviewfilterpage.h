@@ -1,6 +1,3 @@
-#ifndef CONFIGUREVIEWFILTERPAGE
-#define CONFIGUREVIEWFILTERPAGE
-
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -23,6 +20,10 @@
     with any edition of Qt, and distribute the resulting executable,    
     without including the source code for Qt in the source distribution.
 */                                                                      
+
+#ifndef CONFIGUREVIEWFILTERPAGE
+#define CONFIGUREVIEWFILTERPAGE
+
 #include <qwidget.h>
 
 class QButtonGroup;
@@ -35,14 +36,14 @@ class ConfigureViewFilterPage : public QWidget
   Q_OBJECT
   
   public:
-    ConfigureViewFilterPage(QWidget *parent, const char *name = 0);
+    ConfigureViewFilterPage( QWidget *parent, const char *name = 0 );
     ~ConfigureViewFilterPage();
     
-    void readConfig(KConfig *config);
-    void writeConfig(KConfig *config);
+    void readConfig( KConfig *config );
+    void writeConfig( KConfig *config );
     
   protected slots:
-    void buttonClicked(int id);
+    void buttonClicked( int id );
     
   private:
     KComboBox *mFilterCombo;
