@@ -106,7 +106,7 @@ GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *
 
 #ifdef HAVE_GNOKII_H
 static char *lockfile = NULL;
-static char manufacturer[64], model[GN_MODEL_MAX_LENGTH+1], 
+static char manufacturer[64], model[GN_MODEL_MAX_LENGTH+1],
             revision[GN_REVISION_MAX_LENGTH+1], imei[GN_IMEI_MAX_LENGTH+1];
 static QString PhoneProductId;
 
@@ -187,7 +187,7 @@ static QString businit(void)
 	GNOKII_CHECK_ERROR(error);
 
 	GNOKII_DEBUG( QString("Found mobile phone: %1 %2, Revision: %3, IMEI: %4\n")
-				.arg(manufacturer, model, revision, imei) ); 
+				.arg(manufacturer, model, revision, imei) );
 
 	PhoneProductId = QString("%1-%2-%3-%4").arg(APP).arg(model).arg(revision).arg(imei);
 
@@ -787,8 +787,8 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 			     "entries, every contact in your phone will be deleted and only "
 			     "the newly exported contacts will be available from inside your phone.</qt>"),
 			i18n("Export to Mobile Phone"),
-			KGuiItem(i18n("&Append to current phonebook")),
-			KGuiItem(i18n("&Replace current phonebook with new contacts")) ) )
+			KGuiItem(i18n("&Append to Current Phonebook")),
+			KGuiItem(i18n("&Replace Current Phonebook with New Contacts")) ) )
 				overwrite_phone_entries = true;
 	}
 
