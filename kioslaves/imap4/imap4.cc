@@ -800,7 +800,7 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
       while (!cmd->isComplete ())
         parseLoop ();
       if (cmd->result () != "OK")
-        error (ERR_COULD_NOT_WRITE, myHost);
+        error (ERR_SLAVE_DEFINED, cmd->resultInfo());
       else
       {
         if (hasCapability("UIDPLUS"))
