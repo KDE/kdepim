@@ -40,172 +40,189 @@ AddressBook::AddressBook( CategoryEdit *edit,
 }
 AddressBook::~AddressBook(){
 }
+
 KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName, ExtraMap& map )
 {
-    KSync::AddressBookSyncee *syncee = new KSync::AddressBookSyncee();
-    syncee->setSource( "Opie");
-    if( device() )
-	syncee->setSupports( device()->supports( Device::Addressbook ) );
+  KSync::AddressBookSyncee *syncee = new KSync::AddressBookSyncee();
+  syncee->setSource( "Opie");
+  if ( device() )
+    syncee->setSupports( device()->supports( Device::Addressbook ) );
 
-    //return entry;
-    QFile file( fileName );
-    if( !file.open(IO_ReadOnly ) ){
-        //delete syncee; there is not addressbook so to get one synced we need to add an empty Syncee
-	return syncee;
-    }
-    QDomDocument doc("mydocument" );
-    if( !doc.setContent( &file ) ){
-	file.close();
-        delete syncee;
-	return 0;
-    }
-
-
-    QDomElement docElem = doc.documentElement( );
-    QDomNode n =  docElem.firstChild();
-    QStringList attr = attributes();
-    while(!n.isNull() ){
-	QDomElement e = n.toElement();
-	if(!e.isNull() ){
-	    kdDebug(5228) << "Tage Name" << e.tagName() << endl;
-	    if( e.tagName() == QString::fromLatin1("Contacts" ) ){ // we're looking for them
-		QDomNode no = e.firstChild();
-		while(!no.isNull() ){
-		    QDomElement el = no.toElement();
-		    if(!el.isNull() ){
-			kdDebug(5228) << "Contacts: " << el.tagName() << endl;
-			KABC::Addressee adr;
-			adr.setUid( kdeId( "AddressBookSyncEntry",  el.attribute("Uid" ) ) );
-			adr.setFamilyName(el.attribute("LastName" ) );
-			adr.setGivenName(el.attribute("FirstName" ) );
-			adr.setAdditionalName(el.attribute("MiddleName" )  );
-			adr.setSuffix(el.attribute("Suffix") );
-			adr.setNickName(el.attribute("Nickname" ) );
-
-                        QDate date = dateFromString(el.attribute("Birthday") );
-                        if (date.isValid() )
-                            adr.setBirthday( date );
-
-			adr.setRole(el.attribute("JobTitle" ) );
-                        if ( !el.attribute("FileAs").isEmpty() )
-                            adr.setFormattedName( el.attribute("FileAs" ) );
-
-			adr.setOrganization( el.attribute("Company") );
-			KABC::PhoneNumber businessPhoneNum(el.attribute("BusinessPhone"),
-							   KABC::PhoneNumber::Work   );
-			KABC::PhoneNumber businessFaxNum ( el.attribute("BusinessFax"),
-							   KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax  );
-			KABC::PhoneNumber businessMobile ( el.attribute("BusinessMobile"),
-							   KABC::PhoneNumber::Work | KABC::PhoneNumber::Cell );
-			KABC::PhoneNumber businessPager( el.attribute("BusinessPager"),
-							 KABC::PhoneNumber::Work | KABC::PhoneNumber::Pager);
-			adr.insertPhoneNumber( businessPhoneNum );
-			adr.insertPhoneNumber( businessFaxNum );
-			adr.insertPhoneNumber( businessMobile );
-			adr.insertPhoneNumber( businessPager  );
-
-			// Handle multiple mail addresses
-                        QString DefaultEmail = el.attribute("DefaultEmail");
-                        if ( !DefaultEmail.isEmpty() )
-                            adr.insertEmail( DefaultEmail, true ); // preferred
-                        QString Emails = el.attribute("Emails");
-			int emailCount = 1;
-			QString Email = Emails.section( ' ', 1, 1, QString::SectionSkipEmpty);
-			while ( !Email.isEmpty() ) {
-			    // Handle all the secondary emails ...
-                            if (Email != DefaultEmail)
-                                adr.insertEmail( Email, false );
-			    emailCount++;
-			    Email = Emails.section( ' ', emailCount, emailCount, QString::SectionSkipEmpty);
-			}
-
-
-			KABC::PhoneNumber homePhoneNum( el.attribute("HomePhone"),
-							KABC::PhoneNumber::Home );
-
-			KABC::PhoneNumber homeFax (el.attribute("HomeFax"),
-						   KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
-
-			KABC::PhoneNumber homeMobile( el.attribute("HomeMobile"),
-						     KABC::PhoneNumber::Home | KABC::PhoneNumber::Cell );
-			adr.insertPhoneNumber(homePhoneNum );
-			adr.insertPhoneNumber(homeFax );
-			adr.insertPhoneNumber(homeMobile );
-			KABC::Address business( KABC::Address::Work );
-
-			business.setStreet  ( el.attribute("BusinessStreet") );
-			business.setLocality( el.attribute("BusinessCity"  ) );
-			business.setRegion  ( el.attribute("BusinessState" ) );
-			business.setPostalCode( el.attribute("BusinessZip")  );
-                        business.setCountry( el.attribute("BusinessCountry") );
-
-			adr.insertAddress( business );
-
-			KABC::Address home( KABC::Address::Home );
-			home.setStreet( el.attribute("HomeStreet") );
-			home.setLocality( el.attribute("HomeCity") );
-			home.setRegion( el.attribute("HomeState") );
-			home.setPostalCode( el.attribute("HomeZip") );
-                        home.setCountry( el.attribute("HomeCountry") );
-			adr.insertAddress( home );
-			//el.attribute("Birthday");
-
-			adr.setNickName( el.attribute("Nickname") );
-			adr.setNote( el.attribute("Notes") );
-
-		        /* extra block to let memory cleared... */
-			{
-			QStringList categories = QStringList::split(";", el.attribute("Categories" ) );
-                        QString cat;
-			QStringList added;
-			for(uint i=0; i < categories.count(); i++ ){
-                            cat = m_edit->categoryById(categories[i], "Contacts"  );
-			    /* if name is not empty and we did not add the cat
-			     * try to repair broken files
-			     */
-                            if (!cat.isEmpty() && !added.contains(cat) ){
-                                adr.insertCategory( cat );
-				added << cat;
-			    }
-			}
-			}
-
-                        adr.insertCustom("KADDRESSBOOK", "X-Department",  el.attribute("Department") );
-			adr.insertCustom("opie", "HomeWebPage", el.attribute("HomeWebPage") );
-			adr.insertCustom("KADDRESSBOOK", "X-SpousesName", el.attribute("Spouse") );
-			adr.insertCustom("opie", "Gender", el.attribute("Gender") );
-
-                        /*
-                         * Anniversary block
-                         * KADDRESSBOOK what it as ISO DATE string
-                         * and we either have it in Opie old or Qtopia1.6 format
-                         * So from String to Date and this Date will be exported to ISO Date again
-                         */
-                        {
-                            QDate ann = dateFromString( el.attribute("Anniversary") );
-                            if (ann.isValid() ) {
-                                adr.insertCustom("KADDRESSBOOK", "X-Anniversary", ann.toString( Qt::ISODate) );
-                            }
-                        }
-			adr.insertCustom("opie", "Children", el.attribute("Children") );
-			adr.insertCustom("KADDRESSBOOK", "X-Office", el.attribute("Office") );
-			adr.insertCustom("KADDRESSBOOK", "X-Profession", el.attribute("Profession") );
-			adr.insertCustom("KADDRESSBOOK", "X-AssistantsName", el.attribute("Assistant") );
-			adr.insertCustom("KADDRESSBOOK", "X-ManagersName", el.attribute("Manager") );
-                        adr.setRevision( QDateTime::currentDateTime() );
-                        KSync::AddressBookSyncEntry* entry = new KSync::AddressBookSyncEntry( adr, syncee );
-			syncee->addEntry ( entry );
-
-                        // now on to the extra stuff
-                        map.add( "addressbook", el.attribute("Uid"), el.attributes(), attr );
-		    }
-		    no = no.nextSibling();
-		}
-	    }
-	}
-	n = n.nextSibling();
-    }
+  //return entry;
+  QFile file( fileName );
+  if ( !file.open(IO_ReadOnly ) ) {
+    //delete syncee; there is not addressbook so to get one synced we need to add an empty Syncee
     return syncee;
+  }
+
+  QDomDocument doc("mydocument" );
+  if ( !doc.setContent( &file ) ) {
+    file.close();
+    delete syncee;
+    return 0;
+  }
+
+
+  QDomElement docElem = doc.documentElement( );
+  QDomNode n =  docElem.firstChild();
+  QStringList attr = attributes();
+  while ( !n.isNull() ) {
+    QDomElement e = n.toElement();
+    if ( !e.isNull() ) {
+      kdDebug(5228) << "Tage Name" << e.tagName() << endl;
+      if ( e.tagName() == QString::fromLatin1( "Contacts" ) ) { // we're looking for them
+        QDomNode no = e.firstChild();
+        while ( !no.isNull() ) {
+          QDomElement el = no.toElement();
+          if ( !el.isNull() ) {
+            kdDebug(5228) << "Contacts: " << el.tagName() << endl;
+            KABC::Addressee adr;
+            adr.setUid( kdeId( "AddressBookSyncEntry",  el.attribute("Uid" ) ) );
+            adr.setFamilyName( el.attribute( "LastName" ) );
+            adr.setGivenName( el.attribute( "FirstName" ) );
+            adr.setAdditionalName( el.attribute( "MiddleName" )  );
+            adr.setSuffix( el.attribute( "Suffix" ) );
+            adr.setNickName( el.attribute( "Nickname" ) );
+
+            QDate date = dateFromString( el.attribute( "Birthday" ) );
+            if ( date.isValid() )
+              adr.setBirthday( date );
+
+            adr.setRole( el.attribute( "JobTitle" ) );
+            if ( !el.attribute( "FileAs" ).isEmpty() )
+              adr.setFormattedName( el.attribute( "FileAs" ) );
+
+            adr.setOrganization( el.attribute( "Company" ) );
+
+            KABC::PhoneNumber businessPhoneNum( el.attribute( "BusinessPhone" ),
+                                                KABC::PhoneNumber::Work );
+            KABC::PhoneNumber businessFaxNum( el.attribute( "BusinessFax" ),
+                                              KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax );
+            KABC::PhoneNumber businessMobile( el.attribute( "BusinessMobile" ),
+                                              KABC::PhoneNumber::Work | KABC::PhoneNumber::Cell );
+            KABC::PhoneNumber businessPager( el.attribute( "BusinessPager" ),
+                                             KABC::PhoneNumber::Work | KABC::PhoneNumber::Pager );
+            if ( !businessPhoneNum.number().isEmpty() )
+              adr.insertPhoneNumber( businessPhoneNum );
+            if ( !businessFaxNum.number().isEmpty() )
+              adr.insertPhoneNumber( businessFaxNum );
+            if ( !businessMobile.number().isEmpty() )
+              adr.insertPhoneNumber( businessMobile );
+            if ( !businessPager.number().isEmpty() )
+              adr.insertPhoneNumber( businessPager  );
+
+            // Handle multiple mail addresses
+            QString DefaultEmail = el.attribute( "DefaultEmail" );
+            if ( !DefaultEmail.isEmpty() )
+              adr.insertEmail( DefaultEmail, true ); // preferred
+
+            QString Emails = el.attribute("Emails");
+            int emailCount = 1;
+            QString Email = Emails.section( ' ', 1, 1, QString::SectionSkipEmpty );
+            while ( !Email.isEmpty() ) {
+              // Handle all the secondary emails ...
+              if ( Email != DefaultEmail )
+                adr.insertEmail( Email, false );
+              emailCount++;
+              Email = Emails.section( ' ', emailCount, emailCount, QString::SectionSkipEmpty );
+            }
+
+
+            KABC::PhoneNumber homePhoneNum( el.attribute( "HomePhone" ),
+                                            KABC::PhoneNumber::Home );
+            KABC::PhoneNumber homeFax( el.attribute( "HomeFax" ),
+                                       KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
+
+            KABC::PhoneNumber homeMobile( el.attribute( "HomeMobile" ),
+                                          KABC::PhoneNumber::Home | KABC::PhoneNumber::Cell );
+
+            if ( !homePhoneNum.number().isEmpty() )
+              adr.insertPhoneNumber( homePhoneNum );
+            if ( !homeFax.number().isEmpty() )
+              adr.insertPhoneNumber( homeFax );
+            if ( !homeMobile.number().isEmpty() )
+              adr.insertPhoneNumber( homeMobile );
+
+            KABC::Address business( KABC::Address::Work );
+            business.setStreet( el.attribute( "BusinessStreet" ) );
+            business.setLocality( el.attribute( "BusinessCity"  ) );
+            business.setRegion( el.attribute( "BusinessState" ) );
+            business.setPostalCode( el.attribute( "BusinessZip" )  );
+            business.setCountry( el.attribute( "BusinessCountry" ) );
+
+            if ( !business.isEmpty() )
+              adr.insertAddress( business );
+
+            KABC::Address home( KABC::Address::Home );
+            home.setStreet( el.attribute( "HomeStreet" ) );
+            home.setLocality( el.attribute( "HomeCity" ) );
+            home.setRegion( el.attribute( "HomeState" ) );
+            home.setPostalCode( el.attribute( "HomeZip" ) );
+            home.setCountry( el.attribute( "HomeCountry" ) );
+
+            if ( !home.isEmpty() )
+              adr.insertAddress( home );
+
+            adr.setNickName( el.attribute( "Nickname" ) );
+            adr.setNote( el.attribute( "Notes" ) );
+
+            {
+              QStringList categories = QStringList::split(";", el.attribute("Categories" ) );
+              QString cat;
+              QStringList added;
+              for ( uint i = 0; i < categories.count(); i++ ) {
+                cat = m_edit->categoryById( categories[ i ], "Contacts" );
+
+                // if name is not empty and we did not add the
+                // cat try to repair broken files
+                if ( !cat.isEmpty() && !added.contains( cat ) ) {
+                  adr.insertCategory( cat );
+                  added << cat;
+                }
+              }
+            }
+
+            if ( !el.attribute( "Department" ).isEmpty() )
+              adr.insertCustom( "KADDRESSBOOK", "X-Department",  el.attribute( "Department" ) );
+            if ( !el.attribute( "HomeWebPage" ).isEmpty() )
+              adr.insertCustom( "opie", "HomeWebPage", el.attribute( "HomeWebPage" ) );
+            if ( !el.attribute( "Spouse" ).isEmpty() )
+              adr.insertCustom( "KADDRESSBOOK", "X-SpousesName", el.attribute( "Spouse" ) );
+            if ( !el.attribute( "Gender" ).isEmpty() )
+              adr.insertCustom( "opie", "Gender", el.attribute( "Gender" ) );
+
+            QDate ann = dateFromString( el.attribute( "Anniversary" ) );
+            if ( ann.isValid() ) {
+              adr.insertCustom( "KADDRESSBOOK", "X-Anniversary", ann.toString( Qt::ISODate ) );
+            }
+
+            if ( !el.attribute( "Children" ).isEmpty() )
+              adr.insertCustom("opie", "Children", el.attribute("Children") );
+            if ( !el.attribute( "Office" ).isEmpty() )
+              adr.insertCustom("KADDRESSBOOK", "X-Office", el.attribute("Office") );
+            if ( !el.attribute( "Profession" ).isEmpty() )
+              adr.insertCustom("KADDRESSBOOK", "X-Profession", el.attribute("Profession") );
+            if ( !el.attribute( "Assistant" ).isEmpty() )
+              adr.insertCustom("KADDRESSBOOK", "X-AssistantsName", el.attribute("Assistant") );
+            if ( !el.attribute( "Manager" ).isEmpty() )
+              adr.insertCustom("KADDRESSBOOK", "X-ManagersName", el.attribute("Manager") );
+
+            KSync::AddressBookSyncEntry* entry = new KSync::AddressBookSyncEntry( adr, syncee );
+            syncee->addEntry ( entry );
+
+            // now on to the extra stuff
+            map.add( "addressbook", el.attribute( "Uid" ), el.attributes(), attr );
+          }
+
+          no = no.nextSibling();
+        }
+      }
+    }
+
+    n = n.nextSibling();
+  }
+
+  return syncee;
 }
 KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee, ExtraMap& map )
 {
