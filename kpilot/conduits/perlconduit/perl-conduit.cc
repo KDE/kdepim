@@ -106,6 +106,7 @@ PerlConduit::~PerlConduit()
 
 	fThread = new PerlThread(this) ;
 	fThread->start();
+	startTickle();
 	return true;
 }
 
@@ -120,6 +121,7 @@ PerlConduit::~PerlConduit()
 #endif
 		QString r;
 		addSyncLogEntry(i18n("Perl returned %1.").arg(fThread->result()));
+		stopTickle();
 		delayDone();
 		return true;
 	}

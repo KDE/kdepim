@@ -89,6 +89,7 @@ PythonConduit::~PythonConduit()
 
 	fThread = new PythonThread(this) ;
 	fThread->start();
+	startTickle();
 	return true;
 }
 
@@ -103,6 +104,7 @@ PythonConduit::~PythonConduit()
 #endif
 		QString r;
 		addSyncLogEntry(i18n("Python returned %1.").arg(fThread->result()));
+		stopTickle();
 		delayDone();
 		return true;
 	}
