@@ -85,15 +85,15 @@ RContentType::_parse()
     int slash = ts.find('/');
     
     if (slash == -1) {
-        rmmDebug("Invalid Content-Type");
+        rmmDebug("Invalid Content-Type `" + ts + "'");
         return;
     }
     
     type_        = ts.left(slash).stripWhiteSpace();
     subType_    = ts.right(ts.length() - slash - 1).stripWhiteSpace();
     
-    rmmDebug("type_ == " + type_);
-    rmmDebug("subType_ == " + subType_);
+    //rmmDebug("type_ == " + type_);
+    //rmmDebug("subType_ == " + subType_);
 }
 
     void

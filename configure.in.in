@@ -2,3 +2,39 @@
 AC_HEADER_DIRENT
 AC_HEADER_STDC
 AC_CHECK_HEADERS(fcntl.h sys/sysctl.h sys/param.h sys/time.h sys/types.h unistd.h)
+AC_LANG_SAVE
+KDE_CHECK_LIBPTHREAD
+
+AC_MSG_CHECKING(for libqpthr) 
+
+AC_CACHE_VAL(kdepim_cv_have_libqpthr,
+[
+AC_LANG_CPLUSPLUS
+
+kdepim_ldflags_safe="$LDFLAGS"
+kdepim_libs_safe="$LIBS"
+
+LDFLAGS="$LIBPTHREAD $USER_LDFLAGS"
+LIBS="-lqpthr"
+
+AC_TRY_LINK([
+#define _REENTRANT
+#include <qpthr/qp.h>
+],
+[
+QpInit init;
+],
+    AC_DEFINE(USE_QPTHREAD, 1, [Define if the QpThread library is available])
+    CXXFLAGS="$CXXFLAGS -D_REENTRANT"
+    LIBQPTHREAD="-lqpthr"
+    kdepim_cv_have_libqpthr="yes",
+    LIBQPTHREAD=
+    kdepim_cv_have_libqpthr="no"
+)
+AC_SUBST(LIBQPTHREAD)
+LDFLAGS=$kdepim_ldflags_safe
+LIBS=$kdepim_libs_safe
+AC_LANG_RESTORE
+])
+
+AC_MSG_RESULT($kdepim_cv_have_libqpthr)

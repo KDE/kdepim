@@ -165,7 +165,7 @@ RBodyPart::setMimeSubType(const QCString & s)
     void
 RBodyPart::_parse()
 {
-    rmmDebug("=== RBodyPart parse start =====================================");
+    //rmmDebug("=== RBodyPart parse start =====================================");
     
     body_.clear();
     mimeType_       = MimeTypeUnknown;
@@ -179,7 +179,7 @@ RBodyPart::_parse()
     if (endOfHeaders == -1) {
         
         // The body is blank. We'll treat what there is as the envelope.
-        rmmDebug("empty body");
+        //rmmDebug("empty body");
         envelope_    = strRep_;
         data_        = "";
         
@@ -193,64 +193,64 @@ RBodyPart::_parse()
     }
     
 
-    rmmDebug("Looking to see if there's a Content-Type header");
+    //rmmDebug("Looking to see if there's a Content-Type header");
     // Now see if there's a Content-Type header in the envelope.
     // If there is, we might be looking at a multipart message.
     if (!envelope_.has(HeaderContentType)) {
         
         parsed_     = true;
         assembled_  = false;
-        rmmDebug("done parse(1)");
-        rmmDebug("=== RBodyPart parse end   =================================");
+        //rmmDebug("done parse(1)");
+        //rmmDebug("=== RBodyPart parse end   =================================");
         return;
     }
 
-    rmmDebug("There's a Content-Type header");
+    //rmmDebug("There's a Content-Type header");
     
     RContentType contentType(envelope_.contentType());
     
-    rmmDebug("contentType.type() == " + contentType.type());
+    //rmmDebug("contentType.type() == " + contentType.type());
     
     // If this isn't multipart, we've finished parsing.
     if (stricmp(contentType.type(), "multipart") != 0) {
         mimeType_       = mimeTypeStr2Enum(contentType.type());
         mimeSubType_    = mimeSubTypeStr2Enum(contentType.subType());
 
-        rmmDebug("=== RBodyPart parse end   =================================");
+        //rmmDebug("=== RBodyPart parse end   =================================");
         return;
     }
  
-    rmmDebug(" ==== This part is multipart ========================");
+    //rmmDebug(" ==== This part is multipart ========================");
 
     QValueList<RParameter> parameterList(contentType.parameterList().list());
     QValueList<RParameter>::Iterator it;
     
-    rmmDebug("Looking for boundary");
+    //rmmDebug("Looking for boundary");
 
     for (it = parameterList.begin(); it != parameterList.end(); ++it)
         if (0 == stricmp((*it).attribute(), "boundary"))
             boundary_ = (*it).value();
     
-    rmmDebug("boundary == \"" + boundary_ + "\"");
+    //rmmDebug("boundary == \"" + boundary_ + "\"");
     
     if (boundary_.isEmpty()) {
-        rmmDebug("Boundary not found in ContentType header. Giving up.");
+        //rmmDebug("Boundary not found in ContentType header. Giving up.");
         parsed_        = true;
         assembled_    = false;
         return;
     }
     
     if (boundary_.at(0) == '\"') {
-        rmmDebug("Boundary is quoted. Removing quotes.");
+        //rmmDebug("Boundary is quoted. Removing quotes.");
         boundary_.remove(boundary_.length() - 1, 1);
         boundary_.remove(0, 1);
 
         if (boundary_.isEmpty()) {
-            rmmDebug("The (quoted) boundary is empty ! Giving up.");
+            //rmmDebug("The (quoted) boundary is empty ! Giving up.");
             parsed_       = true;
             assembled_    = false;
-            rmmDebug("done parse(2)");
-            rmmDebug("=== RBodyPart parse end   =============================");
+            //rmmDebug("done parse(2)");
+            //rmmDebug("=== RBodyPart parse end   =============================");
             return;
         }
     }
@@ -261,11 +261,11 @@ RBodyPart::_parse()
 
     if (boundaryStart == -1) {
         // Let's just call it a plain text message.
-        rmmDebug("No boundary found in message. Assume plain ?");
+        //rmmDebug("No boundary found in message. Assume plain ?");
         parsed_     = true;
         assembled_  = false;
-        rmmDebug("done parse (3)");
-        rmmDebug("=== RBodyPart parse end   =============================");
+        //rmmDebug("done parse (3)");
+        //rmmDebug("=== RBodyPart parse end   =============================");
         return;
     }
 
@@ -273,7 +273,7 @@ RBodyPart::_parse()
 
     preamble_ = data_.left(boundaryStart).stripWhiteSpace();
 
-    rmmDebug("preamble:\n" + preamble_);
+    //rmmDebug("preamble:\n" + preamble_);
 
     int previousBoundaryEnd = boundaryStart + bound.length();
 
@@ -302,12 +302,12 @@ RBodyPart::_parse()
 
     epilogue_ = data_.right(data_.length() - previousBoundaryEnd);
 
-    rmmDebug("epilogue == \"" + epilogue_ + "\"");
+    //rmmDebug("epilogue == \"" + epilogue_ + "\"");
     
     mimeType_       = mimeTypeStr2Enum(contentType.type());
     mimeSubType_    = mimeSubTypeStr2Enum(contentType.subType());
 
-    rmmDebug("=== RBodyPart parse end   =====================================");
+    //rmmDebug("=== RBodyPart parse end   =====================================");
 }
 
     void

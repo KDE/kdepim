@@ -1,4 +1,3 @@
-KDE_CXXFLAGS = $(USE_RTTI)
 INCLUDES=$(all_includes)
 lib_LTLIBRARIES = librmm.la
 

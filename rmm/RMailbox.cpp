@@ -158,16 +158,18 @@ RMailbox::setDomain(const QCString & s)
 RMailbox::_parse()
 {
     if (strRep_.find('@') == -1) { // Must contain '@' somewhere. (RFC822)
-        rmmDebug("This is not a valid mailbox !");
+        rmmDebug("Invalid mailbox `" + strRep_ + "'");
         return;
     }
     
     QStrList l;
     RTokenise(strRep_, " \n", l);
     QStrListIterator it2(l);
+#if 0
     for (; it2.current(); ++it2) {
         cerr << "Token: `" << it2.current() << "'" << endl;
     }
+#endif
 
 
     bool hasRouteAddress(false);
@@ -207,9 +209,11 @@ RMailbox::_parse()
                 route_ += ' ';
         }
 
+#if 0
         cerr << "strRep : `" << strRep_ << "'" << endl;
         cerr << "phrase : `" << phrase_ << "'" << endl;
         cerr << "route  : `" << route_ << "'" << endl;
+#endif
 
     } else { // It's just addr-spec
         
