@@ -232,7 +232,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
   }
 
   const Incidence::List existingIncidences = mCalendar->incidencesFromSchedulingID( inc->uid() );
-  kdDebug(5800) << "Scheduler::acceptRequest: found " << existingIncidences.count() << " incidences with schedulingID " << inc->schedulingID() << endl;
+  kdDebug(5800) << "Scheduler::acceptRequest status=" << ScheduleMessage::statusName( status ) << ": found " << existingIncidences.count() << " incidences with schedulingID " << inc->schedulingID() << endl;
   Incidence::List::ConstIterator incit = existingIncidences.begin();
   for ( ; incit != existingIncidences.end() ; ++incit ) {
     Incidence* const i = *incit;
@@ -240,34 +240,37 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
                   << ( i->isReadOnly() ? "readonly" : "readwrite" )
                   << ") :" << mFormat->toString( i ) << endl;
     if ( i->revision() <= inc->revision() ) {
-      if ( i->revision() == inc->revision() &&
-           i->lastModified() > inc->lastModified() ) {
-        // This isn't an update - the found incidence was modified more recently
-        kdDebug(5800) << "This isn't an update - the found incidence was modified more recently" << endl;
-        deleteTransaction(incidence);
-        return false;
-      }
       // The new incidence might be an update for the found one
-      if ( !i->isReadOnly() ) {
-        bool isUpdate = true;
-        if ( status == ScheduleMessage::RequestNew ) {
-          kdDebug(5800) << "looking in " << i->uid() << "'s attendees" << endl;
-          // This is supposed to be a new request - however we want to update
-          // the existing one to handle the "clicking more than once on the invitation" case.
-          // So check the attendee status of the attendee.
-          const KCal::Attendee::List attendees = i->attendees();
-          KCal::Attendee::List::ConstIterator ait;
-          for ( ait = attendees.begin(); ait != attendees.end(); ++ait ) {
-            if( (*ait)->email() == attendee && (*ait)->status() == Attendee::NeedsAction ) {
-              // This incidence wasn't created by me - it's probably in a shared folder
-              // and meant for someone else, ignore it.
-              kdDebug(5800) << "ignoring " << i->uid() << " since I'm still NeedsAction there" << endl;
-              isUpdate = false;
-              break;
-            }
+      bool isUpdate = true;
+      // Note status==Obsolete seems to happen if libical parses the same ical twice
+      // (once for sending and once for receiving) ... the 2nd time it becomes "obsolete"
+      // since it has the same dtstamp as the first time
+      if ( status == ScheduleMessage::RequestNew || status == ScheduleMessage::Obsolete ) {
+        kdDebug(5800) << "looking in " << i->uid() << "'s attendees" << endl;
+        // This is supposed to be a new request, not an update - however we want to update
+        // the existing one to handle the "clicking more than once on the invitation" case.
+        // So check the attendee status of the attendee.
+        const KCal::Attendee::List attendees = i->attendees();
+        KCal::Attendee::List::ConstIterator ait;
+        for ( ait = attendees.begin(); ait != attendees.end(); ++ait ) {
+          if( (*ait)->email() == attendee && (*ait)->status() == Attendee::NeedsAction ) {
+            // This incidence wasn't created by me - it's probably in a shared folder
+            // and meant for someone else, ignore it.
+            kdDebug(5800) << "ignoring " << i->uid() << " since I'm still NeedsAction there" << endl;
+            isUpdate = false;
+            break;
           }
         }
-        if ( isUpdate ) {
+      }
+      if ( isUpdate ) {
+        if ( i->revision() == inc->revision() &&
+             i->lastModified() > inc->lastModified() ) {
+          // This isn't an update - the found incidence was modified more recently
+          kdDebug(5800) << "This isn't an update - the found incidence was modified more recently" << endl;
+          deleteTransaction(incidence);
+          return false;
+        }
+        if ( !i->isReadOnly() ) {
           kdDebug(5800) << "replacing existing incidence " << i->uid() << endl;
           mCalendar->deleteIncidence( i );
           break; // replacing one is enough
