@@ -95,7 +95,6 @@ class Recurrence {
     QString endDateStr(bool shortfmt=true) const;
     /** Return week day mask. */
     const QBitArray &days() const;
-    struct rMonthPos;
     /** Return list of day positions in months. */
     const QPtrList<rMonthPos> &monthPositions() const;
     /** Return list of day numbers of a  month. */

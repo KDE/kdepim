@@ -316,9 +316,9 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   }
 
   // alarms
+  QPtrList<Alarm> alarms = incidence->alarms();
   Alarm* alarm;
-  for (QPtrListIterator<Alarm> it(incidence->alarms());
-       (alarm = it.current()) != 0;  ++it) {
+  for (alarm = alarms.first(); alarm; alarm = alarms.next()) {
     if (alarm->enabled()) {
       kdDebug() << "Write alarm for " << incidence->summary() << endl;
       icalcomponent_add_component(parent,writeAlarm(alarm));

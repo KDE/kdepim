@@ -504,9 +504,9 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
 
   // alarm stuff
   kdDebug() << "vcalformat::eventToVTodo was called" << endl;
+  QPtrList<Alarm> alarms = anEvent->alarms();
   Alarm* alarm;
-  for (QPtrListIterator<Alarm> it(anEvent->alarms());
-       (alarm = it.current()) != 0;  ++it) {
+  for (alarm = alarms.first(); alarm; alarm = alarms.next()) {
     if (alarm->enabled()) {
       VObject *a = addProp(vtodo, VCDAlarmProp);
       tmpStr = qDateTimeToISO(alarm->time());
@@ -783,9 +783,9 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     addPropValue(vevent, VCResourcesProp, tmpStr.latin1());
 
   // alarm stuff
+  QPtrList<Alarm> alarms = anEvent->alarms();
   Alarm* alarm;
-  for (QPtrListIterator<Alarm> it(anEvent->alarms());
-       (alarm = it.current()) != 0;  ++it) {
+  for (alarm = alarms.first(); alarm; alarm = alarms.next()) {
     if (alarm->enabled()) {
       VObject *a = addProp(vevent, VCDAlarmProp);
       tmpStr = qDateTimeToISO(alarm->time());
