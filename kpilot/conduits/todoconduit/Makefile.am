@@ -1,5 +1,5 @@
 INCLUDES= @all_includes@ -I$(LIBPISOCK_PATH) \
-	-I$(top_srcdir)/kpilot -I$(top_srcdir)/kpilot/kpilot -I../vcalconduit/versit
+	-I$(top_srcdir)/kpilot -I$(top_srcdir)/kpilot/kpilot -I$(srcdir)/../vcalconduit/versit
 METASOURCES = AUTO
 
 servicedir  = $(kde_servicesdir)
@@ -13,7 +13,7 @@ bin_PROGRAMS = todoconduit
 todoconduit_SOURCES= todo-conduit.cc todo-setup.cc
 
 # the library search path
-todoconduit_LDFLAGS = $(all_libraries) -L`pwd`/../vcalconduit/versit \
+todoconduit_LDFLAGS = $(all_libraries) -L../vcalconduit/versit \
 	-L../../kpilot
 
 # the libraries to link against. Be aware of the order. First the libraries,
