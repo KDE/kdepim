@@ -215,12 +215,10 @@ inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 #define DEBUGDB         kndDebug()
 
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
-// In particular it doesn't give functions a local variable fname,
-// like FUNCTIONSETUP does in the debugging case.
 //
 //
-#define FUNCTIONSETUP
-#define FUNCTIONSETUPL(a)
+#define FUNCTIONSETUP const int fname = 0;
+#define FUNCTIONSETUPL(a) const int fname = a;
 #endif
 
 #define KPILOT_VERSION	"4.5.0 (baby)"
