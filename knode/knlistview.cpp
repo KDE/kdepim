@@ -148,18 +148,20 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
     xText=xPM;
   }
 
-  // making the string shorter when the column is to narrow
-  QFontMetrics fm( p->fontMetrics() );
-  QString t(text(column));
-  int ew = fm.width("...");
-  if (fm.width(t) > width-xText-5) {
-    for (int i=t.length();i>0;i--)
-      if (fm.width(t)+ew > width-xText-5)
-        t.truncate(i);
-    t += "...";
-  }
+  if (width-xText-5 > 0) {
+    // making the string shorter when the column is to narrow
+    QFontMetrics fm( p->fontMetrics() );
+    QString t(text(column));
+    int ew = fm.width("...");
+    if (fm.width(t) > width-xText-5) {
+      for (int i=t.length();i>0;i--)
+        if (fm.width(t)+ew > width-xText-5)
+          t.truncate(i);
+      t += "...";
+    }
 
-  p->drawText(xText, 0, width-xText-5, height(), alignment | AlignVCenter,  t);
+    p->drawText(xText, 0, width-xText-5, height(), alignment | AlignVCenter,  t);
+  }
 }
 
 
