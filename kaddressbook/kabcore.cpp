@@ -346,7 +346,7 @@ void KABCore::mailVCard( const QStringList& uids )
     if ( a.isEmpty() )
       continue;
 
-    QString name = a.givenName() + "_" + a.familyName() + ".vcf";
+    QString name = a.givenName().utf8() + "_" + a.familyName().utf8() + ".vcf";
 
     QString fileName = dirName + "/" + name;
 
