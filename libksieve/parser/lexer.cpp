@@ -159,15 +159,17 @@ static inline bool is8Bit( signed char ch ) {
     return ch < 0;
 }
 
-static QString removeDotStuffAndCRLF( const QString & s ) {
-    const bool dotstuffed = s.startsWith("..");
-    const bool CRLF = s.endsWith("\r\n");
-    const bool LF = !CRLF && s.endsWith("\n");
+static QString removeCRLF( const QString & s ) {
+  const bool CRLF = s.endsWith( "\r\n" );
+  const bool LF = !CRLF && s.endsWith( "\n" );
 
-    const int b = dotstuffed ? 1 : 0; // what to skip at the beginning
-    const int e = CRLF ? 2 : LF ? 1 : 0 ; // what to chop off at the end
+  const int e = CRLF ? 2 : LF ? 1 : 0 ;  // what to chop off at the end
 
-    return s.mid( b, s.length() - b - e );
+  return s.left( s.length() - e );
+}
+
+static QString removeDotStuff( const QString & s ) {
+    return s.startsWith( ".." ) ? s.mid( 1 ) : s ;
 }
 
 namespace KSieve {
@@ -575,7 +577,7 @@ namespace KSieve {
 
     // Now, collect the single lines until one with only a single dot is found:
     QStringList lines;
-    do {
+    while ( !atEnd() ) {
       const char * const oldBeginOfLine = beginOfLine();
       if ( !skipToCRLF() )
 	return false;
@@ -585,12 +587,14 @@ namespace KSieve {
 	  makeError( Error::InvalidUTF8 );
 	  return false;
 	}
-	const QString line = QString::fromUtf8( oldBeginOfLine, lineLength );
-	lines.push_back( removeDotStuffAndCRLF( line ) );
+	const QString line = removeCRLF( QString::fromUtf8( oldBeginOfLine, lineLength ) );
+	lines.push_back( removeDotStuff( line ) );
+	if ( line == "." )
+	  break;
       } else {
 	lines.push_back( QString::null );
       }
-    } while ( !atEnd() && lines.back() != "." );
+    }
 
     if ( lines.back() != "." ) {
       makeError( Error::PrematureEndOfMultiLine, mlBeginLine, mlBeginCol );
