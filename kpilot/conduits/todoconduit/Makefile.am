@@ -1,4 +1,4 @@
-INCLUDES= @all_includes@ -I$(top_srcdir)/kpilot/kpilot -I$(srcdir)/../vcalconduit/versit -I$(top_srcdir)/kpilot/kpilot/libpilot/include
+INCLUDES= @all_includes@ -I$(top_srcdir)/kpilot/kpilot -I../vcalconduit/versit
 METASOURCES = AUTO
 
 servicedir  = $(kde_servicesdir)
@@ -12,12 +12,14 @@ bin_PROGRAMS = todoconduit
 todoconduit_SOURCES= todo-conduit.cc todo-setup.cc
 
 # the library search path
-todoconduit_LDFLAGS = @all_libraries@ -L`pwd`/../vcalconduit/versit -L`pwd`/../../kpilot -L/usr/local/lib
+todoconduit_LDFLAGS = $(all_libraries) -L`pwd`/../vcalconduit/versit \
+	-L../../kpilot
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
 todoconduit_LDADD   = ../../kpilot/pilotTodoEntry.o -lconduit \
-	$(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) -lqt -lX11 -lXext @LIBSOCKET@ -lversit -lpisock
+	$(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) \
+	@LIBSOCKET@ -lversit -lpisock
 
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = todo-conduit.h todo-setup.h

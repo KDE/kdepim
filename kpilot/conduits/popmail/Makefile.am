@@ -1,4 +1,4 @@
-INCLUDES= @all_includes@ -I$(top_srcdir)/kpilot/kpilot -I$(top_srcdir)/kpilot/kpilot/libpilot/include
+INCLUDES= @all_includes@ -I$(top_srcdir)/kpilot/kpilot
 METASOURCES = AUTO
 
 servicedir  = $(kde_servicesdir)
@@ -13,12 +13,13 @@ popmail_conduit_SOURCES= popmail-conduit.cc \
 	passworddialog.cc parsedate.c setupDialog.cc
 
 # the library search path
-popmail_conduit_LDFLAGS = @all_libraries@ -L`pwd`/../../kpilot -L/usr/local/lib
+popmail_conduit_LDFLAGS = $(all_libraries) -L../../kpilot
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
 popmail_conduit_LDADD   =  -lconduit \
-	$(LIB_KDEUI) $(LIB_KFILE) $(LIB_KDECORE) -lqt -lX11 -lXext @LIBSOCKET@ -lpisock
+	$(LIB_KDEUI) $(LIB_KFILE) $(LIB_KDECORE) \
+	@LIBSOCKET@ -lpisock
 
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = popmail-conduit.h passworddialog.h setupDialog.h

@@ -1,3 +1,30 @@
+KPilot Developer's notes for december 6th 2000
+===============================================
+
+Lots of internal stuff going on:
+
+* The sense of the debugging flags was the wrong way around,
+  so using --debug 4 gave you all the UI debugging messages
+  as opposed to just the major and minor ones. This is what
+  you get from suggesting debug 1023 all the time.
+* BaseConduit had some weird debugging output -- not controlled
+  by --debug -- so patched that up. And there was ugliness in the
+  icon loading function. This changes the interface to BaseConduit
+  slightly, 3rd party conduit authors beware.
+* Finally fixed up the Makefile.ams for the standard conduits so
+  that they run properly (without setting LD_LIBRARY_PATH).
+
+Still on the todo-list:
+
+* Fix up the documentation, the screenshots, the descriptions of the 
+  conduits, actually everything after section 2.
+* Really fix the vcal conduit. I've patched some things up and once
+  again I hop it works, but since I can't reproduce the error I'm
+  a little stuck here.
+* Actually *doing* a fast sync for Heiko
+* All of last week's wishlist
+
+
 KPilot Developer's notes for december 2nd 2000
 ===============================================
 
