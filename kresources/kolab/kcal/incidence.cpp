@@ -534,7 +534,7 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
     mRecurrence.dayNumber = QString::number( day );
     QPtrList<int> months = recur->yearNums();
     if ( !months.isEmpty() )
-      mRecurrence.month = s_monthName[ *months.first() - 1 ]; // #### Kolab XML limitation
+      mRecurrence.month = s_monthName[ *months.first() - 1 ]; // #### Kolab XML limitation: only one month specified
     break;
   }
   case KCal::Recurrence::rYearlyDay: // YearlyDay (day N of the year). Not supported by Outlook
@@ -547,7 +547,7 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
     mRecurrence.type = "weekday";
     QPtrList<int> months = recur->yearNums();
     if ( !months.isEmpty() )
-      mRecurrence.month = s_monthName[ *months.first() ]; // #### Kolab XML limitation
+      mRecurrence.month = s_monthName[ *months.first() - 1 ]; // #### Kolab XML limitation: only one month specified
     const QPtrList<KCal::Recurrence::rMonthPos> &monthPositions = recur->yearMonthPositions();
     if ( !monthPositions.isEmpty() ) {
       KCal::Recurrence::rMonthPos monthPos = *monthPositions.getFirst();
