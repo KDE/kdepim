@@ -80,7 +80,7 @@ bool KMobileSkeleton::disconnectDevice(QWidget *)
 }
 
 // returns true, if this device is read-only (default: false)
-bool KMobileSkeleton::isReadOnly()
+bool KMobileSkeleton::isReadOnly() const
 {
   return true;
 }

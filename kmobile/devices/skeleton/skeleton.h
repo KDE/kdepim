@@ -42,7 +42,7 @@ public:
     bool disconnectDevice(QWidget *parent);
 
     // returns true, if this device is read-only (default: false)
-    bool isReadOnly();
+    bool isReadOnly() const;
 
     // you may provide your own icon() implementation to display
     // an appropiate Pixmap (e.g. a Palm Pilot or a Zaurus image).
