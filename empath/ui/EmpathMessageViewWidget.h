@@ -61,7 +61,8 @@ class EmpathMessageViewWidget : public QWidget
 
         void s_print();
         void s_setMessage(const EmpathURL &);
-        void s_partChanged(RMM::RBodyPart *);
+        void s_partChanged(RMM::RBodyPart);
+        void s_showText(const QString &);
         void s_switchView();
 
     protected slots:
@@ -79,7 +80,8 @@ class EmpathMessageViewWidget : public QWidget
         EmpathURL   url_;
         bool        viewingSource_;
 
-        static unsigned int id_;
+        static unsigned int ID_;
+        unsigned int id_;
 };
 
 #endif

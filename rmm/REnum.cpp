@@ -368,6 +368,9 @@ RMM::mimeSubTypeStr2Enum(const QCString & s)
             if (stricmp(s, "plain") == 0)
                 st = MimeSubTypePlain;
 
+            else if (stricmp(s, "png") == 0)
+                st = MimeSubTypePNG;
+            
             else if (stricmp(s, "postscript") == 0)
                 st = MimeSubTypePostScript;
 

@@ -106,4 +106,34 @@ EmpathMessageStructureItem::setup()
     setHeight(QMAX(ph, th));
 }
 
+EmpathMessageTextItem::EmpathMessageTextItem(
+    QListView * parent, const QString & name, const QString & text)
+    :    
+        QListViewItem    (parent),
+        text_            (text)
+{
+    setText(0, name);
+    setPixmap(0, empathIcon("mime-text"));
+}
+
+EmpathMessageTextItem::~EmpathMessageTextItem()
+{
+    // Empty.
+}
+
+    void
+EmpathMessageTextItem::setup()
+{
+    widthChanged();
+    int ph = pixmap(0) ? pixmap(0)->height() : 0;
+    int th = QFontMetrics(KGlobal::generalFont()).height();
+    setHeight(QMAX(ph, th));
+}
+
+    QString
+EmpathMessageTextItem::text()
+{
+    return text_;
+}
+
 // vim:ts=4:sw=4:tw=78

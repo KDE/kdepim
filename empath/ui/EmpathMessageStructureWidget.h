@@ -38,6 +38,8 @@
 #include <RMM_Message.h>
 #include <RMM_BodyPart.h>
 
+class EmpathMessageTextItem;
+
 class EmpathMessageStructureWidget : public QListView
 {
     Q_OBJECT
@@ -60,6 +62,7 @@ class EmpathMessageStructureWidget : public QListView
 
     signals:
         
+        void showText(const QString &);
         void partChanged(RMM::RBodyPart);
         
     private:
@@ -67,6 +70,8 @@ class EmpathMessageStructureWidget : public QListView
         void _addChildren(RMM::RBodyPart, QListViewItem *);
         
         QPopupMenu popup_;
+
+        EmpathMessageTextItem * preambleItem_, * epilogueItem_;
 
 };
 

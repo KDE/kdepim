@@ -21,503 +21,93 @@
 */
 
 #ifdef __GNUG__
-# pragma implementation "RMM_BodyPart.h"
+# pragma implementation "EmpathViewFactory.h"
 #endif
 
-// Qt includes
-#include <qregexp.h>
+#include <qfile.h>
+#include <qtextstream.h>
+
+// KDE includes
+#include <kglobal.h>
+#include <kconfig.h>
 
 // Local includes
-#include <RMM_Utility.h>
+#include "EmpathDefines.h"
+#include "EmpathViewFactory.h"
+#include "EmpathConfig.h"
+#include "Empath.h"
 #include <RMM_BodyPart.h>
-#include <RMM_Envelope.h>
-#include <RMM_Message.h>
-#include <RMM_Enum.h>
-
-using namespace RMM;
-
-
-RBodyPart::RBodyPart()
-    :    REntity()
-{
-    body_.setAutoDelete(true);
-}
-
-RBodyPart::RBodyPart(const RBodyPart & part)
-    :   REntity(part),
-        envelope_            (part.envelope_),
-        data_                (part.data_),
-        body_                (part.body_),
-        encoding_            (part.encoding_),
-        mimeType_            (part.mimeType_),
-        mimeSubType_        (part.mimeSubType_),
-        contentDescription_    (part.contentDescription_),
-        disposition_        (part.disposition_),
-        boundary_            (part.boundary_),
-        type_                (part.type_),
-        preamble_            (part.preamble_),
-        epilogue_            (part.epilogue_)
-{
-    body_ = part.body_;
-}
-
-RBodyPart::RBodyPart(const QCString & s)
-    :    REntity(s)
+    
+EmpathViewFactory::EmpathViewFactory()
 {
     // Empty.
 }
 
-    RBodyPart &
-RBodyPart::operator = (const RBodyPart & part)
-{
-    if (this == &part) return *this;    // Avoid a = a.
-    REntity::operator = (part);
-    
-    envelope_            = part.envelope_;
-    data_                = part.data_;
-    body_                = part.body_;
-    encoding_            = part.encoding_;
-    mimeType_            = part.mimeType_;
-    mimeSubType_        = part.mimeSubType_;
-    contentDescription_    = part.contentDescription_;
-    disposition_        = part.disposition_;
-    boundary_            = part.boundary_;
-    type_                = part.type_;
-    preamble_            = part.preamble_;
-    epilogue_            = part.epilogue_;
-
-    return *this;
-}
-
-RBodyPart::~RBodyPart()
+EmpathViewFactory::~EmpathViewFactory()
 {
     // Empty.
 }
-    
-    RBodyPart &
-RBodyPart::operator = (const QCString & part)
+
+    void
+EmpathViewFactory::init()
 {
-    REntity::operator = (part);
-    return *this;
+}
+
+    const QMimeSource *
+EmpathViewFactory::data(const QString & abs_name) const
+{
+    if (abs_name.left(9) == "empath://") {
+
+        RMM::RMessage m = empath->message(EmpathURL(abs_name));
+
+        if (!m) {
+            empathDebug("Oh shit, can't find the message.");
+            return 0;
+        }
+
+        return new EmpathXMLMessage(m);
+
+    } else {
+
+        return QMimeSourceFactory::data(abs_name);
+    }
+}
+
+EmpathXMLMessage::EmpathXMLMessage(RMM::RBodyPart & part)
+    :   QMimeSource(),
+        encoded_(false)
+{
+    messageData_ = part.asString();
+    _encode();
+}
+
+    const char *
+EmpathXMLMessage::format(int i) const
+{
+    empathDebug(QString::number(i));
+    return i == 0 ? "text/xml" : 0;
 }
 
     bool
-RBodyPart::operator == (RBodyPart & part)
+EmpathXMLMessage::provides(const char * f) const
 {
-    parse();
-    
-    part.parse();
-    
-    bool equal = (
-        envelope_            == part.envelope_            &&
-        data_                == part.data_                &&
-        encoding_            == part.encoding_            &&
-        mimeType_            == part.mimeType_            &&
-        mimeSubType_        == part.mimeSubType_        &&
-        contentDescription_    == part.contentDescription_    &&
-        disposition_        == part.disposition_        &&
-        boundary_            == part.boundary_            &&
-        type_                == part.type_                &&
-        preamble_            == part.preamble_            &&
-        epilogue_            == part.epilogue_);
-    
-    return (equal && false);
-    //body_                == part.body_                &&
-}
-
-    MimeType
-RBodyPart::mimeType()
-{
-    parse();
-    return mimeType_;
-}
-
-    MimeSubType
-RBodyPart::mimeSubType()
-{
-    parse();
-    return mimeSubType_;
-}
-
-    void
-RBodyPart::setMimeType(MimeType t)
-{
-    parse();
-    mimeType_ = t;
-}
-
-    void
-RBodyPart::setMimeSubType(MimeSubType st)
-{
-    parse();
-    mimeSubType_ = st;
-}
-
-    void
-RBodyPart::setMimeType(const QCString & s)
-{
-    parse();
-    mimeType_ = mimeTypeStr2Enum(s);
-}
-
-    void
-RBodyPart::setMimeSubType(const QCString & s)
-{
-    parse();
-    mimeSubType_ = mimeSubTypeStr2Enum(s);
-}
-
-    void
-RBodyPart::_parse()
-{
-    rmmDebug("=== RBodyPart parse start =====================================");
-    
-    body_.clear();
-    mimeType_       = MimeTypeUnknown;
-    mimeSubType_    = MimeSubTypeUnknown;
-    
-    // A body part consists of an envelope and a body.
-    // The body may, again, consist of multiple body parts.
-    
-    int endOfHeaders = strRep_.find(QRegExp("\n\n"));
-    
-    if (endOfHeaders == -1) {
-        
-        // The body is blank. We'll treat what there is as the envelope.
-        rmmDebug("empty body");
-        envelope_    = strRep_;
-        data_        = "";
-        
-    } else {
-        
-        // Add 1 to include eol of last header.
-        envelope_ = strRep_.left(endOfHeaders + 1);
-        
-        // Add 2 to ignore eol on last header plus empty line.
-        data_ = strRep_.mid(endOfHeaders + 2);
-    }
-    
-
-    rmmDebug("Looking to see if there's a Content-Type header");
-    // Now see if there's a Content-Type header in the envelope.
-    // If there is, we might be looking at a multipart message.
-    if (!envelope_.has(HeaderContentType)) {
-        
-        parsed_     = true;
-        assembled_  = false;
-        rmmDebug("done parse(1)");
-        rmmDebug("=== RBodyPart parse end   =================================");
-        return;
-    }
-
-    rmmDebug("There's a Content-Type header");
-    
-    RContentType contentType(envelope_.contentType());
-    
-    rmmDebug("contentType.type() == " + contentType.type());
-    
-    // If this isn't multipart, we've finished parsing.
-    if (stricmp(contentType.type(), "multipart") != 0) {
-        mimeType_       = mimeTypeStr2Enum(contentType.type());
-        mimeSubType_    = mimeSubTypeStr2Enum(contentType.subType());
-
-        rmmDebug("=== RBodyPart parse end   =================================");
-        return;
-    }
- 
-    rmmDebug(" ==== This part is multipart ========================");
-
-    QValueList<RParameter> parameterList(contentType.parameterList().list());
-    QValueList<RParameter>::Iterator it;
-    
-    rmmDebug("Looking for boundary");
-
-    for (it = parameterList.begin(); it != parameterList.end(); ++it)
-        if (0 == stricmp((*it).attribute(), "boundary"))
-            boundary_ = (*it).value();
-    
-    rmmDebug("boundary == \"" + boundary_ + "\"");
-    
-    if (boundary_.isEmpty()) {
-        rmmDebug("Boundary not found in ContentType header. Giving up.");
-        parsed_        = true;
-        assembled_    = false;
-        return;
-    }
-    
-    if (boundary_.at(0) == '\"') {
-        rmmDebug("Boundary is quoted. Removing quotes.");
-        boundary_.remove(boundary_.length() - 1, 1);
-        boundary_.remove(0, 1);
-
-        if (boundary_.isEmpty()) {
-            rmmDebug("The (quoted) boundary is empty ! Giving up.");
-            parsed_       = true;
-            assembled_    = false;
-            rmmDebug("done parse(2)");
-            rmmDebug("=== RBodyPart parse end   =============================");
-            return;
-        }
-    }
-
-    QCString bound("--" + boundary_);
-
-    int boundaryStart(data_.find(bound));
-
-    if (boundaryStart == -1) {
-        // Let's just call it a plain text message.
-        rmmDebug("No boundary found in message. Assume plain ?");
-        parsed_     = true;
-        assembled_  = false;
-        rmmDebug("done parse (3)");
-        rmmDebug("=== RBodyPart parse end   =============================");
-        return;
-    }
-
-    // We can now take whatever's before the first boundary as the preamble.
-
-    preamble_ = data_.left(boundaryStart).stripWhiteSpace();
-
-    rmmDebug("preamble:\n" + preamble_);
-
-    int previousBoundaryEnd = boundaryStart + bound.length();
-
-    // Now find the rest of the parts.
-    
-    // We keep track of the end of the last boundary and the start of the next.
-
-    boundaryStart = data_.find(bound, previousBoundaryEnd);
-
-    while (boundaryStart != -1) {
-
-        RBodyPart * newPart = new RBodyPart(
-            data_.mid(previousBoundaryEnd,
-                boundaryStart - previousBoundaryEnd));
-
-        body_.append(newPart);
-        
-        newPart->parse();
-        
-        previousBoundaryEnd = boundaryStart + bound.length();
-        
-        boundaryStart = data_.find(bound, previousBoundaryEnd);
-    }
-
-    // No more body parts. Anything that's left is the epilogue.
-
-    epilogue_ = data_.right(data_.length() - previousBoundaryEnd);
-
-    rmmDebug("epilogue == \"" + epilogue_ + "\"");
-    
-    mimeType_       = mimeTypeStr2Enum(contentType.type());
-    mimeSubType_    = mimeSubTypeStr2Enum(contentType.subType());
-
-    rmmDebug("=== RBodyPart parse end   =====================================");
-}
-
-    void
-RBodyPart::_assemble()
-{
-    strRep_ = envelope_.asString();
-    strRep_ += "\n";
-    strRep_ += preamble_;
-    strRep_ += data_;
-    strRep_ += epilogue_;
-}
-
-    void
-RBodyPart::createDefault()
-{
-    envelope_.createDefault();
-}
-
-    REnvelope &
-RBodyPart::envelope()
-{
-    parse();
-    return envelope_;
-}
-
-    QList<RBodyPart>
-RBodyPart::body()
-{
-    parse();
-    return body_;
-}
-
-    Q_UINT32
-RBodyPart::size()
-{
-    return data_.length();
-}
-
-    void
-RBodyPart::_update()
-{
-    // STUB
-//    type_ = (0 == 1) ? Basic : Mime;
-}
-
-    void
-RBodyPart::addPart(RBodyPart *)
-{
-    // STUB
-    parse();
-    _update();
-}
-
-    void
-RBodyPart::removePart(RBodyPart *)
-{
-    // STUB
-    parse();
-    _update();
-}
-
-    RBodyPart::PartType
-RBodyPart::type()
-{
-    parse();
-    return type_;
-}
-
-    QCString
-RBodyPart::data()
-{
-    parse();
-    return data_;
-}
-
-    DispType
-RBodyPart::disposition()
-{
-    parse();
-    return disposition_;
-}
-
-    void
-RBodyPart::setEnvelope(REnvelope e)
-{
-    parse();
-    envelope_ = e;
-}    
-
-    void
-RBodyPart::setData(const QCString & s)
-{
-    parse();
-    data_ = s;
-}
-
-    void
-RBodyPart::setBody(QList<RBodyPart> & b)
-{
-    parse();
-    body_ = b;
+    empathDebug(f);
+    return true;
+    return !qstricmp(f, format(0));
 }
 
     QByteArray
-RBodyPart::decode()
+EmpathXMLMessage::encodedData(const char * f) const
 {
-    rmmDebug("decode()");
-    REnvelope e;
-    QByteArray output;
-    
-    if (envelope_.has(Cte)) {
-        
-        rmmDebug("This part has cte header");
-    
-        switch (envelope_.contentTransferEncoding().mechanism()) {
-            
-            case CteTypeBase64:
-                output = decodeBase64(data_);
-                break;
-
-            case CteTypeQuotedPrintable:
-                output = decodeQuotedPrintable(data_);
-                break;
-                
-            case CteType7bit:
-            case CteType8bit:
-            case CteTypeBinary:
-            case CteTypeXtension:
-            default:
-                output = data_;
-                break;
-        }
-
-    } else {
-
-        rmmDebug("This part is not encoded");
-    }
-
-    return output;
+    empathDebug(f);
+//    if (provides(f))
+        return data_;
+//    return QByteArray();
 }
 
     void
-RBodyPart::setDescription(const QCString & s)
+EmpathXMLMessage::_encode()
 {
-    parse();
-    contentDescription_ = s;
-}
-
-    void
-RBodyPart::setEncoding(CteType t)
-{
-    parse();
-    encoding_ = t;
-}
-
-    void
-RBodyPart::setCharset(const QCString & s)
-{
-    parse();
-    charset_ = s;
-}
-
-    QCString
-RBodyPart::charset()
-{
-    parse();
-    return charset_;
-}
-
-
-    RBodyPart
-RBodyPart::part(unsigned int idx)
-{
-    parse();
-    if (body_.count() < idx)
-        return RBodyPart();
-    return *(body_.at(idx));
-}
-
-    unsigned int
-RBodyPart::partCount()
-{
-    parse();
-    return body_.count();
-}
-
-    QCString
-RBodyPart::preamble()
-{
-    parse();
-    return preamble_;
-}
-
-    QCString
-RBodyPart::epilogue()
-{
-    parse();
-    return epilogue_;
-}
-
-    QCString
-RBodyPart::asXML(QColor quote1, QColor quote2)
-{
-    parse();
-
 #define toOutput(a, b) memcpy(outputCursor, (a), (b)); outputCursor += (b)
 
 #define inputToOutput() *(outputCursor++) = *inputCursor
@@ -564,10 +154,21 @@ RBodyPart::asXML(QColor quote1, QColor quote2)
     QCString encodedData;
     
     // Check size isn't 0.
-    unsigned int length = data_.length();
+    unsigned int size = messageData_.size();
 
-    if (length == 0)
-        return encodedData;
+    if (size == 0)
+        return;
+
+    // Sort out some colours for marking up quoted lines.
+
+    KConfig * config(KGlobal::config());
+
+    using namespace EmpathConfig;
+
+    config->setGroup(GROUP_DISPLAY);
+
+    QColor quote1(config->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
+    QColor quote2(config->readColorEntry(UI_QUOTE_TWO, &DFLT_Q_2));
 
     QString col;
 
@@ -577,10 +178,10 @@ RBodyPart::asXML(QColor quote1, QColor quote2)
     col.sprintf("%02X%02X%02X", quote2.red(), quote2.green(), quote2.blue());
     QCString quoteTwo(col.utf8());
 
-    const char * input(data_.data());
+    const char * input(messageData_.data());
     
     const char * inputStart = input;
-    const char * inputEnd = input + length;
+    const char * inputEnd = input + size;
 
     char * inputCursor = const_cast<char *>(input);
     
@@ -606,6 +207,7 @@ RBodyPart::asXML(QColor quote1, QColor quote2)
 
         if ((outputEnd - outputCursor) < 256) {
 
+            cerr << "overflow" << endl;
             nulTerminate();
             encodedData += outputBuf;
             outputCursor = outputBuf;
@@ -692,10 +294,13 @@ RBodyPart::asXML(QColor quote1, QColor quote2)
                   
             case '>':
 
+                cerr << ">" << endl;
                 // Mark up quoted line if that's what we have.
          
                 // First char on line?
                 if (safeToLookBack() && *(inputCursor - 1) == '\n') {
+                    
+                    cerr << "quoting" << endl;
                     
                     quoteDepth = 0;
 
@@ -711,6 +316,7 @@ RBodyPart::asXML(QColor quote1, QColor quote2)
                         // quoting depth.
                         if (*inputCursor++ == '>')
                             ++quoteDepth;
+                    cerr << "quotedepth == " << quoteDepth << endl;
                     }
 
                     toOutput("<font color=\"#", 14);
@@ -735,6 +341,7 @@ RBodyPart::asXML(QColor quote1, QColor quote2)
                     for (len = 0 ; len < quoteDepth; len++)
                         toOutput("&gt; ", 5);
 
+                    cerr << "set markdown" << endl;
                     // Remember that we need to mark down next time we
                     // see '\n'.
                     markDownQuotedLine = true;
@@ -878,7 +485,16 @@ RBodyPart::asXML(QColor quote1, QColor quote2)
     nulTerminate();
     encodedData += outputBuf;
     delete [] outputBuf;
-    return encodedData;
+    outputBuf = 0;
+    messageData_ = encodedData;
+    encoded_ = true;
+    empathDebug("done");
+
+    QFile f("message.html");
+    f.open(IO_WriteOnly);
+    QTextStream s(&f);
+    s << messageData_;
+    f.close();
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -56,13 +56,13 @@ RMM::toCrEol(const QCString & in)
 }
 
     QCString
-RMM::encodeQuotedPrintable(const QCString & in)
+RMM::encodeQuotedPrintable(const QByteArray & in)
 {
     QCString s(in);
     return s;
 }
 
-    QCString
+    QByteArray
 RMM::decodeQuotedPrintable(const QCString & in)
 {
     QCString s(in);
@@ -76,43 +76,41 @@ RMM::decodeQuotedPrintable(const QCString & in)
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    Copyright 1999, 2000
-        Rik Hemsley <rik@kde.org>
-        Wilco Greven <j.w.greven@student.utwente.nl>
- *
- *  Permission to use, copy, modify, and distribute this software and its
- * documentation for any purpose and without fee is hereby granted, provided
- * that the above copyright notices appear in all copies and that both the
- * above copyright notices and this permission notice appear in supporting
- * documentation, and that the name of the University of Washington or The
- * Leland Stanford Junior University not be used in advertising or publicity
- * pertaining to distribution of the software without specific, written prior
- * permission.  This software is made available "as is", and
- * THE UNIVERSITY OF WASHINGTON AND THE LELAND STANFORD JUNIOR UNIVERSITY
- * DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, WITH REGARD TO THIS SOFTWARE,
- * INCLUDING WITHOUT LIMITATION ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE, AND IN NO EVENT SHALL THE UNIVERSITY OF
- * WASHINGTON OR THE LELAND STANFORD JUNIOR UNIVERSITY BE LIABLE FOR ANY
- * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
- * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
- * CONTRACT, TORT (INCLUDING NEGLIGENCE) OR STRICT LIABILITY, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- *
+  
+    Permission to use, copy, modify, and distribute this software and its
+   documentation for any purpose and without fee is hereby granted, provided
+   that the above copyright notices appear in all copies and that both the
+   above copyright notices and this permission notice appear in supporting
+   documentation, and that the name of the University of Washington or The
+   Leland Stanford Junior University not be used in advertising or publicity
+   pertaining to distribution of the software without specific, written prior
+   permission.  This software is made available "as is", and
+   THE UNIVERSITY OF WASHINGTON AND THE LELAND STANFORD JUNIOR UNIVERSITY
+   DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, WITH REGARD TO THIS SOFTWARE,
+   INCLUDING WITHOUT LIMITATION ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE, AND IN NO EVENT SHALL THE UNIVERSITY OF
+   WASHINGTON OR THE LELAND STANFORD JUNIOR UNIVERSITY BE LIABLE FOR ANY
+   SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+   RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
+   CONTRACT, TORT (INCLUDING NEGLIGENCE) OR STRICT LIABILITY, ARISING OUT OF
+   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  
  */
 
 const char * B64 =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     QCString
-RMM::encodeBase64(const char * src, unsigned long srcl, unsigned long & destl)
+RMM::encodeBase64(const QByteArray & src)
 {
-    const unsigned char *s = (unsigned char *)src;
+    const unsigned char *s = (unsigned char *)(src.data());
+    unsigned long srcl = src.size();
     unsigned long i = ((srcl + 2) / 3) * 4;
-    destl = i += 2 * ((i / 60) + 1);
+    unsigned long destl = i += 2 * ((i / 60) + 1);
     char * ret = new char[destl];
     unsigned char *d((unsigned char *)ret);
     
-    for (i = 0; srcl; s += 3) {
+    for (i = 0; srcl != 0; s += 3) {
         
         *d++ = B64[s[0] >> 2];
         *d++ = B64[((s[0] << 4) + (--srcl ? s[1] >> 4 : 0)) & 0x3f];
@@ -141,18 +139,17 @@ RMM::encodeBase64(const char * src, unsigned long srcl, unsigned long & destl)
     return out;
 }
 
-    char *
-RMM::decodeBase64(const QCString & s, unsigned long & len)
+    QByteArray
+RMM::decodeBase64(const QCString & s)
 {
     char c;
     int e(0); 
-    len = 0;
     
     unsigned char * src = (unsigned char *)s.data();
     
     unsigned long srcl = s.length();
-    
-    char * ret = new char[srcl + (srcl / 4 + 1)];
+    unsigned long destl = srcl + (srcl / 4 + 1);
+    char * ret = new char[destl];
     
     char *d((char *)ret);
 
@@ -188,9 +185,9 @@ RMM::decodeBase64(const QCString & s, unsigned long & len)
         }
     }
 
-    len = d - (char *)ret;
-    
-    return ret;
+    QByteArray a;
+    a.setRawData(ret, destl);
+    return a;
 }
 
 // vim:ts=4:sw=4:tw=78

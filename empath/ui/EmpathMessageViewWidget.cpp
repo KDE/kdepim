@@ -25,7 +25,9 @@
 #endif
 
 // Qt includes
-#include <qstrlist.h>
+#include <qmessagebox.h>
+#include <qcstring.h>
+#include <qimage.h>
 
 // KDE includes
 #include <klocale.h>
@@ -45,7 +47,7 @@
 #include <RMM_BodyPart.h>
 #include <RMM_ContentType.h>
 
-unsigned int EmpathMessageViewWidget::id_ = 0;
+unsigned int EmpathMessageViewWidget::ID_ = 0;
 
 EmpathMessageViewWidget::EmpathMessageViewWidget
     (const EmpathURL & url, QWidget *parent)
@@ -53,7 +55,7 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
         url_(url),
         viewingSource_(false)
 {
-    ++id_;
+    id_ = ID_++;
 
     structureWidget_ =
         new EmpathMessageStructureWidget(0, "structureWidget");
@@ -79,8 +81,12 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
         this,   SLOT(s_jobComplete(EmpathJobInfo)));
     
     QObject::connect(
-        structureWidget_,    SIGNAL(partChanged(RMM::RBodyPart *)),
-        this,                SLOT(s_partChanged(RMM::RBodyPart *)));
+        structureWidget_,    SIGNAL(partChanged(RMM::RBodyPart)),
+        this,                SLOT(s_partChanged(RMM::RBodyPart)));
+
+    QObject::connect(
+        structureWidget_,    SIGNAL(showText(const QString &)),
+        this,                SLOT(s_showText(const QString &)));
    
     layout->activate();
     show();    
@@ -113,15 +119,9 @@ EmpathMessageViewWidget::s_jobComplete(EmpathJobInfo ji)
     QColor quote1(config->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
     QColor quote2(config->readColorEntry(UI_QUOTE_TWO, &DFLT_Q_2));
 
-    RMM::RBodyPart message(m.decode());
+    RMM::RBodyPart message(m);
 
     structureWidget_->setMessage(message);
-    
-    // Ok I'm going to try and get the viewable body parts now.
-    // To start with, I'll see if there's only one part. If so, I'll show it,
-    // if possible. Otherwise, I'll have to have a harder look and see what
-    // we're supposed to be showing. If we're looking at a
-    // multipart/alternative, I'll pick the 'best' of the possibilities.
     
     headerViewWidget_->useEnvelope(message.envelope());
 
@@ -142,35 +142,6 @@ EmpathMessageViewWidget::s_jobComplete(EmpathJobInfo ji)
     }
     
     else {
-        
-        // Multipart message
-        // 
-        // Options
-        // 
-        // ALTERNATIVE
-        // 
-        // Choose the 'nicest' version that we are capable of displaying.
-        // 
-        // I hate HTML mail, but that's just me.
-        // 
-        // Order of preference:
-        // HTML, RichText, Plain
-        // 
-        // MIXED
-        // 
-        // With mixed parts, we don't have a clue which part is supposed
-        // to be shown. We assume all, really, but we're not going to do
-        // that.
-        // 
-        // What we want to do is to find a part that looks like it's
-        // equivalent to what you expect, i.e. some text.
-        // 
-        // So, look for text/plain.
-        // 
-        // We won't use the priority order of ALTERNATIVE as we haven't
-        // been asked to, and we might end up showing some HTML that just
-        // confuses the user, when they should be seeing 'hello here's that
-        // web page I told you about'
         
         empathDebug("===================== MULTIPART ====================");
         
@@ -210,7 +181,8 @@ EmpathMessageViewWidget::s_jobComplete(EmpathJobInfo ji)
                     
                         empathDebug("Using this part as body");
 
-                        s = QString::fromUtf8(it.current()->asXML(quote1, quote2));
+                        s = QString::fromUtf8(it.current()
+                            ->asXML(quote1, quote2));
                     
                         messageWidget_->show(s);
                         return;
@@ -218,7 +190,7 @@ EmpathMessageViewWidget::s_jobComplete(EmpathJobInfo ji)
                     
                 } else {
 
-                    empathDebug("Haven't decided what to do with this part yet");
+                    empathDebug("No real idea what to do with this part");
                     s = QString::fromUtf8(it.current()->asString());
                     messageWidget_->show(s);
                     return;
@@ -260,7 +232,7 @@ EmpathMessageViewWidget::s_URLSelected(QString fixedURL, int button)
 
     if (fixedURL.left(7) == "mailto:") {
         
-        fixedURL = fixedURL.right(fixedURL.length() - 7);
+        fixedURL = fixedURL.mid(7);
 
         if (button == 1) {
             empath->s_compose();
@@ -284,10 +256,12 @@ EmpathMessageViewWidget::s_clipClicked()
 }
 
     void
-EmpathMessageViewWidget::s_partChanged(RMM::RBodyPart * part)
+EmpathMessageViewWidget::s_partChanged(RMM::RBodyPart part)
 {
-    RMM::RBodyPart p(*part);
-    QCString s(p.data());
+    empathDebug("");
+
+    QString errorMsg =
+        i18n("<qt type=\"detail\">No viewer for mime type <b>%1</b></qt>");
 
     KConfig * config(KGlobal::config());
 
@@ -298,36 +272,65 @@ EmpathMessageViewWidget::s_partChanged(RMM::RBodyPart * part)
     QColor quote1(config->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
     QColor quote2(config->readColorEntry(UI_QUOTE_TWO, &DFLT_Q_2));
 
-    messageWidget_->show(part->asXML(quote1, quote2));
+    RMM::RContentType t = part.envelope().contentType();
+
+    if (0 == stricmp(t.type(), "text")) {
+
+        if (
+            (0 == stricmp(t.subType(), "plain")) ||
+            (0 == stricmp(t.subType(), "unknown"))
+            )
+            messageWidget_->show(part.asXML(quote1, quote2));
+
+        else if (
+            (0 == stricmp(t.subType(), "html")) ||
+            (0 == stricmp(t.subType(), "richtext"))
+            )
+            messageWidget_->show(part.asString());
+
+    } else if (0 == stricmp(t.type(), "image")) {
+
+        // TODO: Enable this when we work out how to use QMimeSourceFactory.
+        if (
+            (0 == stricmp(t.subType(), "png")) ||
+            (0 == stricmp(t.subType(), "jpeg")) ||
+            (0 == stricmp(t.subType(), "xpm"))) {
+
+            QByteArray data = part.decode();
+
+            if (data.size() == 0) {
+
+              empathDebug("Decoded to nothing")
+              messageWidget_->show("Could not decode image");
+
+            } else {
+
+              QMimeSourceFactory::defaultFactory()
+                  ->setImage("tempimg", QImage(data));
+
+              messageWidget_->show("<img source=\"tempimg\"/>");
+            }
+        }
+
+        else
+            messageWidget_->show(errorMsg.arg(t.type() + "/" + t.subType()));
+
+    } else {
+
+        messageWidget_->show(errorMsg.arg(t.type() + "/" + t.subType()));
+    }
 }
+
+    void
+EmpathMessageViewWidget::s_showText(const QString & s)
+{
+    messageWidget_->show(s);
+}
+
 
     void
 EmpathMessageViewWidget::s_switchView()
 {
-#if 0
-    if (viewingSource_) {
-        
-        empathDebug("Doing normal view");
-        viewingSource_ = false;
-        //go();
-
-    } else {
-        
-        empathDebug("Doing source view");
-        viewingSource_ = true;
-    
-        RMM::RMessage * m(empath->message(url_, xinfo));
-    
-        if (m == 0) {
-            empathDebug("Can't load message from \"" + url_.asString() + "\"");
-            return;
-        }
-        
-        QCString s(m->asString());
-
-        empath->finishedWithMessage(url_);
-        showText(s, false);
-    }
-#endif
+  // STUB
 }
 

@@ -32,14 +32,14 @@
 namespace RMM {
     
 QCString    toCrLfEol    (const QCString &);
-QCString    toLfEol        (const QCString &);
-QCString    toCrEol        (const QCString &);
+QCString    toLfEol      (const QCString &);
+QCString    toCrEol      (const QCString &);
 
-QCString    encodeBase64    (const char *, unsigned long, unsigned long &);
-char *      decodeBase64    (const QCString &, unsigned long &);
+QCString    encodeBase64    (const QByteArray &);
+QByteArray  decodeBase64    (const QCString &);
 
-QCString    encodeQuotedPrintable    (const QCString &);
-QCString    decodeQuotedPrintable    (const QCString &);
+QCString    encodeQuotedPrintable    (const QByteArray &);
+QByteArray  decodeQuotedPrintable    (const QCString &);
 
 }
 #endif

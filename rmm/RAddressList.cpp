@@ -110,21 +110,18 @@ RAddressList::_parse()
     list_.clear();
 
     QStrList l;
-    RTokenise(strRep_, ",\n\r", l);
+    RTokenise(strRep_, ",\n\r", l, true, false);
 
     if (l.count() == 0 && !strRep_.isEmpty()) { // Lets try what we have then.
 
-        RAddress a(strRep_);
-        list_.append(a);
+        list_.append(RAddress(strRep_));
         
     } else {
 
-        QStrListIterator lit(l);
+        QStrListIterator it(l);
 
-        for (; lit.current(); ++lit) {
-            RAddress a(lit.current());
-            list_.append(a);
-        }
+        for (; it.current(); ++it)
+            list_.append(RAddress(it.current()));
     }
 }
 

@@ -30,6 +30,7 @@
 // KDE includes
 #include <kconfig.h>
 #include <kglobal.h>
+#include <klocale.h>
 
 // Local includes
 #include "EmpathMessageListWidget.h"
@@ -44,7 +45,6 @@ EmpathMessageListItem::EmpathMessageListItem(
         QListViewItem(parent),
         m(rec)
 {
-    niceDate_ = KGlobal::locale()->formatDateTime(rec.date().qdt());
     _init();
 }
 
@@ -55,7 +55,6 @@ EmpathMessageListItem::EmpathMessageListItem(
         QListViewItem(parent),
         m(rec)
 {
-    niceDate_ = KGlobal::locale()->formatDateTime(rec.date().qdt());
     _init();
 }
 
@@ -66,6 +65,7 @@ EmpathMessageListItem::~EmpathMessageListItem()
     void
 EmpathMessageListItem::_init()
 {    
+    niceDate_ = KGlobal::locale()->formatDateTime(m.date().qdt());
     setText(0, m.subject());
     setText(2, niceDate_);
     
@@ -79,19 +79,19 @@ EmpathMessageListItem::_init()
 
     if (size_ < 1024) {
         
-        sizeStr = "%1 B";
+        sizeStr = i18n("%1 B");
         sizeStr = sizeStr.arg((Q_UINT32)size_, 4);
     
     } else {
     
         if (size_ < 1048576) {
     
-            sizeStr = "%1 kB";
+            sizeStr = i18n("%1 kB");
             sizeStr = sizeStr.arg((Q_UINT32)(size_ / 1024.0), 4);
     
         } else {
     
-            sizeStr = "%1 MB";
+            sizeStr = i18n("%1 MB");
             sizeStr = sizeStr.arg((Q_UINT32)(size_ / 1048576.0), 4);
         }
     }
@@ -99,6 +99,9 @@ EmpathMessageListItem::_init()
     setText(3, sizeStr);
     
     RMM::RAddress sender_(m.sender());
+
+    empathDebug("phrase == " + sender_.phrase());
+    empathDebug("route  == " + sender_.route());
     
     if (sender_.phrase().isEmpty())
         setText(1, sender_.asString());

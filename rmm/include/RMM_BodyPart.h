@@ -83,9 +83,12 @@ class RBodyPart : public REntity {
         void            setEncoding(RMM::CteType);
         Q_UINT32        size();
         PartType        type();
-        RBodyPart       decode();
+        QByteArray      decode();
 
         QCString        asXML(QColor q1, QColor q2);
+
+        QCString        preamble();
+        QCString        epilogue();
 
     protected:
         

@@ -81,19 +81,22 @@ EmpathMessageStructureWidget::~EmpathMessageStructureWidget()
 EmpathMessageStructureWidget::setMessage(RMM::RBodyPart p)
 {
     clear();
+
+    epilogueItem_ =
+        new EmpathMessageTextItem(this, i18n("Epilogue"), p.epilogue());
+
+    preambleItem_ =
+        new EmpathMessageTextItem(this, i18n("Preamble"), p.preamble());
     
     EmpathMessageStructureItem * i = new EmpathMessageStructureItem(this, p);
+    i->setOpen(true);
     
     QList<RMM::RBodyPart> body(p.body());
     QListIterator<RMM::RBodyPart> it(body);
     
-    for (; it.current(); ++it) {
-        
-        EmpathMessageStructureItem * j =
-            new EmpathMessageStructureItem(i, *(it.current()));
-
-        _addChildren(*(it.current()), j);
-    }
+    for (; it.current(); ++it)
+        _addChildren(*(it.current()),
+            new EmpathMessageStructureItem(i, *(it.current())));
 }
 
     void
@@ -106,6 +109,8 @@ EmpathMessageStructureWidget::_addChildren(RMM::RBodyPart p, QListViewItem *i)
     
         EmpathMessageStructureItem * j =
             new EmpathMessageStructureItem((EmpathMessageStructureItem *)i, p);
+        
+        j->setOpen(true);
 
         _addChildren(*(it.current()), j);
     }
@@ -114,10 +119,12 @@ EmpathMessageStructureWidget::_addChildren(RMM::RBodyPart p, QListViewItem *i)
     void
 EmpathMessageStructureWidget::s_currentChanged(QListViewItem * item)
 {
-    empathDebug("s_currentChanged() called");
-    if (item->depth() == 0) return;
-    EmpathMessageStructureItem * i = (EmpathMessageStructureItem *)item;
-    emit(partChanged(i->part()));
+    if ((item == preambleItem_) || (item == epilogueItem_))
+        emit(showText(static_cast<EmpathMessageTextItem *>(item)->text()));
+
+    else if (item->depth() != 0)
+        emit(partChanged(
+                static_cast<EmpathMessageStructureItem *>(item)->part()));
 }
 
     void
@@ -131,39 +138,7 @@ EmpathMessageStructureWidget::s_rightButtonPressed(
     void
 EmpathMessageStructureWidget::s_saveAs()
 {
-    QString saveFilePath =
-        KFileDialog::getSaveFileName(
-            QString::null, QString::null,
-            this, i18n("Empath: Save Message").latin1());
-    
-    if (saveFilePath.isEmpty()) {
-        empathDebug("No filename given");
-        return;
-    }
-    
-    QFile f(saveFilePath);
-    if (!f.open(IO_WriteOnly)) {
-        // Warn user file cannot be opened.
-        empathDebug("Couldn't open file for writing");
-        QMessageBox::information(this, "Empath",
-            i18n("Sorry I can't write to that file. "
-                "Please try another filename."), i18n("OK"));
-        return;
-    }
-    empathDebug("Opened " + saveFilePath + " OK");
-    
-    QDataStream d(&f);
-    
-    QListViewItem * i(currentItem());
-    
-    if (!i) return;
-    
-    QCString s = ((EmpathMessageStructureItem *)i)->part().asString();
-    
-    d.writeRawBytes(s, s.length());
-
-    f.close();
-    
+    // STUB
 }
 
     void

@@ -108,7 +108,7 @@ RAddress::operator == (RAddress & a)
     void
 RAddress::_parse()
 {
-    cerr << "RAddress::_parse(): strRep : `" << strRep_ << "'" << endl;
+    rmmDebug("strRep : `" + strRep_ + "'" );
     QCString s = strRep_.stripWhiteSpace();
 
     // RFC822: group: phrase ":" [#mailbox] ";"
@@ -201,7 +201,8 @@ RMM::operator << (QDataStream & s, RMM::RAddress & addr)
 RAddress::phrase()
 {
     parse();
-    return phrase_;
+    RMailbox m(*(mailboxList_.at(0)));
+    return m.phrase();
 }
 
 
@@ -209,7 +210,7 @@ RAddress::phrase()
 RAddress::setPhrase(const QCString & s)
 {
     parse();
-    phrase_ = s.data();
+    (*(mailboxList_.at(0))).setPhrase(s);
 }
 
     QCString

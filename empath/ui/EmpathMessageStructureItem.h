@@ -64,6 +64,30 @@ class EmpathMessageStructureItem : public QListViewItem
         RMM::RBodyPart part_;
 };
 
+/**
+ * @internal
+ */
+class EmpathMessageTextItem : public QListViewItem
+{
+    public:
+    
+        EmpathMessageTextItem(
+            QListView * parent, const QString &, const QString &);
+
+        ~EmpathMessageTextItem();
+        
+        QString text();
+
+        virtual void setup();
+        
+        const char * className() const { return "EmpathMessageTextItem"; }
+        
+    private:
+
+        QString text_;
+};
+
+
 #endif
 
 // vim:ts=4:sw=4:tw=78
