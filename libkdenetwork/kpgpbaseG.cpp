@@ -529,7 +529,7 @@ BaseG::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
         || !strncmp( output.data() + index, "sec:", 4 ) )
     { // line contains primary key data
       // Example: pub:f:1024:17:63CB691DFAEBD5FC:860451781::379:-:::scESC:
-      
+
       // abort parsing if we found the start of the next key
       if( !firstKey )
         break;
@@ -704,8 +704,18 @@ BaseG::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
             uid.replace( idx, 4, str );
           }
           QString uidString = QString::fromUtf8( uid.data() );
-          if( uidString.utf8() != uid ) {
-            // The user id doesn't seem to be utf-8. It was most likely
+          // check whether uid was utf-8 encoded
+          bool isUtf8 = true;
+          for ( unsigned int i = 0; i < uidString.length() - 1; ++i ) {
+            if ( uidString[i].unicode() == 0xdbff &&
+                 uidString[i+1].row() == 0xde ) {
+              // we found a non-Unicode character (see QString::fromUtf8())
+              isUtf8 = false;
+              break;
+            }
+          }
+          if( !isUtf8 ) {
+            // The user id isn't utf-8 encoded. It was most likely
             // created with PGP which either used latin1 or koi8-r.
             kdDebug(5100) << "User Id '" << uid
                           << "' doesn't seem to be utf-8 encoded." << endl;
