@@ -49,48 +49,23 @@
 
 Kleo::QGpgMESignEncryptJob::QGpgMESignEncryptJob( GpgME::Context * context )
   : SignEncryptJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMESignEncryptJob" ),
-    GpgME::ProgressProvider(),
-    mCtx( context ),
-    mPlainTextDataProvider( 0 ),
-    mPlainText( 0 ),
-    mCipherTextDataProvider( 0 ),
-    mCipherText( 0 )
+    QGpgMEJob( this, context )
 {
   assert( context );
 }
 
 Kleo::QGpgMESignEncryptJob::~QGpgMESignEncryptJob() {
-  // YES, WE own it!
-  delete mCtx; mCtx = 0;
-  delete mCipherText; mCipherText = 0;
-  delete mCipherTextDataProvider; mCipherTextDataProvider = 0;
-  delete mPlainText; mPlainText = 0;
-  delete mPlainTextDataProvider; mPlainTextDataProvider = 0;
 }
 
 GpgME::Error Kleo::QGpgMESignEncryptJob::setup( const std::vector<GpgME::Key> & signers,
 						const QByteArray & plainText ) {
-  assert( !mCipherText );
-  assert( !mPlainText );
+  assert( !mInData );
+  assert( !mOutData );
 
-  // set up empty data object for the ciphertext
-  mCipherTextDataProvider = new QGpgME::QByteArrayDataProvider();
-  mCipherText = new GpgME::Data( mCipherTextDataProvider );
-  assert( !mCipherText->isNull() );
+  createInData( plainText );
+  createOutData();
 
-  // set up data object for plainText
-  mPlainTextDataProvider = new QGpgME::QByteArrayDataProvider( plainText );
-  mPlainText = new GpgME::Data( mPlainTextDataProvider );
-  assert( !mPlainText->isNull() );
-
-  mCtx->clearSigningKeys();
-  for ( std::vector<GpgME::Key>::const_iterator it = signers.begin() ; it != signers.end() ; ++it ) {
-    if ( (*it).isNull() )
-      continue;
-    if ( const GpgME::Error err = mCtx->addSigningKey( *it ) )
-      return err;
-  }
-  return 0;
+  return setSigningKeys( signers );
 }
 
 GpgME::Error Kleo::QGpgMESignEncryptJob::start( const std::vector<GpgME::Key> & signers,
@@ -101,16 +76,11 @@ GpgME::Error Kleo::QGpgMESignEncryptJob::start( const std::vector<GpgME::Key> & 
     return error;
   }
 
-  // hook up the context to the eventloopinteractor:
-  mCtx->setManagedByEventLoopInteractor( true );
-  connect( QGpgME::EventLoopInteractor::instance(),
-	   SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
-	   SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
-  mCtx->setProgressProvider( this );
+  hookupContextToEventLoopInteractor();
 
   const GpgME::Context::EncryptionFlags flags =
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None ;
-  const GpgME::Error err = mCtx->startCombinedSigningAndEncryption( recipients, *mPlainText, *mCipherText, flags );
+  const GpgME::Error err = mCtx->startCombinedSigningAndEncryption( recipients, *mInData, *mOutData, flags );
 						  
   if ( err )
     deleteLater();
@@ -127,27 +97,15 @@ Kleo::QGpgMESignEncryptJob::exec( const std::vector<GpgME::Key> & signers,
   const GpgME::Context::EncryptionFlags flags =
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None ;
   const std::pair<GpgME::SigningResult,GpgME::EncryptionResult> result =
-    mCtx->signAndEncrypt( recipients, *mPlainText, *mCipherText, flags );
-  cipherText = mCipherTextDataProvider->data();
+    mCtx->signAndEncrypt( recipients, *mInData, *mOutData, flags );
+  cipherText = mOutDataDataProvider->data();
   return result;
 }
 
-void Kleo::QGpgMESignEncryptJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
-  if ( context == mCtx ) {
-    emit done();
-    emit result( mCtx->signingResult(),
-		 mCtx->encryptionResult(),
-		 mCipherTextDataProvider->data() );
-    deleteLater();
-  }
-}
-
-void Kleo::QGpgMESignEncryptJob::slotCancel() {
-  mCtx->cancelPendingOperation();
-}
-
-void Kleo::QGpgMESignEncryptJob::showProgress( const char * what, int type, int current, int total ) {
-  emit progress( what ? QString::fromUtf8( what ) : QString::null, type, current, total );
+void Kleo::QGpgMESignEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
+  emit result( mCtx->signingResult(),
+	       mCtx->encryptionResult(),
+	       mOutDataDataProvider->data() );
 }
 
 #include "qgpgmesignencryptjob.moc"

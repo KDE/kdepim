@@ -50,49 +50,30 @@
 
 Kleo::QGpgMEKeyListJob::QGpgMEKeyListJob( GpgME::Context * context )
   : KeyListJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEKeyListJob" ),
-    GpgME::ProgressProvider(),
-    mCtx( context ), mPatterns( 0 )
+    QGpgMEJob( this, context )
 {
   assert( context );
 }
 
 Kleo::QGpgMEKeyListJob::~QGpgMEKeyListJob() {
-  // YES, WE own it!
-  delete mCtx; mCtx = 0;
-  if ( mPatterns )
-    for ( const char* * it = mPatterns ; *it ; ++it )
-      free( (void*)*it );
-  delete[] mPatterns; mPatterns = 0;
 }
 
 void Kleo::QGpgMEKeyListJob::setup( const QStringList & patterns ) {
   assert( !mPatterns );
 
-  // create a new null-terminated C array of char* from patterns:
-  mPatterns = new const char * [ patterns.size() + 1 ];
-  const char* * pat_it = mPatterns;
-  for ( QStringList::const_iterator it = patterns.begin() ; it != patterns.end() ; ++it ) {
-    if ( (*it).isEmpty() )
-      continue;
-    *pat_it++ = strdup( (*it).utf8().data() );
-  }
-  *pat_it++ = 0;
+  setPatterns( patterns );
 }
 
 GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & patterns, bool secretOnly ) {
   setup( patterns );
 
-  // hook up the context to the eventloopinteractor:
-  mCtx->setManagedByEventLoopInteractor( true );
+  hookupContextToEventLoopInteractor();
   connect( QGpgME::EventLoopInteractor::instance(),
 	   SIGNAL(nextKeyEventSignal(GpgME::Context*,const GpgME::Key&)),
 	   SLOT(slotNextKeyEvent(GpgME::Context*,const GpgME::Key&)) );
-  connect( QGpgME::EventLoopInteractor::instance(),
-	   SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
-	   SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
-  mCtx->setProgressProvider( this );
 
   const GpgME::Error err = mCtx->startKeyListing( mPatterns, secretOnly );
+
   if ( err )
     deleteLater();
   return err;
@@ -116,20 +97,8 @@ void Kleo::QGpgMEKeyListJob::slotNextKeyEvent( GpgME::Context * context, const G
     emit nextKey( key );
 }
 
-void Kleo::QGpgMEKeyListJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
-  if ( context == mCtx ) {
-    emit done();
-    emit result( mCtx->keyListResult() );
-    deleteLater();
-  }
-}
-
-void Kleo::QGpgMEKeyListJob::slotCancel() {
-  mCtx->cancelPendingOperation();
-}
-
-void Kleo::QGpgMEKeyListJob::showProgress( const char * what, int type, int current, int total ) {
-  emit progress( what ? QString::fromUtf8( what ) : QString::null, type, current, total );
+void Kleo::QGpgMEKeyListJob::doOperationDoneEvent( const GpgME::Error & ) {
+  emit result( mCtx->keyListResult() );
 }
 
 #include "qgpgmekeylistjob.moc"

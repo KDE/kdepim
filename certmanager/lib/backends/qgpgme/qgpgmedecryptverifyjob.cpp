@@ -48,51 +48,28 @@
 
 Kleo::QGpgMEDecryptVerifyJob::QGpgMEDecryptVerifyJob( GpgME::Context * context )
   : DecryptVerifyJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDecryptVerifyJob" ),
-    GpgME::ProgressProvider(),
-    mCtx( context ),
-    mPlainTextDataProvider( 0 ),
-    mPlainText( 0 ),
-    mCipherTextDataProvider( 0 ),
-    mCipherText( 0 )
+    QGpgMEJob( this, context )
 {
   assert( context );
 }
 
 Kleo::QGpgMEDecryptVerifyJob::~QGpgMEDecryptVerifyJob() {
-  // YES, WE own it!
-  delete mCtx; mCtx = 0;
-  delete mCipherText; mCipherText = 0;
-  delete mCipherTextDataProvider; mCipherTextDataProvider = 0;
-  delete mPlainText; mPlainText = 0;
-  delete mPlainTextDataProvider; mPlainTextDataProvider = 0;
 }
 
 void Kleo::QGpgMEDecryptVerifyJob::setup( const QByteArray & cipherText ) {
-  assert( !mCipherText );
-  assert( !mPlainText );
+  assert( !mInData );
+  assert( !mOutData );
 
-  // set up data object for cipherText
-  mCipherTextDataProvider = new QGpgME::QByteArrayDataProvider( cipherText );
-  mCipherText = new GpgME::Data( mCipherTextDataProvider );
-  assert( !mCipherText->isNull() );
-
-  // set up empty data object for plaintext
-  mPlainTextDataProvider = new QGpgME::QByteArrayDataProvider();
-  mPlainText = new GpgME::Data( mPlainTextDataProvider );
-  assert( !mPlainText->isNull() );
+  createInData( cipherText );
+  createOutData();
 }
 
 GpgME::Error Kleo::QGpgMEDecryptVerifyJob::start( const QByteArray & cipherText ) {
   setup( cipherText );
 
-  // hook up the context to the eventloopinteractor:
-  mCtx->setManagedByEventLoopInteractor( true );
-  connect( QGpgME::EventLoopInteractor::instance(),
-	   SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
-	   SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
-  mCtx->setProgressProvider( this );
+  hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startCombinedDecryptionAndVerification( *mCipherText, *mPlainText );
+  const GpgME::Error err = mCtx->startCombinedDecryptionAndVerification( *mInData, *mOutData );
 						  
   if ( err )
     deleteLater();
@@ -103,27 +80,15 @@ std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
 Kleo::QGpgMEDecryptVerifyJob::exec( const QByteArray & cipherText, QByteArray & plainText ) {
   setup( cipherText );
   const std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> result =
-    mCtx->decryptAndVerify( *mCipherText, *mPlainText );
-  plainText = mPlainTextDataProvider->data();
+    mCtx->decryptAndVerify( *mInData, *mOutData );
+  plainText = mOutDataDataProvider->data();
   return result;
 }
 
-void Kleo::QGpgMEDecryptVerifyJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
-  if ( context == mCtx ) {
-    emit done();
-    emit result( mCtx->decryptionResult(),
-		 mCtx->verificationResult(),
-		 mPlainTextDataProvider->data() );
-    deleteLater();
-  }
-}
-
-void Kleo::QGpgMEDecryptVerifyJob::slotCancel() {
-  mCtx->cancelPendingOperation();
-}
-
-void Kleo::QGpgMEDecryptVerifyJob::showProgress( const char * what, int type, int current, int total ) {
-  emit progress( what ? QString::fromUtf8( what ) : QString::null, type, current, total );
+void Kleo::QGpgMEDecryptVerifyJob::doOperationDoneEvent( const GpgME::Error & ) {
+  emit result( mCtx->decryptionResult(),
+	       mCtx->verificationResult(),
+	       mOutDataDataProvider->data() );
 }
 
 #include "qgpgmedecryptverifyjob.moc"

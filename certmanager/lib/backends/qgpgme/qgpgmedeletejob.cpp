@@ -37,34 +37,24 @@
 #include "qgpgmedeletejob.h"
 
 #include <qgpgme/eventloopinteractor.h>
-#include <qgpgme/dataprovider.h>
 
-//#include <gpgmepp/key.h>
 #include <gpgmepp/context.h>
-#include <gpgmepp/data.h>
 
 #include <assert.h>
 
 Kleo::QGpgMEDeleteJob::QGpgMEDeleteJob( GpgME::Context * context )
   : DeleteJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDeleteJob" ),
-    GpgME::ProgressProvider(),
-    mCtx( context )
+    QGpgMEJob( this, context )
 {
   assert( context );
 }
 
 Kleo::QGpgMEDeleteJob::~QGpgMEDeleteJob() {
-  // YES, WE own it!
-  delete mCtx; mCtx = 0;
 }
 
 GpgME::Error Kleo::QGpgMEDeleteJob::start( const GpgME::Key & key, bool allowSecretKeyDeletion ) {
-  // hook up the context to the eventloopinteractor:
-  mCtx->setManagedByEventLoopInteractor( true );
-  connect( QGpgME::EventLoopInteractor::instance(),
-	   SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
-	   SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
-  mCtx->setProgressProvider( this );
+
+  hookupContextToEventLoopInteractor();
 
   const GpgME::Error err = mCtx->startKeyDeletion( key, allowSecretKeyDeletion );
 						  
@@ -73,20 +63,8 @@ GpgME::Error Kleo::QGpgMEDeleteJob::start( const GpgME::Key & key, bool allowSec
   return err;
 }
 
-void Kleo::QGpgMEDeleteJob::slotCancel() {
-  mCtx->cancelPendingOperation();
-}
-
-void Kleo::QGpgMEDeleteJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & error ) {
-  if ( context == mCtx ) {
-    emit done();
-    emit result( error );
-    deleteLater();
-  }
-}
-
-void Kleo::QGpgMEDeleteJob::showProgress( const char * what, int type, int current, int total ) {
-  emit progress( what ? QString::fromUtf8( what ) : QString::null, type, current, total );
+void Kleo::QGpgMEDeleteJob::doOperationDoneEvent( const GpgME::Error & error ) {
+  emit result( error );
 }
 
 #include "qgpgmedeletejob.moc"

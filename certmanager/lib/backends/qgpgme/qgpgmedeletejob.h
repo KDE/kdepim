@@ -35,7 +35,7 @@
 
 #include <kleo/deletejob.h>
 
-#include <gpgmepp/interfaces/progressprovider.h>
+#include "qgpgmejob.h"
 
 namespace GpgME {
   class Error;
@@ -45,8 +45,8 @@ namespace GpgME {
 
 namespace Kleo {
 
-  class QGpgMEDeleteJob : public DeleteJob, public GpgME::ProgressProvider {
-    Q_OBJECT
+  class QGpgMEDeleteJob : public DeleteJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
     QGpgMEDeleteJob( GpgME::Context * context );
     ~QGpgMEDeleteJob();
@@ -55,16 +55,12 @@ namespace Kleo {
     GpgME::Error start( const GpgME::Key & key, bool allowSecretKeyDeletion );
 
   private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
-    /*! \reimp from Job */
-    void slotCancel();
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
 
   private:
-    /*! \reimp from GpgME::ProgressProvider */
-    void showProgress( const char * what, int type, int current, int total );
-
-  private:
-    GpgME::Context * mCtx;
+    void doOperationDoneEvent( const GpgME::Error & e );
   };
 
 }

@@ -35,24 +35,19 @@
 
 #include <kleo/exportjob.h>
 
-#include <gpgmepp/interfaces/progressprovider.h>
+#include "qgpgmejob.h"
 
 #include <qcstring.h>
 
 namespace GpgME {
   class Error;
   class Context;
-  class Data;
-}
-
-namespace QGpgME {
-  class QByteArrayDataProvider;
 }
 
 namespace Kleo {
 
-  class QGpgMEExportJob : public ExportJob, public GpgME::ProgressProvider {
-    Q_OBJECT
+  class QGpgMEExportJob : public ExportJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
     QGpgMEExportJob( GpgME::Context * context );
     ~QGpgMEExportJob();
@@ -61,19 +56,12 @@ namespace Kleo {
     GpgME::Error start( const QStringList & patterns );
 
   private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
-    /*! \reimp from Job */
-    void slotCancel();
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
 
   private:
-    /*! \reimp from GpgME::ProgressProvider */
-    void showProgress( const char * what, int type, int current, int total );
-
-  private:
-    GpgME::Context * mCtx;
-    const char* * mPatterns;
-    QGpgME::QByteArrayDataProvider * mKeyDataDataProvider;
-    GpgME::Data * mKeyData;
+    void doOperationDoneEvent( const GpgME::Error & e );
   };
 
 }

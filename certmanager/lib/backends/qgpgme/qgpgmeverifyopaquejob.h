@@ -35,24 +35,19 @@
 
 #include <kleo/verifyopaquejob.h>
 
-#include <gpgmepp/interfaces/progressprovider.h>
+#include "qgpgmejob.h"
 
 #include <qcstring.h>
 
 namespace GpgME {
   class Error;
   class Context;
-  class Data;
-}
-
-namespace QGpgME {
-  class QByteArrayDataProvider;
 }
 
 namespace Kleo {
 
-  class QGpgMEVerifyOpaqueJob : public VerifyOpaqueJob, public GpgME::ProgressProvider {
-    Q_OBJECT
+  class QGpgMEVerifyOpaqueJob : public VerifyOpaqueJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
     QGpgMEVerifyOpaqueJob( GpgME::Context * context );
     ~QGpgMEVerifyOpaqueJob();
@@ -64,21 +59,13 @@ namespace Kleo {
     GpgME::VerificationResult exec( const QByteArray & signedData, QByteArray & plainData );
 
   private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
-    /*! \reimp from Job */
-    void slotCancel();
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
 
   private:
-    /*! \reimp from GpgME::ProgressProvider */
-    void showProgress( const char * what, int type, int current, int total );
+    void doOperationDoneEvent( const GpgME::Error & e );
     void setup( const QByteArray & );
-
-  private:
-    GpgME::Context * mCtx;
-    QGpgME::QByteArrayDataProvider * mSignedDataDataProvider;
-    GpgME::Data * mSignedData;
-    QGpgME::QByteArrayDataProvider * mPlainTextDataProvider;
-    GpgME::Data * mPlainText;
   };
 
 }

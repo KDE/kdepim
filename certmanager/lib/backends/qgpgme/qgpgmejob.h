@@ -35,7 +35,11 @@
 
 #include <gpgmepp/interfaces/progressprovider.h>
 
+#include <gpgmepp/key.h>
+
 #include <qcstring.h>
+
+#include <vector>
 
 namespace GpgME {
   class Error;
@@ -87,6 +91,8 @@ namespace Kleo {
     /*! Creates a GpgME::Data/QGpgME::QByteArrayDataProvider pair,
       filled with the contents of \a in */
     void createInData( const QByteArray & in );
+    /*! Sets the list of signing keys */
+    GpgME::Error setSigningKeys( const std::vector<GpgME::Key> & signers );
     /*! Call this to implement a slotOperationDoneEvent() */
     void doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
 

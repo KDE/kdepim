@@ -37,6 +37,7 @@
 #include "qgpgmerefreshkeysjob.h"
 
 #include "gnupgprocessbase.h"
+#include "qgpgmeprogresstokenmapper.h"
 
 #include <kdebug.h>
 
@@ -177,7 +178,7 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QStr
       kdDebug( 5150 ) << "Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for \"total\", got something else" << endl;
       return;
     }
-    emit progress( what.latin1(), 0, cur, total );
+    emit progress( QGpgMEProgressTokenMapper::instance()->map( what, 0, cur, total ), cur, total );
 
 
   }

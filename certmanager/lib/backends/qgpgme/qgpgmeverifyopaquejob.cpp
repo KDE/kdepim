@@ -39,7 +39,6 @@
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
-//#include <gpgmepp/key.h>
 #include <gpgmepp/context.h>
 #include <gpgmepp/verificationresult.h>
 #include <gpgmepp/data.h>
@@ -48,51 +47,28 @@
 
 Kleo::QGpgMEVerifyOpaqueJob::QGpgMEVerifyOpaqueJob( GpgME::Context * context )
   : VerifyOpaqueJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEVerifyOpaqueJob" ),
-    GpgME::ProgressProvider(),
-    mCtx( context ),
-    mSignedDataDataProvider( 0 ),
-    mSignedData( 0 ),
-    mPlainTextDataProvider( 0 ),
-    mPlainText( 0 )
+    QGpgMEJob( this, context )
 {
   assert( context );
 }
 
 Kleo::QGpgMEVerifyOpaqueJob::~QGpgMEVerifyOpaqueJob() {
-  // YES, WE own it!
-  delete mCtx; mCtx = 0;
-  delete mPlainText; mPlainText = 0;
-  delete mPlainTextDataProvider; mPlainTextDataProvider = 0;
-  delete mSignedData; mSignedData = 0;
-  delete mSignedDataDataProvider; mSignedDataDataProvider = 0;
 }
 
 void Kleo::QGpgMEVerifyOpaqueJob::setup( const QByteArray & signedData ) {
-  assert( !mPlainText );
-  assert( !mSignedData );
+  assert( !mInData );
+  assert( !mOutData );
 
-  // set up empty data object for plain text
-  mPlainTextDataProvider = new QGpgME::QByteArrayDataProvider();
-  mPlainText = new GpgME::Data( mPlainTextDataProvider );
-  assert( !mPlainText->isNull() );
-
-  // set up data object for signedData
-  mSignedDataDataProvider = new QGpgME::QByteArrayDataProvider( signedData );
-  mSignedData = new GpgME::Data( mSignedDataDataProvider );
-  assert( !mSignedData->isNull() );
+  createInData( signedData );
+  createOutData();
 }
 
 GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData ) {
   setup( signedData );
 
-  // hook up the context to the eventloopinteractor:
-  mCtx->setManagedByEventLoopInteractor( true );
-  connect( QGpgME::EventLoopInteractor::instance(),
-	   SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
-	   SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
-  mCtx->setProgressProvider( this );
+  hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startOpaqueSignatureVerification( *mSignedData, *mPlainText );
+  const GpgME::Error err = mCtx->startOpaqueSignatureVerification( *mInData, *mOutData );
 						  
   if ( err )
     deleteLater();
@@ -101,25 +77,14 @@ GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData )
 
 GpgME::VerificationResult Kleo::QGpgMEVerifyOpaqueJob::exec( const QByteArray & signedData, QByteArray & plainText ) {
   setup( signedData );
-  const GpgME::VerificationResult res = mCtx->verifyOpaqueSignature( *mSignedData, *mPlainText );
-  plainText = mPlainTextDataProvider->data();
+  const GpgME::VerificationResult res = mCtx->verifyOpaqueSignature( *mInData, *mOutData );
+  plainText = mOutDataDataProvider->data();
   return res;
 }
 
-void Kleo::QGpgMEVerifyOpaqueJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
-  if ( context == mCtx ) {
-    emit done();
-    emit result( mCtx->verificationResult(), mPlainTextDataProvider->data() );
-    deleteLater();
-  }
+void Kleo::QGpgMEVerifyOpaqueJob::doOperationDoneEvent( const GpgME::Error & ) {
+  emit result( mCtx->verificationResult(), mOutDataDataProvider->data() );
 }
 
-void Kleo::QGpgMEVerifyOpaqueJob::slotCancel() {
-  mCtx->cancelPendingOperation();
-}
-
-void Kleo::QGpgMEVerifyOpaqueJob::showProgress( const char * what, int type, int current, int total ) {
-  emit progress( what ? QString::fromUtf8( what ) : QString::null, type, current, total );
-}
 
 #include "qgpgmeverifyopaquejob.moc"

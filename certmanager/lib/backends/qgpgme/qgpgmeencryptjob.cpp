@@ -42,7 +42,6 @@
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
-//#include <gpgmepp/key.h>
 #include <gpgmepp/context.h>
 #include <gpgmepp/encryptionresult.h>
 #include <gpgmepp/data.h>
@@ -51,54 +50,31 @@
 
 Kleo::QGpgMEEncryptJob::QGpgMEEncryptJob( GpgME::Context * context )
   : EncryptJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEEncryptJob" ),
-    GpgME::ProgressProvider(),
-    mCtx( context ),
-    mPlainTextDataProvider( 0 ),
-    mPlainText( 0 ),
-    mCipherTextDataProvider( 0 ),
-    mCipherText( 0 )
+    QGpgMEJob( this, context )
 {
   assert( context );
 }
 
 Kleo::QGpgMEEncryptJob::~QGpgMEEncryptJob() {
-  // YES, WE own it!
-  delete mCtx; mCtx = 0;
-  delete mCipherText; mCipherText = 0;
-  delete mCipherTextDataProvider; mCipherTextDataProvider = 0;
-  delete mPlainText; mPlainText = 0;
-  delete mPlainTextDataProvider; mPlainTextDataProvider = 0;
 }
 
 void Kleo::QGpgMEEncryptJob::setup( const QByteArray & plainText ) {
-  assert( !mCipherText );
-  assert( !mPlainText );
+  assert( !mInData );
+  assert( !mOutData );
 
-  // set up empty data object for the ciphertext
-  mCipherTextDataProvider = new QGpgME::QByteArrayDataProvider();
-  mCipherText = new GpgME::Data( mCipherTextDataProvider );
-  assert( !mCipherText->isNull() );
-
-  // set up data object for plainText
-  mPlainTextDataProvider = new QGpgME::QByteArrayDataProvider( plainText );
-  mPlainText = new GpgME::Data( mPlainTextDataProvider );
-  assert( !mPlainText->isNull() );
+  createInData( plainText );
+  createOutData();
 }
 
 GpgME::Error Kleo::QGpgMEEncryptJob::start( const std::vector<GpgME::Key> & recipients,
 					    const QByteArray & plainText, bool alwaysTrust ) {
   setup( plainText );
 
-  // hook up the context to the eventloopinteractor:
-  mCtx->setManagedByEventLoopInteractor( true );
-  connect( QGpgME::EventLoopInteractor::instance(),
-	   SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
-	   SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
-  mCtx->setProgressProvider( this );
+  hookupContextToEventLoopInteractor();
 
   const GpgME::Context::EncryptionFlags flags =
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
-  const GpgME::Error err = mCtx->startEncryption( recipients, *mPlainText, *mCipherText, flags );
+  const GpgME::Error err = mCtx->startEncryption( recipients, *mInData, *mOutData, flags );
 						  
   if ( err )
     deleteLater();
@@ -112,26 +88,13 @@ GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::K
   setup( plainText );
   const GpgME::Context::EncryptionFlags flags =
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
-  mResult = mCtx->encrypt( recipients, *mPlainText, *mCipherText, flags );
-  ciphertext = mCipherTextDataProvider->data();
+  mResult = mCtx->encrypt( recipients, *mInData, *mOutData, flags );
+  ciphertext = mOutDataDataProvider->data();
   return mResult;
 }
 
-void Kleo::QGpgMEEncryptJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
-  if ( context == mCtx ) {
-    mResult = mCtx->encryptionResult();
-    emit done();
-    emit result( mResult, mCipherTextDataProvider->data() );
-    deleteLater();
-  }
-}
-
-void Kleo::QGpgMEEncryptJob::slotCancel() {
-  mCtx->cancelPendingOperation();
-}
-
-void Kleo::QGpgMEEncryptJob::showProgress( const char * what, int type, int current, int total ) {
-  emit progress( what ? QString::fromUtf8( what ) : QString::null, type, current, total );
+void Kleo::QGpgMEEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
+  emit result( mResult, mOutDataDataProvider->data() );
 }
 
 void Kleo::QGpgMEEncryptJob::showErrorDialog( QWidget * parent ) const {

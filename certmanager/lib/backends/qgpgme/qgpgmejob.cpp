@@ -98,6 +98,17 @@ void Kleo::QGpgMEJob::setPatterns( const QStringList & sl, bool allowEmpty ) {
   *pat_it++ = 0;
 }
 
+GpgME::Error Kleo::QGpgMEJob::setSigningKeys( const std::vector<GpgME::Key> & signers ) {
+  mCtx->clearSigningKeys();
+  for ( std::vector<GpgME::Key>::const_iterator it = signers.begin() ; it != signers.end() ; ++it ) {
+    if ( (*it).isNull() )
+      continue;
+    if ( const GpgME::Error err = mCtx->addSigningKey( *it ) )
+      return err;
+  }
+  return 0;
+}
+
 void Kleo::QGpgMEJob::createInData( const QByteArray & in ) {
   mInDataDataProvider = new QGpgME::QByteArrayDataProvider( in );
   mInData = new GpgME::Data( mInDataDataProvider );

@@ -35,24 +35,19 @@
 
 #include <kleo/verifydetachedjob.h>
 
-#include <gpgmepp/interfaces/progressprovider.h>
+#include "qgpgmejob.h"
 
 #include <qcstring.h>
 
 namespace GpgME {
   class Error;
   class Context;
-  class Data;
-}
-
-namespace QGpgME {
-  class QByteArrayDataProvider;
 }
 
 namespace Kleo {
 
-  class QGpgMEVerifyDetachedJob : public VerifyDetachedJob, public GpgME::ProgressProvider {
-    Q_OBJECT
+  class QGpgMEVerifyDetachedJob : public VerifyDetachedJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
     QGpgMEVerifyDetachedJob( GpgME::Context * context );
     ~QGpgMEVerifyDetachedJob();
@@ -66,21 +61,13 @@ namespace Kleo {
 				    const QByteArray & signedData );
 
   private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
-    /*! \reimp from Job */
-    void slotCancel();
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
 
   private:
-    /*! \reimp from GpgME::ProgressProvider */
-    void showProgress( const char * what, int type, int current, int total );
+    void doOperationDoneEvent( const GpgME::Error & e );
     void setup( const QByteArray &, const QByteArray & );
-
-  private:
-    GpgME::Context * mCtx;
-    QGpgME::QByteArrayDataProvider * mSignedDataDataProvider;
-    GpgME::Data * mSignedData;
-    QGpgME::QByteArrayDataProvider * mSignatureDataProvider;
-    GpgME::Data * mSignature;
   };
 
 }

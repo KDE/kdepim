@@ -39,7 +39,6 @@
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
-//#include <gpgmepp/key.h>
 #include <gpgmepp/context.h>
 #include <gpgmepp/importresult.h>
 #include <gpgmepp/data.h>
@@ -48,41 +47,26 @@
 
 Kleo::QGpgMEImportJob::QGpgMEImportJob( GpgME::Context * context )
   : ImportJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEImportJob" ),
-    GpgME::ProgressProvider(),
-    mCtx( context ),
-    mKeyDataDataProvider( 0 ),
-    mKeyData( 0 )
+    QGpgMEJob( this, context )
 {
   assert( context );
 }
 
 Kleo::QGpgMEImportJob::~QGpgMEImportJob() {
-  // YES, WE own it!
-  delete mCtx; mCtx = 0;
-  delete mKeyData; mKeyData = 0;
-  delete mKeyDataDataProvider; mKeyDataDataProvider = 0;
 }
 
 void Kleo::QGpgMEImportJob::setup( const QByteArray & keyData ) {
-  assert( !mKeyData );
+  assert( !mInData );
 
-  // set up data object for keyData
-  mKeyDataDataProvider = new QGpgME::QByteArrayDataProvider( keyData );
-  mKeyData = new GpgME::Data( mKeyDataDataProvider );
-  assert( !mKeyData->isNull() );
+  createInData( keyData );
 }
 
 GpgME::Error Kleo::QGpgMEImportJob::start( const QByteArray & keyData ) {
   setup( keyData );
 
-  // hook up the context to the eventloopinteractor:
-  mCtx->setManagedByEventLoopInteractor( true );
-  connect( QGpgME::EventLoopInteractor::instance(),
-	   SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
-	   SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
-  mCtx->setProgressProvider( this );
+  hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startKeyImport( *mKeyData );
+  const GpgME::Error err = mCtx->startKeyImport( *mInData );
 						  
   if ( err )
     deleteLater();
@@ -91,23 +75,12 @@ GpgME::Error Kleo::QGpgMEImportJob::start( const QByteArray & keyData ) {
 
 GpgME::ImportResult Kleo::QGpgMEImportJob::exec( const QByteArray & keyData ) {
   setup( keyData );
-  return mCtx->importKeys( *mKeyData );
+  return mCtx->importKeys( *mInData );
 }
 
-void Kleo::QGpgMEImportJob::slotCancel() {
-  mCtx->cancelPendingOperation();
+void Kleo::QGpgMEImportJob::doOperationDoneEvent( const GpgME::Error & ) {
+  emit result( mCtx->importResult() );
 }
 
-void Kleo::QGpgMEImportJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
-  if ( context == mCtx ) {
-    emit done();
-    emit result( mCtx->importResult() );
-    deleteLater();
-  }
-}
-
-void Kleo::QGpgMEImportJob::showProgress( const char * what, int type, int current, int total ) {
-  emit progress( what ? QString::fromUtf8( what ) : QString::null, type, current, total );
-}
 
 #include "qgpgmeimportjob.moc"

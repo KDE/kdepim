@@ -35,7 +35,7 @@
 
 #include <kleo/keylistjob.h>
 
-#include <gpgmepp/interfaces/progressprovider.h>
+#include "qgpgmejob.h"
 
 namespace GpgME {
   class Error;
@@ -45,8 +45,8 @@ namespace GpgME {
 
 namespace Kleo {
 
-  class QGpgMEKeyListJob : public KeyListJob, public GpgME::ProgressProvider {
-    Q_OBJECT
+  class QGpgMEKeyListJob : public KeyListJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
     QGpgMEKeyListJob( GpgME::Context * context );
     ~QGpgMEKeyListJob();
@@ -59,18 +59,13 @@ namespace Kleo {
 
   private slots:
     void slotNextKeyEvent( GpgME::Context * context, const GpgME::Key & key );
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
-    /*! \reimp from Job */
-    void slotCancel();
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
 
   private:
-    /*! \reimp from GpgME::ProgressProvider */
-    void showProgress( const char * what, int type, int current, int total );
+    void doOperationDoneEvent( const GpgME::Error & e );
     void setup( const QStringList & );
-
-  private:
-    GpgME::Context * mCtx;
-    const char* * mPatterns;
   };
 
 }

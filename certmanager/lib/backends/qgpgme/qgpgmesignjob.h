@@ -35,7 +35,8 @@
 
 #include <kleo/signjob.h>
 
-#include <gpgmepp/interfaces/progressprovider.h>
+#include "qgpgmejob.h"
+
 #include <gpgmepp/signingresult.h>
 
 #include <qcstring.h>
@@ -44,17 +45,12 @@ namespace GpgME {
   class Error;
   class Context;
   class Key;
-  class Data;
-}
-
-namespace QGpgME {
-  class QByteArrayDataProvider;
 }
 
 namespace Kleo {
 
-  class QGpgMESignJob : public SignJob, public GpgME::ProgressProvider {
-    Q_OBJECT
+  class QGpgMESignJob : public SignJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
     QGpgMESignJob( GpgME::Context * context );
     ~QGpgMESignJob();
@@ -74,21 +70,15 @@ namespace Kleo {
     void showErrorDialog( QWidget * parent ) const;
 
   private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
-    /*! \reimp from Job */
-    void slotCancel();
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
 
   private:
-    /*! \reimp from GpgME::ProgressProvider */
-    void showProgress( const char * what, int type, int current, int total );
+    void doOperationDoneEvent( const GpgME::Error & e );
     GpgME::Error setup( const std::vector<GpgME::Key> &, const QByteArray & );
 
   private:
-    GpgME::Context * mCtx;
-    QGpgME::QByteArrayDataProvider * mPlainTextDataProvider;
-    GpgME::Data * mPlainText;
-    QGpgME::QByteArrayDataProvider * mSignatureDataProvider;
-    GpgME::Data * mSignature;
     GpgME::SigningResult mResult;
   };
 

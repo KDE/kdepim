@@ -35,25 +35,19 @@
 
 #include <kleo/importjob.h>
 
-#include <gpgmepp/interfaces/progressprovider.h>
+#include "qgpgmejob.h"
 
 #include <qcstring.h>
 
 namespace GpgME {
   class Error;
   class Context;
-  class Key;
-  class Data;
-}
-
-namespace QGpgME {
-  class QByteArrayDataProvider;
 }
 
 namespace Kleo {
 
-  class QGpgMEImportJob : public ImportJob, public GpgME::ProgressProvider {
-    Q_OBJECT
+  class QGpgMEImportJob : public ImportJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
     QGpgMEImportJob( GpgME::Context * context );
     ~QGpgMEImportJob();
@@ -65,19 +59,13 @@ namespace Kleo {
     GpgME::ImportResult exec( const QByteArray & keyData );
 
   private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
-    /*! \reimp from Job */
-    void slotCancel();
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
 
   private:
-    /*! \reimp from GpgME::ProgressProvider */
-    void showProgress( const char * what, int type, int current, int total );
+    void doOperationDoneEvent( const GpgME::Error & e );
     void setup( const QByteArray & );
-
-  private:
-    GpgME::Context * mCtx;
-    QGpgME::QByteArrayDataProvider * mKeyDataDataProvider;
-    GpgME::Data * mKeyData;
   };
 
 }
