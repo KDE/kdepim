@@ -53,13 +53,13 @@ KAddressbookSyncEntry* AddressBook::toKDE( const QString &fileName )
     while(!n.isNull() ){
 	QDomElement e = n.toElement();
 	if(!e.isNull() ){
-	    kdDebug() << e.tagName() << endl;
+	    kdDebug(5202) << e.tagName() << endl;
 	    if( e.tagName() == QString::fromLatin1("Contacts" ) ){ // we're looking for them
 		QDomNode no = e.firstChild();
 		while(!no.isNull() ){
 		    QDomElement el = no.toElement();
 		    if(!el.isNull() ){
-			kdDebug() << "Contacts: " << el.tagName() << endl;
+			kdDebug(5202) << "Contacts: " << el.tagName() << endl;
 			KABC::Addressee adr;
 			adr.setUid( kdeId( "addressbook",  el.attribute("Uid" ) ) );
 			adr.setFamilyName(el.attribute("LastName" ) );
@@ -146,7 +146,7 @@ KAddressbookSyncEntry* AddressBook::toKDE( const QString &fileName )
     abook->addResource(&r );
     KABC::Ticket *t = abook->requestSaveTicket( &r );
     abook->save( t );*/
-    kdDebug() << "Dumped " << endl;
+    kdDebug(5202) << "Dumped " << endl;
     return entry;
 }
 QByteArray AddressBook::fromKDE( KAddressbookSyncEntry *entry )

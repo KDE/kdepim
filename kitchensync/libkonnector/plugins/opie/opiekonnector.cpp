@@ -29,7 +29,7 @@ class OpiePlugin::OpiePluginPrivate{
 OpiePlugin::OpiePlugin(QObject *obj, const char *name, const QStringList )
   : KonnectorPlugin(obj, name )
 {
-    kdDebug() << "OpiePlugin ";
+    kdDebug(5202) << "OpiePlugin ";
     d = new OpiePluginPrivate;
     d->socket = new OpieSocket(this, "opiesocket");
 
@@ -61,7 +61,7 @@ QString OpiePlugin::udi()const
 Kapabilities OpiePlugin::capabilities( )
 {
   // create the capabilities Apply
-  kdDebug() << "OpiePlugin capabilities" << endl;
+  kdDebug(5202) << "OpiePlugin capabilities" << endl;
   Kapabilities caps;
   caps.setSupportMetaSyncing( true );
   caps.setSupportsPushSync( true );
@@ -131,7 +131,7 @@ void OpiePlugin::slotWrite(QValueList<KOperations> operations )
 }
 void OpiePlugin::slotChanged( bool b)
 {
-    kdDebug() << "State changed Opiekonnector" << endl;
+    kdDebug(5202) << "State changed Opiekonnector" << endl;
     emit  stateChanged( d->udi,  b );
 }
 KSyncEntry* OpiePlugin::retrEntry( const QString& path )

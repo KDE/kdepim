@@ -18,6 +18,7 @@
 #include <kstandarddirs.h>
 #include <qregexp.h>
 
+#include <kunknownsyncentry.h>
 #include <kalendarsyncentry.h>
 
 #include <idhelper.h>
@@ -75,7 +76,7 @@ OpieSocket::OpieSocket(QObject *obj, const char *name )
 }
 OpieSocket::~OpieSocket()
 {
-    kdDebug() << "Delete OpieSocket" << endl;
+    kdDebug(5202) << "Delete OpieSocket" << endl;
     delete d->edit;
     delete d->helper;
 }
@@ -103,7 +104,7 @@ void OpieSocket::startUp() // start the connection
 // and find out the the Homedir Path ;)
 // start connecting
 {
-    kdDebug() << "OPieQCOPSocket" << endl;
+    kdDebug(5202) << "OPieQCOPSocket" << endl;
     delete d->socket;
     d->socket = new QSocket(this, "OpieQCOPSocket" );
     connect( d->socket, SIGNAL(error(int) ), this,
@@ -125,25 +126,25 @@ void OpieSocket::startUp() // start the connection
 }
 bool OpieSocket::startSync()
 {
-    kdDebug() << "startSync " << endl;
+    kdDebug(5202) << "startSync " << endl;
     if( d->isSyncing ){
-	kdDebug() << "isSyncing" << endl;
+	kdDebug(5202) << "isSyncing" << endl;
 	return false;
     }
     d->isSyncing = true;
     d->getMode = d->NOTSTARTED;
     if(d->isConnecting ){
-	kdDebug() << "is connecting tell it to startSync if in NOOP" << endl;
+	kdDebug(5202) << "is connecting tell it to startSync if in NOOP" << endl;
 	d->startSync = true;
 	return true;
     }
     if(!isConnected()  ){
-	kdDebug() << "Not connected starting connection" << endl;
+	kdDebug(5202) << "Not connected starting connection" << endl;
 	startUp();
 	d->startSync = true;
 	return true;
     }
-    kdDebug("start sync the normal way" );
+    kdDebug(5202) << "start sync the normal way"  << endl;
     slotStartSync();
     return true;
 }
@@ -194,9 +195,16 @@ void OpieSocket::write(const QString &path, const QByteArray &array )
 void OpieSocket::write(QPtrList<KSyncEntry> lis)
 {
 // ok the list
-    kdDebug() << "Write back" << endl;
+    kdDebug(5202) << "Write back" << endl;
     lis.setAutoDelete( TRUE );
     KSyncEntry* entry;
+    KURL url;
+    url.setProtocol("ftp" );
+    url.setUser( d->user );
+    url.setPass( d->pass );
+    url.setHost( d->dest );
+    url.setPort( 4242 );
+    //url.setPath( path );
     for ( entry = lis.first(); entry != 0; lis.next() ) {
         // convert to XML
         if ( entry->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
@@ -206,17 +214,54 @@ void OpieSocket::write(QPtrList<KSyncEntry> lis)
             QByteArray todos = todo.fromKDE( cal );
             QByteArray events = dateb.fromKDE( cal );
             // Events + Todo
+            if ( d->meta ) { // save the bytearray
+                QFile aFile(QDir::homeDirPath()+ "/.kitchensync/meta/" + d->partnerId + "/todolist.xml" );
+                if ( aFile.open(IO_WriteOnly) ) {
+                    aFile.writeBlock(todos);
+                }
+                QFile bFile(QDir::homeDirPath()+ "/.kitchensync/meta/" + d->partnerId + "/datebook.xml");
+                if ( bFile.open(IO_WriteOnly) ) {
+                    bFile.writeBlock( events );
+                }
+            }
+        }else if ( entry->type() == QString::fromLatin1("AddressbookSyncEntry") ) {
+            KAddressbookSyncEntry* ab = (KAddressbookSyncEntry*) entry;
+            OpieHelper::AddressBook abook( d->edit,  d->helper,  d->meta );
+            QByteArray book = abook.fromKDE( ab );
+            KTempFile file(locateLocal("tmp", "opie-konn-address"), "new" );
+            QFile *fi  = file.file();
+            fi->writeBlock( book );
+            file.close();
+            url.setPath(d->path + "/Applications/addressbook/adressbook.xml");
+            KIO::NetAccess::upload(file.name(), url);
+            file.unlink();
+            if ( d->meta ) {
+                QFile file2(QDir::homeDirPath()+ "/.kitchensync/meta/" + d->partnerId + "/addressbook.xml");
+                if ( file2.open(IO_WriteOnly ) ) {
+                    file2.writeBlock(book);
+                }
+            }
+        }else if ( entry->type() == QString::fromLatin1("KUnknownSyncEntry") ) {
+            KUnknownSyncEntry* un = (KUnknownSyncEntry*) entry;
+            KTempFile file(locateLocal("tmp", "opie-konn-unknown"), "new" );
+            QFile *fi = file.file();
+            fi->writeBlock( un->byteArray() );
+            file.close();
+            url.setPath(un->fileName()  );
+            KIO::NetAccess::upload( file.name(),  url );
+            file.unlink();
         }
     }
+    // OpieHelper::CategoryEdit write back
     lis.clear();
 }
 void OpieSocket::write(QValueList<KOperations> )
 {
-    kdDebug() << "write KOperations not implemented yet" << endl;
+    kdDebug(5202) << "write KOperations not implemented yet" << endl;
 }
 void OpieSocket::slotError(int error )
 {
-    kdDebug() << "error" << endl;
+    kdDebug(5202) << "error" << endl;
     d->isSyncing = false;
     d->isConnecting = false;
 
@@ -241,7 +286,7 @@ void OpieSocket::process()
     while(d->socket->canReadLine() ){
 	QTextStream stream( d->socket );
 	QString line = d->socket->readLine();
-	kdDebug() << line.stripWhiteSpace() << endl;
+	kdDebug(5202) << line.stripWhiteSpace() << endl;
 	switch( d->mode ){
 	    case d->START: {
 		if( line.left(3) != QString::fromLatin1("220") ){
@@ -279,7 +324,7 @@ void OpieSocket::process()
 		}else{
                 // ok start with the NOOP
                 // start the Timer
-		    kdDebug() << "start the NOOP" << endl;
+		    kdDebug(5202) << "start the NOOP" << endl;
 		    d->mode = d->NOOP;
 		    d->timer = new QTimer(this );
 		    connect(d->timer, SIGNAL(timeout() ), this, SLOT(slotNOOP() ) );
@@ -289,20 +334,20 @@ void OpieSocket::process()
 		break;
 	    }
 	    case d->CALL:
-		kdDebug() << "CALL :)" << endl;
+		kdDebug(5202) << "CALL :)" << endl;
 		manageCall( line );
 		break;
 	    case d->NOOP:
 		//stream << "NOOP\r\n";
 		d->isConnecting = false;
 		if(!d->startSync ){
-		    kdDebug() << "start NOOP" << endl;
+		    kdDebug(5202) << "start NOOP" << endl;
 		    d->mode = d->NOOP;
 		    d->timer = new QTimer(this );
 		    connect(d->timer, SIGNAL(timeout() ), this, SLOT(slotNOOP() ) );
 		    d->timer->start(10000 );
 		} else {
-		    kdDebug () << "slotStartSync now" << endl;
+		    kdDebug (5202) << "slotStartSync now" << endl;
 		    slotStartSync();
 		}
 		break;
@@ -313,16 +358,16 @@ void OpieSocket::slotNOOP()
 {
   QTextStream stream( d->socket );
   stream << "NOOP\r\n";
-  kdDebug() << "NOOP" << endl;
+  kdDebug(5202) << "NOOP" << endl;
   delete d->timer;
   d->timer = 0;
 }
 
 void OpieSocket::slotStartSync()
 {
-  kdDebug() << "slotStartSync()" << endl;
+  kdDebug(5202) << "slotStartSync()" << endl;
   delete d->timer;
-  kdDebug() << "after deleting" << endl;
+  kdDebug(5202) << "after deleting" << endl;
   d->startSync = false;
   QTextStream stream( d->socket );
   stream << "call QPE/System sendHandshakeInfo()\r\n";
@@ -337,14 +382,14 @@ void OpieSocket::manageCall(const QString &line )
 	return;
     }
     if( line.startsWith("CALL QPE/Desktop docLinks(QString)" ) ){
-	kdDebug( ) << "CALL docLinks desktop entry" << endl;
+	kdDebug(5202 ) << "CALL docLinks desktop entry" << endl;
         OpieHelperClass helper;
 	helper.toOpieDesktopEntry( line, &d->m_sync, d->edit  );
     }
     switch( d->getMode ){
 	case d->HANDSHAKE: {
 	    QStringList list = QStringList::split(QString::fromLatin1(" "), line );
-	    kdDebug() << list[3] << endl;
+	    kdDebug(5202) << list[3] << endl;
 	    d->path = list[3];
 	    d->getMode = d->DESKTOPS;
 	    stream << "call QPE/System startSync(QString) KitchenSync\r\n";
@@ -352,7 +397,7 @@ void OpieSocket::manageCall(const QString &line )
 	}
 	case d->ABOOK:{
 	    // start with the files use KIO::NetAcces for it simpleness first
-	    kdDebug() << "Starting fetching" << endl;
+	    kdDebug(5202) << "Starting fetching" << endl;
 	    QString tmpFileName;
 	    KURL url;
 	    url.setProtocol("ftp" );
@@ -362,7 +407,7 @@ void OpieSocket::manageCall(const QString &line )
 	    url.setPort( 4242 );
 	    url.setPath(d->path + "/Settings/Categories.xml " );
 	    //tmpFileName = QString::fromLatin1("/home/ich/categories.xml")
-            kdDebug() << "Fetching categories" << endl;;
+            kdDebug(5202) << "Fetching categories" << endl;;
 	    KIO::NetAccess::download( url, tmpFileName );
             delete d->edit;
             d->edit = new OpieHelper::CategoryEdit( tmpFileName );
@@ -371,25 +416,25 @@ void OpieSocket::manageCall(const QString &line )
 	    url.setPath(d->path + "/Applications/addressbook/addressbook.xml" );
 	    tmpFileName = QString::null;
 	    //tmpFileName = "/home/ich/addressbook.xml";
-            kdDebug() << "Fetching addressbook " << endl;
+            kdDebug(5202) << "Fetching addressbook " << endl;
 	    KIO::NetAccess::download( url, tmpFileName );
 	    KIO::UDSEntry uds;
 	    KIO::NetAccess::stat( url, uds );
 	    KFileItem item(  uds, url );
-            kdDebug( ) << "------------------TIMESTAMP---------------"<< endl;
-            kdDebug( ) << "------------------TIMESTAMP---------------"<< endl;
-            kdDebug( ) << "------------------TIMESTAMP---------------"<< endl;
-            kdDebug()  << item.timeString() << endl;
+            kdDebug(5202 ) << "------------------TIMESTAMP---------------"<< endl;
+            kdDebug(5202 ) << "------------------TIMESTAMP---------------"<< endl;
+            kdDebug(5202 ) << "------------------TIMESTAMP---------------"<< endl;
+            kdDebug(5202)  << item.timeString() << endl;
             OpieHelper::AddressBook book( d->edit,  d->helper,  d->meta );
             d->m_sync.append( book.toKDE( tmpFileName ) );
 	    KIO::NetAccess::removeTempFile( tmpFileName );
 
             // Calendar
 	    QString todo;
-            kdDebug() << "Fetching todolist" << endl;
+            kdDebug(5202) << "Fetching todolist" << endl;
 	    url.setPath(d->path + "/Applications/todolist/todolist.xml" );
 	    KIO::NetAccess::download(url, todo );
-            kdDebug() << "Fetching calendar" << endl;
+            kdDebug(5202) << "Fetching calendar" << endl;
 	    url.setPath(d->path + "/Applications/datebook/datebook.xml" );
 	    KIO::NetAccess::download(url, tmpFileName );
 
@@ -445,7 +490,7 @@ void OpieSocket::manageCall(const QString &line )
                 delete d->helper;
                 d->helper = new KonnectorUIDHelper(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId);
             }
-	    kdDebug() << "desktops entries" << endl;
+	    kdDebug(5202) << "desktops entries" << endl;
 	    stream << "call QPE/System getAllDocLinks()\r\n";
 	    d->getMode = d->ABOOK;
 	    break;
@@ -457,7 +502,7 @@ void OpieSocket::manageCall(const QString &line )
 void OpieSocket::newPartner()
 {
     d->partnerId = randomString( 10 );
-    kdDebug() << "New Sync  " << d->partnerId << endl;
+    kdDebug(5202) << "New Sync  " << d->partnerId << endl;
     QString fileN = QString::fromLatin1("/tmp/opiekonnector-") + d->partnerId;
     QFile file( fileN );
     if ( file.open( IO_WriteOnly ) ) {
@@ -484,7 +529,7 @@ void OpieSocket::readPartner( const QString &fileName )
         if ( string.left( 5 ) == QString::fromLatin1("opie-") )
             d->partnerId = string.mid( 6 );
     }
-    kdDebug() << "Known Partner " << d->partnerId << endl;
+    kdDebug(5202) << "Known Partner " << d->partnerId << endl;
 }
 QString OpieSocket::randomString( int length )
 {

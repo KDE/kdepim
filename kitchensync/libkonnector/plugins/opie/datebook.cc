@@ -46,18 +46,18 @@ DateBook::~DateBook()
 }
 QPtrList<KCal::Event> DateBook::toKDE( const QString& fileName )
 {
-    kdDebug() << "To KDE " << endl;
+    kdDebug(5202) << "To KDE " << endl;
     QPtrList<KCal::Event> m_list;
 
     QFile file( fileName );
     if ( file.open( IO_ReadOnly ) ) {
-        kdDebug() << "file open" << endl;
+        kdDebug(5202) << "file open" << endl;
         QDomDocument doc("mydocument");
         if ( doc.setContent( &file ) ) {
-            kdDebug() << "setContent" << endl;
+            kdDebug(5202) << "setContent" << endl;
             KCal::Event *event;
             QDomElement docElem = doc.documentElement();
-            kdDebug() << "TagName docElem " << docElem.tagName() << endl;
+            kdDebug(5202) << "TagName docElem " << docElem.tagName() << endl;
             QDomNode n = docElem.firstChild();
             QString dummy;
             int Int;
@@ -65,20 +65,20 @@ QPtrList<KCal::Event> DateBook::toKDE( const QString& fileName )
             while (!n.isNull() ) {
                 QDomElement el = n.toElement();
                 if (!el.isNull() ) {
-                    kdDebug() << "e " << el.tagName() << endl;
-                    kdDebug() << "e.isNull not" << endl;
+                    kdDebug(5202) << "e " << el.tagName() << endl;
+                    kdDebug(5202) << "e.isNull not" << endl;
                     if ( el.tagName() == "events") {
                         QDomNode no = el.firstChild();
                         while (!no.isNull() ) {
                             QDomElement e = no.toElement();
                             if (!e.isNull() ) {
                                 if (e.tagName() == "event") {
-                                    kdDebug() << "inside event" << endl;
+                                    kdDebug(5202) << "inside event" << endl;
                                     event = new KCal::Event();
                                     QStringList list = QStringList::split(";",  e.attribute("Categories") );
                                     QStringList categories;
                                     for ( uint i = 0; i < list.count(); i++ ) {
-                                        kdDebug() << list[i]<< " categories " << m_edit->categoryById( list[i],  "Calendar") << endl;
+                                        kdDebug(5202) << list[i]<< " categories " << m_edit->categoryById( list[i],  "Calendar") << endl;
                                         categories.append(m_edit->categoryById(list[i], "Calendar") );
                                     }
                                     if (!categories.isEmpty() ) {
@@ -92,10 +92,10 @@ QPtrList<KCal::Event> DateBook::toKDE( const QString& fileName )
                                     // time
                                     bool ok;
                                     QString start = e.attribute("start");
-                                    kdDebug() << "Start " << fromUTC( (time_t) start.toLong() ).toString() << endl;
+                                    kdDebug(5202) << "Start " << fromUTC( (time_t) start.toLong() ).toString() << endl;
                                     event->setDtStart( fromUTC( (time_t) start.toLong() ) );
                                     QString end = e.attribute("end");
-                                    kdDebug() << "End " << fromUTC( (time_t) end.toLong() ).toString() << endl;
+                                    kdDebug(5202) << "End " << fromUTC( (time_t) end.toLong() ).toString() << endl;
                                     event->setDtEnd( fromUTC( (time_t) end.toLong() ) );
                                     if ( e.attribute("type") == "AllDay" ) {
                                         event->setFloats( true );

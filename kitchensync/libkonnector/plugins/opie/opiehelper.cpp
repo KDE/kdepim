@@ -21,25 +21,25 @@ QString categoryById(const QString &id, const QString &app, QValueList<OpieCateg
   QValueList<OpieCategories>::Iterator it;
   QString category;
   for( it = cate.begin(); it != cate.end(); ++it ){
-    kdDebug() << "it :" << (*it).id() << "id:" << id << "ende"<<endl;
+    kdDebug(5202) << "it :" << (*it).id() << "id:" << id << "ende"<<endl;
     if( id.stripWhiteSpace() == (*it).id().stripWhiteSpace() ){
       //if( app == (*it).app() ){
-      kdDebug() << "found category" << endl;
+      kdDebug(5202) << "found category" << endl;
       category = (*it).name();
       break;
       //}
     }else {
-      kdDebug() << "not equal " << endl;
+      kdDebug(5202) << "not equal " << endl;
     }
     }
-  kdDebug() << "CategoryById: " << category << endl;
+  kdDebug(5202) << "CategoryById: " << category << endl;
   return category;
 };
   void dump(const KABC::Addressee &test ){
-    kdDebug() << "Addressee" << endl;
-    kdDebug() << "Name " << test.name() << endl;
-    kdDebug() << "UID" << test.uid() << endl;
-    kdDebug() << "LastName" << test.familyName() << endl;
+    kdDebug(5202) << "Addressee" << endl;
+    kdDebug(5202) << "Name " << test.name() << endl;
+    kdDebug(5202) << "UID" << test.uid() << endl;
+    kdDebug(5202) << "LastName" << test.familyName() << endl;
   }
 
 };
@@ -64,7 +64,7 @@ void OpieHelperClass::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntr
     string.replace(QRegExp("&0x0d;"), "\n");
     string.replace(QRegExp("&0x0a;"), "\r");
     string.replace(QRegExp("\r\n"), "\n" ); // hell we're on unix
-    kdDebug() << string << endl;
+    kdDebug(5202) << string << endl;
     if(!string.contains("[Desktop Entry]")  )
 	return;
     QStringList list = QStringList::split('\n', string );
@@ -78,7 +78,7 @@ void OpieHelperClass::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntr
     for( it = list.begin(); it != list.end(); ++it ){
 	QString con( (*it) );
 	con = con.stripWhiteSpace();
-	kdDebug() << "CurrentLine " << con << endl;
+	kdDebug(5202) << "CurrentLine " << con << endl;
 	if( con.startsWith("Categories = " ) ){ // FIXME for multiple Categories they're separated by a ;
 	    con = con.remove(0, 13 );
 	    con = con.remove( con.length() -1, 1 );
@@ -97,13 +97,13 @@ void OpieHelperClass::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntr
 	    size = con.stripWhiteSpace();
 	}
 	if( (*it).stripWhiteSpace() == "[Desktop Entry]" ){ // ok next entry starts
-	    kdDebug() << "File:" << fileName << ":Name:" << name << ":Type:" << type <<  ":Size:" << size << endl;
+	    kdDebug(5202) << "File:" << fileName << ":Name:" << name << ":Type:" << type <<  ":Size:" << size << endl;
 	    entr = new OpieDesktopSyncEntry(category, fileName, name, type, size );
 	    entry->append( entr );
 	}
     }
 //ok here we got one more entry I guess I'm wrong here
-    kdDebug() << "File:" << fileName << ":Name:" << name << ":Type:" << type <<  ":Size:" << size << endl;
+    kdDebug(5202) << "File:" << fileName << ":Name:" << name << ":Type:" << type <<  ":Size:" << size << endl;
     entr = new OpieDesktopSyncEntry(category, fileName, name, type, size );
     entry->append( entr );
 }
@@ -123,7 +123,7 @@ void OpieHelperClass::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntr
     file.close();
   }else{
     QDomElement docElem = doc.documentElement( );
-    kdDebug( ) << docElem.tagName() ;
+    kdDebug(5202 ) << docElem.tagName() ;
     QDomNode n =  docElem.firstChild();
     KCal::Todo *todo;
     QString dummy;
@@ -132,7 +132,7 @@ void OpieHelperClass::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntr
     while(!n.isNull() ){
       QDomElement e =n.toElement();
       if(!e.isNull() ){
-	kdDebug() << e.tagName() << endl;
+	kdDebug(5202) << e.tagName() << endl;
 	if(e.tagName() == "Task" ){
 	  todo = new KCal::Todo();
 	  QStringList list = QStringList::split(";", e.attribute("Categories") );
@@ -220,13 +220,13 @@ void OpieHelperClass::toAddressbook(const QString &timeStamp, const QString &fil
     while(!n.isNull() ){
 	QDomElement e = n.toElement();
 	if(!e.isNull() ){
-	    kdDebug() << e.tagName() << endl;
+	    kdDebug(5202) << e.tagName() << endl;
 	    if( e.tagName() == QString::fromLatin1("Contacts" ) ){ // we're looking for them
 		QDomNode no = e.firstChild();
 		while(!no.isNull() ){
 		    QDomElement el = no.toElement();
 		    if(!el.isNull() ){
-			kdDebug() << "Contacts: " << el.tagName() << endl;
+			kdDebug(5202) << "Contacts: " << el.tagName() << endl;
 			KABC::Addressee adr;
 			adr.setUid(el.attribute("Uid" ) );
 			adr.setFamilyName(el.attribute("LastName" ) );
@@ -310,7 +310,7 @@ void OpieHelperClass::toAddressbook(const QString &timeStamp, const QString &fil
     abook->addResource(&r );
     KABC::Ticket *t = abook->requestSaveTicket( &r );
     abook->save( t );*/
-    kdDebug() << "Dumped " << endl;
+    kdDebug(5202) << "Dumped " << endl;
 }
 
 
