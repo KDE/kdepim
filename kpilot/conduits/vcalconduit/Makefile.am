@@ -1,4 +1,7 @@
-INCLUDES= @all_includes@ -I$(LIBPISOCK_PATH) -I$(top_srcdir)/kpilot/kpilot -I$(srcdir)/versit 
+COMPILE_FIRST = versit
+
+INCLUDES= @all_includes@ -I$(LIBPISOCK_PATH) \
+	-I$(top_srcdir)/kpilot -I$(top_srcdir)/kpilot/kpilot -I$(srcdir)/versit 
 SUBDIRS = versit
 METASOURCES = AUTO
 bin_PROGRAMS = vcalconduit
