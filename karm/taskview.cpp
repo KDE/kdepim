@@ -14,6 +14,7 @@
 #include <klocale.h>            // i18n
 #include <kfiledialog.h>
 #include <kmessagebox.h>
+#include <kurlrequester.h>
 
 #include "csvexportdialog.h"
 #include "desktoptracker.h"
@@ -228,7 +229,7 @@ void TaskView::exportcsvFile()
   CSVExportDialog dialog( ReportCriteria::CSVTotalsExport, this );
   if ( current_item() && current_item()->isRoot() )
     dialog.enableTasksToExportQuestion();
-
+  dialog.urlExportTo->KURLRequester::setMode(KFile::File);
   if ( dialog.exec() ) {
     QString err = _storage->report( this, dialog.reportCriteria() );
     if ( !err.isEmpty() ) KMessageBox::error( this, err );

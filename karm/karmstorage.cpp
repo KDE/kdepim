@@ -46,6 +46,7 @@
 #include <taskview.h>
 #include <timekard.h>
 #include <karmutility.h>
+#include <kio/netaccess.h>
 
 //#include <calendarlocal.h>
 //#include <journal.h>
@@ -488,11 +489,23 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
   kdDebug(5970)
     << "KarmStorage::exportcsvFile: " << rc.url << endl;
 
-  QFile f( rc.url );
-  if( !f.open( IO_WriteOnly ) ) {
-      err = i18n("Could not open \"%1\".").arg( rc.url );
+  QFile f;
+  if (rc.url.isLocalFile())
+  {
+    f.setName( rc.url.path() );
+    if( !f.open( IO_WriteOnly ) ) {
+        err = i18n("Could not open \"%1\".").arg( rc.url.path() );
+    }
   }
-
+  else
+  {
+    // create temporary file 
+    f.setName("/tmp/karmcsvexport.tmp"); // makes this function non-reentrant
+    if( !f.open(IO_WriteOnly) ) {
+        err = i18n("Could not open \"%1\".").arg( rc.url.path() );
+    }
+  }
+  
   if (!err)
   {
     QString title = i18n("Export Progress");
@@ -569,7 +582,12 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
       tasknr++;
     }
     f.close();
-
+    
+    if (!rc.url.isLocalFile())
+    {
+      if (!KIO::NetAccess::upload( f.name(), rc.url, 0 )) err=QString("Could not upload");
+      f.remove();
+    }
   }
   return err;
 }
@@ -879,9 +897,9 @@ QString KarmStorage::exportActivityReport ( TaskView      *taskview,
 
   // above taken from timekard.cpp
       
-  QFile f( rc.url );
+  QFile f( rc.url.path() );
   if( !f.open( IO_WriteOnly ) ) {
-      err = i18n( "Could not open \"%1\"." ).arg( rc.url );
+      err = i18n( "Could not open \"%1\"." ).arg( rc.url.path() );
   }
 
   if (!err)

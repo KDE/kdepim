@@ -22,6 +22,7 @@
 #define REPORTCRITERIA_H
 
 #include <qdatetime.h>
+#include <kurl.h>
 class QString;
 
 /**
@@ -51,7 +52,7 @@ class ReportCriteria
     /**
      For reports that write to a file, the filename to write to.
      */
-    QString url;
+    KURL url;
 
     /**
      For history reports, the lower bound of the date range to report on.
