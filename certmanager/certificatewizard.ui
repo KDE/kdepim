@@ -8,12 +8,12 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>621</width>
-            <height>477</height>
+            <width>780</width>
+            <height>522</height>
         </rect>
     </property>
     <property name="caption">
-        <string>Certificate Wizard</string>
+        <string>Key Generation Wizard</string>
     </property>
     <property name="titleFont">
         <font>
@@ -26,7 +26,7 @@
             <cstring>introPage</cstring>
         </property>
         <attribute name="title">
-            <string>Certificate Wizard</string>
+            <string>Key Generation Wizard</string>
         </attribute>
         <vbox>
             <property name="name">
@@ -37,12 +37,12 @@
                     <cstring>TextLabel1</cstring>
                 </property>
                 <property name="text">
-                    <string>&lt;b&gt;Welcome to the Certificate Wizard.&lt;/b&gt;
+                    <string>&lt;b&gt;Welcome to the Key Generation Wizard.&lt;/b&gt;
 &lt;br&gt;
 &lt;br&gt;
-In a few easy steps, this wizard will help you to create a certificate. You use your certificates in order to sign messages, to encrypt messages and to decrypt messages that other people send to you in encrypted form.
+In a few easy steps, this wizard will help you to create a new key pair and request a certificate for it. You can then use your certificate in order to sign messages, to encrypt messages and to decrypt messages that other people send to you in encrypted form.
 &lt;p&gt;
-The certificates will be generated in a decentralized manner. Please contact your local help desk if you are unsure how to create a certificate in your organization.</string>
+The key pair will be generated in a decentralized manner. Please contact your local help desk if you are unsure how to obtain a certificate for your new key in your organization.</string>
                 </property>
             </widget>
             <spacer>
@@ -69,7 +69,7 @@ The certificates will be generated in a decentralized manner. Please contact you
             <cstring>WizardPage</cstring>
         </property>
         <attribute name="title">
-            <string>Certificate Parameters</string>
+            <string>Key Parameters</string>
         </attribute>
         <vbox>
             <property name="name">
@@ -301,7 +301,7 @@ The certificates will be generated in a decentralized manner. Please contact you
             <cstring>generatePage</cstring>
         </property>
         <attribute name="title">
-            <string>Decentralized Certificate Generation</string>
+            <string>Decentralized Key Generation</string>
         </attribute>
         <grid>
             <property name="name">
@@ -312,12 +312,12 @@ The certificates will be generated in a decentralized manner. Please contact you
                     <cstring>TextLabel4</cstring>
                 </property>
                 <property name="text">
-                    <string>&lt;qt&gt;&lt;p&gt;On this page, you will create a certificate in a decentralized way.
-&lt;/p&gt;&lt;p&gt;You can either store the certificate in a file for later transmission or 
+                    <string>&lt;qt&gt;&lt;p&gt;On this page, you will create a key pair in a decentralized way.
+&lt;/p&gt;&lt;p&gt;You can either store the certificate request in a file for later transmission or 
 send it to the Certificate Authority (CA) directly. Please check with 
 your local help desk if you are unsure what to select here.&lt;/p&gt;&lt;p&gt;
 Once you are done with your settings, click 
-&lt;em&gt;Generate Certificate&lt;/em&gt; in order to generate your certificate.&lt;/p&gt;
+&lt;em&gt;Generate Key Pair and Certificate Request&lt;/em&gt; in order to generate your key pair and a corresponding certificate request.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; if you choose to send via email directly, 
 a kmail composer will be opened; you can add detailed information for the CA
 there.&lt;/p&gt;&lt;qt&gt;</string>
@@ -356,7 +356,7 @@ there.&lt;/p&gt;&lt;qt&gt;</string>
                     </sizepolicy>
                 </property>
                 <property name="title">
-                    <string>Certificate &amp;Generation</string>
+                    <string>Certificate Request Options</string>
                 </property>
                 <grid>
                     <property name="name">
@@ -418,7 +418,10 @@ there.&lt;/p&gt;&lt;qt&gt;</string>
                     </size>
                 </property>
                 <property name="text">
-                    <string>&amp;Generate Certificate</string>
+                    <string>&amp;Generate Key Pair and Certificate Request</string>
+                </property>
+                <property name="accel">
+                    <string>Alt+G</string>
                 </property>
             </widget>
             <spacer row="3" column="2">
@@ -462,7 +465,7 @@ there.&lt;/p&gt;&lt;qt&gt;</string>
             <cstring>finishPage</cstring>
         </property>
         <attribute name="title">
-            <string>Your Certificate Is Ready To Be Sent</string>
+            <string>Your Certificate Request Is Ready To Be Sent</string>
         </attribute>
         <vbox>
             <property name="name">
@@ -480,9 +483,9 @@ there.&lt;/p&gt;&lt;qt&gt;</string>
                 </property>
                 <property name="text">
                     <string>&lt;qt&gt;
-Your signature key pair is now ready to be sent to the CA (certification authority) which will generate a certificate for you and send it back via email (unless you have selected storage in a file). Please review the certificate shown below.
+Your key pair has now been created and stored locally. The corresponding certificate request is now ready to be sent to the CA (certification authority) which will generate a certificate for you and send it back via email (unless you have selected storage in a file). Please review the certificate details shown below.
 &lt;p&gt;
-If you want to change anything, press Back and make your changes; otherwise, press Finish to send the signature key pair to the CA.
+If you want to change anything, press Back and make your changes; otherwise, press Finish to send the certificate request to the CA.
 &lt;/qt&gt;</string>
                 </property>
                 <property name="alignment">
