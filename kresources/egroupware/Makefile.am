@@ -28,7 +28,6 @@ libknotes_xmlrpc_la_SOURCES = knotes_resourcexmlrpc.cpp knotes_resourcexmlrpccon
 libknotes_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libknotes_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la -lkdeprint \
                              $(top_builddir)/knotes/libknotesresources.la \
-                             $(top_builddir)/knotes/libknotesconfig.la \
 									  $(top_builddir)/libkdepim/libkdepim.la
 
 kabcincludedir = $(includedir)/kabc

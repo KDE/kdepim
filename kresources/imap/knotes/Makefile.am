@@ -12,7 +12,6 @@ libknotes_imap_la_LDFLAGS = $(all_libraries)
 libknotes_imap_la_LIBADD = -lkresources -lkdeprint \
 	$(top_builddir)/kresources/imap/shared/libresourceimapshared.la \
 	$(top_builddir)/knotes/libknotesresources.la \
-	$(top_builddir)/knotes/libknotesconfig.la \
 	$(top_builddir)/libkcal/libkcal.la
 
 kde_module_LTLIBRARIES = knotes_imap.la
