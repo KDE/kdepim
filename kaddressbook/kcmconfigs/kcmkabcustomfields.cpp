@@ -255,6 +255,17 @@ void KCMKabCustomFields::initGUI()
   QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(),
                                          KDialog::spacingHint() );
 
+  bool noDesigner = KStandardDirs::findExe("designer").isEmpty();
+
+  if ( noDesigner ) 
+  {
+    QString txt =
+      i18n("<qt><b>Warning:</b> Qt Designer could not be found. It is probably not "
+         "installed. You will only be able to import existing designer files!</qt>");
+    QLabel *lbl = new QLabel( txt, this );
+    layout->addWidget( lbl );
+  }
+
   QHBoxLayout *hbox = new QHBoxLayout( layout, KDialog::spacingHint() );
 
   mPageView = new KListView( this );
@@ -303,12 +314,13 @@ void KCMKabCustomFields::initGUI()
 
   hbox->addStretch( 1 );
 
-  mImportButton = new QPushButton( i18n( "Import Page" ), this);
-  hbox->addWidget( mImportButton );
   mDeleteButton = new QPushButton( i18n( "Delete Page" ), this);
   hbox->addWidget( mDeleteButton );
+  mImportButton = new QPushButton( i18n( "Import Page" ), this);
+  hbox->addWidget( mImportButton );
   mDesignerButton = new QPushButton( i18n( "Edit with Qt Designer..." ), this );
   hbox->addWidget( mDesignerButton );
+  if ( noDesigner ) mDesignerButton->setEnabled( false );
 }
 
 void KCMKabCustomFields::updatePreview( QListViewItem *item )
