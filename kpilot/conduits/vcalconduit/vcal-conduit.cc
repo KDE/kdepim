@@ -236,7 +236,8 @@ KCal::Event *VCalConduit::incidenceFromRecord(KCal::Event *e, const PilotDateEnt
 		return NULL;
 	}
 
-	e->setOrganizer(fCalendar->getEmail());
+   // We don't want this, do we?
+//	e->setOrganizer(fCalendar->getEmail());
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 	e->setSecrecy(de->isSecret() ?
 		KCal::Event::SecrecyPrivate :

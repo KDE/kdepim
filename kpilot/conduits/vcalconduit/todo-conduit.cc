@@ -393,7 +393,8 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 		return NULL;
 	}
 
-	e->setOrganizer(fCalendar->getEmail());
+   // We don't want this, do we?
+//	e->setOrganizer(fCalendar->getEmail());
 	e->setPilotId(de->getID());
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 	e->setSecrecy(de->isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic);
