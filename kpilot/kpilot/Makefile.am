@@ -50,6 +50,7 @@ kpilot_SOURCES	= \
 	fileInstaller.cc fileInstallWidget.cc \
 	listItems.cc \
 	kroupware.cc
+kpilot_COMPILE_FIRST = kpilotSettings.h
 
 
 kpilotDaemon_SOURCES = \
