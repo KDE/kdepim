@@ -61,8 +61,8 @@ KMailICalIfaceImpl::KMailICalIfaceImpl()
 }
 
 // Receive an iCal or vCard from the resource
-bool KMailICalIfaceImpl::addIncidence( const QString& type, 
-                                       const QString& uid, 
+bool KMailICalIfaceImpl::addIncidence( const QString& type,
+                                       const QString& uid,
                                        const QString& ical )
 {
   if( !mUseResourceIMAP )
@@ -93,7 +93,7 @@ bool KMailICalIfaceImpl::addIncidence( const QString& type,
 
     // Mark the message as read and store it in the folder
     msg->touch();
-    folder->addMsg( msg );  
+    folder->addMsg( msg );
 
     rc = true;
   } else
@@ -482,15 +482,15 @@ void KMailICalIfaceImpl::readConfig()
   // Make sure the folder parent has the subdirs
   bool makeSubFolders = false;
   KMFolderNode* node;
-  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Calendar ) );
+  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Calendar, folderLanguage ) );
   if( !node || node->isDir() ) makeSubFolders = true;
-  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Tasks ) );
+  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Tasks, folderLanguage ) );
   if( !node || node->isDir() ) makeSubFolders = true;
-  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Journals ) );
+  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Journals, folderLanguage ) );
   if( !node || node->isDir() ) makeSubFolders = true;
-  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Contacts ) );
+  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Contacts, folderLanguage ) );
   if( !node || node->isDir() ) makeSubFolders = true;
-  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Notes ) );
+  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Notes, folderLanguage ) );
   if( !node || node->isDir() ) makeSubFolders = true;
   if( makeSubFolders ) {
     // Not all subfolders were there, so ask if we can make them
