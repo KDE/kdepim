@@ -109,8 +109,8 @@ void KNDialogListBox::keyPressEvent(QKeyEvent *e)
 KNProgress::KNProgress (int desiredHeight, int maxValue, int value, QWidget *parent, const char *name)
  : KProgress(parent, name), desHeight(desiredHeight)
 {
-  setTotalSteps(maxValue);
-  setProgress(value);
+  setRange(0, maxValue);
+  setValue(value);
   setFixedWidth(110);
   setFrameStyle(QFrame::Box | QFrame::Raised);
   setLineWidth(1);
@@ -127,7 +127,7 @@ KNProgress::~KNProgress()
 void KNProgress::disableProgressBar()
 {
   setFormat(QString::null);
-  setProgress(0);
+  setValue(0);
   repaint(false);
 }
 
@@ -137,10 +137,10 @@ void KNProgress::setProgressBar(int value,const QString& text)
 {
   setFormat(text);
   if (value>1000) {
-    setProgress(1000);
+    setValue(1000);
     update();       // circumvent the optimization of setValue
   } else
-    setProgress(value);
+    setValue(value);
 }
 
 
