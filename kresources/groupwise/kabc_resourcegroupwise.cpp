@@ -149,7 +149,8 @@ bool ResourceGroupwise::asyncLoad()
 
 #if 1
   KURL url( prefs()->url() );
-  url.setProtocol( "groupwise" );
+  if ( url.protocol() == "http" ) url.setProtocol( "groupwise" );
+  else url.setProtocol( "groupwises" );
   url.setPath( "/addressbook/" );
   url.setUser( prefs()->user() );
   url.setPass( prefs()->password() );
