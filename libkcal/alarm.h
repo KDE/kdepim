@@ -194,9 +194,10 @@ class Alarm : public CustomProperties
     bool hasEndOffset() const;
 
     /** Set the interval between snoozes for the alarm.
-        @param snoozeTime the time in minutes between snoozes.
+        @param alarmSnoozeTime the time in minutes between snoozes.
      */
     void setSnoozeTime(int alarmSnoozeTime);
+
     /** Get how long the alarm snooze interval is.
         @return the number of minutes between snoozes.
      */
