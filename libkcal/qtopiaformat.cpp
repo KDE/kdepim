@@ -187,7 +187,7 @@ bool QtopiaFormat::load( Calendar *calendar, const QString &fileName)
 
   QtopiaParser handler( calendar );
   QFile xmlFile( fileName );
-  QXmlInputSource source( &xmlFile );
+  QXmlInputSource source( xmlFile );
   QXmlSimpleReader reader;
   reader.setContentHandler( &handler );
   return reader.parse( source );
