@@ -1,5 +1,6 @@
 [Desktop Entry]
-Name=TNEF File Viewer
+Name=KTnef
+GenericName=TNEF File Viewer
 Name[bg]=Преглед на файлове TNEF
 Name[bs]=Preglednik TNEF datoteka
 Name[ca]=Visor fitxer TNEF
@@ -32,7 +33,7 @@ Name[sr@Latn]=Prikazivač TNEF fajlova
 Name[sv]=TNEF-filvisning
 Name[ta]=TNEF  கோப்பை காட்சியகம்
 Name[tg]=Намоиши файлҳои TNEF
-Name[tr]=TNEF Dosya Gösterici
+Name[tr]=TNEF Dosya Göstericisi
 Name[uk]=Переглядач файлів TNEF
 Name[xx]=xxTNEF File Viewerxx
 Name[zh_CN]=TNEF 文件查看器
