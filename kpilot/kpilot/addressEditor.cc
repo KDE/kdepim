@@ -194,7 +194,7 @@ void AddressEditor::initLayout()
 	MakeField(i18n("Last name:"), fLastNameField, 0, 0);
 	MakeField(i18n("First name:"), fFirstNameField, 1, 0);
 	MakeField(i18n("Title:"), fTitleField, 2, 0);
-	MakeField(i18n("Compan:"), fCompanyField, 3, 0);
+	MakeField(i18n("Company:"), fCompanyField, 3, 0);
 
 	for (int i = 0; i < 5; i++)
 	{
