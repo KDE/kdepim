@@ -1,5 +1,9 @@
 KAlarm
 
+=== Version 0.8.5 (KDE 3.1.1) --- 8 Jan 2003 ===
+Fix monthly and yearly recurrences on nth Monday etc. of the month.
+Fix yearly recurrences on February 29th.
+
 === Version 0.8.4 (KDE 3.1) --- 30 Nov 2002 ===
 Make KAlarm icon in message window bring main window to current desktop.
 Fix detection of KDE desktop.
