@@ -79,7 +79,10 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
     void mailToClicked(KNArticleWidget *aw);        
     
     bool closeComposeWindows();    // try to close all composers, return false if user objects
-    
+    void deleteComposersForFolder(KNFolder *folder);
+    KNComposer* findComposer(KNSavedArticle *art);
+    void deleteComposerForArticle(KNSavedArticle *art);
+
   protected:
     KNSavedArticle* newArticle(KNNntpAccount *acc=0);
     KNNntpAccount* getAccount(KNSavedArticle *a);

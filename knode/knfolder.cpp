@@ -24,6 +24,7 @@
 #include <kdebug.h>
 
 #include "knaccountmanager.h"
+#include "knsavedarticlemanager.h"
 #include "knnntpaccount.h"
 #include "knsavedarticle.h"
 #include "knstringsplitter.h"
@@ -366,6 +367,7 @@ void KNFolder::removeArticle(KNSavedArticle *a)
   int idx=findId(a->id());
   
   if(idx!=-1 && at(idx)==a) {
+    knGlobals.sArtManager->deleteComposerForArticle(a);
     list[idx]=0;
     compactList();
     c_ount--;

@@ -24,6 +24,7 @@
 #include <kstddirs.h>
 #include <kglobal.h>
 #include <kconfig.h>
+#include <kwin.h>
 
 #include "knappmanager.h"
 #include "knode.h"
@@ -654,6 +655,12 @@ void KNSavedArticleManager::openInComposer(KNSavedArticle *a, bool firstEdit)
       KMessageBox::error(knGlobals.topWidget, i18n("Cannot load the article"));
       return;
     }
+
+  KNComposer *com = findComposer(a);
+  if (com) {
+    KWin::setActiveWindow(com->winId());
+    return;
+  }
   
   KNNntpAccount *acc=getAccount(a);
   KNUserEntry *user = knGlobals.appManager->defaultUser();
@@ -663,7 +670,7 @@ void KNSavedArticleManager::openInComposer(KNSavedArticle *a, bool firstEdit)
       user = g->user();
   }
 
-  KNComposer *com=new KNComposer(a, user->getSignature(), firstEdit, acc);
+  com=new KNComposer(a, user->getSignature(), firstEdit, acc);
   com->show();
   connect(com, SIGNAL(composerDone(KNComposer*)),
     this, SLOT(slotComposerDone(KNComposer*)));
@@ -879,6 +886,38 @@ bool KNSavedArticleManager::closeComposeWindows()
   return true;
 }
 
+
+void KNSavedArticleManager::deleteComposersForFolder(KNFolder *folder)
+{
+  QList<KNComposer> list = (*comList);
+
+  for (KNComposer *i=list.first(); i; i=list.next())
+    for (int x=0; x<folder->count(); x++)
+      if (i->article() == folder->at(x)) {
+        comList->removeRef(i);
+        delete i;
+        continue;
+      }
+}
+
+
+KNComposer* KNSavedArticleManager::findComposer(KNSavedArticle *art)
+{
+  for (KNComposer *i=comList->first(); i; i=comList->next())
+    if (i->article() == art)
+      return i;
+  return 0;
+}
+
+
+void KNSavedArticleManager::deleteComposerForArticle(KNSavedArticle *art)
+{
+  KNComposer *com=findComposer(art);
+  if (com) {
+    comList->removeRef(com);
+    delete com;
+  }
+}
 
 
 void KNSavedArticleManager::updateStatusString()

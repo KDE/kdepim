@@ -37,11 +37,14 @@ class KNArticleWindow : public KMainWindow  {
     KNArticleWidget* artWidget()        { return artW; }
 
     virtual QSize sizeHint() const;   // useful default value
+
+    static void closeAllWindowsForCollection(KNArticleCollection *col);
       
   protected:
     KNArticleWidget *artW;
     KAction *actPostReply, *actMailReply, *actForward, *actCancel, *actSupersede;
     KToggleAction *actShowToolbar;
+    static QList<KNArticleWindow> instances;
     
   protected slots:
     void slotArticleLoaded();

@@ -42,6 +42,7 @@
 #include "knglobals.h"
 #include "resource.h"
 #include "utilities.h"
+#include "knarticlewindow.h"
 #include "kngroupmanager.h"
 
 
@@ -337,6 +338,7 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
       dlg->setInfo(var->groupname());
       kapp->processEvents();
     }
+    KNArticleWindow::closeAllWindowsForCollection(var);
     cup.group(var);
     kdDebug() << var->groupname() << " => " << cup.deleted() << " expired , " << cup.left() << " left" << endl;
     if(dlg) dlg->progress();
@@ -418,6 +420,8 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
     return;
   }
 
+  KNArticleWindow::closeAllWindowsForCollection(g);
+
   acc=g->account();
   
   QDir dir(acc->path(),g->groupname()+"*");
@@ -430,7 +434,7 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
         ++it;
       }
     }
-    kdDebug(5003) << "Files deleted!\n" << endl;
+    kdDebug(5003) << "Files deleted!" << endl;
     
     if(c_urrentGroup==g) setCurrentGroup(0);
     
@@ -468,6 +472,9 @@ void KNGroupManager::expireGroupNow(KNGroup *g)
 {
   if(!g) g=c_urrentGroup;
   if(!g) return;
+
+  KNArticleWindow::closeAllWindowsForCollection(g);
+
   KNCleanUp cup;
   cup.group(g, true);
   kdDebug(5003) << "KNExpire: " << g->groupname() << " => " << cup.deleted() << " expired , " << cup.left() << " left" << endl;

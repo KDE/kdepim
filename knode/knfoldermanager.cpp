@@ -36,6 +36,7 @@
 #include "knpurgeprogressdialog.h"
 #include "knsavedarticlemanager.h"
 #include "utilities.h"
+#include "knarticlewidget.h"
 #include "knfoldermanager.h"
 
 
@@ -247,9 +248,12 @@ void KNFolderManager::emptyFolder(KNFolder *f)
   if(!f) f=c_urrentFolder;
   if(!f) return;
   if(KMessageBox::questionYesNo(knGlobals.topWidget,i18n("Really empty this folder?"))==KMessageBox::Yes) {
+    aManager->deleteComposersForFolder(f);
     f->deleteAll();
-    if(f==c_urrentFolder)
+    if(f==c_urrentFolder) {
       aManager->setCurrentArticle(0);
+      KNArticleWidget::mainWidget()->showBlankPage();
+    }
   }   
 }
 

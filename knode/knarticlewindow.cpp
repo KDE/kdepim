@@ -31,10 +31,25 @@
 #include "knode.h"
 #include "knarticlewindow.h"
 
+QList<KNArticleWindow> KNArticleWindow::instances;
+
+
+void KNArticleWindow::closeAllWindowsForCollection(KNArticleCollection *col)
+{
+  QList<KNArticleWindow> list=instances;
+  for(KNArticleWindow *i=list.first(); i; i=list.next())
+    if(i->artW->collection()==col)
+      i->close();
+}
+
+
+//==================================================================================
 
 KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col)
   : KMainWindow(0, "articleWindow")
 {
+  instances.append(this);
+
   if(art)
     setCaption(art->subject());
   //setIcon(UserIcon("posting"));
@@ -85,6 +100,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col)
 
 KNArticleWindow::~KNArticleWindow()
 {
+  instances.removeRef(this);
 }
 
 
@@ -179,10 +195,7 @@ void KNArticleWindow::slotConfToolbar()
 {
   KEditToolbar *dlg = new KEditToolbar(guiFactory(),this);
   if (dlg->exec()) {
-    //guiFactory()->removeClient(artW->part());
-    createGUI("knreaderui.rc",false);
-    //guiFactory()->addClient(artW->part());
-    conserveMemory();
+    createGUI("knreaderui.rc");
   }
   delete dlg;
 }
