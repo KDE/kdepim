@@ -105,6 +105,7 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns
 void Kleo::QGpgMESecretKeyExportJob::slotCancel() {
   if ( mProcess )
     mProcess->kill();
+  mProcess = 0;
   mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_CANCELED );
 }
 
