@@ -127,7 +127,7 @@ inline std::ostream& operator <<(std::ostream &o, const QCString &s) { return (o
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.4.3 (Wien)"
+#define KPILOT_VERSION	"4.4.4 (Wolfsburg)"
 
 // * KPilot debugging code looks like:
 //
