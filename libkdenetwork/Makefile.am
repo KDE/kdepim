@@ -42,9 +42,6 @@ libkdenetwork_la_SOURCES = kscoring.cpp \
 			  kmime_message.cpp \
 			  kmime_newsarticle.cpp \
 			  \
-			  cryptplugwrapper.cpp \
-			  cryptplugwrapperlist.cpp \
-			  \
 			  kfoldertree.cpp \
 			  ksubscription.cpp \
 			  kaccount.cpp \

@@ -85,6 +85,6 @@ KDEPIM_PATH_GPGME(0.4.4,[
 	AC_DEFINE(HAVE_GPGME_H, 1, [Define to 1 if you have gpgme >= 0.4.4])
 	AC_DEFINE(HAVE_GPGME_0_4_BRANCH, 1, [Define to 1 if you have gpgme >= 0.4.4])
 ],[
-	DO_NOT_COMPILE="$DO_NOT_COMPILE certmanager"
+	DO_NOT_COMPILE="$DO_NOT_COMPILE certmanager kmail"
 ])
 AM_CONDITIONAL(have_gpgme, test "x$GPGME_LIBS" != "x")
