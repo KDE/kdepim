@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
   aboutData.addAuthor(
       "Allen Winter",                  // developer's name
       I18N_NOOP("Author"),             // task or role
-      "winterz@earthlink.net",         // email address
+      "awinterz@users.sourceforge.net",// email address
       0                                // home page or relevant link
       );
 
