@@ -4,6 +4,8 @@
 // I have noticed that this is full of memory leaks, but since it is
 // short lived, it shouldn't matter so much. -- PGB
 
+#include "options.h"
+
 #include <sys/types.h>
 #include <signal.h>
 #include <iostream.h>
@@ -28,7 +30,6 @@
 #include "todo-setup.h"
 #include "conduitApp.h"
 
-#include "options.h"
 
 // globals
 bool first = TRUE;
@@ -72,12 +73,11 @@ void TodoConduit::getCalendar()
 {
 	FUNCTIONSETUP;
 
-	KConfig* config = KPilotLink::getConfig(TodoSetup::TodoGroup);
+	KConfig& config = KPilotLink::getConfig(TodoSetup::TodoGroup);
 
-	calName = config->readEntry("CalFile");
-	first = config->readBoolEntry("FirstTime", TRUE);
+	calName = config.readEntry("CalFile");
+	first = config.readBoolEntry("FirstTime", TRUE);
 
-	delete config;
 
 	if ((getMode() == BaseConduit::HotSync) || 
 		(getMode() == BaseConduit::Backup)) 
@@ -327,8 +327,8 @@ void TodoConduit::saveTodo()
 {
 	FUNCTIONSETUP;
 
-	KConfig* config = KPilotLink::getConfig(TodoSetup::TodoGroup);
-	QString calName = config->readEntry("CalFile");
+	KConfig& config = KPilotLink::getConfig(TodoSetup::TodoGroup);
+	QString calName = config.readEntry("CalFile");
 
 	if (fCalendar)
 	{

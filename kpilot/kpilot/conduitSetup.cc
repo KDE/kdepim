@@ -18,6 +18,7 @@
 //
 //		Remaining questions are marked with QADE.
 
+#include "options.h"
 
 
 #include <stdio.h>
@@ -43,7 +44,6 @@
 #include "conduitSetup.moc"
 
 #include "kpilot.h"
-#include "options.h"
 
 static const char *id="$Id$";
 
@@ -128,12 +128,11 @@ void
 CConduitSetup::fillLists()
 {
 	FUNCTIONSETUP;
-	KConfig* config = KPilotLink::getConfig("Conduit Names");
+	KConfig& config = KPilotLink::getConfig("Conduit Names");
 	QStringList potentiallyInstalled;
 	fInstalledConduitNames.clear();
 	fAvailableConduitNames.clear();
-	potentiallyInstalled = config->readListEntry("InstalledConduits");
-	delete config;
+	potentiallyInstalled = config.readListEntry("InstalledConduits");
 
 	KServiceTypeProfile::OfferList offers = 
 		KServiceTypeProfile::offers("KPilotConduit");
@@ -280,9 +279,9 @@ CConduitSetup::slotOk()
   // for the database should be run or not.
   //
   //
-  KConfig* config = KPilotLink::getConfig("Conduit Names");
-  config->writeEntry("InstalledConduits", fInstalledConduitNames);
-  config->setGroup("Database Names");
+  KConfig& config = KPilotLink::getConfig("Conduit Names");
+  config.writeEntry("InstalledConduits", fInstalledConduitNames);
+  config.setGroup("Database Names");
 
 	uint i=0;
 	for (i=0; i<fInstalledConduits->count(); i++)
@@ -369,12 +368,11 @@ CConduitSetup::slotOk()
 
 			for (i=l.begin(); i!=l.end(); ++i)
 			{
-				config->writeEntry((*i).stripWhiteSpace(),m);
+				config.writeEntry((*i).stripWhiteSpace(),m);
 			}
 		}
 	}
-	config->sync();
-	delete config;
+	config.sync();
 	slotCancel();
 }
 

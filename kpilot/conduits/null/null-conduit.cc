@@ -99,17 +99,15 @@ NullConduit::doSync()
 {
 	FUNCTIONSETUP;
 
-	KConfig* config = KPilotLink::getConfig();
-	config->setGroup(NullOptions::NullGroup);
+	KConfig& config = KPilotLink::getConfig();
+	config.setGroup(NullOptions::NullGroup);
 
-	QString m=config->readEntry("Text");
+	QString m=config.readEntry("Text");
 	addSyncLogMessage(m.latin1());
 
 	kdDebug() << fname << ": Message from null-conduit:\n"
 		<< fname << ": " << m
 		<< endl;
-
-	delete config;
 }
 
 // aboutAndSetup is pretty much the same
@@ -127,9 +125,9 @@ NullConduit::aboutAndSetup()
 const char *
 NullConduit::dbInfo()
 {
-	KConfig *config = KPilotLink::getConfig(NullOptions::NullGroup);
+	KConfig& config = KPilotLink::getConfig(NullOptions::NullGroup);
 
-	QString m = config->readEntry("DB");
+	QString m = config.readEntry("DB");
 	if (m.isNull())
 	{
 		return "";
@@ -142,6 +140,9 @@ NullConduit::dbInfo()
 
 
 // $Log$
+// Revision 1.9  2000/11/02 23:10:32  adridg
+// Added attach-to-database feature
+//
 // Revision 1.8  2000/09/27 18:41:21  adridg
 // Added author info and new QT layout code.
 //

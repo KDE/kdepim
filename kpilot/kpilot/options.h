@@ -24,7 +24,7 @@
 #if (QT_VERSION > 199)
 #define KDE2
 #else
-#undef KDE2
+#error "This is KPilot for KDE2"
 #endif
 
 #ifdef KDE2

@@ -32,7 +32,7 @@
 // the modules are that make up a binary distribution.
 //
 //
-static char *id="$Id$";
+static const char *id="$Id$";
 
 
 
@@ -42,7 +42,7 @@ NullOptions::NullOptions(QWidget *parent) :
 	setupDialog(parent, NullGroup,0L)
 {
 	FUNCTIONSETUP;
-	KConfig *config=KPilotLink::getConfig(NullGroup);
+	KConfig& config=KPilotLink::getConfig(NullGroup);
 
 	addPage(new NullPage(this,config));
 	/*
@@ -56,12 +56,10 @@ NullOptions::NullOptions(QWidget *parent) :
 	 */
 	addPage(new setupInfoPage(this));
 	setupDialog::setupWidget();
-
-	delete config;
 }
 
   
-int NullPage::commitChanges(KConfig *config)
+int NullPage::commitChanges(KConfig& config)
 {
 	FUNCTIONSETUP;
 
@@ -70,14 +68,14 @@ int NullPage::commitChanges(KConfig *config)
 		kdDebug() << fname << ": Wrote null-conduit message:\n" <<
 			fname << ": " << textField->text() << endl;
 	}
-	config->writeEntry("Text", textField->text());
+	config.writeEntry("Text", textField->text());
 
 	return 0;
 }
 
 
-NullPage::NullPage(setupDialog *parent, KConfig *config) :
-	setupDialogPage(i18n("Null Conduit"),parent,config)
+NullPage::NullPage(setupDialog *parent, KConfig& config) :
+	setupDialogPage(i18n("Null Conduit"),parent)
 {
 	FUNCTIONSETUP;
 	QGridLayout *grid=new QGridLayout(this,4,4,0,SPACING);
@@ -98,7 +96,7 @@ NullPage::NullPage(setupDialog *parent, KConfig *config) :
 	textFieldLabel->adjustSize();
 
 	textField=new QLineEdit(this);
-	textField->setText(config->readEntry("Text","NULL conduit was here!"));
+	textField->setText(config.readEntry("Text","NULL conduit was here!"));
 	textField->adjustSize();
 
 	grid->addWidget(textFieldLabel,2,1);
@@ -107,7 +105,7 @@ NullPage::NullPage(setupDialog *parent, KConfig *config) :
 	dbLabel=new QLabel(i18n("Databases:"),this);
 	dbLabel->adjustSize();
 	dbField=new QLineEdit(this);
-	dbField->setText(config->readEntry("DB"));
+	dbField->setText(config.readEntry("DB"));
 
 	grid->addWidget(dbLabel,3,1);
 	grid->addWidget(dbField,3,2);
@@ -117,6 +115,9 @@ NullPage::NullPage(setupDialog *parent, KConfig *config) :
 
 
 // $Log$
+// Revision 1.9  2000/11/02 23:10:32  adridg
+// Added attach-to-database feature
+//
 // Revision 1.8  2000/09/27 18:41:21  adridg
 // Added author info and new QT layout code.
 //

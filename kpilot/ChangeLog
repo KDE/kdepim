@@ -8,6 +8,7 @@ Lots of things have changed in the class hierarchy.
   places. Moved findSelectedCategory() to PilotComponent. Added some
   other convenience functions there for the category combo box.
 
+* The getConfig() change was very poorly done, sorry about that.
 
 Developer's notes for november 9th 2000
 =======================================

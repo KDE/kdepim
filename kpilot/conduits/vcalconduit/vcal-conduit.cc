@@ -6,6 +6,8 @@
 
 // $Revision$
 
+#include "options.h"
+
 #include <sys/types.h>
 #include <signal.h>
 #include <iostream.h>
@@ -19,7 +21,6 @@
 #include <qmsgbox.h>
 
 #include <kconfig.h>
-/* #include <kapp.h> */
 #include <kdebug.h>
 
 #include "kpilotlink.h"
@@ -94,10 +95,10 @@ void VCalConduit::getCalendar()
 		return;
 	}
 
-	KConfig* config = KPilotLink::getConfig(VCalSetup::VCalGroup);
+	KConfig& config = KPilotLink::getConfig(VCalSetup::VCalGroup);
 	(void) getDebugLevel(config);
-	QString calName = config->readEntry("CalFile");
-	first = config->readBoolEntry("FirstTime", TRUE);
+	QString calName = config.readEntry("CalFile");
+	first = config.readBoolEntry("FirstTime", TRUE);
 
 	if (debug_level & SYNC_TEDIOUS)
 	{
@@ -596,8 +597,8 @@ void VCalConduit::saveVCal()
 {
 	FUNCTIONSETUP;
 
-	KConfig* config = KPilotLink::getConfig(VCalSetup::VCalGroup);
-	QString calName = config->readEntry("CalFile");
+	KConfig& config = KPilotLink::getConfig(VCalSetup::VCalGroup);
+	QString calName = config.readEntry("CalFile");
 	if (fCalendar)
 	{
 		writeVObjectToFile((char*)calName.latin1(), fCalendar);  
@@ -638,10 +639,8 @@ void VCalConduit::doLocalSync()
 		// We need one of KPilot's global 
 		// settings.
 		//
-		KConfig *config=KPilotLink::getConfig();
-		config->setGroup(0L);
-		LocalOverridesPilot=config->readNumEntry("OverwriteRemote",0);
-		delete config;
+		KConfig& config=KPilotLink::getConfig();
+		LocalOverridesPilot=config.readNumEntry("OverwriteRemote",0);
 	}
 
 	if (debug_level & SYNC_MAJOR)

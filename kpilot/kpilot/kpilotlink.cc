@@ -1500,14 +1500,19 @@ void KPilotLink::checkPilotUser()
 }
 
 
-static KConfig* theconfig = 0L;
+static KConfig *theconfig = 0L;
 KConfig& KPilotLink::getConfig(const QString &s)
 {
 	FUNCTIONSETUP;
 
 	if (theconfig)
 	{
-		theconfig->setGroup(s);
+		kdDebug() << fname
+			<< ": Config exists @"
+			<< (int)(theconfig)
+			<< endl;
+
+		// theconfig->setGroup(s);
 		return *theconfig;
 	}
 
@@ -1536,6 +1541,11 @@ KConfig& KPilotLink::getConfig(const QString &s)
 		theconfig=new KConfig(existingConfig,false,false);
 	}
 
+	kdDebug() << fname
+		<< ": Created config @"
+		<< (int)(theconfig)
+		<< endl;
+
 	if (theconfig == 0L)
 	{
 		kdDebug() << fname << ": No configuration was found."
@@ -1552,4 +1562,7 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
   return new PilotLocalDatabase(pathName.latin1(), database.latin1());
 }
 
-// $Log:$
+// $Log$
+// Revision 1.16  2000/11/10 13:22:00  adridg
+// Failed to catch all the changed getConfig() calls
+//

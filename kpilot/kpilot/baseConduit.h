@@ -141,7 +141,7 @@ protected:
 	*
 	* @ret resulting debug level
 	*/
-	int getDebugLevel(KConfig *);
+	int getDebugLevel(KConfig&);
 
 private:
   /**

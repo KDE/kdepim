@@ -28,8 +28,10 @@ class KProcess;
 class PilotRecord;
 class MessageDialog;
 
+class PilotSerialDatabase;
+class PilotLocalDatabase;
+
 #include "pilotUser.h"
-// #include "pi-file.h"
 #include "pilotDatabase.h"
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
@@ -194,8 +196,6 @@ public:
 	*/
 #ifdef KDE2
 	static KConfig& getConfig(const QString &group=QString::null);
-#else
-	static KConfig *getConfig(const QString &group=QString());
 #endif
 	/**
 	* Reads the configuration version from a standard location.

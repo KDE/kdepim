@@ -30,9 +30,9 @@ class NullPage : public setupDialogPage
 	Q_OBJECT
 
 public:
-	NullPage(setupDialog *,KConfig *);
+	NullPage(setupDialog *,KConfig&);
 
-	virtual int commitChanges(KConfig *);
+	virtual int commitChanges(KConfig&);
 
 private:
 	QLabel *textFieldLabel;

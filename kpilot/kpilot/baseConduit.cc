@@ -286,9 +286,9 @@ BaseConduit::getRecord(KSocket* in)
 }
 
 
-int BaseConduit::getDebugLevel(KConfig *c)
+int BaseConduit::getDebugLevel(KConfig& c)
 {
-	int d=c->readNumEntry("Debug",0);
+	int d=c.readNumEntry("Debug",0);
 	debug_level |= d;
 	return debug_level ;
 }
