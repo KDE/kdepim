@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "&kpilot;">
-  <!ENTITY kpilotver "4.4.0">
+  <!ENTITY kpilotver "4.4.2">
   <!ENTITY package "kdepim">
   <!ENTITY USB "<acronym>USB</acronym>">
   <!ENTITY Sony '<trademark class="registered">Sony</trademark>'>
@@ -58,12 +58,13 @@
 <year>2001</year>
 <year>2002</year>
 <year>2003</year>
+<year>2004</year>
 <holder>Adriaan de Groot</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2003-07-05</date>
+<date>2004-03-13</date>
 <releaseinfo>&kpilotver;</releaseinfo>
 
 <abstract>
@@ -117,8 +118,8 @@ also offers useful information on the subject of
 <acronym>PIM</acronym>
 in general.
 &kpilot; shares the
-kde-pim mailing list,
-<email>kde-pim@kde.org</email>.
+kdepim-users mailing list,
+<email>kdepim-users@kde.org</email>.
 See
 <ulink url="http://lists.kde.org/">
 the mailing lists page</ulink>
@@ -127,13 +128,11 @@ for more information on subscribing and unsubscribing from the list.
 
 <para>
 A word about version numbers:
-&kpilot; 4.4.0 is current and unstable as of July 2003.
-It works with both &kde; 3.0 and &kde; 3.1,
-though its functionality may be limited with &kde; 3.0.
-Some conduits have been updated to required &kde; 3.2,
-and these conduits will not be installed under older &kde; versions.
+&kpilot; 4.4.x is current and still unstable as of March 2004.
+It works with &kde; 3.2 only.
 </para>
 
+<!-- TODO -->
 <warning>
 <para>
 This document still reflects &kpilot; version 4.2.2.
@@ -144,123 +143,6 @@ Updated documentation will be released after the &kde; 3.0 release.
 
 
 
-<sect1 id="kpilot-revhistory">
-<title>&kpilot; Revision History</title>
-
-<itemizedlist>
-<listitem>
-<para>
-New in 4.4.0 - The configuration dialogs for both conduits and
-&kpilot;'s general settings have been rearranged again.
-Conduits have been renamed. The popmail and expenses conduits
-have been removed, since they just weren't working.
-For users of &kpilot; 4.3.x versions, both Kroupware syncing
-and file installation have been moved into the conduit configuration.
-A dialog will open up warning you of the transition.
-</para>
-</listitem>
-
-<listitem>
-<para>New in 4.3.0 -
-a new architecture, USB support, and possibly a VCal (&korganizer;)
-conduit that isn't dead slow.
-</para>
-</listitem>
-
-<listitem>
-<para>
-New in 4.2.2 -
-Many compilation and portability fixes were applied.
-Those changes do not affect the visible appearance of &kpilot;.
-What <emphasis>has</emphasis> changed is the GUI.
-We now use the KDE 2 XML GUI.
-This means that menu names have changed <emphasis>again</emphasis>
-but we feel it should be obvious where things have ended up.
-This has the advantage that you can now easily customize the toolbar
-and that the &kpilot; user interface behaves more like the rest of KDE 2.
-Tool tips (also called balloon help) have finally been added.
-</para>
-</listitem>
-
-<listitem>
-<para>
-New in 4.0.0 -
-&kpilot; is now a KDE 2 application.
-A lot of work has gone into making the main
-&kpilot; application compatible with the new KDE 2 standards.
-The stability of the program as a whole has improved as well,
-with lots of bugfixes under the hood.
-</para>
-
-</listitem>
-<listitem>
-<para>
-New in 3.2.1 -
-more bugfixes. &kpilot; 3.2.1 is also
-the last version of &kpilot; for KDE 1.
-Development on the 3.x series has stopped.
-</para>
-</listitem>
-<listitem>
-<para>
-New in 3.2.0 -
-&kpilot; has been polished sufficiently for
-a new public release.
-The infamous application-category bug has been
-squashed along with other bugs.
-</para>
-</listitem>
-<listitem>
-<para>
-New in 3.1.14 -
-New configuration options
-<link linkend="dbspecial">Backup Only:</link>
-and
-<link linkend="dbspecial">Skip</link>
-have been added
-to avoid database corruption for some Handbase databases &mdash;
-and possibly other products as well.
-</para>
-</listitem>
-
-<listitem>
-<para>
-New in 3.1.13 -
-You can now HotSync - experimentally - with &UNIX; style mailboxes.
-The popmail conduit will read a standard mailbox and copy it to the &PalmPilot;.
-</para>
-</listitem>
-
-<listitem>
-<para>
-New in 3.1.12 -
-This release of &kpilot; has only been tested with KDE 1.0, 1.1 and
-1.1.1. Previous versions of KDE are no longer supported.
-&kpilot; 3.1.12 has a number of new features compared to 3.1b9.
-It also includes a large number of bug fixes.
-The most important feature is that
-&kpilot;
-	now supports debugging output.
-</para>
-</listitem>
-
-<listitem>
-<para>
-New in 3.1.9 -
-This is the fourth release of &kpilot;.  The major change in this
-release is conduit support.  There are currently two included conduits, a
-&korganizer; conduit (vcal syncing) and a PopMail conduit (this fixes the
-email bug with &kpilot; 2.1).  Also fixed in this release is the
-Address/Memo <quote>off by one</quote> bug.
-This release <emphasis>requires</emphasis> KDE Beta 4 or
-better.
-</para>
-</listitem>
-
-</itemizedlist>
-
-
-</sect1>
 
 
 <sect1 id="trademarks">
@@ -294,7 +176,7 @@ After that you can use &kpilot;
 to synchronize your &PalmPilot; with
 your &kde; desktop or view
 data from your &PalmPilot; with the
-<link linkend="builtin">builtin applications</link>.
+<link linkend="builtin">builtin viewers</link>.
 </para>
 
 <sect1 id="configuring-kpilot">
