@@ -1399,7 +1399,7 @@ option.
 (ham) you should check the <guilabel>Classify messages manually as spam</guilabel> 
 option: note that you can seemingly achieve the same 
 result when you only change the status of the appropriate messages;
-but, if any of the tools you selected support bayesian filtering 
+but, if any of the tools you selected support Bayesian filtering 
 (&ie; a method to detect spam based on statistical analysis of the 
 messages) then these messages are not only marked but additionally 
 transfered to the tools to let them learn so they can improve their
@@ -1442,7 +1442,7 @@ be applied on incoming messages and on manual filtering.
 <para>Two filters are needed for the classification of ham and spam. They 
 contain actions to mark the messages appropriately. As mentioned above, the filter 
 for classification as spam has another action to move the message into a 
-predefined folder. If the selected tools support bayesian filtering, 
+predefined folder. If the selected tools support Bayesian filtering, 
 the wizard will create additional filter actions to pass the messages to the 
 tools (<guilabel>execute command</guilabel> actions) in the 
 appropriate learn mode.
