@@ -367,7 +367,8 @@ Alarm::List CalendarResources::alarmsTo( const QDateTime &to )
 
 Alarm::List CalendarResources::alarms( const QDateTime &from, const QDateTime &to )
 {
-  kdDebug(5800) << "CalendarResources::alarms(" << from.toString() << " - " << to.toString() << ")\n";
+//  kdDebug(5800) << "CalendarResources::alarms(" << from.toString() << " - "
+//                << to.toString() << ")" << endl;
 
   Alarm::List result;
   CalendarResourceManager::ActiveIterator it;

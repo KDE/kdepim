@@ -195,8 +195,8 @@ Alarm::List CalendarLocal::alarmsTo( const QDateTime &to )
 
 Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
 {
-  kdDebug(5800) << "CalendarLocal::alarms(" << from.toString() << " - "
-                << to.toString() << ")\n";
+//  kdDebug(5800) << "CalendarLocal::alarms(" << from.toString() << " - "
+//                << to.toString() << ")" << endl;
 
   Alarm::List alarms;
 
