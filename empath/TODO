@@ -23,6 +23,8 @@ Highest priority first.
 
 * Implement simple (to one host) SMTP sending.
 
+* Replace all the accel keys stuff once I'm sure it's not going to change.
+
 * Make printing work. HTML view will do it itself, though a little weirdly.
   Will there be a general KDE printing i/f ? Do I make stuff ps first ?
   
