@@ -52,13 +52,23 @@ class Compat
     virtual void fixAlarms( Incidence * ) {}
     virtual void fixFloatingEnd( QDate & ) {}
     virtual bool useTimeZoneShift() { return true; }
+    virtual int fixPriority( int prio ) { return prio; }
 
   private:
     class Private;
     Private *d;
 };
 
-class CompatPre32 : public Compat
+class CompatPre34 : public Compat
+{
+  public:
+    virtual int fixPriority( int prio );
+  private:
+    class Private;
+    Private *d;
+};
+
+class CompatPre32 : public CompatPre34
 {
   public:
     virtual void fixRecurrence( Incidence * );

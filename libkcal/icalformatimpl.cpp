@@ -1588,8 +1588,9 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
       }
 
       case ICAL_PRIORITY_PROPERTY:  // priority
-        intvalue = icalproperty_get_priority(p);
-        incidence->setPriority(intvalue);
+        intvalue = icalproperty_get_priority( p );
+        intvalue = mCompat->fixPriority( intvalue );
+        incidence->setPriority( intvalue );
         break;
 
       case ICAL_CATEGORIES_PROPERTY:  // categories

@@ -60,12 +60,13 @@ Compat *CompatFactory::createCompat( const QString &productId )
         
         if ( versionNum < 30100 ) {
           compat = new CompatPre31;
-        }
-        else if ( versionNum < 30200 ) {
+        } else if ( versionNum < 30200 ) {
           compat = new CompatPre32;
         } else if ( versionNum == 30200 && release == "pre" ) {
           kdDebug(5800) << "Generating compat for KOrganizer 3.2 pre " << endl;
           compat = new Compat32PrereleaseVersions;
+        } else if ( versionNum < 30400 ) {
+          compat = new CompatPre34;
         }
       }
     }
@@ -100,6 +101,14 @@ void Compat::fixRecurrence( Incidence *incidence )
 {
   // Prevent use of compatibility mode during subsequent changes by the application
   incidence->recurrence()->setCompatVersion();
+}
+
+int CompatPre34::fixPriority( int prio )
+{
+  if ( 0<prio && prio<6 ) {
+    // adjust 1->1, 2->3, 3->5, 4->7, 5->9
+    return 2*prio - 1;
+  } else return prio;
 }
 
 void CompatPre32::fixRecurrence( Incidence *incidence )
