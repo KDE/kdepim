@@ -155,40 +155,34 @@ class Calendar {
     /**
       Retrieves an event on the basis of the unique string ID.
     */
-    virtual Event *getEvent( const QString &UniqueStr ) = 0;
+    virtual Event *event( const QString &UniqueStr ) = 0;
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
       The calendar filter is applied.
     */
-    QPtrList<Event> getEventsForDate( const QDate &date, bool sorted = false);
+    QPtrList<Event> events( const QDate &date, bool sorted = false);
     /**
       Get events, which occur on the given date.
       The calendar filter is applied.
     */
-    QPtrList<Event> getEventsForDate( const QDateTime &qdt );
+    QPtrList<Event> events( const QDateTime &qdt );
     /**
       Get events in a range of dates. If inclusive is set to true, only events
       are returned, which are completely included in the range.
       The calendar filter is applied.
     */
-    QPtrList<Event> getEvents( const QDate &start, const QDate &end,
-                               bool inclusive = false);
+    QPtrList<Event> events( const QDate &start, const QDate &end,
+                            bool inclusive = false);
     /**
-      Return all events in calendar
+      Return filtered list of all events in calendar.
     */
-    virtual QPtrList<Event> getAllEvents() = 0;
-  
+    virtual QPtrList<Event> events();
     /**
-      Set calendar filter, which filters events for the getEvents* functions.
-      The Filter object is owned by the caller.
+      Return unfiltered list of all events in calendar.
     */
-    void setFilter( CalFilter * );
-    /**
-      Return calendar filter.
-    */
-    CalFilter *filter();
-      
+    virtual QPtrList<Event> rawEvents() = 0;
+
     /**
       Returns the number of events that are present on the specified date.
     */
@@ -243,6 +237,16 @@ class Calendar {
     void addIncidence( Incidence * );
   
     /**
+      Set calendar filter, which filters events for the events() functions.
+      The Filter object is owned by the caller.
+    */
+    void setFilter( CalFilter * );
+    /**
+      Return calendar filter.
+    */
+    CalFilter *filter();
+      
+    /**
       Return all alarms, which ocur in the given time interval.
     */
     virtual Alarm::List alarms( const QDateTime &from,
@@ -261,12 +265,12 @@ class Calendar {
     /**
       Get unfiltered events, which occur on the given date.
     */
-    virtual QPtrList<Event> rawEventsForDate( const QDate &date,
-                                              bool sorted = false ) = 0;
+    virtual QPtrList<Event> rawEventsForDate( const QDateTime &qdt ) = 0;
     /**
       Get unfiltered events, which occur on the given date.
     */
-    virtual QPtrList<Event> rawEventsForDate( const QDateTime &qdt ) = 0;
+    virtual QPtrList<Event> rawEventsForDate( const QDate &date,
+                                              bool sorted = false ) = 0;  
     /**
       Get events in a range of dates. If inclusive is set to true, only events
       are returned, which are completely included in the range.

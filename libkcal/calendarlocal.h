@@ -63,10 +63,18 @@ class CalendarLocal : public Calendar, public IncidenceBase::Observer
     /** deletes an event from this calendar. */
     void deleteEvent(Event *);
 
-    /** retrieves an event on the basis of the unique string ID. */
-    Event *getEvent(const QString &UniqueStr);
-    /** Return all events in calendar */
-    QPtrList<Event> getAllEvents();
+    /**
+      Retrieves an event on the basis of the unique string ID.
+    */
+    Event *event(const QString &UniqueStr);
+    /**
+      Return filtered list of all events in calendar.
+    */
+//    QPtrList<Event> events();
+    /**
+      Return unfiltered list of all events in calendar.
+    */
+    QPtrList<Event> rawEvents();
 
     /*
       Returns a QString with the text of the holiday (if any) that falls

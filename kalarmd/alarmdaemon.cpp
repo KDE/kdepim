@@ -476,7 +476,7 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
       }
 
       if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY) {
-	Event *event = calendar->getEvent( eventID );
+	Event *event = calendar->event( eventID );
         if (!event) {
 	  Todo *todo = calendar->todo( eventID );
 	  if(!todo) {
@@ -569,7 +569,7 @@ void AlarmDaemon::notifyPendingEvents(const QCString& appname)
       while (cal->getEventPending(eventID))
       {
         notifyEvent(cal, eventID);
-        const Event* event = cal->getEvent(eventID);
+        const Event* event = cal->event(eventID);
         QValueList<QDateTime> alarmtimes;
         checkEventAlarms(*event, alarmtimes);
         cal->setEventHandled(event, alarmtimes);

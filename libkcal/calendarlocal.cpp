@@ -286,9 +286,9 @@ void CalendarLocal::deleteEvent(Event *event)
 }
 
 
-Event *CalendarLocal::getEvent(const QString &uid)
+Event *CalendarLocal::event( const QString &uid )
 {
-  kdDebug(5800) << "CalendarLocal::getEvent(): " << uid << endl;
+  kdDebug(5800) << "CalendarLocal::event(): " << uid << endl;
 
   QPtrList<Event> *eventList;
   QIntDictIterator<QPtrList<Event> > dictIt(*mCalDict);
@@ -626,7 +626,7 @@ QPtrList<Event> CalendarLocal::rawEventsForDate(const QDate &qd, bool sorted)
     return eventList;
   }
 
-  //  kdDebug(5800) << "Sorting getEvents for date\n" << endl;
+  //  kdDebug(5800) << "Sorting events for date\n" << endl;
   // now, we have to sort it based on getDtStart.time()
   QPtrList<Event> eventListSorted;
   for (anEvent = eventList.first(); anEvent; anEvent = eventList.next()) {
@@ -741,7 +741,7 @@ QPtrList<Event> CalendarLocal::rawEventsForDate(const QDateTime &qdt)
   return rawEventsForDate( qdt.date() );
 }
 
-QPtrList<Event> CalendarLocal::getAllEvents()
+QPtrList<Event> CalendarLocal::rawEvents()
 {
   QPtrList<Event> eventList;
 

@@ -69,7 +69,7 @@ bool ADCalendarBase::loadFile_(const QCString& appName)
       // Remove all now non-existent events from the handled list
       for (EventsMap::Iterator it = eventsHandled_.begin();  it != eventsHandled_.end();  )
       {
-        if (it.data().calendarURL == urlString_  &&  !getEvent(it.key()))
+        if (it.data().calendarURL == urlString_  &&  !event(it.key()))
         {
           // Event belonged to this calendar, but can't find it any more
           EventsMap::Iterator i = it;

@@ -1680,7 +1680,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   while (c) {
 //    kdDebug(5800) << "----Event found" << endl;
     Event *event = readEvent(c);
-    if (!cal->getEvent(event->uid())) cal->addEvent(event);
+    if (!cal->event(event->uid())) cal->addEvent(event);
     c = icalcomponent_get_next_component(calendar,ICAL_VEVENT_COMPONENT);
   }
 
@@ -1725,7 +1725,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
         QString tmpStr(s);
         deleteStr(s);
 
-        if (cal->getEvent(tmpStr)) {
+        if (cal->event(tmpStr)) {
           goto SKIP;
         }
         if (cal->todo(tmpStr)) {
@@ -1768,7 +1768,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   // Post-Process list of events with relations, put Event objects in relation
   Event *ev;
   for ( ev=mEventsRelate.first(); ev != 0; ev=mEventsRelate.next() ) {
-    ev->setRelatedTo(cal->getEvent(ev->relatedToUid()));
+    ev->setRelatedTo(cal->event(ev->relatedToUid()));
   }
   Todo *todo;
   for ( todo=mTodosRelate.first(); todo != 0; todo=mTodosRelate.next() ) {

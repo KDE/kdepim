@@ -63,7 +63,7 @@ void KOAlarmClient::handleEvent( const QString &iCalendarString )
   ICalFormat format;
   format.fromString( &cal, iCalendarString );
   
-  QPtrList<Event> events = cal.getAllEvents();
+  QPtrList<Event> events = cal.events();
 
   Event *ev;
   for( ev = events.first(); ev; ev = events.next() ) {

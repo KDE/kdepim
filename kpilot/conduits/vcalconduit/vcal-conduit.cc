@@ -84,7 +84,7 @@ void VCalConduitPrivate::addIncidence(KCal::Incidence*e)
 
 int VCalConduitPrivate::updateIncidences()
 {
-	fAllEvents = fCalendar->getAllEvents();
+	fAllEvents = fCalendar->events();
 	fAllEvents.setAutoDelete(false);
 	return fAllEvents.count();
 }
@@ -690,6 +690,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.68  2002/06/12 22:11:17  kainhofe
+// Proper cleanup, libkcal still has some problems marking records modified on loading
+//
 // Revision 1.67  2002/05/18 13:08:56  kainhofe
 // dirty flag is now cleared, conflict resolution shows the correct item title and asks the correct question
 //

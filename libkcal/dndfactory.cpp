@@ -232,7 +232,7 @@ Event *DndFactory::pasteEvent(const QDate &newDate, const QTime *newTime)
       // own calendar, now we have duplicate UID strings.  Need to generate
       // a new one for this new event.
       QString uidStr = createUniqueId();
-      if (mCalendar->getEvent(anEvent->uid()))
+      if (mCalendar->event(anEvent->uid()))
 	anEvent->setUid(uidStr);
 
       daysOffset = anEvent->dtEnd().date().dayOfYear() -

@@ -109,7 +109,7 @@ bool VCalFormat::save(Calendar *calendar, const QString &fileName)
   }
 
   // EVENT STUFF
-  QPtrList<Event> events = mCalendar->getAllEvents();
+  QPtrList<Event> events = mCalendar->rawEvents();
   Event *ev;
   for(ev=events.first();ev;ev=events.next()) {
     vo = eventToVEvent(ev);
@@ -1470,7 +1470,7 @@ void VCalFormat::populate(VObject *vcal)
 	QString tmpStr(s);
 	deleteStr(s);
 
-	if (mCalendar->getEvent(tmpStr)) {
+	if (mCalendar->event(tmpStr)) {
 	  goto SKIP;
 	}
 	if (mCalendar->todo(tmpStr)) {
@@ -1517,7 +1517,7 @@ void VCalFormat::populate(VObject *vcal)
   // Post-Process list of events with relations, put Event objects in relation
   Event *ev;
   for ( ev=mEventsRelate.first(); ev != 0; ev=mEventsRelate.next() ) {
-    ev->setRelatedTo(mCalendar->getEvent(ev->relatedToUid()));
+    ev->setRelatedTo(mCalendar->event(ev->relatedToUid()));
   }
   Todo *todo;
   for ( todo=mTodosRelate.first(); todo != 0; todo=mTodosRelate.next() ) {

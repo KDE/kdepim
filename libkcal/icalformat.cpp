@@ -162,7 +162,7 @@ QString ICalFormat::toString( Calendar *cal )
   }
 
   // events
-  QPtrList<Event> events = cal->getAllEvents();
+  QPtrList<Event> events = cal->rawEvents();
   Event *ev;
   for(ev=events.first();ev;ev=events.next()) {
     component = mImpl->writeEvent(ev);
@@ -315,7 +315,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   icalcomponent *calendarComponent = mImpl->createCalendarComponent();
 
-  Incidence *existingIncidence = cal->getEvent(incidence->uid());
+  Incidence *existingIncidence = cal->event(incidence->uid());
   if (existingIncidence) {
     // TODO: check, if cast is required, or if it can be done by virtual funcs.
     if (existingIncidence->type() == "Todo") {

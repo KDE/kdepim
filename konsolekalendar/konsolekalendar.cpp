@@ -95,7 +95,7 @@ void KonsoleKalendar::showDate( QDate date )
 {
   Event *singleEvent;
 
-  QList<Event> eventList(m_Calendar->getEventsForDate( date, TRUE));
+  QList<Event> eventList(m_Calendar->events( date, TRUE));
   QString tempString;
   QDate current = QDate::currentDate();
       
@@ -154,7 +154,7 @@ void KonsoleKalendar::showNext()
   int len = 50;
 
   while(!loop) {
-    QList<Event> eventList(m_Calendar->getEventsForDate(m_variables.getDate(), TRUE));
+    QList<Event> eventList(m_Calendar->events(m_variables.getDate(), TRUE));
   
     if( eventList.count() ) {
       len = 80;

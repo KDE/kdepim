@@ -259,24 +259,31 @@ CalFilter *Calendar::filter()
   return mFilter;
 }
 
-QPtrList<Event> Calendar::getEventsForDate(const QDate &date,bool sorted)
+QPtrList<Event> Calendar::events( const QDate &date, bool sorted )
 {
   QPtrList<Event> el = rawEventsForDate(date,sorted);
   mFilter->apply(&el);
   return el;
 }
 
-QPtrList<Event> Calendar::getEventsForDate(const QDateTime &qdt)
+QPtrList<Event> Calendar::events( const QDateTime &qdt )
 {
   QPtrList<Event> el = rawEventsForDate(qdt);
   mFilter->apply(&el);
   return el;
 }
 
-QPtrList<Event> Calendar::getEvents(const QDate &start,const QDate &end,
-                                    bool inclusive)
+QPtrList<Event> Calendar::events( const QDate &start, const QDate &end,
+                                  bool inclusive)
 {
   QPtrList<Event> el = rawEvents(start,end,inclusive);
+  mFilter->apply(&el);
+  return el;
+}
+
+QPtrList<Event> Calendar::events()
+{
+  QPtrList<Event> el = rawEvents();
   mFilter->apply(&el);
   return el;
 }
