@@ -1416,7 +1416,7 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
   nameL->addWidget(h_drC,0,1);
 
   n_ameE=new KLineEdit(nameW);
-  connect(n_ameE, SIGNAL(textChanged(const QString&)), SLOT(slotNameChanged(const QString&)));
+
   n_ameE->setMaxLength(64);
   nameL->addWidget(new QLabel(n_ameE, i18n("Displayed na&me:"),nameW),1,0);
   nameL->addWidget(n_ameE,1,1);
@@ -1459,6 +1459,8 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
   setFixedHeight(sizeHint().height());
   KNHelper::restoreWindowSize("accReadHdrPropDLG", this, sizeHint());
 
+  connect(n_ameE, SIGNAL(textChanged(const QString&)), SLOT(slotNameChanged(const QString&)));
+
   setHelp("anc-knode-headers");
 }
 
@@ -1495,7 +1497,7 @@ void KNConfig::DisplayedHeaderConfDialog::slotActivated(int pos)
 void KNConfig::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
 {
   for(int i=0; i<4; i++)
-    n_ameCB[i]->setEnabled(!str.isEmpty());
+      n_ameCB[i]->setEnabled(!str.isEmpty());
 }
 
 //=============================================================================================
