@@ -46,13 +46,13 @@ in commands in the upper middle field.  The lower middle fields shows
 the direct response of the mobile phone. In the right side of the main
 window the processed output is shown.</para>
 
-<para> On the left side you have the list of available commands. You can
-execute them by double-clicking or pressing the
-<guibutton>Execute</guibutton> button. The modem response output fields
-show what happens.  If you have typed in a new command you can add it to
-the list of available commands by pressing the <guibutton>Add
-Command</guibutton> button. A dialog pops up, which lets you select name
-and parameters for the command.</para> 
+<para> On the left side you have the list of available commands. You
+can execute them by double-clicking or pressing the
+<guibutton>Execute</guibutton> button. The modem response output
+fields show what happens.  If you have typed in a new command you can
+add it to the list of available commands by pressing the
+<guibutton>Add</guibutton> button. A dialog pops up, which lets you
+select name and parameters for the command.</para>
 
 <para>The command list is saved to an &XML; file by selecting
 <guimenuitem>Save</guimenuitem> from the menu or pressing the
@@ -217,7 +217,7 @@ statusbar.</action></para>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Configure Keybindings...</guimenuitem>
+<guimenuitem>Configure Shortcuts...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
