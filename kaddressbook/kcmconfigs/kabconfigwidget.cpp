@@ -127,7 +127,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
                                  "<li>%l: Location</li>"
                                  "<li>%z: Zip Code</li>"
                                  "<li>%c: Country ISO Code</li> </ul>" ) );
-  mLocationMapURL->insertStringList( KABPrefs::instance()->mLocationMapURLs );
+  mLocationMapURL->insertStringList( KABPrefs::instance()->locationMapURLs() );
   boxLayout->addWidget( mLocationMapURL );
   layout->addWidget( groupBox );
 
@@ -153,13 +153,13 @@ void KABConfigWidget::restoreSettings()
   bool blocked = signalsBlocked();
   blockSignals( true );
 
-  mNameParsing->setChecked( KABPrefs::instance()->mAutomaticNameParsing );
-  mViewsSingleClickBox->setChecked( KABPrefs::instance()->mHonorSingleClick );
-  mPhoneHook->setText( KABPrefs::instance()->mPhoneHookApplication );
-  mFaxHook->setText( KABPrefs::instance()->mFaxHookApplication );
+  mNameParsing->setChecked( KABPrefs::instance()->automaticNameParsing() );
+  mViewsSingleClickBox->setChecked( KABPrefs::instance()->honorSingleClick() );
+  mPhoneHook->setText( KABPrefs::instance()->phoneHookApplication() );
+  mFaxHook->setText( KABPrefs::instance()->faxHookApplication() );
   mAddresseeWidget->restoreSettings();
-  mEditorCombo->setCurrentItem( KABPrefs::instance()->mEditorType );
-  mLocationMapURL->setCurrentText( KABPrefs::instance()->mLocationMapURL.arg( KGlobal::locale()->country() ) );
+  mEditorCombo->setCurrentItem( KABPrefs::instance()->editorType() );
+  mLocationMapURL->setCurrentText( KABPrefs::instance()->locationMapURL().arg( KGlobal::locale()->country() ) );
   mLocationMapURL->lineEdit()->setCursorPosition( 0 );
 
   KConfig config( "kabcrc", false, false );
@@ -174,12 +174,12 @@ void KABConfigWidget::restoreSettings()
 
 void KABConfigWidget::saveSettings()
 {
-  KABPrefs::instance()->mAutomaticNameParsing = mNameParsing->isChecked();
-  KABPrefs::instance()->mHonorSingleClick = mViewsSingleClickBox->isChecked();
-  KABPrefs::instance()->mPhoneHookApplication = mPhoneHook->text();
-  KABPrefs::instance()->mFaxHookApplication = mFaxHook->text();
-  KABPrefs::instance()->mEditorType = mEditorCombo->currentItem();
-  KABPrefs::instance()->mLocationMapURL = mLocationMapURL->currentText();
+  KABPrefs::instance()->setAutomaticNameParsing( mNameParsing->isChecked() );
+  KABPrefs::instance()->setHonorSingleClick( mViewsSingleClickBox->isChecked() );
+  KABPrefs::instance()->setPhoneHookApplication( mPhoneHook->text() );
+  KABPrefs::instance()->setFaxHookApplication( mFaxHook->text() );
+  KABPrefs::instance()->setEditorType( mEditorCombo->currentItem() );
+  KABPrefs::instance()->setLocationMapURL( mLocationMapURL->currentText() );
   mAddresseeWidget->saveSettings();
 
   KABPrefs::instance()->writeConfig();

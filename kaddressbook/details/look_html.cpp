@@ -53,7 +53,7 @@ void KABHtmlView::setAddressee( const KABC::Addressee &addr )
 
 void KABHtmlView::phoneNumberClicked( const QString &number )
 {
-  QString commandLine = KABPrefs::instance()->mPhoneHookApplication;
+  QString commandLine = KABPrefs::instance()->phoneHookApplication();
 
   if ( commandLine.isEmpty() ) {
     KMessageBox::sorry( this, i18n( "There is no application set which could be executed. Please go to the settings dialog and configure one." ) );
@@ -66,7 +66,7 @@ void KABHtmlView::phoneNumberClicked( const QString &number )
 
 void KABHtmlView::faxNumberClicked( const QString &number )
 {
-  QString commandLine = KABPrefs::instance()->mFaxHookApplication;
+  QString commandLine = KABPrefs::instance()->faxHookApplication();
 
   if ( commandLine.isEmpty() ) {
     KMessageBox::sorry( this, i18n( "There is no application set which could be executed. Please go to the settings dialog and configure one." ) );

@@ -46,7 +46,7 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core *core,
 
   QVBoxLayout *layout = new QVBoxLayout( page );
 
-  if ( KABPrefs::instance()->mEditorType == KABPrefs::SimpleEditor ) {
+  if ( KABPrefs::instance()->editorType() == KABPrefs::SimpleEditor ) {
     mEditorWidget = new SimpleAddresseeEditor( core, false, page );  
   } else {
     mEditorWidget = new AddresseeEditorWidget( core, false, page );

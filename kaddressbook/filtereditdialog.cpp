@@ -51,7 +51,7 @@ FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
 {
   initGUI();
 
-  QStringList cats = KABPrefs::instance()->mCustomCategories;
+  QStringList cats = KABPrefs::instance()->customCategories();
 
   QStringList::Iterator iter;
   for ( iter = cats.begin(); iter != cats.end(); ++iter )

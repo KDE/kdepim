@@ -220,7 +220,7 @@ void KCMKabCustomFields::loadActivePages(const QStringList& ai)
 
 void KCMKabCustomFields::load()
 {
-  loadActivePages(KABPrefs::instance()->mAdvancedCustomFields);
+  loadActivePages( KABPrefs::instance()->advancedCustomFields() );
 }
 
 QStringList KCMKabCustomFields::saveActivePages()
@@ -243,7 +243,7 @@ QStringList KCMKabCustomFields::saveActivePages()
 
 void KCMKabCustomFields::save()
 {
-  KABPrefs::instance()->mAdvancedCustomFields =  saveActivePages();
+  KABPrefs::instance()->setAdvancedCustomFields( saveActivePages() );
   KABPrefs::instance()->writeConfig();
 }
 

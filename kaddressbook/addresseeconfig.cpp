@@ -59,7 +59,7 @@ bool AddresseeConfig::automaticNameParsing()
   KConfig config( "kaddressbook_addrconfig" );
   config.setGroup( mAddressee.uid() );
   return config.readBoolEntry( "AutomaticNameParsing",
-                               KABPrefs::instance()->mAutomaticNameParsing );
+                               KABPrefs::instance()->automaticNameParsing() );
 }
 
 void AddresseeConfig::setNoDefaultAddrTypes( const QValueList<int> &types )

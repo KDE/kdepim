@@ -157,7 +157,7 @@ void AddresseeEditorWidget::setupTab1()
   connect( button, SIGNAL( clicked() ), SLOT( nameButtonClicked() ) );
   mNameLabel = new KSqueezedTextLabel( tab1 );
 
-  if ( KABPrefs::instance()->mAutomaticNameParsing ) {
+  if ( KABPrefs::instance()->automaticNameParsing() ) {
     mNameLabel->hide();
     mNameEdit->show();
   } else {
@@ -458,7 +458,7 @@ void AddresseeEditorWidget::setupAdditionalTabs()
 
 void AddresseeEditorWidget::setupCustomFieldsTabs()
 {
-  QStringList activePages = KABPrefs::instance()->mAdvancedCustomFields;
+  QStringList activePages = KABPrefs::instance()->advancedCustomFields();
 
   QStringList list = KGlobal::dirs()->findAllResources( "data", "kaddressbook/contacteditorpages/*.ui", true, true );
   for ( QStringList::iterator it = list.begin(); it != list.end(); ++it ) {

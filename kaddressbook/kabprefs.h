@@ -26,56 +26,48 @@
 
 #include <qstringlist.h>
 
-#include <libkdepim/kpimprefs.h>
+#include "kabprefs_base.h"
 
 class KConfig;
 
-class KABPrefs : public KPimPrefs
+class KABPrefs : public KABPrefsBase
 {
   public:
-    ~KABPrefs();
+    virtual ~KABPrefs();
 
     static KABPrefs *instance();
+
+    void setLocationMapURL( const QString &locationMapURL )
+    {
+      if ( !isImmutable( QString::fromLatin1( "LocationMapURL" ) ) )
+        mLocationMapURL = locationMapURL;
+    }
+
+    QString locationMapURL() const
+    {
+      return mLocationMapURL;
+    }
+
+    void setLocationMapURLs( const QStringList &locationMapURLs )
+    {
+      if ( !isImmutable( QString::fromLatin1( "LocationMapURLs" ) ) )
+        mLocationMapURLs = locationMapURLs;
+    }
+
+    QStringList locationMapURLs() const
+    {
+      return mLocationMapURLs;
+    }
     
-    // General
-    bool mHonorSingleClick;
-    bool mAutomaticNameParsing;
-    int mCurrentIncSearchField;
-    QString mPhoneHookApplication;
-    QString mFaxHookApplication;
-    QString mLocationMapURL;
-    QStringList mLocationMapURLs;
-
-    // GUI
-    bool mJumpButtonBarVisible;
-    bool mDetailsPageVisible;
-    QValueList<int> mExtensionsSplitter;
-    QValueList<int> mDetailsSplitter;
-
-    // Contact Editor
-    int mEditorType;
-    QStringList mGlobalCustomFields;
-    QStringList mAdvancedCustomFields;
-
-    // Extensions stuff
-    QString mCurrentExtension;
-
-    // Views stuff
-    QString mCurrentView;
-    QStringList mViewNames;
-
-    // Filter
-    int mCurrentFilter;
-
-    enum { FullEditor, SimpleEditor };
-
-
     void setCategoryDefaults();
-    
+
   private:
     KABPrefs();
     
-    static KABPrefs *sInstance;
+    static KABPrefs *mInstance;
+
+    QString mLocationMapURL;
+    QStringList mLocationMapURLs;
 };
 
 #endif

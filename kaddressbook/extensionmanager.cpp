@@ -54,10 +54,9 @@ ExtensionManager::~ExtensionManager()
 
 void ExtensionManager::restoreSettings()
 {
-  int index = 0;
-  for ( int index = 0; index < mExtensionList.size(); ++index ) {
+  for ( uint index = 0; index < mExtensionList.size(); ++index ) {
     ExtensionData data = mExtensionList[ index ];
-    if ( data.identifier == KABPrefs::instance()->mCurrentExtension ) {
+    if ( data.identifier == KABPrefs::instance()->currentExtension() ) {
       mActionExtensions->setCurrentItem( index );
       setActiveExtension( index );
       return;
@@ -70,11 +69,11 @@ void ExtensionManager::restoreSettings()
 
 void ExtensionManager::saveSettings()
 {
-  int index = mActionExtensions->currentItem();
+  uint index = mActionExtensions->currentItem();
 
   Q_ASSERT( index < mExtensionList.size() );
 
-  KABPrefs::instance()->mCurrentExtension = mExtensionList[ index ].identifier;
+  KABPrefs::instance()->setCurrentExtension( mExtensionList[ index ].identifier );
 }
 
 void ExtensionManager::reconfigure()
@@ -140,7 +139,7 @@ void ExtensionManager::createExtensionWidgets()
 
   {
     // add addressee editor as default
-    if ( KABPrefs::instance()->mEditorType == KABPrefs::SimpleEditor ) {
+    if ( KABPrefs::instance()->editorType() == KABPrefs::SimpleEditor ) {
       wdg = new SimpleAddresseeEditor( mCore, true, this );
     } else {
       wdg = new AddresseeEditorWidget( mCore, true, this );

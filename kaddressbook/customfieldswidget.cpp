@@ -380,7 +380,7 @@ void CustomFieldsWidget::addField()
                             dlg.type(), dlg.isGlobal() );
 
     if ( dlg.isGlobal() ) {
-      KABPrefs::instance()->mGlobalCustomFields = marshallFields( true );
+      KABPrefs::instance()->setGlobalCustomFields( marshallFields( true ) );
     } else {
       AddresseeConfig addrConfig( mAddressee );
       addrConfig.setCustomFields( marshallFields( false ) );
@@ -414,7 +414,7 @@ void CustomFieldsWidget::removeField()
           mRemoveButton->setEnabled( false );
 
         if ( (*it).mGlobal ) {
-          KABPrefs::instance()->mGlobalCustomFields = marshallFields( true );
+          KABPrefs::instance()->setGlobalCustomFields( marshallFields( true ) );
         } else {
           AddresseeConfig addrConfig( mAddressee );
           addrConfig.setCustomFields( marshallFields( false ) );
@@ -441,7 +441,7 @@ void CustomFieldsWidget::initGUI()
   layout->addWidget( mRemoveButton, 1, 2, Qt::AlignRight );
 
   // load global fields
-  QStringList globalFields = KABPrefs::instance()->mGlobalCustomFields;
+  QStringList globalFields = KABPrefs::instance()->globalCustomFields();
 
   if ( globalFields.isEmpty() )
     return;

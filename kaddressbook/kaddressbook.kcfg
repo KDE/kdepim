@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg>
+  <kcfgfile name="kaddressbookrc"/>
+
+  <group name="General">
+    <entry type="Bool" key="AutomaticNameParsing">
+      <label>Automatic name parsing for new addressees</label>
+      <whatsthis></whatsthis>
+      <default>true</default>
+    </entry>
+    <entry type="Int" key="CurrentIncSearchField">
+      <default>0</default>
+    </entry>
+    <entry type="String" key="PhoneHookApplication">
+      <label>Phone</label>
+      <whatsthis></whatsthis>
+      <tooltip>%N: Phone Number</tooltip>
+    </entry>
+    <entry type="String" key="FaxHookApplication">
+      <label>Fax</label>
+      <whatsthis></whatsthis>
+      <tooltip>%N: Fax Number</tooltip>
+      <default>kdeprintfax --phone %N</default>
+    </entry>
+    <entry type="StringList" name="CustomCategories">
+    </entry>
+  </group>
+
+  <group name="Views">
+    <entry type="Bool" key="HonorSingleClick">
+      <label>Honor KDE single click</label>
+      <whatsthis></whatsthis>
+      <default>false</default>
+    </entry>
+    <entry type="String" name="CurrentView">
+      <default>Default Table View</default>
+    </entry>
+    <entry type="StringList" name="ViewNames">
+      <default>Default Table View</default>
+    </entry>
+  </group>
+
+  <group name="MainWindow">
+    <entry type="Bool" name="JumpButtonBarVisible">
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="DetailsPageVisible">
+      <default>true</default>
+    </entry>
+    <entry type="IntList" name="ExtensionsSplitter">
+    </entry>
+    <entry type="IntList" name="DetailsSplitter">
+    </entry>
+  </group>
+
+  <group name="Extensions_General">
+    <entry type="String" key="CurrentExtension">
+      <default>resourceselection</default>
+    </entry>
+  </group>
+
+  <group name="Filters">
+    <entry type="Int" key="CurrentFilter">
+      <default>0</default>
+    </entry>
+  </group>
+
+  <group name="AddresseeEditor">
+    <entry type="Enum" name="EditorType">
+      <choices>
+        <choice name="FullEditor"/>
+        <choice name="SimpleEditor"/>
+      </choices>
+      <default>FullEditor</default>
+    </entry>
+    <entry type="StringList" name="GlobalCustomFields">
+    </entry>
+    <entry type="StringList" name="AdvancedCustomFields">
+    </entry>
+  </group>
+</kcfg>

@@ -23,16 +23,17 @@ libkaddressbookpart_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_librar
 libkaddressbookpart_la_LIBADD = libkaddressbook.la
 
 noinst_LTLIBRARIES = libkabcommon.la
-libkabcommon_la_SOURCES = kabprefs.cpp locationmap.cpp
+libkabcommon_la_SOURCES = kabprefs.cpp kabprefs_base.kcfgc locationmap.cpp filter.cpp 
 libkabcommon_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 libkabcommon_la_LIBADD = $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
                          $(top_builddir)/libkdepim/libkdepim.la
+libkabcommon_la_COMPILE_FIRST = kabprefs_base.h
 
 lib_LTLIBRARIES = libkaddressbook.la
 libkaddressbook_la_SOURCES = addresseeconfig.cpp addresseeeditordialog.cpp \
     addresseeeditorwidget.cpp addresseeutil.cpp addresseditwidget.cpp \
     addviewdialog.cpp emaileditwidget.cpp extensionmanager.cpp \
-    filter.cpp filtereditdialog.cpp filterselectionwidget.cpp geowidget.cpp \
+    filtereditdialog.cpp filterselectionwidget.cpp geowidget.cpp \
     imagewidget.cpp incsearchwidget.cpp jumpbuttonbar.cpp kabcore.cpp kablock.cpp \
     kaddressbookiface.skel kaddressbookservice.cpp \
     kaddressbookview.cpp keywidget.cpp ldapsearchdialog.cpp nameeditdialog.cpp \
@@ -50,7 +51,9 @@ libkaddressbook_la_LIBADD = $(top_builddir)/kaddressbook/printing/libprinter.la 
                             -lkabc_file \
                             $(LIB_KABC) $(LIB_KHTML) libkabcommon.la -lkdeprint -lqui
 libkaddressbook_la_COMPILE_FIRST = $(top_srcdir)/libkdepim/categoryselectdialog.h \
-                                   $(top_srcdir)/libkdepim/categoryeditdialog.h
+                                   $(top_srcdir)/libkdepim/categoryeditdialog.h \
+                                   kabprefs_base.h
+
 
 noinst_HEADERS = \
     addresseditwidget.h addresseeconfig.h \

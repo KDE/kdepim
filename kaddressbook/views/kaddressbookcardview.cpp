@@ -248,7 +248,7 @@ void KAddressBookCardView::readConfig(KConfig *config)
   disconnect(mCardView, SIGNAL(executed(CardViewItem *)),
             this, SLOT(addresseeExecuted(CardViewItem *)));
 
-  if (KABPrefs::instance()->mHonorSingleClick)
+  if ( KABPrefs::instance()->honorSingleClick() )
     connect(mCardView, SIGNAL(executed(CardViewItem *)),
             this, SLOT(addresseeExecuted(CardViewItem *)));
   else

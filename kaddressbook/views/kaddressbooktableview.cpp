@@ -151,7 +151,7 @@ void KAddressBookTableView::reconstructListView()
   connect( mListView->header(), SIGNAL( clicked(int) ),
            SIGNAL( sortFieldChanged() ) );
 
-  if (KABPrefs::instance()->mHonorSingleClick)
+  if ( KABPrefs::instance()->honorSingleClick() )
     connect(mListView, SIGNAL(executed(QListViewItem*)),
           this, SLOT(addresseeExecuted(QListViewItem*)));
   else

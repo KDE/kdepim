@@ -69,15 +69,15 @@ ViewManager::~ViewManager()
 
 void ViewManager::restoreSettings()
 {
-  mViewNameList = KABPrefs::instance()->mViewNames;
-  QString activeViewName = KABPrefs::instance()->mCurrentView;
+  mViewNameList = KABPrefs::instance()->viewNames();
+  QString activeViewName = KABPrefs::instance()->currentView();
 
   mActionSelectView->setItems( mViewNameList );
 
   // Filter
   mFilterList = Filter::restore( mCore->config(), "Filter" );
   mFilterSelectionWidget->setItems( filterNames() );
-  mFilterSelectionWidget->setCurrentItem( KABPrefs::instance()->mCurrentFilter );
+  mFilterSelectionWidget->setCurrentItem( KABPrefs::instance()->currentFilter() );
 
   // Tell the views to reread their config, since they may have
   // been modified by global settings
@@ -101,13 +101,13 @@ void ViewManager::saveSettings()
   }
 
   Filter::save( mCore->config(), "Filter", mFilterList );
-  KABPrefs::instance()->mCurrentFilter = mFilterSelectionWidget->currentItem();
+  KABPrefs::instance()->setCurrentFilter( mFilterSelectionWidget->currentItem() );
 
   // write the view name list
-  KABPrefs::instance()->mViewNames = mViewNameList;
+  KABPrefs::instance()->setViewNames( mViewNameList );
 
   if ( mActiveView )
-    KABPrefs::instance()->mCurrentView = mActiveView->caption();
+    KABPrefs::instance()->setCurrentView( mActiveView->caption() );
 }
 
 QStringList ViewManager::selectedUids() const

@@ -67,7 +67,7 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
   mUseFilters->setEnabled( filters.count() > 0 );
 
   // setup categories
-  QStringList categories =  KABPrefs::instance()->mCustomCategories;
+  QStringList categories =  KABPrefs::instance()->customCategories();
   QStringList::Iterator it;
   for ( it = categories.begin(); it != categories.end(); ++it )
     new QCheckListItem( mCategoriesView, *it, QCheckListItem::CheckBox );

@@ -181,7 +181,7 @@ void KAddressBookIconView::readConfig(KConfig *config)
   disconnect(mIconView, SIGNAL(executed(QIconViewItem *)),
              this, SLOT(addresseeExecuted(QIconViewItem *)));
              
-  if (KABPrefs::instance()->mHonorSingleClick)
+  if ( KABPrefs::instance()->honorSingleClick() )
     connect(mIconView, SIGNAL(executed(QIconViewItem *)),
             this, SLOT(addresseeExecuted(QIconViewItem *)));
   else

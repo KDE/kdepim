@@ -178,27 +178,27 @@ KABCore::~KABCore()
 
 void KABCore::restoreSettings()
 {
-  bool state = KABPrefs::instance()->mJumpButtonBarVisible;
+  bool state = KABPrefs::instance()->jumpButtonBarVisible();
   mActionJumpBar->setChecked( state );
   setJumpButtonBarVisible( state );
 
-  state = KABPrefs::instance()->mDetailsPageVisible;
+  state = KABPrefs::instance()->detailsPageVisible();
   mActionDetails->setChecked( state );
   setDetailsVisible( state );
 
   mViewManager->restoreSettings();
   mExtensionManager->restoreSettings();
 
-  mIncSearchWidget->setCurrentItem( KABPrefs::instance()->mCurrentIncSearchField );
+  mIncSearchWidget->setCurrentItem( KABPrefs::instance()->currentIncSearchField() );
 
-  QValueList<int> splitterSize = KABPrefs::instance()->mExtensionsSplitter;
+  QValueList<int> splitterSize = KABPrefs::instance()->extensionsSplitter();
   if ( splitterSize.count() == 0 ) {
     splitterSize.append( mDetailsSplitter->height() / 2 );
     splitterSize.append( mDetailsSplitter->height() / 2 );
   }
   mExtensionBarSplitter->setSizes( splitterSize );
 
-  splitterSize = KABPrefs::instance()->mDetailsSplitter;
+  splitterSize = KABPrefs::instance()->detailsSplitter();
   if ( splitterSize.count() == 0 ) {
     splitterSize.append( 360 );
     splitterSize.append( 260 );
@@ -209,16 +209,16 @@ void KABCore::restoreSettings()
 
 void KABCore::saveSettings()
 {
-  KABPrefs::instance()->mJumpButtonBarVisible = mActionJumpBar->isChecked();
-  KABPrefs::instance()->mDetailsPageVisible = mActionDetails->isChecked();
+  KABPrefs::instance()->setJumpButtonBarVisible( mActionJumpBar->isChecked() );
+  KABPrefs::instance()->setDetailsPageVisible( mActionDetails->isChecked() );
 
-  KABPrefs::instance()->mExtensionsSplitter = mExtensionBarSplitter->sizes();
-  KABPrefs::instance()->mDetailsSplitter = mDetailsSplitter->sizes();
+  KABPrefs::instance()->setExtensionsSplitter( mExtensionBarSplitter->sizes() );
+  KABPrefs::instance()->setDetailsSplitter( mDetailsSplitter->sizes() );
 
   mExtensionManager->saveSettings();
   mViewManager->saveSettings();
 
-  KABPrefs::instance()->mCurrentIncSearchField = mIncSearchWidget->currentItem();
+  KABPrefs::instance()->setCurrentIncSearchField( mIncSearchWidget->currentItem() );
 }
 
 KABC::AddressBook *KABCore::addressBook() const

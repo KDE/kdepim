@@ -170,7 +170,7 @@ Filter::List Filter::restore( KConfig *config, QString baseGroup )
     list.append( f );
   }
 
-  QStringList cats = KABPrefs::instance()->mCustomCategories;
+  QStringList cats = KABPrefs::instance()->customCategories();
   for ( QStringList::Iterator it = cats.begin(); it != cats.end(); ++it ) {
     Filter filter;
     filter.mName = *it;

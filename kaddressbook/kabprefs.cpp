@@ -27,49 +27,19 @@
 
 #include "kabprefs.h"
 
-KABPrefs *KABPrefs::sInstance = 0;
+KABPrefs *KABPrefs::mInstance = 0;
 static KStaticDeleter<KABPrefs> staticDeleter;
 
 KABPrefs::KABPrefs()
-  : KPimPrefs("kaddressbookrc")
+  : KABPrefsBase()
 {
-  KConfigSkeleton::setCurrentGroup( "Views" );
-  addItemBool( "HonorSingleClick", mHonorSingleClick, false );
-
   KConfigSkeleton::setCurrentGroup( "General" );
-  addItemBool( "AutomaticNameParsing", mAutomaticNameParsing, true );
-  addItemInt( "CurrentIncSearchField", mCurrentIncSearchField, 0 );
-  addItemString( "PhoneHookApplication", mPhoneHookApplication, "" );
-  addItemString( "FaxHookApplication", mFaxHookApplication,
-                 "kdeprintfax --phone %N" );
 
-  QStringList defaultMaps;
-  defaultMaps << "http://link2.map24.com/?lid=9cc343ae&maptype=CGI&lang=%1&street0=%s&zip0=%z&city0=%l&country0=%c";
-  defaultMaps << "http://www.mapquest.com/main.adp?searchtab=address&searchtype=address&country=%c&address=%s&state=%r&zipcode=%z&city=%l&search=1";
-  addItemString( "LocationMapURL", mLocationMapURL, defaultMaps[ 0 ] );
-  addItemStringList( "LocationMapURLs", mLocationMapURLs, defaultMaps );
-
-  KConfigSkeleton::setCurrentGroup( "MainWindow" );
-  addItemBool( "JumpButtonBarVisible", mJumpButtonBarVisible, false );
-  addItemBool( "DetailsPageVisible", mDetailsPageVisible, true );
-  addItemIntList( "ExtensionsSplitter", mExtensionsSplitter );
-  addItemIntList( "DetailsSplitter", mDetailsSplitter );
-
-  KConfigSkeleton::setCurrentGroup( "Extensions_General" );
-  addItemString( "CurrentExtension", mCurrentExtension, "resourceselection" );
-
-  KConfigSkeleton::setCurrentGroup( "Views" );
-  QString defaultView = i18n( "Default Table View" );
-  addItemString( "CurrentView", mCurrentView, defaultView );
-  addItemStringList( "ViewNames", mViewNames, defaultView );
-
-  KConfigSkeleton::setCurrentGroup( "Filters" );
-  addItemInt( "CurrentFilter", mCurrentFilter, 0 );
-
-  KConfigSkeleton::setCurrentGroup( "AddresseeEditor" );
-  addItemInt( "EditorType", mEditorType, 0 );
-  addItemStringList( "GlobalCustomFields", mGlobalCustomFields );
-  addItemStringList( "AdvancedCustomFields", mAdvancedCustomFields );
+  QStringList defaultMap;
+  defaultMap << "http://link2.map24.com/?lid=9cc343ae&maptype=CGI&lang=%1&street0=%s&zip0=%z&city0=%l&country0=%c";
+  defaultMap << "http://www.mapquest.com/main.adp?searchtab=address&searchtype=address&country=%c&address=%s&state=%r&zipcode=%z&city=%l&search=1";
+  addItemString( "LocationMapURL", mLocationMapURL, defaultMap[ 0 ] );
+  addItemStringList( "LocationMapURLs", mLocationMapURLs, defaultMap );
 }
 
 KABPrefs::~KABPrefs()
@@ -78,12 +48,12 @@ KABPrefs::~KABPrefs()
 
 KABPrefs *KABPrefs::instance()
 {
-  if ( !sInstance ) {
-    staticDeleter.setObject( sInstance, new KABPrefs() );
-    sInstance->readConfig();
+  if ( !mInstance ) {
+    staticDeleter.setObject( mInstance, new KABPrefs() );
+    mInstance->readConfig();
   }
 
-  return sInstance;
+  return mInstance;
 }
 
 void KABPrefs::setCategoryDefaults()

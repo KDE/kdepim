@@ -69,7 +69,7 @@ PrintingWizard::PrintingWizard( KPrinter *printer, KABC::AddressBook* ab,
 
   mSelectionPage->setFilters( filters );
 
-  mSelectionPage->setCategories( KABPrefs::instance()->mCustomCategories );
+  mSelectionPage->setCategories( KABPrefs::instance()->customCategories() );
 
   setAppropriate( mSelectionPage, true );
 
