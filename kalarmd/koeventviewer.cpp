@@ -18,12 +18,12 @@
 */
 
 // $Id$
-#include "kalarmdgui.h"
-
 #include <klocale.h>
 
 #include <libkcal/event.h>
 #include <libkcal/todo.h>
+
+#include "compat.h"
 
 #include "koeventviewer.h"
 #include "koeventviewer.moc"

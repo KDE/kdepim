@@ -23,11 +23,14 @@
 #ifndef ADCONFIGDATABASE_H
 #define ADCONFIGDATABASE_H
 
+/*
 #ifdef KALARMD
   #include "adcalendar.h"
 #else
   #include "adcalendar_gui.h"
 #endif
+*/
+#include "adcalendarbase.h"
 #include "calclient.h"
 
 // Provides read-only access to the Alarm Daemon config data files
@@ -41,9 +44,10 @@ class ADConfigDataBase
 
   protected:
     QString           readConfigData(bool sessionStarting, bool& deletedClients,
-                                     bool& deletedCalendars);
-    virtual void      deleteConfigCalendar(const ADCalendar*);
-    ADCalendar*       getCalendar(const QString& calendarURL);
+                                     bool& deletedCalendars,
+                                     ADCalendarBaseFactory *);
+    virtual void      deleteConfigCalendar(const ADCalendarBase*);
+    ADCalendarBase*   getCalendar(const QString& calendarURL);
     static QString    expandURL(const QString& urlString);
     const QString&    clientDataFile() const  { return mClientDataFile; }
 

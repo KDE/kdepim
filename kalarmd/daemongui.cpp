@@ -19,7 +19,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-#include "kalarmdgui.h"
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -45,6 +44,11 @@
 
 const int DAEMON_TIMER_INTERVAL = 5;    // seconds between checks on daemon status
 
+void ADConfigData::readDaemonData(bool& deletedClients, bool& deletedCalendars)
+{
+  ADCalendarGuiFactory calFactory;
+  readConfigData(false, deletedClients, deletedCalendars, &calFactory);
+}
 
 AlarmGui::AlarmGui(QObject *parent, const char *name)
   : QObject(parent, name),
@@ -106,13 +110,13 @@ void AlarmGui::alarmDaemonUpdate(const QString& change, const QString& calendarU
   {
     // It must be a calendar-related change
     bool recreateMenu = false;
-    ADCalendar* cal = getCalendar(expandURL(calendarURL));
+    ADCalendarBase* cal = getCalendar(expandURL(calendarURL));
     if (change == "ADD_CALENDAR")
     {
       // Add a KOrganizer-type calendar
       if (cal)
       {
-        if (cal->actionType() == ADCalendar::KORGANIZER)
+        if (cal->actionType() == ADCalendarBase::KORGANIZER)
         {
           removeDialogEvents(cal);
           cal->close();
@@ -121,7 +125,7 @@ void AlarmGui::alarmDaemonUpdate(const QString& change, const QString& calendarU
       }
       else
       {
-        cal = new ADCalendar(calendarURL, appName, ADCalendar::KORGANIZER);
+        cal = new ADCalendarGui(calendarURL, appName, ADCalendarBase::KORGANIZER);
         mCalendars.append(cal);
         kdDebug() << "AlarmGui::alarmDaemonUpdate(): KORGANIZER calendar added" << endl;
         recreateMenu = true;
@@ -132,11 +136,11 @@ void AlarmGui::alarmDaemonUpdate(const QString& change, const QString& calendarU
       // Add a KAlarm-type calendar
       if (cal)
       {
-        if (cal->actionType() == ADCalendar::KORGANIZER)
+        if (cal->actionType() == ADCalendarBase::KORGANIZER)
           removeDialogEvents(cal);
         mCalendars.remove(cal);
       }
-      cal = new ADCalendar(calendarURL, appName, ADCalendar::KALARM);
+      cal = new ADCalendarGui(calendarURL, appName, ADCalendarBase::KALARM);
       mCalendars.append(cal);
       kdDebug() << "AlarmGui::alarmDaemonUpdate(): KALARM calendar added" << endl;
       recreateMenu = true;
@@ -165,20 +169,20 @@ void AlarmGui::alarmDaemonUpdate(const QString& change, const QString& calendarU
       else if (change == "CALENDAR_UNAVAILABLE")
       {
         // Calendar is not available for monitoring
-//        cal->available_ = false;
-        cal->enabled_   = false;
+        cal->setAvailable( false );
+        cal->setEnabled( false );
       }
       else if (change == "CALENDAR_DISABLED")
       {
         // Calendar is available for monitoring but is not currently being monitored
-//        cal->available_ = true;
-        cal->enabled_   = false;
+        cal->setAvailable( true );
+        cal->setEnabled( false );
       }
       else if (change == "CALENDAR_ENABLED")
       {
         // Calendar is currently being monitored
-//        cal->available_ = true;
-        cal->enabled_   = true;
+        cal->setAvailable( true );
+        cal->setEnabled( true );
       }
       else
       {
@@ -196,7 +200,7 @@ void AlarmGui::alarmDaemonUpdate(const QString& change, const QString& calendarU
  */
 void AlarmGui::handleEvent(const QString& calendarURL, const QString& eventID)
 {
-  ADCalendar* cal = getCalendar(expandURL(calendarURL));
+  ADCalendarBase* cal = getCalendar(expandURL(calendarURL));
   Event* event = cal->getEvent(eventID);
   mAlarmDialog->appendEvent(cal, event);
 }
@@ -345,14 +349,15 @@ void AlarmGui::setToolTip()
   // Count the number of currently loaded calendars whose names should be displayed
   int nAvailable = 0;
   int nForDisplay = 0;
-  ADCalendar* firstForDisplay = 0L;
-  for (ADCalendar* cal = mCalendars.first();  cal;  cal = mCalendars.next())
+  ADCalendarBase* firstForDisplay = 0L;
+  for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
   {
     if (cal->available())
     {
       const ClientInfo* c = getClientInfo(cal->appName());
-      if (c  &&  c->displayCalName  &&  !nForDisplay++)
+      if (c  &&  c->displayCalName  &&  !nForDisplay++) {
         firstForDisplay = cal;
+      }
       ++nAvailable;
     }
   }
@@ -372,25 +377,3 @@ void AlarmGui::setToolTip()
     filename = i18n("No calendar loaded.");
   mDocker->addToolTip(filename);
 }
-
-#if 0
-///////////////////////////////////////////////////////////////////////////////
-// class ADCalendar
-///////////////////////////////////////////////////////////////////////////////
-
-ADCalendar::ADCalendar(const QString& url, const QString& appname, Type type)
-  : ADCalendarBase(url, appname, type),
-    available_(false),
-    enabled_(false)
-{
-  if (type == KORGANIZER)
-    loadFile();
-?  showDialogs(FALSE);
-}
-
-// A virtual "constructor"
-ADCalendarBase* ADCalendar::create(const QString& url, const QString& appname, Type type)
-{
-  return new ADCalendar(url, appname, type);
-}
-#endif

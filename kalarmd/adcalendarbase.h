@@ -24,6 +24,8 @@
 
 #include <libkcal/calendarlocal.h>
 
+#include "compat.h"
+
 using namespace KCal;
 
 // Base class for Alarm Daemon calendar access
@@ -33,10 +35,32 @@ class ADCalendarBase : public CalendarLocal
     enum Type { KORGANIZER = 0, KALARM = 1 };
     ADCalendarBase(const QString& url, const QString& appname, Type);
     ~ADCalendarBase()  { }
+
     const QString&  urlString() const   { return urlString_; }
     const QString&  appName() const     { return appName_; }
     bool            loaded() const      { return loaded_; }
     Type            actionType() const  { return actionType_; }
+
+    virtual void setEnabled( bool ) = 0;
+    virtual bool enabled() const = 0;   
+
+    virtual void setAvailable( bool ) = 0;
+    virtual bool available() const = 0;
+  
+    // client has registered since calendar was
+    // constructed, but has not since added the
+    // calendar. Monitoring is disabled.
+    void setUnregistered( bool u ) { mUnregistered = u; }
+    bool unregistered() const { return mUnregistered; }
+
+    virtual bool loadFile() = 0;
+
+    virtual void setEventHandled(const Event*, const QValueList<QDateTime> &) = 0;
+    virtual bool eventHandled(const Event*, const QValueList<QDateTime> &) = 0;
+
+    virtual void setEventPending(const QString& ID) = 0;
+    virtual bool getEventPending(QString& ID) = 0;
+
   protected:
     bool            loadFile_(const QString& appNamebool);
 
@@ -64,8 +88,18 @@ class ADCalendarBase : public CalendarLocal
     QString           appName_;       // name of application owning this calendar
     Type              actionType_;    // action to take on event
     bool              loaded_;        // true if calendar file is currently loaded
+
+    bool mUnregistered;
 };
 
-typedef QPtrList<ADCalendarBase> CalendarBaseList;
+typedef QPtrList<ADCalendarBase> CalendarList;
+
+class ADCalendarBaseFactory
+{
+  public:
+    virtual ADCalendarBase *create(const QString& url, const QString& appname,
+                                   ADCalendarBase::Type) = 0;
+};
+
 
 #endif

@@ -50,8 +50,7 @@ class ADConfigData : public ADConfigDataBase
 {
   public:
     ADConfigData()  : ADConfigDataBase(false) { }
-    void   readDaemonData(bool& deletedClients, bool& deletedCalendars)
-                                      { readConfigData(false, deletedClients, deletedCalendars); }
+    void readDaemonData(bool& deletedClients, bool& deletedCalendars);
 };
 
 
@@ -64,7 +63,9 @@ class AlarmGui : public QObject, public ADConfigData, virtual public AlarmGuiIfa
 
     bool              isDaemonRunning(bool updateDockWindow = true);
     ClientIteration   getClientIteration()     { return ClientIteration(mClients); }
-    ADCalendarIteration getCalendarIteration() { return ADCalendarIteration(mCalendars); }
+    CalendarList      calendars() { return mCalendars; }
+
+//    ADCalendarIteration getCalendarIteration() { return ADCalendarIteration(mCalendars); }
     int               calendarCount() const    { return mCalendars.count(); }
     bool              autostartDaemon() const  { return mAutostartDaemon; }
     const QString&    defaultClient() const    { return mDefaultClient; }

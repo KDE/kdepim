@@ -29,28 +29,39 @@ class ADCalendar : public ADCalendarBase
   public:
     ADCalendar(const QString& url, const QString& appname, Type);
     ~ADCalendar()  { }
-    static ADCalendar *create(const QString& url, const QString& appname, Type);
-    bool           enabled() const     { return enabled_ && !unregistered; }
+    ADCalendar *create(const QString& url, const QString& appname, Type);
+
     void           setEnabled( bool enabled ) { enabled_ = enabled; }
-    bool           available() const   { return loaded() && !unregistered; }
-    static bool    eventHandled(const Event*, const QValueList<QDateTime> &);
+    bool           enabled() const     { return enabled_ && !unregistered(); }
+
+    void           setAvailable( bool ) {}
+    bool           available() const   { return loaded() && !unregistered(); }
+
+    bool           eventHandled(const Event*, const QValueList<QDateTime> &);
     void           setEventHandled(const Event*,
                                    const QValueList<QDateTime> &);
-    static void    clearEventsHandled(const QString& calendarURL);
+
     void           setEventPending(const QString& ID);
     bool           getEventPending(QString& ID);
+
+    static void    clearEventsHandled(const QString& calendarURL);
+
     bool           loadFile()          { return loadFile_(QString()); }
 
   public:
     bool              available_;
     bool              enabled_;       // events are currently manually enabled
-    bool              unregistered;   // client has registered since calendar was
-                                      // constructed, but has not since added the
-                                      // calendar. Monitoring is disabled.
   private:
     QPtrList<QString> eventsPending_; // IDs of pending KALARM type events
 };
 
-typedef QPtrList<ADCalendar> CalendarList;
+//typedef QPtrList<ADCalendar> CalendarList;
+
+class ADCalendarFactory : public ADCalendarBaseFactory
+{
+  public:
+    ADCalendar *create(const QString& url, const QString& appname,
+                       ADCalendarBase::Type);
+};
 
 #endif

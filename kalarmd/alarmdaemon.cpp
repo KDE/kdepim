@@ -19,7 +19,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-#include "kalarmd.h"
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -95,10 +94,10 @@ void AlarmDaemon::enableCal_(const QString& urlString, bool enable)
 {
   kdDebug() << "AlarmDaemon::enableCal_(" << urlString << ")" << endl;
 
-  ADCalendar* cal = getCalendar(urlString);
+  ADCalendarBase* cal = getCalendar(urlString);
   if (cal)
   {
-    cal->enabled_ = enable;
+    cal->setEnabled( enable );
     notifyGuiCalStatus(cal);    // notify any other GUI applications
   }
 }
@@ -111,15 +110,15 @@ void AlarmDaemon::addCal_(const QString& appname, const QString& urlString, bool
 {
   kdDebug() << "AlarmDaemon::addCal_(" << urlString << "): " << (msgCal ? "KALARM" : "KORGANIZER") << endl;
 
-  ADCalendar* cal = getCalendar(urlString);
+  ADCalendarBase* cal = getCalendar(urlString);
   if (cal)
   {
     // Calendar is already being monitored
-    if (!cal->unregistered)
+    if (!cal->unregistered())
       return;
     if (cal->appName() == appname)
     {
-      cal->unregistered = false;
+      cal->setUnregistered( false );
       reloadCal_(cal);
       return;
     }
@@ -151,7 +150,7 @@ void AlarmDaemon::reloadCal_(const QString& appname, const QString& urlString, b
 
   if (!urlString.isEmpty())
   {
-    ADCalendar* cal = getCalendar(urlString);
+    ADCalendarBase* cal = getCalendar(urlString);
     if (cal)
       reloadCal_(cal);
     else
@@ -166,7 +165,7 @@ void AlarmDaemon::reloadCal_(const QString& appname, const QString& urlString, b
 /*
  * Reload the specified calendar.
  */
-void AlarmDaemon::reloadCal_(ADCalendar* cal)
+void AlarmDaemon::reloadCal_(ADCalendarBase* cal)
 {
   kdDebug() << "AlarmDaemon::reloadCal_(): calendar" << endl;
 
@@ -198,7 +197,7 @@ void AlarmDaemon::removeCal_(const QString& urlString)
 {
   kdDebug() << "AlarmDaemon::removeCal_(" << urlString << ")\n";
 
-  ADCalendar* cal = getCalendar(urlString);
+  ADCalendarBase* cal = getCalendar(urlString);
   if (cal)
   {
     deleteConfigCalendar(cal);
@@ -232,7 +231,7 @@ void AlarmDaemon::registerApp(const QString& appName, const QString& appTitle,
         for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
         {
           if (cal->appName() == appName)
-            static_cast<ADCalendar*>(cal)->unregistered = true;
+            cal->setUnregistered( true );
         }
         mClients.remove(appName);
       }
@@ -313,7 +312,7 @@ void AlarmDaemon::checkAlarms(const QString& appName)
  * display the pending alarms.
  * Reply = true if there were any KORGANIZER type alarms.
  */
-void AlarmDaemon::checkAlarms(ADCalendar* cal)
+void AlarmDaemon::checkAlarms(ADCalendarBase* cal)
 {
   if (mEnabled  &&  cal->loaded()  &&  cal->enabled())
   {
@@ -376,7 +375,7 @@ void AlarmDaemon::checkEventAlarms(const Event& event, QValueList<QDateTime>& al
  * Reply = false if the event should be held pending until the client
  *         application can be started.
  */
-bool AlarmDaemon::notifyEvent(const ADCalendar* calendar, const QString& eventID)
+bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eventID)
 {
   kdDebug() << "AlarmDaemon::notifyEvent(" << eventID << ")\n";
   if (calendar)
@@ -442,8 +441,7 @@ bool AlarmDaemon::notifyEvent(const ADCalendar* calendar, const QString& eventID
 void AlarmDaemon::notifyPendingEvents(const QString& appname)
 {
   kdDebug() << "AlarmDaemon::notifyPendingEvents(" << appname << ")\n";
-  for (ADCalendar* cal = static_cast<ADCalendar*>(mCalendars.first());
-       cal;  static_cast<ADCalendar*>(cal = mCalendars.next()))
+  for (ADCalendarBase* cal = mCalendars.first(); cal; cal = mCalendars.next())
   {
     if (cal->appName() == appname
     &&  cal->actionType() == ADCalendar::KALARM)
@@ -544,7 +542,7 @@ void AlarmDaemon::registerGui(const QString& appName, const QString& dcopObject)
  * Send a DCOP message to all GUI interface applications, notifying them of a change
  * in calendar status.
  */
-void AlarmDaemon::notifyGuiCalStatus(const ADCalendar* cal)
+void AlarmDaemon::notifyGuiCalStatus(const ADCalendarBase* cal)
 {
    notifyGui((cal->available() ? (cal->enabled() ? ENABLE_CALENDAR : DISABLE_CALENDAR) : CALENDAR_UNAVAILABLE),
              cal->urlString());
@@ -578,12 +576,12 @@ void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL, co
     const QString& dcopObject = g.data().dcopObject;
     if (kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(g.key())))
     {
-kdDebug()<<"AlarmDaemon::notifyGui() sending:"<<g.key()<<" ->"<<g.data().dcopObject<<endl;
+      kdDebug()<<"AlarmDaemon::notifyGui() sending:" << g.key()<<" ->" << dcopObject <<endl;
       QByteArray data;
       QDataStream arg(data, IO_WriteOnly);
       arg << changeType << calendarURL << appName;
       if (!kapp->dcopClient()->send(static_cast<const char*>(g.key()),
-                                    static_cast<const char*>(g.data().dcopObject),
+                                    static_cast<const char*>( dcopObject),
                                     "alarmDaemonUpdate(const QString&,const QString&,const QString&)",
                                     data))
         kdDebug() << "AlarmDaemon::guiNotify(): dcop send failed:" << g.key() << endl;

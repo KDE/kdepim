@@ -23,6 +23,8 @@
 #include <kdebug.h>
 #include <kstandarddirs.h>
 
+#include "adcalendar.h"
+
 #include "adconfigdatarw.h"
 
 void ADConfigDataRW::readDaemonData(bool sessionStarting)
@@ -31,8 +33,9 @@ void ADConfigDataRW::readDaemonData(bool sessionStarting)
 
   KSimpleConfig clientConfig(clientDataFile());
 
+  ADCalendarFactory calFactory;
   bool cls, cals;
-  QString newClients = readConfigData(sessionStarting, cls, cals);
+  QString newClients = readConfigData(sessionStarting, cls, cals, &calFactory);
   if (!newClients.isEmpty())
   {
     // One or more clients in the Clients config entry was invalid, so rewrite the entry
@@ -139,7 +142,7 @@ void ADConfigDataRW::addConfigClient(KSimpleConfig& clientConfig, const QString&
 }
 
 // Add a calendar file URL to the client data file for a specified application.
-void ADConfigDataRW::writeConfigCalendar(const QString& appName, const ADCalendar* cal)
+void ADConfigDataRW::writeConfigCalendar(const QString& appName, const ADCalendarBase* cal)
 {
   KSimpleConfig clientConfig(clientDataFile());
   QString groupKey = CLIENT_KEY + appName;
@@ -161,7 +164,7 @@ void ADConfigDataRW::writeConfigCalendar(const QString& appName, const ADCalenda
 /*
  * Delete all entries in the client data file for the specified calendar
  */
-void ADConfigDataRW::deleteConfigCalendar(const ADCalendar* cal)
+void ADConfigDataRW::deleteConfigCalendar(const ADCalendarBase* cal)
 {
   KSimpleConfig clientConfig(clientDataFile());
   QString groupKey = CLIENT_KEY + cal->appName();

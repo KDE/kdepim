@@ -60,7 +60,8 @@ ADConfigDataBase::ADConfigDataBase(bool daemon)
  * monitoring ceases until the client application tell the daemon to monitor it.
  * Reply = updated Clients option in main Alarm Daemon config file.
  */
-QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClients, bool& deletedCalendars)
+QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClients, bool& deletedCalendars,
+                                         ADCalendarBaseFactory *calFactory)
 {
   kdDebug() << "ADConfigDataBase::readConfigData()" << endl;
   deletedClients   = false;
@@ -89,7 +90,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
     if (!found)
     {
       // This client has disappeared. Remove it and its calendars
-      for (ADCalendar* cal = mCalendars.first();  cal;  cal = mCalendars.next())
+      for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
       {
         if (cal->appName() == cl.key())
         {
@@ -160,7 +161,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
             if (comma >= 0)
             {
               QString calname = it.data().mid(comma + 1);
-              ADCalendar* cal = getCalendar(calname);
+              ADCalendarBase* cal = getCalendar(calname);
               if (cal)
               {
                 // The calendar is already in the client's list, so remove
@@ -171,7 +172,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
               else
               {
                 // Add the calendar to the client's list
-                cal = ADCalendar::create(calname, clients[i],
+                cal = calFactory->create(calname, clients[i],
                              static_cast<ADCalendarBase::Type>(it.data().left(comma).toInt()));
                 mCalendars.append(cal);
                 kdDebug() << "ADConfigDataBase::readConfigData(): calendar " << cal->urlString() << endl;
@@ -189,7 +190,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
   return writeNewClients ? newClients : QString::null;
 }
 
-void ADConfigDataBase::deleteConfigCalendar(const ADCalendar*)
+void ADConfigDataBase::deleteConfigCalendar(const ADCalendarBase*)
 {
 }
 
@@ -205,12 +206,12 @@ const ClientInfo* ADConfigDataBase::getClientInfo(const QString& appName) const
   return 0L;
 }
 
-/* Return the ADCalendar structure for the specified full calendar URL */
-ADCalendar *ADConfigDataBase::getCalendar(const QString& calendarURL)
+/* Return the ADCalendarBase structure for the specified full calendar URL */
+ADCalendarBase *ADConfigDataBase::getCalendar(const QString& calendarURL)
 {
   if (!calendarURL.isEmpty())
   {
-    for (ADCalendar *cal = mCalendars.first();  cal;  cal = mCalendars.next())
+    for (ADCalendarBase *cal = mCalendars.first();  cal;  cal = mCalendars.next())
     {
       if (cal->urlString() == calendarURL)
         return cal;

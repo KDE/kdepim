@@ -38,8 +38,8 @@ class ADConfigDataRW : public ADConfigDataBase
     void writeConfigClient(const QString& appName, const ClientInfo&);
     void writeConfigClientGui(const QString& appName, const QString& dcopObject);
     void addConfigClient(KSimpleConfig&, const QString& appName, const QString& key);
-    void writeConfigCalendar(const QString& appName, const ADCalendar*);
-    virtual void   deleteConfigCalendar(const ADCalendar*);
+    void writeConfigCalendar(const QString& appName, const ADCalendarBase*);
+    virtual void   deleteConfigCalendar(const ADCalendarBase*);
 
     typedef QMap<QString, QString> GuiMap;  // maps GUI client names against DCOP object names
 

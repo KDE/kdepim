@@ -22,32 +22,45 @@
 #ifndef ADCALENDAR_GUI_H
 #define ADCALENDAR_GUI_H
 
+#include <kapplication.h>
 #include <kaboutdata.h>
 
 #include "adcalendarbase.h"
 
 // Alarm Daemon GUI calendar access
-class ADCalendar : public ADCalendarBase
+class ADCalendarGui : public ADCalendarBase
 {
   public:
-    ADCalendar(const QString& url, const QString& appname, Type);
-    ~ADCalendar()  { }
-    static ADCalendar *create(const QString& url, const QString& appname, Type);
-    bool           enabled() const     { return enabled_; }
-    bool           available() const   { return available_; }
+    ADCalendarGui(const QString& url, const QString& appname, Type);
+    ~ADCalendarGui()  { }
+
     bool           loadFile()          { return loadFile_(kapp->aboutData()->programName()); }
 
-    bool           available_;     // calendar is available for monitoring
-    bool           enabled_;       // monitoring is currently manually enabled
+    void setEnabled( bool e ) { mEnabled = e; }
+    bool enabled() const { return mEnabled; }
+    
+    void setAvailable( bool a ) { mAvailable = a; }
+    bool available() const { return mAvailable; }
+
+    void setEventHandled(const Event*, const QValueList<QDateTime> &) {}
+    bool eventHandled(const Event*, const QValueList<QDateTime> &) { return false; }
+
+    void setEventPending(const QString&) {}
+    bool getEventPending(QString&) { return false; }
+
+  private:
+    bool           mAvailable;     // calendar is available for monitoring
+    bool           mEnabled;       // monitoring is currently manually enabled
 };
 
-typedef QPtrList<ADCalendar> CalendarList;
+typedef QPtrList<ADCalendarGui> CalendarGuiList;
 
+/*
 // The CalendarIteration class gives secure public access to AlarmGui::mCalendars
 class ADCalendarIteration
 {
   public:
-    ADCalendarIteration(CalendarList& c)  : calendars(c) { calendar = calendars.first(); }
+    ADCalendarIteration(CalendarGuiList& c)  : calendars(c) { calendar = calendars.first(); }
     bool           ok() const           { return !!calendar; }
     bool           next()               { return !!(calendar = calendars.next()); }
     bool           available() const    { return calendar->available(); }
@@ -55,8 +68,17 @@ class ADCalendarIteration
     void           enabled(bool tf)     { calendar->enabled_ = tf; }
     const QString& urlString() const    { return calendar->urlString(); }
   private:
-    CalendarList&  calendars;
-    ADCalendar*    calendar;
+    CalendarGuiList&  calendars;
+    ADCalendarGui*    calendar;
 };
+*/
+
+class ADCalendarGuiFactory : public ADCalendarBaseFactory
+{
+  public:
+    ADCalendarGui *create(const QString& url, const QString& appname,
+                          ADCalendarBase::Type);
+};
+
 
 #endif

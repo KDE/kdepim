@@ -139,13 +139,15 @@ void AlarmDockWindow::updateMenuCalendars(bool recreate)
     {
       int index = calendarIndex;
       menu->insertSeparator(index++);
-      for (ADCalendarIteration cal = alarmGui.getCalendarIteration();  cal.ok();  cal.next())
+      CalendarList calendars = alarmGui.calendars();
+      ADCalendarBase *cal;
+      for( cal = calendars.first(); cal; cal = calendars.next() )
       {
-        int id = menu->insertItem(KURL(cal.urlString()).prettyURL(), this,
-                                       SLOT(selectCal(int)), 0, -1, index);
+        int id = menu->insertItem(KURL(cal->urlString()).prettyURL(), this,
+                                  SLOT(selectCal(int)), 0, -1, index);
         menu->setItemParameter(id, index++);    // set parameter for selectCal()
-        menu->setItemEnabled(id, enable && cal.available());
-        menu->setItemChecked(id, cal.enabled());
+        menu->setItemEnabled(id, enable && cal->available());
+        menu->setItemChecked(id, cal->enabled());
       }
       nCalendarIds = index - calendarIndex;
     }
@@ -154,11 +156,13 @@ void AlarmDockWindow::updateMenuCalendars(bool recreate)
   {
     // Update the state of the existing menu items
     int index = calendarIndex;
-    for (ADCalendarIteration cal = alarmGui.getCalendarIteration();  cal.ok();  cal.next())
+    CalendarList calendars = alarmGui.calendars();
+    ADCalendarBase *cal;
+    for( cal = calendars.first(); cal; cal = calendars.next() )
     {
       int id = menu->idAt(++index);
-      menu->setItemEnabled(id, enable && cal.available());
-      menu->setItemChecked(id, cal.enabled());
+      menu->setItemEnabled(id, enable && cal->available());
+      menu->setItemChecked(id, cal->enabled());
     }
   }
 }
@@ -244,13 +248,15 @@ void AlarmDockWindow::selectCal(int menuIndex)
   bool newstate = !menu->isItemChecked(id);
   kdDebug() << "AlarmDockWindow::selectCal(): "<< menuIndex << ": id=" << id << " newstate=" << (int)newstate << endl;
   int index = clientIndex + nClientIds;
-  for (ADCalendarIteration cal = alarmGui.getCalendarIteration();  cal.ok();  cal.next())
+  CalendarList calendars = alarmGui.calendars();
+  ADCalendarBase *cal;
+  for( cal = calendars.first(); cal; cal = calendars.next() )
   {
     if (++index == menuIndex)
     {
       QByteArray data;
       QDataStream arg(data, IO_WriteOnly);
-      arg << cal.urlString() << (Q_INT8)newstate;
+      arg << cal->urlString() << (Q_INT8)newstate;
       if (!kapp->dcopClient()->send(DAEMON_APP_NAME, DAEMON_DCOP_OBJECT, "enableCal(QString,bool)", data))
         kdDebug() << "AlarmDockWindow::selectCal(): enableCal dcop send failed\n";
       break;

@@ -22,18 +22,21 @@
 #include "adcalendar_gui.h"
 
 
-ADCalendar::ADCalendar(const QString& url, const QString& appname, Type type)
+ADCalendarGui::ADCalendarGui(const QString& url, const QString& appname,
+                             Type type)
   : ADCalendarBase(url, appname, type),
-    available_(false),
-    enabled_(false)
+    mAvailable(false),
+    mEnabled(false)
 {
   if (type == KORGANIZER)
     loadFile();
   showDialogs(FALSE);
 }
 
-// A "virtual constructor"
-ADCalendar* ADCalendar::create(const QString& url, const QString& appname, Type type)
+ADCalendarGui *ADCalendarGuiFactory::create(const QString& url,
+                                            const QString& appname,
+                                            ADCalendarBase::Type type)
 {
-  return new ADCalendar(url, appname, type);
+  return new ADCalendarGui(url, appname, type);
 }
+

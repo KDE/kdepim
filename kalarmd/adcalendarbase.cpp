@@ -42,7 +42,8 @@ ADCalendarBase::ADCalendarBase(const QString& url, const QString& appname, Type 
   : urlString_(url),
     appName_(appname),
     actionType_(type),
-    loaded_(false)
+    loaded_(false),
+    mUnregistered(false)
 {
 }
 

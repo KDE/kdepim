@@ -93,16 +93,16 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void        enableCal_(const QString& urlString, bool enable);
     void        addCal_(const QString& appname, const QString& urlString, bool msgCal);
     void        reloadCal_(const QString& appname, const QString& urlString, bool msgCal);
-    void        reloadCal_(ADCalendar*);
+    void        reloadCal_(ADCalendarBase*);
     void        resetMsgCal_(const QString& appname, const QString& urlString);
     void        removeCal_(const QString& urlString);
     void        checkAlarms();
-    void        checkAlarms(ADCalendar*);
+    void        checkAlarms(ADCalendarBase*);
     void        checkAlarms(const QString& appName);
     void        checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes);
     void        notifyPendingEvents(const QString& appname);
-    bool        notifyEvent(const ADCalendar*, const QString& eventID);
-    void        notifyGuiCalStatus(const ADCalendar*);
+    bool        notifyEvent(const ADCalendarBase*, const QString& eventID);
+    void        notifyGuiCalStatus(const ADCalendarBase*);
     void        notifyGui(GuiChangeType, const QString& calendarURL = QString::null,
                           const QString &appname=QString::null);
 //    void        writeConfigClientGui(const QString& appName, const QString& dcopObject);

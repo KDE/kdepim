@@ -40,14 +40,13 @@
 ADCalendar::ADCalendar(const QString& url, const QString& appname, Type type)
   : ADCalendarBase(url, appname, type),
     available_( false ),
-    enabled_(true),
-    unregistered(false)
+    enabled_(true)
 {
   loadFile();
 }
 
-// A "virtual constructor"
-ADCalendar *ADCalendar::create(const QString& url, const QString& appname, Type type)
+ADCalendar *ADCalendarFactory::create(const QString& url, const QString& appname,
+                                      ADCalendarBase::Type type)
 {
   return new ADCalendar(url, appname, type);
 }

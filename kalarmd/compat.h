@@ -1,7 +1,7 @@
 /*
-    This file is part of the KDE alarm daemon GUI.
-    Copyright (c) 1997-1999 Preston Brown
-    Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
+    Calendar access for KDE Alarm Daemon and KDE Alarm Daemon GUI.
+
+    This file is part of the KDE alarm daemon.
     Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
 
     This program is free software; you can redistribute it and/or modify
@@ -19,39 +19,18 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-// $Id$
+#ifndef AD_COMPAT_H
+#define AD_COMPAT_H
 
-#include <qstring.h>
+// Compatibility with KDE 2.2
+#include <qglobal.h>
+#if QT_VERSION < 300
+	#define QPtrList         QList
+	#define QPtrListIterator QListIterator
+#endif
+#include <kapp.h>
+#if KDE_VERSION < 290
+   #define Alarm KOAlarm
+#endif
 
-#include <kcmdlineargs.h>
-#include <kdebug.h>
-
-#include "daemongui.h"
-
-#include "guiapp.h"
-#include "guiapp.moc"
-
-
-AlarmGuiApp::AlarmGuiApp() :
-  KUniqueApplication(),
-  mAdg(0L)
-{
-}
-
-AlarmGuiApp::~AlarmGuiApp()
-{
-}
-
-int AlarmGuiApp::newInstance()
-{
-  kdDebug() << "kalarmdgui:AlarmGuiApp::newInstance()" << endl;
-
-  // Check if we already have a running alarm daemon widget
-  if (mAdg) return 0;
-
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-  mAdg = new AlarmGui(0L, DCOP_OBJECT_NAME);
-
-  return 0;
-}
+#endif

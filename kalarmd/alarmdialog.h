@@ -22,7 +22,8 @@
 //
 // Alarm dialog.
 //
-#include "kalarmd.h"
+
+#include "compat.h"
 
 #include <kdialogbase.h>
 
