@@ -1611,7 +1611,9 @@ that is used when you create a new folder.</para>
 <listitem>
 <para>Here you can set the folder that should be selected by default if you
 start &kmail;. If you use only &imap; folders then you might want to set
-this to your &imap; inbox folder.</para>
+this to your &imap; inbox folder. If you do that, you can collapse the local 
+folders in the folder list, and then they will stay collapsed when &kmail; 
+starts.</para>
 </listitem>
 </varlistentry>
 

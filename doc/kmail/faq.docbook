@@ -31,12 +31,12 @@
 ~/Mail (incl. hidden ones) to the new ~/Mail folder -->
 
 <qandaentry>
-<question><para>Why are my filters not applied to incoming messages of IMAP accounts?</para></question>
+<question><para>Why are my filters not applied to incoming messages of &imap; accounts?</para></question>
 <answer>
-<para>Normal IMAP mode does not support filtering, but the new 
-disconnected IMAP account type does. You could try to use server-side
+<para>Normal &imap; mode does not support filtering, but the new 
+disconnected &imap; account type does. You could try to use server-side
 filtering (ask your admin for how to install filters on the server and in
-which format), since IMAP is all about managing your email <emphasis>on the server</emphasis>.
+which format), since &imap; is all about managing your email <emphasis>on the server</emphasis>.
 Unfortunately, although there exists a mail filter language (Sieve, defined
 in RFC3028), there is no standardized access protocol for installing or
 editing server-side Sieve scripts. If such a protocol becomes available in
@@ -534,6 +534,22 @@ available in <filename>kdenetwork/kmail/kmailIface.h</filename> and
 <qandaentry>
 <question><para>When I reply to a message, only a part of the message is quoted. How come?</para></question>
 <answer><para>This can happen when the message contains two dashes and a space on a single line. This is seen as the start of the signature. The remaining part of the message will not be quoted, because when you reply to a message KMail strips the signature.</para></answer>
+</qandaentry>
+
+
+<qandaentry>
+<question><para>I am only using &imap;, can I get rid of those Local Folders in 
+the folder list or at least keep them collapsed all the time?</para></question>
+<answer><para>No you can not get rid of them. The local folders function as a 
+fallback when the &imap; server is unreachable. Although you only use &imap;, 
+&kmail; uses the outbox for sending the messages. If we hide all local folders 
+you won't be able to fix messages in the outbox which can not be send for some 
+reason. But it is possible to keep the local folders collapsed. What 
+you have to do is go to <menuchoice><guimenu>Settings</guimenu><guimenuitem>
+Configure &kmail;...</guimenuitem></menuchoice> and go to the section Misc, 
+there you can setup the folder on startup. If you change that to a folder on 
+the &imap; account, the Local Folders will stay collapsed when &kmail; starts.
+</para></answer>
 </qandaentry>
 
 </qandaset>
