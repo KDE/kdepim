@@ -2902,8 +2902,8 @@ but nothing happens.  What else do I need to do?</para>
 <question>
 <para>Can I use freebusy-time with &korganizer;?</para>
 </question>
-<answer><para>Unfortunately this is not implemented yet, but planned for one of 
-the next releases.</para>
+<answer><para>yes, follow the instructions in <link
+linkend="preferences-free-busy">Free/Busy</link>.</para>
 </answer>
 </qandaentry>
 </qandaset>
