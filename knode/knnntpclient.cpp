@@ -703,7 +703,10 @@ void KNNntpClient::handleErrors()
   int code = atoi(getCurrentLine());
 
   // close the connection only when necessary:
-  if ((code != 430)&&(code != 411))  // 430 no such article found / 411 no such news group
+  // 430 no such article found
+  // 411 no such news group
+  // 423 no such article number in this group
+  if ((code != 430)&&(code != 411)&&(code != 423))
     closeConnection();
 }
 
