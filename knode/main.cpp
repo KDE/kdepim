@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
                         KNODE_VERSION,
                         I18N_NOOP("A newsreader for KDE"),
                         KAboutData::License_GPL,
-                        "Copyright (C) 1999, 2000, Christian Thurner",
+                        "Copyright (C) 1999-2000, Christian Thurner",
                         0,
                         "http://knode.sourceforge.net/",
                         "cthurner@freepage.de");

@@ -31,6 +31,7 @@
 #include <kio/netaccess.h>
 #include <kfiledialog.h>
 #include <keditcl.h>
+#include <kspell.h>
 
 #include "knsavedarticle.h"
 #include "knmimecontent.h"
@@ -41,7 +42,7 @@
 
 
 KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
-    :	KTMainWindow(0), r_esult(CRsave), a_rticle(a), nntp(n), attChanged(false)
+    :	KTMainWindow(0), spellChecker(0), r_esult(CRsave), a_rticle(a), nntp(n), attChanged(false)
 {
 	if(!sig.isEmpty()) s_ignature=sig.copy();	
 	
@@ -94,8 +95,7 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
   KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
-  new KAction(i18n("Configure &Spellchecker"), 0, this, SLOT(slotConfSpellchecker()),
-                   actionCollection(), "setup_spellchecker");
+  KStdAction::preferences(this, SLOT(slotPreferences()), actionCollection());
 
   createGUI("kncomposerui.rc");
 
@@ -321,7 +321,18 @@ void KNComposer::slotReplace()
 
 void KNComposer::slotSpellcheck()
 {
-  #warning stub - spellcheck
+  if (spellChecker)  // In progress...
+    return;
+
+  spellChecker = new KSpell(this, i18n("Spellcheck"), this,
+                            SLOT(slotSpellStarted(KSpell *)));
+
+  connect(spellChecker, SIGNAL(death()), this, SLOT(slotSpellFinished()));
+  connect(spellChecker, SIGNAL(done(const QString&)), this, SLOT(slotSpellDone(const QString&)));
+  connect(spellChecker, SIGNAL(misspelling (QString, QStringList *, unsigned)),
+          view->edit, SLOT(misspelling (QString, QStringList *, unsigned)));
+  connect(spellChecker, SIGNAL(corrected (QString, QString, unsigned)),
+          view->edit, SLOT(corrected (QString, QString, unsigned)));
 }
 
 
@@ -416,9 +427,47 @@ void KNComposer::slotConfToolbar()
 }
 
 
-void KNComposer::slotConfSpellchecker()
+void KNComposer::slotPreferences()
 {
-  #warning stub - setup Spellchecker
+  #warning stub - open the main config dialog, section "Post News"
+}
+
+
+//==============================================================================
+// spellchecking code copied form kedit (Bernd Johannes Wuebben)
+//==============================================================================
+
+
+void KNComposer::slotSpellStarted( KSpell *)
+{
+  view->edit->spellcheck_start();
+  spellChecker->setProgressResolution(2);
+  spellChecker->check(view->edit->text());
+}
+
+
+
+void KNComposer::slotSpellDone(const QString &newtext)
+{
+  view->edit->spellcheck_stop();
+  if (spellChecker->dlgResult() == 0)
+    view->edit->setText(newtext);
+  spellChecker->cleanUp();
+}
+
+
+void KNComposer::slotSpellFinished( )
+{
+  KSpell::spellStatus status = spellChecker->status();
+  delete spellChecker;
+  spellChecker = 0;
+  if (status == KSpell::Error) {
+    KMessageBox::sorry(this, i18n("ISpell could not be started.\n"
+    "Please make sure you have ISpell properly configured and in your PATH."));
+  } else if (status == KSpell::Crashed) {
+    view->edit->spellcheck_stop();
+    KMessageBox::sorry(this, i18n("ISpell seems to have crashed."));
+  }
 }
 
 

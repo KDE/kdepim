@@ -27,6 +27,7 @@
 
 class KNNntpAccount;
 class KNSavedArticle;
+class KSpell;
 
 
 class KNComposer : public KTMainWindow  {
@@ -76,6 +77,7 @@ class KNComposer : public KTMainWindow  {
 		 	
 		};
 		ComposerView *view;
+		KSpell *spellChecker;
 		composerResult r_esult;
 		KNSavedArticle *a_rticle;
 		KNNntpAccount *nntp;
@@ -91,6 +93,8 @@ class KNComposer : public KTMainWindow  {
  		void slotDestButtonClicked();
  		void slotFupCheckToggled(bool b);
  		void slotSubjectChanged(const QString &t);			
+ 		
+ 		// action slots
  		void slotSendNow();
  		void slotSendLater(); 		
  		void slotSaveAsDraft(); 		
@@ -106,7 +110,12 @@ class KNComposer : public KTMainWindow  {
    	void slotToggleToolBar();
   	void slotConfKeys();
   	void slotConfToolbar();
-  	void slotConfSpellchecker();
+  	void slotPreferences();
+  	
+    // spellcheck operation
+    void slotSpellStarted(KSpell *);
+    void slotSpellDone(const QString&);
+    void slotSpellFinished();
 					
  	signals:
  		void composerDone(KNComposer*);
