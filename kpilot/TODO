@@ -1,72 +1,111 @@
-[Ignore this file. The TODO list is now maintained in the ChangeLog]
+This is a TODO file. Open issues are unmarked, partly resolved issues
+are marked with a +, ignored issues get an o, and resolved issues a - 
+(or they are completely removed from the list). Check the ChangeLog 
+for details on how an issue is resolved, since resolved issues are
+ periodically purged from this list.
 
-This is a TODO file. Open issues are marked with a *, partly resolved issues
-are marked with a +, ignored issues get an o, and resolved issues a -.
-Check the ChangeLog for details on how an issue is resolved, since resolved
-issues are periodically purged from this list.
 
-General TODO
-============
 
-- Add tool-tip showing daemon status.
-- Fix WhatsThis for Kill daemon on exit.
-* Adjust the time of events to allow for the timezone KOrganizer is in.
-* Make the FileInstallWidget use a KDirWatcher.
-* Handle real devfs better (regular USB support seems OK now).
-* Handle difference between pi_bind() "no such file" error and others.
-* Add malsync conduit.
-* Fix local database & do regression testing
-+ How *do* you sync KNotes with the memo pad? This is hard.
-* Make the address book conduit use libkab (or whatever it's called now).
-* base classes for project manager conduits
-* add ListMaker conduit
-* add Progect conduit
-* add ShadowPlan conduit
-* add BrainForest conduit
-* add JPilot plugin proxy to use JPilog plugins with KPilot
-* Update the Conduit howto
-- Make daemon able to sync more than once in a run.
-- Close device at end of sync.
-+ Port conduits to new setup.
-- Make the kpilotTest program able to do more than one sync in a run. [NOT
-  DONE, but I've decided it's pointless.]
-o Make pi_install_file amenable to use in a GUI program. [Move to a thread
-  in KDE3 and leave unsolved in KDE2]
-- Add conduit-sync in the daemon as well.
-- Look into possible buffer overflows in pi_socket structure.
-- Add a validator ensuring path lengths are kept < 14 chars for
-  pilot-link <= 0.9.5
-- Use KJanusWidget for main window area, to make various views
-  more apparent.
-- Remove the exec()-style code for old conduits. Fixup the messages, too.
-- Possibly move the message and progress bar to the log window as well.
+Essential
+=========
+1)  VCal conduit: Currently using the ResourceCalendar (standard 
+    calendar) doesn't work for some (unknown) reason. Every sync 
+		happens with the filename given in the setup dialog. Probably 
+		very easy to fix.
+2)  Redesign the config dialog of kpilot (get rid of deprecated 
+    options, include conflict resolution, etc.)
+3)  Fix all conduits to use the new global options: conflict resolution, 
+    emergency sync, sync mode etc.
+4)  VCal conduit: Fields not supported on the handheld are erased 
+    in the calendar (e.g. categories). I need to get the Event 
+		before I copy all fields over, and only overwrite the fields 
+		from the handheld, so the others remain unchanged.
+
+
+Important (hight priority)
+============================
+5)  AvantGo conduit: fix the configure.in.in checks for libmal
+6)  ABook conduit: fix the first sync setting
+7)  Check the first-time syncing behavior of all the conduits.
+8)  Find out what's the reason of the "Invalid unique ID" crashes in 
+    the calendar conduits (and the addresssbook conduit)
+9)  GJJ: PalmDOC conduit: kpalmdoc is run as a modal dialog, not as 
+    a standalone dialog (e.g. create a link  on the desktop to 
+		kpalmdoc and start kpalmdoc from there. You can't access the 
+		desktop until you quit kpalmdoc)
+10) GJJ: Add a flag to the log{Error,Message} functions to prevent 
+    the addition of the trailing <br> and the date to each output 
+		(e.g. to put all output from the AvantGo conduit in one line, 
+		instead of one separate line for each .)
+11) Merge between HEAD and BRANCH (again).
+12) ABook conduit: Check all fields for differences before asking 
+    for conflict resolution. (i.e.. don't ask for conflict resolution 
+		of single fields, just for the whole record)
+13) ABook conduit: custom field sync doesn't work with birthdate 
+    (how do I convert a date to a string and back in an arbitrary 
+		format???)
+14) ABook conduit: Fix categories sync
+15) Add force-first-time to the KNotes conduit.
+16) Remove the edit capabilities from the built-in viewers.
+17) Include a calendar viewer, or get rid of the internal viewers 
+    altogether.
+18) VCal conduit: events going over midnight need to be split up 
+    on the handheld
+19) GJJ: Replace newlines in TODO summaries (not allowed in libkabc)
+
+
+Medium (nice to have, but not essential)
+========================================
+20) GJJ: Check all debug output, what should be put in the log (i.e. 
+    be visible to the user) and what is just debug output to track 
+		down problems. 
+21) GJJ: Hunt down and kill printfs. Hunt down bad i18n.
+22) Update README, TODO, NEWS, AUTHORS in HEAD.
+23) GJJ: Move the conduit configuration dialog (for the umpteenth time) 
+    to a list of QCheckBoxes, like noatun's plain playlist or 
+		kdebugdialog
+24) PalmDOC conduit: choosing the bookmark type of the pdb->txt 
+    conversion is not yet implemented
+25) ABook conduit: sync with multiple email addresses (comma separated 
+    list received from handheld)
+26) ABook conduit: sync with preferred address (not home or work address)
+27) Update the conduit programming howto (some changes in the database 
+    and record classes)
+28) GJJ: The question asked when kpilot and the pilot's usernames don't 
+    match isn't very intuitive. It should be changed to a yes/no/cancel 
+		with "Use KPilot name" "Use Pilot name" "Cancel". This is in 
+		interactiveSync.cc.
+29) Fix the NULL conduit's tooltip - OR - make it actually do what the 
+    current tooltip says (resetSyncFlags() should be enough).
+30) GJJ: Create good icons for the kpalmdoc converter application.
+31) GJJ: Extend all conduits to allow arbitrary URLs instead of local 
+    files.
+32) JPilot conduit: fix the configure.in.in checks for gtk/glibc 
+    (although the conduit isn't even remotely finished)
+
+
+Unimportant (lowest priority)
+=============================
+33) JPilot conduit: Implement the conduit as an external GTK application, 
+    that is embedded into kkpilot using qxembed
+34) GJJ: Add tooltips to all controls in all conduit configure dialogs
+35) Do not store the RecordID with the vcalendar entry, but in the kpilot 
+    config
+36) GJJ: Move the file install widget to an iconview.
+37) GJJ: Show the sync log as a KPassivePopup
+38) Should interactiveSync and syncStack be moved to lib/ ?
+39) Make an application that just has a LogWidget and KPilot's dcop 
+    interface (and registration!) so that you can follow the daemon's 
+		log output without starting KPilot at all.
+
+
+
+
 
 
 Specific JOBS
 =============
 
-***
-*** Memo Export
-***
-
-*** Mostly done by David Bishop
-
-Part I. Make a widget (using Qt designer) for exporting memos. It should have
-at least: (1) The possibility to choose "all" or "currently selected" memos
-to export (2) The possibility to set the filename, using a Browse button at
-the very least (3) Chosing XML or plain text for export. (That's 4 readio
-buttons, 3 labels, a groupbox or two and a pushbutton and a QLineEdit in
-total, I think.) Base your widget on a Qt Widget -- *NOT* a dialog. Then it
-fits into KPilot better.
-
-Part II. (Optional) Add a "Always save only selected memo" option to the
-KPilot configuration dialog
-(kdepim/kpilot/kpilot/kpilotConfigDialog_base..ui) and make sure it gets
-saved to the config file (KPilotConfigDialog::commitChanges and also some
-work on ..../kpilotConfig.{h,cc})
-
-Part III. Write a function saveAsXML(const QString &fileName,const char
-*memoData) that writes said memo text to a file with the given name.
 
 ***
 *** PilotLocalDatabase fixups
@@ -82,25 +121,6 @@ would work as well; that depends on whether QVectors resize well. The tricky
 part is implementing the "current record pointer" with the same behavior
 as the current fCurrentRecord member, since conduits may depend on it.
 
-***
-*** Debug cleanup
-***
-
-*** DONE! By, um, I forget ...
-
-- kdDebug() everywhere needs to change into DEBUGCONDUIT, DEBUGKPILOT,
-  or one of the other DEBUG* macros defined in kpilot/lib/options.h.
-  This will send the debugging output to the sensible debug area.
-  Which one you choose depends on where the file lives -- choose wisely.
-
-- DEBUG* calls everywhere need to be surrounded by #ifdef DEBUG #endif.
-  This is because some compilers don't optimize away unused strings,
-  leading to big bulky (well, sorta) executables. Adding the #ifdefs
-  makes sure that there's nothing at all left over from the debugging code
-  when debugging is turned off.
-
-* __FUNCTION__ needs to be replaced by k_funcinfo. The popmail conduit is
-  bad for that one, at the very least.
 
 ***
 *** Popmail Conduit & IOSlaves
