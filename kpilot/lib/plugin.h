@@ -68,7 +68,12 @@ protected:
 
 /**
 * The SyncActions created by the factory should obey at least
-* the argument test, indicating a dry run.
+* the argument test, indicating a dry run. The device link is
+* the link where the sync should run -- don't get the pilotPort()
+* until the sync runs! 
+*
+* setConfig() will be called before the sync starts so that the
+* conduit can read/write metadata and local settings.
 */
 
 class ConduitAction : public SyncAction
@@ -80,8 +85,12 @@ public:
 		const QStringList &args = QStringList());
 	virtual ~ConduitAction();
 
+	void setConfig(KConfig *c) { fConfig=c; } ;
+
 protected:
 	bool isTest() const { return fTest; } ;
+
+	KConfig *fConfig;
 
 private:
 	bool fTest;
@@ -142,5 +151,8 @@ public:
 */
 
 // $Log$
+// Revision 1.1  2001/10/08 21:56:02  adridg
+// Start of making a separate KPilot lib
+//
 
 #endif

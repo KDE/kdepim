@@ -51,6 +51,9 @@ public:
 	PilotDatabase(QObject *,const char *);
 	virtual ~PilotDatabase();
 
+	enum { MAX_APPINFO_SIZE=8192 
+		} Constants;
+
 	/** Reads the application block info, returns size. */
 	virtual int readAppBlock(unsigned char* buffer, int maxLen) = 0;
 
@@ -102,6 +105,9 @@ private:
 
 
 // $Log$
+// Revision 1.1  2001/10/10 21:47:14  adridg
+// Shared files moved from ../kpilot/ and polished
+//
 // Revision 1.10  2001/09/29 16:26:18  adridg
 // The big layout change
 //

@@ -138,9 +138,7 @@ static const char *kpilot_id =
 #include "fileInstallWidget.h"
 #include "logWidget.h"
 
-#ifndef _KPILOT_CONDUITSETUP_H
-#include "conduitSetup.h"
-#endif
+#include "conduitConfigDialog.h"
 
 #ifndef _KPILOT_PILOTDAEMON_H
 #include "pilotDaemonDCOP.h"
@@ -723,10 +721,10 @@ void KPilotInstaller::slotConfigureConduits()
 {
 	FUNCTIONSETUP;
 
-	CConduitSetup *conSetup = 0L;
+	ConduitConfigDialog *conSetup = 0L;
 
 	showTitlePage();
-	conSetup = new CConduitSetup(this);
+	conSetup = new ConduitConfigDialog(this,0L,true);
 	conSetup->exec();
 	delete conSetup;
 }
@@ -836,21 +834,24 @@ int main(int argc, char **argv)
 	KAboutData about("kpilot", I18N_NOOP("KPilot"),
 		KPILOT_VERSION,
 		"KPilot - Hot-sync software for unix\n\n",
-		KAboutData::License_GPL, "(c) 1998-2000, Dan Pilone");
+		KAboutData::License_GPL, "(c) 1998-2000,2001, Dan Pilone");
 	about.addAuthor("Dan Pilone",
 		I18N_NOOP("Project Leader"),
 		"pilone@slac.com", "http://www.slac.com/pilone/kpilot_home/");
 	about.addAuthor("Adriaan de Groot",
 		I18N_NOOP("Maintainer"),
 		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
-	about.addAuthor("Preston Brown", I18N_NOOP("VCal conduit"));
-	about.addAuthor("Greg Stern", I18N_NOOP("Abbrowser conduit"));
-	about.addAuthor("Chris Molnar", I18N_NOOP("Expenses conduit"));
-	about.addAuthor("Heiko Purnhagen", I18N_NOOP("Bugfixer"));
-	about.addAuthor("Joerg Habenicht", I18N_NOOP("Bugfixer"));
-	about.addAuthor("Martin Junius",
+	about.addCredit("Preston Brown", I18N_NOOP("VCal conduit"));
+	about.addCredit("Greg Stern", I18N_NOOP("Abbrowser conduit"));
+	about.addCredit("Chris Molnar", I18N_NOOP("Expenses conduit"));
+	about.addCredit("Heiko Purnhagen", I18N_NOOP("Bugfixer"));
+	about.addCredit("Joerg Habenicht", I18N_NOOP("Bugfixer"));
+	about.addCredit("Martin Junius",
 		I18N_NOOP("XML GUI"),
 		"mj@m-j-s.net", "http://www.m-j-s.net/kde/");
+	about.addCredit("David Bishop",
+		I18N_NOOP(".ui files"));
+
 
 
 
@@ -887,7 +888,7 @@ int main(int argc, char **argv)
 
 	if (run_mode == 'c')
 	{
-		CConduitSetup *cs = new CConduitSetup(0L);
+		ConduitConfigDialog *cs = new ConduitConfigDialog(0L,0L,true);
 		int r = cs->exec();
 
 		if (r)
@@ -964,6 +965,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.63  2001/09/30 19:51:56  adridg
+// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
+//
 // Revision 1.62  2001/09/30 16:58:45  adridg
 // Cleaned up preHotSync interface, removed extra includes, added private-d-ptr.
 //

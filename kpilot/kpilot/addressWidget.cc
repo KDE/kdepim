@@ -223,7 +223,7 @@ void AddressWidget::initialize()
 
 #if KDE_VERSION<220
 		s = i18n("There are still %1 address editing windows open.")
-			.arg(QString::number(fPendingAddresses);
+			.arg(QString::number(fPendingAddresses));
 #else
 		s = i18n("There is still an address editing window open.",
 			"There are still %n address editing windows open.",
@@ -775,6 +775,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.42  2001/09/30 19:51:56  adridg
+// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
+//
 // Revision 1.41  2001/09/30 16:59:22  adridg
 // Cleaned up preHotSync
 //

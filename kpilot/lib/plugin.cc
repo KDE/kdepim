@@ -59,6 +59,7 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	const char *name=0L,
 	const QStringList &args) :
 	SyncAction(p,name),
+	fConfig(0L),
 	fTest(args.contains("test"))
 {
 	FUNCTIONSETUP;
@@ -108,4 +109,7 @@ bool PluginUtility::isModal(const QStringList &a)
 }
 
 // $Log$
+// Revision 1.1  2001/10/08 21:56:02  adridg
+// Start of making a separate KPilot lib
+//
 
