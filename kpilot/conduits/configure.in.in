@@ -70,10 +70,7 @@ fi
 
 case "$with_mal" in
 no) AC_MSG_RESULT(no) ;;
-NOTFOUND) AC_MSG_RESULT(searched but not found)
-	AC_MSG_WARN([KPILOT: MAL headers or library not found. AvantGo conduit will not be compiled.])
-	AC_MSG_WARN([KPILOT: Download libmal>=0.20 from http://jasonday.home.att.net/code/libmal/])
-	;;
+NOTFOUND) AC_MSG_RESULT(searched but not found) ;;
 *)
   if test "x$with_mal" = "xFOUND" ; then
     msg="incs=$mal_incdir libs=$mal_libdir"

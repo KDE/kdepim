@@ -20,4 +20,17 @@ fi
 
 CXXFLAGS="$CXXFLAGS $KDE_DEFAULT_CXXFLAGS"
 
+# check for libgnokii (Nokia mobile phone library)
+AC_DEFUN(KDE_CHECK_GNOKII,
+[
+  AC_CHECK_HEADERS(gnokii.h)
+  AC_REQUIRE([AC_HAVE_XPM])
+  LIB_GNOKII=
+  AC_CHECK_LIB(gnokii, gn_cfg_read,
+       [ LIB_GNOKII="-lgnokii" ],
+       [],
+       $all_libraries -lXpm -lX11 )
+  AC_SUBST(LIB_GNOKII)
+])
+
 

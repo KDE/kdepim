@@ -1,0 +1,7 @@
+if test -z "$LIB_GNOKII"; then
+  echo ""
+  echo "libgnokii (http://www.gnokii.org) is missing. The KDE Addressbook mobile phone import/export filter will not be available."
+  echo ""
+  all_tests=bad
+fi
+
