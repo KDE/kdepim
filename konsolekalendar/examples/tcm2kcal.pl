@@ -11,6 +11,8 @@
 # (at your option) any later version.                                      #
 ############################################################################
 #
+# This script is used to help test konsolekalendar.
+#
 # Modify $konkal, $cal, and $TCM as necessary for your needs.
 #
 # Requirements:
@@ -94,7 +96,7 @@ while($line=<GET>) {
     if( $tday >= 1 && $tday <= 31 ) {
       if( $mday =~ m/day$/ ) {
 	&process() if( $event );
-        print "New day starting: $tday $mday\n";
+#        print "New day starting: $tday $mday\n";
         $day = $tday;
 	$event = "";
 	next;
@@ -244,7 +246,7 @@ sub process() {
   # New Title for Change Mode
   $title=uc($title) if( $mode eq "--change" );
 
-  print "EVENT start datetime=$date, $time, title=$title, end datetime=$enddate, $endtime, duration=$duration\n";
+#  print "EVENT start datetime=$date, $time, title=$title, end datetime=$enddate, $endtime, duration=$duration\n";
   $lastampm=$ampm;
 
   # Run konsolekalendar to insert/change/delete the event
