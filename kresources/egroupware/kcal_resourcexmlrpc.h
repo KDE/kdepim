@@ -61,11 +61,6 @@ class ResourceXMLRPC : public ResourceCached
 
     EGroupwarePrefs *prefs() const { return mPrefs; }
 
-    /**
-      Return name of file used as cache for remote file.
-    */
-    QString cacheFile() const;
-
     bool isSaving();
 
     KABC::Lock *lock();

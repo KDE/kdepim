@@ -80,11 +80,6 @@ class KCalResourceSlox : public KCal::ResourceCached
 
     KCal::SloxPrefs *prefs() const { return mPrefs; }
 
-    /**
-      Return name of file used as cache for remote file.
-    */
-    QString cacheFile();
-
     KABC::Lock *lock();
 
     bool isSaving();

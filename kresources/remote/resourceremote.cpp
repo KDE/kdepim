@@ -163,13 +163,6 @@ bool ResourceRemote::useCacheFile() const
   return mUseCacheFile;
 }
 
-QString ResourceRemote::cacheFile()
-{
-  QString file = locateLocal( "cache", "kcal/kresources/" + identifier() );
-  kdDebug(5800) << "ResourceRemote::cacheFile(): " << file << endl;
-  return file;
-}
-
 bool ResourceRemote::doOpen()
 {
   kdDebug(5800) << "ResourceRemote::doOpen()" << endl;
@@ -200,7 +193,7 @@ bool ResourceRemote::doLoad()
 
   if ( mUseCacheFile ) {
     disableChangeNotification();
-    mCalendar.load( cacheFile() );
+    loadCache();
     enableChangeNotification();
   }
 
@@ -242,7 +235,7 @@ void ResourceRemote::slotLoadJobResult( KIO::Job *job )
 
     mCalendar.close();
     disableChangeNotification();
-    mCalendar.load( cacheFile() );
+    loadCache();
     enableChangeNotification();
 
     emit resourceChanged( this );
@@ -281,7 +274,7 @@ bool ResourceRemote::doSave()
 
   mChangedIncidences = allChanges();
 
-  mCalendar.save( cacheFile() );
+  saveCache();
 
   mUploadJob = KIO::file_copy( KURL( cacheFile() ), mUploadUrl, -1, true );
   connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),

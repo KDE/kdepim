@@ -82,11 +82,6 @@ class ResourceRemote : public ResourceCached
     void setUseCacheFile( bool useCacheFile );
     bool useCacheFile() const;
 
-    /**
-      Return name of file used as cache for remote file.
-    */
-    QString cacheFile();
-
     KABC::Lock *lock();
 
     bool isSaving();

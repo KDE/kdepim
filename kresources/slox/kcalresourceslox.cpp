@@ -31,7 +31,6 @@
 #include <kio/job.h>
 #include <kio/davjob.h>
 #include <klocale.h>
-#include <kstandarddirs.h>
 
 #include <libkdepim/progressmanager.h>
 
@@ -137,13 +136,6 @@ void KCalResourceSlox::writeConfig( KConfig *config )
   ResourceCached::writeConfig( config );
 }
 
-QString KCalResourceSlox::cacheFile()
-{
-  QString file = locateLocal( "cache", "kcal/kresources/" + identifier() );
-  kdDebug() << "KCalResourceSlox::cacheFile(): " << file << endl;
-  return file;
-}
-
 bool KCalResourceSlox::doOpen()
 {
   kdDebug(5800) << "KCalResourceSlox::doOpen()" << endl;
@@ -176,7 +168,7 @@ bool KCalResourceSlox::doLoad()
   mCalendar.close();
 
   disableChangeNotification();
-  mCalendar.load( cacheFile() );
+  loadCache();
   enableChangeNotification();
 
   emit resourceChanged( this );
@@ -802,7 +794,7 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
           disableChangeNotification();
           mCalendar.deleteIncidence( mUploadedIncidence );
           mCalendar.addIncidence( i );
-          mCalendar.save( cacheFile() );
+          saveCache();
           enableChangeNotification();
         }
       }
@@ -891,7 +883,7 @@ bool KCalResourceSlox::doSave()
 
   if ( !confirmSave() ) return false;
 
-  mCalendar.save( cacheFile() );
+  saveCache();
 
   uploadIncidences();
 
