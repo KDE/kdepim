@@ -21,9 +21,7 @@ lib_LTLIBRARIES = libthreadedkonnector.la
 INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/libkcal $(all_includes)
 
 libthreadedkonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/kitchensync/lib -I../../  $(all_includes)
-
-libthreadedkonnector_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -module
-
+libthreadedkonnector_la_LDFLAGS = -module $(KDE_PLUGIN)
 libthreadedkonnector_la_SOURCES = konnector.cpp \
   clientmanager.cpp clientthread.cpp
 

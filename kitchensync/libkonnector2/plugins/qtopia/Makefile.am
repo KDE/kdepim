@@ -23,8 +23,8 @@ lib_LTLIBRARIES = libqtopiakonnector.la
 INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/libkcal $(all_includes)
 
 libqtopiakonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/kitchensync/lib -I../../   $(all_includes)
-libqtopiakonnector_la_LIBADD = ../../libkonnector.la ../../../libksync2.la
-libqtopiakonnector_la_LDFLAGS = $(all_libraries)  $(KDE_RPATH) -module
+libqtopiakonnector_la_LIBADD = ../../libkonnector.la 
+libqtopiakonnector_la_LDFLAGS = -module $(KDE_PLUGIN)
 libqtopiakonnector_la_SOURCES = konnector.cpp socket.cpp addressbook.cpp \
 				categoryedit.cpp datebook.cpp helper.cpp \
 				opiecategories.cpp todo.cpp desktop.cpp \
