@@ -274,7 +274,11 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 
 	QString databaseName(QString::fromLatin1(info->name));
 
+#if QT_VERSION < 0x30100
+	databaseName.replace(QRegExp(CSL1("/")), CSL1("_"));
+#else
 	databaseName.replace('/', CSL1("_"));
+#endif
 
 	QString fullBackupName = fullBackupDir + databaseName;
 

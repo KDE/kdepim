@@ -128,7 +128,13 @@ PilotLocalDatabase::~PilotLocalDatabase()
 void PilotLocalDatabase::fixupDBName()
 {
 	FUNCTIONSETUP;
+#if QT_VERSION < 0x30100
+	fDBName = fDBName.replace(QRegExp(CSL1("/")),CSL1("_"));
+#else
+	// Actually, I don't know if this char-replace
+	// is more efficient than the QString one.
 	fDBName = fDBName.replace('/', CSL1("_"));
+#endif
 }
 
 // Reads the application block info

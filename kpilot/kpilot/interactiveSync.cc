@@ -290,7 +290,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 
 #if KDE_VERSION < 306  /* 305 ok? */
 		strncpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name) - 1);
-		dbi.name[sizeof(dbi.name) - 1)] = '\0';
+		dbi.name[(sizeof(dbi.name) - 1)] = '\0';
 #else
 		strlcpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name));
 #endif
