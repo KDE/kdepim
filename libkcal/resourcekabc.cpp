@@ -64,7 +64,7 @@ extern "C"
 
 
 ResourceKABC::ResourceKABC( const KConfig* config )
-  : ResourceCalendar( config )
+  : ResourceCalendar( config ), mAlarmDays( 1 ), mAlarm( false )
 {
   if ( config ) {
     readConfig( config );
@@ -74,11 +74,8 @@ ResourceKABC::ResourceKABC( const KConfig* config )
 }
 
 ResourceKABC::ResourceKABC( )
-  : ResourceCalendar( 0 )
+  : ResourceCalendar( 0 ), mAlarmDays( 1 ), mAlarm( false )
 {
-  mAlarmDays = 1;
-  mAlarm = false;
-
   init();
 }
 
