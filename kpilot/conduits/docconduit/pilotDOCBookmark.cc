@@ -81,7 +81,7 @@ PilotDOCBookmark & PilotDOCBookmark::operator =(const PilotDOCBookmark & e)
 
 
 
-void *PilotDOCBookmark::pack(void *buf, int *len)
+void *PilotDOCBookmark::pack_(void *buf, int *len)
 {
 	char *tmp = (char *) buf;
 

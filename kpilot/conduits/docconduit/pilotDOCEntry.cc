@@ -77,7 +77,7 @@ PilotDOCEntry & PilotDOCEntry::operator =(const PilotDOCEntry & e)
 
 
 
-void *PilotDOCEntry::pack(void *buf, int *len)
+void *PilotDOCEntry::pack_(void *buf, int *len)
 {
 //      int len;
 	if (compress)
