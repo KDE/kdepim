@@ -28,6 +28,7 @@
 #include "event.h"
 
 #include "konsolekalendar.h"
+#include "konsolekalendaradd.h"
 
 using namespace KCal;
 using namespace std;
@@ -114,6 +115,24 @@ void KonsoleKalendar::showInstance()
   
 }
 
+void KonsoleKalendar::addEvent()
+{
+        kdDebug() << "konsolecalendar.cpp::addEvent | Create Adding"  << endl;
+
+	KonsoleKalendarAdd add( &m_variables );
+	
+	kdDebug() << "konsolecalendar.cpp::addEvent | Adding now!"  << endl;
+	add.addEvent();
+
+}
+	
+void KonsoleKalendar::changeEvent()
+{
+}
+	
+void KonsoleKalendar::deleteEvent()
+{
+}
 
 void KonsoleKalendar::showDate( QDateTime date )
 {

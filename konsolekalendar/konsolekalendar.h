@@ -50,12 +50,28 @@ class KonsoleKalendar
     * Closes calendar.
     */ 
    void closeCalendar();
+
+   /*
+    * Add event to calendar 
+    */
+   void addEvent();
+   
+   /*
+    * Change event 
+    */
+   
+   void changeEvent();
+   
+   /*
+    * Delete event 
+    */
+   
+   void deleteEvent();
    
   private:
     void showNext();
     void showDate( QDateTime date );
     void printEventTime(Event *event);
-    void addEvent( QDateTime start, QDateTime end);
     bool isHappened(Event *event);
       
     KonsoleKalendarVariables m_variables;
