@@ -10,11 +10,11 @@
 #include <qstringlist.h>
 #include <qdict.h>
 
-#include <libkdepim/kprefs.h>
+#include <kconfigskeleton.h>
 
 class KConfig;
 
-class KandyPrefs : public KPrefs
+class KandyPrefs : public KConfigSkeleton
 {
   public:
     virtual ~KandyPrefs();

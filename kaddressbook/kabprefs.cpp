@@ -33,36 +33,36 @@ static KStaticDeleter<KABPrefs> staticDeleter;
 KABPrefs::KABPrefs()
   : KPimPrefs("kaddressbookrc")
 {
-  KPrefs::setCurrentGroup( "Views" );
-  addItemBool( "HonorSingleClick", mHonorSingleClick, false );
+  KConfigSkeleton::setCurrentGroup( "Views" );
+  addItemBool( "", "HonorSingleClick", mHonorSingleClick, false );
 
-  KPrefs::setCurrentGroup( "General" );
-  addItemBool( "AutomaticNameParsing", mAutomaticNameParsing, true );
-  addItemInt( "CurrentIncSearchField", mCurrentIncSearchField, 0 );
-  addItemString( "PhoneHookApplication", mPhoneHookApplication, "" );
-  addItemString( "FaxHookApplication", mFaxHookApplication,
+  KConfigSkeleton::setCurrentGroup( "General" );
+  addItemBool( "", "AutomaticNameParsing", mAutomaticNameParsing, true );
+  addItemInt( "", "CurrentIncSearchField", mCurrentIncSearchField, 0 );
+  addItemString( "", "PhoneHookApplication", mPhoneHookApplication, "" );
+  addItemString( "", "FaxHookApplication", mFaxHookApplication,
                  "kdeprintfax --phone %N" );
 
-  KPrefs::setCurrentGroup( "MainWindow" );
-  addItemBool( "JumpButtonBarVisible", mJumpButtonBarVisible, false );
-  addItemBool( "DetailsPageVisible", mDetailsPageVisible, true );
-  addItemIntList( "ExtensionsSplitter", mExtensionsSplitter );
-  addItemIntList( "DetailsSplitter", mDetailsSplitter );
+  KConfigSkeleton::setCurrentGroup( "MainWindow" );
+  addItemBool( "", "JumpButtonBarVisible", mJumpButtonBarVisible, false );
+  addItemBool( "", "DetailsPageVisible", mDetailsPageVisible, true );
+  addItemIntList( "", "ExtensionsSplitter", mExtensionsSplitter );
+  addItemIntList( "", "DetailsSplitter", mDetailsSplitter );
 
-  KPrefs::setCurrentGroup( "Extensions_General" );
+  KConfigSkeleton::setCurrentGroup( "Extensions_General" );
   QStringList defaultExtensions;
   defaultExtensions << "merge";
   defaultExtensions << "distribution_list_editor";
-  addItemInt( "CurrentExtension", mCurrentExtension, 0 );
-  addItemStringList( "ActiveExtensions", mActiveExtensions, defaultExtensions );
+  addItemInt( "", "CurrentExtension", mCurrentExtension, 0 );
+  addItemStringList( "", "ActiveExtensions", mActiveExtensions, defaultExtensions );
 
-  KPrefs::setCurrentGroup( "Views" );
+  KConfigSkeleton::setCurrentGroup( "Views" );
   QString defaultView = i18n( "Default Table View" );
-  addItemString( "CurrentView", mCurrentView, defaultView );
-  addItemStringList( "ViewNames", mViewNames, defaultView );
+  addItemString( "", "CurrentView", mCurrentView, defaultView );
+  addItemStringList( "", "ViewNames", mViewNames, defaultView );
 
-  KPrefs::setCurrentGroup( "Filters" );
-  addItemInt( "CurrentFilter", mCurrentFilter, 0 );
+  KConfigSkeleton::setCurrentGroup( "Filters" );
+  addItemInt( "", "CurrentFilter", mCurrentFilter, 0 );
 }
 
 KABPrefs::~KABPrefs()
