@@ -83,6 +83,7 @@
 #include <ktempfile.h>
 #include <kio/job.h>
 #include <kio/netaccess.h>
+#include <kstdaccel.h>
 
 // Qt
 #include <qfontmetrics.h>
@@ -224,6 +225,11 @@ void CertManager::createActions() {
 
   action = KStdAction::redisplay( this, SLOT(slotStartCertificateListing()),
 				  actionCollection() );
+  // work around the fact that the stdaction has no shortcut
+  KShortcut reloadShortcut = KStdAccel::shortcut(KStdAccel::Reload);
+  reloadShortcut.append(KKey(CTRL + Key_R));
+  action->setShortcut( reloadShortcut );
+
   connectEnableOperationSignal( this, action );
 
   action = new KAction( i18n("Stop Operation"), "stop", 0,
