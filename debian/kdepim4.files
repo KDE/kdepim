@@ -1,0 +1,5 @@
+usr/lib/libkcal.la
+usr/lib/libkcal.so.*
+usr/lib/libkgantt.la
+usr/lib/libkgantt.so.*
+usr/share/apps/kgantt
