@@ -18,6 +18,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <qaccel.h>
 #include <qclipboard.h>
 #include <qdir.h>
 #include <qpaintdevicemetrics.h>
@@ -79,6 +80,8 @@ KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
   : KTextBrowser(0)
 {
   setWFlags(WType_TopLevel | WDestructiveClose);
+  QAccel *accel = new QAccel( this, "browser close-accel" );
+  accel->connectItem( accel->insertItem( Qt::Key_Escape ), this , SLOT( close() ));
   KNConfig::Appearance *app=knGlobals.configManager()->appearance();
 
   setCaption(kapp->makeStdCaption(i18n("Article Source")));
@@ -134,7 +137,7 @@ QByteArray KNMimeSource::encodedData(const char *) const
 //=============================================================================================================
 
 
-KNArticleWidget::KNArticleWidget(KActionCollection* actColl, KXMLGUIClient* guiClient, 
+KNArticleWidget::KNArticleWidget(KActionCollection* actColl, KXMLGUIClient* guiClient,
     QWidget *parent, const char *name )
     : KTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false),
       emuKMail(false), f_inddialog(0), a_ctions(actColl), mGuiClient(guiClient)
