@@ -1192,7 +1192,7 @@ int main(int argc, char** argv)
 	FUNCTIONSETUP;
 
         KAboutData about("kpilot", I18N_NOOP("KPilot"),
-                         "4.0b",
+                         "4.0b2",
                          "KPilot - Hot-sync software for unix\n\n",
                          KAboutData::License_GPL,
                          "(c) 1998-2000, Dan Pilone");
@@ -1279,4 +1279,7 @@ int main(int argc, char** argv)
 }
 
 
-// $Log: $
+// $Log$
+// Revision 1.28  2001/01/03 00:02:45  adridg
+// Added Heiko's FastSync
+//
