@@ -27,6 +27,7 @@
     Gnokii homepage: http://www.gnokii.org
 
     TODO:
+	- create a log file and give user possibility to see it afterwards
 	- handle callergroup value (Friend, VIP, Family, ...) better
 	- we do not yet write back to SIM memory (for security reasons)
 */
@@ -99,7 +100,7 @@ GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *
 	this_filter = this;
 	m_progressDlg = NULL;
 	createImportAction( i18n( "Import From Nokia Mobile Phone..." ) );
-	createExportAction( i18n( "Export to Nokia Mobile Phone..." ) );
+	createExportAction( i18n( "Export To Nokia Mobile Phone..." ) );
 }
 
 /* import */
@@ -129,7 +130,7 @@ static QString businit(void)
 	static char *BinDir;
 	if (gn_cfg_read(&BinDir)<0)
 #endif
-		return i18n("Failed to initialize the Gnokii Library.");
+		return i18n("Failed to initialize the gnokii library.");
 
 	if (!gn_cfg_phone_load("", &state))
 		return i18n("Gnokii is not yet configured.");
@@ -145,8 +146,8 @@ static QString businit(void)
 		lockfile = gn_device_lock(state.config.port_device);
 		if (lockfile == NULL) {
 			return i18n("Gnokii reports a 'Lock File Error'.\n "
-			"Please exit all other running Instances of Gnokii, check if you have "
-			"Write Permissions in the /var/lock Directory and try again.");
+			"Please exit all other running instances of gnokii, check if you have "
+			"write permissions in the /var/lock directory and try again.");
 		}
 	}
 
@@ -158,8 +159,11 @@ static QString businit(void)
 	state.config.require_dcd = old_dcd;
 	if (error != GN_ERR_NONE) {
 		busterminate();
-		return i18n("<qt>Mobile Phone Interface Initialization failed.<br><br>"
-			"The returned Error Message was:<br><b>%1</b></qt>")
+		return i18n("<qt><center>Mobile Phone interface initialization failed.<br><br>"
+			"The returned error message was:<br><b>%1</b><br><br>"
+			"You might try to run \"gnokii --identify\" on the command line to "
+			"check any cable/transport issues and to verify if your gnokii "
+			"configuration is correct.</center></qt>")
 			.arg(gn_error_print(error));
 	}
 
@@ -273,19 +277,19 @@ static QString buildPhoneInfoString( const gn_memory_status &memstat )
 		"<tr><td><b>%8</b></td><td>%9</td></tr>"
 		"</table><br>")
 		.arg(i18n("Mobile Phone information:"))
-		.arg(i18n("Phone Model"))	.arg(GN_FROM(model))
+		.arg(i18n("Phone model"))	.arg(GN_FROM(model))
 		.arg(i18n("Revision"))		.arg(GN_FROM(revision))
 		.arg(i18n("IMEI"))		.arg(GN_FROM(imei))
-		.arg(i18n("Phonebook Status"))
-		.arg(i18n("%1 out of %2 Contacts used").arg(memstat.used).arg(memstat.used+memstat.free));
+		.arg(i18n("Phonebook status"))
+		.arg(i18n("%1 out of %2 contacts used").arg(memstat.used).arg(memstat.used+memstat.free));
 }
 
 static QString buildMemoryTypeString( gn_memory_type memtype )
 {
 	switch (memtype) {
-	case GN_MT_ME:	return i18n("Internal Memory");
-	case GN_MT_SM:	return i18n("SIM-card Memory");
-	default:	return i18n("Unknown Memory");
+	case GN_MT_ME:	return i18n("internal memory");
+	case GN_MT_SM:	return i18n("SIM-card memory");
+	default:	return i18n("unknown memory");
 	}
 }
 
@@ -313,7 +317,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
   QString s, country;
 
   progress->setTotalSteps(memstat.used);
-  m_progressDlg->setLabel(i18n("<qt>Importing <b>%1</b> Contacts from <b>%2</b> of the Mobile Phone.<br><br>%3</qt>")
+  m_progressDlg->setLabel(i18n("<qt>Importing <b>%1</b> contacts from <b>%2</b> of the Mobile Phone.<br><br>%3</qt>")
 		.arg(memstat.used)
 		.arg(buildMemoryTypeString(memtype))
 		.arg(buildPhoneInfoString(memstat)) );
@@ -485,21 +489,21 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 #ifndef HAVE_GNOKII_H
 
 	KMessageBox::error(parentWidget(), i18n("Gnokii interface is not available.\n"
-		"Please ask your distributor to add gnokii during compile time."));
+		"Please ask your distributor to add gnokii at compile time."));
 
 #else
 
 	if (KMessageBox::Continue != KMessageBox::warningContinueCancel(parentWidget(),
-		i18n("<qt>Please connect your Mobile Phone to your Computer and press "
-		     "<b>Continue</b> to start Importing the Personal Contacts.<br><br>"
-		     "Please note, that in case your Mobile Phone is not properly connected "
-		     "the following Detection Phase might take up to two Minutes in which "
+		i18n("<qt>Please connect your Mobile Phone to your computer and press "
+		     "<b>Continue</b> to start importing the personal contacts.<br><br>"
+		     "Please note, that in case your mobile phone is not properly connected "
+		     "the following detection phase might take up to two minutes in which "
                      "KAddressbook will behave unresponsive.</qt>") ))
 	  return addrList;
 
 	m_progressDlg = new KProgressDialog( parentWidget(), "importwidget",
 		i18n("Mobile Phone Import"),
-		i18n("<qt><center>Establishing Connection to the Mobile Phone.<br><br>"
+		i18n("<qt><center>Establishing connection to the Mobile Phone.<br><br>"
 		     "Please wait...</center></qt>") );
 	m_progressDlg->setAllowCancel(true);
 	m_progressDlg->progressBar()->setProgress(0);
@@ -520,7 +524,7 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 	}
 
 	GNOKII_DEBUG("GNOKII import filter started.\n");
-	m_progressDlg->setButtonText(i18n("&Stop import"));
+	m_progressDlg->setButtonText(i18n("&Stop Import"));
   
 	read_phone_entries("ME", GN_MT_ME, &addrList); // internal phone memory
 	read_phone_entries("SM", GN_MT_SM, &addrList); // SIM card
@@ -726,16 +730,16 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 
 #else
 	if (KMessageBox::Continue != KMessageBox::warningContinueCancel(parentWidget(),
-		i18n("<qt>Please connect your Mobile Phone to your Computer and press "
-		     "<b>Continue</b> to start Exporting the selected Personal Contacts.<br><br>"
+		i18n("<qt>Please connect your Mobile Phone to your computer and press "
+		     "<b>Continue</b> to start exporting the selected personal contacts.<br><br>"
 		     "Please note, that in case your Mobile Phone is not properly connected "
-		     "the following Detection Phase might take up to two Minutes in which "
+		     "the following detection phase might take up to two minutes in which "
 		     "KAddressbook will behave unresponsive.</qt>") ))
 	  return false;
 
 	m_progressDlg = new KProgressDialog( parentWidget(), "importwidget",
 		i18n("Mobile Phone Export"),
-		i18n("<qt><center>Establishing Connection to the Mobile Phone.<br><br>"
+		i18n("<qt><center>Establishing connection to the Mobile Phone.<br><br>"
 		     "Please wait...</center></qt>") );
 	m_progressDlg->setAllowCancel(true);
 	m_progressDlg->progressBar()->setProgress(0);
@@ -788,15 +792,15 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 
 	if (memstat.free >= (int) list.count()) {
 		if (KMessageBox::No == KMessageBox::questionYesNo(parentWidget(),
-			i18n("<qt>Do you want the selected Contacts to be <b>appended</b> to "
-			     "the current Mobile Phonebook or should they <b>replace</b> all "
-			     "currently existing Phonebook Entries ?<br><br>"
-			     "Please note, that in case you choose to Replace the Phonebook "
-			     "Entries, every Contact in your Phone will be deleted and only "
-			     "the new exported Contacts will be available from inside your Phone.</qt>"),
-			i18n("Export to mobile phone"),
-			KGuiItem(i18n("&Append to current Phonebook")),
-			KGuiItem(i18n("&Replace current Phonebook with new Contacts")) ) )
+			i18n("<qt>Do you want the selected contacts to be <b>appended</b> to "
+			     "the current mobile phonebook or should they <b>replace</b> all "
+			     "currently existing phonebook entries ?<br><br>"
+			     "Please note, that in case you choose to replace the phonebook "
+			     "entries, every contact in your phone will be deleted and only "
+			     "the newly exported contacts will be available from inside your phone.</qt>"),
+			i18n("Export to Mobile Phone"),
+			KGuiItem(i18n("&Append to current phonebook")),
+			KGuiItem(i18n("&Replace current phonebook with new contacts")) ) )
 				overwrite_phone_entries = true;
 	}
 	
@@ -804,7 +808,7 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 	entries_written = 0;
 	progress->setProgress(entries_written);
 	m_progressDlg->setButtonText(i18n("&Stop Export"));
-	m_progressDlg->setLabel(i18n("<qt>Exporting <b>%1</b> Contacts to the <b>%2</b> "
+	m_progressDlg->setLabel(i18n("<qt>Exporting <b>%1</b> contacts to the <b>%2</b> "
 			"of the Mobile Phone.<br><br>%3</qt>")
 		.arg(list.count())
 		.arg(buildMemoryTypeString(memtype))
@@ -872,9 +876,9 @@ try_next_phone_entry:
 		if (!deleteLabelInitialized) {
 			m_progressDlg->setLabel(
 				i18n("<qt><center>"
-				     "All selected Contacts have been sucessfully copied to "
+				     "All selected contacts have been sucessfully copied to "
 				     "the Mobile Phone.<br><br>"
-				     "Please wait until all remaining orphaned Contacts from "
+				     "Please wait until all remaining orphaned contacts from "
 				     "the Mobile Phone have been deleted.</center></qt>") );
 			m_progressDlg->setButtonText(i18n("&Stop Delete"));
 			deleteLabelInitialized = true;
@@ -896,7 +900,7 @@ try_next_phone_entry:
 	}
 
 finish:
-	m_progressDlg->setLabel(i18n("Export to Phone finished."));
+	m_progressDlg->setLabel(i18n("Export to phone finished."));
 	this_filter->processEvents();
 
 	GNOKII_DEBUG("GNOKII export filter finished.\n");
@@ -907,14 +911,14 @@ finish:
 	if (!failedList.isEmpty()) {
 		GNOKII_DEBUG(QString("Failed to export: %1\n").arg(failedList.join(", ")));
 		KMessageBox::informationList(parentWidget(),
-                        i18n("<qt>The following Contacts could not be exported to the Mobile Phone. "
-			     "Possible Reasons for this Problem might be:<br><ul>"
-			     "<li>The Contacts contains more Information per Entry than the Phone can store.</li>"
-			     "<li>Your Phone does not allow to store multiple Addresses, eMails, Homepages, ...</li>"
-			     "<li>other Storage Size related problems.</li>"
+                        i18n("<qt>The following contacts could not be exported to the Mobile Phone. "
+			     "Possible Reasons for this problem could be:<br><ul>"
+			     "<li>The contacts contain more information per entry than the phone can store.</li>"
+			     "<li>Your phone does not allow to store multiple addresses, emails, homepages, ...</li>"
+			     "<li>other storage size related problems.</li>"
 			     "</ul>"
-			     "To avoid those kind of Problems in the Future please reduce the amount of different "
-			     "Fields in the above Contacts.</qt>"),
+			     "To avoid those kind of problems in the future please reduce the amount of different "
+			     "fields in the above contacts.</qt>"),
 			failedList,
 			i18n("Mobile Phone Export") );
 	}
