@@ -1,7 +1,7 @@
 /*
     ktnefwriter.cpp
 
-    Copyright (C) 2002 Bo Thorsen  <bo@klaralvdalens-datakonsult.se>
+    Copyright (C) 2002 Bo Thorsen  <bo@sonofthor.dk>
 
     This file is part of KTNEF, the KDE TNEF support library/program.
 
@@ -397,20 +397,20 @@ void KTNEFWriter::setMessageType(MessageType m) {
 
 void KTNEFWriter::setMethod( Method )
 {
-    
+
 }
 
 
 void KTNEFWriter::clearAttendees()
 {
-    
+
 }
 
 
 void KTNEFWriter::addAttendee( const QString& /*cn*/, Role /*r*/, PartStat /*p*/,
 			       bool /*rsvp*/, const QString& /*mailto*/ )
 {
-    
+
 }
 
 
@@ -447,7 +447,7 @@ void KTNEFWriter::setDtEnd( const QDateTime& dtEnd ) {
 
 void KTNEFWriter::setLocation( const QString& /*location*/ )
 {
-    
+
 }
 
 
@@ -466,7 +466,7 @@ void KTNEFWriter::setDtStamp( const QDateTime& dtStamp ) {
 
 void KTNEFWriter::setCategories( const QStringList& )
 {
-    
+
 }
 
 
@@ -493,5 +493,5 @@ void KTNEFWriter::setPriority( Priority p ) {
 void KTNEFWriter::setAlarm( const QString& /*description*/, AlarmAction /*action*/,
                             const QDateTime& /*wakeBefore*/ )
 {
-    
+
 }
