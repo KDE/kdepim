@@ -299,6 +299,8 @@ KMComposeWin::~KMComposeWin()
   {
     mAutoDeleteMsg = FALSE;
     mFolder->addMsg(mMsg);
+    // Ensure that the message is correctly and fully parsed
+    mFolder->unGetMsg( mFolder->count() - 1 );
     emit messageQueuedOrDrafted();
   }
   if (mAutoDeleteMsg) {
