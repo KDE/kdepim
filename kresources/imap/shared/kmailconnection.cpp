@@ -176,7 +176,7 @@ bool KMailConnection::kmailUpdate( const QString& type, const QString& uid,
 void KMailConnection::unregisteredFromDCOP( const QCString& appId )
 {
   if ( mKMailIcalIfaceStub && mKMailIcalIfaceStub->app() == appId ) {
-    // Delete the stub so that the next time we need the addressbook,
+    // Delete the stub so that the next time we need to talk to kmail,
     // we'll know that we need to start a new one.
     delete mKMailIcalIfaceStub;
     mKMailIcalIfaceStub = 0;
