@@ -221,7 +221,7 @@ void ConfigWizard::probeHandheld()
 // @TODO Post 3.3 enable this after the message freeze!
 //	if ( KMessageBox::warningContinueCancel( this, i18n("Please put the handheld in the cradle, "
 //			"press the hotsync button and click on \"Continue\".\n\nSome kernel versions (Linux 2.6.x) have problems with the visor kernel Module (for Sony Clie devices). Running an autodetection in that case might block the computer from doing hotsyncs until it is rebooted. In that case it might be advisable not to continue."), 
-//			i18n("Handheld detection") ) == KMessageBox::Continue ) {
+//			i18n("Handheld Detection") ) == KMessageBox::Continue ) {
 		ProbeDialog *probeDialog = new ProbeDialog( this );
 		if ( probeDialog->exec() && probeDialog->detected() ) {
 			page2->fUserName->setText( probeDialog->userName() );
