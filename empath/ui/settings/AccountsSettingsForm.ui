@@ -12,7 +12,7 @@
             <x>0</x>
             <y>0</y>
             <width>600</width>
-            <height>482</height>
+            <height>484</height>
         </rect>
     </property>
     <property stdset="1">
@@ -105,7 +105,7 @@
                             <x>46</x>
                             <y>161</y>
                             <width>20</width>
-                            <height>298</height>
+                            <height>300</height>
                         </rect>
                     </property>
                     <property stdset="1">
@@ -121,4 +121,11 @@
         </widget>
     </hbox>
 </widget>
+<tabstops>
+    <tabstop>ListBox2</tabstop>
+    <tabstop>pb_newpop</tabstop>
+    <tabstop>pb_newimap</tabstop>
+    <tabstop>pb_edit</tabstop>
+    <tabstop>pb_remove</tabstop>
+</tabstops>
 </UI>

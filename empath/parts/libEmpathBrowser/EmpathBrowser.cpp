@@ -252,6 +252,7 @@ EmpathBrowser::event(QEvent * e)
     void
 EmpathBrowser::s_reply(const QString & id)
 {
+    empathDebug(id);
     EmpathURL u(currentFolder_);
     u.setMessageID(id);
 

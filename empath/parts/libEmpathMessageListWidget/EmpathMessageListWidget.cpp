@@ -102,6 +102,9 @@ EmpathMessageListPart::EmpathMessageListPart(
         this,       SIGNAL(messageActivated(const QString &)));
 
     setXMLFile("EmpathMessageListWidget.rc");
+
+    _initActions();
+
     enableAllActions(false);
 }
 
@@ -121,7 +124,7 @@ EmpathMessageListPart::_initActions()
 {
 #define CA(visibleName, name, key, slot) \
     new KAction(visibleName, name, key, \
-        widget_, slot, actionCollection(), name);
+        this, slot, actionCollection(), name);
 
 CA(i18n("&View"),       "messageView", CTRL+Key_Return, SLOT(s_messageView()));
 CA(i18n("&Compose"),    "messageCompose",   Key_M,  SLOT(s_messageCompose()));
@@ -559,8 +562,8 @@ EmpathMessageListWidget::s_startDrag(const QList<QListViewItem> & items)
     
     while (it.current()) {
         
-//        EmpathMessageListItem * i =
-//            static_cast<EmpathMessageListItem *>(it.current());
+        EmpathMessageListItem * i =
+            static_cast<EmpathMessageListItem *>(it.current());
 
         // TODO
 //        EmpathURL messageURL(url_.mailboxName(), url_.folderPath(), i->id());
@@ -961,7 +964,7 @@ EmpathMessageListWidget::event(QEvent * e)
             break;
     }
 
-    return EmpathListView::event(e);
+    return KListView::event(e);
 }
 
     void

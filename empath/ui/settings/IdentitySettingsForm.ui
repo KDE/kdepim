@@ -12,7 +12,7 @@
             <x>0</x>
             <y>0</y>
             <width>479</width>
-            <height>314</height>
+            <height>316</height>
         </rect>
     </property>
     <property stdset="1">
@@ -144,7 +144,7 @@
                     <x>229</x>
                     <y>125</y>
                     <width>20</width>
-                    <height>178</height>
+                    <height>180</height>
                 </rect>
             </property>
             <property stdset="1">
@@ -158,4 +158,10 @@
         </spacer>
     </vbox>
 </widget>
+<tabstops>
+    <tabstop>le_name</tabstop>
+    <tabstop>le_email</tabstop>
+    <tabstop>le_reply</tabstop>
+    <tabstop>le_org</tabstop>
+</tabstops>
 </UI>

@@ -12,7 +12,7 @@
             <x>0</x>
             <y>0</y>
             <width>600</width>
-            <height>484</height>
+            <height>486</height>
         </rect>
     </property>
     <property stdset="1">
@@ -172,7 +172,7 @@
                     <x>290</x>
                     <y>155</y>
                     <width>20</width>
-                    <height>318</height>
+                    <height>320</height>
                 </rect>
             </property>
             <property stdset="1">
@@ -200,4 +200,11 @@
         <slot>setEnabled(bool)</slot>
     </connection>
 </connections>
+<tabstops>
+    <tabstop>le_reply</tabstop>
+    <tabstop>le_replyAll</tabstop>
+    <tabstop>le_forward</tabstop>
+    <tabstop>cb_wrap</tabstop>
+    <tabstop>sb_wrapColumn</tabstop>
+</tabstops>
 </UI>

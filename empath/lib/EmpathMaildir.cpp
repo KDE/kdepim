@@ -85,7 +85,6 @@ EmpathMaildir::init()
 EmpathMaildir::sync()
 {
     if (!_touched()) {
-        empathDebug("!touched");
         return;
     }
 

@@ -30,7 +30,6 @@ class IdentitySettingsForm;
 class DisplaySettingsForm;
 class ComposeSettingsForm;
 class SendingSettingsForm;
-class AccountsSettingsForm;
 
 class EmpathSettingsDialog : public KDialogBase
 {
@@ -61,13 +60,22 @@ class EmpathSettingsDialog : public KDialogBase
         void slotDefault();
         void slotCancel();
 
+        void slotPreviewDepth1(const QColor &);
+        void slotPreviewDepth2(const QColor &);
+
     private:
+
+        void _load();
+
+        void _identityDefaults();
+        void _composeDefaults();
+        void _displayDefaults();
+        void _sendingDefaults();
 
         IdentitySettingsForm    * identitySettingsForm;
         DisplaySettingsForm     * displaySettingsForm;
         ComposeSettingsForm     * composeSettingsForm;
         SendingSettingsForm     * sendingSettingsForm;
-        AccountsSettingsForm    * accountsSettingsForm;
 };
 
 #endif
