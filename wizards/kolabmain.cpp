@@ -25,6 +25,7 @@
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kcmdlineargs.h>
+#include <kglobal.h>
 
 static const KCmdLineOptions options[] =
 {
@@ -40,12 +41,14 @@ int main(int argc,char **argv)
 
   KApplication app;
 
+  KGlobal::locale()->insertCatalogue( "wizards" );
+
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   bool verbose = false;
   if ( args->isSet( "verbose" ) ) verbose = true;
 
   KolabWizard wizard;
-  
+
   wizard.exec();
 }
