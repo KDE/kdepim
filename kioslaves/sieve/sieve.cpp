@@ -282,6 +282,39 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
 	return ret;
 }
 
+
+/* ---------------------------------------------------------------------------------- */
+/**
+ * Checks if connection parameters (currently - auth method) have changed.
+ * If it it, close the current connection
+ */
+void kio_sieveProtocol::changeCheck( const KURL &url )
+{
+	QString auth;
+
+	if (!metaData("sasl").isEmpty())
+		auth = metaData("sasl").upper();
+	else {
+		QString query = url.query();
+		if ( query.startsWith("?") ) query.remove( 0, 1 );
+		QStringList q = QStringList::split( ",", query );
+		QStringList::iterator it;
+  
+		for ( it = q.begin(); it != q.end(); ++it ) {
+			if ( ( (*it).section('=',0,0) ).lower() == "x-mech" ) {
+				auth = ( (*it).section('=',1) ).upper();
+				break;
+			}
+		}
+	}
+	ksDebug() << "auth: " << auth << " m_sAuth: " << m_sAuth << endl;
+	if ( m_sAuth != auth ) {
+		m_sAuth = auth;
+		if ( isConnectionValid() )
+			disconnect();
+	}
+}
+
 /* ---------------------------------------------------------------------------------- */
 /**
  * Connects to the server.
@@ -407,6 +440,7 @@ void kio_sieveProtocol::special(const QByteArray &data)
 /* ---------------------------------------------------------------------------------- */
 bool kio_sieveProtocol::activate(const KURL& url)
 {
+	changeCheck( url );
 	if (!connect())
 		return false;
 
@@ -468,6 +502,7 @@ static void append_lf2crlf( QByteArray & out, const QByteArray & in ) {
 
 void kio_sieveProtocol::put(const KURL& url, int /*permissions*/, bool /*overwrite*/, bool /*resume*/)
 {
+	changeCheck( url );
 	if (!connect())
 		return;
 
@@ -628,6 +663,7 @@ static void inplace_crlf2lf( QByteArray & in ) {
 /* ---------------------------------------------------------------------------------- */
 void kio_sieveProtocol::get(const KURL& url)
 {
+	changeCheck( url );
 	if (!connect())
 		return;
 
@@ -704,6 +740,7 @@ void kio_sieveProtocol::del(const KURL &url, bool isfile)
 		return;
 	}
 
+	changeCheck( url );
 	if (!connect())
 		return;
 
@@ -754,6 +791,7 @@ void kio_sieveProtocol::chmod(const KURL& url, int permissions)
 
 void kio_sieveProtocol::stat(const KURL& url)
 {
+	changeCheck( url );
 	if (!connect())
 		return;
 
@@ -823,8 +861,9 @@ void kio_sieveProtocol::stat(const KURL& url)
 	finished();
 }
 
-void kio_sieveProtocol::listDir(const KURL& /*url*/)
+void kio_sieveProtocol::listDir(const KURL& url)
 {
+	changeCheck( url );
 	if (!connect())
 		return;
 
@@ -963,10 +1002,10 @@ bool kio_sieveProtocol::authenticate()
 	QStringList strList;
 //	strList.append("NTLM");
 
-  if (!metaData("sasl").isEmpty())
-    strList.append(metaData("sasl").latin1());
+  if ( !m_sAuth.isEmpty() )
+    strList.append( m_sAuth );
   else
-    strList = m_sasl_caps;	
+    strList = m_sasl_caps;
 
   do {
     result = sasl_client_start(conn, strList.join(" ").latin1(), &client_interact,

@@ -96,6 +96,7 @@ protected:
 	bool connect(bool useTLSIfAvailable = true);
 	bool authenticate();
 	void disconnect(bool forcibly = false);
+	void changeCheck( const KURL &url );
 
 	bool sendData(const QCString &data);
 	bool receiveData(bool waitForData = true, QCString *reparse = 0);
@@ -119,6 +120,7 @@ protected:
 	QString				m_sServer;
 	QString				m_sUser;
 	QString				m_sPass;
+	QString				m_sAuth;
 	bool				m_shouldBeConnected;
 };
 
