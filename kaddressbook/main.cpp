@@ -138,5 +138,8 @@ int main( int argc, char *argv[] )
   KAddressBookApp app;
   KGlobal::locale()->insertCatalogue( "libkdepim" );
 
-  return app.exec();
+  bool ret = app.exec();
+  while (KMainWindow::memberList->first())
+      delete KMainWindow::memberList->first();
+  return ret;
 }
