@@ -1,5 +1,5 @@
 Source: kdepim
-Build-Depends: autoconf2.13, automake, libtool, kdelibs-dev (>= 4:2.2.0-0), debhelper (>> 3.0.0), gettext, bison | byacc, libpisock-dev, flex
+Build-Depends: autoconf2.13, automake, libtool, kdelibs-dev (>= 4:2.2.0-0), debhelper (>> 3.0.0), gettext, bison | byacc, libpisock-dev, flex, g++-3.0 [alpha]
 Section: x11
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
@@ -59,6 +59,7 @@ Architecture: any
 Section: libs
 Replaces: korganizer (<< 4:2.2), libical
 Depends: ${shlibs:Depends}
+Conflicts: libical
 Description: KDE libraries amd modules for kdepim
  This package contains the different interface modules and libraries
  provided by the kdepim package.  These includes interfaces to imap and ical

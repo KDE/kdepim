@@ -5,8 +5,13 @@
  
 # This is the debhelper compatability version to use.
 export DH_COMPAT=3
-
 tmp = $(shell pwd)/debian/korganizer
+ARCH = $(shell dpkg-architecture -qDEB_BUILD_ARCH)
+ifeq ($(ARCH),alpha)
+  COMPILER_FLAGS=CXX=g++-3.0 CC=gcc-3.0
+else
+  COMPILER_FLAGS=CXX=g++ CC=gcc
+endif
 
 build: build-stamp
 
@@ -20,6 +25,7 @@ build-stamp:
 	if test ! -f configure; then \
 	  $(MAKE) -f admin/Makefile.common ;\
 	fi
+	$(COMPILER_FLAGS) \
 	./configure $(configkdepim)
 	$(MAKE)
 	touch build-stamp

@@ -1,3 +1,10 @@
+kdepim (4:2.2.0-0beta1-2) unstable; urgency=low
+ 
+  * sync with upstream
+  * Autobuild for alpha now
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Tue, 03 Jul 2001 02:35:00 -0700
+
 kdepim (4:2.2.0-0beta1-1) unstable; urgency=low
  
   * Fix overwrites (Closes: #102855)
