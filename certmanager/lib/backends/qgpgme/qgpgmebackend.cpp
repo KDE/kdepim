@@ -43,6 +43,7 @@
 #include <gpgmepp/engineinfo.h>
 
 #include <klocale.h>
+#include <kstandarddirs.h>
 
 #include <qfile.h>
 #include <qstring.h>
@@ -71,8 +72,11 @@ QString Kleo::QGpgMEBackend::displayName() const {
 }
 
 Kleo::CryptoConfig * Kleo::QGpgMEBackend::config() const {
-  if ( !mCryptoConfig )
-    mCryptoConfig = new QGpgMECryptoConfig();
+  if ( !mCryptoConfig ) {
+    static bool hasGpgConf = !KStandardDirs::findExe( "gpgconf" ).isEmpty();
+    if ( hasGpgConf )
+      mCryptoConfig = new QGpgMECryptoConfig();
+  }
   return mCryptoConfig;
 }
 
