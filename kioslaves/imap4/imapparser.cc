@@ -701,7 +701,7 @@ mailHeader * imapParser::parseEnvelope (parseString & inWords)
   envelope->setDate(parseLiteralC(inWords));
 
   //subject
-  envelope->setSubject(parseLiteralC(inWords));
+  envelope->setSubjectEncoded(parseLiteralC(inWords));
 
   QPtrList<mailAddress> list;
   list.setAutoDelete(true);
@@ -1419,7 +1419,7 @@ int imapParser::parseLoop ()
 
   if (!parseReadLine(result.data)) return -1;
 
-  kdDebug(7116) << result.cstr(); // includes \n
+  //kdDebug(7116) << result.cstr(); // includes \n
 
   if (result.data.isEmpty())
     return 0;
@@ -1520,14 +1520,16 @@ void
 imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
                       QString & _type, QString & _uid, QString & _validity, QString & _info)
 {
-//  kdDebug(7116) << "imapParser::parseURL - " << endl;
   QStringList parameters;
 
   _box = _url.path ();
-  parameters = QStringList::split (';', _box);  //split parameters
-  if (parameters.count () > 0)  //assertion failure otherwise
-    parameters.remove (parameters.begin ());  //strip path
-  _box.truncate(_box.find (';')); // strip parameters
+  int paramStart = _box.find("/;");
+  if ( paramStart > -1 )
+  {
+    QString paramString = _box.right( _box.length() - paramStart-2 );
+    parameters = QStringList::split (';', paramString);  //split parameters
+    _box.truncate( paramStart ); // strip parameters
+  }
   for (QStringList::ConstIterator it (parameters.begin ());
        it != parameters.end (); ++it)
   {
