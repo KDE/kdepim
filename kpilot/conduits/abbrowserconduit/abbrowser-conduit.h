@@ -79,11 +79,11 @@ public slots:
 public:
 	enum EConflictResolution {
 		eUserChoose=0,
+		eDoNotResolve,
 		ePilotOverides,
 		eAbbrowserOverides,
 		eRevertToBackup,
-		eKeepBothInAbbrowser,
-		eDoNotResolve
+		eKeepBothInAbbrowser
 	} ;
 	EConflictResolution getResolveConflictOption() const { return fConflictResolution; }
 	bool doSmartMerge() const { return fSmartMerge; }
@@ -222,6 +222,9 @@ private:
 
 
 // $Log$
+// Revision 1.20  2002/07/20 18:50:45  kainhofe
+// added a terrible hack to add new contacts to the addressbook. Need to fix kabc for this...
+//
 // Revision 1.19  2002/07/09 22:40:18  kainhofe
 // backup database fixes, prevent duplicate vcal entries, fixed the empty record that was inserted on the palm on every sync
 //

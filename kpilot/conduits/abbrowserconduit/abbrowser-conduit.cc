@@ -1627,11 +1627,11 @@ AbbrowserConduit::EConflictResolution AbbrowserConduit::getFieldResolution(const
 		default:
 			QStringList lst;
 			lst <<
-					i18n("Duplicate both") <<
+					i18n("Leave untouched")<<
 					i18n("Handheld overrides") << 
 					i18n("PC overrides") <<
 					i18n("Use the value from the last sync") <<
-					i18n("Leave untouched");
+					i18n("Duplicate both");
 			bool remember=FALSE;
 			res=ResolutionDialog(i18n("Address conflict"), i18n("<html><p>The field \"%1\" of the entry \"%2\" was changed on the handheld and on the PC.</p>"
 					"<table border=0>"
@@ -1850,6 +1850,9 @@ void AbbrowserConduit::doTest()
 }*/
 
 // $Log$
+// Revision 1.39  2002/07/20 18:50:45  kainhofe
+// added a terrible hack to add new contacts to the addressbook. Need to fix kabc for this...
+//
 // Revision 1.38  2002/07/11 13:27:28  mhunter
 // Corrected typographical errors
 //
