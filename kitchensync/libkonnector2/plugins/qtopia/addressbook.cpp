@@ -67,7 +67,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
 			adr.setSuffix(el.attribute("Suffix") );
 			adr.setNickName(el.attribute("Nickname" ) );
 
-                        QDate date = QDate::fromString(el.attribute("Birthday") );
+                        QDate date = fromString(el.attribute("Birthday") );
                         if (date.isValid() )
                             adr.setBirthday( date );
 
@@ -257,4 +257,24 @@ KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
     tempFile->close();
 
     return tempFile;
+}
+
+// FROM TT timeconversion.cpp GPLed
+QDate AddressBook::fromString( const QString &datestr )
+{
+    if (datestr.isEmpty() )
+        return QDate();
+
+    int monthPos = datestr.find('.');
+    int yearPos = datestr.find('.', monthPos+1 );
+    if ( monthPos == -1 || yearPos == -1 ) {
+	qDebug("fromString didn't find . in str = %s; mpos = %d ypos = %d", datestr.latin1(), monthPos, yearPos );
+	return QDate();
+    }
+    int d = datestr.left( monthPos ).toInt();
+    int m = datestr.mid( monthPos+1, yearPos - monthPos - 1 ).toInt();
+    int y = datestr.mid( yearPos+1 ).toInt();
+    QDate date ( y,m,d );
+    //qDebug("TimeConversion::fromString ymd = %s => %d %d %d; mpos = %d ypos = %d", datestr.latin1(), y, m, d, monthPos, yearPos);
+    return date;
 }

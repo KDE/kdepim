@@ -2,6 +2,7 @@
 #ifndef OpieHelperAddressBookShit_H
 #define OpieHelperAddressBookShit_H
 
+#include <qdatetime.h>
 #include <qstring.h>
 
 #include <addressbooksyncee.h>
@@ -21,6 +22,8 @@ namespace OpieHelper {
         KSync::AddressBookSyncee * toKDE( const QString &fileName );
         /* it must be deleted but not by this one here */
         KTempFile* fromKDE(KSync::AddressBookSyncee* syncee );
+    private:
+        QDate fromString( const QString& );
     private:
         enum Fields {
             Uid = 0,
