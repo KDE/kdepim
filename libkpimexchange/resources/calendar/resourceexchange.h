@@ -235,6 +235,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     QMap<QDate, QDateTime>* mCacheDates;
     int mCachedSeconds;
     bool mAutoMailbox;
+    QString mTimeZoneId;
 
     KABC::Lock *mLock;
 };

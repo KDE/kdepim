@@ -70,6 +70,8 @@ ResourceExchange::ResourceExchange( const KConfig *config )
   mLock = new KABC::LockNull( true );
 
   mCache = 0;
+  mTimeZoneId = QString::fromLatin1( "UTC" );
+
   kdDebug() << "Creating ResourceExchange" << endl;
   if (config ) {
     mAccount = new ExchangeAccount(
@@ -131,7 +133,7 @@ bool ResourceExchange::doOpen()
   mEventDates = new QMap<Event,QDateTime>();
   mCacheDates = new QMap<QDate, QDateTime>();
 
-  mCache = new CalendarLocal();
+  mCache = new CalendarLocal( mTimeZoneId );
   // mOldestDate = 0L;
   // mNewestDate = 0L;
 
@@ -477,7 +479,7 @@ Journal *ResourceExchange::journal(const QDate &date)
 
 Journal *ResourceExchange::journal(const QString &uid)
 {
-    if( !mCache)
+    if( !mCache )
         return 0;
     return mCache->journal( uid );
 }
@@ -489,6 +491,7 @@ Journal::List ResourceExchange::journals()
 
 void ResourceExchange::setTimeZoneId( const QString &tzid )
 {
-  if (mCache) mCache->setTimeZoneId( tzid );
+  mTimeZoneId = tzid;
+  if ( mCache ) mCache->setTimeZoneId( tzid );
 }
 #include "resourceexchange.moc"
