@@ -73,16 +73,13 @@ void *PilotMemo::pack(void *buf, int *len)
 	int use_length = *len;
 	if (MAX_MEMO_LEN < use_length) use_length = MAX_MEMO_LEN;
 
-	// It won't fit if the buffer is too small. This second test
-	// is because the encoded length in bytes may be longer (?)
-	// than the unencoded length in characters.
-	if (s.length() > use_length) return NULL;
-
 	// Zero out the buffer, up to the max memo size.
 	memset(buf,0,use_length);
 
 	// Copy the encoded string and make extra sure it's NUL terminated.
 	// Yay, _every_ parameter needs a cast.
+	// *NOTE* This will truncate the memo text if it was passed in as being
+	//        too long, but this is better than allowing garbage in
 	strlcpy(( char *)buf,(const char *)s,use_length);
 
 	// Finally, we set the length of the memo to the used length
