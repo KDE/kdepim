@@ -15,10 +15,10 @@
 						<choice name="eCalendarResource"/>
 						<choice name="eCalendarLocal"/>
 				</choices>
-        <default>eCalendarResource</default>
+        <default>eCalendarLocal</default>
     </entry>
     <entry name="CalendarFile" key="CalFile"  type="Path">
-        <default></default>
+        <default>$HOME/.kde/share/apps/korganizer/std.ics</default>
     </entry>
     <entry name="SyncArchived"  type="Bool">
         <default>true</default>

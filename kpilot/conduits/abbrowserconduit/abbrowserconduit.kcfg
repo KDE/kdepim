@@ -10,10 +10,10 @@
 						<choice name="eAbookResource"/>
 						<choice name="eAbookFile"/>
 				</choices>
-        <default>eAbookResource</default>
+        <default>eAbookFile</default>
     </entry>
     <entry name="FileName" type="Path">
-        <default></default>
+        <default>$HOME/.kde/share/apps/kabc/std.vcf</default>
     </entry>
 		<entry name="ArchiveDeleted" type="Bool">
         <default>true</default>
