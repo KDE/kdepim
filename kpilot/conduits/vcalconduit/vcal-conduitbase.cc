@@ -631,7 +631,7 @@ KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 
 	if (de)
 	{
-		e=fP->findIncidence(de);
+		e=fP->findIncidence(r->id());
 		if (!e)
 		{
 			// no corresponding entry found, so create, copy and insert it.
