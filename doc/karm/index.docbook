@@ -205,8 +205,8 @@ times</action></para>
 <guimenuitem>Import Legacy Flat File</guimenuitem>
 </menuchoice></term>
 <listitem>
-<para><action>Import </action>old style &karm; save files. (&karm; 
-now uses iCalendar-style save files.</para>
+<para><action>Import </action>old style &karm; save files (&karm; 
+now uses iCalendar-style save files.)</para>
 </listitem>
 </varlistentry>
 
