@@ -37,6 +37,14 @@ class VCard_LDIFCreator : public ThumbCreator
   private:
     KPixmapSplitter *mSplitter;
     QPixmap mPixmap;
+
+    QString name;
+    QString text;
+    bool readContents( const QString &path );
+    int xborder, yborder;
+    QSize pixmapSize;
+    bool createImageSmall();
+    bool createImageBig();
 };
 
 #endif

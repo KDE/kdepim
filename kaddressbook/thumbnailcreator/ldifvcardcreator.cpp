@@ -4,8 +4,7 @@
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+    version 2 License as published by the Free Software Foundation.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,7 +20,7 @@
 /*
  *  - ldifvcardthumbnail -
  *
- *  This kioslave generates tumbnails for vCard and LDIF files. 
+ *  kioslave which generates tumbnails for vCard and LDIF files. 
  *  The thumbnails are used e.g. by Konqueror or in the file selection
  *  dialog.
  *
@@ -31,12 +30,16 @@
 #include <qfile.h>
 #include <qpixmap.h>
 #include <qimage.h>
+#include <qpainter.h>
 #include <qtextstream.h>
 
+#include <kdebug.h>
+#include <klocale.h>
 #include <kabc/ldifconverter.h>
 #include <kabc/vcardtool.h>
 #include <kpixmapsplitter.h>
 #include <kstandarddirs.h>
+#include <kglobalsettings.h>
 
 #include "ldifvcardcreator.h"
 
@@ -58,32 +61,103 @@ VCard_LDIFCreator::~VCard_LDIFCreator()
   delete mSplitter;
 }
 
-bool VCard_LDIFCreator::create(const QString &path, int width, int height, QImage &img)
+
+bool VCard_LDIFCreator::readContents( const QString &path )
 {
+  // read file contents
+  QFile file( path );
+  if ( !file.open( IO_ReadOnly ) )
+    return false;
+
+  QString info;
+  text.truncate(0);
+  
+  // read the file
+  QTextStream t( &file );
+  t.setEncoding( QTextStream::Latin1 );
+  QString contents = t.read();
+  file.close();
+
+  // convert the file contents to a KABC::Addressee address
+  KABC::AddresseeList addrList;
+  KABC::Addressee addr;
+  KABC::VCardTool tool;
+
+  addrList = tool.parseVCards( contents );
+  if ( addrList.count() == 0 )
+    if ( !KABC::LDIFConverter::LDIFToAddressee( contents, addrList ) )
+	return false;
+  if ( addrList.count()>1 ) {
+    // create an overview (list of all names)
+    name = i18n("Found %1 contacts:").arg(addrList.count());
+    unsigned int no, linenr;
+    for (linenr=no=0; linenr<30 && no<addrList.count(); ++no) {
+       addr = addrList[no];
+       info = addr.formattedName().simplifyWhiteSpace();
+       if (info.isEmpty())
+          info = addr.givenName() + " " + addr.familyName();
+       info = info.simplifyWhiteSpace();
+       if (info.isEmpty())
+         continue;
+       text.append(info);
+       text.append("\n");
+       ++linenr;
+    }
+    return true;
+  }
+ 
+  // create card for _one_ contact 
+  addr = addrList[ 0 ];
+
+  // prepare the text 
+  name = addr.formattedName().simplifyWhiteSpace();
+  if ( name.isEmpty() )
+    name = addr.givenName() + " " + addr.familyName();
+  name = name.simplifyWhiteSpace();
+
+
+  KABC::PhoneNumber::List pnList = addr.phoneNumbers();
+  QStringList phoneNumbers;
+  for (unsigned int no=0; no<pnList.count(); ++no) {
+    QString pn = pnList[no].number().simplifyWhiteSpace();
+    if (!pn.isEmpty() && !phoneNumbers.contains(pn))
+      phoneNumbers.append(pn);
+  }
+  if ( !phoneNumbers.isEmpty() )
+      text += phoneNumbers.join("\n") + "\n";
+
+  info = addr.organization().simplifyWhiteSpace();
+  if ( !info.isEmpty() )
+    text += info + "\n";
+
+  // get an address
+  KABC::Address address = addr.address(KABC::Address::Work);
+  if (address.isEmpty())
+    address = addr.address(KABC::Address::Home);
+  if (address.isEmpty())
+    address = addr.address(KABC::Address::Pref);
+  info = address.formattedAddress();
+  if ( !info.isEmpty() )
+    text += info + "\n";
+
+  return true;
+}
+
+
+bool VCard_LDIFCreator::createImageSmall()
+{
+  text = name + "\n" + text;
+
   if ( !mSplitter ) {
     mSplitter = new KPixmapSplitter;
     QString pixmap = locate( "data", "konqueror/pics/thumbnailfont_7x4.png" );
-    if ( !pixmap.isEmpty() ) {
-      // FIXME: make font/glyphsize configurable...
-      mSplitter->setPixmap( QPixmap( pixmap ) );
-      mSplitter->setItemSize( QSize( 4, 7 ) );
+    if ( pixmap.isEmpty() ) {
+      kdWarning() << "VCard_LDIFCreator: Font image \"thumbnailfont_7x4.png\" not found!\n";
+      return false;
     }
+    mSplitter->setPixmap( QPixmap( pixmap ) );
+    mSplitter->setItemSize( QSize( 4, 7 ) );
   }
-
-  // determine some sizes...
-  // example: width: 60, height: 64
-  QSize pixmapSize( width, height );
-  if (height * 3 > width * 4)
-    pixmapSize.setHeight( width * 4 / 3 );
-  else
-    pixmapSize.setWidth( height * 3 / 4 );
-
-  if ( pixmapSize != mPixmap.size() )
-    mPixmap.resize( pixmapSize );
-    
-  // one pixel for the rectangle, the rest. whitespace
-  int xborder = 1 + pixmapSize.width()/16;  // minimum x-border
-  int yborder = 1 + pixmapSize.height()/16; // minimum y-border
 
   QSize chSize = mSplitter->itemSize(); // the size of one char
   int xOffset = chSize.width();
@@ -95,60 +169,7 @@ bool VCard_LDIFCreator::create(const QString &path, int width, int height, QImag
   int numCharsPerLine = (int) (canvasWidth / chSize.width());
   int numLines = (int) (canvasHeight / chSize.height());
 
-  // create text-preview
-  QFile file( path );
-  if ( !file.open( IO_ReadOnly ) )
-    return false;
-
-  // read the file
-  QTextStream t( &file );
-  t.setEncoding( QTextStream::Latin1 );
-  QString contents = t.read();
-  file.close();
-
-  // convert the file contents to a KABC::Addressee address
-  bool ok = true;
-  KABC::AddresseeList addrList;
-  KABC::Addressee addr;
-  KABC::VCardTool tool;
-
-  addrList = tool.parseVCards( contents );
-  if ( addrList.count() == 0 ) {
-    ok = KABC::LDIFConverter::LDIFToAddressee( contents, addrList );
-    if ( ok )
-      addr = addrList[ 0 ];
-    else
-      return false;
-  } else
-    addr = addrList[ 0 ];
-
-  // prepare the text to show
-  QString text, info;
-
-  info = addr.formattedName().simplifyWhiteSpace();
-  if ( !info.isEmpty() )
-    text += info + "\n";
-  else
-    text += QString( addr.givenName() + " " + addr.familyName() ).stripWhiteSpace() + "\n";
-
-  info = addr.organization().simplifyWhiteSpace();
-  if ( !info.isEmpty() )
-    text += info + "\n";
-
-  QString pn = addr.phoneNumber( KABC::PhoneNumber::Pref ).number();
-  if ( !pn.isEmpty() )
-    text += pn + "\n";
-
-  pn = addr.phoneNumber( KABC::PhoneNumber::Work ).number();
-  if ( !pn.isEmpty() )
-    text += pn + "\n";
-
-  pn = addr.phoneNumber( KABC::PhoneNumber::Home ).number();
-  if ( !pn.isEmpty() )
-    text += pn + "\n";
-
   // render the information
-  mPixmap.fill( QColor( 245, 245, 245 ) ); // light-grey background
   QRect rect;
   int rest = mPixmap.width() - (numCharsPerLine * chSize.width());
   xborder = QMAX( xborder, rest / 2 ); // center horizontally
@@ -200,10 +221,72 @@ bool VCard_LDIFCreator::create(const QString &path, int width, int height, QImag
     x += xOffset; // next character
   }
 
-  if ( ok )
-    img = mPixmap.convertToImage();
+  return true;
+}
 
-  return ok;
+bool VCard_LDIFCreator::createImageBig()
+{
+  QFont normalFont( KGlobalSettings::generalFont() );
+  QFont titleFont( normalFont );
+  titleFont.setBold(true);
+  // titleFont.setUnderline(true);
+  titleFont.setItalic(true);
+
+  QPainter painter(&mPixmap);
+  painter.setFont(titleFont);
+  QFontMetrics fm(painter.fontMetrics());
+
+  // draw contact name
+  painter.setClipRect(2, 2, pixmapSize.width()-4, pixmapSize.height()-4);
+  QPoint p(5, fm.height()+2);
+  painter.drawText(p, name);
+  p.setY( 3*p.y()/2 );
+
+  // draw contact information
+  painter.setFont(normalFont);
+  fm = painter.fontMetrics();
+
+  QStringList list = QStringList::split('\n', text);
+  for ( QStringList::Iterator it = list.begin(); 
+             p.y()<=pixmapSize.height() && it != list.end(); ++it ) {
+     p.setY( p.y() + fm.height() );
+     painter.drawText(p, *it);
+  }
+
+  return true;
+}
+
+bool VCard_LDIFCreator::create(const QString &path, int width, int height, QImage &img)
+{
+  if ( !readContents(path) )
+    return false;
+
+  // resize the image if necessary
+  pixmapSize = QSize( width, height );
+  if (height * 3 > width * 4)
+    pixmapSize.setHeight( width * 4 / 3 );
+  else
+    pixmapSize.setWidth( height * 3 / 4 );
+
+  if ( pixmapSize != mPixmap.size() )
+    mPixmap.resize( pixmapSize );
+
+  mPixmap.fill( QColor( 245, 245, 245 ) ); // light-grey background
+    
+  // one pixel for the rectangle, the rest. whitespace
+  xborder = 1 + pixmapSize.width()/16;  // minimum x-border
+  yborder = 1 + pixmapSize.height()/16; // minimum y-border
+
+  bool ok;
+  if ( width >= 150 /*pixel*/ )
+    ok = createImageBig();
+  else
+    ok = createImageSmall();
+  if (!ok)
+    return false;
+
+  img = mPixmap.convertToImage();
+  return true;
 }
 
 ThumbCreator::Flags VCard_LDIFCreator::flags() const
