@@ -11,11 +11,11 @@
 #include <qlistview.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qcombo.h>
+#include <qcombobox.h>
 #include <qdict.h>
 #include <qdatetime.h>
 #include <qfileinfo.h>
-#include <qmultilinedit.h>
+#include <qmultilineedit.h>
 
 // KDE includes
 #include <keditcl.h>
