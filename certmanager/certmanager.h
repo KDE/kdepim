@@ -81,7 +81,8 @@ class CertManager : public KMainWindow {
 public:
     CertManager( bool remote = false, const QString& query = QString::null,
 		 const QString& import=QString::null,
-		 QWidget* parent = 0, const char* name = 0);
+		 QWidget * parent=0, const char * name=0, WFlags f=0 );
+    ~CertManager();
 
     bool isRemote() const { return mRemote; }
 
