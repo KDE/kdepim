@@ -1676,8 +1676,11 @@ main(ac, av)
     for ( ; ; ) {
 	(void)printf("\t> ");
 	(void)fflush(stdout);
-	if (fgets(stdin,buff,sizeof(buff)-1) == NULL || buff[0] == '\n')
+	if (fgets(stdin,buff,sizeof(buff)-1) == NULL || buff[0] == '\n' || buff[0]== '\0')
 	    break;
+        int buff_len = strlen(buff);
+        if( buff[buff_len-1] == '\n' )
+            buff[buff_len-1] = '\0';
 #if YYDEBUG
 	if (strcmp(buff, "yydebug") == 0) {
 	    yydebug = !yydebug;
