@@ -215,12 +215,6 @@ ConduitConfigDialog::~ConduitConfigDialog()
 	fConfigWidget->commitChanges();
 }
 
-#if 0
-void ConduitConfigDialog::selected(QListViewItem *)
-{
-}
-#endif
-
 #define PAGE_SIZE	QSize(440,300)
 
 ConduitConfigWidget::ConduitConfigWidget(QHBox *p, const char *n,
@@ -446,26 +440,11 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 		else
 		{
 			d->load(&KPilotConfig::getConfig());
-#if 0
-			d->widget()->resize(PAGE_SIZE);
-			d->widget()->setMinimumSize(PAGE_SIZE);
-			d->widget()->setMaximumSize(PAGE_SIZE);
-			fStack->erase();
-
-			// fStack->resize(d->widget()->size());
-			// fStack->setMinimumSize(d->widget()->size());
-			// fStack->adjustSize();
-			// adjustSize();
-#endif
-
 			fStack->raiseWidget(NEW_CONDUIT);
 			d->widget()->show();
 			fCurrentConfig=d;
 		}
 	}
-#if 0
-	fConduitList->repaint();
-#endif
 }
 
 bool ConduitConfigWidget::release()
