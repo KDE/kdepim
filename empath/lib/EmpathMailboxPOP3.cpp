@@ -477,3 +477,16 @@ EmpathMailboxPOP3::setLogging(bool policy)
 	logging_ = policy;
 }
 
+	bool
+EmpathMailboxPOP3::mark(
+	const EmpathURL &, const QStringList &, RMM::MessageStatus)
+{
+	return false;
+}
+
+	bool
+EmpathMailboxPOP3::removeMessage(const EmpathURL &, const QStringList &)
+{
+	return false;
+}
+

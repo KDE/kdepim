@@ -251,3 +251,16 @@ EmpathMailboxIMAP4::mark(const EmpathURL &, RMM::MessageStatus)
 	return false;
 }
 
+	bool
+EmpathMailboxIMAP4::mark(
+	const EmpathURL &, const QStringList &, RMM::MessageStatus)
+{
+	return false;
+}
+
+	bool
+EmpathMailboxIMAP4::removeMessage(const EmpathURL &, const QStringList &)
+{
+	return false;
+}
+

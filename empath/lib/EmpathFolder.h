@@ -90,6 +90,7 @@ class EmpathFolder : public QObject
 		RMM::RMessage * message(const EmpathURL & url);
 
 		bool mark(const EmpathURL &, RMM::MessageStatus);
+		bool mark(const EmpathURL &, const QStringList &, RMM::MessageStatus);
 		
 		void dropIndex();
 		

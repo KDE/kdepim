@@ -159,7 +159,8 @@ EmpathFolder::mark(const EmpathURL & message, RMM::MessageStatus s)
 	empathDebug("mark called");
 	
 	EmpathMailbox * m(empath->mailbox(url_));
-	if (m == 0) return false;
+	if (m == 0)
+		return false;
 	
 	if (m->mark(message, s)) {
 		messageList_[message.messageID()]->setStatus(s);
@@ -168,5 +169,29 @@ EmpathFolder::mark(const EmpathURL & message, RMM::MessageStatus s)
 	}
 	
 	return false;
+}
+
+	bool
+EmpathFolder::mark(
+	const EmpathURL & url, const QStringList & l, RMM::MessageStatus s)
+{
+	empathDebug("mark called");
+	
+	bool retval(false);
+	
+	EmpathMailbox * m(empath->mailbox(url_));
+
+	if (m == 0)
+		return false;
+	
+#if 0
+	if (m->mark(l, s))
+		messageList_[message.messageID()]->setStatus(s);
+	else
+		retval = false;
+#endif	
+	emit(countUpdated(messageList_.countUnread(), messageList_.count()));
+	
+	return retval;
 }
 

@@ -118,6 +118,12 @@ class EmpathMailbox : public QObject
 			removeMessage		(const EmpathURL &) = 0;
 		
 		/**
+		 * @short Attempt to remove the messages specified in the url list.
+		 */
+		virtual bool
+			removeMessage		(const EmpathURL &, const QStringList &) = 0;
+		
+		/**
 		 * @short Get the type of the message specified in the url.
 		 */
 		virtual RMM::RBodyPart::PartType
@@ -141,8 +147,17 @@ class EmpathMailbox : public QObject
 		virtual void
 			syncIndex			(const EmpathURL &) = 0;
 	
+		/**
+		 * @short Mark the message specified with the given status.
+		 */
 		virtual bool
 			mark(const EmpathURL &, RMM::MessageStatus) = 0;
+		
+		/**
+		 * @short Mark the messages specified with the given status.
+		 */
+		virtual bool
+			mark(const EmpathURL &, const QStringList &, RMM::MessageStatus) = 0;
 
 	public slots:
 

@@ -107,6 +107,7 @@ class EmpathMessageListWidget : public QListView
 		void s_messageMark();
 		void s_messageMarkRead();
 		void s_messageMarkReplied();
+		void s_messageMarkMany();
 		void s_messageView();
 		void s_messageReply();
 		void s_messageReplyAll();
@@ -142,23 +143,24 @@ class EmpathMessageListWidget : public QListView
 		void contentsMouseReleaseEvent	(QMouseEvent *);
 		
 		void _setupMessageMenu();
-
+		
+		void _updateSelected();
+		
 		void getDescendants(
 			EmpathMessageListItem * initialItem,
 			QList<EmpathMessageListItem> * itemList);
 
 		void append(EmpathMessageListItem * item);
 
-		QPopupMenu			messageMenu_;
-		QPopupMenu			multipleMessageMenu_;
-		QPopupMenu			messageMarkMenu_;
+		QPopupMenu	messageMenu_;
+		QPopupMenu	multipleMessageMenu_;
+		QPopupMenu	messageMarkMenu_;
 		
 		EmpathIndexRecordList masterList_;
-		QList<EmpathMessageListItem> itemList_;
+		EmpathMessageListItemList itemList_;
 
 		QPixmap	px_xxx_, px_Sxx_, px_xMx_, px_xxR_,
 				px_SMx_, px_SxR_, px_xMR_, px_SMR_;
-
 		
 		void setStatus(EmpathMessageListItem * item, RMM::MessageStatus status);
 
@@ -186,9 +188,19 @@ class EmpathMessageListWidget : public QListView
 		
 		void markAsRead(EmpathMessageListItem *);
 		
+		/**
+		 * Mark with the status given
+		 */
 		void mark(RMM::MessageStatus);
+
+		/**
+		 * Flip the flag(s) in the given status
+		 */
+		void markOne(RMM::MessageStatus);
 		
 		static QListViewItem * lastSelected_;
+		
+		EmpathMessageListItemList selected_;
 		
 		QPoint dragStart_;
 		

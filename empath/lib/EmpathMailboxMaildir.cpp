@@ -62,8 +62,26 @@ EmpathMailboxMaildir::~EmpathMailboxMaildir()
 EmpathMailboxMaildir::mark(const EmpathURL & message, RMM::MessageStatus s)
 {
 	EmpathMaildir * m = _box(message);
-	if (m == 0) return false;
-	return m->mark(message, s);
+
+	if (m == 0)
+		return false;
+	
+	return m->mark(message.messageID(), s);
+}
+
+	bool
+EmpathMailboxMaildir::mark(
+	const EmpathURL & url, const QStringList & l, RMM::MessageStatus s)
+{
+	if (l.count() == 0)
+		return false;
+
+	EmpathMaildir * m = _box(url);
+
+	if (m == 0)
+		return false;
+	
+	return m->mark(l, s);
 }
 
 	void
@@ -352,12 +370,32 @@ EmpathMailboxMaildir::message(const EmpathURL & id)
 EmpathMailboxMaildir::removeMessage(const EmpathURL & id)
 {
 	empathDebug("removeMessage(" + id.asString() + ") called");
+	
 	EmpathMaildir * m = _box(id);
+	
 	if (m == 0) {
 		empathDebug("Can't find maildir");
 		return 0;
 	}
+	
 	return m->removeMessage(id.messageID());
+}
+
+	bool
+EmpathMailboxMaildir::removeMessage(
+	const EmpathURL & url, const QStringList & l)
+{
+	if (l.count() == 0)
+		return false;
+
+	EmpathMaildir * m = _box(url);
+	
+	if (m == 0) {
+		empathDebug("Can't find maildir");
+		return 0;
+	}
+	
+	return m->removeMessage(l);
 }
 
 	void

@@ -32,6 +32,7 @@
 #include <qlist.h>
 #include <qtimer.h>
 #include <qobject.h>
+#include <qstringlist.h>
 
 // Local includes
 #include "EmpathURL.h"
@@ -65,16 +66,20 @@ class EmpathMaildir : public QObject
 		const EmpathURL &	url()		const { return url_; }
 		const QString &		path()		const { return path_; }
 		
-		bool		mark(const EmpathURL &, RMM::MessageStatus);
+		bool mark(const QString &, RMM::MessageStatus);
+		bool mark(const QStringList &, RMM::MessageStatus);
 		
-		QString		writeMessage(RMM::RMessage & msg);
+		QString		writeMessage(RMM::RMessage &);
 		
-		Q_UINT32					sizeOfMessage		(const QString & id);
-		QString						plainBodyOfMessage	(const QString & id);
-		RMM::REnvelope *			envelopeOfMessage	(const QString & id);
-		RMM::RMessage *				message				(const QString & id);
-		bool						removeMessage		(const QString & id);
-		RMM::RBodyPart::PartType	typeOfMessage		(const QString & id);
+		Q_UINT32					sizeOfMessage		(const QString &);
+		QString						plainBodyOfMessage	(const QString &);
+		RMM::REnvelope *			envelopeOfMessage	(const QString &);
+		RMM::RMessage *				message				(const QString &);
+		
+		bool				removeMessage	(const QString &, bool = false);
+		bool				removeMessage	(const QStringList &);
+		
+		RMM::RBodyPart::PartType	typeOfMessage		(const QString &);
 		
 		void sync(const EmpathURL & url, bool ignoreMtime = false);
 		
@@ -84,14 +89,14 @@ class EmpathMaildir : public QObject
 		
 	private:
 		
-		QString		_write(RMM::RMessage & msg);
-		QCString	_messageData(const QString & filename);
+		QString		_write(RMM::RMessage &);
+		QCString	_messageData(const QString &);
 		void		_markNewMailAsSeen();
-		void 		_markAsSeen(const QString & name);
+		void 		_markAsSeen(const QString &);
 		void		_clearTmp();
 		bool		_setupDirs();
 		QString		_generateUnique();
-		QString		_generateFlagsString(RMM::MessageStatus s);
+		QString		_generateFlagsString(RMM::MessageStatus);
 		void		_readIndex();
 		void		_writeIndex();
 		

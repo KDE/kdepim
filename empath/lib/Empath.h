@@ -226,6 +226,7 @@ class Empath : public QObject
 		 * @short Remove given message.
 		 */
 		bool remove(const EmpathURL &);
+		bool remove(const EmpathURL &, const QStringList &);
 		
 		/**
 		 * Bounce a message.
@@ -233,6 +234,7 @@ class Empath : public QObject
 		void s_bounce(const EmpathURL &);
 
 		bool mark(const EmpathURL &, RMM::MessageStatus);
+		bool mark(const EmpathURL &, const QStringList &, RMM::MessageStatus);
 		
 		void s_setupDisplay();
 		void s_setupIdentity();

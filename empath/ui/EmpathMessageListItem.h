@@ -84,5 +84,8 @@ class EmpathMessageListItem : public QListViewItem
 		QString				sizeStr_;
 };
 
+typedef QList<EmpathMessageListItem> EmpathMessageListItemList;
+typedef QListIterator<EmpathMessageListItem> EmpathMessageListItemIterator;
+
 #endif
 

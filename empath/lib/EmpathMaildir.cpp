@@ -239,12 +239,10 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 }
 
 	bool
-EmpathMaildir::mark(const EmpathURL & message, RMM::MessageStatus msgStat)
+EmpathMaildir::mark(const QString & id, RMM::MessageStatus msgStat)
 {
-	empathDebug("mark(" + message.asString() + ") called");
-	
 	QRegExp re_flags(":2,[A-Za-z]*$");
-	QDir d(path_ + "/cur/", message.messageID() + "*");
+	QDir d(path_ + "/cur/", id + "*");
 	
 	if (d.count() != 1) {
 		empathDebug("Couldn't mark message");
@@ -272,6 +270,28 @@ EmpathMaildir::mark(const EmpathURL & message, RMM::MessageStatus msgStat)
 	if (!retval) {
 		empathDebug("Couldn't mark message");
 	}
+
+	return retval;
+}
+
+	bool
+EmpathMaildir::mark(const QStringList & l, RMM::MessageStatus msgStat)
+{
+	empathDebug("mark many");
+	bool retval = true;
+	
+	EmpathTask * t(empath->addTask(i18n("Marking messages")));
+	t->setMax(l.count());
+	
+	QStringList::ConstIterator it(l.begin());
+	
+	for (; it != l.end(); ++it) {
+		if (!mark(*it, msgStat))
+			retval = false;
+		t->doneOne();
+	}
+
+	t->done();
 	return retval;
 }
 
@@ -326,7 +346,7 @@ EmpathMaildir::message(const QString & id)
 }
 
 	bool
-EmpathMaildir::removeMessage(const QString & id)
+EmpathMaildir::removeMessage(const QString & id, bool writeIndex = false)
 {
 	empathDebug("Removing message with id \"" + id + "\"");
 	
@@ -343,9 +363,32 @@ EmpathMaildir::removeMessage(const QString & id)
 	
 	folder->messageList().remove(id);
 
-	_writeIndex();
+	if (writeIndex) _writeIndex();
 	
 	return true;
+}
+
+	bool
+EmpathMaildir::removeMessage(const QStringList & l)
+{
+	bool retval = true;
+
+	EmpathTask * t(empath->addTask(i18n("Removing messages")));
+
+	t->setMax(l.count());
+
+	QStringList::ConstIterator it(l.begin());
+	
+	for (; it != l.end(); ++it) {
+		if (!removeMessage(*it, false))
+			retval = false;
+		t->doneOne();
+	}
+	
+	t->done();
+	_writeIndex();
+
+	return retval;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -819,12 +862,15 @@ EmpathMaildir::_readIndex()
 EmpathMaildir::_writeIndex()
 {
 	empathDebug("_writeIndex() called");
+	
+	EmpathTask * t(empath->addTask(i18n("Writing index")));
 
 	// Get a pointer to the folder related to us.
 	EmpathFolder * f(empath->folder(url_));
 	
 	if (f == 0) {
 		empathDebug("writeIndex: Couldn't find folder !");
+		t->done();
 		return;
 	}
 	
@@ -832,6 +878,7 @@ EmpathMaildir::_writeIndex()
 	
 	if (!indexFile.open(IO_WriteOnly)) {
 		empathDebug("Couldn't write to index \"" + indexFile.name() + "\"");
+		t->done();
 		return;
 	}
 	
@@ -839,17 +886,22 @@ EmpathMaildir::_writeIndex()
 	
 	empathDebug("Writing " +
 		QString().setNum(f->messageList().count()) + " entries");
+	
+	t->setMax(f->messageList().count());
 
 	EmpathIndexIterator it(f->messageList());
 	
 	for (; it.current(); ++it) {
-		
+
 		indexStream << *it.current();
+		t->doneOne();
 	}
 	
 	indexFile.close();
 	
 	mtime_ = QDateTime::currentDateTime();
+	
+	t->done();
 }
 
 	void
@@ -859,5 +911,4 @@ EmpathMaildir::s_timerBeeped()
 	sync(url_);
 	timer_.start(30000, true);
 }
-
 

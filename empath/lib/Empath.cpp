@@ -208,8 +208,20 @@ Empath::remove(const EmpathURL & url)
 }
 
 	bool
+Empath::remove(const EmpathURL & url, const QStringList & l)
+{
+	EmpathMailbox * m = mailbox(url);
+
+	if (m == 0)
+		return false;
+
+	return m->removeMessage(url, l);
+}
+
+	bool
 Empath::mark(const EmpathURL & url, RMM::MessageStatus s)
 {
+	empathDebug("mark() called");
 	EmpathFolder * f = folder(url);
 	if (f == 0) {
 		empathDebug("Can't find folder " + url.asString());
@@ -218,6 +230,17 @@ Empath::mark(const EmpathURL & url, RMM::MessageStatus s)
 	return f->mark(url, s);
 }
 
+	bool
+Empath::mark(const EmpathURL & url, const QStringList & l, RMM::MessageStatus s)
+{
+	empathDebug("mark() called");
+	EmpathFolder * f = folder(url);
+	
+	if (f == 0)
+		return false;
+
+	return f->mark(url, l, s);
+}
 
 	EmpathTask *
 Empath::addTask(const QString & name)

@@ -38,6 +38,7 @@ EmpathIdentitySettingsDialog.cpp \
 EmpathLeftSideWidget.cpp \
 EmpathMainWidget.cpp \
 EmpathMainWindow.cpp \
+EmpathMessageMarkDialog.cpp \
 EmpathMatchPropertiesDialog.cpp \
 EmpathMenuMaker.cpp \
 EmpathMessageDownloadStatus.cpp \
