@@ -594,7 +594,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       for (tmpDay = tmpDays.first();
            tmpDay;
            tmpDay = tmpDays.next()) {
-        r.by_month_day[index++] = icalrecurrencetype_day_position(*tmpDay*8);//*tmpDay);
+        r.by_month_day[index++] = icalrecurrencetype_day_position(*tmpDay*8);
       }
 //      r.by_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
       break;
@@ -624,6 +624,15 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
           }
         }
 //        r.by_day[index2] = ICAL_RECURRENCE_ARRAY_MAX;
+      }
+      else {
+        tmpDays = recur->monthDays();
+        for (tmpDay = tmpDays.first();
+             tmpDay;
+             tmpDay = tmpDays.next()) {
+          r.by_month_day[index2++] = icalrecurrencetype_day_position(*tmpDay*8);
+        }
+//        r.by_month_day[index2] = ICAL_RECURRENCE_ARRAY_MAX;
       }
       break;
     case Recurrence::rYearlyDay:
@@ -1494,6 +1503,9 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
               recur->setYearly(Recurrence::rYearlyMonth,r.interval,-1);
             else
               recur->setYearly(Recurrence::rYearlyMonth,r.interval,r.count);
+          }
+          while((day = r.by_month_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
+            recur->addMonthlyDay(day);
           }
         }
         index = 0;
