@@ -28,7 +28,7 @@
 #ifndef _KPILOT_PILOTDOCBOOKMARK_H
 #define _KPILOT_PILOTDOCBOOKMARK_H
 
-#include "pilotAppCategory.h"
+#include <pilotAppCategory.h>
 class PilotRecord;
 
 

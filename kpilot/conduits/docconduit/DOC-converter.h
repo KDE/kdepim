@@ -38,13 +38,14 @@
 
 #include <qptrlist.h>
 #include <qobject.h>
+#include "options.h"
 
 
 class PilotDatabase;
 
 
 /****************************************************************************************************
- *  various bookmark classes. Most important is the bmkList  findMatches(QString, bmkList &) function, 
+ *  various bookmark classes. Most important is the bmkList  findMatches(QString, bmkList &) function,
  *  which needs to return a list of all bookmarks found for the given bookmark expression.
  *  A bookmark usually consists of a bookmark text and an offset into the text document.
  ****************************************************************************************************/
@@ -76,7 +77,7 @@ class docMatchBookmark:public docBookmark {
 	docMatchBookmark(QString pattrn, int options=0):docBookmark(),
 		pattern(pattrn), opts(options) { from=0; to=100; };
 	docMatchBookmark(QString pattrn, QString bmkname,
-		int options=0):docBookmark(bmkname, 0), pattern(pattrn), 
+		int options=0):docBookmark(bmkname, 0), pattern(pattrn),
 		opts(options) { from=0; to=100; };
 	virtual ~ docMatchBookmark() { };
 
@@ -111,14 +112,15 @@ private:
 	QString docfilename;
 	QString bmkfilename;
 	bool compress;
+
+	bmkList fBookmarks;
+public:
 	enum eSortBookmarksEnum
 	{
 		eSortNone,
 		eSortPos,
 		eSortName
 	} eSortBookmarks;
-
-	bmkList fBookmarks;
 
 public:
 	 DOCConverter(QObject *parent=0L, const char *name=0L);
@@ -150,11 +152,11 @@ public:
 		fBookmarks.append(bookmark);
 		return fBookmarks.count();
 	};
-	
+
 	int findBmkEndtags(QString &, bmkList&);
 	int findBmkInline(QString &, bmkList&);
 	int findBmkFile(QString &, bmkList&);
-	
+
 
 	void setSort(enum eSortBookmarksEnum sort) {eSortBookmarks=sort;}
 	enum eSortBookmarksEnum getSort() {return eSortBookmarks;}

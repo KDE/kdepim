@@ -28,7 +28,7 @@
 #ifndef _KPILOT_PILOTDOCHEAD_H
 #define _KPILOT_PILOTDOCHEAD_H
 
-#include "pilotAppCategory.h"
+#include <pilotAppCategory.h>
 
 class PilotRecord;
 

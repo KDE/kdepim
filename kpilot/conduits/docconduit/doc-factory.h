@@ -52,7 +52,7 @@ public:
 	static const char *fGroup;
 	static const char *fDOCDir, *fPDBDir, *fKeepPDBLocally, 
 		*fConflictResolution, 
-		*fConvertBookmarks, *fBookmarksBmk, *fBookmarksInline, *fBookmarksEndtags, 
+		*fConvertBookmarks, *fBookmarksBmk, *fBookmarksInline, *fBookmarksEndtags, *fPCBookmarks,
 		*fCompress, 
 		*fSyncDirection, *fDOCList, *fDBListSynced, *fIgnoreBmkChanges, *fLocalSync, *fAlwaysUseResolution;
 	static const char *dbDOCtype;

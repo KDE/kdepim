@@ -1,30 +1,23 @@
 <!DOCTYPE UI><UI version="3.1" stdsetdef="1">
-<class>PalmDOCDialog</class>
-<author>Reinhold Kainhofer</author>
+<class>ConverterDlgBase</class>
 <widget class="QWidget">
     <property name="name">
-        <cstring>Form2</cstring>
+        <cstring>ConverterDlgBase</cstring>
     </property>
     <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>596</width>
-            <height>467</height>
+            <width>456</width>
+            <height>256</height>
         </rect>
     </property>
     <property name="caption">
-        <string>Form2</string>
+        <string>Form1</string>
     </property>
     <grid>
         <property name="name">
             <cstring>unnamed</cstring>
-        </property>
-        <property name="margin">
-            <number>11</number>
-        </property>
-        <property name="spacing">
-            <number>6</number>
         </property>
         <widget class="QTabWidget" row="0" column="0">
             <property name="name">
@@ -41,40 +34,53 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QCheckBox" row="4" column="1">
+                    <widget class="QLabel" row="1" column="0">
                         <property name="name">
-                            <cstring>fLocalSync</cstring>
+                            <cstring>fDocLabel</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>4</hsizetype>
+                                <vsizetype>5</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
                         </property>
                         <property name="text">
-                            <string>&amp;Local sync (only sync the two dirs, no synchronization with handheld)</string>
+                            <string>&amp;PalmDOC file:</string>
                         </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Check this is you only want to synchronize the two directories above, but don't want to install the converted databases to the handheld.</string>
+                        <property name="buddy" stdset="0">
+                            <cstring>fPDBDir</cstring>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+                    <widget class="QLabel" row="0" column="0">
                         <property name="name">
-                            <cstring>fkeepPDBLocally</cstring>
+                            <cstring>fTextLabel</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>4</hsizetype>
+                                <vsizetype>5</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
                         </property>
                         <property name="text">
-                            <string>Keep local copy of &amp;PDB files:</string>
+                            <string>&amp;Text file:</string>
                         </property>
-                        <property name="checked">
-                            <bool>true</bool>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Check if you want to have the .pdb files somewhere on your PC's harddisk.</string>
-                        </property>
-                    </widget>
-                    <widget class="KURLRequester" row="1" column="0" rowspan="1" colspan="2">
-                        <property name="name">
+                        <property name="buddy" stdset="0">
                             <cstring>fDOCDir</cstring>
                         </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Enter the name of the directory where the text files reside on the PC. All files with extension .txt will be synced to the handheld.</string>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fDirectories</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Convert whole &amp;directories</string>
                         </property>
                     </widget>
-                    <widget class="KURLRequester" row="3" column="0" rowspan="1" colspan="2">
+                    <widget class="KURLRequester" row="1" column="1" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>fPDBDir</cstring>
                         </property>
@@ -82,98 +88,33 @@
                             <string>Directory where copies of the handheld databases are kept. You can install them to any PalmOS handheld, and distribute these copies to other people (but beware of copyright infringement!).</string>
                         </property>
                     </widget>
-                    <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
+                    <widget class="KURLRequester" row="0" column="1" rowspan="1" colspan="2">
                         <property name="name">
-                            <cstring>TextLabel1</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Directory containing &amp;text files:</string>
-                        </property>
-                        <property name="buddy" stdset="0">
                             <cstring>fDOCDir</cstring>
                         </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Enter the name of the directory where the text files reside on the PC. All files with extension .txt will be synced to the handheld.</string>
+                        </property>
                     </widget>
-                    <spacer row="7" column="1">
+                    <widget class="KPushButton" row="6" column="0" rowspan="1" colspan="2">
                         <property name="name">
-                            <cstring>Spacer1</cstring>
+                            <cstring>fTextToDoc</cstring>
                         </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
+                        <property name="text">
+                            <string>Convert Text to PalmDOC</string>
                         </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QButtonGroup" row="6" column="0" rowspan="1" colspan="2">
+                    </widget>
+                    <widget class="KPushButton" row="6" column="2">
                         <property name="name">
-                            <cstring>fSyncDirection</cstring>
+                            <cstring>fDocToText</cstring>
                         </property>
-                        <property name="title">
-                            <string>Synchronization Direction</string>
+                        <property name="text">
+                            <string>Convert PalmDOC to Text</string>
                         </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <property name="margin">
-                                <number>11</number>
-                            </property>
-                            <property name="spacing">
-                                <number>6</number>
-                            </property>
-                            <widget class="QRadioButton" row="2" column="0">
-                                <property name="name">
-                                    <cstring>RadioButton3</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Sync only P&amp;C to PDA</string>
-                                </property>
-                                <property name="buttonGroupId">
-                                    <number>2</number>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Sync only changes to the texts on the PC to the handheld. If you changed the texts on the handheld, the changes will not be copied to the PC.</string>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="1" column="0">
-                                <property name="name">
-                                    <cstring>RadioButton2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Sync only P&amp;DA to PC</string>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Only sync changes made on the handheld to the PC. Changes to the text files on the PC will not be committed to the handheld.</string>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="0" column="0">
-                                <property name="name">
-                                    <cstring>RadioButton1</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Sync &amp;all</string>
-                                </property>
-                                <property name="checked">
-                                    <bool>true</bool>
-                                </property>
-                                <property name="buttonGroupId">
-                                    <number>0</number>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Sync the PC to the Handheld and the handheld to the PC</string>
-                                </property>
-                            </widget>
-                        </grid>
                     </widget>
                     <spacer row="5" column="1">
                         <property name="name">
-                            <cstring>spacer12</cstring>
+                            <cstring>spacer5</cstring>
                         </property>
                         <property name="orientation">
                             <enum>Vertical</enum>
@@ -184,27 +125,26 @@
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>21</height>
+                                <height>150</height>
                             </size>
                         </property>
                     </spacer>
-                    <spacer row="4" column="0">
+                    <widget class="QCheckBox" row="3" column="1" rowspan="1" colspan="2">
                         <property name="name">
-                            <cstring>Spacer7</cstring>
+                            <cstring>fAskOverwrite</cstring>
                         </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
+                        <property name="text">
+                            <string>&amp;Ask before overwriting files</string>
                         </property>
-                        <property name="sizeType">
-                            <enum>Maximum</enum>
+                    </widget>
+                    <widget class="QCheckBox" row="4" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fVerbose</cstring>
                         </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>21</width>
-                                <height>21</height>
-                            </size>
+                        <property name="text">
+                            <string>&amp;Verbose messages</string>
                         </property>
-                    </spacer>
+                    </widget>
                 </grid>
             </widget>
             <widget class="QWidget">
@@ -220,7 +160,7 @@
                     </property>
                     <spacer row="3" column="0">
                         <property name="name">
-                            <cstring>Spacer3_2</cstring>
+                            <cstring>spacer6</cstring>
                         </property>
                         <property name="orientation">
                             <enum>Horizontal</enum>
@@ -237,7 +177,7 @@
                     </spacer>
                     <spacer row="4" column="0">
                         <property name="name">
-                            <cstring>Spacer3_3</cstring>
+                            <cstring>spacer7</cstring>
                         </property>
                         <property name="orientation">
                             <enum>Horizontal</enum>
@@ -254,7 +194,7 @@
                     </spacer>
                     <spacer row="2" column="0">
                         <property name="name">
-                            <cstring>Spacer3</cstring>
+                            <cstring>spacer8</cstring>
                         </property>
                         <property name="orientation">
                             <enum>Horizontal</enum>
@@ -368,7 +308,7 @@
                     </property>
                     <spacer row="2" column="0">
                         <property name="name">
-                            <cstring>spacer16</cstring>
+                            <cstring>spacer10</cstring>
                         </property>
                         <property name="orientation">
                             <enum>Vertical</enum>
@@ -383,17 +323,6 @@
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QCheckBox" row="1" column="0">
-                        <property name="name">
-                            <cstring>fNoConversionOfBmksOnly</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Do not convert, if only &amp;bookmarks changed (text unchanged)</string>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Check this if you don't want to sync the text on the handheld to the PC if you only changed the bookmarks on the handheld, but not the text.</string>
-                        </property>
-                    </widget>
                     <widget class="QButtonGroup" row="0" column="0">
                         <property name="name">
                             <cstring>fPCBookmarks</cstring>
@@ -409,21 +338,36 @@
                                 <property name="name">
                                     <cstring>radioButton9</cstring>
                                 </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
                                 <property name="text">
                                     <string>Convert as &amp;inline tags</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>1</number>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="0" column="0">
                                 <property name="name">
                                     <cstring>radioButton8</cstring>
                                 </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
                                 <property name="text">
                                     <string>Do&amp;n't convert bookmarks</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>0</number>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
                                 <property name="name">
                                     <cstring>radioButton10</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
                                 </property>
                                 <property name="text">
                                     <string>Convert as &amp;end tags</string>
@@ -442,93 +386,6 @@
                             </widget>
                         </grid>
                     </widget>
-                </grid>
-            </widget>
-            <widget class="QWidget">
-                <property name="name">
-                    <cstring>tab</cstring>
-                </property>
-                <attribute name="title">
-                    <string>Conflicts</string>
-                </attribute>
-                <grid>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <widget class="QButtonGroup" row="0" column="0">
-                        <property name="name">
-                            <cstring>fConflictResolution</cstring>
-                        </property>
-                        <property name="title">
-                            <string>Conflict Resolution</string>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>If the same text was changed on the PC and the handheld, which of the two versions should be used as the new version?</string>
-                        </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <property name="margin">
-                                <number>11</number>
-                            </property>
-                            <property name="spacing">
-                                <number>6</number>
-                            </property>
-                            <widget class="QRadioButton" row="1" column="0" rowspan="1" colspan="2">
-                                <property name="name">
-                                    <cstring>RadioButton5</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>P&amp;C overrides</string>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="2" column="0" rowspan="1" colspan="2">
-                                <property name="name">
-                                    <cstring>RadioButton4</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>P&amp;DA overrides</string>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="3" column="0" rowspan="1" colspan="2">
-                                <property name="name">
-                                    <cstring>RadioButton7</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Ask the user</string>
-                                </property>
-                                <property name="checked">
-                                    <bool>true</bool>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="0" column="0">
-                                <property name="name">
-                                    <cstring>radioButton12</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;No resolution</string>
-                                </property>
-                            </widget>
-                        </grid>
-                    </widget>
-                    <spacer row="1" column="0">
-                        <property name="name">
-                            <cstring>Spacer8</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>16</width>
-                                <height>213</height>
-                            </size>
-                        </property>
-                    </spacer>
                 </grid>
             </widget>
         </widget>
@@ -553,22 +410,7 @@
         <receiver>fBookmarksBmk</receiver>
         <slot>setEnabled(bool)</slot>
     </connection>
-    <connection>
-        <sender>fkeepPDBLocally</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>fPDBDir</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
-    <connection>
-        <sender>fkeepPDBLocally</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>fLocalSync</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
 </connections>
-<tabstops>
-    <tabstop>tabWidget</tabstop>
-</tabstops>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
     <includehint>kurlrequester.h</includehint>
@@ -576,6 +418,8 @@
     <includehint>kpushbutton.h</includehint>
     <includehint>kurlrequester.h</includehint>
     <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
 </includehints>
 </UI>

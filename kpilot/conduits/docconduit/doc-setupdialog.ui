@@ -41,17 +41,6 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QCheckBox" row="4" column="1">
-                        <property name="name">
-                            <cstring>fLocalSync</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Local sync (only sync the two dirs, no synchronization with handheld)</string>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Check this is you only want to synchronize the two directories above, but don't want to install the converted databases to the handheld.</string>
-                        </property>
-                    </widget>
                     <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>fkeepPDBLocally</cstring>
@@ -184,23 +173,6 @@
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>21</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <spacer row="4" column="0">
-                        <property name="name">
-                            <cstring>Spacer7</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Maximum</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>21</width>
                                 <height>21</height>
                             </size>
                         </property>
@@ -388,7 +360,7 @@
                             <cstring>fNoConversionOfBmksOnly</cstring>
                         </property>
                         <property name="text">
-                            <string>Do not convert, if only &amp;bookmarks changed (text unchanged)</string>
+                            <string>Do not convert, if text unchanged (only bookmarks)</string>
                         </property>
                         <property name="toolTip" stdset="0">
                             <string>Check this if you don't want to sync the text on the handheld to the PC if you only changed the bookmarks on the handheld, but not the text.</string>
@@ -409,21 +381,36 @@
                                 <property name="name">
                                     <cstring>radioButton9</cstring>
                                 </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
                                 <property name="text">
                                     <string>Convert as &amp;inline tags</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>1</number>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="0" column="0">
                                 <property name="name">
                                     <cstring>radioButton8</cstring>
                                 </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
                                 <property name="text">
                                     <string>Do&amp;n't convert bookmarks</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>0</number>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
                                 <property name="name">
                                     <cstring>radioButton10</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
                                 </property>
                                 <property name="text">
                                     <string>Convert as &amp;end tags</string>
@@ -579,18 +566,11 @@
         <receiver>fPDBDir</receiver>
         <slot>setEnabled(bool)</slot>
     </connection>
-    <connection>
-        <sender>fkeepPDBLocally</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>fLocalSync</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
 </connections>
 <tabstops>
     <tabstop>fDOCDir</tabstop>
     <tabstop>fkeepPDBLocally</tabstop>
     <tabstop>fPDBDir</tabstop>
-    <tabstop>fLocalSync</tabstop>
     <tabstop>fCompress</tabstop>
     <tabstop>fConvertBookmarks</tabstop>
     <tabstop>fBookmarksInline</tabstop>

@@ -1,4 +1,4 @@
-/* kpalmDOCConverter.cpp
+/* converter.cpp
 **
 ** Copyright (C) 2003 by Reinhold Kainhofer
 **
@@ -26,42 +26,33 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-
-static const char *kpalmdoc_id =
-	"$Id$";
-
-
 #include "options.h"
 
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <kapplication.h>
 
-#include <converterdlg_base.h>
+#include "kpalmdoc_dlg.h"
 
 
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
 
-	KAboutData about("kpalmdoc", I18N_NOOP("KPalmDOC"),
-		"-0.0.1",
+	KAboutData about("converter", I18N_NOOP("KPalmDOC"), "-0.0.1",
 		"KPalmDOC - KDE Converter for PalmDOC texts.\n\n",
 		KAboutData::License_GPL, "(c) 2003, Reinhold Kainhofer");
-	about.addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Main Developer"),
+	about.addAuthor("Reinhold Kainhofer", I18N_NOOP("Main Developer"),
 		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
-	about.addAuthor("Adriaan de Groot",
-		I18N_NOOP("Maintainer of KPilot"),
+	about.addCredit("Adriaan de Groot", I18N_NOOP("Maintainer of KPilot"),
 		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
 
 	KCmdLineArgs::init(argc, argv, &about);
+  KApplication::addCmdLineOptions();
+
 	KApplication app;
-	PalmDOCDialog *dlg=new PalmDOCDialog();
+	ConverterDlg *dlg=new ConverterDlg(0L, i18n("PalmDOC converter"));
 	dlg->show();
 	return app.exec();
-	
-	/* NOTREACHED */
-	(void) kpalmdoc_id;
 }
 

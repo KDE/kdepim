@@ -95,11 +95,14 @@ DOCWidgetSetup::~DOCWidgetSetup()
 			fSyncDirection->selected()));
 	fConfig->writeEntry(DOCConduitFactory::fIgnoreBmkChanges, 
 		fConfigWidget->fNoConversionOfBmksOnly->isChecked());
-	fConfig->writeEntry(DOCConduitFactory::fLocalSync, 
-		fConfigWidget->fLocalSync->isChecked());
 	fConfig->writeEntry(DOCConduitFactory::fAlwaysUseResolution,
 		fConfigWidget->fAlwaysUseResolution->isChecked());
 	
+	fConfig->writeEntry(DOCConduitFactory::fPCBookmarks,
+		fConfigWidget->fPCBookmarks->id(fConfigWidget->
+			fPCBookmarks->selected()));
+
+
 	fConfig->sync();
 }
 
@@ -132,12 +135,13 @@ DOCWidgetSetup::~DOCWidgetSetup()
 		readBoolEntry(DOCConduitFactory::fCompress, true));
 	fConfigWidget->fSyncDirection->setButton(fConfig->
 		readNumEntry(DOCConduitFactory::fSyncDirection, 0));
-
+		
 	fConfigWidget->fNoConversionOfBmksOnly->setChecked(
 		fConfig->readBoolEntry(DOCConduitFactory::fIgnoreBmkChanges, false));
-	fConfigWidget->fLocalSync->setChecked(
-		fConfig->readBoolEntry(DOCConduitFactory::fLocalSync, false));
 	fConfigWidget->fAlwaysUseResolution->setChecked(
 		fConfig->readBoolEntry(DOCConduitFactory::fAlwaysUseResolution, false));
+		
+	fConfigWidget->fPCBookmarks->setButton(fConfig->
+		readNumEntry(DOCConduitFactory::fPCBookmarks, 0));
 }
 

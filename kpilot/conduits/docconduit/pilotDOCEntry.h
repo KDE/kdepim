@@ -28,7 +28,7 @@
 #ifndef _KPILOT_PILOTDOCENTRY_H
 #define _KPILOT_PILOTDOCENTRY_H
 
-#include "pilotAppCategory.h"
+#include <pilotAppCategory.h>
 #include "makedoc9.h"
 
 

@@ -28,6 +28,7 @@
 	
 #include "options.h"
 #include "doc-factory.moc"
+#include "doc-factory.h"
 	
 #include <kinstance.h>
 #include <kaboutdata.h>
@@ -64,8 +65,8 @@ const char *DOCConduitFactory::fCompress = "Compress";
 const char *DOCConduitFactory::fSyncDirection = "Sync Direction";
 const char *DOCConduitFactory::fDOCList = "Converted PalmDOCs";
 const char *DOCConduitFactory::fIgnoreBmkChanges = "Ignore only bookmark changes";
-const char *DOCConduitFactory::fLocalSync = "Only sync dirs";
 const char *DOCConduitFactory::fAlwaysUseResolution = "Always show resolution dialog";
+const char *DOCConduitFactory::fPCBookmarks = "Bookmarks to PC";
 
 const char *DOCConduitFactory::dbDOCtype = "TEXt";
 const char *DOCConduitFactory::dbDOCcreator = "REAd";
