@@ -23,6 +23,7 @@
 
 #include "resourcecalendar.h"
 
+#include "idmapper.h"
 #include "incidence.h"
 #include "calendarlocal.h"
 
@@ -262,25 +263,13 @@ class ResourceCached : public ResourceCalendar,
     */
     void clearCache();
 
-    /**
-      Stores the remote uid for the given local uid.
-     */
-    void setRemoteUid( const QString &localUid, const QString &remoteUid );
+    void cleanUpEventCache( const KCal::Event::List &eventList );
+    void cleanUpTodoCache( const KCal::Todo::List &todoList );
 
     /**
-      Removes the remote uid.
+      Returns a reference to the id mapper.
      */
-    void removeRemoteUid( const QString &remoteUid );
-
-    /**
-      Returns the remote uid of the given local uid.
-     */
-    QString remoteUid( const QString &localUid ) const;
-
-    /**
-      Returns the local uid for the given remote uid.
-     */
-    QString localUid( const QString &remoteUid ) const;
+    KPIM::IdMapper& idMapper();
 
   protected:
     // From Calendar::Observer
@@ -345,7 +334,7 @@ class ResourceCached : public ResourceCalendar,
     QMap<KCal::Incidence *,bool> mChangedIncidences;
     QMap<KCal::Incidence *,bool> mDeletedIncidences;
 
-    QMap<QString, QVariant> mUidMap;
+    KPIM::IdMapper mIdMapper;
 
     class Private;
     Private *d;

@@ -4,6 +4,7 @@ INCLUDES = -I$(top_srcdir)/libical/src/libical \
   -I$(top_srcdir)/libical/src/libicalss -I$(top_builddir)/libical/src/libical \
   -I$(top_builddir)/libical/src/libicalss -I$(srcdir)/versit -I$(top_srcdir)/ \
   -I$(top_srcdir)/ktnef \
+  -I$(top_srcdir)/libemailfunctions \
   $(all_includes)
 
 lib_LTLIBRARIES   = libkcal.la

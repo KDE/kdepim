@@ -21,7 +21,6 @@
 
 #include <qdatastream.h>
 #include <qdatetime.h>
-#include <qfile.h>
 #include <qstring.h>
 #include <qptrlist.h>
 
@@ -278,40 +277,20 @@ void ResourceCached::clearChanges()
 
 void ResourceCached::loadCache()
 {
-  mUidMap.clear();
+  if ( !mIdMapper.load( uidMapFile() ) )
+    kdError(5800) << "Can't read uid map file '" << uidMapFile() << "'" << endl;
 
-  if ( KStandardDirs::exists( cacheFile() ) ) {
-    // load uid map
-    QFile mapFile( uidMapFile() );
-    if ( mapFile.open( IO_ReadOnly ) ) {
-      QDataStream stream( &mapFile );
-      stream >> mUidMap;
-      mapFile.close();
-    } else {
-      kdError(5800) << "Can't read uid map file '" << mapFile.name() << "'" << endl;
-    }
-
-    // load cache
+  if ( KStandardDirs::exists( cacheFile() ) )
     mCalendar.load( cacheFile() );
-  }
 }
 
 void ResourceCached::saveCache()
 {
   kdDebug(5800) << "ResourceCached::saveCache(): " << cacheFile() << endl;
 
-  // save uid map
-  QFile mapFile( uidMapFile() );
-  if ( mapFile.open( IO_WriteOnly ) ) {
-    kdDebug() << "Save uid map file '" << mapFile.name() << "'" << endl;
-    QDataStream stream( &mapFile );
-    stream << mUidMap;
-    mapFile.close();
-  } else {
-    kdError(5800) << "Can't write uid map file '" << mapFile.name() << "'" << endl;
-  }
+  if ( !mIdMapper.save( uidMapFile() ) )
+    kdError(5800) << "Can't write uid map file '" << uidMapFile() << "'" << endl;
 
-  // save cache
   mCalendar.save( cacheFile() );
 }
 
@@ -320,40 +299,68 @@ void ResourceCached::clearCache()
   mCalendar.close();
 }
 
-void ResourceCached::setRemoteUid( const QString &localUid, const QString &remoteUid )
+void ResourceCached::cleanUpEventCache( const Event::List &eventList )
 {
-  mUidMap.insert( localUid, remoteUid );
-}
+  CalendarLocal calendar;
 
-void ResourceCached::removeRemoteUid( const QString &remoteUid )
-{
-  QMap<QString, QVariant>::Iterator it;
-  for ( it = mUidMap.begin(); it != mUidMap.end(); ++it )
-    if ( it.data().toString() == remoteUid ) {
-      mUidMap.remove( it );
-      return;
-    }
-}
-
-QString ResourceCached::remoteUid( const QString &localUid ) const
-{
-  QMap<QString, QVariant>::ConstIterator it;
-  it = mUidMap.find( localUid );
-
-  if ( it != mUidMap.end() )
-    return it.data().toString();
+  if ( KStandardDirs::exists( cacheFile() ) )
+    calendar.load( cacheFile() );
   else
-    return QString::null;
+    return;
+
+  Event::List list = calendar.events();
+  Event::List::ConstIterator cacheIt, it;
+  for ( cacheIt = list.begin(); cacheIt != list.end(); ++cacheIt ) {
+    bool found = false;
+    for ( it = eventList.begin(); it != eventList.end(); ++it ) {
+      if ( (*it)->uid() == (*cacheIt)->uid() )
+        found = true;
+    }
+
+    if ( !found ) {
+      mIdMapper.removeRemoteId( mIdMapper.remoteId( (*cacheIt)->uid() ) );
+      Event *event = mCalendar.event( (*cacheIt)->uid() );
+      if ( event )
+        mCalendar.deleteEvent( event );
+    }
+  }
+
+  calendar.close();
 }
 
-QString ResourceCached::localUid( const QString &remoteUid ) const
+void ResourceCached::cleanUpTodoCache( const Todo::List &todoList )
 {
-  QMap<QString, QVariant>::ConstIterator it;
-  for ( it = mUidMap.begin(); it != mUidMap.end(); ++it )
-    if ( it.data().toString() == remoteUid )
-      return it.key();
+  CalendarLocal calendar;
 
-  return QString::null;
+  if ( KStandardDirs::exists( cacheFile() ) )
+    calendar.load( cacheFile() );
+  else
+    return;
+
+  Todo::List list = calendar.todos();
+  Todo::List::ConstIterator cacheIt, it;
+  for ( cacheIt = list.begin(); cacheIt != list.end(); ++cacheIt ) {
+
+    bool found = false;
+    for ( it = todoList.begin(); it != todoList.end(); ++it ) {
+      if ( (*it)->uid() == (*cacheIt)->uid() )
+        found = true;
+    }
+
+    if ( !found ) {
+      mIdMapper.removeRemoteId( mIdMapper.remoteId( (*cacheIt)->uid() ) );
+      Todo *todo = mCalendar.todo( (*cacheIt)->uid() );
+      if ( todo )
+        mCalendar.deleteTodo( todo );
+    }
+  }
+
+  calendar.close();
+}
+
+KPIM::IdMapper& ResourceCached::idMapper()
+{
+  return mIdMapper;
 }
 
 QString ResourceCached::cacheFile() const
