@@ -340,8 +340,6 @@ void OpenGroupware::slotUploadJobResult( KIO::Job *job )
     ICalFormat ical;
     Incidence *i = ical.fromString( mIncidencesForUpload.front() );
     clearChange( i );
-    mCalendar.deleteIncidence( i );
-    saveCache();
     mIncidencesForUpload.pop_front();
   }
 
@@ -384,6 +382,7 @@ void OpenGroupware::slotJobResult( KIO::Job *job )
         Incidence *i = (*it)->clone();
         const QString &remote = KURL( mCurrentGetUrl ).path();
         const QString &local = idMapper().localId( remote );
+        kdDebug(7000) << "Remote: " << remote << " local: " << local << endl;
         if ( local.isEmpty() ) {
           idMapper().setRemoteId( i->uid(), remote );
         } else {
@@ -479,7 +478,13 @@ void OpenGroupware::uploadNextIncidence()
 {
   if ( !mIncidencesForUpload.isEmpty() ) {
     KURL url( mBaseUrl );
-    url.setPath( url.path() + "/Calendar/new.ics" );
+    ICalFormat ical;
+    Incidence *i = ical.fromString( mIncidencesForUpload.front() );
+    const QString remote = idMapper().remoteId( i->uid() );
+    if ( !remote.isEmpty() )
+      url.setPath( remote );
+    else
+      url.setPath( url.path() + "/Calendar/new.ics" );
     const QString inc = mIncidencesForUpload.front();
     kdDebug(7000) << "Uploading to: " << inc << endl;
     kdDebug(7000) << "Uploading: " << url.prettyURL() << endl;
