@@ -46,6 +46,7 @@
 #include <kiconloader.h>
 
 #include <qbuffer.h>
+#include <qstylesheet.h>
 
 #include <time.h>
 
@@ -120,7 +121,7 @@ static QString linkPerson( const QString& email, QString name,
       uid = o.uid();
     } else
       // Email not found in the addressbook. Don't make a link
-      uid = "";
+      uid = QString::null;
   }
   kdDebug(5850) << "formatAttendees: uid = " << uid << endl;
 
@@ -166,7 +167,7 @@ static QString eventViewerFormatAttendees( Incidence *event )
     tmpStr += eventViewerAddTag( "h3", i18n("Organizer") );
     tmpStr += "<ul>";
     tmpStr += linkPerson( event->organizer().email(),
-                          event->organizer().name(), "", iconPath );
+                          event->organizer().name(), QString::null, iconPath );
     tmpStr += "</ul>";
 
     // Add attendees links
@@ -445,17 +446,12 @@ QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
  *  Helper functions for the body part formatter of kmail
  *******************************************************************/
 
-static void string2HTML( QString& str )
+static QString string2HTML( const QString& str )
 {
-  str.replace( QChar( '&' ), QString::fromLatin1("&amp;") );
-  str.replace( QChar( '<' ), QString::fromLatin1("&lt;") );
-  str.replace( QChar( '>' ), QString::fromLatin1("&gt;") );
-  str.replace( QChar( '"' ), QString::fromLatin1("&quot;") );
-  str.replace( QChar( '\n'), QString::fromLatin1("<br>") );
-  // additionally ä, ö, ß, .... could be encoded as well...
+  return QStyleSheet::convertFromPlainText(str); 
 }
 
-static QString invitationRow( QString cell1, QString cell2 )
+static QString invitationRow( const QString &cell1, const QString &cell2 )
 {
   return "<tr><td>" + cell1 + "</td><td>" + cell2 + "</td></tr>\n";
 }
@@ -471,14 +467,12 @@ static QString invitationDetailsEvent( Event* event )
 
   QString sSummary = i18n( "Summary unspecified" );
   if ( ! event->summary().isEmpty() ) {
-    sSummary = event->summary();
-    string2HTML( sSummary );
+    sSummary = string2HTML( event->summary() );
   }
 
   QString sLocation = i18n( "Location unspecified" );
   if ( ! event->location().isEmpty() ) {
-    sLocation = event->location();
-    string2HTML( sLocation );
+    sLocation = string2HTML( event->location() );
   }
 
   QString dir = ( QApplication::reverseLayout() ? "rtl" : "ltr" );
@@ -516,7 +510,7 @@ static QString invitationDetailsEvent( Event* event )
 
   // Meeting Duration Row
   if ( !event->doesFloat() && event->hasEndDate() ) {
-    tmp = "";
+    tmp = QString::null;
     QTime sDuration(0,0,0), t;
     int secs = event->dtStart().secsTo( event->dtEnd() );
     t = sDuration.addSecs( secs );
@@ -942,10 +936,9 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     QString sDescr = incidence->description();
     if( ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Cancel ) &&
         !sDescr.isEmpty() ) {
-      string2HTML( sDescr );
       html += "<br>&nbsp;<br>&nbsp;<br><u>" + i18n("Description:")
         + "</u><br><table border=\"0\"><tr><td>&nbsp;</td><td>";
-      html += sDescr + "</td></tr></table>";
+      html += string2HTML(sDescr) + "</td></tr></table>";
     }
   }
 
@@ -1623,7 +1616,7 @@ class IncidenceFormatter::MailBodyVisitor : public IncidenceBase::Visitor
 
 static QString mailBodyIncidence( Incidence *incidence )
 {
-  QString body("");
+  QString body;
   if ( !incidence->organizer().isEmpty() ) {
     body += i18n("Organizer: %1\n").arg( incidence->organizer().fullName() );
   }
