@@ -132,8 +132,9 @@ KNotesApp::KNotesApp()
 KNotesApp::~KNotesApp()
 {
     saveNotes();
-    disconnect();
+    blockSignals(true);
     m_noteList.clear();
+    blockSignals(false);
 
     delete factory;
 }
