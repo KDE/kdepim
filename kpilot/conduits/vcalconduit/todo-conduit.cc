@@ -270,6 +270,7 @@ void TodoConduit::postSync()
 	VCalConduitBase::postSync();
 	// after this successful sync the categories have been synced for sure
 	config()->setConduitVersion( CONDUIT_VERSION );
+	config()->writeConfig();
 	_setAppInfo();
 }
 

@@ -89,6 +89,7 @@ VCalConduitSettings* ToDoConduitFactory::config()
 {
 	if (!fConfig) {
 		fConfig = new VCalConduitSettings("todo");
+		fConfig->readConfig();
 	}
 	return fConfig;
 }

@@ -93,6 +93,7 @@ VCalConduitSettings* VCalConduitFactory::config()
 {
 	if (!fConfig) {
 		fConfig = new VCalConduitSettings("vcal");
+		fConfig->readConfig();
 	}
 	return fConfig;
 }

@@ -231,14 +231,6 @@ error:
 	DEBUGCONDUIT << fname<<": KOrganizer's time zone = "<<tz<<endl;
 #endif
 
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Using calendar file " << config()->calendarFile() << endl;
-	DEBUGCONDUIT << "fCalendarType="<<config()->calendarType()<<endl;
-	DEBUGCONDUIT << "eCalendarLocal would be "<<VCalConduitSettings::eCalendarLocal<<
-			", eCalendarResources would be "<<VCalConduitSettings::eCalendarResource<<endl;
-#endif
-
 	// Need a subclass ptr. for the ResourceCalendar methods
 	KCal::CalendarResources *rescal = 0L;
 
@@ -246,7 +238,7 @@ error:
 	{
 		case VCalConduitSettings::eCalendarLocal:
 #ifdef DEBUG
-			DEBUGCONDUIT<<"Using CalendarLocal!"<<endl;
+			DEBUGCONDUIT<<"Using CalendarLocal, file="<<config()->calendarFile()<<endl;
 #endif
 			if (config()->calendarFile().isEmpty() )
 			{
@@ -300,7 +292,7 @@ error:
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Using CalendarResource!"<<endl;
 #endif
-			rescal = new KCal::CalendarResources( /* tz */);
+			rescal = new KCal::CalendarResources( tz );
 			fCalendar = rescal;
 			if ( !fCalendar)
 			{
