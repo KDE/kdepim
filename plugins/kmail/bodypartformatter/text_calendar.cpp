@@ -36,6 +36,7 @@
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/icalformat.h>
+#include <libkcal/attendee.h>
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -425,26 +426,86 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       kdDebug() << "UrlHandler() (iCalendar)" << endl;
     }
 
+    Incidence* icalToString( const QString& iCal, ICalFormat& format ) const
+    {
+      CalendarLocal calendar;
+      ScheduleMessage *message =
+        format.parseScheduleMessage( &calendar, iCal );
+      if ( !message )
+        //TODO: Error message?
+        return 0;
+      return dynamic_cast<Incidence*>( message->event() );
+    }
+
+    void setStatusOnMyself( Incidence* incidence, Attendee::PartStat status ) const
+    {
+      // TODO: Find myself instead of just taking the first
+      Attendee* myself = *incidence->attendees().begin();
+      myself->setStatus( status );
+      myself->setRSVP( false );
+      // TODO: Clear out all others
+    }
+
+    bool mail( const QString& message ) const
+    {
+      kdDebug(5006) << "Mailing message:\n" << message << endl;
+#if 0
+      // TODO: Mail the thing
+      // TODO: Set From: correctly
+      KOMailClient mailer;
+      return mailer.mailOrganizer(incidence,messageText);
+#endif
+      return true;
+    }
+
+    bool handleAccept( const QString& iCal ) const
+    {
+      // First, save it for KOrganizer to handle
+      QString location = locateLocal( "data", "korganizer/income.accepted/", true );
+      QString file;
+      do {
+        file = location + KApplication::randomString( 10 );
+      } while ( QFile::exists( file ) );
+      QFile f( file );
+      if ( !f.open( IO_WriteOnly ) ) {
+        KMessageBox::error( 0, i18n("Could not open file for writing:\n%1")
+                            .arg( file ) );
+      } else {
+        QByteArray msgArray = iCal.utf8();
+        f.writeBlock( msgArray, msgArray.size() );
+        f.close();
+      }
+
+      // Now produce the return message
+      ICalFormat format;
+      Incidence* incidence = icalToString( iCal, format );
+      if( !incidence ) return false;
+      setStatusOnMyself( incidence, Attendee::Accepted );
+      return mail( format.createScheduleMessage( incidence,
+                                                 Scheduler::Reply ) );
+    }
+
+    bool handleDecline( const QString& iCal ) const
+    {
+      // Produce a decline message
+      ICalFormat format;
+      Incidence* incidence = icalToString( iCal, format );
+      if( !incidence ) return false;
+      setStatusOnMyself( incidence, Attendee::Declined );
+      return mail( format.createScheduleMessage( incidence,
+                                                 Scheduler::Reply ) );
+    }
+
     bool handleClick( KMail::Interface::BodyPart *part,
                       const QString &path ) const
     {
-      if ( path == "accept" ) {
-        QString location = locateLocal( "data", "korganizer/income/", true );
-        QString file = location + KApplication::randomString( 10 );
-        QFile f( file );
-        if ( !f.open( IO_WriteOnly ) ) {
-          KMessageBox::error( 0, i18n("Could not open file for writing:\n%1")
-		                 .arg( file ) );
-        } else {
-          QByteArray msgArray = part->asText().utf8();
-          f.writeBlock( msgArray, msgArray.size() );
-          f.close();
-        }
-      } else {
-        return false;
-      }
+      QString iCal = part->asText();
 
-      return true;
+      if ( path == "accept" )
+        return handleAccept( iCal );
+      else if ( path == "decline" )
+        return handleDecline( iCal );
+      return false;
     }
 
     bool handleContextMenuRequest( KMail::Interface::BodyPart *,
