@@ -31,8 +31,10 @@ KabGDBMBackend::write(
 {
   _openForWriting();
 
-  if (state_ != Write)
+  if (state_ != Write) {
+    cerr << "KabGDBMBackend::write(): Addressbook is not open for writing !" << endl;
     return false;
+  }
   
   datum k;
   k.dptr  = key.data();
@@ -53,8 +55,10 @@ KabGDBMBackend::read(
 {
   _openForReading();
 
-  if (state_ == Closed)
+  if (state_ == Closed) {
+    cerr << "KabGDBMBackend::read(): Addressbook is not open !" << endl;
     return false;
+  }
   
   datum k;
   k.dptr  = (char *)key.data();
@@ -72,8 +76,10 @@ KabGDBMBackend::remove(const QCString & key)
 {
   _openForWriting();
 
-  if (state_ != Write)
+  if (state_ != Write) {
+    cerr << "KabGDBMBackend::remove(): Addressbook is not open for writing !" << endl;
     return false;
+  }
   
   datum k;
   k.dptr  = (char *)key.data();
@@ -88,8 +94,10 @@ KabGDBMBackend::_openForWriting()
   if (state_ == Write)
     return;
   
-  if (state_ == Read)
+  if (state_ == Read) {
+    cerr << "KabGDBMBackend::_openForWriting(): Addressbook is already open for reading !" << endl;
     _close();
+  }
   
   dbf_ = gdbm_open(
     filename_.local8Bit().data(), blockSize_, GDBM_WRITER, mode_, NULL);
@@ -135,24 +143,35 @@ KabGDBMBackend::_close()
   QStrList
 KabGDBMBackend::allKeys()
 {
+  cerr << "KabGDBMBackend::allKeys()" << endl;
   QStrList l;
   
   _openForReading();
   
-  if (state_ == Closed) return l;
-  
-  l.setAutoDelete(true);
+  if (state_ == Closed) {
+   cerr << "KabGDBMBackend::allKeys(): Addressbook is closed !" << endl;
+   return l;
+  }
   
   datum key = gdbm_firstkey(dbf_);
   
+  cerr << "KabGDBMBackend::allKeys(): entering while loop" << endl;
+  
   while (key.dptr) {
+    cerr << "doing gdbm_nextkey" << endl;
+    cerr << "key.dptr = " << key.dptr << endl;
+    cerr << "key.dsize = " << key.dsize << endl;
     datum nextkey = gdbm_nextkey(dbf_, key);
-    QCString s = key.dptr;
-    s.truncate(key.dsize);
+    cerr << "doing QCString(key.dptr,key.dsize)" << endl;
+    QCString s(key.dptr,key.dsize);
+    cerr << "doing l.append" << endl;
     l.append(s);
+    cerr << "doing key = nextkey" << endl;
     key = nextkey;
+    cerr << "KabGDBMBackend::allKeys(): about to do while test again" << endl;
   }
   
+  cerr << "KabGDBMBackend::allKeys(): done" << endl;
   return l;
 }
 

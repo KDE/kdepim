@@ -72,6 +72,8 @@ AC_ARG_PROGRAM
 
 KDE_CREATE_SUBDIRSLIST
 
+KDE_CHECK_MICO()
+
 dnl this will be replaced by Makefile.am
 AC_OUTPUT( \
 Makefile \
@@ -81,14 +83,22 @@ kab2/Makefile \
 idl/Makefile \
 corba/Makefile \
 abui_test/Makefile \
+abbrowser/Makefile \
 kab2/test/Makefile \
 kab2/server/Makefile \
 kab2/lib/Makefile \
 kab2/filters/Makefile \
 kab2/backends/Makefile \
+kab2/UI/Makefile \
 corba/kab/Makefile \
 abui_test/test/Makefile \
+abbrowser/pics/Makefile \
+abbrowser/doc/Makefile \
+abbrowser/data/Makefile \
 kab2/filters/vcard/Makefile \
 kab2/backends/gdbm/Makefile \
+kab2/UI/TypeMapEditor/Makefile \
+kab2/UI/AddressBookEditor/Makefile \
 corba/kab/server/Makefile \
+abbrowser/doc/en/Makefile \
 )

@@ -348,7 +348,7 @@ AddressBookClient::allKeys()
   sz = ::read(fd, c, 4);
   
   if (sz != 4) {
-    cerr << "AddressBookClient::allKeys(): Couldn't read the correct number of bytes" << endl;
+    cerr << "AddressBookClient::allKeys(): Couldn't read the correct number of bytes: got " <<  sz << endl;
     return l;
   }
 

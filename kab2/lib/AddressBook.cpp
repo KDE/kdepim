@@ -271,8 +271,11 @@ AddressBook::update(Entity * e)
   QStrList
 AddressBook::allKeys()
 {
+  cerr << "AddressBook::allKeys()" << endl;
   QStrList l;
+  l.setAutoDelete(true);
   allKeys_(l);
+  cerr << "AddressBook::allKeys() - done" << endl;
   return l;
 }
 
