@@ -405,7 +405,9 @@ void KCalResourceSlox::createEventAttributes( QDomDocument &doc,
 
   WebdavHandler::addSloxElement( doc, parent, "S:location", event->location() );
 
-  // FIXME: FLoating events
+  if ( event->doesFloat() ) {
+    WebdavHandler::addSloxElement( doc, parent, "S:full_time", "yes" );
+  }
 }
 
 void KCalResourceSlox::createTodoAttributes( QDomDocument &doc,
