@@ -16,10 +16,6 @@
  ***************************************************************************/
 
 #include <config.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <dirent.h>
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <qregexp.h>
@@ -210,12 +206,11 @@ void FilterPMail::importUnixMailFolder(const QString& file)
    struct {
       char folder[58];
    } pmg_head;
-   FILE *f;
+   QFile f;
    QString s(file);
    QString folder;
 
-   char line[MAX_LINE];
-   FILE *temp = NULL;
+   QCString line(MAX_LINE);
    KTempFile *tempfile = 0;
    int n = 0;
    QRegExp regexp(MSG_SEPERATOR_REGEX);
@@ -224,9 +219,10 @@ void FilterPMail::importUnixMailFolder(const QString& file)
    // Get folder name
    s.replace( QRegExp("mbx$"), "pmg");
    s.replace( QRegExp("MBX$"), "PMG");
-   f = fopen(QFile::encodeName(s), "rb");
-   fread(&pmg_head, sizeof(pmg_head), 1, f);
-   fclose(f);
+   f.setName(s);
+   f.open(IO_ReadOnly);
+   f.readBlock((char *) &pmg_head, sizeof(pmg_head));
+   f.close();
    folder = "PMail-";
    folder.append(pmg_head.folder);
    inf->to(folder);
@@ -238,10 +234,12 @@ void FilterPMail::importUnixMailFolder(const QString& file)
    // Messages are separated by "From " lines. We use a logic similar
    // to KMail's kmfolder.cpp to find the boundaries.
 
-   f = fopen(file, "rb");
-   while (fgets(line, MAX_LINE, f)) {
+   f.setName(file);
+   f.open(IO_ReadOnly);
+   Q_LONG linelen;
+   while ((linelen = f.readLine(line.data(), MAX_LINE))) {
       // Look for separator
-      if (temp &&                                             // when we wrote to outfile
+      if (tempfile &&                                             // when we wrote to outfile
          (strncmp(line,MSG_SEPERATOR_START, msgSepLen)==0 &&  // quick compar
          regexp.search(line) >= 0))                            // slower regexp
       {
@@ -249,29 +247,28 @@ void FilterPMail::importUnixMailFolder(const QString& file)
          addMessage(inf, folder, tempfile->name());
          tempfile->unlink();
          delete tempfile;
-         temp = NULL;
+         tempfile = 0;
       }
 
       // Do we need to open/reopen output file?
-      if (!temp) {
+      if (!tempfile) {
          tempfile = new KTempFile;
-         temp = tempfile->fstream();
          // Notify progress
          n++;
          inf->current(i18n("Message %1").arg(n));
       }
 
-      fputs(line, temp);
+      tempfile->file()->writeBlock(line.data(), linelen);
    }
 
-   if (temp) {
+   if (tempfile) {
       tempfile->close();
       addMessage(inf, folder, tempfile->name());
       tempfile->unlink();
       delete tempfile;
    }
 
-   fclose(f);
+   f.close();
 }
 
 // vim: ts=2 sw=2 et
