@@ -1,6 +1,7 @@
 kdepim (4:2.1.1-1) unstable; urgency=low
  
   * New upstream version
+  * Upstream fixes (Closes: #77622, #77803)
  
  -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 19 Mar 2001 22:31:00 -0700
 
