@@ -15,14 +15,10 @@
 		<Action name="revokeCert" />
 		<Action name="extendCert" />
 	</Menu>
-	<Menu name="certImportMenu">
+	<Menu name="importMenu">
 	        <text>Import</text>
 		<Action name="importCertFromFile" />		        
-	</Menu>
-	<Menu name="crlMenu">
-		<text>CRL</text>
 		<Action name="importCRLFromFile" />
-		<Action name="importCRLFromLDAP" />	
 	</Menu>
 </MenuBar>
 

@@ -153,24 +153,20 @@ CertManager::CertManager( bool remote, const QString& query,
 
   // Import Certificates
   // Import from file
-  (void)new KAction( i18n("From &File..."), QIconSet(),
+  (void)new KAction( i18n("Certiftcate..."), QIconSet(),
                                              0, this,
                                              SLOT( importCertFromFile() ),
                                              actionCollection(),
                                              "importCertFromFile" );
   // CRLs
   // Import from file
-  KAction* importCRLFromFile = new KAction( i18n("From &File..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
+  KAction* importCRLFromFile = new KAction( i18n("CRL..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
                                             actionCollection(), "importCRLFromFile" );
   QStringList lst;
   lst << "dirmngr" << "-h";
   importCRLFromFile->setEnabled( checkExec( lst ) );
 
-  // Import from LDAP
-  KAction* importCRLFromLDAP = new KAction( i18n("From &LDAP"), QIconSet(), 0, this, SLOT( importCRLFromLDAP() ),
-                                            actionCollection(), "importCRLFromLDAP" );
-  importCRLFromLDAP->setEnabled( false );
-
+  // View CRLs
   KAction* viewCRLs = new KAction( i18n("CRL cache..."), QIconSet(), 0, this, SLOT( slotViewCRLs() ),
 				   actionCollection(), "viewCRLs");
   viewCRLs->setEnabled( importCRLFromFile->isEnabled() ); // we also need dirmngr for this

@@ -1,11 +1,12 @@
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qtextview.h>
-#include <qpushbutton.h>
 
 #include <klocale.h>
 #include <kprocess.h>
 #include <kmessagebox.h>
+#include <kpushbutton.h>
+#include <kstdguiitem.h>
 
 #include "crlview.h"
 
@@ -22,8 +23,8 @@ CRLView::CRLView( QWidget* parent, const char* name, bool modal )
   
   QHBoxLayout* hbLayout = new QHBoxLayout( topLayout );
   
-  _updateButton = new QPushButton( i18n("&Update"), this );
-  _closeButton = new QPushButton( i18n("&Close"), this );
+  _updateButton = new KPushButton( i18n("&Update"), this );  
+  _closeButton = new KPushButton( KStdGuiItem::close(), this );
   
   hbLayout->addWidget( _updateButton );
   hbLayout->addStretch();
