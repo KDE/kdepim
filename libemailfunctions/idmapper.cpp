@@ -77,6 +77,7 @@ bool IdMapper::load()
 
     QStringList parts = QStringList::split( "\x02\x02", line, true );
     mIdMap.insert( parts[ 0 ], parts[ 1 ] );
+    mFingerprintMap.insert( parts[ 0 ], parts[ 2 ] );
   }
 
   file.close();
@@ -96,7 +97,10 @@ bool IdMapper::save()
 
   QMap<QString, QVariant>::Iterator it;
   for ( it = mIdMap.begin(); it != mIdMap.end(); ++it ) {
-    content += it.key() + "\x02\x02" + it.data().toString() + "\r\n";
+    QString fingerprint( "" );
+    if ( mFingerprintMap.contains( it.key() ) )
+      fingerprint = mFingerprintMap[ it.key() ];
+    content += it.key() + "\x02\x02" + it.data().toString() + "\x02\x02" + fingerprint + "\r\n";
   }
 
   file.writeBlock( content.latin1(), qstrlen( content.latin1() ) );
@@ -162,7 +166,7 @@ QString IdMapper::asString() const
 
 void IdMapper::setFingerprint( const QString &localId, const QString &fingerprint )
 {
-  mFingerprintMap.replace( localId, fingerprint );
+  mFingerprintMap.insert( localId, fingerprint );
 }
 
 const QString& IdMapper::fingerprint( const QString &localId ) const
