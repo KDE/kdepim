@@ -65,7 +65,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   label->setBuddy( mPrefixCombo );
   layout->addMultiCellWidget( mPrefixCombo, 0, 0, 1, 2 );
 
-  QWhatsThis::add( mPrefixCombo, i18n( "The predefined honoric prefixes can be extended in the settings dialog." ) );
+  QWhatsThis::add( mPrefixCombo, i18n( "The predefined honorific prefixes can be extended in the settings dialog." ) );
 
   label = new QLabel( i18n( "Given name:" ), page );
   layout->addWidget( label, 1, 0 );
@@ -97,7 +97,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   label->setBuddy( mSuffixCombo );
   layout->addMultiCellWidget( mSuffixCombo, 4, 4, 1, 2 );
 
-  QWhatsThis::add( mSuffixCombo, i18n( "The predefined honoric suffixes can be extended in the settings dialog." ) );
+  QWhatsThis::add( mSuffixCombo, i18n( "The predefined honorific suffixes can be extended in the settings dialog." ) );
 
   label = new QLabel( i18n( "Formatted name:" ), page );
   layout->addWidget( label, 5, 0 );
