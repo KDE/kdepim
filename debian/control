@@ -1,0 +1,18 @@
+Source: kdepim-cvs
+Build-Depends: autoconf, kdelibs3-dev-cvs, debhelper
+Section: utils
+Priority: optional
+Maintainer: Stephan Kulow <coolo@kde.org>
+Standards-Version: 3.1.1
+
+Package: kdepim-cvs
+Architecture: any
+Depends: ${shlibs:Depends}
+Conflicts: korganizer
+Suggests: kdebase-cvs
+Provides: korganizer
+Description: tools for Personal Information Management
+ This package contains the following programs: 
+  - korganizer
+  - kpilot
+  - kab2
