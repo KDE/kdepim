@@ -495,7 +495,11 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
   icalperiodtype period;
   for (it = list.begin(); it!= list.end(); ++it) {
     period.start = writeICalDateTime((*it).start());
-    period.end = writeICalDateTime((*it).end());
+    if ( (*it).hasDuration() ) {
+      period.duration = writeICalDuration( (*it).duration().asSeconds() );
+    } else {
+      period.end = writeICalDateTime((*it).end());
+    }
     icalcomponent_add_property(vfreebusy, icalproperty_new_freebusy(period) );
   }
 
@@ -691,7 +695,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
   // duration
 
-// turned off as it always is set to PTS0 (and must not occur together with DTEND
+// @TODO: turned off as it always is set to PT0S (and must not occur together with DTEND
 
 //  if (incidence->hasDuration()) {
 //    icaldurationtype duration;
@@ -1297,8 +1301,6 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
   icalproperty *p = icalcomponent_get_first_property(vfreebusy,ICAL_ANY_PROPERTY);
 
   icaltimetype icaltime;
-  icalperiodtype icalperiod;
-  QDateTime period_start, period_end;
 
   while (p) {
     icalproperty_kind kind = icalproperty_isa(p);
@@ -1310,20 +1312,26 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
         freebusy->setDtStart(readICalDateTime(icaltime));
         break;
 
-      case ICAL_DTEND_PROPERTY:  // start End Date and Time
+      case ICAL_DTEND_PROPERTY:  // end Date and Time
         icaltime = icalproperty_get_dtend(p);
         readTzidParameter(p,icaltime);
         freebusy->setDtEnd(readICalDateTime(icaltime));
         break;
 
-      case ICAL_FREEBUSY_PROPERTY:  //Any FreeBusy Times
-        icalperiod = icalproperty_get_freebusy(p);
+      case ICAL_FREEBUSY_PROPERTY: { //Any FreeBusy Times
+        icalperiodtype icalperiod = icalproperty_get_freebusy(p);
         readTzidParameter(p,icalperiod.start);
-        readTzidParameter(p,icalperiod.end);
-        period_start = readICalDateTime(icalperiod.start);
-        period_end = readICalDateTime(icalperiod.end);
-        freebusy->addPeriod(period_start, period_end);
-        break;
+        QDateTime period_start = readICalDateTime(icalperiod.start);
+        // @TODO: Allow the period given as start date and duration...
+        if ( !icaltime_is_null_time(icalperiod.end) ) {
+          readTzidParameter(p,icalperiod.end);
+          QDateTime period_end = readICalDateTime(icalperiod.end);
+          freebusy->addPeriod( period_start, period_end );
+        } else {
+          Duration duration = readICalDuration( icalperiod.duration );
+          freebusy->addPeriod( period_start, duration );
+        }
+        break;}
 
       default:
 //        kdDebug(5800) << "ICalFormatImpl::readIncidence(): Unknown property: "
@@ -1622,6 +1630,8 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
        alarm = icalcomponent_get_next_component(parent,ICAL_VALARM_COMPONENT)) {
     readAlarm(alarm,incidence);
   }
+  // Fix incorrect alarm settings by other applications (like outloook 9)
+  mCompat->fixAlarms( incidence );
 }
 
 void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *incidenceBase)
@@ -2499,6 +2509,7 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
   icalcomponent_add_property(message,icalproperty_new_method(icalmethod));
 
   // TODO: check, if dynamic cast is required
+  // @TODO: Use visitor for this!
   if(incidence->type() == "Todo") {
     Todo *todo = static_cast<Todo *>(incidence);
     icalcomponent_add_component(message,writeTodo(todo));
