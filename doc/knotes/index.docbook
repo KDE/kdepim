@@ -3,8 +3,6 @@
   <!ENTITY kappname "&knotes;">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
-  
-  
 ]>
 
 <book lang="&language;">
@@ -69,9 +67,9 @@ desktop.</para></abstract>
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&knotes; is a program that lets you write the computer equivalent of
-sticky notes.  The notes are saved automatically when you exit the program, and
-they display when you open the program. </para>
+<para>&knotes; is a program that lets you write the computer equivalent
+of sticky notes.  The notes are saved automatically when you exit the
+program, and they display when you open the program. </para>
 
 <para>You may print and mail your notes if you configure &knotes; to use helper
 applications. </para>
@@ -152,7 +150,7 @@ desired.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Auto Indent</guilabel></term>
-<listitem><para>This is a checkbox.  If selected, auto-indenting is
+<listitem><para>This is a check box.  If selected, auto-indenting is
 on.</para></listitem>
 </varlistentry>
 <varlistentry>
@@ -184,7 +182,7 @@ left.</para></step>
 <term><guilabel>Mail Action</guilabel></term>
 <listitem><para>Type a mail command and any required command line switches in
 this box.</para>
-<para>By using <option>&quot;%f&quot;</option> in the command line you can pass
+<para>By using <token>%f</token> in the command line you can pass
 the filename of the note body to the mail command.</para>
 </listitem>
 </varlistentry>
@@ -194,9 +192,9 @@ the filename of the note body to the mail command.</para>
 <listitem><para>Type a printing command and any required command line switches
 in this box.</para>
 <para>Use the following variables in the command line:</para>
-<para><option>&quot;%p&quot;</option> is the printer name.</para>
-<para><option>&quot;%t&quot;</option> is the title.</para>
-<para><option>&quot;%f&quot;</option> is the filename of the note body.</para>
+<para><token>%p</token> is the printer name.</para>
+<para><token>%t</token> is the title.</para>
+<para><token>%f</token> is the filename of the note body.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -265,7 +263,7 @@ text of the note.</para>
 
 <para>To rename a note:</para>
 <procedure>
-<step><para><mousebutton>Right</mousebutton> click on the note's title
+<step><para><mousebutton>Right</mousebutton> click on the note title
 bar.</para></step>
 <step><para>Select <guimenuitem>Rename</guimenuitem>.</para></step>
 </procedure>
@@ -282,7 +280,7 @@ button.</para>
 
 <para>To mail a note:</para>
 <procedure>
-<step><para><mousebutton>Right</mousebutton> click on the note's title
+<step><para><mousebutton>Right</mousebutton> click on the note title
 bar.</para></step>
 <step><para>Select <guimenuitem>Mail</guimenuitem>.</para></step>
 </procedure>
@@ -298,7 +296,7 @@ bar.</para></step>
 <para>To print a note:</para>
 
 <procedure>
-<step><para><mousebutton>Right</mousebutton> click on the note's title
+<step><para><mousebutton>Right</mousebutton> click on the note title
 bar.</para></step>
 <step><para>Select <guimenuitem>Print</guimenuitem>.</para></step>
 </procedure>
@@ -313,7 +311,7 @@ bar.</para></step>
 <title>Deleting a Note</title>
 <para>To delete a note:</para>
 <procedure>
-<step><para><mousebutton>Right</mousebutton> click on the note's title
+<step><para><mousebutton>Right</mousebutton> click on the note title
 bar.</para></step>
 <step><para>Select <guimenuitem>Delete Note</guimenuitem>.</para></step>
 </procedure>
@@ -367,13 +365,13 @@ process.</para>
 </sect1>
 
 <sect1 id="customizing-display">
-<title>Customizing a Note's Display</title>
+<title>Customizing a Note Display</title>
 
-<para>To customize a note's display:</para>
+<para>To customize a note display:</para>
 
 <procedure>
-<step><para><guimenuitem>Right</guimenuitem> click on the note's
-titlebar.</para></step>
+<step><para><guimenuitem>Right</guimenuitem> click on the note
+title bar.</para></step>
 <step><para>Select <guimenuitem>Note preferences...</guimenuitem>.</para>
 <para>The <guilabel>Local Settings - Knotes</guilabel> dialog will
 open.</para></step>
@@ -386,8 +384,8 @@ the left.</para></step>
 <variablelist>
 <varlistentry>
 <term><guilabel>Text Color</guilabel></term>
-<listitem><para>The color square shows the current text color.  By clicking this
-color square you open the standard KDE color selection
+<listitem><para>The color square shows the current text color.  By
+clicking this color square you open the standard &kde; color selection
 dialog.</para></listitem>
 </varlistentry>
 <varlistentry>
@@ -409,11 +407,11 @@ desired.</para></listitem>
 </sect1>
 
 <sect1 id="customizing-editor">
-<title>Customizing a Note's Editor</title>
+<title>Customizing a Note Editor</title>
 
-<para>To customize a note's editor:</para>
+<para>To customize a note editor:</para>
 <procedure>
-<step><para><mousebutton>Right</mousebutton> click on the titlebar of the
+<step><para><mousebutton>Right</mousebutton> click on the title bar of the
 note.</para></step>
 <step><para>Select <guimenuitem>Note preferences...</guimenuitem></para>
 <para>The <guilabel>Local Settings - Knotes</guilabel> dialog will
@@ -432,7 +430,7 @@ desired.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Auto Indent</guilabel></term>
-<listitem><para>This is a checkbox.  If selected, auto-indenting is
+<listitem><para>This is a check box.  If selected, auto-indenting is
 on.</para></listitem>
 </varlistentry>
 <varlistentry>
@@ -445,11 +443,11 @@ dialog.</para></listitem>
 </sect1>
 
 <sect1 id="customizing-actions">
-<title>Customizing a Note's Actions</title>
-<para>To customize a note's actions:</para>
+<title>Customizing a Note Actions</title>
+<para>To customize a note actions:</para>
 
 <procedure>
-<step><para><mousebutton>Right</mousebutton> click on the titlebar of the
+<step><para><mousebutton>Right</mousebutton> click on the title bar of the
 note.</para></step>
 <step><para>Select <guimenuitem>Note preferences...</guimenuitem></para>
 <para>The <guilabel>Local Settings - Knotes</guilabel> dialog will
@@ -464,7 +462,7 @@ the left.</para></step>
 <varlistentry>
 <term><guilabel>Mail Action</guilabel></term>
 <listitem><para>Type a mail command and any required command line switches in
-this box.</para> <para>By using <option>&quot;%f&quot;</option> in the command
+this box.</para> <para>By using <token>%f</token> in the command
 line you can pass the filename of the note body to the mail
 command.</para>
 </listitem>
@@ -474,9 +472,9 @@ command.</para>
 <listitem><para>Type a printing command and any required command line switches
 in this box.</para>
 <para>Use the following variables in the command line:</para>
-<para><option>&quot;%p&quot;</option> is the printer name.</para>
-<para><option>&quot;%t&quot;</option> is the title.</para>
-<para><option>&quot;%f&quot;</option> is the filename of the note body.</para>
+<para><token>%p</token> is the printer name.</para>
+<para><token>%t</token> is the title.</para>
+<para><token>%f</token> is the filename of the note body.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -539,10 +537,10 @@ icon.</para></step>
 <sect1 id="requirements">
 <title>Requirements</title>
 
-<para>In order to print or mail notes, you need to have helper applications
-installed, such as <application>a2ps</application> and
-<application>kmail</application>.  You will need to configure &knotes; to use
-these helper applications.  </para>
+<para>In order to print or mail notes, you need to have helper
+applications installed, such as <command>a2ps</command> and &kmail;.
+You will need to configure &knotes; to use these helper applications.
+</para>
 
 </sect1>
 
@@ -558,9 +556,9 @@ following in the base directory of the kdeutils distribution:</para>
 <prompt>%</prompt><userinput><command>make</command> <option>install</option></userinput>
 </screen>
 
-<para>Since &knotes; uses <application>autoconf</application> and
-<application>automake</application> you should have no trouble compiling
-it. Should you run into problems please report them to the KDE mailing
+<para>Since &knotes; uses <command>autoconf</command> and
+<command>automake</command> you should have no trouble compiling
+it. Should you run into problems please report them to the &kde; mailing
 lists.</para>
 
 </sect1>
@@ -570,8 +568,14 @@ lists.</para>
 </book>
 <!--
 Local Variables:
-sgml-minimize-attributes: nil
-sgml-general-insert-case: lower
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
 End:
+
+// vim:ts=0:sw=2:tw=78:noet
 -->
+
 

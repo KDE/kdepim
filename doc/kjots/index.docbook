@@ -4,8 +4,6 @@
   <!ENTITY kappname "&kjots;">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
-  
-  
 ]>
 <book lang="&language;">
 
@@ -34,7 +32,7 @@
 <firstname>Lauri</firstname>
 <surname>Watts</surname>
 <affiliation>
-<address><email>vampyr@atconnex.net</email></address>
+<address><email>lauri@kde.org</email></address>
 </affiliation>
 <contrib>Reviewer</contrib>
 </othercredit>
@@ -52,8 +50,9 @@
 <date>2000-12-14</date>
 <releaseinfo>0.05.00</releaseinfo>
 
-<abstract><para>This handbook describes how to use &kjots; 0.5, a small program
-which is handy for keeping miscellaneous notes.</para></abstract>
+<abstract><para>This handbook describes how to use &kjots; 0.5, a small
+program which is handy for keeping miscellaneous
+notes.</para></abstract>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -68,161 +67,9 @@ which is handy for keeping miscellaneous notes.</para></abstract>
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&kjots; is a small program that helps you to write down some short notes
-and organizes them for you.</para>
+<para>&kjots; is a small program that helps you to write down some short
+notes and organizes them for you.</para>
 
-<sect1 id="kapp-revhistory">
-<title>&kjots; Revision History</title>
-
-<variablelist>
-<varlistentry>
-<term>(Carsten Pfeiffer <email>pfeiffer@kde.org</email>)</term>
-<listitem>
-<itemizedlist>
-<listitem><para>use <classname>KEdit</classname> instead of
-<classname>QMultiLineEdit</classname> directly, adding Search &amp; replace + undo
-</para></listitem>
-<listitem><para>allocate <classname>KTMainWindow</classname> on the heap to
-avoid double deletion on quit</para></listitem>
-</itemizedlist>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>New in version 0.4 (Mario Weilguni
-<email>mweilguni@kde.org</email>)</term>
-<listitem>
-<itemizedlist>
-<listitem><para>works now with Qt 2.0</para></listitem>
-<listitem><para>fixed broken layout of main window</para></listitem>
-<listitem><para>layout improvements in
-<function>AskFileName()</function></para></listitem>
-<listitem><para>layout improvements in
-<function>SubjList()</function></para></listitem>
-<listitem><para>compiles without warnings</para></listitem>
-<listitem><para><guibutton>Apply</guibutton> button is only activated when
-changes were made</para></listitem>
-<listitem><para>improved layout of configuration dialog</para></listitem>
-<listitem><para>fixed a bug in the font selection</para></listitem>
-<listitem><para>now compiles with <application>EGCS</application>   ( Robert
-Williams )</para></listitem>
-</itemizedlist>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>New in version 0.3.0</term>
-<listitem>
-<itemizedlist>
-<listitem><para>added lots of keyboard shortcuts</para></listitem>
-<listitem><para>added <function>klocale->translate()</function></para></listitem>
-</itemizedlist>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>New in version 0.2.6</term>
-<listitem><itemizedlist>
-<listitem><para>icons should be visible in the toolbar</para></listitem>
-</itemizedlist>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>New in version 0.2.5</term>
-<listitem><itemizedlist>
-<listitem><para>you may save books and pages to an ascii file</para></listitem>
-<listitem><para>more kde conforming due to the use of
-<classname>KTopLevelWidget</classname></para></listitem>
-</itemizedlist>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>New in version 0.2.4</term>
-<listitem><itemizedlist>
-<listitem><para>uses <classname>KFontDialog</classname> to set the font of the
-editor widget </para></listitem>
-<listitem><para>you may select an <acronym>URL</acronym> in your text and press
-the &RMB; to execute a program with this <acronym>URL</acronym>. The program to
-execute is configurable for &HTTP; and &FTP;
-<acronym>URL</acronym>s.</para></listitem>
-<listitem><para>some code cleanup</para></listitem>
-</itemizedlist>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>New in version 0.2.3</term>
-<listitem><itemizedlist>
-<listitem><para>compiles with libkde-970510 (no longer
-relevant)</para></listitem>
-<listitem><para>shouldn't segfault, if you delete pages</para></listitem>
-<listitem><para>double clicking on an entry in the subjectlist closes the
-subjectlist window</para></listitem>
-<listitem><para>fixed fonds -> fonts ;)</para></listitem>
-</itemizedlist>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>New in version 0.2.2</term>
-<listitem><itemizedlist>
-<listitem><para>compiles with libkde-0.7.2 (no longer
-relevant)</para></listitem>
-<listitem><para>several bug fixes</para></listitem>
-</itemizedlist>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>New in version 0.2.1</term>
-<listitem><itemizedlist>
-<listitem><para>
-should compile cleanly with libqt1.2 and libkde-0.7.1 and later (no longer relevant)
-</para></listitem>
-</itemizedlist>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>New in version 0.2.0</term>
-<listitem><itemizedlist>
-<listitem><para>changed the layout to be more KDE conforming (toolbar,
-statusbar,...)</para></listitem>
-<listitem><para>folders are now called books and entries are
-pages</para></listitem>
-<listitem><para>added subject to each page</para></listitem>
-<listitem><para>you may popup a window with a list of all subjects and use it to
-find pages more easily</para></listitem>
-<listitem><para>further reduced the minimum size of the window</para></listitem>
-</itemizedlist>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>New in version 0.1.1</term>
-<listitem><itemizedlist>
-<listitem><para>does not delete empty lines anymore</para></listitem>
-<listitem><para>you may insert <keysym>TAB</keysym>s into your
-text</para></listitem>
-<listitem><para>the minimum size of the window is smaller now</para></listitem>
-<listitem><para>the size of the window is saved and read the next time &kjots;
-is started</para></listitem>
-</itemizedlist>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Version 0.1 (presumed)</term>
-<listitem><itemizedlist>
-<listitem><para>Original release</para></listitem>
-</itemizedlist>
-</listitem>
-</varlistentry>
-</variablelist>
-
-</sect1>
 </chapter>
 
 <chapter id="using-kjots">
@@ -231,42 +78,44 @@ is started</para></listitem>
 <para>&kjots; has two basic items used to organise your notes -
 <quote>Books</quote> and <quote>Pages</quote>.</para>
 
-<para>You can create a number of books in &kjots;, and each book can contain a
-number of pages, where you actually type your notes. Each book should be given a
-name (so you can find what you are looking for), as should each page. Although
-you aren't forced to give a page a name, it is sensible to do so.</para>
+<para>You can create a number of books in &kjots;, and each book can
+contain a number of pages, where you actually type your notes. Each book
+should be given a name (so you can find what you are looking for), as
+should each page. Although you aren't forced to give a page a name, it
+is sensible to do so.</para>
 
 <sect1 id="kjots-books">
 <title>Using Books</title>
 
-<para>To create a new book, use <keycombo><keycap>Ctrl</keycap>
-<keycap>n</keycap></keycombo> or the menu entry
+<para>To create a new book, use <keycombo action="simul">&Ctrl;
+<keycap>N</keycap></keycombo> or the menu entry
 <menuchoice><guimenu>File</guimenu><guimenuitem>New
-Book</guimenuitem></menuchoice>, and you will be prompted to enter a name for
-the new book.</para>
+Book</guimenuitem></menuchoice>, and you will be prompted to enter a
+name for the new book.</para>
 
-<para>The name of the new book should now appear in the bottom left hand corner
-of the window. If you want the book to be on your <quote>Hotlist</quote>, choose
-<menuchoice><guimenu>Hotlist</guimenu> <guimenuitem>Add current book to
-hotlist</guimenuitem></menuchoice> and a button with the book's name will appear
-near the bottom of the screen. You can have up to 8 books on the hotlist, and
-can remove the current book using <menuchoice><guimenu>Hotlist</guimenu>
-<guimenuitem>Remove current book from hotlist</guimenuitem></menuchoice>.</para>
+<para>The name of the new book should now appear in the bottom left hand
+corner of the window. If you want the book to be on your
+<quote>Hotlist</quote>, choose <menuchoice><guimenu>Hotlist</guimenu>
+<guimenuitem>Add current book to hotlist</guimenuitem></menuchoice> and
+a button with the book's name will appear near the bottom of the
+screen. You can have up to 8 books on the hotlist, and can remove the
+current book using <menuchoice><guimenu>Hotlist</guimenu>
+<guimenuitem>Remove current book from
+hotlist</guimenuitem></menuchoice>.</para>
 
-<para>A book can be saved using <keycombo><keycap>Ctrl</keycap>
+<para>A book can be saved using <keycombo action="simul">&Ctrl;
 <keycap>S</keycap></keycombo> or the menu entry
 <menuchoice><guimenu>File</guimenu><guimenuitem>Save current
-book</guimenuitem></menuchoice>. When you change books, or exit &kjots;, the
-currently open book will be saved.</para>
+book</guimenuitem></menuchoice>. When you change books, or exit &kjots;,
+the currently open book will be saved.</para>
 
 <para>You can also export an entire book as a text file, using
-<menuchoice><guimenu>File</guimenu>
-<guimenuitem>Save book to ascii file</guimenuitem></menuchoice>.
-You will be then prompted to enter a location for the file to be saved.
-The format of an example saved book is shown below:</para>
+<menuchoice><guimenu>File</guimenu> <guimenuitem>Save book to ascii
+file</guimenuitem></menuchoice>.  You will be then prompted to enter a
+location for the file to be saved.  The format of an example saved book
+is shown below:</para>
 
-<screen>
-############
+<screen>############
 # First page
 ############
 Remember to go to the shops!
@@ -280,40 +129,42 @@ Remember to go to the shops!
 ################
 # The third page
 ################
-This is the third page and is an example for KJots.
-</screen>
+This is the third page and is an example for KJots.</screen>
 
 </sect1>
 
 <sect1 id="kjots-pages">
 <title>Using Pages</title>
 
-<para>Pages are where you actually write whatever you are going to write. Once
-you have created a book, you can type text in the main text box. </para>
+<para>Pages are where you actually write whatever you are going to
+write. Once you have created a book, you can type text in the main text
+box. </para>
 
 <para>To create additional pages, you can use
 <menuchoice><guimenu>Edit</guimenu><guimenuitem>New Page</guimenuitem>
-</menuchoice>, which will create a new page. Similarly, the current page can be
-removed using <menuchoice> <guimenu>Edit</guimenu><guimenuitem>Delete
-Page</guimenuitem> </menuchoice>.</para>
-
-<para>So that you can get to the page you want to see, pages can (and should) be
-given a Subject. This can be chosen by typing the subject in the textbox at the
-bottom of the window. To view a list of subjects for the current book, use
-<keycombo><keycap>Ctrl</keycap> <keycap>L</keycap></keycombo> or the menu entry
-<menuchoice> <guimenu>Hotlist</guimenu><guimenuitem>Subject List</guimenuitem>
+</menuchoice>, which will create a new page. Similarly, the current page
+can be removed using <menuchoice>
+<guimenu>Edit</guimenu><guimenuitem>Delete Page</guimenuitem>
 </menuchoice>.</para>
 
-<tip><para>To quickly switch between pages, use <keycombo><keycap>Ctrl</keycap>
-<keycap>K</keycap></keycombo> to go to the next page, and
-<keycombo><keycap>Ctrl</keycap> <keycap>J</keycap></keycombo> to go to the
-previous page.  You can also use the scrollbar below the main text window, to
-change pages.</para></tip>
+<para>So that you can get to the page you want to see, pages can (and
+should) be given a Subject. This can be chosen by typing the subject in
+the textbox at the bottom of the window. To view a list of subjects for
+the current book, use <keycombo action="simul">&Ctrl;
+<keycap>L</keycap></keycombo> or the menu entry <menuchoice>
+<guimenu>Hotlist</guimenu><guimenuitem>Subject List</guimenuitem>
+</menuchoice>.</para>
 
-<para>If you select a <acronym>URL</acronym>, such as http://www.kde.org, or
-ftp://ftp.kde.org, and then <mousebutton>right</mousebutton> click on the
-selected text, you can choose to open the <acronym>URL</acronym> in &konqueror;,
-or any program you choose in
+<tip><para>To quickly switch between pages, use <keycombo
+action="simul">&Ctrl; <keycap>K</keycap></keycombo> to go to the next
+page, and <keycombo action="simul">&Ctrl; <keycap>J</keycap></keycombo>
+to go to the previous page.  You can also use the scrollbar below the
+main text window, to change pages.</para></tip>
+
+<para>If you select a &URL;, such as http://www.kde.org, or
+ftp://ftp.kde.org, and then <mousebutton>right</mousebutton> click on
+the selected text, you can choose to open the &URL; in &konqueror;, or
+any program you choose in
 <menuchoice><guimenu>Options</guimenu><guimenuitem>Configure
 KJots</guimenuitem></menuchoice>.</para>
 
@@ -330,7 +181,7 @@ KJots</guimenuitem></menuchoice>.</para>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>N</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
 </shortcut>
 <guimenu><accel>F</accel>ile</guimenu>
 <guimenuitem><accel>N</accel>ew Book...</guimenuitem>
@@ -341,7 +192,7 @@ KJots</guimenuitem></menuchoice>.</para>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>S</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo>
 </shortcut>
 <guimenu><accel>F</accel>ile</guimenu>
 <guimenuitem>Save current Book</guimenuitem>
@@ -381,7 +232,7 @@ See <link linkend="kjots-books">Using Books</link>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo>
 </shortcut>
 <guimenu><accel>F</accel>ile</guimenu>
 <guimenuitem>Quit</guimenuitem>
@@ -400,7 +251,7 @@ See <link linkend="kjots-books">Using Books</link>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>X</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>X</keycap></keycombo>
 </shortcut>
 <guimenu><accel>E</accel>dit</guimenu>
 <guimenuitem>C<accel>u</accel>t</guimenuitem>
@@ -412,7 +263,7 @@ text in the main textbox and places it on the clipboard.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>C</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo>
 </shortcut>
 <guimenu><accel>E</accel>dit</guimenu>
 <guimenuitem><accel>C</accel>opy</guimenuitem>
@@ -424,7 +275,7 @@ text in the main textbox and places it on the clipboard.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>V</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>V</keycap></keycombo>
 </shortcut>
 <guimenu><accel>E</accel>dit</guimenu>
 <guimenuitem><accel>P</accel>aste</guimenuitem>
@@ -436,7 +287,7 @@ to the main textbox.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>F</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo>
 </shortcut>
 <guimenu><accel>E</accel>dit</guimenu>
 <guimenuitem><accel>F</accel>ind...</guimenuitem>
@@ -461,7 +312,7 @@ of the search text (specified with Find).</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>R</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo>
 </shortcut>
 <guimenu><accel>E</accel>dit</guimenu>
 <guimenuitem><accel>R</accel>eplace...</guimenuitem>
@@ -474,7 +325,7 @@ only on the current page.
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>W</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo>
 </shortcut>
 <guimenu><accel>E</accel>dit</guimenu>
 <guimenuitem><accel>N</accel>ew Page</guimenuitem>
@@ -486,7 +337,7 @@ in the current book.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>D</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>D</keycap></keycombo>
 </shortcut>
 <guimenu><accel>E</accel>dit</guimenu>
 <guimenuitem><accel>D</accel>elete Page</guimenuitem>
@@ -498,7 +349,7 @@ in the current book.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>J</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo>
 </shortcut>
 <guimenu><accel>E</accel>dit</guimenu>
 <guimenuitem>Previous</guimenuitem>
@@ -510,7 +361,7 @@ book, if it exists.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>K</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>K</keycap></keycombo>
 </shortcut>
 <guimenu><accel>E</accel>dit</guimenu>
 <guimenuitem>Next</guimenuitem>
@@ -550,7 +401,7 @@ See <link linkend="kjots-books">Using Books</link>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>L</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo>
 </shortcut>
 <guimenu>Hot<accel>l</accel>ist</guimenu>
 <guimenuitem>Subject List</guimenuitem>
@@ -607,7 +458,7 @@ the external program to open <acronym>URL</acronym>s and the font to use.
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Shift</keycap><keycap>F1</keycap></keycombo>
+<keycombo action="simul">&Shift;<keycap>F1</keycap></keycombo>
 </shortcut>
 <guimenu><accel>H</accel>elp</guimenu>
 <guimenuitem>What's <accel>T</accel>his</guimenuitem>
@@ -656,8 +507,8 @@ you click on various items on the screen. Not currently working.</para></listite
 Program copyright 1997 Christoph Neerfeld <email>Christoph.Neerfeld@home.ivm.de</email>
 </para>
 <para>
-Based on the jots program included in the tkgoodstuff package.
-The tkgoodstuff package is
+Based on the <command>jots</command> program included in the <application>tkgoodstuff</application> package.
+The <application>tkgoodstuff</application> package is
 copyright 1995-96 Mark Crimmins <email>markcrim@umich.edu</email>
 </para>
 
@@ -680,36 +531,37 @@ Some parts taken from documentation copyright 1998 Christoph Neerfeld
 <sect1 id="getting-kjots">
 <title>How to obtain &kjots;</title>
 
-<para>&kjots; is part of the KDE project <ulink
-url="http://www.kde.org">http://www.kde.org</ulink>.  &kjots; can be found in
-the kdeutils package on <ulink
-url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>, the main
-ftp site of the KDE project. </para>
+<para>&kjots; is part of the &kde; project <ulink
+url="http://www.kde.org">http://www.kde.org</ulink>.  &kjots; can be
+found in the kdeutils package on <ulink
+url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>, the
+main &FTP; site of the &kde; project. </para>
 
 </sect1>
 
 <sect1 id="requirements">
 <title>Requirements</title>
 
-<para>In order to successfully use &kjots;, you need KDE 2.0. There are no other
-requirements.</para>
+<para>In order to successfully use &kjots;, you need &kde; 2.x. There are
+no other requirements.</para>
 
 </sect1>
 
 <sect1 id="compilation">
 <title>Compilation and Installation</title>
 
-<para>In order to compile and install &kjots; on your system, type the following
-in the base directory of the &kjots; distribution:</para>
+<para>In order to compile and install &kjots; on your system, type the
+following in the base directory of the &kjots; distribution:</para>
+
 <screen width="40">
 <prompt>%</prompt> <userinput><command>./configure</command></userinput>
 <prompt>%</prompt> <userinput><command>make</command></userinput>
 <prompt>%</prompt> <userinput><command>make</command> <option>install</option></userinput>
 </screen>
 
-<para>Since &kjots; uses <application>autoconf</application> and
-<application>automake</application> you should have not trouble compiling
-it. Should you run into problems please report them to the KDE mailing
+<para>Since &kjots; uses <command>autoconf</command> and
+<command>automake</command> you should have not trouble compiling
+it. Should you run into problems please report them to the &kde; mailing
 lists.</para>
 
 </sect1>
@@ -724,14 +576,17 @@ before running it.</para>
 
 </appendix>
 
-
-
 &documentation.index;
 </book>
+
 <!--
 Local Variables:
-sgml-minimize-attributes: nil
-sgml-general-insert-case: lower
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
 End:
--->
 
+// vim:ts=0:sw=2:tw=78:noet
+-->
