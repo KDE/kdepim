@@ -1,6 +1,15 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2005-01-11  Adriaan de Groot
+* Added a workaround for buggy Zire USB behavior. It works most of the time.
+* Fixed memory leak when reading AppInfo.
+* Updated website with some more OS-specific information. As always, I am
+  in dire need of workable explanations for OS (usually Linux-distro)
+  specific quirks.
+* Worked on debugging output a little, normalized more output.
+* Verified that copy PC to HH works on Addressbook, ToDo, 
+
 2005-01-05  Adriaan de Groot
 * Pilot-link 0.12, when it comes out, is source incompatible with 0.11,
   but KPilot is already ported to it.
