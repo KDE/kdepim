@@ -1,6 +1,7 @@
 noinst_LTLIBRARIES = libkdgantt.la
 
 libkdgantt_la_SOURCES = \
+			itemAttributeDialog.ui \
 			KDGanttView.cpp			\
 			KDGanttViewEventItem.cpp	\
 			KDGanttViewItem.cpp		\
@@ -12,8 +13,7 @@ libkdgantt_la_SOURCES = \
 			KDMinimizeSplitter.cpp		\
 			KDSemiSizingControl.cpp		\
 			KDSizingControl.cpp		\
-			KDXMLTools.cpp			\
-			itemAttributeDialog.ui
+			KDXMLTools.cpp			
 
 noinst_HEADERS =	\
 			KDGanttViewSubwidgets.h		\
@@ -31,9 +31,8 @@ noinst_HEADERS =	\
 			itemAttributeDialog.ui.h	\
 			qlayoutengine_p.h
 
-METASOURCES = AUTO
-
-INCLUDES  = $(all_includes)
+AM_CPPFLAGS = $(all_includes)
+libkdgantt_la_METASOURCES = AUTO
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp *.h -o $(podir)/kdgantt.pot
