@@ -665,7 +665,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             enc = text.mid(idx,matchLen);
             QUrl::encode(enc);
             enc.replace(QRegExp("/"), "%2F");
-
+  
             result+=QString::fromLatin1("<a href=\"news://") + enc +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
@@ -1463,8 +1463,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
       type=ATunknown;
     }
   }
-
-  QUrl::decode(target);
+  
   if (target.endsWith("/"))
     target.truncate(target.length()-1);
 
