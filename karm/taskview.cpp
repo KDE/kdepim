@@ -48,9 +48,10 @@ TaskView::TaskView(QWidget *parent, const char *name):KListView(parent,name)
   addColumn( i18n("Time") );
   addColumn( i18n("Total Session Time") );
   addColumn( i18n("Total Time") );
-  // setColumnAlignment( 1, Qt::AlignRight );
-  // setColumnAlignment( 2, Qt::AlignRight );
-  // setColumnAlignment( 3, Qt::AlignRight );
+  setColumnAlignment( 1, Qt::AlignRight );
+  setColumnAlignment( 2, Qt::AlignRight );
+  setColumnAlignment( 3, Qt::AlignRight );
+  setColumnAlignment( 4, Qt::AlignRight );
   adaptColumns();
   setAllColumnsShowFocus( true );
 
