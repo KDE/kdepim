@@ -136,3 +136,17 @@ QString CategoryEdit::categoryById( const QString &id,  const QString &app )cons
     }
     return category.isEmpty() ? fallback : category;
 }
+QStringList CategoryEdit::categoriesByIds( const QStringList& ids,
+                                           const QString& app) {
+
+    QStringList list;
+    QStringList::ConstIterator it;
+    QString temp;
+    for ( it = ids.begin(); it != ids.end(); ++it ) {
+        temp = categoryById( (*it), app );
+        if (!temp.isEmpty() )
+            list << temp;
+    }
+
+    return list;
+}

@@ -5,6 +5,7 @@
 #include <qmap.h>
 #include <qstring.h>
 #include <qvaluelist.h>
+#include <qstringlist.h>
 
 #include "opiecategories.h"
 
@@ -23,6 +24,7 @@ namespace OpieHelper {
         int addCategory(const QString &appName,  const QString &name,  int id = 0);
         void parse( const QString &fileName );
         QString categoryById(const QString &id, const QString &app )const;
+        QStringList categoriesByIds( const QStringList& ids,  const QString& app );
         void clear();
         QValueList<OpieCategories> categories()const {  return m_categories; };
     private:

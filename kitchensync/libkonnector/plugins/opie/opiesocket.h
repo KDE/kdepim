@@ -12,7 +12,9 @@
 //#include "categoryedit.h"
 
 namespace KSync{
-
+    class EventSyncee;
+    class TodoSyncee;
+    class AddressBookSyncee;
     class OpieSocket : public QObject
     {
         Q_OBJECT
@@ -41,8 +43,13 @@ namespace KSync{
         void stateChanged( bool );
 
     private:
+        void writeAddressbook( AddressBookSyncee* ab );
+        void writeDatebook( EventSyncee* ev );
+        void writeTodoList( TodoSyncee* to );
         void doAddressbook();
         void doCal();
+        void doDatebook();
+        void doTodo();
         void writeCategory();
         void newPartner();
         void readPartner( const QString & );
@@ -51,6 +58,8 @@ namespace KSync{
         OpieSocketPrivate *d;
 
     private slots:
+//        void handleDownload();
+        bool downloadFile(const QString& path,  QString& fileName);
         void slotError(int );
         void slotConnected( );
         // void slotDis();
@@ -58,7 +67,7 @@ namespace KSync{
         void process(); // ready read
         void slotNOOP();
         void slotStartSync();
-        void manageCall(const QString &line );
+        void manageCall( const QString &line );
     };
 };
 
