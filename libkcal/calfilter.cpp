@@ -80,6 +80,8 @@ bool CalFilter::filterEvent(Event *event)
 {
 //  kdDebug(5800) << "CalFilter::filterEvent(): " << event->getSummary() << endl;
 
+  if ( !mEnabled ) return true;
+
   if (mCriteria & HideRecurring) {
     if (event->doesRecur()) return false;
   }
@@ -91,6 +93,8 @@ bool CalFilter::filterTodo(Todo *todo)
 {
 //  kdDebug(5800) << "CalFilter::filterEvent(): " << event->getSummary() << endl;
 
+  if ( !mEnabled ) return true;
+
   if (mCriteria & HideCompleted) {
     if (todo->isCompleted()) return false;
   }
@@ -101,6 +105,8 @@ bool CalFilter::filterTodo(Todo *todo)
 bool CalFilter::filterIncidence(Incidence *incidence)
 {
 //  kdDebug(5800) << "CalFilter::filterEvent(): " << event->getSummary() << endl;
+
+  if ( !mEnabled ) return true;
 
   if (mCriteria & ShowCategories) {
     for (QStringList::Iterator it = mCategoryList.begin();
