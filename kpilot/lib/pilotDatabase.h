@@ -169,12 +169,6 @@ public:
 		eSerialDB=2 } DBType;
 	virtual DBType dbType() const = 0;
 
-	/**
-	* Here are some static utility functions. listAppInfo() is primarily
-	* meant for debugging, and it dumps an appinfo block to stdout.
-	*/
-	static void listAppInfo(const struct CategoryAppInfo *);
-
 	static inline bool isResource(struct DBInfo *info)
 	{
 		return (info->flags & dlpDBFlagResource);

@@ -155,20 +155,21 @@ public:
 public:
 	bool setCat(struct CategoryAppInfo &info,const QString &label);
 
-#ifdef DEBUG
 	static void dumpCategories(const struct CategoryAppInfo &info)
 	{
+#ifdef DEBUG
 		FUNCTIONSETUP;
 		DEBUGCONDUIT << fname << " lastUniqueId"
 			<< info.lastUniqueID << endl;
 		for (int i = 0; i < 16; i++)
 		{
 			if (!info.name[i][0]) continue;
-			DEBUGCONDUIT << fname << " cat " << i << " =" <<
-				info.name[i] << endl;
+			DEBUGCONDUIT << fname << ": " << i << " = "
+				<< info.ID[i] << " <"
+				<< info.name[i] << ">" << endl;
 		}
-	}
 #endif
+	}
 };
 
 

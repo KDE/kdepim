@@ -76,24 +76,3 @@ PilotDatabase::PilotDatabase(const QString &s) :
 	return creationCount;
 }
 
-/* static */ void PilotDatabase::listAppInfo(const struct CategoryAppInfo *category)
-{
-#ifdef DEBUG
-	FUNCTIONSETUP;
-
-	for (int i = 0; i < 15; i++)
-	{
-		DEBUGKPILOT << fname
-			<< ": Category #"
-			<< i
-			<< " has ID "
-			<< (int) category->ID[i]
-			<< " and name "
-			<< (category->name[i][0] ? "*" : "-")
-			<< category->name[i] << endl;
-	}
-#endif
-}
-
-
-
