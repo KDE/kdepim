@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=JPilot Plugin Proxy Conduit
+Name[de]=JPilot Plugin Proxy
+Implemented=file
+ServiceTypes=KPilotConduit
+X-KDE-Library=libJPilotProxy
