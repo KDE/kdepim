@@ -66,6 +66,8 @@ protected slots:
 	void disconnectDevices();
 	void processEvents();
 	void progress();
+	void detect();
+	void detect(int i);
 public slots:
 	int exec();
 	void slotUser1 () { startDetection(); }
@@ -83,14 +85,15 @@ protected:
 	QTimer* fProcessEventsTimer;
 	QTimer* fTimeoutTimer;
 	QTimer* fProgressTimer;
-
+	QTimer* fRotateLinksTimer;
 protected:
 	QGridLayout* fResultsGroupLayout;
 	QGridLayout* fStatusGroupLayout;
 	
-	QStringList mDevicesToProbe;
-	PilotLinkList mDeviceLinks;
-	PilotLinkMap mDeviceLinkMap;
+	QStringList mDevicesToProbe[3];
+	PilotLinkList mDeviceLinks[3];
+	int mProbeDevicesIndex;
+//	PilotLinkMap mDeviceLinkMap;
 	
 	bool mDetected;
 	QString mUserName;

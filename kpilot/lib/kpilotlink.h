@@ -229,6 +229,11 @@ private:
 	* Usually /dev/pilot, /dev/ttySx, or /dev/usb/x.
 	*/
 	QString fPilotPath;
+	/**
+	* Path with resolved symlinks, to prevent double binding
+	* to the same device.
+	*/
+	QString fRealPilotPath;
 
 	/**
 	* For transient devices: how often have we tried pi_bind()?
@@ -350,6 +355,9 @@ public:
 	 * Get the minor PalmOS version number
 	 */
 	unsigned long minorVersion() const;
+
+private:
+	class KPilotDeviceLinkPrivate;
 } ;
 
 bool operator < ( const struct db &, const struct db &) ;

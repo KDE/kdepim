@@ -57,6 +57,7 @@ static const char *kpilotlink_id = "$Id$";
 
 #include <kconfig.h>
 #include <kmessagebox.h>
+#include <kstandarddirs.h> 
 
 #include "pilotUser.h"
 #include "pilotSysInfo.h"
@@ -64,6 +65,23 @@ static const char *kpilotlink_id = "$Id$";
 
 #include "kpilotlink.moc"
 
+
+// singleton helper class
+class KPilotDeviceLink::KPilotDeviceLinkPrivate 
+{
+public:
+	static KPilotDeviceLinkPrivate*self() { if (!mThis) mThis = new KPilotDeviceLinkPrivate(); return mThis; }
+	bool canBind( QString device ) { kdDebug()<<"Bound devices: "<<mBoundDevices.join(", ").latin1()<<endl; return !mBoundDevices.contains( device ); }
+	void bindDevice( QString device ) { mBoundDevices.append( device ); }
+	void unbindDevice( QString device ) { mBoundDevices.remove( device ); }
+protected:
+	KPilotDeviceLinkPrivate() {}
+	~KPilotDeviceLinkPrivate() {}
+	
+	QStringList mBoundDevices;
+	static KPilotDeviceLinkPrivate*mThis;
+};
+KPilotDeviceLink::KPilotDeviceLinkPrivate*KPilotDeviceLink::KPilotDeviceLinkPrivate::mThis = 0L;
 
 
 KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
@@ -244,7 +262,20 @@ bool KPilotDeviceLink::open()
 		::close(fCurrentPilotSocket);
 	}
 	fCurrentPilotSocket = (-1);
+	
+	fRealPilotPath = KStandardDirs::realPath ( pilotPath() );
+//	if ( dv.exists() && dv.isSymLink() ) {
+//		fRealPilotPath = dv.readLink();
+//	}
 
+	if ( !KPilotDeviceLinkPrivate::self()->canBind( fRealPilotPath ) ) {
+		msg = i18n("Already listening on that device");
+		e=0;
+		kdWarning() << k_funcinfo <<": Pilot Path " << pilotPath().latin1() << " already connected." << endl;
+		goto errInit;
+	}
+
+	
 	if (fPilotMasterSocket == -1)
 	{
 		if (fPilotPath.isEmpty())
@@ -307,6 +338,7 @@ bool KPilotDeviceLink::open()
 		fLinkStatus = DeviceOpen;
 		fOpenTimer->stop();
 
+		KPilotDeviceLinkPrivate::self()->bindDevice( fRealPilotPath );
 		fSocketNotifier = new QSocketNotifier(fPilotMasterSocket,
 			QSocketNotifier::Read, this);
 		QObject::connect(fSocketNotifier, SIGNAL(activated(int)),
@@ -417,8 +449,10 @@ void KPilotDeviceLink::acceptDevice()
 		// fSocketNotifier->setEnabled(false);
 		fSocketNotifierActive=false;
 	}
-
+	
 #ifdef DEBUG
+	DEBUGDAEMON << fname 
+		<< ": Found connection on device "<<pilotPath().latin1()<<endl;
 	DEBUGDAEMON << fname
 		<< ": Current status "
 		<< statusString()
@@ -675,6 +709,7 @@ QString KPilotDeviceLink::statusString() const
 void KPilotDeviceLink::endOfSync()
 {
 	dlp_EndOfSync(pilotSocket(), 0);
+	KPilotDeviceLinkPrivate::self()->unbindDevice( fRealPilotPath );
 	KPILOT_DELETE(fPilotSysInfo);
 	KPILOT_DELETE(fPilotUser);
 }
