@@ -30,9 +30,10 @@ using namespace KWallet;
 
 #include <qwidget.h>
 
-KNServerInfo::KNServerInfo()
-  : t_ype(STnntp), i_d(-1), p_ort(119), h_old(300),
-    t_imeout(60), n_eedsLogon(false), p_assDirty(false)
+KNServerInfo::KNServerInfo() :
+  t_ype(STnntp), i_d(-1), p_ort(119), h_old(300),
+  t_imeout(60), n_eedsLogon(false), p_assDirty(false),
+  mPassLoaded( false )
 {
 }
 
@@ -134,7 +135,7 @@ bool KNServerInfo::operator==(const KNServerInfo &s)
 const QString &KNServerInfo::pass()
 {
   // if we need to load the password, load all of them
-  if (n_eedsLogon && p_ass.isEmpty())
+  if (n_eedsLogon && !mPassLoaded && p_ass.isEmpty() )
     knGlobals.accountManager()->loadPasswords();
 
   return p_ass;
@@ -185,6 +186,7 @@ void KNServerInfo::readPassword()
   // no need to load a password if the account doesn't require auth
   if (!n_eedsLogon)
     return;
+  mPassLoaded = true;
 
   // check wether there is a chance to find our password at all
   if (Wallet::folderDoesNotExist(Wallet::NetworkWallet(), "knode") ||

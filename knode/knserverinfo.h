@@ -80,6 +80,9 @@ class KNServerInfo {
 
     bool n_eedsLogon,
          p_assDirty;
+    /** Prevent loading the password multiple times since wallet operations
+        from the I/O thread don't work. */
+    bool mPassLoaded;
 
   private:
     static Wallet* mWallet;
