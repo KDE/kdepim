@@ -338,7 +338,7 @@ bool KNProtocolClient::getNextLine()
 
     int received;
     do {
-      received = recv(tcpSocket, inputEnd, inputSize-(inputEnd-input)-1, MSG_NOSIGNAL);
+      received = read(tcpSocket, inputEnd, inputSize-(inputEnd-input)-1);
     } while ((received<0)&&(errno==EINTR));       // don't get tricked by signals
 
     if (received <= 0) {
