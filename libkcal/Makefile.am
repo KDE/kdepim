@@ -14,32 +14,32 @@ libkcal_la_LIBADD  = versit/libversit.la $(LIB_KIO) \
 
 libkcal_la_COMPILE_FIRST = $(top_builddir)/libical/src/libical/ical.h $(top_builddir)/libical/src/libicalss/icalss.h
 libkcal_la_SOURCES = \
-        incidencebase.cpp incidence.cpp journal.cpp todo.cpp event.cpp \
-        freebusy.cpp attendee.cpp attachment.cpp recurrence.cpp alarm.cpp \
-        customproperties.cpp calendar.cpp calendarlocal.cpp \
-        calformat.cpp vcalformat.cpp icalformat.cpp icalformatimpl.cpp \
+	incidencebase.cpp incidence.cpp journal.cpp todo.cpp event.cpp \
+	freebusy.cpp attendee.cpp attachment.cpp recurrence.cpp alarm.cpp \
+	customproperties.cpp calendar.cpp calendarlocal.cpp \
+	calformat.cpp vcalformat.cpp icalformat.cpp icalformatimpl.cpp \
 	vcaldrag.cpp icaldrag.cpp \
-        exceptions.cpp \
-        scheduler.cpp imipscheduler.cpp dummyscheduler.cpp \
-        calfilter.cpp \
-        person.cpp period.cpp duration.cpp \
-        dndfactory.cpp \
-        filestorage.cpp \
-        compat.cpp \
+	exceptions.cpp \
+	scheduler.cpp imipscheduler.cpp dummyscheduler.cpp \
+	calfilter.cpp \
+	person.cpp period.cpp duration.cpp \
+	dndfactory.cpp \
+	filestorage.cpp \
+	compat.cpp \
 	resourcecalendar.cpp resourcelocal.cpp resourcelocalconfig.cpp \
 	resourcelocaldir.cpp resourcelocaldirconfig.cpp \
-        calendarresources.cpp \
-        qtopiaformat.cpp \
+	calendarresources.cpp \
+	qtopiaformat.cpp \
 	resourcecached.cpp \
-        htmlexport.cpp calendarnull.cpp \
-        freebusyurlstore.cpp
+	htmlexport.cpp calendarnull.cpp \
+	freebusyurlstore.cpp
 
 libkcalincludedir = $(includedir)/libkcal
 libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
   calendarlocal.h calendarnull.h calendarresources.h calfilter.h calformat.h \
   calstorage.h compat.h customproperties.h dndfactory.h duration.h event.h \
   exceptions.h filestorage.h freebusy.h htmlexport.h icaldrag.h icalformat.h \
-  incidencebase.h incidence.h journal.h listbase.h period.h person.h \
+  incidencebase.h incidence.h journal.h kcalversion.h listbase.h period.h person.h \
   qtopiaformat.h recurrence.h resourcecached.h resourcecalendar.h \
   resourcelocalconfig.h resourcelocaldirconfig.h resourcelocaldir.h \
   resourcelocal.h scheduler.h \

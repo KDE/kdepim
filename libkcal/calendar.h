@@ -32,6 +32,7 @@
 #include "event.h"
 #include "todo.h"
 #include "journal.h"
+#include "kcalversion.h"
 
 #define _TIME_ZONE "-0500" /* hardcoded, overridden in config file. */
 
