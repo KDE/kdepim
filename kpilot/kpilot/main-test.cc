@@ -113,6 +113,7 @@ void createLink()
 		logWidget, SLOT(addMessage(const QString &)));
 	QObject::connect(deviceLink,SIGNAL(logProgress(const QString &,int)),
 		logWidget, SLOT(addProgress(const QString &,int)));
+
 }
 
 static ActionQueue *syncStack = 0L;

@@ -89,12 +89,14 @@ LogWidget::LogWidget(QWidget * parent) :
 
 	fLog = new QTextEdit(this);
 	fLog->setReadOnly(true);
+	fLog->setWordWrap(QTextEdit::WidgetWidth);
+	fLog->setWrapPolicy(QTextEdit::AtWordOrDocumentBoundary);
 #if QT_VERSION < 0x030100
 	/* nothing, use AutoText */
 #else
 	fLog->setTextFormat(Qt::LogText);
 #endif
-	
+
 	QWhatsThis::add(fLog, i18n("<qt>This lists all the messages received "
 			"during the current HotSync</qt>"));
 	grid->addMultiCellWidget(fLog, 1, 1,1,2);
@@ -223,7 +225,7 @@ void LogWidget::addMessage(const QString & s)
 	}
 
 	t.append(s);
-	
+
 #if QT_VERSION < 0x030100
 	t.append(TE_EOL);
 	fLog->setText(fLog->text() + t);
@@ -238,7 +240,7 @@ void LogWidget::addError(const QString & s)
 	FUNCTIONSETUP;
 
 	if (s.isEmpty()) return;
-	
+
 	kdWarning() << "KPilot error: " << s << endl;
 
 	if (!fLog) return;

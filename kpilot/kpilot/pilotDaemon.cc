@@ -545,7 +545,7 @@ bool PilotDaemon::setupPilotLink()
 		this, SLOT(logError(const QString &)));
 	QObject::connect(fPilotLink, SIGNAL(logMessage(const QString &)),
 		this, SLOT(logMessage(const QString &)));
-	QObject::connect(fPilotLink, 
+	QObject::connect(fPilotLink,
 		SIGNAL(logProgress(const QString &,int)),
 		this, SLOT(logProgress(const QString &,int)));
 
@@ -758,7 +758,7 @@ QString PilotDaemon::syncTypeString(int i) const
 		this, SLOT(logError(const QString &)));
 	QObject::connect(fSyncStack, SIGNAL(logMessage(const QString &)),
 		this, SLOT(logMessage(const QString &)));
-	QObject::connect(fSyncStack, 
+	QObject::connect(fSyncStack,
 		SIGNAL(logProgress(const QString &,int)),
 		this, SLOT(logProgress(const QString &,int)));
 
@@ -782,7 +782,7 @@ QString PilotDaemon::syncTypeString(int i) const
 {
 	FUNCTIONSETUP;
 
-	getLogger().logMessage(s);
+	getLogger().logError(s);
 	updateTrayStatus(s);
 }
 
@@ -793,6 +793,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	getLogger().logProgress(s, i);
 	if (!s.isEmpty()) updateTrayStatus(s);
 }
+
 /* slot */ void PilotDaemon::endHotSync()
 {
 	FUNCTIONSETUP;
