@@ -44,6 +44,8 @@
 #include "kcal_resourcegroupwise.h"
 #include "soapH.h"
 
+#include <stdlib.h>
+
 #include "groupwiseserver.h"
 
 static QMap<struct soap *,GroupwiseServer *> mServerMap;
@@ -162,14 +164,14 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
     kdError() << "SSL is in error state." << endl;
     return -1;
   }
-#if 1
-qDebug("*************************");
-char p[99999];
-strncpy(p, s, n);
-p[n]='\0';
-qDebug("%s", p );
-qDebug("\n*************************");
-#endif
+  if ( getenv("DEBUG_GW_RESOURCE") ){
+     qDebug("*************************");
+     char p[99999];
+     strncpy(p, s, n);
+     p[n]='\0';
+     qDebug("%s", p );
+     qDebug("\n*************************");
+  }
    int ret;
    while ( n>0 ){
      ret = m_sock->writeBlock( s, n );
@@ -206,15 +208,15 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *, char *s, size_t n )
    long ret = m_sock->readBlock( s, n );
    if ( ret < 0 )
         qDebug("ERROR: receive failed: %s %d %d", strerror(m_sock->systemError()), m_sock->socketStatus(), m_sock->fd() );
-#if 1
-qDebug("*************************");
-char p[99999];
-strncpy(p, s, ret);
-p[ret]='\0';
-qDebug("%s", p );
-qDebug("\n*************************");
-qDebug("kioReceiveCallback return %d", ret);
-#endif
+   if ( getenv("DEBUG_GW_RESOURCE") ){
+      qDebug("*************************");
+      char p[99999];
+      strncpy(p, s, ret);
+      p[ret]='\0';
+      qDebug("%s", p );
+      qDebug("\n*************************");
+      qDebug("kioReceiveCallback return %d", ret);
+   }
    return ret;
 }
 
