@@ -414,10 +414,10 @@ void Calendar::removeRelations( Incidence *incidence )
     if( !( incidence->relatedTo() != 0 && mOrphans.remove( incidence->relatedTo()->uid() ) ) ) {
       // Removing wasn't that easy
       for( QDictIterator<Incidence> it( mOrphans ); it.current(); ++it ) {
-	if( it.current()->uid() == uid ) {
-	  mOrphans.remove( it.currentKey() );
-	  break;
-	}
+        if( it.current()->uid() == uid ) {
+          mOrphans.remove( it.currentKey() );
+          break;
+        }
       }
     }
 }
@@ -444,6 +444,21 @@ void Calendar::setModified( bool modified )
     }
     mModified = modified;
   }
+}
+
+void Calendar::incidenceUpdated( IncidenceBase *incidence )
+{
+//  kdDebug(5800) << "CalendarResources::incidenceUpdated( IncidenceBase * ): Not yet implemented\n";
+  incidence->setSyncStatus( Event::SYNCMOD );
+  incidence->setLastModified( QDateTime::currentDateTime() );
+  // we should probably update the revision number here,
+  // or internally in the Event itself when certain things change.
+  // need to verify with ical documentation.
+
+  // The static_cast is ok as the CalendarLocal only observes Incidence objects
+  notifyIncidenceChanged( static_cast<Incidence *>( incidence ) );
+
+  setModified( true );
 }
 
 void Calendar::notifyIncidenceAdded( Incidence *i )

@@ -284,6 +284,10 @@ class Calendar : public QObject, public CustomProperties,
     void unregisterObserver( Observer * );
 
     void setModified( bool );
+    /**
+      Return whether the calendar was modified since opening / saving
+     */
+    bool isModified() const { return mModified; }
 
     /**
       Set product id returned by loadedProductId(). This function is only
@@ -321,6 +325,11 @@ class Calendar : public QObject, public CustomProperties,
     void calendarSaved();
     void calendarLoaded();
 
+  protected:
+    /**
+      The observer interface. So far not implemented.
+    */
+    void incidenceUpdated( IncidenceBase * );
   public:
     /**
       Get unfiltered events, which occur on the given date.
