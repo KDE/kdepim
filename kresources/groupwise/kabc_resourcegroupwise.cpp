@@ -263,7 +263,7 @@ bool ResourceGroupwise::asyncLoad()
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Downloading addressbook") );
   connect( mProgress,
-           SIGNAL( progressItemCanceled( ProgressItem * ) ),
+           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
            SLOT( cancelLoad() ) );
 
   return true;
