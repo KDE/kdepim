@@ -44,6 +44,8 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
+#include <cassert>
+
 enum BuilderMethod {
   TaggedArgument,
   StringArgument,
