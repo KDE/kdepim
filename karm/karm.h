@@ -35,7 +35,7 @@ public:
     static QString formatTime(long minutes);
 
 private:
-	void updateParents( QListViewItem* task, long totalDiff, long sesssionDiff );
+    void updateParents( QListViewItem* task, long totalDiff, long sesssionDiff );
 
 public slots:
     /*

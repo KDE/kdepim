@@ -30,13 +30,13 @@ Karm::Karm( QWidget *parent, const char *name )
 {
   _preferences = Preferences::instance();
 
-	connect(this, SIGNAL(doubleClicked(QListViewItem *)),
+  connect(this, SIGNAL(doubleClicked(QListViewItem *)),
           this, SLOT(changeTimer(QListViewItem *)));
 
-	addColumn(i18n("Task Name"));
+  addColumn(i18n("Task Name"));
   addColumn(i18n("Session Time"));
-	addColumn(i18n("Total Time"));
-	setAllColumnsShowFocus(true);
+  addColumn(i18n("Total Time"));
+  setAllColumnsShowFocus(true);
 
   // set up the minuteTimer
   _minuteTimer = new QTimer(this);
@@ -166,11 +166,10 @@ void Karm::save()
  QFile f(_preferences->saveFile());
 
  if ( !f.open( IO_WriteOnly | IO_Truncate ) ) {
-        QString msg = i18n
-	("There was an error trying to save your data file.\n"
-	"Time accumulated this session will NOT be saved!\n");
-	KMessageBox::error(0, msg );
-    return;
+   QString msg = i18n( "There was an error trying to save your data file.\n"
+                       "Time accumulated this session will NOT be saved!\n");
+   KMessageBox::error(0, msg );
+   return;
  }
  const char * comment = "# Karm save data\n";
 
@@ -180,7 +179,7 @@ void Karm::save()
  QTextStream stream(&f);
 
  for (QListViewItem *child =firstChild(); child; child = child->nextSibling()) {
-        writeTaskToFile(&stream, child, 1);
+   writeTaskToFile(&stream, child, 1);
  }
  f.close();
 }
@@ -221,8 +220,8 @@ void Karm::stopAllTimers()
 
 void Karm::resetSessionTimeForAllTasks()
 {
-	for(QListViewItem *child=firstChild(); child; child=child->itemBelow()) {
-		dynamic_cast<Task*>(child)->setSessionTime(0);
+  for(QListViewItem *child=firstChild(); child; child=child->itemBelow()) {
+    dynamic_cast<Task*>(child)->setSessionTime(0);
   }
 }
 
@@ -282,7 +281,7 @@ void Karm::newTask()
 void Karm::newTask(QString caption, QListViewItem *parent)
 {
   AddTaskDialog *dialog = new AddTaskDialog(caption, false);
-	int result = dialog->exec();
+  int result = dialog->exec();
 
   if (result == QDialog::Accepted) {
     QString taskName = i18n("Unnamed Task");
@@ -290,15 +289,15 @@ void Karm::newTask(QString caption, QListViewItem *parent)
       taskName = dialog->taskName();
     }
 
-		long total, totalDiff, session, sessionDiff;
-		dialog->status( &total, &totalDiff, &session, &sessionDiff );
+    long total, totalDiff, session, sessionDiff;
+    dialog->status( &total, &totalDiff, &session, &sessionDiff );
     Task *task;
     if (parent == 0)
       task = new Task(taskName, total, session, this);
     else
       task = new Task(taskName, total, session, parent);
 
-		updateParents( (QListViewItem *) task, totalDiff, sessionDiff );
+    updateParents( (QListViewItem *) task, totalDiff, sessionDiff );
     setCurrentItem(task);
     setSelected(task, true);
   }
@@ -315,15 +314,15 @@ void Karm::newSubTask()
 
 void Karm::editTask()
 {
-	Task *task = (Task *) currentItem();
-	if (!task)
-    return;
+  Task *task = (Task *) currentItem();
+  if (!task)
+  return;
 
   AddTaskDialog *dialog = new AddTaskDialog(i18n("Edit Task"), true);
   dialog->setTask(task->name(),
                   task->totalTime(),
                   task->sessionTime());
-	int result = dialog->exec();
+  int result = dialog->exec();
   if (result == QDialog::Accepted) {
     QString taskName = i18n("Unnamed Task");
     if (!dialog->taskName().isEmpty()) {
@@ -332,8 +331,8 @@ void Karm::editTask()
     task->setName(taskName);
 
     // update session time as well if the time was changed
-		long total, session, totalDiff, sessionDiff;
-		dialog->status( &total, &totalDiff, &session, &sessionDiff );
+    long total, session, totalDiff, sessionDiff;
+    dialog->status( &total, &totalDiff, &session, &sessionDiff );
 
     if( sessionDiff != 0 ) {
       emit sessionTimeChanged( sessionDiff );
@@ -342,20 +341,20 @@ void Karm::editTask()
     task->setSessionTime( session );
 
     // Update the parents for this task.
-		updateParents( (QListViewItem *) task, totalDiff, sessionDiff );
+    updateParents( (QListViewItem *) task, totalDiff, sessionDiff );
   }
   delete dialog;
 }
 
 void Karm::updateParents( QListViewItem* task, long totalDiff, long sessionDiff )
 {
-	QListViewItem *item = task->parent();
-	while (item) {
-		Task *parrentTask = (Task *) item;
-		parrentTask->setTotalTime(parrentTask->totalTime()+totalDiff);
-		parrentTask->setSessionTime(parrentTask->sessionTime()+sessionDiff);
-		item = item->parent();
-	}
+  QListViewItem *item = task->parent();
+  while (item) {
+    Task *parrentTask = (Task *) item;
+    parrentTask->setTotalTime(parrentTask->totalTime()+totalDiff);
+    parrentTask->setSessionTime(parrentTask->sessionTime()+sessionDiff);
+    item = item->parent();
+  }
 }
 
 void Karm::deleteTask()
@@ -369,19 +368,17 @@ void Karm::deleteTask()
   int response;
   if (item->childCount() == 0) {
     response = KMessageBox::questionYesNo(0,
-                                          i18n( "Are you sure you want to delete the task named\n\"%1\"")
-                                          .arg(item->name()),
-                                          i18n( "Deleting Task"));
+                 i18n( "Are you sure you want to delete the task named\n\"%1\"").arg(item->name()),
+                 i18n( "Deleting Task"));
   }
   else {
     response = KMessageBox::questionYesNo(0,
-                                          i18n( "Are you sure you want to delete the task named\n\"%1\"\n"
-                                                "NOTE: all its subtasks will also be deleted!")
-                                          .arg(item->name()),
-                                          i18n( "Deleting Task"));
+                 i18n( "Are you sure you want to delete the task named\n\"%1\"\n"
+                       "NOTE: all its subtasks will also be deleted!").arg(item->name()),
+                 i18n( "Deleting Task"));
   }
 
-	if (response == KMessageBox::Yes) {
+  if (response == KMessageBox::Yes) {
 
     // Remove chilren from the active set of tasks.
     stopChildCounters(item);
@@ -391,7 +388,7 @@ void Karm::deleteTask()
       _idleTimer->stopIdleDetection();
     }
 
-		delete item;
+    delete item;
 
     // remove root decoration if there is no more children.
     bool anyChilds = false;
@@ -404,7 +401,7 @@ void Karm::deleteTask()
     if (!anyChilds) {
       setRootIsDecorated(false);
     }
-	}
+  }
 }
 
 void Karm::stopChildCounters(Task *item)

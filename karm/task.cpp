@@ -34,13 +34,13 @@ void Task::init(const QString& taskName, long minutes, long sessionTime)
     }
   }
 
-	_name = taskName.stripWhiteSpace();
-	_totalTime = minutes;
+  _name = taskName.stripWhiteSpace();
+  _totalTime = minutes;
   _sessionTime = sessionTime;
   _timer = new QTimer(this);
   connect(_timer, SIGNAL(timeout()), this, SLOT(updateActiveIcon()));
   setPixmap(1, UserIcon(QString::fromLatin1("empty-watch.xpm")));
-	update();
+  update();
   _i = 0;
 }
 
@@ -64,35 +64,35 @@ void Task::setRunning(bool on)
 
 void Task::setName( const QString& name )
 {
-	_name = name;
-	update();
+  _name = name;
+  update();
 }
 
 void Task::setTotalTime ( long minutes )
 {
-	_totalTime = minutes;
-	update();
+  _totalTime = minutes;
+  update();
 }
 
 void Task::setSessionTime ( long minutes )
 {
-	_sessionTime = minutes;
-	update();
+  _sessionTime = minutes;
+  update();
 }
 
 
 void Task::incrementTime( long minutes )
 {
-	_totalTime += minutes;
+  _totalTime += minutes;
   _sessionTime += minutes;
-	update();
+  update();
 }
 
 void Task::decrementTime(long minutes)
 {
-	_totalTime -= minutes;
+  _totalTime -= minutes;
   _sessionTime -= minutes;
-	update();
+  update();
 }
 
 

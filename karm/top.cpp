@@ -45,7 +45,6 @@ KarmWindow::KarmWindow()
 		   this, SLOT( updateTime( long ) ) );
 
   // status bar
-	
   statusBar()->insertItem( i18n( "This session: %1" )
                            .arg(QString::fromLatin1("0:00")), 0, 0, true );
 
