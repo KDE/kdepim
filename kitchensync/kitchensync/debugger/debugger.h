@@ -21,10 +21,13 @@
 #ifndef KSYNC_DEBUGGER
 #define KSYNC_DEBUGGER
 
-#include <klocale.h>
-#include <qpixmap.h>
-
 #include <manipulatorpart.h>
+
+#include <libkcal/calendarlocal.h>
+
+#include <klocale.h>
+
+#include <qpixmap.h>
 
 class KAboutData;
 
@@ -60,6 +63,9 @@ class Debugger : public ManipulatorPart
   protected slots:
     void configureKonnector();
     void readSyncees();
+    void writeSyncees();
+
+    void slotReceiveData( Konnector *, Syncee::PtrList syncees );
 
   private:
     QPixmap m_pixmap;
@@ -67,6 +73,8 @@ class Debugger : public ManipulatorPart
 
     QComboBox *mKonnectorCombo;
     QTextView *mLogView;
+
+    KCal::CalendarLocal mCalendar;
 };
 
 }

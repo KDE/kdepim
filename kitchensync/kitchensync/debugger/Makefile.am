@@ -1,6 +1,7 @@
 INCLUDES = -I$(top_srcdir)/kitchensync/kitchensync/lib/ \
   -I$(top_srcdir)/kitchensync/lib/ \
-  -I$(top_srcdir)/kitchensync/libkonnector2 $(all_includes)
+  -I$(top_srcdir)/kitchensync/libkonnector2 \
+  -I$(top_srcdir) $(all_includes)
 
 kde_module_LTLIBRARIES = libksync_debugger.la
 

@@ -21,7 +21,7 @@
 #ifndef CALENDARSYNCEE_H
 #define CALENDARSYNCEE_H
 
-#include <calendarlocal.h>
+#include <libkcal/calendarlocal.h>
 
 #include "syncee.h"
 
