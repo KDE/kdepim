@@ -44,7 +44,7 @@ folders.</para>
 <term>Message list (in the upper right by default)</term>
 <listitem>
 <para>This pane lists header information (message Status Flags, Sender, Subject,
-Date, optionally Size) for the messages in the currently-selected folder. Clicking on a header
+Date, optionally Size) for the messages in the currently selected folder. Clicking on a header
 will select that message and display it in the Message pane; you can also select
 more than one message by holding down the &Ctrl; key when clicking on messages.
 You may sort the messages by clicking on the column that you wish to
@@ -56,7 +56,7 @@ available (like sorting by Status when you click on the header of the Subject co
 <varlistentry>
 <term>Message preview pane (in the lower right by default)</term>
 <listitem>
-<para>This pane displays the currently-selected message. Attachments appear
+<para>This pane displays the currently selected message. Attachments appear
 at the bottom of the message, either as icons or embedded in the message,
 depending on <menuchoice><guimenu>View</guimenu>
 <guimenuitem>Attachments</guimenuitem></menuchoice>. For complex messages
@@ -227,7 +227,7 @@ installed encryption programs you can choose between:
 <term><guilabel>Any</guilabel></term>
 <listitem>
 <para>KMail will use a format which is understood by all recipients of the
-message. The prefered format of the recipients can be specified in the
+message. The preferred format of the recipients can be specified in the
 KDE Address Book.</para></listitem>
 </varlistentry>
 <varlistentry>
@@ -235,9 +235,9 @@ KDE Address Book.</para></listitem>
 <listitem>
 <para>This format is outdated. If you use this format then only the
 message text will be signed and/or encrypted. <emphasis>Attachments will 
-neither be signed nor encrypted.</emphasis> HTML messages can't be signed
+neither be signed nor encrypted.</emphasis> HTML messages cannot be signed
 with this format. You should only use this format
-if necessary, i.e. if you send messages to users of email clients that cannot
+if necessary, &ie; if you send messages to users of email clients that cannot
 handle the more advanced formats.</para></listitem>
 </varlistentry>
 <varlistentry>
@@ -245,7 +245,7 @@ handle the more advanced formats.</para></listitem>
 <listitem>
 <para>This format is the successor of the inline OpenPGP format. If you
 use this format then the message text and all attachments will be signed
-and/or encrypted (at least by default). It's the recommended format if you
+and/or encrypted (at least by default). This is the recommended format if you
 use OpenPGP.</para></listitem>
 </varlistentry>
 <varlistentry>
@@ -269,9 +269,9 @@ used if necessary.</para></listitem>
 <sect2 id="html-mails">
 <title>Creating HTML Messages</title>
 
-<para>Note that HTML messages are often regarded as an annoyance. Therefore
-you should avoid sending HTML messages if possible. Especially you should never
-send HTML messages to a mailing list unless HTML messages are explicitely
+<para>Note that HTML messages are often regarded as an annoyance; therefore,
+you should avoid sending HTML messages if possible. Particularly, you should never
+send HTML messages to a mailing list unless HTML messages are explicitly
 allowed.</para>
 
 <para>In order to be able to create HTML messages you first have to enable
@@ -494,7 +494,7 @@ cannot be restored, so be careful with this setting.</para></warning>
 <sect3 id="folders-properties-mailinglist">
 <title>Mailing List</title>
 
-<para>If you're going to use the folder for a mailing list then you should
+<para>If you are going to use the folder for a mailing list then you should
 check <guilabel>Folder holds a mailing list</guilabel> to associate this folder
 with the mailing list. Next you should
 click on <guilabel>Detect Automatically</guilabel>. KMail will then try
@@ -1148,7 +1148,7 @@ drop down box. The available rules are:</para>
 <row>
 <entry><guilabel>contains</guilabel>/<guilabel>does not contain</guilabel></entry>
 <entry>all textual search items</entry>
-<entry>Matches if the searched item contains (or doesn't contain) the given
+<entry>Matches if the searched item contains (or does not contain) the given
 text.</entry>
 </row>
 <row>
@@ -1167,7 +1167,7 @@ installed then you can edit the regular expression by clicking on the <guilabel>
 <row>
 <entry><guilabel>has an attachment</guilabel>/<guilabel>has no attachment</guilabel></entry>
 <entry><guilabel>&lt;message&gt;</guilabel></entry>
-<entry>Matches if the message has an attachment (or doesn't have an attachment).</entry>
+<entry>Matches if the message has an attachment (or does not have an attachment).</entry>
 </row>
 <row>
 <entry><guilabel>is in address book</guilabel>/<guilabel>is not in address book</guilabel></entry>
@@ -1218,7 +1218,7 @@ the specified value.</entry>
 <row>
 <entry><guilabel>is</guilabel>/<guilabel>is not</guilabel></entry>
 <entry><guilabel>&lt;status&gt;</guilabel></entry>
-<entry>Matches if the message has (or doesn't have) the specified status.</entry>
+<entry>Matches if the message has (or does not have) the specified status.</entry>
 </row>
 </tbody>
 </tgroup>
@@ -1239,7 +1239,7 @@ folder</guilabel>. Here is a list of all possible actions:</para>
 <listitem>
 <para>This will file the message into another folder, removing it from
 its current folder if necessary; you cannot, currently 
-use <acronym>IMAP</acronym> folders as a target.</para>
+use &imap; folders as a target.</para>
 <!-- fixme: still correct? -->
 </listitem>
 </varlistentry>
@@ -1248,7 +1248,7 @@ use <acronym>IMAP</acronym> folders as a target.</para>
 <term><guilabel>copy to folder</guilabel></term>
 <listitem>
 <para>This will copy the message to another folder.</para>
-<note><para>You currently cannot use <acronym>IMAP</acronym>
+<note><para>You currently cannot use &imap;
 folders as a target.</para></note>
 </listitem>
 </varlistentry>
@@ -1295,7 +1295,7 @@ which you do not like.</para>
 </varlistentry>
 <varlistentry>
 <term><guilabel>redirect to</guilabel></term>
-<listitem><para>This will redirect the message as is to another email address.</para>
+<listitem><para>This will redirect the message as-is to another email address.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -1324,7 +1324,7 @@ makes tracking of spam messages, for example, very easy for the sender.</para>
 <para>This will execute a program, but will not modify the
 message. Specify the full path to the program you want to
 execute; &kmail; will then block until the program returns.
-If you don't want &kmail; to block then append '&amp;' to the command.
+If you do not want &kmail; to block then append '&amp;' to the command.
 You can feed
 the program with the parts of the mail: <symbol>&percnt;0</symbol>,
 <symbol>&percnt;1</symbol>, &etc; stand for files representing
@@ -1434,7 +1434,7 @@ this case, this works and I am presented a filter that has
 <quote>List-Id<guilabel>contains</guilabel>
 &lt;kde.mail.kde.org&gt;</quote> preset. You select the
 desired destination folder from the folder pull-down menu in the
-<guilabel>Filter Action</guilabel> group and that's it!</para>
+<guilabel>Filter Action</guilabel> group and that is it.</para>
 
 <para>If that does not work, think of a unique way of identifying the
 messages you want to filter. The (almost) unique property of my &kde;
@@ -1560,7 +1560,7 @@ this.</para>
 <para>An example is filtering messages from a mailing list and detecting 
 spam messages. For the spam detection you will usually use an external 
 tool via a <guilabel>pipe through</guilabel> action. Filtering the messages 
-for the mailing list is done via the List-Id header. If you don't want to 
+for the mailing list is done via the List-Id header. If you do not want to 
 check the messages from the mailing list for spam too, it is better to
 use the filter for the mailing list messages before the filter for the 
 spam detection. This way you avoid the expensive and slow spam check for all
@@ -1779,7 +1779,7 @@ introduction into public key cryptography (&eg; out of the
 the basic concepts, which will help you to understand what is going on; also,
 many security related issues you should know about are discussed there.</para>
 
-<para>Now, let's start.</para>
+<para>Now, let us start.</para>
 
 <sect2 id="pgp-preconditions">
 <title>Preconditions</title>
@@ -2014,7 +2014,7 @@ you cannot use it to encrypt messages unless you have signed the key with your k
 <sect2 id="spam-wizard-basics">
 <title>Basics</title>
 
-<para>&kmail; doesn't have a built-in spam detection solution: the developers believe 
+<para>&kmail; does not have a built-in spam detection solution: the developers believe 
 using external, but specialized, tools is the better approach. &kmail; uses these tools 
 through its flexible filter architecture. The Anti-Spam Wizard helps you with the 
 initial filter setup.
@@ -2129,7 +2129,7 @@ appropriate learn mode.
 <sect2 id="virus-wizard-basics">
 <title>Basics</title>
 
-<para>&kmail; doesn't have a built-in virus detection solution: the developers believe 
+<para>&kmail; does not have a built-in virus detection solution: the developers believe 
 using external, but specialized, tools is the better approach. &kmail; uses these tools 
 through its flexible filter architecture. The Anti-Virus Wizard helps you with the 
 initial filter setup.
@@ -2165,17 +2165,17 @@ standard setup. Modifying existing filters is not yet possible.
 <para>The Anti-Virus Wizard basically works exactly as the 
 <link linkend="the-anti-spam-wizard">Anti-Spam Wizard</link>.
 Here are the details of how the wizard works: &kmail; can use several 
-external tools to detect messages containing virusses; it will try to automatically find 
+external tools to detect messages containing viruses; it will try to automatically find 
 out which of those tools are installed on your box and will show you the 
 result of the search for each tool. You can mark the tools which you want 
-to be used by &kmail; to detect virusses; marking tools which were not found is 
+to be used by &kmail; to detect viruses; marking tools which were not found is 
 not possible because the appropriate checkboxes are disabled. Of course, you 
 can close the wizard, install a tool, and restart the wizard again.
 </para>
 
 <para>If you have marked at least one tool you will be able to select some actions 
-to be done in &kmail; with regard to messages containing virusses: to let &kmail; detect 
-messages containing virusses you definitely should mark the <guilabel>Check messages using the
+to be done in &kmail; with regard to messages containing viruses: to let &kmail; detect 
+messages containing viruses you definitely should mark the <guilabel>Check messages using the
 anti-virus tools</guilabel> option; if you want messages detected as 
 virus-infected to be moved into a certain folder, please select the appropriate folder and 
 mark the <guilabel>Move detected viral messages to the selected folder</guilabel> 
@@ -2204,7 +2204,7 @@ tool is used; that way, both administrators and users can update the
 wizard configuration.
 </para>
 
-<para>The detection of messages containing virusses is achieved by creating 
+<para>The detection of messages containing viruses is achieved by creating 
 <guilabel>pipe through</guilabel> actions per-tool within a 
 special filter. Another filter contains rules to check for detected viral 
 messages and actions to mark them and (optionally, depending on the choice 
