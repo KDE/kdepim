@@ -57,6 +57,8 @@ protected slots:
 protected:
   QString selectedEMails() const;
 
+  virtual void closeEvent( QCloseEvent* );
+
 private:
   QString makeFilter( const QString& query, const QString& attr );
 

@@ -100,8 +100,6 @@ LDAPSearchDialogImpl::LDAPSearchDialogImpl( KABC::AddressBook *ab, QWidget* pare
 	   this, SLOT( slotAddSelectedContacts() ) );
   connect( mailToButton, SIGNAL( clicked() ),
 	   this, SLOT( slotSendMail() ) );
-  connect( searchEdit, SIGNAL( returnPressed() ),
-	   searchButton, SIGNAL( clicked() ) );
   connect( searchButton, SIGNAL( clicked() ),
 	   this, SLOT( slotStartSearch() ) );
 
@@ -230,6 +228,7 @@ QString LDAPSearchDialogImpl::makeFilter( const QString& query, const QString& a
 void LDAPSearchDialogImpl::slotStartSearch()
 {
   cancelQuery();
+  //closeButton->setEnabled( false );
   QApplication::setOverrideCursor( Qt::waitCursor );
   searchButton->setText( i18n("Stop" ) );
   disconnect( searchButton, SIGNAL( clicked() ),
@@ -264,12 +263,19 @@ void LDAPSearchDialogImpl::slotSearchDone()
 	   this, SLOT( slotStartSearch() ) );
   searchButton->setText( i18n("Search" ) );  
   QApplication::restoreOverrideCursor();
+  //closeButton->setEnabled( true );
 }
 
 void LDAPSearchDialogImpl::slotError( const QString& err )
 {
   QApplication::restoreOverrideCursor();
   KMessageBox::error( this, err );
+}
+
+void LDAPSearchDialogImpl::closeEvent( QCloseEvent* e )
+{
+  slotStopSearch();
+  e->accept();
 }
 
 void LDAPSearchDialogImpl::slotAddSelectedContacts()
