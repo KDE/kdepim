@@ -47,7 +47,7 @@ void CalFilter::apply( Event::List *eventlist )
 
   Event::List::Iterator it = eventlist->begin();
   while( it != eventlist->end() ) {
-    if ( !filterEvent( *it ) ) {
+    if ( !filterIncidence( *it ) ) {
       it = eventlist->remove( it );
     } else {
       ++it;
@@ -58,16 +58,16 @@ void CalFilter::apply( Event::List *eventlist )
 }
 
 // TODO: avoid duplicating apply() code
-void CalFilter::apply( Todo::List *eventlist )
+void CalFilter::apply( Todo::List *todolist )
 {
   if ( !mEnabled ) return;
 
 //  kdDebug(5800) << "CalFilter::apply()" << endl;
 
-  Todo::List::Iterator it = eventlist->begin();
-  while( it != eventlist->end() ) {
-    if ( !filterTodo( *it ) ) {
-      it = eventlist->remove( it );
+  Todo::List::Iterator it = todolist->begin();
+  while( it != todolist->end() ) {
+    if ( !filterIncidence( *it ) ) {
+      it = todolist->remove( it );
     } else {
       ++it;
     }
@@ -76,38 +76,20 @@ void CalFilter::apply( Todo::List *eventlist )
 //  kdDebug(5800) << "CalFilter::apply() done" << endl;
 }
 
-bool CalFilter::filterEvent(Event *event)
-{
-//  kdDebug(5800) << "CalFilter::filterEvent(): " << event->getSummary() << endl;
-
-  if ( !mEnabled ) return true;
-
-  if (mCriteria & HideRecurring) {
-    if (event->doesRecur()) return false;
-  }
-
-  return filterIncidence(event);
-}
-
-bool CalFilter::filterTodo(Todo *todo)
-{
-//  kdDebug(5800) << "CalFilter::filterEvent(): " << event->getSummary() << endl;
-
-  if ( !mEnabled ) return true;
-
-  if (mCriteria & HideCompleted) {
-    if (todo->isCompleted()) return false;
-  }
-
-  return filterIncidence(todo);
-}
-
 bool CalFilter::filterIncidence(Incidence *incidence)
 {
-//  kdDebug(5800) << "CalFilter::filterEvent(): " << event->getSummary() << endl;
+//  kdDebug(5800) << "CalFilter::filterIncidence(): " << incidence->summary() << endl;
 
   if ( !mEnabled ) return true;
 
+  if ( mCriteria & HideCompleted && incidence->type() == "Todo" )
+     if ( static_cast<Todo *>(incidence)->isCompleted() )
+       return false;
+  
+  if (mCriteria & HideRecurring) {
+    if (incidence->doesRecur()) return false;
+  }
+  
   if (mCriteria & ShowCategories) {
     for (QStringList::Iterator it = mCategoryList.begin();
          it != mCategoryList.end(); ++it ) {
@@ -134,7 +116,7 @@ bool CalFilter::filterIncidence(Incidence *incidence)
     return true;
   }
     
-//  kdDebug(5800) << "CalFilter::filterEvent(): passed" << endl;
+//  kdDebug(5800) << "CalFilter::filterIncidence(): passed" << endl;
   
   return true;
 }

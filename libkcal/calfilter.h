@@ -64,18 +64,6 @@ class CalFilter
     void apply(Todo::List *todolist);
     
     /**
-      Apply filter criteria on the specified event. Return true, if event passes
-      criteria, otherwise return false.
-    */
-    bool filterEvent(Event *);
-    
-    /**
-      Apply filter criteria on the specified todo. Return true, if event passes
-      criteria, otherwise return false.
-    */
-    bool filterTodo(Todo *);
-    
-    /**
       Apply filter criteria on the specified incidence. Return true, if event passes
       criteria, otherwise return false.
     */
