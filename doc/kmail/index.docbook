@@ -662,9 +662,10 @@ about search patterns and filter actions is the following
 subsections.</para>
 
 <caution><para> Filters are being considered one after the other,
-starting with the first filter in the list. The first one whose pattern
-matches the given message (and only this one!) gets executed. This is
-a known limitation.</para></caution>
+starting with the first filter in the list. The first one whose
+pattern matches the given message gets executed. You can request that
+the remaining filters also be applied, but the default is to stop
+processing at the first matching filter. </para></caution>
 
 <para>Usually, filters are used on incoming messages, but they can
 also be applied to a message or a group of messages. To selectively
@@ -674,10 +675,6 @@ filter messages, select the messages you want to filter and type
 Filters</guimenuitem></menuchoice>. This will apply all your filters
 to those messages; there is no way to apply only certain filters to
 messages, except for incoming and outgoing messages.</para>
-
-<!-- Note (mmutz): I'm describing here the setup that is being
-targeted at for KDE2.2. I just don't want to re-write this section
-twice. dnaber: fixme? -->
 
 <sect2 id="filter-quick">
 <title>Rapid Filter Creation</title>
@@ -697,13 +694,11 @@ uniquely identifies mails from that list. If it succeeds, the guessed
 name of the list is presented in the
 <menuchoice><guimenu>Message</guimenu><guisubmenu>Create
 Filter</guisubmenu><guimenuitem>Filter on
-Mailing-List...</guimenuitem></menuchoice> list.</para>
+Mailing-List...</guimenuitem></menuchoice> menu entry.</para>
 
 <tip><para>In most cases this works very well, yet sometimes you
 should delete parts of the header contents that are likely to change
-again and select "contains" instead of "equals" in the definition of
-the search rule. Usually, just keeping the list address works
-best.</para></tip>
+again. Usually, just keeping the list address works best.</para></tip>
 
 <para>The second method is to manually construct a filter from scratch
 by calling the filter dialog through
@@ -726,9 +721,9 @@ Filter</guisubmenu></menuchoice> or
 Rules...</guimenuitem></menuchoice>.</para>
 
 <para>To exit this dialog without applying changes, click on
-<guibutton>Cancel</guibutton> or hit <keycap>Esc</keycap>.</para>.
+<guibutton>Cancel</guibutton> or hit <keycap>Esc</keycap>.</para>
 
-<para>The dialog is divided into three main sections:</para>
+<para>The dialog is divided into four main sections:</para>
 <variablelist>
 <varlistentry>
 <term><guilabel>Available Filters</guilabel></term>
@@ -736,14 +731,7 @@ Rules...</guimenuitem></menuchoice>.</para>
 buttons to modify the filters, namely to create new filters, to move
 them up or down the list, or to delete and rename them. If you select
 a filter from the list, its details are shown in the right-hand half
-of the dialog.</para>
-
-<para> If you click into the second or third column of the list, you
-toggle the applicability of the corresponding filter: The
-<guilabel>in</guilabel> column shows whether it may be considered for
-incoming mails (&ie; on <guimenuitem>Check Mail</guimenuitem>), while
-the <guilabel>out</guilabel> column shows the same for outgoing mails
-(&ie; on <guimenuitem>Send</guimenuitem>).</para></listitem>
+of the dialog.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Filter Criteria</guilabel></term> <listitem><para>In
@@ -753,9 +741,9 @@ defined rules must match or whether it suffices that any one of them
 matches. See <link linkend="filter-criteria">Search Patterns</link>
 below for a detailed description of each search rule type.</para>
 
-<para> You can click on <guibutton>More</guibutton> to get a new,
-empty rule if you want to define more complex patterns and on
-<guibutton>Fewer</guibutton> to remove the last
+<para> You can click on <guibutton>More</guibutton> to get an
+additional (initially empty) rule if you want to define more complex
+patterns and on <guibutton>Fewer</guibutton> to remove the last
 rule. <guibutton>Clear</guibutton> clears the pattern, &ie; it removes
 all but two rules from screen and resets those two.</para></listitem>
 </varlistentry>
@@ -771,6 +759,19 @@ empty action if you want to define more than one action and on
 <guibutton>Fewer</guibutton> to remove the last
 action. <guibutton>Clear</guibutton> clears the list, &ie; it
 removes all but one action and resets that one.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Advanced options</guilabel></term><listitem><para> In
+this group you can define a few advanced options for filters, that
+allow you to refine your filtering.</para> <para>Using the combo box,
+you can toggle the applicability of the corresponding filter: The
+<guilabel>incoming</guilabel> choice shows that it may be considered
+for incoming mails (&ie; on <guimenuitem>Check Mail</guimenuitem>),
+while the <guilabel>outgoing</guilabel> choice shows the same for
+outgoing mails (&ie; on <guimenuitem>Send</guimenuitem>).</para>
+<note><para>Note that it is currently not possible to define a filter
+that is not considered for manual filtering. This is a known
+limitation. </para></note></listitem>
 </varlistentry>
 </variablelist>
 
@@ -806,11 +807,11 @@ and action list, resp., before the filter is saved.</para>
 <sect2 id="filter-criteria">
 <title>Search Patterns</title>
 
-<!-- fixme: to or from? -->
 <para>The most common use of filters is to filter on the sender of
-messages. This can be done by choosing <guilabel>&lt;To or
-Cc&gt;</guilabel>. But there are other criteria a filter can
-search for:</para>
+messages. This can be done by choosing <guilabel>From</guilabel>. A
+good bet for a mailing list would be <guilabel>&lt;To or
+Cc&gt;</guilabel>. But there are other criteria a filter can search
+for:</para>
 
 <variablelist>
 <varlistentry>
@@ -845,15 +846,9 @@ if any).</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>&lt;recv. date&gt;</guilabel></term>
+<term><guilabel>&lt;age in days&gt;</guilabel></term>
 <listitem>
-<para>Sets upper or lower bounds on the message's date of arrival.</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>&lt;send date&gt;</guilabel></term>
-<listitem>
-<para>Sets upper or lower bounds on the message's date of sending.</para>
+<para>Sets upper or lower bounds on the message's age.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -934,6 +929,55 @@ return the message to the sender as undeliverable.</para>
 <caution><para>This will only work if the senders email address is
 valid. That's <emphasis>not</emphasis> the case for most
 spam.</para></caution>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>confirm delivery</guilabel></term>
+<listitem><para>Will try to return a message to the sender that
+indicates successful delivery of his or her message.</para> <para>This
+action allows you to impose fine-grained constraints on who will get
+delivery receipts from you. Though you can enable the sending of
+delivery confirmations in the configure dialog, section
+<guilabel>Security</guilabel>, we recommended to not send them to
+everyone, since this makes tracking of &eg; spam extremely easy for
+the sender.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>remove header</guilabel></term>
+<listitem>
+<para>Will remove <emphasis>all</emphasis> header fields with the
+given name from the message. This is useful mainly for removing bogus
+<quote>Reply-To:</quote> headers.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>add header</guilabel></term>
+<listitem>
+<para>If no such field is already present, will add a new header field
+with the given name and value to the message. If there is already a
+header field with that name, it is overwritten with the new (the
+given) value. If there are already multiple headers with the given
+name (&eg; <quote>Received:</quote> headers), an arbitrary one of them is
+overwritten and the others are left unchanged. This is a known
+limitation. You may want to combine this filter with the
+<guilabel>remove header</guilabel> filter above to make sure that
+there are no other headers with that name in the message.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>rewrite header</guilabel></term>
+<listitem>
+<para>Will scan the given header field, modify its contents and write
+it back. The search string is always interpreted as a case-sensitive
+regular expression. The replacement string is inserted literally
+except for occurences of <userinput>\n</userinput>,
+<userinput>$n</userinput> and <userinput>${nn}</userinput>, where
+<userinput>n</userinput> is a positive (single-digit, except for the
+third form) number or <userinput>0</userinput>. These constructs are
+interpreted as backreferences to substrings captured with parantheses
+in the search string.</para><para>Analogous restictions as in the
+<guilabel>add header</guilabel> action apply here, too.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
