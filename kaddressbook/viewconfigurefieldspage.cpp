@@ -26,6 +26,7 @@
 #include <qlistbox.h>
 #include <qpushbutton.h>
 #include <qtoolbutton.h>
+#include <qapplication.h>
 
 #include <kcombobox.h>
 #include <kdebug.h>
@@ -40,13 +41,13 @@ class FieldItem : public QListBoxText
   public:
     FieldItem( QListBox *parent, KABC::Field *field )
       : QListBoxText( parent, field->label() ), mField( field ) {}
-    
+
     FieldItem( QListBox *parent, KABC::Field *field, int index )
       : QListBoxText( parent, field->label(), parent->item( index ) ),
         mField( field ) {}
-    
+
     KABC::Field *field() { return mField; }
-    
+
   private:
     KABC::Field *mField;
 };
@@ -66,7 +67,7 @@ void ViewConfigureFieldsPage::restoreSettings( KConfig *config )
 
   if ( fields.isEmpty() )
     fields = KABC::Field::defaultFields();
-  
+
   KABC::Field::List::ConstIterator it;
   for( it = fields.begin(); it != fields.end(); ++it )
     new FieldItem( mSelectedBox, *it );
@@ -233,12 +234,12 @@ void ViewConfigureFieldsPage::initGUI()
   vb1->addStretch();
 
   mAddButton = new QToolButton( this );
-  mAddButton->setIconSet( SmallIconSet( "1rightarrow" ) );
+  mAddButton->setIconSet( QApplication::reverseLayout() ? SmallIconSet( "1leftarrow" ) : SmallIconSet( "1rightarrow" ) );
   connect( mAddButton, SIGNAL( clicked() ), SLOT( slotSelect() ) );
   vb1->addWidget( mAddButton );
 
   mRemoveButton = new QToolButton( this );
-  mRemoveButton->setIconSet( SmallIconSet( "1leftarrow" ) );
+  mRemoveButton->setIconSet( QApplication::reverseLayout() ? SmallIconSet( "1rightarrow" ) : SmallIconSet( "1leftarrow" ) );
   connect( mRemoveButton, SIGNAL( clicked() ), SLOT( slotUnSelect() ) );
   vb1->addWidget( mRemoveButton );
 
