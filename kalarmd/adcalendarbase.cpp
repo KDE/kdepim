@@ -104,8 +104,8 @@ bool ADCalendarBase::loadFile_(const QCString& appName)
   }
   else if (!appName.isEmpty()) {
 #if TODO_handle_download_error
-    KMessageBox::error(0L, i18n("Cannot download calendar from\n%1.")
-                           .arg(url.prettyURL()), appName);
+//    KMessageBox::error(0L, i18n("Cannot download calendar from\n%1.")
+//                           .arg(url.prettyURL()), appName);
 #endif
   }
   return mLoaded;

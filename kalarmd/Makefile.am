@@ -39,7 +39,4 @@ autostartdir = $(prefix)/share/autostart
 app_DATA = kalarmd.desktop
 appdir = $(kde_appsdir)/.hidden
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kalarmdgui.pot
-
 include ../admin/Doxyfile.am
