@@ -1121,6 +1121,12 @@ void KABCore::initActions()
                                    "edit_set_categories" );
   mActionCategories->setWhatsThis( i18n( "Set the categories for all selected contacts." ) );
 
+  KAction *clearLocation = new KAction( i18n( "Clear Search Bar" ),
+					QApplication::reverseLayout() ? "clear_left" : "locationbar_erase",
+					CTRL+Key_L, this, SLOT( slotClearSearchBar() ), actionCollection(), "clear_search" );
+  clearLocation->setWhatsThis( i18n( "Clear Search Bar<p>"
+				     "Clears the content of the quick search bar." ) );
+
   clipboardDataChanged();
 
   connect( UndoStack::instance(), SIGNAL( changed() ), SLOT( updateActionMenu() ) );
@@ -1387,6 +1393,12 @@ void KABCore::editCategories()
 
   mCategoryEditDialog->show();
   mCategoryEditDialog->raise();
+}
+
+void KABCore::slotClearSearchBar()
+{
+  mIncSearchWidget->clear();
+  mIncSearchWidget->setFocus();
 }
 
 bool KABCore::handleCommandLine( KAddressBookIface* iface )

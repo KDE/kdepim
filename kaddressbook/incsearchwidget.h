@@ -44,6 +44,8 @@ class IncSearchWidget : public QWidget
     void setCurrentItem( int pos );
     int currentItem() const;
 
+    void clear();
+
   signals:
     /**
       This signal is emitted whenever the text in the input

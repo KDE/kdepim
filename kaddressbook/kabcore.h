@@ -348,6 +348,7 @@ class KABCore : public KAB::Core
 
     void categoriesSelected( const QStringList& );
     void editCategories();
+    void slotClearSearchBar();
 
   private:
     void initGUI();

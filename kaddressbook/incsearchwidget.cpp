@@ -135,4 +135,9 @@ void IncSearchWidget::setViewFields( const KABC::Field::List &fields )
   mViewFields = fields;
 }
 
+void IncSearchWidget::clear()
+{
+  mSearchText->clear();  
+}
+
 #include "incsearchwidget.moc"
