@@ -32,6 +32,7 @@ static const char *id="$Id$";
 #include <stdlib.h>
 #include <getopt.h>
 #include <signal.h>
+#include <errno.h>
 
 #include <qdir.h>
 #include <qlist.h>
@@ -59,6 +60,122 @@ static const char *id="$Id$";
 #include "busysync.h"
 #include "statusMessages.h"
 #include "kpilot.h"
+
+PilotDaemonTray::PilotDaemonTray(PilotDaemon *p) :
+	KSystemTray(0,"pilotDaemon"), 
+	daemon(p)
+{
+	FUNCTIONSETUP;
+	setupWidget();
+}
+
+/* virtual */ void PilotDaemonTray::mousePressEvent(QMouseEvent *e)
+{
+  FUNCTIONSETUP;
+  if( e->button() == RightButton)
+    {
+      KPopupMenu *menu = contextMenu();
+      contextMenuAboutToShow( menu );
+      menu->popup( e->globalPos() );
+    }
+    else
+	{
+		KSystemTray::mousePressEvent(e);
+	}
+}
+
+/* virtual */ void PilotDaemonTray::closeEvent(QCloseEvent *e)
+{
+	FUNCTIONSETUP;
+	(void) e;
+	daemon->quitImmediately();
+}
+
+void
+PilotDaemonTray::setupWidget()
+{
+	FUNCTIONSETUP;
+
+	KGlobal::iconLoader()->addAppDir("kpilot");
+	icon = KGlobal::iconLoader()->loadIcon("hotsync",KIcon::Toolbar,
+		0,KIcon::DefaultState,0,
+		true);
+	busyicon = KGlobal::iconLoader()->loadIcon("busysync",KIcon::Toolbar,
+		0,KIcon::DefaultState,0,true);
+	if (icon.isNull())
+	{
+		kdDebug() << fname << ": HotSync icon not found."
+			<< endl;
+		icon=QPixmap(hotsync_icon);
+	}
+	if (busyicon.isNull())
+	{
+		kdDebug() << fname << ": HotSync-Busy icon not found."
+			<< endl;
+		busyicon=QPixmap(busysync_icon);
+	}
+
+	changeIcon(Normal);
+
+	KPopupMenu* menu = contextMenu();
+	menu->insertItem(i18n("&About"), this, SLOT(slotShowAbout()));
+	menuKPilotItem=menu->insertItem(i18n("Start &KPilot"),daemon,
+		SLOT(slotRunKPilot()));
+
+#ifdef DEBUG
+	if (debug_level & UI_TEDIOUS)
+	{
+		kdDebug() << fname
+			<< ": Finished getting icons"
+			<< endl;
+	}
+#endif
+}
+
+void PilotDaemonTray::slotShowAbout()
+{
+	FUNCTIONSETUP;
+  
+	if (!kap)
+	{
+		kap=new KAboutApplication(0,"kpdab",false);
+	}
+
+	kap->show();
+}
+
+
+void PilotDaemonTray::enableRunKPilot(bool b)
+{
+	contextMenu()->setItemEnabled(menuKPilotItem,b);
+}
+
+
+void PilotDaemonTray::changeIcon(IconShape i)
+{
+	FUNCTIONSETUP;
+
+	switch(i)
+	{
+	case Normal:
+		setPixmap(icon);
+		break;
+	case Busy:
+		setPixmap(busyicon);
+		break;
+	default :
+		kdDebug() << fname 
+			<< ": Bad icon number "
+			<< (int)i
+			<< endl;
+	}
+}
+
+
+
+
+
+
 
 static KCmdLineOptions kpilotoptions[] =
 {
@@ -120,35 +237,13 @@ int PilotDaemon::getPilotSpeed(KConfig& config)
 #endif
 }
 
-/* virtual */ void PilotDaemon::mousePressEvent(QMouseEvent *e)
-{
-  FUNCTIONSETUP;
-  if( e->button() == RightButton)
-    {
-      KPopupMenu *menu = contextMenu();
-      contextMenuAboutToShow( menu );
-      menu->popup( e->globalPos() );
-    }
-    else
-	{
-		KSystemTray::mousePressEvent(e);
-	}
-}
-
-/* virtual */ void PilotDaemon::closeEvent(QCloseEvent *e)
-{
-	FUNCTIONSETUP;
-	(void) e;
-	quitImmediately();
-}
-
 
 PilotDaemon::PilotDaemon() : 
-	KSystemTray(0,"pilotDaemon"), 
 	fStatus(INIT),
   	fMonitorProcess(0L), fCurrentSocket(0L),
     fCommandSocket(0L), fStatusSocket(0L), fQuit(false), fPilotLink(0L),
-	fStartKPilot(false), fWaitingForKPilot(false)
+	fStartKPilot(false), fWaitingForKPilot(false),
+	tray(0L)
 {
 	FUNCTIONSETUP;
 
@@ -162,10 +257,14 @@ PilotDaemon::PilotDaemon() :
 	fStartKPilot = (bool) config.readNumEntry("StartKPilotAtHotSync", 0);
 	fStatusConnections.setAutoDelete(true);
 
-	setupWidget();
 	setupConnections();
 	if (fStatus == ERROR) return;
 	setupSubProcesses();
+
+	if (config.readBoolEntry("DockDaemon",false))
+	{
+		tray = new PilotDaemonTray(this);
+	}
 
 #ifdef DEBUG
 	if (debug_level & UI_TEDIOUS)
@@ -178,6 +277,15 @@ PilotDaemon::PilotDaemon() :
 #endif
 }
 
+void PilotDaemon::showTray()
+{
+	if (!tray) return;
+
+	// Copied from Klipper
+	KWin::setSystemTrayWindowFor( tray->winId(), 0 );
+	tray->setGeometry(-100, -100, 42, 42 );
+	tray->show();
+}
 
 void
 PilotDaemon::testDir(QString name)
@@ -300,82 +408,6 @@ PilotDaemon::setupSubProcesses()
 	}
 }
 
-void
-PilotDaemon::setupWidget()
-{
-	FUNCTIONSETUP;
-
-	KGlobal::iconLoader()->addAppDir("kpilot");
-	icon = KGlobal::iconLoader()->loadIcon("hotsync",KIcon::Toolbar,
-		0,KIcon::DefaultState,0,
-		true);
-	busyicon = KGlobal::iconLoader()->loadIcon("busysync",KIcon::Toolbar,
-		0,KIcon::DefaultState,0,true);
-	if (icon.isNull())
-	{
-		kdDebug() << fname << ": HotSync icon not found."
-			<< endl;
-		icon=QPixmap(hotsync_icon);
-	}
-	if (busyicon.isNull())
-	{
-		kdDebug() << fname << ": HotSync-Busy icon not found."
-			<< endl;
-		busyicon=QPixmap(busysync_icon);
-	}
-	setPixmap(icon);
-
-	KPopupMenu* menu = contextMenu();
-	menu->insertItem(i18n("&About"), this, SLOT(slotShowAbout()));
-	menuKPilotItem=menu->insertItem(i18n("Start &KPilot"),this,
-		SLOT(slotRunKPilot()));
-
-#ifdef DEBUG
-	if (debug_level & UI_TEDIOUS)
-	{
-		kdDebug() << fname
-			<< ": Finished getting icons"
-			<< endl;
-	}
-#endif
-}
-
-void PilotDaemon::slotShowAbout()
-{
-	FUNCTIONSETUP;
-  
-	if (!kap)
-	{
-		kap=new KAboutApplication(0,"kpdab",false);
-	}
-
-	kap->show();
-}
-
-void PilotDaemon::slotRunKPilot()
-{
-	FUNCTIONSETUP;
-
-	if (fCurrentSocket)
-	{
-		kdDebug() << fname 
-			<< ": Only one KPilot at a time."
-			<< endl;
-		return;
-	}
-
-	KProcess *k=new KProcess();
-
-	*k << "kpilot";
-	if (debug_level)
-	{
-		*k << "--debug" ;
-		*k << QString::number(debug_level);
-	}
-
-	k->start(KProcess::DontCare);
-}
-
 
 void PilotDaemon::killMonitor(bool finishsync)
 {
@@ -397,6 +429,7 @@ void PilotDaemon::killMonitor(bool finishsync)
 	fMonitorProcess=0L;
 }
 
+
 void PilotDaemon::quitImmediately()
 {
 	FUNCTIONSETUP;
@@ -411,7 +444,7 @@ PilotDaemon::startHotSync()
 	FUNCTIONSETUP;
 
 
-	setPixmap(busyicon);
+	if (tray) tray->changeIcon(PilotDaemonTray::Busy);
 
   // We need to send the SYNC_STARTING message after the sync
   // has already begun so that if KPilot is running it doesn't start
@@ -490,7 +523,7 @@ PilotDaemon::slotEndHotSync()
 {
 	FUNCTIONSETUP;
 
-	setPixmap(icon);
+	if (tray) { tray -> changeIcon(PilotDaemonTray::Normal); } 
 
 	KPilotLink *p=getPilotLink();
 
@@ -552,7 +585,7 @@ PilotDaemon::slotAccepted(KSocket* connection)
 	  this, SLOT(slotCommandReceived(KSocket*)));
   fCurrentSocket->enableRead(true);
 
-	contextMenu()->setItemEnabled(menuKPilotItem,false);
+	if (tray) { tray->enableRunKPilot(false); } 
 }
 
 void
@@ -635,7 +668,7 @@ PilotDaemon::slotConnectionClosed(KSocket* connection)
 		}
 
 		fCurrentSocket = 0L;
-		contextMenu()->setItemEnabled(menuKPilotItem,true);
+		if (tray) { tray->enableRunKPilot(true); } 
 	}
 	emit(endHotSync());
 }
@@ -808,6 +841,30 @@ PilotDaemon::~PilotDaemon()
   
 }
 
+void PilotDaemon::slotRunKPilot()
+{
+	FUNCTIONSETUP;
+
+	if (fCurrentSocket)
+	{
+		kdDebug() << fname 
+			<< ": Only one KPilot at a time."
+			<< endl;
+		return;
+	}
+
+	KProcess *k=new KProcess();
+
+	*k << "kpilot";
+	if (debug_level)
+	{
+		*k << "--debug" ;
+		*k << QString::number(debug_level);
+	}
+
+	k->start(KProcess::DontCare);
+}
+
 PilotDaemon* gPilotDaemon=0L;
 int crashFlag=0;
 
@@ -929,10 +986,7 @@ int main(int argc, char* argv[])
 	signal(SIGQUIT, signalHandler);
 	signal(SIGTERM, signalHandler);
 
-	// Copied from Klipper
-	KWin::setSystemTrayWindowFor( gPilotDaemon->winId(), 0 );
-	gPilotDaemon->setGeometry(-100, -100, 42, 42 );
-	gPilotDaemon->show();
+	gPilotDaemon->showTray();
 
 	return a.exec();
 }

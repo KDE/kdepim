@@ -28,9 +28,53 @@ class KAboutApplication;
 // KPilotLink then you need to connect to the command port _BEFORE_ the 
 // hot sync begins. (ie: before the user presses the button...)
 
-class PilotDaemon : public KSystemTray
+class PilotDaemon;
+
+class PilotDaemonTray : public KSystemTray
 {
-  friend class DockingLabel;
+	Q_OBJECT
+
+public:
+	PilotDaemonTray(PilotDaemon *p);
+
+	typedef enum { Normal,Busy } IconShape ;
+	void changeIcon(IconShape);
+
+	void enableRunKPilot(bool);
+
+protected:
+	void setupWidget();
+
+protected slots:
+	void slotShowAbout();
+
+	// "Regular" QT actions
+	//
+	//
+	virtual void mousePressEvent(QMouseEvent* e);
+	virtual void closeEvent(QCloseEvent *e);
+
+private:
+	QPixmap icon,busyicon;
+	PilotDaemon *daemon;
+
+	/**
+	* Remember which item in the context menu
+	* is "Run KPilot" so we can enable / disable
+	* it as necessary.
+	*/
+	int menuKPilotItem;
+
+	/**
+	* Window for the "About KPilot" information.
+	*/
+	KAboutApplication *kap;
+} ;
+
+
+class PilotDaemon : public QObject
+{
+friend class PilotDaemonTray;
 
   Q_OBJECT
   
@@ -63,6 +107,13 @@ public:
 	*/
 	void killMonitor(bool finishsync=false);
 
+	/**
+	* Display the daemon's system tray icon
+	* (if there is one, depending on the DockDaemon
+	* setting in the config file)
+	*/
+	void showTray();
+
 protected:
 	DaemonStatus fStatus;
 
@@ -72,7 +123,6 @@ signals:
 private:
 	int getPilotSpeed(KConfig&);
 
-  void setupWidget();
   void setupSubProcesses();
   void setupConnections();
   void startHotSync();
@@ -95,15 +145,13 @@ private:
   bool    fStartKPilot;
   bool    fWaitingForKPilot;
 
-	QPixmap icon,busyicon;
-	KAboutApplication *kap;
+
 
 	/**
-	* Remember which item in the context menu
-	* is "Run KPilot" so we can enable / disable
-	* it as necessary.
+	* This is a pointer to the (optional) docked
+	* system tray icon for the daemon.
 	*/
-	int menuKPilotItem;
+	PilotDaemonTray *tray;
 
 private slots:
  void slotProcFinished(KProcess*);
@@ -114,16 +162,9 @@ private slots:
   void slotCommandReceived(KSocket*);
   void slotEndHotSync();
   void quitImmediately();
-  void slotShowAbout();
-	void slotRunKPilot();
 
   void slotSyncingDatabase(char* dbName);
   void slotDBBackupFinished();
 
-protected:
-	// "Regular" QT actions
-	//
-	//
-	virtual void mousePressEvent(QMouseEvent* e);
-	virtual void closeEvent(QCloseEvent *e);
+	void slotRunKPilot();
 };
