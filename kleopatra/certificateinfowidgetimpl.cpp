@@ -181,7 +181,7 @@ static QString parseXMLInfo( const QString& info )
     kdDebug() << "xml parser error in CertificateInfoWidgetImpl::slotImportCertificate()" << endl;
   }
   QDomNode importinfo = doc.documentElement().namedItem("importResult");
-  result = "<p align=\"center\"><table border=\"1\"><tr><th>Name</th><th>Value</th></tr>";
+  result = i18n("<p align=\"center\"><table border=\"1\"><tr><th>Name</th><th>Value</th></tr>");
   for( QDomNode n = importinfo.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     if( n.isElement() ) {
       QDomElement elem = n.toElement();
