@@ -263,7 +263,7 @@ void ProbeDialog::timeout()
 			"<li> Make sure the cradle is correctly plugged in to the computer.\n"
 			"<li> Have you checked that your device is actually supported by kpilot (see http://www.kpilot.org).\n"
 			"</ul>"
-			), i18n("Automatic detection failed"), "AutoDetectionFailed");
+			), i18n("Automatic Detection Failed"), "AutoDetectionFailed");
 	}
 }
 

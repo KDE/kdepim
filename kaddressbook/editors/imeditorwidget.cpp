@@ -55,7 +55,7 @@ IMAddressLVI::IMAddressLVI( KListView *parent, KPluginInfo *protocol,
   mPreferred = false;
 }
 
-void IMAddressLVI::setPreferred( bool preferred ) { 
+void IMAddressLVI::setPreferred( bool preferred ) {
   mPreferred = preferred;
 }
 bool IMAddressLVI::preferred() const {
@@ -117,7 +117,7 @@ KPluginInfo * IMAddressLVI::protocol() const
 {
        return mProtocol;
 }
-	
+
 
 IMContext IMAddressLVI::context() const
 {
@@ -166,11 +166,11 @@ QValueList<KPluginInfo *> IMEditorWidget::availableProtocols() const
 {
 	return mProtocols;
 }
-	
+
 
 void IMEditorWidget::loadContact( KABC::Addressee *addr )
 {
-	if ( mWidget->lvAddresses ) 
+	if ( mWidget->lvAddresses )
 		mWidget->lvAddresses->clear();
 
 	// see README for details of how Evolution stores IM addresses (differently)
@@ -192,7 +192,7 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
 				{
 					QStringList addresses = QStringList::split( QChar( 0xE000 ), value );
 					QStringList::iterator end = addresses.end();
-					for ( QStringList::iterator it = addresses.begin(); it != end; ++it )	
+					for ( QStringList::iterator it = addresses.begin(); it != end; ++it )
 					{
 						IMAddressLVI *imaddresslvi = new IMAddressLVI( mWidget->lvAddresses, protocol, *it, Any/*, false*/ );
 						if(!isSet && (*it).stripWhiteSpace().lower() == mPreferred.stripWhiteSpace().lower())
@@ -230,7 +230,7 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
 		//kdDebug( 0 ) << QString::fromLatin1("messaging/%1").arg( protocolToString( *protocolIt ) ) <<
 		//						QString::fromLatin1("All") <<
 		//					lst.join( QChar( 0xE000 ) ) << endl;
-		
+
 		QString addrBookField = ( *protocolIt )->property( "X-KDE-InstantMessagingKABCField" ).toString();
 		if ( !lst.isEmpty() )
 			addr->insertCustom( addrBookField, QString::fromLatin1( "All" ), lst.join( QChar( 0xE000 ) ) );
@@ -253,11 +253,11 @@ void IMEditorWidget::slotSetStandard()
 		QListViewItemIterator it2( mWidget->lvAddresses);
 		while( it2.current() ) {
 			IMAddressLVI *item = static_cast<IMAddressLVI*>(it2.current() );
-			
+
 			if(item->preferred()) {
 				if(current == item)
 					return; //Selected is already preferred
-				else {	
+				else {
 					item->setPreferred(false);
 					mWidget->lvAddresses->repaintItem(item);
 					break;
@@ -287,14 +287,14 @@ void IMEditorWidget::slotUpdateButtons()
 	{
 		mWidget->btnAdd->setEnabled( true );
 		mWidget->btnEdit->setEnabled( true );
-		mWidget->btnDelete->setEnabled( true );	 
+		mWidget->btnDelete->setEnabled( true );
 	        IMAddressLVI *current = static_cast<IMAddressLVI*>(it.current());
 		mWidget->btnSetStandard->setEnabled( !current || !current->preferred() );  //Disable "set standard" if already standard
 	} else if(!mReadOnly && num_selected > 1) {
 		mWidget->btnAdd->setEnabled( true );
 		mWidget->btnEdit->setEnabled( false );
 		mWidget->btnDelete->setEnabled( true );
-		mWidget->btnSetStandard->setEnabled( false );		
+		mWidget->btnSetStandard->setEnabled( false );
 	}
 	else
 	{
@@ -320,11 +320,11 @@ void IMEditorWidget::slotAdd()
 		IMAddressLVI *imaddresslvi = new IMAddressLVI( mWidget->lvAddresses, addressWid->protocol(), addressWid->address() /*, addressWid->context() */ );
 		if( mPreferred.isEmpty() )
 			imaddresslvi->setPreferred( true );  //If it's a new address, set is as preferred.
-		
+
 		if ( mChangedProtocols.find( addressWid->protocol() ) == mChangedProtocols.end() )
 			mChangedProtocols.append( addressWid->protocol() );
 		mWidget->lvAddresses->sort();
-		
+
 		setModified( true );
 	}
 	delete addDialog;
@@ -384,9 +384,9 @@ void IMEditorWidget::slotDelete()
 	}
 	if(num_selected == 0)
 		return;
-	if(KMessageBox::warningContinueCancel( this, i18n("Do you really want to remove the selected address?", "Do you really want to remove the %n selected addresses?", num_selected), i18n("Confirm Remove"), KGuiItem(i18n("&Remove"),"editdelete") ) != KMessageBox::Continue )
+	if(KMessageBox::warningContinueCancel( this, i18n("Do you really want to delete the selected address?", "Do you really want to delete the %n selected addresses?", num_selected), i18n("Confirm Delete"), KStdGuiItem::del() ) != KMessageBox::Continue )
 		return;
-	
+
 	QListViewItemIterator it( mWidget->lvAddresses);
 	bool deletedPreferred = false;
         while(it.current())

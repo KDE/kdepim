@@ -410,13 +410,13 @@ Module::encrypt( Block& block,
 
   if( status & MISSINGKEY ) {
     QString str = i18n("%1 = 'missing keys' error message",
-                       "%1\nDo you want to leave the message as-is, "
+                       "%1\nDo you want to leave the message as is, "
                        "or cancel sending the message?")
                   .arg( pgp->lastErrorMessage() );
     QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     int ret = KMessageBox::warningContinueCancel( 0, str,
                                                   i18n("PGP Warning"),
-                                                  i18n("&Send As-Is") );
+                                                  i18n("&Send As Is") );
     QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;

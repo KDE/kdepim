@@ -454,7 +454,7 @@ void KABCore::deleteContacts( const QStringList &uids )
     }
 
 	    if ( KMessageBox::warningContinueCancelList( mWidget, i18n( "Do you really want to delete this contact?", "Do you really want to delete these %n contacts?", uids.count() ),
-                                         names, "", KGuiItem( i18n("&Delete"), "editdelete") ) == KMessageBox::Cancel )
+		 names, "", KStdGuiItem::del() ) == KMessageBox::Cancel )
       return;
 
     PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uids );

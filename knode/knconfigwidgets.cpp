@@ -2600,11 +2600,11 @@ KNConfig::CacheWidget::CacheWidget(Cache *d, QWidget *p, const char *n)
   QGridLayout *memL=new QGridLayout(memGB, 3,2, 8,5);
   memL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  memL->addWidget(new QLabel(i18n("max articles to keep"), memGB), 1,0);
+  memL->addWidget(new QLabel(i18n("Max articles to keep:"), memGB), 1,0);
   m_emMaxArt=new KIntSpinBox(0, 99999, 1, 1, 10, memGB);
   memL->addWidget(m_emMaxArt, 1,1);
 
-  memL->addWidget(new QLabel(i18n("max memory usage"), memGB), 2,0);
+  memL->addWidget(new QLabel(i18n("Max memory usage:"), memGB), 2,0);
   m_emMaxKB=new KIntSpinBox(0, 99999, 1, 1, 10, memGB);
   m_emMaxKB->setSuffix(" KB");
   memL->addWidget(m_emMaxKB, 2,1);
@@ -2618,12 +2618,12 @@ KNConfig::CacheWidget::CacheWidget(Cache *d, QWidget *p, const char *n)
   QGridLayout *diskL=new QGridLayout(diskGB, 3,2, 8,5);
   diskL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  d_iskMaxArtL=new QLabel(i18n("max articles to keep"), diskGB);
+  d_iskMaxArtL=new QLabel(i18n("Max articles to keep:"), diskGB);
   diskL->addWidget(d_iskMaxArtL, 2,0);
   d_iskMaxArt=new KIntSpinBox(0, 99999, 1, 1, 10, diskGB);
   diskL->addWidget(d_iskMaxArt, 2,1);
 
-  d_iskMaxKBL=new QLabel(i18n("max disk usage"), diskGB);
+  d_iskMaxKBL=new QLabel(i18n("Max disk usage:"), diskGB);
   diskL->addWidget(d_iskMaxKBL, 3,0);
   d_iskMaxKB=new KIntSpinBox(0, 99999, 1, 1, 10, diskGB);
   d_iskMaxKB->setSuffix(" KB");

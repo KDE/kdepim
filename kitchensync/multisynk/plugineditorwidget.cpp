@@ -117,7 +117,7 @@ void PluginEditorWidget::initGUI()
 
   mLabel->setBuddy( mTypeBox );
 
-  mOptionButton = new QPushButton( i18n( "Options..." ), this );
+  mOptionButton = new QPushButton( i18n( "Options" ), this );
   layout->addWidget( mOptionButton, 0, 2 );
 
   mInfoLabel = new QLabel( this );
