@@ -26,6 +26,7 @@
 #include <kseparator.h>
 #include <kiconloader.h>
 
+#include "knodeview.h"
 #include "knnetaccess.h"
 #include "knarticlewidget.h"
 #include "knodeview.h"
@@ -174,6 +175,7 @@ void KNSettingsDialog::slotApply()
     if(sw) sw->apply();
   }
 
+  knGlobals.view->updateViewMode();
   knGlobals.accManager->readConfig();               // read changed config...
   knGlobals.sArtManager->readConfig();
   knGlobals.gManager->readConfig();

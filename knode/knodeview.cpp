@@ -21,6 +21,7 @@
 #include <kglobal.h>
 #include <kapp.h>
 
+#include "knappmanager.h"
 #include "knfoldermanager.h"
 #include "knarticlewidget.h"
 #include "knodeview.h"
@@ -33,21 +34,23 @@
 
 
 KNodeView::KNodeView(QWidget *parent, const char * name)
-  : QSplitter(parent,name)
+  : QSplitter(parent,name), longView(true)
 {
-  KNFocusWidget *colFocus=new KNFocusWidget(this);
+  setOpaqueResize(true);
+  colFocus=new KNFocusWidget(this);
   collectionView=new KNListView(colFocus);
   colFocus->setWidget(collectionView);
   setResizeMode(colFocus, QSplitter::KeepSize);
   
-  PanHorz=new QSplitter(QSplitter::Vertical,this);
-  
-  KNFocusWidget *hdrFocus=new KNFocusWidget(PanHorz);
+  secSplitter=new QSplitter(QSplitter::Vertical,this);
+  secSplitter->setOpaqueResize(true);
+
+  hdrFocus=new KNFocusWidget(secSplitter);
   hdrView=new KNListView(hdrFocus);
   hdrFocus->setWidget(hdrView);
-  PanHorz->setResizeMode(hdrFocus, QSplitter::KeepSize);
-  
-  KNFocusWidget *artFocus=new KNFocusWidget(PanHorz); 
+  secSplitter->setResizeMode(hdrFocus, QSplitter::KeepSize);
+
+  artFocus=new KNFocusWidget(secSplitter);
   artView=new KNArticleWidget(artFocus);
   artFocus->setWidget(artView);
   
@@ -87,6 +90,8 @@ KNodeView::KNodeView(QWidget *parent, const char * name)
   actionCollection += artView->actions();
 
   readOptions();
+
+  updateViewMode();
 }
 
 
@@ -105,13 +110,19 @@ void KNodeView::readOptions()
   QValueList<int> lst = conf->readIntListEntry("Vert_SepPos");
   if (lst.count()!=2)
     lst << 266 << 487;
-  setSizes(lst);
+  if (longView)
+    setSizes(lst);
+  else
+    secSplitter->setSizes(lst);
 
   lst = conf->readIntListEntry("Horz_SepPos");
   if (lst.count()!=2)
     lst << 153 << 234;
-  PanHorz->setSizes(lst);
-  
+  if (longView)
+    secSplitter->setSizes(lst);
+  else
+    setSizes(lst);
+
   lst = conf->readIntListEntry("Hdrs_Size");
   if (lst.count()==7) {
     QValueList<int>::Iterator it = lst.begin();
@@ -148,8 +159,13 @@ void KNodeView::saveOptions()
   KConfig *conf=KGlobal::config();    
   conf->setGroup("APPEARANCE");
 
-  conf->writeEntry("Vert_SepPos",sizes());
-  conf->writeEntry("Horz_SepPos",PanHorz->sizes());
+  if (longView) {
+    conf->writeEntry("Vert_SepPos",sizes());
+    conf->writeEntry("Horz_SepPos",secSplitter->sizes());
+  } else {
+    conf->writeEntry("Vert_SepPos",secSplitter->sizes());
+    conf->writeEntry("Horz_SepPos",sizes());
+  }
 
   QValueList<int> lst;
   QHeader *h=collectionView->header();
@@ -166,6 +182,49 @@ void KNodeView::saveOptions()
   conf->writeEntry("account_sortCol", collectionView->sortColumn());
   conf->writeEntry("account_sortAscending", collectionView->ascending());
 }
+
+
+
+// switch between long & short group list
+void KNodeView::updateViewMode()
+{
+  if (longView != knGlobals.appManager->longGroupList()) {
+    qDebug("relayout****");
+    longView = knGlobals.appManager->longGroupList();
+    QValueList<int> size1 = sizes();
+    QValueList<int> size2 = secSplitter->sizes();
+    if (longView) {
+      setOrientation(Qt::Horizontal);
+      secSplitter->setOrientation(Qt::Vertical);
+      artFocus->reparent(secSplitter,0,QPoint(0,0),true);
+      colFocus->reparent(this,0,QPoint(0,0),true);
+      moveToFirst(colFocus);
+      moveToLast(secSplitter);
+      setResizeMode(colFocus, QSplitter::KeepSize);
+      setResizeMode(secSplitter, QSplitter::Stretch);
+      secSplitter->moveToFirst(hdrFocus);
+      secSplitter->moveToLast(artFocus);
+      secSplitter->setResizeMode(hdrFocus, QSplitter::KeepSize);
+      secSplitter->setResizeMode(artFocus, QSplitter::Stretch);
+    } else {
+      setOrientation(Qt::Vertical);
+      secSplitter->setOrientation(Qt::Horizontal);
+      artFocus->reparent(this,0,QPoint(0,0),true);
+      colFocus->reparent(secSplitter,0,QPoint(0,0),true);
+      moveToFirst(secSplitter);
+      moveToLast(artFocus);
+      setResizeMode(secSplitter, QSplitter::KeepSize);
+      setResizeMode(artFocus, QSplitter::Stretch);
+      secSplitter->moveToFirst(colFocus);
+      secSplitter->moveToLast(hdrFocus);
+      secSplitter->setResizeMode(colFocus, QSplitter::KeepSize);
+      secSplitter->setResizeMode(hdrFocus, QSplitter::Stretch);
+    }
+    setSizes(size2);
+    secSplitter->setSizes(size1);
+  }
+}
+
 
 
 void KNodeView::initCollectionView()

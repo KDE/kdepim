@@ -153,6 +153,7 @@ KNodeApp::KNodeApp()
   //init the GUI
   setCaption(i18n("KDE News Reader"));
   initView();
+  knGlobals.view = view;
   KNLVItemBase::initIcons();
   initStatusBar();
 

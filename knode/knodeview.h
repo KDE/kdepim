@@ -25,6 +25,7 @@
 
 class KNArticleWidget;
 class KNListView;
+class KNFocusWidget;
 
 
 class KNodeView : public QSplitter
@@ -43,15 +44,18 @@ class KNodeView : public QSplitter
     void readOptions();
     void saveOptions();
 
+    void updateViewMode();   // switch between long & short group list
+
   protected:
     void initCollectionView();
     void initHdrView();
     
-    QSplitter *PanHorz;
+    QSplitter *secSplitter;
     KNArticleWidget *artView;
     KNListView *hdrView;
     KNListView *collectionView;
-    int sPos1, sPos2;
+    KNFocusWidget *colFocus, *hdrFocus, *artFocus;
+    bool longView;
 
     KSelectAction *actSortSelect;
     KAction *actNextArt, *actPrevArt, *actNextUnreadArt, *actReadThrough, *actNextUnreadThread,
@@ -73,64 +77,4 @@ class KNodeView : public QSplitter
 };
 
 #endif // KNODEVIEW_H
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -26,6 +26,7 @@ class KNFolderManager;
 class KNSavedArticleManager;
 class KNFilterManager;
 class KNAppManager;
+class KNodeView;
 
 
 // idea: Previously the manager classes were available
@@ -47,6 +48,7 @@ class KNGlobals {
     KNSavedArticleManager *sArtManager;
     KNFilterManager       *fiManager;
     KNAppManager          *appManager;
+    KNodeView             *view;
 
 };
 
