@@ -2,10 +2,16 @@
 #ifndef KSYNC_KONNECTOR_WIZARD_H
 #define KSYNC_KONNECTOR_WIZARD_H
 
-#include <kwizard.h>
+#include <qmap.h> //qt
 
-#include <konnectorprofile.h>
+#include <kwizard.h> //kde
 
+#include <kdevice.h> // libkonnector
+
+#include <konnectorprofile.h> //kitchensyncui
+
+class KonnectorProfileWizardIntro;
+class KonnectorWizardOutro;
 namespace KSync{
     class KonnectorManager;
     class KonnectorWizard : public KWizard {
@@ -19,6 +25,10 @@ namespace KSync{
         void initUI();
         void initKap();
         KonnectorManager* m_manager;
+        KonnectorProfileWizardIntro *m_intro;
+        KonnectorWizardOutro *m_outro;
+        bool m_free:1;
+        QMap<QString, Device> m_devices;
     };
 
 };

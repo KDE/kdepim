@@ -116,7 +116,7 @@ void KonnectorDialog::initListView() {
 }
 void KonnectorDialog::slotAdd() {
 //Wizzard
-    KonnectorWizard wiz(0);
+    KonnectorWizard wiz(m_manager);
     wiz.exec();
 }
 void KonnectorDialog::slotRemove() {
