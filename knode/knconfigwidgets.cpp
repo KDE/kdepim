@@ -102,6 +102,9 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   topL->addMultiCellWidget(s_igFile, 5, 5, 0, 2);
 
   s_ig = new KLineEdit(this);
+  connect(s_ig,SIGNAL(textChanged ( const QString & )),
+          this,SLOT(textFileNameChanged(const QString &)));
+
   f_ileName = new QLabel(s_ig, i18n("Signature &File:"), this);
   topL->addWidget(f_ileName, 6, 0 );
   topL->addWidget(s_ig, 6, 1 );
@@ -140,6 +143,10 @@ KNConfig::IdentityWidget::~IdentityWidget()
 {
 }
 
+void KNConfig::IdentityWidget::textFileNameChanged(const QString &text)
+{
+    e_ditBtn->setEnabled(!text.isEmpty());
+}
 
 void KNConfig::IdentityWidget::apply()
 {
@@ -169,7 +176,7 @@ void KNConfig::IdentityWidget::slotSignatureType(int type)
   f_ileName->setEnabled(sigFromFile);
   s_ig->setEnabled(sigFromFile);
   c_hooseBtn->setEnabled(sigFromFile);
-  e_ditBtn->setEnabled(sigFromFile);
+  e_ditBtn->setEnabled(sigFromFile && !s_ig->text().isEmpty());
   s_igGenerator->setEnabled(sigFromFile);
   s_igEditor->setEnabled(!sigFromFile);
 

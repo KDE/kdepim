@@ -179,6 +179,7 @@ class IdentityWidget : public BaseWidget {
     void slotSignatureType(int type);
     void slotSignatureChoose();
     void slotSignatureEdit();
+    void textFileNameChanged(const QString &);
 
 };
 
