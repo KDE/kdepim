@@ -6,7 +6,7 @@ bin_PROGRAMS = kmobile
 
 lib_LTLIBRARIES = libkmobiledevice.la libkmobileclient.la
 
-INCLUDES         = -I$(top_builddir)/libkdepim $(all_includes)
+INCLUDES         = $(all_includes)
 
 kmobile_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 kmobile_LDADD   = $(LIB_KFILE) $(LIB_KABC) libkmobiledevice.la

@@ -3,7 +3,6 @@ SUBDIRS = pics
 INCLUDES = -I$(top_srcdir)/kitchensync/libksync \
            -I$(top_srcdir)/kitchensync/libkonnector2 \
            -I$(top_srcdir)/kitchensync/multisynk \
-			  -I$(top_builddir)/libkdepim \
            -I$(top_srcdir) \
             $(all_includes)
 

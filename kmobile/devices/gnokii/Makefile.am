@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/kmobile -I$(top_srcdir)/libkdepim -I$(top_srcdir) $(all_includes) 
+INCLUDES = -I$(top_srcdir)/kmobile -I$(top_srcdir) $(all_includes) 
 
 METASOURCES = AUTO
 

@@ -21,7 +21,7 @@
 lib_LTLIBRARIES = libqtopiakonnector.la
 
 INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/libksync -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/libkcal \
--I$(top_builddir)/libkdepim $(all_includes)
+ $(all_includes)
 
 libqtopiakonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/kitchensync/libksync -I../../   $(all_includes)
 libqtopiakonnector_la_LIBADD = ../../libkonnector.la 

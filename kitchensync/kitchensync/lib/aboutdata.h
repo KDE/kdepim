@@ -25,6 +25,7 @@
 #define KSYNC_ABOUTDATA_H
 
 #include <kaboutdata.h>
+#include <kdepimmacros.h>
 
 namespace KSync {
 

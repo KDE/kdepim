@@ -1,6 +1,6 @@
 SUBDIRS  = mimetypes
 
-INCLUDES = -I$(top_srcdir)/kmobile -I$(top_builddir)/libkdepim -I$(top_srcdir) $(all_includes)
+INCLUDES = -I$(top_srcdir)/kmobile -I$(top_srcdir) $(all_includes)
 
 kde_module_LTLIBRARIES = kio_mobile.la
 

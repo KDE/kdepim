@@ -1,7 +1,7 @@
 lib_LTLIBRARIES = liblocalkonnector.la
 
 INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/libksync -I$(top_srcdir)/kitchensync/libkonnector2 \
-           -I$(top_srcdir)/libkcal -I$(top_builddir)/libkdepim $(all_includes)
+           -I$(top_srcdir)/libkcal $(all_includes)
 
 liblocalkonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/kitchensync/libksync -I../../   $(all_includes)
 liblocalkonnector_la_LIBADD = ../../libkonnector.la -lkabc_file

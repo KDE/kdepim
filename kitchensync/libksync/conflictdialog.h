@@ -23,6 +23,7 @@
 #define CONFLICTDIA_H
 
 #include <kdialogbase.h>
+#include <kdepimmacros.h>
 
 namespace KPIM {
 class DiffAlgo;

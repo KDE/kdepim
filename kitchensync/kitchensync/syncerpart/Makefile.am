@@ -1,7 +1,6 @@
 INCLUDES = -I$(top_srcdir)/kitchensync/kitchensync/lib \
   -I$(top_srcdir)/kitchensync/libksync \
   -I$(top_srcdir)/kitchensync/libkonnector2 \
-  -I$(top_builddir)/libkdepim \
   -I$(top_srcdir) $(all_includes)
 
 kde_module_LTLIBRARIES = libksync_syncerpart.la
