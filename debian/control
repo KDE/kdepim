@@ -51,7 +51,7 @@ Architecture: any
 Section: utils
 Replaces: kandy
 Depends: ${shlibs:Depends}
-Recommends: kdebase=cvs-libs
+Recommends: kdebase-cvs-libs
 Enhances: kdebase-cvs
 Conflicts: kandy
 Description: Mobile phone utility for KDE
@@ -61,6 +61,30 @@ Description: Mobile phone utility for KDE
  phonebook tothe KDE address book.
  .
  Kandy is aimed at mobile phone with integrated (GSM) modems.
+
+Package: karm-cvs
+Architecture: any
+Section: utils
+Replaces: karm
+Depends: ${shlibs:Depends}
+Recommends: kdebase-cvs-libs
+Enhances: kdebase-cvs
+Conflicts: karm
+Description: A time tracker for KDE
+ KArm is a time tracker for busy people who need
+ to keep track of the amount of time they spend
+ on various tasks.
+
+Package: knotes-cvs
+Architecture: any
+Section: utils
+Replaces: knotes
+Depends: ${shlibs:Depends}
+Recommends: kdebase-cvs-libs
+Enhances: kdebase-cvs
+Conflicts: knotes
+Description: Sticky notes for KDE
+ Sticky notes for KDE
 
 Package: kdepim-cvs-libs
 Architecture: any

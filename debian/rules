@@ -61,6 +61,8 @@ binary-arch: build
 	dh_installchangelogs -pkdepim-cvs-libs
 	dh_installchangelogs -pkdepim-cvs-dev
 	dh_installchangelogs -pkandy-cvs
+	dh_installchangelogs -pknotes-cvs knotes/ChangeLog
+	dh_installchangelogs -pkarm-cvs karm/ChangeLog
 	dh_strip -a
 	dh_compress -a -X.docbook -X.css -X-license -X.dcl -X.bz2
 	dh_fixperms -a

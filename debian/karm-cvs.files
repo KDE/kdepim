@@ -1,0 +1,7 @@
+usr/share/apps/karm/*
+usr/share/icons/*/*/apps/karm.*
+usr/share/applnk/Utilities/karm.desktop
+usr/bin/karm
+usr/share/man/man1/karm*
+usr/share/doc/kdeutils/karm/*
+usr/share/doc/kde/HTML/en/karm/*
