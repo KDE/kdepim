@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=ServiceType
+X-KDE-ServiceType=UserAgentStrings
+Comment=Konnector Definitions
+Name=Konnector
+[PropertyDef::Group]
+Type=QString
+
+[PropertyDef::Vendor]
+Type=QString

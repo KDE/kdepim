@@ -328,6 +328,23 @@ void OpieSocket::manageCall(const QString &line )
 	    break;
 	}
 	case d->DESKTOPS:{
+            // ok we're now in sync mode let's see if we know this guy
+            // if meta mode let's see where the corresponding meta dir is
+            // $KDEHOME/share/apps/kitchensync/metadata/konnector-id
+            if ( d->meta ) {
+                QString file;
+                KURL url;
+                url.setProtocol("ftp" );
+                url.setUser( d->user );
+                url.setPass( d->pass );
+                url.setHost( d->dest.toString() );
+                url.setPort( 4242 );
+                url.setPath(d->path + "/Settings/meinPartner");
+                KIO::NetAccess::download( url,  file );
+                if ( file.isEmpty() )
+                    newPartner();
+
+            }
 	    kdDebug() << "desktops entries" << endl;
 	    stream << "call QPE/System getAllDocLinks()\r\n";
 	    d->getMode = d->ABOOK;
