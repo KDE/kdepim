@@ -102,7 +102,7 @@ void ViewManager::saveSettings()
 
   // write the view name list
   KABPrefs::instance()->mViewNames = mViewNameList;
-  KABPrefs::instance()->mCurrentView = mActiveView->name();
+  KABPrefs::instance()->mCurrentView = mActiveView->caption();
 }
 
 QStringList ViewManager::selectedUids() const
@@ -139,8 +139,8 @@ KABC::Addressee::List ViewManager::selectedAddressees() const
 
 void ViewManager::setSelected( const QString &uid, bool selected )
 {
-    if ( mActiveView )
-        mActiveView->setSelected( uid, selected );
+  if ( mActiveView )
+    mActiveView->setSelected( uid, selected );
 }
 
 void ViewManager::unloadViews()
@@ -154,7 +154,7 @@ void ViewManager::setActiveView( const QString &name )
   KAddressBookView *view = 0;
 
   // Check that this isn't the same as the current active view
-  if ( mActiveView && ( mActiveView->name() == name ) )
+  if ( mActiveView && ( mActiveView->caption() == name ) )
     return;
 
   // At this point we know the view that should be active is not
@@ -174,9 +174,10 @@ void ViewManager::setActiveView( const QString &name )
 
     ViewFactory *factory = mViewFactoryDict.find( type );
     if ( factory )
-      view = factory->view( mCore->addressBook(), mViewWidgetStack, name.latin1() );
+      view = factory->view( mCore->addressBook(), mViewWidgetStack );
 
     if ( view ) {
+      view->setCaption( name );
       mViewDict.insert( name, view );
       mViewWidgetStack->addWidget( view );
       view->readConfig( config );
@@ -242,9 +243,9 @@ void ViewManager::editView()
   }
 
   if ( wdg ) {
-    ViewConfigureDialog dlg( wdg, mActiveView->name(), this );
+    ViewConfigureDialog dlg( wdg, mActiveView->caption(), this );
 
-    KConfigGroupSaver saver( mCore->config(), mActiveView->name() );
+    KConfigGroupSaver saver( mCore->config(), mActiveView->caption() );
     dlg.restoreSettings( mCore->config() );
 
     if ( dlg.exec() ) {
@@ -273,17 +274,18 @@ void ViewManager::editView()
 
 void ViewManager::deleteView()
 {
-  QString text = i18n( "<qt>Are you sure that you want to delete the view <b>%1</b>?</qt>" ).arg( mActiveView->name() );
+  QString text = i18n( "<qt>Are you sure that you want to delete the view <b>%1</b>?</qt>" )
+                     .arg( mActiveView->caption() );
   QString caption = i18n( "Confirm Delete" );
 
   if ( KMessageBox::questionYesNo( this, text, caption ) == KMessageBox::Yes ) {
-    mViewNameList.remove( mActiveView->name() );
+    mViewNameList.remove( mActiveView->caption() );
 
     // remove the view from the config file
     KConfig *config = mCore->config();
-    config->deleteGroup( mActiveView->name() );
+    config->deleteGroup( mActiveView->caption() );
 
-    mViewDict.remove( mActiveView->name() );
+    mViewDict.remove( mActiveView->caption() );
     mActiveView = 0;
 
     // we are in an invalid state now, but that should be fixed after
@@ -314,7 +316,7 @@ void ViewManager::addView()
         firstConflict = false;
       }
 
-      newName.sprintf( "%s <%d>", newName.latin1(), numTries );
+      newName = QString( "%1 <%2>" ).arg( newName ).arg( numTries );
       numTries++;
     }
 
