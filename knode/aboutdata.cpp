@@ -28,7 +28,7 @@ namespace KNode
 
   static const about_authors authors[] = {
     { "Volker Krause", I18N_NOOP("Maintainer"), "volker.krause@rwth-aachen.de" },
-    { "Roberto Selbach Teixeira", I18N_NOOP("Former maintainer"), "roberto@robt.org" },
+    { "Roberto Selbach Teixeira", I18N_NOOP("Former maintainer"), "roberto@kde.org" },
     { "Christian Gebauer", 0, "gebauer@kde.org" },
     { "Christian Thurner", 0, "cthurner@web.de" },
     { "Dirk Mueller", 0, "mueller@kde.org" },
