@@ -239,6 +239,7 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
 {
 	// for each changed protocol, write a new custom field containing the current set of
 	// addresses
+	QValueList<IMProtocol>::iterator protocolIt;
 	for ( protocolIt = mChangedProtocols.begin(); protocolIt != mChangedProtocols.end(); ++protocolIt )
 	{
 		QStringList lst;
@@ -252,8 +253,8 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
 		}
 
 		//kdDebug( 0 ) << QString::fromLatin1("messaging/%1").arg( protocolToString( *protocolIt ) ) <<
-							QString::fromLatin1("All") <<
-							lst.join( QChar( 0xE000 ) ) << endl;
+		//						QString::fromLatin1("All") <<
+		//					lst.join( QChar( 0xE000 ) ) << endl;
 		if ( lst.count() > 0 )
 			addr->insertCustom( QString::fromLatin1("messaging/%1").arg( protocolToString( *protocolIt ) ),
 							QString::fromLatin1("All"),
