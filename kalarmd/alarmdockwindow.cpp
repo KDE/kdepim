@@ -137,5 +137,5 @@ void AlarmDockWindow::closeEvent(QCloseEvent*)
 
 void AlarmDockWindow::configureAlarmDaemon()
 {
-  kapp->startServiceByDesktopName( "alarmdaemonctrl", QString::null );
+  kapp->startServiceByDesktopName( "kcmkded", QString::null );
 }
