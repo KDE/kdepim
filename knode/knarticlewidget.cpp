@@ -1489,6 +1489,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     type=ATmailto;
   }
   else if(a.left(11)=="addrOrId://") {
+
     target=a.mid(11, a.length()-11);
 
     if ((button==LeftButton)||(button==MidButton)) {
@@ -1559,6 +1560,8 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
         openURL(target);
       break;
       case ATnews:
+        if (target.endsWith("/"))
+          target.truncate(target.length()-1);
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : news-url " << target << endl;
         knGlobals.top->openURL(target);
       break;
