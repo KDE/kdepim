@@ -11,20 +11,16 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KMAILCVT2_H
-#define KMAILCVT2_H
+#ifndef KMAILCVT_H
+#define KMAILCVT_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#define KMAILCVT_VERSION "3"
-#define KMAILCVT         I18N_NOOP("KMail Import Filters")
-
 #include <kapplication.h>
 #include <kwizard.h>
 
-#include "filters.hxx"
 #include "kimportpage.h"
 #include "kselfilterpage.h"
   
@@ -42,8 +38,6 @@ public slots:
 private:
 	KSelFilterPage* selfilterpage;
 	KImportPage* importpage;
-	Filter::List filters;
-	QWidget *_parent;
 };
 
 #endif

@@ -21,10 +21,9 @@
 
 #include "kmailcvt.h"
 
-static KCmdLineOptions options[] =
+static const KCmdLineOptions options[] =
 {
-  { 0, 0, 0 }
-  // INSERT YOUR COMMANDLINE OPTIONS HERE
+  KCmdLineLastOption
 };
 
 int main(int argc, char *argv[])
@@ -32,8 +31,11 @@ int main(int argc, char *argv[])
   KLocale::setMainCatalogue("kmailcvt");
 
   KAboutData aboutData( "kmailcvt", I18N_NOOP("KMailCVT"),
-    KMAILCVT_VERSION, KMAILCVT, KAboutData::License_GPL_V2,
+    "3", I18N_NOOP("KMail Import Filters"), KAboutData::License_GPL_V2,
     "(c) 2000-3, The KMailCVT developers");
+  aboutData.addAuthor("Hans Dijkema","Original author", "kmailcvt@hum.org", "http://www.hum.org/kmailcvt.html");
+  aboutData.addAuthor("Laurence Anderson","New GUI & cleanups", "l.d.anderson@warwick.ac.uk");
+
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
