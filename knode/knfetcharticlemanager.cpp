@@ -77,7 +77,7 @@ KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiM
   actAllUnread = new KAction(i18n("Mark all as u&nread"), 0, this, SLOT(slotAllUnread()),
                              &actionCollection, "group_allUnread");
   actAllUnread->setEnabled(false);
-  actPostReply = new KAction(i18n("Post &reply"),"reply", Key_R , this, SLOT(slotReply()),
+  actPostReply = new KAction(i18n("Post &reply"),"message_reply", Key_R , this, SLOT(slotReply()),
                              &actionCollection, "article_postReply");
   actPostReply->setEnabled(false);
 

@@ -8,3 +8,5 @@ pics_DATA = arrow_left.png fltrgrey.png groupkat.png redball.png stat_edit.png \
 picsdir = $(kde_datadir)/knode/pics
 
 EXTRA_DIST = $(pics_DATA)
+knodeicondir = $(kde_datadir)/knode/icons
+knodeicon_ICON = AUTO
