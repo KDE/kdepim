@@ -77,6 +77,20 @@ void KNotesIMAP::ResourceIMAP::doClose()
     config.writeEntry( it.key(), it.data() );
 }
 
+bool KNotesIMAP::ResourceIMAP::populate( const QStringList &lst, const QString& resource )
+{
+  // Populate the calendar with the new entries
+  const bool silent = mSilent;
+  mSilent = true;
+  for ( QStringList::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+    KCal::Journal* journal = parseJournal( *it );
+    if( journal )
+      addNote( journal, resource );
+  }
+  mSilent = silent;
+  return true;
+}
+
 bool KNotesIMAP::ResourceIMAP::loadResource( const QString& resource )
 {
   // Get the list of journals
@@ -86,18 +100,7 @@ bool KNotesIMAP::ResourceIMAP::loadResource( const QString& resource )
                   << "ResourceIMAP::getIncidenceList()\n";
     return false;
   }
-
-  // Populate the calendar with the new entries
-  const bool silent = mSilent;
-  mSilent = true;
-  for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
-    KCal::Journal* journal = parseJournal( *it );
-    if( journal )
-      addNote( journal, resource );
-  }
-  mSilent = silent;
-
-  return true;
+  return populate( lst, resource );
 }
 
 bool KNotesIMAP::ResourceIMAP::load()
@@ -311,6 +314,14 @@ KCal::Journal* KNotesIMAP::ResourceIMAP::parseJournal( const QString& str )
     kdDebug(5500) << "Parse error\n";
 
   return 0;
+}
+
+
+void KNotesIMAP::ResourceIMAP::asyncLoadResult( const QStringList& lst, const QString& /*type*/,
+                                    const QString& folder )
+{
+  /* No notification necessary? - till */
+  populate( lst, folder );
 }
 
 

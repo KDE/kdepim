@@ -50,6 +50,7 @@ public:
                                  const QString& resource ) = 0;
   virtual void subresourceDeleted( const QString& type,
                                    const QString& resource ) = 0;
+  virtual void asyncLoadResult( const QStringList&, const QString&, const QString& ) = 0;
 
 protected:
   /** Do the connection to KMail. */

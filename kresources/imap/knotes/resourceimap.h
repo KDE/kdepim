@@ -83,6 +83,9 @@ public:
   void subresourceAdded( const QString& type, const QString& resource );
   void subresourceDeleted( const QString& type, const QString& resource );
 
+  // Listen to KMail telling us the async load finished
+  void asyncLoadResult( const QStringList&, const QString&, const QString& );
+  
   /** Return the list of subresources. */
   QStringList subresources() const;
 
@@ -98,6 +101,9 @@ private:
 
   bool loadResource( const QString& resource );
 
+  // parse a list of notes and add the result to the resource
+  bool populate( const QStringList&, const QString& resource );
+  
   QString configFile() const {
     return ResourceIMAPBase::ResourceIMAPShared::configFile( "knotes" );
   }

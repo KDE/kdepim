@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2002 - 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2002 - 2004 Klarï¿½vdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -112,14 +112,8 @@ void KABC::ResourceIMAP::releaseSaveTicket( Ticket* ticket )
   delete ticket;
 }
 
-bool KABC::ResourceIMAP::loadResource( const QString& resource )
+void KABC::ResourceIMAP::populate( const QStringList& lst, const QString& resource )
 {
-  QStringList lst;
-  if ( !kmailIncidences( lst, "Contact", resource ) ) {
-    kdError() << "Communication problem in ResourceIMAP::load()\n";
-    return false;
-  }
-
   for( QStringList::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
     KABC::Addressee addr = mConverter.parseVCard( *it );
     addr.setResource( this );
@@ -127,7 +121,16 @@ bool KABC::ResourceIMAP::loadResource( const QString& resource )
     Resource::insertAddressee( addr );
     mUidmap[ addr.uid() ] = resource;
   }
+}
 
+bool KABC::ResourceIMAP::loadResource( const QString& resource )
+{
+  QStringList lst;
+  if ( !kmailIncidences( lst, "Contact", resource ) ) {
+    kdError() << "Communication problem in ResourceIMAP::load()\n";
+    return false;
+  }
+  populate( lst, resource );
   return true;
 }
 
@@ -378,6 +381,13 @@ void KABC::ResourceIMAP::setSubresourceCompletionWeight( const QString& subresou
   } else {
     kdDebug(5650) << "setSubresourceCompletionWeight: subresource " << subresource << " not found" << endl;
   }
+}
+
+void KABC::ResourceIMAP::asyncLoadResult( const QStringList& lst, const QString& /*type*/,
+                                    const QString& folder )
+{
+  populate( lst, folder );
+  addressBook()->emitAddressBookChanged();
 }
 
 #include "resourceimap.moc"

@@ -125,18 +125,14 @@ bool ResourceIMAP::doLoad()
   return loadAllEvents() & loadAllTasks() & loadAllJournals();
 }
 
-bool ResourceIMAP::loadResource( const QString& type, const QString& folder )
+// helper function which parses a list of incidences
+void ResourceIMAP::populate( const QStringList& lst, const QString& type,
+                             const QString& folder )
 {
-  // Get the list of incidences
-  QStringList lst;
-  if ( !kmailIncidences( lst, type, folder ) )
-    // The get failed
-    return false;
-
-  // Populate the calendar with the new incidences
   const bool silent = mSilent;
   mSilent = true;
-  for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+  kdDebug(5650) << "Foldertype: " << type << endl;
+  for ( QStringList::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
     Incidence* i = parseIncidence( *it );
     if ( i ) {
       if ( i->type() == "Event" && type == "Calendar" ) {
@@ -153,6 +149,18 @@ bool ResourceIMAP::loadResource( const QString& type, const QString& folder )
       kdDebug(5650) << "Problem reading: " << *it << endl;
   }
   mSilent = silent;
+}
+
+bool ResourceIMAP::loadResource( const QString& type, const QString& folder )
+{
+  // Get the list of incidences
+  QStringList lst;
+  if ( !kmailIncidences( lst, type, folder ) )
+    // The get failed
+    return false;
+
+  // Populate the calendar with the new incidences
+  populate( lst, type, folder );
   return true;
 }
 
@@ -687,6 +695,13 @@ bool ResourceIMAP::subresourceActive( const QString& subresource ) const
 void ResourceIMAP::setTimeZoneId( const QString& tzid )
 {
   mCalendar.setTimeZoneId( tzid );
+}
+
+void ResourceIMAP::asyncLoadResult( const QStringList& lst, const QString& type,
+                                    const QString& folder )
+{
+  populate( lst, type, folder );
+  emit resourceChanged( this );
 }
 
 #include "resourceimap.moc"

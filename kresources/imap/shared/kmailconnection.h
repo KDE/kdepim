@@ -23,7 +23,7 @@
 #define IMAPSHARED_KMAILCONNECTION_H
 
 #include <dcopobject.h>
-
+#include <qstringlist.h>
 
 class DCOPClient;
 class KMailICalIface_stub;
@@ -48,6 +48,8 @@ k_dcop:
   void slotRefresh( const QString& type, const QString& resource );
   void subresourceAdded( const QString& type, const QString& resource );
   void subresourceDeleted( const QString& type, const QString& resource );
+  void asyncLoadResult( const QStringList& list, const QString& type,
+                        const QString& folder );
 
 public:
   KMailConnection( ResourceIMAPShared* resource, const QCString& objId );

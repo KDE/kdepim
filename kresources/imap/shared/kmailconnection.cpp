@@ -91,6 +91,9 @@ bool KMailConnection::connectToKMail()
     if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
                               "subresourceDeleted(QString,QString)" ) )
       kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
+    if ( !connectKMailSignal( "asyncLoadResult(QStringList, QString, QString)",
+                              "asyncLoadResult(QStringList, QString, QString)" ) )
+      kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
   }
 
   return ( mKMailIcalIfaceStub != 0 );
@@ -134,6 +137,13 @@ void KMailConnection::subresourceDeleted( const QString& type,
 //   kdDebug(5650) << "KMailConnection::subresourceDeleted( " << type << ", "
 //                 << resource << " )\n";
   mResource->subresourceDeleted( type, resource );
+}
+
+
+void KMailConnection::asyncLoadResult( const QStringList& list, const QString& type,
+                                       const QString& folder )
+{
+  mResource->asyncLoadResult( list, type, folder );
 }
 
 bool KMailConnection::connectKMailSignal( const QCString& signal,

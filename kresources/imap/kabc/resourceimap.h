@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2002 - 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2002 - 2004 Klarï¿½vdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -107,6 +107,7 @@ public:
   // Listen to KMail changes in the amount of sub resources
   void subresourceAdded( const QString& type, const QString& id );
   void subresourceDeleted( const QString& type, const QString& id );
+  void asyncLoadResult( const QStringList&, const QString&, const QString& );
 
   bool addIncidence( const QString& type, const QString& resource,
                      const QString& ical );
@@ -145,6 +146,9 @@ protected:
 
   void loadSubResourceConfig( KConfig& config, const QString& name );
   bool loadResource( const QString& resource );
+
+  // parse a list of vcards and add the result to the resource
+  void populate( const QStringList&, const QString& resource );
 
   QString configFile() const {
     return ResourceIMAPBase::ResourceIMAPShared::configFile( "kabc" );

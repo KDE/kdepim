@@ -29,7 +29,6 @@
 
 #include <resourceimapshared.h>
 
-
 namespace KCal {
 
 /**
@@ -151,7 +150,7 @@ public:
   void slotRefresh( const QString& type, const QString& resource );
   void subresourceAdded( const QString& type, const QString& id );
   void subresourceDeleted( const QString& type, const QString& id );
-
+  void asyncLoadResult( const QStringList&, const QString&, const QString& );
   bool subresourceActive( const QString& ) const;
 
 public slots:
@@ -174,7 +173,6 @@ protected:
   bool doLoad();
   bool doSave();
 
-
 private:
   void init();
 
@@ -182,6 +180,10 @@ private:
   bool loadAllEvents();
   bool loadAllTasks();
   bool loadAllJournals();
+
+  // parse a list of incidences of a certain type and add them
+  void populate( const QStringList &, const QString& type,
+                 const QString& folder );
 
   KCal::Incidence* parseIncidence( const QString& str );
 
