@@ -181,9 +181,12 @@ void KAddressBookIconView::refresh(QString uid)
     for ( iter = addresseeList.begin(); iter != addresseeList.end(); ++iter ) {
       aItem = new AddresseeIconViewItem( fields(), addressBook(), *iter, mIconView );
       aItem->setPixmap(icon);
-      mIconList.append( aItem );
     }
     mIconView->arrangeItemsInGrid( true );
+
+    for ( item = mIconView->firstItem(); item; item = item->nextItem() )
+      mIconList.append( dynamic_cast<AddresseeIconViewItem*>( item ) );
+
   } else {
     // Try to find the one to refresh
     for ( item = mIconView->firstItem(); item; item = item->nextItem() ) {
@@ -256,15 +259,17 @@ void KAddressBookIconView::addresseeSelected()
 void KAddressBookIconView::incrementalSearch(const QString &value, 
                                              KABC::Field *field)
 {
-  KABC::Addressee::List list = addressees();
-  KABC::Addressee::List::Iterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    AddresseeIconViewItem *item;
-    for ( item = mIconList.first(); item; item = mIconList.next() ) {
-      if ( field->value( item->addressee() ).startsWith( value ) ) {
-        mIconView->setSelected(item, true, false);
-        mIconView->ensureItemVisible(item);
-      }
+  if ( value.isEmpty() ) {
+    mIconView->selectAll( false );
+    return;
+  }
+
+  AddresseeIconViewItem *item;
+  for ( item = mIconList.first(); item; item = mIconList.next() ) {
+    if ( field->value( item->addressee() ).startsWith( value ) ) {
+      mIconView->setSelected( item, true, false );
+      mIconView->ensureItemVisible( item );
+      return;
     }
   }
 }
