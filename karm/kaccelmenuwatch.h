@@ -30,7 +30,6 @@ class QPopupMenu;
  * connect the * accelerators, as they are not activated till then.
  * 
  * @author Sirtaj Singh Kang (taj@kde.org)
- * @version $Id$
  */
 
 class KAccelMenuWatch : public QObject

@@ -1,5 +1,3 @@
-$Id$
-
 * check: times can be negative - does that make any sense?
 * add better screenshot to http://pim.kde.org/components/karm.php
 * KarmWindow::makeMenus -> export KAction?

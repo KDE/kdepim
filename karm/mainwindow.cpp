@@ -4,9 +4,6 @@
 */
 
 
-/*
- * $Id$
- */
 
 #include <numeric>
 

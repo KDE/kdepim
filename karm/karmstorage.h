@@ -34,7 +34,6 @@ class TaskView;
  *
  * @short Logic that gets and stores KArm data to disk.
  * @author Mark Bucciarelli <mark@hubcapconsulting.com>
- * @version $Id$
  */
 
 class KarmStorage

@@ -8,10 +8,6 @@
 */
 
 
-/*
- * $Id$
- */
-
 // #include <qkeycode.h>
 // #include <qlayout.h>
 #include <qpixmap.h>
