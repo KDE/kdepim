@@ -27,34 +27,11 @@
 using namespace KCal;
 
 
-ResourceIMAP::ResourceIMAP( const QString &server )
-  : ResourceCalendar( 0 ),
-    ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" ),
-    mServer( server )
-{
-  init();
-}
-
 ResourceIMAP::ResourceIMAP( const KConfig* config )
   : ResourceCalendar( config ),
     ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" )
 {
-  init();
-
-  if ( config ) {
-    mServer = config->readEntry( "Servername" );
-  }
-}
-
-void ResourceIMAP::init()
-{
   setType( "imap" );
-}
-
-void ResourceIMAP::writeConfig( KConfig* config )
-{
-  ResourceCalendar::writeConfig( config );
-  config->writeEntry( "Servername", mServer );
 }
 
 ResourceIMAP::~ResourceIMAP()

@@ -23,7 +23,6 @@
 #include <kresources/configwidget.h>
 #include <kresources/resource.h>
 
-#include "resourceimapconfig.h"
 #include "resourceimap.h"
 
 #include <kglobal.h>
@@ -32,11 +31,25 @@
 using namespace KCal;
 
 
+class ImapFactory : public KRES::PluginFactoryBase
+{
+public:
+  KRES::Resource *resource( const KConfig *config )
+  {
+    return new ResourceIMAP( config );
+  }
+
+  KRES::ConfigWidget *configWidget( QWidget* )
+  {
+    return 0;
+  }
+};
+
 extern "C"
 {
   void *init_kcal_imap()
   {
     KGlobal::locale()->insertCatalogue( "kres_imap" );
-    return new KRES::PluginFactory<ResourceIMAP,ResourceIMAPConfig>();
+    return new ImapFactory();
   }
 }

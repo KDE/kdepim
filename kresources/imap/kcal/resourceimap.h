@@ -40,11 +40,8 @@ class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer,
   Q_OBJECT
 
 public:
-  ResourceIMAP( const QString &server );
-  ResourceIMAP( const KConfig * );
+  explicit ResourceIMAP( const KConfig* config = 0 );
   virtual ~ResourceIMAP();
-
-  virtual void writeConfig( KConfig* config );
 
   KABC::Lock *lock();
 
@@ -174,8 +171,6 @@ protected:
   bool doSave();
 
 private:
-  void init();
-
   bool loadResource( const QString& type, const QString& folder );
   bool loadAllEvents();
   bool loadAllTasks();
@@ -191,7 +186,6 @@ private:
     return ResourceIMAPBase::ResourceIMAPShared::configFile( "kcal" );
   }
 
-  QString mServer;
   ICalFormat mFormat;
 
   // The default calendar

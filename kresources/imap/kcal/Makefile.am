@@ -9,9 +9,9 @@ libkcal_imap_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:0
 libkcal_imap_la_LIBADD  = -lkresources \
 	$(top_builddir)/kresources/imap/shared/libresourceimapshared.la \
 	$(top_builddir)/libkcal/libkcal.la
-libkcal_imap_la_SOURCES = resourceimap.cpp resourceimapconfig.cpp
+libkcal_imap_la_SOURCES = resourceimap.cpp
 
-noinst_HEADERS = resourceimap.h resourceimapconfig.h
+noinst_HEADERS = resourceimap.h
 
 kde_module_LTLIBRARIES = kcal_imap.la
 
