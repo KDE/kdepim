@@ -1,54 +1,70 @@
-Empath has the concept of a 'job', which is a simple name for an operation
-or group of operations that will be performed asynchronously.
+- Empath's asynchronous 'job' scheduling mechanism
+- Rik Hemsley <rik@kde.org>
 
-The class EmpathJobInfo is used to encapsulate the information needed.
+Empath has the concept of a 'job', which is a simple name for an
+operation that will be performed asynchronously.
 
-Some jobs require multiple operations. To make this work, EmpathJobInfo
-can contain two operation specifications, 'current' and 'original'.
+The class 'EmpathJob' is the base class for such an operation.
+If you know DP language, this is called a 'Command', 'Action' or
+'Transaction'.
 
-If a job requires multiple operations, the 'original' spec is used
-to specify what the general target of the operation is, while 'current'
-specifies the sub-operation.
+,-----------------------------.      ,-----------------------------------.
+|           Empath            |<>-->o|            JobScheduler           |
+|-----------------------------|      |-----------------------------------|
+| retrieve(url, NotifyObject) |      | newRetrieveJob(url, NotifyObject) |<>-.
+`-----------------------------'      | runQueue() o                      |   |
+                                     `------------.----------------------'   |
+                                                  .                          v
+                                                  .       ,-------------------.
+                                        ,-------------.   |        Job        |
+                                        | job->run() \|   |-------------------|
+                                        `-------------'   |       run()       |
+                                                          `-------------------'
 
-The various operation types are enumerated in 'ActionType'. This
-includes WriteMessage, RetrieveMessage, CopyMessage, CreateFolder, etc.
+From the user's perspective, the interface is extremely simple and
+easy to use.
 
-To explain further:
+To retrieve a message with URL 'empath://Local/Inbox/999', user code
+could look like this:
 
-A 'simple' job, like 'RetrieveMessage' is performed in one operation.
+empath->retrieve(EmpathURL("empath://Local/Inbox/999"), this);
 
-When empath->retrieve() is called, Empath creates an EmpathJobInfo
-with type RetrieveMessage. This job is passed to the mailbox that should
-perform the operation and queued.
+The final parameter used when calling any of these job-related methods
+is always a pointer to a QObject. If the QObject you pass implements
+the correct slot, you get a signal when the job is complete.
 
-Once the job is complete, Empath emits the signal jobFinished().
+Of course, if you don't care what happens to the job, you simply
+don't pass the final parameter.
 
-Jobs like 'CopyMessage' and 'MoveMessage' are complex - they require
-more than one sub-operation.
+The various methods are: createFolder, removeFolder, copy, move,
+retrieve, write, remove and mark.
 
-Example:
+Those methods whose name does not end in 'Folder' work on messages.
 
-empath->moveMessage() is called.
+All jobs either inherit from 'EmpathSingleJob' or 'EmpathMultiJob'.
+Those that inherit from EmpathMultiJob actually create multiple
+EmpathSingleJob objects and run them one after the other.
 
-An EmpathJobInfo is created. The 'original' operation is set to type
-'MoveMessage'. The 'current' part is set to 'RetrieveMessage' and the
-job is queued.
+This may change in the future. Perhaps an EmpathMultiJob will
+add its EmpathSingleJob objects to the queue and wait for completion.
 
-When the job completes (the 'RetrieveMessage' part,) Empath then asks
-the job what type of operation should happen next.
+Another thing that may change in future is the way that you get
+the signal that a job has completed. Currently you have to implement
+the correct slot in your QObject-derived class. It would be nicer
+if you could pass the name of a slot instead of being forced to
+find out the correct name and implement it.
 
-As this job is of type MoveMessage, the job replies 'WriteMessage'.
-The 'current' part of the job is changed to 'WriteMessage'.
+The new API would probably look like this:
+empath->copy(sourceURL, destURL, QObject *, SLOT(someSlot(EmpathCopyJob)));
 
-Again, when the job completes, Empath asks what should come next.
-The job replies 'RemoveMessage'.
+If anyone can be bothered to do this, please go ahead ;)
 
-Empath now changes the 'current' part to 'RemoveMessage' and queues
-the job again.
+As mentioned above, you have to look up the correct name for the
+slot you should make available. You should look this up in
+lib/EmpathJobScheduler.cpp
 
-When the job again completes, Empath asks what should come next.
-This time, the job has finished, so it replies 'NoAction'. Empath
-then signals that the job has completed, so the caller knows that
-it is done.
+Can you see why that's a hassle ? :)
 
+Well despite these little niggles, this design seems rather logical
+and straightforward. Comments are appreciated.
 
