@@ -192,6 +192,8 @@ void AdvancedCustomFields::initGUI( const QString &uiFile )
 
     ++it;
   }
+
+  delete list;
 }
 
 QString AdvancedCustomFields::pageIdentifier() const
