@@ -70,7 +70,7 @@ namespace Kleo {
 	    QByteArray & cipherText );
 
     /*! \reimp from Job */
-    void showErrorDialog( QWidget * parent ) const;
+    void showErrorDialog( QWidget * parent, const QString & caption ) const;
 
   private slots:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
