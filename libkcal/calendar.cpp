@@ -175,12 +175,15 @@ void Calendar::setTimeZone(const QString & tz)
   mTimeZone = (60*hours+minutes);
   if (neg)
     mTimeZone = -mTimeZone;
+  mLocalTime = false;
 
   setModified( true );
 }
 
 QString Calendar::getTimeZoneStr() const 
 {
+  if (mLocalTime)
+    return QString();
   QString tmpStr;
   int hours = abs(mTimeZone / 60);
   int minutes = abs(mTimeZone % 60);
@@ -195,6 +198,7 @@ QString Calendar::getTimeZoneStr() const
 void Calendar::setTimeZone(int tz)
 {
   mTimeZone = tz;
+  mLocalTime = false;
 
   setModified( true );
 }
@@ -207,6 +211,7 @@ int Calendar::getTimeZone() const
 void Calendar::setTimeZoneId(const QString &id)
 {
   mTimeZoneId = id;
+  mLocalTime = false;
 
   setModified( true );
 }
@@ -215,6 +220,21 @@ QString Calendar::timeZoneId() const
 {
   return mTimeZoneId;
 }
+
+void Calendar::setLocalTime()
+{
+  mLocalTime = true;
+  mTimeZone = 0;
+  mTimeZoneId = "";
+
+  setModified( true );
+}
+
+bool Calendar::isLocalTime() const
+{
+  return mLocalTime;
+}
+
 const QString &Calendar::getEmail()
 {
   return mOwnerEmail;

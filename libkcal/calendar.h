@@ -94,7 +94,7 @@ class Calendar {
   
     /** set time zone from a timezone string (e.g. -2:00) */
     void setTimeZone(const QString & tz);
-    /** set time zone froma aminutes value (e.g. -60) */
+    /** set time zone from a minutes value (e.g. -60) */
     void setTimeZone(int tz);
     /** Return time zone as offest in minutes */
     int getTimeZone() const;
@@ -104,6 +104,10 @@ class Calendar {
     void setTimeZoneId(const QString &);
     /** Return time zone id. */
     QString timeZoneId() const;
+    /** use local time, not UTC or a time zone */
+    void setLocalTime();
+    /** Return whether local time is being used */
+    bool isLocalTime() const;
   
     /** adds a Event to this calendar object.
      * @param anEvent a pointer to the event to add
@@ -217,6 +221,7 @@ class Calendar {
     QString mOwner;        // who the calendar belongs to
     QString mOwnerEmail;   // email address of the owner
     int mTimeZone;         // timezone OFFSET from GMT (MINUTES)
+    bool mLocalTime;       // use local time, not UTC or a time zone
     bool mDialogsOn;       // display various GUI dialogs?
 
     CalFilter *mFilter;
