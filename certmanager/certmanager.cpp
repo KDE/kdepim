@@ -755,10 +755,22 @@ void CertManager::slotDeleteCertificate() {
     return;
   std::vector<GpgME::Key> keys;
   keys.reserve( mItemsToDelete.count() );
+  QStringList keyDisplayNames;
   for ( QPtrListIterator<Kleo::KeyListViewItem> it( mItemsToDelete ) ; it.current() ; ++it )
-    if ( !it.current()->key().isNull() )
+    if ( !it.current()->key().isNull() ) {
       keys.push_back( it.current()->key() );
+      keyDisplayNames.push_back( it.current()->text( 0 ) );
+    }
   if ( keys.empty() )
+    return;
+
+  if ( KMessageBox::warningContinueCancelList(
+         this,
+         i18n( "Do you really want to delete this cerificate?", "Do you really want to delete these %n certificates?", keyDisplayNames.count()),
+         keyDisplayNames,
+         i18n( "Delete Certificates" ),
+         KGuiItem( i18n( "Delete" ), "editdelete" ),
+         "ConfirmDeleteCert", KMessageBox::Dangerous ) != KMessageBox::Continue )
     return;
 
   if ( Kleo::DeleteJob * job = Kleo::CryptPlugFactory::instance()->smime()->deleteJob() )
