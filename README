@@ -19,16 +19,18 @@ scheduling and even sticky notes.
 What it is
 ----------
 
-* kandy: sync phone book entries between your cell phone and
-computer ("kandy" comes from "Handy", the german word used for a
-cellular)
+* kandy: sync phone book entries between your cell phone and computer
+         ("kandy" comes from "Handy", the german word used for a cellular)
 * korganizer: a calendar-of-events and todo-list manager
 * kpilot: to sync with your PalmPilot
+* kalarm: gui for setting up personal alarm/reminder messages
+* kalarmd: personal alarm/reminder messages daemon
+* knotes: yellow notes application
 
 The following apps are not compiled by default:
 
 * empath: a modular e-mail client, designed for reuse, needs a Qt
-with threading support
+          with threading support
 * twister: another personal information manager, needs empath
 * kab2: another design for the KDE addressbook
 
@@ -40,8 +42,8 @@ There is also quite an amount of infrastructure in this package:
 * libimap: IMAP handling
 * libkcal: C++ api for the iCalendar and vCalendar formats
 * librmm: an Internet mail message parser (RFC 822 -> Class hierarchy)
-* vCard: a vCard 3.0 (virtual business card) parser
 * kgantt: lib to display and manage Gantt diagrams
+* ksync: library for syncing collections of data entries
 
 Mailing List, getting involved
 ------------------------------
