@@ -180,7 +180,7 @@ void KABCore::saveSettings()
   mViewManager->saveSettings();
 }
 
-KABC::AddressBook *KABCore::addressBook()
+KABC::AddressBook *KABCore::addressBook() const
 {
   return mAddressBook;
 }
@@ -193,12 +193,12 @@ KConfig *KABCore::config()
   return mConfig;
 }
 
-KActionCollection *KABCore::actionCollection()
+KActionCollection *KABCore::actionCollection() const
 {
   return mGUIClient->actionCollection();
 }
 
-KABC::Field *KABCore::currentSearchField()
+KABC::Field *KABCore::currentSearchField() const
 {
   return mIncSearchWidget->currentField();
 }

@@ -73,7 +73,7 @@ class KABCore : public QWidget
     /**
       Returns a pointer to the StdAddressBook of the application.
      */
-    KABC::AddressBook *addressBook();
+    KABC::AddressBook *addressBook() const;
 
     /**
       Returns a pointer to the KConfig object of the application.
@@ -84,12 +84,12 @@ class KABCore : public QWidget
       Returns a pointer to the global KActionCollection object. So
       other classes can register their actions easily.
      */
-    KActionCollection *actionCollection();
+    KActionCollection *actionCollection() const;
 
     /**
       Returns the current search field of the Incremental Search Widget.
      */
-    KABC::Field *currentSearchField();
+    KABC::Field *currentSearchField() const;
 
     /**
       Returns the uid list of the currently selected contacts.
