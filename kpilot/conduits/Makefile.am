@@ -11,11 +11,11 @@ MAL_SUBDIR = malconduit
 endif
 
 SUBDIRS = expense \
-	abbrowserconduit \
-	docconduit \
-	knotes \
-	popmail \
-	timeconduit \
-	vcalconduit \
-	$(MAL_SUBDIR)
-
+          abbrowserconduit \
+          docconduit \
+          knotes \
+          popmail \
+          timeconduit \
+          vcalconduit \
+          sysinfoconduit \
+          $(MAL_SUBDIR) 

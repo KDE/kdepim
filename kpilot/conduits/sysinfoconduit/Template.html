@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<head>
+  <title>KPilot System Information Page</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15">
+  <meta name="GENERATOR" content="KPilot SysInfo conduit">
+  <style type="text/css">
+  h1 {
+    font-family: sans-serif;
+    font-size: xx-large;
+    font-style: italic;
+    font-variant: small-caps;
+    font-weight: bolder;
+    color: darkBlue;
+    border-bottom: thick solid darkBlue;
+    margin: 30;
+  }
+  h2 {
+    font-family: sans-serif;
+    font-size: large;
+    color: darkRed;
+    margin-top: 40;
+    border-top: thin solid darkRed;
+    display: list-item;
+    list-style-type: circle;
+    margin: 40;
+  }
+  th {
+    font-style: italic;
+    font-weight: bold;
+    background-color: #DFC370;
+    text-align: center;
+  }
+  </style>
+
+
+</head>
+<body bgcolor="#FFE080">
+  <h1>KPilot System Information</h1>
+  <center>
+<p><!--#ifhardware#<a href="#Hardware">Hardware info</a> - #endifhardware#-->
+<!--#ifuser#<a href="#User">User info</a> - #endifuser#-->
+<!--#ifmemory#<a href="#Memory">Memory info</a> - #endifmemory#-->
+<!--#ifstorage#<a href="#Storage">Storage info</a> - #endifstorage#-->
+<!--#ifdblist#<a href="#DBList">Database list</a> - #endifdblist#-->
+<!--#ifrecords#<a href="#Records">Addresses, todos, events, and memos</a> - #endifrecords#-->
+<!--#ifsync#<a href="#Sync">Sync info</a> - #endifsync#-->
+<!--#ifpcversion#<a href="#Version">PC Version info</a> - #endifpcversion#-->
+<!--#ifpalmversion#<a href="#PalmVersion">Palm Version info</a> - #endifpalmversion#-->
+<!--#ifdebug#<a href="#Debug">Debug info</a>#endifdebug#--></p>
+  </center>
+
+
+<!--#ifhardware#<h2><a name="Hardware">Hardware Information</a></h2>
+  <center>
+  <table border=1>
+    <tbody>
+      <tr><td><b>DeviceID:</b></td><td>#deviceid#</td></tr>
+      <tr><td><b>Device name:</b></td><td>#devicename#</td></tr>
+      <tr><td><b>Device model:</b></td><td>#devicemodel#</td></tr>
+      <tr><td><b>Manufacturer:</b></td><td>#manufacturer#</td></tr>
+      <tr><td><b>Connected via:</b></td><td>#devicetype#</td></tr>
+    </tbody>
+  </table>
+  </center>#endifhardware#-->
+
+
+<!--#ifuser#<h2><a name="User">User Information</a></h2>
+  <center>
+  <table border=1>
+    <tbody>
+      <tr><td><b>Handheld User Name:</b></td><td>#username#</td></tr>
+      <tr><td><b>Handheld Password:</b></td><td>#pw#</td></tr>
+      <tr><td><b>Handheld User ID:</b></td><td>#uid#</td></tr>
+      <tr><td><b>Viewer ID:</b></td><td>#viewerid#</td></tr>
+    </tbody>
+  </table>
+  </center>#endifuser#-->
+
+
+<!--#ifmemory#<h2><a name="Memory">Memory Information</a></h2>
+  <center>
+  <table border=1>
+    <tbody>
+      <tr><td><b>ROM:</b></td><td>#rom# kB total</td></tr>
+      <tr><td><b>Total RAM:</b></td><td>#totalmem# kB total</td></tr>
+      <tr><td><b>Free RAM:</b></td><td>#freemem# kB free</td></tr>
+    </tbody>
+  </table>
+  </center>#endifmemory#-->
+
+
+<!--#ifstorage#<h2><a name="Storage">Storage Information</a></h2>
+  <center>
+  <table border=1>
+    <tbody>
+      <tr><td><b>Cards:</b></td><td>#cards#</td></tr>
+    </tbody>
+  </table>
+  </center>#endifstorage#-->
+
+
+<!--#ifdblist#<h2><a name="DBList">List of Databases on Handheld</a></h2>
+  <center>
+  <table border=1>
+    <tr><th>DB name</th><th>type, creator</th><th>index</th><th>flags</th>
+      <th>created</th><th>modified</th><th>version</th></tr>
+    #dblist[<tr><td>%0</td><td>%1,%2</td><td>%3</td><td>%4/%5</td>
+      <td>%7</td><td>%8</td><td>%6</td></tr>
+    ]#
+  </table>
+  </center>#endifdblist#-->
+
+
+
+<!--#ifrecords#<h2><a name="Records">Number of addresses, todos, events, and memos</a></h2>
+  <center>
+  <table border=1>
+    <thead>
+      <tr><th scope=col>Record type</th><th scope=col># of recs</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>Addresses:</b></td><td>#addresses# entries in Addressbook</td></tr>
+      <tr><td><b>Events:</b></td><td>#events# entries in Calendar</td></tr>
+      <tr><td><b>Todos:</b></td><td>#todos# entries in ToDo list</td></tr>
+      <tr><td><b>Memos:</b></td><td>#memos# memos</td></tr>
+    </tbody>
+  </table>
+  </center>#endifrecords#-->
+
+
+<!--#ifsync#<h2><a name="Sync">Synchronization Information</a></h2>
+  <center>
+  <table border=1>
+    <tbody>
+      <tr><td><b>Last sync attempt:</b></td><td>#lastsync#</td></tr>
+      <tr><td><b>Last successfull sync:</b></td><td>#lastsuccsync#</td></tr>
+      <tr><td><b>Last sync with PC (ID):</b></td><td>#lastsyncpc#</td></tr>
+    </tbody>
+  </table>
+  </center>#endifsync#-->
+
+
+<!--#ifpcversion#<h2><a name="Version">Version Information (Desktop)</a></h2>
+  <center>
+  <table border=1>
+    <thead>
+      <tr><th scope=col>Application</th><th scope=col>Version</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>Operating System:</b></td><td>#os#</td></tr>
+      <tr><td><b>Hostname:</b></td><td>#hostname#</td></tr>
+      <tr><td><b>Qt Version:</b></td><td>#qt#</td></tr>
+      <tr><td><b>KDE Libraries Version:</b></td><td>#kde#</td></tr>
+      <tr><td><b>KPilot Version:</b></td><td>#kpilot#</td></tr>
+      <tr><td><b>Pilot-Link Version:</b></td><td>#pilotlink#</td></tr>
+    </tbody>
+  </table>
+  </center>#endifpcversion#-->
+
+
+<!--#ifpalmversion#<h2><a name="PalmVersion">Version Information (Handheld)</a></h2>
+  <center>
+  <table border=1>
+    <thead>
+      <tr><th scope=col>Application</th><th scope=col>Version</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>PalmOS:</b></td><td>#palmos#</td></tr>
+    </tbody>
+  </table>
+  </center>#endifpalmversion#-->
+
+
+<!--#ifdebug#<h2><a name="Debug">Debug Information</a></h2>
+  <center>
+  <table border=1>
+    <tr><td><pre>#debug#</pre></td></tr>
+  </table>
+  </center>#endifdebug#-->
+
+
+    <p>&nbsp;</p>
+  <hr>
+  <font size="-1">Page created <!--#date#--> by the SysInfo conduit of <a href="http://www.slac.com/pilone/kpilot_home/">KPilot</a>.<br>
+  Authors: Reinhold Kainhofer, Adriaan de Groot</font>
+</body>
+</html>
