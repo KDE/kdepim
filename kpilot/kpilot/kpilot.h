@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -85,7 +85,7 @@ public:
 protected:
 	void closeEvent(QCloseEvent *e);
 	KJanusWidget *getManagingWidget() { return fManagingWidget; }
-      
+
 	/**
 	* Provide access to the daemon's DCOP interface
 	* through an object of the stub class.
@@ -119,12 +119,12 @@ public slots:
 
 	/**
 	* These are slots for the standard Configure ...
-	* actions and not interesting. 
+	* actions and not interesting.
 	*/
 	void optionsShowToolbar();
 	void optionsConfigureKeys();
 	void optionsConfigureToolbars();
-	
+
 
 public:
 	/**
@@ -149,7 +149,7 @@ protected:
 	void initComponents();
 
 	/**
-	* This is the private-d-pointer, KPilot style. Not everything 
+	* This is the private-d-pointer, KPilot style. Not everything
 	* has moved there yet.
 	*/
 	class KPilotPrivate;
@@ -174,12 +174,13 @@ private:
 	KToggleAction  *m_toolbarAction;
 	KToggleAction  *m_statusbarAction;
 
-	
+
 protected slots:
 	void quit();
 	void slotConfigureKPilot();
 	void slotConfigureConduits();
 	void fileInstalled(int which);
+	void slotNewToolbarConfig();
 
 	/**
 	 * Indicate that a particular component has been selected (through
@@ -187,7 +188,7 @@ protected slots:
 	 * adjust any other user-visible state to indicate that that component
 	 * is now active.
 	 *
-	 * This should be called (possibly by the component itself!) 
+	 * This should be called (possibly by the component itself!)
 	 * or activated through the signal mechanism.
 	 * */
 	void slotSelectComponent(PilotComponent *);
@@ -198,9 +199,12 @@ signals:
 
 
 
- 
+
 
 // $Log$
+// Revision 1.36  2002/11/27 21:29:06  adridg
+// See larger ChangeLog entry
+//
 // Revision 1.35  2001/11/18 16:59:55  adridg
 // New icons, DCOP changes
 //
@@ -214,8 +218,8 @@ signals:
 // New config architecture
 //
 // Revision 1.27  2001/08/19 19:25:57  adridg
-// Removed kpilotlink dependency from kpilot; added DCOP interfaces to make 
-// that possible. Also fixed a connect() type mismatch that was harmless 
+// Removed kpilotlink dependency from kpilot; added DCOP interfaces to make
+// that possible. Also fixed a connect() type mismatch that was harmless
 // but annoying.
 //
 //

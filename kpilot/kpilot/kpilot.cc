@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -160,11 +160,11 @@ private:
 public:
 	ComponentList &list() { return fPilotComponentList; } ;
 } ;
-	
+
 KPilotInstaller::KPilotInstaller() :
 	KMainWindow(0),
 	DCOPObject("KPilotIface"),
-	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon", 
+	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon",
 		"KPilotDaemonIface")),
 	fP(new KPilotPrivate),
 	fMenuBar(0L),
@@ -174,7 +174,7 @@ KPilotInstaller::KPilotInstaller() :
 	fKillDaemonOnExit(false),
 	fDaemonWasRunning(true),
 	fStatus(Startup),
-	fFileInstallWidget(0L), 
+	fFileInstallWidget(0L),
 	fLogWidget(0L)
 {
 	FUNCTIONSETUP;
@@ -226,8 +226,8 @@ void KPilotInstaller::startDaemonIfNeeded()
 	if ((s.isNull()) || (!getDaemon().ok()))
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname 
-			<< ": Daemon not responding, trying to start it." 
+		DEBUGKPILOT << fname
+			<< ": Daemon not responding, trying to start it."
 			<< endl;
 #endif
 		fDaemonWasRunning = false;
@@ -294,6 +294,7 @@ void KPilotInstaller::setupWidget()
 		<< ": Got XML from "
 		<< xmlFile() << " and " << localXMLFile() << endl;
 #endif
+	setAutoSaveSettings();
 }
 
 
@@ -321,7 +322,7 @@ void KPilotInstaller::initComponents()
 	addComponentPage(fLogWidget, i18n("HotSync"));
 	fLogWidget->setShowTime(true);
 
-	
+
 	ADDICONPAGE(i18n("Memo Viewer"),"kpilot/kpilot-knotes.png");
 	addComponentPage(new MemoWidget(w, defaultDBPath),
 		i18n("Memo Viewer"));
@@ -428,13 +429,13 @@ void KPilotInstaller::slotListSyncRequested()
 
 	switch(i)
 	{
-	case KPilotDCOP::EndOfHotSync : 
+	case KPilotDCOP::EndOfHotSync :
 		componentPostSync();
 		break;
 	default :
 		kdWarning() << k_funcinfo << ": Unhandled status message " << i << endl;
 		break;
-	}	
+	}
 }
 
 bool KPilotInstaller::componentPreSync()
@@ -469,7 +470,7 @@ bool KPilotInstaller::componentPreSync()
 void KPilotInstaller::componentPostSync()
 {
 	FUNCTIONSETUP;
-	
+
 	for (fP->list().first();
 		fP->list().current(); fP->list().next())
 	{
@@ -481,7 +482,7 @@ void KPilotInstaller::componentPostSync()
 		fP->list().current()->postHotSync();
 	}
 }
-	
+
 void KPilotInstaller::setupSync(int kind, const QString & message)
 {
 	FUNCTIONSETUP;
@@ -571,7 +572,7 @@ void KPilotInstaller::quit()
 		if (!fP->list().current()->preHotSync(reason))
 		{
 			kdWarning() << k_funcinfo
-				<< ": Couldn't save " 
+				<< ": Couldn't save "
 				<< fP->list().current()->name()
 				<< endl;
 		}
@@ -672,15 +673,18 @@ void KPilotInstaller::optionsConfigureToolbars()
 {
 	FUNCTIONSETUP;
 	// use the standard toolbar editor
+	saveMainWindowSettings( KGlobal::config(), autoSaveGroup() );
 	KEditToolbar dlg(actionCollection());
-
-	if (dlg.exec())
-	{
-		// recreate our GUI
-		createGUI();
-	}
+	connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
+	dlg.exec();
 }
 
+void KPilotInstaller::slotNewToolbarConfig()
+{
+	// recreate our GUI
+	createGUI();
+	applyMainWindowSettings( KGlobal::config(), autoSaveGroup() );
+}
 
 void KPilotInstaller::slotConfigureKPilot()
 {
@@ -942,6 +946,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.81  2002/11/27 21:29:06  adridg
+// See larger ChangeLog entry
+//
 // Revision 1.80  2002/08/24 21:27:32  adridg
 // Lots of small stuff to remove warnings
 //
