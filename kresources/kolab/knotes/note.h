@@ -52,7 +52,7 @@ public:
   /// Use this to get an xml string describing this journal entry
   static QString journalToXML( KCal::Journal* );
 
-  Note();
+  explicit Note( KCal::Journal* journal = 0 );
   virtual ~Note();
 
   virtual QString type() const { return "Note"; }
@@ -79,6 +79,9 @@ public:
   virtual QString save() const;
 
 protected:
+  /// Read all known fields from this ical incidence
+  void setFields( KCal::Journal* );
+
   QString mSummary;
   QColor mBackgroundColor;
   QColor mForegroundColor;

@@ -33,6 +33,7 @@
 
 #include "note.h"
 
+#include <libkcal/journal.h>
 using namespace Kolab;
 
 
@@ -44,12 +45,13 @@ KCal::Journal* Note::xmlToJournal( const QString xml )
 
 QString Note::journalToXML( KCal::Journal* journal )
 {
-  // TODO: Well...
-  return QString::null;
+  Note note( journal );
+  return note.save();
 }
 
-Note::Note()
+Note::Note( KCal::Journal* journal )
 {
+  setFields( journal );
 }
 
 Note::~Note()
@@ -155,4 +157,12 @@ QString Note::save() const
   saveAttributes( element );
   document.appendChild( element );
   return document.toString();
+}
+
+void Note::setFields( KCal::Journal* journal )
+{
+  KolabBase::setFields( journal );
+
+  // TODO: background and foreground
+  setSummary( journal->summary() );
 }
