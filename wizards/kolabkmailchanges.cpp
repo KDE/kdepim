@@ -119,6 +119,7 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   account->setRealName( KolabConfig::self()->realName() );
   account->setEmail( email );
   account->enableSieve( true );
+  account->setSieveVacationFileName( "kolab-vacation.siv" );
   account->enableSavePassword( KolabConfig::self()->savePassword() );
   account->setEncryption( CreateDisconnectedImapAccount::SSL );
   account->setAuthenticationSend( CreateDisconnectedImapAccount::PLAIN );

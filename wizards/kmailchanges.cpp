@@ -75,6 +75,11 @@ void CreateDisconnectedImapAccount::enableSieve( bool b )
   mEnableSieve = b;
 }
 
+void CreateDisconnectedImapAccount::setSieveVacationFileName( const QString& f )
+{
+  mSieveVacationFileName = f;
+}
+
 void CreateDisconnectedImapAccount::enableSavePassword( bool b )
 {
   mEnableSavePassword = b;
@@ -154,6 +159,7 @@ void CreateDisconnectedImapAccount::apply()
   c.writeEntry( "login", mUser );
 
   c.writeEntry( "sieve-support", mEnableSieve ? "true" : "false" );
+  c.writeEntry( "sieve-vacation-filename", mSieveVacationFileName );
 
   if ( mEncryption == SSL ) {
     c.writeEntry( "use-ssl", true );

@@ -34,7 +34,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
         virtual void writeFolder( KConfig &, int folderId ) = 0;
         virtual void writeIds( int accountId, int transportId ) = 0;
     };
-  
+
     CreateDisconnectedImapAccount( const QString &accountName );
     ~CreateDisconnectedImapAccount();
 
@@ -50,6 +50,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
     void setEmail( const QString & );
 
     void enableSieve( bool );
+    void setSieveVacationFileName( const QString& );
     void enableSavePassword( bool );
 
     enum Encryption { None, SSL, TLS };
@@ -80,6 +81,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
     QString mRealName;
     QString mEmail;
 
+    QString mSieveVacationFileName;
     bool mEnableSieve;
     bool mEnableSavePassword;
 
