@@ -375,7 +375,7 @@ void TaskView::newTask(QString caption, Task *parent)
     {
       delete task;
       KMessageBox::error(0,i18n(
-            "Error storing new task--your changes were not saved."));
+            "Error storing new task. Your changes were not saved."));
     }
   }
 

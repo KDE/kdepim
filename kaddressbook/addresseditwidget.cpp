@@ -244,7 +244,7 @@ void AddressEditWidget::updateAddressEdit()
 
       text += a.extended();
 
-      mAddressTextEdit->setText( text );      
+      mAddressTextEdit->setText( text );
 #endif
     }
   }
@@ -466,7 +466,7 @@ void AddressEditDialog::saveAddress( KABC::Address &addr )
     KABC::Address::List::Iterator it;
     for ( it = mAddressList.begin(); it != mAddressList.end(); ++it )
       (*it).setType( (*it).type() & ~( KABC::Address::Pref ) );
-  
+
     addr.setType( addr.type() | KABC::Address::Pref );
   } else
     addr.setType( addr.type() & ~( KABC::Address::Pref ) );
@@ -547,7 +547,7 @@ void AddressEditDialog::fillCountryCombo()
     i18n( "Tibet" ), i18n( "Togo" ), i18n( "Tonga" ),
     i18n( "Trinidad and Tobago" ), i18n( "Tunisia" ), i18n( "Turkey" ),
     i18n( "Turkmenistan" ), i18n( "Turks and Caicos Islands" ),
-    i18n( "Tuvalu" ), i18n( "Uganda " ), i18n( "Ukraine" ),
+    i18n( "Tuvalu" ), i18n( "Uganda" ), i18n( "Ukraine" ),
     i18n( "United Arab Emirates" ), i18n( "United Kingdom" ),
     i18n( "United States" ), i18n( "Uruguay" ), i18n( "Uzbekistan" ),
     i18n( "Vanuatu" ), i18n( "Vatican City" ), i18n( "Venezuela" ),

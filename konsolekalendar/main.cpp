@@ -195,7 +195,7 @@ int main(int argc, char *argv[])
   /*
    *  Switch on exporting
    *
-   */                                                                     
+   */
   if ( args->isSet("export-type") ) {
      option = args->getOption("export-type");
 
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
   /*
    *  Switch on export file name
    *
-   */                                                                     
+   */
   if ( args->isSet("export-file") ) {
     option = args->getOption("export-file");
 
@@ -278,7 +278,7 @@ int main(int argc, char *argv[])
     create=true;
 
     kdDebug() << "main | parse options | Calendar File: (Create)" << endl;
-    
+
   }
 
 
@@ -372,7 +372,7 @@ int main(int argc, char *argv[])
 
   if ( args->isSet("end-date") ) {
     QString option = args->getOption("end-date");
-    
+
     kdDebug() << "main | parse options | End date before conversion: (" << option << ")" << endl;
 
     enddate = QDate::fromString( option,  Qt::ISODate );
@@ -442,17 +442,17 @@ int main(int argc, char *argv[])
   }
 
  KonsoleKalendar *konsolekalendar = new KonsoleKalendar( &variables );
-	
+
  if ( args->isSet("file") ) {
     calendarFile = true;
     option = args->getOption("file");
     variables.setCalendarFile( option );
- 
+
   /*
    * All modes need to know if the calendar file exists
    * This must be done before we get to opening biz
    */
-   
+
   QFile fileExists( variables.getCalendarFile() );
   bool exists = fileExists.exists();
   fileExists.close();
@@ -474,29 +474,29 @@ int main(int argc, char *argv[])
     }
    }
 
-   if ( !exists ){	 
+   if ( !exists ){
      cout << i18n("Calendar file not found").local8Bit() << option.local8Bit() << endl;
      cout << i18n("Try --create to create new calendar file").local8Bit() << endl;
      return(1);
    }
  }
 
-  CalendarResources *calendarResource = NULL; 
+  CalendarResources *calendarResource = NULL;
   CalendarLocal *localCalendar = NULL;
- 
+
  /*
-  * Should we use local calendar or resource? 
+  * Should we use local calendar or resource?
   */
-	
+
  if( args->isSet("file") ) {
   localCalendar = new CalendarLocal();
   localCalendar->load( variables.getCalendarFile() );
-  variables.setCalendar( localCalendar  );   
+  variables.setCalendar( localCalendar  );
  } else {
-  calendarResource = new CalendarResources();	 
+  calendarResource = new CalendarResources();
   calendarResource->readConfig();
   calendarResource->load();
-  variables.setCalendarResources( calendarResource );	 
+  variables.setCalendarResources( calendarResource );
  }
 
   /***************************************************************************
@@ -512,7 +512,7 @@ int main(int argc, char *argv[])
     startdate = enddate;
     kdDebug() << "main | datetimestamp | setting startdate to enddate" << endl;
   }
-    
+
   // NOTE: If neither date nor end-date specified, then event will be today.
 
   // Handle case with end time (or epoch) unspecified, and start time (or epoch) IS specified.
@@ -551,7 +551,7 @@ int main(int argc, char *argv[])
     enddatetime = QDateTime::QDateTime(enddate, endtime);
     kdDebug() << "main | datetimestamp | setting enddatetime from default enddate (today) and endtime" << endl;
   }
-    
+
   // Set startdatetime, enddatetime if still necessary
   if( startdatetime.isNull() ) {
     startdatetime = QDateTime::QDateTime(startdate, starttime);
@@ -576,7 +576,7 @@ int main(int argc, char *argv[])
 
   // Cannot combine modes
   if( create + view + add + change + del > 1 ) {
-    kdError() << i18n("Only 1 operation mode (view, add, change, delete,create) permitted at a time").local8Bit() << endl;
+    kdError() << i18n("Only one operation mode (view, add, change, delete,create) permitted at a time").local8Bit() << endl;
     return(1);
   }
 
@@ -607,7 +607,7 @@ int main(int argc, char *argv[])
    * And away we go with the real work...                                    *
    ***************************************************************************/
 
-  
+
 
   /*
    * Set our application name for use in unique IDs and error messages,
@@ -615,7 +615,7 @@ int main(int argc, char *argv[])
    */
   QString prodId = "-//K Desktop Environment//NONSGML %1 %2//EN";
   CalFormat::setApplication( progDisplay, prodId.arg( progDisplay).arg( progVersion ) );
-    
+
   /*
    * Opens calendar file so we can use it;)
    * Because at this point we don't know what we'll
@@ -673,15 +673,15 @@ int main(int argc, char *argv[])
     }
 
   delete konsolekalendar;
-	
+
   if( calendarFile ){
     localCalendar->close();
-    delete localCalendar;   
+    delete localCalendar;
   } else {
     calendarResource->close();
     delete calendarResource;
   }
-	
+
   kdDebug() << "main | exiting" << endl;
 
   return 0;

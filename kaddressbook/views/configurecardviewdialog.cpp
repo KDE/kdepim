@@ -1,25 +1,25 @@
 /*
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
-                                                                        
+    This file is part of KAddressBook.
+    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <qstring.h>
 #include <qlayout.h>
@@ -47,7 +47,7 @@
 /////////////////////////////////
 // ConfigureCardViewDialog
 
-ConfigureCardViewWidget::ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget *parent, 
+ConfigureCardViewWidget::ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget *parent,
                                                   const char *name )
   : ViewConfigureWidget( ab, parent, name )
 {
@@ -55,11 +55,11 @@ ConfigureCardViewWidget::ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget
                            DesktopIcon( "looknfeel" ) );
   mAdvancedPage = new CardViewLookNFeelPage( page );
 }
-                                           
+
 ConfigureCardViewWidget::~ConfigureCardViewWidget()
 {
 }
-    
+
 void ConfigureCardViewWidget::restoreSettings( KConfig *config )
 {
   ViewConfigureWidget::restoreSettings( config );
@@ -73,7 +73,7 @@ void ConfigureCardViewWidget::saveSettings( KConfig *config )
 
   mAdvancedPage->saveSettings( config );
 }
-    
+
 ////////////////////////
 // CardViewLookNFeelPage
 CardViewLookNFeelPage::CardViewLookNFeelPage( QWidget *parent, const char *name )
@@ -108,10 +108,10 @@ void CardViewLookNFeelPage::restoreSettings( KConfig *config )
         config->readColorEntry( "HighlightColor", &c ) ) );
   c = colorGroup().highlightedText();
   lbColors->insertItem( new ColorListItem( i18n("Highlighted Text Color"),
-        config->readColorEntry( "HighlightedTextColor", &c ) ) );  
-  
+        config->readColorEntry( "HighlightedTextColor", &c ) ) );
+
   enableColors();
-  
+
   // fonts
   QFont fnt = font();
   updateFontLabel( config->readFontEntry( "TextFont", &fnt ), (QLabel*)lTextFont );
@@ -119,14 +119,14 @@ void CardViewLookNFeelPage::restoreSettings( KConfig *config )
   updateFontLabel( config->readFontEntry( "HeaderFont",  &fnt ), (QLabel*)lHeaderFont );
   cbEnableCustomFonts->setChecked( config->readBoolEntry( "EnableCustomFonts", false ) );
   enableFonts();
-  
+
   // layout
   sbMargin->setValue( config->readNumEntry( "ItemMargin", 0 ) );
   sbSpacing->setValue( config->readNumEntry( "ItemSpacing", 10 ) );
   sbSepWidth->setValue( config->readNumEntry( "SeparatorWidth", 2 ) );
   cbDrawSeps->setChecked( config->readBoolEntry( "DrawSeparators", true ) );
   cbDrawBorders->setChecked( config->readBoolEntry( "DrawBorder", true ) );
-  
+
   // behaviour
   cbShowFieldLabels->setChecked( config->readBoolEntry( "DrawFieldLabels", false ) );
   cbShowEmptyFields->setChecked( config->readBoolEntry( "ShowEmptyFields", false ) );
@@ -158,7 +158,7 @@ void CardViewLookNFeelPage::saveSettings( KConfig *config )
   config->writeEntry( "SeparatorWidth", sbSepWidth->value() );
   config->writeEntry("DrawBorder", cbDrawBorders->isChecked());
   config->writeEntry("DrawSeparators", cbDrawSeps->isChecked());
-  
+
   // behaviour
   config->writeEntry("DrawFieldLabels", cbShowFieldLabels->isChecked());
   config->writeEntry("ShowEmptyFields", cbShowEmptyFields->isChecked());
@@ -192,17 +192,17 @@ void CardViewLookNFeelPage::initGUI()
 {
   int spacing = KDialog::spacingHint();
   int margin = KDialog::marginHint();
-  
+
   QTabWidget *tabs = new QTabWidget( this );
 
   // Layout
   QVBox *loTab = new QVBox( this, "layouttab" );
-  
+
   loTab->setSpacing( spacing );
   loTab->setMargin( margin );
-  
+
   QGroupBox *gbGeneral = new QGroupBox( 1, Qt::Horizontal, i18n("General"), loTab );
-  
+
   cbDrawSeps = new QCheckBox( i18n("Draw &separators"), gbGeneral );
 
   QHBox *hbSW = new QHBox( gbGeneral );
@@ -225,7 +225,7 @@ void CardViewLookNFeelPage::initGUI()
   cbDrawBorders = new QCheckBox( i18n("Draw &borders"), gbCards );
 
   loTab->setStretchFactor( new QWidget( loTab ), 1 );
-  
+
   QWhatsThis::add( sbMargin, i18n(
         "The item margin is the distance (in pixels) between the item edge and the item data. Most noticeably, "
         "incrementing the item margin will add space between the focus rectangle and the item data."
@@ -238,9 +238,9 @@ void CardViewLookNFeelPage::initGUI()
   QWhatsThis::add( lSpacing, QWhatsThis::textFor( sbSpacing ) );
   QWhatsThis::add( sbSepWidth, i18n("Sets the width of column separators") );
   QWhatsThis::add( lSW, QWhatsThis::textFor( sbSepWidth ) );
-  
+
   tabs->addTab( loTab, i18n("&Layout") );
-    
+
   // Colors
   QVBox *colorTab = new QVBox( this, "colortab" );
   colorTab->setSpacing( spacing );
@@ -249,43 +249,43 @@ void CardViewLookNFeelPage::initGUI()
   connect( cbEnableCustomColors, SIGNAL(clicked()), this, SLOT(enableColors()) );
   lbColors = new ColorListBox( colorTab );
   tabs->addTab( colorTab, i18n("&Colors") );
-  
+
   QWhatsThis::add( cbEnableCustomColors, i18n(
-        "If custom colors are enabled, you may choose the colors for the view below. "
+        "If custom colors is enabled, you may choose the colors for the view below. "
         "Otherwise colors from your current KDE color scheme are used."
         ) );
   QWhatsThis::add( lbColors, i18n(
         "Double click or press RETURN on a item to select a color for the related strings in the view."
         ) );
-  
+
   // Fonts
   QVBox *fntTab = new QVBox( this, "fonttab" );
-  
+
   fntTab->setSpacing( spacing );
   fntTab->setMargin( spacing );
-  
+
   cbEnableCustomFonts = new QCheckBox( i18n("&Enable custom fonts"), fntTab );
   connect( cbEnableCustomFonts, SIGNAL(clicked()), this, SLOT(enableFonts()) );
-  
+
   vbFonts = new QWidget( fntTab );
   QGridLayout *gFnts = new QGridLayout( vbFonts, 2, 3 );
   gFnts->setSpacing( spacing );
   gFnts->setAutoAdd( true );
-  gFnts->setColStretch( 1, 1 );  
+  gFnts->setColStretch( 1, 1 );
   QLabel *lTFnt = new QLabel( i18n("&Text font:"), vbFonts );
   lTextFont = new QLabel( vbFonts );
   lTextFont->setFrameStyle( QFrame::Panel|QFrame::Sunken );
   btnFont = new KPushButton( i18n("Choose..."), vbFonts );
   lTFnt->setBuddy( btnFont );
   connect( btnFont, SIGNAL(clicked()), this, SLOT(setTextFont()) );
-  
+
   QLabel *lHFnt = new QLabel( i18n("&Header font:"), vbFonts );
   lHeaderFont = new QLabel( vbFonts );
   lHeaderFont->setFrameStyle( QFrame::Panel|QFrame::Sunken );
   btnHeaderFont = new KPushButton( i18n("Choose..."), vbFonts );
   lHFnt->setBuddy( btnHeaderFont );
   connect( btnHeaderFont, SIGNAL(clicked()), this, SLOT(setHeaderFont()) );
-  
+
   fntTab->setStretchFactor( new QWidget( fntTab ), 1 );
 
   QWhatsThis::add( cbEnableCustomFonts, i18n(
@@ -293,21 +293,21 @@ void CardViewLookNFeelPage::initGUI()
         "Otherwise the default KDE font will be used, in bold style for the header and "
         "normal style for the data."
         ) );
-          
+
   tabs->addTab( fntTab, i18n("&Fonts") );
-  
+
   // Behaviour
   QVBox *behaviourTab = new QVBox( this );
   behaviourTab->setMargin( margin );
   behaviourTab->setSpacing( spacing );
-  
+
   cbShowEmptyFields = new QCheckBox( i18n("Show &empty fields"), behaviourTab );
   cbShowFieldLabels = new QCheckBox( i18n("Show field &labels"), behaviourTab );
 
   behaviourTab->setStretchFactor( new QWidget( behaviourTab ), 1 );
 
   tabs->addTab( behaviourTab, i18n("Be&havior") );
-    
+
 }
 
 void CardViewLookNFeelPage::updateFontLabel( QFont fnt, QLabel *l )

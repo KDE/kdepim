@@ -77,7 +77,7 @@
                                     <string>&amp;Standard addressbook</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Syncronize with KDE's standard addressbook (i.e. the addressbook that you edit in kaddressbook, and which you use in kmail)&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Synchronize with KDE's standard addressbook (i.e. the addressbook that you edit in kaddressbook, and which you use in kmail)&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="1" column="0">

@@ -492,7 +492,7 @@ void KABCore::incrementalSearch( const QString& text, bool search )
   mViewManager->setSelected( QString::null, false );
 
   if ( !text.isEmpty() ) {
-    KABC::Field *field = ( search ? mIncSearchWidget->currentField() : 
+    KABC::Field *field = ( search ? mIncSearchWidget->currentField() :
                                     mViewManager->currentSortField() );
 
 #if KDE_VERSION >= 319
@@ -952,7 +952,7 @@ void KABCore::initActions()
 
   action = new KAction( i18n( "&New Contact..." ), "filenew", CTRL+Key_N, this,
                SLOT( newContact() ), actionCollection(), "file_new_contact" );
-  action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data of a person, including addresses and phonenumbers." ) );
+  action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data of a person, including addresses and phone numbers." ) );
 
   mActionMailVCard = new KAction( i18n("Send &Contact..."), "mail_post_to", 0,
                                   this, SLOT( mailVCard() ),
@@ -962,7 +962,7 @@ void KABCore::initActions()
   mActionEditAddressee = new KAction( i18n( "&Edit Contact..." ), "edit", 0,
                                       this, SLOT( editContact() ),
                                       actionCollection(), "file_properties" );
-  mActionEditAddressee->setWhatsThis( i18n( "Edit a contact<p>You will be presented with a dialog where you can change all data of a person, including addresses and phonenumbers." ) );
+  mActionEditAddressee->setWhatsThis( i18n( "Edit a contact<p>You will be presented with a dialog where you can change all data of a person, including addresses and phone numbers." ) );
 
   // edit menu
   mActionCopy = KStdAction::copy( this, SLOT( copyContacts() ), actionCollection() );

@@ -515,7 +515,7 @@ void ViewManager::initActions()
   action = new KAction( i18n( "Add View..." ), "window_new", 0, this,
                         SLOT( addView() ), mCore->actionCollection(),
                         "view_add" );
-  action->setWhatsThis( i18n( "You can add a new view by choosing one of the dialog that appears after pressing the button. You have to give the view a name, so that you can distinguish between the different views." ) );
+  action->setWhatsThis( i18n( "You can add a new view by choosing one from the dialog that appears after pressing the button. You have to give the view a name, so that you can distinguish between the different views." ) );
 
   mActionDeleteView = new KAction( i18n( "Delete View" ), "view_remove", 0,
                                    this, SLOT( deleteView() ),
