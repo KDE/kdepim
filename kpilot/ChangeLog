@@ -1,6 +1,3 @@
-(The TODO list was moved again to the file TODO)
-
-
 ** KPILOT CHANGELOG **
 ======================
 
@@ -36,7 +33,11 @@
 
 
 KPilot Developer's notes for July 9th
-============================================
+=====================================
+
+2003-7-9  Adriaan de Groot
+* Ditched spurious code in KNotes conduit config. Updated copyrights,
+  still assigned to Dan. Updated the notes interface stubs.
 
 2003-7-7  Adriaan de Groot
 * Added a conduit description to PalmDOC. Well, fixed the "Conduit"
