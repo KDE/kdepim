@@ -289,6 +289,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
                                         QWidget *parent, const char *name,
                                         bool modal )
   : KDialogBase( parent, name, modal, title, Default|Ok|Cancel, Ok ),
+    mRememberCB( 0 ),
     mAllowedKeys( allowedKeys ),
     mCurrentContextMenuItem( 0 )
 {
