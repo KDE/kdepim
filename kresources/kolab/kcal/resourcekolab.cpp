@@ -38,6 +38,7 @@
 #include <qobject.h>
 
 #include <kabc/locknull.h>
+#include <klocale.h>
 #include <libkdepim/kincidencechooser.h>
 
 using namespace KCal;
@@ -286,27 +287,34 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
           addedIncidence = inc;
       } else if ( result == 0 ) { // take both
           localIncidence = local->clone();
+          localIncidence->recreate();
+          localIncidence->setSummary( i18n("Copy of: ") +localIncidence->summary());
           addedIncidence = inc;
       }
-      if ( localIncidence )
-          localIncidence->recreate();
-      if ( addedIncidence )
-          addedIncidence->recreate();
       bool silent = mSilent;
       mSilent = false;
       if ( local->type() == "Event" ) {
-          deleteEvent( (Event*)local );
-          kmailDeleteIncidence( subresource,sernum);
+          deleteEvent( (Event*)local ); // remove local from kmail
+          kmailDeleteIncidence( subresource,sernum);// remove new from kmail
+          mSilent = true;
+          deleteEvent( (Event*)local ); // remove local from calendar and from the uid map
+          mSilent = false; // now we can add the new ones
           if ( localIncidence ) addEvent( (Event*)localIncidence, subresource, 0  );
           if ( addedIncidence  ) addEvent( (Event*)addedIncidence, subresource, 0  );
       } else if (local->type() == "Todo" ) {
           deleteTodo((Todo*)local);
           kmailDeleteIncidence( subresource,sernum);
+          mSilent = true;
+          deleteTodo((Todo*)local);
+          mSilent = false; // now we can add the new ones
           if ( localIncidence ) addTodo( (Todo*)localIncidence, subresource, 0  );
           if ( addedIncidence  ) addTodo( (Todo*)addedIncidence, subresource, 0  );
       } else if ( local->type() == "Journal" ) {
           deleteJournal((Journal*)local );
           kmailDeleteIncidence( subresource,sernum);
+          mSilent = true;
+          deleteJournal((Journal*)local );
+          mSilent = false; // now we can add the new ones
           if ( localIncidence ) addJournal( (Journal*)localIncidence, subresource, 0  );
           if ( addedIncidence  ) addJournal( (Journal*)addedIncidence, subresource, 0  );
       }
