@@ -66,9 +66,12 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
 			adr.setAdditionalName(el.attribute("MiddleName" )  );
 			adr.setSuffix(el.attribute("Suffix") );
 			adr.setNickName(el.attribute("Nickname" ) );
-			adr.setBirthday( QDate::fromString(el.attribute("Birthday")  ) );
+
+                        QDate date = QDate::fromString(el.attribute("Birthday") );
+                        if (date.isValid() )
+                            adr.setBirthday( date );
+
 			adr.setRole(el.attribute("JobTitle" ) );
-			// inside into custom
                         if ( !el.attribute("FileAs").isEmpty() )
                             adr.setFormattedName( el.attribute("FileAs" ) );
 
@@ -233,7 +236,10 @@ KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
             *stream << "HomeWebPage=\"" << escape( ab.custom( "opie", "HomeWebPage" ) ) << "\" ";
             *stream << "Spouse=\"" << escape( ab.custom( "KADDRESSBOOK",  "X-SpousesName") ) << "\" ";
             *stream << "Gender=\"" << escape( ab.custom( "opie",  "Gender") ) << "\" ";
-            *stream << "Birthday=\"" << escape( ab.birthday().date().toString("dd.MM.yyyy") ) << "\" ";
+
+            if ( ab.birthday().date().isValid() )
+                *stream << "Birthday=\"" << escape( ab.birthday().date().toString("dd.MM.yyyy") ) << "\" ";
+
             *stream << "Anniversary=\"" << escape( ab.custom( "KADDRESSBOOK",  "X-Anniversary" ) ) << "\" ";
             *stream << "Nickname=\"" << escape( ab.nickName() ) << "\" ";
             *stream << "Children=\"" << escape( ab.custom("opie", "Children" ) ) << "\" ";
