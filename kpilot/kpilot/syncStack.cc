@@ -38,6 +38,7 @@ static const char *syncStack_id = "$Id$";
 #include <kuserprofile.h>
 #include <klibloader.h>
 
+#include "pilotUser.h"
 #include "hotSync.h"
 #include "interactiveSync.h"
 #include "fileInstaller.h"
@@ -143,7 +144,9 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		l.append(CSL1("--test"));
 	if (fMode & ActionQueue::FlagLocal)
 		l.append(CSL1("--local"));
-	if (fMode & ActionQueue::FlagFull)
+	// do a full sync also when changing PCs
+	if ( (fMode & ActionQueue::FlagFull) || 
+	     (fHandle->getPilotUser()->getLastSyncPC()!=(unsigned long)gethostid() ) )
 		l.append(CSL1("--full"));
 	if (fMode & ActionQueue::FlagHHToPC)
 		l.append(CSL1("--copyHHToPC"));
