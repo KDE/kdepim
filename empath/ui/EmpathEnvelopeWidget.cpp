@@ -54,9 +54,9 @@ EmpathEnvelopeWidget::EmpathEnvelopeWidget(
     RMM::RHeaderList headerList = envelope.headerList();
 
     empathDebug("Adding " + QString().setNum(headerList.count()) + " headers");
-    RMM::RHeaderListIterator it(headerList.begin());
-    for (; it != headerList.end(); ++it) 
-        _addHeader(*it);
+
+    for (RMM::RHeaderListIterator it(headerList); it.current(); ++it) 
+        _addHeader(*it.current());
 
     _lineUpHeaders();
 

@@ -9,19 +9,20 @@ using namespace RMM;
 REnvelope::REnvelope()
     :   RMessageComponent()
 {
-    // Empty.
+    _init();
 }
 
 REnvelope::REnvelope(const REnvelope & e)
     :    RMessageComponent(e)
 {
-    headerList_  = e.headerList_;
+    _init();
+    _replaceHeaderList(e.headerList_);
 }
 
 REnvelope::REnvelope(const QCString & s)
     :    RMessageComponent(s)
 {
-    // Empty.
+    _init();
 }
 
     REnvelope &
@@ -29,7 +30,7 @@ REnvelope::operator = (const REnvelope & e)
 {
     if (this == &e) return *this; // Don't do a = a.
 
-    headerList_ = e.headerList_;
+    _replaceHeaderList(e.headerList_);
 
     RMessageComponent::operator = (e);
     return *this;
@@ -38,7 +39,6 @@ REnvelope::operator = (const REnvelope & e)
     REnvelope &
 REnvelope::operator = (const QCString & s)
 {
-    headerList_.clear();
     RMessageComponent::operator = (s);
     return *this;
 }
@@ -55,6 +55,21 @@ REnvelope::operator == (REnvelope & e)
 REnvelope::~REnvelope()
 {
     // Empty.
+}
+
+    void
+REnvelope::_init()
+{
+    headerList_.setAutoDelete(true);
+}
+
+    void
+REnvelope::_replaceHeaderList(const RHeaderList & l)
+{
+    headerList_.clear();
+
+    for (RHeaderListIterator it(headerList_); it.current(); ++it)
+        headerList_.append(new RHeader(*it.current()));
 }
 
     void
@@ -91,7 +106,7 @@ REnvelope::_parse()
             *r = '\0'; // NUL-terminate buffer.
 
             if (r != rstart) // Only use buffer if it's not empty.
-                headerList_.append(RHeader(QCString(rstart)));
+                headerList_.append(new RHeader(QCString(rstart)));
 
             r = rstart;
             ++c;
@@ -109,17 +124,15 @@ REnvelope::_assemble()
 {
     strRep_ = "";
 
-    RHeaderListIterator it(headerList_.begin());
-
-    for (; it != headerList_.end(); ++it)
-        strRep_ += (*it).asString() + '\n';
+    for (RHeaderListIterator it(headerList_); it.current(); ++it)
+        strRep_ += it.current()->asString() + '\n';
 }
 
     void
 REnvelope::_createDefault(HeaderType t)
 {
     if (t <= HeaderUnknown)
-        headerList_.append(RHeader(QCString(headerNames[t]) + ":"));
+        headerList_.append(new RHeader(QCString(headerNames[t]) + ":"));
 }
 
     void
@@ -133,14 +146,9 @@ REnvelope::has(HeaderType t)
 {
     parse();
 
-    RHeaderListIterator it(headerList_.begin());
-
-    for (; it != headerList_.end(); ++it) {
-
-        if ((*it).headerType() == t) {
+    for (RHeaderListIterator it(headerList_); it.current(); ++it)
+        if (it.current()->headerType() == t)
             return true;
-        }
-    }
 
     return false;
 }
@@ -150,14 +158,9 @@ REnvelope::has(const QCString & headerName)
 {
     parse();
 
-    RHeaderListIterator it(headerList_.begin());
-
-    for (; it != headerList_.end(); ++it) {
-
-        if (0 == stricmp((*it).headerName(), headerName)) {
+    for (RHeaderListIterator it(headerList_); it.current(); ++it)
+        if (0 == stricmp(it.current()->headerName(), headerName))
             return true;
-        }
-    }
 
     return false;
 }
@@ -167,17 +170,15 @@ REnvelope::get(const QCString & s)
 {
     parse();
 
-    RHeaderListIterator it(headerList_.begin());
+    for (RHeaderListIterator it(headerList_); it.current(); ++it)
+        if (0 == stricmp(it.current()->headerName(), s))
+            return *it.current();
 
-    for (; it != headerList_.end(); ++it)
-        if (0 == stricmp((*it).headerName(), s))
-            return (*it);
-
-    RHeader h(s + ":");
+    RHeader * h = new RHeader(s + ":");
 
     headerList_.append(h);
 
-    return h;
+    return *h;
 }
 
     RHeaderBody *
@@ -185,17 +186,15 @@ REnvelope::get(HeaderType t)
 {
     parse();
 
-    RHeaderListIterator it(headerList_.begin());
+    for (RHeaderListIterator it(headerList_); it.current(); ++it)
+        if (it.current()->headerType() == t)
+            return it.current()->headerBody();
 
-    for (; it != headerList_.end(); ++it)
-        if ((*it).headerType() == t)
-            return (*it).headerBody();
-
-    RHeader h(headerNames[t] + ":");
+    RHeader * h = new RHeader(headerNames[t] + ":");
 
     headerList_.append(h);
 
-    return h.headerBody();
+    return h->headerBody();
 }
 
     RMessageID
@@ -232,13 +231,9 @@ REnvelope::set(HeaderType t, const QCString & s)
 {
     parse();
 
-    RHeader h(s);
-
-    RHeaderListIterator it(headerList_.begin());
-
-    for (; it != headerList_.end(); ++it)
-        if (0 == stricmp((*it).headerName(), h.headerName())) {
-            (*it) = s;
+    for (RHeaderListIterator it(headerList_); it.current(); ++it)
+        if (it.current()->headerType() == t) {
+            *it.current() = s;
             break;
         }
 }
@@ -248,11 +243,9 @@ REnvelope::set(const QCString & headerName, const QCString & s)
 {
     parse();
 
-    RHeaderListIterator it(headerList_.begin());
-
-    for (; it != headerList_.end(); ++it)
-        if (0 == stricmp((*it).headerName(), headerName)) {
-            (*it) = headerName + ": " + s;
+    for (RHeaderListIterator it(headerList_); it.current(); ++it)
+        if (0 == stricmp(it.current()->headerName(), headerName)) {
+            *it.current() = headerName + ": " + s;
             break;
         }
 }
@@ -261,14 +254,14 @@ REnvelope::set(const QCString & headerName, const QCString & s)
 REnvelope::addHeader(RHeader h)
 {
     parse();
-    headerList_.append(h);
+    headerList_.append(new RHeader(h));
 }
 
     void
 REnvelope::addHeader(const QCString & s)
 {
     parse();
-    headerList_.append(RHeader(s));
+    headerList_.append(new RHeader(s));
 }
 
      RAddress

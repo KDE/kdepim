@@ -155,6 +155,8 @@ class REnvelope : public RMessageComponent
         
     private:
 
+        void _init();
+        void _replaceHeaderList(const RHeaderList &);
         RHeaderList headerList_;
 };
 

@@ -101,8 +101,6 @@ RContentType::_assemble()
 {
     strRep_ = type_ + "/" + subType_;
     
-    parameterList_.assemble();
-    
     if (parameterList_.list().count() == 0) return;
     
     strRep_ += QCString(";\n    ");

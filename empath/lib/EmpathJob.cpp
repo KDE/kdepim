@@ -298,7 +298,6 @@ void EmpathWriteJob::run()
     EmpathFolder * f = empath->folder(folder_);
 
     if (!f) {
-        empathDebug("Couldn't find folder to save write message to");
         setSuccess(false);
         _done();
         return;
@@ -362,11 +361,27 @@ void EmpathRemoveJob::run()
     if (IDList_.isEmpty()) {
 
         EmpathFolder * f = empath->folder(url_);
+
+        if (0 == f) {
+            empathDebug("Folder `" + url_.asString() + "' does not exist ?");
+            setSuccess(false);
+            _done();
+            return;
+        }
+
         setSuccess(f->removeMessage(url_.messageID()));
 
     } else {
 
         EmpathFolder * f = empath->folder(folder_);
+
+        if (0 == f) {
+            empathDebug("Folder `" + url_.asString() + "' does not exist ?");
+            setSuccess(false);
+            _done();
+            return;
+        }
+
         setSuccessMap(f->removeMessage(IDList_));
     }
 
@@ -388,6 +403,13 @@ void EmpathRetrieveJob::run()
 
     EmpathFolder * f = empath->folder(url_);
 
+    if (0 == f) {
+        empathDebug("Folder `" + url_.asString() + "' does not exist ?");
+        setSuccess(false);
+        _done();
+        return;
+    }
+
     message_ = f->retrieveMessage(url_.messageID());
 
     if (!message_.isNull())
@@ -403,12 +425,28 @@ void EmpathMarkJob::run()
     if (IDList_.isEmpty()) {
 
         EmpathFolder * f = empath->folder(url_);
-        setSuccess(f->markMessage(url_.messageID(), flags_));
+    
+        if (0 == f) {
+            empathDebug("Folder `" + url_.asString() + "' does not exist ?");
+            setSuccess(false);
+            _done();
+            return;
+        }
+
+       setSuccess(f->markMessage(url_.messageID(), flags_));
 
     } else {
 
         EmpathFolder * f = empath->folder(folder_);
-        setSuccessMap(f->markMessage(IDList_, flags_));
+     
+        if (0 == f) {
+            empathDebug("Folder `" + url_.asString() + "' does not exist ?");
+            setSuccess(false);
+            _done();
+            return;
+        }
+
+       setSuccessMap(f->markMessage(IDList_, flags_));
     }
     
     _done();
@@ -419,6 +457,8 @@ void EmpathCreateFolderJob::run()
     EmpathMailbox * m = empath->mailbox(folder_);
 
     if (!m) {
+      
+        empathDebug("Mailbox `" + folder_.asString() + "' does not exist ?");
         setSuccess(false);
         _done();
         return;
@@ -433,6 +473,7 @@ void EmpathRemoveFolderJob::run()
     EmpathMailbox * m = empath->mailbox(folder_);
 
     if (!m) {
+        empathDebug("Mailbox `" + folder_.asString() + "' does not exist ?");
         setSuccess(false);
         _done();
         return;

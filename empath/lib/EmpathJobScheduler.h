@@ -32,8 +32,10 @@
 #include "EmpathDefines.h"
 #include "EmpathJob.h"
 
-class EmpathJobScheduler
+class EmpathJobScheduler : public QObject
 {
+    Q_OBJECT
+
     public:
 
         EmpathJobScheduler();
@@ -106,6 +108,10 @@ class EmpathJobScheduler
             QObject *,
             const char *
         );
+
+    protected:
+
+        void timerEvent(QTimerEvent *);
 
     private:
 

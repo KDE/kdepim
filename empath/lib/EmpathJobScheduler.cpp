@@ -56,6 +56,8 @@ EmpathJobScheduler::newWriteJob(
                 o,  SLOT(s_writeJobFinished(EmpathWriteJob)));
 
     _enqueue(j);
+
+    return j->id();
 }
 
     EmpathJobID
@@ -79,6 +81,8 @@ EmpathJobScheduler::newRetrieveJob(
                 o,  SLOT(s_retrieveJobFinished(EmpathRetrieveJob)));
 
     _enqueue(j);
+
+    return j->id();
 }
 
     EmpathJobID
@@ -102,6 +106,8 @@ EmpathJobScheduler::newCopyJob(
                 o,  SLOT(s_copyJobFinished(EmpathCopyJob)));
 
     _enqueue(j);
+
+    return j->id();
 }
 
     EmpathJobID
@@ -125,6 +131,8 @@ EmpathJobScheduler::newMoveJob(
                 o,  SLOT(s_moveJobFinished(EmpathMoveJob)));
 
     _enqueue(j);
+
+    return j->id();
 }
 
     EmpathJobID
@@ -147,6 +155,8 @@ EmpathJobScheduler::newRemoveJob(
                 o,  SLOT(s_removeJobFinished(EmpathRemoveJob)));
 
     _enqueue(j);
+
+    return j->id();
 }
 
     EmpathJobID
@@ -170,6 +180,8 @@ EmpathJobScheduler::newRemoveJob(
                 o,  SLOT(s_removeJobFinished(EmpathRemoveJob)));
 
     _enqueue(j);
+
+    return j->id();
 }
 
     EmpathJobID
@@ -193,6 +205,8 @@ EmpathJobScheduler::newMarkJob(
                 o,  SLOT(s_markJobFinished(EmpathMarkJob)));
 
     _enqueue(j);
+
+    return j->id();
 }
 
     EmpathJobID
@@ -217,6 +231,8 @@ EmpathJobScheduler::newMarkJob(
                 o,  SLOT(s_markJobFinished(EmpathMarkJob)));
 
     _enqueue(j);
+
+    return j->id();
 }
 
     EmpathJobID
@@ -239,6 +255,8 @@ EmpathJobScheduler::newCreateFolderJob(
                 o,  SLOT(s_createFolderJobFinished(EmpathCreateFolderJob)));
 
     _enqueue(j);
+
+    return j->id();
 }
 
     EmpathJobID
@@ -261,12 +279,21 @@ EmpathJobScheduler::newRemoveFolderJob(
                 o,  SLOT(s_removeFolderJobFinished(EmpathRemoveFolderJob)));
 
     _enqueue(j);
+
+    return j->id();
 }
 
     EmpathJobID
 EmpathJobScheduler::_enqueue(EmpathJob * j)
 {
     queue_.enqueue(j);
+    startTimer(0);
+}
+
+    void
+EmpathJobScheduler::timerEvent(QTimerEvent *)
+{
+    killTimers();
     _runQueue();
 }
 

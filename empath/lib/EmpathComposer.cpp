@@ -72,9 +72,8 @@ EmpathComposer::message(EmpathComposeForm composeForm)
     RMM::RHeaderList invisibleHeaders =
         composeForm.invisibleHeaders().headerList();
 
-    RMM::RHeaderListIterator it(invisibleHeaders.begin());
-    for (; it != invisibleHeaders.end(); ++it)
-        envelope.addHeader(*it);
+    for (RMM::RHeaderListIterator it(invisibleHeaders); it.current(); ++it)
+        envelope.addHeader(*it.current());
 
     message.setEnvelope(envelope);
 
@@ -139,7 +138,11 @@ EmpathComposer::newComposeForm(ComposeType t, const EmpathURL & url)
 
     composeForm.setComposeType(t);
     
-    jobList_.insert(empath->retrieve(url, this), composeForm); 
+    EmpathJobID id = empath->retrieve(url, this);
+
+    empathDebug("Created a job with id " + QString::number(id));
+
+    jobList_.insert(id, composeForm); 
 }
 
     void
