@@ -162,6 +162,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   a_ctSetCharset = new KSelectAction(i18n("Set &Charset"), 0, actionCollection(), "set_charset");
   a_ctSetCharset->setItems(knGlobals.cfgManager->postNewsTechnical()->composerCharsets());
+  a_ctSetCharset->setConfigurable(false);
   connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
   this, SLOT(slotSetCharset(const QString&)));
 
@@ -1147,12 +1148,7 @@ void KNComposer::slotUpdateCursorPos()
 
 void KNComposer::slotConfKeys()
 {
-  KActionCollection coll(*actionCollection());
-
-  // hack, remove actions which cant have a shortcut
-  coll.take(a_ctSetCharset);
-
-  KKeyDialog::configureKeys(&coll, xmlFile(), true, this);
+  KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
 }
 
 

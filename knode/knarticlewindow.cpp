@@ -153,12 +153,7 @@ void KNArticleWindow::slotToggleToolBar()
 
 void KNArticleWindow::slotConfKeys()
 {
-  KActionCollection coll(*actionCollection());
-
-  // hack, remove actions which cant have a shortcut
-  coll.take(artW->setCharsetAction());
-
-  KKeyDialog::configureKeys(&coll, xmlFile(), true, this);
+  KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
 }
 
     
