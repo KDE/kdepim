@@ -30,29 +30,20 @@
 #include <libkdepim/weaver.h>
 
 namespace KABC {
-class ResourceGroupwise;
+class ResourceCached;
 }
 
 namespace KCal {
 class Calendar;
-class ResourceGroupwise;
+class ResourceCached;
 }
 
-class GWJob : public KPIM::ThreadWeaver::Job
+class GWJob
 {
   public:
-    enum Type { ReadAddressBooks, ReadCalendar };
-
-    GWJob( Type type, struct soap *soap, const QString &url, const std::string &session,
-           QObject *parent );
-    virtual ~GWJob();
-
-    Type type() const { return mType; }
-
-    virtual void processEvent( KPIM::ThreadWeaver::Event* );
+    GWJob( struct soap *soap, const QString &url, const std::string &session );
 
   protected:
-    Type mType;
     struct soap *mSoap;
     QString mUrl;
     const std::string mSession;
@@ -61,43 +52,71 @@ class GWJob : public KPIM::ThreadWeaver::Job
 class ReadAddressBooksJob : public GWJob
 {
   public:
-    ReadAddressBooksJob( struct soap *soap, const QString &url, const std::string &session,
-                         QObject *parent );
+    ReadAddressBooksJob( struct soap *soap, const QString &url,
+      const std::string &session );
 
     void setAddressBookIds( const QStringList& );
 
     // we need the resource here for doing uid mapping
-    void setResource( KABC::ResourceGroupwise* );
+    void setResource( KABC::ResourceCached * );
+
+    void run();
 
   protected:
-    void run();
     void readAddressBook( std::string& );
 
   private:
     QStringList mAddressBookIds;
-    KABC::ResourceGroupwise *mResource;
+    KABC::ResourceCached *mResource;
 };
 
 class ReadCalendarJob : public GWJob
 {
   public:
-    ReadCalendarJob( struct soap *soap, const QString &url, const std::string &session,
-                     QObject *parent );
+    ReadCalendarJob( struct soap *soap, const QString &url,
+      const std::string &session );
 
-    void setCalendar( KCal::Calendar* );
     void setCalendarFolder( std::string* );
 
     // we need the resource here for doing uid mapping
-    void setResource( KCal::ResourceGroupwise* );
+    void setResource( KCal::ResourceCached * );
+
+    void run();
 
   protected:
-    void run();
     void readCalendarFolder( const std::string &id );
 
   private:
-    KCal::Calendar *mCalendar;
     std::string *mCalendarFolder;
-    KCal::ResourceGroupwise *mResource;
+    KCal::ResourceCached *mResource;
+};
+
+class ThreadedReadCalendarJob : public KPIM::ThreadWeaver::Job,
+  public ReadCalendarJob
+{
+  public: 
+    ThreadedReadCalendarJob( struct soap *soap, const QString &url,
+      const std::string &session );
+    ~ThreadedReadCalendarJob();
+
+    virtual void processEvent( KPIM::ThreadWeaver::Event* );
+
+  protected:
+    void run();
+};
+
+class ThreadedReadAddressBooksJob : public KPIM::ThreadWeaver::Job,
+  public ReadAddressBooksJob
+{
+  public: 
+    ThreadedReadAddressBooksJob( struct soap *soap, const QString &url,
+      const std::string &session );
+    ~ThreadedReadAddressBooksJob();
+
+    virtual void processEvent( KPIM::ThreadWeaver::Event* );
+
+  protected:
+    void run();
 };
 
 #endif

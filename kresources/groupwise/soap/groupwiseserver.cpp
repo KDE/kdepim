@@ -85,7 +85,7 @@ size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
   return (*it)->gSoapReceiveCallback( soap, s, n );
 }
 
-int GroupwiseServer::gSoapOpen( struct soap *soap, const char *endpoint,
+int GroupwiseServer::gSoapOpen( struct soap *, const char *,
   const char *host, int port )
 {
   kdDebug() << "GroupwiseServer::gSoapOpen()" << endl;
@@ -98,42 +98,43 @@ int GroupwiseServer::gSoapOpen( struct soap *soap, const char *endpoint,
   if (mSSL) {
      kdDebug() << "Creating KSSLSocket()" << endl;
      m_sock = new KSSLSocket();
-     mError = QString::null;
      connect( m_sock, SIGNAL( sslFailure() ), SLOT( slotSslError() ) );
   } else {
      m_sock = new KExtendedSocket();
   }
+  mError = QString::null;
 
-   m_sock->reset();
-   m_sock->setBlockingMode(false);
-   m_sock->setSocketFlags(KExtendedSocket::inetSocket);
+  m_sock->reset();
+  m_sock->setBlockingMode(false);
+  m_sock->setSocketFlags(KExtendedSocket::inetSocket);
 
-   m_sock->setAddress(host, port);
-   m_sock->lookup();
-   int rc = m_sock->connect();
-   if ( rc != 0 ) {
-    kdError() << "gSoapOpen: connect failed " << rc << endl;
+  m_sock->setAddress(host, port);
+  m_sock->lookup();
+  int rc = m_sock->connect();
+  if ( rc != 0 ) {
+   kdError() << "gSoapOpen: connect failed " << rc << endl;
+   mError = i18n("Connect failed: %1.").arg( rc );
+   return -1;
+  }
+  kdDebug() << "TICK" << endl;
+#if 0
+  if ( !m_sock->open() ) {
+    kdError() << "gSoapOpen: open failed" << endl;
     return -1;
-   }
-   kdDebug() << "TICK" << endl;
-#if 0
-   if ( !m_sock->open() ) {
-     kdError() << "gSoapOpen: open failed" << endl;
-     return -1;
-   }
+  }
 #endif
-   m_sock->enableRead(true);
-   m_sock->enableWrite(true);
+  m_sock->enableRead(true);
+  m_sock->enableWrite(true);
 
-   // hopefully never really used by SOAP
+  // hopefully never really used by SOAP
 #if 0
-   return m_sock->fd();
+  return m_sock->fd();
 #else
   return 0;
 #endif
 }
 
-int GroupwiseServer::gSoapClose( struct soap *soap )
+int GroupwiseServer::gSoapClose( struct soap * )
 {
   kdDebug() << "GroupwiseServer::gSoapClose()" << endl;
 
@@ -147,7 +148,7 @@ int GroupwiseServer::gSoapClose( struct soap *soap )
    return SOAP_OK;
 }
 
-int GroupwiseServer::gSoapSendCallback( struct soap *soap, const char *s, size_t n )
+int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
 {
   kdDebug() << "GroupwiseServer::gSoapSendCallback()" << endl;
 
@@ -182,7 +183,7 @@ qDebug("\n*************************");
    return SOAP_OK;
 }
 
-size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s, size_t n )
+size_t GroupwiseServer::gSoapReceiveCallback( struct soap *, char *s, size_t n )
 {
   kdDebug() << "GroupwiseServer::gSoapReceiveCallback()" << endl;
 
@@ -564,14 +565,16 @@ QMap<QString, QString> GroupwiseServer::addressBookList()
   return map;
 }
 
-bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds, KABC::ResourceGroupwise *resource )
+bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds,
+  KABC::ResourceCached *resource )
 {
   if ( mSession.empty() ) {
     kdError() << "GroupwiseServer::readAddressBooks(): no session." << endl;
     return false;
   }
 
-  ReadAddressBooksJob *job = new ReadAddressBooksJob( mSoap, mUrl, mSession, 0 );
+  ThreadedReadAddressBooksJob *job = new ThreadedReadAddressBooksJob( mSoap,
+    mUrl, mSession );
   job->setAddressBookIds( addrBookIds );
   job->setResource( resource );
 
@@ -583,8 +586,26 @@ bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds, KABC::Re
   return true;
 }
 
+bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookIds,
+  KABC::ResourceCached *resource )
+{
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::readAddressBooks(): no session." << endl;
+    return false;
+  }
+
+  ReadAddressBooksJob *job = new ReadAddressBooksJob( mSoap,
+    mUrl, mSession );
+  job->setAddressBookIds( addrBookIds );
+  job->setResource( resource );
+
+  job->run();
+
+  return true;
+}
+
 bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
-  KCal::ResourceGroupwise *resource )
+  KCal::ResourceCached *resource )
 {
   if ( mSession.empty() ) {
     kdError() << "GroupwiseServer::addIncidence(): no session." << endl;
@@ -817,7 +838,7 @@ bool GroupwiseServer::removeAddressee( const KABC::Addressee &addr )
   return true;
 }
 
-bool GroupwiseServer::readCalendar( KCal::Calendar *calendar, KCal::ResourceGroupwise *resource )
+bool GroupwiseServer::readCalendar( KCal::ResourceCached *resource )
 {
   kdDebug() << "GroupwiseServer::readCalendar()" << endl;
 
@@ -826,8 +847,8 @@ bool GroupwiseServer::readCalendar( KCal::Calendar *calendar, KCal::ResourceGrou
     return false;
   }
 
-  ReadCalendarJob *job = new ReadCalendarJob( mSoap, mUrl, mSession, 0 );
-  job->setCalendar( calendar );
+  ThreadedReadCalendarJob *job = new ThreadedReadCalendarJob( mSoap, mUrl,
+    mSession );
   job->setCalendarFolder( &mCalendarFolder );
   job->setResource( resource );
 
@@ -835,6 +856,24 @@ bool GroupwiseServer::readCalendar( KCal::Calendar *calendar, KCal::ResourceGrou
            SIGNAL( readCalendarFinished() ) );
 
   mWeaver->enqueue( job );
+
+  return true;
+}
+
+bool GroupwiseServer::readCalendarSynchronous( KCal::ResourceCached *resource )
+{
+  kdDebug() << "GroupwiseServer::readCalendar()" << endl;
+
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::readCalendar(): no session." << endl;
+    return false;
+  }
+
+  ReadCalendarJob *job = new ReadCalendarJob( mSoap, mUrl, mSession );
+  job->setCalendarFolder( &mCalendarFolder );
+  job->setResource( resource );
+
+  job->run();
 
   return true;
 }

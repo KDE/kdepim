@@ -36,13 +36,13 @@
 #include "gwjobs.h"
 
 namespace KABC {
-class ResourceGroupwise;
+class ResourceCached;
 }
 
 namespace KCal {
 class Calendar;
 class Incidence;
-class ResourceGroupwise;
+class ResourceCached;
 }
 
 class KExtendedSocket;
@@ -69,14 +69,19 @@ class GroupwiseServer : public QObject
     bool login();
     bool logout();
 
-    bool readCalendar( KCal::Calendar*, KCal::ResourceGroupwise* );
-    bool addIncidence( KCal::Incidence *, KCal::ResourceGroupwise * );
+    bool readCalendar( KCal::ResourceCached * );
+    bool addIncidence( KCal::Incidence *, KCal::ResourceCached * );
     bool changeIncidence( KCal::Incidence * );
     bool deleteIncidence( KCal::Incidence * );
 
+    bool readCalendarSynchronous( KCal::ResourceCached *resource );
+
     QMap<QString, QString> addressBookList();
 
-    bool readAddressBooks( const QStringList &addrBookIds, KABC::ResourceGroupwise* );
+    bool readAddressBooks( const QStringList &addrBookIds,
+      KABC::ResourceCached * );
+    bool readAddressBooksSynchronous( const QStringList &addrBookIds,
+      KABC::ResourceCached * );
 
     bool insertAddressee( const QString &addrBookId, KABC::Addressee& );
     bool changeAddressee( const KABC::Addressee& );

@@ -20,44 +20,27 @@
 
 #include <kabc/addressee.h>
 #include <kdebug.h>
-#include <libkcal/calendar.h>
 #include <libkcal/incidence.h>
+#include <libkcal/resourcecached.h>
+#include <libkdepim/kabcresourcecached.h>
 
 #include <qtimer.h>
 
 #include "contactconverter.h"
 #include "incidenceconverter.h"
-#include "kabc_resourcegroupwise.h"
-#include "kcal_resourcegroupwise.h"
 #include "soapH.h"
 
 #include "gwjobs.h"
 
-GWJob::GWJob( Type type, struct soap *soap, const QString &url, const std::string &session,
-              QObject *parent )
-  : Job( parent, "GWJob" ),
-    mType( type ), mUrl( url ), mSession( session )
+GWJob::GWJob( struct soap *soap, const QString &url,
+  const std::string &session )
+  : mSoap( soap ), mUrl( url ), mSession( session )
 {
-  mSoap = soap_copy( soap );
-  mSoap->header = new( SOAP_ENV__Header );
-}
-
-GWJob::~GWJob()
-{
-  soap_free( mSoap );
-  mSoap = 0;
-}
-
-void GWJob::processEvent( KPIM::ThreadWeaver::Event *event )
-{
-  KPIM::ThreadWeaver::Job::processEvent( event );
-  if ( event->action() == KPIM::ThreadWeaver::Event::JobFinished )
-    deleteLater();
 }
 
 ReadAddressBooksJob::ReadAddressBooksJob( struct soap *soap, const QString &url,
-                                          const std::string &session, QObject *parent )
-  : GWJob( ReadAddressBooks, soap, url, session, parent )
+                                          const std::string &session )
+  : GWJob( soap, url, session )
 {
 }
 
@@ -66,7 +49,7 @@ void ReadAddressBooksJob::setAddressBookIds( const QStringList &ids )
   mAddressBookIds = ids;
 }
 
-void ReadAddressBooksJob::setResource( KABC::ResourceGroupwise *resource )
+void ReadAddressBooksJob::setResource( KABC::ResourceCached *resource )
 {
   mResource = resource;
 }
@@ -141,14 +124,10 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 }
 
 ReadCalendarJob::ReadCalendarJob( struct soap *soap, const QString &url,
-                                  const std::string &session, QObject *parent )
-  : GWJob( ReadCalendar, soap, url, session, parent )
+                                  const std::string &session )
+  : GWJob( soap, url, session )
 {
-}
-
-void ReadCalendarJob::setCalendar( KCal::Calendar *calendar )
-{
-  mCalendar = calendar;
+  kdDebug() << "ReadCalendarJob()" << endl;
 }
 
 void ReadCalendarJob::setCalendarFolder( std::string *calendarFolder )
@@ -156,13 +135,15 @@ void ReadCalendarJob::setCalendarFolder( std::string *calendarFolder )
   mCalendarFolder = calendarFolder;
 }
 
-void ReadCalendarJob::setResource( KCal::ResourceGroupwise *resource )
+void ReadCalendarJob::setResource( KCal::ResourceCached *resource )
 {
   mResource = resource;
 }
 
 void ReadCalendarJob::run()
 {
+  kdDebug() << "ReadCalendarJob::run()" << endl;
+
   mSoap->header->ns1__session = mSession;
   _ns1__getFolderListRequest folderListReq;
   folderListReq.parent = "folders";
@@ -184,10 +165,14 @@ void ReadCalendarJob::run()
       }
     }
   }
+  
+  kdDebug() << "ReadCalendarJob::run() done" << endl;
 }
 
 void ReadCalendarJob::readCalendarFolder( const std::string &id )
 {
+  kdDebug() << "ReadCalendarJob::readCalendarFolder()" << endl;
+
   _ns1__getItemsRequest itemsRequest;
 
   itemsRequest.container = id;
@@ -219,6 +204,10 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
   if ( items ) {
     IncidenceConverter conv( mSoap );
 
+    // FIXME: Don't clear cache but merge with cache to preserve uids and in
+    // case not all incidences are retrieved from the server.
+    mResource->clearCache();
+
     std::vector<class ns1__Item * >::const_iterator it;
     for( it = items->begin(); it != items->end(); ++it ) {
       ns1__Appointment *a = dynamic_cast<ns1__Appointment *>( *it );
@@ -236,6 +225,16 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
         i->setCustomProperty( "GWRESOURCE", "CONTAINER", conv.stringToQString( id ) );
 
         QString remoteUid = conv.stringToQString( (*it)->id );
+        QString localUid = mResource->localUid( remoteUid );
+        if ( localUid.isEmpty() ) {
+          mResource->setRemoteUid( i->uid(), remoteUid );
+        } else {
+          i->setUid( localUid );
+        }
+
+// Disable uid mapping as long as we load the whole calendar anyway.
+#if 0
+        QString remoteUid = conv.stringToQString( (*it)->id );
         KCal::Incidence *oldIncidence = mResource->event( mResource->localUid( remoteUid ) );
         if ( !oldIncidence )
           oldIncidence = mResource->todo( mResource->localUid( remoteUid ) );
@@ -244,11 +243,68 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
           mResource->setRemoteUid( i->uid(), remoteUid );
         } else {
           i->setUid( oldIncidence->uid() );
-          mCalendar->deleteIncidence( oldIncidence );
+          mResource->deleteIncidence( oldIncidence );
         }
+#endif
 
-        mCalendar->addIncidence( i );
+        mResource->addIncidence( i );
       }
     }
   }
+}
+
+
+ThreadedReadCalendarJob::ThreadedReadCalendarJob( struct soap *soap,
+  const QString &url, const std::string &session )
+  : ReadCalendarJob( soap_copy( soap ), url, session )
+{
+  kdDebug() << "ThreadedReadCalendarJob()" << endl;
+
+  mSoap->header = new( SOAP_ENV__Header );
+}
+
+ThreadedReadCalendarJob::~ThreadedReadCalendarJob()
+{
+  soap_free( mSoap );
+  mSoap = 0;
+}
+
+void ThreadedReadCalendarJob::processEvent( KPIM::ThreadWeaver::Event *event )
+{
+  KPIM::ThreadWeaver::Job::processEvent( event );
+  if ( event->action() == KPIM::ThreadWeaver::Event::JobFinished )
+    deleteLater();
+}
+
+void ThreadedReadCalendarJob::run()
+{
+  ReadCalendarJob::run();
+}
+
+
+ThreadedReadAddressBooksJob::ThreadedReadAddressBooksJob( struct soap *soap,
+  const QString &url, const std::string &session )
+  : ReadAddressBooksJob( soap_copy( soap ), url, session )
+{
+  kdDebug() << "ThreadedReadAddressBooksJob()" << endl;
+
+  mSoap->header = new( SOAP_ENV__Header );
+}
+
+ThreadedReadAddressBooksJob::~ThreadedReadAddressBooksJob()
+{
+  soap_free( mSoap );
+  mSoap = 0;
+}
+
+void ThreadedReadAddressBooksJob::processEvent( KPIM::ThreadWeaver::Event *event )
+{
+  KPIM::ThreadWeaver::Job::processEvent( event );
+  if ( event->action() == KPIM::ThreadWeaver::Event::JobFinished )
+    deleteLater();
+}
+
+void ThreadedReadAddressBooksJob::run()
+{
+  ReadAddressBooksJob::run();
 }
