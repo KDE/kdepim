@@ -942,7 +942,7 @@ void KABCore::initActions()
   connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
 
   // misc
-  action = new KAction( i18n( "&Lookup Addresses in Folder..." ), "find", 0,
+  action = new KAction( i18n( "&Lookup Addresses in LDAP Directory..." ), "find", 0,
                         this, SLOT( openLDAPDialog() ), actionCollection(), "ldap_lookup" );
   action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );
 
