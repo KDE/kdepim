@@ -1,12 +1,10 @@
-# KDE Config File  
 [KDE Desktop Entry]
+Name=KMailCvt
 Type=Application
-Exec=kmailcvt2 -caption "%c" %i %m  
-Icon=kmailcvt2.xpm
-MiniIcon=kmailcvt2.xpm
-DocPath=kmailcvt2/index.html
-Comment=
-Comment[de]=
+Exec=kmailcvt -caption "%c" %i %m  
+Icon=kmailcvt
+DocPath=kmailcvt/index.html
+Comment=Imports to KMail and KAB
+Comment[nl]=Importeert naar KMail en KAB
 Terminal=0
-Name=Kmailcvt2
-Name[de]=Kmailcvt2
+Name[nl]=KMailCvt

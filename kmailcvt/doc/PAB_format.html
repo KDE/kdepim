@@ -6,15 +6,16 @@
 	<META NAME="GENERATOR" CONTENT="StarOffice/5.2 (Linux)">
 	<META NAME="AUTHOR" CONTENT="Hans Dijkema">
 	<META NAME="CREATED" CONTENT="20000821;22284900">
-	<META NAME="CHANGEDBY" CONTENT="Hans Dijkema">
-	<META NAME="CHANGED" CONTENT="20000825;14341000">
+	<META NAME="CHANGEDBY" CONTENT=" ">
+	<META NAME="CHANGED" CONTENT="20001122;21124900">
 	<STYLE>
 	<!--
 		@page { size: 8.5in 11in; margin-left: 1.25in; margin-right: 1.25in; margin-top: 1in; margin-bottom: 1in }
-		P { margin-bottom: 0.08in }
-		H1 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif; font-size: 16pt }
 		H2 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif; font-size: 14pt; font-style: italic }
+		TH P { margin-bottom: 0.08in }
 		TD P { margin-bottom: 0.08in }
+		H1 { margin-bottom: 0.08in; font-family: "helvetica", sans-serif; font-size: 16pt }
+		P { margin-bottom: 0.08in }
 	-->
 	</STYLE>
 </HEAD>
@@ -102,7 +103,7 @@ the number of fields.</P>
 <P>There's also something like 0x7cec****. I don't know what it is,
 but I expect it to be some index or so.</P>
 <P>The index of fields consists always of 0x000c 0x0014, being what?
-0x0014 turns to be  an offset in the record to record types in most
+0x0014 turns to be an offset in the record to record types in most
 cases. What follows is a list of numbers that seem to describe record
 types. The index of fields only points to variable types like strings
 and arrays. The type of fields are in there. There's a MAPI header
@@ -119,14 +120,13 @@ following:</P>
 	out.</P>
 </OL>
 <P STYLE="margin-left: 0.21in; margin-bottom: 0in">It looks like the
-index of offsets is an index to data  that has no static size. So,
+index of offsets is an index to data that has no static size. So,
 we'll have to recognize the data types we're talking about. The most
 important will probably be:</P>
 <P STYLE="margin-left: 0.22in; margin-bottom: 0in"><BR>
 </P>
-<P STYLE="margin-bottom: 0in">	T_MS_ARRAY		0x1100  	An array of any
-type</P>
-<P STYLE="margin-bottom: 0in">	T_MS_STRING		0x1e		This is a string</P>
+<P STYLE="margin-bottom: 0in">T_MS_ARRAY 0x1100 An array of any type</P>
+<P STYLE="margin-bottom: 0in">T_MS_STRING 0x1e This is a string</P>
 <P STYLE="margin-bottom: 0in"><BR>
 </P>
 <P STYLE="margin-left: 0.22in; margin-bottom: 0in">The function to
@@ -134,7 +134,7 @@ sort out of the datatypes are the ones we want to recognize is as
 follows:</P>
 <P STYLE="margin-left: 0.22in; margin-bottom: 0in"><BR>
 </P>
-<P STYLE="margin-left: 0.22in; margin-bottom: 0in"><IMG SRC="sv9429424.gif" NAME="Object1" ALIGN=ABSMIDDLE HSPACE=8 WIDTH=480 HEIGHT=21></P>
+<P STYLE="margin-left: 0.22in; margin-bottom: 0in"><IMG SRC="sv9429424.gif" NAME="Object1" ALIGN=ABSMIDDLE HSPACE=8 WIDTH=480 HEIGHT=21 BORDER=0></P>
 <P STYLE="margin-bottom: 0in"><BR>
 </P>
 <P STYLE="margin-left: 0.23in; margin-bottom: 0in">An other important
@@ -162,363 +162,125 @@ project.</P>
 </P>
 <H2 STYLE="page-break-before: always">Appendix - Currently known
 field types for the .PAB format.</H2>
-<P STYLE="margin-bottom: 0in; page-break-before: auto"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/***************************************************************************</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-                            pabtypes.h  -  description</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-                            -------------------</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-   begin                : Wed Aug 2 2000</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-   copyright            : (C) 2000 by Hans Dijkema</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-   email                : kmailcvt@hum.org</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-***************************************************************************/</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/***************************************************************************</FONT></FONT></P>
+<P STYLE="margin-left: 1.58in; margin-bottom: 0in"><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">pabtypes.h
+- description<BR>-------------------<BR>begin : Wed Aug 2
+2000<BR>copyright : (C) 2000 by Hans Dijkema<BR>email :
+<A HREF="mailto:kmailcvt@hum.org">kmailcvt@hum.org</A></FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">***************************************************************************/</FONT></FONT></P>
 <P STYLE="margin-bottom: 0in"><BR>
 </P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/***************************************************************************</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-*                                                                    
-    *</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-*   This program is free software; you can redistribute it and/or
-modify  *</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-*   it under the terms of the GNU General Public License as published
-by  *</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-*   the Free Software Foundation; either version 2 of the License, or
-    *</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-*   (at your option) any later version.                              
-    *</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-*                                                                    
-    *</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-* The information in this header file was reengineered from the
-various   *</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-* .PAB files I used to test the .PAB conversion.                     
-    *</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-*                                                                    
-    *</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-* It turns out that the values below are the type information we
-searched *</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-* for in the .PAB file. So we can use them to read the format.       
-    *</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-*                                                                    
-    *</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-***************************************************************************/</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/***************************************************************************<BR>This
+program is free software; you can redistribute it and/or modify<BR>it
+under the terms of the GNU General Public License as published by
+<BR>the Free Software Foundation; either version 2 of the License, or
+<BR>(at your option) any later version. <BR><BR>The information in
+this header file was reengineered from the various <BR>.PAB files I
+used to test the .PAB conversion. </FONT></FONT>
 </P>
-<P STYLE="margin-bottom: 0in"><BR>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">It
+turns out that the values below are the type information we searched
+<BR>for in the .PAB file. So we can use them to read the format.
+<BR><BR>***************************************************************************/<BR><BR>#ifndef
+PABTYPES_H<BR>#define PABTYPES_H 1.0</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/*<BR>*
+MS Windows tags as reengineered from an MS Exchange .PAB and <BR>*
+Outlook .PAB file.<BR>*/</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt"><BR>/////////////////////////////////////////////////////////////////////////////
+</FONT></FONT>
 </P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#ifndef
-PABTYPES_H</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-PABTYPES_H 1.0</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/*</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-*  MS Windows tags as reengineered from an MS Exchange .PAB and </FONT></FONT>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-*  Outlook .PAB file.</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-*/</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////	</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_GIVEN_NAME   			0x3a13</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_GIVEN_NAME_1 			0x3a45</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_GIVEN_NAME_2 			0x3a47</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_GIVEN_NAME_3				0x3a4f</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_GIVEN_NAME_4				0x3001</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_GIVEN_NAME_5				0x3a20</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_GIVEN_NAME 						\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_GIVEN_NAME,MS_GIVEN_NAME_1,MS_GIVEN_NAME_2,		\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_GIVEN_NAME_3,MS_GIVEN_NAME_4,MS_GIVEN_NAME_5</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////	</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_EMAIL					0x3a56</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_EMAIL_1                  			0x3003</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_EMAIL							\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_EMAIL,MS_EMAIL_1</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////	</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_FIRSTNAME					0x3a06</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_FIRSTNAME						\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_FIRSTNAME</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////	</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_LASTNAME					0x3a11</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_LASTNAME							\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_LASTNAME</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////	</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_MIDDLENAME					0x3a44</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_MIDDLENAME	\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_MIDDLENAME</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////	</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_TITLE					0x3a17</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_TITLE		\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_TITLE</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_ADDRESS					0x3a15</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_ADDRESS_1					0x3a29</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_ADDRESS_2					0x3a59</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_ADDRESS		\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_ADDRESS,
-MS_ADDRESS_1, MS_ADDRESS_2</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_ZIP						0x3a5b</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_ZIP_1					0x3a2a</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_ZIP		\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_ZIP,
-MS_ZIP_1</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_STATE					0x3a28</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_STATE_1					0x3a5c</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_STATE		\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_STATE,
-MS_STATE_1</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_TOWN						0x3a27</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_TOWN_1					0x3a59</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_TOWN		\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_TOWN,
-MS_TOWN_1</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_COUNTRY					0x3a26</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_COUNTRY_1					0x3a5a</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_COUNTRY		\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_COUNTRY,
-MS_COUNTRY_1</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_TEL						0x3a08</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_TEL_1					0x3a09</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_TEL_2					0x3a1a</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_TEL_3					0x3a1b</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_TEL_4					0x3a1f</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_TEL_5					0x3a1d</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_TEL_6					0x3a2d</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_TEL_7					0x3a2f</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_TEL		\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_TEL,MS_TEL_1,MS_TEL_2,MS_TEL_3,MS_TEL_4,	\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_TEL_5,MS_TEL_6,MS_TEL_7</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_MOBILE					0x3a1c</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_MOBILE_1					0x3a1e</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_MOBILE_2					0x3a21</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_MOBILE		\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_MOBILE,MS_MOBILE_1,MS_MOBILE_2</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_FAX						0x3a23</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_FAX_1					0x3a24</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_FAX_2					0x3a25</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_FAX_3					0x3a2c</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_FAX		\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_FAX,MS_FAX_1,MS_FAX_2,MS_FAX_3</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_ORG						0x3a16</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_ORGANIZATION	\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_ORG</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////	</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_DEP						0x3a18</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_DEPARTMENT	\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_DEP</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////	</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-MS_COMMENT					0x3004</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_MS_COMMENT		\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		MS_COMMENT</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////	</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-SET_NOT_USED		\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		0x3002,	\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		0x300b,	\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		0x3a2e,	\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		0x3a30,	\</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		0x3a19</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		//
-3002 probably address type	</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		//
-300b some sort of key		</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		//
-3a2e secretary tel number		</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		//
-3a30 name of secretary		</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">		//
-3a19 office location		</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////	</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/*</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-* HP Openmail as reengineered from the X.400 .PAB file.</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">
-*/</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-HP_OPENMAIL_JOB                            0x672b</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-HP_OPENMAIL_ORGANIZATION                   0x6728</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-HP_OPENMAIL_DEPARTMENT                     0x6729</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-HP_OPENMAIL_SUBDEP                         0x672b</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#define
-HP_OPENMAIL_LOCATION_OF_WORK               0x672a</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">/////////////////////////////////////////////////////////////////////////////</FONT></FONT></P>
-<P STYLE="margin-bottom: 0in"><BR>
-</P>
-<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">#endif
- </FONT></FONT>
-</P>
-<P STYLE="margin-bottom: 0in"><BR>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt"><BR>#define
+MS_GIVEN_NAME 0x3a13<BR>#define MS_GIVEN_NAME_1 0x3a45<BR>#define
+MS_GIVEN_NAME_2 0x3a47<BR>#define MS_GIVEN_NAME_3 0x3a4f<BR>#define
+MS_GIVEN_NAME_4 0x3001<BR>#define MS_GIVEN_NAME_5 0x3a20<BR>#define
+SET_MS_GIVEN_NAME MS_GIVEN_NAME,MS_GIVEN_NAME_1,MS_GIVEN_NAME_2,
+MS_GIVEN_NAME_3,MS_GIVEN_NAME_4,MS_GIVEN_NAME_5<BR><BR>/////////////////////////////////////////////////////////////////////////////
+<BR><BR>#define MS_EMAIL 0x3a56<BR>#define MS_EMAIL_1 0x3003<BR>#define
+SET_MS_EMAIL MS_EMAIL,MS_EMAIL_1</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt"><BR>/////////////////////////////////////////////////////////////////////////////
+<BR><BR>#define MS_FIRSTNAME 0x3a06<BR>#define SET_MS_FIRSTNAME
+MS_FIRSTNAME</FONT></FONT></P>
+<P STYLE="margin-bottom: 0in"><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace"><BR>/////////////////////////////////////////////////////////////////////////////
+<BR><BR>#define MS_LASTNAME 0x3a11<BR>#define SET_MS_LASTNAME
+MS_LASTNAME<BR><BR>/////////////////////////////////////////////////////////////////////////////
+<BR><BR>#define MS_MIDDLENAME 0x3a44<BR>#define SET_MS_MIDDLENAME
+\</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">MS_MIDDLENAME</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////
+</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_TITLE 0x3a17</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+SET_MS_TITLE
+MS_TITLE</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_ADDRESS 0x3a15</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_ADDRESS_1 0x3a29</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_ADDRESS_2 0x3a59</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+SET_MS_ADDRESS MS_ADDRESS, MS_ADDRESS_1,
+MS_ADDRESS_2</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_ZIP 0x3a5b</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_ZIP_1 0x3a2a</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+SET_MS_ZIP MS_ZIP,
+MS_ZIP_1</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_STATE 0x3a28</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_STATE_1 0x3a5c</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+SET_MS_STATE MS_STATE,
+MS_STATE_1</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_TOWN 0x3a27</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_TOWN_1 0x3a59</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+SET_MS_TOWN MS_TOWN,
+MS_TOWN_1</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_COUNTRY 0x3a26</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_COUNTRY_1 0x3a5a</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+SET_MS_COUNTRY MS_COUNTRY,
+MS_COUNTRY_1</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_TEL 0x3a08</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_TEL_1 0x3a09</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_TEL_2 0x3a1a</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_TEL_3 0x3a1b</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_TEL_4 0x3a1f</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_TEL_5 0x3a1d</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_TEL_6 0x3a2d</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_TEL_7 0x3a2f</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+SET_MS_TEL MS_TEL,MS_TEL_1,MS_TEL_2,MS_TEL_3,MS_TEL_4,
+MS_TEL_5,MS_TEL_6,MS_TEL_7</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_MOBILE 0x3a1c</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_MOBILE_1 0x3a1e</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_MOBILE_2 0x3a21</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+SET_MS_MOBILE
+MS_MOBILE,MS_MOBILE_1,MS_MOBILE_2</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_FAX 0x3a23</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_FAX_1 0x3a24</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_FAX_2 0x3a25</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_FAX_3 0x3a2c</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+SET_MS_FAX
+MS_FAX,MS_FAX_1,MS_FAX_2,MS_FAX_3</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_ORG 0x3a16</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+SET_MS_ORGANIZATION
+MS_ORG</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////
+</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_DEP 0x3a18</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+SET_MS_DEPARTMENT
+MS_DEP</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////
+</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+MS_COMMENT 0x3004</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+SET_MS_COMMENT
+MS_COMMENT</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////
+</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+SET_NOT_USED 0x3002, 0x300b, 0x3a2e, 0x3a30, 0x3a19<BR></FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">//
+3002 probably address type </FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">//
+300b some sort of key </FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">//
+3a2e secretary tel number </FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">//
+3a30 name of secretary </FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">//
+3a19 office location
+</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////
+</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/*</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">*
+HP Openmail as reengineered from the X.400 .PAB
+file.</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">*/</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+HP_OPENMAIL_JOB 0x672b</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+HP_OPENMAIL_ORGANIZATION 0x6728</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+HP_OPENMAIL_DEPARTMENT 0x6729</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+HP_OPENMAIL_SUBDEP 0x672b</FONT></FONT><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#define
+HP_OPENMAIL_LOCATION_OF_WORK
+0x672a</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">/////////////////////////////////////////////////////////////////////////////</FONT></FONT><BR><BR><FONT SIZE=1 STYLE="font-size: 8pt"><FONT FACE="Courier, monospace">#endif
+</FONT></FONT><BR><BR>
 </P>
 </BODY>
 </HTML>

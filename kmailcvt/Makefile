@@ -207,6 +207,22 @@ kmailcvt_LDADD = -lkab -lkfile -lkdeui -lkdecore -lqt -lXext -lX11 $(LIBSOCKET)
 
 EXTRA_DIST = main.cpp kmailcvt.cpp kmailcvt.h kmailcvt.desktop kmailcvt.xpm mini-kmailcvt.xpm filter_oe5.cxx filter_oe5.hxx filter_pab.cxx filter_pab.hxx filters.cxx filters.hxx harray.hxx mapihd.cpp mapihd.h pablib.cxx pablib.hxx pabtypes.h liboe.h oe5_2mbox.cpp oe5_2mbox.h filter_oe4.cxx filter_oe4.hxx liboe.cxx oe4_2mbox.cpp oe4_2mbox.h PAB_format.html sv9429424.gif 
 
+appsdir = $(kde_appsdir)/Utilities
+apps_DATA = kmailcvt.desktop
+
+#install-data-local:
+#	$(mkinstalldirs) $(kde_appsdir)/Applications/
+#	$(INSTALL_DATA) kmailcvt.desktop $(kde_appsdir)/Applications/kmailcvt.desktop
+#	$(mkinstalldirs) $(kde_icondir)/medium/locolor/apps/
+#	$(INSTALL_DATA) kmailcvt.xpm $(kde_icondir)/medium/locolor/apps/kmailcvt.xpm
+#	$(mkinstalldirs) $(kde_icondir)/small/locolor/apps/
+#	$(INSTALL_DATA) mini-kmailcvt.xpm $(kde_icondir)/small/locolor/apps/kmailcvt.xpm
+
+#uninstall-local:
+#	-rm -f $(kde_appsdir)/Applications/kmailcvt.desktop
+#	-rm -f $(kde_icondir)/medium/locolor/apps/kmailcvt.xpm
+#	-rm -f $(kde_icondir)/small/locolor/apps/kmailcvt.xpm
+
 ####### kdevelop will overwrite this part!!! (end)############
 # this 10 paths are KDE specific. Use them:
 # kde_htmldir       Where your docs should go to. (contains lang subdirs)
@@ -231,6 +247,8 @@ kmailcvt_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 # them while "make clean", use CLEANFILES
 DISTCLEANFILES = $(kmailcvt_METASOURCES)
+
+KDE_ICON = AUTO
 mkinstalldirs = $(SHELL) $(top_srcdir)/admin/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
@@ -268,12 +286,14 @@ CXXLD = $(CXX)
 #>- CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
 #>+ 1
 CXXLINK = $(LIBTOOL) --mode=link --tag=CXX $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(KDE_CXXFLAGS) $(LDFLAGS) -o $@
+DATA =  $(apps_DATA)
+
 DIST_COMMON =  Makefile.am Makefile.in
 
 
 #>- DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=Adding_Filters.html kmailcvt.jpg oe5_2mbox.hxx KmailCvt2.png mapitags.h mapidefs.h 
+KDE_DIST=hi32-app-kmailcvt.png hi48-app-kmailcvt.png mapitags.h lo32-app-kmailcvt.png lo16-app-kmailcvt.png oe5_2mbox.hxx mapidefs.h 
 
 DISTFILES= $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
@@ -368,7 +388,7 @@ mostlyclean-libtool:
 	-rm -f *.lo
 
 clean-libtool:
-	-rm -rf .libs _libs .deps
+	-rm -rf .libs _libs
 
 distclean-libtool:
 
@@ -389,6 +409,25 @@ kmailcvt$(EXEEXT): $(kmailcvt_OBJECTS) $(kmailcvt_DEPENDENCIES)
 	$(CXXCOMPILE) -c `cygpath -w $<`
 .cxx.lo:
 	$(LTCXXCOMPILE) -c $<
+
+install-appsDATA: $(apps_DATA)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(appsdir)
+	@list='$(apps_DATA)'; for p in $$list; do \
+	  if test -f $(srcdir)/$$p; then \
+	    echo " $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(appsdir)/$$p"; \
+	    $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(appsdir)/$$p; \
+	  else if test -f $$p; then \
+	    echo " $(INSTALL_DATA) $$p $(DESTDIR)$(appsdir)/$$p"; \
+	    $(INSTALL_DATA) $$p $(DESTDIR)$(appsdir)/$$p; \
+	  fi; fi; \
+	done
+
+uninstall-appsDATA:
+	@$(NORMAL_UNINSTALL)
+	list='$(apps_DATA)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(appsdir)/$$p; \
+	done
 
 tags: TAGS
 
@@ -531,20 +570,24 @@ installcheck: installcheck-am
 install-exec-am: install-binPROGRAMS
 install-exec: install-exec-am
 
-install-data-am: install-data-local
+#>- install-data-am: install-appsDATA
+#>+ 1
+install-data-am: install-kde-icons  install-appsDATA
 install-data: install-data-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 install: install-am
-uninstall-am: uninstall-binPROGRAMS uninstall-local
+#>- uninstall-am: uninstall-binPROGRAMS uninstall-appsDATA
+#>+ 1
+uninstall-am: uninstall-kde-icons  uninstall-binPROGRAMS uninstall-appsDATA
 uninstall: uninstall-am
-all-am: Makefile $(PROGRAMS)
+all-am: Makefile $(PROGRAMS) $(DATA)
 all-redirect: all-am
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
 installdirs:
-	$(mkinstalldirs)  $(DESTDIR)$(bindir)
+	$(mkinstalldirs)  $(DESTDIR)$(bindir) $(DESTDIR)$(appsdir)
 
 
 mostlyclean-generic:
@@ -593,47 +636,16 @@ maintainer-clean: maintainer-clean-am
 maintainer-clean-binPROGRAMS uninstall-binPROGRAMS install-binPROGRAMS \
 mostlyclean-compile distclean-compile clean-compile \
 maintainer-clean-compile mostlyclean-libtool distclean-libtool \
-clean-libtool maintainer-clean-libtool tags mostlyclean-tags \
-distclean-tags clean-tags maintainer-clean-tags distdir \
-mostlyclean-depend distclean-depend clean-depend \
-maintainer-clean-depend info-am info dvi-am dvi check check-am \
-installcheck-am installcheck install-exec-am install-exec \
-install-data-local install-data-am install-data install-am install \
-uninstall-local uninstall-am uninstall all-redirect all-am all \
-installdirs mostlyclean-generic distclean-generic clean-generic \
-maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+clean-libtool maintainer-clean-libtool uninstall-appsDATA \
+install-appsDATA tags mostlyclean-tags distclean-tags clean-tags \
+maintainer-clean-tags distdir mostlyclean-depend distclean-depend \
+clean-depend maintainer-clean-depend info-am info dvi-am dvi check \
+check-am installcheck-am installcheck install-exec-am install-exec \
+install-data-am install-data install-am install uninstall-am uninstall \
+all-redirect all-am all installdirs mostlyclean-generic \
+distclean-generic clean-generic maintainer-clean-generic clean \
+mostlyclean distclean maintainer-clean
 
-
-install-data-local:
-#>- 	$(mkinstalldirs) $(kde_appsdir)/Applications/
-#>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Applications/
-#>- 	$(INSTALL_DATA) kmailcvt.desktop $(kde_appsdir)/Applications/kmailcvt.desktop
-#>+ 1
-	$(INSTALL_DATA) kmailcvt.desktop $(DESTDIR)$(kde_appsdir)/Applications/kmailcvt.desktop
-#>- 	$(mkinstalldirs) $(kde_icondir)/medium/locolor/apps/
-#>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/medium/locolor/apps/
-#>- 	$(INSTALL_DATA) kmailcvt.xpm $(kde_icondir)/medium/locolor/apps/kmailcvt.xpm
-#>+ 1
-	$(INSTALL_DATA) kmailcvt.xpm $(DESTDIR)$(kde_icondir)/medium/locolor/apps/kmailcvt.xpm
-#>- 	$(mkinstalldirs) $(kde_icondir)/small/locolor/apps/
-#>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/small/locolor/apps/
-#>- 	$(INSTALL_DATA) mini-kmailcvt.xpm $(kde_icondir)/small/locolor/apps/kmailcvt.xpm
-#>+ 1
-	$(INSTALL_DATA) mini-kmailcvt.xpm $(DESTDIR)$(kde_icondir)/small/locolor/apps/kmailcvt.xpm
-
-uninstall-local:
-#>- 	-rm -f $(kde_appsdir)/Applications/kmailcvt.desktop
-#>+ 1
-	-rm -f $(DESTDIR)$(kde_appsdir)/Applications/kmailcvt.desktop
-#>- 	-rm -f $(kde_icondir)/medium/locolor/apps/kmailcvt.xpm
-#>+ 1
-	-rm -f $(DESTDIR)$(kde_icondir)/medium/locolor/apps/kmailcvt.xpm
-#>- 	-rm -f $(kde_icondir)/small/locolor/apps/kmailcvt.xpm
-#>+ 1
-	-rm -f $(DESTDIR)$(kde_icondir)/small/locolor/apps/kmailcvt.xpm
 
 # make messages.po. Move this one to ../po/ and "make merge" in po
 # the -x is for skipping messages already translated in kdelibs
@@ -657,6 +669,25 @@ clean-metasources:
 
 #>+ 2
 docs-am:
+
+#>+ 18
+install-kde-icons:
+	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/locolor/16x16/apps
+	$(INSTALL_DATA) $(srcdir)/mini-kmailcvt.xpm $(DESTDIR)$(kde_icondir)/locolor/16x16/apps/kmailcvt.xpm
+	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/hicolor/32x32/apps
+	$(INSTALL_DATA) $(srcdir)/hi32-app-kmailcvt.png $(DESTDIR)$(kde_icondir)/hicolor/32x32/apps/kmailcvt.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/hicolor/48x48/apps
+	$(INSTALL_DATA) $(srcdir)/hi48-app-kmailcvt.png $(DESTDIR)$(kde_icondir)/hicolor/48x48/apps/kmailcvt.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/locolor/32x32/apps
+	$(INSTALL_DATA) $(srcdir)/lo32-app-kmailcvt.png $(DESTDIR)$(kde_icondir)/locolor/32x32/apps/kmailcvt.png
+	$(INSTALL_DATA) $(srcdir)/lo16-app-kmailcvt.png $(DESTDIR)$(kde_icondir)/locolor/16x16/apps/kmailcvt.png
+
+uninstall-kde-icons:
+	-rm -f $(DESTDIR)$(kde_icondir)/locolor/16x16/apps/kmailcvt.xpm
+	-rm -f $(DESTDIR)$(kde_icondir)/hicolor/32x32/apps/kmailcvt.png
+	-rm -f $(DESTDIR)$(kde_icondir)/hicolor/48x48/apps/kmailcvt.png
+	-rm -f $(DESTDIR)$(kde_icondir)/locolor/32x32/apps/kmailcvt.png
+	-rm -f $(DESTDIR)$(kde_icondir)/locolor/16x16/apps/kmailcvt.png
 
 #>+ 5
 force-reedit:

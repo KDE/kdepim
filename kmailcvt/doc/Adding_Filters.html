@@ -7,7 +7,7 @@
 	<META NAME="AUTHOR" CONTENT="Hans Dijkema">
 	<META NAME="CREATED" CONTENT="20000823;9340900">
 	<META NAME="CHANGEDBY" CONTENT=" ">
-	<META NAME="CHANGED" CONTENT="20001122;20260200">
+	<META NAME="CHANGED" CONTENT="20001122;20483000">
 </HEAD>
 <BODY>
 <H2>Adding new filters to KmailCvt 
@@ -221,16 +221,47 @@ otherwise <B>==&gt; abort conversion.</B></P>
 kabStop(filterInfo *info)</SPAN></P>
 <P STYLE="margin-left: 1.58in; font-weight: medium">Close connection
 to Kab.</P>
-<P STYLE="margin-left: 1.58in"><B>void </B><SPAN STYLE="font-weight: medium">kabAddress</SPAN><B>(</B><SPAN STYLE="font-weight: medium">filterInfo
-*info, const char *adrbookname,<BR>                             
-<B>QString</B> givenname, <B>QString</B> email=NULL,<BR><B>QString
-</B>title=NULL,char *firstName=NULL,char *additionalName=NULL,char
-*lastName=NULL,<BR>char *adress=NULL,char *town=NULL,char
-*state=NULL,char *zip=NULL,char *country=NULL,<BR>char
-*organization=NULL,char *department=NULL,char *subDep=NULL,char
-*job=NULL,<BR>char *tel=NULL,char *fax=NULL,char *mobile=NULL,char
-*modem=NULL,<BR>char *homepage=NULL,char *talk=NULL,<BR>char
-*comment=NULL,char *birthday=NULL<BR>);</SPAN></P>
+<TABLE WIDTH=938 BORDER=0 CELLPADDING=0 CELLSPACING=0>
+	<COL WIDTH=271>
+	<COL WIDTH=667>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TD WIDTH=271>
+				<P STYLE="margin-left: 1.58in"><B>void </B><SPAN STYLE="font-weight: medium">kabAddress</SPAN><B>(</B></P>
+			</TD>
+			<TD WIDTH=667>
+				<P><SPAN STYLE="font-weight: medium">filterInfo *info, QString
+				adrbookname,<BR><B>QString</B> givenname, <B>QString</B>
+				email=<B>KAB_NIL</B>,<BR><B>QString </B>title=<B>KAB_NIL</B>,<B>QString</B>
+				firstName=<B>KAB_NIL</B>,<BR><B>QString</B>
+				additionalName=<B>KAB_NIL</B>, <B>QString</B>
+				lastName=<B>KAB_NIL</B>,<BR><B>QString </B>adress=<B>KAB_NIL</B>,<B>QString
+				</B>town=<B>KAB_NIL</B>,<BR><B>QString </B>state=<B>KAB_NIL</B>,<B>QString
+				</B>zip=<B>KAB_NIL</B>,<B>QString </B>country=<B>KAB_NIL</B>,<BR><B>QString
+				</B>organization=<B>KAB_NIL</B>,<B>QString
+				</B>department=<B>KAB_NIL</B>,<BR><B>QString
+				</B>subDep=<B>KAB_NIL</B>,<B>QString </B>job=<B>KAB_NIL</B>,<BR><B>QString
+				</B>tel=<B>KAB_NIL</B>,<B>QString </B>fax=<B>KAB_NIL</B>,<BR><B>QString
+				</B>mobile=<B>KAB_NIL</B>,<B>QString </B>modem=<B>KAB_NIL</B>,<BR><B>QString
+				</B>homepage=<B>KAB_NIL</B>,<B>QString </B>talk=<B>KAB_NIL</B>,<BR><B>QString
+				</B>comment=<B>KAB_NIL</B>,<B>QString </B>birthday=<B>KAB_NIL</B></SPAN></P>
+			</TD>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=271>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=667>
+				<P>)</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P STYLE="margin-bottom: 0in"><BR>
+</P>
 <P STYLE="margin-left: 1.58in; font-weight: medium">Adds an address
 to Kab, or refills the entry of an existing Kab entry. Note:
 'givenname' is the key in the addressbook. 'adrbookname' is the
@@ -238,7 +269,7 @@ address identifier for the post address. 'givenname' is mandatory, so
 don't call kabAddress without it. 
 </P>
 <P STYLE="margin-left: 1.58in; font-weight: medium">Empty strings
-(strings consisting only of white space or &#147;&#148;) or 'NULL'
+(strings consisting only of white space or &#147;&#148;) or '<B>KAB_NIL</B>'
 strings will be ignored. Variables speak for themselves.</P>
 <H3>This is all</H3>
 <P>Ok, this is all there is to know. If you want to implement a new

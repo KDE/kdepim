@@ -84,6 +84,8 @@ class kmail
     void kmailStop(filterInfo *info);
 };
 
+#define KAB_NIL "__KAB_NIL__"
+
 class kab : public KabAPI
 {
   private:
@@ -100,15 +102,21 @@ class kab : public KabAPI
     void addIfNotExists(std::list<AddressBook::Entry::Address> & l,AddressBook::Entry::Address & A);
   public:
     bool kabStart(filterInfo *info);
-    bool kabAddress(filterInfo *info, const char *adrbookname,
-                      char *givenname, char *email=NULL,
-                      char *title=NULL,char *firstName=NULL,char *additionalName=NULL,char *lastName=NULL,
-                      char *adress=NULL,char *town=NULL,char *state=NULL,char *zip=NULL,char *country=NULL,
-                      char *organization=NULL,char *department=NULL,char *subDep=NULL,char *job=NULL,
-                      char *tel=NULL,char *fax=NULL,char *mobile=NULL,char *modem=NULL,
-                      char *homepage=NULL,char *talk=NULL,
-                      char *comment=NULL,char *birthday=NULL
-                     );
+    bool kabAddress(filterInfo *info, QString adrbookname,
+                    QString givenname, QString email=KAB_NIL,
+                    QString title=KAB_NIL,
+                    QString firstName=KAB_NIL,QString additionalName=KAB_NIL,
+                    QString lastName=KAB_NIL,
+                    QString adress=KAB_NIL,QString town=KAB_NIL,
+                    QString state=KAB_NIL,QString zip=KAB_NIL,
+                    QString country=KAB_NIL,
+                    QString organization=KAB_NIL,QString department=KAB_NIL,
+                    QString subDep=KAB_NIL,QString job=KAB_NIL,
+                    QString tel=KAB_NIL,QString fax=KAB_NIL,
+                    QString mobile=KAB_NIL,QString modem=KAB_NIL,
+                    QString homepage=KAB_NIL,QString talk=KAB_NIL,
+                    QString comment=KAB_NIL,QString birthday=KAB_NIL
+                   );
     void kabStop(filterInfo *info);
 };
 

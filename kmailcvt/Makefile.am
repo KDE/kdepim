@@ -6,18 +6,21 @@ kmailcvt_LDADD   = -lkab -lkfile -lkdeui -lkdecore -lqt -lXext -lX11 $(LIBSOCKET
 
 EXTRA_DIST = main.cpp kmailcvt.cpp kmailcvt.h kmailcvt.desktop kmailcvt.xpm mini-kmailcvt.xpm filter_oe5.cxx filter_oe5.hxx filter_pab.cxx filter_pab.hxx filters.cxx filters.hxx harray.hxx mapihd.cpp mapihd.h pablib.cxx pablib.hxx pabtypes.h liboe.h oe5_2mbox.cpp oe5_2mbox.h filter_oe4.cxx filter_oe4.hxx liboe.cxx oe4_2mbox.cpp oe4_2mbox.h PAB_format.html sv9429424.gif 
 
-install-data-local:
-	$(mkinstalldirs) $(kde_appsdir)/Applications/
-	$(INSTALL_DATA) kmailcvt.desktop $(kde_appsdir)/Applications/kmailcvt.desktop
-	$(mkinstalldirs) $(kde_icondir)/medium/locolor/apps/
-	$(INSTALL_DATA) kmailcvt.xpm $(kde_icondir)/medium/locolor/apps/kmailcvt.xpm
-	$(mkinstalldirs) $(kde_icondir)/small/locolor/apps/
-	$(INSTALL_DATA) mini-kmailcvt.xpm $(kde_icondir)/small/locolor/apps/kmailcvt.xpm
+appsdir = $(kde_appsdir)/Utilities
+apps_DATA = kmailcvt.desktop
 
-uninstall-local:
-	-rm -f $(kde_appsdir)/Applications/kmailcvt.desktop
-	-rm -f $(kde_icondir)/medium/locolor/apps/kmailcvt.xpm
-	-rm -f $(kde_icondir)/small/locolor/apps/kmailcvt.xpm
+#install-data-local:
+#	$(mkinstalldirs) $(kde_appsdir)/Applications/
+#	$(INSTALL_DATA) kmailcvt.desktop $(kde_appsdir)/Applications/kmailcvt.desktop
+#	$(mkinstalldirs) $(kde_icondir)/medium/locolor/apps/
+#	$(INSTALL_DATA) kmailcvt.xpm $(kde_icondir)/medium/locolor/apps/kmailcvt.xpm
+#	$(mkinstalldirs) $(kde_icondir)/small/locolor/apps/
+#	$(INSTALL_DATA) mini-kmailcvt.xpm $(kde_icondir)/small/locolor/apps/kmailcvt.xpm
+
+#uninstall-local:
+#	-rm -f $(kde_appsdir)/Applications/kmailcvt.desktop
+#	-rm -f $(kde_icondir)/medium/locolor/apps/kmailcvt.xpm
+#	-rm -f $(kde_icondir)/small/locolor/apps/kmailcvt.xpm
 
 ####### kdevelop will overwrite this part!!! (end)############
 # this 10 paths are KDE specific. Use them:
@@ -43,6 +46,8 @@ kmailcvt_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 # them while "make clean", use CLEANFILES
 DISTCLEANFILES = $(kmailcvt_METASOURCES)
+
+KDE_ICON=AUTO
 
 # make messages.po. Move this one to ../po/ and "make merge" in po
 # the -x is for skipping messages already translated in kdelibs

@@ -523,18 +523,21 @@ std::list<AddressBook::Entry::Address>::iterator it;
 #undef S
 
 
-#define _A(a,b)   if (b!=NULL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { a=s; } }
-#define _B(a,b)   if (b!=NULL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { addIfNotExists(a,s); } }
-#define _T(a,b,c) if (b!=NULL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { addIfNotExists(a,s,c); } }
+#define _A(a,b)   if (b!=KAB_NIL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { a=s; } }
+#define _B(a,b)   if (b!=KAB_NIL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { addIfNotExists(a,s); } }
+#define _T(a,b,c) if (b!=KAB_NIL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { addIfNotExists(a,s,c); } }
 
-bool kab::kabAddress(filterInfo *_info,const char *adrbookname,
-                      char *givenname, char *email,
-                      char *title,char *firstName,char *additionalName,char *lastName,
-                      char *address,char *town,char */*state*/,char *zip,char *country,
-                      char *organization,char *department,char *subDep,char *job,
-                      char *tel,char *fax,char *mobile,char *modem,
-                      char *homepage,char *talk,
-                      char *comment,char */*birthday*/
+bool kab::kabAddress(filterInfo *_info,QString adrbookname,
+                      QString givenname, QString email,
+                      QString title,QString firstName,
+                      QString additionalName,QString lastName,
+                      QString address,QString town,
+                      QString /*state*/,QString zip,QString country,
+                      QString organization,QString department,
+                      QString subDep,QString job,
+                      QString tel,QString fax,QString mobile,QString modem,
+                      QString homepage,QString talk,
+                      QString comment,QString /*birthday*/
                      )
 {
 //QWidget *parent=_info->parent();
@@ -557,7 +560,7 @@ AddressBook::Entry::Address A;
     api->getKey(i,key);
     api->getEntry(key,e);
 
-    found=strcasecmp(e.fn.latin1(),givenname)==0;
+    found=strcasecmp(e.fn.latin1(),givenname.latin1())==0;
 
     if (!found) { i+=1; }
   }
