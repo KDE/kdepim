@@ -60,6 +60,8 @@ namespace Kleo {
     /*! \reimp */
     QString text( int col ) const;
     /*! \reimp */
+    const QPixmap * pixmap( int col ) const;
+    /*! \reimp */
     int compare( QListViewItem * other, int col, bool ascending ) const;
     /*! \reimp to allow for key() overload above */
     QString key( int col, bool ascending ) const { return KListViewItem::key( col, ascending ); }
@@ -109,6 +111,7 @@ namespace Kleo {
     virtual int width( int column, const QFontMetrics & fm ) const;
     virtual QListView::WidthMode widthMode( int ) const { return QListView::Manual; }
     virtual QString text( const GpgME::Key & key, int column ) const = 0;
+    virtual const QPixmap * pixmap( const GpgME::Key &, int ) const { return 0; }
     virtual int compare( const GpgME::Key & key1, const GpgME::Key & key2, const int column ) const;
   };
 

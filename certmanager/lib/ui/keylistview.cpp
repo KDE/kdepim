@@ -139,6 +139,11 @@ QString Kleo::KeyListViewItem::text( int col ) const {
     : QString::null ;
 }
 
+const QPixmap * Kleo::KeyListViewItem::pixmap( int col ) const {
+  return listView() && listView()->columnStrategy()
+    ? listView()->columnStrategy()->pixmap( key(), col ) : 0 ;
+}
+
 int Kleo::KeyListViewItem::compare( QListViewItem * item, int col, bool ascending ) const {
   if ( !item || item->rtti() != RTTI || !listView() || !listView()->columnStrategy() )
     return KListViewItem::compare( item, col, ascending );
