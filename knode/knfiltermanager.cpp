@@ -39,7 +39,6 @@
 #include "knstringfilter.h"
 #include "knarticlefilter.h"
 #include "knfilterdialog.h"
-#include "knfiltersettings.h"
 #include "knfiltermanager.h"
 #include "knodeview.h"
 #include "knconfig.h"

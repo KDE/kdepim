@@ -5,12 +5,12 @@ SUBDIRS = pics filters
 bin_PROGRAMS = knode
 knode_SOURCES =   knconfigmanager.cpp \
                   knconfig.cpp \
-	                knconfigwidgets.cpp \
+                  knconfigwidgets.cpp \
                   \
-	                knnetaccess.cpp \
+                  knnetaccess.cpp \
                   knprotocolclient.cpp \
                   knsmtpclient.cpp \
-	                knnntpclient.cpp \
+                  knnntpclient.cpp \
                   knjobdata.cpp \
                   \
                   knaccountmanager.cpp \
@@ -32,7 +32,7 @@ knode_SOURCES =   knconfigmanager.cpp \
                   \
                   knarticlemanager.cpp \
                   knheaders.cpp \
-	                knmime.cpp \
+                  knmime.cpp \
                   knarticlewidget.cpp \
                   knarticlewindow.cpp \
                   knviewheader.cpp \
@@ -44,9 +44,9 @@ knode_SOURCES =   knconfigmanager.cpp \
                   \
                   knfiltermanager.cpp \
                   knstatusfilter.cpp \
-	                knstringfilter.cpp \
-	                knrangefilter.cpp \
-	                knarticlefilter.cpp \
+                  knstringfilter.cpp \
+                  knrangefilter.cpp \
+                  knarticlefilter.cpp \
                   knfilterconfigwidget.cpp \
                   knfilterdialog.cpp \
                   knsearchdialog.cpp \
@@ -58,10 +58,10 @@ knode_SOURCES =   knconfigmanager.cpp \
                   knlistview.cpp \
                   knfocuswidget.cpp \
                   knodeview.cpp \
-	                knode.cpp \
-	                knapplication.cpp \
-	                main.cpp
-	
+                  knode.cpp \
+                  knapplication.cpp \
+                  main.cpp
+
 
 noinst_HEADERS =  knconfigmanager.h \
                   knconfig.h \
@@ -91,7 +91,7 @@ noinst_HEADERS =  knconfigmanager.h \
                   \
                   knarticlemanager.h \
                   knheaders.h \
-	                knmime.h \
+                  knmime.h \
                   knarticlewidget.h \
                   knarticlewindow.h \
                   knviewheader.h \
@@ -121,11 +121,11 @@ noinst_HEADERS =  knconfigmanager.h \
                   knapplication.h \
                   resource.h \
                   knglobals.h
-	
-	
-	
 
-knode_LDFLAGS = $(all_libraries) $(KDE_RPATH) 
+
+
+
+knode_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 knode_LDADD   = -lkspell -lmimelib $(LIB_KAB) $(LIB_KFILE) $(LIBPTHREAD) $(LIBRESOLV)
 knode_METASOURCES = AUTO
 

@@ -43,7 +43,6 @@
 #include "knmime.h"
 #include "knarticlewidget.h"
 #include "knviewheader.h"
-#include "knappmanager.h"
 #include "knglobals.h"
 #include "knarticlemanager.h"
 #include "knarticlefactory.h"

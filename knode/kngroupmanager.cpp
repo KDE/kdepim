@@ -37,7 +37,6 @@
 #include "kncollectionviewitem.h"
 #include "knnntpaccount.h"
 //#include "kncleanup.h"
-#include "knuserentry.h"
 #include "knnetaccess.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
