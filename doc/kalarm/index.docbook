@@ -1,8 +1,5 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
-  <!ENTITY kalarm '<application>KAlarm</application>'>
-  <!ENTITY DCOP "DCOP">
-  <!ENTITY kalarmd "kalarmd">
   <!ENTITY kappname "&kalarm;">
   <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
@@ -282,9 +279,9 @@ message. If you don't want to defer it after all, just click
 </listitem>
 </itemizedlist>
 
-<para>The button with the &kalarm; icon provides a convenient way to
-activate &kalarm;. Clicking it has no effect on the alarm message
-window.</para>
+<para>The button with the <guiicon>&kalarm;</guiicon> icon provides a
+convenient way to activate &kalarm;. Clicking it has no effect on the
+alarm message window.</para>
 
 </sect2>
 
@@ -373,19 +370,19 @@ display by &kalarm;:</para>
   <entry>Make an audible beep when the message is displayed.</entry>
 </row>
 <row>
-  <entry><option>-c</option>, <option>--color</option>, <option>--colour</option>
-  <replaceable>colour</replaceable></entry>
+  <entry><option>-c</option>, <option>--color</option>, <option>--colour
+  <replaceable>colour</replaceable></option></entry>
   <entry>Set the message background colour to the specified &Qt;
   colour name or hex code 0xRRGGBB.</entry>
 </row>
 <row>
-  <entry><option>-f</option>, <option>--file</option> <replaceable>URL</replaceable></entry>
+  <entry><option>-f</option>, <option>--file <replaceable>URL</replaceable></option></entry>
   <entry>Specify the name or &URL; of a text file whose contents are to form the alarm message.
   <replaceable>message</replaceable> must not be present if this option is specified.</entry>
 </row>
 <row>
-  <entry><option>-i</option>, <option>--interval</option>
-  <replaceable>minutes</replaceable></entry>
+  <entry><option>-i</option>, <option>--interval
+  <replaceable>minutes</replaceable></option></entry>
   <entry>Set the interval between repetitions of the alarm to the
   specified number of minutes. Mandatory if <option>--repeat</option>
   is specified.</entry>
@@ -396,15 +393,15 @@ display by &kalarm;:</para>
   time.</entry>
 </row>
 <row>
-  <entry><option>-r</option>, <option>--repeat</option>
-  <replaceable>minutes</replaceable></entry>
+  <entry><option>-r</option>, <option>--repeat
+  <replaceable>minutes</replaceable></option></entry>
   <entry>The number of times the alarm should be repeated, after its
   initial display. Mandatory if <option>--interval</option> is
   specified.</entry>
 </row>
 <row>
-  <entry><option>-t</option>, <option>--time</option>
-  <replaceable>time</replaceable></entry>
+  <entry><option>-t</option>, <option>--time
+  <replaceable>time</replaceable></option></entry>
   <entry>Display message at 'time' [[[yyyy-]mm-]dd-]hh:mm (default is
   immediately).</entry>
 </row>
@@ -1116,22 +1113,22 @@ information).</para></note>
 </thead>
 <tbody>
 <row>
-  <entry><option>--calendarURL</option> <replaceable>url</replaceable></entry>
+  <entry><option>--calendarURL <replaceable>url</replaceable></option></entry>
   <entry>Use the calendar file with the specified &URL;. This option
   is only used for integrity checking: if the &URL; doesn't specify
   &kalarm;'s current default calendar file, the request will be
   ignored.</entry>
 </row>
 <row>
-  <entry><option>--cancelEvent</option> <replaceable>eventID</replaceable></entry>
+  <entry><option>--cancelEvent <replaceable>eventID</replaceable></option></entry>
   <entry>Cancel the event with the specified event ID.</entry>
 </row>
 <row>
-  <entry><option>--displayEvent</option> <replaceable>eventID</replaceable></entry>
+  <entry><option>--displayEvent <replaceable>eventID</replaceable></option></entry>
   <entry>Display the event with the specified event ID.</entry>
 </row>
 <row>
-  <entry><option>--handleEvent</option> <replaceable>eventID</replaceable></entry>
+  <entry><option>--handleEvent <replaceable>eventID</replaceable></option></entry>
   <entry>Display or cancel the event with the specified event
   ID. &kalarm; determines which action to take in the same way as for
   the <link linkend="handleEvent">handleEvent()</link> &DCOP; call.</entry>
@@ -1262,15 +1259,10 @@ allow the name &kalarm; to be used by this KDE2 application.
 <sect1 id="getting-kalarm">
 <title>How to obtain &kalarm;</title>
 
-<para>&kalarm; is available as a standalone package from
-<ulink url="http://www.astrojar.org.uk/linux">http://www.astrojar.org.uk/linux</ulink>
-</para>
+&install.intro.documentation;
 
-<para>&kalarm; will be part of the &kde; project
-<ulink url="http://www.kde.org">http://www.kde.org</ulink> from &kde;
-3.0 onwards, in the <ulink url="http://pim.kde.org">&package;</ulink>
-package. The main download site of the &kde; project is
-<ulink url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>.
+<para>&kalarm; is available as a separate package from
+<ulink url="http://www.astrojar.org.uk/linux">http://www.astrojar.org.uk/linux</ulink>
 </para>
 </sect1>
 
@@ -1316,15 +1308,11 @@ package file <filename>kdepim-x.x.tar.gz</filename> or
 <filename>kalarm-x.x.tar.gz</filename> (or similar), depending on
 whether you want to install &package; or just &kalarm;. Unpack it in a
 new directory using the command <userinput><command>tar</command>
-<option>xvfz</option>
-<replaceable>package.tar.gz</replaceable></userinput>, change to that
-directory and enter the following:</para>
+<option>xvfz
+<replaceable>package.tar.gz</replaceable></option></userinput>, change
+to that directory and enter the following:</para>
 
-<screen width="40">
-<prompt>%</prompt> <command>./configure</command>
-<prompt>%</prompt> <command>make</command>
-<prompt>%</prompt> <command>make <option>install</option></command>
-</screen>
+&install.compile.documentation;
 
 <note><para>If you have both more than one version of &kde; installed
 (e.g. KDE1 and KDE2), this may possibly install &kalarm; into the
@@ -1335,11 +1323,6 @@ if your &kde; is installed in <filename>/opt/kde2</filename>:</para>
 
 <para><userinput><command>./configure</command> --prefix=<replaceable>/opt/kde2</replaceable></userinput></para>
 </note>
-
-<para>Since &kalarm; uses <application>autoconf</application> and
-<application>automake</application> you should have no trouble
-compiling it. Should you run into problems please report them to the
-<ulink url="http://lists.kde.org">&kde; mailing lists</ulink>.</para>
 
 <important><para>If you install &kalarm; as a standalone package along
 with &package; 2.2.x, you must install &package; first and &kalarm;
