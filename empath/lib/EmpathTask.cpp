@@ -24,6 +24,7 @@
 
 #include <kapp.h>
 
+#include "Empath.h"
 #include "EmpathTask.h"
 #include "EmpathDefines.h"
 

@@ -32,6 +32,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
+#include <kapp.h>
 
 // Local includes
 #include "EmpathComposeWidget.h"
@@ -41,10 +42,12 @@
 #include "EmpathEditorProcess.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
+#include "EmpathDefines.h"
 #include "EmpathMailSender.h"
 #include <RMM_DateTime.h>
 #include <RMM_Mailbox.h>
 #include <RMM_Address.h>
+#include <RMM_Token.h>
 
 EmpathComposeWidget::EmpathComposeWidget(
 		QWidget *			parent,
@@ -87,6 +90,8 @@ EmpathComposeWidget::_init()
 {	
 	maxSizeColOne_ = 0;
 	
+	invisibleHeaders_.setAutoDelete(true);
+
 	// Get the layouts sorted out first.
 	layout_	= new QGridLayout(this, 2, 2, 4, 4, "layout_");
 	CHECK_PTR(layout_);
@@ -128,6 +133,7 @@ EmpathComposeWidget::_init()
 	CHECK_PTR(editorWidget_);
 	
 	KConfig * c(KGlobal::config());
+
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	editorWidget_->setFont(c->readFontEntry(EmpathConfig::KEY_FIXED_FONT));
@@ -144,18 +150,12 @@ EmpathComposeWidget::_init()
 	_addExtraHeaders();
 	_addHeader("Subject");
 
-	// Ensure everything's lined up nicely.
+	_lineUpHeaders();
 	
-	QListIterator<EmpathHeaderSpecWidget> hit(headerSpecList_);
-	
-	for (; hit.current(); ++hit)
-		hit.current()->setColumnOneSize(maxSizeColOne_);
-
 	layout_->setRowStretch(0, 0);
 	layout_->setRowStretch(1, 10);
 	layout_->setColStretch(0, 7);
 	layout_->setColStretch(0, 3);
-	headerLayout_->activate();
 	extraLayout_->activate();
 	layout_->activate();
 
@@ -193,108 +193,9 @@ EmpathComposeWidget::~EmpathComposeWidget()
 	RMM::RMessage
 EmpathComposeWidget::message()
 {
-	empathDebug("message called");
+	empathDebug("message() called");
 
-	QCString s;
-
-	QListIterator<EmpathHeaderSpecWidget> it(headerSpecList_);
-	
-	for (; it.current(); ++it) {
-		if (it.current()->headerBody().isEmpty())
-			continue;
-		s += it.current()->headerName().ascii();
-		s += " ";
-		s += it.current()->headerBody().ascii();
-		s += "\n";
-	}
-
-	if (composeType_ == Empath::ComposeReply	||
-		composeType_ == Empath::ComposeReplyAll) {
-		
-		RMM::RMessage * m(empath->message(url_));
-		if (m == 0) {
-			empathDebug("No message to reply to");
-			RMM::RMessage x;
-			return x;
-		}
-		
-		RMM::RMessage message(*m);
-		
-		// If there is a references header in the message we're replying to,
-		// we add the message id of that message to the references list.
-		if (message.envelope().has(RMM::HeaderReferences)) {
-			
-			QCString references = "References: ";
-			references += message.envelope().references().asString();
-			references += ": ";
-			references += message.envelope().references().asString();
-			references += " ";
-			references += message.envelope().messageID().asString();
-			s += references;
-			s += "\n";
-			
-		} else {
-			
-			// No references field. In that case, we just make an In-Reply-To
-			// header.
-			s += "In-Reply-To: ";
-		   	s += message.envelope().messageID().asString();
-			s += "\n";
-		}
-	}
-
-	// Put the user's added headers at the end, as they're more likely to
-	// be important, and it's easier to see them when they're near to the
-	// message body text.
-	
-	
-	KConfig * c(KGlobal::config());
-	c->setGroup(EmpathConfig::GROUP_IDENTITY);
-	
-	s += QCString("From: ");
-	s += QCString(c->readEntry(EmpathConfig::KEY_NAME).ascii());
-	s += QCString(" <");
-	s += QCString(c->readEntry(EmpathConfig::KEY_EMAIL).ascii());
-	s += QCString(">");
-	s += "\n";
-	
-	RMM::RDateTime dt;
-	dt.createDefault();
-	s += "Date: " + dt.asString();
-	s += "\n";
-	
-	RMM::RMessageID id;
-	id.createDefault();
-	
-	s += "Message-Id: " + id.asString();
-    s += "\n\n";
-	
-	// Body
-	s += editorWidget_->text().ascii();
-	
-	c->setGroup(EmpathConfig::GROUP_COMPOSE);
-	
-	if (c->readBoolEntry(EmpathConfig::KEY_ADD_SIG)) {
-		
-		QFile f(c->readEntry(EmpathConfig::KEY_SIG_PATH));
-		
-		if (f.open(IO_ReadOnly)) {	
-
-			QTextStream t(&f);
-		
-			QCString sig;
-		
-			while (!t.eof())
-				sig += t.readLine().ascii() + QCString("\n");
-		
-			s += "\n" + sig;
-		}
-	}
-
-	
-	empathDebug(s);
-	RMM::RMessage msg(s);
-	empathDebug(msg.asString());
+	RMM::RMessage msg(_envelope() + "\n" + _body());
 
 	return msg;
 }
@@ -315,8 +216,8 @@ EmpathComposeWidget::_spawnExternalEditor(const QCString & text)
 	CHECK_PTR(p);
 	
 	QObject::connect(
-		p, 		SIGNAL(done(bool, QCString)),
-		this,	SLOT(s_editorDone(bool, QCString)));
+		p, 		SIGNAL	(done			(bool, QCString)),
+		this,	SLOT	(s_editorDone	(bool, QCString)));
 	
 	p->go();
 }
@@ -493,23 +394,26 @@ EmpathComposeWidget::s_editorDone(bool ok, QCString text)
 EmpathComposeWidget::bugReport()
 {
 	_set("To", "rik@kde.org");
+	_addInvisibleHeader("X-EmpathInfo:",
+		"Empath Version: " + EMPATH_VERSION_STRING +
+		" KDE Version: " + QString::fromLatin1(KDE_VERSION_STRING) +
+		" Qt Version: " + QString::fromLatin1(QT_VERSION_STR));
+	_lineUpHeaders();
 	QString errorStr_;
-	errorStr_ = "- " +
-		i18n("What were you trying to do when the problem occured ?");
+	errorStr_ = "- " + i18n(
+		"What were you trying to do when the problem occured ?");
 	errorStr_ += "\n\n\n\n";
-	errorStr_ += "- " +
-		i18n("What actually happened ?");
+	errorStr_ += "- " + i18n(
+		"What actually happened ?");
 	errorStr_ += "\n\n\n\n";
-	errorStr_ += "- " +
-		i18n(
+	errorStr_ += "- " + i18n(
 		"Exactly what did you do that caused the problem to manifest itself ?");
 	errorStr_ += "\n\n\n\n";
-	errorStr_ += "- " +
-		i18n(
+	errorStr_ += "- " + i18n(
 		"Do you have a suggestion as to how this behaviour can be corrected ?");
 	errorStr_ += "\n\n\n\n";
-	errorStr_ += "- " +
-		i18n("- If you saw an error message, please try to reproduce it here");
+	errorStr_ += "- " + i18n(
+		"If you saw an error message, please try to reproduce it here.");
 	editorWidget_->setText(errorStr_);
 }
 
@@ -536,12 +440,24 @@ EmpathComposeWidget::_addHeader(const QString & n, const QString & b)
 	EmpathHeaderSpecWidget * newHsw =
 		new EmpathHeaderSpecWidget(n, b, this);
 	CHECK_PTR(newHsw);
+	
+	newHsw->show();
 
 	headerLayout_->addWidget(newHsw, headerLayout_->numRows(), 1);
 		
 	headerSpecList_.append(newHsw);
 		
 	maxSizeColOne_ = QMAX(newHsw->sizeOfColumnOne(), maxSizeColOne_);
+	
+	headerLayout_->activate();
+}
+
+	void
+EmpathComposeWidget::_addInvisibleHeader(const QString & n, const QString & b)
+{
+	RMM::RHeader * h =
+		new RMM::RHeader(QCString(n.ascii()) + ": " + QCString(b.ascii()));
+	invisibleHeaders_.append(h);
 }
 
 	QString
@@ -578,7 +494,6 @@ EmpathComposeWidget::_set(const QString & headerName, const QString & val)
 	}
 	
 	_addHeader(headerName, val);
-	headerSpecList_.last()->setColumnOneSize(maxSizeColOne_);
 }
 
 	void
@@ -652,4 +567,186 @@ EmpathComposeWidget::s_removeAttachment()
 	attachmentWidget_->removeAttachment();
 }
 
+	void
+EmpathComposeWidget::_lineUpHeaders()
+{
+	QListIterator<EmpathHeaderSpecWidget> hit(headerSpecList_);
+	
+	for (; hit.current(); ++hit)
+		hit.current()->setColumnOneSize(maxSizeColOne_);
+}
+
+	QCString
+EmpathComposeWidget::_envelope()
+{
+	QCString s;
+	
+	s += _referenceHeaders();
+	s += _stdHeaders();
+	s += _visibleHeaders();
+	s += _invisibleHeaders();
+	
+	return s;
+}
+
+	QCString
+EmpathComposeWidget::_body()
+{
+	QCString s = editorWidget_->text().ascii();
+	
+	KConfig * c(KGlobal::config());
+
+	c->setGroup(EmpathConfig::GROUP_COMPOSE);
+	
+	if (!c->readBoolEntry(EmpathConfig::KEY_ADD_SIG))
+		return s;
+
+	QFile f(c->readEntry(EmpathConfig::KEY_SIG_PATH));
+	
+	if (f.open(IO_ReadOnly)) {	
+
+		QTextStream t(&f);
+	
+		QCString sig;
+	
+		while (!t.eof())
+			sig += t.readLine().ascii() + QCString("\n");
+	
+		s += "\n" + sig;
+	}
+
+	return s;
+}
+
+	QCString
+EmpathComposeWidget::_referenceHeaders()
+{
+	QCString s;
+
+	if (composeType_ != Empath::ComposeReply	&&
+		composeType_ != Empath::ComposeReplyAll	)
+		return s;
+
+	RMM::RMessage * m(empath->message(url_));
+	
+	if (m == 0) {
+		empathDebug("No message to reply to");
+		return s;
+	}
+	
+	RMM::RMessage message(*m);
+	
+	// Ok, here's the system.
+	// Whatever happens, we create an In-Reply-To.
+	
+	s += "In-Reply-To: ";
+	s += message.envelope().messageID().asString();
+	s += "\n";
+	
+	if (!message.envelope().has(RMM::HeaderReferences)) {
+		
+		s += "References: ";
+		s += message.envelope().messageID().asString();
+		s += "\n";
+		
+		return s;
+	}
+	
+	// There is a references header.
+
+	QCString references = "References: ";
+	
+	QCString refs(message.envelope().references().asString());
+	
+	QStrList l;
+	
+	RMM::RTokenise(refs, " ", l);
+	
+	// While there are more than 10 references, remove the one in
+	// the second position. This way, we'll end up with 10 again,
+	// and remove all the older references, excluding the oldest.
+		
+	while (l.count() >= 10)
+		l.remove(2);
+	
+	QStrListIterator it(l);
+
+	for (; it.current(); ++it) {
+		references += it.current();
+		references += " ";
+	}
+	
+	references += message.envelope().messageID().asString();
+	s += references;
+	s += "\n";
+	
+	return s;
+}
+	
+	QCString
+EmpathComposeWidget::_visibleHeaders()
+{
+	QCString s;
+	
+	QListIterator<EmpathHeaderSpecWidget> it(headerSpecList_);
+	
+	for (; it.current(); ++it) {
+		
+		if (it.current()->headerBody().isEmpty())
+			continue;
+		
+		s += it.current()->headerName().ascii();
+		s += " ";
+		s += it.current()->headerBody().ascii();
+		s += "\n";
+	}
+	
+	return s;
+}
+	
+	QCString
+EmpathComposeWidget::_invisibleHeaders()
+{
+	QCString s;
+	
+	RMM::RHeaderListIterator it(invisibleHeaders_);
+	
+	for (; it.current(); ++it) {
+		s += it.current()->headerName();
+		s += " ";
+		s += it.current()->headerBody()->asString();
+		s += "\n";
+	}
+	
+	return s;
+}
+
+	QCString
+EmpathComposeWidget::_stdHeaders()
+{
+	QCString s;
+	
+	KConfig * c(KGlobal::config());
+	c->setGroup(EmpathConfig::GROUP_IDENTITY);
+
+	s += QCString("From: ");
+	s += QCString(c->readEntry(EmpathConfig::KEY_NAME).ascii());
+	s += QCString(" <");
+	s += QCString(c->readEntry(EmpathConfig::KEY_EMAIL).ascii());
+	s += QCString(">");
+	s += "\n";
+	
+	RMM::RDateTime dt;
+	dt.createDefault();
+	s += "Date: " + dt.asString();
+	s += "\n";
+	
+	RMM::RMessageID id;
+	id.createDefault();
+	
+	s += "Message-Id: " + id.asString();
+	s += "\n";
+
+	return s;
+}
 

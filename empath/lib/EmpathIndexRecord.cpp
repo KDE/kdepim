@@ -41,7 +41,6 @@ EmpathIndexRecord::EmpathIndexRecord()
 		parentMessageId_	(""),
 		tagged_				(false)
 {
-	empathDebug("default ctor");
 }
 		
 EmpathIndexRecord::EmpathIndexRecord(const EmpathIndexRecord & i)
@@ -55,7 +54,6 @@ EmpathIndexRecord::EmpathIndexRecord(const EmpathIndexRecord & i)
 		parentMessageId_	(i.parentMessageId_),
 		tagged_				(i.tagged_)
 {
-	empathDebug("copy ctor");
 }
 
 
@@ -70,7 +68,6 @@ EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMM::RMessage & m)
 		parentMessageId_	(m.envelope().parentMessageId()),
 		tagged_				(false)
 {
-	empathDebug("ctor w/ an RMessage - my id == " + id_);
 }
 
 EmpathIndexRecord::EmpathIndexRecord(
@@ -93,12 +90,10 @@ EmpathIndexRecord::EmpathIndexRecord(
 		parentMessageId_	(parentMessageId),
 		tagged_				(false)
 {
-	empathDebug("ctor - my id == " + id_);
 }
 
 EmpathIndexRecord::~EmpathIndexRecord()
 {
-	empathDebug("dtor");
 }
 
 	bool
@@ -205,7 +200,6 @@ operator >> (QDataStream & s, EmpathIndexRecord & rec)
 	void
 EmpathIndexRecord::setStatus(RMM::MessageStatus s)
 {
-	empathDebug("setStatus() called");
 	status_ = s;
 }
 

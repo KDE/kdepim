@@ -74,7 +74,8 @@ EmpathMaildir::~EmpathMaildir()
 EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 {
 	empathDebug("sync(" + url.asString() + ") called");
-	QTime realBegin(QTime::currentTime());
+	empath->s_infoMessage(
+		i18n("Reading mailbox") + " " + url_.asString());
 	
 	// First make sure any new mail that has arrived goes into cur.
 	_markNewMailAsSeen();
@@ -99,6 +100,8 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 		
 		if (fiDir.lastModified() < fiIndex.lastModified()) {
 			empathDebug("sync: Not modified");
+			empath->s_infoMessage(
+				i18n("Finished reading mailbox") + " " + url_.asString());
 			return;
 		}
 	}
@@ -229,11 +232,10 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 	
 	t->done();
 	
-	_writeIndex();
+	empath->s_infoMessage(
+		i18n("Finished reading mailbox") + " " + url_.asString());
 	
-	empathDebug("sync took " +
-		QString().setNum(realBegin.msecsTo(QTime::currentTime())) + " ms");
-	empathDebug("sync done");
+	_writeIndex();
 }
 
 	bool
@@ -748,8 +750,7 @@ EmpathMaildir::_generateFlagsString(RMM::MessageStatus s)
 EmpathMaildir::_readIndex()
 {
 	empathDebug("_readIndex() called");
-	QTime realBegin(QTime::currentTime());
-	QTime begin(realBegin);
+	QTime begin(QTime::currentTime());
 	QTime now;
 
 	QFile indexFile(path_ + "/.empathIndex");
@@ -801,10 +802,9 @@ EmpathMaildir::_readIndex()
 				(flags.contains('R') ? RMM::Replied	: 0)	|
 				(flags.contains('F') ? RMM::Marked	: 0)	));
 #endif
-		empathDebug("Inserting the new index record.");
 		
 		if (r->id().isEmpty()) {
-			empathDebug("Not really - no filename !");
+			empathDebug("Not inserting index record - no filename !");
 			delete r;
 			continue;
 		}
@@ -813,9 +813,6 @@ EmpathMaildir::_readIndex()
 	}
 
 	indexFile.close();
-	
-	empathDebug("readIndex took " +
-		QString().setNum(realBegin.msecsTo(QTime::currentTime())) + " ms");
 }
 
 	void

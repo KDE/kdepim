@@ -51,6 +51,7 @@ class EmpathUI : public QObject
 		void s_setupFilters();
 		void s_about();
 		void s_bugReport();
+		void s_infoMessage(const QString &);
 		
 		void s_newComposer(Empath::ComposeType, const EmpathURL &);
 		void s_newComposer(const QString &);

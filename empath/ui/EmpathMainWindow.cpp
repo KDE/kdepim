@@ -157,7 +157,7 @@ EmpathMainWindow::_setupToolBar()
 	void
 EmpathMainWindow::_setupStatusBar()
 {
-	status_->message("Welcome to Empath");
+	empath->s_infoMessage(i18n("Welcome to Empath"));
 }
 
 // If the user presses the close button on the title bar, or tries

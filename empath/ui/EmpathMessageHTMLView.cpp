@@ -28,6 +28,7 @@
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qstring.h>
+#include <qpngio.h>
 
 // KDE includes
 #include <klocale.h>
@@ -53,6 +54,8 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 		busy_(false)
 {
 	empathDebug("ctor");
+
+	qInitPngIO();
 	
 	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
@@ -74,7 +77,7 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 	// End welcome message
 	parse();
 	end();
-
+	
 	QObject::connect(
 		this, SIGNAL(popupMenu(QString, const QPoint &)),
 		this, SLOT(s_popupMenu(QString, const QPoint &)));
@@ -187,8 +190,6 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 
 	QCString quoteOne = QColorToHTML(quote1);
 	QCString quoteTwo = QColorToHTML(quote2);
-	
-	empathDebug("Quote colours: \"" + quoteOne + "\", \"" + quoteTwo + "\"");
 	
 	// Will this work with Qt-2.0's QString ?
 	register char * buf = new char[32768]; // 32k buffer. Will be reused.

@@ -67,13 +67,6 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 
 	setUpdatesEnabled(false);
 	
-	if (getWState() & WState_BlockUpdates) {
-		empathDebug("WState_BlockUpdates is set");
-	}
-	else {
-		empathDebug("WState_BlockUpdates is not set");
-	}
-
 	parent_ = (EmpathMainWindow *)parent;
 	wantScreenUpdates_ = false;
 	setMultiSelection(true);
@@ -309,8 +302,11 @@ EmpathMessageListWidget::mark(RMM::MessageStatus status)
 
 		u.setMessageID(((EmpathMessageListItem *)it.current())->id());
 	
-		if (empath->mark(u, RMM::MessageStatus(i->status() ^ status)))
+		if (empath->mark(u, RMM::MessageStatus(i->status() ^ status))) {
 			setStatus(i, RMM::MessageStatus(i->status() ^ status));
+		} else {
+			empathDebug("Couldn't mark message");
+		}
 	}
 	
 	t->done();
@@ -558,7 +554,7 @@ EmpathMessageListWidget::setSignalUpdates(bool yn)
 	void
 EmpathMessageListWidget::markAsRead(EmpathMessageListItem * item)
 {
-	EmpathURL u = EmpathURL(url_.mailboxName(), url_.folderPath(), item->id());
+	EmpathURL u(url_.mailboxName(), url_.folderPath(), item->id());
 	if (empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Read))) {
 		setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Read));
 	}
@@ -606,6 +602,9 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 		return;
 	}
 	
+	empath->s_infoMessage(
+		i18n("Reading mailbox") + " " + url.asString());
+	
 	// Ask the folder we were showing to drop its index.
 	// Thanks to Waldo's dandy zone allocator, a few 128K blocks might
 	// just get passed back to the OS here.
@@ -650,6 +649,7 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	f->messageList().sync();
 	
 	_fillDisplay(f);
+	
 }
 	void
 EmpathMessageListWidget::s_headerClicked(int i)
@@ -1213,10 +1213,6 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
 		_fillThreading(f);
 	else
 		_fillNonThreading(f);
-
-	setUpdatesEnabled(true);
-	
-	triggerUpdate();
 	
 	filling_ = false;
 	
@@ -1256,6 +1252,10 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
 			readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true));
 	
 	t->done();
+	setUpdatesEnabled(true);
+	triggerUpdate();
+	empath->s_infoMessage(
+		i18n("Finished reading mailbox") + " " + url_.asString());
 }
 
 	void
@@ -1291,8 +1291,13 @@ EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
 //	QTime begin2(begin);
 	QTime now;
 	
-	setUpdatesEnabled(false);
-
+	sortType_ = KGlobal::config()->
+		readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true);
+	
+	setSorting(
+		KGlobal::config()->
+		readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 3), sortType_);
+	
 	for (; mit.current(); ++mit) {
 		
 		addItem(mit.current());
@@ -1315,14 +1320,11 @@ EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
 //		}
 	}
 	
-	sortType_ = KGlobal::config()->
-		readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true);
-	
-	setSorting(
-		KGlobal::config()->
-		readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 3), sortType_);
-	
 	t->done();
+	setUpdatesEnabled(true);
+	triggerUpdate();
+	empath->s_infoMessage(
+		i18n("Finished reading mailbox") + " " + url_.asString());
 }
 
 

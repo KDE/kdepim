@@ -69,6 +69,7 @@ EmpathFolderListItem::EmpathFolderListItem(
 		empathDebug("Can't find the mailbox !!!!");
 		return;
 	}
+
 	QObject::connect(m, SIGNAL(countUpdated(int, int)),
 		this, SLOT(s_setCount(int, int)));
 	

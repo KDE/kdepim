@@ -189,7 +189,10 @@ Empath::folder(const EmpathURL & url)
 {
 	empathDebug("folder(" + url.asString() + ") called");
 	EmpathMailbox * m = mailbox(url);
-	if (m == 0) return 0;
+	if (m == 0) {
+		empathDebug("Can't find mailbox " + url.asString());
+		return 0;
+	}
 	return m->folder(url);
 }
 
@@ -197,7 +200,10 @@ Empath::folder(const EmpathURL & url)
 Empath::remove(const EmpathURL & url)
 {
 	EmpathMailbox * m = mailbox(url);
-	if (m == 0) return false;
+	if (m == 0) {
+		empathDebug("Can't find mailbox " + url.asString());
+		return false;
+	}
 	return m->removeMessage(url);
 }
 
@@ -205,7 +211,10 @@ Empath::remove(const EmpathURL & url)
 Empath::mark(const EmpathURL & url, RMM::MessageStatus s)
 {
 	EmpathFolder * f = folder(url);
-	if (f == 0) return false;
+	if (f == 0) {
+		empathDebug("Can't find folder " + url.asString());
+		return false;
+	}
 	return f->mark(url, s);
 }
 

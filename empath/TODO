@@ -7,8 +7,6 @@ Highest priority first.
 
 * Drag and drop - Working on this but I need HELP ! It's not working right !
 
-* Test sendmail and qmail sending. Add user feedback.
-
 * Nail down the parser (rmm). It's still buggy when creating message parts
   yourself and trying to put them together.
   
@@ -40,7 +38,7 @@ Highest priority first.
   in various parts of rmm. I think this crashes because of a Qt bug.
   
 * Implement locking of index files. Will have to use dotlocking to ensure it'll
-  work over NFS.
+  work over NFS. We can get away with this as only Empath knows about them.
   
 * CORBA !
   x Use an OpenPart for the mail editor.
@@ -57,13 +55,10 @@ Highest priority first.
 
 Bugs in Qt/KDE (possibly)
 
-* KTMainWindow layout fixes my toplevels' size sometimes.
+* KTMainWindow layout fixes my toplevels' size (wrongly) sometimes.
 
 * KHTMLWidget crashes on some valid html. ** Found out it's trying desperately
   to parse stuff in <PRE> and failing.
-
-* Sometimes KMenuBar doesn't show some entries until the mouse passes over them.
-  ** This is being worked on, I hear
 
 * DnD doesn't work right. Me or Qt ? Probably me.
   ** Apparently some of this is actually Qt's fault

@@ -59,6 +59,7 @@ EmpathMailSender::~EmpathMailSender()
 EmpathMailSender::send(RMM::RMessage & message)
 {
 	EmpathTask * t(empath->addTask("Sending message"));
+	empath->s_infoMessage(i18n("Sending message"));
 
 	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_SENDING);
@@ -71,11 +72,13 @@ EmpathMailSender::send(RMM::RMessage & message)
 	
 	if (queueFolder == 0) {
 		empathDebug("Couldn't queue message - couldn't find queue folder !");
+		empathDebug("Queue folder was specified as: \"" + queueURL.asString() + "\"");
 		KMsgBox::message(0, "Empath",
 			i18n("Couldn't queue message ! Writing backup"),
 			KMsgBox::EXCLAMATION, i18n("OK"));
 		emergencyBackup(message);
 		t->done();
+		empath->s_infoMessage(i18n("Unable to send message"));
 		return false;
 	}
 	
@@ -88,6 +91,7 @@ EmpathMailSender::send(RMM::RMessage & message)
 			KMsgBox::EXCLAMATION, i18n("OK"));
 		emergencyBackup(message);
 		t->done();
+		empath->s_infoMessage(i18n("Unable to send message"));
 		return false;
 	}
 
@@ -97,6 +101,7 @@ EmpathMailSender::send(RMM::RMessage & message)
 		empathDebug("Couldn't send message !");
 		emergencyBackup(message);
 		t->done();
+		empath->s_infoMessage(i18n("Unable to send message"));
 		return false;
 	}
 	
@@ -106,6 +111,7 @@ EmpathMailSender::send(RMM::RMessage & message)
 		empathDebug("Couldn't write message to sent folder !");
 		emergencyBackup(message);
 		t->done();
+		empath->s_infoMessage(i18n("Unable to send message"));
 		return false;
 	}
 
@@ -116,10 +122,12 @@ EmpathMailSender::send(RMM::RMessage & message)
 		empathDebug("Couldn't remove message from queue folder !");
 		emergencyBackup(message);
 		t->done();
+		empath->s_infoMessage(i18n("Unable to send message"));
 		return false;
 	}
 	
 	t->done();
+	empath->s_infoMessage(i18n("Message sent successfully"));
 
 	return true;
 }
@@ -202,6 +210,7 @@ EmpathMailSender::queue(RMM::RMessage & message)
 			i18n("Couldn't queue message ! Writing backup"),
 			KMsgBox::EXCLAMATION, i18n("OK"));
 		emergencyBackup(message);
+		empath->s_infoMessage(i18n("Unable to queue message"));
 		return;
 	}
 	
@@ -211,8 +220,11 @@ EmpathMailSender::queue(RMM::RMessage & message)
 			i18n("Couldn't queue message ! Writing backup"),
 			KMsgBox::EXCLAMATION, i18n("OK"));
 		emergencyBackup(message);
+		empath->s_infoMessage(i18n("Unable to queue message"));
 		return;
 	}
+	
+	empath->s_infoMessage(i18n("Message queued for later delivery"));
 }
 
 	void
@@ -241,6 +253,7 @@ EmpathMailSender::emergencyBackup(RMM::RMessage & message)
 		KMsgBox::message(0, "Empath",
 			i18n("Couldn't write the backup file ! Message has been LOST !"),
 			KMsgBox::EXCLAMATION, i18n("OK"));
+		empath->s_infoMessage(i18n("Couldn't write backup file !"));
 		return;
 	}
 
@@ -254,17 +267,22 @@ EmpathMailSender::emergencyBackup(RMM::RMessage & message)
 	
 	if (f.status() != IO_Ok) {
 		empathDebug("Couldn't successfully close the file.");
-		empathDebug("EMERGENCY BACKUP COULD NOT BE WRITTEN !");
+		empathDebug("EMERGENCY BACKUP COULD NOT BE VERIFIED !");
 		empathDebug("PLEASE CONTACT PROGRAM MAINTAINER !");
 		KMsgBox::message(0, "Empath",
-			i18n("Couldn't write the backup file ! Message has been LOST !"),
+		i18n("Couldn't write the backup file ! Message may have been LOST !"),
 			KMsgBox::EXCLAMATION, i18n("OK"));
+		empath->s_infoMessage(i18n("Couldn't write backup file !"));
 		return;
 	}
 	
 	KMsgBox::message(0, "Empath",
-		i18n("Backup message written to") + " " +
+		i18n("Message backup written to") + " " +
 		QString::fromLatin1(tempComposeFilename),
 		KMsgBox::INFORMATION, i18n("OK"));
+	
+	empath->s_infoMessage(
+		i18n("Message backup written to:") + " " +
+		QString::fromLatin1(tempComposeFilename));
 }
 

@@ -26,7 +26,6 @@
 #include "EmpathIndexRecord.h"
 #include "EmpathIndex.h"
 #include "EmpathFolder.h"
-#include "EmpathMessageList.h"
 
 EmpathIndex::EmpathIndex()
 	:	QDict<EmpathIndexRecord>(101)

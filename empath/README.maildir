@@ -1,0 +1,92 @@
+-- How to use Maildir format mailboxes with the Empath mail client
+-- Rik Hemsley <rik@kde.org>
+-- 28th June 1999 
+
+To use Empath with local mailboxes, they need to be in Maildir format.
+
+A Maildir box is easy to identify. Instead of being a single file, it's
+a directory containing subdirectories called 'cur', 'new' and 'tmp'.
+
+If you don't have your mail delivered to a Maildir box, this README will
+tell you how to convert your mbox format spool to a Maildir box and how to
+have mail delivered to this spool in future.
+
+1. Manual mbox->maildir conversion. 
+	
+	Use the included utility 'mbox2maildir' to copy messages from
+	an mbox format file to a Maildir folder.
+
+	The utility is provided in 'empath/import/'.
+	
+	To do the conversion, first make sure that the mbox file is not
+	going to be written to while you're using it. That means if your
+	mail server may write to the file, you should temporarily pause your
+	mail server or any other mail delivery programs (e.g. procmail)
+	and copy your mbox file to a new location.
+	
+	e.g. (for a RedHat Linux system)
+
+	=====================================================================
+	
+	su -c '/etc/rc.d/init.d/sendmail stop'
+	
+	cp /var/spool/mail/${USER} ~/my_mbox
+	
+	su -c '/etc/rc.d/init.d/sendmail start'
+
+	=====================================================================
+	
+	Now if you don't already have a Maildir format box, do something
+	like the following:
+	
+	=====================================================================
+
+	OLD_UMASK=`umask`
+	
+	umask 077
+	
+	mkdir Maildir
+	mkdir Maildir/cur
+	mkdir Maildir/new
+	mkdir Maildir/tmp
+
+	umask ${OLD_UMASK}
+		
+	=====================================================================
+	
+	Next you need to run the conversion utility. Using the example above,
+	this should work fine:
+
+	=====================================================================
+	
+	import/mbox2maildir ~/my_mbox ~/Maildir
+
+	=====================================================================
+	
+	You should get output similar to this:
+	
+	=====================================================================
+	
+	Copying messages
+	From: /home/rik/my_mbox
+	To:   /home/rik/Maildir
+	..............................
+	Copied 30 messages OK
+	
+	=====================================================================
+
+2. Delivery to Maildir format box.
+
+	To do this you will need some form of 'Mail Delivery Agent' (MDA) that
+	can deliver to Maildir format boxes.
+	
+	This will likely mean using qmail (as a sendmail replacement) or
+	using something 'behind' sendmail to handle delivery, such as the
+	utility 'maildrop' which is similar to 'procmail', the traditional
+	mail delivery and filtering agent.
+	
+	Instructions for setting up and using qmail and maildrop are included
+	with the respective packages. It's a great deal easier to set up maildrop
+	than qmail, though I'd recommend moving your site to qmail if you don't
+	need sendmail's extra functionality and care about mail security and safety.
+

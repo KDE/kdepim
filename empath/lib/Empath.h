@@ -189,6 +189,8 @@ class Empath : public QObject
 		
 	public slots:
 		
+		void s_infoMessage(const QString &);
+		
 		void s_newTask(EmpathTask *);
 
 		void s_newMailArrived();
@@ -266,6 +268,7 @@ class Empath : public QObject
 		void about();
 		
 		void newTask(EmpathTask *);
+		void infoMessage(const QString &);
 		
 	private:
 	
@@ -322,6 +325,10 @@ Empath::s_forward(const EmpathURL & url)
 inline void
 Empath::s_bounce(const EmpathURL & url)
 { emit(newComposer(ComposeBounce, url)); }
+
+inline void
+Empath::s_infoMessage(const QString & s)
+{ emit(infoMessage(s)); }
 
 #endif
 

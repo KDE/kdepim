@@ -106,13 +106,31 @@ class EmpathComposeWidget : public QWidget
 	private:
 
 		void	_init();
+		
 		void	_reply(bool toAll = false);
 		void	_forward();
+		
 		void	_spawnExternalEditor(const QCString & text);
+		
 		void	_addExtraHeaders();
+		
 		void	_addHeader(const QString &, const QString & = QString::null);
+		
+		void	_addInvisibleHeader
+			(const QString &, const QString & = QString::null);
+		
 		void	_set(const QString &, const QString &);
 		QString	_get(const QString &);
+		
+		void	_lineUpHeaders();
+		
+		QCString _envelope();
+		QCString _body();
+		
+		QCString _referenceHeaders();
+		QCString _visibleHeaders();
+		QCString _invisibleHeaders();
+		QCString _stdHeaders();
 		
 		EmpathAttachmentListWidget * attachmentWidget_;
 
@@ -127,6 +145,7 @@ class EmpathComposeWidget : public QWidget
 		QLineEdit		* le_subject_;
 		
 		QList<EmpathHeaderSpecWidget> headerSpecList_;
+		RMM::RHeaderList invisibleHeaders_;
 
 		Empath::ComposeType	composeType_;
 

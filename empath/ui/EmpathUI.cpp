@@ -25,7 +25,8 @@
 // Qt includes
 #include <qmessagebox.h>
 #include <qstring.h>
-#include <qpngio.h>
+#include <qwidgetlist.h>
+#include <qapplication.h>
 
 // KDE includes
 #include <kglobal.h>
@@ -34,6 +35,7 @@
 #include <kapp.h>
 #include <kstddirs.h>
 #include <klocale.h>
+#include <ktmainwindow.h>
 
 // Local includes
 #include "Empath.h"
@@ -57,12 +59,14 @@ EmpathUI::EmpathUI()
 {
 	empathDebug("ctor");
 	
-	qInitPngIO();
-	
 	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	QString iconSetPath(c->readEntry(EmpathConfig::KEY_ICON_SET, "standard"));
+	
+	QObject::connect(
+		empath,	SIGNAL(infoMessage(const QString &)),
+		this,	SLOT(s_infoMessage(const QString &)));
 
 	QObject::connect(
 		empath,	SIGNAL(newComposer(Empath::ComposeType, const EmpathURL &)),
@@ -213,5 +217,22 @@ EmpathUI::s_bugReport()
 	EmpathComposeWindow * c = new EmpathComposeWindow();
 	CHECK_PTR(c);
 	c->bugReport();
+}
+
+	void
+EmpathUI::s_infoMessage(const QString & s)
+{
+	QWidgetList * l = QApplication::topLevelWidgets();
+	
+	if (l->isEmpty()) return;
+	
+	QWidgetListIt it(*l);
+	
+	for (; it.current(); ++it) {
+		if (it.current()->inherits("KTMainWindow"))
+			((KTMainWindow *)it.current())->statusBar()->message(s, 4000);
+	}
+	
+	delete l;
 }
 
