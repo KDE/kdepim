@@ -1,9 +1,7 @@
 INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH) \
-	-I../../lib
+	-I../../lib -DDEBUG -DDEBUG_CERR
 
 METASOURCES = AUTO
-
-CXXFLAGS+=-DDEBUG -DDEBUG_CERR
 
 servicedir = $(kde_servicesdir)
 service_DATA = knotes-conduit.desktop

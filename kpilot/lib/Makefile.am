@@ -1,8 +1,6 @@
 METASOURCES = AUTO
 
-INCLUDES = $(all_includes)
-
-CXXFLAGS+=-DDEBUG -DDEBUG_CERR
+INCLUDES = $(all_includes) -DDEBUG -DDEBUG_CERR
 
 kde_module_LTLIBRARIES = libkpilot.la
 
