@@ -1,6 +1,6 @@
 SUBDIRS = soap kioslave
 
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libemailfunctions $(all_includes)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkdepim $(all_includes)
 
 lib_LTLIBRARIES = libkcal_groupwise.la libkabc_groupwise.la
 

@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libemailfunctions -I$(top_srcdir)/kresources/groupwise/soap \
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kresources/groupwise/soap \
   $(all_includes)
 
 noinst_HEADERS = groupwise.h

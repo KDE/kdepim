@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkdepim -I$(top_srcdir)/kresources/groupwise \
-           -I$(top_srcdir)/libemailfunctions  $(all_includes)
+           $(all_includes)
 
 #AM_CPPFLAGS = -DDEBUG
 

@@ -1,6 +1,6 @@
 METASOURCES = AUTO
 
-INCLUDES = -I$(top_srcdir)/libemailfunctions -I$(top_srcdir)/libkdepim \
+INCLUDES = -I$(top_srcdir)/libkdepim \
            -I$(top_srcdir)/libkpimidentities -I$(top_srcdir)/libkcal \
            -I$(top_srcdir)/kresources/imap/shared -I$(top_srcdir) \
            -I$(top_srcdir)/knotes \

@@ -3,7 +3,6 @@ METASOURCES = AUTO
 INCLUDES = -I$(top_srcdir)/korganizer/interfaces \
     -I$(top_srcdir)/interfaces \
     -I$(top_srcdir) \
-    -I$(top_srcdir)/libemailfunctions \
     -I$(top_srcdir)/libkpimexchange/core -I$(top_builddir)/libkpimexchange/core \
     -I$(top_srcdir)/libical/src/libical -I$(top_srcdir)/libical/src/libicalss \
     -I$(top_builddir)/libical/src/libical -I$(top_builddir)/libical/src/libicalss \
