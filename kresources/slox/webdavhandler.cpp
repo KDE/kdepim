@@ -20,6 +20,8 @@
 
 #include "webdavhandler.h"
 
+#include <values.h>
+
 #include <libkdepim/kpimprefs.h>
 
 #include <kdebug.h>
@@ -138,10 +140,26 @@ QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
 {
   QString s = str.mid( 0, str.length() - 3 );
 
+  bool preEpoch = s.startsWith("-");
+  if (preEpoch)
+     s = s.mid(1);
+
   unsigned long ticks = s.toULong();
 
   QDateTime dt;
-  dt.setTime_t( ticks, Qt::UTC );
+
+  if (preEpoch) {
+    dt.setTime_t( 0, Qt::UTC );
+    if (ticks > MAXINT) {
+      dt = dt.addSecs(-MAXINT);
+      ticks -= MAXINT;
+    }
+    dt = dt.addSecs(-((long) ticks));
+  }
+  else
+  {
+    dt.setTime_t( ticks, Qt::UTC );
+  }
 
   return dt;
 }
@@ -149,14 +167,7 @@ QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
 QDateTime WebdavHandler::sloxToQDateTime( const QString &str,
                                           const QString &timeZoneId )
 {
-  QString s = str.mid( 0, str.length() - 3 );
-
-  unsigned long ticks = s.toULong();
-
-  QDateTime dt;
-  dt.setTime_t( ticks, Qt::UTC );
-
-  return KPimPrefs::utcToLocalTime( dt, timeZoneId );
+  return KPimPrefs::utcToLocalTime( sloxToQDateTime(str), timeZoneId );
 }
 
 QDomElement WebdavHandler::addElement( QDomDocument &doc, QDomNode &node,
