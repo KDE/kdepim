@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="8">
+<kpartgui name="kaddressbook" version="9">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -84,13 +84,11 @@
     <Action name="view_refresh"/>
     <Separator/>
     <Action name="options_show_features"/>
-    <Separator/>
   </ToolBar>
 
   <ToolBar name="filterToolBar" noMerge="1"><text>Filter Toolbar</text>
     <Action name="options_edit_filters"/>
     <Action name="select_filter"/>
-    <Separator/>
   </ToolBar>
   
 </kpartgui>
