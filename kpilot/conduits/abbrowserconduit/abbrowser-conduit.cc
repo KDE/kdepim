@@ -71,10 +71,12 @@ AddressBook*AbbrowserConduit::aBook=0L;
 /// This macro just sets the phone number of type "type" to "phone"
 /// Use a macro, because that saves two lines for each call, but does not
 /// have the overhead of a function call
-#define _setPhoneNumber(abEntry, type, nr) \
-	{ PhoneNumber phone = abEntry.phoneNumber(type); \
+static inline void _setPhoneNumber(Addressee &abEntry, int type, const QString &nr)
+{ 
+	PhoneNumber phone = abEntry.phoneNumber(type);
 	phone.setNumber(nr); \
-	abEntry.insertPhoneNumber(phone); }
+	abEntry.insertPhoneNumber(phone); 
+}
 
 
 /*********************************************************************
@@ -522,27 +524,27 @@ void AbbrowserConduit::setOtherField(Addressee & abEntry, QString nr)
 	switch (AbbrowserSettings::pilotOther())
 	{
 		case AbbrowserSettings::eOtherPhone:
-			_setPhoneNumber(abEntry, 0, nr)
+			_setPhoneNumber(abEntry, 0, nr);
 			break;
 		case AbbrowserSettings::eAssistant:
 			abEntry.insertCustom(CSL1("KADDRESSBOOK"), CSL1("AssistantsName"), nr);
 			break;
 		case AbbrowserSettings::eBusinessFax:
-			_setPhoneNumber(abEntry, PhoneNumber::Fax | PhoneNumber::Work, nr)
+			_setPhoneNumber(abEntry, PhoneNumber::Fax | PhoneNumber::Work, nr);
 			break;
 		case AbbrowserSettings::eCarPhone:
-			_setPhoneNumber(abEntry, PhoneNumber::Car, nr)
+			_setPhoneNumber(abEntry, PhoneNumber::Car, nr);
 			break;
 		case AbbrowserSettings::eEmail2:
 			return abEntry.insertEmail(nr);
 		case AbbrowserSettings::eHomeFax:
-			_setPhoneNumber(abEntry, PhoneNumber::Fax|PhoneNumber::Home, nr)
+			_setPhoneNumber(abEntry, PhoneNumber::Fax|PhoneNumber::Home, nr);
 			break;
 		case AbbrowserSettings::eTelex:
-			_setPhoneNumber(abEntry, PhoneNumber::Bbs, nr)
+			_setPhoneNumber(abEntry, PhoneNumber::Bbs, nr);
 			break;
 		case AbbrowserSettings::eTTYTTDPhone:
-			_setPhoneNumber(abEntry, PhoneNumber::Pcs, nr)
+			_setPhoneNumber(abEntry, PhoneNumber::Pcs, nr);
 			break;
 	}
 }
@@ -651,25 +653,27 @@ void AbbrowserConduit::showAddressee(const Addressee & abAddress)
 
 void AbbrowserConduit::showPilotAddress(PilotAddress *pilotAddress)
 {
-	FUNCTIONSETUP;
-	DEBUGCONDUIT << "\tPilot Address" << endl;
+	FUNCTIONSETUPL(3);
+	if (debug_level >= 3)
+	{
 	if (!pilotAddress) {
-		DEBUGCONDUIT<< "\t\tEMPTY"<<endl;
+		DEBUGCONDUIT<< fname << "| EMPTY"<<endl;
 		return;
 	}
-	DEBUGCONDUIT << "\t\tLast name = " << pilotAddress->getField(entryLastname) << endl;
-	DEBUGCONDUIT << "\t\tFirst name = " << pilotAddress->getField(entryFirstname) << endl;
-	DEBUGCONDUIT << "\t\tCompany = " << pilotAddress->getField(entryCompany) << endl;
-	DEBUGCONDUIT << "\t\tJob Title = " << pilotAddress->getField(entryTitle) << endl;
-	DEBUGCONDUIT << "\t\tNote = " << pilotAddress->getField(entryNote) << endl;
-	DEBUGCONDUIT << "\t\tHome phone = " << pilotAddress->getPhoneField(PilotAddress::eHome, false) << endl;
-	DEBUGCONDUIT << "\t\tWork phone = " << pilotAddress->getPhoneField(PilotAddress::eWork, false) << endl;
-	DEBUGCONDUIT << "\t\tMobile phone = " << pilotAddress->getPhoneField(PilotAddress::eMobile, false) << endl;
-	DEBUGCONDUIT << "\t\tEmail = " << pilotAddress->getPhoneField(PilotAddress::eEmail, false) << endl;
-	DEBUGCONDUIT << "\t\tFax = " << pilotAddress->getPhoneField(PilotAddress::eFax, false) << endl;
-	DEBUGCONDUIT << "\t\tPager = " << pilotAddress->getPhoneField(PilotAddress::ePager, false) << endl;
-	DEBUGCONDUIT << "\t\tOther = " << pilotAddress->getPhoneField(PilotAddress::eOther, false) << endl;
-	DEBUGCONDUIT << "\t\tCategory = " << pilotAddress->getCategoryLabel() << endl;
+	DEBUGCONDUIT << fname << "| Last name = " << pilotAddress->getField(entryLastname) << endl;
+	DEBUGCONDUIT << fname << "| First name = " << pilotAddress->getField(entryFirstname) << endl;
+	DEBUGCONDUIT << fname << "| Company = " << pilotAddress->getField(entryCompany) << endl;
+	DEBUGCONDUIT << fname << "| Job Title = " << pilotAddress->getField(entryTitle) << endl;
+	DEBUGCONDUIT << fname << "| Note = " << pilotAddress->getField(entryNote) << endl;
+	DEBUGCONDUIT << fname << "| Home phone = " << pilotAddress->getPhoneField(PilotAddress::eHome, false) << endl;
+	DEBUGCONDUIT << fname << "| Work phone = " << pilotAddress->getPhoneField(PilotAddress::eWork, false) << endl;
+	DEBUGCONDUIT << fname << "| Mobile phone = " << pilotAddress->getPhoneField(PilotAddress::eMobile, false) << endl;
+	DEBUGCONDUIT << fname << "| Email = " << pilotAddress->getPhoneField(PilotAddress::eEmail, false) << endl;
+	DEBUGCONDUIT << fname << "| Fax = " << pilotAddress->getPhoneField(PilotAddress::eFax, false) << endl;
+	DEBUGCONDUIT << fname << "| Pager = " << pilotAddress->getPhoneField(PilotAddress::ePager, false) << endl;
+	DEBUGCONDUIT << fname << "| Other = " << pilotAddress->getPhoneField(PilotAddress::eOther, false) << endl;
+	DEBUGCONDUIT << fname << "| Category = " << pilotAddress->getCategoryLabel() << endl;
+	}
 }
 #endif
 
@@ -678,14 +682,17 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 	PilotAddress *palmAddr)
 {
 #ifdef DEBUG
-	FUNCTIONSETUP;
-	DEBUGCONDUIT << "abEntry:" << endl;
-	showAddressee(pcAddr);
-	DEBUGCONDUIT << "pilotAddress:" << endl;
-	showPilotAddress(palmAddr);
-	DEBUGCONDUIT << "backupAddress:" << endl;
-	showPilotAddress(backupAddr);
-	DEBUGCONDUIT << "------------------------------------------------" << endl;
+	FUNCTIONSETUPL(3);
+	if (debug_level >= 3)
+	{
+		DEBUGCONDUIT << fname << "abEntry:" << endl;
+		showAddressee(pcAddr);
+		DEBUGCONDUIT << fname << "pilotAddress:" << endl;
+		showPilotAddress(palmAddr);
+		DEBUGCONDUIT << fname << "backupAddress:" << endl;
+		showPilotAddress(backupAddr);
+		DEBUGCONDUIT << fname << "------------------------------------------------" << endl;
+	}
 #else
 	Q_UNUSED(pcAddr);
 	Q_UNUSED(backupAddr);
@@ -759,15 +766,22 @@ void AbbrowserConduit::slotPalmRecToPC()
 
 	if (getSyncDirection()==SyncAction::eCopyPCToHH)
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Done; change to PCtoHH phase." << endl;
+#endif
 		abiter = aBook->begin();
 		QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
 		return;
 	}
 
 	if(isFullSync())
+	{
 		palmRec = fDatabase->readRecordByIndex(pilotindex++);
+	}
 	else
-		palmRec = dynamic_cast <PilotSerialDatabase * >(fDatabase)->readNextModifiedRec();
+	{
+		palmRec = fDatabase->readNextModifiedRec();
+	}
 
 	if(!palmRec)
 	{
@@ -813,6 +827,9 @@ void AbbrowserConduit::slotPCRecToPalm()
 	if ( (getSyncDirection()==SyncAction::eCopyHHToPC) ||
 		abiter == aBook->end() || (*abiter).isEmpty() )
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Done; change to delete records." << endl;
+#endif
 		pilotindex = 0;
 		QTimer::singleShot(0, this, SLOT(slotDeletedRecord()));
 		return;
@@ -840,6 +857,9 @@ void AbbrowserConduit::slotPCRecToPalm()
 	recordid_t rid = recID.toLong(&ok);
 	if (recID.isEmpty() || !ok || !rid)
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": This is a new record." << endl;
+#endif
 		// it's a new item(no record ID and not inserted by the Palm -> PC sync), so add it
 		syncAddressee(ad, 0L, 0L);
 		QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
@@ -864,14 +884,32 @@ void AbbrowserConduit::slotPCRecToPalm()
 	if (backupRec) backupAddr=new PilotAddress(fAddressAppInfo, backupRec);
 	if(!backupRec || isFirstSync() || !_equal(backupAddr, ad)  )
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Updating entry." << endl;
+#endif
 		palmRec = fDatabase->readRecordById(rid);
-		PilotAddress*palmAddr=0L;
-		if (palmRec) palmAddr= new PilotAddress(fAddressAppInfo, palmRec);
+		PilotAddress *palmAddr = 0L;
+		if (palmRec)
+		{
+			palmAddr = new PilotAddress(fAddressAppInfo, palmRec);
+		}
+		else
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": No HH record with id " << rid << endl;
+#endif
+		}
 		syncAddressee(ad, backupAddr, palmAddr);
 		// update the id just in case it changed
 		if (palmRec) rid=palmRec->id();
 		KPILOT_DELETE(palmRec);
 		KPILOT_DELETE(palmAddr);
+	}
+	else
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Entry not updated." << endl;
+#endif
 	}
 	KPILOT_DELETE(backupAddr);
 	KPILOT_DELETE(backupRec);
@@ -1020,35 +1058,30 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 	{
 		if (pcAddr.isEmpty())
 		{
-#ifdef DEBUG
-			DEBUGCONDUIT<<"0a "<<endl;
-#endif
 			return _deleteAddressee(pcAddr, backupAddr, palmAddr);
 		}
 		else
 		{
-#ifdef DEBUG
-			DEBUGCONDUIT<<"0b "<<endl;
-#endif
 			return _copyToHH(pcAddr, backupAddr, palmAddr);
 		}
 	}
 
 	if (getSyncDirection()==SyncAction::eCopyHHToPC)
 	{
-#ifdef DEBUG
-			DEBUGCONDUIT<<"0c "<<endl;
-#endif
 		if (!palmAddr)
+		{
 			return _deleteAddressee(pcAddr, backupAddr, palmAddr);
+		}
 		else
+		{
 			return _copyToPC(pcAddr, backupAddr, palmAddr);
+		}
 	}
 
 	if ( !backupAddr || isFirstSync() )
 	{
 #ifdef DEBUG
-			DEBUGCONDUIT<<"1"<<endl;
+			DEBUGCONDUIT<< fname << ": Special case: no backup." << endl;
 #endif
 		/*
 		Resolution matrix (0..does not exist, E..exists, D..deleted flag set, A..archived):
@@ -1219,14 +1252,14 @@ bool AbbrowserConduit::_copyToHH(Addressee &pcAddr, PilotAddress*backupAddr,
 	}
 	_copy(paddr, pcAddr);
 #ifdef DEBUG
-	DEBUGCONDUIT<<"palmAddr->id="<<paddr->id()<<", pcAddr.ID="<<
+	DEBUGCONDUIT << fname << "palmAddr->id="<<paddr->id()<<", pcAddr.ID="<<
 		pcAddr.custom(appString, idString)<<endl;
 #endif
 
 	if(_savePalmAddr(paddr, pcAddr))
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT<<"Vor _saveAbEntry, palmAddr->id="<<
+		DEBUGCONDUIT<< fname << "Vor _saveAbEntry, palmAddr->id="<<
 		paddr->id()<<", pcAddr.ID="<<pcAddr.custom(appString, idString)<<endl;
 #endif
 		_savePCAddr(pcAddr, backupAddr, paddr);
@@ -1326,15 +1359,19 @@ bool AbbrowserConduit::_savePalmAddr(PilotAddress *palmAddr, Addressee &pcAddr)
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << "Saving to pilot " << palmAddr->id()
+	DEBUGCONDUIT << fname << ": Saving to pilot " << palmAddr->id()
 		<< " " << palmAddr->getField(entryFirstname)
 		<< " " << palmAddr->getField(entryLastname)<< endl;
 #endif
 
 	PilotRecord *pilotRec = palmAddr->pack();
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": record with id=" << pilotRec->id()
+		<< " len=" << pilotRec->getLen() << endl;
+#endif
 	recordid_t pilotId = fDatabase->writeRecord(pilotRec);
 #ifdef DEBUG
-	DEBUGCONDUIT<<"PilotRec nach writeRecord ("<<pilotId<<": ID="<<pilotRec->id()<<endl;
+	DEBUGCONDUIT << fname << ": Wrote "<<pilotId<<": ID="<<pilotRec->id()<<endl;
 #endif
 	fLocalDatabase->writeRecord(pilotRec);
 	KPILOT_DELETE(pilotRec);
