@@ -64,8 +64,6 @@ static const char *vcalconduit_id = "$Id$";
 #include "vcal-factory.h"
 #include "vcal-conduit.moc"
 
-#undef DEBUG
-
 QDateTime readTm(const struct tm &t)
 {
   QDateTime dt;
@@ -73,6 +71,7 @@ QDateTime readTm(const struct tm &t)
   dt.setTime(QTime(t.tm_hour, t.tm_min, t.tm_sec));
   return dt;
 }
+
 
 struct tm writeTm(const QDateTime &dt)
 {
@@ -92,6 +91,7 @@ struct tm writeTm(const QDateTime &dt)
   return t;
 }
 
+
 struct tm writeTm(const QDate &dt)
 {
   struct tm t;
@@ -109,6 +109,7 @@ struct tm writeTm(const QDate &dt)
 
   return t;
 }
+
 
 class VCalConduit::VCalPrivate
 {
@@ -134,12 +135,14 @@ private:
 	KCal::Calendar *fCalendar;
 } ;
 
+
 VCalConduit::VCalPrivate::VCalPrivate(KCal::Calendar *b) :
 	fCalendar(b)
 {
 	fAllEvents.setAutoDelete(false);
 	reading=false;
 }
+
 
 int VCalConduit::VCalPrivate::updateEvents()
 {
@@ -148,11 +151,13 @@ int VCalConduit::VCalPrivate::updateEvents()
 	return fAllEvents.count();
 }
 
+
 void VCalConduit::VCalPrivate::removeEvent(KCal::Event *e)
 {
 	fAllEvents.remove(e);
 	fCalendar->deleteEvent(e);
 }
+
 
 KCal::Event *VCalConduit::VCalPrivate::findEvent(recordid_t id)
 {
@@ -166,12 +171,14 @@ KCal::Event *VCalConduit::VCalPrivate::findEvent(recordid_t id)
 	return 0L;
 }
 
+
 KCal::Event *VCalConduit::VCalPrivate::getNextEvent()
 {
 	if (reading) return fAllEvents.next();
 	reading=true;
 	return fAllEvents.first();
 }
+
 
 KCal::Event *VCalConduit::VCalPrivate::getNextModifiedEvent()
 {
@@ -192,7 +199,9 @@ KCal::Event *VCalConduit::VCalPrivate::getNextModifiedEvent()
 	return e;
 }
 
-
+/****************************************************************************
+ *                          VCalConduit class                               *
+ ****************************************************************************/
 
 VCalConduit::VCalConduit(KPilotDeviceLink *d,
 	const char *n,
@@ -207,6 +216,7 @@ VCalConduit::VCalConduit(KPilotDeviceLink *d,
 	(void) vcalconduit_id;
 }
 
+
 VCalConduit::~VCalConduit()
 {
 	FUNCTIONSETUP;
@@ -216,6 +226,7 @@ VCalConduit::~VCalConduit()
 	KPILOT_DELETE(fBackupDatabase);
 	KPILOT_DELETE(fCalendar);
 }
+
 
 /* There are several different scenarios for a record on the Palm and its PC counterpart
   N means a new record, M flags a modified record, D a deleted and - an unmodified record
@@ -269,7 +280,6 @@ there are two special cases: a full and a first sync.
 
 */
 
-#define DEBUG
 /* virtual */ void VCalConduit::exec()
 {
 	debug_level=0;
@@ -307,7 +317,7 @@ there are two special cases: a full and a first sync.
 	usr=fHandle->getPilotUser();
 	// changing the PC or using a different Palm Desktop app causes a full sync
 	// User gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
-	// as PC_ID
+	// as PC_ID, so using JPilot and KPilot is the same as using two differenc PCs
 	fFullSync = (fConfig->readBoolEntry(VCalConduitFactory::alwaysFullSync, false) ||
 		((usr->getLastSyncPC()!=(unsigned long) gethostid()) && fConfig->readBoolEntry(VCalConduitFactory::fullSyncOnPCChange, true)) );
 
@@ -324,6 +334,21 @@ there are two special cases: a full and a first sync.
 		"DatebookDB");
 	fBackupDatabase = new PilotLocalDatabase("DatebookDB");
 	fCalendar = new KCal::CalendarLocal();
+
+#ifdef DEBUG
+/*PilotRecord*r, *s;
+int n;
+n=0;
+while (r=fCurrentDatabase->readRecordByIndex(n++) ) {
+	s=fBackupDatabase->readRecordById(r->getID());
+	DEBUGCONDUIT<<"Record with ID "<<r->getID()<<", backup record: "<<(s?s->getID():0)<<endl;
+}
+n=0;
+while (r=fBackupDatabase->readRecordByIndex(n++) ) {
+	s=fCurrentDatabase->readRecordById(r->getID());
+	DEBUGCONDUIT<<"Backup Record with ID "<<r->getID()<<", Palm record: "<<(s?s->getID():0)<<endl;
+}*/
+#endif
 
 	// Handle lots of error cases.
 	//
@@ -379,6 +404,7 @@ error:
 	emit syncDone(this);
 }
 
+
 void VCalConduit::syncRecord()
 {
 	FUNCTIONSETUP;
@@ -431,11 +457,12 @@ void VCalConduit::syncRecord()
 	QTimer::singleShot(0,this,SLOT(syncRecord()));
 }
 
+
 void VCalConduit::syncEvent()
 {
 // TODO: skip PC => Palm sync for now because the date is off by an hour (dst). Also, duplicates appear on the PC
-QTimer::singleShot(0,this,SLOT(deleteRecord()));
-return;
+//QTimer::singleShot(0,this,SLOT(deleteRecord()));
+//return;
 
 
 	FUNCTIONSETUP;
@@ -484,7 +511,8 @@ return;
 	KPILOT_DELETE(s);
 	QTimer::singleShot(0, this, SLOT(syncEvent()));
 }
-#undef DEBUG
+
+
 void VCalConduit::deleteRecord()
 {
 // TODO: This does not work currently yet (the Events with the PilotID are not yet found?!?!?!) Also happens with the Palm->PC sync.
@@ -522,6 +550,7 @@ void VCalConduit::deleteRecord()
 	QTimer::singleShot(0,this,SLOT(deleteRecord()));
 }
 
+
 void VCalConduit::cleanup()
 {
 	FUNCTIONSETUP;
@@ -535,7 +564,7 @@ void VCalConduit::cleanup()
 	emit syncDone(this);
 }
 
-#define DEBUG
+
 void VCalConduit::addRecord(PilotRecord *r)
 {
 	FUNCTIONSETUP;
@@ -552,7 +581,8 @@ void VCalConduit::addRecord(PilotRecord *r)
 
 	fCalendar->addEvent(e);
 }
-#undef DEBUG
+
+
 void VCalConduit::deleteRecord(PilotRecord *r, PilotRecord *s)
 {
 	FUNCTIONSETUP;
@@ -565,6 +595,7 @@ void VCalConduit::deleteRecord(PilotRecord *r, PilotRecord *s)
 	}
 	fBackupDatabase->writeRecord(r);
 }
+
 
 void VCalConduit::changeRecord(PilotRecord *r,PilotRecord *s)
 {
@@ -587,6 +618,7 @@ void VCalConduit::changeRecord(PilotRecord *r,PilotRecord *s)
 	}
 }
 
+
 void VCalConduit::deletePalmRecord(KCal::Event*e, PilotRecord*s)
 {
 	FUNCTIONSETUP;
@@ -607,6 +639,7 @@ void VCalConduit::deletePalmRecord(KCal::Event*e, PilotRecord*s)
 	}
 }
 
+
 /* I have to use a pointer to an existing PilotDateEntry so that I can handle
    new records as well (and to prevend some crashes concerning the validity
    domain of the PilotRecord*r). In syncEvent this PilotDateEntry is created. */
@@ -623,12 +656,14 @@ void VCalConduit::updateEventOnPalm(KCal::Event*e, PilotDateEntry*de)
 
 	if (r)
 	{
-		fBackupDatabase->writeRecord(r);
 		recordid_t id=fCurrentDatabase->writeRecord(r);
+		r->setID(id);
+		fBackupDatabase->writeRecord(r);
 		e->setSyncStatus(KCal::Incidence::SYNCNONE);
 		e->setPilotId(id);
 	}
 }
+
 
 PilotRecord*VCalConduit::entryFromEvent(PilotDateEntry*de, const KCal::Event*e)
 {
@@ -652,6 +687,7 @@ PilotRecord*VCalConduit::entryFromEvent(PilotDateEntry*de, const KCal::Event*e)
 DEBUGCONDUIT<<"-------- "<<e->summary()<<endl;
 	return de->pack();
 }
+
 
 KCal::Event *VCalConduit::eventFromRecord(KCal::Event *e, const PilotDateEntry &de)
 {
@@ -683,6 +719,7 @@ KCal::Event *VCalConduit::eventFromRecord(KCal::Event *e, const PilotDateEntry &
 	return e;
 }
 
+
 void VCalConduit::setStartEndTimes(KCal::Event *e,const PilotDateEntry &de)
 {
 	FUNCTIONSETUP;
@@ -698,6 +735,7 @@ void VCalConduit::setStartEndTimes(KCal::Event *e,const PilotDateEntry &de)
 		e->setDtEnd(readTm(de.getEventEnd()));
 	}
 }
+
 
 void VCalConduit::setStartEndTimes(PilotDateEntry*de, const KCal::Event *e)
 {
@@ -716,6 +754,7 @@ void VCalConduit::setStartEndTimes(PilotDateEntry*de, const KCal::Event *e)
 	}
 	de->setEventEnd(ttm);
 }
+
 
 void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry &de)
 {
@@ -757,7 +796,9 @@ void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry &de)
 	e->addAlarm(alm);
 	// TODO: Fix alarms
 }
-#define DEBUG
+
+
+
 void VCalConduit::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 {
 	FUNCTIONSETUP;
@@ -769,9 +810,7 @@ void VCalConduit::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 #endif
 		return;
 	}
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": This event has "<<e->alarms().count()<<" alarms set.... "<<endl;
-#endif
+	
 	if (e->alarms().count()<=0)
 	{
 		de->setAlarm(0);
@@ -814,7 +853,7 @@ void VCalConduit::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 	de->setAlarm(1);
 }
 
-#define DEBUG
+
 void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry &dateEntry)
 {
 	FUNCTIONSETUP;
@@ -922,6 +961,7 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry &dateEnt
 	}
 }
 
+
 void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *event)
 {
 	FUNCTIONSETUP;
@@ -987,7 +1027,6 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 		for (int i=0; i<7; i++)
 		{
 			dayArrayPalm.setBit( (i+1)%7, dayArray[i]);
-
 		}
 		dateEntry->setRepeatDays(dayArrayPalm);
 		if (needCalc)
@@ -998,7 +1037,8 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 	case KCal::Recurrence::rMonthlyPos:
 		dateEntry->setRepeatType(repeatMonthlyByDay);
 		if (r->monthPositions().count()>0)
-		{ // Only take the first monthly position, as the palm allows only one
+		{ 
+			// Only take the first monthly position, as the palm allows only one
 			QPtrList<KCal::Recurrence::rMonthPos> mps=r->monthPositions();
 			const KCal::Recurrence::rMonthPos*mp=mps.first();
 			int pos=0;
@@ -1038,7 +1078,7 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 		break;
 	}
 }
-#undef DEBUG
+
 
 void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry &dateEntry)
 {
@@ -1108,6 +1148,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.59  2002/04/20 17:38:02  kainhofe
+// recurrence now correctly written to the palm, no longer crashes
+//
 // Revision 1.58  2002/04/20 14:21:26  kainhofe
 // Alarms are now written to the palm. Some bug fixes, extensive testing. Exceptions still crash the palm ;-(((
 //
