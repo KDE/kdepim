@@ -154,7 +154,8 @@ bool KonsoleKalendar::showInstance()
                     << "view all events sorted list"
                     << endl;
 
-	  Event::List sortedList = allEventsSorted();
+	  Event::List sortedList =
+            m_variables->getCalendar()->events( EventSortStartDate );
 
           QDate dt, firstdate, lastdate;
           firstdate = sortedList.first()->dtStart().date();
@@ -447,26 +448,6 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
     }
   }
   return found;
-}
-
-Event::List KonsoleKalendar::allEventsSorted()
-{
-  Event::List *eventList =
-    new Event::List ( m_variables->getCalendar()->rawEvents( ) );
-
-  // Sort based on Event Starting DateTime
-  Event::List::ConstIterator it;
-  Event::List eventListSorted;
-  Event::List::Iterator sortIt;
-  for ( it = eventList->begin(); it != eventList->end(); ++it ) {
-    sortIt = eventListSorted.begin();
-    while ( sortIt != eventListSorted.end() &&
-            (*it)->dtStart() >= (*sortIt)->dtStart() ) {
-      ++sortIt;
-    }
-    eventListSorted.insert( sortIt, *it );
-  }
-  return ( eventListSorted );
 }
 
 void KonsoleKalendar::printSpecs()
