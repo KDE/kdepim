@@ -95,7 +95,7 @@ class CalendarLocal : public Calendar
     /**
       Return unfiltered list of all events in calendar.
     */
-    Event::List rawEvents();
+    Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
 
     /**
       Add a todo to the todolist.
@@ -117,7 +117,7 @@ class CalendarLocal : public Calendar
     /**
       Return list of all todos.
     */
-    Todo::List rawTodos();
+    Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
       Returns list of todos due on the specified date.
     */
@@ -144,9 +144,16 @@ class CalendarLocal : public Calendar
     */
     Journal *journal( const QString &uid );
     /**
+       Return unfiltered list of all journals in calendar.
+    */
+    Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    /**
+       Get unfiltered journal for a given date.
+    */
+    Journal *rawJournalForDate( const QDate &date );
+    /**
       Return list of all Journals stored in calendar.
     */
-    Journal::List journals();
 
     /**
       Return all alarms, which ocur in the given time interval.
@@ -162,7 +169,9 @@ class CalendarLocal : public Calendar
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
+    //TODO: Deprecate
     Event::List rawEventsForDate( const QDate &date, bool sorted = false );
+    //Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted );
     /**
       Get unfiltered events for date \a qdt.
     */

@@ -56,13 +56,13 @@ ResourceCalendar *CalendarResources::StandardDestinationPolicy::destination( Inc
 ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidence * )
 {
   QPtrList<KRES::Resource> list;
-  
+
   CalendarResourceManager::ActiveIterator it;
   for( it = resourceManager()->activeBegin();
        it != resourceManager()->activeEnd(); ++it ) {
     if ( !(*it)->readOnly() ) {
       //Insert the first the Standard resource to get be the default selected.
-      if ( resourceManager()->standardResource() == *it ) 
+      if ( resourceManager()->standardResource() == *it )
         list.insert( 0,*it );
       else
         list.append( *it );
@@ -221,7 +221,7 @@ bool CalendarResources::addIncidence( Incidence *incidence, ResourceCalendar *re
     oldResource = mResourceMap[incidence];
   }
   mResourceMap[incidence] = resource;
-  if ( validRes && beginChange( incidence ) && 
+  if ( validRes && beginChange( incidence ) &&
        resource->addIncidence( incidence ) ) {
 //    mResourceMap[incidence] = resource;
     incidence->registerObserver( this );
@@ -245,11 +245,11 @@ bool CalendarResources::addIncidence( Incidence *incidence )
 
   if ( resource ) {
     mResourceMap[ incidence ] = resource;
-    
+
     if ( beginChange( incidence ) && resource->addIncidence( incidence ) ) {
       incidence->registerObserver( this );
       notifyIncidenceAdded( incidence );
-      
+
 
       mResourceMap[ incidence ] = resource;
       setModified( true );
@@ -341,7 +341,7 @@ void CalendarResources::deleteTodo( Todo *todo )
   setModified( true );
 }
 
-Todo::List CalendarResources::rawTodos()
+Todo::List CalendarResources::rawTodos( TodoSortField sortField, SortDirection sortDirection )
 {
 //  kdDebug(5800) << "CalendarResources::rawTodos()" << endl;
 
@@ -351,7 +351,7 @@ Todo::List CalendarResources::rawTodos()
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
 //    kdDebug(5800) << "Getting raw todos from '" << (*it)->resourceName()
 //                  << "'" << endl;
-    Todo::List todos = (*it)->rawTodos();
+    Todo::List todos = (*it)->rawTodos( TodoSortUnsorted );
     Todo::List::ConstIterator it2;
     for ( it2 = todos.begin(); it2 != todos.end(); ++it2 ) {
 //      kdDebug(5800) << "Adding todo to result" << endl;
@@ -359,8 +359,7 @@ Todo::List CalendarResources::rawTodos()
       mResourceMap[ *it2 ] = *it;
     }
   }
-
-  return result;
+  return sortTodos( &result, sortField, sortDirection );
 }
 
 Todo *CalendarResources::todo( const QString &uid )
@@ -504,21 +503,21 @@ Event::List CalendarResources::rawEventsForDate(const QDateTime &qdt)
   return result;
 }
 
-Event::List CalendarResources::rawEvents()
+Event::List CalendarResources::rawEvents( EventSortField sortField, SortDirection sortDirection )
 {
   kdDebug(5800) << "CalendarResources::rawEvents()" << endl;
 
   Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Event::List list = (*it)->rawEvents();
+    Event::List list = (*it)->rawEvents( EventSortUnsorted );
     Event::List::ConstIterator it2;
     for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
       result.append( *it2 );
       mResourceMap[ *it2 ] = *it;
     }
   }
-  return result;
+  return sortEvents( &result, sortField, sortDirection );
 }
 
 
@@ -596,23 +595,34 @@ Journal *CalendarResources::journal(const QString &uid)
   return 0;
 }
 
-Journal::List CalendarResources::journals()
+Journal::List CalendarResources::rawJournals( JournalSortField sortField, SortDirection sortDirection )
 {
-  kdDebug(5800) << "CalendarResources::journals()" << endl;
+  kdDebug(5800) << "CalendarResources::rawJournals()" << endl;
 
   Journal::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Journal::List list = (*it)->journals();
+    Journal::List journals = (*it)->rawJournals( JournalSortUnsorted );
     Journal::List::ConstIterator it2;
-    for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
+    for ( it2 = journals.begin(); it2 != journals.end(); ++it2 ) {
       result.append( *it2 );
       mResourceMap[ *it2 ] = *it;
     }
   }
-  return result;
+  return sortJournals( &result, sortField, sortDirection );
 }
 
+Journal *CalendarResources::rawJournalForDate( const QDate &date )
+{
+  Journal *result;
+
+  CalendarResourceManager::ActiveIterator it;
+  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+    result = (*it)->rawJournalForDate( date );
+    mResourceMap[ result ] = *it;
+  }
+  return result;
+}
 
 void CalendarResources::connectResource( ResourceCalendar *resource )
 {

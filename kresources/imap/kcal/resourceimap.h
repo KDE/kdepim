@@ -62,7 +62,7 @@ public:
   /**
      Return unfiltered list of all events in calendar.
   */
-  Event::List rawEvents();
+  Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   /**
      Builds and then returns a list of all events that match for the
      date specified. useful for dayView, etc. etc.
@@ -102,7 +102,7 @@ public:
   /**
      Return list of all todos.
   */
-  Todo::List rawTodos();
+  Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   /**
      Returns list of todos due on the specified date.
   */
@@ -119,7 +119,9 @@ public:
   /** Return Journal with given UID */
   virtual Journal *journal(const QString &UID);
   /** Return list of all Journals stored in calendar */
-  Journal::List journals();
+  Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+  /** Return the journal for the given date */
+  Journal *rawJournalForDate( const QDate &date );
 
   /** Return all alarms, which ocur in the given time interval. */
   Alarm::List alarms( const QDateTime &from, const QDateTime &to );

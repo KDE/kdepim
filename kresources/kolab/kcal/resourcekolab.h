@@ -68,7 +68,7 @@ public:
   bool addEvent( KCal::Event* anEvent );
   void deleteEvent( KCal::Event* );
   KCal::Event* event( const QString &UniqueStr );
-  KCal::Event::List rawEvents();
+  KCal::Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   KCal::Event::List rawEventsForDate( const QDate& date, bool sorted = false );
   KCal::Event::List rawEventsForDate( const QDateTime& qdt );
   KCal::Event::List rawEvents( const QDate& start, const QDate& end,
@@ -77,14 +77,15 @@ public:
   bool addTodo( KCal::Todo* todo );
   void deleteTodo( KCal::Todo* );
   KCal::Todo* todo( const QString& uid );
-  KCal::Todo::List rawTodos();
+  KCal::Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   KCal::Todo::List rawTodosForDate( const QDate& date );
 
   bool addJournal( KCal::Journal* );
   void deleteJournal( KCal::Journal* );
   KCal::Journal* journal( const QDate& );
   KCal::Journal* journal( const QString& uid );
-  KCal::Journal::List journals();
+  KCal::Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+  KCal::Journal* rawJournalForDate( const QDate &date );
 
   KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to );
   KCal::Alarm::List alarmsTo( const QDateTime& to );

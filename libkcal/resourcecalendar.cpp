@@ -56,7 +56,7 @@ QString ResourceCalendar::infoText() const
   txt += i18n("Type: %1").arg( t );
 
   addInfoText( txt );
-  
+
   return txt;
 }
 
@@ -81,7 +81,7 @@ bool ResourceCalendar::deleteIncidence( Incidence *incidence )
 
 Incidence::List ResourceCalendar::rawIncidences()
 {
-  return Calendar::mergeIncidenceList( rawEvents(), rawTodos(), journals() );
+  return Calendar::mergeIncidenceList( rawEvents(), rawTodos(), rawJournals() );
 }
 
 void ResourceCalendar::setSubresourceActive( const QString &, bool )
@@ -100,9 +100,9 @@ bool ResourceCalendar::load()
     success = doLoad();
   }
   if ( !success && !mReceivedLoadError ) loadError();
-  
-  // If the resource is read-only, we need to set its incidences to read-only, 
-  // too. This can't be done at a lower-level, since the read-only setting 
+
+  // If the resource is read-only, we need to set its incidences to read-only,
+  // too. This can't be done at a lower-level, since the read-only setting
   // happens at this level
   if ( readOnly() ) {
     Incidence::List incidences( rawIncidences() );

@@ -72,7 +72,7 @@ bool CalendarLocal::load( const QString &fileName )
 
 bool CalendarLocal::save( const QString &fileName, CalFormat *format )
 {
-  // Save only if the calendar is either modified, or saved to a 
+  // Save only if the calendar is either modified, or saved to a
   // different file than it was loaded from
   if ( mFileName != fileName || isModified() ) {
     FileStorage storage( this, fileName, format );
@@ -185,9 +185,10 @@ void CalendarLocal::deleteAllTodos()
   mTodoList.setAutoDelete( false );
 }
 
-Todo::List CalendarLocal::rawTodos()
+Todo::List CalendarLocal::rawTodos( TodoSortField sortField,
+                                    SortDirection sortDirection )
 {
-  return mTodoList;
+  return sortTodos( &mTodoList, sortField, sortDirection );
 }
 
 Todo *CalendarLocal::todo( const QString &uid )
@@ -401,7 +402,6 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd, bool sorted )
   return eventListSorted;
 }
 
-
 Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
                                           bool inclusive )
 {
@@ -472,29 +472,13 @@ Event::List CalendarLocal::rawEventsForDate( const QDateTime &qdt )
   return rawEventsForDate( qdt.date() );
 }
 
-// This bool is only used by the regression testing program, to save in a stable order
-bool KCal_CalendarLocal_saveOrdered = false;
-
-Event::List CalendarLocal::rawEvents()
+Event::List CalendarLocal::rawEvents( EventSortField sortField, SortDirection sortDirection )
 {
   Event::List eventList;
-  if ( !KCal_CalendarLocal_saveOrdered ) { // normal case: save in random order
-    EventDictIterator it( mEvents );
-    for( ; it.current(); ++it )
-      eventList.append( *it );
-  } else { // regression testing: save in sorted order
-    Event::List::Iterator sortIt;
-    EventDictIterator it( mEvents );
-    for( ; it.current(); ++it ) {
-      sortIt = eventList.begin();
-      while ( sortIt != eventList.end() &&
-              it.current()->dtStart().time() >= (*sortIt)->dtStart().time() ) {
-        ++sortIt;
-      }
-      eventList.insert( sortIt, it.current() );
-    }
-  }
-  return eventList;
+  EventDictIterator it( mEvents );
+  for( ; it.current(); ++it )
+    eventList.append( *it );
+  return sortEvents( &eventList, sortField, sortDirection );
 }
 
 bool CalendarLocal::addJournal(Journal *journal)
@@ -558,8 +542,18 @@ Journal *CalendarLocal::journal( const QString &uid )
   return 0;
 }
 
-Journal::List CalendarLocal::journals()
+Journal::List CalendarLocal::rawJournals( JournalSortField sortField, SortDirection sortDirection )
 {
-  return mJournalList;
+  return sortJournals( &mJournalList, sortField, sortDirection );
+}
+
+Journal *CalendarLocal::rawJournalForDate( const QDate &date )
+{
+  Journal::List::ConstIterator it;
+  for ( it = mJournalList.begin(); it != mJournalList.end(); ++it )
+    if ( (*it)->dtStart().date() == date )
+      return *it;
+
+  return 0;
 }
 

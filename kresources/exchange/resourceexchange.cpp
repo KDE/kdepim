@@ -358,11 +358,11 @@ void ResourceExchange::deleteTodo(Todo *todo)
 //  setModified( true );
 }
 
-Todo::List ResourceExchange::rawTodos()
+Todo::List ResourceExchange::rawTodos( TodoSortField sortField, SortDirection sortDirection )
 {
   Todo::List list;
   if ( mCache )
-	list = mCache->rawTodos();
+	list = mCache->rawTodos( sortField, sortDirection );
   return list;
 }
 
@@ -474,10 +474,10 @@ Event::List ResourceExchange::rawEventsForDate(const QDateTime &qdt)
   return rawEventsForDate( qdt.date() );
 }
 
-Event::List ResourceExchange::rawEvents()
+Event::List ResourceExchange::rawEvents( EventSortField sortField, SortDirection sortDirection )
 {
   kdDebug() << "ResourceExchange::rawEvents()" << endl;
-  return mCache->rawEvents();
+  return mCache->rawEvents( sortField, sortDirection );
 }
 
 bool ResourceExchange::addJournal(Journal *journal)
@@ -516,9 +516,19 @@ Journal *ResourceExchange::journal(const QString &uid)
     return mCache->journal( uid );
 }
 
-Journal::List ResourceExchange::journals()
+Journal::List ResourceExchange::rawJournals( JournalSortField sortField, SortDirection sortDirection )
 {
-  return mCache->journals();
+  Journal::List list;
+  if ( mCache )
+	list = mCache->rawJournals( sortField, sortDirection );
+  return list;
+}
+
+Journal *ResourceExchange::rawJournalForDate( const QDate &date )
+{
+  if ( !mCache )
+    return 0;
+  return mCache->rawJournalForDate( date );
 }
 
 void ResourceExchange::setTimeZoneId( const QString &tzid )

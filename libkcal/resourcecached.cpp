@@ -183,9 +183,9 @@ Event::List ResourceCached::rawEventsForDate( const QDateTime &qdt )
   return mCalendar.rawEventsForDate( qdt.date() );
 }
 
-Event::List ResourceCached::rawEvents()
+Event::List ResourceCached::rawEvents( EventSortField sortField, SortDirection sortDirection )
 {
-  return mCalendar.rawEvents();
+  return mCalendar.rawEvents( sortField, sortDirection );
 }
 
 bool ResourceCached::addTodo( Todo *todo )
@@ -204,9 +204,9 @@ void ResourceCached::deleteJournal( Journal *journal )
 }
 
 
-Todo::List ResourceCached::rawTodos()
+Todo::List ResourceCached::rawTodos( TodoSortField sortField, SortDirection sortDirection )
 {
-  return mCalendar.rawTodos();
+  return mCalendar.rawTodos( sortField, sortDirection );
 }
 
 Todo *ResourceCached::todo( const QString &uid )
@@ -239,9 +239,14 @@ Journal *ResourceCached::journal( const QString &uid )
   return mCalendar.journal( uid );
 }
 
-Journal::List ResourceCached::journals()
+Journal::List ResourceCached::rawJournals( JournalSortField sortField, SortDirection sortDirection )
 {
-  return mCalendar.journals();
+  return mCalendar.rawJournals( sortField, sortDirection );
+}
+
+Journal *ResourceCached::rawJournalForDate( const QDate &date )
+{
+  return mCalendar.rawJournalForDate( date );
 }
 
 

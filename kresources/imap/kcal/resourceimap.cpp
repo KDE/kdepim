@@ -283,9 +283,9 @@ Event::List ResourceIMAP::rawEventsForDate(const QDateTime &qdt)
   return mCalendar.rawEventsForDate( qdt );
 }
 
-Event::List ResourceIMAP::rawEvents()
+Event::List ResourceIMAP::rawEvents( EventSortField sortField, SortDirection sortDirection )
 {
-  return mCalendar.rawEvents();
+  return mCalendar.rawEvents( sortField, sortDirection);
 }
 
 /***********************************************
@@ -338,9 +338,9 @@ void ResourceIMAP::deleteTodo(Todo *todo)
  * Getting Todos
  */
 
-Todo::List ResourceIMAP::rawTodos()
+Todo::List ResourceIMAP::rawTodos( TodoSortField sortField, SortDirection sortDirection )
 {
-  return mCalendar.rawTodos();
+  return mCalendar.rawTodos( sortField, sortDirection );
 }
 
 Todo *ResourceIMAP::todo( const QString &uid )
@@ -413,9 +413,14 @@ Journal *ResourceIMAP::journal(const QString &uid)
   return mCalendar.journal(uid);
 }
 
-Journal::List ResourceIMAP::journals()
+Journal::List ResourceIMAP::rawJournals( JournalSortField sortField, SortDirection sortDirection )
 {
-  return mCalendar.journals();
+  return mCalendar.rawJournals( sortField, sortDirection );
+}
+
+Journal *ResourceIMAP::rawJournalForDate( const QDate &date )
+{
+  return mCalendar.rawJournalForDate( date );
 }
 
 /***********************************************

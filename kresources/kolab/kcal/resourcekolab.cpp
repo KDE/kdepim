@@ -235,8 +235,8 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
   const QString uid = incidencebase->uid();
 
   if ( mUidsPendingUpdate.contains( uid ) || mUidsPendingAdding.contains( uid ) ) {
-    /* We are currently processing this event ( removing and readding or 
-     * adding it ). If so, ignore this update. Keep the last of these around 
+    /* We are currently processing this event ( removing and readding or
+     * adding it ). If so, ignore this update. Keep the last of these around
      * and process once we hear back from KMail on this event. */
     mPendingUpdates.replace( uid, incidencebase );
     return;
@@ -381,7 +381,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       // so we know it's one of our transient ones
       mUidsPendingAdding.append( uid );
 
-      /* Add to the cache immediately if this is a new event coming from 
+      /* Add to the cache immediately if this is a new event coming from
        * KOrganizer. It relies on the incidence being in the calendar when
        * addIncidence returns. */
       if ( newIncidence ) {
@@ -391,9 +391,9 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     }
   } else { /* KMail told us */
     bool ourOwnUpdate = false;
-    /* Check if we updated this one, which means kmail deleted and added it. 
-     * We know the new state, so lets just not do much at all. The old incidence 
-     * in the calendar remains valid, but the serial number changed, so we need to 
+    /* Check if we updated this one, which means kmail deleted and added it.
+     * We know the new state, so lets just not do much at all. The old incidence
+     * in the calendar remains valid, but the serial number changed, so we need to
      * update that */
     if ( ourOwnUpdate = mUidsPendingUpdate.contains( uid ) ) {
       mUidsPendingUpdate.remove( uid );
@@ -425,7 +425,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       mPendingUpdates.remove( uid );
       incidenceUpdated( update );
     } else {
-      /* If the uid was added by KMail, KOrganizer needs to be told, so 
+      /* If the uid was added by KMail, KOrganizer needs to be told, so
        * schedule emitting of the resourceChanged signal. */
       if ( !mUidsPendingAdding.contains( uid ) ) {
         if ( !ourOwnUpdate ) mResourceChangedTimer.changeInterval( 100 );
@@ -482,9 +482,9 @@ KCal::Event* ResourceKolab::event( const QString& uid )
   return mCalendar.event(uid);
 }
 
-KCal::Event::List ResourceKolab::rawEvents()
+KCal::Event::List ResourceKolab::rawEvents( EventSortField sortField, SortDirection sortDirection )
 {
-  return mCalendar.rawEvents();
+  return mCalendar.rawEvents( sortField, sortDirection );
 }
 
 KCal::Event::List ResourceKolab::rawEventsForDate( const QDate& date,
@@ -529,9 +529,9 @@ KCal::Todo* ResourceKolab::todo( const QString& uid )
   return mCalendar.todo( uid );
 }
 
-KCal::Todo::List ResourceKolab::rawTodos()
+KCal::Todo::List ResourceKolab::rawTodos( TodoSortField sortField, SortDirection sortDirection )
 {
-  return mCalendar.rawTodos();
+  return mCalendar.rawTodos( sortField, sortDirection );
 }
 
 KCal::Todo::List ResourceKolab::rawTodosForDate( const QDate& date )
@@ -570,9 +570,14 @@ KCal::Journal* ResourceKolab::journal( const QString& uid )
   return mCalendar.journal(uid);
 }
 
-KCal::Journal::List ResourceKolab::journals()
+KCal::Journal::List ResourceKolab::rawJournals( JournalSortField sortField, SortDirection sortDirection )
 {
-  return mCalendar.journals();
+  return mCalendar.rawJournals( sortField, sortDirection );
+}
+
+KCal::Journal *ResourceKolab::rawJournalForDate( const QDate &date )
+{
+  return mCalendar.rawJournalForDate( date );
 }
 
 KCal::Alarm::List ResourceKolab::alarms( const QDateTime& from,
@@ -627,7 +632,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
   if ( mUidsPendingDeletion.contains( uid ) ) {
     mUidsPendingDeletion.remove( uid );
   } else if ( mUidsPendingUpdate.contains( uid ) ) {
-    // It's good to know if was deleted, but we are waiting on a new one to 
+    // It's good to know if was deleted, but we are waiting on a new one to
     // replace it, so let's just sit tight.
   } else {
     // We didn't trigger this, so KMail did, remove the reference to the uid

@@ -156,7 +156,7 @@ void Calendar::setFilter(CalFilter *filter)
   if ( filter ) {
     mFilter = filter;
   } else {
-    mFilter = mDefaultFilter; 
+    mFilter = mDefaultFilter;
   }
 }
 
@@ -169,7 +169,7 @@ QStringList Calendar::incidenceCategories()
 {
   Incidence::List rawInc( rawIncidences() );
   QStringList categories, thisCats;
-  // TODO: For now just iterate over all incidences. In the future, 
+  // TODO: For now just iterate over all incidences. In the future,
   // the list of categories should be built when reading the file.
   for ( Incidence::List::ConstIterator i = rawInc.constBegin(); i != rawInc.constEnd(); ++i ) {
     thisCats = (*i)->categories();
@@ -197,15 +197,105 @@ Incidence::List Calendar::incidences()
 
 Incidence::List Calendar::rawIncidences()
 {
-  return mergeIncidenceList( rawEvents(), rawTodos(), journals() );
+  return mergeIncidenceList( rawEvents(), rawTodos(), rawJournals() );
+}
+
+Event::List Calendar::sortEvents( Event::List *eventList,
+                                  EventSortField sortField,
+                                  SortDirection sortDirection ) {
+
+  Event::List eventListSorted;
+  Event::List tempList, t;
+  Event::List alphaList;
+  Event::List::Iterator sortIt;
+  Event::List::Iterator eit;
+
+  // Notice we alphabetically presort Summaries first.
+  // We do this so comparison "ties" stay in a nice order.
+
+  switch( sortField ) {
+  case EventSortUnsorted:
+    eventListSorted = *eventList;
+    break;
+
+  case EventSortStartDate:
+    alphaList = sortEvents( eventList, EventSortSummary, sortDirection );
+    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
+      sortIt = eventListSorted.begin();
+      if ( sortDirection == SortDirectionAscending ) {
+        while ( sortIt != eventListSorted.end() &&
+                (*eit)->dtStart() >= (*sortIt)->dtStart() ) {
+          ++sortIt;
+        }
+      } else {
+        while ( sortIt != eventListSorted.end() &&
+                (*eit)->dtStart() < (*sortIt)->dtStart() ) {
+          ++sortIt;
+        }
+      }
+      eventListSorted.insert( sortIt, *eit );
+    }
+    break;
+
+  case EventSortEndDate:
+    alphaList = sortEvents( eventList, EventSortSummary, sortDirection );
+    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
+      if ( (*eit)->hasEndDate() ) {
+        sortIt = eventListSorted.begin();
+        if ( sortDirection == SortDirectionAscending ) {
+          while ( sortIt != eventListSorted.end() &&
+                  (*eit)->dtEnd() >= (*sortIt)->dtEnd() ) {
+            ++sortIt;
+          }
+        } else {
+          while ( sortIt != eventListSorted.end() &&
+                  (*eit)->dtEnd() < (*sortIt)->dtEnd() ) {
+            ++sortIt;
+          }
+        }
+      } else {
+        // Keep a list of the Events without End DateTimes
+        tempList.append( *eit );
+      }
+      eventListSorted.insert( sortIt, *eit );
+    }
+    if ( sortDirection == SortDirectionAscending ) {
+      // Append the list of Events without End DateTimes
+      eventListSorted += tempList;
+    } else {
+      // Prepend the list of Events without End DateTimes
+      tempList += eventListSorted;
+      eventListSorted = tempList;
+    }
+    break;
+
+  case EventSortSummary:
+    for ( eit = eventList->begin(); eit != eventList->end(); ++eit ) {
+      sortIt = eventListSorted.begin();
+      if ( sortDirection == SortDirectionAscending ) {
+        while ( sortIt != eventListSorted.end() &&
+                (*eit)->summary() >= (*sortIt)->summary() ) {
+          ++sortIt;
+        }
+      } else {
+        while ( sortIt != eventListSorted.end() &&
+                (*eit)->summary() < (*sortIt)->summary() ) {
+          ++sortIt;
+        }
+      }
+      eventListSorted.insert( sortIt, *eit );
+    }
+    break;
+  }
+
+  return eventListSorted;
+
 }
 
 Event::List Calendar::events( const QDate &date, bool sorted )
 {
   Event::List el = rawEventsForDate( date, sorted );
-
   mFilter->apply(&el);
-
   return el;
 }
 
@@ -224,13 +314,12 @@ Event::List Calendar::events( const QDate &start, const QDate &end,
   return el;
 }
 
-Event::List Calendar::events()
+Event::List Calendar::events( EventSortField sortField, SortDirection sortDirection )
 {
-  Event::List el = rawEvents();
+  Event::List el = rawEvents( sortField, sortDirection );
   mFilter->apply(&el);
   return el;
 }
-
 
 bool Calendar::addIncidence(Incidence *i)
 {
@@ -247,14 +336,14 @@ bool Calendar::deleteIncidence( Incidence *i )
     endChange( i );
     return result;
   } else
-    return false;    
+    return false;
 }
 
 Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
                                            bool single )
 {
   if ( !incidence || !incidence->doesRecur() ) return 0;
-  
+
   Incidence *newInc = incidence->clone();
   newInc->recreate();
   newInc->setRelatedTo( incidence );
@@ -282,7 +371,7 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
     QDateTime start( ev->dtStart() );
     int daysTo = start.date().daysTo( date );
     ev->setDtStart( start.addDays( daysTo ) );
-    ev->setDtEnd( ev->dtEnd().addDays( daysTo ) );    
+    ev->setDtEnd( ev->dtEnd().addDays( daysTo ) );
   } else if ( incidence->type() == "Todo" ) {
     Todo *td = static_cast<Todo *>( newInc );
     bool haveOffset = false;
@@ -339,9 +428,153 @@ Incidence *Calendar::incidenceFromSchedulingID( const QString &UID )
   return 0;
 }
 
-Todo::List Calendar::todos()
+Todo::List Calendar::sortTodos( Todo::List *todoList,
+                                TodoSortField sortField,
+                                SortDirection sortDirection )
 {
-  Todo::List tl = rawTodos();
+  Todo::List todoListSorted;
+  Todo::List tempList, t;
+  Todo::List alphaList;
+  Todo::List::Iterator sortIt;
+  Todo::List::Iterator eit;
+
+  // Notice we alphabetically presort Summaries first.
+  // We do this so comparison "ties" stay in a nice order.
+
+  // Note that Todos may not have Start DateTimes nor due DateTimes.
+
+  switch( sortField ) {
+  case TodoSortUnsorted:
+    todoListSorted = *todoList;
+    break;
+
+  case TodoSortStartDate:
+    alphaList = sortTodos( todoList, TodoSortSummary, sortDirection );
+    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
+      if ( (*eit)->hasStartDate() ) {
+        sortIt = todoListSorted.begin();
+        if ( sortDirection == SortDirectionAscending ) {
+          while ( sortIt != todoListSorted.end() &&
+                  (*eit)->dtStart() >= (*sortIt)->dtStart() ) {
+            ++sortIt;
+          }
+        } else {
+          while ( sortIt != todoListSorted.end() &&
+                  (*eit)->dtStart() < (*sortIt)->dtStart() ) {
+            ++sortIt;
+          }
+        }
+        todoListSorted.insert( sortIt, *eit );
+      } else {
+        // Keep a list of the Todos without Start DateTimes
+        tempList.append( *eit );
+      }
+    }
+    if ( sortDirection == SortDirectionAscending ) {
+      // Append the list of Todos without Start DateTimes
+      todoListSorted += tempList;
+    } else {
+      // Prepend the list of Todos without Start DateTimes
+      tempList += todoListSorted;
+      todoListSorted = tempList;
+    }
+    break;
+
+  case TodoSortDueDate:
+    alphaList = sortTodos( todoList, TodoSortSummary, sortDirection );
+    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
+      if ( (*eit)->hasDueDate() ) {
+        sortIt = todoListSorted.begin();
+        if ( sortDirection == SortDirectionAscending ) {
+          while ( sortIt != todoListSorted.end() &&
+                  (*eit)->dtDue() >= (*sortIt)->dtDue() ) {
+            ++sortIt;
+          }
+        } else {
+          while ( sortIt != todoListSorted.end() &&
+                  (*eit)->dtDue() < (*sortIt)->dtDue() ) {
+            ++sortIt;
+          }
+        }
+        todoListSorted.insert( sortIt, *eit );
+      } else {
+        // Keep a list of the Todos without Due DateTimes
+        tempList.append( *eit );
+      }
+    }
+    if ( sortDirection == SortDirectionAscending ) {
+      // Append the list of Todos without Due DateTimes
+      todoListSorted += tempList;
+    } else {
+      // Prepend the list of Todos without Due DateTimes
+      tempList += todoListSorted;
+      todoListSorted = tempList;
+    }
+    break;
+
+  case TodoSortPriority:
+    alphaList = sortTodos( todoList, TodoSortSummary, sortDirection );
+    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
+      sortIt = todoListSorted.begin();
+      if ( sortDirection == SortDirectionAscending ) {
+        while ( sortIt != todoListSorted.end() &&
+                (*eit)->priority() >= (*sortIt)->priority() ) {
+          ++sortIt;
+        }
+      } else {
+        while ( sortIt != todoListSorted.end() &&
+                (*eit)->priority() < (*sortIt)->priority() ) {
+          ++sortIt;
+        }
+      }
+      todoListSorted.insert( sortIt, *eit );
+    }
+    break;
+
+  case TodoSortPercentComplete:
+    alphaList = sortTodos( todoList, TodoSortSummary, sortDirection );
+    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
+      sortIt = todoListSorted.begin();
+      if ( sortDirection == SortDirectionAscending ) {
+        while ( sortIt != todoListSorted.end() &&
+                (*eit)->percentComplete() >= (*sortIt)->percentComplete() ) {
+          ++sortIt;
+        }
+      } else {
+        while ( sortIt != todoListSorted.end() &&
+                (*eit)->percentComplete() < (*sortIt)->percentComplete() ) {
+          ++sortIt;
+        }
+      }
+      todoListSorted.insert( sortIt, *eit );
+    }
+    break;
+
+  case TodoSortSummary:
+    for ( eit = todoList->begin(); eit != todoList->end(); ++eit ) {
+      sortIt = todoListSorted.begin();
+      if ( sortDirection == SortDirectionAscending ) {
+        while ( sortIt != todoListSorted.end() &&
+                (*eit)->summary() >= (*sortIt)->summary() ) {
+          ++sortIt;
+        }
+      } else {
+        while ( sortIt != todoListSorted.end() &&
+                (*eit)->summary() < (*sortIt)->summary() ) {
+          ++sortIt;
+        }
+      }
+      todoListSorted.insert( sortIt, *eit );
+    }
+    break;
+  }
+
+  return todoListSorted;
+}
+
+Todo::List Calendar::todos( TodoSortField sortField, SortDirection sortDirection )
+{
+  Todo::List tl = rawTodos( sortField, sortDirection );
   mFilter->apply( &tl );
   return tl;
 }
@@ -349,12 +582,69 @@ Todo::List Calendar::todos()
 Todo::List Calendar::todos( const QDate &date )
 {
   Todo::List el = rawTodosForDate( date );
-
   mFilter->apply(&el);
-
   return el;
 }
 
+Journal::List Calendar::sortJournals( Journal::List *journalList,
+                                      JournalSortField sortField,
+                                      SortDirection sortDirection )
+{
+  Journal::List journalListSorted;
+  Journal::List::Iterator sortIt;
+  Journal::List::Iterator eit;
+
+  switch( sortField ) {
+  case JournalSortUnsorted:
+    journalListSorted = *journalList;
+    break;
+
+  case JournalSortDate:
+    for ( eit = journalList->begin(); eit != journalList->end(); ++eit ) {
+      sortIt = journalListSorted.begin();
+      if ( sortDirection == SortDirectionAscending ) {
+        while ( sortIt != journalListSorted.end() &&
+                (*eit)->dtStart() >= (*sortIt)->dtStart() ) {
+          ++sortIt;
+        }
+      } else {
+        while ( sortIt != journalListSorted.end() &&
+                (*eit)->dtStart() < (*sortIt)->dtStart() ) {
+          ++sortIt;
+        }
+      }
+      journalListSorted.insert( sortIt, *eit );
+    }
+    break;
+
+  case JournalSortSummary:
+    for ( eit = journalList->begin(); eit != journalList->end(); ++eit ) {
+      sortIt = journalListSorted.begin();
+      if ( sortDirection == SortDirectionAscending ) {
+        while ( sortIt != journalListSorted.end() &&
+                (*eit)->summary() >= (*sortIt)->summary() ) {
+          ++sortIt;
+        }
+      } else {
+        while ( sortIt != journalListSorted.end() &&
+                (*eit)->summary() < (*sortIt)->summary() ) {
+          ++sortIt;
+        }
+      }
+      journalListSorted.insert( sortIt, *eit );
+    }
+    break;
+  }
+
+  return journalListSorted;
+}
+
+Journal::List Calendar::journals( JournalSortField sortField, SortDirection sortDirection )
+{
+  Journal::List jl = rawJournals( sortField, sortDirection );
+  mFilter->apply( &jl );
+  return jl;
+}
 
 // When this is called, the todo have already been added to the calendar.
 // This method is only about linking related todos
@@ -514,7 +804,7 @@ Incidence::List Calendar::mergeIncidenceList( const Event::List &e,
                                               const Journal::List &j )
 {
   Incidence::List incidences;
-  
+
   Event::List::ConstIterator it1;
   for( it1 = e.begin(); it1 != e.end(); ++it1 ) incidences.append( *it1 );
 

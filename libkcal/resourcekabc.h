@@ -83,12 +83,14 @@ class ResourceKABC : public ResourceCalendar
     /**
       Return unfiltered list of all events in calendar.
     */
-    Event::List rawEvents();
+    Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
+    //TODO: Deprecate
     Event::List rawEventsForDate( const QDate &date, bool sorted = false );
+    //Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
       Get unfiltered events for date \a qdt.
     */
@@ -99,7 +101,6 @@ class ResourceKABC : public ResourceCalendar
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
                            bool inclusive = false );
-
 
     /*
       Returns a QString with the text of the holiday (if any) that falls
@@ -123,7 +124,7 @@ class ResourceKABC : public ResourceCalendar
     /**
       Return list of all todos.
     */
-    Todo::List rawTodos();
+    Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
       Returns list of todos due on the specified date.
     */
@@ -136,8 +137,14 @@ class ResourceKABC : public ResourceCalendar
     virtual Journal *journal(const QDate &);
     /** Return Journal with given UID */
     virtual Journal *journal(const QString &UID);
-    /** Return list of all Journals stored in calendar */
-    Journal::List journals();
+    /**
+      Return list of all journals.
+    */
+    Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    /**
+      Returns the journal for the given date.
+    */
+    Journal *rawJournalForDate( const QDate &date );
 
     /** Return all alarms, which ocur in the given time interval. */
     Alarm::List alarms( const QDateTime &from, const QDateTime &to );
@@ -165,7 +172,7 @@ class ResourceKABC : public ResourceCalendar
     int mAlarmDays;
     bool mAlarm;
     KABC::AddressBook *mAddressbook;
-    
+
     KABC::Lock *mLock;
 
     class Private;

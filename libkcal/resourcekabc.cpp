@@ -149,17 +149,17 @@ bool ResourceKABC::doLoad()
       uid_1 = (*it).uid();
       if (name_1.isEmpty()) name_1 = (*it).realName();
       summary = i18n("%1's birthday").arg( name_1 );
-      
-      
+
+
       Event *ev = new Event();
       ev->setUid( uid_1+"_KABC_Birthday");
-      
+
       ev->setDtStart(birthdate);
       ev->setDtEnd(birthdate);
       ev->setHasEndDate(true);
       ev->setFloats(true);
       ev->setTransparency( Event::Transparent );
-      
+
       ev->setCustomProperty("KABC", "BIRTHDAY", "YES");
       ev->setCustomProperty("KABC", "UID-1", uid_1 );
       ev->setCustomProperty("KABC", "NAME-1", name_1 );
@@ -167,7 +167,7 @@ bool ResourceKABC::doLoad()
       kdDebug(5800) << "ResourceKABC::doLoad: uid:" << uid_1 << " name: " << name_1
         << " email: " << email_1 << endl;
       ev->setSummary(summary);
-      
+
       // Set the recurrence
       Recurrence *vRecurrence = ev->recurrence();
       vRecurrence->setRecurStart(birthdate);
@@ -230,13 +230,13 @@ bool ResourceKABC::doLoad()
     QString uid_1 = (*addrIt).uid();
     QString email_1 = (*addrIt).fullEmail();
 
-    
+
     QString spouseName = (*addrIt).custom( "KADDRESSBOOK", "X-SpousesName" );
     QString email_2,uid_2;
     if ( name_1.isEmpty() )
       name_1 = (*addrIt).givenName();
     if ( !spouseName.isEmpty() ) {
-      //TODO: find a KABC:Addressee of the spouse 
+      //TODO: find a KABC:Addressee of the spouse
       KABC::Addressee spouse;
       spouse.setNameFromString( spouseName );
       uid_2 = spouse.uid();
@@ -257,7 +257,7 @@ bool ResourceKABC::doLoad()
     ev->setSummary(summary);
 
     ev->setCustomProperty( "KABC", "BIRTHDAY", "YES" );
-    
+
     ev->setCustomProperty( "KABC", "UID-1", (*it).uid() );
     ev->setCustomProperty( "KABC", "NAME-1", name_1 );
     ev->setCustomProperty( "KABC", "EMAIL-1", email_1 );
@@ -365,9 +365,9 @@ Event::List ResourceKABC::rawEventsForDate(const QDateTime &qdt)
   return mCalendar.rawEventsForDate( qdt.date() );
 }
 
-Event::List ResourceKABC::rawEvents()
+Event::List ResourceKABC::rawEvents( EventSortField sortField, SortDirection sortDirection )
 {
-  return mCalendar.rawEvents();
+  return mCalendar.rawEvents( sortField, sortDirection );
 }
 
 bool ResourceKABC::addTodo(Todo*)
@@ -380,9 +380,9 @@ void ResourceKABC::deleteTodo(Todo*)
 }
 
 
-Todo::List ResourceKABC::rawTodos()
+Todo::List ResourceKABC::rawTodos( TodoSortField sortField, SortDirection sortDirection )
 {
-  return mCalendar.rawTodos();
+  return mCalendar.rawTodos( sortField, sortDirection );
 }
 
 Todo *ResourceKABC::todo( const QString &uid )
@@ -417,11 +417,15 @@ Journal *ResourceKABC::journal(const QString &uid)
   return mCalendar.journal( uid );
 }
 
-Journal::List ResourceKABC::journals()
+Journal::List ResourceKABC::rawJournals( JournalSortField sortField, SortDirection sortDirection )
 {
-  return mCalendar.journals();
+  return mCalendar.rawJournals( sortField, sortDirection );
 }
 
+Journal *ResourceKABC::rawJournalForDate( const QDate &date )
+{
+  return mCalendar.rawJournalForDate( date );
+}
 
 Alarm::List ResourceKABC::alarmsTo( const QDateTime &to )
 {

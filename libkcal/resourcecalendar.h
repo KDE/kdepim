@@ -35,6 +35,7 @@
 #include "todo.h"
 #include "event.h"
 #include "journal.h"
+#include "calendar.h"
 
 #include <kresources/resource.h>
 #include <kresources/manager.h>
@@ -83,7 +84,7 @@ class ResourceCalendar : public KRES::Resource
 
       Calling this function multiple times should have the same effect as
       calling it once, given that the data isn't changed between calls.
-    
+
       This function calls doLoad() which has to be reimplented by the resource
       to do the actual loading.
     */
@@ -145,14 +146,16 @@ class ResourceCalendar : public KRES::Resource
       Return unfiltered list of all events in calendar. Use with care,
       this can be a bad idea for server-based calendars.
     */
-    virtual Event::List rawEvents() = 0;
+    virtual Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
+    //TODO: Deprecate
     virtual Event::List rawEventsForDate( const QDate &date,
                                           bool sorted = false ) = 0;
+    //virtual Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
       Get unfiltered events for date \a qdt.
@@ -229,7 +232,7 @@ class ResourceCalendar : public KRES::Resource
     /**
       Return list of all todos.
     */
-    virtual Todo::List rawTodos() = 0;
+    virtual Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
     /**
       Returns list of todos due on the specified date.
     */
@@ -255,12 +258,14 @@ class ResourceCalendar : public KRES::Resource
       Return Journal with given unique id.
     */
     virtual Journal *journal( const QString &uid ) = 0;
-
     /**
-      Return list of all Journals stored in calendar.
+      Return list of all journals.
     */
-    virtual Journal::List journals() = 0;
-
+    virtual Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
+    /**
+      Returns the journal for the given date.
+    */
+    virtual Journal *rawJournalForDate( const QDate &date ) = 0;
 
     /**
       Return all alarms, which ocur in the given time interval.
@@ -293,7 +298,7 @@ class ResourceCalendar : public KRES::Resource
       Is this subresource active or not?
     */
     virtual bool subresourceActive( const QString& ) const { return true; }
-    
+
     /**
       What is the label for this subresource?
      */

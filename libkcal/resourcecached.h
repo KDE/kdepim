@@ -47,17 +47,17 @@ class ResourceCached : public ResourceCalendar,
   public:
     /**
       Reload policy.
-      
+
       @see setReloadPolicy(), reloadPolicy()
     */
     enum { ReloadNever, ReloadOnStartup, ReloadInterval };
     /**
       Save policy.
-      
+
       @see setSavePolicy(), savePolicy()
     */
     enum { SaveNever, SaveOnExit, SaveInterval, SaveDelayed, SaveAlways };
-  
+
     ResourceCached( const KConfig * );
     virtual ~ResourceCached();
 
@@ -74,7 +74,7 @@ class ResourceCached : public ResourceCalendar,
     void setReloadPolicy( int policy );
     /**
       Return reload policy.
-      
+
       @see setReloadPolicy()
     */
     int reloadPolicy() const;
@@ -102,7 +102,7 @@ class ResourceCached : public ResourceCalendar,
     void setSavePolicy( int policy );
     /**
       Return save policy.
-      
+
       @see setsavePolicy()
     */
     int savePolicy() const;
@@ -156,12 +156,15 @@ class ResourceCached : public ResourceCalendar,
     /**
       Return unfiltered list of all events in calendar.
     */
-    Event::List rawEvents();
+    Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
+    //TODO: Deprecate
     Event::List rawEventsForDate( const QDate &date, bool sorted = false );
+    //Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+
     /**
       Get unfiltered events for date \a qdt.
     */
@@ -172,7 +175,6 @@ class ResourceCached : public ResourceCalendar,
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false );
-  
 
     /**
       Add a todo to the todolist.
@@ -190,7 +192,7 @@ class ResourceCached : public ResourceCalendar,
     /**
       Return list of all todos.
     */
-    Todo::List rawTodos();
+    Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
       Returns list of todos due on the specified date.
     */
@@ -212,9 +214,13 @@ class ResourceCached : public ResourceCalendar,
     */
     virtual Journal *journal( const QString &uid );
     /**
-      Return list of all Journals stored in calendar
+      Return list of all journals.
     */
-    Journal::List journals();
+    Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted,SortDirection sortDirection = SortDirectionAscending );
+    /**
+      Returns the journal for the given date.
+    */
+    Journal *rawJournalForDate( const QDate &date );
 
     /**
       Return all alarms, which ocur in the given time interval.
@@ -230,7 +236,7 @@ class ResourceCached : public ResourceCalendar,
       Set id of timezone, e.g. "Europe/Berlin"
     */
     void setTimeZoneId( const QString& tzid );
-  
+
     QString timeZoneId() const;
 
     void enableChangeNotification();
@@ -241,7 +247,7 @@ class ResourceCached : public ResourceCalendar,
     void clearChanges();
 
     bool hasChanges() const;
-  
+
     Incidence::List allChanges() const;
 
     Incidence::List addedIncidences() const;
@@ -280,22 +286,22 @@ class ResourceCached : public ResourceCalendar,
     CalendarLocal mCalendar;
 
     /**
-      Virtual method from KRES::Resource, called when the last instace of the 
-      resource is closed 
+      Virtual method from KRES::Resource, called when the last instace of the
+      resource is closed
      */
     virtual void doClose();
-    /** 
-      Opens the resource. Dummy implementation, so child classes don't have to 
-      reimplement this method. By default, this does not do anything, but can be reimplemented in child classes 
+    /**
+      Opens the resource. Dummy implementation, so child classes don't have to
+      reimplement this method. By default, this does not do anything, but can be reimplemented in child classes
      */
     virtual bool doOpen();
     /**
       Check if reload required according to reload policy.
-    */    
+    */
     bool checkForReload();
     /**
       Check if save required according to save policy.
-    */    
+    */
     bool checkForSave();
 
     void checkForAutomaticSave();

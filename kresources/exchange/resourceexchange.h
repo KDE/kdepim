@@ -62,7 +62,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     /** constructs a new calendar, with variables initialized to sane values. */
 //    ExchangeCalendar( KPIM::ExchangeAccount* account, const QString &timeZoneId );
 //    virtual ~ExchangeCalendar();
-  
+
     /**
       Semantics not yet defined. Should the Exchange calendar be wiped clean?
       Should the disk calendar be copied to the Exchange calendar?
@@ -81,7 +81,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 
     /** clears out the current calendar, freeing all used memory etc. etc. */
 //    void close();
-  
+
     /** Add Event to calendar. */
     bool addEvent(Event *anEvent);
     /** deletes an event from this calendar. */
@@ -109,14 +109,14 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
       on the specified date.
     */
     QString getHolidayForDate(const QDate &qd);
-    
+
     virtual void subscribeEvents( const QDate& start, const QDate& end );
 
     /**
       Stop receiving event signals for the given period (inclusive). After this call,
       the calendar resource will no longer send eventsAdded, eventsModified or
       eventsDeleted signals for events falling completely in this period. The resource
-      MAY delete the Events objects. The application MUST NOT dereference pointers 
+      MAY delete the Events objects. The application MUST NOT dereference pointers
       to the relevant Events after this call.
     */
     virtual void unsubscribeEvents( const QDate& start, const QDate& end );
@@ -137,7 +137,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     /**
       Return list of all todos.
     */
-    Todo::List rawTodos();
+    Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
       Returns list of todos due on the specified date.
     */
@@ -152,7 +152,9 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     /** Return Journal with given UID */
     virtual Journal *journal(const QString &UID);
     /** Return list of all Journals stored in calendar */
-    Journal::List journals();
+    Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted,  SortDirection sortDirection = SortDirectionAscending );
+    /** Return journal for the given date. */
+    Journal *rawJournalForDate( const QDate & );
 
     /** Return all alarms, which ocur in the given time interval. */
     Alarm::List alarms( const QDateTime &from, const QDateTime &to );
@@ -164,7 +166,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 
   protected:
     /**
-      Prepare the calendar for use. Load the calendar from disk, 
+      Prepare the calendar for use. Load the calendar from disk,
       open connections to the calendaring server, whatever.
       Must be called before other methods can be called.
     */
@@ -192,14 +194,18 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false );
+    /**
+       Get unfiltered events in sorted order.
+    */
+    Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
 
-  protected:
+    protected:
     /** Notification function of IncidenceBase::Observer. */
     void incidenceUpdated( IncidenceBase *i );
-  
+
     /** inserts an event into its "proper place" in the calendar. */
 //    void insertEvent(const Event *anEvent);
-  
+
     /** Append alarms of incidence in interval to list of alarms. */
 //    void appendAlarms( Alarm::List &alarms, Incidence *incidence,
 //                       const QDateTime &from, const QDateTime &to );
@@ -209,7 +215,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 //                       const QDateTime &from, const QDateTime &to );
 
     bool uploadEvent( Event *event );
-		
+
     void setTimeZoneId( const QString &tzid );
 
   protected slots:
@@ -225,7 +231,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     KPIM::ExchangeMonitor* mMonitor;
     CalendarLocal* mCache;
     QDict<EventInfo> mEventDict; // maps UIDS to EventInfo records
-    QIntDict<EventInfo> mWatchDict; // maps Watch IDs to EventInfo records 
+    QIntDict<EventInfo> mWatchDict; // maps Watch IDs to EventInfo records
     DateSet* mDates;
     QMap<Event, QDateTime>* mEventDates;
     QMap<QDate, QDateTime>* mCacheDates;
