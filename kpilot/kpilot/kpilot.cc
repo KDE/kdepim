@@ -876,13 +876,17 @@ int main(int argc, char **argv)
 	KAboutData about("kpilot", I18N_NOOP("KPilot"),
 		KPILOT_VERSION,
 		"KPilot - HotSync software for KDE\n\n",
-		KAboutData::License_GPL, "(c) 1998-2000,2001, Dan Pilone");
+		KAboutData::License_GPL, 
+		"(c) 1998-2000,2001, Dan Pilone (c) 2000-2004, Adriaan de Groot",
+		0L,
+		"http://www.fruitsalad.org/people/adridg/kpilot"
+		);
 	about.addAuthor("Dan Pilone",
 		I18N_NOOP("Project Leader"),
-		"pilone@slac.com", "http://www.slac.com/pilone/kpilot_home/");
+		"pilone@slac.com" );
 	about.addAuthor("Adriaan de Groot",
 		I18N_NOOP("Maintainer"),
-		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
+		"groot@kde.org", "http://www.cs.kun.nl/~adridg/");
 	about.addAuthor("Reinhold Kainhofer",
 		I18N_NOOP("Core and conduits developer"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
 	about.addCredit("Preston Brown", I18N_NOOP("VCal conduit"));

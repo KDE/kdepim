@@ -1,6 +1,16 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-04-02  Adriaan de Groot
+* Spent most of the day putting together new tarballs, so I can push
+  KPilot improvements out the door again when needed.
+* Changing the KPilot website to fruitsalad.org, which we know has
+  enough bandwidth.
+
+2004-03-02  Adriaan de Groot
+* Add a variable timeout after the sync, specially for some T3 users.
+  Thanks to Alec Mitchell for pointing that out and providing an initial patch.
+
 2004-02-25  Adriaan de Groot
 * In the KNotes conduit: Coding style fixes. Cleanup doubled strings.
   Improved status reporting. Probably dealt with the memo viewer issue.

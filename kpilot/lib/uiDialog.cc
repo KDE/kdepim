@@ -172,14 +172,14 @@ UIDialog::~UIDialog()
 		s = QString::null;
 		s += CSL1("<a href=\"%1\">").arg(p->homepage());
 		s += p->homepage();
-		s += CSL1("</a>");
+		s += CSL1("</a><br>");
 		linktext->append(s);
 	}
 
 	s = QString::null;
 	s += i18n("Send questions and comments to <a href=\"mailto:%1\">%2</a>.")
-		.arg( CSL1("kde-pim@kde.org") )
-		.arg( CSL1("kde-pim@kde.org") );
+		.arg( CSL1("kdepim-users@kde.org") )
+		.arg( CSL1("kdepim-users@kde.org") );
 	s += ' ';
 	s += i18n("Send bug reports to <a href=\"mailto:%1\">%2</a>.")
 		.arg(p->bugAddress())
