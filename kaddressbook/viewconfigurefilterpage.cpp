@@ -1,25 +1,25 @@
-/*                                                                      
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
-                                                                        
+/*
+    This file is part of KAddressBook.
+    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <qbuttongroup.h>
 #include <qlabel.h>
@@ -78,17 +78,17 @@ ViewConfigureFilterPage::~ViewConfigureFilterPage()
 {
   delete mFilterGroup;
 }
-    
+
 void ViewConfigureFilterPage::restoreSettings( KConfig *config )
 {
   mFilterCombo->clear();
-  
+
   // Load the filter combo
   const Filter::List list = Filter::restore( config, "Filter" );
   Filter::List::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
     mFilterCombo->insertItem( (*it).name() );
-    
+
   int id = config->readNumEntry( "DefaultFilterType", 1 );
   mFilterGroup->setButton( id );
   buttonClicked( id );
@@ -102,7 +102,7 @@ void ViewConfigureFilterPage::saveSettings( KConfig *config )
   config->writeEntry( "DefaultFilterName", mFilterCombo->currentText() );
   config->writeEntry( "DefaultFilterType", mFilterGroup->id( mFilterGroup->selected() ) );
 }
-    
+
 void ViewConfigureFilterPage::buttonClicked( int id )
 {
   mFilterCombo->setEnabled( id == 2 );

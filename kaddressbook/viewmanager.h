@@ -134,7 +134,7 @@ class ViewManager : public QWidget
 
   private:
     void createViewFactories();
-    QStringList filterNames() const;    
+    QStringList filterNames() const;
     int filterPosition( const QString &name ) const;
     QStringList viewNames() const;
     int viewPosition( const QString &name ) const;

@@ -21,7 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef VIEWCONFIGUREFIELDSPAGE_H 
+#ifndef VIEWCONFIGUREFIELDSPAGE_H
 #define VIEWCONFIGUREFIELDSPAGE_H
 
 #include <qwidget.h>
@@ -54,10 +54,10 @@ class ViewConfigureFieldsPage : public QWidget
 
     void slotShowFields( int );
     void slotButtonsEnabled();
-  
+
   private:
     void initGUI();
-    
+
     KComboBox *mCategoryCombo;
     QListBox *mSelectedBox;
     QListBox *mUnSelectedBox;

@@ -1,8 +1,8 @@
-/*    
+/*
   imaddresswidget.cpp
-  
+
   IM address editor widget for KAddressbook
-  
+
   Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
 
     This program is free software; you can redistribute it and/or modify
@@ -73,7 +73,7 @@ void IMAddressWidget::init()
 void IMAddressWidget::slotAddressChanged( const QString &text )
 {
   emit inValidState( !text.stripWhiteSpace().isEmpty() );
-}  
+}
 
 KPluginInfo * IMAddressWidget::protocol() const
 {

@@ -40,7 +40,7 @@
 /////////////////////////////////
 // PwDelete Methods
 
-PwDeleteCommand::PwDeleteCommand( KABC::AddressBook *ab, 
+PwDeleteCommand::PwDeleteCommand( KABC::AddressBook *ab,
                                   const QStringList &uidList)
   : Command( ab ), mAddresseeList(), mUIDList( uidList )
 {
@@ -141,7 +141,7 @@ bool PwPasteCommand::redo()
   for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
     /* we have to set a new uid for the contact, otherwise insertAddressee()
        ignore it.
-     */ 
+     */
     (*it).setUid( KApplication::randomString( 10 ) );
     uids.append( (*it).uid() );
     addressBook()->insertAddressee( *it );

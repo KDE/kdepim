@@ -47,7 +47,7 @@ static QString asUtf8( const QByteArray &val )
   const char *data = val.data();
 
   //QString::fromUtf8() bug workaround
-  if ( data[ val.size() - 1 ] == '\0' ) 
+  if ( data[ val.size() - 1 ] == '\0' )
     return QString::fromUtf8( data, val.size() - 1 );
   else
     return QString::fromUtf8( data, val.size() );
@@ -166,7 +166,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   mSearchType->insertItem( i18n( "Contains" ) );
   mSearchType->insertItem( i18n( "Starts With" ) );
   boxLayout->addMultiCellWidget( mSearchType, 1, 1, 3, 4 );
-  
+
   topLayout->addWidget( groupBox );
 
   mResultListView = new QListView( page );
@@ -205,7 +205,7 @@ void LDAPSearchDialog::restoreSettings()
 {
   // Create one KPIM::LdapClient per selected server and configure it.
 
-  // First clean the list to make sure it is empty at 
+  // First clean the list to make sure it is empty at
   // the beginning of the process
   mLdapClientList.setAutoDelete( true );
   mLdapClientList.clear();
@@ -214,11 +214,11 @@ void LDAPSearchDialog::restoreSettings()
   kabConfig.setGroup( "LDAPSearch" );
   mSearchType->setCurrentItem( kabConfig.readNumEntry( "SearchType", 0 ) );
 
-  // then read the config file and register all selected 
+  // then read the config file and register all selected
   // server in the list
   KConfig* config = KPIM::LdapSearch::config();
   KConfigGroupSaver saver( config, "LDAP" );
-  mNumHosts = config->readUnsignedNumEntry( "NumSelectedHosts" ); 
+  mNumHosts = config->readUnsignedNumEntry( "NumSelectedHosts" );
   if ( !mNumHosts ) {
     KMessageBox::error( this, i18n( "You must select a LDAP server before searching.\nYou can do this from the menu Settings/Configure KAddressBook." ) );
     mIsOK = false;
@@ -233,17 +233,17 @@ void LDAPSearchDialog::restoreSettings()
 
       for ( QMap<QString,QString>::ConstIterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )
         attrs << *it;
-        
+
       ldapClient->setAttrs( attrs );
 
       connect( ldapClient, SIGNAL( result( const KPIM::LdapObject& ) ),
 	       this, SLOT( slotAddResult( const KPIM::LdapObject& ) ) );
       connect( ldapClient, SIGNAL( done() ),
-	       this, SLOT( slotSearchDone() ) ); 
+	       this, SLOT( slotSearchDone() ) );
       connect( ldapClient, SIGNAL( error( const QString& ) ),
 	       this, SLOT( slotError( const QString& ) ) );
 
-      mLdapClientList.append( ldapClient );     
+      mLdapClientList.append( ldapClient );
     }
 
 /** CHECKIT*/
@@ -300,7 +300,7 @@ void LDAPSearchDialog::slotSetScope( bool rec )
     if ( rec )
       client->setScope( "sub" );
     else
-      client->setScope( "one" );  
+      client->setScope( "one" );
   }
 }
 
@@ -351,7 +351,7 @@ void LDAPSearchDialog::slotStartSearch()
 
   QString filter = makeFilter( mSearchEdit->text().stripWhiteSpace(), mFilterCombo->currentText(), startsWith );
 
-   // loop in the list and run the KPIM::LdapClients 
+   // loop in the list and run the KPIM::LdapClients
   mResultListView->clear();
   for ( KPIM::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() )
     client->startQuery( filter );
@@ -437,7 +437,7 @@ void LDAPSearchDialog::slotUser2()
 
 void LDAPSearchDialog::slotUser3()
 {
-  
+
   KABC::Resource *resource = mCore->requestResource( this );
   if ( !resource ) return;
   KABLock::self( mAddressBook )->lock( resource );

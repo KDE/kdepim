@@ -46,8 +46,8 @@ class SearchManager : public QObject
                    QObject *parent, const char *name = 0 );
 
     /**
-      This method takes a pattern and searches for a match of the specified 
-      field of all available contacts. The result is propagated via 
+      This method takes a pattern and searches for a match of the specified
+      field of all available contacts. The result is propagated via
       contactsUpdated().
 
       @param pattern The search string.

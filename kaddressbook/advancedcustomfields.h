@@ -1,6 +1,6 @@
 /*
     This file is part of KAddressbook.
-    
+
     Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 

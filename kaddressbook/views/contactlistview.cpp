@@ -157,7 +157,7 @@ ContactListViewItem::ContactListViewItem(const KABC::Addressee &a,
 {
   if ( mIMProxy )
     mHasIM = ( !( mIMProxy->allContacts().find( mAddressee.uid() ) == mIMProxy->allContacts().end() ) );
-  else 
+  else
     mHasIM = false;
   refresh();
 }
@@ -167,7 +167,7 @@ QString ContactListViewItem::key(int column, bool ascending) const
   // Preserve behaviour of QListViewItem::key(), otherwise we cause a crash if the column does not exist
   if ( column >= parentListView->columns() )
     return QString::null;
-    
+
 #if KDE_VERSION >= 319
   Q_UNUSED( ascending )
   if ( parentListView->showIM() ) {
@@ -184,7 +184,7 @@ QString ContactListViewItem::key(int column, bool ascending) const
       return mFields[ column ]->sortKey( mAddressee );
     }
   }
-  else 
+  else
     return mFields[ column ]->sortKey( mAddressee );
 #else
   return QListViewItem::key( column, ascending ).lower();

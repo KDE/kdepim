@@ -348,8 +348,7 @@ void IMEditorWidget::slotAdd()
                                                    addressWid->address() /*, addressWid->context() */ );
 
     // If it's a new address, set is as preferred.
-    if ( mPreferred.isEmpty() )
-    {
+    if ( mPreferred.isEmpty() ) {
       imaddresslvi->setPreferred( true );
       mPreferred = addressWid->address();
     }

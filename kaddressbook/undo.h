@@ -79,7 +79,7 @@ class StackBase : public QObject
       use the stack, however the subclasses need it to modify the stack.
      */
     Command *pop();
-    
+
     QPtrStack<Command> mCommandStack;
 };
 

@@ -24,20 +24,21 @@
 #ifndef CARDVIEW_H
 #define CARDVIEW_H
 
-#include <qscrollview.h>
-#include <qptrlist.h>
-#include <qstring.h>
-#include <qrect.h>
 #include <qpair.h>
 #include <qpoint.h>
+#include <qptrlist.h>
+#include <qrect.h>
+#include <qscrollview.h>
+#include <qstring.h>
 
 class QLabel;
+class QMouseEvent;
 class QPainter;
 class QResizeEvent;
-class QMouseEvent;
+
 class CardView;
-class CardViewPrivate;
 class CardViewItemPrivate;
+class CardViewPrivate;
 class CardViewTip;
 
 /** Represents a single card (item) in the card view. A card has a caption
@@ -61,7 +62,7 @@ class CardViewItem
     * appear at the top of the card. This is also the string that will
     * be used to sort the cards in the view.
     */
-    CardViewItem(CardView *parent, QString caption = QString::null);
+    CardViewItem( CardView *parent, const QString &caption = QString() );
     virtual ~CardViewItem();
 
     /** @return The caption of the card, or QString::null if none was ever
@@ -73,12 +74,12 @@ class CardViewItem
     * appear at the top of the card. This is also the string that will
     * be used to sort the cards in the view.
     */
-    void setCaption(const QString &caption);
+    void setCaption( const QString &caption );
 
     /** Paints the card using the given painter and color group. The
     * card will handle painting itself selected if it is selected.
     */
-    virtual void paintCard(QPainter *p, QColorGroup &cg);
+    virtual void paintCard( QPainter *p, QColorGroup &cg );
 
     /** Repaints the card. This is done by sending a repaint event to the
     * view with the clip rect defined as this card.
@@ -91,15 +92,15 @@ class CardViewItem
     * within a card.
     * @param value The value of the field.
     */
-    void insertField(const QString &label, const QString &value);
+    void insertField( const QString &label, const QString &value );
 
     /** Removes the field with label <i>label</i> from the card.
     */
-    void removeField(const QString &label);
+    void removeField( const QString &label );
 
     /** @return The value of the field with label <i>label</i>.
     */
-    QString fieldValue(const QString &label);
+    QString fieldValue( const QString &label ) const;
 
     /** Removes all the fields from this card.
     */
@@ -109,7 +110,7 @@ class CardViewItem
     * as the display order in the view. 0 will be returned if this is the
     * last card.
     */
-    CardViewItem *nextItem();
+    CardViewItem *nextItem() const;
 
     /** @return True if this card is currently selected, false otherwise.
     */
@@ -127,7 +128,7 @@ class CardViewItem
     */
     Field *fieldAt( const QPoint &itempos ) const;
 
-    CardView *cardView() { return mView; };
+    CardView *cardView() const { return mView; };
 
     /** @return The height of this item as rendered, in pixels.
 
@@ -136,13 +137,13 @@ class CardViewItem
         argument is mainly to allow the cardView to change global settings (like
         maxFieldLines) that might influence the items heights
     */
-    int height( bool allowCache=true ) const;
+    int height( bool allowCache = true ) const;
 
   protected:
     /** Sets the card as selected. This is usually only called from the
     * card view.
     */
-    void setSelected(bool selected);
+    void setSelected( bool selected );
 
   private:
     /** Sets the default values.
@@ -154,7 +155,7 @@ class CardViewItem
     * <i>width</i>, then the string will be trimmed and a '...' will
     * be appended.
     */
-    QString trimString(const QString &text, int width, QFontMetrics &fm);
+    QString trimString( const QString &text, int width, QFontMetrics &fm ) const;
 
     CardViewItemPrivate *d;
     CardView *mView;
@@ -180,19 +181,19 @@ class CardView : public QScrollView
   public:
     /** Constructor.
     */
-    CardView(QWidget *parent, const char *name);
+    CardView( QWidget *parent, const char *name );
     virtual ~CardView();
 
     /** Inserts the item into the card view. This method does not have
     * to be called if you created the item with a proper parent. Once
     * inserted, the CardView takes ownership of the item.
     */
-    void insertItem(CardViewItem *item);
+    void insertItem( CardViewItem *item );
 
     /** Takes the item from the view. The item will not be deleted and
     * ownership of the item is returned to the caller.
     */
-    void takeItem(CardViewItem *item);
+    void takeItem( CardViewItem *item );
 
     /** Clears the view and deletes all card view items
     */
@@ -203,7 +204,7 @@ class CardView : public QScrollView
     * at it's border.
     * @sa setCurrentItem()
     */
-    CardViewItem *currentItem();
+    CardViewItem *currentItem() const;
 
     /** Sets the CardViewItem @p item to the current item in the view.
     */
@@ -212,19 +213,19 @@ class CardView : public QScrollView
     /** @return The item found at the given point, or 0 if there is no item
     * at that point.
     */
-    CardViewItem *itemAt(const QPoint &viewPos);
+    CardViewItem *itemAt( const QPoint &viewPos ) const;
 
     /** @return The bounding rect of the given item.
     */
-    QRect itemRect(const CardViewItem *item);
+    QRect itemRect( const CardViewItem *item ) const;
 
     /** Ensures that the given item is in the viewable area of the widget
     */
-    void ensureItemVisible(const CardViewItem *item);
+    void ensureItemVisible( const CardViewItem *item );
 
     /** Repaints the given item.
     */
-    void repaintItem(const CardViewItem *item);
+    void repaintItem( const CardViewItem *item );
 
     enum SelectionMode { Single, Multi, Extended, NoSelection };
 
@@ -232,7 +233,7 @@ class CardView : public QScrollView
     *
     * @see QListView
     */
-    void setSelectionMode(SelectionMode mode);
+    void setSelectionMode( SelectionMode mode );
 
     /** @return The current selection mode.
     */
@@ -241,7 +242,7 @@ class CardView : public QScrollView
     /** Selects or deselects the given item. This method honors the current
     * selection mode, so if other items are selected, they may be unselected.
     */
-    void setSelected(CardViewItem *item, bool selected);
+    void setSelected( CardViewItem *item, bool selected );
 
     /** Selects or deselects all items.
     */
@@ -249,7 +250,7 @@ class CardView : public QScrollView
 
     /** @return True if the given item is selected, false otherwise.
     */
-    bool isSelected(CardViewItem *item) const;
+    bool isSelected( CardViewItem *item ) const;
 
     /** @return The first selected item. In single select mode, this will be
     * the only selected item, in other modes this will be the first selected
@@ -266,7 +267,7 @@ class CardView : public QScrollView
     /** @return The item after the given item or 0 if the item is the last
     * item.
     */
-    CardViewItem *itemAfter(CardViewItem *item);
+    CardViewItem *itemAfter( const CardViewItem *item ) const;
 
     /** @return The number of items in the view.
     */
@@ -280,8 +281,8 @@ class CardView : public QScrollView
     *
     * @return The first matching item, or 0 if no items match.
     */
-    CardViewItem *findItem(const QString &text, const QString &label,
-                           Qt::StringComparisonMode compare = Qt::BeginsWith);
+    CardViewItem *findItem( const QString &text, const QString &label,
+                            Qt::StringComparisonMode compare = Qt::BeginsWith ) const;
 
     /** Returns the amounts of pixels required for one column.
     * This depends on wheather drawSeparators is enabled:
@@ -289,13 +290,13 @@ class CardView : public QScrollView
     * If not, it is itemWidth + itemSpacing
     * @see itemWidth(), setItemWidth(), itemSpacing() and setItemSpacing()
     */
-    uint columnWidth();
+    uint columnWidth() const;
 
     /** Sets if the border around a card should be draw. The border is a thing
     * (1 or 2 pixel) line that bounds the card. When drawn, it shows when
     *  a card is highlighted and when it isn't.
     */
-    void setDrawCardBorder(bool enabled);
+    void setDrawCardBorder( bool enabled );
 
     /** @return True if borders are drawn, false otherwise.
     */
@@ -306,7 +307,7 @@ class CardView : public QScrollView
     * columns in the list view. The separator is just for esthetics and it
     * does not serve a functional purpose.
     */
-    void setDrawColSeparators(bool enabled);
+    void setDrawColSeparators( bool enabled );
 
     /** @return True if column separators are drawn, false otherwise.
     */
@@ -317,7 +318,7 @@ class CardView : public QScrollView
     * labels makes sense as a source of clarity for the user, othertimes they
     * waste too much space and do not assist the user.
     */
-    void setDrawFieldLabels(bool enabled);
+    void setDrawFieldLabels( bool enabled );
 
     /** @return True if the field labels are drawn, false otherwise.
     */
@@ -326,7 +327,7 @@ class CardView : public QScrollView
     /** Sets if fields with no value should be drawn (of cause the label only,
     * but it allows for embedded editing sometimes...)
     */
-    void setShowEmptyFields(bool show);
+    void setShowEmptyFields( bool show );
 
     /** @return Wheather empty fields should be shown
     */
@@ -342,7 +343,7 @@ class CardView : public QScrollView
     */
     // Note: I looked for a value in QStyle::PixelMetric to use, but I could
     // not see a useful one. One may turn up in a future version of Qt.
-    uint itemMargin();
+    uint itemMargin() const;
 
     /** Sets the internal item margin. @see itemMargin().
     */
@@ -355,7 +356,7 @@ class CardView : public QScrollView
     */
     // Note: There is no useful QStyle::PixelMetric to use for this atm.
     // An option would be using KDialog::spacingHint().
-    uint itemSpacing();
+    uint itemSpacing() const;
 
     /** Sets the item spacing.
     * @see itemSpacing()
@@ -381,7 +382,7 @@ class CardView : public QScrollView
     void setSeparatorWidth( int width );
 
     /** @return the column separator width */
-    int separatorWidth();
+    int separatorWidth() const;
 
     /** Sets the maximum number of lines to display pr field.
         If set to 0 (the default) all lines will be displayed.
@@ -401,29 +402,29 @@ class CardView : public QScrollView
     * method will only be emitted in single select mode, since it defineds
     * which item was selected.
     */
-    void selectionChanged(CardViewItem *);
+    void selectionChanged( CardViewItem* );
 
     /** This method is emitted whenever an item is clicked.
     */
-    void clicked(CardViewItem *);
+    void clicked( CardViewItem* );
 
     /** Emitted whenever the user 'executes' an item. This is dependant on
     * the KDE global config. This could be a single click or a doubleclick.
     * Also emitted when the return key is pressed on an item.
     */
-    void executed(CardViewItem *);
+    void executed( CardViewItem* );
 
     /** Emitted whenever the user double clicks on an item.
     */
-    void doubleClicked(CardViewItem *);
+    void doubleClicked( CardViewItem* );
 
     /** Emitted when the current item changes
     */
-    void currentChanged( CardViewItem * );
+    void currentChanged( CardViewItem* );
 
     /** Emitted when the return key is pressed in an item.
     */
-    void returnPressed( CardViewItem * );
+    void returnPressed( CardViewItem* );
 
     /** Emitted when the context menu is requested in some way.
     */
@@ -433,19 +434,19 @@ class CardView : public QScrollView
     /** Determines which cards intersect that region and tells them to paint
     * themselves.
     */
-    void drawContents(QPainter *p, int clipx, int clipy, int clipw, int cliph);
+    void drawContents( QPainter *p, int clipx, int clipy, int clipw, int cliph );
 
     /** Sets the layout to dirty and repaints.
     */
-    void resizeEvent(QResizeEvent *e);
+    void resizeEvent( QResizeEvent* );
 
     /** Changes the direction the canvas scolls.
     */
-    void contentsWheelEvent(QWheelEvent *e);
+    void contentsWheelEvent( QWheelEvent* );
 
     /** Sets the layout to dirty and calls for a repaint.
     */
-    void setLayoutDirty(bool dirty);
+    void setLayoutDirty( bool dirty );
 
     /** Does the math based on the bounding rect of the cards to properly
     * lay the cards out on the screen. This is only done if the layout is
@@ -453,22 +454,18 @@ class CardView : public QScrollView
     */
     void calcLayout();
 
-//    virtual void mousePressEvent(QMouseEvent *e);
-//    virtual void mouseReleaseEvent(QMouseEvent *e);
-//    virtual void mouseMoveEvent(QMouseEvent *e);
+    virtual void contentsMousePressEvent( QMouseEvent* );
+    virtual void contentsMouseMoveEvent( QMouseEvent* );
+    virtual void contentsMouseReleaseEvent( QMouseEvent* );
+    virtual void contentsMouseDoubleClickEvent( QMouseEvent* );
 
-    virtual void contentsMousePressEvent(QMouseEvent *e);
-    virtual void contentsMouseMoveEvent(QMouseEvent *e);
-    virtual void contentsMouseReleaseEvent(QMouseEvent *e);
-    virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
+    virtual void enterEvent( QEvent* );
+    virtual void leaveEvent( QEvent* );
 
-    virtual void enterEvent( QEvent * );
-    virtual void leaveEvent( QEvent * );
+    virtual void focusInEvent( QFocusEvent* );
+    virtual void focusOutEvent( QFocusEvent* );
 
-    virtual void focusInEvent( QFocusEvent * );
-    virtual void focusOutEvent( QFocusEvent * );
-
-    virtual void keyPressEvent( QKeyEvent * );
+    virtual void keyPressEvent( QKeyEvent* );
 
     /** Overload this method to be told when a drag should be started.
     * In most cases you will want to start a drag event with the currently

@@ -86,7 +86,7 @@ void ExtensionManager::reconfigure()
 {
   saveSettings();
   createExtensionWidgets();
-  restoreSettings();  
+  restoreSettings();
 }
 
 bool ExtensionManager::isQuickEditVisible() const

@@ -56,7 +56,7 @@ class KABCStorage : public KPIM::DesignerFields::Storage
     QStringList keys()
     {
       QStringList keys;
-    
+
       const QStringList customs = mAddressee->customs();
       QStringList::ConstIterator it;
       for ( it = customs.begin(); it != customs.end(); ++it ) {
@@ -72,7 +72,7 @@ class KABCStorage : public KPIM::DesignerFields::Storage
     {
       return mAddressee->custom( mNs, key );
     }
-    
+
     void write( const QString &key, const QString &value )
     {
       mAddressee->insertCustom( mNs, key, value );
