@@ -28,7 +28,10 @@
 #include <kstandarddirs.h>
 #include <kdebug.h>
 
+#include <libkcal/calformat.h>
+
 #include <qdatetime.h>
+#include <qfile.h>
 
 #include <stdlib.h>
 #include <iostream>
@@ -41,6 +44,9 @@
 using namespace KCal;
 using namespace std;
 
+static const char progName[] = "konsolekalendar";
+static const char progDisplay[] = "KonsoleKalendar";
+static const char progVersion[] = "0.9.8";
 static const char description[] = I18N_NOOP("A command line interface to KDE calendars");
 
 static KCmdLineOptions options[] =
@@ -59,8 +65,8 @@ static KCmdLineOptions options[] =
   { "create", I18N_NOOP("  Create new calendar file if one does not exist"), 0 },
 
   { ":", I18N_NOOP(" Operation modifiers:"), 0 },
-  { "next", I18N_NOOP("  Next activity in calendar"), 0 },
-  { "all", I18N_NOOP("  Show all calendar entries"), 0 },
+  { "next", I18N_NOOP("  View next activity in calendar"), 0 },
+  { "all", I18N_NOOP("  View all calendar entries"), 0 },
   { "date <start-date>", I18N_NOOP("  Start from this day [YYYY-MM-DD]"), 0 },
   { "time <start-time>", I18N_NOOP("  Start from this time [HH:MM:SS]"), 0 },
   { "end-date <end-date>", I18N_NOOP("  End at this day [YYYY-MM-DD]"), 0 },
@@ -84,9 +90,9 @@ int main(int argc, char *argv[])
 {
 
   KAboutData aboutData(
-      "konsolekalendar",               // internal program name
-      I18N_NOOP( "KonsoleKalendar" ),  // displayable program name.
-      "0.9.7",                           // version string
+      progName,                        // internal program name
+      I18N_NOOP( progDisplay ),        // displayable program name.
+      progVersion,                     // version string
       description,                     // short porgram description
       KAboutData::License_GPL,         // license type
       "(c) 2002-2003, Tuukka Pasanen and Allen Winter", // copyright statement
@@ -115,7 +121,7 @@ int main(int argc, char *argv[])
   KCmdLineArgs::init( argc, argv, &aboutData, true );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
-  KInstance ins("konsolekalendar");
+  KInstance ins(progName);
 
 // Replace the KApplication call below with the three lines above
 // will make this a pure non-GUI application -- thanks for the info Stephan Kulow.
@@ -152,7 +158,6 @@ int main(int argc, char *argv[])
   KonsoleKalendarEpoch epochs;
 
   variables.setExportType( NONE );
-  variables.setExportFile( "none.html" );
 	
   if ( args->isSet("verbose") ) {
      variables.setVerbose(true);
@@ -167,7 +172,7 @@ int main(int argc, char *argv[])
    *  Switch on export list
    */
   if ( args->isSet("export-list") ) {
-     cout << i18n("\nKonsoleKalendar supports these export formats:\n  Text\n  Text-Organizer (not working yet)\n  HTML (not working yet)\n  CSV").local8Bit() << endl;
+     cout << i18n("\nKonsoleKalendar supports these export formats:\n  Text [Default]\n  HTML\n  CSV (Comma-Separated Values)").local8Bit() << endl;
      return(0);
   }
 
@@ -184,29 +189,27 @@ int main(int argc, char *argv[])
      } else if( option.upper() == "CSV" ) {
        kdDebug() << "main | export-type | Export to CSV" << endl;
        variables.setExportType( CSV );
-     } else if( option.upper() == "TEXT-ORGANIZER" ) {
-       kdDebug() << "main | export-type | Export to Korganizer TXT" << endl;
-       variables.setExportType( TEXT_KORGANIZER );
-     } else {
-       kdDebug() << "main | export-type | Export to TXT" << endl;
+     } else if( option.upper() == "TEXT" ) {
+       kdDebug() << "main | exporttype | Export to TXT" << endl;
        variables.setExportType( TEXT_KONSOLEKALENDAR );
+     } else {
+       kdError() << i18n("Invalid Export Type Specified: ").local8Bit() << option << endl;
+       return(1);
      }
   }
 
-
- /*
-  * If we use HTML this must be set other wise this is trivial
-  * 
-  */ 
-
+  /*
+   *  Switch on export file name
+   *
+   */                                                                     
   if ( args->isSet("export-file") ) {
-     option = args->getOption("export-file");	  
-     kdDebug() << "main | export-file | Export to file: " << option << endl;	  
-     variables.setExportFile( option );  
+    option = args->getOption("export-file");
+
+    kdDebug() << "main | parse options | Export File: (" << option << ")" << endl;
+
+    variables.setExportFile(option);
   }
-	
-	
-	
+
   /*
    *  Switch on View (Print Entries).  This is the default mode of operation.
    *
@@ -292,7 +295,7 @@ int main(int argc, char *argv[])
    */
   if ( args->isSet("next") )
   {
-      kdDebug() << "main | parse options | Show next event only" << endl;
+    kdDebug() << "main | parse options | Show next event only" << endl;
 
     variables.setNext(true);
   }
@@ -309,7 +312,7 @@ int main(int argc, char *argv[])
 
     startdate = QDate::fromString( option,  Qt::ISODate );
     if( ! startdate.isValid() ) {
-      kdError() << i18n("Invalid Start Date Specified ").local8Bit() << option << endl;
+      kdError() << i18n("Invalid Start Date Specified: ").local8Bit() << option << endl;
       return(1);
     }
     kdDebug() << "main | parse options | Start date after conversion: (" << startdate.toString() << ")" << endl;
@@ -327,7 +330,7 @@ int main(int argc, char *argv[])
 
     starttime = QTime::fromString( option,  Qt::ISODate );
     if( ! starttime.isValid() ) {
-      kdError() << i18n("Invalid Start Time Specified ").local8Bit() << option << endl;
+      kdError() << i18n("Invalid Start Time Specified: ").local8Bit() << option << endl;
       return(1);
     }
     kdDebug() << "main | parse options | Start time after conversion: (" << starttime.toString() << ")" << endl;
@@ -345,7 +348,7 @@ int main(int argc, char *argv[])
 
     enddate = QDate::fromString( option,  Qt::ISODate );
     if( ! enddate.isValid() ) {
-      kdError() << i18n("Invalid End Date Specified ").local8Bit() << option << endl;
+      kdError() << i18n("Invalid End Date Specified: ").local8Bit() << option << endl;
       return(1);
     }
     kdDebug() << "main | parse options | End date after converstion: (" << enddate.toString() << ")" << endl;
@@ -362,7 +365,7 @@ int main(int argc, char *argv[])
 
     endtime = QTime::fromString( option,  Qt::ISODate );
     if( ! endtime.isValid() ) {
-      kdError() << i18n("Invalid End Time Specified ").local8Bit() << option << endl;
+      kdError() << i18n("Invalid End Time Specified: ").local8Bit() << option << endl;
       return(1);
     }
 
@@ -415,7 +418,7 @@ int main(int argc, char *argv[])
     option = args->getOption("file");
     variables.setCalendarFile( option );
 
-      kdDebug() << "main | parse options | using calendar at: (" << variables.getCalendarFile() << ")" << endl;
+    kdDebug() << "main | parse options | using calendar at: (" << variables.getCalendarFile() << ")" << endl;
 
   } else {
     KConfig cfg( locate( "config", "korganizerrc" ) );
@@ -432,8 +435,8 @@ int main(int argc, char *argv[])
         cout << i18n("Using calendar file ").local8Bit() << variables.getCalendarFile().local8Bit() << endl;
       }
     } else {
-      cout << i18n("Remote files are not supported yet.").local8Bit() << endl;
-      //TODO: do we exit here (kdError())?
+      kdError() << i18n("Remote calendar files are not supported yet").local8Bit() << endl;
+      return(1);
     }
   }
 
@@ -513,8 +516,8 @@ int main(int argc, char *argv[])
    ***************************************************************************/
 
   // Cannot combine modes
-  if( view + add + change + del > 1 ) {
-    kdError() << i18n("Only 1 operation mode (view, add, change, delete) permitted at a time.").local8Bit() << endl;
+  if( create + view + add + change + del > 1 ) {
+    kdError() << i18n("Only 1 operation mode (view, add, change, delete,create) permitted at a time").local8Bit() << endl;
     return(1);
   }
 
@@ -547,13 +550,46 @@ int main(int argc, char *argv[])
 
   KonsoleKalendar *konsolekalendar = new KonsoleKalendar(variables);
 
+  /*
+   * Set our application name for use in unique IDs and error messages,
+   * and product ID for incidence PRODID property
+   */
+  QString prodId = "-//K Desktop Environment//NONSGML %1 %2//EN";
+  CalFormat::setApplication( progDisplay, prodId.arg( progDisplay).arg( progVersion ) );
+
+  /*
+   * All modes need to know if the calendar file exists
+   */
+  QFile fileExists( variables.getCalendarFile() );
+  bool exists = fileExists.exists();
+  fileExists.close();
+
   if ( calendarFile && create ) {
+
+    kdDebug() << "main | createcalendar | check if calendar file already exists" << endl;
+
+    if( exists ) {
+      kdError() << i18n("Calendar ").local8Bit() << variables.getCalendarFile() << i18n(" already exists").local8Bit() << endl;
+      return(1);
+    }
     if( konsolekalendar->createCalendar() ) {
-      kdDebug() << "main | createcalendar | successfully created calendarfile" << endl;
+      cout << i18n("Calendar ").local8Bit() << variables.getCalendarFile().local8Bit() << i18n(" successfully created.").local8Bit() << endl;
+      return(0);
     } else {
-      kdDebug() << "main | createcalendar | failed to create calendarfile" << endl;
+      kdError() << i18n("Unable to create calendar: ").local8Bit() << variables.getCalendarFile() << endl;
+      return(1);
     }
    }
+
+  /*
+   * Calendar file must exist for all (non-create) modes.
+   */
+    kdDebug() << "main | modework | check if calendar file exists" << endl;
+    if( ! exists ) {
+      kdError() << i18n("No such calendar: ").local8Bit() << variables.getCalendarFile() << endl;
+      return(1);
+    }
+    kdDebug() << "main | modework | yes calendar file exists" << endl;
 
   /*
    * Opens calendar file so we can use it;)
@@ -573,31 +609,43 @@ int main(int argc, char *argv[])
 	kdDebug() << "main | modework | calling addEvent()" << endl;
 	konsolekalendar->addEvent();
       } else {
-	kdError() << i18n("Attempting to insert an event that already exists.").local8Bit() << endl;
+	kdError() << i18n("Attempting to insert an event that already exists").local8Bit() << endl;
 	return(1);
       }
     }
 
     if( change ) {
       kdDebug() << "main | modework | calling changeEvent()" << endl;
-      konsolekalendar->changeEvent();
+      if( konsolekalendar->changeEvent() != true ) {
+	kdError() << i18n("Attempting to change a non-existent event").local8Bit() << endl;
+	return(1);
+      }
+      kdDebug() << "main | modework | succesful changeEvent()" << endl;
     }
 
     if( del ) {
       kdDebug() << "main | modework | calling deleteEvent()" << endl;
-      konsolekalendar->deleteEvent();
+      if( konsolekalendar->deleteEvent() != true ) {
+	kdError() << i18n("Attempting to delete a non-existent event").local8Bit() << endl;
+	return(1);
+      }
+      kdDebug() << "main | modework | succesful deleteEvent()" << endl;
     }
 
     if( view ) {
       kdDebug() << "main | modework | calling showInstance() to view events" << endl;
-      konsolekalendar->showInstance();
+      if( !konsolekalendar->showInstance() ) {
+	kdError() << i18n("Cannot open specified export file: ").local8Bit() << variables.getExportFile() << endl;
+	return(1);
+      }
     }
 
     konsolekalendar->closeCalendar();
 
   } else {
 
-    kdError() << i18n("Cannot open specified calendar file ").local8Bit() << variables.getCalendarFile() << endl;
+    kdError() << i18n("Cannot open specified calendar file: ").local8Bit() << variables.getCalendarFile() << endl;
+    return(1);
 
   }
 
