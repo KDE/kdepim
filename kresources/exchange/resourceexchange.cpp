@@ -173,6 +173,24 @@ bool ResourceExchange::load()
 
 bool ResourceExchange::save()
 {
+  kdDebug() << "ResourceExchange::save() " << mChangedIncidences.count()
+            << endl;
+
+  Incidence::List::Iterator it = mChangedIncidences.begin();
+  while( it != mChangedIncidences.end() ) {
+    if ( (*it)->type() == "Event" ) {
+      if ( uploadEvent( static_cast<Event *>( *it ) ) ) {
+        it = mChangedIncidences.remove( it );
+      } else {
+        kdError() << "ResourceExchange::save(): upload failed." << endl;
+        ++it;
+      }
+    } else {
+      kdError() << "ResourceExchange::save() type not handled: "
+                << (*it)->type() << endl;
+      ++it;
+    }
+  }
   return true;
 }
 
@@ -224,8 +242,7 @@ void ResourceExchange::slotMonitorError( int errorCode, const QString& moreInfo 
 
 bool ResourceExchange::addEvent(Event *anEvent)
 {
-  if( !mCache )
-        return false;
+  if( !mCache ) return false;
   kdDebug() << "ResourceExchange::addEvent" << endl;
 
   // FIXME: first check of upload finished successfully, only then
@@ -241,15 +258,14 @@ bool ResourceExchange::addEvent(Event *anEvent)
   return true;
 }
 
-void ResourceExchange::uploadEvent( Event *event )
+bool ResourceExchange::uploadEvent( Event *event )
 {
   mClient->uploadSynchronous( event );
 }
 
 void ResourceExchange::deleteEvent(Event *event)
 {
-    if ( !mCache )
-        return;
+  if ( !mCache ) return;
   kdDebug(5800) << "ResourceExchange::deleteEvent" << endl;
 
   mClient->removeSynchronous( event );
@@ -260,6 +276,15 @@ void ResourceExchange::deleteEvent(Event *event)
 //  setModified( true );
 }
 
+void ResourceExchange::changeIncidence( Incidence *incidence )
+{
+  kdDebug() << "ResourceExchange::changeIncidence(): "
+            << incidence->summary() << endl;
+
+  if ( mChangedIncidences.find( incidence ) == mChangedIncidences.end() ) {
+    mChangedIncidences.append( incidence );
+  }
+}
 
 Event *ResourceExchange::event( const QString &uid )
 {

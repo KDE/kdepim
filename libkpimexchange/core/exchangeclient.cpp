@@ -158,6 +158,8 @@ void ExchangeClient::download( const QDate &start, const QDate &end,
 
 void ExchangeClient::upload( KCal::Event *event )
 {
+  kdDebug() << "ExchangeClient::upload()" << endl;
+
   if ( !mAccount->authenticate( mWindow ) ) {
     emit uploadFinished( 0, i18n("Authentification error") ); 
     return;

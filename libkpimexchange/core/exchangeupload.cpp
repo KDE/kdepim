@@ -51,8 +51,9 @@ extern "C" {
 
 using namespace KPIM;
 
-ExchangeUpload::ExchangeUpload( KCal::Event* event, ExchangeAccount* account, const QString& timeZoneId, QWidget* window ) :
-  mTimeZoneId( timeZoneId), mWindow( window )
+ExchangeUpload::ExchangeUpload( KCal::Event *event, ExchangeAccount *account,
+                                const QString &timeZoneId, QWidget *window )
+  : mTimeZoneId( timeZoneId ), mWindow( window )
 {
   kdDebug() << "Called ExchangeUpload" << endl;
 
@@ -78,26 +79,31 @@ void ExchangeUpload::findUid( QString const& uid )
         "FROM Scope('shallow traversal of \"\"')\r\n"
         "WHERE \"urn:schemas:calendar:uid\" = '" + uid + "'\r\n";
 
-//  kdDebug() << "Find uid query: " << endl << query << endl;
+  kdDebug() << "Find uid query: " << endl << query << endl;
   kdDebug() << "Looking for uid " << uid << endl;
   
-  KIO::DavJob* job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", query, false );
+  KIO::DavJob* job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql",
+                                     query, false );
   job->setWindow( mWindow );
-  connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotFindUidResult(KIO::Job *)));
+  connect( job, SIGNAL( result( KIO::Job * ) ),
+           SLOT( slotFindUidResult( KIO::Job * ) ) );
 }
 
 void ExchangeUpload::slotFindUidResult( KIO::Job * job )
 {
   kdDebug() << "slotFindUidResult()" << endl;
+
   if ( job->error() ) {
     kdDebug() << "Error: " << job->error() << endl;
-    job->showErrorDialog( 0L );
-    emit finished( this, ExchangeClient::CommunicationError, "IO Error: " + QString::number(job->error()) + ":" + job->errorString() );
+    job->showErrorDialog( 0 );
+    emit finished( this, ExchangeClient::CommunicationError,
+                   "IO Error: " + QString::number(job->error()) + ":" +
+                   job->errorString() );
     return;
   }
-  QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
+  QDomDocument &response = static_cast<KIO::DavJob *>( job )->response();
 
-//  kdDebug() << "Search uid result: " << endl << response.toString() << endl;
+  kdDebug() << "Search uid result: " << endl << response.toString() << endl;
 
   QDomElement item = response.documentElement().firstChild().toElement();
   QDomElement hrefElement = item.namedItem( "href" ).toElement();
@@ -110,11 +116,12 @@ void ExchangeUpload::slotFindUidResult( KIO::Job * job )
   // The appointment is already in the exchange database
   // Overwrite it with the new data
   QString href = hrefElement.text();
-  KURL url(href);
-  kdDebug() << "Found URL with identical uid: " << url.prettyURL() << ", overwriting that one" << endl;
+  KURL url( href );
+  kdDebug() << "Found URL with identical uid: " << url.prettyURL()
+            << ", overwriting that one" << endl;
 
   startUpload( toDAV( url ) );  
-}  
+}
 
 void ExchangeUpload::tryExist()
 {
@@ -134,10 +141,11 @@ void ExchangeUpload::tryExist()
   addElement( doc, prop, "DAV:", "displayname" );
   addElement( doc, prop, "urn:schemas:calendar", "uid" );
 
-  KIO::DavJob* job = KIO::davPropFind( url, doc, "0", false );
+  KIO::DavJob *job = KIO::davPropFind( url, doc, "0", false );
   job->setWindow( mWindow );
   job->addMetaData( "errorPage", "false" );
-  connect( job, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotPropFindResult( KIO::Job * ) ) );
+  connect( job, SIGNAL( result( KIO::Job * ) ),
+           SLOT( slotPropFindResult( KIO::Job * ) ) );
 }
 
 void ExchangeUpload::slotPropFindResult( KIO::Job *job )
@@ -145,15 +153,15 @@ void ExchangeUpload::slotPropFindResult( KIO::Job *job )
   kdDebug() << "slotPropFindResult()" << endl;
   int error = job->error(); 
   kdDebug() << "PROPFIND error: " << error << ":" << job->errorString() << endl;
-  if ( error && error != KIO::ERR_DOES_NOT_EXIST )
-  {
-    job->showErrorDialog( 0L );
-    emit finished( this, ExchangeClient::CommunicationError, "IO Error: " + QString::number(error) + ":" + job->errorString() );
+  if ( error && error != KIO::ERR_DOES_NOT_EXIST ) {
+    job->showErrorDialog( 0 );
+    emit finished( this, ExchangeClient::CommunicationError,
+                   "IO Error: " + QString::number(error) + ":" +
+                   job->errorString() );
     return;
   }
 
-  if ( !error ) 
-  {
+  if ( !error ) {
     // File exist, try another one
     m_currentUploadNumber++;
     tryExist();
@@ -168,12 +176,14 @@ void ExchangeUpload::slotPropFindResult( KIO::Job *job )
   if ( m_currentUploadNumber == 0 )
     url.addPath( m_currentUpload->summary() + ".EML" );
   else
-    url.addPath( m_currentUpload->summary() + "-" + QString::number( m_currentUploadNumber ) + ".EML" );
+    url.addPath( m_currentUpload->summary() + "-" +
+                 QString::number( m_currentUploadNumber ) + ".EML" );
 
   startUpload( url );
 }
 
-QString timezoneid( int offset ) {
+QString timezoneid( int offset )
+{
   switch ( offset ) {
     case 0: return "0";
     case -60: return "3";
@@ -210,9 +220,9 @@ QString timezoneid( int offset ) {
 }
 
 
-void ExchangeUpload::startUpload( const KURL& url )
+void ExchangeUpload::startUpload( const KURL &url )
 {
-  KCal::Event* event = static_cast<KCal::Event *>( m_currentUpload );
+  KCal::Event *event = static_cast<KCal::Event *>( m_currentUpload );
   if ( ! event ) {
     kdDebug() << "ERROR: trying to upload a non-Event Incidence" << endl;
     emit finished( this, ExchangeClient::NonEventError, "The incidence that is to be uploaded to the exchange server is not of type KCal::Event" );
@@ -224,7 +234,9 @@ void ExchangeUpload::startUpload( const KURL& url )
   QDomElement set = addElement( doc, root, "DAV:", "set" );
   QDomElement prop = addElement( doc, set, "DAV:", "prop" );
   addElement( doc, prop, "DAV:", "contentclass", "urn:content-classes:appointment" );
-  addElement( doc, prop, "http://schemas.microsoft.com/exchange/", "outlookmessageclass", "IPM.appointment" );
+//  addElement( doc, prop, "http://schemas.microsoft.com/exchange/", "outlookmessageclass", "IPM.appointment" );
+  addElement( doc, prop, "http://schemas.microsoft.com/exchange/",
+              "outlookmessageclass", "IPM.Appointment" );
  // addElement( doc, prop, "urn:schemas:calendar:", "method", "Add" );
   addElement( doc, prop, "urn:schemas:calendar:", "alldayevent", 
       event->doesFloat() ? "1" : "0" );
@@ -234,7 +246,7 @@ void ExchangeUpload::startUpload( const KURL& url )
   // value that localUTCOffset() supplies...
   int tzOffset = - KRFCDate::localUTCOffset(); 
   QString offsetString;
-  if ( tzOffset==0 ) 
+  if ( tzOffset == 0 ) 
     offsetString = "Z";
   else if ( tzOffset > 0 ) 
     offsetString = QString( "+%1:%2" ).arg(tzOffset/60, 2).arg( tzOffset%60, 2 );
@@ -245,11 +257,19 @@ void ExchangeUpload::startUpload( const KURL& url )
   kdDebug() << "Timezone offset: " << tzOffset << " : " << offsetString << endl;
 
   addElement( doc, prop, "urn:schemas:calendar:", "dtstart", 
+      event->dtStart().toString( "yyyy-MM-ddThh:mm:ssZ" ) );
+  //    event->dtStart().toString( "yyyy-MM-ddThh:mm:ss.zzzZ" ) );
+  //    2002-06-04T08:00:00.000Z" );
+  addElement( doc, prop, "urn:schemas:calendar:", "dtend", 
+      event->dtEnd().toString( "yyyy-MM-ddThh:mm:ssZ" ) );
+#if 0
+  addElement( doc, prop, "urn:schemas:calendar:", "dtstart", 
       event->dtStart().toString( "yyyy-MM-ddThh:mm:ss.zzz" )+ offsetString );
   //    event->dtStart().toString( "yyyy-MM-ddThh:mm:ss.zzzZ" ) );
   //    2002-06-04T08:00:00.000Z" );
   addElement( doc, prop, "urn:schemas:calendar:", "dtend", 
       event->dtEnd().toString( "yyyy-MM-ddThh:mm:ss.zzz" ) + offsetString );
+#endif
   addElement( doc, prop, "urn:schemas:calendar:", "lastmodified", zoneAsUtc( event->lastModified(), mTimeZoneId ).toString( Qt::ISODate )+"Z" );
 
 //  addElement( doc, prop, "urn:schemas:calendar:", "meetingstatus", "confirmed" );
@@ -305,16 +325,19 @@ void ExchangeUpload::startUpload( const KURL& url )
 
   KIO::DavJob *job = KIO::davPropPatch( url, doc, false );
   job->setWindow( mWindow );
-  connect( job, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotPatchResult( KIO::Job * ) ) );
+  connect( job, SIGNAL( result( KIO::Job * ) ),
+           SLOT( slotPatchResult( KIO::Job * ) ) );
 }
 
-void ExchangeUpload::slotPatchResult( KIO::Job* job )
+void ExchangeUpload::slotPatchResult( KIO::Job *job )
 {
   kdDebug() << "slotPropPatchResult()" << endl;
   if ( job->error() ) {
-    job->showErrorDialog( 0L );
+    job->showErrorDialog( 0 );
     kdDebug() << "Error: " << job->error() << endl;
-    emit finished( this, ExchangeClient::CommunicationError, "IO Error: " + QString::number(job->error()) + ":" + job->errorString() );
+    emit finished( this, ExchangeClient::CommunicationError,
+                   "IO Error: " + QString::number(job->error()) + ":" +
+                   job->errorString() );
     return;
   }
 //  kdDebug() << "Patch result" << endl;

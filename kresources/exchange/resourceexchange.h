@@ -94,6 +94,8 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     /** deletes an event from this calendar. */
     void deleteEvent(Event *);
 
+    void changeIncidence( Incidence * );
+
     /**
       Retrieves an event on the basis of the unique string ID.
     */
@@ -212,9 +214,9 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 //    void appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
 //                       const QDateTime &from, const QDateTime &to );
 
-    void uploadEvent( Event* event );
+    bool uploadEvent( Event *event );
 		
-		void setTimeZoneId( const QString &tzid );
+    void setTimeZoneId( const QString &tzid );
 
   protected slots:
     void slotMonitorNotify( const QValueList<long>& IDs, const QValueList<KURL>& urls);
@@ -238,6 +240,8 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     QString mTimeZoneId;
 
     KABC::Lock *mLock;
+
+    Incidence::List mChangedIncidences;
 };
 
 }
