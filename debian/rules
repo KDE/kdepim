@@ -17,7 +17,7 @@ build-stamp:
 	if test ! -f configure; then \
 	  $(MAKE) -f admin/Makefile.common ;\
 	fi 
-	./configure $(configkde) --with-extra-includes=/usr/include/libpisock 
+	./configure $(configkde) --with-extra-includes=/usr/include/libpisock
 	make
 	touch build-stamp
 
