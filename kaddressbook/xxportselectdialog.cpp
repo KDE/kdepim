@@ -73,7 +73,9 @@ XXPortSelectDialog::XXPortSelectDialog( KABCore *core, bool sort,
     new QCheckListItem( mCategoriesView, *it, QCheckListItem::CheckBox );
   mUseCategories->setEnabled( categories.count() > 0 );
 
-  mUseSelection->setEnabled( mCore->selectedUIDs().count() != 0 );
+  int count = mCore->selectedUIDs().count();
+  mUseSelection->setEnabled( count != 0 );
+  mUseSelection->setChecked( count  > 1 );
 
   mSortTypeCombo->insertItem( i18n( "Ascending" ) );
   mSortTypeCombo->insertItem( i18n( "Descending" ) );

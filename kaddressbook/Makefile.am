@@ -61,7 +61,7 @@ partdir = $(kde_datadir)/kaddressbook
 part_DATA = kaddressbook_part.rc
 
 data_DATA = zone.tab
-datadir = $(kde_datadir)/kaddressbook/
+datadir = $(kde_datadir)/kaddressbook
 
 messages: rc.cpp
 	$(EXTRACTRC) *.rc *.ui */*.ui >> rc.cpp
