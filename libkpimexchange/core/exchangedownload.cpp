@@ -293,6 +293,7 @@ void ExchangeDownload::readAppointment( const KURL& url )
   addElement( doc, prop, "urn:schemas:calendar:", "rrule" );
   addElement( doc, prop, "urn:schemas:calendar:", "exdate" );
   addElement( doc, prop, "urn:schemas:mailheader:", "sensitivity" );
+  addElement( doc, prop, "urn:schemas:calendar:", "reminderoffset" );
   
   addElement( doc, prop, "urn:schemas-microsoft-com:office:office", "Keywords" );
 
@@ -465,7 +466,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   // 2 Private
   // 3 Company Confidential
   QString sensitivity = prop.namedItem( "sensitivity" ).toElement().text();
-  if ( sensitivity.isNull() ) 
+  if ( ! sensitivity.isNull() ) 
   switch( sensitivity.toInt() ) {
     case 0: event->setSecrecy( KCal::Incidence::SecrecyPublic ); break;
     case 1: event->setSecrecy( KCal::Incidence::SecrecyPrivate ); break;
@@ -474,6 +475,22 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
     default: kdWarning() << "Unknown sensitivity: " << sensitivity << endl;
   }
   // kdDebug() << "Got sensitivity: " << sensitivity << endl;
+
+
+  QString reminder = prop.namedItem( "reminderoffset" ).toElement().text();
+  // kdDebug() << "Reminder offset: " << reminder << endl;
+  if ( ! reminder.isNull() ) {
+    // Duration before event in seconds
+    KCal::Duration offset( reminder.toInt() );
+    KCal::Alarm* alarm = event->newAlarm();
+    alarm->setStartOffset( offset );
+    alarm->setEnabled( true );
+    // TODO: multiple alarms; alarm->setType( KCal::Alarm::xxxx );
+  }
+  /** Create a new alarm which is associated with this incidence */
+    //Alarm* newAlarm();
+    /** Add an alarm which is associated with this incidence */
+    //void addAlarm(Alarm*);
 
     /** point at some other event to which the event relates */
     //void setRelatedTo(Incidence *relatedTo);
@@ -495,12 +512,6 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
     */
 
     //void addAttendee(Attendee *a, bool doupdate=true );
-
-    /** Create a new alarm which is associated with this incidence */
-    //Alarm* newAlarm();
-    /** Add an alarm which is associated with this incidence */
-    //void addAlarm(Alarm*);
-
 
   // THE FOLLOWING EVENT PROPERTIES ARE NOT READ
 
