@@ -134,7 +134,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
       clientConfig.setGroup(groupKey);
       info->title             = clientConfig.readEntry("Title", clients[i]);   // read app title (default = app name)
       info->dcopObject        = clientConfig.readEntry("DCOP object");
-      info->notificationType  = clientConfig.readNumEntry("Notification type", 0);
+      info->notificationType  = (ClientInfo::NotificationType)clientConfig.readNumEntry("Notification type", 0);
       info->displayCalName    = clientConfig.readBoolEntry("Display calendar names", true);
       if (!found)
       {

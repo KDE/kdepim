@@ -52,7 +52,7 @@ void ClientInfo::setNotificationType(int type)
   {
     case DCOP_NOTIFY:
     case COMMAND_LINE_NOTIFY:
-      notificationType = type;
+      notificationType = (ClientInfo::NotificationType)type;
       break;
     case NO_START_NOTIFY:
     default:
