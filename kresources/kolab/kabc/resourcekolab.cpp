@@ -371,6 +371,7 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
   if ( !mUidsPendingAdding.contains( uid )
        && !mUidsPendingUpdate.contains( uid ) ) {
     addressBook()->emitAddressBookChanged();
+  } else {
     mUidsPendingAdding.remove( uid );
     mUidsPendingUpdate.remove( uid );
   }
