@@ -1,0 +1,7 @@
+This is a simple kioslave for accessing mbox-files with kio.
+
+At the moment, it doesn't support locking or writing, it is just reading and listing messages.
+
+Usage:
+	mbox:/path/to/mbox/file         For listing the files in a mbox-file
+	mbox:/path/to/mbox/file/id      For getting an id out of a mbox-file.
