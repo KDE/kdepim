@@ -207,7 +207,7 @@ bool ConduitAction::openDatabases_(const char *dbName,const char *localPath)
 	return (fDatabase && fLocalDatabase);
 }
 
-bool ConduitAction::openDatabases(const char *dbName, bool*retrieved)
+bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
 {
 	/*
 	** We should look into the --local flag passed
@@ -215,7 +215,7 @@ bool ConduitAction::openDatabases(const char *dbName, bool*retrieved)
 	** that is implemented ..
 	*/
 	
-	return openDatabases_(dbName, retrieved);
+	return openDatabases_(dbName.latin1(), retrieved);
 }
 
 int PluginUtility::findHandle(const QStringList &a)
@@ -231,13 +231,19 @@ int PluginUtility::findHandle(const QStringList &a)
 			QString s = (*i).mid(7);
 			if (s.isEmpty()) continue;
 
-			handle = atoi((const char *)s);
+			handle = s.toInt();
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
 				<< ": Got handle "
 				<< handle
 				<< endl;
 #endif
+			if (handle<1)
+			{
+				kdWarning() << k_funcinfo
+					<< ": Improbable handle value found."
+					<< endl;
+			}
 			return handle;
 		}
 	}

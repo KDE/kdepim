@@ -217,8 +217,9 @@ PilotRecord*VCalConduit::recordFromIncidence(PilotDateEntry*de, const KCal::Even
 	setAlarms(de, e);
 	setRecurrence(de, e);
 	setExceptions(de, e);
-	de->setDescription(e->summary());
-	de->setNote(e->description());
+	// TODO: Use the right Palm codec
+	de->setDescription(e->summary().latin1());
+	de->setNote(e->description().latin1());
 DEBUGCONDUIT<<"-------- "<<e->summary()<<endl;
 	return de->pack();
 }

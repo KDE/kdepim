@@ -91,7 +91,7 @@ void createLogWidget()
 	kapp->setMainWidget(w);
 	logWidget = w;
 
-	resetButton = new QPushButton(w->buttonBox(),i18n("Reset"));
+	resetButton = new QPushButton(i18n("Reset"),w->buttonBox());
 }
 
 static KPilotDeviceLink *deviceLink = 0L;
@@ -224,12 +224,12 @@ int listConduits(KCmdLineArgs *)
 	{
 		KSharedPtr < KService > o = (*availList).service();
 
-		cout << o->desktopEntryName() << endl;
-		cout << "\t" << o->name()  << endl;
+		cout << o->desktopEntryName().latin1() << endl;
+		cout << "\t" << o->name().latin1()  << endl;
 		if (!o->library().isEmpty())
 		{
 			cout << "\tIn "
-				<< o->library()
+				<< o->library().latin1()
 				<< endl;
 		}
 

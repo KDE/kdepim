@@ -31,6 +31,7 @@
 static const char *syncStack_id = "$Id$";
 
 #include <qtimer.h>
+#include <qfile.h>
 
 #include <kservice.h>
 #include <kservicetype.h>
@@ -65,7 +66,7 @@ WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
 ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	const QString &name,
 	int m) :
-	ConduitAction(p,name),
+	ConduitAction(p,name.latin1()),
 	fDesktopName(name),
 	fMode(m)
 {
@@ -101,7 +102,8 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 #endif
 
 	fLibraryName = o->library();
-	KLibFactory *factory = KLibLoader::self()->factory(o->library());
+	KLibFactory *factory = KLibLoader::self()->factory(
+		QFile::encodeName(o->library()));
 	if (!factory)
 	{
 		kdWarning() << k_funcinfo

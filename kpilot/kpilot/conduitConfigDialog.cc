@@ -315,7 +315,7 @@ void ConduitConfigDialog::configureConduit()
 		return;
 	}
 
-	const char *library = p->text(CONDUIT_LIBRARY);
+	QCString library = QFile::encodeName(p->text(CONDUIT_LIBRARY));
 
 	KLibFactory *f = KLibLoader::self()->
 		factory(library);

@@ -1129,10 +1129,15 @@ void AbbrowserConduit::_copy(PilotAddress & toPilotAddr, KABC::Addressee & fromA
 	_setPilotAddress(toPilotAddr, homeAddress);
 
 	// Process the additional entries from the Palm(the palm database app block tells us the name of the fields)
-	toPilotAddr.setField(entryCustom1, fromAbEntry.custom(appString, "CUSTOM1"));
-	toPilotAddr.setField(entryCustom2, fromAbEntry.custom(appString, "CUSTOM2"));
-	toPilotAddr.setField(entryCustom3, fromAbEntry.custom(appString, "CUSTOM3"));
-	toPilotAddr.setField(entryCustom4, fromAbEntry.custom(appString, "CUSTOM4"));
+	//
+	// TODO: Remove the evil latin1() hack from here and support the
+	// correct Palm codec within the PilotAddress class by using QString
+	// arguments instead.
+	//
+	toPilotAddr.setField(entryCustom1, fromAbEntry.custom(appString, "CUSTOM1").latin1());
+	toPilotAddr.setField(entryCustom2, fromAbEntry.custom(appString, "CUSTOM2").latin1());
+	toPilotAddr.setField(entryCustom3, fromAbEntry.custom(appString, "CUSTOM3").latin1());
+	toPilotAddr.setField(entryCustom4, fromAbEntry.custom(appString, "CUSTOM4").latin1());
 
 	toPilotAddr.setCat(_getCat(fromAbEntry.categories()));
 }

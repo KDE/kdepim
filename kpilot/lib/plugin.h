@@ -95,7 +95,7 @@ protected:
 	KConfig *fConfig;
 	PilotDatabase *fDatabase,*fLocalDatabase;
 
-	bool openDatabases(const char *dbName, bool*retrieved=0L);
+	bool openDatabases(const QString &dbName, bool*retrieved=0L);
 	
 private:
 	bool fTest;	// Do some kind of test run on the pilot
