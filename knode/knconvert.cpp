@@ -56,7 +56,7 @@ KNConvert::KNConvert(const QString &version)
   topL->addWidget(new KSeparator(this));
 
   QHBoxLayout *btnL=new QHBoxLayout(topL, 5);
-  s_tartBtn=new QPushButton(i18n("Start Conversion ..."), this);
+  s_tartBtn=new QPushButton(i18n("Start Conversion..."), this);
   s_tartBtn->setDefault(true);
   btnL->addStretch(1);
   btnL->addWidget(s_tartBtn);
@@ -88,7 +88,7 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
   b_ackupPath=new KLineEdit(QDir::homeDirPath()+QString("/knodedata-")+v_ersion+".tar.gz", w_1);
   w1L->addWidget(b_ackupPath, 3,1);
 
-  b_rowseBtn= new QPushButton(i18n("Browse ..."), w_1);
+  b_rowseBtn= new QPushButton(i18n("Browse..."), w_1);
   connect(b_rowseBtn, SIGNAL(clicked()), this, SLOT(slotBrowse()));
   w1L->addWidget(b_rowseBtn, 3,2);
   w1L->setColStretch(1,1);
@@ -97,7 +97,7 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
   w1L->addRowSpacing(4,15);
 
   w_2=new QLabel(s_tack);
-  w_2->setText(i18n("<b>Converting, please wait ...</b>"));
+  w_2->setText(i18n("<b>Converting, please wait...</b>"));
   w_2->setAlignment(AlignCenter);
   s_tack->addWidget(w_2, 2);
 

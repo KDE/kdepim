@@ -510,7 +510,7 @@ void CConduitSetup::writeInstalledConduits()
 				text(CONDUIT_NAME));
 
 			KMessageBox::error(this, tmpMessage,
-				i18n("Conduit error."));
+				i18n("Conduit Error."));
 		}
 		else if (strcmp(dbName, "<none>") == 0)
 		{
@@ -591,7 +591,7 @@ void CConduitSetup::warnNoExec(const QListViewItem * p)
 	DEBUGKPILOT << fname << ": " << msg << endl;
 #endif
 
-	KMessageBox::error(this, msg, i18n("Conduit error"));
+	KMessageBox::error(this, msg, i18n("Conduit Error"));
 }
 
 void CConduitSetup::warnSetupRunning()
@@ -606,7 +606,7 @@ void CConduitSetup::warnSetupRunning()
 	DEBUGKPILOT << fname << ": " << msg << endl;
 #endif
 
-	KMessageBox::error(this, msg, i18n("Conduit Setup error"));
+	KMessageBox::error(this, msg, i18n("Conduit Setup Error"));
 
 	/* NOTREACHED */
 	(void) conduitsetup_id;
@@ -614,6 +614,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.31  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.30  2001/09/30 23:02:13  adridg
 // Add support for multi-line comments in conduit configurator and add it to kpilotConfig
 //

@@ -191,7 +191,7 @@ void KNArticleManager::showHdrs(bool clear)
     v_iew->clear();
 
   knGlobals.top->setCursorBusy(true);
-  knGlobals.top->setStatusMsg(i18n(" Creating list ..."));
+  knGlobals.top->setStatusMsg(i18n(" Creating list..."));
   knGlobals.top->secureProcessEvents();
 
   if(g_roup) {

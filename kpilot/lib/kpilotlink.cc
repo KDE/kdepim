@@ -175,7 +175,7 @@ void KPilotDeviceLink::openDevice()
 		fStatus = FoundDevice;
 	}
 
-	emit logMessage(i18n("Trying to open device ..."));
+	emit logMessage(i18n("Trying to open device..."));
 
 	if (open())
 	{
@@ -648,6 +648,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.8  2002/02/10 22:21:33  adridg
+// Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
+//
 // Revision 1.7  2002/02/02 11:46:03  adridg
 // Abstracting away pilot-link stuff
 //

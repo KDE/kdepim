@@ -429,7 +429,7 @@ nextFile:
 		return;
 	}
 
-	addSyncLogEntry(i18n("Restoring %1 ...").arg(dbi.name));
+	addSyncLogEntry(i18n("Restoring %1...").arg(dbi.name));
 
 	pi_file *f =
 		pi_file_open(const_cast <
@@ -484,6 +484,9 @@ nextFile:
 
 
 // $Log$
+// Revision 1.11  2002/02/23 20:51:33  adridg
+// Handle errors to _get_info better.
+//
 // Revision 1.10  2002/02/02 11:46:02  adridg
 // Abstracting away pilot-link stuff
 //

@@ -55,7 +55,7 @@ WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
 {
 	FUNCTIONSETUP;
 
-	addSyncLogEntry(i18n("KPilot %1 HotSync starting ...\n").arg(KPILOT_VERSION));
+	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n").arg(KPILOT_VERSION));
 	emit syncDone(this);
 }
 
@@ -330,6 +330,9 @@ void SyncStack::nextAction(SyncAction *b)
 }
 
 // $Log$
+// Revision 1.3  2002/02/02 11:46:02  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.2  2002/01/25 21:43:13  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

@@ -69,22 +69,22 @@ void filter_pmail::import(filterInfo *info)
    strcpy(dir,choosen.latin1());
 
    // Count total number of files to be processed
-   info->log(i18n("Counting files ..."));
+   info->log(i18n("Counting files..."));
    totalFiles = countFiles(".cnm");
    totalFiles += countFiles(".pmm");
    totalFiles += countFiles(".mbx");
 
-   //msg=i18n("Searching for distribution lists ('.pml') ...");
+   //msg=i18n("Searching for distribution lists ('.pml')...");
    //info->log(msg);
    //totalFiles += countFiles(dir, "*.pml");
 
    if (!kmailStart(info))
       return;
-   info->log(i18n("Importing new mail files ('.cnm') ..."));
+   info->log(i18n("Importing new mail files ('.cnm')..."));
    processFiles(".cnm", &filter_pmail::importNewMessage);
-   info->log(i18n("Importing mail folders ('.pmm') ..."));
+   info->log(i18n("Importing mail folders ('.pmm')..."));
    processFiles(".pmm", &filter_pmail::importMailFolder);
-   info->log(i18n("Importing 'unix' mail folders ('.mbx') ..."));
+   info->log(i18n("Importing 'unix' mail folders ('.mbx')..."));
    processFiles(".mbx", &filter_pmail::importUnixMailFolder);
    kmailStop(info);
 }

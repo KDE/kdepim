@@ -392,7 +392,7 @@ void ConduitConfigDialog::warnNoExec(const QListViewItem * p)
 	DEBUGKPILOT << fname << ": " << msg << endl;
 #endif
 
-	KMessageBox::error(this, msg, i18n("Conduit error"));
+	KMessageBox::error(this, msg, i18n("Conduit Error"));
 }
 
 void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
@@ -404,7 +404,7 @@ void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
 		"conduit was not installed properly.</qt>")
 		.arg(p->text(CONDUIT_NAME));
 
-	KMessageBox::error(this, msg, i18n("Conduit error"));
+	KMessageBox::error(this, msg, i18n("Conduit Error"));
 }
 
 /* virtual */ void ConduitConfigDialog::commitChanges()
@@ -430,6 +430,9 @@ void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
 
 
 // $Log$
+// Revision 1.8  2002/04/16 18:18:13  adridg
+// Minor debugging fixups by David B
+//
 // Revision 1.7  2002/01/26 15:00:11  adridg
 // Dblclick to configure
 //
