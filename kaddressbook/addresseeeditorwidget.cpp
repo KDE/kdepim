@@ -579,8 +579,8 @@ void AddresseeEditorWidget::save()
   mAddressee.setSecrecy( mSecrecyWidget->secrecy() );
 
   // save custom fields
-  if(!mIMWidget->preferredIM().isEmpty())
-    mAddressee.insertCustom( "KADDRESSBOOK", "X-IMAddress", mIMWidget->preferredIM());
+  if ( !mIMWidget->preferredIM().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-IMAddress", mIMWidget->preferredIM() );
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-IMAddress" );
   if ( !mSpouseEdit->text().isEmpty() )
@@ -608,7 +608,7 @@ void AddresseeEditorWidget::save()
     mAddressee.insertCustom( "KADDRESSBOOK", "X-Profession", mProfessionEdit->text() );
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-Profession" );
-  
+
   if ( mAnniversaryPicker->inputIsValid() )
     mAddressee.insertCustom( "KADDRESSBOOK", "X-Anniversary",
                              mAnniversaryPicker->date().toString( Qt::ISODate ) );

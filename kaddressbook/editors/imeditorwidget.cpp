@@ -41,6 +41,7 @@
 #include <ktrader.h>
 
 #include "imaddresswidget.h"
+#include "imeditorbase.h"
 #include "imeditorwidget.h"
 
 

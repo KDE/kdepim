@@ -8,10 +8,10 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
           -I$(top_srcdir)/kaddressbook/views \
           -I$(top_srcdir)/kaddressbook/printing \
           -I$(top_srcdir)/kaddressbook/common \
-	  -I$(top_srcdir)/kaddressbook/editors \
+          -I$(top_srcdir)/kaddressbook/editors \
           -I$(top_builddir)/kaddressbook/common \
           -I$(top_srcdir) -I$(top_srcdir)/libkdepim \
-	  -Ieditors \
+          -I$(top_buildir)/kaddressbook/editors \
           $(all_includes)
 
 bin_PROGRAMS = kaddressbook
@@ -47,7 +47,7 @@ libkaddressbook_la_LIBADD = $(top_builddir)/kaddressbook/printing/libprinter.la 
                             $(top_builddir)/libkcal/libkcal.la \
                             -lkabc_file $(LIB_KABC) $(LIB_KHTML) \
                             $(top_builddir)/kaddressbook/common/libkabcommon.la \
-			    $(top_builddir)/kaddressbook/editors/libkaddrbk_instantmessaging.la \
+                            $(top_builddir)/kaddressbook/editors/libkabim.la \
                             -lkdeprint
 libkaddressbook_la_COMPILE_FIRST = $(top_srcdir)/libkdepim/categoryselectdialog.h \
                                    $(top_srcdir)/libkdepim/categoryeditdialog.h \

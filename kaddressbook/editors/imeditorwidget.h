@@ -32,10 +32,11 @@
 #include <kdialogbase.h>
 
 #include "contacteditorwidget.h"
-#include "imeditorbase.h"
+
 
 class AddressWidget;
 class KPluginInfo;
+class IMEditorBase;
 
 enum IMContext { Any, Home, Work };
 
