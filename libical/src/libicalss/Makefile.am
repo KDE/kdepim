@@ -7,7 +7,7 @@ LEX_OUTPUT_ROOT = lex.ss
 
 # just to get it built
 $(srcdir)/icalgauge.c: icalssyacc.h
-$(srcdir)/icalsslexer.c: icalssyacc.h 
+icalsslexer.lo: icalssyacc.h icalgaugeimpl.h
 
 INCLUDES =			\
 	-I$(top_builddir)/libical	\
