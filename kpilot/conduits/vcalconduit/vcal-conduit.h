@@ -2,6 +2,7 @@
 #define _KPILOT_VCAL_CONDUIT_H
 /* vcal-conduit.h                       KPilot
 **
+** Copyright (C) 2002 Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
 **
 ** This file defines the vcal-conduit plugin.
@@ -30,82 +31,91 @@
 
 #include <plugin.h>
 
-namespace KCal
-{
-class Calendar;
-class Event;
-} ;
+#include <event.h>
+#include <calendar.h>
+#include "vcal-factory.h"
+#include "vcal-conduitbase.h"
+#include <pilotDateEntry.h>
+//#include <pilotRecord.h>
 
 class PilotRecord;
 class PilotSerialDatabase;
 class PilotLocalDatabase;
-class PilotDateEntry;
+//class PilotAppCategory;
+//class PilotDateEntry: public PilotAppCategory;
+//class VCalConduitFactory;
 
-class VCalConduit : public ConduitAction
+//class VCalConduitPrivateBase;
+
+class VCalConduitPrivate : public VCalConduitPrivateBase
+{
+public:
+	VCalConduitPrivate(KCal::Calendar *buddy);
+	virtual ~VCalConduitPrivate() {};
+
+#ifdef KDE2
+	QList<KCal::Event> fAllEvents;
+#else
+	QPtrList<KCal::Event> fAllEvents;
+#endif
+
+	virtual int updateIncidences();
+	virtual void addIncidence(KCal::Incidence*);
+	virtual void removeIncidence(KCal::Incidence *);
+	virtual KCal::Incidence *findIncidence(recordid_t);
+	virtual KCal::Incidence *getNextIncidence();
+	virtual KCal::Incidence *getNextModifiedIncidence();
+} ;
+
+
+
+class VCalConduit : public VCalConduitBase
 {
 Q_OBJECT
+//private:
+//	class VCalPrivate;
 public:
 	VCalConduit(KPilotDeviceLink *,
 		const char *name=0L,
 		const QStringList &args = QStringList());
 	virtual ~VCalConduit();
 
-	virtual void exec();
+protected:
+	virtual const QString configGroup() { return VCalConduitFactory::group; };
+	virtual const QString dbname() { return "DatebookDB"; };
 
-protected slots:
-	/**
-	* This function is called to sync modified records from the Pilot to KOrganizer.
-	*/
-	void syncRecord();
-	/**
-	* This function goes the other way around: KOrganizer -> Pilot.
-	*/
-	void syncEvent();
-	void cleanup();
-	void deleteRecord();
+	virtual VCalConduitPrivateBase*newVCalPrivate(KCal::Calendar *fCalendar);
+
+
+	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) { if (r) return new PilotDateEntry(r);  else return new PilotDateEntry();};
+	virtual KCal::Incidence*newIncidence() { return new KCal::Event; };
 
 protected:
-	void addRecord(PilotRecord *);
-	void deleteRecord(PilotRecord *,PilotRecord *);
-	void changeRecord(PilotRecord *,PilotRecord *);
+	virtual PilotRecord *recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e);
+	virtual PilotRecord *recordFromIncidence(PilotDateEntry*de, const KCal::Event*e);
+	virtual KCal::Incidence *incidenceFromRecord(KCal::Incidence *, const PilotAppCategory *);
+	virtual KCal::Event *incidenceFromRecord(KCal::Event *, const PilotDateEntry *);
 
-	void deletePalmRecord(KCal::Event*e, PilotRecord*s);
-	void updateEventOnPalm(KCal::Event*e, PilotDateEntry*de);
-	//void addPalmRecord(KCal::Event *e);
 
-	KCal::Event *eventFromRecord(KCal::Event *, const PilotDateEntry &);
-	PilotRecord *entryFromEvent(PilotDateEntry*de, const KCal::Event*e);
-
-	void setStartEndTimes(KCal::Event *,const PilotDateEntry &);
-	void setAlarms(KCal::Event *,const PilotDateEntry &);
-	void setRecurrence(KCal::Event *,const PilotDateEntry &);
-	void setExceptions(KCal::Event *,const PilotDateEntry &);
+	void setStartEndTimes(KCal::Event *,const PilotDateEntry *);
+	void setAlarms(KCal::Event *,const PilotDateEntry *);
+	void setRecurrence(KCal::Event *,const PilotDateEntry *);
+	void setExceptions(KCal::Event *,const PilotDateEntry *);
 
 	void setStartEndTimes(PilotDateEntry *, const KCal::Event * );
 	void setAlarms(PilotDateEntry *, const KCal::Event * );
 	void setRecurrence(PilotDateEntry *, const KCal::Event * );
 	void setExceptions(PilotDateEntry *, const KCal::Event * );
 
-	KCal::Event *findEvent(recordid_t);
-
-//	virtual const QString configGroup() const { return VCalConduitFactory::group;};
-//	virtual const QString dbname() const { return "DatebookDB";};
-
-protected:
-	KCal::Calendar *fCalendar;
-	PilotSerialDatabase *fCurrentDatabase;
-	PilotLocalDatabase *fBackupDatabase;
-
-	QString fCalendarFile;
-	bool fFirstTime,fDeleteOnPilot, fFullSync;
-	int pilotindex;
-
-private:
-	class VCalPrivate;
-	VCalPrivate *fP;
 } ;
 
 // $Log$
+// Revision 1.20.2.1  2002/04/28 12:58:54  kainhofe
+// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
+//
+// Revision 1.23  2002/04/22 22:51:51  kainhofe
+// Added the first version of the todo conduit, fixed a check for a null pointer in the datebook conduit
+//
 // Revision 1.22  2002/04/19 19:10:29  kainhofe
 // added some comments describin the sync logic, deactivated the sync again (forgot it when I commited last time)
 //

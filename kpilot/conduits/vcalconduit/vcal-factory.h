@@ -30,13 +30,14 @@
 */
 
 #include <klibloader.h>
+#include "vcal-factorybase.h"
 
 class KInstance;
 class KAboutData;
 
-class VCalConduitFactory : public KLibFactory
+class VCalConduitFactory : public VCalConduitFactoryBase
 {
-Q_OBJECT
+Q_OBJECT;
 
 public:
 	VCalConduitFactory(QObject * = 0L,const char * = 0L);
@@ -45,11 +46,6 @@ public:
 	static KAboutData *about() { return fAbout; } ;
 
 	static const char * const group;
-	static const char * const calendarFile,
-		* const firstTime,
-		* const deleteOnPilot, 
-		*const fullSyncOnPCChange, 
-		*const alwaysFullSync;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
@@ -69,6 +65,12 @@ void *init_libvcalconduit();
 } ;
 
 // $Log$
+// Revision 1.4.2.1  2002/04/28 12:58:54  kainhofe
+// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
+//
+// Revision 1.6  2002/04/20 14:21:26  kainhofe
+// Alarms are now written to the palm. Some bug fixes, extensive testing. Exceptions still crash the palm ;-(((
+//
 // Revision 1.5  2002/04/19 19:34:11  kainhofe
 // didn't compile
 //

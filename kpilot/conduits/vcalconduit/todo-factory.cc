@@ -50,16 +50,11 @@ void *init_libtodoconduit()
 //
 //
 const char * const ToDoConduitFactory::group = "todoOptions" ;
-const char * const ToDoConduitFactory::calendarFile = "CalFile" ;
-const char * const ToDoConduitFactory::firstTime = "FirstTime" ;
-const char * const ToDoConduitFactory::deleteOnPilot = "DeleteOnPilot" ;
-const char * const ToDoConduitFactory::fullSyncOnPCChange = "FullSyncOnPCChange";
-const char * const ToDoConduitFactory::alwaysFullSync = "AlwaysFullSync";
 
 
 KAboutData *ToDoConduitFactory::fAbout = 0L;
 ToDoConduitFactory::ToDoConduitFactory(QObject *p, const char *n) :
-	KLibFactory(p,n)
+	VCalConduitFactoryBase(p,n)
 {
 	FUNCTIONSETUP;
 
@@ -143,6 +138,12 @@ ToDoConduitFactory::~ToDoConduitFactory()
 }
 
 // $Log$
+// Revision 1.3.2.1  2002/04/28 12:58:54  kainhofe
+// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
+//
+// Revision 1.4  2002/04/22 22:51:51  kainhofe
+// Added the first version of the todo conduit, fixed a check for a null pointer in the datebook conduit
+//
 // Revision 1.3  2001/12/31 09:25:05  adridg
 // Cleanup, various fixes for runtime loading
 //

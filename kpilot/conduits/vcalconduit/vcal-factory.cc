@@ -50,16 +50,11 @@ void *init_libvcalconduit()
 //
 //
 const char * const VCalConduitFactory::group = "vcalOptions" ;
-const char * const VCalConduitFactory::calendarFile = "CalFile" ;
-const char * const VCalConduitFactory::firstTime = "FirstTime" ;
-const char * const VCalConduitFactory::deleteOnPilot = "DeleteOnPilot" ;
-const char * const VCalConduitFactory::fullSyncOnPCChange = "FullSyncOnPCChange";
-const char * const VCalConduitFactory::alwaysFullSync = "AlwaysFullSync";
 
 
 KAboutData *VCalConduitFactory::fAbout = 0L;
 VCalConduitFactory::VCalConduitFactory(QObject *p, const char *n) :
-	KLibFactory(p,n)
+	VCalConduitFactoryBase(p,n)
 {
 	FUNCTIONSETUP;
 
@@ -147,6 +142,12 @@ VCalConduitFactory::~VCalConduitFactory()
 }
 
 // $Log$
+// Revision 1.5.2.1  2002/04/28 12:58:54  kainhofe
+// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
+//
+// Revision 1.6  2002/04/20 14:21:26  kainhofe
+// Alarms are now written to the palm. Some bug fixes, extensive testing. Exceptions still crash the palm ;-(((
+//
 // Revision 1.5  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //
