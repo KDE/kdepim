@@ -26,6 +26,7 @@
 #define DW_HEADERS_H
 
 #include <iostream>
+#include <vector>
 
 #ifndef DW_CONFIG_H
 #include <mimelib/config.h>
@@ -317,6 +318,14 @@ public:
     //. Returns a reference to the {\tt DwFieldBody} object for a particular
     //. header field with field name {\tt aFieldName}.  If the header field
     //. does not already exist, it is created.  Use {\tt HasField()}
+    //. to test if the header field already exists without creating it.
+    //. This member function allows access to extension fields or
+    //. user-defined fields.
+
+    std::vector<DwFieldBody*> AllFieldBodies(const DwString& aFieldName);
+    //. Returns a vector of pointers to the {\tt DwFieldBody} objects for
+    //. all header fields with field name {\tt aFieldName}.  If the header
+    //. field does not already exist, it is created.  Use {\tt HasField()}
     //. to test if the header field already exists without creating it.
     //. This member function allows access to extension fields or
     //. user-defined fields.

@@ -235,6 +235,38 @@ DwFieldBody& DwHeaders::FieldBody(const DwString& aFieldName)
 }
 
 
+std::vector<DwFieldBody*> DwHeaders::AllFieldBodies(const DwString& aFieldName)
+{
+    assert(aFieldName != "");
+    // First, search for field
+    DwField* field = FindField(aFieldName);
+    // If the field is not found, create the field and its field body
+    if (field == 0) {
+        field = DwField::NewField("", this);
+        field->SetFieldNameStr(aFieldName);
+        DwFieldBody* fieldBody = DwField::CreateFieldBody(aFieldName,
+            "", field);
+        field->SetFieldBody(fieldBody);
+        AddField(field);
+    }
+    std::vector<DwFieldBody*> v;
+    for ( ; field; field = field->Next() ) {
+        if (DwStrcasecmp(field->FieldNameStr(), aFieldName) == 0) {
+            // Get the field body
+            DwFieldBody* fieldBody = field->FieldBody();
+            // If it does not exist, create it
+            if (fieldBody == 0) {
+                fieldBody = DwField::CreateFieldBody(aFieldName, "", field);
+                field->SetFieldBody(fieldBody);
+                SetModified();
+            }
+            v.push_back( fieldBody );
+        }
+    }
+    return v;
+}
+
+
 DwString DwHeaders::AllFieldBodiesAsString(const DwString& aFieldName)
 {
     assert(aFieldName != "");
