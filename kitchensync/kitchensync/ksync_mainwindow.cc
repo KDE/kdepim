@@ -9,6 +9,7 @@
 #include "partbar.h"
 #include "ksync_mainwindow.h"
 
+#include "organizer/ksync_organizerpart.h"
 
 using namespace KitchenSync;
 
@@ -63,10 +64,17 @@ void KSyncMainWindow::initPlugins()
       addModPart( plugin );
     } 
   */
+  OrganizerPart *org = new OrganizerPart(this, "wallah" );
+  addModPart( org);
 }
-void KSyncMainWindow::addModPart()
+void KSyncMainWindow::addModPart(ManipulatorPart *part)
 {
-
+  // diable it for testing
+  //if( part->partIsVisible )
+  {
+    m_bar->insertItem( part );
+  }
+  m_parts.append( part );
 }
 void KSyncMainWindow::slotSync() {
 }

@@ -11,7 +11,7 @@ namespace KitchenSync {
   class OrganizerPart : public ManipulatorPart {
   Q_OBJECT
   public:
-    OrganizerPart(QWidget *parent, const char *name, const QStringList & );
+    OrganizerPart(QWidget *parent, const char *name, const QStringList & = QStringList() );
     virtual ~OrganizerPart();
     QString type()const { return QString::fromLatin1("Organizer"); };
     int progress()const { return 0; };
