@@ -49,13 +49,15 @@ public:
 		HotSync=1,
 		FastSync=2,
 		Backup=3,
-		Restore=4 } ;
+		Restore=4
+		 } ;
 k_dcop:
 	/**
 	* Start a HotSync. What kind of HotSync is determined
 	* by the int parameter (use the enum above!):
 	*/
 	virtual ASYNC requestSync(int) = 0;
+	virtual ASYNC requestSyncType(QString) = 0;
 	virtual ASYNC requestFastSyncNext() = 0;
 	virtual ASYNC requestRegularSyncNext() = 0;
 	virtual int nextSyncType() const = 0;

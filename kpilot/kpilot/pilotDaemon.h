@@ -139,6 +139,7 @@ public:
 	//
 	//
 	virtual ASYNC requestSync(int);
+	virtual ASYNC requestSyncType(QString);
 	virtual ASYNC requestFastSyncNext();
 	virtual ASYNC requestRegularSyncNext();
 	virtual int nextSyncType() const;

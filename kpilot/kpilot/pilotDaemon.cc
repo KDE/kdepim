@@ -594,6 +594,26 @@ bool PilotDaemon::setupPilotLink()
 	updateTrayStatus();
 }
 
+/* DCOP ASYNC */ void PilotDaemon::requestSyncType(QString s)
+{
+	FUNCTIONSETUP;
+
+	// This checks unique prefixes of the names of the various sync types.
+	if (s.startsWith(CSL1("H"))) requestSync(HotSync);
+	else if (s.startsWith(CSL1("Fa"))) requestSync(FastSync);
+	else if (s.startsWith(CSL1("Fu"))) requestSync(HotSync); // FIXME
+	else if (s.startsWith(CSL1("B"))) requestSync(Backup);
+	else if (s.startsWith(CSL1("R"))) requestSync(Restore);
+	else if (s.startsWith(CSL1("T"))) requestSync(Test);
+	else if (s.startsWith(CSL1("CopyHHToPC"))) requestSync(Test); // FIXME
+	else if (s.startsWith(CSL1("CopyPCToHH"))) requestSync(Test); // FIXME
+	else
+	{
+		kdWarning() << ": Unknown sync type " << ( s.isEmpty() ? "<none>" : s )
+			<< endl;
+	}
+}
+
 /* DCOP */ int PilotDaemon::nextSyncType() const
 {
 	return fNextSyncType;
