@@ -105,6 +105,7 @@ public:
     void restartBackgroundSpellCheck();
 signals:
     void activeChanged(const QString &);
+    void newSuggestions( const QString & originalword, const QStringList & suggestions, unsigned int pos );
 
 protected:
     QString spellKey();

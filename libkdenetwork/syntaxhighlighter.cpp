@@ -275,11 +275,12 @@ bool DictSpellChecker::isMisspelled( const QString& word )
     return false;
 }
 
-void DictSpellChecker::slotMisspelling (const QString & originalword, const QStringList & suggestions, unsigned int)
+void DictSpellChecker::slotMisspelling (const QString & originalword, const QStringList & suggestions,
+                                        unsigned int pos)
 {
     kdDebug(5006) << suggestions.join(" ").latin1() << endl;
     dict.replace( originalword, NotOkay );
-
+    emit newSuggestions( originalword, suggestions, pos );
     // this is slow but since kspell is async this will have to do for now
     rehighlightRequest->start(0, true);
 }
