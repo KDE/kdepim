@@ -6,6 +6,7 @@
 #include <kapplication.h>
 #include <kuniqueapplication.h>
 #include <klocale.h>
+#include <stdlib.h>
 
 #include "ksync_mainwindow.h"
 
