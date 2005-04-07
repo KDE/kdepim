@@ -32,6 +32,7 @@
 #include "filter_opera.hxx"
 #include "filter_thunderbird.hxx"
 #include "filter_kmail_maildir.hxx"
+#include "filter_sylpheed.hxx"
 
 #include "kselfilterpage.h"
 
@@ -46,15 +47,16 @@ KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name ) : KSelFilterP
         // For now, we have to live without the warm and fuzzy feeling a refactoring might give. 
         // Patches appreciated. (danimo)
 
-        addFilter(new FilterKMail_maildir);
         addFilter(new FilterEvolution);
         addFilter(new FilterEvolution_v2);
+        addFilter(new FilterKMail_maildir);
         addFilter(new FilterMailApp);
         addFilter(new FilterOpera);
-//        addFilter(new FilterOutlook);
-        addFilter(new FilterOE);
-        addFilter(new FilterPMail);
         addFilter(new FilterThunderbird);
+        addFilter(new FilterSylpheed);
+        addFilter(new FilterOE);
+//        addFilter(new FilterOutlook);
+        addFilter(new FilterPMail);
         addFilter(new FilterMBox);
         addFilter(new FilterPlain);
 }
