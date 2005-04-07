@@ -24,18 +24,64 @@
 #ifndef PHONEEDITWIDGET_H
 #define PHONEEDITWIDGET_H
 
+#include <kcombobox.h>
 #include <kdialogbase.h>
 
 #include "addresseeconfig.h"
-#include "typecombo.h"
 
 class QButtonGroup;
 class QCheckBox;
+class QSignalMapper;
 
 class KLineEdit;
 class KComboBox;
 
-typedef TypeCombo<KABC::PhoneNumber> PhoneTypeCombo;
+class PhoneTypeCombo : public KComboBox
+{
+  Q_OBJECT
+
+  public:
+    PhoneTypeCombo( QWidget *parent );
+    ~PhoneTypeCombo();
+
+    void setType( int type );
+    int type() const;
+
+  signals:
+    void modified();
+
+  protected slots:
+    void selected( int );
+    void otherSelected();
+
+  private:
+    void update();
+
+    int mType;
+    int mLastSelected;
+    QValueList<int> mTypeList;
+};
+
+class PhoneNumberWidget : public QWidget
+{
+  Q_OBJECT
+
+  public:
+    PhoneNumberWidget( QWidget *parent );
+
+    void setNumber( const KABC::PhoneNumber &number );
+    KABC::PhoneNumber number() const;
+
+    void setReadOnly( bool readOnly );
+
+  signals:
+    void modified();
+
+  private:
+    PhoneTypeCombo *mTypeCombo;
+    KLineEdit *mNumberEdit;
+    KABC::PhoneNumber mNumber;
+};
 
 /**
   Widget for editing phone numbers.
@@ -49,103 +95,50 @@ class PhoneEditWidget : public QWidget
     ~PhoneEditWidget();
 
     void setPhoneNumbers( const KABC::PhoneNumber::List &list );
-    KABC::PhoneNumber::List phoneNumbers();
-
-    void updateTypeCombo( const KABC::PhoneNumber::List&, KComboBox* );
-    KABC::PhoneNumber currentPhoneNumber( KComboBox*, int );
+    KABC::PhoneNumber::List phoneNumbers() const;
 
     void setReadOnly( bool readOnly );
 
   signals:
     void modified();
 
-  private slots:
-    void edit();
-
-    void updatePrefEdit();
-    void updateSecondEdit();
-    void updateThirdEdit();
-    void updateFourthEdit();
-
-    void slotPrefEditChanged();
-    void slotSecondEditChanged();
-    void slotThirdEditChanged();
-    void slotFourthEditChanged();
-
-  protected:
-    void updateLineEdits();
-    void updateCombos();
-
-  private:
-    void updateEdit( PhoneTypeCombo *combo );
-    void updatePhoneNumber( PhoneTypeCombo *combo );
-    void updateOtherEdit( PhoneTypeCombo *combo, PhoneTypeCombo *otherCombo );
-
-    PhoneTypeCombo *mPrefCombo;
-    PhoneTypeCombo *mSecondCombo;
-    PhoneTypeCombo *mThirdCombo;
-    PhoneTypeCombo *mFourthCombo;
-    QPushButton *mEditButton;
-
-    KLineEdit *mPrefEdit;
-    KLineEdit *mSecondEdit;
-    KLineEdit *mThirdEdit;
-    KLineEdit *mFourthEdit;
-
-    KABC::PhoneNumber::List mPhoneList;
-    bool mReadOnly;
-};
-
-/**
-  Dialog for editing lists of phonenumbers.
-*/
-class PhoneEditDialog : public KDialogBase
-{
-  Q_OBJECT
-
-  public:
-    PhoneEditDialog( const KABC::PhoneNumber::List &list, QWidget *parent, const char *name = 0 );
-    ~PhoneEditDialog();
-
-    const KABC::PhoneNumber::List &phoneNumbers();
-    bool changed() const;
-
   protected slots:
-    void slotAddPhoneNumber();
-    void slotRemovePhoneNumber();
-    void slotEditPhoneNumber();
-    void slotSelectionChanged();
+    void add();
+    void remove();
+    void changed();
+    void changed( int pos );
 
   private:
+    void updateWidgets();
+
     KABC::PhoneNumber::List mPhoneNumberList;
-    KABC::PhoneNumber::TypeList mTypeList;
-    KComboBox *mTypeBox;
-    KListView *mListView;
+    QPtrList<PhoneNumberWidget> mWidgets;
 
+    QPushButton *mAddButton;
     QPushButton *mRemoveButton;
-    QPushButton *mEditButton;
+    QVBoxLayout *mWidgetLayout;
 
-    bool mChanged;
+    bool mReadOnly;
+    QSignalMapper *mMapper;
 };
 
 /**
   Dialog for editing phone number types.
-*/
+ */
 class PhoneTypeDialog : public KDialogBase
 {
   Q_OBJECT
-public:
-  PhoneTypeDialog( const KABC::PhoneNumber &phoneNumber, QWidget *parent, const char *name = 0 );
+  public:
+    PhoneTypeDialog( int type, QWidget *parent );
 
-  KABC::PhoneNumber phoneNumber();
+    int type() const;
 
-private:
-  KABC::PhoneNumber mPhoneNumber;
-  KABC::PhoneNumber::TypeList mTypeList;
+  private:
+    int mType;
+    KABC::PhoneNumber::TypeList mTypeList;
 
-  QButtonGroup *mGroup;
-  QCheckBox *mPreferredBox;
-  KLineEdit *mNumber;
+    QButtonGroup *mGroup;
+    QCheckBox *mPreferredBox;
 };
 
 #endif
