@@ -476,7 +476,7 @@ dialog.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>Message</guimenu>
+<guimenu>View</guimenu>
 <guisubmenu>Set Encoding</guisubmenu>
 </menuchoice>
 </term>
@@ -1100,6 +1100,20 @@ to this thread will automatically be marked as read.</para>
 <varlistentry>
 <term>
 <menuchoice>
+<guimenu>Message</guimenu>
+<guisubmenu>Create Filter</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up the <link linkend="filter-dialog-id">Filter dialog</link> with a new filter added.
+This new filter is based on fields of the current mail, depending on which
+sub menu item you select.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
 <shortcut><keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Apply Filters</guimenuitem>
@@ -1227,21 +1241,6 @@ the &kde; address book.</para>
 <para><guilabel>Out of Office reply</guilabel> functionality relies on server-side filtering. To be able to use it you need to configure the <link linkend="receiving-mail">Filtering tab</link> (see option relevant to kolab server) of your <guilabel>IMAP</guilabel> account set-up.
 </para>
 </note>
-</listitem>
-</varlistentry>
-
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Tools</guimenu>
-<guisubmenu>Create Filter</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up the <link linkend="filter-dialog-id">Filter dialog</link> with a new filter added.
-This new filter is based on fields of the current mail, depending on which
-sub menu item you select.</para>
 </listitem>
 </varlistentry>
 

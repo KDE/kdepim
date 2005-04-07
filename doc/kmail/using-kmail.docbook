@@ -941,8 +941,8 @@ linkend="filter-dialog">filter dialog</link> to those messages.</para>
 <title>Fast Filter Creation</title>
 
 <para>There are two methods for creating a filter; the quick method is
-to use <menuchoice><guimenu>Tools</guimenu><guimenuitem>Create
-Filter...</guimenuitem></menuchoice>: this will call the filter dialog
+to use <menuchoice><guimenu>Message</guimenu><guimenuitem>Create
+Filter</guimenuitem></menuchoice>: this will call the filter dialog
 and present you with a new filter which has the first rule of the
 search pattern and the first action (as <guilabel>Move into Folder</guilabel>) 
 preset. In most cases, all you have to do is select the folder where the message
@@ -953,7 +953,7 @@ like.</para>
 will try really hard to find a criterion that
 uniquely identifies messages from that list; If it succeeds, the guessed
 name of the list is presented in the
-<menuchoice><guimenu>Tools</guimenu><guisubmenu>Create
+<menuchoice><guimenu>Message</guimenu><guisubmenu>Create
 Filter</guisubmenu><guimenuitem>Filter on
 Mailing-List...</guimenuitem></menuchoice> menu entry.</para>
 
@@ -972,8 +972,8 @@ detail in the following subsection.</para>
 filters.</para>
 
 <para>You can reach it either via
-<menuchoice><guimenu>Tools</guimenu><guisubmenu>Create
-Filter...</guisubmenu></menuchoice> or
+<menuchoice><guimenu>Message</guimenu><guisubmenu>Create
+Filter</guisubmenu></menuchoice> or
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure 
 Filters...</guimenuitem></menuchoice>.</para>
 
@@ -1420,7 +1420,7 @@ automatically transfer new messages from my inbox to my
 <procedure>
 <title>Filtering a mailing list</title>
 <step>
-<para>Try if <menuchoice><guimenu>Tools</guimenu><guisubmenu>Create
+<para>Try if <menuchoice><guimenu>Message</guimenu><guisubmenu>Create
 filter</guisubmenu><guimenuitem>Filter on
 Mailing-List...</guimenuitem></menuchoice> can identify the mailing
 list (the name of the list should then appear in the menu item); in
