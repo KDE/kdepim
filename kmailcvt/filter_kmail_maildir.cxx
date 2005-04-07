@@ -69,8 +69,7 @@ void FilterKMail_maildir::import( FilterInfo *info ) {
 		for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
 			if(!(*filename == "." || *filename == "..")) {
 				info->setCurrent(0);
-				importDirContents(info, dir.filePath(*filename), *filename);
-				// info->addLog("End import of: " + *filename);
+				importDirContents(info, dir.filePath(*filename));
 				info->setOverall((int) ((float) currentDir / numSubDirs * 100));
 				info->setCurrent(100);
 			}
@@ -92,16 +91,37 @@ void FilterKMail_maildir::import( FilterInfo *info ) {
  * @param dirName The name of the directory to import.
  * @param KMailRootDir The directory's root directory in KMail's folder structure.
  */
-void FilterKMail_maildir::importDirContents( FilterInfo *info, const QString& dirName, const QString& KMailRootDir) {
+void FilterKMail_maildir::importDirContents( FilterInfo *info, const QString& dirName) {
 
 	/** Here Import all archives in the current dir */
+	importFiles(info, dirName);
+	
+	/** If there are subfolders, we import them one by one */
+
+	QDir subfolders(dirName);
+	QStringList subDirs = subfolders.entryList("*", QDir::Dirs | QDir::Hidden, QDir::Name);
+	for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
+		if(!(*filename == "." || *filename == "..")) {
+			importDirContents(info, subfolders.filePath(*filename));
+		}
+	}
+}
+
+/**
+ * Import the files within a Folder.
+ * @param info Information storage for the operation.
+ * @param dirName The name of the directory to import.
+ */
+void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName) {
+	
 	QDir dir(dirName);
 	QString _path = "";
 	bool generatedPath = false;
 
 	QDir importDir (dirName);
 	QStringList files = importDir.entryList("[^\\.]*", QDir::Files, QDir::Name);
-	for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
+	int currentFile = 1, numFiles = files.size();
+	for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile, ++currentFile) {
 		QString temp_mailfile = *mailFile;
 		if (!(temp_mailfile.endsWith(".index") || temp_mailfile.endsWith(".index.ids") ||
 			temp_mailfile.endsWith(".index.sorted") || temp_mailfile.endsWith(".uidcache") )) {
@@ -125,7 +145,7 @@ void FilterKMail_maildir::importDirContents( FilterInfo *info, const QString& di
 				}
 				if(_path.endsWith("cur")) _path.remove(_path.length() - 4 , 4);
 				QString _info = _path;
-				info->addLog("Import from folder: " + _info.remove(0,12));
+				info->addLog(i18n("Import folder %1...").arg(_info.remove(0,12)));
 				info->setFrom(_info);
 				info->setTo(_path);
 				generatedPath = true;
@@ -135,21 +155,13 @@ void FilterKMail_maildir::importDirContents( FilterInfo *info, const QString& di
 				if(! addMessage( info, _path, dir.filePath(*mailFile) )) {
 					info->addLog( i18n("Could not import %1").arg( *mailFile ) );
 				}
+				info->setCurrent((int) ((float) currentFile / numFiles * 100));
 			} else {
 				if(! addMessage_fastImport( info, _path, dir.filePath(*mailFile) )) {
 					info->addLog( i18n("Could not import %1").arg( *mailFile ) );
 				}
-			} 
-		}
-	}
-	
-	/** If there are subfolders, we import them one by one */
-
-	QDir subfolders(dirName);
-	QStringList subDirs = subfolders.entryList("*", QDir::Dirs | QDir::Hidden, QDir::Name);
-	for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
-		if(!(*filename == "." || *filename == "..")) {
-			importDirContents(info, subfolders.filePath(*filename), KMailRootDir);
+				info->setCurrent((int) ((float) currentFile / numFiles * 100));
+			}
 		}
 	}
 }

@@ -34,7 +34,8 @@ public:
 private:
   QString mailDir;
 
-  void importDirContents(FilterInfo*, const QString&, const QString&);
+  void importDirContents(FilterInfo*, const QString&);
+  void importFiles(FilterInfo*, const QString&);
 };
 
 #endif
