@@ -93,6 +93,13 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   c = new KConfigPropagator::ChangeConfig;
   c->file = "kmailrc";
   c->group = "IMAP Resource";
+  c->name = "TheIMAPResourceStorageFormat";
+  c->value = KolabConfig::self()->kolab1Legacy() ? "IcalVcard" : "XML";
+  changes.append( c );
+
+  c = new KConfigPropagator::ChangeConfig;
+  c->file = "kmailrc";
+  c->group = "IMAP Resource";
   c->name = "Folder Language";
   c->value = "0"; // TODO: Fix the language
   changes.append( c );
