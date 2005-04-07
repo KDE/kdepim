@@ -64,6 +64,7 @@ void FilterInfo::setTo( const QString& to )
 void FilterInfo::setCurrent( const QString& current )
 {
   m_dlg->_current->setText( current );
+  kapp->processEvents();
 }
 
 void  FilterInfo::setCurrent( int percent )
@@ -82,6 +83,7 @@ void FilterInfo::addLog( const QString& log )
   m_dlg->_log->insertItem( log );
   m_dlg->_log->setCurrentItem( m_dlg->_log->count() - 1 );
   m_dlg->_log->centerCurrentItem();
+  kapp->processEvents();
 }
 
 void FilterInfo::clear()
