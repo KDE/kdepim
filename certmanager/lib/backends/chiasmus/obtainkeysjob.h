@@ -64,17 +64,21 @@ namespace Kleo {
   */
   class ObtainKeysJob : public Kleo::SpecialJob {
     Q_OBJECT
+    Q_PROPERTY( QStringList result READ result )
   public:
-    ObtainKeysJob( const QStringList & keypaths );
+    ObtainKeysJob();
     ~ObtainKeysJob();
 
     /*!\reimp SpecialJob */
     GpgME::Error start();
     /*!\reimp SpecialJob */
-    GpgME::Error exec( QVariant * result );
+    GpgME::Error exec();
 
     /*!\reimp Kleo::Job */
     void showErrorDialog( QWidget *, const QString & ) const;
+
+    using SpecialJob::result;
+    QStringList result() const { return mResult; }
 
   public slots:
     void slotCancel();
@@ -85,7 +89,7 @@ namespace Kleo {
 
   private:
     GpgME::Error mError;
-    const QStringList mKeyPaths;
+    QStringList mKeyPaths;
     unsigned int mIndex;
     QStringList mResult;
     bool mCanceled;

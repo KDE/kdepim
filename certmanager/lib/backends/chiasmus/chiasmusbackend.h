@@ -50,6 +50,8 @@ namespace Kleo {
     ChiasmusBackend();
     ~ChiasmusBackend();
 
+    static const ChiasmusBackend * instance() { return self; }
+
     QString name() const;
     QString displayName() const;
 
@@ -75,6 +77,7 @@ namespace Kleo {
     class Protocol;
     mutable CryptoConfig * mCryptoConfig;
     mutable Protocol * mProtocol;
+    static ChiasmusBackend * self;
   };
 
 }

@@ -38,6 +38,7 @@
 
 #include "config_data.h"
 #include "obtainkeysjob.h"
+#include "chiasmusjob.h"
 
 #include "kleo/cryptoconfig.h"
 
@@ -369,24 +370,31 @@ public:
   RefreshKeysJob * refreshKeysJob() const { return 0; }
 
   SpecialJob * specialJob( const char * type, const QMap<QString,QVariant> & args ) const {
-    if ( qstricmp( type, "x-obtain-keys" ) == 0 && args.size() == 0 ) {
-      CryptoConfigEntry * entry = mCryptoConfig->entry( "Chiasmus", "General", "keydir" );
-      assert( entry );
-      return new ObtainKeysJob( entry->urlValue().path() ); // FIXME: allow more than one keypath
-    }
+    if ( qstricmp( type, "x-obtain-keys" ) == 0 && args.size() == 0 )
+      return new ObtainKeysJob();
+    if ( qstricmp( type, "x-encrypt" ) == 0 && args.size() == 0 )
+      return new ChiasmusJob( ChiasmusJob::Encrypt );
+    if ( qstricmp( type, "x-decrypt" ) == 0 && args.size() == 0 )
+      return new ChiasmusJob( ChiasmusJob::Decrypt );
+    kdDebug(5150) << "ChiasmusBackend::Protocol: tried to instantiate unknown job type \""
+                  << type << "\"" << endl;
+
     return 0;
   }
 };
+
+Kleo::ChiasmusBackend * Kleo::ChiasmusBackend::self = 0;
 
 Kleo::ChiasmusBackend::ChiasmusBackend()
   : Kleo::CryptoBackend(),
     mCryptoConfig( 0 ),
     mProtocol( 0 )
 {
-
+  self = this;
 }
 
 Kleo::ChiasmusBackend::~ChiasmusBackend() {
+  self = 0;
   delete mCryptoConfig;
   delete mProtocol;
 }

@@ -1,8 +1,8 @@
-/*
-    specialjob.h
+/*  -*- mode: C++; c-file-style: "gnu" -*-
+    chiasmusjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,57 +30,72 @@
     your version.
 */
 
-#ifndef __KLEO_SPECIALJOB_H__
-#define __KLEO_SPECIALJOB_H__
 
-#include "job.h"
+#ifndef __KLEO_CHIASMUSJOB_H__
+#define __KLEO_CHIASMUSJOB_H__
 
-namespace GpgME {
-  class Error;
-}
+#include "kleo/specialjob.h"
+
+#include <qstringlist.h>
+
+#include <gpgmepp/context.h>
 
 namespace Kleo {
 
   /**
-     @short An abstract base class for protocol-specific jobs
-
-     To use a SpecialJob, first obtain an instance from the
-     CryptoBackend implementation, connect progress() and result()
-     signals to suitable slots and then start the job with a call to
-     start(). This call might fail, in which case the SpecialJob
-     instance will have schedules its own destruction with a call to
-     QObject::deleteLater().
-
-     After result() is emitted, the SpecialJob will schedule its own
-     destruction by calling QObject::deleteLater().
-
-     Parameters are set using the Qt property system. More general, or
-     constructor parameters are given in the call to
-     Kleo::CryptoBackend::Protocol::specialJob().
-
-     The result is made available through the result signal, and
-     through the read-only result property, the latter of which needs
-     to be defined in each SpecialJob subclass.
+     @short SpecialJob for Chiasmus operations
   */
-  class SpecialJob : public Job {
+  class ChiasmusJob : public Kleo::SpecialJob {
     Q_OBJECT
-  protected:
-    SpecialJob( QObject * parent, const char * name );
-
+    Q_ENUMS( Mode )
+    Q_PROPERTY( Mode mode READ mode )
+    Q_PROPERTY( QString key READ key WRITE setKey )
+    Q_PROPERTY( QByteArray input READ input WRITE setInput )
+    Q_PROPERTY( QByteArray result READ result )
   public:
-   ~SpecialJob();
+    enum Mode {
+      Encrypt, Decrypt
+    };
+    ChiasmusJob( Mode op );
+    ~ChiasmusJob();
 
-    /**
-       Starts the special operation.
-    */
-    virtual GpgME::Error start() = 0;
+    /*!\reimp SpecialJob */
+    GpgME::Error start();
+    /*!\reimp SpecialJob */
+    GpgME::Error exec();
 
-    virtual GpgME::Error exec() = 0;
+    /*!\reimp Kleo::Job */
+    void showErrorDialog( QWidget *, const QString & ) const;
 
-  signals:
-    void result( const GpgME::Error & result, const QVariant & data );
+    Mode mode() const { return mMode; }
+
+    QString key() const { return mKey; }
+    void setKey( const QString & key ) { mKey = key; }
+
+    QByteArray input() const { return mInput; }
+    void setInput( const QByteArray & input ) { mInput = input; }
+
+    using SpecialJob::result;
+    QByteArray result() const { return mOutput; }
+
+  public slots:
+    void slotCancel();
+
+  private slots:
+    void slotPerform();
+
+  private:
+    bool checkPreconditions() const;
+
+  private:
+    QString mKey;
+    QByteArray mInput, mOutput;
+    GpgME::Error mError;
+    bool mCanceled;
+    const Mode mMode;
   };
 
 }
 
-#endif // __KLEO_SPECIALJOB_H__
+
+#endif // __KLEO_CHIASMUSJOB_H__

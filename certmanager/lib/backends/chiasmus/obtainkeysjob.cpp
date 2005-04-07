@@ -34,11 +34,11 @@
 #include <config.h>
 #endif
 
-#ifndef GPG_ERR_SOURCE_DEFAULT
-#define GPG_ERR_SOURCE_DEFAULT ((gpg_err_source_t)176) // chiasmus
-#endif
-
 #include "obtainkeysjob.h"
+
+#include "chiasmusbackend.h"
+
+#include "kleo/cryptoconfig.h"
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -52,26 +52,30 @@
 
 #include <gpg-error.h>
 
-Kleo::ObtainKeysJob::ObtainKeysJob( const QStringList & keypaths )
+#include <cassert>
+
+Kleo::ObtainKeysJob::ObtainKeysJob()
   : SpecialJob( 0, 0 ),
-    mKeyPaths( keypaths ),
     mIndex( 0 ),
     mCanceled( false )
 {
-
+  assert( ChiasmusBackend::instance() );
+  assert( ChiasmusBackend::instance()->config() );
+  const CryptoConfigEntry * keypaths =
+    ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "keydir" );
+  assert( keypaths );
+  mKeyPaths = QStringList( keypaths->urlValue().path() );
 }
 
 Kleo::ObtainKeysJob::~ObtainKeysJob() {}
 
 GpgME::Error Kleo::ObtainKeysJob::start() {
   QTimer::singleShot( 0, this, SLOT(slotPerform()) );
-  return 0;
+  return mError = 0;
 }
 
-GpgME::Error Kleo::ObtainKeysJob::exec( QVariant * result ) {
+GpgME::Error Kleo::ObtainKeysJob::exec() {
   slotPerform( false );
-  if ( result )
-    *result = mResult;
   return mError;
 }
 

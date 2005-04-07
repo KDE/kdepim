@@ -1,8 +1,8 @@
-/*
-    specialjob.h
+/*  -*- mode: C++; c-file-style: "gnu" -*-
+    chiasmuslibrary.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,57 +30,39 @@
     your version.
 */
 
-#ifndef __KLEO_SPECIALJOB_H__
-#define __KLEO_SPECIALJOB_H__
 
-#include "job.h"
+#ifndef __KLEO_CHIASMUSLIBRARY_H__
+#define __KLEO_CHIASMUSLIBRARY_H__
 
-namespace GpgME {
-  class Error;
-}
+#include <qvaluevector.h>
+#include <qcstring.h>
+
+class KLibrary;
 
 namespace Kleo {
 
   /**
-     @short An abstract base class for protocol-specific jobs
-
-     To use a SpecialJob, first obtain an instance from the
-     CryptoBackend implementation, connect progress() and result()
-     signals to suitable slots and then start the job with a call to
-     start(). This call might fail, in which case the SpecialJob
-     instance will have schedules its own destruction with a call to
-     QObject::deleteLater().
-
-     After result() is emitted, the SpecialJob will schedule its own
-     destruction by calling QObject::deleteLater().
-
-     Parameters are set using the Qt property system. More general, or
-     constructor parameters are given in the call to
-     Kleo::CryptoBackend::Protocol::specialJob().
-
-     The result is made available through the result signal, and
-     through the read-only result property, the latter of which needs
-     to be defined in each SpecialJob subclass.
+     @short small helper class to load xia.o through xia.so and make
+     the functionality available.
   */
-  class SpecialJob : public Job {
-    Q_OBJECT
-  protected:
-    SpecialJob( QObject * parent, const char * name );
-
+  class ChiasmusLibrary {
+    ChiasmusLibrary();
+    ~ChiasmusLibrary();
   public:
-   ~SpecialJob();
+    static const ChiasmusLibrary * instance();
+    static void deleteInstance();
 
-    /**
-       Starts the special operation.
-    */
-    virtual GpgME::Error start() = 0;
+    int perform( const QValueVector<QCString> & args ) const;
+  private:
+    typedef int ( *main_func )( int, char** );
+    main_func chiasmus( QString * reason=0 ) const;
 
-    virtual GpgME::Error exec() = 0;
-
-  signals:
-    void result( const GpgME::Error & result, const QVariant & data );
+  private:
+    static ChiasmusLibrary * self;
+    mutable KLibrary * mXiaLibrary;
   };
 
 }
 
-#endif // __KLEO_SPECIALJOB_H__
+
+#endif // __KLEO_CHIASMUSLIBRARY_H__

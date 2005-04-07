@@ -64,6 +64,12 @@ const struct kleo_chiasmus_config_data kleo_chiasmus_config_entries[] = {
     0, 0, 1
   },
   {
+    "lib", I18N_NOOP( "Path to xia.so loadable module" ),
+    Level_Basic, ArgType_Path,
+    { PATH "/usr/local/lib/xia.so" },
+    0, 0, 1
+  },
+  {
     "keydir", I18N_NOOP( "Key directory" ),
     Level_Basic, ArgType_Path,
     { PATH "~/.chiasmus/keys" },
@@ -83,6 +89,14 @@ const struct kleo_chiasmus_config_data kleo_chiasmus_config_entries[] = {
     { PATH "/usr/local/bin/symcryptrun" },
     0, 0, 1
   },
+#ifdef HAVE_C99_INITIALIZERS
+  {
+    "timeout", I18N_NOOP( "Timeout in seconds for Chiasmus operations" ),
+    Level_Advanced, ArgType_UInt,
+    { .unsigned_integer = 60 },
+    0, 0, 1
+  },
+#endif /* HAVE_C99_INITIALIZERS */
 };
 const unsigned int kleo_chiasmus_config_entries_dim
   = sizeof kleo_chiasmus_config_entries / sizeof *kleo_chiasmus_config_entries ;
