@@ -67,6 +67,7 @@ void FilterSylpheed::import( FilterInfo *info ) {
 		QStringList rootSubDirs = dir.entryList("[^\\.]*", QDir::Dirs , QDir::Name);
 		int currentDir = 1, numSubDirs = rootSubDirs.size();
 		for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
+			if(info->shouldTerminate()) break;
 			importDirContents(info, dir.filePath(*filename));
 			info->setOverall((int) ((float) currentDir / numSubDirs * 100));
 		}
@@ -95,6 +96,7 @@ void FilterSylpheed::importDirContents( FilterInfo *info, const QString& dirName
 	QDir subfolders(dirName);
 	QStringList subDirs = subfolders.entryList("[^\\.]*", QDir::Dirs , QDir::Name);
 	for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
+		if(info->shouldTerminate()) return;
 		importDirContents(info, subfolders.filePath(*filename));
 	}
 }
@@ -114,6 +116,7 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName) {
 	QStringList files = importDir.entryList("[^\\.]*", QDir::Files, QDir::Name);
 	int currentFile = 1, numFiles = files.size();
 	for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile, ++currentFile) {
+		if(info->shouldTerminate()) return;
 		QString _mfile = *mailFile;
 		if (!(_mfile.endsWith(".sylpheed_cache") || _mfile.endsWith(".sylpheed_mark") || _mfile.endsWith(".mh_sequences") )) {
 			if(!generatedPath) {
