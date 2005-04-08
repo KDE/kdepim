@@ -32,6 +32,7 @@ static std::ostream & operator<< ( std::ostream &os, const QString &s );
 KABC2Mutt::KABC2Mutt( QObject *parent, const char *name )
   : QObject( parent, name ), mFormat( Aliases ),
     mIgnoreCase( false ), mAllAddresses( false ),
+    mAlternateKeyFormat( false ),
     mAddressBook( 0 )
 {
 }
@@ -53,7 +54,7 @@ void KABC2Mutt::loadingFinished()
     const QString name = (*iaddr).givenName() + ' ' + (*iaddr).familyName();
     if ( !mQuery.isEmpty() ) {
       bool match = (name.find(mQuery, 0, mIgnoreCase) > -1) ||
-                   ((*iaddr).preferredEmail().find(mQuery, 0, mIgnoreCase) > -1 );
+                   ((*iaddr).preferredEmail().find( mQuery, 0, mIgnoreCase ) > -1 );
       if ( !match )
         continue;
     }
@@ -76,7 +77,19 @@ void KABC2Mutt::loadingFinished()
 
     size_t index = 0;
     if ( mFormat == Aliases ) {
-      const QString key = (*iaddr).givenName().left( 3 ) + (*iaddr).familyName().left( 3 );
+      static const QChar space = QChar( ' ' );
+      static const QChar underscore = QChar( '_' );
+
+      QString key;
+      if ( !mAlternateKeyFormat )
+        key = (*iaddr).givenName().left( 3 ) + (*iaddr).familyName().left( 3 );
+      else
+        if ( !(*iaddr).familyName().isEmpty() )
+          key = (*iaddr).givenName().left( 1 ).lower() +
+                (*iaddr).familyName().lower().replace( space, underscore );
+        else
+          key = (*iaddr).givenName().lower().replace( space, underscore );
+
       while ( from != to ) {
         std::cout << "alias " << key;
         if ( index )
@@ -85,6 +98,13 @@ void KABC2Mutt::loadingFinished()
         ++index;
         ++from;
       }
+
+      if ( !(*iaddr).nickName().isEmpty() ) {
+        std::cout << "alias "
+                  << (*iaddr).nickName().lower().replace( space, underscore )
+                  << '\t' << name << " <"
+                  << (*iaddr).preferredEmail() << '>' << std::endl;
+      }
     } else {
       while ( from != to ) {
         std::cout << (*from) << '\t' << name;
@@ -92,7 +112,7 @@ void KABC2Mutt::loadingFinished()
           if ( index )
             std::cout << "\t#" << index;
           else
-            std::cout << '\t' << i18n("preferred");
+            std::cout << '\t' << i18n( "preferred" );
           ++index;
         }
         std::cout << std::endl;
@@ -116,6 +136,9 @@ void KABC2Mutt::loadingFinished()
       }
 
       QStringList emails = list->emails();
+      if ( emails.isEmpty() )
+        continue;
+
       if ( mFormat == Aliases ) {
         std::cout << "alias " << (*iaddr).replace( QRegExp( " " ), "_" )
                   << '\t' << emails.join( "," ) << std::endl;

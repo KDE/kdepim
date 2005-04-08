@@ -36,6 +36,7 @@ class KABC2Mutt : public QObject
     void setFormat( Format format ) { mFormat = format; }
     void setIgnoreCase( bool ignoreCase ) { mIgnoreCase = ignoreCase; }
     void setAllAddresses( bool allAddresses ) { mAllAddresses = allAddresses; }
+    void setAlternateKeyFormat( bool alternateKeyFormat ) { mAlternateKeyFormat = alternateKeyFormat; }
 
     void run();
 
@@ -47,6 +48,7 @@ class KABC2Mutt : public QObject
     Format mFormat;
     bool mIgnoreCase;
     bool mAllAddresses;
+    bool mAlternateKeyFormat;
 
     KABC::AddressBook *mAddressBook;
 };
