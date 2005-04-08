@@ -33,6 +33,7 @@
 #include "filter_thunderbird.hxx"
 #include "filter_kmail_maildir.hxx"
 #include "filter_sylpheed.hxx"
+#include "filter_thebat.hxx"
 
 #include "kselfilterpage.h"
 
@@ -52,8 +53,9 @@ KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name ) : KSelFilterP
         addFilter(new FilterKMail_maildir);
         addFilter(new FilterMailApp);
         addFilter(new FilterOpera);
-        addFilter(new FilterThunderbird);
         addFilter(new FilterSylpheed);
+        addFilter(new FilterThunderbird);
+        addFilter(new FilterTheBat);
         addFilter(new FilterOE);
 //        addFilter(new FilterOutlook);
         addFilter(new FilterPMail);
