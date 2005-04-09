@@ -109,7 +109,6 @@ void KonnectorUIDHelper::addId( const QString& appName,
         Kontainer kont( konnectorId,  kdeId );
         kontainer.remove( kont );
         kontainer.append( kont );
-        m_ids.replace( appName,  kontainer );
     }
 }
 void KonnectorUIDHelper::removeId( const QString &appName,  const QString &id )
