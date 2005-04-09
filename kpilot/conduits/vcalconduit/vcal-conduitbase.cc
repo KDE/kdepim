@@ -792,8 +792,8 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 //		r->setAttrib(r->getAttrib() & ~dlpRecAttrDeleted);
 		fLocalDatabase->writeRecord(r);
 //		fDatabase->writeRecord(r);
-		e->setSyncStatus(KCal::Incidence::SYNCNONE);
 		e->setPilotId(id);
+		e->setSyncStatus(KCal::Incidence::SYNCNONE);
 		KPILOT_DELETE(r);
 	}
 }
