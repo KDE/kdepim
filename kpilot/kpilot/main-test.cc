@@ -282,29 +282,6 @@ int execConduit(KCmdLineArgs *p)
 	return kapp->exec();
 }
 
-int testConduit(KCmdLineArgs *p)
-{
-	FUNCTIONSETUP;
-
-	// get --exec-conduit value
-	QString s = p->getOption("conduit-exec");
-	if (s.isEmpty()) return 1;
-
-	createLogWidget();
-	createLink();
-
-	syncStack = new ActionQueue(deviceLink);
-	syncStack->setTestMode(true);
-	syncStack->queueConduits(QStringList(s),SyncAction::eTest,true);
-
-	connectStack();
-
-	QTimer::singleShot(10,syncStack,SLOT(execConduit()));
-
-	return kapp->exec();
-}
-
-
 int listConduits(KCmdLineArgs *)
 {
 	FUNCTIONSETUP;
@@ -376,14 +353,7 @@ int main(int argc, char **argv)
 
 	if (p->isSet("conduit-exec"))
 	{
-		if (p->isSet("test-local"))
-		{
-			return testConduit(p);
-		}
-		else
-		{
-			return execConduit(p);
-		}
+		return execConduit(p);
 	}
 
 	// The default is supposed to be "list"
