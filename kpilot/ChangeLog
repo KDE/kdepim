@@ -1,9 +1,32 @@
 ** KPILOT CHANGELOG **
 ======================
 
+
+2005-04-09  Adriaan de Groot
+* Geez, can we switch to Subversion yet?
+* Committed the weird-ass record conduit template changes. This makes the
+  RecordConduit a fully templated "container". You plug in 5 other classes
+  to get a working implementation. This is similar to what the record
+  conduit already. The main difference is that it is easier to re-use
+  the things you plug into the recordconduit template. I have a KNotes
+  partial implementation that wraps KCal::Calendar, so that is immediately
+  reuseable for the other 4-button ones.
+* Ripped out test mode from KPilotTest and elsewhere, since it wasn't working
+  at all. I think the "mode" setting for conduits needs a lot more structure.
+  Just having an enum doesn't cut it (what about doing a test-mode local
+  PC to HH sync? Such a sync could be used to produce .pdb files from Kontact
+  data, which is just what the doctor ordered sometimes).
+
 2005-03-22  Adriaan de Groot
 * Long drought in doing any KPilot work or updating the ChangeLog.
 * Meddled in lib/ some to add modifiedIDList() and sanitize some types.
+* Prepared to make fFirstSync private, though it has getters and setters
+  so that doesn't really do much for OO'ness.
+* Wrote a template class for doing syncs generically, to replace the
+  RecordConduit. This one I understand, at least. It's not done yet though,
+  by a long shot, though I have classes to plug in to it for KNotes.
+
+
 
 2005-01-30  Adriaan de Groot
 * Fixed one nasty random crash thanks to vanRijn, probably fixed
