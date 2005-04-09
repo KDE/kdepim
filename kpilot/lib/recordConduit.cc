@@ -59,9 +59,11 @@ const char *id_record_conduit="$Id$";
 
 
 
-/** make that entry on the pc archived (i.e. deleted on the handheld, 
+
+#if 0
+/** make that entry on the pc archived (i.e. deleted on the handheld,
  *  while present on the pc, but not synced to the handheld */
-bool RecordConduit::PCData::makeArchived( RecordConduit::PCEntry *pcEntry ) 
+bool RecordConduit::PCData::makeArchived( RecordConduit::PCEntry *pcEntry )
 {
 	if ( pcEntry ) {
 		pcEntry->makeArchived();
@@ -175,7 +177,7 @@ RecordConduit::~RecordConduit()
 	DEBUGCONDUIT << fname << ": fullsync=" << isFullSync() << ", firstSync=" << isFirstSync() << endl;
 	DEBUGCONDUIT << fname << ": "
 		<< "syncDirection=" << getSyncDirection() << ", "
-//		<< "archive = " << AbbrowserSettings::archiveDeleted() 
+//		<< "archive = " << AbbrowserSettings::archiveDeleted()
 		<< endl;
 	DEBUGCONDUIT << fname << ": conflictRes="<< getConflictResolution() << endl;
 //	DEBUGCONDUIT << fname << ": PilotStreetHome=" << AbbrowserSettings::pilotStreet() << ", PilotFaxHOme" << AbbrowserSettings::pilotFax() << endl;
@@ -237,10 +239,10 @@ void RecordConduit::slotPalmRecToPC()
 	KPILOT_DELETE( compareEntry );
 
 	PilotAppCategory *backupEntry=0L;
-	if ( backupRec ) 
+	if ( backupRec )
 		backupEntry = createPalmEntry( backupRec );
 	PilotAppCategory *palmEntry=0L;
-	if ( palmRec ) 
+	if ( palmRec )
 		palmEntry = createPalmEntry( palmRec );
 
 	syncEntry( pcEntry, backupEntry, palmEntry );
@@ -312,27 +314,27 @@ void RecordConduit::slotPCRecToPalm()
 	// only update if no backup record or the backup record is not equal to the PCEntry
 
 	PilotAppCategory*backupEntry=0L;
-	if ( backupRec ) 
+	if ( backupRec )
 		backupEntry = createPalmEntry( backupRec );
 	if( !backupRec || isFirstSync() || !_equal( backupEntry, pcEntry ) )
 	{
 		PilotRecord *palmRec = fDatabase->readRecordById( recID );
 		PilotAppCategory *palmEntry=0L;
-		if (palmRec) 
+		if (palmRec)
 			palmEntry = createPalmEntry( palmRec );
 		syncEntry( pcEntry, backupEntry, palmEntry );
 		// update the id just in case it changed
-		if ( palmRec ) 
+		if ( palmRec )
 			recID = palmRec->id();
 		KPILOT_DELETE( palmRec );
 		KPILOT_DELETE( palmEntry );
 	}
-	
+
 	KPILOT_DELETE( pcEntry );
 	KPILOT_DELETE( backupEntry );
 	KPILOT_DELETE( backupRec );
 	mSyncedIds.append( recID );
-	
+
 	// done with the sync process, go on with the next one:
 	QTimer::singleShot( 0, this, SLOT( slotPCRecToPalm() ) );
 }
@@ -363,10 +365,10 @@ void RecordConduit::slotDeletedRecord()
 	PCEntry *pcEntry = mPCData->findByUid( uid );
 	PilotRecord *palmRec = fDatabase->readRecordById( backupRec->id() );
 	PilotAppCategory *backupEntry = 0L;
-	if (backupRec) 
+	if (backupRec)
 		backupEntry = createPalmEntry( backupRec );
 	PilotAppCategory*palmEntry=0L;
-	if (palmRec) 
+	if (palmRec)
 		palmEntry = createPalmEntry( palmRec );
 
 	mSyncedIds.append( backupRec->id() );
@@ -483,11 +485,11 @@ int RecordConduit::findFlags() const
 
 bool RecordConduit::isDeleted( const PilotAppCategory *palmEntry )
 {
-	if ( !palmEntry ) 
+	if ( !palmEntry )
 		return true;
-	if ( palmEntry->isDeleted() && !palmEntry->isArchived() ) 
+	if ( palmEntry->isDeleted() && !palmEntry->isArchived() )
 		return true;
-	if ( palmEntry->isArchived() ) 
+	if ( palmEntry->isArchived() )
 		return !archiveDeleted();
 	return false;
 }
@@ -495,7 +497,7 @@ bool RecordConduit::isArchived( const PilotAppCategory *palmEntry )
 {
 	if ( palmEntry && palmEntry->isArchived() )
 		return archiveDeleted();
-	else 
+	else
 		return false;
 }
 
@@ -538,10 +540,10 @@ void RecordConduit::_setAppInfo()
 	// get the address application header information
 	int appLen = 0;
 	unsigned char *buffer = doPackAppInfo( &appLen );
-	if ( buffer ) 
-	{	if (fDatabase) 
+	if ( buffer )
+	{	if (fDatabase)
 			fDatabase->writeAppBlock( buffer, appLen );
-		if (fLocalDatabase) 
+		if (fLocalDatabase)
 			fLocalDatabase->writeAppBlock( buffer, appLen );
 		delete[] buffer;
 	}
@@ -551,9 +553,9 @@ void RecordConduit::_setAppInfo()
 int RecordConduit::compareStr( const QString & str1, const QString & str2 )
 {
 //	FUNCTIONSETUP;
-	if ( str1.isEmpty() && str2.isEmpty() ) 
+	if ( str1.isEmpty() && str2.isEmpty() )
 		return 0;
-	else 
+	else
 		return str1.compare( str2 );
 }
 
@@ -569,7 +571,7 @@ QString RecordConduit::getCatForHH( const QStringList cats, const QString curr )
 {
 	FUNCTIONSETUP;
 	int j;
-	if ( cats.size() < 1 ) 
+	if ( cats.size() < 1 )
 		return QString::null;
 	if ( cats.contains( curr ) )
 		return curr;
@@ -729,7 +731,7 @@ bool RecordConduit::syncEntry( PCEntry *pcEntry, PilotAppCategory*backupEntry,
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT << "Flags: " << palmEntry->getAttrib() << ", isDeleted=" <<
-				isDeleted( palmEntry ) << ", isArchived=" << isArchived( palmEntry ) 
+				isDeleted( palmEntry ) << ", isArchived=" << isArchived( palmEntry )
 				<< endl;
 #endif
 			if ( isDeleted( palmEntry ) )
@@ -822,7 +824,7 @@ bool RecordConduit::palmSaveEntry( PilotAppCategory *palmEntry, PCEntry *pcEntry
 	PilotRecord *pilotRec = palmEntry->pack();
 	recordid_t pilotId = fDatabase->writeRecord(pilotRec);
 #ifdef DEBUG
-	DEBUGCONDUIT << "PilotRec nach writeRecord (" << pilotId << 
+	DEBUGCONDUIT << "PilotRec nach writeRecord (" << pilotId <<
 		": ID=" << pilotRec->id() << endl;
 #endif
 	fLocalDatabase->writeRecord( pilotRec );
@@ -832,7 +834,7 @@ bool RecordConduit::palmSaveEntry( PilotAppCategory *palmEntry, PCEntry *pcEntry
 	if ( pilotId != 0 )
 	{
 		palmEntry->setID( pilotId );
-		if ( !mSyncedIds.contains( pilotId ) ) 
+		if ( !mSyncedIds.contains( pilotId ) )
 		{
 			mSyncedIds.append( pilotId );
 		}
@@ -873,7 +875,7 @@ bool RecordConduit::pcSaveEntry( PCEntry *pcEntry, PilotAppCategory *,
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << "Before _savepcEntry, pcEntry->uid()=" << 
+	DEBUGCONDUIT << "Before _savepcEntry, pcEntry->uid()=" <<
 		pcEntry->uid() << endl;
 #endif
 	if ( pcEntry->recid() != 0 )
@@ -894,7 +896,7 @@ bool RecordConduit::pcDeleteEntry( PCEntry *pcEntry, PilotAppCategory *backupEnt
 
 	if ( palmEntry )
 	{
-		if ( !mSyncedIds.contains( palmEntry->id() ) ) 
+		if ( !mSyncedIds.contains( palmEntry->id() ) )
 		{
 			mSyncedIds.append(palmEntry->id());
 		}
@@ -954,9 +956,9 @@ bool RecordConduit::pcDeleteEntry( PCEntry *pcEntry, PilotAppCategory *backupEnt
 RecordConduit::PCEntry *RecordConduit::findMatch( PilotAppCategory *palmEntry ) const
 {
 	FUNCTIONSETUP;
-	if ( !palmEntry ) 
+	if ( !palmEntry )
 		return 0;
-		
+
 	// TODO: also search with the pilotID
 	// first, use the pilotID to UID map to find the appropriate record
 	if( !isFirstSync() && ( palmEntry->id() > 0) )
@@ -971,7 +973,7 @@ RecordConduit::PCEntry *RecordConduit::findMatch( PilotAppCategory *palmEntry ) 
 			if ( !res && !res->isEmpty() ) return res;
 			KPILOT_DELETE( res );
 #ifdef DEBUG
-			DEBUGCONDUIT << fname << ": PilotRecord has id " << palmEntry->id() << 
+			DEBUGCONDUIT << fname << ": PilotRecord has id " << palmEntry->id() <<
 				", but could not be found on the PC side" << endl;
 #endif
 		}
@@ -983,7 +985,7 @@ RecordConduit::PCEntry *RecordConduit::findMatch( PilotAppCategory *palmEntry ) 
 		recordid_t rid( abEntry->recid() );
 		if ( rid>0 )
 		{
-			if ( rid == palmEntry->id() ) 
+			if ( rid == palmEntry->id() )
 				return abEntry;// yes, we found it
 			// skip this PCEntry, as it has a different corresponding address on the handheld
 			//if ( mAllIds.contains( rid ) ) continue;
@@ -1001,5 +1003,17 @@ RecordConduit::PCEntry *RecordConduit::findMatch( PilotAppCategory *palmEntry ) 
 	return 0;
 }
 
+#endif
+
+void RecordConduitBase::slotPalmRecToPC()
+{
+}
+
+void RecordConduitBase::slotCleanup()
+{
+}
+
+
 
 #include "recordConduit.moc"
+

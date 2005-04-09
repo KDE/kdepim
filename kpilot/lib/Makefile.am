@@ -22,7 +22,8 @@ libkpilot_la_SOURCES = kpilotlibSettings.kcfgc options.cc uiDialog.cc plugin.cc 
 	pilotRecord.cc pilotDatabase.cc \
 	pilotLocalDatabase.cc pilotSerialDatabase.cc \
 	pilotMemo.cc pilotAddress.cc \
-	pilotDateEntry.cc pilotTodoEntry.cc
+	pilotDateEntry.cc pilotTodoEntry.cc \
+	recordConduit.cc
 
 libkpilot_la_LDFLAGS = -no-undefined $(all_libraries) $(KDE_EXTRA_RPATH) $(KDE_RPATH)
 libkpilot_la_LIBADD = $(LIB_KDEUI) $(PISOCK_LIB)
