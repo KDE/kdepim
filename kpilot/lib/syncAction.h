@@ -119,27 +119,110 @@ protected:
 	int openConduit() { return fHandle->openConduit(); } ;
 public:
 	/**
-	* These are the different syncs that we can do.
+	* This class encapsulates the different sync modes that
+	* can be used, and enforces a little discipline in changing
+	* the mode and messing around in general. It replaces a
+	* simple enum by not much more, but it makes things like
+	* local test backups less likely to happen.
+	*
+	* Note that this could all be packed into a bitfield (5 bits needed)
+	* but that makes for messy code in the end.
 	*/
-	enum SyncMode
+	class SyncMode
 	{
-		eDefaultSync=0,
+	public:
+		/** Available modes for the sync. */
+		enum Mode {
 		eFastSync=1,
 		eHotSync=2,
 		eFullSync=3,
 		eCopyPCToHH=4,
 		eCopyHHToPC=5,
 		eBackup=6,
-		eRestore=7,
-		eTest=8,
-		eLastMode=eTest,
-		eLastUserMode=eRestore
+		eRestore=7
+		} ;
+
+		/** Create a mode with the given Mode @param m and
+		* the mix-ins @param test and @param local, which
+		* determine whether the sync should actually change
+		* anything at all (test mode) and whether the HH is
+		* to be simulated by local databases.
+		*/
+		SyncMode(Mode m, bool test=false, bool local=false);
+
+		/** Create a mode by parsing the string list. This
+		* is used mostly by the conduit proxies, which use
+		* a string list to pass aparameters to the shared
+		* library loader.
+		*/
+		SyncMode(const QStringList &l);
+
+		/** Returns the kind of sync; this is just incomplete
+		* information, since a test hot sync is very different from
+		* a non-test one. */
+		Mode mode() const { return fMode; };
+
+		/** Sets a mode from an integer @param mode, if possible.
+		* If the @param mode is illegal, return false and set the
+		* mode to Fast Sync. As a side effect, options test and local
+		* are reset to false.
+		*/
+		bool setMode(int);
+
+		/** Sets options. Returns false if the combination of mode
+		* and the options is impossible. */
+		bool setOptions(bool test, bool local) { fTest=test; fLocal=local; return true; } ;
+
+		/** Shorthand to test for a specific mode enum. This disregards
+		* the mixings local and test.
+		*/
+		bool operator ==(const Mode &m) const { return mode() == m; } ;
+
+		/** Accessor for the test part of the mode. Test syncs should
+		* never actually modify data anywhere.
+		*/
+		bool isTest() const { return fTest; };
+
+		/** Accessor for the local part of the mode. Local syncs use a
+		* local database instead of one on the device link.
+		*/
+		bool isLocal() const { return fLocal; };
+
+
+		bool isFullSync() const
+		{
+			return	( fMode==eFullSync  ) ||
+				( fMode==eCopyPCToHH) ||
+				( fMode==eCopyHHToPC) ;
+		} ;
+		bool isFirstSync() const
+		{
+			return ( fMode==eCopyHHToPC ) || ( fMode==eCopyPCToHH ) ;
+		};
+
+		/**
+		* Returns a standard name for each of the sync modes.
+		*/
+		static QString name(Mode);
+		/**
+		* Returns a (human readable) name for this particular mode,
+		* including extra information about test and local mode.
+		*/
+		QString name() const;
+
+		/**
+		* Returns a QStringList that, when passed to the constructor
+		* of SyncMode, will re-create it. Used to pass modes into
+		* shared library factories.
+		*/
+		QStringList list() const;
+
+	private:
+		Mode fMode;
+		bool fTest;
+		bool fLocal;
 	};
 
-	/**
-	* Returns a standard name for each of the syncs.
-	*/
-	static QString syncModeName(SyncMode);
 
 	enum ConflictResolution
 	{

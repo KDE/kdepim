@@ -44,13 +44,24 @@ k_dcop:
 	/**
 	* Start a HotSync. What kind of HotSync is determined
 	* by the int parameter (use the enum in kpilot.kcfg, or
-	* better yet, use requestSyncType and pass the name) :
+	* better yet, use requestSyncType and pass the name).
+	* Using a value of 0 (zero, which isn't a legal mode for
+	* sync actions) uses the configuration file default.
 	*/
 	virtual ASYNC requestSync(int) = 0;
+	/**
+	* Request a particular kind of sync next; pass in the name
+	* of a sync type instead.
+	*/
 	virtual ASYNC requestSyncType(QString) = 0;
+	/** Shortcut for using requestSync(1) */
 	virtual ASYNC requestFastSyncNext() = 0;
+	/** Shortcut for using requestSync(2) */
 	virtual ASYNC requestRegularSyncNext() = 0;
+	/** Query what type is set most recently. */
 	virtual int nextSyncType() const = 0;
+	/** Set the mix-ins (see SyncAction::SyncMode for details). */
+	virtual ASYNC requestSyncOptions(bool test, bool local) = 0;
 
 	/**
 	* Functions for the KPilot UI, indicating what the daemon
@@ -78,7 +89,7 @@ k_dcop:
 	virtual QString userName() = 0;
 	virtual QString pilotDevice() = 0;
 	virtual bool killDaemonOnExit() = 0;
-   
+
 	/**
 	* Some other useful functionality
 	*/
@@ -87,7 +98,7 @@ k_dcop:
 
 k_dcop_signals:
 	void kpilotDaemonStatusChanged();
-	// used to push status information 
+	// used to push status information
 	void kpilotDaemonStatusDetails( QDateTime, QString, QStringList, QString, QString, QString, bool );
 } ;
 

@@ -102,17 +102,11 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	SyncAction(p,name),
 	fDatabase(0L),
 	fLocalDatabase(0L),
-	fTest(args.contains(CSL1("--test"))),
-	fBackup(args.contains(CSL1("--backup"))),
-	fLocal(args.contains(CSL1("--local"))),
+	fSyncDirection(args),
 	fConflictResolution(SyncAction::eAskUser),
 	fFirstSync(false)
 {
 	FUNCTIONSETUP;
-	if (args.contains(CSL1("--copyPCToHH"))) fSyncDirection=SyncAction::eCopyPCToHH;
-	else if (args.contains(CSL1("--copyHHToPC"))) fSyncDirection=SyncAction::eCopyHHToPC;
-	else if (args.contains(CSL1("--full"))) fSyncDirection=SyncAction::eFullSync;
-	else fSyncDirection=SyncAction::eFastSync;
 
 	QString cResolution(args.grep(QRegExp(CSL1("--conflictResolution \\d*"))).first());
 	if (cResolution.isEmpty())
@@ -129,7 +123,7 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 		DEBUGCONDUIT << fname << ": " << *it << endl;
 	}
 
-	DEBUGCONDUIT << fname << ": Direction=" << fSyncDirection << endl;
+	DEBUGCONDUIT << fname << ": Direction=" << fSyncDirection.name() << endl;
 #endif
 }
 
@@ -378,8 +372,6 @@ bool PluginUtility::isModal(const QStringList &a)
 
 /* static */ bool PluginUtility::isRunning(const QCString &n)
 {
-	FUNCTIONSETUP;
-
 	DCOPClient *dcop = KApplication::kApplication()->dcopClient();
 	QCStringList apps = dcop->registeredApplications();
 	return apps.contains(n);

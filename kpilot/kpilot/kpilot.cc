@@ -403,7 +403,7 @@ void KPilotInstaller::slotSelectComponent(PilotComponent * c)
 void KPilotInstaller::slotBackupRequested()
 {
 	FUNCTIONSETUP;
-	setupSync(SyncAction::eBackup,
+	setupSync(SyncAction::SyncMode::eBackup,
 		i18n("Next sync will be a backup. ") +
 		i18n("Please press the HotSync button."));
 }
@@ -411,7 +411,7 @@ void KPilotInstaller::slotBackupRequested()
 void KPilotInstaller::slotRestoreRequested()
 {
 	FUNCTIONSETUP;
-	setupSync(SyncAction::eRestore,
+	setupSync(SyncAction::SyncMode::eRestore,
 		i18n("Next sync will restore the Pilot from backup. ") +
 		i18n("Please press the HotSync button."));
 }
@@ -419,7 +419,7 @@ void KPilotInstaller::slotRestoreRequested()
 void KPilotInstaller::slotHotSyncRequested()
 {
 	FUNCTIONSETUP;
-	setupSync(SyncAction::eHotSync,
+	setupSync(SyncAction::SyncMode::eHotSync,
 		i18n("Next sync will be a regular HotSync. ") +
 		i18n("Please press the HotSync button."));
 }
@@ -427,7 +427,7 @@ void KPilotInstaller::slotHotSyncRequested()
 void KPilotInstaller::slotFastSyncRequested()
 {
 	FUNCTIONSETUP;
-	setupSync(SyncAction::eFastSync,
+	setupSync(SyncAction::SyncMode::eFastSync,
 		i18n("Next sync will be a Fast Sync. ") +
 		i18n("Please press the HotSync button."));
 }
@@ -435,7 +435,7 @@ void KPilotInstaller::slotFastSyncRequested()
 void KPilotInstaller::slotFullSyncRequested()
 {
 	FUNCTIONSETUP;
-	setupSync(SyncAction::eFullSync,
+	setupSync(SyncAction::SyncMode::eFullSync,
 		i18n("Next sync will be a Full Sync. ") +
 		i18n("Please press the HotSync button."));
 }
@@ -443,7 +443,7 @@ void KPilotInstaller::slotFullSyncRequested()
 void KPilotInstaller::slotHHtoPCRequested()
 {
 	FUNCTIONSETUP;
-	setupSync(SyncAction::eCopyHHToPC,
+	setupSync(SyncAction::SyncMode::eCopyHHToPC,
 		i18n("Next sync will copy Handheld data to PC. ") +
 		i18n("Please press the HotSync button."));
 }
@@ -451,16 +451,9 @@ void KPilotInstaller::slotHHtoPCRequested()
 void KPilotInstaller::slotPCtoHHRequested()
 {
 	FUNCTIONSETUP;
-	setupSync(SyncAction::eCopyPCToHH,
+	setupSync(SyncAction::SyncMode::eCopyPCToHH,
 		i18n("Next sync will copy PC data to Handheld. ") +
 		i18n("Please press the HotSync button."));
-}
-
-void KPilotInstaller::slotTestSyncRequested()
-{
-	FUNCTIONSETUP;
-	setupSync(SyncAction::eTest,
-		QString::fromLatin1("Listing Pilot databases."));
 }
 
 /* virtual DCOP */ ASYNC KPilotInstaller::daemonStatus(int i)
@@ -655,7 +648,7 @@ void KPilotInstaller::initMenu()
 	syncPopup->insert(a);
 
 
-#ifdef DEBUG
+#if 0
 	a = new KAction(i18n("&List Only"),CSL1("listsync"),0,
 		this,SLOT(slotTestSyncRequested()),
 		actionCollection(), "file_list");

@@ -122,7 +122,7 @@ public:
 
 	virtual void slotPalmRecToPC()
 	{
-		if ( (getSyncDirection() == SyncAction::eCopyPCToHH) || (fIDListIterator == fIDList.end()) )
+		if ( (getSyncDirection() == SyncAction::SyncMode::eCopyPCToHH) || (fIDListIterator == fIDList.end()) )
 		{
 			QTimer::singleShot(0,this,SLOT(cleanup()));
 			return;

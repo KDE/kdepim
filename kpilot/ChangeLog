@@ -2,6 +2,13 @@
 ======================
 
 
+2005-04-10  Adriaan de Groot
+* Some useful patches from Philip T. to the vcal conduit committed.
+* Made the sync mode a full-fledged class and ported lib/ and kpilot/
+  to use it. Disabled all the conduits for the time being. Bumped the
+  conduit API because of this. This might cause some serious breakage
+  for the time being.
+
 2005-04-09  Adriaan de Groot
 * Geez, can we switch to Subversion yet?
 * Committed the weird-ass record conduit template changes. This makes the

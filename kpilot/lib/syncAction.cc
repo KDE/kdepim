@@ -124,11 +124,92 @@ bool SyncAction::delayDone()
 	return true;
 }
 
-/* static */ QString SyncAction::syncModeName(SyncMode e)
+static struct
+{
+	SyncAction::SyncMode::Mode mode;
+	const char *name;
+} maps[] =
+{
+	{ SyncAction::SyncMode::eHotSync, "--hotsync" },
+	{ SyncAction::SyncMode::eFastSync, "--fast" },
+	{ SyncAction::SyncMode::eFullSync, "--full" },
+	{ SyncAction::SyncMode::eCopyPCToHH, "--copyPCToHH" },
+	{ SyncAction::SyncMode::eCopyHHToPC, "--copyHHToPC" },
+	{ SyncAction::SyncMode::eBackup, "--backup" },
+	{ SyncAction::SyncMode::eRestore, "--restore" },
+	{ SyncAction::SyncMode::eFastSync, "--fastsync" },
+	{ SyncAction::SyncMode::eFullSync, "--fullsync" },
+	{ SyncAction::SyncMode::eHotSync, (const char *)0 }
+}
+;
+
+SyncAction::SyncMode::SyncMode(const QStringList &args) :
+	fMode(eFastSync),
+	fTest(args.contains("--test")),
+	fLocal(args.contains("--local"))
+{
+	int i = 0;
+	while(maps[i].name)
+	{
+		if (args.contains(QString::fromLatin1(maps[i].name)))
+		{
+			fMode = maps[i].mode;
+			break;
+		}
+		i++;
+	}
+
+	if (!maps[i].name)
+	{
+		kdError() << k_funcinfo << "No mode set by arguments "
+			<< args << ", defaulting to FastSync." << endl;
+	}
+}
+
+SyncAction::SyncMode::SyncMode(Mode m, bool test, bool local) :
+	fMode(m),
+	fTest(test),
+	fLocal(local)
+{
+	if ( ((int)m<(int)eFastSync) || ((int)m>(int)eRestore) )
+	{
+		kdError() << k_funcinfo << "Mode value " << (int)m << " is illegal"
+			", defaulting to FastSync." << endl;
+		fMode = eFastSync;
+	}
+}
+
+QStringList SyncAction::SyncMode::list() const
+{
+	FUNCTIONSETUPL(3);
+
+	QStringList l;
+	int i=0;
+
+	while(maps[i].name)
+	{
+		if ( fMode == maps[i].mode )
+		{
+			l.append(QString::fromLatin1(maps[i].name));
+			break;
+		}
+		i++;
+	}
+	if ( !maps[i].name )
+	{
+		kdError() << k_funcinfo << "Mode " << fMode << " does not have a name." << endl;
+		l.append(QString::fromLatin1(maps[0].name));
+	}
+
+	if (isTest()) l.append(CSL1("--test"));
+	if (isLocal()) l.append(CSL1("--local"));
+	return l;
+}
+
+/* static */ QString SyncAction::SyncMode::name(SyncAction::SyncMode::Mode e)
 {
 	switch(e)
 	{
-	case eTest : return i18n("Test Sync");
 	case eFastSync : return i18n("FastSync");
 	case eHotSync : return i18n("HotSync");
 	case eFullSync : return i18n("Full Synchronization");
@@ -136,9 +217,41 @@ bool SyncAction::delayDone()
 	case eCopyHHToPC : return i18n("Copy Handheld to PC");
 	case eBackup : return i18n("Backup");
 	case eRestore : return i18n("Restore From Backup");
-	case eDefaultSync: break; /* FALLTHRU */
 	}
-	return i18n("Unknown sync mode");
+	return CSL1("<unknown>");
+}
+
+QString SyncAction::SyncMode::name() const
+{
+	QString s = name(fMode);
+	if (isTest())
+	{
+
+		s.append(CSL1(" [%1]").arg(i18n("Test Sync")));
+	}
+	if (isLocal())
+	{
+		s.append(CSL1(" [%1]").arg(i18n("Local Sync")));
+	}
+	return s;
+}
+
+bool SyncAction::SyncMode::setMode(int mode)
+{
+	// Resets test and local flags too
+	fTest = fLocal = false;
+
+	if ( (mode>0) && (mode<=eRestore) )
+	{
+		fMode = (SyncAction::SyncMode::Mode) mode;
+		return true;
+	}
+	else
+	{
+		kdWarning() << k_funcinfo << ": Bad sync mode " << mode << " requested." << endl ;
+		fMode = eHotSync;
+		return false;
+	}
 }
 
 void SyncAction::startTickle(unsigned timeout)

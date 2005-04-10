@@ -80,7 +80,7 @@ static KCmdLineOptions kpilotoptions[] = {
 		I18N_NOOP("*Really* run the conduit, not in test mode."),
 		0 } ,
 	{ "F",0,0},
-	{ "test-local",
+	{ "local",
 		I18N_NOOP("Run the conduit in file-test mode."),
 		0 } ,
 	{ "HHtoPC",
@@ -266,14 +266,14 @@ int execConduit(KCmdLineArgs *p)
 	createLogWidget();
 	createLink();
 
-	SyncAction::SyncMode syncMode = SyncAction::eHotSync;
-	if (p->isSet("test")) syncMode = SyncAction::eTest;
-	if (p->isSet("HHtoPC")) syncMode = SyncAction::eCopyHHToPC;
-	if (p->isSet("PCtoHH")) syncMode = SyncAction::eCopyPCToHH;
+	SyncAction::SyncMode::Mode syncMode = SyncAction::SyncMode::eHotSync;
+	if (p->isSet("HHtoPC")) syncMode = SyncAction::SyncMode::eCopyHHToPC;
+	if (p->isSet("PCtoHH")) syncMode = SyncAction::SyncMode::eCopyPCToHH;
 
+	SyncAction::SyncMode mode(syncMode,p->isSet("test"),p->isSet("local"));
 	syncStack = new ActionQueue(deviceLink);
 	syncStack->queueInit();
-	syncStack->queueConduits(l,syncMode,false);
+	syncStack->queueConduits(l,mode,false);
 	syncStack->queueCleanup();
 
 	connectStack();

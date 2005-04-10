@@ -137,50 +137,12 @@ bool LocalBackupAction::exec()
 
 ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	const QString &name,
-	SyncAction::SyncMode m,
-	bool local) :
+	const SyncAction::SyncMode &m) :
 	ConduitAction(p,name.latin1()),
 	fDesktopName(name),
-	fMode(m),
-	fLocal(local)
+	fMode(m)
 {
 	FUNCTIONSETUP;
-}
-
-/* static */ QStringList ConduitProxy::flagsForMode(SyncAction::SyncMode m)
-{
-	FUNCTIONSETUP;
-	QStringList l;
-	switch(m)
-	{
-	case eBackup :
-		l.append(CSL1("--backup"));
-		break;
-	case eTest:
-		l.append(CSL1("--test"));
-		break;
-	case eFastSync: /* FALLTHRU */
-	case eHotSync:
-		/* Nothing to do for fast or hotsync */
-		break;
-	case eFullSync:
-		l.append(CSL1("--full"));
-		break;
-	case eCopyHHToPC:
-		l.append(CSL1("--copyHHToPC"));
-		break;
-	case eCopyPCToHH:
-		l.append(CSL1("--copyPCToHH"));
-		break;
-	case eRestore:
-		kdWarning() << k_funcinfo << ": Running conduits during restore." << endl;
-		l.append(CSL1("--test"));
-		break;
-	case eDefaultSync:
-		Q_ASSERT(eDefaultSync != m); // Bail
-		break;
-	}
-	return l;
 }
 
 /* virtual */ bool ConduitProxy::exec()
@@ -225,16 +187,10 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		return true;
 	}
 
-	QStringList l = flagsForMode(fMode);
-
-	if (fLocal)
-	{
-		l.append(CSL1("--local"));
-	}
-
+	QStringList l = fMode.list();
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Flags: " << fMode << endl;
+	DEBUGDAEMON << fname << ": Flags: " << fMode.name() << endl;
 #endif
 
 	QObject *object = factory->create(fHandle,name(),"SyncAction",l);
@@ -325,7 +281,7 @@ void ActionQueue::queueInit(bool checkUser)
 	}
 }
 
-void ActionQueue::queueConduits(const QStringList &l,SyncAction::SyncMode m, bool /*local*/)
+void ActionQueue::queueConduits(const QStringList &l,const SyncAction::SyncMode &m, bool /*local*/)
 {
 	FUNCTIONSETUP;
 
@@ -347,7 +303,7 @@ void ActionQueue::queueConduits(const QStringList &l,SyncAction::SyncMode m, boo
 
 #ifdef DEBUG
 		DEBUGDAEMON << fname
-			<< ": Creating proxy with mode=" << m << endl;
+			<< ": Creating proxy with mode=" << m.name() << endl;
 #endif
 		ConduitProxy *cp = new ConduitProxy(fHandle,*it,m);
 		addAction(cp);
