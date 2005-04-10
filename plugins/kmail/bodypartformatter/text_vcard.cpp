@@ -136,17 +136,21 @@ namespace {
   class Plugin : public KMail::Interface::BodyPartFormatterPlugin {
   public:
     const KMail::Interface::BodyPartFormatter * bodyPartFormatter( int idx ) const {
-      return idx == 0 ? new Formatter() : 0 ;
+      return validIndex( idx ) ? new Formatter() : 0 ;
     }
     const char * type( int idx ) const {
-      return idx == 0 ? "text" : 0 ;
+      return validIndex( idx ) ? "text" : 0 ;
     }
     const char * subtype( int idx ) const {
       return idx == 0 ? "x-vcard" : idx == 1 ? "vcard" : 0 ;
     }
 
     const KMail::Interface::BodyPartURLHandler * urlHandler( int idx ) const {
-       return idx == 0 ? new UrlHandler() : 0 ;
+       return validIndex( idx ) ? new UrlHandler() : 0 ;
+    }
+  private:
+    bool validIndex( int idx ) const {
+      return ( idx >= 0 && idx <= 1 );
     }
   };
 
