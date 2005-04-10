@@ -4,7 +4,7 @@
 **
 ** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 1998-2001 Dan Pilone
-** Copyright (C) 1998-2000 Preston Brown
+** Copyright (C) 1998-2000 Preston Brown <pbrown@kde.org>
 ** Copyright (C) 1998 Herwin-Jan Steehouwer
 **
 ** This file is part of the todo conduit, a conduit for KPilot that
@@ -71,13 +71,13 @@ public:
 		const char *name=0L,
 		const QStringList &args = QStringList());
 	virtual ~TodoConduit();
-   
+
 protected:
 	virtual const QString getTitle(PilotAppCategory*de);
-	
+
 	virtual const QString dbname() { return CSL1("ToDoDB"); };
 	virtual void preSync() {_getAppInfo(); };
-	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar) { 
+	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar) {
 		return new TodoConduitPrivate(fCalendar);
 	};
 
@@ -88,8 +88,8 @@ protected:
 	QString _getCat(const QStringList cats, const QString curr) const;
 
 	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) {
-		FUNCTIONSETUP; 
-		if (r) return new PilotTodoEntry(fTodoAppInfo, r); 
+		FUNCTIONSETUP;
+		if (r) return new PilotTodoEntry(fTodoAppInfo, r);
 		else return new PilotTodoEntry(fTodoAppInfo);
 	};
 	virtual KCal::Incidence*newIncidence() { return new KCal::Todo; };
@@ -106,7 +106,7 @@ protected:
 
 	void setCategory(PilotTodoEntry*de, const KCal::Todo*todo);
 	void setCategory(KCal::Todo*todo, const PilotTodoEntry*de);
-	
+
 	struct ToDoAppInfo fTodoAppInfo;
 	bool categoriesSynced;
 } ;

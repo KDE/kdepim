@@ -629,7 +629,7 @@ KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 
 	if (de)
 	{
-		e=fP->findIncidence(de);
+		e=fP->findIncidence(r->id());
 		if (!e)
 		{
 			// no corresponding entry found, so create, copy and insert it.
@@ -790,8 +790,8 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 //		r->setAttrib(r->getAttrib() & ~dlpRecAttrDeleted);
 		fLocalDatabase->writeRecord(r);
 //		fDatabase->writeRecord(r);
-		e->setSyncStatus(KCal::Incidence::SYNCNONE);
 		e->setPilotId(id);
+		e->setSyncStatus(KCal::Incidence::SYNCNONE);
 		KPILOT_DELETE(r);
 	}
 }

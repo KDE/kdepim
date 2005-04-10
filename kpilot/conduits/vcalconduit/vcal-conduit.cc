@@ -131,19 +131,23 @@ KCal::Incidence *VCalConduitPrivate::getNextModifiedIncidence()
 	KCal::Event*e=0L;
 	if (!reading)
 	{
+		// Start from the top
 		reading=true;
 		fAllEventsIterator = fAllEvents.begin();
-		if ( fAllEventsIterator != fAllEvents.end() ) e = *fAllEventsIterator;
 	}
 	else
 	{
+		// Move on from current position
 		++fAllEventsIterator;
 	}
+
+	// Fetch (new) current if possible.
+	if ( fAllEventsIterator != fAllEvents.end() ) e = *fAllEventsIterator;
+	// Then walk the list until we find an unsynced entry
 	while ( fAllEventsIterator != fAllEvents.end() &&
 		e && e->syncStatus()==KCal::Incidence::SYNCNONE && e->pilotId() > 0)
 	{
-		++fAllEventsIterator;
-		e=*fAllEventsIterator;
+		e = (++fAllTodosIterator != fAllTodos.end()) ? *fAllTodosIterator : 0L;
 	}
 	return (fAllEventsIterator == fAllEvents.end()) ? 0L : 	*fAllEventsIterator;
 }
