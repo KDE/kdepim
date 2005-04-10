@@ -142,12 +142,12 @@ KCal::Incidence *TodoConduitPrivate::getNextModifiedIncidence()
 	{
 		reading=true;
 		fAllTodosIterator = fAllTodos.begin();
-		if ( fAllTodosIterator != fAllTodos.end() ) e=*fAllTodosIterator;
 	}
 	else
 	{
 		++fAllTodosIterator;
 	}
+	if ( fAllTodosIterator != fAllTodos.end() ) e=*fAllTodosIterator;
 	while (fAllTodosIterator != fAllTodos.end() &&
 		e && e->syncStatus()!=KCal::Incidence::SYNCMOD)
 	{
