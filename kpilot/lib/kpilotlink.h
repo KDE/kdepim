@@ -35,7 +35,7 @@
 #include <pi-dlp.h>
 
 #include <qobject.h>
-
+#include <qptrlist.h>
 
 class QTimer;
 class QDateTime;
@@ -236,7 +236,7 @@ public:
 	*/
 	void reset(const QString &pilotPath);
 
-	
+
 	/**
 	* Special-cases. Call this after a reset to set device-
 	* specific workarounds; the only one currently known
@@ -247,7 +247,7 @@ public:
 	{
 		fWorkaroundUSB = usb;
 	} ;
-	
+
 	/**
 	* sets an additional device, which should be tried as fallback
 	* usefull for hotplug enviroments
@@ -287,7 +287,7 @@ protected slots:
 	* device. This indicates the beginning of a hotsync.
 	*/
 	void acceptDevice();
-	
+
 protected:
 	/**
 	* Does the low-level opening of the device and handles the

@@ -2,6 +2,12 @@
 ======================
 
 
+2005-04-11  Adriaan de Groot
+* Bumped KPilot version.
+* Added a test program for some parts of the library. Woo! A first!
+  Finally something resembling actual software engineering in KPilot.
+* Cleaned up headers that weren't including all required (system) headers.
+
 2005-04-10  Adriaan de Groot
 * Some useful patches from Philip T. to the vcal conduit committed.
 * Made the sync mode a full-fledged class and ported lib/ and kpilot/

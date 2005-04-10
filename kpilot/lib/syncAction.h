@@ -35,6 +35,7 @@
 
 #include <qobject.h>
 #include <qstring.h>
+#include <qstringlist.h>
 
 #include "kpilotlink.h"
 
@@ -177,6 +178,12 @@ public:
 		* the mixings local and test.
 		*/
 		bool operator ==(const Mode &m) const { return mode() == m; } ;
+		bool operator ==(const SyncMode &m) const
+		{
+			return ( mode() == m.mode() ) &&
+				( isTest() == m.isTest() ) &&
+				( isLocal() == m.isLocal() );
+		} ;
 
 		/** Accessor for the test part of the mode. Test syncs should
 		* never actually modify data anywhere.

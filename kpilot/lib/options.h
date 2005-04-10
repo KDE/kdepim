@@ -52,7 +52,7 @@
 
 // Switch _on_ debugging if it's not off.
 //
-#ifndef NDEBUG 
+#ifndef NDEBUG
 #ifndef DEBUG
 #define DEBUG				(1)
 #endif
@@ -146,23 +146,23 @@ extern KDE_EXPORT int debug_level;
 #include <iostream>
 #endif
 
-class KDE_EXPORT KPilotDepthCount 
-{ 
-public: 
-	KPilotDepthCount(int area, int level, const char *s); 
-	~KPilotDepthCount(); 
-	QString indent() const; 
+class KDE_EXPORT KPilotDepthCount
+{
+public:
+	KPilotDepthCount(int area, int level, const char *s);
+	~KPilotDepthCount();
+	QString indent() const;
 	const char *name() const { return fName; } ;
-	// if DEBUG_CERR is defined, we can't return std::cerr (by value), 
+	// if DEBUG_CERR is defined, we can't return std::cerr (by value),
 	// since the copy constructor is private!
 #ifndef DEBUG_CERR
 	inline kdbgstream debug(int area=0)
 	{ return kdDebug(debug_level >= fLevel, area); }
 #endif
 
-protected: 
-	static int depth; 
-	int fDepth; 
+protected:
+	static int depth;
+	int fDepth;
 	int fLevel;
 	const char *fName;
 } ;
@@ -179,7 +179,7 @@ protected:
 
 using namespace std;
 
-inline std::ostream& operator <<(std::ostream &o, const QString &s) 
+inline std::ostream& operator <<(std::ostream &o, const QString &s)
 	{ if (s.isEmpty()) return o<<"<empty>"; else return o<<s.latin1(); }
 inline std::ostream& operator <<(std::ostream &o, const QCString &s)
 	{ if (s.isEmpty()) return o<<"<empty>"; else return o << *s; }
@@ -187,7 +187,7 @@ inline std::ostream& operator <<(std::ostream &o, const QCString &s)
 
 
 inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
-	{ return o << d.indent() << ' ' << d.name(); } 
+	{ return o << d.indent() << ' ' << d.name(); }
 
 #else
 
@@ -199,7 +199,7 @@ inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
 #define DEBUGCONDUIT	fname.debug(DEBUGAREA_CONDUIT)
 #define DEBUGDB         fname.debug(DEBUGAREA_DB)
 
-inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d) 
+inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 	{ return o << d.indent() ; }
 
 #endif
@@ -221,7 +221,7 @@ inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 #define FUNCTIONSETUPL(a) const int fname = a;
 #endif
 
-#define KPILOT_VERSION	"4.5.0 (baby)"
+#define KPILOT_VERSION	"4.5.1 (baby)"
 
 
 // Function to expand newlines in rich text to <br>\n
