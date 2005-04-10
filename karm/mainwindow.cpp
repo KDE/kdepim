@@ -394,14 +394,18 @@ void MainWindow::print()
 
 void MainWindow::loadGeometry()
 {
-  KConfig &config = *kapp->config();
+  if (initialGeometrySet()) setAutoSaveSettings();
+  else
+  {
+    KConfig &config = *kapp->config();
 
-  config.setGroup( QString::fromLatin1("Main Window Geometry") );
-  int w = config.readNumEntry( QString::fromLatin1("Width"), 100 );
-  int h = config.readNumEntry( QString::fromLatin1("Height"), 100 );
-  w = QMAX( w, sizeHint().width() );
-  h = QMAX( h, sizeHint().height() );
-  resize(w, h);
+    config.setGroup( QString::fromLatin1("Main Window Geometry") );
+    int w = config.readNumEntry( QString::fromLatin1("Width"), 100 );
+    int h = config.readNumEntry( QString::fromLatin1("Height"), 100 );
+    w = QMAX( w, sizeHint().width() );
+    h = QMAX( h, sizeHint().height() );
+    resize(w, h);
+  }
 }
 
 
