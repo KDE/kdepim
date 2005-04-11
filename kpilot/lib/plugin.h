@@ -60,7 +60,7 @@ class KLibrary;
 *
 */
 
-class KDE_EXPORT ConduitConfigBase : public QObject
+class  ConduitConfigBase : public QObject
 {
 Q_OBJECT
 public:
@@ -131,7 +131,7 @@ protected:
 * conduit can read/write metadata and local settings.
 */
 
-class KDE_EXPORT ConduitAction : public SyncAction
+class  ConduitAction : public SyncAction
 {
 Q_OBJECT
 public:
@@ -232,7 +232,7 @@ private:
 	bool openDatabases_(const QString &dbName,const QString &localPath);
 } ;
 
-class KDE_EXPORT PluginUtility
+class  PluginUtility
 {
 public:
 	static int findHandle(const QStringList &);

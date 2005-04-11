@@ -83,7 +83,7 @@ struct db
 
 
 
-class KDE_EXPORT KPilotDeviceLink : public QObject
+class  KPilotDeviceLink : public QObject
 {
 friend class SyncAction;
 Q_OBJECT

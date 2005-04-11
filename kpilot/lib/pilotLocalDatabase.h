@@ -35,7 +35,7 @@
 
 // #define SHADOW_LOCAL_DB (1)
 
-class KDE_EXPORT PilotLocalDatabase : public PilotDatabase
+class  PilotLocalDatabase : public PilotDatabase
 {
 public:
 	/**

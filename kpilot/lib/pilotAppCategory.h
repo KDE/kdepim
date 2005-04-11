@@ -44,7 +44,7 @@
 
 class QTextCodec;
 
-class KDE_EXPORT PilotAppCategory
+class  PilotAppCategory
 {
 protected:			// Use protected since we will be subclassed
 	int fAttrs;	        // Attributes on this record

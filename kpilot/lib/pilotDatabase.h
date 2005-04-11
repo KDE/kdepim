@@ -65,7 +65,7 @@
  * PilotDatabase methods when finished with them!!
  */
 
-class KDE_EXPORT PilotDatabase
+class  PilotDatabase
 {
 public:
 	PilotDatabase(const QString &name = QString::null);

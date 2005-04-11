@@ -34,7 +34,7 @@ class QTabWidget;
 class QPushButton;
 class KAboutData;
 
-class KDE_EXPORT UIDialog
+class  UIDialog
 {
 public:
 	/**

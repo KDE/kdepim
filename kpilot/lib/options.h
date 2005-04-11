@@ -70,8 +70,6 @@
 #include <unistd.h>     /* For size_t for pilot-link */
 #include <qglobal.h>
 #include <pi-version.h>
-// For KDE_EXPORT with kdelibs 3.2.x
-#define KDE_EXPORT
 
 #if (QT_VERSION < 0x030200)
 #error "This is KPilot for KDE3.2 and won't compile with Qt < 3.2.0"
@@ -124,7 +122,7 @@
 
 
 
-extern KDE_EXPORT int debug_level;
+extern int debug_level;
 
 #ifdef DEBUG
 #ifdef __GNUC__
@@ -146,7 +144,7 @@ extern KDE_EXPORT int debug_level;
 #include <iostream>
 #endif
 
-class KDE_EXPORT KPilotDepthCount 
+class KPilotDepthCount 
 { 
 public: 
 	KPilotDepthCount(int area, int level, const char *s); 
@@ -232,12 +230,12 @@ QString rtExpand(const QString &s, bool richText=true);
 /**
  * Convert a struct tm from the pilot-link package to a QDateTime
  */
-KDE_EXPORT QDateTime readTm(const struct tm &t);
+QDateTime readTm(const struct tm &t);
 /**
  * Convert a QDateTime to a struct tm for use with the pilot-link package
  */
-KDE_EXPORT struct tm writeTm(const QDateTime &dt);
-KDE_EXPORT struct tm writeTm(const QDate &dt);
+struct tm writeTm(const QDateTime &dt);
+struct tm writeTm(const QDate &dt);
 
 
 // Some layout macros

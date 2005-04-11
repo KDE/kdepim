@@ -78,7 +78,7 @@
  * this order is kept. In other languages, main can replaced with
  * Corporation.
  */
-class KDE_EXPORT PilotAddress : public PilotAppCategory
+class  PilotAddress : public PilotAppCategory
 {
 public:
 	enum EPhoneType {

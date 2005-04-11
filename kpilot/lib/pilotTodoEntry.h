@@ -41,7 +41,7 @@
 
 
 
-class KDE_EXPORT PilotTodoEntry : public PilotAppCategory
+class  PilotTodoEntry : public PilotAppCategory
 {
 public:
 	PilotTodoEntry(struct ToDoAppInfo &appInfo);

@@ -36,7 +36,7 @@
 #include "pilotRecord.h"
 
 
-class KDE_EXPORT PilotSerialDatabase : public PilotDatabase
+class  PilotSerialDatabase : public PilotDatabase
 {
 public:
 	PilotSerialDatabase(int linksocket, const QString &dbName);
