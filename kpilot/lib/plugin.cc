@@ -311,12 +311,12 @@ bool ConduitAction::openDatabases(const QString &dbName, bool *retrieved)
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Mode="
-		<< (isTest() ? "test " : "")
-		<< (isLocal() ? "local " : "")
+		<< (syncMode().isTest() ? "test " : "")
+		<< (syncMode().isLocal() ? "local " : "")
 		<< endl ;
 #endif
 
-	if (isLocal())
+	if (syncMode().isLocal())
 	{
 		return openDatabases_(dbName,CSL1("/tmp/"));
 	}
@@ -324,6 +324,18 @@ bool ConduitAction::openDatabases(const QString &dbName, bool *retrieved)
 	{
 		return openDatabases_(dbName, retrieved);
 	}
+}
+
+bool ConduitAction::changeSync(SyncMode::Mode m)
+{
+	FUNCTIONSETUP;
+
+	if ( fSyncDirection.isSync() && SyncMode::eFullSync == m)
+	{
+		fSyncDirection.setMode(m);
+		return true;
+	}
+	return false;
 }
 
 int PluginUtility::findHandle(const QStringList &a)

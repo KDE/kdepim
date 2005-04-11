@@ -162,20 +162,20 @@ there are two special cases: a full and a first sync.
 
 #ifdef DEBUG
 	DEBUGCONDUIT<<fname<<": fullsync="<<isFullSync()<<", firstSync="<<isFirstSync()<<endl;
-	DEBUGCONDUIT<<fname<<": syncAction="<<getSyncDirection()<<
+	DEBUGCONDUIT<<fname<<": syncAction=" << syncMode().name() <<
 		", conflictResolution = "<<getConflictResolution()<<", archive = "<<config()->syncArchived()<<endl;
 #endif
 
 	pilotindex=0;
-	switch (getSyncDirection())
+	switch (syncMode().mode())
 	{
-	case SyncAction::eCopyPCToHH:
+	case SyncMode::eCopyPCToHH:
 		// TODO: Clear the palm and backup database??? Or just add the new items ignore
 		// the Palm->PC side and leave the existing items on the palm?
 		emit logMessage(i18n("Copying records to Pilot ..."));
 		QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
 		break;
-	case SyncAction::eCopyHHToPC:
+	case SyncMode::eCopyHHToPC:
 		// TODO: Clear the backup database and the calendar, update fP
 		//       or just add the palm items and leave the PC ones there????
 	default:
@@ -396,7 +396,7 @@ void VCalConduitBase::slotPalmRecToPC()
 	if (!r)
 	{
 		fP->updateIncidences();
-		if (getSyncDirection()==SyncAction::eCopyHHToPC)
+		if ( syncMode()==SyncMode::eCopyHHToPC )
 		{
 			emit logMessage(i18n("Cleaning up ..."));
 			QTimer::singleShot(0, this, SLOT(cleanup()));
@@ -471,7 +471,7 @@ void VCalConduitBase::slotPCRecToPalm()
 	if (!e)
 	{
 		pilotindex=0;
-		if ( (getSyncDirection()==SyncAction::eCopyHHToPC) || (getSyncDirection()==SyncAction::eCopyPCToHH) )
+		if ( (syncMode()==SyncMode::eCopyHHToPC) || (syncMode()==SyncMode::eCopyPCToHH) )
 		{
 			QTimer::singleShot(0, this, SLOT(cleanup()));
 			return;

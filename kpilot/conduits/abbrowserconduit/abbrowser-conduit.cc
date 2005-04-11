@@ -760,7 +760,7 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": fullsync=" << isFullSync() << ", firstSync=" <<    isFirstSync() << endl;
 	DEBUGCONDUIT << fname << ": "
-		<< "syncDirection=" << getSyncDirection() << ", "
+		<< "syncDirection=" << syncMode().name() << ", "
 		<< "archive = " << AbbrowserSettings::archiveDeleted() << endl;
 	DEBUGCONDUIT << fname << ": conflictRes="<< getConflictResolution() << endl;
 	DEBUGCONDUIT << fname << ": PilotStreetHome=" << AbbrowserSettings::pilotStreet() << ", PilotFaxHOme" << AbbrowserSettings::pilotFax() << endl;
@@ -788,7 +788,7 @@ void AbbrowserConduit::slotPalmRecToPC()
 	FUNCTIONSETUP;
 	PilotRecord *palmRec = 0L, *backupRec = 0L;
 
-	if (getSyncDirection()==SyncAction::eCopyPCToHH)
+	if ( syncMode() == SyncMode::eCopyPCToHH )
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Done; change to PCtoHH phase." << endl;
@@ -848,7 +848,7 @@ void AbbrowserConduit::slotPCRecToPalm()
 {
 	FUNCTIONSETUP;
 
-	if ( (getSyncDirection()==SyncAction::eCopyHHToPC) ||
+	if ( (syncMode()==SyncMode::eCopyHHToPC) ||
 		abiter == aBook->end() || (*abiter).isEmpty() )
 	{
 #ifdef DEBUG
@@ -987,7 +987,7 @@ void AbbrowserConduit::slotDeletedRecord()
 void AbbrowserConduit::slotDeleteUnsyncedPCRecords()
 {
 	FUNCTIONSETUP;
-	if (getSyncDirection()==SyncAction::eCopyHHToPC)
+	if ( syncMode()==SyncMode::eCopyHHToPC )
 	{
 		QStringList uids;
 		RecordIDList::iterator it;
@@ -1021,7 +1021,7 @@ void AbbrowserConduit::slotDeleteUnsyncedPCRecords()
 void AbbrowserConduit::slotDeleteUnsyncedHHRecords()
 {
 	FUNCTIONSETUP;
-	if (getSyncDirection()==SyncAction::eCopyPCToHH)
+	if ( syncMode()==SyncMode::eCopyPCToHH )
 	{
 		RecordIDList ids=fDatabase->idList();
 		RecordIDList::iterator it;
@@ -1078,7 +1078,7 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 	FUNCTIONSETUP;
 	showAdresses(pcAddr, backupAddr, palmAddr);
 
-	if (getSyncDirection()==SyncAction::eCopyPCToHH)
+	if ( syncMode() == SyncMode::eCopyPCToHH )
 	{
 		if (pcAddr.isEmpty())
 		{
@@ -1090,7 +1090,7 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 		}
 	}
 
-	if (getSyncDirection()==SyncAction::eCopyHHToPC)
+	if ( syncMode() == SyncMode::eCopyHHToPC )
 	{
 		if (!palmAddr)
 		{

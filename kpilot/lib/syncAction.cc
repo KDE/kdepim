@@ -254,6 +254,24 @@ bool SyncAction::SyncMode::setMode(int mode)
 	}
 }
 
+bool SyncAction::SyncMode::setMode(SyncAction::SyncMode::Mode m)
+{
+	int i=0;
+	while ( maps[i].name )
+	{
+		if ( maps[i].mode == m )
+		{
+			fMode = m;
+			return true;
+		}
+		i++;
+	}
+
+	kdWarning() << k_funcinfo << ": Bad sync mode " << m << " requested." << endl ;
+	fMode = eHotSync;
+	return false;
+}
+
 void SyncAction::startTickle(unsigned timeout)
 {
 	FUNCTIONSETUP;

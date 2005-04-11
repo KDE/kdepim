@@ -234,11 +234,13 @@ void TodoConduit::readConfig()
 {
 	FUNCTIONSETUP;
 	VCalConduitBase::readConfig();
-	// determine if the categories have ever been synce. Needed to prevent loosing the categories on the desktop.
-	// also use a full sync for the first time to make sure the palm categories are really transferred to the desktop
+	// determine if the categories have ever been synce. Needed to prevent loosing
+	// the categories on the desktop. Also use a full sync for the first time to
+	// make sure the palm categories are really transferred to the desktop.
+	//
 	categoriesSynced = config()->conduitVersion()>=CONDUIT_VERSION_CATEGORYSYNC;
-	if (!categoriesSynced & !isFullSync() )
-		setSyncDirection(SyncAction::eFullSync);
+	if (!categoriesSynced && !isFullSync() )
+		changeSync(SyncMode::eFullSync);
 #ifdef DEBUG
 	DEBUGCONDUIT<<"categoriesSynced="<<categoriesSynced<<endl;
 #endif

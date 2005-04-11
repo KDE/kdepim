@@ -108,13 +108,13 @@ MemofileConduit::~MemofileConduit()
 	setFirstSync( _memofiles->isFirstSync() );
 	addSyncLogEntry(i18n(" Syncing with %1.").arg(_memo_directory));
 
-	if (SyncAction::eCopyHHToPC == getSyncDirection() || isFirstSync()) {
+	if ( (syncMode() == SyncAction::SyncMode::eCopyHHToPC) || isFirstSync() ) {
 		addSyncLogEntry(i18n(" Copying Pilot to PC..."));
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": copying Pilot to PC." << endl;
 #endif
 		copyHHToPC();
-	} else if (SyncAction::eCopyPCToHH == getSyncDirection()) {
+	} else if ( syncMode() == SyncAction::SyncMode::eCopyPCToHH ) {
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": copying PC to Pilot." << endl;
 #endif

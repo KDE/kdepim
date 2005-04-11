@@ -269,7 +269,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 		return false;
 	}
 
-	if (isTest())
+	if (syncMode().isTest())
 	{
 		listNotes();
 		return delayDone();
@@ -316,7 +316,7 @@ void KNotesAction::listNotes()
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": "
-		<< "Sync direction: " << getSyncDirection() << endl;
+		<< "Sync direction: " << syncMode().name() << endl;
 #endif
 }
 
@@ -334,23 +334,21 @@ void KNotesAction::listNotes()
 		resetIndexes();
 		getAppInfo();
 		getConfigInfo();
-		switch(getSyncDirection())
+		switch(syncMode().mode())
 		{
-		case SyncAction::eDefaultSync:
-		case SyncAction::eTest:
-		case SyncAction::eBackup:
-		case SyncAction::eRestore:
+		case SyncAction::SyncMode::eBackup:
+		case SyncAction::SyncMode::eRestore:
 			// Impossible!
 			fActionStatus = Done;
 			break;
-		case SyncAction::eCopyHHToPC :
+		case SyncAction::SyncMode::eCopyHHToPC :
 			listNotes(); // Debugging
 			fActionStatus = MemosToKNotes;
 			break;
-		case SyncAction::eFastSync:
-		case SyncAction::eHotSync:
-		case SyncAction::eFullSync:
-		case SyncAction::eCopyPCToHH:
+		case SyncAction::SyncMode::eFastSync:
+		case SyncAction::SyncMode::eHotSync:
+		case SyncAction::SyncMode::eFullSync:
+		case SyncAction::SyncMode::eCopyPCToHH:
 			fActionStatus = ModifiedNotesToPilot;
 			break;
 		}
@@ -374,22 +372,20 @@ void KNotesAction::listNotes()
 		{
 			resetIndexes();
 			fDatabase->resetDBIndex();
-			switch(getSyncDirection())
+			switch(syncMode().mode())
 			{
-			case SyncAction::eDefaultSync:
-			case SyncAction::eTest:
-			case SyncAction::eBackup:
-			case SyncAction::eRestore:
-			case SyncAction::eCopyHHToPC :
+			case SyncAction::SyncMode::eBackup:
+			case SyncAction::SyncMode::eRestore:
+			case SyncAction::SyncMode::eCopyHHToPC :
 				// Impossible!
 				fActionStatus = Done;
 				break;
-			case SyncAction::eFastSync:
-			case SyncAction::eHotSync:
-			case SyncAction::eFullSync:
+			case SyncAction::SyncMode::eFastSync:
+			case SyncAction::SyncMode::eHotSync:
+			case SyncAction::SyncMode::eFullSync:
 				fActionStatus = MemosToKNotes;
 				break;
-			case SyncAction::eCopyPCToHH:
+			case SyncAction::SyncMode::eCopyPCToHH:
 				fActionStatus = Cleanup;
 				break;
 			}
@@ -601,7 +597,7 @@ bool KNotesAction::syncMemoToKNotes()
 
 	PilotRecord *rec = 0L;
 
-	if (SyncAction::eCopyHHToPC == getSyncDirection())
+	if ( syncMode() == SyncAction::SyncMode::eCopyHHToPC )
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Read record " << fP->fRecordIndex << endl;

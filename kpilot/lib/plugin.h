@@ -143,13 +143,17 @@ public:
 	QString conduitName() const { return fConduitName; } ;
 
 protected:
-	bool isTest() const { return fSyncDirection.isTest(); } ;
-	/* bool isBackup() const { return fSyncDirection == SyncMode::eBackup; } ; */
-	bool isLocal() const { return fSyncDirection.isLocal(); } ;
-
-	const SyncMode &getSyncDirection() const { return fSyncDirection; };
+	/** Retrieve the sync mode set for this action. */
+	const SyncMode &syncMode() const { return fSyncDirection; };
+	/** Retrieve the conflict resolution setting for this action. */
 	ConflictResolution getConflictResolution() const
 		{ return fConflictResolution; };
+
+	/** Try to change the sync mode from what it is now to the mode @param m.
+	* This may fail (ie. changing a backup to a restore is not kosher) and
+	* changeSync() will return false then.
+	*/
+	bool changeSync(SyncMode::Mode m);
 
 	// Set the conflict resolution, except if the resolution
 	// form is UseGlobalSetting, in which case nothing changes
@@ -187,8 +191,8 @@ protected:
 	PilotDatabase *fDatabase,*fLocalDatabase;
 
 	/**
-	* See openDatabases_ for info on the @p retrieved
-	* parameter. In -- local mode, retrieved is left
+	* See openDatabases_ for info on the @param retrieved
+	* parameter. In local mode, @param retrieved is left
 	* unchanged.
 	*/
 	bool openDatabases(const QString &dbName, bool*retrieved=0L);

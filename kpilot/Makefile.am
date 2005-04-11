@@ -2,7 +2,7 @@
 ## (C) 1997 Stephan Kulow
 ## Modified by Adriaan de Groot
 
-SUBDIRS = lib kpilot
+SUBDIRS = lib kpilot conduits
 
 messages:
 	$(EXTRACTRC) `find . -name "*.rc" -o -name "*.ui"`  > rc.cpp

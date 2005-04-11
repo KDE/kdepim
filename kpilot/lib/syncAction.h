@@ -169,6 +169,10 @@ public:
 		* are reset to false.
 		*/
 		bool setMode(int);
+		/** Sets a mode from a @param mode, if possible. This leaves
+		* the options unchanged, so as to reward properly-typed programming.
+		*/
+		bool setMode(Mode m);
 
 		/** Sets options. Returns false if the combination of mode
 		* and the options is impossible. */
@@ -206,6 +210,23 @@ public:
 		{
 			return ( fMode==eCopyHHToPC ) || ( fMode==eCopyPCToHH ) ;
 		};
+
+		/** Classify every mode as either a sync (two-way) or copy (one-way) mode. */
+		bool isSync() const
+		{
+			return ( fMode==eFullSync ) ||
+				( fMode == eHotSync ) ||
+				( fMode == eFastSync );
+		} ;
+
+		/** Classify every mode as either a sync (two-way) or copy (one-way) mode. */
+		bool isCopy() const
+		{
+			return ( fMode==eBackup ) ||
+				( fMode==eRestore ) ||
+				( fMode==eCopyPCToHH ) ||
+				( fMode==eCopyHHToPC );
+		} ;
 
 		/**
 		* Returns a standard name for each of the sync modes.

@@ -429,11 +429,11 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	DEBUGCONDUIT << id_conduit_popmail << endl;
 
 
-	if (isTest())
+	if (syncMode().isTest())
 	{
 		doTest();
 	}
-	else if (isBackup())
+	else if (syncMode() == SyncMode::eBackup)
 	{
 		emit logError(i18n("Cannot perform backup of mail database"));
 	}

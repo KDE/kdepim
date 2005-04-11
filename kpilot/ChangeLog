@@ -7,6 +7,7 @@
 * Added a test program for some parts of the library. Woo! A first!
   Finally something resembling actual software engineering in KPilot.
 * Cleaned up headers that weren't including all required (system) headers.
+* Moved all the conduits to the new SyncMode.
 
 2005-04-10  Adriaan de Groot
 * Some useful patches from Philip T. to the vcal conduit committed.
