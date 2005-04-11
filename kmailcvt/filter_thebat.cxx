@@ -147,6 +147,12 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName) {
 		// BUILD the index of messages :
 		// We need this really ugly way, because read with tbb.readLine()
 		// does not work correct. Maybe in come in a continuous loop !!!
+		// Reason: 
+		//		if you use readLine() to read from a file with binary data
+		//		QFile::at() and QFile::atEnd() return wrong value. So we
+		//		never get QFile::atEnd() == true in some cases. This looks
+		//		like a bug in Qt3 maybe fixed in Qt4. 
+		//
 		while((l = tbb.readBlock(input.data(),50)) ) {
 			if(info->shouldTerminate()) return;
 			QString _tmp = input.data();
