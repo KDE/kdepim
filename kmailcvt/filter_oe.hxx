@@ -32,12 +32,12 @@ class FilterOE : public Filter {
     void import(FilterInfo *info);
 
   protected:
-    void importMailBox(const QString& fileName);
-    void mbxImport(QDataStream& ds);
-    void dbxImport(QDataStream& ds);
-    void dbxReadIndex(QDataStream& ds, int filePos);
-    void dbxReadDataBlock(QDataStream& ds, int filePos);
-    void dbxReadEmail(QDataStream& ds, int filePos);
+    void importMailBox( FilterInfo *info, const QString& fileName);
+    void mbxImport( FilterInfo *info, QDataStream& ds);
+    void dbxImport( FilterInfo *info, QDataStream& ds);
+    void dbxReadIndex( FilterInfo *info, QDataStream& ds, int filePos);
+    void dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos);
+    void dbxReadEmail( FilterInfo *info, QDataStream& ds, int filePos);
 
   private: // Private methods
     FilterInfo * inf;
@@ -49,7 +49,11 @@ class FilterOE : public Filter {
     int totalEmails;
     /** which email (of totalFiles) is now in the work? */
     int currentEmail;
-    
+    /** number of imported mails with flag 0x04 */
+    int count0x04;
+    /** number of imported mails with flag 0x84 */
+    int count0x84;
+
     QString folderName;
 };
 
