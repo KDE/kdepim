@@ -131,12 +131,7 @@
     </entry>
     <entry name="ScreenlockSecure" type="Bool">
         <label>Prevent HotSync when screen locked</label>
-        <whatsthis>Turning this option on prevents syncing
-	when the screen is locked. This is a security measure
-	to prevent people from stealing your data through physical
-	access to a Pilot device link to your machine.
-	It doesn't work with screensavers other than KDE, though,
-	so you will need to turn it off for other environments.</whatsthis>
+        <whatsthis>Turning this option on prevents syncing when the screen is locked. This is a security measure to prevent people from stealing your data through physical access to a Pilot device link to your machine. It doesn't work with screensavers other than KDE, though, so you will need to turn it off for other environments.</whatsthis>
 	<default>true</default>
     </entry>
   </group>
