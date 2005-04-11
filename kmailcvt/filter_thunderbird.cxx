@@ -25,10 +25,10 @@
 
 /** Default constructor. */
 FilterThunderbird::FilterThunderbird(void) : 
-  Filter(i18n("Import Thunderbird Local Mails and Folder Structure"),
+  Filter(i18n("Import Thunderbird/Mozilla Local Mails and Folder Structure"),
 	 "Danny Kukawka",
-	 i18n("<p><b>Thunderbird import filter</b></p>"
-              "<p>Select your base Thunderbird mailfolder"
+	 i18n("<p><b>Thunderbird/Mozilla import filter</b></p>"
+              "<p>Select your base Thunderbird/Mozilla mailfolder"
               " (usually ~/.thunderbird/*.default/Mail/Local Folders/).</p>"
               "<p><b>Note:</b> Never choose a Folder, which <u>does not</u> contain mbox-files (for example"
               " a maildir). If you do it anyway, you will get many new folders.</p>"
