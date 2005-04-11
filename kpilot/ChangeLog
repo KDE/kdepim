@@ -1,6 +1,9 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2005-04-12  Adriaan de Groot
+* For a lark, and for David, re-added some KDE 3.2 compatibility code.
+* Template madness! An easy way to create the right appinfo's from any database.
 
 2005-04-11  Adriaan de Groot
 * Bumped KPilot version.

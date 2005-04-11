@@ -29,17 +29,13 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <time.h>
-#include <string.h>
-
 #include <qbitarray.h>
 
 #include <pi-macros.h>
 #include <pi-datebook.h>
 
 #include "pilotAppCategory.h"
-#include "pilotRecord.h"
-
+#include "pilotDatabase.h"
 
 
 class KDE_EXPORT PilotDateEntry : public PilotAppCategory
@@ -143,9 +139,7 @@ private:
 };
 
 
+typedef PilotAppInfo<AppointmentAppInfo,unpack_AppointmentAppInfo> PilotDateInfo;
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
 #endif
-#endif
+

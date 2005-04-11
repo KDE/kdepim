@@ -33,8 +33,8 @@
 #include <pi-memo.h>
 
 #include "pilotAppCategory.h"
+#include "pilotDatabase.h"
 
-class PilotDatabase;
 
 class KDE_EXPORT PilotMemo : public PilotAppCategory
 {
@@ -77,12 +77,6 @@ private:
 	QString fText;
 };
 
-class KDE_EXPORT PilotMemoInfo
-{
-public:
-	PilotMemoInfo(PilotDatabase *);
-protected:
-	struct MemoAppInfo fInfo;
-};
+typedef PilotAppInfo<MemoAppInfo,unpack_MemoAppInfo> PilotMemoInfo;
 
 #endif

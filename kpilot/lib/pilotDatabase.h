@@ -190,4 +190,27 @@ private:
 	QString fName;
 };
 
+template <typename appinfo, int(*f)(appinfo *, unsigned char *, int)>
+class PilotAppInfo
+{
+public:
+	PilotAppInfo(PilotDatabase *d)
+	{
+		FUNCTIONSETUP;
+		int appLen = 8192;
+		unsigned char buffer[8192];
+
+		appLen = d->readAppBlock(buffer,appLen);
+
+		(*f)(&fInfo, buffer, appLen);
+	} ;
+
+	struct CategoryAppInfo *categoryInfo() { return &fInfo.category; } ;
+	appinfo *info() { return &fInfo; } ;
+
+protected:
+	appinfo fInfo;
+} ;
+
+
 #endif

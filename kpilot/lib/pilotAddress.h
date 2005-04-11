@@ -29,20 +29,11 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <time.h>
-#include <string.h>
-
-#ifndef _PILOT_MACROS_H_
 #include <pi-macros.h>
-#endif
-
-#ifndef _PILOT_ADDRESS_H_
 #include <pi-address.h>
-#endif
 
-#ifndef _KPILOT_PILOTAPPCATEGORY_H
 #include "pilotAppCategory.h"
-#endif
+#include "pilotDatabase.h"
 
 /** @brief A wrapper class around the Address struct provided by pi-address.h
  *
@@ -190,6 +181,7 @@ private:
 };
 
 
+typedef PilotAppInfo<AddressAppInfo,unpack_AddressAppInfo> PilotAddressInfo;
 
 
 #endif

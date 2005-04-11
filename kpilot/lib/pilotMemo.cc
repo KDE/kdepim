@@ -145,13 +145,3 @@ QString PilotMemo::sensibleTitle() const
 	}
 }
 
-PilotMemoInfo::PilotMemoInfo(PilotDatabase *d)
-{
-	FUNCTIONSETUP;
-	int appLen = 8192;
-	unsigned char buffer[8192];
-
-	appLen = d->readAppBlock(buffer,appLen);
-
-	unpack_MemoAppInfo(&fInfo, buffer, appLen);
-}

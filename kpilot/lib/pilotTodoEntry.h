@@ -38,6 +38,7 @@
 #include <qstring.h>
 
 #include "pilotAppCategory.h"
+#include "pilotDatabase.h"
 
 
 
@@ -98,10 +99,8 @@ private:
 	struct ToDoAppInfo &fAppInfo;
 };
 
+typedef PilotAppInfo<ToDoAppInfo,unpack_ToDoAppInfo> PilotToDoInfo;
 
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
 #endif
-#endif
+
