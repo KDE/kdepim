@@ -307,9 +307,6 @@ int SyncAction::questionYesNo(const QString & text,
 		}
 	}
 
-#if !KDE_IS_VERSION(3,3,0)
-	return KMessageBox::Cancel;
-#else
 	KDialogBase *dialog =
 		new KDialogBase(caption.isNull()? i18n("Question") : caption,
 		KDialogBase::Yes | KDialogBase::No,
@@ -325,6 +322,7 @@ int SyncAction::questionYesNo(const QString & text,
 		startTickle(timeout);
 	}
 
+#if KDE_IS_VERSION(3,3,0)
 	r = (KMessageBox::ButtonCode) KMessageBox::createKMessageBox(dialog,
 		QMessageBox::Question,
 		text,
@@ -333,6 +331,50 @@ int SyncAction::questionYesNo(const QString & text,
 		&checkboxReturn,
 		0);
 
+#else
+	// The following code is taken from KDialogBase.cc,
+	// part of the KDE 2.2 libraries. Copyright 2001
+	// by Waldo Bastian.
+	//
+	//
+	QVBox *topcontents = new QVBox(dialog);
+
+	topcontents->setSpacing(KDialog::spacingHint() * 2);
+	topcontents->setMargin(KDialog::marginHint() * 2);
+
+	QWidget *contents = new QWidget(topcontents);
+	QHBoxLayout *lay = new QHBoxLayout(contents);
+
+	lay->setSpacing(KDialog::spacingHint() * 2);
+
+	lay->addStretch(1);
+	QLabel *label1 = new QLabel( contents);
+	label1->setPixmap(QMessageBox::standardIcon(QMessageBox::Information));
+	lay->add( label1 );
+	QLabel *label2 = new QLabel( text, contents);
+	label2->setMinimumSize(label2->sizeHint());
+	lay->add(label2);
+	lay->addStretch(1);
+
+	QSize extraSize = QSize(50, 30);
+
+	QCheckBox *checkbox = 0L;
+	if (!key.isEmpty())
+	{
+		checkbox = new QCheckBox(i18n("Do not ask again"),topcontents);
+		extraSize = QSize(50,0);
+	}
+
+	dialog->setMainWidget(topcontents);
+	dialog->enableButtonSeparator(false);
+	dialog->incInitialSize(extraSize);
+
+	r = dialog->exec();
+	if (checkbox)
+	{
+		checkboxReturn = checkbox->isChecked();
+	}
+#endif
 
 	switch(r)
 	{
@@ -350,7 +392,6 @@ int SyncAction::questionYesNo(const QString & text,
 	}
 
 	return result;
-#endif
 }
 
 
@@ -403,7 +444,48 @@ int SyncAction::questionYesNoCancel(const QString & text,
 		&checkboxReturn,
 		0);
 #else
-	r = KDialogBase::Cancel;
+	// The following code is taken from KDialogBase.cc,
+	// part of the KDE 2.2 libraries. Copyright 2001
+	// by Waldo Bastian.
+	//
+	//
+	QVBox *topcontents = new QVBox(dialog);
+
+	topcontents->setSpacing(KDialog::spacingHint() * 2);
+	topcontents->setMargin(KDialog::marginHint() * 2);
+
+	QWidget *contents = new QWidget(topcontents);
+	QHBoxLayout *lay = new QHBoxLayout(contents);
+
+	lay->setSpacing(KDialog::spacingHint() * 2);
+
+	lay->addStretch(1);
+	QLabel *label1 = new QLabel( contents);
+	label1->setPixmap(QMessageBox::standardIcon(QMessageBox::Information));
+	lay->add( label1 );
+	QLabel *label2 = new QLabel( text, contents);
+	label2->setMinimumSize(label2->sizeHint());
+	lay->add(label2);
+	lay->addStretch(1);
+
+	QSize extraSize = QSize(50, 30);
+
+	QCheckBox *checkbox = 0L;
+	if (!key.isEmpty())
+	{
+		checkbox = new QCheckBox(i18n("Do not ask again"),topcontents);
+		extraSize = QSize(50,0);
+	}
+
+	dialog->setMainWidget(topcontents);
+	dialog->enableButtonSeparator(false);
+	dialog->incInitialSize(extraSize);
+
+	r = dialog->exec();
+	if (checkbox)
+	{
+		checkboxReturn = checkbox->isChecked();
+	}
 #endif
 
 	switch(r)
