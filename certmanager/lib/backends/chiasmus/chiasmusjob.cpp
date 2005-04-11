@@ -30,7 +30,7 @@
     your version.
 */
 
-#ifndef HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
@@ -101,6 +101,9 @@ void Kleo::ChiasmusJob::slotPerform() {
   // simple XOR cipher for now :)
   for ( unsigned int i = 0, i_end = mInput.size() ; i < i_end ; ++i )
     mOutput[i] = mInput[i] ^ key[ i % key_len ] ^ pass[ i % pass_len ] ;
+
+  emit done();
+  emit result( 0, QVariant( mOutput ) );
 }
 
 void Kleo::ChiasmusJob::slotCancel() {

@@ -45,6 +45,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kshell.h>
+#include <kdebug.h>
 
 #include <qstringlist.h>
 #include <qvariant.h>

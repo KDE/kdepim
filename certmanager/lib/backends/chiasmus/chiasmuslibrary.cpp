@@ -39,6 +39,7 @@
 
 #include <klibloader.h>
 #include <kdebug.h>
+#include <klocale.h>
 
 #include <qfile.h>
 
