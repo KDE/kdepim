@@ -70,19 +70,19 @@
 #include <unistd.h>     /* For size_t for pilot-link */
 #include <qglobal.h>
 #include <pi-version.h>
-// For KDE_EXPORT with kdelibs 3.3.x
+// For KDE_EXPORT with kdelibs 3.2.x
 #define KDE_EXPORT
 
 #if (QT_VERSION < 0x030200)
-#error "This is KPilot for KDE3.3 and won't compile with Qt < 3.2.0"
+#error "This is KPilot for KDE3.2 and won't compile with Qt < 3.2.0"
 #endif
 
 #ifndef KDE_VERSION
 #include <kdeversion.h>
 #endif
 
-#if !(KDE_IS_VERSION(3,3,0))
-#error "This is KPilot for KDE 3.3 and won't compile with KDE < 3.3.0"
+#if !(KDE_IS_VERSION(3,2,0))
+#error "This is KPilot for KDE 3.2 and won't compile with KDE < 3.2.0"
 #endif
 
 
