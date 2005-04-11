@@ -1,0 +1,14 @@
+/** \mainpage %KPilot API Overview
+
+\section Architecture
+
+%KPilot consists of a core library of utility and communications
+classes which are used by two applications: KPilot itself
+(which is little more than a clumsy data viewer and 
+configuration shell) and the KPilot daemon which does
+the actual communications with the hadheld.
+The daemon loads plugins (called conduits) on demand
+which are used for syncing specific data on the PC
+with the handheld.
+
+*/
