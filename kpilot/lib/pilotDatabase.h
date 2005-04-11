@@ -190,8 +190,27 @@ private:
 	QString fName;
 };
 
+class KDE_EXPORT PilotAppInfoBase
+{
+protected:
+	PilotAppInfoBase() { } ;
+	void init(struct CategoryAppInfo *c, int len)
+	{
+		fC = c;
+		fLen = len ;
+	} ;
+
+public:
+	struct CategoryAppInfo *categoryInfo() { return fC; } ;
+	int length() const { return fLen; } ;
+
+private:
+	struct CategoryAppInfo *fC;
+	int fLen;
+} ;
+
 template <typename appinfo, int(*f)(appinfo *, unsigned char *, int)>
-class PilotAppInfo
+class PilotAppInfo : public PilotAppInfoBase
 {
 public:
 	PilotAppInfo(PilotDatabase *d)
@@ -203,9 +222,9 @@ public:
 		appLen = d->readAppBlock(buffer,appLen);
 
 		(*f)(&fInfo, buffer, appLen);
+		init(&fInfo.category,appLen);
 	} ;
 
-	struct CategoryAppInfo *categoryInfo() { return &fInfo.category; } ;
 	appinfo *info() { return &fInfo; } ;
 
 protected:
