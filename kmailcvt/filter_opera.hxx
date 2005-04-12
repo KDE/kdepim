@@ -20,12 +20,14 @@
 
 #include "filters.hxx"
 
-/**imports opera account-archives into KMail
+/**
+ *imports opera account-archives into KMail
  *@author Danny Kukawka
  */
 
-class FilterOpera : public Filter {
-  public:
+class FilterOpera : public Filter
+{
+public:
     FilterOpera();
     ~FilterOpera();
 
@@ -33,5 +35,3 @@ class FilterOpera : public Filter {
 };
 
 #endif
-
-// vim: ts=2 sw=2 et

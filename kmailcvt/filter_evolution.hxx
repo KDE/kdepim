@@ -30,16 +30,16 @@
 class FilterEvolution : public Filter
 {
 public:
-  FilterEvolution(void);
-  ~FilterEvolution(void);
+    FilterEvolution(void);
+    ~FilterEvolution(void);
 
-  void import(FilterInfo *info);
+    void import(FilterInfo *info);
 
 private:
-  QString mailDir;
-  
-  void importDirContents(FilterInfo*, const QString&, const QString&, const QString&);
-  void importMBox(FilterInfo*, const QString&, const QString&, const QString&);
+    QString mailDir;
+
+    void importDirContents(FilterInfo*, const QString&, const QString&, const QString&);
+    void importMBox(FilterInfo*, const QString&, const QString&, const QString&);
 };
 
 #endif

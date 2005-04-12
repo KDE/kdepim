@@ -23,19 +23,20 @@
  * Imports Sylpheed mail folder with maildir format recursively, recreating the folder structure.
  * @author Danny Kukawka
  */
-class FilterSylpheed : public Filter {
+class FilterSylpheed : public Filter
+{
 
 public:
-	FilterSylpheed(void);
-	~FilterSylpheed(void);
+    FilterSylpheed(void);
+    ~FilterSylpheed(void);
 
-	void import(FilterInfo *info);
+    void import(FilterInfo *info);
 
 private:
-	QString mailDir;
+    QString mailDir;
 
-	void importDirContents(FilterInfo*, const QString&);
-	void importFiles(FilterInfo*, const QString&);
+    void importDirContents(FilterInfo*, const QString&);
+    void importFiles(FilterInfo*, const QString&);
 };
 
 #endif

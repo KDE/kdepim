@@ -15,7 +15,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
- 
+
 #ifndef FILTER_EVOLUTION_V2_HXX
 #define FILTER_EVOLUTION_V2_HXX
 
@@ -28,16 +28,16 @@
 class FilterEvolution_v2 : public Filter
 {
 public:
-  FilterEvolution_v2(void);
-  ~FilterEvolution_v2(void);
+    FilterEvolution_v2(void);
+    ~FilterEvolution_v2(void);
 
-  void import(FilterInfo *info);
+    void import(FilterInfo *info);
 
 private:
-  QString mailDir;
-  
-  void importDirContents(FilterInfo*, const QString&, const QString&, const QString&);
-  void importMBox(FilterInfo*, const QString&, const QString&, const QString&);
+    QString mailDir;
+
+    void importDirContents(FilterInfo*, const QString&, const QString&, const QString&);
+    void importMBox(FilterInfo*, const QString&, const QString&, const QString&);
 };
 
 #endif

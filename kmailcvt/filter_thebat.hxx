@@ -23,19 +23,20 @@
  * Imports The Bat! mail folder recursively, recreating the folder structure.
  * @author Danny Kukawka
  */
-class FilterTheBat : public Filter {
+class FilterTheBat : public Filter
+{
 
 public:
-	FilterTheBat(void);
-	~FilterTheBat(void);
+    FilterTheBat(void);
+    ~FilterTheBat(void);
 
-	void import(FilterInfo *info);
+    void import(FilterInfo *info);
 
 private:
-	QString mailDir;
+    QString mailDir;
 
-	void importDirContents(FilterInfo*, const QString&);
-	void importFiles(FilterInfo*, const QString&);
+    void importDirContents(FilterInfo*, const QString&);
+    void importFiles(FilterInfo*, const QString&);
 };
 
 #endif

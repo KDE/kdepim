@@ -20,12 +20,14 @@
 
 #include "filters.hxx"
 
-/**imports mbox archives messages into KMail
- *@author Laurence Anderson
+/**
+ * imports mbox archives messages into KMail
+ * @author Laurence Anderson
  */
 
-class FilterMBox : public Filter {
-  public:
+class FilterMBox : public Filter
+{
+public:
     FilterMBox();
     ~FilterMBox();
 
@@ -33,5 +35,3 @@ class FilterMBox : public Filter {
 };
 
 #endif
-
-// vim: ts=2 sw=2 et

@@ -26,8 +26,9 @@
  * @author Danny Kukawka
  */
 
-class FilterOutlook : public Filter {
-  public:
+class FilterOutlook : public Filter
+{
+public:
     FilterOutlook();
     ~FilterOutlook();
 
@@ -35,4 +36,3 @@ class FilterOutlook : public Filter {
 };
 
 #endif
-

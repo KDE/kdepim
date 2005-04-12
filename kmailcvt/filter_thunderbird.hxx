@@ -14,7 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
- 
+
 #ifndef FILTER_THUNDERBIRD_HXX
 #define FILTER_THUNDERBIRD_HXX
 
@@ -27,16 +27,16 @@
 class FilterThunderbird : public Filter
 {
 public:
-  FilterThunderbird(void);
-  ~FilterThunderbird(void);
+    FilterThunderbird(void);
+    ~FilterThunderbird(void);
 
-  void import(FilterInfo *info);
+    void import(FilterInfo *info);
 
 private:
-  QString mailDir;
-  
-  void importDirContents(FilterInfo*, const QString&, const QString&, const QString&);
-  void importMBox(FilterInfo*, const QString&, const QString&, const QString&);
+    QString mailDir;
+
+    void importDirContents(FilterInfo*, const QString&, const QString&, const QString&);
+    void importMBox(FilterInfo*, const QString&, const QString&, const QString&);
 };
 
 #endif

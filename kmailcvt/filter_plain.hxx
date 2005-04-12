@@ -20,16 +20,18 @@
 
 #include "filters.hxx"
 
-/**imports Plain text messages into KMail
-  *@author laurence
-  */
+/**
+ *imports Plain text messages into KMail
+ *@author laurence
+ */
 
-class FilterPlain : public Filter {
+class FilterPlain : public Filter
+{
 public:
-	FilterPlain();
-	~FilterPlain();
-	
-  void import(FilterInfo *info);
+    FilterPlain();
+    ~FilterPlain();
+
+    void import(FilterInfo *info);
 };
 
 #endif

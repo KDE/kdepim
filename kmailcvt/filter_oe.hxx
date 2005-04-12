@@ -20,18 +20,20 @@
 
 #include "filters.hxx"
 
-/**imports outlook text messages into KMail
+/**
+ *imports outlook text messages into KMail
  *@author Laurence Anderson
  */
 
-class FilterOE : public Filter {
-  public:
+class FilterOE : public Filter
+{
+public:
     FilterOE();
     ~FilterOE();
 
     void import(FilterInfo *info);
 
-  protected:
+protected:
     void importMailBox( FilterInfo *info, const QString& fileName);
     void mbxImport( FilterInfo *info, QDataStream& ds);
     void dbxImport( FilterInfo *info, QDataStream& ds);
@@ -39,7 +41,7 @@ class FilterOE : public Filter {
     void dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos);
     void dbxReadEmail( FilterInfo *info, QDataStream& ds, int filePos);
 
-  private: // Private methods
+private: // Private methods
     FilterInfo * inf;
     /** which file (of totalFiles) is now in the work? */
     int currentFile;
@@ -58,5 +60,3 @@ class FilterOE : public Filter {
 };
 
 #endif
-
-// vim: ts=2 sw=2 et
