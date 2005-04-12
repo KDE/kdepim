@@ -31,8 +31,7 @@ FilterPMail::FilterPMail() :
                i18n("<p>Select the Pegasus-Mail directory on your system (containing CNM, PMM and MBX files). "
                     "On many systems this is stored in C:\\PMail\\mail</p>"
                     "<p><b>Note:</b> This import filter will import your folders, but not "
-                    "the folder structure. But you will probably only do "
-                    "this one time.</p>"
+                    "the folder structure. But you will probably only do this one time.</p>"
                     "<p><b>Note:</b> Emails will be imported into folder named \"PegasusMail-Import\".</p>"))
 {}
 
@@ -50,7 +49,7 @@ void FilterPMail::import(FilterInfo *info)
     kfd = new KFileDialog( QDir::homeDirPath(), "", 0, "kfiledialog", true );
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
-    QString chosenDir  = kfd->selectedFile();
+    QString chosenDir = kfd->selectedFile();
 
     if (chosenDir.isEmpty()) {
         info->alert(i18n("No directory selected."));
@@ -95,7 +94,6 @@ void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc
         inf->setCurrent(-1);
 
         // call worker function, increase progressbar
-        inf->addLog(i18n("Importing %1").arg(*mailFile));
         (this->*workFunc)(dir.filePath(*mailFile));
         ++currentFile;
         inf->setOverall( (int) ((float) currentFile / totalFiles * 100));
@@ -154,80 +152,56 @@ void FilterPMail::importMailFolder(const QString& file)
     struct {
         char folder[86];
         char id[42];
-    }
-    pmm_head;
-
-    int ch = 0;
-    int state = 0;
-    int n = 0;
-    KTempFile *tempfile = 0;
-
-    // open the message
+    } pmm_head;
+    
+    long l = 0;
     QFile f(file);
-    f.open(IO_ReadOnly);
-
-    // Get folder name
-    f.readBlock((char *) &pmm_head, sizeof(pmm_head));
-    QString folder("PegasusMail-Import/");
-    folder.append(pmm_head.folder);
-    inf->setTo(folder);
-
-    // State machine to read the data in. The fgetc usage is probably terribly slow ...
-    while ((ch = f.getch()) >= 0) {
-        if (inf->shouldTerminate()){
-            tempfile->close();
-            tempfile->unlink();
-            return;
-        }
+    if (!f.open(IO_ReadOnly)) {
+        inf->alert(i18n("Unable to open %1, skipping").arg(file));
+    } else {
+        // Get folder name
+        l = f.readBlock((char *) &pmm_head, sizeof(pmm_head));
+        QString folder("PegasusMail-Import/");
+        folder.append(pmm_head.folder);
+        inf->setTo(folder);
+        inf->addLog(i18n("Importing %1").arg("../" + QString(pmm_head.folder)));
         
-        inf->setCurrent( (int) ( ( (float) f.at() / f.size() ) * 100 ) );
+        QByteArray input(MAX_LINE);
+        bool first_msg = true;
         
-        switch (state) {
-
-            // new message state
-        case 0:
-            // open temp output file
-            tempfile = new KTempFile;
-            state = 1;
-            inf->setCurrent(i18n("Message %1").arg(n++));
-            // fall through
-
-            // inside a message state
-        case 1:
-            if (ch == 0x1a) {
-                // close file, send it
-                tempfile->close();
-
-                if(inf->removeDupMsg)
-                    addMessage( inf, folder, tempfile->name() );
-                else
-                    addMessage_fastImport( inf, folder, tempfile->name() );
-
-                tempfile->unlink();
-                delete tempfile;
-                state = 0;
-                break;
+        while (!f.atEnd()) {
+            KTempFile tempfile;
+            inf->setCurrent( (int) ( ( (float) f.at() / f.size() ) * 100 ) );
+            
+            if(!first_msg) {
+                // set the filepos back to last line minus the seperate char (0x1a)
+                f.at(f.at() - l + 1); 
             }
-            if (ch == 0x0d) {
-                break;
+            
+            // no problem to loose the last line in file. This only contains a seperate char
+            while ( ! f.atEnd() &&  (l = f.readLine(input.data(),MAX_LINE))) {
+                    if (inf->shouldTerminate()){
+                        tempfile.close();
+                        tempfile.unlink();
+                        return;
+                    }
+                    if(input[0] == 0x1a ) {
+                        break;
+                    } else {
+                        tempfile.file()->writeBlock( input, l );
+                    }
             }
-            tempfile->file()->putch(ch);
-            break;
+            tempfile.close();
+            
+            if(inf->removeDupMsg)
+                addMessage( inf, folder, tempfile.name() );
+            else
+                addMessage_fastImport( inf, folder, tempfile.name() );
+            
+            first_msg = false;
+            tempfile.unlink();
         }
     }
-
-    // did Folder end without 0x1a at the end?
-    if (state != 0) {
-        tempfile->close();
-        if(inf->removeDupMsg)
-            addMessage( inf, folder, tempfile->name() );
-        else
-            addMessage_fastImport( inf, folder, tempfile->name() );
-
-        tempfile->unlink();
-        delete tempfile;
-    }
-
     f.close();
 }
 
@@ -265,6 +239,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
     if (! f.open( IO_ReadOnly ) ) {
         inf->alert( i18n("Unable to open %1, skipping").arg( s ) );
     } else {
+        inf->addLog(i18n("Importing %1").arg("../" + QString(pmg_head.folder)));
         l = f.readLine( line.data(),MAX_LINE); // read the first line which is unneeded
         while ( ! f.atEnd() ) {
             KTempFile tempfile;

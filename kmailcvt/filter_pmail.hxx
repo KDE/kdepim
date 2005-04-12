@@ -42,8 +42,9 @@ protected:
 private:
     /** the working directory */
     QDir dir;
-    /**  */
+    /**  pointer to the info */
     FilterInfo * inf;
+    
     /** which file (of totalFiles) is now in the work? */
     int currentFile;
     /** total number of files that get imported */
