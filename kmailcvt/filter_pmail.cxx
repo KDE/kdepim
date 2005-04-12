@@ -33,7 +33,7 @@ FilterPMail::FilterPMail() :
                     "<p><b>Note:</b> This import filter will import your folders, but not "
                     "the folder structure. But you will probably only do "
                     "this one time.</p>"
-                    "<p><b>Note:</b> Emails will be imported into folder with the prefix pmail-</p>"))
+                    "<p><b>Note:</b> Emails will be imported into folder named \"PegasusMail-Import\".</p>"))
 {}
 
 FilterPMail::~FilterPMail()
@@ -79,6 +79,8 @@ void FilterPMail::import(FilterInfo *info)
 /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
 void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc)(const QString&) )
 {
+    if (inf->shouldTerminate()) return;
+    
     QStringList files = dir.entryList(mask, QDir::Files, QDir::Name);
     //kdDebug() << "Mask is " << mask << " count is " << files.count() << endl;
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
@@ -96,6 +98,7 @@ void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc
         (this->*workFunc)(dir.filePath(*mailFile));
         currentFile++;
         inf->setOverall( 100 * currentFile / totalFiles );
+        if (inf->shouldTerminate()) return;
     }
 }
 
@@ -103,7 +106,7 @@ void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc
 /** this function imports one *.CNM message */
 void FilterPMail::importNewMessage(const QString& file)
 {
-    QString destFolder("PMail-New Messages");
+    QString destFolder("PegasusMail-Import/New Messages");
     inf->setTo(destFolder);
 
     /* comment by Danny Kukawka:
@@ -163,14 +166,17 @@ void FilterPMail::importMailFolder(const QString& file)
 
     // Get folder name
     f.readBlock((char *) &pmm_head, sizeof(pmm_head));
-    QString folder("PMail-");
+    QString folder("PegasusMail-Import/");
     folder.append(pmm_head.folder);
     inf->setTo(folder);
-    // The folder name might contain weird characters ...
-    folder.replace(QRegExp("[^a-zA-Z0-9:.-]"), ":");
 
     // State machine to read the data in. The fgetc usage is probably terribly slow ...
     while ((ch = f.getch()) >= 0) {
+         if (inf->shouldTerminate()){
+            tempfile->close();
+            tempfile->unlink();
+            return;
+        }
         switch (state) {
 
             // new message state
@@ -224,85 +230,62 @@ void FilterPMail::importMailFolder(const QString& file)
 /** imports a 'unix' format mail folder (*.MBX) */
 void FilterPMail::importUnixMailFolder(const QString& file)
 {
-    #define MAX_LINE 4096
-    #define MSG_SEPERATOR_START "From "
-    #define MSG_SEPERATOR_REGEX "^From .*..:...*$"
-    static short msgSepLen = strlen(MSG_SEPERATOR_START);
-
     struct {
         char folder[58];
-    }
-    pmg_head;
+    } pmg_head;
+    
     QFile f;
-    QString s(file);
-    QString folder;
+    QString folder("PegasusMail-Import/"), s(file), seperate;
+    QByteArray line(MAX_LINE);
+    int n = 0, l = 0;
 
-    QCString line(MAX_LINE);
-    KTempFile *tempfile = 0;
-    int n = 0;
-    QRegExp regexp(MSG_SEPERATOR_REGEX);
-
-
-    // Get folder name
+    /** Get the folder name */
     s.replace( QRegExp("mbx$"), "pmg");
     s.replace( QRegExp("MBX$"), "PMG");
     f.setName(s);
-    f.open(IO_ReadOnly);
-    f.readBlock((char *) &pmg_head, sizeof(pmg_head));
-    f.close();
-    folder = "PMail-";
-    folder.append(pmg_head.folder);
-    inf->setTo(folder);
-    // The folder name might contain weird characters ...
-    folder.replace(QRegExp("[^a-zA-Z0-9:.-]"), ":");
-
-    // Read in the folder
-    //
-    // Messages are separated by "From " lines. We use a logic similar
-    // to KMail's kmfolder.cpp to find the boundaries.
-
+    if (! f.open( IO_ReadOnly ) ) {
+        inf->alert( i18n("Unable to open %1, skipping").arg( s ) );
+        return;
+    } else {
+        f.readBlock((char *) &pmg_head, sizeof(pmg_head));
+        f.close();
+        
+        folder.append(pmg_head.folder);
+        inf->setTo(folder);
+        inf->setTo(folder);
+    }
+    
+    /** Read in the mbox */
     f.setName(file);
-    f.open(IO_ReadOnly);
-    while (f.readLine(line.data(), MAX_LINE)) {
-        // Look for separator
-        if (tempfile &&                                             // when we wrote to outfile
-                (strncmp(line,MSG_SEPERATOR_START, msgSepLen)==0 &&  // quick compar
-                 regexp.search(line) >= 0))                            // slower regexp
-        {
-            tempfile->close();
-
+    if (! f.open( IO_ReadOnly ) ) {
+        inf->alert( i18n("Unable to open %1, skipping").arg( s ) );
+    } else {
+        l = f.readLine( line.data(),MAX_LINE); // read the first line which is unneeded
+        while ( ! f.atEnd() ) {
+            KTempFile tempfile;
+            
+            // we lost the last line, which is the first line of the new message in
+            // this lopp, but this is ok, because this is the seperate line with
+            // "From ???@???" and we can forget them
+            while ( ! f.atEnd() &&  (l = f.readLine(line.data(),MAX_LINE)) && ((seperate = line.data()).left(5) != "From ")) {
+                tempfile.file()->writeBlock(line.data(), l);
+                if (inf->shouldTerminate()){
+                    tempfile.close();
+                    tempfile.unlink();
+                    return;
+                }
+            }
+            tempfile.close();
             if(inf->removeDupMsg)
-                addMessage( inf, folder, tempfile->name() );
+                addMessage( inf, folder, tempfile.name() );
             else
-                addMessage_fastImport( inf, folder, tempfile->name() );
-
-            tempfile->unlink();
-            delete tempfile;
-            tempfile = 0;
-        }
-
-        // Do we need to open/reopen output file?
-        if (!tempfile) {
-            tempfile = new KTempFile;
-            // Notify progress
+                addMessage_fastImport( inf, folder, tempfile.name() );
+            tempfile.unlink();   
+            
             n++;
-            inf->setCurrent(i18n("Message %1").arg(n));
+            inf->setCurrent(i18n("Message %1").arg(n));            
+            inf->setCurrent( (int) ( ( (float) f.at() / f.size() ) * 100 ) );
         }
-
-        tempfile->file()->writeBlock(line.data(), line.length());
-    }
-
-    if (tempfile) {
-        tempfile->close();
-
-        if(inf->removeDupMsg)
-            addMessage( inf, folder, tempfile->name() );
-        else
-            addMessage_fastImport( inf, folder, tempfile->name() );
-
-        tempfile->unlink();
-        delete tempfile;
-    }
-
+    }    
     f.close();
 }
