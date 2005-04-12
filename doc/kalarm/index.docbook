@@ -42,8 +42,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2005-01-18</date>
-<releaseinfo>1.02.05</releaseinfo>
+<date>2005-12-05</date>
+<releaseinfo>1.03.00</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -76,9 +76,9 @@ deletion. You can also optionally view expired alarms.</para>
 <para>When configuring an alarm, you may either type in the alarm
 message text, specify a text or image file to display, specify a
 command to execute, or enter an email to send. You can also choose
-the color of the alarm message, whether to play a sound, whether it
-should repeat, and whether the alarm should be canceled if it cannot
-be triggered at its scheduled time.</para>
+the color of the alarm message, whether to play a sound or speak the
+message, whether it should repeat, and whether the alarm should be
+canceled if it cannot be triggered at its scheduled time.</para>
 
 <para>Alarms may also be scheduled from the command line, or via &DCOP;
 calls from programs.</para>
@@ -203,6 +203,46 @@ action. You can use the
 expired alarms by default.</para>
 
 </sect2>
+
+<sect2 id="search">
+<title>Searching the alarm list</title>
+
+<para>You can search through the alarm list to find alarms containing
+a search text. To invoke this, select <menuchoice>
+<guimenu>Edit</guimenu><guimenuitem>Find</guimenuitem></menuchoice>.
+In the search dialog, select the alarm types which you wish to search.
+To continue searching for more alarms which match, use <menuchoice>
+<guimenu>Edit</guimenu><guimenuitem>Find Next</guimenuitem></menuchoice>
+or <menuchoice>
+<guimenu>Edit</guimenu><guimenuitem>Find Previous</guimenuitem>
+</menuchoice>.</para>
+
+<para>Searching is performed as follows:</para>
+
+<itemizedlist>
+<listitem>
+<para>Text alarms: the message text is searched.</para>
+</listitem>
+
+<listitem>
+<para>File alarms: the file path/URL is searched.</para>
+</listitem>
+
+<listitem>
+<para>Command alarms: the command line or command script is
+searched.</para>
+</listitem>
+
+<listitem>
+<para>Email alarms: in addition to the subject and body of the email,
+the recipients and the URLs of attachments are searched.</para>
+</listitem>
+</itemizedlist>
+
+<note><para>Only alarms currently shown in the alarm list can be
+selected for searching. So if you want to search expired alarms, you
+must first display them as described in the section above.</para></note>
+</sect2>
 </sect1>
 
 <sect1 id="create-edit">
@@ -250,47 +290,46 @@ various sources:</para>
 
 <itemizedlist>
 <listitem>
-<para>To base your new alarm on an
-<link linkend="templates">alarm template</link>, display the alarm
-edit dialog as described above, and then click
-<guibutton>Load Template</guibutton>. Select a template from the list
-which appears and click <guibutton>OK</guibutton>. The alarm edit
-dialog is then preset with the details from the selected alarm
-template, which you can now edit as required.</para>
+<para>To base your new alarm on an alarm template, follow the
+instructions in the <link linkend="templates">Alarm templates</link>
+section.</para>
 </listitem>
 
 <listitem>
 <para>To base your new alarm on an existing one, highlight the existing
 alarm in the list and select <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>.
-This opens the alarm edit dialog already filled in with a copy of
-the selected alarm's details.</para>
+This opens the <link linkend="alarm-edit-dlg">alarm edit dialog</link>
+already filled in with a copy of the selected alarm's details.</para>
 </listitem>
 
 <listitem>
 <para>To create a new alarm which displays an existing email message,
 drag the email from &kmail; onto &kalarm;'s main window or system tray
-icon. This opens the alarm edit dialog with the entire email message
-(including sender, recipient, etc.) as the alarm text.</para>
+icon. This opens the <link linkend="alarm-edit-dlg">alarm edit
+dialog</link> with the entire email message (including sender,
+recipient, etc.) as the alarm text.</para>
 </listitem>
 
 <listitem>
 <para>To create a new email alarm to send a copy of an existing email
 message, drag the email from &kmail; onto &kalarm;'s main window or
 system tray icon. Then select the <guilabel>Email</guilabel> option.
-The alarm edit dialog is preset with the entire email message except
-sender.</para>
+The <link linkend="alarm-edit-dlg">alarm edit dialog</link> is preset
+with the entire email message except sender.</para>
 </listitem>
 
 <listitem>
 <para>Dragging any piece of text onto &kalarm;'s main window or system
-tray icon opens the alarm edit dialog and sets the alarm text.</para>
+tray icon opens the <link linkend="alarm-edit-dlg">alarm edit
+dialog</link> and sets the alarm text.</para>
 </listitem>
 
 <listitem>
 <para>To create a file display alarm, drag a file URL onto &kalarm;'s
-main window or system tray icon. This opens the alarm edit dialog and
-sets the file name.</para>
+main window or system tray icon. This opens the
+<link linkend="alarm-edit-dlg">alarm edit dialog</link> and sets the
+file name.</para>
 </listitem>
 
 <listitem>
@@ -412,7 +451,8 @@ from the context menu.</para>
 </listitem>
 </itemizedlist>
 
-<para>This displays the alarm edit dialog in read-only mode.</para>
+<para>This displays the <link linkend="alarm-edit-dlg">alarm edit
+dialog</link> in read-only mode.</para>
 
 </sect2>
 
@@ -436,9 +476,35 @@ alarm can contain, apart from the start date.</para>
 alarm to remind you about a television program whose time varies
 from week to week. The template would contain all the alarm details
 (message text, whether to play a sound, etc.) except for the time and
-date. Now, to create the alarm, all you need to do is in the alarm
-edit dialog load that template and then enter the time and
+date. Now, to create the alarm, all you need to do is open the alarm
+edit dialog with that template and then enter the time and
 date.</para>
+
+<para>To create an alarm based on a template, open the
+<link linkend="alarm-edit-dlg">alarm edit dialog</link> preset with
+the template details:</para>
+
+<itemizedlist>
+<listitem>
+<para>Select the <menuchoice>
+<guimenu>Actions</guimenu><guimenuitem>New From Template</guimenuitem>
+</menuchoice> menu item, and then select the desired template.</para>
+</listitem>
+
+<listitem>
+<para><mousebutton>Right</mousebutton> click on the system tray icon
+and choose
+<menuchoice><guimenuitem>New Alarm From Template</guimenuitem></menuchoice>
+from the context menu. Then select the desired template.</para>
+</listitem>
+
+<listitem>
+<para>Open the <link linkend="alarm-edit-dlg">alarm edit dialog</link>
+in the usual way, and click the
+<guibutton>Load Template...</guibutton> button to select a template to
+preset the dialog with.</para>
+</listitem>
+</itemizedlist>
 
 <sect3>
 <title>Configuring templates</title>
@@ -523,6 +589,12 @@ be triggered.</para>
 <para><guilabel>Any time</guilabel> to specify that the alarm should
 only have a date, not a time.</para>
 </listitem>
+
+<listitem>
+<para><guilabel>Time from now</guilabel> to enter how long (in hours
+and minutes) after the alarm is created, that it should be
+triggered.</para>
+</listitem>
 </itemizedlist>
 </listitem>
 
@@ -576,6 +648,37 @@ defined in the <guilabel>Alarm Text</guilabel> group box.</para>
 </itemizedlist>
 
 </sect2>
+
+<sect2 id="undo">
+<title>Undo / redo</title>
+
+<para>You can undo and redo the most recent changes which you have
+made during the current session of &kalarm;. Most actions can be
+undone, including creation, edit and deletion of alarms and alarm
+templates, and reactivation of alarms. To prevent excessive resources
+being used by the undo history, the number of changes stored is
+limited to the last 12.</para>
+
+<para>To undo the last change, select <menuchoice>
+<guimenu>Edit</guimenu><guimenuitem>Undo</guimenuitem></menuchoice>.
+To redo the last change which was undone, select <menuchoice>
+<guimenu>Edit</guimenu><guimenuitem>Redo</guimenuitem>
+</menuchoice>.</para>
+
+<para>To undo a change other than the last one, click on the
+<guibutton>Undo</guibutton> button in the toolbar and hold the mouse
+button down. A list of actions will be displayed from which you can
+choose the one to undo. If you don't see the action which you are
+looking for, remember that you may need to undo more recent changes
+first, which the desired change depends on. For example, if you edited
+an alarm and then deleted it, you cannot undo the edit until you have
+first undone the deletion.</para>
+
+<para>Redoing a change other than the last one can be done in a
+similar manner, using the <guibutton>Redo</guibutton> toolbar
+button.</para>
+
+</sect2>
 </sect1>
 
 <sect1 id="alarm-edit-dlg">
@@ -618,16 +721,36 @@ against accidental acknowledgment of alarms.</para>
 
 <listitem>
 <para>Check <guilabel>Sound</guilabel> if you want an audible alarm
-to sound when the alarm message is displayed. By default a beep is
-sounded; use the button on the right to select an audio file to play.
-To revert to a beep, click the button again. To see what your current
-sound selection is, hover the mouse above the button until a tooltip
-appears.</para>
-
-<para>If you have selected an audio file to play, there are further
-options to control the sound:</para>
+to sound when the alarm message is displayed. Choose:</para>
 
 <itemizedlist>
+<listitem>
+<para><guilabel>Beep</guilabel> to sound a beep.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Speak</guilabel> to have the alarm message spoken as
+well as being displayed. This option is only available if you have
+<application>KTTSD</application> (from the kdeaccessibility package)
+installed and configured, together with a compatible speech
+synthesizer, &eg; <application>Festival</application>.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>File</guilabel> to play an audio file. Use the button
+on the right to display the Sound File dialog which lets you select a
+file to play and set volume and repetition options. If you hover the
+mouse over the button, a tooltip will display the audio file currently
+selected.</para>
+
+<para>In the Sound File dialog:</para>
+
+<itemizedlist>
+<listitem>
+<para>Enter the sound file path or URL, or use the button beside the
+edit box to display a file selection dialog.</para>
+</listitem>
+
 <listitem>
 <para>Check <guilabel>Repeat</guilabel> to continually repeat the
 audio file for as long as the alarm is displayed. (The alarm message
@@ -639,17 +762,29 @@ silence but still want to display the alarm.)</para>
 <para>Check <guilabel>Volume</guilabel> and adjust the slider
 control if you want to adjust the volume at which the audio file is
 played.</para>
+</listitem>
 
-<note><para>When possible, &kmix; is used to set the volume. This
+<listitem>
+<para>If you wish, you can fade the volume. Fading means to start
+playing the audio file at one volume and gradually change to the final
+volume, over a specified time interval. The final volume is that
+entered in <guilabel>Volume</guilabel> above. To enable fade, check
+<guilabel>Fade</guilabel>, and then enter the fade period in seconds
+in the <guilabel>Fade time</guilabel> field, and adjust the
+<guilabel>Initial volume</guilabel> slider.</para>
+</listitem>
+</itemizedlist>
+
+<note><para>When possible, &kmix; is used to set volumes. This
 ensures that the volume at which the alarm is played is unaffected by
-any changes in the computer's sound level. If &kmix; is not running
+any changes in the computer's sound level. If &kmix; is not installed
 (or is older than &kde; 3.1), the volume is set relative to the sound
 level current at the time the alarm triggers. So in this case, the
 volume at which the alarm is played will vary depending on any changes
 in the computer's sound level.</para></note>
 
 <tip><para>You can use the <guibutton>Try</guibutton> button to test out
-the selected sound level.</para></tip>
+the selected sound levels.</para></tip>
 </listitem>
 </itemizedlist>
 </listitem>
@@ -722,10 +857,11 @@ log in.</para>
 </listitem>
 
 <listitem>
-<para><guilabel>File</guilabel> to enter the name or &URL; of a text
+<para><guilabel>File</guilabel> to enter the path or &URL; of a text
 or image file whose contents are to be displayed in the alarm message.
 Use the button beside the edit box to display a file selection dialog.
-Set options as for text alarms above.</para>
+Set options as for text alarms above, but note that the
+<guilabel>Speak</guilabel> option is not available.</para>
 </listitem>
 
 <listitem>
@@ -1100,6 +1236,12 @@ prompt for confirmation, if you selected
 </listitem>
 
 <listitem>
+<para>Edit the alarm by clicking the <guibutton>Edit...</guibutton>
+button. This displays the
+<link linkend="alarm-edit-dlg">alarm edit dialog</link>.</para>
+</listitem>
+
+<listitem>
 <para>Display options to defer the alarm until later by clicking the
 <guibutton>Defer...</guibutton> button. Then select
 <guilabel>Defer to date/time</guilabel> to enter the date and time
@@ -1201,10 +1343,17 @@ for details.</para>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>New Alarm...</guimenuitem></menuchoice></term>
-<listitem><para><action>Opens the alarm edit dialog to create a
-new alarm.</action></para>
-<para>See <link linkend="alarm-edit-dlg">The alarm edit dialog</link>
-for details.</para>
+<listitem><para><action>Opens the <link linkend="alarm-edit-dlg">alarm
+ edit dialog</link> to create a new alarm.</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>New Alarm From Template</guimenuitem></menuchoice></term>
+<listitem><para><action>Displays the list of alarm templates in a
+menu. When you select one, the <link linkend="alarm-edit-dlg">alarm
+edit dialog</link> is opened, preset with that template's
+details.</action></para>
 </listitem>
 </varlistentry>
 
@@ -1923,24 +2072,14 @@ expired alarms.</para>
 <para>The <guilabel>Edit</guilabel> section lets you choose
 default values for the options in the
 <link linkend="alarm-edit-dlg">alarm edit dialog</link>:</para>
+
+<para>For display alarms:</para>
+
 <itemizedlist>
-
-<listitem><para>Set the text color used to show expired alarms in the
-alarm list.</para>
-</listitem>
-
 <listitem><para>Set the default states for the <guilabel>Cancel if
 late</guilabel>, <guilabel>Auto-close window after this
-time</guilabel>, <guilabel>Confirm acknowledgment</guilabel> and
-<guilabel>Copy email to self</guilabel> checkboxes.</para>
-</listitem>
-
-<listitem><para>Set the default sound options. Note that a default
-sound file may be specified even if <guilabel>Sound</guilabel> is
-unchecked or <guilabel>Beep</guilabel> is checked.</para>
-</listitem>
-
-<listitem><para>Set the default recurrence type.</para>
+time</guilabel> and <guilabel>Confirm acknowledgment</guilabel>
+checkboxes.</para>
 </listitem>
 
 <listitem><para>Set the default reminder period units.</para>
@@ -1949,6 +2088,35 @@ unchecked or <guilabel>Beep</guilabel> is checked.</para>
 <listitem><para>Set the default special display alarm actions.</para>
 </listitem>
 
+<listitem><para>Set the default sound options. Note that a default
+sound file may be specified even if <guilabel>Sound</guilabel> is
+unchecked, or if <guilabel>Beep</guilabel> or
+<guilabel>Speak</guilabel> is checked.</para>
+</listitem>
+</itemizedlist>
+
+<para>For command alarms:</para>
+
+<itemizedlist>
+<listitem><para>Set the default states for the <guilabel>Enter a
+script</guilabel> and <guilabel>Execute in terminal window</guilabel>
+checkboxes.</para>
+</listitem>
+</itemizedlist>
+
+<para>For email alarms:</para>
+
+<itemizedlist>
+<listitem><para>Set the default state for the <guilabel>Copy email to
+self</guilabel> checkbox.</para>
+</listitem>
+</itemizedlist>
+
+<para>For all alarm types:</para>
+
+<itemizedlist>
+<listitem><para>Set the default recurrence type.</para>
+</listitem>
 </itemizedlist>
 </sect1>
 
@@ -2005,7 +2173,7 @@ time.</para>
 </row>
 <row>
   <entry><option>-A</option>, <option>--attach <replaceable>URL</replaceable></option></entry>
-  <entry>Specify the name or &URL; of a file which is to be attached
+  <entry>Specify the path or &URL; of a file which is to be attached
   to the email. This option may be repeated as necessary.
   <option>--mail</option> must be specified with this option.</entry>
 </row>
@@ -2019,8 +2187,9 @@ time.</para>
 <row>
   <entry><option>-b</option>, <option>--beep</option></entry>
   <entry>Make an audible beep when the message is displayed.
-  <option>--play</option> and <option>--play-repeat</option> cannot
-  be specified with this option.</entry>
+  <option>--speak</option>, <option>--play</option> and
+  <option>--play-repeat</option> cannot be specified with this
+  option.</entry>
 </row>
 <row>
   <entry><option>--bcc</option></entry>
@@ -2057,7 +2226,7 @@ time.</para>
 </row>
 <row>
   <entry><option>-f</option>, <option>--file <replaceable>URL</replaceable></option></entry>
-  <entry>Specify the name or &URL; of a text or image file whose
+  <entry>Specify the path or &URL; of a text or image file whose
   contents are to form the alarm message. <option>--exec</option> and
   <option>--mail</option> cannot be specified, and
   <replaceable>message</replaceable> must not be present with this
@@ -2115,17 +2284,19 @@ time.</para>
 </row>
 <row>
   <entry><option>-p</option>, <option>--play <replaceable>URL</replaceable></option></entry>
-  <entry>Specify the name or &URL; of an audio file to be played once
+  <entry>Specify the path or &URL; of an audio file to be played once
   when the alarm message is displayed. 
-  <option>--play-repeat</option> and <option>--beep</option> cannot be
-  specified with this option.</entry>
+  <option>--play-repeat</option>, <option>--beep</option> and
+  <option>--speak</option> cannot be specified with this
+  option.</entry>
 </row>
 <row>
   <entry><option>-P</option>, <option>--play-repeat <replaceable>URL</replaceable></option></entry>
-  <entry>Specify the name or &URL; of an audio file to be played
+  <entry>Specify the path or &URL; of an audio file to be played
   repeatedly for as long as the alarm message is displayed.
-  <option>--play</option> and <option>--beep</option> cannot be
-  specified with this option.</entry>
+  <option>--play</option>, <option>--beep</option> and
+  <option>--speak</option> cannot be specified with this
+  option.</entry>
 </row>
 <row>
   <entry><option>--recurrence
@@ -2171,6 +2342,15 @@ time.</para>
   displayed before subsequent recurrences (if any). This option cannot
   be specified with <option>--exec</option>, <option>--mail</option>
   or <option>--reminder</option>.</entry>
+</row>
+<row>
+  <entry><option>-s</option>, <option>--speak</option></entry>
+  <entry>Speak the message when it is displayed. This option requires
+  <application>KTTSD</application> to be installed and configured,
+  together with a compatible speech synthesizer.
+  <option>--beep</option>, <option>--play</option> and
+  <option>--play-repeat</option> cannot be specified with this
+  option.</entry>
 </row>
 <row>
   <entry><option>-S</option>, <option>--subject
@@ -2463,8 +2643,8 @@ void cancelEvent(const QString&amp; <replaceable>calendarFile</replaceable>,
 <varlistentry>
 <term><parameter>calendarFile</parameter></term>
 <listitem>
-<para>Specifies the &URL; of the calendar file containing the event to
-be canceled.</para>
+<para>Specifies the &URL; (not path) of the calendar file containing
+the event to be canceled.</para>
 </listitem>
 </varlistentry>
 
@@ -2514,8 +2694,8 @@ void triggerEvent(const QString&amp; <replaceable>calendarFile</replaceable>,
 <varlistentry>
 <term><parameter>calendarFile</parameter></term>
 <listitem>
-<para>Specifies the &URL; of the calendar file containing the event to
-be triggered.</para>
+<para>Specifies the &URL; (not path) of the calendar file containing
+the event to be triggered.</para>
 </listitem>
 </varlistentry>
 
@@ -2572,8 +2752,8 @@ void handleEvent(const QString&amp; <replaceable>calendarFile</replaceable>,
 <varlistentry>
 <term><parameter>calendarFile</parameter></term>
 <listitem>
-<para>Specifies the &URL; of the calendar file containing the event to
-be displayed/executed or canceled.</para>
+<para>Specifies the &URL; (not path) of the calendar file containing
+the event to be displayed/executed or canceled.</para>
 </listitem>
 </varlistentry>
 
@@ -2724,9 +2904,11 @@ applicable to message alarms.</para>
 string may be in the format <quote>#RRGGBB</quote> (as returned by
 <methodname>QColor::name()</methodname>) where RR, GG and BB are
 two-digit hexadecimal values for red, green and blue. Alternatively
-the string may be a name from the X color database, &eg;
-<quote>red</quote> or <quote>steelblue</quote>. Set the string to null
-to specify the current default background color.</para>
+the string may be in any of the other formats accepted by
+<methodname>QColor::setNamedColor()</methodname>, such as a name from
+the X color database (&eg; <quote>red</quote> or
+<quote>steelblue</quote>). Set the string to null to specify the
+current default background color.</para>
 </listitem>
 </varlistentry>
 
@@ -2753,9 +2935,9 @@ time the message is displayed.</para>
 <varlistentry>
 <term><parameter>audioURL</parameter></term>
 <listitem>
-<para>Specifies the name or &URL; of an audio file which is to be
-played when the message is displayed. Set the value to null if no
-audio file is to be played.</para>
+<para>Specifies the audio file which is to be played when the message
+is displayed. Set the value to null if no audio file is to be
+played.</para>
 </listitem>
 </varlistentry>
 
@@ -2915,8 +3097,8 @@ bool scheduleFile(const KURL&amp; <replaceable>URL</replaceable>,
 <varlistentry>
 <term><parameter>URL</parameter></term>
 <listitem>
-<para>Specifies the name or &URL; of a text or image file whose
-contents are to be displayed in the message to be scheduled.</para>
+<para>Specifies the text or image file whose contents are to be
+displayed in the message to be scheduled.</para>
 </listitem>
 </varlistentry>
 
@@ -2964,18 +3146,20 @@ applicable to file alarms.</para>
 string may be in the format <quote>#RRGGBB</quote> (as returned by
 <methodname>QColor::name()</methodname>) where RR, GG and BB are
 two-digit hexadecimal values for red, green and blue. Alternatively
-the string may be a name from the X color database, &eg;
-<quote>red</quote> or <quote>steelblue</quote>. Set the string to null
-to specify the current default background color.</para>
+the string may be in any of the other formats accepted by
+<methodname>QColor::setNamedColor()</methodname>, such as a name from
+the X color database (&eg; <quote>red</quote> or
+<quote>steelblue</quote>). Set the string to null to specify the
+current default background color.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><parameter>audioURL</parameter></term>
 <listitem>
-<para>Specifies the name or &URL; of an audio file which is to be
-played when the file is displayed. Set the value to null if no
-audio file is to be played.</para>
+<para>Specifies the audio file which is to be played when the message
+is displayed. Set the value to null if no audio file is to be
+played.</para>
 </listitem>
 </varlistentry>
 
@@ -3066,7 +3250,7 @@ including the initial occurrence.</para>
 <title>Description</title>
 <para><function>scheduleFile()</function> is a &DCOP; call to schedule
 the specified text or image file for display at the specified date and
-time. Apart from specifying a file name or &URL; and omitting the
+time. Apart from specifying a file path or &URL; and omitting the
 foreground color and font, its usage is identical to
 <link linkend="scheduleMessage-descrip"><function>scheduleMessage</function></link>
 - see the description of that function for further details.</para>
@@ -3118,8 +3302,9 @@ bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>,
 <varlistentry>
 <term><parameter>commandLine</parameter></term>
 <listitem>
-<para>Specifies the shell command line whose execution is to be
-scheduled.</para>
+<para>Specifies the command whose execution is to be scheduled. The
+<parameter>flags</parameter> parameter indicates whether this
+parameter contains a shell command line or a command script.</para>
 </listitem>
 </varlistentry>
 
@@ -3237,10 +3422,10 @@ including the initial occurrence.</para>
 <refsect1>
 <title>Description</title>
 <para><function>scheduleCommand()</function> is a &DCOP; call to
-schedule the specified shell command line for execution at the
-specified date and time. Apart from specifying a command line and
-omitting the message color, font and audio file parameters, its usage
-is identical to
+schedule the specified shell command line, or command script, for
+execution at the specified date and time. Apart from specifying a
+command and omitting the message color, font and audio file
+parameters, its usage is identical to
 <link linkend="scheduleMessage-descrip"><function>scheduleMessage</function></link>
 - see the description of that function for further details.</para>
 </refsect1>
@@ -3333,8 +3518,8 @@ empty, the sender's email address will be that configured in
 <varlistentry>
 <term><parameter>attachments</parameter></term>
 <listitem>
-<para>A comma-separated list of &URL;s of files to send as email
-attachments.</para>
+<para>A comma-separated list of paths or &URL;s of files to send as
+email attachments.</para>
 </listitem>
 </varlistentry>
 
@@ -3576,11 +3761,15 @@ a different calendar file is specified in the preferences file by a
 
 <para>The calendar file which stores your expired alarms is
 <filename>$KDEHOME/share/apps/kalarm/expired.ics</filename>, unless
-a different calendar file is specified in the preferences file.</para>
+a different calendar file is specified in the preferences file by an
+<parameter>ExpiredCalendar</parameter> entry in the
+<parameter>General</parameter> section.</para>
 
 <para>The calendar file which stores your alarm templates is
 <filename>$KDEHOME/share/apps/kalarm/template.ics</filename>, unless
-a different calendar file is specified in the preferences file.</para>
+a different calendar file is specified in the preferences file by a
+<parameter>TemplateCalendar</parameter> entry in the
+<parameter>General</parameter> section.</para>
 
 <para>Details of alarms currently being displayed are stored in the
 calendar file
@@ -3616,6 +3805,7 @@ Alarm component, in conformance with RFC2445:
 <literal>X-KDE-KALARM-TYPE</literal>,
 <literal>X-KDE-KALARM-FONTCOLOR</literal>,
 <literal>X-KDE-KALARM-VOLUME</literal>,
+<literal>X-KDE-KALARM-SPEAK</literal>,
 <literal>X-KDE-KALARM-KMAILID</literal>.</para>
 </answer>
 </qandaentry>
@@ -3644,7 +3834,7 @@ and the <application>alarm daemon</application>'s application name is
 &kalarm;
 </para>
 <para>
-Program copyright 2001, 2002, 2003, 2004 David Jarvie <email>software@astrojar.org.uk</email>
+Program copyright 2001, 2002, 2003, 2004, 2005 David Jarvie <email>software@astrojar.org.uk</email>
 </para>
 <para>
 Alarm daemon authors:
@@ -3659,15 +3849,15 @@ Alarm daemon authors:
 </para>
 
 <para>
-Documentation copyright 2001, 2002, 2003, 2004 David Jarvie <email>software@astrojar.org.uk</email>
+Documentation copyright 2001, 2002, 2003, 2004, 2005 David Jarvie <email>software@astrojar.org.uk</email>
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
-<para>Thanks go to the author of the &kde;1 KAlarm application,
+<para>Thanks go to the author of the &kde; 1 KAlarm application,
 Stefan Nikolaus <email>stefan.nikolaus@stuco.uni-oldenburg.de</email>,
 who kindly agreed to allow the name &kalarm; to be used by this
-&kde;2/&kde;3 application.
+&kde; 2 / &kde; 3 application.
 </para>
 
 &underFDL;               <!-- FDL: do not remove -->
@@ -3684,7 +3874,7 @@ who kindly agreed to allow the name &kalarm; to be used by this
 
 &install.intro.documentation;
 
-<para>&kalarm; is available for &kde;2 and as a standalone package for
+<para>&kalarm; is available for &kde; 2 and as a standalone package for
 &kde;3 from <ulink url="http://www.astrojar.org.uk/linux/kalarm.html">http://www.astrojar.org.uk/linux/kalarm.html</ulink>
 </para>
 
@@ -3699,6 +3889,22 @@ you also need the &Qt; and <filename>kdelibs</filename> development
 packages. The X11 development package, if present, is used to improve
 &kalarm;'s ability to function under &kde; without a system
 tray.</para>
+
+<para>The following optional packages enhance &kalarm; at runtime if
+they are installed:</para>
+
+<itemizedlist>
+<listitem><para>&kmix; (from kdemultimedia package): if installed, it
+allows &kalarm; to set the absolute sound volume when playing audio
+files.</para>
+</listitem>
+
+<listitem><para><application>KTTSD</application> (from
+kdeaccessibility package): if installed and configured, together with
+a compatible speech synthesizer package, it allows &kalarm; to speak
+alarm messages when they are displayed.</para>
+</listitem>
+</itemizedlist>
 
 <para>&kalarm; uses about 12 Mb and the <application>alarm
 daemon</application> uses about 2.5 Mb of memory to run, but this may
@@ -3725,8 +3931,8 @@ change to the folder which has been created.</para>
 &install.compile.documentation;
 
 <note><para>If you have more than one version of &kde; installed
-(e.g. &kde;2 and &kde;3), this may possibly install &kalarm; into the
-wrong &kde; folder. If necessary, you can give the &kde; folder
+(e.g. &kde; 2 and &kde; 3), this may possibly install &kalarm; into
+the wrong &kde; folder. If necessary, you can give the &kde; folder
 as a parameter to
 <userinput><command>./configure</command></userinput> . For example,
 if your &kde; is installed in <filename>/opt/kde2</filename>:</para>
