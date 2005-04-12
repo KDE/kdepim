@@ -343,6 +343,11 @@ void icalrecur_add_bydayrules(struct icalrecur_parser *parser, const char* vals)
 		t = end -2;
 	    }
 	}
+        /* Outlook/Exchange generate "BYDAY=MO, FR" and "BYDAY=2 TH".
+         * Cope with that.
+         */
+        if ( *t == ' ' )
+          t++;
 
 	wd = icalrecur_string_to_weekday(t);
 
