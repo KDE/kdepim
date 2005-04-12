@@ -25,6 +25,7 @@
 #include <davgroupwareglobals.h>
 #include <webdavhandler.h>
 #include <kdebug.h>
+#include <klocale.h>
 #include <kio/davjob.h>
 #include <libkcal/resourcecached.h>
 #include "davcalendaradaptor.h"
@@ -78,6 +79,9 @@ kdDebug()<<"Upload path: "<<url.url()<<endl;
 
 ExchangeCalendarAdaptor::ExchangeCalendarAdaptor() : DavCalendarAdaptor()
 {
+  /* FIXME Set the progress item messages from the concrete job?*/
+  setDownloadProgressMessage( i18n( "Downloading items" ) );
+  setUploadProgressMessage( i18n( "Uploading items" ) );
 }
 
 void ExchangeCalendarAdaptor::customAdaptDownloadUrl( KURL &url )
