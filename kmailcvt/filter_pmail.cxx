@@ -44,7 +44,7 @@ FilterPMail::~FilterPMail()
 void FilterPMail::import(FilterInfo *info)
 {
     inf = info;
-
+    
     // Select directory from where I have to import files
     KFileDialog *kfd;
     kfd = new KFileDialog( QDir::homeDirPath(), "", 0, "kfiledialog", true );
@@ -62,6 +62,7 @@ void FilterPMail::import(FilterInfo *info)
     dir.setPath (chosenDir);
     QStringList files = dir.entryList("*.[cC][nN][mM]; *.[pP][mM][mM]; *.[mM][bB][xX]", QDir::Files, QDir::Name);
     totalFiles = files.count();
+    currentFile = 0;
     kdDebug() << "Count is " << totalFiles << endl;
 
     info->addLog(i18n("Importing new mail files ('.cnm')..."));
@@ -96,8 +97,9 @@ void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc
         // call worker function, increase progressbar
         inf->addLog(i18n("Importing %1").arg(*mailFile));
         (this->*workFunc)(dir.filePath(*mailFile));
-        currentFile++;
-        inf->setOverall( 100 * currentFile / totalFiles );
+        ++currentFile;
+        inf->setOverall( (int) ((float) currentFile / totalFiles * 100));
+        inf->setCurrent( 100 );
         if (inf->shouldTerminate()) return;
     }
 }
@@ -172,11 +174,14 @@ void FilterPMail::importMailFolder(const QString& file)
 
     // State machine to read the data in. The fgetc usage is probably terribly slow ...
     while ((ch = f.getch()) >= 0) {
-         if (inf->shouldTerminate()){
+        if (inf->shouldTerminate()){
             tempfile->close();
             tempfile->unlink();
             return;
         }
+        
+        inf->setCurrent( (int) ( ( (float) f.at() / f.size() ) * 100 ) );
+        
         switch (state) {
 
             // new message state
