@@ -22,31 +22,34 @@
 
 #include "filters.hxx"
 
-class FilterPMail : public Filter {
+class FilterPMail : public Filter
+{
 public:
-	FilterPMail();
-	~FilterPMail();
-	
-  void import(FilterInfo *info);	
+    FilterPMail();
+    ~FilterPMail();
+
+    void import(FilterInfo *info);
 
 protected:
-  /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
-  void processFiles(const QString& mask,  void(FilterPMail::* workFunc)(const QString&) );
-  /** this function imports one *.CNM message */
-  void importNewMessage(const QString& file);
-  /** this function imports one mail folder file (*.PMM) */
-  void importMailFolder(const QString& file);
-  /** imports a 'unix' format mail folder (*.MBX) */
-  void importUnixMailFolder(const QString& file);
+    /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
+    void processFiles(const QString& mask,  void(FilterPMail::* workFunc)(const QString&) );
+    /** this function imports one *.CNM message */
+    void importNewMessage(const QString& file);
+    /** this function imports one mail folder file (*.PMM) */
+    void importMailFolder(const QString& file);
+    /** imports a 'unix' format mail folder (*.MBX) */
+    void importUnixMailFolder(const QString& file);
+
 private:
-  /** the working directory */
-  QDir dir;
-  /**  */
-  FilterInfo * inf;
-  /** which file (of totalFiles) is now in the work? */
-  int currentFile;
-  /** total number of files that get imported */
-  int totalFiles;
+    /** the working directory */
+    QDir dir;
+    /**  pointer to the info */
+    FilterInfo * inf;
+
+    /** which file (of totalFiles) is now in the work? */
+    int currentFile;
+    /** total number of files that get imported */
+    int totalFiles;
 };
 
 #endif
