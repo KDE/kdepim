@@ -105,12 +105,12 @@ public:
 	/** Set the ToDo item's note. */
 	void  setNote(const QString &note);
 
+	/** Returns the label for the category this ToDo item is in. */
 	QString getCategoryLabel() const;
 
 
 	/** If the label already exists, uses the id; if not, adds the label
-	*  to the category list
-	*  @return false if category labels are full
+	*  to the category list. @return false if category labels are full.
 	*/
 	inline bool setCategory(const QString &label) { return setCat(fAppInfo.category,label);  };
 
