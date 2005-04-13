@@ -61,7 +61,7 @@ void FilterOpera::import(FilterInfo *info)
     }
     /**
      * If the user only select homedir no import needed because 
-     * there should be no files and we shurely import wrong files.
+     * there should be no files and we surely import wrong files.
      */
     else if ( operaDir == QDir::homeDirPath() || operaDir == (QDir::homeDirPath() + "/")) {
         info->addLog(i18n("No files found for import."));
@@ -135,23 +135,24 @@ void FilterOpera::import(FilterInfo *info)
                             overall_status = (int)(((currentFile-1)*(100.0/(float)totalFiles))+(currentPercentage*(1.0/(float)totalFiles)));
 
                         info->setOverall( overall_status );
-                        if ( info->shouldTerminate() ) return;
+                        if ( info->shouldTerminate() ) break;
                     }
 
                     info->addLog( i18n("Finished importing emails from %1").arg( *mailFile ));
                     if (count_duplicates > 0) {
                         info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
                     }
-
                     currentFile++;
                     count_duplicates = 0;
                     operaArchiv.close();
                 }
+                if ( info->shouldTerminate() ) break;
             }
         } else {
             info->addLog(i18n("No files found for import."));
         }
     }
+    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
     info->setCurrent(100);
     info->setOverall(100);
 }

@@ -59,7 +59,7 @@ void FilterEvolution::import(FilterInfo *info)
     }
     /**
      * If the user only select homedir no import needed because 
-     * there should be no files and we shurely import wrong files.
+     * there should be no files and we surely import wrong files.
      */
     else if ( mailDir == QDir::homeDirPath() || mailDir == (QDir::homeDirPath() + "/")) {
         info->addLog(i18n("No files found for import."));

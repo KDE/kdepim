@@ -79,6 +79,7 @@ void FilterSylpheed::import( FilterInfo *info )
     if (count_duplicates > 0) {
         info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
     }
+    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
     count_duplicates = 0;
     info->setCurrent(100);
     info->setOverall(100);
@@ -91,7 +92,8 @@ void FilterSylpheed::import( FilterInfo *info )
  */
 void FilterSylpheed::importDirContents( FilterInfo *info, const QString& dirName)
 {
-
+    if(info->shouldTerminate()) return;
+    
     /** Here Import all archives in the current dir */
     importFiles(info, dirName);
 

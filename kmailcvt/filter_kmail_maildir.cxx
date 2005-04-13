@@ -58,7 +58,7 @@ void FilterKMail_maildir::import( FilterInfo *info )
     }
     /**
      * If the user only select homedir no import needed because 
-     * there should be no files and we shurely import wrong files.
+     * there should be no files and we surely import wrong files.
      */
     else if ( mailDir == QDir::homeDirPath() || mailDir == ( QDir::homeDirPath() + "/" ) ) {
         info->addLog( i18n( "No files found for import." ) );
@@ -84,6 +84,7 @@ void FilterKMail_maildir::import( FilterInfo *info )
     if (count_duplicates > 0) {
         info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
     }
+    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
     count_duplicates = 0;
     info->setCurrent(100);
     info->setOverall(100);

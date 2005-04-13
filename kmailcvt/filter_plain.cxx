@@ -75,12 +75,14 @@ void FilterPlain::import(FilterInfo *info)
 
         info->setCurrent(100);
         info->setOverall(100 * ++currentFile/ totalFiles);
-        if ( info->shouldTerminate() ) return;
+        if ( info->shouldTerminate() ) break;
     }
 
     info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
     if (count_duplicates > 0) {
         info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
     }
+    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
+    
     count_duplicates = 0;
 }

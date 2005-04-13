@@ -77,7 +77,7 @@ void FilterTheBat::import( FilterInfo *info )
         for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
             importDirContents(info, dir.filePath(*filename));
             info->setOverall((int) ((float) currentDir / numSubDirs * 100));
-            if(info->shouldTerminate()) return;
+            if(info->shouldTerminate()) break;
         }
     }
 
@@ -85,6 +85,8 @@ void FilterTheBat::import( FilterInfo *info )
     if (count_duplicates > 0) {
         info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
     }
+    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
+    
     count_duplicates = 0;
     info->setCurrent(100);
     info->setOverall(100);
@@ -97,7 +99,8 @@ void FilterTheBat::import( FilterInfo *info )
  */
 void FilterTheBat::importDirContents( FilterInfo *info, const QString& dirName)
 {
-
+    if(info->shouldTerminate()) return;
+    
     /** Here Import all archives in the current dir */
     QDir dir(dirName);
     QDir importDir (dirName);
@@ -157,7 +160,10 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
         //      like a bug in Qt3 maybe fixed in Qt4.
         //
         while((l = tbb.readBlock(input.data(),50)) ) {
-            if(info->shouldTerminate()) return;
+            if(info->shouldTerminate()) {
+                tbb.close();
+                return;
+            }
             QString _tmp = input.data();
             iFound = _tmp.contains(regexp);
             if(!iFound) {
@@ -191,7 +197,10 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
             info->setFrom("../" + _info + "/messages.tbb");
 
             for(QValueList<long>::Iterator it = offsets.begin() ; it != offsets.end() ; ++it) {
-                if(info->shouldTerminate()) return;
+                if(info->shouldTerminate()) {
+                    tbb.close();
+                    return;
+                }
                 endPos = *it;
                 QByteArray input(endPos-lastPos);
                 tbb.readBlock(input.data(), endPos-lastPos);

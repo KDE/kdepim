@@ -78,6 +78,7 @@ void FilterOE::import(FilterInfo *info)
 
     int n=0;
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
+        if ( info->shouldTerminate() ) break;
         importMailBox(info, dir.filePath(*mailFile));
         inf->setOverall(100 * ++n  / files.count());
     }
@@ -85,6 +86,7 @@ void FilterOE::import(FilterInfo *info)
     inf->setOverall(100);
     inf->setCurrent(100);
     inf->addLog(i18n("Finished importing Outlook Express emails"));
+    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
 
     kdDebug() << "\n" << "total emails in current file: " << totalEmails << endl;
     kdDebug() << "0x84 Mails: " << count0x84 << endl;

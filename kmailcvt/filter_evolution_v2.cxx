@@ -67,7 +67,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
     }
     /**
      * If the user only select homedir no import needed because 
-     * there should be no files and we shurely import wrong files.
+     * there should be no files and we surely import wrong files.
      */
     else if ( mailDir == QDir::homeDirPath() || mailDir == (QDir::homeDirPath() + "/")) {
         info->addLog(i18n("No files found for import."));
@@ -79,6 +79,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
         QStringList rootSubDirs = dir.entryList("[^\\.]*", QDir::Dirs, QDir::Name); // Removal of . and ..
         int currentDir = 1, numSubDirs = rootSubDirs.size();
         for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
+            if (info->shouldTerminate()) break;
             importDirContents(info, dir.filePath(*filename), *filename, *filename);
             info->setOverall((int) ((float) currentDir / numSubDirs * 100));
         }
@@ -87,6 +88,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
         QDir importDir (mailDir);
         QStringList files = importDir.entryList("[^\\.]*", QDir::Files, QDir::Name);
         for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
+            if (info->shouldTerminate()) break;
             QString temp_mailfile = *mailFile;
             if (temp_mailfile.endsWith(".cmeta") || temp_mailfile.endsWith(".ev-summary") ||
                 temp_mailfile.endsWith(".ibex.index") || temp_mailfile.endsWith(".ibex.index.data") ) {}
@@ -100,6 +102,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
         if(count_duplicates > 0) {
             info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
         }
+        if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
     }
     info->setCurrent(100);
     info->setOverall(100);
@@ -114,6 +117,8 @@ void FilterEvolution_v2::import(FilterInfo *info)
  */
 void FilterEvolution_v2::importDirContents(FilterInfo *info, const QString& dirName, const QString& KMailRootDir, const QString& KMailSubDir)
 {
+    if (info->shouldTerminate()) return;
+    
     /** Here Import all archives in the current dir */
     QDir dir(dirName);
 
@@ -222,7 +227,7 @@ void FilterEvolution_v2::importMBox(FilterInfo *info, const QString& mboxName, c
             tmp.unlink();
             int currentPercentage = (int) (((float) mbox.at() / filenameInfo.size()) * 100);
             info->setCurrent(currentPercentage);
-            if (info->shouldTerminate()) return;
+            if (info->shouldTerminate()) break;
         }
         mbox.close();
     }

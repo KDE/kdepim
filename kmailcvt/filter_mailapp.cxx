@@ -53,6 +53,7 @@ void FilterMailApp::import(FilterInfo *info)
     traverseDirectory(directory);
 
     for ( QStringList::Iterator filename = mMboxFiles.begin(); filename != mMboxFiles.end(); ++filename, ++currentFile) {
+        if ( info->shouldTerminate() ) break;
         QFile mbox( *filename );
         if (! mbox.open( IO_ReadOnly ) ) {
             info->alert( i18n("Unable to open %1, skipping").arg( *filename ) );
@@ -110,7 +111,7 @@ void FilterMailApp::import(FilterInfo *info)
                 else
                     overall_status = (int)(((currentFile-1)*(100.0/(float)mMboxFiles.count()))+(currentPercentage*(1.0/(float)mMboxFiles.count())));
                 info->setOverall( overall_status );
-                if ( info->shouldTerminate() ) return;
+                if ( info->shouldTerminate() ) break;
             }
 
             info->addLog( i18n("Finished importing emails from %1").arg( *filename ) );
@@ -122,6 +123,7 @@ void FilterMailApp::import(FilterInfo *info)
             mbox.close();
         }
     }
+    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
 }
 
 void FilterMailApp::traverseDirectory(const QString &dirName)

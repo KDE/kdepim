@@ -106,7 +106,7 @@ void FilterMBox::import(FilterInfo *info)
                     overall_status = (int)(((currentFile-1)*(100.0/(float)filenames.count()))+(currentPercentage*(1.0/(float)filenames.count())));
                 info->setOverall( overall_status );
 
-                if ( info->shouldTerminate() ) return;
+                if ( info->shouldTerminate() ) break;
             }
 
             info->addLog( i18n("Finished importing emails from %1").arg( *filename ));
@@ -115,6 +115,7 @@ void FilterMBox::import(FilterInfo *info)
                                    "%n duplicate messages not imported to folder %1 in KMail", 
                                    count_duplicates).arg(folderName));
             }
+            if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
             count_duplicates = 0;
             // don't forget to close the file !!!
             mbox.close();
