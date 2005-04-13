@@ -113,7 +113,6 @@ class CSVImportDialog : public KDialogBase
     int mStartLine;
     QChar mTextQuote;
     QString mDelimiter;
-    QString mData;
     QByteArray mFileArray;
     QMap<QString, uint> mTypeMap;
     KABC::AddressBook *mAddressBook;

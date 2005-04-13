@@ -481,13 +481,14 @@ void CSVImportDialog::fillTable()
   clearTable();
 
   row = column = 1;
-  mData = QString( mFileArray );
 
-  QTextStream inputStream( mData, IO_ReadOnly );
+  QTextStream inputStream( mFileArray, IO_ReadOnly );
 
   // find the current codec
   int code = mCodecCombo->currentItem();
-  if ( code >= Codec )
+  if ( code == Local )
+    inputStream.setEncoding( QTextStream::Locale );
+  else if ( code >= Codec )
     inputStream.setCodec( mCodecs.at( code - Codec ) );
   else if ( code == Uni )
     inputStream.setEncoding( QTextStream::Unicode );
