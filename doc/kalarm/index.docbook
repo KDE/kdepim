@@ -1343,17 +1343,22 @@ for details.</para>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>New Alarm...</guimenuitem></menuchoice></term>
-<listitem><para><action>Opens the <link linkend="alarm-edit-dlg">alarm
- edit dialog</link> to create a new alarm.</action></para>
+<listitem><para><action>Opens the alarm edit dialog 
+to create a new alarm.</action></para>
+<para>
+See  <link linkend="alarm-edit-dlg">alarm edit dialog</link>
+</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>New Alarm From Template</guimenuitem></menuchoice></term>
 <listitem><para><action>Displays the list of alarm templates in a
-menu. When you select one, the <link linkend="alarm-edit-dlg">alarm
-edit dialog</link> is opened, preset with that template's
-details.</action></para>
+menu. When you select one, the alarm edit dialog is opened,
+preset with that template's details.</action></para>
+<para>
+See <link linkend="alarm-edit-dlg">Alarm Edit dialog</link>
+</para>
 </listitem>
 </varlistentry>
 
