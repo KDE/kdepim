@@ -35,118 +35,13 @@
 #include <string.h> /* for icalmemory_strdup */
 #include <assert.h>
 
+#ifdef WIN32
+#define snprintf      _snprintf
+#define strcasecmp    stricmp
+#endif
+
 #define TEMP_MAX 1024
 
-void*
-icalattachtype_get_data (struct icalattachtype* type);
-
-struct icalattachtype*
-icalattachtype_new()
-{
-    struct icalattachtype* v;
-
-    if ( ( v = (struct icalattachtype*)
-	   malloc(sizeof(struct icalattachtype))) == 0) {
-	errno = ENOMEM;
-	return 0;
-    }
-
-    v->refcount = 1;
-
-    v->binary = 0;
-    v->owns_binary = 0;
-
-    v->base64 = 0;
-    v->owns_base64 = 0;
-
-    v->url = 0; 
-
-    return v;
-}
-
-
-void
-icalattachtype_free(struct icalattachtype* v)
-{
-    icalerror_check_arg( (v!=0),"v");
-    
-    v->refcount--;
-
-    if (v->refcount <= 0){
-	
-	if (v->base64 != 0 && v->owns_base64 != 0){
-	    free(v->base64);
-	}
-
-	if (v->binary != 0 && v->owns_binary != 0){
-	    free(v->binary);
-	}
-	
-	if (v->url != 0){
-	    free(v->url);
-	}
-
-	free(v);
-    }
-}
-
-void  icalattachtype_add_reference(struct icalattachtype* v)
-{
-    icalerror_check_arg( (v!=0),"v");
-    v->refcount++;
-}
-
-void icalattachtype_set_url(struct icalattachtype* v, char* url)
-{
-    icalerror_check_arg( (v!=0),"v");
-
-    if (v->url != 0){
-	free (v->url);
-    }
-
-    v->url = icalmemory_strdup(url);
-
-    /* HACK This routine should do something if icalmemory_strdup returns NULL */
-
-}
-
-char* icalattachtype_get_url(struct icalattachtype* v)
-{
-    icalerror_check_arg( (v!=0),"v");
-    return v->url;
-}
-
-void icalattachtype_set_base64(struct icalattachtype* v, char* base64,
-				int owns)
-{
-    icalerror_check_arg( (v!=0),"v");
-
-    v->base64 = base64;
-    v->owns_base64 = !(owns != 0 );
-    
-}
-
-char* icalattachtype_get_base64(struct icalattachtype* v)
-{
-    icalerror_check_arg( (v!=0),"v");
-    return v->base64;
-}
-
-void icalattachtype_set_binary(struct icalattachtype* v, char* binary,
-				int owns)
-{
-    icalerror_check_arg( (v!=0),"v");
-
-    v->binary = binary;
-    v->owns_binary = !(owns != 0 );
-
-}
-
-void* icalattachtype_get_binary(struct icalattachtype* v)
-{
-    icalerror_check_arg( (v!=0),"v");
-    return v->binary;
-}
 
 int icaltriggertype_is_null_trigger(struct icaltriggertype tr)
 {
@@ -158,6 +53,25 @@ int icaltriggertype_is_null_trigger(struct icaltriggertype tr)
     return 0;
 }
     
+int icaltriggertype_is_bad_trigger(struct icaltriggertype tr)
+{
+    if(icaldurationtype_is_bad_duration(tr.duration)){
+        return 1;
+    }
+
+    return 0;
+}
+
+struct icaltriggertype icaltriggertype_from_int(const int reltime)
+{
+    struct icaltriggertype tr;
+
+    tr.time	= icaltime_null_time();
+    tr.duration = icaldurationtype_from_int(reltime);
+
+    return tr;
+}
+
 struct icaltriggertype icaltriggertype_from_string(const char* str)
 {
 
@@ -173,7 +87,7 @@ struct icaltriggertype icaltriggertype_from_string(const char* str)
 
     if(str == 0) goto error;
 
-    /* Surpress errors so a failure in icaltime_from_string() does not cause an abort */
+    /* Suppress errors so a failure in icaltime_from_string() does not cause an abort */
     es = icalerror_get_error_state(ICAL_MALFORMEDDATA_ERROR);
     icalerror_set_error_state(ICAL_MALFORMEDDATA_ERROR,ICAL_ERROR_NONFATAL);
     e = icalerrno;
@@ -185,7 +99,7 @@ struct icaltriggertype icaltriggertype_from_string(const char* str)
 
 	tr.duration = icaldurationtype_from_string(str);
 
-	if(icaldurationtype_as_int(tr.duration) == 0) goto error;
+        if (icaldurationtype_is_bad_duration(tr.duration)) goto error;
     } 
 
     icalerror_set_error_state(ICAL_MALFORMEDDATA_ERROR,es);
@@ -195,7 +109,7 @@ struct icaltriggertype icaltriggertype_from_string(const char* str)
  error:
     icalerror_set_error_state(ICAL_MALFORMEDDATA_ERROR,es);
     icalerror_set_errno(ICAL_MALFORMEDDATA_ERROR);
-    return null_tr;
+    return tr;
 
 }
 
@@ -204,7 +118,7 @@ struct icalreqstattype icalreqstattype_from_string(const char* str)
 {
   const char *p1,*p2;
   struct icalreqstattype stat;
-  int major, minor;
+  short major=0, minor=0;
 
   icalerror_check_arg((str != 0),"str");
 
@@ -214,7 +128,7 @@ struct icalreqstattype icalreqstattype_from_string(const char* str)
 
   /* Get the status numbers */
 
-  sscanf(str, "%d.%d",&major, &minor);
+  sscanf(str, "%hd.%hd",&major, &minor);
 
   if (major <= 0 || minor < 0){
     icalerror_set_errno(ICAL_MALFORMEDDATA_ERROR);

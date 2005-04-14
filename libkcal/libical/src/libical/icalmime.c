@@ -38,6 +38,10 @@
 #include "dmalloc.h"
 #endif
 
+#ifdef WIN32
+#define snprintf      _snprintf
+#define strcasecmp    stricmp
+#endif
 
 /* These *_part routines are called by the MIME parser via the
    local_action_map */
@@ -227,7 +231,7 @@ line between the header and the previous boundary\?";
 	    }
 
 	    if(parts[i].header.error_text != 0){
-		snprintf(temp,sizeof(temp),
+		snprintf(temp,256,
 			 "%s: %s",str,parts[i].header.error_text);
 	    } else {
 		strcpy(temp,str);

@@ -14,14 +14,15 @@
 "UTC-OFFSET","(a)int","integer","unitary",
 "QUERY","(a)const char*","string","unitary",
 "#Non-standard multi-valued types",,,,
-"ATTACH","(m)struct icalattachtype*","none","URI;BINARY",
+"ATTACH","(m)icalattach *","none","URI;BINARY",
 "DATE-TIME-PERIOD","(m)struct icaldatetimeperiodtype","none","DATE-TIME;PERIOD",
 "TRIGGER","(m)struct icaltriggertype","string","DURATION;DATE-TIME",
 "#Non-standard property enumeration types",,,,
 "METHOD","(a)enum icalproperty_method","string","unitary","PUBLISH;REQUEST;REPLY;ADD;CANCEL;REFRESH;COUNTER;DECLINECOUNTER;CREATE;READ;RESPONSE;MOVE;MODIFY;GENERATEUID;DELETE"
+"X-LIC-CLASS","(a)enum icalproperty_xlicclass","string","unitary","PUBLISH-NEW;PUBLISH-UPDATE;PUBLISH-FREEBUSY;REQUEST-NEW;REQUEST-UPDATE;REQUEST-RESCHEDULE;REQUEST-DELEGATE;REQUEST-NEW-ORGANIZER;REQUEST-FORWARD;REQUEST-STATUS;REQUEST-FREEBUSY;REPLY-ACCEPT;REPLY-DECLINE;REPLY-DELEGATE;REPLY-CRASHER-ACCEPT;REPLY-CRASHER-DECLINE;ADD-INSTANCE;CANCEL-EVENT;CANCEL-INSTANCE;CANCEL-ALL;REFRESH;COUNTER;DECLINECOUNTER;MALFORMED;OBSOLETE;MISSEQUENCED;UNKNOWN"
 "ACTION","(a)enum icalproperty_action","string","unitary","AUDIO;DISPLAY;EMAIL;PROCEDURE"
 "STATUS","(a)enum icalproperty_status","string","unitary","TENTATIVE;CONFIRMED;COMPLETED;NEEDS-ACTION;CANCELLED;IN-PROCESS;DRAFT;FINAL"
-"TRANSP","(a)enum icalproperty_transp","string","unitary","OPAQUE;TRANSPARENT"
+"TRANSP","(a)enum icalproperty_transp","string","unitary","OPAQUE;OPAQUE-NOCONFLICT;TRANSPARENT;TRANSPARENT-NOCONFLICT"
 "CLASS","(a)enum icalproperty_class","string","unitary","PUBLIC;PRIVATE;CONFIDENTIAL"
 "#Other non-standard",,,,
 "REQUEST-STATUS","(a)struct icalreqstattype","string","unitary"

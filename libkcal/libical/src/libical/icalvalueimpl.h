@@ -35,6 +35,8 @@
 #define ICALVALUEIMPL_H
 
 #include "icalenums.h"
+#include "icalproperty.h"
+#include "icalderivedvalue.h"
 
 
 struct icalvalue_impl {
@@ -43,10 +45,10 @@ struct icalvalue_impl {
     char id[5];
     int size;
     icalproperty* parent;
-    const char* x_value;
+    char* x_value;
 
     union data {
-	struct icalattachtype *v_attach;		
+	icalattach *v_attach;		
 	/* void *v_binary; */ /* use v_attach */
 	const char *v_string;
 	/*char *v_text;*/

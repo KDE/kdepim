@@ -1,3 +1,322 @@
+2002-07-09  Andrea Campi  <a.campi@inet.it>
+
+	* src/libical/icalcomponent.c
+	* src/libical/icalcomponent.h: Added a check for valid component kind
+	before instancing a new one.
+
+2002-07-08  Andrea Campi  <a.campi@inet.it>
+
+	* src/python/Gauge.py
+	* src/python/LibicalWrap.i
+	* src/python/Property.py
+	* src/python/Store.py
+	* src/python/Time.py
+	* src/python/python-binding.txt
+	* src/python/test.py: Updated the python bindings to match the C API
+	changes.
+	Obtained from: Mark Tearle
+
+2002-07-04  Andrea Campi  <a.campi@inet.it>
+
+	* src/libical/icalderivedproperty.c.in
+	* src/libical/icalproperty.c
+	* src/libical/icalproperty.h: Added a check for valid property kind
+	before instancing a new one.
+
+	* src/libical/icalvalue.c: Fixed icalvalue_new_clone to properly clone
+	X- properties.
+
+2002-06-28  Andrea Campi  <a.campi@inet.it>
+
+	* design-data/parameters.csv
+	* src/libicalss/icalgauge.c
+	* src/libicalss/icalgaugeimpl.h
+	* src/libicalss/icalsslexer.c
+	* src/libicalss/icalsslexer.l
+	* src/libicalss/icalssyacc.c
+	* src/libicalss/icalssyacc.h
+	* src/libicalss/icalssyacc.y: Added IS NULL to icalgauge
+	syntax.
+	Obtained from: Paul Lindner
+
+	* src/libical/icallexer.c
+	* src/libical/icallexer.l
+	* src/libical/icalyacc.c
+	* src/libical/icalyacc.h
+	* src/libical/icalyacc.y: Sent lex/yacc code to Attic.
+
+	* src/libical/icalparameter.c: Changed icalparameter_as_ical_string
+	to also quote the param value if it contains a , (comma), as per RFC2445.
+
+	* src/libicalss/icalset.c
+	* src/libicalss/icalset.h: Added experimental code to support
+	dynamic loading of icalset derived classes.
+
+	* src/libicalss/Makefile.am
+	* src/libicalss/icalspanlist_cxx.cpp
+	* src/libicalss/icalspanlist_cxx.h: Added C++ binding for libicalss.
+	Obtained from: Paul Lindner
+
+2002-06-28  Eric Busboom  <eric@softwarestudio.org>
+
+	* src/libical/Makefile.am
+	* src/libical/icalduration.c
+	* src/libical/icalparser.c
+	* src/libical/icalvalue.c
+	* src/libical/icalyacc.c
+	* src/libical/icalyacc.h: removed lex and yacc by writing
+	code to parse UTC-OFFSET
+
+2002-06-27  Andrea Campi  <a.campi@inet.it>
+
+	* src/libical/icalcomponent.c
+	* src/libical/icalcomponent.h: Added icalcomponent_foreach_recurrence
+	as a better way of handling recurrences; deprecated
+	icalcomponent_get_span
+	Obtained from: Paul Lindner
+
+	* src/libical/icalderivedvalue.c.in
+	* src/libical/icalvalue.c
+	* src/libical/icalvalue.h: Added a check for valid value kind before
+	instancing a new one.
+	Obtained from: Paul Lindner
+
+	* src/libical/icalproperty.c
+	* src/libical/icalproperty.h: Deprecated icalproperty_remove_parameter,
+	added 3 new functions to do the same in a safer way (wrt X- params).
+	Obtained from: Paul Lindner
+
+	* src/libical/icaltime.c
+	* src/libical/icaltime.h: Added functions to work with time spans.
+	Obtained from: Paul Lindner
+
+2002-06-26  Andrea Campi  <a.campi@inet.it>
+
+	* src/libical/icalduration.c: Fixed icaldurationtype_from_int to
+	generate valid RFC2445 durations (it used to mix weeks and other
+	time units).
+
+2002-06-13  Andrea Campi  <a.campi@inet.it>
+
+	* src/libical/icalvalue.c: Fixed escaping of TEXT values and
+	formatting of UTCOFFSET values to more closely match RFC2445.
+
+	* configure.in
+	* src/libical/Makefile.am
+	* src/libical/icalparameter_cxx.cpp
+	* src/libical/icalparameter_cxx.h
+	* src/libical/icalproperty_cxx.cpp
+	* src/libical/icalproperty_cxx.h
+	* src/libical/icalvalue_cxx.cpp
+	* src/libical/icalvalue_cxx.h
+	* src/libical/vcomponent.cpp
+	* src/libical/vcomponent.h
+	* src/libicalss/icalbdbset_cxx.h: Added C++ binding.
+	Obtained from: Paul Lindner
+
+	* configure.in
+	* src/libicalss/Makefile.am
+	* src/libicalss/icalbdbset.c
+	* src/libicalss/icalbdbset.h
+	* src/libicalss/icalbdbset.h
+	* src/libicalss/icalbdbsetimpl.h
+	* src/test/Makefile.am
+	* src/test/storage.c: Added BerkeleyDB 4.0 icalset implementation.
+	Obtained from: Paul Lindner
+
+2002-06-11  Andrea Campi  <a.campi@inet.it>
+
+	* src/test/Makefile.am
+	* src/test/regression-classify.c
+	* src/test/regression-component.c
+	* src/test/regression-recur.c
+	* src/test/regression-utils.c
+	* src/test/regression.c
+	* src/test/regression.h
+	* src/test/test_fileset.ics: New regression test suite
+	Obtained from: Paul Lindner
+
+	* src/libical/icalcomponent.c
+	* src/libical/icalproperty.c
+	* src/libical/icalproperty.h
+	* src/python/test.py
+	* src/test/regression.c: Improved X- parameter handling.
+	Obtained from: Mark Tearle
+
+2002-06-07  Andrea Campi  <a.campi@inet.it>
+
+	* configure.in
+	* src/libical/Makefile.am
+	* src/libical/icallexer.l
+	* src/libical/icalparser.c
+	* src/libical/icalparser.h
+	* src/libical/icalyacc.y
+	* src/libicalss/Makefile.am
+	* src/libicalss/icalgauge.c
+	* src/libicalss/icalsslexer.c
+	* src/libicalss/icalsslexer.l
+	* src/libicalss/icalssyacc.c
+	* src/libicalss/icalssyacc.h
+	* src/libicalss/icalssyacc.y: Made parser fully reentrant using
+	recent versions of flex/bison. Also committed the generated files
+	so that the library can be compiled even without those tools.
+	Obtained from: Paul Lindner
+
+	* src/python/LibicalWrap.i
+	* src/python/Property.py
+	* src/python/test.py: Support X- properties in the Python wrapper.
+	Obtained from: Mark Tearle
+
+2002-06-04  Andrea Campi  <a.campi@inet.it>
+
+	* *: Constifed a lot of functions, also made a few of them static
+	Obtained from: Paul Lindner <lindner@inuus.com>
+
+2002-06-03  Andrea Campi  <a.campi@inet.it>
+	* src/libical/icallangbind.c
+	* src/python/Component.py
+	* src/python/Gauge.py
+	* src/python/Libical.py
+	* src/python/LibicalWrap.i
+	* src/python/Store.py
+	* src/python/test.py: Fully implemented FileStore and Gauge
+	in the python bindings.
+	Obtained from: Mark Tearle <mtearle@tearle.com>
+
+2002-05-28  Andrea Campi  <a.campi@inet.it>
+
+	* src/libical/icalattach.c
+	* src/libical/icalattach.h
+	* src/libical/icalattachimpl.h
+	* src/libical/icalderivedproperty.c.in
+	* src/libical/icalderivedvalue.c.in
+	* src/libical/icalderivedvalue.h.in
+	* src/libical/icaltypes.c
+	* src/libical/icaltypes.h
+	* src/libical/icalvalue.c
+	* src/libical/icalvalueimpl.h: Changed ATTACH to be an opaque type
+
+2002-05-27  Eric Busboom  <eric@softwarestudio.org>
+
+	* scripts/mkderivedparameters.pl
+	* scripts/mkderivedproperties.pl
+	* scripts/mkderivedvalues.pl
+	* src/libical/icalderivedparameter.c.in
+	* src/libical/icalderivedparameter.h.in
+	* src/libical/icalderivedproperty.c.in
+	* src/libical/icalderivedproperty.h.in
+	* src/libical/icalderivedvalue.c.in
+	* src/libical/icalderivedvalue.h.in: changed the auto generated
+	files and scripts so that the generated code is inserted into the
+	middle of the template (.in) file, instead of the end. This means
+	we could get rid of the declaration for the maps.
+
+2002-05-27  Andrea Campi  <a.campi@inet.it>
+
+	* src/libical/icaltimezone.c: Worked around Outlook/Exchange brokenness.
+	Obtained from: evolution CVS repository
+
+2002-05-24  Andrea Campi  <a.campi@inet.it>
+
+	* src/libical/icalproperty.c: Implemented proper RFC2445 folding.
+	Obtained from: evolution CVS repository
+
+	* src/libical/icalrecur.c: Worked around Outlook/Exchange brokenness.
+	Obtained from: evolution CVS repository
+
+
+2002-05-21  Andrea Campi  <a.campi@inet.it>
+
+	* src/libical/*: Removed void * in favor of opaque typedef types.
+	This helped uncover a few bugs and made debugging easier.
+	Obtained from: Paul Lindner
+
+2002-05-10  Andrea Campi  <a.campi@inet.it>
+
+	* src/libical/icalmemory.c: Made the memory allocator threadsafe.
+	This code is currently conditional on USE_THREAD, but it might
+	become the default in the future.
+	Obtained from: Paul Lindner
+
+	* src/libical/icaltime.c: Implemented icaltime_is_date(), with the
+	intent of removing all direct accesses to is_date.
+
+2002-05-09  Andrea Campi  <a.campi@inet.it>
+
+	* icaltime.c Rewrote and documented icaltime API, with the goal of
+	keeping it stable until release 1.0. Some functions and internal
+	implementation details are now declared obsolete and removed from
+	the documentation; they will be removed at a later time.
+
+2001-12-12  Eric Busboom  <eric@softwarestudio.org>
+
+	* icalrecur.c implemented recurrence rule for "FREQ=YEARLY",
+	with no BY rules.
+
+2001-12-11  Eric Busboom  <eric@softwarestudio.org>
+
+	* icalrecur.c Fixed bug in next_month for MONTHLY rules that have
+	only BYDAY rules. The code would miss valid dates that fell on the
+	first of the month. created new routine is_day_in_byday()
+
+	* icaltime.c Fixed icaltime_from_day_of_year to correctly handle 
+	negative and over-range day-of-years
+
+	* icaltime.c collected all instances of leap year code into
+	icaltime_is_leap_year
+
+	* icaltime.c icaltime_day_of_year. Changed an assert into code
+	that advances the year when the day of year is lager than the
+	number of days in the given year
+
+	* icalerrno.c,h Added the function version
+	icalerror_set_errno. Only the define verson existed.
+
+	* icaltime.c Moved all of the getenv/putenv operations into icaltimegm()
+	
+2001-06-29  Eric Busboom  <eric@softwarestudio.org>
+
+	* icalderivedproperties.h,c Changed the signature if the CLASS
+	property from TEXT to CLASS. ( enum icalproperty_class) 
+
+2001-06-22  Eric Busboom  <eric@softwarestudio.org>
+
+	* icaltypes.c Fixed bug in icaltriggertype_new_from_string htat
+	caused it to fail.
+
+2001-04-12  Eric Busboom  <eric@softwarestudio.org>
+
+	* icalvalue.c Added quoting to apostrophies ("'") in text
+ 	values. This is not required by the spec, but it is necessary in
+ 	icallangbind_property_eval_string, since ' is special in both perl
+ 	and python.
+
+2001-04-10  Eric Busboom  <eric@softwarestudio.org>
+
+	* icalvalue.c Added routine icalvalue_reset_kind. This routine is
+ 	now called by all autogenerated icalvalue_set_*
+ 	routines. icalvalue_reset_kind() will change the kind of the value
+ 	based on the data in the value. Currently, it will set a value to
+ 	either DATETIME or DATE based on the is_date flag of icaltimetype.
+
+2001-04-09  Eric Busboom  <eric@softwarestudio.org>
+
+	* icalproperty.h Converted REQUEST-STATUS to use the struct
+ 	icalreqstat structure instead of a string
+
+2001-04-01  Eric Busboom  <eric@softwarestudio.org>
+
+	* icalcomponent.h Changed meaning of
+ 	icalcomponent_new_from_string. It used to create a new component
+ 	given the text name of the component type to create. Now it calls
+ 	icalparser_parse_string to create a new component from the
+ 	complete iCalendar text representation of the component.
+
+2001-03-31  Eric Busboom  <eric@softwarestudio.org>
+
+	* icalvalue Changed ACTION properties to take an ACTION value
+ 	instead of TEXT. The ACTION value is enumerated.
+
 2001-03-26  Eric Busboom  <eric@softwarestudio.org>
 
 	* icalparameter.h icalparameter_rsvp_* routines now take, return
@@ -324,7 +643,7 @@
 	* icalspanlist.c Added new class, icalspanlist, that generates a
  	list of alternating busy and free times from an icalset. The class
  	includes routines to gnerate rfc2445 busy and free lists, and to
- 	get the next available busy or free time after a given time.
+ 	get the next avaliable busy or free time after a given time.
 
 2000-11-06  Federico Mena Quintero  <federico@helixcode.com>
  

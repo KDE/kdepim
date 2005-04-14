@@ -38,7 +38,7 @@
 #define ICAL_SETERROR_ISFUNC
 
 
-/* This routine is called before any error is triggered. It is called
+/** This routine is called before any error is triggered. It is called
    by icalerror_set_errno, so it does not appear in all of the macros
    below */
 void icalerror_stop_here(void);
@@ -46,7 +46,7 @@ void icalerror_stop_here(void);
 void icalerror_crash_here(void);
 
 typedef enum icalerrorenum {
-    
+    ICAL_NO_ERROR,     /* icalerrno may not be initialized - put it first so and pray that the compiler initialize things to zero */    
     ICAL_BADARG_ERROR,
     ICAL_NEWFAILED_ERROR,
     ICAL_ALLOCATION_ERROR,
@@ -56,15 +56,18 @@ typedef enum icalerrorenum {
     ICAL_FILE_ERROR,
     ICAL_USAGE_ERROR,
     ICAL_UNIMPLEMENTED_ERROR,
-    ICAL_UNKNOWN_ERROR, /* Used for problems in input to icalerror_strerror()*/
-    ICAL_NO_ERROR
+    ICAL_UNKNOWN_ERROR  /* Used for problems in input to icalerror_strerror()*/
 
 } icalerrorenum;
 
-/* The libical error enumeration, like errno*/
-extern icalerrorenum icalerrno;
+icalerrorenum * icalerrno_return(void);
+#define icalerrno (*(icalerrno_return()))
 
-/* If true, libicl aborts after a call to icalerror_set_error*/
+/** If true, libicl aborts after a call to icalerror_set_error
+ *
+ *  @warning NOT THREAD SAFE -- recommended that you do not change
+ *           this in a multithreaded program.
+ */
 extern int icalerror_errors_are_fatal;
 
 /* Warning messages */
@@ -101,6 +104,8 @@ if(icalerror_get_error_state(x)==ICAL_ERROR_FATAL || \
    icalerror_warn(icalerror_strerror(x)); \
    assert(0); \
 } 
+#else
+void icalerror_set_errno(icalerrorenum x); 
 #endif
 
 #ifdef ICAL_ERRORS_ARE_FATAL

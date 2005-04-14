@@ -7,5 +7,5 @@ EXTRA_DIST = \
 	TEST \
 	TODO
 
-SUBDIRS = doc scripts src 
+SUBDIRS = doc scripts src zoneinfo
 

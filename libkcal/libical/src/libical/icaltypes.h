@@ -31,39 +31,6 @@
 #include "icalperiod.h"
 
 
-/* This type type should probably be an opaque type... */
-struct icalattachtype
-{
-	void* binary;
-	int owns_binary; 
-
-	char* base64;
-	int owns_base64;
-
-	char* url;
-
-	int refcount; 
-
-};
-
-/* converts base64 to binary, fetches url and stores as binary, or
-   just returns data */
-
-struct icalattachtype* icalattachtype_new(void);
-void  icalattachtype_add_reference(struct icalattachtype* v);
-void icalattachtype_free(struct icalattachtype* v);
-
-void icalattachtype_set_url(struct icalattachtype* v, char* url);
-char* icalattachtype_get_url(struct icalattachtype* v);
-
-void icalattachtype_set_base64(struct icalattachtype* v, char* base64,
-				int owns);
-char* icalattachtype_get_base64(struct icalattachtype* v);
-
-void icalattachtype_set_binary(struct icalattachtype* v, char* binary,
-				int owns);
-void* icalattachtype_get_binary(struct icalattachtype* v);
-
 struct icalgeotype 
 {
 	float lat;
@@ -84,9 +51,11 @@ struct icaltriggertype
 	struct icaldurationtype duration;
 };
 
+struct icaltriggertype icaltriggertype_from_int(const int reltime);
 struct icaltriggertype icaltriggertype_from_string(const char* str);
 
 int icaltriggertype_is_null_trigger(struct icaltriggertype tr);
+int icaltriggertype_is_bad_trigger(struct icaltriggertype tr);
 
 /* struct icalreqstattype. This struct contains two string pointers,
 but don't try to free either of them. The "desc" string is a pointer

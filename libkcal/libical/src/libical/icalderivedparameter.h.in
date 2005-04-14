@@ -30,8 +30,9 @@
 #define ICALDERIVEDPARAMETER_H
 
 
-typedef void icalparameter;
+typedef struct icalparameter_impl icalparameter;
 
 const char* icalparameter_enum_to_string(int e);
 int icalparameter_string_to_enum(const char* str); 
 
+<insert_code_here>

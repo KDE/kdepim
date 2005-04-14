@@ -24,11 +24,18 @@ if ($opt_i) {
   open(IN,$opt_i) || die "Can't open input file $opt_i";
   
   while(<IN>){
-    print;
-  }    
+    if (/<insert_code_here>/){
+      insert_code();
+    } else {
+      print;
+   }
+
+
+  }
 }
 
-
+sub insert_code
+{
  # Map type names to the value in the icalvalue_impl data union */
 
 %union_map = (
@@ -122,7 +129,8 @@ if($opt_c){
 
   # print out the value to string map
 
-  print "struct icalvalue_kind_map value_map[]={\n"; 
+  my $count = scalar(keys %h) + 1;
+  print "struct icalvalue_kind_map value_map[$count]={\n"; 
 
   foreach $value  (keys %h) {
 
@@ -198,7 +206,7 @@ void icalvalue_set_${lc}(icalvalue* value, $type v) {\
     impl->data.v_$union_data = $assign \n\
     icalvalue_reset_kind(impl);\n}\n";
 
-    print "$type\ icalvalue_get_${lc}(icalvalue* value)\ {\n";
+    print "$type\ icalvalue_get_${lc}(const icalvalue* value)\ {\n";
     if ($type =~ m/(\*|int|float)$/) {
       print "    icalerror_check_arg_rz( (value!=0),\"value\");\n";
     } else {
@@ -212,7 +220,7 @@ void icalvalue_set_${lc}(icalvalue* value, $type v) {\
     
     print "\n /* $value */ \
 icalvalue* icalvalue_new_${lc}($type v); \
-$type icalvalue_get_${lc}(icalvalue* value); \
+$type icalvalue_get_${lc}(const icalvalue* value); \
 void icalvalue_set_${lc}(icalvalue* value, ${type} v);\n\n";
 
   } 
@@ -224,6 +232,5 @@ if ($opt_h){
     print "#endif /*ICALVALUE_H*/\n";
   }
   
-  
-  __END__
-  
+
+}

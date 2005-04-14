@@ -23,7 +23,6 @@
   The original code is icalproperty.c
 
 ======================================================================*/
-/*#line 27 "icalproperty.c.in"*/
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -45,7 +44,10 @@
 #include <stdio.h> /* for printf */
 #include <stdarg.h> /* for va_list, va_start, etc. */
                                                
-#define TMP_BUF_SIZE 1024
+#ifdef WIN32
+#define snprintf      _snprintf
+#define strcasecmp    stricmp
+#endif
 
 /* Private routines for icalproperty */
 void icalvalue_set_parent(icalvalue* value,
@@ -70,37 +72,34 @@ struct icalproperty_impl
 	icalcomponent *parent;
 };
 
-void icalproperty_add_parameters(struct icalproperty_impl *prop,va_list args)
+void icalproperty_add_parameters(icalproperty* prop, va_list args)
 {
-
     void* vp;
 
-    struct icalproperty_impl *impl = (struct icalproperty_impl*)prop;
-  
     while((vp = va_arg(args, void*)) != 0) {
 
 	if (icalvalue_isa_value(vp) != 0 ){
 	} else if (icalparameter_isa_parameter(vp) != 0 ){
 
-	    icalproperty_add_parameter((icalproperty*)impl,
+	    icalproperty_add_parameter((icalproperty*)prop,
 				       (icalparameter*)vp);
 	} else {
-	    assert(0);
+	    icalerror_set_errno(ICAL_BADARG_ERROR);
 	}
 
     }
-    
-    
 }
 
 
-struct icalproperty_impl*
-icalproperty_new_impl (icalproperty_kind kind)
+icalproperty*
+icalproperty_new_impl(icalproperty_kind kind)
 {
-    struct icalproperty_impl* prop;
+    icalproperty* prop;
 
-    if ( ( prop = (struct icalproperty_impl*)
-	   malloc(sizeof(struct icalproperty_impl))) == 0) {
+    if (!icalproperty_kind_is_valid(kind))
+      return NULL;
+
+    if ( ( prop = (icalproperty*) malloc(sizeof(icalproperty))) == 0) {
 	icalerror_set_errno(ICAL_NEWFAILED_ERROR);
 	return 0;
     }
@@ -121,7 +120,7 @@ icalproperty_new_impl (icalproperty_kind kind)
 icalproperty*
 icalproperty_new (icalproperty_kind kind)
 {
-    if(kind == ICAL_NO_PROPERTY){
+    if (kind == ICAL_NO_PROPERTY){
         return 0;
     }
 
@@ -130,13 +129,11 @@ icalproperty_new (icalproperty_kind kind)
 
 
 icalproperty*
-icalproperty_new_clone(icalproperty* prop)
+icalproperty_new_clone(icalproperty* old)
 {
-    struct icalproperty_impl *old = (struct icalproperty_impl*)prop;
-    struct icalproperty_impl *new = icalproperty_new_impl(old->kind);
+    icalproperty *new = icalproperty_new_impl(old->kind);
     pvl_elem p;
 
-    icalerror_check_arg_rz((prop!=0),"Prop");
     icalerror_check_arg_rz((old!=0),"old");
     icalerror_check_arg_rz((new!=0),"new");
 
@@ -217,15 +214,11 @@ icalproperty* icalproperty_new_from_string(const char* str)
 }
 
 void
-icalproperty_free (icalproperty* prop)
+icalproperty_free (icalproperty* p)
 {
-    struct icalproperty_impl *p;
-
     icalparameter* param;
     
-    icalerror_check_arg_rv((prop!=0),"prop");
-
-    p = (struct icalproperty_impl*)prop;
+    icalerror_check_arg_rv((p!=0),"prop");
 
 #ifdef ICAL_FREE_ON_LIST_IS_ERROR
     icalerror_assert( (p->parent ==0),"Tried to free a property that is still attached to a component. ");
@@ -263,70 +256,135 @@ icalproperty_free (icalproperty* prop)
 }
 
 
-const char*
-icalproperty_as_ical_string (icalproperty* prop)
-{   
-    icalparameter *param;
+/* This returns where the start of the next line should be. chars_left does
+   not include the trailing '\0'. */
+#define MAX_LINE_LEN 75
+/*#define MAX_LINE_LEN 120*/
 
-    /* Create new buffer that we can append names, parameters and a
-       value to, and reallocate as needed. Later, this buffer will be
-       copied to a icalmemory_tmp_buffer, which is managed internally
-       by libical, so it can be given to the caller without fear of
-       the caller forgetting to free it */
+static char*
+get_next_line_start (char *line_start, int chars_left)
+{
+    char *pos;
 
-    const char* property_name = 0; 
-    size_t buf_size = 1024;
-    char* buf = icalmemory_new_buffer(buf_size);
-    char* buf_ptr = buf;
-    icalvalue* value;
-    char *out_buf;
+    /* If we have 74 chars or less left, we can output all of them. 
+       we return a pointer to the '\0' at the end of the string. */
+    if (chars_left < MAX_LINE_LEN) {
+        return line_start + chars_left;
+    } 
 
-    char newline[] = "\n";
+    /* Now we jump to the last possible character of the line, and step back
+       trying to find a ';' ':' or ' '. If we find one, we return the character
+       after it. */
+    pos = line_start + MAX_LINE_LEN - 2;
+    while (pos > line_start) {
+        if (*pos == ';' || *pos == ':' || *pos == ' ') {
+	    return pos + 1;
+	}
+	pos--;
+    }
+    /* Now try to split on a UTF-8 boundary defined as a 7-bit
+       value or as a byte with the two high-most bits set:
+       11xxxxxx.  See http://czyborra.com/utf/ */
 
-    struct icalproperty_impl *impl = (struct icalproperty_impl*)prop;
-    
-    icalerror_check_arg_rz( (prop!=0),"prop");
+    pos = line_start + MAX_LINE_LEN - 1;
+    while (pos > line_start) {
+        /* plain ascii */
+        if ((*pos & 128) == 0)
+            return pos;
 
+        /* utf8 escape byte */
+        if ((*pos & 192) == 192)
+            return pos;
 
-    /* Append property name */
-
-    if (impl->kind == ICAL_X_PROPERTY && impl->x_name != 0){
-	property_name = impl->x_name;
-    } else {
-	property_name = icalproperty_kind_to_string(impl->kind);
+        pos--;
     }
 
-    if (property_name == 0 ) {
-	icalerror_warn("Got a property of an unknown kind.");
-	icalmemory_free_buffer(buf);
-	return 0;
-	
+    /* Give up, just break at 74 chars (the 75th char is the space at
+       the start of the line).  */
+
+    return line_start + MAX_LINE_LEN - 1;
+}
+
+
+/** This splits the property into lines less than 75 octects long (as
+ *  specified in RFC2445). It tries to split after a ';' if it can.
+ *  It returns a tmp buffer.  NOTE: I'm not sure if it matters if we
+ *  split a line in the middle of a UTF-8 character. It probably won't
+ *  look nice in a text editor. 
+ */
+static char*
+fold_property_line (char *text)
+{
+    size_t buf_size;
+    char *buf, *buf_ptr, *line_start, *next_line_start, *out_buf;
+    int len, chars_left, first_line;
+    char ch;
+
+    /* Start with a buffer twice the size of our property line, so we almost
+       certainly won't overflow it. */
+    len = strlen (text);
+    buf_size = len * 2;
+    buf = icalmemory_new_buffer (buf_size);
+    buf_ptr = buf;
+
+    /* Step through the text, finding each line to add to the output. */
+    line_start = text;
+    chars_left = len;
+    first_line = 1;
+    for (;;) {
+        if (chars_left <= 0)
+	    break;
+
+        /* This returns the first character for the next line. */
+        next_line_start = get_next_line_start (line_start, chars_left);
+
+	/* If this isn't the first line, we need to output a newline and space
+	   first. */
+	if (!first_line) {
+	    icalmemory_append_string (&buf, &buf_ptr, &buf_size, "\n ");
+	}
+	first_line = 0;
+
+	/* This adds the line to our tmp buffer. We temporarily place a '\0'
+	   in text, so we can copy the line in one go. */
+	ch = *next_line_start;
+	*next_line_start = '\0';
+	icalmemory_append_string (&buf, &buf_ptr, &buf_size, line_start);
+	*next_line_start = ch;
+
+	/* Now we move on to the next line. */
+	chars_left -= (next_line_start - line_start);
+	line_start = next_line_start;
     }
 
+    /* Copy it to a temporary buffer, and then free it. */
+    out_buf = icalmemory_tmp_buffer (strlen (buf) + 1);
+    strcpy (out_buf, buf);
+    icalmemory_free_buffer (buf);
 
-    icalmemory_append_string(&buf, &buf_ptr, &buf_size, property_name);
-#ifdef KCAL_ADDLINEBREAKS
-    icalmemory_append_string(&buf, &buf_ptr, &buf_size, newline);
-#endif
+    return out_buf;
+}
 
 
-    /* Determine what VALUE parameter to include. The VALUE parameters
-       are ignored in the normal parameter printing ( the block after
-       this one, so we need to do it here */
-    {
+/* Determine what VALUE parameter to include. The VALUE parameters
+   are ignored in the normal parameter printing ( the block after
+   this one, so we need to do it here */
+static const char *
+icalproperty_get_value_kind(icalproperty *prop)
+{
 	const char* kind_string = 0;
 
 	icalparameter *orig_val_param
 	    = icalproperty_get_first_parameter(prop,ICAL_VALUE_PARAMETER);
 
-	icalvalue *value = icalproperty_get_value(impl);
+	icalvalue *value = icalproperty_get_value(prop);
 
 	icalvalue_kind orig_kind = ICAL_NO_VALUE;
 
 	icalvalue_kind this_kind = ICAL_NO_VALUE;
 
 	icalvalue_kind default_kind 
-	    =  icalproperty_kind_to_value_kind(impl->kind);
+	    =  icalproperty_kind_to_value_kind(prop->kind);
 
 	if(orig_val_param){
 	    orig_kind = (icalvalue_kind)icalparameter_get_value(orig_val_param);
@@ -353,20 +411,55 @@ icalproperty_as_ical_string (icalproperty* prop)
 	    /* Don'tinclude the VALUE parameter at all */
 	}
 
-	if(kind_string!=0){
-#ifdef KCAL_ADDLINEBREAKS
-	    icalmemory_append_string(&buf, &buf_ptr, &buf_size, " ;");
-#else
-	    icalmemory_append_string(&buf, &buf_ptr, &buf_size, ";");
-#endif
-	    icalmemory_append_string(&buf, &buf_ptr, &buf_size, "VALUE=");
-	    icalmemory_append_string(&buf, &buf_ptr, &buf_size, kind_string);
-#ifdef KCAL_ADDLINEBREAKS
-	    icalmemory_append_string(&buf, &buf_ptr, &buf_size, newline);
-#endif
-	}
-	
+	return kind_string;
+}
 
+const char*
+icalproperty_as_ical_string (icalproperty* prop)
+{   
+    icalparameter *param;
+
+    /* Create new buffer that we can append names, parameters and a
+       value to, and reallocate as needed. Later, this buffer will be
+       copied to a icalmemory_tmp_buffer, which is managed internally
+       by libical, so it can be given to the caller without fear of
+       the caller forgetting to free it */
+
+    const char* property_name = 0; 
+    size_t buf_size = 1024;
+    char* buf = icalmemory_new_buffer(buf_size);
+    char* buf_ptr = buf;
+    icalvalue* value;
+    char *out_buf;
+    const char* kind_string = 0;
+
+    char newline[] = "\n";
+
+    
+    icalerror_check_arg_rz( (prop!=0),"prop");
+
+
+    /* Append property name */
+
+    if (prop->kind == ICAL_X_PROPERTY && prop->x_name != 0){
+	property_name = prop->x_name;
+    } else {
+	property_name = icalproperty_kind_to_string(prop->kind);
+    }
+
+    if (property_name == 0 ) {
+	icalerror_warn("Got a property of an unknown kind.");
+	icalmemory_free_buffer(buf);
+	return 0;
+	
+    }
+
+    icalmemory_append_string(&buf, &buf_ptr, &buf_size, property_name);
+
+    kind_string = icalproperty_get_value_kind(prop);
+    if(kind_string!=0){
+	icalmemory_append_string(&buf, &buf_ptr, &buf_size, ";VALUE=");
+	icalmemory_append_string(&buf, &buf_ptr, &buf_size, kind_string);
     }
 
     /* Append parameters */
@@ -374,39 +467,27 @@ icalproperty_as_ical_string (icalproperty* prop)
 	param != 0; 
 	param = icalproperty_get_next_parameter(prop,ICAL_ANY_PARAMETER)) {
 
-	char* kind_string = icalparameter_as_ical_string(param); 
 	icalparameter_kind kind = icalparameter_isa(param);
+	kind_string = icalparameter_as_ical_string(param); 
 
 	if(kind==ICAL_VALUE_PARAMETER){
 	    continue;
 	}
 
 	if (kind_string == 0 ) {
-	    char temp[TMP_BUF_SIZE];
-	    snprintf(temp, TMP_BUF_SIZE,"Got a parameter of unknown kind in %s property",property_name);
-	    icalerror_warn(temp);
+	  icalerror_warn("Got a parameter of unknown kind for the following property");
+
+	  icalerror_warn((property_name) ? property_name : "(NULL)");
 	    continue;
 	}
 
-#ifdef KCAL_ADDLINEBREAKS
-	icalmemory_append_string(&buf, &buf_ptr, &buf_size, " ;");
-#else
 	icalmemory_append_string(&buf, &buf_ptr, &buf_size, ";");
-#endif
     	icalmemory_append_string(&buf, &buf_ptr, &buf_size, kind_string);
-#ifdef KCAL_ADDLINEBREAKS
- 	icalmemory_append_string(&buf, &buf_ptr, &buf_size, newline);
-#endif
-
     }    
 
     /* Append value */
 
-#ifdef KCAL_ADDLINEBREAKS
-    icalmemory_append_string(&buf, &buf_ptr, &buf_size, " :");
-#else
     icalmemory_append_string(&buf, &buf_ptr, &buf_size, ":");
-#endif
 
     value = icalproperty_get_value(prop);
 
@@ -424,9 +505,8 @@ icalproperty_as_ical_string (icalproperty* prop)
     /* Now, copy the buffer to a tmp_buffer, which is safe to give to
        the caller without worring about de-allocating it. */
 
-    
-    out_buf = icalmemory_tmp_buffer(strlen(buf)+1);
-    strcpy(out_buf, buf);
+    /* We now use a function to fold the line properly every 75 characters. */
+    out_buf = fold_property_line (buf);
 
     icalmemory_free_buffer(buf);
 
@@ -436,11 +516,9 @@ icalproperty_as_ical_string (icalproperty* prop)
 
 
 icalproperty_kind
-icalproperty_isa (icalproperty* property)
+icalproperty_isa (icalproperty* p)
 {
-    struct icalproperty_impl *p = (struct icalproperty_impl*)property;
-
-   if(property != 0){
+   if(p != 0){
        return p->kind;
    }
 
@@ -450,10 +528,9 @@ icalproperty_isa (icalproperty* property)
 int
 icalproperty_isa_property (void* property)
 {
-    struct icalproperty_impl *impl = (struct icalproperty_impl*)property;
+    icalproperty *impl = (icalproperty *) property;
 
     icalerror_check_arg_rz( (property!=0), "property");
-
     if (strcmp(impl->id,"prop") == 0) {
 	return 1;
     } else {
@@ -463,11 +540,9 @@ icalproperty_isa_property (void* property)
 
 
 void
-icalproperty_add_parameter (icalproperty* prop,icalparameter* parameter)
+icalproperty_add_parameter (icalproperty* p,icalparameter* parameter)
 {
-    struct icalproperty_impl *p = (struct icalproperty_impl*)prop;
-    
-   icalerror_check_arg_rv( (prop!=0),"prop");
+   icalerror_check_arg_rv( (p!=0),"prop");
    icalerror_check_arg_rv( (parameter!=0),"parameter");
     
    pvl_push(p->parameters, parameter);
@@ -483,8 +558,11 @@ icalproperty_set_parameter (icalproperty* prop,icalparameter* parameter)
     icalerror_check_arg_rv( (parameter!=0),"parameter");
 
     kind = icalparameter_isa(parameter);
-
-    icalproperty_remove_parameter(prop,kind);
+    if (kind != ICAL_X_PARAMETER)
+      icalproperty_remove_parameter_by_kind(prop,kind);
+    else
+      icalproperty_remove_parameter_by_name(prop, 
+					    icalparameter_get_xname(parameter));
 
     icalproperty_add_parameter(prop,parameter);
 }
@@ -506,12 +584,16 @@ void icalproperty_set_parameter_from_string(icalproperty* prop,
         icalerror_set_errno(ICAL_BADARG_ERROR);
         return;
     }
-
+    
     param  = icalparameter_new_from_value_string(kind,value);
 
     if (param == 0){
         icalerror_set_errno(ICAL_BADARG_ERROR);
         return;
+    }
+
+    if(kind == ICAL_X_PARAMETER){
+	icalparameter_set_xname(param, name);
     }
 
     icalproperty_set_parameter(prop,param);
@@ -531,16 +613,27 @@ const char* icalproperty_get_parameter_as_string(icalproperty* prop,
     
     kind = icalparameter_string_to_kind(name);
 
-    if(kind == ICAL_NO_PROPERTY){
+    if(kind == ICAL_NO_PARAMETER){
         /* icalenum_string_to_parameter_kind will set icalerrno */
         return 0;
     }
+    
+    for(param = icalproperty_get_first_parameter(prop,kind); 
+	    param != 0; 
+	    param = icalproperty_get_next_parameter(prop,kind)) {
+	    if (kind != ICAL_X_PARAMETER) {
+		    break;
+	    }
 
-    param = icalproperty_get_first_parameter(prop,kind);
+	    if (strcmp(icalparameter_get_xname(param),name)==0) {
+		    break;
+	    }		
+    }
 
     if (param == 0){
         return 0;
     }
+
 
     str = icalparameter_as_ical_string(param);
 
@@ -555,32 +648,133 @@ const char* icalproperty_get_parameter_as_string(icalproperty* prop,
 
 }
 
+/** @see icalproperty_remove_parameter_by_kind() 
+ *
+ *  @deprecated Please use icalproperty_remove_parameter_by_kind()
+ *              instead.
+ */
+
 void
-icalproperty_remove_parameter (icalproperty* prop, icalparameter_kind kind)
+icalproperty_remove_parameter(icalproperty* prop, icalparameter_kind kind)
+{
+  icalproperty_remove_parameter_by_kind(prop, kind);
+}
+
+
+/** @brief Remove all parameters with the specified kind.
+ *
+ *  @param prop   A valid icalproperty.
+ *  @param kind   The kind to remove (ex. ICAL_TZID_PARAMETER)
+ *
+ *  See icalproperty_remove_parameter_by_name() and
+ *  icalproperty_remove_parameter_by_ref() for alternate ways of
+ *  removing parameters
+ */
+
+void
+icalproperty_remove_parameter_by_kind(icalproperty* prop, icalparameter_kind kind)
 {
     pvl_elem p;     
-    struct icalproperty_impl *impl = (struct icalproperty_impl*)prop;
 
     icalerror_check_arg_rv((prop!=0),"prop");
     
-    for(p=pvl_head(impl->parameters);p != 0; p = pvl_next(p)){
+    for(p=pvl_head(prop->parameters);p != 0; p = pvl_next(p)){
 	icalparameter* param = (icalparameter *)pvl_data (p);
         if (icalparameter_isa(param) == kind) {
-            pvl_remove (impl->parameters, p);
-            icalparameter_free (param);
+            pvl_remove (prop->parameters, p);
+	    icalparameter_free(param);
             break;
         }
     }                       
 }
 
 
-int
-icalproperty_count_parameters (icalproperty* prop)
-{
-    struct icalproperty_impl *p = (struct icalproperty_impl*)prop;
+/** @brief Remove all parameters with the specified name.
+ *
+ *  @param prop   A valid icalproperty.
+ *  @param name   The name of the parameter to remove
+ *
+ *  This function removes paramters with the given name.  The name
+ *  corresponds to either a built-in name (TZID, etc.) or the name of
+ *  an extended parameter (X-FOO)
+ *
+ *  See icalproperty_remove_parameter_by_kind() and
+ *  icalproperty_remove_parameter_by_ref() for alternate ways of removing
+ *  parameters
+ */
 
+
+void
+icalproperty_remove_parameter_by_name(icalproperty* prop, const char *name)
+{
+    pvl_elem p;     
+
+    icalerror_check_arg_rv((prop!=0),"prop");
+    
+    for(p=pvl_head(prop->parameters);p != 0; p = pvl_next(p)){
+	icalparameter* param = (icalparameter *)pvl_data (p);
+	const char * kind_string;
+
+	if (icalparameter_isa(param) == ICAL_X_PARAMETER)
+	  kind_string = icalparameter_get_xname(param);
+	else
+	  kind_string = icalparameter_kind_to_string(icalparameter_isa(param));
+
+	if (!kind_string)
+	  continue;
+
+        if (0 == strcmp(kind_string, name)) {
+            pvl_remove (prop->parameters, p);
+            break;
+        }
+    }                       
+}
+
+
+/** @brief Remove the specified parameter reference from the property.
+ *
+ *  @param prop   A valid icalproperty.
+ *  @param parameter   A reference to a specific icalparameter.
+ *
+ *  This function removes the specified parameter reference from the
+ *  property.
+ */
+
+void
+icalproperty_remove_parameter_by_ref(icalproperty* prop, icalparameter* parameter)
+{
+    pvl_elem p;
+    icalparameter_kind kind;
+    const char *name;
+
+    icalerror_check_arg_rv((prop!=0),"prop");
+    icalerror_check_arg_rv((parameter!=0),"parameter");
+
+    kind = icalparameter_isa(parameter);
+    name = icalparameter_get_xname(parameter);
+
+    /*
+     * FIXME If it's an X- parameter, also compare the names. It would be nice
+     * to have a better abstraction like icalparameter_equals()
+     */
+    for(p=pvl_head(prop->parameters);p != 0; p = pvl_next(p)){
+	icalparameter* p_param = (icalparameter *)pvl_data (p);
+	if (icalparameter_isa(p_param) == kind &&
+	    (kind != ICAL_X_PARAMETER ||
+	    !strcmp(icalparameter_get_xname(p_param), name))) {
+            pvl_remove (prop->parameters, p);
+            icalparameter_free(p_param);
+            break;
+	} 
+    }   
+}
+
+
+int
+icalproperty_count_parameters (const icalproperty* prop)
+{
     if(prop != 0){
-	return pvl_count(p->parameters);
+	return pvl_count(prop->parameters);
     }
 
     icalerror_set_errno(ICAL_USAGE_ERROR);
@@ -589,11 +783,9 @@ icalproperty_count_parameters (icalproperty* prop)
 
 
 icalparameter*
-icalproperty_get_first_parameter (icalproperty* prop, icalparameter_kind kind)
+icalproperty_get_first_parameter(icalproperty* p, icalparameter_kind kind)
 {
-   struct icalproperty_impl *p = (struct icalproperty_impl*)prop;
-
-   icalerror_check_arg_rz( (prop!=0),"prop");
+   icalerror_check_arg_rz( (p!=0),"prop");
    
    p->parameter_iterator = pvl_head(p->parameters);
 
@@ -617,11 +809,9 @@ icalproperty_get_first_parameter (icalproperty* prop, icalparameter_kind kind)
 
 
 icalparameter*
-icalproperty_get_next_parameter (icalproperty* prop, icalparameter_kind kind)
+icalproperty_get_next_parameter (icalproperty* p, icalparameter_kind kind)
 {
-    struct icalproperty_impl *p = (struct icalproperty_impl*)prop;
-    
-    icalerror_check_arg_rz( (prop!=0),"prop");
+    icalerror_check_arg_rz( (p!=0),"prop");
     
     if (p->parameter_iterator == 0) {
 	return 0;
@@ -643,11 +833,9 @@ icalproperty_get_next_parameter (icalproperty* prop, icalparameter_kind kind)
 }
 
 void
-icalproperty_set_value (icalproperty* prop, icalvalue* value)
+icalproperty_set_value (icalproperty* p, icalvalue* value)
 {
-    struct icalproperty_impl *p = (struct icalproperty_impl*)prop;
-
-    icalerror_check_arg_rv((prop !=0),"prop");
+    icalerror_check_arg_rv((p !=0),"prop");
     icalerror_check_arg_rv((value !=0),"value");
     
     if (p->value != 0){
@@ -658,7 +846,7 @@ icalproperty_set_value (icalproperty* prop, icalvalue* value)
 
     p->value = value;
     
-    icalvalue_set_parent(value,prop);
+    icalvalue_set_parent(value,p);
 }
 
 
@@ -706,24 +894,20 @@ void icalproperty_set_value_from_string(icalproperty* prop,const char* str,
 }
 
 icalvalue*
-icalproperty_get_value (icalproperty* prop)
+icalproperty_get_value(const icalproperty* prop)
 {
-    struct icalproperty_impl *p = (struct icalproperty_impl*)prop;
-    
     icalerror_check_arg_rz( (prop!=0),"prop");
     
-    return p->value;
+    return prop->value;
 }
 
-const char* icalproperty_get_value_as_string(icalproperty* prop)
+const char* icalproperty_get_value_as_string(const icalproperty* prop)
 {
     icalvalue *value;
     
-    struct icalproperty_impl *impl = (struct icalproperty_impl*)prop;
-    
     icalerror_check_arg_rz( (prop!=0),"prop");
 
-    value = impl->value; 
+    value = prop->value; 
 
     return icalvalue_as_ical_string(value);
 }
@@ -731,35 +915,37 @@ const char* icalproperty_get_value_as_string(icalproperty* prop)
 
 void icalproperty_set_x_name(icalproperty* prop, const char* name)
 {
-    struct icalproperty_impl *impl = (struct icalproperty_impl*)prop;
-
     icalerror_check_arg_rv( (name!=0),"name");
     icalerror_check_arg_rv( (prop!=0),"prop");
 
-    if (impl->x_name != 0) {
-        free(impl->x_name);
+    if (prop->x_name != 0) {
+        free(prop->x_name);
     }
 
-    impl->x_name = icalmemory_strdup(name);
+    prop->x_name = icalmemory_strdup(name);
 
-    if(impl->x_name == 0){
+    if(prop->x_name == 0){
 	icalerror_set_errno(ICAL_NEWFAILED_ERROR);
     }
 
 }
                               
 const char* icalproperty_get_x_name(icalproperty* prop){
-
-    struct icalproperty_impl *impl = (struct icalproperty_impl*)prop;
-
     icalerror_check_arg_rz( (prop!=0),"prop");
 
-    return impl->x_name;
+    return prop->x_name;
 }
 
 
-/* From Jonathan Yue <jonathan.yue@cp.net>    */
-const char* icalproperty_get_name (icalproperty* prop)
+const char* icalproperty_get_name(const icalproperty* prop)
+{
+#ifndef NO_WARN_DEPRECATED
+	icalerror_warn("icalproperty_get_name() is DEPRECATED, please use icalproperty_get_property_name() instead.");
+#endif
+	return icalproperty_get_property_name(prop);
+}
+
+const char* icalproperty_get_property_name(const icalproperty* prop)
 {
 
     const char* property_name = 0;
@@ -767,14 +953,12 @@ const char* icalproperty_get_name (icalproperty* prop)
     char* buf = icalmemory_new_buffer(buf_size);
     char* buf_ptr = buf;  
 
-    struct icalproperty_impl *impl = (struct icalproperty_impl*)prop;
-
     icalerror_check_arg_rz( (prop!=0),"prop");
  
-    if (impl->kind == ICAL_X_PROPERTY && impl->x_name != 0){
-        property_name = impl->x_name;
+    if (prop->kind == ICAL_X_PROPERTY && prop->x_name != 0){
+        property_name = prop->x_name;
     } else {
-        property_name = icalproperty_kind_to_string(impl->kind);
+        property_name = icalproperty_kind_to_string(prop->kind);
     }
  
     if (property_name == 0 ) {
@@ -800,26 +984,14 @@ const char* icalproperty_get_name (icalproperty* prop)
 void icalproperty_set_parent(icalproperty* property,
 			     icalcomponent* component)
 {
-    struct icalproperty_impl *impl = (struct icalproperty_impl*)property;
-
     icalerror_check_arg_rv( (property!=0),"property");
     
-    impl->parent = component;
+    property->parent = component;
 }
 
-icalcomponent* icalproperty_get_parent(icalproperty* property)
+icalcomponent* icalproperty_get_parent(const icalproperty* property)
 {
-    struct icalproperty_impl *impl = (struct icalproperty_impl*)property;
- 
     icalerror_check_arg_rz( (property!=0),"property");
 
-    return impl->parent;
+    return property->parent;
 }
-
-
-
-
-
-
-
-/* Everything below this line is machine generated. Do not edit. */
