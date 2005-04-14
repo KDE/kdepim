@@ -84,7 +84,7 @@ bool WebdavHandler::extractBool( const QDomElement &node, const QString &entry, 
   if ( !element.isNull() ) {
     value = (element.text() != "0");
     return true;
-  } 
+  }
   return false;
 }
 
@@ -94,7 +94,7 @@ bool WebdavHandler::extractLong( const QDomElement &node, const QString &entry, 
   if ( !element.isNull() ) {
     value = element.text().toLong();
     return true;
-  } 
+  }
   return false;
 }
 
@@ -104,7 +104,7 @@ bool WebdavHandler::extractFloat( const QDomElement &node, const QString &entry,
   if ( !element.isNull() ) {
     value = element.text().toFloat();
     return true;
-  } 
+  }
   return false;
 }
 
@@ -114,7 +114,7 @@ bool WebdavHandler::extractDateTime( const QDomElement &node, const QString &ent
   if ( !element.isNull() && !element.text().isEmpty() ) {
     value = QDateTime::fromString( element.text(), Qt::ISODate  );
     return true;
-  } 
+  }
   return false;
 }
 
@@ -124,7 +124,7 @@ bool WebdavHandler::extractString( const QDomElement &node, const QString &entry
   if ( !element.isNull() ) {
     value = element.text();
     return true;
-  } 
+  }
   return false;
 }
 
@@ -139,7 +139,7 @@ bool WebdavHandler::extractStringList( const QDomElement &node, const QString &e
       value.append( item.text() );
     }
     return true;
-  } 
+  }
   return false;
 }
 
@@ -151,22 +151,32 @@ const QString WebdavHandler::getEtagFromHeaders( const QString& headers )
   return headers.mid( start, headers.find( "\n", start ) - start );
 }
 
+//TODO: should not call libical functions directly -- better to make
+//      a new libkcal abstraction method.
 QDateTime WebdavHandler::utcAsZone( const QDateTime& utc, const QString& timeZoneId )
 {
+  int daylight;
   QDateTime epoch;
   epoch.setTime_t( 0 );
   time_t v = epoch.secsTo( utc );
   struct icaltimetype tt = icaltime_from_timet( v, 0 ); // 0: is_date=false
-  int offset = icaltime_utc_offset( tt, timeZoneId.local8Bit() );
+  int offset = icaltimezone_get_utc_offset(
+    icaltimezone_get_builtin_timezone_from_tzid( timeZoneId.latin1() ),
+    &tt, &daylight );
   return utc.addSecs( offset );
 }
 
+//TODO: should not call libical functions directly -- better to make
+//      a new libkcal abstraction method.
 QDateTime WebdavHandler::zoneAsUtc( const QDateTime& zone, const QString& timeZoneId )
 {
+  int daylight;
   QDateTime epoch;
   epoch.setTime_t( 0 );
   time_t v = epoch.secsTo( zone );
   struct icaltimetype tt = icaltime_from_timet( v, 0 ); // 0: is_date=false
-  int offset = icaltime_utc_offset( tt, timeZoneId.local8Bit() );
+  int offset = icaltimezone_get_utc_offset(
+    icaltimezone_get_builtin_timezone_from_tzid( timeZoneId.latin1() ),
+    &tt, &daylight );
   return zone.addSecs( - offset );
 }

@@ -63,7 +63,7 @@ class ICalFormatImpl
     icalproperty *writeOrganizer( const Person &organizer );
     icalproperty *writeAttachment(Attachment *attach);
     icalproperty *writeRecurrenceRule(Recurrence *);
-    icalproperty *writeAlarm(Alarm *alarm);
+    icalcomponent *writeAlarm(Alarm *alarm);
 
     QString extractErrorProperty(icalcomponent *);
     Todo *readTodo(icalcomponent *vtodo);
@@ -96,11 +96,9 @@ class ICalFormatImpl
     void readCustomProperties(icalcomponent *parent,CustomProperties *);
     void dumpIcalRecurrence(icalrecurrencetype);
     void readTimezone(icalcomponent *vtimezone);
-    void readTzidParameter( icalcomponent *parent, icaltimetype &t );
 
     ICalFormat *mParent;
     Calendar *mCalendar;
-    QDict<class Timezone> mTimezones;
 
     QString mLoadedProductId;         // PRODID string loaded from calendar file
     int mCalendarVersion;             // determines backward compatibility mode on read

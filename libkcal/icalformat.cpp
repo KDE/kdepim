@@ -497,7 +497,8 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   kdDebug(5800) << "ICalFormat::parseScheduleMessage() classify..." << endl;
 
-  icalclass result = icalclassify(message,calendarComponent,(char *)"");
+  icalproperty_xlicclass result = icalclassify( message, calendarComponent,
+                                                (char *)"" );
 
   kdDebug(5800) << "ICalFormat::parseScheduleMessage() returning..." << endl;
   kdDebug(5800) << "ICalFormat::parseScheduleMessage(), result = " << result << endl;
@@ -505,22 +506,22 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   ScheduleMessage::Status status;
 
   switch (result) {
-    case ICAL_PUBLISH_NEW_CLASS:
+    case ICAL_XLICCLASS_PUBLISHNEW:
       status = ScheduleMessage::PublishNew;
       break;
-    case ICAL_PUBLISH_UPDATE_CLASS:
+    case ICAL_XLICCLASS_PUBLISHUPDATE:
       status = ScheduleMessage::PublishUpdate;
       break;
-    case ICAL_OBSOLETE_CLASS:
+    case ICAL_XLICCLASS_OBSOLETE:
       status = ScheduleMessage::Obsolete;
       break;
-    case ICAL_REQUEST_NEW_CLASS:
+    case ICAL_XLICCLASS_REQUESTNEW:
       status = ScheduleMessage::RequestNew;
       break;
-    case ICAL_REQUEST_UPDATE_CLASS:
+    case ICAL_XLICCLASS_REQUESTUPDATE:
       status = ScheduleMessage::RequestUpdate;
       break;
-    case ICAL_UNKNOWN_CLASS:
+    case ICAL_XLICCLASS_UNKNOWN:
     default:
       status = ScheduleMessage::Unknown;
       break;
