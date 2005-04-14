@@ -48,23 +48,35 @@ QDomElement addElement( QDomDocument& doc, QDomNode& node, const QString& ns, co
   return el;
 }
 
+//TODO: should not call libical functions directly -- better to make
+//      a new libkcal abstraction method.
 QDateTime utcAsZone( const QDateTime& utc, const QString& timeZoneId )
 {
+  int daylight;
   QDateTime epoch;
   epoch.setTime_t( 0 );
   time_t v = epoch.secsTo( utc );
   struct icaltimetype tt = icaltime_from_timet( v, 0 ); // 0: is_date=false
-  int offset = icaltime_utc_offset( tt, timeZoneId.local8Bit() );
+  int offset = icaltimezone_get_utc_offset(
+    icaltimezone_get_builtin_timezone_from_tzid( timeZoneId.latin1() ),
+    &tt, &daylight );
+
   return utc.addSecs( offset );
 }
 
+//TODO: should not call libical functions directly -- better to make
+//      a new libkcal abstraction method.
 QDateTime zoneAsUtc( const QDateTime& zone, const QString& timeZoneId )
 {
+  int daylight;
   QDateTime epoch;
   epoch.setTime_t( 0 );
   time_t v = epoch.secsTo( zone );
   struct icaltimetype tt = icaltime_from_timet( v, 0 ); // 0: is_date=false
-  int offset = icaltime_utc_offset( tt, timeZoneId.local8Bit() );
+  int offset = icaltimezone_get_utc_offset(
+    icaltimezone_get_builtin_timezone_from_tzid( timeZoneId.latin1() ),
+    &tt, &daylight );
+
   return zone.addSecs( - offset );
 }
 
