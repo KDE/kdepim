@@ -3,7 +3,9 @@
                              -------------------
     begin                : Sat Jan 6 2001
     copyright            : (C) 2001 by Holger Schurig
+                           (C) 2006 by Danny Kukawka
     email                : holgerschurig@gmx.de
+                           danny.kukawka@web.de
  ***************************************************************************/
 
 /***************************************************************************
@@ -27,12 +29,11 @@
 
 FilterPMail::FilterPMail() :
         Filter(i18n("Import Folders From Pegasus-Mail"),
-               "Holger Schurig <p>( Filter accelerated by Danny Kukawka )</p>",
-               i18n("<p>Select the Pegasus-Mail directory on your system (containing CNM, PMM and MBX files). "
-                    "On many systems this is stored in C:\\PMail\\mail</p>"
-                    "<p><b>Note:</b> This import filter will import your folders, but not "
-                    "the folder structure. But you will probably only do this one time.</p>"
-                    "<p><b>Note:</b> Emails will be imported into folder named \"PegasusMail-Import\".</p>"))
+               "Holger Schurig <br>( rewritten by Danny Kukawka )",
+               i18n("<p>Select the Pegasus-Mail directory on your system (containing *.CNM, *.PMM and *.MBX files). "
+                    "On many systems this is stored in C:\\pmail\\mail or C:\\pmail\\mail\\admin</p>"
+                    "<p><b>Note:</b> Since it is possible to recreate the folder structure all folders "
+                    "stored under: \"PegasusMail-Import\".</p>"))
 {}
 
 FilterPMail::~FilterPMail()
@@ -49,7 +50,7 @@ void FilterPMail::import(FilterInfo *info)
     kfd = new KFileDialog( QDir::homeDirPath(), "", 0, "kfiledialog", true );
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
-    QString chosenDir = kfd->selectedFile();
+    chosenDir = kfd->selectedFile();
 
     if (chosenDir.isEmpty()) {
         info->alert(i18n("No directory selected."));
@@ -63,6 +64,10 @@ void FilterPMail::import(FilterInfo *info)
     totalFiles = files.count();
     currentFile = 0;
     kdDebug() << "Count is " << totalFiles << endl;
+    
+    if(!(folderParsed = parseFolderMatrix())) {
+        info->addLog(i18n("Can't parse the folder structure. Continue import without subfolder support!"));
+    }
 
     info->addLog(i18n("Importing new mail files ('.cnm')..."));
     processFiles("*.[cC][nN][mM]", &FilterPMail::importNewMessage);
@@ -162,7 +167,10 @@ void FilterPMail::importMailFolder(const QString& file)
         // Get folder name
         l = f.readBlock((char *) &pmm_head, sizeof(pmm_head));
         QString folder("PegasusMail-Import/");
-        folder.append(pmm_head.folder);
+        if(folderParsed) 
+            folder.append(getFolderName((QString)pmm_head.id));
+        else 
+            folder.append(pmm_head.folder);
         inf->setTo(folder);
         inf->addLog(i18n("Importing %1").arg("../" + QString(pmm_head.folder)));
         
@@ -211,6 +219,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
 {
     struct {
         char folder[58];
+        char id[31];
     } pmg_head;
     
     QFile f;
@@ -229,7 +238,11 @@ void FilterPMail::importUnixMailFolder(const QString& file)
         f.readBlock((char *) &pmg_head, sizeof(pmg_head));
         f.close();
         
-        folder.append(pmg_head.folder);
+         if(folderParsed) 
+            folder.append(getFolderName((QString)pmg_head.id));
+        else 
+            folder.append(pmg_head.folder);
+        
         inf->setTo(folder);
         inf->setTo(folder);
     }
@@ -268,4 +281,62 @@ void FilterPMail::importUnixMailFolder(const QString& file)
         }
     }    
     f.close();
+}
+
+/** Parse the information about folderstructure to folderMatrix */
+bool FilterPMail::parseFolderMatrix() 
+{
+    kdDebug() << "Start parsing the foldermatrix." << endl;
+    inf->addLog(i18n("Parsing the folder structure..."));
+    
+    QFile hierarch(chosenDir + "/hierarch.pm");
+    if (! hierarch.open( IO_ReadOnly ) ) {
+        inf->alert( i18n("Unable to open %1, skipping").arg( chosenDir + "hierarch.pm" ) );
+        return false;
+    } else {
+        QStringList tmpList;
+        QString tmpRead;
+        while ( !hierarch.atEnd() &&  hierarch.readLine(tmpRead,100)) {
+            QString tmpArray[5];
+            tmpRead.remove(tmpRead.length() -2,2);
+            QStringList tmpList = QStringList::split(",", tmpRead, false);
+            int i = 0;
+            for ( QStringList::Iterator it = tmpList.begin(); it != tmpList.end(); ++it, i++) {
+                QString _tmp = *it;
+                if(i < 5) tmpArray[i] = _tmp.remove("\"");
+                else return false; 
+            } 
+            folderMatrix.append(tmpArray);
+        }
+    }
+    return true;
+}
+
+/** get the foldername for a given file ID from folderMatrix */
+QString FilterPMail::getFolderName(QString ID) 
+{
+    bool found = false;
+    QString folder = "";
+    QString search = ID;
+    
+    while (!found)
+    {
+        for ( QValueList<QString[5]>::Iterator it = folderMatrix.begin(); it != folderMatrix.end(); it++) {
+            QString tmp[5] = *it;
+            
+            QString _ID = tmp[2];
+            if(_ID == search) {
+                QString _type = tmp[0] + tmp[1];
+                if(( _type == "21")) {
+                    found = true;
+                    break;
+                }
+                else {
+                    folder.prepend((tmp[4] + "/")); // += ("/" + tmp[4]);
+                    search = tmp[3];
+                }
+            }
+        }  
+    }
+    return folder;
 }
