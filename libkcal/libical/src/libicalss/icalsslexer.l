@@ -57,7 +57,7 @@ digit		[0-9]
 %array /* Make yytext an array. Slow, but handy. HACK */
 
 %option caseless
-%option reentrant-bison
+/* not enough widely supported: %option reentrant-bison */
 
 %s sql string_value
 

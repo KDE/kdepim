@@ -15,10 +15,6 @@ INCLUDES =                         \
        -I$(srcdir)/../libical      \
        -I../libical
 
-# just to get it built
-$(srcdir)/icalgauge.c: icalssyacc.h
-	icalsslexer.lo: icalssyacc.h icalgaugeimpl.h
-
 libicalss_la_SOURCES =		\
 	icalcalendar.c		\
 	icalclassify.c		\
