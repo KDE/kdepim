@@ -242,7 +242,6 @@ void TestResource::testJournalAddRemove()
   assert( oldcount == newcount );
   delete journal;
 }
-}
 
 void TestResource::cleanup()
 {

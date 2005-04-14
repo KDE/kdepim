@@ -64,7 +64,7 @@ int main( int argc, char **argv )
   kdDebug(5800) << "Output file: " << output << endl;
 
 
-  CalendarLocal cal;
+  CalendarLocal cal( QString::fromLatin1("UTC") );
 
   if ( !cal.load( input ) ) return 1;
   if ( !cal.save( output ) ) return 1;
