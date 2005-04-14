@@ -1,5 +1,5 @@
 
-zoneinfodir = $(DESTDIR)$(kde_datadir)/libical/zoneinfo
+zoneinfodir = $(kde_datadir)/libical/zoneinfo
 
 zoneinfo_DATA = zones.tab
 
@@ -20,9 +20,9 @@ DIRS = \
 
 install-data-local:
 	for dir in $(DIRS); do \
-	  $(mkinstalldirs) $(zoneinfodir)/$$dir; \
+	  $(mkinstalldirs) $(DESTDIR)$(zoneinfodir)/$$dir; \
 	  for tzfile in $(srcdir)/$$dir/*.ics; do \
-	    $(INSTALL_DATA) $$tzfile $(zoneinfodir)/$$dir; \
+	    $(INSTALL_DATA) $$tzfile $(DESTDIR)$(zoneinfodir)/$$dir; \
 	  done \
 	done
 
