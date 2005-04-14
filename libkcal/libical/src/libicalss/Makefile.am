@@ -5,7 +5,9 @@ AM_YFLAGS =-d -v -p ss
 AM_LFLAGS = -Pss
 LEX_OUTPUT_ROOT = lex.ss
 
-all: icalss.h
+# just to get it built
+$(srcdir)/icalgauge.c: icalssyacc.h
+icalsslexer.lo: icalssyacc.h icalgaugeimpl.h
 
 INCLUDES =                         \
        -I$(srcdir)/..              \
@@ -25,10 +27,10 @@ libicalss_la_SOURCES =		\
 	icaldirset.c		\
 	icalfileset.c		\
 	icalset.c		\
+	icalssyacc.y            \
+	icalsslexer.l           \
 	icalspanlist.c		\
-	icalmessage.c		\
-	icalsslexer.c           \
-        icalssyacc.c
+	icalmessage.c		
 
 libicalss_la_COMPILE_FIRST = ../libical/ical.h
 
