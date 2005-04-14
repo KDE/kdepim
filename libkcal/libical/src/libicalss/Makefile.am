@@ -5,30 +5,37 @@ AM_YFLAGS =-d -v -p ss
 AM_LFLAGS = -Pss
 LEX_OUTPUT_ROOT = lex.ss
 
-# just to get it built
-$(srcdir)/icalgauge.c: icalssyacc.h
-icalsslexer.lo: icalssyacc.h icalgaugeimpl.h
-
-INCLUDES =                         \
-       -I$(srcdir)/..              \
-       -I..                        \
-       -I$(srcdir)/../libical      \
-       -I../libical
+INCLUDES = -I../libical -I$(srcdir)/../libical
 
 libicalss_la_SOURCES =		\
 	icalcalendar.c		\
+	icalcalendar.h		\
 	icalclassify.c		\
+	icalclassify.h		\
 	icalcluster.c		\
+	icalcluster.h		\
+	icalclusterimpl.h	\
 	icalgauge.c		\
+	icalgauge.h		\
+	icalgaugeimpl.h		\
 	icaldirset.c		\
+	icaldirset.h		\
+	icaldirsetimpl.h	\
 	icalfileset.c		\
+	icalfileset.h		\
+	icalfilesetimpl.h	\
 	icalset.c		\
-	icalssyacc.y            \
-	icalsslexer.l           \
+	icalset.h		\
+	icalssyacc.h		\
 	icalspanlist.c		\
-	icalmessage.c		
+	icalspanlist.h		\
+	icalmessage.c		\
+	icalmessage.h		\
+	icalsslexer.c           \
+        icalssyacc.c
 
-libicalss_la_COMPILE_FIRST = ../libical/ical.h
+# We don't need icalss.h, but it needs to be built...
+libicalss_la_COMPILE_FIRST = ../libical/ical.h icalss.h
 
 COMBINEDHEADERS = \
 	$(srcdir)/icalgauge.h \
