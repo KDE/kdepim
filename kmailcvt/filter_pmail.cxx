@@ -304,11 +304,15 @@ bool FilterPMail::parseFolderMatrix()
             for ( QStringList::Iterator it = tmpList.begin(); it != tmpList.end(); ++it, i++) {
                 QString _tmp = *it;
                 if(i < 5) tmpArray[i] = _tmp.remove("\"");
-                else return false; 
+                else {
+                    hierarch.close();
+                    return false; 
+                }
             } 
             folderMatrix.append(tmpArray);
         }
     }
+    hierarch.close();
     return true;
 }
 
@@ -332,7 +336,7 @@ QString FilterPMail::getFolderName(QString ID)
                     break;
                 }
                 else {
-                    folder.prepend((tmp[4] + "/")); // += ("/" + tmp[4]);
+                    folder.prepend((tmp[4] + "/"));
                     search = tmp[3];
                 }
             }
