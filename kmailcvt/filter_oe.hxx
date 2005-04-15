@@ -38,9 +38,12 @@ class FilterOE : public Filter {
     void dbxReadIndex( FilterInfo *info, QDataStream& ds, int filePos);
     void dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos);
     void dbxReadEmail( FilterInfo *info, QDataStream& ds, int filePos);
+    
+    /** helperfunctions for folder structure support */
+    QString parseFolderString( QDataStream& ds, int filePos);
+    QString getFolderName(QString filename);
 
   private: // Private methods
-    FilterInfo * inf;
     /** which file (of totalFiles) is now in the work? */
     int currentFile;
     /** total number of files that get imported */
@@ -54,7 +57,17 @@ class FilterOE : public Filter {
     /** number of imported mails with flag 0x84 */
     int count0x84;
 
+    /** true if the folderstructure is parsed */
+    bool parsedFolder;
+    /** true if the current parsing file is the folder file */
+    bool currentIsFolderFile;
+    /** matrix with information about the folder structure*/
+    QValueList<QString[4]> folderStructure;
+
+    /** name of the current folder */
     QString folderName;
+    /** name of the chosen folder */
+    QString mailDir;
 };
 
 #endif
