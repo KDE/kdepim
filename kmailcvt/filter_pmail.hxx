@@ -19,6 +19,7 @@
 #define FILTER_PMAIL_HXX
 
 #include <qdir.h>
+#include <qvaluelist.h>
 
 #include "filters.hxx"
 
@@ -39,13 +40,25 @@ protected:
     void importMailFolder(const QString& file);
     /** imports a 'unix' format mail folder (*.MBX) */
     void importUnixMailFolder(const QString& file);
+    /** this function recreate the folder structure */
+    bool parseFolderMatrix();
+    /** this function parse the folder structure */
+    QString getFolderName(QString ID); 
 
 private:
-    /** the working directory */
+       /** the working directory */
     QDir dir;
     /**  pointer to the info */
     FilterInfo * inf;
-
+    /** QStringList with the foldernames, First String contains the ID, the second the folder */
+    QValueList<QString[5]> folderMatrix;
+    
+    /** true, if the folderfile is parsed **/
+    bool folderParsed;
+    
+    /** the trough the filedialog selected path **/
+    QString chosenDir;
+    
     /** which file (of totalFiles) is now in the work? */
     int currentFile;
     /** total number of files that get imported */

@@ -50,7 +50,7 @@ void FilterPMail::import(FilterInfo *info)
     kfd = new KFileDialog( QDir::homeDirPath(), "", 0, "kfiledialog", true );
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
-    QString chosenDir  = kfd->selectedFile();
+    chosenDir  = kfd->selectedFile();
 
     if (chosenDir.isEmpty()) {
         info->alert(i18n("No directory selected."));
@@ -64,6 +64,8 @@ void FilterPMail::import(FilterInfo *info)
     totalFiles = files.count();
     currentFile = 0;
     kdDebug() << "Count is " << totalFiles << endl;
+    
+    folderParsed = parseFolderMatrix();
 
     info->addLog(i18n("Importing new mail files ('.cnm')..."));
     processFiles("*.[cC][nN][mM]", &FilterPMail::importNewMessage);
@@ -162,8 +164,13 @@ void FilterPMail::importMailFolder(const QString& file)
     } else {
         // Get folder name
         l = f.readBlock((char *) &pmm_head, sizeof(pmm_head));
-        QString folder("PMail-");
-        folder.append(pmm_head.folder);
+        QString folder("PMail");
+        
+        if(folderParsed) 
+            folder.append(getFolderName((QString)pmm_head.id));
+        else 
+            folder.append(pmm_head.folder);
+        
         inf->setTo(folder);
         inf->addLog(i18n("Importing %1").arg("../" + QString(pmm_head.folder)));
 
@@ -212,10 +219,11 @@ void FilterPMail::importUnixMailFolder(const QString& file)
 {
     struct {
         char folder[58];
+        char id[31];
     } pmg_head;
 
     QFile f;
-    QString folder("PMail-"), s(file), seperate;
+    QString folder("PMail"), s(file), seperate;
     QByteArray line(MAX_LINE);
     int n = 0, l = 0;
 
@@ -229,8 +237,12 @@ void FilterPMail::importUnixMailFolder(const QString& file)
     } else {
         f.readBlock((char *) &pmg_head, sizeof(pmg_head));
         f.close();
-
-        folder.append(pmg_head.folder);
+        
+        if(folderParsed) 
+            folder.append(getFolderName((QString)pmg_head.id));
+        else 
+            folder.append(pmg_head.folder);
+            
         inf->setTo(folder);
         inf->setTo(folder);
     }
@@ -269,4 +281,66 @@ void FilterPMail::importUnixMailFolder(const QString& file)
         }
     }
     f.close();
+}
+
+
+/** Parse the information about folderstructure to folderMatrix */
+bool FilterPMail::parseFolderMatrix() 
+{
+    kdDebug() << "Start parsing the foldermatrix." << endl;
+    
+    QFile hierarch(chosenDir + "/hierarch.pm");
+    if (! hierarch.open( IO_ReadOnly ) ) {
+        inf->alert( i18n("Unable to open %1, skipping").arg( chosenDir + "hierarch.pm" ) );
+        return false;
+    } else {
+        QStringList tmpList;
+        QString tmpRead;
+        while ( !hierarch.atEnd() &&  hierarch.readLine(tmpRead,100)) {
+            QString tmpArray[5];
+            tmpRead.remove(tmpRead.length() -2,2);
+            QStringList tmpList = QStringList::split(",", tmpRead, false);
+            int i = 0;
+            for ( QStringList::Iterator it = tmpList.begin(); it != tmpList.end(); ++it, i++) {
+                QString _tmp = *it;
+                if(i < 5) tmpArray[i] = _tmp.remove("\"");
+                else {
+                    hierarch.close();
+                    return false; 
+                }
+            } 
+            folderMatrix.append(tmpArray);
+        }
+    }
+    hierarch.close();
+    return true;
+}
+
+/** get the foldername for a given file ID from folderMatrix */
+QString FilterPMail::getFolderName(QString ID) 
+{
+    bool found = false;
+    QString folder = "";
+    QString search = ID;
+    
+    while (!found)
+    {
+        for ( QValueList<QString[5]>::Iterator it = folderMatrix.begin(); it != folderMatrix.end(); it++) {
+            QString tmp[5] = *it;
+            
+            QString _ID = tmp[2];
+            if(_ID == search) {
+                QString _type = tmp[0] + tmp[1];
+                if(( _type == "21")) {
+                    found = true;
+                    break;
+                }
+                else {
+                    folder.prepend(("-" + tmp[4]));
+                    search = tmp[3];
+                }
+            }
+        }  
+    }
+    return folder;
 }
