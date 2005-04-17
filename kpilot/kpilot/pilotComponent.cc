@@ -51,7 +51,7 @@ static const char *pilotComponent_id =
 // This is a pilot constant and should probably be defined
 // in a more sensible place but I'm lazy right now.
 //
-#define MAX_CATEGORIES	(15)
+#define MAX_CATEGORIES	(16)
 
 PilotComponent::PilotComponent(QWidget * parent,
 	const char *id,
@@ -252,7 +252,7 @@ void PilotComponent::populateCategories(QComboBox * c,
 	// the user uses, so no translation is necessary.
 	//
 	//
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < MAX_CATEGORIES; i++)
 	{
 		if (info->name[i][0])
 		{
