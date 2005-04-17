@@ -225,6 +225,7 @@
 * A few layout adjustments for the perl/python conduits (QTextEdit
   instead of QLineEdit)
 
+
 2004-06-29  Joern Ahrens
 * Corrected the behavior of the configuration dialog, when the
   screensaver option is changed.

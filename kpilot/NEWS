@@ -1,7 +1,11 @@
 KPilot news. This file lists only major releases &c.
 For more detailed information and musings, see the
-ChangeLog or the README files.
+ChangeLog or the README files. There is also the
+history page on www.kpilot.org.
 
+* November 4, 2004: KDE 3.3.1 contains KPilot 4.4.5; there is
+  a 4.4.6 available from the website, but it is of dubious
+  quality.
 * January 18, 2004: KDE 3.2 released, with KPilot 4.4.0. I'd
   say 4.4.0 is dead in the water, there's too much new useful
   stuff in 4.4.1 (for the PIM release).
