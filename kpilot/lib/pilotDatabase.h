@@ -202,6 +202,7 @@ protected:
 
 public:
 	struct CategoryAppInfo *categoryInfo() { return fC; } ;
+	const struct CategoryAppInfo *categoryInfo() const { return fC; } ;
 	int length() const { return fLen; } ;
 
 	/** Search for the given category @param name in the list
@@ -221,6 +222,9 @@ public:
 	/** Alternative to the above inconvenience function. */
 	int findCategory(const QString &name, bool unknownIsUnfiled = false)
 		{ return findCategory(name,unknownIsUnfiled,categoryInfo()); } ;
+
+	/** For debugging, display all the category names */
+	void dump() const;
 
 private:
 	struct CategoryAppInfo *fC;

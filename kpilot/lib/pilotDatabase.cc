@@ -144,3 +144,8 @@ int PilotAppInfoBase::findCategory(const QString &selectedCategory,
 		currentCatID = 0;
 	return currentCatID;
 }
+
+void PilotAppInfoBase::dump() const
+{
+	PilotAppCategory::dumpCategories(*categoryInfo());
+}
