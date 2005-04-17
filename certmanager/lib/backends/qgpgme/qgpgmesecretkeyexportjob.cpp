@@ -69,8 +69,10 @@ Kleo::QGpgMESecretKeyExportJob::~QGpgMESecretKeyExportJob() {
 GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns ) {
   assert( mKeyData.isEmpty() );
 
-  if ( patterns.size() != 1 || patterns.front().isEmpty() )
+  if ( patterns.size() != 1 || patterns.front().isEmpty() ) {
+    deleteLater();
     return mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_INV_VALUE );
+  }
 
   // create and start gpgsm process:
   mProcess = new GnuPGProcessBase( this, "gpgsm --export-secret-key-p12" );
