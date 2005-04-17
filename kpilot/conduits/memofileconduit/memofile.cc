@@ -121,7 +121,7 @@ void Memofile::setID(recordid_t id)
 
 bool Memofile::save()
 {
-	bool result = false;
+	bool result = true;
 
 	if ((isModified() && isLoaded()) || _modifiedByPalm) {
 		result = saveFile();

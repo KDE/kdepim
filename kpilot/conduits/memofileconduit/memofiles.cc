@@ -543,7 +543,7 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 		QString data = stream.readLine();
 		int errors = 0;
 		bool ok;
-	
+
 		QStringList fields = QStringList::split( FIELD_SEP, data );
 		if ( fields.count() >= 2 ) {
 			int id = fields[0].toInt( &ok );
@@ -552,14 +552,14 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 			QString categoryName = fields[1];
 			if ( categoryName.isEmpty() )
 				errors++;
-	
+
 			if (errors <= 0) {
 				map[id] = categoryName;
 			}
 		} else {
 			errors++;
 		}
-	
+
 		if (errors > 0) {
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
@@ -602,7 +602,7 @@ bool Memofiles::saveCategoryMetadata()
 #endif
 		return false;
 	}
-	
+
 	MemoCategoryMap::Iterator it;
 	for ( it = _categories.begin(); it != _categories.end(); ++it ) {
 		stream  << it.key()
@@ -628,6 +628,24 @@ bool Memofiles::saveMemos()
 			_memofiles.remove(memofile);
 		} else {
 			result = memofile->save();
+			// Fix prompted by Bug #103922
+			// if we weren't able to save the file, then remove it from the list.
+			// if we don't do this, the next sync will think that the user deliberately
+			// deleted the memofile and will then delete it from the Pilot.
+			// TODO -- at some point, we should probably tell the user that this
+			//        did not work, but that will require a String change.
+			//        Also, this is a partial fix since at this point
+			//        this memo will never make its way onto the PC, but at least
+			//        we won't delete it from the Pilot erroneously either.  *sigh*
+			if (!result) {
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+	<< ": unable to save memofile: ["
+	<< memofile->filename() << "], now removing it from the metadata list."
+	<< endl;
+#endif
+				_memofiles.remove(memofile);
+			}
 		}
 	}
 	return true;
@@ -640,7 +658,7 @@ bool Memofiles::isFirstSync()
 	                      QFile::exists(_categoryMetadataFile);
 
 	bool valid = metadataExists && _metadataLoaded;
-	
+
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 	<< ": local metadata exists: [" << metadataExists
@@ -701,10 +719,11 @@ QString Memofiles::filename(PilotMemo * memo)
 		if (filename.isEmpty()) {
 			filename = CSL1("empty");
 		}
-		// safety net. we can't save a 
-		// filesystem separator as part of a filename, now can we?
-		filename.replace('/', CSL1("-"));
 	}
+
+	// safety net. we can't save a
+	// filesystem separator as part of a filename, now can we?
+	filename.replace('/', CSL1("-"));
 
 	QString category = _categories[memo->getCat()];
 
