@@ -28,9 +28,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <pi-memo.h>
-#include <qptrlist.h>
-
 #include "pilotComponent.h"
 
 class KPilotInstaller;
@@ -97,11 +94,13 @@ private:
 	void setupWidget();
 	void updateWidget(); // Called with the lists have changed..
 	void writeMemo(PilotMemo* which);
+
+	class Private;
+
 	QComboBox* fCatList;
 
 	KTextEdit*		fTextWidget;
-	struct MemoAppInfo	fMemoAppInfo;
-	QPtrList<PilotMemo>	fMemoList;
+	Private *d;
 	QListBox*		fListBox;
 
 	QPushButton *fExportButton,*fDeleteButton;
