@@ -91,6 +91,12 @@ const struct kleo_chiasmus_config_data kleo_chiasmus_config_entries[] = {
   },
 #ifdef HAVE_C99_INITIALIZERS
   {
+    "symcryptrun-class", I18N_NOOP( "SymCryptRun class to use" ),
+    Level_Expert, ArgType_String,
+    { .string = "confucius" },
+    0, 0, 1
+  },
+  {
     "timeout", I18N_NOOP( "Timeout in seconds for Chiasmus operations" ),
     Level_Advanced, ArgType_UInt,
     { .unsigned_integer = 60 },

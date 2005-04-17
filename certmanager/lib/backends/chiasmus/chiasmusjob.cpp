@@ -1,4 +1,4 @@
-/*  -*- mode: C++; c-file-style: "gnu" -*-
+/*
     chiasmusjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
@@ -35,18 +35,29 @@
 #endif
 
 #include "chiasmusjob.h"
+#include "chiasmusbackend.h"
+#include "symcryptrunprocessbase.h"
 
+#include "kleo/cryptoconfig.h"
 #include "ui/passphrasedialog.h"
 
 #include <gpg-error.h>
 
+#include <kshell.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+
 #include <qtimer.h>
 #include <qfileinfo.h>
+#include <qvariant.h>
+
+#include <memory>
 
 #include <cassert>
 
 Kleo::ChiasmusJob::ChiasmusJob( Mode mode )
   : Kleo::SpecialJob( 0, 0 ),
+    mSymCryptRun( 0 ),
     mError( 0 ),
     mCanceled( false ),
     mMode( mode )
@@ -56,57 +67,100 @@ Kleo::ChiasmusJob::ChiasmusJob( Mode mode )
 
 Kleo::ChiasmusJob::~ChiasmusJob() {}
 
-GpgME::Error Kleo::ChiasmusJob::start() {
+GpgME::Error Kleo::ChiasmusJob::setup() {
   if ( !checkPreconditions() )
     return mError = gpg_error( GPG_ERR_INV_VALUE );
-  QTimer::singleShot( 0, this, SLOT(slotPerform()) );
+
+  const Kleo::CryptoConfigEntry * class_
+    = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "symcryptrun-class" );
+  const Kleo::CryptoConfigEntry * chiasmus
+    = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "path" );
+  if ( !class_ || !chiasmus )
+    return mError = gpg_error( GPG_ERR_INTERNAL );
+
+  mSymCryptRun = new SymCryptRunProcessBase( class_->stringValue(),
+                                             KShell::tildeExpand( chiasmus->urlValue().path() ),
+                                             mKey,
+                                             mMode == Encrypt
+                                             ? SymCryptRunProcessBase::Encrypt
+                                             : SymCryptRunProcessBase::Decrypt,
+                                             this, "symcryptrun" );
+  return 0;
+}
+
+namespace {
+  struct LaterDeleter {
+    QObject * _this;
+    LaterDeleter( QObject * o ) : _this( o ) {}
+    ~LaterDeleter() { if ( _this ) _this->deleteLater(); }
+    void disable() { _this = 0; }
+  };
+}
+
+GpgME::Error Kleo::ChiasmusJob::start() {
+
+  LaterDeleter d( this );
+
+  if ( const GpgME::Error err = setup() )
+    return mError = err;
+
+  connect( mSymCryptRun, SIGNAL(processExited(KProcess*)),
+           this, SLOT(slotProcessExited(KProcess*)) );
+
+  if ( !mSymCryptRun->launch( mInput ) )
+    return mError = gpg_error( GPG_ERR_ENOENT ); // what else?
+
+  d.disable();
   return mError = 0;
 }
 
-GpgME::Error Kleo::ChiasmusJob::exec() {
-  if ( !checkPreconditions() )
-    return mError = gpg_error( GPG_ERR_INV_VALUE );
-  slotPerform();
+GpgME::Error Kleo::ChiasmusJob::slotProcessExited( KProcess * proc ) {
+  if ( proc != mSymCryptRun )
+    mError = gpg_error( GPG_ERR_INTERNAL );
+  else if ( mCanceled )
+    mError = gpg_error( GPG_ERR_CANCELED );
+  else if ( !proc->normalExit() )
+    mError = gpg_error( GPG_ERR_GENERAL );
+  else
+    switch ( proc->exitStatus() ) {
+    case 0: // success
+      mOutput = mSymCryptRun->output();
+      mError = 0;
+    default:
+    case 1: // Some error occured
+      mStderr = mSymCryptRun->stderr();
+      mError = gpg_error( GPG_ERR_GENERAL );
+    case 2: // No valid passphrase was provided
+      mError = gpg_error( GPG_ERR_INV_PASSPHRASE );
+    case 3: // Canceled
+      mError = gpg_error( GPG_ERR_CANCELED );
+    }
+  emit done();
+  emit result( mError, QVariant( mOutput ) );
   return mError;
+}
+
+GpgME::Error Kleo::ChiasmusJob::exec() {
+  if ( const GpgME::Error err = setup() )
+    return mError = err;
+
+  if ( !mSymCryptRun->launch( mInput, KProcess::Block ) ) {
+    delete mSymCryptRun; mSymCryptRun = 0;
+    return mError = gpg_error( GPG_ERR_ENOENT ); // what else?
+  }
+
+  const GpgME::Error err = slotProcessExited( mSymCryptRun );
+  delete mSymCryptRun; mSymCryptRun = 0;
+  return err;
 }
 
 bool Kleo::ChiasmusJob::checkPreconditions() const {
   return !mKey.isEmpty();
 }
 
-void Kleo::ChiasmusJob::slotPerform() {
-  if ( mCanceled ) {
-    mError = gpg_error( GPG_ERR_CANCELED );
-    return;
-  }
-
-  assert( checkPreconditions() );
-
-  Kleo::PassphraseDialog dlg( i18n( "<qt><p>Please enter the passphrase to unlock Chiasmus key</p>"
-                                    "<p align=\"center\">%1</p></qt>" ).arg( mKey ),
-                              i18n( "Enter Chiasmus Passphrase" ) );
-  if ( dlg.exec() != QDialog::Accepted ) {
-    mError = gpg_error( GPG_ERR_CANCELED );
-    return;
-  }
-
-  const QFileInfo fi( mKey );
-  const QCString key = fi.baseName().latin1();
-  const unsigned int key_len = key.length();
-  const char * const pass = dlg.passphrase();
-  const unsigned int pass_len = qstrlen( pass );
-
-  mOutput.resize( mInput.size() );
-
-  // simple XOR cipher for now :)
-  for ( unsigned int i = 0, i_end = mInput.size() ; i < i_end ; ++i )
-    mOutput[i] = mInput[i] ^ key[ i % key_len ] ^ pass[ i % pass_len ] ;
-
-  emit done();
-  emit result( 0, QVariant( mOutput ) );
-}
-
 void Kleo::ChiasmusJob::slotCancel() {
+  if ( mSymCryptRun )
+    mSymCryptRun->kill();
   mCanceled = true;
 }
 
@@ -119,7 +173,12 @@ void Kleo::ChiasmusJob::showErrorDialog( QWidget * parent, const QString & capti
                         ? i18n( "Encryption failed: %1" )
                         : i18n( "Decryption failed: %1" ) )
     .arg( QString::fromLocal8Bit( mError.asString() ) );
-  KMessageBox::error( parent, msg, caption );
+  if ( !mStderr.isEmpty() ) {
+    const QString details = i18n( "The following was received on stderr:\n%1" ).arg( mStderr );
+    KMessageBox::detailedError( parent, msg, details, caption );
+  } else {
+    KMessageBox::error( parent, msg, caption );
+  }
 }
 
 #include "chiasmusjob.moc"

@@ -40,7 +40,11 @@
 
 #include <gpgmepp/context.h>
 
+class KProcess;
+
 namespace Kleo {
+
+  class SymCryptRunProcessBase;
 
   /**
      @short SpecialJob for Chiasmus operations
@@ -82,15 +86,18 @@ namespace Kleo {
     void slotCancel();
 
   private slots:
-    void slotPerform();
+    GpgME::Error slotProcessExited( KProcess * );
 
   private:
     bool checkPreconditions() const;
+    GpgME::Error setup();
 
   private:
+    SymCryptRunProcessBase * mSymCryptRun;
     QString mKey;
     QByteArray mInput, mOutput;
     GpgME::Error mError;
+    QString mStderr;
     bool mCanceled;
     const Mode mMode;
   };

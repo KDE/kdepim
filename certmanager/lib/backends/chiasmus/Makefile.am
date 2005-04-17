@@ -7,6 +7,7 @@ noinst_LTLIBRARIES = libkleopatra_backend_chiasmus.la
 libkleopatra_backend_chiasmus_la_SOURCES = \
                         config_data.c \
                         obtainkeysjob.cpp \
+                        symcryptrunprocessbase.cpp \
                         chiasmusjob.cpp \
                         chiasmuslibrary.cpp \
                         chiasmusbackend.cpp
