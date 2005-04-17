@@ -33,8 +33,12 @@
 #include <pi-appinfo.h>
 
 #include <qstringlist.h>
+#include <qtextcodec.h>
 
 #include "pilotDatabase.h"
+#include "pilotAppCategory.h"
+
+#define MAX_CATEGORIES	(16)
 
 static int creationCount = 0;
 static QStringList *createdNames = 0L;
@@ -107,3 +111,36 @@ PilotDatabase::PilotDatabase(const QString &s) :
 	return l;
 }
 
+int PilotAppInfoBase::findCategory(const QString &selectedCategory, 
+	bool unknownIsUnfiled, struct CategoryAppInfo *info)
+{
+	FUNCTIONSETUP;
+
+	int currentCatID = -1;
+	for (int i=0; i<MAX_CATEGORIES; i++)
+	{
+		if (!info->name[i][0]) continue;
+		if (selectedCategory == 
+			PilotAppCategory::codec()->toUnicode(info->name[i]))
+		{
+			currentCatID = i;
+			break;
+		}
+	}
+
+#ifdef DEBUG
+	if (-1 == currentCatID)
+	{
+		DEBUGKPILOT << fname << ": Category name " 
+			<< selectedCategory << " not found." << endl;
+	}
+	else
+	{
+		DEBUGKPILOT << fname << ": Matched category " << currentCatID << endl;
+	}
+#endif
+
+	if ((currentCatID == -1) && unknownIsUnfiled)
+		currentCatID = 0;
+	return currentCatID;
+}

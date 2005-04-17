@@ -204,6 +204,24 @@ public:
 	struct CategoryAppInfo *categoryInfo() { return fC; } ;
 	int length() const { return fLen; } ;
 
+	/** Search for the given category @param name in the list
+	* of categories; returns the category number. If @param unknownIsUnfiled
+	* is true, then map unknown categories to Unfiled instead of returning
+	* an error number.
+	*
+	* @return >=0          is a specific category based on the text ->
+	*               category number mapping defined by the Pilot,
+	*  @return -1         means unknown category selected when
+	*               @param unknownIsUnfiled is true.
+	*  @return  0         == Unfiled means unknown category selected when
+	*               @param unknownIsUnfiled is false.
+	* 
+	*/
+	static int findCategory(const QString &name, bool unknownIsUnfiled, struct CategoryAppInfo *info);
+	/** Alternative to the above inconvenience function. */
+	int findCategory(const QString &name, bool unknownIsUnfiled = false)
+		{ return findCategory(name,unknownIsUnfiled,categoryInfo()); } ;
+
 private:
 	struct CategoryAppInfo *fC;
 	int fLen;
