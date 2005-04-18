@@ -42,6 +42,8 @@ Memofiles::Memofiles (MemoCategoryMap & categories, struct MemoAppInfo & appInfo
 	_countNewToLocal = _countModifiedToLocal = _countDeletedToLocal = 0;
 	_memofiles.setAutoDelete(true);
 
+	ensureDirectoryReady();
+
 	_metadataLoaded = loadFromMetadata();
 }
 
@@ -160,6 +162,7 @@ bool Memofiles::ensureDirectoryReady()
 	if (!checkDirectory(_baseDirectory))
 		return false;
 
+	int failures = 0;
 	// now make sure that a directory for each category exists.
 	QString _category_name;
 	QString dir;
@@ -175,10 +178,10 @@ bool Memofiles::ensureDirectoryReady()
 #endif
 
 		if (!checkDirectory(dir))
-			return false;
+			failures++;
 	}
 
-	return true;
+	return failures == 0;
 }
 
 bool Memofiles::checkDirectory(QString & dir)
@@ -721,9 +724,7 @@ QString Memofiles::filename(PilotMemo * memo)
 		}
 	}
 
-	// safety net. we can't save a
-	// filesystem separator as part of a filename, now can we?
-	filename.replace('/', CSL1("-"));
+	filename = sanitizeName(filename);
 
 	QString category = _categories[memo->getCat()];
 
@@ -748,6 +749,15 @@ QString Memofiles::filename(PilotMemo * memo)
 	}
 
 	return newfilename;
+}
+
+QString Memofiles::sanitizeName(QString name)
+{
+	QString clean = name;
+	// safety net. we can't save a
+	// filesystem separator as part of a filename, now can we?
+	clean.replace('/', CSL1("-"));
+	return clean;
 }
 
 QString Memofiles::getResults()

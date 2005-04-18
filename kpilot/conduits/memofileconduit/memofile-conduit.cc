@@ -277,7 +277,7 @@ bool MemofileConduit::loadPilotCategories()
 
 	for (int i = 0; i < 16; i++) {
 		if (fMemoAppInfo.category.name[i][0]) {
-			_category_name = PilotAppCategory::codec()->toUnicode(fMemoAppInfo.category.name[i]);
+			_category_name = Memofiles::sanitizeName( PilotAppCategory::codec()->toUnicode(fMemoAppInfo.category.name[i]));
 			_category_id   = (int)fMemoAppInfo.category.ID[i];
 			_category_num  = i;
 			fCategories[_category_num] = _category_name;
