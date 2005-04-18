@@ -29,10 +29,9 @@ FilterSylpheed::FilterSylpheed( void ) :
                 i18n( "<p><b>Sylpheed import filter</b></p>"
                       "<p>Select the base directory of your Sylpheed mailfolder which you would import "
                       "(usually: ~/Mail ).</p>"
-                      "<p><b>Note:</b> This Filter imports specially from Sylpheed Claws "
-                      "(http://claws.sylpheed.org). Other Sylpheed versions are not tested.</p>"
                       "<p>Since it is possible to recreate the folder structure all folder "
-                      "stored under: \"Sylpheed-Import\" in your local folder.</p>" ) )
+                      "stored under: \"Sylpheed-Import\" in your local folder.</p>" 
+                      "<p>This filter also recreate the status of a message e.g. new or forwarded.") )
 {}
 
 /** Destructor. */
@@ -211,7 +210,6 @@ void FilterSylpheed::readMarkFile( FilterInfo *info, const QString &path, QDict<
         s.setNum((uint) in);
         dict.insert(s, new unsigned long(flags));
     }
-    file.close();
 }
 
 QString FilterSylpheed::msgFlagsToString(unsigned long flags)
