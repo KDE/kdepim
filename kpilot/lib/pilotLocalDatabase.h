@@ -149,8 +149,8 @@ public:
 		{ if (isDBOpen()) return fAppLen; else return -1; } ;
 	char *appInfo() { return fAppInfo; } ;
 
-	struct DBInfo getDBInfo() const { return fDBInfo; }
-	void setDBInfo(struct DBInfo dbi) {fDBInfo=dbi; }
+	const struct DBInfo &getDBInfo() const { return fDBInfo; }
+	void setDBInfo(const struct DBInfo &dbi) {fDBInfo=dbi; }
 
 	virtual DBType dbType() const;
 
