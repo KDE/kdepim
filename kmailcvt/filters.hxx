@@ -73,10 +73,12 @@ class Filter
   protected:
     bool addMessage( FilterInfo* info,
                      const QString& folder,
-                     const QString& msgFile );
+                     const QString& msgFile,
+                     const QString& msgStatusFlags = QString());
     bool addMessage_fastImport( FilterInfo* info,
-                     		const QString& folder,
-                     		const QString& msgFile );
+                     		    const QString& folder,
+                     		    const QString& msgFile,
+                                const QString& msgStatusFlags = QString());
     bool endImport();
   private:
     QString m_name;
