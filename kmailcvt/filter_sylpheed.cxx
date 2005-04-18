@@ -20,6 +20,7 @@
 #include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
+#include <kdebug.h>
 
 /** Default constructor. */
 FilterSylpheed::FilterSylpheed( void ) :
@@ -106,6 +107,7 @@ void FilterSylpheed::importDirContents( FilterInfo *info, const QString& dirName
     }
 }
 
+
 /**
  * Import the files within a Folder.
  * @param info Information storage for the operation.
@@ -113,14 +115,19 @@ void FilterSylpheed::importDirContents( FilterInfo *info, const QString& dirName
  */
 void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
 {
-
     QDir dir(dirName);
     QString _path = "";
     bool generatedPath = false;
 
+    QDict<unsigned long> msgflags;
+    msgflags.setAutoDelete(true);
+
     QDir importDir (dirName);
     QStringList files = importDir.entryList("[^\\.]*", QDir::Files, QDir::Name);
     int currentFile = 1, numFiles = files.size();
+    
+    readMarkFile(info, dir.filePath(".sylpheed_mark"), msgflags);
+    
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile, ++currentFile) {
         if(info->shouldTerminate()) return;
         QString _mfile = *mailFile;
@@ -138,17 +145,86 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
                 generatedPath = true;
             }
 
+            QString flags;
+            if (msgflags[_mfile])
+                flags = msgFlagsToString(*(msgflags[_mfile]));
+             
             if(info->removeDupMsg) {
-                if(! addMessage( info, _path, dir.filePath(*mailFile) )) {
+                if(! addMessage( info, _path, dir.filePath(*mailFile), flags )) {
                     info->addLog( i18n("Could not import %1").arg( *mailFile ) );
                 }
                 info->setCurrent((int) ((float) currentFile / numFiles * 100));
             } else {
-                if(! addMessage_fastImport( info, _path, dir.filePath(*mailFile) )) {
+                if(! addMessage_fastImport( info, _path, dir.filePath(*mailFile), flags )) {
                     info->addLog( i18n("Could not import %1").arg( *mailFile ) );
                 }
                 info->setCurrent((int) ((float) currentFile / numFiles * 100));
             }
         }
     }
+}
+
+
+void FilterSylpheed::readMarkFile( FilterInfo *info, const QString &path, QDict<unsigned long> &dict )
+{
+    /* Each sylpheed mail directory contains a .sylpheed_mark file which
+     * contains all the flags for each messages. The layout of this file
+     * is documented in the source code of sylpheed: in procmsg.h for
+     * the flag bits, and procmsg.c.
+     *
+     * Note that the mark file stores 32 bit unsigned integers in the
+     * platform's native "endianness". 
+     *
+     * The mark file starts with a 32 bit unsigned integer with a version
+     * number. It is then followed by pairs of 32 bit unsigned integers,
+     * the first one with the message file name (which is a number), 
+     * and the second one with the actual message flags */
+
+    Q_UINT32 in, flags;
+    QFile file(path);
+
+    if (!file.open(IO_ReadOnly)) 
+        return;
+    
+    QDataStream stream(&file);
+
+    if (Q_BYTE_ORDER == Q_LITTLE_ENDIAN)
+        stream.setByteOrder(QDataStream::LittleEndian);
+
+
+
+    /* Read version; if the value is reasonably too big, we're looking
+     * at a file created on another platform. I don't have any test 
+     * marks/folders, so just ignoring this case */
+    stream >> in;
+    if (in > (Q_UINT32) 0xffff) 
+        return;
+
+    while (!stream.atEnd()) {
+        if(info->shouldTerminate()){
+            file.close();
+            return;
+        }
+        stream >> in;
+        stream >> flags;
+        QString s;
+        s.setNum((uint) in);
+        dict.insert(s, new unsigned long(flags));
+    }
+    file.close();
+}
+
+QString FilterSylpheed::msgFlagsToString(unsigned long flags)
+{
+    QString status;
+    
+    /* see sylpheed's procmsg.h */
+    if (flags & 1UL) status += 'N';
+    if (flags & 2UL) status += 'U';
+    if ((flags & 3UL) == 0UL) status += 'R';
+    if (flags & 8UL) status += 'D';
+    if (flags & 16UL) status += 'A';
+    if (flags & 32UL) status += 'F';
+    
+    return status;
 }
