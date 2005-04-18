@@ -38,8 +38,6 @@
 #include "pilotDatabase.h"
 #include "pilotAppCategory.h"
 
-#define MAX_CATEGORIES	(16)
-
 static int creationCount = 0;
 static QStringList *createdNames = 0L;
 

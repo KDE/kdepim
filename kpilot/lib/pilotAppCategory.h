@@ -42,6 +42,8 @@
 
 #include "pilotRecord.h"
 
+#define MAX_CATEGORIES	(16)
+
 class QTextCodec;
 
 class KDE_EXPORT PilotAppCategory

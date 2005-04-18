@@ -50,11 +50,6 @@
 static const char *pilotComponent_id =
 	"$Id$";
 
-// This is a pilot constant and should probably be defined
-// in a more sensible place but I'm lazy right now.
-//
-#define MAX_CATEGORIES	(16)
-
 PilotComponent::PilotComponent(QWidget * parent,
 	const char *id,
 	const QString & path) :
