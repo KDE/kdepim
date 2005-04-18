@@ -77,7 +77,7 @@ namespace Kleo {
     /*!\reimp Kleo::Job */
     void showErrorDialog( QWidget *, const QString & ) const;
 
-    using SpecialJob::result;
+    //using SpecialJob::result;
     QStringList result() const { return mResult; }
 
   public slots:

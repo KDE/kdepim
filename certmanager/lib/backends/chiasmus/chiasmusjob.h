@@ -79,7 +79,7 @@ namespace Kleo {
     QByteArray input() const { return mInput; }
     void setInput( const QByteArray & input ) { mInput = input; }
 
-    using SpecialJob::result;
+    //using SpecialJob::result;
     QByteArray result() const { return mOutput; }
 
   public slots:

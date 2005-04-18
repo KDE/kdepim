@@ -136,7 +136,7 @@ GpgME::Error Kleo::ChiasmusJob::slotProcessExited( KProcess * proc ) {
       mError = gpg_error( GPG_ERR_CANCELED );
     }
   emit done();
-  emit result( mError, QVariant( mOutput ) );
+  emit SpecialJob::result( mError, QVariant( mOutput ) );
   return mError;
 }
 
