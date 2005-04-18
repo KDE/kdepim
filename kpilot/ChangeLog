@@ -1,6 +1,11 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2005-04-18  Adriaan de Groot
+* Being on vacation doesn't mean I'm not on the job. Doxied a lot, did some cleanup.
+* Renamed PilotLocalDatabase::writeID() and changed its signature, since it
+  was kind of stupid. Doxied it, too.
+
 2005-04-12  Adriaan de Groot
 * For a lark, and for David, re-added some KDE 3.2 compatibility code.
 * Template madness! An easy way to create the right appinfo's from any database.

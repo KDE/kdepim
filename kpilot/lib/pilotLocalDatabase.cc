@@ -477,7 +477,7 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 }
 
 // Writes a new ID to the record specified the index.  Not supported on Serial connections
-recordid_t PilotLocalDatabase::writeID(PilotRecord * rec)
+recordid_t PilotLocalDatabase::updateID(recordid_t id)
 {
 	FUNCTIONSETUP;
 
@@ -492,9 +492,9 @@ recordid_t PilotLocalDatabase::writeID(PilotRecord * rec)
 			": Last call was _NOT_ readNextModifiedRec()" << endl;
 		return 0;
 	}
-	fRecords[fPendingRec]->setID(rec->id());
+	fRecords[fPendingRec]->setID(id);
 	fPendingRec = -1;
-	return rec->id();
+	return id;
 }
 
 // Writes a new record to database (if 'id' == 0, it is assumed that this is a new record to be installed on pilot)

@@ -125,8 +125,14 @@ public:
 	virtual int cleanup();
 
 
-	// Writes a new ID to the record specified.
-	virtual recordid_t writeID(PilotRecord* rec);
+	/** Update the ID of the current record in the database with
+	* the specified @param id . This is allowed only after
+	* reading or writing a modified or new record.
+	*/
+	virtual recordid_t  updateID(recordid_t id);
+
+
+	/** Return the name of the database (as it would be on the handheld). */
 	QString getDBName() const { return fDBName; }
 
 	/**
