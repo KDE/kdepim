@@ -451,20 +451,6 @@ void KNotesAction::getAppInfo()
 {
 	FUNCTIONSETUP;
 
-
-	unsigned char buffer[PilotDatabase::MAX_APPINFO_SIZE];
-	int appInfoSize = fDatabase->readAppBlock(buffer,PilotDatabase::MAX_APPINFO_SIZE);
-	struct MemoAppInfo memoInfo;
-
-	if (appInfoSize<0)
-	{
-		fActionStatus=Error;
-		return;
-	}
-
-	unpack_MemoAppInfo(&memoInfo,buffer,appInfoSize);
-	PilotAppCategory::dumpCategories(memoInfo.category);
-
 	resetIndexes();
 }
 
