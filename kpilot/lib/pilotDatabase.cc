@@ -109,6 +109,22 @@ PilotDatabase::PilotDatabase(const QString &s) :
 	return l;
 }
 
+PilotAppInfoBase::PilotAppInfoBase(PilotDatabase *d) : fC(new struct CategoryAppInfo), fLen(0), fOwn(true)
+{
+	FUNCTIONSETUP;
+	int appLen = MAX_APPINFO_SIZE;
+	unsigned char buffer[MAX_APPINFO_SIZE];
+
+	fLen = appLen = d->readAppBlock(buffer,appLen);
+	unpack_CategoryAppInfo(fC, buffer, appLen);
+} ;
+
+PilotAppInfoBase::~PilotAppInfoBase()
+{
+	if (fOwn) delete fC;
+} ;
+
+
 int PilotAppInfoBase::findCategory(const QString &selectedCategory, 
 	bool unknownIsUnfiled, struct CategoryAppInfo *info)
 {

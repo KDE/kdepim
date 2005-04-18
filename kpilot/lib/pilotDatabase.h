@@ -68,8 +68,6 @@ public:
 	PilotDatabase(const QString &name = QString::null);
 	virtual ~PilotDatabase();
 
-	static const int MAX_APPINFO_SIZE=8192;
-
 
 	QString name() const { return fName; } ;
 
@@ -187,10 +185,18 @@ private:
 	QString fName;
 };
 
+/** Base class for all specific kinds of AppInfo. */
 class KDE_EXPORT PilotAppInfoBase
 {
 protected:
-	PilotAppInfoBase() { } ;
+	/** Constructor. This is for use by derived classes (using the template below
+	* only, and says that the category info in the base class aliases data in
+	* the derived class. Remember to call init()!
+	*/
+	PilotAppInfoBase() : fC(0L), fLen(-1), fOwn(false) { } ;
+	/** Initialize class members after reading header, to alias data elsewhere.
+	* Only for use by the (derived) template classes below.
+	*/
 	void init(struct CategoryAppInfo *c, int len)
 	{
 		fC = c;
@@ -198,8 +204,25 @@ protected:
 	} ;
 
 public:
+	/** Maximum size of an AppInfo block, taken roughly from the pilot-link source. */
+	static const int MAX_APPINFO_SIZE=8192;
+
+	/** Constructor, intended for untyped access to the AppInfo only. This throws
+	* away everything but the category information. In this variety, the 
+	* CategoryAppInfo structure is owned by the PilotAppInfoBase object. 
+	*/
+	PilotAppInfoBase(PilotDatabase *d);
+	/** Destructor. */
+	virtual ~PilotAppInfoBase();
+
+	/** Retrieve the most basic part of the AppInfo block -- the category
+	* information which is guaranteed to be the first 240-odd bytes of
+	* a database.
+	*/
 	struct CategoryAppInfo *categoryInfo() { return fC; } ;
+	/** Const version of the above function. */
 	const struct CategoryAppInfo *categoryInfo() const { return fC; } ;
+	/** Returns the length of the (whole) AppInfo block. */
 	int length() const { return fLen; } ;
 
 	/** Search for the given category @param name in the list
@@ -226,17 +249,18 @@ public:
 private:
 	struct CategoryAppInfo *fC;
 	int fLen;
+	bool fOwn;
 } ;
 
 template <typename appinfo, int(*f)(appinfo *, unsigned char *, int)>
 class PilotAppInfo : public PilotAppInfoBase
 {
 public:
-	PilotAppInfo(PilotDatabase *d)
+	PilotAppInfo(PilotDatabase *d) : PilotAppInfoBase()
 	{
 		FUNCTIONSETUP;
-		int appLen = 8192;
-		unsigned char buffer[8192];
+		int appLen = MAX_APPINFO_SIZE;
+		unsigned char buffer[MAX_APPINFO_SIZE];
 
 		appLen = d->readAppBlock(buffer,appLen);
 

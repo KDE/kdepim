@@ -234,8 +234,8 @@ bool MemofileConduit::getAppInfo()
 	FUNCTIONSETUP;
 
 
-	unsigned char buffer[PilotDatabase::MAX_APPINFO_SIZE];
-	int appInfoSize = fDatabase->readAppBlock(buffer,PilotDatabase::MAX_APPINFO_SIZE);
+	unsigned char buffer[PilotAppInfoBase::MAX_APPINFO_SIZE];
+	int appInfoSize = fDatabase->readAppBlock(buffer,PilotAppInfoBase::MAX_APPINFO_SIZE);
 
 	if (appInfoSize<0) {
 		return false;
