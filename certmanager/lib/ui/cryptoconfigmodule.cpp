@@ -189,9 +189,11 @@ void Kleo::CryptoConfigComponentGUI::defaults()
 Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
   CryptoConfigModule* module, Kleo::CryptoConfigGroup* group,
   QWidget* parent, const char* name )
-  : QGroupBox( 1, Qt::Horizontal, // yeah that means a vertical layout...
-               group->description(), parent, name ), mGroup( group )
+  : QWidget( parent, name ), mGroup( group )
 {
+  QVBoxLayout * vlay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
+  vlay->setAutoAdd( true );
+  (void) new KDHorizontalLine( group->description(), this );
   QStringList entries = mGroup->entryList();
   for( QStringList::Iterator entryit = entries.begin(); entryit != entries.end(); ++entryit ) {
     Kleo::CryptoConfigEntry* entry = group->entry( *entryit );

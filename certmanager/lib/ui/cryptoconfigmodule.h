@@ -97,7 +97,7 @@ namespace Kleo {
   /**
    * A widget corresponding to a group in the crypto config
    */
-  class CryptoConfigGroupGUI : public QGroupBox {
+  class CryptoConfigGroupGUI : public QWidget {
     Q_OBJECT
 
   public:
