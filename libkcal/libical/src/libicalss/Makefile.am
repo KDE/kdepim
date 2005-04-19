@@ -60,7 +60,7 @@ icalss.h: $(COMBINEDHEADERS)
 	| egrep -v "#include.*\"pvl\.h\""		\
 	| egrep -v '\$$(Id|Locker): .+\$$'>> icalss.h
 	echo '#ifdef __cplusplus'	  >> icalss.h
-	echo '};'			  >> icalss.h
+	echo '}'			  >> icalss.h
 	echo '#endif'			  >> icalss.h
 
 noinst_HEADERS = icalss.h icalcalendar.h icalclassify.h icalcluster.h \
