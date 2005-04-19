@@ -3,7 +3,7 @@
                              -------------------
     begin                : Sat Jan 6 2001
     copyright            : (C) 2001 by Holger Schurig
-                           (C) 2006 by Danny Kukawka
+                           (C) 2005 by Danny Kukawka
     email                : holgerschurig@gmx.de
                            danny.kukawka@web.de
  ***************************************************************************/
