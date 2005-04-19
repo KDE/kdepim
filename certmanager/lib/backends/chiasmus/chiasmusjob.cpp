@@ -126,14 +126,18 @@ GpgME::Error Kleo::ChiasmusJob::slotProcessExited( KProcess * proc ) {
     case 0: // success
       mOutput = mSymCryptRun->output();
       mError = 0;
+      break;
     default:
     case 1: // Some error occured
       mStderr = mSymCryptRun->stderr();
       mError = gpg_error( GPG_ERR_GENERAL );
+      break;
     case 2: // No valid passphrase was provided
       mError = gpg_error( GPG_ERR_INV_PASSPHRASE );
+      break;
     case 3: // Canceled
       mError = gpg_error( GPG_ERR_CANCELED );
+      break;
     }
   emit done();
   emit SpecialJob::result( mError, QVariant( mOutput ) );
