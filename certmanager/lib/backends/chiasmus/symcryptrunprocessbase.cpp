@@ -32,7 +32,10 @@
 
 #include "symcryptrunprocessbase.h"
 
+#include <ktempfile.h>
+
 #include <qtimer.h>
+#include <qfile.h>
 
 #include <cstring>
 
@@ -40,38 +43,48 @@ Kleo::SymCryptRunProcessBase::SymCryptRunProcessBase( const QString & class_, co
                                                       const QString & keyFile, Operation mode,
                                                       QObject * parent, const char * name )
   : KProcess( parent, name ),
+    mClass( class_ ),
+    mProgram( program ),
+    mKeyFile( keyFile ),
     mOperation( mode )
 {
-  *this << "symcryptrun"
-        << "--class" << class_
-        << "--program" << program
-        << "--keyfile" << keyFile;
-  if ( mode == Encrypt )
-    *this << "--encrypt";
-  else
-    *this << "--decrypt";
+
 }
 
 Kleo::SymCryptRunProcessBase::~SymCryptRunProcessBase() {}
 
 bool Kleo::SymCryptRunProcessBase::launch( const QByteArray & input, RunMode rm ) {
-  mInput = input.copy();
   connect( this, SIGNAL(receivedStdout(KProcess*,char*,int)),
            this, SLOT(slotReceivedStdout(KProcess*,char*,int)) );
   connect( this, SIGNAL(receivedStderr(KProcess*,char*,int)),
            this, SLOT(slotReceivedStderr(KProcess*,char*,int)) );
-  connect( this, SIGNAL(wroteStdin(KProcess*)), this, SLOT(closeStdin()) );
-  return KProcess::start( rm, All );
-}
-
-int Kleo::SymCryptRunProcessBase::commSetupDoneP() {
-  // since in blocked mode, we don't go into event loop at all, we
-  // need to hook ourselves into a virtual function that is called
-  // from the parent after the fork(). This is it.
-  if ( const int rc = KProcess::commSetupDoneP() )
-    return rc;
-  writeStdin( mInput.data(), mInput.size() );
-  return 0;
+  if ( rm == Block ) {
+    KTempFile tempfile;
+    tempfile.setAutoDelete( true );
+    if ( QFile * file = tempfile.file() )
+      file->writeBlock( input );
+    else
+      return false;
+    *this << "symcryptrun --class " + quote( mClass )
+      + " --program " + quote( mProgram )
+      + " --keyfile " + quote( mKeyFile )
+      + ( mOperation == Encrypt ? " --encrypt " : " --decrypt " )
+      + " < " + quote( tempfile.name() );
+    setUseShell( true );
+    return KProcess::start( Block, All );
+  } else {
+    *this << "symcryptrun" << "--class" << mClass
+          << "--program" << mProgram
+          << "--keyfile" << mKeyFile
+          << ( mOperation == Encrypt ? "--encrypt" : "--decrypt" );
+    const bool ok = KProcess::start( rm, All );
+    if ( !ok )
+      return ok;
+    mInput = input.copy();
+    writeStdin( mInput.begin(), mInput.size() );
+    connect( this, SIGNAL(wroteStdin(KProcess*)), this, SLOT(closeStdin()) );
+    return true;
+  }
 }
 
 void Kleo::SymCryptRunProcessBase::slotReceivedStdout( KProcess * proc, char * buf, int len ) {

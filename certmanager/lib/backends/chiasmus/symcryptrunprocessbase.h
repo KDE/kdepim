@@ -65,14 +65,12 @@ private slots:
   void slotReceivedStdout( KProcess *, char *, int );
   void slotReceivedStderr( KProcess *, char *, int );
 
-protected:
-  int commSetupDoneP();
-
 private:
   QByteArray mInput;
   QByteArray mOutput;
   QString mStderr;
-  Operation mOperation;
+  const QString mClass, mProgram, mKeyFile;
+  const Operation mOperation;
 };
 
 };
