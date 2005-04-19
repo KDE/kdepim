@@ -89,7 +89,17 @@ class Formatter : public KMail::Interface::BodyPartFormatter
         return Ok;
       CalendarLocal cl( KPimPrefs::timezone() );
       KMInvitationFormatterHelper helper( bodyPart );
-      QString html = IncidenceFormatter::formatICalInvitation( bodyPart->asText(), &cl, &helper );
+      QString source;
+      /* If the bodypart does not have a charset specified, we need to fall back to
+         utf8, not the KMail fallback encoding, so get the contents as binary and decode
+         explicitely. */
+      if ( bodyPart->contentTypeParameter( "charset").isEmpty() ) {
+        const QByteArray &ba = bodyPart->asBinary();
+        source = QString::fromUtf8(ba);
+      } else {
+        source = bodyPart->asText();
+      }
+      QString html = IncidenceFormatter::formatICalInvitation( source, &cl, &helper );
 
       if ( html.isEmpty() ) return AsIcon;
       writer->queue( html );
