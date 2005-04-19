@@ -13,9 +13,9 @@
 -->
 
 <definitions 
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
     targetNamespace="http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl"
     xmlns:tns="http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl"
-	xmlns="http://schemas.xmlsoap.org/wsdl/"
     xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
     xmlns:types="http://schemas.novell.com/2005/01/GroupWise/types"
     xmlns:methods="http://schemas.novell.com/2005/01/GroupWise/methods"
@@ -23,8 +23,8 @@
    
 	<types>
 		<schema xmlns="http://www.w3.org/2001/XMLSchema">
-			<import targetNamespace="http://schemas.novell.com/2005/01/GroupWise/types" schemaLocation="types.xsd"/>
-			<import targetNamespace="http://schemas.novell.com/2005/01/GroupWise/methods" schemaLocation="methods.xsd"/>
+			<import namespace="http://schemas.novell.com/2005/01/GroupWise/types" schemaLocation="types.xsd"/>
+			<import namespace="http://schemas.novell.com/2005/01/GroupWise/methods" schemaLocation="methods.xsd"/>
 		</schema>		
 	</types>
 
