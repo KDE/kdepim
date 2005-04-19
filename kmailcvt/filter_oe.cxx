@@ -3,7 +3,7 @@
                              -------------------
     begin                : Sat Feb 1 2003
     copyright            : (C) 2003 by Laurence Anderson
-                           (C) 2006 by Danny Kukawka
+                           (C) 2005 by Danny Kukawka
     email                : l.d.anderson@warwick.ac.uk
                            danny.Kukawka@web.de
  ***************************************************************************/
