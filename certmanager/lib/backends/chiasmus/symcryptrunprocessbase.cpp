@@ -43,12 +43,13 @@ Kleo::SymCryptRunProcessBase::SymCryptRunProcessBase( const QString & class_, co
                                                       const QString & keyFile, Operation mode,
                                                       QObject * parent, const char * name )
   : KProcess( parent, name ),
-    mClass( class_ ),
-    mProgram( program ),
-    mKeyFile( keyFile ),
     mOperation( mode )
 {
-
+  *this << "symcryptrun"
+        << "--class" << class_
+        << "--program" << program
+        << "--keyfile" << keyFile
+        << ( mode == Encrypt ? "--encrypt" : "--decrypt" );
 }
 
 Kleo::SymCryptRunProcessBase::~SymCryptRunProcessBase() {}
@@ -65,18 +66,10 @@ bool Kleo::SymCryptRunProcessBase::launch( const QByteArray & input, RunMode rm 
       file->writeBlock( input );
     else
       return false;
-    *this << "symcryptrun --class " + quote( mClass )
-      + " --program " + quote( mProgram )
-      + " --keyfile " + quote( mKeyFile )
-      + ( mOperation == Encrypt ? " --encrypt " : " --decrypt " )
-      + " < " + quote( tempfile.name() );
-    setUseShell( true );
+    tempfile.close();
+    *this << "--input" << tempfile.name();
     return KProcess::start( Block, All );
   } else {
-    *this << "symcryptrun" << "--class" << mClass
-          << "--program" << mProgram
-          << "--keyfile" << mKeyFile
-          << ( mOperation == Encrypt ? "--encrypt" : "--decrypt" );
     const bool ok = KProcess::start( rm, All );
     if ( !ok )
       return ok;

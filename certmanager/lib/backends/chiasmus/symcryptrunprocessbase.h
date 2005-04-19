@@ -69,7 +69,6 @@ private:
   QByteArray mInput;
   QByteArray mOutput;
   QString mStderr;
-  const QString mClass, mProgram, mKeyFile;
   const Operation mOperation;
 };
 
