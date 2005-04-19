@@ -19,7 +19,9 @@
 	xmlns:types="http://schemas.novell.com/2005/01/GroupWise/types" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
+			
+	<xs:import namespace="http://schemas.novell.com/2005/01/GroupWise/types" schemaLocation="types.xsd"/>
+	
 	<xs:element name="acceptRequest">
 		<xs:complexType>
 			<xs:sequence>
@@ -302,6 +304,7 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="getAddressBookListRequest">
+		<xs:complexType/>
 	</xs:element>
 	<xs:element name="getAddressBookListResponse">
 		<xs:complexType>
@@ -339,6 +342,7 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="getCategoryListRequest">
+		<xs:complexType/>
 	</xs:element>
 	<xs:element name="getCategoryListResponse">
 		<xs:complexType>
@@ -349,6 +353,7 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="getCustomListRequest">
+		<xs:complexType/>
 	</xs:element>
 	<xs:element name="getCustomListResponse">
 		<xs:complexType>
@@ -481,6 +486,7 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="getProxyAccessListRequest">
+		<xs:complexType/>
 	</xs:element>
 	<xs:element name="getProxyAccessListResponse">
 		<xs:complexType>
@@ -491,6 +497,7 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="getProxyListRequest">
+		<xs:complexType/>
 	</xs:element>
 	<xs:element name="getProxyListResponse">
 		<xs:complexType>
@@ -531,6 +538,7 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="getTimezoneListRequest">
+		<xs:complexType/>
 	</xs:element>
 	<xs:element name="getTimezoneListResponse">
 		<xs:complexType>
@@ -563,6 +571,7 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="logoutRequest">
+		<xs:complexType/>
 	</xs:element>
 	<xs:element name="logoutResponse">
 		<xs:complexType>
