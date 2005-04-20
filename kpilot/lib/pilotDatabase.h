@@ -252,7 +252,7 @@ private:
 	bool fOwn;
 } ;
 
-template <typename appinfo, int(*f)(appinfo *, unsigned char *, int)>
+template <typename appinfo, int(*f)(appinfo *, unsigned char *, PI_SIZE_T)>
 class PilotAppInfo : public PilotAppInfoBase
 {
 public:
