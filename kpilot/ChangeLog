@@ -7,6 +7,13 @@ TODO: get an innocuous database to run PilotLocalDatabase tests with.
 TODO: move PilotLocalDatabase to a QValueVector<PilotRecord *>.
 TODO: provide template-based, interpreted databases much like the
   AppInfo classes now have.
+TODO: give the knotes conduit a decent test mode
+
+2005-04-20  Adriaan de Groot
+* Finally added a general test() function to sync actions to mirror the
+  exec() call. By default, this calls exec() and logs a warning. Removed it
+  again because it won't work -- SyncAction doesn't _have_ a SyncMode set.
+* Started doing a little bit of test code in the KNotes conduit.
 
 2005-04-18  Adriaan de Groot
 * Being on vacation doesn't mean I'm not on the job. Doxied a lot, did some cleanup.

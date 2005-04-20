@@ -212,7 +212,47 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 {
 	FUNCTIONSETUP;
 
+	if (syncMode().isTest())
+	{
+		test();
+		delayDone();
+		return true;
+	}
+
 	QString e;
+	if (!retrieveKNotesInfo()) return false;
+
+	// Database names seem to be latin1
+	if (!openDatabases(CSL1("MemoDB")))
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
+			<< "Can not open databases." << endl;
+#endif
+		emit logError(i18n("Could not open MemoDB on the Handheld."));
+		return false;
+	}
+
+	fP->fTimer = new QTimer(this);
+	fActionStatus = Init;
+	resetIndexes();
+
+	connect(fP->fTimer,SIGNAL(timeout()),SLOT(process()));
+	fP->fTimer->start(0,false);
+
+	return true;
+}
+
+void KNotesAction::test()
+{
+	if (!retrieveKNotesInfo()) return;
+	listNotes();
+}
+
+bool KNotesAction::retrieveKNotesInfo()
+{
+	FUNCTIONSETUP;
+
 	if (!fP || !fP->fDCOP)
 	{
 #ifdef DEBUG
@@ -224,7 +264,6 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 		return false;
 
 	}
-
 
 	QCString knotesAppname = "knotes" ;
 	if (!PluginUtility::isRunning(knotesAppname))
@@ -257,33 +296,8 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 		return false;
 
 	}
-
-	// Database names seem to be latin1
-	if (!openDatabases(CSL1("MemoDB")))
-	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
-			<< "Can not open databases." << endl;
-#endif
-		emit logError(i18n("Could not open MemoDB on the Handheld."));
-		return false;
-	}
-
-	if (syncMode().isTest())
-	{
-		listNotes();
-		return delayDone();
-	}
-
-	fP->fTimer = new QTimer(this);
-	fActionStatus = Init;
-	resetIndexes();
-
-	connect(fP->fTimer,SIGNAL(timeout()),SLOT(process()));
-	fP->fTimer->start(0,false);
-
-	return true;
 }
+
 
 void KNotesAction::resetIndexes()
 {
