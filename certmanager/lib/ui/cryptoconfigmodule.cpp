@@ -31,6 +31,8 @@
 
 #include "cryptoconfigmodule.h"
 #include "directoryserviceswidget.h"
+#include "kdhorizontalline.h"
+
 #include <kleo/cryptoconfig.h>
 
 #include <klineedit.h>
