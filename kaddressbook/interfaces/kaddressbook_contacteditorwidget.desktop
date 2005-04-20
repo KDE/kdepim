@@ -10,7 +10,10 @@ Comment[da]=KAddressBook plugin til kontakteditorkontrol
 Comment[de]=Addressbuch Kontakteditor-Widget Plugin
 Comment[es]=Accesorio de elemento de editor de contactos para KAddressBook
 Comment[et]=KDE aadressiraamatu kontaktide redigeerimise plugin
+Comment[eu]=KAddressBook-en kontaktu editore trepetaren plugin-a
+Comment[fi]=Osoitekirjan yhteystietojen muokkainsovelma
 Comment[fr]=Module d'édition de contacts de KAddressBook
+Comment[hi]=के-एड्रेस-बुक सम्पर्क संपादक विजेट प्लगइन
 Comment[hu]=KAddressBook névjegyszerkesztő bővítőmodul
 Comment[it]=Plugin editor dei contatti di KAddressbook
 Comment[ja]=KAddressbook コンタクト エディタ ウィジェット プラグイン
@@ -24,13 +27,12 @@ Comment[ru]=Редактор контакта адресной книги KDE
 Comment[sk]=KAddressBook modul pre editor kontaktov
 Comment[sl]=Vstavek gradnika urejevalnika stikov za Adresar
 Comment[sr]=KAddressBook прикључак контроле едитора контаката
-Comment[sr@Latn]=KAddressBook прикључак контроле едитора контаката
+Comment[sr@Latn]=KAddressBook priključak kontrole editora kontakata
 Comment[sv]=Kadressbok-insticksprogram för kontakteditor
 Comment[ta]=கேமுகவரிபுத்தகம் தொடர்பு தொகுப்பான் சாளர சொருகுப்பொருள்
 Comment[tg]=Муҳаррири алоқоти китоби адресии KDE
 Comment[tr]=Adres Defteri Kişi Düzenleyici Parçacık Eklentisi
 Comment[uk]=Втулок редагування контактів адресної книги
-Comment[xx]=xxKAddressBook Contact Editor Widget Pluginxx
 Comment[zh_CN]=KAddressBook 联系人编辑部件插件
 
 [PropertyDef::X-KDE-KAddressBook-CEWPluginVersion]

@@ -14,6 +14,7 @@ Name[de]=Komposer-Plugin
 Name[el]=Πρόσθετο του Komposer
 Name[es]=Accesorio Komposer
 Name[et]=Komposeri plugin
+Name[eu]=Komposer plugin-a
 Name[fi]=Komposer-liitännäinen
 Name[fr]=Module de Komposer
 Name[gl]=Extensión Komposer
@@ -33,13 +34,12 @@ Name[ru]=Модуль Komposer
 Name[sk]=Modul Komposer
 Name[sl]=Vstavek za Komposer
 Name[sr]=Прикључак Komposer-а
-Name[sr@Latn]=Dodatak sastavljača
+Name[sr@Latn]=Priključak Komposer-a
 Name[sv]=Komposer-insticksprogram
 Name[ta]=கம்போசர் சொருகுப்பொருள்
 Name[tg]=Модули Komposer
 Name[tr]=Komposer Eklentisi
 Name[uk]=Втулок Komposer
-Name[xx]=xxKomposer Pluginxx
 Name[zh_CN]=Komposer 插件
 
 [PropertyDef::X-Komposer-Version]
