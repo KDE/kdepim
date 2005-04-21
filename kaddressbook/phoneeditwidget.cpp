@@ -175,7 +175,7 @@ PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
 
   mAddButton = new QPushButton( i18n( "Add" ), this );
   mAddButton->setMaximumSize( mAddButton->sizeHint() );
-  layout->addWidget( mAddButton, 1, 0 );
+  layout->addWidget( mAddButton, 1, 0, Qt::AlignRight );
 
   mRemoveButton = new QPushButton( i18n( "Remove" ), this );
   mRemoveButton->setMaximumSize( mRemoveButton->sizeHint() );
@@ -218,6 +218,7 @@ void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
       mPhoneNumberList.append( KABC::PhoneNumber( "", types[ i ] ) );
 
   updateWidgets();
+  updateButtons();
 }
 
 KABC::PhoneNumber::List PhoneEditWidget::phoneNumbers() const
@@ -243,6 +244,7 @@ void PhoneEditWidget::add()
   mPhoneNumberList.append( KABC::PhoneNumber() );
 
   updateWidgets();
+  updateButtons();
 }
 
 void PhoneEditWidget::remove()
@@ -251,6 +253,7 @@ void PhoneEditWidget::remove()
   changed();
 
   updateWidgets();
+  updateButtons();
 }
 
 void PhoneEditWidget::updateWidgets()
@@ -274,6 +277,11 @@ void PhoneEditWidget::updateWidgets()
 
     ++counter;
   }
+}
+
+void PhoneEditWidget::updateButtons()
+{
+  mRemoveButton->setEnabled( mPhoneNumberList.count() > 3 );
 }
 
 void PhoneEditWidget::changed( int pos )

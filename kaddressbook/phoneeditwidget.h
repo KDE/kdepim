@@ -110,6 +110,7 @@ class PhoneEditWidget : public QWidget
 
   private:
     void updateWidgets();
+    void updateButtons();
 
     KABC::PhoneNumber::List mPhoneNumberList;
     QPtrList<PhoneNumberWidget> mWidgets;
