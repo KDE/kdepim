@@ -1390,7 +1390,7 @@ int vcaltime_utc_offset( QDateTime ictt, QString tzid )
   //source says this is DEPRECATED, but it doesn't say what to use instead
   //how to handle failure from icaltimezone_get_builtin_timezone_from_tzid()?
   return icaltimezone_get_utc_offset(
-    icaltimezone_get_builtin_timezone_from_tzid( tzid.latin1() ),
+    icaltimezone_get_builtin_timezone( tzid.latin1() ),
     &tt, &daylight );
 }
 

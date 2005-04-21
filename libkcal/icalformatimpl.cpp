@@ -1822,7 +1822,7 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
     else
       t = icaltime_convert_to_zone(
         t,
-        icaltimezone_get_builtin_timezone_from_tzid (
+        icaltimezone_get_builtin_timezone (
           mParent->timeZoneId().utf8() ) );
   }
 
