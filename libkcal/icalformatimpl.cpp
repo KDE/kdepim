@@ -1838,7 +1838,7 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
   kdDebug(5800) << "--- H: " << t.hour << " M: " << t.minute << " S: " << t.second
             << endl;
   kdDebug(5800) << "--- isDate: " << t.is_date << endl;
-  kdDebug(5800) << "--- isUtc: " << t.is_utc << endl;
+  kdDebug(5800) << "--- isUtc: " << icaltime_is_utc( t )<< endl;
   kdDebug(5800) << "--- zoneId: " << t.zone << endl;
 #endif
 
@@ -1846,14 +1846,14 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
   t = icaltime_convert_to_zone( t, icaltimezone_get_utc_timezone() );
 
   if ( icaltime_is_utc( t ) && mCompat && mCompat->useTimeZoneShift() ) {
-    // kdDebug(5800) << "--- Converting time to zone " << mParent->timeZoneId() << " (" << ICalDate2QDate(t) << ")." << endl;
+//    kdDebug(5800) << "--- Converting time to zone " << mParent->timeZoneId() << " (" << ICalDate2QDate(t) << ")." << endl;
     if (mParent->timeZoneId().isEmpty())
       t = icaltime_convert_to_zone( t, 0 ); //make floating timezone
     else
       t = icaltime_convert_to_zone(
         t,
-        icaltimezone_get_builtin_timezone_from_tzid (
-          mParent->timeZoneId().utf8() ) );
+        icaltimezone_get_builtin_timezone ( mParent->timeZoneId().latin1() ) );
+//    kdDebug(5800) << "--- Converted to zone " << mParent->timeZoneId() << " (" << ICalDate2QDate(t) << ")." << endl;
   }
 
   return ICalDate2QDate(t);
