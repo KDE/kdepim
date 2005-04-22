@@ -46,12 +46,24 @@ extern "C" {
 
 using namespace KCal;
 
+/* Static helpers */
 static QDateTime ICalDate2QDate(const icaltimetype& t)
 {
   // Outlook sends dates starting from 1601-01-01, but QDate()
   // can only handle dates starting 1752-09-14.
   const int year = (t.year>=1754) ? t.year : 1754;
   return QDateTime(QDate(year,t.month,t.day), QTime(t.hour,t.minute,t.second));
+}
+
+static void _dumpIcaltime( const icaltimetype& t)
+{
+  kdDebug(5800) << "--- Y: " << t.year << " M: " << t.month << " D: " << t.day
+      << endl;
+  kdDebug(5800) << "--- H: " << t.hour << " M: " << t.minute << " S: " << t.second
+      << endl;
+  kdDebug(5800) << "--- isDate: " << t.is_date << endl;
+  kdDebug(5800) << "--- isUtc: " << icaltime_is_utc( t )<< endl;
+  kdDebug(5800) << "--- zoneId: " << t.zone << endl;
 }
 
 const int gSecondsPerMinute = 60;
@@ -1816,31 +1828,31 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
   t.zone = 0;
   t.is_utc = 0;
 
-  if ( mParent->utc() ) {
-    if (mParent->timeZoneId().isEmpty())
-      t = icaltime_convert_to_zone( t, 0 ); //make floating timezone
-    else
-      t = icaltime_convert_to_zone(
-        t,
-        icaltimezone_get_builtin_timezone (
-          mParent->timeZoneId().utf8() ) );
+  //_dumpIcaltime( t );
+  /* The QDateTime we get passed in is to be considered in the timezone of
+   * the current calendar (mParent's), or, if there is none, to be floating.
+   * In the later case store a floating time, in the former normalize to utc. */
+  if (mParent->timeZoneId().isEmpty())
+    t = icaltime_convert_to_zone( t, 0 ); //make floating timezone
+  else {
+    icaltimezone* tz = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().latin1() );
+    icaltimezone* utc = icaltimezone_get_utc_timezone();
+    if ( tz != utc ) {
+      t.zone = tz;
+      t = icaltime_convert_to_zone( t, utc );
+    } else {
+      t.is_utc = 1;
+      t.zone = utc;
+    }
   }
-
+  //_dumpIcaltime( t );
   return t;
 }
 
 QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
 {
-#if 0
   kdDebug(5800) << "ICalFormatImpl::readICalDateTime()" << endl;
-  kdDebug(5800) << "--- Y: " << t.year << " M: " << t.month << " D: " << t.day
-            << endl;
-  kdDebug(5800) << "--- H: " << t.hour << " M: " << t.minute << " S: " << t.second
-            << endl;
-  kdDebug(5800) << "--- isDate: " << t.is_date << endl;
-  kdDebug(5800) << "--- isUtc: " << icaltime_is_utc( t )<< endl;
-  kdDebug(5800) << "--- zoneId: " << t.zone << endl;
-#endif
+  _dumpIcaltime( t );
 
   // First convert the time into UTC.
   t = icaltime_convert_to_zone( t, icaltimezone_get_utc_timezone() );
