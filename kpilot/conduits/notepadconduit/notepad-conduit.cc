@@ -132,18 +132,22 @@ NotepadActionThread::NotepadActionThread(QObject *parent, int pilotSocket) :
 
 	PilotSerialDatabase *db = new PilotSerialDatabase(fPilotSocket, "npadDB");
 
-	// int n = db->recordCount();
-	QValueList<recordid_t> vl = db->idList();
-	QValueList<recordid_t>::iterator it;
-	struct NotePad a;
-	for ( it = vl.begin(); it != vl.end(); ++it ) {
-		PilotRecord *pr = db->readRecordById(*it);
-		if(pr) {
-			unpack_NotePad(&a, (unsigned char*)pr->getData(), pr->getLen());
-			saveImage(&a);
+	int n = db->recordCount();
+
+	if ( n > 0 )
+	{
+		QValueList<recordid_t> vl = db->idList();
+		QValueList<recordid_t>::iterator it;
+		struct NotePad a;
+		for ( it = vl.begin(); it != vl.end(); ++it ) {
+			PilotRecord *pr = db->readRecordById(*it);
+			if(pr) {
+				unpack_NotePad(&a, (unsigned char*)pr->getData(), pr->getLen());
+				saveImage(&a);
+			}
 		}
 	}
-    KPILOT_DELETE(db);
+	KPILOT_DELETE(db);
 	QApplication::postEvent(fParent, new QEvent(QEvent::User));
 }
 
