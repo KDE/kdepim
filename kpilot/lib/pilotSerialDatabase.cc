@@ -134,7 +134,13 @@ QValueList<recordid_t> PilotSerialDatabase::idList()
 
 	recordid_t *idarr=new recordid_t[idlen];
 	int idlenread;
-	dlp_ReadRecordIDList (fDBSocket, getDBHandle(), 0, 0, idlen, idarr, &idlenread);
+	int r = dlp_ReadRecordIDList (fDBSocket, getDBHandle(), 0, 0, idlen, idarr, &idlenread);
+
+	if ( (r<0) || (idlenread<1) )
+	{
+		kdWarning() << k_funcinfo << ": Failed to read ID list from database." << endl;
+		return idlist;
+	}
 
 	// now create the QValue list from the idarr:
 	for (idlen=0; idlen<idlenread; idlen++)
