@@ -48,9 +48,12 @@
 # endif
 #endif
 
-#include <pi-macros.h>
+#include <pi-dlp.h>
 
-#include "pilotRecord.h"
+
+class PilotRecord;
+
+typedef QValueList<recordid_t> RecordIDList;
 
 
 
@@ -208,8 +211,8 @@ public:
 	static const int MAX_APPINFO_SIZE=8192;
 
 	/** Constructor, intended for untyped access to the AppInfo only. This throws
-	* away everything but the category information. In this variety, the 
-	* CategoryAppInfo structure is owned by the PilotAppInfoBase object. 
+	* away everything but the category information. In this variety, the
+	* CategoryAppInfo structure is owned by the PilotAppInfoBase object.
 	*/
 	PilotAppInfoBase(PilotDatabase *d);
 	/** Destructor. */
@@ -236,7 +239,7 @@ public:
 	*               @param unknownIsUnfiled is true.
 	*  @return  0         == Unfiled means unknown category selected when
 	*               @param unknownIsUnfiled is false.
-	* 
+	*
 	*/
 	static int findCategory(const QString &name, bool unknownIsUnfiled, struct CategoryAppInfo *info);
 	/** Alternative to the above inconvenience function. */

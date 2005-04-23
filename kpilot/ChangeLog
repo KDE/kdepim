@@ -9,6 +9,11 @@ TODO: provide template-based, interpreted databases much like the
   AppInfo classes now have.
 TODO: give the knotes conduit a decent test mode
 
+2005-04-22  Adriaan de Groot
+* Fixed (I hope) bug in notepad conduit related to having zero records in the
+  database.
+* Added some more dox.
+
 2005-04-20  Adriaan de Groot
 * Finally added a general test() function to sync actions to mirror the
   exec() call. By default, this calls exec() and logs a warning. Removed it
