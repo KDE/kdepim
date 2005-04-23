@@ -1488,18 +1488,56 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 
 	if (flags & eqFlagsPhones)
 	{
-		if(_compare(abEntry.phoneNumber(PhoneNumber::Work).number(),
-			piAddress->getPhoneField(PilotAddress::eWork, false))) return false;
-		if(_compare(abEntry.phoneNumber(PhoneNumber::Home).number(),
-			piAddress->getPhoneField(PilotAddress::eHome, false))) return false;
+		// first, look for missing e-mail addresses on either side
+		QStringList abEmails(abEntry.emails());
+		QStringList piEmails(piAddress->getEmails());
+
+		if (abEmails.count() != piEmails.count()) return false;
+		for (QStringList::Iterator it = abEmails.begin(); it != abEmails.end(); it++) {
+			if (!piEmails.contains(*it)) return false;
+		}
+		for (QStringList::Iterator it = piEmails.begin(); it != piEmails.end(); it++) {
+			if (!abEmails.contains(*it)) return false;
+		}
+
+		// now look for differences in phone numbers.  Note:  we can't just compare one
+		// of each kind of phone number, because there's no guarantee that if the user
+		// has more than one of a given type, we're comparing the correct two.
+
+		PhoneNumber::List abPhones(abEntry.phoneNumbers());
+		PhoneNumber::List piPhones(piAddress->getPhoneNumbers());
+		// first make sure that all of the pilot phone numbers are in kabc
+		for (PhoneNumber::List::Iterator it = piPhones.begin(); it != piPhones.end(); it++) {
+			PhoneNumber piPhone = *it;
+			bool found=false;
+			for (PhoneNumber::List::Iterator it = abPhones.begin(); it != abPhones.end(); it++) {
+				PhoneNumber abPhone = *it;
+				if (_compare(piPhone.number(), abPhone.number()) == 0) {
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+				return false;
+		}
+		// now the other way (*cringe*  kabc has the capacity to store way more addresses
+		// than the Pilot, so this might give false positives more than we'd want....
+		for (PhoneNumber::List::Iterator it = abPhones.begin(); it != abPhones.end(); it++) {
+			PhoneNumber abPhone = *it;
+			bool found=false;
+			for (PhoneNumber::List::Iterator it = piPhones.begin(); it != piPhones.end(); it++) {
+				PhoneNumber piPhone = *it;
+				if (_compare(piPhone.number(), abPhone.number()) == 0) {
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+				return false;
+		}
+
 		if(_compare(getOtherField(abEntry),
 			piAddress->getPhoneField(PilotAddress::eOther, false))) return false;
-		if(_compare(abEntry.preferredEmail(),
-			piAddress->getPhoneField(PilotAddress::eEmail, false))) return false;
-		if(_compare(getFax(abEntry).number(),
-			piAddress->getPhoneField(PilotAddress::eFax, false))) return false;
-		if(_compare(abEntry.phoneNumber(PhoneNumber::Cell).number(),
-			piAddress->getPhoneField(PilotAddress::eMobile, false))) return false;
 	}
 
 	if (flags & eqFlagsAdress)
@@ -1556,19 +1594,16 @@ void AbbrowserConduit::_copy(PilotAddress *toPilotAddr, Addressee &fromAbEntry)
 	toPilotAddr->setField(entryTitle, fromAbEntry.prefix());
 	toPilotAddr->setField(entryNote, fromAbEntry.note());
 
-	// do email first, to ensure its gets stored
-	toPilotAddr->setPhoneField(PilotAddress::eEmail, fromAbEntry.preferredEmail(), false);
-	toPilotAddr->setPhoneField(PilotAddress::eWork,
-		fromAbEntry.phoneNumber(PhoneNumber::Work).number(), false);
-	toPilotAddr->setPhoneField(PilotAddress::eHome,
-		fromAbEntry.phoneNumber(PhoneNumber::Home).number(), false);
-	toPilotAddr->setPhoneField(PilotAddress::eMobile,
-		fromAbEntry.phoneNumber(PhoneNumber::Cell).number(), false);
-	toPilotAddr->setPhoneField(PilotAddress::eFax, getFax(fromAbEntry).number(), false);
-	toPilotAddr->setPhoneField(PilotAddress::ePager,
-		fromAbEntry.phoneNumber(PhoneNumber::Pager).number(), false);
+	// do email first, to ensure they get stored
+	toPilotAddr->setEmails(fromAbEntry.emails());
+	// now in one fell swoop, set all phone numbers from the Addressee.  Note,
+	// we don't need to differentiate between Fax numbers here--all Fax numbers
+	// (Home Fax or Work Fax or just plain old Fax) will get synced to the Pilot
+	toPilotAddr->setPhoneNumbers(fromAbEntry.phoneNumbers());
+	// Other field is an oddball and if the user has more than one field set
+	// as "Other" then only one will be carried over.
 	toPilotAddr->setPhoneField(PilotAddress::eOther, getOtherField(fromAbEntry), false);
-	toPilotAddr->setShownPhone(PilotAddress::eMobile);
+	toPilotAddr->setShownPhone(PilotAddress::eHome);
 
 	KABC::Address homeAddress = getAddress(fromAbEntry);
 	_setPilotAddress(toPilotAddr, homeAddress);
@@ -1628,24 +1663,38 @@ void AbbrowserConduit::_copy(Addressee &toAbEntry, PilotAddress *fromPiAddr)
 	toAbEntry.setNote(fromPiAddr->getField(entryNote));
 
 	// copy the phone stuff
-	toAbEntry.removeEmail(toAbEntry.preferredEmail());
-	toAbEntry.insertEmail(fromPiAddr->getPhoneField(PilotAddress::eEmail, false), true);
+	// first off, handle the e-mail addresses as a group and separate from
+	// the other phone number fields
+	toAbEntry.setEmails(fromPiAddr->getEmails());
 
-	_copyPhone(toAbEntry,
-		toAbEntry.phoneNumber(PhoneNumber::Home),
-		fromPiAddr->getPhoneField(PilotAddress::eHome, false));
-	_copyPhone(toAbEntry,
-		toAbEntry.phoneNumber(PhoneNumber::Work),
-		fromPiAddr->getPhoneField(PilotAddress::eWork, false));
-	_copyPhone(toAbEntry,
-		toAbEntry.phoneNumber(PhoneNumber::Cell),
-		fromPiAddr->getPhoneField(PilotAddress::eMobile, false));
-	_copyPhone(toAbEntry,
-		getFax(toAbEntry),
-		fromPiAddr->getPhoneField(PilotAddress::eFax, false));
-	_copyPhone(toAbEntry,
-		toAbEntry.phoneNumber(PhoneNumber::Pager),
-		fromPiAddr->getPhoneField(PilotAddress::ePager, false));
+	// going from Pilot to kabc, we need to clear out all phone records in kabc
+	// so that they can be set from the Pilot.  If we do not do this, then records
+	// will be left in kabc when they are removed from the Pilot and we'll look
+	// broken.
+	PhoneNumber::List old = toAbEntry.phoneNumbers();
+	for (PhoneNumber::List::Iterator it = old.begin(); it != old.end(); ++it) {
+		PhoneNumber phone = *it;
+		toAbEntry.removePhoneNumber(phone);
+	}
+
+	// now, get the phone numbers from the Pilot and set them one at a time in kabc
+	PhoneNumber::List phones = fromPiAddr->getPhoneNumbers();
+	for (PhoneNumber::List::Iterator it = phones.begin(); it != phones.end(); ++it) {
+		PhoneNumber phone = *it;
+		// fax is an odd-ball because while the Pilot has a single "Fax" field, kabc has
+		// both a "Home Fax" and a "Work Fax" field and we need to tell kabc
+		// what our user has asked us to.
+		if (phone.type() & PhoneNumber::Fax) {
+			_copyPhone(toAbEntry, getFax(toAbEntry), phone.number());
+		} else {
+			_copyPhone(toAbEntry, toAbEntry.phoneNumber(phone.type()),
+				phone.number());
+		}
+	}
+
+	// Note:  this is weird, and it may cause data to not be synced if there is
+	// more than one "Other" field being used on the Pilot, since only one will
+	// be synced in either direction.
 	setOtherField(toAbEntry, fromPiAddr->getPhoneField(PilotAddress::eOther, false));
 
 	KABC::Address homeAddress = getAddress(toAbEntry);
