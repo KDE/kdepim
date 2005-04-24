@@ -217,8 +217,8 @@ inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
 //
 //
-#define FUNCTIONSETUP const int fname = 0;
-#define FUNCTIONSETUPL(a) const int fname = a;
+#define FUNCTIONSETUP const int fname = 0; Q_UNUSED(fname);
+#define FUNCTIONSETUPL(a) const int fname = a; Q_UNUSED(fname);
 #endif
 
 #define KPILOT_VERSION	"4.5.1 (baby)"
