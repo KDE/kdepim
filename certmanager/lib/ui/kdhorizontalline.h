@@ -61,6 +61,8 @@ public:
   QSize minimumSizeHint() const;
   QSizePolicy sizePolicy() const;
 
+  static int indentHint();
+
 public slots:
   virtual void setTitle( const QString & title );
 

@@ -120,11 +120,10 @@ QSize KDHorizontalLine::sizeHint() const {
 }
 
 QSize KDHorizontalLine::minimumSizeHint() const {
-  const int w = 2 * 8 // margins on both sides
-                + fontMetrics().width( mTitle, mLenVisible )
-                + fontMetrics().width( QChar( ' ' ) );
+  const int w = fontMetrics().width( mTitle, mLenVisible ) +
+                fontMetrics().width( QChar( ' ' ) );
   const int h = fontMetrics().height();
-  return QSize( w, h );
+  return QSize( QMAX( w, indentHint() ), h ).expandedTo( qApp->globalStrut() );
 }
 
 void KDHorizontalLine::paintEvent( QPaintEvent * e ) {
@@ -135,18 +134,17 @@ void KDHorizontalLine::paintEvent( QPaintEvent * e ) {
     const int h = fm.height();
     const int tw = fm.width( mTitle, mLenVisible ) + fm.width(QChar(' '));
     int x;
-    const int marg = 8;
     if ( mAlign & AlignHCenter )		// center alignment
       x = frameRect().width()/2 - tw/2;
     else if ( mAlign & AlignRight )	// right alignment
-      x = frameRect().width() - tw - marg;
+      x = frameRect().width() - tw;
     else if ( mAlign & AlignLeft )       // left alignment
-      x = marg;
+      x = 0;
     else { // auto align
       if( QApplication::reverseLayout() )
-        x = frameRect().width() - tw - marg;
+        x = frameRect().width() - tw;
       else
-        x = marg;
+        x = 0;
     }
     QRect r( x, 0, tw, h );
     int va = style().styleHint( QStyle::SH_GroupBox_TextLabelVerticalAlignment, this );
@@ -163,6 +161,11 @@ void KDHorizontalLine::paintEvent( QPaintEvent * e ) {
   }
   drawFrame( &paint );
   drawContents( &paint );
+}
+
+// static
+int KDHorizontalLine::indentHint() {
+  return 30;
 }
 
 #include "kdhorizontalline.moc"
