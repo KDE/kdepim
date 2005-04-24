@@ -562,6 +562,10 @@ void AbbrowserConduit::setOtherField(Addressee & abEntry, QString nr)
 
 PhoneNumber AbbrowserConduit::getFax(const Addressee & abEntry)
 {
+	// *NOTE* If our user has said that they want a fax number to be their
+	//        preferred number on their Pilot, this will negate that.  In other
+	//        words, this could be a bug waiting to happen if someone wants to
+	//        have a fax number be their "preferred number".
 	return abEntry.phoneNumber( PhoneNumber::Fax |
 		( (AbbrowserSettings::pilotFax()==0) ?(PhoneNumber::Home) :(PhoneNumber::Work)));
 }
@@ -669,19 +673,8 @@ void AbbrowserConduit::showPilotAddress(PilotAddress *pilotAddress)
 		DEBUGCONDUIT<< fname << "| EMPTY"<<endl;
 		return;
 	}
-	DEBUGCONDUIT << fname << "| Last name = " << pilotAddress->getField(entryLastname) << endl;
-	DEBUGCONDUIT << fname << "| First name = " << pilotAddress->getField(entryFirstname) << endl;
-	DEBUGCONDUIT << fname << "| Company = " << pilotAddress->getField(entryCompany) << endl;
-	DEBUGCONDUIT << fname << "| Job Title = " << pilotAddress->getField(entryTitle) << endl;
-	DEBUGCONDUIT << fname << "| Note = " << pilotAddress->getField(entryNote) << endl;
-	DEBUGCONDUIT << fname << "| Home phone = " << pilotAddress->getPhoneField(PilotAddress::eHome, false) << endl;
-	DEBUGCONDUIT << fname << "| Work phone = " << pilotAddress->getPhoneField(PilotAddress::eWork, false) << endl;
-	DEBUGCONDUIT << fname << "| Mobile phone = " << pilotAddress->getPhoneField(PilotAddress::eMobile, false) << endl;
-	DEBUGCONDUIT << fname << "| Email = " << pilotAddress->getPhoneField(PilotAddress::eEmail, false) << endl;
-	DEBUGCONDUIT << fname << "| Fax = " << pilotAddress->getPhoneField(PilotAddress::eFax, false) << endl;
-	DEBUGCONDUIT << fname << "| Pager = " << pilotAddress->getPhoneField(PilotAddress::ePager, false) << endl;
-	DEBUGCONDUIT << fname << "| Other = " << pilotAddress->getPhoneField(PilotAddress::eOther, false) << endl;
-	DEBUGCONDUIT << fname << "| Category = " << pilotAddress->getCategoryLabel() << endl;
+	DEBUGCONDUIT << fname << "\n"
+			<< pilotAddress->getTextRepresentation(false) << endl;
 	}
 }
 #endif
@@ -1512,9 +1505,20 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 			bool found=false;
 			for (PhoneNumber::List::Iterator it = abPhones.begin(); it != abPhones.end(); it++) {
 				PhoneNumber abPhone = *it;
+				// see if we have the same number here...
 				if (_compare(piPhone.number(), abPhone.number()) == 0) {
-					found = true;
-					break;
+					// *sigh*  Okay, now see if the preferred number has changed.
+					// only check this in one direction, since kabc can have more
+					// than one field as preferred and the pilot can only have one
+					if (piPhone.type() & PhoneNumber::Pref &&
+						!(abPhone.type() & PhoneNumber::Pref)) {
+						// if the pilot says this one is preferred and kabc doesn't
+						// agree, the records don't match.
+						return false;
+					} else {
+						found = true;
+						break;
+					}
 				}
 			}
 			if (!found)
@@ -1603,7 +1607,6 @@ void AbbrowserConduit::_copy(PilotAddress *toPilotAddr, Addressee &fromAbEntry)
 	// Other field is an oddball and if the user has more than one field set
 	// as "Other" then only one will be carried over.
 	toPilotAddr->setPhoneField(PilotAddress::eOther, getOtherField(fromAbEntry), false);
-	toPilotAddr->setShownPhone(PilotAddress::eHome);
 
 	KABC::Address homeAddress = getAddress(fromAbEntry);
 	_setPilotAddress(toPilotAddr, homeAddress);

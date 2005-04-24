@@ -235,6 +235,14 @@ QString PilotAddress::getTextRepresentation(bool richText)
 		}
 	text += ps;
 
+	// category
+	if (!getCategoryLabel().isEmpty())
+	{
+		text += par;
+		text += rtExpand(getCategoryLabel(), richText);
+		text += ps;
+	}
+
 	// note
 	if (!getField(entryNote).isEmpty())
 	{
@@ -243,6 +251,7 @@ QString PilotAddress::getTextRepresentation(bool richText)
 		text += rtExpand(getField(entryNote), richText);
 		text += ps;
 	}
+
 	return text;
 }
 
@@ -255,6 +264,7 @@ QString PilotAddress::getCategoryLabel() const
 
 QStringList PilotAddress::getEmails() const
 {
+	FUNCTIONSETUP;
 	QStringList list;
 	QString test;
 
@@ -271,14 +281,26 @@ QStringList PilotAddress::getEmails() const
 		}
 	}
 
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": returning: ["
+				<< list.size() << "] e-mail addresses." << endl;
+#endif
 	return list;
 }
 
 KABC::PhoneNumber::List PilotAddress::getPhoneNumbers() const
 {
+	FUNCTIONSETUP;
 
 	KABC::PhoneNumber::List list;
 	QString test;
+
+	int shownPhone = getShownPhone() + entryPhone1;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": preferred pilot index is: ["
+				<< shownPhone << "], preferred phone number is: ["
+				<< getField(shownPhone) << "]" << endl;
+#endif
 
 	for (int i = entryPhone1; i <= entryPhone5; i++)
 	{
@@ -291,49 +313,40 @@ KABC::PhoneNumber::List PilotAddress::getPhoneNumbers() const
 			if (ind != eEmail)
 			{
 				int phoneType = pilotToPhoneMap[ind];
+
 				// only populate a PhoneNumber if we have a corresponding type
 				if (phoneType >=0)
 				{
+					// if this is the preferred phone number, set it as such
+					if (shownPhone == i) {
+						phoneType |= KABC::PhoneNumber::Pref;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": found preferred pilot index: ["
+				<< i << "], text: [" << test << "]" << endl;
+#endif
+					}
 					KABC::PhoneNumber ph(test, phoneType);
 					list.append(ph);
+				} else {
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": whoopsie.  pilot phone number: ["
+				<< test << "], index: [" << i << "], type: ["
+				<< ind << "], has no corresponding PhoneNumber type." << endl;
+#endif
 				}
 			}
 		}
 	}
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": returning: ["
+				<< list.size() << "] phone numbers" << endl;
+#endif
 	return list;
-}
-
-KABC::PhoneNumber::List PilotAddress::getPhoneNumbers(EPhoneType type) const
-{
-
-	KABC::PhoneNumber::List list;
-	QString test;
-
-	for (int i = entryPhone1; i <= entryPhone5; i++)
-	{
-		test = getField(i);
-		// only look at this if the field is populated
-		if (!test.isEmpty())
-		{
-			int ind = getPhoneLabelIndex(i-entryPhone1);
-			if (ind == type)
-			{
-				int phoneType = pilotToPhoneMap[ind];
-				// only populate a PhoneNumber if we have a corresponding type
-				if (phoneType >=0)
-				{
-					KABC::PhoneNumber ph(test, phoneType);
-					list.append(ph);
-				}
-			}
-		}
-	}
-	return list;
-
 }
 
 void PilotAddress::setPhoneNumbers(KABC::PhoneNumber::List list)
 {
+	FUNCTIONSETUP;
 	QString test;
 
 	// clear all phone numbers (not e-mails) first
@@ -368,12 +381,30 @@ void PilotAddress::setPhoneNumbers(KABC::PhoneNumber::List list)
 			int phoneKey = it.data();
 			if ( phone.type() & phoneKey)
 			{
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": found pilot type: ["
+				<< pilotKey << "] ("
+				<< fAppInfo.phoneLabels[pilotKey]
+				<< ") for PhoneNumber: ["
+				<< phone.number() << "]" << endl;
+#endif
 				category = pilotKey;
 				break;
 			}
 		}
-		setPhoneField(static_cast<PilotAddress::EPhoneType>(category),
+		int fieldSlot = setPhoneField(static_cast<PilotAddress::EPhoneType>(category),
 					  phone.number(), true, false);
+
+		// if this is the preferred phone number, then set it as such
+		if (phone.type() & KABC::PhoneNumber::Pref) {
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": found preferred PhoneNumber. "
+				<< "setting showPhone to index: ["
+				<< fieldSlot << "], PhoneNumber: ["
+				<< phone.number() << "]" << endl;
+#endif
+			fAddressInfo.showPhone = fieldSlot - entryPhone1;
+		}
 	}
 }
 
@@ -462,7 +493,7 @@ int PilotAddress::_getNextEmptyPhoneSlot() const
 	return entryCustom4;
 }
 
-void PilotAddress::setPhoneField(EPhoneType type, const QString &field,
+int PilotAddress::setPhoneField(EPhoneType type, const QString &field,
 	bool overflowCustom, bool overwriteExisting)
 {
 	FUNCTIONSETUPL(4);
@@ -496,6 +527,7 @@ void PilotAddress::setPhoneField(EPhoneType type, const QString &field,
 
 		fAddressInfo.phoneLabel[labelIndex] = appPhoneLabelNum;
 	}
+	return fieldSlot;
 }
 
 int PilotAddress::_findPhoneFieldSlot(int appTypeNum) const

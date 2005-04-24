@@ -128,7 +128,6 @@ public:
 	fields and will return only those which are not e-mail addresses.
 	 */
 	KABC::PhoneNumber::List getPhoneNumbers() const;
-	KABC::PhoneNumber::List getPhoneNumbers(EPhoneType type) const;
 	void setPhoneNumbers(KABC::PhoneNumber::List list);
 
 	QString getCategoryLabel() const;
@@ -155,8 +154,9 @@ public:
 	*  it will use entryCustom4 field to store the field
 	*  @param overwriteExisting is true, it will overwrite an existing record-type
 	*  with the field, else it will always search for the first available slot
+	 * @return index of the field that this information was set to
 	*/
-	void setPhoneField(EPhoneType type, const QString &field,
+	int setPhoneField(EPhoneType type, const QString &field,
 		bool overflowCustom=true, bool overwriteExisting=true);
 
 	/**
