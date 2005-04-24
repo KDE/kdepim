@@ -338,6 +338,7 @@ void AddressWidget::updateWidget()
 		fAddressList.next();
 	}
 
+	fListBox->sort();
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": " << listIndex << " records" << endl;
 #endif
@@ -676,7 +677,7 @@ void AddressWidget::writeAddress(PilotAddress * which,
 void AddressWidget::slotExport()
 {
 	FUNCTIONSETUP;
-	
+
 	int currentCatID = findSelectedCategory(fCatList,
 		&(fAddressAppInfo.category));
 
