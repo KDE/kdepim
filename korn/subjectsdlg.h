@@ -169,7 +169,7 @@ private slots:
 	void closeDialog();
 	
 	//Functions for the subjects
-public:
+public slots:
 	void reloadSubjects();
 private:
 	void prepareStep1Subjects( KMailDrop* );

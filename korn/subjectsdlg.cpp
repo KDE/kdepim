@@ -5,13 +5,13 @@
 #include <kdebug.h>
 #include <qlayout.h>
 #include <qdatetime.h>
+#include <qtimer.h>
 #include "mailsubject.h"
 #include <klocale.h>
 #include <qprogressdialog.h>
 #include <kmessagebox.h>
 #include "maildlg.h"
 #include "progress_dialog.h"
-
 
 KornSubjectsDlg::SubjectListViewItem::SubjectListViewItem( QListView *parent, KornMailSubject * item)
 	// set the column strings except column 2 (date)
@@ -122,15 +122,29 @@ void KornSubjectsDlg::loadMessages()
 
 void KornSubjectsDlg::listSelectionChanged()
 {
+	QPtrList< QListViewItem > list( _list->selectedItems() );
+	
 	if (!_mailDrop)
 		return;
-	int selected = _list->selectedItems().count();
+	int selected = list.count();
+	bool enableDelete = selected > 0;
+
+	if(enableDelete)
+	{
+		KornSubjectsDlg::SubjectListViewItem* current = (SubjectListViewItem*)list.first();
+		KMailDrop *drop = current->getMailSubject()->getMailDrop();
+		enableDelete = drop->canDeleteMails();
+
+		while( enableDelete &&  ( current = (SubjectListViewItem*)list.next() ) )
+			enableDelete = current->getMailSubject()->getMailDrop()->canDeleteMails();
+	}
 
 	// eneable the show button if one is selected
 	showButton->setEnabled(selected == 1);
 
 	// eneable the delete button if one or more items are selected
-	//TODO//deleteButton->setEnabled((selected > 0) && _mailDrop->canDeleteMails());
+	
+	deleteButton->setEnabled(enableDelete);
 }
 
 void KornSubjectsDlg::doubleClicked(QListViewItem * item)
@@ -293,6 +307,8 @@ void KornSubjectsDlg::deleteSubjectsStruct()
 		return;
 
 	disconnect( _subjects->progress, SIGNAL( cancelPressed() ), this, SLOT( slotSubjectsCanceled() ) );
+
+	this->unsetCursor();
 	
 	delete _subjects->progress;
 	delete _subjects->subjects;
@@ -373,7 +389,6 @@ void KornSubjectsDlg::subjectsReady( bool success )
 			show();
 	}
 }
-
 //---------------------------------
 //Here comes all functions with have to do something with deleting messages
 //---------------------------------
@@ -382,13 +397,13 @@ void KornSubjectsDlg::subjectsReady( bool success )
 //Main function
 void KornSubjectsDlg::deleteMessage()
 {
-	if ( !_delete )
+	if ( _delete )
 		return; //A delete action is already pending
 	
 	makeDeleteStruct();
 	
 	fillDeleteMessageList();
-	
+
 	if ( _delete->messages->count() == 0 )
 	{
 		deleteDeleteStruct();
@@ -422,14 +437,14 @@ void KornSubjectsDlg::makeDeleteStruct()
 	_delete->ids = new QPtrList< const KornMailId >;
 	_delete->progress = new QProgressDialog( this, "progress" );
 	_delete->totalNumberOfMessages = 0;
-	
+
 	connect( _delete->progress, SIGNAL( canceled() ), this, SLOT( slotDeleteCanceled() ) );
 }
 
 void KornSubjectsDlg::deleteDeleteStruct()
 {
 	disconnect( _delete->progress, SIGNAL( canceled() ), this, SLOT( slotDeleteCanceled() ) );
-	
+
 	delete _delete->messages;
 	delete _delete->ids;
 	delete _delete->progress;
@@ -439,7 +454,9 @@ void KornSubjectsDlg::deleteDeleteStruct()
 void KornSubjectsDlg::fillDeleteMessageList()
 {
 	QListViewItem *current;
-	for( current = _list->selectedItems().first(); current; current = _list->selectedItems().next() )
+	QPtrList< QListViewItem > list( _list->selectedItems() );
+	
+	for( current = list.first(); current; current = list.next() )
 		_delete->messages->append( ( ( KornSubjectsDlg::SubjectListViewItem * ) current )->getMailSubject() );
 }
 
@@ -449,15 +466,19 @@ void KornSubjectsDlg::fillDeleteIdList( KMailDrop *drop )
 	KornMailSubject *current;
 	for( current = _delete->messages->first(); current; current = _delete->messages->next() )
 		if( current->getMailDrop() == drop )
+		{
 			_delete->ids->append( current->getId() );
+			_delete->messages->remove( current );
+		}
 }
 
 void KornSubjectsDlg::deleteNextMessage()
 {
 	if( _delete->messages->count() == 0 ) //No more messages to delete
 	{
+		QTimer::singleShot( 100, this, SLOT( reloadSubjects() ) );
 		deleteDeleteStruct();
-		reloadSubjects(); //Reload all subjects again
+		//reloadSubjects(); //Reload all subjects again
 		return;
 	}
 	
@@ -500,3 +521,4 @@ void KornSubjectsDlg::slotDeleteCanceled()
 }
 
 #include "subjectsdlg.moc"
+
