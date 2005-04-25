@@ -24,6 +24,36 @@ dnl
 
 AC_DEFUN([KPILOT_CHECK_PISOCK],
 [
+AC_REQUIRE([KDE_CHECK_LIB64])
+
+AC_MSG_CHECKING(for pilot-link (for KPilot))
+AC_ARG_WITH(pilot_link,
+[  --with-pilot-link=PATH  set prefix for pilot-link files @<:@default=check@:>@],
+[
+  case "$withval" in
+  yes)
+    with_pilot_link=CHECK
+    ;;
+  esac ],
+[ with_pilot_link=CHECK ]
+)dnl
+
+case "$with_pilot_link" in
+CHECK)
+	AC_MSG_RESULT([autodetect])
+	;;
+*)
+	if test -d "$with_pilot_link" ; then
+		AC_MSG_RESULT([$with_pilot_link])
+	else
+		AC_MSG_RESULT([autodetect])
+		with_pilot_link=CHECK
+		AC_MSG_WARN([The path provided for pilot-link, $with_pilot_link, does not exist.])
+	fi
+	;;
+esac
+
+
 
 AC_LANG_PUSH(C++)
 
@@ -44,8 +74,9 @@ pisock_path=""
 dnl Try looking normally
 dnl
 dnl
+if test "x$with_pilot_link" = "xCHECK" ; then
 AC_CHECK_HEADER(pi-file.h,[HAVE_PISOCK=1], )
-
+fi
 
 dnl If nothing found, try some other places that might have
 dnl pilot-link installed. These can be extended for particular
@@ -55,11 +86,17 @@ dnl
 if  test "$HAVE_PISOCK" = "0" ; then
 	pisock_path=""
 	AC_MSG_CHECKING([for pi-file.h alternate])
-	for i in /usr/local/pilot/include /usr/local/include /vol/kde/support/include /usr/include /usr/include/libpisock ; do
-		test -f $i/pi-file.h && HAVE_PISOCK=1
-		test -f $i/pi-file.h && PISOCK_INCLUDE="-I$i"
-		test -f $i/pi-file.h && pisock_path="$i"
-	done
+	if test "x$with_pilot_link" = "xCHECK" ; then
+		for i in /usr/local/pilot/include /usr/local/include /vol/kde/support/include /usr/include /usr/include/libpisock ; do
+			test -f $i/pi-file.h && HAVE_PISOCK=1
+			test -f $i/pi-file.h && PISOCK_INCLUDE="-I$i"
+			test -f $i/pi-file.h && pisock_path="$i"
+		done
+	else
+		test -f "$with_pilot_link/include/pi-file.h" && HAVE_PISOCK=1
+		test -f "$with_pilot_link/include/pi-file.h" && PISOCK_INCLUDE="-I$with_pilot_link/include"
+		test -f "$with_pilot_link/include/pi-file.h" && pisock_path="$with_pilot_link/include"
+	fi
 
 	if test "$pisock_path" ; then
 		AC_MSG_RESULT([found $pisock_path])
@@ -127,6 +164,10 @@ if test "$HAVE_PISOCK" = "1" ; then
 	)
 fi
 
+if test "x$with_pilot_link" = "xCHECK" ; then
+
+# Fairly random collection of possible extra libraries needed
+# to link pilot-link against.
 if test "$HAVE_PISOCK" = "1" ; then
 	HAVE_PISOCK=0
 
@@ -165,7 +206,16 @@ if test "$HAVE_PISOCK" = "1" ; then
 			)
 		]
 		)
+fi
+fi
 
+# No libpisock found yet, but the headers have been found
+if test -z "$PISOCK_LIB" ; then
+if test "$HAVE_PISOCK" = "1" ; then
+
+HAVE_PISOCK=0
+
+if test "x$with_pilot_link" = "xCHECK" ; then
 dnl Run through the loop *anyway*, even if we've already found
 dnl the library. The inner if makes sure that we only check until
 dnl we've found the library once.
@@ -182,14 +232,22 @@ for i in /usr/local/pilot/lib /usr/local/lib /vol/kde/support/lib ; do
 			HAVE_PISOCK=1],[],[])
 	fi
 done
-
 else
-	HAVE_PISOCK="0"
-	PISOCK_LIB=""
-	PISOCK_INCLUDE=""
+	CPPFLAGS="$kpilot_save_cflags  $all_includes $PISOCK_INCLUDE"
+	LDFLAGS="$kpilot_save_ldflags  $all_libraries -L$with_pilot_link/lib -R$with_pilot_link/lib"
+
+	unset ac_cv_lib_pisock_pi_accept
+	AC_CHECK_LIB(pisock,pi_accept,
+		[PISOCK_LIB="-L$with_pilot_link/lib -R$with_pilot_link/lib -lpisock"
+		HAVE_PISOCK=1],[],[])
+fi
+fi
 fi
 
+
 if test "$HAVE_PISOCK" = "0" ; then
+	PISOCK_LIB=""
+	PISOCK_INCLUDE=""
 	DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
 fi
 
