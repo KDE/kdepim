@@ -67,12 +67,6 @@ static const KJanusWidget::Face determineJanusFace( const Kleo::CryptoConfig * c
 Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent, const char * name )
   : KJanusWidget( parent, name, determineJanusFace( config ) ), mConfig( config )
 {
-//  QVBoxLayout *vlay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
-//  mTabWidget = new QTabWidget( this );
-//  vlay->addWidget( mTabWidget );
-
-  const QStringList components = config->componentList();
-
   QWidget * vbox = 0;
   if ( face() == Plain ) {
     vbox = plainPage();
@@ -80,16 +74,18 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
     vlay->setAutoAdd( true );
   }
 
-  for( QStringList::const_iterator compit = components.begin(); compit != components.end(); ++compit ) {
-    //kdDebug(5150) << "Component " << (*compit).local8Bit() << ":" << endl;
-    Kleo::CryptoConfigComponent* comp = config->component( *compit );
+  const QStringList components = config->componentList();
+  for ( QStringList::const_iterator it = components.begin(); it != components.end(); ++it ) {
+    //kdDebug(5150) << "Component " << (*it).local8Bit() << ":" << endl;
+    Kleo::CryptoConfigComponent* comp = config->component( *it );
     Q_ASSERT( comp );
     if ( comp->groupList().empty() )
       continue;
-    if ( face() != Plain )
-    vbox = addVBoxPage( comp->description(), QString::null, loadIcon( *compit ) );
+    if ( face() != Plain ) {
+      vbox = addVBoxPage( comp->description(), QString::null, loadIcon( comp->iconName() ) );
+    }
     CryptoConfigComponentGUI* compGUI =
-      new CryptoConfigComponentGUI( this, comp, vbox, (*compit).local8Bit() );
+      new CryptoConfigComponentGUI( this, comp, vbox, (*it).local8Bit() );
     // KJanusWidget doesn't seem to have iterators, so we store a copy...
     mComponentGUIs.append( compGUI );
   }
@@ -189,6 +185,7 @@ Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
   QGridLayout * glay, QWidget* widget, const char* name )
   : QObject( module, name ), mGroup( group )
 {
+  const int startRow = glay->numRows();
   const QStringList entries = mGroup->entryList();
   for( QStringList::const_iterator it = entries.begin(), end = entries.end() ; it != end; ++it ) {
     Kleo::CryptoConfigEntry* entry = group->entry( *it );
@@ -200,6 +197,17 @@ Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
       entryGUI->load();
     }
   }
+  const int endRow = glay->numRows() - 1;
+  if ( endRow < startRow )
+    return;
+
+  const QString iconName = group->iconName();
+  if ( iconName.isEmpty() )
+    return;
+
+  QLabel * l = new QLabel( widget );
+  l->setPixmap( loadIcon( iconName ) );
+  glay->addMultiCellWidget( l, startRow, endRow, 0, 0, Qt::AlignTop );
 }
 
 bool Kleo::CryptoConfigGroupGUI::save()
