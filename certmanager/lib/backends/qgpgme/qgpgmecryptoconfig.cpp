@@ -198,10 +198,10 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut( KProcIO* proc )
   while( ( result = proc->readln(line) ) != -1 ) {
     //kdDebug(5150) << "GOT LINE:" << line << endl;
     // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
-    QStringList lst = QStringList::split( ':', line, true );
+    const QStringList lst = QStringList::split( ':', line, true );
     if ( lst.count() >= 10 ) {
-      int flags = lst[1].toInt();
-      int level = lst[2].toInt();
+      const int flags = lst[1].toInt();
+      const int level = lst[2].toInt();
       if ( level > 2 ) // invisible or internal -> skip it;
         continue;
       if ( flags & GPGCONF_FLAG_GROUP ) {
@@ -209,12 +209,12 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut( KProcIO* proc )
           mGroups.insert( mCurrentGroupName, mCurrentGroup );
         //else
         //  kdDebug(5150) << "Discarding empty group " << mCurrentGroupName << endl;
-        mCurrentGroup = new QGpgMECryptoConfigGroup( lst[3], level );
+        mCurrentGroup = new QGpgMECryptoConfigGroup( lst[0], lst[3], level );
         mCurrentGroupName = lst[0];
       } else {
         // normal entry
         if ( !mCurrentGroup ) {  // first toplevel entry -> create toplevel group
-          mCurrentGroup = new QGpgMECryptoConfigGroup( QString::null, 0 );
+          mCurrentGroup = new QGpgMECryptoConfigGroup( "<nogroup>", QString::null, 0 );
           mCurrentGroupName = "<nogroup>";
         }
         mCurrentGroup->mEntries.insert( lst[0], new QGpgMECryptoConfigEntry( lst ) );
@@ -320,8 +320,9 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
 
 ////
 
-QGpgMECryptoConfigGroup::QGpgMECryptoConfigGroup( const QString& description, int level )
+QGpgMECryptoConfigGroup::QGpgMECryptoConfigGroup( const QString & name, const QString& description, int level )
   : mEntries( 29 ),
+    mName( name ),
     mDescription( description ),
     mLevel( static_cast<Kleo::CryptoConfigEntry::Level>( level ) )
 {
@@ -400,10 +401,10 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( const QStringList& parsedLine 
   // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
   assert( parsedLine.count() >= 10 ); // called checked for it already
   QStringList::const_iterator it = parsedLine.begin();
-  ++it; // skip name, stored in group
+  mName = *it++;
   mFlags = (*it++).toInt();
   mLevel = (*it++).toInt();
-  mDescription = (*it++);
+  mDescription = *it++;
   bool ok;
   // we keep the real (int) arg type, since it influences the parsing (e.g. for ldap urls)
   mRealArgType = (*it++).toInt();

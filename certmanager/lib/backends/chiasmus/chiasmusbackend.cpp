@@ -155,6 +155,7 @@ namespace {
     {
       assert( i < kleo_chiasmus_config_entries_dim );
     }
+    QString name() const { return kleo_chiasmus_config_entries[mIdx].name; }
     QString description() const { return i18n( kleo_chiasmus_config_entries[mIdx].description ); }
     bool isOptional() const { return kleo_chiasmus_config_entries[mIdx].is_optional; }
     bool isList() const { return kleo_chiasmus_config_entries[mIdx].is_list; }
@@ -255,6 +256,8 @@ namespace {
   public:
     ChiasmusGeneralGroup() : Kleo::CryptoConfigGroup(), mConfigObject( 0 ) {}
     ~ChiasmusGeneralGroup() { clear(); delete mConfigObject; }
+    QString name() const { return "General"; }
+    QString iconName() const { return "chiasmus_chi"; }
     QString description() const { return i18n( "General" ); }
     Kleo::CryptoConfigEntry::Level level() const { return Kleo::CryptoConfigEntry::Level_Basic; }
     QStringList entryList() const {
@@ -308,6 +311,8 @@ namespace {
         mGeneralGroup->sync();
     }
 
+    QString name() const { return "Chiasmus"; }
+    QString iconName() const { return "chiasmus_chi"; }
     QString description() const { return i18n( "Chiasmus" ); }
     QStringList groupList() const { return QStringList() << "General"; }
     Kleo::CryptoConfigGroup * group( const QString & name ) const {

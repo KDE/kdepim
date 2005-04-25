@@ -84,6 +84,11 @@ namespace Kleo {
     virtual ~CryptoConfigEntry() {}
 
     /**
+     * Return the internal name of this entry
+     */
+    virtual QString name() const = 0;
+
+    /**
      * @return user-visible description of this entry
      */
     virtual QString description() const = 0;
@@ -240,7 +245,17 @@ namespace Kleo {
     virtual ~CryptoConfigGroup() {}
 
     /**
-     * @return user-visible description of this entry
+     * Return the internal name of this group
+     */
+    virtual QString name() const = 0;
+
+    /**
+     * Return the name of the icon for this group
+     */
+    virtual QString iconName() const = 0;
+
+    /**
+     * @return user-visible description of this group
      */
     virtual QString description() const = 0;
 
@@ -271,6 +286,16 @@ namespace Kleo {
 
   public:
     virtual ~CryptoConfigComponent() {}
+
+    /**
+     * Return the internal name of this component
+     */
+    virtual QString name() const = 0;
+
+    /**
+     * Return the name of the icon for this component
+     */
+    virtual QString iconName() const = 0;
 
     /**
      * Return user-visible description of this component

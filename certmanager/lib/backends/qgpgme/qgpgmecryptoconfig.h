@@ -82,11 +82,13 @@ class QGpgMECryptoConfigComponent : public QObject, public Kleo::CryptoConfigCom
   Q_OBJECT
 public:
   QGpgMECryptoConfigComponent( QGpgMECryptoConfig*, const QString& name, const QString& description );
-  virtual ~QGpgMECryptoConfigComponent();
+  ~QGpgMECryptoConfigComponent();
 
-  virtual QString description() const { return mDescription; }
-  virtual QStringList groupList() const;
-  virtual Kleo::CryptoConfigGroup* group( const QString& name ) const;
+  QString name() const { return mName; }
+  QString iconName() const { return mName; }
+  QString description() const { return mDescription; }
+  QStringList groupList() const;
+  Kleo::CryptoConfigGroup* group( const QString& name ) const;
 
   void sync( bool runtime );
 
@@ -106,17 +108,20 @@ private:
 class QGpgMECryptoConfigGroup : public Kleo::CryptoConfigGroup {
 
 public:
-  QGpgMECryptoConfigGroup( const QString& description, int level );
-  virtual ~QGpgMECryptoConfigGroup() {}
+  QGpgMECryptoConfigGroup( const QString & name, const QString& description, int level );
+  ~QGpgMECryptoConfigGroup() {}
 
-  virtual QString description() const { return mDescription; }
-  virtual Kleo::CryptoConfigEntry::Level level() const { return mLevel; }
-  virtual QStringList entryList() const;
-  virtual Kleo::CryptoConfigEntry* entry( const QString& name ) const;
+  QString name() const { return mName; }
+  QString iconName() const { return QString::null; }
+  QString description() const { return mDescription; }
+  Kleo::CryptoConfigEntry::Level level() const { return mLevel; }
+  QStringList entryList() const;
+  Kleo::CryptoConfigEntry* entry( const QString& name ) const;
 
 private:
   friend class QGpgMECryptoConfigComponent; // it adds the entries
   QDict<QGpgMECryptoConfigEntry> mEntries;
+  QString mName;
   QString mDescription;
   Kleo::CryptoConfigEntry::Level mLevel;
 };
@@ -124,37 +129,39 @@ private:
 class QGpgMECryptoConfigEntry : public Kleo::CryptoConfigEntry {
 public:
   QGpgMECryptoConfigEntry( const QStringList& parsedLine );
-  virtual ~QGpgMECryptoConfigEntry();
+  ~QGpgMECryptoConfigEntry();
 
-  virtual QString description() const { return mDescription; }
-  virtual bool isOptional() const;
-  virtual bool isList() const;
-  virtual bool isRuntime() const;
-  virtual Level level() const { return static_cast<Level>( mLevel ); }
-  virtual ArgType argType() const { return static_cast<ArgType>( mArgType ); }
-  virtual bool isSet() const;
-  virtual bool boolValue() const;
-  virtual QString stringValue() const;
-  virtual int intValue() const;
-  virtual unsigned int uintValue() const;
-  virtual KURL urlValue() const;
-  virtual unsigned int numberOfTimesSet() const;
-  virtual QStringList stringValueList() const;
-  virtual QValueList<int> intValueList() const;
-  virtual QValueList<unsigned int> uintValueList() const;
-  virtual KURL::List urlValueList() const;
-  virtual void resetToDefault();
-  virtual void setBoolValue( bool );
-  virtual void setStringValue( const QString& );
-  virtual void setIntValue( int );
-  virtual void setUIntValue( unsigned int );
-  virtual void setURLValue( const KURL& );
-  virtual void setNumberOfTimesSet( unsigned int );
-  virtual void setStringValueList( const QStringList& );
-  virtual void setIntValueList( const QValueList<int>& );
-  virtual void setUIntValueList( const QValueList<unsigned int>& );
-  virtual void setURLValueList( const KURL::List& );
-  virtual bool isDirty() const { return mDirty; }
+  QString name() const { return mName; }
+  QString description() const { return mDescription; }
+  bool isOptional() const;
+  bool isList() const;
+  bool isRuntime() const;
+  Level level() const { return static_cast<Level>( mLevel ); }
+  ArgType argType() const { return static_cast<ArgType>( mArgType ); }
+  bool isSet() const;
+  bool boolValue() const;
+  QString stringValue() const;
+  int intValue() const;
+  unsigned int uintValue() const;
+  KURL urlValue() const;
+  unsigned int numberOfTimesSet() const;
+  QStringList stringValueList() const;
+  QValueList<int> intValueList() const;
+  QValueList<unsigned int> uintValueList() const;
+  KURL::List urlValueList() const;
+  void resetToDefault();
+  void setBoolValue( bool );
+  void setStringValue( const QString& );
+  void setIntValue( int );
+  void setUIntValue( unsigned int );
+  void setURLValue( const KURL& );
+  void setNumberOfTimesSet( unsigned int );
+  void setStringValueList( const QStringList& );
+  void setIntValueList( const QValueList<int>& );
+  void setUIntValueList( const QValueList<unsigned int>& );
+  void setURLValueList( const KURL::List& );
+  bool isDirty() const { return mDirty; }
+
   void setDirty( bool b );
   QString outputString() const;
 
@@ -163,6 +170,7 @@ protected:
   QVariant stringToValue( const QString& value, bool unescape ) const;
   QString toString( bool escape ) const;
 private:
+  QString mName;
   QString mDescription;
   QVariant mDefaultValue;
   QVariant mValue;
