@@ -1665,6 +1665,22 @@ void AbbrowserConduit::_copy(Addressee &toAbEntry, PilotAddress *fromPiAddr)
 	toAbEntry.setPrefix(fromPiAddr->getField(entryTitle));
 	toAbEntry.setNote(fromPiAddr->getField(entryNote));
 
+	// set the formatted name
+	QString formattedName;
+	if (! fromPiAddr->getField(entryTitle).stripWhiteSpace().isEmpty()) {
+		formattedName += fromPiAddr->getField(entryTitle).stripWhiteSpace();
+		formattedName += " ";
+	}
+	if (! fromPiAddr->getField(entryFirstname).stripWhiteSpace().isEmpty()) {
+		formattedName += fromPiAddr->getField(entryFirstname).stripWhiteSpace();
+		formattedName += " ";
+	}
+	if (! fromPiAddr->getField(entryLastname).stripWhiteSpace().isEmpty()) {
+		formattedName += fromPiAddr->getField(entryLastname).stripWhiteSpace();
+	}
+
+	toAbEntry.setFormattedName(formattedName);
+
 	// copy the phone stuff
 	// first off, handle the e-mail addresses as a group and separate from
 	// the other phone number fields
