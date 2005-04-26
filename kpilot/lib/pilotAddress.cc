@@ -406,6 +406,36 @@ void PilotAddress::setPhoneNumbers(KABC::PhoneNumber::List list)
 			fAddressInfo.showPhone = fieldSlot - entryPhone1;
 		}
 	}
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Pilot's showPhone now: ["
+				<< fAddressInfo.showPhone << "]." << endl;
+#endif
+
+	// after setting the numbers, make sure that something sensible is set as the
+	// shownPhone on the Pilot if nothing is yet...
+	QString pref = getField(fAddressInfo.showPhone + entryPhone1);
+	if (fAddressInfo.showPhone < 0 || fAddressInfo.showPhone > 4 || pref.isEmpty()) {
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Pilot's showPhone: ["
+				<< fAddressInfo.showPhone
+				<< "] not properly set to a default. trying to set a sensible one."
+				<< endl;
+#endif
+		for (int i = entryPhone1; i <= entryPhone5; i++)
+		{
+			pref = getField(i);
+			if (!pref.isEmpty())
+			{
+				fAddressInfo.showPhone = i - entryPhone1;
+				break;
+			}
+		}
+	}
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Pilot's showPhone now: ["
+				<< fAddressInfo.showPhone << "], and that's final." << endl;
+#endif
 }
 
 void PilotAddress::setEmails(QStringList list)
