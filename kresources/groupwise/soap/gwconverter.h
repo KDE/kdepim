@@ -51,6 +51,12 @@ class GWConverter
     QDateTime charToQDateTime( const char *str );
     QDateTime charToQDateTime( const char *str, const QString &timezone );
 
+    std::string* qDateTimeToString( const QDateTime &string, const QString &timezone );
+    std::string* qDateTimeToString( const QDateTime &string );
+    
+    QDateTime stringToQDateTime( const std::string* );
+
+
   private:
     struct soap* mSoap;
 };

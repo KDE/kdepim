@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- 
 <notice>
-   Copyright © 2005-2005 Novell, Inc. All Rights Reserved.
+   Copyright Â© 2005-2005 Novell, Inc. All Rights Reserved.
 
    THIS WORK IS SUBJECT TO U.S. AND INTERNATIONAL COPYRIGHT LAWS AND TREATIES.
    NO PART OF THIS WORK MAY BE USED, PRACTICED, PERFORMED COPIED, DISTRIBUTED,
@@ -134,6 +134,7 @@
 		<xs:complexContent>
 			<xs:extension base="tns:CalendarItem">
 				<xs:sequence>
+					<xs:element name="startDate" type="xs:dateTime" minOccurs="0" />
 					<xs:element ref="tns:endDate" minOccurs="0" />
 					<xs:element ref="tns:acceptLevel" minOccurs="0" />
 					<xs:element name="alarm" type="tns:Alarm" minOccurs="0" />
@@ -216,9 +217,8 @@
 		<xs:complexContent>
 			<xs:extension base="tns:Mail">
 				<xs:sequence>
-					<xs:element ref="tns:startDate" minOccurs="0" />
 					<xs:element name="rdate" type="tns:RecurrenceDateType" minOccurs="0" />
-<!-- 					<xs:element name="rrule" type="tns:RecurrenceRule" minOccurs="0" />  -->
+ 					<xs:element name="rrule" type="tns:RecurrenceRule" minOccurs="0" />
 					<xs:element name="exdate" type="tns:RecurrenceDateType" minOccurs="0" />
 					<xs:element ref="tns:recurrenceKey" minOccurs="0" />
 					<xs:element name="iCalId" type="xs:string" minOccurs="0" />
@@ -387,6 +387,61 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="DeltaInfo">
+		<xs:sequence>	
+		<xs:annotation>
+		
+<!--
+Name:	WpdsGetCurrentDeltaInfo
+Desc:	Find and return the current Delta information. This will require reading
+			the PO record for the last rebuilt time and finding the current number
+			of Delta records, or the curernt Delta sequence number.
+In:	hDSSession - Handle of session.
+Out:	pwdLastRebuiltTime - Pointer to return the last rebuild time of the current PO.
+		pwdFirstSequence - Pointer to return the first Sequence number that exists.
+		pwdLastSequence - Pointer to return the count or the last used Sequence number.
+Ret:	WERR_OK if successful.
+Include:
+Notes:
+Example:
+
+		
+;WpdsGetNewDeltas
+Desc:		Find all delta records from the specified domain DB which are
+				NEWER than the specified time.
+In:		hSession - Handle to the DS session for the domain db to check.
+			wdPORebuiltTime - Latest PO Rebuilt time to check against.
+			wMaxRecords - Maximum number of records to get in one read.
+			wdSequenceStart - Sequence number to start with.
+Out:		phIterator - Pointer to return MM_HANDLE to iterator.
+			phRecs - Pointer to return MM_HANDLE to WPF_RECORD array.
+			pwNumRecs - Pointer to return record count.
+			pwdLastSeqNum - Poiner to return the last sequence number in the array.
+-->
+		
+			<xs:documentation>
+            The deltaInfo structure contains pointers or sequence numbers into a dynamic list.
+            count:
+               Input:   The desired number of items to be returned in one read.
+               Output:  The actual number of items returned.
+            firstSequence:
+               Input:   The sequence or position to start the read.
+               Output:  The first valid sequence in the list.
+            lastSequence:
+               Input:   N/A
+               Output:  The last sequence number successfully read.
+            lastTimePORebuild:
+                        The last time the administrator rebuilt the post office.  A post office rebuild
+                        resets all the sequence numbers.  If a rebuild occurs, a resync is required before 
+                        new deltas can be applied to a local list.
+			</xs:documentation>		      
+		</xs:annotation>
+            <xs:element name="count" type="xs:unsignedInt" default="-1" minOccurs="0" />
+            <xs:element name="firstSequence" type="xs:unsignedInt" minOccurs="0" />
+            <xs:element name="lastSequence" type="xs:unsignedInt" minOccurs="0" nillable="1" />
+            <xs:element name="lastTimePORebuild" type="xs:unsignedInt" />            
+		</xs:sequence>            
+	</xs:complexType>
 	<xs:complexType name="Distribution">
 		<xs:sequence>
 			<xs:element name="from" type="tns:From" minOccurs="0" />
@@ -530,6 +585,8 @@
 			<xs:enumeration value="pending" />
 			<xs:enumeration value="accepted" />
 			<xs:enumeration value="deleted" />
+			<xs:enumeration value="opened" />
+			<xs:enumeration value="owner" />
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="FolderList">
@@ -674,10 +731,10 @@
 	</xs:simpleType>
 	<xs:complexType name="ImAddress">
 		<xs:sequence>
-			<xs:element name="service" type="xs:string" />
-			<xs:element name="address" type="xs:string" />
+			<xs:element name="service" type="xs:string" minOccurs="0" />
+			<xs:element name="address" type="xs:string" minOccurs="0" />
 			<!-- type = work, home, etc. -->
-			<xs:element name="type" type="xs:string" />
+			<xs:element name="type" type="xs:string" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ImAddressList">
@@ -693,7 +750,6 @@
 			<xs:element ref="tns:modified" minOccurs="0" />
 			<xs:element name="changes" type="tns:ItemChanges" minOccurs="0" maxOccurs="1" />
 		</xs:sequence>
-		<xs:attribute name="type" type="xs:string" />
 	</xs:complexType>
 	<xs:complexType name="ItemChanges">
 		<xs:sequence>
@@ -710,12 +766,11 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="ItemList">
-		<xs:complexContent>
-			<xs:extension base="tns:Items">
-				<xs:attribute name="offset" type="xs:int" />
-				<xs:attribute name="count" type="xs:int" />
-			</xs:extension>
-		</xs:complexContent>
+		<xs:sequence>
+			<xs:element name="item" type="tns:Item" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="offset" type="xs:int" />
+		<xs:attribute name="count" type="xs:int" />
 	</xs:complexType>
 	<xs:complexType name="ItemOptions">
 		<xs:sequence>
@@ -808,6 +863,8 @@
 					<xs:element name="attachments" type="tns:AttachmentInfo" minOccurs="0" />
 					<xs:element name="options" type="tns:ItemOptions" minOccurs="0" />
 					<xs:element name="link" type="tns:LinkInfo" minOccurs="0" />
+					<xs:element name="hasAttachment" type="xs:boolean" default="0" minOccurs="0"/>
+					<xs:element name="size" type="xs:unsignedInt" minOccurs="0" default="0" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -836,9 +893,9 @@
 	<xs:complexType name="MessagePart">
 		<xs:simpleContent>
 			<xs:extension base="xs:base64Binary">
-				<xs:attribute name="contentId" type="xs:string" default=""/>
-				<xs:attribute name="contentType" type="xs:string" />
-				<xs:attribute name="length" type="xs:int" />
+				<xs:attribute name="contentId" type="xs:string" default="" />
+				<xs:attribute name="contentType" type="xs:string" minOccurs="0" default="text/plain" />
+				<xs:attribute name="length" type="xs:int" minOccurs="0" default="0" />
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
@@ -887,7 +944,11 @@
 	</xs:complexType>
 	<xs:complexType name="Note">
 		<xs:complexContent>
-			<xs:extension base="tns:CalendarItem" />
+			<xs:extension base="tns:CalendarItem">
+				<xs:sequence>
+					<xs:element name="startDate" type="xs:date" minOccurs="0" />
+				</xs:sequence>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:simpleType name="NotificationType">
@@ -929,7 +990,7 @@
 	</xs:complexType>
 	<xs:complexType name="PersonalInfo">
 		<xs:sequence>
-			<xs:element name="birthday" type="xs:date" nillable="true" minOccurs="0" />
+			<xs:element name="birthday" type="xs:date" nillable="1" minOccurs="0" />
 			<xs:element name="website" type="xs:anyURI" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
@@ -1064,8 +1125,8 @@
 		<xs:complexContent>
 			<xs:extension base="tns:NameAndEmail">
 				<xs:sequence>
-					<xs:element name="distType" type="tns:DistributionType" />
-					<xs:element name="recipType" type="tns:RecipientType" />
+					<xs:element name="distType" type="tns:DistributionType" minOccurs="0" default="TO" />
+					<xs:element name="recipType" type="tns:RecipientType" minOccurs="0" default="User" />
 					<xs:element name="recipientStatus" type="tns:RecipientStatus" minOccurs="0" maxOccurs="1" />
 				</xs:sequence>
 			</xs:extension>
@@ -1082,6 +1143,7 @@
 			<xs:element name="undeliverable" type="xs:dateTime" minOccurs="0" />
 			<xs:element name="transferred" type="xs:dateTime" minOccurs="0" />
 			<xs:element name="transferDelayed" type="xs:dateTime" minOccurs="0" />
+			<xs:element name="transferFailed" type="tns:TransferFailedStatus" minOccurs="0" />
 			<xs:element name="downloaded" type="xs:dateTime" minOccurs="0" />
 			<xs:element name="downloadedByThirdParty" type="xs:dateTime" minOccurs="0" />
 			<xs:element name="retractRequested" type="xs:dateTime" minOccurs="0" />
@@ -1118,32 +1180,31 @@
 			<xs:element name="date" type="xs:date" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
-<!-- 
 	<xs:complexType name="RecurrenceRule">
 		<xs:annotation>
 			<xs:documentation>
 				This is the same logic as iCalander (RFC 2445).
 			</xs:documentation>
 		</xs:annotation>
-		<xs:complexContent>
-			<xs:sequence>		
-				<xs:element name="frequency" type="tns:Frequency"/>
-				<xs:choice>
-					<xs:element name="count" type="xs:unsignedInt" minOccurs="0"/>
-					<xs:element name="until" type="xs:date" minOccurs="0"/>
-				</xs:choice>
-				<xs:element name="interval" type="xs:unsignedInt" minOccurs="0"/>
-				<xs:element name="byDay" type="tns:DayOfWeekList" minOccurs="0"/>
-				<xs:element name="byMonthDay" type="tns:DayOfMonthList" minOccurs="0"/>
-				<xs:element name="byYearDay" type="tns:DayOfYearList" minOccurs="0"/>
-				<xs:element name="byMonth" type="tns:MonthList" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexContent>
+		<xs:sequence>
+			<xs:element name="frequency" type="tns:Frequency" minOccurs="0" />
+<!--		
+			<xs:choice>
+-->			
+				<xs:element name="count" type="xs:unsignedInt" minOccurs="0" />
+				<xs:element name="until" type="xs:date" minOccurs="0"/>
+<!--		
+			</xs:choice>
+-->			
+			<xs:element name="interval" type="xs:unsignedInt" minOccurs="0"/>
+			<xs:element name="byDay" type="tns:DayOfWeekList" minOccurs="0"/>
+			<xs:element name="byYearDay" type="tns:DayOfYearList" minOccurs="0"/>
+			<xs:element name="byMonth" type="tns:MonthList" minOccurs="0"/>
+		</xs:sequence>
 	</xs:complexType>
--->
 	<xs:complexType name="ReferenceInfo">
 		<xs:sequence>
-			<xs:element name="lastReferenceDate" type="xs:dateTime" nillable="true" minOccurs="0" />
+			<xs:element name="lastReferenceDate" type="xs:dateTime" nillable="1" minOccurs="0" />
 			<xs:element name="referenceCount" type="xs:integer" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
@@ -1370,7 +1431,8 @@
 		<xs:complexContent>
 			<xs:extension base="tns:CalendarItem">
 				<xs:sequence>
-					<xs:element name="dueDate" type="xs:date" />
+					<xs:element name="startDate" type="xs:date" minOccurs="0" />
+					<xs:element name="dueDate" type="xs:date" minOccurs="0" />
 					<xs:element name="taskPriority" type="xs:string" minOccurs="0" />
 					<xs:element name="completed" type="xs:boolean" minOccurs="0" />
 				</xs:sequence>
@@ -1389,10 +1451,14 @@
 		<xs:sequence>
 			<xs:element name="name" type="xs:string" />
 			<xs:element name="month" type="tns:Month" minOccurs="0" />
+<!--
 			<xs:choice>
+-->
 				<xs:element name="day" type="tns:Day" minOccurs="0" />
 				<xs:element name="dayOfWeek" type="tns:DayOfWeek" minOccurs="0" />
+<!--
 			</xs:choice>
+-->
 			<xs:element name="hour" type="tns:Hour" minOccurs="0" />
 			<xs:element name="minute" type="tns:Minute" minOccurs="0" />
 			<xs:element name="offset" type="tns:GMTOffset" />
@@ -1402,6 +1468,13 @@
 		<xs:sequence>
 			<xs:element name="timezone" type="tns:Timezone" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TransferFailedStatus">
+		<xs:complexContent>
+			<xs:extension base="tns:RecipientStatus">
+				<xs:attribute name="FailureReason" type="xs:string" />
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="TrustedApplication">
 		<xs:complexContent>

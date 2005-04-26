@@ -55,6 +55,7 @@ class ngwt__Appointment;
 class ngwt__Mail;
 class ngwt__Task;
 class ngwt__Status;
+class GroupWiseBinding;
 
 namespace GroupWise {
 
@@ -157,7 +158,8 @@ class GroupwiseServer : public QObject
     std::string mCalendarFolder;
     
     struct soap *mSoap;
-
+    GroupWiseBinding *mBinding;
+    
     KExtendedSocket *m_sock;
 
     QString mError;

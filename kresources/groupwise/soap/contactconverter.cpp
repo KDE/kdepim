@@ -54,7 +54,6 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
   contact->version = 0;
   contact->modified = 0;
   contact->changes = 0;
-  contact->type = 0;
 
   // Uid
   contact->id = qStringToString( addr.custom( "GWRESOURCE", "UID" ) );
@@ -511,9 +510,9 @@ ngwt__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee
         // extract each address for this protocol, and create an ngwt__ImAddress for it, and append it to list.
         for ( QStringList::ConstIterator it = addresses.begin(); it != end; ++it ) {
           ngwt__ImAddress* address = soap_new_ngwt__ImAddress( soap(), -1 );
-          address->service.append( protocol.utf8() );
-          address->address.append( (*it).utf8() );
-          address->type.append( "all" );
+          address->service->append( protocol.utf8() );
+          address->address->append( (*it).utf8() );
+          address->type->append( "all" );
           kdDebug() << "adding: service: " << protocol << " address: " << *it << " type: all" << endl;
           list->push_back( address );
         }

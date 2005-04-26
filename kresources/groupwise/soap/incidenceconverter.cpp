@@ -162,7 +162,7 @@ KCal::Todo* IncidenceConverter::convertFromTask( ngwt__Task* task )
   }
 
   if ( task->startDate != 0 )
-    todo->setDtStart( charToQDateTime( task->startDate, mTimezone ) );
+    todo->setDtStart( QDate::fromString( stringToQString( task->startDate), Qt::ISODate ) );
 
   todo->setDtDue( QDate::fromString( stringToQString( task->dueDate ), Qt::ISODate ) );
 
@@ -198,10 +198,10 @@ ngwt__Task* IncidenceConverter::convertToTask( KCal::Todo* todo )
   }
 
   if ( todo->dtStart().isValid() )
-    task->startDate = qDateTimeToChar( todo->dtStart(), mTimezone );
+    task->startDate = qDateTimeToString( todo->dtStart(), mTimezone );
 
   if ( todo->hasDueDate() ) {
-    task->dueDate = qDateTimeToChar( todo->dtDue() );
+    task->dueDate = qDateTimeToString( todo->dtDue() );
   }
 
   // FIXME: Restore custom priorities
@@ -220,7 +220,6 @@ ngwt__Task* IncidenceConverter::convertToTask( KCal::Todo* todo )
 bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt__CalendarItem* item )
 {
   // ngwt__CalendarItem
-  item->startDate = 0;
   item->rdate = 0;
   item->recurrenceKey = 0;
   item->iCalId = 0;
@@ -247,7 +246,6 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt
   item->version = 0;
   item->modified = 0;
   item->changes = 0;
-  item->type = 0;
 
   QString id = incidence->customProperty( "GWRESOURCE", "UID" );
   if ( !id.isEmpty() ) item->id = qStringToString( id );

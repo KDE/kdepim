@@ -8,7 +8,7 @@
 
 SOAP_BEGIN_NAMESPACE(soap)
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.1 2005-04-20 13:09:23 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.1 2005-04-21 08:38:32 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__acceptRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__acceptRequest *ngwm__acceptRequest, _ngwm__acceptResponse *ngwm__acceptResponse)
@@ -1374,6 +1374,59 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getProxyAccessListRequest(struct soap
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
 	ngwm__getProxyAccessListResponse->soap_get(soap, "ngwm:getProxyAccessListResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+#ifndef WITH_LEANER
+	 || soap_resolve_attachments(soap)
+#endif
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getProxyListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getProxyListRequest *ngwm__getProxyListRequest, _ngwm__getProxyListResponse *ngwm__getProxyListResponse)
+{	struct __ngw__getProxyListRequest soap_tmp___ngw__getProxyListRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://137.65.15.153:8080";
+	if (!soap_action)
+		soap_action = "getProxyListRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__getProxyListRequest.ngwm__getProxyListRequest = ngwm__getProxyListRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__getProxyListRequest(soap, &soap_tmp___ngw__getProxyListRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__getProxyListRequest(soap, &soap_tmp___ngw__getProxyListRequest, "-ngw:getProxyListRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__getProxyListRequest(soap, &soap_tmp___ngw__getProxyListRequest, "-ngw:getProxyListRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__getProxyListResponse)
+		return soap_closesock(soap);
+	ngwm__getProxyListResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__getProxyListResponse->soap_get(soap, "ngwm:getProxyListResponse", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);

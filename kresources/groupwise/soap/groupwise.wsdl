@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
 <notice>
-   Copyright © 2005-2005 Novell, Inc. All Rights Reserved.
+   Copyright Â© 2005-2005 Novell, Inc. All Rights Reserved.
 
    THIS WORK IS SUBJECT TO U.S. AND INTERNATIONAL COPYRIGHT LAWS AND TREATIES.
    NO PART OF THIS WORK MAY BE USED, PRACTICED, PERFORMED COPIED, DISTRIBUTED,
@@ -222,6 +222,13 @@
    </message>
    <message name="getProxyAccessListResponseMessage">
       <part name="getProxyAccessListRes" element="methods:getProxyAccessListResponse"/>
+   </message>
+
+   <message name="getProxyListRequestMessage">
+      <part name="getProxyListReq" element="methods:getProxyListRequest"/>
+   </message>
+   <message name="getProxyListResponseMessage">
+      <part name="getProxyListRes" element="methods:getProxyListResponse"/>
    </message>
 
    <message name="getSettingsRequestMessage">
@@ -556,6 +563,11 @@
      <operation name="getProxyAccessListRequest">
        <input message="tns:getProxyAccessListRequestMessage"/>
        <output message="tns:getProxyAccessListResponseMessage"/>
+     </operation>
+
+     <operation name="getProxyListRequest">
+       <input message="tns:getProxyListRequestMessage"/>
+       <output message="tns:getProxyListResponseMessage"/>
      </operation>
 
      <operation name="getSettingsRequest">
@@ -990,6 +1002,17 @@
 
     <operation name="getProxyAccessListRequest">
       <soap:operation soapAction="getProxyAccessListRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getProxyListRequest">
+      <soap:operation soapAction="getProxyListRequest" style="document" />
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>

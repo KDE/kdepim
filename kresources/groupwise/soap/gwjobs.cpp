@@ -61,20 +61,21 @@ void ReadAddressBooksJob::run()
 {
   kdDebug() << "ReadAddressBooksJob::run()" << endl;
 
-  mSoap->header->session = mSession;
-  _ns3__getAddressBookListResponse addressBookListResponse;
-  soap_call___ns3__getAddressBookListRequest( mSoap, mUrl.latin1(),
-                                              NULL, "", &addressBookListResponse );
+  mSoap->header->ngwt__session = mSession;
+  _ngwm__getAddressBookListRequest addressBookListRequest;
+  _ngwm__getAddressBookListResponse addressBookListResponse;
+  soap_call___ngw__getAddressBookListRequest( mSoap, mUrl.latin1(),
+                                              NULL, &addressBookListRequest, &addressBookListResponse );
   soap_print_fault( mSoap, stderr );
 
   if ( addressBookListResponse.books ) {
-    std::vector<class ns3__AddressBook * > *addressBooks = addressBookListResponse.books->book;
+    std::vector<class ngwt__AddressBook * > *addressBooks = &addressBookListResponse.books->book;
 
     mServer->emitReadAddressBookTotalSize( ( mAddressBookIds.count() )
       * 100 );
     mProgress = 0;
 
-    std::vector<class ns3__AddressBook * >::const_iterator it;
+    std::vector<class ngwt__AddressBook * >::const_iterator it;
     for ( it = addressBooks->begin(); it != addressBooks->end(); ++it ) {
       if ( !(*it)->id ) {
         kdError() << "No addressbook id" << endl;
@@ -94,37 +95,37 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 {
   kdDebug() << "ReadAddressBookJob::readAddressBook() " << id.c_str() << endl;
 
-  _ns3__getItemsRequest itemsRequest;
+  _ngwm__getItemsRequest itemsRequest;
   itemsRequest.container = id;
   itemsRequest.filter = 0;
   itemsRequest.items = 0;
 
-  mSoap->header->session = mSession;
-  _ns3__getItemsResponse itemsResponse;
-  int result = soap_call___ns3__getItemsRequest( mSoap, mUrl.latin1(), 0,
+  mSoap->header->ngwt__session = mSession;
+  _ngwm__getItemsResponse itemsResponse;
+  int result = soap_call___ngw__getItemsRequest( mSoap, mUrl.latin1(), 0,
                                     &itemsRequest, &itemsResponse );
   if ( result != 0 ) {
     soap_print_fault( mSoap, stderr );
     return;
   }
 
-  std::vector<class ns3__Item * > *items = itemsResponse.items->item;
+  std::vector<class ngwt__Item * > *items = &itemsResponse.items->item;
   if ( items ) {
     ContactConverter converter( mSoap );
 
     int maxCount = items->size();
     int count = 0;
 
-    std::vector<class ns3__Item * >::const_iterator it;
+    std::vector<class ngwt__Item * >::const_iterator it;
     for ( it = items->begin(); it != items->end(); ++it ) {
-      ns3__Item *item = *it;
+      ngwt__Item *item = *it;
 
 #if 0
       kdDebug() << "ITEM: " << item->name.c_str() << "(" << item->id.c_str()
         << ")" << endl;
 #endif
 
-      ns3__Contact *contact = dynamic_cast<ns3__Contact *>( item );
+      ngwt__Contact *contact = dynamic_cast<ngwt__Contact *>( item );
 
       KABC::Addressee addr = converter.convertFromContact( contact );
       if ( !addr.isEmpty() ) {
@@ -178,27 +179,25 @@ void ReadCalendarJob::run()
 {
   kdDebug() << "ReadCalendarJob::run()" << endl;
 
-  mSoap->header->session = mSession;
-  _ns3__getFolderListRequest folderListReq;
+  mSoap->header->ngwt__session = mSession;
+  _ngwm__getFolderListRequest folderListReq;
   folderListReq.parent = "folders";
   folderListReq.recurse = true;
-  _ns3__getFolderListResponse folderListRes;
-  soap_call___ns3__getFolderListRequest( mSoap, mUrl.latin1(), 0,
+  _ngwm__getFolderListResponse folderListRes;
+  soap_call___ngw__getFolderListRequest( mSoap, mUrl.latin1(), 0,
                                          &folderListReq,
                                          &folderListRes );
 
   if ( folderListRes.folders ) {
-    std::vector<class ns3__Folder * > *folders = folderListRes.folders->folder;
+    std::vector<class ngwt__Folder * > *folders = &folderListRes.folders->folder;
     if ( folders ) {
-      std::vector<class ns3__Folder * >::const_iterator it;
+      std::vector<class ngwt__Folder * >::const_iterator it;
       for ( it = folders->begin(); it != folders->end(); ++it ) {
-        if ( (*it)->type && *((*it)->type) == "Calendar" ) {
-          if ( !(*it)->id ) {
-            kdError() << "No calendar id" << endl;
-          } else {
-            readCalendarFolder( *(*it)->id );
-            (*mCalendarFolder) = *(*it)->id;
-          }
+        if ( !(*it)->id ) {
+          kdError() << "No calendar id" << endl;
+        } else {
+          readCalendarFolder( *(*it)->id );
+          (*mCalendarFolder) = *(*it)->id;
         }
       }
     }
@@ -211,14 +210,16 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
 {
   kdDebug() << "ReadCalendarJob::readCalendarFolder()" << endl;
 
-  _ns3__getItemsRequest itemsRequest;
+  _ngwm__getItemsRequest itemsRequest;
 
   itemsRequest.container = id;
-  itemsRequest.view = "recipients message recipientStatus";
+  std::string *str = soap_new_std__string( mSoap, -1 );
+  str->append( "recipients message recipientStatus" );
+  itemsRequest.view = str;
 
 /*
-  ns3__Filter *filter = soap_new_ns3__Filter( mSoap, -1 );
-  ns3__FilterEntry *filterEntry = soap_new_ns3__FilterEntry( mSoap, -1 );
+  ngwt__Filter *filter = soap_new_ngwm__Filter( mSoap, -1 );
+  ngwt__FilterEntry *filterEntry = soap_new_ngwm__FilterEntry( mSoap, -1 );
   filterEntry->op = gte;
   filterEntry->field = QString::fromLatin1( "startDate" ).utf8();
   filterEntry->value = QDateTime::currentDateTime().toString( "yyyyMMddThhmmZ" ).utf8();
@@ -230,26 +231,26 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
   itemsRequest.filter = 0;
   itemsRequest.items = 0;
 
-  mSoap->header->session = mSession;
-  _ns3__getItemsResponse itemsResponse;
-  soap_call___ns3__getItemsRequest( mSoap, mUrl.latin1(), 0,
+  mSoap->header->ngwt__session = mSession;
+  _ngwm__getItemsResponse itemsResponse;
+  soap_call___ngw__getItemsRequest( mSoap, mUrl.latin1(), 0,
                                     &itemsRequest,
                                     &itemsResponse );
   soap_print_fault(mSoap, stderr);
 
-  std::vector<class ns3__Item * > *items = itemsResponse.items->item;
+  std::vector<class ngwt__Item * > *items = &itemsResponse.items->item;
 
   if ( items ) {
     IncidenceConverter conv( mSoap );
 
-    std::vector<class ns3__Item * >::const_iterator it;
+    std::vector<class ngwt__Item * >::const_iterator it;
     for( it = items->begin(); it != items->end(); ++it ) {
-      ns3__Appointment *a = dynamic_cast<ns3__Appointment *>( *it );
+      ngwt__Appointment *a = dynamic_cast<ngwt__Appointment *>( *it );
       KCal::Incidence *i = 0;
       if ( a ) {
         i = conv.convertFromAppointment( a );
       } else {
-        ns3__Task *t = dynamic_cast<ns3__Task *>( *it );
+        ngwt__Task *t = dynamic_cast<ngwt__Task *>( *it );
         if ( t ) {
           i = conv.convertFromTask( t );
         }
