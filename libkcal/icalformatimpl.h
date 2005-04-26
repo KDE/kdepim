@@ -73,7 +73,7 @@ class ICalFormatImpl
     Attendee *readAttendee(icalproperty *attendee);
     Person readOrganizer( icalproperty *organizer );
     Attachment *readAttachment(icalproperty *attach);
-    void readIncidence(icalcomponent *parent,Incidence *incidence);
+    void readIncidence(icalcomponent *parent, icaltimezone *timezone, Incidence *incidence);
     void readRecurrenceRule(icalproperty *rrule,Incidence *event);
     void readRecurrence( const struct icalrecurrencetype &r, Recurrence* recur );
     void readAlarm(icalcomponent *alarm,Incidence *incidence);
@@ -83,7 +83,7 @@ class ICalFormatImpl
     icaltimetype writeICalDate(const QDate &);
     QDate readICalDate(icaltimetype);
     icaltimetype writeICalDateTime(const QDateTime &);
-    QDateTime readICalDateTime(icaltimetype);
+    QDateTime readICalDateTime( icaltimetype&, icaltimezone* tz = 0 );
     icaldurationtype writeICalDuration(int seconds);
     int readICalDuration(icaldurationtype);
     icalcomponent *createCalendarComponent(Calendar * = 0);
@@ -91,7 +91,7 @@ class ICalFormatImpl
 
   private:
     void writeIncidenceBase(icalcomponent *parent,IncidenceBase *);
-    void readIncidenceBase(icalcomponent *parent,IncidenceBase *);
+    void readIncidenceBase(icalcomponent *parent, IncidenceBase *);
     void writeCustomProperties(icalcomponent *parent,CustomProperties *);
     void readCustomProperties(icalcomponent *parent,CustomProperties *);
     void dumpIcalRecurrence(icalrecurrencetype);

@@ -877,7 +877,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 {
   Todo *todo = new Todo;
 
-  readIncidence(vtodo,todo);
+  readIncidence(vtodo, 0, todo); // FIXME timezone
 
   icalproperty *p = icalcomponent_get_first_property(vtodo,ICAL_ANY_PROPERTY);
 
@@ -943,11 +943,18 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
   return todo;
 }
 
-Event *ICalFormatImpl::readEvent(icalcomponent *vevent, icalcomponent *vtimezone)
+Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezone )
 {
   Event *event = new Event;
 
-  readIncidence(vevent,event);
+  // FIXME where is this freed?
+  icaltimezone *tz = icaltimezone_new();
+  if ( !icaltimezone_set_component( tz, vtimezone ) ) {
+    icaltimezone_free( tz, 1 );
+    tz = 0;
+  }
+
+  readIncidence( vevent, tz, event);
 
   icalproperty *p = icalcomponent_get_first_property(vevent,ICAL_ANY_PROPERTY);
 
@@ -972,7 +979,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent, icalcomponent *vtimezone
           }
           event->setDtEnd( QDateTime( endDate, QTime( 0, 0, 0 ) ) );
         } else {
-          event->setDtEnd(readICalDateTime(icaltime));
+          event->setDtEnd(readICalDateTime(icaltime, tz));
           event->setFloats( false );
         }
         break;
@@ -1068,7 +1075,7 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
 {
   FreeBusy *freebusy = new FreeBusy;
 
-  readIncidenceBase(vfreebusy,freebusy);
+  readIncidenceBase(vfreebusy, freebusy);
 
   icalproperty *p = icalcomponent_get_first_property(vfreebusy,ICAL_ANY_PROPERTY);
 
@@ -1115,7 +1122,7 @@ Journal *ICalFormatImpl::readJournal(icalcomponent *vjournal)
 {
   Journal *journal = new Journal;
 
-  readIncidence(vjournal,journal);
+  readIncidence(vjournal, 0, journal); // FIXME tz?
 
   return journal;
 }
@@ -1244,7 +1251,7 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   return attachment;
 }
 
-void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
+void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Incidence *incidence)
 {
   readIncidenceBase(parent,incidence);
 
@@ -1263,7 +1270,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_CREATED_PROPERTY:
         icaltime = icalproperty_get_created(p);
-        incidence->setCreated(readICalDateTime(icaltime));
+        incidence->setCreated(readICalDateTime(icaltime, tz));
         break;
 
       case ICAL_SEQUENCE_PROPERTY:  // sequence
@@ -1273,7 +1280,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_LASTMODIFIED_PROPERTY:  // last modification date
         icaltime = icalproperty_get_lastmodified(p);
-        incidence->setLastModified(readICalDateTime(icaltime));
+        incidence->setLastModified(readICalDateTime(icaltime, tz));
         break;
 
       case ICAL_DTSTART_PROPERTY:  // start date and time
@@ -1281,7 +1288,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
         if (icaltime.is_date) {
           incidence->setDtStart(QDateTime(readICalDate(icaltime),QTime(0,0,0)));
         } else {
-          incidence->setDtStart(readICalDateTime(icaltime));
+          incidence->setDtStart(readICalDateTime(icaltime, tz));
           incidence->setFloats(false);
         }
         break;
@@ -1350,7 +1357,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
         if (icaltime.is_date) {
           incidence->addExDate(readICalDate(icaltime));
         } else {
-          incidence->addExDateTime(readICalDateTime(icaltime));
+          incidence->addExDateTime(readICalDateTime(icaltime, tz));
         }
         break;
 
@@ -1491,11 +1498,13 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
   int index = 0;
   short day = 0;
   QBitArray qba(7);
+  icaltimetype t;
 
   switch (r.freq) {
     case ICAL_MINUTELY_RECURRENCE:
       if (!icaltime_is_null_time(r.until)) {
-        recur->setMinutely(r.interval,readICalDateTime(r.until));
+        t = r.until;
+        recur->setMinutely(r.interval,readICalDateTime(t));
       } else {
         if (r.count == 0)
           recur->setMinutely(r.interval,-1);
@@ -1505,7 +1514,8 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
       break;
     case ICAL_HOURLY_RECURRENCE:
       if (!icaltime_is_null_time(r.until)) {
-        recur->setHourly(r.interval,readICalDateTime(r.until));
+        t = r.until;
+        recur->setHourly(r.interval,readICalDateTime(t));
       } else {
         if (r.count == 0)
           recur->setHourly(r.interval,-1);
@@ -1515,7 +1525,8 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
       break;
     case ICAL_DAILY_RECURRENCE:
       if (!icaltime_is_null_time(r.until)) {
-        recur->setDaily(r.interval,readICalDate(r.until));
+        t = r.until;
+        recur->setDaily(r.interval,readICalDate(t));
       } else {
         if (r.count == 0)
           recur->setDaily(r.interval,-1);
@@ -1527,7 +1538,8 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
 //      kdDebug(5800) << "WEEKLY_RECURRENCE" << endl;
       wkst = (r.week_start + 5)%7 + 1;
       if (!icaltime_is_null_time(r.until)) {
-        recur->setWeekly(r.interval,qba,readICalDate(r.until),wkst);
+        t = r.until;
+        recur->setWeekly(r.interval,qba,readICalDate(t),wkst);
       } else {
         if (r.count == 0)
           recur->setWeekly(r.interval,qba,-1,wkst);
@@ -1542,8 +1554,9 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
     case ICAL_MONTHLY_RECURRENCE:
       if (r.by_day[0] != ICAL_RECURRENCE_ARRAY_MAX) {
         if (!icaltime_is_null_time(r.until)) {
+          t = r.until;
           recur->setMonthly(Recurrence::rMonthlyPos,r.interval,
-                            readICalDate(r.until));
+                            readICalDate(t));
         } else {
           if (r.count == 0)
             recur->setMonthly(Recurrence::rMonthlyPos,r.interval,-1);
@@ -1572,8 +1585,9 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
         }
       } else if (r.by_month_day[0] != ICAL_RECURRENCE_ARRAY_MAX) {
         if (!icaltime_is_null_time(r.until)) {
+          t = r.until;
           recur->setMonthly(Recurrence::rMonthlyDay,r.interval,
-                            readICalDate(r.until));
+                            readICalDate(t));
         } else {
           if (r.count == 0)
             recur->setMonthly(Recurrence::rMonthlyDay,r.interval,-1);
@@ -1589,8 +1603,9 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
     case ICAL_YEARLY_RECURRENCE:
       if (r.by_year_day[0] != ICAL_RECURRENCE_ARRAY_MAX) {
         if (!icaltime_is_null_time(r.until)) {
+          t = r.until;
           recur->setYearly(Recurrence::rYearlyDay,r.interval,
-                            readICalDate(r.until));
+                            readICalDate(t));
         } else {
           if (r.count == 0)
             recur->setYearly(Recurrence::rYearlyDay,r.interval,-1);
@@ -1603,8 +1618,9 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
       } if (r.by_month[0] != ICAL_RECURRENCE_ARRAY_MAX) {
         if (r.by_day[0] != ICAL_RECURRENCE_ARRAY_MAX) {
           if (!icaltime_is_null_time(r.until)) {
+            t = r.until;
             recur->setYearly(Recurrence::rYearlyPos,r.interval,
-                              readICalDate(r.until));
+                              readICalDate(t));
           } else {
             if (r.count == 0)
               recur->setYearly(Recurrence::rYearlyPos,r.interval,-1);
@@ -1633,8 +1649,9 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
           }
         } else {
           if (!icaltime_is_null_time(r.until)) {
+            t = r.until;
             recur->setYearly(Recurrence::rYearlyMonth,r.interval,
-                              readICalDate(r.until));
+                              readICalDate(t));
           } else {
             if (r.count == 0)
               recur->setYearly(Recurrence::rYearlyMonth,r.interval,-1);
@@ -1825,7 +1842,7 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
   t.second = datetime.time().second();
 
   t.is_date = 0;
-  t.zone = 0;
+  t.zone = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().latin1() );
   t.is_utc = 0;
 
   //_dumpIcaltime( t );
@@ -1846,26 +1863,31 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
     }
   }
   //_dumpIcaltime( t );
+
   return t;
 }
 
-QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
+QDateTime ICalFormatImpl::readICalDateTime( icaltimetype& t, icaltimezone* tz )
 {
   kdDebug(5800) << "ICalFormatImpl::readICalDateTime()" << endl;
+  if ( tz ) {
+    t.zone = tz;
+    t.is_utc = (tz == icaltimezone_get_utc_timezone())?1:0;
+  }
   _dumpIcaltime( t );
 
   // First convert the time into UTC.
   t = icaltime_convert_to_zone( t, icaltimezone_get_utc_timezone() );
 
   if ( icaltime_is_utc( t ) && mCompat && mCompat->useTimeZoneShift() ) {
-//    kdDebug(5800) << "--- Converting time to zone " << mParent->timeZoneId() << " (" << ICalDate2QDate(t) << ")." << endl;
+    kdDebug(5800) << "--- Converting time to zone " << mParent->timeZoneId() << " (" << ICalDate2QDate(t) << ")." << endl;
     if (mParent->timeZoneId().isEmpty())
       t = icaltime_convert_to_zone( t, 0 ); //make floating timezone
     else
       t = icaltime_convert_to_zone(
         t,
         icaltimezone_get_builtin_timezone ( mParent->timeZoneId().latin1() ) );
-//    kdDebug(5800) << "--- Converted to zone " << mParent->timeZoneId() << " (" << ICalDate2QDate(t) << ")." << endl;
+    kdDebug(5800) << "--- Converted to zone " << mParent->timeZoneId() << " (" << ICalDate2QDate(t) << ")." << endl;
   }
 
   return ICalDate2QDate(t);
