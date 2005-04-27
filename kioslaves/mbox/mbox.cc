@@ -116,8 +116,7 @@ void MBoxProtocol::listDir( const KURL& url )
 		return;
 	}
 	
-	int counter = 0;
-	while( !mbox.atEnd() && ++counter < 100 && !m_errorState )
+	while( !mbox.atEnd() && !m_errorState )
 	{
 		entry = Stat::stat( mbox, info );
 		if( mbox.inListing() )
