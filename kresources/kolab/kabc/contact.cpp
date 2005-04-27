@@ -960,10 +960,6 @@ static int /*KABC::PhoneNumber::Types*/ phoneTypeFromString( const QString& type
     return KABC::PhoneNumber::Pcs;
   if ( type == "pager" )
     return KABC::PhoneNumber::Pager;
-  if ( type == "company" )
-    return KABC::PhoneNumber::Work; // # duplicated
-  if ( type == "business2" )
-    return KABC::PhoneNumber::Work; // # duplicated
   return KABC::PhoneNumber::Home; // whatever
 }
 
