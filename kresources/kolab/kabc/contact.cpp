@@ -750,12 +750,28 @@ static QStringList phoneTypeToString( int /*KABC::PhoneNumber::Types*/ type )
     type = type & ~KABC::PhoneNumber::Work;
   }
 
+  // To support both "home1" and "home2", map Home+Pref to home1
+  if ( ( type & KABC::PhoneNumber::Home ) && ( type & KABC::PhoneNumber::Pref ) )
+  {
+      types << "home1";
+      type = type & ~KABC::PhoneNumber::Home;
+      type = type & ~KABC::PhoneNumber::Pref;
+  }
+  // To support both "business1" and "business2", map Work+Pref to business1
+  if ( ( type & KABC::PhoneNumber::Work ) && ( type & KABC::PhoneNumber::Pref ) )
+  {
+      types << "business1";
+      type = type & ~KABC::PhoneNumber::Work;
+      type = type & ~KABC::PhoneNumber::Pref;
+  }
+
+
   if ( type & KABC::PhoneNumber::Home )
-    types << "home1";
-  if ( type & KABC::PhoneNumber::Msg ) // messaging
-    types << "home2"; // #
+    types << "home2";
+  if ( type & KABC::PhoneNumber::Msg ) // Msg==messaging
+    types << "company";
   if ( type & KABC::PhoneNumber::Work )
-    types << "business1";
+    types << "business2";
   if ( type & KABC::PhoneNumber::Pref )
     types << "primary";
   if ( type & KABC::PhoneNumber::Voice )
@@ -776,7 +792,6 @@ static QStringList phoneTypeToString( int /*KABC::PhoneNumber::Types*/ type )
     types << "assistant"; // ## Assistant is e.g. secretary
   if ( type & KABC::PhoneNumber::Pager )
     types << "pager";
-  // "company" and "business2" are not generated...
   return types;
 }
 
@@ -786,13 +801,16 @@ static int /*KABC::PhoneNumber::Types*/ phoneTypeFromString( const QString& type
     return KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax;
   if ( type == "businessfax" )
     return KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax;
-
-  if ( type == "home1" )
-    return KABC::PhoneNumber::Home;
-  if ( type == "home2" )
-    return KABC::PhoneNumber::Msg;
   if ( type == "business1" )
+    return KABC::PhoneNumber::Work | KABC::PhoneNumber::Pref;
+  if ( type == "business2" )
     return KABC::PhoneNumber::Work;
+  if ( type == "home1" )
+    return KABC::PhoneNumber::Home | KABC::PhoneNumber::Pref;
+  if ( type == "home2" )
+    return KABC::PhoneNumber::Home;
+  if ( type == "company" )
+    return KABC::PhoneNumber::Msg;
   if ( type == "primary" )
     return KABC::PhoneNumber::Pref;
   if ( type == "callback" )
@@ -813,10 +831,6 @@ static int /*KABC::PhoneNumber::Types*/ phoneTypeFromString( const QString& type
     return KABC::PhoneNumber::Pcs;
   if ( type == "pager" )
     return KABC::PhoneNumber::Pager;
-  if ( type == "company" )
-    return KABC::PhoneNumber::Work; // # duplicated
-  if ( type == "business2" )
-    return KABC::PhoneNumber::Work; // # duplicated
   return KABC::PhoneNumber::Home; // whatever
 }
 
