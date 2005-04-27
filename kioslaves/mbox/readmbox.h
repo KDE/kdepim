@@ -28,6 +28,8 @@ class QFile;
 class QString;
 class QTextStream;
 
+struct utimbuf;
+
 /**
  * This class handels reading from a mbox-file.
  */
@@ -40,7 +42,7 @@ public:
 	 * @param info The information of the file to read
 	 * @param parent The instance of the parent MBoxProtocol.
 	 */
-	ReadMBox( const UrlInfo* info, MBoxProtocol* parent );
+	ReadMBox( const UrlInfo* info, MBoxProtocol* parent, bool onlynew = false, bool savetime = false );
 
 	/**
 	 * Destructor
@@ -94,12 +96,18 @@ public:
 	 * @return true if and only if the cursor is at EOF.
 	 */
 	bool atEnd() const;
+
+	/**
+	 * Return true if the message is a new message, or all messages are listed
+	 * @return true if it must be listed
+	 */
+	bool inListing() const;
 private:
 	/**
 	 * Opens a file
 	 * @return true Returns true if opening was succesful.
 	 */
-	bool open();
+	bool open( bool savetime );
 
 	/**
 	 * Closes a file.
@@ -111,5 +119,11 @@ private:
 	QTextStream* m_stream;
 	QString* m_current_line;
 	QString* m_current_id;
+
+	struct utimbuf* m_prev_time;
+
+	bool m_only_new, m_savetime;
+
+	bool m_status, m_prev_status, m_header;
 };
 #endif

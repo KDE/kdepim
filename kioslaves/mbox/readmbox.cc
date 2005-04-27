@@ -25,20 +25,30 @@
 #include <kio/global.h>
 
 #include <qfile.h>
+#include <qfileinfo.h>
 #include <qstring.h>
 #include <qtextstream.h>
 
-ReadMBox::ReadMBox( const UrlInfo* info, MBoxProtocol* parent )
+#include <utime.h>
+
+ReadMBox::ReadMBox( const UrlInfo* info, MBoxProtocol* parent, bool onlynew, bool savetime )
 	: MBoxFile( info, parent ),
 	m_file( 0 ),
 	m_stream( 0 ),
 	m_current_line( new QString( QString::null ) ),
-	m_current_id( new QString( QString::null ) )
+	m_current_id( new QString( QString::null ) ),
+	m_prev_time( 0 ),
+	m_only_new( onlynew ),
+	m_savetime( savetime ),
+	m_status( false ),
+	m_prev_status( false ),
+	m_header( true )
+	
 {
 	if( m_info->type() == UrlInfo::invalid )
 		m_mbox->emitError( KIO::ERR_DOES_NOT_EXIST, info->url() );
 		
-	if( !open() )
+	if( !open( savetime ) )
 		m_mbox->emitError( KIO::ERR_CANNOT_OPEN_FOR_READING, info->url() );
 
 	if( m_info->type() == UrlInfo::message )
@@ -80,8 +90,21 @@ bool ReadMBox::nextLine()
 	if( m_current_line->left( 5 ) == "From " )
 	{
 		*m_current_id = *m_current_line;
+		m_prev_status = m_status;
+		m_status = false;
+		m_header = true;
 		return true;
+	} else if( m_only_new )
+	{
+		if( m_current_line->left( 8 ) == "Status: " && m_header &&
+		    ( m_current_line->contains( "U" ) || m_current_line->contains( "N" ) ) && m_header )
+		{
+			m_status = true;
+		}
 	}
+
+	if( m_current_line->stripWhiteSpace().isEmpty() )
+		m_header = false;
 
 	return false;
 }
@@ -124,8 +147,22 @@ bool ReadMBox::atEnd() const
 	return m_stream->atEnd() || ( m_info->type() == UrlInfo::message && *m_current_id != m_info->id() );
 }
 
-bool ReadMBox::open()
+bool ReadMBox::inListing() const
 {
+	return !m_only_new || m_prev_status;
+}
+
+bool ReadMBox::open( bool savetime )
+{
+	if( savetime )
+	{
+		QFileInfo info( m_info->filename() );
+	
+		m_prev_time = new utimbuf;
+		m_prev_time->actime = info.lastRead().toTime_t();
+		m_prev_time->modtime = info.lastModified().toTime_t();
+	}
+	
 	if( m_file )
 		return false; //File already open
 
@@ -149,5 +186,8 @@ void ReadMBox::close()
 	delete m_stream; m_stream = 0;
 	m_file->close();
 	delete m_file; m_file = 0;
+
+	if( m_prev_time )
+		utime( QFile::encodeName( m_info->filename() ), m_prev_time );
 }
 

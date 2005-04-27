@@ -103,9 +103,9 @@ void MBoxProtocol::listDir( const KURL& url )
 {
 	m_errorState = false;
 	
-	KIO::UDSEntryList list;
+	KIO::UDSEntry entry;
 	UrlInfo info( url, UrlInfo::directory );
-	ReadMBox mbox( &info, this );
+	ReadMBox mbox( &info, this, hasMetaData( "onlynew" ), hasMetaData( "savetime" ) );
 
 	if( m_errorState )
 		return;
@@ -118,8 +118,12 @@ void MBoxProtocol::listDir( const KURL& url )
 	
 	int counter = 0;
 	while( !mbox.atEnd() && ++counter < 100 && !m_errorState )
-		listEntry( Stat::stat( mbox, info ), false );
-		
+	{
+		entry = Stat::stat( mbox, info );
+		if( mbox.inListing() )
+			listEntry( entry, false );
+	}
+
 	listEntry( KIO::UDSEntry(), true );
 	finished();
 }
