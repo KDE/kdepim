@@ -8,7 +8,7 @@
 
 SOAP_BEGIN_NAMESPACE(soap)
 
-SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.1 2005-04-21 08:38:32 GMT")
+SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.1 2005-04-27 14:37:44 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -8727,7 +8727,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__SignatureDefault(struct soap *soap, con
 }
 
 static const struct soap_code_map soap_codes_ngwt__SignatureDefault[] =
-{	{ (long)_system, "system" },
+{	{ (long)system, "system" },
 	{ (long)HTML, "HTML" },
 	{ 0, NULL }
 };

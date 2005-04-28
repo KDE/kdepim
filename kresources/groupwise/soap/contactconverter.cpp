@@ -212,8 +212,10 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
   KABC::Addressee addr;
 
   if ( !contact )
+  {
+    kdDebug() << "Null Contact, bailing out!" << endl;
     return addr;
-
+  }
   addr.insertCustom( "GWRESOURCE", "UID", stringToQString( contact->id ) );
 
   // Name parts
@@ -241,7 +243,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
   if ( contact->emailList ) {
      QStringList emails;
 
-     if ( !contact->emailList->primary->empty() )
+     if ( contact->emailList->primary )
          emails.append( stringToQString( contact->emailList->primary ) );
 
      if ( !contact->emailList->email.empty() ) {
@@ -340,6 +342,9 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
                           addresses.join( QChar( 0xE000 ) ) );
     }
   }
+  kdDebug() << "Got the following addressee: " << endl; 
+  addr.dump();
+
   return addr;
 }
 

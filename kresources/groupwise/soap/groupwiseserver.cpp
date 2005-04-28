@@ -241,7 +241,7 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
     mSSL( url.left(6)=="https:" ), m_sock( 0 )
 {
   mBinding = new GroupWiseBinding;
-  mSoap = new soap;
+  mSoap = mBinding->soap;
 
   kdDebug() << "GroupwiseServer(): URL: " << url << endl;
 

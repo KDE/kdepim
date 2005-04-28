@@ -97,8 +97,10 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 
   _ngwm__getItemsRequest itemsRequest;
   itemsRequest.container = id;
+  itemsRequest.count = -1;
   itemsRequest.filter = 0;
   itemsRequest.items = 0;
+  itemsRequest.view = 0;
 
   mSoap->header->ngwt__session = mSession;
   _ngwm__getItemsResponse itemsResponse;
@@ -111,6 +113,9 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 
   std::vector<class ngwt__Item * > *items = &itemsResponse.items->item;
   if ( items ) {
+#if 1
+    kdDebug() << "ReadAddressBooksJob::readAddressBook() - got " << items->size() << "contacts" << endl;
+#endif
     ContactConverter converter( mSoap );
 
     int maxCount = items->size();
@@ -120,9 +125,15 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
     for ( it = items->begin(); it != items->end(); ++it ) {
       ngwt__Item *item = *it;
 
-#if 0
-      kdDebug() << "ITEM: " << item->name.c_str() << "(" << item->id.c_str()
+#if 1
+    if ( item )
+      if ( item->name )
+        kdDebug() << "ITEM: " << item->name->c_str() << endl;
+      if ( item->id )
+        kdDebug() << "ITEM: (" << item->id->c_str()
         << ")" << endl;
+    else 
+      kdDebug() << "ITEM is null" << endl;
 #endif
 
       ngwt__Contact *contact = dynamic_cast<ngwt__Contact *>( item );

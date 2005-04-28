@@ -15,6 +15,7 @@
 <xs:schema 
 	targetNamespace="http://schemas.novell.com/2005/01/GroupWise/methods"
 	elementFormDefault="qualified"
+	attributeFormDefault="unqualified"
 	xmlns="http://schemas.novell.com/2005/01/GroupWise/methods" 
 	xmlns:types="http://schemas.novell.com/2005/01/GroupWise/types" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
