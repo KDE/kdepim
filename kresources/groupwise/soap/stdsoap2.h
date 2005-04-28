@@ -164,7 +164,9 @@ engelen@genivia.com / engelen@acm.org
 #endif
 
 #ifdef __alpha
+#ifndef __FreeBSD__
 # define TRU64 
+#endif
 #endif
 
 #ifdef __MVS__
