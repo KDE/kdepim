@@ -64,30 +64,10 @@ const struct kleo_chiasmus_config_data kleo_chiasmus_config_entries[] = {
     0, 0, 1
   },
   {
-    "lib", I18N_NOOP( "Path to xia.so loadable module" ),
-    Level_Basic, ArgType_Path,
-    { PATH "/usr/local/lib/xia.so" },
-    0, 0, 1
-  },
-  {
     "keydir", I18N_NOOP( "Key directory" ),
     Level_Basic, ArgType_Path,
     { PATH "~/.chiasmus/keys" },
-    0, 0, 1
-  },
-#ifdef HAVE_C99_INITIALIZERS
-  {
-    "use-chiasmuswrapper", I18N_NOOP( "Use SymCryptRun as Chiasmus wrapper (recommended)" ),
-    Level_Expert, ArgType_None,
-    { .boolean = { 1, 1 } },
-    0, 0, 1
-  },
-#endif /* HAVE_C99_INITIALIZERS */
-  {
-    "chiasmuswrapper-path", I18N_NOOP( "Path to SymCryptRun executable" ),
-    Level_Expert, ArgType_Path,
-    { PATH "/usr/local/bin/symcryptrun" },
-    0, 0, 1
+    0, 0, 1 /* FIXME: should be a list */
   },
 #ifdef HAVE_C99_INITIALIZERS
   {

@@ -456,20 +456,6 @@ bool Kleo::ChiasmusBackend::checkForChiasmus( QString * reason ) const {
     return false;
   }
 
-  const CryptoConfigEntry * useWrapper = config()->entry( "Chiasmus", "General", "use-chiasmuswrapper" );
-  assert( useWrapper ); assert( useWrapper->argType() == CryptoConfigEntry::ArgType_None );
-  if ( useWrapper->boolValue() == true ) {
-    const CryptoConfigEntry * wrapperPath = config()->entry( "Chiasmus", "General", "chiasmuswrapper-path" );
-    assert( wrapperPath ); assert( wrapperPath->argType() == CryptoConfigEntry::ArgType_Path );
-    const QString wrapper = wrapperPath->urlValue().path();
-    const QFileInfo wfi( KShell::tildeExpand( wrapper ) );
-    if ( !wfi.isExecutable() ) {
-      if ( reason )
-        *reason = i18n( "File \"%1\" does not exist or is not executable." ).arg( wrapper );
-      return false;
-    }
-  }
-
   // FIXME: more checks?
   mProtocol = tmp.release();
   return true;
