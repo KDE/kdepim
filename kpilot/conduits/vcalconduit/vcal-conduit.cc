@@ -145,7 +145,7 @@ KCal::Incidence *VCalConduitPrivate::getNextModifiedIncidence()
 	if ( fAllEventsIterator != fAllEvents.end() ) e = *fAllEventsIterator;
 	// Then walk the list until we find an unsynced entry
 	while ( fAllEventsIterator != fAllEvents.end() &&
-		e && e->syncStatus()==KCal::Incidence::SYNCNONE && e->pilotId() > 0)
+		e && e->syncStatus()!=KCal::Incidence::SYNCMOD && e->pilotId() > 0)
 	{
 		e = (++fAllEventsIterator != fAllEvents.end()) ? *fAllEventsIterator : 0L;
 	}
