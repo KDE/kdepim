@@ -163,12 +163,6 @@ engelen@genivia.com / engelen@acm.org
 # define HP_UX
 #endif
 
-#ifdef __alpha
-#ifndef __FreeBSD__
-# define TRU64 
-#endif
-#endif
-
 #ifdef __MVS__
 # define OS390
 #endif
