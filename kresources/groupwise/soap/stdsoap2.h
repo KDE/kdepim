@@ -164,7 +164,9 @@ engelen@genivia.com / engelen@acm.org
 #endif
 
 #ifdef __alpha
+#ifndef __FreeBSD__
 # define TRU64 
+#endif
 #endif
 
 #ifdef __MVS__
@@ -496,7 +498,7 @@ engelen@genivia.com / engelen@acm.org
 # include <math.h>	/* for isnan() */
 #endif
 
-/* #define DEBUG */ /* Uncomment to debug sending (in file SENT.log) receiving (in file RECV.log) and messages (in file TEST.log) */
+//#define DEBUG  /* Uncomment to debug sending (in file SENT.log) receiving (in file RECV.log) and messages (in file TEST.log) */
 
 #ifdef __cplusplus
 extern "C" {
