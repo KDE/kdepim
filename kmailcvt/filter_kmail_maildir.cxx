@@ -26,13 +26,13 @@ FilterKMail_maildir::FilterKMail_maildir( void ) :
         Filter( i18n( "Import KMail Maildirs and Folder Structure" ),
                 "Danny Kukawka",
                 i18n( "<p><b>KMail import filter</b></p>"
-                      "<p>Select the base directory of your KMail mailfolder which you would import.</p>"
+                      "<p>Select the base directory of the KMail mailfolder you want to import.</p>"
                       "<p><b>Note:</b> Never select your current local KMail maildir (usually "
-                      "~/Mail or ~/.kde/share/apps/kmail/mail ). In this case KMailCVT maybe come into "
-                      "a continuous loop. </p>"
-                      "<p>This filter doesn't import KMail mailfolder with mbox files.</p>"
-                      "<p>Since it is possible to recreate the folder structure all folder "
-                      "stored under: \"KMail-Import\" in your local folder.</p>" ) )
+                      "~/Mail or ~/.kde/share/apps/kmail/mail ): in this case, KMailCVT may become stuck "
+                      "in a continuous loop. </p>"
+                      "<p>This filter does not import KMail mailfolders with mbox files.</p>"
+                      "<p>Since it is possible to recreate the folder structure, the folders "
+                      "will be stored under: \"KMail-Import\" in your local folder.</p>" ) )
 {}
 
 /** Destructor. */

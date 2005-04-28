@@ -33,12 +33,12 @@ FilterTheBat::FilterTheBat( void ) :
         Filter( i18n( "Import The Bat! Mails and Folder Structure" ),
                 "Danny Kukawka",
                 i18n( "<p><b>The Bat! import filter</b></p>"
-                      "<p>Select the base directory of your \'The Bat!\' local mailfolder which "
-                      "you would import.</p>"
-                      "<p><b>Note:</b> This Filter imports specially *.tbb-files from \'The Bat!\' "
-                      "local folder e.g. from POP accounts and not from IMAP/DIMAP accounts.</p>"
-                      "<p>Since it is possible to recreate the folder structure all folder "
-                      "stored under: \"TheBat-Import\" in your local account.</p>" ) )
+                      "<p>Select the base directory of the \'The Bat!\' local mailfolder you "
+                      "want to import.</p>"
+                      "<p><b>Note:</b> This filter imports the *.tbb-files from \'The Bat!\' "
+                      "local folder, e.g. from POP accounts, and not from IMAP/DIMAP accounts.</p>"
+                      "<p>Since it is possible to recreate the folder structure, the folders "
+                      "will be stored under: \"TheBat-Import\" in your local account.</p>" ) )
 {}
 
 /** Destructor. */

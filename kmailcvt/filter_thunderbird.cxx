@@ -30,10 +30,10 @@ FilterThunderbird::FilterThunderbird(void) :
                i18n("<p><b>Thunderbird/Mozilla import filter</b></p>"
                     "<p>Select your base Thunderbird/Mozilla mailfolder"
                     " (usually ~/.thunderbird/*.default/Mail/Local Folders/).</p>"
-                    "<p><b>Note:</b> Never choose a Folder, which <u>does not</u> contain mbox-files (for example"
-                    " a maildir). If you do it anyway, you will get many new folders.</p>"
-                    "<p>Since it is possible to recreate the folder structure all folder "
-                    "stored under: \"Thunderbird-Import\".</p>"))
+                    "<p><b>Note:</b> Never choose a Folder which <u>does not</u> contain mbox-files (for example,"
+                    " a maildir): if you do, you will get many new folders.</p>"
+                    "<p>Since it is possible to recreate the folder structure, the folders "
+                    "will be stored under: \"Thunderbird-Import\".</p>"))
 {}
 
 /** Destructor. */

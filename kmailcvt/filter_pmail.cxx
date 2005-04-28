@@ -32,8 +32,8 @@ FilterPMail::FilterPMail() :
                "Holger Schurig <br>( rewritten by Danny Kukawka )",
                i18n("<p>Select the Pegasus-Mail directory on your system (containing *.CNM, *.PMM and *.MBX files). "
                     "On many systems this is stored in C:\\pmail\\mail or C:\\pmail\\mail\\admin</p>"
-                    "<p><b>Note:</b> Since it is possible to recreate the folder structure all folders "
-                    "stored under: \"PegasusMail-Import\".</p>"))
+                    "<p><b>Note:</b> Since it is possible to recreate the folder structure, the folders "
+                    "will be stored under: \"PegasusMail-Import\".</p>"))
 {}
 
 FilterPMail::~FilterPMail()
@@ -66,7 +66,7 @@ void FilterPMail::import(FilterInfo *info)
     kdDebug() << "Count is " << totalFiles << endl;
     
     if(!(folderParsed = parseFolderMatrix())) {
-        info->addLog(i18n("Can't parse the folder structure. Continue import without subfolder support!"));
+        info->addLog(i18n("Cannot parse the folder structure; continuing import without subfolder support."));
     }
 
     info->addLog(i18n("Importing new mail files ('.cnm')..."));

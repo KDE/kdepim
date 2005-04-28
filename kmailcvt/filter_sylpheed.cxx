@@ -27,11 +27,11 @@ FilterSylpheed::FilterSylpheed( void ) :
         Filter( i18n( "Import Sylpheed Maildirs and Folder Structure" ),
                 "Danny Kukawka",
                 i18n( "<p><b>Sylpheed import filter</b></p>"
-                      "<p>Select the base directory of your Sylpheed mailfolder which you would import "
+                      "<p>Select the base directory of the Sylpheed mailfolder you want to import "
                       "(usually: ~/Mail ).</p>"
-                      "<p>Since it is possible to recreate the folder structure all folder "
-                      "stored under: \"Sylpheed-Import\" in your local folder.</p>" 
-                      "<p>This filter also recreate the status of a message e.g. new or forwarded.") )
+                      "<p>Since it is possible to recreate the folder structure, the folders "
+                      "will be stored under: \"Sylpheed-Import\" in your local folder.</p>" 
+                      "<p>This filter also recreates the status of message, e.g. new or forwarded.") )
 {}
 
 /** Destructor. */

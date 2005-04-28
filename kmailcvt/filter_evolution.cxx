@@ -32,8 +32,8 @@ FilterEvolution::FilterEvolution(void) :
                "Simon MARTIN<br /><br />( Filter accelerated by Danny Kukawka )",
                i18n("<p><b>Evolution 1.x import filter</b></p>"
                     "<p>Select the base directory of Evolution's mails (usually ~/evolution/local).</p>"
-                    "<p>Since it is possible to recreate the folder structure all folder "
-                    "stored under: \"Evolution-Import\".</p>"))
+                    "<p>Since it is possible to recreate the folder structure, the folders "
+                    "will be stored under: \"Evolution-Import\".</p>"))
 {}
 
 /** Destructor. */

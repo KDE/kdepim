@@ -30,10 +30,10 @@ FilterEvolution_v2::FilterEvolution_v2(void) :
                "Danny Kukawka",
                i18n("<p><b>Evolution 2.x import filter</b></p>"
                     "<p>Select the base directory of your local Evolution mailfolder (usually ~/.evolution/mail/local/).</p>"
-                    "<p><b>Note:</b> Never choose a Folder, which <u>does not</u> contain mbox-files (for example "
-                    "a maildir). If you do it anyway, you will get many new folders.</p>"
-                    "<p>Since it is possible to recreate the folder structure all folder "
-                    "stored under: \"Evolution-Import\".</p>"))
+                    "<p><b>Note:</b> Never choose a Folder which <u>does not</u> contain mbox-files (for example "
+                    "a maildir): if you do, you will get many new folders.</p>"
+                    "<p>Since it is possible to recreate the folder structure, the folders "
+                    "will be stored under: \"Evolution-Import\".</p>"))
 {}
 
 /** Destructor. */
