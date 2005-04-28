@@ -39,6 +39,7 @@
 
 class KLineEdit;
 class KIntNumInput;
+class KURLRequester;
 class QPushButton;
 class QGridLayout;
 
@@ -156,6 +157,44 @@ namespace Kleo {
     virtual void doLoad();
   private:
     KLineEdit* mLineEdit;
+  };
+
+  /**
+   * A widget manager for a path entry in the crypto config
+   */
+  class CryptoConfigEntryPath : public CryptoConfigEntryGUI {
+    Q_OBJECT
+
+  public:
+    CryptoConfigEntryPath( CryptoConfigModule* module,
+                           Kleo::CryptoConfigEntry* entry,
+                           const QString& entryName,
+                           QGridLayout * layout,
+                           QWidget* parent, const char* name = 0 );
+
+    virtual void doSave();
+    virtual void doLoad();
+  private:
+    KURLRequester* mUrlRequester;
+  };
+
+  /**
+   * A widget manager for an URL entry in the crypto config
+   */
+  class CryptoConfigEntryURL : public CryptoConfigEntryGUI {
+    Q_OBJECT
+
+  public:
+    CryptoConfigEntryURL( CryptoConfigModule* module,
+                          Kleo::CryptoConfigEntry* entry,
+                          const QString& entryName,
+                          QGridLayout * layout,
+                          QWidget* parent, const char* name = 0 );
+
+    virtual void doSave();
+    virtual void doLoad();
+  private:
+    KURLRequester * mUrlRequester;
   };
 
   /**
