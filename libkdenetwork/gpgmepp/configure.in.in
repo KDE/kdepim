@@ -137,6 +137,16 @@ KDEPIM_PATH_GPGME(0.4.5,[
 		AC_MSG_RESULT([no])
 	])
 
+	AC_MSG_CHECKING([if gpgme has GPGME_INCLUDE_CERTS_DEFAULT])
+	AC_TRY_COMPILE([#include <gpgme.h>], [
+                int i = GPGME_INCLUDE_CERTS_DEFAULT;
+	], [
+		AC_DEFINE(HAVE_GPGME_INCLUDE_CERTS_DEFAULT, 1, [Define to 1 if your gpgme has the GPGME_INCLUDE_CERTS_DEFAULT macro])
+		AC_MSG_RESULT([yes])
+	], [
+		AC_MSG_RESULT([no])
+	])
+
 	CFLAGS="$kdepim_gpgmepp_save_cflags"
 	LIBS="$kdepim_gpgmepp_save_libs"
 	AC_LANG_RESTORE
