@@ -2,12 +2,12 @@
    Copyright (C) 2003 Klarälvdalens Datakonsult AB
 
    This file is part of GPGME++.
- 
+
    GPGME++ is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
- 
+
    GPGME++ is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -119,7 +119,7 @@ namespace GpgME {
     default:                     return Unknown;
     }
   }
-    
+
 
   void Context::setArmor( bool useArmor ) {
     gpgme_set_armor( d->ctx, int( useArmor ) );
@@ -136,7 +136,13 @@ namespace GpgME {
   }
 
   void Context::setIncludeCertificates( int which ) {
-    assert( which >= -2 );
+    if ( which == DefaultCertificates ) {
+#ifdef HAVE_GPGME_INCLUDE_CERTS_DEFAULT
+      which = GPGME_INCLUDE_CERTS_DEFAULT;
+#else
+      which = 1;
+#endif
+    }
     gpgme_set_include_certs( d->ctx, which );
   }
 
@@ -152,7 +158,7 @@ namespace GpgME {
     const unsigned int cur = gpgme_get_keylist_mode( d->ctx );
     gpgme_set_keylist_mode( d->ctx, add_to_gpgme_keylist_mode_t( cur, mode ) );
   }
-    
+
 
   unsigned int Context::keyListMode() const {
     return convert_from_gpgme_keylist_mode_t( gpgme_get_keylist_mode( d->ctx ) );
@@ -425,7 +431,7 @@ namespace GpgME {
     return d->lasterr = gpgme_op_decrypt_verify_start( d->ctx, cdp ? cdp->data : 0, pdp ? pdp->data : 0 );
   }
 
-  
+
 
 
   void Context::clearSigningKeys() {
