@@ -332,7 +332,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
           for ( it = fields.begin(); it != fields.end(); ++it ) {
             if ( counter == (int)( posToType( item->currentItem() ) - mCustomCounter ) ) {
               (*it)->setValue( a, value );
-              continue;
+              break;
             }
             ++counter;
           }
