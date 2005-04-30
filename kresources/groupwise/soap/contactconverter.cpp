@@ -337,13 +337,16 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
       QStringList addresses = addrIt.data();
       kdDebug() << "got IM addresses for '" << protocol << "' : " << addresses << endl;
       // TODO: map protocol to KDE's set of known protocol names (need to know the set of services in use elsewhere)
+      if ( protocol == "nov" )
+        protocol = "groupwise";
       addr.insertCustom( QString::fromLatin1("messaging/%1").arg( protocol ),
                           QString::fromLatin1( "All" ),
                           addresses.join( QChar( 0xE000 ) ) );
     }
   }
-  kdDebug() << "Got the following addressee: " << endl; 
+  kdDebug() << "Got the following addressee: " << endl;
   addr.dump();
+  kdDebug() << "Customs are: " << addr.customs() << endl;
 
   return addr;
 }

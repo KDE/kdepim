@@ -45,6 +45,7 @@ class ContactConverter : public GWConverter
     ngwt__ImAddressList* convertImAddresses( const KABC::Addressee& );
     // splits up an arbitrary custom field
     void splitField( const QString &str, QString &app, QString &name, QString &value );
+    static QMap<QString, QString > mIMProtocolMap;
 };
 
 #endif

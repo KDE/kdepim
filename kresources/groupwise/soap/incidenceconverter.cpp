@@ -89,7 +89,9 @@ ngwt__Appointment* IncidenceConverter::convertToAppointment( KCal::Event* event 
     return 0;
 
   ngwt__Appointment* appointment = soap_new_ngwt__Appointment( soap(), -1 );
+  appointment->startDate = 0;
   appointment->endDate = 0;
+  appointment->acceptLevel = 0;
   appointment->alarm = 0;
   appointment->allDayEvent = 0;
   appointment->place = 0;
@@ -219,23 +221,35 @@ ngwt__Task* IncidenceConverter::convertToTask( KCal::Todo* todo )
 
 bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt__CalendarItem* item )
 {
+  //TODO: support the new iCal standard recurrence rule
+
   // ngwt__CalendarItem
   item->rdate = 0;
+  item->rrule = 0;
+  item->exdate = 0;
   item->recurrenceKey = 0;
   item->iCalId = 0;
   // ngwt__Mail
+  item->subject = 0;
   item->originalSubject = 0;
+  item->subjectPrefix = 0;
   item->distribution = 0;
   item->message = 0;
   item->attachments = 0;
   item->options = 0;
+  item->link = 0;
+  item->hasAttachment = false;
+  item->size = 0;
   // ngwt__BoxEntry
   item->status = 0;
   item->thread = 0;
   item->msgId = 0;
   item->source = 0;
+  item->returnSentItemsId = 0;
   item->delivered = 0;
   item->class_ = 0;
+  item->security = 0;
+  item->comment = 0;
   // ngwt__ContainerItem
   item->categories = 0;
   item->created = 0;
@@ -371,7 +385,7 @@ bool IncidenceConverter::convertFromCalendarItem( ngwt__CalendarItem* item,
   incidence->setCustomProperty( "GWRESOURCE", "UID",
                                 stringToQString( item->id ) );
 
-  if ( !item->subject->empty() )
+  if ( item->subject && !item->subject->empty() )
     incidence->setSummary( stringToQString( item->subject ) );
 
 //  kdDebug() << "SUMMARY: " << incidence->summary() << endl;
@@ -457,7 +471,7 @@ void IncidenceConverter::setItemDescription( KCal::Incidence *incidence,
 
 void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence *incidence )
 {
-  kdDebug() << "IncidenceConverter::getAttendees()" << item->subject->c_str()
+  kdDebug() << "IncidenceConverter::getAttendees()" << ( item->subject ? item->subject->c_str() : "no subject" )
     << endl;
 
   if ( item->distribution && item->distribution->recipients ) {

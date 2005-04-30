@@ -193,6 +193,7 @@ void ReadCalendarJob::run()
   mSoap->header->ngwt__session = mSession;
   _ngwm__getFolderListRequest folderListReq;
   folderListReq.parent = "folders";
+  folderListReq.view = 0;
   folderListReq.recurse = true;
   _ngwm__getFolderListResponse folderListRes;
   soap_call___ngw__getFolderListRequest( mSoap, mUrl.latin1(), 0,
@@ -207,8 +208,13 @@ void ReadCalendarJob::run()
         if ( !(*it)->id ) {
           kdError() << "No calendar id" << endl;
         } else {
-          readCalendarFolder( *(*it)->id );
-          (*mCalendarFolder) = *(*it)->id;
+          ngwt__SystemFolder * fld = dynamic_cast<ngwt__SystemFolder *>( *it );
+          if ( fld )
+            if ( fld->folderType == Calendar || fld->folderType == Checklist ) {
+              kdDebug() << "Got calendar folder" << endl;
+              readCalendarFolder( *(*it)->id );
+              (*mCalendarFolder) = *(*it)->id;
+          }
         }
       }
     }
@@ -249,13 +255,11 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
                                     &itemsResponse );
   soap_print_fault(mSoap, stderr);
 
-  std::vector<class ngwt__Item * > *items = &itemsResponse.items->item;
-
-  if ( items ) {
+  if ( itemsResponse.items ) {
     IncidenceConverter conv( mSoap );
 
     std::vector<class ngwt__Item * >::const_iterator it;
-    for( it = items->begin(); it != items->end(); ++it ) {
+    for( it = itemsResponse.items->item.begin(); it != itemsResponse.items->item.end(); ++it ) {
       ngwt__Appointment *a = dynamic_cast<ngwt__Appointment *>( *it );
       KCal::Incidence *i = 0;
       if ( a ) {
