@@ -100,14 +100,18 @@ ultimate ownertrust: it is no longer implicitly done for you.</para>
 </answer>
 </qandaentry>
 
-<qandaentry>
-<question><para>Where does &kmail; save my settings and my mail?</para></question>
-<answer>
-<para>Most &kmail; settings are stored in <filename>$<envar>KDEHOME</envar>/share/config/kmailrc</filename>,
-where $<envar>KDEHOME</envar> is typically <filename class="directory">~/.kde</filename>; the identities are stored in <filename>$<envar>KDEHOME</envar>/share/config/emailidentities</filename> and your mail is saved in <filename class="directory">~/Mail</filename>. Note that some of the files are hidden: remember to also copy those if you
-want to backup or archive your mails.</para>
-</answer>
-</qandaentry>
+<qandaentry> <question><para>Where does &kmail; save my settings and my
+mail?</para></question> <answer> <para>Most &kmail; settings are stored in
+<filename>$<envar>KDEHOME</envar>/share/config/kmailrc</filename>, where
+$<envar>KDEHOME</envar> is typically <filename
+class="directory">~/.kde</filename>; the identities are stored in
+<filename>$<envar>KDEHOME</envar>/share/config/emailidentities</filename>
+and your mail is saved in <filename
+class="directory">$<envar>KDEHOME</envar>/share/apps/kmail</filename> (or
+<filename class="directory">~/Mail</filename> if you upgraded from a
+previous &kmail; version that used this location.) Note that some of the
+files are hidden: remember to also copy those if you want to backup or
+archive your mails.</para> </answer> </qandaentry>
 
 <qandaentry id="faq-index-regeneration">
 <question><para>Why did &kmail; regenerate the index of a folder?</para></question>
@@ -126,7 +130,7 @@ to use &kmail; together with procmail then please read <link
  linkend="faq-procmail">this &FAQ;</link>. If you want to use &kmail; together with
 another email client then please read <link 
 linkend="faq-other-muas">this &FAQ;</link>.</para></listitem>
-<listitem><para>If your mail folder (usually <filename class="directory">~/Mail</filename>)
+<listitem><para>If your mail folder (usually <filename class="directory">$<envar>KDEHOME</envar>/share/apps/kmail/</filename> or <filename class="directory">~/Mail</filename>)
 is on a volume which is mounted via NFS and if the clock of the NFS server is ahead of the
 clock of your computer then the NFS server sometimes reports a wrong
 file date for the index file. In this case &kmail; assumes that the index
@@ -235,20 +239,19 @@ then open it with an editor and add &eg; <userinput>folders=/home/username/.mail
 to the <quote>[General]</quote> section. Then move all your existing folders (including
 the hidden index files) to the new location. The next time you start &kmail; will use
 <filename class="directory">/home/username/.mail</filename> instead of
-<filename class="directory">/home/username/Mail</filename>. Note that &kmail;
+<filename class="directory">/home/username/.kde/share/apps/kmail</filename>. Note that &kmail;
 will lose its filters if you change the mail folder's location but forget
 to move your existing folders.</para>
 </answer>
 </qandaentry>
 
 <qandaentry>
-<question><para>How can I use mail folders that are not in <filename
-class="directory">~/Mail/</filename>?</para></question>
+<question><para>How can I use mail folders that are not in the normal &kmail; message folder location?</para></question>
 
 <answer><para>To add a whole mbox mail folder use
 <userinput><command>ln</command> <option>-s</option>
 <filename>/somewhere/Mail/.remotedir.directory</filename> <filename
-class="symlink">~/Mail/.mymailboxfile.directory</filename></userinput>.
+class="symlink">/home/username/share/apps/kmail/.mymailboxfile.directory</filename></userinput>.
 Note that it is not possible to use links to files, only links that point
 to folders will work.</para></answer>
 </qandaentry>

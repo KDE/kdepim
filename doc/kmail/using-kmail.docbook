@@ -368,13 +368,16 @@ checker. Note that you may first need to configure the spellchecker using
 <sect1 id="folders">
 <title>Message Folders</title>
 
-<para>Message Folders are used to organize your email messages. By default, all
-message folders are stored in the folder <filename
-class="directory">Mail</filename>, which is created in your home folder. When
-you first start &kmail; the <guilabel>inbox</guilabel>,
+<para>Message Folders are used to organize your email messages. By default,
+if you have no existing message folders, messages are stored in the folder
+<filename
+class="directory">$<envar>KDEHOME</envar>/share/apps/kmail/</filename>.  If
+you have existing message folders in <filename
+class="directory">~/Mail</filename>, these will be used instead.  When you
+first start &kmail; the <guilabel>inbox</guilabel>,
 <guilabel>outbox</guilabel>, <guilabel>sent-mail</guilabel>,
-<guilabel>trash</guilabel> and <guilabel>drafts</guilabel> folders are created.
-These folders each have special functions:</para>
+<guilabel>trash</guilabel> and <guilabel>drafts</guilabel> folders are
+created.  These folders each have special functions:</para>
 
 <variablelist>
 <varlistentry>
