@@ -291,6 +291,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
   // FIXME count only @ not in double quotes
 
   bool tooManyAtsFlag = false;
+  bool assumeAtIsPartOfName = false;
 
   int atCount = aStr.contains('@');
   if ( atCount > 1 ) {
@@ -348,6 +349,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
           break;
         case '@' :
           if ( !inQuotedString ) {
+            assumeAtIsPartOfName = !assumeAtIsPartOfName;
             if ( index == 0 ) {  // Missing local part
               return MissingLocalPart;
             } else if( index == strlen-1 ) {
@@ -415,6 +417,11 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
       }
     }
   }
+
+  if ( assumeAtIsPartOfName && tooManyAtsFlag ) {
+    tooManyAtsFlag = !tooManyAtsFlag;
+  }
+
   if ( context == InComment )
     return UnbalancedParens;
 
