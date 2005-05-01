@@ -23,6 +23,7 @@
 #include "korncfgimpl.h"
 #include "hvcontainer.h"
 
+#include <kapplication.h>
 #include <kconfig.h>
 #include <kdialogbase.h>
 #include <klocale.h>
@@ -72,6 +73,8 @@ void KornShell::optionDlg()
 
 void KornShell::readConfig()
 {
+	static bool shownConfig = false;
+	
 	_config->setGroup( "korn" );
 	QChar layout = _config->readEntry( "layout", "Docked" )[0].upper();
 	
@@ -85,6 +88,19 @@ void KornShell::readConfig()
 	connect( _box, SIGNAL( showConfiguration() ), this, SLOT( optionDlg() ) );
 			
 	_box->readConfig( _config );
+
+	//Show configuration dialog of no boxes are configurated
+	if( !_config->hasGroup( "korn-0" ) )
+		//If user pressed cancel, or did not add a box, close KOrn
+		if( !shownConfig )
+		{
+			shownConfig = true;
+			optionDlg();
+		}
+		else
+		{
+			kapp->quit();
+		}
 }
 
 void KornShell::slotDialogClosed()
