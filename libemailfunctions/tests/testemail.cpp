@@ -286,6 +286,9 @@ int main(int argc, char *argv[])
   // correct error msg when a comma is inside <>
   checkIsValidEmailAddress( "Matt Douhan <matt@fruitsalad,org>", "UnexpectedComma" );
 
+  // an @ inside < > is allowed
+  checkIsValidEmailAddress( "Matt@home <matt@fruitsalad.org>", "AddressOk" );
+
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( QString::fromUtf8("test@täst.invalid"), "true" );
