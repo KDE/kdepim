@@ -95,7 +95,7 @@ public:
 	char *getData() const
 	{
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
-		if (fBuffer) return fBuffer->data; else
+		if (fBuffer) return (char *)(fBuffer->data); else
 #endif
 		return fData;
 	}
