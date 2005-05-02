@@ -387,6 +387,9 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
 		if( (*_metadata)["auth"].isEmpty() )
 			_metadata->erase( "auth" );
 	}
+
+	if( cfg.hasKey( "tls" ) )
+		(*_metadata)["tls"] = cfg.readEntry("tls", "auto" );
 	
 	_valid = true;
 	emitValidChanged();
