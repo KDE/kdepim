@@ -148,7 +148,7 @@ int lzfu_decompress(QIODevice *input, QIODevice *output)
 			else
 			{
 				// uncompressed chunk (char)
-				char c = (char)input->getch();
+				signed char c = (char)input->getch();
 				if (c == -1)
 				{
 					if (!input->atEnd())
