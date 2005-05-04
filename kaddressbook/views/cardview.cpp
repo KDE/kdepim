@@ -997,7 +997,7 @@ void CardView::contentsMousePressEvent( QMouseEvent *e )
   if ( item == 0 ) {
     d->mLastClickOnItem = false;
     if ( d->mOnSeparator) {
-      d->mResizeAnchor = pos.x() + contentsX();
+      d->mResizeAnchor = e->x() + contentsX();
       d->colspace = (2 * d->mItemSpacing);
       int ccw = d->mItemWidth + d->colspace + d->mSepWidth;
       d->first = (contentsX() + d->mSepWidth) / ccw;
