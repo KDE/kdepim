@@ -989,15 +989,15 @@ void CardView::contentsMousePressEvent( QMouseEvent *e )
 {
   QScrollView::contentsMousePressEvent( e );
 
-  QPoint pos = e->pos();
-  d->mLastClickPos = pos;
+  QPoint pos = contentsToViewport( e->pos() );
+  d->mLastClickPos = e->pos();
 
-  CardViewItem *item = itemAt( pos );
+  CardViewItem *item = itemAt( e->pos() );
 
   if ( item == 0 ) {
     d->mLastClickOnItem = false;
     if ( d->mOnSeparator) {
-      d->mResizeAnchor = e->x() + contentsX();
+      d->mResizeAnchor = pos.x() + contentsX();
       d->colspace = (2 * d->mItemSpacing);
       int ccw = d->mItemWidth + d->colspace + d->mSepWidth;
       d->first = (contentsX() + d->mSepWidth) / ccw;
@@ -1032,7 +1032,7 @@ void CardView::contentsMousePressEvent( QMouseEvent *e )
     // select current item
     item->setSelected( true );
 
-    emit contextMenuRequested( item, mapToGlobal( e->pos() ) );
+    emit contextMenuRequested( item, mapToGlobal( pos ) );
     return;
   }
 
