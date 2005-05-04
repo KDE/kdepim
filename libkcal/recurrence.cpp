@@ -1198,9 +1198,9 @@ QDate Recurrence::getNextDateNoTime(const QDate &preDate, bool *last) const
          * or the 5th Monday, and the month being checked is February or a 30-day month,
          * so limit the number of iterations.
          */
-		QDate end = (rDuration >= 0) ? endDate() : MAX_DATE;
+        QDate end = (rDuration >= 0) ? endDate() : MAX_DATE;
         int maxMonthsAhead = (end.year() - startYear)*12 + end.month() - startMonth;
-		monthsAhead += rFreq;
+        monthsAhead += rFreq;
         int maxIter = maxIterations();
         for (int i = 0;  i < maxIter && monthsAhead <= maxMonthsAhead;  ++i) {
           int months = startMonth - 1 + monthsAhead;
@@ -1226,9 +1226,9 @@ QDate Recurrence::getNextDateNoTime(const QDate &preDate, bool *last) const
       if (!nextDate.isValid()) {
         /* Check for a date in the next scheduled year.
          * The next check may fail if, for example, it's the 29th of February or the 5th
-		 * Monday, so limit the number of iterations.
+         * Monday, so limit the number of iterations.
          */
-		QDate end = (rDuration >= 0) ? endDate() : MAX_DATE;
+        QDate end = (rDuration >= 0) ? endDate() : MAX_DATE;
         int maxYear = end.year();
         startYear += yearsAhead + rFreq;
         int maxIter = maxIterations();
@@ -1340,7 +1340,7 @@ QDate Recurrence::getPreviousDateNoTime(const QDate &afterDate, bool *last) cons
       if (!prevDate.isValid()) {
         /* Check for a date in the previous scheduled year.
          * The next check may fail if, for example, it's the 29th of February or the 5th
-		 * Monday, so limit the number of iterations.
+         * Monday, so limit the number of iterations.
          */
         if (!notThisYear)
           yearsAhead -= rFreq;
@@ -1733,7 +1733,7 @@ int Recurrence::weeklyCalcEndDate(QDate &enddate, int daysPerWeek) const
   if (startDayOfWeek != rWeekStart) {
     // Check what remains of the start week
     for (int i = startDayOfWeek - 1;  i != rWeekStart - 1;  i = (i + 1) % 7) {
-	  ++daysGone;
+      ++daysGone;
       if (rDays.testBit((uint)i)) {
         ++countGone;
         if (--countTogo == 0)
@@ -1751,7 +1751,7 @@ int Recurrence::weeklyCalcEndDate(QDate &enddate, int daysPerWeek) const
     countTogo -= wholeWeeks * daysPerWeek;
     // Check the last week in the recurrence
     for (int i = rWeekStart - 1;  ;  i = (i + 1) % 7) {
-	  ++daysGone;
+      ++daysGone;
       if (rDays.testBit((uint)i)) {
         ++countGone;
         if (--countTogo == 0)
