@@ -57,10 +57,10 @@ CalendarLocal::~CalendarLocal()
   close();
 }
 
-bool CalendarLocal::load( const QString &fileName )
+bool CalendarLocal::load( const QString &fileName, CalFormat *format )
 {
   mFileName = fileName;
-  FileStorage storage( this, fileName );
+  FileStorage storage( this, fileName, format );
   return storage.load();
 }
 

@@ -87,29 +87,35 @@ bool FileStorage::load()
 
   // Always try to load with iCalendar. It will detect, if it is actually a
   // vCalendar file.
-  ICalFormat iCal;
-
-  bool success = iCal.load( calendar(), mFileName);
-
+  bool success;
+  // First try the supplied format. Otherwise fall through to iCalendar, then
+  // to vCalendar
+  success = saveFormat() && saveFormat()->load( calendar(), mFileName );
   if ( !success ) {
-    if ( iCal.exception() ) {
-//      kdDebug(5800) << "---Error: " << mFormat->exception()->errorCode() << endl;
-      if ( iCal.exception()->errorCode() == ErrorFormat::CalVersion1 ) {
-        // Expected non vCalendar file, but detected vCalendar
-        kdDebug(5800) << "FileStorage::load() Fallback to VCalFormat" << endl;
-        VCalFormat vCal;
-        success = vCal.load( calendar(), mFileName );
-        calendar()->setProductId( vCal.productId() );
+    ICalFormat iCal;
+
+    bool success = iCal.load( calendar(), mFileName);
+
+    if ( !success ) {
+      if ( iCal.exception() ) {
+//        kdDebug(5800) << "---Error: " << mFormat->exception()->errorCode() << endl;
+        if ( iCal.exception()->errorCode() == ErrorFormat::CalVersion1 ) {
+          // Expected non vCalendar file, but detected vCalendar
+          kdDebug(5800) << "FileStorage::load() Fallback to VCalFormat" << endl;
+          VCalFormat vCal;
+          success = vCal.load( calendar(), mFileName );
+          calendar()->setProductId( vCal.productId() );
+        } else {
+          return false;
+        }
       } else {
+        kdDebug(5800) << "Warning! There should be set an exception." << endl;
         return false;
       }
     } else {
-      kdDebug(5800) << "Warning! There should be set an exception." << endl;
-      return false;
+//     kdDebug(5800) << "---Success" << endl;
+      calendar()->setProductId( iCal.loadedProductId() );
     }
-  } else {
-//    kdDebug(5800) << "---Success" << endl;
-    calendar()->setProductId( iCal.loadedProductId() );
   }
 
   calendar()->setModified( false );

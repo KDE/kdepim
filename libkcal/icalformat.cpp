@@ -51,9 +51,9 @@ extern "C" {
 
 using namespace KCal;
 
-ICalFormat::ICalFormat()
+ICalFormat::ICalFormat() : mImpl(0)
 {
-  mImpl = new ICalFormatImpl( this );
+  setImplementation( new ICalFormatImpl( this ) );
 
   mTimeZoneId = "UTC";
   mUtc = true;
@@ -62,6 +62,12 @@ ICalFormat::ICalFormat()
 ICalFormat::~ICalFormat()
 {
   delete mImpl;
+}
+
+void ICalFormat::setImplementation( ICalFormatImpl *impl )
+{
+  if ( mImpl ) delete mImpl;
+  mImpl = impl;
 }
 
 #if defined(_AIX) && defined(open)

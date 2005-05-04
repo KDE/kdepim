@@ -130,6 +130,7 @@ class LIBKCAL_EXPORT ICalFormat : public CalFormat
       to avoid utf8 conversions, which are expensive, when reading from disk.
     */
     bool fromRawString( Calendar * calendar, const QCString & );
+    void setImplementation( ICalFormatImpl *impl );
 
   private:
     ICalFormatImpl *mImpl;

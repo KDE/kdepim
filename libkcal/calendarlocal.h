@@ -53,8 +53,9 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
 
       @return true, if successful, false on error.
       @param fileName the name of the calendar on disk.
+      @param format the format to use. If 0, iCalendar and vCalendar will be used
     */
-    bool load( const QString &fileName );
+    bool load( const QString &fileName, CalFormat *format = 0 );
 
     /**
       Writes out the calendar to disk in the specified \a format.

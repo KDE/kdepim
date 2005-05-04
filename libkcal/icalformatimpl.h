@@ -74,8 +74,8 @@ class ICalFormatImpl
     Person readOrganizer( icalproperty *organizer );
     Attachment *readAttachment(icalproperty *attach);
     void readIncidence(icalcomponent *parent, icaltimezone *timezone, Incidence *incidence);
-    void readRecurrenceRule(icalproperty *rrule,Incidence *event);
-    void readRecurrence( const struct icalrecurrencetype &r, Recurrence* recur );
+    virtual void readRecurrenceRule(icalproperty *rrule,Incidence *event);
+    virtual void readRecurrence( const struct icalrecurrencetype &r, Recurrence* recur );
     void readAlarm(icalcomponent *alarm,Incidence *incidence);
     /** Return the PRODID string loaded from calendar file */
     const QString &loadedProductId()  { return mLoadedProductId; }
@@ -89,12 +89,13 @@ class ICalFormatImpl
     icalcomponent *createCalendarComponent(Calendar * = 0);
     icalcomponent *createScheduleComponent(IncidenceBase *,Scheduler::Method);
 
+  protected:
+    void dumpIcalRecurrence(icalrecurrencetype);
   private:
     void writeIncidenceBase(icalcomponent *parent,IncidenceBase *);
     void readIncidenceBase(icalcomponent *parent, IncidenceBase *);
     void writeCustomProperties(icalcomponent *parent,CustomProperties *);
     void readCustomProperties(icalcomponent *parent,CustomProperties *);
-    void dumpIcalRecurrence(icalrecurrencetype);
     void readTimezone(icalcomponent *vtimezone);
 
     ICalFormat *mParent;
