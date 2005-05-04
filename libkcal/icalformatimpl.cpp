@@ -1351,6 +1351,14 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
         readRecurrenceRule(p,incidence);
         break;
 
+      case ICAL_RDATE_PROPERTY:
+        // TODO
+        break;
+
+      case ICAL_EXRULE_PROPERTY:
+        // TODO
+        break;
+
       case ICAL_EXDATE_PROPERTY:
         icaltime = icalproperty_get_exdate(p);
         if (icaltime.is_date) {
