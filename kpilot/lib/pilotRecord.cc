@@ -66,7 +66,7 @@ static const char *pilotRecord_id =
 }
 
 PilotRecord::PilotRecord(void *data, int len, int attrib, int cat,
-	pi_uid_t uid) :
+	recordid_t uid) :
 	fData(0L),
 	fLen(len),
 	fAttrib(attrib),

@@ -58,7 +58,7 @@ public:
 	*
 	* This constructor makes a copy of the data buffer (and owns that buffer).
 	*/
-	PilotRecord(void* data, int length, int attrib, int cat, pi_uid_t uid);
+	PilotRecord(void* data, int length, int attrib, int cat, recordid_t uid);
 
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	/** Constructor. Using the given buffer @param buf (which carries its
@@ -67,7 +67,7 @@ public:
 	* of the buffer, and doesn't make an additional copy
 	* (In practice, this just saves copying around extra buffers).
 	*/
-	PilotRecord(pi_buffer_t *buf, int attrib, int cat, pi_uid_t uid) :
+	PilotRecord(pi_buffer_t *buf, int attrib, int cat, recordid_t uid) :
 		fData((char *)buf->data),fLen(buf->used),fAttrib(attrib),
 		fCat(cat),fID(uid),fBuffer(buf)
 	{ fAllocated++; }
