@@ -52,7 +52,7 @@ struct pi_buffer_t;
 class KDE_EXPORT PilotRecord
 {
 public:
-	/** Constructor. Using the given @param data and @param length, create
+	/** Constructor. Using the given @p data and @p length, create
 	* a record. Give it the additional attributes and category numbers;
 	* the UID is a HH unique ID for identifying records.
 	*
@@ -61,7 +61,7 @@ public:
 	PilotRecord(void* data, int length, int attrib, int cat, recordid_t uid);
 
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
-	/** Constructor. Using the given buffer @param buf (which carries its
+	/** Constructor. Using the given buffer @p buf (which carries its
 	* own data and length), create a record. Otherwise much like the
 	* above constructor @em except that this record assumes ownership
 	* of the buffer, and doesn't make an additional copy
@@ -83,7 +83,7 @@ public:
 		fDeleted++;
 	}
 
-	/** Constructor. Copies the data from the @param orig record. */
+	/** Constructor. Copies the data from the @p orig record. */
 	PilotRecord(PilotRecord* orig);
 
 	/** Retrieve the data buffer for this record. Note that trying
@@ -101,12 +101,29 @@ public:
 	}
 
 	/** Returns the length of the data for this record. */
-	int getLen() const {
+	int getLen() const
+	{
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 		if (fBuffer) return fBuffer->used; else
 #endif
 		return fLen;
 	}
+
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+	/** Returns the data buffer associated with this record. */
+	const pi_buffer_t *buffer() const { return fBuffer; }
+
+	/** Set the data for this record. Frees old data. Assumes
+	* ownership of the passed in buffer @p b.
+	*/
+	void setData(pi_buffer_t *b)
+	{
+		if (fBuffer) { pi_buffer_free(fBuffer); }
+		else { delete[] fData; } ;
+		fData = 0L;
+		fBuffer = b;
+	}
+#endif
 
 	/** A constant, really left over from PalmOS 4 days, when records
 	* could be 64k in size at most. It is used in various places to
@@ -114,7 +131,7 @@ public:
 	*/
 	enum { APP_BUFFER_SIZE = 0xffff } ;
 
-	/** Assignment operator. Makes a copy of the @param orig record. */
+	/** Assignment operator. Makes a copy of the @p orig record. */
 	PilotRecord& operator=(PilotRecord& orig);
 
 	/** Sets the data for this record. Makes a copy of the data buffer. */
