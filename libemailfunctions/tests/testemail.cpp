@@ -289,6 +289,12 @@ int main(int argc, char *argv[])
   //several commentlevels
   checkIsValidEmailAddress( "Matt Douhan (hey(jongel)fibbel) <matt@fruitsalad.org>", "AddressOk" );
 
+  // several comment levels and one (the outer) being unbalanced
+  checkIsValidEmailAddress( "Matt Douhan (hey(jongel)fibbel <matt@fruitsalad.org>", "UnbalancedParens" );
+
+  // several comment levels and one (the inner) being unbalanced
+  checkIsValidEmailAddress( "Matt Douhan (hey(jongelfibbel) <matt@fruitsalad.org>", "UnbalancedParens" );
+
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( QString::fromUtf8("test@täst.invalid"), "true" );
