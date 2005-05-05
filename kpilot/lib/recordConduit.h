@@ -54,21 +54,79 @@ class RecordConduitBase : public ConduitAction
 {
 Q_OBJECT
 public:
+	/** Constructor. The QStringList @p a sets flags for the ConduitAction.
+	*/
 	RecordConduitBase(KPilotDeviceLink *o,
 		const char *n,
 		const QStringList a = QStringList()) :
-		ConduitAction(o,n,a)
+		ConduitAction(o,n,a),
+		fTimer(0L)
 	{
 	} ;
+	/** Destructor. */
 	virtual ~RecordConduitBase()
 	{
+		// delete fTimer; // Timer is a child object
 	} ;
 
+	/** The different directions that a pair of records (one on the PC, one
+	* on the Pilot) can be synced. These correspond to special sync directions
+	* and the most general "sync both ways". Values of this type are passed
+	* to the single-record syncer functions.
+	*/
 	typedef enum { HHtoPC=0, PCtoHH=1, Both=2 } SyncDirection;
 
+	/** Return values for the processing functions. Each should return
+	* NotDone if it needs to be called again (e.g. to process another record),
+	* Done if it is finished and something else should be done, and
+	* Error if the sync cannot be completed.
+	*/
+	typedef enum { NotDone=0, Done=1, Error=2 } SyncProgress;
+
+protected:
+	/** Function called at the beginning of a sync to load data from the PC.
+	* @return Done when the load has finished.
+	* @see process
+	*/
+	virtual SyncProgress loadPC() = 0;
+
+	/** Function called repeatedly to fetch the next modified entry from the Palm and
+	* sync it with the PC by looking up the record, and calling the syncer for it.
+	*
+	* @return true when there are no more modified records on the Palm
+	* @see process
+	*/
+	virtual SyncProgress palmRecToPC() = 0;
+
+	/** Function called at the end of this conduit's sync, which should reset DB flags
+	* and write changed config data out to disk.
+	*
+	* @return true if the cleanup succeeds.
+	* @see process
+	*/
+	virtual SyncProgress cleanup() = 0;
+
 protected slots:
-	virtual void slotPalmRecToPC();
-	virtual void slotCleanup();
+	/** Slot used for the implementation of a state machine: calls each of the
+	* relevant other slots (above) as needed until they return true.
+	*/
+	void process();
+
+protected:
+	virtual bool exec();
+
+private:
+	/** Timer to signal the process() slot. Used to keep the UI responsive. */
+	QTimer *fTimer;
+
+	/** State of the conduit's sync. This is changed by process. */
+	enum { Initialize, PalmToPC, Cleanup } fState;
+
+	QMap<recordid_t,QString> fUIDMap;
+	RecordIDList fIDList;
+	RecordIDList::Iterator fIDListIterator;
+
+	QString fDBName;
 } ;
 
 template <class PCEntry, class PCContainer, class HHEntry, class HHAppInfo, class Syncer>
@@ -88,44 +146,28 @@ public:
 	{
 	} ;
 
-	bool exec()
+	virtual SyncProgress loadPC()
 	{
 		FUNCTIONSETUP;
-		if (!_prepare()) return false;
-		setFirstSync(false);
-
-		bool retrieved = false;
-		if (!openDatabases( fDBName, &retrieved))
-		{
-			emit logError(i18n("Unable to open the %1 database on the handheld.").arg( fDBName ) );
-			return false;
-		}
-		if (retrieved) setFirstSync(true);
 
 		fAppInfo = new HHAppInfo(fDatabase) ;
 		fContainer = new PCContainer();
 		if (!fContainer->load())
 		{
 			emit logError(i18n("Unable to load the %1 database on the PC.").arg(fConduitName));
-			return false;
+			return Error;
 		}
 		if (fContainer->isEmpty()) setFirstSync(true); /* And leave UID map empty */
 		else fContainer->mapToRecords(fUIDMap);
 
-		if (isFirstSync()) fIDList=fDatabase->idList();
-		else fIDList=fDatabase->modifiedIDList();
-		fIDListIterator = fIDList.begin();
-
-		QTimer::singleShot(0,this,SLOT(slotPalmRecToPC()));
-		return true;
+		return Done;
 	} ;
 
-	virtual void slotPalmRecToPC()
+	virtual SyncProgress palmRecToPC()
 	{
-		if ( (syncMode() == SyncAction::SyncMode::eCopyPCToHH) || (fIDListIterator == fIDList.end()) )
+		if ( fIDListIterator == fIDList.end() )
 		{
-			QTimer::singleShot(0,this,SLOT(cleanup()));
-			return;
+			return Done;
 		}
 
 		recordid_t currentID = *fIDListIterator++;
@@ -164,35 +206,22 @@ public:
 		delete currentHH;
 		// delete currentPC; Ownership passed to the container
 
-		QTimer::singleShot(0,this,SLOT(slotPalmRecToPC()));
+		return NotDone;
 	}
 
-	virtual void cleanup()
+	virtual SyncProgress cleanup()
 	{
 		delete fAppInfo;
 		fContainer->save();
 		delete fContainer;
+		return Done;
 	}
 
-	virtual bool prepare() { return true; } ;
 	virtual bool getAppInfo( unsigned char *buffer, int appLen ) { return true; } ;
 
 protected:
-	QMap<recordid_t,QString> fUIDMap;
-	RecordIDList fIDList;
-	RecordIDList::Iterator fIDListIterator;
-
 	HHAppInfo *fAppInfo;
 	PCContainer *fContainer;
-
-	QString fDBName;
-
-private:
-	bool _prepare()
-	{
-		return prepare();
-	} ;
-
 } ;
 
 

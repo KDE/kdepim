@@ -58,6 +58,87 @@ const char *id_record_conduit="$Id$";
 }
 
 
+/* virtual */ bool RecordConduitBase::exec()
+{
+	FUNCTIONSETUP;
+	fState = Initialize;
+
+	setFirstSync(false);
+
+	bool retrieved = false;
+	if (!openDatabases( fDBName, &retrieved))
+	{
+		emit logError(i18n("Unable to open the %1 database on the handheld.").arg( fDBName ) );
+		return false;
+	}
+	if (retrieved) setFirstSync(true);
+
+	if (isFirstSync()) fIDList=fDatabase->idList();
+	else fIDList=fDatabase->modifiedIDList();
+	fIDListIterator = fIDList.begin();
+
+	fTimer = new QTimer(this);
+	connect(fTimer,SIGNAL(timeout()),this,SLOT(process()));
+	fTimer->start(0,true); // Fire as often as possible to prompt processing
+	return true;
+}
+
+/* virtual */ void RecordConduitBase::process()
+{
+	FUNCTIONSETUP;
+	SyncProgress p;
+
+	switch(fState)
+	{
+	case Initialize :
+		p = loadPC();
+		break;
+	case PalmToPC :
+		p = palmRecToPC();
+		break;
+	case Cleanup :
+		p = cleanup();
+		break;
+	}
+
+	switch(p)
+	{
+	case Error :
+		fTimer->stop();
+		delayDone();
+		return;
+	case NotDone :
+		// Return so we get called again.
+		return;
+	case Done :
+		// Get on with it.
+		break;
+	}
+
+	// Here the previous call was done.
+	switch(fState)
+	{
+	case Initialize :
+		if ( ( syncMode().mode() == SyncMode::eCopyPCToHH ) ||
+			( syncMode().mode() == SyncMode::eRestore ) )
+		{
+			fState = Cleanup;
+		}
+		else
+		{
+			fState = PalmToPC;
+		}
+		break;
+	case PalmToPC :
+		fState = Cleanup;
+		break;
+	case Cleanup :
+		fTimer->stop();
+		delayDone();
+		// No change in state, timer stopped and we're done.
+		break;
+	}
+}
 
 
 #if 0
@@ -1005,13 +1086,6 @@ RecordConduit::PCEntry *RecordConduit::findMatch( PilotAppCategory *palmEntry ) 
 
 #endif
 
-void RecordConduitBase::slotPalmRecToPC()
-{
-}
-
-void RecordConduitBase::slotCleanup()
-{
-}
 
 
 
