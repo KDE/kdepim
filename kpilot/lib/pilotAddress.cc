@@ -53,7 +53,14 @@ PilotAddress::PilotAddress(struct AddressAppInfo &appInfo,
 	fAddressInfo()
 {
 	FUNCTIONSETUPL(4);
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+	pi_buffer_t b;
+	b.data = (unsigned char *) rec->getData();
+	b.allocated = b.used = rec->getLen();
+	if (rec) unpack_Address(&fAddressInfo, &b, address_v1);
+#else
 	if (rec) unpack_Address(&fAddressInfo, (unsigned char *) rec->getData(), rec->getLen());
+#endif
 	(void) pilotadress_id;
 	_loadMaps();
 }
@@ -668,8 +675,15 @@ void *PilotAddress::pack_(void *buf, int *len)
 	FUNCTIONSETUPL(4);
 	int i;
 
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+	pi_buffer_t b = { 0,0,0 } ;
+	i = pack_Address(&fAddressInfo, &b, address_v1);
+	memcpy(buf,b.data,kMin(i,*len));
+	*len = kMin(i,*len);
+#else
 	i = pack_Address(&fAddressInfo, (unsigned char *) buf, *len);
 	*len = i;
+#endif
 	return buf;
 }
 

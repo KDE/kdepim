@@ -32,6 +32,8 @@
 
 #include <qtextcodec.h>
 #include <qdatetime.h>
+
+#include <kglobal.h>
 #include <kdebug.h>
 
 
@@ -53,8 +55,15 @@ PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec):P
 	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
 	if (rec)
 	{
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+		pi_buffer_t b;
+		b.data = (unsigned char *) rec->getData();
+		b.allocated = b.used = rec->getLen();
+		unpack_ToDo(&fTodoInfo, &b, todo_v1);
+#else
 		unpack_ToDo(&fTodoInfo, (unsigned char *) rec->getData(),
 			rec->getLen());
+#endif
 	}
 	(void) pilotTodoEntry_id;
 }
@@ -151,8 +160,15 @@ void *PilotTodoEntry::pack_(void *buf, int *len)
 {
 	int i;
 
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+	pi_buffer_t b = { 0,0,0 } ;
+	i = pack_ToDo(&fTodoInfo, &b, todo_v1);
+	memcpy(buf,b.data,kMin(i,*len));
+	*len = kMin(i,*len);
+#else
 	i = pack_ToDo(&fTodoInfo, (unsigned char *) buf, *len);
 	*len = i;
+#endif
 	return buf;
 }
 

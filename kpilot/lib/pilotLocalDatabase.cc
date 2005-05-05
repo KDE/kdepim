@@ -681,7 +681,7 @@ void PilotLocalDatabase::openDatabase()
 	pi_file *dbFile;
 	PI_SIZE_T size;
 	int attr, cat;
-	pi_uid_t id;
+	recordid_t id;
 
 	setDBOpen(false);
 	char buffer[PATH_MAX];

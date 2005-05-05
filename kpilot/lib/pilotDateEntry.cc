@@ -34,9 +34,8 @@
 #include <qtextcodec.h>
 #include <qdatetime.h>
 
-#ifndef _KDEBUG_H_
+#include <kglobal.h>
 #include <kdebug.h>
-#endif
 
 #include "pilotDateEntry.h"
 
@@ -56,8 +55,15 @@ PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord *
 	::memset(&fAppointmentInfo, 0, sizeof(fAppointmentInfo));
 	if (rec)
 	{
-		 unpack_Appointment(&fAppointmentInfo,
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+		pi_buffer_t b;
+		b.data = (unsigned char *) rec->getData();
+		b.allocated = b.used = rec->getLen();
+		unpack_Appointment(&fAppointmentInfo, &b, datebook_v1);
+#else
+		unpack_Appointment(&fAppointmentInfo,
 			(unsigned char *) rec->getData(), rec->getLen());
+#endif
 	}
 	return;
 
@@ -274,8 +280,15 @@ void *PilotDateEntry::pack_(void *buf, int *len)
 {
 	int i;
 
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+	pi_buffer_t b = { 0,0,0 } ;
+	i = pack_Appointment(&fAppointmentInfo, &b, datebook_v1);
+	memcpy(buf,b.data,kMin(i,*len));
+	*len = kMin(i,*len);
+#else
 	i = pack_Appointment(&fAppointmentInfo, (unsigned char *) buf, *len);
 	*len = i;
+#endif
 	return buf;
 }
 
