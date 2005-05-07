@@ -9,6 +9,12 @@ TODO: provide template-based, interpreted databases much like the
   AppInfo classes now have.
 TODO: give the knotes conduit a decent test mode
 
+2005-05-07  Adriaan de Groot
+* After tweaking pilot-link 0.12-pre3 so that KPilot will with it (has to do
+  with API consistency) the AppInfo template class works again, and i've
+  extended it a little to make setting and getting category names nicer.
+* Applied the new template to the memofile conduit.
+
 2005-04-22  Adriaan de Groot
 * Fixed (I hope) bug in notepad conduit related to having zero records in the
   database.

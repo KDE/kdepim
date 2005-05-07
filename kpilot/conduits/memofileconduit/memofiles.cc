@@ -32,7 +32,7 @@
 
 QString Memofiles::FIELD_SEP = CSL1("\t");
 
-Memofiles::Memofiles (MemoCategoryMap & categories, struct MemoAppInfo & appInfo, QString & baseDirectory) :
+Memofiles::Memofiles (MemoCategoryMap & categories, PilotMemoInfo &appInfo, QString & baseDirectory) :
 		_categories(categories), _memoAppInfo(appInfo), _baseDirectory(baseDirectory)
 {
 	FUNCTIONSETUP;

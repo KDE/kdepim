@@ -39,7 +39,7 @@ class Memofiles {
 
 public:
 
-	Memofiles (MemoCategoryMap & categories, struct MemoAppInfo & appInfo, QString & baseDirectory);
+	Memofiles (MemoCategoryMap & categories, PilotMemoInfo &appInfo, QString & baseDirectory);
 	~Memofiles();
 
 	void load(bool loadAll);
@@ -67,7 +67,7 @@ public:
 private:
 
 	MemoCategoryMap _categories;
-	struct MemoAppInfo & _memoAppInfo;
+	PilotMemoInfo &_memoAppInfo;
 	QString & _baseDirectory;
 	QPtrList<Memofile> _memofiles;
 

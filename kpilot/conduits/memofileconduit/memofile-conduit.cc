@@ -69,7 +69,9 @@ MemofileConduit::MemofileConduit(KPilotDeviceLink *d,
                                  const char *n,
                                  const QStringList &l) :
 		ConduitAction(d,n,l),
-		_DEFAULT_MEMODIR(CSL1("~/MyMemos/"))
+		_DEFAULT_MEMODIR(CSL1("~/MyMemos/")),
+		fMemoAppInfo(0L),
+		_memofiles(0L)
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
@@ -103,7 +105,7 @@ MemofileConduit::~MemofileConduit()
 		return false;
 	}
 
-	_memofiles = new Memofiles(fCategories, fMemoAppInfo, _memo_directory);
+	_memofiles = new Memofiles(fCategories, *fMemoAppInfo, _memo_directory);
 
 	setFirstSync( _memofiles->isFirstSync() );
 	addSyncLogEntry(i18n(" Syncing with %1.").arg(_memo_directory));
@@ -193,6 +195,7 @@ bool MemofileConduit::setAppInfo()
 	{
 		if (fCategories.contains(i)) {
 			QString name = fCategories[i].left(16);
+			fMemoAppInfo->setCategory(i,name);
 
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
@@ -200,9 +203,6 @@ bool MemofileConduit::setAppInfo()
 			<< "] to name: ["
 			<< name << "]" << endl;
 #endif
-
-			memset(fMemoAppInfo.category.name[i], 0, 16);
-			strlcpy(fMemoAppInfo.category.name[i], name.latin1(), 16);
 		}
 	}
 
@@ -221,9 +221,9 @@ bool MemofileConduit::setAppInfo()
 
 unsigned char *MemofileConduit::doPackAppInfo( int *appLen )
 {
-	int appLength = pack_MemoAppInfo(&fMemoAppInfo, 0, 0);
+	int appLength = pack_MemoAppInfo(fMemoAppInfo->info(), 0, 0);
 	unsigned char *buffer = new unsigned char[appLength];
-	pack_MemoAppInfo(&fMemoAppInfo, buffer, appLength);
+	pack_MemoAppInfo(fMemoAppInfo->info(), buffer, appLength);
 	if ( appLen ) *appLen = appLength;
 	return buffer;
 }
@@ -233,16 +233,9 @@ bool MemofileConduit::getAppInfo()
 {
 	FUNCTIONSETUP;
 
-
-	unsigned char buffer[PilotAppInfoBase::MAX_APPINFO_SIZE];
-	int appInfoSize = fDatabase->readAppBlock(buffer,PilotAppInfoBase::MAX_APPINFO_SIZE);
-
-	if (appInfoSize<0) {
-		return false;
-	}
-
-	unpack_MemoAppInfo(&fMemoAppInfo,buffer,appInfoSize);
-	PilotAppCategory::dumpCategories(fMemoAppInfo.category);
+	KPILOT_DELETE(fMemoAppInfo);
+	fMemoAppInfo = new PilotMemoInfo(fDatabase);
+	fMemoAppInfo->dump();
 	return true;
 }
 
@@ -275,10 +268,13 @@ bool MemofileConduit::loadPilotCategories()
 	int _category_id=0;
 	int _category_num=0;
 
-	for (int i = 0; i < MAX_CATEGORIES; i++) {
-		if (fMemoAppInfo.category.name[i][0]) {
-			_category_name = Memofiles::sanitizeName( PilotAppCategory::codec()->toUnicode(fMemoAppInfo.category.name[i]));
-			_category_id   = (int)fMemoAppInfo.category.ID[i];
+	for (int i = 0; i < MAX_CATEGORIES; i++)
+	{
+		_category_name = fMemoAppInfo->category(i);
+		if (!_category_name.isEmpty())
+		{
+			_category_name = Memofiles::sanitizeName( _category_name );
+			_category_id   = fMemoAppInfo->categoryInfo()->ID[i];
 			_category_num  = i;
 			fCategories[_category_num] = _category_name;
 #ifdef DEBUG
@@ -478,7 +474,7 @@ bool MemofileConduit::copyPCToHH()
 
 	// re-create our memofiles helper...
 	delete _memofiles;
-	_memofiles = new Memofiles(fCategories, fMemoAppInfo, _memo_directory);
+	_memofiles = new Memofiles(fCategories, *fMemoAppInfo, _memo_directory);
 
 	// make sure we are starting with a clean database on both ends...
 	fDatabase->deleteRecord(0, true);
