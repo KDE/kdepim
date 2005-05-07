@@ -306,6 +306,17 @@ int main(int argc, char *argv[])
   // an error inside a double quote is no error
   checkIsValidEmailAddress ( "Matt Douhan \"(jongel\" <matt@fruitsalad.org>", "AddressOk" );
 
+  // inside a quoted string double quotes are only allowed in pairs as per rfc2822
+  checkIsValidEmailAddress( "Matt Douhan \"jongel\"fibbel\" <matt@fruitsalad.org>", "UnbalancedQuote" );
+
+  // The correct error msg is UnbalancedQuote since inside a qouted-string quotes MUST be in pairs
+  // so even is the ) is unbalanced it is per definition invisible and as such cannot generate
+  // an error msg
+  checkIsValidEmailAddress( "Matt Douhan \"jongel\"fibbel)\" <matt@fruitsalad.org>", "UnbalancedQuote" );
+
+  // a questionmark is valid in an atom
+  checkIsValidEmailAddress ( "Matt? <matt@fruitsalad.org>", "AddressOk" );
+
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( QString::fromUtf8("test@täst.invalid"), "true" );
