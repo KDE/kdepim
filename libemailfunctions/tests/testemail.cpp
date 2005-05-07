@@ -90,6 +90,8 @@ static QString emailTestParseResultToString( EmailParseResult errorCode )
     return "DisallowedChar";
   } else if( errorCode == UnexpectedComma ) {
     return "UnexpectedComma";
+  } else if( errorCode == UnbalancedQuote ) {
+    return "UnbalancedQuote";
   }
   return "unknown error code";
 }
@@ -254,6 +256,9 @@ int main(int argc, char *argv[])
 
   // Double quotes inside parens
   checkIsValidEmailAddress( "Matt (\"jongel\") Douhan <matt@fruitsalad.org>", "AddressOk" );
+
+  // DOuble quotes not closed
+  checkIsValidEmailAddress( "Matt \"jongel Douhan <matt@fruitsalad.org>", "UnbalancedQuote" );
 
   // Parens inside double quotes
   checkIsValidEmailAddress( "Matt \"(jongel)\" Douhan <matt@fruitsalad.org>", "AddressOk" );
