@@ -66,7 +66,10 @@
 #endif
 // #define DEBUG_CERR			(1)
 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
+
 #include <unistd.h>     /* For size_t for pilot-link */
 #include <qglobal.h>
 #include <pi-version.h>
