@@ -71,7 +71,8 @@ static const char *addresswidget_id =
 AddressWidget::AddressWidget(QWidget * parent,
 	const QString & path) :
 	PilotComponent(parent, "component_address", path),
-	fAddrInfo(0),
+	fAddrInfo(0L),
+	fAddressAppInfo(0L),
 	fPendingAddresses(0)
 {
 	FUNCTIONSETUP;
@@ -106,7 +107,7 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 		if (!(pilotRec->isDeleted()) &&
 			(!(pilotRec->isSecret()) || KPilotSettings::showSecrets()))
 		{
-			address = new PilotAddress(fAddressAppInfo, pilotRec);
+			address = new PilotAddress(*(fAddressAppInfo->info()), pilotRec);
 			if (address == 0L)
 			{
 				kdWarning() << k_funcinfo
@@ -142,17 +143,14 @@ void AddressWidget::showComponent()
 
 	PilotDatabase *addressDB =
 		new PilotLocalDatabase(dbPath(), CSL1("AddressDB"));
-	unsigned char buffer[PilotRecord::APP_BUFFER_SIZE];
-	int appLen;
 
 	fAddressList.clear();
 
 	if (addressDB->isDBOpen())
 	{
-		appLen = addressDB->readAppBlock(buffer, PilotRecord::APP_BUFFER_SIZE);
-		unpack_AddressAppInfo(&fAddressAppInfo, buffer, appLen);
-
-		populateCategories(fCatList, &fAddressAppInfo.category);
+		KPILOT_DELETE(fAddressAppInfo);
+		fAddressAppInfo = new PilotAddressInfo(addressDB);
+		populateCategories(fCatList, fAddressAppInfo->categoryInfo());
 		getAllAddresses(addressDB);
 
 	}
@@ -307,7 +305,7 @@ void AddressWidget::updateWidget()
 #endif
 
 	int currentCatID = findSelectedCategory(fCatList,
-		&(fAddressAppInfo.category));
+		fAddressAppInfo->categoryInfo());
 
 	fListBox->clear();
 	fAddressList.first();
@@ -447,7 +445,7 @@ void AddressWidget::slotEditRecord()
 	}
 
 	AddressEditor *editor = new AddressEditor(selectedRecord,
-		&fAddressAppInfo, this);
+		fAddressAppInfo->info(), this);
 
 	connect(editor, SIGNAL(recordChangeComplete(PilotAddress *)),
 		this, SLOT(slotUpdateRecord(PilotAddress *)));
@@ -497,7 +495,7 @@ void AddressWidget::slotCreateNewRecord()
 	}
 
 	AddressEditor *editor = new AddressEditor(0L,
-		&fAddressAppInfo, this);
+		fAddressAppInfo->info(), this);
 
 	connect(editor, SIGNAL(recordChangeComplete(PilotAddress *)),
 		this, SLOT(slotAddRecord(PilotAddress *)));
@@ -514,7 +512,7 @@ void AddressWidget::slotAddRecord(PilotAddress * address)
 	if ( !shown && fPendingAddresses==0 ) return;
 
 	int currentCatID = findSelectedCategory(fCatList,
-		&(fAddressAppInfo.category), true);
+		fAddressAppInfo->categoryInfo(), true);
 
 
 	address->setCat(currentCatID);
@@ -679,16 +677,19 @@ void AddressWidget::slotExport()
 	FUNCTIONSETUP;
 
 	int currentCatID = findSelectedCategory(fCatList,
-		&(fAddressAppInfo.category));
+		fAddressAppInfo->categoryInfo());
+
+	QString prompt = (currentCatID==-1) ?
+		i18n("Export All Addresses") :
+		i18n("Export Address Category %1").arg(fAddressAppInfo->category(currentCatID)) ;
+
 
 	QString saveFile = KFileDialog::getSaveFileName(
 		QString::null,
 		CSL1("*.csv|Comma Separated Values"),
 		this,
-		( (currentCatID==-1) ?
-			i18n("Export All Addresses") :
-			i18n("Export Address Category %1").arg(PilotAppCategory::codec()->toUnicode(fAddressAppInfo.category.name[currentCatID]))));
-
+		prompt
+		);
 	if (saveFile.isEmpty())
 	{
 #ifdef DEBUG
@@ -727,7 +728,7 @@ void AddressWidget::slotExport()
 		if ((currentCatID == -1) ||
 			(a->getCat() == currentCatID))
 		{
-			write_record_CSV(f, &fAddressAppInfo, a->address(),
+			write_record_CSV(f, fAddressAppInfo->info(), a->address(),
 				a->getAttrib(), a->getCat(), 0);
 		}
 		fAddressList.next();

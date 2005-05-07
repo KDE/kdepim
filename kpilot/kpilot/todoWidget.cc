@@ -69,8 +69,9 @@ void TodoCheckListItem::stateChange(bool state)
 TodoWidget::TodoWidget(QWidget * parent,
 	const QString & path) :
 	PilotComponent(parent, "component_todo", path),
-	fTodoInfo(0),
-	fTodoDB(0),
+	fTodoInfo(0L),
+	fTodoAppInfo(0L),
+	fTodoDB(0L),
 	fPendingTodos(0)
 {
 	FUNCTIONSETUP;
@@ -105,7 +106,7 @@ int TodoWidget::getAllTodos(PilotDatabase * todoDB)
 		if (!(pilotRec->isDeleted()) &&
 			(!(pilotRec->isSecret()) || KPilotSettings::showSecrets()))
 		{
-			todo = new PilotTodoEntry(fTodoAppInfo, pilotRec);
+			todo = new PilotTodoEntry(*(fTodoAppInfo->info()), pilotRec);
 			if (todo == 0L)
 			{
 				kdWarning() << k_funcinfo
@@ -147,10 +148,9 @@ void TodoWidget::showComponent()
 
 	if (fTodoDB->isDBOpen())
 	{
-		appLen = fTodoDB->readAppBlock(buffer, PilotRecord::APP_BUFFER_SIZE);
-		unpack_ToDoAppInfo(&fTodoAppInfo, buffer, appLen);
-
-		populateCategories(fCatList, &fTodoAppInfo.category);
+		KPILOT_DELETE(fTodoAppInfo);
+		fTodoAppInfo = new PilotToDoInfo(fTodoDB);
+		populateCategories(fCatList, fTodoAppInfo->categoryInfo());
 		getAllTodos(fTodoDB);
 
 	}
@@ -299,7 +299,7 @@ void TodoWidget::updateWidget()
 	int listIndex = 0;
 
 	int currentCatID = findSelectedCategory(fCatList,
-		&(fTodoAppInfo.category));
+		fTodoAppInfo->categoryInfo());
 
 	fListBox->clear();
 	fTodoList.first();
@@ -376,7 +376,7 @@ void TodoWidget::slotEditRecord(QListViewItem*item)
 	}
 
 	TodoEditor *editor = new TodoEditor(selectedRecord,
-		&fTodoAppInfo, this);
+		fTodoAppInfo->info(), this);
 
 	connect(editor, SIGNAL(recordChangeComplete(PilotTodoEntry *)),
 		this, SLOT(slotUpdateRecord(PilotTodoEntry *)));
@@ -426,7 +426,7 @@ void TodoWidget::slotCreateNewRecord()
 	}
 
 	TodoEditor *editor = new TodoEditor(0L,
-		&fTodoAppInfo, this);
+		fTodoAppInfo->info(), this);
 
 	connect(editor, SIGNAL(recordChangeComplete(PilotTodoEntry *)),
 		this, SLOT(slotAddRecord(PilotTodoEntry *)));
@@ -443,7 +443,7 @@ void TodoWidget::slotAddRecord(PilotTodoEntry * todo)
 	if ( !shown && fPendingTodos==0 ) return;
 
 	int currentCatID = findSelectedCategory(fCatList,
-		&(fTodoAppInfo.category), true);
+		fTodoAppInfo->categoryInfo(), true);
 
 
 	todo->setCat(currentCatID);
