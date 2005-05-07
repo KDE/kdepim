@@ -72,9 +72,18 @@ Architecture: any
 Depends: ${shlibs:Depends}
 Suggests: kmix (>= 4:3.1.0)
 Description: KDE alarm message and command scheduler
- KAlarm is a personal alarm message, command and email scheduler. It lets you
- set up personal alarm messages which pop up on the screen at the chosen
- time, or you can schedule commands to be executed or emails to be sent.
+ KAlarm provides a graphical interface to schedule personal timed events -
+ pop-up alarm messages, command execution and sending emails. There is a
+ range of options for configuring recurring events.
+ .
+ A pop-up alarm can show either a simple text message, or the contents of a
+ text or image file, It can optionally play a sound file. You can choose its
+ appearance, and set reminders. Among KAlarm's other facilities, you can set
+ up templates to allow KAlarm to be used as a 'tea timer'.
+ .
+ As an alternative to using the graphical interface, alarms can be scheduled
+ from the command line or via DCOP calls from other programs. KAlarm is
+ KDE-based, but will also run on other desktops.
  .
  This package is part of the official KDE pim module.
 
