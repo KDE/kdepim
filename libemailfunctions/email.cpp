@@ -299,6 +299,15 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
 	  return TooFewAts;
   }
 
+  // According to rfc2822 double quotes must appear as quoted pairs
+  // inside a quoted string, this means the nr of double quotes
+  // must be an even number, so we can shortcut that here and 
+  // avoid starting the parser if the nr of quotes is not even
+  int quotesAreInPairs = aStr.contains('"');
+  if (( quotesAreInPairs % 2 ) != 0 ) {
+    return UnbalancedQuote;
+  }
+
   // The main parser, try and catch all weird and wonderful
   // mistakes users and/or machines can create
 
