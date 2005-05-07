@@ -241,7 +241,7 @@ int main(int argc, char *argv[])
 
   // Check that angle brackets are closed the other way around, and anglebrackets in domainpart
   // instead of local part
-  // checkIsValidEmailAddress( "matt douhanmatt@<fruitsalad.org", "UnclosedAngleAddr" );
+  checkIsValidEmailAddress( "matt douhan matt@<fruitsalad.org", "UnclosedAngleAddr" );
 
   // check that a properly formated anglebrackets situation is OK
   checkIsValidEmailAddress( "matt douhan<matt@fruitsalad.org>", "AddressOk" );
@@ -274,6 +274,9 @@ int main(int argc, char *argv[])
   // Domains literals also need to work
   checkIsValidEmailAddress( "Matt Douhan <matt@[123.123.123.123]>", "AddressOk" );
 
+  // Typo in domain literal address
+  checkIsValidEmailAddress( "Matt Douhan <matt@[123.123.123,123]>", "UnexpectedComma" );
+
   // Some more insane tests but still valid so they must work
   checkIsValidEmailAddress( "Matt Douhan <\"m@att\"@jongel.com>", "AddressOk" );
 
@@ -294,6 +297,9 @@ int main(int argc, char *argv[])
 
   // several comment levels and one (the inner) being unbalanced
   checkIsValidEmailAddress( "Matt Douhan (hey(jongelfibbel) <matt@fruitsalad.org>", "UnbalancedParens" );
+
+  // an error inside a double quote is no error
+  checkIsValidEmailAddress ( "Matt Douhan \"(jongel\" <matt@fruitsalad.org>", "AddressOk" );
 
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
