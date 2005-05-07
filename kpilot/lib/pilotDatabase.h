@@ -52,6 +52,7 @@
 
 
 class PilotRecord;
+struct CategoryAppInfo;
 
 typedef QValueList<recordid_t> RecordIDList;
 
@@ -248,6 +249,16 @@ public:
 
 	/** For debugging, display all the category names */
 	void dump() const;
+
+	/** Gets a single category name. Returns QString::null if there is no
+	* such category number @p i . */
+	QString category(unsigned int i);
+
+	/** Sets a category name. @return true if this succeeded. @return false
+	* on failure, e.g. the index @p i was out of range or the category name
+	* was invalid. Category names that are too long are truncated to 15 characters.
+	*/
+	bool setCategory(unsigned int i, const QString &s);
 
 private:
 	struct CategoryAppInfo *fC;

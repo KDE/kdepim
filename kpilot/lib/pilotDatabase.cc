@@ -35,6 +35,8 @@
 #include <qstringlist.h>
 #include <qtextcodec.h>
 
+#include <kglobal.h>
+
 #include "pilotDatabase.h"
 #include "pilotAppCategory.h"
 
@@ -125,7 +127,7 @@ PilotAppInfoBase::~PilotAppInfoBase()
 } ;
 
 
-int PilotAppInfoBase::findCategory(const QString &selectedCategory, 
+int PilotAppInfoBase::findCategory(const QString &selectedCategory,
 	bool unknownIsUnfiled, struct CategoryAppInfo *info)
 {
 	FUNCTIONSETUP;
@@ -134,7 +136,7 @@ int PilotAppInfoBase::findCategory(const QString &selectedCategory,
 	for (int i=0; i<MAX_CATEGORIES; i++)
 	{
 		if (!info->name[i][0]) continue;
-		if (selectedCategory == 
+		if (selectedCategory ==
 			PilotAppCategory::codec()->toUnicode(info->name[i]))
 		{
 			currentCatID = i;
@@ -145,7 +147,7 @@ int PilotAppInfoBase::findCategory(const QString &selectedCategory,
 #ifdef DEBUG
 	if (-1 == currentCatID)
 	{
-		DEBUGKPILOT << fname << ": Category name " 
+		DEBUGKPILOT << fname << ": Category name "
 			<< selectedCategory << " not found." << endl;
 	}
 	else
@@ -163,3 +165,28 @@ void PilotAppInfoBase::dump() const
 {
 	PilotAppCategory::dumpCategories(*categoryInfo());
 }
+
+// Eww. I don't know how to cleanly get the size of a field of
+// a structure otherwise. Both of these constants _should_ be
+// 16, which is checked in one of the test programs.
+//
+#define CATEGORY_NAME_SIZE (sizeof(((struct CategoryAppInfo *)0)->name[0]))
+#define CATEGORY_COUNT     ( (sizeof(((struct CategoryAppInfo *)0)->name)) / CATEGORY_NAME_SIZE )
+
+QString PilotAppInfoBase::category(unsigned int i)
+{
+	if (i>=CATEGORY_COUNT) return QString::null;
+	return PilotAppCategory::codec()->toUnicode(categoryInfo()->name[i],CATEGORY_NAME_SIZE-1);
+}
+
+bool PilotAppInfoBase::setCategory(unsigned int i, const QString &s)
+{
+	if (i>=CATEGORY_COUNT) return false;
+	int len = CATEGORY_NAME_SIZE - 1;
+	QCString t = PilotAppCategory::codec()->fromUnicode(s,len);
+	memset(categoryInfo()->name[i],0,CATEGORY_NAME_SIZE);
+	qstrncpy(categoryInfo()->name[i],t,kMin(len,(int)CATEGORY_NAME_SIZE));
+	return true;
+}
+
+

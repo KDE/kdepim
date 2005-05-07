@@ -86,7 +86,7 @@ const char *id_record_conduit="$Id$";
 /* virtual */ void RecordConduitBase::process()
 {
 	FUNCTIONSETUP;
-	SyncProgress p;
+	SyncProgress p = Error;
 
 	switch(fState)
 	{
