@@ -315,6 +315,15 @@ int main(int argc, char *argv[])
   // weird but OK
   checkIsValidEmailAddress( "\"testing, \\\"testing\" <matt@fruitsalad.org>", "AddressOk" );
 
+  // escape a quote to many to see if it makes it invalid
+  checkIsValidEmailAddress( "\"testing, \\\"testing\\\" <matt@fruitsalad.org>", "UnbalancedQuote" );
+
+  // escape a parens and thus make a comma appear 
+  checkIsValidEmailAddress( "Matt (jongel, fibbel\\\) <matt@fruitsalad.org>", "UnbalancedParens" );
+
+  // several errors inside doublequotes
+  checkIsValidEmailAddress( "Matt \"(jongel,\\\" < fibbel\\\)\" <matt@fruitsalad.org>", "AddressOk" );
+
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( QString::fromUtf8("test@täst.invalid"), "true" );
