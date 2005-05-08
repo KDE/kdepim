@@ -81,6 +81,7 @@ bool ReadMBox::nextLine()
 	{
 		*m_current_line = QString::null;
 		*m_current_id = QString::null;
+		m_prev_status = m_status;
 		return true;
 	}
 
@@ -91,15 +92,15 @@ bool ReadMBox::nextLine()
 	{
 		*m_current_id = *m_current_line;
 		m_prev_status = m_status;
-		m_status = false;
+		m_status = true;
 		m_header = true;
 		return true;
 	} else if( m_only_new )
 	{
-		if( m_current_line->left( 8 ) == "Status: " && m_header &&
-		    ( m_current_line->contains( "U" ) || m_current_line->contains( "N" ) ) && m_header )
+		if( m_header && m_current_line->left( 7 ) == "Status:" &&
+		    ! m_current_line->contains( "U" ) && ! m_current_line->contains( "N" ) )
 		{
-			m_status = true;
+			m_status = false;
 		}
 	}
 
@@ -127,7 +128,7 @@ unsigned int ReadMBox::skipMessage()
 	if( !m_stream )
 		return 0;
 
-	while( !m_stream->atEnd() && !nextLine() )
+	while( !nextLine() )
 		result += m_current_line->length();
 
 	return result;
