@@ -299,12 +299,6 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
 	  return TooFewAts;
   }
   
-  bool quotesInPairs = false;
-  int quotesAreInPairs = aStr.contains('"');
-  if (( quotesAreInPairs % 2 ) == 0 ) {
-    quotesInPairs = true;
-  }
-
   // The main parser, try and catch all weird and wonderful
   // mistakes users and/or machines can create
 
@@ -339,9 +333,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
           ++index; // skip the '\'
           if (( index + 1 )> strlen ) {
             return UnexpectedEnd;
-          } else if ( aStr[index] == '"' ) {
-            quotesInPairs = !quotesInPairs;
-          }
+          } 
           break;
         case ',' :
           if ( !inQuotedString )
@@ -386,9 +378,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
           ++index; // skip the '\'
           if (( index + 1 )> strlen ) {
             return UnexpectedEnd;
-          } else if ( aStr[index] == '"' ) {
-            quotesInPairs = !quotesInPairs;
-          }
+          } 
           break;
         }
         break;
@@ -421,8 +411,6 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
           ++index; // skip the '\'
           if (( index + 1 )> strlen ) {
             return UnexpectedEnd;
-          } else if ( aStr[index] == '"' ) {
-            quotesInPairs = !quotesInPairs;
           }
           break;
         }
@@ -431,10 +419,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
     }
   }
 
-  if ( !quotesInPairs )
-    return UnbalancedQuote;
-
-  if ( inQuotedString && !quotesInPairs )
+  if ( inQuotedString )
     return UnbalancedQuote;
 
   if ( context == InComment )
