@@ -733,6 +733,8 @@ void KPIM::AddresseeLineEdit::slotCompletion()
   {
     m_previousAddresses = QString::null;
   }
+  if ( completionBox() )
+    completionBox()->setCancelledText( m_searchString );
   doCompletion( false );
 }
 
