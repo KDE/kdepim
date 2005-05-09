@@ -325,19 +325,22 @@ void LDAPSearchDialog::slotSetScope( bool rec )
 QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr,
                                       bool startsWith )
 {
+  /* The reasoning behind this filter is:
+   * If it's a person, or a distlist, show it, even if it doesn't have an email address.
+   * If it's not a person, or a distlist, only show it if it has an email attribute.
+   * This allows both resource accounts with an email address which are not a person and
+   * person entries without an email address to show up, while still not showing things
+   * like structural entries in the ldap tree. */
+  QString result( "&(|(objectclass=person)(objectclass=groupofnames)(mail=*))(" );
   if( query.isEmpty() )
     // Return a filter that matches everything
-    return QString( "|(cn=*)(sn=*)" );
+    return result + "|(cn=*)(sn=*)" + ")";
 
   if ( attr == i18n( "Name" ) ) {
-    QString result( (startsWith ? "|(cn=%1*)(sn=%2*)" : "|(cn=*%1*)(sn=*%2*)") );
-
+    result += startsWith ? "|(cn=%1*)(sn=%2*)" : "|(cn=*%1*)(sn=*%2*)";
     result = result.arg( query ).arg( query );
-
-    return result;
   } else {
-    QString result( (startsWith ? "%1=%2*" : "%1=*%2*") );
-
+    result += (startsWith ? "%1=%2*" : "%1=*%2*");
     if ( attr == i18n( "Email" ) ) {
       result = result.arg( "mail" ).arg( query );
     } else if ( attr == i18n( "Home Number" ) ) {
@@ -347,10 +350,11 @@ QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr,
     } else {
       // Error?
       result = QString::null;
+      return result;
     }
-
-    return result;
   }
+  result += ")";
+  return result;
 }
 
 void LDAPSearchDialog::slotStartSearch()
