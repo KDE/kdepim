@@ -857,7 +857,9 @@ void Contact::setFields( const KABC::Addressee* addressee )
   setSpouseName( addressee->custom( "KADDRESSBOOK", "X-SpousesName" ) );
   if ( !addressee->birthday().isNull() )
   	setBirthday( addressee->birthday().date() );
-  setAnniversary( stringToDate( addressee->custom( "KADDRESSBOOK", "X-Anniversary" ) ) );
+  const QString& anniversary = addressee->custom( "KADDRESSBOOK", "X-Anniversary" );
+  if ( !anniversary.isEmpty() )
+    setAnniversary( stringToDate( anniversary  ) );
 
   const QStringList emails = addressee->emails();
   // Conversion problem here:
