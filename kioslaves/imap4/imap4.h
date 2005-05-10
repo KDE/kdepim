@@ -157,8 +157,14 @@ protected:
   }
   void doListEntry (const KURL & _url, int stretch, imapCache * cache = NULL,
     bool withFlags = FALSE, bool withSubject = FALSE);
-  void doListEntry (const KURL & _url, const QString & myBox,
-                    const imapList & item);
+
+  /** 
+   * Send a list entry (folder) to the application 
+   * If @p appendPath is true the foldername will be appended 
+   * to the path of @p url
+   */
+  void doListEntry (const KURL & url, const QString & myBox,
+                    const imapList & item, bool appendPath = true);
 
   /** Send an ACL command which is identified by @p command */
   void specialACLCommand( int command, QDataStream& stream );

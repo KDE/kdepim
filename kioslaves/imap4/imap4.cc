@@ -87,7 +87,6 @@ extern "C" {
 
 #define IMAP_PROTOCOL "imap"
 #define IMAP_SSL_PROTOCOL "imaps"
-#define IMAP_TIMEOUT_IN_SECONDS 60
 
 using namespace KIO;
 
@@ -427,14 +426,17 @@ IMAP4Protocol::listDir (const KURL & _url)
     QString listStr = myBox;
     imapCommand *cmd;
 
-    if (!listStr.isEmpty () && !listStr.endsWith(myDelimiter))
+    if (!listStr.isEmpty () && !listStr.endsWith(myDelimiter) &&
+        mySection != "FOLDERONLY")
       listStr += myDelimiter;
+
     if (mySection.isEmpty())
     {
       listStr += "%";
     } else if (mySection == "COMPLETE") {
       listStr += "*";
     }
+    kdDebug(7116) << "IMAP4Protocol::listDir - listStr=" << listStr << endl;
     cmd =
       doCommand (imapCommand::clientList ("", listStr,
             (myLType == "LSUB" || myLType == "LSUBNOCHECK")));
@@ -470,7 +472,7 @@ IMAP4Protocol::listDir (const KURL & _url)
             }
           }
           if (boxOk)
-            doListEntry (aURL, myBox, (*it));
+            doListEntry (aURL, myBox, (*it), (mySection != "FOLDERONLY"));
           else // this folder is dead
             kdDebug(7116) << "IMAP4Protocol::listDir - suppress " << (*it).name() << endl;
         }
@@ -481,7 +483,7 @@ IMAP4Protocol::listDir (const KURL & _url)
         for (QValueListIterator < imapList > it = listResponses.begin ();
             it != listResponses.end (); ++it)
         {
-          doListEntry (aURL, myBox, (*it));
+          doListEntry (aURL, myBox, (*it), (mySection != "FOLDERONLY"));
         }
       }
       entry.clear ();
@@ -621,7 +623,7 @@ IMAP4Protocol::listDir (const KURL & _url)
     selectInfo.setAlert( 0 );
   }
 
-  kdDebug(7116) << "IMAP4Protcol::listDir - Finishing listDir" << endl;
+  kdDebug(7116) << "IMAP4Protocol::listDir - Finishing listDir" << endl;
   finished ();
 }
 
@@ -676,6 +678,7 @@ bool IMAP4Protocol::parseRead(QByteArray & buffer, ulong len, ulong relay)
     ssize_t readLen = myRead(buf, QMIN(len - buffer.size(), sizeof(buf) - 1));
     if (readLen == 0)
     {
+      kdDebug(7116) << "parseRead: readLen == 0 - connection broken" << endl;
       error (ERR_CONNECTION_BROKEN, myHost);
       setState(ISTATE_CONNECT);
       closeConnection();
@@ -741,12 +744,13 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, ulong relay)
     }
     if (!isConnectionValid())
     {
+      kdDebug(7116) << "parseReadLine - connection broken" << endl;
       error (ERR_CONNECTION_BROKEN, myHost);
       setState(ISTATE_CONNECT);
       closeConnection();
       return FALSE;
     }
-    if (!waitForResponse( IMAP_TIMEOUT_IN_SECONDS ))
+    if (!waitForResponse( responseTimeout() ))
     {
       error(ERR_SERVER_TIMEOUT, myHost);
       setState(ISTATE_CONNECT);
@@ -756,6 +760,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, ulong relay)
     readBufferLen = read(readBuffer, IMAP_BUFFER - 1);
     if (readBufferLen == 0)
     {
+      kdDebug(7116) << "parseReadLine: readBufferLen == 0 - connection broken" << endl;
       error (ERR_CONNECTION_BROKEN, myHost);
       setState(ISTATE_CONNECT);
       closeConnection();
@@ -1210,6 +1215,8 @@ IMAP4Protocol::del (const KURL & _url, bool isFile)
  * Capabilities: data = 'c'. Result shipped in infoMessage() signal
  * No-op: data = 'N'
  * Namespace: data = 'n'. Result shipped in infoMessage() signal
+ *                        The format is: section=namespace=delimiter
+ *                        Note that the namespace can be empty               
  * Unsubscribe: data = 'U' + URL (KURL)
  * Subscribe: data = 'u' + URL (KURL)
  * Change the status: data = 'S' + URL (KURL) + Flags (QCString)
@@ -1251,6 +1258,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     imapCommand *cmd = doCommand(imapCommand::clientNoop());
     if (cmd->result () != "OK")
     {
+      kdDebug(7116) << "NOOP did not succeed - connection broken" << endl;
       completeQueue.removeRef (cmd);
       error (ERR_CONNECTION_BROKEN, myHost);
       return;
@@ -1261,8 +1269,8 @@ IMAP4Protocol::special (const QByteArray & aData)
   }
   case 'n':
   { 
-    // namespace
-    // separate the entries by , this should be save
+    // namespace in the form "section=namespace=delimiter"
+    // entries are separated by ,
     infoMessage( imapNamespaces.join(",") );
     finished();
     break;
@@ -1986,9 +1994,15 @@ bool IMAP4Protocol::makeLogin ()
       QValueListIterator < imapList > it = listResponses.begin();
       if ( it != listResponses.end() )
       {
-        imapNamespaceDelimiter[QString::null] = (*it).hierarchyDelimiter();
+        namespaceToDelimiter[QString::null] = (*it).hierarchyDelimiter();
         kdDebug(7116) << "makeLogin - delimiter for empty ns='" << 
           (*it).hierarchyDelimiter() << "'" << endl;
+        if ( !hasCapability("NAMESPACE") )
+        {
+          QString nsentry = QString::number( 0 ) + "==" 
+            + (*it).hierarchyDelimiter();
+          imapNamespaces.append( nsentry );
+        }
       }
     }
     completeQueue.removeRef (cmd);
@@ -2127,7 +2141,7 @@ IMAP4Protocol::doListEntry (const QString & encodedUrl, int stretch, imapCache *
 
 void
 IMAP4Protocol::doListEntry (const KURL & _url, const QString & myBox,
-                            const imapList & item)
+                            const imapList & item, bool appendPath)
 {
   KURL aURL = _url;
   aURL.setQuery (QString::null);
@@ -2136,11 +2150,11 @@ IMAP4Protocol::doListEntry (const KURL & _url, const QString & myBox,
   int hdLen = item.hierarchyDelimiter().length();
 
   {
-    // mailboxName will be appended to the path!
+    // mailboxName will be appended to the path if appendPath is true
     QString mailboxName = item.name ();
 
     // some beautification
-    if (mailboxName.find (myBox) == 0)
+    if (mailboxName.find (myBox) == 0 && mailboxName.length() > myBox.length())
     {
       mailboxName =
         mailboxName.right (mailboxName.length () - myBox.length ());
@@ -2212,12 +2226,16 @@ IMAP4Protocol::doListEntry (const KURL & _url, const QString & myBox,
       atom.m_uds = UDS_URL;
       QString path = aURL.path();
       atom.m_str = aURL.url (0, 106); // utf-8
-      if (path[path.length() - 1] == '/' && !path.isEmpty() && path != "/")
-        path.truncate(path.length() - 1);
-      if (!path.isEmpty() && path != "/"
-        && path.right(hdLen) != item.hierarchyDelimiter())
-        path += item.hierarchyDelimiter();
-      path += mailboxName;
+      if (appendPath)
+      {
+        if (path[path.length() - 1] == '/' && !path.isEmpty() && path != "/")
+          path.truncate(path.length() - 1);
+        if (!path.isEmpty() && path != "/"
+            && path.right(hdLen) != item.hierarchyDelimiter()) {
+          path += item.hierarchyDelimiter();
+        }
+        path += mailboxName;
+      }
       aURL.setPath(path);
       atom.m_str = aURL.url(0, 106); // utf-8
       atom.m_long = 0;
@@ -2256,9 +2274,9 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
   // get the delimiter
   QString myNamespace = namespaceForBox( _box );
   kdDebug(7116) << "IMAP4::parseURL - namespace=" << myNamespace << endl;
-  if ( imapNamespaceDelimiter.contains(myNamespace) )
+  if ( namespaceToDelimiter.contains(myNamespace) )
   {
-    _hierarchyDelimiter = imapNamespaceDelimiter[myNamespace];
+    _hierarchyDelimiter = namespaceToDelimiter[myNamespace];
     kdDebug(7116) << "IMAP4::parseURL - delimiter=" << _hierarchyDelimiter << endl;
   }
 
@@ -2306,8 +2324,10 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
               }
             }
             // if we got no list response for the box see if it's a prefix
-            if ( retVal == ITYPE_UNKNOWN && imapNamespaceDelimiter.contains(_box) )
+            if ( retVal == ITYPE_UNKNOWN && 
+                 namespaceToDelimiter.contains(_box) ) {
               retVal = ITYPE_DIR;
+            }
           } else {
             kdDebug(7116) << "IMAP4::parseURL - got error for " << _box << endl;
           }
@@ -2441,7 +2461,7 @@ ssize_t IMAP4Protocol::myRead(void *data, ssize_t len)
     return copyLen;
   }
   if (!isConnectionValid()) return 0;
-  waitForResponse( IMAP_TIMEOUT_IN_SECONDS );
+  waitForResponse( responseTimeout() );
   return read(data, len);
 }
 

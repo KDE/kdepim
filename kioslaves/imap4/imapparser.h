@@ -466,10 +466,16 @@ protected:
   /** @brief the results from search/acl commands */
   QStringList lastResults;
 
-  /** @brief namespace prefix - delimiter association */
-  QMap<QString, QString> imapNamespaceDelimiter;
+  /** 
+   * @brief namespace prefix - delimiter association
+   * The namespace is cleaned before so that it does not contain the delimiter 
+   */
+  QMap<QString, QString> namespaceToDelimiter;
 
-  /** @brief list of namespace - prefix */
+  /** 
+   * @brief list of namespaces in the form: section=namespace=delimiter
+   * section is 0 (personal), 1 (other users) or 2 (shared)
+   */
   QStringList imapNamespaces;
 
 private:

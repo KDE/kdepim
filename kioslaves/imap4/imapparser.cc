@@ -183,7 +183,8 @@ static bool sasl_interact( KIO::SlaveBase *slave, KIO::AuthInfo &ai, void *in )
         interact->len = strlen( (const char *) interact->result );
         break;
       default:
-        interact->result = 0; interact->len = 0;
+        interact->result = 0; 
+        interact->len = 0;
         break;
     }
     interact++;
@@ -228,11 +229,12 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
     result = sasl_client_start(conn, aAuth.latin1(), &client_interact,
                        hasCapability("SASL-IR") ? &out : 0, &outlen, &mechusing);
 
-    if ( result == SASL_INTERACT )
+    if ( result == SASL_INTERACT ) {
       if ( !sasl_interact( slave, ai, client_interact ) ) {
         sasl_dispose( &conn );
         return false;
       }
+    }
   } while ( result == SASL_INTERACT );
 
   if ( result != SASL_CONTINUE && result != SASL_OK ) {
@@ -276,11 +278,12 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
                                   &client_interact,
                                   &out, &outlen);
 
-        if (result == SASL_INTERACT)
+        if (result == SASL_INTERACT) {
           if ( !sasl_interact( slave, ai, client_interact ) ) {
             sasl_dispose( &conn );
             return false;
           }
+        }
       } while ( result == SASL_INTERACT );
 
       if ( result != SASL_CONTINUE && result != SASL_OK ) {
@@ -1548,7 +1551,11 @@ void imapParser::parseNamespace (parseString & result)
   if ( result[0] != '(' )
     return;
 
-  imapNamespaceDelimiter.clear();
+  QString delimEmpty;
+  if ( namespaceToDelimiter.contains( QString::null ) )
+    delimEmpty = namespaceToDelimiter[QString::null];
+
+  namespaceToDelimiter.clear();
   imapNamespaces.clear();
 
   // remember what section we're in (user, other users, shared)
@@ -1570,10 +1577,14 @@ void imapParser::parseNamespace (parseString & result)
       QCString delim = parseOneWordC( result );
       kdDebug(7116) << "imapParser::parseNamespace ns='" << prefix <<
        "',delim='" << delim << "'" << endl;
-      imapNamespaceDelimiter[prefix] = delim;
-      const QString prefixStr = prefix;
-      QString nsentry = QString::number( ns ) + "=" + prefixStr;
+      QString nsentry = QString::number( ns ) + "=" + QString(prefix) + 
+        "=" + QString(delim);
       imapNamespaces.append( nsentry );
+      if ( prefix.right( 1 ) == delim ) {
+        // strip delimiter to get a correct entry for comparisons
+        prefix.resize( prefix.length() );
+      }
+      namespaceToDelimiter[prefix] = delim;
       
       result.pos++; // tie off )
       skipWS( result );
@@ -1590,6 +1601,9 @@ void imapParser::parseNamespace (parseString & result)
       // drop whatever it is
       parseOneWord( result );
     }
+  }
+  if ( !delimEmpty.isEmpty() ) {
+    namespaceToDelimiter[QString::null] = delimEmpty;
   }
 }
 
@@ -1930,7 +1944,8 @@ QString imapParser::namespaceForBox( const QString & box )
   QString myNamespace;
   if ( !box.isEmpty() )
   {
-    QValueList<QString> list = imapNamespaceDelimiter.keys();
+    QValueList<QString> list = namespaceToDelimiter.keys();
+    QString cleanPrefix;
     for ( QValueList<QString>::Iterator it = list.begin(); it != list.end(); ++it )
     {
       if ( !(*it).isEmpty() && box.find( *it ) != -1 )
