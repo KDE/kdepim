@@ -1107,7 +1107,7 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
         break;}
 
       default:
-//        kdDebug(5800) << "ICalFormatImpl::readIncidence(): Unknown property: "
+//        kdDebug(5800) << "ICalFormatImpl::readFreeBusy(): Unknown property: "
 //                      << kind << endl;
       break;
     }
@@ -1476,8 +1476,9 @@ void ICalFormatImpl::readCustomProperties(icalcomponent *parent,CustomProperties
   while (p) {
 
     QString value = QString::fromUtf8(icalproperty_get_x(p));
-    customProperties[icalproperty_as_ical_string(p)] = value;
-
+    const char *name = icalproperty_get_x_name(p);
+    customProperties[name] = value;
+    kdDebug(5800) << "Set custom property [" << name << '=' << value << ']' << endl;
     p = icalcomponent_get_next_property(parent,ICAL_X_PROPERTY);
   }
 
