@@ -69,7 +69,7 @@ MemofileConduit::MemofileConduit(KPilotDeviceLink *d,
                                  const char *n,
                                  const QStringList &l) :
 		ConduitAction(d,n,l),
-		_DEFAULT_MEMODIR(CSL1("~/MyMemos/")),
+		_DEFAULT_MEMODIR(QDir::homeDirPath() + CSL1("/MyMemos")),
 		fMemoAppInfo(0L),
 		_memofiles(0L)
 {
@@ -106,6 +106,10 @@ MemofileConduit::~MemofileConduit()
 	}
 
 	_memofiles = new Memofiles(fCategories, *fMemoAppInfo, _memo_directory);
+	if (! _memofiles || ! _memofiles->isReady()) {
+		emit logError(TODO_I18N("Cannot initialize from filesystem."));
+		return false;
+	}
 
 	setFirstSync( _memofiles->isFirstSync() );
 	addSyncLogEntry(i18n(" Syncing with %1.").arg(_memo_directory));

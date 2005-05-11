@@ -52,6 +52,7 @@ public:
 	QString getResults();
 
 	bool isFirstSync();
+	bool isReady() { return _ready; };
 
 	QPtrList<Memofile> getModified();
 	QPtrList<Memofile> getAll() { return _memofiles; } ;
@@ -90,6 +91,7 @@ private:
 	int _countNewToLocal;
 
 	bool _metadataLoaded;
+	bool _ready;
 
 };
 #endif //MEMOFILES_H

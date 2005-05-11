@@ -42,7 +42,7 @@ Memofiles::Memofiles (MemoCategoryMap & categories, PilotMemoInfo &appInfo, QStr
 	_countNewToLocal = _countModifiedToLocal = _countDeletedToLocal = 0;
 	_memofiles.setAutoDelete(true);
 
-	ensureDirectoryReady();
+	_ready = ensureDirectoryReady();
 
 	_metadataLoaded = loadFromMetadata();
 }
