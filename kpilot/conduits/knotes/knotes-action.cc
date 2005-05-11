@@ -296,6 +296,8 @@ bool KNotesAction::retrieveKNotesInfo()
 		return false;
 
 	}
+
+	return true;
 }
 
 
