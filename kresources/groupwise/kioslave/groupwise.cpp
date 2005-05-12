@@ -113,7 +113,7 @@ void Groupwise::get( const KURL &url )
     errorMessage( error );
   }
   
-  kdDebug(7000) << "GroupwiseCgiProtocol::get() done" << endl;
+  kdDebug(7000) << "Groupwise::get() done" << endl;
 }
 
 QString Groupwise::soapUrl( const KURL &url )
