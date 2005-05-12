@@ -9,6 +9,15 @@ TODO: provide template-based, interpreted databases much like the
   AppInfo classes now have.
 TODO: give the knotes conduit a decent test mode
 
+2005-05-11  Adriaan de Groot
+* Wasted much time trying to get generic FreeBSD USB support for non-
+  Visors working in pilot-link-0.12 before I found out that ColdSync 
+  doesn't support that either.
+* Removed non-working calendar conduits (calendarbaseconduit/ and 
+  calendarconduits/) from the conduits dir; restore them w/ SVN
+  commits near 412528. These were recordconduit-based conduits
+  by Reinhold, but I broke the RecordConduit in the meantime.
+
 2005-05-07  Adriaan de Groot
 * After tweaking pilot-link 0.12-pre3 so that KPilot will with it (has to do
   with API consistency) the AppInfo template class works again, and i've
