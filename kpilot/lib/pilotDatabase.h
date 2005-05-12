@@ -30,9 +30,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include <qstring.h>
 #include <qvaluelist.h>
@@ -51,9 +48,13 @@
 # endif
 #endif
 
-#include <pi-macros.h>
+#include <pi-dlp.h>
 
-#include "pilotRecord.h"
+
+class PilotRecord;
+struct CategoryAppInfo;
+
+typedef QValueList<recordid_t> RecordIDList;
 
 
 
@@ -70,8 +71,6 @@ class KDE_EXPORT PilotDatabase
 public:
 	PilotDatabase(const QString &name = QString::null);
 	virtual ~PilotDatabase();
-
-	static const int MAX_APPINFO_SIZE=8192;
 
 
 	QString name() const { return fName; } ;
@@ -108,8 +107,13 @@ public:
 	/** returns the number of records in the database */
 	virtual int recordCount()=0;
 
-	/** Returns a QValueList of all record ids in the database.  */
-	 virtual QValueList<recordid_t> idList()=0;
+	/** Returns a QValueList of all record ids in the database.
+	    This implementation is really bad. */
+	virtual RecordIDList idList();
+	/** Returns a list of all record ids that have been modified in the
+	    database. This implementation is really bad. */
+	virtual RecordIDList modifiedIDList();
+
 
 	/** Reads a record from database by id, returns record length */
 	virtual PilotRecord* readRecordById(recordid_t id) = 0;
@@ -184,5 +188,105 @@ private:
 	bool fDBOpen;
 	QString fName;
 };
+
+/** Base class for all specific kinds of AppInfo. */
+class KDE_EXPORT PilotAppInfoBase
+{
+protected:
+	/** Constructor. This is for use by derived classes (using the template below
+	* only, and says that the category info in the base class aliases data in
+	* the derived class. Remember to call init()!
+	*/
+	PilotAppInfoBase() : fC(0L), fLen(-1), fOwn(false) { } ;
+	/** Initialize class members after reading header, to alias data elsewhere.
+	* Only for use by the (derived) template classes below.
+	*/
+	void init(struct CategoryAppInfo *c, int len)
+	{
+		fC = c;
+		fLen = len ;
+	} ;
+
+public:
+	/** Maximum size of an AppInfo block, taken roughly from the pilot-link source. */
+	static const int MAX_APPINFO_SIZE=8192;
+
+	/** Constructor, intended for untyped access to the AppInfo only. This throws
+	* away everything but the category information. In this variety, the
+	* CategoryAppInfo structure is owned by the PilotAppInfoBase object.
+	*/
+	PilotAppInfoBase(PilotDatabase *d);
+	/** Destructor. */
+	virtual ~PilotAppInfoBase();
+
+	/** Retrieve the most basic part of the AppInfo block -- the category
+	* information which is guaranteed to be the first 240-odd bytes of
+	* a database.
+	*/
+	struct CategoryAppInfo *categoryInfo() { return fC; } ;
+	/** Const version of the above function. */
+	const struct CategoryAppInfo *categoryInfo() const { return fC; } ;
+	/** Returns the length of the (whole) AppInfo block. */
+	int length() const { return fLen; } ;
+
+	/** Search for the given category @param name in the list
+	* of categories; returns the category number. If @param unknownIsUnfiled
+	* is true, then map unknown categories to Unfiled instead of returning
+	* an error number.
+	*
+	* @return >=0          is a specific category based on the text ->
+	*               category number mapping defined by the Pilot,
+	*  @return -1         means unknown category selected when
+	*               @param unknownIsUnfiled is true.
+	*  @return  0         == Unfiled means unknown category selected when
+	*               @param unknownIsUnfiled is false.
+	*
+	*/
+	static int findCategory(const QString &name, bool unknownIsUnfiled, struct CategoryAppInfo *info);
+	/** Alternative to the above inconvenience function. */
+	int findCategory(const QString &name, bool unknownIsUnfiled = false)
+		{ return findCategory(name,unknownIsUnfiled,categoryInfo()); } ;
+
+	/** For debugging, display all the category names */
+	void dump() const;
+
+	/** Gets a single category name. Returns QString::null if there is no
+	* such category number @p i . */
+	QString category(unsigned int i);
+
+	/** Sets a category name. @return true if this succeeded. @return false
+	* on failure, e.g. the index @p i was out of range or the category name
+	* was invalid. Category names that are too long are truncated to 15 characters.
+	*/
+	bool setCategory(unsigned int i, const QString &s);
+
+private:
+	struct CategoryAppInfo *fC;
+	int fLen;
+	bool fOwn;
+} ;
+
+template <typename appinfo, int(*f)(appinfo *, unsigned char *, PI_SIZE_T)>
+class PilotAppInfo : public PilotAppInfoBase
+{
+public:
+	PilotAppInfo(PilotDatabase *d) : PilotAppInfoBase()
+	{
+		FUNCTIONSETUP;
+		int appLen = MAX_APPINFO_SIZE;
+		unsigned char buffer[MAX_APPINFO_SIZE];
+
+		appLen = d->readAppBlock(buffer,appLen);
+
+		(*f)(&fInfo, buffer, appLen);
+		init(&fInfo.category,appLen);
+	} ;
+
+	appinfo *info() { return &fInfo; } ;
+
+protected:
+	appinfo fInfo;
+} ;
+
 
 #endif

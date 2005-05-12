@@ -29,20 +29,13 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <time.h>
-#include <string.h>
-
-#ifndef _PILOT_MACROS_H_
 #include <pi-macros.h>
-#endif
-
-#ifndef _PILOT_ADDRESS_H_
 #include <pi-address.h>
-#endif
 
-#ifndef _KPILOT_PILOTAPPCATEGORY_H
+#include <kabc/addressbook.h>
+
 #include "pilotAppCategory.h"
-#endif
+#include "pilotDatabase.h"
 
 /** @brief A wrapper class around the Address struct provided by pi-address.h
  *
@@ -78,6 +71,11 @@
  * this order is kept. In other languages, main can replaced with
  * Corporation.
  */
+namespace KABC
+{
+	class PhoneNumber;
+}
+
 class KDE_EXPORT PilotAddress : public PilotAppCategory
 {
 public:
@@ -118,6 +116,20 @@ public:
 	void setField(int field, const QString &text);
 	QString getField(int field) const;
 
+    /**
+      Return list of all email addresses.  This will search through our "phone"
+	  fields and will return only those which are e-mail addresses.
+     */
+    QStringList getEmails() const;
+	void setEmails(QStringList emails);
+
+    /**
+	Return list of all phone numbers.  This will search through our "phone"
+	fields and will return only those which are not e-mail addresses.
+	 */
+	KABC::PhoneNumber::List getPhoneNumbers() const;
+	void setPhoneNumbers(KABC::PhoneNumber::List list);
+
 	QString getCategoryLabel() const;
 
 	/** If the label already exists, uses the id; if not, adds the label
@@ -140,9 +152,12 @@ public:
 	*  @param field is value to store
 	*  @param overflowCustom is true, and entryPhone1 to entryPhone5 is full
 	*  it will use entryCustom4 field to store the field
+	*  @param overwriteExisting is true, it will overwrite an existing record-type
+	*  with the field, else it will always search for the first available slot
+	 * @return index of the field that this information was set to
 	*/
-	void setPhoneField(EPhoneType type, const QString &field,
-		bool overflowCustom=true);
+	int setPhoneField(EPhoneType type, const QString &field,
+		bool overflowCustom=true, bool overwriteExisting=true);
 
 	/**
 	* Returns the (adjusted) index of the phone number
@@ -154,7 +169,7 @@ public:
 	*/
 	int getShownPhone() const { return fAddressInfo.showPhone; }
 	void setShownPhone(EPhoneType phoneType);
-	int  getPhoneLabelIndex(int index) { return fAddressInfo.phoneLabel[index]; }
+	int  getPhoneLabelIndex(int index) const { return fAddressInfo.phoneLabel[index]; }
 
 
 	virtual void *pack_(void *, int *);
@@ -185,11 +200,17 @@ private:
 	*/
 	int _findPhoneFieldSlot(int appTypeNum) const;
 
+	void _loadMaps();
+
+	/** pilotToPhone map tracks from PilotAddress types to PhoneNumber types */
+	QMap < int, int> pilotToPhoneMap;
+
 	struct AddressAppInfo &fAppInfo;
 	struct Address fAddressInfo;
 };
 
 
+typedef PilotAppInfo<AddressAppInfo,unpack_AddressAppInfo> PilotAddressInfo;
 
 
 #endif

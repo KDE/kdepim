@@ -127,7 +127,7 @@ void DeviceConfigPage::load()
 		fConfigWidget->fWorkaround->setCurrentItem(1);
 		break;
 	default:
-		kdWarning() << k_funcinfo 
+		kdWarning() << k_funcinfo
 			<< ": Unknown workaround number "
 			<< (int) KPilotSettings::workarounds()
 			<< endl;
@@ -176,12 +176,12 @@ void DeviceConfigPage::load()
 	case 0 : KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone); break;
 	case 1 : KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundUSB); break;
 	default :
-		kdWarning() << k_funcinfo 
+		kdWarning() << k_funcinfo
 			<< ": Unknown workaround number "
 			<< fConfigWidget->fWorkaround->currentItem()
 			<< endl;
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
-			
+
 	}
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();
@@ -251,12 +251,12 @@ SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
 }
 
 #define MENU_ITEM_COUNT (5)
-static SyncAction::SyncMode syncTypeMap[MENU_ITEM_COUNT] = {
-	SyncAction::eHotSync,
-	SyncAction::eFastSync,
-	SyncAction::eFullSync,
-	SyncAction::eCopyPCToHH,
-	SyncAction::eCopyHHToPC
+static SyncAction::SyncMode::Mode syncTypeMap[MENU_ITEM_COUNT] = {
+	SyncAction::SyncMode::eHotSync,
+	SyncAction::SyncMode::eFastSync,
+	SyncAction::SyncMode::eFullSync,
+	SyncAction::SyncMode::eCopyPCToHH,
+	SyncAction::SyncMode::eCopyHHToPC
 	} ;
 
 void SyncConfigPage::load()
@@ -266,7 +266,7 @@ void SyncConfigPage::load()
 
 	/* Sync tab */
 	int synctype=KPilotSettings::syncType();
-	if (synctype<0) synctype=(int) SyncAction::eHotSync;
+	if (synctype<0) synctype=(int) SyncAction::SyncMode::eHotSync;
 	for (unsigned int i=0; i<MENU_ITEM_COUNT; ++i)
 	{
 		if (syncTypeMap[i] == synctype)
@@ -301,7 +301,7 @@ void SyncConfigPage::load()
 	}
 	if (synctype < 0)
 	{
-		synctype = SyncAction::eHotSync;
+		synctype = SyncAction::SyncMode::eHotSync;
 	}
 
 	KPilotSettings::setSyncType(synctype);
@@ -504,7 +504,7 @@ void StartExitConfigPage::load()
 	DEBUGDAEMON << fname << ": desktop=" << desktopfile << endl;
 	DEBUGDAEMON << fname << ": location=" << location << endl;
 #endif
-	
+
 	KPilotSettings::setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin->isChecked());
 	if (KPilotSettings::startDaemonAtLogin())
 	{

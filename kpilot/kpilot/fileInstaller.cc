@@ -88,6 +88,23 @@ void FileInstaller::clearPending()
 	}
 }
 
+void FileInstaller::deleteFile(const QString &file)
+{
+    QFile::remove(fDirName + file);
+    emit filesChanged();
+}
+
+void FileInstaller::deleteFiles(const QStringList &files)
+{
+    if(files.empty())
+        return;
+
+    for(QStringList::ConstIterator it = files.begin(); it != files.end(); ++it)
+        QFile::remove(fDirName + *it);
+    
+    emit filesChanged();
+}
+
 /* virtual */ bool FileInstaller::runCopy(const QString & s, QWidget* w )
 {
 	FUNCTIONSETUP;
@@ -102,7 +119,8 @@ void FileInstaller::clearPending()
 	DEBUGDAEMON << fname << ": Copying " << s << endl;
 #endif
 
-	KURL srcName(s);
+	KURL srcName;
+	srcName.setPath(s);
 	KURL destDir(fDirName + CSL1("/") + srcName.fileName());
 
 #if KDE_IS_VERSION(3,1,9)

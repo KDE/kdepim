@@ -45,14 +45,14 @@ public:
 
 	QString getResults();
 
-	
+
 protected:
 	virtual bool exec();
-	
+
 
 protected slots:
 	void process();
-	
+
 private:
 	// configuration settings...
 	QString	_DEFAULT_MEMODIR;
@@ -63,7 +63,7 @@ private:
 	int _countModifiedToPilot;
 	int _countNewToPilot;
 
-	struct MemoAppInfo	fMemoAppInfo;
+	PilotMemoInfo	*fMemoAppInfo;
 	QPtrList<PilotMemo> fMemoList;
 
 	// our categories
@@ -71,7 +71,7 @@ private:
 
 	Memofiles * _memofiles;
 
-	
+
 	bool	readConfig();
 	bool	getAppInfo();
 	bool	setAppInfo();
@@ -82,19 +82,19 @@ private:
 	bool	loadPilotCategories();
 
 	void 	listPilotMemos();
-	
+
 	void	getAllFromPilot();
 	void	getModifiedFromPilot();
-	
+
 	bool	copyHHToPC();
 	bool	copyPCToHH();
 	bool	sync();
-	
+
 	int 	writeToPilot(Memofile * memofile);
 	void	deleteFromPilot(PilotMemo* memo);
 
 	void 	cleanup();
-	
+
 };
 
 #endif

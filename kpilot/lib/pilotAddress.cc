@@ -39,6 +39,7 @@ static const char *pilotadress_id =
 #include <assert.h>
 
 #include <qtextcodec.h>
+#include <qstringlist.h>
 
 #include "pilotAddress.h"
 
@@ -52,8 +53,16 @@ PilotAddress::PilotAddress(struct AddressAppInfo &appInfo,
 	fAddressInfo()
 {
 	FUNCTIONSETUPL(4);
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+	pi_buffer_t b;
+	b.data = (unsigned char *) rec->getData();
+	b.allocated = b.used = rec->getLen();
+	if (rec) unpack_Address(&fAddressInfo, &b, address_v1);
+#else
 	if (rec) unpack_Address(&fAddressInfo, (unsigned char *) rec->getData(), rec->getLen());
+#endif
 	(void) pilotadress_id;
+	_loadMaps();
 }
 
 PilotAddress::PilotAddress(struct AddressAppInfo &appInfo) :
@@ -70,6 +79,8 @@ PilotAddress::PilotAddress(struct AddressAppInfo &appInfo) :
 	fAddressInfo.phoneLabel[2] = (int) eOther;
 	fAddressInfo.phoneLabel[3] = (int) eMobile;
 	fAddressInfo.phoneLabel[4] = (int) eEmail;
+
+	_loadMaps();
 }
 
 PilotAddress::PilotAddress(const PilotAddress & copyFrom) :
@@ -79,6 +90,8 @@ PilotAddress::PilotAddress(const PilotAddress & copyFrom) :
 {
 	FUNCTIONSETUPL(4);
 	_copyAddressInfo(copyFrom.fAddressInfo);
+
+	_loadMaps();
 }
 
 PilotAddress & PilotAddress::operator = (const PilotAddress & copyFrom)
@@ -118,7 +131,7 @@ void PilotAddress::_copyAddressInfo(const struct Address &copyFrom)
 			copyFrom.phoneLabel[labelLp];
 	}
 
-	for (int entryLp = 0; entryLp < 19; entryLp++)
+	for (int entryLp = 0; entryLp < MAXFIELDS; entryLp++)
 	{
 		if (copyFrom.entry[entryLp])
 			fAddressInfo.entry[entryLp] =
@@ -229,6 +242,14 @@ QString PilotAddress::getTextRepresentation(bool richText)
 		}
 	text += ps;
 
+	// category
+	if (!getCategoryLabel().isEmpty())
+	{
+		text += par;
+		text += rtExpand(getCategoryLabel(), richText);
+		text += ps;
+	}
+
 	// note
 	if (!getField(entryNote).isEmpty())
 	{
@@ -237,6 +258,7 @@ QString PilotAddress::getTextRepresentation(bool richText)
 		text += rtExpand(getField(entryNote), richText);
 		text += ps;
 	}
+
 	return text;
 }
 
@@ -245,6 +267,248 @@ QString PilotAddress::getCategoryLabel() const
 	int cat(getCat());
 	if (cat>0) return codec()->toUnicode(fAppInfo.category.name[cat]);
 	else return QString::null;
+}
+
+QStringList PilotAddress::getEmails() const
+{
+	FUNCTIONSETUP;
+	QStringList list;
+	QString test;
+
+	for (int i = entryPhone1; i <= entryPhone5; i++)
+	{
+		test = getField(i);
+		if (!test.isEmpty())
+		{
+			int ind = getPhoneLabelIndex(i-entryPhone1);
+			if (ind == eEmail)
+			{
+				list.append(test);
+			}
+		}
+	}
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": returning: ["
+				<< list.size() << "] e-mail addresses." << endl;
+#endif
+	return list;
+}
+
+KABC::PhoneNumber::List PilotAddress::getPhoneNumbers() const
+{
+	FUNCTIONSETUP;
+
+	KABC::PhoneNumber::List list;
+	QString test;
+
+	int shownPhone = getShownPhone() + entryPhone1;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": preferred pilot index is: ["
+				<< shownPhone << "], preferred phone number is: ["
+				<< getField(shownPhone) << "]" << endl;
+#endif
+
+	for (int i = entryPhone1; i <= entryPhone5; i++)
+	{
+		test = getField(i);
+		// only look at this if the field is populated
+		if (!test.isEmpty())
+		{
+			int ind = getPhoneLabelIndex(i-entryPhone1);
+			// we only care about non-email types
+			if (ind != eEmail)
+			{
+				int phoneType = pilotToPhoneMap[ind];
+
+				// only populate a PhoneNumber if we have a corresponding type
+				if (phoneType >=0)
+				{
+					// if this is the preferred phone number, set it as such
+					if (shownPhone == i) {
+						phoneType |= KABC::PhoneNumber::Pref;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": found preferred pilot index: ["
+				<< i << "], text: [" << test << "]" << endl;
+#endif
+					}
+					KABC::PhoneNumber ph(test, phoneType);
+					list.append(ph);
+				} else {
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": whoopsie.  pilot phone number: ["
+				<< test << "], index: [" << i << "], type: ["
+				<< ind << "], has no corresponding PhoneNumber type." << endl;
+#endif
+				}
+			}
+		}
+	}
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": returning: ["
+				<< list.size() << "] phone numbers" << endl;
+#endif
+	return list;
+}
+
+void PilotAddress::setPhoneNumbers(KABC::PhoneNumber::List list)
+{
+	FUNCTIONSETUP;
+	QString test;
+
+	// clear all phone numbers (not e-mails) first
+	for (int i = entryPhone1; i <= entryPhone5; i++)
+	{
+		test = getField(i);
+		if (!test.isEmpty())
+		{
+			int ind = getPhoneLabelIndex(i-entryPhone1);
+			if (ind != eEmail)
+			{
+				setField(i, "");
+			}
+		}
+	}
+
+	// now iterate through the list and for each PhoneNumber in the list,
+	// iterate through our phone types using our map and set the first one
+	// we find as the type of address for the Pilot
+	QMap<int, int>::ConstIterator it;
+
+	for(KABC::PhoneNumber::List::Iterator listIter = list.begin();
+		   listIter != list.end(); ++listIter)
+	{
+		KABC::PhoneNumber phone = *listIter;
+
+		int category = eHome;
+
+		for ( it = pilotToPhoneMap.begin(); it != pilotToPhoneMap.end(); ++it )
+		{
+			int pilotKey = it.key();
+			int phoneKey = it.data();
+			if ( phone.type() & phoneKey)
+			{
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": found pilot type: ["
+				<< pilotKey << "] ("
+				<< fAppInfo.phoneLabels[pilotKey]
+				<< ") for PhoneNumber: ["
+				<< phone.number() << "]" << endl;
+#endif
+				category = pilotKey;
+				break;
+			}
+		}
+		int fieldSlot = setPhoneField(static_cast<PilotAddress::EPhoneType>(category),
+					  phone.number(), true, false);
+
+		// if this is the preferred phone number, then set it as such
+		if (phone.type() & KABC::PhoneNumber::Pref) {
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": found preferred PhoneNumber. "
+				<< "setting showPhone to index: ["
+				<< fieldSlot << "], PhoneNumber: ["
+				<< phone.number() << "]" << endl;
+#endif
+			fAddressInfo.showPhone = fieldSlot - entryPhone1;
+		}
+	}
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Pilot's showPhone now: ["
+				<< fAddressInfo.showPhone << "]." << endl;
+#endif
+
+	// after setting the numbers, make sure that something sensible is set as the
+	// shownPhone on the Pilot if nothing is yet...
+	QString pref = getField(fAddressInfo.showPhone + entryPhone1);
+	if (fAddressInfo.showPhone < 0 || fAddressInfo.showPhone > 4 || pref.isEmpty()) {
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Pilot's showPhone: ["
+				<< fAddressInfo.showPhone
+				<< "] not properly set to a default. trying to set a sensible one."
+				<< endl;
+#endif
+		for (int i = entryPhone1; i <= entryPhone5; i++)
+		{
+			pref = getField(i);
+			if (!pref.isEmpty())
+			{
+				fAddressInfo.showPhone = i - entryPhone1;
+				break;
+			}
+		}
+	}
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Pilot's showPhone now: ["
+				<< fAddressInfo.showPhone << "], and that's final." << endl;
+#endif
+}
+
+void PilotAddress::setEmails(QStringList list)
+{
+	QString test;
+
+	// clear all e-mails first
+	for (int i = entryPhone1; i <= entryPhone5; i++)
+	{
+		test = getField(i);
+		if (!test.isEmpty())
+		{
+			int ind = getPhoneLabelIndex(i-entryPhone1);
+			if (ind == eEmail)
+			{
+				setField(i, "");
+			}
+		}
+	}
+
+	for(QStringList::Iterator listIter = list.begin();
+		   listIter != list.end(); ++listIter)
+	{
+		QString email = *listIter;
+		setPhoneField(eEmail, email, true, false);
+	}
+}
+
+/**
+ * Okay, this is so that we can map the Pilot address types to Phone Number types.
+ * Email addresses are NOT included in this map, and are handled separately (not in
+ * PhoneNumber at all).
+ */
+
+void PilotAddress::_loadMaps()
+{
+	/**
+	 * from PhoneNumber
+	 * enum Types { Home = 1, Work = 2, Msg = 4, Pref = 8, Voice = 16, Fax = 32,
+					Cell = 64, Video = 128, Bbs = 256, Modem = 512, Car = 1024,
+					Isdn = 2048, Pcs = 4096, Pager = 8192 };
+	 * from PilotAddress
+	 * enum EPhoneType {
+		eWork=0, eHome, eFax, eOther, eEmail, eMain,
+		ePager, eMobile
+		};
+	 */
+	pilotToPhoneMap.clear();
+	// do this one first, since it's an oddball (PhoneNumber has Fax | Home and
+	// Fax | Work, so either way, we want to find Fax before we find Home.  =;)
+	pilotToPhoneMap.insert(eFax, KABC::PhoneNumber::Fax);
+
+	pilotToPhoneMap.insert(eWork, KABC::PhoneNumber::Work);
+	pilotToPhoneMap.insert(eHome, KABC::PhoneNumber::Home);
+	pilotToPhoneMap.insert(ePager, KABC::PhoneNumber::Pager);
+	pilotToPhoneMap.insert(eMobile, KABC::PhoneNumber::Cell);
+
+	// eMain doesn't cleanly map to anything in PhoneNumber, so we'll
+	// pretend that Palm really meant to say "Home"
+	pilotToPhoneMap.insert(eMain, KABC::PhoneNumber::Home);
+
+	// okay, more ugliness.  Addressee maps Other separately, so it will be set
+	// individually coming in and going out.  We're not counting this as a PhoneNumber.
+	// pilotToPhoneMap.insert(eOther, KABC::PhoneNumber::Home);
+
+
 }
 
 QString PilotAddress::getField(int field) const
@@ -266,8 +530,8 @@ int PilotAddress::_getNextEmptyPhoneSlot() const
 	return entryCustom4;
 }
 
-void PilotAddress::setPhoneField(EPhoneType type, const QString &field,
-	bool overflowCustom)
+int PilotAddress::setPhoneField(EPhoneType type, const QString &field,
+	bool overflowCustom, bool overwriteExisting)
 {
 	FUNCTIONSETUPL(4);
 	// first look to see if the type is already assigned to a fieldSlot
@@ -275,7 +539,7 @@ void PilotAddress::setPhoneField(EPhoneType type, const QString &field,
 	//int appPhoneLabelNum = _getAppPhoneLabelNum(typeStr);
 	int appPhoneLabelNum = (int) type;
 	QString fieldStr(field);
-	int fieldSlot = _findPhoneFieldSlot(appPhoneLabelNum);
+	int fieldSlot = (overwriteExisting) ? _findPhoneFieldSlot(appPhoneLabelNum) : -1;
 
 	if (fieldSlot == -1)
 		fieldSlot = _getNextEmptyPhoneSlot();
@@ -300,6 +564,7 @@ void PilotAddress::setPhoneField(EPhoneType type, const QString &field,
 
 		fAddressInfo.phoneLabel[labelIndex] = appPhoneLabelNum;
 	}
+	return fieldSlot;
 }
 
 int PilotAddress::_findPhoneFieldSlot(int appTypeNum) const
@@ -410,8 +675,15 @@ void *PilotAddress::pack_(void *buf, int *len)
 	FUNCTIONSETUPL(4);
 	int i;
 
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+	pi_buffer_t b = { 0,0,0 } ;
+	i = pack_Address(&fAddressInfo, &b, address_v1);
+	memcpy(buf,b.data,kMin(i,*len));
+	*len = kMin(i,*len);
+#else
 	i = pack_Address(&fAddressInfo, (unsigned char *) buf, *len);
 	*len = i;
+#endif
 	return buf;
 }
 

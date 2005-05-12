@@ -33,6 +33,7 @@ static const char *pilotMemo_id =
 #include <qtextcodec.h>
 
 #include "pilotMemo.h"
+#include "pilotDatabase.h"
 
 
 
@@ -143,3 +144,4 @@ QString PilotMemo::sensibleTitle() const
 		return i18n("[unknown]");
 	}
 }
+

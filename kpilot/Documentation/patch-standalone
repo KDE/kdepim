@@ -1,0 +1,42 @@
+Index: conduits/vcalconduit/Makefile.am
+===================================================================
+RCS file: /home/kde/kdepim/kpilot/conduits/vcalconduit/Makefile.am,v
+retrieving revision 1.51
+diff -u -3 -p -r1.51 Makefile.am
+--- conduits/vcalconduit/Makefile.am	9 Jan 2005 18:57:11 -0000	1.51
++++ conduits/vcalconduit/Makefile.am	23 Apr 2005 20:05:31 -0000
+@@ -21,16 +21,14 @@ libvcalconduit_shared_la_SOURCES = vcalc
+ 	vcal-conduitbase.cc
+ 
+ conduit_vcal_la_SOURCES = vcal-conduit.cc vcal-factory.cc vcal-setup.cc
+-conduit_vcal_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
++conduit_vcal_la_LDFLAGS = -module $(KDE_PLUGIN) -lkcal $(all_libraries)
+ conduit_vcal_la_LIBADD = ../../lib/libkpilot.la \
+-	../../../libkcal/libkcal.la \
+ 	libvcalconduit_shared.la
+ conduit_vcal_la_COMPILE_FIRST = vcalconduitSettings.h korganizerConduit.h
+ 
+ conduit_todo_la_SOURCES = todo-factory.cc todo-setup.cc todo-conduit.cc
+-conduit_todo_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
++conduit_todo_la_LDFLAGS = -module $(KDE_PLUGIN) -lkcal $(all_libraries)
+ conduit_todo_la_LIBADD = ../../lib/libkpilot.la \
+-	../../../libkcal/libkcal.la \
+ 	libvcalconduit_shared.la
+ conduit_todo_la_COMPILE_FIRST = vcalconduitSettings.h korganizerConduit.h
+ 
+Index: lib/options.h
+===================================================================
+RCS file: /home/kde/kdepim/kpilot/lib/options.h,v
+retrieving revision 1.70
+diff -u -3 -p -r1.70 options.h
+--- lib/options.h	10 Apr 2005 23:06:43 -0000	1.70
++++ lib/options.h	23 Apr 2005 20:05:31 -0000
+@@ -62,7 +62,7 @@
+ // of to the KDE debugging facility (it does lose some niftiness then).
+ //
+ #ifndef DEBUG
+-// #define DEBUG			(1)
++#define DEBUG			(1)
+ #endif
+ // #define DEBUG_CERR			(1)
+ 

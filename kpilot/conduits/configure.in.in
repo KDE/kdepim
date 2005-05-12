@@ -33,7 +33,7 @@ AC_REQUIRE([KPILOT_CHECK_PISOCK])
 
 AC_MSG_CHECKING(for libmal (for KPilots MAL conduit))
 AC_ARG_WITH(mal,
-[  --with-mal=PATH        set path for libmal files @<:@default=check@:>@],
+[  --with-mal=PATH         set path for libmal files @<:@default=check@:>@],
 [ case "$withval" in
   yes)
     with_mal=CHECK
@@ -183,8 +183,18 @@ dnl
 dnl ----------------------------------------------------------------------------
 
 AC_DEFUN([KPILOT_CHECK_NOTEPAD],[HAVE_NOTEPAD=0
+kpilot_save_cflags="$CPPFLAGS"
+kpilot_save_ldflags="$LDFLAGS"
+
+test -z "$PISOCK_INCLUDE" || CPPFLAGS="$CPPFLAGS $PISOCK_INCLUDE"
 KDE_CHECK_HEADER(pi-notepad.h,HAVE_NOTEPAD=1,
 	AC_MSG_WARN([KPILOT: No notepad.h for pilot-link. Your pilot-link is too old.]))
+
+CPPFLAGS="$kpilot_save_cflags"
+LDFLAGS="$kpilot_save_ldflags"
+unset kpilot_save_cflags
+unset kpilot_save_ldflags
+
 AM_CONDITIONAL(include_notepad, test "$HAVE_NOTEPAD" = 1)
 ])
 

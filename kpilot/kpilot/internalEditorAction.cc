@@ -139,7 +139,7 @@ void InternalEditorAction::syncDirtyDB()
 			DEBUGKPILOT<<endl<<endl<<endl;
 #endif
 			//localDB->writeRecord(rec);
-			localDB->writeID(rec);
+			localDB->updateID(id);
 		}
 		KPILOT_DELETE(rec);
 	}

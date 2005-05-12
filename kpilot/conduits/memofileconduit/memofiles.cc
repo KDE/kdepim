@@ -32,7 +32,7 @@
 
 QString Memofiles::FIELD_SEP = CSL1("\t");
 
-Memofiles::Memofiles (MemoCategoryMap & categories, struct MemoAppInfo & appInfo, QString & baseDirectory) :
+Memofiles::Memofiles (MemoCategoryMap & categories, PilotMemoInfo &appInfo, QString & baseDirectory) :
 		_categories(categories), _memoAppInfo(appInfo), _baseDirectory(baseDirectory)
 {
 	FUNCTIONSETUP;
@@ -41,6 +41,8 @@ Memofiles::Memofiles (MemoCategoryMap & categories, struct MemoAppInfo & appInfo
 	_categoryMetadataFile = _baseDirectory + QDir::separator() + CSL1(".categories");
 	_countNewToLocal = _countModifiedToLocal = _countDeletedToLocal = 0;
 	_memofiles.setAutoDelete(true);
+
+	_ready = ensureDirectoryReady();
 
 	_metadataLoaded = loadFromMetadata();
 }
@@ -160,6 +162,7 @@ bool Memofiles::ensureDirectoryReady()
 	if (!checkDirectory(_baseDirectory))
 		return false;
 
+	int failures = 0;
 	// now make sure that a directory for each category exists.
 	QString _category_name;
 	QString dir;
@@ -175,10 +178,10 @@ bool Memofiles::ensureDirectoryReady()
 #endif
 
 		if (!checkDirectory(dir))
-			return false;
+			failures++;
 	}
 
-	return true;
+	return failures == 0;
 }
 
 bool Memofiles::checkDirectory(QString & dir)
@@ -543,7 +546,7 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 		QString data = stream.readLine();
 		int errors = 0;
 		bool ok;
-	
+
 		QStringList fields = QStringList::split( FIELD_SEP, data );
 		if ( fields.count() >= 2 ) {
 			int id = fields[0].toInt( &ok );
@@ -552,14 +555,14 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 			QString categoryName = fields[1];
 			if ( categoryName.isEmpty() )
 				errors++;
-	
+
 			if (errors <= 0) {
 				map[id] = categoryName;
 			}
 		} else {
 			errors++;
 		}
-	
+
 		if (errors > 0) {
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
@@ -602,7 +605,7 @@ bool Memofiles::saveCategoryMetadata()
 #endif
 		return false;
 	}
-	
+
 	MemoCategoryMap::Iterator it;
 	for ( it = _categories.begin(); it != _categories.end(); ++it ) {
 		stream  << it.key()
@@ -628,6 +631,24 @@ bool Memofiles::saveMemos()
 			_memofiles.remove(memofile);
 		} else {
 			result = memofile->save();
+			// Fix prompted by Bug #103922
+			// if we weren't able to save the file, then remove it from the list.
+			// if we don't do this, the next sync will think that the user deliberately
+			// deleted the memofile and will then delete it from the Pilot.
+			// TODO -- at some point, we should probably tell the user that this
+			//        did not work, but that will require a String change.
+			//        Also, this is a partial fix since at this point
+			//        this memo will never make its way onto the PC, but at least
+			//        we won't delete it from the Pilot erroneously either.  *sigh*
+			if (!result) {
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+	<< ": unable to save memofile: ["
+	<< memofile->filename() << "], now removing it from the metadata list."
+	<< endl;
+#endif
+				_memofiles.remove(memofile);
+			}
 		}
 	}
 	return true;
@@ -640,7 +661,7 @@ bool Memofiles::isFirstSync()
 	                      QFile::exists(_categoryMetadataFile);
 
 	bool valid = metadataExists && _metadataLoaded;
-	
+
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 	<< ": local metadata exists: [" << metadataExists
@@ -703,6 +724,8 @@ QString Memofiles::filename(PilotMemo * memo)
 		}
 	}
 
+	filename = sanitizeName(filename);
+
 	QString category = _categories[memo->getCat()];
 
 	Memofile * memofile = find(category, filename);
@@ -726,6 +749,15 @@ QString Memofiles::filename(PilotMemo * memo)
 	}
 
 	return newfilename;
+}
+
+QString Memofiles::sanitizeName(QString name)
+{
+	QString clean = name;
+	// safety net. we can't save a
+	// filesystem separator as part of a filename, now can we?
+	clean.replace('/', CSL1("-"));
+	return clean;
 }
 
 QString Memofiles::getResults()

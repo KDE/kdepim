@@ -167,10 +167,10 @@ void PilotDaemonTray::setupWidget()
 	fSyncTypeMenu = new KPopupMenu(menu,"sync_type_menu");
 	QString once = i18n("Appended to names of sync types to indicate the sync will happen just one time"," (once)");
 #define MI(a) fSyncTypeMenu->insertItem( \
-		SyncAction::syncModeName(SyncAction::a) + once, \
-		(int)(SyncAction::a));
+		SyncAction::SyncMode::name(SyncAction::SyncMode::a) + once, \
+		(int)(SyncAction::SyncMode::a));
 	fSyncTypeMenu->insertItem(i18n("Default (%1)")
-		.arg(SyncAction::syncModeName((SyncAction::SyncMode)KPilotSettings::syncType())),
+		.arg(SyncAction::SyncMode::name((SyncAction::SyncMode::Mode)KPilotSettings::syncType())),
 		0);
 	fSyncTypeMenu->insertSeparator();
 
@@ -282,19 +282,13 @@ void PilotDaemonTray::endHotSync()
 	}
 }
 
-static inline SyncAction::SyncMode getSyncType()
-{
-	unsigned int m = KPilotSettings::syncType();
-	if (m>SyncAction::eRestore) m=SyncAction::eTest;
-	return (SyncAction::SyncMode) m;
-}
 
 PilotDaemon::PilotDaemon() :
 	DCOPObject("KPilotDaemonIface"),
 	fDaemonStatus(INIT),
 	fPostSyncAction(None),
 	fPilotLink(0L),
-	fNextSyncType(SyncAction::eTest),
+	fNextSyncType(SyncAction::SyncMode::eHotSync,true),
 	fSyncStack(0L),
 	fTray(0L),
 	fInstaller(0L),
@@ -321,7 +315,7 @@ PilotDaemon::PilotDaemon() :
 	connect(fInstaller, SIGNAL(filesChanged()),
 		this, SLOT(slotFilesChanged()));
 
-	fNextSyncType = getSyncType();
+	fNextSyncType.setMode( KPilotSettings::syncType() );
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -469,7 +463,7 @@ void PilotDaemon::showTray()
 		<< endl;
 #endif
 
-	requestSync(SyncAction::eDefaultSync);
+	requestSync(0);
 
 
 	if (fPilotLink)
@@ -549,7 +543,7 @@ void PilotDaemon::showTray()
 	s.append(shortStatusString());
 
 	s.append(CSL1("; NextSync="));
-	s.append(syncTypeString(fNextSyncType));
+	s.append(fNextSyncType.name());
 
 	s.append(CSL1(" ("));
 	if (fPilotLink)
@@ -652,12 +646,12 @@ bool PilotDaemon::setupPilotLink()
 
 /* DCOP ASYNC */ void PilotDaemon::requestRegularSyncNext()
 {
-	requestSync(SyncAction::eHotSync);
+	requestSync(SyncAction::SyncMode::eHotSync);
 }
 
 /* DCOP ASYNC */ void PilotDaemon::requestFastSyncNext()
 {
-	requestSync(SyncAction::eFastSync);
+	requestSync(SyncAction::SyncMode::eFastSync);
 }
 
 
@@ -665,32 +659,12 @@ bool PilotDaemon::setupPilotLink()
 {
 	FUNCTIONSETUP;
 
-
-	if ( (mode>=0) && (mode<=SyncAction::eLastMode))
+	if ( 0==mode )
 	{
-		if (((int)SyncAction::eDefaultSync)==mode)
-		{
-			fNextSyncType = (SyncAction::SyncMode) KPilotSettings::syncType();
-			if ( (((int)SyncAction::eDefaultSync) == fNextSyncType) ||
-				(fNextSyncType < 0) || (fNextSyncType > SyncAction::eLastMode) )
-			{
-				// Bad mode set in config file.
-				kdWarning() << k_funcinfo << ": Bad mode set in config file." << endl;
-				fNextSyncType = SyncAction::eHotSync;
-			}
-		}
-		else
-		{
-			fNextSyncType = (SyncAction::SyncMode) mode;
-		}
-#ifdef DEBUG
-		DEBUGDAEMON << fname
-			<< ": Next sync is: "
-			<< syncTypeString(fNextSyncType)
-			<< endl ;
-#endif
+		mode = KPilotSettings::syncType();
 	}
-	else
+
+	if ( !fNextSyncType.setMode(mode) )
 	{
 		kdWarning() << k_funcinfo << ": Ignored fake sync type " << mode << endl;
 		return;
@@ -700,15 +674,15 @@ bool PilotDaemon::setupPilotLink()
 
 	if (fTray && (fTray->fSyncTypeMenu))
 	{
-		for (int i=((int)SyncAction::eDefaultSync);
-			i<=((int)SyncAction::eLastUserMode) /* Restore */ ;
+		for (int i=((int)SyncAction::SyncMode::eFastSync);
+			i<=((int)SyncAction::SyncMode::eRestore) /* Restore */ ;
 			++i)
 		{
 			fTray->fSyncTypeMenu->setItemChecked(i,mode==i);
 		}
 	}
 
-	getLogger().logMessage(i18n("Next HotSync will be: %1. ").arg(syncTypeString(fNextSyncType)) +
+	getLogger().logMessage(i18n("Next HotSync will be: %1. ").arg(fNextSyncType.name()) +
 		i18n("Please press the HotSync button."));
 }
 
@@ -717,15 +691,15 @@ bool PilotDaemon::setupPilotLink()
 	FUNCTIONSETUP;
 
 	// This checks unique prefixes of the names of the various sync types.
-	if (s.startsWith(CSL1("H"))) requestSync(SyncAction::eHotSync);
-	else if (s.startsWith(CSL1("Fa"))) requestSync(SyncAction::eFastSync);
-	else if (s.startsWith(CSL1("Fu"))) requestSync(SyncAction::eFullSync);
-	else if (s.startsWith(CSL1("B"))) requestSync(SyncAction::eBackup);
-	else if (s.startsWith(CSL1("R"))) requestSync(SyncAction::eRestore);
-	else if (s.startsWith(CSL1("T"))) requestSync(SyncAction::eTest);
-	else if (s.startsWith(CSL1("CopyHHToPC"))) requestSync(SyncAction::eCopyHHToPC);
-	else if (s.startsWith(CSL1("CopyPCToHH"))) requestSync(SyncAction::eCopyPCToHH);
-	else if (s.startsWith(CSL1("D"))) requestSync(SyncAction::eDefaultSync);
+	if (s.startsWith(CSL1("H"))) requestSync(SyncAction::SyncMode::eHotSync);
+	else if (s.startsWith(CSL1("Fa"))) requestSync(SyncAction::SyncMode::eFastSync);
+	else if (s.startsWith(CSL1("Fu"))) requestSync(SyncAction::SyncMode::eFullSync);
+	else if (s.startsWith(CSL1("B"))) requestSync(SyncAction::SyncMode::eBackup);
+	else if (s.startsWith(CSL1("R"))) requestSync(SyncAction::SyncMode::eRestore);
+	else if (s.startsWith(CSL1("T"))) { fNextSyncType.setOptions(true,false); }
+	else if (s.startsWith(CSL1("CopyHHToPC"))) requestSync(SyncAction::SyncMode::eCopyHHToPC);
+	else if (s.startsWith(CSL1("CopyPCToHH"))) requestSync(SyncAction::SyncMode::eCopyPCToHH);
+	else if (s.startsWith(CSL1("D"))) requestSync(0);
 	else
 	{
 		kdWarning() << ": Unknown sync type " << ( s.isEmpty() ? CSL1("<none>") : s )
@@ -733,15 +707,22 @@ bool PilotDaemon::setupPilotLink()
 	}
 }
 
-/* DCOP */ int PilotDaemon::nextSyncType() const
+/* DCOP ASYNC */ void PilotDaemon::requestSyncOptions(bool test, bool local)
 {
-	return fNextSyncType;
+	if ( !fNextSyncType.setOptions(test,local) )
+	{
+		kdWarning() << k_funcinfo << ": Nonsensical request for "
+			<< (test ? "test" : "notest")
+			<< ' '
+			<< (local ? "local" : "nolocal")
+			<< " in mode "
+			<< fNextSyncType.name() << endl;
+	}
 }
 
-QString PilotDaemon::syncTypeString(SyncAction::SyncMode i) const
+/* DCOP */ int PilotDaemon::nextSyncType() const
 {
-	FUNCTIONSETUP;
-	return SyncAction::syncModeName(i);
+	return fNextSyncType.mode();
 }
 
 /**
@@ -976,13 +957,13 @@ static void queueConduits(ActionQueue *fSyncStack,
 	if (conduits.count() > 0)
 	{
 		fSyncStack->queueConduits( conduits,e);
-		QString s = i18n("Conduit flags: ");
-		s.append(ConduitProxy::flagsForMode(e).join(CSL1(" ")));
+		// QString s = i18n("Conduit flags: ");
+		// s.append(ConduitProxy::flagsForMode(e).join(CSL1(" ")));
 		// logMessage(s);
 	}
 }
 
-/* slot */ void PilotDaemon::startHotSync(KPilotDeviceLink*pilotLink)
+/* slot */ void PilotDaemon::startHotSync(KPilotDeviceLink *pilotLink)
 {
 	FUNCTIONSETUP;
 
@@ -994,8 +975,7 @@ static void queueConduits(ActionQueue *fSyncStack,
 #ifdef DEBUG
 	DEBUGDAEMON << fname
 		<< ": Starting Sync with type "
-		<< syncTypeString(fNextSyncType)
-		<< " (" << fNextSyncType << ")" << endl;
+		<< fNextSyncType.name() << endl;
 	DEBUGDAEMON << fname << ": Status is " << shortStatusString() << endl;
 	(void) PilotDatabase::count();
 #endif
@@ -1022,7 +1002,7 @@ static void queueConduits(ActionQueue *fSyncStack,
 	// Except when the user has requested a Restore, in which case she knows she doesn't
 	// want to sync with a blank palm and then back up the result over her stored backup files,
 	// do a Full Sync when changing the PC or using a different Palm Desktop app.
-	if (fNextSyncType != SyncAction::eRestore)
+	if (fNextSyncType.mode() != SyncAction::SyncMode::eRestore)
 	{
 		// Use gethostid to determine , since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
 		// as PC_ID, so using JPilot and KPilot is the same as using two different PCs
@@ -1030,7 +1010,7 @@ static void queueConduits(ActionQueue *fSyncStack,
 		pcchanged = usr->getLastSyncPC() !=(unsigned long) gethostid();
 		if (pcchanged && KPilotSettings::fullSyncOnPCChange() )
 		{
-			fNextSyncType = SyncAction::eFullSync;
+			fNextSyncType = SyncAction::SyncMode::eFullSync;
 		}
 	}
 
@@ -1039,62 +1019,50 @@ static void queueConduits(ActionQueue *fSyncStack,
 
 	conduits = KPilotSettings::installedConduits() ;
 
-	switch (fNextSyncType)
+	if (fNextSyncType.isTest())
 	{
-	case SyncAction::eTest:
 		fSyncStack->addAction(new TestLink(pilotLink));
-		// No conduits, nothing.
-		break;
-	case SyncAction::eBackup:
-		if (KPilotSettings::runConduitsWithBackup() && (conduits.count() > 0))
-		{
-			fSyncStack->queueConduits(conduits,SyncAction::eBackup);
-		}
-		fSyncStack->addAction(new BackupAction(pilotLink,true));
-		break;
-	case SyncAction::eRestore:
-		fSyncStack->addAction(new RestoreAction(pilotLink));
-		queueInstaller(fSyncStack,fInstaller,conduits);
-		break;
-	case SyncAction::eFullSync:
-	case SyncAction::eFastSync:
-	case SyncAction::eHotSync:
-		// first install the files, and only then do the conduits
-		// (conduits might want to sync a database that will be installed
-		queueInstaller(fSyncStack,fInstaller,conduits);
-		queueEditors(fSyncStack,pilotLink);
-		queueConduits(fSyncStack,conduits,fNextSyncType);
-		// After running the conduits, install new databases
-		queueInstaller(fSyncStack,fInstaller,conduits);
-		// And sync the remaining databases if needed.
-		if ( (fNextSyncType == SyncAction::eHotSync) ||
-			(fNextSyncType == SyncAction::eFullSync))
-		{
-			fSyncStack->addAction(new BackupAction(pilotLink, (fNextSyncType == SyncAction::eFullSync)));
-		}
-		break;
-	case SyncAction::eCopyPCToHH:
-		queueConduits(fSyncStack,conduits,SyncAction::eCopyPCToHH);
-		break;
-	case SyncAction::eCopyHHToPC:
-		queueConduits(fSyncStack,conduits,SyncAction::eCopyHHToPC);
-		break;
-	case SyncAction::eDefaultSync:
-		Q_ASSERT(SyncAction::eDefaultSync != fNextSyncType);
-#if 0
-	default:
-#ifdef DEBUG
-		DEBUGDAEMON << fname
-			<< ": Can't handle sync type "
-			<< syncTypeString(fNextSyncType) << endl;
-#endif
-		fSyncStack->addAction(new SorryAction(pilotLink),
-			i18n("KPilot cannot perform a sync of type <i>%1</i>.")
-				.arg(SyncAction::syncModeName(fNextSyncType)));
-		break;
-#endif
 	}
-
+	else
+	{
+		switch (fNextSyncType.mode())
+		{
+		case SyncAction::SyncMode::eBackup:
+			if (KPilotSettings::runConduitsWithBackup() && (conduits.count() > 0))
+			{
+				queueConduits(fSyncStack,conduits,fNextSyncType);
+			}
+			fSyncStack->addAction(new BackupAction(pilotLink,true));
+			break;
+		case SyncAction::SyncMode::eRestore:
+			fSyncStack->addAction(new RestoreAction(pilotLink));
+			queueInstaller(fSyncStack,fInstaller,conduits);
+			break;
+		case SyncAction::SyncMode::eFullSync:
+		case SyncAction::SyncMode::eFastSync:
+		case SyncAction::SyncMode::eHotSync:
+			// first install the files, and only then do the conduits
+			// (conduits might want to sync a database that will be installed
+			queueInstaller(fSyncStack,fInstaller,conduits);
+			queueEditors(fSyncStack,pilotLink);
+			queueConduits(fSyncStack,conduits,fNextSyncType);
+			// After running the conduits, install new databases
+			queueInstaller(fSyncStack,fInstaller,conduits);
+			// And sync the remaining databases if needed.
+			if ( (fNextSyncType == SyncAction::SyncMode::eHotSync) ||
+				(fNextSyncType == SyncAction::SyncMode::eFullSync))
+			{
+				fSyncStack->addAction(new BackupAction(pilotLink, (fNextSyncType == SyncAction::SyncMode::eFullSync)));
+			}
+			break;
+		case SyncAction::SyncMode::eCopyPCToHH:
+			queueConduits(fSyncStack,conduits,SyncAction::SyncMode::eCopyPCToHH);
+			break;
+		case SyncAction::SyncMode::eCopyHHToPC:
+			queueConduits(fSyncStack,conduits,SyncAction::SyncMode::eCopyHHToPC);
+			break;
+		}
+	}
 
 // Jump here to finalize the connections to the sync action
 // queue and start the actual sync.
@@ -1181,7 +1149,7 @@ launch:
 	}
 
 	fPostSyncAction = None;
-	requestSync(SyncAction::eDefaultSync /* default */);
+	requestSync(0);
 
 	(void) PilotDatabase::count();
 
@@ -1267,7 +1235,7 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 	tipText.append( s );
 	tipText.append( CSL1(" ") );
 	tipText.append( i18n("Next sync is %1.")
-		.arg( syncTypeString(fNextSyncType) ) );
+		.arg( fNextSyncType.name() ) );
 	tipText.append( CSL1("</qt>") );
 
 	QToolTip::remove(fTray);

@@ -39,9 +39,9 @@ class Memofiles {
 
 public:
 
-	Memofiles (MemoCategoryMap & categories, struct MemoAppInfo & appInfo, QString & baseDirectory);
+	Memofiles (MemoCategoryMap & categories, PilotMemoInfo &appInfo, QString & baseDirectory);
 	~Memofiles();
-	
+
 	void load(bool loadAll);
 	void save();
 	void eraseLocalMemos();
@@ -50,9 +50,10 @@ public:
 	void deleteMemo (PilotMemo * memo);
 
 	QString getResults();
-		
+
 	bool isFirstSync();
-	
+	bool isReady() { return _ready; };
+
 	QPtrList<Memofile> getModified();
 	QPtrList<Memofile> getAll() { return _memofiles; } ;
 	Memofile * find (const QString & category, const QString & filename);
@@ -62,11 +63,12 @@ public:
 	void setCategories(MemoCategoryMap map) { _categories = map; } ;
 
 	static QString FIELD_SEP;
+	static QString sanitizeName(QString name);
 
 private:
-   
+
 	MemoCategoryMap _categories;
-	struct MemoAppInfo & _memoAppInfo;
+	PilotMemoInfo &_memoAppInfo;
 	QString & _baseDirectory;
 	QPtrList<Memofile> _memofiles;
 
@@ -87,9 +89,10 @@ private:
 	int _countDeletedToLocal;
 	int _countModifiedToLocal;
 	int _countNewToLocal;
-	
+
 	bool _metadataLoaded;
-	
+	bool _ready;
+
 };
 #endif //MEMOFILES_H
 

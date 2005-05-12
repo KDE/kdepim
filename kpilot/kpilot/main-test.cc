@@ -80,7 +80,7 @@ static KCmdLineOptions kpilotoptions[] = {
 		I18N_NOOP("*Really* run the conduit, not in test mode."),
 		0 } ,
 	{ "F",0,0},
-	{ "test-local",
+	{ "local",
 		I18N_NOOP("Run the conduit in file-test mode."),
 		0 } ,
 	{ "HHtoPC",
@@ -93,7 +93,7 @@ static KCmdLineOptions kpilotoptions[] = {
 		I18N_NOOP("Run conduit specially designed to timeout."),
 		0 } ,
 	{ "test-usercheck",
-		I18N_NOOP("Run conduit specially designed to timeout."),
+		I18N_NOOP("Run conduit just for user check."),
 		0 } ,
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
@@ -266,14 +266,14 @@ int execConduit(KCmdLineArgs *p)
 	createLogWidget();
 	createLink();
 
-	SyncAction::SyncMode syncMode = SyncAction::eHotSync;
-	if (p->isSet("test")) syncMode = SyncAction::eTest;
-	if (p->isSet("HHtoPC")) syncMode = SyncAction::eCopyHHToPC;
-	if (p->isSet("PCtoHH")) syncMode = SyncAction::eCopyPCToHH;
+	SyncAction::SyncMode::Mode syncMode = SyncAction::SyncMode::eHotSync;
+	if (p->isSet("HHtoPC")) syncMode = SyncAction::SyncMode::eCopyHHToPC;
+	if (p->isSet("PCtoHH")) syncMode = SyncAction::SyncMode::eCopyPCToHH;
 
+	SyncAction::SyncMode mode(syncMode,p->isSet("test"),p->isSet("local"));
 	syncStack = new ActionQueue(deviceLink);
 	syncStack->queueInit();
-	syncStack->queueConduits(l,syncMode,false);
+	syncStack->queueConduits(l,mode,false);
 	syncStack->queueCleanup();
 
 	connectStack();
@@ -281,28 +281,6 @@ int execConduit(KCmdLineArgs *p)
 
 	return kapp->exec();
 }
-
-int testConduit(KCmdLineArgs *p)
-{
-	FUNCTIONSETUP;
-
-	// get --exec-conduit value
-	QString s = p->getOption("conduit-exec");
-	if (s.isEmpty()) return 1;
-
-	createLogWidget();
-	createLink();
-
-	syncStack = new ActionQueue(deviceLink);
-	syncStack->queueConduits(QStringList(s),SyncAction::eTest,true);
-
-	connectStack();
-
-	QTimer::singleShot(10,syncStack,SLOT(execConduit()));
-
-	return kapp->exec();
-}
-
 
 int listConduits(KCmdLineArgs *)
 {
@@ -375,14 +353,7 @@ int main(int argc, char **argv)
 
 	if (p->isSet("conduit-exec"))
 	{
-		if (p->isSet("test-local"))
-		{
-			return testConduit(p);
-		}
-		else
-		{
-			return execConduit(p);
-		}
+		return execConduit(p);
 	}
 
 	// The default is supposed to be "list"

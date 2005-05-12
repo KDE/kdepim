@@ -212,7 +212,7 @@ static inline void initNoBackup(QStringList &dbnames,
 			}
 			else
 			{
-				QCString data =  s.mid(2,4).latin1();
+				QCString data =  s.mid(1,4).latin1();
 				unsigned long creator = pi_mktag(data[0],data[1],data[2],data[3]);
 				dbcreators.append(creator);
 			}
@@ -367,10 +367,11 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	fDBIndex = info.index + 1;
 
 	char buff[8];
+	memset(buff, 0, 8);
 	buff[0] = '[';
 	set_long( &buff[1], info.creator );
-	buff[6] = ']';
-	buff[7] = '\0';
+	buff[5] = ']';
+	buff[6] = '\0';
 	QString creator = QString::fromLatin1( buff );
 	info.name[33]='\0';
 	QString dbname = QString::fromLatin1( info.name );

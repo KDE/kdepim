@@ -4,7 +4,7 @@
   <group name="memofile-conduit">
     <entry name="Directory" type="Path">
         <label>What directory do you want to sync your PDA's memos with?</label>
-        <default>~/MyMemos/</default>
+        <default>$HOME/MyMemos</default>
     </entry>
     <entry name="SyncPrivate" type="Bool">
         <label>Do you want to sync your private records to the filesystem?</label>

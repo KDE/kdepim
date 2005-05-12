@@ -125,7 +125,7 @@ private:
 	*/
 	QComboBox            *fCatList;
 	QTextView            *fAddrInfo;
-	struct AddressAppInfo fAddressAppInfo;
+	PilotAddressInfo     *fAddressAppInfo;
 	QPtrList<PilotAddress>   fAddressList;
 	QListBox             *fListBox;
 	QPushButton	     *fEditButton,*fDeleteButton;

@@ -73,10 +73,10 @@ AddressBook*AbbrowserConduit::aBook=0L;
 /// Use a macro, because that saves two lines for each call, but does not
 /// have the overhead of a function call
 static inline void _setPhoneNumber(Addressee &abEntry, int type, const QString &nr)
-{ 
+{
 	PhoneNumber phone = abEntry.phoneNumber(type);
 	phone.setNumber(nr); \
-	abEntry.insertPhoneNumber(phone); 
+	abEntry.insertPhoneNumber(phone);
 }
 
 
@@ -217,7 +217,7 @@ bool AbbrowserConduit::_loadAddressBook()
 	{
 		case AbbrowserSettings::eAbookResource:
 			DEBUGCONDUIT<<"Loading standard addressbook"<<endl;
-			aBook = StdAddressBook::self();
+			aBook = StdAddressBook::self( true );
 			break;
 		case AbbrowserSettings::eAbookFile:
 		{ // initialize the abook with the given file
@@ -280,7 +280,7 @@ bool AbbrowserConduit::_loadAddressBook()
 	// a Abbrowser Addressee; allows for easy lookup and comparisons
 	if(aBook->begin() == aBook->end())
 	{
-		fFirstSync = true;
+		setFirstSync( true );
 	}
 	else
 	{
@@ -470,7 +470,7 @@ void AbbrowserConduit::setCustomField(Addressee &abEntry,  int index, QString cu
 				// use given format
 				bdate=KGlobal::locale()->readDate(cust, AbbrowserSettings::customDateFormat(), &ok);
 			}
-			
+
 			if (!ok)
 			{
 				QString format = KGlobal::locale()->dateFormatShort();
@@ -562,6 +562,10 @@ void AbbrowserConduit::setOtherField(Addressee & abEntry, QString nr)
 
 PhoneNumber AbbrowserConduit::getFax(const Addressee & abEntry)
 {
+	// *NOTE* If our user has said that they want a fax number to be their
+	//        preferred number on their Pilot, this will negate that.  In other
+	//        words, this could be a bug waiting to happen if someone wants to
+	//        have a fax number be their "preferred number".
 	return abEntry.phoneNumber( PhoneNumber::Fax |
 		( (AbbrowserSettings::pilotFax()==0) ?(PhoneNumber::Home) :(PhoneNumber::Work)));
 }
@@ -669,19 +673,8 @@ void AbbrowserConduit::showPilotAddress(PilotAddress *pilotAddress)
 		DEBUGCONDUIT<< fname << "| EMPTY"<<endl;
 		return;
 	}
-	DEBUGCONDUIT << fname << "| Last name = " << pilotAddress->getField(entryLastname) << endl;
-	DEBUGCONDUIT << fname << "| First name = " << pilotAddress->getField(entryFirstname) << endl;
-	DEBUGCONDUIT << fname << "| Company = " << pilotAddress->getField(entryCompany) << endl;
-	DEBUGCONDUIT << fname << "| Job Title = " << pilotAddress->getField(entryTitle) << endl;
-	DEBUGCONDUIT << fname << "| Note = " << pilotAddress->getField(entryNote) << endl;
-	DEBUGCONDUIT << fname << "| Home phone = " << pilotAddress->getPhoneField(PilotAddress::eHome, false) << endl;
-	DEBUGCONDUIT << fname << "| Work phone = " << pilotAddress->getPhoneField(PilotAddress::eWork, false) << endl;
-	DEBUGCONDUIT << fname << "| Mobile phone = " << pilotAddress->getPhoneField(PilotAddress::eMobile, false) << endl;
-	DEBUGCONDUIT << fname << "| Email = " << pilotAddress->getPhoneField(PilotAddress::eEmail, false) << endl;
-	DEBUGCONDUIT << fname << "| Fax = " << pilotAddress->getPhoneField(PilotAddress::eFax, false) << endl;
-	DEBUGCONDUIT << fname << "| Pager = " << pilotAddress->getPhoneField(PilotAddress::ePager, false) << endl;
-	DEBUGCONDUIT << fname << "| Other = " << pilotAddress->getPhoneField(PilotAddress::eOther, false) << endl;
-	DEBUGCONDUIT << fname << "| Category = " << pilotAddress->getCategoryLabel() << endl;
+	DEBUGCONDUIT << fname << "\n"
+			<< pilotAddress->getTextRepresentation(false) << endl;
 	}
 }
 #endif
@@ -726,15 +719,16 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 
 	_prepare();
 
-	fFirstSync = false;
-	if(!openDatabases(CSL1("AddressDB"), &fFirstSync))
+	bool retrieved = false;
+	if(!openDatabases(CSL1("AddressDB"), &retrieved))
 	{
 		emit logError(i18n("Unable to open the addressbook databases on the handheld."));
 		return false;
 	}
+	setFirstSync( retrieved );
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": First sync now " << fFirstSync << endl;
+	DEBUGCONDUIT << fname << ": First sync now " << isFirstSync() << endl;
 #endif
 
 	_getAppInfo();
@@ -743,10 +737,10 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 		emit logError(i18n("Unable to open the addressbook."));
 		return false;
 	}
-	fFirstSync = fFirstSync || (aBook->begin() == aBook->end());
+	setFirstSync( isFirstSync() || (aBook->begin() == aBook->end()) );
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": First sync now " << fFirstSync
+	DEBUGCONDUIT << fname << ": First sync now " << isFirstSync()
 		<< " and addressbook is "
 		<< ((aBook->begin() == aBook->end()) ? "" : "non-")
 		<< "empty." << endl;
@@ -759,7 +753,7 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": fullsync=" << isFullSync() << ", firstSync=" <<    isFirstSync() << endl;
 	DEBUGCONDUIT << fname << ": "
-		<< "syncDirection=" << getSyncDirection() << ", "
+		<< "syncDirection=" << syncMode().name() << ", "
 		<< "archive = " << AbbrowserSettings::archiveDeleted() << endl;
 	DEBUGCONDUIT << fname << ": conflictRes="<< getConflictResolution() << endl;
 	DEBUGCONDUIT << fname << ": PilotStreetHome=" << AbbrowserSettings::pilotStreet() << ", PilotFaxHOme" << AbbrowserSettings::pilotFax() << endl;
@@ -787,7 +781,7 @@ void AbbrowserConduit::slotPalmRecToPC()
 	FUNCTIONSETUP;
 	PilotRecord *palmRec = 0L, *backupRec = 0L;
 
-	if (getSyncDirection()==SyncAction::eCopyPCToHH)
+	if ( syncMode() == SyncMode::eCopyPCToHH )
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Done; change to PCtoHH phase." << endl;
@@ -847,7 +841,7 @@ void AbbrowserConduit::slotPCRecToPalm()
 {
 	FUNCTIONSETUP;
 
-	if ( (getSyncDirection()==SyncAction::eCopyHHToPC) ||
+	if ( (syncMode()==SyncMode::eCopyHHToPC) ||
 		abiter == aBook->end() || (*abiter).isEmpty() )
 	{
 #ifdef DEBUG
@@ -986,7 +980,7 @@ void AbbrowserConduit::slotDeletedRecord()
 void AbbrowserConduit::slotDeleteUnsyncedPCRecords()
 {
 	FUNCTIONSETUP;
-	if (getSyncDirection()==SyncAction::eCopyHHToPC)
+	if ( syncMode()==SyncMode::eCopyHHToPC )
 	{
 		QStringList uids;
 		RecordIDList::iterator it;
@@ -1020,7 +1014,7 @@ void AbbrowserConduit::slotDeleteUnsyncedPCRecords()
 void AbbrowserConduit::slotDeleteUnsyncedHHRecords()
 {
 	FUNCTIONSETUP;
-	if (getSyncDirection()==SyncAction::eCopyPCToHH)
+	if ( syncMode()==SyncMode::eCopyPCToHH )
 	{
 		RecordIDList ids=fDatabase->idList();
 		RecordIDList::iterator it;
@@ -1077,7 +1071,7 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 	FUNCTIONSETUP;
 	showAdresses(pcAddr, backupAddr, palmAddr);
 
-	if (getSyncDirection()==SyncAction::eCopyPCToHH)
+	if ( syncMode() == SyncMode::eCopyPCToHH )
 	{
 		if (pcAddr.isEmpty())
 		{
@@ -1089,7 +1083,7 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 		}
 	}
 
-	if (getSyncDirection()==SyncAction::eCopyHHToPC)
+	if ( syncMode() == SyncMode::eCopyHHToPC )
 	{
 		if (!palmAddr)
 		{
@@ -1487,18 +1481,67 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 
 	if (flags & eqFlagsPhones)
 	{
-		if(_compare(abEntry.phoneNumber(PhoneNumber::Work).number(),
-			piAddress->getPhoneField(PilotAddress::eWork, false))) return false;
-		if(_compare(abEntry.phoneNumber(PhoneNumber::Home).number(),
-			piAddress->getPhoneField(PilotAddress::eHome, false))) return false;
+		// first, look for missing e-mail addresses on either side
+		QStringList abEmails(abEntry.emails());
+		QStringList piEmails(piAddress->getEmails());
+
+		if (abEmails.count() != piEmails.count()) return false;
+		for (QStringList::Iterator it = abEmails.begin(); it != abEmails.end(); it++) {
+			if (!piEmails.contains(*it)) return false;
+		}
+		for (QStringList::Iterator it = piEmails.begin(); it != piEmails.end(); it++) {
+			if (!abEmails.contains(*it)) return false;
+		}
+
+		// now look for differences in phone numbers.  Note:  we can't just compare one
+		// of each kind of phone number, because there's no guarantee that if the user
+		// has more than one of a given type, we're comparing the correct two.
+
+		PhoneNumber::List abPhones(abEntry.phoneNumbers());
+		PhoneNumber::List piPhones(piAddress->getPhoneNumbers());
+		// first make sure that all of the pilot phone numbers are in kabc
+		for (PhoneNumber::List::Iterator it = piPhones.begin(); it != piPhones.end(); it++) {
+			PhoneNumber piPhone = *it;
+			bool found=false;
+			for (PhoneNumber::List::Iterator it = abPhones.begin(); it != abPhones.end(); it++) {
+				PhoneNumber abPhone = *it;
+				// see if we have the same number here...
+				if (_compare(piPhone.number(), abPhone.number()) == 0) {
+					// *sigh*  Okay, now see if the preferred number has changed.
+					// only check this in one direction, since kabc can have more
+					// than one field as preferred and the pilot can only have one
+					if (piPhone.type() & PhoneNumber::Pref &&
+						!(abPhone.type() & PhoneNumber::Pref)) {
+						// if the pilot says this one is preferred and kabc doesn't
+						// agree, the records don't match.
+						return false;
+					} else {
+						found = true;
+						break;
+					}
+				}
+			}
+			if (!found)
+				return false;
+		}
+		// now the other way (*cringe*  kabc has the capacity to store way more addresses
+		// than the Pilot, so this might give false positives more than we'd want....
+		for (PhoneNumber::List::Iterator it = abPhones.begin(); it != abPhones.end(); it++) {
+			PhoneNumber abPhone = *it;
+			bool found=false;
+			for (PhoneNumber::List::Iterator it = piPhones.begin(); it != piPhones.end(); it++) {
+				PhoneNumber piPhone = *it;
+				if (_compare(piPhone.number(), abPhone.number()) == 0) {
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+				return false;
+		}
+
 		if(_compare(getOtherField(abEntry),
 			piAddress->getPhoneField(PilotAddress::eOther, false))) return false;
-		if(_compare(abEntry.preferredEmail(),
-			piAddress->getPhoneField(PilotAddress::eEmail, false))) return false;
-		if(_compare(getFax(abEntry).number(),
-			piAddress->getPhoneField(PilotAddress::eFax, false))) return false;
-		if(_compare(abEntry.phoneNumber(PhoneNumber::Cell).number(),
-			piAddress->getPhoneField(PilotAddress::eMobile, false))) return false;
 	}
 
 	if (flags & eqFlagsAdress)
@@ -1555,19 +1598,15 @@ void AbbrowserConduit::_copy(PilotAddress *toPilotAddr, Addressee &fromAbEntry)
 	toPilotAddr->setField(entryTitle, fromAbEntry.prefix());
 	toPilotAddr->setField(entryNote, fromAbEntry.note());
 
-	// do email first, to ensure its gets stored
-	toPilotAddr->setPhoneField(PilotAddress::eEmail, fromAbEntry.preferredEmail(), false);
-	toPilotAddr->setPhoneField(PilotAddress::eWork,
-		fromAbEntry.phoneNumber(PhoneNumber::Work).number(), false);
-	toPilotAddr->setPhoneField(PilotAddress::eHome,
-		fromAbEntry.phoneNumber(PhoneNumber::Home).number(), false);
-	toPilotAddr->setPhoneField(PilotAddress::eMobile,
-		fromAbEntry.phoneNumber(PhoneNumber::Cell).number(), false);
-	toPilotAddr->setPhoneField(PilotAddress::eFax, getFax(fromAbEntry).number(), false);
-	toPilotAddr->setPhoneField(PilotAddress::ePager,
-		fromAbEntry.phoneNumber(PhoneNumber::Pager).number(), false);
+	// do email first, to ensure they get stored
+	toPilotAddr->setEmails(fromAbEntry.emails());
+	// now in one fell swoop, set all phone numbers from the Addressee.  Note,
+	// we don't need to differentiate between Fax numbers here--all Fax numbers
+	// (Home Fax or Work Fax or just plain old Fax) will get synced to the Pilot
+	toPilotAddr->setPhoneNumbers(fromAbEntry.phoneNumbers());
+	// Other field is an oddball and if the user has more than one field set
+	// as "Other" then only one will be carried over.
 	toPilotAddr->setPhoneField(PilotAddress::eOther, getOtherField(fromAbEntry), false);
-	toPilotAddr->setShownPhone(PilotAddress::eMobile);
 
 	KABC::Address homeAddress = getAddress(fromAbEntry);
 	_setPilotAddress(toPilotAddr, homeAddress);
@@ -1626,25 +1665,43 @@ void AbbrowserConduit::_copy(Addressee &toAbEntry, PilotAddress *fromPiAddr)
 	toAbEntry.setPrefix(fromPiAddr->getField(entryTitle));
 	toAbEntry.setNote(fromPiAddr->getField(entryNote));
 
-	// copy the phone stuff
-	toAbEntry.removeEmail(toAbEntry.preferredEmail());
-	toAbEntry.insertEmail(fromPiAddr->getPhoneField(PilotAddress::eEmail, false), true);
+	// set the formatted name
+	// TODO this is silly and should be removed soon.
+	toAbEntry.setFormattedName(toAbEntry.realName());
 
-	_copyPhone(toAbEntry,
-		toAbEntry.phoneNumber(PhoneNumber::Home),
-		fromPiAddr->getPhoneField(PilotAddress::eHome, false));
-	_copyPhone(toAbEntry,
-		toAbEntry.phoneNumber(PhoneNumber::Work),
-		fromPiAddr->getPhoneField(PilotAddress::eWork, false));
-	_copyPhone(toAbEntry,
-		toAbEntry.phoneNumber(PhoneNumber::Cell),
-		fromPiAddr->getPhoneField(PilotAddress::eMobile, false));
-	_copyPhone(toAbEntry,
-		getFax(toAbEntry),
-		fromPiAddr->getPhoneField(PilotAddress::eFax, false));
-	_copyPhone(toAbEntry,
-		toAbEntry.phoneNumber(PhoneNumber::Pager),
-		fromPiAddr->getPhoneField(PilotAddress::ePager, false));
+	// copy the phone stuff
+	// first off, handle the e-mail addresses as a group and separate from
+	// the other phone number fields
+	toAbEntry.setEmails(fromPiAddr->getEmails());
+
+	// going from Pilot to kabc, we need to clear out all phone records in kabc
+	// so that they can be set from the Pilot.  If we do not do this, then records
+	// will be left in kabc when they are removed from the Pilot and we'll look
+	// broken.
+	PhoneNumber::List old = toAbEntry.phoneNumbers();
+	for (PhoneNumber::List::Iterator it = old.begin(); it != old.end(); ++it) {
+		PhoneNumber phone = *it;
+		toAbEntry.removePhoneNumber(phone);
+	}
+
+	// now, get the phone numbers from the Pilot and set them one at a time in kabc
+	PhoneNumber::List phones = fromPiAddr->getPhoneNumbers();
+	for (PhoneNumber::List::Iterator it = phones.begin(); it != phones.end(); ++it) {
+		PhoneNumber phone = *it;
+		// fax is an odd-ball because while the Pilot has a single "Fax" field, kabc has
+		// both a "Home Fax" and a "Work Fax" field and we need to tell kabc
+		// what our user has asked us to.
+		if (phone.type() & PhoneNumber::Fax) {
+			_copyPhone(toAbEntry, getFax(toAbEntry), phone.number());
+		} else {
+			_copyPhone(toAbEntry, toAbEntry.phoneNumber(phone.type()),
+				phone.number());
+		}
+	}
+
+	// Note:  this is weird, and it may cause data to not be synced if there is
+	// more than one "Other" field being used on the Pilot, since only one will
+	// be synced in either direction.
 	setOtherField(toAbEntry, fromPiAddr->getPhoneField(PilotAddress::eOther, false));
 
 	KABC::Address homeAddress = getAddress(toAbEntry);

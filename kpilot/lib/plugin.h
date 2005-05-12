@@ -41,7 +41,7 @@
 class PilotDatabase;
 class KLibrary;
 
-#define KPILOT_PLUGIN_API	(20041002)
+#define KPILOT_PLUGIN_API	(20050401)
 
 /**
 * The first classe here: ConduitConfigBase is for configuration purposes.
@@ -143,13 +143,17 @@ public:
 	QString conduitName() const { return fConduitName; } ;
 
 protected:
-	bool isTest() const { return fTest; } ;
-	bool isBackup() const { return fBackup; } ;
-	bool isLocal() const { return fLocal; } ;
-
-	SyncMode getSyncDirection() const { return fSyncDirection; };
+	/** Retrieve the sync mode set for this action. */
+	const SyncMode &syncMode() const { return fSyncDirection; };
+	/** Retrieve the conflict resolution setting for this action. */
 	ConflictResolution getConflictResolution() const
 		{ return fConflictResolution; };
+
+	/** Try to change the sync mode from what it is now to the mode @param m.
+	* This may fail (ie. changing a backup to a restore is not kosher) and
+	* changeSync() will return false then.
+	*/
+	bool changeSync(SyncMode::Mode m);
 
 	// Set the conflict resolution, except if the resolution
 	// form is UseGlobalSetting, in which case nothing changes
@@ -161,8 +165,6 @@ protected:
 		if (SyncAction::eUseGlobalSetting != res)
 			fConflictResolution=res;
 	}
-	void setSyncDirection(SyncMode dir)
-		{ fSyncDirection=dir; }
 
 	/**
 	* A full sync happens for eFullSync, eCopyPCToHH and eCopyHHToPC. It
@@ -171,10 +173,7 @@ protected:
 	*/
 	bool isFullSync() const
 	{
-		return fFirstSync ||
-			( (fSyncDirection==SyncAction::eFullSync  ) ||
-			(fSyncDirection==SyncAction::eCopyPCToHH) ||
-			(fSyncDirection==SyncAction::eCopyHHToPC) ) ;
+		return fFirstSync || fSyncDirection.isFullSync() ;
 	}
 
 	/**
@@ -185,30 +184,28 @@ protected:
 	* (if it is empty). This also implies a full sync.
 	*/
 	bool isFirstSync() const {
-		return fFirstSync ||
-		(fSyncDirection==SyncAction::eCopyHHToPC) ||
-		(fSyncDirection==SyncAction::eCopyPCToHH); };
+		return fFirstSync || fSyncDirection.isFirstSync() ;
+	} ;
+	void setFirstSync(bool first) { fFirstSync=first; } ;
 
 	PilotDatabase *fDatabase,*fLocalDatabase;
 
 	/**
-	* See openDatabases_ for info on the @p retrieved
-	* parameter. In --local mode, retrieved is left
+	* See openDatabases_ for info on the @param retrieved
+	* parameter. In local mode, @param retrieved is left
 	* unchanged.
 	*/
 	bool openDatabases(const QString &dbName, bool*retrieved=0L);
 
 private:
-	bool fTest;	// Do some kind of test run on the pilot
-	bool fBackup;	// Do a backup of the database
-	bool fLocal;	// Local test without a Pilot
 	SyncMode fSyncDirection; // Stores fast, full, PCToHH or HHToPC
 	ConflictResolution fConflictResolution;
 
 	// Make these only protected so the conduit can change the variable
 protected:
-	bool fFirstSync;
 	QString fConduitName;
+private:
+	bool fFirstSync;
 
 private:
 	/**
@@ -227,7 +224,8 @@ private:
 	* directory. For testing only.
 	*
 	* If @p localPath is QString::null, don't even try to open
-	* fDatabase. Just open the local one.
+	* fDatabase (the one that is supposed to be on the HH).
+	* Just open the one inteded to be on the PC (fLocalDatabase).
 	*/
 	bool openDatabases_(const QString &dbName,const QString &localPath);
 } ;
@@ -257,7 +255,7 @@ public:
 } ;
 
 /**
-* All KPilot conduits should subclass KLibfActory like this.
+* All KPilot conduits should subclass KLibFactory like this.
 *
 * Boilerplate for inheritance:
 *

@@ -1,6 +1,5 @@
 ### Makefile.am for kpilot/lib
 ###
-### $Id$
 ###
 
 METASOURCES = AUTO
@@ -18,20 +17,32 @@ INCLUDES = $(PISOCK_INCLUDE) $(all_includes)
 lib_LTLIBRARIES = libkpilot.la
 
 libkpilot_la_SOURCES = kpilotlibSettings.kcfgc options.cc uiDialog.cc plugin.cc syncAction.cc \
-	kpilotlink.cc recordConduit.cc \
+	kpilotlink.cc \
 	pilotRecord.cc pilotDatabase.cc \
 	pilotLocalDatabase.cc pilotSerialDatabase.cc \
 	pilotMemo.cc pilotAddress.cc \
-	pilotDateEntry.cc pilotTodoEntry.cc
+	pilotDateEntry.cc pilotTodoEntry.cc \
+	recordConduit.cc
 
 libkpilot_la_LDFLAGS = -no-undefined $(all_libraries) $(KDE_EXTRA_RPATH) $(KDE_RPATH)
-libkpilot_la_LIBADD = $(LIB_KDEUI) $(PISOCK_LIB)
+libkpilot_la_LIBADD = $(LIB_KDEUI) $(PISOCK_LIB) -lkabc
 
 kpilotincludedir = $(includedir)/kpilot
-kpilotinclude_HEADERS = kpilotlink.h uiDialog.h plugin.h syncAction.h recordConduit.h \
+kpilotinclude_HEADERS = kpilotlink.h uiDialog.h plugin.h syncAction.h \
 	pilotRecord.h pilotDatabase.h \
 	pilotLocalDatabase.h pilotSerialDatabase.h
 
 kde_kcfg_DATA = kpilotlib.kcfg
+
+check_PROGRAMS = testactions testconstants
+TESTS = testactions testconstants
+
+testactions_SOURCES = testactions.cc
+testactions_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testactions_LDADD  = libkpilot.la $(PISOCK_LIB)
+
+testconstants_SOURCES = testconstants.cc
+testconstants_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testconstants_LDADD  = libkpilot.la $(PISOCK_LIB)
 
 include $(top_srcdir)/doc/api/Doxyfile.am

@@ -1,6 +1,89 @@
 ** KPILOT CHANGELOG **
 ======================
 
+TODO: let the memofile conduit use the PilotMemoInfo class instead of its
+  hand-rolled own interpretation of the memo info.
+TODO: get an innocuous database to run PilotLocalDatabase tests with.
+TODO: move PilotLocalDatabase to a QValueVector<PilotRecord *>.
+TODO: provide template-based, interpreted databases much like the
+  AppInfo classes now have.
+TODO: give the knotes conduit a decent test mode
+
+2005-05-11  Adriaan de Groot
+* Wasted much time trying to get generic FreeBSD USB support for non-
+  Visors working in pilot-link-0.12 before I found out that ColdSync 
+  doesn't support that either.
+* Removed non-working calendar conduits (calendarbaseconduit/ and 
+  calendarconduits/) from the conduits dir; restore them w/ SVN
+  commits near 412528. These were recordconduit-based conduits
+  by Reinhold, but I broke the RecordConduit in the meantime.
+
+2005-05-07  Adriaan de Groot
+* After tweaking pilot-link 0.12-pre3 so that KPilot will with it (has to do
+  with API consistency) the AppInfo template class works again, and i've
+  extended it a little to make setting and getting category names nicer.
+* Applied the new template to the memofile conduit.
+
+2005-04-22  Adriaan de Groot
+* Fixed (I hope) bug in notepad conduit related to having zero records in the
+  database.
+* Added some more dox.
+
+2005-04-20  Adriaan de Groot
+* Finally added a general test() function to sync actions to mirror the
+  exec() call. By default, this calls exec() and logs a warning. Removed it
+  again because it won't work -- SyncAction doesn't _have_ a SyncMode set.
+* Started doing a little bit of test code in the KNotes conduit.
+
+2005-04-18  Adriaan de Groot
+* Being on vacation doesn't mean I'm not on the job. Doxied a lot, did some cleanup.
+* Renamed PilotLocalDatabase::writeID() and changed its signature, since it
+  was kind of stupid. Doxied it, too.
+
+2005-04-12  Adriaan de Groot
+* For a lark, and for David, re-added some KDE 3.2 compatibility code.
+* Template madness! An easy way to create the right appinfo's from any database.
+
+2005-04-11  Adriaan de Groot
+* Bumped KPilot version.
+* Added a test program for some parts of the library. Woo! A first!
+  Finally something resembling actual software engineering in KPilot.
+* Cleaned up headers that weren't including all required (system) headers.
+* Moved all the conduits to the new SyncMode.
+
+2005-04-10  Adriaan de Groot
+* Some useful patches from Philip T. to the vcal conduit committed.
+* Made the sync mode a full-fledged class and ported lib/ and kpilot/
+  to use it. Disabled all the conduits for the time being. Bumped the
+  conduit API because of this. This might cause some serious breakage
+  for the time being.
+
+2005-04-09  Adriaan de Groot
+* Geez, can we switch to Subversion yet?
+* Committed the weird-ass record conduit template changes. This makes the
+  RecordConduit a fully templated "container". You plug in 5 other classes
+  to get a working implementation. This is similar to what the record
+  conduit already. The main difference is that it is easier to re-use
+  the things you plug into the recordconduit template. I have a KNotes
+  partial implementation that wraps KCal::Calendar, so that is immediately
+  reuseable for the other 4-button ones.
+* Ripped out test mode from KPilotTest and elsewhere, since it wasn't working
+  at all. I think the "mode" setting for conduits needs a lot more structure.
+  Just having an enum doesn't cut it (what about doing a test-mode local
+  PC to HH sync? Such a sync could be used to produce .pdb files from Kontact
+  data, which is just what the doctor ordered sometimes).
+
+2005-03-22  Adriaan de Groot
+* Long drought in doing any KPilot work or updating the ChangeLog.
+* Meddled in lib/ some to add modifiedIDList() and sanitize some types.
+* Prepared to make fFirstSync private, though it has getters and setters
+  so that doesn't really do much for OO'ness.
+* Wrote a template class for doing syncs generically, to replace the
+  RecordConduit. This one I understand, at least. It's not done yet though,
+  by a long shot, though I have classes to plug in to it for KNotes.
+
+
+
 2005-01-30  Adriaan de Groot
 * Fixed one nasty random crash thanks to vanRijn, probably fixed
   the KNotes HHtoPC problem, tagged 4.4.7, released it. This
@@ -180,6 +263,7 @@
   lost that state when synced to the PC.
 * A few layout adjustments for the perl/python conduits (QTextEdit
   instead of QLineEdit)
+
 
 2004-06-29  Joern Ahrens
 * Corrected the behavior of the configuration dialog, when the

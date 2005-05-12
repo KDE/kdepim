@@ -147,7 +147,6 @@ public:
 	DaemonStatus status() const { return fDaemonStatus; } ;
 	/* DCOP */ virtual QString statusString();
 	/* DCOP */ virtual QString shortStatusString();
-	QString  syncTypeString(SyncAction::SyncMode i) const;
 
 	/**
 	* Display the daemon's system tray icon
@@ -167,6 +166,8 @@ public:
 	virtual ASYNC requestFastSyncNext();
 	virtual ASYNC requestRegularSyncNext();
 	virtual int nextSyncType() const;
+	virtual ASYNC requestSyncOptions(bool,bool);
+
 	virtual ASYNC quitNow();
 	virtual ASYNC reloadSettings();
 	virtual ASYNC setTempDevice(QString d);
@@ -210,7 +211,6 @@ private:
 	KPilotDeviceLink &getPilotLink() { return *fPilotLink; }
 	KPilotDeviceLink *fPilotLink;
 
-	// TODO!!! get rid of the next sync type
 	SyncAction::SyncMode fNextSyncType;
 
 	ActionQueue *fSyncStack;

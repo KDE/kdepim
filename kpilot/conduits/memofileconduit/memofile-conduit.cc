@@ -69,14 +69,16 @@ MemofileConduit::MemofileConduit(KPilotDeviceLink *d,
                                  const char *n,
                                  const QStringList &l) :
 		ConduitAction(d,n,l),
-		_DEFAULT_MEMODIR(CSL1("~/MyMemos/"))
+		_DEFAULT_MEMODIR(QDir::homeDirPath() + CSL1("/MyMemos")),
+		fMemoAppInfo(0L),
+		_memofiles(0L)
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
 	DEBUGCONDUIT<<memofile_conduit_id<<endl;
 #endif
 	fConduitName=i18n("Memofile");
-	fMemoList.setAutoDelete(true);	
+	fMemoList.setAutoDelete(true);
 }
 
 MemofileConduit::~MemofileConduit()
@@ -90,7 +92,7 @@ MemofileConduit::~MemofileConduit()
 {
 	FUNCTIONSETUP;
 
-	fFirstSync = false;
+	setFirstSync( false );
 	if(!openDatabases(CSL1("MemoDB"))) {
 		emit logError(i18n("Unable to open the memo databases on the handheld."));
 		return false;
@@ -103,18 +105,22 @@ MemofileConduit::~MemofileConduit()
 		return false;
 	}
 
-	_memofiles = new Memofiles(fCategories, fMemoAppInfo, _memo_directory);
+	_memofiles = new Memofiles(fCategories, *fMemoAppInfo, _memo_directory);
+	if (! _memofiles || ! _memofiles->isReady()) {
+		emit logError(TODO_I18N("Cannot initialize from filesystem."));
+		return false;
+	}
 
-	fFirstSync = _memofiles->isFirstSync();
+	setFirstSync( _memofiles->isFirstSync() );
 	addSyncLogEntry(i18n(" Syncing with %1.").arg(_memo_directory));
 
-	if (SyncAction::eCopyHHToPC == getSyncDirection() || fFirstSync) {
+	if ( (syncMode() == SyncAction::SyncMode::eCopyHHToPC) || isFirstSync() ) {
 		addSyncLogEntry(i18n(" Copying Pilot to PC..."));
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": copying Pilot to PC." << endl;
 #endif
 		copyHHToPC();
-	} else if (SyncAction::eCopyPCToHH == getSyncDirection()) {
+	} else if ( syncMode() == SyncAction::SyncMode::eCopyPCToHH ) {
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": copying PC to Pilot." << endl;
 #endif
@@ -188,21 +194,19 @@ bool MemofileConduit::setAppInfo()
 	}
 
 	fCategories = map;
-	
-	for (int i = 0; i < 15; i++)
+
+	for (int i = 0; i < MAX_CATEGORIES; i++)
 	{
 		if (fCategories.contains(i)) {
 			QString name = fCategories[i].left(16);
-			
+			fMemoAppInfo->setCategory(i,name);
+
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
 			<< ": setting category: [" << i
 			<< "] to name: ["
 			<< name << "]" << endl;
 #endif
-
-			memset(fMemoAppInfo.category.name[i], 0, 16);
-			strlcpy(fMemoAppInfo.category.name[i], name.latin1(), 16);
 		}
 	}
 
@@ -221,9 +225,9 @@ bool MemofileConduit::setAppInfo()
 
 unsigned char *MemofileConduit::doPackAppInfo( int *appLen )
 {
-	int appLength = pack_MemoAppInfo(&fMemoAppInfo, 0, 0);
+	int appLength = pack_MemoAppInfo(fMemoAppInfo->info(), 0, 0);
 	unsigned char *buffer = new unsigned char[appLength];
-	pack_MemoAppInfo(&fMemoAppInfo, buffer, appLength);
+	pack_MemoAppInfo(fMemoAppInfo->info(), buffer, appLength);
 	if ( appLen ) *appLen = appLength;
 	return buffer;
 }
@@ -233,16 +237,9 @@ bool MemofileConduit::getAppInfo()
 {
 	FUNCTIONSETUP;
 
-
-	unsigned char buffer[PilotDatabase::MAX_APPINFO_SIZE];
-	int appInfoSize = fDatabase->readAppBlock(buffer,PilotDatabase::MAX_APPINFO_SIZE);
-
-	if (appInfoSize<0) {
-		return false;
-	}
-
-	unpack_MemoAppInfo(&fMemoAppInfo,buffer,appInfoSize);
-	PilotAppCategory::dumpCategories(fMemoAppInfo.category);
+	KPILOT_DELETE(fMemoAppInfo);
+	fMemoAppInfo = new PilotMemoInfo(fDatabase);
+	fMemoAppInfo->dump();
 	return true;
 }
 
@@ -275,10 +272,13 @@ bool MemofileConduit::loadPilotCategories()
 	int _category_id=0;
 	int _category_num=0;
 
-	for (int i = 0; i < 15; i++) {
-		if (fMemoAppInfo.category.name[i][0]) {
-			_category_name = PilotAppCategory::codec()->toUnicode(fMemoAppInfo.category.name[i]);
-			_category_id   = (int)fMemoAppInfo.category.ID[i];
+	for (int i = 0; i < MAX_CATEGORIES; i++)
+	{
+		_category_name = fMemoAppInfo->category(i);
+		if (!_category_name.isEmpty())
+		{
+			_category_name = Memofiles::sanitizeName( _category_name );
+			_category_id   = fMemoAppInfo->categoryInfo()->ID[i];
 			_category_num  = i;
 			fCategories[_category_num] = _category_name;
 #ifdef DEBUG
@@ -381,7 +381,7 @@ void MemofileConduit::getModifiedFromPilot()
 		} else {
 			fLocalDatabase->writeRecord(pilotRec);
 		}
-		
+
 		if ((!pilotRec->isSecret()) || _sync_private) {
 			fMemoList.append(memo);
 
@@ -475,16 +475,16 @@ bool MemofileConduit::copyPCToHH()
 	//       after this, we need to reinitialize our memofiles object...
 	setAppInfo();
 	cleanup();
-	
+
 	// re-create our memofiles helper...
 	delete _memofiles;
-	_memofiles = new Memofiles(fCategories, fMemoAppInfo, _memo_directory);
+	_memofiles = new Memofiles(fCategories, *fMemoAppInfo, _memo_directory);
 
 	// make sure we are starting with a clean database on both ends...
 	fDatabase->deleteRecord(0, true);
 	fLocalDatabase->deleteRecord(0, true);
 	cleanup();
-	
+
 	_memofiles->load(true);
 
 	QPtrList<Memofile> memofiles = _memofiles->getAll();
@@ -516,7 +516,7 @@ int MemofileConduit::writeToPilot(Memofile * memofile)
 	<< "] could not be written to the pilot."
 	<< endl;
 #endif
-		
+
 		return -1;
 	}
 

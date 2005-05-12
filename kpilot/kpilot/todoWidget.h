@@ -30,13 +30,9 @@
 #ifndef _KPILOT_TODOWIDGET_H
 #define _KPILOT_TODOWIDGET_H
 
-class TodoListView;
 class QComboBox;
 class QPushButton;
 class QTextView;
-class PilotTodoEntry;
-
-class PilotDatabase;
 
 #include "pilotComponent.h"
 #include "pilotTodoEntry.h"
@@ -154,7 +150,7 @@ private:
 	*/
 	QComboBox		*fCatList;
 	QTextView		*fTodoInfo;
-	struct ToDoAppInfo 	fTodoAppInfo;
+	PilotToDoInfo 		*fTodoAppInfo;
 	QPtrList<PilotTodoEntry>	fTodoList;
 	TodoListView		*fListBox;
 	QPushButton		*fEditButton,*fDeleteButton;

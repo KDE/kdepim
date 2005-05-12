@@ -33,8 +33,12 @@
 #include <pi-appinfo.h>
 
 #include <qstringlist.h>
+#include <qtextcodec.h>
+
+#include <kglobal.h>
 
 #include "pilotDatabase.h"
+#include "pilotAppCategory.h"
 
 static int creationCount = 0;
 static QStringList *createdNames = 0L;
@@ -75,4 +79,114 @@ PilotDatabase::PilotDatabase(const QString &s) :
 #endif
 	return creationCount;
 }
+
+/* virtual */ RecordIDList PilotDatabase::idList()
+{
+	RecordIDList l;
+
+	for (unsigned int i = 0 ; ; i++)
+	{
+		PilotRecord *r = readRecordByIndex(i);
+		if (!r) break;
+		l.append(r->id());
+		delete r;
+	}
+
+	return l;
+}
+
+/* virtual */ RecordIDList PilotDatabase::modifiedIDList()
+{
+	RecordIDList l;
+
+	resetDBIndex();
+	while(1)
+	{
+		PilotRecord *r = readNextModifiedRec();
+		if (!r) break;
+		l.append(r->id());
+		delete r;
+	}
+
+	return l;
+}
+
+PilotAppInfoBase::PilotAppInfoBase(PilotDatabase *d) : fC(new struct CategoryAppInfo), fLen(0), fOwn(true)
+{
+	FUNCTIONSETUP;
+	int appLen = MAX_APPINFO_SIZE;
+	unsigned char buffer[MAX_APPINFO_SIZE];
+
+	fLen = appLen = d->readAppBlock(buffer,appLen);
+	unpack_CategoryAppInfo(fC, buffer, appLen);
+} ;
+
+PilotAppInfoBase::~PilotAppInfoBase()
+{
+	if (fOwn) delete fC;
+} ;
+
+
+int PilotAppInfoBase::findCategory(const QString &selectedCategory,
+	bool unknownIsUnfiled, struct CategoryAppInfo *info)
+{
+	FUNCTIONSETUP;
+
+	int currentCatID = -1;
+	for (int i=0; i<MAX_CATEGORIES; i++)
+	{
+		if (!info->name[i][0]) continue;
+		if (selectedCategory ==
+			PilotAppCategory::codec()->toUnicode(info->name[i]))
+		{
+			currentCatID = i;
+			break;
+		}
+	}
+
+#ifdef DEBUG
+	if (-1 == currentCatID)
+	{
+		DEBUGKPILOT << fname << ": Category name "
+			<< selectedCategory << " not found." << endl;
+	}
+	else
+	{
+		DEBUGKPILOT << fname << ": Matched category " << currentCatID << endl;
+	}
+#endif
+
+	if ((currentCatID == -1) && unknownIsUnfiled)
+		currentCatID = 0;
+	return currentCatID;
+}
+
+void PilotAppInfoBase::dump() const
+{
+	PilotAppCategory::dumpCategories(*categoryInfo());
+}
+
+// Eww. I don't know how to cleanly get the size of a field of
+// a structure otherwise. Both of these constants _should_ be
+// 16, which is checked in one of the test programs.
+//
+#define CATEGORY_NAME_SIZE (sizeof(((struct CategoryAppInfo *)0)->name[0]))
+#define CATEGORY_COUNT     ( (sizeof(((struct CategoryAppInfo *)0)->name)) / CATEGORY_NAME_SIZE )
+
+QString PilotAppInfoBase::category(unsigned int i)
+{
+	if (i>=CATEGORY_COUNT) return QString::null;
+	return PilotAppCategory::codec()->toUnicode(categoryInfo()->name[i],CATEGORY_NAME_SIZE-1);
+}
+
+bool PilotAppInfoBase::setCategory(unsigned int i, const QString &s)
+{
+	if (i>=CATEGORY_COUNT) return false;
+	int len = CATEGORY_NAME_SIZE - 1;
+	QCString t = PilotAppCategory::codec()->fromUnicode(s,len);
+	memset(categoryInfo()->name[i],0,CATEGORY_NAME_SIZE);
+	qstrncpy(categoryInfo()->name[i],t,kMin(len,(int)CATEGORY_NAME_SIZE));
+	return true;
+}
+
 

@@ -52,7 +52,7 @@
 
 // Switch _on_ debugging if it's not off.
 //
-#ifndef NDEBUG 
+#ifndef NDEBUG
 #ifndef DEBUG
 #define DEBUG				(1)
 #endif
@@ -66,7 +66,10 @@
 #endif
 // #define DEBUG_CERR			(1)
 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
+
 #include <unistd.h>     /* For size_t for pilot-link */
 #include <qglobal.h>
 #include <pi-version.h>
@@ -146,23 +149,23 @@ extern KDE_EXPORT int debug_level;
 #include <iostream>
 #endif
 
-class KDE_EXPORT KPilotDepthCount 
-{ 
-public: 
-	KPilotDepthCount(int area, int level, const char *s); 
-	~KPilotDepthCount(); 
-	QString indent() const; 
+class KDE_EXPORT KPilotDepthCount
+{
+public:
+	KPilotDepthCount(int area, int level, const char *s);
+	~KPilotDepthCount();
+	QString indent() const;
 	const char *name() const { return fName; } ;
-	// if DEBUG_CERR is defined, we can't return std::cerr (by value), 
+	// if DEBUG_CERR is defined, we can't return std::cerr (by value),
 	// since the copy constructor is private!
 #ifndef DEBUG_CERR
 	inline kdbgstream debug(int area=0)
 	{ return kdDebug(debug_level >= fLevel, area); }
 #endif
 
-protected: 
-	static int depth; 
-	int fDepth; 
+protected:
+	static int depth;
+	int fDepth;
 	int fLevel;
 	const char *fName;
 } ;
@@ -179,7 +182,7 @@ protected:
 
 using namespace std;
 
-inline std::ostream& operator <<(std::ostream &o, const QString &s) 
+inline std::ostream& operator <<(std::ostream &o, const QString &s)
 	{ if (s.isEmpty()) return o<<"<empty>"; else return o<<s.latin1(); }
 inline std::ostream& operator <<(std::ostream &o, const QCString &s)
 	{ if (s.isEmpty()) return o<<"<empty>"; else return o << *s; }
@@ -187,7 +190,7 @@ inline std::ostream& operator <<(std::ostream &o, const QCString &s)
 
 
 inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
-	{ return o << d.indent() << ' ' << d.name(); } 
+	{ return o << d.indent() << ' ' << d.name(); }
 
 #else
 
@@ -199,7 +202,7 @@ inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
 #define DEBUGCONDUIT	fname.debug(DEBUGAREA_CONDUIT)
 #define DEBUGDB         fname.debug(DEBUGAREA_DB)
 
-inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d) 
+inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 	{ return o << d.indent() ; }
 
 #endif
@@ -217,11 +220,11 @@ inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
 //
 //
-#define FUNCTIONSETUP const int fname = 0;
-#define FUNCTIONSETUPL(a) const int fname = a;
+#define FUNCTIONSETUP const int fname = 0; Q_UNUSED(fname);
+#define FUNCTIONSETUPL(a) const int fname = a; Q_UNUSED(fname);
 #endif
 
-#define KPILOT_VERSION	"4.5.0 (baby)"
+#define KPILOT_VERSION	"4.5.1 (baby)"
 
 
 // Function to expand newlines in rich text to <br>\n
@@ -257,10 +260,12 @@ KDE_EXPORT struct tm writeTm(const QDate &dt);
 
 
 // This marks strings that need to be i18n()ed in future,
-// but cannot be done now due to message freeze.
+// but cannot be done now due to message freeze. The _P
+// variant is to handle plurals and is wrong, but unavoidable.
 //
 //
 #define TODO_I18N(a)	QString::fromLatin1(a)
+#define TODO_I18N_P(a,b,c) ((c>1) ? a : b)
 
 // Handle some cases for QT_NO_CAST_ASCII and NO_ASCII_CAST.
 // Where possible in the source, known constant strings in

@@ -29,8 +29,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "options.h"    /* for PI_SIZE_T */
-
 #include "pilotDatabase.h"
 
 // #define SHADOW_LOCAL_DB (1)
@@ -127,8 +125,14 @@ public:
 	virtual int cleanup();
 
 
-	// Writes a new ID to the record specified.
-	virtual recordid_t writeID(PilotRecord* rec);
+	/** Update the ID of the current record in the database with
+	* the specified @param id . This is allowed only after
+	* reading or writing a modified or new record.
+	*/
+	virtual recordid_t  updateID(recordid_t id);
+
+
+	/** Return the name of the database (as it would be on the handheld). */
 	QString getDBName() const { return fDBName; }
 
 	/**
@@ -145,8 +149,8 @@ public:
 		{ if (isDBOpen()) return fAppLen; else return -1; } ;
 	char *appInfo() { return fAppInfo; } ;
 
-	struct DBInfo getDBInfo() const { return fDBInfo; }
-	void setDBInfo(struct DBInfo dbi) {fDBInfo=dbi; }
+	const struct DBInfo &getDBInfo() const { return fDBInfo; }
+	void setDBInfo(const struct DBInfo &dbi) {fDBInfo=dbi; }
 
 	virtual DBType dbType() const;
 
@@ -161,7 +165,7 @@ private:
 	struct DBInfo fDBInfo;
 	QString fPathName,fDBName;
 	char*       fAppInfo;
-	PI_SIZE_T   fAppLen;
+	size_t      fAppLen;
 	int         fNumRecords;
 	int         fCurrentRecord;
 	PilotRecord* fRecords[10000]; // Current max records in DB.. hope it's enough

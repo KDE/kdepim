@@ -103,7 +103,7 @@ public:
 	*/
 
 	void queueInit(bool checkUser = false);
-	void queueConduits(const QStringList &conduits,SyncAction::SyncMode e, bool local=false);
+	void queueConduits(const QStringList &conduits,const SyncAction::SyncMode &e, bool local=false);
 	void queueInstaller(const QString &dir);
 	void queueCleanup();
 
@@ -175,10 +175,7 @@ Q_OBJECT
 public:
 	ConduitProxy(KPilotDeviceLink *,
 		const QString &desktopName,
-		SyncAction::SyncMode m,
-		bool local = false);
-
-	static QStringList flagsForMode(SyncAction::SyncMode m);
+		const SyncAction::SyncMode &m);
 
 protected:
 	virtual bool exec();
@@ -190,7 +187,6 @@ protected:
 	QString fLibraryName;
 	ConduitAction *fConduit;
 	SyncAction::SyncMode fMode;
-	bool fLocal;
 } ;
 
 

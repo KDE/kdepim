@@ -51,6 +51,9 @@ public:
 	void addFiles( const QStringList&, QWidget* w );
 	void addFile( const QString&, QWidget* w );
 
+    void deleteFile(const QString &);
+    void deleteFiles(const QStringList &);
+
 	/**
 	* Returns information about this installer. Note particularly
 	* that fileNames() returns only filenames, not paths. In particular,

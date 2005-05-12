@@ -102,17 +102,11 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	SyncAction(p,name),
 	fDatabase(0L),
 	fLocalDatabase(0L),
-	fTest(args.contains(CSL1("--test"))),
-	fBackup(args.contains(CSL1("--backup"))),
-	fLocal(args.contains(CSL1("--local"))),
+	fSyncDirection(args),
 	fConflictResolution(SyncAction::eAskUser),
 	fFirstSync(false)
 {
 	FUNCTIONSETUP;
-	if (args.contains(CSL1("--copyPCToHH"))) fSyncDirection=SyncAction::eCopyPCToHH;
-	else if (args.contains(CSL1("--copyHHToPC"))) fSyncDirection=SyncAction::eCopyHHToPC;
-	else if (args.contains(CSL1("--full"))) fSyncDirection=SyncAction::eFullSync;
-	else fSyncDirection=SyncAction::eFastSync;
 
 	QString cResolution(args.grep(QRegExp(CSL1("--conflictResolution \\d*"))).first());
 	if (cResolution.isEmpty())
@@ -129,7 +123,7 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 		DEBUGCONDUIT << fname << ": " << *it << endl;
 	}
 
-	DEBUGCONDUIT << fname << ": Direction=" << fSyncDirection << endl;
+	DEBUGCONDUIT << fname << ": Direction=" << fSyncDirection.name() << endl;
 #endif
 }
 
@@ -234,7 +228,6 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 	}
 	fLocalDatabase = localDB;
 
-	// These latin1()'s are ok, since database names are latin1-coded.
 	fDatabase = new PilotSerialDatabase(pilotSocket(), name /* On pilot */);
 
 	if (!fDatabase)
@@ -318,12 +311,12 @@ bool ConduitAction::openDatabases(const QString &dbName, bool *retrieved)
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Mode="
-		<< (isTest() ? "test " : "")
-		<< (isLocal() ? "local " : "")
+		<< (syncMode().isTest() ? "test " : "")
+		<< (syncMode().isLocal() ? "local " : "")
 		<< endl ;
 #endif
 
-	if (isLocal())
+	if (syncMode().isLocal())
 	{
 		return openDatabases_(dbName,CSL1("/tmp/"));
 	}
@@ -331,6 +324,18 @@ bool ConduitAction::openDatabases(const QString &dbName, bool *retrieved)
 	{
 		return openDatabases_(dbName, retrieved);
 	}
+}
+
+bool ConduitAction::changeSync(SyncMode::Mode m)
+{
+	FUNCTIONSETUP;
+
+	if ( fSyncDirection.isSync() && SyncMode::eFullSync == m)
+	{
+		fSyncDirection.setMode(m);
+		return true;
+	}
+	return false;
 }
 
 int PluginUtility::findHandle(const QStringList &a)
@@ -379,8 +384,6 @@ bool PluginUtility::isModal(const QStringList &a)
 
 /* static */ bool PluginUtility::isRunning(const QCString &n)
 {
-	FUNCTIONSETUP;
-
 	DCOPClient *dcop = KApplication::kApplication()->dcopClient();
 	QCStringList apps = dcop->registeredApplications();
 	return apps.contains(n);

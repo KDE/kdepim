@@ -26,6 +26,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include "options.h"
+
 #include <qlayout.h>
 #include <qgroupbox.h>
 #include <qlabel.h>

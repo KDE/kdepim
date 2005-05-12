@@ -62,6 +62,16 @@ protected:
 	*/
 	void listNotes();
 
+	/** Run a test on the conduit. */
+	void test();
+
+	/**
+	* Contact KNotes by DCOP and retrieve the list of notes it
+	* has. @return false if the DCOP connection could not be made.
+	* Modifies fP to store the notes in.
+	*/
+	bool retrieveKNotesInfo();
+
 	/**
 	* For actual processing. These are called by process
 	* and it is critical that fP->fIndex is set properly.
@@ -78,7 +88,7 @@ protected:
 	void cleanupMemos();
 
 	void updateNote(const NoteAndMemo &,const PilotMemo *);
-	
+
 	/**
 	* Add the Memo to KNotes.
 	*/

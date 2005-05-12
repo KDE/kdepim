@@ -43,15 +43,12 @@
 
 #include "kpilotConfig.h"
 #include "pilotAppCategory.h"
+#include "pilotDatabase.h"
+
 #include "pilotComponent.moc"
 
 static const char *pilotComponent_id =
 	"$Id$";
-
-// This is a pilot constant and should probably be defined
-// in a more sensible place but I'm lazy right now.
-//
-#define MAX_CATEGORIES	(15)
 
 PilotComponent::PilotComponent(QWidget * parent,
 	const char *id,
@@ -111,117 +108,7 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 	{
 		QString selectedCategory =
 			fCatList->text(fCatList->currentItem());
-
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": List item "
-			<< fCatList->currentItem()
-			<< " (of "
-			<< fCatList->count()
-			<< ") "
-			<< " selected, text=" << selectedCategory << endl;
-#endif
-
-		currentCatID = 0;
-		while (strcmp(info->name[currentCatID],
-				selectedCategory.latin1()) &&
-			(currentCatID < MAX_CATEGORIES))
-		{
-#ifdef DEBUG
-			DEBUGKPILOT << fname
-				<< ": Didn't match category "
-				<< currentCatID
-				<< "=" << info->name[currentCatID] << endl;
-#endif
-
-			currentCatID++;
-		}
-
-		if (!(currentCatID < MAX_CATEGORIES))
-		{
-			currentCatID = 0;
-			while (strcmp(info->name[currentCatID],
-					selectedCategory.latin1()) &&
-				(currentCatID < MAX_CATEGORIES))
-			{
-				currentCatID++;
-			}
-		}
-
-		if (!(currentCatID < MAX_CATEGORIES))
-		{
-			currentCatID = 0;
-			while (strcmp(info->name[currentCatID],
-					selectedCategory.ascii()) &&
-				(currentCatID < MAX_CATEGORIES))
-			{
-				currentCatID++;
-			}
-		}
-
-		if (!(currentCatID < MAX_CATEGORIES))
-		{
-			currentCatID = 0;
-			while ((info->name[currentCatID][0]) &&
-				(currentCatID < MAX_CATEGORIES))
-			{
-				if (selectedCategory ==
-					QString::fromLatin1(info->
-						name[currentCatID]))
-				{
-#ifdef DEBUG
-					DEBUGKPILOT << fname
-						<< ": Matched "
-						<< currentCatID << endl;
-#endif
-
-					break;
-				}
-				currentCatID++;
-			}
-		}
-
-		if (currentCatID < MAX_CATEGORIES)
-		{
-#ifdef DEBUG
-			DEBUGKPILOT << fname
-				<< ": Matched category "
-				<< currentCatID
-				<< "=" << info->name[currentCatID] << endl;
-#endif
-		}
-		else
-		{
-#ifdef DEBUG			// necessary for Tru64 unix
-			kdWarning() << k_funcinfo
-				<< ": Selected category didn't match "
-				"any name!\n";
-			kdWarning() << k_funcinfo
-				<< ": Number of listed categories "
-				<< fCatList->count() << endl;
-			kdWarning() << k_funcinfo
-				<< ": Selected category ("
-				<< selectedCategory
-				<< ") " << endl;
-			kdWarning() << k_funcinfo
-				<< ": Categories expand to " << endl;
-#endif
-			currentCatID = 0;
-			while ((info->name[currentCatID][0]) &&
-				(currentCatID < MAX_CATEGORIES))
-			{
-#ifdef DEBUG
-				kdWarning() << k_funcinfo
-					<< ": Category ["
-					<< currentCatID
-					<< "] = "
-					<< (info->name[currentCatID]) << endl;
-#endif
-				currentCatID++;
-			}
-
-			currentCatID = (-1);
-		}
+		currentCatID = PilotAppInfoBase::findCategory(selectedCategory, AllIsUnfiled, info);
 	}
 
 	if ((currentCatID == -1) && AllIsUnfiled)
@@ -252,7 +139,7 @@ void PilotComponent::populateCategories(QComboBox * c,
 	// the user uses, so no translation is necessary.
 	//
 	//
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < MAX_CATEGORIES; i++)
 	{
 		if (info->name[i][0])
 		{
