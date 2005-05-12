@@ -1,7 +1,7 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!-- 
 <notice>
-   Copyright Â© 2005-2005 Novell, Inc. All Rights Reserved.
+   Copyright © 2005-2005 Novell, Inc. All Rights Reserved.
 
    THIS WORK IS SUBJECT TO U.S. AND INTERNATIONAL COPYRIGHT LAWS AND TREATIES.
    NO PART OF THIS WORK MAY BE USED, PRACTICED, PERFORMED COPIED, DISTRIBUTED,
@@ -15,10 +15,8 @@
 <xs:schema
 	targetNamespace="http://schemas.novell.com/2005/01/GroupWise/types" 
 	elementFormDefault="qualified"
-	attributeFormDefault="unqualified"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:tns="http://schemas.novell.com/2005/01/GroupWise/types">
-
 	<xs:element name="acceptLevel" type="tns:AcceptLevel" />
 	<xs:element name="code" type="xs:int" />
 	<xs:element name="description" type="xs:string" />
@@ -31,7 +29,24 @@
 	<xs:element name="recurrenceKey" type="xs:unsignedInt" />
 	<xs:element name="rights" type="tns:Rights" />
 	<xs:element name="sequence" type="xs:unsignedInt" />
-	<xs:element name="session" type="xs:string" />
+	
+   <xs:element name="session" type="xs:string" />
+
+<!--  
+   // Works with Java
+   <xs:element name="session" type="xs:string" />
+
+   // Works with .Net  - it worked at one time anyway
+   <xs:element name="session">
+      <xs:complexType>
+         <xs:simpleContent>
+            <xs:extension base="xs:string" />
+         </xs:simpleContent>
+      </xs:complexType>
+   </xs:element>
+
+-->   
+	
 	<xs:element name="startDate" type="xs:dateTime" />
 	<xs:element name="subject" type="xs:string" />
 	<xs:element name="uuid" type="tns:UUID" />
@@ -252,7 +267,7 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Normal" />
 			<xs:enumeration value="Personal" />
-			<xs:enumeration value="Follow-up" />
+			<xs:enumeration value="FollowUp" />
 			<xs:enumeration value="Urgent" />
 			<xs:enumeration value="LowPriority" />
 		</xs:restriction>
@@ -391,39 +406,11 @@
 	<xs:complexType name="DeltaInfo">
 		<xs:sequence>	
 		<xs:annotation>
-		
-<!--
-Name:	WpdsGetCurrentDeltaInfo
-Desc:	Find and return the current Delta information. This will require reading
-			the PO record for the last rebuilt time and finding the current number
-			of Delta records, or the curernt Delta sequence number.
-In:	hDSSession - Handle of session.
-Out:	pwdLastRebuiltTime - Pointer to return the last rebuild time of the current PO.
-		pwdFirstSequence - Pointer to return the first Sequence number that exists.
-		pwdLastSequence - Pointer to return the count or the last used Sequence number.
-Ret:	WERR_OK if successful.
-Include:
-Notes:
-Example:
-
-		
-;WpdsGetNewDeltas
-Desc:		Find all delta records from the specified domain DB which are
-				NEWER than the specified time.
-In:		hSession - Handle to the DS session for the domain db to check.
-			wdPORebuiltTime - Latest PO Rebuilt time to check against.
-			wMaxRecords - Maximum number of records to get in one read.
-			wdSequenceStart - Sequence number to start with.
-Out:		phIterator - Pointer to return MM_HANDLE to iterator.
-			phRecs - Pointer to return MM_HANDLE to WPF_RECORD array.
-			pwNumRecs - Pointer to return record count.
-			pwdLastSeqNum - Poiner to return the last sequence number in the array.
--->
-		
 			<xs:documentation>
             The deltaInfo structure contains pointers or sequence numbers into a dynamic list.
             count:
-               Input:   The desired number of items to be returned in one read.
+               Input:   The desired number of items to be returned in one read.  
+                        A count of "-1" means to return all the items in the list.
                Output:  The actual number of items returned.
             firstSequence:
                Input:   The sequence or position to start the read.
@@ -437,10 +424,10 @@ Out:		phIterator - Pointer to return MM_HANDLE to iterator.
                         new deltas can be applied to a local list.
 			</xs:documentation>		      
 		</xs:annotation>
-            <xs:element name="count" type="xs:unsignedInt" default="-1" minOccurs="0" />
-            <xs:element name="firstSequence" type="xs:unsignedInt" minOccurs="0" />
-            <xs:element name="lastSequence" type="xs:unsignedInt" minOccurs="0" nillable="1" />
-            <xs:element name="lastTimePORebuild" type="xs:unsignedInt" />            
+         <xs:element name="count" type="xs:unsignedInt" minOccurs="0" />
+         <xs:element name="firstSequence" type="xs:unsignedInt" minOccurs="0" />
+         <xs:element name="lastSequence" type="xs:unsignedInt" minOccurs="0" nillable="1" />
+         <xs:element name="lastTimePORebuild" type="xs:unsignedInt" />            
 		</xs:sequence>            
 	</xs:complexType>
 	<xs:complexType name="Distribution">
@@ -623,13 +610,13 @@ Out:		phIterator - Pointer to return MM_HANDLE to iterator.
 		<xs:sequence>
 			<xs:element ref="tns:startDate" />
 			<xs:element ref="tns:endDate" />
-			<xs:element ref="tns:acceptLevel" />
-			<xs:element ref="tns:subject" />
+			<xs:element ref="tns:acceptLevel" minOccurs="0" />
+			<xs:element ref="tns:subject" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="FreeBusyInfo">
 		<xs:complexContent>
-			<xs:extension base="tns:FreeBusyUser">
+			<xs:extension base="tns:NameAndEmail">
 				<xs:sequence>
 					<xs:element name="blocks" type="tns:FreeBusyBlockList" />
 				</xs:sequence>
@@ -638,7 +625,7 @@ Out:		phIterator - Pointer to return MM_HANDLE to iterator.
 	</xs:complexType>
 	<xs:complexType name="FreeBusyUserList">
 		<xs:sequence>
-			<xs:element name="user" type="tns:FreeBusyUser" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="user" type="tns:NameAndEmail" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="FreeBusyInfoList">
@@ -652,11 +639,6 @@ Out:		phIterator - Pointer to return MM_HANDLE to iterator.
 			<xs:element name="outstanding" type="xs:int" />
 			<xs:element name="total" type="xs:int" />
 		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="FreeBusyUser">
-		<xs:complexContent>
-			<xs:extension base="tns:NameAndEmail" />
-		</xs:complexContent>
 	</xs:complexType>
 	<xs:simpleType name="Frequency">
 		<xs:restriction base="xs:string">
@@ -710,8 +692,9 @@ Out:		phIterator - Pointer to return MM_HANDLE to iterator.
 			<xs:element ref="tns:id" />
 			<xs:element ref="tns:name" minOccurs="0" />
 			<xs:element ref="tns:email" />
-			<xs:element name="distType" type="tns:DistributionType" default="TO" />
-			<xs:element name="itemType" type="tns:ContactType" default="Contact" />
+			<xs:element name="distType" type="tns:DistributionType" minOccurs="0" default="TO" />
+			<xs:element name="itemType" type="tns:ContactType" minOccurs="0" default="Contact" />
+			<xs:element name="members" type="tns:GroupMemberList" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="GroupMemberList">
@@ -865,7 +848,7 @@ Out:		phIterator - Pointer to return MM_HANDLE to iterator.
 					<xs:element name="options" type="tns:ItemOptions" minOccurs="0" />
 					<xs:element name="link" type="tns:LinkInfo" minOccurs="0" />
 					<xs:element name="hasAttachment" type="xs:boolean" default="0" minOccurs="0"/>
-					<xs:element name="size" type="xs:unsignedInt" minOccurs="0" default="0" />
+					<xs:element name="size" type="xs:int" minOccurs="0" default="0" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -894,9 +877,10 @@ Out:		phIterator - Pointer to return MM_HANDLE to iterator.
 	<xs:complexType name="MessagePart">
 		<xs:simpleContent>
 			<xs:extension base="xs:base64Binary">
+				<xs:attribute name="id" type="tns:uid" use="optional" />
 				<xs:attribute name="contentId" type="xs:string" default="" />
-				<xs:attribute name="contentType" type="xs:string" minOccurs="0" default="text/plain" />
-				<xs:attribute name="length" type="xs:int" minOccurs="0" default="0" />
+				<xs:attribute name="contentType" type="xs:string" default="text/plain" use="optional" />
+				<xs:attribute name="length" type="xs:int" default="0" use="optional" />
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
@@ -1221,6 +1205,13 @@ Out:		phIterator - Pointer to return MM_HANDLE to iterator.
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:simpleType name="RetractType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="myMailbox" />
+			<xs:enumeration value="recipientMailboxes" />
+			<xs:enumeration value="allMailboxes" />
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:complexType name="ReturnNotification">
 		<xs:annotation>
 			<xs:documentation>
@@ -1366,8 +1357,7 @@ Out:		phIterator - Pointer to return MM_HANDLE to iterator.
 		<xs:sequence>
 			<xs:element name="id" type="tns:uid" minOccurs="0" />
 			<xs:element ref="tns:name" minOccurs="0" />
-			<xs:element name="type" type="tns:SignatureType" minOccurs="0" />
-			<xs:element name="default" type="tns:SignatureDefault" minOccurs="0" />
+			<xs:element name="default" type="xs:boolean" default="0" minOccurs="0" />
 			<xs:element name="part" type="tns:SignatureData" minOccurs="0" />
 			<xs:element name="global" type="xs:boolean" default="0" minOccurs="0" />
 		</xs:sequence>
@@ -1377,24 +1367,12 @@ Out:		phIterator - Pointer to return MM_HANDLE to iterator.
 			<xs:element name="signature" type="tns:Signature" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
-	<xs:simpleType name="SignatureDefault">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="system" />
-			<xs:enumeration value="HTML" />
-		</xs:restriction>
-	</xs:simpleType>
 	<xs:complexType name="SignatureData">
 		<xs:sequence>
 			<xs:element name="size" type="xs:unsignedInt" minOccurs="0" />
 			<xs:element name="data" type="xs:base64Binary" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
-	<xs:simpleType name="SignatureType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="PlainText" />
-			<xs:enumeration value="HTML" />
-		</xs:restriction>
-	</xs:simpleType>
 	<xs:complexType name="Status">
 		<xs:sequence>
 			<xs:element ref="tns:code" />

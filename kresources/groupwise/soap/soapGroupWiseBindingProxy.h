@@ -14,15 +14,16 @@ class GroupWiseBinding
 	struct soap *soap;
 	const char *endpoint;
 	GroupWiseBinding()
-	{ soap = soap_new(); endpoint = "http://137.65.15.153:8080"; if (soap && !soap->namespaces) { static const struct Namespace namespaces[] = 
+	{ soap = soap_new(); endpoint = "http://localhost:8080"; if (soap && !soap->namespaces) { static const struct Namespace namespaces[] = 
 {
 	{"SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/", "http://www.w3.org/*/soap-envelope", NULL},
 	{"SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/", "http://www.w3.org/*/soap-encoding", NULL},
 	{"xsi", "http://www.w3.org/2001/XMLSchema-instance", "http://www.w3.org/*/XMLSchema-instance", NULL},
 	{"xsd", "http://www.w3.org/2001/XMLSchema", "http://www.w3.org/*/XMLSchema", NULL},
 	{"ngwt", "http://schemas.novell.com/2005/01/GroupWise/types", NULL, NULL},
-	{"ngw", "http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl", NULL, NULL},
 	{"ngwm", "http://schemas.novell.com/2005/01/GroupWise/methods", NULL, NULL},
+	{"ngw", "http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl", NULL, NULL},
+	{"ns2", "http://schemas.novell.com/2005/01/GroupWise/events", NULL, NULL},
 	{NULL, NULL, NULL, NULL}
 };
 	soap->namespaces = namespaces; } };
@@ -47,6 +48,8 @@ class GroupWiseBinding
 	virtual int __ngw__getAttachmentRequestMessage(_ngwm__getAttachmentRequest *ngwm__getAttachmentRequest, _ngwm__getAttachmentResponse *ngwm__getAttachmentResponse) { return soap ? soap_call___ngw__getAttachmentRequestMessage(soap, endpoint, NULL, ngwm__getAttachmentRequest, ngwm__getAttachmentResponse) : SOAP_EOM; };
 	virtual int __ngw__getCategoryListRequest(_ngwm__getCategoryListRequest *ngwm__getCategoryListRequest, _ngwm__getCategoryListResponse *ngwm__getCategoryListResponse) { return soap ? soap_call___ngw__getCategoryListRequest(soap, endpoint, NULL, ngwm__getCategoryListRequest, ngwm__getCategoryListResponse) : SOAP_EOM; };
 	virtual int __ngw__getCustomListRequest(_ngwm__getCustomListRequest *ngwm__getCustomListRequest, _ngwm__getCustomListResponse *ngwm__getCustomListResponse) { return soap ? soap_call___ngw__getCustomListRequest(soap, endpoint, NULL, ngwm__getCustomListRequest, ngwm__getCustomListResponse) : SOAP_EOM; };
+	virtual int __ngw__getDeltasRequest(_ngwm__getDeltasRequest *ngwm__getDeltasRequest, _ngwm__getDeltasResponse *ngwm__getDeltasResponse) { return soap ? soap_call___ngw__getDeltasRequest(soap, endpoint, NULL, ngwm__getDeltasRequest, ngwm__getDeltasResponse) : SOAP_EOM; };
+	virtual int __ngw__getDeltaInfoRequest(_ngwm__getDeltaInfoRequest *ngwm__getDeltaInfoRequest, _ngwm__getDeltaInfoResponse *ngwm__getDeltaInfoResponse) { return soap ? soap_call___ngw__getDeltaInfoRequest(soap, endpoint, NULL, ngwm__getDeltaInfoRequest, ngwm__getDeltaInfoResponse) : SOAP_EOM; };
 	virtual int __ngw__getFolderListRequest(_ngwm__getFolderListRequest *ngwm__getFolderListRequest, _ngwm__getFolderListResponse *ngwm__getFolderListResponse) { return soap ? soap_call___ngw__getFolderListRequest(soap, endpoint, NULL, ngwm__getFolderListRequest, ngwm__getFolderListResponse) : SOAP_EOM; };
 	virtual int __ngw__getFreeBusyRequest(_ngwm__getFreeBusyRequest *ngwm__getFreeBusyRequest, _ngwm__getFreeBusyResponse *ngwm__getFreeBusyResponse) { return soap ? soap_call___ngw__getFreeBusyRequest(soap, endpoint, NULL, ngwm__getFreeBusyRequest, ngwm__getFreeBusyResponse) : SOAP_EOM; };
 	virtual int __ngw__getItemRequest(_ngwm__getItemRequest *ngwm__getItemRequest, _ngwm__getItemResponse *ngwm__getItemResponse) { return soap ? soap_call___ngw__getItemRequest(soap, endpoint, NULL, ngwm__getItemRequest, ngwm__getItemResponse) : SOAP_EOM; };
@@ -84,6 +87,12 @@ class GroupWiseBinding
 	virtual int __ngw__startFreeBusySessionRequest(_ngwm__startFreeBusySessionRequest *ngwm__startFreeBusySessionRequest, _ngwm__startFreeBusySessionResponse *ngwm__startFreeBusySessionResponse) { return soap ? soap_call___ngw__startFreeBusySessionRequest(soap, endpoint, NULL, ngwm__startFreeBusySessionRequest, ngwm__startFreeBusySessionResponse) : SOAP_EOM; };
 	virtual int __ngw__unacceptRequest(_ngwm__unacceptRequest *ngwm__unacceptRequest, _ngwm__unacceptResponse *ngwm__unacceptResponse) { return soap ? soap_call___ngw__unacceptRequest(soap, endpoint, NULL, ngwm__unacceptRequest, ngwm__unacceptResponse) : SOAP_EOM; };
 	virtual int __ngw__uncompleteRequest(_ngwm__uncompleteRequest *ngwm__uncompleteRequest, _ngwm__uncompleteResponse *ngwm__uncompleteResponse) { return soap ? soap_call___ngw__uncompleteRequest(soap, endpoint, NULL, ngwm__uncompleteRequest, ngwm__uncompleteResponse) : SOAP_EOM; };
+	virtual int __ngw__cleanEventConfigurationRequest(_ns2__cleanEventConfigurationRequest *ns2__cleanEventConfigurationRequest, _ns2__cleanEventConfigurationResponse *ns2__cleanEventConfigurationResponse) { return soap ? soap_call___ngw__cleanEventConfigurationRequest(soap, endpoint, NULL, ns2__cleanEventConfigurationRequest, ns2__cleanEventConfigurationResponse) : SOAP_EOM; };
+	virtual int __ngw__configureEventsRequest(_ns2__configureEventsRequest *ns2__configureEventsRequest, _ns2__configureEventsResponse *ns2__configureEventsResponse) { return soap ? soap_call___ngw__configureEventsRequest(soap, endpoint, NULL, ns2__configureEventsRequest, ns2__configureEventsResponse) : SOAP_EOM; };
+	virtual int __ngw__getEventConfigurationRequest(_ns2__getEventConfigurationRequest *ns2__getEventConfigurationRequest, _ns2__getEventConfigurationResponse *ns2__getEventConfigurationResponse) { return soap ? soap_call___ngw__getEventConfigurationRequest(soap, endpoint, NULL, ns2__getEventConfigurationRequest, ns2__getEventConfigurationResponse) : SOAP_EOM; };
+	virtual int __ngw__getEventsRequest(_ns2__getEventsRequest *ns2__getEventsRequest, _ns2__getEventsResponse *ns2__getEventsResponse) { return soap ? soap_call___ngw__getEventsRequest(soap, endpoint, NULL, ns2__getEventsRequest, ns2__getEventsResponse) : SOAP_EOM; };
+	virtual int __ngw__removeEventConfigurationRequest(_ns2__removeEventConfigurationRequest *ns2__removeEventConfigurationRequest, _ns2__removeEventConfigurationResponse *ns2__removeEventConfigurationResponse) { return soap ? soap_call___ngw__removeEventConfigurationRequest(soap, endpoint, NULL, ns2__removeEventConfigurationRequest, ns2__removeEventConfigurationResponse) : SOAP_EOM; };
+	virtual int __ngw__removeEventsRequest(_ns2__removeEventsRequest *ns2__removeEventsRequest, _ns2__removeEventsResponse *ns2__removeEventsResponse) { return soap ? soap_call___ngw__removeEventsRequest(soap, endpoint, NULL, ns2__removeEventsRequest, ns2__removeEventsResponse) : SOAP_EOM; };
 };
 SOAP_END_NAMESPACE(soap)
 #endif

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--
 <notice>
-   Copyright Â© 2005-2005 Novell, Inc. All Rights Reserved.
+   Copyright © 2005-2005 Novell, Inc. All Rights Reserved.
 
    THIS WORK IS SUBJECT TO U.S. AND INTERNATIONAL COPYRIGHT LAWS AND TREATIES.
    NO PART OF THIS WORK MAY BE USED, PRACTICED, PERFORMED COPIED, DISTRIBUTED,
@@ -11,265 +11,261 @@
    AUTHORIZATION COULD SUBJECT THE PERPETRATOR TO CRIMINAL AND CIVIL LIABILITY.
 </notice>
 -->
-
 <xs:schema 
-	targetNamespace="http://schemas.novell.com/2005/01/GroupWise/methods"
-	elementFormDefault="qualified"
-	attributeFormDefault="unqualified"
-	xmlns="http://schemas.novell.com/2005/01/GroupWise/methods" 
-	xmlns:types="http://schemas.novell.com/2005/01/GroupWise/types" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema">
-			
+   targetNamespace="http://schemas.novell.com/2005/01/GroupWise/methods" 
+   elementFormDefault="qualified"
+   xmlns="http://schemas.novell.com/2005/01/GroupWise/methods" 
+   xmlns:types="http://schemas.novell.com/2005/01/GroupWise/types"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   
 	<xs:import namespace="http://schemas.novell.com/2005/01/GroupWise/types" schemaLocation="types.xsd"/>
-	
-	<xs:element name="acceptRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="types:ItemRefList" />
-				<xs:element name="comment" type="xs:string" nillable="true" />
-				<xs:element name="acceptLevel" type="types:AcceptLevel" nillable="true" />
-				<xs:element name="recurrenceAllInstances" type="xs:unsignedInt" default="0" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="acceptResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="acceptShareRequest">
-		<xs:annotation>
-			<xs:documentation>
+
+   <xs:element name="acceptRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="items" type="types:ItemRefList" />
+            <xs:element name="comment" type="xs:string" nillable="1" />
+            <xs:element name="acceptLevel" type="types:AcceptLevel" nillable="1" />
+            <xs:element name="recurrenceAllInstances" type="xs:int" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="acceptResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="acceptShareRequest">
+      <xs:annotation>
+         <xs:documentation>
 				container is requied for accepting a shared folder notification.
 				It is the container id of the folder where the new folder will be
 				placed.
 				If name or container are not sent, the original values from the
 				notification message will be used.
 			</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="types:uid" />
-				<xs:element name="name" type="xs:string" minOccurs="0" />
-				<xs:element name="container" type="types:uid" minOccurs="0" />
-				<xs:element ref="types:description" minOccurs="0" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="acceptShareResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="addItemRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="types:uid" />
-				<xs:element name="id" type="types:uid" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="addItemResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="addItemsRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="types:uid" />
-				<xs:element name="items" type="types:ItemRefList" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="addItemsResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="addMembersRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="types:uid" />
-				<xs:element name="members" type="types:GroupMemberList" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="addMembersResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="closeFreeBusySessionRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="freeBusySessionId" type="xs:int" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="closeFreeBusySessionResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="completeRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="types:ItemRefList" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="completeResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="createCursorRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="types:uid" />
-				<xs:element name="view" type="types:View" minOccurs="0" />
-				<xs:element name="filter" type="types:Filter" minOccurs="0" />
-				<!--				<xs:element name="sort" type="types:Sort" minOccurs="0" /> -->
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="createCursorResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="cursor" type="xs:int" minOccurs="0" />
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="createItemRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="item" type="types:Item" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="createItemResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="types:uid" minOccurs="0" />
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="createProxyAccessRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="entry" type="types:AccessRightEntry" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="createProxyAccessResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="types:uid" minOccurs="0" />
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="createSignatureRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="global" type="xs:boolean" default="0" minOccurs="0"/>
-				<xs:element name="signature" type="types:Signature" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="createSignatureResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="declineRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="types:ItemRefList" />
-				<xs:element name="comment" type="xs:string" nillable="true" />
-				<xs:element name="recurrenceAllInstances" type="xs:unsignedInt" default="0"  />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="declineResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="delegateRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="types:ItemRefList" />
-				<xs:element name="commentToOrganizer" type="xs:string" nillable="true" />
-				<xs:element name="commentToDelegatee" type="xs:string" nillable="true" />
-				<xs:element name="distribution" type="types:Distribution" />
-				<xs:element name="recurrenceAllInstances" type="xs:unsignedInt" default="0" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="delegateResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="destroyCursorRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="types:uid" />
-				<xs:element name="cursor" type="xs:int" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="destroyCursorResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="executeRuleRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="types:uid"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="executeRuleResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="forwardRequest">
-		<xs:annotation>
-			<xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="id" type="types:uid" />
+            <xs:element name="name" type="xs:string" minOccurs="0" />
+            <xs:element name="container" type="types:uid" minOccurs="0" />
+            <xs:element ref="types:description" minOccurs="0" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="acceptShareResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="addItemRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="container" type="types:uid" />
+            <xs:element name="id" type="types:uid" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="addItemResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="addItemsRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="container" type="types:uid" />
+            <xs:element name="items" type="types:ItemRefList" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="addItemsResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="addMembersRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="container" type="types:uid" />
+            <xs:element name="members" type="types:GroupMemberList" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="addMembersResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="closeFreeBusySessionRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="freeBusySessionId" type="xs:int" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="closeFreeBusySessionResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="completeRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="items" type="types:ItemRefList" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="completeResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="createCursorRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="container" type="types:uid" />
+            <xs:element name="view" type="types:View" minOccurs="0" />
+            <xs:element name="filter" type="types:Filter" minOccurs="0" />
+            <!--				<xs:element name="sort" type="types:Sort" minOccurs="0" /> -->
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="createCursorResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="cursor" type="xs:int" minOccurs="0" />
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="createItemRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="item" type="types:Item" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="createItemResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="id" type="types:uid" minOccurs="0" />
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="createProxyAccessRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="entry" type="types:AccessRightEntry" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="createProxyAccessResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="id" type="types:uid" minOccurs="0" />
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="createSignatureRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="global" type="xs:boolean" default="0" minOccurs="0" />
+            <xs:element name="signature" type="types:Signature" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="createSignatureResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="declineRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="items" type="types:ItemRefList" />
+            <xs:element name="comment" type="xs:string" nillable="1" />
+            <xs:element name="recurrenceAllInstances" type="xs:int" default="0" minOccurs="0" /> 
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="declineResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="delegateRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="items" type="types:ItemRefList" />
+            <xs:element name="commentToOrganizer" type="xs:string" nillable="1" />
+            <xs:element name="commentToDelegatee" type="xs:string" nillable="1" />
+            <xs:element name="distribution" type="types:Distribution" />
+            <xs:element name="recurrenceAllInstances" type="xs:int" default="0" minOccurs="0" /> 
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="delegateResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="destroyCursorRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="container" type="types:uid" />
+            <xs:element name="cursor" type="xs:int" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="destroyCursorResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="executeRuleRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="id" type="types:uid" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="executeRuleResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="forwardRequest">
+      <xs:annotation>
+         <xs:documentation>
 				Forwarding a message is a two step process.
 				First you call the method with the id of the original item.
 				A new mail item is returned.
@@ -374,7 +370,7 @@
                </xs:documentation>
             </xs:annotation>
             <xs:element name="container" type="types:uid" />
-            <xs:element name="view" type="types:View" nillable="1" />            
+            <xs:element name="view" type="types:View" nillable="1" />
             <xs:element name="deltaInfo" type="types:DeltaInfo" />
          </xs:sequence>
       </xs:complexType>
@@ -404,7 +400,7 @@
       <xs:complexType>
          <xs:sequence>
             <xs:element name="deltaInfo" type="types:DeltaInfo" />
-            <xs:element name="status" type="types:Status" />            
+            <xs:element name="status" type="types:Status" />
          </xs:sequence>
       </xs:complexType>
    </xs:element>
@@ -414,6 +410,8 @@
             <xs:element name="parent" type="types:uid" />
             <xs:element name="view" type="types:View" nillable="1" />
             <xs:element name="recurse" type="xs:boolean" />
+            <xs:element name="imap" type="xs:boolean" default="0" />
+            <xs:element name="nntp" type="xs:boolean" default="0" />
          </xs:sequence>
       </xs:complexType>
    </xs:element>
@@ -606,7 +604,10 @@
    <xs:element name="loginResponse">
       <xs:complexType>
          <xs:sequence>
-            <xs:element name="session" type="xs:string" minOccurs="0" />
+        <xs:element name="session" type="xs:string" />
+        <!--<xs:element ref="types:session" /> -->
+        <!--<xs:element name="session" type="types:session" /> -->
+        <!--<xs:element name="session" type="xs:string" /> -->        
             <xs:element name="userinfo" type="types:UserInfo" minOccurs="0" />
             <xs:element name="gwVersion" type="xs:string" minOccurs="0" />
             <xs:element name="redirectToHost" type="types:Host" minOccurs="0" maxOccurs="1" />
@@ -854,28 +855,28 @@
 				If you are making multiple calls to readCursorRequest, "position"
 				should either be "current" or not present after the first call.
 			</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="types:uid"/>
-				<xs:element name="cursor" type="xs:int"/>
-				<xs:element name="forward" type="xs:boolean" default="true"/>
-				<xs:element name="postition" type="types:CursorSeek" nillable="true" default="current"/>
-				<xs:element name="count" type="xs:int" nillable="true" default="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="readCursorResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="types:ItemList" minOccurs="0" />
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="removeItemRequest">
-		<xs:annotation>
-			<xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="container" type="types:uid" />
+            <xs:element name="cursor" type="xs:int" />
+            <xs:element name="forward" type="xs:boolean" default="1" />
+            <xs:element name="position" type="types:CursorSeek" nillable="1" default="current" />
+            <xs:element name="count" type="xs:int" nillable="1" default="0" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="readCursorResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="items" type="types:ItemList" minOccurs="0" />
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="removeItemRequest">
+      <xs:annotation>
+         <xs:documentation>
 				If the container is not specified then the item is 
 				   removed from all of the containers that it is linked
 				   to and is stored in the "Trash".
@@ -1016,84 +1017,85 @@
 				in lieu of the 'new' calendar item that will be delivered to 
 				the recipient.
 				"retractingAllInstances": When TRUE, a single notice will be 
-				placed in the recipient's in-box (instead of a notice for each
+				placed in the recipient's in-box (instead of a notice for each auto-date
 				instance).  
 			</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="types:ItemRefList" />
-				<xs:element name="comment" type="xs:string" minOccurs="0" nillable="true" />
-				<xs:element name="retractingAllInstances" type="xs:boolean" minOccurs="0" default="0" />
-				<xs:element name="retractCausedByResend" type="xs:boolean" minOccurs="0" default="0" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="retractResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="sendItemRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="item" type="types:Item" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="sendItemResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="types:uid" minOccurs="0" maxOccurs="unbounded" />
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="startFreeBusySessionRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="users" type="types:FreeBusyUserList" />
-				<xs:element name="startDate" type="xs:dateTime" />
-				<xs:element name="endDate" type="xs:dateTime" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="startFreeBusySessionResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="freeBusySessionId" type="xs:int" />
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="unacceptRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="types:ItemRefList" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="unacceptResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="uncompleteRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="types:ItemRefList" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="uncompleteResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="types:Status" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="items" type="types:ItemRefList" />
+            <xs:element name="comment" type="xs:string" minOccurs="0" nillable="1" />
+            <xs:element name="retractingAllInstances" type="xs:boolean" minOccurs="0" default="0" />
+            <xs:element name="retractCausedByResend" type="xs:boolean" minOccurs="0" default="0" />
+            <xs:element name="retractType" type="types:RetractType" minOccurs="0" default="recipientMailboxes" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="retractResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="sendItemRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="item" type="types:Item" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="sendItemResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="id" type="types:uid" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="startFreeBusySessionRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="users" type="types:FreeBusyUserList" />
+            <xs:element name="startDate" type="xs:dateTime" />
+            <xs:element name="endDate" type="xs:dateTime" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="startFreeBusySessionResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="freeBusySessionId" type="xs:int" />
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="unacceptRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="items" type="types:ItemRefList" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="unacceptResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="uncompleteRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="items" type="types:ItemRefList" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="uncompleteResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
 </xs:schema>

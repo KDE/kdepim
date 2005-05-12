@@ -8,13 +8,13 @@
 
 SOAP_BEGIN_NAMESPACE(soap)
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.1 2005-04-27 14:37:44 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.1 2005-05-11 14:43:26 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__acceptRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__acceptRequest *ngwm__acceptRequest, _ngwm__acceptResponse *ngwm__acceptResponse)
 {	struct __ngw__acceptRequest soap_tmp___ngw__acceptRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "acceptRequest";
 	soap->encodingStyle = NULL;
@@ -67,7 +67,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__acceptRequest(struct soap *soap, cons
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__acceptShareRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__acceptShareRequest *ngwm__acceptShareRequest, _ngwm__acceptShareResponse *ngwm__acceptShareResponse)
 {	struct __ngw__acceptShareRequest soap_tmp___ngw__acceptShareRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "acceptShareRequest";
 	soap->encodingStyle = NULL;
@@ -120,7 +120,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__acceptShareRequest(struct soap *soap,
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__addItemRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__addItemRequest *ngwm__addItemRequest, _ngwm__addItemResponse *ngwm__addItemResponse)
 {	struct __ngw__addItemRequest soap_tmp___ngw__addItemRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "addItemRequest";
 	soap->encodingStyle = NULL;
@@ -173,7 +173,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__addItemRequest(struct soap *soap, con
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__addItemsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__addItemsRequest *ngwm__addItemsRequest, _ngwm__addItemsResponse *ngwm__addItemsResponse)
 {	struct __ngw__addItemsRequest soap_tmp___ngw__addItemsRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "addItemsRequest";
 	soap->encodingStyle = NULL;
@@ -226,7 +226,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__addItemsRequest(struct soap *soap, co
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__addMembersRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__addMembersRequest *ngwm__addMembersRequest, _ngwm__addMembersResponse *ngwm__addMembersResponse)
 {	struct __ngw__addMembersRequest soap_tmp___ngw__addMembersRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "addMembersRequest";
 	soap->encodingStyle = NULL;
@@ -279,7 +279,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__addMembersRequest(struct soap *soap, 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__closeFreeBusySessionRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__closeFreeBusySessionRequest *ngwm__closeFreeBusySessionRequest, _ngwm__closeFreeBusySessionResponse *ngwm__closeFreeBusySessionResponse)
 {	struct __ngw__closeFreeBusySessionRequest soap_tmp___ngw__closeFreeBusySessionRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "closeFreeBusySessionRequest";
 	soap->encodingStyle = NULL;
@@ -332,7 +332,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__closeFreeBusySessionRequest(struct so
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__completeRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__completeRequest *ngwm__completeRequest, _ngwm__completeResponse *ngwm__completeResponse)
 {	struct __ngw__completeRequest soap_tmp___ngw__completeRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "completeRequest";
 	soap->encodingStyle = NULL;
@@ -385,7 +385,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__completeRequest(struct soap *soap, co
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createCursorRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__createCursorRequest *ngwm__createCursorRequest, _ngwm__createCursorResponse *ngwm__createCursorResponse)
 {	struct __ngw__createCursorRequest soap_tmp___ngw__createCursorRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "createCursorRequest";
 	soap->encodingStyle = NULL;
@@ -438,7 +438,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createCursorRequest(struct soap *soap
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createItemRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__createItemRequest *ngwm__createItemRequest, _ngwm__createItemResponse *ngwm__createItemResponse)
 {	struct __ngw__createItemRequest soap_tmp___ngw__createItemRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "createItemRequest";
 	soap->encodingStyle = NULL;
@@ -491,7 +491,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createItemRequest(struct soap *soap, 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createProxyAccessRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__createProxyAccessRequest *ngwm__createProxyAccessRequest, _ngwm__createProxyAccessResponse *ngwm__createProxyAccessResponse)
 {	struct __ngw__createProxyAccessRequest soap_tmp___ngw__createProxyAccessRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "createProxyAccessRequest";
 	soap->encodingStyle = NULL;
@@ -544,7 +544,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createProxyAccessRequest(struct soap 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createSignatureRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__createSignatureRequest *ngwm__createSignatureRequest, _ngwm__createSignatureResponse *ngwm__createSignatureResponse)
 {	struct __ngw__createSignatureRequest soap_tmp___ngw__createSignatureRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "createSignatureRequest";
 	soap->encodingStyle = NULL;
@@ -597,7 +597,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createSignatureRequest(struct soap *s
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__declineRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__declineRequest *ngwm__declineRequest, _ngwm__declineResponse *ngwm__declineResponse)
 {	struct __ngw__declineRequest soap_tmp___ngw__declineRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "declineRequest";
 	soap->encodingStyle = NULL;
@@ -650,7 +650,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__declineRequest(struct soap *soap, con
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__delegateRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__delegateRequest *ngwm__delegateRequest, _ngwm__delegateResponse *ngwm__delegateResponse)
 {	struct __ngw__delegateRequest soap_tmp___ngw__delegateRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "delegateRequest";
 	soap->encodingStyle = NULL;
@@ -703,7 +703,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__delegateRequest(struct soap *soap, co
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__destroyCursorRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__destroyCursorRequest *ngwm__destroyCursorRequest, _ngwm__destroyCursorResponse *ngwm__destroyCursorResponse)
 {	struct __ngw__destroyCursorRequest soap_tmp___ngw__destroyCursorRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "destroyCursorRequest";
 	soap->encodingStyle = NULL;
@@ -756,7 +756,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__destroyCursorRequest(struct soap *soa
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__executeRuleRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__executeRuleRequest *ngwm__executeRuleRequest, _ngwm__executeRuleResponse *ngwm__executeRuleResponse)
 {	struct __ngw__executeRuleRequest soap_tmp___ngw__executeRuleRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "executeRuleRequest";
 	soap->encodingStyle = NULL;
@@ -809,7 +809,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__executeRuleRequest(struct soap *soap,
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__forwardRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__forwardRequest *ngwm__forwardRequest, _ngwm__forwardResponse *ngwm__forwardResponse)
 {	struct __ngw__forwardRequest soap_tmp___ngw__forwardRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "forwardRequest";
 	soap->encodingStyle = NULL;
@@ -862,7 +862,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__forwardRequest(struct soap *soap, con
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getAddressBookListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getAddressBookListRequest *ngwm__getAddressBookListRequest, _ngwm__getAddressBookListResponse *ngwm__getAddressBookListResponse)
 {	struct __ngw__getAddressBookListRequest soap_tmp___ngw__getAddressBookListRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getAddressBookListRequest";
 	soap->encodingStyle = NULL;
@@ -915,7 +915,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getAddressBookListRequest(struct soap
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getAttachmentRequestMessage(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getAttachmentRequest *ngwm__getAttachmentRequest, _ngwm__getAttachmentResponse *ngwm__getAttachmentResponse)
 {	struct __ngw__getAttachmentRequestMessage soap_tmp___ngw__getAttachmentRequestMessage;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getAttachmentRequestMessage";
 	soap->encodingStyle = NULL;
@@ -968,7 +968,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getAttachmentRequestMessage(struct so
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getCategoryListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getCategoryListRequest *ngwm__getCategoryListRequest, _ngwm__getCategoryListResponse *ngwm__getCategoryListResponse)
 {	struct __ngw__getCategoryListRequest soap_tmp___ngw__getCategoryListRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getCategoryListRequest";
 	soap->encodingStyle = NULL;
@@ -1021,7 +1021,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getCategoryListRequest(struct soap *s
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getCustomListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getCustomListRequest *ngwm__getCustomListRequest, _ngwm__getCustomListResponse *ngwm__getCustomListResponse)
 {	struct __ngw__getCustomListRequest soap_tmp___ngw__getCustomListRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getCustomListRequest";
 	soap->encodingStyle = NULL;
@@ -1071,10 +1071,116 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getCustomListRequest(struct soap *soa
 	return soap_closesock(soap);
 }
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getDeltasRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getDeltasRequest *ngwm__getDeltasRequest, _ngwm__getDeltasResponse *ngwm__getDeltasResponse)
+{	struct __ngw__getDeltasRequest soap_tmp___ngw__getDeltasRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "getDeltasRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__getDeltasRequest.ngwm__getDeltasRequest = ngwm__getDeltasRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__getDeltasRequest(soap, &soap_tmp___ngw__getDeltasRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__getDeltasRequest(soap, &soap_tmp___ngw__getDeltasRequest, "-ngw:getDeltasRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__getDeltasRequest(soap, &soap_tmp___ngw__getDeltasRequest, "-ngw:getDeltasRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__getDeltasResponse)
+		return soap_closesock(soap);
+	ngwm__getDeltasResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__getDeltasResponse->soap_get(soap, "ngwm:getDeltasResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+#ifndef WITH_LEANER
+	 || soap_resolve_attachments(soap)
+#endif
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getDeltaInfoRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getDeltaInfoRequest *ngwm__getDeltaInfoRequest, _ngwm__getDeltaInfoResponse *ngwm__getDeltaInfoResponse)
+{	struct __ngw__getDeltaInfoRequest soap_tmp___ngw__getDeltaInfoRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "getDeltaInfoRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__getDeltaInfoRequest.ngwm__getDeltaInfoRequest = ngwm__getDeltaInfoRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__getDeltaInfoRequest(soap, &soap_tmp___ngw__getDeltaInfoRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__getDeltaInfoRequest(soap, &soap_tmp___ngw__getDeltaInfoRequest, "-ngw:getDeltaInfoRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__getDeltaInfoRequest(soap, &soap_tmp___ngw__getDeltaInfoRequest, "-ngw:getDeltaInfoRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__getDeltaInfoResponse)
+		return soap_closesock(soap);
+	ngwm__getDeltaInfoResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__getDeltaInfoResponse->soap_get(soap, "ngwm:getDeltaInfoResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+#ifndef WITH_LEANER
+	 || soap_resolve_attachments(soap)
+#endif
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getFolderListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getFolderListRequest *ngwm__getFolderListRequest, _ngwm__getFolderListResponse *ngwm__getFolderListResponse)
 {	struct __ngw__getFolderListRequest soap_tmp___ngw__getFolderListRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getFolderListRequest";
 	soap->encodingStyle = NULL;
@@ -1127,7 +1233,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getFolderListRequest(struct soap *soa
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getFreeBusyRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getFreeBusyRequest *ngwm__getFreeBusyRequest, _ngwm__getFreeBusyResponse *ngwm__getFreeBusyResponse)
 {	struct __ngw__getFreeBusyRequest soap_tmp___ngw__getFreeBusyRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getFreeBusyRequest";
 	soap->encodingStyle = NULL;
@@ -1180,7 +1286,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getFreeBusyRequest(struct soap *soap,
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getItemRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getItemRequest *ngwm__getItemRequest, _ngwm__getItemResponse *ngwm__getItemResponse)
 {	struct __ngw__getItemRequest soap_tmp___ngw__getItemRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getItemRequest";
 	soap->encodingStyle = NULL;
@@ -1233,7 +1339,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getItemRequest(struct soap *soap, con
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getItemsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getItemsRequest *ngwm__getItemsRequest, _ngwm__getItemsResponse *ngwm__getItemsResponse)
 {	struct __ngw__getItemsRequest soap_tmp___ngw__getItemsRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getItemsRequest";
 	soap->encodingStyle = NULL;
@@ -1286,7 +1392,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getItemsRequest(struct soap *soap, co
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getQuickMessagesRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getQuickMessagesRequest *ngwm__getQuickMessagesRequest, _ngwm__getQuickMessagesResponse *ngwm__getQuickMessagesResponse)
 {	struct __ngw__getQuickMessagesRequest soap_tmp___ngw__getQuickMessagesRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getQuickMessagesRequest";
 	soap->encodingStyle = NULL;
@@ -1339,7 +1445,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getQuickMessagesRequest(struct soap *
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getProxyAccessListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getProxyAccessListRequest *ngwm__getProxyAccessListRequest, _ngwm__getProxyAccessListResponse *ngwm__getProxyAccessListResponse)
 {	struct __ngw__getProxyAccessListRequest soap_tmp___ngw__getProxyAccessListRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getProxyAccessListRequest";
 	soap->encodingStyle = NULL;
@@ -1392,7 +1498,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getProxyAccessListRequest(struct soap
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getProxyListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getProxyListRequest *ngwm__getProxyListRequest, _ngwm__getProxyListResponse *ngwm__getProxyListResponse)
 {	struct __ngw__getProxyListRequest soap_tmp___ngw__getProxyListRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getProxyListRequest";
 	soap->encodingStyle = NULL;
@@ -1445,7 +1551,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getProxyListRequest(struct soap *soap
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSettingsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getSettingsRequest *ngwm__getSettingsRequest, struct __ngw__getSettingsRequestResponse &param_1)
 {	struct __ngw__getSettingsRequest soap_tmp___ngw__getSettingsRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getSettingsRequest";
 	soap->encodingStyle = NULL;
@@ -1496,7 +1602,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSettingsRequest(struct soap *soap,
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSignaturesRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getSignaturesRequest *ngwm__getSignaturesRequest, _ngwm__getSignaturesResponse *ngwm__getSignaturesResponse)
 {	struct __ngw__getSignaturesRequest soap_tmp___ngw__getSignaturesRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getSignaturesRequest";
 	soap->encodingStyle = NULL;
@@ -1549,7 +1655,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSignaturesRequest(struct soap *soa
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getTimezoneListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getTimezoneListRequest *ngwm__getTimezoneListRequest, _ngwm__getTimezoneListResponse *ngwm__getTimezoneListResponse)
 {	struct __ngw__getTimezoneListRequest soap_tmp___ngw__getTimezoneListRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "getTimezoneListRequest";
 	soap->encodingStyle = NULL;
@@ -1602,7 +1708,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getTimezoneListRequest(struct soap *s
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__loginRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__loginRequest *ngwm__loginRequest, _ngwm__loginResponse *ngwm__loginResponse)
 {	struct __ngw__loginRequest soap_tmp___ngw__loginRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "loginRequest";
 	soap->encodingStyle = NULL;
@@ -1655,7 +1761,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__loginRequest(struct soap *soap, const
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__logoutRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__logoutRequest *ngwm__logoutRequest, _ngwm__logoutResponse *ngwm__logoutResponse)
 {	struct __ngw__logoutRequest soap_tmp___ngw__logoutRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "logoutRequest";
 	soap->encodingStyle = NULL;
@@ -1708,7 +1814,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__logoutRequest(struct soap *soap, cons
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__markPrivateRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__markPrivateRequest *ngwm__markPrivateRequest, _ngwm__markPrivateResponse *ngwm__markPrivateResponse)
 {	struct __ngw__markPrivateRequest soap_tmp___ngw__markPrivateRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "markPrivateRequest";
 	soap->encodingStyle = NULL;
@@ -1761,7 +1867,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__markPrivateRequest(struct soap *soap,
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__markReadRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__markReadRequest *ngwm__markReadRequest, _ngwm__markReadResponse *ngwm__markReadResponse)
 {	struct __ngw__markReadRequest soap_tmp___ngw__markReadRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "markReadRequest";
 	soap->encodingStyle = NULL;
@@ -1814,7 +1920,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__markReadRequest(struct soap *soap, co
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__markUnPrivateRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__markUnPrivateRequest *ngwm__markUnPrivateRequest, _ngwm__markUnPrivateResponse *ngwm__markUnPrivateResponse)
 {	struct __ngw__markUnPrivateRequest soap_tmp___ngw__markUnPrivateRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "markUnPrivateRequest";
 	soap->encodingStyle = NULL;
@@ -1867,7 +1973,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__markUnPrivateRequest(struct soap *soa
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__markUnReadRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__markUnReadRequest *ngwm__markUnReadRequest, _ngwm__markUnReadResponse *ngwm__markUnReadResponse)
 {	struct __ngw__markUnReadRequest soap_tmp___ngw__markUnReadRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "markUnReadRequest";
 	soap->encodingStyle = NULL;
@@ -1920,7 +2026,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__markUnReadRequest(struct soap *soap, 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__modifyItemRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__modifyItemRequest *ngwm__modifyItemRequest, _ngwm__modifyItemResponse *ngwm__modifyItemResponse)
 {	struct __ngw__modifyItemRequest soap_tmp___ngw__modifyItemRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "modifyItemRequest";
 	soap->encodingStyle = NULL;
@@ -1973,7 +2079,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__modifyItemRequest(struct soap *soap, 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__modifyPasswordRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__modifyPasswordRequest *ngwm__modifyPasswordRequest, _ngwm__modifyPasswordResponse *ngwm__modifyPasswordResponse)
 {	struct __ngw__modifyPasswordRequest soap_tmp___ngw__modifyPasswordRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "modifyPasswordRequest";
 	soap->encodingStyle = NULL;
@@ -2026,7 +2132,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__modifyPasswordRequest(struct soap *so
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__modifyProxyAccessRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__modifyProxyAccessRequest *ngwm__modifyProxyAccessRequest, _ngwm__modifyProxyAccessResponse *ngwm__modifyProxyAccessResponse)
 {	struct __ngw__modifyProxyAccessRequest soap_tmp___ngw__modifyProxyAccessRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "modifyProxyAccessRequest";
 	soap->encodingStyle = NULL;
@@ -2079,7 +2185,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__modifyProxyAccessRequest(struct soap 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__modifySettingsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__modifySettingsRequest *ngwm__modifySettingsRequest, _ngwm__modifySettingsResponse *ngwm__modifySettingsResponse)
 {	struct __ngw__modifySettingsRequest soap_tmp___ngw__modifySettingsRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "modifySettingsRequest";
 	soap->encodingStyle = NULL;
@@ -2132,7 +2238,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__modifySettingsRequest(struct soap *so
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__modifySignaturesRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__modifySignaturesRequest *ngwm__modifySignaturesRequest, _ngwm__modifySignaturesResponse *ngwm__modifySignaturesResponse)
 {	struct __ngw__modifySignaturesRequest soap_tmp___ngw__modifySignaturesRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "modifySignaturesRequest";
 	soap->encodingStyle = NULL;
@@ -2185,7 +2291,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__modifySignaturesRequest(struct soap *
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__moveItemRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__moveItemRequest *ngwm__moveItemRequest, _ngwm__moveItemResponse *ngwm__moveItemResponse)
 {	struct __ngw__moveItemRequest soap_tmp___ngw__moveItemRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "moveItemRequest";
 	soap->encodingStyle = NULL;
@@ -2238,7 +2344,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__moveItemRequest(struct soap *soap, co
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__positionCursorRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__positionCursorRequest *ngwm__positionCursorRequest, _ngwm__positionCursorResponse *ngwm__positionCursorResponse)
 {	struct __ngw__positionCursorRequest soap_tmp___ngw__positionCursorRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "positionCursorRequest";
 	soap->encodingStyle = NULL;
@@ -2291,7 +2397,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__positionCursorRequest(struct soap *so
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__purgeDeletedItemsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__purgeDeletedItemsRequest *ngwm__purgeDeletedItemsRequest, _ngwm__purgeDeletedItemsResponse *ngwm__purgeDeletedItemsResponse)
 {	struct __ngw__purgeDeletedItemsRequest soap_tmp___ngw__purgeDeletedItemsRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "purgeDeletedItemsRequest";
 	soap->encodingStyle = NULL;
@@ -2344,7 +2450,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__purgeDeletedItemsRequest(struct soap 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__purgeRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__purgeRequest *ngwm__purgeRequest, _ngwm__purgeResponse *ngwm__purgeResponse)
 {	struct __ngw__purgeRequest soap_tmp___ngw__purgeRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "purgeRequest";
 	soap->encodingStyle = NULL;
@@ -2397,7 +2503,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__purgeRequest(struct soap *soap, const
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__readCursorRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__readCursorRequest *ngwm__readCursorRequest, _ngwm__readCursorResponse *ngwm__readCursorResponse)
 {	struct __ngw__readCursorRequest soap_tmp___ngw__readCursorRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "readCursorRequest";
 	soap->encodingStyle = NULL;
@@ -2450,7 +2556,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__readCursorRequest(struct soap *soap, 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeItemRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__removeItemRequest *ngwm__removeItemRequest, _ngwm__removeItemResponse *ngwm__removeItemResponse)
 {	struct __ngw__removeItemRequest soap_tmp___ngw__removeItemRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "removeItemRequest";
 	soap->encodingStyle = NULL;
@@ -2503,7 +2609,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeItemRequest(struct soap *soap, 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeItemsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__removeItemsRequest *ngwm__removeItemsRequest, _ngwm__removeItemsResponse *ngwm__removeItemsResponse)
 {	struct __ngw__removeItemsRequest soap_tmp___ngw__removeItemsRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "removeItemsRequest";
 	soap->encodingStyle = NULL;
@@ -2556,7 +2662,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeItemsRequest(struct soap *soap,
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeMembersRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__removeMembersRequest *ngwm__removeMembersRequest, _ngwm__removeMembersResponse *ngwm__removeMembersResponse)
 {	struct __ngw__removeMembersRequest soap_tmp___ngw__removeMembersRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "removeMembersRequest";
 	soap->encodingStyle = NULL;
@@ -2609,7 +2715,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeMembersRequest(struct soap *soa
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeProxyAccessRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__removeProxyAccessRequest *ngwm__removeProxyAccessRequest, _ngwm__removeProxyAccessResponse *ngwm__removeProxyAccessResponse)
 {	struct __ngw__removeProxyAccessRequest soap_tmp___ngw__removeProxyAccessRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "removeProxyAccessRequest";
 	soap->encodingStyle = NULL;
@@ -2662,7 +2768,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeProxyAccessRequest(struct soap 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeSignatureRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__removeSignatureRequest *ngwm__removeSignatureRequest, _ngwm__removeSignatureResponse *ngwm__removeSignatureResponse)
 {	struct __ngw__removeSignatureRequest soap_tmp___ngw__removeSignatureRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "removeSignatureRequest";
 	soap->encodingStyle = NULL;
@@ -2715,7 +2821,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeSignatureRequest(struct soap *s
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__replyRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__replyRequest *ngwm__replyRequest, _ngwm__replyResponse *ngwm__replyResponse)
 {	struct __ngw__replyRequest soap_tmp___ngw__replyRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "replyRequest";
 	soap->encodingStyle = NULL;
@@ -2768,7 +2874,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__replyRequest(struct soap *soap, const
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__retractRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__retractRequest *ngwm__retractRequest, _ngwm__retractResponse *ngwm__retractResponse)
 {	struct __ngw__retractRequest soap_tmp___ngw__retractRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "retractRequest";
 	soap->encodingStyle = NULL;
@@ -2821,7 +2927,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__retractRequest(struct soap *soap, con
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__sendItemRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__sendItemRequest *ngwm__sendItemRequest, _ngwm__sendItemResponse *ngwm__sendItemResponse)
 {	struct __ngw__sendItemRequest soap_tmp___ngw__sendItemRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "sendItemRequest";
 	soap->encodingStyle = NULL;
@@ -2874,7 +2980,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__sendItemRequest(struct soap *soap, co
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__startFreeBusySessionRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__startFreeBusySessionRequest *ngwm__startFreeBusySessionRequest, _ngwm__startFreeBusySessionResponse *ngwm__startFreeBusySessionResponse)
 {	struct __ngw__startFreeBusySessionRequest soap_tmp___ngw__startFreeBusySessionRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "startFreeBusySessionRequest";
 	soap->encodingStyle = NULL;
@@ -2927,7 +3033,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__startFreeBusySessionRequest(struct so
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__unacceptRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__unacceptRequest *ngwm__unacceptRequest, _ngwm__unacceptResponse *ngwm__unacceptResponse)
 {	struct __ngw__unacceptRequest soap_tmp___ngw__unacceptRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "unacceptRequest";
 	soap->encodingStyle = NULL;
@@ -2980,7 +3086,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__unacceptRequest(struct soap *soap, co
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__uncompleteRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__uncompleteRequest *ngwm__uncompleteRequest, _ngwm__uncompleteResponse *ngwm__uncompleteResponse)
 {	struct __ngw__uncompleteRequest soap_tmp___ngw__uncompleteRequest;
 	if (!soap_endpoint)
-		soap_endpoint = "http://137.65.15.153:8080";
+		soap_endpoint = "http://localhost:8080";
 	if (!soap_action)
 		soap_action = "uncompleteRequest";
 	soap->encodingStyle = NULL;
@@ -3015,6 +3121,324 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__uncompleteRequest(struct soap *soap, 
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
 	ngwm__uncompleteResponse->soap_get(soap, "ngwm:uncompleteResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+#ifndef WITH_LEANER
+	 || soap_resolve_attachments(soap)
+#endif
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__cleanEventConfigurationRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns2__cleanEventConfigurationRequest *ns2__cleanEventConfigurationRequest, _ns2__cleanEventConfigurationResponse *ns2__cleanEventConfigurationResponse)
+{	struct __ngw__cleanEventConfigurationRequest soap_tmp___ngw__cleanEventConfigurationRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "cleanEventConfigurationRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__cleanEventConfigurationRequest.ns2__cleanEventConfigurationRequest = ns2__cleanEventConfigurationRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__cleanEventConfigurationRequest(soap, &soap_tmp___ngw__cleanEventConfigurationRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__cleanEventConfigurationRequest(soap, &soap_tmp___ngw__cleanEventConfigurationRequest, "-ngw:cleanEventConfigurationRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__cleanEventConfigurationRequest(soap, &soap_tmp___ngw__cleanEventConfigurationRequest, "-ngw:cleanEventConfigurationRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ns2__cleanEventConfigurationResponse)
+		return soap_closesock(soap);
+	ns2__cleanEventConfigurationResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ns2__cleanEventConfigurationResponse->soap_get(soap, "ns2:cleanEventConfigurationResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+#ifndef WITH_LEANER
+	 || soap_resolve_attachments(soap)
+#endif
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__configureEventsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns2__configureEventsRequest *ns2__configureEventsRequest, _ns2__configureEventsResponse *ns2__configureEventsResponse)
+{	struct __ngw__configureEventsRequest soap_tmp___ngw__configureEventsRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "configureEventsRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__configureEventsRequest.ns2__configureEventsRequest = ns2__configureEventsRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__configureEventsRequest(soap, &soap_tmp___ngw__configureEventsRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__configureEventsRequest(soap, &soap_tmp___ngw__configureEventsRequest, "-ngw:configureEventsRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__configureEventsRequest(soap, &soap_tmp___ngw__configureEventsRequest, "-ngw:configureEventsRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ns2__configureEventsResponse)
+		return soap_closesock(soap);
+	ns2__configureEventsResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ns2__configureEventsResponse->soap_get(soap, "ns2:configureEventsResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+#ifndef WITH_LEANER
+	 || soap_resolve_attachments(soap)
+#endif
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getEventConfigurationRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns2__getEventConfigurationRequest *ns2__getEventConfigurationRequest, _ns2__getEventConfigurationResponse *ns2__getEventConfigurationResponse)
+{	struct __ngw__getEventConfigurationRequest soap_tmp___ngw__getEventConfigurationRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "getEventConfigurationRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__getEventConfigurationRequest.ns2__getEventConfigurationRequest = ns2__getEventConfigurationRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__getEventConfigurationRequest(soap, &soap_tmp___ngw__getEventConfigurationRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__getEventConfigurationRequest(soap, &soap_tmp___ngw__getEventConfigurationRequest, "-ngw:getEventConfigurationRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__getEventConfigurationRequest(soap, &soap_tmp___ngw__getEventConfigurationRequest, "-ngw:getEventConfigurationRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ns2__getEventConfigurationResponse)
+		return soap_closesock(soap);
+	ns2__getEventConfigurationResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ns2__getEventConfigurationResponse->soap_get(soap, "ns2:getEventConfigurationResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+#ifndef WITH_LEANER
+	 || soap_resolve_attachments(soap)
+#endif
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getEventsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns2__getEventsRequest *ns2__getEventsRequest, _ns2__getEventsResponse *ns2__getEventsResponse)
+{	struct __ngw__getEventsRequest soap_tmp___ngw__getEventsRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "getEventsRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__getEventsRequest.ns2__getEventsRequest = ns2__getEventsRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__getEventsRequest(soap, &soap_tmp___ngw__getEventsRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__getEventsRequest(soap, &soap_tmp___ngw__getEventsRequest, "-ngw:getEventsRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__getEventsRequest(soap, &soap_tmp___ngw__getEventsRequest, "-ngw:getEventsRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ns2__getEventsResponse)
+		return soap_closesock(soap);
+	ns2__getEventsResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ns2__getEventsResponse->soap_get(soap, "ns2:getEventsResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+#ifndef WITH_LEANER
+	 || soap_resolve_attachments(soap)
+#endif
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeEventConfigurationRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns2__removeEventConfigurationRequest *ns2__removeEventConfigurationRequest, _ns2__removeEventConfigurationResponse *ns2__removeEventConfigurationResponse)
+{	struct __ngw__removeEventConfigurationRequest soap_tmp___ngw__removeEventConfigurationRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "removeEventConfigurationRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__removeEventConfigurationRequest.ns2__removeEventConfigurationRequest = ns2__removeEventConfigurationRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__removeEventConfigurationRequest(soap, &soap_tmp___ngw__removeEventConfigurationRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__removeEventConfigurationRequest(soap, &soap_tmp___ngw__removeEventConfigurationRequest, "-ngw:removeEventConfigurationRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__removeEventConfigurationRequest(soap, &soap_tmp___ngw__removeEventConfigurationRequest, "-ngw:removeEventConfigurationRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ns2__removeEventConfigurationResponse)
+		return soap_closesock(soap);
+	ns2__removeEventConfigurationResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ns2__removeEventConfigurationResponse->soap_get(soap, "ns2:removeEventConfigurationResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+#ifndef WITH_LEANER
+	 || soap_resolve_attachments(soap)
+#endif
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeEventsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns2__removeEventsRequest *ns2__removeEventsRequest, _ns2__removeEventsResponse *ns2__removeEventsResponse)
+{	struct __ngw__removeEventsRequest soap_tmp___ngw__removeEventsRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "removeEventsRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__removeEventsRequest.ns2__removeEventsRequest = ns2__removeEventsRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__removeEventsRequest(soap, &soap_tmp___ngw__removeEventsRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__removeEventsRequest(soap, &soap_tmp___ngw__removeEventsRequest, "-ngw:removeEventsRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__removeEventsRequest(soap, &soap_tmp___ngw__removeEventsRequest, "-ngw:removeEventsRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ns2__removeEventsResponse)
+		return soap_closesock(soap);
+	ns2__removeEventsResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ns2__removeEventsResponse->soap_get(soap, "ns2:removeEventsResponse", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);

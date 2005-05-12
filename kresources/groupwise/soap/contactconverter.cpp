@@ -34,14 +34,15 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
   ngwt__Contact* contact = soap_new_ngwt__Contact( soap(), -1 );
 
-  // ns1_Contact
+  // ngwt_Contact
   contact->fullName = 0;
   contact->emailList = 0;
   contact->imList = 0;
   contact->addressList = 0;
   contact->officeInfo = 0;
   contact->personalInfo = 0;
-  // ns1_AddressBookItem
+  contact->referenceInfo = 0;
+  // ngwt_AddressBookItem
   contact->uuid = 0;
   contact->comment = 0;
   // ngwt__ContainerItem
@@ -118,6 +119,7 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
   // Phone numbers
   if ( !addr.phoneNumbers().isEmpty() ) {
     ngwt__PhoneList* phoneList = soap_new_ngwt__PhoneList( soap(), -1 );
+    phoneList->default_ = 0;
     std::vector<class ngwt__PhoneNumber*> *list = soap_new_std__vectorTemplateOfPointerTongwt__PhoneNumber( soap(), -1 );
 
     KABC::PhoneNumber::List phones = addr.phoneNumbers();
@@ -513,11 +515,16 @@ ngwt__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee
       // get the protocol for this field
       QString protocol = app.section( '/', 1, 1 );
       if ( !protocol.isEmpty() ) {
+        if ( protocol == "groupwise" )
+          protocol = "novell";
         QStringList addresses = QStringList::split( QChar( 0xE000 ), value );
         QStringList::iterator end = addresses.end();
         // extract each address for this protocol, and create an ngwt__ImAddress for it, and append it to list.
         for ( QStringList::ConstIterator it = addresses.begin(); it != end; ++it ) {
           ngwt__ImAddress* address = soap_new_ngwt__ImAddress( soap(), -1 );
+          address->service = soap_new_std__string( soap(), -1 );
+          address->address = soap_new_std__string( soap(), -1 );
+          address->type = soap_new_std__string( soap(), -1 );
           address->service->append( protocol.utf8() );
           address->address->append( (*it).utf8() );
           address->type->append( "all" );

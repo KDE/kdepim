@@ -20,8 +20,10 @@
 
 #include "incidenceconverter.h"
 
+#include <klocale.h>
 #include <kmdcodec.h>
 #include <libkdepim/kpimprefs.h>
+#include <libkcal/event.h>
 
 #include <kdebug.h>
 
@@ -51,16 +53,19 @@ KCal::Event* IncidenceConverter::convertFromAppointment( ngwt__Appointment* appo
     return 0;
   }
 
-  if ( appointment->allDayEvent && (*appointment->allDayEvent) ) {
+  if ( appointment->allDayEvent && (*appointment->allDayEvent) )
+  {
     event->setFloats( true );
-    
+    // startDate actually belongs to CalendarItem, but the way it is interpreted depends on 
+    // whether allDayEvent from Appointment is true
     if ( appointment->startDate != 0 )
       event->setDtStart( charToQDate( appointment->startDate ) );
 
     if ( appointment->endDate != 0 )
       event->setDtEnd( charToQDate( appointment->endDate ).addDays( -1 ) );
-    
-  } else {
+  }
+  else
+  {
     event->setFloats( false );
 
     if ( appointment->startDate != 0 )
@@ -79,6 +84,13 @@ KCal::Event* IncidenceConverter::convertFromAppointment( ngwt__Appointment* appo
 
   if ( appointment->place )
     event->setLocation( stringToQString( appointment->place ) );
+
+  if ( appointment->acceptLevel ) {
+    if ( *appointment->acceptLevel == Tentative )
+      event->setTransparency( KCal::Event::Transparent );
+    else
+      event->setTransparency( KCal::Event::Opaque );
+  }
 
   return event;
 }
@@ -182,6 +194,7 @@ KCal::Todo* IncidenceConverter::convertFromTask( ngwt__Task* task )
   if ( task->completed && (*task->completed) == true )
     todo->setCompleted( true );
 
+  todo->setLocation( i18n( "Novell GroupWise does not support locations for To-dos." ) );
   return todo;
 }
 
@@ -189,8 +202,9 @@ ngwt__Task* IncidenceConverter::convertToTask( KCal::Todo* todo )
 {
   if ( !todo )
     return 0;
-
   ngwt__Task* task = soap_new_ngwt__Task( soap(), -1 );
+  task->startDate = 0;
+  task->dueDate = 0;
   task->taskPriority = 0;
   task->completed = 0;
 
@@ -343,17 +357,17 @@ void IncidenceConverter::setAttendees( KCal::Incidence *incidence,
   
   std::vector<ngwt__Recipient * > *recipients = 
     soap_new_std__vectorTemplateOfPointerTongwt__Recipient( soap(), -1 );
-  recipientList->recipient = *recipients;
-
+ 
   recipients->push_back( createRecipient( mFromName, mFromEmail, mFromUuid ) );
 
   KCal::Attendee::List attendees = incidence->attendees();
   KCal::Attendee::List::ConstIterator it;
   for( it = attendees.begin(); it != attendees.end(); ++it ) {
-    kdDebug() << "IncidenceConverter::setAttendee() " << (*it)->fullName()
+    kdDebug() << "IncidenceConverter::setAttendees(), adding " << (*it)->fullName()
       << endl;
     recipients->push_back( createRecipient( (*it)->name(), (*it)->email() ) );
   }
+ recipientList->recipient = *recipients;
 }
 
 ngwt__Recipient *IncidenceConverter::createRecipient( const QString &name,
@@ -365,11 +379,13 @@ ngwt__Recipient *IncidenceConverter::createRecipient( const QString &name,
   if ( !uuid.isEmpty() ) recipient->uuid = qStringToString( uuid );
   else recipient->uuid = 0;
   if ( !name.isEmpty() ) {
+    kdDebug() << "- recipient name: " << name << endl; 
     recipient->displayName = qStringToString( name );
   } else {
     recipient->displayName = 0;
   }
   if ( !email.isEmpty() ) {
+    kdDebug() << "- recipient email: " << email << endl; 
     recipient->email = qStringToString( email );
   } else {
     recipient->email = 0;
@@ -431,6 +447,7 @@ void IncidenceConverter::getItemDescription( ngwt__CalendarItem *item, KCal::Inc
       if ( stringToQString( (*it)->contentType ) == "text/plain" ) {
         QString description = QString::fromUtf8( (char*)data.__ptr, data.__size );
         incidence->setDescription( description );
+        kdDebug() << "Incidence description decodes to: " << description << endl; 
         return;
       }
     }
@@ -473,6 +490,13 @@ void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence
 {
   kdDebug() << "IncidenceConverter::getAttendees()" << ( item->subject ? item->subject->c_str() : "no subject" )
     << endl;
+
+  if ( item->distribution && item->distribution->from ) {
+    kdDebug() << "-- from" << endl;
+    KCal::Person organizer( stringToQString( item->distribution->from->displayName ),
+                            stringToQString( item->distribution->from->email ) );
+    incidence->setOrganizer( organizer );
+  }
 
   if ( item->distribution && item->distribution->recipients ) {
     kdDebug() << "-- recipients" << endl;

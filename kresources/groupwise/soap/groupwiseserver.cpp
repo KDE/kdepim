@@ -302,7 +302,7 @@ bool GroupwiseServer::login()
 
   if ( !checkResponse( result, loginResp.status ) ) return false;
 
-  mSession = *loginResp.session;
+  mSession = loginResp.session;
   mSoap->header = new( SOAP_ENV__Header );
 
   mUserName = "";
@@ -708,11 +708,12 @@ bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
 //  kdDebug() << "RESPONDED UID: " << response.id.c_str() << endl;
 
   // what if this returns multiple IDs - does a single recurring incidence create multiple ids on the server?
-  Q_ASSERT( response.id.size() == 1 );
+  if ( response.id.size() == 1 )
+  {
   std::string firstId = *(response.id.begin() );
   incidence->setCustomProperty( "GWRESOURCE", "UID",
                                 QString::fromUtf8( firstId.c_str() ) );
-
+  }
   return true;
 }
 
@@ -726,12 +727,21 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   kdDebug() << "GroupwiseServer::changeIncidence() " << incidence->summary()
             << endl;
 
+#if 0
   if ( incidence->attendeeCount() > 0 ) {
-    if ( !deleteIncidence( incidence ) ) return false;
-    if ( !addIncidence( incidence, 0 ) ) return false;
+    kdDebug() << "GroupwiseServer::changeIncidence() - deleting old meeting " << endl;
+    if ( !deleteIncidence( incidence ) ) {
+      kdDebug() << "GroupwiseServer::changeIncidence() - deletion failed." << endl;
+      return false;
+    }
+    kdDebug() << "GroupwiseServer::changeIncidence() - adding new meeting with attendees" << endl;
+    if ( !addIncidence( incidence, 0 ) ) {
+      kdDebug() << "GroupwiseServer::changeIncidence() - adding failed." << endl;
+      return false;
+    }
     return true;
   }
-
+#endif
   IncidenceConverter converter( mSoap );
   converter.setFrom( mUserName, mUserEmail, mUserUuid );
 
@@ -759,7 +769,7 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   request.updates->add = 0;
   request.updates->_delete = 0;
   request.updates->update = item;
-
+  request.notification = 0;
   _ngwm__modifyItemResponse response;
   mSoap->header->ngwt__session = mSession;
 
@@ -874,6 +884,7 @@ bool GroupwiseServer::changeAddressee( const KABC::Addressee &addr )
   request.updates->add = 0;
   request.updates->_delete = 0;
   request.updates->update = contact;
+  request.notification = 0;
 
   _ngwm__modifyItemResponse response;
   mSoap->header->ngwt__session = mSession;
@@ -925,7 +936,7 @@ bool GroupwiseServer::readCalendarSynchronous( KCal::Calendar *cal )
   return true;
 }
 
-bool GroupwiseServer::readFreeBusy( const QString &email, 
+bool GroupwiseServer::readFreeBusy( const QString &email,
   const QDate &start, const QDate &end, KCal::FreeBusy *freeBusy )
 {
   if ( mSession.empty() ) {
@@ -938,12 +949,12 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
   GWConverter conv( mSoap );
 
   // Setup input data
-  ngwt__FreeBusyUser user;
+  ngwt__NameAndEmail user;
   user.displayName = 0;
   user.uuid = 0;
   user.email = conv.qStringToString( email );
 
-  std::vector<class ngwt__FreeBusyUser * > users;
+  std::vector<class ngwt__NameAndEmail * > users;
   users.push_back( &user );
 
   ngwt__FreeBusyUserList userList;
@@ -954,7 +965,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
   startSessionRequest.users = &userList;
   startSessionRequest.startDate = conv.qDateToChar( start );
   startSessionRequest.endDate = conv.qDateToChar( end );
-  
+
   _ngwm__startFreeBusySessionResponse startSessionResponse;
 
   mSoap->header->ngwt__session = mSession;
@@ -971,7 +982,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
   // Get free/busy data
   _ngwm__getFreeBusyRequest getFreeBusyRequest;
   getFreeBusyRequest.freeBusySessionId = QString::number( fbSessionId ).utf8();
-  
+
   _ngwm__getFreeBusyResponse getFreeBusyResponse;
 
   mSoap->header->ngwt__session = mSession;
@@ -1009,9 +1020,9 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
           for( it2 = blocks->begin(); it2 != blocks->end(); ++it2 ) {
             QDateTime blockStart = conv.charToQDateTime( (*it2)->startDate );
             QDateTime blockEnd = conv.charToQDateTime( (*it2)->endDate );
-            ngwt__AcceptLevel acceptLevel = (*it2)->acceptLevel;
+            ngwt__AcceptLevel acceptLevel = *(*it2)->acceptLevel;
 
-            std::string subject = (*it2)->subject;
+            std::string subject = *(*it2)->subject;
   //          kdDebug() << "BLOCK Subject: " << subject.c_str() << endl;
 
             if ( acceptLevel == Busy || acceptLevel == OutOfOffice ) {
@@ -1026,7 +1037,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
   // Close session
   _ngwm__closeFreeBusySessionRequest closeSessionRequest;
   closeSessionRequest.freeBusySessionId = fbSessionId;
-  
+
   _ngwm__closeFreeBusySessionResponse closeSessionResponse;
 
   mSoap->header->ngwt__session = mSession;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
 <notice>
-   Copyright Â© 2005-2005 Novell, Inc. All Rights Reserved.
+   Copyright © 2005-2005 Novell, Inc. All Rights Reserved.
 
    THIS WORK IS SUBJECT TO U.S. AND INTERNATIONAL COPYRIGHT LAWS AND TREATIES.
    NO PART OF THIS WORK MAY BE USED, PRACTICED, PERFORMED COPIED, DISTRIBUTED,
@@ -13,18 +13,20 @@
 -->
 
 <definitions 
-    xmlns="http://schemas.xmlsoap.org/wsdl/"
     targetNamespace="http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl"
     xmlns:tns="http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl"
+	 xmlns="http://schemas.xmlsoap.org/wsdl/"
     xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
     xmlns:types="http://schemas.novell.com/2005/01/GroupWise/types"
     xmlns:methods="http://schemas.novell.com/2005/01/GroupWise/methods"
+    xmlns:events="http://schemas.novell.com/2005/01/GroupWise/events"
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
    
 	<types>
 		<schema xmlns="http://www.w3.org/2001/XMLSchema">
-			<import namespace="http://schemas.novell.com/2005/01/GroupWise/types" schemaLocation="types.xsd"/>
+			<import namespace="http://schemas.novell.com/2005/01/GroupWise/types"   schemaLocation="types.xsd"/>
 			<import namespace="http://schemas.novell.com/2005/01/GroupWise/methods" schemaLocation="methods.xsd"/>
+			<import namespace="http://schemas.novell.com/2005/01/GroupWise/events"  schemaLocation="events.xsd"/>
 		</schema>		
 	</types>
 
@@ -180,6 +182,20 @@
    </message>
    <message name="getCustomListResponseMessage">
       <part name="getCustomListRes" element="methods:getCustomListResponse"/>
+   </message>
+
+   <message name="getDeltasRequestMessage">
+      <part name="getDeltasReq" element="methods:getDeltasRequest"/>
+   </message>
+   <message name="getDeltasResponseMessage">
+      <part name="getDeltasRes" element="methods:getDeltasResponse"/>
+   </message>
+
+   <message name="getDeltaInfoRequestMessage">
+      <part name="getDeltaInfoReq" element="methods:getDeltaInfoRequest"/>
+   </message>
+   <message name="getDeltaInfoResponseMessage">
+      <part name="getDeltaInfoRes" element="methods:getDeltaInfoResponse"/>
    </message>
 
    <message name="getFolderListRequestMessage">
@@ -432,6 +448,47 @@
       <part name="startFreeBusySessionRes" element="methods:startFreeBusySessionResponse"/>
    </message>
 
+   <message name="cleanEventConfigurationRequestMessage">
+      <part name="cleanEventConfigurationReq" element="events:cleanEventConfigurationRequest"/>
+   </message>
+   <message name="cleanEventConfigurationResponseMessage">
+      <part name="cleanEventConfigurationRes" element="events:cleanEventConfigurationResponse"/>
+   </message>
+
+   <message name="configureEventsRequestMessage">
+      <part name="configureEventsReq" element="events:configureEventsRequest"/>
+   </message>
+   <message name="configureEventsResponseMessage">
+      <part name="configureEventsRes" element="events:configureEventsResponse"/>
+   </message>
+
+   <message name="getEventConfigurationRequestMessage">
+      <part name="getEventConfigurationReq" element="events:getEventConfigurationRequest"/>
+   </message>
+   <message name="getEventConfigurationResponseMessage">
+      <part name="getEventConfigurationRes" element="events:getEventConfigurationResponse"/>
+   </message>
+
+   <message name="getEventsRequestMessage">
+      <part name="getEventsReq" element="events:getEventsRequest"/>
+   </message>
+   <message name="getEventsResponseMessage">
+      <part name="getEventsRes" element="events:getEventsResponse"/>
+   </message>
+
+   <message name="removeEventConfigurationRequestMessage">
+      <part name="removeEventConfigurationReq" element="events:removeEventConfigurationRequest"/>
+   </message>
+   <message name="removeEventConfigurationResponseMessage">
+      <part name="removeEventConfigurationRes" element="events:removeEventConfigurationResponse"/>
+   </message>
+
+   <message name="removeEventsRequestMessage">
+      <part name="removeEventsReq" element="events:removeEventsRequest"/>
+   </message>
+   <message name="removeEventsResponseMessage">
+      <part name="removeEventsRes" element="events:removeEventsResponse"/>
+   </message>
 
    <portType name="GroupWisePortType">
 
@@ -533,6 +590,16 @@
      <operation name="getCustomListRequest">
        <input message="tns:getCustomListRequestMessage"/>
        <output message="tns:getCustomListResponseMessage"/>
+     </operation>
+
+     <operation name="getDeltasRequest">
+       <input message="tns:getDeltasRequestMessage"/>
+       <output message="tns:getDeltasResponseMessage"/>
+     </operation>
+
+     <operation name="getDeltaInfoRequest">
+       <input message="tns:getDeltaInfoRequestMessage"/>
+       <output message="tns:getDeltaInfoResponseMessage"/>
      </operation>
 
      <operation name="getFolderListRequest">
@@ -717,6 +784,36 @@
      <operation name="uncompleteRequest">
        <input message="tns:uncompleteRequestMessage"/>
        <output message="tns:uncompleteResponseMessage"/>
+     </operation>
+
+   </portType>
+
+
+   <portType name="GroupWiseEventsPortType">
+   
+     <operation name="cleanEventConfigurationRequest">
+       <input message="tns:cleanEventConfigurationRequestMessage"/>
+       <output message="tns:cleanEventConfigurationResponseMessage"/>
+     </operation>
+     <operation name="configureEventsRequest">
+       <input message="tns:configureEventsRequestMessage"/>
+       <output message="tns:configureEventsResponseMessage"/>
+     </operation>
+     <operation name="getEventConfigurationRequest">
+       <input message="tns:getEventConfigurationRequestMessage"/>
+       <output message="tns:getEventConfigurationResponseMessage"/>
+     </operation>
+     <operation name="getEventsRequest">
+       <input message="tns:getEventsRequestMessage"/>
+       <output message="tns:getEventsResponseMessage"/>
+     </operation>
+     <operation name="removeEventConfigurationRequest">
+       <input message="tns:removeEventConfigurationRequestMessage"/>
+       <output message="tns:removeEventConfigurationResponseMessage"/>
+     </operation>
+     <operation name="removeEventsRequest">
+       <input message="tns:removeEventsRequestMessage"/>
+       <output message="tns:removeEventsResponseMessage"/>
      </operation>
 
    </portType>
@@ -936,6 +1033,28 @@
 
     <operation name="getCustomListRequest">
       <soap:operation soapAction="getCustomListRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getDeltasRequest">
+      <soap:operation soapAction="getDeltasRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getDeltaInfoRequest">
+      <soap:operation soapAction="getDeltaInfoRequest" style="document" />
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
@@ -1353,17 +1472,92 @@
   </binding>
 
 
-   <documentation>
-      Service Definition ---------------------------------------------------------------------------
-   </documentation>
+  <binding name="GroupWiseEventsBinding" type="tns:GroupWiseEventsPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 
-  <service name="GroupwiseService">
-        <port binding="tns:GroupWiseBinding" name="GroupwiseSOAPPort">
+    <operation name="cleanEventConfigurationRequest">
+      <soap:operation soapAction="cleanEventConfigurationRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="configureEventsRequest">
+      <soap:operation soapAction="configureEventsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="getEventConfigurationRequest">
+      <soap:operation soapAction="getEventConfigurationRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="getEventsRequest">
+      <soap:operation soapAction="getEventsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="removeEventConfigurationRequest">
+      <soap:operation soapAction="removeEventConfigurationRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+   
+    <operation name="removeEventsRequest">
+      <soap:operation soapAction="removeEventsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+   </binding>
+
+
+   <service name="GroupwiseService">
+
+      <port binding="tns:GroupWiseBinding" name="GroupwiseSOAPPort">
          <documentation>
             The default port for the GroupWise SOAP protocol is 7191.
          </documentation>
-         <soap:address location="http://137.65.15.153:8080"/>
-        </port>
-  </service>
+         <soap:address location="http://localhost:8080"/>
+      </port>
+
+      <port binding="tns:GroupWiseEventsBinding" name="GroupwiseEventsSOAPPort">
+         <documentation>
+            The default port for the GroupWise Events is the same as the SOAP protocol - 7191.
+         </documentation>
+         <soap:address location="http://localhost:7191"/>
+      </port>
+
+   </service>
+
 </definitions>
 

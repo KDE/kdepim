@@ -33,10 +33,10 @@ stubs: groupwise.wsdl
 	sed  -e 's,->delete\([^d]\),->_delete\1,' $(srcdir)/soapC.cpp > $(srcdir)/soapC.cpp_
 	mv $(srcdir)/soapC.cpp_ $(srcdir)/soapC.cpp
 	# rename any 'new' method decls
-	sed  -e 's,*delete\([^d]\),*_delete\1,' $(srcdir)/soapStub.h > $(srcdir)/soapStub.h_
+	sed  -e 's,*new\([^d]\),*_new\1,' $(srcdir)/soapStub.h > $(srcdir)/soapStub.h_
 	mv $(srcdir)/soapStub.h_ $(srcdir)/soapStub.h
 	# rename any 'new' method invocations
-	sed  -e 's,->delete\([^d]\),->_delete\1,' $(srcdir)/soapC.cpp > $(srcdir)/soapC.cpp_
+	sed  -e 's,->new\([^d]\),->_new\1,' $(srcdir)/soapC.cpp > $(srcdir)/soapC.cpp_
 	mv $(srcdir)/soapC.cpp_ $(srcdir)/soapC.cpp
 
 METASOURCES = AUTO

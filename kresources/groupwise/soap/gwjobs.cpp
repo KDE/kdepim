@@ -231,8 +231,9 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
 
   itemsRequest.container = id;
   std::string *str = soap_new_std__string( mSoap, -1 );
-  str->append( "recipients message recipientStatus" );
+  str->append( "startDate endDate subject alarm allDayEvent place timezone iCalId recipients message recipientStatus" );
   itemsRequest.view = str;
+  //itemsRequest.view = 0;
 
 /*
   ngwt__Filter *filter = soap_new_ngwm__Filter( mSoap, -1 );
