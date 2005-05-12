@@ -247,7 +247,7 @@ in the trash.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycap>D</keycap></shortcut>
+<shortcut><keycap>Delete</keycap></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Move to Trash</guimenuitem>
 </menuchoice>
@@ -342,11 +342,11 @@ once they are deleted with this command.</para>
 </term>
 <listitem>
 <para>Changes the way attachments appear in the <guilabel>Message
-pane</guilabel> (independent of the MIME Tree). With <guimenuitem>Icons</guimenuitem>
+pane</guilabel> (independent of the MIME Tree). With <guimenuitem>As Icons</guimenuitem>
 all attachments appear as icons at the bottom of the message.
 <guimenuitem>Smart</guimenuitem> will show attachments as
 icons, unless the message suggests that they should be displayed inline.
-You can suggest that certain attachments should be shown inline 
+You can suggest that certain attachments should be shown inline
 in your own messages when you select <guilabel>Suggest automatic display</guilabel>
 in the attachment's properties dialog.
 <guimenuitem>Inline</guimenuitem> shows the contents of the attachments
@@ -380,7 +380,7 @@ Column</guilabel>)</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Display a column in the list of folders which shows the number 
+<para>Display a column in the list of folders which shows the number
 of messages per folder.</para>
 </listitem>
 </varlistentry>
@@ -461,6 +461,7 @@ at the <literal>Received:</literal> lines in the header.</para>
 <varlistentry>
 <term>
 <menuchoice>
+<shortcut><keycap>X</keycap></shortcut>
 <guimenu>View</guimenu>
 <guimenuitem>Use Fixed Font</guimenuitem>
 </menuchoice>
@@ -521,7 +522,7 @@ Pane. The default, <guilabel>Auto</guilabel>, should work in almost all cases.</
 <listitem>
 <para>Selects the next unread message in the message list. If there is
 no unread message below the currently selected message then the behavior
-depends on the value of the <xref 
+depends on the value of the <xref
 linkend="configure-misc-folders-go-unread"/> option.</para>
 </listitem>
 </varlistentry>
@@ -550,7 +551,7 @@ linkend="configure-misc-folders-go-unread"/> option.</para>
 <listitem>
 <para>Selects the previous unread message in the message list. If there is
 no unread message above the currently selected message then the behavior
-depends on the value of the <xref 
+depends on the value of the <xref
 linkend="configure-misc-folders-go-unread"/> option.</para>
 </listitem>
 </varlistentry>
@@ -626,7 +627,7 @@ dialog that lets you create a new folder.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Sets the status of all new and unread messages in the current folder to read.</para> 
+<para>Sets the status of all new and unread messages in the current folder to read.</para>
 </listitem>
 </varlistentry>
 
@@ -652,7 +653,7 @@ you might want to compact a folder manually.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Deletes old messages from the current folder or moves them to another 
+<para>Deletes old messages from the current folder or moves them to another
 folder, according to the rules in the folder's <guilabel>Properties</guilabel> dialog (the default is not to delete or move old messages). Usually &kmail;
 does this automatically, but under certain circumstances you might want to
 expire a folder manually..</para>
@@ -696,7 +697,7 @@ This is only available for &imap; folders.</para>
 </term>
 <listitem>
 <para>Moves all of the messages in the selected folder into the trash folder.
-This is only available if the currently selected folder is not a trash 
+This is only available if the currently selected folder is not a trash
 folder.</para>
 </listitem>
 </varlistentry>
@@ -738,7 +739,7 @@ of a folder after it has been removed.</para></warning>
 <listitem>
 <para>If enabled then &html; messages in this folders will be shown using
 &html; rendering. For security reasons, we recommend to only
-activate this for folders which only contain trusted messages.</para> 
+activate this for folders which only contain trusted messages.</para>
 </listitem>
 </varlistentry>
 
@@ -751,7 +752,7 @@ activate this for folders which only contain trusted messages.</para>
 </term>
 <listitem>
 <para>If enabled then the messages in the message list
-are shown in a tree-like list, with replies showing up directly under the 
+are shown in a tree-like list, with replies showing up directly under the
 message they reply to.</para>
 </listitem>
 </varlistentry>
@@ -782,7 +783,7 @@ to disable this option.
 </term>
 <listitem>
 <para>Opens up the <link linkend="folders-properties-window">Properties dialog</link> which lets you
-change the settings for the selected folder.</para> 
+change the settings for the selected folder.</para>
 </listitem>
 </varlistentry>
 
@@ -804,7 +805,7 @@ change the settings for the selected folder.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Opens the <link linkend="the-composer-window">composer window</link> so you can 
+<para>Opens the <link linkend="the-composer-window">composer window</link> so you can
 write a new message.</para>
 </listitem>
 </varlistentry>
@@ -818,7 +819,7 @@ write a new message.</para>
 </term>
 <listitem>
 <para>Opens the composer window so you can write a new
-mail. If the current folder holds a mailing list and has a posting 
+mail. If the current folder holds a mailing list and has a posting
 address defined, this address will be the default <guilabel>To:</guilabel>
 address.</para>
 </listitem>
@@ -834,15 +835,15 @@ address.</para>
 </term>
 <listitem>
 <para>Opens up the composer window, inserts the quoted text of the currently
-selected message and presets the <guilabel>To:</guilabel> field either with 
+selected message and presets the <guilabel>To:</guilabel> field either with
 the mailing-list address (if you reply to a mailing-list message) or with the
 preferred reply address of the sender. If you want to control which address
 the <guilabel>To:</guilabel> field is preset with then you should either use
 <menuchoice><guimenu>Message</guimenu><guimenuitem>Reply to
-Author...</guimenuitem></menuchoice> or 
+Author...</guimenuitem></menuchoice> or
 <menuchoice><guimenu>Message</guimenu><guimenuitem>Reply to
 Mailing-List...</guimenuitem></menuchoice>.
-Your identity will automatically be set to the one which this message was 
+Your identity will automatically be set to the one which this message was
 sent to.</para>
 </listitem>
 </varlistentry>
@@ -857,9 +858,9 @@ sent to.</para>
 </term>
 <listitem>
 <para>Opens up the composer window, inserts the quoted text of the currently
-selected message and presets the <guilabel>To:</guilabel> field either with 
+selected message and presets the <guilabel>To:</guilabel> field either with
 the mailing-list address (if you reply to a mailing-list message) or with the
-preferred reply address of the sender. The <guilabel>Copy to (CC):</guilabel> 
+preferred reply address of the sender. The <guilabel>Copy to (CC):</guilabel>
 field is preset with the addresses of all other recipients of the currently
 selected message excluding your own addresses.
 Your identity will automatically be set to the one which this message was
@@ -894,7 +895,7 @@ sent to.</para>
 </term>
 <listitem>
 <para>Opens up the composer window, inserts the quoted text of the currently
-selected message and presets the <guilabel>To:</guilabel> field with 
+selected message and presets the <guilabel>To:</guilabel> field with
 the mailing-list address. If you did not specify a mailing-list address for
 the currently selected folder and &kmail; cannot determine the posting address
 from the currently selected message then the <guilabel>To:</guilabel> field
@@ -913,7 +914,7 @@ sent to.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Works just like <guimenuitem>Reply...</guimenuitem> except that the text 
+<para>Works just like <guimenuitem>Reply...</guimenuitem> except that the text
 of the currently selected message is not quoted.</para>
 </listitem>
 </varlistentry>
@@ -926,7 +927,7 @@ of the currently selected message is not quoted.</para>
 </term>
 <listitem>
 <para>Forwards the message to a new recipient. Using <guimenuitem>Inline</guimenuitem>,
-the message's text and some important header fields will be copied to the body of the new message 
+the message's text and some important header fields will be copied to the body of the new message
 with a text marking the forwarded part. Attachments will be forwarded
 as attachments of the new message. Using <guimenuitem>As Attachment</guimenuitem>
 the message and its attachments will become an attachment of the new message. The original message
@@ -934,7 +935,7 @@ headers will be included in the forwarded message, too.
 <guimenuitem>Redirect</guimenuitem> works like forward, except that the message stays the same (even
 the <guilabel>From:</guilabel> field). The user who redirected the message is added in special
 header fields (<literal>Redirect-From</literal>, <literal>Redirect-Date</literal>, <literal>Redirect-To</literal>,
-&etc;).</para> 
+&etc;).</para>
 </listitem>
 </varlistentry>
 
@@ -1015,7 +1016,7 @@ following states:</para>
 <row>
 <entry><guimenuitem>Important</guimenuitem></entry>
 <entry>Flag</entry>
-<entry>This status will not automatically be set by &kmail;. You can use it freely to mark 
+<entry>This status will not automatically be set by &kmail;. You can use it freely to mark
 messages that are in some way important to you.</entry>
 </row>
 <row>
@@ -1178,56 +1179,56 @@ the &kde; address book.</para>
 </listitem>
 </varlistentry>
 
-	<varlistentry id="reader-tools-certificate-manager">
-	  <term>
-	    <menuchoice>
-	      <guimenu>Tools</guimenu>
-	      <guimenuitem>Certificate Manager...</guimenuitem>
-	    </menuchoice>
-	  </term>
-	  <listitem>
-	    <para>
-	      Starts <ulink
-	      url="/kleopatra"><application>Kleopatra</application></ulink>,
-	      the &kde; certificate manager.
-	    </para>
-	  </listitem>
-	</varlistentry>
+    <varlistentry id="reader-tools-certificate-manager">
+      <term>
+        <menuchoice>
+          <guimenu>Tools</guimenu>
+          <guimenuitem>Certificate Manager...</guimenuitem>
+        </menuchoice>
+      </term>
+      <listitem>
+        <para>
+          Starts <ulink
+          url="/kleopatra"><application>Kleopatra</application></ulink>,
+          the &kde; certificate manager.
+        </para>
+      </listitem>
+    </varlistentry>
 
-	<varlistentry id="reader-tools-gnupg-log-viewer">
-	  <term>
-	    <menuchoice>
-	      <guimenu>Tools</guimenu>
-	      <guimenuitem>GnuPG Log Viewer</guimenuitem>
-	    </menuchoice>
-	  </term>
-	  <listitem>
-	    <para>
-	      Starts <ulink
-	      url="/kwatchgnupg"><application>KWatchGnuPG</application></ulink>,
-	      a tool to present the debug output of
-	      <application>GnuPG</application> application. If
-	      signing, encryption, or verification mysteriously stop
-	      working, you might find out why by looking at the log.
-	    </para>
-	  </listitem>
-	</varlistentry>
+    <varlistentry id="reader-tools-gnupg-log-viewer">
+      <term>
+        <menuchoice>
+          <guimenu>Tools</guimenu>
+          <guimenuitem>GnuPG Log Viewer</guimenuitem>
+        </menuchoice>
+      </term>
+      <listitem>
+        <para>
+          Starts <ulink
+          url="/kwatchgnupg"><application>KWatchGnuPG</application></ulink>,
+          a tool to present the debug output of
+          <application>GnuPG</application> application. If
+          signing, encryption, or verification mysteriously stop
+          working, you might find out why by looking at the log.
+        </para>
+      </listitem>
+    </varlistentry>
 
-	<varlistentry id="reader-tools-import-messages">
-	  <term>
-	    <menuchoice>
-	      <guimenu>Tools</guimenu>
-	      <guimenuitem>Import Messages...</guimenuitem>
-	    </menuchoice>
-	  </term>
-	  <listitem>
-	    <para>
-	      Starts up <application>kmailcvt</application> (which is
-	      part of kdepim). This application lets you import
-	      messages from several email clients &kmail;.
-	    </para>
-	  </listitem>
-	</varlistentry>
+    <varlistentry id="reader-tools-import-messages">
+      <term>
+        <menuchoice>
+          <guimenu>Tools</guimenu>
+          <guimenuitem>Import Messages...</guimenuitem>
+        </menuchoice>
+      </term>
+      <listitem>
+        <para>
+          Starts up <application>kmailcvt</application> (which is
+          part of kdepim). This application lets you import
+          messages from several email clients &kmail;.
+        </para>
+      </listitem>
+    </varlistentry>
 <varlistentry>
 <term>
 <menuchoice>
@@ -1254,7 +1255,7 @@ the &kde; address book.</para>
 <listitem>
 <para>Opens up the viewer window for the filter log; there you find some options to
 control the logging of the filtering process.  In the log you will find valuable
-information about what filter rules were used, what was the result of the evaluation 
+information about what filter rules were used, what was the result of the evaluation
 of those rules, and which filter actions were applied to a message.</para>
 </listitem>
 </varlistentry>
@@ -1267,7 +1268,7 @@ of those rules, and which filter actions were applied to a message.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>It starts a <link linkend="the-anti-spam-wizard">wizard</link> which can help 
+<para>It starts a <link linkend="the-anti-spam-wizard">wizard</link> which can help
 you to set up spam filtering.</para>
 </listitem>
 </varlistentry>
@@ -1281,8 +1282,8 @@ you to set up spam filtering.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>It starts a <link linkend="the-anti-virus-wizard">wizard</link> which can help 
-you to set up scanning messages for virusses.</para>
+<para>It starts a <link linkend="the-anti-virus-wizard">wizard</link> which can help
+you to set up scanning messages for viruses.</para>
 </listitem>
 </varlistentry>
 -->
@@ -1501,7 +1502,7 @@ Queued Messages</guimenuitem></menuchoice>.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Queues the message in the outbox for sending it later using 
+<para>Queues the message in the outbox for sending it later using
 <menuchoice><guimenu>File</guimenu><guimenuitem>Send
 Queued Messages</guimenuitem></menuchoice>.
 </para>
@@ -1516,7 +1517,7 @@ Queued Messages</guimenuitem></menuchoice>.
 </menuchoice>
 </term>
 <listitem>
-<para>Save the message in the <guilabel>drafts</guilabel> folder so you can 
+<para>Save the message in the <guilabel>drafts</guilabel> folder so you can
 later edit and send it.</para>
 </listitem>
 </varlistentry>
@@ -1831,27 +1832,27 @@ incoming messages.</para>
 </listitem>
 </varlistentry>
 
-	<varlistentry id="composer-options-request-mdn">
-	  <term>
-	    <menuchoice>
-	      <guimenu>Options</guimenu>
-	      <guimenuitem>Request Disposition Notification</guimenuitem>
-	    </menuchoice>
-	  </term>
-	  <listitem>
-	    <para>
-	      If you choose this option, you request a confirmation
-	      email once your message is downloaded and read by its
-	      recipient. This has to be supported and enabled by the
-	      receiver's email client in order to work.
-	    </para>
-	    <para>
-	      See <xref linkend="configure-security-reading-mdns"/>
-	      for background information and ways to customize the
-	      read receipts that &kmail; itself sends.
-	    </para>
-	  </listitem>
-	</varlistentry>
+    <varlistentry id="composer-options-request-mdn">
+      <term>
+        <menuchoice>
+          <guimenu>Options</guimenu>
+          <guimenuitem>Request Disposition Notification</guimenuitem>
+        </menuchoice>
+      </term>
+      <listitem>
+        <para>
+          If you choose this option, you request a confirmation
+          email once your message is downloaded and read by its
+          recipient. This has to be supported and enabled by the
+          receiver's email client in order to work.
+        </para>
+        <para>
+          See <xref linkend="configure-security-reading-mdns"/>
+          for background information and ways to customize the
+          read receipts that &kmail; itself sends.
+        </para>
+      </listitem>
+    </varlistentry>
 
 <varlistentry id="composer-options-sign-message">
 <term>
@@ -1879,22 +1880,22 @@ You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</lin
 </listitem>
 </varlistentry>
 
-	<varlistentry id="composer-options-select-crypto-message-format">
-	  <term>
-	    <menuchoice>
-	      <guimenu>Options</guimenu>
-	      <guisubmenu>Select Cryptographic Message Format</guisubmenu>
-	    </menuchoice>
-	  </term>
-	  <listitem>
-	    <para>
-	      Choose the cryptographic message format to use to
-	      digitally sign and/or encrypt the message in. See <link
-	      linkend="cryptographic-message-formats">the previous
-	      description of each option</link> for more information.
-	    </para>
-	  </listitem>
-	</varlistentry>
+    <varlistentry id="composer-options-select-crypto-message-format">
+      <term>
+        <menuchoice>
+          <guimenu>Options</guimenu>
+          <guisubmenu>Select Cryptographic Message Format</guisubmenu>
+        </menuchoice>
+      </term>
+      <listitem>
+        <para>
+          Choose the cryptographic message format to use to
+          digitally sign and/or encrypt the message in. See <link
+          linkend="cryptographic-message-formats">the previous
+          description of each option</link> for more information.
+        </para>
+      </listitem>
+    </varlistentry>
 
 <varlistentry>
 <term>
