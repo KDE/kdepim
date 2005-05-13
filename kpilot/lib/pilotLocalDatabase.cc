@@ -535,7 +535,7 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 	if (newRecord->id() != 0)
 	{
 		for (i = 0; i < fNumRecords; i++)
-			if (fRecords[i]->id() == newRecord->id())
+			if (fRecords[i] && fRecords[i]->id() == newRecord->id())
 			{
 				delete fRecords[i];
 
