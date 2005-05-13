@@ -9,6 +9,13 @@ TODO: provide template-based, interpreted databases much like the
   AppInfo classes now have.
 TODO: give the knotes conduit a decent test mode
 
+
+2005-05-13  Adriaan de Groot
+* Friday the 13th! I merged HEAD to BRANCH and am now working in 
+  BRANCH (branches/KDE/3.4/kdepim/kpilot) to do bugfixes. New features
+  and strings go in HEAD, and we'll forward-port bugfixes at some
+  point. The cutover is revision 413061.
+
 2005-05-11  Adriaan de Groot
 * Wasted much time trying to get generic FreeBSD USB support for non-
   Visors working in pilot-link-0.12 before I found out that ColdSync 

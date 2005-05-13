@@ -140,12 +140,14 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	                <<"/dev/ttyUSB0"<<"/dev/ttyUSB2"
 	                <<"/dev/usb/tts/0"<<"/dev/usb/tts/2"
 	                <<"/dev/cuaa0"<<"/dev/cuaa2"
+			<<"/dev/cuad0"<<"/dev/cuad2"
 	                <<"/dev/ucom0"<<"/dev/ucom2";
 	mDevicesToProbe[2] <<"/dev/ttyS1"<<"/dev/ttyS3"
 	                <<"/dev/tts/1"<<"/dev/tts/3"
 	                <<"/dev/ttyUSB1"<<"/dev/ttyUSB3"
 	                <<"/dev/usb/tts/1"<<"/dev/usb/tts/3"
 	                <<"/dev/cuaa1"<<"/dev/cuaa3"
+			<<"/dev/cuad1"<<"/dev/cuad3"
 	                <<"/dev/ucom1"<<"/dev/ucom3";
 
 	fProcessEventsTimer = new QTimer( this );
