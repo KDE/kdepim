@@ -1,0 +1,42 @@
+#!/bin/sh
+export LC_ALL=C
+export CDPATH=
+KDEI18N=$KDESRC/proko2/kde-i18n
+test -L po || { rm -f po ; ln -s ../kde-i18n/templates/kdepim po }
+test -d po || exit 1
+
+make -f admin/Makefile.common package-messages || exit 1
+
+cd $KDEI18N || exit 1
+svn update
+export VERBOSE=1
+make merge || exit 1
+svn update
+
+function checkchanges()
+{
+  for t in `svn status 2>&1 | grep '^M' | gawk '{print $2}'`; do
+    diff=`diff -u -I'^#' -I'^"POT-Creation-Date:' .svn/text-base/$t.svn-base $t`
+    if test -n "$diff"; then
+      echo "$t: changed"
+    else
+      #echo "$t: no change"
+      svn revert $t
+    fi
+  done
+}
+
+cd templates/kdepim || exit 1
+checkchanges
+cd ../..
+
+cd de/messages/kdepim || exit 1
+checkchanges
+cd ../docs/kdepim || exit 1
+checkchanges
+
+cd ../../..
+../check_po_files
+
+echo "Now go to $KDEI18N and commit templates/ and de/"
+
