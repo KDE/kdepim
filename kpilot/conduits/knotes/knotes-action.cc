@@ -838,7 +838,7 @@ void KNotesAction::cleanupMemos()
 	}
 	if (!spoke)
 	{
-		addSyncLogEntry(TODO_I18N_P("No change to KNotes."));
+		addSyncLogEntry(TODO_I18N("No change to KNotes."));
 	}
 }
 
