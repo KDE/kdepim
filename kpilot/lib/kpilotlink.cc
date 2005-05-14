@@ -257,7 +257,7 @@ void KPilotDeviceLink::checkDevice()
 		// (relevant as long as we use only one device type)
 		//
 		emit logError(i18n("Pilot device %1 does not exist. "
-			"It is probably a USB device, and will appear during a HotSync.")
+			"It is probably a USB device and will appear during a HotSync.")
 				.arg(fPilotPath));
 		messages |= (OpenMessage | OpenFailMessage);
 	}
@@ -281,7 +281,7 @@ void KPilotDeviceLink::openDevice()
 		fLinkStatus = FoundDevice;
 	}
 
-	shouldPrint(OpenMessage,i18n("Trying to open %1 device...")
+	shouldPrint(OpenMessage,i18n("Trying to open device %1...")
 		.arg(fPilotPath));
 
 	if (open())
@@ -294,8 +294,8 @@ void KPilotDeviceLink::openDevice()
 	}
 	else
 	{
-		shouldPrint(OpenFailMessage,i18n("Could not open %1 device - "
-				"will retry...").
+		shouldPrint(OpenFailMessage,i18n("Could not open device: %1 "
+				"(will retry)").
 				arg(fPilotPath));
 
 		if (fLinkStatus != PilotLinkError)
@@ -552,7 +552,7 @@ void KPilotDeviceLink::acceptDevice()
 
 		// Presumably, strerror() returns things in
 		// local8Bit and not latin1.
-		emit logError(i18n("Cannot listen on (%1) Pilot socket").
+		emit logError(i18n("Cannot listen on Pilot socket (%1)").
 			arg(QString::fromLocal8Bit(s)));
 
 		close();
@@ -570,7 +570,7 @@ void KPilotDeviceLink::acceptDevice()
 
 		kdWarning() << "pi_accept: " << s << endl;
 
-		emit logError(i18n("Cannot accept (%1) Pilot")
+		emit logError(i18n("Cannot accept Pilot (%1)")
 			.arg(QString::fromLocal8Bit(s)));
 
 		fLinkStatus = PilotLinkError;
@@ -584,7 +584,7 @@ void KPilotDeviceLink::acceptDevice()
 		kdError() << k_funcinfo
 			<< ": Already connected or unable to connect!"
 			<< endl;
-		emit logError(i18n("Cannot accept (%1) Pilot")
+		emit logError(i18n("Cannot accept Pilot (%1)")
 			.arg(i18n("already connected")));
 		close();
 		return;
