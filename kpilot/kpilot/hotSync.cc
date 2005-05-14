@@ -382,14 +382,16 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Checking database " << info.name
+	DEBUGCONDUIT << fname << ": Checking to see if we should backup database " << info.name
 		<< " [" << QString::number(info.creator,16) << "]" << endl;
 #endif
+
+	// see if user told us not to back this creator or database up...
 	if (dontBackup(&info,fNoBackupDBs,fNoBackupCreators))
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Skipping database " << info.name
-			<< endl;
+			<< " (database in no-backup list)" << endl;
 #endif
 		QString s = i18n("Skipping %1")
 			.arg(PilotAppCategory::codec()->toUnicode(info.name));
@@ -397,8 +399,13 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 		return;
 	}
 
+	// don't backup resource databases...
 	if ( (!fFullBackup) && PilotDatabase::isResource(&info))
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Skipping database " << info.name
+			<< " (resource database)" << endl;
+#endif
 		// Just skip resource DBs during an update hotsync.
 		return;
 	}
@@ -421,54 +428,68 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	}
 }
 
+/**
+ * This method will back up a single database from the Pilot to a directory on
+ * our filesystem.  If our user asks us to do a full backup, then we will unconditionally
+ * copy the database file from the Pilot into the backup directory.  Otherwise, we will
+ * check to see if the database has any modified records in it on the pilot.  If the
+ * database has not changed on the Pilot, then there's nothing to backup and we return.
+ * If we do backup the database from the Pilot to the filesystem, we will reset the
+ * dirty flags so that we won't unnecessarily backup this database again.
+ */
 bool BackupAction::createLocalDatabase(DBInfo * info)
 {
 	FUNCTIONSETUP;
 
 	QString databaseName(PilotAppCategory::codec()->toUnicode(info->name));
-	if (!fFullBackup)
+	// default this to true.  we will set it to false if there are no modified
+	// records and we are not doing a full sync.
+	bool doBackup = true;
+
+	// make sure that our directory is available...
+	if (!checkBackupDirectory(fBackupDir)) return false;
+
+	// we always need to open the database on the pilot because if we're going to sync
+	// it, we need to reset the "dirty" flags, etc.
+	PilotSerialDatabase*serial=new PilotSerialDatabase(pilotSocket(), databaseName);
+	if (!serial->isDBOpen())
 	{
-		// open the serial db first so that the local db is not read into memory
-		// in case of an error
-		PilotSerialDatabase*serial=new PilotSerialDatabase(pilotSocket(), databaseName);
-		if (serial->isDBOpen())
-		{
-			PilotLocalDatabase*local=new PilotLocalDatabase(fBackupDir, databaseName);
-			if (local->isDBOpen())
-			{
-				// Now walk through all modified records
-				int index=0;
-				unsigned int count = 0;
-				PilotRecord*rec=serial->readNextModifiedRec(&index);
-				while (rec)
-				{
-					count++;
-					local->writeRecord(rec);
-					KPILOT_DELETE(rec);
-					rec=serial->readNextModifiedRec(&index);
-				}
 #ifdef DEBUG
-				DEBUGCONDUIT << fname << ": Updated " << count << " records "
-					<< "in DB " << info->name << endl;
-#endif
-				serial->cleanup();
-				serial->resetSyncFlags();
-				KPILOT_DELETE(local);
-				KPILOT_DELETE(serial);
-				return true;
-			}
-			KPILOT_DELETE(local);
-		}
-		KPILOT_DELETE(serial);
-#ifdef DEBUG
-		DEBUGCONDUIT<<"Fast backup not possible with database "<<info->name<<". Will do full backup on it"<<endl;
+		DEBUGCONDUIT<<"Unable to open database "<<info->name<<" to check for modified records and reset sync flags."<<endl;
 #endif
 	}
 
-	// Either we want a full backup, or fast backup encoutered a problem
-	// Just fetch the database to the backup dir
-	if (!checkBackupDirectory(fBackupDir)) return false;
+	// now we look to see if the database on the pilot has at least one changed record
+	// in it.  we do this so that we don't waste time backing up a database that has
+	// not changed.  note: don't bother with this check if we're doing a full backup.
+	if (!fFullBackup && serial->isDBOpen())
+	{
+		int index=0;
+		PilotRecord*rec=serial->readNextModifiedRec(&index);
+		if (!rec)
+		{
+			doBackup = false;
+		}
+		KPILOT_DELETE(rec);
+	}
 
+	// close this database with the Pilot so we can back it up to the
+	// filesystem if necessary
+	KPILOT_DELETE(serial);
+
+	// if we don't need to do a backup for this database, clean up and
+	// return true (our work here is done)
+	if (!doBackup)
+	{
+#ifdef DEBUG
+		DEBUGDB << fname
+			<< ": don't need to backup this database (no changes)." << endl;
+#endif
+		return true;
+	}
+
+	// if we're here then we are going to back this database up.  do some basic sanity
+	// checks and proceed....
 	databaseName.replace('/', CSL1("_"));
 
 	QString fullBackupName = fBackupDir + databaseName;
@@ -484,13 +505,25 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 
 #ifdef DEBUG
 	DEBUGDB << fname
-		<< ": Creating local database " << fullBackupName << endl;
+		<< ": Backing up database to: [" << fullBackupName << "]" << endl;
 #endif
 
 	/* Ensure that DB-open flag is not kept */
 	info->flags &= ~dlpDBFlagOpen;
 
-	return fHandle->retrieveDatabase(fullBackupName,info);
+	bool backedUp = fHandle->retrieveDatabase(fullBackupName,info);
+
+	// if we've backed this one up, clean it up so we won't do it again next
+	// sync unless it's truly changed
+	serial=new PilotSerialDatabase(pilotSocket(), databaseName);
+	if (backedUp && serial->isDBOpen())
+	{
+		serial->cleanup();
+		serial->resetSyncFlags();
+	}
+	KPILOT_DELETE(serial);
+
+	return backedUp;
 }
 
 void BackupAction::endBackup()
