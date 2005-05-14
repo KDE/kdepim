@@ -1,8 +1,8 @@
-# KDE Config File  
+# KDE Config File
 [Desktop Entry]
 Encoding=UTF-8
 Type=Application
-Exec=ksync -caption "%c" %i %m  
+Exec=ksync -caption "%c" %i %m
 Icon=ksync
 DocPath=ksync/index.html
 Terminal=false
