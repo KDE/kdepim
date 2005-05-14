@@ -2,7 +2,7 @@
     knarticle.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -173,8 +173,6 @@ class KNRemoteArticle : public KNArticle {
 
     QColor color() const { return c_olor; }
     void setColor(const QColor& c) { c_olor = c; }
-    void setPgpSigned(bool f) { pgp_signed = f; }
-    bool isPgpSigned() const { return pgp_signed; }
 
     time_t subThreadChangeDate() { return s_ubThreadChangeDate; }
     void setSubThreadChangeDate(time_t date) { s_ubThreadChangeDate = date; }
@@ -193,7 +191,6 @@ class KNRemoteArticle : public KNArticle {
     unsigned char t_hrLevel;         // quality of threading
     short s_core;                    // guess what ;-)
     QColor c_olor;                   // color for the header list
-    bool pgp_signed;                 // true if the user asks to check the pgp signature
     unsigned short u_nreadFups,      // number of the article's unread follow-ups
                    n_ewFups;         // number of the article's new follow-ups
     time_t s_ubThreadChangeDate;     // the last time the sub-thread of this article changed

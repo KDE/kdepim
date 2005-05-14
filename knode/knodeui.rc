@@ -22,6 +22,9 @@
     <Action name="fetch_article_with_id"/>
   </Menu>
   <Menu noMerge="1" name="view"><text>&amp;View</text>
+    <Action name="view_headers"/>
+    <Action name="view_attachments"/>
+    <Separator/>
     <Action name="view_showThreads"/>
     <Action name="view_ExpandAll"/>
     <Action name="view_CollapseAll"/>
@@ -32,12 +35,11 @@
     <Action name="view_Refresh"/>
     <Separator/>
     <Action name="view_rot13"/>
-    <Action name="article_verify"/>
     <Separator/>
-    <Action name="view_showAllHdrs"/>
     <Action name="article_viewSource"/>
     <Separator/>
     <Action name="view_useFixedFont"/>
+    <Action name="view_fancyFormating"/>
     <Action name="set_charset"/>
   </Menu>
   <Menu noMerge="1" name="go_document"><text>&amp;Go</text>
@@ -219,20 +221,36 @@
 </Menu>
 
 <Menu name="body_popup">
-  <Action name="file_save"/>
+  <Action name="file_save_as"/>
   <Action name="file_print"/>
   <Separator/>
   <Action name="edit_copy"/>
   <Action name="edit_select_all"/>
   <Separator/>
-  <Action name="view_showAllHdrs"/>
   <Action name="article_viewSource"/>
   <Separator/>
   <Action name="view_rot13"/>
-  <Action name="article_verify"/>
   <Separator/>
   <Action name="view_useFixedFont"/>
+  <Action name="view_fancyFormating"/>
   <Action name="set_charset"/>
+</Menu>
+
+<Menu name="url_popup">
+  <Action name="open_url"/>
+  <Action name="copy_url"/>
+  <Action name="add_bookmark"/>
+</Menu>
+
+<Menu name="mailto_popup">
+  <Action name="add_addr_book"/>
+  <Action name="openin_addr_book"/>
+  <Action name="copy_url"/>
+</Menu>
+
+<Menu name="attachment_popup">
+  <Action name="open_attachment"/>
+  <Action name="save_attachment"/>
 </Menu>
 
 </kpartgui>

@@ -2,7 +2,7 @@
     knmime.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -65,7 +65,6 @@ void KNArticle::setLocked(bool b)
 KNRemoteArticle::KNRemoteArticle(KNGroup *g)
  : KNArticle(g), a_rticleNumber(-1), i_dRef(-1), d_ref(0), t_hrLevel(0), s_core(0),
    c_olor(knGlobals.configManager()->appearance()->unreadThreadColor()),
-   pgp_signed(false),
    u_nreadFups(0), n_ewFups(0), s_ubThreadChangeDate(0)
 {
   m_essageID.setParent(this);

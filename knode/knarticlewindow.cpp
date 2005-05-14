@@ -3,7 +3,7 @@
     knarticlewindow.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -18,19 +18,18 @@
 #include <kwin.h>
 
 #include <kstdaction.h>
-#include <kedittoolbar.h>
-#include <kkeydialog.h>
 #include <kconfig.h>
 #include <kaccel.h>
 #include <kaction.h>
 
 #include "knarticle.h"
-#include "knarticlewidget.h"
+#include "articlewidget.h"
 #include "utilities.h"
 #include "knglobals.h"
 #include "knmainwidget.h"
 #include "knarticlewindow.h"
-#include <qpopupmenu.h>
+
+using namespace KNode;
 
 QPtrList<KNArticleWindow> KNArticleWindow::instances;
 
@@ -97,25 +96,22 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
   if(art)
     setCaption(art->subject()->asUnicodeString());
 
-  artW = new KNArticleWidget(actionCollection(), this, this);
+  artW = new ArticleWidget( this, this, actionCollection() );
   artW->setArticle(art);
   setCentralWidget(artW);
 
   instances.append(this);
 
   // file menu
-  KStdAction::close(this, SLOT(slotFileClose()),actionCollection());
+  KStdAction::close( this, SLOT(close()), actionCollection() );
 
   // settings menu
-  setStandardToolBarMenuEnabled(true);
-  KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
-  KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
-  a_ccel=new KAccel(this);
-  artW->setCharsetKeyboardAction()->plugAccel(a_ccel);
+  KAccel *accel = new KAccel( this );
+  artW->setCharsetKeyboardAction()->plugAccel( accel );
 
-  createGUI("knreaderui.rc");
+  setupGUI( ToolBar|Keys|Create, "knreaderui.rc");
 
   KConfig *conf = knGlobals.config();
   conf->setGroup("articleWindow_options");
@@ -130,32 +126,6 @@ KNArticleWindow::~KNArticleWindow()
   KConfig *conf = knGlobals.config();
   conf->setGroup("articleWindow_options");
   saveMainWindowSettings(conf);
-}
-
-
-void KNArticleWindow::slotFileClose()
-{
-  close();
-}
-
-
-void KNArticleWindow::slotConfKeys()
-{
-  KKeyDialog::configure( actionCollection(), this, true );
-}
-
-
-void KNArticleWindow::slotConfToolbar()
-{
-  KEditToolbar dlg(guiFactory(),this);
-  connect(&dlg,SIGNAL( newToolbarConfig() ), this, SLOT( slotNewToolbarConfig() ));
-  dlg.exec();
-}
-
-
-void KNArticleWindow::slotNewToolbarConfig()
-{
-  createGUI("knreaderui.rc");
 }
 
 //--------------------------------

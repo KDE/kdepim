@@ -189,10 +189,6 @@ KNConfig::Appearance::Appearance()
   c_olors[alternateBackground]=c->readColorEntry("alternateBackgroundColor",&defCol);
   c_olorNames[alternateBackground]=i18n("Alternate Background");
 
-  defCol=kapp->palette().active().background();
-  c_olors[header]=c->readColorEntry("headerColor",&defCol);
-  c_olorNames[header]=i18n("Header Decoration");
-
   defCol=kapp->palette().active().text();
   c_olors[normalText]=c->readColorEntry("textColor",&defCol);
   c_olorNames[normalText]=i18n("Normal Text");
@@ -282,7 +278,6 @@ void KNConfig::Appearance::save()
   c->writeEntry("customColors", u_seColors);
   c->writeEntry("backgroundColor", c_olors[background]);
   c->writeEntry("alternateBackgroundColor", c_olors[alternateBackground]);
-  c->writeEntry("headerColor", c_olors[header]);
   c->writeEntry("textColor", c_olors[normalText]);
   c->writeEntry("quote1Color", c_olors[quoted1]);
   c->writeEntry("quote2Color", c_olors[quoted2]);
@@ -368,15 +363,6 @@ QColor KNConfig::Appearance::linkColor()
 }
 
 
-QColor KNConfig::Appearance::headerDecoColor()
-{
-  if(u_seColors)
-    return c_olors[header];
-  else
-    return defaultColor( header );
-}
-
-
 QColor KNConfig::Appearance::unreadThreadColor()
 {
   if(u_seColors)
@@ -458,20 +444,6 @@ QFont KNConfig::Appearance::articleListFont()
 }
 
 
-QString KNConfig::Appearance::quotedTextHexcode(int i)
-{
-  switch(i) {
-    case quoted1Hex:
-      return quoteColor1().name();
-    case quoted2Hex:
-      return quoteColor2().name();
-    case quoted3Hex:
-      return quoteColor3().name();
-  }
-  return textColor().name();
-}
-
-
 QColor KNConfig::Appearance::defaultColor(int i)
 {
   switch(i) {
@@ -481,9 +453,6 @@ QColor KNConfig::Appearance::defaultColor(int i)
 
     case alternateBackground:
       return KGlobalSettings::alternateBackgroundColor();
-
-    case header:
-      return kapp->palette().active().background();
 
     case quoted1:
       return QColor( 0x00, 0x80, 0x00 );
@@ -568,7 +537,6 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
   s_howScore=conf->readBoolEntry("showScore3", true);
   s_howUnread=conf->readBoolEntry("showUnread", true);
   s_howThreads = conf->readBoolEntry("showThreads", true);
-  a_utoCheckPgpSigs = conf->readBoolEntry("autoCheckPgpSigs",false);
   mDateFormat = (KMime::DateFormatter::FormatType) conf->readNumEntry( "dateFormat", KMime::DateFormatter::Localized );
   mDateCustomFormat = conf->readEntry( "customDateFormat" );
 
@@ -605,7 +573,6 @@ void KNConfig::ReadNewsGeneral::save()
   conf->writeEntry("showScore3", s_howScore);
   conf->writeEntry("showUnread", s_howUnread);
   conf->writeEntry("showThreads", s_howThreads);
-  conf->writeEntry("autoCheckPgpSigs", a_utoCheckPgpSigs);
   conf->writeEntry( "dateFormat", mDateFormat );
   conf->writeEntry( "customDateFormat", mDateCustomFormat );
 
@@ -666,31 +633,15 @@ KNConfig::ReadNewsViewer::ReadNewsViewer()
   KConfig *conf=knGlobals.config();
   conf->setGroup("READNEWS");
 
-  s_howHeaderDeco=conf->readBoolEntry("showHeaderDeco", true);
   r_ewrapBody=conf->readBoolEntry("rewrapBody", true);
   r_emoveTrailingNewlines=conf->readBoolEntry("removeTrailingNewlines", true);
   s_howSig=conf->readBoolEntry("showSig", true);
   i_nterpretFormatTags=conf->readBoolEntry("interpretFormatTags", true);
   q_uoteCharacters=conf->readEntry("quoteCharacters",">:");
-  i_nlineAtt=conf->readBoolEntry("inlineAtt", true);
   o_penAtt=conf->readBoolEntry("openAtt", false) ;
   s_howAlts=conf->readBoolEntry("showAlts", false);
-  f_ullHdrs=conf->readBoolEntry("fullHdrs", false);
   u_seFixedFont=conf->readBoolEntry("articleBodyFixedFont", false);
   QString s = conf->readEntry("Browser","Default");
-  if (s=="Konqueror")
-    b_rowser = BTkonq;
-  else if (s=="Netscape")
-    b_rowser = BTnetscape;
-  else if (s=="Mozilla")
-    b_rowser = BTmozilla;
-  else if (s=="Opera")
-    b_rowser = BTopera;
-  else if (s=="Other")
-    b_rowser = BTother;
-  else
-    b_rowser = BTdefault;
-  b_rowserCommand=conf->readPathEntry("BrowserCommand","netscape %u");
 }
 
 
@@ -709,32 +660,14 @@ void KNConfig::ReadNewsViewer::save()
   KConfig *conf=knGlobals.config();
   conf->setGroup("READNEWS");
 
-  conf->writeEntry("showHeaderDeco", s_howHeaderDeco);
   conf->writeEntry("rewrapBody", r_ewrapBody);
   conf->writeEntry("removeTrailingNewlines", r_emoveTrailingNewlines);
   conf->writeEntry("showSig", s_howSig);
   conf->writeEntry("interpretFormatTags", i_nterpretFormatTags);
   conf->writeEntry("quoteCharacters",q_uoteCharacters);
-  conf->writeEntry("inlineAtt", i_nlineAtt);
   conf->writeEntry("openAtt", o_penAtt);
   conf->writeEntry("showAlts", s_howAlts);
-  conf->writeEntry("fullHdrs", f_ullHdrs);
   conf->writeEntry("articleBodyFixedFont", u_seFixedFont);
-  switch (b_rowser) {
-    case BTdefault: conf->writeEntry("Browser","Default");
-		    break;
-    case BTkonq: conf->writeEntry("Browser","Konqueror");
-                 break;
-    case BTnetscape: conf->writeEntry("Browser","Netscape");
-                     break;
-    case BTmozilla: conf->writeEntry("Browser","Mozilla");
-                    break;
-    case BTopera: conf->writeEntry("Browser","Opera");
-                  break;
-    case BTother: conf->writeEntry("Browser","Other");
-                  break;
-  }
-  conf->writePathEntry("BrowserCommand", b_rowserCommand);
   conf->sync();
   d_irty = false;
 }

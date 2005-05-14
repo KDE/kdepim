@@ -319,7 +319,7 @@ Q_OBJECT
 
 class KDE_EXPORT Appearance : public Base {
 
-#define COL_CNT 12
+#define COL_CNT 11
 #define FNT_CNT 5
 #define HEX_CNT 4
 #define ICON_CNT 14
@@ -327,9 +327,9 @@ class KDE_EXPORT Appearance : public Base {
   friend class AppearanceWidget;
 
   public:
-    enum ColorIndex   { background=0, alternateBackground=1, header=2, normalText=3, quoted1=4,
-                        quoted2=5, quoted3=6, url=7, unreadThread=8, readThread=9,
-                        unreadArticle=10, readArticle=11 };
+    enum ColorIndex   { background=0, alternateBackground=1, normalText=2, quoted1=3,
+                        quoted2=4, quoted3=5, url=6, unreadThread=7, readThread=8,
+                        unreadArticle=9, readArticle=10 };
 
     enum HexIndex     { quoted1Hex=0, quoted2Hex=1, quoted3Hex=2 };
 
@@ -352,14 +352,10 @@ class KDE_EXPORT Appearance : public Base {
     QColor quoteColor2();
     QColor quoteColor3();
     QColor linkColor();
-    QColor headerDecoColor();
     QColor unreadThreadColor();
     QColor readThreadColor();
     QColor unreadArticleColor();
     QColor readArticleColor();
-
-    QString headerDecoHexcode()       { return headerDecoColor().name(); }
-    QString quotedTextHexcode(int i);
 
     QFont articleFont();
     QFont articleFixedFont();
@@ -500,9 +496,6 @@ class KDE_EXPORT ReadNewsGeneral : public Base {
     bool showThreads()const               { return s_howThreads; }
     void setShowThreads(bool b)      { d_irty=true; s_howThreads=b;}
 
-    bool autoCheckPgpSigs()const          { return a_utoCheckPgpSigs; }
-    void setAutoCheckPgpSigs(bool b) { d_irty=true; a_utoCheckPgpSigs=b;}
-
     KMime::DateFormatter::FormatType dateFormat() const { return mDateFormat; }
     QString dateCustomFormat() const { return mDateCustomFormat; }
 
@@ -519,8 +512,7 @@ class KDE_EXPORT ReadNewsGeneral : public Base {
           s_howLines,
           s_howScore,
           s_howUnread,
-          s_howThreads,
-          a_utoCheckPgpSigs;
+          s_howThreads;
 
     int   m_axFetch,
           m_arkSecs,
@@ -614,48 +606,33 @@ class KDE_EXPORT ReadNewsViewer : public Base {
   friend class ReadNewsViewerWidget;
 
   public:
-    enum browserType { BTdefault=0, BTkonq=1, BTnetscape=2, BTmozilla=3, BTopera=4, BTother=5 };
-
     ReadNewsViewer();
     ~ReadNewsViewer();
 
     void save();
 
-    bool showHeaderDecoration()const      { return s_howHeaderDeco; }
     bool rewrapBody()const                { return r_ewrapBody; }
     bool removeTrailingNewlines()const    { return r_emoveTrailingNewlines; }
     bool showSignature()const             { return s_howSig; }
     bool interpretFormatTags()const       { return i_nterpretFormatTags; }
+    void setInterpretFormatTags( bool f ) { d_irty = true; i_nterpretFormatTags = f; }
     QString quoteCharacters()const        { return q_uoteCharacters; }
 
-    bool showAttachmentsInline()const     { return i_nlineAtt; }
     bool openAttachmentsOnClick()const    { return o_penAtt; }
     bool showAlternativeContents()const   { return s_howAlts; }
 
-    browserType browser()const            { return b_rowser; }
-    QString browserCommand()const         { return b_rowserCommand; }
-
-    bool showFullHdrs()const              { return f_ullHdrs; }
-    void setShowFullHdrs(bool b)     { d_irty = true; f_ullHdrs=b; }
     bool useFixedFont() const             { return u_seFixedFont; }
     void setUseFixedFont(bool b)     { d_irty = true; u_seFixedFont=b; }
 
   protected:
-    bool  s_howHeaderDeco,
-          r_ewrapBody,
+    bool  r_ewrapBody,
           r_emoveTrailingNewlines,
           s_howSig,
           i_nterpretFormatTags,
-          i_nlineAtt,
           o_penAtt,
           s_howAlts,
-          f_ullHdrs,
           u_seFixedFont;
     QString q_uoteCharacters;
-
-    browserType b_rowser;
-    QString b_rowserCommand;
-
 };
 
 
@@ -671,24 +648,14 @@ class KDE_EXPORT ReadNewsViewerWidget : public BaseWidget {
     void save();
 
   protected:
-    QCheckBox   *d_ecoCB,
-                *r_ewrapCB,
+    QCheckBox   *r_ewrapCB,
                 *r_emoveTrailingCB,
                 *s_igCB,
-                *i_nlineCB,
                 *o_penAttCB,
-                *a_ltAttCB,
-                *f_ormatCB;
-    QComboBox   *b_rowser;
-    KLineEdit   *b_rowserCommand,
-                *q_uoteCharacters;
-    QPushButton *c_hooseBrowser;
+                *a_ltAttCB;
+    KLineEdit *q_uoteCharacters;
 
     ReadNewsViewer *d_ata;
-
-  protected slots:
-    void slotBrowserTypeChanged(int);
-    void slotChooseBrowser();
 
 };
 
@@ -1101,12 +1068,10 @@ class KDE_EXPORT PrivacyWidget : public BaseWidget {
     PrivacyWidget(QWidget *p=0, const char *n=0);
     ~PrivacyWidget();
 
-    void load();
     void save();
 
   protected:
     Kpgp::Config *c_onf;
-    QCheckBox *a_utoCheckSigCB;
 };
 
 

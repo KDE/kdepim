@@ -22,13 +22,13 @@
 #include <kwin.h>
 #include <ktempfile.h>
 
+#include "articlewidget.h"
 #include "knmainwidget.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "utilities.h"
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"
-#include "knarticlewidget.h"
 #include "knsearchdialog.h"
 #include "knfiltermanager.h"
 #include "knfolder.h"
@@ -42,6 +42,8 @@
 #include "knarticlewindow.h"
 #include "knfoldermanager.h"
 #include "headerview.h"
+
+using namespace KNode;
 
 
 KNArticleManager::KNArticleManager() : QObject(0,0)
@@ -191,11 +193,11 @@ void KNArticleManager::showHdrs(bool clear)
   if(g_roup) {
     KNRemoteArticle *art, *ref, *current;
 
-    current=static_cast<KNRemoteArticle*>(knGlobals.top->articleView()->article());
+    current = static_cast<KNRemoteArticle*>( knGlobals.top->articleViewer()->article() );
 
     if(current && (current->collection() != g_roup)) {
       current=0;
-      knGlobals.top->articleView()->setArticle(0);
+      knGlobals.top->articleViewer()->setArticle( 0 );
     }
 
     if(g_roup->isLocked())
@@ -320,7 +322,7 @@ void KNArticleManager::showHdrs(bool clear)
 
   if(setFirstChild && v_iew->firstChild()) {
     v_iew->setCurrentItem(v_iew->firstChild());
-    knGlobals.top->articleView()->setArticle(0);
+    knGlobals.top->articleViewer()->setArticle( 0 );
   }
 
   knGlobals.setStatusMsg(QString::null);
@@ -468,7 +470,7 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
   if (!force && a->isNotUnloadable())
     return false;
 
-  if (!force && KNArticleWidget::articleVisible(a))
+  if ( !force && ( ArticleWidget::articleVisible( a ) ) )
     return false;
 
   if (!force && (a->type()==KMime::Base::ATlocal) &&
@@ -479,7 +481,7 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
     if (!force)
       return false;
 
-  KNArticleWidget::articleRemoved(a);
+  ArticleWidget::articleRemoved( a );
   if (!a->type()==KMime::Base::ATlocal)
     knGlobals.artFactory->deleteComposerForArticle(static_cast<KNLocalArticle*>(a));
   a->KMime::Content::clear();
@@ -929,14 +931,14 @@ void KNArticleManager::processJob(KNJobData *j)
   if(j->type()==KNJobData::JTfetchArticle && !j->canceled()) {
     if(j->success()) {
       KNRemoteArticle *a=static_cast<KNRemoteArticle*>(j->data());
-      KNArticleWidget::articleChanged(a);
+      ArticleWidget::articleChanged( a );
       if(!a->isOrphant()) //orphant articles are deleted by the displaying widget
         knGlobals.memoryManager()->updateCacheEntry(a);
       if(a->listItem())
         a->updateListItem();
     }
     else
-      KNArticleWidget::articleLoadError(static_cast<KNRemoteArticle*>(j->data()), j->errorString());
+      ArticleWidget::articleLoadError(static_cast<KNRemoteArticle*>(j->data()), j->errorString());
   }
 
   delete j;

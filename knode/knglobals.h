@@ -2,7 +2,7 @@
     knglobals.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -40,7 +40,9 @@ class KXMLGUIClient;
 namespace Kpgp {
    class Module;
 }
-class KNArticleWidget;
+namespace KNode {
+  class ArticleWidget;
+}
 
 
 /** idea: Previously the manager classes were available
@@ -54,7 +56,7 @@ class KDE_EXPORT KNGlobals {
     /** no need to include knode.h everywhere */
     KNMainWidget          *top;
     KXMLGUIClient         *guiClient;
-    KNArticleWidget       *artWidget;
+    KNode::ArticleWidget  *artWidget;
     KNArticleFactory      *artFactory;
     Kpgp::Module          *pgp;
     KConfig               *config();

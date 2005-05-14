@@ -3,6 +3,7 @@
 
     KNode, the KDE newsreader
     Copyright (c) 2003 Zack Rusin <zack@kde.org>
+    Copyright (c) 2004-2005 Volker Krause <volker.krause@rwth-aachen.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -53,7 +54,9 @@ class KNNetAccess;
 namespace Kpgp {
     class Module;
 }
-class KNArticleWidget;
+namespace KNode {
+  class ArticleWidget;
+}
 class KNArticle;
 class KNLocalArticle;
 class KNRemoteArticle;
@@ -92,7 +95,7 @@ public:
   /** access to GUI-elements */
   KNCollectionView* collectionView()const  { return c_olView; }
   KNHeaderView*       headerView()const      { return h_drView; }
-  KNArticleWidget*  articleView()const     { return a_rtView; }
+  KNode::ArticleWidget* articleViewer() const     { return mArticleViewer; }
   KRSqueezedTextLabel*  statusBarLabelGroup() const { return s_tatusGroup; }
   KRSqueezedTextLabel*  statusBarLabelFilter() const { return s_tatusFilter; }
   public: //The dcop interface
@@ -190,7 +193,7 @@ protected:
   //GUI
   KAccel          *a_ccel;
   KNProgress      *p_rogBar;
-  KNArticleWidget *a_rtView;
+  KNode::ArticleWidget *mArticleViewer;
   KNCollectionView *c_olView;
   KNHeaderView      *h_drView;
   KDockWidget     *c_olDock, *h_drDock, *a_rtDock;
@@ -285,7 +288,6 @@ protected:
   KAction               *a_ctArtSortHeadersKeyb,
     *a_ctArtFilterKeyb,
     *a_ctArtSearch,
-    *a_ctArtFind,
     *a_ctArtRefreshList,
     *a_ctArtCollapseAll,
     *a_ctArtExpandAll,
@@ -364,7 +366,6 @@ protected slots:
   void slotArtSortHeaders(int i);
   void slotArtSortHeadersKeyb();
   void slotArtSearch();
-  void slotArtFind();
   void slotArtRefreshList();
   void slotArtCollapseAll();
   void slotArtExpandAll();

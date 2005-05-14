@@ -2,7 +2,7 @@
     knarticlewindow.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -20,9 +20,11 @@
 #include <kmainwindow.h>
 
 class KNArticle;
-class KNArticleWidget;
 class KNArticleCollection;
 
+namespace KNode {
+  class ArticleWidget;
+}
 
 class KNArticleWindow : public KMainWindow  {
 
@@ -31,7 +33,7 @@ class KNArticleWindow : public KMainWindow  {
   public:
     KNArticleWindow(KNArticle *art);
     ~KNArticleWindow();
-    KNArticleWidget* artWidget()const        { return artW; }
+    KNode::ArticleWidget* artWidget()const        { return artW; }
 
     static bool closeAllWindowsForCollection(KNArticleCollection *col, bool force=true);
     static bool closeAllWindowsForArticle(KNArticle *art, bool force=true);
@@ -39,15 +41,9 @@ class KNArticleWindow : public KMainWindow  {
     static bool raiseWindowForArticle(const QCString &mid);
 
   protected:
-    KAccel *a_ccel;
-    KNArticleWidget *artW;
+    KNode::ArticleWidget *artW;
     static QPtrList<KNArticleWindow> instances;
 
-  protected slots:
-    void slotFileClose();
-    void slotConfKeys();
-    void slotConfToolbar();
-    void slotNewToolbarConfig();
 };
 
 #endif

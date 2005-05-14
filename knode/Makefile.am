@@ -26,7 +26,7 @@ kcm_knode_la_LIBADD = libknodecommon.la $(LIB_KDECORE)
 
 
 libknodecommon_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
-libknodecommon_la_LIBADD = -lkdeprint -lkwalletclient $(top_builddir)/libkmime/libkmime.la $(top_builddir)/libkpgp/libkpgp.la $(top_builddir)/libkdepim/libkdepim.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIB_KUTILS) $(LIBRESOLV)
+libknodecommon_la_LIBADD = -lkdeprint -lkwalletclient $(top_builddir)/libkmime/libkmime.la $(top_builddir)/libkpgp/libkpgp.la $(top_builddir)/libkdepim/libkdepim.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIB_KUTILS) $(LIBRESOLV) $(LIB_KHTML)
 libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   knconfig.cpp \
                   knconfigwidgets.cpp \
@@ -86,7 +86,9 @@ libknodecommon_la_SOURCES =   knconfigmanager.cpp \
 		  knglobals.cpp \
 		  knodecomposeriface.skel \
 		  knodeiface.skel \
-		  kncollectionview.cpp
+		  kncollectionview.cpp \
+                  articlewidget.cpp \
+                  csshelper.cpp
 
 knode_SOURCES = knode.cpp knapplication.cpp main.cpp
 
@@ -152,7 +154,9 @@ noinst_HEADERS =  knconfigmanager.h \
                   knglobals.h \
 		  aboutdata.h \
 		  knmainwidget.h \
-		  kncollectionview.h
+		  kncollectionview.h \
+                  articlewidget.h \
+                  csshelper.h
 
 
 knode_METASOURCES = AUTO

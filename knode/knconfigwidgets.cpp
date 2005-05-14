@@ -1181,77 +1181,43 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
 {
   QGroupBox *appgb=new QGroupBox(i18n("Appearance"), this);
   QGroupBox *agb=new QGroupBox(i18n("Attachments"), this);
-  QGroupBox *bgb=new QGroupBox(i18n("Browser"), this);
-  QLabel *l1;
 
-  d_ecoCB=new QCheckBox(i18n("Show fancy header deco&rations"), appgb);
   r_ewrapCB=new QCheckBox(i18n("Re&wrap text when necessary"), appgb);
   r_emoveTrailingCB=new QCheckBox(i18n("Re&move trailing empty lines"), appgb);
   s_igCB=new QCheckBox(i18n("Show sig&nature"), appgb);
-  f_ormatCB=new QCheckBox(i18n("Interpret te&xt format tags"), appgb);
   q_uoteCharacters=new KLineEdit(appgb);
   QLabel *quoteCharL = new QLabel(q_uoteCharacters, i18n("Recognized q&uote characters:"), appgb);
 
-  i_nlineCB=new QCheckBox(i18n("Show attachments &inline if possible"), agb);
   o_penAttCB=new QCheckBox(i18n("Open a&ttachments on click"), agb);
   a_ltAttCB=new QCheckBox(i18n("Show alternati&ve contents as attachments"), agb);
 
-  b_rowser=new QComboBox(bgb);
-  b_rowser->insertItem(i18n("Default Browser"));
-  b_rowser->insertItem("Konqueror");
-  b_rowser->insertItem("Netscape");
-  b_rowser->insertItem("Mozilla");
-  b_rowser->insertItem("Opera");
-  b_rowser->insertItem(i18n("Other Browser"));
-  connect(b_rowser, SIGNAL(activated(int)), SLOT(slotBrowserTypeChanged(int)));
-  l1=new QLabel(b_rowser, i18n("Open &links with:"), bgb);
-  b_rowserCommand = new KLineEdit(bgb);
-  c_hooseBrowser= new QPushButton(i18n("Choo&se..."),bgb);
-  connect(c_hooseBrowser, SIGNAL(clicked()), SLOT(slotChooseBrowser()));
-
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
-  QGridLayout *appgbL=new QGridLayout(appgb, 7,2, 8,5);
+  QGridLayout *appgbL=new QGridLayout(appgb, 4,2, 8,5);
   QVBoxLayout *agbL=new QVBoxLayout(agb, 8, 5);
-  QGridLayout *bgbL=new QGridLayout(bgb, 3,3, 8,5);
 
   topL->addWidget(appgb);
   topL->addWidget(agb);
-  topL->addWidget(bgb);
   topL->addStretch(1);
 
   appgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  appgbL->addMultiCellWidget(d_ecoCB, 1,1, 0,1);
   appgbL->addMultiCellWidget(r_ewrapCB, 2,2, 0,1);
   appgbL->addMultiCellWidget(r_emoveTrailingCB, 3,3, 0,1);
   appgbL->addMultiCellWidget(s_igCB, 4,4, 0,1);
-  appgbL->addMultiCellWidget(f_ormatCB, 5,5, 0,1);
   appgbL->addWidget(quoteCharL, 6,0);
   appgbL->addWidget(q_uoteCharacters, 6,1);
 
   agbL->addSpacing(fontMetrics().lineSpacing()-4);
-  agbL->addWidget(i_nlineCB);
   agbL->addWidget(o_penAttCB);
   agbL->addWidget(a_ltAttCB);
 
-  bgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  bgbL->addWidget(l1, 1,0);
-  bgbL->addMultiCellWidget(b_rowser,1,1,1,2);
-  bgbL->addMultiCellWidget(b_rowserCommand,2,2,0,1);
-  bgbL->addWidget(c_hooseBrowser,2,2);
-  bgbL->setColStretch(1,1);
-
   topL->setResizeMode(QLayout::Minimum);
 
-  connect(d_ecoCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
   connect(r_ewrapCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
   connect(r_emoveTrailingCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
   connect(s_igCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
-  connect(f_ormatCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
   connect(q_uoteCharacters, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()));
-  connect(i_nlineCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
   connect(o_penAttCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
   connect(a_ltAttCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
-  connect(b_rowserCommand, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()));
 
   load();
 }
@@ -1264,19 +1230,12 @@ KNConfig::ReadNewsViewerWidget::~ReadNewsViewerWidget()
 
 void KNConfig::ReadNewsViewerWidget::load()
 {
-  d_ecoCB->setChecked(d_ata->s_howHeaderDeco);
   r_ewrapCB->setChecked(d_ata->r_ewrapBody);
   r_emoveTrailingCB->setChecked(d_ata->r_emoveTrailingNewlines);
   s_igCB->setChecked(d_ata->s_howSig);
-  f_ormatCB->setChecked(d_ata->i_nterpretFormatTags);
   q_uoteCharacters->setText(d_ata->q_uoteCharacters);
-  i_nlineCB->setChecked(d_ata->i_nlineAtt);
   o_penAttCB->setChecked(d_ata->o_penAtt);
   a_ltAttCB->setChecked(d_ata->s_howAlts);
-  b_rowser->setCurrentItem((int)(d_ata->b_rowser));
-  b_rowserCommand->setText(d_ata->b_rowserCommand);
-  b_rowserCommand->setEnabled(d_ata->b_rowser==ReadNewsViewer::BTother);
-  c_hooseBrowser->setEnabled(d_ata->b_rowser==ReadNewsViewer::BTother);
 }
 
 
@@ -1285,41 +1244,14 @@ void KNConfig::ReadNewsViewerWidget::save()
   if(!d_irty)
     return;
 
-  d_ata->s_howHeaderDeco=d_ecoCB->isChecked();
   d_ata->r_ewrapBody=r_ewrapCB->isChecked();
   d_ata->r_emoveTrailingNewlines=r_emoveTrailingCB->isChecked();
   d_ata->s_howSig=s_igCB->isChecked();
-  d_ata->i_nterpretFormatTags=f_ormatCB->isChecked();
   d_ata->q_uoteCharacters=q_uoteCharacters->text();
-  d_ata->i_nlineAtt=i_nlineCB->isChecked();
   d_ata->o_penAtt=o_penAttCB->isChecked();
   d_ata->s_howAlts=a_ltAttCB->isChecked();
-  d_ata->b_rowser=(ReadNewsViewer::browserType)(b_rowser->currentItem());
-  d_ata->b_rowserCommand=b_rowserCommand->text();
 
   d_ata->setDirty(true);
-}
-
-
-void KNConfig::ReadNewsViewerWidget::slotBrowserTypeChanged(int i)
-{
-  bool enabled=((ReadNewsViewer::browserType)(i)==ReadNewsViewer::BTother);
-  b_rowserCommand->setEnabled(enabled);
-  c_hooseBrowser->setEnabled(enabled);
-  emit changed(true);
-}
-
-
-void KNConfig::ReadNewsViewerWidget::slotChooseBrowser()
-{
-  QString path=b_rowserCommand->text().simplifyWhiteSpace();
-  if (path.right(3) == " %u")
-    path.truncate(path.length()-3);
-
-  path=KFileDialog::getOpenFileName(path, QString::null, this, i18n("Choose Browser"));
-
-  if (!path.isEmpty())
-    b_rowserCommand->setText(path+" %u");
 }
 
 
@@ -1534,6 +1466,8 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
   topL->addMultiCellWidget(nameW,0,0,0,1);
 
   QGroupBox *ngb=new QGroupBox(i18n("Name"), page);
+  // ### hide style settings for now, the new viewer doesn't support this yet
+  ngb->hide();
   QVBoxLayout *ngbL = new QVBoxLayout(ngb, 8, 5);
   ngbL->setAutoAdd(true);
   ngbL->addSpacing(fontMetrics().lineSpacing()-4);
@@ -1544,6 +1478,8 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
   topL->addWidget(ngb,1,0);
 
   QGroupBox *vgb=new QGroupBox(i18n("Value"), page);
+  // ### hide style settings for now, the new viewer doen't support this yet
+  vgb->hide();
   QVBoxLayout *vgbL = new QVBoxLayout(vgb, 8, 5);
   vgbL->setAutoAdd(true);
   vgbL->addSpacing(fontMetrics().lineSpacing()-4);
@@ -2358,13 +2294,6 @@ KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n)
   topLayout->addWidget(c_onf);
   connect(c_onf, SIGNAL(changed()), SLOT(slotEmitChanged()));
 
-  QGroupBox *optBox = new QGroupBox(i18n("KNode Specific Options"), this);
-  topLayout->addWidget(optBox);
-  QBoxLayout *groupL = new QVBoxLayout(optBox, KDialog::spacingHint());
-  groupL->addSpacing(fontMetrics().lineSpacing());
-  a_utoCheckSigCB = new QCheckBox(i18n("Ch&eck signatures automatically"),optBox);
-  groupL->addWidget(a_utoCheckSigCB);
-  connect(a_utoCheckSigCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
   topLayout->addStretch(1);
 
   load();
@@ -2376,27 +2305,19 @@ KNConfig::PrivacyWidget::~PrivacyWidget()
 }
 
 
-void KNConfig::PrivacyWidget::load()
-{
-  a_utoCheckSigCB->setChecked(knGlobals.configManager()->readNewsGeneral()->autoCheckPgpSigs());
-}
-
-
 void KNConfig::PrivacyWidget::save()
 {
   if(!d_irty)
     return;
 
   c_onf->applySettings();
-  knGlobals.configManager()->readNewsGeneral()->setAutoCheckPgpSigs(a_utoCheckSigCB->isChecked());
-  knGlobals.configManager()->readNewsGeneral()->setDirty(true);
 }
 
 
 //==============================================================================================================
 
 
-// BEGIN: Cleanup configuration widgets ---------------------------------------
+//BEGIN: Cleanup configuration widgets ---------------------------------------
 
 
 KNConfig::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent, const char *name )
@@ -2569,7 +2490,7 @@ void KNConfig::CleanupWidget::slotFolderCBtoggled(bool b)
 }
 
 
-// END: Cleanup configuration widgets -----------------------------------------
+//END: Cleanup configuration widgets -----------------------------------------
 
 //==============================================================================================================
 

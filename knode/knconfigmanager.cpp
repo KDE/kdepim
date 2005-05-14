@@ -2,7 +2,7 @@
     knconfigmanager.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -25,7 +25,7 @@
 
 #include "utilities.h"
 #include "knglobals.h"
-#include "knarticlewidget.h"
+#include "articlewidget.h"
 #include "knarticlefactory.h"
 #include "knmainwidget.h"
 
@@ -121,7 +121,7 @@ void KNConfigDialog::slotConfigCommitted()
 {
   knGlobals.configManager()->syncConfig();
 
-  KNArticleWidget::configChanged();
+  KNode::ArticleWidget::configChanged();
   if(knGlobals.top)
     knGlobals.top->configChanged();
   if(knGlobals.artFactory)

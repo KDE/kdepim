@@ -2,7 +2,7 @@
     kngroupmanager.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 #include <kdebug.h>
 #include <kcharsets.h>
 
+#include "articlewidget.h"
 #include "knmainwidget.h"
 #include "knarticlemanager.h"
 #include "kngroupdialog.h"
@@ -36,8 +37,9 @@
 #include "resource.h"
 #include "utilities.h"
 #include "knarticlewindow.h"
-#include "knarticlewidget.h"
 #include "knmemorymanager.h"
+
+using namespace KNode;
 
 
 //=================================================================================
@@ -462,7 +464,7 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
   }
 
   KNArticleWindow::closeAllWindowsForCollection(g);
-  KNArticleWidget::collectionRemoved(g);
+  ArticleWidget::collectionRemoved( g );
 
   acc=g->account();
 

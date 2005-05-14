@@ -3,6 +3,7 @@
 
     KNode, the KDE newsreader
     Copyright (c) 2003 Zack Rusin <zack@kde.org>
+    Copyright (c) 2004-2005 Volker Krause <volker.krause@rwth-aachen.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -47,6 +48,7 @@ using KRecentAddress::RecentAddresses;
 #include "knhdrviewitem.h"
 
 //Core
+#include "articlewidget.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "knarticlemanager.h"
@@ -66,6 +68,8 @@ using KRecentAddress::RecentAddresses;
 #include <kcmdlineargs.h>
 
 #include <klistviewsearchline.h>
+
+using namespace KNode;
 
 KNGlobals knGlobals;
 
@@ -98,16 +102,16 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   }
   KDockWidgetHeader *header = new KDockWidgetHeader(a_rtDock, "artDockHeader");
   a_rtDock->setHeader(header);
-  a_rtView = new KNArticleWidget(actionCollection(), knGlobals.guiClient, a_rtDock ,"artView");
-  header->setDragPanel(new KNDockWidgetHeaderDrag(a_rtView, header, a_rtDock));
-  knGlobals.artWidget=a_rtView;
-  a_rtDock->setWidget(a_rtView);
+  mArticleViewer = new ArticleWidget( a_rtDock, knGlobals.guiClient, actionCollection(), "articleViewer");
+  header->setDragPanel( new KNDockWidgetHeaderDrag( mArticleViewer, header, a_rtDock ) );
+  knGlobals.artWidget = mArticleViewer;
+  a_rtDock->setWidget( mArticleViewer );
   //setView(a_rtDock);
   setMainDockWidget(a_rtDock);
 
   connect(a_rtDock, SIGNAL(iMBeingClosed()), SLOT(slotArticleDockHidden()));
   connect(a_rtDock, SIGNAL(hasUndocked()), SLOT(slotArticleDockHidden()));
-  connect(a_rtView, SIGNAL(focusChangeRequest(QWidget *)), SLOT(slotDockWidgetFocusChangeRequest(QWidget *)));
+  connect( mArticleViewer, SIGNAL(focusChangeRequest(QWidget*)), SLOT(slotDockWidgetFocusChangeRequest(QWidget*)) );
 
   //collection view
   c_olDock = createDockWidget("group_view", UserIcon("group"), 0,
@@ -134,10 +138,10 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   connect(c_olView, SIGNAL(itemRenamed(QListViewItem*)),
           SLOT(slotCollectionRenamed(QListViewItem*)));
 
-  accel->connectItem( accel->insertItem(Key_Up), a_rtView, SLOT(slotKeyUp()) );
-  accel->connectItem( accel->insertItem(Key_Down), a_rtView, SLOT(slotKeyDown()) );
-  accel->connectItem( accel->insertItem(Key_Prior), a_rtView, SLOT(slotKeyPrior()) );
-  accel->connectItem( accel->insertItem(Key_Next), a_rtView, SLOT(slotKeyNext()) );
+  accel->connectItem( accel->insertItem(Key_Up), mArticleViewer, SLOT(scrollUp()) );
+  accel->connectItem( accel->insertItem(Key_Down), mArticleViewer, SLOT(scrollDown()) );
+  accel->connectItem( accel->insertItem(Key_Prior), mArticleViewer, SLOT(scrollPrior()) );
+  accel->connectItem( accel->insertItem(Key_Next), mArticleViewer, SLOT(scrollNext()) );
 
   //header view
   h_drDock = createDockWidget("header_view", SmallIcon("text_block"), 0,
@@ -437,6 +441,7 @@ QSize KNMainWidget::sizeHint() const
 
 void KNMainWidget::openURL(const KURL &url)
 {
+  kdDebug(5003) << k_funcinfo << url << endl;
   QString host = url.host();
   unsigned short int port = url.port();
   KNNntpAccount *acc=0;
@@ -539,7 +544,7 @@ void KNMainWidget::configChanged()
 void KNMainWidget::initActions()
 {
   a_ccel=new KAccel(this);
-  a_rtView->setCharsetKeyboardAction()->plugAccel(a_ccel);
+  mArticleViewer->setCharsetKeyboardAction()->plugAccel(a_ccel);
 
   //navigation
   a_ctNavNextArt            = new KAction( KGuiItem(i18n("&Next Article"), "next",
@@ -673,8 +678,6 @@ void KNMainWidget::initActions()
   a_ctArtFilterKeyb->plugAccel(a_ccel);
   a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"mail_find" , Key_F4 , this,
                               SLOT(slotArtSearch()), actionCollection(), "article_search");
-  a_ctArtFind               = new KAction(i18n("F&ind in Article..."),"find", KStdAccel::shortcut(KStdAccel::Find) , this,
-                              SLOT(slotArtFind()), actionCollection(), "find_in_article");
   a_ctArtRefreshList        = new KAction(i18n("&Refresh List"),"reload", KStdAccel::shortcut(KStdAccel::Reload), this,
                               SLOT(slotArtRefreshList()), actionCollection(), "view_Refresh");
   a_ctArtCollapseAll        = new KAction(i18n("&Collapse All Threads"), 0 , this,
@@ -822,6 +825,7 @@ void KNMainWidget::saveOptions()
 
   c_olView->writeConfig();
   h_drView->writeConfig();
+  mArticleViewer->writeConfig();
 
   // store dock configuration
   manager()->writeConfig(knGlobals.config(),"dock_configuration");
@@ -851,7 +855,7 @@ void KNMainWidget::prepareShutdown()
   kdDebug(5003) << "KNMainWidget::prepareShutdown()" << endl;
 
   //cleanup article-views
-  KNArticleWidget::cleanup();
+  ArticleWidget::cleanup();
 
   // expire groups (if necessary)
   KNCleanUp *cup = new KNCleanUp();
@@ -904,14 +908,14 @@ void KNMainWidget::showEvent(QShowEvent *)
 void KNMainWidget::fontChange( const QFont & )
 {
   a_rtFactory->configChanged();
-  KNArticleWidget::configChanged();
+  ArticleWidget::configChanged();
   configChanged();
 }
 
 
 void KNMainWidget::paletteChange( const QPalette & )
 {
-  KNArticleWidget::configChanged();
+  ArticleWidget::configChanged();
   configChanged();
 }
 
@@ -995,7 +999,7 @@ void KNMainWidget::slotArticleSelected(QListViewItem *i)
   if(i)
     selectedArticle=(static_cast<KNHdrViewItem*>(i))->art;
 
-  a_rtView->setArticle(selectedArticle);
+  mArticleViewer->setArticle( selectedArticle );
 
   //actions
   bool enabled;
@@ -1073,14 +1077,14 @@ void KNMainWidget::slotCollectionSelected(QListViewItem *i)
           i->setOpen(true);
       break;
       case KNCollection::CTgroup :
-        if (!(h_drView->hasFocus())&&!(a_rtView->hasFocus()))
+        if ( !h_drView->hasFocus() && !mArticleViewer->hasFocus() )
           h_drView->setFocus();
         selectedGroup=static_cast<KNGroup*>(c);
         selectedAccount=selectedGroup->account();
       break;
 
       case KNCollection::CTfolder :
-        if (!(h_drView->hasFocus())&&!(a_rtView->hasFocus()))
+        if ( !h_drView->hasFocus() && !mArticleViewer->hasFocus() )
           h_drView->setFocus();
         selectedFolder=static_cast<KNFolder*>(c);
       break;
@@ -1321,7 +1325,7 @@ void KNMainWidget::slotArticleDockHidden()
 
 void KNMainWidget::slotDockWidgetFocusChangeRequest(QWidget *w)
 {
-  if (w == a_rtView) {
+  if ( w == mArticleViewer ) {
     if (c_olView->isVisible()) {
       c_olView->setFocus();
       if (!w->hasFocus())  // fails if the view is visible but floating
@@ -1338,14 +1342,14 @@ void KNMainWidget::slotDockWidgetFocusChangeRequest(QWidget *w)
       if (!w->hasFocus())  // fails if the view is visible but floating
         return;
     }
-    if (a_rtView->isVisible()) {
-      a_rtView->setFocus();
+    if ( mArticleViewer->isVisible() ) {
+      mArticleViewer->setFocus();
       return;
     }
   }
   if (w == h_drView) {
-    if (a_rtView->isVisible()) {
-      a_rtView->setFocus();
+    if ( mArticleViewer->isVisible() ) {
+      mArticleViewer->setFocus();
       if (!w->hasFocus())  // fails if the view is visible but floating
         return;
     }
@@ -1377,8 +1381,8 @@ void KNMainWidget::slotNavNextUnreadThread()
 void KNMainWidget::slotNavReadThrough()
 {
   kdDebug(5003) << "KNMainWidget::slotNavReadThrough()" << endl;
-  if (a_rtView->scrollingDownPossible())
-    a_rtView->scrollDown();
+  if ( !mArticleViewer->atBottom() )
+    mArticleViewer->scrollNext();
   else if(g_rpManager->currentGroup() != 0)
     slotNavNextUnreadArt();
 }
@@ -1680,13 +1684,6 @@ void KNMainWidget::slotArtSearch()
 }
 
 
-void KNMainWidget::slotArtFind()
-{
-  kdDebug(5003) << "KNMainWidget::slotArtFind()" << endl;
-  a_rtView->find();
-}
-
-
 void KNMainWidget::slotArtRefreshList()
 {
   kdDebug(5003) << "KNMainWidget::slotArtRefreshList()" << endl;
@@ -1718,9 +1715,9 @@ void KNMainWidget::slotArtExpandAll()
 void KNMainWidget::slotArtToggleThread()
 {
   kdDebug(5003) << "KNMainWidget::slotArtToggleThread()" << endl;
-  if(a_rtView->article() && a_rtView->article()->listItem()->isExpandable()) {
-    bool o=!(a_rtView->article()->listItem()->isOpen());
-    a_rtView->article()->listItem()->setOpen(o);
+  if( mArticleViewer->article() && mArticleViewer->article()->listItem()->isExpandable() ) {
+    bool o = !(mArticleViewer->article()->listItem()->isOpen());
+    mArticleViewer->article()->listItem()->setOpen( o );
   }
 }
 
@@ -1814,8 +1811,8 @@ void KNMainWidget::slotScoreLower()
   if( !g_rpManager->currentGroup() )
     return;
 
-  if (a_rtView->article() && a_rtView->article()->type()==KMime::Base::ATremote) {
-    KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rtView->article());
+  if ( mArticleViewer->article() && mArticleViewer->article()->type() == KMime::Base::ATremote ) {
+    KNRemoteArticle *ra = static_cast<KNRemoteArticle*>( mArticleViewer->article() );
     s_coreManager->addRule(KNScorableArticle(ra), g_rpManager->currentGroup()->groupname(), -10);
   }
 }
@@ -1827,8 +1824,8 @@ void KNMainWidget::slotScoreRaise()
   if( !g_rpManager->currentGroup() )
     return;
 
-  if (a_rtView->article() && a_rtView->article()->type()==KMime::Base::ATremote) {
-    KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rtView->article());
+  if ( mArticleViewer->article() && mArticleViewer->article()->type() == KMime::Base::ATremote ) {
+    KNRemoteArticle *ra = static_cast<KNRemoteArticle*>( mArticleViewer->article() );
     s_coreManager->addRule(KNScorableArticle(ra), g_rpManager->currentGroup()->groupname(), +10);
   }
 }
@@ -1871,9 +1868,9 @@ void KNMainWidget::slotArtOpenNewWindow()
 {
   kdDebug(5003) << "KNMainWidget::slotArtOpenNewWindow()" << endl;
 
-  if(a_rtView->article()) {
-    if (!KNArticleWindow::raiseWindowForArticle(a_rtView->article())) {
-      KNArticleWindow *win=new KNArticleWindow(a_rtView->article());
+  if( mArticleViewer->article() ) {
+    if ( !KNArticleWindow::raiseWindowForArticle( mArticleViewer->article() )) {
+      KNArticleWindow *win=new KNArticleWindow( mArticleViewer->article() );
       win->show();
     }
   }
@@ -1924,8 +1921,8 @@ void KNMainWidget::slotArtEdit()
   if (!f_olManager->currentFolder())
     return;
 
-  if (a_rtView->article() && a_rtView->article()->type()==KMime::Base::ATlocal)
-    a_rtFactory->edit(static_cast<KNLocalArticle*>(a_rtView->article()));
+  if ( mArticleViewer->article() && mArticleViewer->article()->type() == KMime::Base::ATlocal )
+    a_rtFactory->edit( static_cast<KNLocalArticle*>( mArticleViewer->article() ) );
 }
 
 
@@ -2017,9 +2014,9 @@ void KNMainWidget::slotSwitchToHeaderView()
 
 void KNMainWidget::slotSwitchToArticleViewer()
 {
-  if (!a_rtView->isVisible())
+  if ( !mArticleViewer->isVisible() )
     slotToggleArticleViewer();
-  a_rtView->setFocus();
+  mArticleViewer->setFocus();
 }
 
 

@@ -2,7 +2,7 @@
     knfolder.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 
 #include <kqcstringsplitter.h>
 
+#include "articlewidget.h"
 #include "knarticlemanager.h"
 #include "kncollectionviewitem.h"
 #include "knhdrviewitem.h"
@@ -33,6 +34,8 @@
 #include "knarticlewidget.h"
 #include "knarticlewindow.h"
 #include "knmainwidget.h"
+
+using namespace KNode;
 
 
 KNFolder::KNFolder()
@@ -434,7 +437,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
       a->setEndOffset(m_boxFile.at()); //save offset
 
       //update
-      KNArticleWidget::articleChanged(a);
+      ArticleWidget::articleChanged( a );
       i_ndexDirty=true;
 
     }
@@ -486,7 +489,7 @@ void KNFolder::removeArticles(KNLocalArticle::List *l, bool del)
     //update
     knGlobals.artFactory->deleteComposerForArticle(a);
     KNArticleWindow::closeAllWindowsForArticle(a);
-    KNArticleWidget::articleRemoved(a);
+    ArticleWidget::articleRemoved( a );
     delete a->listItem();
 
     //delete article
