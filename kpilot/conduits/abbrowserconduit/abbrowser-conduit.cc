@@ -620,8 +620,13 @@ QString AbbrowserConduit::_getCatForHH(const QStringList cats, const QString cur
 		}
 	}
 	// If we have a free label, return the first possible cat
-	QString lastCat = QString::fromLatin1(fAddressAppInfo.category.name[15]);
-	if (lastCat.isEmpty()) return cats.first();
+	for(j = 0; j <= 15; j++)
+	{
+		QString cat = QString::fromLatin1(fAddressAppInfo.category.name[j]);
+		if (cat.isEmpty()) return cats.first();
+	}
+
+	// didn't find anything. return null
 	return QString::null;
 }
 void AbbrowserConduit::_setCategory(Addressee & abEntry, QString cat)
