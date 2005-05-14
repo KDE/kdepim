@@ -184,12 +184,8 @@ bool Memofile::saveFile()
 
 bool Memofile::isModified(void)
 {
-	FUNCTIONSETUP;
 	// first, check to see if this file is deleted....
 	if (!fileExists()) {
-#ifdef DEBUG
-		DEBUGCONDUIT << "isModified: our file doesn't exist. returning true." << endl;
-#endif
 		return true;
 	}
 
@@ -203,37 +199,18 @@ bool Memofile::isModified(void)
 		modBySize = isModifiedBySize();
 
 	bool ret = _modified || modByTimestamp || modBySize;
-#ifdef DEBUG
-	if (ret) {
-		DEBUGCONDUIT <<"isModified: " << toString() << " _modified: ["
-		<< _modified << "], modByTimestamp: ["
-		<< modByTimestamp << "] modBySize: [" << ret
-		<< modBySize << "] returning: [" << ret
-		<< "]." << endl;
-	}
-#endif
+
 	return ret;
 }
 
 bool Memofile::isModifiedByTimestamp()
 {
-	FUNCTIONSETUP;
-
 	if (_lastModified <=0) {
-#ifdef DEBUG
-		DEBUGCONDUIT <<"isModifiedByTimestamp: lastModified is <=0, returning true" << endl;
-#endif
 		return true;
 	}
 
 	uint lastModifiedTime = getFileLastModified();
 	if ( lastModifiedTime != _lastModified) {
-#ifdef DEBUG
-		DEBUGCONDUIT <<"isModifiedByTimestamp: file : [" << filename()
-		<< "] was modified: [" << lastModifiedTime
-		<< "], which is not my: [" << _lastModified
-		<< "]." << endl;
-#endif
 		return true;
 	}
 
@@ -242,23 +219,12 @@ bool Memofile::isModifiedByTimestamp()
 
 bool Memofile::isModifiedBySize()
 {
-	FUNCTIONSETUP;
-
 	if (_size <=0) {
-#ifdef DEBUG
-		DEBUGCONDUIT <<"isModifiedBySize: size is <=0, returning true" << endl;
-#endif
 		return true;
 	}
 
 	uint size = getFileSize();
 	if ( size != _size) {
-#ifdef DEBUG
-		DEBUGCONDUIT <<"isModifiedBySize: file : [" << filename()
-		<< "] was modified: [" << size
-		<< "], which is not my: [" << _size
-		<< "]." << endl;
-#endif
 		return true;
 	}
 
@@ -278,17 +244,3 @@ uint Memofile::getFileSize()
 	uint size = f.size();
 	return size;
 }
-
-// bool Memofile::operator==( const PilotMemo &p ) const
-// {
-// 	FUNCTIONSETUP;
-//
-// 	bool equals = false;
-//
-// 	if (getID() > 0)
-// 	{
-// 		equals = p.getID()==getID();
-// 	}
-//
-// 	return equals;
-// }
