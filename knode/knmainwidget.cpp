@@ -603,7 +603,7 @@ void KNMainWidget::initActions()
                               SLOT(slotAccExpireAll()), actionCollection(), "account_expire_all");
   a_ctAccGetNewHdrs         = new KAction(i18n("&Get New Articles in All Groups"), "mail_get", 0, this,
                               SLOT(slotAccGetNewHdrs()), actionCollection(), "account_dnlHeaders");
-  a_ctAccGetNewHdrsAll      = new KAction(i18n("&Get New Articles in All Accounts"), "mail_get", 0, this,
+  a_ctAccGetNewHdrsAll      = new KAction(i18n("&Get New Articles in All Accounts"), "mail_get_all", 0, this,
                                           SLOT(slotAccGetNewHdrsAll()), actionCollection(), "account_dnlAllHeaders");
   a_ctAccDelete             = new KAction(i18n("&Delete Account"), "editdelete", 0, this,
                               SLOT(slotAccDelete()), actionCollection(), "account_delete");
