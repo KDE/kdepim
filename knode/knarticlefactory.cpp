@@ -307,22 +307,22 @@ void KNArticleFactory::createForward(KNArticle *a)
 
   //--------------------------- <Body> -----------------------------
 
-  QString fwd=QString("\n,--------------- %1\n\n").arg(i18n("Forwarded message (begin)"));
+  QString fwd = QString("\n--------------- %1\n\n").arg(i18n("Forwarded message (begin)"));
 
-  fwd+=( i18n(" Subject")+": "+a->subject()->asUnicodeString()+"\n");
-  fwd+=( i18n(" From")+": "+a->from()->asUnicodeString()+"\n");
-  fwd+=( i18n(" Date")+": "+a->date()->asUnicodeString()+"\n");
-  fwd+=( i18n(" Newsgroup")+": "+a->newsgroups()->asUnicodeString()+"\n\n");
+  fwd+=( i18n("Subject") + ": " + a->subject()->asUnicodeString() + "\n" );
+  fwd+=( i18n("From") + ": " + a->from()->asUnicodeString() + "\n" );
+  fwd+=( i18n("Date") + ": " + a->date()->asUnicodeString() + "\n" );
+  fwd+=( i18n("Newsgroup") + ": " + a->newsgroups()->asUnicodeString() + "\n\n" );
 
   KMime::Content *text=a->textContent();
   if(text) {
     QStringList decodedLines;
-    text->decodedText(decodedLines, true, knGlobals.configManager()->readNewsViewer()->removeTrailingNewlines());
+    text->decodedText( decodedLines, false, false );
     for(QStringList::Iterator it=decodedLines.begin(); it!=decodedLines.end(); ++it)
-      fwd+=" "+(*it)+"\n";
+      fwd += (*it) + "\n";
   }
 
-  fwd+=QString("\n`--------------- %1\n").arg(i18n("Forwarded message (end)"));
+  fwd += QString("\n--------------- %1\n").arg(i18n("Forwarded message (end)"));
 
   //--------------------------- </Body> ----------------------------
 
@@ -835,7 +835,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
       KMessageBox::sorry(knGlobals.topWidget,
 	i18n("Please enter a valid email address at the identity tab of the account configuration dialog."));
     else
-      KMessageBox::sorry(knGlobals.topWidget, 
+      KMessageBox::sorry(knGlobals.topWidget,
          i18n("Please enter a valid email address at the identity section of the configuration dialog."));
     delete art;
     return 0;
