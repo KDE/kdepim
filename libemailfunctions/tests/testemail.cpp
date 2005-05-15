@@ -324,6 +324,9 @@ int main(int argc, char *argv[])
   // several errors inside doublequotes
   checkIsValidEmailAddress( "Matt \"(jongel,\\\" < fibbel\\\)\" <matt@fruitsalad.org>", "AddressOk" );
 
+  // BUG 105705
+  checkIsValidEmailAddress( "matt-@fruitsalad.org", "AddressOk" );
+
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( QString::fromUtf8("test@täst.invalid"), "true" );
@@ -335,6 +338,7 @@ int main(int argc, char *argv[])
   checkIsValidSimpleEmailAddress( "\"-matt\"@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( "matt@jongel.fibbel.com", "true" );
   checkIsValidSimpleEmailAddress( "Matt Douhan <matt@fruitsalad.org>", "false" );
+  // BUG 105705
   checkIsValidSimpleEmailAddress( "matt-@fibbel.com", "true" );
 
   // check if the pure email address is wrong
