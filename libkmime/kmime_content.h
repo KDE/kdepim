@@ -98,9 +98,9 @@ class KDE_EXPORT Content : public Base {
     QCString encodedContent(bool useCrLf=false);
     QByteArray decodedContent();
     void decodedText(QString &s, bool trimText=false,
-		     bool removeTrainingNewlines=false);
+		     bool removeTrailingNewlines=false);
     void decodedText(QStringList &s, bool trimText=false,
-		     bool removeTrainingNewlines=false);
+		     bool removeTrailingNewlines=false);
     void fromUnicodeString(const QString &s);
 
     Content* textContent();
