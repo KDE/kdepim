@@ -1423,8 +1423,16 @@ void KNComposer::slotNewToolbarConfig()
 
 void KNComposer::slotSubjectChanged(const QString &t)
 {
-  if(!t.isEmpty()) setCaption(t);
-  else setCaption(i18n("No Subject"));
+  // replace newlines
+  QString subject = t;
+  subject.replace( '\n', ' ' );
+  subject.replace( '\r', ' ' );
+  v_iew->s_ubject->setText( subject );
+  // update caption
+  if( !subject.isEmpty() )
+    setCaption( subject );
+  else
+    setCaption( i18n("No Subject") );
 }
 
 
