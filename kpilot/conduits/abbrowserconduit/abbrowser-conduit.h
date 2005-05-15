@@ -99,7 +99,7 @@ private:
 
 	/* Given a list of contacts, creates the pilot id to contact key map
 	 * and a list of new contacts in O(n) time (single pass) */
-	void _mapContactsToPilot( QMap < recordid_t, QString> &idContactMap) const;
+	void _mapContactsToPilot( QMap < recordid_t, QString> &idContactMap);
 	/* Do the preperations before doSync or doBackup.
 	 * Load contacts, set the pilot */
 	bool _prepare();

@@ -118,7 +118,7 @@ AbbrowserConduit::~AbbrowserConduit()
 
 /* Builds the map which links record ids to uid's of Addressee
 */
-void AbbrowserConduit::_mapContactsToPilot(QMap < recordid_t, QString > &idContactMap) const
+void AbbrowserConduit::_mapContactsToPilot(QMap < recordid_t, QString > &idContactMap)
 {
 	FUNCTIONSETUP;
 
@@ -132,7 +132,26 @@ void AbbrowserConduit::_mapContactsToPilot(QMap < recordid_t, QString > &idConta
 		if(!recid.isEmpty())
 		{
 			recordid_t id = recid.toULong();
-			idContactMap.insert(id, aContact.uid());
+			// safety check:  make sure that we don't already have a map for this pilot id.
+			// if we do (this can come from a copy/paste in kaddressbook, etc.), then we need
+			// to reset our Addressee so that we can assign him a new pilot Id later and sync
+			// him properly.  if we don't do this, we'll lose one of these on the pilot.
+			if (!idContactMap.contains(id))
+			{
+				idContactMap.insert(id, aContact.uid());
+			}
+			else
+			{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": found duplicate pilot key: ["
+						<< id << "], removing pilot id from addressee: ["
+						<< aContact.realName() << "]" << endl;
+#endif
+				aBook->removeAddressee(aContact);
+				aContact.removeCustom(appString, idString);
+				aBook->insertAddressee(aContact);
+				abChanged = true;
+			}
 		}
 	}
 #ifdef DEBUG
