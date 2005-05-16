@@ -740,7 +740,7 @@ QString ArticleWidget::displaySigHeader( Kpgp::Block* block )
 
     // HTMLize the signer's user id and create mailto: link
     signer = toHtmlString( signer, None );
-    signer = "<a href=\"mailto://" + signer + "\">" + signer + "</a>"; // FIXME: signer as mailto link?
+    signer = "<a href=\"mailto:" + KPIM::getEmailAddress( signer ) + "\">" + signer + "</a>";
 
     if( !signerKey.isEmpty() )
       message += i18n( "Message was signed by %1 (Key ID: 0x%2)." )
