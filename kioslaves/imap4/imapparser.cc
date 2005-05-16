@@ -1549,6 +1549,10 @@ void imapParser::parseNamespace (parseString & result)
   if ( result[0] != '(' )
     return;
 
+  QString delimEmpty;
+  if ( imapNamespaceDelimiter.contains( QString::null ) )
+    delimEmpty = imapNamespaceDelimiter[QString::null];
+
   imapNamespaceDelimiter.clear();
   imapNamespaces.clear();
 
@@ -1571,10 +1575,14 @@ void imapParser::parseNamespace (parseString & result)
       QCString delim = parseOneWordC( result );
       kdDebug(7116) << "imapParser::parseNamespace ns='" << prefix <<
        "',delim='" << delim << "'" << endl;
-      imapNamespaceDelimiter[prefix] = delim;
       const QString prefixStr = prefix;
       QString nsentry = QString::number( ns ) + "=" + prefixStr;
       imapNamespaces.append( nsentry );
+      if ( prefix.right( 1 ) == delim ) {
+        // strip delimiter to get a correct entry for comparisons
+        prefix.resize( prefix.length() );
+      }      
+      imapNamespaceDelimiter[prefix] = delim;
       
       result.pos++; // tie off )
       skipWS( result );
@@ -1591,6 +1599,9 @@ void imapParser::parseNamespace (parseString & result)
       // drop whatever it is
       parseOneWord( result );
     }
+  }
+  if ( !delimEmpty.isEmpty() ) {
+    imapNamespaceDelimiter[QString::null] = delimEmpty;
   }
 }
 
