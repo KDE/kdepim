@@ -340,6 +340,7 @@ int main(int argc, char *argv[])
   checkIsValidSimpleEmailAddress( "Matt Douhan <matt@fruitsalad.org>", "false" );
   // BUG 105705
   checkIsValidSimpleEmailAddress( "matt-@fibbel.com", "true" );
+  checkIsValidSimpleEmailAddress( "matt@fibbel-is-a-geek.com", "true" );
 
   // check if the pure email address is wrong
   checkIsValidSimpleEmailAddress( "mattfruitsalad.org", "false" );
