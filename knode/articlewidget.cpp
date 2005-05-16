@@ -24,6 +24,7 @@
 #include <qpaintdevicemetrics.h>
 #include <qpopupmenu.h>
 #include <qstringlist.h>
+#include <qtextcodec.h>
 #include <qtimer.h>
 
 #include <kaction.h>
@@ -392,81 +393,43 @@ void ArticleWidget::displayArticle()
 
   // if the article is pgp signed and the user asked for verifying the
   // signature, we show a nice header:
-  Kpgp::Module *pgp = knGlobals.pgp;
   QPtrList<Kpgp::Block> pgpBlocks;
   QStrList nonPgpBlocks;
+  bool containsPGP = Kpgp::Module::prepareMessageForDecryption( mArticle->body(), pgpBlocks, nonPgpBlocks );
 
-  if ( Kpgp::Module::prepareMessageForDecryption( mArticle->body(), pgpBlocks, nonPgpBlocks ) ) {
-    // Only the first OpenPGP block is verified (if there is one)
-    Kpgp::Block* pgpBlock = pgpBlocks.first();
-    if( pgpBlock && pgpBlock->type() == Kpgp::ClearsignedBlock )
-      pgpBlock->verify();
-    else
-      pgpBlock = 0;
-    if( pgpBlock && pgpBlock->isSigned() ) {
-      QString signer = pgpBlock->signatureUserId();
-      QCString signerKey = pgpBlock->signatureKeyId();
-      html += "<p><b>";
-      if( signer.isEmpty() )
-      {
-        html += i18n( "Message was signed with unknown key 0x%1." )
-          .arg( signerKey );
-        html += "<br/>";
-        html += i18n( "The validity of the signature cannot be verified." );
+  mViewer->write ( html );
+  html = QString();
+
+  if ( containsPGP ) {
+    QPtrListIterator<Kpgp::Block> pbit( pgpBlocks );
+    QStrListIterator npbit( nonPgpBlocks );
+    QTextCodec *codec = KGlobal::charsets()->codecForName( text->contentType()->charset() );
+
+    for( ; *pbit != 0; ++pbit, ++npbit ) {
+      // handle non-pgp block
+      QCString str( *npbit );
+      if( !str.isEmpty() ) {
+        QStringList lines = QStringList::split( '\n', codec->toUnicode( str ) );
+        displayBodyBlock( lines );
       }
-      else {
-        // determine the validity of the key
-        Kpgp::Validity keyTrust;
-        if( !signerKey.isEmpty() )
-          keyTrust = pgp->keyTrust( signerKey );
-        else
-          // This is needed for the PGP 6 support because PGP 6 doesn't
-          // print the key id of the signing key if the key is known.
-          keyTrust = pgp->keyTrust( signer );
-
-        // HTMLize the signer's user id and create mailto: link
-        signer = toHtmlString( signer, None );
-        signer = "<a href=\"mailto://" + signer + "\">" + signer + "</a>";
-
-        if( !signerKey.isEmpty() )
-          html += i18n( "Message was signed by %1 (Key ID: 0x%2)." )
-          .arg( signer )
-          .arg( signerKey );
-        else
-          html += i18n( "Message was signed by %1." ).arg( signer );
-        html += "<br/>";
-
-        if( pgpBlock->goodSignature() )
-        {
-          switch( keyTrust )
-          {
-          case Kpgp::KPGP_VALIDITY_UNKNOWN:
-            html += i18n( "The signature is valid, but the key's "
-                          "validity is unknown." );
-            break;
-          case Kpgp::KPGP_VALIDITY_MARGINAL:
-            html += i18n( "The signature is valid and the key is "
-                          "marginally trusted." );
-            break;
-          case Kpgp::KPGP_VALIDITY_FULL:
-            html += i18n( "The signature is valid and the key is "
-                          "fully trusted." );
-            break;
-          case Kpgp::KPGP_VALIDITY_ULTIMATE:
-            html += i18n( "The signature is valid and the key is "
-                          "ultimately trusted." );
-            break;
-          default:
-            html += i18n( "The signature is valid, but the key is "
-                          "untrusted." );
-          }
-        }
-        else // bad signature
-        {
-        html += i18n("Warning: The signature is bad.");
-        }
+      // handle pgp block
+      Kpgp::Block* block = *pbit;
+      if ( block->type() == Kpgp::ClearsignedBlock )
+        block->verify();
+      QStringList lines = QStringList::split( '\n', codec->toUnicode( block->text() ) );
+      if ( block->isSigned() ) {
+        QString signClass = displaySigHeader( block );
+        displayBodyBlock( lines );
+        displaySigFooter( signClass );
+      } else {
+        displayBodyBlock( lines );
       }
-      html += "</b><br/></p>";
+    }
+    // deal with the last non-pgp block
+    QCString str( *npbit );
+    if( !str.isEmpty() ) {
+      QStringList lines = QStringList::split( '\n', codec->toUnicode( str ) );
+      displayBodyBlock( lines );
     }
   }
 
@@ -508,63 +471,11 @@ void ArticleWidget::displayArticle()
       }
     }
     else {
-      int oldLevel = -2, newLevel = -2;
-      bool isSig = false;
-      QStringList lines;
-      QString line;
-      text->decodedText( lines, true, knGlobals.configManager()->readNewsViewer()->removeTrailingNewlines() );
-      QString quoteChars = rnv->quoteCharacters().simplifyWhiteSpace();
-      if (quoteChars.isEmpty())
-        quoteChars = ">";
-
-      for ( QStringList::Iterator it = lines.begin(); it != lines.end(); ++it) {
-        line = (*it);
-        if ( !line.isEmpty() ) {
-          // signature found
-          if ( !isSig && line == "-- " ) {
-            isSig = true;
-            // close previous body tag (if any) and open new one
-            if ( newLevel != -2 )
-              html += "</div>";
-            html += mCSSHelper->nonQuotedFontTag();
-            newLevel = -1;
-            if ( rnv->showSignature() ) {
-              html += "<hr size=\"1\"/>";
-              continue;
-            }
-            else break;
-          }
-          // look for quoting characters
-          if ( !isSig ) {
-            oldLevel = newLevel;
-            newLevel = quotingDepth( line, quoteChars );
-            if ( newLevel >= 3 )
-              newLevel = 2; // no more than three levels supported (0-2)
-
-            // quoting level changed
-            if ( newLevel != oldLevel ) {
-              if ( oldLevel != -2 )
-                html += "</div>"; // close previous level
-              // open new level
-              if ( newLevel == -1 )
-                html += mCSSHelper->nonQuotedFontTag();
-              else
-                html += mCSSHelper->quoteFontTag( newLevel );
-            }
-            // output the actual line
-            html += toHtmlString( line, ParseURL | FancyFormatting | AllowROT13 ) + "<br/>";
-          } else {
-            // signature
-            html += toHtmlString( line, ParseURL | AllowROT13 ) + "<br/>";
-          }
-        } else {
-          // empty line
-          html += "<br/>";
-        }
+      if ( !containsPGP ) {
+        QStringList lines;
+        text->decodedText( lines, true, knGlobals.configManager()->readNewsViewer()->removeTrailingNewlines() );
+        displayBodyBlock( lines );
       }
-      // close body quoting level tags
-      if ( newLevel != -2 )
-        html += "</div>";
     }
 
   }
@@ -738,6 +649,153 @@ void ArticleWidget::displayHeader()
 
   mViewer->write( html );
   mViewer->write( "</div>" );
+}
+
+
+void ArticleWidget::displayBodyBlock( const QStringList &lines )
+{
+  int oldLevel = -2, newLevel = -2;
+  bool isSig = false;
+  QString line, html;
+  KNConfig::ReadNewsViewer *rnv = knGlobals.configManager()->readNewsViewer();
+  QString quoteChars = rnv->quoteCharacters().simplifyWhiteSpace();
+  if (quoteChars.isEmpty())
+    quoteChars = ">";
+
+  for ( QStringList::const_iterator it = lines.begin(); it != lines.end(); ++it) {
+    line = (*it);
+    if ( !line.isEmpty() ) {
+      // signature found
+      if ( !isSig && line == "-- " ) {
+        isSig = true;
+        // close previous body tag (if any) and open new one
+        if ( newLevel != -2 )
+          html += "</div>";
+        html += mCSSHelper->nonQuotedFontTag();
+        newLevel = -1;
+        if ( rnv->showSignature() ) {
+          html += "<hr size=\"1\"/>";
+          continue;
+        }
+        else break;
+      }
+      // look for quoting characters
+      if ( !isSig ) {
+        oldLevel = newLevel;
+        newLevel = quotingDepth( line, quoteChars );
+        if ( newLevel >= 3 )
+          newLevel = 2; // no more than three levels supported (0-2)
+
+        // quoting level changed
+        if ( newLevel != oldLevel ) {
+          if ( oldLevel != -2 )
+            html += "</div>"; // close previous level
+          // open new level
+          if ( newLevel == -1 )
+            html += mCSSHelper->nonQuotedFontTag();
+          else
+            html += mCSSHelper->quoteFontTag( newLevel );
+        }
+        // output the actual line
+        html += toHtmlString( line, ParseURL | FancyFormatting | AllowROT13 ) + "<br/>";
+      } else {
+        // signature
+        html += toHtmlString( line, ParseURL | AllowROT13 ) + "<br/>";
+      }
+    } else {
+      // empty line
+      html += "<br/>";
+    }
+  }
+      // close body quoting level tags
+  if ( newLevel != -2 )
+    html += "</div>";
+
+  mViewer->write( html );
+}
+
+
+QString ArticleWidget::displaySigHeader( Kpgp::Block* block )
+{
+  QString signClass = "signErr";
+  QString signer = block->signatureUserId();
+  QCString signerKey = block->signatureKeyId();
+  QString message;
+  if ( signer.isEmpty() ) {
+    message = i18n( "Message was signed with unknown key 0x%1." )
+      .arg( signerKey );
+    message += "<br/>";
+    message += i18n( "The validity of the signature cannot be verified." );
+    signClass = "signWarn";
+  } else {
+    // determine the validity of the key
+    Kpgp::Module *pgp = knGlobals.pgp;
+    Kpgp::Validity keyTrust;
+    if( !signerKey.isEmpty() )
+      keyTrust = pgp->keyTrust( signerKey );
+    else
+      // This is needed for the PGP 6 support because PGP 6 doesn't
+      // print the key id of the signing key if the key is known.
+      keyTrust = pgp->keyTrust( signer );
+
+    // HTMLize the signer's user id and create mailto: link
+    signer = toHtmlString( signer, None );
+    signer = "<a href=\"mailto://" + signer + "\">" + signer + "</a>"; // FIXME: signer as mailto link?
+
+    if( !signerKey.isEmpty() )
+      message += i18n( "Message was signed by %1 (Key ID: 0x%2)." )
+      .arg( signer )
+      .arg( signerKey );
+    else
+      message += i18n( "Message was signed by %1." ).arg( signer );
+    message += "<br/>";
+
+    if( block->goodSignature() ) {
+      if ( keyTrust < Kpgp::KPGP_VALIDITY_MARGINAL )
+        signClass = "signOkKeyBad";
+      else
+        signClass = "signOkKeyOk";
+      switch( keyTrust ) {
+        case Kpgp::KPGP_VALIDITY_UNKNOWN:
+          message += i18n( "The signature is valid, but the key's "
+                          "validity is unknown." );
+          break;
+        case Kpgp::KPGP_VALIDITY_MARGINAL:
+          message += i18n( "The signature is valid and the key is "
+                          "marginally trusted." );
+          break;
+        case Kpgp::KPGP_VALIDITY_FULL:
+          message += i18n( "The signature is valid and the key is "
+                          "fully trusted." );
+          break;
+        case Kpgp::KPGP_VALIDITY_ULTIMATE:
+          message += i18n( "The signature is valid and the key is "
+                          "ultimately trusted." );
+          break;
+        default:
+          message += i18n( "The signature is valid, but the key is "
+                          "untrusted." );
+      }
+    } else {
+      message += i18n("Warning: The signature is bad.");
+      signClass = "signErr";
+    }
+  }
+
+  QString html = "<table cellspacing=\"1\" cellpadding=\"1\" class=\"" + signClass + "\">";
+  html += "<tr class=\"" + signClass + "H\"><td>";
+  html += message;
+  html += "</td></tr><tr class=\"" + signClass + "B\"><td>";
+  mViewer->write( html );
+  return signClass;
+}
+
+
+void ArticleWidget::displaySigFooter( const QString &signClass )
+{
+  QString html = "</td></tr><tr class=\"" + signClass + "H\">";
+  html += "<td>" + i18n( "End of signed message" ) + "</td></tr></table>";
+  mViewer->write( html );
 }
 
 

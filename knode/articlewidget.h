@@ -36,6 +36,10 @@ class KSelectAction;
 class KToggleAction;
 class KXMLGUIClient;
 
+namespace Kpgp {
+  class Block;
+}
+
 class KNArticle;
 class KNArticleCollection;
 
@@ -123,6 +127,14 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
 
     /// display the message header (should be replaced by KMail's HeaderStyle class)
     void displayHeader();
+    /** displays the given text block, including quote and signature handling
+     *  @param lines A list of lines to display.
+     */
+    void displayBodyBlock( const QStringList &lines );
+    /// displays a signature block header
+    QString displaySigHeader( Kpgp::Block* block );
+    /// displays a signature footer
+    void displaySigFooter( const QString &signClass );
     /// displays the given attachment
     void displayAttachment( KMime::Content *att, int partNum );
 
