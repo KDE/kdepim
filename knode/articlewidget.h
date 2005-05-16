@@ -143,7 +143,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
       None = 0,
       ParseURL = 1,
       FancyFormatting = 2,
-      AllowROT13 = 4,
+      AllowROT13 = 4
     };
     /// convert the given string into a HTML string
     QString toHtmlString( const QString &line, int flags = ParseURL );
