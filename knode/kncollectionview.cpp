@@ -369,7 +369,7 @@ QDragObject* KNCollectionView::dragObject()
 {
   KFolderTreeItem *item = static_cast<KFolderTreeItem*>
       (itemAt(viewport()->mapFromGlobal(QCursor::pos())));
-  if (item->protocol() == KFolderTreeItem::Local && item->type() == KFolderTreeItem::Other) {
+  if ( item && item->protocol() == KFolderTreeItem::Local && item->type() == KFolderTreeItem::Other ) {
     QDragObject *d = new QStoredDrag( "x-knode-drag/folder", viewport() );
     d->setPixmap( SmallIcon("folder") );
     return d;
