@@ -140,13 +140,26 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
 
 PilotLocalDatabase::PilotLocalDatabase(const QString &dbName) :
 	PilotDatabase( QString() ),
-	fPathName(dbName),
-	fDBName(dbName),
+	fPathName( QString() ),
+	fDBName( QString() ),
 	fAppInfo(0L),
 	fAppLen(0),
 	d(0L)
 {
 	FUNCTIONSETUP;
+
+	int p = dbName.findRev( '/' );
+	if (p<0)
+	{
+		// No slash
+		fPathName = CSL1(".");
+		fDBName = dbName;
+	}
+	else
+	{
+		fPathName = dbName.left(p);
+		fDBName = dbName.mid(p+1);
+	}
 	openDatabase();
 }
 
@@ -588,8 +601,9 @@ void PilotLocalDatabase::openDatabase()
 	dbFile = pi_file_open(buffer);
 	if (dbFile == 0L)
 	{
-		kdError() << k_funcinfo
-			<< ": Failed to open " << dbPathName() << endl;
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Failed to open " << dbPathName() << endl;
+#endif
 		return;
 	}
 
@@ -631,7 +645,7 @@ void PilotLocalDatabase::closeDatabase()
 	if (isDBOpen() == false)
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT<<"Database "<<fDBName<<" is not open. Cannot close and write it"<<endl;
+		DEBUGCONDUIT << fname << ": Database "<<fDBName<<" is not open. Cannot close and write it"<<endl;
 #endif
 		return;
 	}

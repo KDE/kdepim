@@ -34,8 +34,8 @@ kpilotinclude_HEADERS = kpilotlink.h uiDialog.h plugin.h syncAction.h \
 
 kde_kcfg_DATA = kpilotlib.kcfg
 
-check_PROGRAMS = testactions testconstants
-TESTS = testactions testconstants
+check_PROGRAMS = testactions testconstants testdatabase
+TESTS = testactions testconstants testdatabase
 
 testactions_SOURCES = testactions.cc
 testactions_LDFLAGS = $(all_libraries) $(KDE_RPATH)
@@ -43,6 +43,11 @@ testactions_LDADD  = libkpilot.la $(PISOCK_LIB)
 
 testconstants_SOURCES = testconstants.cc
 testconstants_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-testconstants_LDADD  = libkpilot.la $(PISOCK_LIB)
+testconstants_LDADD   = libkpilot.la $(PISOCK_LIB)
+
+testdatabase_SOURCES  = testdatabase.cc
+testdatabase_LDFLAGS  = $(all_libraries) $(KDE_RPATH)
+testdatabase_LDADD    = libkpilot.la $(PISOCK_LIB)
+testdatabase_CXXFLAGS = '-DSOURCE="$(srcdir)"'
 
 include $(top_srcdir)/doc/api/Doxyfile.am

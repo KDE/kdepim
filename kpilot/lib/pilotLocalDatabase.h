@@ -56,6 +56,8 @@ public:
 	* a backup run, since the conduit assumes the database to have
 	* the state of the previous conduit run,  useConduitDBs=true
 	* opens the database in $KDEHOME/share/apps/kpilot/conduits
+	*
+	* TODO: Deprecate this one.
 	*/
 	PilotLocalDatabase(const QString &name, bool useConduitDBs /* =false */);
 

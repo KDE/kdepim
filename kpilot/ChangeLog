@@ -1,26 +1,29 @@
 ** KPILOT CHANGELOG **
 ======================
 
-TODO: let the memofile conduit use the PilotMemoInfo class instead of its
-  hand-rolled own interpretation of the memo info.
-TODO: get an innocuous database to run PilotLocalDatabase tests with.
-TODO: move PilotLocalDatabase to a QValueVector<PilotRecord *>.
 TODO: provide template-based, interpreted databases much like the
   AppInfo classes now have.
-TODO: give the knotes conduit a decent test mode
+TODO: give the knotes conduit a decent test mode.
+TODO: only re-write a local database if it is changed.
 
+2005-05-16  Adriaan de Groot
+* Added yet another constructor to the local databases, this time hopefully
+  one that doesn't have a horribly convoluted semantics -- it just opens
+  a file (or not).
+* Added more tests for lib. These will always fail unless you have a copy
+  of Aesop's fables in /tmp .
 
 2005-05-13  Adriaan de Groot
-* Friday the 13th! I merged HEAD to BRANCH and am now working in 
+* Friday the 13th! I merged HEAD to BRANCH and am now working in
   BRANCH (branches/KDE/3.4/kdepim/kpilot) to do bugfixes. New features
   and strings go in HEAD, and we'll forward-port bugfixes at some
   point. The cutover is revision 413061.
 
 2005-05-11  Adriaan de Groot
 * Wasted much time trying to get generic FreeBSD USB support for non-
-  Visors working in pilot-link-0.12 before I found out that ColdSync 
+  Visors working in pilot-link-0.12 before I found out that ColdSync
   doesn't support that either.
-* Removed non-working calendar conduits (calendarbaseconduit/ and 
+* Removed non-working calendar conduits (calendarbaseconduit/ and
   calendarconduits/) from the conduits dir; restore them w/ SVN
   commits near 412528. These were recordconduit-based conduits
   by Reinhold, but I broke the RecordConduit in the meantime.
