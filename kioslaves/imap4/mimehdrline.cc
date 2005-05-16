@@ -486,18 +486,24 @@ mimeHdrLine::truncateLine(QCString aLine, unsigned int truncate)
   int cutHere;
   QCString retVal;
   uint len = aLine.length();
+  // see if we have a line of the form "key: value" (like "Subject: bla")
+  // then we do not want to truncate between key and value
+  int validStart = aLine.find(": ");
+  if (validStart > -1) {
+    validStart += 2;
+  }
 
   while (len > truncate) {
     cutHere = aLine.findRev(' ', truncate);
-    if (cutHere < 1) {
+    if (cutHere < 1 || cutHere < validStart) {
       cutHere = aLine.findRev('\t', truncate);
       if (cutHere < 1) {
         cutHere = aLine.find(' ', 1);
         if (cutHere < 1) {
           cutHere = aLine.find('\t', 1);
           if (cutHere < 1) {
-            cerr << "cant truncate line" << endl;
-            break;
+	    // simply truncate
+	    return aLine.left(truncate);
           }
         }
       }
