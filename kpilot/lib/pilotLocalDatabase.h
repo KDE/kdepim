@@ -57,8 +57,14 @@ public:
 	* the state of the previous conduit run,  useConduitDBs=true
 	* opens the database in $KDEHOME/share/apps/kpilot/conduits
 	*/
-	PilotLocalDatabase(const QString &name, bool useConduitDBs=false);
+	PilotLocalDatabase(const QString &name, bool useConduitDBs /* =false */);
 
+
+	/**
+	* Opens the local database. This is primarily for testing
+	* purposes; only tries the given path.
+	*/
+	PilotLocalDatabase(const QString &name);
 
 	virtual ~PilotLocalDatabase();
 

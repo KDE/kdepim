@@ -138,6 +138,17 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
 	openDatabase();
 }
 
+PilotLocalDatabase::PilotLocalDatabase(const QString &dbName) :
+	PilotDatabase( QString() ),
+	fPathName(dbName),
+	fDBName(dbName),
+	fAppInfo(0L),
+	fAppLen(0),
+	d(0L)
+{
+	FUNCTIONSETUP;
+	openDatabase();
+}
 
 PilotLocalDatabase::~PilotLocalDatabase()
 {
@@ -442,7 +453,7 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
  			if ((*d)[i]->id() == newRecord->id())
   			{
  				delete (*d)[i];
-  
+
  				(*d)[i] = new PilotRecord(newRecord);
   				return 0;
   			}
