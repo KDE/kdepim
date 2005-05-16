@@ -55,6 +55,7 @@ extern "C" {
 #include <kdebug.h>
 #include <kmdcodec.h>
 #include <kurl.h>
+#include <kasciistricmp.h>
 
 imapParser::imapParser ()
 {
@@ -1911,7 +1912,7 @@ bool imapParser::hasCapability (const QString & cap)
        it != imapCapabilities.end (); ++it)
   {
 //    kdDebug(7116) << "imapParser::hasCapability - Examining '" << (*it) << "'" << endl;
-    if (c == *it)
+    if ( !(kasciistricmp(c.ascii(), (*it).ascii())) )
     {
       return true;
     }
