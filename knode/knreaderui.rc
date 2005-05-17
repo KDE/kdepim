@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="KNReader" version="13">
+<kpartgui name="KNReader" version="14">
 
 <MenuBar>
   <Menu noMerge="1" name="file"><text>&amp;File</text>
