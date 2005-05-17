@@ -1562,6 +1562,7 @@ void imapParser::parseNamespace (parseString & result)
 
   // remember what section we're in (user, other users, shared)
   int ns = -1;
+  bool personalAvailable = false;
   while ( !result.isEmpty() )
   {
     if ( result[0] == '(' )
@@ -1579,6 +1580,11 @@ void imapParser::parseNamespace (parseString & result)
       QCString delim = parseOneWordC( result );
       kdDebug(7116) << "imapParser::parseNamespace ns='" << prefix <<
        "',delim='" << delim << "'" << endl;
+      if ( ns == 0 ) 
+      {
+        // at least one personal ns
+        personalAvailable = true;
+      }
       QString nsentry = QString::number( ns ) + "=" + QString(prefix) + 
         "=" + QString(delim);
       imapNamespaces.append( nsentry );
@@ -1605,7 +1611,15 @@ void imapParser::parseNamespace (parseString & result)
     }
   }
   if ( !delimEmpty.isEmpty() ) {
+    // remember default delimiter
     namespaceToDelimiter[QString::null] = delimEmpty;
+    if ( !personalAvailable )
+    {
+      // at least one personal ns would be nice
+      kdDebug(7116) << "imapParser::parseNamespace - registering own personal ns" << endl;
+      QString nsentry = "0==" + delimEmpty;
+      imapNamespaces.append( nsentry );
+    }
   }
 }
 

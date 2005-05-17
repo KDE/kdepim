@@ -1999,6 +1999,7 @@ bool IMAP4Protocol::makeLogin ()
           (*it).hierarchyDelimiter() << "'" << endl;
         if ( !hasCapability("NAMESPACE") )
         {
+          // server does not support namespaces
           QString nsentry = QString::number( 0 ) + "==" 
             + (*it).hierarchyDelimiter();
           imapNamespaces.append( nsentry );
