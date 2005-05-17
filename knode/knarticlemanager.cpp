@@ -84,7 +84,8 @@ void KNArticleManager::saveContentToFile(KMime::Content *c, QWidget *parent)
 
   if (file) {
     QByteArray data=c->decodedContent();
-    file->writeBlock(data.data(), data.size());
+    if (file->writeBlock(data.data(), data.size()) == -1 )
+      KNHelper::displayExternalFileError( parent );
   }
 }
 
@@ -107,7 +108,8 @@ void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
 
   if (file) {
     QCString tmp=a->encodedContent(false);
-    file->writeBlock(tmp.data(), tmp.size());
+    if ( file->writeBlock(tmp.data(), tmp.size()) == -1 )
+      KNHelper::displayExternalFileError( parent );
   }
 }
 
