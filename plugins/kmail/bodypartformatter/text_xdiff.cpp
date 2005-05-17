@@ -116,7 +116,7 @@ namespace {
             style = "";
           }
         }
-        html += "<span " + style + ">" + line + "</span>\n";
+        html += "<span " + style + ">" + line + "</span><br/>";
       }
 
       html += "</pre></div>";
