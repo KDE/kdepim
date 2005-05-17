@@ -278,7 +278,7 @@ void KNConfig::IdentityWidget::slotSignatureEdit()
 
 //==========================================================================================
 
-// BEGIN: NNTP account configuration widgets ----------------------------------
+//BEGIN: NNTP account configuration widgets ----------------------------------
 
 KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n)
   : BaseWidget(p, n), a_ccManager(knGlobals.accountManager())
@@ -613,7 +613,7 @@ void KNConfig::NntpAccountConfDialog::slotIntervalChecked(bool b)
   c_heckIntervalLabel->setEnabled(b);
 }
 
-// END: NNTP account configuration widgets ------------------------------------
+//END: NNTP account configuration widgets ------------------------------------
 
 //=============================================================================================
 

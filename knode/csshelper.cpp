@@ -26,9 +26,14 @@ KNode::CSSHelper::CSSHelper( const QPaintDeviceMetrics &pdm ) :
   mLinkColor = app->linkColor();
   mVisitedLinkColor = app->linkColor();
   mBackgroundColor = app->backgroundColor();
-  mQuoteColor[0] = app->quoteColor1();
-  mQuoteColor[1] = app->quoteColor2();
-  mQuoteColor[2] = app->quoteColor3();
+  for ( int i = 0; i < 3; ++i )
+    mQuoteColor[i] = app->quoteColor( i );
+
+  cHtmlWarning = app->htmlWarningColor();
+  cPgpOk1H  = app->signOkKeyOkColor();
+  cPgpOk0H  = app->signOkKeyBadColor();
+  cPgpWarnH = app->signWarnColor();
+  cPgpErrH  = app->signErrColor();
 
   mBodyFont = mPrintFont = app->articleFont();
   mFixedFont = mFixedPrintFont = app->articleFixedFont();

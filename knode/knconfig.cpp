@@ -181,49 +181,66 @@ KNConfig::Appearance::Appearance()
   //colors
   u_seColors=c->readBoolEntry("customColors", false);
 
-  QColor defCol=kapp->palette().active().base();
-  c_olors[background]=c->readColorEntry("backgroundColor",&defCol);
-  c_olorNames[background]=i18n("Background");
+  QColor defCol = defaultColor( background );
+  c_olors[background] = c->readColorEntry( "backgroundColor", &defCol );
+  c_olorNames[background] = i18n("Background");
 
-  defCol=KGlobalSettings::alternateBackgroundColor();
-  c_olors[alternateBackground]=c->readColorEntry("alternateBackgroundColor",&defCol);
-  c_olorNames[alternateBackground]=i18n("Alternate Background");
+  defCol = defaultColor( alternateBackground );
+  c_olors[alternateBackground] = c->readColorEntry("alternateBackgroundColor", &defCol );
+  c_olorNames[alternateBackground] = i18n("Alternate Background");
 
-  defCol=kapp->palette().active().text();
-  c_olors[normalText]=c->readColorEntry("textColor",&defCol);
-  c_olorNames[normalText]=i18n("Normal Text");
+  defCol = defaultColor( normalText );
+  c_olors[normalText] = c->readColorEntry( "textColor", &defCol );
+  c_olorNames[normalText] = i18n("Normal Text");
 
-  defCol=QColor( 0x00, 0x80, 0x00 );
-  c_olors[quoted1]=c->readColorEntry("quote1Color",&defCol);
-  c_olorNames[quoted1]=i18n("Quoted Text - First level");
+  defCol = defaultColor( quoted1 );
+  c_olors[quoted1] = c->readColorEntry( "quote1Color", &defCol );
+  c_olorNames[quoted1] = i18n("Quoted Text - First level");
 
-  defCol=QColor( 0x00, 0x70, 0x00 );
-  c_olors[quoted2]=c->readColorEntry("quote2Color",&defCol);
-  c_olorNames[quoted2]=i18n("Quoted Text - Second level");
+  defCol = defaultColor( quoted2 );
+  c_olors[quoted2] = c->readColorEntry( "quote2Color", &defCol );
+  c_olorNames[quoted2] = i18n("Quoted Text - Second level");
 
-  defCol=QColor( 0x00, 0x60, 0x00 );
-  c_olors[quoted3]=c->readColorEntry("quote3Color",&defCol);
-  c_olorNames[quoted3]=i18n("Quoted Text - Third level");
+  defCol = defaultColor( quoted3 );
+  c_olors[quoted3] = c->readColorEntry( "quote3Color", &defCol );
+  c_olorNames[quoted3] = i18n("Quoted Text - Third level");
 
-  defCol=KGlobalSettings::linkColor();
-  c_olors[url]=c->readColorEntry("URLColor",&defCol);
-  c_olorNames[url]=i18n("Link");
+  defCol = defaultColor( url );
+  c_olors[url] = c->readColorEntry( "URLColor", &defCol );
+  c_olorNames[url] = i18n("Link");
 
-  defCol=kapp->palette().disabled().text();
-  c_olors[readThread]=c->readColorEntry("readThreadColor",&defCol);
-  c_olorNames[readThread]=i18n("Read Thread");
+  defCol = defaultColor( readThread );
+  c_olors[readThread] = c->readColorEntry( "readThreadColor", &defCol );
+  c_olorNames[readThread] = i18n("Read Thread");
 
-  defCol=kapp->palette().active().text();
-  c_olors[unreadThread]=c->readColorEntry("unreadThreadColor",&defCol);
-  c_olorNames[unreadThread]=i18n("Unread Thread");
+  defCol = defaultColor( unreadThread );
+  c_olors[unreadThread] = c->readColorEntry("unreadThreadColor", &defCol );
+  c_olorNames[unreadThread] = i18n("Unread Thread");
 
-  defCol.setRgb(136,136,136);
-  c_olors[readArticle]=c->readColorEntry("readArtColor",&defCol);
-  c_olorNames[readArticle]=i18n("Read Article");
+  defCol = defaultColor( readThread );
+  c_olors[readArticle] = c->readColorEntry("readArtColor", &defCol );
+  c_olorNames[readArticle] = i18n("Read Article");
 
-  defCol.setRgb(183,154,11);
-  c_olors[unreadArticle]=c->readColorEntry("unreadArtColor",&defCol);
-  c_olorNames[unreadArticle]=i18n("Unread Article");
+  defCol = defaultColor( unreadArticle );
+  c_olors[unreadArticle] = c->readColorEntry("unreadArtColor", &defCol );
+  c_olorNames[unreadArticle] = i18n("Unread Article");
+
+  defCol = defaultColor( signOkKeyOk );
+  c_olors[signOkKeyOk] = c->readColorEntry("signOkKeyOk", &defCol );
+  defCol = defaultColor( signOkKeyBad );
+  c_olors[signOkKeyBad] = c->readColorEntry("signOkKeyBad", &defCol );
+  defCol = defaultColor( signWarn );
+  c_olors[signWarn] = c->readColorEntry("signWarn", &defCol );
+  defCol = defaultColor( signErr );
+  c_olors[signErr] = c->readColorEntry("signErr", &defCol );
+  defCol = defaultColor( htmlWarning );
+  c_olors[htmlWarning] = c->readColorEntry("htmlWarning", &defCol );
+
+  c_olorNames[signOkKeyOk] = i18n("Valid Signature with Trusted Key");
+  c_olorNames[signOkKeyBad] = i18n("Valid Signature with Untrusted Key");
+  c_olorNames[signWarn] = i18n("Unchecked Signature");
+  c_olorNames[signErr] = i18n("Bad Signature");
+  c_olorNames[htmlWarning] = i18n("HTML Message Warning");
 
   //fonts
   u_seFonts = c->readBoolEntry("customFonts", false);
@@ -287,6 +304,11 @@ void KNConfig::Appearance::save()
   c->writeEntry("unreadThreadColor", c_olors[unreadThread]);
   c->writeEntry("readArtColor", c_olors[readArticle]);
   c->writeEntry("unreadArtColor", c_olors[unreadArticle]);
+  c->writeEntry( "signOkKeyOk", c_olors[signOkKeyOk] );
+  c->writeEntry( "signOkKeyBad", c_olors[signOkKeyBad] );
+  c->writeEntry( "signWarn", c_olors[signWarn] );
+  c->writeEntry( "signErr", c_olors[signErr] );
+  c->writeEntry( "htmlWarning", c_olors[htmlWarning] );
 
   c->writeEntry("customFonts", u_seFonts);
   c->writeEntry("articleFont", f_onts[article]);
@@ -299,7 +321,7 @@ void KNConfig::Appearance::save()
 }
 
 
-QColor KNConfig::Appearance::backgroundColor()
+QColor KNConfig::Appearance::backgroundColor() const
 {
   if(u_seColors)
     return c_olors[background];
@@ -308,7 +330,7 @@ QColor KNConfig::Appearance::backgroundColor()
 }
 
 
-QColor KNConfig::Appearance::alternateBackgroundColor()
+QColor KNConfig::Appearance::alternateBackgroundColor() const
 {
   if(u_seColors)
     return c_olors[alternateBackground];
@@ -317,7 +339,7 @@ QColor KNConfig::Appearance::alternateBackgroundColor()
 }
 
 
-QColor KNConfig::Appearance::textColor()
+QColor KNConfig::Appearance::textColor() const
 {
   if(u_seColors)
     return c_olors[normalText];
@@ -326,34 +348,16 @@ QColor KNConfig::Appearance::textColor()
 }
 
 
-QColor KNConfig::Appearance::quoteColor1()
+QColor KNConfig::Appearance::quoteColor( int depth ) const
 {
-  if(u_seColors)
-    return c_olors[quoted1];
+  if ( u_seColors )
+    return c_olors[quoted1 + depth];
   else
-    return defaultColor( quoted1 );
+    return defaultColor( quoted1 + depth );
 }
 
 
-QColor KNConfig::Appearance::quoteColor2()
-{
-  if(u_seColors)
-    return c_olors[quoted2];
-  else
-    return defaultColor( quoted2 );
-}
-
-
-QColor KNConfig::Appearance::quoteColor3()
-{
-  if(u_seColors)
-    return c_olors[quoted3];
-  else
-    return defaultColor( quoted3 );
-}
-
-
-QColor KNConfig::Appearance::linkColor()
+QColor KNConfig::Appearance::linkColor() const
 {
   if(u_seColors)
     return c_olors[url];
@@ -363,7 +367,7 @@ QColor KNConfig::Appearance::linkColor()
 }
 
 
-QColor KNConfig::Appearance::unreadThreadColor()
+QColor KNConfig::Appearance::unreadThreadColor() const
 {
   if(u_seColors)
     return c_olors[unreadThread];
@@ -372,7 +376,7 @@ QColor KNConfig::Appearance::unreadThreadColor()
 }
 
 
-QColor KNConfig::Appearance::readThreadColor()
+QColor KNConfig::Appearance::readThreadColor() const
 {
   if(u_seColors)
     return c_olors[readThread];
@@ -381,7 +385,7 @@ QColor KNConfig::Appearance::readThreadColor()
 }
 
 
-QColor KNConfig::Appearance::unreadArticleColor()
+QColor KNConfig::Appearance::unreadArticleColor() const
 {
   if(u_seColors)
     return c_olors[unreadArticle];
@@ -390,7 +394,7 @@ QColor KNConfig::Appearance::unreadArticleColor()
 }
 
 
-QColor KNConfig::Appearance::readArticleColor()
+QColor KNConfig::Appearance::readArticleColor() const
 {
   if(u_seColors)
     return c_olors[readArticle];
@@ -399,7 +403,7 @@ QColor KNConfig::Appearance::readArticleColor()
 }
 
 
-QFont KNConfig::Appearance::articleFont()
+QFont KNConfig::Appearance::articleFont() const
 {
   if(u_seFonts)
     return f_onts[article];
@@ -408,7 +412,7 @@ QFont KNConfig::Appearance::articleFont()
 }
 
 
-QFont KNConfig::Appearance::articleFixedFont()
+QFont KNConfig::Appearance::articleFixedFont() const
 {
   if(u_seFonts)
     return f_onts[articleFixed];
@@ -417,7 +421,7 @@ QFont KNConfig::Appearance::articleFixedFont()
 }
 
 
-QFont KNConfig::Appearance::composerFont()
+QFont KNConfig::Appearance::composerFont() const
 {
   if(u_seFonts)
     return f_onts[composer];
@@ -426,7 +430,7 @@ QFont KNConfig::Appearance::composerFont()
 }
 
 
-QFont KNConfig::Appearance::groupListFont()
+QFont KNConfig::Appearance::groupListFont() const
 {
   if(u_seFonts)
     return f_onts[groupList];
@@ -435,7 +439,7 @@ QFont KNConfig::Appearance::groupListFont()
 }
 
 
-QFont KNConfig::Appearance::articleListFont()
+QFont KNConfig::Appearance::articleListFont() const
 {
   if(u_seFonts)
     return f_onts[articleList];
@@ -444,8 +448,9 @@ QFont KNConfig::Appearance::articleListFont()
 }
 
 
-QColor KNConfig::Appearance::defaultColor(int i)
+QColor KNConfig::Appearance::defaultColor(int i) const
 {
+  // defaults should match libkdepim/csshelper.cpp
   switch(i) {
 
     case background:
@@ -476,13 +481,24 @@ QColor KNConfig::Appearance::defaultColor(int i)
 
     case readArticle:
       return QColor( 136, 136, 136 );
+
+    case signOkKeyOk:
+      return QColor( 0x40, 0xFF, 0x00 );
+    case signOkKeyBad:
+    case signWarn:
+      return QColor( 0xFF, 0xFF, 0x40 );
+    case signErr:
+      return Qt::red;
+
+    case htmlWarning:
+      return QColor( 0xFF, 0x40, 0x40 );
   }
 
   return kapp->palette().disabled().text();
 }
 
 
-QFont KNConfig::Appearance::defaultFont(int i)
+QFont KNConfig::Appearance::defaultFont(int i) const
 {
   if ( i == articleFixed || i == composer )
     return KGlobalSettings::fixedFont();
