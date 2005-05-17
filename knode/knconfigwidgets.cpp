@@ -1181,34 +1181,44 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
 {
   QGroupBox *appgb=new QGroupBox(i18n("Appearance"), this);
   QGroupBox *agb=new QGroupBox(i18n("Attachments"), this);
+  QGroupBox *secbox = new QGroupBox( i18n("Security"), this );
 
   r_ewrapCB=new QCheckBox(i18n("Re&wrap text when necessary"), appgb);
   r_emoveTrailingCB=new QCheckBox(i18n("Re&move trailing empty lines"), appgb);
   s_igCB=new QCheckBox(i18n("Show sig&nature"), appgb);
+  mShowRefBar = new QCheckBox( i18n("Show reference bar"), appgb );
   q_uoteCharacters=new KLineEdit(appgb);
   QLabel *quoteCharL = new QLabel(q_uoteCharacters, i18n("Recognized q&uote characters:"), appgb);
 
   o_penAttCB=new QCheckBox(i18n("Open a&ttachments on click"), agb);
   a_ltAttCB=new QCheckBox(i18n("Show alternati&ve contents as attachments"), agb);
 
+  mAlwaysShowHTML = new QCheckBox( i18n("Prefer HTML to plain text"), secbox );
+
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
-  QGridLayout *appgbL=new QGridLayout(appgb, 4,2, 8,5);
+  QGridLayout *appgbL=new QGridLayout(appgb, 5,2, 8,5);
   QVBoxLayout *agbL=new QVBoxLayout(agb, 8, 5);
+  QVBoxLayout *secLayout = new QVBoxLayout( secbox, 8, 5 );
 
   topL->addWidget(appgb);
   topL->addWidget(agb);
+  topL->addWidget( secbox );
   topL->addStretch(1);
 
   appgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
   appgbL->addMultiCellWidget(r_ewrapCB, 2,2, 0,1);
   appgbL->addMultiCellWidget(r_emoveTrailingCB, 3,3, 0,1);
   appgbL->addMultiCellWidget(s_igCB, 4,4, 0,1);
+  appgbL->addMultiCellWidget( mShowRefBar, 5,5, 0,1 );
   appgbL->addWidget(quoteCharL, 6,0);
   appgbL->addWidget(q_uoteCharacters, 6,1);
 
   agbL->addSpacing(fontMetrics().lineSpacing()-4);
   agbL->addWidget(o_penAttCB);
   agbL->addWidget(a_ltAttCB);
+
+  secLayout->addSpacing( fontMetrics().lineSpacing() - 4 );
+  secLayout->addWidget( mAlwaysShowHTML );
 
   topL->setResizeMode(QLayout::Minimum);
 
@@ -1218,6 +1228,8 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
   connect(q_uoteCharacters, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()));
   connect(o_penAttCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
   connect(a_ltAttCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
+  connect( mShowRefBar, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
+  connect( mAlwaysShowHTML, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
 
   load();
 }
@@ -1236,6 +1248,8 @@ void KNConfig::ReadNewsViewerWidget::load()
   q_uoteCharacters->setText(d_ata->q_uoteCharacters);
   o_penAttCB->setChecked(d_ata->o_penAtt);
   a_ltAttCB->setChecked(d_ata->s_howAlts);
+  mShowRefBar->setChecked( d_ata->showRefBar() );
+  mAlwaysShowHTML->setChecked( d_ata->alwaysShowHTML() );
 }
 
 
@@ -1250,6 +1264,8 @@ void KNConfig::ReadNewsViewerWidget::save()
   d_ata->q_uoteCharacters=q_uoteCharacters->text();
   d_ata->o_penAtt=o_penAttCB->isChecked();
   d_ata->s_howAlts=a_ltAttCB->isChecked();
+  d_ata->setShowRefBar( mShowRefBar->isChecked() );
+  d_ata->setAlwaysShowHTML( mAlwaysShowHTML->isChecked() );
 
   d_ata->setDirty(true);
 }

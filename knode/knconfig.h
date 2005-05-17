@@ -626,6 +626,12 @@ class KDE_EXPORT ReadNewsViewer : public Base {
     bool useFixedFont() const             { return u_seFixedFont; }
     void setUseFixedFont(bool b)     { d_irty = true; u_seFixedFont=b; }
 
+    bool showRefBar() const                { return mShowRefBar; }
+    void setShowRefBar( bool b )           { d_irty = true; mShowRefBar = b; }
+
+    bool alwaysShowHTML() const            { return mAlwaysShowHTML; }
+    void setAlwaysShowHTML( bool b )       { d_irty = true; mAlwaysShowHTML = b; }
+
   protected:
     bool  r_ewrapBody,
           r_emoveTrailingNewlines,
@@ -633,7 +639,9 @@ class KDE_EXPORT ReadNewsViewer : public Base {
           i_nterpretFormatTags,
           o_penAtt,
           s_howAlts,
-          u_seFixedFont;
+          u_seFixedFont,
+          mShowRefBar,
+          mAlwaysShowHTML;
     QString q_uoteCharacters;
 };
 
@@ -654,7 +662,9 @@ class KDE_EXPORT ReadNewsViewerWidget : public BaseWidget {
                 *r_emoveTrailingCB,
                 *s_igCB,
                 *o_penAttCB,
-                *a_ltAttCB;
+                *a_ltAttCB,
+                *mShowRefBar,
+                *mAlwaysShowHTML;
     KLineEdit *q_uoteCharacters;
 
     ReadNewsViewer *d_ata;

@@ -277,6 +277,8 @@ void ArticleWidget::readConfig()
   mFixedFontToggle->setChecked( knGlobals.configManager()->readNewsViewer()->useFixedFont() );
   mFancyToggle->setChecked( knGlobals.configManager()->readNewsViewer()->interpretFormatTags() );
 
+  mShowHtml = knGlobals.configManager()->readNewsViewer()->alwaysShowHTML();
+
   KConfig *conf = knGlobals.config();
   conf->setGroup( "READNEWS" );
   mAttachmentStyle = conf->readEntry( "attachmentStyle", "inline" );
@@ -318,6 +320,7 @@ void ArticleWidget::setArticle( KNArticle *article )
   if ( mArticle && mArticle->isOrphant() )
     delete mArticle;
 
+  mShowHtml = knGlobals.configManager()->readNewsViewer()->alwaysShowHTML();
   mRot13 = false;
   mRot13Toggle->setChecked( false );
   mTimer->stop();
@@ -629,9 +632,9 @@ void ArticleWidget::displayHeader()
   html += "</tr></table>";
 
   // references
-  // TODO: make this optional
   KMime::Headers::References *refs = mArticle->references( false );
-  if ( mArticle->type() == KMime::Base::ATremote && refs ) {
+  if ( mArticle->type() == KMime::Base::ATremote && refs
+       && knGlobals.configManager()->readNewsViewer()->showRefBar() ) {
     html += "<div class=\"spamheader\">";
     int refCnt = refs->count(), i = 1;
     QCString id = refs->first();

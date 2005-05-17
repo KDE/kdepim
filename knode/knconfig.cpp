@@ -657,7 +657,8 @@ KNConfig::ReadNewsViewer::ReadNewsViewer()
   o_penAtt=conf->readBoolEntry("openAtt", false) ;
   s_howAlts=conf->readBoolEntry("showAlts", false);
   u_seFixedFont=conf->readBoolEntry("articleBodyFixedFont", false);
-  QString s = conf->readEntry("Browser","Default");
+  mShowRefBar = conf->readBoolEntry( "showRefBar", true );
+  mAlwaysShowHTML = conf->readBoolEntry( "alwaysShowHTML", false );
 }
 
 
@@ -684,6 +685,8 @@ void KNConfig::ReadNewsViewer::save()
   conf->writeEntry("openAtt", o_penAtt);
   conf->writeEntry("showAlts", s_howAlts);
   conf->writeEntry("articleBodyFixedFont", u_seFixedFont);
+  conf->writeEntry("showRefBar", mShowRefBar );
+  conf->writeEntry( "alwaysShowHTML", mAlwaysShowHTML );
   conf->sync();
   d_irty = false;
 }
