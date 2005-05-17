@@ -486,7 +486,8 @@ void KNArticleFactory::createSupersede(KNArticle *a)
   art->followUpTo()->from7BitString(a->followUpTo()->as7BitString(false));
 
   //References
-  art->references()->from7BitString(a->references()->as7BitString(false));
+  if ( !a->references()->isEmpty() )
+    art->references()->from7BitString( a->references()->as7BitString(false) );
 
   //Supersedes
   art->supersedes()->from7BitString(a->messageID()->as7BitString(false));
