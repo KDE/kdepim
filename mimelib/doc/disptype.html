@@ -1,0 +1,224 @@
+<HTML>
+<HEAD>
+  <TITLE> DwDispositionType Man Page </TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H2>
+  <FONT COLOR="navy"> NAME </FONT>
+</H2>
+<P>
+DwDispositionType -- Class representing a MIME content-disposition field
+body
+<H2>
+  <FONT COLOR="navy"> SYNOPSIS </FONT>
+</H2>
+<PRE>class DW_EXPORT DwDispositionType : public <A HREF="fieldbdy.html">DwFieldBody</A> {
+
+public:
+
+    <A HREF="disptype.html#DwDispositionType">DwDispositionType</A>();
+    <A HREF="disptype.html#DwDispositionType">DwDispositionType</A>(const DwDispositionType&amp; aDispType);
+    <A HREF="disptype.html#DwDispositionType">DwDispositionType</A>(const DwString&amp; aStr, DwMessageComponent* aParent=0);
+    virtual ~DwDispositionType();
+    const DwDispositionType&amp; <A HREF="disptype.html#op_eq">operator =</A> (const DwDispositionType&amp; aDispType);
+    virtual void <A HREF="disptype.html#Parse">Parse</A>();
+    virtual void <A HREF="disptype.html#Assemble">Assemble</A>();
+    virtual DwMessageComponent* <A HREF="disptype.html#Clone">Clone</A>() const;
+    int <A HREF="disptype.html#DispositionType">DispositionType</A>() const;
+    void <A HREF="disptype.html#SetDispositionType">SetDispositionType</A>(int aType);
+    const DwString&amp; <A HREF="disptype.html#DispositionTypeStr">DispositionTypeStr</A>() const;
+    void <A HREF="disptype.html#SetDispositionTypeStr">SetDispositionTypeStr</A>(const DwString&amp; aStr);
+    const DwString&amp; <A HREF="disptype.html#Filename">Filename</A>() const;
+    void <A HREF="disptype.html#SetFilename">SetFilename</A>(const DwString&amp; aStr);
+    DwParameter* <A HREF="disptype.html#FirstParameter">FirstParameter</A>() const;
+    void <A HREF="disptype.html#AddParameter">AddParameter</A>(DwParameter* aParam);
+    static DwDispositionType* <A HREF="disptype.html#NewDispositionType">NewDispositionType</A>(const DwString&amp; aStr,
+        DwMessageComponent* aParent);
+    static DwDispositionType* (*<A HREF="disptype.html#sNewDispositionType">sNewDispositionType</A>)(const DwString&amp;,
+        DwMessageComponent*);
+
+protected:
+
+    void _AddParameter(DwParameter* aParam);
+    virtual void EnumToStr();
+    virtual void StrToEnum();
+    void DeleteParameterList();
+    void CopyParameterList(DwParameter* aFirst);
+    int mDispositionType;
+    DwString mDispositionTypeStr;
+    DwString mFilenameStr;
+    DwParameter* mFirstParameter;
+
+public:
+
+    virtual void PrintDebugInfo(ostream&amp; aStrm, int aDepth=0) const;
+    virtual void CheckInvariants() const;
+
+protected:
+
+    void _PrintDebugInfo(ostream&amp; aStrm) const;
+};
+</PRE>
+<H2>
+  <FONT COLOR="navy"> DESCRIPTION </FONT>
+</H2>
+<P>
+<B><TT>DwDispositionType</TT></B> represents a field body for the
+Content-Disposition header field as described in RFC-1806. This header field
+specifies whether the content of a message or body part should be displayed
+automatically to a user. A disposition-type of inline indicates that the
+content should be displayed; a disposition-type of attachment indicates that
+it should not be. RFC-1806 specifies that a filename parameter may be optionally
+included in the field body; the filename parameter suggests a file name for
+saving the message or body part's content.
+<P>
+<B><TT>DwDispositionType</TT></B> provides convenience functions that allow
+you to set or get the disposition-type as an enumerated value, to set or
+get the filename parameter, or to manage a list of parameters.
+<P>
+RFC-1806 specifically states that the Content-Disposition header field is
+experimental and not a proposed standard.
+<H2>
+  <FONT COLOR="navy"> Public Member Functions </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> <A NAME="DwDispositionType">DwDispositionType</A>()
+<BR>
+DwDispositionType(const DwDispositionType&amp; aDispType) <BR>
+DwDispositionType(const DwString&amp; aStr, DwMessageComponent* aParent=0)
+</B></FONT>
+<P>
+The first constructor is the default constructor, which sets the
+<B><TT>DwDispositionType</TT></B> object's string representation to the empty
+string and sets its parent to <B><TT>NULL</TT></B>.
+<P>
+The second constructor is the copy constructor, which performs deep copy
+of <B><TT>aDispType</TT></B>. The parent of the new
+<B><TT>DwDispositionType</TT></B> object is set to <B><TT>NULL</TT></B>.
+<P>
+The third constructor copies <B><TT>aStr</TT></B> to the
+<B><TT>DwDispositionType</TT></B> object's string representation and sets
+<B><TT>aParent</TT></B> as its parent. The virtual member function
+<B><TT>Parse()</TT></B> should be called immediately after this constructor
+in order to parse the string representation. Unless it is
+<B><TT>NULL</TT></B>, <B><TT>aParent</TT></B> should point to an object of
+a class derived from <B><TT>DwField</TT></B>.
+<P>
+<FONT COLOR="teal"><B> const DwDispositionType&amp; <A NAME="op_eq">operator
+=</A> (const DwDispositionType&amp; aDispType) </B></FONT>
+<P>
+This is the assignment operator, which performs a deep copy of
+<B><TT>aDispType</TT></B>. The parent node of the
+<B><TT>DwDipositionType</TT></B> object is not changed.
+<P>
+<FONT COLOR="teal"><B> virtual void <A NAME="Parse">Parse</A>() </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+executes the parse method for <B><TT>DwDispositionType</TT></B> objects.
+It should be called immediately after the string representation is modified
+and before the parts of the broken-down representation are accessed.
+<P>
+This function clears the is-modified flag.
+<P>
+<FONT COLOR="teal"><B> virtual void <A NAME="Assemble">Assemble</A>()
+</B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+executes the assemble method for <B><TT>DwDispositionType</TT></B> objects.
+It should be called whenever one of the object's attributes is changed in
+order to assemble the string representation from its broken-down representation.
+It will be called automatically for this object by the parent object's
+<B><TT>Assemble()</TT></B> member function if the is-modified flag is set.
+<P>
+This function clears the is-modified flag.
+<P>
+<FONT COLOR="teal"><B> virtual DwMessageComponent*
+<A NAME="Clone">Clone</A>() const </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+creates a new <B><TT>DwDispositionType</TT></B> object on the free store
+that has the same value as this <B><TT>DwDispositionType</TT></B> object.
+The basic idea is that of a virtual copy constructor.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="DispositionType">DispositionType</A>()
+const </B></FONT>
+<P>
+Returns the disposition-type as an enumerated value. Valid enumerated types,
+which are defined in enum.h, include
+<B><TT>DwMime::kDispTypeNull</TT></B>,
+<B><TT>DwMime::kDispTypeUnknown</TT></B>,
+<B><TT>DwMime::kDispTypeInline</TT></B>, and
+<B><TT>DwMime::kDispTypeAttachment</TT></B>.
+<P>
+<FONT COLOR="teal"><B> void
+<A NAME="SetDispositionType">SetDispositionType</A>(int aType) </B></FONT>
+<P>
+Sets the disposition-type from the enumerated value
+<B><TT>aType</TT></B>. Valid enumerated types, which are defined in enum.h,
+include <B><TT>DwMime::kDispTypeNull</TT></B>,
+<B><TT>DwMime::kDispTypeUnknown</TT></B>,
+<B><TT>DwMime::kDispTypeInline</TT></B>, and
+<B><TT>DwMime::kDispTypeAttachment</TT></B>.
+<P>
+<FONT COLOR="teal"><B> const DwString&amp;
+<A NAME="DispositionTypeStr">DispositionTypeStr</A>() const </B></FONT>
+<P>
+Returns the disposition-type as a string.
+<P>
+<FONT COLOR="teal"><B> void
+<A NAME="SetDispositionTypeStr">SetDispositionTypeStr</A>(const DwString&amp;
+aStr) </B></FONT>
+<P>
+Sets the disposition-type from a string.
+<P>
+<FONT COLOR="teal"><B> const DwString&amp; <A NAME="Filename">Filename</A>()
+const </B></FONT>
+<P>
+This convenience function returns the value from the filename parameter,
+if present. If no filename parameter is present, an empty string is returned.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="SetFilename">SetFilename</A>(const
+DwString&amp; aStr) </B></FONT>
+<P>
+This convenience function sets the value of the filename parameter to
+<B><TT>aStr</TT></B>.
+<P>
+<FONT COLOR="teal"><B> DwParameter*
+<A NAME="FirstParameter">FirstParameter</A>() const </B></FONT>
+<P>
+Returns the first <B><TT>DwParameter</TT></B> object in the list managed
+by this <B><TT>DwDispositionType</TT></B> object, or <B><TT>NULL</TT></B>
+if no parameters are present. Use <B><TT>DwParameter::Next()</TT></B> to
+iterate through the list.
+<P>
+<FONT COLOR="teal"><B> void
+<A NAME="AddParameter">AddParameter</A>(DwParameter* aParam) </B></FONT>
+<P>
+Adds a <B><TT>DwParameter</TT></B> object to the list managed by this
+<B><TT>DwDispositionType</TT></B> object.
+<P>
+<FONT COLOR="teal"><B> static DwDispositionType*
+<A NAME="NewDispositionType">NewDispositionType</A>(const DwString&amp; aStr,
+DwMessageComponent* aParent) </B></FONT>
+<P>
+Creates a new <B><TT>DwDispositionType</TT></B> object on the free store.
+If the static data member <B><TT>sNewDispositionType</TT></B> is
+<B><TT>NULL</TT></B>, this member function will create a new
+<B><TT>DwDispositionType</TT></B> and return it. Otherwise,
+<B><TT>NewDispositionType()</TT></B> will call the user-supplied function
+pointed to by <B><TT>sNewDispositionType</TT></B>, which is assumed to return
+an object from a class derived from <B><TT>DwDispositionType</TT></B>, and
+return that object.
+<H2>
+  <FONT COLOR="navy"> Public Data Members </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> static DwDispositionType*
+(*<A NAME="sNewDispositionType">sNewDispositionType</A>)(const DwString&amp;,
+DwMessageComponent*) </B></FONT>
+<P>
+If <B><TT>sNewDispositionType</TT></B> is not <B><TT>NULL</TT></B>, it is
+assumed to point to a user-supplied function that returns an object from
+a class derived from <B><TT>DwDispositionType</TT></B>.
+<P>
+</BODY></HTML>

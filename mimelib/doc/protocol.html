@@ -1,0 +1,274 @@
+<HTML>
+<HEAD>
+  <TITLE> DwProtocolClient Man Page </TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H2>
+  <FONT COLOR="navy"> NAME </FONT>
+</H2>
+<P>
+DwProtocolClient -- Base class for all protocol clients
+<H2>
+  <FONT COLOR="navy"> SYNOPSIS </FONT>
+</H2>
+<PRE>class DW_EXPORT DwProtocolClient {
+
+public:
+
+    enum Failure {
+        kFailNoFailure      = 0, // No failure
+        kFailNoWinsock      = 1, // A usable Winsock DLL could not be found
+        kFailNetDown        = 2, // The network is down
+        kFailHostNotFound   = 3, // The server was not found
+        kFailConnReset      = 4, // The connection was reset
+        kFailNetUnreachable = 5, // The network is unreachable
+        kFailTimedOut       = 6, // Timed out while waiting for an operation
+                                 // to complete
+        kFailConnDropped    = 7,
+        kFailConnRefused    = 8,
+        kFailNoResources    = 9
+    };
+
+    enum Error {
+        kErrNoError = 0,
+        kErrUnknownError = 0x4000,
+        kErrBadParameter = 0x4001,
+        kErrBadUsage     = 0x4002,
+        kErrNoWinsock    = 0x4003,  // Win32
+        kErrHostNotFound = 0x5000,  // UNIX
+        kErrTryAgain     = 0x5001,  // UNIX
+        kErrNoRecovery   = 0x5002,  // UNIX
+        kErrNoData       = 0x5003,  // UNIX
+        kErrNoAddress    = 0x5004,  // UNIX
+    };
+
+protected:
+
+    <A HREF="protocol.html#DwProtocolClient">DwProtocolClient</A>();
+
+public:
+
+    virtual <A HREF="protocol.html#~DwProtocolClient">~DwProtocolClient</A>();
+    virtual int <A HREF="protocol.html#Open">Open</A>(const char* aServer, DwUint16 aPort);
+    DwBool <A HREF="protocol.html#IsOpen">IsOpen</A>() const;
+    int <A HREF="protocol.html#Close">Close</A>();
+    int <A HREF="protocol.html#SetReceiveTimeout">SetReceiveTimeout</A>(int aSecs);
+    int <A HREF="protocol.html#LastCommand">LastCommand</A>() const;
+    int <A HREF="protocol.html#LastFailure">LastFailure</A>() const;
+    const char* <A HREF="protocol.html#LastFailureStr">LastFailureStr</A>() const;
+    int <A HREF="protocol.html#LastError">LastError</A>() const;
+    const char* <A HREF="protocol.html#LastErrorStr">LastErrorStr</A>() const;
+
+protected:
+
+    enum {
+        kWSAStartup=1,  // Win32
+        kgethostbyname,
+        ksocket,
+        ksetsockopt,
+        kconnect,
+        ksend,
+        krecv,
+        kclose,         // UNIX
+        kclosesocket,   // Win32
+        kselect
+    };
+    DwBool      mIsDllOpen;
+    DwBool      mIsOpen;
+    SOCKET      mSocket;
+    DwUint16    mPort;
+    char*       mServerName;
+    int         mReceiveTimeout;
+    int         mLastCommand;
+    int         mFailureCode;
+    const char* mFailureStr;
+    int         mErrorCode;
+    const char* mErrorStr;
+    virtual void <A HREF="protocol.html#HandleError">HandleError</A>(int aErrorCode, int aSystemCall);
+    int <A HREF="protocol.html#PSend">PSend</A>(const char* aBuf, int aBufLen);
+    int <A HREF="protocol.html#PReceive">PReceive</A>(char* aBuf, int aBufSize);
+};
+</PRE>
+<H2>
+  <FONT COLOR="navy"> DESCRIPTION </FONT>
+</H2>
+<P>
+<B><TT>DwProtocolClient</TT></B> is the base class for other classes that
+implement specific protocols, such as SMTP, POP, and NNTP.
+<B><TT>DwProtocolClient</TT></B> serves two purposes. First, It combines
+operations common to all its derived classes, such as opening a TCP connection
+to the server. Second, it provides a platform-independent interface to the
+network services required by its subclasses.
+<P>
+There are two separate implementations of
+<B><TT>DwProtocolClient</TT></B>: one for Berkeley sockets under UNIX, and
+one for Winsock under Win32. The interface is the same for both implementations,
+thus providing platform independence.
+<P>
+There are two platform-specific details that you should be aware of. First,
+if you are writing a UNIX program, you should be sure to handle the SIGPIPE
+signal. This signal is raised when a program tries to write to a TCP connection
+that was shutdown by the remote host. The default action for this signal
+is to terminate the program. To prevent this from happening in your program,
+you should either catch the signal or tell the operating system to ignore
+it. Second, if you are writing a Win32 application for Windows NT or Windows95,
+you should be aware of the fact that the constructor calls the Winsock function
+<B><TT>WSAStartup()</TT></B> to initialize the Winsock DLL. (The destructor
+calls <B><TT>WSACleanup()</TT></B>.) Because it is possible for
+<B><TT>WSAStartup()</TT></B> to fail, it is also possible that the constructor
+may fail. To verify that the constructor has succeeded, call the member function
+<B><TT>LastError()</TT></B> and check that it returns zero.
+<P>
+To open a connection to a server, call <B><TT>Open()</TT></B> with the server
+name and TCP port number as arguments. <B><TT>Open()</TT></B> is declared
+virtual; derived classes may override this member function.
+<B><TT>Open()</TT></B> may fail, so you should check the return value to
+verify that it succeeded. To close the connection, call
+<B><TT>Close()</TT></B>. To check if a connection is open, call
+<B><TT>IsOpen()</TT></B>. <B><TT>IsOpen()</TT></B> returns a value that indicates
+whether or not a call to <B><TT>Open()</TT></B> was successful; it will not
+detect failure in the network or a close operation by the remote host.
+<P>
+<B><TT>DwProtocolClient</TT></B> sets a timeout on receive operations on
+the TCP connection. The default value of the timeout period is 90 seconds.
+To change the default value, call <B><TT>SetReceiveTimeout()</TT></B> and
+pass the new value as an argument.
+<P>
+Whenever <B><TT>DwProtocolClient</TT></B> cannot complete an operation, it
+is because an error has occurred. Most member functions indicate that an
+error has occurred via their return values. For most member functions, a
+return value of -1 indicates an error. To get the specific error that has
+occurred, call <B><TT>LastError()</TT></B>, which returns either the system
+error code or a MIME++ defined error code. To get a text string that describes
+the error, call <B><TT>LastErrorStr()</TT></B>.
+<P>
+Some errors are also considered "failures." A failure occurs when an operation
+cannot be completed because of conditions external to the program. For example,
+a failure occurs when the network is down or when an application's user enters
+bad input. Errors that occur because of programmer error are not considered
+failures. If an error occurs, you should call <B><TT>LastError()</TT></B>
+to determine the error, but you should also call
+<B><TT>LastFailure()</TT></B> to determine if a failure occurred. In interactive
+applications, failures should always be reported to the application's user.
+To get a text string that describes a failure, call
+<B><TT>LastFailureStr()</TT></B>.
+<P>
+It is possible to translate the error and failure message strings to a language
+other than English. To do this, you may override the virtual function
+<B><TT>HandleError()</TT></B>.
+<H2>
+  <FONT COLOR="navy"> Public Member Functions </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> virtual
+<A NAME="~DwProtocolClient">~DwProtocolClient</A>() </B></FONT>
+<P>
+Frees the resources used by this object. In a Win32 environment, the destructor
+calls <B><TT>WSACleanup()</TT></B>.
+<P>
+<FONT COLOR="teal"><B> virtual int <A NAME="Open">Open</A>(const char* aServer,
+DwUint16 aPort) </B></FONT>
+<P>
+Opens a TCP connection to the server <B><TT>aServer</TT></B> at port
+<B><TT>aPort</TT></B>. <B><TT>aServer</TT></B> may be either a host name,
+such as "smtp.acme.com" or an IP number in dotted decimal format, such as
+"147.81.64.59". If the connection attempt succeeds,
+<B><TT>Open()</TT></B> returns 0; othewise, it returns -1. To determine what
+error occurred when the connection attempt fails, call the member function
+<B><TT>LastError()</TT></B>. To determine if a failure also occurred, call
+the member function <B><TT>LastFailure()</TT></B>.
+<P>
+<FONT COLOR="teal"><B> DwBool <A NAME="IsOpen">IsOpen</A>() const </B></FONT>
+<P>
+Returns true value if a connection to the server is open.
+<B><TT>IsOpen()</TT></B> will return a true value if a call to
+<B><TT>Open()</TT></B> was successful; it will not detect failure in the
+network or a close operation by the remote host.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Close">Close</A>() </B></FONT>
+<P>
+Closes the connection to the server. Returns 0 if successful, or returns
+-1 if unsuccessful.
+<P>
+<FONT COLOR="teal"><B> int
+<A NAME="SetReceiveTimeout">SetReceiveTimeout</A>(int aSecs) </B></FONT>
+<P>
+Changes the default timeout for receive operations on the socket to
+<B><TT>aSecs</TT></B> seconds. The default value is 90 seconds.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="LastCommand">LastCommand</A>() const
+</B></FONT>
+<P>
+Returns an enumerated value indicating the last command sent to the server.
+Enumerated values are defined in subclasses of
+<B><TT>DwProtocolClient</TT></B>.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="LastFailure">LastFailure</A>() const
+</B></FONT>
+<P>
+Returns an enumerated value indicating what failure last occurred.
+<P>
+<FONT COLOR="teal"><B> const char*
+<A NAME="LastFailureStr">LastFailureStr</A>() const </B></FONT>
+<P>
+Returns a failure message string associated with the failure code returned
+by <B><TT>LastFailure()</TT></B>.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="LastError">LastError</A>() const
+</B></FONT>
+<P>
+Returns an error code for the last error that occurred. Normally, the error
+code returned is an error code returned by a system call;
+<B><TT>DwProtocolClient</TT></B> does no translation of error codes returned
+by system calls. In some cases, an error code defined by MIME++ may returned
+to indicate improper use of the <B><TT>DwProtocolClient</TT></B> class.
+<P>
+<FONT COLOR="teal"><B> const char* <A NAME="LastErrorStr">LastErrorStr</A>()
+const </B></FONT>
+<P>
+Returns an error message string associated with the error code returned by
+<B><TT>LastError()</TT></B>.
+<H2>
+  <FONT COLOR="navy"> Protected Member Functions </FONT>
+</H2>
+<P>
+<B><FONT COLOR="teal"> <A NAME="DwProtocolClient">DwProtocolClient</A>()
+</FONT></B>
+<P>
+Initializes the <B><TT>DwProtocolClient</TT></B> object. In a Win32 environment,
+this constructor calls <B><TT>WSAStartup()</TT></B> to initialize the Winsock
+DLL. To verify that the DLL was initialized successfully, call the member
+function <B><TT>LastError()</TT></B> and verify that it returns zero.
+<P>
+<B><FONT COLOR="teal"> virtual void <A NAME="HandleError">HandleError</A>(int
+aErrorCode, int aSystemCall) </FONT></B>
+<P>
+Interprets error codes. <B><TT>aErrorCode</TT></B> is an error code, which
+may be a system error code, or an error code defined by
+<B><TT>DwProtocolClient</TT></B>. <B><TT>aSystemCall</TT></B> is an enumerated
+value defined by <B><TT>DwProtocolClient</TT></B> that indicates the last
+system call made, which should be the system call that set the error code.
+<B><TT>HandleError()</TT></B> sets values for <B><TT>mErrorStr</TT></B>,
+<B><TT>mFailureCode</TT></B>, and <B><TT>mFailureStr</TT></B>.
+<P>
+<B><FONT COLOR="teal"> int <A NAME="PSend">PSend</A>(const char* aBuf, int
+aBufLen) </FONT></B>
+<P>
+Sends <B><TT>aBufLen</TT></B> characters from the buffer
+<B><TT>aBuf</TT></B>. Returns the number of characters sent. If the number
+of characters sent is less than the number of characters specified in
+<B><TT>aBufLen</TT></B>, the caller should call
+<B><TT>LastError()</TT></B> to determine what, if any, error occurred. To
+determine if a failure also occurred, call the member function
+<B><TT>LastFailure()</TT></B>.
+<P>
+<B><FONT COLOR="teal"> int <A NAME="PReceive">PReceive</A>(char* aBuf, int
+aBufSize) </FONT></B>
+<P>
+Receives up to <B><TT>aBufSize</TT></B> characters into the buffer
+<B><TT>aBuf</TT></B>. Returns the number of characters received. If zero
+is returned, the caller should call the member function
+<B><TT>LastError()</TT></B> to determine what, if any, error occurred. To
+determine if a failure also occurred, call the member function
+<B><TT>LastFailure()</TT></B>.
+</BODY></HTML>

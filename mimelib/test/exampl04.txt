@@ -1,0 +1,73 @@
+MIME-Version: 1.0
+Message-Id: <97082402123500.00119@kaybee>
+Content-Type: Multipart/Mixed;
+  boundary="Boundary-=_pHqghUmeaYlNlfdXfircvsCxgGBw"
+Date: Sun, 24 Aug 1997 02:12:35 -0500
+From: Emily Postnews <emily.postnews@usenet.com>
+To: verbose@noisy
+Cc: forgetful@myvax
+Bcc: eager@beaver.dam
+Subject: Getting email through
+
+
+--Boundary-=_pHqghUmeaYlNlfdXfircvsCxgGBw
+Content-Type: Text/Plain
+Content-Transfer-Encoding: 7bit
+Content-Description: text, unencoded
+
+> Dear Ms. Postnews:
+>
+> I couldn't get mail through to somebody on another site. What should I do?
+>
+> -- eager@beaver.dam
+
+Dear Eager:
+
+No problem, just post your message to a group that a lot of people read.
+Say, "This is for John Smith. I couldn't get mail through so I'm posting it.
+All others please ignore."
+
+This way tens of thousands of people will spend a few seconds scanning over
+and ignoring your article, using up over 16 man-hours of their collective
+time, but you will be saved the terrible trouble of checking through usenet
+maps or looking for alternate routes. Just think, if you couldn't distribute
+your message to 9000 other computers, you might actually have to (gasp) call
+directory assistance for 60 cents, or even phone the person. This can cost
+as much as a few DOLLARS (!) for a 5 minute call!
+
+And certainly it's better to spend 10 to 20 dollars of other people's money
+distributing the message than for you to have to waste $9 on an overnight
+letter, or even 29 cents on a stamp!
+
+Don't forget. The world will end if your message doesn't get through, so
+post it as many places as you can.
+
+Em
+
+--Boundary-=_pHqghUmeaYlNlfdXfircvsCxgGBw
+Content-Type: Text/Plain
+Content-Transfer-Encoding: base64
+Content-Description: text, base64 encoded
+
+PiBEZWFyIE1zLiBQb3N0bmV3czoKPgo+IEkgY291bGRuJ3QgZ2V0IG1haWwgdGhyb3VnaCB0byBz
+b21lYm9keSBvbiBhbm90aGVyIHNpdGUuIFdoYXQgc2hvdWxkIEkgZG8/Cj4KPiAtLSBlYWdlckBi
+ZWF2ZXIuZGFtCgpEZWFyIEVhZ2VyOgoKTm8gcHJvYmxlbSwganVzdCBwb3N0IHlvdXIgbWVzc2Fn
+ZSB0byBhIGdyb3VwIHRoYXQgYSBsb3Qgb2YgcGVvcGxlIHJlYWQuClNheSwgIlRoaXMgaXMgZm9y
+IEpvaG4gU21pdGguIEkgY291bGRuJ3QgZ2V0IG1haWwgdGhyb3VnaCBzbyBJJ20gcG9zdGluZyBp
+dC4KQWxsIG90aGVycyBwbGVhc2UgaWdub3JlLiIKClRoaXMgd2F5IHRlbnMgb2YgdGhvdXNhbmRz
+IG9mIHBlb3BsZSB3aWxsIHNwZW5kIGEgZmV3IHNlY29uZHMgc2Nhbm5pbmcgb3ZlcgphbmQgaWdu
+b3JpbmcgeW91ciBhcnRpY2xlLCB1c2luZyB1cCBvdmVyIDE2IG1hbi1ob3VycyBvZiB0aGVpciBj
+b2xsZWN0aXZlCnRpbWUsIGJ1dCB5b3Ugd2lsbCBiZSBzYXZlZCB0aGUgdGVycmlibGUgdHJvdWJs
+ZSBvZiBjaGVja2luZyB0aHJvdWdoIHVzZW5ldAptYXBzIG9yIGxvb2tpbmcgZm9yIGFsdGVybmF0
+ZSByb3V0ZXMuIEp1c3QgdGhpbmssIGlmIHlvdSBjb3VsZG4ndCBkaXN0cmlidXRlCnlvdXIgbWVz
+c2FnZSB0byA5MDAwIG90aGVyIGNvbXB1dGVycywgeW91IG1pZ2h0IGFjdHVhbGx5IGhhdmUgdG8g
+KGdhc3ApIGNhbGwKZGlyZWN0b3J5IGFzc2lzdGFuY2UgZm9yIDYwIGNlbnRzLCBvciBldmVuIHBo
+b25lIHRoZSBwZXJzb24uIFRoaXMgY2FuIGNvc3QKYXMgbXVjaCBhcyBhIGZldyBET0xMQVJTICgh
+KSBmb3IgYSA1IG1pbnV0ZSBjYWxsIQoKQW5kIGNlcnRhaW5seSBpdCdzIGJldHRlciB0byBzcGVu
+ZCAxMCB0byAyMCBkb2xsYXJzIG9mIG90aGVyIHBlb3BsZSdzIG1vbmV5CmRpc3RyaWJ1dGluZyB0
+aGUgbWVzc2FnZSB0aGFuIGZvciB5b3UgdG8gaGF2ZSB0byB3YXN0ZSAkOSBvbiBhbiBvdmVybmln
+aHQKbGV0dGVyLCBvciBldmVuIDI5IGNlbnRzIG9uIGEgc3RhbXAhCgpEb24ndCBmb3JnZXQuIFRo
+ZSB3b3JsZCB3aWxsIGVuZCBpZiB5b3VyIG1lc3NhZ2UgZG9lc24ndCBnZXQgdGhyb3VnaCwgc28K
+cG9zdCBpdCBhcyBtYW55IHBsYWNlcyBhcyB5b3UgY2FuLgoKRW0K
+
+--Boundary-=_pHqghUmeaYlNlfdXfircvsCxgGBw--
