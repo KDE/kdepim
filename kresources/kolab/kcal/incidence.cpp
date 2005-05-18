@@ -374,7 +374,6 @@ bool Incidence::saveAttributes( QDomElement& element ) const
   }
   writeString( element, "scheduling-id", schedulingID() );
   writeString( element, "revision", QString::number( revision() ) );
-  writeString( element, "pilot-sync-id", QString::number( pilotSyncId() ) );
   saveCustomAttributes( element );
   return true;
 }
@@ -646,7 +645,8 @@ void Incidence::setFields( const KCal::Incidence* incidence )
 
   if ( incidence->pilotId() != 0 )
     setPilotSyncId( incidence->pilotId() );
-  kdDebug() << "PILOT SYNC ID: " << mPilotSyncId << endl;
+    
+  setPilotSyncStatus( incidence->syncStatus() );
 
   // Unhandled tags and other custom properties (see libkcal/customproperties.h)
   const QMap<QCString, QString> map = incidence->customProperties();
@@ -771,6 +771,10 @@ void Incidence::saveTo( KCal::Incidence* incidence )
   }
 
   incidence->setSchedulingID( schedulingID() );
+  if ( hasPilotSyncId() )
+    incidence->setPilotId( pilotSyncId() );
+  if ( hasPilotSyncStatus() )
+    incidence->setSyncStatus( pilotSyncStatus() );
 
   for( QValueList<Custom>::ConstIterator it = mCustomList.begin(); it != mCustomList.end(); ++it ) {
     incidence->setNonKDECustomProperty( (*it).key, (*it).value );
