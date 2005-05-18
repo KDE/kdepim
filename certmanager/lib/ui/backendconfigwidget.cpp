@@ -300,7 +300,7 @@ void Kleo::BackendConfigWidget::slotRescanButtonClicked() {
 void Kleo::BackendConfigWidget::slotConfigureButtonClicked() {
   const CryptoBackend* backend = d->listView->currentBackend();
   if ( backend && backend->config() ) {
-    Kleo::CryptoConfigDialog dlg( backend->config() );
+    Kleo::CryptoConfigDialog dlg( backend->config(), this );
     int result = dlg.exec();
     if ( result == QDialog::Accepted ) {
       // Tell other users of gpgconf (e.g. the s/mime page) that the gpgconf data might have changed
