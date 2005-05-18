@@ -67,7 +67,7 @@ char* GWConverter::qStringToChar( const QString &string )
 
 QDate GWConverter::charToQDate( const char *str )
 {
-  if ( !str ) return QDate();
+  if ( !str ) return QDate(); // FIXME: Qt::ISODate is probably no good here because it expects yyyy-MM-dd not yyyyMMdd 
   return QDate::fromString( QString::fromUtf8( str ), Qt::ISODate );
 }
 
@@ -99,12 +99,12 @@ QDateTime GWConverter::stringToQDateTime( const std::string* str )
 
 char* GWConverter::qDateToChar( const QDate &date )
 {
-  return qStringToChar( date.toString( Qt::ISODate ) );
+  return qStringToChar( date.toString( "yyyyMMdd" ) );
 }
 
 std::string* GWConverter::qDateToString( const QDate &date )
 {
-  return qStringToString( date.toString( Qt::ISODate ) );
+  return qStringToString( date.toString( "yyyyMMdd" ) );
 }
 
 QDate GWConverter::stringToQDate( std::string* str )

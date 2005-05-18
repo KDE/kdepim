@@ -727,11 +727,11 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   kdDebug() << "GroupwiseServer::changeIncidence() " << incidence->summary()
             << endl;
 
-#if 0
+#if 1
   if ( incidence->attendeeCount() > 0 ) {
-    kdDebug() << "GroupwiseServer::changeIncidence() - deleting old meeting " << endl;
-    if ( !deleteIncidence( incidence ) ) {
-      kdDebug() << "GroupwiseServer::changeIncidence() - deletion failed." << endl;
+    kdDebug() << "GroupwiseServer::changeIncidence() - retracting old meeting " << endl;
+    if ( !retractRequest( incidence, DueToResend ) ) {
+      kdDebug() << "GroupwiseServer::changeIncidence() - retracting failed." << endl;
       return false;
     }
     kdDebug() << "GroupwiseServer::changeIncidence() - adding new meeting with attendees" << endl;
@@ -829,6 +829,31 @@ bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
   request.id = std::string( incidence->customProperty( "GWRESOURCE", "UID" ).utf8() );
 
   int result = soap_call___ngw__removeItemRequest( mSoap, mUrl.latin1(), 0,
+                                                    &request, &response );
+  return checkResponse( result, response.status );
+}
+
+bool GroupwiseServer::retractRequest( KCal::Incidence *incidence, RetractCause cause )
+{
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::retractRequest(): no session." << endl;
+    return false;
+  }
+
+  kdDebug() << "GroupwiseServer::retractRequest(): " << incidence->summary()
+            << endl;
+
+  _ngwm__retractRequest request;
+  _ngwm__retractResponse response;
+  mSoap->header->ngwt__session = mSession;
+  request.comment = 0;
+  request.retractCausedByResend = (bool*)soap_malloc( mSoap, 1 );
+  request.retractingAllInstances = (bool*)soap_malloc( mSoap, 1 );
+  request.retractCausedByResend = ( cause == DueToResend );
+  request.retractingAllInstances = true;
+  request.retractType = allMailboxes;
+
+  int result = soap_call___ngw__retractRequest( mSoap, mUrl.latin1(), 0,
                                                     &request, &response );
   return checkResponse( result, response.status );
 }

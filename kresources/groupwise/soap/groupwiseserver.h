@@ -80,6 +80,7 @@ class GroupwiseServer : public QObject
   Q_OBJECT
 
   public:
+    enum RetractCause { DueToResend, Other };
     GroupwiseServer( const QString &url, const QString &user,
                      const QString &password, QObject *parent );
     ~GroupwiseServer();
@@ -92,6 +93,13 @@ class GroupwiseServer : public QObject
     bool addIncidence( KCal::Incidence *, KCal::ResourceCached * );
     bool changeIncidence( KCal::Incidence * );
     bool deleteIncidence( KCal::Incidence * );
+
+    /**
+     * @brief Retract a meeting request.
+     * This is needed to change a meeting, because you need to retract it from others' mailboxes before resending.
+     * @param causedByResend indicate if the retraction is caused by a resend, suppresses the retraction message in favour of the resent meeting.
+     */
+    bool retractRequest( KCal::Incidence *, RetractCause cause );
 
     bool readCalendarSynchronous( KCal::Calendar *cal );
 

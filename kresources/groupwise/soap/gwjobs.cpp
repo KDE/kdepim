@@ -230,10 +230,13 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
   _ngwm__getItemsRequest itemsRequest;
 
   itemsRequest.container = id;
+#if 1
   std::string *str = soap_new_std__string( mSoap, -1 );
-  str->append( "startDate endDate subject alarm allDayEvent place timezone iCalId recipients message recipientStatus" );
+  str->append( "startDate endDate subject alarm allDayEvent place timezone iCalId recipients message recipientStatus recurrenceKey" );
   itemsRequest.view = str;
-  //itemsRequest.view = 0;
+#else
+  itemsRequest.view = 0;
+#endif
 
 /*
   ngwt__Filter *filter = soap_new_ngwm__Filter( mSoap, -1 );
@@ -248,12 +251,13 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
 */
   itemsRequest.filter = 0;
   itemsRequest.items = 0;
-
+  itemsRequest.count = -1;
   mSoap->header->ngwt__session = mSession;
   _ngwm__getItemsResponse itemsResponse;
   soap_call___ngw__getItemsRequest( mSoap, mUrl.latin1(), 0,
                                     &itemsRequest,
                                     &itemsResponse );
+  kdDebug() << "Faults according to GSOAP:" << endl;
   soap_print_fault(mSoap, stderr);
 
   if ( itemsResponse.items ) {

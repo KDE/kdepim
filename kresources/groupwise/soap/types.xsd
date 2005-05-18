@@ -31,7 +31,6 @@
 	<xs:element name="sequence" type="xs:unsignedInt" />
 	
    <xs:element name="session" type="xs:string" />
-
 <!--  
    // Works with Java
    <xs:element name="session" type="xs:string" />
@@ -44,7 +43,6 @@
          </xs:simpleContent>
       </xs:complexType>
    </xs:element>
-
 -->   
 	
 	<xs:element name="startDate" type="xs:dateTime" />
@@ -379,7 +377,7 @@
 		</xs:sequence>
 	</xs:complexType>
 	<xs:simpleType name="DayOfYear">
-		<xs:restriction base="xs:integer">
+		<xs:restriction base="xs:short">
 			<xs:minInclusive value="-365" />
 			<xs:maxInclusive value="365" />
 		</xs:restriction>
@@ -446,26 +444,6 @@
 			<xs:enumeration value="BC" />
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:complexType name="DocumentRef">
-		<xs:complexContent>
-			<xs:extension base="tns:Mail">
-				<xs:sequence>
-					<xs:element name="library" type="tns:NameAndEmail" />
-					<xs:element name="number" type="xs:unsignedInt" />
-					<xs:element name="filename" type="xs:string" minOccurs="0" />
-					<xs:element name="docType" type="xs:string" />
-					<xs:element name="author" type="tns:NameAndEmail" />
-					<xs:element name="creator" type="tns:NameAndEmail" />
-					<xs:element name="officialVersion" type="xs:unsignedInt" />
-					<xs:element name="currentVersion" type="xs:unsignedInt" />
-					<xs:element ref="tns:version" />
-					<xs:element name="versionDescription" type="xs:string" />
-					<xs:element name="fileSize" type="xs:unsignedInt" minOccurs="0" />
-					<xs:element name="acl" type="tns:AccessControlList" minOccurs="0" />
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
 	<xs:complexType name="EmailAddressList">
 		<xs:sequence>
 			<xs:element ref="tns:email" minOccurs="0" maxOccurs="unbounded" />
@@ -644,7 +622,7 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Daily" />
 			<xs:enumeration value="Weekly" />
-			<xs:enumeration value="Monthy" />
+			<xs:enumeration value="Monthly" />
 			<xs:enumeration value="Yearly" />
 		</xs:restriction>
 	</xs:simpleType>
@@ -1168,7 +1146,7 @@
 	<xs:complexType name="RecurrenceRule">
 		<xs:annotation>
 			<xs:documentation>
-				This is the same logic as iCalander (RFC 2445).
+				This is the same logic as iCalendar (RFC 2445).
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -1190,7 +1168,7 @@
 	<xs:complexType name="ReferenceInfo">
 		<xs:sequence>
 			<xs:element name="lastReferenceDate" type="xs:dateTime" nillable="1" minOccurs="0" />
-			<xs:element name="referenceCount" type="xs:integer" minOccurs="0" />
+			<xs:element name="referenceCount" type="xs:int" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Resource">

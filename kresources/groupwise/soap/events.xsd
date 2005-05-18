@@ -24,6 +24,7 @@
    <xs:element name="key" type="xs:string" />
    <xs:element name="event" type="tns:EventType" />
    <xs:element name="field" type="tns:FieldList" />
+   <xs:element name="id" type="types:uid" />
    <xs:complexType name="ContainerList">
       <xs:sequence>
          <xs:element name="container" type="types:uid" minOccurs="0" maxOccurs="unbounded" />
@@ -33,7 +34,7 @@
    <xs:complexType name="Event">
       <xs:sequence>
          <xs:element ref="tns:event" />
-         <xs:element ref="types:id" />
+         <xs:element ref="tns:id" minOccurs="0" />
          <xs:element name="timeStamp" type="xs:dateTime" minOccurs="0" />
          <xs:element ref="tns:field" minOccurs="0" />
          <xs:element name="container" type="types:uid" minOccurs="0" />
@@ -43,13 +44,12 @@
    </xs:complexType>
    <xs:complexType name="EventDefinition">
       <xs:sequence>
-         <xs:element ref="tns:event" minOccurs="1" maxOccurs="34" />
+         <xs:element name="events" type="tns:EventTypeList" />
          <xs:element name="type" type="tns:ItemTypeList" minOccurs="0" />
          <xs:element ref="tns:field" minOccurs="0" />
          <xs:element name="containers" type="tns:ContainerList" minOccurs="0" />
       </xs:sequence>
    </xs:complexType>
-   
    <xs:complexType name="EventList">
       <xs:sequence>
          <xs:element name="event" type="tns:Event" minOccurs="0" maxOccurs="unbounded" />
@@ -61,10 +61,15 @@
          <xs:element name="persistence" type="xs:duration" minOccurs="0" />
          <xs:element name="ipAddress" type="xs:string" minOccurs="0" />
          <xs:element name="port" type="xs:int" minOccurs="0" />
-         <xs:element name="http" type="xs:boolean" default="0" />
-         <xs:element name="event" type="tns:EventDefinition" maxOccurs="unbounded" />
+         <xs:element name="http" type="xs:boolean" minOccurs="0" default="0" />
+         <xs:element name="definition" type="tns:EventDefinition" minOccurs="0" />
       </xs:sequence>
       <xs:attribute name="enabled" type="xs:boolean" default="0" />
+   </xs:complexType>
+   <xs:complexType name="EventsList">
+      <xs:sequence>
+         <xs:element name="event" type="tns:Events" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
    </xs:complexType>
    <xs:simpleType name="EventType">
       <xs:restriction base="xs:string">
@@ -106,6 +111,11 @@
          <xs:enumeration value="ItemUncomplete" />
       </xs:restriction>
    </xs:simpleType>
+   <xs:complexType name="EventTypeList">
+      <xs:sequence>
+         <xs:element name="event" type="tns:EventType" minOccurs="1" maxOccurs="34" />
+      </xs:sequence>
+   </xs:complexType>
    <xs:simpleType name="Field">
       <xs:restriction base="xs:string">
          <xs:enumeration value="AcceptLevel" />
@@ -189,7 +199,7 @@
    <xs:element name="getEventConfigurationResponse">
       <xs:complexType>
          <xs:sequence>
-            <xs:element name="events" type="tns:Events" minOccurs="0" />
+            <xs:element name="events" type="tns:EventsList" minOccurs="0" />
             <xs:element name="status" type="types:Status" />
          </xs:sequence>
       </xs:complexType>
@@ -198,8 +208,8 @@
       <xs:complexType>
          <xs:sequence>
             <xs:element ref="tns:key" />
-            <xs:element name="from" type="xs:dateTime" minOccurs="0" />
-            <xs:element name="until" type="xs:dateTime" minOccurs="0" />
+            <xs:element name="from" type="xs:dateTime" minOccurs="0" nillable="1" />
+            <xs:element name="until" type="xs:dateTime" minOccurs="0" nillable="1" />
             <xs:element name="count" type="xs:int" default="-1" />
             <xs:element name="remove" type="xs:boolean" default="0" />
             <xs:element name="notify" type="xs:boolean" default="0" />
