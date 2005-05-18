@@ -139,9 +139,25 @@ GpgME::Error Kleo::ChiasmusJob::slotProcessExited( KProcess * proc ) {
       mError = gpg_error( GPG_ERR_CANCELED );
       break;
     }
+
+  const Kleo::CryptoConfigEntry * showOutput
+    = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "show-output" );
+  if ( showOutput && showOutput->boolValue() ) {
+    showChiasmusOutput();
+  }
+
   emit done();
   emit SpecialJob::result( mError, QVariant( mOutput ) );
   return mError;
+}
+
+void Kleo::ChiasmusJob::showChiasmusOutput() {
+  kdDebug() << k_funcinfo << endl;
+  if ( mStderr.isEmpty() )
+    return;
+  KMessageBox::information( 0 /*how to get a parent widget?*/,
+                            mStderr,
+                            i18n( "Output from chiasmus" ) );
 }
 
 GpgME::Error Kleo::ChiasmusJob::exec() {

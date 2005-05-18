@@ -91,6 +91,7 @@ namespace Kleo {
   private:
     bool checkPreconditions() const;
     GpgME::Error setup();
+    void showChiasmusOutput();
 
   private:
     SymCryptRunProcessBase * mSymCryptRun;

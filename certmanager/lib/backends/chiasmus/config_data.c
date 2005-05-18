@@ -71,6 +71,12 @@ const struct kleo_chiasmus_config_data kleo_chiasmus_config_entries[] = {
   },
 #ifdef HAVE_C99_INITIALIZERS
   {
+    "show-output", I18N_NOOP( "Show output from chiasmus operations" ),
+    Level_Expert, ArgType_None,
+    { .boolean = { .value = 0, .numTimesSet = 0 } },
+    0, 0, 1
+  },
+  {
     "symcryptrun-class", I18N_NOOP( "SymCryptRun class to use" ),
     Level_Expert, ArgType_String,
     { .string = "confucius" },
