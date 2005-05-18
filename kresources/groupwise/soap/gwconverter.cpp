@@ -94,7 +94,8 @@ std::string* GWConverter::qDateTimeToString( const QDateTime &dt )
 
 QDateTime GWConverter::stringToQDateTime( const std::string* str )
 {
-  return QDateTime::fromString( QString::fromUtf8( str->c_str() ) );
+  QDateTime dt = QDateTime::fromString( QString::fromUtf8( str->c_str() ), Qt::ISODate );
+  return dt;
 }
 
 char* GWConverter::qDateToChar( const QDate &date )

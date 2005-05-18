@@ -179,10 +179,15 @@ KCal::Todo* IncidenceConverter::convertFromTask( ngwt__Task* task )
     return 0;
   }
 
-  if ( task->startDate != 0 )
-    todo->setDtStart( QDate::fromString( stringToQString( task->startDate), Qt::ISODate ) );
+  if ( task->startDate ) {
+    todo->setHasStartDate( true );
+    todo->setDtStart( stringToQDateTime( task->startDate ) );
+  }
 
-  todo->setDtDue( QDate::fromString( stringToQString( task->dueDate ), Qt::ISODate ) );
+  if ( task->dueDate ) {
+    todo->setHasDueDate( true );
+    todo->setDtDue( stringToQDateTime( task->dueDate ) );
+  }
 
   if ( task->taskPriority ) {
     QString priority = stringToQString( task->taskPriority );
@@ -191,7 +196,7 @@ KCal::Todo* IncidenceConverter::convertFromTask( ngwt__Task* task )
 
     int p = priority.toInt();
     if ( p == 0 ) p = 3;
-    
+
     todo->setPriority( p );
   }
 
