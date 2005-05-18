@@ -349,6 +349,7 @@ void IncidenceBase::setPilotId( unsigned long id )
   if (mReadOnly) return;
 
   mPilotId = id;
+  updated();
 }
 
 unsigned long IncidenceBase::pilotId() const
