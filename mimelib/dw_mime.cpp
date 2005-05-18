@@ -8,7 +8,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -320,6 +320,12 @@ int DwSubtypeStrToEnum(const DwString& aStr)
             type = DwMime::kSubtypeSigned;
         }
         break;
+    case 'V':
+    case 'v':
+        if (DwStrcasecmp(aStr, "vnd.de.bund.bsi.chiasmus-text") == 0) {
+          type = DwMime::kSubtypeChiasmusText;
+        }
+        break;
     case 'X':
     case 'x':
         if (DwStrcasecmp(aStr, "x-vcard") == 0) {
@@ -424,6 +430,9 @@ void DwSubtypeEnumToStr(int aEnum, DwString& aStr)
         break;
     case DwMime::kSubtypeMsTNEF:
         aStr = "ms-tnef";
+        break;
+    case DwMime::kSubtypeChiasmusText:
+        aStr = "vnd.de.bund.bsi.chiasmus-text";
         break;
     case DwMime::kSubtypeJpeg:
         aStr = "jpeg";
