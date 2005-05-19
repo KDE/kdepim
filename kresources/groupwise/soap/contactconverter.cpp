@@ -219,6 +219,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
     return addr;
   }
   addr.insertCustom( "GWRESOURCE", "UID", stringToQString( contact->id ) );
+  addr.insertCustom( "GWRESOURCE", "UUID", stringToQString( contact->uuid ) );
 
   // Name parts
   ngwt__FullName* fullName = contact->fullName;
