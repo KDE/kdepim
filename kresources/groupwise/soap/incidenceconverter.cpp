@@ -23,7 +23,8 @@
 #include <libkdepim/kpimprefs.h>
 #include <libkcal/event.h>
 #include <libkcal/recurrence.h>
-
+#include <kabc/stdaddressbook.h>
+#include <kabc/addressee.h>
 #include <kdebug.h>
 
 #include "incidenceconverter.h"
@@ -46,6 +47,7 @@ void IncidenceConverter::setFrom( const QString &name,
 
 KCal::Event* IncidenceConverter::convertFromAppointment( ngwt__Appointment* appointment )
 {
+  kdDebug() << "IncidenceConverter::convertFromAppointment()" << endl;
   if ( !appointment )
     return 0;
 
@@ -78,6 +80,8 @@ KCal::Event* IncidenceConverter::convertFromAppointment( ngwt__Appointment* appo
       event->setDtEnd( charToQDateTime( appointment->endDate, mTimezone ) );
   }
 
+  kdDebug() << "start date: " << event->dtStart() << endl;
+  kdDebug() << "end date: " << event->dtEnd() << endl;
 
   if ( appointment->alarm ) {
     KCal::Alarm *alarm = event->newAlarm();
@@ -100,7 +104,7 @@ KCal::Event* IncidenceConverter::convertFromAppointment( ngwt__Appointment* appo
 
 ngwt__Appointment* IncidenceConverter::convertToAppointment( KCal::Event* event )
 {
-  kdDebug() << k_funcinfo << endl;
+  kdDebug() << "IncidenceConverter::convertToAppointment()" << endl;
   if ( !event )
     return 0;
 
@@ -398,14 +402,18 @@ void IncidenceConverter::setAttendees( KCal::Incidence *incidence,
   std::vector<ngwt__Recipient * > *recipients = 
     soap_new_std__vectorTemplateOfPointerTongwt__Recipient( soap(), -1 );
  
-  recipients->push_back( createRecipient( mFromName, mFromEmail, mFromUuid ) );
+//  recipients->push_back( createRecipient( mFromName, mFromEmail, mFromUuid ) );
 
   KCal::Attendee::List attendees = incidence->attendees();
   KCal::Attendee::List::ConstIterator it;
   for( it = attendees.begin(); it != attendees.end(); ++it ) {
     kdDebug() << "IncidenceConverter::setAttendees(), adding " << (*it)->fullName()
       << endl;
-    recipients->push_back( createRecipient( (*it)->name(), (*it)->email() ) );
+    QString uuid;
+    QValueList<KABC::Addressee> addList = KABC::StdAddressBook::self()->findByEmail( (*it)->email() );
+    if ( !addList.first().isEmpty() )
+    uuid = addList.first().custom( "GWRESOURCE", "UUID" );
+    recipients->push_back( createRecipient( (*it)->name(), (*it)->email(), uuid ) );
   }
  recipientList->recipient = *recipients;
 }
@@ -444,7 +452,7 @@ bool IncidenceConverter::convertFromCalendarItem( ngwt__CalendarItem* item,
   if ( item->subject && !item->subject->empty() )
     incidence->setSummary( stringToQString( item->subject ) );
 
-//  kdDebug() << "SUMMARY: " << incidence->summary() << endl;
+  kdDebug() << "SUMMARY: " << incidence->summary() << endl;
 
   if ( item->created )
     incidence->setCreated( charToQDateTime( item->created, mTimezone ) );
@@ -534,24 +542,24 @@ void IncidenceConverter::setItemDescription( KCal::Incidence *incidence,
 
 void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence *incidence )
 {
-  kdDebug() << "IncidenceConverter::getAttendees()" << ( item->subject ? item->subject->c_str() : "no subject" )
-    << endl;
+//   kdDebug() << "IncidenceConverter::getAttendees()" << ( item->subject ? item->subject->c_str() : "no subject" )
+//     << endl;
 
   if ( item->distribution && item->distribution->from ) {
-    kdDebug() << "-- from" << endl;
+/*    kdDebug() << "-- from" << endl;*/
     KCal::Person organizer( stringToQString( item->distribution->from->displayName ),
                             stringToQString( item->distribution->from->email ) );
     incidence->setOrganizer( organizer );
   }
 
   if ( item->distribution && item->distribution->recipients ) {
-    kdDebug() << "-- recipients" << endl;
+/*    kdDebug() << "-- recipients" << endl;*/
     std::vector<ngwt__Recipient*> recipients = item->distribution->recipients->recipient;
     std::vector<ngwt__Recipient*>::const_iterator it;
 
     for ( it = recipients.begin(); it != recipients.end(); ++it ) {
-      kdDebug() << "---- recipient " << endl;
-      ngwt__Recipient *recipient = *it;
+/*      kdDebug() << "---- recipient " << endl;
+ */     ngwt__Recipient *recipient = *it;
       KCal::Attendee *attendee = new KCal::Attendee(
         stringToQString( recipient->displayName ),
         stringToQString( recipient->email ) );
@@ -827,6 +835,11 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     daysOfYear->day.push_back( *rmd.first() );
     item->rrule->byYearDay = daysOfYear;
     // no need to do MonthList recurrence as these will appear as separate instances when fetched from GW
-    ;
+  }
+  else if ( incidence->doesRecur() == KCal::Recurrence::rYearlyMonth )
+  {
+    kdDebug() << "incidence recurs yearly on monthday" << endl; 
+    *freq = Yearly;
+    item->rrule->frequency = freq;
   }
 }
