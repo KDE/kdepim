@@ -4,7 +4,6 @@
 ### executables and one library from the sources in this dir.
 ###
 ###
-### $Id$
 ###
 
 SUBDIRS = Icons
