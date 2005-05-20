@@ -18,6 +18,9 @@ TODO: only re-write a local database if it is changed.
   to slip the include and library dir for pilot-link right in front, which in
   turn makes it possible to build against development pilot-link versions even
   if there are installed copies in standard locations as well.
+* Extended the AppInfo template class with a pack function as well, so that
+  reading and writing AppInfo blocks can be delegated there.
+* Ported the ToDo conduit to use the PilotToDoInfo template instantiation.
 
 2005-05-16  Adriaan de Groot
 * Added yet another constructor to the local databases, this time hopefully

@@ -197,7 +197,8 @@ protected:
 	* only, and says that the category info in the base class aliases data in
 	* the derived class. Remember to call init()!
 	*/
-	PilotAppInfoBase() : fC(0L), fLen(-1), fOwn(false) { } ;
+	PilotAppInfoBase() : fC(0L), fLen(0), fOwn(false) { } ;
+
 	/** Initialize class members after reading header, to alias data elsewhere.
 	* Only for use by the (derived) template classes below.
 	*/
@@ -227,7 +228,7 @@ public:
 	/** Const version of the above function. */
 	const struct CategoryAppInfo *categoryInfo() const { return fC; } ;
 	/** Returns the length of the (whole) AppInfo block. */
-	int length() const { return fLen; } ;
+	PI_SIZE_T length() const { return fLen; } ;
 
 	/** Search for the given category @param name in the list
 	* of categories; returns the category number. If @param unknownIsUnfiled
@@ -262,11 +263,13 @@ public:
 
 private:
 	struct CategoryAppInfo *fC;
-	int fLen;
+	PI_SIZE_T fLen;
 	bool fOwn;
 } ;
 
-template <typename appinfo, int(*f)(appinfo *, unsigned char *, PI_SIZE_T)>
+template <typename appinfo,
+	int(*unpack)(appinfo *, unsigned char *, PI_SIZE_T),
+	int(*pack)(appinfo *, unsigned char *, PI_SIZE_T)>
 class PilotAppInfo : public PilotAppInfoBase
 {
 public:
@@ -278,8 +281,20 @@ public:
 
 		appLen = d->readAppBlock(buffer,appLen);
 
-		(*f)(&fInfo, buffer, appLen);
+		(*unpack)(&fInfo, buffer, appLen);
 		init(&fInfo.category,appLen);
+	} ;
+
+	int write(PilotDatabase *d)
+	{
+		FUNCTIONSETUP;
+		unsigned char buffer[MAX_APPINFO_SIZE];
+		int appLen = (*pack)(&fInfo, buffer, length());
+		if (appLen > 0)
+		{
+			d->writeAppBlock(buffer,appLen);
+		}
+		return appLen;
 	} ;
 
 	appinfo *info() { return &fInfo; } ;

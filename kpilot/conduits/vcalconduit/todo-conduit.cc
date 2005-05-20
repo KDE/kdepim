@@ -195,27 +195,18 @@ void TodoConduit::_setAppInfo()
 {
 	FUNCTIONSETUP;
 	// get the address application header information
-	int appLen = pack_ToDoAppInfo(&fTodoAppInfo, 0, 0);
-	unsigned char *buffer = new unsigned char[appLen];
-	pack_ToDoAppInfo(&fTodoAppInfo, buffer, appLen);
-	if (fDatabase) fDatabase->writeAppBlock(buffer, appLen);
-	if (fLocalDatabase) fLocalDatabase->writeAppBlock(buffer, appLen);
-	delete[] buffer;
+	fTodoAppInfo->write(fDatabase);
 }
+
 void TodoConduit::_getAppInfo()
 {
 	FUNCTIONSETUP;
 	// get the address application header information
-	unsigned char *buffer =
-		new unsigned char[PilotRecord::APP_BUFFER_SIZE];
-	int appLen = fDatabase->readAppBlock(buffer,PilotRecord::APP_BUFFER_SIZE);
 
-	unpack_ToDoAppInfo(&fTodoAppInfo, buffer, appLen);
-	delete[]buffer;
-	buffer = NULL;
+	fTodoAppInfo = new PilotToDoInfo(fDatabase);
 
 #ifdef DEBUG
-	PilotAppCategory::dumpCategories(fTodoAppInfo.category);
+	fTodoAppInfo->dump();
 #endif
 }
 
@@ -339,19 +330,19 @@ void TodoConduit::setCategory(PilotTodoEntry*de, const KCal::Todo*todo)
 
 
 /**
- * _getCat returns the id of the category from the given categories list. If none of the categories exist
- * on the palm, the "Nicht abgelegt" (don't know the english name) is used.
+ * _getCat returns the id of the category from the given categories list. If none of the
+ * categories exist on the palm, the "Unfiled" one is used.
  */
 QString TodoConduit::_getCat(const QStringList cats, const QString curr) const
 {
 	int j;
 	if (cats.size()<1) return QString::null;
 	if (cats.contains(curr)) return curr;
-	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it ) {
+	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it )
+	{
 		for (j=1; j<=15; j++)
 		{
-			QString catName = PilotAppCategory::codec()->
-				toUnicode(fTodoAppInfo.category.name[j]);
+			QString catName = fTodoAppInfo->category(j);
 			if (!(*it).isEmpty() && !(*it).compare( catName ) )
 			{
 				return catName;
@@ -359,7 +350,9 @@ QString TodoConduit::_getCat(const QStringList cats, const QString curr) const
 		}
 	}
 	// If we have a free label, return the first possible cat
-	QString lastName( QString::fromLatin1(fTodoAppInfo.category.name[15]) );
+	//
+	// FIXME: Clearly buggy, but I don't know how or why
+	QString lastName = fTodoAppInfo->category(15);
 	if (lastName.isEmpty()) return cats.first();
 	return QString::null;
 }
@@ -438,7 +431,7 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 	int cat=de->getCat();
 	if (0<cat && cat<=15)
 	{
-		QString newcat=PilotAppCategory::codec()->toUnicode(fTodoAppInfo.category.name[cat]);
+		QString newcat=fTodoAppInfo->category(cat);
 		if (!cats.contains(newcat))
 		{
 			cats.append( newcat );

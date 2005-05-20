@@ -130,7 +130,7 @@ private:
 	struct ToDoAppInfo &fAppInfo;
 };
 
-typedef PilotAppInfo<ToDoAppInfo,unpack_ToDoAppInfo> PilotToDoInfo;
+typedef PilotAppInfo<ToDoAppInfo,unpack_ToDoAppInfo, pack_ToDoAppInfo> PilotToDoInfo;
 
 
 #endif

@@ -210,7 +210,7 @@ private:
 };
 
 
-typedef PilotAppInfo<AddressAppInfo,unpack_AddressAppInfo> PilotAddressInfo;
+typedef PilotAppInfo<AddressAppInfo,unpack_AddressAppInfo, pack_AddressAppInfo> PilotAddressInfo;
 
 
 #endif
