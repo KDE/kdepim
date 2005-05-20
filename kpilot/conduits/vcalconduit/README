@@ -1,11 +1,12 @@
-KPilot vCal KOrganizer conduit version 3.0
+KPilot iCalender (e.g. KOrganizer) conduit version 
 (c) 1998 Dan Pilone, Preston Brown, Herwin Jan Steehouwer
+(C) 2003-2004 Reinhold Kainhofer
+(C) Adriaan de Groot
 
-This conduit works with KPilot and KOrganizer.
+This conduit works with KPilot and any application that uses iCalendar files.
 
-Things to remember:
-* When deleting from yout PalmPilot set 
-  'Save Archive Copy On PC' OFF !!!
 
 Preston Brown and Herwin Jan Steehouwer
 pbrown@kde.org, steehouwer@kde.org
+Reinhold Kainhofer (reinhold@kainhofer.com)
+Adriaan de Groot (groot@kde.org)
