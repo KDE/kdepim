@@ -19,7 +19,7 @@ METASOURCES = AUTO
 INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 
 libconfiguration_la_SOURCES = kpilotConfig.cc kpilotSettings.kcfgc
-libconfiguration_la_LDFLAGS = $(all_libraries)
+libconfiguration_la_LDFLAGS = $(PISOCK_LDFLAGS) $(all_libraries)
 
 kcm_kpilot_la_SOURCES = pilotDaemonDCOP.stub  kpilotConfigDialog.cc \
 	kpilotConfigDialog_device.ui \
@@ -36,7 +36,7 @@ kcm_kpilot_la_SOURCES = pilotDaemonDCOP.stub  kpilotConfigDialog.cc \
 	kpilotConfigWizard_app.ui \
 	kpilotConfigWizard.cc \
 	dbSelectionDialog.cc dbSelection_base.ui
-kcm_kpilot_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
+kcm_kpilot_la_LDFLAGS = $(PISOCK_LDFLAGS) $(all_libraries) -module -avoid-version -no-undefined
 kcm_kpilot_la_LIBADD = $(LIB_KFILE) $(PISOCK_LIB) \
 	../lib/libkpilot.la \
 	libconfiguration.la
@@ -70,9 +70,9 @@ kpilotTest_SOURCES = \
 	main-test.cc
 
 
-kpilot_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-kpilotDaemon_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-kpilotTest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+kpilot_LDFLAGS = $(PISOCK_LDFLAGS) $(all_libraries) $(KDE_RPATH)
+kpilotDaemon_LDFLAGS = $(PISOCK_LDFLAGS) $(all_libraries) $(KDE_RPATH)
+kpilotTest_LDFLAGS = $(PISOCK_LDFLAGS) $(all_libraries) $(KDE_RPATH)
 
 
 # the libraries to link against. Be aware of the order. First the libraries,

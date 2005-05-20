@@ -1,10 +1,23 @@
 ** KPILOT CHANGELOG **
 ======================
 
+TODO: Figure out why archived records are bad.
+	[23:07] <till> Now i'm hunting why new entries on the palm are dropped and
+	               deletes from the palm as well.
+	[23:44] <till> [ade]: Hm, I delete a task on the palm, sync, and the
+	               record->isDeleted() is false, on sync, but it is modified and
+	               updated on the pc, although that does not change anything.
+
 TODO: provide template-based, interpreted databases much like the
   AppInfo classes now have.
 TODO: give the knotes conduit a decent test mode.
 TODO: only re-write a local database if it is changed.
+
+2005-05-20  Adriaan de Groot
+* Split PISOCK_LIB into PISOCK_LIB and PISOCK_LDFLAGS. This makes it possible
+  to slip the include and library dir for pilot-link right in front, which in
+  turn makes it possible to build against development pilot-link versions even
+  if there are installed copies in standard locations as well.
 
 2005-05-16  Adriaan de Groot
 * Added yet another constructor to the local databases, this time hopefully

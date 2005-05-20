@@ -24,7 +24,7 @@ libkpilot_la_SOURCES = kpilotlibSettings.kcfgc options.cc uiDialog.cc plugin.cc 
 	pilotDateEntry.cc pilotTodoEntry.cc \
 	recordConduit.cc
 
-libkpilot_la_LDFLAGS = -no-undefined $(all_libraries) $(KDE_EXTRA_RPATH) $(KDE_RPATH)
+libkpilot_la_LDFLAGS = -no-undefined $(PISOCK_LDFLAGS) $(all_libraries) $(KDE_EXTRA_RPATH) $(KDE_RPATH)
 libkpilot_la_LIBADD = $(LIB_KDEUI) $(PISOCK_LIB) -lkabc
 
 kpilotincludedir = $(includedir)/kpilot
@@ -38,15 +38,15 @@ check_PROGRAMS = testactions testconstants testdatabase
 TESTS = testactions testconstants testdatabase
 
 testactions_SOURCES = testactions.cc
-testactions_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testactions_LDFLAGS = $(PISOCK_LDFLAGS) $(all_libraries) $(KDE_RPATH)
 testactions_LDADD  = libkpilot.la $(PISOCK_LIB)
 
 testconstants_SOURCES = testconstants.cc
-testconstants_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testconstants_LDFLAGS = $(PISOCK_LDFLAGS) $(all_libraries) $(KDE_RPATH)
 testconstants_LDADD   = libkpilot.la $(PISOCK_LIB)
 
 testdatabase_SOURCES  = testdatabase.cc
-testdatabase_LDFLAGS  = $(all_libraries) $(KDE_RPATH)
+testdatabase_LDFLAGS  = $(PISOCK_LDFLAGS) $(all_libraries) $(KDE_RPATH)
 testdatabase_LDADD    = libkpilot.la $(PISOCK_LIB)
 testdatabase_CXXFLAGS = '-DSOURCE="$(srcdir)"'
 
