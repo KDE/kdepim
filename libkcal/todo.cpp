@@ -84,6 +84,7 @@ void Todo::setDtDue(const QDateTime &dtDue, bool first )
     mDtRecurrence = dtDue;
   } else {
     mDtDue = dtDue;
+    // TODO: This doesn't seem right...
     recurrence()->setRecurStart( dtDue );
   }
 
@@ -165,6 +166,7 @@ QDateTime Todo::dtStart( bool first ) const
 
 void Todo::setDtStart( const QDateTime &dtStart )
 {
+  // TODO: This doesn't seem right (rfc 2445/6 says, recurrence is calculated from the dtstart...)
   if ( doesRecur() )
     recurrence()->setRecurStart( mDtDue );
   IncidenceBase::setDtStart( dtStart );
