@@ -42,8 +42,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2005-12-05</date>
-<releaseinfo>1.03.00</releaseinfo>
+<date>2005-19-05</date>
+<releaseinfo>1.03.01</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -889,11 +889,32 @@ interpreter is invoked.</para>
 </listitem>
 
 <listitem>
+<para>Use the <guilabel>Command Output</guilabel> group box to specify
+what you want to be done with any terminal output which the command
+produces when it executes.</para>
+
+<itemizedlist>
+<listitem>
 <para>Check <guilabel>Execute in terminal window</guilabel> to cause
-the command to be executed in a terminal window. This will allow you
-to see any terminal output which the command produces. You can choose
+the command to be executed in a terminal window. You can choose
 which type of terminal window should be used in the
 <link linkend="preferences-general">Preferences dialog</link>.</para>
+</listitem>
+
+<listitem>
+<para>Check <guilabel>Log to file</guilabel> to save the command's
+output in a file. The output, prefixed by a heading showing the time
+at which the command was scheduled to run, will be appended to any
+existing contents of the file. Enter the file name in the edit box, or
+use the button beside the edit box to display a file selection
+dialog.</para>
+</listitem>
+
+<listitem>
+<para>Check <guilabel>Discard</guilabel> to throw away the command's
+output.</para>
+</listitem>
+</itemizedlist>
 </listitem>
 </itemizedlist>
 </listitem>
