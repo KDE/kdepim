@@ -5,6 +5,7 @@ X-KDE-ServiceType=kdedevice/mobiledevice
 Name=KDE Mobile Device Lowlevel Hardware Driver
 Name[bs]=KDE hardverski drajver niskog nivoa za mobilne uređaje
 Name[ca]=Manegador KDE de dispositius de maquinari mòbil de baix nivell
+Name[cs]=KDE nízkoúrovňový ovladač mobilních zářízení 
 Name[cy]=Gyrrydd Caledwedd Lefel Isel KDE ar gyfer Dyfeisiau Symudol
 Name[da]=KDE Mobil-enhed Lavt niveau hardware-driver
 Name[de]=Lowlevel-Treiber für mobile Geräte

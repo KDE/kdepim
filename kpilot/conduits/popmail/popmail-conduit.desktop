@@ -4,6 +4,7 @@ Type=Service
 Comment=Send mail from your handheld through KMail.
 Comment[bg]=Изпращане на поща от мобилно устройство чрез KMail.
 Comment[ca]=Envia correu des de la vostra agenda electrònica a través de KMail.
+Comment[cs]=Odeslání zprávy z PDA přes KMail.
 Comment[da]=Send post fra din håndholdte gennem KMail.
 Comment[de]=Zum Versenden von E-Mails mit dem Taschencomputer via KMail.
 Comment[es]=Envía el correo de la agenda electrónica a través de KMail.
