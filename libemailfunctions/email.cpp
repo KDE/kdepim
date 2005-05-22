@@ -521,7 +521,7 @@ bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
       }
   }
 
-  QString addrRx = "[a-zA-Z]*[\\w.-]*[a-zA-Z0-9-]@";
+  QString addrRx = "[a-zA-Z]*[_\\w.-]*[_a-zA-Z0-9-]@";
   if ( localPart[ 0 ] == '\"' || localPart[ localPart.length()-1 ] == '\"' ) {
     addrRx = "\"[a-zA-Z@]*[\\w.@-]*[a-zA-Z0-9@]\"@";
   }
