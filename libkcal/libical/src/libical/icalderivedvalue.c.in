@@ -262,7 +262,7 @@ icalvalue_get_datetimeperiod(const icalvalue* impl)
   icalerror_check_arg( (impl!=0),"value");
   icalerror_check_value_type(value, ICAL_DATETIMEPERIOD_VALUE);
   
-  if(impl->kind == ICAL_DATETIME_VALUE){
+  if( impl->kind == ICAL_DATETIME_VALUE || impl->kind == ICAL_DATE_VALUE ){
       dtp.period = icalperiodtype_null_period();
       dtp.time = impl->data.v_time;
   } else if(impl->kind == ICAL_PERIOD_VALUE) {
