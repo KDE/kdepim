@@ -13,6 +13,12 @@ TODO: provide template-based, interpreted databases much like the
 TODO: give the knotes conduit a decent test mode.
 TODO: only re-write a local database if it is changed.
 
+2005-05-22  Adriaan de Groot
+* Gratuitously update the version number, call this one "kind" (Dutch for
+  "child", or otherwise short for "kind of liable to eat your data").
+  This sort-of makes me wish we'd just left BRANCH totally unchanged
+  since the last release. KDE 3.4.1 tomorrow.
+
 2005-05-20  Adriaan de Groot
 * Split PISOCK_LIB into PISOCK_LIB and PISOCK_LDFLAGS. This makes it possible
   to slip the include and library dir for pilot-link right in front, which in
