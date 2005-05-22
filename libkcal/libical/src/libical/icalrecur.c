@@ -502,7 +502,7 @@ char* icalrecurrencetype_as_string(struct icalrecurrencetype *recur)
 	icalmemory_append_string(&str,&str_p,&buf_sz, temp);
     }
 
-    if(recur->interval != 0){
+    if(recur->interval != 1){
 	snprintf(temp,sizeof(temp),"%d",recur->interval);
 	icalmemory_append_string(&str,&str_p,&buf_sz,";INTERVAL=");
 	icalmemory_append_string(&str,&str_p,&buf_sz, temp);
@@ -544,7 +544,15 @@ char* icalrecurrencetype_as_string(struct icalrecurrencetype *recur)
 		    icalmemory_append_char(&str,&str_p,&buf_sz,',');
 		}
 	    }	 
-	}   
+	}
+    }
+
+    /* Monday is the default, so no need to write that out */
+    if ( recur->week_start != ICAL_MONDAY_WEEKDAY ) {
+	const char *daystr = icalrecur_weekday_to_string(
+		icalrecurrencetype_day_day_of_week( recur->week_start ));
+	icalmemory_append_string(&str,&str_p,&buf_sz,";WKST=");
+	icalmemory_append_string(&str,&str_p,&buf_sz,daystr);
     }
 
     return  str;
