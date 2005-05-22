@@ -327,6 +327,9 @@ int main(int argc, char *argv[])
   // BUG 105705
   checkIsValidEmailAddress( "matt-@fruitsalad.org", "AddressOk" );
 
+  // underscore at the end of local part
+  checkIsValidEmailAddress( "matt_@fruitsalad.org", "AddressOk" );
+
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( QString::fromUtf8("test@täst.invalid"), "true" );
@@ -341,6 +344,7 @@ int main(int argc, char *argv[])
   // BUG 105705
   checkIsValidSimpleEmailAddress( "matt-@fibbel.com", "true" );
   checkIsValidSimpleEmailAddress( "matt@fibbel-is-a-geek.com", "true" );
+  checkIsValidSimpleEmailAddress( "matt_@fibbel.com", "true" );
 
   // check if the pure email address is wrong
   checkIsValidSimpleEmailAddress( "mattfruitsalad.org", "false" );
