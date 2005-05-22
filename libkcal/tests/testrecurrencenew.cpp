@@ -20,23 +20,14 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "recurrencerule.h"
-#include "recurrence.h"
-
-#include "icalformat.h"
-#include "icalformatimpl.h"
 #include "calendarlocal.h"
 
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kdebug.h>
-#include <klocale.h>
 #include <kcmdlineargs.h>
 
 #include <qfile.h>
-#include <qfileinfo.h>
-
-#include <iostream>
 
 
 
