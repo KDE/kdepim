@@ -9,12 +9,14 @@
 # every file, so timezones should be fine.
 # 
 # Usage:
-#   createtestcases.pl InputFile.ics OutputBaseFileName
+#   createtestcases.pl InputFile.ics OutputBaseFileName [ext]
 #
 # InputFile.ics .. The large calendar file containing multiple incidences
 # OutputBaseFileName .. The base name of the output files. They will be
-#                       numbered sequentially, i.e. OutputBaseFileName1.ics,
-#                       OutputBaseFileName2.ics, etc.
+#                       numbered sequentially, i.e. OutputBaseFileName1.ext,
+#                       OutputBaseFileName2.ext, etc.
+# [ext].. optional file name extension for the output files. If none is given,
+#         ics is used.
 #
 # Disclaimer: This script exists merely for development purposes to help us 
 # KDE developer generate atomic test cases for libkcal's test suite.
@@ -24,8 +26,12 @@ use Cwd;
 
 my $infile=shift @ARGV;
 my $filebase=shift @ARGV;
+my $ext=shift @ARGV;
+if ( !$ext ) {
+	$ext = "ics";
+}
 my $filenr=0;
-my $filename="$filebase$filenr.ics";
+my $filename="$filebase$filenr.$ext";
 
 print "Infile: $infile\n";
 print "filebase: $filebase\n";
@@ -46,7 +52,7 @@ while (<INFILE>) {
 	  if ( !$opened ) {
 			$opened = 1;
   		$filenr=$filenr+1;
-	  	$filename="$filebase$filenr.ics";
+	  	$filename="$filebase$filenr.$ext";
 		  open fh, "> $filename";
   		if ( $pretext ) {
  	  		print fh $pretext;
