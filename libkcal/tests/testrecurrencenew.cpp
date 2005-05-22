@@ -21,6 +21,7 @@
 */
 
 #include "recurrencerule.h"
+#include "recurrence.h"
 
 #include "icalformat.h"
 #include "icalformatimpl.h"
@@ -46,6 +47,7 @@ static const KCmdLineOptions options[] =
 {
   { "verbose", "Verbose output", 0 },
   { "+input", "Name of input file", 0 },
+  { "[+output]", "optional name of output file for the recurrence dates", 0 },
   KCmdLineLastOption
 };
 
@@ -91,37 +93,30 @@ int main( int argc, char **argv )
     kdDebug(5800) << "*+*+*+*+*+*+*+*+*+*" << endl;
     kdDebug(5800) << " -> " << incidence->summary() << " <- " << endl;
 
-    QPtrList<RecurrenceRule> rrules = incidence->recurrence()->getRecurrenceRules();
-    if ( !rrules.isEmpty() ) {
-      RecurrenceRule *recur = rrules.first();
-      recur->dump();
+    incidence->recurrence()->dump();
 
-    // QDateTime::currentDateTime()
-      QDateTime dt( recur->startDate().addSecs(-2) );
-      int i=0;
-      if ( outstream ) {
-        // Output to file for testing purposes
-        while (dt.isValid() && i<500 ) {
-          ++i;
-          dt = dt.addSecs( 1 );
-          dt = recur->getNextDate( dt );
-          (*outstream) << dt.toString( Qt::ISODate ) << endl;
-        }
-      } else {
-        // Output to konsole
-        for ( i = 0; i<10; ++i ) {
-          kdDebug(5800) << "-------------------------------------------" << endl;
-          dt = recur->getNextDate( dt );
-          kdDebug(5800) << " *~*~*~*~ Next date is: " << dt << endl;
-          dt = dt.addSecs( 1 );
-        }
+    QDateTime dt( incidence->dtStart().addSecs(-2) );
+    int i=0;
+    if ( outstream ) {
+      // Output to file for testing purposes
+      while (dt.isValid() && i<500 ) {
+        ++i;
+        dt = dt.addSecs( 1 );
+        dt = incidence->recurrence()->getNextDateTime( dt );
+        (*outstream) << dt.toString( Qt::ISODate ) << endl;
+      }
+    } else {
+      incidence->recurrence()->dump();
+      // Output to konsole
+      while ( dt.isValid() && i<10 ) {
+        ++i;
+        kdDebug(5800) << "-------------------------------------------" << endl;
+        dt = incidence->recurrence()->getNextDateTime( dt );
+        kdDebug(5800) << " *~*~*~*~ Next date is: " << dt << endl;
+        dt = dt.addSecs( 1 );
       }
     }
   }
-
-//   cal.save( "ffff.ics" );
-
-
 
   delete outstream;
   outfile.close();
