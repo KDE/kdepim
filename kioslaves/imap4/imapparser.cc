@@ -1396,7 +1396,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
         }
         else if (word == "BODY[]" )
         {
-	  // Do the same as with "RFC822"
+          // Do the same as with "RFC822"
           parseLiteralC(inWords, true);
         }
         else if (word == "BODYSTRUCTURE")
@@ -1429,10 +1429,10 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
           else 
             lastHandled = new imapCache();
 
-          if (envelope || seenUid.isEmpty ())
+          if (seenUid.isEmpty ())
           {
-            // we have seen this one already
-            // or don't know where to put it
+            // unknown what to do
+            kdDebug(7116) << "imapParser::parseFetch - UID empty" << endl;
           }
           else
           {
