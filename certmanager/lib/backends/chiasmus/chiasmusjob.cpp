@@ -45,6 +45,7 @@
 
 #include <kshell.h>
 #include <klocale.h>
+#include <kdebug.h>
 #include <kmessagebox.h>
 
 #include <qtimer.h>
