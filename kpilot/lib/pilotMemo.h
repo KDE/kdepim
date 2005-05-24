@@ -77,6 +77,6 @@ private:
 	QString fText;
 };
 
-typedef PilotAppInfo<MemoAppInfo,unpack_MemoAppInfo> PilotMemoInfo;
+typedef PilotAppInfo<MemoAppInfo,unpack_MemoAppInfo, pack_MemoAppInfo> PilotMemoInfo;
 
 #endif

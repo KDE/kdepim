@@ -229,7 +229,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 		DEBUGCONDUIT << fname
 			<< "Can not open databases." << endl;
 #endif
-		emit logError(i18n("Could not open MemoDB on the Handheld."));
+		emit logError(TODO_I18N("Could not open MemoDB on the Handheld."));
 		return false;
 	}
 
@@ -801,44 +801,44 @@ void KNotesAction::cleanupMemos()
 	bool spoke = false;
 	if (fP->fAddedMemosCounter)
 	{
-		addSyncLogEntry(i18n("Added one new memo.",
+		addSyncLogEntry(TODO_I18N_P("Added one new memo.",
 			"Added %n new memos.",
 			fP->fAddedMemosCounter));
 	}
 	if (fP->fModifiedMemosCounter)
 	{
-		addSyncLogEntry(i18n("Modified one memo.",
+		addSyncLogEntry(TODO_I18N_P("Modified one memo.",
 			"Modified %n memos.",
 			fP->fModifiedMemosCounter));
 		spoke = true;
 	}
 	if (fP->fDeletedMemosCounter)
 	{
-		addSyncLogEntry(i18n("Deleted one memo.",
+		addSyncLogEntry(TODO_I18N_P("Deleted one memo.",
 			"Deleted %n memos.",fP->fDeletedMemosCounter));
 		spoke = true;
 	}
 	if (fP->fAddedNotesCounter)
 	{
-		addSyncLogEntry(i18n("Added one note to KNotes.",
+		addSyncLogEntry(TODO_I18N_P("Added one note to KNotes.",
 			"Added %n notes to KNotes.",fP->fAddedNotesCounter));
 		spoke = true;
 	}
 	if (fP->fModifiedNotesCounter)
 	{
-		addSyncLogEntry(i18n("Modified one note in KNotes.",
+		addSyncLogEntry(TODO_I18N_P("Modified one note in KNotes.",
 			"Modified %n notes in KNotes.",fP->fModifiedNotesCounter));
 		spoke = true;
 	}
 	if (fP->fDeletedNotesCounter)
 	{
-		addSyncLogEntry(i18n("Deleted one note from KNotes.",
+		addSyncLogEntry(TODO_I18N_P("Deleted one note from KNotes.",
 			"Deleted %n notes from KNotes.",fP->fDeletedNotesCounter));
 		spoke = true;
 	}
 	if (!spoke)
 	{
-		addSyncLogEntry(i18n("No change to KNotes."));
+		addSyncLogEntry(TODO_I18N("No change to KNotes."));
 	}
 }
 

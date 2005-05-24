@@ -68,7 +68,7 @@ const char *id_record_conduit="$Id$";
 	bool retrieved = false;
 	if (!openDatabases( fDBName, &retrieved))
 	{
-		emit logError(i18n("Unable to open the %1 database on the handheld.").arg( fDBName ) );
+		emit logError(TODO_I18N("Unable to open the %1 database on the handheld.").arg( fDBName ) );
 		return false;
 	}
 	if (retrieved) setFirstSync(true);

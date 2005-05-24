@@ -96,7 +96,7 @@ void InternalEditorAction::syncDirtyDB()
 	// changed record from the PC to the handheld
 
 	PilotRecord*rec=0L;
-	PilotLocalDatabase*localDB=new PilotLocalDatabase(*dbIter);
+	PilotLocalDatabase*localDB=new PilotLocalDatabase(*dbIter, false);
 	PilotSerialDatabase*serialDB=new PilotSerialDatabase(pilotSocket(), *dbIter);
 	if (!localDB->isDBOpen() || !serialDB->isDBOpen())
 	{
@@ -348,7 +348,7 @@ emit logError(i18n("Setting the database flags on the handheld is not yet suppor
 QTimer::singleShot(0, this, SLOT(syncAppBlockChangedDB()));
 return;
 
-	PilotLocalDatabase*localDB=new PilotLocalDatabase(*dbIter);
+	PilotLocalDatabase*localDB=new PilotLocalDatabase(*dbIter, false);
 	PilotSerialDatabase*serialDB=new PilotSerialDatabase(pilotSocket(), *dbIter);
 
 	// open the local and the serial database and copy the flags over
@@ -385,7 +385,7 @@ void InternalEditorAction::syncAppBlockChangedDB()
 	DEBUGKPILOT<<"syncAppBlockChangedDB for DB "<<(*dbIter)<<endl;
 #endif
 
-	PilotLocalDatabase*localDB=new PilotLocalDatabase(*dbIter);
+	PilotLocalDatabase*localDB=new PilotLocalDatabase(*dbIter, false);
 	PilotSerialDatabase*serialDB=new PilotSerialDatabase(pilotSocket(), *dbIter);
 
 	unsigned char*appBlock=new unsigned char[0xFFFF];

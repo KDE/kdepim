@@ -89,8 +89,8 @@ protected:
 
 	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) {
 		FUNCTIONSETUP;
-		if (r) return new PilotTodoEntry(fTodoAppInfo, r);
-		else return new PilotTodoEntry(fTodoAppInfo);
+		if (r) return new PilotTodoEntry(*(fTodoAppInfo->info()), r);
+		else return new PilotTodoEntry(*(fTodoAppInfo->info()));
 	};
 	virtual KCal::Incidence*newIncidence() { return new KCal::Todo; };
 
@@ -107,7 +107,7 @@ protected:
 	void setCategory(PilotTodoEntry*de, const KCal::Todo*todo);
 	void setCategory(KCal::Todo*todo, const PilotTodoEntry*de);
 
-	struct ToDoAppInfo fTodoAppInfo;
+	PilotToDoInfo *fTodoAppInfo;
 	bool categoriesSynced;
 } ;
 

@@ -224,7 +224,7 @@ inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 #define FUNCTIONSETUPL(a) const int fname = a; Q_UNUSED(fname);
 #endif
 
-#define KPILOT_VERSION	"4.5.3 (peuter)"
+#define KPILOT_VERSION	"4.5.2 (kind)"
 
 
 // Function to expand newlines in rich text to <br>\n
@@ -260,10 +260,12 @@ KDE_EXPORT struct tm writeTm(const QDate &dt);
 
 
 // This marks strings that need to be i18n()ed in future,
-// but cannot be done now due to message freeze.
+// but cannot be done now due to message freeze. The _P
+// variant is to handle plurals and is wrong, but unavoidable.
 //
 //
 #define TODO_I18N(a)	QString::fromLatin1(a)
+#define TODO_I18N_P(a,b,c) ((c>1) ? a : b)
 
 // Handle some cases for QT_NO_CAST_ASCII and NO_ASCII_CAST.
 // Where possible in the source, known constant strings in

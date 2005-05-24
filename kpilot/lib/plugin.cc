@@ -257,7 +257,7 @@ bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPat
 			<< ": local mode test for one database only."
 			<< endl;
 #endif
-		fDatabase = new PilotLocalDatabase(dbName);
+		fDatabase = new PilotLocalDatabase(dbName,false);
 		fLocalDatabase = 0L;
 		return false;
 	}

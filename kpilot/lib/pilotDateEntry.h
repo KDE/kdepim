@@ -139,7 +139,7 @@ private:
 };
 
 
-typedef PilotAppInfo<AppointmentAppInfo,unpack_AppointmentAppInfo> PilotDateInfo;
+typedef PilotAppInfo<AppointmentAppInfo,unpack_AppointmentAppInfo, pack_AppointmentAppInfo> PilotDateInfo;
 
 #endif
 

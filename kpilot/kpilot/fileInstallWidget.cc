@@ -154,8 +154,8 @@ bool FileInstallWidget::eventFilter(QObject *watched, QEvent *event)
     		dragEnterEvent(static_cast<QDragEnterEvent*>(event));
             return true;
         }
-    
-        // We have to skip the DragMove event, because it seems to override the 
+
+        // We have to skip the DragMove event, because it seems to override the
         // accept state, when it is set to false by dragEnterEvent() (event->accept(false);)
         if(event->type() == QEvent::DragMove) {
             return true;
@@ -283,18 +283,18 @@ void FileInstallWidget::contextMenu(QMouseEvent *event)
     for(item = fIconView->firstItem(); item; item = item->nextItem())
     {
         if(item->isSelected())
-            files.append(item->text());            
+            files.append(item->text());
     }
 
     QPopupMenu popup(fIconView);
-    
+
     item = fIconView->findItem(event->pos());
     if(item) {
         // Popup for the right clicked item
-        popup.insertItem(i18n("Delete"), 10);
+        popup.insertItem(TODO_I18N("Delete"), 10);
     }
 
-    popup.insertItem(i18n("Delete selected files"), 11);
+    popup.insertItem(TODO_I18N("Delete selected files"), 11);
     if(files.empty())
         popup.setItemEnabled(11, false);
 
@@ -302,6 +302,6 @@ void FileInstallWidget::contextMenu(QMouseEvent *event)
     if(id == 10)
         fInstaller->deleteFile(item->text());
     else if(id == 11)
-        fInstaller->deleteFiles(files);        
+        fInstaller->deleteFiles(files);
 
 }

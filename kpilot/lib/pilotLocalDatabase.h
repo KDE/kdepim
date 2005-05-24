@@ -31,8 +31,6 @@
 
 #include "pilotDatabase.h"
 
-// #define SHADOW_LOCAL_DB (1)
-
 class KDE_EXPORT PilotLocalDatabase : public PilotDatabase
 {
 public:
@@ -58,9 +56,17 @@ public:
 	* a backup run, since the conduit assumes the database to have
 	* the state of the previous conduit run,  useConduitDBs=true
 	* opens the database in $KDEHOME/share/apps/kpilot/conduits
+	*
+	* TODO: Deprecate this one.
 	*/
-	PilotLocalDatabase(const QString &name, bool useConduitDBs=false);
+	PilotLocalDatabase(const QString &name, bool useConduitDBs /* =false */);
 
+
+	/**
+	* Opens the local database. This is primarily for testing
+	* purposes; only tries the given path.
+	*/
+	PilotLocalDatabase(const QString &name);
 
 	virtual ~PilotLocalDatabase();
 
@@ -166,15 +172,9 @@ private:
 	QString fPathName,fDBName;
 	char*       fAppInfo;
 	size_t      fAppLen;
-	int         fNumRecords;
-	int         fCurrentRecord;
-	PilotRecord* fRecords[10000]; // Current max records in DB.. hope it's enough
-	int         fPendingRec; // Temp index for the record about to get an ID.
 
-#ifdef SHADOW_LOCAL_DB
-	QValueList<PilotRecord *> fRecordList;
-	QValueList<PilotRecord *>::Iterator fRecordIndex;
-#endif
+	class Private;
+	Private *d;
 
 	/**
 	* For databases opened by name only (constructor 2 -- which is the

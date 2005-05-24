@@ -227,11 +227,11 @@ QString SyncAction::SyncMode::name() const
 	if (isTest())
 	{
 
-		s.append(CSL1(" [%1]").arg(i18n("Test Sync")));
+		s.append(CSL1(" [%1]").arg(TODO_I18N("Test Sync")));
 	}
 	if (isLocal())
 	{
-		s.append(CSL1(" [%1]").arg(i18n("Local Sync")));
+		s.append(CSL1(" [%1]").arg(TODO_I18N("Local Sync")));
 	}
 	return s;
 }

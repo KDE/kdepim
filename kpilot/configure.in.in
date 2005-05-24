@@ -68,6 +68,7 @@ HAVE_PISOCK=0
 HAVE_BAD_PISOCK=NO
 
 PISOCK_LIB=""
+PISOCK_LDFLAGS=""
 PISOCK_INCLUDE=""
 pisock_path=""
 
@@ -228,7 +229,8 @@ for i in /usr/local/pilot/lib /usr/local/lib /vol/kde/support/lib ; do
 
 		unset ac_cv_lib_pisock_pi_accept
 		AC_CHECK_LIB(pisock,pi_accept,
-			[PISOCK_LIB="-L$i -R$i -lpisock"
+			[PISOCK_LDFLAGS="-L$i -R$i"
+			PISOCK_LIB="-lpisock"
 			HAVE_PISOCK=1],[],[])
 	fi
 done
@@ -238,7 +240,8 @@ else
 
 	unset ac_cv_lib_pisock_pi_accept
 	AC_CHECK_LIB(pisock,pi_accept,
-		[PISOCK_LIB="-L$with_pilot_link/lib -R$with_pilot_link/lib -lpisock"
+		[PISOCK_LDFLAGS="-L$with_pilot_link/lib -R$with_pilot_link/lib"
+		PISOCK_LIB="-lpisock"
 		HAVE_PISOCK=1],[],[])
 fi
 fi
@@ -247,11 +250,13 @@ fi
 
 if test "$HAVE_PISOCK" = "0" ; then
 	PISOCK_LIB=""
+	PISOCK_LDFLAGS=""
 	PISOCK_INCLUDE=""
 	DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
 fi
 
 AC_SUBST(PISOCK_LIB)
+AC_SUBST(PISOCK_LDFLAGS)
 AC_SUBST(PISOCK_INCLUDE)
 AM_CONDITIONAL(compile_kpilot, test "$HAVE_PISOCK" = 1)
 

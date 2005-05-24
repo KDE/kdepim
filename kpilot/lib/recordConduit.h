@@ -154,7 +154,7 @@ public:
 		fContainer = new PCContainer();
 		if (!fContainer->load())
 		{
-			emit logError(i18n("Unable to load the %1 database on the PC.").arg(fConduitName));
+			emit logError(TODO_I18N("Unable to load the %1 database on the PC.").arg(fConduitName));
 			return Error;
 		}
 		if (fContainer->isEmpty()) setFirstSync(true); /* And leave UID map empty */
