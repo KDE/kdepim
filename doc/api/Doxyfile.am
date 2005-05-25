@@ -12,9 +12,6 @@ apidox-am-yes:
 		echo "HTML_HEADER            = $(top_srcdir)/doc/api/header.html" >> Doxyfile; \
 		echo "HTML_FOOTER            = $(top_srcdir)/doc/api/footer.html" >> Doxyfile; \
 		echo "HTML_STYLESHEET        = $(top_builddir)/apidocs/doxygen.css" >> Doxyfile; \
-		echo "LATEX_OUTPUT           = $(subdir)/latex" >> Doxyfile; \
-		echo "RTF_OUTPUT             = $(subdir)/rtf" >> Doxyfile; \
-		echo "MAN_OUTPUT             = $(subdir)/man" >> Doxyfile; \
 		$(DOXYGEN) Doxyfile ;\
 		sh $(top_srcdir)/doc/api/doxyndex.sh $(top_builddir)/apidocs $(subdir)/html ; \
 	fi
@@ -100,21 +97,11 @@ apidox-am-toplevel-yes:
 	echo "OUTPUT_DIRECTORY       = $(top_builddir)/apidocs" >> Doxyfile ; \
 	echo "FILE_PATTERNS          = *.dox" >> Doxyfile ; \
 	echo "RECURSIVE              = NO" >> Doxyfile ; \
-	echo "SOURCE_BROWSER         = NO" >> Doxyfile ; \
 	echo "ALPHABETICAL_INDEX     = NO" >> Doxyfile ; \
 	echo "HTML_OUTPUT            = ." >> Doxyfile ; \
 	echo "HTML_HEADER            = $(top_srcdir)/doc/api/mainheader.html" >> Doxyfile ; \
 	echo "HTML_FOOTER            = $(top_srcdir)/doc/api/mainfooter.html" >> Doxyfile ; \
 	echo "HTML_STYLESHEET        = $(top_builddir)/apidocs/common/doxygen.css" >> Doxyfile ; \
-	echo "GENERATE_LATEX         = NO" >> Doxyfile ; \
-	echo "GENERATE_RTF           = NO" >> Doxyfile ; \
-	echo "GENERATE_MAN           = NO" >> Doxyfile ; \
-	echo "GENERATE_XML           = NO" >> Doxyfile ; \
-	echo "GENERATE_AUTOGEN_DEF   = NO" >> Doxyfile ; \
-	echo "ENABLE_PREPROCESSING   = NO" >> Doxyfile ; \
-	echo "CLASS_DIAGRAMS         = NO" >> Doxyfile ; \
-	echo "HAVE_DOT               = NO" >> Doxyfile ; \
-	echo "GENERATE_HTML          = YES" >> Doxyfile ;\
 	$(mkinstalldirs) $(top_builddir)/apidocs ; \
 	rm -f $(top_builddir)/apidocs/common ; \
 	if test -d $(top_srcdir)/doc/common; then \
