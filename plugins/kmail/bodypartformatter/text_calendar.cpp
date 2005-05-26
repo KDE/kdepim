@@ -54,6 +54,7 @@
 #include <kglobalsettings.h>
 #include <kiconloader.h>
 #include <kdebug.h>
+#include <kdcopservicestarter.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kapplication.h>
@@ -64,6 +65,9 @@
 #include <qtextstream.h>
 
 #include <kdepimmacros.h>
+
+#include <dcopclient.h>
+#include <dcopref.h>
 
 using namespace KCal;
 
@@ -190,7 +194,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
     }
 
-    void setStatusOnMyself( Incidence* incidence, Attendee* myself, 
+    void setStatusOnMyself( Incidence* incidence, Attendee* myself,
                             Attendee::PartStat status, const QString &receiver ) const
     {
       Attendee* newMyself = 0;
@@ -239,10 +243,37 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       }
       ts->setEncoding( QTextStream::UnicodeUTF8 );
       (*ts) << receiver << '\n' << iCal;
+
+      // Now ensure that korganizer is running; otherwise start it, to prevent surprises
+      // (https://intevation.de/roundup/kolab/issue758)
+      QString error;
+      QCString dcopService;
+      int result = KDCOPServiceStarter::self()->findServiceFor( "DCOP/Organizer", QString::null, QString::null, &error, &dcopService );
+      if ( result == 0 ) {
+        // OK, so korganizer (or kontact) is running. Now ensure the object we want is available
+        // [that's not the case when kontact was already running, but korganizer not loaded into it...]
+        static const char* const dcopObjectId = "KOrganizerIface";
+        QCString dummy;
+        if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) ) {
+          DCOPRef ref( dcopService, dcopService ); // talk to the KUniqueApplication or its kontact wrapper
+          DCOPReply reply = ref.call( "load()" );
+          if ( reply.isValid() && (bool)reply ) {
+            kdDebug() << "Loaded " << dcopService << " successfully" << endl;
+            Q_ASSERT( kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) );
+          } else
+            kdWarning() << "Error loading " << dcopService << endl;
+        }
+
+        // We don't do anything with it, we just need it to be running so that it handles
+        // the incoming directory.
+      }
+      else
+        kdWarning() << "Couldn't start DCOP/Organizer: " << dcopService << " " << error << endl;
+
       return true;
     }
 
-    bool handleInvitation( const QString& iCal, Attendee::PartStat status, 
+    bool handleInvitation( const QString& iCal, Attendee::PartStat status,
                            KMail::Callback &callback ) const
     {
       bool ok = true;
