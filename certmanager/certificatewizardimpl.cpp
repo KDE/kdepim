@@ -74,6 +74,7 @@
 #include <qcombobox.h>
 
 #include <assert.h>
+#include <dcopref.h>
 
 static const unsigned int keyLengths[] = {
   1024, 1532, 2048, 3072, 4096
@@ -439,12 +440,14 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
 
   QCString dummy;
   // OK, so kmail (or kontact) is running. Now ensure the object we want is available.
-  // This is kind of a limitation of findServiceFor, which should do this by itself,
-  // for that it needs to know the dcop object ID -> requires kdelibs API change.
-  if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dcopService, dummy ) ) {
-    KDCOPServiceStarter::self()->startServiceFor( "DCOP/Mailer", QString::null,
-                                                  QString::null, &error, &dcopService );
-    assert( kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dcopService, dummy ) );
+  // [that's not the case when kontact was already running, but kmail not loaded into it... in theory.]
+  if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) ) {
+    DCOPRef ref( dcopService, dcopService ); // talk to the KUniqueApplication or its kontact wrapper
+    DCOPReply reply = ref.call( "load()" );
+    if ( reply.isValid() && (bool)reply ) {
+      Q_ASSERT( kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) );
+    } else
+      kdWarning() << "Error loading " << dcopService << endl;
   }
 
   DCOPClient* dcopClient = kapp->dcopClient();
