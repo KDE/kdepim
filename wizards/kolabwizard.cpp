@@ -269,7 +269,7 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
   mUserEdit = new KLineEdit( page );
   topLayout->addWidget( mUserEdit, 1, 1 );
   QWhatsThis::add(mUserEdit, i18n("Your email address on the Kolab Server. "
-                        "Format: <i>name@server.domain.tld</i>"));
+                        "Format: <i>name@example.net</i>"));
 
   label = new QLabel( i18n("Real name:"), page );
   topLayout->addWidget( label, 2, 0 );

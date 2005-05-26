@@ -92,7 +92,7 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   topL->addMultiCellWidget(r_eplyTo, 3,3, 1,2);
   msg = i18n( "<qt><p>When someone reply to your article by email, this is the address the message "
 	      "will be sent. If you fill in this field, please do it with a real "
-	      "email address.</p><p>Ex: <b>john@doe.com</b>.</p></qt>" );
+	      "email address.</p><p>Ex: <b>john@example.com</b>.</p></qt>" );
   QWhatsThis::add( l, msg );
   QWhatsThis::add( r_eplyTo, msg );
   connect( r_eplyTo, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()) );

@@ -203,7 +203,7 @@ recipient in one of the fields, use a comma to separate each address
 from the next one. 
 <!-- fixme: there's now a setting for this: -->
 You may need to specify fully qualified addresses
-(&ie; <userinput>user@domain.com</userinput>) even for local
+(&ie; <userinput>user@example.com</userinput>) even for local
 users, depending on your system configuration.</para>
 
 <para>When you are finished with your
@@ -1429,14 +1429,14 @@ Mailing-List...</guimenuitem></menuchoice> can identify the mailing
 list (the name of the list should then appear in the menu item); in
 this case, this works and I am presented a filter that has
 <quote>List-Id<guilabel>contains</guilabel>
-&lt;kde.mail.kde.org&gt;</quote> preset. You select the
+&lt;kde.kde.org&gt;</quote> preset. You select the
 desired destination folder from the folder pull-down menu in the
 <guilabel>Filter Action</guilabel> group and that is it.</para>
 
 <para>If that does not work, think of a unique way of identifying the
 messages you want to filter. The (almost) unique property of my &kde;
 List messages is that they always contain
-<quote>kde@mail.kde.org</quote> in the
+<quote>kde@kde.org</quote> in the
 <guilabel>To:</guilabel> or <guilabel>CC:</guilabel> field. It is only
 almost unique, because this fails for cross-posted messages.</para>
 </step>
@@ -1452,7 +1452,7 @@ filter. It will appear as <guilabel>&lt;unknown&gt;</guilabel>.</para>
 <para>In the <guilabel> Filter Criteria</guilabel> area, select
 <guilabel>&lt;recipients&gt;</guilabel> from the first drop-down box,
 <guilabel>contains</guilabel> from the second drop-down box, and type
-<userinput>kde@mail.kde.org</userinput> in the text
+<userinput>kde@kde.org</userinput> in the text
 field.</para>
 </step>
 <step>
@@ -1478,7 +1478,7 @@ the filter you just created.</para>
 </step>
 <step>
 <para>Since you want to filter all messages that have
-<replaceable>kde@mail.kde.org</replaceable> in the
+<replaceable>kde@kde.org</replaceable> in the
 <guilabel>To:</guilabel> or <guilabel>CC:</guilabel> field
 <emphasis>and</emphasis> that are from Fred, check the
 <guibutton>Match all of the following</guibutton> radio
