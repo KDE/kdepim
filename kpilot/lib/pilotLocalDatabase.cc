@@ -618,7 +618,7 @@ void PilotLocalDatabase::openDatabase()
 
 	int count;
 	pi_file_get_entries(dbFile, &count);
-	if (count > 0)
+	if (count >= 0)
 	{
 		KPILOT_DELETE(d);
 		d = new Private(count);
