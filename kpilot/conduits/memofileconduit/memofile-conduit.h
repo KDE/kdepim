@@ -88,6 +88,7 @@ private:
 
 	bool	copyHHToPC();
 	bool	copyPCToHH();
+	void	deleteUnsyncedHHRecords();
 	bool	sync();
 
 	int 	writeToPilot(Memofile * memofile);

@@ -27,8 +27,16 @@
 */
 
 #include "options.h"
+
+#include <kaboutdata.h>
+#include <kapplication.h>
+#include <kdebug.h>
+#include <klocale.h>
+#include <kcmdlineargs.h>
+
 #include "pilotLocalDatabase.h"
 #include "pilotRecord.h"
+#include "pilotMemo.h"
 
 
 typedef struct { int id,size; } recordInfo;
@@ -105,7 +113,7 @@ int checkDatabase(const char *path, recordInfo *info)
 	while( (r = db.readRecordByIndex(index) ) )
 	{
 		kdDebug() << "[" << index << "] id=" << r->id() << " size=" << r->getLen() << endl;
-		if ( info[index].id != r->id() )
+		if ( ((recordid_t)info[index].id) != r->id() )
 		{
 			kdDebug() << "* Bad ID (expected" << r->id() << ")" << endl;
 			fail++;
@@ -138,8 +146,57 @@ struct { const char *path; recordInfo *info; } tests[] = {
 	{ 0L, 0L }
 } ;
 
+int checkMemo()
+{
+	PilotLocalDatabase *l = new PilotLocalDatabase(SOURCE "/data/MemoDB");
+	if (!l->isDBOpen()) return 1;
+
+	PilotMemoInfo *m = new PilotMemoInfo(l);
+	m->dump();
+
+	QString c = m->category(1);
+	if (c != CSL1("Business"))
+	{
+		kdDebug() << "* Category 1 is not 'Business' but " << c << endl;
+		return 1;
+	}
+
+	m->setCategory(2,CSL1("Aardvark"));
+	m->write(l);
+
+	c = m->category(2);
+	if (c != CSL1("Aardvark"))
+	{
+		kdDebug() << "* Category 2 is not 'Aardvark' but " << c << endl;
+		return 1;
+	}
+
+
+	delete m;
+	delete l;
+	return 0;
+}
+
+static const KCmdLineOptions options[] =
+{
+  {"verbose", "Verbose output", 0},
+  KCmdLineLastOption
+};
+
+
 int main(int argc, char **argv)
 {
+	KAboutData aboutData("testdatabase","Test Databases","0.1");
+	KCmdLineArgs::init(argc,argv,&aboutData);
+	KCmdLineArgs::addCmdLineOptions( options );
+
+	//  KApplication app( false, false );
+	KApplication app;
+
+	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+	Q_UNUSED(args)
+
 	int r = 0;
 	int i = 0;
 #ifdef DEBUG
@@ -155,6 +212,10 @@ int main(int argc, char **argv)
 		}
 		i++;
 	}
+
+	kdDebug() << "*** Test " << i << endl;
+	if (checkMemo()) r++;
+	i++;
 
 	if (r)
 	{

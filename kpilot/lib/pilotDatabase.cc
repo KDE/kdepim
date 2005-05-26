@@ -185,7 +185,7 @@ bool PilotAppInfoBase::setCategory(unsigned int i, const QString &s)
 	int len = CATEGORY_NAME_SIZE - 1;
 	QCString t = PilotAppCategory::codec()->fromUnicode(s,len);
 	memset(categoryInfo()->name[i],0,CATEGORY_NAME_SIZE);
-	qstrncpy(categoryInfo()->name[i],t,kMin(len,(int)CATEGORY_NAME_SIZE));
+	qstrncpy(categoryInfo()->name[i],t,CATEGORY_NAME_SIZE);
 	return true;
 }
 

@@ -114,7 +114,7 @@ MemofileConduit::~MemofileConduit()
 	setFirstSync( _memofiles->isFirstSync() );
 	addSyncLogEntry(i18n(" Syncing with %1.").arg(_memo_directory));
 
-	if ( (syncMode() == SyncAction::SyncMode::eCopyHHToPC) || isFirstSync() ) {
+	if ( (syncMode() == SyncAction::SyncMode::eCopyHHToPC) || _memofiles->isFirstSync() ) {
 		addSyncLogEntry(i18n(" Copying Pilot to PC..."));
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": copying Pilot to PC." << endl;
@@ -474,16 +474,10 @@ bool MemofileConduit::copyPCToHH()
 	// Note: This will reset both fCategories and fMemoAppInfo, so
 	//       after this, we need to reinitialize our memofiles object...
 	setAppInfo();
-	cleanup();
 
 	// re-create our memofiles helper...
 	delete _memofiles;
 	_memofiles = new Memofiles(fCategories, *fMemoAppInfo, _memo_directory);
-
-	// make sure we are starting with a clean database on both ends...
-	fDatabase->deleteRecord(0, true);
-	fLocalDatabase->deleteRecord(0, true);
-	cleanup();
 
 	_memofiles->load(true);
 
@@ -496,9 +490,37 @@ bool MemofileConduit::copyPCToHH()
 	}
 
 	_memofiles->save();
-
+	
+	// now that we've copied from the PC to our handheld, remove anything extra from the
+	// handheld...
+	deleteUnsyncedHHRecords();
+	
 	return true;
 
+}
+
+void MemofileConduit::deleteUnsyncedHHRecords()
+{
+	FUNCTIONSETUP;
+	if ( syncMode()==SyncMode::eCopyPCToHH )
+	{
+		RecordIDList ids=fDatabase->idList();
+		RecordIDList::iterator it;
+		for ( it = ids.begin(); it != ids.end(); ++it )
+		{
+			if (!_memofiles->find(*it))
+			{
+#ifdef DEBUG
+				DEBUGCONDUIT << fname
+				<< "Deleting record with ID "<<*it <<" from handheld "
+				<< "(is not on PC, and syncing with PC->HH direction)"
+				<< endl;
+#endif
+				fDatabase->deleteRecord(*it);
+				fLocalDatabase->deleteRecord(*it);
+			}
+		}
+	}
 }
 
 int MemofileConduit::writeToPilot(Memofile * memofile)
