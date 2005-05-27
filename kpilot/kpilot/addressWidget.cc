@@ -317,7 +317,7 @@ void AddressWidget::updateWidget()
 	while (fAddressList.current())
 	{
 		if ((currentCatID == -1) ||
-			(fAddressList.current()->getCat() == currentCatID))
+			(fAddressList.current()->category() == currentCatID))
 		{
 			QString title = createTitle(fAddressList.current(),
 				addressDisplayMode);
@@ -515,7 +515,7 @@ void AddressWidget::slotAddRecord(PilotAddress * address)
 		fAddressAppInfo->categoryInfo(), true);
 
 
-	address->setCat(currentCatID);
+	address->PilotAppCategory::setCategory(currentCatID);
 	fAddressList.append(address);
 	writeAddress(address);
 	// TODO: Just add the new record to the lists
@@ -586,7 +586,7 @@ void AddressWidget::slotDeleteRecord()
 			i18n("Delete Record?")) == KMessageBox::No)
 		return;
 
-	selectedRecord->makeDeleted();
+	selectedRecord->setDeleted( true );
 	writeAddress(selectedRecord);
 	emit(recordChanged(selectedRecord));
 	showComponent();
@@ -726,10 +726,10 @@ void AddressWidget::slotExport()
 	{
 		const PilotAddress *a = fAddressList.current();
 		if ((currentCatID == -1) ||
-			(a->getCat() == currentCatID))
+			(a->category() == currentCatID))
 		{
 			write_record_CSV(f, fAddressAppInfo->info(), a->address(),
-				a->getAttrib(), a->getCat(), 0);
+				a->attributes(), a->category(), 0);
 		}
 		fAddressList.next();
 	}

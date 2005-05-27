@@ -114,7 +114,7 @@ void InternalEditorAction::syncDirtyDB()
 		if (id>0)
 		{
 			PilotRecord*serrec=serialDB->readRecordById(id);
-			if (serrec && (serrec->getAttrib() & dlpRecAttrDirty))
+			if (serrec && (serrec->isModified()) )
 			{
 				bool kpilotOverrides=queryUseKPilotChanges(*dbIter, id, rec, serrec, localDB);
 				if (kpilotOverrides)
@@ -129,7 +129,7 @@ void InternalEditorAction::syncDirtyDB()
 		{
 #ifdef DEBUG
 			DEBUGKPILOT<<"Generating ID for Record "<<rec->id()<<" with data "<<endl;
-			DEBUGKPILOT<<rec->getData()<<endl;
+			DEBUGKPILOT<<rec->data()<<endl;
 			DEBUGKPILOT<<"-----------------------------------------"<<endl;
 #endif
 			int id=serialDB->writeRecord(rec);
@@ -265,7 +265,7 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 			Q_ASSERT( hexEditIf ); // This should not fail!
 			if( hexEditIf )
 			{
-				hexEditIf->setData( localrec->getData(), localrec->getLen() );
+				hexEditIf->setData( localrec->data(), localrec->size() );
 // 					Do we need the following call at all???
 //				hexEditIf->setMaxDataSize( localrec->getLen() );
 				hexEditIf->setReadOnly( true );
@@ -293,7 +293,7 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 			Q_ASSERT( hexEditIf ); // This should not fail!
 			if( hexEditIf )
 			{
-				hexEditIf->setData( serialrec->getData(), serialrec->getLen() );
+				hexEditIf->setData( serialrec->data(), serialrec->size() );
 // 					Do we need the following call at all???
 //				hexEditIf->setMaxDataSize( serialrec->getLen() );
 				hexEditIf->setReadOnly( true );

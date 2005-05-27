@@ -195,11 +195,11 @@ bool MemofileConduit::setAppInfo()
 
 	fCategories = map;
 
-	for (int i = 0; i < MAX_CATEGORIES; i++)
+	for (int i = 0; i < CATEGORY_COUNT; i++)
 	{
 		if (fCategories.contains(i)) {
 			QString name = fCategories[i].left(16);
-			fMemoAppInfo->setCategory(i,name);
+			fMemoAppInfo->setCategoryName(i,name);
 
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
@@ -272,7 +272,7 @@ bool MemofileConduit::loadPilotCategories()
 	int _category_id=0;
 	int _category_num=0;
 
-	for (int i = 0; i < MAX_CATEGORIES; i++)
+	for (int i = 0; i < CATEGORY_COUNT; i++)
 	{
 		_category_name = fMemoAppInfo->category(i);
 		if (!_category_name.isEmpty())
@@ -325,9 +325,9 @@ void MemofileConduit::getAllFromPilot()
 			<< ": Added memo: ["
 			<< currentRecord
 			<< "], id: ["
-			<< memo->getID()
+			<< memo->id()
 			<< "], category: ["
-			<< fCategories[memo->getCat()]
+			<< fCategories[memo->category()]
 			<< "], title: ["
 			<< memo->getTitle()
 			<< "]" << endl;
@@ -377,7 +377,7 @@ void MemofileConduit::getModifiedFromPilot()
 		// we are syncing to both our filesystem and to the local
 		// database, so take care of the local database here
 		if (memo->isDeleted()) {
-			fLocalDatabase->deleteRecord(memo->getID());
+			fLocalDatabase->deleteRecord(memo->id());
 		} else {
 			fLocalDatabase->writeRecord(pilotRec);
 		}
@@ -388,7 +388,7 @@ void MemofileConduit::getModifiedFromPilot()
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
 			<< ": modified memo id: ["
-			<< memo->getID()
+			<< memo->id()
 			<< "], title: ["
 			<< memo->getTitle()
 			<< "]" << endl;
@@ -398,7 +398,7 @@ void MemofileConduit::getModifiedFromPilot()
 #ifdef DEBUG
 			DEBUGCONDUIT << fname <<
 			": skipped secret modified record id: ["
-			<< memo->getID()
+			<< memo->id()
 			<< "], title: ["
 			<< memo->getTitle()
 			<< "]" << endl;
@@ -438,11 +438,11 @@ void MemofileConduit::listPilotMemos()
 
 	PilotMemo *memo;
 	for ( memo = fMemoList.first(); memo; memo = fMemoList.next() ) {
-		QString _category_name = fCategories[memo->getCat()];
+		QString _category_name = fCategories[memo->category()];
 
 		DEBUGCONDUIT << fConduitName
 		<< ": listing record id: [" << memo->id()
-		<< "] category id: [" << memo->getCat()
+		<< "] category id: [" << memo->category()
 		<< "] category name: [" << _category_name
 		<< "] title: [" << memo->getTitle()
 		<< "]" << endl;
@@ -490,11 +490,11 @@ bool MemofileConduit::copyPCToHH()
 	}
 
 	_memofiles->save();
-	
+
 	// now that we've copied from the PC to our handheld, remove anything extra from the
 	// handheld...
 	deleteUnsyncedHHRecords();
-	
+
 	return true;
 
 }

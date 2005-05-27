@@ -214,7 +214,9 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 //			if (!(pilotRec->isDeleted()) )
 			{
 				PilotListViewItem*item=new PilotListViewItem(fRecordList,
-					QString::number(currentRecord), QString::number(pilotRec->getLen()),  QString::number(pilotRec->id()), QString::null,
+					QString::number(currentRecord), QString::number(pilotRec->size()),
+					QString::number(pilotRec->id()),
+					QString::null,
 					pilotRec->id(), pilotRec);
 				item->setNumericCol(0, true);
 				item->setNumericCol(1, true);
@@ -310,7 +312,7 @@ void GenericDBWidget::slotAddRecord()
 	FUNCTIONSETUP;
 	PilotRecord*rec=new PilotRecord(0L, 0, 0, 0, 0);
 	PilotListViewItem*item=new PilotListViewItem(fRecordList,
-		QString::number(-1), QString::number(rec->getLen()),
+		QString::number(-1), QString::number(rec->size()),
 		QString::number(rec->id()), QString::null,
 		rec->id(), rec);
 	if (slotEditRecord(item))
@@ -335,7 +337,7 @@ bool GenericDBWidget::slotEditRecord(QListViewItem*item)
 		DBRecordEditor*dlg=new DBRecordEditor(rec, nr, this);
 		if (dlg->exec())
 		{
-			currRecItem->setText(1, QString::number(rec->getLen()));
+			currRecItem->setText(1, QString::number(rec->size()));
 			currRecItem->setText(2, QString::number(rec->id()));
 			fRecordList->triggerUpdate();
 			writeRecord(rec);

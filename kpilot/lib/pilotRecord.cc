@@ -65,13 +65,10 @@ static const char *pilotRecord_id =
 #endif
 }
 
-PilotRecord::PilotRecord(void *data, int len, int attrib, int cat,
-	recordid_t uid) :
+PilotRecord::PilotRecord(void *data, int len, int attrib, int cat, recordid_t uid) :
+	PilotRecordBase(attrib,cat,uid),
 	fData(0L),
-	fLen(len),
-	fAttrib(attrib),
-	fCat(cat),
-	fID(uid)
+	fLen(len)
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	,
 	fBuffer(0L)
@@ -87,21 +84,17 @@ PilotRecord::PilotRecord(void *data, int len, int attrib, int cat,
 }
 
 PilotRecord::PilotRecord(PilotRecord * orig) :
-	fID(orig->id())
+	PilotRecordBase( orig->attributes(), orig->category(), orig->id() )
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	,
 	fBuffer(0L)
 #endif
 {
 	FUNCTIONSETUPL(4);
-	fData = new char[orig->getLen()];
+	fData = new char[orig->size()];
 
-	memcpy(fData, orig->getData(), orig->getLen());
-	fLen = orig->getLen();
-	fAttrib = orig->getAttrib();
-	fCat = orig->category();
-	fID = orig->id();
-
+	memcpy(fData, orig->data(), orig->size());
+	fLen = orig->size();
 	fAllocated++;
 }
 
@@ -119,39 +112,14 @@ PilotRecord & PilotRecord::operator = (PilotRecord & orig)
 
 	if (fData)
 		delete[]fData;
-	fData = new char[orig.getLen()];
+	fData = new char[orig.size()];
 
-	memcpy(fData, orig.getData(), orig.getLen());
-	fLen = orig.getLen();
-	fAttrib = orig.getAttrib();
-	fCat = orig.category();
-	fID = orig.id();
+	memcpy(fData, orig.data(), orig.size());
+	fLen = orig.size();
+	setAttributes( orig.attributes() );
+	setCategory( orig.category() );
+	setID( orig.id() );
 	return *this;
-}
-
-recordid_t PilotRecord::getID() const
-{
-	return id();
-}
-
-void PilotRecord::makeDeleted()
-{
-	setDeleted(true);
-}
-
-void PilotRecord::makeSecret()
-{
-	setSecret(true);
-}
-
-int PilotRecord::getCat() const
-{
-	return category();
-}
-
-void PilotRecord::setCat(int i)
-{
-	return setCategory(i);
 }
 
 void PilotRecord::setData(const char *data, int len)
@@ -193,23 +161,23 @@ void PilotRecord::setData(const char *data, int len)
 	return QString::fromLatin1(codec()->name());
 }
 
-bool PilotAppCategory::setCat(struct CategoryAppInfo &info,const QString &label)
+bool PilotAppCategory::setCategory(struct CategoryAppInfo &info,const QString &label)
 {
 	int emptyAvailable = -1;
-	if (label.isEmpty()) { setCat(0); return true; }
-	for (int catId = 1; catId < 16; catId++) 
+	if (label.isEmpty()) { setCategory(0); return true; }
+	for (int catId = 1; catId < CATEGORY_COUNT; catId++)
 	{
 		QString aCat;
-		if (!info.name[catId][0]) 
+		if (!info.name[catId][0])
 		{
 			emptyAvailable=catId; continue;
 		}
 		aCat = codec()->toUnicode(info.name[catId]);
-		if (label == aCat) { setCat(catId); return true; }
+		if (label == aCat) { setCategory(catId); return true; }
 	}
 	if (emptyAvailable<0) return false;
-	strlcpy(info.name[emptyAvailable], codec()->fromUnicode(label), 16);
-	setCat(emptyAvailable);
+	strlcpy(info.name[emptyAvailable], codec()->fromUnicode(label), sizeof(info.name[emptyAvailable]) );
+	setCategory(emptyAvailable);
 	return true;
 }
 
@@ -218,7 +186,7 @@ PilotRecord *PilotAppCategory::pack()
 	int len = PilotRecord::APP_BUFFER_SIZE;
 	void* buff = new unsigned char[len];
 	pack_(buff, &len);
-	PilotRecord* rec =  new PilotRecord(buff, len, getAttrib(), getCat(), id());
+	PilotRecord* rec =  new PilotRecord(buff, len, attributes(), category(), id());
 	delete [] (unsigned char*)buff;
 	return rec;
 }

@@ -1249,7 +1249,7 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT<<"2d"<<endl;
-			DEBUGCONDUIT<<"Flags: "<<palmAddr->getAttrib()<<", isDeleted="<<
+			DEBUGCONDUIT<<"Flags: "<<palmAddr->attributes()<<", isDeleted="<<
 				isDeleted(palmAddr)<<", isArchived="<<isArchived(palmAddr)<<endl;
 #endif
 			if (isDeleted(palmAddr))
@@ -1355,7 +1355,7 @@ bool AbbrowserConduit::_deleteAddressee(Addressee &pcAddr, PilotAddress*backupAd
 	if (palmAddr)
 	{
 		if (!syncedIds.contains(palmAddr->id())) syncedIds.append(palmAddr->id());
-		palmAddr->makeDeleted();
+		palmAddr->setDeleted( true );
 		PilotRecord *pilotRec = palmAddr->pack();
 		pilotRec->setDeleted();
 		pilotindex--;
@@ -1367,7 +1367,7 @@ bool AbbrowserConduit::_deleteAddressee(Addressee &pcAddr, PilotAddress*backupAd
 	else if (backupAddr)
 	{
 		if (!syncedIds.contains(backupAddr->id())) syncedIds.append(backupAddr->id());
-		backupAddr->makeDeleted();
+		backupAddr->setDeleted( true );
 		PilotRecord *pilotRec = backupAddr->pack();
 		pilotRec->setDeleted();
 		pilotindex--;
@@ -1408,7 +1408,7 @@ bool AbbrowserConduit::_savePalmAddr(PilotAddress *palmAddr, Addressee &pcAddr)
 	PilotRecord *pilotRec = palmAddr->pack();
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": record with id=" << pilotRec->id()
-		<< " len=" << pilotRec->getLen() << endl;
+		<< " len=" << pilotRec->size() << endl;
 #endif
 	recordid_t pilotId = fDatabase->writeRecord(pilotRec);
 #ifdef DEBUG
@@ -1610,7 +1610,7 @@ void AbbrowserConduit::_copy(PilotAddress *toPilotAddr, Addressee &fromAbEntry)
 	FUNCTIONSETUP;
 	if (!toPilotAddr) return;
 
-	toPilotAddr->setAttrib(toPilotAddr->getAttrib() & ~(dlpRecAttrDeleted));
+	toPilotAddr->setDeleted(false);
 
 	// don't do a reset since this could wipe out non copied info
 	//toPilotAddr->reset();
@@ -1644,9 +1644,13 @@ void AbbrowserConduit::_copy(PilotAddress *toPilotAddr, Addressee &fromAbEntry)
 	toPilotAddr->setCategory(_getCatForHH(fromAbEntry.categories(), toPilotAddr->getCategoryLabel()));
 
 	if (isArchived(fromAbEntry))
-		toPilotAddr->makeArchived();
+	{
+		toPilotAddr->setArchived( true );
+	}
 	else
-		toPilotAddr->setAttrib(toPilotAddr->getAttrib() & ~(dlpRecAttrArchived));
+	{
+		toPilotAddr->setArchived( false );
+	}
 }
 
 
@@ -1748,7 +1752,7 @@ void AbbrowserConduit::_copy(Addressee &toAbEntry, PilotAddress *fromPiAddr)
 	toAbEntry.insertCustom(appString, idString, QString::number(fromPiAddr->id()));
 
 
-	int cat = fromPiAddr->getCat();
+	int cat = fromPiAddr->category();
 	QString category;
 	if (0 < cat && cat <= 15) category = fAddressAppInfo.category.name[cat];
 	_setCategory(toAbEntry, category);

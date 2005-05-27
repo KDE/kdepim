@@ -136,7 +136,7 @@ public:
 	*  to the category list
 	*  @return false if category labels are full
 	*/
-	inline bool setCategory(const QString &label) { return setCat(fAppInfo.category,label); } ;
+	inline bool setCategory(const QString &label) { return PilotAppCategory::setCategory(fAppInfo.category,label); } ;
 
 
 	/**

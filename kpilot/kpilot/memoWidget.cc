@@ -399,7 +399,7 @@ void MemoWidget::slotDeleteMemo()
 	}
 	else
 	{
-		selectedMemo->makeDeleted();
+		selectedMemo->setDeleted(true);
 		writeMemo(selectedMemo);
 	}
 	d->fMemoList.remove(selectedMemo);
@@ -437,7 +437,7 @@ void MemoWidget::updateWidget()
 	while (d->fMemoList.current())
 	{
 		PilotMemo *curr = d->fMemoList.current();
-		if ((curr->getCat() == currentCatID) ||
+		if ((curr->category() == currentCatID) ||
 			(currentCatID == -1))
 		{
 			PilotListItem *p =

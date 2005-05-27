@@ -61,8 +61,8 @@ PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec):P
 		b.allocated = b.used = rec->getLen();
 		unpack_ToDo(&fTodoInfo, &b, todo_v1);
 #else
-		unpack_ToDo(&fTodoInfo, (unsigned char *) rec->getData(),
-			rec->getLen());
+		unpack_ToDo(&fTodoInfo, (unsigned char *) rec->data(),
+			rec->size());
 #endif
 	}
 	(void) pilotTodoEntry_id;
@@ -153,7 +153,7 @@ QString PilotTodoEntry::getTextRepresentation(bool richText)
 
 QString PilotTodoEntry::getCategoryLabel() const
 {
-	return codec()->toUnicode(fAppInfo.category.name[getCat()]);
+	return codec()->toUnicode(fAppInfo.category.name[category()]);
 }
 
 void *PilotTodoEntry::pack_(void *buf, int *len)

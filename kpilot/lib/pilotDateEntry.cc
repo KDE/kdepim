@@ -62,7 +62,7 @@ PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord *
 		unpack_Appointment(&fAppointmentInfo, &b, datebook_v1);
 #else
 		unpack_Appointment(&fAppointmentInfo,
-			(unsigned char *) rec->getData(), rec->getLen());
+			(unsigned char *) rec->data(), rec->size());
 #endif
 	}
 	return;
@@ -273,7 +273,7 @@ QString PilotDateEntry::getTextRepresentation(bool richText)
 
 QString PilotDateEntry::getCategoryLabel() const
 {
-	return codec()->toUnicode(fAppInfo.category.name[getCat()]);
+	return codec()->toUnicode(fAppInfo.category.name[category()]);
 }
 
 void *PilotDateEntry::pack_(void *buf, int *len)

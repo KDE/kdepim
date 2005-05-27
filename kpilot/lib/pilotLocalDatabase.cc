@@ -326,6 +326,7 @@ PilotRecord *PilotLocalDatabase::readRecordByIndex(int index)
 		kdWarning() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
+	kdDebug() << "Index=" << index << " Count=" << recordCount() << endl;
 	if (index >= recordCount())
 		return 0L;
 	PilotRecord *newRecord = new PilotRecord((*d)[index]);
@@ -399,7 +400,7 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 	d->pending = -1;
 	// Should this also check for deleted?
 	while ((d->current < d->size())
-		&& !((*d)[d->current]->isDirty())  && ((*d)[d->current]->id()>0 ))
+		&& !((*d)[d->current]->isModified())  && ((*d)[d->current]->id()>0 ))
 	{
 		d->current++;
 	}
@@ -457,7 +458,7 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 	// written to the database it is dirty.  (You can clean up the database with
 	// resetSyncFlags().)  This will make things get copied twice during a hot-sync
 	// but shouldn't cause any other major headaches.
-	newRecord->setAttrib(newRecord->getAttrib() | dlpRecAttrDirty);
+	newRecord->setModified( true );
 
 	// First check to see if we have this record:
   	if (newRecord->id() != 0)
@@ -525,7 +526,9 @@ int PilotLocalDatabase::resetSyncFlags()
 	}
 	d->pending = -1;
 	for (unsigned int i = 0; i < d->size(); i++)
-		(*d)[i]->setAttrib((*d)[i]->getAttrib() & ~dlpRecAttrDirty);
+	{
+		(*d)[i]->setModified( false );
+	}
 	return 0;
 }
 
@@ -559,7 +562,7 @@ int PilotLocalDatabase::cleanup()
 	Private::Iterator i = d->begin();
 	while ( i!=d->end() )
 	{
-		if ( (*i)->getAttrib() & (dlpRecAttrDeleted|dlpRecAttrArchived) )
+		if ( (*i)->isDeleted() || (*i)->isArchived() )
 		{
 			delete (*i);
 			i = d->erase(i);
@@ -672,9 +675,9 @@ void PilotLocalDatabase::closeDatabase()
 		else
 		{
 			pi_file_append_record(dbFile,
-				(*d)[i]->getData(),
-				(*d)[i]->getLen(),
-				(*d)[i]->getAttrib(), (*d)[i]->category(),
+				(*d)[i]->data(),
+				(*d)[i]->size(),
+				(*d)[i]->attributes(), (*d)[i]->category(),
 				(*d)[i]->id());
 		}
 	}

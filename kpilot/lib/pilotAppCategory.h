@@ -42,26 +42,11 @@
 
 #include "pilotRecord.h"
 
-#define MAX_CATEGORIES	(16)
-
 class QTextCodec;
 
-class KDE_EXPORT PilotAppCategory
+class KDE_EXPORT PilotAppCategory : public PilotRecordBase
 {
 protected:			// Use protected since we will be subclassed
-	int fAttrs;	        // Attributes on this record
-	recordid_t fId;		// The unique ID this record was assigned
-
-	/**
-	* This field stores the category this record belongs to.  It will be
-	* whatever the pilot said it was.  Note that if you change the categories
-	* for the app by calling addCategory or removeCategory in the appInfo_t
-	* class, these fields will become invalid.  We have no way to mark them
-	* invalid automatically though.  If you're going to change category names
-	* in your program, you can't use this field safely.
-	*/
-	int fCategory;		// The category ID this record belongs to
-
 	/**
 	* Pack whatever data the interpreted record holds into the given
 	* buffer, of length @p size; return NULL to indicate failure,
@@ -73,41 +58,35 @@ protected:			// Use protected since we will be subclassed
 
 
 public:
-	PilotAppCategory(void) :
-		fAttrs(0),
-		fId(0),
-		fCategory(0)
-	{} ;
-
-	PilotAppCategory(int a, recordid_t i, int c) :
-		fAttrs(a),
-		fId(i),
-		fCategory(c)
+	PilotAppCategory(int a=0, recordid_t i=0, int c=0) :
+		PilotRecordBase(a,c,i)
 	{} ;
 
 	PilotAppCategory(const PilotRecord* rec) :
-		fAttrs((rec)?rec->getAttrib():0),
-		fId((rec)?rec->id():0),
-		fCategory((rec)?rec->category():0)
+		PilotRecordBase( ((rec)?rec->attributes():0),
+			((rec)?rec->id():0),
+			((rec)?rec->category():0) )
 	{} ;
 
 	PilotAppCategory(const PilotAppCategory &copyFrom) :
-		fAttrs(copyFrom.fAttrs),
-		fId(copyFrom.fId),
-		fCategory(copyFrom.fCategory)
+		PilotRecordBase(copyFrom.attributes(),
+			copyFrom.id(),
+			copyFrom.category() )
 	{} ;
 
 	PilotAppCategory& operator=( const PilotAppCategory &r )
 	{
-		fAttrs = r.fAttrs;
-		fId = r.fId;
-		fCategory = r.fCategory;
+		setAttributes( r.attributes() );
+		setID( r.id() );
+		setCategory( r.category() );
 		return *this;
 	} ;
 
 	bool operator==(const PilotAppCategory &compareTo)
 	{
-		return (fAttrs==compareTo.fAttrs && fId==compareTo.fId && fCategory==compareTo.fCategory);
+		return (attributes() ==compareTo.attributes() &&
+			id() ==compareTo.id() &&
+			category() ==compareTo.category() );
 	} ;
 
 	virtual ~PilotAppCategory(void) {};
@@ -117,25 +96,12 @@ public:
 	*/
 	virtual PilotRecord* pack();
 
-	int getAttrib(void) const { return fAttrs; }
-	int getCat(void) const { return fCategory; }
-	void setCat(int cat) { fCategory = cat; }
-	recordid_t id(void) const { return fId; }
-	recordid_t getID() { return id(); } // Just for compatability's sake
-	recordid_t getID() const { return id(); } // Just for compatability's sake
-	void setID(recordid_t id) { fId = id; }
-	void setAttrib(int attrib) { fAttrs = attrib; }
-
 	virtual QString getTextRepresentation(bool=false) {return i18n("Unknown record type");};
 
-public:
-	bool isSecret() const { return fAttrs & dlpRecAttrSecret ; } ;
-	bool isDeleted() const { return fAttrs & dlpRecAttrDeleted ; } ;
-	bool isArchived() const { return fAttrs & dlpRecAttrArchived ; } ;
-	void makeSecret() { fAttrs |= dlpRecAttrSecret; } ;
-	void makeDeleted() { fAttrs |= dlpRecAttrDeleted ; } ;
-	void makeArchived() { fAttrs |= dlpRecAttrArchived ; } ;
-	bool isModified() const { return fAttrs & dlpRecAttrDirty; }
+	void setCategory( int c) { return PilotRecordBase::setCategory(c); }
+	bool setCategory(struct CategoryAppInfo &info,const QString &label);
+	bool setCat(struct CategoryAppInfo &info,const QString &label) KDE_DEPRECATED
+		{ return setCategory(info,label); }
 
 protected:
 	static QTextCodec *pilotCodec;
@@ -144,28 +110,6 @@ public:
 		{ if (pilotCodec) return pilotCodec; else return setupPilotCodec(QString::null); } ;
 	static QTextCodec *setupPilotCodec(const QString &);
 	static QString codecName();
-
-
-public:
-	bool setCat(struct CategoryAppInfo &info,const QString &label);
-
-	static void dumpCategories(const struct CategoryAppInfo &info)
-	{
-#ifdef DEBUG
-		FUNCTIONSETUP;
-		DEBUGCONDUIT << fname << " lastUniqueId"
-			<< info.lastUniqueID << endl;
-		for (int i = 0; i < 16; i++)
-		{
-			if (!info.name[i][0]) continue;
-			DEBUGCONDUIT << fname << ": " << i << " = "
-				<< info.ID[i] << " <"
-				<< info.name[i] << ">" << endl;
-		}
-#else
-		Q_UNUSED(info);
-#endif
-	}
 };
 
 

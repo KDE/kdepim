@@ -304,9 +304,9 @@ recordid_t PilotSerialDatabase::writeRecord(PilotRecord * newRecord)
 	}
 	success =
 		dlp_WriteRecord(fDBSocket, getDBHandle(),
-		newRecord->getAttrib(), newRecord->id(),
-		newRecord->category(), newRecord->getData(),
-		newRecord->getLen(), &newid);
+		newRecord->attributes(), newRecord->id(),
+		newRecord->category(), newRecord->data(),
+		newRecord->size(), &newid);
 	if ( (newRecord->id() != newid) && (newid!=0) )
 		newRecord->setID(newid);
 	return newid;

@@ -59,7 +59,7 @@ PilotAddress::PilotAddress(struct AddressAppInfo &appInfo,
 	b.allocated = b.used = rec->getLen();
 	if (rec) unpack_Address(&fAddressInfo, &b, address_v1);
 #else
-	if (rec) unpack_Address(&fAddressInfo, (unsigned char *) rec->getData(), rec->getLen());
+	if (rec) unpack_Address(&fAddressInfo, (unsigned char *) rec->data(), rec->size());
 #endif
 	(void) pilotadress_id;
 	_loadMaps();
@@ -264,7 +264,7 @@ QString PilotAddress::getTextRepresentation(bool richText)
 
 QString PilotAddress::getCategoryLabel() const
 {
-	int cat(getCat());
+	int cat(category());
 	if (cat>0) return codec()->toUnicode(fAppInfo.category.name[cat]);
 	else return QString::null;
 }

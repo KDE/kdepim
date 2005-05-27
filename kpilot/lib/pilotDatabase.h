@@ -251,6 +251,11 @@ public:
 	/** For debugging, display all the category names */
 	void dump() const;
 
+	/** For debugging, display category names for the given AppInfo
+	* structure. Called by dump().
+	*/
+	static void dumpCategories(const struct CategoryAppInfo &info);
+
 	/** Gets a single category name. Returns QString::null if there is no
 	* such category number @p i . */
 	QString category(unsigned int i);
@@ -259,7 +264,7 @@ public:
 	* on failure, e.g. the index @p i was out of range or the category name
 	* was invalid. Category names that are too long are truncated to 15 characters.
 	*/
-	bool setCategory(unsigned int i, const QString &s);
+	bool setCategoryName(unsigned int i, const QString &s);
 
 private:
 	struct CategoryAppInfo *fC;
@@ -279,6 +284,7 @@ public:
 		int appLen = MAX_APPINFO_SIZE;
 		unsigned char buffer[MAX_APPINFO_SIZE];
 
+		memset(&fInfo,0,sizeof(fInfo));
 		if (d && d->isDBOpen())
 		{
 			appLen = d->readAppBlock(buffer,appLen);

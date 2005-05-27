@@ -76,14 +76,14 @@ void DBRecordEditor::slotOk()
 	FUNCTIONSETUP;
 	if (KMessageBox::questionYesNo(this, i18n("Changing the record data and flags might corrupt the whole record, or even make the database unusable. Do not change the values unless you are absolutely sure you know what you are doing.\n\nReally assign these new flags?"), i18n("Changing Record"))==KMessageBox::Yes)
 	{
-		int att=rec->getAttrib();
+		int att=rec->attributes();
 #define setFlag(ctrl, flag) if (ctrl->isChecked()) att|=flag; else att &= ~flag;
 		setFlag(fDirty, dlpRecAttrDirty);
 		setFlag(fDeleted, dlpRecAttrDeleted);
 		setFlag(fBusy, dlpRecAttrBusy);
 		setFlag(fSecret, dlpRecAttrSecret);
 		setFlag(fArchived, dlpRecAttrArchived);
-		rec->setAttrib(att);
+		rec->setAttributes(att);
 #undef setFlag
 
 #ifdef USE_KHEXEDIT
@@ -220,7 +220,7 @@ void DBRecordEditor::fillWidgets()
 	fRecordIndex->setText(QString::number(nr));
 	fRecordID->setText(QString::number(rec->id()));
 
-	int att=rec->getAttrib();
+	int att=rec->attributes();
 	fDirty->setChecked(att & dlpRecAttrDirty);
 	fDeleted->setChecked(att & dlpRecAttrDeleted);
 	fBusy->setChecked(att & dlpRecAttrBusy);
@@ -230,8 +230,8 @@ void DBRecordEditor::fillWidgets()
 #ifdef USE_KHEXEDIT
 	if( fRecordDataIf )
 	{
-		int len = rec->getLen();
-		memcpy( fBuffer, rec->getData(), len );
+		int len = rec->size();
+		memcpy( fBuffer, rec->data(), len );
 		fRecordDataIf->setData( fBuffer, len, 4096 );
 		fRecordDataIf->setMaxDataSize( 4096 );
 		fRecordDataIf->setReadOnly( false );

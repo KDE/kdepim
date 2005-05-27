@@ -40,7 +40,7 @@ static const char *pilotMemo_id =
 PilotMemo::PilotMemo(const PilotRecord * rec) : PilotAppCategory(rec)
 {
 	FUNCTIONSETUP;
-	fText = codec()->toUnicode((const char *)(rec->getData()),rec->getLen());
+	fText = codec()->toUnicode((const char *)(rec->data()),rec->size());
 	(void) pilotMemo_id;
 }
 
@@ -56,7 +56,7 @@ PilotRecord *PilotMemo::pack()
 	char *buf = new char[fText.length() + 8];
 	int len = fText.length() + 8;
 	pack_(buf,&len);
-	PilotRecord *r = new PilotRecord(buf, len, getAttrib(), getCat(), id());
+	PilotRecord *r = new PilotRecord(buf, len, attributes(), category(), id());
 	delete[] buf;
 	return r;
 }

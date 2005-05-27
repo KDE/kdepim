@@ -141,8 +141,6 @@ void TodoWidget::showComponent()
 #endif
 
 	fTodoDB = new PilotLocalDatabase(dbPath(), CSL1("ToDoDB"));
-	unsigned char buffer[PilotRecord::APP_BUFFER_SIZE];
-	int appLen;
 
 	fTodoList.clear();
 
@@ -313,7 +311,7 @@ void TodoWidget::updateWidget()
 	{
 		todo=fTodoList.current();
 		if ((currentCatID == -1) ||
-			(todo->getCat() == currentCatID))
+			(todo->category() == currentCatID))
 		{
 			QString title = todo->getDescription();
 
@@ -446,7 +444,7 @@ void TodoWidget::slotAddRecord(PilotTodoEntry * todo)
 		fTodoAppInfo->categoryInfo(), true);
 
 
-	todo->setCat(currentCatID);
+	todo->PilotAppCategory::setCategory(currentCatID);
 	fTodoList.append(todo);
 	writeTodo(todo);
 	// TODO: Just add the new record to the lists
@@ -513,7 +511,7 @@ void TodoWidget::slotDeleteRecord()
 			i18n("Delete Record?")) == KMessageBox::No)
 		return;
 
-	selectedRecord->makeDeleted();
+	selectedRecord->setDeleted(true);
 	writeTodo(selectedRecord);
 	emit(recordChanged(selectedRecord));
 	showComponent();

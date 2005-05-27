@@ -144,7 +144,7 @@ void Memofiles::load (bool loadAll)
 
 	for ( memofile = _memofiles.first(); memofile; memofile = _memofiles.next() ) {
 		if (! memofile->fileExists()) {
-			memofile->makeDeleted();
+			memofile->setDeleted( true );
 		}
 	}
 }
@@ -357,7 +357,7 @@ Memofile * Memofiles::find (recordid_t id)
 	Memofile * memofile;
 
 	for ( memofile = _memofiles.first(); memofile; memofile = _memofiles.next() ) {
-		if ( memofile->getID() == id) {
+		if ( memofile->id() == id) {
 			return memofile;
 		}
 	}
@@ -388,7 +388,7 @@ void Memofiles::deleteMemo(PilotMemo * memo)
 	if (! memo->isDeleted())
 		return;
 
-	Memofile * memofile = find(memo->getID());
+	Memofile * memofile = find(memo->id());
 	if (memofile) {
 		memofile->deleteFile();
 		_memofiles.remove(memofile);
@@ -407,10 +407,10 @@ void Memofiles::addModifiedMemo (PilotMemo * memo)
 	}
 
 	QString debug = CSL1(": adding a PilotMemo. id: [")
-	                + QString::number(memo->getID()) + CSL1("], title: [")
+	                + QString::number(memo->id()) + CSL1("], title: [")
 	                + memo->getTitle() + CSL1("]. ");
 
-	Memofile * memofile = find(memo->getID());
+	Memofile * memofile = find(memo->id());
 
 	if (NULL == memofile) {
 		_countNewToLocal++;
@@ -431,7 +431,7 @@ void Memofiles::addModifiedMemo (PilotMemo * memo)
 	<< debug << endl;
 #endif
 
-	memofile = new Memofile(memo, _categories[memo->getCat()], filename(memo), _baseDirectory);
+	memofile = new Memofile(memo, _categories[memo->category()], filename(memo), _baseDirectory);
 	memofile->setModifiedByPalm(true);
 	_memofiles.append(memofile);
 
@@ -501,8 +501,8 @@ bool Memofiles::saveMemoMetadata()
 	for ( memofile = _memofiles.first(); memofile; memofile = _memofiles.next() ) {
 		// don't save deleted memos to our id file
 		if (! memofile->isDeleted()) {
-			stream  << memofile->getID() << FIELD_SEP
-			<< memofile->getCat() << FIELD_SEP
+			stream  << memofile->id() << FIELD_SEP
+			<< memofile->category() << FIELD_SEP
 			<< memofile->lastModified() << FIELD_SEP
 			<< memofile->size() << FIELD_SEP
 			<< memofile->filename()

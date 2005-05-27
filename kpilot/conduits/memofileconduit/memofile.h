@@ -58,18 +58,18 @@ class Memofile : public PilotMemo
 		Memofile(PilotMemo * memo, QString categoryName, QString fileName, QString baseDirectory);
 		Memofile(recordid_t id, int category, uint lastModifiedTime, uint size, QString categoryName, QString filename, QString baseDirectory);
 		Memofile(int category, QString categoryName, QString fileName, QString baseDirectory);
-		
+
 		uint lastModified() const { return _lastModified; } ;
 		uint size() const { return _size; } ;
 
 		void setModifiedByPalm(bool mod) { _modifiedByPalm = mod; } ;
 		void setModified(bool modified) { _modified = modified; } ;
-		
+
 		bool isModified(void);
 		bool isModifiedByPalm() { return _modifiedByPalm; } ;
 		bool isLoaded(void) { return (! text().isEmpty()); } ;
 		bool isNew(void) { return _new; } ;
-		
+
 		bool load();
 
 		bool fileExists() { return QFile::exists(filenameAbs()); } ;
@@ -80,7 +80,7 @@ class Memofile : public PilotMemo
 		bool deleteFile();
 
 		QString toString() {
-			return CSL1("id: [") + QString::number(getID())
+			return CSL1("id: [") + QString::number(id())
 					+ CSL1("], category:[") + _categoryName
 					+ CSL1("], filename: [") + _filename + CSL1("]");
 		} ;
@@ -92,13 +92,13 @@ class Memofile : public PilotMemo
 		bool saveFile();
 		bool isModifiedByTimestamp();
 		bool isModifiedBySize();
-		
+
 		QString filenameAbs() { return dirName() + filename(); } ;
 		QString dirName() { return _baseDirectory + QDir::separator() + _categoryName + QDir::separator(); } ;
 		bool setCategory(const QString &label);
 		uint getFileLastModified();
 		uint getFileSize();
-		
+
 		bool _modifiedByPalm;
 		bool _modified;
 		bool _new;

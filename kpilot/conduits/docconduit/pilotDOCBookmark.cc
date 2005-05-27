@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -50,9 +50,9 @@ PilotDOCBookmark::PilotDOCBookmark(PilotRecord * rec):PilotAppCategory(rec)
 {
 	if (rec)
 	{
-		strncpy(&bookmarkName[0], (char *) rec->getData(), 16);
+		strncpy(&bookmarkName[0], (char *) rec->data(), 16);
 		bookmarkName[16]='\0';
-		pos = get_long(&rec->getData()[16]);// << 8 + (rec->getData())[17];
+		pos = get_long(&rec->data()[16]);// << 8 + (rec->getData())[17];
 	}
 	(void) pilotDOCBookmark_id;
 }

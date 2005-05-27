@@ -45,11 +45,102 @@ struct pi_buffer_t;
 #include <pi-dlp.h>
 #include <pi-file.h>
 
+#define CATEGORY_NAME_SIZE 16 // (sizeof(((struct CategoryAppInfo *)0)->name[0]))
+#define CATEGORY_COUNT     16 // ( (sizeof(((struct CategoryAppInfo *)0)->name)) / CATEGORY_NAME_SIZE )
+
+
+/** All entriesin the Handheld -- whether interpreted or binary blobs --
+* have some common characteristics, viz. an ID number, a category,
+* and some attributes defined by the handheld. PilotRecordBase is
+* a common base class collecting methods to manipulate those
+* common characteristics.
+*/
+class KDE_EXPORT PilotRecordBase
+{
+public:
+	PilotRecordBase(int attrib=0, int cat=0, recordid_t id=0) :
+		fAttrib(attrib),fCat(cat),fID(id) {}
+
+	/** Attributes of this record (deleted, secret, ...); it's a bitfield. */
+	inline int   attributes() const { return fAttrib; }
+	/** Set the attributes of this record. */
+	inline void  setAttributes(int attrib) { fAttrib = attrib; }
+	int getAttrib() const KDE_DEPRECATED { return attributes(); }
+	void setAttrib(int attrib) KDE_DEPRECATED { setAttributes(attrib); }
+
+	/** Returns the category number (0..15) of this record. */
+	int   category() const { return fCat; }
+	/** Sets the category number (0..15) of this record. Trying to set an illegal
+	* category number files this one under "Unfiled" (which is 0).
+	*/
+	void  setCategory(int cat) { if ( (cat<0) || (cat>=CATEGORY_COUNT)) cat=0; fCat = cat; }
+	int   getCat() const KDE_DEPRECATED { return category(); }
+	void  setCat(int cat) KDE_DEPRECATED { return setCategory(cat); }
+
+	/** Returns the record ID for this record. Record IDs are unique for a given
+	* handheld and database.
+	*/
+	inline recordid_t id() const { return fID; }
+	/** Sets the record ID for this record. Use with caution -- you ca confuse
+	* the handheld by doing weird things here.
+	*/
+	void setID(recordid_t id) { fID = id; }
+	recordid_t getID() const KDE_DEPRECATED { return id(); }
+
+	/** Accessor for one bit of the record's attributes. Is this record marked
+	* deleted (on the handheld) ? Deleted records are not removed from the
+	* database until a HotSync is done (which normally calls purge deleted
+	* or so to really get rid of the records from storage.
+	*/
+	inline bool isDeleted() const { return fAttrib & dlpRecAttrDeleted; };
+	/** Accessor for one bit of the record's attributes. Is this record secret?
+	* Secret records are not displayed on the desktop by default.
+	*/
+	inline bool isSecret() const { return fAttrib & dlpRecAttrSecret; } ;
+	/** Accessor for one bit of the record's attributes. Is this record a
+	* to-be-archived record? When a record is deleted, it may be marked
+	* as "archive on PC" which means the PC should keep a copy. The
+	* PC data correspondng to an archived-but-deleted record must not
+	* be deleted.
+	*/
+	inline bool isArchived() const { return fAttrib & dlpRecAttrArchived; } ;
+	/** Accessor for one bit of the record's attributes. Is this record modified?
+	* Modified records are those that have been modified since the last HotSync.
+	*/
+	inline bool isModified() const { return fAttrib & dlpRecAttrDirty; }
+	inline bool isDirty() const KDE_DEPRECATED { return isModified(); } ;
+
+#define SETTER(a) {\
+		if (d) { fAttrib |= a; } \
+		else   { fAttrib &= ~a; } }
+
+	/** Mark a record as deleted (or not).*/
+	inline void setDeleted(bool d=true) SETTER(dlpRecAttrDeleted)
+
+	/** Mark a record as secret (or not). */
+	inline void setSecret(bool d=true) SETTER(dlpRecAttrSecret)
+
+	/** Mark a record as archived (or not). */
+	inline void setArchived(bool d=true) SETTER(dlpRecAttrArchived)
+
+	/** Mark a record as modified (or not). */
+	inline void setModified(bool d=true) SETTER(dlpRecAttrDirty)
+
+	void makeDeleted() KDE_DEPRECATED { setDeleted(true); }
+	void makeSecret() KDE_DEPRECATED { setSecret(true); }
+	void makeArchived() KDE_DEPRECATED { setArchived(true); }
+#undef SETTER
+
+private:
+	int fAttrib, fCat;
+	recordid_t fID;
+} ;
+
 /** An "uninterpreted" representation of the bits comprising a HH record.
 * This class maintains a created and deleted count which can be requested
 * using allocationInfo().
 */
-class KDE_EXPORT PilotRecord
+class KDE_EXPORT PilotRecord : public PilotRecordBase
 {
 public:
 	/** Constructor. Using the given @p data and @p length, create
@@ -68,8 +159,10 @@ public:
 	* (In practice, this just saves copying around extra buffers).
 	*/
 	PilotRecord(pi_buffer_t *buf, int attrib, int cat, recordid_t uid) :
-		fData((char *)buf->data),fLen(buf->used),fAttrib(attrib),
-		fCat(cat),fID(uid),fBuffer(buf)
+		PilotRecordBase(attrib,cat,uid),
+		fData((char *)buf->data),
+		fLen(buf->used),
+		fBuffer(buf)
 	{ fAllocated++; }
 #endif
 
@@ -92,22 +185,24 @@ public:
 	*
 	* @see setData
 	*/
-	char *getData() const
+	char *data() const
 	{
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 		if (fBuffer) return (char *)(fBuffer->data); else
 #endif
 		return fData;
 	}
+	char *getData() const KDE_DEPRECATED { return data(); }
 
-	/** Returns the length of the data for this record. */
-	int getLen() const
+	/** Returns the size of the data for this record. */
+	int size() const
 	{
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 		if (fBuffer) return fBuffer->used; else
 #endif
 		return fLen;
 	}
+	int getLen() const KDE_DEPRECATED { return size(); }
 
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	/** Returns the data buffer associated with this record. */
@@ -120,7 +215,8 @@ public:
 	{
 		if (fBuffer) { pi_buffer_free(fBuffer); }
 		else { delete[] fData; } ;
-		fData = 0L;
+		fData = (char *)b->data;
+		fLen = b->used;
 		fBuffer = b;
 	}
 #endif
@@ -137,49 +233,19 @@ public:
 	/** Sets the data for this record. Makes a copy of the data buffer. */
 	void setData(const char* data, int len);
 
-
-	inline int   getAttrib() const { return fAttrib; }
-	inline void  setAttrib(int attrib) { fAttrib = attrib; }
-
-	int   category() const { return fCat; }
-	void  setCategory(int cat) { fCat = cat; }
-	int   getCat() const KDE_DEPRECATED;
-	void  setCat(int cat) KDE_DEPRECATED;
-
-	inline recordid_t id() const { return fID; }
-	recordid_t getID() const KDE_DEPRECATED;
-	void setID(recordid_t id) { fID = id; }
-
 private:
 	char* fData;
 	int   fLen;
-	int   fAttrib;
-	int   fCat;
-	recordid_t fID;
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	pi_buffer_t *fBuffer;
 #endif
 
 public:
-	inline bool isDeleted() const { return fAttrib & dlpRecAttrDeleted; };
-	inline bool isSecret() const { return fAttrib & dlpRecAttrSecret; } ;
-	inline bool isArchived() const { return fAttrib & dlpRecAttrArchived; } ;
-	inline bool isDirty() const { return fAttrib & dlpRecAttrDirty; } ;
-	inline void setDeleted(bool d=true) {
-		if (d) { fAttrib |= dlpRecAttrDeleted; }
-		else   { fAttrib &= ~dlpRecAttrDeleted; } }
-	inline void setSecret(bool s=true) {
-		if (s) { fAttrib |= dlpRecAttrSecret; }
-		else   { fAttrib &= ~dlpRecAttrSecret; } }
-	void makeDeleted() KDE_DEPRECATED;
-	void makeSecret() KDE_DEPRECATED;
-
 	/**
 	* This is an interface for tracking down memory leaks
 	* in the use of PilotRecords (for those without valgrind).
 	* Count the number of allocations and deallocations.
 	*/
-public:
 	static void allocationInfo();
 private:
 	static int fAllocated,fDeleted;

@@ -133,7 +133,7 @@ int PilotAppInfoBase::findCategory(const QString &selectedCategory,
 	FUNCTIONSETUP;
 
 	int currentCatID = -1;
-	for (int i=0; i<MAX_CATEGORIES; i++)
+	for (int i=0; i<CATEGORY_COUNT; i++)
 	{
 		if (!info->name[i][0]) continue;
 		if (selectedCategory ==
@@ -161,17 +161,29 @@ int PilotAppInfoBase::findCategory(const QString &selectedCategory,
 	return currentCatID;
 }
 
-void PilotAppInfoBase::dump() const
+void PilotAppInfoBase::dumpCategories(const struct CategoryAppInfo &info)
 {
-	PilotAppCategory::dumpCategories(*categoryInfo());
+#ifdef DEBUG
+	FUNCTIONSETUP;
+	DEBUGCONDUIT << fname << " lastUniqueId"
+		<< info.lastUniqueID << endl;
+	for (int i = 0; i < 16; i++)
+	{
+		if (!info.name[i][0]) continue;
+		DEBUGCONDUIT << fname << ": " << i << " = "
+			<< info.ID[i] << " <"
+			<< info.name[i] << ">" << endl;
+	}
+#else
+	Q_UNUSED(info);
+#endif
 }
 
-// Eww. I don't know how to cleanly get the size of a field of
-// a structure otherwise. Both of these constants _should_ be
-// 16, which is checked in one of the test programs.
-//
-#define CATEGORY_NAME_SIZE (sizeof(((struct CategoryAppInfo *)0)->name[0]))
-#define CATEGORY_COUNT     ( (sizeof(((struct CategoryAppInfo *)0)->name)) / CATEGORY_NAME_SIZE )
+void PilotAppInfoBase::dump() const
+{
+	dumpCategories(*categoryInfo());
+}
+
 
 QString PilotAppInfoBase::category(unsigned int i)
 {
@@ -179,7 +191,7 @@ QString PilotAppInfoBase::category(unsigned int i)
 	return PilotAppCategory::codec()->toUnicode(categoryInfo()->name[i],CATEGORY_NAME_SIZE-1);
 }
 
-bool PilotAppInfoBase::setCategory(unsigned int i, const QString &s)
+bool PilotAppInfoBase::setCategoryName(unsigned int i, const QString &s)
 {
 	if (i>=CATEGORY_COUNT) return false;
 	int len = CATEGORY_NAME_SIZE - 1;

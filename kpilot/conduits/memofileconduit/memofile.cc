@@ -32,9 +32,9 @@ Memofile::Memofile(PilotMemo * memo, QString categoryName, QString fileName, QSt
 {
 	_lastModified = 0;
 	_size = 0;
-	setAttrib(memo->getAttrib());
-	setCat(memo->getCat());
-	setID(memo->getID());
+	setAttributes(memo->attributes());
+	PilotAppCategory::setCategory(memo->category());
+	setID(memo->id());
 	_modified = _modifiedByPalm = false;
 }
 
@@ -44,7 +44,7 @@ Memofile::Memofile(recordid_t id, int category, uint lastModifiedTime, uint size
 		_filename(fileName),_baseDirectory(baseDirectory)
 {
 	setID(id);
-	setCat(category);
+	PilotAppCategory::setCategory(category);
 	_lastModified = lastModifiedTime;
 	_size = size;
 	_modified = _modifiedByPalm = false;
@@ -56,7 +56,7 @@ Memofile::Memofile(int category, QString categoryName, QString fileName, QString
 {
 	setID(0);
 	_new = true;
-	setCat(category);
+	PilotAppCategory::setCategory(category);
 	_modified = true;
 	_modifiedByPalm = false;
 	_lastModified = 0;
@@ -110,13 +110,12 @@ bool Memofile::load()
 	return true;
 }
 
-void Memofile::setID(recordid_t id)
+void Memofile::setID(recordid_t i)
 {
-	if (id != getID())
+	if (i != id())
 		_modifiedByPalm = true;
 
-	PilotMemo::setID(id);
-
+	PilotMemo::setID(i);
 }
 
 bool Memofile::save()

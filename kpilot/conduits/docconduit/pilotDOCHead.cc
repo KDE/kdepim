@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -52,7 +52,7 @@ spare(0), storyLen(0), numRecords(0), recordSize(textRecordSize), position(0)
 */
 PilotDOCHead::PilotDOCHead(PilotRecord * rec):PilotAppCategory(rec)
 {
-	unpack((const void *) rec->getData());
+	unpack((const void *) rec->data());
 }
 
 

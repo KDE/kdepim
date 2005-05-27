@@ -27,6 +27,11 @@
 */
 
 #include "options.h"
+<<<<<<< .mine
+
+#include <qstringlist.h>
+
+=======
 
 #include <kaboutdata.h>
 #include <kapplication.h>
@@ -34,6 +39,7 @@
 #include <klocale.h>
 #include <kcmdlineargs.h>
 
+>>>>>>> .r418479
 #include "pilotLocalDatabase.h"
 #include "pilotRecord.h"
 #include "pilotMemo.h"
@@ -139,6 +145,60 @@ int checkDatabase(const char *path, recordInfo *info)
 	return 0;
 }
 
+const char *categoryNames[4] =
+{
+	"aardvarks",
+	"toolongToBeaCategoryName",
+	"personal",
+	"impersonal"
+} ;
+
+QStringList listCategories()
+{
+	QStringList cats;
+	PilotLocalDatabase *l = new PilotLocalDatabase(SOURCE "/data/MemoDB");
+	PilotMemoInfo *m = new PilotMemoInfo(l);
+
+	if (!l->isDBOpen()) return cats;
+
+	cats.append(CSL1("Unfiled"));
+	m->dump();
+
+	for (int i=0; i<20; i++)
+	{
+		PilotRecord *r = l->readRecordByIndex(i);
+		kdDebug() << "Read record " << (void *)r << " with id=" << r->id() << endl;
+		if (!r) break;
+	}
+
+	for (int i=0; i<4; i++)
+	{
+		QString s = m->category(i);
+		kdDebug() << "Category " << i << ": " << (s.isEmpty() ? CSL1("<empty>") : s) << endl;
+		cats.append(s);
+/*
+		if (i<((sizeof(categoryNames) / sizeof(categoryNames[0]))))
+			m->setCategory(i,QString::fromLatin1(categoryNames[i]));
+*/
+	}
+
+	m->write(l);
+
+	delete m;
+	delete l;
+
+	return cats;
+}
+
+int checkCategories()
+{
+	QStringList l = listCategories();
+	QStringList m = listCategories();
+
+	if (l.isEmpty() || m.isEmpty()) return 1;
+	if (l!=m) return 1;
+	return 0;
+}
 
 struct { const char *path; recordInfo *info; } tests[] = {
 	{ "/tmp/nonexistant/nonexistent", nonexistent },
@@ -203,6 +263,9 @@ int main(int argc, char **argv)
 	debug_level=4;
 #endif
 
+	Q_UNUSED(argc);
+	Q_UNUSED(argv);
+
 	while ( tests[i].path )
 	{
 		kdDebug() << "*** Test " << i << endl;
@@ -213,10 +276,21 @@ int main(int argc, char **argv)
 		i++;
 	}
 
+<<<<<<< .mine
+	kdDebug() << "*** Test " << i << endl;
+	if (checkCategories())
+	{
+		kdDebug() << "* Category list changed!" << endl;
+		r++;
+	}
+	i++;
+
+=======
 	kdDebug() << "*** Test " << i << endl;
 	if (checkMemo()) r++;
 	i++;
 
+>>>>>>> .r418479
 	if (r)
 	{
 		kdDebug() << "***\n*** Failed " << r << " tests." << endl;

@@ -13,6 +13,14 @@ TODO: provide template-based, interpreted databases much like the
 TODO: give the knotes conduit a decent test mode.
 TODO: only re-write a local database if it is changed.
 
+2005-05-27  Adriaan de Groot
+* Start of the PIM meeting! Way!
+* Committed some critical data-loss fixes yesterday. Too late for the KDE 3.4.1 release.
+  Argh. I think it would have been better not to touch BRANCH at all and leave it
+  at the same buggy state as in KDE 3.4.0
+* Fairly large-scale deprecation of functions in lib/, finally factored out the
+  shared attributes/category/id stuff from records and AppCategory objects.
+
 2005-05-22  Adriaan de Groot
 * Gratuitously update the version number, call this one "kind" (Dutch for
   "child", or otherwise short for "kind of liable to eat your data").
