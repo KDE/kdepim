@@ -956,7 +956,9 @@ bool MessageWin::runKMix()
 		// KMix is not already running, so start it
 		if (KApplication::startServiceByDesktopName(QString::fromLatin1(KMIX_APP_NAME), QString::null, &mKMixError, &mKMixName))
 			return false;
-		// Show only its system tray icon
+		// Minimise its window - don't use hide() since this would remove all
+		// trace of it from the panel if it is not configured to be docked in
+		// the system tray.
 		kapp->dcopClient()->send(mKMixName, KMIX_DCOP_WINDOW, "minimize()", QString::null);
 	}
 	return true;
