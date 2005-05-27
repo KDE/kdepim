@@ -45,6 +45,7 @@
 #include <qvaluelist.h>
 #include <qimage.h>
 #include <qdir.h>
+#include <qcstring.h>
 
 extern "C"
 {
@@ -126,7 +127,7 @@ NotepadActionThread::NotepadActionThread(QObject *parent, int pilotSocket) :
 	FUNCTIONSETUP;
 }
 
-/*virtual*/ void NotepadActionThread::run()
+void NotepadActionThread::run()
 {
 	FUNCTIONSETUP;
 
@@ -151,142 +152,69 @@ NotepadActionThread::NotepadActionThread(QObject *parent, int pilotSocket) :
 	QApplication::postEvent(fParent, new QEvent(QEvent::User));
 }
 
-int NotepadActionThread::unpackNotePad(struct NotePad *a, unsigned char *buffer, int len)
-{
-	FUNCTIONSETUP;
-	
-	unsigned char *start = buffer;
-
-	a->createDate.sec = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	a->createDate.min = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	a->createDate.hour = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	a->createDate.day = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	a->createDate.month = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	a->createDate.year = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	
-	a->createDate.s = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	
-	a->changeDate.sec = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	a->changeDate.min = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	a->changeDate.hour = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	a->changeDate.day = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	a->changeDate.month = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	a->changeDate.year = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	
-	a->changeDate.s = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	
-	a->flags = (unsigned short int) get_short(buffer);
-	buffer += 2;
-	
-	if( a->flags & NOTEPAD_FLAG_ALARM ) {
-			a->alarmDate.sec = (unsigned short int) get_short(buffer);
-			buffer += 2;
-			a->alarmDate.min = (unsigned short int) get_short(buffer);
-			buffer += 2;
-			a->alarmDate.hour = (unsigned short int) get_short(buffer);
-			buffer += 2;
-			a->alarmDate.day = (unsigned short int) get_short(buffer);
-			buffer += 2;
-			a->alarmDate.month = (unsigned short int) get_short(buffer);
-			buffer += 2;
-			a->alarmDate.year = (unsigned short int) get_short(buffer);
-			buffer += 2;
-		
-			a->alarmDate.s = (unsigned short int) get_short(buffer);
-			buffer += 2;
-		}
-		
-		if( a->flags & NOTEPAD_FLAG_NAME ) {
-			a->name = strdup((char *) buffer);
-		
-			buffer += strlen( a->name ) + 1;
-				
-			if( (strlen( a->name ) + 1)%2 == 1)
-				++buffer;
-				
-		}
-		else {
-			a->name = NULL;
-		}
-		
-	
-	if( a->flags & NOTEPAD_FLAG_BODY ) {
-			a->body.bodyLen = get_long( buffer );
-			buffer += 4;
-		
-			a->body.width = get_long( buffer );
-			buffer += 4;
-		
-			a->body.height = get_long( buffer );
-			buffer += 4;
-		
-			a->body.l1 = get_long( buffer );
-			buffer += 4;
-		
-			a->body.dataType = get_long( buffer );
-			buffer += 4;
-		
-			a->body.dataLen = get_long( buffer );
-			buffer += 4;
-		
-			a->data = (dataRec_t*)malloc( a->body.dataLen );
-		
-			if( a->data == NULL )
-				return( 0 );
-		
-			memcpy( a->data, buffer, a->body.dataLen );
-		}
-	
-	Q_UNUSED(len);
-	return ( buffer - start );	/* FIXME: return real length */
-}
-
 void NotepadActionThread::saveImage(struct NotePad *n)
 {
 	FUNCTIONSETUP;
 	
-	int datapoints = 0;
-	QImage image(n->body.width+8, n->body.height, 8, 2);
+    int width = n->body.width + 8;    
+    int height = n->body.height;
 	
-	image.setColor(0, qRgb(0xaa, 0xc1 ,0x91) );
-	image.setColor(1, qRgb(0x30, 0x36, 0x29) );
+    QImage image(width, height, 8, 2);
+    
+    if(n->body.dataType == NOTEPAD_DATA_BITS)
+    {
+        image.setColor(0, qRgb(0xaa, 0xc1 ,0x91));
+        image.setColor(1, qRgb(0x30, 0x36, 0x29));
 
-	int x = 0;	
-	int y = 0;
-	int pos = 0;
-	for(unsigned int i=0; i<n->body.dataLen/2; ++i)
-	{
-		datapoints += n->data[i].repeat;
-		for(int j=0; j<n->data[i].repeat; ++j)
-		{
-			for(int k=0; k<8; ++k)
-			{
-				y = pos / 160;
-				x = pos % 160;
-
-				if(n->data[i].data & 1<<(7-k))
-					image.setPixel(x,y,1);
-				else
-		    		image.setPixel(x,y,0);
-				++pos;
-			}
-		}
-	}
-	QString imgname = QString("%1/%2.png").arg(NotepadConduitSettings::outputDirectory()).arg(n->name);
+        int x = 0;  
+        int y = 0;
+        int pos = 0;
+        for(int i=0; i<n->body.dataLen/2; ++i)
+        {
+            for(int j=0; j<n->data[i].repeat; ++j)
+            {
+                for(int k=0; k<8; ++k)
+                {
+				    y = pos / width;
+				    x = pos % width ;
+        
+				    if(n->data[i].data & 1<<(7-k))
+				        image.setPixel(x,y,1);
+				    else
+                        image.setPixel(x,y,0);
+                    ++pos;
+                }
+	       }
+        }      
+    }
+    else if(n->body.dataType == NOTEPAD_DATA_PNG)
+    {
+        image.loadFromData((uchar*)(n->data), n->body.dataLen);
+    }
+    else
+    {
+        // Unknown data type
+#ifdef DEBUG
+    DEBUGCONDUIT << fname << ": Unknown data type: " << n->body.dataType << endl;
+#endif        
+        return;
+    }
+	
+    QString filename(n->name);
+    if(filename.isEmpty())
+    {
+        filename.sprintf("%4d-%02d-%02d_%02d-%02d-%02d",
+                        n->changeDate.year,
+                        n->changeDate.month,
+                        n->changeDate.day,
+                        n->changeDate.hour,
+                        n->changeDate.min,
+                        n->changeDate.sec);
+                
+    }
+    QString imgname = QString("%1/%2.png").arg(NotepadConduitSettings::outputDirectory()).arg(filename);
+    
+    
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Notepad " << imgname << endl;
 #endif
