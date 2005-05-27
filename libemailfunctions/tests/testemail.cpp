@@ -330,6 +330,9 @@ int main(int argc, char *argv[])
   // underscore at the end of local part
   checkIsValidEmailAddress( "matt_@fruitsalad.org", "AddressOk" );
 
+  // how about ( comment ) in the domain part
+  checkIsValidEmailAddress( "matt_@(this is a cool host)fruitsalad.org", "AddressOk" );
+
   // full atext support according to rfc2822
   checkIsValidEmailAddress( "!matt@fruitsalad.org", "AddressOk" );
   checkIsValidEmailAddress( "#matt@fruitsalad.org", "AddressOk" );
