@@ -333,6 +333,9 @@ int main(int argc, char *argv[])
   // how about ( comment ) in the domain part
   checkIsValidEmailAddress( "matt_@(this is a cool host)fruitsalad.org", "AddressOk" );
 
+  // To quote rfc2822 the test below is aesthetically displeasing, but perfectly legal.
+  checkIsValidEmailAddress( "Pete(A wonderful \\) chap) <pete(his account)@silly.test(his host)>", "AddressOk" );
+
   // full atext support according to rfc2822
   checkIsValidEmailAddress( "!matt@fruitsalad.org", "AddressOk" );
   checkIsValidEmailAddress( "#matt@fruitsalad.org", "AddressOk" );
