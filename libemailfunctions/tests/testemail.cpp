@@ -330,6 +330,28 @@ int main(int argc, char *argv[])
   // underscore at the end of local part
   checkIsValidEmailAddress( "matt_@fruitsalad.org", "AddressOk" );
 
+  // full atext support according to rfc2822
+  checkIsValidEmailAddress( "!matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "#matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "$matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "%matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "&matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "'matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "*matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "+matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "/matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "=matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "?matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "^matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "_matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "-matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "`matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "{matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "|matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "}matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "~matt@fruitsalad.org", "AddressOk" );
+
+
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( QString::fromUtf8("test@täst.invalid"), "true" );
@@ -345,6 +367,26 @@ int main(int argc, char *argv[])
   checkIsValidSimpleEmailAddress( "matt-@fibbel.com", "true" );
   checkIsValidSimpleEmailAddress( "matt@fibbel-is-a-geek.com", "true" );
   checkIsValidSimpleEmailAddress( "matt_@fibbel.com", "true" );
+  // Check the defined chars for atext according to rfc2822
+  checkIsValidSimpleEmailAddress( "!matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "#matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "$matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "%matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "&matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "'matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "*matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "+matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "/matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "=matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "?matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "^matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "_matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "-matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "`matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "{matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "|matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "}matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "~matt@fruitsalad.org", "true" );
 
   // check if the pure email address is wrong
   checkIsValidSimpleEmailAddress( "mattfruitsalad.org", "false" );
