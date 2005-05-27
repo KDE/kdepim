@@ -336,6 +336,10 @@ int main(int argc, char *argv[])
   // To quote rfc2822 the test below is aesthetically displeasing, but perfectly legal.
   checkIsValidEmailAddress( "Pete(A wonderful \\) chap) <pete(his account)@silly.test(his host)>", "AddressOk" );
 
+  // quoted pair or not quoted pair
+  checkIsValidEmailAddress( "\"jongel '\\\" fibbel\" <matt@fruitsalad.org>", "AddressOk" );
+  checkIsValidEmailAddress( "\"jongel '\" fibbel\" <matt@fruitsalad.org>", "UnbalancedQuote" );
+
   // full atext support according to rfc2822
   checkIsValidEmailAddress( "!matt@fruitsalad.org", "AddressOk" );
   checkIsValidEmailAddress( "#matt@fruitsalad.org", "AddressOk" );
