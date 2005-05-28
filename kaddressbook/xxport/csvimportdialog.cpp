@@ -233,7 +233,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
           a.setOrganization( value );
           break;
         case Note:
-          a.setNote( value );
+          a.setNote( a.note() + value + "\n" );
           break;
 
         case HomePhone:
@@ -529,7 +529,7 @@ void CSVImportDialog::fillTable()
      case S_QUOTED_FIELD :
       if ( x == mTextQuote ) {
         state = S_MAYBE_END_OF_QUOTED_FIELD;
-      } else if ( x == '\n' ) {
+      } else if ( x == '\n' &&  mTextQuote.isNull() ) {
         setText( row - mStartLine + 1, column, field );
         field = "";
         if ( x == '\n' ) {
