@@ -2190,22 +2190,8 @@ AppearancePageReaderTab::AppearancePageReaderTab( QWidget * parent,
   // Fallback Character Encoding
   QHBoxLayout *hlay = new QHBoxLayout( vlay ); // inherits spacing
   mCharsetCombo = new QComboBox( this );
-  const QStringList &encodings = KMMsgBase::supportedEncodings( false );
-  mCharsetCombo->insertStringList( encodings );
+  mCharsetCombo->insertStringList( KMMsgBase::supportedEncodings( false ) );
 
-  QStringList::ConstIterator it( encodings.begin() );
-  QStringList::ConstIterator end( encodings.end() );
-  const QString &currentEncoding = GlobalSettings::fallbackCharacterEncoding();
-  int i = 0;
-  for( ; it != end; ++it)
-  {
-    if( KGlobal::charsets()->encodingForName(*it) == currentEncoding )
-    {
-      mCharsetCombo->setCurrentItem( i );
-      break;
-    }
-    i++;
-  }
   connect( mCharsetCombo, SIGNAL( activated( int ) ),
            this, SLOT( slotEmitChanged( void ) ) );
 
@@ -2222,7 +2208,10 @@ AppearancePageReaderTab::AppearancePageReaderTab( QWidget * parent,
   // Override Character Encoding
   QHBoxLayout *hlay2 = new QHBoxLayout( vlay ); // inherits spacing
   mOverrideCharsetCombo = new QComboBox( this );
-  readCurrentOverrideCodec();
+  QStringList encodings = KMMsgBase::supportedEncodings( false );
+  encodings.prepend( i18n( "Auto" ) );
+  mOverrideCharsetCombo->insertStringList( encodings );
+  mOverrideCharsetCombo->setCurrentItem(0);
 
   connect( mOverrideCharsetCombo, SIGNAL( activated( int ) ),
            this, SLOT( slotEmitChanged( void ) ) );
@@ -2241,16 +2230,35 @@ AppearancePageReaderTab::AppearancePageReaderTab( QWidget * parent,
 }
 
 
-void AppearancePage::ReaderTab::readCurrentOverrideCodec()
+void AppearancePage::ReaderTab::readCurrentFallbackCodec()
 {
   QStringList encodings = KMMsgBase::supportedEncodings( false );
-  encodings.prepend( i18n( "Auto" ) );
-  mOverrideCharsetCombo->insertStringList( encodings );
-  mOverrideCharsetCombo->setCurrentItem(0);
+  QStringList::ConstIterator it( encodings.begin() );
+  QStringList::ConstIterator end( encodings.end() );
+  const QString &currentEncoding = GlobalSettings::fallbackCharacterEncoding();
+  int i = 0;
+  for( ; it != end; ++it)
+  {
+    if( KGlobal::charsets()->encodingForName(*it) == currentEncoding )
+    {
+      mCharsetCombo->setCurrentItem( i );
+      break;
+    }
+    i++;
+  }
+}
 
+void AppearancePage::ReaderTab::readCurrentOverrideCodec()
+{
+  const QString &currentOverrideEncoding = GlobalSettings::overrideCharacterEncoding();
+  if ( currentOverrideEncoding.isEmpty() ) {
+    mOverrideCharsetCombo->setCurrentItem( 0 );
+    return;
+  }
+  QStringList encodings = KMMsgBase::supportedEncodings( false );
+  encodings.prepend( i18n( "Auto" ) );
   QStringList::Iterator it( encodings.begin() );
   QStringList::Iterator end( encodings.end() );
-  const QString &currentOverrideEncoding = GlobalSettings::overrideCharacterEncoding();
   int i = 0;
   for( ; it != end; ++it)
   {
@@ -2266,6 +2274,7 @@ void AppearancePage::ReaderTab::readCurrentOverrideCodec()
 void AppearancePage::ReaderTab::doLoadFromGlobalSettings()
 {
   mShowEmoticonsCheck->setChecked( GlobalSettings::showEmoticons() );
+  readCurrentFallbackCodec();
   readCurrentOverrideCodec();
 }
 
@@ -2285,7 +2294,9 @@ void AppearancePage::ReaderTab::save() {
   GlobalSettings::setFallbackCharacterEncoding(
       KGlobal::charsets()->encodingForName( mCharsetCombo->currentText() ) );
   GlobalSettings::setOverrideCharacterEncoding(
-      KGlobal::charsets()->encodingForName( mOverrideCharsetCombo->currentText() ) );
+      mOverrideCharsetCombo->currentItem() == 0 ?
+        QString() :
+        KGlobal::charsets()->encodingForName( mOverrideCharsetCombo->currentText() ) );
 }
 
 
