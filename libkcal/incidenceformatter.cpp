@@ -198,16 +198,18 @@ static QString eventViewerFormatAttachments( Incidence *i )
   QString tmpStr;
   Attachment::List as = i->attachments();
   if ( as.count() > 0 ) {
-    tmpStr += "<ul>";
     Attachment::List::ConstIterator it;
     for( it = as.begin(); it != as.end(); ++it ) {
       if ( (*it)->isUri() ) {
-        tmpStr += "<li>";
-        tmpStr += eventViewerAddLink( (*it)->uri(), (*it)->uri() );
-        tmpStr += "</li>";
+        QString name;
+        if ( (*it)->uri().startsWith( "kmail:" ) )
+          name = i18n( "Show mail" );
+        else
+          name = (*it)->uri();
+        tmpStr += eventViewerAddLink( (*it)->uri(), name );
+        tmpStr += "<br>";
       }
     }
-    tmpStr += "</ul>";
   }
   return tmpStr;
 }
@@ -248,53 +250,89 @@ static QString eventViewerFormatEvent( Event *event )
   if ( !event ) return QString::null;
   QString tmpStr( eventViewerAddTag( "h1", event->summary() ) );
 
+  tmpStr += "<table>";
   if ( !event->location().isEmpty() ) {
-    tmpStr += eventViewerAddTag( "b", i18n("Location: ") );
-    tmpStr += event->location();
-    tmpStr += "<br>";
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Location" ) + "</b></td>";
+    tmpStr += "<td>" + event->location() + "</td>";
+    tmpStr += "</tr>";
   }
+
+  tmpStr += "<tr>";
   if ( event->doesFloat() ) {
     if ( event->isMultiDay() ) {
-      tmpStr += i18n("<b>From:</b> %1 <b>To:</b> %2")
+      tmpStr += "<td align=\"right\"><b>Time</b></td>";
+      tmpStr += "<td>" + i18n("<beginTime> - <endTime>","%1 - %2")
                     .arg( event->dtStartDateStr() )
-                    .arg( event->dtEndDateStr() );
+                    .arg( event->dtEndDateStr() ) + "</td>";
     } else {
-      tmpStr += i18n("<b>On:</b> %1").arg( event->dtStartDateStr() );
+      tmpStr += "<td align=\"right\"><b>Date</b></td>";
+      tmpStr += "<td>" + i18n("date as string","%1").arg( event->dtStartDateStr() ) + "</td>";
     }
   } else {
     if ( event->isMultiDay() ) {
-      tmpStr += i18n("<b>From:</b> %1 <b>To:</b> %2")
+      tmpStr += "<td align=\"right\"><b>Time</b></td>";
+      tmpStr += "<td>" + i18n("<beginTime> - <endTime>","%1 - %2")
                     .arg( event->dtStartStr() )
-                    .arg( event->dtEndStr() );
+                    .arg( event->dtEndStr() ) + "</td>";
     } else {
-      tmpStr += i18n("<b>On:</b> %1 <b>From:</b> %2 <b>To:</b> %3")
-                    .arg( event->dtStartDateStr() )
+      tmpStr += "<td align=\"right\"><b>Time</b></td>";
+      tmpStr += "<td>" + i18n("<beginTime> - <endTime>","%1 - %2")
                     .arg( event->dtStartTimeStr() )
-                    .arg( event->dtEndTimeStr() );
+                    .arg( event->dtEndTimeStr() ) + "</td>";
+      tmpStr += "</tr><tr>";
+      tmpStr += "<td align=\"right\"><b>Date</b></td>";
+      tmpStr += "<td>" + i18n("date as string","%1")
+                    .arg( event->dtStartDateStr() ) + "</td>";
     }
   }
+  tmpStr += "</tr>";
+
   if ( event->customProperty("KABC","BIRTHDAY")== "YES" ) {
-    tmpStr+=eventViewerFormatBirthday( event );
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>Birthday</b></td>";
+    tmpStr += "<td>" + eventViewerFormatBirthday( event ) + "</td>";
+    tmpStr += "</tr>";
+    tmpStr += "</table>";
     return tmpStr;
   }
-  if ( !event->description().isEmpty() )
-    tmpStr += eventViewerAddTag( "p", event->description() );
 
-  tmpStr += eventViewerFormatCategories( event );
+  if ( !event->description().isEmpty() ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td></td>";
+    tmpStr += "<td>" + eventViewerAddTag( "p", event->description() ) + "</td>";
+    tmpStr += "</tr>";
+  }
+
+  if ( event->categories().count() > 0 ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Category", "Categories", event->categories().count() )+ "</b></td>";
+    tmpStr += "<td>" + event->categoriesStr() + "</td>";
+    tmpStr += "</tr>";
+  }
 
   if ( event->doesRecur() ) {
     QDateTime dt = event->recurrence()->getNextDateTime(
                                           QDateTime::currentDateTime() );
-    tmpStr += eventViewerAddTag( "p", "<em>" +
-      i18n("This is a recurring event. The next occurrence will be on %1.").arg(
-      KGlobal::locale()->formatDateTime( dt, true ) ) + "</em>" );
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Next Occurence" )+ "</b></td>";
+    tmpStr += "<td>" + KGlobal::locale()->formatDateTime( dt, true ) + "</td>";
+    tmpStr += "</tr>";
   }
 
   tmpStr += eventViewerFormatReadOnly( event );
 
   tmpStr += eventViewerFormatAttendees( event );
-  tmpStr += eventViewerFormatAttachments( event );
 
+  int attachmentCount = event->attachments().count();
+  if ( attachmentCount > 0 ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Attachment", "Attachments", attachmentCount )+ "</b></td>";
+    tmpStr += "<td>" + eventViewerFormatAttachments( event ) + "</td>";
+    tmpStr += "</tr>";
+  }
+
+  tmpStr += "</table>";
   tmpStr += "<p><em>" + i18n( "Creation date: %1.").arg(
     KGlobal::locale()->formatDateTime( event->created() , true ) ) + "</em>";
   return tmpStr;
