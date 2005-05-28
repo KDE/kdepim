@@ -190,3 +190,18 @@ PilotRecord *PilotAppCategory::pack()
 	delete [] (unsigned char*)buff;
 	return rec;
 }
+
+QString PilotAppCategory::fromPilot( const char *c, int len );
+{
+	return codec()->toUnicode(c,len);
+}
+
+int PilotAppCategory::toPilot( const QString &s, char *buf, int len)
+{
+	int used = len;
+	QCString cbuf = codec()->fromUnicode(s,used);
+	memset( buf, 0, len );
+	if (used > len) used=len;
+	memcpy( buf, cbuf.data(), used );
+	return used;
+}

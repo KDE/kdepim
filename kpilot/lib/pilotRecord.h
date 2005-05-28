@@ -7,14 +7,6 @@
 **
 */
 
-/**
-** @file This file defines the class PilotRecord, which is the lowest-
-** denominator representation of the bits used in a Pilot-based
-** database record. The PilotRecord is @em just a collection of
-** bits, nothing more. It can be converted to an interpreted form
-** using some other classes like PilotAppCategory.
-*/
-
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -36,6 +28,12 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+/**
+* @file This file defines the lowest- denominator representation(s)
+*of the bits used in a Pilot-based database record.
+*/
+
+
 #include <time.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -49,7 +47,7 @@ struct pi_buffer_t;
 #define CATEGORY_COUNT     16 // ( (sizeof(((struct CategoryAppInfo *)0)->name)) / CATEGORY_NAME_SIZE )
 
 
-/** All entriesin the Handheld -- whether interpreted or binary blobs --
+/** All entries in the Handheld -- whether interpreted or binary blobs --
 * have some common characteristics, viz. an ID number, a category,
 * and some attributes defined by the handheld. PilotRecordBase is
 * a common base class collecting methods to manipulate those
@@ -58,6 +56,13 @@ struct pi_buffer_t;
 class KDE_EXPORT PilotRecordBase
 {
 public:
+	/** Constructor. Initialize the characteristics to the
+	* given values.
+	* @param attrib Attributes (bitfield) for this entry.
+	* @param cat Category for this entry. Should be between 0 and 16
+	*        (CATEGORY_COUNT), but this is not enforced.
+	* @param id Unique ID for this entry. May be 0 (non-unique) as well.
+	*/
 	PilotRecordBase(int attrib=0, int cat=0, recordid_t id=0) :
 		fAttrib(attrib),fCat(cat),fID(id) {}
 
@@ -137,8 +142,8 @@ private:
 } ;
 
 /** An "uninterpreted" representation of the bits comprising a HH record.
-* This class maintains a created and deleted count which can be requested
-* using allocationInfo().
+* This binary blob only exposes the data via the data() and size() functions,
+* and also exposes the common characteristics of all entries.
 */
 class KDE_EXPORT PilotRecord : public PilotRecordBase
 {
