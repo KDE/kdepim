@@ -398,7 +398,7 @@ void KNNntpClient::doFetchNewHeaders()
   // see RFC 2980 section 2.1.7
   QStrList headerformat;
   cmd = "LIST OVERVIEW.FMT";
-  if (sendCommand( cmd, rep )) {
+  if ( sendCommand( cmd, rep ) && rep == 215 ) {
     QStrList tmp;
     if (getMsg(tmp)) {
       for(QCString s = tmp.first(); s; s = tmp.next()) {
