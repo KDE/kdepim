@@ -173,6 +173,13 @@ class LIBKCAL_EXPORT CalendarResources :
     void load();
 
     /**
+     * Reloads all incidences from all resources.
+     * @par tz The timezone to set.
+     * @return success or failure
+     */
+    bool reload( const QString &tz );
+
+    /**
        Clear out the current Calendar, freeing all used memory etc.
     */
     void close();
@@ -570,6 +577,15 @@ class LIBKCAL_EXPORT CalendarResources :
        @return the list of Alarms occuring before the specified QDateTime.
     */
     Alarm::List alarmsTo( const QDateTime &to );
+
+    /**
+     * Set the viewing time zone, which requires that all resources are saved,
+     * and then reloaded such that the event times are re-interpreted in the new
+     * timezone. Note that the absolute times of events do not change with this.
+     * If you want to change the times of the contents of the resources, use
+     * @ref setTimeZoneId
+     */
+    void setTimeZoneIdViewOnly( const QString& tz );
 
   signals:
     /**

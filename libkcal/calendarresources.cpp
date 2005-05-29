@@ -158,6 +158,14 @@ void CalendarResources::load()
   mOpen = true;
 }
 
+bool CalendarResources::reload( const QString &tz )
+{
+  save();
+  close();
+  setTimeZoneId( tz );
+  load();
+}
+
 void CalendarResources::setStandardDestinationPolicy()
 {
   mDestinationPolicy = mStandardPolicy;
@@ -649,6 +657,11 @@ void CalendarResources::doSetTimeZoneId( const QString &timeZoneId )
   for ( i1 = mManager->begin(); i1 != mManager->end(); ++i1 ) {
     (*i1)->setTimeZoneId( timeZoneId );
   }
+}
+
+void CalendarResources::setTimeZoneIdViewOnly( const QString &timeZoneId )
+{
+  reload( timeZoneId );
 }
 
 CalendarResources::Ticket

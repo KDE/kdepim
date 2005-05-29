@@ -237,6 +237,14 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
     void setTimeZoneId( const QString &timeZoneId );
 
     /**
+     * Set the timezone used for viewing the incidences in this calendar. In
+     * case it differs from the current timezone, shift the events such that they
+     * retain their absolute time (in UTC).
+     * @ref setTimeZoneId
+     */
+    virtual void setTimeZoneIdViewOnly( const QString &timeZoneId ) = 0;
+    
+    /**
        Get the Time Zone ID for the Calendar.
 
        @return the string containg the Time Zone ID.
@@ -280,6 +288,13 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        Sync changes in memory to persistant storage.
     */
     virtual void save() = 0;
+
+    /**
+     * Load the calendar contents from storage. This requires the calendar to have been loaded
+     * once before, in other words initialized.
+     * @par tz The timezone to use for loading.
+     */
+    virtual bool reload( const QString &tz = QString::null ) = 0;
 
     /**
        Determine if the Calendar is currently being saved.

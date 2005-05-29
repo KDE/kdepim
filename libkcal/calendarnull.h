@@ -76,6 +76,8 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
     */
     void save() {}
 
+    bool reload( const QString & ) { return true;}
+    
 // Event Specific Methods //
 
     /**
@@ -293,6 +295,8 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
     */
     void incidenceUpdated( IncidenceBase * /*incidenceBase*/ ) {}
 
+    void setTimeZoneIdViewOnly( const QString& ) {};
+    
   private:
     static CalendarNull *mSelf;
 

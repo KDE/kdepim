@@ -58,6 +58,13 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
     bool load( const QString &fileName, CalFormat *format = 0 );
 
     /**
+     * Reloads the contents of the storage into memory. The associated file name
+     * must be known, in other words a previous load() must have been executed.
+     * @return success or failure
+    */
+    bool reload( const QString &tz );
+
+    /**
       Writes out the calendar to disk in the specified \a format.
       CalendarLocal takes ownership of the CalFormat object.
       @param fileName the name of the file
@@ -177,6 +184,13 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
     Event::List rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false );
 
+    /**
+     * Set the timezone of the calendar to be used for interpreting the events
+     * in the calendar. This requires that the calendar is saved first, so the
+     * user is asked whether he wants to do that, or keep the timezone as is.
+     */
+    void setTimeZoneIdViewOnly( const QString& tz );
+  
   protected:
 
     /** inserts an event into its "proper place" in the calendar. */

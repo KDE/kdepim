@@ -26,6 +26,8 @@
 #include <qptrlist.h>
 
 #include <kdebug.h>
+#include <klocale.h>
+#include <kmessagebox.h>
 
 #include "vcaldrag.h"
 #include "vcalformat.h"
@@ -61,6 +63,17 @@ bool CalendarLocal::load( const QString &fileName, CalFormat *format )
 {
   mFileName = fileName;
   FileStorage storage( this, fileName, format );
+  return storage.load();
+}
+
+bool CalendarLocal::reload( const QString &tz )
+{
+  const QString filename = mFileName;
+  save();
+  close();
+  mFileName = filename;
+  setTimeZoneId( tz );
+  FileStorage storage( this, mFileName );
   return storage.load();
 }
 
@@ -536,4 +549,22 @@ Journal::List CalendarLocal::rawJournalsForDate( const QDate &date )
   }
 
   return journals;
+}
+
+void CalendarLocal::setTimeZoneIdViewOnly( const QString& tz )
+{
+  const QString question( i18n("The timezone setting was changed. In order to display the calendar "
+      "you are looking at in the new timezone, it needs to be saved. Do you want to save the pending "
+      "changes or rather wait and apply the new timezone on the next reload?" ) );
+  int rc = KMessageBox::Yes;
+  if ( isModified() ) {
+    rc = KMessageBox::questionYesNo( 0, question,
+                                       i18n("Save before applying timezones?"),
+                                       KGuiItem(i18n("Save")),
+                                       KGuiItem(i18n("Apply timezone change on next reload")),
+                                       "calendarLocalSaveBeforeTimezoneShift");
+  }
+  if ( rc == KMessageBox::Yes ) {
+    reload( tz );
+  }
 }
