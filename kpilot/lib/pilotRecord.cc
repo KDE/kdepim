@@ -191,7 +191,7 @@ PilotRecord *PilotAppCategory::pack()
 	return rec;
 }
 
-QString PilotAppCategory::fromPilot( const char *c, int len );
+QString PilotAppCategory::fromPilot( const char *c, int len )
 {
 	return codec()->toUnicode(c,len);
 }
