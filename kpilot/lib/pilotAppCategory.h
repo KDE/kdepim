@@ -152,7 +152,7 @@ public:
 	* @param label The label to look for.
 	*/
 	bool setCategory(struct CategoryAppInfo &info,const QString &label);
-	bool setCat(struct CategoryAppInfo &info,const QString &label) KDE_DEPRECATED
+	bool KDE_DEPRECATED setCat(struct CategoryAppInfo &info,const QString &label)
 		{ return setCategory(info,label); }
 
 protected:

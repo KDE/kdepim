@@ -37,6 +37,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <kdemacros.h>
 
 struct pi_buffer_t;
 
@@ -70,8 +71,8 @@ public:
 	inline int   attributes() const { return fAttrib; }
 	/** Set the attributes of this record. */
 	inline void  setAttributes(int attrib) { fAttrib = attrib; }
-	int getAttrib() const KDE_DEPRECATED { return attributes(); }
-	void setAttrib(int attrib) KDE_DEPRECATED { setAttributes(attrib); }
+	int KDE_DEPRECATED getAttrib() const { return attributes(); }
+	void KDE_DEPRECATED setAttrib(int attrib) { setAttributes(attrib); }
 
 	/** Returns the category number (0..15) of this record. */
 	int   category() const { return fCat; }
@@ -79,8 +80,8 @@ public:
 	* category number files this one under "Unfiled" (which is 0).
 	*/
 	void  setCategory(int cat) { if ( (cat<0) || (cat>=CATEGORY_COUNT)) cat=0; fCat = cat; }
-	int   getCat() const KDE_DEPRECATED { return category(); }
-	void  setCat(int cat) KDE_DEPRECATED { return setCategory(cat); }
+	int  KDE_DEPRECATED  getCat() const { return category(); }
+	void KDE_DEPRECATED  setCat(int cat) { return setCategory(cat); }
 
 	/** Returns the record ID for this record. Record IDs are unique for a given
 	* handheld and database.
@@ -90,7 +91,7 @@ public:
 	* the handheld by doing weird things here.
 	*/
 	void setID(recordid_t id) { fID = id; }
-	recordid_t getID() const KDE_DEPRECATED { return id(); }
+	recordid_t KDE_DEPRECATED getID() const { return id(); }
 
 	/** Accessor for one bit of the record's attributes. Is this record marked
 	* deleted (on the handheld) ? Deleted records are not removed from the
@@ -113,7 +114,7 @@ public:
 	* Modified records are those that have been modified since the last HotSync.
 	*/
 	inline bool isModified() const { return fAttrib & dlpRecAttrDirty; }
-	inline bool isDirty() const KDE_DEPRECATED { return isModified(); } ;
+	inline bool KDE_DEPRECATED isDirty() const { return isModified(); } ;
 
 #define SETTER(a) {\
 		if (d) { fAttrib |= a; } \
@@ -131,9 +132,9 @@ public:
 	/** Mark a record as modified (or not). */
 	inline void setModified(bool d=true) SETTER(dlpRecAttrDirty)
 
-	void makeDeleted() KDE_DEPRECATED { setDeleted(true); }
-	void makeSecret() KDE_DEPRECATED { setSecret(true); }
-	void makeArchived() KDE_DEPRECATED { setArchived(true); }
+	void KDE_DEPRECATED makeDeleted() { setDeleted(true); }
+	void KDE_DEPRECATED makeSecret() { setSecret(true); }
+	void KDE_DEPRECATED makeArchived() { setArchived(true); }
 #undef SETTER
 
 private:
@@ -197,7 +198,7 @@ public:
 #endif
 		return fData;
 	}
-	char *getData() const KDE_DEPRECATED { return data(); }
+	char *KDE_DEPRECATED getData() const { return data(); }
 
 	/** Returns the size of the data for this record. */
 	int size() const
@@ -207,7 +208,7 @@ public:
 #endif
 		return fLen;
 	}
-	int getLen() const KDE_DEPRECATED { return size(); }
+	int KDE_DEPRECATED getLen() const { return size(); }
 
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	/** Returns the data buffer associated with this record. */
