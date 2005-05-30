@@ -208,7 +208,19 @@ void CreateDisconnectedImapAccount::apply()
   KPIM::IdentityManager identityManager;
   if ( !identityManager.allEmails().contains( mEmail ) ) {
     // Not sure how to name the identity. First one is "Default", next one mAccountName, but then...
-    KPIM::Identity& identity = identityManager.newFromScratch( mAccountName );
+    // let's use the server name after that.
+    QString accountName = mAccountName;
+    const QStringList identities = identityManager.identities();
+    if ( identities.find( accountName ) != identities.end() ) {
+      accountName = mServer;
+      int i = 2;
+      // And if there's already one, number them
+      while ( identities.find( accountName ) != identities.end() ) {
+        accountName = mServer + " " + QString::number( i++ );
+      }
+    }
+
+    KPIM::Identity& identity = identityManager.newFromScratch( accountName );
     identity.setFullName( mRealName );
     identity.setEmailAddr( mEmail );
     identityManager.commit();
