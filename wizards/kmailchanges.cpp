@@ -121,7 +121,19 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
       KPIM::IdentityManager identityManager;
       if ( !identityManager.allEmails().contains( email ) ) {
         // Not sure how to name the identity. First one is "Default", next one "Kolab", but then...
-        KPIM::Identity& identity = identityManager.newFromScratch( i18n( "Kolab" ) );
+        // let's use the server name after that.
+        QString accountName = i18n( "Kolab" );
+        const QStringList identities = identityManager.identities();
+        if ( identities.find( accountName ) != identities.end() ) {
+          accountName = KolabConfig::self()->server();
+          int i = 2;
+          // And if there's already one, number them
+          while ( identities.find( accountName ) != identities.end() ) {
+            accountName = KolabConfig::self()->server() + " " + QString::number( i++ );
+          }
+        }
+
+        KPIM::Identity& identity = identityManager.newFromScratch( accountName );
         identity.setFullName( KolabConfig::self()->realName() );
         identity.setEmailAddr( email );
         identityManager.commit();
