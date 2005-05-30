@@ -22,10 +22,8 @@
 #define DEBUGDIALOG_H
 
 #include <kdialogbase.h>
-#include <qdom.h>
 
-class KListView;
-class QListViewItem;
+class KTextBrowser;
 
 /**
   A dialog that parses chunks of XML documents and
@@ -60,7 +58,6 @@ class DebugDialog : public KDialogBase
   private slots:
     void clear();
     void save();
-    void contextMenuRequested( QListViewItem*, const QPoint&, int );
 
   protected slots:
     virtual void slotUser1();
@@ -71,12 +68,11 @@ class DebugDialog : public KDialogBase
     static DebugDialog *mSelf;
 
     void addText( const QString&, Type );
-    void addNode( const QString&, Type );
-    void addSubNode( const QDomElement&, QListViewItem *parent );
 
     QStringList mMessages;
+    QStringList mHTMLMessages;
 
-    KListView *mView;
+    KTextBrowser *mView;
 };
 
 #endif

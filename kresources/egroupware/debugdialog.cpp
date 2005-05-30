@@ -21,9 +21,8 @@
 #include <qfile.h>
 #include <qfiledialog.h>
 #include <qlayout.h>
-#include <qpopupmenu.h>
 
-#include <klistview.h>
+#include <ktextbrowser.h>
 #include <kstaticdeleter.h>
 
 #include <stdlib.h>
@@ -41,18 +40,11 @@ DebugDialog::DebugDialog()
   QWidget *page = plainPage();
   QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );
 
-  mView = new KListView( page );
-  mView->addColumn( "" );
-  mView->setFullWidth( true );
-  mView->setRootIsDecorated( true );
-
+  mView = new KTextBrowser( page );
   layout->addWidget( mView );
 
   setButtonText( User1, "Save As..." );
   setButtonText( User2, "Clear" );
-
-  connect( mView, SIGNAL( contextMenuRequested( QListViewItem*, const QPoint&, int ) ),
-           this, SLOT( contextMenuRequested( QListViewItem*, const QPoint&, int ) ) );
 
   clear();
 }
@@ -85,8 +77,6 @@ void DebugDialog::addMessage( const QString &msg, Type type )
 void DebugDialog::clear()
 {
   mView->clear();
-  new QListViewItem( mView, "Communication Protocol" );
-
   mMessages.clear();
 }
 
@@ -118,81 +108,19 @@ void DebugDialog::slotUser2()
 
 void DebugDialog::addText( const QString &text, Type type )
 {
+  QString htmlCode( text );
+  htmlCode.replace( "<", "&lt;" );
+  htmlCode.replace( ">", "&gt;" );
+  htmlCode.replace( "\n", "<br>" );
+
   mMessages.append( text );
+  if ( type == Input )
+    mHTMLMessages.append( "<font color=\"green\">" + htmlCode + "</font>" );
+  else
+    mHTMLMessages.append( "<font color=\"blue\">" + htmlCode + "</font>" );
 
-  addNode( text, type );
-}
-
-void DebugDialog::addNode( const QString &text, Type type )
-{
-  QDomDocument document( "XMLMessage" );
-
-  document.setContent( text );
-
-  QDomElement documentElement = document.documentElement(); 
-
-  QListViewItem *item = new QListViewItem( mView->firstChild(), type == Input ? "Input" : "Output" );
-
-  addSubNode( documentElement, item );
-
-  mView->setOpen( item, true );
-}
-
-void DebugDialog::addSubNode( const QDomElement &parentElement, QListViewItem *parentItem )
-{
-  QDomNode node = parentElement.firstChild();
-  while ( !node.isNull() ) {
-    QDomElement element = node.toElement();
-    if ( !element.isNull() ) {
-      QString name = element.tagName();
-
-      bool hasChildNodes = false;
-      QDomNodeList nodes = element.childNodes();
-      for ( uint i = 0; i < nodes.count(); ++i )
-        if ( !nodes.item( i ).isText() )
-          hasChildNodes = true;
-
-      if ( !hasChildNodes )
-        name += (element.text().isEmpty() ? "" : "( " + element.text() + " )");
-      QListViewItem *item = new QListViewItem( parentItem, name );
-      addSubNode( element, item );
-    }
-
-    node = node.nextSibling();
-  }
-}
-
-void DebugDialog::contextMenuRequested( QListViewItem *item, const QPoint &point, int )
-{
-  QPopupMenu menu( this );
-  menu.insertItem( "Expand Item", 1 );
-  menu.insertItem( "Collaps Item", 2 );
-  switch ( menu.exec( point ) ) {
-    case 1:
-      {
-        QListViewItemIterator it( item );
-        while ( it.current() ) {
-          mView->setOpen( it.current(), true );
-          ++it;
-          if ( it.current() == item->nextSibling() )
-            break;
-        }
-      }
-      break;
-    case 2:
-      {
-        QListViewItemIterator it( item );
-        while ( it.current() ) {
-          mView->setOpen( it.current(), false );
-          ++it;
-          if ( it.current() == item->nextSibling() )
-            break;
-        }
-      }
-      break;
-    default:
-      break;
-  }
+  mView->clear();
+  mView->setText( mHTMLMessages.join( "<br>" ) );
 }
 
 #include "debugdialog.moc"
