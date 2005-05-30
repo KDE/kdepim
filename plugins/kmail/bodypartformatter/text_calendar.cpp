@@ -285,8 +285,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       // First, save it for KOrganizer to handle
       QString dir;
       if ( status == Attendee::Accepted ) dir = "accepted";
-      else if ( status == Attendee::Tentative  ) dir = "accepted";
-      else if ( status == Attendee::Declined ) dir = "tentative";
+      else if ( status == Attendee::Tentative  ) dir = "tentative";
+      else if ( status == Attendee::Declined ) dir = "cancel";
       else return true; // unknown status
 
       saveFile( receiver, iCal, dir );
