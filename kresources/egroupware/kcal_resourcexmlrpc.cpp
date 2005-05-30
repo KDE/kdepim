@@ -1189,6 +1189,7 @@ void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, 
 
   int rights = args[ "rights" ].toInt();
   todo->setReadOnly( !(rights & EGW_ACCESS_EDIT) );
+  setRights( todo, rights );
 }
 
 void ResourceXMLRPC::checkLoadingFinished()
