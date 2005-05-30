@@ -34,13 +34,13 @@
 #include "libkcal/calendarlocal.h"
 #include "libkcal/incidence.h"
 #include "libkcal/resourcecached.h"
+#include "todostatemapper.h"
 
 namespace KXMLRPC {
 class Server;
 }
 
 class Synchronizer;
-class UIDMapper;
 class QTimer;
 
 namespace KCal {
@@ -222,7 +222,8 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
 
     QMap<QString, int> mEventCategoryMap;
     QMap<QString, int> mTodoCategoryMap;
-    QMap<QString, QString> mTodoStateMap;
+
+    TodoStateMapper mTodoStateMapper;
 
     Synchronizer *mSynchronizer;
 

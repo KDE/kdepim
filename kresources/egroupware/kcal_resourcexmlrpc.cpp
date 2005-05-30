@@ -147,6 +147,8 @@ void ResourceXMLRPC::init()
 {
   setType( "xmlrpc" );
 
+  mTodoStateMapper.setPath( "kcal/todostatemap/" );
+
   mPrefs = new EGroupwarePrefs;
   mLoaded = 0;
 
@@ -230,6 +232,8 @@ bool ResourceXMLRPC::doLoad()
   clearChanges();
 
   loadCache();
+  mTodoStateMapper.setIdentifier( type() + "_" + identifier() );
+  mTodoStateMapper.load();
 
   QMap<QString, QVariant> args, columns;
   args.insert( "start", QDateTime( QDate::currentDate().addDays( -12 ) ) );
@@ -303,6 +307,8 @@ bool ResourceXMLRPC::doSave()
 
   if ( counter != 0 )
     mSynchronizer->start();
+
+  mTodoStateMapper.save();
 
   return true;
 }
@@ -711,6 +717,7 @@ void ResourceXMLRPC::deleteTodoFinished( const QValueList<QVariant>&,
                                          const QVariant& id )
 {
   idMapper().removeRemoteId( idMapper().remoteId( id.toString() ) );
+  mTodoStateMapper.remove( idMapper().remoteId( id.toString() ) );
 
   Todo *todo = mCalendar.todo( id.toString() );
   disableChangeNotification();
@@ -1110,19 +1117,9 @@ void ResourceXMLRPC::writeTodo( Todo* todo, QMap<QString, QVariant>& args )
   }
 
   // STATE
-  QString statusDesc = mTodoStateMap[ todo->uid() ];
-  int status = todo->percentComplete();
-  if ( status == 0 )
-    statusDesc = (statusDesc == "offer" ? "offer" : "0%");
-  else if ( status == 50 )
-    statusDesc = (statusDesc == "ongoing" ? "ongoing" : "50%");
-  else if ( status == 100 )
-    if ( statusDesc != "done" && statusDesc != "billed" )
-      statusDesc = "100%";
-  else
-    statusDesc = QString::number( status ) + "%";
-
-  args.insert( "status", statusDesc );
+  QString remoteId = idMapper().remoteId( todo->uid() );
+  QString status = mTodoStateMapper.remoteState( remoteId, todo->percentComplete() );
+  args.insert( "status", status );
 }
 
 void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, QString &uid )
@@ -1185,18 +1182,10 @@ void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, 
 
   // STATE
   QString status = args[ "status" ].toString();
-  mTodoStateMap.insert( uid, status );
+  int state = TodoStateMapper::toLocal( status );
 
-  if ( status == "offer" )
-    todo->setPercentComplete( 0 );
-  else if ( status == "ongoing" )
-    todo->setPercentComplete( 50 );
-  else if ( status == "done" || status == "billed" )
-    todo->setPercentComplete( 100 );
-  else {
-    QString number = status.replace( "%", "" );
-    todo->setPercentComplete( number.toInt() );
-  }
+  mTodoStateMapper.addTodoState( uid, state, status );
+  todo->setPercentComplete( state );
 
   int rights = args[ "rights" ].toInt();
   todo->setReadOnly( !(rights & EGW_ACCESS_EDIT) );

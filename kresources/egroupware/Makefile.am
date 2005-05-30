@@ -25,7 +25,7 @@ libkabc_xmlrpc_la_LIBADD = $(LIB_KIO) -lkabc $(top_builddir)/libkdepim/libkdepim
                            libegwcommon.la
 
 libkcal_xmlrpc_la_SOURCES = kcal_resourcexmlrpc.cpp kcal_resourcexmlrpcconfig.cpp \
-                            kcal_egroupwareprefs.kcfgc
+                            todostatemapper.cpp kcal_egroupwareprefs.kcfgc
 libkcal_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libkcal_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la \
                            $(top_builddir)/libkdepim/libkdepim.la \
