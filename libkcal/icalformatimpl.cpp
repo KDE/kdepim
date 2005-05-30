@@ -2080,12 +2080,10 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
   t.zone = 0;
   t.is_utc = 0;
 
-  if ( mParent->utc() ) {
-    if (mParent->timeZoneId().isEmpty())
-      t = icaltime_as_utc(t, 0);
-    else
-      t = icaltime_as_utc(t,mParent->timeZoneId().utf8());
-  }
+  if (mParent->timeZoneId().isEmpty())
+    t = icaltime_as_utc(t, 0);
+  else
+    t = icaltime_as_utc(t,mParent->timeZoneId().utf8());
 
   return t;
 }
