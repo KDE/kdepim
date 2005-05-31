@@ -78,7 +78,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
 
     //article generation
     // col: group or account
-    KNLocalArticle* newArticle(KNCollection *col, QString &sig, QCString defChset, bool withXHeaders=true);
+    KNLocalArticle* newArticle(KNCollection *col, QString &sig, QCString defChset, bool withXHeaders=true, KNArticle *origPost=0);
 
     //cancel & supersede
     bool cancelAllowed(KNArticle *a);
