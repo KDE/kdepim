@@ -1966,7 +1966,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   connect(e_ditBtn, SIGNAL(clicked()), SLOT(slotEditBtnClicked()));
   xgbL->addWidget(e_ditBtn, 3,1);
 
-  QLabel *placeHolders = new QLabel(i18n("<qt>Placeholders: %NAME=name, %EMAIL=email address</qt>"), xgb);
+  QLabel *placeHolders = new QLabel(i18n("<qt>Placeholders for replies: <b>%NAME</b>=sender's name, <b>%EMAIL</b>=sender's address</qt>"), xgb);
   xgbL->addMultiCellWidget(placeHolders, 5, 5, 0, 1);
 
   i_ncUaCB=new QCheckBox(i18n("Do not add the \"&User-Agent\" identification header"), xgb);
@@ -2173,7 +2173,7 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
   i_ntro=new KLineEdit(replyB);
   replyL->addMultiCellWidget(new QLabel(i_ntro,i18n("&Introduction phrase:"), replyB),1,1,0,1);
   replyL->addMultiCellWidget(i_ntro, 2,2,0,1);
-  replyL->addMultiCellWidget(new QLabel(i18n("Placeholders: %NAME=name, %EMAIL=email address,\n%DATE=date, %MSID=message-id, %GROUP=group name, %L=line break"), replyB),3,3,0,1);
+  replyL->addMultiCellWidget(new QLabel(i18n("<qt>Placeholders: <b>%NAME</b>=sender's name, <b>%EMAIL</b>=sender's address,<br><b>%DATE</b>=date, <b>%MSID</b>=message-id, <b>%GROUP</b>=group name, <b>%L</b>=line break</qt>"), replyB),3,3,0,1);
   connect(i_ntro, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()));
 
   r_ewrapCB=new QCheckBox(i18n("Rewrap quoted te&xt automatically"), replyB);

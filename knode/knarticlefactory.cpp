@@ -118,7 +118,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
 
   //create new article
   QString sig;
-  KNLocalArticle *art=newArticle(g, sig, chset);
+  KNLocalArticle *art=newArticle(g, sig, chset, true, a);
   if(!art)
     return;
 
@@ -786,7 +786,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 }
 
 
-KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QCString defChset, bool withXHeaders)
+KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QCString defChset, bool withXHeaders, KNArticle *origPost)
 {
   KNConfig::PostNewsTechnical *pnt=knGlobals.configManager()->postNewsTechnical();
 
@@ -883,12 +883,18 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
   if(withXHeaders) {
     KNConfig::XHeaders::Iterator it;
     for(it=pnt->xHeaders().begin(); it!=pnt->xHeaders().end(); ++it) {
-      QString name(art->from()->name());
-      if (name.isEmpty())
-        name = QString::fromLatin1(art->from()->email());
       QString value = (*it).value();
-      value.replace(QRegExp("%NAME"), name);
-      value.replace(QRegExp("%EMAIL"), QString::fromLatin1(art->from()->email()));
+      if(origPost) {
+        QString name(origPost->from()->name());
+        if (name.isEmpty())
+          name = QString::fromLatin1(origPost->from()->email());
+        value.replace(QRegExp("%NAME"), name);
+        value.replace(QRegExp("%EMAIL"), QString::fromLatin1(origPost->from()->email()));
+      }
+      else
+        if(value.find("%NAME") != -1 || value.find("%EMAIL") != -1)
+          continue;
+
       art->setHeader( new KMime::Headers::Generic( (QCString("X-")+(*it).name()), art, value, pnt->charset() ) );
     }
   }
