@@ -30,12 +30,12 @@
 
 namespace KCal {
 
-#define QDateTimeList QValueList<QDateTime>
-#define QDateList QValueList<QDate>
-#define QTimeList QValueList<QTime>
+typedef QValueList<QDateTime> DateTimeList;
+typedef QValueList<QDate> DateList;
+typedef QValueList<QTime> TimeList;
 
 
-class Incidence;
+//class Incidence;
 
 /**
   This class represents a recurrence rule for a calendar incidence.
@@ -49,13 +49,18 @@ class LIBKCAL_EXPORT RecurrenceRule
            rDaily, rWeekly, rMonthly, rYearly
          };
     /** structure for describing the n-th weekday of the month/year. */
-    struct WDayPos {
+    class WDayPos {
+    public:
+      WDayPos( int pos = 0 , short day = 0 ) : Day(day),Pos(pos){}
       short Day;  // Weekday, 1=monday, 7=sunday
       int Pos;    // week of the day (-1 for last, 1 for first, 0 for all weeks)
                    // Bounded by -366 and +366, 0 means all weeks in that period
+      bool operator==( const RecurrenceRule::WDayPos &pos2 ) const {
+          return ( Day == pos2.Day ) && ( Pos == pos2.Pos );
+        }
     };
 
-    RecurrenceRule( Incidence *parent/*, int compatVersion = 0*/ );
+    RecurrenceRule( /*Incidence *parent, int compatVersion = 0*/ );
     RecurrenceRule(const RecurrenceRule&);
     ~RecurrenceRule();
 
@@ -63,13 +68,7 @@ class LIBKCAL_EXPORT RecurrenceRule
     bool operator!=( const RecurrenceRule& r ) const  { return !operator==(r); }
     RecurrenceRule &operator=(const RecurrenceRule&);
 
-    Incidence *parent() const { return mParent; }
-    /** Set the calendar file version for backwards compatibility.
-     * @param version is the KOrganizer/libkcal version, e.g. 220 for KDE 2.2.0.
-     * Specify version = 0 to cancel compatibility mode.
-     */
-//     void setCompatVersion(int version = 0);
-
+//     Incidence *parent() const { return mParent; }
 
 
     /** Set if recurrence is read-only or can be changed. */
@@ -118,8 +117,9 @@ class LIBKCAL_EXPORT RecurrenceRule
     /** Sets the total number of times the event is to occur, including both the
      * first and last. */
     void setDuration(int duration);
-    /** Returns the number of recurrences up to and including the date specified. */
-    int durationTo(const QDate &) const;
+// TODO_Recurrence: What to do with float?
+//     /** Returns the number of recurrences up to and including the date specified. */
+//     int durationTo(const QDate &) const;
     /** Returns the number of recurrences up to and including the date/time specified. */
     int durationTo(const QDateTime &) const;
 
@@ -127,50 +127,37 @@ class LIBKCAL_EXPORT RecurrenceRule
 
     /** Returns true if the date specified is one on which the event will
      * recur. */
-    bool recursOnPure(const QDate &qd) const;
+    bool recursOn( const QDate &qd ) const;
     /** Returns true if the date/time specified is one at which the event will
      * recur. Times are rounded down to the nearest minute to determine the result. */
-    bool recursAtPure(const QDateTime &) const;
+    bool recursAt( const QDateTime & ) const;
+    /** Returns true if the date matches the rules. It does not necessarily
+        mean that this is an actual occurrence. In particular, the method does
+        not check if the date is after the end date, or if the interval
+        matches */
+    bool dateMatchesRules( const QDateTime &qdt ) const;
 
 
     /** Returns a list of the times on the specified date at which the
      * recurrence will occur.
      * @param date the date for which to find the recurrence times.
      */
-    QValueList<QTime> recurTimesOn(const QDate &date) const;
+    TimeList recurTimesOn( const QDate &date ) const;
 
 
-    /** Returns the date of the next recurrence, after the specified date.
-     * @param preDate the date after which to find the recurrence.
-     * @param last if non-null, *last is set to true if the next recurrence is the
-     * last recurrence, else false.
-     * Reply = date of next recurrence, or invalid date if none.
-     */
-//     QDate getNextDate(const QDate& preDate, bool* last = 0) const;
     /** Returns the date and time of the next recurrence, after the specified date/time.
      * If the recurrence has no time, the next date after the specified date is returned.
      * @param preDateTime the date/time after which to find the recurrence.
-     * @param last if non-null, *last is set to true if the next recurrence is the
-     * last recurrence, else false.
-     * Reply = date/time of next recurrence, or invalid date if none.
+     * @return date/time of next recurrence, or invalid date if none.
      */
-    QDateTime getNextDate(const QDateTime& preDateTime, bool* last = 0) const;
-    /** Returns the date of the last previous recurrence, before the specified date.
-     * @param afterDate the date before which to find the recurrence.
-     * @param last if non-null, *last is set to true if the previous recurrence is the
-     * last recurrence, else false.
-     * Reply = date of previous recurrence, or invalid date if none.
-     */
-    QDate getPreviousDate(const QDate& afterDate, bool* last = 0) const;
+    QDateTime getNextDate( const QDateTime& preDateTime ) const;
     /** Returns the date and time of the last previous recurrence, before the specified date/time.
      * If a time later than 00:00:00 is specified and the recurrence has no time, 00:00:00 on
      * the specified date is returned if that date recurs.
      * @param afterDateTime the date/time before which to find the recurrence.
-     * @param last if non-null, *last is set to true if the previous recurrence is the
-     * last recurrence, else false.
-     * Reply = date/time of previous recurrence, or invalid date if none.
+     * @return date/time of previous recurrence, or invalid date if none.
      */
-    QDateTime getPreviousDateTime(const QDateTime& afterDateTime, bool* last = 0) const;
+    QDateTime getPreviousDate( const QDateTime& afterDateTime ) const;
 
 
 
@@ -244,12 +231,13 @@ class LIBKCAL_EXPORT RecurrenceRule
         bool isConsistent( PeriodType period ) const;
         bool increase( PeriodType type, int freq );
         QDateTime intervalDateTime( PeriodType type ) const;
-        QDateTimeList dateTimes( PeriodType type ) const;
+        DateTimeList dateTimes( PeriodType type ) const;
         void dump() const;
     };
 
     Constraint getNextValidDateInterval( const QDateTime &preDate, PeriodType type ) const;
-    QDateTimeList datesForInterval( const Constraint &interval, PeriodType type ) const;
+    Constraint getPreviousValidDateInterval( const QDateTime &preDate, PeriodType type ) const;
+    DateTimeList datesForInterval( const Constraint &interval, PeriodType type ) const;
     bool mergeIntervalConstraint( Constraint *merged, const Constraint &conit,
                                   const Constraint &interval ) const;
     bool buildCache() const;
@@ -266,7 +254,7 @@ class LIBKCAL_EXPORT RecurrenceRule
     uint mFrequency;
 
     bool mIsReadOnly;
-    bool mDoesFloat;
+//     bool mDoesFloat;
 
     QValueList<int> mBySeconds;     // values: second 0-59
     QValueList<int> mByMinutes;     // values: minute 0-59
@@ -285,22 +273,15 @@ class LIBKCAL_EXPORT RecurrenceRule
     bool mDirty;
 
     // Cache for duration
-    mutable QDateTimeList mCachedDates;
+    mutable DateTimeList mCachedDates;
     mutable bool mCached;
     mutable QDateTime mCachedDateEnd;
 
-    // Backwards compatibility for KDE < 3.1.
-//     int   mCompatVersion;  // calendar file version for backwards compatibility
-//     short mCompatRecurs;   // original 'recurs' in old calendar format, or rNone
-//     int   mCompatDuration; // original 'rDuration' in old calendar format, or 0
-
-    Incidence *mParent;
+//     Incidence *mParent;
 
     class Private;
     Private *d;
 };
-
-//bool operator==( const RecurrenceRule::WDayPos &pos1, const RecurrenceRule::WDayPos &pos2 );
 
 }
 
