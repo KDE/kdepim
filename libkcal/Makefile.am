@@ -19,7 +19,7 @@ libkcal_la_LIBADD  = versit/libversit.la $(LIB_KIO) \
 libkcal_la_COMPILE_FIRST = ./libical/src/libical/ical.h ./libical/src/libicalss/icalss.h
 libkcal_la_SOURCES = \
 	incidencebase.cpp incidence.cpp journal.cpp todo.cpp event.cpp \
-	freebusy.cpp attendee.cpp attachment.cpp recurrencerule.cpp recurrence.cpp alarm.cpp \
+	freebusy.cpp attendee.cpp attachment.cpp recurrence.cpp alarm.cpp \
 	customproperties.cpp calendar.cpp calendarlocal.cpp \
 	calformat.cpp vcalformat.cpp icalformat.cpp icalformatimpl.cpp \
 	incidenceformatter.cpp \
