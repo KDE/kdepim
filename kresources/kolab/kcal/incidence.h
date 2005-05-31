@@ -101,8 +101,14 @@ public:
   QValueList<Attendee>& attendees();
   const QValueList<Attendee>& attendees() const;
 
-  virtual void setSchedulingID( const QString& sid );
-  virtual QString schedulingID() const;
+  /**
+   * The internal uid is used as the uid inside KOrganizer whenever
+   * two or more events with the same uid appear, which KOrganizer
+   * can't handle. To avoid keep that interal uid from changing all the
+   * time, it is persisted in the XML between a save and the next load.
+   */
+  void setInternalUID( const QString& iuid );
+  QString internalUID() const;
 
   virtual void setRevision( int );
   virtual int revision() const;
@@ -142,7 +148,7 @@ protected:
   Recurrence mRecurrence;
   QValueList<Attendee> mAttendees;
   QValueList<KCal::Attachment*> mAttachments;
-  QString mSchedulingID;
+  QString mInternalUID;
   int mRevision;
 
   struct Custom {
