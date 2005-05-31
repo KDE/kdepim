@@ -171,7 +171,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
 
   private slots:
     /// called if the user clicked on an URL
-    void slotURLClicked( const KURL &url );
+    void slotURLClicked( const KURL &url, bool forceOpen = false );
     /// called if the user RMB clicked on an URL
     void slotURLPopup( const QString &url, const QPoint &point );
 

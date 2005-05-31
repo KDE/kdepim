@@ -1118,7 +1118,7 @@ void ArticleWidget::scrollNext()
 
 
 
-void ArticleWidget::slotURLClicked( const KURL &url )
+void ArticleWidget::slotURLClicked( const KURL &url, bool forceOpen)
 {
   // internal URLs
   if ( url.protocol() == "knode" ) {
@@ -1155,7 +1155,7 @@ void ArticleWidget::slotURLClicked( const KURL &url )
     if ( !c )
       return;
     // TODO: replace with message box as done in KMail
-    if ( knGlobals.configManager()->readNewsViewer()->openAttachmentsOnClick() )
+    if ( forceOpen || knGlobals.configManager()->readNewsViewer()->openAttachmentsOnClick() )
       knGlobals.articleManager()->openContent( c );
     else
       knGlobals.articleManager()->saveContentToFile( c, this );
@@ -1421,7 +1421,7 @@ void ArticleWidget::slotOpenInAddressBook()
 
 void ArticleWidget::slotOpenAttachment()
 {
-  slotURLClicked( mCurrentURL );
+  slotURLClicked( mCurrentURL, true );
 }
 
 void ArticleWidget::slotSaveAttachment()
