@@ -515,10 +515,10 @@ void ArticleWidget::displayErrorMessage( const QString &msg )
   mViewer->write( "</body></html>");
   mViewer->end();
 
-  // mark article as read, typically the article is expired on the server, so its
-  // impossible to read it later anyway.
+  // mark article as read if there is a negative reply from the server
   if ( knGlobals.configManager()->readNewsGeneral()->autoMark() &&
-     mArticle && mArticle->type() == KMime::Base::ATremote && !mArticle->isOrphant() ) {
+       mArticle && mArticle->type() == KMime::Base::ATremote && !mArticle->isOrphant() &&
+       ( msg.find("430") != -1 || msg.find("423") != -1 ) ) {
     KNRemoteArticle::List l;
     l.append( static_cast<KNRemoteArticle*>( mArticle ) );
     knGlobals.articleManager()->setRead( l, true );
