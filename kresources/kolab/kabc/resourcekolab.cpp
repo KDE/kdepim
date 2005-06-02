@@ -77,7 +77,8 @@ extern "C"
 }
 
 static const char* s_kmailContentsType = "Contact";
-static const char* s_attachmentMimeType = "application/x-vnd.kolab.contact";
+static const char* s_attachmentMimeTypeContact = "application/x-vnd.kolab.contact";
+static const char* s_attachmentMimeTypeDistList = "application/x-vnd.kolab.contact.distlist";
 
 KABC::ResourceKolab::ResourceKolab( const KConfig *config )
   : KPIM::ResourceABC( config ),
@@ -172,56 +173,74 @@ QString KABC::ResourceKolab::loadContact( const QString& contactXML, const QStri
 bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
 {
   int count = 0;
-  if ( !kmailIncidencesCount( count, s_attachmentMimeType, subResource ) ) {
-    kdError() << "Communication problem in ResourceKolab::load()\n";
+  if ( !kmailIncidencesCount( count, s_attachmentMimeTypeContact, subResource ) ) {
+    kdError() << "Communication problem in KABC::ResourceKolab::loadSubResource()\n";
     return false;
   }
-  if ( !count )
-    return true;
+  if ( count )
+  {
 
-  // Read that many contacts at a time.
-  // If this number is too small we lose time in kmail.
-  // If it's too big the progressbar is jumpy.
-  const int nbMessages = 200;
+    // Read that many contacts at a time.
+    // If this number is too small we lose time in kmail.
+    // If it's too big the progressbar is jumpy.
+    const int nbMessages = 200;
 
-  (void)Observer::self(); // ensure kio_uiserver is running
-  UIServer_stub uiserver( "kio_uiserver", "UIServer" );
-  int progressId = 0;
-  if ( count > 200 ) {
-    progressId = uiserver.newJob( kapp->dcopClient()->appId(), true );
-    uiserver.totalFiles( progressId, count );
-    uiserver.infoMessage( progressId, i18n( "Loading contacts..." ) );
-    uiserver.transferring( progressId, "Contacts" );
-  }
-
-  for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
-    QMap<Q_UINT32, QString> lst;
-
-    if ( !kmailIncidences( lst, s_attachmentMimeType, subResource, startIndex, nbMessages ) ) {
-      kdError() << "Communication problem in ResourceKolab::load()\n";
-      if ( progressId )
-        uiserver.jobFinished( progressId );
-      return false;
+    (void)Observer::self(); // ensure kio_uiserver is running
+    UIServer_stub uiserver( "kio_uiserver", "UIServer" );
+    int progressId = 0;
+    if ( count > 200 ) {
+      progressId = uiserver.newJob( kapp->dcopClient()->appId(), true );
+      uiserver.totalFiles( progressId, count );
+      uiserver.infoMessage( progressId, i18n( "Loading contacts..." ) );
+      uiserver.transferring( progressId, "Contacts" );
     }
 
-    for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
-      loadContact( it.data(), subResource, it.key() );
-    }
-    if ( progressId ) {
-      uiserver.processedFiles( progressId, startIndex );
-      uiserver.percent( progressId, 100 * startIndex / count );
-    }
+    for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
+      QMap<Q_UINT32, QString> lst;
+
+      if ( !kmailIncidences( lst, s_attachmentMimeTypeContact, subResource, startIndex, nbMessages ) ) {
+        kdError() << "Communication problem in ResourceKolab::load()\n";
+        if ( progressId )
+          uiserver.jobFinished( progressId );
+        return false;
+      }
+
+      for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+        loadContact( it.data(), subResource, it.key() );
+      }
+      if ( progressId ) {
+        uiserver.processedFiles( progressId, startIndex );
+        uiserver.percent( progressId, 100 * startIndex / count );
+      }
 
 //    if ( progress.wasCanceled() ) {
 //      uiserver.jobFinished( progressId );
 //      return false;
 //    }
+    }
+    kdDebug(5650) << "Contacts kolab resource: got " << count << " contacts in " << subResource << endl;
+
+    if ( progressId )
+      uiserver.jobFinished( progressId );
   }
 
-  kdDebug(5650) << "Contacts kolab resource: got " << count << " contacts in " << subResource << endl;
+  // Now get the distribution lists, they have a different mimetype
+  count = 0;
+  if ( !kmailIncidencesCount( count, s_attachmentMimeTypeDistList, subResource ) ) {
+    kdError() << "Communication problem in KABC::ResourceKolab::loadSubResource()\n";
+    return false;
+  }
 
-  if ( progressId )
-    uiserver.jobFinished( progressId );
+  QMap<Q_UINT32, QString> lst;
+  if( !kmailIncidences( lst, s_attachmentMimeTypeDistList, subResource, 0, count ) ) {
+    kdError() << "Communication problem in KABC::ResourceKolab::loadSubResource()\n";
+    return false;
+  }
+
+  for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+    loadContact( it.data(), subResource, it.key() );
+  }
+
   return true;
 }
 
@@ -341,7 +360,9 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     sernum = 0;
   }
 
-  bool rc = kmailUpdate( subResource, sernum, xml, s_attachmentMimeType, uid /*subject*/,
+  const char* attachmentMimetype = contact.isDistributionList() ?
+                                   s_attachmentMimeTypeDistList : s_attachmentMimeTypeContact;
+  bool rc = kmailUpdate( subResource, sernum, xml, attachmentMimetype, uid /*subject*/,
                          CustomHeaderMap(),
                          att.attachmentURLs, att.attachmentMimeTypes, att.attachmentNames,
                          att.deletedAttachments );
