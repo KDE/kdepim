@@ -170,7 +170,7 @@ QString KABC::ResourceKolab::loadContact( const QString& contactXML, const QStri
   return addr.uid();
 }
 
-bool KABC::ResourceKolab::loadSubResourceHelper( const QString& subResource )
+bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
 {
   bool kolabcontacts = loadSubResourceHelper( subResource, s_attachmentMimeTypeContact );
   bool kolabdistlists = loadSubResourceHelper( subResource, s_attachmentMimeTypeDistList );

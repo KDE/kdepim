@@ -147,6 +147,7 @@ protected:
   void loadSubResourceConfig( KConfig& config, const QString& name,
                               const QString& label, bool writable );
   bool loadSubResource( const QString& subResource );
+  bool loadSubResourceHelper( const QString& subResource, const char* mimetype );
   QString loadContact( const QString& contactXML, const QString& subResource, Q_UINT32 sernum );
 
   QString configFile() const {
