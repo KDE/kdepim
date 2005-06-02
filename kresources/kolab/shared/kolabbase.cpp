@@ -328,14 +328,10 @@ bool KolabBase::saveAttributes( QDomElement& element ) const
 
 bool KolabBase::load( const QString& xml )
 {
-  // This QString is actually in utf-8, but that fails loading in the
-  // XML engine, since it won't detect encoding in a QString. So we do this:
-  const QString utf8 = QString::fromUtf8( xml.local8Bit() );
-
   QString errorMsg;
   int errorLine, errorColumn;
   QDomDocument document;
-  bool ok = document.setContent( utf8, &errorMsg, &errorLine, &errorColumn );
+  bool ok = document.setContent( xml, &errorMsg, &errorLine, &errorColumn );
 
   if ( !ok ) {
     qWarning( "Error loading document: %s, line %d, column %d",
