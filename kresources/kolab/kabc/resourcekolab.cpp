@@ -72,7 +72,8 @@ class KolabFactory : public KRES::PluginFactoryBase
 K_EXPORT_COMPONENT_FACTORY(kabc_kolab,KolabFactory)
 
 static const char* s_kmailContentsType = "Contact";
-static const char* s_attachmentMimeType = "application/x-vnd.kolab.contact";
+static const char* s_attachmentMimeTypeContact = "application/x-vnd.kolab.contact";
+static const char* s_attachmentMimeTypeDistList = "application/x-vnd.kolab.contact.distlist";
 static const char* s_inlineMimeType = "text/x-vcard";
 
 KABC::ResourceKolab::ResourceKolab( const KConfig *config )
@@ -175,24 +176,23 @@ QString KABC::ResourceKolab::loadContact( const QString& contactData,
 
 bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
 {
-  bool kolabstype = loadSubResource( subResource, s_attachmentMimeType );
-  bool vcardstyle = loadSubResource( subResource, s_inlineMimeType );
-  return kolabstype && vcardstyle;
+  bool kolabcontacts = loadSubResourceHelper( subResource, s_attachmentMimeTypeContact, KMailICalIface::StorageXML );
+  bool kolabdistlists = loadSubResourceHelper( subResource, s_attachmentMimeTypeDistList, KMailICalIface::StorageXML );
+  bool vcardstyle = loadSubResourceHelper( subResource, s_inlineMimeType, KMailICalIface::StorageIcalVcard );
+  return kolabcontacts && kolabdistlists && vcardstyle;
 }
 
-bool KABC::ResourceKolab::loadSubResource( const QString& subResource,
-                                           const char* mimetype )
+bool KABC::ResourceKolab::loadSubResourceHelper( const QString& subResource,
+                                                 const char* mimetype,
+                                                 KMailICalIface::StorageFormat format )
 {
   int count = 0;
   if ( !kmailIncidencesCount( count, mimetype, subResource ) ) {
-    kdError() << "Communication problem in ResourceKolab::load()\n";
+    kdError() << "Communication problem in KABC::ResourceKolab::loadSubResourceHelper()\n";
     return false;
   }
   if ( !count )
     return true;
-
-  KMailICalIface::StorageFormat format =
-    mimetype == s_attachmentMimeType ? KMailICalIface::StorageXML : KMailICalIface::StorageIcalVcard;
 
   // Read that many contacts at a time.
   // If this number is too small we lose time in kmail.
@@ -360,7 +360,8 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     // no way to know the mimetype. The addressee editor allows to attach _any_ kind of file,
     // and the sound system sorts it out.
     att.updateAttachment( contact.sound(), contact.soundAttachmentName(), "audio/unknown" );
-    mimetype = s_attachmentMimeType;
+    mimetype = contact.isDistributionList() ?
+                s_attachmentMimeTypeDistList : s_attachmentMimeTypeContact;
   } else {
     mimetype = s_inlineMimeType;
     KABC::VCardConverter converter;

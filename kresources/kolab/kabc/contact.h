@@ -193,6 +193,9 @@ public:
   // Serialize this note to an XML string
   QString saveXML() const;
 
+  // Return true if this contact is a distr list  (TODO)
+  bool isDistributionList() const { /*return mIsDistributionList;*/ return false; }
+
 protected:
   void setFields( const KABC::Addressee* );
 
