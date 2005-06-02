@@ -115,8 +115,6 @@ KPIM::EmailParseResult splitAddressInternal( const QCString& address,
   if ( address.isEmpty() )
     return KPIM::AddressEmpty;
 
-  QCString result;
-
   // The following is a primitive parser for a mailbox-list (cf. RFC 2822).
   // The purpose is to extract a displayable string from the mailboxes.
   // Comments in the addr-spec are not handled. No error checking is done.
@@ -792,7 +790,7 @@ QString KPIM::decodeIDN( const QString & addrSpec )
 {
   const int atPos = addrSpec.findRev( '@' );
   if ( atPos == -1 )
-    return QString::null;
+    return addrSpec;
 
   QString idn = KIDNA::toUnicode( addrSpec.mid( atPos + 1 ) );
   if ( idn.isEmpty() )
