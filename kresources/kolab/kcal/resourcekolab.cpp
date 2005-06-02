@@ -273,16 +273,9 @@ bool ResourceKolab::doSave()
 {
   return true;
 }
-
-void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
+void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase)
 {
-  incidencebase->setSyncStatus( KCal::Event::SYNCMOD );
-  incidencebase->setLastModified( QDateTime::currentDateTime() );
-  // we should probably update the revision number here,
-  // or internally in the Event itself when certain things change.
-  // need to verify with ical documentation.
-
-  const QString uid = incidencebase->uid();
+ const QString uid = incidencebase->uid();
   kdDebug() << k_funcinfo << uid << endl;
 
   if ( mUidsPendingUpdate.contains( uid ) || mUidsPendingAdding.contains( uid ) ) {
@@ -302,6 +295,17 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
   }
 
   sendKMailUpdate( incidencebase, subResource, sernum );
+
+}
+void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
+{
+  incidencebase->setSyncStatusSilent( KCal::Event::SYNCMOD );
+  incidencebase->setLastModified( QDateTime::currentDateTime() );
+  // we should probably update the revision number here,
+  // or internally in the Event itself when certain things change.
+  // need to verify with ical documentation.
+  incidenceUpdatedSilent( incidencebase );
+
 }
 
 void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subresource, Q_UINT32 sernum )

@@ -337,6 +337,12 @@ void IncidenceBase::setSyncStatus(int stat)
 {
   if (mReadOnly) return;
   mSyncStatus = stat;
+  updatedSilent();
+}
+void IncidenceBase::setSyncStatusSilent(int stat)
+{
+  if (mReadOnly) return;
+  mSyncStatus = stat;
 }
 
 int IncidenceBase::syncStatus() const
@@ -374,5 +380,15 @@ void IncidenceBase::updated()
     Observer *o = it.current();
     ++it;
     o->incidenceUpdated( this );
+  }
+}
+
+void IncidenceBase::updatedSilent()
+{
+  QPtrListIterator<Observer> it(mObservers);
+  while( it.current() ) {
+    Observer *o = it.current();
+    ++it;
+    o->incidenceUpdatedSilent( this );
   }
 }

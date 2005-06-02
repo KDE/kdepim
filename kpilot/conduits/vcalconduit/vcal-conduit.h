@@ -85,6 +85,7 @@ protected:
 	virtual KCal::Incidence*newIncidence();
 	virtual const QString getTitle(PilotAppCategory*de);
 	virtual VCalConduitSettings *config();
+    virtual void postSync();
 
 protected:
 	virtual PilotRecord *recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e);

@@ -253,7 +253,15 @@ void TodoConduit::postSync()
 	// after this successful sync the categories have been synced for sure
 	config()->setConduitVersion( CONDUIT_VERSION );
 	config()->writeConfig();
-	_setAppInfo();
+	_setAppInfo(); 
+    KCal::Todo::List::ConstIterator it;
+    KCal::Todo::List fAllTodos;	
+    fAllTodos = fCalendar->todos();
+    QString res;
+    for( it = fAllTodos.begin(); it != fAllTodos.end(); ++it ) {
+        KCal::Todo *todo = *it;
+        todo->setSyncStatus( KCal::Incidence::SYNCNONE );
+    }
 }
 
 

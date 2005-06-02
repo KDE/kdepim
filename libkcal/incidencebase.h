@@ -43,6 +43,7 @@ class IncidenceBase : public CustomProperties
     class Observer {
       public:
         virtual void incidenceUpdated( IncidenceBase * ) = 0;
+        virtual void incidenceUpdatedSilent( IncidenceBase * ) {};
     };
 
     IncidenceBase();
@@ -167,6 +168,7 @@ class IncidenceBase : public CustomProperties
       Set synchronisation satus.
     */
     void setSyncStatus( int status );
+    void setSyncStatusSilent( int status );
     /**
       Return synchronisation status.
     */
@@ -195,6 +197,7 @@ class IncidenceBase : public CustomProperties
       changed.
     */
     void updated();
+    void updatedSilent();
 
   protected:
     bool mReadOnly;

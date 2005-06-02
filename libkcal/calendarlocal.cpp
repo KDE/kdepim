@@ -303,7 +303,7 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
 
 void CalendarLocal::incidenceUpdated( IncidenceBase *incidence )
 {
-  incidence->setSyncStatus( Event::SYNCMOD );
+  incidence->setSyncStatusSilent( Event::SYNCMOD );
   incidence->setLastModified( QDateTime::currentDateTime() );
   // we should probably update the revision number here,
   // or internally in the Event itself when certain things change.

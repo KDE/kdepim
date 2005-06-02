@@ -159,6 +159,7 @@ private:
 
   /// Reimplemented from IncidenceBase::Observer to know when an incidence was changed
   void incidenceUpdated( KCal::IncidenceBase* );
+  void incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase);
 
   bool openResource( KConfig& config, const char* contentType,
                      Kolab::ResourceMap& map );

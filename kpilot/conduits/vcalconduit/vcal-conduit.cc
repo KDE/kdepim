@@ -179,7 +179,22 @@ VCalConduit::~VCalConduit()
 VCalConduitPrivateBase* VCalConduit::newVCalPrivate(KCal::Calendar *fCalendar) {
 	return new VCalConduitPrivate(fCalendar);
 }
-
+void VCalConduit::postSync()
+{
+    FUNCTIONSETUP;
+    
+    KCal::Event::List::Iterator it;
+    KCal::Event::List fAllTodos;	
+    fAllTodos = fCalendar->events();
+    QString res;
+    KCal::Event *todo = 0;
+    for( it = fAllTodos.begin(); it != fAllTodos.end(); ++it ) {
+        todo = *it; 
+        todo->setSyncStatus( KCal::Incidence::SYNCNONE );
+    }
+    
+   
+}
 void VCalConduit::_getAppInfo()
 {
 	FUNCTIONSETUP;
