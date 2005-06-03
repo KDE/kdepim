@@ -200,13 +200,17 @@ void Todo::setCompleted(bool completed)
   else {
     mPercentComplete = 0;
     mHasCompletedDate = false;
+    mCompleted = QDateTime();
   }
   updated();
 }
 
 QDateTime Todo::completed() const
 {
-  return mCompleted;
+  if ( hasCompletedDate() )
+    return mCompleted;
+  else
+    return QDateTime();
 }
 
 QString Todo::completedStr() const
