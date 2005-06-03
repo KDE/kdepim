@@ -235,7 +235,7 @@ bool Task::saveAttributes( QDomElement& element ) const
   if ( !parent().isNull() )
     writeString( element, "parent", parent() );
 
-  if ( hasCompletedDate() )
+  if ( hasCompletedDate() && percentCompleted() == 100)
     writeString( element, "x-completed-date", dateTimeToString( completedDate() ) );
 
   return true;
@@ -305,7 +305,7 @@ void Task::setFields( const KCal::Todo* task )
   else
     setParent( QString::null );
 
-  if ( task->hasCompletedDate() )
+  if ( task->hasCompletedDate() && task->percentComplete() == 100 )
     setCompletedDate( localToUTC( task->completed() ) );
   else
     mHasCompletedDate = false;
@@ -326,6 +326,6 @@ void Task::saveTo( KCal::Todo* task )
   if ( !parent().isNull() )
     task->setRelatedToUid( parent() );
 
-  if ( hasCompletedDate() )
+  if ( hasCompletedDate() && task->percentComplete() == 100 )
     task->setCompleted( utcToLocal( mCompletedDate ) );
 }
