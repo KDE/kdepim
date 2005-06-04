@@ -11,6 +11,4 @@ so that the new version produces the same set of occurences. Things that
 are known as broken in KOrganizer from KDE 3.4:
  1) If the start date does not match the RRULE, it doesn't appear 
     as an occurences (rfc 2445 says the DTSTART is always the first 
-		occurence).
- 2) If the start date does not match the RRULE, as a consequence of 1)
-    the last occurence is off by one.
+		occurence, except when it's excluded by EXDATE or EXRULE).
