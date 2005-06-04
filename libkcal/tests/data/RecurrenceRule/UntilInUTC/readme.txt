@@ -16,7 +16,6 @@ time, so the only occurence is at 09:00:
 Several of these test cases are simply copied from other directories of this test suite:
 Until_TestCase06.ics: LibICal/LibICal_TestCase14.ics
 Until_TestCase05.ics: LibICal/LibICal_TestCase13.ics
-Until_TestCase01.ics: -"-
 Until_TestCase04.ics: LibICal/LibICal_TestCase47.ics
 Until_TestCase03.ics: LibICal/LibICal_TestCase22.ics
 
