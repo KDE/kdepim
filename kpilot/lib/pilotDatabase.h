@@ -339,8 +339,8 @@ protected:
 * a more sensible structure (e.g. PilotDatebookEntry). The mapping from
 * the KDE type to the Pilot type and vice-versa is done by the mapper
 * class's convert() functions.
-* 
-* To interpret a database as pilot-link interpretations (e.g. as 
+*
+* To interpret a database as pilot-link interpretations (e.g. as
 * PilotDatebookEntry records, not as Events) use the NullMapper class
 * below in combination with a template instantiation with kdetype==pilottype.
 *
@@ -379,7 +379,7 @@ public:
 	/** Reads a record from database by @p id */
 	kdetype *readRecordById(recordid_t id)
 	{
-		return interpret(fDB->readRecordByID(id));
+		return interpret(fDB->readRecordById(id));
 	}
 
 	/** Reads a record from database with index @p index */
