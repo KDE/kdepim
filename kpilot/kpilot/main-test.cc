@@ -95,6 +95,9 @@ static KCmdLineOptions kpilotoptions[] = {
 	{ "test-usercheck",
 		I18N_NOOP("Run conduit just for user check."),
 		0 } ,
+	{ "dump-calendar",
+		I18N_NOOP("Dump calendar to stdout."),
+		0 } ,
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif
