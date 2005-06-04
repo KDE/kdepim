@@ -28,6 +28,7 @@
 */
 
 #include <qtimer.h>
+#include <klocale.h>
 
 #include "plugin.h"
 #include "pilotAppCategory.h"
@@ -148,13 +149,11 @@ public:
 
 	virtual SyncProgress loadPC()
 	{
-		FUNCTIONSETUP;
-
 		fAppInfo = new HHAppInfo(fDatabase) ;
 		fContainer = new PCContainer();
 		if (!fContainer->load())
 		{
-			emit logError(TODO_I18N("Unable to load the %1 database on the PC.").arg(fConduitName));
+			emit logError(i18n("Unable to load the %1 database on the PC.").arg(fConduitName));
 			return Error;
 		}
 		if (fContainer->isEmpty()) setFirstSync(true); /* And leave UID map empty */

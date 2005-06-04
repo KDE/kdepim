@@ -39,6 +39,8 @@
 #include <stdio.h>
 #include <kdemacros.h>
 
+#include "pilotLinkVersion.h"
+
 struct pi_buffer_t;
 
 #include <pi-dlp.h>

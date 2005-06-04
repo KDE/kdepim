@@ -39,6 +39,8 @@
 */
 
 #include <qstring.h>
+#include <klocale.h>
+
 #include <pi-appinfo.h>
 
 #include "pilotRecord.h"

@@ -1,11 +1,11 @@
-#ifndef _KPILOT_UIDIALOG_H
-#define _KPILOT_UIDIALOG_H
-/* uiDialog.h                           KPilot
+#ifndef PILOTLINKVERSION_H
+#define PILOTLINKVERSION_H
+
+/* pilotLinkVersion.h                           KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
-** Copyright (C) 2004 by Adriaan de Groot
+** Copyright (C) 2005 by Adriaan de Groot
 **
-** This class defines a way to add an "about widget" to a tab widget.
+** Checks the pilot-link version and defines some convenience macros.
 **
 */
 
@@ -30,28 +30,31 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-class QTabWidget;
-class QPushButton;
-class QWidget;
-class KAboutData;
 
-class KDE_EXPORT UIDialog
-{
-public:
-	/**
-	* This is the function that does the work of adding an about
-	* page to a tabwidget. It is made public and static so that
-	* it can be used elsewhere wherever tabwidgets appear.
-	*/
-	static  void addAboutPage(QTabWidget *,
-		KAboutData *data=0L,
-		bool aboutbutton=false);
+#include <pi-version.h>
 
-	/**
-	* This creates the actual about widget. Again, public & static so
-	* you can slap in an about widget wherever.
-	*/
-	static QWidget *aboutPage(QWidget *parent, KAboutData *data=0L);
-} ;
+#ifndef PILOT_LINK_VERSION
+#error "You need at least pilot-link version 0.9.5"
+#endif
+
+
+#define PILOT_LINK_NUMBER	((10000*PILOT_LINK_VERSION) + \
+				(100*PILOT_LINK_MAJOR)+PILOT_LINK_MINOR)
+#define PILOT_LINK_0_10_0	(1000)
+#define PILOT_LINK_0_11_0	(1100)
+#define PILOT_LINK_0_11_8	(1108)
+#define PILOT_LINK_0_12_0	(1200)
+
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_11_8
+#warning "You need at least pilot-link version 0.11.8 for modern devices"
+#endif
+
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+#define PI_SIZE_T int
+#else
+#define PI_SIZE_T size_t
+#endif
+
 
 #endif
+

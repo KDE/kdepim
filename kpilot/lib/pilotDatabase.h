@@ -48,6 +48,8 @@
 # endif
 #endif
 
+#include "pilotLinkVersion.h"
+
 #include <pi-dlp.h>
 
 
@@ -280,7 +282,6 @@ class PilotAppInfo : public PilotAppInfoBase
 public:
 	PilotAppInfo(PilotDatabase *d) : PilotAppInfoBase()
 	{
-		FUNCTIONSETUP;
 		int appLen = MAX_APPINFO_SIZE;
 		unsigned char buffer[MAX_APPINFO_SIZE];
 
@@ -296,7 +297,6 @@ public:
 
 	int write(PilotDatabase *d)
 	{
-		FUNCTIONSETUP;
 		unsigned char buffer[MAX_APPINFO_SIZE];
 		if (!d || !d->isDBOpen())
 		{
@@ -316,5 +316,25 @@ protected:
 	appinfo fInfo;
 } ;
 
+template <class kdetype, class pilottype, class mapper>
+class DatabaseInterpreter
+{
+public:
+	DatabaseInterpreter(PilotDatabase *d) : fDB(d) { } ;
+
+	kdetype *readRecordByIndex(int index)
+	{
+		PilotRecord *r = fDB->readRecordByIndex(index);
+		if (!r) return 0;
+		pilottype *a = new pilottype(r);
+		if (!a) { delete r; return 0; }
+		return mapper::convert(a);
+	}
+
+	PilotDatabase *db() const { return fDB; }
+
+protected:
+	PilotDatabase *fDB;
+} ;
 
 #endif
