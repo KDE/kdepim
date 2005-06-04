@@ -274,12 +274,22 @@ private:
 	bool fOwn;
 } ;
 
+/** A template class for reading and interpreting AppInfo blocks;
+* the idea is that it handles all the boilerplate code for reading
+* the app block, converting it to the right kind, and then unpacking
+* it. Template parameters are the type (struct, from pilot-link probably)
+* of the interpreted appinfo, and the pack and unpack functions for it
+* (again, from pilot-link).
+*/
 template <typename appinfo,
 	int(*unpack)(appinfo *, unsigned char *, PI_SIZE_T),
 	int(*pack)(appinfo *, unsigned char *, PI_SIZE_T)>
 class PilotAppInfo : public PilotAppInfoBase
 {
 public:
+	/** Constructor. Read the appinfo from database @p d and
+	* interpret it.
+	*/
 	PilotAppInfo(PilotDatabase *d) : PilotAppInfoBase()
 	{
 		int appLen = MAX_APPINFO_SIZE;
@@ -295,6 +305,9 @@ public:
 		init(&fInfo.category,appLen);
 	} ;
 
+	/** Write this appinfo block to the database @p d; returns
+	* the number of bytes written or -1 on failure.
+	*/
 	int write(PilotDatabase *d)
 	{
 		unsigned char buffer[MAX_APPINFO_SIZE];
@@ -310,31 +323,109 @@ public:
 		return appLen;
 	} ;
 
+	/** Returns a (correctly typed) pointer to the interpreted
+	* appinfo block.
+	*/
 	appinfo *info() { return &fInfo; } ;
 
 protected:
 	appinfo fInfo;
 } ;
 
+/** A template class for reading and interpreting a database. This removes
+* the need for a lot of boilerplate code that does the conversions.
+* Parameters are two interpretation classes: one for the KDE side of
+* things (e.g. Event) and one that interprets the Pilot's records into
+* a more sensible structure (e.g. PilotDatebookEntry). The mapping from
+* the KDE type to the Pilot type and vice-versa is done by the mapper
+* class's convert() functions.
+* 
+* To interpret a database as pilot-link interpretations (e.g. as 
+* PilotDatebookEntry records, not as Events) use the NullMapper class
+* below in combination with a template instantiation with kdetype==pilottype.
+*
+* The database interpreter intentionally has an interface similar to
+* that of a PilotDatabase, but it isn't one.
+*/
 template <class kdetype, class pilottype, class mapper>
 class DatabaseInterpreter
 {
+private:
+	/** Interpret a PilotRecord as an object of type kdetype. */
+	kdetype *interpret(PilotRecord *r)
+	{
+		// NULL records return NULL kde objects.
+		if (!r) return 0;
+		// Interpret the binary blob as a pilot-link object.
+		pilottype *a = new pilottype(r);
+		// The record is now obsolete.
+		delete r;
+		// Interpretation failed.
+		if (!a) { return 0; }
+		// Now convert to KDE type.
+		kdetype *t = mapper::convert(a);
+		// The NULL mapper just returns the pointer a, so we
+		// need to check if anything has changed before deleting.
+		if ( (void *)t != (void *)a )
+		{
+			delete a;
+		}
+		return t;
+	}
 public:
+	/** Constructor. Interpret the database @p d. */
 	DatabaseInterpreter(PilotDatabase *d) : fDB(d) { } ;
 
-	kdetype *readRecordByIndex(int index)
+	/** Reads a record from database by @p id */
+	kdetype *readRecordById(recordid_t id)
 	{
-		PilotRecord *r = fDB->readRecordByIndex(index);
-		if (!r) return 0;
-		pilottype *a = new pilottype(r);
-		if (!a) { delete r; return 0; }
-		return mapper::convert(a);
+		return interpret(fDB->readRecordByID(id));
 	}
 
+	/** Reads a record from database with index @p index */
+	kdetype *readRecordByIndex(int index)
+	{
+		return interpret(fDB->readRecordByIndex(index));
+	}
+
+	/** Reads the next record from database in category @p category */
+	kdetype *readNextRecInCategory(int category)
+	{
+		return interpret(fDB->readNextRecInCategory(category));
+	}
+
+	/**
+	* Reads the next record from database that has the dirty flag set.
+	* If @p ind is non-NULL, *ind is set to the index of the current
+	* record (i.e. before the record pointer moves to the next
+	* modified record).
+	*/
+	kdetype *readNextModifiedRec(int *ind=NULL)
+	{
+		return interpret(fDB->readNextModifiedRec(ind));
+	}
+
+
+	/** Retrieve the database pointer; this is useful to just pass
+	* around DatabaseInterpreter objects as if they are databases,
+	* and then perform DB operations on the database it wraps.
+	*/
 	PilotDatabase *db() const { return fDB; }
 
 protected:
 	PilotDatabase *fDB;
+} ;
+
+/** NULL mapper class; the conversions here don't @em do anything,
+* so you can use this when you only need 1 conversion step (from
+* PilotRecord to PilotDatebookEntry, for instance) instead of 2.
+*/
+template <class T>
+class NullMapper
+{
+public:
+	/** NULL Conversion function. */
+	static T *convert(T *t) { return t; }
 } ;
 
 #endif
