@@ -9,8 +9,7 @@ UID:KOrganizer-1832470339.751
 SEQUENCE:1
 LAST-MODIFIED:20050520T105511Z
 X-ORGANIZER:MAILTO:reinhold@kainhofer.com
-RRULE:MAILTO:reinhold@kainhofer.com#17
-SUMMARY:20. Mai 2005, 23-24 Uhr, alle 3 Jahre am vorletzten Freitag im Mai, 17 mal
+SUMMARY:20. Mai 2005, 23-24 Uhr, alle 3 Jahre am vorletzten Freitag im Mai, 17 mal (not possible in vCalendar -> no RRULE)
 CLASS:PUBLIC
 PRIORITY:5
 TRANSP:0
