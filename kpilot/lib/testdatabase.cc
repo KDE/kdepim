@@ -27,11 +27,6 @@
 */
 
 #include "options.h"
-<<<<<<< .mine
-
-#include <qstringlist.h>
-
-=======
 
 #include <kaboutdata.h>
 #include <kapplication.h>
@@ -39,14 +34,32 @@
 #include <klocale.h>
 #include <kcmdlineargs.h>
 
->>>>>>> .r418479
 #include "pilotLocalDatabase.h"
 #include "pilotRecord.h"
 #include "pilotMemo.h"
 
 
+/* Return values for the various check* functions. They
+   return OK if all is OK; ERR is for generic errors.
+   ERR_NO_EXIST is returned if something (usually a database
+   or other file) doesn't exist that should. The latter
+   error might be ignored.
+*/
+#define OK           (0)
+#define ERR          (1)
+#define ERR_NO_EXIST (2)
+
+
+/* Data about the records in a database. The id field is
+   interpreted specially for the first and last entries.
+*/
 typedef struct { int id,size; } recordInfo;
 
+/* Use END in the last recordInfo struct describing a database
+   to indicate you expect the database to end there. Use NO_EXIST
+   as the ID in the first struct to indicate that the database
+   is expected _not_ to exist.
+*/
 #define NO_EXIST   (-2)
 #define END        (-1)
 
@@ -99,18 +112,18 @@ int checkDatabase(const char *path, recordInfo *info)
 		if ( info[0].id == NO_EXIST )
 		{
 			kdDebug() << "This was expected" << endl;
-			return 0;
+			return OK;
 		}
 		else
 		{
-			return 1;
+			return ERR_NO_EXIST;
 		}
 	}
 
 	if ( info[0].id == NO_EXIST )
 	{
 		kdDebug() << "Database not expected" << endl;
-		return 1;
+		return ERR;
 	}
 
 	int fail = 0;
@@ -118,13 +131,13 @@ int checkDatabase(const char *path, recordInfo *info)
 	PilotRecord *r;
 	while( (r = db.readRecordByIndex(index) ) )
 	{
-		kdDebug() << "[" << index << "] id=" << r->id() << " size=" << r->getLen() << endl;
+		kdDebug() << "[" << index << "] id=" << r->id() << " size=" << r->size() << endl;
 		if ( ((recordid_t)info[index].id) != r->id() )
 		{
 			kdDebug() << "* Bad ID (expected" << r->id() << ")" << endl;
 			fail++;
 		}
-		else if ( info[index].size != r->getLen() )
+		else if ( info[index].size != r->size() )
 		{
 			kdDebug() << "* Bad size (expected " << info[index].size << ")" << endl;
 			fail++;
@@ -140,9 +153,9 @@ int checkDatabase(const char *path, recordInfo *info)
 	if (fail)
 	{
 		kdDebug() << "* " << fail << " failures." << endl;
-		return 1;
+		return ERR;
 	}
-	return 0;
+	return OK;
 }
 
 const char *categoryNames[4] =
@@ -178,7 +191,7 @@ QStringList listCategories()
 		cats.append(s);
 /*
 		if (i<((sizeof(categoryNames) / sizeof(categoryNames[0]))))
-			m->setCategory(i,QString::fromLatin1(categoryNames[i]));
+			m->setCategoryName(i,QString::fromLatin1(categoryNames[i]));
 */
 	}
 
@@ -195,21 +208,15 @@ int checkCategories()
 	QStringList l = listCategories();
 	QStringList m = listCategories();
 
-	if (l.isEmpty() || m.isEmpty()) return 1;
-	if (l!=m) return 1;
-	return 0;
+	if (l.isEmpty() || m.isEmpty()) return ERR;
+	if (l!=m) return ERR;
+	return OK;
 }
-
-struct { const char *path; recordInfo *info; } tests[] = {
-	{ "/tmp/nonexistant/nonexistent", nonexistent },
-	{ "/tmp/Aesop", aesop },
-	{ 0L, 0L }
-} ;
 
 int checkMemo()
 {
 	PilotLocalDatabase *l = new PilotLocalDatabase(SOURCE "/data/MemoDB");
-	if (!l->isDBOpen()) return 1;
+	if (!l->isDBOpen()) return ERR_NO_EXIST;
 
 	PilotMemoInfo *m = new PilotMemoInfo(l);
 	m->dump();
@@ -218,23 +225,23 @@ int checkMemo()
 	if (c != CSL1("Business"))
 	{
 		kdDebug() << "* Category 1 is not 'Business' but " << c << endl;
-		return 1;
+		return ERR;
 	}
 
-	m->setCategory(2,CSL1("Aardvark"));
+	m->setCategoryName(2,CSL1("Aardvark"));
 	m->write(l);
 
 	c = m->category(2);
 	if (c != CSL1("Aardvark"))
 	{
 		kdDebug() << "* Category 2 is not 'Aardvark' but " << c << endl;
-		return 1;
+		return ERR;
 	}
 
 
 	delete m;
 	delete l;
-	return 0;
+	return OK;
 }
 
 static const KCmdLineOptions options[] =
@@ -266,31 +273,38 @@ int main(int argc, char **argv)
 	Q_UNUSED(argc);
 	Q_UNUSED(argv);
 
+#define ALLOW_NO_EXIST (1)
+	static struct { const char *path; recordInfo *info; int flags; } 
+		tests[] =
+	{
+		{ "/tmp/nonexistant/nonexistent", nonexistent,0 },
+		{ "/tmp/Aesop", aesop, ALLOW_NO_EXIST },
+		{ 0L, 0L, 0 }
+	} ;
+
 	while ( tests[i].path )
 	{
 		kdDebug() << "*** Test " << i << endl;
-		if ( checkDatabase( tests[i].path, tests[i].info ) )
+		int ret = checkDatabase( tests[i].path, tests[i].info );
+		if ( ret )
 		{
-			r++;
+			if ( (ret==ERR_NO_EXIST) && 
+				(tests[i].flags & ALLOW_NO_EXIST) )
+			{
+				kdDebug() << "* Test database doesn't exist, ignored." << endl;
+			}
+			else
+			{
+				r++;
+			}
 		}
 		i++;
 	}
 
-<<<<<<< .mine
-	kdDebug() << "*** Test " << i << endl;
-	if (checkCategories())
-	{
-		kdDebug() << "* Category list changed!" << endl;
-		r++;
-	}
-	i++;
-
-=======
 	kdDebug() << "*** Test " << i << endl;
 	if (checkMemo()) r++;
 	i++;
 
->>>>>>> .r418479
 	if (r)
 	{
 		kdDebug() << "***\n*** Failed " << r << " tests." << endl;

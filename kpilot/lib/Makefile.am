@@ -50,4 +50,13 @@ testdatabase_LDFLAGS  = $(PISOCK_LDFLAGS) $(all_libraries) $(KDE_RPATH)
 testdatabase_LDADD    = libkpilot.la $(PISOCK_LIB)
 testdatabase_CXXFLAGS = '-DSOURCE="$(srcdir)"'
 
+check-local:
+	rm -f FAILED
+	for i in $(srcdir)/*.h ; do \
+		( echo "#include <kdemacros.h>" ; echo "#include \"$$i\"" ; echo "int main(int argc,char **argv){return 0;}" ) > header-test.cc; \
+		echo "$$i" ; \
+		g++ $(all_includes) $(PISOCK_INCLUDE) -c header-test.cc || echo "$$i" >> FAILED; \
+	done
+	test ! -e FAILED
+
 include $(top_srcdir)/doc/api/Doxyfile.am
