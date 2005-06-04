@@ -925,10 +925,26 @@ bool RecurrenceRule::recursOn( const QDate &qd ) const
   }
   if ( !match ) return false;
   // if it recurs every interval, speed things up...
-  if ( mFrequency == 1 ) return true;
+  if ( mFrequency == 1 && mBySetPos.isEmpty() && mByDays.isEmpty() ) return true;
   QDateTime tmp( qd, QTime( 0, 0, 0 ) );
   Constraint interval( getNextValidDateInterval( tmp, recurrenceType() ) );
-  if ( interval.matches( qd, recurrenceType() ) ) return true;
+  // Constraint::matches is quite efficient, so first check if it can occur at
+  // all before we calculate all actual dates.
+  if ( !interval.matches( qd, recurrenceType() ) ) return false;
+  // We really need to obtain the list of dates in this interval, since
+  // otherwise BYSETPOS will not work (i.e. the date will match the interval,
+  // but BYSETPOS selects only one of these matching dates!
+  DateTimeList times = datesForInterval( interval, recurrenceType() );
+  DateTimeList::ConstIterator it = times.begin();
+  while ( ( it != times.end() ) && ( (*it).date() < qd ) )
+    ++it;
+  if ( it != times.end() ) {
+    // If we are beyond the end...
+    if ( mDuration >= 0 && (*it) > endDate() )
+      return false;
+    if ( (*it).date() == qd )
+      return true;
+  }
   return false;
 }
 
@@ -946,10 +962,11 @@ bool RecurrenceRule::recursAt( const QDateTime &qd ) const
   bool match = dateMatchesRules( qd );
   if ( !match ) return false;
   // if it recurs every interval, speed things up...
-  if ( mFrequency == 1 ) return true;
+  if ( mFrequency == 1 && mBySetPos.isEmpty() && mByDays.isEmpty() ) return true;
   Constraint interval( getNextValidDateInterval( qd, recurrenceType() ) );
 // kdDebug(5800) << " Interval for date " << qd << endl;
 // interval.dump();
+  // TODO_Recurrence: Does this work with BySetPos???
   if ( interval.matches( qd, recurrenceType() ) ) return true;
 
   return false;
@@ -996,9 +1013,6 @@ kdDebug(5800) << "         RecurrenceRule::durationTo: " << dt << endl;
 QDateTime RecurrenceRule::getPreviousDate( const QDateTime& afterDate ) const
 {
 kdDebug(5800) << "         RecurrenceRule::getPreviousDate: " << afterDate << endl;
-  if ( mDuration >= 0 && endDate().isValid() && afterDate >= endDate() )
-    return endDate();
-
   // Beyond end of recurrence
   if ( afterDate < startDate() )
     return QDateTime();
@@ -1017,19 +1031,27 @@ kdDebug(5800) << "         RecurrenceRule::getPreviousDate: " << afterDate << en
   }
 
 // kdDebug(5800) << "    getNext date after " << preDate << endl;
-  Constraint interval( getPreviousValidDateInterval( afterDate, recurrenceType() ) );
+  prev = afterDate;
+  if ( mDuration >= 0 && endDate().isValid() && afterDate >= endDate() )
+    prev = endDate().addSecs( 1 );
+
+  Constraint interval( getPreviousValidDateInterval( prev, recurrenceType() ) );
+kdDebug(5800) << "Previous Valid Date Interval for date " << prev << ": " << endl;
+interval.dump();
   DateTimeList dts = datesForInterval( interval, recurrenceType() );
   DateTimeList::Iterator dtit = dts.end();
   if ( dtit != dts.begin() ) {
     do {
       --dtit;
-    } while ( dtit != dts.begin() && (*dtit) >= afterDate );
-    if ( (*dtit) < afterDate ) return (*dtit);
+    } while ( dtit != dts.begin() && (*dtit) >= prev );
+    if ( (*dtit) < prev ) return (*dtit);
   }
 
   // Previous interval. As soon as we find an occurence, we're done.
   while ( interval.intervalDateTime( recurrenceType() ) > startDate() ) {
     interval.increase( recurrenceType(), -frequency() );
+kdDebug(5800) << "Decreased interval: " << endl;
+interval.dump();
     // The returned date list is sorted
     DateTimeList dts = datesForInterval( interval, recurrenceType() );
     // The list is sorted, so take the last one.
@@ -1112,8 +1134,10 @@ RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const Q
     case rMinutely: modifier *= 60;
     case rSecondly:
         periods = start.secsTo( toDate ) / modifier;
-        if ( periods > 0 )
-          periods += ( frequency() - 1 - ( (periods - 1) % frequency() ) );
+kdDebug(5800) << "    Perioods: " << periods << endl;
+        // round it down to the next lower multiple of frequency():
+        periods = ( periods / frequency() ) * frequency();
+kdDebug(5800) << "    Adjusted Periods: " << periods << endl;
         nextValid = start.addSecs( modifier * periods );
         break;
 
@@ -1123,16 +1147,20 @@ RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const Q
         modifier *= 7;
     case rDaily:
         periods = start.daysTo( toDate ) / modifier;
-        if ( periods > 0 )
-          periods += (frequency() - 1 - ( (periods - 1) % frequency() ) );
+        // round it down to the next lower multiple of frequency():
+        periods = ( periods / frequency() ) * frequency();
+/*        if ( periods > 0 )
+          periods += (frequency() - 1 - ( (periods - 1) % frequency() ) );*/
         nextValid = start.addDays( modifier * periods );
         break;
 
     case rMonthly: {
         periods = 12*( toDate.date().year() - start.date().year() ) +
              ( toDate.date().month() - start.date().month() );
-        if ( periods > 0 )
-          periods += (frequency() - 1 - ( (periods - 1) % frequency() ) );
+        // round it down to the next lower multiple of frequency():
+        periods = ( periods / frequency() ) * frequency();
+/*        if ( periods > 0 )
+          periods += (frequency() - 1 - ( (periods - 1) % frequency() ) );*/
         // set the day to the first day of the month, so we don't have problems
         // with non-existent days like Feb 30 or April 31
         start.setDate( QDate( start.date().year(), start.date().month(), 1 ) );
@@ -1140,14 +1168,16 @@ RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const Q
         break; }
     case rYearly:
         periods = ( toDate.date().year() - start.date().year() );
-        if ( periods > 0 )
-          periods += ( frequency() - 1 - ( (periods - 1) % frequency() ) );
+        // round it down to the next lower multiple of frequency():
+        periods = ( periods / frequency() ) * frequency();
+/*        if ( periods > 0 )
+          periods += ( frequency() - 1 - ( (periods - 1) % frequency() ) );*/
         nextValid.setDate( start.date().addYears( periods ) );
         break;
     default:
         break;
   }
-// kdDebug(5800) << "    ~~~> date in next interval is: : " << nextValid << endl;
+// kdDebug(5800) << "    ~~~> date in previous interval is: : " << nextValid << endl;
 
   return Constraint( nextValid, type, mWeekStart );
 }
