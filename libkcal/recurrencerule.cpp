@@ -952,7 +952,7 @@ bool RecurrenceRule::recursOn( const QDate &qd ) const
   }
   if ( !match ) return false;
   // if it recurs every interval, speed things up...
-  if ( mFrequency == 1 && mBySetPos.isEmpty() && mByDays.isEmpty() ) return true;
+//   if ( mFrequency == 1 && mBySetPos.isEmpty() && mByDays.isEmpty() ) return true;
   QDateTime tmp( qd, QTime( 0, 0, 0 ) );
   Constraint interval( getNextValidDateInterval( tmp, recurrenceType() ) );
   // Constraint::matches is quite efficient, so first check if it can occur at
@@ -989,7 +989,7 @@ bool RecurrenceRule::recursAt( const QDateTime &qd ) const
   bool match = dateMatchesRules( qd );
   if ( !match ) return false;
   // if it recurs every interval, speed things up...
-  if ( mFrequency == 1 && mBySetPos.isEmpty() && mByDays.isEmpty() ) return true;
+//   if ( mFrequency == 1 && mBySetPos.isEmpty() && mByDays.isEmpty() ) return true;
   Constraint interval( getNextValidDateInterval( qd, recurrenceType() ) );
 // kdDebug(5800) << " Interval for date " << qd << endl;
 // interval.dump();
