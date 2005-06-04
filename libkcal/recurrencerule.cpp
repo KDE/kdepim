@@ -33,7 +33,34 @@
 
 using namespace KCal;
 
+// FIXME: If Qt is ever changed so that QDateTime:::addSecs takes into account
+//        DST shifts, we need to use our own addSecs method, too, since we
+//        need to caalculate things in UTC!
+/** Workaround for broken QDateTime::secsTo (at least in Qt 3.3). While
+   QDateTime::secsTo does take time zones into account, QDateTime::addSecs
+   does not, so we have a problem:
+      QDateTime d1(QDate(2005, 10, 30), QTime(1, 30, 0) );
+      QDateTime d2(QDate(2005, 10, 30), QTime(3, 30, 0) );
 
+      kdDebug(5800) << "d1=" << d1 << ", d2=" << d2 << endl;
+      kdDebug(5800) << "d1.secsTo(d2)=" << d1.secsTo(d2) << endl;
+      kdDebug(5800) << "d1.addSecs(d1.secsTo(d2))=" << d1.addSecs(d1.secsTo(d2)) << endl;
+   This code generates the following output:
+      libkcal: d1=Son Okt 30 01:30:00 2005, d2=Son Okt 30 03:30:00 2005
+      libkcal: d1.secsTo(d2)=10800
+      libkcal: d1.addSecs(d1.secsTo(d2))=Son Okt 30 04:30:00 2005
+   Notice that secsTo counts the hour between 2:00 and 3:00 twice, while
+   adddSecs doesn't and so has one additional hour. This basically makes it
+   impossible to use QDateTime for *any* calculations, in local time zone as
+   well as in UTC. Since we don't want to use
+   time zones anyway, but do all secondsly/minutely/hourly calculations in UTC,
+   we simply use our own secsTo, which ignores all time zone shifts. */
+long long ownSecsTo( const QDateTime &dt1, const QDateTime &dt2 )
+{
+  long long res = dt1.date().daysTo( dt2.date() ) * 24*3600;
+  res += dt1.time().secsTo( dt2.time() );
+  return res;
+}
 
 
 
@@ -1133,11 +1160,9 @@ RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const Q
     case rHourly:   modifier *= 60;
     case rMinutely: modifier *= 60;
     case rSecondly:
-        periods = start.secsTo( toDate ) / modifier;
-kdDebug(5800) << "    Perioods: " << periods << endl;
+        periods = ownSecsTo( start, toDate ) / modifier;
         // round it down to the next lower multiple of frequency():
         periods = ( periods / frequency() ) * frequency();
-kdDebug(5800) << "    Adjusted Periods: " << periods << endl;
         nextValid = start.addSecs( modifier * periods );
         break;
 
@@ -1149,8 +1174,6 @@ kdDebug(5800) << "    Adjusted Periods: " << periods << endl;
         periods = start.daysTo( toDate ) / modifier;
         // round it down to the next lower multiple of frequency():
         periods = ( periods / frequency() ) * frequency();
-/*        if ( periods > 0 )
-          periods += (frequency() - 1 - ( (periods - 1) % frequency() ) );*/
         nextValid = start.addDays( modifier * periods );
         break;
 
@@ -1159,8 +1182,6 @@ kdDebug(5800) << "    Adjusted Periods: " << periods << endl;
              ( toDate.date().month() - start.date().month() );
         // round it down to the next lower multiple of frequency():
         periods = ( periods / frequency() ) * frequency();
-/*        if ( periods > 0 )
-          periods += (frequency() - 1 - ( (periods - 1) % frequency() ) );*/
         // set the day to the first day of the month, so we don't have problems
         // with non-existent days like Feb 30 or April 31
         start.setDate( QDate( start.date().year(), start.date().month(), 1 ) );
@@ -1170,8 +1191,6 @@ kdDebug(5800) << "    Adjusted Periods: " << periods << endl;
         periods = ( toDate.date().year() - start.date().year() );
         // round it down to the next lower multiple of frequency():
         periods = ( periods / frequency() ) * frequency();
-/*        if ( periods > 0 )
-          periods += ( frequency() - 1 - ( (periods - 1) % frequency() ) );*/
         nextValid.setDate( start.date().addYears( periods ) );
         break;
     default:
@@ -1204,7 +1223,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const QDate
     case rHourly:   modifier *= 60;
     case rMinutely: modifier *= 60;
     case rSecondly:
-        periods = start.secsTo( toDate ) / modifier;
+        periods = ownSecsTo( start, toDate ) / modifier;
         if ( periods > 0 )
           periods += ( frequency() - 1 - ( (periods - 1) % frequency() ) );
         nextValid = start.addSecs( modifier * periods );
