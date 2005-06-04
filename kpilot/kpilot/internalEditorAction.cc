@@ -199,8 +199,8 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	if (dbName==CSL1("DatebookDB"))
 	{
 	        struct AppointmentAppInfo fAppInfo;
-		unsigned char *buffer = new unsigned char[PilotDateEntry::APP_BUFFER_SIZE];
-		int appLen = db->readAppBlock(buffer, PilotDateEntry::APP_BUFFER_SIZE);
+		unsigned char *buffer = new unsigned char[PilotRecord::APP_BUFFER_SIZE];
+		int appLen = db->readAppBlock(buffer, PilotRecord::APP_BUFFER_SIZE);
 		unpack_AppointmentAppInfo(&fAppInfo, buffer, appLen);
 		delete[] buffer;
 
