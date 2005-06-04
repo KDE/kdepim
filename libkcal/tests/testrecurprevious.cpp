@@ -87,12 +87,12 @@ int main( int argc, char **argv )
     incidence->recurrence()->dump();
 
     QDateTime dt( incidence->recurrence()->endDate() );
-    if ( !dt.isValid() ) dt = QDateTime( QDate( 2011, 1, 1 ), QTime( 0, 0, 1 ) );
-    else dt = dt.addYears( 2 );
     int i=0;
-    kdDebug(5800) << "-------------------------------------------" << endl;
-    kdDebug(5800) << " *~*~*~*~ Starting with date: " << dt << endl;
     if ( outstream ) {
+      if ( !dt.isValid() ) dt = QDateTime( QDate( 2011, 1, 1 ), QTime( 0, 0, 1 ) );
+      else dt = dt.addYears( 2 );
+      kdDebug(5800) << "-------------------------------------------" << endl;
+      kdDebug(5800) << " *~*~*~*~ Starting with date: " << dt << endl;
       // Output to file for testing purposes
       while (dt.isValid() && i<500 ) {
         dt = dt.addSecs( -1 );
@@ -101,7 +101,11 @@ int main( int argc, char **argv )
         (*outstream) << dt.toString( Qt::ISODate ) << endl;
       }
     } else {
+      if ( !dt.isValid() ) dt = QDateTime( QDate( 2005, 7, 31 ), QTime( 23, 59, 59 ) );
+//      else dt = dt.addYears( 2 );
       incidence->recurrence()->dump();
+      kdDebug(5800) << "-------------------------------------------" << endl;
+      kdDebug(5800) << " *~*~*~*~ Starting with date: " << dt << endl;
       // Output to konsole
       while ( dt.isValid() && i<50 ) {
         dt = dt.addSecs( -1 );
