@@ -293,7 +293,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
   }
 
   QString subResource;
-  Q_UINT32 sernum;
+  Q_UINT32 sernum = 0;
   if ( mUidMap.contains( uid ) ) {
     subResource = mUidMap[ uid ].resource();
     sernum = mUidMap[ uid ].serialNumber();
@@ -420,7 +420,13 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   QString subject = incidencebase->uid();
   if ( !isXMLStorageFormat ) subject.prepend( "iCal " ); // conform to the old style
 
-  return kmailUpdate( subresource, sernum, data, mimetype, subject, customHeaders );
+  // behold, sernum is an in-parameter
+  const bool rc = kmailUpdate( subresource, sernum, data, mimetype, subject, customHeaders );
+  // update the serial number
+  if ( mUidMap.contains( incidencebase->uid() ) ) {
+    mUidMap[ incidencebase->uid() ].setSerialNumber( sernum );
+  }
+  return rc;
 }
 
 bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _subresource,
