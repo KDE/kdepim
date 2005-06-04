@@ -36,6 +36,7 @@
 
 #include <kglobal.h>
 #include <kdebug.h>
+#include <libkcal/event.h>
 
 #include "pilotDateEntry.h"
 
@@ -50,7 +51,9 @@ PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo):PilotAppCateg
 
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotDateEntry()
 */
-PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord * rec):PilotAppCategory(rec), fAppInfo(appInfo)
+PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord * rec) :
+	PilotAppCategory(rec),
+	fAppInfo(appInfo)
 {
 	::memset(&fAppointmentInfo, 0, sizeof(fAppointmentInfo));
 	if (rec)
@@ -58,7 +61,7 @@ PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord *
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 		pi_buffer_t b;
 		b.data = (unsigned char *) rec->getData();
-		b.allocated = b.used = rec->getLen();
+		b.allocated = b.used = rec->size();
 		unpack_Appointment(&fAppointmentInfo, &b, datebook_v1);
 #else
 		unpack_Appointment(&fAppointmentInfo,
@@ -104,7 +107,9 @@ void PilotDateEntry::_copyExceptions(const PilotDateEntry & e)
 }
 
 
-PilotDateEntry::PilotDateEntry(const PilotDateEntry & e):PilotAppCategory(e), fAppInfo(e.fAppInfo)
+PilotDateEntry::PilotDateEntry(const PilotDateEntry & e) :
+	PilotAppCategory(e),
+	fAppInfo(e.fAppInfo)
 {
 	::memcpy(&fAppointmentInfo, &e.fAppointmentInfo,
 		sizeof(struct Appointment));
@@ -183,7 +188,7 @@ QString PilotDateEntry::getTextRepresentation(bool richText)
 		text+=ps;
 	}
 
-	if (getAlarm())
+	if ( isAlarmEnabled() )
 	{
 		text+=par;
 		tmp=i18n("%1 is the duration, %2 is the time unit", "Alarm: %1 %2 before event starts").
@@ -269,6 +274,46 @@ QString PilotDateEntry::getTextRepresentation(bool richText)
 	}
 
 	return text;
+}
+
+QDateTime PilotDateEntry::dtStart() const
+{
+	FUNCTIONSETUP;
+	return readTm( getEventStart() );
+}
+
+QDateTime PilotDateEntry::dtEnd() const
+{
+	FUNCTIONSETUP;
+	return readTm( getEventEnd() );
+}
+
+QDateTime PilotDateEntry::dtRepeatEnd() const
+{
+	FUNCTIONSETUP;
+	return readTm( getRepeatEnd() );
+}
+
+unsigned int PilotDateEntry::alarmLeadTime() const
+{
+	FUNCTIONSETUP;
+	if (!isAlarmEnabled()) return 0;
+
+	int adv = getAdvance();
+	if ( adv < 0 ) return 0; // Not possible to enter on the pilot
+	unsigned int t = adv;
+	int u = getAdvanceUnits();
+
+
+	switch(u)
+	{
+	case advMinutes : t *= 60; break;
+	case advHours : t *= 3600; break;
+	case advDays : t *= 3600 * 24; break;
+	default: t = 0;
+	}
+
+	return t;
 }
 
 QString PilotDateEntry::getCategoryLabel() const
@@ -358,12 +403,14 @@ void PilotDateEntry::setNoteP(const char *note, int l)
 
 void PilotDateEntry::setNote(const QString &s)
 {
-	setNoteP(codec()->fromUnicode(s),s.length());
+	QCString t = codec()->fromUnicode(s);
+	setNoteP( t.data(),t.length() );
 }
 
 void PilotDateEntry::setDescription(const QString &s)
 {
-	setDescriptionP(codec()->fromUnicode(s),s.length());
+	QCString t = codec()->fromUnicode(s);
+	setDescriptionP( t.data(),t.length() );
 }
 
 QString PilotDateEntry::getNote() const
