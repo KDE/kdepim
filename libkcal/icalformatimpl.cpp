@@ -2070,6 +2070,10 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   }
 #endif
 
+  // read a VTIMEZONE if there is one
+  icalcomponent *ctz = 
+    icalcomponent_get_first_component( calendar, ICAL_VTIMEZONE_COMPONENT );
+
   // Store all events with a relatedTo property in a list for post-processing
   mEventsRelate.clear();
   mTodosRelate.clear();
@@ -2090,7 +2094,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   c = icalcomponent_get_first_component(calendar,ICAL_VEVENT_COMPONENT);
   while (c) {
 //    kdDebug(5800) << "----Event found" << endl;
-    Event *event = readEvent(c, NULL);
+    Event *event = readEvent(c, ctz);
     if (event && !cal->event(event->uid())) cal->addEvent(event);
     c = icalcomponent_get_next_component(calendar,ICAL_VEVENT_COMPONENT);
   }
