@@ -64,30 +64,30 @@ namespace Threaded {
     /**
        Starts reading the device and computing the synccees.
        Returns if a backup could be started. If the function returns with true
-       the job is terminated by by either a @ref signalError( const KSync::Error& )
-       or a @ref signalFinished( const KSync::Progress& ).
+       the job is terminated by by either a signalError( const KSync::Error& )
+       or a signalFinished( ).
      */
     bool readSyncees();
     /**
        Starts writing the syncees to the device.
        Returns if a backup could be started. If the function returns with true
-       the job is terminated by by either a @ref signalError( const KSync::Error& )
-       or a @ref signalFinished( const KSync::Progress& ).
+       the job is terminated by by either a signalError( const KSync::Error& )
+       or a signalFinished( ).
      */
     bool writeSyncees();
 
     /**
        Starts connecting the device.
        Returns if a backup could be started. If the function returns with true
-       the job is terminated by by either a @ref signalError( const KSync::Error& )
-       or a @ref signalFinished( const KSync::Progress& ).
+       the job is terminated by by either a signalError( const KSync::Error& )
+       or a signalFinished( ).
      */
     bool connectDevice();
     /**
        Starts disconnecting the device.
        Returns if a backup could be started. If the function returns with true
-       the job is terminated by by either a @ref signalError( const KSync::Error& )
-       or a @ref signalFinished( const KSync::Progress& ).
+       the job is terminated by by either a signalError( const KSync::Error& )
+       or a signalFinished( ).
      */
     bool disconnectDevice();
 
