@@ -469,7 +469,7 @@ void KDGanttMinimizeSplitter::setOrientation( Orientation o )
 
 #if QT_VERSION >= 300
 /*!
-  \reimp
+  Reimplemented from superclass.
 */
 void KDGanttMinimizeSplitter::resizeEvent( QResizeEvent * )
 {
@@ -600,7 +600,7 @@ void KDGanttMinimizeSplitter::setRubberband( int p )
 }
 
 
-/*! \reimp */
+/*! Reimplemented from superclass. */
 bool KDGanttMinimizeSplitter::event( QEvent *e )
 {
     if ( e->type() == QEvent::LayoutHint || ( e->type() == QEvent::Show && data->firstShow ) ) {
@@ -1124,7 +1124,7 @@ void KDGanttMinimizeSplitter::recalcId()
 }
 
 
-/*!\reimp
+/*! Reimplemented from superclass.
 */
 QSize KDGanttMinimizeSplitter::sizeHint() const
 {
