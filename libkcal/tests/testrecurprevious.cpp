@@ -102,7 +102,7 @@ int main( int argc, char **argv )
       }
     } else {
       if ( !dt.isValid() ) dt = QDateTime( QDate( 2005, 7, 31 ), QTime( 23, 59, 59 ) );
-//      else dt = dt.addYears( 2 );
+      else dt = dt.addYears( 2 );
       incidence->recurrence()->dump();
       kdDebug(5800) << "-------------------------------------------" << endl;
       kdDebug(5800) << " *~*~*~*~ Starting with date: " << dt << endl;
