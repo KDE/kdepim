@@ -149,7 +149,7 @@ protected:
 	ConflictResolution getConflictResolution() const
 		{ return fConflictResolution; };
 
-	/** Try to change the sync mode from what it is now to the mode @param m.
+	/** Try to change the sync mode from what it is now to the mode @p m.
 	* This may fail (ie. changing a backup to a restore is not kosher) and
 	* changeSync() will return false then.
 	*/
@@ -191,9 +191,13 @@ protected:
 	PilotDatabase *fDatabase,*fLocalDatabase;
 
 	/**
-	* See openDatabases_ for info on the @param retrieved
-	* parameter. In local mode, @param retrieved is left
+	* See openDatabases_ for info on the @p retrieved
+	* parameter. In local mode, @p retrieved is left
 	* unchanged.
+	*
+	* @param dbName database name to open.
+	* @param retrieved indicator whether the database had to be loaded
+	*        from the handheld.
 	*/
 	bool openDatabases(const QString &dbName, bool*retrieved=0L);
 
@@ -230,10 +234,13 @@ private:
 	bool openDatabases_(const QString &dbName,const QString &localPath);
 } ;
 
+/** A class containing only static helper methods. */
 class KDE_EXPORT PluginUtility
 {
 public:
+	/** Searches the string list for --handle=NN and returns the number. */
 	static int findHandle(const QStringList &);
+	/** Searches the string list for --modal and returns true if found. */
 	static bool isModal(const QStringList &a);
 
 	/**

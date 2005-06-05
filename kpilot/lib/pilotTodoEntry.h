@@ -50,7 +50,7 @@ class KDE_EXPORT PilotTodoEntry : public PilotAppCategory
 public:
 	/** Create an empty ToDo item */
 	PilotTodoEntry(struct ToDoAppInfo &appInfo);
-	/** Create a ToDo item and fill it with data from the uninterpreted record @param rec. */
+	/** Create a ToDo item and fill it with data from the uninterpreted record @p rec. */
 	PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec);
 	/** Copy an existing ToDo item. */
 	PilotTodoEntry(const PilotTodoEntry &e);
@@ -58,7 +58,7 @@ public:
 	~PilotTodoEntry() { free_ToDo(&fTodoInfo); }
 
 	/** Return a string for the ToDo item. If @param richText is true, then
-	* use <qt> style markup to make the string clearer when displayed.
+	* use qt style markup to make the string clearer when displayed.
 	*/
 	virtual QString getTextRepresentation(bool richText=false);
 
@@ -117,8 +117,8 @@ public:
 	// static const int APP_BUFFER_SIZE;
 
 protected:
-	void *pack_(void *, int *);
-	void unpack(const void *, int = 0) { } ;
+	void *pack_(void *buf, int *size);
+	void unpack(const void *buf, int size = 0) { } ;
 
 	const char *getDescriptionP() const { return fTodoInfo.description; } ;
 	void setDescriptionP(const char *, int len=-1) ;

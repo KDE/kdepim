@@ -185,8 +185,8 @@ void VCalConduit::_getAppInfo()
 	FUNCTIONSETUP;
 	// get the address application header information
 	unsigned char *buffer =
-		new unsigned char[PilotDateEntry::APP_BUFFER_SIZE];
-	int appLen = fDatabase->readAppBlock(buffer,PilotDateEntry::APP_BUFFER_SIZE);
+		new unsigned char[PilotRecord::APP_BUFFER_SIZE];
+	int appLen = fDatabase->readAppBlock(buffer,PilotRecord::APP_BUFFER_SIZE);
 
 	unpack_AppointmentAppInfo(&fAppointmentAppInfo, buffer, appLen);
 	delete[]buffer;
@@ -239,7 +239,7 @@ PilotRecord*VCalConduit::recordFromIncidence(PilotDateEntry*de, const KCal::Even
 	}
 
 	// set secrecy, start/end times, alarms, recurrence, exceptions, summary and description:
-	if (e->secrecy()!=KCal::Event::SecrecyPublic) de->makeSecret();
+	if (e->secrecy()!=KCal::Event::SecrecyPublic) de->setSecret( true );
 
 	setStartEndTimes(de, e);
 	setAlarms(de, e);
@@ -276,7 +276,7 @@ KCal::Event *VCalConduit::incidenceFromRecord(KCal::Event *e, const PilotDateEnt
 		KCal::Event::SecrecyPrivate :
 		KCal::Event::SecrecyPublic);
 
-	e->setPilotId(de->getID());
+	e->setPilotId(de->id());
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 
 	setStartEndTimes(e,de);
@@ -322,7 +322,7 @@ void VCalConduit::setStartEndTimes(PilotDateEntry*de, const KCal::Event *e)
 	FUNCTIONSETUP;
 	struct tm ttm=writeTm(e->dtStart());
 	de->setEventStart(ttm);
-	de->setEvent(e->doesFloat());
+	de->setFloats( e->doesFloat() );
 
 	if (e->hasEndDate() && e->dtEnd().isValid())
 	{
@@ -343,7 +343,7 @@ void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry *de)
 	if (!e) return;
 	// Delete all the alarms now and add them one by one later on.
 	e->clearAlarms();
-	if (!de->getAlarm()) return;
+	if (!de->isAlarmEnabled()) return;
 
 //	QDateTime alarmDT = readTm(de->getEventStart());
 	int advanceUnits = de->getAdvanceUnits();
@@ -393,7 +393,7 @@ void VCalConduit::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 
 	if ( !e->isAlarmEnabled() )
 	{
-		de->setAlarm(0);
+		de->setAlarmEnabled( false );
 		return;
 	}
 
@@ -410,7 +410,7 @@ void VCalConduit::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": no enabled alarm found (should exist!!!)"<<endl;
 #endif
-		de->setAlarm(0);
+		de->setAlarmEnabled( false );
 		return;
 	}
 
@@ -437,7 +437,7 @@ void VCalConduit::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 		de->setAdvanceUnits(advMinutes);
 	}
 	de->setAdvance((aoffs>0)?offs:-offs);
-	de->setAlarm(1);
+	de->setAlarmEnabled( true );
 }
 
 
@@ -792,7 +792,7 @@ void VCalConduit::setCategory(KCal::Event *e, const PilotDateEntry *de)
 {
 	if (!e || !de) return;
 	QStringList cats=e->categories();
-	int cat=de->getCat();
+	int cat=de->category();
 	if (0<cat && cat<PILOT_CATEGORY_MAX)
 	{
 		QString newcat=PilotAppCategory::codec()->toUnicode(fAppointmentAppInfo.category.name[cat]);

@@ -12,6 +12,20 @@ TODO: provide template-based, interpreted databases much like the
   AppInfo classes now have.
 TODO: give the knotes conduit a decent test mode.
 TODO: only re-write a local database if it is changed.
+TODO: move set-category code from subclasses into PilotRecordBase.
+
+2005-06-05  Adriaan de Groot
+* I learned to make Chinese dumplings yesterday. That's a much better use
+  of a saturday afternoon than bug hunting, don't you think?
+* Put lots of effort into the dox for PilotDateEntry, normalized a lot
+  of things, gave things slightly more sensible names. This is work towards
+  implementing the DatabaseInterpreter for appointments, so you can treat
+  the data on the Pilot as a sequence of (libkcal) Events instead of as
+  binary blobs.
+* Patch from Dylan G applied that replaces 15s and 16s in the code with a
+  defined constant (there already was one, just not used consistently). 
+  Did some more rationalizing, finally removed the CATEGORY_COUNT define
+  which was just a duplicate.
 
 2005-05-27  Adriaan de Groot
 * Start of the PIM meeting! Way!

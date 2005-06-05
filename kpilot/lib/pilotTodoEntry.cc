@@ -58,7 +58,7 @@ PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec):P
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 		pi_buffer_t b;
 		b.data = (unsigned char *) rec->getData();
-		b.allocated = b.used = rec->getLen();
+		b.allocated = b.used = rec->size();
 		unpack_ToDo(&fTodoInfo, &b, todo_v1);
 #else
 		unpack_ToDo(&fTodoInfo, (unsigned char *) rec->data(),

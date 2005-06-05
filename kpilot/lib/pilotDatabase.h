@@ -232,17 +232,17 @@ public:
 	/** Returns the length of the (whole) AppInfo block. */
 	PI_SIZE_T length() const { return fLen; } ;
 
-	/** Search for the given category @param name in the list
-	* of categories; returns the category number. If @param unknownIsUnfiled
+	/** Search for the given category @p name in the list
+	* of categories; returns the category number. If @p unknownIsUnfiled
 	* is true, then map unknown categories to Unfiled instead of returning
 	* an error number.
 	*
-	* @return >=0          is a specific category based on the text ->
+	* @return >=0   is a specific category based on the text ->
 	*               category number mapping defined by the Pilot,
-	*  @return -1         means unknown category selected when
-	*               @param unknownIsUnfiled is true.
-	*  @return  0         == Unfiled means unknown category selected when
-	*               @param unknownIsUnfiled is false.
+	*  @return -1   means unknown category selected when
+	*               @p unknownIsUnfiled is true.
+	*  @return  0   == Unfiled means unknown category selected when
+	*               @p unknownIsUnfiled is false.
 	*
 	*/
 	static int findCategory(const QString &name, bool unknownIsUnfiled, struct CategoryAppInfo *info);

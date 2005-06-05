@@ -682,7 +682,7 @@ KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 	if (e && de)
 	{
 		// TODO: check for conflict, and if there is one, ask for resolution
-		if ( (e->syncStatus()!=KCal::Incidence::SYNCNONE) && (r->getAttrib() &dlpRecAttrDirty) )
+		if ( (e->syncStatus()!=KCal::Incidence::SYNCNONE) && (r->isDirty() ) )
 		{
 			// TODO: I have not yet found a way to complete ignore an item
 			if (resolveConflict(e, de))

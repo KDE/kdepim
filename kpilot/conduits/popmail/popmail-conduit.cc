@@ -280,7 +280,7 @@ int PopMailConduit::sendViaKMail()
 
 		unpack_Mail(&theMail,
 			(unsigned char*)pilotRec->getData(),
-			pilotRec->getLen());
+			pilotRec->size());
 		writeMessageToFile(sendf, theMail);
 
 
@@ -319,7 +319,7 @@ int PopMailConduit::sendViaKMail()
 
 		// Mark it as filed...
 		pilotRec->setCategory(3);
-		pilotRec->setAttrib(pilotRec->getAttrib() & ~dlpRecAttrDirty);
+		pilotRec->setDirty( false );
 		fDatabase->writeRecord(pilotRec);
 		delete pilotRec;
 		// This is ok since we got the mail with unpack mail..

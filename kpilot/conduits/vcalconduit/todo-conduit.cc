@@ -273,7 +273,7 @@ PilotRecord*TodoConduit::recordFromTodo(PilotTodoEntry*de, const KCal::Todo*todo
 	}
 
 	// set secrecy, start/end times, alarms, recurrence, exceptions, summary and description:
-	if (todo->secrecy()!=KCal::Todo::SecrecyPublic) de->makeSecret();
+	if (todo->secrecy()!=KCal::Todo::SecrecyPublic) de->setSecret( true );
 
 	// update it from the iCalendar Todo.
 
@@ -428,7 +428,7 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 {
 	if (!e || !de) return;
 	QStringList cats=e->categories();
-	int cat=de->getCat();
+	int cat=de->category();
 	if (0<cat && cat<PILOT_CATEGORY_MAX)
 	{
 		QString newcat=fTodoAppInfo->category(cat);

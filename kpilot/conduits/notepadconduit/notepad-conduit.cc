@@ -143,7 +143,7 @@ void NotepadActionThread::run()
 		for ( it = vl.begin(); it != vl.end(); ++it ) {
 			PilotRecord *pr = db->readRecordById(*it);
 			if(pr) {
-				unpack_NotePad(&a, (unsigned char*)pr->getData(), pr->getLen());
+				unpack_NotePad(&a, (unsigned char*)pr->getData(), pr->size());
 				saveImage(&a);
 			}
 		}

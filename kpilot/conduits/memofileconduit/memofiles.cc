@@ -726,7 +726,7 @@ QString Memofiles::filename(PilotMemo * memo)
 
 	filename = sanitizeName(filename);
 
-	QString category = _categories[memo->getCat()];
+	QString category = _categories[memo->category()];
 
 	Memofile * memofile = find(category, filename);
 

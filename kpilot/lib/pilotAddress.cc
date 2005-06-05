@@ -56,7 +56,7 @@ PilotAddress::PilotAddress(struct AddressAppInfo &appInfo,
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	pi_buffer_t b;
 	b.data = (unsigned char *) rec->getData();
-	b.allocated = b.used = rec->getLen();
+	b.allocated = b.used = rec->size();
 	if (rec) unpack_Address(&fAddressInfo, &b, address_v1);
 #else
 	if (rec) unpack_Address(&fAddressInfo, (unsigned char *) rec->data(), rec->size());

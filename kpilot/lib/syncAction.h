@@ -143,8 +143,8 @@ public:
 		eRestore=7
 		} ;
 
-		/** Create a mode with the given Mode @param m and
-		* the mix-ins @param test and @param local, which
+		/** Create a mode with the given Mode @p m and
+		* the mix-ins @p test and @p local, which
 		* determine whether the sync should actually change
 		* anything at all (test mode) and whether the HH is
 		* to be simulated by local databases.
@@ -163,13 +163,13 @@ public:
 		* a non-test one. */
 		Mode mode() const { return fMode; };
 
-		/** Sets a mode from an integer @param mode, if possible.
-		* If the @param mode is illegal, return false and set the
+		/** Sets a mode from an integer @p mode, if possible.
+		* If the @p mode is illegal, return false and set the
 		* mode to Fast Sync. As a side effect, options test and local
 		* are reset to false.
 		*/
 		bool setMode(int);
-		/** Sets a mode from a @param mode, if possible. This leaves
+		/** Sets a mode from a @p mode, if possible. This leaves
 		* the options unchanged, so as to reward properly-typed programming.
 		*/
 		bool setMode(Mode m);

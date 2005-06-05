@@ -64,7 +64,7 @@ public:
 	PilotDateEntry& operator=(const PilotDateEntry &e);
 
 	/** Create a textual representation (human-readable) of this appointment.
-	* If @p richText is true, then the text representation uses <qt> style
+	* If @p richText is true, then the text representation uses qt style
 	* tags as well.
 	*/
 	virtual QString getTextRepresentation(bool richText=false);
@@ -232,8 +232,8 @@ public:
   static const int KDE_DEPRECATED APP_BUFFER_SIZE;
 
 protected:
-  void *pack_(void *, int *);
-  void unpack(const void *, int = 0) { }
+  void *pack_(void *buf, int *size);
+  void unpack(const void *buf, int size = 0) { }
 
 private:
   struct Appointment fAppointmentInfo;
