@@ -143,7 +143,10 @@ public:
 	virtual QString getTextRepresentation(bool rt=false)
 		{ Q_UNUSED(rt); return i18n("Unknown record type"); }
 
-	/** Sets the category number to @p c (between 0 and 15). */
+	/** Sets the category number to @p c in the range 
+	* 0 <= c < PILOT_CATEGORY_MAX). Using an invalid
+	* category number results in category 0.
+	*/
 	void setCategory( int c ) { return PilotRecordBase::setCategory(c); }
 	/** Sets the category number by looking up the string @p label
 	* in the category table @p info . Sets the category to 0 (unfiled)

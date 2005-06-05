@@ -133,7 +133,7 @@ int PilotAppInfoBase::findCategory(const QString &selectedCategory,
 	FUNCTIONSETUP;
 
 	int currentCatID = -1;
-	for (int i=0; i<CATEGORY_COUNT; i++)
+	for (int i=0; i<PILOT_CATEGORY_MAX; i++)
 	{
 		if (!info->name[i][0]) continue;
 		if (selectedCategory ==
@@ -167,7 +167,7 @@ void PilotAppInfoBase::dumpCategories(const struct CategoryAppInfo &info)
 	FUNCTIONSETUP;
 	DEBUGCONDUIT << fname << " lastUniqueId"
 		<< info.lastUniqueID << endl;
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < PILOT_CATEGORY_MAX; i++)
 	{
 		if (!info.name[i][0]) continue;
 		DEBUGCONDUIT << fname << ": " << i << " = "
@@ -187,17 +187,17 @@ void PilotAppInfoBase::dump() const
 
 QString PilotAppInfoBase::category(unsigned int i)
 {
-	if (i>=CATEGORY_COUNT) return QString::null;
-	return PilotAppCategory::codec()->toUnicode(categoryInfo()->name[i],CATEGORY_NAME_SIZE-1);
+	if (i>=PILOT_CATEGORY_MAX) return QString::null;
+	return PilotAppCategory::codec()->toUnicode(categoryInfo()->name[i],PILOT_CATEGORY_SIZE-1);
 }
 
 bool PilotAppInfoBase::setCategoryName(unsigned int i, const QString &s)
 {
-	if (i>=CATEGORY_COUNT) return false;
-	int len = CATEGORY_NAME_SIZE - 1;
+	if (i>=PILOT_CATEGORY_MAX) return false;
+	int len = PILOT_CATEGORY_SIZE - 1;
 	QCString t = PilotAppCategory::codec()->fromUnicode(s,len);
-	memset(categoryInfo()->name[i],0,CATEGORY_NAME_SIZE);
-	qstrncpy(categoryInfo()->name[i],t,CATEGORY_NAME_SIZE);
+	memset(categoryInfo()->name[i],0,PILOT_CATEGORY_SIZE);
+	qstrncpy(categoryInfo()->name[i],t,PILOT_CATEGORY_SIZE);
 	return true;
 }
 

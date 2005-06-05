@@ -340,7 +340,7 @@ QString TodoConduit::_getCat(const QStringList cats, const QString curr) const
 	if (cats.contains(curr)) return curr;
 	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it )
 	{
-		for (j=1; j<=15; j++)
+		for (j=1; j<PILOT_CATEGORY_MAX; j++)
 		{
 			QString catName = fTodoAppInfo->category(j);
 			if (!(*it).isEmpty() && !(*it).compare( catName ) )
@@ -352,7 +352,7 @@ QString TodoConduit::_getCat(const QStringList cats, const QString curr) const
 	// If we have a free label, return the first possible cat
 	//
 	// FIXME: Clearly buggy, but I don't know how or why
-	QString lastName = fTodoAppInfo->category(15);
+	QString lastName = fTodoAppInfo->category(PILOT_CATEGORY_MAX-1);
 	if (lastName.isEmpty()) return cats.first();
 	return QString::null;
 }
@@ -429,7 +429,7 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 	if (!e || !de) return;
 	QStringList cats=e->categories();
 	int cat=de->getCat();
-	if (0<cat && cat<=15)
+	if (0<cat && cat<PILOT_CATEGORY_MAX)
 	{
 		QString newcat=fTodoAppInfo->category(cat);
 		if (!cats.contains(newcat))

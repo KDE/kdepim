@@ -165,7 +165,7 @@ bool PilotAppCategory::setCategory(struct CategoryAppInfo &info,const QString &l
 {
 	int emptyAvailable = -1;
 	if (label.isEmpty()) { setCategory(0); return true; }
-	for (int catId = 1; catId < CATEGORY_COUNT; catId++)
+	for (int catId = 1; catId < PILOT_CATEGORY_MAX; catId++)
 	{
 		QString aCat;
 		if (!info.name[catId][0])

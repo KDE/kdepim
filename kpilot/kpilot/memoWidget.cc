@@ -574,7 +574,7 @@ bool MemoWidget::addMemo(const QString &s, int category)
 	{
 		return false;
 	}
-	if ((category<0) || (category>15)) category=0;
+	if ((category<0) || (category>=PILOT_CATEGORY_MAX)) category=0;
 
 	char *text = new char[s.length() + 2];
 	if (s.isEmpty())

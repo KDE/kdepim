@@ -628,7 +628,7 @@ QString AbbrowserConduit::_getCatForHH(const QStringList cats, const QString cur
 	if (cats.contains(curr)) return curr;
 	for(QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it)
 	{
-		for(j = 0; j <= 15; j++)
+		for(j = 0; j < PILOT_CATEGORY_MAX; j++)
 		{
 			QString catName = PilotAppCategory::codec()->
 				toUnicode(fAddressAppInfo.category.name[j]);
@@ -639,7 +639,7 @@ QString AbbrowserConduit::_getCatForHH(const QStringList cats, const QString cur
 		}
 	}
 	// If we have a free label, return the first possible cat
-	for(j = 0; j <= 15; j++)
+	for(j = 0; j < PILOT_CATEGORY_MAX; j++)
 	{
 		QString cat = QString::fromLatin1(fAddressAppInfo.category.name[j]);
 		if (cat.isEmpty()) return cats.first();
@@ -1754,7 +1754,7 @@ void AbbrowserConduit::_copy(Addressee &toAbEntry, PilotAddress *fromPiAddr)
 
 	int cat = fromPiAddr->category();
 	QString category;
-	if (0 < cat && cat <= 15) category = fAddressAppInfo.category.name[cat];
+	if (0 < cat && cat < PILOT_CATEGORY_MAX) category = fAddressAppInfo.category.name[cat];
 	_setCategory(toAbEntry, category);
 #ifdef DEBUG
 	showAddressee(toAbEntry);

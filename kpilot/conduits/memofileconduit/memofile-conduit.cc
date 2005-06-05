@@ -195,7 +195,7 @@ bool MemofileConduit::setAppInfo()
 
 	fCategories = map;
 
-	for (int i = 0; i < CATEGORY_COUNT; i++)
+	for (int i = 0; i < PILOT_CATEGORY_MAX; i++)
 	{
 		if (fCategories.contains(i)) {
 			QString name = fCategories[i].left(16);
@@ -272,7 +272,7 @@ bool MemofileConduit::loadPilotCategories()
 	int _category_id=0;
 	int _category_num=0;
 
-	for (int i = 0; i < CATEGORY_COUNT; i++)
+	for (int i = 0; i < PILOT_CATEGORY_MAX; i++)
 	{
 		_category_name = fMemoAppInfo->category(i);
 		if (!_category_name.isEmpty())

@@ -552,7 +552,7 @@ void RecordConduit::slotCleanup()
 const QStringList RecordConduit::categories() const
 {
 	QStringList cats;
-	for ( int j = 0; j <=  15; j++ ) {
+	for ( int j = 0; j < PILOT_CATEGORY_MAX; j++ ) {
 		QString catName( category( j ) );
 		if ( !catName.isEmpty() ) cats << catName;
 	}
@@ -658,7 +658,7 @@ QString RecordConduit::getCatForHH( const QStringList cats, const QString curr )
 		return curr;
 	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it)
 	{
-		for ( j = 0; j <= 15; j++ )
+		for ( j = 0; j < PILOT_CATEGORY_MAX; j++ )
 		{
 			QString catnm( category( j ) );
 			if ( !(*it).isEmpty() && ( (*it)==catnm ) )
@@ -668,7 +668,7 @@ QString RecordConduit::getCatForHH( const QStringList cats, const QString curr )
 		}
 	}
 	// If we have a free label, return the first possible cat
-	QString lastCat( category( 15 ) );
+	QString lastCat( category( PILOT_CATEGORY_MAX-1 ) );
 	return ( lastCat.isEmpty() ) ? ( cats.first() ) : ( QString::null );
 }
 

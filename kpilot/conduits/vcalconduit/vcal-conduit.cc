@@ -772,7 +772,7 @@ QString VCalConduit::_getCat(const QStringList cats, const QString curr) const
 	if (cats.size()<1) return QString::null;
 	if (cats.contains(curr)) return curr;
 	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it ) {
-		for (j=1; j<=15; j++)
+		for (j=1; j<PILOT_CATEGORY_MAX; j++)
 		{
 			QString catName = PilotAppCategory::codec()->
 			  toUnicode(fAppointmentAppInfo.category.name[j]);
@@ -783,7 +783,7 @@ QString VCalConduit::_getCat(const QStringList cats, const QString curr) const
 		}
 	}
 	// If we have a free label, return the first possible cat
-	QString lastName(QString::fromLatin1(fAppointmentAppInfo.category.name[15]));
+	QString lastName(QString::fromLatin1(fAppointmentAppInfo.category.name[PILOT_CATEGORY_MAX-1]));
 	if (lastName.isEmpty()) return cats.first();
 	return QString::null;
 }
@@ -793,7 +793,7 @@ void VCalConduit::setCategory(KCal::Event *e, const PilotDateEntry *de)
 	if (!e || !de) return;
 	QStringList cats=e->categories();
 	int cat=de->getCat();
-	if (0<cat && cat<=15)
+	if (0<cat && cat<PILOT_CATEGORY_MAX)
 	{
 		QString newcat=PilotAppCategory::codec()->toUnicode(fAppointmentAppInfo.category.name[cat]);
 		if (!cats.contains(newcat))

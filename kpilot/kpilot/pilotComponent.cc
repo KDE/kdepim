@@ -139,7 +139,7 @@ void PilotComponent::populateCategories(QComboBox * c,
 	// the user uses, so no translation is necessary.
 	//
 	//
-	for (int i = 0; i < CATEGORY_COUNT; i++)
+	for (int i = 0; i < PILOT_CATEGORY_MAX; i++)
 	{
 		if (info->name[i][0])
 		{

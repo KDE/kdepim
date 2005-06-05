@@ -46,8 +46,8 @@ struct pi_buffer_t;
 #include <pi-dlp.h>
 #include <pi-file.h>
 
-#define CATEGORY_NAME_SIZE 16 // (sizeof(((struct CategoryAppInfo *)0)->name[0]))
-#define CATEGORY_COUNT     16 // ( (sizeof(((struct CategoryAppInfo *)0)->name)) / CATEGORY_NAME_SIZE )
+#define PILOT_CATEGORY_SIZE 16 // (sizeof(((struct CategoryAppInfo *)0)->name[0]))
+#define PILOT_CATEGORY_MAX 16 // ( (sizeof(((struct CategoryAppInfo *)0)->name)) / PILOT_CATEGORY_SIZE )
 
 
 /** All entries in the Handheld -- whether interpreted or binary blobs --
@@ -62,26 +62,31 @@ public:
 	/** Constructor. Initialize the characteristics to the
 	* given values.
 	* @param attrib Attributes (bitfield) for this entry.
-	* @param cat Category for this entry. Should be between 0 and 16
-	*        (CATEGORY_COUNT), but this is not enforced.
+	* @param cat Category for this entry. Should be in the
+	*        range 0 <= cat < PILOT_CATEGORY_MAX . Using an
+	*        invalid category means 0 (unfiled) is used.
 	* @param id Unique ID for this entry. May be 0 (non-unique) as well.
 	*/
 	PilotRecordBase(int attrib=0, int cat=0, recordid_t id=0) :
-		fAttrib(attrib),fCat(cat),fID(id) {}
+		fAttrib(attrib),fCat(cat),fID(id) 
+	{ 
+		if ( !( (0<=cat) && (cat<PILOT_CATEGORY_MAX) ) ) fCat=0; 
+	}
 
 	/** Attributes of this record (deleted, secret, ...); it's a bitfield. */
-	inline int   attributes() const { return fAttrib; }
+	inline int attributes() const { return fAttrib; }
 	/** Set the attributes of this record. */
 	inline void  setAttributes(int attrib) { fAttrib = attrib; }
 	int KDE_DEPRECATED getAttrib() const { return attributes(); }
 	void KDE_DEPRECATED setAttrib(int attrib) { setAttributes(attrib); }
 
-	/** Returns the category number (0..15) of this record. */
+	/** Returns the category number 0 <= < PILOT_CATEGORY_MAX of this record. */
 	int   category() const { return fCat; }
-	/** Sets the category number (0..15) of this record. Trying to set an illegal
-	* category number files this one under "Unfiled" (which is 0).
+	/** Sets the category number 0 <= < PILOT_CATEGORY_MAX of this record. 
+	* Trying to set an illegal category number files this one under 
+	* "Unfiled" (which is 0).
 	*/
-	void  setCategory(int cat) { if ( (cat<0) || (cat>=CATEGORY_COUNT)) cat=0; fCat = cat; }
+	void  setCategory(int cat) { if ( (cat<0) || (cat>=PILOT_CATEGORY_MAX)) cat=0; fCat = cat; }
 	int  KDE_DEPRECATED  getCat() const { return category(); }
 	void KDE_DEPRECATED  setCat(int cat) { return setCategory(cat); }
 
