@@ -319,7 +319,7 @@ int PopMailConduit::sendViaKMail()
 
 		// Mark it as filed...
 		pilotRec->setCategory(3);
-		pilotRec->setDirty( false );
+		pilotRec->setModified( false );
 		fDatabase->writeRecord(pilotRec);
 		delete pilotRec;
 		// This is ok since we got the mail with unpack mail..
