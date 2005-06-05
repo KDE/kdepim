@@ -2517,7 +2517,7 @@ bool KDGanttViewItem::isMyTextCanvas(QCanvasItem *tc)
   Specifies the progress of this item in percent.
   Progress is limited to minimum 0, maximum 100.
 
-  \param time the progress in percent.
+  \param percent the progress in percent.
 */
 
 void KDGanttViewItem::setProgress(int percent)

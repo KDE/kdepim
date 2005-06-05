@@ -60,6 +60,7 @@
 
   \param from the source items
   \param to the target items
+  \param type the link type for the connection
 */
 KDGanttViewTaskLink::KDGanttViewTaskLink( QPtrList<KDGanttViewItem> from,
                                           QPtrList<KDGanttViewItem> to,
@@ -82,6 +83,7 @@ KDGanttViewTaskLink::KDGanttViewTaskLink( QPtrList<KDGanttViewItem> from,
 
   \param from the source item
   \param to the target item
+  \param type the link type for the connection
 */
 KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewItem*  from,
                                           KDGanttViewItem* to,
@@ -103,6 +105,7 @@ KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewItem*  from,
   \param group the link group to insert this link into
   \param from the source items
   \param to the target items
+  \param type the link type for the connection
 */
 
 KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
@@ -129,6 +132,7 @@ KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
   \param group the link group to insert this link into
   \param from the source item
   \param to the target item
+  \param type the link type for the connection
 */
 
 KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,

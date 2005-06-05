@@ -52,6 +52,7 @@
   base class.
   \param name the internal widget name. This parameter is passed to
   the base class.
+  \param f window flags. This parameter is passed to the base class.
 
 */
 
