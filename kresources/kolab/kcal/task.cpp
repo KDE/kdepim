@@ -55,7 +55,7 @@ QString Task::taskToXML( KCal::Todo* todo, const QString& tz )
 }
 
 Task::Task( const QString& tz, KCal::Todo* task )
-  : Incidence( tz ), mPriority( 3 ), mPercentCompleted( 0 ),
+  : Incidence( tz ), mPriority( 5 ), mPercentCompleted( 0 ),
     mStatus( KCal::Incidence::StatusNone ),
     mHasStartDate( false ), mHasDueDate( false ),
     mHasCompletedDate( false )
@@ -157,8 +157,8 @@ bool Task::loadAttribute( QDomElement& element )
   if ( tagName == "priority" ) {
     bool ok;
     int priority = element.text().toInt( &ok );
-    if ( !ok || priority < 0 || priority > 5 )
-      priority = 3;
+    if ( !ok || priority < 0 || priority > 9 )
+      priority = 5;
     setPriority( priority );
   } else if ( tagName == "completed" ) {
     bool ok;
