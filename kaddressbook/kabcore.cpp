@@ -446,6 +446,7 @@ void KABCore::pasteContacts()
 void KABCore::pasteContacts( KABC::Addressee::List &list )
 {
   KABC::Resource *resource = requestResource( mWidget );
+  if(! resource) return;
   KABC::Addressee::List::Iterator it;
   for ( it = list.begin(); it != list.end(); ++it )
     (*it).setResource( resource );
