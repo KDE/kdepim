@@ -339,7 +339,7 @@ public:
 
   /** parse a literal or word, may require more data */
   QCString parseLiteralC(parseString & inWords, bool relay = false,
-                           bool stopAtBracket = false, int *outlen = 0L);
+                           bool stopAtBracket = false, int *outlen = 0);
   inline QByteArray parseLiteral (parseString & inWords, bool relay = false,
                            bool stopAtBracket = false) {
     int len = 0; // string size
@@ -356,7 +356,7 @@ public:
 
   /** parse one word (maybe quoted) upto next space " ) ] } */
   static QCString parseOneWordC (parseString & inWords,
-    bool stopAtBracket = FALSE, int *len = 0L);
+    bool stopAtBracket = FALSE, int *len = 0);
   static inline QByteArray parseOneWord (parseString & inWords,
     bool stopAtBracket = FALSE) {
     int len = 0; // string size
