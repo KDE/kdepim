@@ -70,7 +70,7 @@ imapParser::imapParser ()
 imapParser::~imapParser ()
 {
   delete lastHandled;
-  lastHandled = 0L;
+  lastHandled = 0;
 }
 
 imapCommand *
@@ -456,10 +456,6 @@ imapParser::parseUntagged (parseString & result)
           if (qstrncmp(what, "FETCH", what.size()) == 0)
           {
             seenUid = QString::null;
-            if (lastHandled) 
-              lastHandled->clear();
-            else 
-              lastHandled = new imapCache();
             parseFetch (number, result);
           }
           break;
@@ -1849,28 +1845,6 @@ QCString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, i
       inWords.pos++;
       inWords.takeLeft(retVal, i - 1);
       len = i - 1;
-#if 0
-      static char *buf = 0L;
-      static int buflen = 0;
-      if (buflen < i) {
-        buflen = i;
-        buf = (char *)realloc(buf, buflen);
-      }
-
-      // If you're keen, you could do this in-place without the buffer
-      int k = 0;
-      for (unsigned int j = 0; j < len; j++) {
-        if (retVal[j] != '\\') {
-          buf[k++] = retVal[j];
-        } else {
-          j++; // skip the next character too
-        }
-      }
-      buf[k] = 0;
-
-      retVal = buf; // deep copy
-      retValSize = k;
-#else
       int offset = 0;
       for (unsigned int j = 0; j <= len; j++) {
         if (retVal[j] == '\\') {
@@ -1881,7 +1855,6 @@ QCString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, i
       }
       retVal[len - offset] = 0;
       retValSize = len - offset;
-#endif
       inWords.pos += i;
     }
     else
