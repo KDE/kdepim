@@ -44,6 +44,7 @@
 #include <qvbox.h>
 #include <qheader.h>
 #include <qtoolbutton.h>
+#include <qcheckbox.h>
 #include <kapplication.h>
 #include <dcopclient.h>
 
@@ -67,6 +68,9 @@ This dialog allows to change those weights, by showing one item per:
 
  Maybe 'recent addresses' should be configurable too, but first it might
  be better to add support for them in korganizer too.
+
+ The dialog also allows to disable the whole business of weighted completion 
+ sources and use straight up alphabetical sorting instead.
 
 */
 
@@ -206,8 +210,9 @@ CompletionOrderEditor::CompletionOrderEditor( KPIM::LdapSearch* ldapSearch,
   // Now sort the items, then create the GUI
   mItems.sort();
 
-  QHBox* page = makeHBoxMainWidget();
-  mListView = new KListView( page );
+  QVBox* page = makeVBoxMainWidget();
+  mListViewAndButtons = new QHBox( page );
+  mListView = new KListView( mListViewAndButtons );
   mListView->setSorting( -1 );
   mListView->addColumn( QString::null );
   mListView->header()->hide();
@@ -217,7 +222,7 @@ CompletionOrderEditor::CompletionOrderEditor( KPIM::LdapSearch* ldapSearch,
     kdDebug(5300) << "  " << (*compit)->label() << " " << (*compit)->completionWeight() << endl;
   }
 
-  QVBox* upDownBox = new QVBox( page );
+  QVBox* upDownBox = new QVBox( mListViewAndButtons );
   mUpButton = new QToolButton( upDownBox, "mUpButton" );
   mUpButton->setPixmap( BarIcon( "up", KIcon::SizeSmall ) );
   mUpButton->setEnabled( false ); // b/c no item is selected yet
@@ -230,6 +235,14 @@ CompletionOrderEditor::CompletionOrderEditor( KPIM::LdapSearch* ldapSearch,
 
   QWidget* spacer = new QWidget( upDownBox );
   upDownBox->setStretchFactor( spacer, 100 );
+
+  mUseSortedInsteadOfWeighted = new QCheckBox( i18n( "Use alphabetical sorting" ),  page );
+  mConfig.setGroup( "General" );
+  const bool sorted = ( mConfig.readEntry( "CompletionOrder", "Weighted" ) == "Sorted" );
+  mUseSortedInsteadOfWeighted->setChecked( sorted );
+  connect ( mUseSortedInsteadOfWeighted, SIGNAL( toggled( bool ) ),
+            this, SLOT( slotUseSortedInsteadOfWeightedToggled( bool ) ) );
+  mListViewAndButtons->setEnabled( !sorted );
 
   connect( mListView, SIGNAL( selectionChanged( QListViewItem* ) ),
            SLOT( slotSelectionChanged( QListViewItem* ) ) );
@@ -278,6 +291,12 @@ void CompletionOrderEditor::slotMoveDown()
   mDirty = true;
 }
 
+void CompletionOrderEditor::slotUseSortedInsteadOfWeightedToggled( bool on )
+{
+  mListViewAndButtons->setEnabled( !on );
+  mDirty = true;
+}
+
 void CompletionOrderEditor::slotOk()
 {
   if ( mDirty ) {
@@ -289,6 +308,10 @@ void CompletionOrderEditor::slotOk()
       kdDebug(5300) << "slotOk:   " << item->item()->label() << " " << w << endl;
       --w;
     }
+
+    mConfig.setGroup( "General" );
+    const QString order = mUseSortedInsteadOfWeighted->isChecked()?"Sorted":"Weighted";
+    mConfig.writeEntry( "CompletionOrder", order );
 
     // Emit DCOP signal
     // The emitter is always set to KPIM::IMAPCompletionOrder, so that the connect works

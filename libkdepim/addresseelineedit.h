@@ -88,6 +88,9 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     virtual void dropEvent( QDropEvent *e );
     void doCompletion( bool ctrlT );
     virtual QPopupMenu *createPopupMenu();
+    
+    /** return whether we are using sorted or weighted display */
+    static KCompletion::CompOrder completionOrder();
 
   k_dcop:
     // Connected to the DCOP signal

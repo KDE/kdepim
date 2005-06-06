@@ -35,6 +35,8 @@
 #include <kconfig.h>
 
 class QToolButton;
+class QCheckBox;
+class QHBox;
 class KListView;
 namespace KPIM {
 
@@ -74,6 +76,7 @@ private slots:
   void slotSelectionChanged( QListViewItem* );
   void slotMoveUp();
   void slotMoveDown();
+  void slotUseSortedInsteadOfWeightedToggled( bool on );
   virtual void slotOk();
 
 private:
@@ -82,6 +85,8 @@ private:
   KListView* mListView;
   QToolButton* mUpButton;
   QToolButton* mDownButton;
+  QCheckBox* mUseSortedInsteadOfWeighted;
+  QHBox* mListViewAndButtons;
 
   bool mDirty;
 };

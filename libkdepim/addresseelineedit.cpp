@@ -102,7 +102,7 @@ void AddresseeLineEdit::init()
 {
   if ( !s_completion ) {
     completionDeleter.setObject( s_completion, new KCompletion() );
-    s_completion->setOrder( KCompletion::Weighted );
+    s_completion->setOrder( completionOrder() );
     s_completion->setIgnoreCase( true );
 
     completionItemsDeleter.setObject( s_completionItemMap, new KPIM::CompletionItemsMap() );
@@ -325,8 +325,10 @@ void AddresseeLineEdit::doCompletion( bool ctrlT )
   if ( !m_useCompletion )
     return;
 
-  if ( s_addressesDirty )
+  if ( s_addressesDirty ) {
     loadContacts(); // read from local address book
+    s_completion->setOrder( completionOrder() );
+  }
 
   // cursor at end of string - or Ctrl+T pressed for substring completion?
   if ( ctrlT ) {
@@ -738,4 +740,16 @@ void KPIM::AddresseeLineEdit::slotCompletion()
   doCompletion( false );
 }
 
+// not cached, to make sure we get an up-to-date value when it changes
+KCompletion::CompOrder KPIM::AddresseeLineEdit::completionOrder()
+{
+  KConfig config( "kpimcompletionorder" );
+  config.setGroup( "General" );
+  const QString order = config.readEntry( "CompletionOrder", "Weighted" );
+
+  if ( order == "Weighted" )
+    return KCompletion::Weighted;
+  else
+    return KCompletion::Sorted;
+}
 #include "addresseelineedit.moc"
