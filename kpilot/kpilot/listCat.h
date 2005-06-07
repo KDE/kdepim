@@ -5,9 +5,12 @@
 ** Copyright (C) 2000-2001 by Adriaan de Groot
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
+*/
+
+/** @file
 ** This is a specialization of KListView to allow the user to
 ** DnD a fixed set of objects into a fixed set of categories
-** (categories set at construction time).
+** (categories set at construction time). @em Deprecated, do not use.
 */
 
 /*
@@ -44,13 +47,13 @@ class QStringList;
  * You can use all of the standard KListView signals and
  * slots. You may in particular want to change the names
  * of the columns, for example:
- * <PRE>
+ * @code
  * ListCategorizer *lc = new ListCategorizer(this,colors);
  * lc->setColumnText(0,i18n("Color"));
  * lc->setColumnText(1,i18n("HTML"));
  * QListViewItem *stdKDE = lc->addCategory(i18n("Standard KDE"));
  * (void) new QListViewItem(stdKDE,i18n("red"),"#FF0000");
- * </PRE>
+ * @endcode
  * to set sensible column headers for a list of colors
  * and their HTML equivalents (although why you would want
  * to categorize colors is beyond me).
@@ -142,12 +145,12 @@ public:
 	 */
 	QListViewItem *findCategory(const QString& categoryName) const;
 	/**
-	 * Return the list of strings in column @column of all siblings
+	 * Return the list of strings in column @p column of all siblings
 	 * of the given item @p p. If you remembered a pointer to a
 	 * category, you can use
-	 * <PRE>
+	 * @code
 	 * QStringList l = lc->listSiblings(stdKDE->firstChild(),2);
-	 * <PRE>
+	 * @endcode
 	 * to get the list of strings in hidden column 2 under
 	 * the category you remembered.
 	 */
