@@ -43,7 +43,7 @@ apidox-am-yes:
 			else \
 				tagpath=`ls -1 $(kde_htmldir)/en/*-apidocs/$$tag/$$tag.tag 2> /dev/null` ;\
 				if test -n "$$tagpath"; then \
-					path=`echo $$tagpath | sed -e "s,.*/\([^/]*-apidocs\)/$$tag/$$tag.tag,../../../\1/$$tag,"` ;\
+					path=`echo $$tagpath | sed -e "s,.*/\([^/]*-apidocs\)/$$tag/$$tag.tag,$(top_builddir)/../../\1/$$tag,"` ;\
 				fi ;\
 			fi ;\
 			if test "$$tag" = qt; then \
