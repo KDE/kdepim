@@ -5,6 +5,9 @@
 ** Copyright (C) 1998-2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
+*/
+
+/** @file
 ** Encapsulates all the communication with the pilot. Also
 ** does daemon-like polling of the Pilot. Interesting status
 ** changes are signalled.
@@ -46,21 +49,7 @@ class KPilotSysInfo;
 class KPilotCard;
 struct DBInfo;
 
-/*
-** The KPilotLink class was originally a kind of C++ wrapper
-** for the pilot-link library. It grew and grew and mutated
-** until it was finally cleaned up again in 2001. In the meantime
-** it had become something that wrapped a lot more than just
-** pilot-link. This class currently does:
-**
-** * Client (ie. conduit) handling of kpilotlink protocol connections
-** * Pilot-link handling
-**
-** Which is exactly what is needed: something that conduits can
-** plug onto to talk to the pilot.
-*/
-
-/*
+/**
 ** The struct db is a description class for Pilot databases
 ** by Kenneth Albanowski. It's not really clear why it's *here*.
 ** The macro pi_mktag is meant to be given four char (8-bit)
@@ -82,6 +71,20 @@ struct db
 #define pi_mktag(c1,c2,c3,c4) (((c1)<<24)|((c2)<<16)|((c3)<<8)|(c4))
 
 
+
+/**
+** The KPilotLink class was originally a kind of C++ wrapper
+** for the pilot-link library. It grew and grew and mutated
+** until it was finally cleaned up again in 2001. In the meantime
+** it had become something that wrapped a lot more than just
+** pilot-link. This class currently does:
+**
+** * Client (ie. conduit) handling of kpilotlink protocol connections
+** * Pilot-link handling
+**
+** Which is exactly what is needed: something that conduits can
+** plug onto to talk to the pilot.
+*/
 
 class KDE_EXPORT KPilotDeviceLink : public QObject
 {
