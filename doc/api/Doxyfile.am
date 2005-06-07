@@ -31,10 +31,28 @@ apidox-am-yes:
 					patterns="$$patterns $$item" ;\
 				fi ;\
 			done ;\
-			echo "EXCLUDE_PATTERNS      += $$patterns" >> Doxyfile;
-\
+			echo "EXCLUDE_PATTERNS      += $$patterns" >> Doxyfile; \
 			echo "EXCLUDE               += $$dirs" >> Doxyfile ;\
 		fi ;\
+		echo "TAGFILES = \\" >> Doxyfile; \
+		tags='$(DOXYGEN_REFERENCES) qt'; for tag in $$tags; do \
+			tagpath= ;\
+			path="../../$$tag" ;\
+			if test -f $(top_builddir)/apidocs/$$tag/$$tag.tag; then \
+				tagpath="$(top_builddir)/apidocs/$$tag/$$tag.tag" ;\
+			else \
+				tagpath=`ls -1 $(kde_htmldir)/en/*-apidocs/$$tag/$$tag.tag 2> /dev/null` ;\
+				if test -n "$$tagpath"; then \
+					path=`echo $$tagpath | sed -e "s,.*/\([^/]*-apidocs\)/$$tag/$$tag.tag,../../../\1/$$tag,"` ;\
+				fi ;\
+			fi ;\
+			if test "$$tag" = qt; then \
+				echo "	$$tagpath=$(QTDOCDIR)" >> Doxyfile ;\
+			else if test -n "$$tagpath"; then \
+				echo "$$tagpath=$$path/html \\" >> Doxyfile ;\
+				fi ;\
+			fi ;\
+		done ;\
 		$(DOXYGEN) Doxyfile ;\
 		dox_index="$(top_srcdir)/doc/api/doxyndex.sh" ; \
 		test -f "$$dox_index" || dox_index="$(top_srcdir)/admin/Doxyndex.sh" ; \
