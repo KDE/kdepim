@@ -465,7 +465,7 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
   mSavedOffsetY = mKeyListView->contentsY();
 
   disconnectSignals();
-  this->setEnabled( false );
+  mKeyListView->setEnabled( false );
 
   // FIXME: save current selection
   if ( mOpenPGPBackend )
@@ -474,7 +474,7 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
     startKeyListJobForBackend( mSMIMEBackend, std::vector<GpgME::Key>(), false /*non-validating*/ );
 
   if ( mListJobCount == 0 ) {
-    this->setEnabled( true );
+    mKeyListView->setEnabled( true );
     KMessageBox::information( this,
 			      i18n("No backends found for listing keys. "
 				   "Check your installation."),
@@ -558,7 +558,7 @@ void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & r
 
   mKeyListView->flushKeys();
 
-  this->setEnabled( true );
+  mKeyListView->setEnabled( true );
   mListJobCount = mTruncated = 0;
   mKeysToCheck.clear();
 
@@ -630,7 +630,7 @@ void Kleo::KeySelectionDialog::startValidatingKeyListing() {
   mSavedOffsetY = mKeyListView->contentsY();
 
   disconnectSignals();
-  this->setEnabled( false );
+  mKeyListView->setEnabled( false );
 
   std::vector<GpgME::Key> smime, openpgp;
   for ( std::vector<GpgME::Key>::const_iterator it = mKeysToCheck.begin() ; it != mKeysToCheck.end() ; ++it )
