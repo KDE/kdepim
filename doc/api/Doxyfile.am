@@ -21,6 +21,20 @@ apidox-am-yes:
 		echo "HTML_FOOTER            = $$dox_footer" >> Doxyfile; \
 		echo "HTML_STYLESHEET        = $$dox_css" >> Doxyfile; \
 		echo "GENERATE_TAGFILE       = $(top_builddir)/apidocs/$(subdir)/`basename $(subdir)`.tag" >> Doxyfile ;\
+		if test -n "$(DOXYGEN_EXCLUDE)"; then \
+			patterns= ;\
+			dirs= ;\
+			for item in `echo "$(DOXYGEN_EXCLUDE)"`; do \
+				if test -d "$(srcdir)/$$item"; then \
+					dirs="$$dirs $(srcdir)/$$item/" ;\
+				else \
+					patterns="$$patterns $$item" ;\
+				fi ;\
+			done ;\
+			echo "EXCLUDE_PATTERNS      += $$patterns" >> Doxyfile;
+\
+			echo "EXCLUDE               += $$dirs" >> Doxyfile ;\
+		fi ;\
 		$(DOXYGEN) Doxyfile ;\
 		dox_index="$(top_srcdir)/doc/api/doxyndex.sh" ; \
 		test -f "$$dox_index" || dox_index="$(top_srcdir)/admin/Doxyndex.sh" ; \
@@ -53,6 +67,7 @@ install-apidox:
 		$(mkinstalldirs) $(DESTDIR)$(kde_htmldir)/en/$(PACKAGE)-apidocs ;\
 		list=`cd $(top_builddir)/apidocs && ls -1`; \
 		echo "installing $(top_builddir)/apidocs/$$file" ;\
+		echo "target directory $(DESTDIR)$(kde_htmldir)/en/$(PACKAGE)-apidocs" ; \
 		for file in $$list; do \
 			if test -f $(top_builddir)/apidocs/$$file; then \
 				$(INSTALL_DATA) $(top_builddir)/apidocs/$$file $(DESTDIR)$(kde_htmldir)/en/$(PACKAGE)-apidocs; \
