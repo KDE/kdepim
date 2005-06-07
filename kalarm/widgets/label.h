@@ -54,7 +54,7 @@ class Label : public QLabel
 		 *  @param name   The name of this widget.
 		 *  @param f      @see QWidget constructor for details.
 		 */
-		Label(const QString& text, QWidget* parent, const char* name = 0, WFlags = 0);
+		Label(const QString& text, QWidget* parent, const char* name = 0, WFlags f = 0);
 		/** Constructs a label, with a buddy widget, that displays @p text.
 		 *  @param buddy  Buddy widget which receives the keyboard focus when the
 		 *                label's accelerator key is pressed. If @p buddy is a radio
@@ -65,7 +65,7 @@ class Label : public QLabel
 		 *  @param name   The name of this widget.
 		 *  @param f      @see QWidget constructor for details.
 		 */
-		Label(QWidget* buddy, const QString& text, QWidget* parent, const char* name = 0, WFlags = 0);
+		Label(QWidget* buddy, const QString& text, QWidget* parent, const char* name = 0, WFlags f = 0);
 		/** Sets the label's buddy widget which receives the keyboard focus when the
 		 *  label's accelerator key is pressed. If @p buddy is a radio button,
 		 *  @p buddy is in addition selected when the accelerator key is pressed.

@@ -57,7 +57,11 @@ class MessageBox : public KMessageBox
 		 */
 		static void setContinueDefault(const QString& dontAskAgainName, ButtonCode defaultButton);
 		/** Displays a Continue/Cancel message box with the option as to which button is the default.
+		 *  @param parent Parent widget
 		 *  @param defaultButton The default button for the message box. Valid values are Continue or Cancel.
+		 *  @param text Message string
+		 *  @param caption Caption (window title) of the message box
+		 *  @param buttonContinue The text for the first button (default = i18n("Continue"))
 		 *  @param dontAskAgainName If specified, the message box will only be suppressed
 		 *    if the user chose Continue last time.
 		 */
@@ -66,6 +70,10 @@ class MessageBox : public KMessageBox
 		                                  const KGuiItem& buttonContinue = KStdGuiItem::cont(),
 		                                  const QString& dontAskAgainName = QString::null);
 		/** Displays a Continue/Cancel message box.
+		 *  @param parent Parent widget
+		 *  @param text Message string
+		 *  @param caption Caption (window title) of the message box
+		 *  @param buttonContinue The text for the first button (default = i18n("Continue"))
 		 *  @param dontAskAgainName If specified, (1) The message box will only be suppressed
 		 *    if the user chose Continue last time, and (2) The default button is that last set
 		 *    with either setContinueDefault() or warningContinueCancel() for the same
@@ -87,11 +95,11 @@ class MessageBox : public KMessageBox
 		 *  If the message box has Cancel as the default button, either setContinueDefault()
 		 *  or warningContinueCancel() must have been called previously to set this for the
 		 *  specified @p dontShowAgainName value.
-		 *  @param dontAskAgainName The identifier controlling whether the message box is suppressed.
+		 *  @param dontShowAgainName The identifier controlling whether the message box is suppressed.
 		 */
 		static bool shouldBeShownContinue(const QString& dontShowAgainName);
 		/** Stores whether the Yes/No message box should or should not be shown again.
-		 *  @param dontAskAgainName The identifier controlling whether the message box is suppressed.
+		 *  @param dontShowAgainName The identifier controlling whether the message box is suppressed.
 		 *  @param dontShow If true, the message box will be suppressed and will return @p result.
 		 *  @param result The button code to return if the message box is suppressed.
 		 */
@@ -100,7 +108,7 @@ class MessageBox : public KMessageBox
 		 *  If the message box has Cancel as the default button, either setContinueDefault()
 		 *  or warningContinueCancel() must have been called previously to set this for the
 		 *  specified @p dontShowAgainName value.
-		 *  @param dontAskAgainName The identifier controlling whether the message box is suppressed.
+		 *  @param dontShowAgainName The identifier controlling whether the message box is suppressed.
 		 *  @param dontShow If true, the message box will be suppressed and will return Continue.
 		 */
 		static void saveDontShowAgainContinue(const QString& dontShowAgainName, bool dontShow = true);

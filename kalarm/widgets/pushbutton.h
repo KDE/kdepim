@@ -59,7 +59,7 @@ class PushButton : public QPushButton
 		/** Sets whether the push button is read-only for the user.
 		 *  @param readOnly True to set the widget read-only, false to enable its action.
 		 */
-		virtual void  setReadOnly(bool);
+		virtual void  setReadOnly(bool readOnly);
 		/** Returns true if the widget is read only. */
 		virtual bool  isReadOnly() const  { return mReadOnly; }
 	protected:
