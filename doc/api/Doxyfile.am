@@ -131,6 +131,19 @@ apidox:
 	    done; \
 	fi
 
+install-apidox-recurse: install-apidox
+	@set fnord $(MAKEFLAGS); amf=$$2; if test -n '$(SUBDIRS)'; then \
+	    list='$(SUBDIRS)'; \
+	    for subdir in $$list; do \
+		if grep '^include .*Doxyfile.am' $(srcdir)/$$subdir/Makefile.am > /dev/null ; then \
+		echo "Installing apidox from $$subdir"; \
+		if test "$$subdir" != "."; then \
+			(cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) GENERATE_FLAG=no install-apidox-recurse) || exit 1; \
+		fi ; fi ;\
+	    done; \
+	fi
+
+
 apidox-am-toplevel-no:
 apidox-am-toplevel-yes:
 	@echo "*** Creating API documentation main page"; \
