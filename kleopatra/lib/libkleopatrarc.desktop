@@ -24,6 +24,7 @@ Name[sr]=Неоверени кључ
 Name[sr@Latn]=Neovereni ključ
 Name[sv]=Nyckeln har inte validerats
 Name[ta]=செல்லுபடியாகாத விசை
+Name[tr]=Geçerli Olmayan Anahtar
 Name[uk]=Неперевірений ключ
 Name[zh_CN]=未校验的密钥
 
@@ -57,6 +58,7 @@ Name[sr]=Истекли кључ
 Name[sr@Latn]=Istekli ključ
 Name[sv]=Utgången nyckel
 Name[ta]=காலாவதியான விசை
+Name[tr]=Süresi Dolmuş Anahtar
 Name[uk]=Застарілий ключ
 Name[zh_CN]=过期密钥
 
@@ -87,6 +89,7 @@ Name[sr]=Опозвани кључ
 Name[sr@Latn]=Opozvani ključ
 Name[sv]=Återkallad nyckel
 Name[ta]=நீக்கிய விசை
+Name[tr]=Geri Alınmış Anahtar
 Name[uk]=Анульований ключ
 Name[zh_CN]=吊销的密钥
 
@@ -117,6 +120,7 @@ Name[sr]=Корени сертификат од поверења
 Name[sr@Latn]=Koreni sertifikat od poverenja
 Name[sv]=Pålitligt rotcertifikat
 Name[ta]=நம்பகமான மூல சான்றிதழ்
+Name[tr]=Güvenilir Kök Sertifikası
 Name[uk]=Кореневий сертифікат з довірою
 Name[zh_CN]=可信任的根证书
 
@@ -147,6 +151,7 @@ Name[sr]=Корени сертификат који није од поверењ
 Name[sr@Latn]=Koreni sertifikat koji nije od poverenja
 Name[sv]=Opålitligt rotcertifikat
 Name[ta]=நம்பமுடியாத மூல சான்றிதழ்
+Name[tr]=Güvenilmeyen Kök Sertifikası
 Name[uk]=Кореневий сертифікат без довіри
 Name[zh_CN]=未信任的根证书
 
@@ -179,6 +184,7 @@ Name[sr]=Други кључеви
 Name[sr@Latn]=Drugi ključevi
 Name[sv]=Andra nycklar
 Name[ta]=மற்ற விசைகள்
+Name[tr]=Diğer Anahtarlar
 Name[uk]=Інші ключі
 Name[zh_CN]=其它密钥
 
