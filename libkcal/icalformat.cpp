@@ -471,15 +471,18 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   }
 
   kdDebug(5800) << "ICalFormat::parseScheduleMessage() restriction..." << endl;
-
+  
   if (!icalrestriction_check(message)) {
+    kdWarning(5800) << k_funcinfo << endl << "libkcal reported a problem while parsing:" << endl;
+    kdWarning(5800) << Scheduler::translatedMethodName(method) + ": " + mImpl->extractErrorProperty(c)<< endl;
+    /*
     setException(new ErrorFormat(ErrorFormat::Restriction,
                                    Scheduler::translatedMethodName(method) + ": " +
                                    mImpl->extractErrorProperty(c)));
     delete incidence;
     return 0;
+    */
   }
-
   icalcomponent *calendarComponent = mImpl->createCalendarComponent(cal);
 
   Incidence *existingIncidence =
