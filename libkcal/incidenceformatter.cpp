@@ -890,7 +890,8 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   ScheduleMessage *msg = format.parseScheduleMessage( mCalendar, invitation );
 
   if( !msg ) {
-    kdDebug(5850) << "No iCal in this scheduling message\n";
+    kdDebug( 5850 ) << "Failed to parse the scheduling message" << endl;
+    kdDebug( 5850 ) << format.exception()->message() << endl;
     return QString::null;
   }
 
