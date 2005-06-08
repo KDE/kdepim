@@ -201,7 +201,9 @@ bool Modem::open()
 
   tcflush( fd, TCIOFLUSH );
   if ( tcgetattr( fd, &init_tty ) == -1 ) {
-    emit errorMessage( i18n( "tcgetattr() failed." ) );
+    int errnumber = errno;
+    emit errorMessage( i18n( "Communication setup failed (tcgetattr code: %1)" )
+        .arg(strerror(errnumber)) );
     ::close( fd );
     fd = 0;
     return false;
