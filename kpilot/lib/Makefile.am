@@ -4,7 +4,7 @@
 
 METASOURCES = AUTO
 
-INCLUDES = $(PISOCK_INCLUDE) $(all_includes)
+INCLUDES = $(PISOCK_INCLUDE) $(all_includes) -I$(top_srcdir)
 
 ### If you must get debugging output on a platform where
 ### the libs are built without debugging support, define
