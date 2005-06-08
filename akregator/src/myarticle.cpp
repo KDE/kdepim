@@ -100,8 +100,7 @@ MyArticle::MyArticle(Article article) : d(new Private)
         uint parsed = hashStr.toUInt(&parsedOk, 16);
         if (!parsedOk)
         {
-            d->hash = calcHash(title() + description() + link().url() + commentsLink().url()
-                    + QString::number(comments()) );
+            d->hash = calcHash(title() + description() + link().url() + commentsLink().url());
         }
         else
             d->hash = parsed;
