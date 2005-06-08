@@ -901,25 +901,17 @@ EditPrefTab::EditPrefTab(QVBox* frame)
 	QBoxLayout* layout = new QVBoxLayout(group, marginKDE2 + KDialog::marginHint(), KDialog::spacingHint());
 	layout->addSpacing(groupTopMargin);
 
-	QHBox* box = new QHBox(group);
-	box->setSpacing(KDialog::spacingHint());
-	layout->addWidget(box);
-	mDefaultLateCancel = new QCheckBox(LateCancelSelector::i18n_n_CancelIfLate(), box, "defCancelLate");
-	mDefaultLateCancel->setMinimumSize(mDefaultLateCancel->sizeHint());
-	QWhatsThis::add(mDefaultLateCancel, defsetting.arg(LateCancelSelector::i18n_CancelIfLate()));
-	box->setStretchFactor(new QWidget(box), 1);    // left adjust the control
-
-	mDefaultAutoClose = new QCheckBox(LateCancelSelector::i18n_i_AutoCloseWinLC(), box, "defAutoClose");
-	mDefaultAutoClose->setMinimumSize(mDefaultAutoClose->sizeHint());
-	QWhatsThis::add(mDefaultAutoClose, defsetting.arg(LateCancelSelector::i18n_AutoCloseWin()));
-	box->setFixedHeight(box->sizeHint().height());
-
 	mDefaultConfirmAck = new QCheckBox(EditAlarmDlg::i18n_k_ConfirmAck(), group, "defConfAck");
 	mDefaultConfirmAck->setMinimumSize(mDefaultConfirmAck->sizeHint());
 	QWhatsThis::add(mDefaultConfirmAck, defsetting.arg(EditAlarmDlg::i18n_ConfirmAck()));
 	layout->addWidget(mDefaultConfirmAck, 0, Qt::AlignAuto);
 
-	box = new QHBox(group);
+	mDefaultAutoClose = new QCheckBox(LateCancelSelector::i18n_i_AutoCloseWinLC(), group, "defAutoClose");
+	mDefaultAutoClose->setMinimumSize(mDefaultAutoClose->sizeHint());
+	QWhatsThis::add(mDefaultAutoClose, defsetting.arg(LateCancelSelector::i18n_AutoCloseWin()));
+	layout->addWidget(mDefaultAutoClose, 0, Qt::AlignAuto);
+
+	QHBox* box = new QHBox(group);
 	box->setSpacing(KDialog::spacingHint());
 	layout->addWidget(box);
 	QLabel* label = new QLabel(i18n("Reminder &units:"), box);
@@ -1008,13 +1000,20 @@ EditPrefTab::EditPrefTab(QVBox* frame)
 	QWhatsThis::add(mDefaultEmailBcc, defsetting.arg(EditAlarmDlg::i18n_CopyEmailToSelf()));
 	layout->addWidget(mDefaultEmailBcc, 0, Qt::AlignAuto);
 
-	// RECURRENCE
-	QHBox* itemBox = new QHBox(mPage);   // this is to control the QWhatsThis text display area
-	box = new QHBox(itemBox);
+	// Late cancellation
+	box = new QHBox(mPage);
 	box->setSpacing(KDialog::spacingHint());
-	label = new QLabel(i18n("&Recurrence:"), box);
+	mDefaultLateCancel = new QCheckBox(LateCancelSelector::i18n_n_CancelIfLate(), box, "defCancelLate");
+	mDefaultLateCancel->setMinimumSize(mDefaultLateCancel->sizeHint());
+	QWhatsThis::add(mDefaultLateCancel, defsetting.arg(LateCancelSelector::i18n_CancelIfLate()));
+	box->setStretchFactor(new QWidget(box), 1);    // left adjust the control
+
+	// RECURRENCE
+	QHBox* itemBox = new QHBox(box);   // this is to control the QWhatsThis text display area
+	itemBox->setSpacing(KDialog::spacingHint());
+	label = new QLabel(i18n("&Recurrence:"), itemBox);
 	label->setFixedSize(label->sizeHint());
-	mDefaultRecurPeriod = new QComboBox(box, "defRecur");
+	mDefaultRecurPeriod = new QComboBox(itemBox, "defRecur");
 	mDefaultRecurPeriod->insertItem(RecurrenceEdit::i18n_NoRecur());
 	mDefaultRecurPeriod->insertItem(RecurrenceEdit::i18n_AtLogin());
 	mDefaultRecurPeriod->insertItem(RecurrenceEdit::i18n_HourlyMinutely());
@@ -1024,10 +1023,9 @@ EditPrefTab::EditPrefTab(QVBox* frame)
 	mDefaultRecurPeriod->insertItem(RecurrenceEdit::i18n_Yearly());
 	mDefaultRecurPeriod->setFixedSize(mDefaultRecurPeriod->sizeHint());
 	label->setBuddy(mDefaultRecurPeriod);
-	QWhatsThis::add(box,
+	QWhatsThis::add(itemBox,
 	      i18n("The default setting for the recurrence rule in the alarm edit dialog."));
-	itemBox->setStretchFactor(new QWidget(itemBox), 1);
-	itemBox->setFixedHeight(box->sizeHint().height());
+	box->setFixedHeight(itemBox->sizeHint().height());
 
 	mPage->setStretchFactor(new QWidget(mPage), 1);    // top adjust the widgets
 }
