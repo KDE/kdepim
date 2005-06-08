@@ -36,14 +36,15 @@ apidox-am-yes:
 		fi ;\
 		echo "TAGFILES = \\" >> Doxyfile; \
 		tags='$(DOXYGEN_REFERENCES) qt'; for tag in $$tags; do \
+			tagsubdir=`dirname $$tag` ; tag=`basename $$tag` ; \
 			tagpath= ;\
-			path="../../$$tag" ;\
-			if test -f $(top_builddir)/apidocs/$$tag/$$tag.tag; then \
-				tagpath="$(top_builddir)/apidocs/$$tag/$$tag.tag" ;\
+			path="$(top_builddir)/../$$tagsubdir/$$tag" ;\
+			if test -f $(top_builddir)/apidocs/$$tagsubdir/$$tag/$$tag.tag; then \
+				tagpath="$(top_builddir)/apidocs/$$tagsubdir/$$tag/$$tag.tag" ;\
 			else \
-				tagpath=`ls -1 $(kde_htmldir)/en/*-apidocs/$$tag/$$tag.tag 2> /dev/null` ;\
+				tagpath=`ls -1 $(kde_htmldir)/en/*-apidocs/$$tagsubdir/$$tag/$$tag.tag 2> /dev/null` ;\
 				if test -n "$$tagpath"; then \
-					path=`echo $$tagpath | sed -e "s,.*/\([^/]*-apidocs\)/$$tag/$$tag.tag,$(top_builddir)/../../\1/$$tag,"` ;\
+					path=`echo $$tagpath | sed -e "s,.*/\([^/]*-apidocs\)/$$tagsubdir/$$tag/$$tag.tag,$(top_builddir)/../../\1/$$tag,"` ;\
 				fi ;\
 			fi ;\
 			if test "$$tag" = qt; then \
