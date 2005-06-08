@@ -16,6 +16,9 @@ WRKDIR="$1/$2"
 TOPDIR=`echo "$2" | sed -e 's+[^/][^/]*/+../+g' -e 's+html$+..+'`
 echo "Postprocessing files in $WRKDIR ($TOPDIR)"
 
+# Fix up the installdox script so it accepts empty args
+sed -e 's+foreach $sub (keys %subst)+foreach $sub (keys %subst) { delete $subst{$sub} if $subst{$sub} eq ""; } ; foreach $sub (keys %subst)+' < $WRKDIR/installdox > installdox.new && mv installdox.new $WRKDIR/installdox
+
 # Special case top-level to have an empty MENU.
 if test "x$2" = "x." ; then
 MENU=""
