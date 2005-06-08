@@ -176,7 +176,7 @@ void KOEditorAttachments::showAttachment( QListViewItem *item )
 
 void KOEditorAttachments::slotAdd()
 {
-  KURL uri = KURLRequesterDlg::getURL( QString::null, 0,
+  KURL uri = KURLRequesterDlg::getURL( QString::null, this,
                                        i18n("Add Attachment") );
   // TODO: Implement adding binary attachments
   if ( !uri.isEmpty() ) {
@@ -192,7 +192,7 @@ void KOEditorAttachments::slotEdit()
 
   KCal::Attachment *att = attitem->attachment();
   if ( att->isUri() ) {
-    KURL uri = KURLRequesterDlg::getURL( att->uri(), 0,
+    KURL uri = KURLRequesterDlg::getURL( att->uri(), this,
                                          i18n("Edit Attachment") );
 
     if ( !uri.isEmpty() )
