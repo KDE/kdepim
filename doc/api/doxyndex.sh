@@ -14,7 +14,7 @@
 
 WRKDIR="$1/$2"
 TOPDIR=`echo "$2" | sed -e 's+[^/][^/]*/+../+g' -e 's+html$+..+'`
-echo "Postprocessing files in $WRKDIR ($TOPDIR)"
+echo "* Postprocessing files in $WRKDIR ($TOPDIR)"
 
 # Fix up the installdox script so it accepts empty args
 #
