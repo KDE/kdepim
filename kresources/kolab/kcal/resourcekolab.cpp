@@ -524,7 +524,10 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
 
 bool ResourceKolab::addEvent( KCal::Event* event )
 {
-  return addIncidence( event, QString::null, 0 );
+  if ( mUidMap.contains( uid ) ) 
+    return true; //noop
+  else
+    return addIncidence( event, QString::null, 0 );
 }
 
 void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
@@ -591,7 +594,10 @@ KCal::Event::List ResourceKolab::rawEvents( const QDate& start,
 
 bool ResourceKolab::addTodo( KCal::Todo* todo )
 {
-  return addIncidence( todo, QString::null, 0 );
+  if ( mUidMap.contains( uid ) ) 
+    return true; //noop
+  else
+    return addIncidence( todo, QString::null, 0 );
 }
 
 void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
@@ -625,7 +631,10 @@ KCal::Todo::List ResourceKolab::rawTodosForDate( const QDate& date )
 
 bool ResourceKolab::addJournal( KCal::Journal* journal )
 {
-  return addIncidence( journal, QString::null, 0 );
+  if ( mUidMap.contains( uid ) ) 
+    return true; //noop
+  else
+    return addIncidence( journal, QString::null, 0 );
 }
 
 void ResourceKolab::addJournal( const QString& xml, const QString& subresource,
