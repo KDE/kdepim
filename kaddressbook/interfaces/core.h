@@ -24,6 +24,12 @@
 #ifndef KAB_CORE_H
 #define KAB_CORE_H
 
+#include <config.h> // for KDEPIM_NEW_DISTRLISTS
+
+#ifdef KDEPIM_NEW_DISTRLISTS
+#include <libkdepim/distributionlist.h>
+#endif
+
 #include <qobject.h>
 
 #include <kabc/field.h>
@@ -102,6 +108,19 @@ class KDE_EXPORT Core : public QObject
      */
     virtual void deleteContacts( const QStringList &uids ) = 0;
 
+#ifdef KDEPIM_NEW_DISTRLISTS
+    /**
+      Returns all the distribution lists.
+     */
+    virtual KPIM::DistributionList::List distributionLists() const = 0;
+
+    /**
+      Returns the name of all the distribution lists.
+     */
+    virtual QStringList distributionListNames() const = 0;
+#endif
+
+    //// This class isn't part of interfaces/, so this method here isn't really useful
     virtual SearchManager *searchManager() const = 0;
 
   public slots:
@@ -131,7 +150,7 @@ class KDE_EXPORT Core : public QObject
     virtual void newContact() = 0;
 
     /**
-      DCOP METHOD: Returns the name of the contact, that matches the given 
+      DCOP METHOD: Returns the name of the contact, that matches the given
                    phone number.
      */
     virtual QString getNameByPhone( const QString& phone ) = 0;

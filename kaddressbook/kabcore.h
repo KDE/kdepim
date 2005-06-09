@@ -135,6 +135,18 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     KAB::SearchManager *searchManager() const { return mSearchManager; }
 
+#ifdef KDEPIM_NEW_DISTRLISTS
+    /**
+      Returns all the distribution lists.
+     */
+    virtual KPIM::DistributionList::List distributionLists() const;
+
+    /**
+      Returns the name of all the distribution lists.
+     */
+    virtual QStringList distributionListNames() const;
+#endif
+
   public slots:
     /**
       Is called whenever a contact is selected in the view.

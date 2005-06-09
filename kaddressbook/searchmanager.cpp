@@ -55,6 +55,20 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
     allContacts.append( *abIt );
 #endif
 
+#ifdef KDEPIM_NEW_DISTRLISTS
+  // Extract distribution lists from allContacts
+  mDistributionLists.clear();
+  KABC::Addressee::List::Iterator rmit = allContacts.begin();
+  while ( rmit != list.end() ) {
+    //kdDebug() << (*rmit).formattedName() << "   distrlist=" << KPIM::DistributionList::isDistributionList( *rmit ) << endl;
+    if ( KPIM::DistributionList::isDistributionList( *rmit ) ) {
+      mDistributionLists.append( static_cast<KPIM::DistributionList>( *rmit ) );
+      rmit = list.remove( rmit );
+    } else
+      ++rmit;
+  }
+#endif
+
   if ( mPattern.isEmpty() ) { // no pattern, return all
     mContacts = allContacts;
 
@@ -63,45 +77,30 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
     return;
   }
 
-  if ( !mFields.isEmpty() ) {
-    KABC::Field::List::ConstIterator fieldIt;
-    KABC::Addressee::List::ConstIterator it;
-    for ( it = allContacts.begin(); it != allContacts.end(); ++it ) {
-      for ( fieldIt = mFields.begin(); fieldIt != mFields.end(); ++fieldIt ) {
-        if ( type == StartsWith && (*fieldIt)->value( *it ).startsWith( pattern, false ) ) {
-          mContacts.append( *it );
-          break;
-        } else if ( type == EndsWith && (*fieldIt)->value( *it ).endsWith( pattern, false ) ) {
-          mContacts.append( *it );
-          break;
-        } else if ( type == Contains && (*fieldIt)->value( *it ).find( pattern, 0, false ) != -1 ) {
-          mContacts.append( *it );
-          break;
-        } else if ( type == Equals && (*fieldIt)->value( *it ).localeAwareCompare( pattern ) == 0 ) {
-          mContacts.append( *it );
-          break;
-        }
-      }
-    }
-  } else {
-    KABC::Addressee::List::ConstIterator it;
-    for ( it = allContacts.begin(); it != allContacts.end(); ++it ) {
-      KABC::Field::List fieldList = KABC::Field::allFields();
-      KABC::Field::List::ConstIterator fieldIt;
-      for ( fieldIt = fieldList.begin(); fieldIt != fieldList.end(); ++fieldIt ) {
-        if ( type == StartsWith && (*fieldIt)->value( *it ).startsWith( pattern, false ) ) {
-          mContacts.append( *it );
-          break;
-        } else if ( type == EndsWith && (*fieldIt)->value( *it ).endsWith( pattern, false ) ) {
-          mContacts.append( *it );
-          break;
-        } else if ( type == Contains && (*fieldIt)->value( *it ).find( pattern, 0, false ) != -1 ) {
-          mContacts.append( *it );
-          break;
-        } else if ( type == Equals && (*fieldIt)->value( *it ).localeAwareCompare( pattern ) == 0 ) {
-          mContacts.append( *it );
-          break;
-        }
+  const KABC::Field::List fieldList = !mFields.isEmpty() ? mFields : KABC::Field::allFields();
+
+  KABC::Addressee::List::ConstIterator it = allContacts.begin();
+  const KABC::Addressee::List::ConstIterator end = allContacts.end();
+  for ( ; it != end; ++it ) {
+#ifdef KDEPIM_NEW_DISTRLISTS
+    if ( KPIM::DistributionList::isDistributionList( *it ) )
+      continue;
+#endif
+    KABC::Field::List::ConstIterator fieldIt = fieldList.begin();
+    for ( ; fieldIt != fieldList.end(); ++fieldIt ) {
+
+      if ( type == StartsWith && (*fieldIt)->value( *it ).startsWith( pattern, false ) ) {
+        mContacts.append( *it );
+        break;
+      } else if ( type == EndsWith && (*fieldIt)->value( *it ).endsWith( pattern, false ) ) {
+        mContacts.append( *it );
+        break;
+      } else if ( type == Contains && (*fieldIt)->value( *it ).find( pattern, 0, false ) != -1 ) {
+        mContacts.append( *it );
+        break;
+      } else if ( type == Equals && (*fieldIt)->value( *it ).localeAwareCompare( pattern ) == 0 ) {
+        mContacts.append( *it );
+        break;
       }
     }
   }
@@ -118,5 +117,22 @@ void SearchManager::reload()
 {
   search( mPattern, mFields, mType );
 }
+
+#ifdef KDEPIM_NEW_DISTRLISTS
+KPIM::DistributionList::List KAB::SearchManager::distributionLists() const
+{
+  return mDistributionLists;
+}
+
+QStringList KAB::SearchManager::distributionListNames() const
+{
+  QStringList lst;
+  KPIM::DistributionList::List::ConstIterator it;
+  for ( it = mDistributionLists.begin(); it != mDistributionLists.end(); ++it ) {
+    lst.append( (*it).formattedName() );
+  }
+  return lst;
+}
+#endif
 
 #include "searchmanager.moc"

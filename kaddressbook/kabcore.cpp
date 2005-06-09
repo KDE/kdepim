@@ -1271,4 +1271,16 @@ bool KABCore::handleCommandLine( KAddressBookIface* iface )
   return doneSomething;
 }
 
+#ifdef KDEPIM_NEW_DISTRLISTS
+KPIM::DistributionList::List KABCore::distributionLists() const
+{
+  return mSearchManager->distributionLists();
+}
+
+QStringList KABCore::distributionListNames() const
+{
+  return mSearchManager->distributionListNames();
+}
+#endif
+
 #include "kabcore.moc"

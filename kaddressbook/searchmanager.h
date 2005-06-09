@@ -24,9 +24,13 @@
 #ifndef SEARCHMANAGER_H
 #define SEARCHMANAGER_H
 
+#include <config.h> // for KDEPIM_NEW_DISTRLISTS
 #include <qobject.h>
 
 #include <kabc/stdaddressbook.h>
+#ifdef KDEPIM_NEW_DISTRLISTS
+#include <libkdepim/distributionlist.h>
+#endif
 
 namespace KAB {
 
@@ -61,6 +65,19 @@ class SearchManager : public QObject
      */
     KABC::Addressee::List contacts() const;
 
+
+#ifdef KDEPIM_NEW_DISTRLISTS
+    /**
+      Returns all the distribution lists.
+     */
+    KPIM::DistributionList::List distributionLists() const;
+
+    /**
+      Returns the name of all the distribution lists.
+     */
+    QStringList distributionListNames() const;
+#endif
+
   signals:
     /**
       Emitted whenever the contacts have changed.
@@ -72,6 +89,9 @@ class SearchManager : public QObject
 
   private:
     KABC::Addressee::List mContacts;
+#ifdef KDEPIM_NEW_DISTRLISTS
+    KPIM::DistributionList::List mDistributionLists;
+#endif
     KABC::AddressBook *mAddressBook;
 
     QString mPattern;
