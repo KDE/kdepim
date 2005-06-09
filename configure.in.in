@@ -54,21 +54,20 @@ AC_DEFUN([KDE_CHECK_GNOKII],
 ])
 
 
+dnl Checks for header files.
+AC_CHECK_HEADERS(sys/cdefs.h) dnl for libkholidays/lunarphase.cpp
+AC_CHECK_HEADERS(sys/ioctl.h) dnl for kandy/src/modem.cpp
+AC_CHECK_HEADERS(sys/file.h sys/stat.h sys/time.h byteswap.h) dnl for at least kmail
+
 dnl the below is copied from kdenetwork's configure as too many apps moved
 dnl and noone can say which tests are needed and which are obsolete for kdepim ;(
 
-dnl Checks for header files.
-AC_CHECK_HEADERS(linux/tcp.h linux/if_ppp.h)
-AC_CHECK_HEADERS(net/errno.h net/if_ppp.h)
-AC_CHECK_HEADERS(asm/param.h)
-AC_CHECK_HEADERS(sys/file.h sys/stat.h sys/time.h sys/cdefs.h sys/sockio.h)
-AC_CHECK_HEADERS(fcntl.h unistd.h fnmatch.h sysent.h strings.h paths.h)
-AC_CHECK_HEADERS(utmp.h re_comp.h getopt.h byteswap.h)
-AC_CHECK_HEADER([resolv.h],,,[#include <netinet/in.h>])
+AC_CHECK_HEADERS(fcntl.h unistd.h sysent.h strings.h paths.h)
+
+dnl unused AC_CHECK_HEADER([resolv.h],,,[#include <netinet/in.h>])
 
 KDE_CHECK_LARGEFILE
 
-AC_CHECK_FUNCS(flock)
 AC_CHECK_USLEEP
 
 dnl Checks for library functions.
@@ -77,12 +76,9 @@ AC_CHECK_GETDOMAINNAME
 AC_CHECK_GETHOSTNAME
 AC_C_BIGENDIAN
 
-AC_CHECK_FUNC(res_init)
-if test "$ac_cv_func_res_init" = no; then
-  AC_CHECK_LIB(resolv, res_init, LIBRESOLV="-lresolv $LIBSOCKET", , $LIBSOCKET)
-fi
-AC_SUBST(LIBRESOLV)
+AC_CHECK_RES_INIT
 
+dnl needed by libkmime
 AC_CACHE_CHECK(for timezone variable, ac_cv_var_timezone,
 	AC_TRY_COMPILE([
 		#include <time.h>
@@ -92,6 +88,8 @@ AC_CACHE_CHECK(for timezone variable, ac_cv_var_timezone,
 if test $ac_cv_var_timezone = yes; then
 	AC_DEFINE(HAVE_TIMEZONE, 1, [define if you have a timezone variable])
 fi
+
+dnl needed by libkmime
 AC_CACHE_CHECK(for tm_gmtoff in struct tm, ac_cv_struct_tm_gmtoff,	
 	AC_TRY_COMPILE([
 		#include <time.h>
