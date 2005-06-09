@@ -298,6 +298,9 @@ bool Calendar::deleteIncidence( Incidence *incidence )
     return false;
 }
 
+/** Dissociate a single occurence or all future occurences from a recurring sequence.
+    The new incidence is returned, but not automatically inserted into the calendar,
+		which is left to the calling application */
 Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
                                            bool single )
 {
@@ -351,20 +354,15 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
       haveOffset = true;
     }
   }
-  if ( addIncidence( newInc ) ) {
-    if ( single ) {
-      incidence->addExDate( date );
-    } else {
-      recur = incidence->recurrence();
-      if ( recur ) {
-        // Make sure the recurrence of the past events ends
-        // at the corresponding day
-        recur->setEndDate( date.addDays(-1) );
-      }
-    }
+  if ( single ) {
+    incidence->addExDate( date );
   } else {
-    delete newInc;
-    return 0;
+    recur = incidence->recurrence();
+    if ( recur ) {
+      // Make sure the recurrence of the past events ends
+      // at the corresponding day
+      recur->setEndDate( date.addDays(-1) );
+    }
   }
   return newInc;
 }
