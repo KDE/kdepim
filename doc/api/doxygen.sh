@@ -6,8 +6,17 @@
 #
 # cd /mnt/build/kdepim
 # sh /mnt/src/kdepim/doc/api/doxygen.sh /mnt/src/kdepim
+#
+# You can also build single subdirs (for instance, after updating some
+# dox and you don't want to rebuild for the enitre module) by giving the
+# subdirectory _relative to the top srcdir_ as a second argument:
+#
+# sh /mnt/src/kdepim/doc/api/doxygen.sh /mnt/src/kdepim kpilot/lib
+# 
+# When generating dox for kdelibs, a tag file for Qt is also created.
+# The location of Qt is specified indirectly through $QTDOCDIR or,
+# if that is not set, $QTDIR, or otherwise guessed.
 
-test -z "$MAKE" && MAKE=gmake
 
 recurse=1
 
@@ -25,14 +34,35 @@ if ! test -d "$1" ; then
 	exit 1
 fi
 
+if test -z "$QTDOCDIR" ; then
+	if test -z "$QTDIR" ; then
+		for i in /usr/X11R6/share/doc/qt/html
+		do
+			QTDOCDIR="$i"
+			test -d "$QTDOCDIR" && break
+		done
+	else
+		for i in share/doc/qt/html doc/html
+		do
+			QTDOCDIR="$QTDIR/$i"
+			test -d "$QTDOCDIR" && break
+		done
+	fi
+fi
+if test -z "$QTDOCDIR"  || test -d "$QTDOCDIR" ; then
+	echo "* QTDOCDIR could not be guessed, or not set correctly."
+	QTDOCDIR=/vol/nonexistent
+fi
+
 top_srcdir="$1"
+module_name=`basename "$top_srcdir"`
 subdir="$2"
 test "x." = "x$subdir" && subdir=""
 
 if test -z "$subdir" ; then
-	rm -rf apidocs
-	mkdir apidocs
-	cd apidocs || exit 1
+	rm -rf "$module_name"-apidocs
+	mkdir "$module_name"-apidocs
+	cd "$module_name"-apidocs || exit 1
 
 	# Extract some constants from the top-level files and
 	# store them in Makefile.in for later reference.
@@ -46,9 +76,10 @@ if test -z "$subdir" ; then
 	srcdir="$1"
 	subdir="."
 else
+	cd "$module_name"-apidocs || exit 1
 	srcdir="$top_srcdir/$subdir"
 	subdirname=`basename "$subdir"`
-	top_builddir="$3"
+	top_builddir=`perl -e '$foo="'$3'"; $foo+="/" unless $foo=~/\/$/; $foo=~s+[^/].*+../+; $foo=~s+/$++; print $foo;'`
 fi
 
 
@@ -146,26 +177,30 @@ apidox_subdir()
 ### 			echo "EXCLUDE_PATTERNS      += $$patterns" >> Doxyfile; \
 ### 			echo "EXCLUDE               += $$dirs" >> Doxyfile ;\
 ### 		fi ;\
-### 		echo "TAGFILES = \\" >> Doxyfile; \
-### 		tags='$(DOXYGEN_REFERENCES) qt'; for tag in $$tags; do \
-### 			tagsubdir=`dirname $$tag` ; tag=`basename $$tag` ; \
-### 			tagpath= ;\
-### 			path="$(top_builddir)/../$$tagsubdir/$$tag" ;\
-### 			if test -f $(top_builddir)/apidocs/$$tagsubdir/$$tag/$$tag.tag; then \
-### 				tagpath="$(top_builddir)/apidocs/$$tagsubdir/$$tag/$$tag.tag" ;\
-### 			else \
-### 				tagpath=`ls -1 $(kde_htmldir)/en/*-apidocs/$$tagsubdir/$$tag/$$tag.tag 2> /dev/null` ;\
-### 				if test -n "$$tagpath"; then \
-### 					path=`echo $$tagpath | sed -e "s,.*/\([^/]*-apidocs\)/$$tagsubdir/$$tag/$$tag.tag,$(top_builddir)/../../\1/$$tag,"` ;\
-### 				fi ;\
-### 			fi ;\
-### 			if test "$$tag" = qt; then \
-### 				echo "	$$tagpath=$(QTDOCDIR)" >> Doxyfile ;\
-### 			else if test -n "$$tagpath"; then \
-### 				echo "$$tagpath=$$path/html \\" >> Doxyfile ;\
-### 				fi ;\
-### 			fi ;\
-### 		done
+	echo "TAGFILES = \\" >> "$subdir/Doxyfile"
+	## For now, don't support \ continued references lines
+	tags=`grep ^DOXYGEN_REFERENCES "$srcdir/Makefile.am" | \
+		sed -e 's+DOXYGEN.*=\s*++'`
+	for i in $tags qt ; do
+		tagsubdir=`dirname $i` ; tag=`basename $i`
+		tagpath=""
+
+		# Find location of tag file
+		if test -f "$tagsubdir/$tag/$tag.tag" ; then
+			file="$tagsubdir/$tag/$tag.tag"
+			loc="$tagsubdir/$tag/html"
+		else
+			file=`ls -1 ../*-apidocs/$tagsubdir/$tag/$tag.tag`
+			loc=`echo "$file" | sed -e "s/$tag.tag\$/html/"`
+		fi
+		if test "$tag" = "qt" ; then
+			echo "  $file=$QTDOCDIR" >> "$subdir/Doxyfile"
+		else
+			test -n "$file" && \
+				echo "  $file=../$top_builddir/$loc \\" >> "$subdir/Doxyfile"
+		fi
+	done
+
 	doxygen "$subdir/Doxyfile"
 	dox_index="$top_srcdir/doc/api/doxyndex.sh"
 	test -f "$dox_index" || dox_index="$top_srcdir/admin/Doxyndex.sh"
@@ -176,6 +211,13 @@ apidox_subdir()
 if test "x." = "x$top_builddir" ; then
 	apidox_toplevel
 	if test "x$recurse" = "x1" ; then
+		if test "x$module_name" = "xkdelibs" ; then
+			# Special case: create a qt tag file.
+			echo "*** Creating a tag file for the Qt library:"
+			mkdir qt
+			doxytag -t qt/qt.tag "$QTDOCDIR"
+		fi
+
 		for i in `cat subdirs.in`
 		do
 			if test "x$i" = "x." ; then
