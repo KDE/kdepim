@@ -156,7 +156,7 @@ apidox_subdir()
 
 	cat "Doxyfile.in" >> "$subdir/Doxyfile"
 
-	echo "PROJECT_NAME           = \"$subdirname\"" >> "$subdir/Doxyfile"
+	echo "PROJECT_NAME           = \"$subdir\"" >> "$subdir/Doxyfile"
 	echo "INPUT                  = $srcdir" >> "$subdir/Doxyfile"
 	echo "IMAGE_PATH             = $top_srcdir/doc/api" >> "$subdir/Doxyfile"
 	echo "OUTPUT_DIRECTORY       = ." >> "$subdir/Doxyfile"
