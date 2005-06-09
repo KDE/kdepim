@@ -59,11 +59,11 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
   // Extract distribution lists from allContacts
   mDistributionLists.clear();
   KABC::Addressee::List::Iterator rmit = allContacts.begin();
-  while ( rmit != list.end() ) {
+  while ( rmit != allContacts.end() ) {
     //kdDebug() << (*rmit).formattedName() << "   distrlist=" << KPIM::DistributionList::isDistributionList( *rmit ) << endl;
     if ( KPIM::DistributionList::isDistributionList( *rmit ) ) {
       mDistributionLists.append( static_cast<KPIM::DistributionList>( *rmit ) );
-      rmit = list.remove( rmit );
+      rmit = allContacts.remove( rmit );
     } else
       ++rmit;
   }
