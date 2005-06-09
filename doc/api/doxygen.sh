@@ -88,6 +88,12 @@ else
 	top_builddir=`perl -e '$foo="'$3'"; $foo+="/" unless $foo=~/\/$/; $foo=~s+[^/].*+../+; $foo=~s+/$++; print $foo;'`
 fi
 
+extract_line()
+{
+	pattern=`echo "$1" | tr + .`
+	grep "^$1" "$srcdir/Makefile.am" | \
+		sed -e "s+$pattern.*=\s*++"
+}
 
 ### Add HTML header, footer, CSS tags to Doxyfile.
 ### Assumes $subdir is set. Argument is a string
@@ -170,23 +176,25 @@ apidox_subdir()
 	echo "GENERATE_TAGFILE       = $subdir/$subdirname.tag" >> "$subdir/Doxyfile"
 
 	apidox_htmlfiles ""
-### 		if test -n "$(DOXYGEN_EXCLUDE)"; then \
-### 			patterns= ;\
-### 			dirs= ;\
-### 			for item in `echo "$(DOXYGEN_EXCLUDE)"`; do \
-### 				if test -d "$(srcdir)/$$item"; then \
-### 					dirs="$$dirs $(srcdir)/$$item/" ;\
-### 				else \
-### 					patterns="$$patterns $$item" ;\
-### 				fi ;\
-### 			done ;\
-### 			echo "EXCLUDE_PATTERNS      += $$patterns" >> Doxyfile; \
-### 			echo "EXCLUDE               += $$dirs" >> Doxyfile ;\
-### 		fi ;\
+
+	excludes=`extract_line DOXYGEN_EXCLUDE`
+	if test -n "$excludes"; then
+		patterns=""
+		dirs=""
+		for item in `echo "$excludes"`; do
+			if test -d "$subdir/$item"; then
+				dirs="$dirs $subdir/$item/"
+			else
+				patterns="$patterns $item"
+			fi
+		done
+		echo "EXCLUDE_PATTERNS      += $patterns" >> "$subdir/Doxyfile"
+		echo "EXCLUDE               += $dirs" >> "$subdir/Doxyfile"
+	fi
+
 	echo "TAGFILES = \\" >> "$subdir/Doxyfile"
 	## For now, don't support \ continued references lines
-	tags=`grep ^DOXYGEN_REFERENCES "$srcdir/Makefile.am" | \
-		sed -e 's+DOXYGEN.*=\s*++'`
+	tags=`extract_line DOXYGEN_REFERENCES`
 	for i in $tags qt ; do
 		tagsubdir=`dirname $i` ; tag=`basename $i`
 		tagpath=""
@@ -340,7 +348,7 @@ if test "x." = "x$top_builddir" ; then
 			# Special case: create a qt tag file.
 			echo "*** Creating a tag file for the Qt library:"
 			mkdir qt
-			doxytag -t qt/qt.tag "$QTDOCDIR"
+			doxytag -t qt/qt.tag "$QTDOCDIR" > /dev/null 2>&1
 		fi
 
 		for i in `cat subdirs.in`
