@@ -524,7 +524,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
 
 bool ResourceKolab::addEvent( KCal::Event* event )
 {
-  if ( mUidMap.contains( uid ) ) 
+  if ( mUidMap.contains( event->uid() ) ) 
     return true; //noop
   else
     return addIncidence( event, QString::null, 0 );
@@ -594,7 +594,7 @@ KCal::Event::List ResourceKolab::rawEvents( const QDate& start,
 
 bool ResourceKolab::addTodo( KCal::Todo* todo )
 {
-  if ( mUidMap.contains( uid ) ) 
+  if ( mUidMap.contains( todo->uid() ) ) 
     return true; //noop
   else
     return addIncidence( todo, QString::null, 0 );
@@ -631,7 +631,7 @@ KCal::Todo::List ResourceKolab::rawTodosForDate( const QDate& date )
 
 bool ResourceKolab::addJournal( KCal::Journal* journal )
 {
-  if ( mUidMap.contains( uid ) ) 
+  if ( mUidMap.contains( journal->uid() ) ) 
     return true; //noop
   else
     return addIncidence( journal, QString::null, 0 );
