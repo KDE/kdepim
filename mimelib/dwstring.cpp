@@ -310,7 +310,7 @@ void DwStringRep::operator delete(void* aRep, size_t)
 
 const size_t DwString::kEmptyBufferSize = 4;
 char DW_EXPORT DwString::sEmptyBuffer[]="    ";
-DwStringRep* DW_EXPORT DwString::sEmptyRep = 0;
+DwStringRep* DwString::sEmptyRep = 0;
 
 const size_t DwString::npos = (size_t) -1;
 
