@@ -136,9 +136,6 @@ void MainWindow::initObject()
       plugActionList( "navigator_actionlist", mSidePane->actions() );
   }
 
-  // flush paint events
-  kapp->processEvents();
-
   KSettings::Dispatcher::self()->registerInstance( instance(), this,
                                                    SLOT( updateConfig() ) );
 
