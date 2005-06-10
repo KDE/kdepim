@@ -55,6 +55,7 @@ JumpButton::JumpButton( const QString &firstChar, const QString &lastChar,
                         QWidget *parent )
   : QPushButton( "", parent ), mChar( firstChar )
 {
+  setToggleButton( true );
   if ( !lastChar.isEmpty() )
     setText( QString( "%1 - %2" ).arg( firstChar.upper() ).arg( lastChar.upper() ) );
   else
@@ -72,6 +73,7 @@ JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name
   layout->setResizeMode( QLayout::FreeResize );
 
   mGroupBox = new QButtonGroup( 1, Qt::Horizontal, this );
+  mGroupBox->setExclusive( true );
   mGroupBox->layout()->setSpacing( 0 );
   mGroupBox->layout()->setMargin( 0 );
   mGroupBox->setFrameStyle( QFrame::NoFrame );
