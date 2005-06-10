@@ -173,12 +173,15 @@ test -r _SUBDIRS && mv _SUBDIRS subdirs.top || true
 ### to stick in front of the file if needed.
 apidox_htmlfiles()
 {
-	dox_header="$top_srcdir/doc/api/$1header.html" ; \
-	dox_footer="$top_srcdir/doc/api/$1footer.html" ; \
-	dox_css="$top_srcdir/doc/api/doxygen.css" ; \
-	test -f "$dox_header" || dox_header="$top_srcdir/admin/Dox-$1header.html" ; \
-	test -f "$dox_footer" || dox_footer="$top_srcdir/admin/Dox-$1footer.html" ; \
+	dox_header="$top_srcdir/doc/api/$1header.html"
+	dox_footer="$top_srcdir/doc/api/$1footer.html"
+	dox_css="$top_srcdir/doc/api/doxygen.css"
+	test -f "$dox_header" || dox_header="$top_srcdir/admin/Dox-$1header.html"
+	test -f "$dox_footer" || dox_footer="$top_srcdir/admin/Dox-$1footer.html"
 	test -f "$dox_css" || dox_css="$top_srcdir/admin/doxygen.css"
+	test -f "$dox_header" || dox_header="$ADMIN/$1header.html"
+	test -f "$dox_footer" || dox_footer="$ADMIN/$1footer.html"
+	test -f "$dox_css" || dox_css="$ADMIN/doxygen.css"
 
 	echo "HTML_HEADER            = $dox_header" >> "$subdir/Doxyfile" ; \
 	echo "HTML_FOOTER            = $dox_footer" >> "$subdir/Doxyfile" ; \
@@ -189,11 +192,15 @@ apidox_htmlfiles()
 apidox_toplevel()
 {
 	echo "*** Creating API documentation main page"
-	if test -f $top_srcdir/doc/api/Doxyfile.pim ; then
-		cp $top_srcdir/doc/api/Doxyfile.pim Doxyfile
-	else
-		cp $top_srcdir/admin/Doxyfile.global Doxyfile
-	fi
+	for i in "$top_srcdir/doc/api/Doxyfile.pim" \
+		"$top_srcdir/admin/Doxyfile.global" \
+		"$ADMIN/Doxyfile.global"
+	do
+		if test -f "$i" ; then
+			cp "$i" Doxyfile
+			break
+		fi
+	done
 
 
 	cat "$top_builddir/Doxyfile.in" >> Doxyfile
@@ -226,8 +233,9 @@ apidox_toplevel()
 		echo "<li>$indent<a href=\"@topdir@/$dir$file/html/index.html\">$file</a></li>"
 	done > subdirs
 
-	dox_index="$top_srcdir/doc/api/doxyndex.sh" ; \
-	test -f "$dox_index" || dox_index="$top_srcdir/admin/Doxyndex.sh" ; \
+	dox_index="$top_srcdir/doc/api/doxyndex.sh"
+	test -f "$dox_index" || dox_index="$top_srcdir/admin/Doxyndex.sh"
+	test -f "$dox_index" || dox_index="$ADMIN/doxyndex.sh"
 	sh "$dox_index" "$top_builddir" .
 }
 
@@ -235,10 +243,15 @@ apidox_toplevel()
 apidox_subdir()
 {
 	echo "*** Creating apidox in $subdir"
-	dox_file="$top_srcdir/doc/api/Doxyfile.pim" ; \
-	test -f "$dox_file" || dox_file="$top_srcdir/admin/Doxyfile.global" ; \
-	cp "$dox_file" "$subdir/Doxyfile"
-
+	for i in "$top_srcdir/doc/api/Doxyfile.pim" \
+		"$top_srcdir/admin/Doxyfile.global" \
+		"$ADMIN/Doxyfile.global"
+	do
+		if test -f "$i" ; then
+			cp "$i" "$subdir/Doxyfile"
+			break
+		fi
+	done
 
 
 	cat "Doxyfile.in" >> "$subdir/Doxyfile"
@@ -305,6 +318,7 @@ apidox_subdir()
 	doxygen "$subdir/Doxyfile"
 	dox_index="$top_srcdir/doc/api/doxyndex.sh"
 	test -f "$dox_index" || dox_index="$top_srcdir/admin/Doxyndex.sh"
+	test -f "$dox_index" || dox_index="$ADMIN/doxyndex.sh"
 	sh "$dox_index" "." "$subdir/html"
 }
 
