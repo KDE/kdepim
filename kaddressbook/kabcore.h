@@ -354,6 +354,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     void setDetailsVisible( bool visible );
 
     void extensionModified( const KABC::Addressee::List &list );
+    void extensionDeleted( const QStringList &uidList );
     void clipboardDataChanged();
     void updateActionMenu();
     void updateIncSearchWidget();

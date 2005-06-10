@@ -79,6 +79,7 @@ class KDE_EXPORT ExtensionWidget : public QWidget
 
   signals:
     void modified( const KABC::Addressee::List &list );
+    void deleted( const QStringList& uidList );
 
   private:
     KAB::Core *mCore;

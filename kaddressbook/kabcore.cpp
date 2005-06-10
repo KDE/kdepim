@@ -144,6 +144,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
            SLOT( updateIncSearchWidget() ) );
   connect( mExtensionManager, SIGNAL( modified( const KABC::Addressee::List& ) ),
            this, SLOT( extensionModified( const KABC::Addressee::List& ) ) );
+  connect( mExtensionManager, SIGNAL( deleted( const QStringList& ) ),
+           this, SLOT( extensionDeleted( const QStringList& ) ) );
 
   connect( mXXPortManager, SIGNAL( modified() ),
            SLOT( setModified() ) );
@@ -770,6 +772,18 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
     mViewManager->refreshView();
   else
     mViewManager->refreshView( list[ 0 ].uid() );
+}
+
+void KABCore::extensionDeleted( const QStringList &uidList )
+{
+  PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uidList );
+  UndoStack::instance()->push( command );
+  RedoStack::instance()->clear();
+
+  // now if we deleted anything, refresh
+  setContactSelected( QString::null );
+  setModified( true );
+  mViewManager->refreshView();
 }
 
 QString KABCore::getNameByPhone( const QString &phone )
