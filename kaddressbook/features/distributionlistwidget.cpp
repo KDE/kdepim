@@ -199,7 +199,11 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   topLayout->addWidget( mRemoveContactButton, 2, 3 );
   connect( mRemoveContactButton, SIGNAL( clicked() ), SLOT( removeContact() ) );
 
-#ifndef KDEPIM_NEW_DISTRLISTS
+#ifdef KDEPIM_NEW_DISTRLISTS
+  // When contacts are changed, update both distr list combo and contents of displayed distr list
+  connect( core, SIGNAL( contactsUpdated() ),
+           this, SLOT( updateNameCombo() ) );
+#else
   mManager = new KABC::DistributionListManager( core->addressBook() );
 
   connect( KABC::DistributionListWatcher::self(), SIGNAL( changed() ),

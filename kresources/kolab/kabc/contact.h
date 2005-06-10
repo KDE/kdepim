@@ -193,8 +193,8 @@ public:
   // Serialize this note to an XML string
   QString saveXML() const;
 
-  // Return true if this contact is a distr list  (TODO)
-  bool isDistributionList() const { /*return mIsDistributionList;*/ return false; }
+  // Return true if this contact is a distr list
+  bool isDistributionList() const { return mIsDistributionList; }
 
 protected:
   void setFields( const KABC::Addressee* );
@@ -213,6 +213,9 @@ private:
 
   void loadCustomAttributes( QDomElement& element );
   void saveCustomAttributes( QDomElement& element ) const;
+
+  void loadDistrListMember( const QDomElement& element );
+  void saveDistrListMembers( QDomElement& element ) const;
 
   QImage loadPictureFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
   QImage loadPictureFromAddressee( const KABC::Picture& picture );
@@ -260,12 +263,18 @@ private:
   float mLatitude;
   float mLongitude;
   bool mHasGeo;
+  bool mIsDistributionList;
   struct Custom {
     QString app;
     QString name;
     QString value;
   };
   QValueList<Custom> mCustomList;
+  struct Member {
+    QString displayName;
+    QString email;
+  };
+  QValueList<Member> mDistrListMembers;
 };
 
 }
