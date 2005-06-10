@@ -20,6 +20,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "distributionlistwidget.h"
+
 #include <qbuttongroup.h>
 #include <qcombobox.h>
 #include <qlabel.h>
@@ -35,14 +37,18 @@
 #include <kmessagebox.h>
 
 #include <kabc/addresseedialog.h>
+#ifdef KDEPIM_NEW_DISTRLISTS
+#include <libkdepim/distributionlist.h>
+typedef KPIM::DistributionList DistributionList;
+#else
 #include <kabc/distributionlist.h>
+typedef KABC::DistributionList DistributionList;
+#endif
 #include <kabc/stdaddressbook.h>
 #include <kabc/vcardconverter.h>
 #include <libkdepim/kvcarddrag.h>
 
 #include "core.h"
-
-#include "distributionlistwidget.h"
 
 class DistributionListFactory : public KAB::ExtensionFactory
 {
@@ -140,7 +146,10 @@ class ContactItem : public QListViewItem
 
 DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent,
                                                 const char *name )
-  : KAB::ExtensionWidget( core, parent, name ), mManager( 0 )
+  : KAB::ExtensionWidget( core, parent, name )
+#ifndef KDEPIM_NEW_DISTRLISTS
+  , mManager( 0 )
+#endif
 {
   QGridLayout *topLayout = new QGridLayout( this, 3, 4, KDialog::marginHint(),
                                             KDialog::spacingHint() );
@@ -190,10 +199,13 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   topLayout->addWidget( mRemoveContactButton, 2, 3 );
   connect( mRemoveContactButton, SIGNAL( clicked() ), SLOT( removeContact() ) );
 
+#ifndef KDEPIM_NEW_DISTRLISTS
   mManager = new KABC::DistributionListManager( core->addressBook() );
 
   connect( KABC::DistributionListWatcher::self(), SIGNAL( changed() ),
            this, SLOT( updateNameCombo() ) );
+#endif
+
   connect( core->addressBook(), SIGNAL( addressBookChanged( AddressBook* ) ),
            this, SLOT( updateNameCombo() ) );
 
@@ -208,12 +220,16 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
 
 DistributionListWidget::~DistributionListWidget()
 {
+#ifndef KDEPIM_NEW_DISTRLISTS
   delete mManager;
+#endif
 }
 
 void DistributionListWidget::save()
 {
+#ifndef KDEPIM_NEW_DISTRLISTS
   mManager->save();
+#endif
 }
 
 void DistributionListWidget::selectionContactViewChanged()
@@ -226,6 +242,15 @@ void DistributionListWidget::selectionContactViewChanged()
   mRemoveContactButton->setEnabled( state );
 }
 
+bool DistributionListWidget::alreadyExists( const QString& distrListName ) const
+{
+#ifdef KDEPIM_NEW_DISTRLISTS
+  return core()->distributionListNames().contains( distrListName );
+#else
+  return mManager->listNames().contains( distrListName );
+#endif
+}
+
 void DistributionListWidget::createList()
 {
   QString newName = KInputDialog::getText( i18n( "New Distribution List" ),
@@ -234,46 +259,78 @@ void DistributionListWidget::createList()
 
   if ( newName.isEmpty() ) return;
 
-  if ( mManager->listNames().contains( newName ) ) {
+  if ( alreadyExists( newName ) ) {
     KMessageBox::sorry( this, i18n( "The name already exists" ) );
     return;
   }
+#ifdef KDEPIM_NEW_DISTRLISTS
+  KABC::Resource* resource = core()->requestResource( this );
+  if ( !resource )
+    return;
+
+  KPIM::DistributionList dist;
+  dist.setResource( resource );
+  dist.setName( newName );
+  core()->addressBook()->insertAddressee( dist );
+
+  // Creates undo-redo command, calls setModified, also triggers contactsUpdated,
+  // which triggers updateNameCombo, so the new name appears
+  changed( dist );
+
+#else
   new KABC::DistributionList( mManager, newName );
 
-  mNameCombo->clear();
-  mNameCombo->insertStringList( mManager->listNames() );
-  mNameCombo->setCurrentItem( mNameCombo->count() - 1 );
+  updateNameCombo();
+#endif
 
+  // Select the new one in the list
+  mNameCombo->setCurrentText( newName );
+  // Display the contents of the list we just selected (well, it's empty)
   updateContactView();
 
+#ifndef KDEPIM_NEW_DISTRLISTS
   changed();
+#endif
 }
 
 void DistributionListWidget::editList()
 {
-  QString oldName = mNameCombo->currentText();
+  const QString oldName = mNameCombo->currentText();
 
-  QString newName = KInputDialog::getText( i18n( "Rename Distribution List" ),
-                                           i18n( "Please enter name:" ),
-                                           oldName, 0, this );
+  const QString newName = KInputDialog::getText( i18n( "Rename Distribution List" ),
+                                                 i18n( "Please enter name:" ),
+                                                 oldName, 0, this );
 
   if ( newName.isEmpty() ) return;
 
-  if ( mManager->listNames().contains( newName ) ) {
+  if ( alreadyExists( newName ) ) {
     KMessageBox::sorry( this, i18n( "The name already exists" ) );
     return;
   }
+#ifdef KDEPIM_NEW_DISTRLISTS
+  KPIM::DistributionList dist = KPIM::DistributionList::findByName(
+    core()->addressBook(), mNameCombo->currentText() );
+  if ( dist.isEmpty() ) // not found [should be impossible]
+    return;
+
+  dist.setFormattedName( newName );
+  core()->addressBook()->insertAddressee( dist );
+
+  changed( dist );
+#else
   KABC::DistributionList *list = mManager->list( oldName );
   list->setName( newName );
+  updateNameCombo();
+#endif
 
-  int pos = mNameCombo->currentItem();
-  mNameCombo->clear();
-  mNameCombo->insertStringList( mManager->listNames() );
-  mNameCombo->setCurrentItem( pos );
-
+  // Select the new name in the list (updateNameCombo couldn't know we wanted that one)
+  mNameCombo->setCurrentText( newName );
+  // Display the contents of the list we just selected
   updateContactView();
 
+#ifndef KDEPIM_NEW_DISTRLISTS
   changed();
+#endif
 }
 
 void DistributionListWidget::removeList()
@@ -285,96 +342,157 @@ void DistributionListWidget::removeList()
   if ( result != KMessageBox::Continue )
     return;
 
+#ifdef KDEPIM_NEW_DISTRLISTS
+  KPIM::DistributionList dist = KPIM::DistributionList::findByName(
+    core()->addressBook(), mNameCombo->currentText() );
+  if ( dist.isEmpty() ) // not found [should be impossible]
+    return;
+
+  core()->addressBook()->removeAddressee( dist );
+
+  emit deleted( dist.uid() );
+#else
   mManager->remove( mManager->list( mNameCombo->currentText() ) );
   mNameCombo->removeItem( mNameCombo->currentItem() );
 
   updateContactView();
 
   changed();
+#endif
 }
 
 void DistributionListWidget::addContact()
 {
+#ifdef KDEPIM_NEW_DISTRLISTS
+  KPIM::DistributionList dist = KPIM::DistributionList::findByName(
+    core()->addressBook(), mNameCombo->currentText() );
+  if ( dist.isEmpty() ) { // not found
+    kdDebug(5720) << k_funcinfo << mNameCombo->currentText() << " not found" << endl;
+    return;
+  }
+#else
   KABC::DistributionList *list = mManager->list( mNameCombo->currentText() );
   if ( !list )
     return;
+  KABC::DistributionList& dist = *list;
+#endif
 
   const KABC::Addressee::List addrList = selectedContacts();
   KABC::Addressee::List::ConstIterator it;
   for ( it = addrList.begin(); it != addrList.end(); ++it )
-    list->insertEntry( *it );
+    dist.insertEntry( *it );
 
+#ifdef KDEPIM_NEW_DISTRLISTS
+  core()->addressBook()->insertAddressee( dist );
+  changed( dist );
+#else
   updateContactView();
-
   changed();
+#endif
 }
 
 void DistributionListWidget::removeContact()
 {
+#ifdef KDEPIM_NEW_DISTRLISTS
+  KPIM::DistributionList dist = KPIM::DistributionList::findByName(
+    core()->addressBook(), mNameCombo->currentText() );
+  if ( dist.isEmpty() ) // not found
+    return;
+#else
   KABC::DistributionList *list = mManager->list( mNameCombo->currentText() );
   if ( !list )
     return;
+  KABC::DistributionList& dist = *list;
+#endif
 
   ContactItem *contactItem =
                     static_cast<ContactItem *>( mContactView->selectedItem() );
   if ( !contactItem )
     return;
 
-  list->removeEntry( contactItem->addressee(), contactItem->email() );
+  dist.removeEntry( contactItem->addressee(), contactItem->email() );
   delete contactItem;
 
+#ifdef KDEPIM_NEW_DISTRLISTS
+  core()->addressBook()->insertAddressee( dist );
+  changed( dist );
+#else
   changed();
+#endif
 }
 
 void DistributionListWidget::changeEmail()
 {
+#ifdef KDEPIM_NEW_DISTRLISTS
+  KPIM::DistributionList dist = KPIM::DistributionList::findByName(
+    core()->addressBook(), mNameCombo->currentText() );
+  if ( dist.isEmpty() ) // not found
+    return;
+#else
   KABC::DistributionList *list = mManager->list( mNameCombo->currentText() );
   if ( !list )
     return;
+  KABC::DistributionList& dist = *list;
+#endif
 
   ContactItem *contactItem =
                     static_cast<ContactItem *>( mContactView->selectedItem() );
   if ( !contactItem )
     return;
 
-  QString email = EmailSelector::getEmail( contactItem->addressee().emails(),
-                                           contactItem->email(), this );
-  list->removeEntry( contactItem->addressee(), contactItem->email() );
-  list->insertEntry( contactItem->addressee(), email );
+  const QString email = EmailSelector::getEmail( contactItem->addressee().emails(),
+                                                 contactItem->email(), this );
+  dist.removeEntry( contactItem->addressee(), contactItem->email() );
+  dist.insertEntry( contactItem->addressee(), email );
 
+#ifdef KDEPIM_NEW_DISTRLISTS
+  core()->addressBook()->insertAddressee( dist );
+  changed( dist );
+#else
   updateContactView();
-
   changed();
+#endif
 }
 
 void DistributionListWidget::updateContactView()
 {
   mContactView->clear();
 
+  bool isListSelected = false;
+#ifdef KDEPIM_NEW_DISTRLISTS
+  KPIM::DistributionList dist;
+  if ( mNameCombo->count() != 0 )
+    dist = KPIM::DistributionList::findByName(
+      core()->addressBook(), mNameCombo->currentText() );
+  isListSelected = !dist.isEmpty();
+#else
   KABC::DistributionList *list = mManager->list( mNameCombo->currentText() );
-  if ( !list ) {
+  isListSelected = list != 0;
+#endif
+  if ( !isListSelected ) {
     mEditListButton->setEnabled( false );
     mRemoveListButton->setEnabled( false );
     mChangeEmailButton->setEnabled( false );
     mRemoveContactButton->setEnabled( false );
     mContactView->setEnabled( false );
     return;
-  } else {
-    mEditListButton->setEnabled( true );
-    mRemoveListButton->setEnabled( true );
-    mContactView->setEnabled( true );
   }
+  mEditListButton->setEnabled( true );
+  mRemoveListButton->setEnabled( true );
+  mContactView->setEnabled( true );
 
   uint entryCount = 0;
+#ifdef KDEPIM_NEW_DISTRLISTS
+  const KPIM::DistributionList::Entry::List entries = dist.entries( core()->addressBook() );
+  KPIM::DistributionList::Entry::List::ConstIterator it;
+#else
   const KABC::DistributionList::Entry::List entries = list->entries();
   KABC::DistributionList::Entry::List::ConstIterator it;
+#endif
   for ( it = entries.begin(); it != entries.end(); ++it, ++entryCount )
     new ContactItem( mContactView, (*it).addressee, (*it).email );
 
-  ContactItem *contactItem =
-                    static_cast<ContactItem *>( mContactView->selectedItem() );
-  bool state = contactItem;
-
+  bool state = mContactView->selectedItem() != 0;
   mChangeEmailButton->setEnabled( state );
   mRemoveContactButton->setEnabled( state );
 
@@ -383,32 +501,51 @@ void DistributionListWidget::updateContactView()
 
 void DistributionListWidget::updateNameCombo()
 {
-  mManager->load();
-
   int pos = mNameCombo->currentItem();
   mNameCombo->clear();
-  mNameCombo->insertStringList( mManager->listNames() );
-  mNameCombo->setCurrentItem( pos );
+#ifdef KDEPIM_NEW_DISTRLISTS
+  const QStringList names = core()->distributionListNames();
+#else
+  mManager->load();
+  const QStringList names = mManager->listNames();
+#endif
+  mNameCombo->insertStringList( names );
+  mNameCombo->setCurrentItem( QMIN( pos, (int)names.count() - 1 ) );
 
   updateContactView();
 }
 
 void DistributionListWidget::dropEvent( QDropEvent *e )
 {
-  KABC::DistributionList *distributionList = mManager->list( mNameCombo->currentText() );
-  if ( !distributionList )
+  if ( mNameCombo->count() == 0 )
     return;
+
+#ifdef KDEPIM_NEW_DISTRLISTS
+  KPIM::DistributionList dist = KPIM::DistributionList::findByName(
+    core()->addressBook(), mNameCombo->currentText() );
+  if ( dist.isEmpty() )
+    return;
+#else
+  KABC::DistributionList *list = mManager->list( mNameCombo->currentText() );
+  if ( !list )
+    return;
+  KABC::DistributionList& dist = *list;
+#endif
 
   QString vcards;
   if ( KVCardDrag::decode( e, vcards ) ) {
     KABC::VCardConverter converter;
-    const KABC::Addressee::List list = converter.parseVCards( vcards );
-    KABC::Addressee::List::ConstIterator it;
-    for ( it = list.begin(); it != list.end(); ++it )
-      distributionList->insertEntry( *it );
+    const KABC::Addressee::List lst = converter.parseVCards( vcards );
+    for ( KABC::Addressee::List::ConstIterator it = lst.begin(); it != lst.end(); ++it )
+      dist.insertEntry( *it );
 
+#ifdef KDEPIM_NEW_DISTRLISTS
+    core()->addressBook()->insertAddressee( dist );
+    changed( dist );
+#else
     changed();
     updateContactView();
+#endif
   }
 }
 
@@ -432,11 +569,17 @@ void DistributionListWidget::dropped( QDropEvent *e, QListViewItem* )
   dropEvent( e );
 }
 
+#ifdef KDEPIM_NEW_DISTRLISTS
+void DistributionListWidget::changed( const KABC::Addressee& dist )
+{
+  emit modified( KABC::Addressee::List() << dist );
+}
+#else
 void DistributionListWidget::changed()
 {
   save();
 }
-
+#endif
 
 DistributionListView::DistributionListView( QWidget *parent, const char* name )
   : KListView( parent, name )
