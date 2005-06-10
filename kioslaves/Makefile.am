@@ -6,3 +6,5 @@ endif
 
 SUBDIRS = imap4 mbox $(SIEVE_SUBDIR)
 
+include doc/api/Doxyfile.am
+

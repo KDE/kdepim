@@ -1,0 +1,5 @@
+/** @mainpage
+*
+* KDE PIM also contains a few KIOSlaves. The most important
+* of these is the IMAP4Protocol slave which is used for IMAP operations.
+*/

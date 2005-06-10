@@ -353,7 +353,7 @@ public:
    * @brief Create a GETANNOTATION command
    * @param box mailbox name
    * @param entry entry specifier
-   * @param attribute attribute specifier
+   * @param attributeNames attribute specifier
    * @return a GETANNOTATION imapCommand
    */
   static imapCommand *clientGetAnnotation ( const QString& box, const QString& entry, const QStringList& attributeNames );
