@@ -22,13 +22,14 @@
 # suppresses cleaning up (rm -rf) of the dox direction beforehand.
 
 
+### There is only one option, so handle it in a clumsy way
 recurse=1
-
 if test "x--no-recurse" = "x$1" ; then
 	shift
 	recurse=0
 fi
 
+### Sanity check the mandatory "top srcdir" argument.
 if test -z "$1" ; then
 	echo "Usage: doxygen.sh <top_srcdir>"
 	exit 1
@@ -38,6 +39,7 @@ if ! test -d "$1" ; then
 	exit 1
 fi
 
+### Sanity check and guess QTDOCDIR.
 if test -z "$QTDOCDIR" ; then
 	if test -z "$QTDIR" ; then
 		for i in /usr/X11R6/share/doc/qt/html
@@ -58,11 +60,21 @@ if test -z "$QTDOCDIR"  || test \! -d "$QTDOCDIR" ; then
 	QTDOCDIR=/vol/nonexistent
 fi
 
+### Get the "top srcdir", also its name, and handle the case that subdir "."
+### is given (which would be top_srcdir then, so it's equal to none-given
+### but no recursion either).
+###
 top_srcdir="$1"
 module_name=`basename "$top_srcdir"`
 subdir="$2"
-test "x." = "x$subdir" && subdir=""
+if test "x." = "x$subdir" ; then
+	subdir=""
+	recurse=0
+fi
 
+### If we're making the top subdir, create the structure
+### for the apidox and initialize it. Otherwise, just use the
+### structure assumed to be there.
 if test -z "$subdir" ; then
 	if test "x$recurse" = "x1" ; then
 		rm -rf "$module_name"-apidocs
@@ -88,12 +100,64 @@ else
 	top_builddir=`perl -e '$foo="'$3'"; $foo+="/" unless $foo=~/\/$/; $foo=~s+[^/].*+../+; $foo=~s+/$++; print $foo;'`
 fi
 
+### Read a single line (TODO: support \ continuations) from the Makefile.am.
+### Used to extract variable assignments from it.
 extract_line()
 {
 	pattern=`echo "$1" | tr + .`
 	grep "^$1" "$srcdir/Makefile.am" | \
 		sed -e "s+$pattern.*=\s*++"
 }
+
+### Handle the COMPILE_{FIRST,LAST,BEFORE,AFTER} part of Makefile.am
+### in the toplevel. Copied from admin/cvs.sh. Licence presumed LGPL).
+create_subdirs()
+{
+echo "* Sorting top-level subdirs"
+dirs=
+idirs=
+if test -f "$top_srcdir/inst-apps"; then
+   idirs=`cat "$top_srcdir/"inst-apps`
+else
+   idirs=`cd "$top_srcdir" && ls -1 | sort`
+fi
+
+compilefirst=`sed -ne 's#^COMPILE_FIRST[ ]*=[ ]*##p' "$top_srcdir/"Makefile.am.in | head -n 1`
+compilelast=`sed -ne 's#^COMPILE_LAST[ ]*=[ ]*##p' "$top_srcdir/"Makefile.am.in | head -n 1`
+for i in $idirs; do
+    if test -f "$top_srcdir/"$i/Makefile.am; then
+       case " $compilefirst $compilelast " in
+         *" $i "*) ;;
+         *) dirs="$dirs $i"
+       esac
+    fi
+done
+
+: > ./_SUBDIRS
+
+for d in $compilefirst; do
+   echo $d >> ./_SUBDIRS
+done
+
+(for d in $dirs; do 
+   list=`sed -ne "s#^COMPILE_BEFORE_$d""[ ]*=[ ]*##p" "$top_srcdir/"Makefile.am.in | head -n 1`
+   for s in $list; do
+      echo $s $d
+   done
+   list=`sed -ne "s#^COMPILE_AFTER_$d""[ ]*=[ ]*##p" "$top_srcdir/"Makefile.am.in | head -n 1`
+   for s in $list; do
+      echo $d $s
+   done
+   echo $d $d
+done ) | tsort >> ./_SUBDIRS
+
+for d in $compilelast; do
+   echo $d >> ./_SUBDIRS
+done
+
+test -r _SUBDIRS && mv _SUBDIRS subdirs.top || true
+}
+
 
 ### Add HTML header, footer, CSS tags to Doxyfile.
 ### Assumes $subdir is set. Argument is a string
@@ -112,6 +176,7 @@ apidox_htmlfiles()
 	echo "HTML_STYLESHEET        = $dox_css" >> "$subdir/Doxyfile"
 }
 
+### Handle the Doxygen processing of a toplevel directory.
 apidox_toplevel()
 {
 	echo "*** Creating API documentation main page"
@@ -157,6 +222,7 @@ apidox_toplevel()
 	sh "$dox_index" "$top_builddir" .
 }
 
+### Handle the Doxygen processing of a non-toplevel directory.
 apidox_subdir()
 {
 	echo "*** Creating apidox in $subdir"
@@ -221,6 +287,19 @@ apidox_subdir()
 	sh "$dox_index" "." "$subdir/html"
 }
 
+### Run a given subdir by setting up global variables first.
+do_subdir()
+{
+	subdir="$i"
+	srcdir="$top_srcdir/$subdir"
+	subdirname=`basename "$subdir"`
+	mkdir -p "$subdir"
+	top_builddir=`echo "/$subdir" | sed -e 's+/[^/]*+../+g'`
+	apidox_subdir
+}
+
+
+### Create installdox-slow in the toplevel
 create_installdox()
 {
 # Fix up the installdox script so it accepts empty args
@@ -342,6 +421,7 @@ EOF
 
 if test "x." = "x$top_builddir" ; then
 	apidox_toplevel
+	create_subdirs
 	create_installdox > installdox-slow
 	if test "x$recurse" = "x1" ; then
 		if test "x$module_name" = "xkdelibs" ; then
@@ -351,24 +431,51 @@ if test "x." = "x$top_builddir" ; then
 			doxytag -t qt/qt.tag "$QTDOCDIR" > /dev/null 2>&1
 		fi
 
-		for i in `cat subdirs.in`
+		# subdirs.top lists _all_ subdirs of top in the order they 
+		# should be handled; subdirs.in lists those dirs that contain
+		# dox. So the intersection of the two is the ordered list
+		# of top-level subdirs that contain dox.
+		#
+		# subdirs.top also doesn't contain ".", so that special
+		# case can be ignored in the loop.
+
+		
+		(
+		for i in `cat subdirs.top`
 		do
 			if test "x$i" = "x." ; then
 				continue
 			fi
+			# Calculate intersection of this element and the
+			# set of dox dirs.
+			if grep "^$i\$" subdirs.in > /dev/null 2>&1 ; then
+				echo "$i"
+				mkdir -p "$i" 2> /dev/null
 
-			subdir="$i"
-			srcdir="$top_srcdir/$subdir"
-			subdirname=`basename "$subdir"`
-			mkdir -p "$subdir"
-			top_builddir=`echo "/$subdir" | sed -e 's+/[^/]*+../+g'`
-			apidox_subdir
+				# Handle the subdirs of this one
+				for j in `grep "$i/" subdirs.in`
+				do
+					echo "$j"
+					mkdir -p "$j" 2> /dev/null
+				done
+			fi
+		done
+
+		# Now we still need to handle whatever is left
+		for i in `cat subdirs.in`
+		do
+			test -d "$i" || echo "$i"
+			mkdir -p "$i" 2> /dev/null
+		done
+		) > subdirs.sort
+		for i in `cat subdirs.sort`
+		do
+			do_subdir "$i"
 		done
 	fi
 else
 	apidox_subdir
 fi
-
 
 
 
