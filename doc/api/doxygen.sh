@@ -279,8 +279,16 @@ apidox_subdir()
 			file="$tagsubdir/$tag/$tag.tag"
 			loc="$tagsubdir/$tag/html"
 		else
-			file=`ls -1 ../*-apidocs/$tagsubdir/$tag/$tag.tag`
+			file=`ls -1 ../*-apidocs/$tagsubdir/$tag/$tag.tag 2> /dev/null`
 			loc=`echo "$file" | sed -e "s/$tag.tag\$/html/"`
+
+			# If the tag file doesn't exist yet, but should
+			# because we have the right dirs here, queue
+			# this directory for re-processing later.
+			if test -z "$file" && test -d "$top_srcdir/$tagsubdir/$tag" ; then
+				echo "* Need to re-process $subdir for tag $i"
+				echo "$subdir" >> "subdirs.later"
+			fi
 		fi
 		if test "$tag" = "qt" ; then
 			if test -z "$QTDOCDIR" ; then
@@ -451,6 +459,10 @@ if test "x." = "x$top_builddir" ; then
 			cp "$QTDOCTAG" qt/qt.tag
 		fi
 
+		# Here's a queue of dirs to re-process later when 
+		# all the rest have been done already.
+		> subdirs.later
+
 		# subdirs.top lists _all_ subdirs of top in the order they 
 		# should be handled; subdirs.in lists those dirs that contain
 		# dox. So the intersection of the two is the ordered list
@@ -492,6 +504,18 @@ if test "x." = "x$top_builddir" ; then
 		do
 			do_subdir "$i"
 		done
+
+		if test -s "subdirs.later" ; then
+			sort subdirs.later | uniq > subdirs.sort
+			for i in `cat subdirs.sort`
+			do
+				: > subdirs.later
+				echo "*** Reprocessing $i"
+				do_subdir "$i"
+				test -s "subdirs.later" && echo "* Some tag files were still not found."
+			done
+		fi
+
 	fi
 else
 	apidox_subdir
