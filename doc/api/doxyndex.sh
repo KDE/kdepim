@@ -33,6 +33,7 @@ for i in "Main Page/index" \
 	"Alphabetical List/classes" \
 	"Class List/annotated" \
 	"File List/files" \
+	"Directories/dirs" \
 	"Namespace Members/namespacemembers" \
 	"Class Members/functions" \
 	"Related Pages/pages"
