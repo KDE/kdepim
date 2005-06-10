@@ -1325,7 +1325,7 @@ void KDGanttMinimizeSplitter::processChildEvents()
 
 
 /*!
-  \reimp
+  Reimplemented from superclass.
 */
 
 void KDGanttMinimizeSplitter::styleChange( QStyle& old )
