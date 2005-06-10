@@ -15,7 +15,11 @@
 # 
 # When generating dox for kdelibs, a tag file for Qt is also created.
 # The location of Qt is specified indirectly through $QTDOCDIR or,
-# if that is not set, $QTDIR, or otherwise guessed.
+# if that is not set, $QTDIR, or otherwise guessed. You may explicitly
+# set the location of a pre-generated tag file with $QTDOCTAG. One
+# typical approach might be:
+#
+# QTDOCTAG=$QTDIR/doc/qt.tag QTDOCDIR=http://doc.trolltech.com/3.3/
 #
 # Finally, there is a --no-recurse option for top-level generation
 # that avoids generating all the subdirectories as well. It also
@@ -56,8 +60,13 @@ if test -z "$QTDOCDIR" ; then
 	fi
 fi
 if test -z "$QTDOCDIR"  || test \! -d "$QTDOCDIR" ; then
-	echo "* QTDOCDIR could not be guessed, or not set correctly."
-	QTDOCDIR=/vol/nonexistent
+	echo "*** QTDOCDIR could not be guessed, or not set correctly."
+	if test -z "$QTDOCTAG" ; then
+		echo "* QTDOCDIR set to \"\""
+		QTDOCDIR=""
+	else
+		echo "* But I'll use $QTDOCDIR anyway because of QTDOCTAG."
+	fi
 fi
 
 ### Get the "top srcdir", also its name, and handle the case that subdir "."
@@ -274,7 +283,11 @@ apidox_subdir()
 			loc=`echo "$file" | sed -e "s/$tag.tag\$/html/"`
 		fi
 		if test "$tag" = "qt" ; then
-			echo "  $file=$QTDOCDIR" >> "$subdir/Doxyfile"
+			if test -z "$QTDOCDIR" ; then
+				echo "  $file" >> "$subdir/Doxyfile"
+			else
+				echo "  $file=$QTDOCDIR" >> "$subdir/Doxyfile"
+			fi
 		else
 			test -n "$file" && \
 				echo "  $file=../$top_builddir/$loc \\" >> "$subdir/Doxyfile"
@@ -425,10 +438,17 @@ if test "x." = "x$top_builddir" ; then
 	create_installdox > installdox-slow
 	if test "x$recurse" = "x1" ; then
 		if test "x$module_name" = "xkdelibs" ; then
-			# Special case: create a qt tag file.
-			echo "*** Creating a tag file for the Qt library:"
+			if test -z "$QTDOCTAG" && test -d "$QTDOCDIR" ; then
+				# Special case: create a qt tag file.
+				echo "*** Creating a tag file for the Qt library:"
+				mkdir qt
+				doxytag -t qt/qt.tag "$QTDOCDIR" > /dev/null 2>&1
+			fi
+		fi
+		if test -n "$QTDOCTAG" && test -r "$QTDOCTAG" ; then
+			echo "*** Copying tag file for the Qt library:"
 			mkdir qt
-			doxytag -t qt/qt.tag "$QTDOCDIR" > /dev/null 2>&1
+			cp "$QTDOCTAG" qt/qt.tag
 		fi
 
 		# subdirs.top lists _all_ subdirs of top in the order they 
