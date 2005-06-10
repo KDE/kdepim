@@ -55,6 +55,8 @@ PMENU=`grep '<!-- pmenu' "$WRKDIR/index.html" | sed -e 's+.*pmenu *++' -e 's+ *-
 # on HTML_HEADER (ie. header.html) containing the <!-- menu --> comment.  
 for i in "$WRKDIR"/*.html 
 do 
-	sed -e "s+<!-- menu -->+$MENU+" -e "s+<!-- gmenu -->+$GMENU+" -e "s+<!-- pmenu.*-->+$PMENU+" < "$i"  | sed -e "s+@topdir@+$TOPDIR+g" > "$i.new" && mv "$i.new" "$i" 
+	if test -f "$i" ; then
+		sed -e "s+<!-- menu -->+$MENU+" -e "s+<!-- gmenu -->+$GMENU+" -e "s+<!-- pmenu.*-->+$PMENU+" < "$i"  | sed -e "s+@topdir@+$TOPDIR+g" > "$i.new" && mv "$i.new" "$i" 
+	fi
 done
 

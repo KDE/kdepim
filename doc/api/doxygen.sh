@@ -189,10 +189,10 @@ apidox_htmlfiles()
 apidox_toplevel()
 {
 	echo "*** Creating API documentation main page"
-	if test -f $top_srcdir/admin/Doxyfile.global ; then
-		cp $top_srcdir/admin/Doxyfile.global Doxyfile
-	else
+	if test -f $top_srcdir/doc/api/Doxyfile.pim ; then
 		cp $top_srcdir/doc/api/Doxyfile.pim Doxyfile
+	else
+		cp $top_srcdir/admin/Doxyfile.global Doxyfile
 	fi
 
 
