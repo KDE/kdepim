@@ -123,6 +123,13 @@ class KDE_EXPORT Core : public QObject
     //// This class isn't part of interfaces/, so this method here isn't really useful
     virtual SearchManager *searchManager() const = 0;
 
+    signals:
+    /**
+      Forwarded from SearchManager
+      After it is emitted, distributionListNames() might have a different result.
+     */
+    void contactsUpdated();
+
   public slots:
     /**
       Is called whenever a contact is selected in the view.

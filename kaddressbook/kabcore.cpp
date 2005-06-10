@@ -123,6 +123,9 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
   mSearchManager = new KAB::SearchManager( mAddressBook, parent );
 
+  connect( mSearchManager, SIGNAL( contactsUpdated() ),
+           this, SIGNAL( contactsUpdated() ) );
+
   initGUI();
 
   connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook* ) ),
