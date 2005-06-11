@@ -171,7 +171,7 @@ IMAP4Protocol::IMAP4Protocol (const QCString & pool, const QCString & app, bool 
         (isSSL ? IMAP_SSL_PROTOCOL : IMAP_PROTOCOL), pool,
               app, isSSL), imapParser (), mimeIO (), outputBuffer(outputCache)
 {
-  outputBufferIndex = 0L;
+  outputBufferIndex = 0;
   mySSL = isSSL;
   readBuffer[0] = 0x00;
   relayEnabled = false;
@@ -307,9 +307,6 @@ IMAP4Protocol::get (const KURL & _url)
 
     if (aSequence != "0:0")
     {
-      if (getLastHandled())
-        getLastHandled()->clear();
-
       QString contentEncoding;
       if (aEnum == ITYPE_ATTACH && decodeContent)
       {
@@ -377,7 +374,7 @@ IMAP4Protocol::get (const KURL & _url)
             cacheOutput = false;
             flushOutput(contentEncoding);
           }
-        }
+        } // if not complete
       }
       while (!cmd->isComplete ());
       if (aEnum == ITYPE_BOX || aEnum == ITYPE_DIR_AND_BOX)
@@ -654,11 +651,12 @@ IMAP4Protocol::parseRelay (const QByteArray & buffer)
   } else if (cacheOutput)
   {
     // collect data
-    outputBuffer.open(IO_WriteOnly);
+    if ( !outputBuffer.isOpen() ) {
+      outputBuffer.open(IO_WriteOnly);
+    }
     outputBuffer.at(outputBufferIndex);
     outputBuffer.writeBlock(buffer, buffer.size());
     outputBufferIndex += buffer.size();
-    outputBuffer.close();
   }
 }
 
@@ -2399,11 +2397,12 @@ IMAP4Protocol::outputLine (const QCString & _str, int len)
 
   if (cacheOutput)
   {
-    outputBuffer.open(IO_WriteOnly);
+    if ( !outputBuffer.isOpen() ) {
+      outputBuffer.open(IO_WriteOnly);
+    }
     outputBuffer.at(outputBufferIndex);
     outputBuffer.writeBlock(_str.data(), len);
     outputBufferIndex += len;
-    outputBuffer.close();
     return 0;
   }
 
@@ -2422,8 +2421,9 @@ IMAP4Protocol::outputLine (const QCString & _str, int len)
 void IMAP4Protocol::flushOutput(QString contentEncoding)
 {
   // send out cached data to the application
-  if (outputBufferIndex == 0L)
+  if (outputBufferIndex == 0)
     return;
+  outputBuffer.close();
   outputCache.resize(outputBufferIndex);
   if (decodeContent)
   {
@@ -2446,7 +2446,7 @@ void IMAP4Protocol::flushOutput(QString contentEncoding)
   }
   mProcessedSize += outputBufferIndex;
   processedSize( mProcessedSize );
-  outputBufferIndex = 0L;
+  outputBufferIndex = 0;
   outputCache[0] = '\0';
   outputBuffer.setBuffer(outputCache);
 }

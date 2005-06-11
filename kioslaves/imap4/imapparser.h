@@ -72,9 +72,19 @@ public:
     qmemmove(dest.data(), data.data() + pos, len);
   }
   // Warning: does not check for going past end of "data"
+  void takeLeftNoResize(QCString& dest, uint len) const
+  {
+    qmemmove(dest.data(), data.data() + pos, len);
+  }
+  // Warning: does not check for going past end of "data"
   void takeMid(QCString& dest, uint start, uint len) const
   {
     dest.resize(len + 1);
+    qmemmove(dest.data(), data.data() + pos + start, len);
+  }
+  // Warning: does not check for going past end of "data"
+  void takeMidNoResize(QCString& dest, uint start, uint len) const
+  {
     qmemmove(dest.data(), data.data() + pos + start, len);
   }
   void clear()

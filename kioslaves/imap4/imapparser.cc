@@ -1784,8 +1784,8 @@ QCString imapParser::parseLiteralC(parseString & inWords, bool relay, bool stopA
     {
       bool proper;
       ulong runLenSave = runLen + 1;
-      QCString tmpstr;
-      inWords.takeMid(tmpstr, 1, runLen - 1);
+      QCString tmpstr(runLen);
+      inWords.takeMidNoResize(tmpstr, 1, runLen - 1);
       runLen = tmpstr.toULong (&proper);
       inWords.pos += runLenSave;
       if (proper)
@@ -1826,9 +1826,11 @@ QCString imapParser::parseLiteralC(parseString & inWords, bool relay, bool stopA
 // does not know about literals ( {7} literal )
 QCString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, int *outLen)
 {
-  QCString retVal;
   uint retValSize = 0;
   uint len = inWords.length();
+  if (len == 0) {
+    return QCString();
+  }
 
   if (len > 0 && inWords[0] == '"')
   {
@@ -1842,8 +1844,9 @@ QCString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, i
     }
     if (i < len)
     {
+      QCString retVal(i);
       inWords.pos++;
-      inWords.takeLeft(retVal, i - 1);
+      inWords.takeLeftNoResize(retVal, i - 1);
       len = i - 1;
       int offset = 0;
       for (unsigned int j = 0; j <= len; j++) {
@@ -1856,18 +1859,29 @@ QCString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, i
       retVal[len - offset] = 0;
       retValSize = len - offset;
       inWords.pos += i;
+      skipWS (inWords);
+      if (outLen) {
+        *outLen = retValSize;
+      }
+      return retVal;
     }
     else
     {
       kdDebug(7116) << "imapParser::parseOneWord - error parsing unmatched \"" << endl;
-      retVal = inWords.cstr();
+      QCString retVal = inWords.cstr();
       retValSize = len;
       inWords.clear();
+      if (outLen) {
+        *outLen = retValSize;
+      }
+      return retVal;
     }
   }
   else
   {
+    // not quoted
     unsigned int i;
+    // search for end
     for (i = 0; i < len; ++i) {
         char ch = inWords[i];
         if (ch <= ' ' || ch == '(' || ch == ')' ||
@@ -1875,28 +1889,21 @@ QCString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, i
             break;
     }
 
-    if (i < len)
-    {
-      inWords.takeLeft(retVal, i);
-      retValSize = i;
-      inWords.pos += i;
-    }
-    else
-    {
-      retVal = inWords.cstr();
-      retValSize = len;
-      inWords.clear();
-    }
+    QCString retVal(i+1);
+    inWords.takeLeftNoResize(retVal, i);
+    retValSize = i;
+    inWords.pos += i;
+    
     if (retVal == "NIL") {
       retVal.truncate(0);
       retValSize = 0;
     }
+    skipWS (inWords);
+    if (outLen) {
+      *outLen = retValSize;
+    }
+    return retVal;
   }
-  skipWS (inWords);
-  if (outLen) {
-    *outLen = retValSize;
-  }
-  return retVal;
 }
 
 bool imapParser::parseOneNumber (parseString & inWords, ulong & num)
