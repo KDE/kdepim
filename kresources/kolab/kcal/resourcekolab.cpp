@@ -420,7 +420,13 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   QString subject = incidencebase->uid();
   if ( !isXMLStorageFormat ) subject.prepend( "iCal " ); // conform to the old style
 
-  return kmailUpdate( subresource, sernum, data, mimetype, subject, customHeaders );
+  // behold, sernum is an in-parameter
+  const bool rc = kmailUpdate( subresource, sernum, data, mimetype, subject, customHeaders );
+  // update the serial number
+  if ( mUidMap.contains( incidencebase->uid() ) ) {
+    mUidMap[ incidencebase->uid() ].setSerialNumber( sernum );
+  }
+  return rc;
 }
 
 bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _subresource,
@@ -518,7 +524,10 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
 
 bool ResourceKolab::addEvent( KCal::Event* event )
 {
-  return addIncidence( event, QString::null, 0 );
+  if ( mUidMap.contains( event->uid() ) ) 
+    return true; //noop
+  else
+    return addIncidence( event, QString::null, 0 );
 }
 
 void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
@@ -584,7 +593,10 @@ KCal::Event::List ResourceKolab::rawEvents( const QDate& start,
 
 bool ResourceKolab::addTodo( KCal::Todo* todo )
 {
-  return addIncidence( todo, QString::null, 0 );
+  if ( mUidMap.contains( todo->uid() ) ) 
+    return true; //noop
+  else
+    return addIncidence( todo, QString::null, 0 );
 }
 
 void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
@@ -618,7 +630,10 @@ KCal::Todo::List ResourceKolab::rawTodosForDate( const QDate& date )
 
 bool ResourceKolab::addJournal( KCal::Journal* journal )
 {
-  return addIncidence( journal, QString::null, 0 );
+  if ( mUidMap.contains( journal->uid() ) ) 
+    return true; //noop
+  else
+    return addIncidence( journal, QString::null, 0 );
 }
 
 void ResourceKolab::addJournal( const QString& xml, const QString& subresource,
