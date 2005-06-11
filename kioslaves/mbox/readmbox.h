@@ -42,9 +42,7 @@ public:
 	 * @param info The information of the file to read
 	 * @param parent The instance of the parent MBoxProtocol.
 	 * @param onlynew Only read new messages from the MBox file.
-	 * @param savetime Er. Something.
-	 *
-	 * @todo Figure out what savetime means.
+	 * @param savetime If true, the atime of the mbox-file is preserved (note that this touch the ctime).
 	 */
 	ReadMBox( const UrlInfo* info, MBoxProtocol* parent, bool onlynew = false, bool savetime = false );
 
