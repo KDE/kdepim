@@ -92,6 +92,8 @@ static QString emailTestParseResultToString( EmailParseResult errorCode )
     return "UnexpectedComma";
   } else if( errorCode == UnbalancedQuote ) {
     return "UnbalancedQuote";
+  } else if( errorCode == InvalidDisplayName ) {
+    return "InvalidDisplayName";
   }
   return "unknown error code";
 }
@@ -360,6 +362,9 @@ int main(int argc, char *argv[])
   checkIsValidEmailAddress( "|matt@fruitsalad.org", "AddressOk" );
   checkIsValidEmailAddress( "}matt@fruitsalad.org", "AddressOk" );
   checkIsValidEmailAddress( "~matt@fruitsalad.org", "AddressOk" );
+
+  //bug 105405
+  checkIsValidEmailAddress( "[foobar] <matt@fruitsalad.org>", "InvalidDisplayName" );
 
 
   // checks for "pure" email addresses in the form of xxx@yyy.tld
