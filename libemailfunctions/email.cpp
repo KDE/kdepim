@@ -318,6 +318,10 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
             commentLevel = 1;
           }
           break;
+        case '[' :
+          return InvalidDisplayName; 
+        case ']' :
+          return InvalidDisplayName;
         case ':' :
           if ( !inQuotedString ) {
             return DisallowedChar;
@@ -483,6 +487,9 @@ QString KPIM::emailParseResultToString( EmailParseResult errorCode )
     case DisallowedChar :
       return i18n("The email address you entered is not valid because it "
                   "contains an illegal character.");
+    case InvalidDisplayName :
+      return i18n("The email address you have entered is not valid because it "
+                  "contains an invalid displayname.");
   }
   return i18n("Unknown problem with email address");
 }

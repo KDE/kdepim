@@ -47,7 +47,7 @@ enum EmailParseResult { AddressOk, AddressEmpty, UnexpectedEnd,
                         TooManyAts, UnexpectedComma,
                         TooFewAts, MissingLocalPart,
                         UnbalancedQuote, NoAddressSpec,
-                        DisallowedChar };
+                        DisallowedChar, InvalidDisplayName };
 
 // Helper functions
 /** Split a comma separated list of email addresses. */
