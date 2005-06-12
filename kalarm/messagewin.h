@@ -28,6 +28,7 @@ class QPushButton;
 class KPushButton;
 class QLabel;
 class QTimer;
+class KWinModule;
 class AlarmTimeWidget;
 class DeferAlarmDlg;
 class KArtsDispatcher;
@@ -51,6 +52,7 @@ class MessageWin : public MainWindowBase
 		bool                hasDefer() const       { return !!mDeferButton; }
 		bool                isValid() const        { return !mInvalid; }
 		virtual void        show();
+		virtual QSize       sizeHint() const;
 		static int          instanceCount()        { return mWindowList.count(); }
 		static MessageWin*  findEvent(const QString& eventID);
 
@@ -72,6 +74,7 @@ class MessageWin : public MainWindowBase
 		void                enableButtons();
 		void                setRemainingTextDay();
 		void                setRemainingTextMinute();
+		void                setMaxSize();
 
 	private:
 		void                initView();
@@ -123,6 +126,7 @@ class MessageWin : public MainWindowBase
 		QPushButton*        mKAlarmButton;
 		DeferAlarmDlg*      mDeferDlg;
 		QDateTime           mDeferLimit;      // last time to which the message can currently be deferred
+		mutable KWinModule* mWinModule;
 		int                 mFlags;
 		int                 mLateCancel;
 		int                 mButtonDelay;     // delay (ms) after window is shown before buttons are enabled
