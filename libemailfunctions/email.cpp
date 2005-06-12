@@ -319,9 +319,13 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
           }
           break;
         case '[' :
-          return InvalidDisplayName; 
+          if ( !inQuotedString ) {
+            return InvalidDisplayName; 
+          } 
         case ']' :
-          return InvalidDisplayName;
+          if ( !inQuotedString ) {
+            return InvalidDisplayName;
+          }
         case ':' :
           if ( !inQuotedString ) {
             return DisallowedChar;
