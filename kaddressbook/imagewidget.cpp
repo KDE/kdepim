@@ -265,7 +265,9 @@ void ImageBaseWidget::urlDropped( const KURL &url )
 
 void ImageBaseWidget::loadImage()
 {
-  mImageLabel->setPixmap( loadPixmap( KURL( mImageUrl->url() ) ) );
+  QPixmap pixmap = loadPixmap( KURL( mImageUrl->url() ) );
+  if(! pixmap.isNull() )
+    mImageLabel->setPixmap( pixmap );
 }
 
 void ImageBaseWidget::updateGUI()
@@ -316,10 +318,10 @@ QPixmap ImageBaseWidget::loadPixmap( const KURL &url )
   }
 
   QPixmap selectedPixmap = KPIM::KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, this );
-  if ( !selectedPixmap.isNull() ) {
-     pixmap = selectedPixmap;
-     mImageUrl->clear();
-  }
+  if ( selectedPixmap.isNull() )
+    return QPixmap();
+  pixmap = selectedPixmap;
+  mImageUrl->clear();
 
   if ( pixmap.height() != 140 || pixmap.width() != 100 ) {
     if ( pixmap.height() > pixmap.width() )
