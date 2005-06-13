@@ -176,12 +176,12 @@ apidox_htmlfiles()
 	dox_header="$top_srcdir/doc/api/$1header.html"
 	dox_footer="$top_srcdir/doc/api/$1footer.html"
 	dox_css="$top_srcdir/doc/api/doxygen.css"
-	test -f "$dox_header" || dox_header="$top_srcdir/admin/Dox-$1header.html"
-	test -f "$dox_footer" || dox_footer="$top_srcdir/admin/Dox-$1footer.html"
-	test -f "$dox_css" || dox_css="$top_srcdir/admin/doxygen.css"
 	test -f "$dox_header" || dox_header="$ADMIN/$1header.html"
 	test -f "$dox_footer" || dox_footer="$ADMIN/$1footer.html"
 	test -f "$dox_css" || dox_css="$ADMIN/doxygen.css"
+	test -f "$dox_header" || dox_header="$top_srcdir/admin/Dox-$1header.html"
+	test -f "$dox_footer" || dox_footer="$top_srcdir/admin/Dox-$1footer.html"
+	test -f "$dox_css" || dox_css="$top_srcdir/admin/doxygen.css"
 
 	echo "HTML_HEADER            = $dox_header" >> "$subdir/Doxyfile" ; \
 	echo "HTML_FOOTER            = $dox_footer" >> "$subdir/Doxyfile" ; \
@@ -193,8 +193,8 @@ apidox_toplevel()
 {
 	echo "*** Creating API documentation main page"
 	for i in "$top_srcdir/doc/api/Doxyfile.pim" \
-		"$top_srcdir/admin/Doxyfile.global" \
-		"$ADMIN/Doxyfile.global"
+		"$ADMIN/Doxyfile.global" \
+		"$top_srcdir/admin/Doxyfile.global"
 	do
 		if test -f "$i" ; then
 			cp "$i" Doxyfile
@@ -234,8 +234,8 @@ apidox_toplevel()
 	done > subdirs
 
 	dox_index="$top_srcdir/doc/api/doxyndex.sh"
-	test -f "$dox_index" || dox_index="$top_srcdir/admin/Doxyndex.sh"
 	test -f "$dox_index" || dox_index="$ADMIN/doxyndex.sh"
+	test -f "$dox_index" || dox_index="$top_srcdir/admin/Doxyndex.sh"
 	sh "$dox_index" "$top_builddir" .
 }
 
@@ -244,8 +244,8 @@ apidox_subdir()
 {
 	echo "*** Creating apidox in $subdir"
 	for i in "$top_srcdir/doc/api/Doxyfile.pim" \
-		"$top_srcdir/admin/Doxyfile.global" \
-		"$ADMIN/Doxyfile.global"
+		"$ADMIN/Doxyfile.global" \
+		"$top_srcdir/admin/Doxyfile.global"
 	do
 		if test -f "$i" ; then
 			cp "$i" "$subdir/Doxyfile"
@@ -317,8 +317,8 @@ apidox_subdir()
 
 	doxygen "$subdir/Doxyfile"
 	dox_index="$top_srcdir/doc/api/doxyndex.sh"
-	test -f "$dox_index" || dox_index="$top_srcdir/admin/Doxyndex.sh"
 	test -f "$dox_index" || dox_index="$ADMIN/doxyndex.sh"
+	test -f "$dox_index" || dox_index="$top_srcdir/admin/Doxyndex.sh"
 	sh "$dox_index" "." "$subdir/html"
 }
 
