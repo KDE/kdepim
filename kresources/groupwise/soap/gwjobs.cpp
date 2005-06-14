@@ -284,3 +284,34 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
     }
   }
 }
+
+UpdateAddressBooksJob::UpdateAddressBooksJob( GroupwiseServer *server,
+  struct soap *soap, const QString &url, const std::string &session )
+  : GWJob( soap, url, session ), mServer( server )
+{
+}
+
+void UpdateAddressBooksJob::setAddressBookIds( const QStringList &ids )
+{
+  mAddressBookIds = ids;
+
+  kdDebug() << "ADDR IDS: " << ids.join( "," ) << endl;
+}
+
+void UpdateAddressBooksJob::setResource( KABC::ResourceCached *resource )
+{
+  mResource = resource;
+}
+
+void UpdateAddressBooksJob::run()
+{
+  kdDebug() << "UpdateAddressBooksJob::run()" << endl;
+
+  mSoap->header->ngwt__session = mSession;
+
+}
+
+void UpdateAddressBooksJob::updateAddressBook( std::string& )
+{
+
+}
