@@ -639,7 +639,7 @@
 
      <operation name="getSettingsRequest">
        <input message="tns:getSettingsRequestMessage"/>
-       <output message="tns:getSettingsRequestMessage"/>
+       <output message="tns:getSettingsResponseMessage"/>
      </operation>
 
      <operation name="getSignaturesRequest">

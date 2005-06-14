@@ -3010,7 +3010,7 @@ public:
 class SOAP_CMAC _ngwm__getSettingsResponse
 {
 public:
-	ngwt__Settings *settings;	/* optional element */
+	ngwt__Settings *settings;	/* RPC return element */	/* optional element */
 	ngwt__Status *status;	/* required element */
 	struct soap *soap;	/* transient */
 public:
@@ -5589,12 +5589,6 @@ struct __ngw__getProxyListRequest
 	_ngwm__getProxyListRequest *ngwm__getProxyListRequest;	/* optional element */
 };
 
-/* -ngw:getSettingsRequestResponse: */
-struct __ngw__getSettingsRequestResponse
-{
-	_ngwm__getSettingsRequest *ngwm__getSettingsRequest;	/* RPC return element */	/* optional element */
-};
-
 /* -ngw:getSettingsRequest: */
 struct __ngw__getSettingsRequest
 {
@@ -5942,7 +5936,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ngw__getProxyAccessListRequest(struct soap*, _ngwm__
 
 SOAP_FMAC5 int SOAP_FMAC6 __ngw__getProxyListRequest(struct soap*, _ngwm__getProxyListRequest *ngwm__getProxyListRequest, _ngwm__getProxyListResponse *ngwm__getProxyListResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ngw__getSettingsRequest(struct soap*, _ngwm__getSettingsRequest *ngwm__getSettingsRequest, struct __ngw__getSettingsRequestResponse &param_1);
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getSettingsRequest(struct soap*, _ngwm__getSettingsRequest *ngwm__getSettingsRequest, _ngwm__getSettingsResponse *ngwm__getSettingsResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 __ngw__getSignaturesRequest(struct soap*, _ngwm__getSignaturesRequest *ngwm__getSignaturesRequest, _ngwm__getSignaturesResponse *ngwm__getSignaturesResponse);
 
@@ -6079,7 +6073,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getProxyAccessListRequest(struct soap
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getProxyListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getProxyListRequest *ngwm__getProxyListRequest, _ngwm__getProxyListResponse *ngwm__getProxyListResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSettingsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getSettingsRequest *ngwm__getSettingsRequest, struct __ngw__getSettingsRequestResponse &param_1);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSettingsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getSettingsRequest *ngwm__getSettingsRequest, _ngwm__getSettingsResponse *ngwm__getSettingsResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSignaturesRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getSignaturesRequest *ngwm__getSignaturesRequest, _ngwm__getSignaturesResponse *ngwm__getSignaturesResponse);
 

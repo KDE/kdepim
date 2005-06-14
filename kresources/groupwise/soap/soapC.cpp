@@ -8,7 +8,7 @@
 
 SOAP_BEGIN_NAMESPACE(soap)
 
-SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.1 2005-05-18 07:51:49 GMT")
+SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.1 2005-06-10 15:15:43 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -917,6 +917,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTo_ngwm__getSignaturesResponse(soap, NULL, NULL, "ngwm:getSignaturesResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getSignaturesRequest:
 		return soap_in_PointerTo_ngwm__getSignaturesRequest(soap, NULL, NULL, "ngwm:getSignaturesRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getSettingsResponse:
+		return soap_in_PointerTo_ngwm__getSettingsResponse(soap, NULL, NULL, "ngwm:getSettingsResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getSettingsRequest:
 		return soap_in_PointerTo_ngwm__getSettingsRequest(soap, NULL, NULL, "ngwm:getSettingsRequest");
 	case SOAP_TYPE_PointerTo_ngwm__getProxyListResponse:
@@ -3491,6 +3493,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTo_ngwm__getSignaturesResponse(soap, tag, id, (_ngwm__getSignaturesResponse *const*)ptr, "ngwm:getSignaturesResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getSignaturesRequest:
 		return soap_out_PointerTo_ngwm__getSignaturesRequest(soap, tag, id, (_ngwm__getSignaturesRequest *const*)ptr, "ngwm:getSignaturesRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getSettingsResponse:
+		return soap_out_PointerTo_ngwm__getSettingsResponse(soap, tag, id, (_ngwm__getSettingsResponse *const*)ptr, "ngwm:getSettingsResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getSettingsRequest:
 		return soap_out_PointerTo_ngwm__getSettingsRequest(soap, tag, id, (_ngwm__getSettingsRequest *const*)ptr, "ngwm:getSettingsRequest");
 	case SOAP_TYPE_PointerTo_ngwm__getProxyListResponse:
@@ -4840,9 +4844,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE___ngw__getSettingsRequest:
 		soap_serialize___ngw__getSettingsRequest(soap, (const struct __ngw__getSettingsRequest *)ptr);
 		break;
-	case SOAP_TYPE___ngw__getSettingsRequestResponse:
-		soap_serialize___ngw__getSettingsRequestResponse(soap, (const struct __ngw__getSettingsRequestResponse *)ptr);
-		break;
 	case SOAP_TYPE___ngw__getProxyListRequest:
 		soap_serialize___ngw__getProxyListRequest(soap, (const struct __ngw__getProxyListRequest *)ptr);
 		break;
@@ -5139,6 +5140,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__getSignaturesRequest:
 		soap_serialize_PointerTo_ngwm__getSignaturesRequest(soap, (_ngwm__getSignaturesRequest *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getSettingsResponse:
+		soap_serialize_PointerTo_ngwm__getSettingsResponse(soap, (_ngwm__getSettingsResponse *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__getSettingsRequest:
 		soap_serialize_PointerTo_ngwm__getSettingsRequest(soap, (_ngwm__getSettingsRequest *const*)ptr);
@@ -60403,84 +60407,6 @@ SOAP_FMAC3 struct __ngw__getSettingsRequest * SOAP_FMAC4 soap_in___ngw__getSetti
 	return a;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getSettingsRequestResponse(struct soap *soap, const struct __ngw__getSettingsRequestResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_embedded(soap, &a->ngwm__getSettingsRequest, SOAP_TYPE_PointerTo_ngwm__getSettingsRequest);
-	soap_serialize_PointerTo_ngwm__getSettingsRequest(soap, &a->ngwm__getSettingsRequest);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getSettingsRequestResponse(struct soap *soap, struct __ngw__getSettingsRequestResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ngwm__getSettingsRequest = NULL;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getSettingsRequestResponse(struct soap *soap, const struct __ngw__getSettingsRequestResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE___ngw__getSettingsRequestResponse);
-	if (soap_out___ngw__getSettingsRequestResponse(soap, tag, id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getSettingsRequestResponse(struct soap *soap, const char *tag, int id, const struct __ngw__getSettingsRequestResponse *a, const char *type)
-{
-	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE___ngw__getSettingsRequestResponse), type);
-	if (a->ngwm__getSettingsRequest)
-		soap_element_result(soap, "ngwm:getSettingsRequest");
-	soap_out_PointerTo_ngwm__getSettingsRequest(soap, "ngwm:getSettingsRequest", -1, &a->ngwm__getSettingsRequest, "");
-	soap_element_end_out(soap, tag);
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ngw__getSettingsRequestResponse * SOAP_FMAC4 soap_get___ngw__getSettingsRequestResponse(struct soap *soap, struct __ngw__getSettingsRequestResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ngw__getSettingsRequestResponse(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC3 struct __ngw__getSettingsRequestResponse * SOAP_FMAC4 soap_in___ngw__getSettingsRequestResponse(struct soap *soap, const char *tag, struct __ngw__getSettingsRequestResponse *a, const char *type)
-{
-	short soap_flag_ngwm__getSettingsRequest = 1;
-	if (soap_element_begin_in(soap, tag, 0))
-		return NULL;
-	if (*soap->type && soap_match_tag(soap, soap->type, type))
-	{	soap->error = SOAP_TYPE;
-		return NULL;
-	}
-	a = (struct __ngw__getSettingsRequestResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE___ngw__getSettingsRequestResponse, sizeof(struct __ngw__getSettingsRequestResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	if (soap->alloced)
-		soap_default___ngw__getSettingsRequestResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{	for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ngwm__getSettingsRequest && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTo_ngwm__getSettingsRequest(soap, "ngwm:getSettingsRequest", &a->ngwm__getSettingsRequest, ""))
-				{	soap_flag_ngwm__getSettingsRequest = 0;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct __ngw__getSettingsRequestResponse *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE___ngw__getSettingsRequestResponse, 0, sizeof(struct __ngw__getSettingsRequestResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getProxyListRequest(struct soap *soap, const struct __ngw__getProxyListRequest *a)
 {
 	(void)soap; (void)a; /* appease -Wall -Werror */
@@ -66615,6 +66541,59 @@ SOAP_FMAC3 _ngwm__getSignaturesRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__get
 	}
 	else
 	{	a = (_ngwm__getSignaturesRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getSignaturesRequest, sizeof(_ngwm__getSignaturesRequest), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getSettingsResponse(struct soap *soap, _ngwm__getSettingsResponse *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getSettingsResponse))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getSettingsResponse(struct soap *soap, _ngwm__getSettingsResponse *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getSettingsResponse);
+	if (soap_out_PointerTo_ngwm__getSettingsResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getSettingsResponse(struct soap *soap, const char *tag, int id, _ngwm__getSettingsResponse *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getSettingsResponse);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getSettingsResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getSettingsResponse(struct soap *soap, _ngwm__getSettingsResponse **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getSettingsResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getSettingsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getSettingsResponse(struct soap *soap, const char *tag, _ngwm__getSettingsResponse **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getSettingsResponse **)soap_malloc(soap, sizeof(_ngwm__getSettingsResponse *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getSettingsResponse *)soap_instantiate__ngwm__getSettingsResponse(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getSettingsResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getSettingsResponse, sizeof(_ngwm__getSettingsResponse), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}

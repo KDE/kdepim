@@ -8,7 +8,7 @@
 
 SOAP_BEGIN_NAMESPACE(soap)
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.1 2005-05-18 07:51:49 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.1 2005-06-10 15:15:43 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__acceptRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__acceptRequest *ngwm__acceptRequest, _ngwm__acceptResponse *ngwm__acceptResponse)
@@ -1548,7 +1548,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getProxyListRequest(struct soap *soap
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSettingsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getSettingsRequest *ngwm__getSettingsRequest, struct __ngw__getSettingsRequestResponse &param_1)
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSettingsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getSettingsRequest *ngwm__getSettingsRequest, _ngwm__getSettingsResponse *ngwm__getSettingsResponse)
 {	struct __ngw__getSettingsRequest soap_tmp___ngw__getSettingsRequest;
 	if (!soap_endpoint)
 		soap_endpoint = "http://localhost:8080";
@@ -1577,13 +1577,15 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSettingsRequest(struct soap *soap,
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
 		return soap_closesock(soap);
-	soap_default___ngw__getSettingsRequestResponse(soap, &param_1);
+	if (!ngwm__getSettingsResponse)
+		return soap_closesock(soap);
+	ngwm__getSettingsResponse->soap_default(soap);
 	if (soap_begin_recv(soap)
 	 || soap_envelope_begin_in(soap)
 	 || soap_recv_header(soap)
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
-	soap_get___ngw__getSettingsRequestResponse(soap, &param_1, "-ngw:getSettingsRequestResponse", "");
+	ngwm__getSettingsResponse->soap_get(soap, "ngwm:getSettingsResponse", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);

@@ -19,9 +19,11 @@ libgwsoap_la_SOURCES = contactconverter.cpp gwconverter.cpp incidenceconverter.c
 libgwsoap_la_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 libgwsoap_la_LIBADD	= -lkabc
 
+srcdir = .
+
 stubs: groupwise.wsdl
 	# make a header file from the wsdl
-	wsdl2h -e -o $(srcdir)/groupwise.h $(srcdir)/groupwise-new.wsdl -t $(srcdir)/typemap.dat
+	wsdl2h -e -o $(srcdir)/groupwise.h $(srcdir)/groupwise.wsdl -t $(srcdir)/typemap.dat
 	# remove ns1__ prefixes from generated functions
 	cd $(srcdir); ./fixup_groupwise.h.pl --inplace
 	# create the stubs from the header
