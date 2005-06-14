@@ -46,7 +46,7 @@
 #include "soapGroupWiseBindingProxy.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <stlvector.h>
+#include <vector>
 #include <string>
 
 #include "groupwiseserver.h"
