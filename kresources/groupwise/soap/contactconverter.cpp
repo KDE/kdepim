@@ -27,53 +27,51 @@ ContactConverter::ContactConverter( struct soap* soap )
 {
 }
 
-ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
+ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 {
   if ( addr.isEmpty() )
     return 0;
 
-  ns1__Contact* contact = soap_new_ns1__Contact( soap(), -1 );
+  ngwt__Contact* contact = soap_new_ngwt__Contact( soap(), -1 );
 
-  // ns1_Contact
+  // ngwt_Contact
   contact->fullName = 0;
   contact->emailList = 0;
   contact->imList = 0;
   contact->addressList = 0;
   contact->officeInfo = 0;
   contact->personalInfo = 0;
-  // ns1_AddressBookItem
+  contact->referenceInfo = 0;
+  // ngwt_AddressBookItem
   contact->uuid = 0;
   contact->comment = 0;
-  // ns1__ContainerItem
-  contact->container = 0;
+  // ngwt__ContainerItem
   contact->categories = 0;
   contact->created = 0;
   contact->customs = 0;
-  // ns1__contact
+  // ngwt__contact
   contact->id = 0;
   contact->name = 0;
   contact->version = 0;
   contact->modified = 0;
   contact->changes = 0;
-  contact->type = 0;
 
   // Uid
   contact->id = qStringToString( addr.custom( "GWRESOURCE", "UID" ) );
 
   // Container
   if ( !addr.custom( "GWRESOURCE", "CONTAINER" ).isEmpty() ) {
-    std::vector<ns1__ContainerRef*>* container = soap_new_std__vectorTemplateOfPointerTons1__ContainerRef( soap(), -1 );
-    ns1__ContainerRef* containerRef = soap_new_ns1__ContainerRef( soap(), -1 );
+    std::vector<ngwt__ContainerRef*>* container = soap_new_std__vectorTemplateOfPointerTongwt__ContainerRef( soap(), -1 );
+    ngwt__ContainerRef* containerRef = soap_new_ngwt__ContainerRef( soap(), -1 );
     containerRef->deleted = 0;
     containerRef->__item = addr.custom( "GWRESOURCE", "CONTAINER" ).utf8();
     container->push_back( containerRef );
 
-    contact->container = container;
-  } else
-    contact->container = 0;
+    contact->container = *container;
+  }
 
   // Name parts
-  ns1__FullName* fullName = soap_new_ns1__FullName( soap(), -1 );
+  ngwt__FullName* fullName = soap_new_ngwt__FullName( soap(), -1 );
   fullName->displayName = 0;
   fullName->namePrefix = 0;
   fullName->firstName = 0;
@@ -103,58 +101,59 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
   // Emails
   if ( !addr.emails().isEmpty() ) {
-    ns1__EmailAddressList* emailList = soap_new_ns1__EmailAddressList( soap(), -1 );
+    ngwt__EmailAddressList* emailList = soap_new_ngwt__EmailAddressList( soap(), -1 );
     std::vector<std::string>* list = soap_new_std__vectorTemplateOfstd__string( soap(), -1 );
 
     QStringList emails = addr.emails();
-    emailList->primary = emails.first().utf8();
+    emailList->primary = qStringToString( emails.first() );
 
     QStringList::Iterator it;
     for ( it = emails.begin(); it != emails.end(); ++it )
       list->push_back( std::string( (*it).utf8() ) );
 
-    emailList->email = list;
+    emailList->email = *list;
     contact->emailList = emailList;
   } else
     contact->emailList = 0;
 
   // Phone numbers
   if ( !addr.phoneNumbers().isEmpty() ) {
-    ns1__PhoneList* phoneList = soap_new_ns1__PhoneList( soap(), -1 );
-    std::vector<class ns1__PhoneNumber*> *list = soap_new_std__vectorTemplateOfPointerTons1__PhoneNumber( soap(), -1 );
+    ngwt__PhoneList* phoneList = soap_new_ngwt__PhoneList( soap(), -1 );
+    phoneList->default_ = 0;
+    std::vector<class ngwt__PhoneNumber*> *list = soap_new_std__vectorTemplateOfPointerTongwt__PhoneNumber( soap(), -1 );
 
     KABC::PhoneNumber::List phones = addr.phoneNumbers();
     KABC::PhoneNumber::List::Iterator it;
     for ( it = phones.begin(); it != phones.end(); ++it ) {
-      ns1__PhoneNumber* number = convertPhoneNumber( *it );
+      ngwt__PhoneNumber* number = convertPhoneNumber( *it );
       if ( number ) {
         list->push_back( number );
 
         // if preferred number assign it
         if ( (*it).type() & KABC::PhoneNumber::Pref )
-          phoneList->default_ = (*it).number().utf8();
+          phoneList->default_ = qStringToString( (*it).number() );
       }
     }
 
-    phoneList->phone = list;
+    phoneList->phone = *list;
     contact->phoneList = phoneList;
   } else
     contact->phoneList = 0;
 
   // Addresses
   if ( !addr.addresses().isEmpty() ) {
-    ns1__PostalAddressList* addressList = soap_new_ns1__PostalAddressList( soap(), -1 );
-    std::vector<class ns1__PostalAddress*> *list = soap_new_std__vectorTemplateOfPointerTons1__PostalAddress( soap(), -1 );
+    ngwt__PostalAddressList* addressList = soap_new_ngwt__PostalAddressList( soap(), -1 );
+    std::vector<class ngwt__PostalAddress*> *list = soap_new_std__vectorTemplateOfPointerTongwt__PostalAddress( soap(), -1 );
 
     KABC::Address::List addresses = addr.addresses();
     KABC::Address::List::Iterator it;
     for ( it = addresses.begin(); it != addresses.end(); ++it ) {
-      ns1__PostalAddress* address = convertPostalAddress( *it );
+      ngwt__PostalAddress* address = convertPostalAddress( *it );
       if ( address )
         list->push_back( address );
     }
 
-    addressList->address = list;
+    addressList->address = *list;
     contact->addressList = addressList;
   } else
     contact->addressList = 0;
@@ -166,7 +165,7 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
   // Office information
   {
-    ns1__OfficeInfo* info = soap_new_ns1__OfficeInfo( soap(), -1 );
+    ngwt__OfficeInfo* info = soap_new_ngwt__OfficeInfo( soap(), -1 );
 
     // TODO: write back organization?
 
@@ -181,7 +180,7 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
       info->title = 0;
 
     if ( !addr.url().isEmpty() )
-      info->website = qStringToChar( addr.url().url() );
+      info->website = qStringToString( addr.url().url() );
     else
       info->website = 0;
 
@@ -192,10 +191,10 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
   // Personal information
   {
-    ns1__PersonalInfo* info = soap_new_ns1__PersonalInfo( soap(), -1 );
+    ngwt__PersonalInfo* info = soap_new_ngwt__PersonalInfo( soap(), -1 );
 
     if ( addr.birthday().isValid() )
-      info->birthday = qDateToChar( addr.birthday().date() );
+      info->birthday = qDateToString( addr.birthday().date() );
     else
       info->birthday = 0;
 
@@ -208,19 +207,22 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
   return contact;
 }
 
-KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
+KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
 {
   kdDebug() << "ContactConverter::convertFromContact()" << endl;
 
   KABC::Addressee addr;
 
   if ( !contact )
+  {
+    kdDebug() << "Null Contact, bailing out!" << endl;
     return addr;
-
+  }
   addr.insertCustom( "GWRESOURCE", "UID", stringToQString( contact->id ) );
+  addr.insertCustom( "GWRESOURCE", "UUID", stringToQString( contact->uuid ) );
 
   // Name parts
-  ns1__FullName* fullName = contact->fullName;
+  ngwt__FullName* fullName = contact->fullName;
 
   if ( fullName->displayName )
     addr.setFormattedName( stringToQString( fullName->displayName ) );
@@ -244,13 +246,13 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
   if ( contact->emailList ) {
      QStringList emails;
 
-     if ( !contact->emailList->primary.empty() )
+     if ( contact->emailList->primary )
          emails.append( stringToQString( contact->emailList->primary ) );
 
-     if ( contact->emailList->email ) {
-       std::vector<std::string> *list = contact->emailList->email;
+     if ( !contact->emailList->email.empty() ) {
+       std::vector<std::string> list = contact->emailList->email;
        std::vector<std::string>::const_iterator it;
-       for ( it = list->begin(); it != list->end(); ++it ) {
+       for ( it = list.begin(); it != list.end(); ++it ) {
          if ( emails.find( stringToQString( *it ) ) == emails.end() )
            emails.append( stringToQString( *it ) );
        }
@@ -261,12 +263,12 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
   }
 
   // Phone numbers
-  if ( contact->phoneList && contact->phoneList->phone ) {
+  if ( contact->phoneList && !contact->phoneList->phone.empty() ) {
     QString defaultNumber = stringToQString( contact->phoneList->default_ );
 
-    std::vector<class ns1__PhoneNumber*> *list = contact->phoneList->phone;
-    std::vector<class ns1__PhoneNumber*>::const_iterator it;
-    for ( it = list->begin(); it != list->end(); ++it ) {
+    std::vector<class ngwt__PhoneNumber*> list = contact->phoneList->phone;
+    std::vector<class ngwt__PhoneNumber*>::const_iterator it;
+    for ( it = list.begin(); it != list.end(); ++it ) {
       KABC::PhoneNumber phone = convertPhoneNumber( *it );
       if ( !phone.number().isEmpty() ) {
         if ( phone.number() == defaultNumber )
@@ -277,10 +279,10 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
   }
 
   // Addresses
-  if ( contact->addressList && contact->addressList->address ) {
-    std::vector<class ns1__PostalAddress*> *list = contact->addressList->address;
-    std::vector<class ns1__PostalAddress*>::const_iterator it;
-    for ( it = list->begin(); it != list->end(); ++it ) {
+  if ( contact->addressList && !contact->addressList->address.empty() ) {
+    std::vector<class ngwt__PostalAddress*> list = contact->addressList->address;
+    std::vector<class ngwt__PostalAddress*>::const_iterator it;
+    for ( it = list.begin(); it != list.end(); ++it ) {
       KABC::Address address = convertPostalAddress( *it );
       if ( !address.isEmpty() )
         addr.insertAddress( address );
@@ -289,7 +291,7 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
 
   // Office information
   if ( contact->officeInfo ) {
-    ns1__OfficeInfo* info = contact->officeInfo;
+    ngwt__OfficeInfo* info = contact->officeInfo;
 
     if ( info->organization )
       addr.setOrganization( stringToQString( info->organization->__item ) );
@@ -306,10 +308,10 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
 
   // Personal information
   if ( contact->personalInfo ) {
-    ns1__PersonalInfo* info = contact->personalInfo;
+    ngwt__PersonalInfo* info = contact->personalInfo;
 
     if ( info->birthday ) {
-      QDate date = charToQDate( info->birthday );
+      QDate date = stringToQDate( info->birthday );
       if ( date.isValid() )
         addr.setBirthday( date );
     }
@@ -322,9 +324,9 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
   if ( contact->imList ) {
     // put all the im addresses on the same service into the same qstringlist
     QMap<QString, QStringList> addressMap;
-    std::vector<ns1__ImAddress*> *list = contact->imList->im;
-    std::vector<ns1__ImAddress*>::const_iterator it;
-    for ( it = list->begin(); it != list->end(); ++it ) {
+    std::vector<ngwt__ImAddress*> list = contact->imList->im;
+    std::vector<ngwt__ImAddress*>::const_iterator it;
+    for ( it = list.begin(); it != list.end(); ++it ) {
       QStringList addressesForService = addressMap[ stringToQString( (*it)->service ) ];
       addressesForService.append( stringToQString( (*it)->address ) );
       addressMap.insert( stringToQString( (*it)->service ), addressesForService );
@@ -338,15 +340,21 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
       QStringList addresses = addrIt.data();
       kdDebug() << "got IM addresses for '" << protocol << "' : " << addresses << endl;
       // TODO: map protocol to KDE's set of known protocol names (need to know the set of services in use elsewhere)
+      if ( protocol == "nov" )
+        protocol = "groupwise";
       addr.insertCustom( QString::fromLatin1("messaging/%1").arg( protocol ),
                           QString::fromLatin1( "All" ),
                           addresses.join( QChar( 0xE000 ) ) );
     }
   }
+  kdDebug() << "Got the following addressee: " << endl;
+  addr.dump();
+  kdDebug() << "Customs are: " << addr.customs() << endl;
+
   return addr;
 }
 
-KABC::PhoneNumber ContactConverter::convertPhoneNumber( ns1__PhoneNumber *phone ) const
+KABC::PhoneNumber ContactConverter::convertPhoneNumber( ngwt__PhoneNumber *phone ) const
 {
   KABC::PhoneNumber phoneNumber;
 
@@ -371,12 +379,12 @@ KABC::PhoneNumber ContactConverter::convertPhoneNumber( ns1__PhoneNumber *phone 
   return phoneNumber;
 }
 
-ns1__PhoneNumber* ContactConverter::convertPhoneNumber( const KABC::PhoneNumber &number ) const
+ngwt__PhoneNumber* ContactConverter::convertPhoneNumber( const KABC::PhoneNumber &number ) const
 {
   if ( number.number().isEmpty() )
     return 0;
 
-  ns1__PhoneNumber* phoneNumber = soap_new_ns1__PhoneNumber( soap(), -1 );
+  ngwt__PhoneNumber* phoneNumber = soap_new_ngwt__PhoneNumber( soap(), -1 );
   phoneNumber->__item = number.number().utf8();
 
   if ( number.type() & KABC::PhoneNumber::Fax ) {
@@ -396,7 +404,7 @@ ns1__PhoneNumber* ContactConverter::convertPhoneNumber( const KABC::PhoneNumber 
   return phoneNumber;
 }
 
-KABC::Address ContactConverter::convertPostalAddress( ns1__PostalAddress *addr ) const
+KABC::Address ContactConverter::convertPostalAddress( ngwt__PostalAddress *addr ) const
 {
   KABC::Address address;
 
@@ -432,12 +440,12 @@ KABC::Address ContactConverter::convertPostalAddress( ns1__PostalAddress *addr )
   return address;
 }
 
-ns1__PostalAddress* ContactConverter::convertPostalAddress( const KABC::Address &address )
+ngwt__PostalAddress* ContactConverter::convertPostalAddress( const KABC::Address &address )
 {
   if ( address.isEmpty() )
     return 0;
 
-  ns1__PostalAddress* postalAddress = soap_new_ns1__PostalAddress( soap(), -1 );
+  ngwt__PostalAddress* postalAddress = soap_new_ngwt__PostalAddress( soap(), -1 );
 
   postalAddress->description = 0;
 
@@ -482,7 +490,7 @@ ns1__PostalAddress* ContactConverter::convertPostalAddress( const KABC::Address 
   return postalAddress;
 }
 
-ns1__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee& addr )
+ngwt__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee& addr )
 {
   //return 0;
   /* TODO: use IM address dedicated functions in KDE 4.0.
@@ -490,8 +498,8 @@ ns1__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee&
   IM address out of the addressee and passes it to this
   function, which converts one at a time. */
   kdDebug() << k_funcinfo << endl;
-  ns1__ImAddressList* imList = soap_new_ns1__ImAddressList( soap(), -1 );
-  std::vector<class ns1__ImAddress*> *list = soap_new_std__vectorTemplateOfPointerTons1__ImAddress( soap(), -1 );
+  ngwt__ImAddressList* imList = soap_new_ngwt__ImAddressList( soap(), -1 );
+  std::vector<class ngwt__ImAddress*> *list = soap_new_std__vectorTemplateOfPointerTongwt__ImAddress( soap(), -1 );
 
   // for each custom
   // if it contains IM addresses
@@ -508,21 +516,26 @@ ns1__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee&
       // get the protocol for this field
       QString protocol = app.section( '/', 1, 1 );
       if ( !protocol.isEmpty() ) {
+        if ( protocol == "groupwise" )
+          protocol = "novell";
         QStringList addresses = QStringList::split( QChar( 0xE000 ), value );
         QStringList::iterator end = addresses.end();
-        // extract each address for this protocol, and create an ns1__ImAddress for it, and append it to list.
+        // extract each address for this protocol, and create an ngwt__ImAddress for it, and append it to list.
         for ( QStringList::ConstIterator it = addresses.begin(); it != end; ++it ) {
-          ns1__ImAddress* address = soap_new_ns1__ImAddress( soap(), -1 );
-          address->service.append( protocol.utf8() );
-          address->address.append( (*it).utf8() );
-          address->type.append( "all" );
+          ngwt__ImAddress* address = soap_new_ngwt__ImAddress( soap(), -1 );
+          address->service = soap_new_std__string( soap(), -1 );
+          address->address = soap_new_std__string( soap(), -1 );
+          address->type = soap_new_std__string( soap(), -1 );
+          address->service->append( protocol.utf8() );
+          address->address->append( (*it).utf8() );
+          address->type->append( "all" );
           kdDebug() << "adding: service: " << protocol << " address: " << *it << " type: all" << endl;
           list->push_back( address );
         }
       }
     }
   }
-  imList->im = list;
+  imList->im = *list;
   if ( list->size() > 0 )
     return imList;
   else

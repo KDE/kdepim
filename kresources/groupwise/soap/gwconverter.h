@@ -42,11 +42,20 @@ class GWConverter
     char* qDateToChar( const QDate& );
     QDate charToQDate( const char * );
 
+    std::string* qDateToString( const QDate &string );
+    QDate stringToQDate( std::string* );
+
     char *qDateTimeToChar( const QDateTime &dt, const QString &timezone );
     char *qDateTimeToChar( const QDateTime &dt );
 
     QDateTime charToQDateTime( const char *str );
     QDateTime charToQDateTime( const char *str, const QString &timezone );
+
+    std::string* qDateTimeToString( const QDateTime &string, const QString &timezone );
+    std::string* qDateTimeToString( const QDateTime &string );
+    
+    QDateTime stringToQDateTime( const std::string* );
+
 
   private:
     struct soap* mSoap;

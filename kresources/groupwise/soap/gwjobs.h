@@ -91,4 +91,28 @@ class ReadCalendarJob : public GWJob
     KCal::Calendar *mCalendar;
 };
 
+class UpdateAddressBooksJob : public GWJob
+{
+  public:
+    UpdateAddressBooksJob( GroupwiseServer *server, struct soap *soap,
+      const QString &url,
+      const std::string &session );
+
+    /** set the address book IDs to update - at the moment this is only the System Address Book (SAB) */
+    void setAddressBookIds( const QStringList& );
+
+    // we need the resource here for doing uid mapping
+    void setResource( KABC::ResourceCached * );
+
+    void run();
+  protected:
+    void updateAddressBook( std::string& );
+
+  private:
+    GroupwiseServer *mServer;
+    QStringList mAddressBookIds;
+    KABC::ResourceCached *mResource;
+    int mProgress;
+};
+
 #endif

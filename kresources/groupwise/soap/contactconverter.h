@@ -30,21 +30,22 @@ class ContactConverter : public GWConverter
   public:
     ContactConverter( struct soap* );
 
-    KABC::Addressee convertFromContact( ns1__Contact* );
-    ns1__Contact* convertToContact( const KABC::Addressee& );
+    KABC::Addressee convertFromContact( ngwt__Contact* );
+    ngwt__Contact* convertToContact( const KABC::Addressee& );
 
   private:
-    KABC::PhoneNumber convertPhoneNumber( ns1__PhoneNumber* ) const;
-    ns1__PhoneNumber* convertPhoneNumber( const KABC::PhoneNumber& ) const;
+    KABC::PhoneNumber convertPhoneNumber( ngwt__PhoneNumber* ) const;
+    ngwt__PhoneNumber* convertPhoneNumber( const KABC::PhoneNumber& ) const;
 
-    KABC::Address convertPostalAddress( ns1__PostalAddress* ) const;
-    ns1__PostalAddress* convertPostalAddress( const KABC::Address& );
+    KABC::Address convertPostalAddress( ngwt__PostalAddress* ) const;
+    ngwt__PostalAddress* convertPostalAddress( const KABC::Address& );
     /* we convert all IM addresses in the addressee at once,
     because multiple values per IM system are stored in a custom field each
     which is a different structure to that used for phone numbers, email addresses etc */
-    ns1__ImAddressList* convertImAddresses( const KABC::Addressee& );
+    ngwt__ImAddressList* convertImAddresses( const KABC::Addressee& );
     // splits up an arbitrary custom field
     void splitField( const QString &str, QString &app, QString &name, QString &value );
+    static QMap<QString, QString > mIMProtocolMap;
 };
 
 #endif

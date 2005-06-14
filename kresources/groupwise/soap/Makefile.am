@@ -19,13 +19,26 @@ libgwsoap_la_SOURCES = contactconverter.cpp gwconverter.cpp incidenceconverter.c
 libgwsoap_la_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 libgwsoap_la_LIBADD	= -lkabc
 
+srcdir = .
+
 stubs: groupwise.wsdl
+	# make a header file from the wsdl
 	wsdl2h -e -o $(srcdir)/groupwise.h $(srcdir)/groupwise.wsdl -t $(srcdir)/typemap.dat
+	# remove ns1__ prefixes from generated functions
 	cd $(srcdir); ./fixup_groupwise.h.pl --inplace
+	# create the stubs from the header
 	soapcpp2 -d $(srcdir) -I$(srcdir) $(srcdir)/groupwise.h
+	# rename any 'delete' method declarations
 	sed  -e 's,*delete\([^d]\),*_delete\1,' $(srcdir)/soapStub.h > $(srcdir)/soapStub.h_
 	mv $(srcdir)/soapStub.h_ $(srcdir)/soapStub.h
+	# rename any 'delete' method invocations
 	sed  -e 's,->delete\([^d]\),->_delete\1,' $(srcdir)/soapC.cpp > $(srcdir)/soapC.cpp_
+	mv $(srcdir)/soapC.cpp_ $(srcdir)/soapC.cpp
+	# rename any 'new' method decls
+	sed  -e 's,*new\([^d]\),*_new\1,' $(srcdir)/soapStub.h > $(srcdir)/soapStub.h_
+	mv $(srcdir)/soapStub.h_ $(srcdir)/soapStub.h
+	# rename any 'new' method invocations
+	sed  -e 's,->new\([^d]\),->_new\1,' $(srcdir)/soapC.cpp > $(srcdir)/soapC.cpp_
 	mv $(srcdir)/soapC.cpp_ $(srcdir)/soapC.cpp
 
 METASOURCES = AUTO

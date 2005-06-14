@@ -24,9 +24,11 @@
 #include <kio/job.h>
 #include <kio/jobclasses.h>
 #include <qapplication.h>
+#include <qmap.h>
 #include <qobject.h>
 #include <qstring.h>
 #include <qthread.h>
+#include <qvaluelist.h>
 
 #include <string>
 
@@ -45,16 +47,19 @@ class Incidence;
 class ResourceCached;
 }
 
+class ngwt__Settings;
+
 class KExtendedSocket;
 
 struct soap;
 
-class ns1__Folder;
-class ns1__Item;
-class ns1__Appointment;
-class ns1__Mail;
-class ns1__Task;
-class ns1__Status;
+class ngwt__Folder;
+class ngwt__Item;
+class ngwt__Appointment;
+class ngwt__Mail;
+class ngwt__Task;
+class ngwt__Status;
+class GroupWiseBinding;
 
 namespace GroupWise {
 
@@ -62,16 +67,15 @@ class AddressBook
 {
   public:
     typedef QValueList<AddressBook> List;
-  
+
     AddressBook() : isPersonal( false ), isFrequentContacts( false ) {}
-  
+
     QString id;
     QString name;
     QString description;
     bool isPersonal;
     bool isFrequentContacts;
 };
-
 }
 
 class GroupwiseServer : public QObject
@@ -79,6 +83,7 @@ class GroupwiseServer : public QObject
   Q_OBJECT
 
   public:
+    enum RetractCause { DueToResend, Other };
     GroupwiseServer( const QString &url, const QString &user,
                      const QString &password, QObject *parent );
     ~GroupwiseServer();
@@ -91,6 +96,13 @@ class GroupwiseServer : public QObject
     bool addIncidence( KCal::Incidence *, KCal::ResourceCached * );
     bool changeIncidence( KCal::Incidence * );
     bool deleteIncidence( KCal::Incidence * );
+
+    /**
+     * @brief Retract a meeting request.
+     * This is needed to change a meeting, because you need to retract it from others' mailboxes before resending.
+     * @param causedByResend indicate if the retraction is caused by a resend, suppresses the retraction message in favour of the resent meeting.
+     */
+    bool retractRequest( KCal::Incidence *, RetractCause cause );
 
     bool readCalendarSynchronous( KCal::Calendar *cal );
 
@@ -122,6 +134,8 @@ class GroupwiseServer : public QObject
     void emitReadAddressBookTotalSize( int );
     void emitReadAddressBookProcessedSize( int );
 
+    bool readUserSettings( ngwt__Settings *settings );
+
   signals:
     void readAddressBookTotalSize( int );
     void readAddressBookProcessedSize( int );
@@ -129,13 +143,13 @@ class GroupwiseServer : public QObject
   protected:
     void dumpCalendarFolder( const std::string &id );
 
-    void dumpFolder( ns1__Folder * );
-    void dumpItem( ns1__Item * );
-    void dumpAppointment( ns1__Appointment * );
-    void dumpTask( ns1__Task * );
-    void dumpMail( ns1__Mail * );
+    void dumpFolder( ngwt__Folder * );
+    void dumpItem( ngwt__Item * );
+    void dumpAppointment( ngwt__Appointment * );
+    void dumpTask( ngwt__Task * );
+    void dumpMail( ngwt__Mail * );
 
-    bool checkResponse( int result, ns1__Status *status );
+    bool checkResponse( int result, ngwt__Status *status );
 
     void log( const QString &prefix, const char *s, size_t n );
 
@@ -157,7 +171,8 @@ class GroupwiseServer : public QObject
     std::string mCalendarFolder;
     
     struct soap *mSoap;
-
+    GroupWiseBinding *mBinding;
+    
     KExtendedSocket *m_sock;
 
     QString mError;

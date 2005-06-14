@@ -1,2294 +1,1179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<definitions
-    xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
-    xmlns:tns="http://schemas.novell.com/2003/10/NCSP/types.xsd" 
-    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
-    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="http://schemas.novell.com/2003/10/NCSP/types.xsd"
-    xmlns="http://schemas.xmlsoap.org/wsdl/">
-  <types>
-    <xs:schema targetNamespace="http://schemas.novell.com/2003/10/NCSP/types.xsd">
-
-<!-- data types -->
-	<xs:element name="acceptLevel" type="tns:AcceptLevel"/>
-	<xs:element name="code" type="xs:int"/>
-	<xs:element name="description" type="xs:string"/>
-	<xs:element name="displayName" type="xs:string"/>
-	<xs:element name="email" type="xs:string"/>
-	<xs:element name="endDate" type="xs:dateTime"/>
-	<xs:element name="id" type="tns:uid"/>
-	<xs:element name="modified" type="xs:dateTime"/>
-	<xs:element name="name" type="xs:string"/>
-	<xs:element name="rights" type="tns:Rights"/>
-	<xs:element name="sequence" type="xs:unsignedInt"/>
-	<xs:element name="session" type="xs:string"/>
-	<xs:element name="startDate" type="xs:dateTime"/>
-	<xs:element name="subject" type="xs:string"/>
-	<xs:element name="uuid" type="tns:UUID"/>
-	<xs:element name="version" type="xs:unsignedInt"/>
-
-	<xs:simpleType name="AcceptLevel">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Free"/>
-			<xs:enumeration value="Tentative"/>
-			<xs:enumeration value="Busy"/>
-			<xs:enumeration value="OutOfOffice"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="AccessControlListEntry">
-		<xs:complexContent>
-			<xs:extension base="tns:NameAndEmail">
-				<xs:sequence>
-					<xs:element ref="tns:rights"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="AccessControlList">
-		<xs:sequence>
-			<xs:element name="entry" type="tns:AccessControlListEntry" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="AccessMiscRight">
-		<xs:sequence>
-			<xs:element name="alarms" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="notify" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="readHidden" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="setup" type="xs:boolean" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="AccessRight">
-		<xs:sequence>
-			<xs:element name="read" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="write" type="xs:boolean" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="AccessRightChanges">
-		<xs:sequence>
-			<xs:element name="add" type="tns:AccessRightEntry" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="delete" type="tns:AccessRightEntry" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="update" type="tns:AccessRightEntry" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="AccessRightEntry">
-		<xs:complexContent>
-			<xs:extension base="tns:NameAndEmail">
-				<xs:sequence>
-					<xs:element ref="tns:id" minOccurs="0"/>
-					<xs:element name="appointment" type="tns:AccessRight" minOccurs="0"/>
-					<xs:element name="mail" type="tns:AccessRight" minOccurs="0"/>
-					<xs:element name="misc" type="tns:AccessMiscRight" minOccurs="0"/>
-					<xs:element name="note" type="tns:AccessRight" minOccurs="0"/>
-					<xs:element name="task" type="tns:AccessRight" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="AccessRightList">
-		<xs:sequence>
-			<xs:element name="entry" type="tns:AccessRightEntry" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="AddressBook">
-		<xs:complexContent>
-			<xs:extension base="tns:Item">
-				<xs:sequence>
-					<xs:element ref="tns:description" minOccurs="0"/>
-					<xs:element name="isPersonal" type="xs:boolean" minOccurs="0"/>
-					<xs:element name="isFrequentContacts" type="xs:boolean" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="AddressBookItem">
-		<xs:complexContent>
-			<xs:extension base="tns:ContainerItem">
-				<xs:sequence>
-					<xs:element ref="tns:uuid" minOccurs="0"/>
-					<xs:element name="comment" type="xs:string" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="AddressBookList">
-		<xs:sequence>
-			<xs:element name="book" type="tns:AddressBook" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Alarm">
-		<xs:simpleContent>
-			<xs:extension base = "xs:int">
-				<xs:attribute name="enabled" type="xs:boolean"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-
-	<xs:complexType name="Appointment">
-		<xs:complexContent>
-			<xs:extension base="tns:CalendarItem">
-				<xs:sequence>
-					<xs:element ref="tns:endDate"/>
-					<xs:element ref="tns:acceptLevel"/>
-					<xs:element name="alarm" type="tns:Alarm" minOccurs="0"/>
-					<xs:element name="allDayEvent" type="xs:boolean" minOccurs="0"/>
-					<xs:element name="place" type="xs:string" minOccurs="0"/>
-					<xs:element name="timezone" type="tns:Timezone" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="AttachmentID">
-		<xs:simpleContent>
-			<xs:extension base="tns:uid">
-				<xs:attribute name="itemReference" type="xs:boolean"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-
-	<xs:complexType name="AttachmentInfo">
-		<xs:sequence>
-			<xs:element name="attachment" type="tns:AttachmentItemInfo" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="AttachmentItemInfo">
-		<xs:sequence>
-			<xs:element name="id" type="tns:AttachmentID" minOccurs="0"/>
-			<xs:element ref="tns:name"/>
-			<xs:element name="contentId" type="xs:string" minOccurs="0"/>
-			<xs:element name="contentType" type="xs:string" minOccurs="0"/>
-			<xs:element name="size" type="xs:unsignedInt"/>
-			<xs:element name="date" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="data" type="xs:base64Binary" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Authentication">
-	</xs:complexType>
-
-	<xs:complexType name="BoxEntry">
-		<xs:complexContent>
-			<xs:extension base="tns:ContainerItem">
-				<xs:sequence>
-					<xs:element name="status" type="tns:ItemStatus" minOccurs="0"/>
-					<xs:element name="thread" type="xs:string" minOccurs="0"/>
-					<xs:element name="msgid" type="xs:string" minOccurs="0"/>
-					<xs:element name="source" type="tns:ItemSource" minOccurs="0"/>
-					<xs:element name="delivered" type="xs:dateTime"/>
-					<xs:element name="class" type="tns:ItemClass" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="CalendarItem">
-		<xs:complexContent>
-			<xs:extension base="tns:Mail">
-				<xs:sequence>
-					<xs:element ref="tns:startDate" minOccurs="0"/>
-					<xs:element name="rdate" type="tns:RecurrenceDateType" minOccurs="0"/>
-					<xs:element name="isRecurring" type="xs:boolean" minOccurs="0" />
-					<xs:element name="iCalId" type="xs:string" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="Category">
-		<xs:complexContent>
-			<xs:extension base="tns:Item">
-				<xs:sequence>
-				<xs:element name="categoryType" type="tns:CategoryType" minOccurs="0"/>
-				<xs:element name="color" type="xs:unsignedInt" minOccurs="0"/>
-			</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="CategoryList">
-		<xs:sequence>
-			<xs:element name="category" type="tns:Category" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="CategoryRefList">
-		<xs:sequence>
-			<xs:element name="category" type="tns:uid" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="primary" type="tns:uid"/>
-	</xs:complexType>
-
-	<xs:simpleType name="CategoryType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Normal"/>
-			<xs:enumeration value="Personal"/>
-			<xs:enumeration value="Follow-up"/>
-			<xs:enumeration value="Urgent"/>
-			<xs:enumeration value="LowPriority"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="CommentStatus">
-		<xs:simpleContent>
-			<xs:extension base="xs:dateTime">
-				<xs:attribute name="comment" type="xs:string"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-
-	<xs:complexType name="Contact">
-		<xs:complexContent>
-			<xs:extension base="tns:AddressBookItem">
-				<xs:sequence>
-					<xs:element name="fullName" type="tns:FullName" minOccurs="0"/>
-					<xs:element name="emailList" type="tns:EmailAddressList" minOccurs="0"/>
-					<xs:element name="imList" type="tns:ImAddressList" minOccurs="0"/>
-					<xs:element name="phoneList" type="tns:PhoneList" minOccurs="0"/>
-					<xs:element name="addressList" type="tns:PostalAddressList" minOccurs="0"/>
-					<xs:element name="officeInfo" type="tns:OfficeInfo" minOccurs="0"/>
-					<xs:element name="personalInfo" type="tns:PersonalInfo" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="ContainerItem">
-		<xs:complexContent>
-			<xs:extension base="tns:Item">
-				<xs:sequence>
-					<xs:element name="container" type="tns:ContainerRef" minOccurs="1" maxOccurs="unbounded"/>
-					<xs:element name="categories" type="tns:CategoryRefList" minOccurs="0"/>
-					<xs:element name="created" type="xs:dateTime" minOccurs="0"/>
-					<xs:element name="customs" type="tns:CustomList" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="ContainerRef">
-		<xs:simpleContent>
-			<xs:extension base="xs:string">
-				<xs:attribute name="deleted" type="xs:dateTime"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-
-	<xs:complexType name="ContactFolder">
-		<xs:complexContent>
-			<xs:extension base="tns:SystemFolder">
-				<xs:sequence>
-					<xs:element name="addressBook" type="tns:uid" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:simpleType name="ContactType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Contact"/>
-			<xs:enumeration value="Group"/>
-			<xs:enumeration value="Resource"/>
-			<xs:enumeration value="Organization"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="CursorSeek">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="current"/>
-			<xs:enumeration value="start"/>
-			<xs:enumeration value="end"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="Custom">
-		<xs:sequence>
-			<xs:element name="field" type="xs:string"/>
-<!--			<xs:element name="value" type="xs:anyType" minOccurs="0"/> -->
-			<xs:element name="value" type="xs:string" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="CustomList">
-		<xs:sequence>
-			<xs:element name="custom" type="tns:Custom" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:simpleType name="Day">
-		<xs:restriction base="xs:unsignedByte">
-			<xs:maxInclusive value="30"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="DayOfWeek">
-		<xs:simpleContent>
-			<xs:extension base="tns:WeekDay">
-				<xs:attribute name="occurrence" type="tns:OccurrenceType"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-
-	<xs:complexType name="DelegatedStatus">
-		<xs:simpleContent>
-			<xs:extension base="tns:CommentStatus">
-				<xs:attribute name="userid" type="xs:string"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-
-	<xs:complexType name="DelegateeStatus">
-		<xs:complexContent>
-			<xs:extension base="tns:RecipientStatus">
-				<xs:attribute name="userid" type="xs:string"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="DeltaList">
-		<xs:sequence>
-			<xs:element name="add" type="tns:Items" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="delete" type="tns:Items" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="update" type="tns:Items" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Distribution">
-		<xs:sequence>
-			<xs:element name="from" type="tns:From" minOccurs="0"/>
-			<xs:element name="to" type="xs:string" minOccurs="0"/>
-			<xs:element name="cc" type="xs:string" minOccurs="0"/>
-			<xs:element name="bc" type="xs:string" minOccurs="0"/>
-			<xs:element name="recipients" type="tns:RecipientList"/>
-			<xs:element name="sendoptions" type="tns:SendOptions" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:simpleType name="DistributionType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="TO"/>
-			<xs:enumeration value="CC"/>
-			<xs:enumeration value="BC"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="DocumentRef">
-		<xs:complexContent>
-			<xs:extension base="tns:Mail">
-				<xs:sequence>
-					<xs:element name="library" type="tns:NameAndEmail"/>
-					<xs:element name="number" type="xs:unsignedInt"/>
-					<xs:element name="filename" type="xs:string" minOccurs="0"/>
-					<xs:element name="docType" type="xs:string"/>
-					<xs:element name="author" type="tns:NameAndEmail"/>
-					<xs:element name="creator" type="tns:NameAndEmail"/>
-					<xs:element name="officialVersion" type="xs:unsignedInt"/>
-					<xs:element name="currentVersion" type="xs:unsignedInt"/>
-					<xs:element name="version" type="xs:unsignedInt"/>
-					<xs:element name="versionDescription" type="xs:string"/>
-					<xs:element name="fileSize" type="xs:unsignedInt" minOccurs="0"/>
-					<xs:element name="acl" type="tns:AccessControlList" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="EmailAddressList">
-		<xs:sequence>
-			<xs:element ref="tns:email" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="primary" type="xs:string"/>
-	</xs:complexType>
-
-	<xs:complexType name="Filter">
-		<xs:sequence>
-			<xs:element name="element" type="tns:FilterElement" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="FilterElement">
-		<xs:sequence>
-			<xs:element name="op" type="tns:FilterOp"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="FilterEntry">
-		<xs:complexContent>
-			<xs:extension base="tns:FilterElement">
-				<xs:sequence>
-					<xs:element name="field" type="xs:string"/>
-                  			<xs:element name="value" type="xs:string"/>
-<!--					<xs:element name="value" type="xs:anyType"/> -->
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="FilterGroup">
-		<xs:annotation>
-			<xs:documentation>
-				FilterGroup comprises FilterOp "and", "or" or "not"
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="tns:FilterElement">
-				<xs:sequence>
-					<xs:element name="element" type="tns:FilterElement" minOccurs="1" maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:simpleType name="FilterOp">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="and"/>
-			<xs:enumeration value="or"/>
-			<xs:enumeration value="not"/>
-			<xs:enumeration value="eq"/>
-			<xs:enumeration value="ne"/>
-			<xs:enumeration value="gt"/>
-			<xs:enumeration value="lt"/>
-			<xs:enumeration value="gte"/>
-			<xs:enumeration value="lte"/>
-			<xs:enumeration value="contains"/>
-			<xs:enumeration value="containsWord"/>
-			<xs:enumeration value="begins"/>
-			<xs:enumeration value="exists"/>
-			<xs:enumeration value="notExist"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="Folder">
-		<xs:complexContent>
-			<xs:extension base="tns:Item">
-				<xs:sequence>
-					<xs:element name="parent" type="tns:uid"/>
-					<xs:element ref="tns:description" minOccurs="0"/>
-					<xs:element name="count" type="xs:int" minOccurs="0"/>
-					<xs:element name="hasUnread" type="xs:boolean" minOccurs="0"/>
-					<xs:element name="unreadCount" type="xs:int" minOccurs="0"/>
-					<xs:element ref="tns:sequence" minOccurs="0"/>
-					<xs:element name="settings" type="tns:uid" minOccurs="0"/>
-					<xs:element name="hasSubfolders" type="xs:boolean" minOccurs="0"/>
-					<xs:element name="notification" type="tns:SharedFolderNotification" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="FolderACL">
-		<xs:sequence>
-			<xs:element name="entry" type="tns:FolderACLEntry" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="FolderACLEntry">
-		<xs:complexContent>
-			<xs:extension base="tns:AccessControlListEntry">
-				<xs:sequence>
-					<xs:element name="status" type="tns:FolderACLStatus"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:simpleType name="FolderACLStatus">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="pending"/>
-			<xs:enumeration value="accepted"/>
-			<xs:enumeration value="deleted"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="FolderList">
-		<xs:sequence>
-			<xs:element name="folder" type="tns:Folder" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:simpleType name="FolderType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Mailbox"/>
-			<xs:enumeration value="SentItems"/>
-			<xs:enumeration value="WorkInProgress"/>
-			<xs:enumeration value="Trash"/>
-			<xs:enumeration value="Calendar"/>
-			<xs:enumeration value="Contacts"/>
-			<xs:enumeration value="Documents"/>
-			<xs:enumeration value="Checklist"/>
-			<xs:enumeration value="Cabinet"/>
-			<xs:enumeration value="Normal"/>
-			<xs:enumeration value="NNTP"/>
-			<xs:enumeration value="IMAP"/>
-			<xs:enumeration value="Query"/>
-			<xs:enumeration value="JunkMail"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="FreeBusyBlockList">
-		<xs:sequence>
-			<xs:element name="block" type="tns:FreeBusyBlock" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-	
-	<xs:complexType name="FreeBusyBlock">
-		<xs:sequence>
-			<xs:element ref="tns:startDate"/>
-			<xs:element ref="tns:endDate"/>
-			<xs:element ref="tns:acceptLevel"/>
-			<xs:element ref="tns:subject"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="FreeBusyInfo">
-		<xs:complexContent>
-			<xs:extension base="tns:FreeBusyUser">
-				<xs:sequence>
-					<xs:element name="blocks" type="tns:FreeBusyBlockList"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="FreeBusyUserList">
-		<xs:sequence>
-			<xs:element name="user" type="tns:FreeBusyUser" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="FreeBusyInfoList">
-		<xs:sequence>
-			<xs:element name="user" type="tns:FreeBusyInfo" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="FreeBusyStats">
-		<xs:sequence>
-			<xs:element name="responded" type="xs:int"/>
-			<xs:element name="outstanding" type="xs:int"/>
-			<xs:element name="total" type="xs:int"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="FreeBusyUser">
-		<xs:complexContent>
-			<xs:extension base="tns:NameAndEmail"/>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="From">
-		<xs:complexContent>
-			<xs:extension base="tns:NameAndEmail">
-				<xs:sequence>
-					<xs:element name="replyTo" type="xs:string" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="FullName">
-		<xs:sequence>
-			<xs:element ref="tns:displayName" minOccurs="0"/>
-			<xs:element name="namePrefix" type="xs:string" minOccurs="0"/>
-			<xs:element name="firstName" type="xs:string" minOccurs="0"/>
-			<xs:element name="middleName" type="xs:string" minOccurs="0"/>
-			<xs:element name="lastName" type="xs:string" minOccurs="0"/>
-			<xs:element name="nameSuffix" type="xs:string" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:simpleType name="GMTOffset">
-		<xs:annotation>
-			<xs:documentation>
-				The number of seconds from GMT (UTC)
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:int">
-			<xs:minExclusive value="-86400"/>
-			<xs:maxExclusive value="86400"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="Group">
-		<xs:complexContent>
-			<xs:extension base="tns:AddressBookItem">
-				<xs:sequence>
-					<xs:element name="members" type="tns:GroupMemberList"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="GroupMember">
-		<xs:sequence>
-			<xs:element ref="tns:id"/>
-			<xs:element ref="tns:name" minOccurs="0"/>
-			<xs:element ref="tns:email"/>
-			<xs:element name="distType" type="tns:DistributionType" default="TO"/>
-			<xs:element name="itemType" type="tns:ContactType" default="Contact"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="GroupMemberList">
-		<xs:sequence>
-			<xs:element name="member" type="tns:GroupMember" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:simpleType name="Hour">
-		<xs:restriction base="xs:unsignedByte">
-			<xs:maxInclusive value="23"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="ImAddress">
-		<xs:sequence>
-			<xs:element name="service" type="xs:string"/>
-			<xs:element name="address" type="xs:string"/>
-			<!-- type = work, home, etc. -->
-			<xs:element name="type" type="xs:string"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="ImAddressList">
-		<xs:sequence>
-			<xs:element name="im" type="tns:ImAddress" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Item">
-		<xs:sequence>
-			<xs:element ref="tns:id" minOccurs="0"/>
-			<xs:element ref="tns:name" minOccurs="0"/>
-			<xs:element ref="tns:version" minOccurs="0"/>
-			<xs:element ref="tns:modified" minOccurs="0"/>
-			<xs:element name="changes" type="tns:ItemChanges" minOccurs="0" maxOccurs="1"/>
-		        <xs:element name="type" type="xs:string" minOccurs="0"/>
-                </xs:sequence>
-<!--		<xs:attribute name="type" type="xs:string"/>-->
-	</xs:complexType>
-
-	<xs:complexType name="ItemChanges">
-		<xs:sequence>
-			<xs:element name="add" type="tns:Item" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="delete" type="tns:Item" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="update" type="tns:Item" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:simpleType name="ItemClass">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Public"/>
-			<xs:enumeration value="Private"/>
-			<xs:enumeration value="Confidential"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="ItemList">
-		<xs:complexContent>
-			<xs:extension base="tns:Items">
-				<xs:attribute name="offset" type="xs:int"/>
-				<xs:attribute name="count" type="xs:int"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="ItemOptions">
-		<xs:sequence>
-			<xs:element name="priority" type="tns:ItemOptionsPriority" minOccurs="0" default="Standard"/>
-			<xs:element name="expires" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="delayDeliveryUntil" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="concealSubject" type="xs:boolean" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:simpleType name="ItemOptionsPriority">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="High"/>
-			<xs:enumeration value="Standard"/>
-			<xs:enumeration value="Low"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="ItemRef">
-		<xs:simpleContent>
-			<xs:extension base="xs:string">
-				<xs:attribute name="uid" type="tns:uid" use="optional"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-
-	<xs:complexType name="ItemRefList">
-		<xs:sequence>
-			<xs:element name="item" type="tns:uid" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Items">
-		<xs:sequence>
-			<xs:element name="item" type="tns:Item" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:simpleType name="ItemSource">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="received"/>
-			<xs:enumeration value="sent"/>
-			<xs:enumeration value="draft"/>
-			<xs:enumeration value="personal"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="ItemStatus">
-		<xs:sequence>
-			<xs:element name="accepted" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="completed" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="delegated" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="deleted" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="forwarded" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="opened" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="read" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="replied" type="xs:boolean" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Mail">
-		<xs:complexContent>
-			<xs:extension base="tns:BoxEntry">
-				<xs:sequence>
-					<xs:element ref="tns:subject"/>
-					<xs:element name="originalSubject" type="xs:string" minOccurs="0"/>
-					<xs:element name="distribution" type="tns:Distribution"/>
-					<xs:element name="message" type="tns:MessageBody" minOccurs="0"/>
-					<xs:element name="attachments" type="tns:AttachmentInfo" minOccurs="0"/>
-					<xs:element name="options" type="tns:ItemOptions" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="MessageBody">
-		<xs:sequence>
-			<xs:element name="part" type="tns:MessagePart" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="defaultPart" type="xs:string"/>
-	</xs:complexType>
-
-	<xs:complexType name="MessagePart">
-		<xs:simpleContent>
-			<xs:extension base="xs:base64Binary">
-				<xs:attribute name="contentId" type="xs:string" minOccurs="0"/>
-				<xs:attribute name="contentType" type="xs:string" minOccurs="0"/>
-				<xs:attribute name="length" type="xs:int"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-
-	<xs:simpleType name="Minute">
-		<xs:restriction base="xs:unsignedByte">
-			<xs:maxInclusive value="59"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="Month">
-		<xs:restriction base="xs:unsignedByte">
-			<xs:maxInclusive value="11"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="NameAndEmail">
-		<xs:sequence>
-			<xs:element ref="tns:displayName" minOccurs="0"/>
-			<xs:element ref="tns:email" minOccurs="0"/>
-			<xs:element ref="tns:uuid" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Note">
-		<xs:complexContent>
-			<xs:extension base="tns:CalendarItem"/>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:simpleType name="OccurrenceType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="First"/>
-			<xs:enumeration value="Second"/>
-			<xs:enumeration value="Third"/>
-			<xs:enumeration value="Fourth"/>
-			<xs:enumeration value="Last"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="OfficeInfo">
-		<xs:sequence>
-			<xs:element name="organization" type="tns:ItemRef" minOccurs="0"/>
-			<xs:element name="department" type="xs:string" minOccurs="0"/>
-			<xs:element name="title" type="xs:string" minOccurs="0"/>
-			<xs:element name="website" type="xs:anyURI" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Organization">
-		<xs:complexContent>
-			<xs:extension base="tns:AddressBookItem">
-				<xs:sequence>
-					<xs:element name="contact" type="tns:ItemRef" minOccurs="0"/>
-					<xs:element name="phone" type="xs:string" minOccurs="0"/>
-					<xs:element name="fax" type="xs:string" minOccurs="0"/>
-					<xs:element name="address" type="tns:PostalAddress" minOccurs="0"/>
-					<xs:element name="website" type="xs:anyURI" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="PersonalInfo">
-		<xs:sequence>
-			<xs:element name="birthday" type="xs:date" nillable="true" minOccurs="0"/>
-			<xs:element name="website" type="xs:anyURI" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="PhoneFlags">
-		<xs:sequence>
-			<xs:element name="called" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="pleaseCall" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="willCall" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="returnedYourCall" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="wantsToSeeYou" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="cameToSeeYou" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="urgent" type="xs:boolean" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="PhoneList">
-		<xs:sequence>
-			<xs:element name="phone" type="tns:PhoneNumber" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="default" type="xs:string"/>
-	</xs:complexType>
-
-	<xs:complexType name="PhoneMessage">
-		<xs:complexContent>
-			<xs:extension base="tns:Mail">
-				<xs:sequence>
-					<xs:element name="caller" type="xs:string" minOccurs="0"/>
-					<xs:element name="company" type="xs:string" minOccurs="0"/>
-					<xs:element name="phone" type="xs:string" minOccurs="0"/>
-					<xs:element name="flags" type="tns:PhoneFlags" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="PhoneNumber">
-		<xs:simpleContent>
-			<xs:extension base="xs:string">
-				<xs:attribute name="type" type="tns:PhoneNumberType" use="required"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-
-	<xs:simpleType name="PhoneNumberType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Fax"/>
-			<xs:enumeration value="Home"/>
-			<xs:enumeration value="Mobile"/>
-			<xs:enumeration value="Office"/>
-			<xs:enumeration value="Pager"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="PlainText">
-		<xs:complexContent>
-			<xs:extension base="tns:Authentication">
-				<xs:sequence>
-					<xs:element name="username" type="xs:string"/>
-					<xs:element name="password" type="xs:string" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="PostalAddress">
-		<xs:sequence>
-			<xs:element ref="tns:description" minOccurs="0"/>
-			<xs:element name="streetAddress" type="xs:string" minOccurs="0"/>
-			<xs:element name="location" type="xs:string" minOccurs="0"/>
-			<xs:element name="city" type="xs:string" minOccurs="0"/>
-			<xs:element name="state" type="xs:string" minOccurs="0"/>
-			<xs:element name="postalCode" type="xs:string" minOccurs="0"/>
-			<xs:element name="country" type="xs:string" minOccurs="0"/>
-		</xs:sequence>
-		<xs:attribute name="type" type="tns:PostalAddressType" use="required"/>
-	</xs:complexType>
-
-	<xs:complexType name="PostalAddressList">
-		<xs:sequence>
-			<xs:element name="address" type="tns:PostalAddress" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:simpleType name="PostalAddressType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Home"/>
-			<xs:enumeration value="Office"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="ProblemEntry">
-		<xs:sequence>
-			<xs:element name="element" type="xs:string" minOccurs="0"/>
-			<xs:element ref="tns:code" minOccurs="0"/>
-			<xs:element ref="tns:description" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="ProblemList">
-		<xs:sequence>
-			<xs:element name="entry" type="tns:ProblemEntry" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Proxy">
-		<xs:complexContent>
-			<xs:extension base="tns:Authentication">
-				<xs:sequence>
-					<xs:element name="username" type="xs:string"/>
-					<xs:element name="proxy" type="xs:string"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="ProxyList">
-		<xs:sequence>
-			<xs:element name="proxy" type="tns:NameAndEmail" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Query">
-		<xs:sequence>
-			<xs:element name="target" type="tns:QueryTarget"/>
-			<xs:element name="filter" type="tns:Filter"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="QueryFolder">
-		<xs:complexContent>
-			<xs:extension base="tns:Folder">
-				<xs:sequence>
-					<xs:element name="query" type="tns:Query" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="QueryTarget">
-		<xs:sequence>
-			<xs:element name="source" type="tns:uid" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="container" type="tns:uid" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Recipient">
-		<xs:complexContent>
-			<xs:extension base="tns:NameAndEmail">
-				<xs:sequence>
-					<xs:element name="distType" type="tns:DistributionType"/>
-					<xs:element name="recipType" type="tns:RecipientType"/>
-					<xs:element name="recipientStatus" type="tns:RecipientStatus" minOccurs="0" maxOccurs="1"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="RecipientList">
-		<xs:sequence>
-			<xs:element name="recipient" type="tns:Recipient" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="RecipientStatus">
-		<xs:sequence>
-			<xs:element name="delivered" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="undeliverable" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="transferred" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="transferDelayed" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="downloaded" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="retractRequested" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="retracted" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="opened" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="deleted" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="undeleted" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="purged" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="accepted" type="tns:CommentStatus" minOccurs="0"/>
-			<xs:element name="declined" type="tns:CommentStatus" minOccurs="0"/>
-			<xs:element name="replied" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="forwarded" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="shared" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="started" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="completed" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="incomplete" type="xs:dateTime" minOccurs="0"/>
-			<xs:element name="delegated" type="tns:DelegatedStatus" minOccurs="0"/>
-			<xs:element name="delegateeStatus" type="tns:DelegateeStatus" minOccurs="0"/> <!-- USERID property specifies delegatee -->
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:simpleType name="RecipientType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="User"/>
-			<xs:enumeration value="PersonalGroup"/>
-			<xs:enumeration value="SystemGroup"/>
-			<xs:enumeration value="PersonalGroupMember"/>
-			<xs:enumeration value="SystemGroupMember"/>
-                        <xs:enumeration value="Resource"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="RecurrenceDateType">
-	 <xs:sequence>
-	  <xs:element name="date" type="xs:date" maxOccurs="unbounded" />
-	 </xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Resource">
-		<xs:complexContent>
-			<xs:extension base="tns:AddressBookItem">
-				<xs:sequence>
-					<xs:element name="phone" type="xs:string" minOccurs="0"/>
-					<xs:element name="resourceType" type="xs:string" minOccurs="0"/>
-					<xs:element ref="tns:email" minOccurs="0"/>
-					<xs:element name="owner" type="tns:ItemRef" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="ReturnNotification">
-		<xs:annotation>
-			<xs:documentation>
-				A calendar item will have opened, accepted and decliened (not deleted)
-				A box entry item will have opened and deleted
-			</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="opened" type="tns:ReturnNotificationOptions" minOccurs="0"/>
-			<xs:element name="deleted" type="tns:ReturnNotificationOptions" minOccurs="0"/>
-			<xs:element name="accepted" type="tns:ReturnNotificationOptions" minOccurs="0"/>
-			<xs:element name="declined" type="tns:ReturnNotificationOptions" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="ReturnNotificationOptions">
-		<xs:sequence>
-			<xs:element name="mail" type="xs:boolean" default="false"/>
-			<xs:element name="notify" type="xs:boolean" default="false"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Rights">
-		<xs:all>
-			<xs:element name="read" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="add" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="edit" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="delete" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="share" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="manage" type="xs:boolean" minOccurs="0"/>
-		</xs:all>
-	</xs:complexType>
-
-	<xs:complexType name="SendOptionsRequestReply">
-		<xs:attribute name="withinNDays" type="xs:unsignedInt"/>
-	</xs:complexType>
-
-	<xs:complexType name="SendOptions">
-		<xs:sequence>
-			<xs:element name="requestReply" type="tns:SendOptionsRequestReply" minOccurs="0"/>
-			<xs:element name="mimeEncoding" type="xs:string" minOccurs="0"/>
-			<xs:element name="statusTracking" type="tns:StatusTracking" minOccurs="0"/>
-			<xs:element name="notification" type="tns:ReturnNotification" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Settings">
-		<xs:sequence>
-			<xs:element name="group" type="tns:SettingsGroup" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="setting" type="tns:Custom" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="SettingsGroup">
-		<xs:sequence>
-			<xs:element name="setting" type="tns:Custom" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="type" type="xs:string"/>
-	</xs:complexType>
-
-	<xs:complexType name="SettingsList">
-		<xs:sequence>
-			<xs:element name="setting" type="tns:Custom" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="SharedFolder">
-		<xs:complexContent>
-			<xs:extension base="tns:Folder">
-				<xs:sequence>
-					<xs:element ref="tns:rights" minOccurs="0"/>
-					<xs:element name="acl" type="tns:FolderACL" minOccurs="0"/>
-					<xs:element name="owner" type="tns:UUID" minOccurs="0"/>
-					<xs:element name="isSharedByMe" type="xs:boolean" minOccurs="0"/>
-					<xs:element name="isSharedToMe" type="xs:boolean" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="SharedFolderNotification">
-		<xs:sequence>
-			<xs:element ref="tns:subject" minOccurs="0"/>
-			<xs:element name="message" type="xs:string" minOccurs="0"/>
-			<xs:element ref="tns:description" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="Status">
-		<xs:sequence>
-			<xs:element ref="tns:code"/>
-			<xs:element ref="tns:description" minOccurs="0"/>
-			<xs:element name="info" type="xs:string" minOccurs="0"/>
-			<xs:element name="problems" type="tns:ProblemList" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="StatusTracking">
-		<xs:simpleContent>
-			<xs:extension base="tns:StatusTrackingOptions">
-				<xs:attribute name="autoDelete" type="xs:boolean" default="false"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-
-	<xs:simpleType name="StatusTrackingOptions">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="None"/>
-			<xs:enumeration value="Delivered"/>
-			<xs:enumeration value="DeliveredAndOpened"/>
-			<xs:enumeration value="All"/>
-                        <xs:enumeration value="Full"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="SystemFolder">
-		<xs:complexContent>
-			<xs:extension base="tns:Folder">
-				<xs:sequence>
-					<xs:element name="isSystemFolder" type="xs:boolean" minOccurs="0"/>
-					<xs:element name="folder_type" type="tns:FolderType"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="Task">
-		<xs:complexContent>
-			<xs:extension base="tns:CalendarItem">
-				<xs:sequence>
-					<xs:element name="dueDate" type="xs:date"/>
-					<xs:element name="taskPriority" type="xs:string" minOccurs="0"/>
-					<xs:element name="completed" type="xs:boolean" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="Timezone">
-		<xs:sequence>
-			<xs:element name="id" type="xs:string"/>
-			<xs:element ref="tns:description"/>
-			<xs:element name="daylight" type="tns:TimezoneComponent" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="standard" type="tns:TimezoneComponent"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="TimezoneComponent">
-		<xs:sequence>
-			<xs:element name="name" type="xs:string"/>
-			<xs:element name="month" type="tns:Month" minOccurs="0"/>
-			<xs:choice>
-				<xs:element name="day" type="tns:Day" minOccurs="0"/>
-				<xs:element name="dayOfWeek" type="tns:DayOfWeek" minOccurs="0"/>
-			</xs:choice>
-			<xs:element name="hour" type="tns:Hour" minOccurs="0"/>
-			<xs:element name="minute" type="tns:Minute" minOccurs="0"/>
-			<xs:element name="offset" type="tns:GMTOffset"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="TimezoneList">
-		<xs:sequence>
-			<xs:element name="timezone" type="tns:Timezone" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="TrustedApplication">
-		<xs:complexContent>
-			<xs:extension base="tns:Authentication">
-				<xs:sequence>
-					<xs:element name="name" type="xs:string"/>
-					<xs:element name="key" type="xs:string"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:simpleType name="uid">
-		<xs:annotation>
-			<xs:documentation>
-				The unique identifier is a application defined
-				string to uniquely identify an item. The string
-				can optionally consist of two parts. The first
-				part identifies a unique existence of an item. 
-				The second part of the string optionally specifies
-				instance information. The first and second part of 
-				the ID are separated by an '@'. For this reason 
-				neither the first nor second part can contain an 
-				'@' symbol.
-				
-				To determine whether or not two items are the 
-				same item, the consumer of this API should 
-				compare the first part of the ids of the two
-				items (i.e. all of the id up to the @ symbol).
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:pattern value="[^@]+(@*)?"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="UserInfo">
-		<xs:sequence>
-			<xs:element ref="tns:name"/>
-			<xs:element ref="tns:email" minOccurs="0"/>
-			<xs:element ref="tns:uuid" minOccurs="0"/>
-			<xs:any/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:simpleType name="UUID">
-		<xs:annotation>
-			<xs:documentation>
-				The UUID is the unique user ID on a given 
-				email system. This is used in various 
-				places to indicate that a sender or recipient
-				is an user internal to the collaboration
-				system instead of an external user (i.e. 
-				internet address).
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string"/>
-	</xs:simpleType>
-
-	<xs:simpleType name="View">
-		<xs:list itemType="xs:string"/>
-	</xs:simpleType>
-
-	<xs:simpleType name="WeekDay">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Sunday"/>
-			<xs:enumeration value="Monday"/>
-			<xs:enumeration value="Tuesday"/>
-			<xs:enumeration value="Wednesday"/>
-			<xs:enumeration value="Thursday"/>
-			<xs:enumeration value="Friday"/>
-			<xs:enumeration value="Saturday"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-<!-- methods -->
-	<xs:element name="acceptRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="tns:ItemRefList"/>
-				<xs:element name="comment" type="xs:string"/>
-				<xs:element name="acceptLevel" type="tns:AcceptLevel"/>
-				<xs:element name="recurrenceAllInstances" type="xs:boolean" minOccurs="0" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="acceptResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="addItemRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="tns:uid"/>
-				<xs:element name="id" type="tns:uid"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="addItemResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="addItemsRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="tns:uid"/>
-				<xs:element name="items" type="tns:ItemRefList"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="addItemsResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="addMembersRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="tns:uid"/>
-				<xs:element name="members" type="tns:GroupMemberList"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="addMembersResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="closeFreeBusySessionRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="freeBusySessionId" type="xs:int"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="closeFreeBusySessionResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="completeRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="tns:ItemRefList"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="completeResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="createCursorRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="tns:uid"/>
-				<xs:element name="view" type="tns:View"/>
-				<xs:element name="filter" type="tns:Filter"/>
-<!--				<xs:element name="sort" type="tns:Sort"/> -->
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="createCursorResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="cursor" type="xs:int"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="createItemRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="item" type="tns:Item"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="createItemResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="tns:uid"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="createProxyAccessRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="entry" type="tns:AccessRightEntry"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="createProxyAccessResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="tns:uid"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="declineRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="tns:ItemRefList"/>
-				<xs:element name="comment" type="xs:string"/>
-				<xs:element name="recurrenceAllInstances" type="xs:boolean" minOccurs="0" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="declineResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="delegateRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="tns:ItemRefList"/>
-				<xs:element name="commentToOrganizer" type="xs:string"/>
-				<xs:element name="commentToDelegatee" type="xs:string"/>
-				<xs:element name="distribution" type="tns:Distribution"/>
-				<xs:element name="recurrenceAllInstances" type="xs:boolean" minOccurs="0" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="delegateResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="destroyCursorRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="cursor" type="xs:int"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="destroyCursorResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getAddressBookListRequest" type="xs:string">
-	</xs:element>
-
-	<xs:element name="getAddressBookListResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="books" type="tns:AddressBookList"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getAttachmentRequest">
-		<xs:annotation>
-			<xs:documentation>
-				This work only for file attachments.
-				If you try to specify an embedded item, you will get an error.
-				If you specify offset = 0 and length = -1,
-					you will receive the whole attachment.
-				You can supply other values for offset and length to receive
-					a part of the attachment.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="tns:uid"/>
-				<xs:element name="offset" type="xs:int"/>
-				<xs:element name="length" type="xs:int"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getAttachmentResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="part" type="tns:MessagePart"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getCategoryListRequest" type="xs:string">
-	</xs:element>
-
-	<xs:element name="getCategoryListResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="categories" type="tns:CategoryList"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getCustomListRequest" type="xs:string">
-	</xs:element>
-
-	<xs:element name="getCustomListResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="customs" type="tns:CustomList"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getDeltaRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="AddressBookItem" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="Appointment" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="CalendarItem" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="Contact" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="Folder" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="Group" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="Item" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="Mail" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="Note" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="PhoneMessage" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="Task" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getDeltaResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="used" type="xs:unsignedInt"/>
-				<xs:element name="changed" type="xs:boolean"/>
-				<xs:element name="deltas" type="tns:DeltaList"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getFolderListRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="parent" type="tns:uid"/>
-				<xs:element name="view" type="tns:View"/>
-				<xs:element name="recurse" type="xs:boolean"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getFolderListResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="folders" type="tns:FolderList"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getFreeBusyRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="freeBusySessionId" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getFreeBusyResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="freeBusyStats" type="tns:FreeBusyStats"/>
-				<xs:element name="freeBusyInfo" type="tns:FreeBusyInfoList"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getItemRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="tns:uid"/>
-				<xs:element name="view" type="tns:View" nillable="true"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getItemResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="item" type="tns:Item"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getItemsRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="tns:uid"/>
-				<xs:element name="view" type="tns:View"/>
-				<xs:element name="filter" type="tns:Filter"/>
-				<xs:element name="items" type="tns:ItemRefList" minOccurs="0" maxOccurs="1"/>
-<!--				<xs:element name="sort" type="tns:Sort"/> -->
-<!--				<xs:element name="count" type="xs:int" default="-1"/> -->
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getItemsResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="tns:Items"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getProxyAccessListRequest" type="xs:string">
-	</xs:element>
-
-	<xs:element name="getProxyAccessListResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="accessRights" type="tns:AccessRightList"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getProxyListRequest" type="xs:string">
-	</xs:element>
-
-	<xs:element name="getProxyListResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="proxies" type="tns:ProxyList"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getSettingsRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="xs:string" minOccurs="0" nillable="true"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getSettingsResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="settings" type="tns:Settings"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getTimezoneListRequest" type="xs:string">
-	</xs:element>
-
-	<xs:element name="getTimezoneListResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="timezones" type="tns:TimezoneList"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="loginRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="auth" type="tns:Authentication"/>
-				<xs:element name="language" type="xs:language"/>
-				<xs:element name="version" type="xs:decimal"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="loginResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="session" type="xs:string"/>
-				<xs:element name="UserInfo" type="tns:UserInfo"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="logoutRequest" type="xs:string">
-	</xs:element>
-
-	<xs:element name="logoutResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="markReadRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="tns:ItemRefList"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="markReadResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="markUnReadRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="tns:ItemRefList"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="markUnReadResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="modifyItemRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="tns:uid"/>
-				<xs:element name="updates" type="tns:ItemChanges"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="modifyItemResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="modifyProxyAccessRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="tns:uid"/>
-				<xs:element name="updates" type="tns:AccessRightChanges"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="modifyProxyAccessResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="modifySettingsRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="settings" type="tns:SettingsList"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="modifySettingsResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="positionCursorRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="cursor" type="xs:int"/>
-				<xs:element name="seek" type="tns:CursorSeek"/>
-				<xs:element name="offset" type="xs:int"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="positionCursorResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="purgeDeletedItemsRequest">
-		<xs:annotation>
-			<xs:documentation>
-				This method permanently deletes all items that were previously
-				   marked for deletion (i.e. stored in the "Trash").
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence/>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="purgeDeletedItemsResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="purgeItemRequest">
-		<xs:annotation>
-			<xs:documentation>
-				If the container is not specified then all of the item
-				   links are removed and the item is permanently deleted.
-				If the container is specified then only the specific link
-				   to the container is deleted. If the last remaining link
-				   is deleted then the item will be deleted.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="tns:uid"/>
-				<xs:element name="id" type="tns:uid"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="purgeItemResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="readCursorRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="cursor" type="xs:int"/>
-				<xs:element name="forward" type="xs:boolean"/>
-				<xs:element name="count" type="xs:int"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="readCursorResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="tns:ItemList"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="removeItemRequest">
-		<xs:annotation>
-			<xs:documentation>
-				If the container is not specified then the item is 
-				   removed from all of the containers that it is linked
-				   to and is stored in the "Trash".
-				If the container is specified then the item is only
-				   removed from that specific container and it's link
-				   is stored in the "Trash".
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="tns:uid" nillable="true"/>
-				<xs:element name="id" type="tns:uid"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="removeItemResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="removeItemsRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="tns:uid"/>
-				<xs:element name="items" type="tns:ItemRefList"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="removeItemsResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="removeMembersRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="container" type="tns:uid"/>
-				<xs:element name="members" type="tns:GroupMemberList"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="removeMembersResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="removeProxyAccessRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="tns:uid"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="removeProxyAccessResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="retractRequest">
-		<xs:annotation>
-			<xs:documentation>
-				If a recipient has opened or accepted a Calendar item, a notice
-				will be placed in the recipient's in-box when the item is
-				retracted.  The notice can be affected by the following options:
-				
-				"comment":  The comment will be included in the notice.
-				"retractCausedByResend": When TRUE, the notice will be suppressed
-				in lieu of the 'new' calendar item that will be delivered to 
-				the recipient.
-				"retractingAllInstances": When TRUE, a single notice will be 
-				placed in the recipient's in-box (instead of a notice for each
-				instance).  
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="items" type="tns:ItemRefList"/>
-				<xs:element name="comment" type="xs:string" minOccurs="0"/>
-				<xs:element name="retractingAllInstances" type="xs:bool" minOccurs="0"/>
-				<xs:element name="retractCausedByResend" type="xs:bool" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="retractResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="sendItemRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="item" type="tns:Item"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="sendItemResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="id" type="tns:uid"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="startFreeBusySessionRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="users" type="tns:FreeBusyUserList"/>
-				<xs:element name="startDate" type="xs:dateTime"/>
-				<xs:element name="endDate" type="xs:dateTime"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="startFreeBusySessionResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="freeBusySessionId" type="xs:int"/>
-				<xs:element name="status" type="tns:Status"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-    </xs:schema>
-</types>
-
-<message name="header">
-    <part name="session" element="tns:session"/>
-</message>
-
-<message name="loginRequestMessage">
-    <part name="auth" element="tns:loginRequest"/>
-</message>
-
-<message name="loginResponseMessage">
-    <part name="auth2" element="tns:loginResponse"/>
-</message>
-
-<message name="getCategoryListRequestMessage">
-    <part name="categories" element="tns:getCategoryListRequest"/>
-</message>
-
-<message name="getCategoryListResponseMessage">
-    <part name="categories2" element="tns:getCategoryListResponse"/>
-</message>
-
-<message name="getAddressBookListRequestMessage">
-    <part name="addressbooks" element="tns:getAddressBookListRequest"/>
-</message>
-
-<message name="getAddressBookListResponseMessage">
-    <part name="addressbooks2" element="tns:getAddressBookListResponse"/>
-</message>
-
-<message name="getItemRequestMessage">
-    <part name="item" element="tns:getItemRequest"/>
-</message>
-
-<message name="getItemResponseMessage">
-    <part name="item2" element="tns:getItemResponse"/>
-</message>
-
-<message name="getItemsRequestMessage">
-    <part name="items" element="tns:getItemsRequest"/>
-</message>
-
-<message name="getItemsResponseMessage">
-    <part name="items2" element="tns:getItemsResponse"/>
-</message>
-
-<message name="getFolderListRequestMessage">
-    <part name="folder" element="tns:getFolderListRequest"/>
-</message>
-
-<message name="getFolderListResponseMessage">
-    <part name="folder2" element="tns:getFolderListResponse"/>
-</message>
-
-<message name="getDeltaRequestMessage">
-    <part name="delta" element="tns:getDeltaRequest"/>
-</message>
-
-<message name="getDeltaResponseMessage">
-    <part name="delta2" element="tns:getDeltaResponse"/>
-</message>
-
-<message name="createItemRequestMessage">
-    <part name="createitem" element="tns:createItemRequest"/>
-</message>
-
-<message name="createItemResponseMessage">
-    <part name="createitem" element="tns:createItemResponse"/>
-</message>
-
-<message name="sendItemRequestMessage">
-    <part name="senditem" element="tns:sendItemRequest"/>
-</message>
-
-<message name="sendItemResponseMessage">
-    <part name="senditem" element="tns:sendItemResponse"/>
-</message>
-
-<message name="modifyItemRequestMessage">
-    <part name="modifyitem" element="tns:modifyItemRequest"/>
-</message>
-
-<message name="modifyItemResponseMessage">
-    <part name="modifyitem" element="tns:modifyItemResponse"/>
-</message>
-
-<message name="purgeItemRequestMessage">
-    <part name="purgeitem" element="tns:purgeItemRequest"/>
-</message>
-
-<message name="purgeItemResponseMessage">
-    <part name="purgeitem" element="tns:purgeItemResponse"/>
-</message>
-
-<message name="removeItemRequestMessage">
-    <part name="removeitem" element="tns:removeItemRequest"/>
-</message>
-
-<message name="removeItemResponseMessage">
-    <part name="removeitem" element="tns:removeItemResponse"/>
-</message>
-
-<message name="startFreeBusySessionRequestMessage">
-    <part name="startfreebusysession" element="tns:startFreeBusySessionRequest"/>
-</message>
-
-<message name="startFreeBusySessionResponseMessage">
-    <part name="startfreebusysession" element="tns:startFreeBusySessionResponse"/>
-</message>
-
-<message name="closeFreeBusySessionRequestMessage">
-    <part name="closefreebusysession" element="tns:closeFreeBusySessionRequest"/>
-</message>
-
-<message name="closeFreeBusySessionResponseMessage">
-    <part name="closefreebusysession" element="tns:closeFreeBusySessionResponse"/>
-</message>
-
-<message name="getFreeBusyRequestMessage">
-    <part name="getFreeBusy" element="tns:getFreeBusyRequest"/>
-</message>
-
-<message name="getFreeBusyResponseMessage">
-    <part name="getFreeBusy" element="tns:getFreeBusyResponse"/>
-</message>
-
-<portType name="GroupWisePortType">
-  <operation name="loginRequest">
-    <input message="tns:loginRequestMessage"/>
-    <output message="tns:loginResponseMessage"/>
-  </operation>
-  <operation name="getCategoryListRequest">
-    <input message="tns:getCategoryListRequestMessage"/>
-    <output message="tns:getCategoryListResponseMessage"/>
-  </operation>
-  <operation name="getAddressBookListRequest">
-    <input message="tns:getAddressBookListRequestMessage"/>
-    <output message="tns:getAddressBookListResponseMessage"/>
-  </operation>
-  <operation name="getItemRequest">
-    <input message="tns:getItemRequestMessage"/>
-    <output message="tns:getItemResponseMessage"/>
-  </operation>
-  <operation name="getItemsRequest">
-    <input message="tns:getItemsRequestMessage"/>
-    <output message="tns:getItemsResponseMessage"/>
-  </operation>
-  <operation name="getFolderListRequest">
-    <input message="tns:getFolderListRequestMessage"/>
-    <output message="tns:getFolderListResponseMessage"/>
-  </operation>
-  <operation name="getDeltaRequest">
-    <input message="tns:getDeltaRequestMessage"/>
-    <output message="tns:getDeltaResponseMessage"/>
-  </operation>
-  <operation name="createItemRequest">
-    <input message="tns:createItemRequestMessage"/>
-    <output message="tns:createItemResponseMessage"/>
-  </operation>
-  <operation name="sendItemRequest">
-    <input message="tns:sendItemRequestMessage"/>
-    <output message="tns:sendItemResponseMessage"/>
-  </operation>
-  <operation name="modifyItemRequest">
-    <input message="tns:modifyItemRequestMessage"/>
-    <output message="tns:modifyItemResponseMessage"/>
-  </operation>
-  <operation name="purgeItemRequest">
-    <input message="tns:purgeItemRequestMessage"/>
-    <output message="tns:purgeItemResponseMessage"/>
-  </operation>
-  <operation name="removeItemRequest">
-    <input message="tns:removeItemRequestMessage"/>
-    <output message="tns:removeItemResponseMessage"/>
-  </operation>
-  <operation name="startFreeBusySessionRequest">
-    <input message="tns:startFreeBusySessionRequestMessage"/>
-    <output message="tns:startFreeBusySessionResponseMessage"/>
-  </operation>
-  <operation name="closeFreeBusySessionRequest">
-    <input message="tns:closeFreeBusySessionRequestMessage"/>
-    <output message="tns:closeFreeBusySessionResponseMessage"/>
-  </operation>
-  <operation name="getFreeBusyRequest">
-    <input message="tns:getFreeBusyRequestMessage"/>
-    <output message="tns:getFreeBusyResponseMessage"/>
-  </operation>
-</portType>
-
-  <binding name="GroupWiseBinding" type="tns:GroupWisePortType">
-    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+<!-- 
+<notice>
+   Copyright © 2005-2005 Novell, Inc. All Rights Reserved.
+
+   THIS WORK IS SUBJECT TO U.S. AND INTERNATIONAL COPYRIGHT LAWS AND TREATIES.
+   NO PART OF THIS WORK MAY BE USED, PRACTICED, PERFORMED COPIED, DISTRIBUTED,
+   REVISED, MODIFIED, TRANSLATED, ABRIDGED, CONDENSED, EXPANDED, COLLECTED,
+   COMPILED, LINKED, RECAST, TRANSFORMED OR ADAPTED WITHOUT THE PRIOR WRITTEN
+   CONSENT OF NOVELL, INC. ANY USE OR EXPLOITATION OF THIS WORK WITHOUT
+   AUTHORIZATION COULD SUBJECT THE PERPETRATOR TO CRIMINAL AND CIVIL LIABILITY.
+</notice>
+-->
+
+<definitions 
+    targetNamespace="http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl"
+    xmlns:tns="http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl"
+	 xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+    xmlns:types="http://schemas.novell.com/2005/01/GroupWise/types"
+    xmlns:methods="http://schemas.novell.com/2005/01/GroupWise/methods"
+    xmlns:events="http://schemas.novell.com/2005/01/GroupWise/events"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+   
+	<types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema">
+			<import namespace="http://schemas.novell.com/2005/01/GroupWise/types"   schemaLocation="types.xsd"/>
+			<import namespace="http://schemas.novell.com/2005/01/GroupWise/methods" schemaLocation="methods.xsd"/>
+			<import namespace="http://schemas.novell.com/2005/01/GroupWise/events"  schemaLocation="events.xsd"/>
+		</schema>		
+	</types>
+
+   <message name="acceptRequestMessage">
+      <part name="acceptReq" element="methods:acceptRequest"/>
+   </message>
+   <message name="acceptResponseMessage">
+       <part name="acceptRes" element="methods:acceptResponse"/>
+   </message>
+
+   <message name="unacceptRequestMessage">
+      <part name="unacceptReq" element="methods:unacceptRequest"/>
+   </message>
+   <message name="unacceptResponseMessage">
+       <part name="unacceptRes" element="methods:unacceptResponse"/>
+   </message>
+
+   <message name="acceptShareRequestMessage">
+      <part name="acceptShareReq" element="methods:acceptShareRequest"/>
+   </message>
+   <message name="acceptShareResponseMessage">
+      <part name="acceptShareRes" element="methods:acceptShareResponse"/>
+   </message>
+
+   <message name="addItemRequestMessage">
+      <part name="addItemReq" element="methods:addItemRequest"/>
+   </message>
+   <message name="addItemResponseMessage">
+      <part name="addItemRes" element="methods:addItemResponse"/>
+   </message>
+
+   <message name="addItemsRequestMessage">
+      <part name="addItemsReq" element="methods:addItemsRequest"/>
+   </message>
+   <message name="addItemsResponseMessage">
+      <part name="addItemsRes" element="methods:addItemsResponse"/>
+   </message>
+
+   <message name="addMembersRequestMessage">
+      <part name="addMembersReq" element="methods:addMembersRequest"/>
+   </message>
+   <message name="addMembersResponseMessage">
+      <part name="addMembersRes" element="methods:addMembersResponse"/>
+   </message>
+
+   <message name="closeFreeBusySessionRequestMessage">
+      <part name="closeFreeBusySessionReq" element="methods:closeFreeBusySessionRequest"/>
+   </message>
+   <message name="closeFreeBusySessionResponseMessage">
+      <part name="closeFreeBusySessionRes" element="methods:closeFreeBusySessionResponse"/>
+   </message>
+
+   <message name="completeRequestMessage">
+      <part name="completeReq" element="methods:completeRequest"/>
+   </message>
+   <message name="completeResponseMessage">
+      <part name="completeRes" element="methods:completeResponse"/>
+   </message>
+
+   <message name="uncompleteRequestMessage">
+      <part name="uncompleteReq" element="methods:uncompleteRequest"/>
+   </message>
+   <message name="uncompleteResponseMessage">
+      <part name="uncompleteRes" element="methods:uncompleteResponse"/>
+   </message>
+
+   <message name="createCursorRequestMessage">
+      <part name="createCursorReq" element="methods:createCursorRequest"/>
+   </message>
+   <message name="createCursorResponseMessage">
+      <part name="createCursorRes" element="methods:createCursorResponse"/>
+   </message>
+
+   <message name="createItemRequestMessage">
+      <part name="createItemReq" element="methods:createItemRequest"/>
+   </message>
+   <message name="createItemResponseMessage">
+      <part name="createItemRes" element="methods:createItemResponse"/>
+   </message>
+
+   <message name="createProxyAccessRequestMessage">
+      <part name="createProxyAccessReq" element="methods:createProxyAccessRequest"/>
+   </message>
+   <message name="createProxyAccessResponseMessage">
+      <part name="createProxyAccessRes" element="methods:createProxyAccessResponse"/>
+   </message>
+
+   <message name="createSignatureRequestMessage">
+      <part name="createSignatureReq" element="methods:createSignatureRequest"/>
+   </message>
+   <message name="createSignatureResponseMessage">
+      <part name="createSignatureRes" element="methods:createSignatureResponse"/>
+   </message>
+
+   <message name="declineRequestMessage">
+      <part name="declineReq" element="methods:declineRequest"/>
+   </message>
+   <message name="declineResponseMessage">
+      <part name="declineRes" element="methods:declineResponse"/>
+   </message>
+
+   <message name="delegateRequestMessage">
+      <part name="delegateReq" element="methods:delegateRequest"/>
+   </message>
+   <message name="delegateResponseMessage">
+      <part name="delegateRes" element="methods:delegateResponse"/>
+   </message>
+
+   <message name="destroyCursorRequestMessage">
+      <part name="destroyCursorReq" element="methods:destroyCursorRequest"/>
+   </message>
+   <message name="destroyCursorResponseMessage">
+      <part name="destroyCursorRes" element="methods:destroyCursorResponse"/>
+   </message>
+
+   <message name="executeRuleRequestMessage">
+      <part name="executeRuleReq" element="methods:executeRuleRequest"/>
+   </message>
+   <message name="executeRuleResponseMessage">
+      <part name="executeRuleRes" element="methods:executeRuleResponse"/>
+   </message>
+
+   <message name="forwardRequestMessage">
+      <part name="forwardReq" element="methods:forwardRequest"/>
+   </message>
+   <message name="forwardResponseMessage">
+      <part name="forwardRes" element="methods:forwardResponse"/>
+   </message>
+
+   <message name="getAddressBookListRequestMessage">
+      <part name="getAddressBookListReq" element="methods:getAddressBookListRequest"/>
+   </message>
+   <message name="getAddressBookListResponseMessage">
+      <part name="getAddressBookListRes" element="methods:getAddressBookListResponse"/>
+   </message>
+
+   <message name="getAttachmentRequestMessage">
+      <part name="getAttachmentReq" element="methods:getAttachmentRequest"/>
+   </message>
+   <message name="getAttachmentResponseMessage">
+      <part name="getAttachmentRes" element="methods:getAttachmentResponse"/>
+   </message>
+
+   <message name="getCategoryListRequestMessage">
+      <part name="getCategoryListReq" element="methods:getCategoryListRequest"/>
+   </message>
+   <message name="getCategoryListResponseMessage">
+      <part name="getCategoryListRes" element="methods:getCategoryListResponse"/>
+   </message>
+
+   <message name="getCustomListRequestMessage">
+      <part name="getCustomListReq" element="methods:getCustomListRequest"/>
+   </message>
+   <message name="getCustomListResponseMessage">
+      <part name="getCustomListRes" element="methods:getCustomListResponse"/>
+   </message>
+
+   <message name="getDeltasRequestMessage">
+      <part name="getDeltasReq" element="methods:getDeltasRequest"/>
+   </message>
+   <message name="getDeltasResponseMessage">
+      <part name="getDeltasRes" element="methods:getDeltasResponse"/>
+   </message>
+
+   <message name="getDeltaInfoRequestMessage">
+      <part name="getDeltaInfoReq" element="methods:getDeltaInfoRequest"/>
+   </message>
+   <message name="getDeltaInfoResponseMessage">
+      <part name="getDeltaInfoRes" element="methods:getDeltaInfoResponse"/>
+   </message>
+
+   <message name="getFolderListRequestMessage">
+      <part name="getFolderListReq" element="methods:getFolderListRequest"/>
+   </message>
+   <message name="getFolderListResponseMessage">
+      <part name="getFolderListRes" element="methods:getFolderListResponse"/>
+   </message>
+
+   <message name="getFreeBusyRequestMessage">
+      <part name="getFreeBusyReq" element="methods:getFreeBusyRequest"/>
+   </message>
+   <message name="getFreeBusyResponseMessage">
+      <part name="getFreeBusyRes" element="methods:getFreeBusyResponse"/>
+   </message>
+
+   <message name="getItemRequestMessage">
+      <part name="getItemReq" element="methods:getItemRequest"/>
+   </message>
+   <message name="getItemResponseMessage">
+      <part name="getItemRes" element="methods:getItemResponse"/>
+   </message>
+
+   <message name="getItemsRequestMessage">
+      <part name="getItemsReq" element="methods:getItemsRequest"/>
+   </message>
+   <message name="getItemsResponseMessage">
+      <part name="getItemsRes" element="methods:getItemsResponse"/>
+   </message>
+
+   <message name="getQuickMessagesRequestMessage">
+      <part name="getQuickMessagesReq" element="methods:getQuickMessagesRequest"/>
+   </message>
+   <message name="getQuickMessagesResponseMessage">
+      <part name="getQuickMessagesRes" element="methods:getQuickMessagesResponse"/>
+   </message>
+
+   <message name="getProxyAccessListRequestMessage">
+      <part name="getProxyAccessListReq" element="methods:getProxyAccessListRequest"/>
+   </message>
+   <message name="getProxyAccessListResponseMessage">
+      <part name="getProxyAccessListRes" element="methods:getProxyAccessListResponse"/>
+   </message>
+
+   <message name="getProxyListRequestMessage">
+      <part name="getProxyListReq" element="methods:getProxyListRequest"/>
+   </message>
+   <message name="getProxyListResponseMessage">
+      <part name="getProxyListRes" element="methods:getProxyListResponse"/>
+   </message>
+
+   <message name="getSettingsRequestMessage">
+      <part name="getSettingsReq" element="methods:getSettingsRequest"/>
+   </message>
+   <message name="getSettingsResponseMessage">
+      <part name="getSettingsRes" element="methods:getSettingsResponse"/>
+   </message>
+
+   <message name="getSignaturesRequestMessage">
+      <part name="getSignaturesReq" element="methods:getSignaturesRequest"/>
+   </message>
+   <message name="getSignaturesResponseMessage">
+      <part name="getSignaturesRes" element="methods:getSignaturesResponse"/>
+   </message>
+
+   <message name="getTimezoneListRequestMessage">
+      <part name="getTimezoneListReq" element="methods:getTimezoneListRequest"/>
+   </message>
+   <message name="getTimezoneListResponseMessage">
+      <part name="getTimezoneListRes" element="methods:getTimezoneListResponse"/>
+   </message>
+
+   <message name="sessionMessage">
+      <part name="sessionId" element="types:session" />
+   </message>
+
+   <message name="loginRequestMessage">
+      <part name="loginReq" element="methods:loginRequest"/>
+   </message>
+
+   <message name="loginResponseMessage">
+      <part name="loginRes" element="methods:loginResponse"/>
+   </message>
+
+   <message name="logoutRequestMessage">
+      <part name="logoutReq" element="methods:logoutRequest"/>
+   </message>
+   <message name="logoutResponseMessage">
+      <part name="logoutRes" element="methods:logoutResponse"/>
+   </message>
+
+   <message name="markPrivateRequestMessage">
+      <part name="markPrivateReq" element="methods:markPrivateRequest"/>
+   </message>
+   <message name="markPrivateResponseMessage">
+      <part name="markPrivateRes" element="methods:markPrivateResponse"/>
+   </message>
+
+   <message name="markUnPrivateRequestMessage">
+      <part name="markUnPrivateReq" element="methods:markUnPrivateRequest"/>
+   </message>
+   <message name="markUnPrivateResponseMessage">
+      <part name="markUnPrivateRes" element="methods:markUnPrivateResponse"/>
+   </message>
+
+   <message name="markReadRequestMessage">
+      <part name="markReadReq" element="methods:markReadRequest"/>
+   </message>
+   <message name="markReadResponseMessage">
+      <part name="markReadRes" element="methods:markReadResponse"/>
+   </message>
+
+   <message name="markUnReadRequestMessage">
+      <part name="markUnReadReq" element="methods:markUnReadRequest"/>
+   </message>
+   <message name="markUnReadResponseMessage">
+      <part name="markUnReadRes" element="methods:markUnReadResponse"/>
+   </message>
+
+   <message name="modifyItemRequestMessage">
+      <part name="modifyItemReq" element="methods:modifyItemRequest"/>
+   </message>
+   <message name="modifyItemResponseMessage">
+      <part name="modifyItemRes" element="methods:modifyItemResponse"/>
+   </message>
+
+   <message name="modifyPasswordRequestMessage">
+      <part name="modifyPasswordReq" element="methods:modifyPasswordRequest"/>
+   </message>
+   <message name="modifyPasswordResponseMessage">
+      <part name="modifyPasswordRes" element="methods:modifyPasswordResponse"/>
+   </message>
+
+   <message name="modifyProxyAccessRequestMessage">
+      <part name="modifyProxyAccessReq" element="methods:modifyProxyAccessRequest"/>
+   </message>
+   <message name="modifyProxyAccessResponseMessage">
+      <part name="modifyProxyAccessRes" element="methods:modifyProxyAccessResponse"/>
+   </message>
+
+   <message name="modifySettingsRequestMessage">
+      <part name="modifySettingsReq" element="methods:modifySettingsRequest"/>
+   </message>
+   <message name="modifySettingsResponseMessage">
+      <part name="modifySettingsRes" element="methods:modifySettingsResponse"/>
+   </message>
+
+   <message name="modifySignaturesRequestMessage">
+      <part name="modifySignaturesReq" element="methods:modifySignaturesRequest"/>
+   </message>
+   <message name="modifySignaturesResponseMessage">
+      <part name="modifySignaturesRes" element="methods:modifySignaturesResponse"/>
+   </message>
+
+   <message name="moveItemRequestMessage">
+      <part name="moveItemReq" element="methods:moveItemRequest"/>
+   </message>
+   <message name="moveItemResponseMessage">
+      <part name="moveItemRes" element="methods:moveItemResponse"/>
+   </message>
+
+   <message name="positionCursorRequestMessage">
+      <part name="positionCursorReq" element="methods:positionCursorRequest"/>
+   </message>
+   <message name="positionCursorResponseMessage">
+      <part name="positionCursorRes" element="methods:positionCursorResponse"/>
+   </message>
+
+   <message name="purgeDeletedItemsRequestMessage">
+      <part name="purgeDeletedItemsReq" element="methods:purgeDeletedItemsRequest"/>
+   </message>
+   <message name="purgeDeletedItemsResponseMessage">
+      <part name="purgeDeletedItemsRes" element="methods:purgeDeletedItemsResponse"/>
+   </message>
+
+   <message name="purgeRequestMessage">
+      <part name="purgeReq" element="methods:purgeRequest"/>
+   </message>
+   <message name="purgeResponseMessage">
+      <part name="purgeRes" element="methods:purgeResponse"/>
+   </message>
+
+   <message name="readCursorRequestMessage">
+      <part name="readCursorReq" element="methods:readCursorRequest"/>
+   </message>
+   <message name="readCursorResponseMessage">
+      <part name="readCursorRes" element="methods:readCursorResponse"/>
+   </message>
+
+   <message name="removeItemRequestMessage">
+      <part name="removeItemReq" element="methods:removeItemRequest"/>
+   </message>
+   <message name="removeItemResponseMessage">
+      <part name="removeItemRes" element="methods:removeItemResponse"/>
+   </message>
+
+   <message name="removeItemsRequestMessage">
+      <part name="removeItemsReq" element="methods:removeItemsRequest"/>
+   </message>
+   <message name="removeItemsResponseMessage">
+      <part name="removeItemsRes" element="methods:removeItemsResponse"/>
+   </message>
+
+   <message name="removeMembersRequestMessage">
+      <part name="removeMembersReq" element="methods:removeMembersRequest"/>
+   </message>
+   <message name="removeMembersResponseMessage">
+      <part name="removeMembersRes" element="methods:removeMembersResponse"/>
+   </message>
+
+   <message name="removeProxyAccessRequestMessage">
+      <part name="removeProxyAccessReq" element="methods:removeProxyAccessRequest"/>
+   </message>
+   <message name="removeProxyAccessResponseMessage">
+      <part name="removeProxyAccessRes" element="methods:removeProxyAccessResponse"/>
+   </message>
+
+   <message name="removeSignatureRequestMessage">
+      <part name="removeSignatureReq" element="methods:removeSignatureRequest"/>
+   </message>
+   <message name="removeSignatureResponseMessage">
+      <part name="removeSignatureRes" element="methods:removeSignatureResponse"/>
+   </message>
+
+   <message name="replyRequestMessage">
+      <part name="replyReq" element="methods:replyRequest"/>
+   </message>
+   <message name="replyResponseMessage">
+      <part name="replyRes" element="methods:replyResponse"/>
+   </message>
+
+   <message name="retractRequestMessage">
+      <part name="retractReq" element="methods:retractRequest"/>
+   </message>
+   <message name="retractResponseMessage">
+      <part name="retractRes" element="methods:retractResponse"/>
+   </message>
+
+   <message name="sendItemRequestMessage">
+      <part name="sendItemReq" element="methods:sendItemRequest"/>
+   </message>
+   <message name="sendItemResponseMessage">
+      <part name="sendItemRes" element="methods:sendItemResponse"/>
+   </message>
+
+   <message name="startFreeBusySessionRequestMessage">
+      <part name="startFreeBusySessionReq" element="methods:startFreeBusySessionRequest"/>
+   </message>
+   <message name="startFreeBusySessionResponseMessage">
+      <part name="startFreeBusySessionRes" element="methods:startFreeBusySessionResponse"/>
+   </message>
+
+   <message name="cleanEventConfigurationRequestMessage">
+      <part name="cleanEventConfigurationReq" element="events:cleanEventConfigurationRequest"/>
+   </message>
+   <message name="cleanEventConfigurationResponseMessage">
+      <part name="cleanEventConfigurationRes" element="events:cleanEventConfigurationResponse"/>
+   </message>
+
+   <message name="configureEventsRequestMessage">
+      <part name="configureEventsReq" element="events:configureEventsRequest"/>
+   </message>
+   <message name="configureEventsResponseMessage">
+      <part name="configureEventsRes" element="events:configureEventsResponse"/>
+   </message>
+
+   <message name="getEventConfigurationRequestMessage">
+      <part name="getEventConfigurationReq" element="events:getEventConfigurationRequest"/>
+   </message>
+   <message name="getEventConfigurationResponseMessage">
+      <part name="getEventConfigurationRes" element="events:getEventConfigurationResponse"/>
+   </message>
+
+   <message name="getEventsRequestMessage">
+      <part name="getEventsReq" element="events:getEventsRequest"/>
+   </message>
+   <message name="getEventsResponseMessage">
+      <part name="getEventsRes" element="events:getEventsResponse"/>
+   </message>
+
+   <message name="removeEventConfigurationRequestMessage">
+      <part name="removeEventConfigurationReq" element="events:removeEventConfigurationRequest"/>
+   </message>
+   <message name="removeEventConfigurationResponseMessage">
+      <part name="removeEventConfigurationRes" element="events:removeEventConfigurationResponse"/>
+   </message>
+
+   <message name="removeEventsRequestMessage">
+      <part name="removeEventsReq" element="events:removeEventsRequest"/>
+   </message>
+   <message name="removeEventsResponseMessage">
+      <part name="removeEventsRes" element="events:removeEventsResponse"/>
+   </message>
+
+   <portType name="GroupWisePortType">
+
+     <operation name="acceptRequest">
+       <input message="tns:acceptRequestMessage"/>
+       <output message="tns:acceptResponseMessage"/>
+     </operation>
+
+     <operation name="acceptShareRequest">
+       <input message="tns:acceptShareRequestMessage"/>
+       <output message="tns:acceptShareResponseMessage"/>
+     </operation>
+
+     <operation name="addItemRequest">
+       <input message="tns:addItemRequestMessage"/>
+       <output message="tns:addItemResponseMessage"/>
+     </operation>
+
+     <operation name="addItemsRequest">
+       <input message="tns:addItemsRequestMessage"/>
+       <output message="tns:addItemsResponseMessage"/>
+     </operation>
+
+     <operation name="addMembersRequest">
+       <input message="tns:addMembersRequestMessage"/>
+       <output message="tns:addMembersResponseMessage"/>
+     </operation>
+
+     <operation name="closeFreeBusySessionRequest">
+       <input message="tns:closeFreeBusySessionRequestMessage"/>
+       <output message="tns:closeFreeBusySessionResponseMessage"/>
+     </operation>
+
+     <operation name="completeRequest">
+       <input message="tns:completeRequestMessage"/>
+       <output message="tns:completeResponseMessage"/>
+     </operation>
+
+     <operation name="createCursorRequest">
+       <input message="tns:createCursorRequestMessage"/>
+       <output message="tns:createCursorResponseMessage"/>
+     </operation>
+
+     <operation name="createItemRequest">
+       <input message="tns:createItemRequestMessage"/>
+       <output message="tns:createItemResponseMessage"/>
+     </operation>
+
+     <operation name="createProxyAccessRequest">
+       <input message="tns:createProxyAccessRequestMessage"/>
+       <output message="tns:createProxyAccessResponseMessage"/>
+     </operation>
+
+     <operation name="createSignatureRequest">
+       <input message="tns:createSignatureRequestMessage"/>
+       <output message="tns:createSignatureResponseMessage"/>
+     </operation>
+
+     <operation name="declineRequest">
+       <input message="tns:declineRequestMessage"/>
+       <output message="tns:declineResponseMessage"/>
+     </operation>
+
+     <operation name="delegateRequest">
+       <input message="tns:delegateRequestMessage"/>
+       <output message="tns:delegateResponseMessage"/>
+     </operation>
+
+     <operation name="destroyCursorRequest">
+       <input message="tns:destroyCursorRequestMessage"/>
+       <output message="tns:destroyCursorResponseMessage"/>
+     </operation>
+
+     <operation name="executeRuleRequest">
+       <input message="tns:executeRuleRequestMessage"/>
+       <output message="tns:executeRuleResponseMessage"/>
+     </operation>
+
+     <operation name="forwardRequest">
+       <input message="tns:forwardRequestMessage"/>
+       <output message="tns:forwardResponseMessage"/>
+     </operation>
+
+     <operation name="getAddressBookListRequest">
+       <input message="tns:getAddressBookListRequestMessage"/>
+       <output message="tns:getAddressBookListResponseMessage"/>
+     </operation>
+
+     <operation name="getAttachmentRequestMessage">
+       <input message="tns:getAttachmentRequestMessage"/>
+       <output message="tns:getAttachmentResponseMessage"/>
+     </operation>
+
+     <operation name="getCategoryListRequest">
+       <input message="tns:getCategoryListRequestMessage"/>
+       <output message="tns:getCategoryListResponseMessage"/>
+     </operation>
+
+     <operation name="getCustomListRequest">
+       <input message="tns:getCustomListRequestMessage"/>
+       <output message="tns:getCustomListResponseMessage"/>
+     </operation>
+
+     <operation name="getDeltasRequest">
+       <input message="tns:getDeltasRequestMessage"/>
+       <output message="tns:getDeltasResponseMessage"/>
+     </operation>
+
+     <operation name="getDeltaInfoRequest">
+       <input message="tns:getDeltaInfoRequestMessage"/>
+       <output message="tns:getDeltaInfoResponseMessage"/>
+     </operation>
+
+     <operation name="getFolderListRequest">
+       <input message="tns:getFolderListRequestMessage"/>
+       <output message="tns:getFolderListResponseMessage"/>
+     </operation>
+
+     <operation name="getFreeBusyRequest">
+       <input message="tns:getFreeBusyRequestMessage"/>
+       <output message="tns:getFreeBusyResponseMessage"/>
+     </operation>
+
+     <operation name="getItemRequest">
+       <input message="tns:getItemRequestMessage"/>
+       <output message="tns:getItemResponseMessage"/>
+     </operation>
+
+     <operation name="getItemsRequest">
+       <input message="tns:getItemsRequestMessage"/>
+       <output message="tns:getItemsResponseMessage"/>
+     </operation>
+
+     <operation name="getQuickMessagesRequest">
+       <input message="tns:getQuickMessagesRequestMessage"/>
+       <output message="tns:getQuickMessagesResponseMessage"/>
+     </operation>
+
+     <operation name="getProxyAccessListRequest">
+       <input message="tns:getProxyAccessListRequestMessage"/>
+       <output message="tns:getProxyAccessListResponseMessage"/>
+     </operation>
+
+     <operation name="getProxyListRequest">
+       <input message="tns:getProxyListRequestMessage"/>
+       <output message="tns:getProxyListResponseMessage"/>
+     </operation>
+
+     <operation name="getSettingsRequest">
+       <input message="tns:getSettingsRequestMessage"/>
+       <output message="tns:getSettingsResponseMessage"/>
+     </operation>
+
+     <operation name="getSignaturesRequest">
+       <input message="tns:getSignaturesRequestMessage"/>
+       <output message="tns:getSignaturesResponseMessage"/>
+     </operation>
+
+     <operation name="getTimezoneListRequest">
+       <input message="tns:getTimezoneListRequestMessage"/>
+       <output message="tns:getTimezoneListResponseMessage"/>
+     </operation>
+
+     <operation name="loginRequest">
+       <input message="tns:loginRequestMessage"/>
+       <output message="tns:loginResponseMessage"/>
+     </operation>
+     <operation name="logoutRequest">
+       <input message="tns:logoutRequestMessage"/>
+       <output message="tns:logoutResponseMessage"/>
+     </operation>
+
+     <operation name="markPrivateRequest">
+       <input message="tns:markPrivateRequestMessage"/>
+       <output message="tns:markPrivateResponseMessage"/>
+     </operation>
+
+     <operation name="markUnPrivateRequest">
+       <input message="tns:markUnPrivateRequestMessage"/>
+       <output message="tns:markUnPrivateResponseMessage"/>
+     </operation>
+
+     <operation name="markReadRequest">
+       <input message="tns:markReadRequestMessage"/>
+       <output message="tns:markReadResponseMessage"/>
+     </operation>
+
+     <operation name="markUnReadRequest">
+       <input message="tns:markUnReadRequestMessage"/>
+       <output message="tns:markUnReadResponseMessage"/>
+     </operation>
+
+     <operation name="modifyItemRequest">
+       <input message="tns:modifyItemRequestMessage"/>
+       <output message="tns:modifyItemResponseMessage"/>
+     </operation>
+
+     <operation name="modifyPasswordRequest">
+       <input message="tns:modifyPasswordRequestMessage"/>
+       <output message="tns:modifyPasswordResponseMessage"/>
+     </operation>
+
+     <operation name="modifyProxyAccessRequest">
+       <input message="tns:modifyProxyAccessRequestMessage"/>
+       <output message="tns:modifyProxyAccessResponseMessage"/>
+     </operation>
+
+     <operation name="modifySettingsRequest">
+       <input message="tns:modifySettingsRequestMessage"/>
+       <output message="tns:modifySettingsResponseMessage"/>
+     </operation>
+
+     <operation name="modifySignaturesRequest">
+       <input message="tns:modifySignaturesRequestMessage"/>
+       <output message="tns:modifySignaturesResponseMessage"/>
+     </operation>
+
+     <operation name="moveItemRequest">
+       <input message="tns:moveItemRequestMessage"/>
+       <output message="tns:moveItemResponseMessage"/>
+     </operation>
+
+     <operation name="positionCursorRequest">
+       <input message="tns:positionCursorRequestMessage"/>
+       <output message="tns:positionCursorResponseMessage"/>
+     </operation>
+
+     <operation name="purgeDeletedItemsRequest">
+       <input message="tns:purgeDeletedItemsRequestMessage"/>
+       <output message="tns:purgeDeletedItemsResponseMessage"/>
+     </operation>
+
+     <operation name="purgeRequest">
+       <input message="tns:purgeRequestMessage"/>
+       <output message="tns:purgeResponseMessage"/>
+     </operation>
+
+     <operation name="readCursorRequest">
+       <input message="tns:readCursorRequestMessage"/>
+       <output message="tns:readCursorResponseMessage"/>
+     </operation>
+
+     <operation name="removeItemRequest">
+       <input message="tns:removeItemRequestMessage"/>
+       <output message="tns:removeItemResponseMessage"/>
+     </operation>
+
+     <operation name="removeItemsRequest">
+       <input message="tns:removeItemsRequestMessage"/>
+       <output message="tns:removeItemsResponseMessage"/>
+     </operation>
+
+     <operation name="removeMembersRequest">
+       <input message="tns:removeMembersRequestMessage"/>
+       <output message="tns:removeMembersResponseMessage"/>
+     </operation>
+
+     <operation name="removeProxyAccessRequest">
+       <input message="tns:removeProxyAccessRequestMessage"/>
+       <output message="tns:removeProxyAccessResponseMessage"/>
+     </operation>
+
+     <operation name="removeSignatureRequest">
+       <input message="tns:removeSignatureRequestMessage"/>
+       <output message="tns:removeSignatureResponseMessage"/>
+     </operation>
+
+     <operation name="replyRequest">
+       <input message="tns:replyRequestMessage"/>
+       <output message="tns:replyResponseMessage"/>
+     </operation>
+
+     <operation name="retractRequest">
+       <input message="tns:retractRequestMessage"/>
+       <output message="tns:retractResponseMessage"/>
+     </operation>
+
+     <operation name="sendItemRequest">
+       <input message="tns:sendItemRequestMessage"/>
+       <output message="tns:sendItemResponseMessage"/>
+     </operation>
+
+     <operation name="startFreeBusySessionRequest">
+       <input message="tns:startFreeBusySessionRequestMessage"/>
+       <output message="tns:startFreeBusySessionResponseMessage"/>
+     </operation>
+
+     <operation name="unacceptRequest">
+       <input message="tns:unacceptRequestMessage"/>
+       <output message="tns:unacceptResponseMessage"/>
+     </operation>
+
+     <operation name="uncompleteRequest">
+       <input message="tns:uncompleteRequestMessage"/>
+       <output message="tns:uncompleteResponseMessage"/>
+     </operation>
+
+   </portType>
+
+
+   <portType name="GroupWiseEventsPortType">
+   
+     <operation name="cleanEventConfigurationRequest">
+       <input message="tns:cleanEventConfigurationRequestMessage"/>
+       <output message="tns:cleanEventConfigurationResponseMessage"/>
+     </operation>
+     <operation name="configureEventsRequest">
+       <input message="tns:configureEventsRequestMessage"/>
+       <output message="tns:configureEventsResponseMessage"/>
+     </operation>
+     <operation name="getEventConfigurationRequest">
+       <input message="tns:getEventConfigurationRequestMessage"/>
+       <output message="tns:getEventConfigurationResponseMessage"/>
+     </operation>
+     <operation name="getEventsRequest">
+       <input message="tns:getEventsRequestMessage"/>
+       <output message="tns:getEventsResponseMessage"/>
+     </operation>
+     <operation name="removeEventConfigurationRequest">
+       <input message="tns:removeEventConfigurationRequestMessage"/>
+       <output message="tns:removeEventConfigurationResponseMessage"/>
+     </operation>
+     <operation name="removeEventsRequest">
+       <input message="tns:removeEventsRequestMessage"/>
+       <output message="tns:removeEventsResponseMessage"/>
+     </operation>
+
+   </portType>
+
+
+<binding name="GroupWiseBinding" type="tns:GroupWisePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <operation name="acceptRequest">
+      <soap:operation soapAction="acceptRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="acceptShareRequest">
+      <soap:operation soapAction="acceptShareRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="addItemRequest">
+      <soap:operation soapAction="addItemRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="addItemsRequest">
+      <soap:operation soapAction="addItemsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="addMembersRequest">
+      <soap:operation soapAction="addMembersRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="closeFreeBusySessionRequest">
+      <soap:operation soapAction="closeFreeBusySessionRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="completeRequest">
+      <soap:operation soapAction="completeRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="createCursorRequest">
+      <soap:operation soapAction="createCursorRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="createItemRequest">
+      <soap:operation soapAction="createItemRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="createProxyAccessRequest">
+      <soap:operation soapAction="createProxyAccessRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="createSignatureRequest">
+      <soap:operation soapAction="createSignatureRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="declineRequest">
+      <soap:operation soapAction="declineRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="delegateRequest">
+      <soap:operation soapAction="delegateRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="destroyCursorRequest">
+      <soap:operation soapAction="destroyCursorRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="executeRuleRequest">
+      <soap:operation soapAction="executeRuleRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="forwardRequest">
+      <soap:operation soapAction="forwardRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getAddressBookListRequest">
+      <soap:operation soapAction="getAddressBookListRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getAttachmentRequestMessage">
+      <soap:operation soapAction="getAttachmentRequestMessage" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getCategoryListRequest">
+      <soap:operation soapAction="getCategoryListRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getCustomListRequest">
+      <soap:operation soapAction="getCustomListRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getDeltasRequest">
+      <soap:operation soapAction="getDeltasRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getDeltaInfoRequest">
+      <soap:operation soapAction="getDeltaInfoRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getFolderListRequest">
+      <soap:operation soapAction="getFolderListRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getFreeBusyRequest">
+      <soap:operation soapAction="getFreeBusyRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getItemRequest">
+      <soap:operation soapAction="getItemRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getItemsRequest">
+      <soap:operation soapAction="getItemsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getQuickMessagesRequest">
+      <soap:operation soapAction="getQuickMessagesRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getProxyAccessListRequest">
+      <soap:operation soapAction="getProxyAccessListRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getProxyListRequest">
+      <soap:operation soapAction="getProxyListRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getSettingsRequest">
+      <soap:operation soapAction="getSettingsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getSignaturesRequest">
+      <soap:operation soapAction="getSignaturesRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getTimezoneListRequest">
+      <soap:operation soapAction="getTimezoneListRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
     <operation name="loginRequest">
       <soap:operation soapAction="loginRequest" style="document" />
       <input>
@@ -2298,151 +1183,381 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-    <operation name="getCategoryListRequest">
-      <soap:operation soapAction="getCategoryListRequest" style="document" />
+    <operation name="logoutRequest">
+      <soap:operation soapAction="logoutRequest" style="document" />
       <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
         <soap:body use="literal"/>
       </output>
     </operation>
-    <operation name="getAddressBookListRequest">
-      <soap:operation soapAction="getAddressBookListRequest" style="document" />
+
+    <operation name="markPrivateRequest">
+      <soap:operation soapAction="markPrivateRequest" style="document" />
       <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
         <soap:body use="literal"/>
       </output>
     </operation>
-    <operation name="getItemRequest">
-      <soap:operation soapAction="getItemRequest" style="document" />
+
+    <operation name="markReadRequest">
+      <soap:operation soapAction="markReadRequest" style="document" />
       <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
         <soap:body use="literal"/>
       </output>
     </operation>
-    <operation name="getItemsRequest">
-      <soap:operation soapAction="getItemsRequest" style="document" />
+
+    <operation name="markUnPrivateRequest">
+      <soap:operation soapAction="markUnPrivateRequest" style="document" />
       <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
         <soap:body use="literal"/>
       </output>
     </operation>
-    <operation name="getFolderListRequest">
-      <soap:operation soapAction="getFolderListRequest" style="document" />
+
+    <operation name="markUnReadRequest">
+      <soap:operation soapAction="markUnReadRequest" style="document" />
       <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
         <soap:body use="literal"/>
       </output>
     </operation>
-    <operation name="getDeltaRequest">
-      <soap:operation soapAction="getDeltaRequest" style="document" />
-      <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
-        <soap:body use="literal"/>
-      </input>
-      <output>
-        <soap:body use="literal"/>
-      </output>
-    </operation>
-    <operation name="createItemRequest">
-      <soap:operation soapAction="createItemRequest" style="document" />
-      <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
-        <soap:body use="literal"/>
-      </input>
-      <output>
-        <soap:body use="literal"/>
-      </output>
-    </operation>
-    <operation name="sendItemRequest">
-      <soap:operation soapAction="sendItemRequest" style="document" />
-      <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
-        <soap:body use="literal"/>
-      </input>
-      <output>
-        <soap:body use="literal"/>
-      </output>
-    </operation>
+
     <operation name="modifyItemRequest">
       <soap:operation soapAction="modifyItemRequest" style="document" />
       <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
         <soap:body use="literal"/>
       </output>
     </operation>
-    <operation name="purgeItemRequest">
-      <soap:operation soapAction="purgeItemRequest" style="document" />
+
+    <operation name="modifyPasswordRequest">
+      <soap:operation soapAction="modifyPasswordRequest" style="document" />
       <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
         <soap:body use="literal"/>
       </output>
     </operation>
+
+    <operation name="modifyProxyAccessRequest">
+      <soap:operation soapAction="modifyProxyAccessRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="modifySettingsRequest">
+      <soap:operation soapAction="modifySettingsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="modifySignaturesRequest">
+      <soap:operation soapAction="modifySignaturesRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="moveItemRequest">
+      <soap:operation soapAction="moveItemRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="positionCursorRequest">
+      <soap:operation soapAction="positionCursorRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="purgeDeletedItemsRequest">
+      <soap:operation soapAction="purgeDeletedItemsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="purgeRequest">
+      <soap:operation soapAction="purgeRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="readCursorRequest">
+      <soap:operation soapAction="readCursorRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
     <operation name="removeItemRequest">
       <soap:operation soapAction="removeItemRequest" style="document" />
       <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
         <soap:body use="literal"/>
       </output>
     </operation>
+
+    <operation name="removeItemsRequest">
+      <soap:operation soapAction="removeItemsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="removeMembersRequest">
+      <soap:operation soapAction="removeMembersRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="removeProxyAccessRequest">
+      <soap:operation soapAction="removeProxyAccessRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="removeSignatureRequest">
+      <soap:operation soapAction="removeSignatureRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="replyRequest">
+      <soap:operation soapAction="replyRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="retractRequest">
+      <soap:operation soapAction="retractRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="sendItemRequest">
+      <soap:operation soapAction="sendItemRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
     <operation name="startFreeBusySessionRequest">
       <soap:operation soapAction="startFreeBusySessionRequest" style="document" />
       <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
         <soap:body use="literal"/>
       </output>
     </operation>
-    <operation name="closeFreeBusySessionRequest">
-      <soap:operation soapAction="closeFreeBusySessionRequest" style="document" />
+
+    <operation name="unacceptRequest">
+      <soap:operation soapAction="unacceptRequest" style="document" />
       <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
         <soap:body use="literal"/>
       </output>
     </operation>
-    <operation name="getFreeBusyRequest">
-      <soap:operation soapAction="getFreeBusyRequest" style="document" />
+
+    <operation name="uncompleteRequest">
+      <soap:operation soapAction="uncompleteRequest" style="document" />
       <input>
-        <soap:header message="tns:header" part="session" use="literal"/>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
         <soap:body use="literal"/>
       </output>
     </operation>
+
   </binding>
 
-  <service name="GroupwiseSOAP">
-        <port binding="tns:GroupWiseBinding" name="GroupwiseSOAPPort">
-        </port>
-  </service>
+
+  <binding name="GroupWiseEventsBinding" type="tns:GroupWiseEventsPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <operation name="cleanEventConfigurationRequest">
+      <soap:operation soapAction="cleanEventConfigurationRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="configureEventsRequest">
+      <soap:operation soapAction="configureEventsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="getEventConfigurationRequest">
+      <soap:operation soapAction="getEventConfigurationRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="getEventsRequest">
+      <soap:operation soapAction="getEventsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="removeEventConfigurationRequest">
+      <soap:operation soapAction="removeEventConfigurationRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+   
+    <operation name="removeEventsRequest">
+      <soap:operation soapAction="removeEventsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+   </binding>
+
+
+   <service name="GroupwiseService">
+
+      <port binding="tns:GroupWiseBinding" name="GroupwiseSOAPPort">
+         <documentation>
+            The default port for the GroupWise SOAP protocol is 7191.
+         </documentation>
+         <soap:address location="http://localhost:8080"/>
+      </port>
+
+      <port binding="tns:GroupWiseEventsBinding" name="GroupwiseEventsSOAPPort">
+         <documentation>
+            The default port for the GroupWise Events is the same as the SOAP protocol - 7191.
+         </documentation>
+         <soap:address location="http://localhost:7191"/>
+      </port>
+
+   </service>
+
 </definitions>
 

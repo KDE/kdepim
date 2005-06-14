@@ -28,7 +28,7 @@
 
 #include "gwconverter.h"
 
-class ns1__Recipient;
+class ngwt__Recipient;
 
 class IncidenceConverter : public GWConverter
 {
@@ -38,23 +38,29 @@ class IncidenceConverter : public GWConverter
     void setFrom( const QString &name, const QString &email,
       const QString &uuid );
 
-    KCal::Event* convertFromAppointment( ns1__Appointment* );
-    ns1__Appointment* convertToAppointment( KCal::Event* );
+    KCal::Event* convertFromAppointment( ngwt__Appointment* );
+    ngwt__Appointment* convertToAppointment( KCal::Event* );
 
-    KCal::Todo* convertFromTask( ns1__Task* );
-    ns1__Task* convertToTask( KCal::Todo* );
+    KCal::Todo* convertFromTask( ngwt__Task* );
+    ngwt__Task* convertToTask( KCal::Todo* );
 
   private:
-    bool convertToCalendarItem( KCal::Incidence*, ns1__CalendarItem* );
-    bool convertFromCalendarItem( ns1__CalendarItem*, KCal::Incidence* );
+    bool convertToCalendarItem( KCal::Incidence*, ngwt__CalendarItem* );
+    bool convertFromCalendarItem( ngwt__CalendarItem*, KCal::Incidence* );
 
-    void getItemDescription( ns1__CalendarItem*, KCal::Incidence* );
-    void setItemDescription( KCal::Incidence*, ns1__CalendarItem* );
+    void getItemDescription( ngwt__CalendarItem*, KCal::Incidence* );
+    void setItemDescription( KCal::Incidence*, ngwt__CalendarItem* );
 
-    void getAttendees( ns1__CalendarItem*, KCal::Incidence* );
-    void setAttendees( KCal::Incidence *, ns1__CalendarItem * );
+    void getAttendees( ngwt__CalendarItem*, KCal::Incidence* );
+    void setAttendees( KCal::Incidence *, ngwt__CalendarItem * );
 
-    ns1__Recipient *createRecipient( const QString &name,
+    void getRecurrence( ngwt__CalendarItem*, KCal::Incidence* );
+    void setRecurrence( KCal::Incidence *, ngwt__CalendarItem * );
+
+    // used for converting weekly recurrences from GW
+    QBitArray getDayBitArray( ngwt__DayOfWeekList * );
+
+    ngwt__Recipient *createRecipient( const QString &name,
       const QString &email, const QString &uuid = QString::null );
 
     QString mTimezone;
