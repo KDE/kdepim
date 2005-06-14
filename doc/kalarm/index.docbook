@@ -42,8 +42,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2005-19-05</date>
-<releaseinfo>1.03.01</releaseinfo>
+<date>2005-06-12</date>
+<releaseinfo>1.03.02</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -1246,7 +1246,8 @@ up when the alarm recurs. This avoids having to acknowledge multiple
 copies of the same message should you not wish, or be unable, to
 acknowledge a message at the time it appears.</para>
 
-<para>The alarm message window provides the following options:</para>
+<para>The alarm message window provides whichever of the following
+options are applicable to the displayed alarm:</para>
 
 <itemizedlist>
 <listitem>
@@ -1269,7 +1270,8 @@ button. This displays the
 when the message is to be redisplayed, or select <guilabel>Defer for
 time interval</guilabel> to enter how long after now (in hours and
 minutes) the message should be redisplayed. Then click
-<guibutton>Defer</guibutton> to defer the alarm message.</para>
+<guibutton>Defer</guibutton> to defer the alarm message and close its
+window.</para>
 
 <note><para>The time the alarm is deferred to must be earlier than its
 next scheduled occurrence or next reminder. For this reason, the
@@ -1286,17 +1288,22 @@ selected.</para></note>
 
 <listitem>
 <para>Stop playing the alarm's sound file by clicking the button
-showing the <quote>stop playing</quote> symbol. Clicking it has no
-effect on the alarm message window.</para>
-
-<note><para>This button only appears when the alarm has a sound file
-specified.</para></note>
+showing the <quote>stop playing</quote> symbol.</para>
 </listitem>
 
 <listitem>
-<para>The button showing the <guiicon>&kalarm;</guiicon> icon provides a
-convenient way to activate &kalarm;. Clicking it has no effect on the
-alarm message window.</para>
+<para>If the alarm message was created by dragging an email from
+&kmail;, you can directly access the email in &kmail; by clicking the
+button showing the &kmail; icon. This will select and highlight the
+email in &kmail;'s folder list.</para>
+
+<warning><para>If &kmail;'s indexes are regenerated, the link to the
+email in &kmail; will be lost.</para></warning>
+</listitem>
+
+<listitem>
+<para>The button showing the <guiicon>&kalarm;</guiicon> icon provides
+a convenient way to activate &kalarm;.</para>
 </listitem>
 </itemizedlist>
 
