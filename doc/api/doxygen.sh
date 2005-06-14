@@ -260,6 +260,7 @@ apidox_subdir()
 	echo "INPUT                  = $srcdir" >> "$subdir/Doxyfile"
 	echo "IMAGE_PATH             = $top_srcdir/doc/api" >> "$subdir/Doxyfile"
 	echo "OUTPUT_DIRECTORY       = ." >> "$subdir/Doxyfile"
+	echo "RECURSIVE              = NO" >> "$subdir/Doxyfile"
 	echo "HTML_OUTPUT            = $subdir/html" >> "$subdir/Doxyfile"
 	echo "GENERATE_TAGFILE       = $subdir/$subdirname.tag" >> "$subdir/Doxyfile"
 
@@ -287,18 +288,24 @@ apidox_subdir()
 		tagsubdir=`dirname $i` ; tag=`basename $i`
 		tagpath=""
 
-		# Find location of tag file
-		if test -f "$tagsubdir/$tag/$tag.tag" ; then
-			file="$tagsubdir/$tag/$tag.tag"
-			loc="$tagsubdir/$tag/html"
+		if test "x$tagsubdir" = "x." ; then
+			tagsubdir=""
 		else
-			file=`ls -1 ../*-apidocs/$tagsubdir/$tag/$tag.tag 2> /dev/null`
+			tagsubdir="$tagsubdir/"
+		fi
+
+		# Find location of tag file
+		if test -f "$tagsubdir$tag/$tag.tag" ; then
+			file="$tagsubdir$tag/$tag.tag"
+			loc="$tagsubdir$tag/html"
+		else
+			file=`ls -1 ../*-apidocs/$tagsubdir$tag/$tag.tag 2> /dev/null`
 			loc=`echo "$file" | sed -e "s/$tag.tag\$/html/"`
 
 			# If the tag file doesn't exist yet, but should
 			# because we have the right dirs here, queue
 			# this directory for re-processing later.
-			if test -z "$file" && test -d "$top_srcdir/$tagsubdir/$tag" ; then
+			if test -z "$file" && test -d "$top_srcdir/$tagsubdir$tag" ; then
 				echo "* Need to re-process $subdir for tag $i"
 				echo "$subdir" >> "subdirs.later"
 			fi
@@ -310,8 +317,10 @@ apidox_subdir()
 				echo "  $file=$QTDOCDIR" >> "$subdir/Doxyfile"
 			fi
 		else
-			test -n "$file" && \
-				echo "  $file=../$top_builddir/$loc \\" >> "$subdir/Doxyfile"
+			if test -n "$file"  ; then
+				echo "* Found tag $file"
+				echo "  $file=../$top_builddir$loc \\" >> "$subdir/Doxyfile"
+			fi
 		fi
 	done
 
