@@ -32,6 +32,8 @@
 #include <kconfig.h>
 #include <kdepimmacros.h>
 
+class ngwt__Settings;
+
 namespace KCal {
 
 class GroupwisePrefsBase;
@@ -62,6 +64,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
 
     KABC::Lock *lock();
 
+    bool userSettings( ngwt__Settings *settings );
   protected:
     void init();
 

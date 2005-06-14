@@ -7,12 +7,12 @@
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-
+    
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
-
+    
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -49,7 +49,7 @@ class ResourceMemory : public ResourceCached
 {
   public:
     ResourceMemory() : ResourceCached( 0 ) {}
-
+    
     Ticket *requestSaveTicket() { return 0; }
     bool load() { return true; }
     bool save( Ticket * ) { return true; }
@@ -65,17 +65,17 @@ KDE_EXPORT int kdemain( int argc, char **argv );
 int kdemain( int argc, char **argv )
 {
   KInstance instance( "kio_groupwise" );
-
+  
   kdDebug(7000) << "Starting kio_groupwise(pid:  " << getpid() << ")" << endl;
-
+  
   if (argc != 4) {
     fprintf( stderr, "Usage: kio_groupwise protocol domain-socket1 domain-socket2\n");
     exit( -1 );
   }
-
+  
   Groupwise slave( argv[1], argv[2], argv[3] );
   slave.dispatchLoop();
-
+  
   return 0;
 }
 
@@ -101,19 +101,19 @@ void Groupwise::get( const KURL &url )
   QString path = url.path();
   debugMessage( "Path: " + path );
 
-  if ( path.startsWith( "/freebusy/" ) ) {
+  if ( path.contains( "/freebusy" ) ) {
     getFreeBusy( url );
-  } else if ( path.startsWith( "/calendar/" ) ) {
+  } else if ( path.contains( "/calendar" ) ) {
     getCalendar( url );
-  } else if ( path.startsWith( "/addressbook/" ) ) {
+  } else if ( path.contains( "/addressbook" ) ) {
     getAddressbook( url );
   } else {
     QString error = i18n("Unknown path. Known paths are '/freebusy/', "
       "'/calendar/' and '/addressbook/'.");
     errorMessage( error );
   }
-
-  kdDebug(7000) << "GroupwiseCgiProtocol::get() done" << endl;
+  
+  kdDebug(7000) << "Groupwise::get() done" << endl;
 }
 
 QString Groupwise::soapUrl( const KURL &url )
@@ -124,14 +124,28 @@ QString Groupwise::soapUrl( const KURL &url )
   QString u;
   if ( useSsl ) u = "https";
   else u = "http";
-
+  
   u += "://" + url.host() + ":";
-  if ( url.port() ) u += QString::number( url.port() );
+  if ( url.port() ) 
+    u += QString::number( url.port() );
   else {
     if ( useSsl ) u += "8201";
     else u += "7181";
   }
-  u += "/soap";
+
+  // check for a soap path in the URL
+  // assume that if a path to soap is included in the URL,
+  // it will be at the start of the path, eg.
+  // groupwise://host:port/soap2/freebusy
+  if ( ! ( url.path().startsWith("/freebusy/") ||
+           url.path().startsWith("/calendar/") ||
+           url.path().startsWith("/addressbook/" ) ) )
+  {
+    QString soapPath = QString("/") + QStringList::split('/', url.path())[0];
+    u += soapPath;
+  }
+  else
+    u += "/soap";
 
   return u;
 }
@@ -158,7 +172,7 @@ void Groupwise::getFreeBusy( const KURL &url )
     KCal::FreeBusy *fb = new KCal::FreeBusy;
 
     if ( user.isEmpty() || pass.isEmpty() ) {
-      errorMessage( i18n("Need username and password.") );
+      errorMessage( i18n("Need username and password to read Free/Busy information.") );
     } else {
       GroupwiseServer server( u, user, pass, 0 );
 
@@ -214,7 +228,7 @@ void Groupwise::getCalendar( const KURL &url )
 
   GroupwiseServer server( u, user, pass, 0 );
 
-  KCal::CalendarLocal calendar( QString::fromLatin1("UTC") );
+  KCal::CalendarLocal calendar( QString::fromLatin1("UTC"));
 
   kdDebug() << "Login" << endl;
   if ( !server.login() ) {
@@ -263,7 +277,7 @@ void Groupwise::getAddressbook( const KURL &url )
         ids.append( item[ 1 ] );
       }
     }
-
+    
     debugMessage( "IDs: " + ids.join( "," ) );
 
     KABC::ResourceMemory resource;

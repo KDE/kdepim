@@ -36,6 +36,8 @@
 
 #include "kcal_resourcegroupwiseconfig.h"
 
+#include "soap/soapH.h"
+
 using namespace KCal;
 
 ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent,  const char* name )
@@ -60,18 +62,25 @@ ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent,  const char* 
   mainLayout->addWidget( mPasswordEdit, 3, 1 );
   mPasswordEdit->setEchoMode( KLineEdit::Password );
 
+  QPushButton *settingsButton = new QPushButton( i18n( "View User Settings" ), this );
+  mainLayout->addMultiCellWidget( settingsButton, 4, 4, 0, 1 );
+
   mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
   mainLayout->addMultiCellWidget( mReloadConfig, 5, 5, 0, 1 );
 
   mSaveConfig = new KCal::ResourceCachedSaveConfig( this );
   mainLayout->addMultiCellWidget( mSaveConfig, 6, 6, 0, 1 );
+
+  connect( settingsButton, SIGNAL( clicked() ), SLOT( slotViewUserSettings() ) );
+
 }
 
 void ResourceGroupwiseConfig::loadSettings( KRES::Resource *resource )
 {
   kdDebug() << "KCal::ResourceGroupwiseConfig::loadSettings()" << endl;
-
   ResourceGroupwise *res = static_cast<ResourceGroupwise *>( resource );
+  mResource = res;
+  
   if ( res ) {
     if ( !res->prefs() ) {
       kdError() << "No PREF" << endl;
@@ -102,4 +111,13 @@ void ResourceGroupwiseConfig::saveSettings( KRES::Resource *resource )
   }
 }
 
+void ResourceGroupwiseConfig::slotViewUserSettings()
+{
+  kdDebug(5700) << "KCal::ResourceGroupwiseConfig::slotViewUserSettings()" << endl;
+  if ( mResource )
+  {
+    ngwt__Settings s;
+    mResource->userSettings( &s);
+  }
+}
 #include "kcal_resourcegroupwiseconfig.moc"

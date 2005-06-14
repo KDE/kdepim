@@ -299,4 +299,19 @@ void ResourceGroupwise::cancelLoad()
   mProgress = 0;
 }
 
+bool ResourceGroupwise::userSettings( ngwt__Settings *settings )
+{
+  kdDebug() << "ResourceGroupwise::userSettings()" << endl;
+
+  GroupwiseServer server( prefs()->url(),
+                          prefs()->user(),
+                          prefs()->password(), this );
+
+  server.login();
+  // get these out again, once we discover their format.
+  bool success = server.readUserSettings( settings );
+  server.logout();
+  return success;
+}
+
 #include "kcal_resourcegroupwise.moc"

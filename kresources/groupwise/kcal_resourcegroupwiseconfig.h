@@ -49,6 +49,9 @@ class KDE_EXPORT ResourceGroupwiseConfig : public KRES::ConfigWidget
     virtual void loadSettings( KRES::Resource *resource );
     virtual void saveSettings( KRES::Resource *resource );
 
+  protected slots:
+    void slotViewUserSettings();
+
   private:
     KLineEdit *mUrl;
     KLineEdit *mUserEdit;
@@ -56,6 +59,7 @@ class KDE_EXPORT ResourceGroupwiseConfig : public KRES::ConfigWidget
 
     ResourceCachedReloadConfig *mReloadConfig;
     ResourceCachedSaveConfig *mSaveConfig;
+    ResourceGroupwise *mResource;
 };
 
 }
