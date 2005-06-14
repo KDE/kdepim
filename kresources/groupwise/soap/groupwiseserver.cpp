@@ -1047,7 +1047,9 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
             QDateTime blockEnd = conv.charToQDateTime( (*it2)->endDate );
             ngwt__AcceptLevel acceptLevel = *(*it2)->acceptLevel;
 
-            std::string subject = *(*it2)->subject;
+            /* we need to support these as people use it for checking others' calendars */ 
+/*            if ( (*it2)->subject )
+              std::string subject = *(*it2)->subject;*/
   //          kdDebug() << "BLOCK Subject: " << subject.c_str() << endl;
 
             if ( acceptLevel == Busy || acceptLevel == OutOfOffice ) {
@@ -1118,6 +1120,65 @@ void GroupwiseServer::log( const QString &prefix, const char *s, size_t n )
     f.putch( '\n' );
     f.close();
   }
+}
+
+bool GroupwiseServer::readUserSettings( ngwt__Settings *returnedSettings )
+{
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::userSettings(): no session." << endl;
+    returnedSettings = 0;
+    return returnedSettings;
+  }
+
+  _ngwm__getSettingsRequest request;
+
+#if 1
+  // server doesn't give return any settings keys even if id is a null string
+  request.id = soap_new_std__string( mSoap, -1 );
+  request.id->append("allowSharedFolders");
+#else
+  request.id = 0;
+#endif
+
+  _ngwm__getSettingsResponse response;
+  mSoap->header->ngwt__session = mSession;
+
+  int result = soap_call___ngw__getSettingsRequest( mSoap, mUrl.latin1(), 0, &request, &response );
+
+  if ( !checkResponse( result, response.status ) )
+  {
+    kdDebug() << "GroupwiseServer::userSettings() - checkResponse() failed" << endl;
+    returnedSettings = 0;
+    return returnedSettings;
+  }
+
+  returnedSettings = response.settings;
+  if ( returnedSettings )
+  {
+    kdDebug() << "GroupwiseServer::userSettings() - settings are: " << endl;
+    std::vector<class ngwt__SettingsGroup * > group = returnedSettings->group;
+    std::vector<class ngwt__SettingsGroup *>::const_iterator it;
+    for( it = group.begin(); it != group.end(); ++it )
+    {
+      ngwt__SettingsGroup * group = *it;
+      if ( group->type )
+        kdDebug() << "GROUP: " << group->type->c_str();
+      
+      std::vector<ngwt__Custom * > setting = group->setting;
+      std::vector<class ngwt__Custom *>::const_iterator it2;
+      for( it2 = setting.begin(); it2 != setting.end(); ++it2 )
+      {
+        kdDebug() << "  SETTING: " << (*it2)->field.c_str();
+        if ( (*it2)->value )
+          kdDebug() << "   value : " << (*it2)->value->c_str();
+      }
+    }
+  }
+  else
+    kdDebug() << "GroupwiseServer::userSettings() - no settings in response. " << endl;
+  kdDebug() << "GroupwiseServer::userSettings() - done. " << endl;
+  
+  return returnedSettings;
 }
 
 #include "groupwiseserver.moc"

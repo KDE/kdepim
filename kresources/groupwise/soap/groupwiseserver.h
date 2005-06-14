@@ -24,9 +24,11 @@
 #include <kio/job.h>
 #include <kio/jobclasses.h>
 #include <qapplication.h>
+#include <qmap.h>
 #include <qobject.h>
 #include <qstring.h>
 #include <qthread.h>
+#include <qvaluelist.h>
 
 #include <string>
 
@@ -44,6 +46,8 @@ class Calendar;
 class Incidence;
 class ResourceCached;
 }
+
+class ngwt__Settings;
 
 class KExtendedSocket;
 
@@ -63,16 +67,15 @@ class AddressBook
 {
   public:
     typedef QValueList<AddressBook> List;
-  
+
     AddressBook() : isPersonal( false ), isFrequentContacts( false ) {}
-  
+
     QString id;
     QString name;
     QString description;
     bool isPersonal;
     bool isFrequentContacts;
 };
-
 }
 
 class GroupwiseServer : public QObject
@@ -130,6 +133,8 @@ class GroupwiseServer : public QObject
 
     void emitReadAddressBookTotalSize( int );
     void emitReadAddressBookProcessedSize( int );
+
+    bool readUserSettings( ngwt__Settings *settings );
 
   signals:
     void readAddressBookTotalSize( int );
