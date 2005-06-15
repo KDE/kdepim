@@ -80,4 +80,5 @@ METASOURCES = AUTO
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/libkcal.pot
 
+DOXYGEN_REFERENCES=kresources
 include $(top_srcdir)/doc/api/Doxyfile.am

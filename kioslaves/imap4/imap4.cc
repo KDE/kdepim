@@ -36,11 +36,19 @@
  *   - http://www.ietf.org/internet-drafts/draft-daboo-imap-annotatemore-05.txt
  *          IMAP ANNOTATEMORE draft - April 2004.
  *
+ *
  * Supported URLs:
- *   - imap://server/ - Prompt for user/pass, list all folders in home directory
- *   - imap://user:pass@server/ - Uses LOGIN to log in
- *   - imap://user;AUTH=method:pass@server/ - Uses AUTHENTICATE to log in
- *   - imap://server/folder/ - List messages in folder
+ * \verbatim
+imap://server/
+imap://user:pass@server/
+imap://user;AUTH=method:pass@server/
+imap://server/folder/
+ * \endverbatim
+ * These URLs cause the following actions (in order):
+ *   - Prompt for user/pass, list all folders in home directory
+ *   - Uses LOGIN to log in
+ *   - Uses AUTHENTICATE to log in
+ *   - List messages in folder
  *
  * @note API notes:
  *   Not receiving the required write access for a folder means

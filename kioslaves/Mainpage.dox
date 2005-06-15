@@ -1,5 +1,9 @@
 /** @mainpage
 *
-* KDE PIM also contains a few KIOSlaves. The most important
+* IO Slaves.
+*
+* KDE PIM contains a few KIOSlaves. The most important
 * of these is the IMAP4Protocol slave which is used for IMAP operations.
+* Similarly, the MBoxProtocol slave is used to access mbox files.
+* 
 */

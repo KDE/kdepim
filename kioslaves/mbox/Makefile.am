@@ -26,3 +26,5 @@ kdelnk_DATA = mbox.protocol
 kdelnkdir = $(kde_servicesdir)
 
 
+include $(top_srcdir)/doc/api/Doxyfile.am
+
