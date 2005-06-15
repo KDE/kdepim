@@ -3,6 +3,7 @@ Encoding=UTF-8
 X-KDE-Library=libkaddrbk_ldif_xxport
 Name=KAB LDIF XXPort Plugin
 Name[be]=Дапаўненьне KAB "Імпарт LDIF"
+Name[br]=Lugent XXPorzh KAB LDIF
 Name[bs]=KAB dodatak za LDIF XXPort
 Name[ca]=Endollable per importació/exportació de LDIF per a KAB
 Name[cs]=Exportní modul LDIF
