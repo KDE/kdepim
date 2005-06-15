@@ -25,6 +25,7 @@
 
 #include <libkcal/calendar.h>
 #include <libkcal/incidence.h>
+#include <libkdepim/kpimprefs.h>
 
 #include <kabc/addressee.h>
 
@@ -1043,8 +1044,8 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
         if ( blocks ) {
           std::vector<class ngwt__FreeBusyBlock *>::const_iterator it2;
           for( it2 = blocks->begin(); it2 != blocks->end(); ++it2 ) {
-            QDateTime blockStart = conv.charToQDateTime( (*it2)->startDate );
-            QDateTime blockEnd = conv.charToQDateTime( (*it2)->endDate );
+            QDateTime blockStart = conv.charToQDateTime( (*it2)->startDate, KPimPrefs::timezone() );
+            QDateTime blockEnd = conv.charToQDateTime( (*it2)->endDate, KPimPrefs::timezone() );
             ngwt__AcceptLevel acceptLevel = *(*it2)->acceptLevel;
 
             /* we need to support these as people use it for checking others' calendars */ 
