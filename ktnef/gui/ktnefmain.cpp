@@ -57,8 +57,6 @@
 
 #define	NOT_IMPLEMENTED QMessageBox::information(this, "ktnef", "Not implemented yet", QMessageBox::Ok|QMessageBox::Default, 0)
 
-KFileOpenWithHandler*	KTNEFMain::handler_ = 0;
-
 KTNEFMain::KTNEFMain(QWidget *parent, const char *name)
 	: KMainWindow(parent, name)
 {
@@ -74,9 +72,6 @@ KTNEFMain::KTNEFMain(QWidget *parent, const char *name)
 	// create personale temo extract dir
 	KStandardDirs::makeDir(KGlobal::dirs()->localkdedir() + "/share/apps/ktnef/tmp");
 
-	// create an instance of KFIleOpenWithHandler
-	if (!handler_) handler_ = new KFileOpenWithHandler();
-
 	resize(430,350);
 	setAutoSaveSettings( "MainWindow" );
 }
@@ -84,11 +79,6 @@ KTNEFMain::KTNEFMain(QWidget *parent, const char *name)
 KTNEFMain::~KTNEFMain()
 {
 	delete parser_;
-	if (handler_ && memberList->count() <= 1)
-	{
-		delete handler_;
-		handler_ = 0;
-	}
 	cleanup();
 }
 
@@ -210,8 +200,7 @@ void KTNEFMain::viewFileAs()
 	KURL::List	list;
 	list.append(KURL::fromPathOrURL( extractTemp(view_->getSelection()->first()) ));
 
-  KRun::displayOpenWithDialog(list);
-//speleoalex KOpenWithHandler::getOpenWithHandler()->displayOpenWithDialog(list);
+	KRun::displayOpenWithDialog(list);
 }
 
 void KTNEFMain::extractFile()
