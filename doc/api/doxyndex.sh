@@ -14,7 +14,7 @@
 
 WRKDIR="$1/$2"
 TOPDIR=`echo "$2" | sed -e 's+[^/][^/]*/+../+g' -e 's+html$+..+'`
-echo "* Postprocessing files in $WRKDIR ($TOPDIR)"
+echo "* Postprocessing files in $WRKDIR"
 
 # Special case top-level to have an empty MENU.
 if test "x$2" = "x." ; then
