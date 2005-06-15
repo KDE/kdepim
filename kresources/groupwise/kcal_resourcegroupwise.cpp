@@ -299,7 +299,7 @@ void ResourceGroupwise::cancelLoad()
   mProgress = 0;
 }
 
-bool ResourceGroupwise::userSettings( ngwt__Settings *settings )
+bool ResourceGroupwise::userSettings( ngwt__Settings *&settings )
 {
   kdDebug() << "ResourceGroupwise::userSettings()" << endl;
 

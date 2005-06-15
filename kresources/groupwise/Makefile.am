@@ -5,9 +5,8 @@ INCLUDES = -I$(top_srcdir) $(all_includes)
 lib_LTLIBRARIES = libkcal_groupwise.la libkabc_groupwise.la
 
 libkcal_groupwise_la_SOURCES = kcal_resourcegroupwise.cpp \
-                               kcal_resourcegroupwiseconfig.cpp \
-                               kcal_groupwiseprefsbase.kcfgc \
-                               kcal_groupwiseprefs.cpp
+	kcal_resourcegroupwiseconfig.cpp kcal_groupwiseprefsbase.kcfgc kcal_groupwiseprefs.cpp \
+	groupwisesettingswidget.cpp groupwisesettingswidgetbase.ui
 libkcal_groupwise_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) \
                                -version-info 1:0:0 -no-undefined
 libkcal_groupwise_la_LIBADD = soap/libgwsoap.la \
@@ -45,3 +44,4 @@ METASOURCES = AUTO
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp soap/*.cpp -o $(podir)/kres_groupwise.pot
+noinst_HEADERS = groupwisesettingswidget.h

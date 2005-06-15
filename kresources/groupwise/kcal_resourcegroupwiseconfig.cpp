@@ -25,7 +25,9 @@
 #include <qcheckbox.h>
 
 #include <klocale.h>
+#include <klistview.h>
 #include <kdebug.h>
+#include <kdialogbase.h>
 #include <kstandarddirs.h>
 #include <klineedit.h>
 
@@ -33,9 +35,8 @@
 
 #include "kcal_resourcegroupwise.h"
 #include "kcal_groupwiseprefs.h"
-
 #include "kcal_resourcegroupwiseconfig.h"
-
+#include "groupwisesettingswidget.h"
 #include "soap/soapH.h"
 
 using namespace KCal;
@@ -116,8 +117,54 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
   kdDebug(5700) << "KCal::ResourceGroupwiseConfig::slotViewUserSettings()" << endl;
   if ( mResource )
   {
-    ngwt__Settings s;
-    mResource->userSettings( &s);
+    ngwt__Settings * s;
+    mResource->userSettings( s );
+
+    if ( s )
+    {
+      KDialogBase * dialog = new KDialogBase( ::qt_cast<QWidget*>(parent() ), "gwsettingswidget", false, i18n( "GroupWise Settings" ), KDialogBase::Ok );
+      GroupWiseSettingsWidget * settingsWidget = new GroupWiseSettingsWidget( dialog );
+  
+      // populate dialog
+      kdDebug() << "slotViewUserSettings() - settings are: " << endl;
+      std::vector<class ngwt__SettingsGroup *>::const_iterator it;
+      for( it = s->group.begin(); it != s->group.end(); ++it )
+      {
+        ngwt__SettingsGroup * group = *it;
+        QString groupName;
+        if ( group->type )
+        {
+          groupName = QString::fromUtf8( group->type->c_str() );
+          kdDebug() << "GROUP: " << groupName << endl;;
+        }
+        KListViewItem * groupLVI = new KListViewItem( settingsWidget->m_settingsList, groupName ); 
+        std::vector<ngwt__Custom * > setting = group->setting;
+        std::vector<class ngwt__Custom *>::const_iterator it2;
+        for( it2 = setting.begin(); it2 != setting.end(); ++it2 )
+        {
+          QString setting, value;
+          bool locked = false;
+          setting = QString::fromUtf8( (*it2)->field.c_str() );
+          if ( (*it2)->value )
+          {
+            value = QString::fromUtf8( (*it2)->value->c_str() );
+          }
+          if ( (*it2)->locked )
+            locked = *((*it2)->locked);
+
+          kdDebug() << "  SETTING: " << setting  << "   value : " << value <<  (locked ? "locked" : " not locked " ) << endl;
+          KListViewItem * settingLVI = new KListViewItem( groupLVI, QString::null, setting, value, (locked ? "locked" : " not locked " ) ); 
+          if ( !locked )
+            settingLVI->setRenameEnabled( 2, true );
+        }
+      }
+  
+      dialog->show();
+      dialog->exec();
+    }
+      else 
+        kdDebug() << "KCal::ResourceGroupwiseConfig::slotViewUserSettings() - NO SETTINGS" << endl;
   }
 }
+
 #include "kcal_resourcegroupwiseconfig.moc"

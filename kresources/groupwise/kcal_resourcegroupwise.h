@@ -64,7 +64,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
 
     KABC::Lock *lock();
 
-    bool userSettings( ngwt__Settings *settings );
+    bool userSettings( ngwt__Settings * &settings );
   protected:
     void init();
 

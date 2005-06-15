@@ -1123,7 +1123,7 @@ void GroupwiseServer::log( const QString &prefix, const char *s, size_t n )
   }
 }
 
-bool GroupwiseServer::readUserSettings( ngwt__Settings *returnedSettings )
+bool GroupwiseServer::readUserSettings( ngwt__Settings *&returnedSettings )
 {
   if ( mSession.empty() ) {
     kdError() << "GroupwiseServer::userSettings(): no session." << endl;
@@ -1133,7 +1133,7 @@ bool GroupwiseServer::readUserSettings( ngwt__Settings *returnedSettings )
 
   _ngwm__getSettingsRequest request;
 
-#if 1
+#if 0
   // server doesn't give return any settings keys even if id is a null string
   request.id = soap_new_std__string( mSoap, -1 );
   request.id->append("allowSharedFolders");
@@ -1154,32 +1154,40 @@ bool GroupwiseServer::readUserSettings( ngwt__Settings *returnedSettings )
   }
 
   returnedSettings = response.settings;
-  if ( returnedSettings )
+  if ( !returnedSettings )
   {
-    kdDebug() << "GroupwiseServer::userSettings() - settings are: " << endl;
-    std::vector<class ngwt__SettingsGroup * > group = returnedSettings->group;
-    std::vector<class ngwt__SettingsGroup *>::const_iterator it;
-    for( it = group.begin(); it != group.end(); ++it )
-    {
-      ngwt__SettingsGroup * group = *it;
-      if ( group->type )
-        kdDebug() << "GROUP: " << group->type->c_str();
-      
-      std::vector<ngwt__Custom * > setting = group->setting;
-      std::vector<class ngwt__Custom *>::const_iterator it2;
-      for( it2 = setting.begin(); it2 != setting.end(); ++it2 )
-      {
-        kdDebug() << "  SETTING: " << (*it2)->field.c_str();
-        if ( (*it2)->value )
-          kdDebug() << "   value : " << (*it2)->value->c_str();
-      }
-    }
-  }
-  else
     kdDebug() << "GroupwiseServer::userSettings() - no settings in response. " << endl;
+    // debug data pending server fix
+    // settings
+    returnedSettings = new ngwt__Settings;
+    // list of groups
+    //returnedSettings->group = new std::vector<ngwt__SettingsGroup * >; // sample group
+    ngwt__SettingsGroup * grp = new ngwt__SettingsGroup;
+    grp->type = new std::string;
+    grp->type->append( "GROUP 1" );
+    // list of settings
+    //grp->setting = new std::vector<ngwt__Custom * >;
+    // 2 sample settings
+    ngwt__Custom * setting1 = new ngwt__Custom;
+    setting1->field.append("Setting 1");
+    setting1->value = new std::string;
+    setting1->value->append("Value 1 ");
+    setting1->locked = new bool;
+    *(setting1->locked) = false;
+    ngwt__Custom * setting2 = new ngwt__Custom;
+    setting2->field.append("Setting 2");
+    setting2->value = new std::string;
+    setting2->value->append("Value 2");
+    setting2->locked = new bool;
+    *(setting2->locked) = true;
+    grp->setting.push_back( setting1 );
+    grp->setting.push_back( setting2 );
+    
+    returnedSettings->group.push_back( grp );
+  }
   kdDebug() << "GroupwiseServer::userSettings() - done. " << endl;
   
-  return returnedSettings;
+  return true; /** FIXME return false if no settings fetched */
 }
 
 #include "groupwiseserver.moc"
