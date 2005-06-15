@@ -25,7 +25,6 @@
 class KTNEFView;
 class KTNEFParser;
 class KTNEFAttach;
-class KFileOpenWithHandler;
 
 class KTNEFMain : public KMainWindow
 {
@@ -77,8 +76,6 @@ private:
 	QString		filename_;
 	QString		defaultdir_;
 	QString		lastdir_;
-
-	static KFileOpenWithHandler*	handler_;
 };
 
 #endif
