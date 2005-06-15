@@ -386,16 +386,27 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
   clearException();
 
-  if (messageText.isEmpty()) return 0;
-
+  if (messageText.isEmpty())
+  {
+    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QString::fromLatin1( "messageText was empty, unable to parse into a ScheduleMessage" ) ) );
+    return 0;
+  }
   icalcomponent *message;
   message = icalparser_parse_string(messageText.utf8());
 
-  if (!message) return 0;
+  if (!message)
+  {
+    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QString::fromLatin1( "icalparser was unable to parse messageText into a ScheduleMessage" ) ) );
+    return 0;
+  }
 
   icalproperty *m = icalcomponent_get_first_property(message,
                                                      ICAL_METHOD_PROPERTY);
-  if (!m) return 0;
+  if (!m)
+  {
+    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QString::fromLatin1( "message didn't contain an ICAL_METHOD_PROPERTY" ) ) );
+    return 0;
+  }
 
   icalcomponent *c;
 
@@ -431,6 +442,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   if (!incidence) {
     kdDebug(5800) << "ICalFormat:parseScheduleMessage: object is not a freebusy, event, todo or journal" << endl;
+    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QString::fromLatin1( "object is not a freebusy, event, todo or journal" ) ) );
     return 0;
   }
 

@@ -891,6 +891,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
   if( !msg ) {
     kdDebug( 5850 ) << "Failed to parse the scheduling message" << endl;
+    Q_ASSERT( format.exception() );
     kdDebug( 5850 ) << format.exception()->message() << endl;
     return QString::null;
   }
