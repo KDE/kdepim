@@ -170,6 +170,11 @@ MAX_DOT_GRAPH_DEPTH    = 0
 GENERATE_LEGEND        = YES
 DOT_CLEANUP            = YES
 SEARCHENGINE           = NO
+
+### KDE Settings
+ALIASES = \
+	"intern=\par<b>Internal use only.</b>" \
+	"reimp=\par<b>Reimplemented from superclass.</b>"
 HTML_ALIGN_MEMBERS     = YES
 REFERENCED_BY_RELATION = NO
 REFERENCES_RELATION    = NO
