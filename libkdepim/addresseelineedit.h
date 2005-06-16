@@ -60,7 +60,7 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
 
     virtual void setFont( const QFont& );
 
-    static KConfig *config();
+    //static KConfig *config();
 
   public slots:
     void cursorAtEnd();
@@ -88,7 +88,7 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     virtual void dropEvent( QDropEvent *e );
     void doCompletion( bool ctrlT );
     virtual QPopupMenu *createPopupMenu();
-    
+
     /** return whether we are using sorted or weighted display */
     static KCompletion::CompOrder completionOrder();
 
@@ -129,7 +129,7 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     static KPIM::LdapSearch *s_LDAPSearch;
     static QString *s_LDAPText;
     static AddresseeLineEdit *s_LDAPLineEdit;
-    static KConfig *s_config;
+  //static KConfig *s_config;
 
     class AddresseeLineEditPrivate;
     AddresseeLineEditPrivate *d;

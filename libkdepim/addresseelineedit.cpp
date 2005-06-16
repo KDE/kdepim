@@ -61,7 +61,7 @@ QTimer* AddresseeLineEdit::s_LDAPTimer = 0L;
 KPIM::LdapSearch* AddresseeLineEdit::s_LDAPSearch = 0L;
 QString* AddresseeLineEdit::s_LDAPText = 0L;
 AddresseeLineEdit* AddresseeLineEdit::s_LDAPLineEdit = 0L;
-KConfig *AddresseeLineEdit::s_config = 0L;
+//KConfig *AddresseeLineEdit::s_config = 0L;
 
 static KStaticDeleter<KCompletion> completionDeleter;
 static KStaticDeleter<KPIM::CompletionItemsMap> completionItemsDeleter;
@@ -692,6 +692,8 @@ void AddresseeLineEdit::slotEditCompletionOrder()
   editor.exec();
 }
 
+#if 0
+// Use the one from KABC instead,
 KConfig* AddresseeLineEdit::config()
 {
   if ( !s_config )
@@ -700,6 +702,7 @@ KConfig* AddresseeLineEdit::config()
 
   return s_config;
 }
+#endif
 
 void KPIM::AddresseeLineEdit::slotIMAPCompletionOrderChanged()
 {
