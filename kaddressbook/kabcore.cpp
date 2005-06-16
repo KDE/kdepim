@@ -853,7 +853,7 @@ void KABCore::openLDAPDialog()
 
   if ( !mLdapSearchDialog ) {
     mLdapSearchDialog = new LDAPSearchDialog( mAddressBook, this, mWidget );
-    connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ), mSearchManager,
+    connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ), this,
             SLOT( addressBookChanged() ) );
     connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ),
             SLOT( setModified() ) );
