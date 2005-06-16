@@ -172,10 +172,6 @@ void LdapClient::cancelQuery()
 
 void LdapClient::slotData( KIO::Job*, const QByteArray& data )
 {
-#ifndef NDEBUG // don't create the QString
-//  QString str( data );
-//  kdDebug(5700) << "LdapClient: Got \"" << str << "\"\n";
-#endif
   parseLDIF( data );
 }
 
@@ -247,7 +243,7 @@ void LdapClient::finishCurrentObject()
 
 void LdapClient::parseLDIF( const QByteArray& data )
 {
-  //kdDebug(5300) << "LdapClient::parseLDIF( " << QCString(data) << " )" << endl;
+  //kdDebug(5300) << "LdapClient::parseLDIF( " << QCString(data.data(), data.size()+1) << " )" << endl;
   if ( data.size() ) {
     d->ldif.setLDIF( data );
   } else {
@@ -256,20 +252,20 @@ void LdapClient::parseLDIF( const QByteArray& data )
 
   LDIF::ParseVal ret;
   QString name;
-  QByteArray value;
   do {
     ret = d->ldif.nextItem();
     switch ( ret ) {
-      case LDIF::Item: 
+      case LDIF::Item:
         {
           name = d->ldif.attr();
-          value = d->ldif.val();
-          bool bFoundOC = name.lower() == "objectclass";
-          if( bFoundOC )
+          // Must make a copy! QByteArray is explicitely shared
+          QByteArray value = d->ldif.val().copy();
+          bool bIsObjectClass = name.lower() == "objectclass";
+          if( bIsObjectClass )
             mCurrentObject.objectClass = QString::fromUtf8( value, value.size() );
-          if( mReportObjectClass || !bFoundOC )
+          if( mReportObjectClass || !bIsObjectClass )
             mCurrentObject.attrs[ name ].append( value );
-          //kdDebug(5300) << "LdapClient::parseLDIF()" << name << " / " << value << endl;
+          //kdDebug(5300) << "LdapClient::parseLDIF(): name=" << name << " value=" << QCString(value.data(), value.size()+1) << endl;
         }
         break;
      case LDIF::EndEntry:
