@@ -375,7 +375,7 @@ KABC::Addressee::List
 AddressesDialog::allToAddressesNoDuplicates()  const
 {
   KABC::Addressee::List aList = allAddressee( d->toItem );
-  QStringList dList = toDistributionLists();
+  const QStringList dList = toDistributionLists();
   KABC::AddressBook* abook = KABC::StdAddressBook::self( true );
   for ( QStringList::ConstIterator it = dList.begin(); it != dList.end(); ++it ) {
     QValueList<KPIM::DistributionList::Entry> eList
