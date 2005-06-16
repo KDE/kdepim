@@ -34,6 +34,17 @@ GroupWiseSettingsWidget::GroupWiseSettingsWidget( QWidget * parent )
 void GroupWiseSettingsWidget::slotItemRenamed( QListViewItem * item, int )
 {
   kdDebug() << "GroupWiseSettingsWidget::slotItemRenamed() - " << item->text( 1 ) << " changed to " << item->text( 2 ) << endl;
+  m_dirtySettings.insert( item->text( 1 ), item->text( 2 ) );
+}
+
+QMap<QString, QString> GroupWiseSettingsWidget::dirtySettings()
+{
+  return m_dirtySettings;
+}
+
+void GroupWiseSettingsWidget::reset()
+{
+  m_dirtySettings.clear();
 }
 
 #include "groupwisesettingswidget.moc"

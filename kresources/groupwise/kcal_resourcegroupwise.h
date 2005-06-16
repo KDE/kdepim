@@ -65,7 +65,8 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     KABC::Lock *lock();
 
     bool userSettings( ngwt__Settings * &settings );
-  protected:
+    bool modifyUserSettings( QMap<QString, QString> & settings );
+ protected:
     void init();
 
     bool confirmSave();

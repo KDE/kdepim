@@ -135,7 +135,7 @@ class GroupwiseServer : public QObject
     void emitReadAddressBookProcessedSize( int );
 
     bool readUserSettings( ngwt__Settings *&settings );
-
+    bool modifyUserSettings( QMap<QString, QString> & );
   signals:
     void readAddressBookTotalSize( int );
     void readAddressBookProcessedSize( int );

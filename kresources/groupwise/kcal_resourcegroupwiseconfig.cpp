@@ -122,9 +122,10 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
 
     if ( s )
     {
-      KDialogBase * dialog = new KDialogBase( ::qt_cast<QWidget*>(parent() ), "gwsettingswidget", false, i18n( "GroupWise Settings" ), KDialogBase::Ok );
+      KDialogBase * dialog = new KDialogBase( ::qt_cast<QWidget*>(parent() ), "gwsettingswidget", true, i18n( "GroupWise Settings" ) );
+//       QVBoxLayout * layout = new QVBoxLayout( dialog );
       GroupWiseSettingsWidget * settingsWidget = new GroupWiseSettingsWidget( dialog );
-  
+      dialog->setMainWidget( settingsWidget );
       // populate dialog
       kdDebug() << "slotViewUserSettings() - settings are: " << endl;
       std::vector<class ngwt__SettingsGroup *>::const_iterator it;
@@ -160,7 +161,11 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
       }
   
       dialog->show();
-      dialog->exec();
+      if ( dialog->exec() == QDialog::Accepted )
+      {
+        QMap<QString, QString> settings = settingsWidget->dirtySettings();
+        mResource->modifyUserSettings( settings );
+      }
     }
       else 
         kdDebug() << "KCal::ResourceGroupwiseConfig::slotViewUserSettings() - NO SETTINGS" << endl;

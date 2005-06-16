@@ -33,7 +33,8 @@ class GroupWiseSettingsWidget : public GroupWiseSettingsWidgetBase
 Q_OBJECT
 public:
   GroupWiseSettingsWidget( QWidget * parent );
-
+  QMap<QString, QString> dirtySettings();
+  void reset();
 protected slots:
   /**
    * Add the renamed item to the list of dirty (changed) settings

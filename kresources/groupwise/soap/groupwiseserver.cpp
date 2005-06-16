@@ -1190,4 +1190,40 @@ bool GroupwiseServer::readUserSettings( ngwt__Settings *&returnedSettings )
   return true; /** FIXME return false if no settings fetched */
 }
 
+bool GroupwiseServer::modifyUserSettings( QMap<QString, QString> & settings  )
+{
+  kdDebug() << "GroupwiseServer::userSettings()" << endl;
+
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::userSettings(): no session." << endl;
+    return false;
+  }
+  _ngwm__modifySettingsRequest request;
+  _ngwm__modifySettingsResponse response;
+  request.settings = soap_new_ngwt__SettingsList( mSoap, -1 );
+  QMap<QString, QString>::Iterator it;
+  for ( it = settings.begin(); it != settings.end(); ++it )
+  {
+    kdDebug() << " creating Custom for " << it.key() << ", " << it.data() << endl;
+    ngwt__Custom * custom = soap_new_ngwt__Custom( mSoap, -1 );
+    custom->locked = 0;
+    custom->field.append( it.key().utf8() );
+    custom->value = soap_new_std__string( mSoap, -1 );
+    custom->value->append( it.data().utf8() );
+    request.settings->setting.push_back( custom );
+
+  }
+
+  mSoap->header->ngwt__session = mSession;
+
+  int result = soap_call___ngw__modifySettingsRequest( mSoap, mUrl.latin1(), 0, &request, &response );
+  if ( !checkResponse( result, response.status ) )
+  {
+    kdDebug() << "GroupwiseServer::modifyUserSettings() - checkResponse() failed" << endl;
+    return false;
+  }
+  kdError() << "GroupwiseServer::userSettings() - success" << endl;
+  return true;
+}
+
 #include "groupwiseserver.moc"

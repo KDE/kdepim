@@ -314,4 +314,26 @@ bool ResourceGroupwise::userSettings( ngwt__Settings *&settings )
   return success;
 }
 
+bool ResourceGroupwise::modifyUserSettings( QMap<QString, QString> & settings )
+{
+  kdDebug() << "ResourceGroupwise::modifyUserSettings()" << endl;
+
+  if ( settings.isEmpty() ) 
+  {
+   kdDebug() << "ResourceGroupwise::modifyUserSettings(): no changed settings" << endl;
+    return false;
+  }
+
+
+  GroupwiseServer server( prefs()->url(),
+                          prefs()->user(),
+                          prefs()->password(), this );
+
+  server.login();
+  // get these out again, once we discover their format.
+  bool success = server.modifyUserSettings( settings );
+  server.logout();
+  return success;
+}
+
 #include "kcal_resourcegroupwise.moc"
