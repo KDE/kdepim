@@ -106,8 +106,9 @@ class ContactListItem : public QListViewItem
     virtual QString text( int col ) const
     {
       // Look up a suitable attribute for column col
-      QString colName = listView()->columnText( col );
-      return join( mAttrs[ adrbookattr2ldap()[ colName ] ], ", " );
+      const QString colName = listView()->columnText( col );
+      const QString ldapAttrName = adrbookattr2ldap()[ colName ];
+      return join( mAttrs[ ldapAttrName ], ", " );
     }
 };
 
