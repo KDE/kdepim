@@ -1,7 +1,7 @@
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kresources/groupwise $(all_includes)
 
 #AM_CPPFLAGS = -DDEBUG
-KDE_CXXFLAGS = -Wno-non-virtual-dtor 
+KDE_CXXFLAGS = -Wno-non-virtual-dtor
 
 check_PROGRAMS = soapdebug
 
@@ -18,8 +18,6 @@ libgwsoap_la_SOURCES = contactconverter.cpp gwconverter.cpp incidenceconverter.c
                        soapC.cpp soapClient.cpp stdsoap2.cpp
 libgwsoap_la_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 libgwsoap_la_LIBADD	= -lkabc
-
-srcdir = .
 
 # the following rule does:
 # make a header file from the wsdl
