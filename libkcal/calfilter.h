@@ -100,8 +100,22 @@ class LIBKCAL_EXPORT CalFilter
     */
     QStringList categoryList() const;
 
+    /**
+      Set list of email addresses which are to be considered when finding 
+      incidences which the current user is not a participant of. This is
+      normally the list used by KOPrefs::thatIsMe() as well.
+    */
+    void setEmailList( const QStringList & );
+    /**
+      Return list of email addresses which are to be considered when finding 
+      incidences which the current user is not a participant of. This is
+      normally the list used by KOPrefs::thatIsMe() as well.
+      See related functions.
+    */
+    QStringList emailList() const;
+
     enum { HideRecurring = 1, HideCompleted = 2, ShowCategories = 4,
-           HideInactiveTodos = 8 };
+           HideInactiveTodos = 8, HideTodosWithoutAttendeeInEmailList = 16 };
 
     /**
       Set criteria, which have to be fulfilled by events passing the filter.
@@ -132,6 +146,7 @@ class LIBKCAL_EXPORT CalFilter
     bool mEnabled;
 
     QStringList mCategoryList;
+    QStringList mEmailList;
     int mCompletedTimeSpan;
 
     class Private;

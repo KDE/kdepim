@@ -118,6 +118,21 @@ bool CalFilter::filterIncidence(Incidence *incidence) const
           QDateTime::currentDateTime() < todo->dtStart() ||
           todo->isCompleted() ) )
       return false;
+
+    if ( mCriteria & HideTodosWithoutAttendeeInEmailList ) {
+      const Attendee::List &attendees = todo->attendees();
+      // no attendees, must be me only
+      if ( todo->attendees().isEmpty() )
+        return true;
+
+      Attendee::List::ConstIterator it;
+      for( it = attendees.begin(); it != attendees.end(); ++it ) {
+        if ( mEmailList.find( (*it)->email() ) != mEmailList.end() ) {
+          return true;
+        }
+      }
+      return false;
+    }
   }
 
 
@@ -184,6 +199,16 @@ void CalFilter::setCategoryList(const QStringList &categoryList)
 QStringList CalFilter::categoryList() const
 {
   return mCategoryList;
+}
+
+void CalFilter::setEmailList(const QStringList &emailList)
+{
+  mEmailList = emailList;
+}
+
+QStringList CalFilter::emailList() const
+{
+  return mEmailList;
 }
 
 void CalFilter::setCompletedTimeSpan( int timespan )
