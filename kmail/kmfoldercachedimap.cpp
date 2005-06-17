@@ -1307,6 +1307,10 @@ void KMFolderCachedImap::slotGetMessagesData(KIO::Job * job, const QByteArray & 
   KMAcctCachedImap::JobIterator it = mAccount->findJob(job);
   if ( it == mAccount->jobsEnd() ) { // Shouldn't happen
     kdDebug(5006) << "could not find job!?!?!" << endl;
+    // be sure to reset the sync state, if the listing was partial we would
+    // otherwise delete not-listed mail locally, and on the next sync on the server
+    // as well
+    mSyncState = SYNC_STATE_HANDLE_INBOX;
     serverSyncInternal(); /* HACK^W Fix: we should at least try to keep going */
     return;
   }
@@ -1399,6 +1403,7 @@ void KMFolderCachedImap::getMessagesResult( KMail::FolderJob *job, bool lastSet 
   mProgress += 10;
   if( job->error() ) { // error listing messages but the user chose to continue
     mContentState = imapNoInformation;
+    mSyncState = SYNC_STATE_HANDLE_INBOX; // be sure not to continue in this folder
   } else {
     if( lastSet ) { // always true here (this comes from online-imap...)
       mContentState = imapFinished;
