@@ -1427,7 +1427,8 @@ void KNComposer::slotSubjectChanged(const QString &t)
   QString subject = t;
   subject.replace( '\n', ' ' );
   subject.replace( '\r', ' ' );
-  v_iew->s_ubject->setText( subject );
+  if ( subject != t ) // setText() sets the cursor to the end
+    v_iew->s_ubject->setText( subject );
   // update caption
   if( !subject.isEmpty() )
     setCaption( subject );
