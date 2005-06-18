@@ -22,7 +22,7 @@
 #include "utilities.h"
 
 
-KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
+KNSourceViewWindow::KNSourceViewWindow( const QString &text )
   : KTextBrowser(0)
 {
   setWFlags(WType_TopLevel | WDestructiveClose);
@@ -30,24 +30,26 @@ KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
   accel->connectItem( accel->insertItem( Qt::Key_Escape ), this , SLOT( close() ));
   KNConfig::Appearance *app=knGlobals.configManager()->appearance();
 
+  setTextFormat( PlainText );
+
   setCaption(kapp->makeStdCaption(i18n("Article Source")));
   setPaper( QBrush(app->backgroundColor()) );
+  setFont( app->articleFixedFont() );
   setColor( app->textColor() );
+  setWordWrap( KTextBrowser::NoWrap );
 
-  QStyleSheetItem *style;
-  style=new QStyleSheetItem(styleSheet(), "txt");
-  style->setDisplayMode(QStyleSheetItem::DisplayBlock);
-  style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
-  style->setFontFamily(app->articleFixedFont().family());
-  style->setFontSize(app->articleFixedFont().pointSize());
-  style->setFontUnderline(app->articleFixedFont().underline());
-  style->setFontWeight(app->articleFixedFont().weight());
-  style->setFontItalic(app->articleFixedFont().italic());
-  style->setColor( app->textColor() );
-
-  setText(QString("<qt><txt>%1</txt></qt>").arg(htmlCode));
+  setText( text );
   KNHelper::restoreWindowSize("sourceWindow", this, QSize(500,300));
   show();
+}
+
+
+void KNSourceViewWindow::setPalette( const QPalette &pal )
+{
+  QPalette p = pal;
+  p.setColor( QColorGroup::Text, knGlobals.configManager()->appearance()->textColor() );
+  p.setColor( QColorGroup::Background, knGlobals.configManager()->appearance()->backgroundColor() );
+  KTextBrowser::setPalette( p );
 }
 
 

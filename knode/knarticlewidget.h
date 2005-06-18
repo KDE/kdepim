@@ -24,8 +24,9 @@ class KNSourceViewWindow : public KTextBrowser {
   Q_OBJECT
 
   public:
-    KNSourceViewWindow(const QString &htmlCode);
+    KNSourceViewWindow( const QString &text );
     ~KNSourceViewWindow();
+    virtual void setPalette( const QPalette &pal );
 
 };
 

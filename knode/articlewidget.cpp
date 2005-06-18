@@ -37,9 +37,10 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmdcodec.h>
+#include <kmessagebox.h>
 #include <kmimetype.h>
 #include <krun.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <ktempfile.h>
 #include <kurl.h>
 
@@ -236,6 +237,7 @@ void ArticleWidget::enableActions()
   mCharsetSelect->setEnabled( true );
   mCharsetSelectKeyb->setEnabled( true );
   mFixedFontToggle->setEnabled( true );
+  mFancyToggle->setEnabled( true );
 
   // only valid for remote articles
   bool enabled = ( mArticle->type() == KMime::Base::ATremote );
@@ -268,6 +270,7 @@ void ArticleWidget::disableActions()
   mCharsetSelect->setEnabled( false );
   mCharsetSelectKeyb->setEnabled( false );
   mFixedFontToggle->setEnabled( false );
+  mFancyToggle->setEnabled( false );
 }
 
 
@@ -1010,16 +1013,11 @@ void ArticleWidget::processJob( KNJobData * job )
   if ( job->type() == KNJobData::JTfetchSource ) {
     KNRemoteArticle *a = static_cast<KNRemoteArticle*>( job->data() );
     if ( !job->canceled() ) {
-      QString html;
-      if ( !job->success() ) {
-        html = i18n("<b><font size=+1 color=red>An error occurred.</font></b><hr><br>");
-        html += job->errorString();
-      } else {
-        html= QString("%1<br>%2")
-          .arg( toHtmlString( a->head(), None ) )
-          .arg( toHtmlString( a->body(), None ) );
-      }
-      new KNSourceViewWindow( html );
+      if ( !job->success() )
+        KMessageBox::error( this, i18n("An error occurred while downloading the article source:\n")
+          .arg( job->errorString() ) );
+      else
+        new KNSourceViewWindow( a->head() + "\n" + a->body() );
     }
     delete job;
     delete a;
@@ -1234,7 +1232,7 @@ void ArticleWidget::slotViewSource()
 {
   // local article can be shown directly
   if ( mArticle && mArticle->type() == KMime::Base::ATlocal && mArticle->hasContent() ) {
-    new KNSourceViewWindow( toHtmlString( mArticle->encodedContent( false ), None ) );
+    new KNSourceViewWindow( mArticle->encodedContent( false ) );
   } else {
     // download remote article
     if ( mArticle && mArticle->type() == KMime::Base::ATremote ) {
