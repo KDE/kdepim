@@ -1,3 +1,4 @@
+KDE_OPTIONS=nofinal
 SUBDIRS = cfgc interfaces tests
 
 INCLUDES = -I$(top_srcdir) $(all_includes)
