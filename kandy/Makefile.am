@@ -3,4 +3,5 @@
 
 SUBDIRS = src profiles
 
+DOXYGEN_SET_RECURSIVE = YES
 include $(top_srcdir)/doc/api/Doxyfile.am

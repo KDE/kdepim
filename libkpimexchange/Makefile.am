@@ -19,4 +19,5 @@ dummy.cpp:
 messages:
 	$(XGETTEXT) core/*.cpp -o $(podir)/libkpimexchange.pot
 
+DOXYGEN_SET_RECURSIVE = YES
 include $(top_srcdir)/doc/api/Doxyfile.am
