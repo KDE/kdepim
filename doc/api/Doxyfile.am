@@ -1,66 +1,28 @@
 ## generate API documentation with doxygen
 apidox-am-yes:
+	cd $(top_builddir) && sh $(top_srcdir)/admin/Doxygen/doxygen.sh \
+		--recurse --no-modulename \
+		$(top_srcdir) $(subdir)
+
+apidox-am-toplevel-yes:
+	cd $(top_builddir) && sh $(top_srcdir)/admin/Doxygen/doxygen.sh \
+		--no-modulename \
+		$(top_srcdir)
+
+## Don't generate API documentation without doxygen
+apidox-am-no:
+
+apidox-am-toplevel-no:
+
+
+apidox:
 	@if test "$(subdir)" != "."; then \
-		$(mkinstalldirs) $(top_builddir)/apidocs/$(subdir) ;\
-		dox_file="$(top_srcdir)/doc/api/Doxyfile.pim" ; \
-		test -f "$$dox_file" || dox_file="$(top_srcdir)/admin/Doxyfile.global" ; \
-		cp "$$dox_file" Doxyfile ; \
-		dox_header="$(top_srcdir)/doc/api/header.html" ; \
-		dox_footer="$(top_srcdir)/doc/api/footer.html" ; \
-		dox_css="$(top_srcdir)/doc/api/doxygen.css" ; \
-		test -f "$$dox_header" || dox_header="$(top_srcdir)/admin/Dox-header.html" ; \
-		test -f "$$dox_footer" || dox_footer="$(top_srcdir)/admin/Dox-footer.html" ; \
-		test -f "$$dox_css" || dox_css="$(top_srcdir)/admin/doxygen.css" ; \
-		echo "PROJECT_NAME           = \"$(subdir)\"" >> Doxyfile; \
-		echo "PROJECT_NUMBER         = \"Version $(VERSION)\"" >> Doxyfile; \
-		echo "INPUT                  = $(srcdir)" >> Doxyfile; \
-		echo "IMAGE_PATH             = $(top_srcdir)/doc/api" >> Doxyfile ;\
-		echo "OUTPUT_DIRECTORY       = $(top_builddir)/apidocs" >> Doxyfile; \
-		echo "HTML_OUTPUT            = $(subdir)/html" >> Doxyfile; \
-		echo "HTML_HEADER            = $$dox_header" >> Doxyfile; \
-		echo "HTML_FOOTER            = $$dox_footer" >> Doxyfile; \
-		echo "HTML_STYLESHEET        = $$dox_css" >> Doxyfile; \
-		echo "GENERATE_TAGFILE       = $(top_builddir)/apidocs/$(subdir)/`basename $(subdir)`.tag" >> Doxyfile ;\
-		if test -n "$(DOXYGEN_EXCLUDE)"; then \
-			patterns= ;\
-			dirs= ;\
-			for item in `echo "$(DOXYGEN_EXCLUDE)"`; do \
-				if test -d "$(srcdir)/$$item"; then \
-					dirs="$$dirs $(srcdir)/$$item/" ;\
-				else \
-					patterns="$$patterns $$item" ;\
-				fi ;\
-			done ;\
-			echo "EXCLUDE_PATTERNS      += $$patterns" >> Doxyfile; \
-			echo "EXCLUDE               += $$dirs" >> Doxyfile ;\
-		fi ;\
-		echo "TAGFILES = \\" >> Doxyfile; \
-		tags='$(DOXYGEN_REFERENCES) qt'; for tag in $$tags; do \
-			tagsubdir=`dirname $$tag` ; tag=`basename $$tag` ; \
-			tagpath= ;\
-			path="$(top_builddir)/../$$tagsubdir/$$tag" ;\
-			if test -f $(top_builddir)/apidocs/$$tagsubdir/$$tag/$$tag.tag; then \
-				tagpath="$(top_builddir)/apidocs/$$tagsubdir/$$tag/$$tag.tag" ;\
-			else \
-				tagpath=`ls -1 $(kde_htmldir)/en/*-apidocs/$$tagsubdir/$$tag/$$tag.tag 2> /dev/null` ;\
-				if test -n "$$tagpath"; then \
-					path=`echo $$tagpath | sed -e "s,.*/\([^/]*-apidocs\)/$$tagsubdir/$$tag/$$tag.tag,$(top_builddir)/../../\1/$$tag,"` ;\
-				fi ;\
-			fi ;\
-			if test "$$tag" = qt; then \
-				echo "	$$tagpath=$(QTDOCDIR)" >> Doxyfile ;\
-			else if test -n "$$tagpath"; then \
-				echo "$$tagpath=$$path/html \\" >> Doxyfile ;\
-				fi ;\
-			fi ;\
-		done ;\
-		$(DOXYGEN) Doxyfile ;\
-		dox_index="$(top_srcdir)/doc/api/doxyndex.sh" ; \
-		test -f "$$dox_index" || dox_index="$(top_srcdir)/admin/Doxyndex.sh" ; \
-		sh "$$dox_index" "$(top_builddir)/apidocs" "$(subdir)/html" ; \
+		$(MAKE) apidox-am-@KDE_HAS_DOXYGEN@ ;\
+	else \
+		$(MAKE) apidox-am-toplevel-@KDE_HAS_DOXYGEN@ ;\
 	fi
 
-apidox-am-no:
+
 
 install-data-local: install-apidox
 
@@ -108,30 +70,6 @@ uninstall-apidox:
 		fi\
 	fi
 
-apidox:
-	@if test "$(subdir)" != "."; then \
-		$(MAKE) apidox-am-@KDE_HAS_DOXYGEN@ ;\
-	else \
-		$(MAKE) apidox-am-toplevel-@KDE_HAS_DOXYGEN@ ;\
-	fi
-	@set fnord $(MAKEFLAGS); amf=$$2; if test -n '$(SUBDIRS)'; then \
-	    list='$(SUBDIRS)'; \
-	    for subdir in $$list; do \
-		if grep '^include .*Doxyfile.am' $(srcdir)/$$subdir/Makefile.am > /dev/null ; then \
-		echo "Making apidox in $$subdir"; \
-		if test "$$subdir" != "."; then \
-			(cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) GENERATE_FLAG=no apidox) || exit 1; \
-		fi ; fi ;\
-	    done; \
-	    for subdir in $$list; do \
-		if grep '^include .*Doxyfile.am' $(srcdir)/$$subdir/Makefile.am > /dev/null ; then \
-		echo "Making apidox in $$subdir"; \
-		if test "$$subdir" != "."; then \
-			(cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) GENERATE_FLAG=yes apidox) || exit 1; \
-		fi ; fi ;\
-	    done; \
-	fi
-
 install-apidox-recurse: install-apidox
 	@set fnord $(MAKEFLAGS); amf=$$2; if test -n '$(SUBDIRS)'; then \
 	    list='$(SUBDIRS)'; \
@@ -145,60 +83,8 @@ install-apidox-recurse: install-apidox
 	fi
 
 
-apidox-am-toplevel-no:
-apidox-am-toplevel-yes:
-	@echo "*** Creating API documentation main page"; \
-	cp $(top_srcdir)/admin/Doxyfile.global Doxyfile; \
-	dox_header="$(top_srcdir)/doc/api/header.html" ; \
-	dox_footer="$(top_srcdir)/doc/api/footer.html" ; \
-	dox_css="$(top_srcdir)/doc/api/doxygen.css" ; \
-	test -f "$$dox_header" || dox_header="$(top_srcdir)/admin/Dox-mainheader.html" ; \
-	test -f "$$dox_footer" || dox_footer="$(top_srcdir)/admin/Dox-mainfooter.html" ; \
-	test -f "$$dox_css" || dox_css="$(top_srcdir)/admin/doxygen.css" ; \
-	echo "PROJECT_NAME           = \"$(DOXYGEN_PROJECT_NAME)\"" >> Doxyfile ; \
-	echo "PROJECT_NUMBER         = \"$(DOXYGEN_PROJECT_NUMBER)\"" >> Doxyfile ; \
-	echo "INPUT                  = $(top_srcdir)" >> Doxyfile ; \
-	echo "OUTPUT_DIRECTORY       = $(top_builddir)/apidocs" >> Doxyfile ; \
-	echo "FILE_PATTERNS          = *.dox" >> Doxyfile ; \
-	echo "RECURSIVE              = NO" >> Doxyfile ; \
-	echo "ALPHABETICAL_INDEX     = NO" >> Doxyfile ; \
-	echo "HTML_OUTPUT            = ." >> Doxyfile ; \
-	echo "HTML_HEADER            = $$dox_header" >> Doxyfile ; \
-	echo "HTML_FOOTER            = $$dox_footer" >> Doxyfile ; \
-	echo "HTML_STYLESHEET        = $$dox_css" >> Doxyfile ; \
-	$(mkinstalldirs) $(top_builddir)/apidocs ; \
-	rm -f $(top_builddir)/apidocs/common ; \
-	if test -d $(top_srcdir)/doc/common; then \
-	   common_dir=`cd $(top_srcdir)/doc/common && pwd` ;\
-	else \
-	   common_dir=$(kde_libs_htmldir)/en/common ;\
-	fi ;\
-	$(LN_S) $$common_dir $(top_builddir)/apidocs/common ;\
-	doxygen Doxyfile; \
-	rm -f Doxyfile
-	@true > $(top_builddir)/apidocs/subdirs
-	@$(MAKE) apidox-am-tree PARENT="" PARENTINDENT=""
-	@sort $(top_builddir)/apidocs/subdirs | sed -e 's+<!--.*-->++' > $(top_builddir)/apidocs/subdirs_ && mv $(top_builddir)/apidocs/subdirs_ $(top_builddir)/apidocs/subdirs
-	@dox_index="$(top_srcdir)/doc/api/doxyndex.sh" ; \
-	test -f "$$dox_index" || dox_index="$(top_srcdir)/admin/Doxyndex.sh" ; \
-	sh "$$dox_index" "$(top_builddir)/apidocs" .
 
-
-apidox-am-tree:
-	@if test -n '$(SUBDIRS)' ; then \
-		list='$(SUBDIRS)' ; \
-		for subdir in $$list ; do \
-			if test "x$$subdir" != "x."; then \
-				if grep '^include .*Doxyfile.am' $(srcdir)/$$subdir/Makefile.am > /dev/null ; then \
-					echo "Making apidox index in $$subdir"; \
-					echo "<li><!-- $(PARENT)/$$subdir -->$(PARENTINDENT)<a href=\"@topdir@$(PARENT)/$$subdir/html/index.html\">$$subdir</a></li>" >> $(top_builddir)/apidocs/subdirs ; \
-					(cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) apidox-am-tree PARENT="$(PARENT)/$$subdir" PARENTINDENT='\&nbsp;\&nbsp;$(PARENTINDENT)' ) || exit 1; \
-				fi ; \
-			fi ; \
-		done ; \
-	fi
-
-.PHONY: apidox-am-yes apidox-am-no install-data-local install-apidox install-apidox uninstall-local uninstall-apidox uninstall-apidox apidox apidox-am-toplevel-no apidox-am-toplevel-yes apidox-am-tree
+.PHONY: apidox-am-yes apidox-am-no install-data-local install-apidox install-apidox uninstall-local uninstall-apidox uninstall-apidox apidox apidox-am-toplevel-no apidox-am-toplevel-yes
 
 
 # Local Variables:
