@@ -3165,7 +3165,7 @@ tcp_connect(struct soap *soap, const char *endpoint, const char *host, int port)
       { struct timeval timeout;
 #if defined(SOCKLEN_T)
         SOCKLEN_T n = sizeof(struct sockaddr_in);
-#elif defined(__socklen_t_defined) || defined(_SOCKLEN_T) || defined(CYGWIN) || defined(FREEBSD)
+#elif defined(__socklen_t_defined) || defined(_SOCKLEN_T) || defined(CYGWIN) || defined(__FreeBSD__)
         socklen_t n = sizeof(struct sockaddr_in);
 #elif defined(WIN32) || defined(__APPLE__) || defined(HP_UX) || defined(SUN_OS) || defined(OPENSERVER) || defined(TRU64) || defined(VXWORKS)
         int n = sizeof(struct sockaddr_in);
@@ -3605,7 +3605,7 @@ tcp_accept(struct soap *soap, int s, struct sockaddr *a, int *n)
 { int fd;
 #if defined(SOCKLEN_T)
   fd = (int)accept((SOAP_SOCKET)s, a, (SOCKLEN_T*)n);
-#elif defined(__socklen_t_defined) || defined(_SOCKLEN_T) || defined(CYGWIN) || defined(FREEBSD)
+#elif defined(__socklen_t_defined) || defined(_SOCKLEN_T) || defined(CYGWIN) || defined(__FreeBSD__)
   fd = (int)accept((SOAP_SOCKET)s, a, (socklen_t*)n);
 #elif defined(WIN32) || defined(__APPLE__) || defined(HP_UX) || defined(SUN_OS) || defined(OPENSERVER) || defined(TRU64) || defined(VXWORKS)
   fd = (int)accept((SOAP_SOCKET)s, a, n);
