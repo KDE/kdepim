@@ -68,13 +68,23 @@ class AddressBook
   public:
     typedef QValueList<AddressBook> List;
 
-    AddressBook() : isPersonal( false ), isFrequentContacts( false ) {}
+    AddressBook() : isPersonal( false ), isFrequentContacts( false ), isSystemAddressBook( false ) {}
 
     QString id;
     QString name;
     QString description;
     bool isPersonal;
     bool isFrequentContacts;
+    bool isSystemAddressBook;
+};
+
+class DeltaInfo
+{
+  public:
+    long count;
+    long firstSequence;
+    long lastSequence;
+    long lastTimePORebuild;
 };
 }
 
@@ -110,6 +120,8 @@ class GroupwiseServer : public QObject
 
     bool readAddressBooksSynchronous( const QStringList &addrBookIds,
       KABC::ResourceCached * );
+    bool updateAddressBooks( const QStringList &addrBookIds, KABC::ResourceCached *,
+      const unsigned int firstSequenceNumber, const unsigned int lastSequenceNumber );
 
     bool insertAddressee( const QString &addrBookId, KABC::Addressee& );
     bool changeAddressee( const KABC::Addressee& );
@@ -121,7 +133,8 @@ class GroupwiseServer : public QObject
     bool dumpData();
     void dumpFolderList();
 
-    bool getDelta();
+//     bool getDelta();
+    GroupWise::DeltaInfo getDeltaInfo( const QStringList & addressBookIds );
 
     bool getCategoryList();
 

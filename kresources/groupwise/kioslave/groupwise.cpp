@@ -106,7 +106,10 @@ void Groupwise::get( const KURL &url )
   } else if ( path.contains( "/calendar" ) ) {
     getCalendar( url );
   } else if ( path.contains( "/addressbook" ) ) {
-    getAddressbook( url );
+    if ( url.query().contains( "update=true" ) )
+      updateAddressbook( url );
+    else
+      getAddressbook( url );
   } else {
     QString error = i18n("Unknown path. Known paths are '/freebusy/', "
       "'/calendar/' and '/addressbook/'.");
@@ -314,6 +317,76 @@ void Groupwise::getAddressbook( const KURL &url )
 
     data( vcard.utf8() );
 
+    finished();
+  }
+}
+
+void Groupwise::updateAddressbook( const KURL &url )
+{
+  QString u = soapUrl( url );
+
+  QString user = url.user();
+  QString pass = url.pass();
+
+  debugMessage( "update AB URL: " + u );
+  debugMessage( "update AB User: " + user );
+  debugMessage( "update AB Password: " + pass );
+
+  QString query = url.query();
+
+  unsigned int firstSequenceNumber = 0;
+  unsigned int lastSequenceNumber = 0;
+
+  if ( query.isEmpty() || query == "?" ) {
+    errorMessage( i18n("No addressbook IDs given.") );
+  } else {
+    QStringList ids;
+
+    query = query.mid( 1 );
+    QStringList queryItems = QStringList::split( "&", query );
+    QStringList::ConstIterator it;
+    for( it = queryItems.begin(); it != queryItems.end(); ++it ) {
+      QStringList item = QStringList::split( "=", (*it) );
+      if ( item.count() == 2 && item[ 0 ] == "addressbookid" ) {
+        ids.append( item[ 1 ] );
+      }
+      if ( item.count() == 2 && item[ 0 ] == "firstSeqNo" )
+        firstSequenceNumber = item[ 1 ].toInt();
+      if ( item.count() == 2 && item[ 0 ] == "lastSeqNo" )
+        lastSequenceNumber = item[ 1 ].toInt();
+    }
+    
+    debugMessage( "update IDs: " + ids.join( "," ) );
+
+    KABC::ResourceMemory resource;
+
+    GroupwiseServer server( u, user, pass, 0 );
+
+    kdDebug() << "Login" << endl;
+    if ( !server.login() ) {
+      errorMessage( i18n("Unable to login.") );
+    } else {
+      kdDebug() << "Update Addressbook" << endl;
+      if ( !server.updateAddressBooks( ids, &resource, firstSequenceNumber, lastSequenceNumber ) ) {
+        errorMessage( i18n("Unable to update addressbook data.") );
+      }
+      kdDebug() << "Logout" << endl;
+      server.logout();
+    }
+/*
+    KABC::Addressee::List addressees;
+    KABC::Resource::Iterator it2;
+    for( it2 = resource.begin(); it2 != resource.end(); ++it2 ) {
+      kdDebug() << "ADDRESSEE: " << (*it2).fullEmail() << endl;
+      addressees.append( *it2 );
+    }
+
+    KABC::VCardConverter conv;
+
+    QString vcard = conv.createVCards( addressees );
+
+    data( vcard.utf8() );
+*/
     finished();
   }
 }

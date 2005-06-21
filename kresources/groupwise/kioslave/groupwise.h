@@ -39,6 +39,7 @@ class Groupwise : public QObject, public KIO::SlaveBase
     void getFreeBusy( const KURL &url );
     void getCalendar( const KURL &url );
     void getAddressbook( const KURL &url );
+    void updateAddressbook( const KURL &url );
 
     QString soapUrl( const KURL &url );
 

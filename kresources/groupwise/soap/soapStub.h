@@ -558,7 +558,7 @@ public:
 class SOAP_CMAC ngwt__DeltaInfo
 {
 public:
-	unsigned long *count;	/* optional element */
+	int *count;	/* optional element */
 	unsigned long *firstSequence;	/* optional element */
 	unsigned long *lastSequence;	/* optional element */
 	unsigned long lastTimePORebuild;	/* required element */

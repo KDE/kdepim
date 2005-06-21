@@ -303,15 +303,41 @@ void UpdateAddressBooksJob::setResource( KABC::ResourceCached *resource )
   mResource = resource;
 }
 
+void UpdateAddressBooksJob::setFirstSequenceNumber( const int firstSeqNo )
+{
+  mFirstSequenceNumber = firstSeqNo;
+}
+
+void UpdateAddressBooksJob::setLastSequenceNumber( const int lastSeqNo )
+{
+  mLastSequenceNumber = lastSeqNo;
+}
+
 void UpdateAddressBooksJob::run()
 {
   kdDebug() << "UpdateAddressBooksJob::run()" << endl;
 
   mSoap->header->ngwt__session = mSession;
+  _ngwm__getDeltasRequest request;
+  _ngwm__getDeltasResponse response;
 
-}
+  GWConverter conv( mSoap );
+  request.container.append( mAddressBookIds.first().latin1() );
+  request.deltaInfo = soap_new_ngwt__DeltaInfo( mSoap, -1 );
+/*  request.deltaInfo->count = (int*)soap_malloc( mSoap, sizeof(int) );
+  *( request.deltaInfo->count ) = -1;*/
+  request.deltaInfo->count = 0;
+  request.deltaInfo->lastTimePORebuild = 0;
+  request.deltaInfo->firstSequence = (unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );
+  *(request.deltaInfo->firstSequence) = mFirstSequenceNumber;
+  request.deltaInfo->lastSequence = (unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );
+  *(request.deltaInfo->lastSequence) = mLastSequenceNumber;
+ request.view = soap_new_std__string( mSoap, -1 );
+  request.view->append("id name version modified changes");
+  soap_call___ngw__getDeltasRequest( mSoap, mUrl.latin1(),
+                                              NULL, &request, &response);
+  soap_print_fault( mSoap, stderr );
 
-void UpdateAddressBooksJob::updateAddressBook( std::string& )
-{
-
+//   if ( addressBookListResponse.books ) {
+//     std::vector<class ngwt__AddressBook * > *addressBooks = &addressBookListResponse.books->book;
 }

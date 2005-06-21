@@ -47,7 +47,7 @@
 #include "soapGroupWiseBindingProxy.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <vector>
+#include <stlvector.h>
 #include <string>
 
 #include "groupwiseserver.h"
@@ -582,6 +582,15 @@ void GroupwiseServer::dumpItem( ngwt__Item *i )
 bool GroupwiseServer::logout()
 {
   // FIXME: Send logoutRequest
+  mSoap->header->ngwt__session = mSession;
+  _ngwm__logoutRequest request;
+  _ngwm__logoutResponse response;
+
+  int result = soap_call___ngw__logoutRequest( mSoap, mUrl.latin1(),
+                                               NULL, &request, &response);
+  soap_print_fault( mSoap, stderr );
+  if (!checkResponse( result, response.status ) )
+    kdDebug() << "error while logging out" << endl;
 
   soap_end( mSoap );
   soap_done( mSoap );
@@ -592,25 +601,42 @@ bool GroupwiseServer::logout()
   return true;
 }
 
-bool GroupwiseServer::getDelta()
+GroupWise::DeltaInfo GroupwiseServer::getDeltaInfo( const QStringList & addressBookIds )
 {
-#if 0
+  GroupWise::DeltaInfo info;
+  info.count = 0;
+  info.firstSequence = 0;
+  info.lastSequence = 0;
+  info.lastTimePORebuild = 0;
+
   if ( mSession.empty() ) {
     kdError() << "GroupwiseServer::getDelta(): no session." << endl;
-    return false;
+    return info;
   }
 
-  _ngwm__getDeltasRequest deltasRequest;
-  deltasRequest.deltaInfo = 0;
-  deltasRequest.view = 0;
-
   mSoap->header->ngwt__session = mSession;
-  _ngwm__getDeltasResponse deltasResponse;
-  int result = soap_call___ngwm__getDeltasRequest( mSoap, mUrl.latin1(), 0,
-    &deltasRequest, &deltasResponse );
-  return checkResponse( result, deltasResponse.status );
-#endif
-  return false;
+  _ngwm__getDeltaInfoRequest request;
+  _ngwm__getDeltaInfoResponse response;
+
+  GWConverter conv( mSoap );
+  request.container.append( addressBookIds.first().latin1() );
+
+  int result = soap_call___ngw__getDeltaInfoRequest( mSoap, mUrl.latin1(),
+                                              NULL, &request, &response);
+  soap_print_fault( mSoap, stderr );
+  if (!checkResponse( result, response.status ) )
+    return info;
+
+  if ( response.deltaInfo->count )
+    info.count = *( response.deltaInfo->count );
+  if ( response.deltaInfo->firstSequence )
+    info.firstSequence = *( response.deltaInfo->firstSequence );
+  if ( response.deltaInfo->lastSequence )
+    info.lastSequence = *( response.deltaInfo->lastSequence );
+  if ( response.deltaInfo->lastTimePORebuild )
+    info.lastTimePORebuild = response.deltaInfo->lastTimePORebuild;
+
+  return info;
 }
 
 GroupWise::AddressBook::List GroupwiseServer::addressBookList()
@@ -662,6 +688,25 @@ bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookId
     mUrl, mSession );
   job->setAddressBookIds( addrBookIds );
   job->setResource( resource );
+
+  job->run();
+
+  return true;
+}
+
+bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds,
+  KABC::ResourceCached *resource, const unsigned int firstSequenceNumber, const unsigned int lastSequenceNumber )
+{
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::updateAddressBooks(): no session." << endl;
+    return false;
+  }
+
+  UpdateAddressBooksJob * job = new UpdateAddressBooksJob( this, mSoap, mUrl, mSession );
+  job->setAddressBookIds( addrBookIds );
+  job->setResource( resource );
+  job->setFirstSequenceNumber( firstSequenceNumber );
+  job->setLastSequenceNumber( lastSequenceNumber );
 
   job->run();
 

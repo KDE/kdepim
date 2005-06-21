@@ -28,6 +28,8 @@ libgwsoap_la_LIBADD	= -lkabc
 # rename any 'new' method decls
 # rename any 'new' method invocations
 
+srcdir = .
+
 stubs: groupwise.wsdl
 	wsdl2h -e -o $(srcdir)/groupwise.h $(srcdir)/groupwise.wsdl -t $(srcdir)/typemap.dat
 	cd $(srcdir); ./fixup_groupwise.h.pl --inplace

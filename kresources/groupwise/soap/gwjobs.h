@@ -104,6 +104,17 @@ class UpdateAddressBooksJob : public GWJob
     // we need the resource here for doing uid mapping
     void setResource( KABC::ResourceCached * );
 
+    /**
+     * set the first sequence number we have in the local copy of the System Address Book
+     */
+    void setFirstSequenceNumber( const int firstSeqNo );
+
+    /**
+     * set the last sequence number we have in the local copy of the System Address Book
+     */
+    void setLastSequenceNumber( const int lastSeqNo );
+
+
     void run();
   protected:
     void updateAddressBook( std::string& );
@@ -113,6 +124,8 @@ class UpdateAddressBooksJob : public GWJob
     QStringList mAddressBookIds;
     KABC::ResourceCached *mResource;
     int mProgress;
+    int mFirstSequenceNumber; // first and last sequence numbers define the current state of the system addressbook
+    int mLastSequenceNumber;  // and are used to determine which deltas to download
 };
 
 #endif

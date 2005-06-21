@@ -8,7 +8,7 @@
 
 SOAP_BEGIN_NAMESPACE(soap)
 
-SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.1 2005-06-10 15:15:43 GMT")
+SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.1 2005-06-20 15:02:27 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -1257,8 +1257,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__SharedFolderNotification(soap, NULL, NULL, "ngwt:SharedFolderNotification");
 	case SOAP_TYPE_PointerTongwt__MessagePart:
 		return soap_in_PointerTongwt__MessagePart(soap, NULL, NULL, "ngwt:MessagePart");
-	case SOAP_TYPE_PointerToint:
-		return soap_in_PointerToint(soap, NULL, NULL, "xsd:int");
 	case SOAP_TYPE_PointerTongwt__Item:
 		return soap_in_PointerTongwt__Item(soap, NULL, NULL, "ngwt:Item");
 	case SOAP_TYPE_PointerTongwt__ItemChanges:
@@ -1289,6 +1287,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__RecipientList(soap, NULL, NULL, "ngwt:RecipientList");
 	case SOAP_TYPE_PointerTongwt__From:
 		return soap_in_PointerTongwt__From(soap, NULL, NULL, "ngwt:From");
+	case SOAP_TYPE_PointerToint:
+		return soap_in_PointerToint(soap, NULL, NULL, "xsd:int");
 	case SOAP_TYPE_PointerTongwt__DayOfWeek:
 		return soap_in_PointerTongwt__DayOfWeek(soap, NULL, NULL, "ngwt:DayOfWeek");
 	case SOAP_TYPE_PointerTongwt__Custom:
@@ -3833,8 +3833,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__SharedFolderNotification(soap, tag, id, (ngwt__SharedFolderNotification *const*)ptr, "ngwt:SharedFolderNotification");
 	case SOAP_TYPE_PointerTongwt__MessagePart:
 		return soap_out_PointerTongwt__MessagePart(soap, tag, id, (ngwt__MessagePart *const*)ptr, "ngwt:MessagePart");
-	case SOAP_TYPE_PointerToint:
-		return soap_out_PointerToint(soap, tag, id, (int *const*)ptr, "xsd:int");
 	case SOAP_TYPE_PointerTongwt__Item:
 		return soap_out_PointerTongwt__Item(soap, tag, id, (ngwt__Item *const*)ptr, "ngwt:Item");
 	case SOAP_TYPE_PointerTongwt__ItemChanges:
@@ -3865,6 +3863,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__RecipientList(soap, tag, id, (ngwt__RecipientList *const*)ptr, "ngwt:RecipientList");
 	case SOAP_TYPE_PointerTongwt__From:
 		return soap_out_PointerTongwt__From(soap, tag, id, (ngwt__From *const*)ptr, "ngwt:From");
+	case SOAP_TYPE_PointerToint:
+		return soap_out_PointerToint(soap, tag, id, (int *const*)ptr, "xsd:int");
 	case SOAP_TYPE_PointerTongwt__DayOfWeek:
 		return soap_out_PointerTongwt__DayOfWeek(soap, tag, id, (ngwt__DayOfWeek *const*)ptr, "ngwt:DayOfWeek");
 	case SOAP_TYPE_PointerTongwt__Custom:
@@ -5651,9 +5651,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTongwt__MessagePart:
 		soap_serialize_PointerTongwt__MessagePart(soap, (ngwt__MessagePart *const*)ptr);
 		break;
-	case SOAP_TYPE_PointerToint:
-		soap_serialize_PointerToint(soap, (int *const*)ptr);
-		break;
 	case SOAP_TYPE_PointerTongwt__Item:
 		soap_serialize_PointerTongwt__Item(soap, (ngwt__Item *const*)ptr);
 		break;
@@ -5698,6 +5695,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTongwt__From:
 		soap_serialize_PointerTongwt__From(soap, (ngwt__From *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToint:
+		soap_serialize_PointerToint(soap, (int *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__DayOfWeek:
 		soap_serialize_PointerTongwt__DayOfWeek(soap, (ngwt__DayOfWeek *const*)ptr);
@@ -49584,8 +49584,8 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Distribution(struct soap *soap, int s
 void ngwt__DeltaInfo::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
-	soap_embedded(soap, &((ngwt__DeltaInfo*)this)->count, SOAP_TYPE_PointerTounsignedLong);
-	soap_serialize_PointerTounsignedLong(soap, &((ngwt__DeltaInfo*)this)->count);
+	soap_embedded(soap, &((ngwt__DeltaInfo*)this)->count, SOAP_TYPE_PointerToint);
+	soap_serialize_PointerToint(soap, &((ngwt__DeltaInfo*)this)->count);
 	soap_embedded(soap, &((ngwt__DeltaInfo*)this)->firstSequence, SOAP_TYPE_PointerTounsignedLong);
 	soap_serialize_PointerTounsignedLong(soap, &((ngwt__DeltaInfo*)this)->firstSequence);
 	soap_embedded(soap, &((ngwt__DeltaInfo*)this)->lastSequence, SOAP_TYPE_PointerTounsignedLong);
@@ -49620,7 +49620,7 @@ int ngwt__DeltaInfo::soap_out(struct soap *soap, const char *tag, int id, const 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DeltaInfo(struct soap *soap, const char *tag, int id, const ngwt__DeltaInfo *a, const char *type)
 {
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__DeltaInfo), type);
-	soap_out_PointerTounsignedLong(soap, "ngwt:count", -1, &(((ngwt__DeltaInfo*)a)->count), "");
+	soap_out_PointerToint(soap, "ngwt:count", -1, &(((ngwt__DeltaInfo*)a)->count), "");
 	soap_out_PointerTounsignedLong(soap, "ngwt:firstSequence", -1, &(((ngwt__DeltaInfo*)a)->firstSequence), "");
 	soap_out_PointerTounsignedLong(soap, "ngwt:lastSequence", -1, &(((ngwt__DeltaInfo*)a)->lastSequence), "");
 	soap_out_unsignedLong(soap, "ngwt:lastTimePORebuild", -1, &(((ngwt__DeltaInfo*)a)->lastTimePORebuild), "");
@@ -49665,7 +49665,7 @@ SOAP_FMAC3 ngwt__DeltaInfo * SOAP_FMAC4 soap_in_ngwt__DeltaInfo(struct soap *soa
 	{	for (;;)
 		{	soap->error = SOAP_TAG_MISMATCH;
 			if (soap_flag_count1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTounsignedLong(soap, "ngwt:count", &(((ngwt__DeltaInfo*)a)->count), ""))
+				if (soap_in_PointerToint(soap, "ngwt:count", &(((ngwt__DeltaInfo*)a)->count), ""))
 				{	soap_flag_count1 = 0;
 					continue;
 				}
@@ -75470,55 +75470,6 @@ SOAP_FMAC3 ngwt__MessagePart ** SOAP_FMAC4 soap_in_PointerTongwt__MessagePart(st
 	return a;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToint(struct soap *soap, int *const*a)
-{
-	soap_reference(soap, *a, SOAP_TYPE_int);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToint(struct soap *soap, int *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToint);
-	if (soap_out_PointerToint(soap, tag, id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToint(struct soap *soap, const char *tag, int id, int *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_int);
-	if (id < 0)
-		return soap->error;
-	return soap_out_int(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 int ** SOAP_FMAC4 soap_get_PointerToint(struct soap *soap, int **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerToint(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC3 int ** SOAP_FMAC4 soap_in_PointerToint(struct soap *soap, const char *tag, int **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1))
-		return NULL;
-	if (!a)
-		if (!(a = (int **)soap_malloc(soap, sizeof(int *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_int(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (int **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_int, sizeof(int), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Item(struct soap *soap, ngwt__Item *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__Item))
@@ -76304,6 +76255,55 @@ SOAP_FMAC3 ngwt__From ** SOAP_FMAC4 soap_in_PointerTongwt__From(struct soap *soa
 	}
 	else
 	{	a = (ngwt__From **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__From, sizeof(ngwt__From), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToint(struct soap *soap, int *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_int);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToint(struct soap *soap, int *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToint);
+	if (soap_out_PointerToint(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToint(struct soap *soap, const char *tag, int id, int *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_int);
+	if (id < 0)
+		return soap->error;
+	return soap_out_int(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 int ** SOAP_FMAC4 soap_get_PointerToint(struct soap *soap, int **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToint(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 int ** SOAP_FMAC4 soap_in_PointerToint(struct soap *soap, const char *tag, int **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (int **)soap_malloc(soap, sizeof(int *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_int(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (int **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_int, sizeof(int), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}

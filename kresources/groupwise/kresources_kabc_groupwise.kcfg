@@ -35,5 +35,17 @@
   <entry key="WriteAddressBook" type="String" >
    <label>Address Book for new Contacts</label>
   </entry>
+  <entry key="SystemAddressBook" type="String" >
+   <label>ID of System Address Book</label>
+  </entry>
+  <entry key="LastTimePORebuild" type="Int" >
+    <label>Last time the Post Office was rebuilt</label>
+  </entry>
+  <entry key="firstSequenceNumber" type="Int" >
+    <label>The first sequence number of the GW System Address Book held locally</label>
+  </entry>
+  <entry key="lastSequenceNumber" type="Int" >
+    <label>The last sequence number of the GW System Address Book held locally</label>
+  </entry>
  </group>
 </kcfg>

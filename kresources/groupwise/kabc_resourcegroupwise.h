@@ -71,6 +71,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     bool asyncLoad();
     bool save( Ticket * );
     bool asyncSave( Ticket * );
+    bool updateAddressBooks();
 
   protected:
     void init();
@@ -92,6 +93,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     KIO::TransferJob *mDownloadJob;
     KPIM::ProgressItem *mProgress;
     QString mJobData;
+    bool mUpdateSystemAddressBook;
 };
 
 }
