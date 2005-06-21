@@ -81,4 +81,4 @@ messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/libkcal.pot
 
 DOXYGEN_REFERENCES=kresources
-include $(top_srcdir)/doc/api/Doxyfile.am
+include $(top_srcdir)/admin/Doxyfile.am

@@ -38,6 +38,6 @@ DISTCLEANFILES = inst-apps
 
 MAINTAINERCLEANFILES = subdirs configure.in acinclude.m4 SUBDIRS
 
-include doc/api/Doxyfile.am
+include $(top_srcdir)/admin/Doxyfile.am
 include admin/deps.am
 

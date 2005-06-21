@@ -91,4 +91,4 @@ srcdoc:
 	$(mkinstalldirs) $(SRCDOC_DEST)
 	kdoc -H -d $(SRCDOC_DEST) kaddressbook $(noinst_HEADERS) -lqt
 
-include $(top_srcdir)/doc/api/Doxyfile.am
+include $(top_srcdir)/admin/Doxyfile.am

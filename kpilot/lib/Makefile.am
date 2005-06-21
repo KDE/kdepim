@@ -60,4 +60,4 @@ check-local:
 	test ! -e FAILED
 
 DOXYGEN_REFERENCES=libkcal kdecore
-include $(top_srcdir)/doc/api/Doxyfile.am
+include $(top_srcdir)/admin/Doxyfile.am

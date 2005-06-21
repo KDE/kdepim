@@ -41,4 +41,4 @@ INCLUDES  = $(all_includes)
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp *.h -o $(podir)/kdgantt.pot
-include $(top_srcdir)/doc/api/Doxyfile.am
+include $(top_srcdir)/admin/Doxyfile.am

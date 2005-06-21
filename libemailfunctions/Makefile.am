@@ -16,4 +16,4 @@ METASOURCES = AUTO
 
 # No messages target. Those files are part of libkdepim.pot.
 
-include $(top_srcdir)/doc/api/Doxyfile.am
+include $(top_srcdir)/admin/Doxyfile.am

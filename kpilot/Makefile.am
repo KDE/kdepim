@@ -9,7 +9,7 @@ messages:
 	$(XGETTEXT) `find . -name "*.cc" -o -name "*.cpp"` -o $(podir)/kpilot.pot   
 	-rm -f rc.cpp
 
-include $(top_srcdir)/doc/api/Doxyfile.am
+include $(top_srcdir)/admin/Doxyfile.am
 
 # Just for the KPilot developers: grab all the strings, for checking.
 devel-pot :
