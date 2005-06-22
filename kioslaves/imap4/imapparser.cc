@@ -57,6 +57,7 @@ extern "C" {
 #include <kurl.h>
 
 #include <kasciistricmp.h>
+#include <kasciistringtools.h>
 
 imapParser::imapParser ()
 {
@@ -185,7 +186,7 @@ static bool sasl_interact( KIO::SlaveBase *slave, KIO::AuthInfo &ai, void *in )
         interact->len = strlen( (const char *) interact->result );
         break;
       default:
-        interact->result = 0; 
+        interact->result = 0;
         interact->len = 0;
         break;
     }
@@ -216,7 +217,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
     return false;
 
 //  result = sasl_client_new( isSSL ? "imaps" : "imap",
-  result = sasl_client_new( "imap", /* FIXME: with cyrus-imapd, even imaps' digest-uri 
+  result = sasl_client_new( "imap", /* FIXME: with cyrus-imapd, even imaps' digest-uri
                                        must be 'imap'. I don't know if it's good or bad. */
                        aFQDN.latin1(),
                        0, 0, 0, 0, &conn );
@@ -252,7 +253,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   tmp.resetRawData( out, outlen );
   // then lets try it
   QString firstCommand = aAuth;
-  if ( !challenge.isEmpty() ) { 
+  if ( !challenge.isEmpty() ) {
     firstCommand += " ";
     firstCommand += QString::fromLatin1( challenge.data(), challenge.size() );
   }
@@ -488,7 +489,7 @@ void
 imapParser::parseResult (QByteArray & result, parseString & rest,
   const QString & command)
 {
-  if (command == "SELECT") 
+  if (command == "SELECT")
     selectInfo.setReadWrite(true);
 
   if (rest[0] == '[')
@@ -631,7 +632,8 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
 
 void imapParser::parseCapability (parseString & result)
 {
-  imapCapabilities = QStringList::split (' ', result.cstr().lower());
+  QCString temp( result.cstr() );
+  imapCapabilities = QStringList::split ( ' ', KPIM::kAsciiToLower( temp.data() ) );
 }
 
 void imapParser::parseFlags (parseString & result)
@@ -649,7 +651,7 @@ void imapParser::parseList (parseString & result)
   result.pos++; // tie off (
 
   this_one.parseAttributes( result );
-  
+
   result.pos++; // tie off )
   skipWS (result);
 
@@ -1363,7 +1365,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
 
           if (lastHandled)
             envelope = lastHandled->getHeader ();
-          else 
+          else
             lastHandled = new imapCache();
 
           if (envelope && !envelope->getMessageId ().isEmpty ())
@@ -1422,7 +1424,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
           mailHeader *envelope = 0;
           if (lastHandled)
             envelope = lastHandled->getHeader ();
-          else 
+          else
             lastHandled = new imapCache();
 
           if (seenUid.isEmpty ())
@@ -1576,12 +1578,12 @@ void imapParser::parseNamespace (parseString & result)
       QCString delim = parseOneWordC( result );
       kdDebug(7116) << "imapParser::parseNamespace ns='" << prefix <<
        "',delim='" << delim << "'" << endl;
-      if ( ns == 0 ) 
+      if ( ns == 0 )
       {
         // at least one personal ns
         personalAvailable = true;
       }
-      QString nsentry = QString::number( ns ) + "=" + QString(prefix) + 
+      QString nsentry = QString::number( ns ) + "=" + QString(prefix) +
         "=" + QString(delim);
       imapNamespaces.append( nsentry );
       if ( prefix.right( 1 ) == delim ) {
@@ -1589,7 +1591,7 @@ void imapParser::parseNamespace (parseString & result)
         prefix.resize( prefix.length() );
       }
       namespaceToDelimiter[prefix] = delim;
-      
+
       result.pos++; // tie off )
       skipWS( result );
     } else if ( result[0] == ')' )
@@ -1893,7 +1895,7 @@ QCString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, i
     inWords.takeLeftNoResize(retVal, i);
     retValSize = i;
     inWords.pos += i;
-    
+
     if (retVal == "NIL") {
       retVal.truncate(0);
       retValSize = 0;
