@@ -50,8 +50,18 @@ private:
     QDir dir;
     /**  pointer to the info */
     FilterInfo * inf;
-    /** QStringList with the foldernames, First String contains the ID, the second the folder */
-    QValueList<QString[5]> folderMatrix;
+
+    /** Folder structure here has 5 entries. */
+    typedef FolderStructureBase<5> FolderStructure;
+    /** List with the folder matrix, which contains following strings:
+	1. type (2 for root-folder, 1 for folder, 0 for mailarchiv)
+	2. type (1 for root-folder, 3 for folder, 0 for mailarchiv)  
+	3. "ID:flag:filename" of folder/archiv   
+	4. "ID:name" of parent folder
+	5. name of folder/archiv
+    */
+    QValueList<FolderStructure> folderMatrix;
+    typedef QValueList<FolderStructure>::Iterator FolderStructureIterator;
     
     bool folderParsed;
     
