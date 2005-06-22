@@ -68,8 +68,9 @@ void FilterMBox::import(FilterInfo *info)
 
             while ( ! mbox.atEnd() ) {
                 KTempFile tmp;
+                unsigned long filepos = 0;
                 /* comment by Danny:
-                * Don't use QTextStream to read from mbox, etter use QDataStream. QTextStream only 
+                * Don't use QTextStream to read from mbox, better use QDataStream. QTextStream only 
                 * support Unicode/Latin1/Locale. So you lost information from emails with 
                 * charset!=Unicode/Latin1/Locale (e.g. KOI8-R) and Content-Transfer-Encoding != base64 
                 * (e.g. 8Bit). It also not help to convert the QTextStream to Unicode. By this you
@@ -83,7 +84,14 @@ void FilterMBox::import(FilterInfo *info)
                 tmp.file()->writeBlock( input, l );
 
                 while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
-                    tmp.file()->writeBlock( input, l );
+                       tmp.file()->writeBlock( input, l );
+                       
+                       // workaround to fix hang if a corrupted mbox contains some 
+                       // binary data, for more see bug #106796
+                       if (mbox.at() == filepos)
+                           mbox.at(mbox.size());
+                       else 
+                           filepos = mbox.at();
                 }
                 tmp.close();
                 first_msg = false;
