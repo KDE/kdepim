@@ -56,6 +56,7 @@ extern "C" {
 #include <kmdcodec.h>
 #include <kurl.h>
 #include <kasciistricmp.h>
+#include <kasciistringtools.h>
 
 imapParser::imapParser ()
 {
@@ -631,7 +632,8 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
 
 void imapParser::parseCapability (parseString & result)
 {
-  imapCapabilities = QStringList::split (' ', result.cstr().lower());
+  QCString temp( result.cstr() );
+  imapCapabilities = QStringList::split ( ' ', KPIM::kAsciiToLower( temp.data() ) );
 }
 
 void imapParser::parseFlags (parseString & result)
