@@ -68,7 +68,7 @@ void FilterMBox::import(FilterInfo *info)
 
             while ( ! mbox.atEnd() ) {
                 KTempFile tmp;
-                unsigned long filepos = 0;
+                QIODevice::Offset filepos = 0;
                 /* comment by Danny:
                 * Don't use QTextStream to read from mbox, better use QDataStream. QTextStream only 
                 * support Unicode/Latin1/Locale. So you lost information from emails with 
