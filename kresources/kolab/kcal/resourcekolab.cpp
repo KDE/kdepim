@@ -436,6 +436,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
   if ( !incidence ) return false;
   const QString &uid = incidence->uid();
   QString subResource = _subresource;
+
   Kolab::ResourceMap *map = &mEventSubResources; // don't use a ref here!
 
   const QString& type = incidence->type();
@@ -861,6 +862,15 @@ ResourceKolab::labelForSubresource( const QString& subresource ) const
   if ( mJournalSubResources.contains( subresource ) )
     return mJournalSubResources[ subresource ].label();
   return subresource;
+}
+
+QString ResourceKolab::subresourceIdentifier( Incidence *incidence )
+{
+  QString uid = incidence->uid();
+  if ( mUidMap.contains( uid ) )
+    return mUidMap[ uid ].resource();
+  else
+    return QString();
 }
 
 void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,

@@ -125,6 +125,8 @@ public:
   /** What is the label for this subresource? */
   virtual const QString labelForSubresource( const QString& resource ) const;
 
+  virtual QString subresourceIdentifier( Incidence *incidence );
+
   KABC::Lock* lock();
 
 signals:
