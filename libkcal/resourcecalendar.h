@@ -312,7 +312,8 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
 
       @return the identifier of the subresource or an empty string.
     */
-    virtual QString subresourceIdentifier( Incidence *incidence ) { return QString(); }
+    virtual QString subresourceIdentifier( Incidence *incidence ) 
+    { Q_UNUSED( incidence ); return QString(); }
 
   public slots:
     /**

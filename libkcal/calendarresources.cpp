@@ -164,6 +164,7 @@ bool CalendarResources::reload( const QString &tz )
   close();
   setTimeZoneId( tz );
   load();
+  return true;
 }
 
 void CalendarResources::setStandardDestinationPolicy()
