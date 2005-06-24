@@ -501,7 +501,7 @@ QString KPIM::emailParseResultToString( EmailParseResult errorCode )
 //-----------------------------------------------------------------------------
 bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
 {
-  // If we are passed an empty string bail right away no need to process further·
+  // If we are passed an empty string bail right away no need to process further
   // and waste resources
   if ( aStr.isEmpty() ) {
     return false;
