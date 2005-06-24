@@ -374,6 +374,9 @@ int main(int argc, char *argv[])
   // non-ASCII char as first char of IDN
   checkIsValidSimpleEmailAddress( QString::fromUtf8("i_want@øl.invalid"), "true" );
   checkIsValidSimpleEmailAddress( "matt@[123.123.123.123]", "true" );
+  checkIsValidSimpleEmailAddress( "matt@[3.3.3.3]", "true" );
+  checkIsValidSimpleEmailAddress( "matt@[4.4.4.4]", "true" );
+  checkIsValidSimpleEmailAddress( "matt@[192.168.254.254]", "true" );
   checkIsValidSimpleEmailAddress( "\"matt\"@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( "-matt@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( "\"-matt\"@fruitsalad.org", "true" );
