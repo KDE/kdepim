@@ -42,8 +42,8 @@
 using namespace Akregator;
 using namespace RSS;
 
-ArticleListItem::ArticleListItem( QListView *parent, QListViewItem *after, const MyArticle& a, Feed *feed)
-    : KListViewItem( parent, after, KCharsets::resolveEntities(a.title()), feed->title(), KGlobal::locale()->formatDateTime(a.pubDate(), true, false) )
+ArticleListItem::ArticleListItem( QListView *parent, const MyArticle& a, Feed *feed)
+    : KListViewItem( parent, KCharsets::resolveEntities(a.title()), feed->title(), KGlobal::locale()->formatDateTime(a.pubDate(), true, false) )
 {
     m_article = a;
     m_feed = feed;
@@ -260,7 +260,7 @@ void ArticleList::slotUpdate()
 
     for (; it != end; ++it) {
         if (!(*it).isDeleted()) {
-            ArticleListItem *ali = new ArticleListItem(this, lastChild(), *it, (*it).feed());
+            ArticleListItem *ali = new ArticleListItem(this, *it, (*it).feed());
             if (haveOld && *it == oldCurrentArticle) {
                 setCurrentItem(ali);
                 setSelected(ali, true);
