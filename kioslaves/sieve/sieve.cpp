@@ -533,7 +533,7 @@ void kio_sieveProtocol::put(const KURL& url, int /*permissions*/, bool /*overwri
 	}
 
 	// script size
-	int bufLen = (int)data.size() - 1;
+	int bufLen = (int)data.size();
 	totalSize(bufLen);
 
 	// timsieved 1.1.0:
