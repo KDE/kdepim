@@ -243,6 +243,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       }
       ts->setEncoding( QTextStream::UnicodeUTF8 );
       (*ts) << receiver << '\n' << iCal;
+      file.close();
 
       // Now ensure that korganizer is running; otherwise start it, to prevent surprises
       // (https://intevation.de/roundup/kolab/issue758)
