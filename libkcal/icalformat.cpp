@@ -368,7 +368,10 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
   clearException();
 
-  if (messageText.isEmpty()) return 0;
+  if (messageText.isEmpty()) {
+    setException(new ErrorFormat(ErrorFormat::LoadError, i18n( "Empty file" )));
+    return 0;
+  }
 
   icalcomponent *message;
   message = icalparser_parse_string(messageText.utf8());
