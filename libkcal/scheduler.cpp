@@ -19,10 +19,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <qdir.h>
-#include <qfile.h>
-#include <qtextstream.h>
-
 #include <klocale.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
@@ -49,8 +45,7 @@ QString ScheduleMessage::statusName(ScheduleMessage::Status status)
 {
   switch (status) {
     case PublishUpdate:
-// TODO: Add string when i18n freeze is over.
-//      return i18n("Updated Publish");
+      return i18n("Updated Publish");
     case PublishNew:
       return i18n("Publish");
     case Obsolete:
@@ -383,7 +378,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
         to->updated();
     }
     if ( to ) {
-      // for VTODO a REPLY can be used to update the completion status of 
+      // for VTODO a REPLY can be used to update the completion status of
       // a task. see RFC2446 3.4.3
       Todo *update = dynamic_cast<Todo*> ( incidence );
       Q_ASSERT( update );
