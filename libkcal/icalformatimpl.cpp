@@ -1853,7 +1853,7 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
   t.zone = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().latin1() );
   t.is_utc = 0;
 
-  _dumpIcaltime( t );
+ // _dumpIcaltime( t );
   /* The QDateTime we get passed in is to be considered in the timezone of
    * the current calendar (mParent's), or, if there is none, to be floating.
    * In the later case store a floating time, in the former normalize to utc. */
@@ -1870,7 +1870,7 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
       t.zone = utc;
     }
   }
-  _dumpIcaltime( t );
+//  _dumpIcaltime( t );
 
   return t;
 }
@@ -1882,7 +1882,7 @@ QDateTime ICalFormatImpl::readICalDateTime( icaltimetype& t, icaltimezone* tz )
     t.zone = tz;
     t.is_utc = (tz == icaltimezone_get_utc_timezone())?1:0;
   }
-  _dumpIcaltime( t );
+  //_dumpIcaltime( t );
 
   // Convert to view time
   if ( !mParent->timeZoneId().isEmpty() && t.zone ) {
