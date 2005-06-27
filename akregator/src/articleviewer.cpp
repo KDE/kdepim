@@ -156,7 +156,8 @@ void ArticleViewer::generateCSS()
     ".content > BR:first-child {\n display: none;  }\n"
     //".contentlink {\n display: block; }\n"
     "}\n\n" // @media screen, print
-    "@media screen { body { overflow: auto; } }\n"
+    // Why did we need that, bug #108187?
+    //"@media screen { body { overflow: auto; } }\n"
     "\n\n");
      
    
