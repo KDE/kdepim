@@ -381,7 +381,7 @@ bool GroupwiseServer::dumpData()
       if ( !book->id ) {
         kdError() << "Missing book id" << endl;
       } else {
-        itemsRequest.container = *(book->id);
+        itemsRequest.container = book->id;
       }
       itemsRequest.filter = 0;
       itemsRequest.items = 0;
@@ -473,7 +473,8 @@ void GroupwiseServer::dumpCalendarFolder( const std::string &id )
 {
   _ngwm__getItemsRequest itemsRequest;
 
-  itemsRequest.container = id;
+  itemsRequest.container = soap_new_std__string( mSoap, -1 );
+  *(itemsRequest.container) = id;
   std::string *str = soap_new_std__string( mSoap, -1 );
   str->append( "recipients message recipientStatus" );
   itemsRequest.view = str;
@@ -695,7 +696,7 @@ bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookId
 }
 
 bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds,
-  KABC::ResourceCached *resource, const unsigned int firstSequenceNumber, const unsigned int lastSequenceNumber )
+  KABC::ResourceCached *resource, const unsigned int startSequenceNumber )
 {
   if ( mSession.empty() ) {
     kdError() << "GroupwiseServer::updateAddressBooks(): no session." << endl;
@@ -705,8 +706,7 @@ bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds,
   UpdateAddressBooksJob * job = new UpdateAddressBooksJob( this, mSoap, mUrl, mSession );
   job->setAddressBookIds( addrBookIds );
   job->setResource( resource );
-  job->setFirstSequenceNumber( firstSequenceNumber );
-  job->setLastSequenceNumber( lastSequenceNumber );
+  job->setStartSequenceNumber( startSequenceNumber );
 
   job->run();
 

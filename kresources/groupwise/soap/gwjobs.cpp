@@ -33,6 +33,8 @@
 
 #include "gwjobs.h"
 
+#define READ_FOLDER_CHUNK_SIZE 20
+
 GWJob::GWJob( struct soap *soap, const QString &url,
   const std::string &session )
   : mSoap( soap ), mUrl( url ), mSession( session )
@@ -96,7 +98,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
   kdDebug() << "ReadAddressBookJob::readAddressBook() " << id.c_str() << endl;
 
   _ngwm__getItemsRequest itemsRequest;
-  itemsRequest.container = id;
+  itemsRequest.container = &id;
   itemsRequest.count = -1;
   itemsRequest.filter = 0;
   itemsRequest.items = 0;
@@ -212,7 +214,10 @@ void ReadCalendarJob::run()
           if ( fld )
             if ( fld->folderType == Calendar || fld->folderType == Checklist ) {
               kdDebug() << "Got calendar folder" << endl;
-              readCalendarFolder( *(*it)->id );
+              int count = 0;
+              if ( fld->count )
+                count = *( fld->count );
+              readCalendarFolder( *(*it)->id, count );
               (*mCalendarFolder) = *(*it)->id;
           }
         }
@@ -223,20 +228,21 @@ void ReadCalendarJob::run()
   kdDebug() << "ReadCalendarJob::run() done" << endl;
 }
 
-void ReadCalendarJob::readCalendarFolder( const std::string &id )
+void ReadCalendarJob::readCalendarFolder( const std::string &id, const unsigned int count )
 {
-  kdDebug() << "ReadCalendarJob::readCalendarFolder()" << endl;
+  kdDebug() << "ReadCalendarJob::readCalendarFolder() '" << id.c_str() << "', with " << count << " entries." << endl;
+  mSoap->header->ngwt__session = mSession;
 
+#if 0
   _ngwm__getItemsRequest itemsRequest;
 
   itemsRequest.container = id;
-#if 1
   std::string *str = soap_new_std__string( mSoap, -1 );
   str->append( "startDate endDate subject alarm allDayEvent place timezone iCalId recipients message recipientStatus recurrenceKey" );
   itemsRequest.view = str;
-#else
-  itemsRequest.view = 0;
-#endif
+  itemsRequest.filter = 0;
+  itemsRequest.items = 0;
+  itemsRequest.count = -1;
 
 /*
   ngwt__Filter *filter = soap_new_ngwm__Filter( mSoap, -1 );
@@ -249,10 +255,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
 
   itemsRequest.filter = filter;
 */
-  itemsRequest.filter = 0;
-  itemsRequest.items = 0;
-  itemsRequest.count = -1;
-  mSoap->header->ngwt__session = mSession;
+
   _ngwm__getItemsResponse itemsResponse;
   soap_call___ngw__getItemsRequest( mSoap, mUrl.latin1(), 0,
                                     &itemsRequest,
@@ -283,6 +286,96 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
       }
     }
   }
+#else
+  unsigned int readItems = 0;
+  unsigned int readChunkSize = QMIN( READ_FOLDER_CHUNK_SIZE, count);
+  
+  int cursor;
+
+  _ngwm__createCursorRequest cursorRequest;
+  _ngwm__createCursorResponse cursorResponse;
+
+  cursorRequest.container = id;
+#if 0
+  cursorRequest.view = soap_new_std__string( mSoap, -1 );
+  cursorRequest.view->append( "startDate endDate subject alarm allDayEvent place timezone iCalId recipients message recipientStatus recurrenceKey" );
+#else
+  cursorRequest.view = 0;
+#endif
+  cursorRequest.filter = 0;
+
+  soap_call___ngw__createCursorRequest( mSoap, mUrl.latin1(), 0,
+                                        &cursorRequest,
+                                        &cursorResponse );
+  if ( cursorResponse.cursor )
+    cursor = *(cursorResponse.cursor);
+  else /* signal error? */
+    return;
+
+  _ngwm__readCursorRequest readCursorRequest;
+
+  readCursorRequest.cursor = cursor;
+  readCursorRequest.container = id;
+  readCursorRequest.forward = true;
+#if 0 // seeing if adding the position enum causes the server to truncate returned data
+  readCursorRequest.position = (ngwt__CursorSeek*)soap_malloc( mSoap, sizeof(ngwt__CursorSeek) );
+  *( readCursorRequest.position ) = start;
+#else
+  readCursorRequest.position = 0;
+#endif
+  readCursorRequest.count = (int*)soap_malloc( mSoap, sizeof(int) );
+  *( readCursorRequest.count ) = (int)readChunkSize;
+
+  while ( readItems < count )
+  {
+    mSoap->header->ngwt__session = mSession;
+    kdDebug() << "sending readCursorRequest with session: " << mSession.c_str() << endl;
+    _ngwm__readCursorResponse readCursorResponse;
+    if ( soap_call___ngw__readCursorRequest( mSoap, mUrl.latin1(), 0,
+                                      &readCursorRequest,
+                                      &readCursorResponse ) != SOAP_OK )
+    {
+      kdDebug() << "Faults according to GSOAP:" << endl;
+      soap_print_fault(mSoap, stderr);
+      kdDebug() << "EXITING" << endl;
+      return;
+    }
+  
+    if ( readCursorResponse.items ) {
+      IncidenceConverter conv( mSoap );
+  
+      std::vector<class ngwt__Item * >::const_iterator it;
+      for( it = readCursorResponse.items->item.begin(); it != readCursorResponse.items->item.end(); ++it ) {
+        KCal::Incidence *i = 0;
+        ngwt__Appointment *a = dynamic_cast<ngwt__Appointment *>( *it );
+        if ( a ) {
+          i = conv.convertFromAppointment( a );
+        } else {
+          ngwt__Task *t = dynamic_cast<ngwt__Task *>( *it );
+          if ( t ) {
+            i = conv.convertFromTask( t );
+          }
+        }
+  
+        if ( i ) {
+          i->setCustomProperty( "GWRESOURCE", "CONTAINER", conv.stringToQString( id ) );
+  
+          mCalendar->addIncidence( i );
+        }
+      }
+    }
+    else
+      kdDebug() << " readCursor got no Items in Response!" << endl;
+
+    readItems += readChunkSize; // this means that the read count is increased even if the call fails, but at least the while will always end
+    kdDebug() << " just read " << readChunkSize << " items" << endl;
+    readChunkSize = QMIN( readChunkSize, count - readItems );
+    *(readCursorRequest.count) = readChunkSize;
+    //*(readCursorRequest.position) = current;
+  }
+  kdDebug() << " read " << readItems << " items in total" << endl;
+  
+#endif
 }
 
 UpdateAddressBooksJob::UpdateAddressBooksJob( GroupwiseServer *server,
@@ -303,14 +396,9 @@ void UpdateAddressBooksJob::setResource( KABC::ResourceCached *resource )
   mResource = resource;
 }
 
-void UpdateAddressBooksJob::setFirstSequenceNumber( const int firstSeqNo )
+void UpdateAddressBooksJob::setStartSequenceNumber( const int startSeqNo )
 {
-  mFirstSequenceNumber = firstSeqNo;
-}
-
-void UpdateAddressBooksJob::setLastSequenceNumber( const int lastSeqNo )
-{
-  mLastSequenceNumber = lastSeqNo;
+  mStartSequenceNumber = startSeqNo;
 }
 
 void UpdateAddressBooksJob::run()
@@ -324,20 +412,20 @@ void UpdateAddressBooksJob::run()
   GWConverter conv( mSoap );
   request.container.append( mAddressBookIds.first().latin1() );
   request.deltaInfo = soap_new_ngwt__DeltaInfo( mSoap, -1 );
-/*  request.deltaInfo->count = (int*)soap_malloc( mSoap, sizeof(int) );
-  *( request.deltaInfo->count ) = -1;*/
-  request.deltaInfo->count = 0;
+  request.deltaInfo->count = (int*)soap_malloc( mSoap, sizeof(int) );
+  *( request.deltaInfo->count ) = -1;
+ /* request.deltaInfo->count = 0;*/
   request.deltaInfo->lastTimePORebuild = 0;
   request.deltaInfo->firstSequence = (unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );
-  *(request.deltaInfo->firstSequence) = mFirstSequenceNumber;
-  request.deltaInfo->lastSequence = (unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );
-  *(request.deltaInfo->lastSequence) = mLastSequenceNumber;
- request.view = soap_new_std__string( mSoap, -1 );
-  request.view->append("id name version modified changes");
+  *(request.deltaInfo->firstSequence) = mStartSequenceNumber;
+  request.deltaInfo->lastSequence = 0; /*(unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );*/
+  /* *(request.deltaInfo->lastSequence) = mLastSequenceNumber; */
+  request.view = soap_new_std__string( mSoap, -1 );
+  //request.view->append("id name version modified ItemChanges");
   soap_call___ngw__getDeltasRequest( mSoap, mUrl.latin1(),
                                               NULL, &request, &response);
   soap_print_fault( mSoap, stderr );
 
-//   if ( addressBookListResponse.books ) {
+//   if ( addressBookListResponse.books ) { 
 //     std::vector<class ngwt__AddressBook * > *addressBooks = &addressBookListResponse.books->book;
 }

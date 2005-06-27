@@ -121,7 +121,7 @@ class GroupwiseServer : public QObject
     bool readAddressBooksSynchronous( const QStringList &addrBookIds,
       KABC::ResourceCached * );
     bool updateAddressBooks( const QStringList &addrBookIds, KABC::ResourceCached *,
-      const unsigned int firstSequenceNumber, const unsigned int lastSequenceNumber );
+      const unsigned int startSequenceNumber );
 
     bool insertAddressee( const QString &addrBookId, KABC::Addressee& );
     bool changeAddressee( const KABC::Addressee& );

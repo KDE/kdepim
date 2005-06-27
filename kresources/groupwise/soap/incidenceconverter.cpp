@@ -268,6 +268,7 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt
   item->link = 0;
   item->hasAttachment = false;
   item->size = 0;
+  item->subType = 0;
   // ngwt__BoxEntry
   item->status = 0;
   item->thread = 0;
@@ -314,7 +315,7 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt
       *item->class_ = Private;
       break;
     case KCal::Event::SecrecyConfidential:
-      *item->class_ = Confidential;
+      *item->class_ = Private;
       break;
   }
 
@@ -439,7 +440,7 @@ ngwt__Recipient *IncidenceConverter::createRecipient( const QString &name,
     recipient->email = 0;
   }
   recipient->distType = TO;
-  recipient->recipType = User_;
+  recipient->recipType = User;
   return recipient;
 }
 

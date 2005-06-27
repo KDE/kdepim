@@ -347,8 +347,8 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
                           addresses.join( QChar( 0xE000 ) ) );
     }
   }
-  kdDebug() << "Got the following addressee: " << endl;
-  addr.dump();
+  //kdDebug() << "Got the following addressee: " << endl;
+  //addr.dump();
   kdDebug() << "Customs are: " << addr.customs() << endl;
 
   return addr;

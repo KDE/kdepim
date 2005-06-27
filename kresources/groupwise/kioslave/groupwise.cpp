@@ -334,7 +334,6 @@ void Groupwise::updateAddressbook( const KURL &url )
 
   QString query = url.query();
 
-  unsigned int firstSequenceNumber = 0;
   unsigned int lastSequenceNumber = 0;
 
   if ( query.isEmpty() || query == "?" ) {
@@ -350,9 +349,7 @@ void Groupwise::updateAddressbook( const KURL &url )
       if ( item.count() == 2 && item[ 0 ] == "addressbookid" ) {
         ids.append( item[ 1 ] );
       }
-      if ( item.count() == 2 && item[ 0 ] == "firstSeqNo" )
-        firstSequenceNumber = item[ 1 ].toInt();
-      if ( item.count() == 2 && item[ 0 ] == "lastSeqNo" )
+       if ( item.count() == 2 && item[ 0 ] == "lastSeqNo" )
         lastSequenceNumber = item[ 1 ].toInt();
     }
     
@@ -367,7 +364,7 @@ void Groupwise::updateAddressbook( const KURL &url )
       errorMessage( i18n("Unable to login.") );
     } else {
       kdDebug() << "Update Addressbook" << endl;
-      if ( !server.updateAddressBooks( ids, &resource, firstSequenceNumber, lastSequenceNumber ) ) {
+      if ( !server.updateAddressBooks( ids, &resource, lastSequenceNumber ) ) {
         errorMessage( i18n("Unable to update addressbook data.") );
       }
       kdDebug() << "Logout" << endl;

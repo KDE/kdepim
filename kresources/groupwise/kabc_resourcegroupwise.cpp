@@ -389,6 +389,7 @@ void ResourceGroupwise::slotJobResult( KIO::Job *job )
     kdDebug() << "storing delta info to prefs" << endl;
     mPrefs->setFirstSequenceNumber( deltaInfo.firstSequence );
     mPrefs->setLastSequenceNumber( deltaInfo.lastSequence );
+    mPrefs->writeConfig();
   }
 }
 

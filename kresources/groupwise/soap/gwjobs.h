@@ -78,16 +78,18 @@ class ReadCalendarJob : public GWJob
       const std::string &session );
 
     void setCalendarFolder( std::string* );
+    void setChecklistFolder( std::string* );
 
     void setCalendar( KCal::Calendar * );
 
     void run();
 
   protected:
-    void readCalendarFolder( const std::string &id );
+    void readCalendarFolder( const std::string &id, const unsigned int count );
 
   private:
     std::string *mCalendarFolder;
+    std::string *mChecklistFolder;
     KCal::Calendar *mCalendar;
 };
 
@@ -105,15 +107,10 @@ class UpdateAddressBooksJob : public GWJob
     void setResource( KABC::ResourceCached * );
 
     /**
-     * set the first sequence number we have in the local copy of the System Address Book
+     * set the sequence number to start reading deltas from (usually the last sequenec number
+     * we have in the local copy of the System Address Book).
      */
-    void setFirstSequenceNumber( const int firstSeqNo );
-
-    /**
-     * set the last sequence number we have in the local copy of the System Address Book
-     */
-    void setLastSequenceNumber( const int lastSeqNo );
-
+    void setStartSequenceNumber( const int startSeqNo );
 
     void run();
   protected:
@@ -124,8 +121,8 @@ class UpdateAddressBooksJob : public GWJob
     QStringList mAddressBookIds;
     KABC::ResourceCached *mResource;
     int mProgress;
-    int mFirstSequenceNumber; // first and last sequence numbers define the current state of the system addressbook
-    int mLastSequenceNumber;  // and are used to determine which deltas to download
+    int mStartSequenceNumber; // first and last sequence numbers define the current state of the system addressbook
+                              // and are used to determine which deltas to download
 };
 
 #endif
