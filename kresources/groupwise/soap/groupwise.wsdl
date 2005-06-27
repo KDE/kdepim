@@ -107,6 +107,13 @@
       <part name="createItemRes" element="methods:createItemResponse"/>
    </message>
 
+	<message name="createJunkEntryRequestMessage">
+      <part name="createJunkEntryReq" element="methods:createJunkEntryRequest"/>
+   </message>
+   <message name="createJunkEntryResponseMessage">
+      <part name="createJunkEntryRes" element="methods:createJunkEntryResponse"/>
+   </message>
+
    <message name="createProxyAccessRequestMessage">
       <part name="createProxyAccessReq" element="methods:createProxyAccessRequest"/>
    </message>
@@ -140,13 +147,6 @@
    </message>
    <message name="destroyCursorResponseMessage">
       <part name="destroyCursorRes" element="methods:destroyCursorResponse"/>
-   </message>
-
-   <message name="executeRuleRequestMessage">
-      <part name="executeRuleReq" element="methods:executeRuleRequest"/>
-   </message>
-   <message name="executeRuleResponseMessage">
-      <part name="executeRuleRes" element="methods:executeRuleResponse"/>
    </message>
 
    <message name="forwardRequestMessage">
@@ -224,6 +224,20 @@
    </message>
    <message name="getItemsResponseMessage">
       <part name="getItemsRes" element="methods:getItemsResponse"/>
+   </message>
+
+   <message name="getJunkEntriesRequestMessage">
+      <part name="getJunkEntriesReq" element="methods:getJunkEntriesRequest"/>
+   </message>
+   <message name="getJunkEntriesResponseMessage">
+      <part name="getJunkEntriesRes" element="methods:getJunkEntriesResponse"/>
+   </message>
+
+   <message name="getJunkMailSettingsRequestMessage">
+      <part name="getJunkMailSettingsReq" element="methods:getJunkMailSettingsRequest"/>
+   </message>
+   <message name="getJunkMailSettingsResponseMessage">
+      <part name="getJunkMailSettingsRes" element="methods:getJunkMailSettingsResponse"/>
    </message>
 
    <message name="getQuickMessagesRequestMessage">
@@ -322,6 +336,19 @@
       <part name="modifyItemRes" element="methods:modifyItemResponse"/>
    </message>
 
+   <message name="modifyJunkEntryRequestMessage">
+      <part name="modifyJunkEntryReq" element="methods:modifyJunkEntryRequest"/>
+   </message>
+   <message name="modifyJunkEntryResponseMessage">
+      <part name="modifyJunkEntryRes" element="methods:modifyJunkEntryResponse"/>
+   </message>
+   <message name="modifyJunkMailSettingsRequestMessage">
+      <part name="modifyJunkMailSettingsReq" element="methods:modifyJunkMailSettingsRequest"/>
+   </message>
+   <message name="modifyJunkMailSettingsResponseMessage">
+      <part name="modifyJunkMailSettingsRes" element="methods:modifyJunkMailSettingsResponse"/>
+   </message>
+
    <message name="modifyPasswordRequestMessage">
       <part name="modifyPasswordReq" element="methods:modifyPasswordRequest"/>
    </message>
@@ -385,6 +412,13 @@
       <part name="readCursorRes" element="methods:readCursorResponse"/>
    </message>
 
+   <message name="removeCustomDefinitionRequestMessage">
+      <part name="removeCustomDefinitionReq" element="methods:removeCustomDefinitionRequest"/>
+   </message>
+   <message name="removeCustomDefinitionResponseMessage">
+      <part name="removeCustomDefinitionRes" element="methods:removeCustomDefinitionResponse"/>
+   </message>
+
    <message name="removeItemRequestMessage">
       <part name="removeItemReq" element="methods:removeItemRequest"/>
    </message>
@@ -397,6 +431,13 @@
    </message>
    <message name="removeItemsResponseMessage">
       <part name="removeItemsRes" element="methods:removeItemsResponse"/>
+   </message>
+
+   <message name="removeJunkEntryRequestMessage">
+      <part name="removeJunkEntryReq" element="methods:removeJunkEntryRequest"/>
+   </message>
+   <message name="removeJunkEntryResponseMessage">
+      <part name="removeJunkEntryRes" element="methods:removeJunkEntryResponse"/>
    </message>
 
    <message name="removeMembersRequestMessage">
@@ -537,6 +578,11 @@
        <output message="tns:createItemResponseMessage"/>
      </operation>
 
+     <operation name="createJunkEntryRequest">
+       <input message="tns:createJunkEntryRequestMessage"/>
+       <output message="tns:createJunkEntryResponseMessage"/>
+     </operation>
+
      <operation name="createProxyAccessRequest">
        <input message="tns:createProxyAccessRequestMessage"/>
        <output message="tns:createProxyAccessResponseMessage"/>
@@ -560,11 +606,6 @@
      <operation name="destroyCursorRequest">
        <input message="tns:destroyCursorRequestMessage"/>
        <output message="tns:destroyCursorResponseMessage"/>
-     </operation>
-
-     <operation name="executeRuleRequest">
-       <input message="tns:executeRuleRequestMessage"/>
-       <output message="tns:executeRuleResponseMessage"/>
      </operation>
 
      <operation name="forwardRequest">
@@ -620,6 +661,16 @@
      <operation name="getItemsRequest">
        <input message="tns:getItemsRequestMessage"/>
        <output message="tns:getItemsResponseMessage"/>
+     </operation>
+
+     <operation name="getJunkEntriesRequest">
+       <input message="tns:getJunkEntriesRequestMessage"/>
+       <output message="tns:getJunkEntriesResponseMessage"/>
+     </operation>
+
+     <operation name="getJunkMailSettingsRequest">
+       <input message="tns:getJunkMailSettingsRequestMessage"/>
+       <output message="tns:getJunkMailSettingsResponseMessage"/>
      </operation>
 
      <operation name="getQuickMessagesRequest">
@@ -686,6 +737,16 @@
        <output message="tns:modifyItemResponseMessage"/>
      </operation>
 
+     <operation name="modifyJunkEntryRequest">
+       <input message="tns:modifyJunkEntryRequestMessage"/>
+       <output message="tns:modifyJunkEntryResponseMessage"/>
+     </operation>
+
+     <operation name="modifyJunkMailSettingsRequest">
+       <input message="tns:modifyJunkMailSettingsRequestMessage"/>
+       <output message="tns:modifyJunkMailSettingsResponseMessage"/>
+     </operation>
+
      <operation name="modifyPasswordRequest">
        <input message="tns:modifyPasswordRequestMessage"/>
        <output message="tns:modifyPasswordResponseMessage"/>
@@ -731,6 +792,11 @@
        <output message="tns:readCursorResponseMessage"/>
      </operation>
 
+     <operation name="removeCustomDefinitionRequest">
+       <input message="tns:removeCustomDefinitionRequestMessage"/>
+       <output message="tns:removeCustomDefinitionResponseMessage"/>
+     </operation>
+
      <operation name="removeItemRequest">
        <input message="tns:removeItemRequestMessage"/>
        <output message="tns:removeItemResponseMessage"/>
@@ -741,6 +807,10 @@
        <output message="tns:removeItemsResponseMessage"/>
      </operation>
 
+     <operation name="removeJunkEntryRequest">
+       <input message="tns:removeJunkEntryRequestMessage"/>
+       <output message="tns:removeJunkEntryResponseMessage"/>
+     </operation>
      <operation name="removeMembersRequest">
        <input message="tns:removeMembersRequestMessage"/>
        <output message="tns:removeMembersResponseMessage"/>
@@ -921,6 +991,17 @@
       </output>
     </operation>
 
+    <operation name="createJunkEntryRequest">
+      <soap:operation soapAction="createJunkEntryRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
     <operation name="createProxyAccessRequest">
       <soap:operation soapAction="createProxyAccessRequest" style="document" />
       <input>
@@ -967,17 +1048,6 @@
 
     <operation name="destroyCursorRequest">
       <soap:operation soapAction="destroyCursorRequest" style="document" />
-      <input>
-		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
-        <soap:body use="literal"/>
-      </input>
-      <output>
-        <soap:body use="literal"/>
-      </output>
-    </operation>
-
-    <operation name="executeRuleRequest">
-      <soap:operation soapAction="executeRuleRequest" style="document" />
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
@@ -1099,6 +1169,28 @@
 
     <operation name="getItemsRequest">
       <soap:operation soapAction="getItemsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getJunkEntriesRequest">
+      <soap:operation soapAction="getJunkEntriesRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getJunkMailSettingsRequest">
+      <soap:operation soapAction="getJunkMailSettingsRequest" style="document" />
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>
@@ -1249,6 +1341,28 @@
       </output>
     </operation>
 
+	 <operation name="modifyJunkEntryRequest">
+      <soap:operation soapAction="modifyJunkEntryRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="modifyJunkMailSettingsRequest">
+      <soap:operation soapAction="modifyJunkMailSettingsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
     <operation name="modifyPasswordRequest">
       <soap:operation soapAction="modifyPasswordRequest" style="document" />
       <input>
@@ -1348,6 +1462,17 @@
       </output>
     </operation>
 
+    <operation name="removeCustomDefinitionRequest">
+      <soap:operation soapAction="removeCustomDefinitionRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
     <operation name="removeItemRequest">
       <soap:operation soapAction="removeItemRequest" style="document" />
       <input>
@@ -1361,6 +1486,17 @@
 
     <operation name="removeItemsRequest">
       <soap:operation soapAction="removeItemsRequest" style="document" />
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="removeJunkEntryRequest">
+      <soap:operation soapAction="removeJunkEntryRequest" style="document" />
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
         <soap:body use="literal"/>

@@ -48,6 +48,7 @@
          <xs:element name="type" type="tns:ItemTypeList" minOccurs="0" />
          <xs:element ref="tns:field" minOccurs="0" />
          <xs:element name="containers" type="tns:ContainerList" minOccurs="0" />
+         <xs:element name="subType" type="xs:string" minOccurs="0" />
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="EventList">
@@ -136,6 +137,7 @@
          <xs:enumeration value="Security" />
          <xs:enumeration value="SendPriority" />
          <xs:enumeration value="StartDate" />
+         <xs:enumeration value="Subject" />
          <xs:enumeration value="TaskCategory" />
          <xs:enumeration value="TaskPriority" />
       </xs:restriction>

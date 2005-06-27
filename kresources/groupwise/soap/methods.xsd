@@ -143,7 +143,6 @@
             <xs:element name="container" type="types:uid" />
             <xs:element name="view" type="types:View" minOccurs="0" />
             <xs:element name="filter" type="types:Filter" minOccurs="0" />
-            <!--				<xs:element name="sort" type="types:Sort" minOccurs="0" /> -->
          </xs:sequence>
       </xs:complexType>
    </xs:element>
@@ -159,10 +158,26 @@
       <xs:complexType>
          <xs:sequence>
             <xs:element name="item" type="types:Item" />
+            <xs:element name="notification" type="types:SharedFolderNotification" minOccurs="0" />
          </xs:sequence>
       </xs:complexType>
    </xs:element>
    <xs:element name="createItemResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="id" type="types:uid" minOccurs="0" />
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="createJunkEntryRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="entry" type="types:JunkEntry" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="createJunkEntryResponse">
       <xs:complexType>
          <xs:sequence>
             <xs:element name="id" type="types:uid" minOccurs="0" />
@@ -188,7 +203,6 @@
    <xs:element name="createSignatureRequest">
       <xs:complexType>
          <xs:sequence>
-            <xs:element name="global" type="xs:boolean" default="0" minOccurs="0" />
             <xs:element name="signature" type="types:Signature" />
          </xs:sequence>
       </xs:complexType>
@@ -219,7 +233,7 @@
    <xs:element name="delegateRequest">
       <xs:complexType>
          <xs:sequence>
-            <xs:element name="items" type="types:ItemRefList" />
+            <xs:element name="id" type="types:uid" />
             <xs:element name="commentToOrganizer" type="xs:string" nillable="1" />
             <xs:element name="commentToDelegatee" type="xs:string" nillable="1" />
             <xs:element name="distribution" type="types:Distribution" />
@@ -243,20 +257,6 @@
       </xs:complexType>
    </xs:element>
    <xs:element name="destroyCursorResponse">
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element name="status" type="types:Status" />
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="executeRuleRequest">
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element name="id" type="types:uid" />
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="executeRuleResponse">
       <xs:complexType>
          <xs:sequence>
             <xs:element name="status" type="types:Status" />
@@ -458,11 +458,10 @@
    <xs:element name="getItemsRequest">
       <xs:complexType>
          <xs:sequence>
-            <xs:element name="container" type="types:uid" />
+            <xs:element name="container" type="types:uid" minOccurs="0" />
             <xs:element name="view" type="types:View" nillable="1" />
             <xs:element name="filter" type="types:Filter" nillable="1" />
             <xs:element name="items" type="types:ItemRefList" minOccurs="0" maxOccurs="1" />
-            <!--				<xs:element name="sort" type="types:Sort"/> -->
             <xs:element name="count" type="xs:int" default="-1" />
          </xs:sequence>
       </xs:complexType>
@@ -471,6 +470,34 @@
       <xs:complexType>
          <xs:sequence>
             <xs:element name="items" type="types:Items" minOccurs="0" />
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="getJunkEntriesRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="container" type="types:JunkHandlingListType" minOccurs="0" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="getJunkEntriesResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="junk" type="types:JunkHandlingList" minOccurs="0" />
+            <xs:element name="block" type="types:JunkHandlingList" minOccurs="0" />
+            <xs:element name="trust" type="types:JunkHandlingList" minOccurs="0" />
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="getJunkMailSettingsRequest">
+      <xs:complexType/>
+   </xs:element>
+   <xs:element name="getJunkMailSettingsResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="settings" type="types:SettingsList" minOccurs="0" />
             <xs:element name="status" type="types:Status" />
          </xs:sequence>
       </xs:complexType>
@@ -609,6 +636,7 @@
         <!--<xs:element name="session" type="types:session" /> -->
         <!--<xs:element name="session" type="xs:string" /> -->        
             <xs:element name="userinfo" type="types:UserInfo" minOccurs="0" />
+            <xs:element name="entry" type="types:AccessRightEntry" minOccurs="0" />
             <xs:element name="gwVersion" type="xs:string" minOccurs="0" />
             <xs:element name="redirectToHost" type="types:Host" minOccurs="0" maxOccurs="1" />
             <xs:element name="serverUTCTime" type="xs:dateTime" minOccurs="0" />
@@ -710,6 +738,34 @@
       <xs:complexType>
          <xs:sequence>
             <xs:element ref="types:modified" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="modifyJunkEntryRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="entry" type="types:JunkEntry" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="modifyJunkEntryResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="modifyJunkMailSettingsRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="settings" type="types:SettingsList" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="modifyJunkMailSettingsResponse">
+      <xs:complexType>
+         <xs:sequence>
             <xs:element name="status" type="types:Status" />
          </xs:sequence>
       </xs:complexType>
@@ -874,6 +930,33 @@
          </xs:sequence>
       </xs:complexType>
    </xs:element>
+   <xs:element name="removeCustomDefinitionRequest">
+      <xs:annotation>
+         <xs:documentation>
+				This method remove the custom field defintion not the field and
+				values within an item.
+				To delete custom defintions from personal address book entries, set
+				books = "1", else the definition will be deleted from mail items.
+				This method can take a long time to execute.
+				You can set doAsynchronous to have the custom field definition
+				removed in the background.
+			</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="customs" type="types:CustomList" minOccurs="0" />
+				<xs:element name="books" type="xs:boolean" default="0" />
+          <xs:element name="doAsynchronous" type="xs:boolean" default="0" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="removeCustomDefinitionResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
    <xs:element name="removeItemRequest">
       <xs:annotation>
          <xs:documentation>
@@ -908,6 +991,20 @@
       </xs:complexType>
    </xs:element>
    <xs:element name="removeItemsResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="status" type="types:Status" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="removeJunkEntryRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="id" type="types:uid" />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="removeJunkEntryResponse">
       <xs:complexType>
          <xs:sequence>
             <xs:element name="status" type="types:Status" />
