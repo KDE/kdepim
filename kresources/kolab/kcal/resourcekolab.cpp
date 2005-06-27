@@ -454,6 +454,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     bool newIncidence = _subresource.isEmpty();
     if ( newIncidence ) {
       subResource = findWritableResource( *map );
+      mNewIncidencesMap.insert( uid, subResource );
     }
     if ( subResource.isEmpty() )
       return false;
@@ -870,7 +871,7 @@ QString ResourceKolab::subresourceIdentifier( Incidence *incidence )
   if ( mUidMap.contains( uid ) )
     return mUidMap[ uid ].resource();
   else
-    return QString();
+    return mNewIncidencesMap[ uid ];
 }
 
 void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,

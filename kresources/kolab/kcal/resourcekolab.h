@@ -186,6 +186,15 @@ private:
   QDict<KCal::IncidenceBase> mPendingUpdates;
   QTimer mResourceChangedTimer;
   ICalFormat mFormat;
+
+  /**
+    This map contains the association between a new added incidence
+    and the subresource it belongs to.
+    That's needed to return the correct mapping in subresourceIdentifier().
+
+    We can't trust on mUidMap here, because it contains only non-pending uids.
+   */
+  QMap<QString, QString> mNewIncidencesMap;
 };
 
 }
