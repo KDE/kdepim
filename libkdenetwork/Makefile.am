@@ -5,4 +5,3 @@ GPGME_COPY_SUBDIRS = libgpg-error-copy libgpgme-copy
 endif
 SUBDIRS = $(GPGME_COPY_SUBDIRS) gpgmepp qgpgme .
 
-include $(top_srcdir)/admin/Doxyfile.am

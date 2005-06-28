@@ -19,4 +19,3 @@ dummy.cpp:
 messages:
 	$(XGETTEXT) core/*.cpp -o $(podir)/libkpimexchange.pot
 
-include $(top_srcdir)/admin/Doxyfile.am
