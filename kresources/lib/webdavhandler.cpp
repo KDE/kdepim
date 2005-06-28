@@ -146,7 +146,8 @@ bool WebdavHandler::extractStringList( const QDomElement &node, const QString &e
 
 const QString WebdavHandler::getEtagFromHeaders( const QString& headers )
 {
-  int start = headers.find( "etag:" );
+  int start = headers.find( "etag:", 0, false );
+  if ( start < 0 ) return QString();
   start += 6;
   return headers.mid( start, headers.find( "\n", start ) - start );
 }
