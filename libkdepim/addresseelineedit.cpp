@@ -680,7 +680,7 @@ QPopupMenu* AddresseeLineEdit::createPopupMenu()
     return 0;
 
   if ( m_useCompletion )
-    menu->insertItem( i18n( "Edit Completion Order..." ),
+    menu->insertItem( i18n( "Configure Completion Order..." ),
                       this, SLOT( slotEditCompletionOrder() ) );
   return menu;
 }
