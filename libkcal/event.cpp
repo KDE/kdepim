@@ -85,17 +85,17 @@ QDateTime Event::dtEnd() const
 
 QString Event::dtEndTimeStr() const
 {
-  return KGlobal::locale()->formatTime(mDtEnd.time());
+  return KGlobal::locale()->formatTime(dtEnd().time());
 }
 
 QString Event::dtEndDateStr(bool shortfmt) const
 {
-  return KGlobal::locale()->formatDate(mDtEnd.date(),shortfmt);
+  return KGlobal::locale()->formatDate(dtEnd().date(),shortfmt);
 }
 
 QString Event::dtEndStr() const
 {
-  return KGlobal::locale()->formatDateTime(mDtEnd);
+  return KGlobal::locale()->formatDateTime(dtEnd());
 }
 
 void Event::setHasEndDate(bool b)
