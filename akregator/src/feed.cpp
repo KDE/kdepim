@@ -28,7 +28,6 @@
 #include <qdom.h>
 
 #include <kurl.h>
-#include <kcharsets.h>
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>
@@ -508,7 +507,7 @@ void Feed::fetchCompleted(Loader *l, Document doc, Status status)
     }
     
     if (title().isEmpty())
-        setTitle( KCharsets::resolveEntities(KCharsets::resolveEntities(m_document.title())) );
+        setTitle( m_document.title() );
 
     Archive::load(this); // make sure archive is merged 
     
