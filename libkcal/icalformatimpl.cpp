@@ -187,15 +187,20 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
   icalcomponent_add_property(vevent,icalproperty_new_dtstart(start));
 
   if (event->hasEndDate()) {
-    // end time
+    // End time.
+    // RFC2445 says that if DTEND is present, it has to be greater than DTSTART.
     icaltimetype end;
     if (event->doesFloat()) {
 //      kdDebug(5800) << " Event " << event->summary() << " floats." << endl;
-      // +1 day because end date is non-inclusive.
-      end = writeICalDate( event->dtEnd().date().addDays( 1 ) );
+      if (event->dtEnd().date() != event->dtStart().date()) {
+        // +1 day because end date is non-inclusive.
+        end = writeICalDate( event->dtEnd().date().addDays( 1 ) );
+      }
     } else {
 //      kdDebug(5800) << " Event " << event->summary() << " has time." << endl;
-      end = writeICalDateTime(event->dtEnd());
+      if (event->dtEnd() != event->dtStart()) {
+        end = writeICalDateTime(event->dtEnd());
+      }
     }
     icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
   }
