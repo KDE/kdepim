@@ -913,7 +913,7 @@ int KPilotDeviceLink::openConduit()
 	return dlp_OpenConduit(fCurrentPilotSocket);
 }
 
-QString KPilotDeviceLink::statusString(LinkStatus l) const
+QString KPilotDeviceLink::statusString(LinkStatus l)
 {
 	FUNCTIONSETUP;
 	QString s = CSL1("KPilotDeviceLink=");
