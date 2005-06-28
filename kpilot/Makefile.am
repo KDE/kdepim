@@ -9,6 +9,7 @@ messages:
 	$(XGETTEXT) `find . -name "*.cc" -o -name "*.cpp"` -o $(podir)/kpilot.pot   
 	-rm -f rc.cpp
 
+DOXYGEN_REFERENCES = kpilot/lib kpilot/kpilot
 include $(top_srcdir)/admin/Doxyfile.am
 
 # Just for the KPilot developers: grab all the strings, for checking.

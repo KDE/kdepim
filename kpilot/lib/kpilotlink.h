@@ -72,18 +72,23 @@ struct db
 
 
 
-/**
+/** A class that handles some aspects of communication with the
+** Handheld. A KPilotLink object represents a connection to a device
+** (which may be active or inactive -- the latter in cases where
+** the link is @e waiting for a device to show up). The object
+** handles waiting, protocol initialization and some general
+** tasks such as getting system information or user data.
+**
+** The actual communication with the handheld should use the
+** PilotDatabase methods or use pilot-link dlp_* functions directly
+** on handle().
+**
+**
 ** The KPilotLink class was originally a kind of C++ wrapper
 ** for the pilot-link library. It grew and grew and mutated
 ** until it was finally cleaned up again in 2001. In the meantime
 ** it had become something that wrapped a lot more than just
-** pilot-link. This class currently does:
-**
-** * Client (ie. conduit) handling of kpilotlink protocol connections
-** * Pilot-link handling
-**
-** Which is exactly what is needed: something that conduits can
-** plug onto to talk to the pilot.
+** pilot-link.
 */
 
 class KDE_EXPORT KPilotDeviceLink : public QObject
@@ -101,8 +106,8 @@ public:
 	* Call reset() on it to start looking for a device.
 	*/
 	KPilotDeviceLink( QObject *parent = 0, const char *name = 0, const QString &tempDevice = QString::null );
+	/** Destructor. This rudely ends the communication with the handheld. */
 	virtual ~KPilotDeviceLink();
-//	bool init(QObject *parent=0L,const char *n=0L);
 
 
 /*
@@ -127,7 +132,13 @@ public:
 		WorkaroundUSB
 		} LinkStatus;
 
+	/** Get the status (state enum) of this link.
+	* @return The LinkStatus enum for the link's current state.
+	*/
 	LinkStatus status() const { return fLinkStatus; } ;
+	/** Get a human-readable string for the given status @p l. */
+	static QString statusString(LinkStatus l);
+	/** Get a human-readable string for the status of this object. */
 	virtual QString statusString() const;
 
 	/**

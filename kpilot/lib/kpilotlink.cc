@@ -913,13 +913,12 @@ int KPilotDeviceLink::openConduit()
 	return dlp_OpenConduit(fCurrentPilotSocket);
 }
 
-QString KPilotDeviceLink::statusString() const
+QString KPilotDeviceLink::statusString(LinkStatus l) const
 {
 	FUNCTIONSETUP;
 	QString s = CSL1("KPilotDeviceLink=");
 
-
-	switch (fLinkStatus)
+	switch (l)
 	{
 	case Init:
 		s.append(CSL1("Init"));
@@ -951,6 +950,11 @@ QString KPilotDeviceLink::statusString() const
 	}
 
 	return s;
+}
+
+QString KPilotDeviceLink::statusString() const
+{
+	return statusString( status() );
 }
 
 void KPilotDeviceLink::endOfSync()
