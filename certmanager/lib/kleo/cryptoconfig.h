@@ -68,6 +68,10 @@ namespace Kleo {
        @li ArgType_Path	A string that describes the pathname of a file.
        The file does not necessarily need to exist.
        Separated from string so that e.g. a KURLRequester can be used.
+       @li ArgType_DirPath	A string that describes the pathname of a directory.
+       The directory does not necessarily need to exist.
+       Separated from path so that e.g. a KURLRequester can be used which only
+       allows directories to be selected.
        @li ArgType_URL		A URL
        @li ArgType_LDAPURL	A LDAP URL
        Separated from URL so that a more specific widget can be shown, hiding the url syntax
@@ -78,7 +82,8 @@ namespace Kleo {
                    ArgType_UInt = 3,
                    ArgType_Path = 4,
                    ArgType_URL = 5,
-                   ArgType_LDAPURL = 6 };
+                   ArgType_LDAPURL = 6,
+                   ArgType_DirPath = 7 };
 
 #ifdef __cplusplus
     virtual ~CryptoConfigEntry() {}

@@ -168,7 +168,7 @@ namespace {
     int intValue() const { return mValue.toInt(); }
     unsigned int uintValue() const { return mValue.toUInt(); }
     KURL urlValue() const {
-      if ( argType() != ArgType_Path ) return KURL( mValue.toString() );
+      if ( argType() != ArgType_Path && argType() != ArgType_DirPath ) return KURL( mValue.toString() );
       KURL u; u.setPath( mValue.toString() ); return u;
     }
     unsigned int numberOfTimesSet() const { return 0; }
@@ -176,7 +176,7 @@ namespace {
     QValueList<int> intValueList() const { return to< QValueList<int> >( mValue ); }
     QValueList<unsigned int> uintValueList() const { return to< QValueList<unsigned int> >( mValue ); }
     KURL::List urlValueList() const {
-      if ( argType() != ArgType_Path ) return mValue.toStringList();
+      if ( argType() != ArgType_Path && argType()!= ArgType_DirPath ) return mValue.toStringList();
       else return to<KURL::List>( mValue ); }
     void resetToDefault() { mValue = defaultValue(); mDirty = false; }
     void setBoolValue( bool value ) { setValue( QVariant( value, int() ) ); }
@@ -184,7 +184,7 @@ namespace {
     void setIntValue( int value ) { setValue( value ); }
     void setUIntValue( unsigned int value ) { setValue( value ); }
     void setURLValue( const KURL & value ) {
-      if ( argType() != ArgType_Path ) setValue( value.url() );
+      if ( argType() != ArgType_Path && argType()!= ArgType_DirPath ) setValue( value.url() );
       else setValue( value.path() );
     }
     void setNumberOfTimesSet( unsigned int ) {}
@@ -237,6 +237,7 @@ namespace {
       else
         return data.defaults.unsigned_integer;
     case ArgType_Path:
+    case ArgType_DirPath:
       if ( isList() )
         return QValueList<QVariant>() << QString::fromLatin1( data.defaults.path );
       else

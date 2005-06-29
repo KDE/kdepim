@@ -85,6 +85,8 @@ int main( int argc, char** argv ) {
             // fallthrough
           case Kleo::CryptoConfigEntry::ArgType_Path:
             // fallthrough
+          case Kleo::CryptoConfigEntry::ArgType_DirPath:
+            // fallthrough
           case Kleo::CryptoConfigEntry::ArgType_String:
 
             cout << " string value=" << entry->stringValue().local8Bit();
@@ -125,6 +127,8 @@ int main( int argc, char** argv ) {
           }
             // fallthrough
           case Kleo::CryptoConfigEntry::ArgType_Path:
+            // fallthrough
+          case Kleo::CryptoConfigEntry::ArgType_DirPath:
             // fallthrough
           case Kleo::CryptoConfigEntry::ArgType_String: {
             assert( entry->isOptional() ); // empty lists must be allowed (see issue121)

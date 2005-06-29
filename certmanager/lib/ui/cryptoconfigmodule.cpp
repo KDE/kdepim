@@ -191,6 +191,7 @@ Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
   for( QStringList::const_iterator it = entries.begin(), end = entries.end() ; it != end; ++it ) {
     Kleo::CryptoConfigEntry* entry = group->entry( *it );
     Q_ASSERT( entry );
+    if ( entry->level() > CryptoConfigEntry::Level_Advanced ) continue;
     CryptoConfigEntryGUI* entryGUI =
       CryptoConfigEntryGUIFactory::createEntryGUI( module, entry, *it, glay, widget );
     if ( entryGUI ) {
@@ -253,6 +254,7 @@ CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoC
       return new CryptoConfigEntryLineEdit( module, entry, entryName, glay, widget, name );
     case Kleo::CryptoConfigEntry::ArgType_URL:
     case Kleo::CryptoConfigEntry::ArgType_Path:
+    case Kleo::CryptoConfigEntry::ArgType_DirPath:
     case Kleo::CryptoConfigEntry::ArgType_String:
       kdWarning(5150) << "No widget implemented for list of type " << entry->argType() << endl;
       return 0; // TODO when the need arises :)
@@ -273,6 +275,8 @@ CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoC
     return new CryptoConfigEntryURL( module, entry, entryName, glay, widget, name );
   case Kleo::CryptoConfigEntry::ArgType_Path:
     return new CryptoConfigEntryPath( module, entry, entryName, glay, widget, name );
+  case Kleo::CryptoConfigEntry::ArgType_DirPath:
+    return new CryptoConfigEntryDirPath( module, entry, entryName, glay, widget, name );
   case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
       kdWarning(5150) << "No widget implemented for type " << entry->argType() << endl;
       return 0; // TODO when the need arises :)
@@ -357,7 +361,33 @@ void Kleo::CryptoConfigEntryPath::doSave()
 
 void Kleo::CryptoConfigEntryPath::doLoad()
 {
-  mUrlRequester->setURL( mEntry->urlValue().url() );
+  mUrlRequester->setURL( mEntry->urlValue().path() );
+}
+
+////
+
+Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
+  CryptoConfigModule* module,
+  Kleo::CryptoConfigEntry* entry, const QString& entryName,
+  QGridLayout * glay, QWidget* widget, const char* name )
+  : CryptoConfigEntryGUI( module, entry, entryName, name )
+{
+  const int row = glay->numRows();
+  mUrlRequester = new KURLRequester( widget );
+  mUrlRequester->setMode( KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly );
+  glay->addWidget( new QLabel( mUrlRequester, description(), widget ), row, 1 );
+  glay->addWidget( mUrlRequester, row, 2 );
+  connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+}
+
+void Kleo::CryptoConfigEntryDirPath::doSave()
+{
+  mEntry->setURLValue( mUrlRequester->url() );
+}
+
+void Kleo::CryptoConfigEntryDirPath::doLoad()
+{
+  mUrlRequester->setURL( mEntry->urlValue().path() );
 }
 
 ////

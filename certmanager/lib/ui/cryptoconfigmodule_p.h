@@ -179,6 +179,25 @@ namespace Kleo {
   };
 
   /**
+   * A widget manager for a directory path entry in the crypto config
+   */
+  class CryptoConfigEntryDirPath : public CryptoConfigEntryGUI {
+    Q_OBJECT
+
+  public:
+    CryptoConfigEntryDirPath( CryptoConfigModule* module,
+                              Kleo::CryptoConfigEntry* entry,
+                              const QString& entryName,
+                              QGridLayout * layout,
+                              QWidget* parent, const char* name = 0 );
+
+    virtual void doSave();
+    virtual void doLoad();
+  private:
+    KURLRequester* mUrlRequester;
+  };
+
+  /**
    * A widget manager for an URL entry in the crypto config
    */
   class CryptoConfigEntryURL : public CryptoConfigEntryGUI {

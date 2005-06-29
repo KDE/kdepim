@@ -65,7 +65,7 @@ const struct kleo_chiasmus_config_data kleo_chiasmus_config_entries[] = {
   },
   {
     "keydir", I18N_NOOP( "Key directory" ),
-    Level_Basic, ArgType_Path,
+    Level_Basic, ArgType_DirPath,
     { PATH "~/.chiasmus/keys" },
     0, 0, 1 /* FIXME: should be a list */
   },
