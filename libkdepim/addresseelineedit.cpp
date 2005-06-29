@@ -493,7 +493,7 @@ void AddresseeLineEdit::loadContacts()
       }
     } else { // KABC non-imap resource
       int weight = config.readNumEntry( resource->identifier(), 60 );
-      s_completionSources->append( resource->identifier() );
+      s_completionSources->append( resource->resourceName() );
       KABC::Resource::Iterator it;
       for ( it = resource->begin(); it != resource->end(); ++it )
         addContact( *it, weight, s_completionSources->size()-1 );
