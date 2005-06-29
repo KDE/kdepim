@@ -356,7 +356,9 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
 
 void Kleo::CryptoConfigEntryPath::doSave()
 {
-  mEntry->setURLValue( mUrlRequester->url() );
+  KURL url;
+  url.setPath( mUrlRequester->url() );
+  mEntry->setURLValue( url );
 }
 
 void Kleo::CryptoConfigEntryPath::doLoad()
@@ -382,7 +384,10 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
 
 void Kleo::CryptoConfigEntryDirPath::doSave()
 {
-  mEntry->setURLValue( mUrlRequester->url() );
+  KURL url;
+  url.setPath( mUrlRequester->url() );
+  mEntry->setURLValue( url );
+
 }
 
 void Kleo::CryptoConfigEntryDirPath::doLoad()
