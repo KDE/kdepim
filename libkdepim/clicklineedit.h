@@ -41,7 +41,8 @@ class ClickLineEdit : public KLineEdit
 
     void setClickMessage( const QString &msg );
     QString clickMessage() const { return mClickMessage; } 
-  
+
+  public slots:
     virtual void setText( const QString& txt );
 
   protected:
