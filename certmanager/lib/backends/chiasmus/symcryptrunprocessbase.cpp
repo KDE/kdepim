@@ -33,6 +33,8 @@
 #include "symcryptrunprocessbase.h"
 
 #include <ktempfile.h>
+#include <kdebug.h>
+#include <kshell.h>
 
 #include <qtimer.h>
 #include <qfile.h>
@@ -40,7 +42,8 @@
 #include <cstring>
 
 Kleo::SymCryptRunProcessBase::SymCryptRunProcessBase( const QString & class_, const QString & program,
-                                                      const QString & keyFile, Operation mode,
+                                                      const QString & keyFile, const QString & options,
+                                                      Operation mode,
                                                       QObject * parent, const char * name )
   : KProcess( parent, name ),
     mOperation( mode )
@@ -50,6 +53,11 @@ Kleo::SymCryptRunProcessBase::SymCryptRunProcessBase( const QString & class_, co
         << "--program" << program
         << "--keyfile" << keyFile
         << ( mode == Encrypt ? "--encrypt" : "--decrypt" );
+  if ( !options.isEmpty() )
+  {
+      const QStringList args = KShell::splitArgs( options );
+      *this << "--" << "--extra-chiasmus-option" << args;
+  }
 }
 
 Kleo::SymCryptRunProcessBase::~SymCryptRunProcessBase() {}
@@ -68,6 +76,7 @@ bool Kleo::SymCryptRunProcessBase::launch( const QByteArray & input, RunMode rm 
       return false;
     tempfile.close();
     *this << "--input" << tempfile.name();
+    kdDebug() << this->args() << endl;
     return KProcess::start( Block, All );
   } else {
     const bool ok = KProcess::start( rm, All );

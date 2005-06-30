@@ -54,6 +54,7 @@ namespace Kleo {
     Q_ENUMS( Mode )
     Q_PROPERTY( Mode mode READ mode )
     Q_PROPERTY( QString key READ key WRITE setKey )
+    Q_PROPERTY( QString options READ options WRITE setOptions )
     Q_PROPERTY( QByteArray input READ input WRITE setInput )
     Q_PROPERTY( QByteArray result READ result )
   public:
@@ -76,6 +77,9 @@ namespace Kleo {
     QString key() const { return mKey; }
     void setKey( const QString & key ) { mKey = key; }
 
+    QString options() const { return mOptions; }
+    void setOptions( const QString & options ) { mOptions = options; }
+
     QByteArray input() const { return mInput; }
     void setInput( const QByteArray & input ) { mInput = input; }
 
@@ -96,6 +100,7 @@ namespace Kleo {
   private:
     SymCryptRunProcessBase * mSymCryptRun;
     QString mKey;
+    QString mOptions;
     QByteArray mInput, mOutput;
     GpgME::Error mError;
     QString mStderr;

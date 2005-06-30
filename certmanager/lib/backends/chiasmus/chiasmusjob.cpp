@@ -81,7 +81,7 @@ GpgME::Error Kleo::ChiasmusJob::setup() {
 
   mSymCryptRun = new SymCryptRunProcessBase( class_->stringValue(),
                                              KShell::tildeExpand( chiasmus->urlValue().path() ),
-                                             mKey,
+                                             mKey, mOptions,
                                              mMode == Encrypt
                                              ? SymCryptRunProcessBase::Encrypt
                                              : SymCryptRunProcessBase::Decrypt,

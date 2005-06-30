@@ -48,7 +48,8 @@ public:
     Encrypt, Decrypt
   };
   SymCryptRunProcessBase( const QString & class_, const QString & program,
-                          const QString & keyFile, Operation op,
+                          const QString & keyFile, const QString& options,
+                          Operation op,
                           QObject * parent=0, const char * name=0 );
   ~SymCryptRunProcessBase();
 
