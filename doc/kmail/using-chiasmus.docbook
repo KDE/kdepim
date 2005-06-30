@@ -1,0 +1,147 @@
+<chapter id="chiasmus">
+
+<chapterinfo>
+<authorgroup>
+<author>
+<firstname>Jan-Oliver</firstname>
+<surname>Wagner</surname>
+<affiliation><address>
+<email>jan@intevation.de</email>
+</address></affiliation>
+</author>
+<author>
+<firstname>Till</firstname>
+<surname>Adam</surname>
+<affiliation><address>
+<email>till@kdab.net</email>
+</address></affiliation>
+</author>
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+<date>2005-06-30</date>
+<releaseinfo>1.8</releaseinfo>
+</chapterinfo>
+
+<title>Using the Chiasmus encryption tool</title>
+
+<sect1 id="chiasmus-preparations">
+<title>Preparations</title>
+
+<para>
+To encrypt and decrypt with Chiasmus, you need the BSI's Chiasmus 
+command line tool for GNU/Linux. It is intended solely for use in
+government agencies and availabe on request at the BSI.
+</para>
+
+<para>
+When executed without parameters, the <emphasis>chiasmus</emphasis>
+program should output something like:
+</para>
+
+<computeroutput>
+Chiasmus (R) fuer Windows K 1.8.0.0
+Bundesamt fuer Sicherheit in der Informationstechnik
+Kontakt: Chiasmus@bsi.bund.de
+(C) 2001 - 2005
+[ ...]
+</computeroutput>
+
+<para>
+Version 1.8.0.0 was tested succesfully, it is unknown whether other
+versions will work as well.
+</para>
+
+<para>
+As a last preparation step a directory which will hold the key files
+ending in ".xis" has to be created, if none already exists. Usually
+<filename class="directory">~/.chiasmus/</filename>  is used.
+</para>
+
+
+<sect1 id="chiasmus-configuration">
+	<title>Configuration</title>
+<para>
+Select <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure KMail
+</guimenuitem></menuchoice> and choose the <guilabel>Crypto-Backends</guilabel>
+tab on the Security page. Select the entry for Chiasmus and click 
+<guibutton>Configure....</guibutton> to open the configuration dialgo 
+for the Chiasmus backend.
+</para>
+
+<para>
+Specify the path to the Chiasmus binary and the directory where key files are
+to be stored, using the file selection dialogs which open when you click the
+folder icons next to the path entries.
+</para>
+
+<para>
+Close the backend configuration dialog by clicking <guibutton>Ok</guibutton>
+and check the Chiasmus checkbox to activate it. Then also close the main 
+configuration dialog.
+</para>
+
+<para>
+To finalize the configuration, restart KMail or Kontact.
+</para>
+
+</sect1>
+
+
+<sect1 id="chiasmus-encryption">
+	<title>Encryption</title>
+<para>
+To encrypt a message with Chiasmus, select <menuchoice><guimenu>
+Options</guimenu><guimenuitem>Encrypt message with chiasmus
+</guimenuitem></menuchoice>.
+<note>
+If you want to use Chiasmus encryption regularly, you should add
+an icon for that option to your toolbar, using <menuchoice><guimenu>
+Settings</guimenu><guimenuitem>Configure toolbars</guimenuitem>
+</menuchoice>. Move the entry for <guilabel>Encrypt with Chiasmus
+</guilabel> from the left side of the dialog to the right, using the
+buttons between the two panes. You can then quickly enable or disable
+Chiasmus encryption using that toolbar button and have a visual 
+indication of the current state.
+</note>
+<note>
+If automatic saving of backup copies of currently edited messages is
+enabled, you will be prompted for your Chiasmus password, if Chiamsus
+encryption is active.
+</note>
+</para>
+
+<para>
+On message sending, you will be prompted for the key file to be
+used for encryption and the corresponsing password. If the password
+is correct, the text of the message and all its attachments will be
+encrypted.
+</para>
+
+<note>
+The other signing and encryption options are completely independent
+of the Chiasmus encryption. You can use those in addition to Chiasmus,
+but that does not make much sense and complicates decryption for the
+recipients.
+</note>
+
+</sect1>
+
+<sect1 id="chiasmus-decryption">
+	<title>Decryption</title>
+<para>
+KMail and Kontact automatically detect messages that have been encrypted
+using Chiasmus and will automatically ask for the key file to be used for
+decryption and the corresponding password. If the password is correct, the
+message will be decrypted and displayed.
+<para>
+<para>
+To decrypt attachments that were encrypted using Chiasmus, which have
+a file name ending in <emphasis>.xia</emphasis>, right-click on the 
+attachment you want to decrypt and select <guilabel>Decrypt using Chiasmus
+</guilabel>. After you've chosen a key file to be used for decryption and
+entered the correct password for it, a file selection dialog will allow you
+to specify where the decrypted attachment should be placed.
+</sect1>
+
+</chapter>
