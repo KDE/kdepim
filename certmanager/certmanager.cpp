@@ -97,8 +97,6 @@
 #include <algorithm>
 #include <assert.h>
 
-static const bool startWithHierarchicalKeyListing = false;
-
 namespace {
 
   class DisplayStrategy : public Kleo::KeyListView::DisplayStrategy{
@@ -184,8 +182,6 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
 
   // Main Window --------------------------------------------------
   mKeyListView = new CertKeyListView( new ColumnStrategy(), new DisplayStrategy(), this, "mKeyListView" );
-  mKeyListView->setHierarchical( startWithHierarchicalKeyListing );
-  mKeyListView->setRootIsDecorated( startWithHierarchicalKeyListing );
   mKeyListView->setSelectionMode( QListView::Extended );
   setCentralWidget( mKeyListView );
 
@@ -208,13 +204,27 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
   if ( !import.isEmpty() )
     slotImportCertFromFile( KURL( import ) );
 
+  readConfig();
   updateStatusBarLabels();
   slotSelectionChanged(); // initial state for selection-dependent actions
 }
 
 CertManager::~CertManager() {
+  writeConfig();
   delete mDirmngrProc; mDirmngrProc = 0;
   delete mHierarchyAnalyser; mHierarchyAnalyser = 0;
+}
+
+void CertManager::readConfig() {
+  KConfig config( "kleopatrarc" );
+  config.setGroup( "Display Options" );
+  slotToggleHierarchicalView( config.readBoolEntry( "hierarchicalView", false ) );
+}
+
+void CertManager::writeConfig() {
+  KConfig config( "kleopatrarc" );
+  config.setGroup( "Display Options" );
+  config.writeEntry( "hierarchicalView", mKeyListView->hierarchical() );
 }
 
 void CertManager::createStatusBar() {
@@ -262,11 +272,9 @@ void CertManager::createActions() {
   action = new KAction( i18n("Expand All"), 0, CTRL+Key_Period,
 			this, SLOT(slotExpandAll()),
 			actionCollection(), "view_expandall" );
-  action->setEnabled( startWithHierarchicalKeyListing );
   action = new KAction( i18n("Collapse All"), 0, CTRL+Key_Comma,
 			this, SLOT(slotCollapseAll()),
 			actionCollection(), "view_collapseall" );
-  action->setEnabled( startWithHierarchicalKeyListing );
 
   (void)   new KAction( i18n("Refresh CRLs"), 0, 0,
 			this, SLOT(slotRefreshKeys()),
@@ -412,6 +420,10 @@ void CertManager::slotToggleHierarchicalView( bool hier ) {
     act->setEnabled( hier );
   if ( KAction * act = action("view_collapseall" ) )
     act->setEnabled( hier );
+  if ( KToggleAction * act = 
+      static_cast<KToggleAction*>( action("view_hierarchical") ) )
+    act->setChecked( hier );
+
   if ( hier && !mCurrentQuery.isEmpty() )
     startRedisplay( false );
 }

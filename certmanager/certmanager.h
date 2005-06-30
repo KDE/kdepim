@@ -172,6 +172,8 @@ private:
     void importNextURLOrRedisplay();
     void startRedisplay( bool validating );
     QString displayNameForJob( const Kleo::Job *job );
+    void readConfig();
+    void writeConfig();
 
 private:
     Kleo::KeyListView * mKeyListView;
