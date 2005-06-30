@@ -1,2 +1,0 @@
-STATUS is deleted from all VEVENTS and VTODOS!
-If no CREATED and LAST-MODIFIED was given in the original ics file, make check fails wrongly!
