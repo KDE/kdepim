@@ -189,11 +189,11 @@ void Groupwise::getFreeBusy( const KURL &url )
       kdDebug() << "Login" << endl;
 
       if ( !server.login() ) {
-        errorMessage( i18n("Unable to login.") );
+        errorMessage( i18n("Unable to login: ") + server.error() );
       } else {
         kdDebug() << "Read free/busy" << endl;
         if ( !server.readFreeBusy( email, start, end, fb ) ) {
-          errorMessage( i18n("Unable to read free/busy data.") );
+          errorMessage( i18n("Unable to read free/busy data: ") + server.error() );
         }
         kdDebug() << "Read free/busy" << endl;
         server.logout();
@@ -235,11 +235,11 @@ void Groupwise::getCalendar( const KURL &url )
 
   kdDebug() << "Login" << endl;
   if ( !server.login() ) {
-    errorMessage( i18n("Unable to login.") );
+    errorMessage( i18n("Unable to login: ") + server.error() );
   } else {
     kdDebug() << "Read calendar" << endl;
     if ( !server.readCalendarSynchronous( &calendar ) ) {
-      errorMessage( i18n("Unable to read calendar data.") );
+      errorMessage( i18n("Unable to read calendar data: ") + server.error() );
     }
     kdDebug() << "Logout" << endl;
     server.logout();
@@ -294,11 +294,11 @@ void Groupwise::getAddressbook( const KURL &url )
 
     kdDebug() << "Login" << endl;
     if ( !server.login() ) {
-      errorMessage( i18n("Unable to login.") );
+      errorMessage( i18n("Unable to login: ") + server.error() );
     } else {
       kdDebug() << "Read Addressbook" << endl;
       if ( !server.readAddressBooksSynchronous( ids, &resource ) ) {
-        errorMessage( i18n("Unable to read addressbook data.") );
+        errorMessage( i18n("Unable to read addressbook data: ") + server.error() );
       }
       kdDebug() << "Logout" << endl;
       server.logout();
@@ -361,11 +361,11 @@ void Groupwise::updateAddressbook( const KURL &url )
 
     kdDebug() << "Login" << endl;
     if ( !server.login() ) {
-      errorMessage( i18n("Unable to login.") );
+      errorMessage( i18n("Unable to login: ") + server.error() );
     } else {
       kdDebug() << "Update Addressbook" << endl;
       if ( !server.updateAddressBooks( ids, &resource, lastSequenceNumber ) ) {
-        errorMessage( i18n("Unable to update addressbook data.") );
+        errorMessage( i18n("Unable to update addressbook data: ") + server.error() );
       }
       kdDebug() << "Logout" << endl;
       server.logout();

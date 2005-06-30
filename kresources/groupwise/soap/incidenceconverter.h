@@ -44,6 +44,9 @@ class IncidenceConverter : public GWConverter
     KCal::Todo* convertFromTask( ngwt__Task* );
     ngwt__Task* convertToTask( KCal::Todo* );
 
+    KCal::Journal* convertFromNote( ngwt__Note* note);
+    ngwt__Note* convertToNote( KCal::Journal* journal );
+
   private:
     bool convertToCalendarItem( KCal::Incidence*, ngwt__CalendarItem* );
     bool convertFromCalendarItem( ngwt__CalendarItem*, KCal::Incidence* );

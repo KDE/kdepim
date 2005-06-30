@@ -100,7 +100,7 @@ size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
 int GroupwiseServer::gSoapOpen( struct soap *, const char *,
   const char *host, int port )
 {
-  kdDebug() << "GroupwiseServer::gSoapOpen()" << endl;
+//  kdDebug() << "GroupwiseServer::gSoapOpen()" << endl;
 
   if ( m_sock ) {
     kdError() << "m_sock non-null: " << (void*)m_sock << endl;
@@ -108,7 +108,7 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
   }
 
   if ( mSSL ) {
-    kdDebug() << "Creating KSSLSocket()" << endl;
+//    kdDebug() << "Creating KSSLSocket()" << endl;
     m_sock = new KSSLSocket();
     connect( m_sock, SIGNAL( sslFailure() ), SLOT( slotSslError() ) );
   } else {
@@ -142,7 +142,7 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
 
 int GroupwiseServer::gSoapClose( struct soap * )
 {
-  kdDebug() << "GroupwiseServer::gSoapClose()" << endl;
+//  kdDebug() << "GroupwiseServer::gSoapClose()" << endl;
 
   delete m_sock;
   m_sock = 0;
@@ -156,7 +156,7 @@ int GroupwiseServer::gSoapClose( struct soap * )
 
 int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
 {
-  kdDebug() << "GroupwiseServer::gSoapSendCallback()" << endl;
+//  kdDebug() << "GroupwiseServer::gSoapSendCallback()" << endl;
 
   if ( !m_sock ) {
     kdError() << "no open connection" << endl;
@@ -201,7 +201,7 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
 size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
   size_t n )
 {
-  kdDebug() << "GroupwiseServer::gSoapReceiveCallback()" << endl;
+//  kdDebug() << "GroupwiseServer::gSoapReceiveCallback()" << endl;
 
   if ( !m_sock ) {
     kdError() << "no open connection" << endl;
@@ -295,15 +295,23 @@ bool GroupwiseServer::login()
   int result = 1, maxTries = 3;
   mBinding->endpoint = mUrl.latin1();
   
-  while ( --maxTries && result ) {
-/*    result = soap_call___ngw__loginRequest( mSoap, mUrl.latin1(), NULL,
-      &loginReq, &loginResp );*/
-    result = mBinding->__ngw__loginRequest( &loginReq, &loginResp );
-  }
+//  while ( --maxTries && result ) {
+    result = soap_call___ngw__loginRequest( mSoap, mUrl.latin1(), NULL,
+      &loginReq, &loginResp );
+    /*result = mBinding->__ngw__loginRequest( &loginReq, &loginResp );*/
+//  }
 
   if ( !checkResponse( result, loginResp.status ) ) return false;
 
   mSession = loginResp.session;
+
+  if ( mSession.size() == 0 ) // workaround broken loginResponse error reporting
+  {
+    kdDebug() << "Login failed but the server didn't report an error" << endl;
+    mError = i18n( "Login failed, but the GroupWise server didn't report an error" );
+    return false;
+  }
+
   mSoap->header = new( SOAP_ENV__Header );
 
   mUserName = "";
@@ -735,6 +743,8 @@ bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
     item = converter.convertToAppointment( static_cast<KCal::Event *>( incidence ) );
   } else if ( incidence->type() == "Todo" ) {
     item = converter.convertToTask( static_cast<KCal::Todo *>( incidence ) );
+  } else if ( incidence->type() == "Journal" ) {
+    item = converter.convertToNote( static_cast<KCal::Journal *>( incidence ) );;
   } else {
     kdError() << "KCal::GroupwiseServer::addIncidence(): Unknown type: "
               << incidence->type() << endl;
@@ -799,6 +809,8 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
     item = converter.convertToAppointment( static_cast<KCal::Event *>( incidence ) );
   } else if ( incidence->type() == "Todo" ) {
     item = converter.convertToTask( static_cast<KCal::Todo *>( incidence ) );
+  } else if ( incidence->type() == "Journal" ) {
+    item = converter.convertToNote( static_cast<KCal::Journal *>( incidence ) );;
   } else {
     kdError() << "KCal::GroupwiseServer::changeIncidence(): Unknown type: "
               << incidence->type() << endl;
@@ -837,6 +849,7 @@ bool GroupwiseServer::checkResponse( int result, ngwt__Status *status )
     if ( status->description ) {
       msg += " ";
       msg += status->description->c_str();
+      mError = status->description->c_str();
     }
     kdError() << msg << endl;
     return false;
@@ -1000,6 +1013,7 @@ bool GroupwiseServer::readCalendarSynchronous( KCal::Calendar *cal )
 
   ReadCalendarJob *job = new ReadCalendarJob( mSoap, mUrl, mSession );
   job->setCalendarFolder( &mCalendarFolder );
+  job->setChecklistFolder( &mCheckListFolder );
   job->setCalendar( cal );
 
   job->run();

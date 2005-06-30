@@ -32,6 +32,8 @@
 
 #include "ksslsocket.h"
 
+#include "stdlib.h"
+
 struct KSSLSocketPrivate
 {
 	mutable KSSL *kssl;
@@ -43,7 +45,7 @@ struct KSSLSocketPrivate
 
 KSSLSocket::KSSLSocket() : KExtendedSocket()
 {
-  kdDebug() << "KSSLSocket() " << (void*)this << endl;
+//  kdDebug() << "KSSLSocket() " << (void*)this << endl;
 
 	d = new KSSLSocketPrivate;
 	d->kssl = 0L;
@@ -62,7 +64,7 @@ KSSLSocket::KSSLSocket() : KExtendedSocket()
 
 KSSLSocket::~KSSLSocket()
 {
-  kdDebug() << "KSSLSocket()::~KSSLSocket() " << (void*)this << endl;
+//  kdDebug() << "KSSLSocket()::~KSSLSocket() " << (void*)this << endl;
 
 	//Close connection
 	closeNow();
@@ -87,14 +89,14 @@ Q_LONG KSSLSocket::readBlock( char* data, Q_ULONG maxLen )
 
 Q_LONG KSSLSocket::writeBlock( const char* data, Q_ULONG len )
 {
-  kdDebug() << "KSSLSocket::writeBlock() " << (void*)this  << endl;
-  kdDebug() << "  d->kssl: " << (void*)d->kssl << endl;
+//  kdDebug() << "KSSLSocket::writeBlock() " << (void*)this  << endl;
+//  kdDebug() << "  d->kssl: " << (void*)d->kssl << endl;
 	return d->kssl->write( data, len );
 }
 
 void KSSLSocket::slotConnected()
 {
-  kdDebug() << "KSSLSocket::slotConnected() " << (void*)this << endl;
+//  kdDebug() << "KSSLSocket::slotConnected() " << (void*)this << endl;
 	if( KSSL::doesSSLWork() )
 	{
 		kdDebug(0) << k_funcinfo << "Trying SSL connection..." << endl;
@@ -135,7 +137,7 @@ void KSSLSocket::slotConnected()
 
 void KSSLSocket::slotDisconnected()
 {
-  kdDebug() << "KSSLSocket::slotDisconnected() " << (void*)this << endl;
+//  kdDebug() << "KSSLSocket::slotDisconnected() " << (void*)this << endl;
 	if( readNotifier() )
 		readNotifier()->setEnabled(false);
 }
@@ -382,23 +384,23 @@ int KSSLSocket::verifyCertificate()
 	if (rc == -1)
 		return rc;
 
-
-	kdDebug(0) << "SSL connection information follows:" << endl
-		<< "+-----------------------------------------------" << endl
-		<< "| Cipher: " << d->kssl->connectionInfo().getCipher() << endl
-		<< "| Description: " << d->kssl->connectionInfo().getCipherDescription() << endl
-		<< "| Version: " << d->kssl->connectionInfo().getCipherVersion() << endl
-		<< "| Strength: " << d->kssl->connectionInfo().getCipherUsedBits()
-		<< " of " << d->kssl->connectionInfo().getCipherBits()
-		<< " bits used." << endl
-		<< "| PEER:" << endl
-		<< "| Subject: " << d->kssl->peerInfo().getPeerCertificate().getSubject() << endl
-		<< "| Issuer: " << d->kssl->peerInfo().getPeerCertificate().getIssuer() << endl
-		<< "| Validation: " << (int)ksv << endl
-		<< "| Certificate matches IP: " << _IPmatchesCN << endl
-		<< "+-----------------------------------------------"
-		<< endl;
-
+  if ( getenv("DEBUG_GW_RESOURCE") ) {
+  	kdDebug(0) << "SSL connection information follows:" << endl
+		  << "+-----------------------------------------------" << endl
+		  << "| Cipher: " << d->kssl->connectionInfo().getCipher() << endl
+		  << "| Description: " << d->kssl->connectionInfo().getCipherDescription() << endl
+		  << "| Version: " << d->kssl->connectionInfo().getCipherVersion() << endl
+		  << "| Strength: " << d->kssl->connectionInfo().getCipherUsedBits()
+		  << " of " << d->kssl->connectionInfo().getCipherBits()
+		  << " bits used." << endl
+		  << "| PEER:" << endl
+		  << "| Subject: " << d->kssl->peerInfo().getPeerCertificate().getSubject() << endl
+		  << "| Issuer: " << d->kssl->peerInfo().getPeerCertificate().getIssuer() << endl
+		  << "| Validation: " << (int)ksv << endl
+		  << "| Certificate matches IP: " << _IPmatchesCN << endl
+		  << "+-----------------------------------------------"
+		  << endl;
+    }
 	return rc;
 }
 

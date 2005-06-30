@@ -34,6 +34,12 @@ namespace KCal {
 class Calendar;
 }
 
+struct ReadItemCounts {
+  unsigned int appointments;
+  unsigned int notes;
+  unsigned int tasks;
+};
+
 class GroupwiseServer;
 
 class GWJob
@@ -85,7 +91,7 @@ class ReadCalendarJob : public GWJob
     void run();
 
   protected:
-    void readCalendarFolder( const std::string &id, const unsigned int count );
+    void readCalendarFolder( const std::string &id, const unsigned int count, ReadItemCounts & counts );
 
   private:
     std::string *mCalendarFolder;

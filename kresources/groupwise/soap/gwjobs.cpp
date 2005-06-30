@@ -183,6 +183,11 @@ void ReadCalendarJob::setCalendarFolder( std::string *calendarFolder )
   mCalendarFolder = calendarFolder;
 }
 
+void ReadCalendarJob::setChecklistFolder( std::string *checklistFolder )
+{
+  mChecklistFolder = checklistFolder;
+}
+
 void ReadCalendarJob::setCalendar( KCal::Calendar *calendar )
 {
   mCalendar = calendar;
@@ -202,6 +207,13 @@ void ReadCalendarJob::run()
                                          &folderListReq,
                                          &folderListRes );
 
+  // consistency check variables
+  unsigned int totalItems = 0;
+  ReadItemCounts totals;
+  totals.tasks = 0;
+  totals.notes = 0;
+  totals.appointments = 0;
+
   if ( folderListRes.folders ) {
     std::vector<class ngwt__Folder * > *folders = &folderListRes.folders->folder;
     if ( folders ) {
@@ -212,23 +224,72 @@ void ReadCalendarJob::run()
         } else {
           ngwt__SystemFolder * fld = dynamic_cast<ngwt__SystemFolder *>( *it );
           if ( fld )
-            if ( fld->folderType == Calendar || fld->folderType == Checklist ) {
-              kdDebug() << "Got calendar folder" << endl;
-              int count = 0;
-              if ( fld->count )
-                count = *( fld->count );
-              readCalendarFolder( *(*it)->id, count );
-              (*mCalendarFolder) = *(*it)->id;
+          {
+            bool haveReadFolder = false;
+            int count = 0;
+            ReadItemCounts itemCounts;
+            itemCounts.appointments = 0;
+            itemCounts.notes = 0;
+            itemCounts.tasks = 0;
+            if ( fld->count )
+            {
+              count = *( fld->count );
+              totalItems += count;
+            }
+            kdDebug() << "Folder " <<  (*(*it)->id).c_str() << ", containing " << count << " items." << endl;
+            if ( fld->folderType == Calendar ) {
+              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Calendar, containing " << count << " items." << endl;
+              readCalendarFolder( *(*it)->id, count, itemCounts );
+              haveReadFolder = true;
+              *mCalendarFolder = *((*it)->id);
+            }
+            else if ( fld->folderType == Checklist ) {
+              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Checklist, containing " << count << " items." << endl;
+              readCalendarFolder( *(*it)->id, count, itemCounts );
+              haveReadFolder = true;
+              *mChecklistFolder = *((*it)->id);
+            }
+/*            else if ( fld->folderType == Mailbox ) {
+              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Mailbox (not yet accepted items), containing " << count << " items." << endl;
+              readCalendarFolder( *(*it)->id, count, itemCounts );
+              haveReadFolder = true;
+            }*/
+            if ( haveReadFolder )
+            {
+              kdDebug() << "Folder contained " << itemCounts.appointments << " appointments, " << itemCounts.notes << " notes, and " << itemCounts.tasks << " tasks." << endl;
+              totals.appointments += itemCounts.appointments;
+              totals.notes += itemCounts.notes;
+              totals.tasks += itemCounts.tasks;
+            }
+            else
+              kdDebug() << "Skipping folder: " << *((*it)->id )->c_str() << endl;
           }
         }
       }
     }
   }
-  
+
+  // perform consistency checks
+  kdDebug() << "Total count of items of all types in folders we read: " << totalItems << endl;
+  kdDebug() << "Folders we read contained " << totals.appointments << " appointments, " << totals.notes << " notes, and " << totals.tasks << " tasks." << endl;
+  kdDebug() << "Local calendar now contains " << mCalendar->rawEvents().count() << " events and " << mCalendar->rawJournals().count() << " journals, and " << mCalendar->rawTodos().count() << " todos." << endl;
+  if ( totals.appointments == mCalendar->rawEvents().count() )
+    kdDebug() << "All events accounted for." << endl;
+  else
+    kdDebug() << "ERROR: event counts do not match." << endl;
+  if ( totals.notes == mCalendar->rawJournals().count() )
+    kdDebug() << "All journals accounted for." << endl;
+  else
+    kdDebug() << "ERROR: journal counts do not match." << endl;
+  if ( totals.tasks == mCalendar->rawTodos().count() )
+    kdDebug() << "All todos accounted for." << endl;
+  else
+    kdDebug() << "ERROR: todo counts do not match." << endl;
+
   kdDebug() << "ReadCalendarJob::run() done" << endl;
 }
 
-void ReadCalendarJob::readCalendarFolder( const std::string &id, const unsigned int count )
+void ReadCalendarJob::readCalendarFolder( const std::string &id, const unsigned int count, ReadItemCounts & counts )
 {
   kdDebug() << "ReadCalendarJob::readCalendarFolder() '" << id.c_str() << "', with " << count << " entries." << endl;
   mSoap->header->ngwt__session = mSession;
@@ -350,13 +411,21 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, const unsigned 
         ngwt__Appointment *a = dynamic_cast<ngwt__Appointment *>( *it );
         if ( a ) {
           i = conv.convertFromAppointment( a );
+          counts.appointments++;
         } else {
           ngwt__Task *t = dynamic_cast<ngwt__Task *>( *it );
           if ( t ) {
             i = conv.convertFromTask( t );
+            counts.tasks++;
+          }
+          else {
+            ngwt__Note *n = dynamic_cast<ngwt__Note *>( *it );
+            if ( n ) {
+              i = conv.convertFromNote( n );
+              counts.notes++;
+            }
           }
         }
-  
         if ( i ) {
           i->setCustomProperty( "GWRESOURCE", "CONTAINER", conv.stringToQString( id ) );
   
@@ -367,14 +436,16 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, const unsigned 
     else
       kdDebug() << " readCursor got no Items in Response!" << endl;
 
-    readItems += readChunkSize; // this means that the read count is increased even if the call fails, but at least the while will always end
-    kdDebug() << " just read " << readChunkSize << " items" << endl;
-    readChunkSize = QMIN( readChunkSize, count - readItems );
-    *(readCursorRequest.count) = readChunkSize;
+    readItems += readCursorResponse.items->item.size(); // this means that the read count is increased even if the call fails, but at least the while will always end
+    kdDebug() << " just read " << readCursorResponse.items->item.size() << " items" << endl;
+    // 
+    if ( readCursorResponse.items->item.size() < readChunkSize )
+      break;
+/*    readChunkSize = QMIN( readChunkSize, count - readItems );
+    *(readCursorRequest.count) = readChunkSize;*/
     //*(readCursorRequest.position) = current;
   }
   kdDebug() << " read " << readItems << " items in total" << endl;
-  
 #endif
 }
 

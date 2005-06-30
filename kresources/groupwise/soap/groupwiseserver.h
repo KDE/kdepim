@@ -149,6 +149,7 @@ class GroupwiseServer : public QObject
 
     bool readUserSettings( ngwt__Settings *&settings );
     bool modifyUserSettings( QMap<QString, QString> & );
+    
   signals:
     void readAddressBookTotalSize( int );
     void readAddressBookProcessedSize( int );
@@ -182,7 +183,8 @@ class GroupwiseServer : public QObject
     QString mUserUuid;
 
     std::string mCalendarFolder;
-    
+    std::string mCheckListFolder;
+
     struct soap *mSoap;
     GroupWiseBinding *mBinding;
     

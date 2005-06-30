@@ -22,6 +22,7 @@
 #include <kmdcodec.h>
 #include <libkdepim/kpimprefs.h>
 #include <libkcal/event.h>
+#include <libkcal/journal.h>
 #include <libkcal/recurrence.h>
 #include <kabc/stdaddressbook.h>
 #include <kabc/addressee.h>
@@ -111,6 +112,8 @@ ngwt__Appointment* IncidenceConverter::convertToAppointment( KCal::Event* event 
   ngwt__Appointment* appointment = soap_new_ngwt__Appointment( soap(), -1 );
   appointment->startDate = 0;
   appointment->endDate = 0;
+  appointment->startDay = 0;
+  appointment->endDay = 0;
   appointment->acceptLevel = 0;
   appointment->alarm = 0;
   appointment->allDayEvent = 0;
@@ -130,9 +133,10 @@ ngwt__Appointment* IncidenceConverter::convertToAppointment( KCal::Event* event 
 
     if ( event->dtStart().isValid() )
       appointment->startDate = qDateToChar( event->dtStart().date() );
-
+      appointment->startDay = qDateToString( event->dtStart().date() );
     if ( event->hasEndDate() )
       appointment->endDate = qDateToChar( event->dtEnd().date() );
+      appointment->endDay = qDateToString( event->dtEnd().date() );
   } else {
     appointment->allDayEvent = 0;
 
@@ -207,6 +211,8 @@ KCal::Todo* IncidenceConverter::convertFromTask( ngwt__Task* task )
   if ( task->completed && (*task->completed) == true )
     todo->setCompleted( true );
 
+  getAttendees( task, todo );
+
   todo->setLocation( i18n( "Novell GroupWise does not support locations for To-dos." ) );
   return todo;
 }
@@ -244,6 +250,45 @@ ngwt__Task* IncidenceConverter::convertToTask( KCal::Todo* todo )
     (*task->completed) = false;
 
   return task;
+}
+
+KCal::Journal* IncidenceConverter::convertFromNote( ngwt__Note* note)
+{
+  if ( !note )
+    return 0;
+
+  KCal::Journal *journal = new KCal::Journal();
+
+  if ( !convertFromCalendarItem( note, journal ) ) {
+    delete journal;
+    return 0;
+  }
+
+  if ( note->startDate ) {
+    journal->setDtStart( stringToQDateTime( note->startDate ) );
+  }
+
+  getAttendees( note, journal );
+
+  return journal;
+}
+
+ngwt__Note* IncidenceConverter::convertToNote( KCal::Journal* journal )
+{
+  if ( !journal )
+    return 0;
+  ngwt__Note* note = soap_new_ngwt__Note( soap(), -1 );
+  note->startDate = 0;
+
+  if ( !convertToCalendarItem( journal, note ) ) {
+    soap_dealloc( soap(), note );
+    return 0;
+  }
+
+  if ( journal->dtStart().isValid() )
+    note->startDate = qDateTimeToString( journal->dtStart(), mTimezone );
+
+  return note;
 }
 
 bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt__CalendarItem* item )

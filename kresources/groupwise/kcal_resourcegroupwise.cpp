@@ -245,6 +245,7 @@ bool ResourceGroupwise::doSave()
 
   if ( !server.login() ) {
     kdError() << "Unable to login to server" << endl;
+    emit resourceSaveError( this, i18n( "Unable to login to server: " ) + server.error() );
     return false;
   }
 
