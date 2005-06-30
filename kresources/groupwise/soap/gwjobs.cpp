@@ -387,7 +387,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, const unsigned 
   readCursorRequest.count = (int*)soap_malloc( mSoap, sizeof(int) );
   *( readCursorRequest.count ) = (int)readChunkSize;
 
-  while ( readItems < count )
+  while ( true )
   {
     mSoap->header->ngwt__session = mSession;
     kdDebug() << "sending readCursorRequest with session: " << mSession.c_str() << endl;
@@ -399,7 +399,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, const unsigned 
       kdDebug() << "Faults according to GSOAP:" << endl;
       soap_print_fault(mSoap, stderr);
       kdDebug() << "EXITING" << endl;
-      return;
+      break;
     }
   
     if ( readCursorResponse.items ) {
