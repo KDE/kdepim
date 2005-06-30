@@ -5,7 +5,7 @@ PRODID:-//KDE//LibKCal test cases 1.0//EN
 BEGIN:VEVENT
 UID:19970901T130000Z-123403@host.com
 DTSTART:19971102
-SUMMARY:Our Blissful Anniversary on Nov 2, starting 1997
+SUMMARY:Yearly, on Nov 2, but date is taken from DTSTART, floating
 RRULE:FREQ=YEARLY
 END:VEVENT
 
