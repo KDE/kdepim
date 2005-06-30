@@ -62,13 +62,12 @@ KCal::Event* IncidenceConverter::convertFromAppointment( ngwt__Appointment* appo
   if ( appointment->allDayEvent && (*appointment->allDayEvent) )
   {
     event->setFloats( true );
-    // startDate actually belongs to CalendarItem, but the way it is interpreted depends on 
-    // whether allDayEvent from Appointment is true
-    if ( appointment->startDate != 0 )
-      event->setDtStart( charToQDate( appointment->startDate ) );
 
-    if ( appointment->endDate != 0 )
-      event->setDtEnd( charToQDate( appointment->endDate ).addDays( -1 ) );
+    if ( appointment->startDay != 0 )
+      event->setDtStart( QDate::fromString( QString::fromUtf8( appointment->startDay->c_str() ), Qt::ISODate ) );
+
+    if ( appointment->endDay != 0 )
+      event->setDtEnd( QDate::fromString( QString::fromUtf8( appointment->endDay->c_str() ), Qt::ISODate ) );
   }
   else
   {
@@ -132,10 +131,10 @@ ngwt__Appointment* IncidenceConverter::convertToAppointment( KCal::Event* event 
     appointment->allDayEvent = allDayEvent;
 
     if ( event->dtStart().isValid() )
-      appointment->startDate = qDateToChar( event->dtStart().date() );
+//      appointment->startDate = qDateToChar( event->dtStart().date() );
       appointment->startDay = qDateToString( event->dtStart().date() );
     if ( event->hasEndDate() )
-      appointment->endDate = qDateToChar( event->dtEnd().date() );
+//      appointment->endDate = qDateToChar( event->dtEnd().date() );
       appointment->endDay = qDateToString( event->dtEnd().date() );
   } else {
     appointment->allDayEvent = 0;
