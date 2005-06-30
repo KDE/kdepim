@@ -98,6 +98,12 @@ class LIBKCAL_EXPORT RecurrenceRule
     /** Set start of recurrence, as a date and time. */
     void setStartDate(const QDateTime &start);
 
+    /** Returns whether the start date has no time associated. Floating
+        means -- according to rfc2445 -- that the event has no time associate. */
+    bool doesFloat() const { return mFloating; }
+    /** Sets whether the dtstart is a floating time (i.e. has no time attached) */
+    void setFloats( bool floats );
+
 
     /** Returns the date and time of the last recurrence.
      * An invalid date is returned if the recurrence has no end.
@@ -118,7 +124,6 @@ class LIBKCAL_EXPORT RecurrenceRule
     /** Sets the total number of times the event is to occur, including both the
      * first and last. */
     void setDuration(int duration);
-// TODO_Recurrence: What to do with float?
 //     /** Returns the number of recurrences up to and including the date specified. */
 //     int durationTo(const QDate &) const;
     /** Returns the number of recurrences up to and including the date/time specified. */
@@ -255,7 +260,7 @@ class LIBKCAL_EXPORT RecurrenceRule
     uint mFrequency;
 
     bool mIsReadOnly;
-//     bool mDoesFloat;
+    bool mFloating;
 
     QValueList<int> mBySeconds;     // values: second 0-59
     QValueList<int> mByMinutes;     // values: minute 0-59
