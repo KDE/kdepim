@@ -91,6 +91,7 @@ namespace Kleo {
 
   private slots:
     GpgME::Error slotProcessExited( KProcess * );
+    void slotTimeout();
 
   private:
     bool checkPreconditions() const;
@@ -105,6 +106,7 @@ namespace Kleo {
     GpgME::Error mError;
     QString mStderr;
     bool mCanceled;
+    bool mTimeout;
     const Mode mMode;
   };
 

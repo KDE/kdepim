@@ -61,6 +61,7 @@ Kleo::ChiasmusJob::ChiasmusJob( Mode mode )
     mSymCryptRun( 0 ),
     mError( 0 ),
     mCanceled( false ),
+    mTimeout( true ),
     mMode( mode )
 {
 
@@ -76,7 +77,9 @@ GpgME::Error Kleo::ChiasmusJob::setup() {
     = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "symcryptrun-class" );
   const Kleo::CryptoConfigEntry * chiasmus
     = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "path" );
-  if ( !class_ || !chiasmus )
+  const Kleo::CryptoConfigEntry * timeoutEntry
+    = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "timeout" );
+  if ( !class_ || !chiasmus || !timeoutEntry )
     return mError = gpg_error( GPG_ERR_INTERNAL );
 
   mSymCryptRun = new SymCryptRunProcessBase( class_->stringValue(),
@@ -86,6 +89,8 @@ GpgME::Error Kleo::ChiasmusJob::setup() {
                                              ? SymCryptRunProcessBase::Encrypt
                                              : SymCryptRunProcessBase::Decrypt,
                                              this, "symcryptrun" );
+  QTimer::singleShot( timeoutEntry->uintValue() * 1000, this, 
+                      SLOT( slotTimeout() ) );
   return 0;
 }
 
@@ -120,6 +125,8 @@ GpgME::Error Kleo::ChiasmusJob::slotProcessExited( KProcess * proc ) {
     mError = gpg_error( GPG_ERR_INTERNAL );
   else if ( mCanceled )
     mError = gpg_error( GPG_ERR_CANCELED );
+  else if ( mTimeout )
+    mError = gpg_error( GPG_ERR_TIMEOUT );
   else if ( !proc->normalExit() )
     mError = gpg_error( GPG_ERR_GENERAL );
   else
@@ -184,6 +191,14 @@ void Kleo::ChiasmusJob::slotCancel() {
     mSymCryptRun->kill();
   mCanceled = true;
 }
+
+void Kleo::ChiasmusJob::slotTimeout() {
+  if ( !mSymCryptRun ) 
+    return;
+  mSymCryptRun->kill();
+  mTimeout = true;
+}
+
 
 void Kleo::ChiasmusJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
   if ( !mError )
