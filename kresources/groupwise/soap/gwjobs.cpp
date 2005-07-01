@@ -33,7 +33,7 @@
 
 #include "gwjobs.h"
 
-#define READ_FOLDER_CHUNK_SIZE 20
+#define READ_FOLDER_CHUNK_SIZE 100
 
 GWJob::GWJob( struct soap *soap, const QString &url,
   const std::string &session )
@@ -238,14 +238,20 @@ void ReadCalendarJob::run()
             }
             kdDebug() << "Folder " <<  (*(*it)->id).c_str() << ", containing " << count << " items." << endl;
             if ( fld->folderType == Calendar ) {
-              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Calendar, containing " << count << " items." << endl;
-              readCalendarFolder( *(*it)->id, count, itemCounts );
+              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Calendar, physically containing " << count << " items." << endl;
+              readCalendarFolder( *(*it)->id, itemCounts );
               haveReadFolder = true;
               *mCalendarFolder = *((*it)->id);
             }
             else if ( fld->folderType == Checklist ) {
-              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Checklist, containing " << count << " items." << endl;
-              readCalendarFolder( *(*it)->id, count, itemCounts );
+              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Checklist, physically containing " << count << " items." << endl;
+              readCalendarFolder( *(*it)->id, itemCounts );
+              haveReadFolder = true;
+              *mChecklistFolder = *((*it)->id);
+            }
+            else if ( fld->folderType == SentItems ) {
+              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type SentItems, physically containing " << count << " items." << endl;
+              readCalendarFolder( *(*it)->id, itemCounts );
               haveReadFolder = true;
               *mChecklistFolder = *((*it)->id);
             }
@@ -289,9 +295,9 @@ void ReadCalendarJob::run()
   kdDebug() << "ReadCalendarJob::run() done" << endl;
 }
 
-void ReadCalendarJob::readCalendarFolder( const std::string &id, const unsigned int count, ReadItemCounts & counts )
+void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts & counts )
 {
-  kdDebug() << "ReadCalendarJob::readCalendarFolder() '" << id.c_str() << "', with " << count << " entries." << endl;
+  kdDebug() << "ReadCalendarJob::readCalendarFolder() '" << id.c_str() << endl;
   mSoap->header->ngwt__session = mSession;
 
 #if 0
@@ -349,7 +355,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, const unsigned 
   }
 #else
   unsigned int readItems = 0;
-  unsigned int readChunkSize = QMIN( READ_FOLDER_CHUNK_SIZE, count);
+  unsigned int readChunkSize = READ_FOLDER_CHUNK_SIZE;
   
   int cursor;
 

@@ -91,7 +91,7 @@ class ReadCalendarJob : public GWJob
     void run();
 
   protected:
-    void readCalendarFolder( const std::string &id, const unsigned int count, ReadItemCounts & counts );
+    void readCalendarFolder( const std::string &id, ReadItemCounts & counts );
 
   private:
     std::string *mCalendarFolder;

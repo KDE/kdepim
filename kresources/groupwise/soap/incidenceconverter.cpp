@@ -285,9 +285,16 @@ ngwt__Note* IncidenceConverter::convertToNote( KCal::Journal* journal )
     return 0;
   }
 
-  if ( journal->dtStart().isValid() )
-    note->startDate = qDateTimeToString( journal->dtStart(), mTimezone );
+  if ( journal->doesFloat() ) {
+    if ( journal->dtStart().isValid() )
+      note->startDate = qDateToString( journal->dtStart().date() );
+  } else {
+    if ( journal->dtStart().isValid() )
+      note->startDate = qDateTimeToString( journal->dtStart(), mTimezone );
+  }
 
+  if ( !note->subject )
+    note->subject = qStringToString( QString("PLACEHOLDER SUBJECT") );
   return note;
 }
 
@@ -404,64 +411,56 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt
 void IncidenceConverter::setAttendees( KCal::Incidence *incidence,
   ngwt__CalendarItem *item )
 {
-  ngwt__Distribution *dist = soap_new_ngwt__Distribution( soap(), -1 );
-  item->distribution = dist;
-
-  ngwt__From *from = soap_new_ngwt__From( soap(), -1 );
-  dist->from = from;
+  item->distribution = soap_new_ngwt__Distribution( soap(), -1 );
+ 
+  item->distribution->from = soap_new_ngwt__From( soap(), -1 );
 
   // ngwt__From
-  from->replyTo = 0;
+  item->distribution->from->replyTo = 0;
   // ngwt__NameAndEmail
-  from->displayName = 0;
-  from->email = 0;
-  from->uuid = 0;
+  item->distribution->from->displayName = 0;
+  item->distribution->from->email = 0;
+  item->distribution->from->uuid = 0;
 
-  from->displayName = qStringToString( incidence->organizer().name() );
-  from->email = qStringToString( incidence->organizer().email() );
+  item->distribution->from->displayName = qStringToString( incidence->organizer().name() );
+  item->distribution->from->email = qStringToString( incidence->organizer().email() );
 
-  if ( !mFromName.isEmpty() ) from->displayName = qStringToString( mFromName );
-  if ( !mFromEmail.isEmpty() ) from->email = qStringToString( mFromEmail );
-  if ( !mFromUuid.isEmpty() ) from->uuid = qStringToString( mFromUuid );
+  if ( !mFromName.isEmpty() ) item->distribution->from->displayName = qStringToString( mFromName );
+  if ( !mFromEmail.isEmpty() ) item->distribution->from->email = qStringToString( mFromEmail );
+  if ( !mFromUuid.isEmpty() ) item->distribution->from->uuid = qStringToString( mFromUuid );
 
-  QString to = "To";
-  dist->to = qStringToString( to );
-  dist->cc = 0;
+  QString to; // To list consists of display names of organizer and attendees separated by ";  "
+  to += incidence->organizer().name();
+  item->distribution->sendoptions = soap_new_ngwt__SendOptions( soap(), -1 );
 
-  ngwt__SendOptions *sendOptions = soap_new_ngwt__SendOptions( soap(), -1 );
-  dist->sendoptions = sendOptions;
+  item->distribution->sendoptions->requestReply = 0;
+  item->distribution->sendoptions->mimeEncoding = 0;
+  item->distribution->sendoptions->notification = 0;
 
-  sendOptions->requestReply = 0;
-  sendOptions->mimeEncoding = 0;
-  sendOptions->notification = 0;
-
-  ngwt__StatusTracking *statusTracking = soap_new_ngwt__StatusTracking( soap(),
+  item->distribution->sendoptions->statusTracking = soap_new_ngwt__StatusTracking( soap(),
     -1 );
-  sendOptions->statusTracking = statusTracking;
 
-  statusTracking->autoDelete = false;
-  statusTracking->__item = All_;
+  item->distribution->sendoptions->statusTracking->autoDelete = false;
+  item->distribution->sendoptions->statusTracking->__item = All_;
 
-  ngwt__RecipientList *recipientList = soap_new_ngwt__RecipientList( soap(), -1 );
-  dist->recipients = recipientList;
-  
-  std::vector<ngwt__Recipient * > *recipients = 
-    soap_new_std__vectorTemplateOfPointerTongwt__Recipient( soap(), -1 );
- 
-//  recipients->push_back( createRecipient( mFromName, mFromEmail, mFromUuid ) );
+  item->distribution->recipients = soap_new_ngwt__RecipientList( soap(), -1 );
+  item->distribution->recipients->recipient = *( soap_new_std__vectorTemplateOfPointerTongwt__Recipient( soap(), -1 ) );
 
   KCal::Attendee::List attendees = incidence->attendees();
   KCal::Attendee::List::ConstIterator it;
   for( it = attendees.begin(); it != attendees.end(); ++it ) {
+    if ( !to.isEmpty() )
+      to += QString::fromLatin1( ";  %1" ).arg( (*it)->name() );
     kdDebug() << "IncidenceConverter::setAttendees(), adding " << (*it)->fullName()
       << endl;
     QString uuid;
     QValueList<KABC::Addressee> addList = KABC::StdAddressBook::self()->findByEmail( (*it)->email() );
     if ( !addList.first().isEmpty() )
-    uuid = addList.first().custom( "GWRESOURCE", "UUID" );
-    recipients->push_back( createRecipient( (*it)->name(), (*it)->email(), uuid ) );
+      uuid = addList.first().custom( "GWRESOURCE", "UUID" ); //uuid may be mandatory for the recipients list to be stored on the server...
+    item->distribution->recipients->recipient.push_back( createRecipient( (*it)->name(), (*it)->email(), uuid ) );
   }
- recipientList->recipient = *recipients;
+  item->distribution->to = qStringToString( to );
+  item->distribution->cc = 0;
 }
 
 ngwt__Recipient *IncidenceConverter::createRecipient( const QString &name,
