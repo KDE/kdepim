@@ -350,7 +350,7 @@ void AddresseeLineEdit::doCompletion( bool ctrlT )
 
   // cursor at end of string - or Ctrl+T pressed for substring completion?
   if ( ctrlT ) {
-    const QStringList completions = s_completion->substringCompletion( m_searchString );
+    const QStringList completions = getAdjustedCompletionItems( false );
 
     if ( completions.count() > 1 )
       ; //m_previousAddresses = prevAddr;
@@ -374,50 +374,16 @@ void AddresseeLineEdit::doCompletion( bool ctrlT )
 
     case KGlobalSettings::CompletionPopup:
     {
-      //m_previousAddresses = prevAddr;
-      QStringList items = s_completion->allMatches( m_searchString );
-      items += s_completion->allMatches( "\"" + m_searchString );
-      unsigned int beforeDollarCompletionCount = items.count();
+      const QStringList items = getAdjustedCompletionItems( true );
+      bool autoSuggest = !items.isEmpty() && (mode != KGlobalSettings::CompletionPopupAuto);
+      setCompletedItems( items, autoSuggest );
 
-      if ( m_searchString.find( ' ' ) == -1 ) // one word, possibly given name
-        items += s_completion->allMatches( "$$" + m_searchString );
-
-      // kdDebug(5300) << "     AddresseeLineEdit::doCompletion() found: " << items.join(" AND ") << endl;
-
-      if ( items.isEmpty() ) {
-        setCompletedItems( items, false );
-      } else {
-        int lastSourceIndex = -1;
-        unsigned int i = 0;
-        for ( QStringList::Iterator it = items.begin(); it != items.end(); ++it, ++i ) {
-          CompletionItemsMap::const_iterator cit = s_completionItemMap->find(*it);
-          if ( cit == s_completionItemMap->end() ) continue;
-          int idx = (*cit).second;
-          if ( lastSourceIndex == -1 || lastSourceIndex != idx ) {
-            const QString sourceLabel(  (*s_completionSources)[idx] );
-            items.insert( it, sourceLabel );
-            lastSourceIndex = idx;
-          }
-          (*it) = (*it).prepend( s_completionItemIndentString );
-          if ( i > beforeDollarCompletionCount ) { 
-            // remove the '$$whatever$' part
-            int pos = (*it).find( '$', 2 );
-            if ( pos < 0 ) // ???
-              continue;
-            (*it) = (*it).mid( pos + 1 );
-          }
-        }
-        bool autoSuggest = (mode != KGlobalSettings::CompletionPopupAuto);
-        setCompletedItems( items, autoSuggest );
-
-        if ( !autoSuggest ) {
-          int index = items.first().find( m_searchString );
-          QString newText = m_previousAddresses + items.first().mid( index );
-          setUserSelection( false );
-          setCompletedText( newText, true );
-        }
+      if ( !autoSuggest ) {
+        int index = items.first().find( m_searchString );
+        QString newText = m_previousAddresses + items.first().mid( index );
+        setUserSelection( false );
+        setCompletedText( newText, true );
       }
-
       break;
     }
 
@@ -460,6 +426,7 @@ void AddresseeLineEdit::slotPopupCompletion( const QString& completion )
 void AddresseeLineEdit::loadContacts()
 {
   s_completion->clear();
+  s_completionItemMap->clear();
   s_addressesDirty = false;
   //m_contactMap.clear();
 
@@ -599,7 +566,6 @@ void AddresseeLineEdit::addCompletionItem( const QString& string, int weight, in
 void AddresseeLineEdit::slotStartLDAPLookup()
 {
   if ( !s_LDAPSearch->isAvailable() ) {
-    s_completionItemMap->clear();
     return;
   }
   if (  s_LDAPLineEdit != this )
@@ -612,7 +578,6 @@ void AddresseeLineEdit::stopLDAPLookup()
 {
   s_LDAPSearch->cancelSearch();
   s_LDAPLineEdit = NULL;
-  s_completionItemMap->clear();
 }
 
 void AddresseeLineEdit::startLoadingLDAPEntries()
@@ -865,4 +830,40 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
   return ClickLineEdit::eventFilter( obj, e );
 }
 
+const QStringList KPIM::AddresseeLineEdit::getAdjustedCompletionItems( bool fullSearch )
+{
+  QStringList items = fullSearch ?
+    s_completion->allMatches( m_searchString )
+    : s_completion->substringCompletion( m_searchString );
+  if ( fullSearch )
+    items += s_completion->allMatches( "\"" + m_searchString );
+  unsigned int beforeDollarCompletionCount = items.count();
+
+  if ( fullSearch && m_searchString.find( ' ' ) == -1 ) // one word, possibly given name
+    items += s_completion->allMatches( "$$" + m_searchString );
+
+  // kdDebug(5300) << "     AddresseeLineEdit::doCompletion() found: " << items.join(" AND ") << endl;
+
+  int lastSourceIndex = -1;
+  unsigned int i = 0;
+  for ( QStringList::Iterator it = items.begin(); it != items.end(); ++it, ++i ) {
+    CompletionItemsMap::const_iterator cit = s_completionItemMap->find(*it);
+    if ( cit == s_completionItemMap->end() )continue;
+    int idx = (*cit).second;
+    if ( lastSourceIndex == -1 || lastSourceIndex != idx ) {
+      const QString sourceLabel(  (*s_completionSources)[idx] );
+      items.insert( it, sourceLabel );
+      lastSourceIndex = idx;
+    }
+    (*it) = (*it).prepend( s_completionItemIndentString );
+    if ( i > beforeDollarCompletionCount ) { 
+      // remove the '$$whatever$' part
+      int pos = (*it).find( '$', 2 );
+      if ( pos < 0 ) // ???
+        continue;
+      (*it) = (*it).mid( pos + 1 );
+    }
+  }
+  return items;
+}
 #include "addresseelineedit.moc"
