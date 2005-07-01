@@ -56,7 +56,7 @@ Kleo::SymCryptRunProcessBase::SymCryptRunProcessBase( const QString & class_, co
   if ( !options.isEmpty() )
   {
       const QStringList args = KShell::splitArgs( options );
-      *this << "--" << "--extra-chiasmus-option" << args;
+      *this << "--" << args;
   }
 }
 
