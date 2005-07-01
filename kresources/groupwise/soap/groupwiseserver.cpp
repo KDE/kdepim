@@ -308,7 +308,7 @@ bool GroupwiseServer::login()
   if ( mSession.size() == 0 ) // workaround broken loginResponse error reporting
   {
     kdDebug() << "Login failed but the server didn't report an error" << endl;
-    mError = i18n( "Login failed, but the GroupWise server didn't report an error" );
+    mError = i18n( "Login failed, but the GroupWise server did not report an error" );
     return false;
   }
 
