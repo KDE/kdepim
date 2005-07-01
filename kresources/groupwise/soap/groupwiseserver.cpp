@@ -277,7 +277,11 @@ bool GroupwiseServer::login()
 {
   _ngwm__loginResponse loginResp;
   _ngwm__loginRequest loginReq;
-  loginReq.application = 0;
+  loginReq.application = soap_new_std__string( mSoap, -1 );
+  loginReq.application->append( "KDEPIM" );
+  loginReq.language.append( "us" );
+  loginReq.version.append( "1" );
+  
   GWConverter conv( mSoap );
 
   ngwt__PlainText pt;
