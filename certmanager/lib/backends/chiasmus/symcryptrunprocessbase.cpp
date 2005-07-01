@@ -76,7 +76,6 @@ bool Kleo::SymCryptRunProcessBase::launch( const QByteArray & input, RunMode rm 
       return false;
     tempfile.close();
     *this << "--input" << tempfile.name();
-    kdDebug() << this->args() << endl;
     return KProcess::start( Block, All );
   } else {
     const bool ok = KProcess::start( rm, All );
