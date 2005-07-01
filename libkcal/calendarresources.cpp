@@ -325,7 +325,7 @@ Todo::List CalendarResources::rawTodos()
 
 Todo *CalendarResources::todo( const QString &uid )
 {
-  kdDebug(5800) << "CalendarResources::todo(uid)" << endl;
+  //kdDebug(5800) << "CalendarResources::todo(uid)" << endl;
 
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
