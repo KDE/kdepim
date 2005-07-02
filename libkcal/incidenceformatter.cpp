@@ -277,9 +277,13 @@ static QString eventViewerFormatEvent( Event *event )
                     .arg( event->dtEndStr() ) + "</td>";
     } else {
       tmpStr += "<td align=\"right\"><b>Time</b></td>";
-      tmpStr += "<td>" + i18n("<beginTime> - <endTime>","%1 - %2")
-                    .arg( event->dtStartTimeStr() )
-                    .arg( event->dtEndTimeStr() ) + "</td>";
+      if ( event->hasEndDate() && event->dtStart() != event->dtEnd()) {
+        tmpStr += "<td>" + i18n("<beginTime> - <endTime>","%1 - %2")
+                      .arg( event->dtStartTimeStr() )
+                      .arg( event->dtEndTimeStr() ) + "</td>";
+      } else {
+        tmpStr += "<td>" + event->dtStartTimeStr() + "</td>";
+      }
       tmpStr += "</tr><tr>";
       tmpStr += "<td align=\"right\"><b>Date</b></td>";
       tmpStr += "<td>" + i18n("date as string","%1")
