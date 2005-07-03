@@ -786,35 +786,44 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
       }
     }
   }
-  if ( e->type() == QEvent::Accel || e->type() == QEvent::AccelOverride
-      || e->type() == QEvent::KeyPress || e->type() == QEvent::KeyRelease ) {
+  if ( ( obj == this ) &&
+     ( e->type() == QEvent::AccelOverride ) ) {
+    QKeyEvent *ke = static_cast<QKeyEvent*>( e );
+    ke->accept();
+    return true;
+  }
+  if ( ( obj == this ) &&
+      ( e->type() == QEvent::KeyPress ) ) {
     QKeyEvent *ke = static_cast<QKeyEvent*>( e );
     unsigned int currentIndex = completionBox()->currentItem();
     if ( ke->key() == Key_Up ) {
+      //kdDebug() << "EVENTFILTER: Key_Up currentIndex=" << currentIndex << endl;
       // figure out if the item we would be moving to is one we want
       // to ignore. If so, go one further
       QListBoxItem *itemAbove = completionBox()->item( currentIndex - 1 );
       if ( itemAbove && !itemAbove->text().startsWith( s_completionItemIndentString ) ) {
-        // there is a header above is, check if there is even further up 
+        // there is a header above is, check if there is even further up
         // and if so go one up, so it'll be selected
-        if ( completionBox()->item( currentIndex - 2 ) ) {
+        if ( currentIndex > 1 && completionBox()->item( currentIndex - 2 ) ) {
+          //kdDebug() << "EVENTFILTER: Key_Up -> skipping " << currentIndex - 1 << endl;
           completionBox()->setCurrentItem( itemAbove->prev() );
-          completionBox()->setSelected( currentIndex - 1, true );
+          completionBox()->setSelected( currentIndex - 2, true );
         } else {
           // nothing to skip to, let's stay where we are
-          completionBox()->setSelected( currentIndex + 1, true );
         }
         return true;
       }
     } else if ( ke->key() == Key_Down ) {
       // same strategy for downwards
+      //kdDebug() << "EVENTFILTER: Key_Down. currentIndex=" << currentIndex << endl;
       QListBoxItem *itemBelow = completionBox()->item( currentIndex + 1 );
       if ( itemBelow && !itemBelow->text().startsWith( s_completionItemIndentString ) ) {
         if ( completionBox()->item( currentIndex + 2 ) ) {
+          //kdDebug() << "EVENTFILTER: Key_Down -> skipping " << currentIndex+1 << endl;
           completionBox()->setCurrentItem( itemBelow->next() );
-          completionBox()->setSelected( currentIndex + 1, true );
+          completionBox()->setSelected( currentIndex + 2, true );
         } else {
-          completionBox()->setSelected( currentIndex - 1, true );
+          // nothing to skip to, let's stay where we are
         }
         return true;
       }
