@@ -31,7 +31,6 @@
 #include "knglobals.h"
 #include "knarticlefactory.h"
 #include "knfolder.h"
-#include "knarticlewidget.h"
 #include "knarticlewindow.h"
 #include "knmainwidget.h"
 

@@ -41,7 +41,6 @@ using KRecentAddress::RecentAddresses;
 
 //GUI
 #include "knmainwidget.h"
-#include "knarticlewidget.h"
 #include "knarticlewindow.h"
 #include "kncollectionview.h"
 #include "kncollectionviewitem.h"

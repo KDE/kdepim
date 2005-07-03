@@ -33,9 +33,9 @@
 
 #include <email.h>
 
+#include "kndisplayedheader.h"
 #include "knglobals.h"
 #include "kngroupmanager.h"
-#include "knarticlewidget.h"
 #include "utilities.h"
 
 

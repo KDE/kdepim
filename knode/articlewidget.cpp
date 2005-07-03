@@ -60,15 +60,16 @@
 #include "knarticlecollection.h"
 #include "knarticlefactory.h"
 #include "knarticlemanager.h"
-#include "knarticlewidget.h"
 #include "knconfig.h"
 #include "knconfigmanager.h"
+#include "kndisplayedheader.h"
 #include "knfolder.h"
 #include "knfoldermanager.h"
 #include "knglobals.h"
 #include "kngroup.h"
 #include "knmainwidget.h"
 #include "knnntpaccount.h"
+#include "knsourceviewwindow.h"
 
 using namespace KNode;
 

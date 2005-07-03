@@ -38,11 +38,11 @@
 #include <kstdguiitem.h>
 
 #include "knaccountmanager.h"
+#include "kndisplayedheader.h"
 #include "kngroupmanager.h"
 #include "knglobals.h"
 #include "knnntpaccount.h"
 #include "utilities.h"
-#include "knarticlewidget.h"
 #include "knfiltermanager.h"
 #include "knarticlefilter.h"
 #include "knscoring.h"
