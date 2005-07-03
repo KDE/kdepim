@@ -768,9 +768,7 @@ int KPIM::AddresseeLineEdit::addCompletionSource( const QString &source )
 bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
 {
   if ( obj == completionBox() ) {
-    if ( e->type() == QEvent::MouseButtonPress
-        || e->type() == QEvent::MouseMove
-        || e->type() == QEvent::MouseButtonRelease ) {
+    if ( e->type() == QEvent::MouseButtonPress ) {
       QMouseEvent* me = static_cast<QMouseEvent*>( e );
       // find list box item at the event position
       QListBoxItem *item = completionBox()->itemAt( me->pos() );
