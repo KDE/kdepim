@@ -342,7 +342,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @param date request filtered Incidence list for this QDate only.
 
-       @return the list of filtered Incidences occuring on the specified date.
+       @return the list of filtered Incidences occurring on the specified date.
     */
     virtual Incidence::List incidences( const QDate &date );
 
@@ -468,7 +468,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @param qdt request filtered Event list for this QDateTime only.
 
-       @return the list of filtered Events occuring on the specified timestamp.
+       @return the list of filtered Events occurring on the specified timestamp.
     */
     Event::List events( const QDateTime &qdt );
 
@@ -495,7 +495,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @param sortField specifies the EventSortField.
        @param sortDirection specifies the SortDirection.
 
-       @return the list of sorted, filtered Events occuring on @a date.
+       @return the list of sorted, filtered Events occurring on @a date.
     */
     Event::List events(
       const QDate &date,
@@ -520,7 +520,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @param qdt request unfiltered Event list for this QDateTime only.
 
-       @return the list of unfiltered Events occuring on the specified
+       @return the list of unfiltered Events occurring on the specified
        timestamp.
     */
     virtual Event::List rawEventsForDate( const QDateTime &qdt ) = 0;
@@ -548,7 +548,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @param sortField specifies the EventSortField.
        @param sortDirection specifies the SortDirection.
 
-       @return the list of sorted, unfiltered Events occuring on @a date.
+       @return the list of sorted, unfiltered Events occurring on @a date.
     */
     virtual Event::List rawEventsForDate(
       const QDate &date,

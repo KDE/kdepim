@@ -372,7 +372,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @param qdt request unfiltered Event list for this QDateTime only.
 
-       @return the list of unfiltered Events occuring on the specified
+       @return the list of unfiltered Events occurring on the specified
        timestamp.
     */
     Event::List rawEventsForDate( const QDateTime &qdt );
@@ -400,7 +400,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @param sortField specifies the EventSortField.
        @param sortDirection specifies the SortDirection.
 
-       @return the list of sorted, unfiltered Events occuring on @a date.
+       @return the list of sorted, unfiltered Events occurring on @a date.
     */
     Event::List rawEventsForDate(
       const QDate &date,
@@ -574,7 +574,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @param to is the ending timestamp.
 
-       @return the list of Alarms occuring before the specified QDateTime.
+       @return the list of Alarms occurring before the specified QDateTime.
     */
     Alarm::List alarmsTo( const QDateTime &to );
 
