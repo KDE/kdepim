@@ -59,7 +59,8 @@ libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   \
                   knarticlemanager.cpp \
                   knarticle.cpp \
-                  knarticlewidget.cpp \
+                  kndisplayedheader.cpp \
+                  knsourceviewwindow.cpp \
                   knarticlewindow.cpp \
                   knhdrviewitem.cpp \
                   \
@@ -126,7 +127,8 @@ noinst_HEADERS =  knconfigmanager.h \
                   \
                   knarticlemanager.h \
                   knarticle.h \
-                  knarticlewidget.h \
+                  kndisplayedheader.h \
+                  knsourceviewwindow.h \
                   knarticlewindow.h \
                   knhdrviewitem.h \
                   \

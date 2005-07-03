@@ -129,11 +129,7 @@ void KNHdrViewItem::paintCell( QPainter *p, const QColorGroup &cg, int column, i
       pen.setColor( greyColor() );
     else
       pen.setColor( normalColor() );
-#if KDE_IS_VERSION(3,3,90)
     base = backgroundColor( column );
-#else
-    base = backgroundColor();
-#endif
   }
 
   p->setPen( pen );

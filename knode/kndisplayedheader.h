@@ -9,29 +9,13 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KNARTICLEWIDGET_H
-#define KNARTICLEWIDGET_H
+#ifndef KNDISPLAYEDHEADER_H
+#define KNDISPLAYEDHEADER_H
 
 #include <qbitarray.h>
-#include <ktextbrowser.h>
-
-
-class KNSourceViewWindow : public KTextBrowser {
-
-  Q_OBJECT
-
-  public:
-    KNSourceViewWindow( const QString &text );
-    ~KNSourceViewWindow();
-    virtual void setPalette( const QPalette &pal );
-
-};
-
-
-//============================================================================================
 
 
 class KNDisplayedHeader {

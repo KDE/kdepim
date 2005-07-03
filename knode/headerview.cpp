@@ -57,9 +57,7 @@ KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
   setAllColumnsShowFocus( true );
   setSelectionMode( QListView::Extended );
   setShowSortIndicator( true );
-#if KDE_IS_VERSION( 3, 3, 90 )
   setShadeSortColumn ( true );
-#endif
   setRootIsDecorated( true );
   setSorting( mPaintInfo.dateCol );
   header()->setMovingEnabled( true );

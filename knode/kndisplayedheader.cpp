@@ -9,57 +9,12 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qaccel.h>
+#include <klocale.h>
 
-#include <kapplication.h>
-
-#include "knarticlewidget.h"
-#include "knglobals.h"
-#include "knconfigmanager.h"
-#include "utilities.h"
-
-
-KNSourceViewWindow::KNSourceViewWindow( const QString &text )
-  : KTextBrowser(0)
-{
-  setWFlags(WType_TopLevel | WDestructiveClose);
-  QAccel *accel = new QAccel( this, "browser close-accel" );
-  accel->connectItem( accel->insertItem( Qt::Key_Escape ), this , SLOT( close() ));
-  KNConfig::Appearance *app=knGlobals.configManager()->appearance();
-
-  setTextFormat( PlainText );
-
-  setCaption(kapp->makeStdCaption(i18n("Article Source")));
-  setPaper( QBrush(app->backgroundColor()) );
-  setFont( app->articleFixedFont() );
-  setColor( app->textColor() );
-  setWordWrap( KTextBrowser::NoWrap );
-
-  setText( text );
-  KNHelper::restoreWindowSize("sourceWindow", this, QSize(500,300));
-  show();
-}
-
-
-void KNSourceViewWindow::setPalette( const QPalette &pal )
-{
-  QPalette p = pal;
-  p.setColor( QColorGroup::Text, knGlobals.configManager()->appearance()->textColor() );
-  p.setColor( QColorGroup::Background, knGlobals.configManager()->appearance()->backgroundColor() );
-  KTextBrowser::setPalette( p );
-}
-
-
-KNSourceViewWindow::~KNSourceViewWindow()
-{
-  KNHelper::saveWindowSize("sourceWindow",size());
-}
-
-
-//=============================================================================================================
+#include "kndisplayedheader.h"
 
 
 // some standard headers
@@ -218,8 +173,3 @@ void  KNDisplayedHeader::createTags()
     t_ags[3].prepend(tokens[7]);
   }
 }
-
-
-//--------------------------------
-
-#include "knarticlewidget.moc"
