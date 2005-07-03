@@ -43,7 +43,7 @@ public:
 	//This function let it start fetching headers.
 	void doReadSubjects( KKioDrop* );
 	
-	//This function should return true then and only then of no error occured.
+	//This function should return true then and only then of no error occurred.
 	bool valid( ) { return _valid; }
 	
 private:

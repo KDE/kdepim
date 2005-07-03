@@ -2265,7 +2265,7 @@ ICAL_ALLOCATION_ERROR
 \newline 
 ICAL_NO_ERROR
 \newline 
-No error has occured
+No error has occurred
 \newline 
 ICAL_TIMEDOUT_ERROR
 \newline 

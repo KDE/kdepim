@@ -2664,7 +2664,7 @@
 	* import.c (append_xml_impinfo): Kludge to print fingerprint
 	instead of keyid for use with gpgsm.
 	(import_status_handler): Set a flag to know whether any import
-	occured.
+	occurred.
 	(gpgme_op_import): Reurn -1 if no certificate ewas imported.
 
 2002-06-25  Werner Koch  <wk@gnupg.org>

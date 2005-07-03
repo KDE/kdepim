@@ -44,7 +44,7 @@ public:
 	//This function should be called if there are messages to be deleted.
 	bool deleteMails( QPtrList< const KornMailId > *, KKioDrop* );
 	
-	//This function should return false then and only then if an error occured.
+	//This function should return false then and only then if an error occurred.
 	bool valid( ) { return _valid; }
 	
 public slots:

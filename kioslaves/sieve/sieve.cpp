@@ -963,7 +963,7 @@ bool kio_sieveProtocol::saslInteract( void *in, AuthInfo &ai )
   return true;
 }
 
-#define SASLERROR  error(ERR_COULD_NOT_AUTHENTICATE, i18n("An error occured during authentication: %1").arg( \
+#define SASLERROR  error(ERR_COULD_NOT_AUTHENTICATE, i18n("An error occurred during authentication: %1").arg( \
       QString::fromUtf8( sasl_errdetail( conn ) )));
 
 bool kio_sieveProtocol::authenticate()

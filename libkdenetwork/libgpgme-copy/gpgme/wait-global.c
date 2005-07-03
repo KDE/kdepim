@@ -200,7 +200,7 @@ _gpgme_wait_global_event_cb (void *data, gpgme_event_io_t type,
 
 	if (err)
 	  {
-	    /* An error occured.  Close all fds in this context, and
+	    /* An error occurred.  Close all fds in this context, and
 	       send the error in a done event.  */
 	    unsigned int idx;
 	    
@@ -312,7 +312,7 @@ gpgme_wait (gpgme_ctx_t ctx, gpgme_error_t *status, int hang)
 	      err = item->handler (item->handler_value, fdt.fds[i].fd);
 	      if (err)
 		{
-		  /* An error occured.  Close all fds in this context,
+		  /* An error occurred.  Close all fds in this context,
 		     and signal it.  */
 		  unsigned int idx;
 	    

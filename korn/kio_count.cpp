@@ -205,7 +205,7 @@ void KIO_Count::result( KIO::Job* job )
 	if( job != _job )
 		kdError() << i18n( "Got unknown job; something must be wrong..." ) << endl;
 
-	//look of an error occured. If there is, print the error.
+	//look of an error occurred. If there is, print the error.
 	//This could be very useful by resolving bugs.
 	if( job->error() )
 	{

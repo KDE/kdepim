@@ -83,7 +83,7 @@ _gpgme_wait_on_condition (gpgme_ctx_t ctx, volatile int *cond)
 
       if (nr < 0)
 	{
-	  /* An error occured.  Close all fds in this context, and
+	  /* An error occurred.  Close all fds in this context, and
 	     signal it.  */
 	  unsigned int idx;
 
@@ -111,7 +111,7 @@ _gpgme_wait_on_condition (gpgme_ctx_t ctx, volatile int *cond)
 	      err = item->handler (item->handler_value, ctx->fdt.fds[i].fd);
 	      if (err)
 		{
-		  /* An error occured.  Close all fds in this context,
+		  /* An error occurred.  Close all fds in this context,
 		     and signal it.  */
 		  unsigned int idx;
 		  

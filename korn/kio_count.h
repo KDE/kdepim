@@ -50,7 +50,7 @@ public:
 	//This function starts counting
 	void count( KKioDrop* );
 	
-	//This functions returns true of no error has occured.
+	//This functions returns true of no error has occurred.
 	bool valid( ) { return _valid; }
 	
 	void stopActiveCount();
