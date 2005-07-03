@@ -768,19 +768,34 @@ int KPIM::AddresseeLineEdit::addCompletionSource( const QString &source )
 bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
 {
   if ( obj == completionBox() ) {
-    if ( e->type() == QEvent::MouseButtonPress ) {
+    if ( e->type() == QEvent::MouseButtonPress
+      || e->type() == QEvent::MouseMove
+      || e->type() == QEvent::MouseButtonRelease ) {
       QMouseEvent* me = static_cast<QMouseEvent*>( e );
       // find list box item at the event position
       QListBoxItem *item = completionBox()->itemAt( me->pos() );
-      if ( !item ) return false;
-      if ( !item->text().startsWith( s_completionItemIndentString ) ) {
-        return true; // eat the event, we don't want anything to happen
-      } else {
-        // if we are not on one of the group heading, make sure the item
-        // below or above is selected, not the heading, inadvertedly, due
-        // to fuzzy auto-selection from QListBox
-        completionBox()->setCurrentItem( item );
-        completionBox()->setSelected( completionBox()->index( item ), true );
+      if ( !item ) {
+        // In the case of a mouse move outside of the box we don't want
+        // the parent to fuzzy select a header by mistake.
+        bool eat = e->type() == QEvent::MouseMove;
+        return eat;
+      }
+      // avoid selection of headers on button press, or move or release while
+      // a button is pressed
+      if ( e->type() == QEvent::MouseButtonPress 
+          || me->state() & LeftButton || me->state() & MidButton 
+          || me->state() & RightButton ) {
+        if ( !item->text().startsWith( s_completionItemIndentString ) ) {
+          return true; // eat the event, we don't want anything to happen
+        } else {
+          // if we are not on one of the group heading, make sure the item
+          // below or above is selected, not the heading, inadvertedly, due
+          // to fuzzy auto-selection from QListBox
+          completionBox()->setCurrentItem( item );
+          completionBox()->setSelected( completionBox()->index( item ), true );
+          if ( e->type() == QEvent::MouseMove )
+            return true; // avoid fuzzy selection behavior
+        }
       }
     }
   }
