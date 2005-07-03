@@ -1,6 +1,4 @@
 /*
-    knnetaccess.cpp
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -11,7 +9,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 #include <unistd.h>
@@ -63,9 +61,6 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
 
   nntpClient=new KNNntpClient(nntpOutPipe[0],nntpInPipe[1],nntp_Mutex);
   nntpClient->start();
-
-  nntpJobQueue.setAutoDelete(false);
-  smtpJobQueue.setAutoDelete(false);
 }
 
 
@@ -120,19 +115,24 @@ void KNNetAccess::addJob(KNJobData *job)
 
     // avoid duplicate fetchNewHeader jobs...
     bool duplicate = false;
-    if (job->type()==KNJobData::JTfetchNewHeaders || job->type()==KNJobData::JTsilentFetchNewHeaders) {
-      for (KNJobData *j = nntpJobQueue.first(); j; j = nntpJobQueue.next())
-        if ((j->type()==KNJobData::JTfetchNewHeaders || j->type()==KNJobData::JTsilentFetchNewHeaders) &&
-             j->data() == job->data())     // job works on the same group...
+    if ( job->type() == KNJobData::JTfetchNewHeaders || job->type() == KNJobData::JTsilentFetchNewHeaders ) {
+      QValueList<KNJobData*>::ConstIterator it;
+      for ( it = nntpJobQueue.begin(); it != nntpJobQueue.end(); ++it ) {
+        if ( ( (*it)->type() == KNJobData::JTfetchNewHeaders || (*it)->type() == KNJobData::JTsilentFetchNewHeaders )
+          && (*it)->data() == job->data() ) // job works on the same group...
           duplicate = true;
+      }
     }
 
     if (!duplicate) {
       // give a lower priority to fetchNewHeaders and postArticle jobs
-      if (job->type()==KNJobData::JTfetchNewHeaders || job->type()==KNJobData::JTsilentFetchNewHeaders || job->type()==KNJobData::JTpostArticle)
-        nntpJobQueue.append(job);
-      else
-        nntpJobQueue.prepend(job);
+      if ( job->type() == KNJobData::JTfetchNewHeaders
+           || job->type() == KNJobData::JTsilentFetchNewHeaders
+           || job->type() == KNJobData::JTpostArticle ) {
+        nntpJobQueue.append( job );
+      } else {
+        nntpJobQueue.prepend( job );
+      }
 
       if (!currentNntpJob)   // no active job, start the new one
         startJobNntp();
@@ -149,18 +149,14 @@ void KNNetAccess::stopJobsNntp(int type)
     triggerAsyncThread(nntpOutPipe[1]);
   }
 
-  KNJobData *tmp;                          // kill waiting jobs
-  KNJobData *start = nntpJobQueue.first();
-  do {
-    if (!nntpJobQueue.isEmpty()) {
-      tmp=nntpJobQueue.take(0);
-      if ((type==0)||(tmp->type()==type)) {
-        tmp->cancel();
-        tmp->notifyConsumer();
-      } else
-        nntpJobQueue.append(tmp);
+  QValueList<KNJobData*>::Iterator it;
+  for ( it = nntpJobQueue.begin(); it != nntpJobQueue.end(); ++it ) {
+    if ( (*it)->type() == type ) {
+      (*it)->cancel();
+      (*it)->notifyConsumer();
+      nntpJobQueue.remove( it );
     }
-  } while(!nntpJobQueue.isEmpty() && (start != nntpJobQueue.first()));
+  }
 }
 
 
@@ -178,18 +174,14 @@ void KNNetAccess::stopJobsSmtp(int type)
     threadDoneSmtp();
   }
 
-  KNJobData *tmp;                          // kill waiting jobs
-  KNJobData *start = smtpJobQueue.first();
-  do {
-    if (!smtpJobQueue.isEmpty()) {
-      tmp=smtpJobQueue.take(0);
-      if ((type==0)||(tmp->type()==type)) {
-        tmp->cancel();
-        tmp->notifyConsumer();
-      } else
-        smtpJobQueue.append(tmp);
+  QValueList<KNJobData*>::Iterator it;
+  for ( it = smtpJobQueue.begin(); it != smtpJobQueue.end(); ++it ) {
+    if ( (*it)->type() == type ) {
+      (*it)->cancel();
+      (*it)->notifyConsumer();
+      smtpJobQueue.remove( it );
     }
-  } while(!smtpJobQueue.isEmpty() && (start != smtpJobQueue.first()));
+  }
 }
 
 
@@ -216,7 +208,8 @@ void KNNetAccess::startJobNntp()
       0, "NNTP", i18n("KNode NNTP"), QString::null, true, false );
   connect(mNNTPProgressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), SLOT(slotCancelNNTPJobs()));
 
-  currentNntpJob = nntpJobQueue.take(0);
+  currentNntpJob = nntpJobQueue.first();
+  nntpJobQueue.remove( nntpJobQueue.begin() );
   currentNntpJob->prepareForExecution();
   if (currentNntpJob->success()) {
     nntpClient->insertJob(currentNntpJob);
@@ -242,7 +235,8 @@ void KNNetAccess::startJobSmtp()
     0, "SMTP", i18n("KNode SMTP"), i18n("Sending message..."), true, false );
   connect(mSMTPProgressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), SLOT(slotCancelSMTPJobs()));
 
-  currentSmtpJob = smtpJobQueue.take(0);
+  currentSmtpJob = smtpJobQueue.first();
+  smtpJobQueue.remove( smtpJobQueue.begin() );
   currentSmtpJob->prepareForExecution();
   if (currentSmtpJob->success()) {
     KNLocalArticle *art = static_cast<KNLocalArticle*>( currentSmtpJob->data() );

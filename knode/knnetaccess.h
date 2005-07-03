@@ -1,6 +1,4 @@
 /*
-    knnetaccess.h
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -11,7 +9,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 #ifndef KNNETACCESS_H
@@ -19,7 +17,7 @@
 
 #include <qobject.h>
 #include <qmutex.h>
-#include <qptrqueue.h>
+#include <qvaluelist.h>
 
 class QSocketNotifier;
 
@@ -73,7 +71,7 @@ class KNNetAccess : public QObject  {
     QString unshownMsg;
 
     KNNntpClient *nntpClient;
-    QPtrList<KNJobData> nntpJobQueue, smtpJobQueue;
+    QValueList<KNJobData*> nntpJobQueue, smtpJobQueue;
     KNJobData *currentNntpJob, *currentSmtpJob;
     QMutex nntp_Mutex;
     int nntpInPipe[2], nntpOutPipe[2];
