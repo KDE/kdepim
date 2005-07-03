@@ -406,6 +406,11 @@ int main(int argc, char *argv[])
   checkIsValidSimpleEmailAddress( "|matt@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( "}matt@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( "~matt@fruitsalad.org", "true" );
+  // BUG 108476
+  checkIsValidSimpleEmailAddress( "foo+matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "bar=matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "jongel-matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "matt-@fruitsalad.org", "true" );
 
   // check if the pure email address is wrong
   checkIsValidSimpleEmailAddress( "mattfruitsalad.org", "false" );
