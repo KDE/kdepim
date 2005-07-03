@@ -27,6 +27,7 @@
 
 #include "progressmanager.h"
 
+#include "knaccountmanager.h"
 #include "knarticle.h"
 #include "knmainwidget.h"
 #include "knjobdata.h"
@@ -61,6 +62,8 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
 
   nntpClient=new KNNntpClient(nntpOutPipe[0],nntpInPipe[1],nntp_Mutex);
   nntpClient->start();
+
+  connect( knGlobals.accountManager(), SIGNAL(passwordsChanged()), SLOT(slotPasswordsChanged()) );
 }
 
 
@@ -98,9 +101,12 @@ void KNNetAccess::addJob(KNJobData *job)
     return;
   }
 
-  // make sure the account has its password loaded
-  // this allows on-demand wallet opening
-  job->account()->pass();
+  // put jobs which are waiting for the wallet into an extra queue
+  if ( !job->account()->readyForLogin() ) {
+    mWalletQueue.append( job );
+    knGlobals.accountManager()->loadPasswordsAsync();
+    return;
+  }
 
   if (job->type()==KNJobData::JTmail) {
     smtpJobQueue.append(job);
@@ -469,6 +475,17 @@ void KNNetAccess::slotJobInfoMessage( KIO::Job *job, const QString &msg )
   kdDebug(5003) << k_funcinfo << "Status: " << msg << endl;
   if ( mSMTPProgressItem )
     mSMTPProgressItem->setStatus( msg );
+}
+
+
+void KNNetAccess::slotPasswordsChanged()
+{
+  QValueList<KNJobData*>::ConstIterator it;
+  for ( it = mWalletQueue.begin(); it != mWalletQueue.end(); ++it )
+    nntpJobQueue.append( (*it) );
+  mWalletQueue.clear();
+  if ( !currentNntpJob )
+    startJobNntp();
 }
 
 //--------------------------------

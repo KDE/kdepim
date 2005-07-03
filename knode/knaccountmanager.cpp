@@ -1,8 +1,6 @@
 /*
-    knaccountmanager.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -11,7 +9,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 #include <stdlib.h>
@@ -23,6 +21,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
+#include <kwallet.h>
 
 #include "kngroupmanager.h"
 #include "knnntpaccount.h"
@@ -32,9 +31,12 @@
 #include "knaccountmanager.h"
 #include "knfoldermanager.h"
 
+KWallet::Wallet* KNAccountManager::mWallet = 0;
+bool KNAccountManager::mWalletOpenFailed = false;
 
 KNAccountManager::KNAccountManager(KNGroupManager *gm, QObject * parent, const char * name)
-  : QObject(parent, name), gManager(gm), c_urrentAccount(0)
+  : QObject(parent, name), gManager(gm), c_urrentAccount(0),
+  mAsyncOpening( false )
 {
   accList=new QPtrList<KNNntpAccount>;
   accList->setAutoDelete(true);
@@ -53,6 +55,8 @@ KNAccountManager::~KNAccountManager()
 {
   delete accList;
   delete s_mtp;
+  delete mWallet;
+  mWallet = 0;
 }
 
 
@@ -211,15 +215,86 @@ void KNAccountManager::accountRenamed(KNNntpAccount *a)
 }
 
 
+void KNAccountManager::loadPasswordsAsync()
+{
+  if ( !mWallet && !mWalletOpenFailed ) {
+    if ( knGlobals.top )
+      mWallet = Wallet::openWallet( Wallet::NetworkWallet(),
+                                    knGlobals.topWidget->topLevelWidget()->winId(),
+                                    Wallet::Asynchronous );
+    else
+      mWallet = Wallet::openWallet( Wallet::NetworkWallet(), 0, Wallet::Asynchronous );
+    if ( mWallet ) {
+      connect( mWallet, SIGNAL(walletOpened(bool)), SLOT(slotWalletOpened(bool)) );
+      mAsyncOpening = true;
+    }
+    else {
+      mWalletOpenFailed = true;
+      loadPasswords();
+    }
+    return;
+  }
+  if ( mWallet && !mAsyncOpening )
+    loadPasswords();
+}
+
+
 void KNAccountManager::loadPasswords()
 {
   KNNntpAccount *a;
   for (a = accList->first(); a; a = accList->next())
     a->readPassword();
+  emit passwordsChanged();
+}
+
+
+KWallet::Wallet* KNAccountManager::wallet()
+{
+  if ( mWallet && mWallet->isOpen() )
+    return mWallet;
+
+  if ( !Wallet::isEnabled() || mWalletOpenFailed )
+    return 0;
+
+  delete mWallet;
+  if ( knGlobals.top )
+    mWallet = Wallet::openWallet( Wallet::NetworkWallet(),
+                                  knGlobals.topWidget->topLevelWidget()->winId() );
+  else
+    mWallet = Wallet::openWallet( Wallet::NetworkWallet() );
+
+  if ( !mWallet ) {
+    mWalletOpenFailed = true;
+    return 0;
+  }
+
+  prepareWallet();
+  return mWallet;
+}
+
+
+void KNAccountManager::prepareWallet()
+{
+  if ( mWallet && !mWallet->hasFolder("knode") )
+    mWallet->createFolder( "knode" );
+  mWallet->setFolder( "knode" );
+}
+
+
+void KNAccountManager::slotWalletOpened( bool success )
+{
+  mAsyncOpening = false;
+  if ( !success ) {
+    delete mWallet;
+    mWallet = 0;
+  } else
+    prepareWallet();
+  KNNntpAccount *a;
+  for (a = accList->first(); a; a = accList->next())
+    a->readPassword();
+  emit passwordsChanged();
 }
 
 //--------------------------------
 
 #include "knaccountmanager.moc"
-
-// kate: space-indent on; indent-width 2;

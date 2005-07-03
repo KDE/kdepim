@@ -90,9 +90,14 @@ class KNNetAccess : public QObject  {
     void slotJobPercent( KIO::Job *job, unsigned long percent );
     void slotJobInfoMessage( KIO::Job *job, const QString &msg );
 
+    void slotPasswordsChanged();
+
   private:
     ProgressItem *mNNTPProgressItem, *mSMTPProgressItem;
     KIO::StoredTransferJob *mSmtpJob;
+
+    /// jobs waiting for async wallet loading
+    QValueList<KNJobData*> mWalletQueue;
 
 };
 

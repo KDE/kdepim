@@ -1,8 +1,6 @@
 /*
-    knaccountmanager.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -11,7 +9,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 #ifndef KNACCOUNTMANAGER_H
@@ -19,6 +17,10 @@
 
 #include <qglobal.h>
 #include <qptrlist.h>
+
+namespace KWallet {
+  class Wallet;
+}
 
 class KNGroupManager;
 class KNNntpAccount;
@@ -51,6 +53,11 @@ class KNAccountManager : public QObject
 
     /** Loads the passwords of all accounts, allows on-demand wallet opening */
     void loadPasswords();
+    /** Loads passwords of all accounts asynchronous */
+    void loadPasswordsAsync();
+
+    /** Returns a pointer to an open wallet if available, 0 otherwise */
+    static KWallet::Wallet* wallet();
 
   protected:
     void loadAccounts();
@@ -63,9 +70,21 @@ class KNAccountManager : public QObject
     void accountAdded(KNNntpAccount *a);
     void accountRemoved(KNNntpAccount *a);   // don't do anything with a, it will be deleted soon
     void accountModified(KNNntpAccount *a);
+    /** Emitted if passwords have been loaded from the wallet */
+    void passwordsChanged();
+
+  private slots:
+    void slotWalletOpened( bool success );
+
+  private:
+    /** set/create wallet-folder */
+    static void prepareWallet();
+
+  private:
+    static KWallet::Wallet *mWallet;
+    static bool mWalletOpenFailed;
+    bool mAsyncOpening;
 
 };
 
 #endif
-
-// kate: space-indent on; indent-width 2;

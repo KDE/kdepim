@@ -1,8 +1,6 @@
 /*
-    knserverinfo.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -11,7 +9,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 
@@ -19,7 +17,6 @@
 #include <kconfig.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <kstaticdeleter.h>
 #include <kwallet.h>
 using namespace KWallet;
 
@@ -94,7 +91,7 @@ void KNServerInfo::saveConf(KConfig *conf)
     conf->writeEntry("user", u_ser);
     // open wallet for storing only if the user actually changed the password
     if (n_eedsLogon && p_assDirty) {
-      Wallet *wallet = KNServerInfo::wallet();
+      Wallet *wallet = KNAccountManager::wallet();
       if (!wallet || wallet->writePassword(QString::number(i_d), p_ass)) {
         if ( KMessageBox::warningYesNo( 0,
              i18n("KWallet is not available. It is strongly recommended to use "
@@ -150,37 +147,6 @@ void KNServerInfo::setPass(const QString &s)
 }
 
 
-Wallet* KNServerInfo::mWallet = 0;
-
-Wallet* KNServerInfo::wallet()
-{
-  static bool walletOpenFailed = false;
-  if (mWallet && mWallet->isOpen())
-    return mWallet;
-
-  if (!Wallet::isEnabled() || walletOpenFailed)
-    return 0;
-
-  delete mWallet;
-  static KStaticDeleter<Wallet> sd;
-  if (knGlobals.top)
-    sd.setObject( mWallet, Wallet::openWallet(Wallet::NetworkWallet(),
-                  knGlobals.topWidget->topLevelWidget()->winId()) );
-  else
-    sd.setObject( mWallet, Wallet::openWallet(Wallet::NetworkWallet()) );
-
-  if (!mWallet) {
-    walletOpenFailed = true;
-    return 0;
-  }
-
-  if (mWallet && !mWallet->hasFolder("knode"))
-    mWallet->createFolder("knode");
-  mWallet->setFolder("knode");
-  return mWallet;
-}
-
-
 void KNServerInfo::readPassword()
 {
   // no need to load a password if the account doesn't require auth
@@ -194,8 +160,7 @@ void KNServerInfo::readPassword()
     return;
 
   // finally try to open the wallet and read the password
-  if (wallet())
-    wallet()->readPassword(QString::number(i_d), p_ass);
+  KWallet::Wallet *wallet = KNAccountManager::wallet();
+  if ( wallet )
+    wallet->readPassword( QString::number(i_d), p_ass );
 }
-
-// kate: space-indent on; indent-width 2;

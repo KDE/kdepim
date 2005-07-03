@@ -1,8 +1,6 @@
 /*
-    knserverinfo.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -11,7 +9,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 #ifndef KNSERVERINFO_H
@@ -46,6 +44,7 @@ class KNServerInfo {
     int timeout() const            { return t_imeout; }
     bool needsLogon()const         { return n_eedsLogon; }
     bool isEmpty()const            { return s_erver.isEmpty(); }
+    bool readyForLogin() const { return !n_eedsLogon || mPassLoaded; }
 
     //set
     void setType(serverType t)        { t_ype=t; }
@@ -64,9 +63,6 @@ class KNServerInfo {
     void readPassword();
 
   protected:
-    /** Returns a pointer to an open wallet if available, 0 otherwise */
-    static Wallet* wallet();
-
     serverType t_ype;
 
     QString  s_erver,
@@ -83,12 +79,7 @@ class KNServerInfo {
     /** Prevent loading the password multiple times since wallet operations
         from the I/O thread don't work. */
     bool mPassLoaded;
-
-  private:
-    static Wallet* mWallet;
 };
 
 
 #endif
-
-// kate: space-indent on; indent-width 2;
