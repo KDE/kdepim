@@ -70,7 +70,7 @@ public:
 	 * Constructor.
 	 *
 	 * This creates a new empty ListCategorizer with
-	 * @see startOpen set to false. The parameters
+	 * startOpen set to false. The parameters
 	 * @p parent and @p name are the usual Qt ones.
 	 */
 	ListCategorizer(QWidget *parent,
@@ -80,7 +80,7 @@ public:
 	 *
 	 * This creates a ListCategorizer with the given @p categories
 	 * already inserted. In addition, this constructor lets you
-	 * specify whether or not @see startOpen is set.
+	 * specify whether or not startOpen is set.
 	 */
 	ListCategorizer(const QStringList& categories,
 		bool startOpen,
@@ -90,7 +90,7 @@ public:
 	/**
 	 * Add a list of categories to the ListCategorizer.
 	 * All the categories are added without descriptions;
-	 * use @see addCategory on a per-category basis for that.
+	 * use addCategory on a per-category basis for that.
 	 */
 	void addCategories(const QStringList&);
 	/**
@@ -98,7 +98,7 @@ public:
 	 * @p description. This can be useful if you want
 	 * either a description for the category or want to
 	 * refer to this category in the future without
-	 * using @see findCategory().
+	 * using findCategory().
 	 *
 	 * @return the QListViewItem created for the category
 	 */
@@ -117,7 +117,7 @@ public:
 	 * Add a single item to the category named @p category,
 	 * with name @p name and description set to @p description.
 	 * This might be a convenience function, but it's probably
-	 * more convenient to just use @see QListViewItem's
+	 * more convenient to just use QListViewItem's
 	 * constructor. That way you can also hide more data in
 	 * the remaining columns.
 	 */
@@ -130,7 +130,7 @@ public:
 	 * the names of all the items categorized under a given
 	 * category, or, more usefully, set @p column to something
 	 * other that 0 (name) or 1 (description) to return the
-	 * @see QStringList hidden in the non-visible columns.
+	 * QStringList hidden in the non-visible columns.
 	 */
 	QStringList items(const QString& category,int column=0) const
 	{
@@ -138,9 +138,9 @@ public:
 	}
 
 	/**
-	 * Given a category @see categoryName return the @see QListViewItem
+	 * Given a category categoryName return the QListViewItem
 	 * that represents that category. Probably a useless function,
-	 * since just remembering the pointer @see addCategory gives
+	 * since just remembering the pointer addCategory gives
 	 * you is faster and uses hardly any memory.
 	 */
 	QListViewItem *findCategory(const QString& categoryName) const;
@@ -188,7 +188,7 @@ protected:
 
 private:
 	/**
-	 * Call several @see KListView functions to set up useful
+	 * Call several KListView functions to set up useful
 	 * behavior for this particular class.
 	 */
 	void setupWidget();
