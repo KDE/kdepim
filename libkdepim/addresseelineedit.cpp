@@ -659,7 +659,8 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
           // we have to install the event filter after popup(), since that 
           // calls show(), and that's where KCompletionBox installs its filter.
           // We want to be first, though, so do it now.
-          qApp->installEventFilter( this );
+          if ( s_completion->order() == KCompletion::Weighted )
+            qApp->installEventFilter( this );
         }
         if ( autoSuggest )
         {
@@ -873,11 +874,15 @@ const QStringList KPIM::AddresseeLineEdit::getAdjustedCompletionItems( bool full
     if ( cit == s_completionItemMap->end() )continue;
     int idx = (*cit).second;
     if ( lastSourceIndex == -1 || lastSourceIndex != idx ) {
-      const QString sourceLabel(  (*s_completionSources)[idx] );
-      items.insert( it, sourceLabel );
+      if ( s_completion->order() == KCompletion::Weighted ) {
+        const QString sourceLabel(  (*s_completionSources)[idx] );
+        items.insert( it, sourceLabel );
+      }
       lastSourceIndex = idx;
     }
-    (*it) = (*it).prepend( s_completionItemIndentString );
+    if ( s_completion->order() == KCompletion::Weighted ) {
+      (*it) = (*it).prepend( s_completionItemIndentString );
+    }
     if ( i > beforeDollarCompletionCount ) { 
       // remove the '$$whatever$' part
       int pos = (*it).find( '$', 2 );
