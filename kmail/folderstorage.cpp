@@ -1017,7 +1017,7 @@ void FolderStorage::setContentsType( KMail::FolderContentsType type )
 {
   if ( type != mContentsType ) {
     mContentsType = type;
-    kmkernel->iCalIface().folderContentsTypeChanged( folder(), type );
+    emit contentsTypeChanged( type );
   }
 }
 
