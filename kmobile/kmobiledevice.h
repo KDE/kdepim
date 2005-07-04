@@ -170,7 +170,7 @@ public:
     const QString nameForCap(int cap) const;
 
     // returns an error string for the given error code
-    // @see KIO::buildErrorString()
+    // See KIO::buildErrorString()
     QString buildErrorString(KIO::Error err, const QString &errorText) const;
 
 public:
@@ -493,7 +493,7 @@ protected:
     QString m_deviceName;	// e.g. "Nokia 6310", "Opie"
     QString m_deviceRevision;	// e.g. "Revision 1.2" or "n/a"
     QString m_connectionName;	// e.g. "IRDA", "USB", "Cable", "gnokii", "gammu", ...
-    int m_caps;			// @see enum Capabilities
+    int m_caps;			// see enum Capabilities
     bool m_connected;
 
 private:
