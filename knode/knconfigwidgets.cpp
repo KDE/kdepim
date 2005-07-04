@@ -337,8 +337,9 @@ KNConfig::NntpAccountListWidget::~NntpAccountListWidget()
 void KNConfig::NntpAccountListWidget::load()
 {
   l_box->clear();
-  for(KNNntpAccount *a=a_ccManager->first(); a; a=a_ccManager->next())
-    slotAddItem(a);
+  QValueList<KNNntpAccount*>::Iterator it;
+  for ( it = a_ccManager->begin(); it != a_ccManager->end(); ++it )
+    slotAddItem( *it );
 }
 
 

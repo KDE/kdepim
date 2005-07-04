@@ -1,8 +1,6 @@
 /*
-    kncollectionview.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 2004 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2004-2005 Volker Krause <volker.krause@rwth-aachen.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -10,7 +8,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 #include <qcursor.h>
@@ -183,9 +181,10 @@ void KNCollectionView::updateAccount(KNNntpAccount *a)
 void KNCollectionView::reloadAccounts()
 {
   KNAccountManager* am = knGlobals.accountManager();
-  for(KNNntpAccount *a = am->first(); a; a = am->next()) {
-    removeAccount(a);
-    addAccount(a);
+  QValueList<KNNntpAccount*>::Iterator it;
+  for ( it = am->begin(); it != am->end(); ++it ) {
+    removeAccount( *it );
+    addAccount( *it );
   }
 }
 

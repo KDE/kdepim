@@ -1,6 +1,4 @@
 /*
-    knmainwidget.cpp
-
     KNode, the KDE newsreader
     Copyright (c) 2003 Zack Rusin <zack@kde.org>
     Copyright (c) 2004-2005 Volker Krause <volker.krause@rwth-aachen.de>
@@ -11,7 +9,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 #include "knmainwidget.h"
 
@@ -448,9 +446,13 @@ void KNMainWidget::openURL(const KURL &url)
   if (url.url().left(7) == "news://") {
 
     // lets see if we already have an account for this host...
-    for(acc=a_ccManager->first(); acc; acc=a_ccManager->next())
-      if( acc->server().lower()==host.lower() && (port==0 || acc->port()==port) )
+    QValueList<KNNntpAccount*>::Iterator it;
+    for ( it = a_ccManager->begin(); it != a_ccManager->end(); ++it ) {
+      if ( (*it)->server().lower() == host.lower() && ( port==0 || (*it)->port() == port ) ) {
+        acc = *it;
         break;
+      }
+    }
 
     if(!acc) {
       acc=new KNNntpAccount();
@@ -472,9 +474,9 @@ void KNMainWidget::openURL(const KURL &url)
   } else {
     if (url.url().left(5) == "news:") {
       // TODO: make the default server configurable
-      acc=a_ccManager->currentAccount();
-      if (acc == 0)
-        acc=a_ccManager->first();
+      acc = a_ccManager->currentAccount();
+      if ( acc == 0 )
+        acc = a_ccManager->first();
     } else {
       kdDebug(5003) << "KNMainWidget::openURL() URL is not a valid news URL" << endl;
     }
@@ -1443,10 +1445,9 @@ void KNMainWidget::slotAccDelete()
 
 void KNMainWidget::slotAccGetNewHdrsAll()
 {
-  kdDebug(5003) << "KNMainWindow::slotAccGetNewHdrsAll()" << endl;
-
-  for (KNNntpAccount *account = a_ccManager->first(); account; account = a_ccManager->next() )
-    g_rpManager->checkAll(account);
+  QValueList<KNNntpAccount*>::Iterator it;
+  for ( it = a_ccManager->begin(); it != a_ccManager->end(); ++it )
+    g_rpManager->checkAll( *it );
 }
 
 void KNMainWidget::slotAccPostNewArticle()

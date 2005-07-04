@@ -38,12 +38,10 @@ KNAccountManager::KNAccountManager(KNGroupManager *gm, QObject * parent, const c
   : QObject(parent, name), gManager(gm), c_urrentAccount(0),
   mAsyncOpening( false )
 {
-  accList=new QPtrList<KNNntpAccount>;
-  accList->setAutoDelete(true);
-  s_mtp=new KNServerInfo();
+  s_mtp = new KNServerInfo();
   s_mtp->setType(KNServerInfo::STsmtp);
   s_mtp->setId(0);
-  KConfig *conf=knGlobals.config();
+  KConfig *conf = knGlobals.config();
   conf->setGroup("MAILSERVER");
   s_mtp->readConf(conf);
 
@@ -53,7 +51,10 @@ KNAccountManager::KNAccountManager(KNGroupManager *gm, QObject * parent, const c
 
 KNAccountManager::~KNAccountManager()
 {
-  delete accList;
+  QValueList<KNNntpAccount*>::Iterator it;
+  for ( it = mAccounts.begin(); it != mAccounts.end(); ++it )
+    delete (*it);
+  mAccounts.clear();
   delete s_mtp;
   delete mWallet;
   mWallet = 0;
@@ -62,8 +63,9 @@ KNAccountManager::~KNAccountManager()
 
 void KNAccountManager::prepareShutdown()
 {
-  for(KNNntpAccount *a=accList->first(); a; a=accList->next())
-    a->saveInfo();
+  QValueList<KNNntpAccount*>::Iterator it;
+  for ( it = mAccounts.begin(); it != mAccounts.end(); ++it )
+    (*it)->saveInfo();
 }
 
 
@@ -80,9 +82,9 @@ void KNAccountManager::loadAccounts()
 
   QStringList::Iterator it;
   for(it = entries.begin(); it != entries.end(); ++it) {
-    a=new KNNntpAccount();
-    if (a->readInfo(dir+(*it)+"/info")) {
-      accList->append(a);
+    a = new KNNntpAccount();
+    if (a->readInfo(dir+(*it) + "/info")) {
+      mAccounts.append(a);
       gManager->loadGroups(a);
       emit accountAdded(a);
     } else {
@@ -93,25 +95,21 @@ void KNAccountManager::loadAccounts()
 }
 
 
-KNNntpAccount* KNAccountManager::account(int i)
+KNNntpAccount* KNAccountManager::account( int id )
 {
-  KNNntpAccount *ret=0;
-  if(i>0)
-  {
-    for(KNNntpAccount *a=accList->first(); a; a=accList->next()) {
-      if(a->id()==i) {
-        ret=a;
-        break;
-      }
-    }
-  }
-  return ret;
+  if ( id <= 0 )
+    return 0;
+  QValueList<KNNntpAccount*>::ConstIterator it;
+  for ( it = mAccounts.begin(); it != mAccounts.end(); ++it )
+    if ( (*it)->id() == id )
+      return *it;
+  return 0;
 }
 
 
 void KNAccountManager::setCurrentAccount(KNNntpAccount *a)
 {
-  c_urrentAccount=a;
+  c_urrentAccount = a;
 }
 
 
@@ -136,7 +134,7 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
 
   dir = locateLocal("data",QString("knode/nntp.%1/").arg(a->id()));
   if (!dir.isNull()) {
-    accList->append(a);
+    mAccounts.append(a);
     emit(accountAdded(a));
     return true;
   } else {
@@ -188,7 +186,7 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
     if(c_urrentAccount==a) setCurrentAccount(0);
 
     emit(accountRemoved(a));
-    accList->removeRef(a);      // finally delete a
+    mAccounts.remove( a );  // finally delete a
     return true;
   }
 
@@ -212,6 +210,14 @@ void KNAccountManager::accountRenamed(KNNntpAccount *a)
   if(!a) return;
 
   emit(accountModified(a));
+}
+
+
+KNNntpAccount* KNAccountManager::first() const
+{
+  if ( mAccounts.isEmpty() )
+    return 0;
+  return mAccounts.first();
 }
 
 
@@ -241,9 +247,9 @@ void KNAccountManager::loadPasswordsAsync()
 
 void KNAccountManager::loadPasswords()
 {
-  KNNntpAccount *a;
-  for (a = accList->first(); a; a = accList->next())
-    a->readPassword();
+  QValueList<KNNntpAccount*>::Iterator it;
+  for ( it = mAccounts.begin(); it != mAccounts.end(); ++it )
+    (*it)->readPassword();
   emit passwordsChanged();
 }
 
@@ -285,14 +291,13 @@ void KNAccountManager::slotWalletOpened( bool success )
 {
   mAsyncOpening = false;
   if ( !success ) {
+    mWalletOpenFailed = true;
     delete mWallet;
     mWallet = 0;
-  } else
+  } else {
     prepareWallet();
-  KNNntpAccount *a;
-  for (a = accList->first(); a; a = accList->next())
-    a->readPassword();
-  emit passwordsChanged();
+  }
+  loadPasswords();
 }
 
 //--------------------------------

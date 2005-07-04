@@ -16,7 +16,7 @@
 #define KNACCOUNTMANAGER_H
 
 #include <qglobal.h>
-#include <qptrlist.h>
+#include <qvaluelist.h>
 
 namespace KWallet {
   class Wallet;
@@ -47,9 +47,12 @@ class KNAccountManager : public QObject
     bool hasCurrentAccount() const             { return (c_urrentAccount!=0); }
     KNNntpAccount* currentAccount() const       { return c_urrentAccount; }
     KNServerInfo* smtp() const                 { return s_mtp; }
-    KNNntpAccount* first()                { return accList->first(); }
-    KNNntpAccount* next()                 { return accList->next(); }
-    KNNntpAccount* account(int i);
+    /** Returns the account with the given id. */
+    KNNntpAccount* account( int id );
+    QValueList<KNNntpAccount*>::Iterator begin() { return mAccounts.begin(); }
+    QValueList<KNNntpAccount*>::Iterator end()  { return mAccounts.end(); }
+    /** Returns the first account (used as fallback sometimes). */
+    KNNntpAccount* first() const;
 
     /** Loads the passwords of all accounts, allows on-demand wallet opening */
     void loadPasswords();
@@ -62,7 +65,6 @@ class KNAccountManager : public QObject
   protected:
     void loadAccounts();
     KNGroupManager *gManager;
-    QPtrList<KNNntpAccount> *accList;
     KNNntpAccount *c_urrentAccount;
     KNServerInfo *s_mtp;
 
@@ -81,6 +83,7 @@ class KNAccountManager : public QObject
     static void prepareWallet();
 
   private:
+    QValueList<KNNntpAccount*> mAccounts;
     static KWallet::Wallet *mWallet;
     static bool mWalletOpenFailed;
     bool mAsyncOpening;

@@ -1,8 +1,6 @@
 /*
-    knscoring.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -11,7 +9,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 #include <qstring.h>
@@ -104,13 +102,12 @@ KNScoringManager::~KNScoringManager()
 QStringList KNScoringManager::getGroups() const
 {
   KNAccountManager *am = knGlobals.accountManager();
-  KNNntpAccount *ac = am->first();
   QStringList res;
-  while (ac) {
+  QValueList<KNNntpAccount*>::Iterator it;
+  for ( it = am->begin(); it != am->end(); ++it ) {
     QStringList groups;
-    knGlobals.groupManager()->getSubscribed(ac,groups);
+    knGlobals.groupManager()->getSubscribed( (*it), groups);
     res += groups;
-    ac = am->next();
   }
   res.sort();
   return res;
