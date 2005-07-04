@@ -1,6 +1,4 @@
 /*
-    knconfigwidgets.cpp
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -11,7 +9,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 
@@ -521,7 +519,11 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   p_ass=new KLineEdit(page);
   p_assLabel=new QLabel(p_ass, i18n("Pass&word:"), page);
   p_ass->setEchoMode(KLineEdit::Password);
-  p_ass->setText(a->pass());
+  if ( a->readyForLogin() )
+    p_ass->setText(a->pass());
+  else
+    if ( a->needsLogon() )
+      knGlobals.accountManager()->loadPasswordsAsync();
   topL->addWidget(p_assLabel, 8,0);
   topL->addMultiCellWidget(p_ass, 8,8, 1,2);
 
@@ -554,6 +556,7 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   cleanupLayout->addWidget( mCleanupWidget );
   cleanupLayout->addStretch( 1 );
 
+  connect( knGlobals.accountManager(), SIGNAL(passwordsChanged()), SLOT(slotPasswordChanged()) );
 
   KNHelper::restoreWindowSize("accNewsPropDLG", this, sizeHint());
 
@@ -611,6 +614,12 @@ void KNConfig::NntpAccountConfDialog::slotIntervalChecked(bool b)
   i_nterval->setChecked(b);
   c_heckInterval->setEnabled(b);
   c_heckIntervalLabel->setEnabled(b);
+}
+
+void KNConfig::NntpAccountConfDialog::slotPasswordChanged()
+{
+  if ( p_ass->text().isEmpty() )
+    p_ass->setText( a_ccount->pass() );
 }
 
 //END: NNTP account configuration widgets ------------------------------------
