@@ -48,7 +48,7 @@ class BookmarkSyncEntry : public KSyncEntry
 };
 
 /**
-  This class provides an implementation of the @see KSyncee interface for KSync.
+  This class provides an implementation of the KSyncee interface for KSync.
   It provides syncing of bookmark files as used by Konqueror.
 */
 class KDE_EXPORT BookmarkSyncee : public KSyncee
