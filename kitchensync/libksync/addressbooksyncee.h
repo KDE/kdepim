@@ -65,7 +65,7 @@ class KDE_EXPORT AddressBookSyncEntry : public SyncEntry
 };
 
 /**
-  This class provides an implementation of the @see KSyncee interface for KSync.
+  This class provides an implementation of the KSyncee interface for KSync.
   It provides syncing of AddressBook files.
 */
 class KDE_EXPORT AddressBookSyncee : public Syncee

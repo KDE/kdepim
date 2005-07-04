@@ -55,7 +55,7 @@ class KDE_EXPORT CalendarSyncEntry : public SyncEntry
 };
 
 /**
-  This class provides an implementation of the @see KSyncee interface for KSync.
+  This class provides an implementation of the KSyncee interface for KSync.
   It provides syncing of iCalendar files.
 */
 class KDE_EXPORT CalendarSyncee : public Syncee

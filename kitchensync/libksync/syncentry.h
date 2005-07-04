@@ -44,7 +44,7 @@ class Syncee;
   implemented by concrete subclasses. This makes it possible to
   operate with one synchronisation algorithm on different Syncees.
 
-  SyncEntry objects are collected by a @see Syncee objects.
+  SyncEntry objects are collected by a Syncee objects.
 */
 class KDE_EXPORT SyncEntry
 {
@@ -78,7 +78,7 @@ class KDE_EXPORT SyncEntry
     /**
       Return a unique id. This is used to uniquely identify the entry. Two
       entries having the same id are considered to be two variants of the same
-      entry. No two entries of the same @see KSyncee data set must have the same
+      entry. No two entries of the same KSyncee data set must have the same
       id.
     */
     virtual QString id() = 0;
@@ -172,12 +172,12 @@ class KDE_EXPORT SyncEntry
     virtual SyncEntry *clone() = 0;
 
     /**
-      Set the @see Syncee data set, the entry belongs to.
+      Set the Syncee data set, the entry belongs to.
     */
     void setSyncee( Syncee * );
 
     /**
-      Return the @see Syncee data set, the entry belongs to.
+      Return the Syncee data set, the entry belongs to.
     */
     Syncee *syncee()const;
 
