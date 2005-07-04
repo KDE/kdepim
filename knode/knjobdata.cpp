@@ -1,8 +1,6 @@
 /*
-    knjobdata.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -11,7 +9,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 
@@ -21,34 +19,34 @@
 
 KNJobConsumer::KNJobConsumer()
 {
-  j_obs.setAutoDelete(false);
 }
 
 
 KNJobConsumer::~KNJobConsumer()
 {
-  for(KNJobData *j=j_obs.first(); j; j=j_obs.next())
-    j->c_onsumer=0;
+  QValueList<KNJobData*>::Iterator it;
+  for ( it = mJobs.begin(); it != mJobs.end(); ++it )
+    (*it)->c_onsumer = 0;
 }
 
 
-void KNJobConsumer::emitJob(KNJobData *j)
+void KNJobConsumer::emitJob( KNJobData *j )
 {
-  if(j) {
-    j_obs.append(j);
-    knGlobals.netAccess()->addJob(j);
+  if ( j ) {
+    mJobs.append( j );
+    knGlobals.netAccess()->addJob( j );
   }
 }
 
 
-void KNJobConsumer::jobDone(KNJobData *j)
+void KNJobConsumer::jobDone( KNJobData *j )
 {
-  if(j && j_obs.removeRef(j))
-    processJob(j);
+  if ( j && mJobs.remove( j ) )
+    processJob( j );
 }
 
 
-void KNJobConsumer::processJob(KNJobData *j)
+void KNJobConsumer::processJob( KNJobData *j )
 {
   delete j;
 }

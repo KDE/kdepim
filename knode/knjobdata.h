@@ -1,8 +1,6 @@
 /*
-    knjobdata.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -11,14 +9,14 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 #ifndef KNJOBDATA_H
 #define KNJOBDATA_H
 
 #include <qglobal.h>
-#include <qptrlist.h>
+#include <qvaluelist.h>
 
 class KNJobData;
 class KNServerInfo;
@@ -38,14 +36,14 @@ class KNJobConsumer {
 	calling @ref processJob */
     void jobDone(KNJobData *j);
 
-    /** Returns TRUE if we are waiting for at least one job
+    /** Returns true if we are waiting for at least one job
 	to be completed */
-    bool jobsPending()const  { return (j_obs.count()>0); }
+    bool jobsPending() const { return !mJobs.isEmpty(); }
 
   protected:
     /** The actual work is done here */
     virtual void processJob(KNJobData *j);
-    QPtrList<KNJobData> j_obs;
+    QValueList<KNJobData*> mJobs;
 
 };
 
