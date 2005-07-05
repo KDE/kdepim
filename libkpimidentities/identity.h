@@ -135,11 +135,11 @@ public:
 
 protected:
   /** Read configuration from config. Group must be preset (or use
-      @see KConfigGroup). Called from @see IdentityManager. */
+      KConfigGroup). Called from IdentityManager. */
   void readConfig( const KConfigBase * );
 
-  /** Write configuration to config. Group must be preset (or use @see
-      KConfigGroup). Called from @see IdentityManager. */
+  /** Write configuration to config. Group must be preset (or use 
+      KConfigGroup). Called from IdentityManager. */
   void writeConfig( KConfigBase * ) const;
 
 public:
@@ -159,7 +159,7 @@ public:
 protected:
   /** Set whether this identity is the default identity. Since this
       affects all other identites, too (most notably, the old default
-      identity), only the @see IdentityManager can change this.
+      identity), only the IdentityManager can change this.
       You should use
       <pre>
       kmkernel->identityManager()->setAsDefault( name_of_default )

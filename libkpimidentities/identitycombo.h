@@ -62,22 +62,22 @@ public:
 signals:
   /** @deprecated
    *  @em Really emitted whenever the current identity changes. Either
-   *  by user intervention or on @see setCurrentIdentity() or if the
+   *  by user intervention or on  setCurrentIdentity() or if the
    *  current identity disappears.
    **/
   void identityChanged( const QString & identityName );
 
   /** @em Really emitted whenever the current identity changes. Either
-   *  by user intervention or on @see setCurrentIdentity() or if the
+   *  by user intervention or on setCurrentIdentity() or if the
    *  current identity disappears.
    *
-   *  You might also want to listen to @see IdentityManager::changed,
-   *  @see IdentityManager::deleted and @see IdentityManager::added.
+   *  You might also want to listen to IdentityManager::changed,
+   *  IdentityManager::deleted and IdentityManager::added.
    **/
   void identityChanged( uint uoid );
 
 public slots:
-  /** Connected to @see IdentityManager::changed(). Reloads the list
+  /** Connected to IdentityManager::changed(). Reloads the list
    *  of identities.
    **/
   void slotIdentityManagerChanged();
