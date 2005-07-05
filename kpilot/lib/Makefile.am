@@ -1,6 +1,8 @@
 ### Makefile.am for kpilot/lib
 ###
+### $Id$
 ###
+
 
 METASOURCES = AUTO
 
