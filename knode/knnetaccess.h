@@ -65,10 +65,8 @@ class KNNetAccess : public QObject  {
     void threadDoneSmtp();
 
     /** stores the current status message,
-	so that it can be restored by the mainwindow */
+        so that it can be restored by the mainwindow */
     QString currMsg;
-    /** messages from the nntp-client have priority */
-    QString unshownMsg;
 
     KNNntpClient *nntpClient;
     QValueList<KNJobData*> nntpJobQueue, smtpJobQueue;
@@ -79,21 +77,26 @@ class KNNetAccess : public QObject  {
 
   protected slots:
     void slotThreadSignal(int i);
-    void slotCancelNNTPJobs() { stopJobsNntp(0); }
-    void slotCancelSMTPJobs() { stopJobsSmtp(0); }
 
   signals:
     void netActive(bool);
+
+  private:
+    void cancelCurrentNntpJob( int type = 0 );
+    void cancelCurrentSmtpJob( int type = 0 );
+    /** Update activitiy status, i.e. emit netActive signal. */
+    void updateStatus();
 
   private slots:
     void slotJobResult( KIO::Job *job );
     void slotJobPercent( KIO::Job *job, unsigned long percent );
     void slotJobInfoMessage( KIO::Job *job, const QString &msg );
 
+    void slotCancelJob( KPIM::ProgressItem *item );
+
     void slotPasswordsChanged();
 
   private:
-    ProgressItem *mNNTPProgressItem, *mSMTPProgressItem;
     KIO::StoredTransferJob *mSmtpJob;
 
     /// jobs waiting for async wallet loading

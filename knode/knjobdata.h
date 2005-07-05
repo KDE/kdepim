@@ -18,6 +18,8 @@
 #include <qglobal.h>
 #include <qvaluelist.h>
 
+#include <libkdepim/progressmanager.h>
+
 class KNJobData;
 class KNServerInfo;
 
@@ -93,11 +95,19 @@ class KNJobData {
     bool authError() const                { return a_uthError; }
 
     void setErrorString(const QString& s) { e_rrorString=s; }
-    void cancel()                         { c_anceled=true; }
+    void cancel();
     void setAuthError(bool b)             { a_uthError=b; }
 
     void prepareForExecution()           { e_rrorString = d_ata->prepareForExecution(); }
     void notifyConsumer();
+
+    KPIM::ProgressItem* progressItem() const { return mProgressItem; }
+    void createProgressItem();
+
+    // safe forwards to the progress item
+    void setStatus( const QString &msg ) { if ( mProgressItem ) mProgressItem->setStatus( msg ); }
+    void setProgress( unsigned int progress ) { if ( mProgressItem ) mProgressItem->setProgress( progress ); }
+    void setComplete() { if ( mProgressItem ) { mProgressItem->setComplete(); mProgressItem = 0; } }
 
   protected:
     jobType t_ype;
@@ -107,6 +117,9 @@ class KNJobData {
     bool c_anceled;
     bool a_uthError;
     KNJobConsumer *c_onsumer;
+
+  private:
+    KPIM::ProgressItem *mProgressItem;
 
 };
 

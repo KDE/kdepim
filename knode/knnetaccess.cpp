@@ -25,8 +25,6 @@
 #include <ksocks.h>
 #include <kapplication.h>
 
-#include "progressmanager.h"
-
 #include "knaccountmanager.h"
 #include "knarticle.h"
 #include "knmainwidget.h"
@@ -40,8 +38,7 @@ using KPIM::ProgressManager;
 
 
 KNNetAccess::KNNetAccess(QObject *parent, const char *name )
-  : QObject(parent,name), currentNntpJob(0), currentSmtpJob(0),
-    mNNTPProgressItem(0), mSMTPProgressItem(0)
+  : QObject(parent,name), currentNntpJob(0), currentSmtpJob(0)
 {
   if ( pipe(nntpInPipe) == -1 || pipe(nntpOutPipe) == -1 ) {
     KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nFailed to open pipes for internal communication."));
@@ -72,11 +69,6 @@ KNNetAccess::~KNNetAccess()
 {
   disconnect(nntpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
 
-  if(mNNTPProgressItem)
-    mNNTPProgressItem->setComplete();
-  if(mSMTPProgressItem)
-    mSMTPProgressItem->setComplete();
-
   nntpClient->terminateClient();
   nntpClient->wait();
 
@@ -101,10 +93,15 @@ void KNNetAccess::addJob(KNJobData *job)
     return;
   }
 
+  job->createProgressItem();
+  connect( job->progressItem(), SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), SLOT(slotCancelJob(KPIM::ProgressItem*)) );
+  emit netActive( true );
+
   // put jobs which are waiting for the wallet into an extra queue
   if ( !job->account()->readyForLogin() ) {
     mWalletQueue.append( job );
     knGlobals.accountManager()->loadPasswordsAsync();
+    job->setStatus( i18n( "Waiting for KWallet..." ) );
     return;
   }
 
@@ -144,31 +141,49 @@ void KNNetAccess::addJob(KNJobData *job)
         startJobNntp();
     }
   }
+  updateStatus();
 }
 
 
-// type==0 => all jobs
-void KNNetAccess::stopJobsNntp(int type)
+void KNNetAccess::cancelCurrentNntpJob( int type )
 {
   if ((currentNntpJob && !currentNntpJob->canceled()) && ((type==0)||(currentNntpJob->type()==type))) {   // stop active job
     currentNntpJob->cancel();
     triggerAsyncThread(nntpOutPipe[1]);
   }
+}
 
+
+void KNNetAccess::stopJobsNntp( int type )
+{
+  cancelCurrentNntpJob( type );
+  KNJobData *tmp;
   QValueList<KNJobData*>::Iterator it;
-  for ( it = nntpJobQueue.begin(); it != nntpJobQueue.end(); ++it ) {
-    if ( (*it)->type() == type ) {
-      (*it)->cancel();
-      (*it)->notifyConsumer();
-      nntpJobQueue.remove( it );
-    }
+  for ( it = nntpJobQueue.begin(); it != nntpJobQueue.end();) {
+    tmp = *it;
+    if ( type == 0 || tmp->type() == type ) {
+      it = nntpJobQueue.remove( it );
+      tmp->cancel();
+      tmp->notifyConsumer();
+    } else
+      ++it;
   }
+  for ( it = mWalletQueue.begin(); it != mWalletQueue.end();) {
+    tmp == *it;
+    if ( type == 0 || tmp->type() == type ) {
+      it = mWalletQueue.remove( it );
+      tmp->cancel();
+      tmp->notifyConsumer();
+    } else
+      ++it;
+  }
+  updateStatus();
 }
 
 
 
 // type==0 => all jobs
-void KNNetAccess::stopJobsSmtp(int type)
+void KNNetAccess::cancelCurrentSmtpJob( int type )
 {
   if ((currentSmtpJob && !currentSmtpJob->canceled()) && ((type==0)||(currentSmtpJob->type()==type))) {    // stop active job
     currentSmtpJob->cancel();
@@ -179,15 +194,24 @@ void KNNetAccess::stopJobsSmtp(int type)
     }
     threadDoneSmtp();
   }
+}
 
+
+void KNNetAccess::stopJobsSmtp( int type )
+{
+  cancelCurrentSmtpJob( type );
+  KNJobData *tmp;
   QValueList<KNJobData*>::Iterator it;
-  for ( it = smtpJobQueue.begin(); it != smtpJobQueue.end(); ++it ) {
-    if ( (*it)->type() == type ) {
-      (*it)->cancel();
-      (*it)->notifyConsumer();
-      smtpJobQueue.remove( it );
-    }
+  for ( it = smtpJobQueue.begin(); it != smtpJobQueue.end();) {
+    tmp = *it;
+    if ( type == 0 || tmp->type() == type ) {
+      it = smtpJobQueue.remove( it );
+      tmp->cancel();
+      tmp->notifyConsumer();
+    } else
+      ++it;
   }
+  updateStatus();
 }
 
 
@@ -210,17 +234,12 @@ void KNNetAccess::startJobNntp()
     return;
   }
 
-  mNNTPProgressItem = ProgressManager::createProgressItem(
-      0, "NNTP", i18n("KNode NNTP"), QString::null, true, false );
-  connect(mNNTPProgressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), SLOT(slotCancelNNTPJobs()));
-
   currentNntpJob = nntpJobQueue.first();
   nntpJobQueue.remove( nntpJobQueue.begin() );
   currentNntpJob->prepareForExecution();
   if (currentNntpJob->success()) {
     nntpClient->insertJob(currentNntpJob);
     triggerAsyncThread(nntpOutPipe[1]);
-    emit netActive(true);
     kdDebug(5003) << "KNNetAccess::startJobNntp(): job started" << endl;
   } else {
     threadDoneNntp();
@@ -235,11 +254,6 @@ void KNNetAccess::startJobSmtp()
     kdWarning(5003) << "KNNetAccess::startJobSmtp(): job queue is empty?? aborting" << endl;
     return;
   }
-  unshownMsg = QString::null;
-
-  mSMTPProgressItem = ProgressManager::createProgressItem(
-    0, "SMTP", i18n("KNode SMTP"), i18n("Sending message..."), true, false );
-  connect(mSMTPProgressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), SLOT(slotCancelSMTPJobs()));
 
   currentSmtpJob = smtpJobQueue.first();
   smtpJobQueue.remove( smtpJobQueue.begin() );
@@ -273,7 +287,6 @@ void KNNetAccess::startJobSmtp()
     connect( mSmtpJob, SIGNAL(infoMessage(KIO::Job*, const QString&) ),
              SLOT( slotJobInfoMessage(KIO::Job*, const QString&) ) );
 
-    emit netActive(true);
     kdDebug(5003) << "KNNetAccess::startJobSmtp(): job started" << endl;
   } else {
     threadDoneSmtp();
@@ -321,21 +334,17 @@ void KNNetAccess::threadDoneNntp()
 
   nntpClient->removeJob();
   currentNntpJob = 0L;
-  if (!currentSmtpJob) {
-    emit netActive(false);
-    currMsg = QString::null;
-    knGlobals.setStatusMsg();
-  } else {
-    currMsg = unshownMsg;
-    knGlobals.setStatusMsg(currMsg);
-  }
-  mNNTPProgressItem->setComplete();
-  mNNTPProgressItem = 0;
+
+  currMsg = QString::null;
+  knGlobals.setStatusMsg();
+  tmp->setComplete();
 
   tmp->notifyConsumer();
 
   if (!nntpJobQueue.isEmpty())
     startJobNntp();
+
+  updateStatus();
 }
 
 
@@ -353,19 +362,18 @@ void KNNetAccess::threadDoneSmtp()
   tmp = currentSmtpJob;
   currentSmtpJob = 0L;
   if (!currentNntpJob) {
-    emit netActive(false);
     currMsg = QString::null;
     knGlobals.setStatusMsg();
   }
-  mSMTPProgressItem->setComplete();
-  mSMTPProgressItem = 0;
+  tmp->setComplete();
 
   tmp->notifyConsumer();
 
   if (!smtpJobQueue.isEmpty())
     startJobSmtp();
-}
 
+  updateStatus();
+}
 
 
 void KNNetAccess::cancelAllJobs()
@@ -395,58 +403,58 @@ void KNNetAccess::slotThreadSignal(int i)
       case KNProtocolClient::TSconnect:
         currMsg = i18n(" Connecting to server...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        currentNntpJob->setStatus(currMsg);
       break;
       case KNProtocolClient::TSloadGrouplist:
         currMsg = i18n(" Loading group list from disk...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        currentNntpJob->setStatus(currMsg);
       break;
       case KNProtocolClient::TSwriteGrouplist:
         currMsg = i18n(" Writing group list to disk...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        currentNntpJob->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadGrouplist:
         currMsg = i18n(" Downloading group list...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        currentNntpJob->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadNewGroups:
         currMsg = i18n(" Looking for new groups...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        currentNntpJob->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadDesc:
         currMsg = i18n(" Downloading group descriptions...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        currentNntpJob->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadNew:
         currMsg = i18n(" Downloading new headers...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        currentNntpJob->setStatus(currMsg);
       break;
       case KNProtocolClient::TSsortNew:
         currMsg = i18n(" Sorting...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        currentNntpJob->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadArticle:
         currMsg = i18n(" Downloading article...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        currentNntpJob->setStatus(currMsg);
       break;
       case KNProtocolClient::TSsendArticle:
         currMsg = i18n(" Sending article...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        currentNntpJob->setStatus(currMsg);
       break;
       case KNProtocolClient::TSjobStarted:
-        mNNTPProgressItem->setProgress(0);
+        currentNntpJob->setProgress(0);
       break;
       case KNProtocolClient::TSprogressUpdate:
-          mNNTPProgressItem->setProgress(nntpClient->getProgressValue()/10);
+          currentNntpJob->setProgress(nntpClient->getProgressValue()/10);
       break;
     };
   }
@@ -465,16 +473,14 @@ void KNNetAccess::slotJobResult( KIO::Job *job )
 void KNNetAccess::slotJobPercent( KIO::Job *job, unsigned long percent )
 {
   kdDebug(5003) << k_funcinfo << "Progress: " << percent << endl;
-  if ( mSMTPProgressItem )
-    mSMTPProgressItem->setProgress( percent );
+  currentSmtpJob->setProgress( percent );
 }
 
 
 void KNNetAccess::slotJobInfoMessage( KIO::Job *job, const QString &msg )
 {
   kdDebug(5003) << k_funcinfo << "Status: " << msg << endl;
-  if ( mSMTPProgressItem )
-    mSMTPProgressItem->setStatus( msg );
+  currentSmtpJob->setStatus( msg );
 }
 
 
@@ -486,6 +492,56 @@ void KNNetAccess::slotPasswordsChanged()
   mWalletQueue.clear();
   if ( !currentNntpJob )
     startJobNntp();
+}
+
+
+void KNNetAccess::slotCancelJob( KPIM::ProgressItem *item )
+{
+  KNJobData *tmp;
+  QValueList<KNJobData*>::Iterator it;
+  for ( it = nntpJobQueue.begin(); it != nntpJobQueue.end();) {
+    tmp = *it;
+    if ( tmp->progressItem() == item ) {
+      it = nntpJobQueue.remove( it );
+      tmp->cancel();
+      tmp->notifyConsumer();
+    } else
+      ++it;
+  }
+  for ( it = smtpJobQueue.begin(); it != smtpJobQueue.end();) {
+    tmp = *it;
+    if ( tmp->progressItem() == item ) {
+      it = smtpJobQueue.remove( it );
+      tmp->cancel();
+      tmp->notifyConsumer();
+    } else
+      ++it;
+  }
+  for ( it = mWalletQueue.begin(); it != mWalletQueue.end();) {
+    tmp = *it;
+    if ( tmp->progressItem() == item ) {
+      it = mWalletQueue.remove( it );
+      tmp->cancel();
+      tmp->notifyConsumer();
+    } else
+      ++it;
+  }
+
+  if ( currentNntpJob && currentNntpJob->progressItem() == item )
+    cancelCurrentNntpJob();
+  if ( currentSmtpJob && currentSmtpJob->progressItem() == item )
+    cancelCurrentSmtpJob();
+
+  updateStatus();
+}
+
+void KNNetAccess::updateStatus( )
+{
+  if ( nntpJobQueue.isEmpty() && smtpJobQueue.isEmpty() && !currentNntpJob
+       && !currentSmtpJob && mWalletQueue.isEmpty() )
+    emit netActive( false );
+  else
+    emit netActive( true );
 }
 
 //--------------------------------

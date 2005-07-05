@@ -13,9 +13,14 @@
 */
 
 
+#include <klocale.h>
+
+#include <libkdepim/progressmanager.h>
+
 #include "knarticle.h"
 #include "knglobals.h"
 #include "knnetaccess.h"
+#include "knnntpaccount.h"
 
 KNJobConsumer::KNJobConsumer()
 {
@@ -54,7 +59,8 @@ void KNJobConsumer::processJob( KNJobData *j )
 
 // the assingment of a_ccount may cause race conditions, check again.... (CG)
 KNJobData::KNJobData(jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem *i)
- : t_ype(t), d_ata(i), a_ccount(a), c_anceled(false), a_uthError(false), c_onsumer(c)
+ : t_ype(t), d_ata(i), a_ccount(a), c_anceled(false), a_uthError(false), c_onsumer(c),
+  mProgressItem( 0 )
 {
   d_ata->setLocked(true);
 }
@@ -74,4 +80,30 @@ void KNJobData::notifyConsumer()
     c_onsumer->jobDone(this);
   else
     delete this;
+}
+
+void KNJobData::cancel()
+{
+  c_anceled = true;
+  if ( mProgressItem ) {
+    mProgressItem->setStatus( "Canceled" );
+    mProgressItem->setComplete();
+    mProgressItem = 0;
+  }
+}
+
+void KNJobData::createProgressItem()
+{
+  if ( mProgressItem )
+    return;
+  QString msg = i18n( "KNode" );
+  if ( type() == JTmail )
+    msg = i18n( "Sending message" );
+  else {
+    KNNntpAccount *acc = static_cast<KNNntpAccount*>( account() );
+    if ( acc )
+      msg = acc->name();
+  }
+  mProgressItem = KPIM::ProgressManager::createProgressItem( 0,
+      KPIM::ProgressManager::getUniqueID(), msg, i18n( "Waiting..." ), true );
 }
