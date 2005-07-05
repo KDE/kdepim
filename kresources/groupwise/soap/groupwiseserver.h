@@ -146,13 +146,15 @@ class GroupwiseServer : public QObject
 
     void emitReadAddressBookTotalSize( int );
     void emitReadAddressBookProcessedSize( int );
+    void emitErrorMessage( const QString &, bool );
 
     bool readUserSettings( ngwt__Settings *&settings );
     bool modifyUserSettings( QMap<QString, QString> & );
-    
+
   signals:
     void readAddressBookTotalSize( int );
     void readAddressBookProcessedSize( int );
+    void errorMessage( const QString &, bool );
 
   protected:
     void dumpCalendarFolder( const std::string &id );

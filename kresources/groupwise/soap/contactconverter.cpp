@@ -256,7 +256,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
          if ( emails.find( stringToQString( *it ) ) == emails.end() )
            emails.append( stringToQString( *it ) );
        }
-     } 
+     }
 
      if ( emails.count() )
        addr.setEmails( emails );
@@ -338,7 +338,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
     {
       QString protocol = addrIt.key();
       QStringList addresses = addrIt.data();
-      kdDebug() << "got IM addresses for '" << protocol << "' : " << addresses << endl;
+      //kdDebug() << "got IM addresses for '" << protocol << "' : " << addresses << endl;
       // TODO: map protocol to KDE's set of known protocol names (need to know the set of services in use elsewhere)
       if ( protocol == "nov" )
         protocol = "groupwise";
@@ -346,6 +346,17 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
                           QString::fromLatin1( "All" ),
                           addresses.join( QChar( 0xE000 ) ) );
     }
+  }
+  
+  // addressbook delta sync info
+  if ( contact->sync )
+  {
+    if ( *contact->sync == add )
+      addr.insertCustom( "GWRESOURCE", "SYNC", "ADD" );
+    else if ( *contact->sync == _delete )
+      addr.insertCustom( "GWRESOURCE", "SYNC", "DEL" );
+    else if ( *contact->sync == update )
+      addr.insertCustom( "GWRESOURCE", "SYNC", "UPD" );
   }
   //kdDebug() << "Got the following addressee: " << endl;
   //addr.dump();

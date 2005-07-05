@@ -291,6 +291,8 @@ void Groupwise::getAddressbook( const KURL &url )
       SLOT( slotReadAddressBookTotalSize( int ) ) );
     connect( &server, SIGNAL( readAddressBookProcessedSize( int ) ),
       SLOT( slotReadAddressBookProcessedSize( int ) ) );
+    connect( &server, SIGNAL( errorMessage( const QString &, bool ) ),
+      SLOT( slotServerErrorMessage( const QString &, bool ) ) );
 
     kdDebug() << "Login" << endl;
     if ( !server.login() ) {
@@ -338,6 +340,7 @@ void Groupwise::updateAddressbook( const KURL &url )
 
   if ( query.isEmpty() || query == "?" ) {
     errorMessage( i18n("No addressbook IDs given.") );
+    return;
   } else {
     QStringList ids;
 
@@ -370,7 +373,7 @@ void Groupwise::updateAddressbook( const KURL &url )
       kdDebug() << "Logout" << endl;
       server.logout();
     }
-/*
+
     KABC::Addressee::List addressees;
     KABC::Resource::Iterator it2;
     for( it2 = resource.begin(); it2 != resource.end(); ++it2 ) {
@@ -383,7 +386,8 @@ void Groupwise::updateAddressbook( const KURL &url )
     QString vcard = conv.createVCards( addressees );
 
     data( vcard.utf8() );
-*/
+
+    processedPercent( 50 );
     finished();
   }
 }
@@ -411,6 +415,12 @@ void Groupwise::slotReadAddressBookProcessedSize( int size )
 {
   kdDebug() << "Groupwise::processedSize(): " << size << endl;
   processedSize( size );
+}
+
+void Groupwise::slotServerErrorMessage( const QString & serverErrorMessage, bool fatal )
+{
+  kdDebug() << "Groupwise::slotJobErrorMessage()" << serverErrorMessage << ( fatal ? ", FATAL!" : ", proceeding" ) << endl;
+  errorMessage( i18n( "An error occurred while communicating with the GroupWise server:\n%1" ).arg( serverErrorMessage ) );
 }
 
 #include "groupwise.moc"

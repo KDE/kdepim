@@ -39,6 +39,8 @@ class GroupwisePrefs;
 
 class KDE_EXPORT ResourceGroupwise : public ResourceCached
 {
+  friend class ResourceGroupwiseConfig;
+
   Q_OBJECT
 
   public:
@@ -73,12 +75,17 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     bool asyncSave( Ticket * );
     bool updateAddressBooks();
 
+    /**
+     * Clears the cached data, in memory and on disk
+     */
+    void clearCache();
   protected:
     void init();
     void initGroupwise();
 
   private slots:
-    void slotJobResult( KIO::Job * );
+    void slotFetchJobResult( KIO::Job * );
+    void slotUpdateJobResult( KIO::Job * );
     void slotJobData( KIO::Job *, const QByteArray & );
     void slotJobPercent( KIO::Job *job, unsigned long percent );
 

@@ -46,7 +46,6 @@ class GWJob
 {
   public:
     GWJob( struct soap *soap, const QString &url, const std::string &session );
-
   protected:
     struct soap *mSoap;
     QString mUrl;

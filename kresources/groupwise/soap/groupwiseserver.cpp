@@ -623,7 +623,7 @@ GroupWise::DeltaInfo GroupwiseServer::getDeltaInfo( const QStringList & addressB
   info.lastTimePORebuild = 0;
 
   if ( mSession.empty() ) {
-    kdError() << "GroupwiseServer::getDelta(): no session." << endl;
+    kdError() << "GroupwiseServer::getDeltaInfo(): no session." << endl;
     return info;
   }
 
@@ -789,7 +789,7 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
 
 #if 1
   if ( incidence->attendeeCount() > 0 ) {
-    kdDebug() << "GroupwiseServer::changeIncidence() - retracting old meeting " << endl;
+    kdDebug() << "GroupwiseServer::changeIncidence() - retracting old incidence " << endl;
     if ( !retractRequest( incidence, DueToResend ) ) {
       kdDebug() << "GroupwiseServer::changeIncidence() - retracting failed." << endl;
       return false;
@@ -1155,6 +1155,11 @@ void GroupwiseServer::emitReadAddressBookTotalSize( int s )
 void GroupwiseServer::emitReadAddressBookProcessedSize( int s )
 {
   emit readAddressBookProcessedSize( s );
+}
+
+void GroupwiseServer::emitErrorMessage( const QString & msg, bool fatal )
+{
+  emit errorMessage( msg, fatal );
 }
 
 void GroupwiseServer::log( const QString &prefix, const char *s, size_t n )

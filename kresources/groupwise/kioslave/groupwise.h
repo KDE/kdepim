@@ -46,6 +46,7 @@ class Groupwise : public QObject, public KIO::SlaveBase
   protected slots:
     void slotReadAddressBookTotalSize( int );
     void slotReadAddressBookProcessedSize( int );
+    void slotServerErrorMessage( const QString &, bool );
 };
 
 #endif

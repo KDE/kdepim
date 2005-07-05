@@ -117,7 +117,7 @@ void ResourceGroupwiseConfig::loadSettings( KRES::Resource *res )
   mURL->setURL( mResource->prefs()->url() );
   mUser->setText( mResource->prefs()->user() );
   mPassword->setText( mResource->prefs()->password() );
-
+  mReadAddressBookIds = mResource->prefs()->readAddressBooks();
   updateAddressBookView();
 }
 
@@ -164,7 +164,16 @@ void ResourceGroupwiseConfig::saveAddressBookSettings()
 
     ++it2;
   }
-
+  // check if the SAB was selected when the settings were loaded and is not selected now,
+  // if so, clear the resource to clear the SAB data that is no longer required.
+  // also, set the sequence numbers to 0 so that we know the SAB should be re-fetched in its entirety the next time we do load it
+  QString sab = mResource->prefs()->systemAddressBook();
+  if ( ( mReadAddressBookIds.find( sab ) != mReadAddressBookIds.end() ) && ( selectedRead.find( sab ) == selectedRead.end() ) )
+  {
+    mResource->clearCache();
+    mResource->prefs()->setLastSequenceNumber( 0 );
+    mResource->prefs()->setFirstSequenceNumber( 0 );
+  }
   selectedWrite = mWriteAddressBookIds[ mAddressBookBox->currentItem() ];
 
   mResource->prefs()->setReadAddressBooks( selectedRead );

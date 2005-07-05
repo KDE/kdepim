@@ -64,7 +64,7 @@ class KDE_EXPORT ResourceGroupwiseConfig : public KRES::ConfigWidget
     KComboBox *mAddressBookBox;
 
     QStringList mWriteAddressBookIds;
-
+    QStringList mReadAddressBookIds;
     ResourceGroupwise *mResource;
 };
 

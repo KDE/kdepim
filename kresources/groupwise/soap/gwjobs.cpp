@@ -20,6 +20,8 @@
 
 #include <kabc/addressee.h>
 #include <kdebug.h>
+#include <klocale.h>
+
 #include <libkcal/incidence.h>
 #include <libkcal/resourcecached.h>
 #include <kabcresourcecached.h>
@@ -83,7 +85,7 @@ void ReadAddressBooksJob::run()
         kdError() << "No addressbook id" << endl;
       } else {
         QString id = GWConverter::stringToQString( (*it)->id );
-        kdDebug() << "ID: " << id << endl;
+        kdDebug() << "Reading ID: " << id << endl;
         if ( mAddressBookIds.find( id ) != mAddressBookIds.end() ) {
           readAddressBook( *(*it)->id );
           mProgress += 100;
@@ -110,13 +112,14 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
                                     &itemsRequest, &itemsResponse );
   if ( result != 0 ) {
     soap_print_fault( mSoap, stderr );
+    mServer->emitErrorMessage( i18n("Unable to read GroupWise address book: %1" ).arg( id.c_str() ), false );
     return;
   }
 
   std::vector<class ngwt__Item * > *items = &itemsResponse.items->item;
   if ( items ) {
 #if 1
-    kdDebug() << "ReadAddressBooksJob::readAddressBook() - got " << items->size() << "contacts" << endl;
+    kdDebug() << "ReadAddressBooksJob::readAddressBook() - got " << items->size() << " contacts in folder " << id.c_str()   << endl;
 #endif
     ContactConverter converter( mSoap );
 
@@ -497,11 +500,59 @@ void UpdateAddressBooksJob::run()
   *(request.deltaInfo->firstSequence) = mStartSequenceNumber;
   request.deltaInfo->lastSequence = 0; /*(unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );*/
   /* *(request.deltaInfo->lastSequence) = mLastSequenceNumber; */
-  request.view = soap_new_std__string( mSoap, -1 );
+  //request.view = soap_new_std__string( mSoap, -1 );
   //request.view->append("id name version modified ItemChanges");
+  request.view = 0;
   soap_call___ngw__getDeltasRequest( mSoap, mUrl.latin1(),
                                               NULL, &request, &response);
   soap_print_fault( mSoap, stderr );
+
+  std::vector<class ngwt__Item * > *items = &response.items->item;
+  if ( items ) {
+#if 1
+    kdDebug() << "ReadAddressBooksJob::UpdateAddressBooksJob() - got " << items->size() << "contacts" << endl;
+#endif
+    ContactConverter converter( mSoap );
+
+    std::vector<class ngwt__Item * >::const_iterator it;
+    for ( it = items->begin(); it != items->end(); ++it ) {
+      ngwt__Item *item = *it;
+
+#if 1
+    if ( item )
+      if ( item->name )
+        kdDebug() << "ITEM: " << item->name->c_str() << endl;
+      if ( item->id )
+        kdDebug() << "ITEM: ID (" << item->id->c_str()
+        << ")" << endl;
+    else 
+      kdDebug() << "ITEM is null" << endl;
+#endif
+
+      ngwt__Contact *contact = dynamic_cast<ngwt__Contact *>( item );
+
+      KABC::Addressee addr = converter.convertFromContact( contact );
+      if ( !addr.isEmpty() ) {
+        addr.setResource( mResource );
+
+        // FIXME: if deltas for other addressbooks are read this will be incorrect
+        addr.insertCustom( "GWRESOURCE", "CONTAINER", mAddressBookIds.first() );
+
+        QString remoteUid = converter.stringToQString( (*it)->id );
+
+        KABC::Addressee oldAddressee = mResource->findByUid( mResource->idMapper().localId( remoteUid ) );
+        if ( oldAddressee.isEmpty() ) // new addressee
+          mResource->idMapper().setRemoteId( addr.uid(), remoteUid );
+        else {
+          addr.setUid( oldAddressee.uid() );
+          mResource->removeAddressee( oldAddressee );
+        }
+
+        mResource->insertAddressee( addr );
+        mResource->clearChange( addr );
+      }
+    }
+  }
 
 //   if ( addressBookListResponse.books ) { 
 //     std::vector<class ngwt__AddressBook * > *addressBooks = &addressBookListResponse.books->book;
