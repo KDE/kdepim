@@ -151,7 +151,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   QSize buttonSize;
   mSearchButton = new QPushButton( i18n( "Stop" ), groupBox );
   buttonSize = mSearchButton->sizeHint();
-  mSearchButton->setText( i18n( "Search" ) );
+  mSearchButton->setText( i18n( "&Search" ) );
   if ( buttonSize.width() < mSearchButton->sizeHint().width() )
     buttonSize = mSearchButton->sizeHint();
   mSearchButton->setFixedWidth( buttonSize.width() );
@@ -383,7 +383,7 @@ void LDAPSearchDialog::slotSearchDone()
   connect( mSearchButton, SIGNAL( clicked() ),
            this, SLOT( slotStartSearch() ) );
 
-  mSearchButton->setText( i18n( "Search" ) );
+  mSearchButton->setText( i18n( "&Search" ) );
   QApplication::restoreOverrideCursor();
 }
 
