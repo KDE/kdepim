@@ -79,7 +79,7 @@ public:
   /**
    * Convenience wrapper that can be used for small chunks of data
    * when you can provide a large enough buffer. The default
-   * implementation creates an @see Encoder and uses it.
+   * implementation creates an Encoder and uses it.
    *
    * Encodes a chunk of bytes starting at @p scursor and extending to
    * @p send into the buffer described by @p dcursor and @p dend.
@@ -115,7 +115,7 @@ public:
   /**
    * Convenience wrapper that can be used for small chunks of data
    * when you can provide a large enough buffer. The default
-   * implementation creates a @see Decoder and uses it.
+   * implementation creates a Decoder and uses it.
    *
    * Decodes a chunk of bytes starting at @p scursor and extending to
    * @p send into the buffer described by @p dcursor and @p dend.
@@ -189,7 +189,7 @@ public:
 };
 
 /**
- * Stateful decoder class, modelled after @see QTextDecoder.
+ * Stateful decoder class, modelled after QTextDecoder.
  *
  * @section Overview
  *
@@ -198,35 +198,35 @@ public:
  * arbitrary size. They maintain any state necessary to go on where
  * the previous call left off.
  *
- * The class consists of only two methods of interest: @see decode,
- * which decodes an input block and @see finalize, which flushes any
+ * The class consists of only two methods of interest: see decode,
+ * which decodes an input block and finalize, which flushes any
  * remaining data to the output stream.
  *
- * Typically, you will create a decoder instance, call @see decode as
- * often as necessary, then call @see finalize (most often a single
+ * Typically, you will create a decoder instance, call decode as
+ * often as necessary, then call finalize (most often a single
  * call suffices, but it might be that during that call the output
- * buffer is filled, so you should be prepared to call @see finalize
+ * buffer is filled, so you should be prepared to call finalize
  * as often as necessary, ie. until it returns @p true).
  *
  * @section Return Values
  *
  * Both methods return @p true to indicate that they've finished their
- * job. For @see decode, a return value of @p true means that the
+ * job. For decode, a return value of @p true means that the
  * current input block has been finished (@p false most often means
  * that the output buffer is full, but that isn't required
- * behavior. The @see decode call is free to return at arbitrary
+ * behavior. The decode call is free to return at arbitrary
  * times during processing).
  *
- * For @see finalize, a return value of @p true means that all data
+ * For finalize, a return value of @p true means that all data
  * implicitly or explicitly stored in the decoder instance has been
  * flushed to the output buffer. A @p false return value should be
  * interpreted as "check if the output buffer is full and call me
- * again", just as with @see decode.
+ * again", just as with decode.
  *
  * @section Usage Pattern
  *
  * Since the decoder maintains state, you can only use it once. After
- * a sequence of input blocks has been processed, you @see finalize
+ * a sequence of input blocks has been processed, you finalize
  * the output and then delete the decoder instance. If you want to
  * process another input block sequence, you create a new instance.
  *
@@ -269,7 +269,7 @@ class Decoder {
 protected:
   friend class Codec;
   /**
-   * Protected constructor. Use @see KMime::Codec::makeDecoder to
+   * Protected constructor. Use KMime::Codec::makeDecoder to
    * create an instance. The bool parameter determines whether lines
    * end with CRLF (true) or LF (false, default).
    **/
@@ -284,7 +284,7 @@ public:
   virtual bool decode( const char* & scursor, const char * const send,
 		       char* & dcursor, const char * const dend ) = 0;
   /** Call this method to finalize the output stream. Writes all
-   *  remaining data and resets the decoder. See @see KMime::Codec for
+   *  remaining data and resets the decoder. See KMime::Codec for
    *  calling conventions.
    **/
   virtual bool finish( char* & dcursor, const char * const dend ) = 0;
@@ -293,7 +293,7 @@ protected:
   const bool mWithCRLF;
 };
 
-/** Stateful encoder class, modelled after @see QTextEncoder.
+/** Stateful encoder class, modelled after QTextEncoder.
     @short Stateful encoder class
     @author Marc Mutz <mutz@kde.org>
 */
@@ -309,12 +309,12 @@ public:
   virtual ~Encoder() {}
 
   /** Encode a chunk of data, maintaining state information between
-      calls. See @see KMime::Codec for calling conventions. */
+      calls. See KMime::Codec for calling conventions. */
   virtual bool encode( const char* & scursor, const char * const send,
 		       char* & dcursor, const char * const dend ) = 0;
 
   /** Call this method to finalize the output stream. Writes all
-      remaining data and resets the encoder. See @see KMime::Codec for
+      remaining data and resets the encoder. See KMime::Codec for
       calling conventions. */
   virtual bool finish( char* & dcursor, const char * const dend ) = 0;
 
@@ -340,7 +340,7 @@ protected:
   }
 
   /** Writes characters from the output buffer to the output stream.
-      Implementations of @see encode and @see finish should call this
+      Implementations of encode and finish should call this
       at the very beginning and for each iteration of the while loop.
       @return true if all chars could be written, false otherwise */
   bool flushOutputBuffer( char* & dcursor, const char * const dend );
@@ -354,7 +354,7 @@ protected:
   }
 
 private:
-  /** An output buffer to simplyfy some codecs. Use with @see write
+  /** An output buffer to simplyfy some codecs. Use with write
       and flushOutputBuffer */
   char mOutputBuffer[ maxBufferedChars ];
 protected:

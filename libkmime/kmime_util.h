@@ -222,7 +222,7 @@ namespace KMime {
     QString dateString(time_t otime, const QString& lang = QString::null,
 		       bool shortFormat = true, bool includeSecs=false) const;
     /**
-     * overloaded, does exactly what @see #dateString does (it's slower)
+     * overloaded, does exactly what #dateString does (it's slower)
      */
     QString dateString(const QDateTime& dtime, const QString& lang = QString::null,
 		       bool shortFormat = true, bool includeSecs=false) const;
@@ -232,7 +232,7 @@ namespace KMime {
      * makes the class use the custom format for
      * date to string conversions.
      * Method accepts the same arguments
-     * as @see QDateTime::toString method and adds
+     * as QDateTime::toString method and adds
      * "Z" expression which is substituted with the
      * RFC-822 style numeric timezone (-0500)
      * @param format the custom format
@@ -251,7 +251,7 @@ namespace KMime {
     void reset();
 
     //statics
-    /** convenience function @see dateString
+    /** convenience function dateString
      * @param t specifies the FormatType to use
      * @param time time to format
      * @param data is either the format when FormatType is Custom, or language
@@ -263,7 +263,7 @@ namespace KMime {
 				const QString& data = QString::null,
 				bool shortFormat = true, bool includeSecs=false);
 
-    /** convenience function, same as @see #formatDate
+    /** convenience function, same as #formatDate
      * but returns the current time formatted
      * @param t specifies the FormatType to use
      * @param data is either the format when FormatType is Custom, or language
@@ -275,7 +275,7 @@ namespace KMime {
 				       const QString& data = QString::null,
 				       bool shortFormat = true, bool includeSecs=false);
 
-    /** convenience function, same as @see #rfc2822 */
+    /** convenience function, same as #rfc2822 */
     static QCString rfc2822FormatDate( time_t time );
     static bool     isDaylight();
   protected:
