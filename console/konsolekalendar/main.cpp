@@ -245,7 +245,8 @@ int main( int argc, char *argv[] )
    * Switch on export list
    */
   if ( args->isSet( "export-list" ) ) {
-    cout << i18n( "\n%1 supports these export formats:" ).
+    cout << endl;
+    cout << i18n( "%1 supports these export formats:" ).
       arg( progDisplay ).local8Bit()
          << endl;
     cout << i18n( "  %1 [Default]" ).
