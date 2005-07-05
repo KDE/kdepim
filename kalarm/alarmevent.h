@@ -367,7 +367,6 @@ class KAEvent : public KAAlarmEventBase
 		void               removeExpiredAlarm(KAAlarm::Type);
 		void               incrementRevision()                               { ++mRevision;  mUpdated = true; }
 
-		KCal::Event*       event() const;    // convert to new Event
 		bool               isTemplate() const             { return !mTemplateName.isEmpty(); }
 		const QString&     templateName() const           { return mTemplateName; }
 		bool               usingDefaultTime() const       { return mTemplateDefaultTime; }

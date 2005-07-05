@@ -818,16 +818,6 @@ int KAEvent::flags() const
 }
 
 /******************************************************************************
- * Create a new Event from the KAEvent data.
- */
-Event* KAEvent::event() const
-{
-	Event* ev = new KCal::Event;
-	updateKCalEvent(*ev);
-	return ev;
-}
-
-/******************************************************************************
  * Update an existing KCal::Event with the KAEvent data.
  * If 'original' is true, the event start date/time is adjusted to its original
  * value instead of its next occurrence, and the expired main alarm is
