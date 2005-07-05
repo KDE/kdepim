@@ -61,7 +61,7 @@ Kleo::ChiasmusJob::ChiasmusJob( Mode mode )
     mSymCryptRun( 0 ),
     mError( 0 ),
     mCanceled( false ),
-    mTimeout( true ),
+    mTimeout( false ),
     mMode( mode )
 {
 
