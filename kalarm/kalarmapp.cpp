@@ -1744,7 +1744,7 @@ QString KAlarmApp::createTempScriptFile(const QString& command, bool insertShell
 	else
 	{
 		if (insertShell)
-			;
+			*stream << "#!" << ShellProcess::shellPath() << "\n";
 		*stream << command;
 		tmpFile.close();
 		if (tmpFile.status())
