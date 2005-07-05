@@ -65,7 +65,7 @@ public:
 	QString currentID() const;
 
 	/**
-	 * This function reads the next line. The next line can be read by the @see currentLine()
+	 * This function reads the next line. The next line can be read by the currentLine()
 	 * function call.
 	 *
 	 * @return true if succesfull, otherwise false.

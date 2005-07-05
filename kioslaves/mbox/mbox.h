@@ -32,7 +32,7 @@ class MBoxProtocol : public KIO::SlaveBase
 {
 public:
 	/**
-	 * Constructor, for the parameters, @see KIO::SlaveBase
+	 * Constructor, for the parameters,  See KIO::SlaveBase
 	 */
 	MBoxProtocol( const QCString&, const QCString& );
 	/**
