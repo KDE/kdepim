@@ -345,7 +345,7 @@ class CardView : public QScrollView
     // not see a useful one. One may turn up in a future version of Qt.
     uint itemMargin() const;
 
-    /** Sets the internal item margin. @see itemMargin().
+    /** Sets the internal item margin. See itemMargin().
     */
     void setItemMargin( uint margin );
 

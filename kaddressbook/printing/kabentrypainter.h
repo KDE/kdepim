@@ -89,19 +89,19 @@ class KABEntryPainter
 
     /**
       Returns the index of the rectangle if the point p is inside of
-      one of the telephone numbers. See @see hitsEmail
+      one of the telephone numbers. See hitsEmail
      */
     int hitsPhone( const QPoint &p );
 
     /**
       Returns the index of the rectangle if the point p is inside of
-      one of the telephone numbers. See @see hitsEmail
+      one of the telephone numbers. See hitsEmail
      */
     int hitsTalk( const QPoint &p );
 
     /**
       Returns the index of the rectangle if the point p is inside of
-      one of the telephone numbers. See @see hitsEmail
+      one of the telephone numbers. See hitsEmail
      */
     int hitsURL( const QPoint &p );
 
