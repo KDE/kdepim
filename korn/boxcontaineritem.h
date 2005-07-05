@@ -49,8 +49,8 @@ public:
 	 * This constructor implements the default arguments for any QObject.
 	 * Note that is does not give a name to DCOPObject; that name
 	 * is set in the readConfig-function.
-	 * @param parent The parent of this object, @see Object::QObject
-	 * @param name The name of this object, @see QObject::QObject
+	 * @param parent The parent of this object, See Object::QObject
+	 * @param name The name of this object, See QObject::QObject
 	 * @see BoxContainerItem::readConfig
 	 */
 	BoxContainerItem( QObject * parent = 0, const char * name = 0 );
@@ -91,7 +91,7 @@ public slots:
 	 * This functions should be called if a mouse-button has been pressed.
 	 * This handles the connected events of it.
 	 * 
-	 * @param button The button that was pressed, @see Qt::ButtonState
+	 * @param button The button that was pressed, See Qt::ButtonState
 	 */
 	void mouseButtonPressed( Qt::ButtonState button );
 protected:
