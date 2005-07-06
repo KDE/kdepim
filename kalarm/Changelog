@@ -7,6 +7,7 @@ Prevent message windows always being full screen after a big message is shown.
 Prevent message windows being initially larger than the desktop.
 Prevent message windows initially overlapping the KDE panel.
 Prevent session restoration displaying main windows which should be hidden.
+Change --volume command line option short form to -V (-v is used by --version).
 
 === Version 1.2.8 (KDE 3.4.1) --- 9 May 2005 ===
 Fix failure to enable "Reminder for first recurrence only" checkbox.
