@@ -465,9 +465,9 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
   _ngwm__createCursorResponse cursorResponse;
 
   cursorRequest.container = id;
-#if 0
+#if 1
   cursorRequest.view = soap_new_std__string( mSoap, -1 );
-  cursorRequest.view->append( "startDate endDate subject alarm allDayEvent place timezone iCalId recipients message recipientStatus recurrenceKey" );
+  cursorRequest.view->append( "container status source security distribution acceptLevel startDate endDate subject alarm allDayEvent place timezone iCalId recipients message recipientStatus recurrenceKey" );
 #else
   cursorRequest.view = 0;
 #endif
