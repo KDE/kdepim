@@ -150,7 +150,7 @@ KIO::Job *GroupDavGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor,
   KIO::Job *delJob = 0;
   if ( !url.isEmpty() ) {
     kdDebug(5700) << "Delete: " <<   url.url() << endl;
-    delJob = KIO::del( url, false, false );
+    delJob = KIO::file_delete( url, false );
   }
   if ( delJob && adaptor && adaptor->idMapper() ) {
     kdDebug(5800 ) << "Adding If-Match metadata: " << adaptor->idMapper()->fingerprint( deletedItem->uid() ) << endl;
@@ -176,7 +176,7 @@ kdDebug() << "Deleting item at "<< url.url() << endl;
     }
     kdDebug(5700) << "Delete (Mod) : " <<   url.url() << endl;
   }
-  return KIO::del( urls, false, false );*/
+  return KIO::file_del( urls, false, false );*/
 }
 
 
