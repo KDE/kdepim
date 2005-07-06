@@ -37,15 +37,15 @@
 
 #define READ_FOLDER_CHUNK_SIZE 250
 
-GWJob::GWJob( struct soap *soap, const QString &url,
+GWJob::GWJob( GroupwiseServer *server, struct soap *soap, const QString &url,
   const std::string &session )
-  : mSoap( soap ), mUrl( url ), mSession( session )
+  : mServer( server ), mSoap( soap ), mUrl( url ), mSession( session )
 {
 }
 
 ReadAddressBooksJob::ReadAddressBooksJob( GroupwiseServer *server,
   struct soap *soap, const QString &url, const std::string &session )
-  : GWJob( soap, url, session ), mServer( server )
+  : GWJob( server, soap, url, session )
 {
 }
 
@@ -273,9 +273,9 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 #endif
 }
 
-ReadCalendarJob::ReadCalendarJob( struct soap *soap, const QString &url,
+ReadCalendarJob::ReadCalendarJob( GroupwiseServer *server, struct soap *soap, const QString &url,
                                   const std::string &session )
-  : GWJob( soap, url, session ), mCalendar( 0 )
+  : GWJob( server, soap, url, session ), mCalendar( 0 )
 {
   kdDebug() << "ReadCalendarJob()" << endl;
 }
@@ -351,12 +351,12 @@ void ReadCalendarJob::run()
               haveReadFolder = true;
               *mChecklistFolder = *((*it)->id);
             }
-            else if ( fld->folderType == SentItems ) {
+/*            else if ( fld->folderType == SentItems ) {
               kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type SentItems, physically containing " << count << " items." << endl;
               readCalendarFolder( *(*it)->id, itemCounts );
               haveReadFolder = true;
               *mChecklistFolder = *((*it)->id);
-            }
+            }*/
 /*            else if ( fld->folderType == Mailbox ) {
               kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Mailbox (not yet accepted items), containing " << count << " items." << endl;
               readCalendarFolder( *(*it)->id, count, itemCounts );
@@ -540,18 +540,17 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
           mCalendar->addIncidence( i );
         }
       }
+      readItems += readCursorResponse.items->item.size();
+      kdDebug() << " just read " << readCursorResponse.items->item.size() << " items" << endl;
+      if ( readCursorResponse.items->item.size() < readChunkSize )
+        break;
     }
     else
+    {
       kdDebug() << " readCursor got no Items in Response!" << endl;
-
-    readItems += readCursorResponse.items->item.size(); // this means that the read count is increased even if the call fails, but at least the while will always end
-    kdDebug() << " just read " << readCursorResponse.items->item.size() << " items" << endl;
-    // 
-    if ( readCursorResponse.items->item.size() < readChunkSize )
+      mServer->emitErrorMessage( i18n("Unable to read GroupWise address book: reading %1 returned no items." ).arg( id.c_str() ), false );
       break;
-/*    readChunkSize = QMIN( readChunkSize, count - readItems );
-    *(readCursorRequest.count) = readChunkSize;*/
-    //*(readCursorRequest.position) = current;
+    }
   }
   kdDebug() << " read " << readItems << " items in total" << endl;
 #endif
@@ -559,7 +558,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
 
 UpdateAddressBooksJob::UpdateAddressBooksJob( GroupwiseServer *server,
   struct soap *soap, const QString &url, const std::string &session )
-  : GWJob( soap, url, session ), mServer( server )
+  : GWJob( server, soap, url, session )
 {
 }
 

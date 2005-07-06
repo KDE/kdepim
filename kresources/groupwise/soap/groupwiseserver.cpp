@@ -1012,7 +1012,7 @@ bool GroupwiseServer::readCalendarSynchronous( KCal::Calendar *cal )
     return false;
   }
 
-  ReadCalendarJob *job = new ReadCalendarJob( mSoap, mUrl, mSession );
+  ReadCalendarJob *job = new ReadCalendarJob( this, mSoap, mUrl, mSession );
   job->setCalendarFolder( &mCalendarFolder );
   job->setChecklistFolder( &mCheckListFolder );
   job->setCalendar( cal );
@@ -1071,11 +1071,12 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
 
   _ngwm__getFreeBusyResponse getFreeBusyResponse;
 
-  mSoap->header->ngwt__session = mSession;
+  
 
   bool done = false;
 
   do {
+    mSoap->header->ngwt__session = mSession;
     result = soap_call___ngw__getFreeBusyRequest( mSoap,
       mUrl.latin1(), NULL, &getFreeBusyRequest, &getFreeBusyResponse );
     if ( !checkResponse( result, getFreeBusyResponse.status ) ) {

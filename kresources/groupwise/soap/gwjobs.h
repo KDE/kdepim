@@ -45,8 +45,9 @@ class GroupwiseServer;
 class GWJob
 {
   public:
-    GWJob( struct soap *soap, const QString &url, const std::string &session );
+    GWJob( GroupwiseServer *server, struct soap *soap, const QString &url, const std::string &session );
   protected:
+    GroupwiseServer *mServer;
     struct soap *mSoap;
     QString mUrl;
     const std::string mSession;
@@ -67,7 +68,6 @@ class ReadAddressBooksJob : public GWJob
     void readAddressBook( std::string& );
 
   private:
-    GroupwiseServer *mServer;
     QStringList mAddressBookIds;
     KABC::Resource *mResource;
     int mProgress;
@@ -76,7 +76,7 @@ class ReadAddressBooksJob : public GWJob
 class ReadCalendarJob : public GWJob
 {
   public:
-    ReadCalendarJob( struct soap *soap, const QString &url,
+    ReadCalendarJob( GroupwiseServer *server, struct soap *soap, const QString &url,
       const std::string &session );
 
     void setCalendarFolder( std::string* );
@@ -116,7 +116,6 @@ class UpdateAddressBooksJob : public GWJob
     void updateAddressBook( std::string& );
 
   private:
-    GroupwiseServer *mServer;
     QStringList mAddressBookIds;
     KABC::Resource *mResource;
     int mProgress;
