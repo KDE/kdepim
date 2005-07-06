@@ -56,7 +56,7 @@ using namespace KCal;
    we simply use our own secsTo, which ignores all time zone shifts. */
 long long ownSecsTo( const QDateTime &dt1, const QDateTime &dt2 )
 {
-  long long res = dt1.date().daysTo( dt2.date() ) * 24*3600;
+  long long res = static_cast<long long>( dt1.date().daysTo( dt2.date() ) ) * 24*3600;
   res += dt1.time().secsTo( dt2.time() );
   return res;
 }
@@ -70,7 +70,9 @@ long long ownSecsTo( const QDateTime &dt1, const QDateTime &dt2 )
 
 class DateHelper {
   public:
+#ifndef NDEBUG
     static QString dayName( short day );
+#endif
     static QDate getNthWeek( int year, int weeknumber, short weekstart = 1 );
     static int weekNumbersInYear( int year, short weekstart = 1 );
     static int getWeekNumber( const QDate &date, short weekstart, int *year = 0 );
@@ -78,6 +80,7 @@ class DateHelper {
 };
 
 
+#ifndef NDEBUG
 QString DateHelper::dayName( short day )
 {
   switch ( day ) {
@@ -91,6 +94,7 @@ QString DateHelper::dayName( short day )
     default: return "??";
   }
 }
+#endif
 
 
 QDate DateHelper::getNthWeek( int year, int weeknumber, short weekstart )
@@ -1349,6 +1353,7 @@ DateTimeList RecurrenceRule::datesForInterval( const Constraint &interval, Perio
 
 void RecurrenceRule::dump() const
 {
+#ifndef NDEBUG
   kdDebug(5800) << "RecurrenceRule::dump():" << endl;
   if ( !mRRule.isEmpty() )
     kdDebug(5800) << "   RRULE=" << mRRule << endl;
@@ -1396,6 +1401,7 @@ void RecurrenceRule::dump() const
         it!=mConstraints.end(); ++it ) {
     (*it).dump();
   }
+#endif
 }
 
 void RecurrenceRule::Constraint::dump() const
