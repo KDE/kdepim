@@ -98,7 +98,7 @@ void ReadAddressBooksJob::run()
 void ReadAddressBooksJob::readAddressBook( std::string &id )
 {
   kdDebug() << "ReadAddressBookJob::readAddressBook() " << id.c_str() << endl;
-
+#if 0
   _ngwm__getItemsRequest itemsRequest;
   itemsRequest.container = &id;
   itemsRequest.count = -1;
@@ -172,6 +172,122 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
       mServer->emitReadAddressBookProcessedSize( progress );
     }
   }
+#else
+  unsigned int readItems = 0;
+  unsigned int readChunkSize = 500 /*READ_FOLDER_CHUNK_SIZE*/;
+  
+  int cursor;
+
+  _ngwm__createCursorRequest cursorRequest;
+  _ngwm__createCursorResponse cursorResponse;
+
+  cursorRequest.container = id;
+  cursorRequest.view = 0;
+  // filter for Contacts until we support Groups
+  cursorRequest.filter = soap_new_ngwt__Filter( mSoap, -1 );
+  ngwt__FilterEntry * fe = soap_new_ngwt__FilterEntry( mSoap, -1 );
+  fe->op = isOf;
+  fe->field = soap_new_std__string( mSoap, -1 );
+  fe->field->append( "@type" );
+  fe->value = soap_new_std__string( mSoap, -1 );
+  fe->value->append( "Contact" );
+  fe->custom = 0;
+  fe->date = 0;
+
+  cursorRequest.filter->element = fe;
+
+  mSoap->header->ngwt__session = mSession;
+  soap_call___ngw__createCursorRequest( mSoap, mUrl.latin1(), 0,
+                                        &cursorRequest,
+                                        &cursorResponse );
+  if ( cursorResponse.cursor )
+    cursor = *(cursorResponse.cursor);
+  else /* signal error? */
+    return;
+
+  _ngwm__readCursorRequest readCursorRequest;
+
+  readCursorRequest.cursor = cursor;
+  readCursorRequest.container = id;
+  readCursorRequest.forward = true;
+  readCursorRequest.position = 0;
+
+  readCursorRequest.count = (int*)soap_malloc( mSoap, sizeof(int) );
+  *( readCursorRequest.count ) = (int)readChunkSize;
+
+  while ( true )
+  {
+    mSoap->header->ngwt__session = mSession;
+    kdDebug() << "sending readCursorRequest with session: " << mSession.c_str() << endl;
+    _ngwm__readCursorResponse readCursorResponse;
+    if ( soap_call___ngw__readCursorRequest( mSoap, mUrl.latin1(), 0,
+                                      &readCursorRequest,
+                                      &readCursorResponse ) != SOAP_OK )
+    {
+      kdDebug() << "Faults according to GSOAP:" << endl;
+      soap_print_fault(mSoap, stderr);
+      kdDebug() << "Unable to read " << *( readCursorRequest.count ) << " items at once, halving number and retrying request" << endl;
+      *( readCursorRequest.count ) = QMAX( 1, *( readCursorRequest.count )/2 );
+      continue;
+    }
+  
+    if ( readCursorResponse.items ) {
+      ContactConverter converter( mSoap );
+ 
+      kdDebug() << "ReadAddressBooksJob::readAddressBook() - got " << readCursorResponse.items->item.size() << " contacts in cursor read of folder " << id.c_str()   << endl;
+
+      std::vector<class ngwt__Item * >::const_iterator it;
+      for( it = readCursorResponse.items->item.begin(); it != readCursorResponse.items->item.end(); ++it ) {
+        ngwt__Item *item = *it;
+
+#if 1
+        if ( item )
+          if ( item->name )
+            kdDebug() << "ITEM: " << item->name->c_str() << endl;
+          if ( item->id )
+            kdDebug() << "ITEM: (" << item->id->c_str()
+            << ")" << endl;
+        else 
+          kdDebug() << "ITEM is null" << endl;
+#endif
+        ngwt__Contact *contact = dynamic_cast<ngwt__Contact *>( item );
+
+        KABC::Addressee addr = converter.convertFromContact( contact );
+        if ( !addr.isEmpty() ) {
+          addr.setResource( mResource );
+
+          addr.insertCustom( "GWRESOURCE", "CONTAINER", converter.stringToQString( id ) );
+
+          QString remoteUid = converter.stringToQString( (*it)->id );
+ 
+          KABC::Addressee oldAddressee = mResource->findByUid( mResource->idMapper().localId( remoteUid ) );
+          if ( oldAddressee.isEmpty() ) // new addressee
+            mResource->idMapper().setRemoteId( addr.uid(), remoteUid );
+          else {
+            addr.setUid( oldAddressee.uid() );
+            mResource->removeAddressee( oldAddressee );
+          }
+  
+          mResource->insertAddressee( addr );
+          mResource->clearChange( addr );
+        }
+      }
+    }
+    else
+      kdDebug() << " readCursor got no Items in Response!" << endl;
+
+    readItems += readCursorResponse.items->item.size(); // this means that the read count is increased even if the call fails, but at least the while will always end
+    kdDebug() << " just read " << readCursorResponse.items->item.size() << " items" << endl;
+    // 
+    if ( readCursorResponse.items->item.size() < *( readCursorRequest.count ) )
+      break;
+  }
+/*    readChunkSize = QMIN( readChunkSize, count - readItems );
+    *(readCursorRequest.count) = readChunkSize;*/
+    //*(readCursorRequest.position) = current;
+
+  kdDebug() << " read " << readItems << " items in total" << endl;
+#endif
 }
 
 ReadCalendarJob::ReadCalendarJob( struct soap *soap, const QString &url,
