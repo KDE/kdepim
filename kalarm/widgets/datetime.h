@@ -24,12 +24,13 @@
 
 
 /**
+ *  @short A QDateTime with date-only option.
+ *
  *  The DateTime class holds a date, with or without a time.
  *  DateTime is very similar to the QDateTime class, with the additional option to
  *  hold a date-only value. This allows a single date-time representation to be used
  *  for both an event having a specific date and time, and an all-day event.
  *
- *  @short QDateTime with date-only option.
  *  @author David Jarvie <software@astrojar.org.uk>
 */
 class DateTime

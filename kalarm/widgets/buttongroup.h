@@ -24,6 +24,8 @@
 
 
 /**
+ *  @short A QButtonGroup with signal on new selection, plus Qt 2 compatibility.
+ *
  *  The ButtonGroup class provides an enhanced version of the QButtonGroup class.
  *
  *  It emits an additional signal, buttonSet(int), whenever any of its buttons
@@ -31,7 +33,6 @@
  *  QButtonGroup class only emits signals when buttons are clicked on by the user.)
  *  The class also provides Qt 2 compatibility.
  *
- *  @short QButtonGroup with signal on new selection, plus Qt 2 compatibility.
  *  @author David Jarvie <software@astrojar.org.uk>
  */
 class ButtonGroup : public QButtonGroup

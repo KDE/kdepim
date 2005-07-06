@@ -26,6 +26,8 @@ class QRadioButton;
 class LabelFocusWidget;
 
 /**
+ *  @short A QLabel with option for a buddy radio button.
+ *
  *  The Label class provides a text display, with special behaviour when a radio
  *  button is set as a buddy.
  *
@@ -34,7 +36,6 @@ class LabelFocusWidget;
  *  focus and is switched on. When a non-radio button is specified as a buddy, the
  *  behaviour is the same as for QLabel.
  *
- *  @short QLabel with option for a buddy radio button.
  *  @author David Jarvie <software@astrojar.org.uk>
  */
 class Label : public QLabel
@@ -45,14 +46,14 @@ class Label : public QLabel
 		/** Constructs an empty label.
 		 *  @param parent The parent object of this widget.
 		 *  @param name The name of this widget.
-		 *  @param f    Flags. @see QWidget constructor for details.
+		 *  @param f    Flags. See QWidget constructor for details.
 		 */
 		Label(QWidget* parent, const char* name = 0, WFlags f = 0);
 		/** Constructs a label that displays @p text.
 		 *  @param text   Text string to display.
 		 *  @param parent The parent object of this widget.
 		 *  @param name   The name of this widget.
-		 *  @param f      Flags. @see QWidget constructor for details.
+		 *  @param f      Flags. See QWidget constructor for details.
 		 */
 		Label(const QString& text, QWidget* parent, const char* name = 0, WFlags f = 0);
 		/** Constructs a label, with a buddy widget, that displays @p text.
@@ -63,7 +64,7 @@ class Label : public QLabel
 		 *  @param text   Text string to display.
 		 *  @param parent The parent object of this widget.
 		 *  @param name   The name of this widget.
-		 *  @param f      Flags. @see QWidget constructor for details.
+		 *  @param f      Flags. See QWidget constructor for details.
 		 */
 		Label(QWidget* buddy, const QString& text, QWidget* parent, const char* name = 0, WFlags f = 0);
 		/** Sets the label's buddy widget which receives the keyboard focus when the

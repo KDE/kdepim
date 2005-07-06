@@ -27,6 +27,8 @@
 
 
 /**
+ *  @short Represents a sorted list of colours.
+ *
  *  The ColourList class holds a list of colours, sorted in RGB value order.
  *
  *  It provides a sorted QValueList of colours in RGB value order, with iterators

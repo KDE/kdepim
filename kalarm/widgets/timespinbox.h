@@ -26,6 +26,8 @@
 
 
 /**
+ *  @short Hours/minutes time entry widget.
+ *
  *  The TimeSpinBox class provides a widget to enter a time consisting of an hours/minutes
  *  value. It can hold a time in any of 3 modes: a time of day using the 24-hour clock; a
  *  time of day using the 12-hour clock; or a length of time not restricted to 24 hours.
@@ -38,7 +40,6 @@
  *  The widget may be set as read-only. This has the same effect as disabling it, except
  *  that its appearance is unchanged.
  *
- *  @short Hours/minutes time entry widget.
  *  @author David Jarvie <software@astrojar.org.uk>
  */
 class TimeSpinBox : public SpinBox2

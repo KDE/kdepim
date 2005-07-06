@@ -23,6 +23,8 @@
 #include <libkdepim/kdateedit.h>
 
 /**
+ *  @short Date edit widget with range limits.
+ *
  *  The DateEdit class provides a date editor with the ability to set limits on the
  *  dates which can be entered.
  *
@@ -30,7 +32,6 @@
  *  error messages. If the user tries to enter a date outside the allowed range, the
  *  appropriate error message (if any) is output using KMessageBox::sorry().
  *
- *  @short Date edit widget with range limits.
  *  @author David Jarvie <software@astrojar.org.uk>
  */
 class DateEdit : public KDateEdit

@@ -27,6 +27,8 @@
 
 
 /**
+ *  @short Enhanced KShellProcess.
+ *
  *  The ShellProcess class runs a shell command and interprets the shell exit status
  *  as far as possible. It blocks execution if shell access is prohibited.
  *
@@ -39,7 +41,6 @@
  *  report that the command could not be found or could not be executed, the NOT_FOUND
  *  status is returned.
  *
- *  @short KShellProcess with interpretation of shell exit status.
  *  @author David Jarvie <software@astrojar.org.uk>
  */
 class ShellProcess : public KShellProcess
