@@ -28,6 +28,7 @@
 #include <libkdepim/kpimprefs.h>
 
 #include <kabc/addressee.h>
+#include <kabc/addresseelist.h>
 
 #include <kio/job.h>
 #include <kio/jobclasses.h>
@@ -689,8 +690,7 @@ GroupWise::AddressBook::List GroupwiseServer::addressBookList()
   return books;
 }
 
-bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookIds,
-  KABC::ResourceCached *resource )
+bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookIds )
 {
   if ( mSession.empty() ) {
     kdError() << "GroupwiseServer::readAddressBooks(): no session." << endl;
@@ -700,15 +700,13 @@ bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookId
   ReadAddressBooksJob *job = new ReadAddressBooksJob( this, mSoap,
     mUrl, mSession );
   job->setAddressBookIds( addrBookIds );
-  job->setResource( resource );
 
   job->run();
 
   return true;
 }
 
-bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds,
-  KABC::ResourceCached *resource, const unsigned int startSequenceNumber )
+bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds, const unsigned int startSequenceNumber )
 {
   if ( mSession.empty() ) {
     kdError() << "GroupwiseServer::updateAddressBooks(): no session." << endl;
@@ -717,7 +715,6 @@ bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds,
 
   UpdateAddressBooksJob * job = new UpdateAddressBooksJob( this, mSoap, mUrl, mSession );
   job->setAddressBookIds( addrBookIds );
-  job->setResource( resource );
   job->setStartSequenceNumber( startSequenceNumber );
 
   job->run();
@@ -1160,6 +1157,11 @@ void GroupwiseServer::emitReadAddressBookProcessedSize( int s )
 void GroupwiseServer::emitErrorMessage( const QString & msg, bool fatal )
 {
   emit errorMessage( msg, fatal );
+}
+
+void GroupwiseServer::emitGotAddressees( const KABC::Addressee::List addressees )
+{
+  emit gotAddressees( addressees );
 }
 
 void GroupwiseServer::log( const QString &prefix, const char *s, size_t n )

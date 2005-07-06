@@ -27,7 +27,7 @@
 #include <kabc/addressee.h>
 
 namespace KABC {
-class ResourceCached;
+class Resource;
 }
 
 namespace KCal {
@@ -61,9 +61,6 @@ class ReadAddressBooksJob : public GWJob
 
     void setAddressBookIds( const QStringList& );
 
-    // we need the resource here for doing uid mapping
-    void setResource( KABC::ResourceCached * );
-
     void run();
 
   protected:
@@ -72,7 +69,7 @@ class ReadAddressBooksJob : public GWJob
   private:
     GroupwiseServer *mServer;
     QStringList mAddressBookIds;
-    KABC::ResourceCached *mResource;
+    KABC::Resource *mResource;
     int mProgress;
 };
 
@@ -108,9 +105,6 @@ class UpdateAddressBooksJob : public GWJob
     /** set the address book IDs to update - at the moment this is only the System Address Book (SAB) */
     void setAddressBookIds( const QStringList& );
 
-    // we need the resource here for doing uid mapping
-    void setResource( KABC::ResourceCached * );
-
     /**
      * set the sequence number to start reading deltas from (usually the last sequenec number
      * we have in the local copy of the System Address Book).
@@ -124,7 +118,7 @@ class UpdateAddressBooksJob : public GWJob
   private:
     GroupwiseServer *mServer;
     QStringList mAddressBookIds;
-    KABC::ResourceCached *mResource;
+    KABC::Resource *mResource;
     int mProgress;
     int mStartSequenceNumber; // first and last sequence numbers define the current state of the system addressbook
                               // and are used to determine which deltas to download

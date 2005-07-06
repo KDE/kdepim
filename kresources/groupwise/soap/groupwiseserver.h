@@ -38,7 +38,8 @@
 #include "gwjobs.h"
 
 namespace KABC {
-class ResourceCached;
+  class AddresseeList;
+  class Resource;
 }
 
 namespace KCal {
@@ -118,9 +119,8 @@ class GroupwiseServer : public QObject
 
     GroupWise::AddressBook::List addressBookList();
 
-    bool readAddressBooksSynchronous( const QStringList &addrBookIds,
-      KABC::ResourceCached * );
-    bool updateAddressBooks( const QStringList &addrBookIds, KABC::ResourceCached *,
+    bool readAddressBooksSynchronous( const QStringList &addrBookIds );
+    bool updateAddressBooks( const QStringList &addrBookIds,
       const unsigned int startSequenceNumber );
 
     bool insertAddressee( const QString &addrBookId, KABC::Addressee& );
@@ -147,6 +147,7 @@ class GroupwiseServer : public QObject
     void emitReadAddressBookTotalSize( int );
     void emitReadAddressBookProcessedSize( int );
     void emitErrorMessage( const QString &, bool );
+    void emitGotAddressees( const KABC::Addressee::List );
 
     bool readUserSettings( ngwt__Settings *&settings );
     bool modifyUserSettings( QMap<QString, QString> & );
@@ -155,6 +156,7 @@ class GroupwiseServer : public QObject
     void readAddressBookTotalSize( int );
     void readAddressBookProcessedSize( int );
     void errorMessage( const QString &, bool );
+    void gotAddressees( const KABC::Addressee::List );
 
   protected:
     void dumpCalendarFolder( const std::string &id );

@@ -18,7 +18,6 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "groupwise.h"
 
 #include "groupwiseserver.h"
 
@@ -29,6 +28,7 @@
 #include <libkcal/scheduler.h>
 #include <libkcal/calendarlocal.h>
 
+#include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>
 
 #include <kinstance.h>
@@ -42,6 +42,8 @@
 #include <stdlib.h>
 
 #include <kdepimmacros.h>
+
+#include "groupwise.h"
 
 namespace KABC {
 
@@ -283,8 +285,6 @@ void Groupwise::getAddressbook( const KURL &url )
     
     debugMessage( "IDs: " + ids.join( "," ) );
 
-    KABC::ResourceMemory resource;
-
     GroupwiseServer server( u, user, pass, 0 );
 
     connect( &server, SIGNAL( readAddressBookTotalSize( int ) ),
@@ -293,34 +293,32 @@ void Groupwise::getAddressbook( const KURL &url )
       SLOT( slotReadAddressBookProcessedSize( int ) ) );
     connect( &server, SIGNAL( errorMessage( const QString &, bool ) ),
       SLOT( slotServerErrorMessage( const QString &, bool ) ) );
+    connect( &server, SIGNAL( gotAddressees( const KABC::Addressee::List ) ),
+      SLOT( slotReadReceiveAddressees( const KABC::Addressee::List ) ) );
 
     kdDebug() << "Login" << endl;
     if ( !server.login() ) {
       errorMessage( i18n("Unable to login: ") + server.error() );
     } else {
       kdDebug() << "Read Addressbook" << endl;
-      if ( !server.readAddressBooksSynchronous( ids, &resource ) ) {
+      if ( !server.readAddressBooksSynchronous( ids ) ) {
         errorMessage( i18n("Unable to read addressbook data: ") + server.error() );
       }
       kdDebug() << "Logout" << endl;
       server.logout();
+      finished();
     }
+  }
+}
 
-    KABC::Addressee::List addressees;
-    KABC::Resource::Iterator it2;
-    for( it2 = resource.begin(); it2 != resource.end(); ++it2 ) {
-      kdDebug() << "ADDRESSEE: " << (*it2).fullEmail() << endl;
-      addressees.append( *it2 );
-    }
-
+void Groupwise::slotReadReceiveAddressees( const KABC::Addressee::List addressees )
+{
+    kdDebug() << "Groupwise::slotReadReceiveAddressees() - passing " << addressees.count() << " contacts back to application" << endl;
     KABC::VCardConverter conv;
 
     QString vcard = conv.createVCards( addressees );
 
     data( vcard.utf8() );
-
-    finished();
-  }
 }
 
 void Groupwise::updateAddressbook( const KURL &url )
@@ -358,37 +356,24 @@ void Groupwise::updateAddressbook( const KURL &url )
     
     debugMessage( "update IDs: " + ids.join( "," ) );
 
-    KABC::ResourceMemory resource;
-
     GroupwiseServer server( u, user, pass, 0 );
+    connect( &server, SIGNAL( errorMessage( const QString &, bool ) ),
+      SLOT( slotServerErrorMessage( const QString &, bool ) ) );
+    connect( &server, SIGNAL( gotAddressees( const KABC::Addressee::List ) ),
+      SLOT( slotReadReceiveAddressees( const KABC::Addressee::List ) ) );
 
     kdDebug() << "Login" << endl;
     if ( !server.login() ) {
       errorMessage( i18n("Unable to login: ") + server.error() );
     } else {
       kdDebug() << "Update Addressbook" << endl;
-      if ( !server.updateAddressBooks( ids, &resource, lastSequenceNumber ) ) {
+      if ( !server.updateAddressBooks( ids, lastSequenceNumber ) ) {
         errorMessage( i18n("Unable to update addressbook data: ") + server.error() );
       }
       kdDebug() << "Logout" << endl;
       server.logout();
+      finished();
     }
-
-    KABC::Addressee::List addressees;
-    KABC::Resource::Iterator it2;
-    for( it2 = resource.begin(); it2 != resource.end(); ++it2 ) {
-      kdDebug() << "ADDRESSEE: " << (*it2).fullEmail() << endl;
-      addressees.append( *it2 );
-    }
-
-    KABC::VCardConverter conv;
-
-    QString vcard = conv.createVCards( addressees );
-
-    data( vcard.utf8() );
-
-    processedPercent( 50 );
-    finished();
   }
 }
 

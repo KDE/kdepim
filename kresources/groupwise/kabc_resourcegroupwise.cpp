@@ -295,7 +295,7 @@ bool ResourceGroupwise::asyncLoad()
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotFetchJobResult( KIO::Job * ) ) );
   connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-           SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
+           SLOT( slotReadJobData( KIO::Job *, const QByteArray & ) ) );
   connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
            SLOT( slotJobPercent( KIO::Job *, unsigned long ) ) );
 
@@ -353,35 +353,9 @@ void ResourceGroupwise::slotFetchJobResult( KIO::Job *job )
   if ( job->error() ) {
     kdError() << job->errorString() << endl;
     emit loadingError( this, job->errorString() );
-  } else {
-    //mAddrMap.clear(); //ideally we would remove all the contacts from the personal addressbooks and keep the ones from the SAB
-    // for the moment we will just have to deal with double removal.
-  
-    KABC::VCardConverter conv;
-    Addressee::List addressees = conv.parseVCards( mJobData );
-    Addressee::List::ConstIterator it;
-    for( it = addressees.begin(); it != addressees.end(); ++it ) {
-      KABC::Addressee addr = *it;
-      if ( !addr.isEmpty() ) {
-        addr.setResource( this );
-
-        QString remote = addr.custom( "GWRESOURCE", "UID" );
-        QString local = idMapper().localId( remote );
-        if ( local.isEmpty() ) {
-          idMapper().setRemoteId( addr.uid(), remote );
-        } else {
-          addr.setUid( local );
-        }
-
-        insertAddressee( addr );
-        clearChange( addr );
-      }
-    }
   }
 
   saveCache();
-
-  emit loadingFinished( this );
 
   mDownloadJob = 0;
   if ( mProgress ) mProgress->setComplete();
@@ -409,7 +383,8 @@ void ResourceGroupwise::slotFetchJobResult( KIO::Job *job )
         mPrefs->setFirstSequenceNumber( deltaInfo.firstSequence );
         mPrefs->setLastSequenceNumber( deltaInfo.lastSequence );
         mPrefs->writeConfig();
-      } 
+        emit loadingFinished( this );
+      }
     }
   }
 }
@@ -421,53 +396,6 @@ void ResourceGroupwise::slotUpdateJobResult( KIO::Job *job )
   if ( job->error() ) {
     kdError() << job->errorString() << endl;
     emit loadingError( this, job->errorString() );
-  } else {
-    KABC::VCardConverter conv;
-    Addressee::List addressees = conv.parseVCards( mJobData );
-    Addressee::List::ConstIterator it;
-
-    for( it = addressees.begin(); it != addressees.end(); ++it ) {
-      KABC::Addressee addr = *it;
-      if ( !addr.isEmpty() ) {
-#if 1 // until we figure out how to get complete changes...
-        // switch between added, deleted and modified
-        // if added or changed
-        QString syncType = addr.custom( "GWRESOURCE", "SYNC" );
-        QString remote = addr.custom( "GWRESOURCE", "UID" );
-        QString local = idMapper().localId( remote );
-
-        if ( syncType == "ADD" || syncType == "UPD" )
-        {
-          addr.setResource( this );
-            if ( local.isEmpty() ) {
-            idMapper().setRemoteId( addr.uid(), remote );
-          } else {
-            addr.setUid( local );
-          }
-  
-          insertAddressee( addr );
-          clearChange( addr );
-        }
-        else if ( syncType == "DEL" )
-        {
-          // if deleted
-          if ( !remote.isEmpty() )
-          {
-            if ( !local.isEmpty() )
-            {
-              idMapper().removeRemoteId( remote );
-              KABC::Addressee addrToDelete = findByUid( local );
-              removeAddressee( addrToDelete );
-            }
-          }
-          else 
-            kdError() << "Addressee to delete did not have a remote UID, unable to find the corresponding local contact" << endl;
-        }
-#else
-        addr.dump();
-#endif
-      }
-    }
   }
   saveCache();
 
@@ -526,7 +454,7 @@ bool ResourceGroupwise::updateAddressBooks()
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotUpdateJobResult( KIO::Job * ) ) );
   connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-           SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
+           SLOT( slotUpdateJobData( KIO::Job *, const QByteArray & ) ) );
   connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
            SLOT( slotJobPercent( KIO::Job *, unsigned long ) ) );
 
@@ -539,11 +467,84 @@ bool ResourceGroupwise::updateAddressBooks()
   return true;
 }
 
-void ResourceGroupwise::slotJobData( KIO::Job *, const QByteArray &data )
+void ResourceGroupwise::slotReadJobData( KIO::Job *, const QByteArray &data )
 {
-//  kdDebug() << "ResourceGroupwise::slotJobData()" << endl;
+  kdDebug() << "ResourceGroupwise::slotReadJobData()" << endl;
 
   mJobData.append( data.data() );
+  //mAddrMap.clear(); //ideally we would remove all the contacts from the personal addressbooks and keep the ones from the SAB
+  // for the moment we will just have to deal with double removal.
+
+  KABC::VCardConverter conv;
+  QTime profile;
+  profile.start();
+  Addressee::List addressees = conv.parseVCards( mJobData );
+  kdDebug() << "ResourceGroupwise::slotReadJobData() - parsed " << addressees.count() << " contacts in "  << profile.elapsed() << "ms, now adding to resource..." << endl;
+
+  Addressee::List::ConstIterator it;
+  for( it = addressees.begin(); it != addressees.end(); ++it ) {
+    KABC::Addressee addr = *it;
+    if ( !addr.isEmpty() ) {
+      addr.setResource( this );
+
+      QString remote = addr.custom( "GWRESOURCE", "UID" );
+      QString local = idMapper().localId( remote );
+      if ( local.isEmpty() ) {
+        idMapper().setRemoteId( addr.uid(), remote );
+      } else {
+        addr.setUid( local );
+      }
+
+      insertAddressee( addr );
+      clearChange( addr );
+    }
+  }
+  mJobData = QString::null;
+}
+
+void ResourceGroupwise::slotUpdateJobData( KIO::Job *, const QByteArray &data )
+{
+  KABC::VCardConverter conv;
+  Addressee::List addressees = conv.parseVCards( mJobData );
+  Addressee::List::ConstIterator it;
+
+  for( it = addressees.begin(); it != addressees.end(); ++it ) {
+    KABC::Addressee addr = *it;
+    if ( !addr.isEmpty() ) {
+      // if added or changed
+      QString syncType = addr.custom( "GWRESOURCE", "SYNC" );
+      QString remote = addr.custom( "GWRESOURCE", "UID" );
+      QString local = idMapper().localId( remote );
+
+      if ( syncType == "ADD" || syncType == "UPD" )
+      {
+        addr.setResource( this );
+          if ( local.isEmpty() ) {
+          idMapper().setRemoteId( addr.uid(), remote );
+        } else {
+          addr.setUid( local );
+        }
+
+        insertAddressee( addr );
+        clearChange( addr );
+      }
+      else if ( syncType == "DEL" )
+      {
+        // if deleted
+        if ( !remote.isEmpty() )
+        {
+          if ( !local.isEmpty() )
+          {
+            idMapper().removeRemoteId( remote );
+            KABC::Addressee addrToDelete = findByUid( local );
+            removeAddressee( addrToDelete );
+          }
+        }
+        else 
+          kdError() << "Addressee to delete did not have a remote UID, unable to find the corresponding local contact" << endl;
+      }
+    }
+  }
 }
 
 void ResourceGroupwise::slotJobPercent( KIO::Job *, unsigned long percent )

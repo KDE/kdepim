@@ -360,7 +360,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
   }
   //kdDebug() << "Got the following addressee: " << endl;
   //addr.dump();
-  kdDebug() << "Customs are: " << addr.customs() << endl;
+  //kdDebug() << "Customs are: " << addr.customs() << endl;
 
   return addr;
 }

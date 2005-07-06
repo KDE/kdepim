@@ -18,13 +18,13 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include <kabc/addressee.h>
 #include <kdebug.h>
 #include <klocale.h>
+#include <kabc/addressee.h>
+#include <kabc/resource.h>
 
 #include <libkcal/incidence.h>
 #include <libkcal/resourcecached.h>
-#include <kabcresourcecached.h>
 
 #include <qtimer.h>
 
@@ -35,7 +35,7 @@
 
 #include "gwjobs.h"
 
-#define READ_FOLDER_CHUNK_SIZE 100
+#define READ_FOLDER_CHUNK_SIZE 250
 
 GWJob::GWJob( struct soap *soap, const QString &url,
   const std::string &session )
@@ -54,11 +54,6 @@ void ReadAddressBooksJob::setAddressBookIds( const QStringList &ids )
   mAddressBookIds = ids;
 
   kdDebug() << "ADDR IDS: " << ids.join( "," ) << endl;
-}
-
-void ReadAddressBooksJob::setResource( KABC::ResourceCached *resource )
-{
-  mResource = resource;
 }
 
 void ReadAddressBooksJob::run()
@@ -174,7 +169,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
   }
 #else
   unsigned int readItems = 0;
-  unsigned int readChunkSize = 500 /*READ_FOLDER_CHUNK_SIZE*/;
+  unsigned int readChunkSize = READ_FOLDER_CHUNK_SIZE;
   
   int cursor;
 
@@ -217,6 +212,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 
   while ( true )
   {
+    KABC::Addressee::List contacts;
     mSoap->header->ngwt__session = mSession;
     kdDebug() << "sending readCursorRequest with session: " << mSession.c_str() << endl;
     _ngwm__readCursorResponse readCursorResponse;
@@ -253,32 +249,19 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
         ngwt__Contact *contact = dynamic_cast<ngwt__Contact *>( item );
 
         KABC::Addressee addr = converter.convertFromContact( contact );
-        if ( !addr.isEmpty() ) {
-          addr.setResource( mResource );
-
-          addr.insertCustom( "GWRESOURCE", "CONTAINER", converter.stringToQString( id ) );
-
-          QString remoteUid = converter.stringToQString( (*it)->id );
- 
-          KABC::Addressee oldAddressee = mResource->findByUid( mResource->idMapper().localId( remoteUid ) );
-          if ( oldAddressee.isEmpty() ) // new addressee
-            mResource->idMapper().setRemoteId( addr.uid(), remoteUid );
-          else {
-            addr.setUid( oldAddressee.uid() );
-            mResource->removeAddressee( oldAddressee );
-          }
-  
-          mResource->insertAddressee( addr );
-          mResource->clearChange( addr );
-        }
+        if ( !addr.isEmpty() )
+          contacts.append( addr );
       }
+      readItems += readCursorResponse.items->item.size(); // this means that the read count is increased even if the call fails, but at least the while will always end
     }
     else
       kdDebug() << " readCursor got no Items in Response!" << endl;
 
-    readItems += readCursorResponse.items->item.size(); // this means that the read count is increased even if the call fails, but at least the while will always end
     kdDebug() << " just read " << readCursorResponse.items->item.size() << " items" << endl;
-    // 
+
+    // pass the received addressees back to the server
+    mServer->emitGotAddressees( contacts );
+
     if ( readCursorResponse.items->item.size() < *( readCursorRequest.count ) )
       break;
   }
@@ -587,11 +570,6 @@ void UpdateAddressBooksJob::setAddressBookIds( const QStringList &ids )
   kdDebug() << "ADDR IDS: " << ids.join( "," ) << endl;
 }
 
-void UpdateAddressBooksJob::setResource( KABC::ResourceCached *resource )
-{
-  mResource = resource;
-}
-
 void UpdateAddressBooksJob::setStartSequenceNumber( const int startSeqNo )
 {
   mStartSequenceNumber = startSeqNo;
@@ -628,6 +606,7 @@ void UpdateAddressBooksJob::run()
 #if 1
     kdDebug() << "ReadAddressBooksJob::UpdateAddressBooksJob() - got " << items->size() << "contacts" << endl;
 #endif
+    KABC::Addressee::List contacts;
     ContactConverter converter( mSoap );
 
     std::vector<class ngwt__Item * >::const_iterator it;
@@ -648,26 +627,10 @@ void UpdateAddressBooksJob::run()
       ngwt__Contact *contact = dynamic_cast<ngwt__Contact *>( item );
 
       KABC::Addressee addr = converter.convertFromContact( contact );
-      if ( !addr.isEmpty() ) {
-        addr.setResource( mResource );
-
-        // FIXME: if deltas for other addressbooks are read this will be incorrect
-        addr.insertCustom( "GWRESOURCE", "CONTAINER", mAddressBookIds.first() );
-
-        QString remoteUid = converter.stringToQString( (*it)->id );
-
-        KABC::Addressee oldAddressee = mResource->findByUid( mResource->idMapper().localId( remoteUid ) );
-        if ( oldAddressee.isEmpty() ) // new addressee
-          mResource->idMapper().setRemoteId( addr.uid(), remoteUid );
-        else {
-          addr.setUid( oldAddressee.uid() );
-          mResource->removeAddressee( oldAddressee );
-        }
-
-        mResource->insertAddressee( addr );
-        mResource->clearChange( addr );
-      }
+      if ( !addr.isEmpty() )
+        contacts.append( addr );
     }
+    mServer->emitGotAddressees( contacts );
   }
 
 //   if ( addressBookListResponse.books ) { 
