@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *  Program:  kalarm
- *  (C) 2001 - 2004 by David Jarvie <software@astrojar.org.uk>
+ *  Copyright (C) 2001 - 2005 by David Jarvie <software@astrojar.org.uk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -89,7 +89,7 @@ static KCmdLineOptions options[] =
 	{ "u", 0, 0 },
 	{ "until <time>", I18N_NOOP("Repeat until time [[[yyyy-]mm-]dd-]hh:mm, or date yyyy-mm-dd"), 0 },
 #ifndef WITHOUT_ARTS
-	{ "v", 0, 0 },
+	{ "V", 0, 0 },
 	{ "volume <percent>", I18N_NOOP("Volume to play audio file"), 0 },
 #endif
 	{ "+[message]", I18N_NOOP("Message text to display"), 0 },
