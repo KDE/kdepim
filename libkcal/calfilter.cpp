@@ -120,18 +120,22 @@ bool CalFilter::filterIncidence(Incidence *incidence) const
       return false;
 
     if ( mCriteria & HideTodosWithoutAttendeeInEmailList ) {
+      bool iAmOneOfTheAttendees = false;
       const Attendee::List &attendees = todo->attendees();
-      // no attendees, must be me only
-      if ( todo->attendees().isEmpty() )
-        return true;
-
-      Attendee::List::ConstIterator it;
-      for( it = attendees.begin(); it != attendees.end(); ++it ) {
-        if ( mEmailList.find( (*it)->email() ) != mEmailList.end() ) {
-          return true;
+      if ( !todo->attendees().isEmpty() ) {
+        Attendee::List::ConstIterator it;
+        for( it = attendees.begin(); it != attendees.end(); ++it ) {
+          if ( mEmailList.find( (*it)->email() ) != mEmailList.end() ) {
+            iAmOneOfTheAttendees = true;
+            break;
+          }
         }
+      } else {
+        // no attendees, must be me only
+        iAmOneOfTheAttendees = true;
       }
-      return false;
+      if ( !iAmOneOfTheAttendees )
+        return false;
     }
   }
 
