@@ -102,7 +102,7 @@ class KarmStorage
     QString load(TaskView* taskview, const Preferences* preferences);
 
     QString buildTaskView(KCal::ResourceCalendar *rc, TaskView *view);
-    
+
     /* Close calendar and clear view.  Release lock if holding one. */
     void closeStorage(TaskView* view);
 
@@ -271,7 +271,7 @@ class KarmStorage
 
   private:
     static KarmStorage                *_instance;
-    KCal::CalendarResources           *_calendar;
+    KCal::ResourceCalendar            *_calendar;
     QString                           _icalfile;
 
     KarmStorage();
@@ -280,6 +280,7 @@ class KarmStorage
         DesktopList* desktopList);
     void writeTaskAsTodo
       (Task* task, const int level, QPtrStack< KCal::Todo >& parents);
+    bool saveCalendar();
 
     KCal::Event* baseEvent(const Task*);
     bool remoteResource( const QString& file ) const;
@@ -309,7 +310,7 @@ class KarmStorage
             QMap<QString,long>& daytotals,
             const QDate& from,
             const QDate& to,
-            const int level, 
+            const int level,
 	    std::vector <QString> &matrix,
             const ReportCriteria &rc
             );
