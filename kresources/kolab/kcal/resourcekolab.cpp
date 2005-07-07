@@ -64,6 +64,7 @@ static const char* todoAttachmentMimeType = "application/x-vnd.kolab.task";
 static const char* journalAttachmentMimeType = "application/x-vnd.kolab.journal";
 static const char* incidenceInlineMimeType = "text/calendar";
 
+
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
     mCalendar( QString::fromLatin1("UTC") ), mOpen( false )
@@ -179,12 +180,12 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
       return false;
     }
 
-    const bool silent = mSilent;
-    mSilent = true;
-    for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
-      addIncidence( mimetype, it.data(), subResource, it.key() );
+    { // for RAII scoping below
+      TemporarySilencer t( this );
+      for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+        addIncidence( mimetype, it.data(), subResource, it.key() );
+      }
     }
-    mSilent = silent;
     if ( progressId ) {
       uiserver.processedFiles( progressId, startIndex );
       uiserver.percent( progressId, 100 * startIndex / count );
@@ -454,11 +455,12 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     bool newIncidence = _subresource.isEmpty();
     if ( newIncidence ) {
       subResource = findWritableResource( *map );
-      mNewIncidencesMap.insert( uid, subResource );
     }
 
     if ( subResource.isEmpty() )
       return false;
+
+    mNewIncidencesMap.insert( uid, subResource );
 
     if ( !sendKMailUpdate( incidence, subResource, sernum ) ) {
       kdError(5650) << "Communication problem in ResourceKolab::addIncidence()\n";
@@ -696,9 +698,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            const QString& data )
 {
   bool rc = true;
-  const bool silent = mSilent;
-  mSilent = true;
-
+  TemporarySilencer t( this ); // RAII
   if ( type != kmailCalendarContentsType && type != kmailTodoContentsType
        && type != kmailJournalContentsType )
     // Not ours
@@ -722,8 +722,6 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
     else
       addIncidence( inc, subResource, sernum );
   }
-
-  mSilent = silent;
   return rc;
 }
 
@@ -830,8 +828,7 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
 
   // Finally delete all the incidences
   if ( !uids.isEmpty() ) {
-    const bool silent = mSilent;
-    mSilent = true;
+    TemporarySilencer t( this );
     QStringList::ConstIterator it;
     for ( it = uids.begin(); it != uids.end(); ++it ) {
       KCal::Incidence* incidence = mCalendar.incidence( *it );
@@ -839,7 +836,6 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
         mCalendar.deleteIncidence( incidence );
       mUidMap.remove( *it );
     }
-    mSilent = silent;
   }
 
   emit signalSubresourceRemoved( this, type, subResource );
@@ -883,11 +879,9 @@ void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map
                                               const QString& type,
                                               const QString& folder )
 {
-  const bool silent = mSilent;
-  mSilent = true;
+  TemporarySilencer t( this );
   for( QMap<Q_UINT32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it )
     addIncidence( type.latin1(), it.data(), folder, it.key() );
-  mSilent = silent;
 }
 
 bool ResourceKolab::subresourceActive( const QString& subresource ) const

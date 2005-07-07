@@ -45,11 +45,14 @@
 
 namespace KCal {
 
+struct TemporarySilencer;
+
 class KDE_EXPORT ResourceKolab : public KCal::ResourceCalendar,
                       public KCal::IncidenceBase::Observer,
                       public Kolab::ResourceKolabBase
 {
   Q_OBJECT
+    friend struct TemporarySilencer;
 
 public:
   ResourceKolab( const KConfig* );
@@ -195,6 +198,21 @@ private:
     We can't trust on mUidMap here, because it contains only non-pending uids.
    */
   QMap<QString, QString> mNewIncidencesMap;
+};
+
+struct TemporarySilencer {
+ TemporarySilencer( ResourceKolab *_resource )
+  {
+    resource = _resource;
+    oldValue = resource->mSilent;
+    resource->mSilent = true;
+  }
+  ~TemporarySilencer()
+  {
+    resource->mSilent = oldValue;
+  }
+  ResourceKolab *resource;
+  bool oldValue;
 };
 
 }
