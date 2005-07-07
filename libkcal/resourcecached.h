@@ -235,6 +235,15 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
 
     QString timeZoneId() const;
 
+    /**
+      Return the owner of the calendar's full name.
+    */
+    const Person &getOwner() const;
+    /**
+      Set the owner of the calendar. Should be owner's full name.
+    */
+    void setOwner( const Person &owner );
+
     void enableChangeNotification();
     void disableChangeNotification();
 

@@ -640,5 +640,14 @@ bool ResourceCached::doOpen()
   return true;
 }
 
+void KCal::ResourceCached::setOwner( const Person &owner )
+{
+  mCalendar.setOwner( owner );
+}
+
+const Person & KCal::ResourceCached::getOwner() const
+{
+  return mCalendar.getOwner();
+}
 
 #include "resourcecached.moc"
