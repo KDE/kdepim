@@ -299,6 +299,7 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase)
 }
 void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
 {
+  if ( incidencebase->isReadOnly() ) return;
   incidencebase->setSyncStatusSilent( KCal::Event::SYNCMOD );
   incidencebase->setLastModified( QDateTime::currentDateTime() );
   // we should probably update the revision number here,
@@ -544,6 +545,7 @@ void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
 
 bool ResourceKolab::deleteIncidence( KCal::Incidence* incidence )
 {
+  if ( incidence->isReadOnly() ) return false;
   const QString uid = incidence->uid();
   kdDebug() << k_funcinfo << uid << endl;
   if( !mUidMap.contains( uid ) ) return false; // Odd
