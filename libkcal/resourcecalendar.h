@@ -74,13 +74,13 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
       Load resource data. After calling this function all data is accessible by
       calling the incidence/event/todo/etc. accessor functions.
 
-      If data is actually loaded within this function or the loading is delayed
+      Whether data is actually loaded within this function or the loading is delayed
       until it is accessed by another function depends on the implementation of
       the resource.
 
       If loading the data takes significant time, the resource should return
-      cached values, if available and return the results via the resourceChanged
-      signal. When the resource has finished loading the resourceLoaded() signal
+      cached values if available, and return the results via the resourceChanged
+      signal. When the resource has finished loading, the resourceLoaded() signal
       is emitted.
 
       Calling this function multiple times should have the same effect as
@@ -95,7 +95,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
       Save resource data. After calling this function it is safe to close the
       resource without losing data.
 
-      If data is actually saved within this function or saving is delayed
+      Whether data is actually saved within this function or saving is delayed
       depends on the implementation of the resource.
 
       If saving the data takes significant time, the resource should return from
@@ -159,8 +159,8 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
-      Builds and then returns a list of all events that match for the
-      date specified. useful for dayView, etc. etc.
+      Builds and then returns a list of all events that match the
+      date specified. Useful for dayView, etc. etc.
     */
     virtual Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
 
@@ -171,7 +171,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
 
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
-      only events are returned, which are completely included in the range.
+      only events which are completely included in the range are returned.
     */
     virtual Event::List rawEvents( const QDate &start, const QDate &end,
                                    bool inclusive = false ) = 0;
@@ -180,8 +180,8 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       This signal is emitted when the data in the resource has changed. The
       resource has to make sure that this signal is emitted whenever any
-      pointers to incidences become invalid the resource has given to the
-      calling code before.
+      pointers to incidences which the resource has previously given to the
+      calling code, become invalid.
     */
     void resourceChanged( ResourceCalendar * );
 
@@ -243,7 +243,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
 
 
     /**
-      Add a Journal entry to resource.
+      Add a Journal entry to the resource.
     */
     virtual bool addJournal( Journal * ) = 0;
 
@@ -266,13 +266,13 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual Journal::List rawJournalsForDate( const QDate &date ) = 0;
 
     /**
-      Return all alarms, which ocur in the given time interval.
+      Return all alarms which occur in the given time interval.
     */
     virtual Alarm::List alarms( const QDateTime &from,
                                 const QDateTime &to ) = 0;
 
     /**
-      Return all alarms, which ocur before given date.
+      Return all alarms which occur before given date.
     */
     virtual Alarm::List alarmsTo( const QDateTime &to ) = 0;
 
