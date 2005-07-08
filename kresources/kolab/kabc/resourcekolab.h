@@ -125,6 +125,8 @@ public:
 
   /// Is this subresource active?
   bool subresourceActive( const QString& ) const;
+  /// Is this subresource writabel?
+  bool subresourceWritable( const QString& ) const;
 
   virtual void setSubresourceActive( const QString &, bool );
 
