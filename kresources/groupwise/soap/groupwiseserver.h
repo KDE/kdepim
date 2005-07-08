@@ -104,8 +104,16 @@ class GroupwiseServer : public QObject
     bool login();
     bool logout();
 
+    /**
+     * Send an accept message for the given incidence to the server
+     */
+    bool acceptIncidence( KCal::Incidence * );
     bool addIncidence( KCal::Incidence *, KCal::ResourceCached * );
     bool changeIncidence( KCal::Incidence * );
+    /**
+     * send a decline message for the given incidence to the server
+     */
+    bool declineIncidence( KCal::Incidence * );
     bool deleteIncidence( KCal::Incidence * );
 
     /**
@@ -168,6 +176,16 @@ class GroupwiseServer : public QObject
     void dumpMail( ngwt__Mail * );
 
     bool checkResponse( int result, ngwt__Status *status );
+
+    /**
+     * Given a partial record ID, query the server for the full version from the calendar folder 
+     */
+    std::string getFullIDFor( const QString & );
+
+    /**
+     * Check if an incidence involves other people
+     */
+    bool iAmTheOrganizer( KCal::Incidence * );
 
     void log( const QString &prefix, const char *s, size_t n );
 

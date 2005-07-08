@@ -722,6 +722,176 @@ bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds, const 
   return true;
 }
 
+std::string GroupwiseServer::getFullIDFor( const QString & gwRecordIDFromIcal )
+{
+  // first get the ID of the calendar folder - because we don't store this in the resource we have to fetch it manually
+  std::string calendarFolderID;
+  _ngwm__getFolderListRequest folderListReq;
+  _ngwm__getFolderListResponse folderListRes;
+  folderListReq.parent = "folders";
+  folderListReq.view = soap_new_std__string( mSoap, -1 );
+  folderListReq.view->append( "id type" );
+  folderListReq.recurse = false;
+
+  mSoap->header->ngwt__session = mSession;
+  soap_call___ngw__getFolderListRequest( mSoap, mUrl.latin1(), 0,
+                                         &folderListReq,
+                                         &folderListRes );
+
+  if ( folderListRes.folders ) {
+    std::vector<class ngwt__Folder * > *folders = &folderListRes.folders->folder;
+    if ( folders ) {
+      std::vector<class ngwt__Folder * >::const_iterator it;
+      for ( it = folders->begin(); it != folders->end(); ++it ) {
+        ngwt__SystemFolder * fld = dynamic_cast<ngwt__SystemFolder *>( *it );
+        if ( fld && fld->folderType == Calendar )
+          if ( !fld->id ) {
+            kdError() << "No folder id" << endl;
+          } else {
+            calendarFolderID = *fld->id;
+          }
+      }
+    }
+  }
+  if ( calendarFolderID.empty() )
+  {
+    kdError() << "couldn't get calendar folder ID in order to accept invitation" << endl;
+    return false;
+  }
+  
+  // now get the full Item ID of the 
+  std::string fullItemID;
+
+  _ngwm__getItemsRequest getItemRequest;
+  _ngwm__getItemsResponse getItemResponse;
+  //getItemRequest.id.append( gwRecordID.latin1() );
+  getItemRequest.view = 0;
+  getItemRequest.filter = soap_new_ngwt__Filter( mSoap, -1 );
+  ngwt__FilterEntry * fe = soap_new_ngwt__FilterEntry( mSoap, -1 );
+  fe->op = eq;
+  fe->field = soap_new_std__string( mSoap, -1 );
+  fe->field->append( "id" );
+  fe->value = soap_new_std__string( mSoap, -1 );
+  fe->value->append( gwRecordIDFromIcal.latin1() );
+  fe->custom = 0;
+  fe->date = 0;
+  getItemRequest.filter->element = fe;
+  getItemRequest.container = &calendarFolderID;
+  getItemRequest.items = 0;
+  getItemRequest.count = 1;
+
+  mSoap->header->ngwt__session = mSession;
+  int result = soap_call___ngw__getItemsRequest( mSoap, mUrl.latin1(), 0,
+                                                   &getItemRequest, &getItemResponse );
+  if ( !checkResponse( result, getItemResponse.status ) ) return false;
+
+  std::vector<class ngwt__Item * > *items = &getItemResponse.items->item;
+  if ( items ) {
+    std::vector<class ngwt__Item * >::const_iterator it = items->begin();
+    if ( it != items->end() )
+    {
+      ngwt__Item * item = *it;
+      fullItemID = *item->id;
+    }
+  }
+
+  if ( !fullItemID.empty() )
+  {
+    kdDebug() << " obtained full item id " << fullItemID.c_str() << endl;
+  }
+  return fullItemID;
+}
+
+bool GroupwiseServer::acceptIncidence( KCal::Incidence *incidence )
+{
+  kdDebug() << "GroupwiseServer::acceptIncidence() " << incidence->schedulingID() << " : " << incidence->summary()             << endl;
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::acceptIncidence(): no session." << endl;
+    return false;
+  }
+
+  GWConverter conv( mSoap );
+
+  std::string gwUID = incidence->customProperty( "GWRESOURCE", "UID" ).latin1();
+
+  if ( gwUID.empty() )
+  {
+    QString gwRecordIDFromIcal = incidence->nonKDECustomProperty( "X-GWRECORDID" );
+    // we need to do a getItem to get the item's complete ID, including the container portion
+    // this is only necessary because the Ical GWRECORDID property is incomplete
+    gwUID = getFullIDFor( gwRecordIDFromIcal );
+  }
+
+  if ( gwUID.empty() )
+  {
+    kdError() << "GroupwiseServer::declineIncidence(): no GroupWise item ID." << endl;
+    return false;
+  }
+
+  _ngwm__acceptRequest request;
+  _ngwm__acceptResponse response;
+
+  request.comment = 0;
+  request.acceptLevel = 0;
+  request.recurrenceAllInstances = 0; /*FIXME: This should be the recurrence key for recurring events */
+  request.items = soap_new_ngwt__ItemRefList( mSoap, -1 );
+/*  std::string acceptedItem;
+  acceptedItem.append( gwRecordID.utf8() );*/
+  request.items->item.push_back( gwUID );
+
+  mSoap->header->ngwt__session = mSession;
+  int result = soap_call___ngw__acceptRequest( mSoap, mUrl.latin1(), 0,
+                                                   &request, &response );
+  if ( !checkResponse( result, response.status ) ) return false;
+
+  return true;
+}
+
+bool GroupwiseServer::declineIncidence( KCal::Incidence *incidence )
+{
+  kdDebug() << "GroupwiseServer::declineIncidence() " << incidence->schedulingID() << " : " << incidence->summary()             << endl;
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::declineIncidence(): no session." << endl;
+    return false;
+  }
+
+  GWConverter conv( mSoap );
+
+  std::string gwUID = incidence->customProperty( "GWRESOURCE", "UID" ).latin1();
+
+  if ( gwUID.empty() )
+  {
+    QString gwRecordIDFromIcal = incidence->nonKDECustomProperty( "X-GWRECORDID" );
+    // we need to do a getItem to get the item's complete ID, including the container portion
+    // this is only necessary because the Ical GWRECORDID property is incomplete
+    gwUID = getFullIDFor( gwRecordIDFromIcal );
+  }
+
+  if ( gwUID.empty() )
+  {
+    kdError() << "GroupwiseServer::declineIncidence(): no GroupWise item ID." << endl;
+    return false;
+  }
+
+  _ngwm__declineRequest request;
+  _ngwm__declineResponse response;
+
+  request.comment = 0;
+  request.recurrenceAllInstances = 0; /*FIXME: This should be the recurrence key for recurring events */
+  request.items = soap_new_ngwt__ItemRefList( mSoap, -1 );
+/*  std::string acceptedItem;
+  acceptedItem.append( gwRecordID.utf8() );*/
+  request.items->item.push_back( gwUID );
+
+  mSoap->header->ngwt__session = mSession;
+  int result = soap_call___ngw__declineRequest( mSoap, mUrl.latin1(), 0,
+                                                   &request, &response );
+  if ( !checkResponse( result, response.status ) ) return false;
+
+  return true;
+}
+
+
 bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
   KCal::ResourceCached * )
 {
@@ -732,6 +902,14 @@ bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
 
   kdDebug() << "GroupwiseServer::addIncidence() " << incidence->summary()
             << endl;
+
+  QString gwRecordIDFromIcal = incidence->nonKDECustomProperty( "X-GWRECORDID" );
+  if( !gwRecordIDFromIcal.isEmpty() || !incidence->customProperty( "GWRESOURCE", "UID" ).isEmpty() ) {
+    kdDebug() << "Incidence has GroupWise ID already: (" << gwRecordIDFromIcal << "ical|" << incidence->customProperty( "GWRESOURCE", "UID" ) <<  "soap) and organizer : " << incidence->organizer().email() << endl;
+     return acceptIncidence( incidence );
+  }
+  else
+    kdDebug() << "Incidence has no scheduling ID." << endl;
 
   IncidenceConverter converter( mSoap );
   converter.setFrom( mUserName, mUserEmail, mUserUuid );
@@ -785,7 +963,9 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
             << endl;
 
 #if 1
+  //FIXME: if I am not the organizer restrict my changes to accept or decline
   if ( incidence->attendeeCount() > 0 ) {
+    //TODO: if organizer is not myself, then only apply the accept status changes from myself via an acceptReq etc.
     kdDebug() << "GroupwiseServer::changeIncidence() - retracting old incidence " << endl;
     if ( !retractRequest( incidence, DueToResend ) ) {
       kdDebug() << "GroupwiseServer::changeIncidence() - retracting failed." << endl;
@@ -868,6 +1048,24 @@ bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
 
   kdDebug() << "GroupwiseServer::deleteIncidence(): " << incidence->summary()
             << endl;
+
+  // decline if necessary on the server
+  QString gwRecordIDFromIcal = incidence->nonKDECustomProperty( "X-GWRECORDID" );
+
+  // debug contents of message custom properties
+  kdDebug() << "incidence custom properties BEGIN" << endl;
+  typedef QMap<QCString, QString> PropMap;
+  PropMap customs = incidence->customProperties();
+  PropMap::Iterator it;
+  for ( it = customs.begin(); it != customs.end(); ++it )
+    kdDebug() << "key: " << it.key() << ", data: " << it.data() << endl;
+  kdDebug() << "incidence custom properties END" << endl;
+
+  if ( incidence->attendeeCount() > 0 ) {
+    kdDebug() << "Incidence has GroupWise ID already: (" << gwRecordIDFromIcal << "ical|" << incidence->customProperty( "GWRESOURCE", "UID" ) <<  "soap) and organizer : " << incidence->organizer().email() << endl;
+    return declineIncidence( incidence );
+  }
+
 
 #if 0
   kdDebug() << "UID: " << incidence->customProperty( "GWRESOURCE", "UID" )
@@ -1295,6 +1493,11 @@ bool GroupwiseServer::modifyUserSettings( QMap<QString, QString> & settings  )
   }
   kdError() << "GroupwiseServer::userSettings() - success" << endl;
   return true;
+}
+
+bool GroupwiseServer::iAmTheOrganizer( KCal::Incidence * incidence )
+{
+  return ( incidence->organizer().email() == mUserEmail );
 }
 
 #include "groupwiseserver.moc"
