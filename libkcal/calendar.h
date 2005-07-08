@@ -243,7 +243,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
      * @ref setTimeZoneId
      */
     virtual void setTimeZoneIdViewOnly( const QString &timeZoneId ) = 0;
-    
+
     /**
        Get the Time Zone ID for the Calendar.
 
@@ -294,7 +294,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
      * once before, in other words initialized.
      * @par tz The timezone to use for loading.
      */
-    virtual bool reload( const QString &tz = QString::null ) = 0;
+    virtual bool reload( const QString &tz ) = 0;
 
     /**
        Determine if the Calendar is currently being saved.
