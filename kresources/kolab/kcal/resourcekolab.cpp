@@ -277,6 +277,7 @@ bool ResourceKolab::doSave()
 
 void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
 {
+  if ( incidencebase->isReadOnly() ) return; // Should not happen (TM)
   incidencebase->setSyncStatus( KCal::Event::SYNCMOD );
   incidencebase->setLastModified( QDateTime::currentDateTime() );
   // we should probably update the revision number here,
@@ -548,6 +549,8 @@ void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
 
 bool ResourceKolab::deleteIncidence( KCal::Incidence* incidence )
 {
+  if ( incidence->isReadOnly() ) return false;
+
   const QString uid = incidence->uid();
   if( !mUidMap.contains( uid ) ) return false; // Odd
   /* The user told us to delete, tell KMail */
