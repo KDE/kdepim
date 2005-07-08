@@ -329,8 +329,12 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
   const QString uid = addr.uid();
   QString subResource;
   Q_UINT32 sernum;
-  if ( mUidMap.contains( uid ) ) {
+  if ( mUidMap.find( uid ) != mUidMap.end() ) {
     subResource = mUidMap[ uid ].resource();
+    if ( !subresourceWritable( subResource ) ) {
+      kdWarning() << "Wow! Something tried to update a non-writable addressee! Fix this caller: " << kdBacktrace() << endl;
+      return false;
+    }
     sernum = mUidMap[ uid ].serialNumber();
   } else {
     if ( !mCachedSubresource.isNull() ) {
@@ -411,10 +415,15 @@ void KABC::ResourceKolab::insertAddressee( const Addressee& addr )
 void KABC::ResourceKolab::removeAddressee( const Addressee& addr )
 {
   const QString uid = addr.uid();
+  if ( mUidMap.find( uid ) == mUidMap.end() ) return;
   //kdDebug(5650) << k_funcinfo << uid << endl;
-
+  const QString resource = mUidMap[ uid ].resource();
+  if ( !subresourceWritable( resource ) ) {
+    kdWarning() << "Wow! Something tried to delete a non-writable addressee! Fix this caller: " << kdBacktrace() << endl;
+    return;
+  }
   /* The user told us to delete, tell KMail */
-  kmailDeleteIncidence( mUidMap[ uid ].resource(),
+  kmailDeleteIncidence( resource,
                         mUidMap[ uid ].serialNumber() );
   mUidsPendingDeletion.append( uid );
   mUidMap.remove( uid );
@@ -579,6 +588,14 @@ bool KABC::ResourceKolab::subresourceActive( const QString& subresource ) const
   kdDebug(5650) << "subresourceActive( " << subresource << " ): Safe bet\n";
 
   return true;
+}
+
+bool KABC::ResourceKolab::subresourceWritable( const QString& subresource ) const
+{
+  if ( mSubResources.contains( subresource ) ) {
+    return mSubResources[ subresource ].writable();
+  }
+  return false; //better a safe default
 }
 
 int KABC::ResourceKolab::subresourceCompletionWeight( const QString& subresource ) const
