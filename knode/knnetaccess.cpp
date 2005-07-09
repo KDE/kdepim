@@ -157,7 +157,7 @@ void KNNetAccess::cancelCurrentNntpJob( int type )
 void KNNetAccess::stopJobsNntp( int type )
 {
   cancelCurrentNntpJob( type );
-  KNJobData *tmp;
+  KNJobData *tmp = 0;
   QValueList<KNJobData*>::Iterator it;
   for ( it = nntpJobQueue.begin(); it != nntpJobQueue.end();) {
     tmp = *it;
@@ -187,11 +187,6 @@ void KNNetAccess::cancelCurrentSmtpJob( int type )
 {
   if ((currentSmtpJob && !currentSmtpJob->canceled()) && ((type==0)||(currentSmtpJob->type()==type))) {    // stop active job
     currentSmtpJob->cancel();
-    kdDebug(5003) << k_funcinfo << "killing job" << mSmtpJob << endl;
-    if ( mSmtpJob ) {
-      mSmtpJob->kill();
-      mSmtpJob = 0;
-    }
     threadDoneSmtp();
   }
 }
@@ -200,7 +195,7 @@ void KNNetAccess::cancelCurrentSmtpJob( int type )
 void KNNetAccess::stopJobsSmtp( int type )
 {
   cancelCurrentSmtpJob( type );
-  KNJobData *tmp;
+  KNJobData *tmp = 0;
   QValueList<KNJobData*>::Iterator it;
   for ( it = smtpJobQueue.begin(); it != smtpJobQueue.end();) {
     tmp = *it;
@@ -279,13 +274,10 @@ void KNNetAccess::startJobSmtp()
       destination.setUser( account->user() );
       destination.setPass( account->pass() );
     }
-    mSmtpJob = KIO::storedPut( art->encodedContent(true), destination, -1, false, false, false );
-    connect( mSmtpJob, SIGNAL( result(KIO::Job*) ),
+    KIO::Job* job = KIO::storedPut( art->encodedContent(true), destination, -1, false, false, false );
+    connect( job, SIGNAL( result(KIO::Job*) ),
              SLOT( slotJobResult(KIO::Job*) ) );
-    connect( mSmtpJob, SIGNAL(percent(KIO::Job*, unsigned long) ),
-             SLOT( slotJobPercent(KIO::Job*, unsigned long) ) );
-    connect( mSmtpJob, SIGNAL(infoMessage(KIO::Job*, const QString&) ),
-             SLOT( slotJobInfoMessage(KIO::Job*, const QString&) ) );
+    currentSmtpJob->setJob( job );
 
     kdDebug(5003) << "KNNetAccess::startJobSmtp(): job started" << endl;
   } else {
@@ -463,24 +455,17 @@ void KNNetAccess::slotThreadSignal(int i)
 
 void KNNetAccess::slotJobResult( KIO::Job *job )
 {
-  if ( job->error() )
-    currentSmtpJob->setErrorString( job->errorString() );
-  threadDoneSmtp();
-  mSmtpJob = 0;
-}
-
-
-void KNNetAccess::slotJobPercent( KIO::Job *job, unsigned long percent )
-{
-  kdDebug(5003) << k_funcinfo << "Progress: " << percent << endl;
-  currentSmtpJob->setProgress( percent );
-}
-
-
-void KNNetAccess::slotJobInfoMessage( KIO::Job *job, const QString &msg )
-{
-  kdDebug(5003) << k_funcinfo << "Status: " << msg << endl;
-  currentSmtpJob->setStatus( msg );
+  if ( job == currentSmtpJob->job() ) {
+    if ( job->error() )
+      currentSmtpJob->setErrorString( job->errorString() );
+    threadDoneSmtp();
+    return;
+  }
+  if ( job == currentNntpJob->job() ) {
+    // TODO
+    return;
+  }
+  kdError(5003) << k_funcinfo << "unknown job" << endl;
 }
 
 
@@ -497,7 +482,7 @@ void KNNetAccess::slotPasswordsChanged()
 
 void KNNetAccess::slotCancelJob( KPIM::ProgressItem *item )
 {
-  KNJobData *tmp;
+  KNJobData *tmp = 0;
   QValueList<KNJobData*>::Iterator it;
   for ( it = nntpJobQueue.begin(); it != nntpJobQueue.end();) {
     tmp = *it;

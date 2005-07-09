@@ -13,7 +13,9 @@
 */
 
 
+#include <kdebug.h>
 #include <klocale.h>
+#include <kio/job.h>
 
 #include <libkdepim/progressmanager.h>
 
@@ -60,6 +62,7 @@ void KNJobConsumer::processJob( KNJobData *j )
 // the assingment of a_ccount may cause race conditions, check again.... (CG)
 KNJobData::KNJobData(jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem *i)
  : t_ype(t), d_ata(i), a_ccount(a), c_anceled(false), a_uthError(false), c_onsumer(c),
+  mJob( 0 ),
   mProgressItem( 0 )
 {
   d_ata->setLocked(true);
@@ -85,10 +88,25 @@ void KNJobData::notifyConsumer()
 void KNJobData::cancel()
 {
   c_anceled = true;
+  if ( mJob ) {
+    mJob->kill();
+    mJob = 0;
+  }
   if ( mProgressItem ) {
     mProgressItem->setStatus( "Canceled" );
     mProgressItem->setComplete();
     mProgressItem = 0;
+  }
+}
+
+void KNJobData::setJob( KIO::Job *job )
+{
+  mJob = job;
+  if ( job ) {
+    connect( job, SIGNAL( percent(KIO::Job*, unsigned long) ),
+             SLOT( slotJobPercent(KIO::Job*, unsigned long) ) );
+    connect( job, SIGNAL( infoMessage(KIO::Job*, const QString&) ),
+             SLOT( slotJobInfoMessage(KIO::Job*, const QString&) ) );
   }
 }
 
@@ -107,3 +125,18 @@ void KNJobData::createProgressItem()
   mProgressItem = KPIM::ProgressManager::createProgressItem( 0,
       KPIM::ProgressManager::getUniqueID(), msg, i18n( "Waiting..." ), true );
 }
+
+void KNJobData::slotJobPercent( KIO::Job*, unsigned long percent )
+{
+  kdDebug(5003) << k_funcinfo << "Progress: " << percent << endl;
+  setProgress( percent );
+}
+
+void KNJobData::slotJobInfoMessage( KIO::Job*, const QString &msg )
+{
+  kdDebug(5003) << k_funcinfo << "Status: " << msg << endl;
+  setStatus( msg );
+}
+
+
+#include "knjobdata.moc"

@@ -15,10 +15,14 @@
 #ifndef KNJOBDATA_H
 #define KNJOBDATA_H
 
-#include <qglobal.h>
+#include <qobject.h>
 #include <qvaluelist.h>
 
 #include <libkdepim/progressmanager.h>
+
+namespace KIO {
+  class Job;
+}
 
 class KNJobData;
 class KNServerInfo;
@@ -64,7 +68,9 @@ class KNJobItem {
 };
 
 
-class KNJobData {
+class KNJobData : public QObject
+{
+  Q_OBJECT
 
   public:
 
@@ -101,6 +107,9 @@ class KNJobData {
     void prepareForExecution()           { e_rrorString = d_ata->prepareForExecution(); }
     void notifyConsumer();
 
+    KIO::Job* job() const                { return mJob; }
+    void setJob( KIO::Job *job );
+
     KPIM::ProgressItem* progressItem() const { return mProgressItem; }
     void createProgressItem();
 
@@ -118,7 +127,12 @@ class KNJobData {
     bool a_uthError;
     KNJobConsumer *c_onsumer;
 
+  private slots:
+    void slotJobPercent( KIO::Job *job, unsigned long percent );
+    void slotJobInfoMessage( KIO::Job *job, const QString &msg );
+
   private:
+    KIO::Job *mJob;
     KPIM::ProgressItem *mProgressItem;
 
 };

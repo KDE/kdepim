@@ -23,7 +23,6 @@ class QSocketNotifier;
 
 namespace KIO {
   class Job;
-  class StoredTransferJob;
 }
 
 namespace KPIM {
@@ -89,16 +88,12 @@ class KNNetAccess : public QObject  {
 
   private slots:
     void slotJobResult( KIO::Job *job );
-    void slotJobPercent( KIO::Job *job, unsigned long percent );
-    void slotJobInfoMessage( KIO::Job *job, const QString &msg );
 
     void slotCancelJob( KPIM::ProgressItem *item );
 
     void slotPasswordsChanged();
 
   private:
-    KIO::StoredTransferJob *mSmtpJob;
-
     /// jobs waiting for async wallet loading
     QValueList<KNJobData*> mWalletQueue;
 
