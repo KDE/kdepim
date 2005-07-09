@@ -388,6 +388,16 @@ padding-left: 6px;
 
 
 
+
+td.indexkey {
+vertical-align: top;
+background: #dfe7f3;
+}
+
+#content td.memItemLeft {
+text-align: right;
+}
+
 #leftmenu ul ul
 {
 padding: 0px;
