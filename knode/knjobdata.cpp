@@ -114,16 +114,19 @@ void KNJobData::createProgressItem()
 {
   if ( mProgressItem )
     return;
+  KNNntpAccount *acc = static_cast<KNNntpAccount*>( account() );
   QString msg = i18n( "KNode" );
   if ( type() == JTmail )
     msg = i18n( "Sending message" );
   else {
-    KNNntpAccount *acc = static_cast<KNNntpAccount*>( account() );
     if ( acc )
       msg = acc->name();
   }
+  bool encr = false;
+  if ( acc && acc->encryption() != KNServerInfo::None )
+    encr = true;
   mProgressItem = KPIM::ProgressManager::createProgressItem( 0,
-      KPIM::ProgressManager::getUniqueID(), msg, i18n( "Waiting..." ), true );
+      KPIM::ProgressManager::getUniqueID(), msg, i18n( "Waiting..." ), true, encr );
 }
 
 void KNJobData::slotJobPercent( KIO::Job*, unsigned long percent )

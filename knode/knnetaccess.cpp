@@ -266,7 +266,10 @@ void KNNetAccess::startJobSmtp()
     // create url
     KURL destination;
     KNServerInfo *account = currentSmtpJob->account();
-    destination.setProtocol("smtp");
+    if ( account->encryption() == KNServerInfo::SSL )
+      destination.setProtocol( "smtps" );
+    else
+      destination.setProtocol( "smtp" );
     destination.setHost( account->server() );
     destination.setPort( account->port() );
     destination.setQuery( query );
@@ -277,6 +280,10 @@ void KNNetAccess::startJobSmtp()
     KIO::Job* job = KIO::storedPut( art->encodedContent(true), destination, -1, false, false, false );
     connect( job, SIGNAL( result(KIO::Job*) ),
              SLOT( slotJobResult(KIO::Job*) ) );
+    if ( account->encryption() == KNServerInfo::TLS )
+      job->addMetaData( "TLS", "on" );
+    else
+      job->addMetaData( "TLS", "off" );
     currentSmtpJob->setJob( job );
 
     kdDebug(5003) << "KNNetAccess::startJobSmtp(): job started" << endl;

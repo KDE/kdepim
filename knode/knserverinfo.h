@@ -27,6 +27,8 @@ class KNServerInfo {
 
   public:
     enum serverType { STnntp, STsmtp, STpop3 };
+    enum Encryption { None, SSL, TLS };
+
     KNServerInfo();
     ~KNServerInfo();
 
@@ -45,6 +47,7 @@ class KNServerInfo {
     bool needsLogon()const         { return n_eedsLogon; }
     bool isEmpty()const            { return s_erver.isEmpty(); }
     bool readyForLogin() const { return !n_eedsLogon || mPassLoaded; }
+    Encryption encryption() const { return mEncryption; }
 
     //set
     void setType(serverType t)        { t_ype=t; }
@@ -56,6 +59,7 @@ class KNServerInfo {
     void setHold(int h)               { h_old=h; }
     void setTimeout(int t)            { t_imeout=t; }
     void setNeedsLogon(bool b)        { n_eedsLogon=b; }
+    void setEncryption( Encryption enc ) { mEncryption = enc; }
 
     bool operator==(const KNServerInfo &s);
 
@@ -79,6 +83,8 @@ class KNServerInfo {
     /** Prevent loading the password multiple times since wallet operations
         from the I/O thread don't work. */
     bool mPassLoaded;
+    /** Encyrption method */
+    Encryption mEncryption;
 };
 
 

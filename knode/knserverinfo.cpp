@@ -30,7 +30,8 @@ using namespace KWallet;
 KNServerInfo::KNServerInfo() :
   t_ype(STnntp), i_d(-1), p_ort(119), h_old(300),
   t_imeout(60), n_eedsLogon(false), p_assDirty(false),
-  mPassLoaded( false )
+  mPassLoaded( false ),
+  mEncryption( None )
 {
 }
 
@@ -59,22 +60,30 @@ void KNServerInfo::readConf(KConfig *conf)
 
   if(t_imeout < 15) t_imeout=15;
 
-  if(t_ype==STnntp) {
+  if(t_ype==STnntp)
     i_d=conf->readNumEntry("id", -1);
-    n_eedsLogon=conf->readBoolEntry("needsLogon",false);
-    u_ser=conf->readEntry("user");
-    p_ass = KNHelper::decryptStr(conf->readEntry("pass"));
 
-    // migration to KWallet
-    if (Wallet::isEnabled() && !p_ass.isEmpty()) {
-      conf->deleteEntry( "pass" );
-      p_assDirty = true;
-    }
+  n_eedsLogon=conf->readBoolEntry("needsLogon",false);
+  u_ser=conf->readEntry("user");
+  p_ass = KNHelper::decryptStr(conf->readEntry("pass"));
 
-    // if the wallet is open, no need to delay the password loading
-    if (Wallet::isOpen( Wallet::NetworkWallet() ))
-      readPassword();
+  // migration to KWallet
+  if (Wallet::isEnabled() && !p_ass.isEmpty()) {
+    conf->deleteEntry( "pass" );
+    p_assDirty = true;
   }
+
+  // if the wallet is open, no need to delay the password loading
+  if (Wallet::isOpen( Wallet::NetworkWallet() ))
+    readPassword();
+
+  QString encStr = conf->readEntry( "encryption", "None" );
+  if ( encStr.contains( "SSL", false ) )
+    mEncryption = SSL;
+  else if ( encStr.contains( "TLS", false ) )
+    mEncryption = TLS;
+  else
+    mEncryption = None;
 }
 
 
@@ -85,32 +94,43 @@ void KNServerInfo::saveConf(KConfig *conf)
   conf->writeEntry("port", p_ort);
   conf->writeEntry("holdTime", h_old);
   conf->writeEntry("timeout", t_imeout);
-  if (t_ype==STnntp) {
+  if (t_ype==STnntp)
     conf->writeEntry("id", i_d);
-    conf->writeEntry("needsLogon", n_eedsLogon);
-    conf->writeEntry("user", u_ser);
-    // open wallet for storing only if the user actually changed the password
-    if (n_eedsLogon && p_assDirty) {
-      Wallet *wallet = KNAccountManager::wallet();
-      if (!wallet || wallet->writePassword(QString::number(i_d), p_ass)) {
-        if ( KMessageBox::warningYesNo( 0,
-             i18n("KWallet is not available. It is strongly recommended to use "
-                  "KWallet for managing your passwords.\n"
-                  "However, KNode can store the password in its configuration "
-                  "file instead. The password is stored in an obfuscated format, "
-                  "but should not be considered secure from decryption efforts "
-                  "if access to the configuration file is obtained.\n"
-                  "Do you want to store the password for server '%1' in the "
-                  "configuration file?").arg( server() ),
-             i18n("KWallet Not Available"),
-             KGuiItem( i18n("Store Password") ),
-             KGuiItem( i18n("Do Not Store Password") ) )
-             == KMessageBox::Yes ) {
-          conf->writeEntry( "pass", KNHelper::encryptStr( p_ass ) );
-        }
+
+  conf->writeEntry("needsLogon", n_eedsLogon);
+  conf->writeEntry("user", u_ser);
+  // open wallet for storing only if the user actually changed the password
+  if (n_eedsLogon && p_assDirty) {
+    Wallet *wallet = KNAccountManager::wallet();
+    if (!wallet || wallet->writePassword(QString::number(i_d), p_ass)) {
+      if ( KMessageBox::warningYesNo( 0,
+            i18n("KWallet is not available. It is strongly recommended to use "
+                "KWallet for managing your passwords.\n"
+                "However, KNode can store the password in its configuration "
+                "file instead. The password is stored in an obfuscated format, "
+                "but should not be considered secure from decryption efforts "
+                "if access to the configuration file is obtained.\n"
+                "Do you want to store the password for server '%1' in the "
+                "configuration file?").arg( server() ),
+            i18n("KWallet Not Available"),
+            KGuiItem( i18n("Store Password") ),
+            KGuiItem( i18n("Do Not Store Password") ) )
+            == KMessageBox::Yes ) {
+        conf->writeEntry( "pass", KNHelper::encryptStr( p_ass ) );
       }
-      p_assDirty = false;
     }
+    p_assDirty = false;
+  }
+
+  switch ( mEncryption ) {
+    case SSL:
+      conf->writeEntry( "encryption", "SSL" );
+      break;
+    case TLS:
+      conf->writeEntry( "encryption", "TLS" );
+      break;
+    default:
+      conf->writeEntry( "encryption", "None" );
   }
 }
 
@@ -125,7 +145,9 @@ bool KNServerInfo::operator==(const KNServerInfo &s)
             (t_imeout==s.t_imeout) &&
             (n_eedsLogon==s.n_eedsLogon) &&
             (u_ser==s.u_ser) &&
-            (p_ass==s.p_ass)            );
+            (p_ass==s.p_ass) &&
+            (mEncryption == s.mEncryption)
+         );
 }
 
 
