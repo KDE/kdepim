@@ -139,6 +139,7 @@ public:
    *
    */
   void removeHoliday(int y, int m, int d) {
+    Q_UNUSED(y); Q_UNUSED(m); Q_UNUSED(d);
   }
 
 
