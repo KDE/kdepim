@@ -224,10 +224,8 @@ void KNNetAccess::triggerAsyncThread(int pipeFd)
 
 void KNNetAccess::startJobNntp()
 {
-  if (nntpJobQueue.isEmpty()) {
-    kdWarning(5003) << "KNNetAccess::startJobNntp(): job queue is empty?? aborting" << endl;
+  if ( nntpJobQueue.isEmpty() )
     return;
-  }
 
   currentNntpJob = nntpJobQueue.first();
   nntpJobQueue.remove( nntpJobQueue.begin() );
@@ -245,10 +243,8 @@ void KNNetAccess::startJobNntp()
 
 void KNNetAccess::startJobSmtp()
 {
-  if (smtpJobQueue.isEmpty()) {
-    kdWarning(5003) << "KNNetAccess::startJobSmtp(): job queue is empty?? aborting" << endl;
+  if ( smtpJobQueue.isEmpty() )
     return;
-  }
 
   currentSmtpJob = smtpJobQueue.first();
   smtpJobQueue.remove( smtpJobQueue.begin() );
@@ -479,11 +475,18 @@ void KNNetAccess::slotJobResult( KIO::Job *job )
 void KNNetAccess::slotPasswordsChanged()
 {
   QValueList<KNJobData*>::ConstIterator it;
-  for ( it = mWalletQueue.begin(); it != mWalletQueue.end(); ++it )
-    nntpJobQueue.append( (*it) );
+  for ( it = mWalletQueue.begin(); it != mWalletQueue.end(); ++it ) {
+    (*it)->setStatus( i18n("Waiting...") );
+    if ( (*it)->type() == KNJobData::JTmail )
+      smtpJobQueue.append( (*it) );
+    else
+      nntpJobQueue.append( (*it) );
+  }
   mWalletQueue.clear();
   if ( !currentNntpJob )
     startJobNntp();
+  if ( !currentSmtpJob )
+    startJobSmtp();
 }
 
 
