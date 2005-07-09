@@ -589,48 +589,8 @@ font-weight: bold;
 background-color: #c1cfea;
 }
 
-.newsshort, .newsshort .newsbox1, .newsshort .newsbox2, .newsshort table {
-background-color: #c1cfea;
-}
 
-.newslong, .newslong .newsbox1, .newslong .newsbox2 , .newslong table {
-background-color: transparent;
-}
-
-.newsbox1 h3, .newsbox2 h3 {
-padding-left: 0px;
-font-size: 100%;
-font-weight: bold;
-}
-
-
-#content .newsshort h2 {
-background-color: #000080;
-}
-
-.newsshort th {
-display: none;
-}
-
-.newslong .date
-{
-background-color: #c1cfea;
-}
-
-.newslong .title
-{
-color: #5e738e;
-background-color: #c1cfea;
-}
-
-.minipage
-{
-border: 1px dotted black;
-}
-
-.shellcode
-{
-background-color: #c1cfea;
-border: 1px dotted black;
+#content td.memItemLeft {
+text-align: right;
 }
 
