@@ -652,6 +652,17 @@ void KNConfig::SmtpAccountWidget::load()
   else
     if ( mAccount->needsLogon() )
       knGlobals.accountManager()->loadPasswordsAsync();
+  switch ( mAccount->encryption() ) {
+    case KNServerInfo::None:
+      mEncNone->setChecked( true );
+      break;
+    case KNServerInfo::SSL:
+      mEncSSL->setChecked( true );
+      break;
+    case KNServerInfo::TLS:
+      mEncTLS->setChecked( true );
+      break;
+  }
 }
 
 
@@ -667,6 +678,12 @@ void KNConfig::SmtpAccountWidget::save()
     mAccount->setUser( mUser->text() );
     mAccount->setPass( mPassword->text() );
   }
+  if ( mEncNone->isChecked() )
+    mAccount->setEncryption( KNServerInfo::None );
+  if ( mEncSSL->isChecked() )
+    mAccount->setEncryption( KNServerInfo::SSL );
+  if ( mEncTLS->isChecked() )
+    mAccount->setEncryption( KNServerInfo::TLS );
 
   KConfig *conf = knGlobals.config();
   conf->setGroup("MAILSERVER");
@@ -681,10 +698,11 @@ void KNConfig::SmtpAccountWidget::useExternalMailerToggled( bool b )
   mServerLabel->setEnabled( !b );
   mPortLabel->setEnabled( !b );
   mLogin->setEnabled( !b );
-  if ( b )
+  if ( !b )
     loginToggled( mLogin->isChecked() );
   else
     loginToggled( false );
+  mEncGroup->setEnabled( !b );
   emit changed( true );
 }
 

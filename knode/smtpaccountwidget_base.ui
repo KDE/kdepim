@@ -8,9 +8,12 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>431</width>
+            <width>306</width>
             <height>320</height>
         </rect>
+    </property>
+    <property name="caption">
+        <string>SmtpAccountWidgetBase</string>
     </property>
     <grid>
         <property name="name">
@@ -35,23 +38,6 @@
                 <cstring>mServer</cstring>
             </property>
         </widget>
-        <spacer row="6" column="2">
-            <property name="name">
-                <cstring>mSpacer</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Vertical</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>20</width>
-                    <height>110</height>
-                </size>
-            </property>
-        </spacer>
         <widget class="QLabel" row="2" column="0">
             <property name="name">
                 <cstring>mPortLabel</cstring>
@@ -85,6 +71,31 @@
                 <cstring>mPassword</cstring>
             </property>
         </widget>
+        <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>mLogin</cstring>
+            </property>
+            <property name="text">
+                <string>Server requires &amp;authentication</string>
+            </property>
+        </widget>
+        <spacer row="7" column="2">
+            <property name="name">
+                <cstring>mSpacer</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>40</height>
+                </size>
+            </property>
+        </spacer>
         <widget class="KLineEdit" row="5" column="1" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>mPassword</cstring>
@@ -117,13 +128,51 @@
                 <cstring>mServer</cstring>
             </property>
         </widget>
-        <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="3">
+        <widget class="QButtonGroup" row="6" column="0" rowspan="1" colspan="3">
             <property name="name">
-                <cstring>mLogin</cstring>
+                <cstring>mEncGroup</cstring>
             </property>
-            <property name="text">
-                <string>Server requires &amp;authentication</string>
+            <property name="title">
+                <string>Encryption</string>
             </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>mEncNone</cstring>
+                    </property>
+                    <property name="text">
+                        <string>None</string>
+                    </property>
+                    <property name="accel">
+                        <string></string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>mEncSSL</cstring>
+                    </property>
+                    <property name="text">
+                        <string>SSL</string>
+                    </property>
+                    <property name="accel">
+                        <string></string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>mEncTLS</cstring>
+                    </property>
+                    <property name="text">
+                        <string>TLS</string>
+                    </property>
+                    <property name="accel">
+                        <string></string>
+                    </property>
+                </widget>
+            </vbox>
         </widget>
     </grid>
 </widget>
@@ -165,6 +214,12 @@
         <signal>toggled(bool)</signal>
         <receiver>SmtpAccountWidgetBase</receiver>
         <slot>loginToggled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>mEncGroup</sender>
+        <signal>clicked(int)</signal>
+        <receiver>SmtpAccountWidgetBase</receiver>
+        <slot>changed()</slot>
     </connection>
 </connections>
 <slots>
