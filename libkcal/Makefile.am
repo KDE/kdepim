@@ -54,15 +54,15 @@ libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
 kde_module_LTLIBRARIES = kcal_local.la kcal_localdir.la kcal_kabc.la
 
 kcal_local_la_SOURCES = resourcelocal_plugin.cpp
-kcal_local_la_LDFLAGS = -module $(KDE_PLUGIN)
+kcal_local_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 kcal_local_la_LIBADD  = libkcal.la
 
 kcal_localdir_la_SOURCES = resourcelocaldir_plugin.cpp
-kcal_localdir_la_LDFLAGS = -module $(KDE_PLUGIN)
+kcal_localdir_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 kcal_localdir_la_LIBADD  = libkcal.la
 
 kcal_kabc_la_SOURCES = resourcekabc.cpp resourcekabcconfig.cpp
-kcal_kabc_la_LDFLAGS = -module $(KDE_PLUGIN)
+kcal_kabc_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 kcal_kabc_la_LIBADD  = libkcal.la
 
 EXTRA_PROGRAMS = convertqtopia

@@ -10,7 +10,7 @@ libkcal_resourceremote_la_SOURCES = resourceremote.cpp resourceremoteconfig.cpp
 kde_module_LTLIBRARIES = kcal_remote.la
 
 kcal_remote_la_SOURCES = resourceremote_plugin.cpp
-kcal_remote_la_LDFLAGS = -module $(KDE_PLUGIN)
+kcal_remote_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 kcal_remote_la_LIBADD  = libkcal_resourceremote.la \
                          $(top_builddir)/libkdepim/libkdepim.la
 
