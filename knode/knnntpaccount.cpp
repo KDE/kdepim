@@ -1,8 +1,6 @@
 /*
-    knnntpaccount.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -11,7 +9,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 #include <ksimpleconfig.h>
@@ -21,7 +19,9 @@
 #include "utilities.h"
 #include "kncollectionviewitem.h"
 #include "knnntpaccount.h"
+#include "knconfig.h"
 #include "knconfigmanager.h"
+#include "knconfigwidgets.h"
 #include "kngroupmanager.h"
 #include "knglobals.h"
 
@@ -227,5 +227,3 @@ KNConfig::Cleanup *KNNntpAccount::activeCleanupConfig() const
 }
 
 #include "knnntpaccount.moc"
-
-// kate: space-indent on; indent-width 2;

@@ -1,8 +1,6 @@
 /*
-    knconfigpages.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 2004 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2004-2005 Volker Krause <volker.krause@rwth-aachen.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -10,7 +8,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 #include <qlayout.h>
@@ -23,6 +21,7 @@
 #include "knconfig.h"
 #include "knconfigmanager.h"
 #include "knconfigpages.h"
+#include "knconfigwidgets.h"
 
 #include <kdepimmacros.h>
 
@@ -75,9 +74,9 @@ extern "C"
 {
   KDE_EXPORT KCModule *create_knode_config_identity( QWidget *parent, const char * )
   {
-    KNConfig::IdentityWidget *page = new KNConfig::IdentityWidget( 
-      knGlobals.configManager()->identity(), 
-      parent, 
+    KNConfig::IdentityWidget *page = new KNConfig::IdentityWidget(
+      knGlobals.configManager()->identity(),
+      parent,
       "kcmknode_config_identity" );
     return page;
   }
@@ -99,7 +98,7 @@ extern "C"
 
 KNConfig::AccountsPage::AccountsPage(QWidget *parent, const char *name)
   : BasePageWithTabs(parent, name) {
-  
+
   addTab(new KNConfig::NntpAccountListWidget(this), i18n("Newsgroup Servers"));
   addTab(new KNConfig::SmtpAccountWidget(this), i18n("Mail Server (SMTP)"));
 }
@@ -134,7 +133,7 @@ extern "C"
 
 KNConfig::ReadNewsPage::ReadNewsPage(QWidget *parent, const char *name)
   : BasePageWithTabs(parent, name) {
-  
+
   KNConfigManager *cfgMgr = knGlobals.configManager();
   addTab(new KNConfig::ReadNewsGeneralWidget(cfgMgr->readNewsGeneral(), this), i18n("General"));
   addTab(new KNConfig::ReadNewsNavigationWidget(cfgMgr->readNewsNavigation(), this), i18n("Navigation"));
@@ -160,7 +159,7 @@ extern "C"
 
 KNConfig::PostNewsPage::PostNewsPage(QWidget *parent, const char *name)
   : BasePageWithTabs(parent, name) {
-  
+
   KNConfigManager *cfgMgr = knGlobals.configManager();
   addTab(new KNConfig::PostNewsTechnicalWidget(cfgMgr->postNewsTechnical(), this), i18n("Technical"));
   addTab(new KNConfig::PostNewsComposerWidget(cfgMgr->postNewsComposer(), this), i18n("Composer"));

@@ -36,6 +36,9 @@
 #include <kstdguiitem.h>
 
 #include "knaccountmanager.h"
+#include "knconfig.h"
+#include "knconfigwidgets.h"
+#include "knconfigmanager.h"
 #include "kndisplayedheader.h"
 #include "kngroupmanager.h"
 #include "knglobals.h"
@@ -44,7 +47,6 @@
 #include "knfiltermanager.h"
 #include "knarticlefilter.h"
 #include "knscoring.h"
-#include "knconfigmanager.h"
 #include <kpgp.h>
 
 
@@ -627,73 +629,80 @@ void KNConfig::NntpAccountConfDialog::slotPasswordChanged()
 
 //=============================================================================================
 
-
 KNConfig::SmtpAccountWidget::SmtpAccountWidget( QWidget *p, const char *n ) :
-  KCModule( p, n )
+  SmtpAccountWidgetBase( p, n )
 {
-  QGridLayout *topL=new QGridLayout(this, 6, 3, 5);
-
-  u_seExternalMailer = new QCheckBox(i18n("&Use external mail program"), this);
-  connect(u_seExternalMailer, SIGNAL(toggled(bool)), SLOT(useExternalMailerToggled(bool)));
-  topL->addMultiCellWidget(u_seExternalMailer, 0, 0, 0, 2);
-
-  s_erver=new KLineEdit(this);
-  s_erverLabel=new QLabel(s_erver, i18n("&Server:"), this);
-  topL->addWidget(s_erverLabel, 1,0);
-  topL->addMultiCellWidget(s_erver, 1, 1, 1, 2);
-  connect(s_erver, SIGNAL(textChanged(const QString&)), SLOT(changed()));
-
-  p_ort=new KLineEdit(this);
-  p_ortLabel=new QLabel(p_ort, i18n("&Port:"), this);
-  topL->addWidget(p_ortLabel, 2,0);
-  p_ort->setValidator(new KIntValidator(0,65536,this));
-  topL->addWidget(p_ort, 2,1);
-  connect(p_ort, SIGNAL(textChanged(const QString&)), SLOT(changed()));
-
-  topL->setColStretch(1,1);
-  topL->setColStretch(2,1);
-
-  s_erverInfo=knGlobals.accountManager()->smtp();
-
+  mAccount = knGlobals.accountManager()->smtp();
+  connect( knGlobals.accountManager(), SIGNAL(passwordsChanged()), SLOT(slotPasswordChanged()) );
   load();
-}
-
-
-
-KNConfig::SmtpAccountWidget::~SmtpAccountWidget()
-{
 }
 
 
 void KNConfig::SmtpAccountWidget::load()
 {
-  u_seExternalMailer->setChecked(knGlobals.configManager()->postNewsTechnical()->useExternalMailer());
-  useExternalMailerToggled(knGlobals.configManager()->postNewsTechnical()->useExternalMailer());
-  s_erver->setText(s_erverInfo->server());
-  p_ort->setText(QString::number(s_erverInfo->port()));
+  mUseExternalMailer->setChecked( knGlobals.configManager()->postNewsTechnical()->useExternalMailer() );
+  useExternalMailerToggled( knGlobals.configManager()->postNewsTechnical()->useExternalMailer() );
+  mServer->setText( mAccount->server() );
+  mPort->setValue( mAccount->port() );
+  mLogin->setChecked( mAccount->needsLogon() );
+  loginToggled( mAccount->needsLogon() );
+  mUser->setText( mAccount->user() );
+  if ( mAccount->readyForLogin() )
+    mPassword->setText( mAccount->pass() );
+  else
+    if ( mAccount->needsLogon() )
+      knGlobals.accountManager()->loadPasswordsAsync();
 }
+
 
 void KNConfig::SmtpAccountWidget::save()
 {
-  knGlobals.configManager()->postNewsTechnical()->u_seExternalMailer = u_seExternalMailer->isChecked();
+  knGlobals.configManager()->postNewsTechnical()->u_seExternalMailer = mUseExternalMailer->isChecked();
   knGlobals.configManager()->postNewsTechnical()->setDirty(true);
 
-  s_erverInfo->setServer(s_erver->text());
-  s_erverInfo->setPort(p_ort->text().toInt());
+  mAccount->setServer( mServer->text() );
+  mAccount->setPort( mPort->value() );
+  mAccount->setNeedsLogon( mLogin->isChecked() );
+  if ( mAccount->needsLogon() ) {
+    mAccount->setUser( mUser->text() );
+    mAccount->setPass( mPassword->text() );
+  }
 
-  KConfig *conf=knGlobals.config();
+  KConfig *conf = knGlobals.config();
   conf->setGroup("MAILSERVER");
-  s_erverInfo->saveConf(conf);
+  mAccount->saveConf( conf );
 }
 
 
-void KNConfig::SmtpAccountWidget::useExternalMailerToggled(bool b)
+void KNConfig::SmtpAccountWidget::useExternalMailerToggled( bool b )
 {
-  s_erver->setEnabled(!b);
-  p_ort->setEnabled(!b);
-  s_erverLabel->setEnabled(!b);
-  p_ortLabel->setEnabled(!b);
-  emit changed(true);
+  mServer->setEnabled( !b );
+  mPort->setEnabled( !b );
+  mServerLabel->setEnabled( !b );
+  mPortLabel->setEnabled( !b );
+  mLogin->setEnabled( !b );
+  if ( b )
+    loginToggled( mLogin->isChecked() );
+  else
+    loginToggled( false );
+  emit changed( true );
+}
+
+
+void KNConfig::SmtpAccountWidget::loginToggled( bool b )
+{
+  mUser->setEnabled( b );
+  mUserLabel->setEnabled( b );
+  mPassword->setEnabled( b );
+  mPasswordLabel->setEnabled( b );
+  emit changed( true );
+}
+
+
+void KNConfig::SmtpAccountWidget::slotPasswordChanged()
+{
+  if ( mPassword->text().isEmpty() )
+    mPassword->setText( mAccount->pass() );
 }
 
 
@@ -2574,4 +2583,4 @@ void KNConfig::CacheWidget::apply()
 
 
 //------------------------
-#include "knconfig.moc"
+#include "knconfigwidgets.moc"

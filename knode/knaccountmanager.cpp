@@ -247,6 +247,7 @@ void KNAccountManager::loadPasswordsAsync()
 
 void KNAccountManager::loadPasswords()
 {
+  s_mtp->readPassword();
   QValueList<KNNntpAccount*>::Iterator it;
   for ( it = mAccounts.begin(); it != mAccounts.end(); ++it )
     (*it)->readPassword();

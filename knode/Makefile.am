@@ -89,7 +89,8 @@ libknodecommon_la_SOURCES =   knconfigmanager.cpp \
 		  knodeiface.skel \
 		  kncollectionview.cpp \
                   articlewidget.cpp \
-                  csshelper.cpp
+                  csshelper.cpp \
+                  smtpaccountwidget_base.ui
 
 knode_SOURCES = knode.cpp knapplication.cpp main.cpp
 
@@ -98,6 +99,7 @@ libknodepart_la_SOURCES = knode_part.cpp
 
 noinst_HEADERS =  knconfigmanager.h \
                   knconfig.h \
+                  knconfigwidgets.h \
                   \
                   knnetaccess.h \
                   knprotocolclient.h \
