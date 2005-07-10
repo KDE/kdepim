@@ -48,7 +48,9 @@
 #include <kpgp.h>
 
 
-KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n) : BaseWidget(p, n), d_ata(d)
+KNConfig::IdentityWidget::IdentityWidget( Identity *d, QWidget *p, const char *n ) :
+  KCModule( p, n ),
+  d_ata( d )
 {
   QString msg;
 
@@ -59,61 +61,61 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   topL->addWidget(l, 0,0);
   topL->addMultiCellWidget(n_ame, 0,0, 1,2);
   msg = i18n("<qt><p>Your name as it will appear to others reading your articles.</p>"
-	"<p>Ex: <b>John Stuart Masterson III</b>.</p></qt>");
+      "<p>Ex: <b>John Stuart Masterson III</b>.</p></qt>");
   QWhatsThis::add( n_ame, msg );
   QWhatsThis::add( l, msg );
-  connect( n_ame, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()) );
+  connect( n_ame, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
 
   o_rga=new KLineEdit(this);
   l=new QLabel(o_rga, i18n("Organi&zation:"), this);
   topL->addWidget(l, 1,0);
   topL->addMultiCellWidget(o_rga, 1,1, 1,2);
   msg = i18n( "<qt><p>The name of the organization you work for.</p>"
-	"<p>Ex: <b>KNode, Inc</b>.</p></qt>" );
+      "<p>Ex: <b>KNode, Inc</b>.</p></qt>" );
   QWhatsThis::add( o_rga, msg );
   QWhatsThis::add( l, msg );
-  connect( o_rga, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()) );
+  connect( o_rga, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
 
   e_mail=new KLineEdit(this);
   l=new QLabel(e_mail, i18n("Email a&ddress:"), this);
   topL->addWidget(l, 2,0);
   topL->addMultiCellWidget(e_mail, 2,2, 1,2);
   msg = i18n( "<qt><p>Your email address as it will appear to others "
-	"reading your articles</p><p>Ex: <b>nospam@please.com</b>.</qt>" );
+      "reading your articles</p><p>Ex: <b>nospam@please.com</b>.</qt>" );
   QWhatsThis::add( l, msg );
   QWhatsThis::add( e_mail, msg );
-  connect( e_mail, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()) );
+  connect( e_mail, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
 
   r_eplyTo=new KLineEdit(this);
   l=new QLabel(r_eplyTo, i18n("&Reply-to address:"), this);
   topL->addWidget(l, 3,0);
   topL->addMultiCellWidget(r_eplyTo, 3,3, 1,2);
   msg = i18n( "<qt><p>When someone reply to your article by email, this is the address the message "
-	      "will be sent. If you fill in this field, please do it with a real "
-	      "email address.</p><p>Ex: <b>john@example.com</b>.</p></qt>" );
+      "will be sent. If you fill in this field, please do it with a real "
+      "email address.</p><p>Ex: <b>john@example.com</b>.</p></qt>" );
   QWhatsThis::add( l, msg );
   QWhatsThis::add( r_eplyTo, msg );
-  connect( r_eplyTo, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()) );
+  connect( r_eplyTo, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
 
   m_ailCopiesTo=new KLineEdit(this);
   l=new QLabel(m_ailCopiesTo, i18n("&Mail-copies-to:"), this);
   topL->addWidget(l, 4,0);
   topL->addMultiCellWidget(m_ailCopiesTo, 4,4, 1,2);
-  connect( m_ailCopiesTo, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()) );
+  connect( m_ailCopiesTo, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
 
   s_igningKey = new Kpgp::SecretKeyRequester(this);
   s_igningKey->dialogButton()->setText(i18n("Chan&ge..."));
   s_igningKey->setDialogCaption(i18n("Your OpenPGP Key"));
   s_igningKey->setDialogMessage(i18n("Select the OpenPGP key which should be "
-				     "used for signing articles."));
+      "used for signing articles."));
   l=new QLabel(s_igningKey, i18n("Signing ke&y:"), this);
   topL->addWidget(l, 5,0);
   topL->addMultiCellWidget(s_igningKey, 5,5, 1,2);
   msg = i18n("<qt><p>The OpenPGP key you choose here will be "
-		     "used to sign your articles.</p></qt>");
+      "used to sign your articles.</p></qt>");
   QWhatsThis::add( l, msg );
   QWhatsThis::add( s_igningKey, msg );
-  connect( s_igningKey, SIGNAL(changed()), SLOT(slotEmitChanged()) );
+  connect( s_igningKey, SIGNAL(changed()), SLOT(changed()) );
 
   b_uttonGroup = new QButtonGroup(this);
   connect( b_uttonGroup, SIGNAL(clicked(int)),
@@ -125,7 +127,7 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   b_uttonGroup->insert(s_igFile, 0);
   topL->addMultiCellWidget(s_igFile, 6, 6, 0, 2);
   QWhatsThis::add( s_igFile,
-		  i18n( "<qt><p>Mark this to let KNode read the signature from a file.</p></qt>" ) );
+                   i18n( "<qt><p>Mark this to let KNode read the signature from a file.</p></qt>" ) );
   s_ig = new KLineEdit(this);
 
   f_ileName = new QLabel(s_ig, i18n("Signature &file:"), this);
@@ -134,7 +136,7 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   c_ompletion = new KURLCompletion();
   s_ig->setCompletionObject(c_ompletion);
   msg = i18n( "<qt><p>The file from which the signature will be read.</p>"
-	"<p>Ex: <b>/home/robt/.sig</b>.</p></qt>" );
+      "<p>Ex: <b>/home/robt/.sig</b>.</p></qt>" );
   QWhatsThis::add( f_ileName, msg );
   QWhatsThis::add( s_ig, msg );
 
@@ -150,9 +152,9 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   s_igGenerator = new QCheckBox(i18n("&The file is a program"), this);
   topL->addMultiCellWidget(s_igGenerator, 8, 8, 0, 1);
   msg = i18n( "<qt><p>Mark this option if the signature will be generated by a program</p>"
-	"<p>Ex: <b>/home/robt/gensig.sh</b>.</p></qt>" );
+      "<p>Ex: <b>/home/robt/gensig.sh</b>.</p></qt>" );
   QWhatsThis::add( s_igGenerator, msg );
-  connect( s_igGenerator, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
+  connect( s_igGenerator, SIGNAL(toggled(bool)), SLOT(changed()) );
 
   s_igEdit = new QRadioButton( i18n("Specify signature &below"), this);
   b_uttonGroup->insert(s_igEdit, 1);
@@ -161,7 +163,7 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   s_igEditor = new QTextEdit(this);
   s_igEditor->setTextFormat(Qt::PlainText);
   topL->addMultiCellWidget(s_igEditor, 10, 10, 0, 2);
-  connect( s_igEditor, SIGNAL(textChanged()), SLOT(slotEmitChanged()) );
+  connect( s_igEditor, SIGNAL(textChanged()), SLOT(changed()) );
 
   topL->setColStretch(1,1);
   topL->setRowStretch(7,1);
@@ -201,9 +203,6 @@ void KNConfig::IdentityWidget::load()
 
 void KNConfig::IdentityWidget::save()
 {
-  if(!d_irty)
-    return;
-
   d_ata->n_ame=n_ame->text();
   d_ata->o_rga=o_rga->text();
   d_ata->e_mail=e_mail->text();
@@ -278,8 +277,9 @@ void KNConfig::IdentityWidget::slotSignatureEdit()
 
 //BEGIN: NNTP account configuration widgets ----------------------------------
 
-KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n)
-  : BaseWidget(p, n), a_ccManager(knGlobals.accountManager())
+KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n) :
+  KCModule( p, n ),
+  a_ccManager( knGlobals.accountManager() )
 {
   p_ixmap = SmallIcon("server");
 
@@ -628,7 +628,8 @@ void KNConfig::NntpAccountConfDialog::slotPasswordChanged()
 //=============================================================================================
 
 
-KNConfig::SmtpAccountWidget::SmtpAccountWidget(QWidget *p, const char *n) : BaseWidget(p, n)
+KNConfig::SmtpAccountWidget::SmtpAccountWidget( QWidget *p, const char *n ) :
+  KCModule( p, n )
 {
   QGridLayout *topL=new QGridLayout(this, 6, 3, 5);
 
@@ -640,14 +641,14 @@ KNConfig::SmtpAccountWidget::SmtpAccountWidget(QWidget *p, const char *n) : Base
   s_erverLabel=new QLabel(s_erver, i18n("&Server:"), this);
   topL->addWidget(s_erverLabel, 1,0);
   topL->addMultiCellWidget(s_erver, 1, 1, 1, 2);
-  connect(s_erver, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()));
+  connect(s_erver, SIGNAL(textChanged(const QString&)), SLOT(changed()));
 
   p_ort=new KLineEdit(this);
   p_ortLabel=new QLabel(p_ort, i18n("&Port:"), this);
   topL->addWidget(p_ortLabel, 2,0);
   p_ort->setValidator(new KIntValidator(0,65536,this));
   topL->addWidget(p_ort, 2,1);
-  connect(p_ort, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()));
+  connect(p_ort, SIGNAL(textChanged(const QString&)), SLOT(changed()));
 
   topL->setColStretch(1,1);
   topL->setColStretch(2,1);
@@ -674,9 +675,6 @@ void KNConfig::SmtpAccountWidget::load()
 
 void KNConfig::SmtpAccountWidget::save()
 {
-  if(!d_irty)
-    return;
-
   knGlobals.configManager()->postNewsTechnical()->u_seExternalMailer = u_seExternalMailer->isChecked();
   knGlobals.configManager()->postNewsTechnical()->setDirty(true);
 
@@ -786,8 +784,9 @@ int KNConfig::AppearanceWidget::FontListItem::width(const QListBox *lb ) const
 //===================================================================================
 
 
-KNConfig::AppearanceWidget::AppearanceWidget(QWidget *p, const char *n)
-  : BaseWidget(p, n), d_ata(knGlobals.configManager()->appearance())
+KNConfig::AppearanceWidget::AppearanceWidget( QWidget *p, const char *n ) :
+  KCModule( p, n ),
+  d_ata( knGlobals.configManager()->appearance() )
 {
   QGridLayout *topL=new QGridLayout(this, 8,2, 5,5);
 
@@ -846,9 +845,6 @@ void KNConfig::AppearanceWidget::load()
 
 void KNConfig::AppearanceWidget::save()
 {
-  if(!d_irty)
-    return;
-
   d_ata->u_seColors=c_olorCB->isChecked();
   for(int i=0; i<d_ata->colorCount(); i++)
     d_ata->c_olors[i] = (static_cast<ColorListItem*>(c_List->item(i)))->color();
@@ -967,8 +963,9 @@ void KNConfig::AppearanceWidget::slotFontSelectionChanged()
 //=============================================================================================
 
 
-KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidget *p, const char *n)
-  : BaseWidget(p, n), d_ata(d)
+KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget( ReadNewsGeneral *d, QWidget *p, const char *n ) :
+  KCModule( p, n ),
+  d_ata( d )
 {
   QGroupBox *hgb=new QGroupBox(i18n("Article Handling"), this);
   QGroupBox *lgb=new QGroupBox(i18n("Article List"), this);
@@ -1034,19 +1031,19 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
 
   topL->setResizeMode(QLayout::Minimum);
 
-  connect(a_utoCB,           SIGNAL(toggled(bool)),     SLOT(slotEmitChanged()));
-  connect(m_axFetch,         SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
-  connect(m_arkCB,           SIGNAL(toggled(bool)),     SLOT(slotEmitChanged()));
-  connect(m_arkSecs,         SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
-  connect(m_arkCrossCB,      SIGNAL(toggled(bool)),     SLOT(slotEmitChanged()));
-  connect(s_martScrollingCB, SIGNAL(toggled(bool)),     SLOT(slotEmitChanged()));
-  connect(e_xpThrCB,         SIGNAL(toggled(bool)),     SLOT(slotEmitChanged()));
-  connect(d_efaultExpandCB,  SIGNAL(toggled(bool)),     SLOT(slotEmitChanged()));
-  connect(l_inesCB,          SIGNAL(toggled(bool)),     SLOT(slotEmitChanged()));
-  connect(s_coreCB,          SIGNAL(toggled(bool)),     SLOT(slotEmitChanged()));
-  connect(u_nreadCB,         SIGNAL(toggled(bool)),     SLOT(slotEmitChanged()));
-  connect(c_ollCacheSize,    SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
-  connect(a_rtCacheSize,     SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
+  connect(a_utoCB,           SIGNAL(toggled(bool)),     SLOT(changed()));
+  connect(m_axFetch,         SIGNAL(valueChanged(int)), SLOT(changed()));
+  connect(m_arkCB,           SIGNAL(toggled(bool)),     SLOT(changed()));
+  connect(m_arkSecs,         SIGNAL(valueChanged(int)), SLOT(changed()));
+  connect(m_arkCrossCB,      SIGNAL(toggled(bool)),     SLOT(changed()));
+  connect(s_martScrollingCB, SIGNAL(toggled(bool)),     SLOT(changed()));
+  connect(e_xpThrCB,         SIGNAL(toggled(bool)),     SLOT(changed()));
+  connect(d_efaultExpandCB,  SIGNAL(toggled(bool)),     SLOT(changed()));
+  connect(l_inesCB,          SIGNAL(toggled(bool)),     SLOT(changed()));
+  connect(s_coreCB,          SIGNAL(toggled(bool)),     SLOT(changed()));
+  connect(u_nreadCB,         SIGNAL(toggled(bool)),     SLOT(changed()));
+  connect(c_ollCacheSize,    SIGNAL(valueChanged(int)), SLOT(changed()));
+  connect(a_rtCacheSize,     SIGNAL(valueChanged(int)), SLOT(changed()));
 
   load();
 }
@@ -1077,9 +1074,6 @@ void KNConfig::ReadNewsGeneralWidget::load()
 
 void KNConfig::ReadNewsGeneralWidget::save()
 {
-  if(!d_irty)
-    return;
-
   d_ata->a_utoCheck=a_utoCB->isChecked();
   d_ata->m_axFetch=m_axFetch->value();
   d_ata->a_utoMark=m_arkCB->isChecked();
@@ -1100,8 +1094,9 @@ void KNConfig::ReadNewsGeneralWidget::save()
 //=============================================================================================
 
 
-KNConfig::ReadNewsNavigationWidget::ReadNewsNavigationWidget(ReadNewsNavigation *d, QWidget *p, const char *n)
-  : BaseWidget(p, n), d_ata(d)
+KNConfig::ReadNewsNavigationWidget::ReadNewsNavigationWidget( ReadNewsNavigation *d, QWidget *p, const char *n ) :
+  KCModule( p, n ),
+  d_ata( d )
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
 
@@ -1115,7 +1110,7 @@ KNConfig::ReadNewsNavigationWidget::ReadNewsNavigationWidget(ReadNewsNavigation 
   m_arkAllReadGoNextCB=new QCheckBox(i18n("&Switch to the next group"), gb);
   gbL->addWidget(m_arkAllReadGoNextCB);
 
-  connect(m_arkAllReadGoNextCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
+  connect(m_arkAllReadGoNextCB, SIGNAL(toggled(bool)), SLOT(changed()));
 
   // ==== Mark Thread as Read =================================================
 
@@ -1129,8 +1124,8 @@ KNConfig::ReadNewsNavigationWidget::ReadNewsNavigationWidget(ReadNewsNavigation 
   m_arkThreadReadGoNextCB=new QCheckBox(i18n("Go &to the next unread thread"), gb);
   gbL->addWidget(m_arkThreadReadGoNextCB);
 
-  connect(m_arkThreadReadCloseThreadCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
-  connect(m_arkThreadReadGoNextCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
+  connect(m_arkThreadReadCloseThreadCB, SIGNAL(toggled(bool)), SLOT(changed()));
+  connect(m_arkThreadReadGoNextCB, SIGNAL(toggled(bool)), SLOT(changed()));
 
   // ==== Ignore Thread =======================================================
 
@@ -1144,8 +1139,8 @@ KNConfig::ReadNewsNavigationWidget::ReadNewsNavigationWidget(ReadNewsNavigation 
   i_gnoreThreadGoNextCB=new QCheckBox(i18n("Go to the next &unread thread"), gb);
   gbL->addWidget(i_gnoreThreadGoNextCB);
 
-  connect(i_gnoreThreadCloseThreadCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
-  connect(i_gnoreThreadGoNextCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
+  connect(i_gnoreThreadCloseThreadCB, SIGNAL(toggled(bool)), SLOT(changed()));
+  connect(i_gnoreThreadGoNextCB, SIGNAL(toggled(bool)), SLOT(changed()));
 
   topL->addStretch(1);
   topL->setResizeMode(QLayout::Minimum);
@@ -1170,9 +1165,6 @@ void KNConfig::ReadNewsNavigationWidget::load()
 
 void KNConfig::ReadNewsNavigationWidget::save()
 {
-  if(!d_irty)
-    return;
-
   d_ata->m_arkAllReadGoNext = m_arkAllReadGoNextCB->isChecked();
   d_ata->m_arkThreadReadGoNext = m_arkThreadReadGoNextCB->isChecked();
   d_ata->m_arkThreadReadCloseThread = m_arkThreadReadCloseThreadCB->isChecked();
@@ -1186,8 +1178,9 @@ void KNConfig::ReadNewsNavigationWidget::save()
 //=============================================================================================
 
 
-KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget *p, const char *n)
-  : BaseWidget(p, n), d_ata(d)
+KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget( ReadNewsViewer *d, QWidget *p, const char *n ) :
+  KCModule( p, n ),
+  d_ata( d )
 {
   QGroupBox *appgb=new QGroupBox(i18n("Appearance"), this);
   QGroupBox *agb=new QGroupBox(i18n("Attachments"), this);
@@ -1232,14 +1225,14 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
 
   topL->setResizeMode(QLayout::Minimum);
 
-  connect(r_ewrapCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
-  connect(r_emoveTrailingCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
-  connect(s_igCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
-  connect(q_uoteCharacters, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()));
-  connect(o_penAttCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
-  connect(a_ltAttCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
-  connect( mShowRefBar, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
-  connect( mAlwaysShowHTML, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
+  connect(r_ewrapCB, SIGNAL(toggled(bool)), SLOT(changed()));
+  connect(r_emoveTrailingCB, SIGNAL(toggled(bool)), SLOT(changed()));
+  connect(s_igCB, SIGNAL(toggled(bool)), SLOT(changed()));
+  connect(q_uoteCharacters, SIGNAL(textChanged(const QString&)), SLOT(changed()));
+  connect(o_penAttCB, SIGNAL(toggled(bool)), SLOT(changed()));
+  connect(a_ltAttCB, SIGNAL(toggled(bool)), SLOT(changed()));
+  connect( mShowRefBar, SIGNAL(toggled(bool)), SLOT(changed()) );
+  connect( mAlwaysShowHTML, SIGNAL(toggled(bool)), SLOT(changed()) );
 
   load();
 }
@@ -1265,9 +1258,6 @@ void KNConfig::ReadNewsViewerWidget::load()
 
 void KNConfig::ReadNewsViewerWidget::save()
 {
-  if(!d_irty)
-    return;
-
   d_ata->r_ewrapBody=r_ewrapCB->isChecked();
   d_ata->r_emoveTrailingNewlines=r_emoveTrailingCB->isChecked();
   d_ata->s_howSig=s_igCB->isChecked();
@@ -1284,8 +1274,10 @@ void KNConfig::ReadNewsViewerWidget::save()
 //=============================================================================================
 
 
-KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget(DisplayedHeaders *d, QWidget *p, const char *n)
-  : BaseWidget(p, n), s_ave(false), d_ata(d)
+KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, QWidget *p, const char *n ) :
+  KCModule( p, n ),
+  s_ave( false ),
+  d_ata( d )
 {
   QGridLayout *topL=new QGridLayout(this, 7,2, 5,5);
 
@@ -1575,8 +1567,9 @@ void KNConfig::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
 //=============================================================================================
 
 
-KNConfig::ScoringWidget::ScoringWidget(Scoring *d, QWidget *p, const char *n)
-  : BaseWidget(p,n), d_ata(d)
+KNConfig::ScoringWidget::ScoringWidget( Scoring *d, QWidget *p, const char *n ) :
+  KCModule( p, n ),
+  d_ata( d )
 {
   QGridLayout *topL = new QGridLayout(this,4,2, 5,5);
   ksc = new KScoringEditorWidget(knGlobals.scoringManager(), this);
@@ -1588,13 +1581,13 @@ KNConfig::ScoringWidget::ScoringWidget(Scoring *d, QWidget *p, const char *n)
   QLabel *l=new QLabel(i_gnored, i18n("Default score for &ignored threads:"), this);
   topL->addWidget(l, 2, 0);
   topL->addWidget(i_gnored, 2, 1);
-  connect(i_gnored, SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
+  connect(i_gnored, SIGNAL(valueChanged(int)), SLOT(changed()));
 
   w_atched=new KIntSpinBox(-100000, 100000, 1, 0, 10, this);
   l=new QLabel(w_atched, i18n("Default score for &watched threads:"), this);
   topL->addWidget(l, 3, 0);
   topL->addWidget(w_atched, 3, 1);
-  connect(w_atched, SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
+  connect(w_atched, SIGNAL(valueChanged(int)), SLOT(changed()));
 
   topL->setColStretch(0, 1);
 
@@ -1615,9 +1608,6 @@ void KNConfig::ScoringWidget::load()
 
 void KNConfig::ScoringWidget::save()
 {
-  if(!d_irty)
-    return;
-
   d_ata->i_gnoredThreshold = i_gnored->value();
   d_ata->w_atchedThreshold = w_atched->value();
 
@@ -1628,8 +1618,9 @@ void KNConfig::ScoringWidget::save()
 //=============================================================================================
 
 
-KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
- : BaseWidget(p,n), f_ilManager(knGlobals.filterManager())
+KNConfig::FilterListWidget::FilterListWidget( QWidget *p, const char *n ) :
+  KCModule( p, n ),
+  f_ilManager( knGlobals.filterManager() )
 {
   QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
 
@@ -1710,8 +1701,7 @@ void KNConfig::FilterListWidget::load()
 
 void KNConfig::FilterListWidget::save()
 {
-  if(d_irty)
-    f_ilManager->commitChanges();
+  f_ilManager->commitChanges();
 }
 
 
@@ -1910,8 +1900,9 @@ void KNConfig::FilterListWidget::slotSelectionChangedMenu()
 //=============================================================================================
 
 
-KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d, QWidget *p, const char *n)
-  : BaseWidget(p, n), d_ata(d)
+KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget( PostNewsTechnical *d, QWidget *p, const char *n ) :
+  KCModule( p, n ),
+  d_ata( d )
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
 
@@ -1926,18 +1917,18 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   c_harset->insertStringList(d->composerCharsets());
   ggbL->addWidget(new QLabel(c_harset, i18n("Cha&rset:"), ggb), 1,0);
   ggbL->addWidget(c_harset, 1,1);
-  connect(c_harset, SIGNAL(activated(int)), SLOT(slotEmitChanged()));
+  connect(c_harset, SIGNAL(activated(int)), SLOT(changed()));
 
   e_ncoding=new QComboBox(ggb);
   e_ncoding->insertItem(i18n("Allow 8-bit"));
   e_ncoding->insertItem(i18n("7-bit (Quoted-Printable)"));
   ggbL->addWidget(new QLabel(e_ncoding, i18n("Enco&ding:"), ggb), 2,0);
   ggbL->addWidget(e_ncoding, 2,1);
-  connect(e_ncoding, SIGNAL(activated(int)), SLOT(slotEmitChanged()));
+  connect(e_ncoding, SIGNAL(activated(int)), SLOT(changed()));
 
   u_seOwnCSCB=new QCheckBox(i18n("Use o&wn default charset when replying"), ggb);
   ggbL->addMultiCellWidget(u_seOwnCSCB, 3,3, 0,1);
-  connect(u_seOwnCSCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
+  connect(u_seOwnCSCB, SIGNAL(toggled(bool)), SLOT(changed()));
 
   g_enMIdCB=new QCheckBox(i18n("&Generate message-id"), ggb);
   connect(g_enMIdCB, SIGNAL(toggled(bool)), this, SLOT(slotGenMIdCBToggled(bool)));
@@ -1949,7 +1940,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   ggbL->addWidget(h_ostL, 5,0);
   ggbL->addWidget(h_ost, 5,1);
   ggbL->setColStretch(1,1);
-  connect(h_ost, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()));
+  connect(h_ost, SIGNAL(textChanged(const QString&)), SLOT(changed()));
 
   // ==== X-Headers =============================================================
 
@@ -1981,7 +1972,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
 
   i_ncUaCB=new QCheckBox(i18n("Do not add the \"&User-Agent\" identification header"), xgb);
   xgbL->addMultiCellWidget(i_ncUaCB, 6,6, 0,1);
-  connect(i_ncUaCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
+  connect(i_ncUaCB, SIGNAL(toggled(bool)), SLOT(changed()));
 
   xgbL->setRowStretch(4,1);
   xgbL->setColStretch(0,1);
@@ -2013,9 +2004,6 @@ void KNConfig::PostNewsTechnicalWidget::load()
 
 void KNConfig::PostNewsTechnicalWidget::save()
 {
-  if(!d_irty)
-    return;
-
   d_ata->c_harset=c_harset->currentText().latin1();
   d_ata->a_llow8BitBody=(e_ncoding->currentItem()==0);
   d_ata->u_seOwnCharset=u_seOwnCSCB->isChecked();
@@ -2145,8 +2133,9 @@ QString KNConfig::XHeaderConfDialog::result()
 //===================================================================================================
 
 
-KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QWidget *p, const char *n)
-  : BaseWidget(p, n), d_ata(d)
+KNConfig::PostNewsComposerWidget::PostNewsComposerWidget( PostNewsComposer *d, QWidget *p, const char *n ) :
+  KCModule( p, n ),
+  d_ata( d )
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
 
@@ -2163,12 +2152,12 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
   m_axLen=new KIntSpinBox(20, 200, 1, 20, 10, generalB);
   generalL->addWidget(m_axLen,1,2);
   connect(w_ordWrapCB, SIGNAL(toggled(bool)), m_axLen, SLOT(setEnabled(bool)));
-  connect(w_ordWrapCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
-  connect(m_axLen, SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
+  connect(w_ordWrapCB, SIGNAL(toggled(bool)), SLOT(changed()));
+  connect(m_axLen, SIGNAL(valueChanged(int)), SLOT(changed()));
 
   o_wnSigCB=new QCheckBox(i18n("Appe&nd signature automatically"), generalB);
   generalL->addMultiCellWidget(o_wnSigCB,2,2,0,1);
-  connect(o_wnSigCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
+  connect(o_wnSigCB, SIGNAL(toggled(bool)), SLOT(changed()));
 
   generalL->setColStretch(1,1);
 
@@ -2184,19 +2173,19 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
   replyL->addMultiCellWidget(new QLabel(i_ntro,i18n("&Introduction phrase:"), replyB),1,1,0,1);
   replyL->addMultiCellWidget(i_ntro, 2,2,0,1);
   replyL->addMultiCellWidget(new QLabel(i18n("<qt>Placeholders: <b>%NAME</b>=sender's name, <b>%EMAIL</b>=sender's address,<br><b>%DATE</b>=date, <b>%MSID</b>=message-id, <b>%GROUP</b>=group name, <b>%L</b>=line break</qt>"), replyB),3,3,0,1);
-  connect(i_ntro, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()));
+  connect(i_ntro, SIGNAL(textChanged(const QString&)), SLOT(changed()));
 
   r_ewrapCB=new QCheckBox(i18n("Rewrap quoted te&xt automatically"), replyB);
   replyL->addMultiCellWidget(r_ewrapCB, 4,4,0,1);
-  connect(r_ewrapCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
+  connect(r_ewrapCB, SIGNAL(toggled(bool)), SLOT(changed()));
 
   a_uthSigCB=new QCheckBox(i18n("Include the a&uthor's signature"), replyB);
   replyL->addMultiCellWidget(a_uthSigCB, 5,5,0,1);
-  connect(a_uthSigCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
+  connect(a_uthSigCB, SIGNAL(toggled(bool)), SLOT(changed()));
 
   c_ursorOnTopCB=new QCheckBox(i18n("Put the cursor &below the introduction phrase"), replyB);
   replyL->addMultiCellWidget(c_ursorOnTopCB, 6,6,0,1);
-  connect(c_ursorOnTopCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
+  connect(c_ursorOnTopCB, SIGNAL(toggled(bool)), SLOT(changed()));
 
   replyL->setColStretch(1,1);
 
@@ -2213,14 +2202,14 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
   editorL->addWidget(e_ditor,1,1);
   QPushButton *btn = new QPushButton(i18n("Choo&se..."),editorB);
   connect(btn, SIGNAL(clicked()), SLOT(slotChooseEditor()));
-  connect(e_ditor, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()));
+  connect(e_ditor, SIGNAL(textChanged(const QString&)), SLOT(changed()));
   editorL->addWidget(btn,1,2);
 
   editorL->addMultiCellWidget(new QLabel(i18n("%f will be replaced with the filename to edit."), editorB),2,2,0,2);
 
   e_xternCB=new QCheckBox(i18n("Start exte&rnal editor automatically"), editorB);
   editorL->addMultiCellWidget(e_xternCB, 3,3,0,2);
-  connect(e_xternCB, SIGNAL(clicked()), SLOT(slotEmitChanged()));
+  connect(e_xternCB, SIGNAL(clicked()), SLOT(changed()));
 
   editorL->setColStretch(1,1);
 
@@ -2252,9 +2241,6 @@ void KNConfig::PostNewsComposerWidget::load()
 
 void KNConfig::PostNewsComposerWidget::save()
 {
-  if(!d_irty)
-    return;
-
   d_ata->w_ordWrap=w_ordWrapCB->isChecked();
   d_ata->m_axLen=m_axLen->value();
   d_ata->r_ewrap=r_ewrapCB->isChecked();
@@ -2285,14 +2271,14 @@ void KNConfig::PostNewsComposerWidget::slotChooseEditor()
 //===================================================================================================
 
 
-KNConfig::PostNewsSpellingWidget::PostNewsSpellingWidget(QWidget *p, const char *n)
-  : BaseWidget(p, n)
+KNConfig::PostNewsSpellingWidget::PostNewsSpellingWidget( QWidget *p, const char *n ) :
+  KCModule( p, n )
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
 
   c_onf = new KSpellConfig( this, "spell", 0, false );
   topL->addWidget(c_onf);
-  connect(c_onf, SIGNAL(configChanged()), SLOT(slotEmitChanged()));
+  connect(c_onf, SIGNAL(configChanged()), SLOT(changed()));
 
   topL->addStretch(1);
 }
@@ -2305,20 +2291,19 @@ KNConfig::PostNewsSpellingWidget::~PostNewsSpellingWidget()
 
 void KNConfig::PostNewsSpellingWidget::save()
 {
-  if(d_irty)
-     c_onf->writeGlobalSettings();
+  c_onf->writeGlobalSettings();
 }
 
 
 //==============================================================================================================
 
-KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n)
-  : BaseWidget(p,n)
+KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n) :
+  KCModule( p, n )
 {
   QBoxLayout *topLayout = new QVBoxLayout(this, 5);
   c_onf = new Kpgp::Config(this,"knode pgp config",false);
   topLayout->addWidget(c_onf);
-  connect(c_onf, SIGNAL(changed()), SLOT(slotEmitChanged()));
+  connect(c_onf, SIGNAL(changed()), SLOT(changed()));
 
   topLayout->addStretch(1);
 
@@ -2333,9 +2318,6 @@ KNConfig::PrivacyWidget::~PrivacyWidget()
 
 void KNConfig::PrivacyWidget::save()
 {
-  if(!d_irty)
-    return;
-
   c_onf->applySettings();
 }
 
@@ -2440,14 +2422,15 @@ void KNConfig::GroupCleanupWidget::slotDefaultToggled( bool state )
 }
 
 
-KNConfig::CleanupWidget::CleanupWidget(QWidget *p, const char *n)
-  : BaseWidget(p, n), d_ata(knGlobals.configManager()->cleanup())
+KNConfig::CleanupWidget::CleanupWidget( QWidget *p, const char *n ) :
+  KCModule( p, n ),
+  d_ata( knGlobals.configManager()->cleanup() )
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
 
   mGroupCleanup = new GroupCleanupWidget( d_ata, this );
   topL->addWidget( mGroupCleanup );
-  connect( mGroupCleanup, SIGNAL(changed()), SLOT(slotEmitChanged()) );
+  connect( mGroupCleanup, SIGNAL(changed()), SLOT(changed()) );
 
   // === folders =========================================================
 
@@ -2470,7 +2453,7 @@ KNConfig::CleanupWidget::CleanupWidget(QWidget *p, const char *n)
   f_olderDaysL=new QLabel(f_olderDays,i18n("P&urge folders every:"), foldersB);
   foldersL->addWidget(f_olderDaysL,2,0);
   foldersL->addWidget(f_olderDays,2,1,Qt::AlignRight);
-  connect(f_olderDays, SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
+  connect(f_olderDays, SIGNAL(valueChanged(int)), SLOT(changed()));
 
   foldersL->setColStretch(1,1);
 
@@ -2496,9 +2479,6 @@ void KNConfig::CleanupWidget::load()
 
 void KNConfig::CleanupWidget::save()
 {
-  if(!d_irty)
-    return;
-
   d_ata->d_oCompact=f_olderCB->isChecked();
   d_ata->c_ompactInterval=f_olderDays->value();
 
@@ -2522,7 +2502,7 @@ void KNConfig::CleanupWidget::slotFolderCBtoggled(bool b)
 
 /*
 KNConfig::CacheWidget::CacheWidget(Cache *d, QWidget *p, const char *n)
-  : BaseWidget(p, n), d_ata(d)
+  : KCModule p, n), d_ata(d)
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
 

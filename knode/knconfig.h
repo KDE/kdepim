@@ -74,27 +74,6 @@ class Base {
 };
 
 
-class KDE_EXPORT BaseWidget : public KCModule {
-
-  Q_OBJECT
-
-  public:
-    BaseWidget(QWidget *p=0, const char *n=0) : KCModule(p, n), d_irty(false) {}
-    ~BaseWidget() {}
-
-    void show()             { d_irty=true; QWidget::show(); }
-
-    bool dirty()const            { return d_irty; }
-    void setDirty(bool b)   { d_irty=b; }
-
-  protected:
-    bool d_irty;
-
-  protected slots:
-    void slotEmitChanged() { emit changed( true ); }
-};
-
-
 class KDE_EXPORT Identity : public QObject, public Base {
 
 Q_OBJECT
@@ -165,7 +144,7 @@ Q_OBJECT
 };
 
 
-class KDE_EXPORT IdentityWidget : public BaseWidget {
+class KDE_EXPORT IdentityWidget : public KCModule {
 
   Q_OBJECT
 
@@ -206,7 +185,7 @@ class KDE_EXPORT IdentityWidget : public BaseWidget {
 };
 
 
-class KDE_EXPORT NntpAccountListWidget : public BaseWidget {
+class KDE_EXPORT NntpAccountListWidget : public KCModule {
 
   Q_OBJECT
 
@@ -294,7 +273,7 @@ class KDE_EXPORT NntpAccountConfDialog : public KDialogBase  {
 };
 
 
-class KDE_EXPORT SmtpAccountWidget : public BaseWidget {
+class KDE_EXPORT SmtpAccountWidget : public KCModule {
 
 Q_OBJECT
 
@@ -392,7 +371,7 @@ class KDE_EXPORT Appearance : public Base {
 };
 
 
-class KDE_EXPORT AppearanceWidget : public BaseWidget {
+class KDE_EXPORT AppearanceWidget : public KCModule {
 
   Q_OBJECT
 
@@ -528,7 +507,7 @@ class KDE_EXPORT ReadNewsGeneral : public Base {
 };
 
 
-class KDE_EXPORT ReadNewsGeneralWidget : public BaseWidget {
+class KDE_EXPORT ReadNewsGeneralWidget : public KCModule {
 
   public:
     ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidget *p=0, const char *n=0);
@@ -583,7 +562,7 @@ class KDE_EXPORT ReadNewsNavigation : public Base {
 };
 
 
-class KDE_EXPORT ReadNewsNavigationWidget : public BaseWidget {
+class KDE_EXPORT ReadNewsNavigationWidget : public KCModule {
 
   public:
     ReadNewsNavigationWidget(ReadNewsNavigation *d, QWidget *p=0, const char *n=0);
@@ -647,7 +626,7 @@ class KDE_EXPORT ReadNewsViewer : public Base {
 };
 
 
-class KDE_EXPORT ReadNewsViewerWidget : public BaseWidget {
+class KDE_EXPORT ReadNewsViewerWidget : public KCModule {
 
   Q_OBJECT
 
@@ -700,7 +679,7 @@ class KDE_EXPORT DisplayedHeaders : public Base {
 };
 
 
-class KDE_EXPORT DisplayedHeadersWidget : public BaseWidget {
+class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
 
   Q_OBJECT
 
@@ -790,7 +769,7 @@ class KDE_EXPORT Scoring : public Base {
 };
 
 
-class KDE_EXPORT ScoringWidget : public BaseWidget {
+class KDE_EXPORT ScoringWidget : public KCModule {
 
   Q_OBJECT
 
@@ -810,7 +789,7 @@ class KDE_EXPORT ScoringWidget : public BaseWidget {
 };
 
 
-class KDE_EXPORT FilterListWidget : public BaseWidget {
+class KDE_EXPORT FilterListWidget : public KCModule {
 
   Q_OBJECT
 
@@ -938,7 +917,7 @@ class KDE_EXPORT PostNewsTechnical : public Base {
 };
 
 
-class KDE_EXPORT PostNewsTechnicalWidget : public BaseWidget {
+class KDE_EXPORT PostNewsTechnicalWidget : public KCModule {
 
   Q_OBJECT
 
@@ -1028,7 +1007,7 @@ class PostNewsComposer : public Base {
 };
 
 
-class KDE_EXPORT PostNewsComposerWidget : public BaseWidget {
+class KDE_EXPORT PostNewsComposerWidget : public KCModule {
 
   Q_OBJECT
 
@@ -1058,7 +1037,7 @@ class KDE_EXPORT PostNewsComposerWidget : public BaseWidget {
 };
 
 
-class KDE_EXPORT PostNewsSpellingWidget : public BaseWidget {
+class KDE_EXPORT PostNewsSpellingWidget : public KCModule {
 
   public:
     PostNewsSpellingWidget(QWidget *p=0, const char *n=0);
@@ -1073,7 +1052,7 @@ class KDE_EXPORT PostNewsSpellingWidget : public BaseWidget {
 
 
 
-class KDE_EXPORT PrivacyWidget : public BaseWidget {
+class KDE_EXPORT PrivacyWidget : public KCModule {
 
   Q_OBJECT
 
@@ -1169,7 +1148,7 @@ class KDE_EXPORT GroupCleanupWidget : public QWidget {
 
 
 /** Global cleanup configuration widget */
-class KDE_EXPORT CleanupWidget : public BaseWidget {
+class KDE_EXPORT CleanupWidget : public KCModule {
 
   Q_OBJECT
 
@@ -1227,7 +1206,7 @@ class KDE_EXPORT CleanupWidget : public BaseWidget {
 };
 
 
-class CacheWidget : public BaseWidget  {
+class CacheWidget : public KCModule  {
 
 
   Q_OBJECT
