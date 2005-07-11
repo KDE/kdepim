@@ -604,13 +604,18 @@ void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence
 
     for ( it = recipients.begin(); it != recipients.end(); ++it ) {
 /*      kdDebug() << "---- recipient " << endl;
- */     ngwt__Recipient *recipient = *it;
+ */   ngwt__Recipient *recipient = *it;
       KCal::Attendee *attendee = new KCal::Attendee(
         stringToQString( recipient->displayName ),
         stringToQString( recipient->email ) );
 
+      // set our status
+      if ( *(recipient->email) == *(qStringToString( mFromEmail )) )
+        if ( item->status->accepted )
+          attendee->setStatus( ( *item->status->accepted ) ? KCal::Attendee::Accepted : KCal::Attendee::NeedsAction );
+
       incidence->addAttendee( attendee );
-    } 
+    }
   }
 }
 

@@ -467,7 +467,8 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
   cursorRequest.container = id;
 #if 1
   cursorRequest.view = soap_new_std__string( mSoap, -1 );
-  cursorRequest.view->append( "container status source security distribution acceptLevel startDate endDate subject alarm allDayEvent place timezone iCalId recipients message recipientStatus recurrenceKey" );
+  cursorRequest.view->append( "default message recipients attachments recipientStatus peek" /*"container status source security distribution acceptLevel startDate endDate subject alarm allDayEvent place timezone iCalId recipients message recurrenceKey"*/ );
+
 #else
   cursorRequest.view = 0;
 #endif
@@ -512,7 +513,8 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
   
     if ( readCursorResponse.items ) {
       IncidenceConverter conv( mSoap );
-  
+      conv.setFrom( mServer->userName(), mServer->userEmail(), mServer->userUuid() );
+
       std::vector<class ngwt__Item * >::const_iterator it;
       for( it = readCursorResponse.items->item.begin(); it != readCursorResponse.items->item.end(); ++it ) {
         KCal::Incidence *i = 0;
