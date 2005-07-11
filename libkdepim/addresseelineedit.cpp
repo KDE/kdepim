@@ -803,8 +803,10 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
   if ( ( obj == this ) &&
      ( e->type() == QEvent::AccelOverride ) ) {
     QKeyEvent *ke = static_cast<QKeyEvent*>( e );
-    ke->accept();
-    return true;
+    if ( ke->key() == Key_Up || ke->key() == Key_Down ) {
+      ke->accept();
+      return true;
+    }
   }
   if ( ( obj == this ) &&
       ( e->type() == QEvent::KeyPress ) ) {
