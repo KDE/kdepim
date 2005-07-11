@@ -230,6 +230,8 @@ void KOWhatsNextView::updateView()
   mText += "</td></tr>\n</table>\n";
 
   kdDebug(5850) << "KOWhatsNextView::updateView: text: " << mText << endl;
+	
+  delete ipath;
   mView->setText(mText);
 }
 
