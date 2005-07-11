@@ -67,10 +67,13 @@ private slots:
   void slotReceivedStderr( KProcess *, char *, int );
 
 private:
+  void addOptions();
+
   QByteArray mInput;
   QByteArray mOutput;
   QString mStderr;
   const Operation mOperation;
+  QString mOptions;
 };
 
 };
