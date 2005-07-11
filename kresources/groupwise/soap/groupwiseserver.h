@@ -105,17 +105,29 @@ class GroupwiseServer : public QObject
     bool logout();
 
     /**
-     * Send an accept message for the given incidence to the server
+     * Send an accept message for an incidence organised by someone else to the server
      */
     bool acceptIncidence( KCal::Incidence * );
+    /**
+     * Add a new incidence to the server.  This is a smart method that adds Incidences to the GroupWise server using the 
+     * appropriate GroupWise call - own appointments are Sent, whereas appointments organized by others are Accepted.
+     */
     bool addIncidence( KCal::Incidence *, KCal::ResourceCached * );
+    /**
+     * Alter an existing incidence on the server.  This is a smart method that adds Incidences to the GroupWise server 
+     * using the appropriate GroupWise call.  If the item has no other attendees (personal),
+     * this is carried out with changeItem, otherwise it is retracted and resent.
+     */
     bool changeIncidence( KCal::Incidence * );
     /**
-     * send a decline message for the given incidence to the server
+     * send a Decline message for the given incidence to the server
      */
     bool declineIncidence( KCal::Incidence * );
+    /**
+     * delete an incidence from the server.  This is a smart method that adds Incidences to the GroupWise server
+     * using the appropriate GroupWise call.  If the item is personal, it is deleted.  Items with attendees are Declined.
+     */
     bool deleteIncidence( KCal::Incidence * );
-
     /**
      * @brief Retract a meeting request.
      * This is needed to change a meeting, because you need to retract it from others' mailboxes before resending.
@@ -159,6 +171,10 @@ class GroupwiseServer : public QObject
 
     bool readUserSettings( ngwt__Settings *&settings );
     bool modifyUserSettings( QMap<QString, QString> & );
+
+    QString userEmail() const { return mUserEmail; }
+    QString userName() const { return mUserName; }
+    QString userUuid() const { return mUserUuid; }
 
   signals:
     void readAddressBookTotalSize( int );

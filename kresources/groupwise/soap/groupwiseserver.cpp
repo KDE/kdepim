@@ -962,23 +962,40 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   kdDebug() << "GroupwiseServer::changeIncidence() " << incidence->summary()
             << endl;
 
-#if 1
-  //FIXME: if I am not the organizer restrict my changes to accept or decline
-  if ( incidence->attendeeCount() > 0 ) {
-    //TODO: if organizer is not myself, then only apply the accept status changes from myself via an acceptReq etc.
-    kdDebug() << "GroupwiseServer::changeIncidence() - retracting old incidence " << endl;
-    if ( !retractRequest( incidence, DueToResend ) ) {
-      kdDebug() << "GroupwiseServer::changeIncidence() - retracting failed." << endl;
-      return false;
+  if ( iAmTheOrganizer( incidence ) )
+  {
+    if ( incidence->attendeeCount() > 0 ) {
+      kdDebug() << "GroupwiseServer::changeIncidence() - retracting old incidence " << endl;
+      if ( !retractRequest( incidence, DueToResend ) ) {
+        kdDebug() << "GroupwiseServer::changeIncidence() - retracting failed." << endl;
+        return false;
+      }
+      kdDebug() << "GroupwiseServer::changeIncidence() - adding new meeting with attendees" << endl;
+      if ( !addIncidence( incidence, 0 ) ) {
+        kdDebug() << "GroupwiseServer::changeIncidence() - adding failed." << endl;
+        return false;
+      }
+      return true;
     }
-    kdDebug() << "GroupwiseServer::changeIncidence() - adding new meeting with attendees" << endl;
-    if ( !addIncidence( incidence, 0 ) ) {
-      kdDebug() << "GroupwiseServer::changeIncidence() - adding failed." << endl;
-      return false;
+  }
+  else  // If I am not the organizer restrict my changes to accept or decline requests.
+  {
+    // find myself as attendee.   
+    KCal::Attendee::List attendees = incidence->attendees();
+    KCal::Attendee::List::ConstIterator it;
+    for( it = attendees.begin(); it != attendees.end(); ++it ) {
+      if ( (*it)->email() == mUserEmail ) {
+        if ( (*it)->status() == KCal::Attendee::Accepted )
+          return acceptIncidence( incidence );
+        else if ( (*it)->status() == KCal::Attendee::Declined )
+          return declineIncidence( incidence );
+        break;
+      }
     }
+    // if we are attending, but not the organiser, and we have not accepted or declined, there's nothing else to do.
     return true;
   }
-#endif
+
   IncidenceConverter converter( mSoap );
   converter.setFrom( mUserName, mUserEmail, mUserUuid );
 
