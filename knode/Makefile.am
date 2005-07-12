@@ -91,6 +91,7 @@ libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   articlewidget.cpp \
                   csshelper.cpp \
                   smtpaccountwidget_base.ui
+libknodecommon_la_COMPILE_FIRST = smtpaccountwidget_base.h
 
 knode_SOURCES = knode.cpp knapplication.cpp main.cpp
 
