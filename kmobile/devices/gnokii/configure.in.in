@@ -1,7 +1,2 @@
 # $Id$
-
-# check for libgnokii (Nokia mobile phone library)
-KDE_CHECK_GNOKII
-
-AM_CONDITIONAL(include_gnokii_device, [test -n "$LIB_GNOKII"])
-
+AM_CONDITIONAL(include_gnokii_device, test -n "$LIB_GNOKII")

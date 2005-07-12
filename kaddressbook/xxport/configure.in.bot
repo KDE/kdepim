@@ -1,4 +1,4 @@
-if test -z "$LIB_GNOKII"; then
+if test "x$with_gnokii" = xcheck && test -z "$LIB_GNOKII"; then
   echo ""
   echo "libgnokii (http://www.gnokii.org) is missing. The KDE Addressbook mobile phone import/export filter will not be available."
   echo ""
