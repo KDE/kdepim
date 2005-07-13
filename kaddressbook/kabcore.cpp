@@ -1221,8 +1221,8 @@ KABC::Addressee KABCore::mergeContacts( const KABC::Addressee::List &list )
     KABC::PhoneNumber::List masterPhones = masterAddressee.phoneNumbers();
     KABC::PhoneNumber::List::ConstIterator phoneIt;
     for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt )
-      if ( !masterPhones.contains( *it ) )
-        masterAddressee.insertPhoneNumber( *it );
+      if ( !masterPhones.contains( *phoneIt ) )
+        masterAddressee.insertPhoneNumber( *phoneIt );
 
     // TITLE
     if ( masterAddressee.title().isEmpty() && !(*contactIt).title().isEmpty() )
