@@ -328,7 +328,10 @@ void KABCore::setContactSelected( const QString &uid )
 
   if ( mReadWrite ) {
     mActionCut->setEnabled( selected );
-    mActionPaste->setEnabled( selected );
+
+    QClipboard *cb = QApplication::clipboard();
+    KABC::Addressee::List list = AddresseeUtil::clipboardToAddressees( cb->text() );
+    mActionPaste->setEnabled( !list.isEmpty() );
   }
 
   mActionCopy->setEnabled( selected );
