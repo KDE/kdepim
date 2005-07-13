@@ -47,13 +47,7 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
                                     const QStringList & )
   : DCOPObject( "KAddressBookIface" ), KParts::ReadOnlyPart( parent, name )
 {
-  kdDebug(5720) << "KAddressbookPart()" << endl;
-  kdDebug(5720) << "  InstanceName: " << kapp->instanceName() << endl;
-
   setInstance( KAddressbookFactory::instance() );
-
-  kdDebug(5720) << "KAddressbookPart()..." << endl;
-  kdDebug(5720) << "  InstanceName: " << kapp->instanceName() << endl;
 
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget( parentWidget, widgetName );
