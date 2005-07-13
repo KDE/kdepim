@@ -552,7 +552,7 @@ int ViewManager::filterPosition( const QString &name ) const
   Filter::List::ConstIterator it;
   for ( it = mFilterList.begin(); it != mFilterList.end(); ++it, ++pos )
     if ( name == (*it).name() )
-      return pos + 1;
+      return pos + 2;
 
   return 0;
 }
