@@ -84,11 +84,16 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                   const QString &file, const char *name )
   : KAB::Core( client, parent, name ), mStatusBar( 0 ), mViewManager( 0 ),
     mExtensionManager( 0 ), mCategorySelectDialog( 0 ), mCategoryEditDialog( 0 ),
-    mLdapSearchDialog( 0 ), mReadWrite( readWrite ), mModified( false )
+    mLdapSearchDialog( 0 ), mJumpButtonBar( 0 ), mReadWrite( readWrite ),
+    mModified( false )
 {
   mWidget = new QWidget( parent, name );
 
   mIsPart = !parent->isA( "KAddressBookMain" );
+
+  mAddressBookChangedTimer = new QTimer( this );
+  connect( mAddressBookChangedTimer, SIGNAL( timeout() ),
+           this, SLOT( addressBookChanged() ) );
 
   if ( file.isEmpty() ) {
     mAddressBook = KABC::StdAddressBook::self( true );
@@ -129,9 +134,9 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   initGUI();
 
   connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook* ) ),
-           SLOT( addressBookChanged() ) );
+           SLOT( delayedAddressBookChanged() ) );
   connect( mAddressBook, SIGNAL( loadingFinished( Resource* ) ),
-           SLOT( addressBookChanged() ) );
+           SLOT( delayedAddressBookChanged() ) );
 
   mIncSearchWidget->setFocus();
 
@@ -152,11 +157,6 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
   connect( mXXPortManager, SIGNAL( modified() ),
            SLOT( setModified() ) );
-
-  connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QString& ) ),
-           SLOT( incrementalJumpButtonSearch( const QString& ) ) );
-  connect( mViewManager, SIGNAL( sortFieldChanged() ),
-           mJumpButtonBar, SLOT( updateButtons() ) );
 
   connect( mDetails, SIGNAL( highlightedMessage( const QString& ) ),
            SLOT( detailsHighlighted( const QString& ) ) );
@@ -736,10 +736,13 @@ void KABCore::redo()
 
 void KABCore::setJumpButtonBarVisible( bool visible )
 {
-  if ( visible )
+  if ( visible ) {
+    if ( !mJumpButtonBar )
+      createJumpButtonBar();
     mJumpButtonBar->show();
-  else
-    mJumpButtonBar->hide();
+  } else
+    if ( mJumpButtonBar )
+      mJumpButtonBar->hide();
 }
 
 void KABCore::setDetailsVisible( bool visible )
@@ -913,9 +916,18 @@ bool KABCore::queryClose()
   return true;
 }
 
+void KABCore::delayedAddressBookChanged()
+{
+  mAddressBookChangedTimer->start( 1000 );
+}
+
 void KABCore::addressBookChanged()
 {
-  mJumpButtonBar->updateButtons();
+  mAddressBookChangedTimer->stop();
+
+  if ( mJumpButtonBar )
+    mJumpButtonBar->updateButtons();
+
   mSearchManager->reload();
   mViewManager->setSelected( QString::null, false );
   setContactSelected( QString::null );
@@ -968,11 +980,11 @@ void KABCore::initGUI()
   mExtensionBarSplitter = new QSplitter( mDetailsSplitter );
   mExtensionBarSplitter->setOrientation( Qt::Vertical );
 
-  QWidget *detailsWidget = new QWidget( mDetailsSplitter );
-  QHBoxLayout *detailsLayout = new QHBoxLayout( detailsWidget );
+  mDetailsWidget = new QWidget( mDetailsSplitter );
+  mDetailsLayout = new QHBoxLayout( mDetailsWidget );
 
-  mDetailsPage = new QWidget( detailsWidget );
-  detailsLayout->addWidget( mDetailsPage );
+  mDetailsPage = new QWidget( mDetailsWidget );
+  mDetailsLayout->addWidget( mDetailsPage );
 
   QHBoxLayout *detailsPageLayout = new QHBoxLayout( mDetailsPage, 0, 0 );
   mDetails = new KPIM::AddresseeView( mDetailsPage );
@@ -989,15 +1001,23 @@ void KABCore::initGUI()
 
   mExtensionManager = new ExtensionManager( this, mExtensionBarSplitter );
 
-  mJumpButtonBar = new JumpButtonBar( this, detailsWidget );
-  detailsLayout->addWidget( mJumpButtonBar );
-  detailsLayout->setStretchFactor( mJumpButtonBar, 1 );
-
   topLayout->setStretchFactor( mDetailsSplitter, 1 );
 
   mXXPortManager = new XXPortManager( this, mWidget );
 
   initActions();
+}
+
+void KABCore::createJumpButtonBar()
+{
+  mJumpButtonBar = new JumpButtonBar( this, mDetailsWidget );
+  mDetailsLayout->addWidget( mJumpButtonBar );
+  mDetailsLayout->setStretchFactor( mJumpButtonBar, 1 );
+
+  connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QString& ) ),
+           SLOT( incrementalJumpButtonSearch( const QString& ) ) );
+  connect( mViewManager, SIGNAL( sortFieldChanged() ),
+           mJumpButtonBar, SLOT( updateButtons() ) );
 }
 
 void KABCore::initActions()
