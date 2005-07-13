@@ -896,7 +896,7 @@ events with other users using one of these clients.</para>
 
 <para>In day and week view a little icon showing one
 <guiicon>tux</guiicon> is placed in the event, if you are the
-organizer of an group scheduling event.</para>
+organizer of a group scheduling event.</para>
 
 <sect2 id="publish">
 <title>Publishing an Event</title>
@@ -944,9 +944,8 @@ linkend="reference-windows-incoming">inbox</link>.</para>
 <sect1 id="as-attendee">
 <title>Being the Attendee in a Group Scheduled Event</title>
 
-<para>In day and week views, a little icon showing <guiicon>three tux
-penguins</guiicon> is placed in the event, if you are the organizer of
-an groupscheduling event.</para>
+<para>In day and week views, a little icon showing <guiicon>two people</guiicon>
+is placed in the event, if you are an attendee in a groupscheduling event.</para>
 
 <sect2 id="answer">
 <title>Answering an Event-Request</title>
