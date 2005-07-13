@@ -52,6 +52,7 @@ class KToggleAction;
 class KXMLGUIClient;
 
 class QSplitter;
+class QHBoxLayout;
 
 class AddresseeEditorDialog;
 class ExtensionManager;
@@ -360,6 +361,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     void updateIncSearchWidget();
 
     void slotEditorDestroyed( const QString &uid );
+    void delayedAddressBookChanged();
     void addressBookChanged();
 
     void categoriesSelected( const QStringList& );
@@ -368,6 +370,7 @@ class KDE_EXPORT KABCore : public KAB::Core
 
   private:
     void initGUI();
+    void createJumpButtonBar();
     void initActions();
 
     void updateCategories();
@@ -391,6 +394,8 @@ class KDE_EXPORT KABCore : public KAB::Core
     KPIM::CategorySelectDialog *mCategorySelectDialog;
     KPIM::CategoryEditDialog *mCategoryEditDialog;
     QWidget *mDetailsPage;
+    QWidget *mDetailsWidget;
+    QHBoxLayout *mDetailsLayout;
     QSplitter *mDetailsSplitter;
     QSplitter *mExtensionBarSplitter;
 
@@ -400,6 +405,8 @@ class KDE_EXPORT KABCore : public KAB::Core
     bool mReadWrite;
     bool mModified;
     bool mIsPart;
+
+    QTimer *mAddressBookChangedTimer;
 
     KAction *mActionPaste;
     KAction *mActionCut;
