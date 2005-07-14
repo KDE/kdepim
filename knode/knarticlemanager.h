@@ -80,8 +80,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     bool deleteArticles(KNLocalArticle::List &l, bool ask=true);
 
     //article handling
-    void setAllRead(bool r=true);
-    void setAllRead(int lastcount, bool r=true);
+    void setAllRead( bool read = true, int lastcount = -1 );
     void setRead(KNRemoteArticle::List &l, bool r=true, bool handleXPosts=true);
     /// mark all articles in the current group as not new
     void setAllNotNew();

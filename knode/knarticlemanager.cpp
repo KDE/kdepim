@@ -604,76 +604,49 @@ bool KNArticleManager::deleteArticles(KNLocalArticle::List &l, bool ask)
 }
 
 
-void KNArticleManager::setAllRead(bool r)
+void KNArticleManager::setAllRead( bool read, int lastcount )
 {
-  if(!g_roup)
+  if ( !g_roup )
     return;
 
-  int new_count = 0, ignore_count=0;
-  KNRemoteArticle *a;
-  for(int i=0; i<g_roup->length(); i++) {
-    a=g_roup->at(i);
-    if(a->getReadFlag()!=r) {
-      a->setRead(r);
-      a->setChanged(true);
-      if(a->isNew() && !a->isIgnored())
-        new_count++;
-      if(a->isIgnored())
-        ignore_count++;
-    }
-  }
+  int groupLength = g_roup->length();
+  int newCount = g_roup->newCount();
+  int readCount = g_roup->readCount();
+  int offset = lastcount;
 
-  g_roup->updateThreadInfo();
-  if(r) {
-    g_roup->setReadCount(g_roup->length());
-    g_roup->setNewCount(0);
-  } else {
-    g_roup->setReadCount(ignore_count);
-    g_roup->setNewCount(new_count);
-  }
-
-  g_roup->updateListItem();
-  showHdrs(true);
-}
-
-
-void KNArticleManager::setAllRead(int lastcount, bool r)
-{
-  if(!g_roup)
-    return;
-
-  int groupLength=g_roup->length();
-  int newCount=g_roup->newCount();
-  int readCount=g_roup->readCount();
-
-  if(lastcount>groupLength)
-    lastcount=groupLength;
+  if ( lastcount > groupLength || lastcount < 0 )
+    offset = groupLength;
 
   KNRemoteArticle *a;
-  for(int i=groupLength-lastcount; i<groupLength; i++) {
-    a=g_roup->at(i);
-    if(a->getReadFlag()!=r) {
-      a->setRead(r);
-      a->setChanged(true);
-      if(!r) {
+  for ( int i = groupLength - offset; i < groupLength; i++ ) {
+    a = g_roup->at( i );
+    if ( a->getReadFlag() != read && !a->isIgnored() ) {
+      a->setRead( read );
+      a->setChanged( true );
+      if ( !read ) {
         readCount--;
-        if (a->isNew() && !a->isIgnored())
+        if ( a->isNew() )
           newCount++;
-      }
-      else {
+      } else {
         readCount++;
-        if (a->isNew() && !a->isIgnored())
+        if ( a->isNew() )
           newCount--;
       }
     }
   }
 
   g_roup->updateThreadInfo();
-  g_roup->setReadCount(readCount);
-  g_roup->setNewCount(newCount);
+  if ( lastcount < 0 && read ) {
+    // HACK: try to hide the effects of the ignore/filter new/unread count bug
+    g_roup->setReadCount( groupLength );
+    g_roup->setNewCount( 0 );
+  } else {
+    g_roup->setReadCount( readCount );
+    g_roup->setNewCount( newCount );
+  }
 
   g_roup->updateListItem();
-  showHdrs(true);
+  showHdrs( true );
 }
 
 

@@ -1534,14 +1534,14 @@ void KNMainWidget::slotGrpSetAllUnread()
 void KNMainWidget::slotGrpSetUnread()
 {
   kdDebug(5003) << "KNMainWidget::slotGrpSetUnread()" << endl;
-  int groupLength=g_rpManager->currentGroup()->length();
+  int groupLength = g_rpManager->currentGroup()->length();
 
   bool ok = FALSE;
   int res = KInputDialog::getInteger(
                 i18n( "Mark Last as Unread" ),
                 i18n( "Enter how many articles should be marked unread:" ), groupLength, 1, groupLength, 1, &ok, this );
   if ( ok )
-    a_rtManager->setAllRead(res, false);
+    a_rtManager->setAllRead( false, res );
 }
 
 void KNMainWidget::slotFolNew()
