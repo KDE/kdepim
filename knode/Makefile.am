@@ -23,6 +23,7 @@ knode_LDADD   = libknodecommon.la
 kcm_knode_la_SOURCES = knconfigpages.cpp
 kcm_knode_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
 kcm_knode_la_LIBADD = libknodecommon.la $(LIB_KDECORE)
+kcm_knode_la_COMPILE_FIRST = libknodecommon.la
 
 
 libknodecommon_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
