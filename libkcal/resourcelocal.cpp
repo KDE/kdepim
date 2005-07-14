@@ -169,24 +169,28 @@ KABC::Lock *ResourceLocal::lock()
   return mLock;
 }
 
-void ResourceLocal::reload()
+bool ResourceLocal::doReload()
 {
-  kdDebug(5800) << "ResourceLocal::reload()" << endl;
+  kdDebug(5800) << "ResourceLocal::doReload()" << endl;
 
-  if ( !isOpen() ) return;
+  if ( !isOpen() ) return false;
 
   if ( d->mLastModified == readLastModified() ) {
     kdDebug(5800) << "ResourceLocal::reload(): file not modified since last read."
               << endl;
-    return;
+    return false;
   }
 
   mCalendar.close();
   mCalendar.load( mURL.path() );
-
-  emit resourceChanged( this );
+  return true;
 }
 
+void ResourceLocal::reload()
+{
+  if ( doReload() )
+    emit resourceChanged( this );
+}
 
 void ResourceLocal::dump() const
 {

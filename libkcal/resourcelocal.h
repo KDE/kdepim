@@ -22,22 +22,22 @@
 #ifndef KCAL_RESOURCELOCAL_H
 #define KCAL_RESOURCELOCAL_H
 
-#include <qptrlist.h>
 #include <qstring.h>
 #include <qdatetime.h>
 
 #include <kurl.h>
-#include <kconfig.h>
 #include <kdirwatch.h>
 #include <kdepimmacros.h>
+class KConfig;
 
-#include "incidence.h"
 #include "calendarlocal.h"
 #include "libkcal_export.h"
 
 #include "resourcecached.h"
 
 namespace KCal {
+
+class CalFormat;
 
 /**
   This class provides a calendar resource stored as a local file.
@@ -71,8 +71,14 @@ class LIBKCAL_EXPORT ResourceLocal : public ResourceCached
     void reload();
 
   protected:
-    bool doLoad();
-    bool doSave();
+    virtual bool doLoad();
+    virtual bool doSave();
+    /**
+      Called by reload() to reload the resource, if it is already open.
+      @return true if successful, else false. If true is returned,
+              reload() will emit a resourceChanged() signal.
+    */
+    virtual bool doReload();
 
     QDateTime readLastModified();
 

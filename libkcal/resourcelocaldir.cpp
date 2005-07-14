@@ -138,17 +138,25 @@ bool ResourceLocalDir::doLoad()
       QString fileName = dirName + "/" + *it;
       kdDebug(5800) << " read '" << fileName << "'" << endl;
       CalendarLocal cal( mCalendar.timeZoneId() );
-      success &= cal.load( fileName );
-      Incidence::List incidences = cal.rawIncidences();
-      Incidence::List::ConstIterator it;
-      for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
-        Incidence *i = *it;
-        if ( i ) mCalendar.addIncidence( i->clone() );
+      if ( !doFileLoad( cal, fileName ) ) {
+        success = false;
+      } else {
+        Incidence::List incidences = cal.rawIncidences();
+        Incidence::List::ConstIterator it;
+        for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
+          Incidence *i = *it;
+          if ( i ) mCalendar.addIncidence( i->clone() );
+        }
       }
     }
   }
 
   return success;
+}
+
+bool ResourceLocalDir::doFileLoad( CalendarLocal &cal, const QString &fileName )
+{
+  return cal.load( fileName );
 }
 
 bool ResourceLocalDir::doSave()
