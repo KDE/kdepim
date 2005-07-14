@@ -175,7 +175,7 @@ KPIM::DistributionList::Entry::List KPIM::DistributionList::entries( KABC::Addre
     KABC::Addressee a = findByUidOrName( book, uid, email );
     if ( a.isEmpty() ) {
       // ## The old DistributionListManager had a "missing entries" list...
-      kdWarning() << "Addressee not found: " << uid << endl;
+      kdWarning() << "Addressee not found: " << uid << " email: " << email << endl;
     } else {
       Entry e( a, email );
       res.append( e );
