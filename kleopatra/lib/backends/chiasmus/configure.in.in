@@ -1,0 +1,16 @@
+dnl
+dnl Check for C99 designated initializers:
+dnl
+AC_LANG_SAVE
+AC_LANG_C
+AC_MSG_CHECKING([for C99 designated initializers])
+AC_TRY_COMPILE([
+        union { int one; const char * two } foo = { .two = "Hello" };
+], [], [
+        AC_DEFINE(HAVE_C99_INITIALIZERS, 1, [Define to 1 if your C compiler support C99 designated initializers])
+        AC_MSG_RESULT([yes])
+], [
+        AC_MSG_RESULT([no])
+])
+
+AC_LANG_RESTORE

@@ -13,6 +13,7 @@ libkleopatra_la_SOURCES = \
 libkleopatra_la_LIBADD = \
 			kleo/libkleopatra_core.la \
 			backends/qgpgme/libkleopatra_backend_qgpgme.la \
+			backends/chiasmus/libkleopatra_backend_chiasmus.la \
 			ui/libkleopatra_ui.la \
 			\
 			$(top_builddir)/libkdenetwork/qgpgme/libqgpgme.la \
@@ -21,7 +22,12 @@ libkleopatra_la_LIBADD = \
 # Disabled for kdepim-3.3, see also kleo/cryptobackendfactory.cpp
 # backends/kpgp/libkleopatra_backend_kpgp.la
 
-libkleopatra_la_LDFLAGS = $(all_libraries) -version-info 0:0:0 -no-undefined
+# --version-info CURRENT:REVISION:AGE
+#   (Code changed:                      REVISION++)
+#   (Interfaces added/removed/changed:  CURRENT++, REVISION=0)
+#   (Interfaces added:                  AGE++)
+#   (Interfaces removed/changed:        AGE=0)
+libkleopatra_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -no-undefined
 
 METASOURCES = AUTO
 

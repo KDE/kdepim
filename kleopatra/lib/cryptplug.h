@@ -367,52 +367,6 @@ protected:
 public:
 
 #define CRYPTPLUG_CERT_DOES_NEVER_EXPIRE 365000
-
-
-
-
-/*! \ingroup groupGeneral
-    \brief This function returns the version string of this cryptography
-           plug-in.
-
-   If the plugins initialization fails the calling process might want
-   to display the library version number to the user for checking if
-   there is an old version of the library installed...
-
-   \note This function <b>must</b> be implemented by each plug-in using
-   this API specification.
-*/
-const char* libVersion( void );
-
-/*! \ingroup groupGeneral
-    \brief This function returns a URL to be used for reporting a bug that
-           you found (or suspect, resp.) in this cryptography plug-in.
-
-   If the plugins for some reason cannot specify an appropriate URL you
-   should at least be provided with a text giving you some advise on
-   how to report a bug.
-
-   \note This function <b>must</b> be implemented by each plug-in using
-   this API specification.
-*/
-const char* bugURL( void );
-
-
-/*! \ingroup groupGeneral
-    \brief Return the current interface version of the plugin.
-
-   Return the current interface version.  This is a simple way for a
-   user to check whether all required fucntions are available.  If
-   MIN_VERSION is not NULL the lowest supported version of the
-   interface is returned in addition.
-
-   The version is a positive integer.  A user should check for the
-   existance of this function before using it; if the fucntion does
-   not exist, a interface version of 0 should be assumed.
-
-   This function may be called prior to initialize().
-  */
-int interfaceVersion (int *min_version);
 #define CRYPTPLUG_ERR_WRONG_KEY_USAGE 0x7070
 
 /*! \ingroup groupGeneral
@@ -850,53 +804,6 @@ struct StructuringInfo {
 
 
 /*! \ingroup groupSignAct
-   \brief Signs a message \c cleartext and returns
-          in \c *ciphertext the signature data bloc that
-          is to be added to the message. The length returned
-          in \c *cipherLen tells you the size (==amount of bytes)
-          of the ciphertext, if the structuring information
-          would return with contentTEncCode set to "base64"
-          the ciphertext might contain a char 0x00
-          and has to be converted into base64 before sending.
-
-   The signature role is specified by \c certificate.
-   If \c certificate is \c NULL, the default certificate is used.
-
-   If the message could be signed, the function returns
-          \c true, otherwise
-          \c false.
-
-   Use the StructuringInfo data returned in parameter \c structuring
-   to find out how to build the respective MIME object (or the plain
-   text message body, resp.).
-
-   \note The function allocates memory for the \c *ciphertext, so
-         make sure you set free that memory when no longer needing
-         it (as shown in example code provided with documentation
-         of the struct \c StructuringInfo).
-
-   \note The function also allocates memory for some char* members
-    of the StructuringInfo* parameter that you are providing,
-    therefore you <b>must</b> call the \c free_StructuringInfo() function
-    to make sure all memory is set free that was allocated. This must be
-    done <b>before</b> calling the next cryptography function - even if
-    you intend to call \c encryptMessage() immediately after
-    \c signMessage().
-
-   \see StructuringInfo, free_StructuringInfo
-*/
-bool signMessage( const char*  cleartext,
-                  char** ciphertext,
-                  const size_t* cipherLen,
-                  const char*  certificate,
-                  struct StructuringInfo* structuring,
-                  int* errId,
-                  char** errTxt,
-		  SendCertificates sendCertificates,
-		  SignatureCompoundMode signatureCompoundMode );
-
-
-/*! \ingroup groupSignAct
  */
 struct SignatureMetaDataExtendedInfo
 {
@@ -957,103 +864,6 @@ bool checkMessageSignature( char** cleartext,
                             char** attrOrder,
                             const char* unknownAttrsHandling );
 
-/*! \ingroup groupSignAct
-   \brief Stores the certificates that follow with the message
-          \c ciphertext locally.
-*/
-bool storeCertificatesFromMessage( const char* ciphertext );
-
-
-/*! \ingroup groupCryptAct
-   \brief Find all certificate for a given addressee.
-
-  NOTE: The certificate parameter must point to a not-yet allocated
-        char*.  The function will allocate the memory needed and
-        return the size in newSize.
-   If secretOnly is true, only secret keys are returned.
-*/
-bool findCertificates( const char* addressee,
-                       char** certificates,
-                       int* newSize,
-                       bool secretOnly,
-                       char** attrOrder,
-                       const char* unknownAttrsHandling );
-
-/*! \ingroup groupCryptAct
-   \brief Encrypts an email message in
-          \c cleartext according to the \c addressee and
-          the current settings (algorithm, etc.) and
-          returns the encoded data bloc in \c *ciphertext.
-          The length returned in \c *cipherLen tells you the
-          size (==amount of bytes) of the ciphertext, if the
-          structuring information would return with
-          contentTEncCode set to "base64" the ciphertext
-          might contain a char 0x00 and has to be converted
-          into base64 before sending.
-
-   If the message could be encrypted, the function returns
-          \c true, otherwise
-          \c false.
-
-   Use the StructuringInfo data returned in parameter \c structuring
-   to find out how to build the respective MIME object (or the plain
-   text message body, resp.).
-
-   \note The function allocates memory for the \c *ciphertext, so
-         make sure you set free that memory when no longer needing
-         it (as shown in example code provided with documentation
-         of the struct \c StructuringInfo).
-
-   \note The function also allocates memory for some char* members
-    of the StructuringInfo* parameter that you are providing,
-    therefore you <b>must</b> call the \c free_StructuringInfo() function
-    to make sure all memory is set free that was allocated. This must be
-    done <b>before</b> calling the next cryptography function!
-
-   \see StructuringInfo, free_StructuringInfo
-*/
-bool encryptMessage( const char*  cleartext,
-                     const char** ciphertext,
-                     const size_t* cipherLen,
-                     const char*  addressee,
-                     struct StructuringInfo* structuring,
-                     int* errId,
-                     char** errTxt );
-
-
-/*! \ingroup groupCryptAct
-   \brief Combines the functionality of
-          \c encryptMessage() and
-          \c signMessage().
-
-   If \c certificate is \c NULL,
-   the default certificate will be used.
-
-   If the message could be signed and encrypted, the function returns
-          \c true, otherwise
-          \c false.
-
-   Use the StructuringInfo data returned in parameter \c structuring
-   to find out how to build the respective MIME object (or the plain
-   text message body, resp.).
-
-   \note The function allocates memory for the \c *ciphertext, so
-         make sure you set free that memory when no longer needing
-         it (as shown in example code provided with documentation
-         of the struct \c StructuringInfo).
-
-   \note The function also allocates memory for some char* members
-    of the StructuringInfo* parameter that you are providing,
-    therefore you <b>must</b> call the \c free_StructuringInfo() function
-    to make sure all memory is set free that was allocated. This must be
-    done <b>before</b> calling the next cryptography function!
-
-   \see StructuringInfo, free_StructuringInfo
-*/
-bool encryptAndSignMessage( const char* cleartext,
-                            const char** ciphertext,
-                            const char* certificate,
-                            struct StructuringInfo* structuring );
 
 /*! \ingroup groupCryptAct
    \brief Tries to decrypt an email message
@@ -1096,9 +906,6 @@ bool decryptAndCheckMessage( const char*  ciphertext,
                              char** attrOrder,
                              const char* unknownAttrsHandling );
 
-
-struct CertIterator;
-
 struct DnPair {
     char *key;
     char *value;
@@ -1126,35 +933,6 @@ struct CertificateInfo {
 
   struct DnPair *dnarray; /* parsed values from userid[0] */
 };
-
-/*! \fn struct CertIterator*  startListCertificates( const char* pattern );
-    \fn struct CertificateInfo*  nextCertificate( struct CertIterator* );
-    \fn void endListCertificates( struct CertIterator* );
-
-    \ingroup certList
-  Example that runs through certs matching "Steffen":
-\verbatim
-  struct CertificateInfo* info;
-  struct CertIterator* it = startListCertificates("Steffen", 0 );
-  while( nextCertificate( it, &info ) == GPGME_No_Error && info ) {
-    do something with info.
-    dont free() it, the struct will be reused
-    by the next call to nextCertificate()
-  }
-  int truncated = endListCertificates( it );
-\endverbatim
-*/
-struct CertIterator*
-startListCertificates( const char* pattern, int remote );
-
-int
-nextCertificate( struct CertIterator*,
-                 struct CertificateInfo** result,
-                 char** attrOrder,
-                 const char* unknownAttrsHandling );
-
-int
-endListCertificates( struct CertIterator* );
 
   /*!
     Import a certificate from memory.

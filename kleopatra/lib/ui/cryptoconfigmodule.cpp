@@ -30,7 +30,10 @@
 */
 
 #include "cryptoconfigmodule.h"
+#include "cryptoconfigmodule_p.h"
 #include "directoryserviceswidget.h"
+#include "kdhorizontalline.h"
+
 #include <kleo/cryptoconfig.h>
 
 #include <klineedit.h>
@@ -57,26 +60,36 @@ inline QPixmap loadIcon( QString s ) {
     ->loadIcon( s.replace( QRegExp( "[^a-zA-Z0-9_]" ), "_" ), KIcon::NoGroup, KIcon::SizeMedium );
 }
 
+static const KJanusWidget::Face determineJanusFace( const Kleo::CryptoConfig * config ) {
+  return config && config->componentList().size() < 2
+    ? KJanusWidget::Plain
+    : KJanusWidget::IconList ;
+}
+
 Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent, const char * name )
-  : KJanusWidget( parent, name, KJanusWidget::IconList ), mConfig( config )
+  : KJanusWidget( parent, name, determineJanusFace( config ) ), mConfig( config )
 {
-//  QVBoxLayout *vlay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
-//  mTabWidget = new QTabWidget( this );
-//  vlay->addWidget( mTabWidget );
+  QWidget * vbox = 0;
+  if ( face() == Plain ) {
+    vbox = plainPage();
+    QVBoxLayout * vlay = new QVBoxLayout( vbox, 0, KDialog::spacingHint() );
+    vlay->setAutoAdd( true );
+  }
 
-  QStringList components = config->componentList();
-
-  for( QStringList::Iterator compit = components.begin(); compit != components.end(); ++compit ) {
-    //kdDebug(5150) << "Component " << (*compit).local8Bit() << ":" << endl;
-    Kleo::CryptoConfigComponent* comp = config->component( *compit );
+  const QStringList components = config->componentList();
+  for ( QStringList::const_iterator it = components.begin(); it != components.end(); ++it ) {
+    //kdDebug(5150) << "Component " << (*it).local8Bit() << ":" << endl;
+    Kleo::CryptoConfigComponent* comp = config->component( *it );
     Q_ASSERT( comp );
-    if ( !comp->groupList().isEmpty() ) {
-      QVBox* vbox = addVBoxPage( comp->description(), QString::null, loadIcon( *compit ) );
-      CryptoConfigComponentGUI* compGUI =
-        new CryptoConfigComponentGUI( this, comp, vbox, (*compit).local8Bit() );
-      // KJanusWidget doesn't seem to have iterators, so we store a copy...
-      mComponentGUIs.append( compGUI );
+    if ( comp->groupList().empty() )
+      continue;
+    if ( face() != Plain ) {
+      vbox = addVBoxPage( comp->description(), QString::null, loadIcon( comp->iconName() ) );
     }
+    CryptoConfigComponentGUI* compGUI =
+      new CryptoConfigComponentGUI( this, comp, vbox, (*it).local8Bit() );
+    // KJanusWidget doesn't seem to have iterators, so we store a copy...
+    mComponentGUIs.append( compGUI );
   }
 }
 
@@ -118,29 +131,27 @@ void Kleo::CryptoConfigModule::cancel()
 Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
   CryptoConfigModule* module, Kleo::CryptoConfigComponent* component,
   QWidget* parent, const char* name )
-#ifdef USE_TABS // Old idea, dead code
-  : QTabWidget( parent, name ),
-#else
   : QWidget( parent, name ),
-#endif
     mComponent( component )
 {
-#ifndef USE_TABS
-  QVBoxLayout *vlay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
-#endif
-
-  QStringList groups = mComponent->groupList();
-  for( QStringList::Iterator groupit = groups.begin(); groupit != groups.end(); ++groupit ) {
-    Kleo::CryptoConfigGroup* group = mComponent->group( *groupit );
-    Q_ASSERT( group );
-    CryptoConfigGroupGUI* gg = new CryptoConfigGroupGUI( module, group, this );
-#ifdef USE_TABS
-    addTab( gg, group->description() );
-#else
-    vlay->addWidget( gg );
-#endif
-    mGroupGUIs.append( gg );
+  QGridLayout * glay = new QGridLayout( this, 1, 3, 0, KDialog::spacingHint() );
+  const QStringList groups = mComponent->groupList();
+  if ( groups.size() > 1 ) {
+    glay->setColSpacing( 0, KDHorizontalLine::indentHint() );
+    for ( QStringList::const_iterator it = groups.begin(), end = groups.end() ; it != end; ++it ) {
+      Kleo::CryptoConfigGroup* group = mComponent->group( *it );
+      Q_ASSERT( group );
+      if ( !group )
+        continue;
+      KDHorizontalLine * hl = new KDHorizontalLine( group->description(), this );
+      const int row = glay->numRows();
+      glay->addMultiCellWidget( hl, row, row, 0, 2 );
+      mGroupGUIs.append( new CryptoConfigGroupGUI( module, group, glay, this ) );
+    }
+  } else if ( !groups.empty() ) {
+    mGroupGUIs.append( new CryptoConfigGroupGUI( module, mComponent->group( groups.front() ), glay, this ) );
   }
+  glay->setRowStretch( glay->numRows(), 1 );
 }
 
 
@@ -173,21 +184,33 @@ void Kleo::CryptoConfigComponentGUI::defaults()
 
 Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
   CryptoConfigModule* module, Kleo::CryptoConfigGroup* group,
-  QWidget* parent, const char* name )
-  : QGroupBox( 1, Qt::Horizontal, // yeah that means a vertical layout...
-               group->description(), parent, name ), mGroup( group )
+  QGridLayout * glay, QWidget* widget, const char* name )
+  : QObject( module, name ), mGroup( group )
 {
-  QStringList entries = mGroup->entryList();
-  for( QStringList::Iterator entryit = entries.begin(); entryit != entries.end(); ++entryit ) {
-    Kleo::CryptoConfigEntry* entry = group->entry( *entryit );
+  const int startRow = glay->numRows();
+  const QStringList entries = mGroup->entryList();
+  for( QStringList::const_iterator it = entries.begin(), end = entries.end() ; it != end; ++it ) {
+    Kleo::CryptoConfigEntry* entry = group->entry( *it );
     Q_ASSERT( entry );
+    if ( entry->level() > CryptoConfigEntry::Level_Advanced ) continue;
     CryptoConfigEntryGUI* entryGUI =
-      CryptoConfigEntryGUIFactory::createEntryGUI( module, entry, *entryit, this );
+      CryptoConfigEntryGUIFactory::createEntryGUI( module, entry, *it, glay, widget );
     if ( entryGUI ) {
       mEntryGUIs.append( entryGUI );
       entryGUI->load();
     }
   }
+  const int endRow = glay->numRows() - 1;
+  if ( endRow < startRow )
+    return;
+
+  const QString iconName = group->iconName();
+  if ( iconName.isEmpty() )
+    return;
+
+  QLabel * l = new QLabel( widget );
+  l->setPixmap( loadIcon( iconName ) );
+  glay->addMultiCellWidget( l, startRow, endRow, 0, 0, Qt::AlignTop );
 }
 
 bool Kleo::CryptoConfigGroupGUI::save()
@@ -219,44 +242,49 @@ void Kleo::CryptoConfigGroupGUI::defaults()
 
 ////
 
-CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoConfigModule* module, Kleo::CryptoConfigEntry* entry, const QString& entryName, QWidget* parent, const char* name )
+CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoConfigModule* module, Kleo::CryptoConfigEntry* entry, const QString& entryName, QGridLayout * glay, QWidget* widget, const char* name )
 {
   if ( entry->isList() ) {
     switch( entry->argType() ) {
     case Kleo::CryptoConfigEntry::ArgType_None:
       // A list of options with no arguments (e.g. -v -v -v) is shown as a spinbox
-      return new CryptoConfigEntrySpinBox( module, entry, entryName, parent, name );
+      return new CryptoConfigEntrySpinBox( module, entry, entryName, glay, widget, name );
     case Kleo::CryptoConfigEntry::ArgType_Int:
     case Kleo::CryptoConfigEntry::ArgType_UInt:
       // Let people type list of numbers (1,2,3....). Untested.
-      return new CryptoConfigEntryLineEdit( module, entry, entryName, parent, name );
+      return new CryptoConfigEntryLineEdit( module, entry, entryName, glay, widget, name );
     case Kleo::CryptoConfigEntry::ArgType_URL:
     case Kleo::CryptoConfigEntry::ArgType_Path:
+    case Kleo::CryptoConfigEntry::ArgType_DirPath:
     case Kleo::CryptoConfigEntry::ArgType_String:
       kdWarning(5150) << "No widget implemented for list of type " << entry->argType() << endl;
       return 0; // TODO when the need arises :)
     case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
-      return new CryptoConfigEntryLDAPURL( module, entry, entryName, parent, name );
+      return new CryptoConfigEntryLDAPURL( module, entry, entryName, glay, widget, name );
     }
+    kdWarning(5150) << "No widget implemented for list of (unknown) type " << entry->argType() << endl;
+    return 0;
   }
 
   switch( entry->argType() ) {
   case Kleo::CryptoConfigEntry::ArgType_None:
-    return new CryptoConfigEntryCheckBox( module, entry, entryName, parent, name );
+    return new CryptoConfigEntryCheckBox( module, entry, entryName, glay, widget, name );
   case Kleo::CryptoConfigEntry::ArgType_Int:
-    // fallthrough
   case Kleo::CryptoConfigEntry::ArgType_UInt:
-    return new CryptoConfigEntrySpinBox( module, entry, entryName, parent, name );
-  case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
-    // TODO when the need arises
+    return new CryptoConfigEntrySpinBox( module, entry, entryName, glay, widget, name );
   case Kleo::CryptoConfigEntry::ArgType_URL:
-    // fallthrough
+    return new CryptoConfigEntryURL( module, entry, entryName, glay, widget, name );
   case Kleo::CryptoConfigEntry::ArgType_Path:
-    return new CryptoConfigEntryPath( module, entry, entryName, parent, name );
+    return new CryptoConfigEntryPath( module, entry, entryName, glay, widget, name );
+  case Kleo::CryptoConfigEntry::ArgType_DirPath:
+    return new CryptoConfigEntryDirPath( module, entry, entryName, glay, widget, name );
+  case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
+      kdWarning(5150) << "No widget implemented for type " << entry->argType() << endl;
+      return 0; // TODO when the need arises :)
   case Kleo::CryptoConfigEntry::ArgType_String:
-    return new CryptoConfigEntryLineEdit( module, entry, entryName, parent, name );
+    return new CryptoConfigEntryLineEdit( module, entry, entryName, glay, widget, name );
   }
-  kdWarning(5150) << "No widget implemented for list of (unknown) type " << entry->argType() << endl;
+  kdWarning(5150) << "No widget implemented for (unknown) type " << entry->argType() << endl;
   return 0;
 }
 
@@ -266,8 +294,8 @@ Kleo::CryptoConfigEntryGUI::CryptoConfigEntryGUI(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry,
   const QString& entryName,
-  QWidget* parent, const char* name )
-  : QHBox( parent, name ), mEntry( entry ), mName( entryName ), mChanged( false )
+  const char* name )
+  : QObject( module, name ), mEntry( entry ), mName( entryName ), mChanged( false )
 {
   connect( this, SIGNAL( changed() ), module, SIGNAL( changed() ) );
 }
@@ -291,16 +319,14 @@ void Kleo::CryptoConfigEntryGUI::resetToDefault()
 Kleo::CryptoConfigEntryLineEdit::CryptoConfigEntryLineEdit(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
-  QWidget* parent, const char* name )
-  : CryptoConfigEntryGUI( module, entry, entryName, parent, name )
+  QGridLayout * glay, QWidget* widget, const char* name )
+  : CryptoConfigEntryGUI( module, entry, entryName, name )
 {
-  setSpacing( KDialog::spacingHint() );
-  QLabel* label = new QLabel( description(), this );
-  mLineEdit = new KLineEdit( this );
+  const int row = glay->numRows();
+  mLineEdit = new KLineEdit( widget );
+  glay->addWidget( new QLabel( mLineEdit, description(), widget ), row, 1 );
+  glay->addWidget( mLineEdit, row, 2 );
   connect( mLineEdit, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
-  label->setBuddy( mLineEdit );
-  QWidget* stretch = new QWidget( this );
-  setStretchFactor( stretch, 1 );
 }
 
 void Kleo::CryptoConfigEntryLineEdit::doSave()
@@ -315,18 +341,17 @@ void Kleo::CryptoConfigEntryLineEdit::doLoad()
 
 ////
 
-
 Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
-  QWidget* widget, const char* name )
-  : CryptoConfigEntryGUI( module, entry, entryName, widget, name )
+  QGridLayout * glay, QWidget* widget, const char* name )
+  : CryptoConfigEntryGUI( module, entry, entryName, name )
 {
-  QHBox *box = new QHBox( widget );
-  QLabel *label = new QLabel( description(), box );
-  mUrlRequester = new KURLRequester( box );
-  label->setBuddy( mUrlRequester );
+  const int row = glay->numRows();
+  mUrlRequester = new KURLRequester( widget );
   mUrlRequester->setMode( KFile::File | KFile::ExistingOnly | KFile::LocalOnly );
+  glay->addWidget( new QLabel( mUrlRequester, description(), widget ), row, 1 );
+  glay->addWidget( mUrlRequester, row, 2 );
   connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
 }
 
@@ -342,15 +367,69 @@ void Kleo::CryptoConfigEntryPath::doLoad()
   mUrlRequester->setURL( mEntry->urlValue().path() );
 }
 
+////
+
+Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
+  CryptoConfigModule* module,
+  Kleo::CryptoConfigEntry* entry, const QString& entryName,
+  QGridLayout * glay, QWidget* widget, const char* name )
+  : CryptoConfigEntryGUI( module, entry, entryName, name )
+{
+  const int row = glay->numRows();
+  mUrlRequester = new KURLRequester( widget );
+  mUrlRequester->setMode( KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly );
+  glay->addWidget( new QLabel( mUrlRequester, description(), widget ), row, 1 );
+  glay->addWidget( mUrlRequester, row, 2 );
+  connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+}
+
+void Kleo::CryptoConfigEntryDirPath::doSave()
+{
+  KURL url;
+  url.setPath( mUrlRequester->url() );
+  mEntry->setURLValue( url );
+
+}
+
+void Kleo::CryptoConfigEntryDirPath::doLoad()
+{
+  mUrlRequester->setURL( mEntry->urlValue().path() );
+}
+
+////
+
+Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
+  CryptoConfigModule* module,
+  Kleo::CryptoConfigEntry* entry, const QString& entryName,
+  QGridLayout * glay, QWidget* widget, const char* name )
+  : CryptoConfigEntryGUI( module, entry, entryName, name )
+{
+  const int row = glay->numRows();
+  mUrlRequester = new KURLRequester( widget );
+  mUrlRequester->setMode( KFile::File | KFile::ExistingOnly );
+  glay->addWidget( new QLabel( mUrlRequester, description(), widget ), row, 1 );
+  glay->addWidget( mUrlRequester, row, 2 );
+  connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+}
+
+void Kleo::CryptoConfigEntryURL::doSave()
+{
+  mEntry->setURLValue( mUrlRequester->url() );
+}
+
+void Kleo::CryptoConfigEntryURL::doLoad()
+{
+  mUrlRequester->setURL( mEntry->urlValue().url() );
+}
+
+////
 
 Kleo::CryptoConfigEntrySpinBox::CryptoConfigEntrySpinBox(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
-  QWidget* parent, const char* name )
-  : CryptoConfigEntryGUI( module, entry, entryName, parent, name )
+  QGridLayout * glay, QWidget* widget, const char* name )
+  : CryptoConfigEntryGUI( module, entry, entryName, name )
 {
-  setSpacing( KDialog::spacingHint() );
-  QLabel* label = new QLabel( description(), this );
 
   if ( entry->argType() == Kleo::CryptoConfigEntry::ArgType_None && entry->isList() ) {
     mKind = ListOfNone;
@@ -361,14 +440,14 @@ Kleo::CryptoConfigEntrySpinBox::CryptoConfigEntrySpinBox(
     mKind = Int;
   }
 
-  mNumInput = new KIntNumInput( this );
+  const int row = glay->numRows();
+  mNumInput = new KIntNumInput( widget );
+  glay->addWidget( new QLabel( mNumInput, description(), widget ), row, 1 );
+  glay->addWidget( mNumInput, row, 2 );
+
   if ( mKind == UInt || mKind == ListOfNone )
     mNumInput->setMinValue( 0 );
   connect( mNumInput, SIGNAL( valueChanged(int) ), SLOT( slotChanged() ) );
-  label->setBuddy( mNumInput );
-
-  QWidget* stretch = new QWidget( this );
-  setStretchFactor( stretch, 1 );
 }
 
 void Kleo::CryptoConfigEntrySpinBox::doSave()
@@ -409,10 +488,12 @@ void Kleo::CryptoConfigEntrySpinBox::doLoad()
 Kleo::CryptoConfigEntryCheckBox::CryptoConfigEntryCheckBox(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
-  QWidget* parent, const char* name )
-  : CryptoConfigEntryGUI( module, entry, entryName, parent, name )
+  QGridLayout * glay, QWidget* widget, const char* name )
+  : CryptoConfigEntryGUI( module, entry, entryName, name )
 {
-  mCheckBox = new QCheckBox( this);
+  const int row = glay->numRows();
+  mCheckBox = new QCheckBox( widget );
+  glay->addMultiCellWidget( mCheckBox, row, row, 1, 2 );
   mCheckBox->setText( description() );
   connect( mCheckBox, SIGNAL( toggled(bool) ), SLOT( slotChanged() ) );
 }
@@ -431,17 +512,21 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry,
   const QString& entryName,
-  QWidget* parent, const char* name )
-  : CryptoConfigEntryGUI( module, entry, entryName, parent, name )
+  QGridLayout * glay, QWidget* widget, const char* name )
+  : CryptoConfigEntryGUI( module, entry, entryName, name )
 {
-  setSpacing( KDialog::spacingHint() );
-  QLabel* label = new QLabel( description(), this );
-  mPushButton = new QPushButton( i18n( "Edit..." ), this );
-  mLabel = new QLabel( this );
+  mLabel = new QLabel( widget );
+  mPushButton = new QPushButton( i18n( "Edit..." ), widget );
+
+
+  const int row = glay->numRows();
+  glay->addWidget( new QLabel( mPushButton, description(), widget ), row, 1 );
+  QHBoxLayout * hlay = new QHBoxLayout;
+  glay->addLayout( hlay, row, 2 );
+  hlay->addWidget( mLabel, 1 );
+  hlay->addWidget( mPushButton );
+
   connect( mPushButton, SIGNAL( clicked() ), SLOT( slotOpenDialog() ) );
-  label->setBuddy( mPushButton );
-  QWidget* stretch = new QWidget( this );
-  setStretchFactor( stretch, 1 );
 }
 
 void Kleo::CryptoConfigEntryLDAPURL::doLoad()
@@ -458,7 +543,7 @@ void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
 {
   // I'm a bad boy and I do it all on the stack. Enough classes already :)
   // This is just a simple dialog around the directory-services-widget
-  KDialogBase dialog( this, 0, true /*modal*/,
+  KDialogBase dialog( mPushButton->parentWidget(), 0, true /*modal*/,
                       i18n( "Configure LDAP Servers" ),
                       KDialogBase::Default|KDialogBase::Cancel|KDialogBase::Ok,
                       KDialogBase::Ok, true /*separator*/ );
@@ -484,3 +569,4 @@ void Kleo::CryptoConfigEntryLDAPURL::setURLList( const KURL::List& urlList )
 }
 
 #include "cryptoconfigmodule.moc"
+#include "cryptoconfigmodule_p.moc"

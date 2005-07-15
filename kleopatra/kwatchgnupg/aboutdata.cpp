@@ -45,7 +45,6 @@ struct about_data {
 };
 
 static const about_data authors[] = {
-  // PENDING(steffen) review 
   { "Steffen Hansen", I18N_NOOP("Original Author"), "hansen@kde.org", 0 },
 };
 

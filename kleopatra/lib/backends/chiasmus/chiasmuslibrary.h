@@ -1,12 +1,13 @@
-/*
-    cryptoconfigmodule.h
+/*  -*- mode: C++; c-file-style: "gnu" -*-
+    chiasmuslibrary.h
 
-    This file is part of libkleopatra
-    Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
+    This file is part of libkleopatra, the KDE keymanagement library
+    Copyright (c) 2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License,
-    version 2, as published by the Free Software Foundation.
+    modify it under the terms of the GNU General Public License as
+    published by the Free Software Foundation; either version 2 of the
+    License, or (at your option) any later version.
 
     Libkleopatra is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,40 +30,39 @@
     your version.
 */
 
-#ifndef CRYPTOCONFIGMODULE_H
-#define CRYPTOCONFIGMODULE_H
 
-#include <kjanuswidget.h>
+#ifndef __KLEO_CHIASMUSLIBRARY_H__
+#define __KLEO_CHIASMUSLIBRARY_H__
 
-#include <qvaluelist.h>
+#include <qvaluevector.h>
+#include <qcstring.h>
+
+class KLibrary;
 
 namespace Kleo {
 
-  class CryptoConfig;
-  class CryptoConfigComponentGUI;
-
   /**
-   * Crypto Config Module widget, dynamically generated from CryptoConfig
-   * It's a simple QWidget so that it can be embedded into a dialog or into a KCModule.
-   */
-  class CryptoConfigModule : public KJanusWidget {
-    Q_OBJECT
+     @short small helper class to load xia.o through xia.so and make
+     the functionality available.
+  */
+  class ChiasmusLibrary {
+    ChiasmusLibrary();
+    ~ChiasmusLibrary();
   public:
-    CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0, const char * name=0 );
+    static const ChiasmusLibrary * instance();
+    static void deleteInstance();
 
-    void save();
-    void reset(); // i.e. reload current settings, discarding user input
-    void defaults();
-    void cancel();
-
-  signals:
-    void changed();
+    int perform( const QValueVector<QCString> & args ) const;
+  private:
+    typedef int ( *main_func )( int, char** );
+    main_func chiasmus( QString * reason=0 ) const;
 
   private:
-    Kleo::CryptoConfig* mConfig;
-    QValueList<CryptoConfigComponentGUI *> mComponentGUIs;
+    static ChiasmusLibrary * self;
+    mutable KLibrary * mXiaLibrary;
   };
 
 }
 
-#endif
+
+#endif // __KLEO_CHIASMUSLIBRARY_H__

@@ -1,12 +1,13 @@
 /*
-    cryptoconfigmodule.h
+    kleo/cryptobackend.cpp
 
-    This file is part of libkleopatra
-    Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
+    This file is part of libkleopatra, the KDE keymanagement library
+    Copyright (c) 2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License,
-    version 2, as published by the Free Software Foundation.
+    modify it under the terms of the GNU General Public License as
+    published by the Free Software Foundation; either version 2 of the
+    License, or (at your option) any later version.
 
     Libkleopatra is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,40 +30,7 @@
     your version.
 */
 
-#ifndef CRYPTOCONFIGMODULE_H
-#define CRYPTOCONFIGMODULE_H
+#include "cryptobackend.h"
 
-#include <kjanuswidget.h>
-
-#include <qvaluelist.h>
-
-namespace Kleo {
-
-  class CryptoConfig;
-  class CryptoConfigComponentGUI;
-
-  /**
-   * Crypto Config Module widget, dynamically generated from CryptoConfig
-   * It's a simple QWidget so that it can be embedded into a dialog or into a KCModule.
-   */
-  class CryptoConfigModule : public KJanusWidget {
-    Q_OBJECT
-  public:
-    CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0, const char * name=0 );
-
-    void save();
-    void reset(); // i.e. reload current settings, discarding user input
-    void defaults();
-    void cancel();
-
-  signals:
-    void changed();
-
-  private:
-    Kleo::CryptoConfig* mConfig;
-    QValueList<CryptoConfigComponentGUI *> mComponentGUIs;
-  };
-
-}
-
-#endif
+const char Kleo::CryptoBackend::OpenPGP[] = "OpenPGP";
+const char Kleo::CryptoBackend::SMIME[] = "SMIME";
