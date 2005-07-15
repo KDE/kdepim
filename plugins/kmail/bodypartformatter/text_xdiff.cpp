@@ -63,7 +63,7 @@ namespace {
 
       if ( !writer ) return Ok;
 
-      if (  bodyPart->defaultDisplay() == KMail::Interface::BodyPart::AsIcon ) 
+      if (  bodyPart->defaultDisplay() == KMail::Interface::BodyPart::AsIcon )
         return AsIcon;
 
       const QString diff = bodyPart->asText();
@@ -85,6 +85,7 @@ namespace {
 
       QString tableStyle = QString::fromLatin1(
         "style=\""
+        "text-align: -khtml-auto; "
         "border: solid black 1px; "
         "padding: 0.5em; "
         "margin: 0em;\"");
