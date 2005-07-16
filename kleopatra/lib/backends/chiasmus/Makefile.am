@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/certmanager/lib -I$(top_srcdir)/libkdenetwork $(all_includes)
+INCLUDES = -I$(top_srcdir)/certmanager/lib -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
 
 KDE_CXXFLAGS = '-DGPG_ERR_SOURCE_DEFAULT=((gpg_err_source_t)176)'
 
