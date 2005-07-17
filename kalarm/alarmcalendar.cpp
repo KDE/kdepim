@@ -1,7 +1,7 @@
 /*
  *  alarmcalendar.cpp  -  KAlarm calendar file access
  *  Program:  kalarm
- *  (C) 2001 - 2004 by David Jarvie <software@astrojar.org.uk>
+ *  Copyright (C) 2001 - 2005 by David Jarvie <software@astrojar.org.uk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -726,8 +726,14 @@ void AlarmCalendar::getKAlarmVersion() const
 	if (mCalendar)
 	{
 		const QString& prodid = mCalendar->loadedProductId();
-		QString progname = QString(" ") + kapp->aboutData()->programName() + " ";
+		QString progname = QString::fromLatin1(" KAlarm ");
 		int i = prodid.find(progname, 0, false);
+		if (i < 0)
+		{
+			// Older versions used KAlarm's translated name in the product ID
+			progname = QString(" ") + kapp->aboutData()->programName() + " ";
+			i = prodid.find(progname, 0, false);
+		}
 		if (i >= 0)
 		{
 			QString ver = prodid.mid(i + progname.length()).stripWhiteSpace();

@@ -1,6 +1,6 @@
 KAlarm
 
-=== Version 1.2.9 --- 19 June 2005 ===
+=== Version 1.2.9 --- 17 July 2005 ===
 Minimise KMix window if KMix is started by KAlarm when displaying a message.
 Fix Plastik style 'enabled' indication for time spinbox left-hand buttons.
 Prevent message windows always being full screen after a big message is shown.
@@ -8,6 +8,7 @@ Prevent message windows being initially larger than the desktop.
 Prevent message windows initially overlapping the KDE panel.
 Prevent session restoration displaying main windows which should be hidden.
 Change --volume command line option short form to -V (-v is used by --version).
+Use 'KAlarm' untranslated in calendar product ID, to cater for locale changes.
 
 === Version 1.2.8 (KDE 3.4.1) --- 9 May 2005 ===
 Fix failure to enable "Reminder for first recurrence only" checkbox.
