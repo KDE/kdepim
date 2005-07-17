@@ -1,6 +1,4 @@
 /*
-    knarticlemanager.cpp
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -11,7 +9,7 @@
     (at your option) any later version.
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
 #include <kmessagebox.h>
@@ -739,7 +737,6 @@ void KNArticleManager::setAllNotNew()
 {
   if ( !g_roup )
     return;
-  kdDebug(5003) << k_funcinfo << "begin" << endl;
   KNRemoteArticle *a;
   for ( int i = 0; i < g_roup->length(); ++i) {
     a = g_roup->at(i);
@@ -892,10 +889,15 @@ void  KNArticleManager::rescoreArticles(KNRemoteArticle::List &l)
         defScore = knGlobals.configManager()->scoring()->watchedThreshold();
       a->setScore(defScore);
 
+      bool read = a->isRead();
+
       KNScorableArticle sa(a);
       sm->applyRules(sa);
       a->updateListItem();
       a->setChanged(true);
+
+      if ( !read && a->isRead() != read )
+        g_roup->incReadCount();
     }
   }
 }

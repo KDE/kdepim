@@ -76,6 +76,12 @@ QString KNScorableArticle::getHeaderByType(const QString& s) const
   return t;
 }
 
+
+void KNScorableArticle::markAsRead()
+{
+  _a->setRead();
+}
+
 //----------------------------------------------------------------------------
 
 KNScorableGroup::KNScorableGroup()
