@@ -425,6 +425,9 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
     }
   }
 
+  if ( atCount == 0 && !inQuotedString )
+    return TooFewAts;
+
   if ( inQuotedString )
     return UnbalancedQuote;
 
