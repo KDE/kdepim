@@ -199,7 +199,7 @@ bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
         }
 
         // determine nowchar depending on sorting criterion
-        {
+        if ( sfield ) {
           QString tmpstr = sfield->value( addressee );
           if ( !tmpstr.isEmpty() ) {
             nowchar = tmpstr.at( 0 ).upper();
