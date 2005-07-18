@@ -425,6 +425,8 @@ int main(int argc, char *argv[])
   // and here some insane but still valid cases
   checkIsValidSimpleEmailAddress( "\"m@tt\"@fruitsalad.org", "true" );
 
+  checkIsValidSimpleEmailAddress( "matt\"@@\"fruitsalad.org", "false" );
+
   // check the getEmailAddress address method
   checkGetEmailAddress( "matt@fruitsalad.org", "matt@fruitsalad.org" );
   checkGetEmailAddress( "Matt Douhan <matt@fruitsalad.org>", "matt@fruitsalad.org" );
