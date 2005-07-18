@@ -107,6 +107,7 @@ enum {
     kSubtypePkcs7Signature,
     kSubtypePkcs7Mime,
     kSubtypeMsTNEF,
+    kSubtypeChiasmusText,
     // Image
     kSubtypeJpeg,
     kSubtypeGif,
