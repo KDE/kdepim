@@ -77,7 +77,7 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		
 		info->index = counter;
 		info->reset = accountGroup->readNumEntry( "reset", 0 );
-		info->msgnr = 0;
+		info->msgnr = info->reset;
 		info->newMessages = false;
 		
 		_dropInfo->insert( kiodrop, info );
