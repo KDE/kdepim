@@ -366,6 +366,8 @@ int main(int argc, char *argv[])
   //bug 105405
   checkIsValidEmailAddress( "[foobar] <matt@fruitsalad.org>", "InvalidDisplayName" );
   checkIsValidEmailAddress( "matt \"[foobar]\" Douhan <matt@fruitsalad.org>", "AddressOk" );
+ 
+  checkIsValidEmailAddress( "Matt Douhan <matt\"@@\"fruitsalad.org>", "TooFewAts" );
 
 
   // checks for "pure" email addresses in the form of xxx@yyy.tld
