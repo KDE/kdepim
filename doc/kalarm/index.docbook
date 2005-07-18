@@ -1209,6 +1209,16 @@ in the list and press <guibutton>Delete</guibutton>.</para>
 <sect2>
 <title>Other controls</title>
 
+<para>Select <guilabel>Show in &korganizer;</guilabel> to add the
+alarm to &korganizer;'s active calendar, where it will appear as an
+event without an alarm. This option allows you to track alarms in
+&korganizer; while still making use of &kalarm;'s functions.</para>
+
+<note><para>If you later modify or delete the alarm in &kalarm;, the
+&korganizer; event will be modified or deleted correspondingly. But
+if you change the event in &korganizer;, the alarm in &kalarm; will
+not be affected.</para></note>
+
 <para>Press the <guibutton>Load Template</guibutton> button to select
 a template to preset the dialog with, as described in <link
 linkend="create-edit">Creating and manipulating alarms</link>. </para>
@@ -2281,6 +2291,11 @@ time.</para>
   (months) are not allowed.
   Mandatory if <option>--repeat</option> or <option>--until</option>
   is specified.</entry>
+</row>
+<row>
+  <entry><option>-k</option>, <option>--korganizer</option></entry>
+  <entry>Show the alarm as an event in &korganizer;'s active
+  calendar.</entry>
 </row>
 <row>
   <entry><option>-l</option>, <option>--late-cancel
