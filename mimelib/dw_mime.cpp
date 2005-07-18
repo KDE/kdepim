@@ -323,6 +323,12 @@ int DwSubtypeStrToEnum(const DwString& aStr)
             type = DwMime::kSubtypeSigned;
         }
         break;
+    case 'V':
+    case 'v':
+        if (DwStrcasecmp(aStr, "vnd.de.bund.bsi.chiasmus-text") == 0) {
+          type = DwMime::kSubtypeChiasmusText;
+        }
+        break;
     case 'X':
     case 'x':
         if (DwStrcasecmp(aStr, "x-vcard") == 0) {
@@ -436,6 +442,9 @@ void DwSubtypeEnumToStr(int aEnum, DwString& aStr)
         break;
     case DwMime::kSubtypeMsTNEF:
         aStr = "ms-tnef";
+        break;
+    case DwMime::kSubtypeChiasmusText:
+        aStr = "vnd.de.bund.bsi.chiasmus-text";
         break;
     case DwMime::kSubtypeJpeg:
         aStr = "jpeg";
