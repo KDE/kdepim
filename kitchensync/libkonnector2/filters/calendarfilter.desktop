@@ -15,6 +15,7 @@ Name[es]=Filtro de calendario
 Name[et]=Kalendrifilter
 Name[sv]=Kalenderfilter
 Name[ta]=நாள்காட்டி அலங்காரம்
+Name[tr]=Takvim Süzgeci
 
 Comment=Filters events and todos in a calendar
 Comment[bg]=Филтриране на събитията и задачите в календара
@@ -24,3 +25,4 @@ Comment[es]=Filtra los eventos y las tareas pendientes de un calendario
 Comment[et]=Kalendri sündmuste ja ülesannete filtreerimine
 Comment[sv]=Filtrerar händelser och uppgifter i en kalender
 Comment[ta]=நாட்காட்டியில் செய்திகளையும் செய்யவேண்டியவைகளையும் வடிகட்டுகிறது
+Comment[tr]=Bir takvimdeki olayları ve yapılacakları süzer
