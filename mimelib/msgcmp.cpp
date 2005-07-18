@@ -42,7 +42,7 @@ DwMessageComponent::DwMessageComponent()
     mParent = 0;
     mClassId = kCidMessageComponent;
     mClassName = sClassName;
-    mId = "";
+    mId = DwString();
 }
 
 
@@ -67,7 +67,7 @@ DwMessageComponent::DwMessageComponent(const DwString& aStr,
     mParent = aParent;
     mClassId = kCidMessageComponent;
     mClassName = sClassName;
-    mId = "";
+    mId = DwString();
 }
 
 
