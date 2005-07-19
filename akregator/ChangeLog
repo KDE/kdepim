@@ -2,6 +2,20 @@ Akregator ChangeLog
 ===================
 (c) 2004, 2005 the Akregator authors.
 
+Changes after 1.1
+-----------------------------
+
+Bug fixes:
+        - make opening of external files in akregator work again -hw
+        - disable Ok button when lineedit is empty in addfeeddialog -tpr
+        - support XHTML description in Atom -hw
+        - only use external browser if selected -hw
+        - fix html tags in titles (#97991) -hw
+        - fix reverse layout (--reverse parameter) (#104398) -hw
+        - fix scrollbar positions in article viewer (#108187) -hw
+        - improved article list speed signifcantly -fo
+        - fix copy link address to clipboard (#102956) -hw
+
 Changes after 1.0
 -----------------------------
 
