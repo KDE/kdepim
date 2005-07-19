@@ -52,7 +52,7 @@ void printToprint( QTextStream &out, QMap<QString,QString> &to_printed, const QS
 	}
 	else if( type == "pop3" )
 	{
-		out << "host=" << to_printed[ "host" ] << endl;
+		out << "server=" << to_printed[ "host" ] << endl;
 		out << "port=" << to_printed[ "port" ] << endl;
 		out << "username=" << to_printed[ "user" ] << endl;
 		if( to_printed[ "APOP" ] == "true" )
@@ -62,14 +62,14 @@ void printToprint( QTextStream &out, QMap<QString,QString> &to_printed, const QS
 	}
 	else if( type == "imap4" )
 	{
-		out << "host=" << to_printed[ "host" ] << endl;
+		out << "server=" << to_printed[ "host" ] << endl;
 		out << "port=" << to_printed[ "port" ] << endl;
 		out << "username=" << to_printed[ "user" ] << endl;
 		out << "mailbox=" << to_printed[ "mailbox" ] << endl;
 	}
 	else if( type == "nntp" )
 	{
-		out << "host=" << to_printed[ "host" ] << endl;
+		out << "server=" << to_printed[ "host" ] << endl;
 		out << "port=" << to_printed[ "port" ] << endl;
 		out << "mailbox=" << to_printed[ "group" ] << endl;
 	}
@@ -79,7 +79,7 @@ void printToprint( QTextStream &out, QMap<QString,QString> &to_printed, const QS
 	}
 	else if( type == "kio" )
 	{
-		out << "host=" << to_printed[ "host" ] << endl;
+		out << "server=" << to_printed[ "host" ] << endl;
 		out << "port=" << to_printed[ "port" ] << endl;
 		out << "username=" << to_printed[ "username" ] << endl;
 		out << "mailbox=" << to_printed[ "mailbox" ] << endl;
