@@ -5,7 +5,13 @@ Akregator ChangeLog
 Changes after 1.1
 -----------------------------
 
+Changes:
+
+        - make "mark all as read" icon consistent with kmail and knode (#107370) -fo
+
 Bug fixes:
+        - Don't set articles to new when comment count changes (#106345) -fo
+        - reset search bar properly when changing nodes -fo
         - make opening of external files in akregator work again -hw
         - disable Ok button when lineedit is empty in addfeeddialog -tpr
         - support XHTML description in Atom -hw
