@@ -266,9 +266,19 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
     if ( readCursorResponse.items->item.size() < *( readCursorRequest.count ) )
       break;
   }
-/*    readChunkSize = QMIN( readChunkSize, count - readItems );
-    *(readCursorRequest.count) = readChunkSize;*/
-    //*(readCursorRequest.position) = current;
+
+  _ngwm__destroyCursorRequest destReq;
+  _ngwm__destroyCursorResponse destResp;
+  destReq.container = id;
+  destReq.cursor = cursor;
+  mSoap->header->ngwt__session = mSession;
+  if ( soap_call___ngw__destroyCursorRequest( mSoap, mUrl.latin1(), 0,
+                                    &destReq,
+                                    &destResp ) != SOAP_OK )
+  {
+    kdDebug() << "Faults according to GSOAP:" << endl;
+    soap_print_fault(mSoap, stderr);
+  }
 
   kdDebug() << " read " << readItems << " items in total" << endl;
 #endif
@@ -559,6 +569,21 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
       break;
     }
   }
+
+  _ngwm__destroyCursorRequest destReq;
+  _ngwm__destroyCursorResponse destResp;
+  destReq.container = id;
+  destReq.cursor = cursor;
+  mSoap->header->ngwt__session = mSession;
+  kdDebug() << "sending destroy calendar cursor request with session: " << mSession.c_str() << endl;
+  if ( soap_call___ngw__destroyCursorRequest( mSoap, mUrl.latin1(), 0,
+                                    &destReq,
+                                    &destResp ) != SOAP_OK )
+  {
+    kdDebug() << "Faults according to GSOAP:" << endl;
+    soap_print_fault(mSoap, stderr);
+  }
+ 
   kdDebug() << " read " << readItems << " items in total" << endl;
 #endif
 }
