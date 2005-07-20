@@ -21,24 +21,21 @@
 #ifndef KCAL_RESOURCELOCALDIRDIR_H
 #define KCAL_RESOURCELOCALDIRDIR_H
 
-#include <qptrlist.h>
-#include <qstring.h>
-#include <qdatetime.h>
-
 #include <kurl.h>
-#include <kconfig.h>
 #include <kdirwatch.h>
 #include <kdepimmacros.h>
-
-#include "incidence.h"
-#include "calendarlocal.h"
-#include "icalformat.h"
 
 #include "resourcecached.h"
 
 #include "libkcal_export.h"
 
+class QString;
+class KConfig;
+
 namespace KCal {
+
+class CalendarLocal;
+class Incidence;
 
 /**
   \internal

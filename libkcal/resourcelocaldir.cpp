@@ -29,12 +29,14 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kurl.h>
+#include <kconfig.h>
 #include <kstandarddirs.h>
 
 #include "vcaldrag.h"
 #include "vcalformat.h"
 #include "icalformat.h"
 #include "exceptions.h"
+#include "calendarlocal.h"
 #include "incidence.h"
 #include "event.h"
 #include "todo.h"
@@ -140,13 +142,6 @@ bool ResourceLocalDir::doLoad()
       CalendarLocal cal( mCalendar.timeZoneId() );
       if ( !doFileLoad( cal, fileName ) ) {
         success = false;
-      } else {
-        Incidence::List incidences = cal.rawIncidences();
-        Incidence::List::ConstIterator it;
-        for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
-          Incidence *i = *it;
-          if ( i ) mCalendar.addIncidence( i->clone() );
-        }
       }
     }
   }
@@ -156,7 +151,15 @@ bool ResourceLocalDir::doLoad()
 
 bool ResourceLocalDir::doFileLoad( CalendarLocal &cal, const QString &fileName )
 {
-  return cal.load( fileName );
+  if ( !cal.load( fileName ) )
+    return false;
+  Incidence::List incidences = cal.rawIncidences();
+  Incidence::List::ConstIterator it;
+  for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
+    Incidence *i = *it;
+    if ( i ) mCalendar.addIncidence( i->clone() );
+  }
+  return true;
 }
 
 bool ResourceLocalDir::doSave()
