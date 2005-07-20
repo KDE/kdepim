@@ -35,7 +35,8 @@
 
 #include "gwjobs.h"
 
-#define READ_FOLDER_CHUNK_SIZE 250
+#define READ_ADDRESS_FOLDER_CHUNK_SIZE 250
+#define READ_CALENDAR_FOLDER_CHUNK_SIZE 50
 
 GWJob::GWJob( GroupwiseServer *server, struct soap *soap, const QString &url,
   const std::string &session )
@@ -169,7 +170,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
   }
 #else
   unsigned int readItems = 0;
-  unsigned int readChunkSize = READ_FOLDER_CHUNK_SIZE;
+  unsigned int readChunkSize = READ_ADDRESS_FOLDER_CHUNK_SIZE;
   
   int cursor;
 
@@ -457,7 +458,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
   }
 #else
   unsigned int readItems = 0;
-  unsigned int readChunkSize = READ_FOLDER_CHUNK_SIZE;
+  unsigned int readChunkSize = READ_CALENDAR_FOLDER_CHUNK_SIZE;
   
   int cursor;
 
@@ -496,6 +497,8 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
   readCursorRequest.count = (int*)soap_malloc( mSoap, sizeof(int) );
   *( readCursorRequest.count ) = (int)readChunkSize;
 
+  //soap_set_imode(mSoap, SOAP_XML_STRICT);
+
   while ( true )
   {
     mSoap->header->ngwt__session = mSession;
@@ -507,6 +510,8 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
     {
       kdDebug() << "Faults according to GSOAP:" << endl;
       soap_print_fault(mSoap, stderr);
+      soap_print_fault_location(mSoap, stderr);
+
       kdDebug() << "EXITING" << endl;
       break;
     }
