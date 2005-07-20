@@ -213,7 +213,7 @@ KCal::Todo* IncidenceConverter::convertFromTask( ngwt__Task* task )
 
   getAttendees( task, todo );
 
-  todo->setLocation( i18n( "Novell GroupWise does not support locations for To-dos." ) );
+  todo->setLocation( i18n( "Novell GroupWise does not support locations for to-dos." ) );
   return todo;
 }
 
