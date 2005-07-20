@@ -76,43 +76,61 @@
 ]
 
 #	For WhiteMesa interoperability testing round 2:
+
 i	= "http://www.soapinterop.org/"
 s	= "http://www.soapinterop.org/xsd"
 
 #	Amazon Web Services:
+
 aws	= "urn:PI/DevCentral/SoapService"
 
+#	MTOM xop and xmime
+
+xop	= <http://www.w3.org/2004/08/xop/include>
+xmime	= <http://www.w3.org/2004/06/xmlmime>
+xmlmime	= <http://www.w3.org/2004/11/xmlmime>
+
+xmime__contentType = | char* | char*
+xmlmime__contentType = | char* | char*
+
+#	WS-Addressing
+
+wsa	= <http://schemas.xmlsoap.org/ws/2004/08/addressing>
+
 #	Bindings for WS-* protocols:
+
 dsig	= "http://www.w3.org/2000/09/xmldsig#"
 xenc	= "http://www.w3.org/2001/04/xmlenc#"
 wsrp	= "http://schemas.xmlsoap.org/rp/"
 wsse	= "http://schemas.xmlsoap.org/ws/2002/04/secext"
-wsa	= "http://schemas.xmlsoap.org/ws/2004/08/addressing"
+wsa3	= "http://schemas.xmlsoap.org/ws/2003/03/addressing"
 wsp	= "http://schemas.xmlsoap.org/ws/2004/09/policy"
 wsu	= "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+
+#	Remember: type bindings are given on a single line.
+#	Example XML schema and C/C++ type bindings:
+
+xsd__int	= | int
 
 # Novell GroupWise
 ngw = "http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl"
 ngwt = "http://schemas.novell.com/2005/01/GroupWise/types"
 ngwm = "http://schemas.novell.com/2005/01/GroupWise/methods"
-
-#	Remember: type definitions are given on a single line containing.
-#	Example XML schema and C/C++ type bindings:
-
-xsd__int	= | int
-
-# used for groupwise 
+ngwe = "http://schemas.novell.com/2005/01/GroupWise/events"
 xsd__dateTime  = | char* | char*
 
-#	WS-Policy imports wsu:Id
+#	With SOAP encoded arrays, the SOAP-ENC:arrayType attribute is defined
+#	but we really don't need it because we never use it
 
-wsu__Id		= typedef char *wsu__Id; | wsu__Id | wsu__Id
+SOAP_ENC__arrayType	= | char* | char*
 
 #	To use regular char* strings instead of std::string, use:
 
 # xsd__string	= | char* | char*
 
-# xsd__string = | QCString | QCString*
+#	WS-Policy imports wsu:Id
+
+wsu__Id		= typedef char *wsu__Id; | wsu__Id | wsu__Id
 
 #	To use regular char* strings serialized with xsi:type attributes, use:
 

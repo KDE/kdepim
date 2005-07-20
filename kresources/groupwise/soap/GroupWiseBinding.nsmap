@@ -9,6 +9,6 @@ SOAP_NMAC struct Namespace namespaces[] =
 	{"ngwt", "http://schemas.novell.com/2005/01/GroupWise/types", NULL, NULL},
 	{"ngwm", "http://schemas.novell.com/2005/01/GroupWise/methods", NULL, NULL},
 	{"ngw", "http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl", NULL, NULL},
-	{"ns2", "http://schemas.novell.com/2005/01/GroupWise/events", NULL, NULL},
+	{"ngwe", "http://schemas.novell.com/2005/01/GroupWise/events", NULL, NULL},
 	{NULL, NULL, NULL, NULL}
 };
