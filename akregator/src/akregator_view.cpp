@@ -1573,6 +1573,8 @@ void View::slotClearFilter()
 {
     m_searchLine->clear();
     m_searchCombo->setCurrentItem(0);
+    slotSearchComboChanged(0);
+    slotSearchTextChanged("");
 }
 
 void View::readProperties(KConfig* config) // this is called when session is being restored
