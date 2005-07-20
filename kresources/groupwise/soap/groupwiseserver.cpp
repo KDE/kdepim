@@ -358,7 +358,7 @@ bool GroupwiseServer::getCategoryList()
     categories = &catListResp.categories->category;
     std::vector<class ngwt__Category * >::const_iterator it;
     for( it = categories->begin(); it != categories->end(); ++it ) {
-//      cout << "CATEGORY" << endl;
+//      kdDebug() << "CATEGORY" << endl;
       dumpItem( *it );
     }
   }
@@ -381,13 +381,13 @@ bool GroupwiseServer::dumpData()
     for( it = addressBooks->begin(); it != addressBooks->end(); ++it ) {
       ngwt__AddressBook *book = *it;
       if ( book->description ) {
-        cout << "ADDRESSBOOK: description: " << book->description->c_str() << endl;
+        kdDebug() << "ADDRESSBOOK: description: " << book->description->c_str() << endl;
       }
       if ( book->id ) {
-        cout << "ADDRESSBOOK: id: " << book->id->c_str() << endl;
+        kdDebug() << "ADDRESSBOOK: id: " << book->id->c_str() << endl;
       }
       if ( book->name ) {
-        cout << "ADDRESSBOOK: name: " << book->name->c_str() << endl;
+        kdDebug() << "ADDRESSBOOK: name: " << book->name->c_str() << endl;
       }
 
       _ngwm__getItemsRequest itemsRequest;
@@ -410,7 +410,7 @@ bool GroupwiseServer::dumpData()
       if ( items ) {
         std::vector<class ngwt__Item * >::const_iterator it2;
         for( it2 = items->begin(); it2 != items->end(); ++it2 ) {
-          cout << "ITEM" << endl;
+          kdDebug() << "ITEM" << endl;
           dumpItem( *it2 );
 
           if ( true ) {
@@ -431,9 +431,9 @@ bool GroupwiseServer::dumpData()
             ngwt__Item *item = itemResponse.item;
             ngwt__Contact *contact = dynamic_cast<ngwt__Contact *>( item );
             if ( !contact ) {
-              cerr << "Cast failed." << endl;
+              kdError() << "Cast failed." << endl;
             } else {
-              cout << "Cast succeeded." << endl;
+              kdDebug() << "Cast succeeded." << endl;
             }
           }
         }
@@ -460,7 +460,7 @@ void GroupwiseServer::dumpFolderList()
     if ( folders ) {
       std::vector<class ngwt__Folder * >::const_iterator it;
       for ( it = folders->begin(); it != folders->end(); ++it ) {
-        cout << "FOLDER" << endl;
+        kdDebug() << "FOLDER" << endl;
         dumpFolder( *it );
 #if 0
         if ( (*it)->type && *((*it)->type) == "Calendar" ) {
@@ -517,16 +517,16 @@ void GroupwiseServer::dumpCalendarFolder( const std::string &id )
 #endif
       ngwt__Appointment *a = dynamic_cast<ngwt__Appointment *>( *it );
       if ( !a ) {
-        cerr << "Appointment cast failed." << endl;
+        kdError() << "Appointment cast failed." << endl;
       } else {
-        cout << "CALENDAR ITEM" << endl;
+        kdDebug() << "CALENDAR ITEM" << endl;
         dumpAppointment( a );
       }
       ngwt__Task *t = dynamic_cast<ngwt__Task *>( *it );
       if ( !t ) {
-        cerr << "Task cast failed." << endl;
+        kdError() << "Task cast failed." << endl;
       } else {
-        cout << "TASK" << endl;
+        kdDebug() << "TASK" << endl;
         dumpTask( t );
       }
     }
@@ -536,33 +536,33 @@ void GroupwiseServer::dumpCalendarFolder( const std::string &id )
 void GroupwiseServer::dumpMail( ngwt__Mail *m )
 {
   dumpItem( m );
-  cout << "  SUBJECT: " << m->subject << endl;
+  kdDebug() << "  SUBJECT: " << m->subject << endl;
 }
 
 void GroupwiseServer::dumpTask( ngwt__Task *t )
 {
   dumpMail( t );
   if ( t->completed ) {
-    cout << "  COMPLETED: " << ( t->completed ? "true" : "false" ) << endl; 
+    kdDebug() << "  COMPLETED: " << ( t->completed ? "true" : "false" ) << endl; 
   }
 }
 
 void GroupwiseServer::dumpAppointment( ngwt__Appointment *a )
 {
   dumpMail( a );
-  cout << "  START DATE: " << a->startDate << endl;
-  cout << "  END DATE: " << a->endDate << endl;
+  kdDebug() << "  START DATE: " << a->startDate << endl;
+  kdDebug() << "  END DATE: " << a->endDate << endl;
   if ( a->allDayEvent ) {
-    cout << "  ALL DAY: " << ( a->allDayEvent ? "true" : "false" ) << endl;
+    kdDebug() << "  ALL DAY: " << ( a->allDayEvent ? "true" : "false" ) << endl;
   }
 }
 
 void GroupwiseServer::dumpFolder( ngwt__Folder *f )
 {
   dumpItem( f );
-  cout << "  PARENT: " << f->parent.c_str() << endl;
+  kdDebug() << "  PARENT: " << f->parent.c_str() << endl;
   if ( f->description ) {
-    cout << "  DESCRIPTION: " << f->description->c_str() << endl;
+    kdDebug() << "  DESCRIPTION: " << f->description->c_str() << endl;
   }
   // FIXME: More fields
 //	int *count;
@@ -578,17 +578,17 @@ void GroupwiseServer::dumpItem( ngwt__Item *i )
 {
   if ( !i ) return;
   if ( i->id ) {
-    cout << "  ID: " << i->id->c_str() << endl;
+    kdDebug() << "  ID: " << i->id->c_str() << endl;
   }
   if ( i->name ) {
-    cout << "  NAME: " << i->name->c_str() << endl;
+    kdDebug() << "  NAME: " << i->name->c_str() << endl;
   }
-  cout << "  VERSION: " << i->version << endl;
-  cout << "  MODIFIED: " << i->modified << endl;
-  if ( i->changes ) cout << "  HASCHANGES" << endl;
+  kdDebug() << "  VERSION: " << i->version << endl;
+  kdDebug() << "  MODIFIED: " << i->modified << endl;
+  if ( i->changes ) kdDebug() << "  HASCHANGES" << endl;
 #if 0
   if ( i->type ) {
-    cout << "  TYPE: " << i->type->c_str() << endl;
+    kdDebug() << "  TYPE: " << i->type->c_str() << endl;
   }
 #endif
 }
