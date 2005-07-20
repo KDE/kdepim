@@ -36,7 +36,7 @@
 
 #include <kglobal.h>
 #include <kdebug.h>
-#include <libkcal/event.h>
+#include "libkcal/event.h"
 
 #include "pilotDateEntry.h"
 
