@@ -23,8 +23,7 @@ knode_LDADD   = libknodecommon.la
 kcm_knode_la_SOURCES = knconfigpages.cpp
 kcm_knode_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
 kcm_knode_la_LIBADD = libknodecommon.la $(LIB_KDECORE)
-kcm_knode_la_COMPILE_FIRST = libknodecommon.la
-
+knconfigpages.lo: smtpaccountwidget_base.h
 
 libknodecommon_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
 libknodecommon_la_LIBADD = -lkdeprint -lkwalletclient $(top_builddir)/libkmime/libkmime.la $(top_builddir)/libkpgp/libkpgp.la $(top_builddir)/libkdepim/libkdepim.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIB_KUTILS) $(LIBRESOLV) $(LIB_KHTML)
