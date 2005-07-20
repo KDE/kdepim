@@ -38,7 +38,7 @@
 #if 0
 
 i18n("Please select folders for addressbook:")
-i18n("Please select folders for calendar, to-dos and journals:")
+i18n("Please select folders for events, to-dos and journal entries:")
 
 #endif
 
