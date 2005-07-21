@@ -46,7 +46,7 @@ class AlarmCalendar : public QObject
 		void                  startUpdate();
 		void                  endUpdate();
 		KCal::Event*          event(const QString& uniqueID)      { return mCalendar ? mCalendar->event(uniqueID) : 0; }
-		KCal::Event::List     events()                            { return mCalendar->events(); }
+		KCal::Event::List     events()                            { return mCalendar->rawEvents(); }
 		KCal::Event::List     events(const QDate& d, bool sorted = false) { return mCalendar->events(d, sorted); }
 		KCal::Event::List     eventsWithAlarms(const QDateTime& from, const QDateTime& to);
 		KCal::Event*          addEvent(const KAEvent&, bool useEventID = false);
