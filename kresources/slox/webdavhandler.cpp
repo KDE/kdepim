@@ -28,6 +28,8 @@
 #endif
 #endif
 
+#include <stdlib.h>
+
 #include <libkcal/incidence.h>
 
 #include <libkdepim/kpimprefs.h>
@@ -150,7 +152,16 @@ QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt,
 {
   QDateTime utc = KPimPrefs::localTimeToUtc( dt, timeZoneId );
 
-  uint ticks = -utc.secsTo( QDateTime( QDate( 1970, 1, 1 ), QTime( 0, 0 ) ) );
+  // secsTo and toTime_t etc also perform a timezone conversion using the system timezone,
+  // but we want to use the calendar timezone, so we have to convert ourself and spoof the tz to UTC before 
+  // converting to ticks to prevent this 
+  QCString origTz = getenv("TZ");
+  setenv( "TZ", "UTC", 1 );
+  uint ticks = utc.toTime_t();
+  if ( origTz.isNull() )
+    unsetenv( "TZ" );
+  else
+    setenv( "TZ", origTz, 1 );
 
   return QString::number( ticks ) + "000";
 }
