@@ -42,7 +42,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2005-06-12</date>
+<date>2005-07-21</date>
 <releaseinfo>1.03.02</releaseinfo>
 
 <abstract>
@@ -1877,21 +1877,17 @@ client to be used to send email alarms:</para>
 
 <itemizedlist>
 <listitem><para><guilabel>KMail</guilabel>: When an email alarm is
-triggered, the email is sent using KMail as follows:</para>
+triggered, the email is sent using &kmail; (which is started first if
+necessary) as follows:</para>
 
 <itemizedlist>
-<listitem><para>If &kmail; is running at the time and &kmail; is
-version 1.7 or later, the email is sent automatically.</para>
+<listitem><para>If &kmail; is version 1.7 or later, the email is sent
+automatically.</para>
 </listitem>
 
-<listitem><para>If &kmail; is running at the time and &kmail; is an
-older version, the email is added to &kmail;'s
-<filename>outbox</filename> folder for later transmission.</para>
-</listitem>
-
-<listitem><para>If &kmail; is not running, a &kmail; composer window
-is displayed filled in with the email details, to enable you to send
-the email manually.</para>
+<listitem><para>If &kmail; is an older version, the email is added to
+&kmail;'s <filename>outbox</filename> folder for later
+transmission.</para>
 </listitem>
 </itemizedlist>
 </listitem>
