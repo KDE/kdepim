@@ -40,3 +40,16 @@ diff -u -3 -p -r1.70 options.h
  #endif
  // #define DEBUG_CERR			(1)
  
+Index: lib/Makefile.am
+===================================================================
+--- lib/Makefile.am	(revision 437137)
++++ lib/Makefile.am	(working copy)
+@@ -25,7 +25,7 @@
+ 	recordConduit.cc
+ 
+ libkpilot_la_LDFLAGS = -no-undefined $(PISOCK_LDFLAGS) $(all_libraries) $(KDE_EXTRA_RPATH) $(KDE_RPATH)
+-libkpilot_la_LIBADD = $(LIB_KDEUI) $(PISOCK_LIB) $(LIB_KABC) $(top_builddir)/libkcal/libkcal.la
++libkpilot_la_LIBADD = $(LIB_KDEUI) $(PISOCK_LIB) $(LIB_KABC) -lkcal
+ 
+ kpilotincludedir = $(includedir)/kpilot
+ kpilotinclude_HEADERS = kpilotlink.h uiDialog.h plugin.h syncAction.h \
