@@ -152,18 +152,14 @@ class LIBKCAL_EXPORT Recurrence
     /** Returns the date and time of the next recurrence, after the specified date/time.
      * If the recurrence has no time, the next date after the specified date is returned.
      * @param preDateTime the date/time after which to find the recurrence.
-     * @param last if non-null, *last is set to true if the next recurrence is the
-     * last recurrence, else false.
-     * Reply = date/time of next recurrence, or invalid date if none.
+     * @return date/time of next recurrence, or invalid date if none.
      */
     QDateTime getNextDateTime( const QDateTime& preDateTime ) const;
     /** Returns the date and time of the last previous recurrence, before the specified date/time.
      * If a time later than 00:00:00 is specified and the recurrence has no time, 00:00:00 on
      * the specified date is returned if that date recurs.
      * @param afterDateTime the date/time before which to find the recurrence.
-     * @param last if non-null, *last is set to true if the previous recurrence is the
-     * last recurrence, else false.
-     * Reply = date/time of previous recurrence, or invalid date if none.
+     * @return date/time of previous recurrence, or invalid date if none.
      */
     QDateTime getPreviousDateTime( const QDateTime& afterDateTime ) const;
 
@@ -280,7 +276,6 @@ class LIBKCAL_EXPORT Recurrence
         monthly recurrence. All other recurrence components (recurrence
         date/times, exception date/times and exception rules) are not
         modified.
-     * @param type rMonthlyPos or rMonthlyDay
      * @param freq the frequency to recur, e.g. 3 for every third month.
      */
     void setMonthly( int freq );
@@ -340,7 +335,7 @@ class LIBKCAL_EXPORT Recurrence
      *
      *   By default infinite recurrence is used. To set an end date use the
      *   method setEndDate and to set the number of occurrences use setDuration.
-     * @param dat the day of the month for the event
+     * @param date the day of the month for the event
      */
     void addYearlyDate( int date );
     /** Adds month in yearly recurrence. You can specify specific day numbers
