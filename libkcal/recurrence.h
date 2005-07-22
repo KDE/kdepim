@@ -38,6 +38,54 @@ class RecurrenceRule;
 
 /**
   This class represents a recurrence rule for a calendar incidence.
+
+  It manages all recurrence rules, recurrence date/times, exception rules
+  and exception date times that can appear inside calendar items.
+  Each recurrence rule and exception rule is represented as an object
+  of type RecurrenceRule.
+
+  For the simple case where at most one recurrence
+  rule is present, this class provides shortcut methods to set the type:
+    setMinutely()
+    setHourly()
+    setDaily()
+    setWeekly()
+    setMonthly()
+    setYearly()
+  to set/get general information about the recurrence:
+    setEndDate()
+    setEndDateTime()
+    duration()
+    durationTo()
+    setDuration()
+    frequency()
+    setFrequency()
+  and to set/get specific information about the recurrence within the interval:
+    days()
+    monthDays()
+    monthPositions()
+    yearDays()
+    yearDates()
+    yearMonths()
+    yearPositions()
+    addMonthlyPos()
+    addMonthlyDate()
+    addYearlyDay()
+    addYearlyDate()
+    addYearlyPos()
+    addYearlyMonth()
+  These are all available so that you don't have to work on the RecurrenceRule
+  objects themselves.
+  In other words, in that simple situation the interface stays almost the
+  same compared to the old Recurrence class, which allowed only one
+  recurrence rule.
+
+  As soon as your recurrence consists of multiple recurrence rules or exception
+  rules, you cannot use the methods mentioned above any more (since each rule
+  will have a different type and different settings). If you still call
+  any of them, the set*ly methods will remove all rules and add one rule with
+  the specified type. The add* and the other set* methods will change only
+  the first recurrence rule, but leave the others untouched.
 */
 class LIBKCAL_EXPORT Recurrence
 {
@@ -91,7 +139,8 @@ class LIBKCAL_EXPORT Recurrence
     /** Returns true if the date/time specified is one at which the event will
      * recur. Times are rounded down to the nearest minute to determine the result. */
     bool recursAt( const QDateTime & ) const;
-    /** Turns off recurrence for the event. */
+    /** Removes all recurrence rules. Recurrence dates and exceptions are
+        not removed. */
     void unsetRecurs();
 
     /** Returns a list of the times on the specified date at which the
@@ -157,20 +206,41 @@ class LIBKCAL_EXPORT Recurrence
     /** Sets an event to recur minutely. By default infinite recurrence is used.
         To set an end date use the method setEndDate and to set the number
         of occurrences use setDuration.
+
+        This method clears all recurrence rules and adds one rule with a
+        minutely recurrence. All other recurrence components (recurrence
+        date/times, exception date/times and exception rules) are not
+        modified.
      * @param freq the frequency to recur, e.g. 2 is every other minute
      */
     void setMinutely( int freq );
 
     /** Sets an event to recur hourly. By default infinite recurrence is used.
+        The minute of the recurrence is taken from the start date (if you
+        need to change it, you will have to modify the defaultRRule's
+        byMinute list manually.
         To set an end date use the method setEndDate and to set the number
         of occurrences use setDuration.
+
+        This method clears all recurrence rules and adds one rule with a
+        hourly recurrence. All other recurrence components (recurrence
+        date/times, exception date/times and exception rules) are not
+        modified.
      * @param freq the frequency to recur, e.g. 2 is every other hour
      */
     void setHourly( int freq );
 
     /** Sets an event to recur daily. By default infinite recurrence is used.
+        The minute and second of the recurrence is taken from the start date
+        (if you need to change them, you will have to modify the defaultRRule's
+        byMinute list manually.
         To set an end date use the method setEndDate and to set the number
         of occurrences use setDuration.
+
+        This method clears all recurrence rules and adds one rule with a
+        daily recurrence. All other recurrence components (recurrence
+        date/times, exception date/times and exception rules) are not
+        modified.
      * @param freq the frequency to recur, e.g. 2 is every other day
      */
     void setDaily( int freq );
@@ -178,6 +248,11 @@ class LIBKCAL_EXPORT Recurrence
     /** Sets an event to recur weekly. By default infinite recurrence is used.
         To set an end date use the method setEndDate and to set the number
         of occurrences use setDuration.
+
+        This method clears all recurrence rules and adds one rule with a
+        weekly recurrence. All other recurrence components (recurrence
+        date/times, exception date/times and exception rules) are not
+        modified.
      * @param freq the frequency to recur, e.g. every other week etc.
      * @param days a 7 bit array indicating which days on which to recur (bit 0 = Monday).
      * @param weekStart the first day of the week (Monday=1 .. Sunday=7, default is Monday).
@@ -194,14 +269,22 @@ class LIBKCAL_EXPORT Recurrence
     QBitArray days() const; // Emulate the old behavior
 
     /** Sets an event to recur monthly. By default infinite recurrence is used.
+        The date of the monthly recurrence will be taken from the start date
+        unless you explicitly add one or more recurrence dates with
+        addMonthlyDate or a recurrence position in the month (e.g. first
+        monday) using addMonthlyPos.
         To set an end date use the method setEndDate and to set the number
         of occurrences use setDuration.
+
+        This method clears all recurrence rules and adds one rule with a
+        monthly recurrence. All other recurrence components (recurrence
+        date/times, exception date/times and exception rules) are not
+        modified.
      * @param type rMonthlyPos or rMonthlyDay
      * @param freq the frequency to recur, e.g. 3 for every third month.
      */
     void setMonthly( int freq );
-    /** Adds a position to the recursMonthlyPos recurrence rule, if it is
-     * set.
+    /** Adds a position (e.g. first monday) to the monthly recurrence rule.
      * @param pos the position in the month for the recurrence, with valid
      * values being 1-5 (5 weeks max in a month).
      * @param days the days for the position to recur on (bit 0 = Monday).
@@ -210,7 +293,8 @@ class LIBKCAL_EXPORT Recurrence
      */
     void addMonthlyPos( short pos, const QBitArray &days );
     void addMonthlyPos( short pos, ushort day );
-    /** Adds a position to the monthly day recurrence list.
+    /** Adds a date (e.g. the 15th of each month) to the monthly day
+     *  recurrence list.
      * @param day the date in the month to recur.
      */
     void addMonthlyDate( short day );
@@ -235,6 +319,11 @@ class LIBKCAL_EXPORT Recurrence
      *
      *  By default infinite recurrence is used. To set an end date use the
      *  method setEndDate and to set the number of occurrences use setDuration.
+
+        This method clears all recurrence rules and adds one rule with a
+        yearly recurrence. All other recurrence components (recurrence
+        date/times, exception date/times and exception rules) are not
+        modified.
      * @param freq the frequency to recur, e.g. 3 for every third year.
      */
     void setYearly( int freq );
