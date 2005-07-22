@@ -271,7 +271,7 @@ template <class Todo> void mergeRelations( Todo* const dest,
 template <class Todo> void mergeExDates( Todo* const dest,
                                          const Todo* const src)
 {
-  dest->setExDates( src->exDates() );
+  dest->recurrence()->setExDates( src->recurrence()->exDates() );
 }
 
 /*

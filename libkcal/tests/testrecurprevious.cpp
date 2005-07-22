@@ -86,7 +86,7 @@ int main( int argc, char **argv )
 
     incidence->recurrence()->dump();
 
-    QDateTime dt( incidence->recurrence()->endDate() );
+    QDateTime dt( incidence->recurrence()->endDateTime() );
     int i=0;
     if ( outstream ) {
       if ( !dt.isValid() ) dt = QDateTime( QDate( 2011, 1, 1 ), QTime( 0, 0, 1 ) );

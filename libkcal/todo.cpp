@@ -85,10 +85,11 @@ void Todo::setDtDue(const QDateTime &dtDue, bool first )
   } else {
     mDtDue = dtDue;
     // TODO: This doesn't seem right...
-    recurrence()->setRecurStart( dtDue );
+    recurrence()->setStartDateTime( dtDue );
+    recurrence()->setFloats( doesFloat() );
   }
 
-  if ( doesRecur() && dtDue < recurrence()->recurStart() )
+  if ( doesRecur() && dtDue < recurrence()->startDateTime() )
     setDtStart( dtDue );
 
   //kdDebug(5800) << "setDtDue says date is " << mDtDue.toString() << endl;
@@ -167,8 +168,10 @@ QDateTime Todo::dtStart( bool first ) const
 void Todo::setDtStart( const QDateTime &dtStart )
 {
   // TODO: This doesn't seem right (rfc 2445/6 says, recurrence is calculated from the dtstart...)
-  if ( doesRecur() )
-    recurrence()->setRecurStart( mDtDue );
+  if ( doesRecur() ) {
+    recurrence()->setStartDateTime( mDtDue );
+    recurrence()->setFloats( doesFloat() );
+  }
   IncidenceBase::setDtStart( dtStart );
 }
 
@@ -260,7 +263,7 @@ bool Todo::recursOn( const QDate &date ) const
   QDate today = QDate::currentDate();
   return ( Incidence::recursOn(date) &&
            !( date < today && mDtRecurrence.date() < today &&
-              mDtRecurrence > recurrence()->recurStart() ) );
+              mDtRecurrence > recurrence()->startDateTime() ) );
 }
 
 bool Todo::recurTodo()

@@ -112,15 +112,11 @@ KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QString
 
     KCal::Recurrence *rec = event->recurrence();
     start = e.attribute("created");
-    rec->setRecurStart( fromUTC( (time_t) start.toLong() ) );
+    rec->setStartDateTime( fromUTC( (time_t) start.toLong() ) );
+		bool haveRecurrence = true;
 
     if ( type == "Daily" ) {
-        if ( hasEnd ) {
-            start = e.attribute("enddt");
-            rec->setDaily(freq,  fromUTC( (time_t) start.toLong() ).date() );
-        }else{
-            rec->setDaily( freq,  -1 );
-        }
+		    rec->setDaily( freq );
         // weekly
     }else if ( type == "Weekly") {
         int days = e.attribute("rweekdays").toInt();
@@ -141,24 +137,12 @@ KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QString
         if ( Sunday & days )
             bits.setBit( 6 );
 
-        if ( hasEnd ) {
-            start = e.attribute("enddt");
-            rec->setWeekly( freq,  bits, fromUTC( (time_t) start.toLong() ).date() );
-        }else{
-            rec->setWeekly( freq,  bits,  -1 );
-        }
+        rec->setWeekly( freq,  bits );
     // monthly
     }else if ( type == "MonthlyDay" ) {
+		    rec->setMonthly( freq );
         // monthly day the  1st Saturday of the month
         int rposition = e.attribute("rposition").toInt();
-        if ( hasEnd ) {
-            start = e.attribute("enddt");
-            rec->setMonthly( KCal::Recurrence::rMonthlyPos,
-                             freq,fromUTC( (time_t) start.toLong() ).date() );
-        }else{
-            rec->setMonthly( KCal::Recurrence::rMonthlyPos,
-                             freq,  -1 );
-        }
         QBitArray array( 7);
         array.fill( false );
         QDate date = event->dtStart().date();
@@ -166,29 +150,21 @@ KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QString
         rec->addMonthlyPos( rposition, array );
 
     }else if ( type == "MonthlyDate" ) {
+		    rec->setMonthly( freq );
         // int rposition = e.attribute("rposition").toInt();
-        if ( hasEnd ) {
-            start = e.attribute("enddt");
-            rec->setMonthly( KCal::Recurrence::rMonthlyDay,
-                             freq,fromUTC( (time_t) start.toLong() ).date() );
-        }else{
-            rec->setMonthly( KCal::Recurrence::rMonthlyDay,
-                             freq,  -1 );
-        }
-        QDate date = event->dtStart().date();
-        rec->addMonthlyDay( date.day() );
+        // That's the default anyway:
+//        rec->addMonthlyDay( event->dtStart().date().day() );
 
     }else if ( type == "Yearly" ) {
-        if (hasEnd ) {
-            start = e.attribute("enddt");
-            rec->setYearly( KCal::Recurrence::rYearlyDay,
-                            freq,
-                            fromUTC( (time_t) start.toLong() ).date() );
-        }else{
-            rec->setYearly( KCal::Recurrence::rYearlyDay,
-                            freq, -1 );
-        }
-        rec->addYearlyNum( event->dtStart().date().dayOfYear() );
+		    rec->setYearly( freq );
+				// That's the default anyway:
+//        rec->addYearlyNum( event->dtStart().date().dayOfYear() );
+    } else {
+		    haveRecurrence = false;
+		}
+		if ( haveRecurrence && hasEnd ) {
+        start = e.attribute("enddt");
+        rec->setEndDate( fromUTC( (time_t) start.toLong() ).date() );
     }
 
     // now save the attributes for later use
@@ -308,7 +284,7 @@ QString DateBook::event2string( KCal::Event *event, ExtraMap& map )
     KCal::Recurrence *rec = event->recurrence();
     if ( rec->doesRecur() ) {
         QString type;
-        switch( rec->doesRecur() ) {
+        switch( rec->recurrenceType() ) {
         case KCal::Recurrence::rDaily :{
             type = "Daily";
             break;
@@ -388,7 +364,7 @@ QString DateBook::event2string( KCal::Event *event, ExtraMap& map )
                 str.append( "rhasenddate=\"1\" ");
                 str.append( "enddt=\"" + QString::number( toUTC(rec->endDate() ) ) + "\" ");
             }
-            str.append( "created=\"" + QString::number( toUTC(rec->recurStart() ) ) + "\" ");
+            str.append( "created=\"" + QString::number( toUTC(rec->startDateTime() ) ) + "\" ");
         }
     }
     // FIXME alarm

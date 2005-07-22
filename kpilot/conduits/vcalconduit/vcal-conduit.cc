@@ -463,11 +463,9 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 		endDate = readTm(dateEntry->getRepeatEnd()).date();
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << "-- end " << endDate.toString() << endl;
-#endif
 	}
 	else
 	{
-#ifdef DEBUG
 		DEBUGCONDUIT << fname << "-- noend" << endl;
 #endif
 	}
@@ -477,8 +475,7 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 	switch(dateEntry->getRepeatType())
 	{
 	case repeatDaily:
-		if (repeatsForever) recur->setDaily(freq,-1);
-		else recur->setDaily(freq,endDate);
+		recur->setDaily(freq);
 		break;
 	case repeatWeekly:
 		{
@@ -501,9 +498,7 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 		{
 			if (days[i]) dayArray.setBit(i-1);
 		}
-
-		if (repeatsForever) recur->setWeekly(freq,dayArray,-1);
-		else recur->setWeekly(freq,dayArray,endDate);
+		recur->setWeekly( freq, dayArray );
 		}
 		break;
 	case repeatMonthlyByDay: {
@@ -512,14 +507,7 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 		// Palm->PC: w=pos/7
 		// week: if w=4 -> week=-1, else week=w+1;
 		// day: day=(pos-1)%7 (rotate by one day!)
-		if (repeatsForever)
-		{
-			recur->setMonthly(Recurrence_t::rMonthlyPos,freq,-1);
-		}
-		else
-		{
-			recur->setMonthly(Recurrence_t::rMonthlyPos,freq,endDate);
-		}
+		recur->setMonthly( freq );
 
 		int day=dateEntry->getRepeatDay();
 		int week=day/7;
@@ -529,27 +517,13 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 		recur->addMonthlyPos(week, dayArray);
 		break;}
 	case repeatMonthlyByDate:
-		if (repeatsForever)
-		{
-			recur->setMonthly(Recurrence_t::rMonthlyDay,freq,-1);
-		}
-		else
-		{
-			recur->setMonthly(Recurrence_t::rMonthlyDay,freq,endDate);
-		}
-		recur->addMonthlyDay( dateEntry->getEventStart().tm_mday );
+		recur->setMonthly( freq );
+		recur->addMonthlyDate( dateEntry->getEventStart().tm_mday );
 		break;
 	case repeatYearly:
-		if (repeatsForever)
-		{
-			recur->setYearly(Recurrence_t::rYearlyMonth,freq,-1);
-		}
-		else
-		{
-			recur->setYearly(Recurrence_t::rYearlyMonth,freq,endDate);
-		}
+		recur->setYearly( freq );
 		evt=readTm(dateEntry->getEventStart()).date();
-		recur->addYearlyNum( evt.month() );
+		recur->addYearlyMonth( evt.month() );
 //		dayArray.setBit((evt.day()-1) % 7);
 //		recur->addYearlyMonthPos( ( (evt.day()-1) / 7) + 1, dayArray );
 		break;
@@ -563,6 +537,10 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 #endif
 		break;
 	}
+	if (!repeatsForever)
+	{
+		recur->setEndDate(endDate);
+	}
 }
 
 
@@ -571,7 +549,7 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 	FUNCTIONSETUP;
 	bool isMultiDay=false;
 
-	//  first we have 'fake type of recurrence' when a multi-day event is passed to the pilot, it is converted to an event
+	// first we have 'fake type of recurrence' when a multi-day event is passed to the pilot, it is converted to an event
 	// which recurs daily a number of times. if the event itself recurs, this will be overridden, and
 	// only the first day will be included in the event!!!!
 	QDateTime startDt(readTm(dateEntry->getEventStart())), endDt(readTm(dateEntry->getEventEnd()));
@@ -589,8 +567,8 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 
 	KCal::Recurrence*r=event->recurrence();
 	if (!r) return;
-	ushort recType=r->doesRecur();
-	if (recType==KCal::Recurrence::rNone)
+	ushort recType=r->recurrenceType();
+	if ( recType==KCal::Recurrence::rNone )
 	{
 		if (!isMultiDay) dateEntry->setRepeatType(repeatNone);
 		return;
@@ -600,7 +578,7 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 	int freq=r->frequency();
 	QDate endDate=r->endDate();
 
-	if (!endDate.isValid())
+	if ( r->duration() < 0 || !endDate.isValid() )
 	{
 		dateEntry->setRepeatForever();
 	}
@@ -640,17 +618,12 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 		if (r->monthPositions().count()>0)
 		{
 			// Only take the first monthly position, as the palm allows only one
-			QPtrList<KCal::Recurrence::rMonthPos> mps=r->monthPositions();
-			const KCal::Recurrence::rMonthPos*mp=mps.first();
-			int pos=0;
-			dayArray=mp->rDays;
-			// this is quite clumsy, but I haven't found a better way...
-			for (int j=0; j<7; j++)
-				if (dayArray[j]) pos=j;
-			int week=mp->rPos;
-			if (mp->negative) week*=-1;
-			int day=(pos+1) % 7; // rotate because of different offset
+			QValueList<KCal::RecurrenceRule::WDayPos> mps=r->monthPositions();
+			KCal::RecurrenceRule::WDayPos mp=mps.first();
+			int week = mp.pos();
+			int day = (mp.day()+1) % 7; // rotate because of different offset
 			// turn to 0-based and include starting from end of month
+			// TODO: We don't handle counting from the end of the month yet!
 			if (week==-1) week=4; else week--;
 			dateEntry->setRepeatDay(static_cast<DayOfMonthType>(7*week + day));
 		}
@@ -705,7 +678,7 @@ void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry *dateEn
 #endif
 		return;
 	}
-	vevent->setExDates(dl);
+	vevent->recurrence()->setExDates(dl);
 }
 
 void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *vevent )
@@ -724,7 +697,8 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 	if (ex_List)
 		KPILOT_DELETE(ex_List);*/
 
-	size_t excount=vevent->exDates().size();
+	KCal::DateList exDates = vevent->recurrence()->exDates();
+	size_t excount = exDates.size();
 	if (excount<1)
 	{
 		dateEntry->setExceptionCount(0);
@@ -744,7 +718,6 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 
 	size_t n=0;
 
-	KCal::DateList exDates = vevent->exDates();
 	KCal::DateList::ConstIterator dit;
 	for (dit = exDates.begin(); dit != exDates.end(); ++dit ) {
 		struct tm ttm=writeTm(*dit);
@@ -775,7 +748,7 @@ QString VCalConduit::_getCat(const QStringList cats, const QString curr) const
 		for (j=1; j<PILOT_CATEGORY_MAX; j++)
 		{
 			QString catName = PilotAppCategory::codec()->
-			  toUnicode(fAppointmentAppInfo.category.name[j]);
+        toUnicode(fAppointmentAppInfo.category.name[j]);
 			if (!(*it).isEmpty() && !(*it).compare( catName ) )
 			{
 				return catName;

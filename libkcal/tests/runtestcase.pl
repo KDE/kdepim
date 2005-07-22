@@ -40,6 +40,8 @@ $app = $ARGV[0];
 $id = $ARGV[1];
 $file = $ARGV[2];
 
+$MAXERRLINES=25;
+
 $file =~ /^(.*)\.[^\.]*$/;
 
 my $outfile = $file;
@@ -84,6 +86,7 @@ sub checkfile()
   $error = 0;
   $i = 0;
   $line = 1;
+	my $errorlines = 0;
   while( <READ> ) {
     $out = $_;
     $ref = @ref[$i++];
@@ -102,9 +105,14 @@ sub checkfile()
     }
 
     if ( $out ne $ref ) {
+		  $errorlines++;
       $error++;
-      print "  Line $line: Expected      : $ref";
-      print "  Line $line: Actual output : $out";
+      if ( $errorlines < $MAXERRLINES ) {
+        print "  Line $line: Expected      : $ref";
+        print "  Line $line: Actual output : $out";
+      } elsif ( $errorlines == $MAXERRLINES ) {
+        print "  <Remaining error suppressed>\n";
+      }
     }
     
     $line++;
@@ -142,6 +150,6 @@ sub checkfile()
     }
   } else {
     unlink($outfile);
-    print "  OK\n";
+#    print "  OK\n";
   }
 }

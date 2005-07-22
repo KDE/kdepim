@@ -87,14 +87,14 @@ class LIBKCAL_EXPORT ICalFormat : public CalFormat
     */
     QString toString( Incidence * );
     /**
-      Return recurrence as iCalendar formatted text.
+      Return recurrence rule as iCalendar formatted text.
     */
-    QString toString( Recurrence * );
+    QString toString( RecurrenceRule * );
     /**
       Parse string and fill recurrence object with
       that information
     */
-    bool fromString ( Recurrence *, const QString& );
+    bool fromString ( RecurrenceRule *, const QString& );
   
     /**
       Create a scheduling message for event @p e using method @p m.

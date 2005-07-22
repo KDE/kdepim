@@ -391,8 +391,10 @@ kdDebug()<<"ExchangeConverterCalendar::readIncidence: ERROR: No UID given"<<endl
     // Timezone should be handled automatically
     // because we used mFormat.setTimeZone() earlier
     // FIXME: Implement this using the format!
-    if ( ! mFormat.fromString( event->recurrence(), tmpstr ) ) {
+    RecurrenceRule *rrule = event->recurrence()->defaultRRule( true );
+    if ( ! mFormat.fromString( rrule, tmpstr ) ) {
       kdError() << "ERROR parsing rrule " << tmpstr << endl;
+      event->recurrence()->addRRule( rrule );
     }
   }
 
@@ -404,7 +406,7 @@ kdDebug()<<"ExchangeConverterCalendar::readIncidence: ERROR: No UID given"<<endl
       exdates.append( /*utcAsZone(*/ QDateTime::fromString( *it, Qt::ISODate )/*,
           localTimeZoneId )*/.date() );
     }
-    event->setExDates( exdates );
+    event->recurrence()->setExDates( exdates );
   }
   // FIXME: use rdate and exrule!
 /* FIXME: Recurring events, they are split up

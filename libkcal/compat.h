@@ -60,7 +60,16 @@ class Compat
     Private *d;
 };
 
-class CompatPre34 : public Compat
+class CompatPre35 : public Compat
+{
+  public:
+    virtual void fixRecurrence( Incidence * );
+  private:
+    class Private;
+    Private *d;
+};
+
+class CompatPre34 : public CompatPre35
 {
   public:
     virtual int fixPriority( int prio );
@@ -83,6 +92,7 @@ class CompatPre31 : public CompatPre32
 {
   public:
     virtual void fixFloatingEnd( QDate & );
+    virtual void fixRecurrence( Incidence *incidence );
 
   private:
     class Private;

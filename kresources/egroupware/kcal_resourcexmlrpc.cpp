@@ -890,58 +890,47 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
     }
   }
 
-  if ( rType != CAL_RECUR_NONE ) {
+  if ( rType != CAL_RECUR_NONE && rInterval > 0 ) {
     Recurrence *re = event->recurrence();
-    re->setRecurStart( event->dtStart() );
+//    re->setRecurStart( event->dtStart() );
 
-    QBitArray weekMask( 7 );
-    weekMask.setBit( 0, rData & CAL_MONDAY );
-    weekMask.setBit( 1, rData & CAL_TUESDAY );
-    weekMask.setBit( 2, rData & CAL_WEDNESDAY );
-    weekMask.setBit( 3, rData & CAL_THURSDAY );
-    weekMask.setBit( 4, rData & CAL_FRIDAY );
-    weekMask.setBit( 5, rData & CAL_SATURDAY );
-    weekMask.setBit( 6, rData & CAL_SUNDAY );
 
     if ( rInterval == 0 ) // libkcal crashes with rInterval == 0
       rInterval = 1;
 
     switch ( rType ) {
       case CAL_RECUR_DAILY:
-        if ( rEndDate.date().isValid() )
-          re->setDaily( rInterval, rEndDate.date() );
-        else
-          re->setDaily( rInterval, -1 );
+        re->setDaily( rInterval );
         break;
-      case CAL_RECUR_WEEKLY:
-        if ( rEndDate.date().isValid() )
-          re->setWeekly( rInterval, weekMask, rEndDate.date() );
-        else
-          re->setWeekly( rInterval, weekMask, -1 );
-        break;
+      case CAL_RECUR_WEEKLY: {
+        QBitArray weekMask( 7 );
+        weekMask.setBit( 0, rData & CAL_MONDAY );
+        weekMask.setBit( 1, rData & CAL_TUESDAY );
+        weekMask.setBit( 2, rData & CAL_WEDNESDAY );
+        weekMask.setBit( 3, rData & CAL_THURSDAY );
+        weekMask.setBit( 4, rData & CAL_FRIDAY );
+        weekMask.setBit( 5, rData & CAL_SATURDAY );
+        weekMask.setBit( 6, rData & CAL_SUNDAY );
+
+        re->setWeekly( rInterval, weekMask );
+        break; }
       case CAL_RECUR_MONTHLY_MDAY:
-        if ( rEndDate.date().isValid() )
-          re->setMonthly( Recurrence::rMonthlyPos, rInterval, rEndDate.date() );
-        else
-          re->setMonthly( Recurrence::rMonthlyPos, rInterval, -1 );
+        re->setMonthly( rInterval );
         break;
       case CAL_RECUR_MONTHLY_WDAY:
-        if ( rEndDate.date().isValid() )
-          re->setMonthly( Recurrence::rMonthlyDay, rInterval, rEndDate.date() );
-        else
-          re->setMonthly( Recurrence::rMonthlyDay, rInterval, -1 );
+        re->setMonthly( rInterval );
+        // TODO: Set the correct monthly pos
         break;
       case CAL_RECUR_YEARLY:
-        if ( rEndDate.date().isValid() )
-          re->setYearly( Recurrence::rYearlyDay, rInterval, rEndDate.date() );
-        else
-          re->setYearly( Recurrence::rYearlyDay, rInterval, -1 );
+        re->setYearly( rInterval );
         break;
     }
+    if ( rEndDate.date().isValid() )
+      re->setEndDate( rEndDate.date() );
 
     QValueList<QDateTime>::ConstIterator exIt;
     for ( exIt = rExceptions.begin(); exIt != rExceptions.end(); ++exIt )
-      event->addExDateTime( *exIt );
+      re->addExDateTime( *exIt );
   }
 
   event->setReadOnly( !(rights & EGW_ACCESS_EDIT) );
@@ -991,48 +980,58 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
 
   args.insert( "priority", priority );
 
-  // RECURRENCY
+  // RECURRENCE
   Recurrence *rec = event->recurrence();
-  if ( rec->doesRecur() == Recurrence::rNone ) {
+  if ( !rec->doesRecur() ) {
     args.insert( "recur_type", int( 0 ) );
     args.insert( "recur_interval", int( 0 ) );
     args.insert( "recur_enddate", QDateTime() );
     args.insert( "recur_data", int( 0 ) );
     args.insert( "recur_exception", QMap<QString, QVariant>() );
   } else {
-    if ( rec->doesRecur() == Recurrence::rDaily ) {
-      args.insert( "recur_type", int( CAL_RECUR_DAILY ) );
-    } else if ( rec->doesRecur() == Recurrence::rWeekly ) {
-      int weekMask = 0;
-      if ( rec->days().testBit( 0 ) )
-        weekMask += CAL_MONDAY;
-      if ( rec->days().testBit( 1 ) )
-        weekMask += CAL_TUESDAY;
-      if ( rec->days().testBit( 2 ) )
-        weekMask += CAL_WEDNESDAY;
-      if ( rec->days().testBit( 3 ) )
-        weekMask += CAL_THURSDAY;
-      if ( rec->days().testBit( 4 ) )
-        weekMask += CAL_FRIDAY;
-      if ( rec->days().testBit( 5 ) )
-        weekMask += CAL_SATURDAY;
-      if ( rec->days().testBit( 6 ) )
-        weekMask += CAL_SUNDAY;
+    switch ( rec->recurrenceType() ) {
+      case Recurrence::rDaily:
+          args.insert( "recur_type", int( CAL_RECUR_DAILY ) );
+          break;
+      case Recurrence::rWeekly:  {
+          int weekMask = 0;
+          if ( rec->days().testBit( 0 ) )
+            weekMask += CAL_MONDAY;
+          if ( rec->days().testBit( 1 ) )
+            weekMask += CAL_TUESDAY;
+          if ( rec->days().testBit( 2 ) )
+            weekMask += CAL_WEDNESDAY;
+          if ( rec->days().testBit( 3 ) )
+            weekMask += CAL_THURSDAY;
+          if ( rec->days().testBit( 4 ) )
+            weekMask += CAL_FRIDAY;
+          if ( rec->days().testBit( 5 ) )
+            weekMask += CAL_SATURDAY;
+          if ( rec->days().testBit( 6 ) )
+            weekMask += CAL_SUNDAY;
 
-      args.insert( "recur_data", weekMask );
-      args.insert( "recur_type", int( CAL_RECUR_WEEKLY ) );
-    } else if ( rec->doesRecur() == Recurrence::rMonthlyPos ) {
-      args.insert( "recur_type", int( CAL_RECUR_MONTHLY_MDAY ) );
-    } else if ( rec->doesRecur() == Recurrence::rMonthlyDay ) {
-      args.insert( "recur_type", int( CAL_RECUR_MONTHLY_WDAY ) );
-    } else if ( rec->doesRecur() == Recurrence::rYearlyDay ) {
-      args.insert( "recur_type", int( CAL_RECUR_YEARLY ) );
+          args.insert( "recur_data", weekMask );
+          args.insert( "recur_type", int( CAL_RECUR_WEEKLY ) );
+          }
+          break;
+      case Recurrence::rMonthlyPos:
+          args.insert( "recur_type", int( CAL_RECUR_MONTHLY_MDAY ) );
+          break;
+      case Recurrence::rMonthlyDay:
+          args.insert( "recur_type", int( CAL_RECUR_MONTHLY_WDAY ) );
+          break;
+      case Recurrence::rYearlyDay:
+          args.insert( "recur_type", int( CAL_RECUR_YEARLY ) );
+          break;
+      default:
+          break;
     }
 
     args.insert( "recur_interval", rec->frequency() );
     args.insert( "recur_enddate", rec->endDateTime() );
 
-    const QValueList<QDateTime> dates = event->exDateTimes();
+    //  TODO: Also use exception dates!
+    const QValueList<QDateTime> dates = event->recurrence()->exDateTimes();
     QValueList<QDateTime>::ConstIterator dateIt;
     QMap<QString, QVariant> exMap;
     int counter = 0;

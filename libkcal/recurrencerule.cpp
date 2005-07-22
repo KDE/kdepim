@@ -161,8 +161,6 @@ int DateHelper::getWeekNumberNeg( const QDate &date, short weekstart, int *year 
  **************************************************************************/
 
 
-const QDate KCal::RecurrenceRule::MAX_DATE(3000, 1, 1);   // Maximum date = 1-Jan-3000
-
 RecurrenceRule::Constraint::Constraint( int wkst )
 {
   weekstart = wkst;
@@ -370,7 +368,7 @@ DateTimeList RecurrenceRule::Constraint::dateTimes( RecurrenceRule::PeriodType t
   if ( !done && weekday != 0 ) {
     QDate dt( year, 1, 1 );
     // If type == yearly and month is given, pos is still in month not year!
-    // TODO_Recurrence: Correct handling of n-th  BYDAY... 
+    // TODO_Recurrence: Correct handling of n-th  BYDAY...
     int maxloop = 53;
     bool inMonth = ( type == rMonthly) || ( type == rYearly && month > 0 );
     if ( inMonth && month > 0 ) {
@@ -548,7 +546,7 @@ void RecurrenceRule::setRecurrenceType( PeriodType period )
 }
 
 
-QDateTime RecurrenceRule::endDate( bool *result ) const
+QDateTime RecurrenceRule::endDt( bool *result ) const
 {
   if ( result ) *result = false;
   if ( mPeriod == rNone ) return QDateTime();
@@ -558,9 +556,9 @@ QDateTime RecurrenceRule::endDate( bool *result ) const
   } else if ( mDuration == 0 ) {
     return mDateEnd;
   } else {
-    // N occurences. Check if we have a full cache. If so, return the cached end date.
+    // N occurrences. Check if we have a full cache. If so, return the cached end date.
     if ( ! mCached ) {
-      // If not enough occurences can be found (i.e. inconsistent constraints)
+      // If not enough occurrences can be found (i.e. inconsistent constraints)
       if ( !buildCache() ) {
         if ( result ) result = false;
         return QDateTime();
@@ -571,7 +569,7 @@ QDateTime RecurrenceRule::endDate( bool *result ) const
   return QDateTime();
 }
 
-void RecurrenceRule::setEndDate( const QDateTime &dateTime )
+void RecurrenceRule::setEndDt( const QDateTime &dateTime )
 {
   if ( isReadOnly() ) return;
   mDateEnd = dateTime;
@@ -618,10 +616,10 @@ void RecurrenceRule::setDirty()
   mDirty = true;
   mCached = false;
   mCachedDates.clear();
-  // TODO_Recurrence: Emit some signaal or notify the parent to ensure 
+  // TODO_Recurrence: Emit some signaal or notify the parent to ensure
 }
 
-void RecurrenceRule::setStartDate( const QDateTime &start )
+void RecurrenceRule::setStartDt( const QDateTime &start )
 {
   if ( isReadOnly() ) return;
   mDateStart = start;
@@ -802,8 +800,8 @@ void RecurrenceRule::buildConstraints()
       QValueList<WDayPos>::const_iterator dayit;
       for ( dayit = mByDays.constBegin(); dayit != mByDays.constEnd(); ++dayit ) {
         con = (*it);
-        con.weekday = (*dayit).Day;
-        con.weekdaynr = (*dayit).Pos;
+        con.weekday = (*dayit).day();
+        con.weekdaynr = (*dayit).pos();
         tmp.append( con );
       }
     }
@@ -871,9 +869,9 @@ void RecurrenceRule::buildConstraints()
 bool RecurrenceRule::buildCache() const
 {
 kdDebug(5800) << "         RecurrenceRule::buildCache: " << endl;
-  // Build the list of all occurences of this event (we need that to determine
+  // Build the list of all occurrences of this event (we need that to determine
   // the end date!)
-  Constraint interval( getNextValidDateInterval( startDate(), recurrenceType() ) );
+  Constraint interval( getNextValidDateInterval( startDt(), recurrenceType() ) );
   QDateTime next;
 
   DateTimeList dts = datesForInterval( interval, recurrenceType() );
@@ -881,10 +879,10 @@ kdDebug(5800) << "         RecurrenceRule::buildCache: " << endl;
   // Only use dates after the event has started (start date is only included
   // if it matches)
   while ( it != dts.end() ) {
-    if ( (*it) < startDate() ) it =  dts.remove( it );
+    if ( (*it) < startDt() ) it =  dts.remove( it );
     else ++it;
   }
-//  dts.prepend( startDate() ); // the start date is always the first occurence
+//  dts.prepend( startDt() ); // the start date is always the first occurrence
 
 
   int loopnr = 0;
@@ -899,7 +897,7 @@ kdDebug(5800) << "         RecurrenceRule::buildCache: " << endl;
     ++loopnr;
   }
   if ( int(dts.count()) > mDuration ) {
-    // we have picked up more occurences than necessary, remove them
+    // we have picked up more occurrences than necessary, remove them
     it = dts.at( mDuration );
     while ( it != dts.end() ) it = dts.remove( it );
   }
@@ -934,10 +932,10 @@ bool RecurrenceRule::dateMatchesRules( const QDateTime &qdt ) const
 bool RecurrenceRule::recursOn( const QDate &qd ) const
 {
 //  kdDebug(5800) << "         RecurrenceRule::recursOn: " << qd << endl;
-  if ( qd < startDate().date() ) return false;
+  if ( qd < startDt().date() ) return false;
   // Start date is only included if it really matches
-//   if ( qd == startDate().date() ) return true;
-  if ( mDuration >= 0 && qd > endDate().date() ) return false;
+//   if ( qd == startDt().date() ) return true;
+  if ( mDuration >= 0 && qd > endDt().date() ) return false;
 
   // The date must be in an appropriate interval (getNextValidDateInterval),
   // Plus it must match at least one of the constraints
@@ -961,7 +959,7 @@ bool RecurrenceRule::recursOn( const QDate &qd ) const
     ++it;
   if ( it != times.end() ) {
     // If we are beyond the end...
-    if ( mDuration >= 0 && (*it) > endDate() )
+    if ( mDuration >= 0 && (*it) > endDt() )
       return false;
     if ( (*it).date() == qd )
       return true;
@@ -974,11 +972,11 @@ bool RecurrenceRule::recursAt( const QDateTime &qd ) const
 {
 // kdDebug(5800) << "         RecurrenceRule::recursAt: " << qd << endl;
   if ( doesFloat() ) return recursOn( qd.date() );
-  if ( qd < startDate() ) return false;
+  if ( qd < startDt() ) return false;
   // Start date is only included if it really matches
-//   if ( qd == startDate() ) return true;
-  if ( mDuration >= 0 && qd > endDate() ) return false;
-  
+//   if ( qd == startDt() ) return true;
+  if ( mDuration >= 0 && qd > endDt() ) return false;
+
   // The date must be in an appropriate interval (getNextValidDateInterval),
   // Plus it must match at least one of the constraints
   bool match = dateMatchesRules( qd );
@@ -1018,12 +1016,12 @@ int RecurrenceRule::durationTo( const QDateTime &dt ) const
 // kdDebug(5800) << "         RecurrenceRule::durationTo: " << dt << endl;
   // Easy cases: either before start, or after all recurrences and we know
   // their number
-  if ( dt < startDate() ) return 0;
+  if ( dt < startDt() ) return 0;
   // Start date is only included if it really matches
-//   if ( dt == startDate() ) return 1;
-  if ( mDuration > 0 && dt >= endDate() ) return mDuration;
+//   if ( dt == startDt() ) return 1;
+  if ( mDuration > 0 && dt >= endDt() ) return mDuration;
 
-  QDateTime next( startDate() );
+  QDateTime next( startDt() );
   int found = 0;
   while ( next.isValid() && next <= dt ) {
     ++found;
@@ -1037,7 +1035,7 @@ QDateTime RecurrenceRule::getPreviousDate( const QDateTime& afterDate ) const
 {
 // kdDebug(5800) << "         RecurrenceRule::getPreviousDate: " << afterDate << endl;
   // Beyond end of recurrence
-  if ( afterDate < startDate() )
+  if ( afterDate < startDt() )
     return QDateTime();
 
   // If we have a cache (duration given), use that
@@ -1055,8 +1053,8 @@ QDateTime RecurrenceRule::getPreviousDate( const QDateTime& afterDate ) const
 
 // kdDebug(5800) << "    getNext date after " << preDate << endl;
   prev = afterDate;
-  if ( mDuration >= 0 && endDate().isValid() && afterDate >= endDate() )
-    prev = endDate().addSecs( 1 );
+  if ( mDuration >= 0 && endDt().isValid() && afterDate >= endDt() )
+    prev = endDt().addSecs( 1 );
 
   Constraint interval( getPreviousValidDateInterval( prev, recurrenceType() ) );
 // kdDebug(5800) << "Previous Valid Date Interval for date " << prev << ": " << endl;
@@ -1070,8 +1068,8 @@ QDateTime RecurrenceRule::getPreviousDate( const QDateTime& afterDate ) const
     if ( (*dtit) < prev ) return (*dtit);
   }
 
-  // Previous interval. As soon as we find an occurence, we're done.
-  while ( interval.intervalDateTime( recurrenceType() ) > startDate() ) {
+  // Previous interval. As soon as we find an occurrence, we're done.
+  while ( interval.intervalDateTime( recurrenceType() ) > startDt() ) {
     interval.increase( recurrenceType(), -frequency() );
 // kdDebug(5800) << "Decreased interval: " << endl;
 // interval.dump();
@@ -1080,7 +1078,7 @@ QDateTime RecurrenceRule::getPreviousDate( const QDateTime& afterDate ) const
     // The list is sorted, so take the last one.
     if ( dts.count() > 0 ) {
       prev = dts.last();
-      if ( prev.isValid() && prev >= startDate() ) return prev;
+      if ( prev.isValid() && prev >= startDt() ) return prev;
       else return QDateTime();
     }
   }
@@ -1092,11 +1090,11 @@ QDateTime RecurrenceRule::getNextDate( const QDateTime &preDate ) const
 {
 // kdDebug(5800) << "         RecurrenceRule::getNextDate: " << preDate << endl;
   // Beyond end of recurrence
-  if ( mDuration >= 0 && endDate().isValid() && preDate >= endDate() )
+  if ( mDuration >= 0 && endDt().isValid() && preDate >= endDt() )
     return QDateTime();
 
   // Start date is only included if it really matches
-//   if ( preDate < startDate() ) return startDate();
+//   if ( preDate < startDt() ) return startDt();
   if ( mDuration > 0 ) {
     if ( !mCached ) buildCache();
     DateTimeList::ConstIterator it = mCachedDates.begin();
@@ -1113,11 +1111,11 @@ QDateTime RecurrenceRule::getNextDate( const QDateTime &preDate ) const
   DateTimeList::Iterator dtit = dts.begin();
   while ( dtit != dts.end() && (*dtit) <= preDate ) ++dtit;
   if ( dtit != dts.end() ) {
-    if ( mDuration >= 0 && (*dtit) > endDate() ) return QDateTime();
+    if ( mDuration >= 0 && (*dtit) > endDt() ) return QDateTime();
     else return (*dtit);
   }
 
-  // Increase the interval. The first occurence that we find is the result (if
+  // Increase the interval. The first occurrence that we find is the result (if
   // if's before the end date).
     // TODO: some validity checks to avoid infinite loops for contradictory constraints
   int loopnr = 0;
@@ -1126,7 +1124,7 @@ QDateTime RecurrenceRule::getNextDate( const QDateTime &preDate ) const
     DateTimeList dts = datesForInterval( interval, recurrenceType() );
     if ( dts.count() > 0 ) {
       QDateTime ret( dts.first() );
-      if ( mDuration >= 0 && ret > endDate() ) return QDateTime();
+      if ( mDuration >= 0 && ret > endDt() ) return QDateTime();
       else return ret;
     }
     ++loopnr;
@@ -1138,8 +1136,8 @@ RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const Q
 {
 // kdDebug(5800) << "       (o) getPreviousValidDateInterval after " << preDate << ", type=" << type << endl;
   long periods = 0;
-  QDateTime nextValid = startDate();
-  QDateTime start = startDate();
+  QDateTime nextValid = startDt();
+  QDateTime start = startDt();
   int modifier = 1;
   QDateTime toDate( preDate );
   // for super-daily recurrences, don't care about the time part
@@ -1201,7 +1199,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const QDate
   // TODO: Simplify this!
 // kdDebug(5800) << "       (o) getNextValidDateInterval after " << preDate << ", type=" << type << endl;
   long periods = 0;
-  QDateTime start = startDate();
+  QDateTime start = startDt();
   QDateTime nextValid( start );
   int modifier = 1;
   QDateTime toDate( preDate );
@@ -1362,7 +1360,7 @@ void RecurrenceRule::dump() const
 
   kdDebug(5800) << "   Period type: " << recurrenceType() << ", frequency: " << frequency() << endl;
   kdDebug(5800) << "   #occurrences: " << duration() << endl;
-  kdDebug(5800) << "   start date: " << startDate() <<", end date: " << endDate() << endl;
+  kdDebug(5800) << "   start date: " << startDt() <<", end date: " << endDt() << endl;
 
 
 #define dumpByIntList(list,label) \
@@ -1381,8 +1379,8 @@ void RecurrenceRule::dump() const
     QStringList lst;
     for ( QValueList<WDayPos>::ConstIterator it = mByDays.begin();
           it != mByDays.end(); ++it ) {
-      lst.append( ( ((*it).Pos!=0) ? QString::number( (*it).Pos ) : "" ) +
-                   DateHelper::dayName( (*it).Day ) );
+      lst.append( ( ((*it).pos()!=0) ? QString::number( (*it).pos() ) : "" ) +
+                   DateHelper::dayName( (*it).day() ) );
     }
     kdDebug(5800) << "   ByDays:     " << lst.join(", ") << endl;
   }

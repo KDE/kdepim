@@ -85,8 +85,6 @@ class LIBKCAL_EXPORT CalFormat
     static const QString& application()  { return mApplication; }
     /** Return the PRODID string to write into calendar files */
     static const QString& productId()  { return mProductId; }
-    /** Return the KDE calendar format version indicated by a PRODID property */
-    static int calendarVersion(const char* prodId);
     /** Return the PRODID string loaded from calendar file */
     const QString &loadedProductId()  { return mLoadedProductId; }
 

@@ -135,7 +135,7 @@ bool ResourceKABC::doLoad()
   KABC::AddressBook::Iterator it;
   for ( it = mAddressbook->begin(); it != mAddressbook->end(); ++it ) {
 
-    QDateTime birthdate = (*it).birthday().date();
+    QDate birthdate = (*it).birthday().date();
     QString name_1, email_1, uid_1;
     if ( birthdate.isValid() ) {
       kdDebug(5800) << "found a birthday " << birthdate.toString() << endl;
@@ -166,9 +166,11 @@ bool ResourceKABC::doLoad()
 
       // Set the recurrence
       Recurrence *vRecurrence = ev->recurrence();
-      vRecurrence->setRecurStart(birthdate);
-      vRecurrence->setYearly(Recurrence::rYearlyMonth,1,-1);
-      vRecurrence->addYearlyNum(birthdate.date().month());
+      vRecurrence->setStartDate( birthdate );
+      vRecurrence->setYearly( 1 );
+      if ( birthdate.month()==2 && birthdate.day()==29 ) {
+        vRecurrence->addYearlyDay( 60 );
+      }
 
       ev->clearAlarms();
 
@@ -219,7 +221,7 @@ bool ResourceKABC::doLoad()
   }
 
   for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
-    QDateTime anniversary = QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
+    QDate anniversary = QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
     kdDebug(5800) << "found a anniversary " << anniversary.toString() << endl;
     QString name;
     QString name_1 = (*addrIt).nickName();
@@ -265,9 +267,11 @@ bool ResourceKABC::doLoad()
     }
     // Set the recurrence
     Recurrence *vRecurrence = ev->recurrence();
-    vRecurrence->setRecurStart(anniversary);
-    vRecurrence->setYearly(Recurrence::rYearlyMonth,1,-1);
-    vRecurrence->addYearlyNum(anniversary.date().month());
+    vRecurrence->setStartDate( anniversary );
+    vRecurrence->setYearly( 1 );
+    if ( anniversary.month()==2 && anniversary.day()==29 ) {
+      vRecurrence->addYearlyDay( 60 );
+    }
 
     ev->clearAlarms();
 

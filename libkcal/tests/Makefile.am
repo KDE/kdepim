@@ -1,6 +1,18 @@
 INCLUDES = -I$(top_srcdir)/libkcal $(all_includes)
 
-check_PROGRAMS = testtostring testincidence testcalendar readandwrite testresource testfields
+
+check_PROGRAMS = testtostring \
+                 testincidence \
+                 testcalendar \
+                 readandwrite \
+                 testresource \
+                 testfields \
+                 testrecurrence \
+                 testrecurprevious \
+                 testrecurson \
+                 testrecurrencetype \
+                 testvcalexport
+
 
 METASOURCES = AUTO
 
@@ -24,6 +36,26 @@ testresource_SOURCES = testresource.cpp
 testresource_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 testresource_LDADD = ../libkcal.la
 
+testrecurrence_SOURCES = testrecurrence.cpp
+testrecurrence_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testrecurrence_LDADD = ../libkcal.la
+
+testrecurprevious_SOURCES = testrecurprevious.cpp
+testrecurprevious_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testrecurprevious_LDADD = ../libkcal.la
+
+testrecurson_SOURCES = testrecurson.cpp
+testrecurson_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testrecurson_LDADD = ../libkcal.la
+
+testrecurrencetype_SOURCES = testrecurrencetype.cpp
+testrecurrencetype_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testrecurrencetype_LDADD = ../libkcal.la
+
+testvcalexport_SOURCES = testvcalexport.cpp
+testvcalexport_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testvcalexport_LDADD = ../libkcal.la
+
 testfields_SOURCES = testfields.cpp
 testfields_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 testfields_LDADD   = ../libkcal.la
@@ -31,9 +63,25 @@ testfields_CXXFLAGS= -DINPUT='"$(srcdir)/data/test_pilot.ics"'
 
 TESTFILES = test1.ics test2.ics test3.ics test4.ics test5.ics test_Mozilla.ics
 
-check-local: readandwrite testfields
+check-local: readandwrite testrecurrence testrecurprevious testrecurson testvcalexport
 	rm -f FAILED; \
-	for i in $(TESTFILES); do \
-	  perl $(srcdir)/checkcalendar.pl  $(srcdir)/data/$$i; \
-        done; \
+	for i in `find $(srcdir)/data/RecurrenceRule/ -name "*.ics"`; do \
+	  perl $(srcdir)/runtestcase.pl testrecurrence "next" $$i; \
+	done; \
+	for i in `find $(srcdir)/data/RecurrenceRule/ -name "*.ics"`; do \
+	  perl $(srcdir)/runtestcase.pl testrecurprevious "prev" $$i; \
+	done; \
+	for i in `find $(srcdir)/data/RecurrenceRule/ -name "*.ics"`; do \
+	  perl $(srcdir)/runtestcase.pl testrecurson "recurson" $$i; \
+	done; \
+	for i in `find $(srcdir)/data/Compat/ -name "*.ics"`; do \
+	  perl $(srcdir)/runtestcase.pl readandwrite "ical" $$i; \
+	done; \
+	for i in `find $(srcdir)/data/vCalendar/ -name "*.ics"`; do \
+		perl $(srcdir)/runtestcase.pl testvcalexport "vcal" $$i; \
+	done;
+	for i in `find $(srcdir)/data/vCalendar/ -name "*.vcs"`; do \
+		perl $(srcdir)/runtestcase.pl readandwrite "ical" $$i; \
+	done;
 	[ ! -e FAILED ]
+

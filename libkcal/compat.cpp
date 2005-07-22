@@ -39,6 +39,9 @@ Compat *CompatFactory::createCompat( const QString &productId )
 
   int korg = productId.find( "KOrganizer" );
   int outl9 = productId.find( "Outlook 9.0" );
+//   int kcal = productId.find( "LibKCal" );
+
+  // TODO: Use the version of LibKCal to determine the compat class...
   if ( korg >= 0 ) {
     int versionStart = productId.find( " ", korg );
     if ( versionStart >= 0 ) {
@@ -69,6 +72,8 @@ Compat *CompatFactory::createCompat( const QString &productId )
           compat = new Compat32PrereleaseVersions;
         } else if ( versionNum < 30400 ) {
           compat = new CompatPre34;
+        } else if ( versionNum < 30500 ) {
+          compat = new CompatPre35;
         }
       }
     }
@@ -99,10 +104,31 @@ void Compat::fixEmptySummary( Incidence *incidence )
   }
 }
 
-void Compat::fixRecurrence( Incidence *incidence )
+void Compat::fixRecurrence( Incidence */*incidence*/ )
 {
   // Prevent use of compatibility mode during subsequent changes by the application
-  incidence->recurrence()->setCompatVersion();
+//  incidence->recurrence()->setCompatVersion();
+}
+
+/** Before kde 3.5, the start date was not automatically a recurring date. So
+    if the start date doesn't match the recurrence rule, we need to add an ex
+    date for the date start. If a duration was given, the DTSTART was only counted
+    if it matched, so by accident this was already the correct behavior, so
+    we don't need to adjust the duration... */
+void CompatPre35::fixRecurrence( Incidence *incidence )
+{
+  Recurrence* recurrence = incidence->recurrence();
+  if (recurrence ) {
+    QDateTime start( incidence->dtStart() );
+    // kde < 3.5 only had one rrule, so no need to loop over all RRULEs.
+    RecurrenceRule *r = recurrence->defaultRRule();
+    if ( r && !r->dateMatchesRules( start )  ) {
+      recurrence->addExDateTime( start );
+    }
+  }
+
+  // Call base class method now that everything else is done
+  Compat::fixRecurrence( incidence );
 }
 
 int CompatPre34::fixPriority( int prio )
@@ -113,23 +139,92 @@ int CompatPre34::fixPriority( int prio )
   } else return prio;
 }
 
+/** The recurrence has a specified number of repetitions.
+    Pre-3.2, this was extended by the number of exception dates.
+    This is also rfc 2445-compliant. The duration of an RRULE also counts
+    events that are later excluded via EXDATE or EXRULE. */
 void CompatPre32::fixRecurrence( Incidence *incidence )
 {
   Recurrence* recurrence = incidence->recurrence();
-  if ( recurrence->doesRecur() != Recurrence::rNone  &&  recurrence->duration() > 0 ) {
-    // The recurrence has a specified number of repetitions.
-    // Pre-3.2, this was extended by the number of exception dates.
-    recurrence->setDuration( recurrence->duration() + incidence->exDates().count() );
+  if ( recurrence->doesRecur() &&  recurrence->duration() > 0 ) {
+    recurrence->setDuration( recurrence->duration() + incidence->recurrence()->exDates().count() );
   }
   // Call base class method now that everything else is done
-  Compat::fixRecurrence( incidence );
+  CompatPre35::fixRecurrence( incidence );
 }
 
+/** Before kde 3.1, floating events (events without a date) had 0:00 of their
+    last day as the end date. E.g. 28.5.2005  0:00 until 28.5.2005 0:00 for an
+    event that lasted the whole day on May 28, 2005. According to RFC 2445, the
+    end date for such an event needs to be 29.5.2005 0:00. */
 void CompatPre31::fixFloatingEnd( QDate &endDate )
 {
   endDate = endDate.addDays( 1 );
 }
 
+void CompatPre31::fixRecurrence( Incidence *incidence )
+{
+  CompatPre32::fixRecurrence( incidence );
+
+  Recurrence *recur = incidence->recurrence();
+  RecurrenceRule *r = 0;
+  if ( recur ) r = recur->defaultRRule();
+  if ( recur && r ) {
+    int duration = r->duration();
+    if ( duration > 0 ) {
+      // Backwards compatibility for KDE < 3.1.
+      // rDuration was set to the number of time periods to recur,
+      // with week start always on a Monday.
+      // Convert this to the number of occurrences.
+      r->setDuration( -1 );
+      QDate end( r->startDt().date() );
+      bool doNothing = false;
+      // # of periods:
+      int tmp = ( duration - 1 ) * r->frequency();
+      switch ( r->recurrenceType() ) {
+        case RecurrenceRule::rWeekly: {
+          end = end.addDays( tmp * 7 + 7 - end.dayOfWeek() );
+          break; }
+        case RecurrenceRule::rMonthly: {
+          int month = end.month() - 1 + tmp;
+          end.setYMD( end.year() + month / 12, month % 12 + 1, 31 );
+          break; }
+        case RecurrenceRule::rYearly: {
+          end.setYMD( end.year() + tmp, 12, 31);
+          break; }
+        default:
+          doNothing = true;
+          break;
+      }
+      if ( !doNothing ) {
+        duration = r->durationTo( QDateTime( end, QTime( 0, 0, 0 ) ) );
+        r->setDuration( duration );
+      }
+    }
+
+    /* addYearlyNum */
+    // Dates were stored as day numbers, with a fiddle to take account of leap years.
+    // Convert the day number to a month.
+    QValueList<int> days = r->byYearDays();
+    if ( !days.isEmpty() ) {
+      QValueList<int> months = r->byMonths();
+      for ( QValueListConstIterator<int> it = days.begin(); it != days.end(); ++it ) {
+        int newmonth = QDate( r->startDt().date().year(), 1, 1).addDays( (*it) - 1 ).month();
+        if ( !months.contains( newmonth ) )
+          months.append( newmonth );
+      }
+      r->setByMonths( months );
+      days.clear();
+      r->setByYearDays( days );
+    }
+  }
+
+
+}
+
+/** In Outlook 9, alarms have the wrong sign. I.e. RFC 2445 says that negative
+    values for the trigger are before the event's start. Outlook/exchange,
+    however used positive values. */
 void CompatOutlook9::fixAlarms( Incidence *incidence )
 {
   if ( !incidence ) return;

@@ -311,7 +311,7 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
 
         // Adjust the 'from' date/time and find the next recurrence at or after it
         qdt = incidence->recurrence()->getNextDateTime( from.addSecs(-offset - 1) );
-        if ( !qdt.isValid() || incidence->isException( qdt )
+        if ( !qdt.isValid()
         ||   (qdt = qdt.addSecs( offset )) > to )    // remove the adjustment to get the alarm time
         {
           // The next recurrence is too late.
@@ -322,22 +322,20 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
           bool found = false;
           qdt = from.addSecs( -offset );
           while ( (qdt = incidence->recurrence()->getPreviousDateTime( qdt )).isValid() ) {
-            if ( !incidence->isException( qdt ) ) {
-              int toFrom = qdt.secsTo( from ) - offset;
-              if ( toFrom > alarm->duration() )
-                break;     // this recurrence's last repetition is too early, so give up
-              // The last repetition of this recurrence is at or after 'from' time.
-              // Check if a repetition occurs between 'from' and 'to'.
-              int snooze = alarm->snoozeTime() * 60;   // in seconds
-              if ( period >= snooze
-              ||   toFrom % snooze == 0
-              ||   (toFrom / snooze + 1) * snooze <= toFrom + period ) {
-                found = true;
+            int toFrom = qdt.secsTo( from ) - offset;
+            if ( toFrom > alarm->duration() )
+              break;     // this recurrence's last repetition is too early, so give up
+            // The last repetition of this recurrence is at or after 'from' time.
+            // Check if a repetition occurs between 'from' and 'to'.
+            int snooze = alarm->snoozeTime() * 60;   // in seconds
+            if ( period >= snooze
+            ||   toFrom % snooze == 0
+            ||   (toFrom / snooze + 1) * snooze <= toFrom + period ) {
+              found = true;
 #ifndef NDEBUG
-                qdt = qdt.addSecs( offset + ((toFrom-1) / snooze + 1) * snooze );   // for debug output
+              qdt = qdt.addSecs( offset + ((toFrom-1) / snooze + 1) * snooze );   // for debug output
 #endif
-                break;
-              }
+              break;
             }
           }
           if ( !found )

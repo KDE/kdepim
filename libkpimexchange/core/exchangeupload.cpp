@@ -287,10 +287,10 @@ void ExchangeUpload::startUpload( const KURL &url )
 
   KCal::Recurrence *recurrence = event->recurrence();
   kdDebug() << "Recurrence->doesRecur(): " << recurrence->doesRecur() << endl;
-  if ( recurrence->doesRecur() != KCal::Recurrence::rNone ) {
+  if ( recurrence->recurrenceType() != KCal::Recurrence::rNone ) {
     addElement( doc, prop, "urn:schemas:calendar:", "instancetype", "1" );
     KCal::ICalFormat *format = new KCal::ICalFormat();
-    QString recurstr = format->toString( recurrence );
+    QString recurstr = format->toString( recurrence->defaultRRule() );
     // Strip leading "RRULE\n :" and whitespace
     recurstr = recurstr.replace( QRegExp("^[A-Z]*[\\s]*:"), "").stripWhiteSpace();
     kdDebug() << "Recurrence rule after replace: \"" << recurstr << "\"" << endl;
@@ -302,7 +302,7 @@ void ExchangeUpload::startUpload( const KURL &url )
     addElement( doc, prop, "urn:schemas:calendar:", "instancetype", "0" );
   }
 
-  KCal::DateList exdates = event->exDates();
+  KCal::DateList exdates = recurrence->exDates();
   if ( !exdates.isEmpty() ) {
     QDomElement exdate = addElement( doc, prop, "urn:schemas:calendar:", "exdate" );
     KCal::DateList::iterator it;

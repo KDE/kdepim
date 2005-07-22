@@ -90,35 +90,31 @@ class QtopiaParser : public QXmlDefaultHandler
           Recurrence *r = event->recurrence();
 
           if ( rtype == "Daily" ) {
-            if ( hasEndDate ) r->setDaily( freq, endDate );
-            else r->setDaily( freq, -1 );
+            r->setDaily( freq );
+            if ( hasEndDate ) r->setEndDate( endDate );
           } else if ( rtype == "Weekly" ) {
-            if ( hasEndDate ) r->setWeekly( freq, weekDays, endDate );
-            else r->setWeekly( freq, weekDays, -1 );
+            r->setWeekly( freq, weekDays );
+            if ( hasEndDate ) r->setEndDate( endDate );
           } else if ( rtype == "MonthlyDate" ) {
+            r->setMonthly( freq );
             if ( hasEndDate )
-              r->setMonthly( Recurrence::rMonthlyDay, freq, endDate );
-            else
-              r->setMonthly( Recurrence::rMonthlyDay, freq, -1 );
-            r->addMonthlyDay( startDate.day() );
+              r->setEndDate( endDate );
+            r->addMonthlyDate( startDate.day() );
           } else if ( rtype == "MonthlyDay" ) {
+            r->setMonthly( freq );
             if ( hasEndDate )
-              r->setMonthly( Recurrence::rMonthlyPos, freq, endDate );
-            else
-              r->setMonthly( Recurrence::rMonthlyPos, freq, -1 );
+              r->setEndDate( endDate );
             QBitArray days( 7 );
             days.fill( false );
             days.setBit( startDate.dayOfWeek() - 1 );
             r->addMonthlyPos( pos, days );
           } else if ( rtype == "Yearly" ) {
+            r->setYearly( freq );
             if ( hasEndDate )
-              r->setYearly( Recurrence::rYearlyMonth, freq, endDate );
-            else
-              r->setYearly( Recurrence::rYearlyMonth, freq, -1 );
-            r->addYearlyNum( startDate.month() );
+              r->setEndDate( endDate );
           }
         }
-        
+
         QString categoryList = attributes.value( "categories" );
         event->setCategories( lookupCategories( categoryList ) );
 

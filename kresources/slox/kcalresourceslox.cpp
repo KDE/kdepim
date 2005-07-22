@@ -304,7 +304,7 @@ void KCalResourceSlox::uploadIncidences()
   // Don't try to upload recurring incidences as long as the resource doesn't
   // correctly write them in order to avoid corrupting data on the server.
   // FIXME: Remove when recurrences are correctly written.
-  if ( mUploadedIncidence->doesRecur() ) {
+  if ( mUploadedIncidence->recurrenceType() ) {
     clearChange( mUploadedIncidence );
     uploadIncidences();
     return;
@@ -655,24 +655,27 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
   Recurrence *r = event->recurrence();
   
   if ( type == "daily" ) {
-    r->setDaily( dailyValue, end.date() );
+    r->setDaily( dailyValue );
   } else if ( type == "weekly" ) {
-    r->setWeekly( weeklyValue, days, end.date() );
+    r->setWeekly( weeklyValue, days );
   } else if ( type == "monthly" ) {
-    r->setMonthly( Recurrence::rMonthlyDay, monthlyValueMonth, end.date() );
-    r->addMonthlyDay( monthlyValueDay );
+    r->setMonthly( monthlyValueMonth );
+    r->addMonthlyDate( monthlyValueDay );
   } else if ( type == "yearly" ) {
-    r->setYearlyByDate( yearlyValueDay, Recurrence::rMar1, 1, end.date() );
-    r->addYearlyNum( yearlyMonth );
+    r->setYearly( 1 );
+		r->addYearlyDate( yearlyValueDay );
+    r->addYearlyMonth( yearlyMonth );
   } else if ( type == "monthly2" ) {
-    r->setMonthly( Recurrence::rMonthlyPos, monthly2ValueMonth, end.date() );
+    r->setMonthly( monthly2ValueMonth );
     QBitArray days( 7 );
     days.setBit( event->dtStart().date().dayOfWeek() );
     r->addMonthlyPos( monthly2Recurrency, days );
-  } else if ( type == "yearly2" ) {
-    r->setYearlyByDate( yearly2Day, Recurrence::rMar1, 1, end.date() );
-    r->addYearlyNum( yearly2Month );
+  } else if ( type == "yearly2" ) {  
+    r->setYearly( 1 );
+		r->addYearlyDate( yearly2Day );
+    r->addYearlyMonth( yearly2Month );
   }
+	r->setEndDate( end.date() );
 }
 
 void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,

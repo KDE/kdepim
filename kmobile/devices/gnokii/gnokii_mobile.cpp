@@ -813,7 +813,7 @@ int KMobileGnokii::storeCalendarEntry( int index, const KCal::Event &event )
   }
 
   // recurrence:
-  switch (event.recurrence()->doesRecur()) {
+  switch (event.recurrence()->recurrenceType()) {
   case KCal::Recurrence::rNone:
   default:
 		entry.recurrence = GN_CALNOTE_NEVER;

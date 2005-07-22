@@ -53,8 +53,6 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
   mRelatedTo = 0;
   mRelatedToUid = i.mRelatedToUid;
 //  Incidence::List mRelations;    Incidence::List mRelations;
-  mExDates = i.mExDates;
-  mExDateTimes = i.mExDateTimes;
   mResources = i.mResources;
   mStatusString = i.mStatusString;
   mStatus = i.mStatus;
@@ -143,8 +141,6 @@ bool Incidence::operator==( const Incidence& i2 ) const
         // no need to compare mRelatedTo
         stringCompare( relatedToUid(), i2.relatedToUid() ) &&
         relations() == i2.relations() &&
-        exDates() == i2.exDates() &&
-        exDateTimes() == i2.exDateTimes() &&
         attachments() == i2.attachments() &&
         resources() == i2.resources() &&
         mStatus == i2.mStatus &&
@@ -173,8 +169,16 @@ void Incidence::recreate()
 void Incidence::setReadOnly( bool readOnly )
 {
   IncidenceBase::setReadOnly( readOnly );
-  if (mRecurrence)
-    mRecurrence->setRecurReadOnly(readOnly);
+  if ( mRecurrence )
+    mRecurrence->setRecurReadOnly( readOnly );
+}
+
+void Incidence::setFloats(bool f)
+{
+  if (mReadOnly) return;
+  if ( recurrence() ) 
+    recurrence()->setFloats( f );
+  IncidenceBase::setFloats( f );
 }
 
 void Incidence::setCreated( const QDateTime &created )
@@ -203,8 +207,10 @@ int Incidence::revision() const
 
 void Incidence::setDtStart(const QDateTime &dtStart)
 {
-  if (mRecurrence)
-    mRecurrence->setRecurStart( dtStart );
+  if ( mRecurrence ) {
+    mRecurrence->setStartDateTime( dtStart );
+    mRecurrence->setFloats( doesFloat() );
+  }
   IncidenceBase::setDtStart( dtStart );
 }
 
@@ -318,80 +324,135 @@ void Incidence::removeRelation(Incidence *event)
 //  if (event->getRelatedTo() == this) event->setRelatedTo(0);
 }
 
+
+// %%%%%%%%%%%%  Recurrence-related methods %%%%%%%%%%%%%%%%%%%%
+
+
+Recurrence *Incidence::recurrence() const
+{
+  if (!mRecurrence)
+  {
+    const_cast<KCal::Incidence*>(this)->mRecurrence = new Recurrence(const_cast<KCal::Incidence*>(this));
+    mRecurrence->setStartDateTime( IncidenceBase::dtStart() );
+    mRecurrence->setFloats( doesFloat() );
+    mRecurrence->setRecurReadOnly( mReadOnly );
+  }
+
+  return mRecurrence;
+}
+
+uint Incidence::recurrenceType() const
+{
+  if ( mRecurrence ) return mRecurrence->recurrenceType();
+  else return Recurrence::rNone;
+}
+
+bool Incidence::doesRecur() const
+{
+  if ( mRecurrence ) return mRecurrence->doesRecur();
+  else return false;
+}
+
 bool Incidence::recursOn(const QDate &qd) const
 {
-  return (mRecurrence && mRecurrence->recursOnPure(qd) && !isException(qd));
+  return ( mRecurrence && mRecurrence->recursOn(qd) );
 }
 
 bool Incidence::recursAt(const QDateTime &qdt) const
 {
-  return (mRecurrence && mRecurrence->recursAtPure(qdt) && !isException(qdt.date()) && !isException(qdt));
+  return ( mRecurrence && mRecurrence->recursAt(qdt) );
 }
 
-void Incidence::setExDates(const DateList &exDates)
+// %%%%%%%%%%%%%%%%% begin:RecurrenceRule %%%%%%%%%%%%%%%%%
+
+// Exception Dates
+/*void Incidence::setExDates(const DateList &exDates)
 {
-  if (mReadOnly) return;
-  mExDates = exDates;
+  if ( mReadOnly ) return;
+  recurrence()->setExDates( exDates );
   updated();
 }
 
-void Incidence::setExDateTimes(const DateTimeList &exDateTimes)
+void Incidence::addExDate( const QDate &date )
 {
-  if (mReadOnly) return;
-  mExDateTimes = exDateTimes;
-  updated();
-}
-
-void Incidence::addExDate(const QDate &date)
-{
-  if (mReadOnly) return;
-  mExDates.append(date);
-  updated();
-}
-
-void Incidence::addExDateTime(const QDateTime &dateTime)
-{
-  if (mReadOnly) return;
-  mExDateTimes.append(dateTime);
+  if ( mReadOnly ) return;
+  recurrence()->addExDate( date );
   updated();
 }
 
 DateList Incidence::exDates() const
 {
-  return mExDates;
+  if ( mRecurrence ) return mRecurrence->exDates();
+  else return DateList();
+}
+
+
+// Exception DateTimes
+void Incidence::setExDateTimes( const DateTimeList &exDates )
+{
+  if ( mReadOnly ) return;
+  recurrence()->setExDateTimes( exDates );
+  updated();
+}
+
+void Incidence::addExDateTime( const QDateTime &date )
+{
+  if ( mReadOnly ) return;
+  recurrence()->addExDateTime( date );
+  updated();
 }
 
 DateTimeList Incidence::exDateTimes() const
 {
-  return mExDateTimes;
+  if ( mRecurrence ) return mRecurrence->exDateTimes();
+  else return DateTimeList();
 }
 
-bool Incidence::isException(const QDate &date) const
+
+// Recurrence Dates
+void Incidence::setRDates(const DateList &exDates)
 {
-  DateList::ConstIterator it;
-  for( it = mExDates.begin(); it != mExDates.end(); ++it ) {
-    if ( (*it) == date ) {
-      return true;
-    }
-  }
-
-  return false;
+  if ( mReadOnly ) return;
+  recurrence()->setRDates( exDates );
+  updated();
 }
 
-bool Incidence::isException(const QDateTime &dateTime) const
+void Incidence::addRDate( const QDate &date )
 {
-  // FIXME: How are exceptions handled for events with a given time. If the
-  //        EXDATE contains only a date but no time, does that mean the event
-  //        doesn't happen on that day at all? Or is EXDATE without a time only
-  //        allowed for all-day events?
-  DateTimeList::ConstIterator it;
-  for( it = mExDateTimes.begin(); it != mExDateTimes.end(); ++it ) {
-    if ( (*it) == dateTime ) {
-      return true;
-    }
-  }
-  return isException( dateTime.date() );
+  if ( mReadOnly ) return;
+  recurrence()->addRDate( date );
+  updated();
 }
+
+DateList Incidence::rDates() const
+{
+  if ( mRecurrence ) return mRecurrence->rDates();
+  else return DateList();
+}
+
+
+// Recurrence DateTimes
+void Incidence::setRDateTimes( const DateTimeList &exDates )
+{
+  if ( mReadOnly ) return;
+  recurrence()->setRDateTimes( exDates );
+  updated();
+}
+
+void Incidence::addRDateTime( const QDateTime &date )
+{
+  if ( mReadOnly ) return;
+  recurrence()->addRDateTime( date );
+  updated();
+}
+
+DateTimeList Incidence::rDateTimes() const
+{
+  if ( mRecurrence ) return mRecurrence->rDateTimes();
+  else return DateTimeList();
+}*/
+
+// %%%%%%%%%%%%%%%%% end:RecurrenceRule %%%%%%%%%%%%%%%%%
 
 void Incidence::addAttachment(Attachment *attachment)
 {
@@ -587,18 +648,6 @@ bool Incidence::isAlarmEnabled() const
   return false;
 }
 
-Recurrence *Incidence::recurrence() const
-{
-  if (!mRecurrence)
-  {
-    const_cast<KCal::Incidence*>(this)->mRecurrence = new Recurrence(const_cast<KCal::Incidence*>(this));
-    mRecurrence->setRecurReadOnly(mReadOnly);
-    mRecurrence->setRecurStart(IncidenceBase::dtStart());
-  }
-
-  return mRecurrence;
-}
-
 void Incidence::setLocation(const QString &location)
 {
   if (mReadOnly) return;
@@ -609,12 +658,6 @@ void Incidence::setLocation(const QString &location)
 QString Incidence::location() const
 {
   return mLocation;
-}
-
-ushort Incidence::doesRecur() const
-{
-  if ( mRecurrence ) return mRecurrence->doesRecur();
-  else return Recurrence::rNone;
 }
 
 void Incidence::setSchedulingID( const QString& sid )

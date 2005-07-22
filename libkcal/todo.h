@@ -50,15 +50,15 @@ class LIBKCAL_EXPORT Todo : public Incidence
       Sets due date and time.
 
       @param dtDue The due date/time.
-      @param first Set the date of the first occurence (if the todo is recurrent).
+      @param first Set the date of the first occurrence (if the todo is recurrent).
     */
     void setDtDue(const QDateTime &dtDue, bool first = false);
     /**
       Returns due date and time.
 
       @param first If true and the todo recurs, the due date of the first
-      occurence will be returned.If false and recurrent, the date of the
-      current occurence will be returned. If non-recurrent, the normal due date
+      occurrence will be returned.If false and recurrent, the date of the
+      current occurrence will be returned. If non-recurrent, the normal due date
       will be returned.
     */
     QDateTime dtDue( bool first = false ) const;
@@ -106,7 +106,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
     /**
       Returns the startdate of the todo.
       @param first If true, the startdate of the todo will be returned. If the
-      todo recurs, the startdate of the first occurence will be returned.
+      todo recurs, the startdate of the first occurrence will be returned.
       If false and the todo recurs, the relative startdate will be returned,
       based on the date returned by dtRecurrence().
     */
@@ -120,7 +120,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
     /** Returns an todo's starting time as a string formatted according to the
      users locale settings.
      @param first If true, the startdate of the todo will be returned. If the
-     todo recurs, the startdate of the first occurence will be returned.
+     todo recurs, the startdate of the first occurrence will be returned.
      If false and the todo recurs, the relative startdate will be returned,
      based on the date returned by dtRecurrence().
     */
@@ -130,7 +130,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
      @param shortfmt If true, use short date format, if set to false use
      long format.
      @param first If true, the startdate of the todo will be returned. If the
-     todo recurs, the startdate of the first occurence will be returned.
+     todo recurs, the startdate of the first occurrence will be returned.
      If false and the todo recurs, the relative startdate will be returned,
      based on the date returned by dtRecurrence().
     */
@@ -138,7 +138,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
     /** Returns an todo's starting date and time as a string formatted according
      to the users locale settings.
      @param first If true, the startdate of the todo will be returned. If the
-     todo recurs, the startdate of the first occurence will be returned.
+     todo recurs, the startdate of the first occurrence will be returned.
      If false and the todo recurs, the relative startdate will be returned,
      based on the date returned by dtRecurrence().
     */
@@ -188,19 +188,19 @@ class LIBKCAL_EXPORT Todo : public Incidence
     bool hasCompletedDate() const;
 
     /**
-      Sets the due date/time of the current occurence if recurrent.
+      Sets the due date/time of the current occurrence if recurrent.
     */
     void setDtRecurrence( const QDateTime &dt );
 
     /**
-      Returns the due date/time of the current occurence if recurrent.
+      Returns the due date/time of the current occurrence if recurrent.
     */
     QDateTime dtRecurrence() const;
 
     /**
       Returns true if the date specified is one on which the todo will
       recur. Todo's are a special case, hence the overload. It adds an extra
-      check, which make it return false if there's an occurence between
+      check, which make it return false if there's an occurrence between
       the recurstart and today.
     */
     virtual bool recursOn( const QDate &date ) const;
@@ -217,7 +217,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
     bool recurTodo();
 
     QDateTime mDtDue;                    // due date of todo
-                                         // (first occurence if recurrent)
+                                         // (first occurrence if recurrent)
     QDateTime mDtRecurrence;             // due date of recurrence
 
     bool mHasDueDate;                    // if todo has associated due date

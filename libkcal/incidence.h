@@ -111,6 +111,9 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase
     */
     void setReadOnly( bool readonly );
 
+    /** Set whether the incidence floats, i.e. has a date but no time attached to it. */
+    void setFloats( bool f );
+    
     /**
       Recreate event. The event is made a new unique event, but already stored
       event information is preserved. Sets uniquie id, creation date, last
@@ -213,44 +216,38 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase
     */
     void removeRelation(Incidence *);
 
-    /**
-      Returns the list of dates which are exceptions to the recurrence rule.
-    */
-    DateList exDates() const;
-    /**
-      Returns the list of date/times which are exceptions to the recurrence
-      rule.
-    */
-    DateTimeList exDateTimes() const;
-    /**
-      Sets the list of dates which are exceptions to the recurrence rule.
-      This does not affect the date-time exception list.
-    */
-    void setExDates( const DateList &exDates );
-    /**
-      Sets the list of date/times which are exceptions to the recurrence rule.
-     This does not affect the date-only exception list.
-    */
-    void setExDateTimes( const DateTimeList &exDateTimes );
-    /**
-      Add a date to the list of exceptions of the recurrence rule.
-    */
-    void addExDate( const QDate &date );
-    /**
-      Add a date/time to the list of exceptions of the recurrence rule.
-    */
-    void addExDateTime( const QDateTime &dateTime );
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// %%%%%  Recurrence-related methods
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
-      Returns true if there is an exception for this date in the recurrence
-      rule set, or false otherwise. Does not check the date/time exception list.
+      Return the recurrence rule associated with this incidence. If there is
+      none, returns an appropriate (non-0) object.
     */
-    bool isException( const QDate &qd ) const;
+    Recurrence *recurrence() const;
+
     /**
-      Returns true if there is an exception for this date/time in the recurrence
-      rule set, or false otherwise. Does not check the date-only exception list.
+      Forward to Recurrence::doesRecur().
     */
-    bool isException( const QDateTime &qdt ) const;
+    bool doesRecur() const;
+    uint recurrenceType() const;
+
+    /**
+      Returns true if the date specified is one on which the incidence will
+      recur.
+    */
+    virtual bool recursOn( const QDate &qd ) const;
+    /**
+      Returns true if the date/time specified is one on which the incidence will
+      recur.
+    */
+    bool recursAt( const QDateTime &qdt ) const;
+
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// %%%%%  Attachment-related methods
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
       Add attachment.
@@ -276,6 +273,11 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase
       Remove and delete all attachments.
     */
     void clearAttachments();
+
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// %%%%%  Secrecy and Status methods
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
       Sets secrecy status. This can be Public, Private or Confidential. See
@@ -323,18 +325,10 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase
     */
     static QString statusName( Status );
 
-    /**
-      Returns true if the date specified is one on which the incidence will
-      recur.
-    */
-    virtual bool recursOn( const QDate &qd ) const;
-    /**
-      Returns true if the date/time specified is one on which the incidence will
-      recur.
-    */
-    bool recursAt( const QDateTime &qdt ) const;
 
-    // VEVENT and VTODO, but not VJOURNAL (move to EventBase class?):
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// %%%%%  Other methods
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
       Set resources used, such as Office, Car, etc.
@@ -356,6 +350,11 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase
       priority. If the priority is undefined 0 is returned.
     */
     int priority() const;
+
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// %%%%%  Alarm-related methods
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
       All alarms that are associated with this incidence.
@@ -382,16 +381,12 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase
     */
     bool isAlarmEnabled() const;
 
-    /**
-      Return the recurrence rule associated with this incidence. If there is
-      none, returns an appropriate (non-0) object.
-    */
-    Recurrence *recurrence() const;
 
-    /**
-      Forward to Recurrence::doesRecur().
-    */
-    ushort doesRecur() const;
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// %%%%%  Other methods
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
     /**
       Set the event's/todo's location. Do _not_ use it with journal.
@@ -429,8 +424,6 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase
     Incidence *mRelatedTo;
     QString mRelatedToUid;
     Incidence::List mRelations;
-    DateList mExDates;
-    DateTimeList mExDateTimes;
     Attachment::List mAttachments;
     QStringList mResources;
 

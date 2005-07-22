@@ -55,7 +55,8 @@ int main(int argc,char **argv)
 
   Event *event1 = new Event;
   event1->setSummary("Test Event");
-  event1->recurrence()->setDaily( 2, 3 );
+  event1->recurrence()->setDaily( 2 );
+  event1->recurrence()->setDuration( 3 );
 
   QString eventString1 = f.toString( event1 );
   if ( verbose )

@@ -484,7 +484,7 @@ static const char *s_monthName[] =
 void Incidence::setRecurrence( KCal::Recurrence* recur )
 {
   mRecurrence.interval = recur->frequency();
-  switch ( recur->doesRecur() ) {
+  switch ( recur->recurrenceType() ) {
   case KCal::Recurrence::rMinutely: // Not handled by the kolab XML
     mRecurrence.cycle = "minutely";
     break;
@@ -506,58 +506,55 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
   case KCal::Recurrence::rMonthlyPos: {
     mRecurrence.cycle = "monthly";
     mRecurrence.type = "weekday";
-    const QPtrList<KCal::Recurrence::rMonthPos> &monthPositions = recur->monthPositions();
+    QValueList<KCal::RecurrenceRule::WDayPos> monthPositions = recur->monthPositions();
     if ( !monthPositions.isEmpty() ) {
-      KCal::Recurrence::rMonthPos monthPos = *monthPositions.getFirst();
-      QBitArray arr = monthPos.rDays;
-      for ( uint idx = 0 ; idx < 7 ; ++idx )
-        if ( arr.testBit( idx ) )
-          mRecurrence.days.append( s_weekDayName[idx] );
-      mRecurrence.dayNumber = QString::number( monthPos.rPos );
-      // Not handled: monthPos.negative (nth days before end of month)
+      KCal::RecurrenceRule::WDayPos monthPos = monthPositions.first();
+      // TODO: Handle multiple days in the same week
+      mRecurrence.dayNumber = QString::number( monthPos.pos() );
+      mRecurrence.days.append( s_weekDayName[ monthPos.day()-1 ] );
+        // Not (properly) handled(?): monthPos.negative (nth days before end of month)
     }
     break;
   }
   case KCal::Recurrence::rMonthlyDay: {
     mRecurrence.cycle = "monthly";
     mRecurrence.type = "daynumber";
-    const QPtrList<int> &monthDays = recur->monthDays();
+    QValueList<int> monthDays = recur->monthDays();
     // ####### Kolab XML limitation: only the first month day is used
     if ( !monthDays.isEmpty() )
-      mRecurrence.dayNumber = QString::number( *monthDays.getFirst() );
+      mRecurrence.dayNumber = QString::number( monthDays.first() );
     break;
   }
   case KCal::Recurrence::rYearlyMonth: // (day n of Month Y)
   {
     mRecurrence.cycle = "yearly";
     mRecurrence.type = "monthday";
-    QPtrList<int> rmd = recur->monthDays();
-    int day = !rmd.isEmpty() ? *rmd.first() : recur->parent()->dtStart().date().day();
+    QValueList<int> rmd = recur->yearDates();
+    int day = !rmd.isEmpty() ? rmd.first() : recur->parent()->dtStart().date().day();
     mRecurrence.dayNumber = QString::number( day );
-    QPtrList<int> months = recur->yearNums();
+    QValueList<int> months = recur->yearMonths();
     if ( !months.isEmpty() )
-      mRecurrence.month = s_monthName[ *months.first() - 1 ]; // #### Kolab XML limitation: only one month specified
+      mRecurrence.month = s_monthName[ months.first() - 1 ]; // #### Kolab XML limitation: only one month specified
     break;
   }
   case KCal::Recurrence::rYearlyDay: // YearlyDay (day N of the year). Not supported by Outlook
     mRecurrence.cycle = "yearly";
     mRecurrence.type = "yearday";
-    mRecurrence.dayNumber = QString::number( *recur->yearNums().getFirst() );
+    mRecurrence.dayNumber = QString::number( recur->yearDays().first() );
     break;
   case KCal::Recurrence::rYearlyPos: // (weekday X of week N of month Y)
     mRecurrence.cycle = "yearly";
     mRecurrence.type = "weekday";
-    QPtrList<int> months = recur->yearNums();
+    QValueList<int> months = recur->yearMonths();
     if ( !months.isEmpty() )
-      mRecurrence.month = s_monthName[ *months.first() - 1 ]; // #### Kolab XML limitation: only one month specified
-    const QPtrList<KCal::Recurrence::rMonthPos> &monthPositions = recur->yearMonthPositions();
+      mRecurrence.month = s_monthName[ months.first() - 1 ]; // #### Kolab XML limitation: only one month specified
+    QValueList<KCal::RecurrenceRule::WDayPos> monthPositions = recur->yearPositions();
     if ( !monthPositions.isEmpty() ) {
-      KCal::Recurrence::rMonthPos monthPos = *monthPositions.getFirst();
-      QBitArray arr = monthPos.rDays;
-      for ( uint idx = 0 ; idx < 7 ; ++idx )
-        if ( arr.testBit( idx ) )
-          mRecurrence.days.append( s_weekDayName[idx] );
-      mRecurrence.dayNumber = QString::number( monthPos.rPos );
+      KCal::RecurrenceRule::WDayPos monthPos = monthPositions.first();
+      // TODO: Handle multiple days in the same week
+      mRecurrence.dayNumber = QString::number( monthPos.pos() );
+      mRecurrence.days.append( s_weekDayName[ monthPos.day()-1 ] );
+
       //mRecurrence.dayNumber = QString::number( *recur->yearNums().getFirst() );
       // Not handled: monthPos.negative (nth days before end of month)
     }
@@ -638,7 +635,7 @@ void Incidence::setFields( const KCal::Incidence* incidence )
 
   if ( incidence->doesRecur() ) {
     setRecurrence( incidence->recurrence() );
-    mRecurrence.exclusions = incidence->exDates();
+    mRecurrence.exclusions = incidence->recurrence()->exDates();
   }
 
   // Handle the scheduling ID
@@ -723,41 +720,35 @@ void Incidence::saveTo( KCal::Incidence* incidence )
     KCal::Recurrence* recur = incidence->recurrence(); // yeah, this creates it
     // done below recur->setFrequency( mRecurrence.interval );
     if ( mRecurrence.cycle == "minutely" ) {
-      recur->setMinutely( mRecurrence.interval, -1 );
+      recur->setMinutely( mRecurrence.interval );
     } else if ( mRecurrence.cycle == "hourly" ) {
-      recur->setHourly( mRecurrence.interval, -1 );
+      recur->setHourly( mRecurrence.interval );
     } else if ( mRecurrence.cycle == "daily" ) {
-      recur->setDaily( mRecurrence.interval, -1 );
+      recur->setDaily( mRecurrence.interval );
     } else if ( mRecurrence.cycle == "weekly" ) {
       QBitArray rDays = daysListToBitArray( mRecurrence.days );
-      recur->setWeekly( mRecurrence.interval, rDays, -1 );
+      recur->setWeekly( mRecurrence.interval, rDays );
     } else if ( mRecurrence.cycle == "monthly" ) {
+      recur->setMonthly( mRecurrence.interval );
       if ( mRecurrence.type == "weekday" ) {
-        recur->setMonthly( KCal::Recurrence::rMonthlyPos, mRecurrence.interval, -1 );
         recur->addMonthlyPos( mRecurrence.dayNumber.toInt(), daysListToBitArray( mRecurrence.days ) );
       } else if ( mRecurrence.type == "daynumber" ) {
-        recur->setMonthly( KCal::Recurrence::rMonthlyDay, mRecurrence.interval, -1 );
-        recur->addMonthlyDay( mRecurrence.dayNumber.toInt() );
+        recur->addMonthlyDate( mRecurrence.dayNumber.toInt() );
       } else kdWarning() << "Unhandled monthly recurrence type " << mRecurrence.type << endl;
     } else if ( mRecurrence.cycle == "yearly" ) {
+      recur->setYearly( mRecurrence.interval );
       if ( mRecurrence.type == "monthday" ) {
-        recur->setYearly( KCal::Recurrence::rYearlyMonth, mRecurrence.interval, -1 );
-        recur->setYearlyByDate( mRecurrence.dayNumber.toInt(),
-                                KCal::Recurrence::rMar1, // whichever
-                                mRecurrence.interval,
-                                -1 );
-        for ( int i = 0; i < 12; ++i )
+        recur->addYearlyDate( mRecurrence.dayNumber.toInt() );
+				for ( int i = 0; i < 12; ++i )
           if ( s_monthName[ i ] == mRecurrence.month )
-            recur->addYearlyNum( i+1 );
+            recur->addYearlyMonth( i+1 );
       } else if ( mRecurrence.type == "yearday" ) {
-        recur->setYearly( KCal::Recurrence::rYearlyDay, mRecurrence.interval, -1 );
-        recur->addYearlyNum( mRecurrence.dayNumber.toInt() );
+        recur->addYearlyDay( mRecurrence.dayNumber.toInt() );
       } else if ( mRecurrence.type == "weekday" ) {
-        recur->setYearly( KCal::Recurrence::rYearlyPos, mRecurrence.interval, -1 );
-        for ( int i = 0; i < 12; ++i )
+			  for ( int i = 0; i < 12; ++i )
           if ( s_monthName[ i ] == mRecurrence.month )
-            recur->addYearlyNum( i+1 );
-        recur->addMonthlyPos( mRecurrence.dayNumber.toInt(), daysListToBitArray( mRecurrence.days ) );
+            recur->addYearlyMonth( i+1 );
+        recur->addYearlyPos( mRecurrence.dayNumber.toInt(), daysListToBitArray( mRecurrence.days ) );
       } else kdWarning() << "Unhandled yearly recurrence type " << mRecurrence.type << endl;
     } else kdWarning() << "Unhandled recurrence cycle " << mRecurrence.cycle << endl;
 
@@ -765,9 +756,9 @@ void Incidence::saveTo( KCal::Incidence* incidence )
       recur->setDuration( mRecurrence.range.toInt() );
     } else if ( mRecurrence.rangeType == "date" ) {
       recur->setEndDate( stringToDate( mRecurrence.range ) );
-    } // "none" is default since -1 is passed everywhere above
+    } // "none" is default since tje set*ly methods set infinite recurrence
 
-    incidence->setExDates( mRecurrence.exclusions );
+    incidence->recurrence()->setExDates( mRecurrence.exclusions );
   }
 
   incidence->setSchedulingID( schedulingID() );

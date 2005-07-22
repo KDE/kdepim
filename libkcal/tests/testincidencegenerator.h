@@ -10,7 +10,8 @@ static Event* makeTestEvent()
 {
   Event *event = new Event();
   event->setSummary("Test Event");
-  event->recurrence()->setDaily( 2, 3 );
+  event->recurrence()->setDaily( 2 );
+  event->recurrence()->setDuration( 3 );
   return event;
 }
 

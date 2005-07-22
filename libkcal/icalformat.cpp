@@ -287,17 +287,18 @@ QString ICalFormat::toString( Incidence *incidence )
   return text;
 }
 
-QString ICalFormat::toString( Recurrence *recurrence )
+QString ICalFormat::toString( RecurrenceRule *recurrence )
 {
   icalproperty *property;
-  property = mImpl->writeRecurrenceRule( recurrence );
+  property = icalproperty_new_rrule( mImpl->writeRecurrenceRule( recurrence ) );
   QString text = QString::fromUtf8( icalproperty_as_ical_string( property ) );
   icalproperty_free( property );
   return text;
 }
 
-bool ICalFormat::fromString( Recurrence * recurrence, const QString& rrule )
+bool ICalFormat::fromString( RecurrenceRule * recurrence, const QString& rrule )
 {
+	if ( !recurrence ) return false;
   bool success = true;
   icalerror_clear_errno();
   struct icalrecurrencetype recur = icalrecurrencetype_from_string( rrule.latin1() );

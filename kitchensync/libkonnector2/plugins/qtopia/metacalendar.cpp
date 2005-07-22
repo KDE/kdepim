@@ -97,7 +97,7 @@ QString MetaCalendar::eventToString( KCal::Event* event)
   /* Recurrance */
   KCal::Recurrence* rec = event->recurrence();
   if ( rec->doesRecur() ) {
-    switch( rec->doesRecur() ) {
+    switch( rec->recurrenceType() ) {
     case KCal::Recurrence::rDaily:
       string += "Daily";
       break;
@@ -128,7 +128,7 @@ QString MetaCalendar::eventToString( KCal::Event* event)
     if ( rec->duration() == 0 ) {
       string += rec->endDate().toString("dd.MM.yyyy");
     }
-    string += rec->recurStart().date().toString("dd.MM.yyyy hh:mm:ss");
+    string += rec->startDateTime().toString("dd.MM.yyyy hh:mm:ss");
   }
   /* Alarms here */
   /*

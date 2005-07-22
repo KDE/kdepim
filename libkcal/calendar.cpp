@@ -298,7 +298,7 @@ bool Calendar::deleteIncidence( Incidence *incidence )
     return false;
 }
 
-/** Dissociate a single occurence or all future occurences from a recurring sequence.
+/** Dissociate a single occurrence or all future occurrences from a recurring sequence.
     The new incidence is returned, but not automatically inserted into the calendar,
 		which is left to the calling application */
 Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
@@ -315,13 +315,13 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
     recur->unsetRecurs();
   } else {
     // Adjust the recurrence for the future incidences. In particular
-    // adjust the "end after n occurences" rules! "No end date" and "end by ..."
+    // adjust the "end after n occurrences" rules! "No end date" and "end by ..."
     // don't need to be modified.
     int duration = recur->duration();
     if ( duration > 0 ) {
       int doneduration = recur->durationTo( date.addDays(-1) );
       if ( doneduration >= duration ) {
-        kdDebug(5850) << "The dissociated event already occured more often "
+        kdDebug(5850) << "The dissociated event already occurred more often "
                       << "than it was supposed to ever occur. ERROR!" << endl;
         recur->unsetRecurs();
       } else {
@@ -354,11 +354,11 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
       haveOffset = true;
     }
   }
-  if ( single ) {
-    incidence->addExDate( date );
-  } else {
-    recur = incidence->recurrence();
-    if ( recur ) {
+  recur = incidence->recurrence();
+  if ( recur ) {
+    if ( single ) {
+      recur->addExDate( date );
+    } else {
       // Make sure the recurrence of the past events ends
       // at the corresponding day
       recur->setEndDate( date.addDays(-1) );

@@ -44,10 +44,12 @@
 // #include <kdebug.h>
 
 #include <klocale.h>
+#include <kglobal.h>
 #include <kiconloader.h>
 
 #include <qbuffer.h>
 #include <qstylesheet.h>
+#include <qdatetime.h>
 
 #include <time.h>
 
@@ -319,7 +321,7 @@ static QString eventViewerFormatEvent( Event *event )
     QDateTime dt = event->recurrence()->getNextDateTime(
                                           QDateTime::currentDateTime() );
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Next Occurence" )+ "</b></td>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Next Occurrence" )+ "</b></td>";
     tmpStr += "<td>" + KGlobal::locale()->formatDateTime( dt, true ) + "</td>";
     tmpStr += "</tr>";
   }
@@ -1691,20 +1693,26 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Event *event )
     mResult += i18n("End Time: %1\n").arg( event->dtEndTimeStr() );
   }
   if ( event->doesRecur() ) {
+    Recurrence *recur = event->recurrence();
+    // TODO: Merge these two to one of the form "Recurs every 3 days"
     mResult += i18n("Recurs: %1\n")
-             .arg( recurrence[ event->recurrence()->doesRecur() ] );
-/* @TODO: frequency
+             .arg( recurrence[ recur->recurrenceType() ] );
     mResult += i18n("Frequency: %1\n")
-             .arg( recurrence[event->recurrence()->frequency() ]);
-*/
-    if ( event->recurrence()->duration() > 0 ) {
-      mResult += i18n ("Repeats once", "Repeats %n times", event->recurrence()->duration());
+             .arg( event->recurrence()->frequency() );
+
+    if ( recur->duration() > 0 ) {
+      mResult += i18n ("Repeats once", "Repeats %n times", recur->duration());
       mResult += '\n';
     } else {
-      if ( event->recurrence()->duration() != -1 ) {
-//        mResult += i18n("Repeat until: %1")
-        mResult += i18n("End Date: %1\n")
-                 .arg( event->recurrence()->endDateStr() );
+      if ( recur->duration() != -1 ) {
+// TODO_Recurrence: What to do with floating
+        QString endstr;
+        if ( event->doesFloat() ) {
+          endstr = KGlobal::locale()->formatDate( recur->endDate() );
+        } else {
+          endstr = KGlobal::locale()->formatDateTime( recur->endDateTime() );
+        }
+        mResult += i18n("Repeat until: %1\n").arg( endstr );
       } else {
         mResult += i18n("Repeats forever\n");
       }

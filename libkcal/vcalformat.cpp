@@ -424,100 +424,93 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   }
 
   // recurrence rule stuff
-  if (anEvent->recurrence()->doesRecur()) {
-    // some more variables
-    QPtrList<Recurrence::rMonthPos> tmpPositions;
-    QPtrList<int> tmpDays;
-    int *tmpDay;
-    Recurrence::rMonthPos *tmpPos;
+  const Recurrence *recur = anEvent->recurrence();
+  if ( recur->doesRecur() ) {
+    bool validRecur = true;
     QString tmpStr2;
-    int i;
-
-    switch(anEvent->recurrence()->doesRecur()) {
+    switch ( recur->recurrenceType() ) {
     case Recurrence::rDaily:
-      tmpStr.sprintf("D%i ",anEvent->recurrence()->frequency());
-//      if (anEvent->rDuration > 0)
-//        tmpStr += "#";
+      tmpStr.sprintf("D%i ",recur->frequency());
       break;
     case Recurrence::rWeekly:
-      tmpStr.sprintf("W%i ",anEvent->recurrence()->frequency());
-      for (i = 0; i < 7; i++) {
-        if (anEvent->recurrence()->days().testBit(i))
+      tmpStr.sprintf("W%i ",recur->frequency());
+      for (int i = 0; i < 7; i++ ) {
+        QBitArray days ( recur->days() );
+        if ( days.testBit(i) )
           tmpStr += dayFromNum(i);
       }
       break;
-    case Recurrence::rMonthlyPos:
-      tmpStr.sprintf("MP%i ", anEvent->recurrence()->frequency());
+    case Recurrence::rMonthlyPos: {
+      tmpStr.sprintf("MP%i ", recur->frequency());
       // write out all rMonthPos's
-      tmpPositions = anEvent->recurrence()->monthPositions();
-      for (tmpPos = tmpPositions.first();
-           tmpPos;
-           tmpPos = tmpPositions.next()) {
-
-        tmpStr2.sprintf("%i", tmpPos->rPos);
-        if (tmpPos->negative)
+      QValueList<RecurrenceRule::WDayPos> tmpPositions = recur->monthPositions();
+      for ( QValueListConstIterator<RecurrenceRule::WDayPos> posit = tmpPositions.begin();
+            posit != tmpPositions.end(); ++posit ) {
+        int pos = (*posit).pos();
+        tmpStr2.sprintf("%i", (pos>0) ? pos : (-pos) );
+        if ( pos < 0)
           tmpStr2 += "- ";
         else
           tmpStr2 += "+ ";
         tmpStr += tmpStr2;
-        for (i = 0; i < 7; i++) {
-          if (tmpPos->rDays.testBit(i))
-            tmpStr += dayFromNum(i);
-        }
-      } // loop for all rMonthPos's
-      break;
-    case Recurrence::rMonthlyDay:
-      tmpStr.sprintf("MD%i ", anEvent->recurrence()->frequency());
+        tmpStr += dayFromNum( (*posit).day() - 1 );
+      }
+      break; }
+    case Recurrence::rMonthlyDay: {
+      tmpStr.sprintf("MD%i ", recur->frequency());
       // write out all rMonthDays;
-      tmpDays = anEvent->recurrence()->monthDays();
-      for (tmpDay = tmpDays.first();
-           tmpDay;
-           tmpDay = tmpDays.next()) {
-        tmpStr2.sprintf("%i ", *tmpDay);
+      QValueList<int> tmpDays = recur->monthDays();
+      for ( QValueListIterator<int> tmpDay = tmpDays.begin();
+            tmpDay != tmpDays.end(); ++tmpDay ) {
+        tmpStr2.sprintf( "%i ", *tmpDay );
         tmpStr += tmpStr2;
       }
-      break;
-    case Recurrence::rYearlyMonth:
-      tmpStr.sprintf("YM%i ", anEvent->recurrence()->frequency());
+      break; }
+    case Recurrence::rYearlyMonth: {
+      tmpStr.sprintf("YM%i ", recur->frequency());
+      // write out all the months;'
+      // TODO: Any way to write out the day within the month???
+      QValueList<int> months = recur->yearMonths();
+      for ( QValueListIterator<int> mit = months.begin();
+            mit != months.end(); ++mit ) {
+        tmpStr2.sprintf( "%i ", *mit );
+        tmpStr += tmpStr2;
+      }
+      break; }
+    case Recurrence::rYearlyDay: {
+      tmpStr.sprintf("YD%i ", recur->frequency());
       // write out all the rYearNums;
-      tmpDays = anEvent->recurrence()->yearNums();
-      for (tmpDay = tmpDays.first();
-           tmpDay;
-           tmpDay = tmpDays.next()) {
-        tmpStr2.sprintf("%i ", *tmpDay);
+      QValueList<int> tmpDays = recur->yearDays();
+      for ( QValueListIterator<int> tmpDay = tmpDays.begin();
+            tmpDay != tmpDays.end(); ++tmpDay ) {
+        tmpStr2.sprintf( "%i ", *tmpDay );
         tmpStr += tmpStr2;
       }
-      break;
-    case Recurrence::rYearlyDay:
-      tmpStr.sprintf("YD%i ", anEvent->recurrence()->frequency());
-      // write out all the rYearNums;
-      tmpDays = anEvent->recurrence()->yearNums();
-      for (tmpDay = tmpDays.first();
-           tmpDay;
-           tmpDay = tmpDays.next()) {
-        tmpStr2.sprintf("%i ", *tmpDay);
-        tmpStr += tmpStr2;
-      }
-      break;
+      break; }
     default:
+      // TODO: Write rYearlyPos and arbitrary rules!
       kdDebug(5800) << "ERROR, it should never get here in eventToVEvent!" << endl;
+      validRecur = false;
       break;
     } // switch
 
-    if (anEvent->recurrence()->duration() > 0) {
-      tmpStr2.sprintf("#%i",anEvent->recurrence()->duration());
+    if (recur->duration() > 0) {
+      tmpStr2.sprintf("#%i",recur->duration());
       tmpStr += tmpStr2;
-    } else if (anEvent->recurrence()->duration() == -1) {
+    } else if (recur->duration() == -1) {
       tmpStr += "#0"; // defined as repeat forever
     } else {
-      tmpStr += qDateTimeToISO(anEvent->recurrence()->endDate(), FALSE);
+      tmpStr += qDateTimeToISO(recur->endDateTime(), FALSE);
     }
-    addPropValue(vevent,VCRRuleProp, tmpStr.local8Bit());
+    // Only write out the rrule if we have a valid recurrence (i.e. a known
+    // type in thee switch above)
+    if ( validRecur )
+      addPropValue(vevent,VCRRuleProp, tmpStr.local8Bit());
 
   } // event repeats
 
   // exceptions to recurrence
-  DateList dateList = anEvent->exDates();
+  DateList dateList = recur->exDates();
   DateList::ConstIterator it;
   QString tmpStr2;
 
@@ -716,7 +709,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
         a = new Attendee(0, tmpStr);
       } else {
         // just a name
-				// WTF??? Replacing the spaces of a name and using this as email?
+        // WTF??? Replacing the spaces of a name and using this as email?
         QString email = tmpStr.replace( ' ', '.' );
         a = new Attendee(tmpStr,email);
       }
@@ -995,17 +988,16 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     if (tmpStr.left(1) == "D") {
       int index = tmpStr.find(' ');
       int rFreq = tmpStr.mid(1, (index-1)).toInt();
+      anEvent->recurrence()->setDaily(rFreq);
       index = tmpStr.findRev(' ') + 1; // advance to last field
       if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
         QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->recurrence()->setDaily(rFreq, rEndDate);
+        anEvent->recurrence()->setEndDateTime( rEndDate );
       } else {
         int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration == 0) // VEvents set this to 0 forever, we use -1
-          anEvent->recurrence()->setDaily(rFreq, -1);
-        else
-          anEvent->recurrence()->setDaily(rFreq, rDuration);
+        if ( rDuration > 0 ) 
+          anEvent->recurrence()->setDuration( rDuration );
       }
     }
     /********************************* WEEKLY ******************************/
@@ -1029,16 +1021,15 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
           index += 3; // advance to next day, or possibly "#"
         }
       }
+      anEvent->recurrence()->setWeekly( rFreq, qba );
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
         QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->recurrence()->setWeekly(rFreq, qba, rEndDate);
+        anEvent->recurrence()->setEndDateTime( rEndDate );
       } else {
         int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration == 0)
-          anEvent->recurrence()->setWeekly(rFreq, qba, -1);
-        else
-          anEvent->recurrence()->setWeekly(rFreq, qba, rDuration);
+        if ( rDuration > 0 )
+          anEvent->recurrence()->setDuration( rDuration );
       }
     }
     /**************************** MONTHLY-BY-POS ***************************/
@@ -1046,6 +1037,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       int index = tmpStr.find(' ');
       int last = tmpStr.findRev(' ') + 1;
       int rFreq = tmpStr.mid(2, (index-1)).toInt();
+      anEvent->recurrence()->setMonthly( rFreq );
       index += 1; // advance to beginning of stuff after freq
       QBitArray qba(7);
       short tmpPos;
@@ -1055,7 +1047,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
         if( tmpPos == 5 )
           tmpPos = -1;
         qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
-        anEvent->recurrence()->addMonthlyPos(tmpPos, qba);
+        anEvent->recurrence()->addMonthlyPos( tmpPos, qba );
       }
       else {
         // e.g. MP1 1+ SU #0
@@ -1071,22 +1063,22 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
             qba.setBit(dayNum);
             index += 3; // advance to next day, or possibly pos or "#"
           }
-          anEvent->recurrence()->addMonthlyPos(tmpPos, qba);
+          anEvent->recurrence()->addMonthlyPos( tmpPos, qba );
           qba.detach();
           qba.fill(FALSE); // clear out
         } // while != "#"
       }
-      index = last; if (tmpStr.mid(index,1) == "#") index++;
+      index = last;
+      if (tmpStr.mid(index,1) == "#") index++;
+
       if (tmpStr.find('T', index) != -1) {
         QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length() -
                                                     index))).date();
-        anEvent->recurrence()->setMonthly(Recurrence::rMonthlyPos, rFreq, rEndDate);
+        anEvent->recurrence()->setEndDate( rEndDate );
       } else {
         int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration == 0)
-          anEvent->recurrence()->setMonthly(Recurrence::rMonthlyPos, rFreq, -1);
-        else
-          anEvent->recurrence()->setMonthly(Recurrence::rMonthlyPos, rFreq, rDuration);
+        if (rDuration > 0)
+          anEvent->recurrence()->setDuration( rDuration );
       }
     }
 
@@ -1097,14 +1089,12 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       int rFreq = tmpStr.mid(2, (index-1)).toInt();
       index += 1;
       short tmpDay;
-      // We have to set monthly by day now (using dummy values), because the
-      // addMonthlyDay calls check for that type of recurrence, and if the
-      // recurrence isn't yet set to monthly, addMonthlyDay doesn't do anything
-      anEvent->recurrence()->setMonthly( Recurrence::rMonthlyDay, rFreq, -1 );
+
+      anEvent->recurrence()->setMonthly( rFreq );
       if( index == last ) {
         // e.g. MD1 #0
         tmpDay = anEvent->dtStart().date().day();
-        anEvent->recurrence()->addMonthlyDay(tmpDay);
+        anEvent->recurrence()->addMonthlyDate( tmpDay );
       }
       else {
         // e.g. MD1 3 #0
@@ -1115,19 +1105,18 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
           if (tmpStr.mid(index, 1) == "-")
             tmpDay = 0 - tmpDay;
           index += 2; // advance the index;
-          anEvent->recurrence()->addMonthlyDay(tmpDay);
+          anEvent->recurrence()->addMonthlyDate( tmpDay );
         } // while != #
       }
-      index = last; if (tmpStr.mid(index,1) == "#") index++;
+      index = last;
+      if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
         QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->recurrence()->setMonthly(Recurrence::rMonthlyDay, rFreq, rEndDate);
+        anEvent->recurrence()->setEndDate( rEndDate );
       } else {
         int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration == 0)
-          anEvent->recurrence()->setMonthly(Recurrence::rMonthlyDay, rFreq, -1);
-        else
-          anEvent->recurrence()->setMonthly(Recurrence::rMonthlyDay, rFreq, rDuration);
+        if (rDuration > 0)
+          anEvent->recurrence()->setDuration( rDuration );
       }
     }
 
@@ -1136,32 +1125,32 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       int index = tmpStr.find(' ');
       int last = tmpStr.findRev(' ') + 1;
       int rFreq = tmpStr.mid(2, (index-1)).toInt();
+      anEvent->recurrence()->setYearly( rFreq );
       index += 1;
       short tmpMonth;
       if( index == last ) {
         // e.g. YM1 #0
         tmpMonth = anEvent->dtStart().date().month();
-        anEvent->recurrence()->addYearlyNum(tmpMonth);
+        anEvent->recurrence()->addYearlyMonth( tmpMonth );
       }
       else {
         // e.g. YM1 3 #0
         while (index < last) {
           int index2 = tmpStr.find(' ', index);
           tmpMonth = tmpStr.mid(index, (index2-index)).toShort();
-          index = index2+1;
-          anEvent->recurrence()->addYearlyNum(tmpMonth);
+          index = index2 + 1;
+          anEvent->recurrence()->addYearlyMonth( tmpMonth );
         } // while != #
       }
+
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
         QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->recurrence()->setYearly(Recurrence::rYearlyMonth, rFreq, rEndDate);
+        anEvent->recurrence()->setEndDate( rEndDate );
       } else {
         int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration == 0)
-          anEvent->recurrence()->setYearly(Recurrence::rYearlyMonth, rFreq, -1);
-        else
-          anEvent->recurrence()->setYearly(Recurrence::rYearlyMonth, rFreq, rDuration);
+        if (rDuration > 0)
+          anEvent->recurrence()->setDuration( rDuration );
       }
     }
 
@@ -1170,12 +1159,13 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       int index = tmpStr.find(' ');
       int last = tmpStr.findRev(' ') + 1;
       int rFreq = tmpStr.mid(2, (index-1)).toInt();
+      anEvent->recurrence()->setYearly( rFreq );
       index += 1;
       short tmpDay;
       if( index == last ) {
         // e.g. YD1 #0
         tmpDay = anEvent->dtStart().date().dayOfYear();
-        anEvent->recurrence()->addYearlyNum(tmpDay);
+        anEvent->recurrence()->addYearlyDay( tmpDay );
       }
       else {
         // e.g. YD1 123 #0
@@ -1183,23 +1173,25 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
           int index2 = tmpStr.find(' ', index);
           tmpDay = tmpStr.mid(index, (index2-index)).toShort();
           index = index2+1;
-          anEvent->recurrence()->addYearlyNum(tmpDay);
+          anEvent->recurrence()->addYearlyDay( tmpDay );
         } // while != #
       }
-      index = last; if (tmpStr.mid(index,1) == "#") index++;
+      index = last;
+      if (tmpStr.mid(index,1) == "#") index++;
+
       if (tmpStr.find('T', index) != -1) {
         QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->recurrence()->setYearly(Recurrence::rYearlyDay, rFreq, rEndDate);
+        anEvent->recurrence()->setEndDate( rEndDate );
       } else {
         int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration == 0)
-          anEvent->recurrence()->setYearly(Recurrence::rYearlyDay, rFreq, -1);
-        else
-          anEvent->recurrence()->setYearly(Recurrence::rYearlyDay, rFreq, rDuration);
+        if (rDuration > 0)
+          anEvent->recurrence()->setDuration( rDuration );
       }
     } else {
       kdDebug(5800) << "we don't understand this type of recurrence!" << endl;
     } // if
+kdDebug(5800) << " Recurrence loaded from vCalendar file: " << endl;
+anEvent->recurrence()->dump();
   } // repeats
 
 
@@ -1209,7 +1201,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     QStringList exDates = QStringList::split(",",s);
     QStringList::ConstIterator it;
     for(it = exDates.begin(); it != exDates.end(); ++it ) {
-      anEvent->addExDate(ISOToQDate(*it));
+      anEvent->recurrence()->addExDate(ISOToQDate(*it));
     }
     deleteStr(s);
   }

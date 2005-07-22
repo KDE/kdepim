@@ -25,7 +25,7 @@
 #define KCAL_RECURRENCERULE_H
 
 #include <qdatetime.h>
-#include <qvaluelist.h>
+#include <libkcal/listbase.h>
 
 #include "libkcal_export.h"
 
@@ -44,6 +44,7 @@ typedef QValueList<QTime> TimeList;
 class LIBKCAL_EXPORT RecurrenceRule
 {
   public:
+    typedef ListBase<RecurrenceRule> List;
     /** enum for describing the frequency how an event recurs, if at all. */
     enum PeriodType { rNone = 0,
            rSecondly, rMinutely, rHourly,
@@ -52,13 +53,19 @@ class LIBKCAL_EXPORT RecurrenceRule
     /** structure for describing the n-th weekday of the month/year. */
     class WDayPos {
     public:
-      WDayPos( int pos = 0 , short day = 0 ) : Day(day),Pos(pos){}
-      short Day;  // Weekday, 1=monday, 7=sunday
-      int Pos;    // week of the day (-1 for last, 1 for first, 0 for all weeks)
-                   // Bounded by -366 and +366, 0 means all weeks in that period
+      WDayPos( int ps = 0 , short dy = 0 ) : mDay(dy), mPos(ps) {}
+      short day() const { return mDay; }
+      int pos() const { return mPos; }
+      void setDay( short dy ) { mDay = dy; }
+      void setPos( int ps ) { mPos = ps; }
+
       bool operator==( const RecurrenceRule::WDayPos &pos2 ) const {
-          return ( Day == pos2.Day ) && ( Pos == pos2.Pos );
+          return ( mDay == pos2.mDay ) && ( mPos == pos2.mPos );
         }
+    protected:
+      short mDay;  // Weekday, 1=monday, 7=sunday
+      int mPos;    // week of the day (-1 for last, 1 for first, 0 for all weeks)
+                   // Bounded by -366 and +366, 0 means all weeks in that period
     };
 
     RecurrenceRule( /*Incidence *parent, int compatVersion = 0*/ );
@@ -94,9 +101,9 @@ class LIBKCAL_EXPORT RecurrenceRule
 
 
     /** Return the start of the recurrence */
-    QDateTime startDate() const   { return mDateStart; }
+    QDateTime startDt() const   { return mDateStart; }
     /** Set start of recurrence, as a date and time. */
-    void setStartDate(const QDateTime &start);
+    void setStartDt(const QDateTime &start);
 
     /** Returns whether the start date has no time associated. Floating
         means -- according to rfc2445 -- that the event has no time associate. */
@@ -110,10 +117,10 @@ class LIBKCAL_EXPORT RecurrenceRule
      * @param result if non-null, *result is updated to true if successful,
      * or false if there is no recurrence.
      */
-    QDateTime endDate( bool* result = 0 ) const;
+    QDateTime endDt( bool* result = 0 ) const;
     /** Sets the date and time of the last recurrence.
      * @param endDateTime the ending date/time after which to stop recurring. */
-    void setEndDate(const QDateTime &endDateTime);
+    void setEndDt(const QDateTime &endDateTime);
 
 
     /**
@@ -128,6 +135,8 @@ class LIBKCAL_EXPORT RecurrenceRule
 //     int durationTo(const QDate &) const;
     /** Returns the number of recurrences up to and including the date/time specified. */
     int durationTo(const QDateTime &) const;
+    /** Returns the number of recurrences up to and including the date specified. */
+    int durationTo( const QDate &date ) const { return durationTo( QDateTime( date, QTime( 23, 59, 59 ) ) ); }
 
 
 
@@ -193,9 +202,6 @@ class LIBKCAL_EXPORT RecurrenceRule
     short weekStart() const { return mWeekStart; }
 
 
-    /** Upper date limit for recurrences */
-    static const QDate MAX_DATE;
-
     void setDirty();
 
     /**
@@ -254,7 +260,7 @@ class LIBKCAL_EXPORT RecurrenceRule
     /** how often it recurs (including dtstart):
           -1 means infinitely,
            0 means an explicit end date,
-           positive values give the number of occurences */
+           positive values give the number of occurrences */
     int mDuration;
     QDateTime mDateEnd;
     uint mFrequency;

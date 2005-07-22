@@ -237,7 +237,7 @@ void ExchangeDownload::handleAppointments( const QDomDocument &response,
       QDomElement prop = propstat.namedItem( "prop" ).toElement();
       if ( prop.isNull() ) {
         kdError() << "Error: no <prop> in response" << endl;
-	continue;
+        continue;
       }
 
       QDomElement instancetypeElement = prop.namedItem( "instancetype" ).toElement();
@@ -270,9 +270,9 @@ void ExchangeDownload::handleAppointments( const QDomDocument &response,
       }
       QString href = hrefElement.text();
       KURL url(href);
-      
+
       kdDebug() << "Getting appointment from url: " << url.prettyURL() << endl;
-      
+
       readAppointment( toDAV( url ) );
       successCount++;
     }
@@ -290,13 +290,13 @@ void ExchangeDownload::handleRecurrence( QString uid )
         "SELECT \"DAV:href\", \"urn:schemas:calendar:instancetype\"\r\n"
         "FROM Scope('shallow traversal of \"\"')\r\n"
         "WHERE \"urn:schemas:calendar:uid\" = '" + uid + "'\r\n"
-	" AND (\"urn:schemas:calendar:instancetype\" = 1)\r\n";
-//	"      OR \"urn:schemas:calendar:instancetype\" = 3)\r\n" // FIXME: exception are not handled
+        " AND (\"urn:schemas:calendar:instancetype\" = 1)\r\n";
+//        "      OR \"urn:schemas:calendar:instancetype\" = 3)\r\n" // FIXME: exception are not handled
 
   // kdDebug() << "Exchange master query: " << endl << query << endl;
 
   increaseDownloads();
- 
+
   KIO::DavJob* job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql",
                                      query, false );
   KIO::Scheduler::scheduleJob( job );
@@ -467,7 +467,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job *job )
 
   QString transparent = prop.namedItem( "transparent" ).toElement().text();
   event->setTransparency( transparent.toInt() > 0 ? KCal::Event::Transparent
-			  : KCal::Event::Opaque );
+                           : KCal::Event::Opaque );
   // kdDebug() << "Got transparent: " << transparent << endl;
 
   QString description = prop.namedItem( "textdescription" ).toElement().text();
@@ -487,7 +487,9 @@ void ExchangeDownload::slotPropFindResult( KIO::Job *job )
   if ( !rrule.isEmpty() ) {
     // Timezone should be handled automatically 
     // because we used mFormat->setTimeZone() earlier
-    if ( ! mFormat->fromString( event->recurrence(), rrule ) ) {
+    KCal::RecurrenceRule *rr = event->recurrence()->defaultRRule( true );
+
+    if ( !rr || !mFormat->fromString( rr, rrule ) ) {
       kdError() << "ERROR parsing rrule " << rrule << endl;
     }
   }
@@ -512,7 +514,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job *job )
     exdates.append( date );
     // kdDebug() << "Got exdate: " << date.toString() << endl;
   }
-  event->setExDates( exdates );
+  event->recurrence()->setExDates( exdates );
 
   // Exchange sentitivity values:
   // 0 None

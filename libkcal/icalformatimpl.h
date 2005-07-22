@@ -63,6 +63,7 @@ class ICalFormatImpl
     icalproperty *writeOrganizer( const Person &organizer );
     icalproperty *writeAttachment(Attachment *attach);
     icalproperty *writeRecurrenceRule(Recurrence *);
+    icalrecurrencetype writeRecurrenceRule( RecurrenceRule *recur );
     icalcomponent *writeAlarm(Alarm *alarm);
 
     QString extractErrorProperty(icalcomponent *);
@@ -74,8 +75,9 @@ class ICalFormatImpl
     Person readOrganizer( icalproperty *organizer );
     Attachment *readAttachment(icalproperty *attach);
     void readIncidence(icalcomponent *parent, icaltimezone *timezone, Incidence *incidence);
-    virtual void readRecurrenceRule(icalproperty *rrule,Incidence *event);
-    virtual void readRecurrence( const struct icalrecurrencetype &r, Recurrence* recur );
+    void readRecurrenceRule(icalproperty *rrule,Incidence *event);
+    void readExceptionRule( icalproperty *rrule, Incidence *incidence );
+    void readRecurrence( const struct icalrecurrencetype &r, RecurrenceRule* recur );
     void readAlarm(icalcomponent *alarm,Incidence *incidence);
     /** Return the PRODID string loaded from calendar file */
     const QString &loadedProductId()  { return mLoadedProductId; }
@@ -86,6 +88,9 @@ class ICalFormatImpl
     QDateTime readICalDateTime( icaltimetype&, icaltimezone* tz = 0 );
     icaldurationtype writeICalDuration(int seconds);
     int readICalDuration(icaldurationtype);
+    icaldatetimeperiodtype writeICalDatePeriod( const QDate &date );
+    icaldatetimeperiodtype writeICalDateTimePeriod( const QDateTime &date );
+
     icalcomponent *createCalendarComponent(Calendar * = 0);
     icalcomponent *createScheduleComponent(IncidenceBase *,Scheduler::Method);
 
@@ -102,7 +107,6 @@ class ICalFormatImpl
     Calendar *mCalendar;
 
     QString mLoadedProductId;         // PRODID string loaded from calendar file
-    int mCalendarVersion;             // determines backward compatibility mode on read
 
     Event::List mEventsRelate;           // events with relations
     Todo::List mTodosRelate;             // todos with relations
