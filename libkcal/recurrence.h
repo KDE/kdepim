@@ -105,22 +105,30 @@ class LIBKCAL_EXPORT Recurrence
 
     Incidence *parent() { return mParent; }
 
-    /** Return the start date/time of the recurrence (0:00 for floating incidences) */
+    /** Return the start date/time of the recurrence (Time for floating incidences will be 0:00). 
+     @return the current start/time of the recurrence. */
     QDateTime startDateTime() const   { return mStartDateTime; }
     /** Return the start date/time of the recurrence */
     QDate startDate() const   { return mStartDateTime.date(); }
-    /** Set start of recurrence, as a date and time. */
+    /** Set start of recurrence, as a date and time. Also sets the incidence to non-floating.
+       @param start the new start date/time of the incidence.
+    */
     void setStartDateTime( const QDateTime &start );
-    /** Set start of recurrence, as a date. Also sets the incidence to floating. */
+    /** Set start of recurrence, as a date. Also sets the incidence to floating. 
+       @param start The new start date of the incidence.
+    */
     void setStartDate( const QDate &start );
 
     /** Set whether the recurrence has no time, just a date.
      * Floating means -- according to rfc2445 -- that the event has no time
      * associated.
      * N.B. This property is derived by default from whether setStartDateTime() or
-     * setStartDate() is called. */
+     * setStartDate() is called. 
+     * @return whether the recurrence has a time (false) or it is just a date (true). */
     bool doesFloat() const { return mFloating; }
-    /** Sets whether the dtstart is a floating time (i.e. has no time attached) */
+    /** Sets whether the dtstart is a floating time (i.e. has no time attached) 
+       @param floats If the recurrence is for all-day item (true) or has a time associated (false).
+       */
     void setFloats( bool floats );
 
     /** Set if recurrence is read-only or can be changed. */
@@ -152,14 +160,14 @@ class LIBKCAL_EXPORT Recurrence
     /** Returns the date and time of the next recurrence, after the specified date/time.
      * If the recurrence has no time, the next date after the specified date is returned.
      * @param preDateTime the date/time after which to find the recurrence.
-     * @return date/time of next recurrence, or invalid date if none.
+     * @return date/time of next recurrence (strictly later than the given QDateTiem), or invalid date if none.
      */
     QDateTime getNextDateTime( const QDateTime& preDateTime ) const;
     /** Returns the date and time of the last previous recurrence, before the specified date/time.
      * If a time later than 00:00:00 is specified and the recurrence has no time, 00:00:00 on
      * the specified date is returned if that date recurs.
      * @param afterDateTime the date/time before which to find the recurrence.
-     * @return date/time of previous recurrence, or invalid date if none.
+     * @return date/time of previous recurrence (strictly earlier than the given QDateTime), or invalid date if none.
      */
     QDateTime getPreviousDateTime( const QDateTime& afterDateTime ) const;
 

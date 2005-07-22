@@ -583,7 +583,7 @@ class LIBKCAL_EXPORT CalendarResources :
      * and then reloaded such that the event times are re-interpreted in the new
      * timezone. Note that the absolute times of events do not change with this.
      * If you want to change the times of the contents of the resources, use
-     * @ref setTimeZoneId
+     * setTimeZoneId
      */
     void setTimeZoneIdViewOnly( const QString& tz );
 
