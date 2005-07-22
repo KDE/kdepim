@@ -116,12 +116,12 @@ void KMobileDevice::setClassType( enum ClassType ct )
 {
   m_classType = ct;
   m_deviceClassName = defaultClassName(ct);
-};
+}
 
 enum KMobileDevice::ClassType KMobileDevice::classType() const
 {
   return m_classType;
-};
+}
 
 QString KMobileDevice::iconFileName() const
 {
@@ -159,12 +159,12 @@ QString KMobileDevice::defaultClassName( ClassType ct )
 void KMobileDevice::setCapabilities( int caps )
 {
   m_caps = caps;
-};
+}
 
 int KMobileDevice::capabilities() const
 {
   return m_caps;
-};
+}
 
 const QString KMobileDevice::nameForCap(int cap) const
 {
