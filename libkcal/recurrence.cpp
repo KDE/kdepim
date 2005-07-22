@@ -872,6 +872,7 @@ void Recurrence::setRDateTimes( const DateTimeList &rdates )
 {
   if ( mRecurReadOnly ) return;
   mRDateTimes = rdates;
+  qHeapSort( mRDateTimes );
 }
 
 void Recurrence::addRDateTime( const QDateTime &rdate )
@@ -891,6 +892,7 @@ void Recurrence::setRDates( const DateList &rdates )
 {
   if ( mRecurReadOnly ) return;
   mRDates = rdates;
+  qHeapSort( mRDates );
 }
 
 void Recurrence::addRDate( const QDate &rdate )
@@ -910,6 +912,7 @@ void Recurrence::setExDateTimes( const DateTimeList &exdates )
 {
   if ( mRecurReadOnly ) return;
   mExDateTimes = exdates;
+  qHeapSort( mExDateTimes );
 }
 
 void Recurrence::addExDateTime( const QDateTime &exdate )
@@ -929,6 +932,7 @@ void Recurrence::setExDates( const DateList &exdates )
 {
   if ( mRecurReadOnly ) return;
   mExDates = exdates;
+  qHeapSort( mExDates );
 }
 
 void Recurrence::addExDate( const QDate &exdate )
