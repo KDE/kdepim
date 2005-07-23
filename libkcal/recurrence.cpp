@@ -161,9 +161,7 @@ RecurrenceRule *Recurrence::defaultRRuleConst() const
 
 void Recurrence::updated()
 {
-  // doesRecur re-calculates the type if it's rMax!
   mCachedType = rMax;
-  mCachedType = doesRecur();
   if (mParent) mParent->updated();
 }
 
@@ -251,6 +249,9 @@ bool Recurrence::recursOn(const QDate &qd) const
   TimeList tms;
   // First handle dates. Exrules override
   if ( mExDates.contains( qd ) ) return false;
+
+//FIXME: EXRULE takes precedence over RDATE entries, so any EXRULE of DATE type
+//       must be considered first, before RDATE or RRULE.
   if ( mRDates.contains( qd ) ) return true;
 
   // Check if it might recur today at all.
@@ -263,7 +264,10 @@ bool Recurrence::recursOn(const QDate &qd) const
   if ( !recurs ) {
     for ( DateTimeList::ConstIterator rit = mRDateTimes.begin();
           rit != mRDateTimes.end(); ++rit ) {
-      if ( (*rit).date() == qd ) recurs = true;
+      if ( (*rit).date() == qd ) {
+        recurs = true;
+	break;
+      }
     }
   }
   // If the event wouldn't recur at all, simply return false, don't check ex*
@@ -273,7 +277,10 @@ bool Recurrence::recursOn(const QDate &qd) const
   bool exon = false;
   for ( DateTimeList::ConstIterator exit = mExDateTimes.begin();
         exit != mExDateTimes.end(); ++exit ) {
-    if ( (*exit).date() == qd ) exon = true;
+    if ( (*exit).date() == qd ) {
+      exon = true;
+      break;
+    }
   }
   for ( RecurrenceRule::List::ConstIterator rr = mExRules.begin(); rr != mExRules.end(); ++rr ) {
     exon = exon || (*rr)->recursOn( qd );
@@ -672,20 +679,30 @@ TimeList Recurrence::recurTimesOn( const QDate &date ) const
   // The whole day is excepted
   if ( mExDates.contains( date ) ) return times;
 
+//FIXME: EXRULE takes precedence over RDATE entries, so any EXRULE of DATE type
+//       must be considered first, before RDATE or RRULE.
   if ( startDate() == date ) times << startDateTime().time();
+  bool foundDate = false;
   for ( DateTimeList::ConstIterator it = mRDateTimes.begin();
         it != mRDateTimes.end(); ++it ) {
-    if ( (*it).date() == date ) times << (*it).time();
+    if ( (*it).date() == date ) {
+      times << (*it).time();
+      foundDate = true;
+    } else if (foundDate) break;
   }
   for ( RecurrenceRule::List::ConstIterator rr = mRRules.begin(); rr != mRRules.end(); ++rr ) {
     times += (*rr)->recurTimesOn( date );
   }
   qHeapSort( times );
 
+  foundDate = false;
   TimeList extimes;
   for ( DateTimeList::ConstIterator it = mExDateTimes.begin();
         it != mExDateTimes.end(); ++it ) {
-    if ( (*it).date() == date ) extimes << (*it).time();
+    if ( (*it).date() == date ) {
+      extimes << (*it).time();
+      foundDate = true;
+    } else if (foundDate) break;
   }
   for ( RecurrenceRule::List::ConstIterator rr = mExRules.begin(); rr != mExRules.end(); ++rr ) {
     extimes += (*rr)->recurTimesOn( date );
