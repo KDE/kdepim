@@ -111,15 +111,19 @@ bool Recurrence::operator==( const Recurrence& r2 ) const
   return true;
 }
 
+QDateTime Recurrence::startDateTime() const
+{
+  if ( mFloating )
+    return QDateTime( mStartDateTime.date(), QTime( 0, 0, 0 ) );
+  else return mStartDateTime;
+}
+
 void Recurrence::setFloats( bool floats )
 {
   if ( mRecurReadOnly ) return;
   if ( floats == mFloating ) return;
   mFloating = floats;
 
-  if ( floats ) {
-    mStartDateTime.setTime( QTime(0, 0, 0) );
-  }
 
   RecurrenceRule::List::ConstIterator it;
   for ( it = mRRules.begin(); it != mRRules.end(); ++it ) {
@@ -724,9 +728,10 @@ kdDebug(5800) << " Recurrence::getNextDateTime after " << preDateTime << endl;
     while ( it != mRDateTimes.end() && (*it) <= nextDT ) ++it;
     if ( it != mRDateTimes.end() ) dates << (*it);
 
+kdDebug(5800) << "    nextDT: " << nextDT << ", startDT: " << startDateTime() << endl;
+kdDebug(5800) << "   getNextDateTime: found " << dates.count() << " RDATES and DTSTART in loop " << loop << endl;
     DateList::ConstIterator dit = mRDates.begin();
-    QDate rdate( nextDT.date() );
-    while ( dit != mRDates.end() && (*dit) <= rdate ) ++dit;
+    while ( dit != mRDates.end() && QDateTime( (*dit), startDateTime().time() ) <= nextDT ) ++dit;
     if ( dit != mRDates.end() ) dates << QDateTime( (*dit), startDateTime().time() );
 
     // Add the next occurrences from all RRULEs.
@@ -792,7 +797,7 @@ QDateTime Recurrence::getPreviousDateTime( const QDateTime &afterDateTime ) cons
     if ( dit != mRDates.begin() ) {
       do {
         --dit;
-      } while ( dit != mRDates.begin() && QDateTime((*dit), startDateTime().time()) >= prevDT.date() );
+      } while ( dit != mRDates.begin() && QDateTime((*dit), startDateTime().time()) >= prevDT );
       if ( dit != mRDates.begin() ) dates << QDateTime( (*dit), startDateTime().time() );
     }
 

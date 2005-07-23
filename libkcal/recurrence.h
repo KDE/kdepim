@@ -105,16 +105,16 @@ class LIBKCAL_EXPORT Recurrence
 
     Incidence *parent() { return mParent; }
 
-    /** Return the start date/time of the recurrence (Time for floating incidences will be 0:00). 
+    /** Return the start date/time of the recurrence (Time for floating incidences will be 0:00).
      @return the current start/time of the recurrence. */
-    QDateTime startDateTime() const   { return mStartDateTime; }
+    QDateTime startDateTime() const;
     /** Return the start date/time of the recurrence */
     QDate startDate() const   { return mStartDateTime.date(); }
     /** Set start of recurrence, as a date and time. Also sets the incidence to non-floating.
        @param start the new start date/time of the incidence.
     */
     void setStartDateTime( const QDateTime &start );
-    /** Set start of recurrence, as a date. Also sets the incidence to floating. 
+    /** Set start of recurrence, as a date. Also sets the incidence to floating.
        @param start The new start date of the incidence.
     */
     void setStartDate( const QDate &start );
@@ -123,10 +123,10 @@ class LIBKCAL_EXPORT Recurrence
      * Floating means -- according to rfc2445 -- that the event has no time
      * associated.
      * N.B. This property is derived by default from whether setStartDateTime() or
-     * setStartDate() is called. 
+     * setStartDate() is called.
      * @return whether the recurrence has a time (false) or it is just a date (true). */
     bool doesFloat() const { return mFloating; }
-    /** Sets whether the dtstart is a floating time (i.e. has no time attached) 
+    /** Sets whether the dtstart is a floating time (i.e. has no time attached)
        @param floats If the recurrence is for all-day item (true) or has a time associated (false).
        */
     void setFloats( bool floats );
