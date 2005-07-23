@@ -1,6 +1,7 @@
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//K Desktop Environment (KDE)//LibKCal test cases 1.0//EN
+X-LibKCal-Testsuite-OutTZ:Europe/Vienna
 
 BEGIN:VEVENT
 DESCRIPTION:Daily until June 1 (UNTIL on June 1 0:00 in UTC is after the event starts on December 15 01:00 in local time)

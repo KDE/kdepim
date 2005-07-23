@@ -2,6 +2,7 @@ BEGIN:VCALENDAR
 METHOD:REQUEST
 PRODID:Microsoft CDO for Microsoft Exchange
 VERSION:2.0
+X-LibKCal-Testsuite-OutTZ:America/New_York
 BEGIN:VTIMEZONE
 TZID:GMT -0800 (Standard) / GMT -0700 (Daylight)
 BEGIN:STANDARD

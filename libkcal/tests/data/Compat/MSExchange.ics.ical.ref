@@ -1,6 +1,7 @@
 BEGIN:VCALENDAR
 PRODID:-//K Desktop Environment//NONSGML libkcal 3.5//EN
 VERSION:2.0
+X-LibKCal-Testsuite-OutTZ:America/New_York
 BEGIN:VEVENT
 DTSTAMP:20040122T092702Z
 ORGANIZER;CN=Shaheedur Haque:MAILTO:srhaque@ncube.com

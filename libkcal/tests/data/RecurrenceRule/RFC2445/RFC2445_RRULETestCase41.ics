@@ -1,6 +1,7 @@
 BEGIN:VCALENDAR
 PRODID:-//Cyrusoft International\, Inc.//Mulberry v4.0//EN
 VERSION:2.0
+X-LibKCal-Testsuite-OutTZ:America/New_York
 
 BEGIN:VEVENT
 DESCRIPTION:changing only WKST from MO to SU\, yields different results...

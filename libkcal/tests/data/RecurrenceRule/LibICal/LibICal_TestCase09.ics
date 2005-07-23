@@ -1,6 +1,7 @@
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//K Desktop Environment (KDE)//LibKCal test cases 1.0//EN
+X-LibKCal-Testsuite-OutTZ:America/Los_Angeles
 
 BEGIN:VEVENT
 DESCRIPTION:Daily until December 24\, 1997:
