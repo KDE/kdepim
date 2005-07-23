@@ -979,219 +979,180 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
 
   // repeat stuff
   if ((vo = isAPropertyOf(vevent, VCRRuleProp)) != 0) {
+    bool understood = false;
     QString tmpStr = (s = fakeCString(vObjectUStringZValue(vo)));
     deleteStr(s);
     tmpStr.simplifyWhiteSpace();
     tmpStr = tmpStr.upper();
+// kdDebug() <<" We have a recurrence rule: " << tmpStr<< endl;
 
-    /********************************* DAILY ******************************/
-    if (tmpStr.left(1) == "D") {
-      int index = tmpStr.find(' ');
-      int rFreq = tmpStr.mid(1, (index-1)).toInt();
-      anEvent->recurrence()->setDaily(rFreq);
-      index = tmpStr.findRev(' ') + 1; // advance to last field
-      if (tmpStr.mid(index,1) == "#") index++;
-      if (tmpStr.find('T', index) != -1) {
-        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->recurrence()->setEndDateTime( rEndDate );
-      } else {
-        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if ( rDuration > 0 ) 
-          anEvent->recurrence()->setDuration( rDuration );
+    // first, read the type of the recurrence
+    int typelen = 1;
+    uint type = Recurrence::rNone;
+    if ( tmpStr.left(1) == "D") {
+      type = Recurrence::rDaily;
+    } else if ( tmpStr.left(1) == "W") {
+      type = Recurrence::rWeekly;
+    } else {
+      typelen = 2;
+      if ( tmpStr.left(2) == "MP") {
+        type = Recurrence::rMonthlyPos;
+      } else if ( tmpStr.left(2) == "MD" ) {
+        type = Recurrence::rMonthlyDay;
+      } else if ( tmpStr.left(2) == "YM" ) {
+        type = Recurrence::rYearlyMonth;
+      } else if ( tmpStr.left(2) == "YD" ) {
+        type = Recurrence::rYearlyDay;
       }
     }
-    /********************************* WEEKLY ******************************/
-    else if (tmpStr.left(1) == "W") {
+
+    if ( type != Recurrence::rNone ) {
+// kdDebug() << " It's a supported type " << endl;
+
+      // Immediately after the type is the frequency
       int index = tmpStr.find(' ');
-      int last = tmpStr.findRev(' ') + 1;
-      int rFreq = tmpStr.mid(1, (index-1)).toInt();
-      index += 1; // advance to beginning of stuff after freq
-      QBitArray qba(7);
-      QString dayStr;
-      if( index == last ) {
-        // e.g. W1 #0
-        qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
+      int last = tmpStr.findRev(' ') + 1; // find last entry
+      int rFreq = tmpStr.mid(typelen, (index-1)).toInt();
+      ++index; // advance to beginning of stuff after freq
+
+      // Read the type-specific settings
+      switch ( type ) {
+        case Recurrence::rDaily:
+               anEvent->recurrence()->setDaily(rFreq);
+               break;
+
+        case Recurrence::rWeekly: {
+               QBitArray qba(7);
+               QString dayStr;
+               if( index == last ) {
+                 // e.g. W1 #0
+                 qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
+               }
+               else {
+                 // e.g. W1 SU #0
+                 while (index < last) {
+                   dayStr = tmpStr.mid(index, 3);
+                   int dayNum = numFromDay(dayStr);
+                   qba.setBit(dayNum);
+                   index += 3; // advance to next day, or possibly "#"
+                 }
+               }
+               anEvent->recurrence()->setWeekly( rFreq, qba );
+               break; }
+
+        case Recurrence::rMonthlyPos: {
+               anEvent->recurrence()->setMonthly( rFreq );
+
+               QBitArray qba(7);
+               short tmpPos;
+               if( index == last ) {
+                 // e.g. MP1 #0
+                 tmpPos = anEvent->dtStart().date().day()/7 + 1;
+                 if( tmpPos == 5 )
+                   tmpPos = -1;
+                 qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
+                 anEvent->recurrence()->addMonthlyPos( tmpPos, qba );
+               }
+               else {
+                 // e.g. MP1 1+ SU #0
+                 while (index < last) {
+                   tmpPos = tmpStr.mid(index,1).toShort();
+                   index += 1;
+                   if (tmpStr.mid(index,1) == "-")
+                     // convert tmpPos to negative
+                     tmpPos = 0 - tmpPos;
+                   index += 2; // advance to day(s)
+                   while (numFromDay(tmpStr.mid(index,3)) >= 0) {
+                     int dayNum = numFromDay(tmpStr.mid(index,3));
+                     qba.setBit(dayNum);
+                     index += 3; // advance to next day, or possibly pos or "#"
+                   }
+                   anEvent->recurrence()->addMonthlyPos( tmpPos, qba );
+                   qba.detach();
+                   qba.fill(FALSE); // clear out
+                 } // while != "#"
+               }
+             break;}
+
+        case Recurrence::rMonthlyDay:
+             anEvent->recurrence()->setMonthly( rFreq );
+             if( index == last ) {
+               // e.g. MD1 #0
+               short tmpDay = anEvent->dtStart().date().day();
+               anEvent->recurrence()->addMonthlyDate( tmpDay );
+             }
+             else {
+               // e.g. MD1 3 #0
+               while (index < last) {
+                 int index2 = tmpStr.find(' ', index);
+                 short tmpDay = tmpStr.mid(index, (index2-index)).toShort();
+                 index = index2-1;
+                 if (tmpStr.mid(index, 1) == "-")
+                   tmpDay = 0 - tmpDay;
+                 index += 2; // advance the index;
+                 anEvent->recurrence()->addMonthlyDate( tmpDay );
+               } // while != #
+             }
+             break;
+
+        case Recurrence::rYearlyMonth:
+             anEvent->recurrence()->setYearly( rFreq );
+
+             if( index == last ) {
+               // e.g. YM1 #0
+               short tmpMonth = anEvent->dtStart().date().month();
+               anEvent->recurrence()->addYearlyMonth( tmpMonth );
+             }
+             else {
+               // e.g. YM1 3 #0
+               while (index < last) {
+                 int index2 = tmpStr.find(' ', index);
+                 short tmpMonth = tmpStr.mid(index, (index2-index)).toShort();
+                 index = index2 + 1;
+                 anEvent->recurrence()->addYearlyMonth( tmpMonth );
+               } // while != #
+             }
+             break;
+
+        case Recurrence::rYearlyDay:
+             anEvent->recurrence()->setYearly( rFreq );
+
+             if( index == last ) {
+               // e.g. YD1 #0
+               short tmpDay = anEvent->dtStart().date().dayOfYear();
+               anEvent->recurrence()->addYearlyDay( tmpDay );
+             }
+             else {
+               // e.g. YD1 123 #0
+               while (index < last) {
+                 int index2 = tmpStr.find(' ', index);
+                 short tmpDay = tmpStr.mid(index, (index2-index)).toShort();
+                 index = index2+1;
+                 anEvent->recurrence()->addYearlyDay( tmpDay );
+               } // while != #
+             }
+             break;
+
+        default: break;
       }
-      else {
-        // e.g. W1 SU #0
-        while (index < last) {
-          dayStr = tmpStr.mid(index, 3);
-          int dayNum = numFromDay(dayStr);
-          qba.setBit(dayNum);
-          index += 3; // advance to next day, or possibly "#"
-        }
-      }
-      anEvent->recurrence()->setWeekly( rFreq, qba );
-      index = last; if (tmpStr.mid(index,1) == "#") index++;
-      if (tmpStr.find('T', index) != -1) {
-        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->recurrence()->setEndDateTime( rEndDate );
-      } else {
+
+      // find the last field, which is either the duration or the end date
+      index = last;
+      if ( tmpStr.mid(index,1) == "#") {
+        // Nr of occurrences
+        index++;
         int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
         if ( rDuration > 0 )
           anEvent->recurrence()->setDuration( rDuration );
-      }
-    }
-    /**************************** MONTHLY-BY-POS ***************************/
-    else if (tmpStr.left(2) == "MP") {
-      int index = tmpStr.find(' ');
-      int last = tmpStr.findRev(' ') + 1;
-      int rFreq = tmpStr.mid(2, (index-1)).toInt();
-      anEvent->recurrence()->setMonthly( rFreq );
-      index += 1; // advance to beginning of stuff after freq
-      QBitArray qba(7);
-      short tmpPos;
-      if( index == last ) {
-        // e.g. MP1 #0
-        tmpPos = anEvent->dtStart().date().day()/7 + 1;
-        if( tmpPos == 5 )
-          tmpPos = -1;
-        qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
-        anEvent->recurrence()->addMonthlyPos( tmpPos, qba );
-      }
-      else {
-        // e.g. MP1 1+ SU #0
-        while (index < last) {
-          tmpPos = tmpStr.mid(index,1).toShort();
-          index += 1;
-          if (tmpStr.mid(index,1) == "-")
-            // convert tmpPos to negative
-            tmpPos = 0 - tmpPos;
-          index += 2; // advance to day(s)
-          while (numFromDay(tmpStr.mid(index,3)) >= 0) {
-            int dayNum = numFromDay(tmpStr.mid(index,3));
-            qba.setBit(dayNum);
-            index += 3; // advance to next day, or possibly pos or "#"
-          }
-          anEvent->recurrence()->addMonthlyPos( tmpPos, qba );
-          qba.detach();
-          qba.fill(FALSE); // clear out
-        } // while != "#"
-      }
-      index = last;
-      if (tmpStr.mid(index,1) == "#") index++;
-
-      if (tmpStr.find('T', index) != -1) {
-        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length() -
-                                                    index))).date();
-        anEvent->recurrence()->setEndDate( rEndDate );
-      } else {
-        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration > 0)
-          anEvent->recurrence()->setDuration( rDuration );
-      }
-    }
-
-    /**************************** MONTHLY-BY-DAY ***************************/
-    else if (tmpStr.left(2) == "MD") {
-      int index = tmpStr.find(' ');
-      int last = tmpStr.findRev(' ') + 1;
-      int rFreq = tmpStr.mid(2, (index-1)).toInt();
-      index += 1;
-      short tmpDay;
-
-      anEvent->recurrence()->setMonthly( rFreq );
-      if( index == last ) {
-        // e.g. MD1 #0
-        tmpDay = anEvent->dtStart().date().day();
-        anEvent->recurrence()->addMonthlyDate( tmpDay );
-      }
-      else {
-        // e.g. MD1 3 #0
-        while (index < last) {
-          int index2 = tmpStr.find(' ', index);
-          tmpDay = tmpStr.mid(index, (index2-index)).toShort();
-          index = index2-1;
-          if (tmpStr.mid(index, 1) == "-")
-            tmpDay = 0 - tmpDay;
-          index += 2; // advance the index;
-          anEvent->recurrence()->addMonthlyDate( tmpDay );
-        } // while != #
-      }
-      index = last;
-      if (tmpStr.mid(index,1) == "#") index++;
-      if (tmpStr.find('T', index) != -1) {
+      } else if ( tmpStr.find('T', index) != -1 ) {
         QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->recurrence()->setEndDate( rEndDate );
-      } else {
-        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration > 0)
-          anEvent->recurrence()->setDuration( rDuration );
+        anEvent->recurrence()->setEndDateTime( rEndDate );
       }
-    }
+// anEvent->recurrence()->dump();
 
-    /*********************** YEARLY-BY-MONTH *******************************/
-    else if (tmpStr.left(2) == "YM") {
-      int index = tmpStr.find(' ');
-      int last = tmpStr.findRev(' ') + 1;
-      int rFreq = tmpStr.mid(2, (index-1)).toInt();
-      anEvent->recurrence()->setYearly( rFreq );
-      index += 1;
-      short tmpMonth;
-      if( index == last ) {
-        // e.g. YM1 #0
-        tmpMonth = anEvent->dtStart().date().month();
-        anEvent->recurrence()->addYearlyMonth( tmpMonth );
-      }
-      else {
-        // e.g. YM1 3 #0
-        while (index < last) {
-          int index2 = tmpStr.find(' ', index);
-          tmpMonth = tmpStr.mid(index, (index2-index)).toShort();
-          index = index2 + 1;
-          anEvent->recurrence()->addYearlyMonth( tmpMonth );
-        } // while != #
-      }
-
-      index = last; if (tmpStr.mid(index,1) == "#") index++;
-      if (tmpStr.find('T', index) != -1) {
-        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->recurrence()->setEndDate( rEndDate );
-      } else {
-        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration > 0)
-          anEvent->recurrence()->setDuration( rDuration );
-      }
-    }
-
-    /*********************** YEARLY-BY-DAY *********************************/
-    else if (tmpStr.left(2) == "YD") {
-      int index = tmpStr.find(' ');
-      int last = tmpStr.findRev(' ') + 1;
-      int rFreq = tmpStr.mid(2, (index-1)).toInt();
-      anEvent->recurrence()->setYearly( rFreq );
-      index += 1;
-      short tmpDay;
-      if( index == last ) {
-        // e.g. YD1 #0
-        tmpDay = anEvent->dtStart().date().dayOfYear();
-        anEvent->recurrence()->addYearlyDay( tmpDay );
-      }
-      else {
-        // e.g. YD1 123 #0
-        while (index < last) {
-          int index2 = tmpStr.find(' ', index);
-          tmpDay = tmpStr.mid(index, (index2-index)).toShort();
-          index = index2+1;
-          anEvent->recurrence()->addYearlyDay( tmpDay );
-        } // while != #
-      }
-      index = last;
-      if (tmpStr.mid(index,1) == "#") index++;
-
-      if (tmpStr.find('T', index) != -1) {
-        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->recurrence()->setEndDate( rEndDate );
-      } else {
-        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration > 0)
-          anEvent->recurrence()->setDuration( rDuration );
-      }
     } else {
       kdDebug(5800) << "we don't understand this type of recurrence!" << endl;
-    } // if
-kdDebug(5800) << " Recurrence loaded from vCalendar file: " << endl;
-anEvent->recurrence()->dump();
+    } // if known recurrence type
   } // repeats
 
 
