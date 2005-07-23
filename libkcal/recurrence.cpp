@@ -18,8 +18,8 @@
 
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
 */
 
 #include <limits.h>
@@ -728,8 +728,8 @@ kdDebug(5800) << " Recurrence::getNextDateTime after " << preDateTime << endl;
     while ( it != mRDateTimes.end() && (*it) <= nextDT ) ++it;
     if ( it != mRDateTimes.end() ) dates << (*it);
 
-kdDebug(5800) << "    nextDT: " << nextDT << ", startDT: " << startDateTime() << endl;
-kdDebug(5800) << "   getNextDateTime: found " << dates.count() << " RDATES and DTSTART in loop " << loop << endl;
+/*kdDebug(5800) << "    nextDT: " << nextDT << ", startDT: " << startDateTime() << endl;
+kdDebug(5800) << "   getNextDateTime: found " << dates.count() << " RDATES and DTSTART in loop " << loop << endl;*/
     DateList::ConstIterator dit = mRDates.begin();
     while ( dit != mRDates.end() && QDateTime( (*dit), startDateTime().time() ) <= nextDT ) ++dit;
     if ( dit != mRDates.end() ) dates << QDateTime( (*dit), startDateTime().time() );
@@ -742,19 +742,19 @@ kdDebug(5800) << "   getNextDateTime: found " << dates.count() << " RDATES and D
 
     // Take the first of these (all others can't be used later on)
     qHeapSort( dates );
-kdDebug(5800) << "   getNextDateTime: found " << dates.count() << " dates in loop " << loop << endl;
+// kdDebug(5800) << "   getNextDateTime: found " << dates.count() << " dates in loop " << loop << endl;
 
     if ( dates.isEmpty() ) return QDateTime();
     nextDT = dates.first();
 
     // Check if that date/time is excluded explicitly or by an exrule:
     if ( !mExDates.contains( nextDT.date() ) && !mExDateTimes.contains( nextDT ) ) {
-kdDebug(5800) << "   NextDT" << nextDT << " not excluded by EXDATE " << endl;
+// kdDebug(5800) << "   NextDT" << nextDT << " not excluded by EXDATE " << endl;
       bool allowed = true;
       for ( RecurrenceRule::List::ConstIterator rr = mExRules.begin(); rr != mExRules.end(); ++rr ) {
         allowed = allowed && !( (*rr)->recursAt( nextDT ) );
       }
-kdDebug(5800) << "   NextDT " << nextDT << ", allowed=" << allowed << endl;
+// kdDebug(5800) << "   NextDT " << nextDT << ", allowed=" << allowed << endl;
       if ( allowed ) return nextDT;
     }
   }
