@@ -259,7 +259,7 @@ public:
     //. objects.
 
     const char* partId() const { return mId.c_str(); };
-    void SetPartId( const char* id ) { mId = id; };
+    void SetPartId( DwString id ) { mId = id; };
     // set or get a unique string for that part
 
 protected:
