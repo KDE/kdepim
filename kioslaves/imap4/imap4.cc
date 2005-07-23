@@ -276,6 +276,7 @@ IMAP4Protocol::get (const KURL & _url)
     if (aEnum == ITYPE_BOX || aEnum == ITYPE_DIR_AND_BOX)
     {
       // write the digest header
+      cacheOutput = true;
       outputLine
         ("Content-Type: multipart/digest; boundary=\"IMAPDIGEST\"\r\n", 55);
       if (selectInfo.recentAvailable ())
@@ -308,6 +309,8 @@ IMAP4Protocol::get (const KURL & _url)
         }
       }
       outputLine ("\r\n", 2);
+      flushOutput(QString::null);
+      cacheOutput = false;
     }
 
     if (aEnum == ITYPE_MSG || (aEnum == ITYPE_ATTACH && !decodeContent))
@@ -958,11 +961,13 @@ IMAP4Protocol::mkdir (const KURL & _url, int)
     parseURL(_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
   if (type == ITYPE_BOX)
   {
-    if (messageBox(QuestionYesNo,
-      i18n("The following folder will be created on the server: %1 "
-           "What do you want to store in this folder?").arg( _url.prettyURL() ),
-      i18n("Create Folder"),
-      i18n("&Messages"), i18n("&Subfolders")) == KMessageBox::No)
+    bool ask = ( aInfo.find( "ASKUSER" ) != -1 );
+    if ( ask && 
+        messageBox(QuestionYesNo,
+          i18n("The following folder will be created on the server: %1 "
+               "What do you want to store in this folder?").arg( _url.prettyURL() ), 
+          i18n("Create Folder"),
+          i18n("&Messages"), i18n("&Subfolders")) == KMessageBox::No )
     {
       cmd = doCommand(imapCommand::clientDelete(newBox));
       completeQueue.removeRef (cmd);
