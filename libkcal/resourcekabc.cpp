@@ -227,22 +227,26 @@ bool ResourceKABC::doLoad()
     QString name_1 = (*addrIt).nickName();
     QString uid_1 = (*addrIt).uid();
     QString email_1 = (*addrIt).fullEmail();
+    if ( name_1.isEmpty() )
+      name_1 = (*addrIt).realName();
 
 
     QString spouseName = (*addrIt).custom( "KADDRESSBOOK", "X-SpousesName" );
-    QString email_2,uid_2;
-    if ( name_1.isEmpty() )
-      name_1 = (*addrIt).givenName();
+    QString name_2,email_2,uid_2;
     if ( !spouseName.isEmpty() ) {
       //TODO: find a KABC:Addressee of the spouse
+      //      Probably easiest would be to use a QMap (as the spouse's entry was already searched above!
       KABC::Addressee spouse;
       spouse.setNameFromString( spouseName );
       uid_2 = spouse.uid();
       email_2 = spouse.fullEmail();
-      name = name_1;
-      name += " & " + spouse.givenName();
+      name_2 = spouse.nickName();
+      if ( name_2.isEmpty() )
+        name_2 = spouse.givenName();
+      summary = i18n("insert names of both spouses", "%1's & %2's anniversary").arg( name_1 ).arg( name_2 );
+    } else {
+      summary = i18n("only one spouse in addressbook, insert the name", "%1's anniversary").arg( name_1 );
     }
-    summary = i18n("%1's anniversary").arg( name );
 
     Event *ev = new Event();
       ev->setUid( (*it).uid()+"_KABC_Anniversary");
