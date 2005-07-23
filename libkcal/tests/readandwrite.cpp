@@ -67,6 +67,10 @@ int main( int argc, char **argv )
   CalendarLocal cal( QString::fromLatin1("UTC") );
 
   if ( !cal.load( input ) ) return 1;
+	QString tz = cal.nonKDECustomProperty( "X-LibKCal-Testsuite-OutTZ" );
+	if ( !tz.isEmpty() ) {
+	  cal.setTimeZoneIdViewOnly( tz );
+	}
   if ( !cal.save( output ) ) return 1;
 
   return 0;
