@@ -979,7 +979,6 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
 
   // repeat stuff
   if ((vo = isAPropertyOf(vevent, VCRRuleProp)) != 0) {
-    bool understood = false;
     QString tmpStr = (s = fakeCString(vObjectUStringZValue(vo)));
     deleteStr(s);
     tmpStr.simplifyWhiteSpace();
