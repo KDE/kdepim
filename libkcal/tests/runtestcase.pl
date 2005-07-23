@@ -66,7 +66,7 @@ sub checkfile()
   my $file = shift;
   my $outfile = shift;
 
-  print "Checking '$outfile':\n";
+  my $logentry = "Checking '$outfile':\n";
 
   my @ref;
   if ( !open( REF, "$file.$id.ref" ) ) {
@@ -105,7 +105,10 @@ sub checkfile()
     }
 
     if ( $out ne $ref ) {
-		  $errorlines++;
+      if ( $errorlines == 0 ) {
+        print $logentry;
+      }
+      $errorlines++;
       $error++;
       if ( $errorlines < $MAXERRLINES ) {
         print "  Line $line: Expected      : $ref";
