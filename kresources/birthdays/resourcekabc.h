@@ -27,13 +27,13 @@
 
 #include <kconfig.h>
 
-#include "incidence.h"
-#include "calendarlocal.h"
+#include "libkcal/incidence.h"
+#include "libkcal/calendarlocal.h"
 #include <kabc/addressbook.h>
 
-#include "resourcecalendar.h"
+#include "libkcal/resourcecalendar.h"
 
-#include <kdepimmacros.h>
+#include "libkdepim/kdepimmacros.h"
 
 namespace KIO {
 class FileCopyJob;

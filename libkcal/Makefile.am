@@ -51,7 +51,7 @@ libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
   resourcelocal.h scheduler.h libkcal_export.h \
   todo.h vcaldrag.h vcalformat.h
 
-kde_module_LTLIBRARIES = kcal_local.la kcal_localdir.la kcal_kabc.la
+kde_module_LTLIBRARIES = kcal_local.la kcal_localdir.la 
 
 kcal_local_la_SOURCES = resourcelocal_plugin.cpp
 kcal_local_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
@@ -61,16 +61,12 @@ kcal_localdir_la_SOURCES = resourcelocaldir_plugin.cpp
 kcal_localdir_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 kcal_localdir_la_LIBADD  = libkcal.la
 
-kcal_kabc_la_SOURCES = resourcekabc.cpp resourcekabcconfig.cpp
-kcal_kabc_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
-kcal_kabc_la_LIBADD  = libkcal.la
-
 EXTRA_PROGRAMS = convertqtopia
 convertqtopia_SOURCES = convertqtopia.cpp
 convertqtopia_LDADD = libkcal.la
 
 servicedir = $(kde_servicesdir)/kresources/kcal
-service_DATA = local.desktop localdir.desktop kabc.desktop
+service_DATA = local.desktop localdir.desktop
 
 manager_DATA = kcal_manager.desktop
 managerdir = $(kde_servicesdir)/kresources

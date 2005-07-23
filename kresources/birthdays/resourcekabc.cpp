@@ -35,15 +35,15 @@
 #include <kabc/stdaddressbook.h>
 #include <kabc/locknull.h>
 
-#include "vcaldrag.h"
-#include "vcalformat.h"
-#include "icalformat.h"
-#include "exceptions.h"
-#include "incidence.h"
-#include "event.h"
-#include "todo.h"
-#include "journal.h"
-#include "filestorage.h"
+#include "libkcal/vcaldrag.h"
+#include "libkcal/vcalformat.h"
+#include "libkcal/icalformat.h"
+#include "libkcal/exceptions.h"
+#include "libkcal/incidence.h"
+#include "libkcal/event.h"
+#include "libkcal/todo.h"
+#include "libkcal/journal.h"
+#include "libkcal/filestorage.h"
 #include "libkcal/alarm.h"
 
 #include <kresources/configwidget.h>
@@ -58,6 +58,7 @@ extern "C"
 {
   void *init_kcal_kabc()
   {
+	  KGlobal::locale()->insertCatalogue( "kres_birthday" );
     KGlobal::locale()->insertCatalogue( "libkcal" );
     return new KRES::PluginFactory<ResourceKABC,ResourceKABCConfig>();
   }
