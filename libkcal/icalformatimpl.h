@@ -75,7 +75,7 @@ class ICalFormatImpl
     Person readOrganizer( icalproperty *organizer );
     Attachment *readAttachment(icalproperty *attach);
     void readIncidence(icalcomponent *parent, icaltimezone *timezone, Incidence *incidence);
-    void readRecurrenceRule(icalproperty *rrule,Incidence *event);
+    void readRecurrenceRule(icalproperty *rrule,Incidence *event );
     void readExceptionRule( icalproperty *rrule, Incidence *incidence );
     void readRecurrence( const struct icalrecurrencetype &r, RecurrenceRule* recur );
     void readAlarm(icalcomponent *alarm,Incidence *incidence);

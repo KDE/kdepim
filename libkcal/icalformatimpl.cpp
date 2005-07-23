@@ -1436,7 +1436,7 @@ void ICalFormatImpl::readCustomProperties(icalcomponent *parent,CustomProperties
 
 
 
-void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence)
+void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence )
 {
 //  kdDebug(5800) << "Read recurrence for " << incidence->summary() << endl;
 
@@ -1490,6 +1490,7 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
   icaltimetype t;
   if ( !icaltime_is_null_time( r.until ) ) {
     t = r.until;
+    // Convert to the correct time zone! it's in UTC by specification.
     QDateTime endDate( readICalDateTime(t) );
     recur->setEndDt( endDate );
   } else {
