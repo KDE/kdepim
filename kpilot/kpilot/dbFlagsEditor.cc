@@ -58,7 +58,7 @@ DBFlagsEditor::~DBFlagsEditor()
 
 void DBFlagsEditor::slotOk()
 {
-	if (KMessageBox::questionYesNo(this, i18n("Changing the database flags might corrupt the whole database, or make the data unusable. Do not change the values unless you are absolutely sure you know what you are doing.\n\nReally assign these new flags?"), i18n("Changing Database Flags"))==KMessageBox::Yes)
+	if (KMessageBox::questionYesNo(this, i18n("Changing the database flags might corrupt the whole database, or make the data unusable. Do not change the values unless you are absolutely sure you know what you are doing.\n\nReally assign these new flags?"), i18n("Changing Database Flags"),i18n("Assign"),KStdGuiItem::cancel())==KMessageBox::Yes)
 	{
 		strlcpy(dbi->name, PilotAppCategory::codec()->fromUnicode(widget->fDBName->text()), 33);
 

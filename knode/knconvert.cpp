@@ -214,7 +214,7 @@ void KNConvert::slotTarExited(KProcess *proc)
 
   if(!proc || !proc->normalExit() || proc->exitStatus()!=0) {
     success=false;
-    if(KMessageBox::No==KMessageBox::warningYesNo(this, i18n("<b>The backup failed</b>; do you want to continue anyway?"))) {
+    if(KMessageBox::Cancel==KMessageBox::warningContinueCancel(this, i18n("<b>The backup failed</b>; do you want to continue anyway?"))) {
 
       delete t_ar;
       t_ar = 0;

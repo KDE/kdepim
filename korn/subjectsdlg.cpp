@@ -415,7 +415,7 @@ void KornSubjectsDlg::deleteMessage()
 	QString confirmation = i18n(	"Do you really want to delete %n message?",
 					"Do you really want to delete %n messages?", _delete->messages->count() );
 	
-	if( KMessageBox::questionYesNo( this, confirmation, i18n( "Confirmation" ) ) != KMessageBox::Yes )
+	if( KMessageBox::questionYesNo( this, confirmation, i18n( "Confirmation" ), KStdGuiItem::del(), KStdGuiItem::cancel() ) != KMessageBox::Yes )
 	{
 		deleteDeleteStruct();
 		return; //Not excepted

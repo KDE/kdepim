@@ -427,7 +427,7 @@ void ViewManager::dropped( QDropEvent *e )
     int c = urls.count();
     if ( c > 1 ) {
       QString questionString = i18n( "Import one contact into your addressbook?", "Import %n contacts into your addressbook?", c );
-      if ( KMessageBox::questionYesNo( this, questionString, i18n( "Import Contacts?" ) ) == KMessageBox::Yes ) {
+      if ( KMessageBox::questionYesNo( this, questionString, i18n( "Import Contacts?" ), i18n("Import"), i18n("Do Not Import") ) == KMessageBox::Yes ) {
         for ( ; it != urls.end(); ++it )
           emit urlDropped( *it );
       }

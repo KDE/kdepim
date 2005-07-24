@@ -840,7 +840,7 @@ bool KNMainWidget::requestShutdown()
   if( a_rtFactory->jobsPending() &&
       KMessageBox::No==KMessageBox::warningYesNo(this, i18n(
 "KNode is currently sending articles. If you quit now you might lose these \
-articles.\nDo you want to quit anyway?"))
+articles.\nDo you want to quit anyway?"), QString::null, KStdGuiItem::quit(), KStdGuiItem::cancel())
     )
     return false;
 
@@ -1508,7 +1508,7 @@ void KNMainWidget::slotGrpUnsubscribe()
   kdDebug(5003) << "KNMainWidget::slotGrpUnsubscribe()" << endl;
   if(g_rpManager->currentGroup()) {
     if(KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,
-      i18n("Do you really want to unsubscribe from %1?").arg(g_rpManager->currentGroup()->groupname())))
+      i18n("Do you really want to unsubscribe from %1?").arg(g_rpManager->currentGroup()->groupname()), QString::null, i18n("Unsubscribe"), KStdGuiItem::cancel()))
       if (g_rpManager->unsubscribeGroup(g_rpManager->currentGroup()))
         slotCollectionSelected(0);
   }

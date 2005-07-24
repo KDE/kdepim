@@ -504,7 +504,7 @@ void KABCore::setWhoAmI()
   }
 
   QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>" ) );
-  if ( KMessageBox::questionYesNo( mWidget, text.arg( addrList[ 0 ].assembledName() ) ) == KMessageBox::Yes )
+  if ( KMessageBox::questionYesNo( mWidget, text.arg( addrList[ 0 ].assembledName() ), QString::null, i18n("Use"), i18n("Do Not Use") ) == KMessageBox::Yes )
     static_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self( true ) )->setWhoAmI( addrList[ 0 ] );
 }
 
@@ -1227,7 +1227,7 @@ void KABCore::categoriesSelected( const QStringList &categories )
 {
   bool merge = false;
   QString msg = i18n( "Merge with existing categories?" );
-  if ( KMessageBox::questionYesNo( mWidget, msg ) == KMessageBox::Yes )
+  if ( KMessageBox::questionYesNo( mWidget, msg, QString::null, i18n("Merge"), i18n("Do Not Merge") ) == KMessageBox::Yes )
     merge = true;
 
   QStringList uids = mViewManager->selectedUids();

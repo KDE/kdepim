@@ -328,7 +328,7 @@ int KSSLSocket::verifyCertificate()
 						msg.arg(ourHost),
 						i18n("Server Authentication"),
 						i18n("&Details"),
-						i18n("Co&ntinue") );
+						KStdGuiItem::cont().text() );
 					}
 					else
 					{
@@ -338,7 +338,7 @@ int KSSLSocket::verifyCertificate()
 						msg.arg(ourHost),
 						i18n("Server Authentication"),
 						i18n("&Details"),
-						i18n("Co&ntinue") );
+						KStdGuiItem::cont().text() );
 					}
 				}
 				while (result == KMessageBox::Yes);

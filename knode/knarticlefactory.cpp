@@ -141,7 +141,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
       if( post && // user wanted to reply by public posting?
           // ask the user if she wants to ignore this F'up-To: poster
           ( KMessageBox::Yes != KMessageBox::questionYesNo(knGlobals.topWidget,
-                i18n("The author has requested a reply by email instead\nof a followup to the newsgroup. (Followup-To: poster)\nDo you want to reply in public anyway?")) ))
+                i18n("The author has requested a reply by email instead\nof a followup to the newsgroup. (Followup-To: poster)\nDo you want to reply in public anyway?"), QString::null, i18n("Reply Public"), i18n("Reply by Email")) ))
       {
         art->setDoPost(false);
         art->setDoMail(true);
@@ -280,7 +280,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   bool incAtt = ( !knGlobals.configManager()->postNewsTechnical()->useExternalMailer() &&
                   ct->isMultipart() && ct->isSubtype("mixed") &&
                   KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget,
-                  i18n("This article contains attachments. Do you want them to be forwarded as well?"))
+                  i18n("This article contains attachments. Do you want them to be forwarded as well?"), QString::null, i18n("Forward"), i18n("Do Not Forward"))
                 );
 
   if (knGlobals.configManager()->postNewsTechnical()->useOwnCharset())
@@ -361,7 +361,7 @@ void KNArticleFactory::createCancel(KNArticle *a)
     return;
 
   if(KMessageBox::No==KMessageBox::questionYesNo(knGlobals.topWidget,
-    i18n("Do you really want to cancel this article?")))
+    i18n("Do you really want to cancel this article?"), QString::null, i18n("Cancel Article"), KStdGuiItem::cancel()))
     return;
 
   bool sendNow;
@@ -441,7 +441,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
     return;
 
   if(KMessageBox::No==KMessageBox::questionYesNo(knGlobals.topWidget,
-    i18n("Do you really want to supersede this article?")))
+    i18n("Do you really want to supersede this article?"), QString::null, i18n("Supersede"), KStdGuiItem::cancel()))
     return;
 
   KNGroup *grp;

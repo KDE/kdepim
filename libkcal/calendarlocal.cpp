@@ -558,8 +558,8 @@ void CalendarLocal::setTimeZoneIdViewOnly( const QString& tz )
   if ( isModified() ) {
     rc = KMessageBox::questionYesNo( 0, question,
                                        i18n("Save before applying timezones?"),
-                                       KGuiItem(i18n("Save")),
-                                       KGuiItem(i18n("Apply timezone change on next reload")),
+                                       KStdGuiItem::save(),
+                                       KGuiItem(i18n("Apply Timezone Change on Next Reload")),
                                        "calendarLocalSaveBeforeTimezoneShift");
   }
   if ( rc == KMessageBox::Yes ) {

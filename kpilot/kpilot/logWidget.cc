@@ -356,7 +356,7 @@ void LogWidget::hideSplash()
 				this,
 				i18n("The file exists. Do you want to "
 					"overwrite it?"),
-				i18n("File Exists"));
+				i18n("File Exists"), i18n("Overwrite"), i18n("Do Not Overwrite"));
 			if (r==KMessageBox::Yes)
 			{
 				finished=saveFile(saveFileName);
@@ -382,7 +382,7 @@ bool LogWidget::saveFile(const QString &saveFileName)
 		int r = KMessageBox::questionYesNo(this,
 			i18n("<qt>Cannot open the file &quot;%1&quot; "
 				"for writing; try again?</qt>"),
-			i18n("Cannot Save"));
+			i18n("Cannot Save"), i18n("Try Again"), i18n("Do Not Try"));
 
 		if (r==KMessageBox::Yes) return false;
 		return true;

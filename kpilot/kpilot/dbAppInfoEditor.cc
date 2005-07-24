@@ -90,7 +90,7 @@ void DBAppInfoEditor::slotOk()
 	KMessageBox::sorry(this, i18n("Changing the AppInfo block isn't yet supported by KPilot!"));
 /*	if (KMessageBox::questionYesNo(this, i18n("Changing the AppInfo block "
 		"might corrupt the whole database. \n\nReally assign the new AppInfo "
-		"block?"), i18n("Changing AppInfo Block"))==KMessageBox::Yes)
+		"block?"), i18n("Changing AppInfo Block"), i18n("Assign"), KStdGuiItem::cancel())==KMessageBox::Yes)
 	{
 		// TODO: Copy the data over
 		// TODO: set the length

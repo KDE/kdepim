@@ -153,7 +153,7 @@ void DeviceConfigPage::load()
 			"probably unsupported and can cause problems. "
 			"Are you sure you want to use this device name?</qt>")
 			.arg(d),
-		i18n("Device Name too Long")
+		i18n("Device Name too Long"), i18n("Use"), i18n("Do Not Use")
 		) ;
 	}
 #endif

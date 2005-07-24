@@ -2625,9 +2625,9 @@ void KNComposer::AttachmentPropertiesDlg::accept()
     return;
   }
   else if(n_onTextAsText && m_imeType->text().find("text/", 0, false)!=-1 &&
-       KMessageBox::warningYesNo(this,
+       KMessageBox::warningContinueCancel(this,
        i18n("You have changed the mime-type of this non-textual attachment\nto text. This might cause an error while loading or encoding the file.\nProceed?")
-       ) == KMessageBox::No) return;
+       ) == KMessageBox::Cancel) return;
 
   KDialogBase::accept();
 }

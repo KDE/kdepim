@@ -139,7 +139,7 @@ void BackupView::deleteBackup()
   }
 
   int result = KMessageBox::questionYesNo( this,
-      i18n("Permanently delete backup '%1'?").arg( backupItem->text( 0 ) ) );
+      i18n("Permanently delete backup '%1'?").arg( backupItem->text( 0 ) ), QString::null, KStdGuiItem::del(), KStdGuiItem::cancel() );
   if ( result == KMessageBox::No ) return;
 
   QString dirName = locateLocal( "appdata", topBackupDir() );

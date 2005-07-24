@@ -300,7 +300,7 @@ bool Kandy::queryClose()
 {
   if (mView->isModified()) {
     switch (KMessageBox::warningYesNoCancel(this,
-        i18n("Save changes to profile %1?").arg(mFilename))) {
+        i18n("Save changes to profile %1?").arg(mFilename), QString::null, KStdGuiItem::save(), KStdGuiItem::discard())) {
       case KMessageBox::Yes :
         fileSave();
         return true;

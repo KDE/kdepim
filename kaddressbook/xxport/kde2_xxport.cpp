@@ -55,7 +55,7 @@ KABC::AddresseeList KDE2XXPort::importContacts( const QString& ) const
 
   int result = KMessageBox::questionYesNoCancel( parentWidget(),
       i18n( "Override previously imported entries?" ),
-      i18n( "Import KDE 2 Addressbook" ) );
+      i18n( "Import KDE 2 Addressbook" ), i18n("Import"), i18n("Do Not Import") );
 
   if ( !result ) return KABC::AddresseeList();
 

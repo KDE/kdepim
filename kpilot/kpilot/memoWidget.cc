@@ -348,7 +348,7 @@ void MemoWidget::slotDeleteMemo()
 	}
 	if (KMessageBox::questionYesNo(this,
 			i18n("Delete currently selected memo?"),
-			i18n("Delete Memo?")) != KMessageBox::Yes)
+			i18n("Delete Memo?"), KStdGuiItem::del(), KStdGuiItem::cancel()) != KMessageBox::Yes)
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname <<

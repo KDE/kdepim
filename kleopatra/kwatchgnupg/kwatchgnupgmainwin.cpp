@@ -2,7 +2,7 @@
     kwatchgnupgmainwin.cpp
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2001,2002,2004 Klarï¿½vdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -192,7 +192,7 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
 
 void KWatchGnuPGMainWindow::slotWatcherExited()
 {
-  if( KMessageBox::questionYesNo( this, i18n("The watchgnupg logging process died.\nDo you want to try to restart it?") ) == KMessageBox::Yes ) {
+  if( KMessageBox::questionYesNo( this, i18n("The watchgnupg logging process died.\nDo you want to try to restart it?"), QString::null, i18n("Try Restart"), i18n("Do Not Try") ) == KMessageBox::Yes ) {
 	mCentralWidget->append( i18n("====== Restarting logging process =====") );
 	startWatcher();
   } else {
@@ -238,7 +238,7 @@ void KWatchGnuPGMainWindow::slotSaveAs()
 		KMessageBox::warningYesNo( this, i18n("The file named \"%1\" already "
 											  "exists. Are you sure you want "
 											  "to overwrite it?").arg(filename),
-								   i18n("Overwrite File") ) ) {
+								   i18n("Overwrite File"), i18n("Overwrite"), KStdGuiItem::cancel() ) ) {
 	  return;
 	}
   }

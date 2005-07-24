@@ -583,7 +583,7 @@ void AddressWidget::slotDeleteRecord()
 
 	if (KMessageBox::questionYesNo(this,
 			i18n("Delete currently selected record?"),
-			i18n("Delete Record?")) == KMessageBox::No)
+			i18n("Delete Record?"), KStdGuiItem::del(), KStdGuiItem::cancel()) == KMessageBox::No)
 		return;
 
 	selectedRecord->setDeleted( true );

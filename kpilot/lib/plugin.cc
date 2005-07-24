@@ -90,7 +90,7 @@ ConduitConfigBase::~ConduitConfigBase()
 
 	int r = KMessageBox::questionYesNoCancel(fWidget,
 		maybeSaveText(),
-		i18n("%1 Conduit").arg(this->conduitName()));
+		i18n("%1 Conduit").arg(this->conduitName()), KStdGuiItem::save(), KStdGuiItem::discard());
 	if (r == KMessageBox::Cancel) return false;
 	if (r == KMessageBox::Yes) commit();
 	return true;

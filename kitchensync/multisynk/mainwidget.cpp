@@ -124,7 +124,7 @@ void MainWidget::deletePair()
   if ( !uid.isEmpty() ) {
     KonnectorPair *pair = mManager->pair( uid );
     int result = KMessageBox::questionYesNo( this, i18n( "Do you really want to delete '%1'?" ).arg( pair->name() ),
-                                             i18n( "Delete Synchronization Pair" ) );
+                                             i18n( "Delete Synchronization Pair" ), KStdGuiItem::del(), KStdGuiItem::cancel() );
     if ( result == KMessageBox::Yes )
       mManager->remove( uid );
   }

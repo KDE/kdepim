@@ -362,7 +362,7 @@ void GenericDBWidget::slotDeleteRecord()
 {
 	FUNCTIONSETUP;
 	PilotListViewItem*currRecItem=dynamic_cast<PilotListViewItem*>(fRecordList->selectedItem());
-	if (currRecItem && (KMessageBox::questionYesNo(this, i18n("<qt>Do you really want to delete the selected record? This cannot be undone.<br><br>Delete record?<qt>"), i18n("Deleting Record"))==KMessageBox::Yes) )
+	if (currRecItem && (KMessageBox::questionYesNo(this, i18n("<qt>Do you really want to delete the selected record? This cannot be undone.<br><br>Delete record?<qt>"), i18n("Deleting Record"), KStdGuiItem::del(), KStdGuiItem::cancel())==KMessageBox::Yes) )
 	{
 		PilotRecord*rec=(PilotRecord*)currRecItem->rec();
 		rec->setDeleted();

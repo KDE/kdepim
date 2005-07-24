@@ -329,7 +329,7 @@ KMobileDevice * KMobileFactory::chooseDeviceDialog( QWidget *parent,
      answ = KMessageBox::questionYesNo(parent,
 		i18n( "<qt>You have no mobile devices configured yet.<p>"
 			"Do you want to add a device now ?</qt>" ),
-		i18n( "KDE Mobile Device Access" ) );
+		i18n( "KDE Mobile Device Access" ), KStdGuiItem::add(), i18n("Do Not Add") );
      if (answ != KMessageBox::Yes)
 	return 0L;
      // add a new device

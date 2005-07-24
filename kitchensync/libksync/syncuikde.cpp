@@ -61,7 +61,7 @@ bool SyncUiKde::confirmDelete( SyncEntry* entry, SyncEntry* target )
 
     QString text = i18n("\"%1\" was deleted on %2. Do you want to delete it?").arg( target->name() ).arg( entry->syncee()->title() );
 
-    int res =KMessageBox::questionYesNo(mParent, text, i18n("Delete?") );
+    int res =KMessageBox::questionYesNo(mParent, text, i18n("Delete?"), KStdGuiItem::del(), KStdGuiItem::cancel() );
     if ( res == KMessageBox::Yes ) return true;
     else return false;
 
@@ -75,7 +75,7 @@ SyncEntry* SyncUiKde::deletedChanged( SyncEntry* syncEntry, SyncEntry* target )
 {
     QString text = i18n("\"%1\" was deleted on %2 and changed on %3").arg( target->name() ).arg( syncEntry->syncee()->title() ).arg( target->syncee()->title() );
     int res = KMessageBox::questionYesNo(mParent, text, i18n("Delete or Modify?"),
-                               i18n("Delete"), i18n("Modify") );
+                               KStdGuiItem::del(), i18n("Modify") );
     if ( res == KMessageBox::Yes )
         return syncEntry;
     else if ( res == KMessageBox::No )
@@ -89,7 +89,7 @@ SyncEntry* SyncUiKde::changedChanged( SyncEntry* syncEntry, SyncEntry* target )
 {
     QString text = i18n("\"%1\" was changed on both sources. Which one do you want to take?").arg(syncEntry->name() );
 
-    int res = KMessageBox::questionYesNo(mParent, text, i18n("Modified two entries"),
+    int res = KMessageBox::questionYesNo(mParent, text, i18n("Modified Two Entries"),
                                        syncEntry->syncee()->title(),
                                        target->syncee()->title() );
 
