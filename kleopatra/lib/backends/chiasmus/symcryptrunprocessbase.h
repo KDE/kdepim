@@ -76,6 +76,6 @@ private:
   QString mOptions;
 };
 
-};
+}
 
 #endif // __KLEO_BACKEND_CHIASMUS__SYMCRYPTRUNPROCESSBASE_H__
