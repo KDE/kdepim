@@ -161,6 +161,7 @@ RecurrenceRule *Recurrence::defaultRRuleConst() const
 
 void Recurrence::updated()
 {
+  // recurrenceType() re-calculates the type if it's rMax
   mCachedType = rMax;
   if (mParent) mParent->updated();
 }
@@ -249,9 +250,15 @@ bool Recurrence::recursOn(const QDate &qd) const
   TimeList tms;
   // First handle dates. Exrules override
   if ( mExDates.contains( qd ) ) return false;
+  // For all-day events a matching exrule excludes the whole day
+  // since exclusions take precedence over inclusions, we know it can't occur on that day.
+  if ( doesFloat() ) {
+    for ( RecurrenceRule::List::ConstIterator rr = mExRules.begin(); rr != mExRules.end(); ++rr ) {
+      if ( (*rr)->recursOn( qd ) )
+        return false;
+    }
+  }
 
-//FIXME: EXRULE takes precedence over RDATE entries, so any EXRULE of DATE type
-//       must be considered first, before RDATE or RRULE.
   if ( mRDates.contains( qd ) ) return true;
 
   // Check if it might recur today at all.
@@ -266,7 +273,7 @@ bool Recurrence::recursOn(const QDate &qd) const
           rit != mRDateTimes.end(); ++rit ) {
       if ( (*rit).date() == qd ) {
         recurs = true;
-	break;
+        break;
       }
     }
   }
@@ -678,9 +685,15 @@ TimeList Recurrence::recurTimesOn( const QDate &date ) const
   TimeList times;
   // The whole day is excepted
   if ( mExDates.contains( date ) ) return times;
+  // EXRULE takes precedence over RDATE entries, so for floating events,
+  // a matching excule also excludes the whole day automatically
+  if ( doesFloat() ) {
+    for ( RecurrenceRule::List::ConstIterator rr = mExRules.begin(); rr != mExRules.end(); ++rr ) {
+      if ( (*rr)->recursOn( date ) )
+        return times;
+    }
+  }
 
-//FIXME: EXRULE takes precedence over RDATE entries, so any EXRULE of DATE type
-//       must be considered first, before RDATE or RRULE.
   if ( startDate() == date ) times << startDateTime().time();
   bool foundDate = false;
   for ( DateTimeList::ConstIterator it = mRDateTimes.begin();
@@ -688,7 +701,7 @@ TimeList Recurrence::recurTimesOn( const QDate &date ) const
     if ( (*it).date() == date ) {
       times << (*it).time();
       foundDate = true;
-    } else if (foundDate) break;
+    } else if (foundDate) break; // <= Assume that the rdatetime list is sorted
   }
   for ( RecurrenceRule::List::ConstIterator rr = mRRules.begin(); rr != mRRules.end(); ++rr ) {
     times += (*rr)->recurTimesOn( date );
@@ -742,6 +755,7 @@ kdDebug(5800) << " Recurrence::getNextDateTime after " << preDateTime << endl;
     DateTimeList dates;
     if ( nextDT < startDateTime() ) dates << startDateTime();
     DateTimeList::ConstIterator it = mRDateTimes.begin();
+    // Assume that the rdatetime list is sorted
     while ( it != mRDateTimes.end() && (*it) <= nextDT ) ++it;
     if ( it != mRDateTimes.end() ) dates << (*it);
 
@@ -815,7 +829,8 @@ QDateTime Recurrence::getPreviousDateTime( const QDateTime &afterDateTime ) cons
       do {
         --dit;
       } while ( dit != mRDates.begin() && QDateTime((*dit), startDateTime().time()) >= prevDT );
-      if ( dit != mRDates.begin() ) dates << QDateTime( (*dit), startDateTime().time() );
+      if ( QDateTime((*dit), startDateTime().time()) < prevDT )
+        dates << QDateTime( (*dit), startDateTime().time() );
     }
 
     // Add the previous occurrences from all RRULEs.
