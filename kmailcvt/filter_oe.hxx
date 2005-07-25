@@ -61,8 +61,17 @@ class FilterOE : public Filter {
     bool parsedFolder;
     /** true if the current parsing file is the folder file */
     bool currentIsFolderFile;
+
+    /** Folder structure with following  4 entries:
+        1. descriptive folder name 
+        2. filename 
+        3. ID of current folder
+        4. ID of parent folder 
+    */
+    typedef FolderStructureBase<4> FolderStructure;
     /** matrix with information about the folder structure*/
-    QValueList<QString[4]> folderStructure;
+    QValueList<FolderStructure> folderStructure;
+    typedef QValueList<FolderStructure>::Iterator FolderStructureIterator;
 
     /** name of the current folder */
     QString folderName;
