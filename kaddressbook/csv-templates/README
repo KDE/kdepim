@@ -43,7 +43,7 @@ to create a new csv import template, you have to create a file like
 36 "Profession"
 37 "Assistant's Name"
 38 "Manager's Name"
-39 "Spouse's Name"
+39 "Partner's Name"
 40 "Office"
 41 "IM Address"
 42 "Anniversary"

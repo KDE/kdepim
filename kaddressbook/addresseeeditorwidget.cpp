@@ -384,7 +384,7 @@ void AddresseeEditorWidget::setupTab2()
   label->setBuddy( mNicknameEdit );
   layout->addWidget( mNicknameEdit, 4, 2 );
 
-  label = new QLabel( i18n( "Spouse's name:" ), tab2 );
+  label = new QLabel( i18n( "Partner's name:" ), tab2 );
   layout->addWidget( label, 5, 1 );
   mSpouseEdit = new KPIM::AddresseeLineEdit( tab2 );
   connect( mSpouseEdit, SIGNAL( textChanged( const QString& ) ),
