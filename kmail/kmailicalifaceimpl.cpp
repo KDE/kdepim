@@ -848,7 +848,7 @@ void KMailICalIfaceImpl::slotFolderRemoved( KMFolder* folder )
 void KMailICalIfaceImpl::slotIncidenceAdded( KMFolder* folder,
                                              Q_UINT32 sernum )
 {
-  if( !mUseResourceIMAP )
+  if( mResourceQuiet || !mUseResourceIMAP )
     return;
 
 //  kdDebug(5006) << "KMailICalIfaceImpl::slotIncidenceAdded" << endl;
