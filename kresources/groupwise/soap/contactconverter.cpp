@@ -224,23 +224,25 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
   // Name parts
   ngwt__FullName* fullName = contact->fullName;
 
-  if ( fullName->displayName )
-    addr.setFormattedName( stringToQString( fullName->displayName ) );
+  if ( fullName ) {
+    if ( fullName->displayName )
+      addr.setFormattedName( stringToQString( fullName->displayName ) );
 
-  if ( fullName->namePrefix )
-    addr.setPrefix( stringToQString( fullName->namePrefix ) );
+    if ( fullName->namePrefix )
+      addr.setPrefix( stringToQString( fullName->namePrefix ) );
 
-  if ( fullName->firstName )
-    addr.setGivenName( stringToQString( fullName->firstName ) );
+    if ( fullName->firstName )
+      addr.setGivenName( stringToQString( fullName->firstName ) );
 
-  if ( fullName->middleName )
-    addr.setAdditionalName( stringToQString( fullName->middleName ) );
+    if ( fullName->middleName )
+      addr.setAdditionalName( stringToQString( fullName->middleName ) );
 
-  if ( fullName->lastName )
-    addr.setFamilyName( stringToQString( fullName->lastName ) );
+    if ( fullName->lastName )
+      addr.setFamilyName( stringToQString( fullName->lastName ) );
 
-  if ( fullName->nameSuffix )
-    addr.setSuffix( stringToQString( fullName->nameSuffix ) );
+    if ( fullName->nameSuffix )
+      addr.setSuffix( stringToQString( fullName->nameSuffix ) );
+  }
 
   // Emails
   if ( contact->emailList ) {
@@ -347,7 +349,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
                           addresses.join( QChar( 0xE000 ) ) );
     }
   }
-  
+
   // addressbook delta sync info
   if ( contact->sync )
   {
