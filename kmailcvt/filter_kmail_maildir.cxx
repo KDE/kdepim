@@ -123,7 +123,7 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
 {
 
     QDir dir(dirName);
-    QString _path = "";
+    QString _path;
     bool generatedPath = false;
 
     QDir importDir (dirName);

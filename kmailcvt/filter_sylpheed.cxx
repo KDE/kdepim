@@ -115,7 +115,7 @@ void FilterSylpheed::importDirContents( FilterInfo *info, const QString& dirName
 void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
 {
     QDir dir(dirName);
-    QString _path = "";
+    QString _path;
     bool generatedPath = false;
 
     QDict<unsigned long> msgflags;

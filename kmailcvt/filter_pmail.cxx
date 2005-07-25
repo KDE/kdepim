@@ -320,7 +320,7 @@ bool FilterPMail::parseFolderMatrix()
 QString FilterPMail::getFolderName(QString ID) 
 {
     bool found = false;
-    QString folder = "";
+    QString folder;
     QString search = ID;
     
     while (!found)

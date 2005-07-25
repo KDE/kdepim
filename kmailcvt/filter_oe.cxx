@@ -140,7 +140,7 @@ void FilterOE::importMailBox( FilterInfo *info, const QString& fileName)
                 folderName = "OE-Import/" + mailfileinfo.baseName(TRUE);
                 if(parsedFolder) {
                     QString _tmpFolder = getFolderName(_nameOfFile);
-                    if(_tmpFolder != "") folderName = "OE-Import/" + _tmpFolder;
+                    if(!_tmpFolder.isEmpty()) folderName = "OE-Import/" + _tmpFolder;
                 }
                 info->addLog(i18n("Importing OE5+ Mailbox %1").arg( "../" + _nameOfFile));
                 info->setTo(folderName);
@@ -371,7 +371,7 @@ void FilterOE::dbxReadEmail( FilterInfo *info, QDataStream& ds, int filePos)
 QString FilterOE::parseFolderString( QDataStream& ds, int filePos )
 {
     char tmp;
-    QString returnString = "";
+    QString returnString;
     int wasAt = ds.device()->at();
     ds.device()->at(filePos);
     

@@ -206,7 +206,7 @@ void FilterEvolution_v2::importMBox(FilterInfo *info, const QString& mboxName, c
             tmp.close();
             first_msg = false;
 
-            QString destFolder = "";
+            QString destFolder;
             QString _targetDir = targetDir;
             if(!targetDir.isNull()) {
                 if(_targetDir.contains(".sbd"))
