@@ -559,7 +559,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
       }
       readItems += readCursorResponse.items->item.size();
       kdDebug() << " just read " << readCursorResponse.items->item.size() << " items" << endl;
-      if ( readCursorResponse.items->item.size() < readChunkSize )
+      if ( readCursorResponse.items->item.size() == 0 )
         break;
     }
     else
@@ -575,7 +575,6 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
   destReq.container = id;
   destReq.cursor = cursor;
   mSoap->header->ngwt__session = mSession;
-  kdDebug() << "sending destroy calendar cursor request with session: " << mSession.c_str() << endl;
   if ( soap_call___ngw__destroyCursorRequest( mSoap, mUrl.latin1(), 0,
                                     &destReq,
                                     &destResp ) != SOAP_OK )
