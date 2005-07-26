@@ -17,7 +17,7 @@
  *                                                                             *
  * You should have received a copy of the GNU General Public License           *
  * along with this program; if not, write to the Free Software                 *
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. *
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. *
  *                                                                             *
  * As a special exception, permission is given to link this program            *
  * with any edition of Qt, and distribute the resulting executable,            *
@@ -114,9 +114,7 @@ bool KonsoleKalendarAdd::addEvent()
 bool KonsoleKalendarAdd::addImportedCalendar()
 {
 
-  // TODO: reimplement this please..
-
-  /*if ( !m_variables->getCalendar()->load( m_variables->getImportFile() ) ) {
+  if ( !m_variables->getCalendar()->load( m_variables->getImportFile() ) ) {
     kdDebug()
       << "konsolekalendaradd.cpp::importCalendar() | "
       << "Can't import file: "
@@ -135,7 +133,7 @@ bool KonsoleKalendarAdd::addImportedCalendar()
     m_variables->getCalendar()->save( m_variables->getCalendarFile() );
   } else {
     m_variables->getCalendar()->save();
-  }*/
+  }
 
   return true;
 }

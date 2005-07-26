@@ -8,7 +8,7 @@ runscripts_LDADD = $(LIB_QT) $(LIB_KDECORE)
 
 locking_SOURCES = locking.cpp lockerthread.cpp
 locking_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-locking_LDADD = $(LIB_QT) $(LIB_KDEPIM)
+locking_LDADD = $(LIB_QT) $(top_builddir)/libkcal/libkcal.la
 
 KDE_CXXFLAGS = $(USE_EXCEPTIONS)
 

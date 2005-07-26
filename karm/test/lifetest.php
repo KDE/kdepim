@@ -128,7 +128,7 @@ else
     // the mouse can be in the way, so, move it out. This here even works with "focus strictly under mouse".
     system("xte 'mousemove 1 1'");
     echo "\nStarting karm";
-    $process=popen("karm --geometry 200x100+0+0", 'w'); 
+    $process=popen("karm --geometry 200x100+0+0 /tmp/karmtest.ics >/dev/null 2>&1", 'w'); 
     $rc=1;
     while ($rc==1) system("dcop `dcop 2>/dev/null | grep karm` KarmDCOPIface version",$rc);
     echo "mainwindow is ready";

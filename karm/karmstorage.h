@@ -15,8 +15,8 @@
  *   You should have received a copy of the GNU General Public License along
  *   with this program; if not, write to the
  *      Free Software Foundation, Inc.
- *      59 Temple Place - Suite 330
- *      Boston, MA  02111-1307  USA.
+ *      51 Franklin Street, Fifth Floor
+ *      Boston, MA  02110-1301  USA.
  *
  */
 
@@ -71,8 +71,8 @@ class KarmStorage
     /*
      * Return reference to storage singleton.
      *
-     * The constructors are made private, so in order to create this class
-     * you must use this function.
+     * The constructors are private, so this must be used to create a
+     * KarmStorage instance.
      */
     static KarmStorage *instance();
 
@@ -95,11 +95,12 @@ class KarmStorage
      *
      * @param taskview     The list group used in the TaskView
      * @param preferences  The current KArm preferences.
+     * @param fileName     Override preferences' filename
      *
      * @return empty string if success, error message if error.
      *
      */
-    QString load(TaskView* taskview, const Preferences* preferences);
+    QString load(TaskView* taskview, const Preferences* preferences, QString fileName="" );
 
     QString buildTaskView(KCal::ResourceCalendar *rc, TaskView *view);
     
@@ -177,6 +178,25 @@ class KarmStorage
     void changeTime(const Task* task, const long deltaSeconds);
 
     /**
+     * Book time to a task.
+     *
+     * Creates an iCalendar event and adds it to the calendar.  Does not write
+     * calender to disk, just adds event to calendar in memory.  However, the
+     * resource framework does try to get a lock on the file.  After a
+     * succesful lock, the calendar marks this incidence as modified and then
+     * releases the lock.
+     *
+     * @param task Task
+     * @param startDateTime Date and time the booking starts.
+     * @param durationInSeconds Duration of time to book, in seconds.
+     *
+     * @return true if event was added, false if not (if, for example, the
+     * attempted file lock failed).
+     */
+    bool bookTime(const Task* task, const QDateTime& startDateTime, 
+                  long durationInSeconds);
+
+    /**
      * Log a change to a task name.
      *
      * For iCalendar storage, there is no need to log an Event for this event,
@@ -187,7 +207,7 @@ class KarmStorage
      * @param oldname  The old name of the task.  The new name is in the task
      *   object already.
      */
-    void setName(const Task* /*task*/, const QString& /*oldname*/) {}
+    void setName(const Task* task, const QString& oldname) { Q_UNUSED(task); Q_UNUSED(oldname); }
 
 
     /**
@@ -198,7 +218,7 @@ class KarmStorage
      *
      * @param task    The task the timer was started for.
      */
-    void startTimer(const Task* /*task*/) {}
+    void startTimer(const Task* task) { Q_UNUSED(task); }
 
     /**
      * Log the event that the timer has stopped for this task.
@@ -271,15 +291,16 @@ class KarmStorage
 
   private:
     static KarmStorage                *_instance;
-    KCal::CalendarResources           *_calendar;
+    KCal::ResourceCalendar            *_calendar;
     QString                           _icalfile;
 
     KarmStorage();
     void adjustFromLegacyFileFormat(Task* task);
     bool parseLine(QString line, long *time, QString *name, int *level,
         DesktopList* desktopList);
-    void writeTaskAsTodo
+    QString writeTaskAsTodo
       (Task* task, const int level, QPtrStack< KCal::Todo >& parents);
+    bool saveCalendar();
 
     KCal::Event* baseEvent(const Task*);
     bool remoteResource( const QString& file ) const;

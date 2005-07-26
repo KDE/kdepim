@@ -2,7 +2,7 @@
     kleo/cryptobackendfactory.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -16,7 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -34,10 +34,12 @@
 #define __KLEO_CRYPTOBACKENDFACTORY_H__
 
 #include <qobject.h>
-#include <qvaluevector.h>
 
 #include "cryptobackend.h"
 #include <kdepimmacros.h>
+
+#include <vector>
+#include <map>
 
 namespace Kleo {
   class BackendConfigWidget;
@@ -47,6 +49,12 @@ class QString;
 class KConfig;
 
 namespace Kleo {
+
+  struct lt_i_str {
+    bool operator()( const char * one, const char * two ) const {
+      return qstricmp( one, two ) < 0;
+    }
+  };
 
   class KDE_EXPORT CryptoBackendFactory : public QObject {
     Q_OBJECT
@@ -58,6 +66,7 @@ namespace Kleo {
 
     const CryptoBackend::Protocol * smime() const;
     const CryptoBackend::Protocol * openpgp() const;
+    const CryptoBackend::Protocol * protocol( const char * name ) const;
     CryptoConfig * config() const;
 
     const CryptoBackend * backend( unsigned int idx ) const;
@@ -77,14 +86,21 @@ namespace Kleo {
     // 0 means no backend selected.
     void setSMIMEBackend( const CryptoBackend* backend );
     void setOpenPGPBackend( const CryptoBackend* backend );
+    void setProtocolBackend( const char * name, const CryptoBackend * backend );
 
     void scanForBackends( QStringList * reasons=0 );
 
+    const char * enumerateProtocols( int i ) const;
+
+    bool knowsAboutProtocol( const char * name ) const;
+
   protected:
-    QValueVector<CryptoBackend*> mBackendList;
+    std::vector<CryptoBackend*> mBackendList;
     mutable KConfig* mConfigObject;
-    const CryptoBackend* mSMIMEBackend;
-    const CryptoBackend* mOpenPGPBackend;
+    typedef std::map<const char *, const CryptoBackend*, lt_i_str> BackendMap;
+    BackendMap mBackends;
+    typedef std::vector<const char *> ProtocolSet;
+    ProtocolSet mAvailableProtocols;
 
   private:
     const CryptoBackend * backendByName( const QString& name ) const;

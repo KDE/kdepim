@@ -1,5 +1,5 @@
 /*
- *   This file only: 
+ *   This file only:
  *     Copyright (C) 2003  Mark Bucciarelli <mark@hubcapconsutling.com>
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -13,10 +13,10 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License along
- *   with this program; if not, write to the 
+ *   with this program; if not, write to the
  *      Free Software Foundation, Inc.
- *      59 Temple Place - Suite 330 
- *      Boston, MA  02111-1307  USA.
+ *      51 Franklin Street, Fifth Floor
+ *      Boston, MA  02110-1301  USA.
  *
  */
 
@@ -44,17 +44,16 @@ PrintDialog::PrintDialog()
   : KDialogBase(0, "PrintDialog", true, i18n("Print Dialog"), Ok|Cancel,
       Ok, true )
 {
-  QWidget *page = new QWidget( this ); 
+  QWidget *page = new QWidget( this );
   setMainWidget(page);
   int year, month;
 
-  QVBoxLayout *layout = new QVBoxLayout(page);
-  
+  QVBoxLayout *layout = new QVBoxLayout(page, KDialog::spacingHint());
   layout->addSpacing(10);
   layout->addStretch(1);
-  
+
   // Date Range
-  QGroupBox *rangeGroup = new QGroupBox(1, Horizontal, i18n("Date Range"), 
+  QGroupBox *rangeGroup = new QGroupBox(1, Horizontal, i18n("Date Range"),
       page);
   layout->addWidget(rangeGroup);
 
@@ -76,6 +75,16 @@ PrintDialog::PrintDialog()
   layout->addSpacing(10);
   layout->addStretch(1);
 
+  _allTasks = new QComboBox( page );
+  _allTasks->insertItem( i18n( "Selected Task" ) );
+  _allTasks->insertItem( i18n( "All Tasks" ) );
+  layout->addWidget( _allTasks );
+
+  _perWeek = new QCheckBox( i18n( "Summarize per week" ), page );
+  layout->addWidget( _perWeek );
+  _totalsOnly = new QCheckBox( i18n( "Totals Only" ), page );
+  layout->addWidget( _totalsOnly );
+
   layout->addSpacing(10);
   layout->addStretch(1);
 }
@@ -88,6 +97,21 @@ QDate PrintDialog::from() const
 QDate PrintDialog::to() const
 {
   return _to->date();
+}
+
+bool PrintDialog::perWeek() const
+{
+  return _perWeek->isChecked();
+}
+
+bool PrintDialog::allTasks() const
+{
+  return _allTasks->currentItem() == 1;
+}
+
+bool PrintDialog::totalsOnly() const
+{
+  return _totalsOnly->isChecked();
 }
 
 #include "printdialog.moc"

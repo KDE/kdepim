@@ -3,6 +3,8 @@
 # Create files relative to current directory if no "/" prefix
 # in file name given on command line
 
+exec >>check.log 2>&1
+
 TESTFILE="testkarm.ics"
 TESTTODO="testtodo"
 

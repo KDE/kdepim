@@ -16,7 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -69,8 +69,10 @@ Kleo::QGpgMESecretKeyExportJob::~QGpgMESecretKeyExportJob() {
 GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns ) {
   assert( mKeyData.isEmpty() );
 
-  if ( patterns.size() != 1 || patterns.front().isEmpty() )
+  if ( patterns.size() != 1 || patterns.front().isEmpty() ) {
+    deleteLater();
     return mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_INV_VALUE );
+  }
 
   // create and start gpgsm process:
   mProcess = new GnuPGProcessBase( this, "gpgsm --export-secret-key-p12" );

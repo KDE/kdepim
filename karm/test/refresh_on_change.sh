@@ -1,16 +1,21 @@
 #!/bin/sh
 
+# I cannot get this test to work reliably!
+# I suspect the culprit is FAM.
+#   -- Mark
+
+exec >>check.log 2>&1
 
 source __lib.sh
 
 TESTFILE="/tmp/testkarm.ics"
+
 set_up
 
 TODO_NAME=$0
 TODO_UID=abc-123
 TODO_TIME=`date +%Y%m%dT%H%M%SZ`
 
-# file is empty, as karm doesn't write anything till there is data.
 cat >> $TESTFILE << endl
 BEGIN:VCALENDAR
 PRODID:-//K Desktop Environment//NONSGML KArm Test Scripts//EN

@@ -1,12 +1,14 @@
 #ifndef KARM_MAIN_WINDOW_H
 #define KARM_MAIN_WINDOW_H
 
-#include <kmainwindow.h>
+#include <kparts/mainwindow.h>
+
+#include "karmerrors.h"
 #include <karmdcopiface.h>
+#include "reportcriteria.h"
 
 class KAccel;
 class KAccelMenuWatch;
-class KDialogBase;
 class KarmTray;
 class QListViewItem;
 class QPoint;
@@ -21,18 +23,41 @@ class TaskView;
  * Main window to tie the application together.
  */
 
-class MainWindow : public KMainWindow, virtual public KarmDCOPIface
+class MainWindow : public KParts::MainWindow, virtual public KarmDCOPIface
 {
   Q_OBJECT
 
   private:
-    KAccel          *_accel;
-    KAccelMenuWatch *_watcher;
-    TaskView        *_taskView;
-    long            _totalSum;
-    long            _sessionSum;
-    Preferences     *_preferences;
-    KarmTray        *_tray;
+    void             makeMenus();
+    QString          _hasTask( Task* task, const QString &taskname ) const;
+    Task*            _hasUid( Task* task, const QString &uid ) const;
+
+    KAccel*          _accel;
+    KAccelMenuWatch* _watcher;
+    TaskView*        _taskView;
+    long             _totalSum;
+    long             _sessionSum;
+    Preferences*     _preferences;
+    KarmTray*        _tray;
+    KAction*         actionStart;
+    KAction*         actionStop;
+    KAction*         actionStopAll;
+    KAction*         actionDelete;
+    KAction*         actionEdit;
+    KAction*         actionMarkAsComplete;
+    KAction*         actionMarkAsIncomplete;
+    KAction*         actionPreferences;
+    KAction*         actionClipTotals;
+    KAction*         actionClipHistory;
+    QString          m_error[ KARM_MAX_ERROR_NO + 1 ];
+
+    friend class KarmTray;
+
+  //private:
+
+    //KDialogBase *dialog;
+
+
 
   public:
     MainWindow( const QString &icsfile = "" );
@@ -40,8 +65,23 @@ class MainWindow : public KMainWindow, virtual public KarmDCOPIface
 
     // DCOP
     QString version() const;
-    QString hastodo( const QString &storage ) const;
-    QString addtodo( const QString &storage );
+    QString taskIdFromName( const QString &taskName ) const;
+    /** @reimp from KarmDCOPIface::addTask */
+    int addTask( const QString &storage );
+    /** @reimp from KarmDCOPIface::setPerCentComplete */
+    QString setPerCentComplete( const QString& taskName, int PerCent );
+    /** @reimp from KarmDCOPIface::bookTime */
+    int bookTime( const QString& taskId, const QString& iso8601StartDateTime, long durationInMinutes );
+    /** @reimp from KarmDCOPIface::getError */
+    QString getError( int karmErrorNumber ) const;
+    int totalMinutesForTaskId( const QString& taskId );
+    QString starttimerfor( const QString &taskname );
+    QString stoptimerfor( const QString &taskname );
+    QString deletetodo();
+    bool    getpromptdelete();
+    QString setpromptdelete( bool prompt );
+    QString exportcsvfile( QString filename, QString from, QString to, int type, bool decimalMinutes, bool allTasks, QString delimiter, QString quote );
+    QString importplannerfile( QString filename );
 
   public slots:
     void quit();
@@ -52,7 +92,7 @@ class MainWindow : public KMainWindow, virtual public KarmDCOPIface
     void resetAllTimes();
     void updateTime( long, long );
     void updateStatusBar();
-    void save();
+    bool save();
     void exportcsvHistory();
     void print();
     void slotSelectionChanged();
@@ -69,23 +109,6 @@ class MainWindow : public KMainWindow, virtual public KarmDCOPIface
     void loadGeometry();
     bool queryClose();
 
-  private:
-    void makeMenus();
-    QString _hastodo( Task* task, const QString &taskname ) const;
-
-    KDialogBase *dialog;
-    KAction* actionStart;
-    KAction* actionStop;
-    KAction* actionStopAll;
-    KAction* actionDelete;
-    KAction* actionEdit;
-//    KAction* actionAddComment;
-    KAction* actionMarkAsComplete;
-    KAction* actionPreferences;
-    KAction* actionClipTotals;
-    KAction* actionClipHistory;
-
-    friend class KarmTray;
 };
 
 #endif // KARM_MAIN_WINDOW_H

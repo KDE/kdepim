@@ -2,7 +2,7 @@
     kleo/cryptobackend.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -16,7 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -49,15 +49,21 @@ namespace Kleo {
   class SignEncryptJob;
   class DecryptVerifyJob;
   class RefreshKeysJob;
+  class SpecialJob;
 }
 
 class QString;
+class QVariant;
+template <typename T_Key, typename T_Value> class QMap;
 
 namespace Kleo {
 
   class CryptoBackend {
   public:
     class Protocol;
+
+    static const char OpenPGP[];
+    static const char SMIME[];
 
     virtual ~CryptoBackend() {}
 
@@ -66,13 +72,19 @@ namespace Kleo {
 
     virtual bool checkForOpenPGP( QString * reason=0 ) const = 0;
     virtual bool checkForSMIME( QString * reason=0 ) const = 0;
+    virtual bool checkForProtocol( const char * name,  QString * reason=0 ) const = 0;
 
     virtual bool supportsOpenPGP() const = 0;
     virtual bool supportsSMIME() const = 0;
+    virtual bool supportsProtocol( const char * name ) const = 0;
 
     virtual CryptoConfig * config() const = 0;
+
     virtual Protocol * openpgp() const = 0;
     virtual Protocol * smime() const = 0;
+    virtual Protocol * protocol( const char * name ) const = 0;
+
+    virtual const char * enumerateProtocols( int i ) const = 0;
   };
 
   class CryptoBackend::Protocol {
@@ -98,6 +110,8 @@ namespace Kleo {
     virtual SignEncryptJob    * signEncryptJob( bool armor=false, bool textMode=false ) const = 0;
     virtual DecryptVerifyJob  * decryptVerifyJob( bool textmode=false ) const = 0;
     virtual RefreshKeysJob    * refreshKeysJob() const = 0;
+
+    virtual SpecialJob        * specialJob( const char * type, const QMap<QString,QVariant> & args ) const = 0;
   };
 
 }

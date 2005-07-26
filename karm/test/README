@@ -1,6 +1,18 @@
 This directory holds automated tests for karm.
 
-It's in very rough shape.  Basically, I consider it usable only by me.
+It's in very rough shape.
+
+
+How you start:
+
+  (1) get and install kdepim including karm
+
+  (2) get and install xautomation from http://hoopajoo.net/projects/xautomation.html
+
+  (3) get and install Net::DAV::Server with CPAN
+
+  (4) start the automated tests with the command make check
+
 
 Here are some of the issues:
 
@@ -44,6 +56,7 @@ Here are some of the issues:
 
 That having been said, I find it so useful that I will keep working on this so
 it should get better shortly.
+
 
 Some notes on runscripts.cpp:
 

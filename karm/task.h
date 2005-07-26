@@ -218,6 +218,11 @@ class Task : public QObject, public QListViewItem
      */
     void setPercentComplete(const int percent, KarmStorage *storage);
 
+
+    /** Sets an appropriate icon for this task based on its level of
+     * completion */
+    void setPixmapProgress();
+
     /** Return true if task is complete (percent complete equals 100).  */
     bool isComplete();
 

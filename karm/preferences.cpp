@@ -232,16 +232,17 @@ void Preferences::emitSignals()
   emit setupChanged();
 }
 
-QString Preferences::iCalFile()           const { return _iCalFileV; }
-QString Preferences::activeCalendarFile() const { return _iCalFileV; }
-bool    Preferences::detectIdleness()     const { return _doIdleDetectionV; }
-int     Preferences::idlenessTimeout()    const { return _idleDetectValueV; }
-bool    Preferences::autoSave()           const { return _doAutoSaveV; }
-int     Preferences::autoSavePeriod()     const { return _autoSaveValueV; }
-bool    Preferences::logging()            const { return _loggingV; }
-bool    Preferences::promptDelete()       const { return _promptDeleteV; }
-bool    Preferences::displayColumn(int n) const { return _displayColumnV[n]; }
-QString Preferences::userRealName()       const { return _userRealName; }
+QString Preferences::iCalFile()           	     const { return _iCalFileV; }
+QString Preferences::activeCalendarFile() 	     const { return _iCalFileV; }
+bool    Preferences::detectIdleness()                const { return _doIdleDetectionV; }
+int     Preferences::idlenessTimeout()               const { return _idleDetectValueV; }
+bool    Preferences::autoSave()                      const { return _doAutoSaveV; }
+int     Preferences::autoSavePeriod()                const { return _autoSaveValueV; }
+bool    Preferences::logging()                       const { return _loggingV; }
+bool    Preferences::promptDelete()                  const { return _promptDeleteV; }
+QString Preferences::setPromptDelete(bool prompt)    { _promptDeleteV=prompt; return ""; }
+bool    Preferences::displayColumn(int n)            const { return _displayColumnV[n]; }
+QString Preferences::userRealName()                  const { return _userRealName; }
 
 //---------------------------------------------------------------------------
 //                                  Load and Save

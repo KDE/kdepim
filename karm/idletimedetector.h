@@ -74,7 +74,7 @@ public slots:
 
   /**
      Sets whether idle detection should be done at all
-     @param on If true idle detection is done based on @see
+     @param on If true idle detection is done based on
      startIdleDetection and @ref stopIdleDetection
   **/
   void toggleOverAllIdleDetection(bool on);

@@ -2,6 +2,8 @@
 
 # Karm can read and write to an FTP server for storage file.
 
+exec >>check.log 2>&1
+
 PORT=8000
 TESTFILE="http://localhost:$PORT/testkarm.ics"
 TESTFILE_LOCAL="testkarm.ics"

@@ -45,7 +45,7 @@ test cases:
   bool PlannerParser::startDocument()
   {
     withInTasks=false; // becomes true as soon as parsing occurres <tasks>
-    return TRUE;
+    return true;
   }
   
   bool PlannerParser::startElement( const QString&, const QString&, const QString& qName, const QXmlAttributes& att )
@@ -84,7 +84,7 @@ test cases:
     
       task->setPercentComplete(taskComplete, _taskView->storage());
     }
-    return TRUE;
+    return true;
  }
     
   bool PlannerParser::endElement( const QString&, const QString&, const QString& qName)
@@ -95,6 +95,6 @@ test cases:
       if (qName=="task")  if (level-->=0) task=task->parent();
       if (qName=="tasks") withInTasks=false;
     }
-    return TRUE;
+    return true;
   }
 

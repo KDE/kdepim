@@ -41,9 +41,6 @@ TaskView::TaskView(QWidget *parent, const char *name, const QString &icsfile ):K
   _preferences = Preferences::instance( icsfile );
   _storage = KarmStorage::instance();
 
-  connect(this, SIGNAL( doubleClicked( QListViewItem * )),
-          this, SLOT( changeTimer( QListViewItem * )));
-
   connect( this, SIGNAL( expanded( QListViewItem * ) ),
            this, SLOT( itemStateChanged( QListViewItem * ) ) );
   connect( this, SIGNAL( collapsed( QListViewItem * ) ),
@@ -117,6 +114,40 @@ KarmStorage* TaskView::storage()
   return _storage;
 }
 
+void TaskView::contentsMousePressEvent ( QMouseEvent * e )
+{
+  kdDebug(5970) << "entering contentsMousePressEvent" << endl;
+  KListView::contentsMousePressEvent(e);
+  Task *task = current_item();
+  // if clicked onto the "completed" icon
+  if ( e->x()<=18  )
+  {
+    if ( task->isComplete() ) task->setPercentComplete( 0, _storage );
+    else task->setPercentComplete( 100, _storage );
+  }
+}
+
+void TaskView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
+{
+  kdDebug(5970) << "entering contentsMouseDoubleClickEvent" << endl;
+  KListView::contentsMouseDoubleClickEvent(e);
+  
+  // start/stop timer
+  Task *task = current_item();
+
+  if ( task != 0 && activeTasks.findRef(task) == -1 )
+  {
+    // Stop all the other timers.
+    for (unsigned int i=0; i<activeTasks.count();i++)
+      (activeTasks.at(i))->setRunning(false, _storage);
+    activeTasks.clear();
+
+    // Start the new timer.
+    startCurrentTimer();
+  }
+  else stopCurrentTimer();
+}
+
 TaskView::~TaskView()
 {
   _preferences->save();
@@ -137,10 +168,12 @@ Task* TaskView::item_at_index(int i)
   return static_cast<Task*>(itemAtIndex(i));
 }
 
-void TaskView::load()
+void TaskView::load( QString fileName )
 {
+  // if the program is used as an embedded plugin for konqueror, there may be a need
+  // to load from a file without touching the preferences.
   _isloading = true;
-  QString err = _storage->load(this, _preferences);
+  QString err = _storage->load(this, _preferences, fileName);
 
   if (!err.isEmpty())
   {
@@ -160,6 +193,7 @@ void TaskView::load()
   setCurrentItem(first_child());
   _desktopTracker->startTracking();
   _isloading = false;
+  refresh();
 }
 
 void TaskView::restoreItemState( QListViewItem *item )
@@ -211,16 +245,7 @@ void TaskView::refresh()
   int i = 0;
   for ( Task* t = item_at_index(i); t; t = item_at_index(++i) )
   {
-    if (!t->isComplete())
-    {
-      t->setOpen(true);
-      t->setEnabled(true);
-    }
-    else
-    {
-      t->setOpen(false);
-      t->setEnabled(false);
-    }
+    t->setPixmapProgress();
   }
   
   // remove root decoration if there is no more children.
@@ -271,19 +296,23 @@ void TaskView::loadFromFlatFile()
   }
 }
 
-void TaskView::importPlanner()
+QString TaskView::importPlanner(QString fileName)
 {
   kdDebug(5970) << "entering importPlanner" << endl;
-  {
-    PlannerParser* handler=new PlannerParser(this);
-    QFile xmlFile(KFileDialog::getOpenFileName(QString::null, QString::null, 0) );
-    QXmlInputSource source( xmlFile );
-    QXmlSimpleReader reader;
-    reader.setContentHandler( handler );
-    reader.parse( source );
-    // we need a refresh
-    refresh();
-  }
+  PlannerParser* handler=new PlannerParser(this);
+  if (fileName.isEmpty()) fileName=KFileDialog::getOpenFileName(QString::null, QString::null, 0);
+  QFile xmlFile( fileName );
+  QXmlInputSource source( xmlFile );
+  QXmlSimpleReader reader;
+  reader.setContentHandler( handler );
+  reader.parse( source );
+  refresh();
+  return "";
+}
+
+QString TaskView::report( const ReportCriteria& rc )
+{
+  return _storage->report( this, rc );
 }
 
 void TaskView::exportcsvFile()
@@ -426,24 +455,6 @@ void TaskView::stopCurrentTimer()
   stopTimerFor( current_item());
 }
 
-
-void TaskView::changeTimer(QListViewItem *)
-{
-  Task *task = current_item();
-
-  if ( task != 0 && activeTasks.findRef(task) == -1 )
-  {
-    // Stop all the other timers.
-    for (unsigned int i=0; i<activeTasks.count();i++)
-      (activeTasks.at(i))->setRunning(false, _storage);
-    activeTasks.clear();
-
-    // Start the new timer.
-    startCurrentTimer();
-  }
-  else stopCurrentTimer();
-}
-
 void TaskView::minuteUpdate()
 {
   addTimeToActiveTasks(1, false);
@@ -483,7 +494,7 @@ void TaskView::newTask(QString caption, Task *parent)
     if ( uid.isNull() )
     {
       KMessageBox::error( 0, i18n(
-            "Error storing new task. Your changes were not saved." ) );
+            "Error storing new task. Your changes were not saved. Make sure you can edit your iCalendar file. Also quit all applications using this file and remove any lock file related to its name from ~/.kde/share/apps/kabc/lock/ " ) );
     }
 
     delete dialog;
@@ -491,9 +502,12 @@ void TaskView::newTask(QString caption, Task *parent)
 }
 
 QString TaskView::addTask
-( const QString& taskname, long total, long session, const DesktopList& desktops, Task* parent )
+( const QString& taskname, long total, long session, 
+  const DesktopList& desktops, Task* parent )
 {
   Task *task;
+
+  kdDebug(5970) << "TaskView::addTask: taskname = " << taskname << endl;
 
   if ( parent ) task = new Task( taskname, total, session, desktops, parent );
   else          task = new Task( taskname, total, session, desktops, this );
@@ -507,6 +521,8 @@ QString TaskView::addTask
     setCurrentItem( task );
 
     setSelected( task, true );
+
+    task->setPixmapProgress();
 
     save();
   }
@@ -585,6 +601,23 @@ void TaskView::editTask()
 //    task->addComment( comment, _storage );
 //}
 
+void TaskView::reinstateTask(int completion)
+{
+  Task* task = current_item();
+  if (task == 0) {
+    KMessageBox::information(0,i18n("No task selected."));
+    return;
+  }
+
+  if (completion<0) completion=0;
+  if (completion<100)
+  {
+    task->setPercentComplete(completion, _storage);
+    task->setPixmapProgress();
+    save();
+    emit updateButtons();
+  }
+}
 
 void TaskView::deleteTask(bool markingascomplete)
 {
@@ -597,28 +630,30 @@ void TaskView::deleteTask(bool markingascomplete)
   int response = KMessageBox::Yes;
   if (!markingascomplete && _preferences->promptDelete()) {
     if (task->childCount() == 0) {
-      response = KMessageBox::warningYesNo( 0,
+      response = KMessageBox::warningContinueCancel( 0,
           i18n( "Are you sure you want to delete "
           "the task named\n\"%1\" and its entire history?")
           .arg(task->name()),
-          i18n( "Deleting Task"));
+          i18n( "Deleting Task"), KStdGuiItem::del());
     }
     else {
-      response = KMessageBox::warningYesNo( 0,
+      response = KMessageBox::warningContinueCancel( 0,
           i18n( "Are you sure you want to delete the task named"
           "\n\"%1\" and its entire history?\n"
           "NOTE: all its subtasks and their history will also "
           "be deleted.").arg(task->name()),
-          i18n( "Deleting Task"));
+          i18n( "Deleting Task"), KStdGuiItem::del());
     }
   }
 
-  if (response == KMessageBox::Yes)
+  if (response == KMessageBox::Continue)
   {
     if (markingascomplete)
     {
       task->setPercentComplete(100, _storage);
+      task->setPixmapProgress();
       save();
+      emit updateButtons();
 
       // Have to remove after saving, as the save routine only affects tasks
       // that are in the view.  Otherwise, the new percent complete does not
@@ -630,8 +665,8 @@ void TaskView::deleteTask(bool markingascomplete)
     {
       task->remove(activeTasks, _storage);
       task->removeFromView();
-      save();
       deleteItemState( task );
+      save();
     }
 
     // remove root decoration if there is no more children.
@@ -743,9 +778,21 @@ void TaskView::markTaskAsComplete()
   deleteTask(markingascomplete);
 }
 
+void TaskView::markTaskAsIncomplete()
+{
+  if (current_item())
+    kdDebug(5970) << "TaskView::markTaskAsComplete: "
+      << current_item()->uid() << endl;
+  else
+    kdDebug(5970) << "TaskView::markTaskAsComplete: null current_item()" << endl;
+
+  reinstateTask(50); // if it has been reopened, assume half-done
+}
+
+
 void TaskView::clipTotals()
 {
-  TimeKard *t = new TimeKard();
+  TimeKard t;
   if (current_item() && current_item()->isRoot())
   {
     int response = KMessageBox::questionYesNo( 0,
@@ -754,28 +801,27 @@ void TaskView::clipTotals()
         i18n("Copy This Task"), i18n("Copy All Tasks") );
     if (response == KMessageBox::Yes) // this task only
     {
-      KApplication::clipboard()->setText(t->totalsAsText(this));
+      KApplication::clipboard()->setText(t.totalsAsText(this));
     }
     else // only task
     {
-      KApplication::clipboard()->setText(t->totalsAsText(this, false));
+      KApplication::clipboard()->setText(t.totalsAsText(this, false));
     }
   }
   else
   {
-    KApplication::clipboard()->setText(t->totalsAsText(this));
+    KApplication::clipboard()->setText(t.totalsAsText(this));
   }
 }
 
 void TaskView::clipHistory()
 {
-
-  PrintDialog *dialog = new PrintDialog();
-  if (dialog->exec()== QDialog::Accepted)
+  PrintDialog dialog;
+  if (dialog.exec()== QDialog::Accepted)
   {
-    TimeKard *t = new TimeKard();
+    TimeKard t;
     KApplication::clipboard()->
-      setText(t->historyAsText(this, dialog->from(), dialog->to()));
+      setText( t.historyAsText(this, dialog.from(), dialog.to(), !dialog.allTasks(), dialog.perWeek(), dialog.totalsOnly() ) );
   }
 }
 

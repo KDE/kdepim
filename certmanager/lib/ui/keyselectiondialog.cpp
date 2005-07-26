@@ -20,7 +20,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -63,6 +63,7 @@
 
 // Qt
 #include <qcheckbox.h>
+#include <qtoolbutton.h>
 #include <qlabel.h>
 #include <qpixmap.h>
 #include <qtimer.h>
@@ -352,10 +353,15 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   QHBoxLayout * hlay = new QHBoxLayout( topLayout ); // inherits spacing
   QLineEdit * le = new QLineEdit( page );
   le->setText( initialQuery );
+  QToolButton *clearButton = new QToolButton( page );
+  clearButton->setIconSet( KGlobal::iconLoader()->loadIconSet(
+              KApplication::reverseLayout() ? "clear_left":"locationbar_erase", KIcon::Small, 0 ) );
+  hlay->addWidget( clearButton );
   hlay->addWidget( new QLabel( le, i18n("&Search for:"), page ) );
   hlay->addWidget( le, 1 );
   le->setFocus();
 
+  connect( clearButton, SIGNAL( clicked() ), le, SLOT( clear() ) );
   connect( le, SIGNAL(textChanged(const QString&)),
 	   this, SLOT(slotSearch(const QString&)) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
@@ -465,7 +471,7 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
   mSavedOffsetY = mKeyListView->contentsY();
 
   disconnectSignals();
-  this->setEnabled( false );
+  mKeyListView->setEnabled( false );
 
   // FIXME: save current selection
   if ( mOpenPGPBackend )
@@ -474,7 +480,7 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
     startKeyListJobForBackend( mSMIMEBackend, std::vector<GpgME::Key>(), false /*non-validating*/ );
 
   if ( mListJobCount == 0 ) {
-    this->setEnabled( true );
+    mKeyListView->setEnabled( true );
     KMessageBox::information( this,
 			      i18n("No backends found for listing keys. "
 				   "Check your installation."),
@@ -558,7 +564,7 @@ void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & r
 
   mKeyListView->flushKeys();
 
-  this->setEnabled( true );
+  mKeyListView->setEnabled( true );
   mListJobCount = mTruncated = 0;
   mKeysToCheck.clear();
 
@@ -630,7 +636,7 @@ void Kleo::KeySelectionDialog::startValidatingKeyListing() {
   mSavedOffsetY = mKeyListView->contentsY();
 
   disconnectSignals();
-  this->setEnabled( false );
+  mKeyListView->setEnabled( false );
 
   std::vector<GpgME::Key> smime, openpgp;
   for ( std::vector<GpgME::Key>::const_iterator it = mKeysToCheck.begin() ; it != mKeysToCheck.end() ; ++it )

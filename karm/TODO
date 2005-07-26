@@ -1,12 +1,14 @@
-* KarmWindow::makeMenus -> export KAction?
-* KarmWindow::contextMenuRequest QPopupMenu should be static!
-* put connect( ..contextMenu at the right place
-* mainwindow: move tray signals into tray.cpp
-* add mouse double-click action (start new timer, stop old) to "Configure
+* KarmWindow::makeMenus -> export KAction?  KarmWindow::contextMenuRequest
+* QPopupMenu should be static!  put connect( ..contextMenu at the right place
+* mainwindow: move tray signals into tray.cpp add mouse double-click action
+* (start new timer, stop old) to "Configure
   Shortcuts" dialog.
 
-Mark - Sooner ...
---------------------------
+Mark - Sooner ...  --------------------------
+
+  * 2005-05-24: Modify test scripts for change in dcop iface.  
+  
+  * 2005-05-24: Update docs for new dcop methods.
 
   * 2003-09-24: Generate man page (look for script mentioned on kde-devel).
 
@@ -16,8 +18,7 @@ Mark - Sooner ...
   * 2003-09-17: BUG: entering a negative time increments total session time
     (maybe only if session time is zero?)
 
-Mark - Later ...
---------------------------
+Mark - Later ...  --------------------------
 
   * 2004-06-14: In file exports, check if QT has a function to give you a
     platform-specific end of line character.  Right now, it is hard coded to a
@@ -44,7 +45,7 @@ Mark - Later ...
     import a task list from another file.  If they say no, then pop up the new
     task dialog.  (TaskView::load).
 
-  * 2003-09-03: Use file menu and delete storeage page in preferences.
+  * 2003-09-03: Use file menu and delete storage page in preferences.
 
   * 2003-08-15: Add ability to import tasks from an iCalendar file.
       - TaskView::load()
@@ -59,12 +60,31 @@ Mark - Later ...
     Hmmm ... or just write a sql calendar resource?
 
 
-Wishlist:
----------
-* activeTasks should be cleaned up
-* if two timers are active, associate a percentage with them, optimaly the
+Wishlist: --------------------------
+* activeTasks should be cleaned up if two timers are active, associate a
+* percentage with them, optimaly the
   percentage should be configurable
-* completed % per task
-* don't display competed tasks
-* context menu in headers for choosing if one wants to see some column or not
+* completed % per task don't display competed tasks context menu in headers
+* for choosing if one wants to see some column or not
   
+
+Design Notes --------------------------
+
+- Taskview mediates access to KarmStorage.  That is one overzealous ListView
+  subclass!
+
+- The original code was written with the expectation that the user would be
+  starting and stopping timers.  This perspective loses relevance when you
+  want book time with an arbitrary start and stop time.  This impacts method
+  names and the arguments passed.  For example, see KarmStorage bookTime
+  versus changeTime.  Duplicate code, different method signatures.
+
+- How do deal with keeping gui responsive while saving data.  Really should be
+  asynchronous.  Then we have to be careful with race conditions; for example,
+  if an external fires a DCOP event while the user is stopping a time and we
+  have a really slow remote resource.
+
+- Add the dcop method bookTime, I originally forgot to increment the total time
+  counter on the task.  This is a bad design--a proper task class would provide
+  an interface to log a history event and would increment the total time for
+  me.

@@ -16,7 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -108,7 +108,7 @@ void KMail::CryptPlugFactory::scanForBackends( QStringList * reason ) {
 
 void KMail::CryptPlugFactory::updateCryptPlugWrapperList() {
   mCryptPlugWrapperList->clear();
-  for ( QValueVector<Kleo::CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
+  for ( std::vector<Kleo::CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
     if ( CryptPlugWrapper * w = dynamic_cast<CryptPlugWrapper*>( (*it)->openpgp() ) )
       mCryptPlugWrapperList->append( w );
     if ( CryptPlugWrapper * w = dynamic_cast<CryptPlugWrapper*>( (*it)->smime() ) )

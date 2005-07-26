@@ -15,8 +15,8 @@
  *   You should have received a copy of the GNU General Public License along
  *   with this program; if not, write to the
  *      Free Software Foundation, Inc.
- *      59 Temple Place - Suite 330
- *      Boston, MA  02111-1307  USA.
+ *      51 Franklin Street, Fifth Floor
+ *      Boston, MA  02110-1301  USA.
  *
  */
 
@@ -92,7 +92,8 @@ class TimeKard
      *
      * Formatted for pasting into clipboard.
      *
-     * @param taskview a pointer to a TaskView object.
+     * @param taskview The view whose tasks need to be formatted.
+     *
      * @param justThisTask Only useful when user has picked a root task.  We
      * use this parameter to distinguish between when a user just wants to
      * print the task subtree for a root task and when they want to print
@@ -106,13 +107,21 @@ class TimeKard
      * Formatted for pasting into clipboard.
      */
     QString historyAsText(TaskView* taskview, const QDate& from,
-        const QDate& to, bool justThisTask = true);
+        const QDate& to, bool justThisTask, bool perWeek, bool totalsOnly);
 
+private:
     void printTask(Task *t, QString &s, int level);
 
-    void printWeekTask(const Task *t, const QMap<QString, long>& datamap,
-        QMap<QString, long>& daytotals,
-        const Week& week, const int level, QString& retval);
+    void printTaskHistory(const Task *t, const QMap<QString, long>& datamap,
+                          QMap<QString, long>& daytotals,
+                          const QDate& from, const QDate& to,
+                          const int level, QString& retval, bool totalsOnly);
 
-};
+    QString sectionHistoryAsText(TaskView* taskview,
+                                 const QDate& sectionFrom, const QDate& sectionTo,
+                                 const QDate& from, const QDate& to,
+                                 const QString& name,
+                                 bool justThisTask, bool totalsOnly);
+
+  };
 #endif // KARM_TIMEKARD_H

@@ -28,7 +28,13 @@
     <Action name="delete_task" />
     <Action name="edit_task" />
 <!--    <Action name="add_comment_to_task" /> -->
+    <Separator />
     <Action name="mark_as_complete" />
+    <Action name="mark_as_incomplete" />
+  </Menu>
+  <Menu name="settings" > 
+    <text>&amp;Settings</text>
+    <Action name="configure_karm" />
   </Menu>
 </MenuBar>
 <ToolBar alreadyVisited="1" position="Top" iconText="IconOnly" noMerge="1" name="mainToolBar" >
@@ -51,6 +57,9 @@
   <Action name="delete_task" />
   <Action name="edit_task" />
 <!--  <Action name="add_comment_to_task" /> -->
+  <Separator />
+  <Action name="mark_as_complete" />
+  <Action name="mark_as_incomplete" />
   <Separator />
   <Action name="clip_totals" />
   <Action name="clip_history" />

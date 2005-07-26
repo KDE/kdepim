@@ -77,7 +77,7 @@ void MyPrinter::print()
     int height = metrics.height();
     QString now = KGlobal::locale()->formatDateTime(QDateTime::currentDateTime());
     
-    painter.drawText(xMargin, yoff, pageWidth*2, height*2,
+    painter.drawText(xMargin, yoff, pageWidth, height,
          QPainter::AlignCenter, 
          i18n("KArm - %1").arg(now));
     

@@ -16,7 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -45,13 +45,15 @@ struct about_data {
 };
 
 static const about_data authors[] = {
-  // PENDING(steffen) review 
   { "Steffen Hansen", I18N_NOOP("Original Author"), "hansen@kde.org", 0 },
 };
 
+#if 0
+// can't create zero size array - doesn't compile
 static const about_data credits[] = {
   // PENDING(steffen) add stuff
 };
+#endif
 
 AboutData::AboutData()
   : KAboutData( "kwatchgnupg", I18N_NOOP("KWatchGnuPG"),
@@ -59,11 +61,13 @@ AboutData::AboutData()
 		"(c) 2004 Klar\xC3\xA4lvdalens Datakonsult AB\n" )
 {
   using ::authors;
-  using ::credits;
+  //using ::credits;
   for ( unsigned int i = 0 ; i < sizeof authors / sizeof *authors ; ++i )
     addAuthor( authors[i].name, authors[i].desc,
 	       authors[i].email, authors[i].web );
+#if 0
   for ( unsigned int i = 0 ; i < sizeof credits / sizeof *credits ; ++i )
     addCredit( credits[i].name, credits[i].desc,
 	       credits[i].email, credits[i].web );
+#endif
 }

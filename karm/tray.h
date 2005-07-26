@@ -9,6 +9,9 @@
 #include <ksystemtray.h>
 
 #include "task.h"
+#include "karm_part.h"
+
+class KarmPart;
 
 class QPopupMenu;
 class QTimer;
@@ -24,6 +27,7 @@ class KarmTray : public KSystemTray
 
   public:
     KarmTray(MainWindow * parent);
+    KarmTray(karmPart * parent);
     ~KarmTray();
 
   private:

@@ -16,7 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -33,9 +33,13 @@
 #ifndef CRYPTOCONFIG_H
 #define CRYPTOCONFIG_H
 
+#ifdef __cplusplus
+/* we read this file from a C compiler, and are only interested in the
+ * enums... */
+
 #include <kurl.h>
 
-// Start reading this file from the bottom up :)
+/* Start reading this file from the bottom up :) */
 
 namespace Kleo {
 
@@ -45,6 +49,7 @@ namespace Kleo {
   class CryptoConfigEntry {
 
   public:
+#endif /* __cplusplus */
     /**
        @li basic	This option should always be offered to the user.
        @li advanced	This option may be offered to advanced users.
@@ -63,6 +68,10 @@ namespace Kleo {
        @li ArgType_Path	A string that describes the pathname of a file.
        The file does not necessarily need to exist.
        Separated from string so that e.g. a KURLRequester can be used.
+       @li ArgType_DirPath	A string that describes the pathname of a directory.
+       The directory does not necessarily need to exist.
+       Separated from path so that e.g. a KURLRequester can be used which only
+       allows directories to be selected.
        @li ArgType_URL		A URL
        @li ArgType_LDAPURL	A LDAP URL
        Separated from URL so that a more specific widget can be shown, hiding the url syntax
@@ -73,9 +82,16 @@ namespace Kleo {
                    ArgType_UInt = 3,
                    ArgType_Path = 4,
                    ArgType_URL = 5,
-                   ArgType_LDAPURL = 6 };
+                   ArgType_LDAPURL = 6,
+                   ArgType_DirPath = 7 };
 
+#ifdef __cplusplus
     virtual ~CryptoConfigEntry() {}
+
+    /**
+     * Return the internal name of this entry
+     */
+    virtual QString name() const = 0;
 
     /**
      * @return user-visible description of this entry
@@ -234,7 +250,17 @@ namespace Kleo {
     virtual ~CryptoConfigGroup() {}
 
     /**
-     * @return user-visible description of this entry
+     * Return the internal name of this group
+     */
+    virtual QString name() const = 0;
+
+    /**
+     * Return the name of the icon for this group
+     */
+    virtual QString iconName() const = 0;
+
+    /**
+     * @return user-visible description of this group
      */
     virtual QString description() const = 0;
 
@@ -265,6 +291,16 @@ namespace Kleo {
 
   public:
     virtual ~CryptoConfigComponent() {}
+
+    /**
+     * Return the internal name of this component
+     */
+    virtual QString name() const = 0;
+
+    /**
+     * Return the name of the icon for this component
+     */
+    virtual QString iconName() const = 0;
 
     /**
      * Return user-visible description of this component
@@ -342,5 +378,5 @@ namespace Kleo {
   };
 
 }
-
+#endif /* __cplusplus */
 #endif /* CRYPTOCONFIG_H */

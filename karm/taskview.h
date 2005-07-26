@@ -10,6 +10,7 @@
 #include "desktoplist.h"
 #include "resourcecalendar.h"
 #include "karmstorage.h"
+#include "reportcriteria.h"
 #include <qtimer.h>
 //#include "desktoptracker.h"
 
@@ -55,7 +56,7 @@ class TaskView : public KListView
     Task* item_at_index(int i);
 
     /** Load the view from storage.  */
-    void load();
+    void load( QString filename="" );
 
     /** Close the storage and release lock. */
     void closeStorage();
@@ -95,10 +96,7 @@ class TaskView : public KListView
     /** Stop all running timers.  */
     void stopAllTimers();
 
-    /** Stop all running timers, and start timer on current item.  */
-    void changeTimer( QListViewItem * = 0 );
-
-    /** Calls newTask with caption "New Task".  */
+    /** Calls newTask dialog with caption "New Task".  */
     void newTask();
 
     /** Display edit task dialog and create a new task with results.  */
@@ -111,7 +109,10 @@ class TaskView : public KListView
     void loadFromFlatFile();
 
     /** used to import tasks from imendio planner */
-    void importPlanner();
+    QString importPlanner( QString fileName="" );
+
+    /** call export function for csv totals or history */
+    QString report( const ReportCriteria &rc );
 
     /** Export comma separated values format for task time totals. */
     void exportcsvFile();
@@ -119,10 +120,20 @@ class TaskView : public KListView
     /** Export comma-separated values format for task history. */
     QString exportcsvHistory();
 
-    /** Calls newTask with caption "New Sub Task". */
+    /** Calls newTask dialog with caption "New Sub Task". */
     void newSubTask();
 
     void editTask();
+
+    /** 
+     * Returns a pointer to storage object.
+     *
+     * This is poor object oriented design--the task view should 
+     * expose wrappers around the storage methods we want to access instead of
+     * giving clients full access to objects that we own.
+     *
+     * Hopefully, this will be redesigned as part of the Qt4 migration.
+     */
     KarmStorage* storage();
 
     /**
@@ -134,8 +145,13 @@ class TaskView : public KListView
      * list view.
      */
     void deleteTask(bool markingascomplete=false);
+
+    /** Reinstates the current task as incomplete.
+     * @param completion The percentage complete to mark the task as. */
+    void reinstateTask(int completion);
 //    void addCommentToTask();
     void markTaskAsComplete();
+    void markTaskAsIncomplete();
 
     /** Subtracts time from all active tasks, and does not log event. */
     void extractTime( int minutes );
@@ -178,16 +194,21 @@ class TaskView : public KListView
     KarmStorage * _storage;
 
   private:
+    void contentsMousePressEvent ( QMouseEvent * e );
+    void contentsMouseDoubleClickEvent ( QMouseEvent * e );
     void updateParents( Task* task, long totalDiff, long sesssionDiff);
     void deleteChildTasks( Task *item );
     void addTimeToActiveTasks( int minutes, bool save_data = true );
+    /** item state stores if a task is expanded so you can see the subtasks */
     void restoreItemState( QListViewItem *item );
 
   protected slots:
     void autoSaveChanged( bool );
     void autoSavePeriodChanged( int period );
     void minuteUpdate();
+    /** item state stores if a task is expanded so you can see the subtasks */
     void itemStateChanged( QListViewItem *item );
+    /** item state stores if a task is expanded so you can see the subtasks */
     void deleteItemState( QListViewItem *item );
     void iCalFileModified(ResourceCalendar *);
 };

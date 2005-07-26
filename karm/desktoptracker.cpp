@@ -32,7 +32,7 @@ void DesktopTracker::handleDesktopChange( int desktop )
   // the data file can get huge fast if logging is turned on.  Then saving
   // get's slower, etc.  There's no benefit in saving a lot of start/stop 
   // events that are very small.  Wait a bit to make sure the user is settled.
-  if ( !_timer->start( minimumInterval * 1000, TRUE ) ) changeTimers();
+  if ( !_timer->start( minimumInterval * 1000, true ) ) changeTimers();
 }
 
 void DesktopTracker::changeTimers()

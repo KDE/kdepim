@@ -71,6 +71,13 @@ KarmTray::KarmTray(MainWindow* parent)
   */
 }
 
+KarmTray::KarmTray(karmPart * parent)
+  : KSystemTray( 0 , "Karm Tray")
+{
+// it is not convenient if every kpart gets an icon in the systray.
+  _taskActiveTimer = 0;
+}
+
 KarmTray::~KarmTray()
 {
 }
@@ -86,15 +93,21 @@ void KarmTray::insertTitle(QString title)
 
 void KarmTray::startClock()
 {
-  _taskActiveTimer->start(1000);
-  setPixmap( *(*icons)[_activeIcon] );
-  show();
+  if ( _taskActiveTimer ) 
+  {
+    _taskActiveTimer->start(1000);
+    setPixmap( *(*icons)[_activeIcon] );
+    show();
+  }
 }
 
 void KarmTray::stopClock()
 {
-  _taskActiveTimer->stop();
-  show();
+  if ( _taskActiveTimer )  
+  {  
+    _taskActiveTimer->stop();
+    show();
+  }
 }
 
 void KarmTray::advanceClock()

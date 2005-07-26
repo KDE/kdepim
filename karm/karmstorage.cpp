@@ -15,8 +15,8 @@
  *   You should have received a copy of the GNU General Public License along
  *   with this program; if not, write to the
  *      Free Software Foundation, Inc.
- *      59 Temple Place - Suite 330
- *      Boston, MA  02111-1307  USA.
+ *      51 Franklin Street, Fifth Floor
+ *      Boston, MA  02110-1301  USA.
  *
  */
 
@@ -80,7 +80,9 @@ KarmStorage::KarmStorage()
   _calendar = 0;
 }
 
-QString KarmStorage::load (TaskView* view, const Preferences* preferences)
+QString KarmStorage::load (TaskView* view, const Preferences* preferences, QString fileName )
+// loads data from filename into view. If no filename is given, filename from preferences is used.
+// filename might be of use if this program is run as embedded konqueror plugin.
 {
   // When I tried raising an exception from this method, the compiler
   // complained that exceptions are not allowed.  Not sure how apps
@@ -92,9 +94,10 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
 
   QString err;
   KEMailSettings settings;
+  if ( fileName.isEmpty() ) fileName = preferences->iCalFile();
 
   // If same file, don't reload
-  if ( preferences->iCalFile() == _icalfile ) return err;
+  if ( fileName == _icalfile ) return err;
 
 
   // If file doesn't exist, create a blank one to avoid ResourceLocal load
@@ -104,47 +107,43 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   {
     int handle;
     handle = open (
-        QFile::encodeName( preferences->iCalFile() ),
+        QFile::encodeName( fileName ),
         O_CREAT|O_EXCL|O_WRONLY,
         S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH
         );
     if (handle != -1) close(handle);
   }
 
-  if ( _calendar) closeStorage(view);
-  else _calendar = new KCal::CalendarResources( QString::fromLatin1("UTC") );
+  if ( _calendar)
+    closeStorage(view);
 
   // Create local file resource and add to resources
-  _icalfile = preferences->iCalFile();
+  _icalfile = fileName;
 
-  KCal::ResourceCalendar *l;
+  KCal::ResourceCached *resource;
   if ( remoteResource( _icalfile ) )
   {
-    KURL download = KURL( _icalfile );
-    KURL upload   = KURL( _icalfile );
-    l = new KCal::ResourceRemote( upload, download );
+    KURL url( _icalfile );
+    resource = new KCal::ResourceRemote( url, url ); // same url for upload and download
   }
   else
   {
-    l = new KCal::ResourceLocal( _icalfile );
+    resource = new KCal::ResourceLocal( _icalfile );
   }
+  _calendar = resource;
 
-  QObject::connect (l, SIGNAL(resourceChanged(ResourceCalendar *)),
+  QObject::connect (_calendar, SIGNAL(resourceChanged(ResourceCalendar *)),
   	            view, SLOT(iCalFileModified(ResourceCalendar *)));
-  l->setTimeZoneId( KPimPrefs::timezone() );
-  l->setResourceName( QString::fromLatin1("KArm") );
-  l->open();
-  l->load();
-
-  KCal::CalendarResourceManager *m = _calendar->resourceManager();
-  m->add(l);
-  m->setStandardResource(l);
+  _calendar->setTimeZoneId( KPimPrefs::timezone() );
+  _calendar->setResourceName( QString::fromLatin1("KArm") );
+  _calendar->open();
+  _calendar->load();
 
   // Claim ownership of iCalendar file if no one else has.
-  KCal::Person owner = _calendar->getOwner();
+  KCal::Person owner = resource->getOwner();
   if ( owner.isEmpty() )
   {
-    _calendar->setOwner( KCal::Person(
+    resource->setOwner( KCal::Person(
           settings.getSetting( KEMailSettings::RealName ),
           settings.getSetting( KEMailSettings::EmailAddress ) ) );
   }
@@ -184,13 +183,7 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
       Task* task = new Task(*todo, view);
       map.insert( (*todo)->uid(), task );
       view->setRootIsDecorated(true);
-      if ((*todo)->isCompleted())
-      {
-        task->setEnabled(false);
-        task->setOpen(false);
-      }
-      else
-        task->setOpen(true);
+      task->setPixmapProgress();
     }
 
     // Load each task under it's parent task.
@@ -240,13 +233,7 @@ QString KarmStorage::buildTaskView(KCal::ResourceCalendar *rc, TaskView *view)
     Task* task = new Task(*todo, view);
     map.insert( (*todo)->uid(), task );
     view->setRootIsDecorated(true);
-    if ((*todo)->isCompleted())
-    {
-      task->setEnabled(false);
-      task->setOpen(false);
-    }
-    else
-      task->setOpen(true);
+    task->setPixmapProgress();
   }
 
   // 1.1. Load each task under it's parent task.
@@ -275,11 +262,9 @@ void KarmStorage::closeStorage(TaskView* view)
 {
   if ( _calendar )
   {
-
     _calendar->close();
-
-    KCal::CalendarResourceManager *m = _calendar->resourceManager();
-    m->remove( m->standardResource() );
+    delete _calendar;
+    _calendar = 0;
 
     view->clear();
   }
@@ -287,46 +272,59 @@ void KarmStorage::closeStorage(TaskView* view)
 
 QString KarmStorage::save(TaskView* taskview)
 {
-  QString err="";
+  kdDebug(5970) << "entering KarmStorage::save" << endl;
+  QString err;
 
   QPtrStack< KCal::Todo > parents;
 
   for (Task* task=taskview->first_child(); task; task = task->nextSibling())
   {
-    writeTaskAsTodo(task, 1, parents );
+    err=writeTaskAsTodo(task, 1, parents );
   }
 
-  if ( !_calendar->save(
-        _calendar->requestSaveTicket( _calendar->resourceManager()->standardResource() )
-        )
-      )
+  if ( !saveCalendar() )
   {
     err="Could not save";
   }
 
-  kdDebug(5970)
-    << "KarmStorage::save : wrote "
-    << taskview->count() << " tasks to " << _icalfile << endl;
+  if ( err.isEmpty() )
+  {
+    kdDebug(5970)
+      << "KarmStorage::save : wrote "
+      << taskview->count() << " tasks to " << _icalfile << endl;
+  }
+  else
+  {
+    kdWarning(5970) << "KarmStorage::save : " << err << endl;
+  }
+
   return err;
 }
 
-void KarmStorage::writeTaskAsTodo(Task* task, const int level,
+QString KarmStorage::writeTaskAsTodo(Task* task, const int level,
     QPtrStack< KCal::Todo >& parents )
 {
+  QString err;
   KCal::Todo* todo;
 
   todo = _calendar->todo(task->uid());
+  if ( !todo )
+  {
+    kdDebug(5970) << "Could not get todo from calendar" << endl;
+    return "Could not get todo from calendar";
+  }
   task->asTodo(todo);
   if ( !parents.isEmpty() ) todo->setRelatedTo( parents.top() );
   parents.push( todo );
 
-  for (Task* nextTask = task->firstChild(); nextTask;
-      nextTask = nextTask->nextSibling() )
+  for ( Task* nextTask = task->firstChild(); nextTask;
+        nextTask = nextTask->nextSibling() )
   {
-    writeTaskAsTodo(nextTask, level+1, parents );
+    err = writeTaskAsTodo(nextTask, level+1, parents );
   }
 
   parents.pop();
+  return err;
 }
 
 bool KarmStorage::isEmpty()
@@ -597,9 +595,9 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
     // Surround the field with quotes if the field contains
     // a comma (delim) or a double quote
     if (task->name().contains(delim) || task->name().contains(dquote))
-      to_quote = TRUE;
+      to_quote = true;
     else
-      to_quote = FALSE;
+      to_quote = false;
     */
     to_quote = true;
 
@@ -681,6 +679,12 @@ QString KarmStorage::addTask(const Task* task, const Task* parent)
       todo->setRelatedTo(_calendar->todo(parent->uid()));
     uid = todo->uid();
   }
+  else
+  {
+    // Most likely a lock could not be pulled, although there are other
+    // possiblities (like a really confused resource manager).
+    uid = "";
+  }
 
   return uid;
 }
@@ -711,8 +715,7 @@ bool KarmStorage::removeTask(Task* task)
   _calendar->deleteTodo(todo);
 
   // Save entire file
-  _calendar->save(_calendar->requestSaveTicket
-    (_calendar->resourceManager()->standardResource()));
+  saveCalendar();
 
   return true;
 }
@@ -733,8 +736,7 @@ void KarmStorage::addComment(const Task* task, const QString& comment)
   // temporary
   todo->setDescription(task->comment());
 
-  _calendar->save(_calendar->requestSaveTicket
-    ( _calendar->resourceManager()->standardResource() ));
+  saveCalendar();
 }
 
 long KarmStorage::printTaskHistory (
@@ -997,7 +999,10 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
   else // use remote file
   {
     KTempFile tmpFile;
-    if ( tmpFile.status() != 0 ) err = QString::fromLatin1( "Unable to get temporary file" );
+    if ( tmpFile.status() != 0 )
+    {
+      err = QString::fromLatin1( "Unable to get temporary file" );
+    }
     else
     {
       QTextStream *stream=tmpFile.textStream();
@@ -1013,6 +1018,26 @@ void KarmStorage::stopTimer(const Task* task)
 {
   long delta = task->startTime().secsTo(QDateTime::currentDateTime());
   changeTime(task, delta);
+}
+
+bool KarmStorage::bookTime(const Task* task,
+                           const QDateTime& startDateTime,
+                           const long durationInSeconds)
+{
+  // Ignores preferences setting re: logging history.
+  KCal::Event* e;
+  QDateTime end;
+
+  e = baseEvent( task );
+  e->setDtStart( startDateTime );
+  e->setDtEnd( startDateTime.addSecs( durationInSeconds ) );
+
+  // Use a custom property to keep a record of negative durations
+  e->setCustomProperty( kapp->instanceName(),
+      QCString("duration"),
+      QString::number(durationInSeconds));
+
+  return _calendar->addEvent(e);
 }
 
 void KarmStorage::changeTime(const Task* task, const long deltaSeconds)
@@ -1099,7 +1124,7 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
 
   for(QDate d = from; d <= to; d = d.addDays(1))
   {
-    events = _calendar->events(d);
+    events = _calendar->rawEventsForDate( d );
     for (event = events.begin(); event != events.end(); ++event)
     {
 
@@ -1153,59 +1178,19 @@ bool KarmStorage::remoteResource( const QString& file ) const
   return rval;
 }
 
-/*
- * Obsolete methods for writing to flat file format.
- * Aug 8, 2003, Mark
- *
-void KarmStorage::saveToFileFormat()
+bool KarmStorage::saveCalendar()
 {
-  //QFile f(_preferences->saveFile());
-  QFile f(_preferences->flatFile());
+  kdDebug(5970) << "KarmStorage::saveCalendar" << endl;
 
-  if ( !f.open( IO_WriteOnly | IO_Truncate ) ) {
-    QString msg = i18n( "There was an error trying to save your data file.\n"
-                       "Time accumulated during this session will not be saved!\n");
-    KMessageBox::error(0, msg );
-    return;
+  KABC::Lock *lock = _calendar->lock();
+  if ( !lock || !lock->lock() )
+    return false;
+
+  if ( _calendar && _calendar->save() ) {
+    lock->unlock();
+    return true;
   }
-  const char * comment = "# TaskView save data\n";
 
-  f.writeBlock(comment, strlen(comment));  //comment
-  f.flush();
-
-  QTextStream stream(&f);
-  for (Task* child = firstChild();
-             child;
-             child = child->nextSibling())
-    writeTaskToFile(&stream, child, 1);
-
-  f.close();
-  kdDebug(5970) << "Saved data to file " << f.name() << endl;
+  lock->unlock();
+  return false;
 }
-void KarmStorage::writeTaskToFile( QTextStream *strm, Task *task,
-                                int level)
-{
-  //lukas: correct version for non-latin1 users
-  QString _line = QString::fromLatin1("%1\t%2\t%3").arg(level).
-          arg(task->time()).arg(task->name());
-
-  DesktopList d = task->getDesktops();
-  int dsize = d.size();
-  if (dsize>0) {
-    _line += '\t';
-    for (int i=0; i<dsize-1; i++) {
-      _line += QString::number(d[i]);
-      _line += ',';
-    }
-    _line += QString::number(d[dsize-1]);
-  }
-  *strm << _line << "\n";
-
-  for ( Task* child= task->firstChild();
-              child;
-              child=child->nextSibling()) {
-    writeTaskToFile(strm, child, level+1);
-  }
-}
-
-*/

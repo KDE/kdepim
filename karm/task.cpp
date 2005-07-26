@@ -24,7 +24,7 @@ QPtrVector<QPixmap> *Task::icons = 0;
 Task::Task( const QString& taskName, long minutes, long sessionTime,
             DesktopList desktops, TaskView *parent)
   : QObject(), QListViewItem(parent)
-{
+{ 
   init(taskName, minutes, sessionTime, desktops, 0);
 }
 
@@ -62,18 +62,16 @@ void Task::init( const QString& taskName, long minutes, long sessionTime,
 
   if (icons == 0) {
     icons = new QPtrVector<QPixmap>(8);
+    KIconLoader* kil = new KIconLoader("karm"); // always load icons from the KArm application
     for (int i=0; i<8; i++)
     {
       QPixmap *icon = new QPixmap();
       QString name;
       name.sprintf("watch-%d.xpm",i);
-      *icon = UserIcon(name);
+      *icon = kil->loadIcon( name, KIcon::User );
       icons->insert(i,icon);
     }
   }
-
-  //kdDebug(5970) << "Task::init(" << taskName << ", " << minutes << ", "
-  //  << sessionTime << ", desktops)" << endl;
 
   _removing = false;
   _name = taskName.stripWhiteSpace();
@@ -99,6 +97,7 @@ Task::~Task() {
 void Task::setRunning( bool on, KarmStorage* storage )
 {
   if ( on ) {
+    if (isComplete()) return; // don't start if its marked complete
     if (!_timer->isActive()) {
       _timer->start(1000);
       storage->startTimer(this);
@@ -144,11 +143,6 @@ void Task::setPercentComplete(const int percent, KarmStorage *storage)
   kdDebug(5970) << "Task::setPercentComplete(" << percent << ", storage): "
     << _uid << endl;
 
-  if (isRunning()) setRunning(false, storage);
-
-  setEnabled(false);
-  setOpen(false);
-
   if (!percent)
     _percentcomplete = 0;
   else if (percent > 100)
@@ -157,6 +151,10 @@ void Task::setPercentComplete(const int percent, KarmStorage *storage)
     _percentcomplete = 0;
   else
     _percentcomplete = percent;
+
+  if (isRunning() && _percentcomplete==100) setRunning(false, storage);
+
+  setPixmapProgress();
 
   // When parent marked as complete, mark all children as complete as well.
   // Complete tasks are not displayed in the task view, so if a parent is
@@ -173,6 +171,16 @@ void Task::setPercentComplete(const int percent, KarmStorage *storage)
     for (Task* child= this->firstChild(); child; child = child->nextSibling())
       child->setPercentComplete(_percentcomplete, storage);
   }
+}
+
+void Task::setPixmapProgress()
+{
+  QPixmap* icon = new QPixmap();
+  if (_percentcomplete >= 100)
+    *icon = UserIcon("task-complete.xpm");
+  else
+    *icon = UserIcon("task-incomplete.xpm");
+  setPixmap(0, *icon);
 }
 
 bool Task::isComplete() { return _percentcomplete == 100; }
@@ -207,9 +215,9 @@ void Task::changeTimes( long minutesSession, long minutes, KarmStorage* storage)
 
 void Task::changeTotalTimes( long minutesSession, long minutes )
 {
-  //kdDebug(5970)
-  //  << "Task::changeTotalTimes(" << minutesSession << ", "
-  //  << minutes << ") for " << name() << endl;
+  kdDebug(5970)
+    << "Task::changeTotalTimes(" << minutesSession << ", "
+    << minutes << ") for " << name() << endl;
 
   _totalSessionTime += minutesSession;
   _totalTime += minutes;
@@ -280,6 +288,9 @@ QString Task::fullName() const
 KCal::Todo* Task::asTodo(KCal::Todo* todo) const
 {
 
+  Q_ASSERT( todo != NULL );
+
+  kdDebug(5970) << "Task::asTodo: name() = '" << name() << "'" << endl;
   todo->setSummary( name() );
 
   // Note: if the date start is empty, the KOrganizer GUI will have the

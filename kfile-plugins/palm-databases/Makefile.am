@@ -1,4 +1,4 @@
-## Makefile.am for vcf file meta info plugin
+## Makefile.am for palm database meta info plugin
 
 # set the include path for X, qt and KDE
 INCLUDES         = $(PISOCK_INCLUDE) $(all_includes)
@@ -9,7 +9,7 @@ noinst_HEADERS   = kfile_palm.h
 kde_module_LTLIBRARIES = kfile_palm.la
 
 kfile_palm_la_SOURCES = kfile_palm.cpp 
-kfile_palm_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
+kfile_palm_la_LDFLAGS = $(PISOCK_LDFLAGS) $(all_libraries) -module $(KDE_PLUGIN)
 kfile_palm_la_LIBADD = $(LIB_KSYCOCA) $(PISOCK_LIB)
 
 # let automoc handle all of the meta source files (moc)

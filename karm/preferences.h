@@ -30,6 +30,7 @@ class Preferences :public KDialogBase
     bool logging() const;
     int autoSavePeriod() const;
     bool promptDelete() const;
+    QString setPromptDelete( bool prompt );
     bool displayColumn(int n) const;
     QString userRealName() const;
 
