@@ -809,7 +809,8 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
     }
   }
   if ( ( obj == this ) &&
-      ( e->type() == QEvent::KeyPress ) ) {
+      ( e->type() == QEvent::KeyPress ) &&
+      completionBox()->isVisible() ) {
     QKeyEvent *ke = static_cast<QKeyEvent*>( e );
     unsigned int currentIndex = completionBox()->currentItem();
     if ( ke->key() == Key_Up ) {
