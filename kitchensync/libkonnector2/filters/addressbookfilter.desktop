@@ -8,7 +8,6 @@ X-KDE-KitchenSyncFilterType=addressbook
 
 Name=Address Book Filter
 Name[bg]=Филтър за адресника
-Name[cs]=Filtr knihy adres
 Name[da]=Addressebogsfilter
 Name[es]=Filtro de la libreta de direcciones
 Name[et]=Aadressiraamatu filter
@@ -18,7 +17,6 @@ Name[tr]=Adres Defteri Süzgeci
 
 Comment=Filters contacts in an address book
 Comment[bg]=Филтриране на контактите в адресника
-Comment[cs]=Filtruje kontakty v knize adres
 Comment[da]=Filtrerer kontakter i en adressebog
 Comment[es]=Filtra los contactos de la libreta de direcciones
 Comment[et]=Kontaktide filtreerimine aadressiraamatus

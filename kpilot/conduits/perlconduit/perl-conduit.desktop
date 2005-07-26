@@ -37,6 +37,7 @@ Name[zh_CN]=Perl (例子)
 Comment=This sample conduit runs a Perl interpreter.
 Comment[bg]=Пример за изпълнение на интерпретатора на Perl
 Comment[ca]=Aquest conducte de mostra executa un intèrpret Perl.
+Comment[cs]=Toto propojení spustí interpret Perlu.
 Comment[da]=Denne eksempel-conduit kører en Perl-fortolker.
 Comment[de]=Dieser Abgleich (Conduit) startet einen Perl Interpreter
 Comment[es]=Este conducto de ejemplo ejecuta un intérprete de Perl

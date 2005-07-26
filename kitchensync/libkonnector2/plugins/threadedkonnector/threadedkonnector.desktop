@@ -6,6 +6,7 @@ X-KDE-Library=libthreadedkonnector
 
 Name=Demo Konnector for a Threaded Implementation
 Name[ca]=Demostració de konnector per a una implementació amb fils
+Name[cs]=Demo konektor pro vláknovou implementaci
 Name[cy]=Kysylltydd arddangosol ar gyfer weithredoliant edafeddedig
 Name[da]=Demo-konnector for en trådet implementation
 Name[de]=Demo-Verbinder zur Implementierung von Threads
