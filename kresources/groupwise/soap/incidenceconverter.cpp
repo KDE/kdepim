@@ -408,7 +408,7 @@ void IncidenceConverter::setAttendees( KCal::Incidence *incidence,
   ngwt__CalendarItem *item )
 {
   item->distribution = soap_new_ngwt__Distribution( soap(), -1 );
- 
+
   item->distribution->from = soap_new_ngwt__From( soap(), -1 );
 
   // ngwt__From
@@ -468,13 +468,13 @@ ngwt__Recipient *IncidenceConverter::createRecipient( const QString &name,
   if ( !uuid.isEmpty() ) recipient->uuid = qStringToString( uuid );
   else recipient->uuid = 0;
   if ( !name.isEmpty() ) {
-    kdDebug() << "- recipient name: " << name << endl; 
+    kdDebug() << "- recipient name: " << name << endl;
     recipient->displayName = qStringToString( name );
   } else {
     recipient->displayName = 0;
   }
   if ( !email.isEmpty() ) {
-    kdDebug() << "- recipient email: " << email << endl; 
+    kdDebug() << "- recipient email: " << email << endl;
     recipient->email = qStringToString( email );
   } else {
     recipient->email = 0;
@@ -541,7 +541,7 @@ void IncidenceConverter::getItemDescription( ngwt__CalendarItem *item, KCal::Inc
       if ( stringToQString( (*it)->contentType ) == "text/plain" ) {
         QString description = QString::fromUtf8( (char*)data.__ptr, data.__size );
         incidence->setDescription( description );
-        kdDebug() << "Incidence description decodes to: " << description << endl; 
+        kdDebug() << "Incidence description decodes to: " << description << endl;
         return;
       }
     }
@@ -613,11 +613,10 @@ void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence
   }
 }
 
-#if 0 // rrule is only used on writing to the server.
 void IncidenceConverter::getRecurrence( ngwt__CalendarItem* item, KCal::Incidence* incidence)
 {
   // is it daily, weekly, monthly, yearly - this determine how to proceed
-  kdDebug() << k_funcinfo << endl; 
+  kdDebug() << k_funcinfo << endl;
   if ( item->rrule )
   {
     // get recurrence frequency ( eg every X units )
@@ -631,23 +630,23 @@ void IncidenceConverter::getRecurrence( ngwt__CalendarItem* item, KCal::Incidenc
       switch ( *item->rrule->frequency )
       {
         case Daily:
-          kdDebug() << "item recurs daily" << endl; 
+          kdDebug() << "item recurs daily" << endl;
           r->setDaily( rFreq );
           break;
         case Weekly: {
-          kdDebug() << "item recurs weekly" << endl; 
+          kdDebug() << "item recurs weekly" << endl;
           QBitArray days = getDayBitArray( item->rrule->byDay );
           r->setWeekly( rFreq, days );
           }
           break;
         case Monthly:
-          kdDebug() << "item recurs monthly" << endl; 
+          kdDebug() << "item recurs monthly" << endl;
           // seems that this is not as well developed as the weeks - there's no space in RecurrenceRule for the DayOfMonth
           // 3rd thursday in month is handled by DayOfWeek's occurrenceType attribute = first, second, third... last
           r->setMonthly( rFreq );
           break;
         case Yearly:
-          kdDebug() << "item recurs yearly" << endl; 
+          kdDebug() << "item recurs yearly" << endl;
           // annual recurrence
           r->setYearly( rFreq );
           // recurs on these months in year (jan, mar, aug) etc - is this in our Recurrence, can korg edit these fsckers?
@@ -659,7 +658,7 @@ void IncidenceConverter::getRecurrence( ngwt__CalendarItem* item, KCal::Incidenc
               r->addYearlyMonth( *it + 1);
           }
           else if ( item->rrule->byYearDay ) // recurs on the given days of the year.
-          { 
+          {
             // iterate std::vector<short>day  while ( day list )
             std::vector<unsigned char>::const_iterator it;
             for ( it = item->rrule->byMonth->month.begin(); it != item->rrule->byMonth->month.end(); ++it ) {
@@ -689,12 +688,12 @@ void IncidenceConverter::getRecurrence( ngwt__CalendarItem* item, KCal::Incidenc
 }
 QBitArray IncidenceConverter::getDayBitArray( ngwt__DayOfWeekList * days )
 {
-  kdDebug() << k_funcinfo << endl; 
+  kdDebug() << k_funcinfo << endl;
   QBitArray dayArray(7);
   dayArray.fill( false );
   if ( days )
   {
-    std::vector<class ngwt__DayOfWeek * >::const_iterator it; 
+    std::vector<class ngwt__DayOfWeek * >::const_iterator it;
     for ( it = days->day.begin(); it != days->day.end(); ++it )
     {
       switch ( (*it)->__item )
@@ -728,7 +727,7 @@ QBitArray IncidenceConverter::getDayBitArray( ngwt__DayOfWeekList * days )
 
 void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__CalendarItem * item )
 {
-  kdDebug() << k_funcinfo << endl; 
+  kdDebug() << k_funcinfo << endl;
   ngwt__Frequency * freq;
   const KCal::Recurrence * recur = incidence->recurrence();
 
@@ -762,7 +761,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
       *item->rrule->count = GW_MAX_RECURRENCES;
     }
 
-    // recurrence date - try setting it using the recurrence start date - didn't help 
+    // recurrence date - try setting it using the recurrence start date - didn't help
 /*    std::string startDate;
     startDate.append( recur->recurStart().date().toString( Qt::ISODate ).utf8() );
     item->rdate = soap_new_ngwt__RecurrenceDateType( soap(), -1 );
@@ -783,13 +782,13 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
 
   if ( incidence->recurrenceType() == KCal::Recurrence::rDaily )
   {
-    kdDebug() << "incidence recurs daily" << endl; 
+    kdDebug() << "incidence recurs daily" << endl;
     *freq = Daily;
     item->rrule->frequency = freq;
   }
   else if ( incidence->recurrenceType() == KCal::Recurrence::rWeekly )
   {
-    kdDebug() << "incidence recurs weekly" << endl; 
+    kdDebug() << "incidence recurs weekly" << endl;
     *freq = Weekly;
     item->rrule->frequency = freq;
     // now change the bitArray of the days of the week that it recurs on to a ngwt__DayOfWeekList *
@@ -833,7 +832,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
   }
    else if ( incidence->recurrenceType() == KCal::Recurrence::rMonthlyDay )
   {
-    kdDebug() << "incidence recurs monthly" << endl; 
+    kdDebug() << "incidence recurs monthly" << endl;
     ;
     *freq = Monthly;
     item->rrule->frequency = freq;
@@ -842,7 +841,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
   }
   else if ( incidence->recurrenceType() == KCal::Recurrence::rYearlyDay )
   {
-    kdDebug() << "incidence recurs yearly on day #" << endl; 
+    kdDebug() << "incidence recurs yearly on day #" << endl;
     *freq = Yearly;
     item->rrule->frequency = freq;
     // TODO: translate '1st sunday in may'
@@ -855,7 +854,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
   }
   else if ( incidence->recurrenceType() == KCal::Recurrence::rYearlyMonth )
   {
-    kdDebug() << "incidence recurs yearly on monthday" << endl; 
+    kdDebug() << "incidence recurs yearly on monthday" << endl;
     *freq = Yearly;
     item->rrule->frequency = freq;
   }
