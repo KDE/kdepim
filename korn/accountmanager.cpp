@@ -21,6 +21,8 @@
 #include "dcopdrop.h"
 #include "kio.h"
 #include "maildrop.h"
+#include "protocol.h"
+#include "protocols.h"
 #include "subjectsdlg.h"
 
 #include <kaudioplayer.h>
@@ -33,7 +35,7 @@ KornSubjectsDlg* AccountManager::_subjectsDlg = 0;
 
 AccountManager::AccountManager( QObject * parent, const char * name )
 	: QObject( parent, name ),
-	_kioList( new QPtrList< KKioDrop > ),
+	_kioList( new QPtrList< KMailDrop > ),
 	_dcopList( new QPtrList< DCOPDrop > ),
 	_dropInfo( new QMap< KMailDrop*, Dropinfo* > )
 {
@@ -59,7 +61,16 @@ void AccountManager::readConfig( KConfig* config, const int index )
 	{
 		accountGroup = new KConfigGroup( config, QString( "korn-%1-%2" ).arg( index ).arg( counter ) );
 		
-		KKioDrop *kiodrop = new KKioDrop;
+		const Protocol *proto = Protocols::getProto( accountGroup->readEntry( "protocol" ) );
+		if( !proto )
+		{
+			kdWarning() << "Protocol werd niet gevonden" << endl;
+			++counter;
+			continue;
+		}
+		QMap< QString, QString > *configmap = proto->createConfig( accountGroup );
+		KMailDrop *kiodrop = proto->createMaildrop( accountGroup );
+		const Protocol *nproto = proto->getProtocol( accountGroup );
 		Dropinfo *info = new Dropinfo;
 		
 		//TODO: connect some stuff
@@ -69,7 +80,11 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		connect( kiodrop, SIGNAL( validChanged( bool ) ), this, SLOT( slotValidChanged( bool ) ) );
 		
 		kiodrop->readGeneralConfigGroup( *masterGroup );
-		kiodrop->readConfigGroup( *accountGroup );
+		if( !kiodrop->readConfigGroup( *accountGroup ) || !kiodrop->readConfigGroup( *configmap, nproto ) )
+		{
+			++counter;
+			continue;
+		}
 		
 		kiodrop->startMonitor();
 		
@@ -77,7 +92,7 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		
 		info->index = counter;
 		info->reset = accountGroup->readNumEntry( "reset", 0 );
-		info->msgnr = 0;
+		info->msgnr = info->reset;
 		info->newMessages = false;
 		
 		_dropInfo->insert( kiodrop, info );
@@ -136,7 +151,7 @@ QString AccountManager::getTooltip() const
 	
 void AccountManager::doRecheck()
 {
-	KKioDrop *item;
+	KMailDrop *item;
 	for( item = _kioList->first(); item; item = _kioList->next() )
 		item->forceRecheck();
 }
@@ -170,7 +185,7 @@ void AccountManager::doView()
 
 void AccountManager::doStartTimer()
 {
-	KKioDrop *item;
+	KMailDrop *item;
 	
 	for( item = _kioList->first(); item; item = _kioList->next() )
 		item->startMonitor();
@@ -178,7 +193,7 @@ void AccountManager::doStartTimer()
 
 void AccountManager::doStopTimer()
 {
-	KKioDrop *item;
+	KMailDrop *item;
 
 	for( item = _kioList->first(); item; item = _kioList->next() )
 		item->stopMonitor();
@@ -190,7 +205,8 @@ int AccountManager::totalMessages()
 	
 	QMap< KMailDrop*, Dropinfo* >::Iterator it;
 	for( it = _dropInfo->begin(); it != _dropInfo->end(); ++it )
-		result += it.data()->msgnr - it.data()->reset;
+		//if( it.date()->msgnr - it.date()->reset > 0 )
+			result += it.data()->msgnr - it.data()->reset;
 	
 	return result;
 }
@@ -217,6 +233,7 @@ void AccountManager::slotChanged( int count, KMailDrop* mailDrop )
 	
 	if( count > info->msgnr )
 	{
+		kdDebug() << "Run program" << count << " > " << info->msgnr << endl;
 		if( !mailDrop->soundFile().isEmpty() )
 			playSound( mailDrop->soundFile() );
 		if( !mailDrop->newMailCmd().isEmpty() )

@@ -34,6 +34,7 @@ class KIO_Protocol;
 class KIO_Subjects;
 class KIO_Read;
 class KIO_Delete;
+class KConfigGroup;
 class KURL;
 template<class> class QPtrList;
 template<class> class QValueList;
@@ -57,8 +58,7 @@ private:
 	
 	bool _valid;
 		
-	KIO_Protocol * _protocol;
-	QPtrList<KIO_Protocol> * _protocols;
+	const KIO_Protocol * _protocol;
 	
 	KIO_Count *_count;
 	KIO_Subjects *_subjects;
@@ -95,20 +95,21 @@ public:
 	static const char *MailboxConfigKey;
 	static const char *PassConfigKey;
 	static const char *SavePassConfigKey;
-	static const char *AuthConfigKey;
+	static const char *MetadataConfigKey;
 
 public:
 	/**
 	* KKioDrop Constructor
 	*/
 	KKioDrop();
+	KKioDrop( KConfigGroup* );
 
 	/** 
 	  * Set the server that will be checked for new mail.
 	 */
 	void setKioServer( const QString & proto, const QString & server, int port = -1 );
 	void setKioServer( const QString & proto, const QString & server, int port,
-	                   const KIO::MetaData metadata, bool setProtocol = true ); //Last argument inits _protocol
+	                   const KIO::MetaData metadata, bool ssl, bool setProtocol = true ); //Last argument inits _protocol
 
 	/** Set the account information for the PROTO server. */
 	void setUser( const QString & user, const QString & password, const QString & mailbox, const QString & auth );
@@ -124,7 +125,7 @@ public:
 	QString auth() const;
 
 	virtual void recheck();
-	void forceRecheck();
+	virtual void forceRecheck();
 
 	virtual bool valid();
 
@@ -143,7 +144,7 @@ public:
 	virtual QString readMail(const KornMailId * id, bool * stop);
 	
 	virtual KMailDrop* clone () const ;
-	virtual bool readConfigGroup ( const KConfigBase& cfg );
+	virtual bool readConfigGroup ( const QMap< QString, QString >& map, const Protocol * protocol );
 	virtual bool writeConfigGroup ( KConfigBase& cfg ) const;
 	virtual QString type() const { return QString::fromUtf8("kio"); }
 	

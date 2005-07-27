@@ -30,9 +30,7 @@ public:
 	MBox_Protocol() {}
 	virtual ~MBox_Protocol() {}
 
-	virtual KIO_Protocol * clone() const { return new MBox_Protocol; }
-
-	virtual QString protocol() const { return "mbox"; }
+	virtual QString protocol( bool ) const { return "mbox"; }
 	virtual QString configName() const { return "mbox"; }
 
 	virtual bool canReadSubjects() const { return true; }
@@ -40,16 +38,21 @@ public:
 	virtual bool canReadMail() const { return true; }
 	virtual bool fullMessage() const { return true; }
 
-	virtual int fields() const { return no_fields; }
-	virtual int urlFields() const { return mailbox; }
+	//virtual int fields() const { return no_fields; }
+	//virtual int urlFields() const { return mailbox; }
 		
 	virtual QString mailboxName() const { return i18n( "File:" ); }
 	
-	virtual void recheckKURL( KURL &, KIO::MetaData & md )
+	virtual void recheckKURL( KURL &, KIO::MetaData & md ) const
 		{ md.insert( "onlynew", "" ); md.insert( "savetime", "" ); }
-	virtual void readSubjectKURL( KURL &, KIO::MetaData & ) { }
-	virtual void deleteMailKURL( KURL &, KIO::MetaData & )  { }
-	virtual void readMailKURL( KURL &, KIO::MetaData & )    { }
+	virtual void readSubjectKURL( KURL &, KIO::MetaData & ) const { }
+	virtual void deleteMailKURL( KURL &, KIO::MetaData & ) const { }
+	virtual void readMailKURL( KURL &, KIO::MetaData & ) const   { }
+
+	virtual void configFillGroupBoxes( QStringList* ) const;
+	virtual void configFields( QPtrVector< QWidget >*, const QObject*, QPtrList< AccountInput >* ) const;
+	virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
+	virtual void writeEntries( QMap< QString, QString >* ) const;
 };
 
 #endif

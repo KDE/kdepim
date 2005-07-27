@@ -240,7 +240,10 @@ void KornBoxCfgImpl::slotEditBox()
 	_group = new KConfigGroup( _config, QString( "korn-%1-%2" ).
 			arg( _index ).arg(elbAccounts->listBox()->currentItem() ) );
 	
-	widget->readConfig( _group );
+	QMap< QString, QString > *map = new QMap< QString, QString >( _config->entryMap( QString( "korn-%1-%2" ).
+			                        arg( _index ).arg(elbAccounts->listBox()->currentItem() ) ) );
+	widget->readConfig( _group, map );
+	delete map;
 
 	_base->show();
 }

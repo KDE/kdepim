@@ -24,18 +24,19 @@
 #include "mbox_proto.h"
 #include "pop3_proto.h"
 #include "process_proto.h"
-#include "imaps_proto.h"
+//#include "imaps_proto.h"
 #include "nntp_proto.h"
-#include "pop3s_proto.h"
+//#include "pop3s_proto.h"
 #include "qmail_proto.h"
+#include "dcop_proto.h"
 
 #include <qdict.h>
 #include <qstring.h>
 #include <qstringlist.h>
 
-QDict<KIO_Protocol>* Protocols::protocols = 0;
+QDict<Protocol>* Protocols::protocols = 0;
 
-KIO_Protocol* Protocols::getProto( const QString& proto )
+const Protocol* Protocols::getProto( const QString& proto )
 {
 	if( !protocols )
 		fillProtocols();
@@ -43,14 +44,19 @@ KIO_Protocol* Protocols::getProto( const QString& proto )
 	return protocols->find( proto );
 }
 
-QStringList Protocols::getProtocols()
+const Protocol* Protocols::firstProtocol()
+{
+	return getProto( "mbox" );
+}
+
+QStringList Protocols::getProtocols() 
 {
 	QStringList output;
 	
 	if( !protocols )
 		fillProtocols();
 	
-	QDictIterator<KIO_Protocol> it( *protocols );
+	QDictIterator<Protocol> it( *protocols );
 	for( ; it.current(); ++it )
 		output.append( it.currentKey() );
 
@@ -61,19 +67,20 @@ QStringList Protocols::getProtocols()
 	
 void Protocols::fillProtocols()
 {
-	protocols = new QDict< KIO_Protocol>;
+	protocols = new QDict< Protocol>;
 	protocols->setAutoDelete( true );
 	addProtocol( new Imap_Protocol );
-	addProtocol( new Imaps_Protocol );
+	//addProtocol( new Imaps_Protocol );
 	addProtocol( new MBox_Protocol );
 	addProtocol( new Pop3_Protocol );
-	addProtocol( new Pop3s_Protocol );
+	//addProtocol( new Pop3s_Protocol );
 	addProtocol( new Process_Protocol );
 	addProtocol( new Nntp_Protocol );
 	addProtocol( new QMail_Protocol );
+	addProtocol( new DCOP_Protocol );
 }
 
-void Protocols::addProtocol( KIO_Protocol* proto )
+void Protocols::addProtocol( Protocol* proto )
 {
 	protocols->insert( proto->configName(), proto );
 }

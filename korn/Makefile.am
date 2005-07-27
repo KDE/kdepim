@@ -12,15 +12,18 @@ korn_LDADD = $(LIB_KIO)
 
 korn_SOURCES = \
   accountmanager.cpp \
+  account_input.cpp \
   boxcontainer.cpp \
   boxcontaineritem.cpp boxcontaineritem.skel \
   dcopdrop.cpp \
   dcopdropif.cpp dcopdropif.skel \
+  dcop_proto.cpp \
   dockedcontainer.cpp \
   dockeditem.cpp \
   hvcontainer.cpp \
   hvitem.cpp \
   keditlistboxman.cpp \
+  nntp_proto.cpp \
   maildrop.cpp \
   main.cpp \
   polldrop.cpp \
@@ -30,11 +33,14 @@ korn_SOURCES = \
   maildlg.cpp \
   mailid.cpp \
   mailsubject.cpp \
+  mbox_proto.cpp \
+  imap_proto.cpp \
   intid.cpp \
   stringid.cpp \
   kornapp.cpp \
   kio.cpp \
   kio_count.cpp \
+  kio_proto.cpp \
   kio_subjects.cpp \
   kio_single_subject.cpp \
   kio_read.cpp \
@@ -46,13 +52,18 @@ korn_SOURCES = \
   kornaccountcfg.ui \
   kornboxcfg.ui \
   korncfg.ui \
+  pop3_proto.cpp \
   systemtray.cpp \
-  progress_dialog.ui 
+  process_proto.cpp \
+  progress_dialog.ui \
+  qmail_proto.cpp
 
 noinst_HEADERS = \
   accountmanager.h \
+  account_input.h \
   boxcontainer.h \
   boxcontaineritem.h \
+  dcop_proto.h \
   dcopdrop.h \
   dcopdropif.h \
   dockeditem.h \

@@ -30,8 +30,11 @@ class QString;
 #include <kio/global.h>
 #include <klocale.h>
 #include <qstringlist.h>
+#include "protocol.h"
 
-class KIO_Protocol
+#include "kio.h"
+
+class KIO_Protocol : public Protocol
 {
 public:
 	/*
@@ -48,22 +51,19 @@ public:
 	 * Public enumeration
 	 */
 	enum DeleteTypeEnum { get, del };
-	/*
-	 * This enumeration is used when returning the capebilitys of a protocol
+	/**
+	 * This are the implementation of the Protocol-functions
 	 */
-	enum Fields {	no_fields = 0, server = 1, port = 2, username = 4, password = 8,
-			mailbox = 16, save_password = 32, auth = 64 };
+	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
 
-	/*
-	 * Function to get another instance of the protocol.
-	 * This function have to be overloaded in every inheritance.
-	 */
-	virtual KIO_Protocol * clone() const { return new KIO_Protocol; }
+	virtual KMailDrop* createMaildrop( KConfigGroup* config ) const { return new KKioDrop( config ); }
+
+	virtual QMap< QString, QString >* createConfig( KConfigGroup *group ) const;
 
 	/*
 	 * @return: the name of the kio_slave
 	 */
-	virtual QString protocol() const { return "file"; }
+	virtual QString protocol( bool ) const { return "file"; }
 
 	/*
 	 * @return: the name of the protocol used by the configuration
@@ -87,8 +87,8 @@ public:
 	 * true means that an option is enabled;
 	 * false means that the option is disabled.
 	 */
-	virtual int fields() const { return server | port | username | password | mailbox; }
-	virtual int urlFields() const { return no_fields; }
+	//virtual int fields() const { return server | port | username | password | mailbox; }
+	//virtual int urlFields() const { return no_fields; }
 	virtual unsigned short defaultPort() const { return 0; }
 
 	/*
@@ -128,15 +128,30 @@ public:
 	 * deleteCommitKURL is the KURL manipulator; the KURL is as in the settings.
 	 * That KURL isn't retouch by deleteMailKURL.
 	 */
-	virtual void recheckConnectKURL( KURL &, KIO::MetaData & ) { }
-	virtual void recheckKURL     ( KURL &, KIO::MetaData & ) { }
-	virtual void readSubjectConnectKURL ( KURL & kurl, KIO::MetaData & ) { kurl.setPath( "" ); }
-	virtual void readSubjectKURL ( KURL &, KIO::MetaData & ) { } //For editing a kurl (adding extra options)
-	virtual void deleteMailConnectKURL( KURL & kurl, KIO::MetaData & ) { kurl.setPath( "" ); }
-	virtual void deleteMailKURL  ( KURL &, KIO::MetaData & ) { }
-	virtual bool commitDelete() { return false; }
-	virtual void deleteCommitKURL( KURL &, KIO::MetaData & ) { }
-	virtual void readMailKURL    ( KURL &, KIO::MetaData & ) { }
+	virtual void recheckConnectKURL( KURL &, KIO::MetaData & ) const { }
+	virtual void recheckKURL     ( KURL &, KIO::MetaData & ) const { };
+	virtual void readSubjectConnectKURL ( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
+	virtual void readSubjectKURL ( KURL &, KIO::MetaData & ) const { } //For editing a kurl (adding extra options)
+	virtual void deleteMailConnectKURL( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
+	virtual void deleteMailKURL  ( KURL &, KIO::MetaData & ) const { }
+	virtual bool commitDelete() const { return false; }
+	virtual void deleteCommitKURL( KURL &, KIO::MetaData & ) const { }
+	virtual void readMailKURL    ( KURL &, KIO::MetaData & ) const { }
+
+
+	virtual const KIO_Protocol* getKIOProtocol() const { return this; }
+
+	virtual void readEntries( QMap< QString, QString >* ) const;
+	virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const = 0;
+
+protected:
+	/*
+	 * This enumeration is used when returning the capebilitys of a protocol
+	 */
+	enum Fields {	no_fields = 0, server = 1, port = 2, username = 4, password = 8,
+			mailbox = 16, save_password = 32, metadata = 64 };
+
+	void clearFields( QMap< QString, QString > *map, const Fields fields ) const;
 };
 
 #endif //MK_KIO_PROTO_H

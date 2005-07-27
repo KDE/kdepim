@@ -40,8 +40,16 @@ public:
 	HVContainer( Qt::Orientation orientation, QObject * parent = 0 , const char * name = 0 );
 	~HVContainer();
 	
+	/**
+	 * This functions calls show() to the box
+	 */
 	virtual void showBox();
 protected:
+	/**
+	 * This function returns a new instance of the container.
+	 *
+	 * @return A new instance of this container.
+	 */
 	virtual BoxContainerItem* newBoxInstance() const;
 private:
 	QHBox *box;

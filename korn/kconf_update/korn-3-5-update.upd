@@ -1,0 +1,10 @@
+Id=korn-3-5-ssl-update
+File=kornrc
+Options=overwrite
+Script=korn-3-5-ssl-update.pl,perl
+
+Id=korn-3-5-metadata-update
+File=kornrc
+Options=overwrite
+Script=korn-3-5-metadata-update.pl,perl
+

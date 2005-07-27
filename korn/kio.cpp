@@ -32,12 +32,15 @@
 #include "kio_subjects.h"
 #include "kio_read.h"
 #include "kio_delete.h"
+#include "protocol.h"
+#include "protocols.h"
 #include "stringid.h"
 #include"utils.h"
 //#include"kiocfg.h"
 //#include"dropdlg.h"
 #include "mailsubject.h"
 
+#include<kconfig.h>
 #include<kconfigbase.h>
 #include<kdebug.h>
 #include<klocale.h>
@@ -55,14 +58,14 @@
 
 //Headers of protocols
 #include"kio_proto.h"
-#include"pop3_proto.h"
-#include"pop3s_proto.h"
-#include"imap_proto.h"
-#include"imaps_proto.h"
-#include"nntp_proto.h"
-#include"maildir_proto.h"
-#include"qmail_proto.h"
-#include"process_proto.h"
+//#include"pop3_proto.h"
+//#include"pop3s_proto.h"
+//#include"imap_proto.h"
+//#include"imaps_proto.h"
+//#include"nntp_proto.h"
+//#include"maildir_proto.h"
+//#include"qmail_proto.h"
+//#include"process_proto.h"
 #include"mbox_proto.h"
 
 /*
@@ -88,21 +91,8 @@ KKioDrop::KKioDrop()
 	_kurl = new KURL;
 	_metadata = new KIO::MetaData;
 
-	//Initializing protocol list
-	_protocols = new QPtrList<KIO_Protocol>;
-	_protocols->setAutoDelete( true );
-	_protocols->append( new Pop3_Protocol    );
-	_protocols->append( new Pop3s_Protocol   ); 
-	_protocols->append( new Imap_Protocol    );
-	_protocols->append( new Imaps_Protocol   );
-	_protocols->append( new MBox_Protocol    ); //Not stable enough yet
-	_protocols->append( new Nntp_Protocol    );
-	_protocols->append( new Maildir_Protocol );
-	_protocols->append( new QMail_Protocol   );
-	_protocols->append( new Process_Protocol );
-	
 	//Initialising protocol; if no protocol is set before first use, it will use the first protocol
-	_protocol = _protocols->first()->clone(); //The first protocol is the default
+	_protocol = Protocols::firstProtocol()->getKIOProtocol(); //The first protocol is the default
 	_kurl->setPort( _protocol->defaultPort() );
 
 	//Creating children and connect them to the outside world; this class passes the messages for them...
@@ -121,45 +111,80 @@ KKioDrop::KKioDrop()
 	_mailurls = new QValueList<FileInfo>;
 }
 
+KKioDrop::KKioDrop( KConfigGroup* )
+	: KPollableDrop(),
+	_kurl( 0 ),
+	_metadata( 0 ),
+	_valid(false),
+	_protocol( 0 ),
+	_count( 0 ),
+	_subjects( 0 ),
+	_read( 0 ),
+	_readSubjectsTotalSteps( 0 ),
+	_deleteMailsTotalSteps( 0 ),
+	_process( 0 ),
+	_mailurls( 0 )
+{
+	_kurl = new KURL;
+	_metadata = new KIO::MetaData;
+
+	//Initialising protocol; if no protocol is set before first use, it will use the first protocol
+	_protocol = Protocols::firstProtocol()->getKIOProtocol(); //The first protocol is the default
+	_kurl->setPort( _protocol->defaultPort() );
+		
+	//Creating children and connect them to the outside world; this class passes the messages for them...
+	//This class handles all the counting.
+	_count = new KIO_Count( this, "kio_count" );
+	
+	//This class is responsible for providing the available subjects
+	_subjects = new KIO_Subjects( this, "kio_subjects" );
+	
+	//This class is used when a full message has to be read.
+	_read = new KIO_Read( this, "kio_read" );
+	
+	//This class can delete mails.
+	_delete = new KIO_Delete( this, "kio_delete" );
+	
+	_mailurls = new QValueList<FileInfo>;
+
+	//readConfigGroup( *config );
+}
+
 void KKioDrop::setKioServer( const QString & proto, const QString & server, int port )
 {
 	 //Settings default for last vars; could not inline because KIO::MetaData-object is not defined in header.
-	setKioServer( proto, server, port, KIO::MetaData(), true );
+	setKioServer( proto, server, port, KIO::MetaData(), false, true );
 }
 
-void KKioDrop::setKioServer(const QString & proto, const QString & server, int port, const KIO::MetaData metadata, bool setProtocol )
+void KKioDrop::setKioServer(const QString & proto, const QString & server, int port, const KIO::MetaData metadata, bool ssl,
+		            bool setProtocol )
 {
 	QString auth;
-	KIO_Protocol * protocol;
 	
 	if( port == -1 )
 		port = _protocol->defaultPort();
 
 	if( setProtocol ) //false if _protocol already made
 	{
-		delete _protocol;
-		_protocol = 0;
-		for( protocol = _protocols->first(); protocol; protocol = _protocols->next() )
-			if( protocol->configName() == proto )
-				_protocol = protocol->clone();
+		_protocol = Protocols::getProto( proto )->getKIOProtocol();
 
 		if( ! _protocol )
-			_protocol = _protocols->first()->clone();
+			_protocol = Protocols::firstProtocol()->getKIOProtocol();
 	}
 			
-	_kurl->setProtocol( _protocol->protocol() );
+	_kurl->setProtocol( _protocol->protocol( ssl ) );
 	_kurl->setHost    ( server );
 	_kurl->setPort    ( port );
 	
 	//Checking for authentication-settings.
-	if( _metadata->contains("auth") )
-	{
-		auth = (*_metadata)["auth"];
-		*_metadata = metadata;
-		if( ! _metadata->contains("auth") )
-			(*_metadata)["auth"] = auth;
-	} else
-		*_metadata = metadata;
+	//if( _metadata->contains("auth") )
+	//{
+	//	auth = (*_metadata)["auth"];
+	//	*_metadata = metadata;
+	//	if( ! _metadata->contains("auth") )
+	//		(*_metadata)["auth"] = auth;
+	//} else
+	*_metadata = metadata;
 		
 	_count->stopActiveCount();
 }
@@ -244,8 +269,6 @@ bool KKioDrop::valid()
 
 KKioDrop::~KKioDrop()
 {
-	delete _protocols;
-	delete _protocol;
 	delete _count;
 	delete _subjects;
 	delete _kurl;
@@ -304,88 +327,38 @@ KMailDrop* KKioDrop::clone() const
 	return clone;
 }
 
-bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
+bool KKioDrop::readConfigGroup( const QMap< QString, QString > &map, const Protocol* protocol )
 {
 	QString val, val2;
-	KPollableDrop::readConfigGroup( cfg );
-	KIO_Protocol * protocol;
 
-	this->setName( cfg.readEntry( "name", this->name() ).utf8() );
-	
-	val2 = cfg.readEntry(fu(ProtoConfigKey));
-	if( val2.isEmpty() )
+	if( !map.contains( "server" ) || !map.contains( "port" ) || !map.contains( "ssl" ) || !map.contains( "username" ) ||
+	    !map.contains( "mailbox" ) || !map.contains( "password" ) || !map.contains( "metadata" ) || !map.contains( "name" ) )
 	{
-		_valid = false;
-		emit validChanged( valid() );
-		kdWarning() << i18n( "No protocol specified" ) << endl;
+		kdWarning() << "Bug: map niet compleet" << endl;
 		return false;
 	}
 
-	//Set protocol
-        delete _protocol;
-	_protocol = 0;
-	for( protocol = _protocols->first(); protocol; protocol = _protocols->next() )
-		if( protocol->configName() == val2 )
-			_protocol = protocol->clone();
-			
-        if( ! _protocol )
-        	_protocol = _protocols->first()->clone();
-
-	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::server )
-	{
-		val = cfg.readEntry(fu(HostConfigKey));
-		if( val.isEmpty() )
-		{
-			_valid = false;
-			emit validChanged( valid() );
-			kdWarning() << i18n( "No server specified" ) << endl;
-			return false;
-		}
-		setKioServer( val2, val, cfg.readNumEntry(fu(PortConfigKey), _protocol->defaultPort() ), KIO::MetaData(), false );
-	} else
-		setKioServer( val2, "", _protocol->defaultPort(), KIO::MetaData(), false );
-
-	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::username )
-	{
-		_kurl->setUser( cfg.readEntry(fu(UserConfigKey)) );
-		if( _kurl->user().isEmpty() )
-		{
-			_valid = false;
-			emit validChanged( valid() );
-			kdWarning() << i18n( "No username specified" ) << endl;
-			return false;
-		}
-	}
-
-	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::mailbox )
-	{
-		_kurl->setPath( cfg.readEntry(fu(MailboxConfigKey)) );
-		if( _kurl->path().isEmpty() )
-		{
-			_valid = false;
-			emit validChanged( valid() );
-			kdWarning() << i18n( "No mailbox specified" ) << endl;
-			return false;
-		}
-	}
-
-	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::password )
-	{
-		_password = cfg.readEntry(fu(PassConfigKey));
-		//decrypt( _password );
-
-		if( _password.isEmpty() ) {
-			_kurl->setPass("");	
-		} else {
-			_kurl->setPass( _password );
-		}
-	}
+	this->setName( (*map.find( "name" )).utf8() );
 	
-	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::auth )
+	_protocol = protocol->getKIOProtocol();
+	if( !_protocol )
+		_protocol = Protocols::firstProtocol()->getKIOProtocol();
+			
+	val = *map.find( "server" );
+	setKioServer( val2, val, (*map.find( "port" )).toInt(), KIO::MetaData(), *map.find( "ssl" ) == "true", false );
+
+	_kurl->setUser( *map.find( "username" ) );
+	_kurl->setPath( *map.find( "mailbox" ) );
+
+	_kurl->setPass( *map.find( "password" ) );
+	
+	QStringList list = QStringList::split( ',', *map.find( "metadata" ) );
+	QStringList::Iterator it;
+	for( it = list.begin(); it != list.end(); ++it )
 	{
-		(*_metadata)["auth"] = cfg.readEntry(fu(AuthConfigKey),"");
-		if( (*_metadata)["auth"].isEmpty() )
-			_metadata->erase( "auth" );
+		int split = (*it).find( "=" );
+		if( split > 0 )
+			_metadata->insert( (*it).left( split ), (*it).right( (*it).length() - split - 1 ) );
 	}
 	
 	_valid = true;
@@ -397,7 +370,8 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
 bool KKioDrop::writeConfigGroup( KConfigBase& cfg ) const
 {
 	KPollableDrop::writeConfigGroup( cfg );
-	QString p;
+	kdDebug() << "KKioDrop::wroteConfigGroup()" << endl;
+	/*QString p;
 
 	if( _kurl->hasPass() ) {
 		p = _kurl->pass();
@@ -417,7 +391,7 @@ bool KKioDrop::writeConfigGroup( KConfigBase& cfg ) const
 		cfg.writeEntry(fu(PassConfigKey), p );
 	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::auth )
 		cfg.writeEntry(fu(AuthConfigKey), auth() );
-
+	*/
 	return true;
 }
 
@@ -427,46 +401,10 @@ KKioDrop& KKioDrop::operator = ( const KKioDrop& other )
 	setFreq( other.freq() );
 
 	if( other._protocol )
-	{
-		delete _protocol;
-		_protocol = other._protocol->clone();
-	}
+		_protocol = other._protocol->getKIOProtocol();
 
 	return *this;
 }
-
-//void KKioDrop::addConfigPage( KDropCfgDialog *dlg )
-//{
-//	KKioCfg * kiocfg = new KKioCfg( this );
-//	KIO_Protocol * protocol;
-//	for( protocol = _protocols->first() ; protocol ; protocol = _protocols->next() )
-//		kiocfg->addProtocol( protocol->clone() );
-//	
-//	dlg->addConfigPage( kiocfg );
-//
-//	KPollableDrop::addConfigPage( dlg );
-//}
-
-//void KKioDrop::encrypt( QString& str )
-//{
-//	unsigned int i, val;
-//	unsigned int len = str.length();
-//	QString result="";
-//
-//	for ( i=0; i < len; i++ )
-//	{
-//		val = str[i].latin1() - ' ';
-//		val = (255-' ') - val;
-//		result += (char)(val + ' ');
-//	}
-//
-//	str = result; //Replasing with encrypted QString
-//}
-//
-//void KKioDrop::decrypt( QString& str )
-//{
-//	encrypt( str );
-//}
 
 //Public slots
 void KKioDrop::readSubjectsCanceled()
@@ -610,6 +548,6 @@ const char *KKioDrop::UserConfigKey = "username";
 const char *KKioDrop::PassConfigKey = "password";
 const char *KKioDrop::MailboxConfigKey = "mailbox";
 const char *KKioDrop::SavePassConfigKey = "savepass";
-const char *KKioDrop::AuthConfigKey = "auth";
+const char *KKioDrop::MetadataConfigKey = "metadata";
 
 #include "kio.moc"

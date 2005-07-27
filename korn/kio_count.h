@@ -60,7 +60,7 @@ private:
 	KIO::Slave *_slave;
 	KURL *_kurl;
 	KIO::MetaData *_metadata;
-	KIO_Protocol *_protocol;
+	const KIO_Protocol *_protocol;
 	bool _valid;
 	QValueList<KKioDrop::FileInfo> *_new_mailurls; //entries can come with more function calls.
 	int _subjects_pending;

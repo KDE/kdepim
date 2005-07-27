@@ -19,7 +19,7 @@
 #ifndef MK_PROTOCOLS_H
 #define MK_PROTOCOLS_H
 
-class KIO_Protocol;
+class Protocol;
 
 template< class T > class QDict;
 class QString;
@@ -31,15 +31,16 @@ public:
 	Protocols() {}
 	~Protocols() {}
 	
-	static KIO_Protocol* getProto( const QString& );
+	static const Protocol* getProto( const QString& );
+	static const Protocol* firstProtocol();
 	
 	static QStringList getProtocols();
 	
 	static void fillProtocols();
 private:
-	static void addProtocol( KIO_Protocol* );
+	static void addProtocol( Protocol* );
 
-	static QDict<KIO_Protocol> *protocols;
+	static QDict<Protocol> *protocols;
 };
 
 #endif //MK_PROTOCOLS_H

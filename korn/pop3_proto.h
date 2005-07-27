@@ -32,15 +32,13 @@ public:
 
 	virtual bool connectionBased() const { return true; }
 	
-	virtual QString protocol() const { return "pop3"; }
+	virtual QString protocol( bool ssl ) const { return ssl ? "pop3s" : "pop3"; }
 	virtual QString configName() const { return "pop3"; }
 	virtual bool canReadSubjects() const { return true; }
 	virtual bool canDeleteMail() const { return true; }
 	virtual bool canReadMail() const { return true; }
 
-	virtual int fields() const { return server | port | username | password | auth; }
-	virtual int urlFields() const { return no_fields; }
-	virtual unsigned short defaultPort() const { return 110; }
+	virtual unsigned short defaultPort( bool ssl ) const { return ssl?995:110; }
 
 	virtual DeleteTypeEnum deleteFunction() const { return get; }
 
@@ -50,6 +48,11 @@ public:
 	virtual void deleteMailKURL ( KURL & kurl, KIO::MetaData & ) { kurl.setPath( kurl.path().replace( "/download/", "/remove/" ) ); }
 	virtual bool commitDelete () { return true; }
 	virtual void deleteCommitKURL(KURL & kurl, KIO::MetaData & ) { kurl.setPath( "commit" ); }
+
+	virtual void configFillGroupBoxes( QStringList* ) const;
+        virtual void configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput >* ) const;
+        virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
+        virtual void writeEntries( QMap< QString, QString >* ) const;
 };
 
 #endif

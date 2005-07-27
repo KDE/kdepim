@@ -28,33 +28,116 @@
  * If there is a commit-function, it should be installed in this file.
  */
 
+/**
+ * This class define the way a imap-protocol works.
+ * It implements function of KIO_Protocol to make the kio-modules work with it,
+ * as well as function of Protocol, to configure it.
+ */
 class Imap_Protocol : public KIO_Protocol
 {
 public:
+	/**
+	 * Constructor
+	 */
 	Imap_Protocol()  {}
+	/**
+	 * Destructor
+	 */
 	virtual ~Imap_Protocol() {}
 
-	virtual KIO_Protocol * clone() const { return new Imap_Protocol; }
-
+	/**
+	 * This function should return true if the protocol is connection-based.
+	 * imap is, so this return "true".
+	 *
+	 * @return true
+	 */
 	virtual bool connectionBased() const { return true; }
 	
-	virtual QString protocol() const { return "imap"; }
+	/**
+	 * This gives the two names for a kioslave: imaps if ssl is selected, imap if not.
+	 *
+	 * @param ssl true if ssl is selected.
+	 * @return "imaps" if ssl is true, "imap" otherwise
+	 */
+	virtual QString protocol( bool ssl ) const { return ssl ? "imaps" : "imap"; }
+	/**
+	 * This name of this protocol: it goed in the configuration under this name.
+	 *
+	 * @return The name of this protocol: "imap"
+	 */
 	virtual QString configName() const { return "imap"; }
+	/**
+	 * true, because it is possible to read subjects with imap.
+	 *
+	 * @return true
+	 */
 	virtual bool canReadSubjects() const { return true; }
+	/**
+	 * false, because deleting imap-mails doesn't work that well. See the commen above this class:
+	 * metadata expunge=auto doesn't work.
+	 * 
+	 * @return false
+	 */
 	virtual bool canDeleteMail() const { return false; } //See comment above class: metadata expunge=auto doesn't work.
+	/**
+	 * true, because it is possible to read the whole message.
+	 *
+	 * @return true
+	 */
 	virtual bool canReadMail() const { return true; }
 
-	virtual int fields() const { return server | port | username | password | mailbox | auth; }
-	virtual int urlFields() const { return no_fields; }
-	virtual unsigned short defaultPort() const { return 143; }
+	/**
+	 * This function returns the default port. This depends whether ssl is used or not.
+	 * If ssl is used, it return 993, elsewise 143.
+	 *
+	 * @param ssl Is ssl used?
+	 * @return 993 if ssl is true, false otherwise.
+	 */
+	virtual unsigned short defaultPort( bool ssl ) const { return ssl ? 993 : 143; }
 
 	virtual QStringList authList() const { return QStringList::split( '|', "*|LOGIN|ANONYMOUS|CRAM-MD5", false); }
 	//Could not test did, my server don't support other authentication methods.
 
-	virtual void recheckKURL    ( KURL &kurl, KIO::MetaData & ) { kurl.setQuery( "unseen" ); }
-	virtual void readSubjectKURL( KURL &kurl, KIO::MetaData & ) { kurl.setPath( kurl.path() + ";section=ENVELOPE" ); }
-	virtual void deleteMailConnectKURL( KURL &, KIO::MetaData & metadata ) { metadata.insert( "expunge", "auto" ); }
+	/**
+	 * These function change the kurl and the metadata.
+	 * In this case, "unseen" is added to the query to only list unlees kurls.
+	 * These function are called in kio_*.cpp
+	 */
+	virtual void recheckKURL    ( KURL &kurl, KIO::MetaData & ) const { kurl.setQuery( "unseen" ); }
+	virtual void readSubjectKURL( KURL &kurl, KIO::MetaData & ) const { kurl.setPath( kurl.path() + ";section=ENVELOPE" ); }
+	virtual void deleteMailConnectKURL( KURL &, KIO::MetaData & metadata ) const { metadata.insert( "expunge", "auto" ); }
 	
+	/**
+	 * This functions gives a list of names of groupboxes which are to be set in the configuration.
+	 * In this case, two elements are added: "Server" and "Identity".
+	 *
+	 * @param list A list to add the name of groupboxes in.
+	 */
+	virtual void configFillGroupBoxes( QStringList* list ) const;
+	/**
+	 * This function adds elements to the groupbox.
+	 *
+	 * @param vector The vector containing the groupBoxes
+	 * @param object The object to connect signals to
+	 * @param ptrlist A list with object which is filled in this function. The list must already be created.
+	 */
+	virtual void configFields( QPtrVector< QWidget >* vector, const QObject* object, QPtrList< AccountInput >* ptrlist ) const;
+	/**
+	 * This function is used to change the configuration.
+	 * In the case, the metadata-key is splitted out, and put in the @p metadata parameter.
+	 *
+	 * @param map The mapping containing the configuration. This object can change in this function.
+	 * @param metadata An empty mapping at the begin, a mapping containing metadata at the end.
+	 */
+        virtual void readEntries( QMap< QString, QString >* map, QMap< QString, QString >* metadata ) const;
+	/**
+	 * This function edits writeEntry. It merge things back to a metadata-key and adds this
+	 * key to the configuration.
+	 *
+	 * @param map The mapping which contains the information to be written to a configuarion file.
+	 *	the contents of this mapping can change in this function.
+	 */
+        virtual void writeEntries( QMap< QString, QString >* map ) const;
 };
 
 #endif

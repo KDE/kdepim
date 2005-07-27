@@ -50,7 +50,7 @@ private:
 	KKioDrop *_kio;
 	KURL *_kurl;
 	KIO::MetaData *_metadata;
-	KIO_Protocol *_protocol;
+	const KIO_Protocol *_protocol;
 	QPtrList<KIO_Single_Subject> *_jobs;
 	KIO::Slave *_slave;
 	bool _valid;

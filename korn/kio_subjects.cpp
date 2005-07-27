@@ -49,7 +49,6 @@ KIO_Subjects::~KIO_Subjects( )
 	delete _jobs;
 	delete _kurl;
 	delete _metadata;
-	delete _protocol;
 	_protocol = 0;
 }
 
@@ -59,8 +58,7 @@ void KIO_Subjects::doReadSubjects( KKioDrop *drop )
 	QValueList<KKioDrop::FileInfo>::ConstIterator end_it = drop->_mailurls->end();
 	
 	_kio = drop;
-	delete _protocol;
-	_protocol = _kio->_protocol->clone();
+	_protocol = _kio->_protocol;
 	*_kurl = *_kio->_kurl;
 	*_metadata = *_kio->_metadata;
 

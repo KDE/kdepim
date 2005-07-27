@@ -23,16 +23,45 @@
 
 class DCOPDrop;
 
+/**
+ * This DCOP-interface for the DCOPdrop.
+ */
 class DCOPDropInterface : virtual public DCOPObject
 {
 K_DCOP
 public:
-	DCOPDropInterface( DCOPDrop*, const char* );
+	/**
+	 * Constructor
+	 * @param drop The parent DCOPDrop
+	 * @param name The name of the dcop-object
+	 */
+	DCOPDropInterface( DCOPDrop* drop, const char* name );
+	/**
+	 * Destructor
+	 */
 	~DCOPDropInterface();
 	
-	void changeName( const QString& );
+	/**
+	 * This function is used to change the dcop-name
+	 *
+	 * @param name The new name of this dcop interface.
+	 */
+	void changeName( const QString& name );
 k_dcop:
+	/**
+	 * This function adds a message to list of new messages.
+	 *
+	 * @param subject The subject of the message
+	 * @param message The body of the message
+	 * @return The id which this message got
+	 */
 	int addMessage( const QString& subject, const QString& message );
+	/**
+	 * This function removes a message from the list of new messages.
+	 *
+	 * @param id The id of the message to be deleted. The id can be obtained in
+	 * 	the "addMessage" dcop call.
+	 */
 	bool removeMessage( int id );
 	
 private:

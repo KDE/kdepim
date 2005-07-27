@@ -39,10 +39,7 @@ public:
 	virtual bool canReadMail() const { return true; }
 	virtual bool fullMessage() const { return true; }
 
-	virtual int fields() const { return mailbox; }
-	virtual int urlFields() const { return no_fields; }
-	
-	virtual void recheckKURL( KURL &kurl, KIO::MetaData& )
+	virtual void recheckKURL( KURL &kurl, KIO::MetaData& ) const
 		{ if( kurl.path().right( 1 ) == "/" )
 		  	kurl.setPath( kurl.path() +  "new" );
 		  else
@@ -51,6 +48,11 @@ public:
 	 
 	
 	virtual QString mailboxName() const { return i18n( "Path:" ); }
+
+	virtual void configFillGroupBoxes( QStringList* ) const;
+        virtual void configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput >* ) const;
+        virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
+        virtual void writeEntries( QMap< QString, QString >* ) const;
 };
 
 #endif

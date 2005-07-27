@@ -36,7 +36,7 @@ typedef QMemArray<char> QByteArray;
 class KIO_Single_Subject : public QObject
 { Q_OBJECT
 public:
-	KIO_Single_Subject( QObject * parent, const char * name, KURL &, KIO::MetaData &, KIO_Protocol *,
+	KIO_Single_Subject( QObject * parent, const char * name, KURL &, KIO::MetaData &, const KIO_Protocol *,
 	                    KIO::Slave *&, const QString &, const long );
 	~KIO_Single_Subject( );
 	
@@ -47,7 +47,7 @@ private:
 	QString *_message;
 	QString *_name;
 	KURL *_kurl;
-	KIO_Protocol *_protocol;
+	const KIO_Protocol *_protocol;
 	KIO::MetaData *_metadata;
 	KIO::TransferJob* _job;
 	long _size;

@@ -39,9 +39,14 @@ public:
 	virtual bool canReadMail() const { return true; }
 	virtual bool fullMessage() const { return true; }
 
-	virtual int fields() const { return server | port | username | password | mailbox; }
-	virtual int urlFields() const { return no_fields; }
-	virtual unsigned short defaultPort() const { return 119; }
+	//virtual int fields() const { return server | port | username | password | mailbox; }
+	//virtual int urlFields() const { return no_fields; }
+	virtual unsigned short defaultPort( bool ) const { return 119; }
+
+	virtual void configFillGroupBoxes( QStringList* ) const;
+        virtual void configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput >* ) const;
+        virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
+        virtual void writeEntries( QMap< QString, QString >* ) const;
 };
 
 #endif

@@ -24,9 +24,16 @@
 class KConfigGroup;
 class KURLRequester;
 
+class QVBoxLayout;
+class QHBoxLayout;
 class QLabel;
 class QString;
 class QWidget;
+
+class AccountInput;
+
+template< class T > class QPtrList;
+template< class T > class QPtrVector;
 
 class KornAccountCfgImpl : public KornAccountCfg
 { Q_OBJECT
@@ -34,8 +41,11 @@ public:
 	KornAccountCfgImpl( QWidget * parent = 0, const char * name = 0 );
 	~KornAccountCfgImpl();
 	
-	void readConfig( KConfigGroup *config );
+	void readConfig( KConfigGroup *config, QMap< QString, QString > *entries );
 	void writeConfig();
+
+public slots:
+	void slotSSLChanged();
 	
 protected slots:
 	virtual void slotProtocolChanged( const QString& );
@@ -49,10 +59,11 @@ private:
 	int _fields;
 	int _urlfields;
 		
-	void showHide( int fieldvalue, QLabel *label, QWidget* edit, KURLRequester* url, const QString& labelText, QWidget *& previous );
+	QVBoxLayout *_vlayout;
+	QHBoxLayout *_protocolLayout;
+	QPtrVector< QWidget > *_groupBoxes;
 	
-	QString encrypt( const QString& ) const;
-	QString decrypt( const QString& ) const;
+	QPtrList< AccountInput > *_accountinput;
 };
 
 #endif //MK_KORNACCOUNTCFGIMPL_H

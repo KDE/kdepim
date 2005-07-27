@@ -67,9 +67,19 @@ bool DCOPDrop::stopMonitor()
 	return true;
 }
 
-bool DCOPDrop::readConfigGroup( const KConfigBase& cfg )
+bool DCOPDrop::readConfigGroup( const KConfigGroup &cfg )
 {
 	return KMailDrop::readConfigGroup( cfg );
+}
+
+bool DCOPDrop::readConfigGroup( const QMap< QString, QString > &map, const Protocol * )
+{
+	if( !map.contains( "dcopname" ) )
+		kdDebug() << "map is niet compleet" << endl;
+
+	this->setDCOPName( *map.find( "dcopname" ) );
+	
+	return true;
 }
 
 bool DCOPDrop::writeConfigGroup( KConfigBase& cfg ) const

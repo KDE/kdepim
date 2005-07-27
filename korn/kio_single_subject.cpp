@@ -36,13 +36,13 @@
 #include <qstring.h>
 
 KIO_Single_Subject::KIO_Single_Subject( QObject * parent, const char * name,
-		    KURL &kurl, KIO::MetaData &metadata, KIO_Protocol * protocol, KIO::Slave *& slave,
+		    KURL &kurl, KIO::MetaData &metadata, const KIO_Protocol * protocol, KIO::Slave *& slave,
 		    const QString &url, const long size ) 
 		: QObject( parent, name )
 {
 	_kurl = new KURL( kurl );
 	_metadata = new KIO::MetaData( metadata );
-	_protocol = protocol->clone( );
+	_protocol = protocol;
 	_name = new QString( url );
 	_size = size;
 	_message = new QString;
@@ -56,7 +56,6 @@ KIO_Single_Subject::~KIO_Single_Subject( )
 		KIO::Scheduler::cancelJob( _job );
 	delete _kurl;
 	delete _metadata;
-	delete _protocol;
 	delete _name;
 	delete _message;
 }

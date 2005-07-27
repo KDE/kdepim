@@ -18,7 +18,9 @@
 
 #include "kornaccountcfgimpl.h"
 
+#include "account_input.h"
 #include "kio_proto.h"
+#include "protocol.h"
 #include "protocols.h"
 
 #include <kconfigbase.h>
@@ -28,6 +30,9 @@
 
 #include <qcheckbox.h>
 #include <qcombobox.h>
+#include <qptrvector.h>
+#include <qlayout.h>
+#include <qmap.h>
 #include <qlabel.h>
 #include <qwidget.h>
 
@@ -35,56 +40,42 @@ KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent, const char * name )
 	: KornAccountCfg( parent, name ),
 	_config( 0 ),
 	_fields( 0 ),
-	_urlfields( 0 )
+	_urlfields( 0 ),
+	_vlayout( 0 ),
+	_protocolLayout( 0 ),
+	_groupBoxes( 0 ),
+	_accountinput( new QPtrList< AccountInput >() )
 {
 	connect( parent, SIGNAL( okClicked() ), this, SLOT( slotOK() ) );
 	connect( parent, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
 	
 	this->cbProtocol->insertStringList( Protocols::getProtocols() );
+
+	_accountinput->setAutoDelete( true );
 }
 	
 KornAccountCfgImpl::~KornAccountCfgImpl()
 {
+	delete _accountinput;
 }
 
-void KornAccountCfgImpl::readConfig( KConfigGroup *config )
+void KornAccountCfgImpl::readConfig( KConfigGroup *config, QMap< QString, QString > *entries )
 {
+	AccountInput *input;
+	
 	_config = config;
-	
+
+	_accountinput->clear();
+
 	this->cbProtocol->setCurrentText( _config->readEntry( "protocol", "mbox" ) );
-	slotProtocolChanged( this->cbProtocol->currentText() );
+        slotProtocolChanged( this->cbProtocol->currentText() );
+	const Protocol *protocol = Protocols::getProto( _config->readEntry( "protocol", "mbox" ) );
+
+	protocol->readEntries( entries );
 	
-	if( _fields & KIO_Protocol::server )
-		this->edServer->setText( _config->readEntry( "server", "localhost" ) );
-	if( _urlfields & KIO_Protocol::server )
-		this->urlServer->setURL( _config->readEntry( "server", "localhost" ) );
-	if( _fields & KIO_Protocol::port )
-		this->edPort->setText( _config->readEntry( "port", this->edPort->text() ) );
-	if( _urlfields & KIO_Protocol::port )
-		this->urlPort->setURL( _config->readEntry( "port", this->urlPort->url() ) );
-	
-	if( _fields & KIO_Protocol::username )
-		this->edUsername->setText( _config->readEntry( "username", "" ) );
-	if( _urlfields & KIO_Protocol::username )
-		this->urlUsername->setURL( _config->readEntry( "username", "" ) );
-	if( _fields & KIO_Protocol::mailbox )
-		this->edMailbox->setText( _config->readEntry( "mailbox", "" ) );
-	if( _urlfields & KIO_Protocol::mailbox )
-		this->urlMailbox->setURL( _config->readEntry( "mailbox", "" ) );
-	if( _fields & KIO_Protocol::password )
-		this->chPassword->setChecked( _config->readBoolEntry( "savepassword", false ) );
-	if( _fields & KIO_Protocol::password )
-	{
-		this->edPassword->setEnabled( _config->readBoolEntry( "savepassword", false ) );
-		this->edPassword->setText( _config->readEntry( "password", "" ) );
-	}
-	if( _fields & KIO_Protocol::auth )
-	{
-		this->cbAuth->setCurrentItem( -1 );
-		for( int index = 0; index < this->cbAuth->count(); ++index )
-			if( this->cbAuth->text( index ) == _config->readEntry( "auth", "Plain" ) )
-				this->cbAuth->setCurrentItem( index );
-	}
+	for( input = _accountinput->first(); input; input = _accountinput->next() )
+		if( entries->contains( input->configName() ) )
+			input->setValue( *(entries->find( input->configName() ) ) );
 	
 	this->edInterval->setText( _config->readEntry( "interval", "300" ) );
 	
@@ -97,44 +88,28 @@ void KornAccountCfgImpl::readConfig( KConfigGroup *config )
 
 void KornAccountCfgImpl::writeConfig()
 {
+	AccountInput *input;
+	const Protocol *protocol = Protocols::getProto( this->cbProtocol->currentText() );
+
+	if( !protocol )
+	{
+		kdWarning() << "An error occured during writing the account information: protocol does not exist" << endl;
+		return;
+	}
+	
 	_config->writeEntry( "protocol", this->cbProtocol->currentText() );
 		
-	if( _fields & KIO_Protocol::server )
-		_config->writeEntry( "server", this->edServer->text() );
-	else if( _urlfields & KIO_Protocol::server )
-		_config->writeEntry( "server", this->urlServer->url() );
-	else
-		_config->writeEntry( "server", "" );
-	if( _fields & KIO_Protocol::port )
-		_config->writeEntry( "port", this->edPort->text() );
-	else if( _urlfields & KIO_Protocol::port )
-		_config->writeEntry( "port", this->urlPort->url() );
-	else
-		_config->writeEntry( "port", "" );
-	
-	if( _fields & KIO_Protocol::username )
-		_config->writeEntry( "username", this->edUsername->text() );
-	else if( _urlfields & KIO_Protocol::username )
-		_config->writeEntry( "username", this->urlUsername->url() );
-	else
-		_config->writeEntry( "username", "" );
-	if( _fields & KIO_Protocol::mailbox )
-		_config->writeEntry( "mailbox", this->edMailbox->text() );
-	else if( _urlfields & KIO_Protocol::mailbox )
-		_config->writeEntry( "mailbox", this->urlMailbox->url() );
-	else
-		_config->writeEntry( "mailbox", "" );
-	if( _fields & KIO_Protocol::password )
-		_config->writeEntry( "savepassword", this->chPassword->isChecked() );
-	
-	if( ( _fields & KIO_Protocol::password ) && this->edPassword->isEnabled() )
-		_config->writeEntry( "password", this->edPassword->text() );
-	else
-		_config->writeEntry( "password", "" );
-	if( _fields & KIO_Protocol::auth )
-		_config->writeEntry( "auth", this->cbAuth->currentText() );
-	else
-		_config->writeEntry( "auth", "" );
+	QMap< QString, QString > *map = new QMap< QString, QString >;
+	QMap< QString, QString >::ConstIterator it;
+	for( input = _accountinput->first(); input; input = _accountinput->next() )
+		map->insert( input->configName(), input->value() );
+
+	protocol->writeEntries( map );
+
+	for( it = map->begin(); it != map->end(); ++it )
+		_config->writeEntry( it.key(), it.data() );
+
+	delete map;
 	
 	_config->writeEntry( "interval", this->edInterval->text().toInt() );
 
@@ -143,6 +118,24 @@ void KornAccountCfgImpl::writeConfig()
 	_config->writeEntry( "sound", this->edPlaySound->url() );
 	_config->writeEntry( "passivepopup", this->chPassivePopup->isChecked() );
 	_config->writeEntry( "passivedate", this->chPassiveDate->isChecked() );
+}
+
+void KornAccountCfgImpl::slotSSLChanged()
+{
+	AccountInput *input;
+	const Protocol* protocol = Protocols::getProto( this->cbProtocol->currentText() );
+	bool ssl = false;
+	
+	if( !protocol )
+		return;
+
+	for( input = _accountinput->first(); input; input = _accountinput->next() )
+		if( ( input->configName() == "ssl" && input->value() == "true" ) || input->value() == "ssl" )
+			ssl = true;
+
+	for( input = _accountinput->first(); input; input = _accountinput->next() )
+		if( input->configName() == "port" && ( input->value() == QString::number( protocol->defaultPort( !ssl ) ) ) )
+			input->setValue( QString::number( protocol->defaultPort( ssl ) ) );
 }
 	
 void KornAccountCfgImpl::slotOK()
@@ -156,81 +149,66 @@ void KornAccountCfgImpl::slotCancel()
 
 void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 {
-	KIO_Protocol *protocol = Protocols::getProto( proto );
-	QWidget *previousWidget = 0; //For TAB-sequence
-	if( protocol == 0 )
-		return; //ERROR: protocol not found
-	
-	_fields = protocol->fields();
-	_urlfields = protocol->urlFields();
-	
-	//Hide show the different boxes
-	showHide( KIO_Protocol::server, lbServer, (QWidget*)edServer, urlServer, protocol->serverName(), previousWidget );
-	showHide( KIO_Protocol::port, lbPort, (QWidget*)edPort, urlPort, protocol->portName(), previousWidget );
-	showHide( KIO_Protocol::username, lbUsername, (QWidget*)edUsername, urlUsername, protocol->usernameName(), previousWidget );
-	showHide( KIO_Protocol::mailbox, lbMailbox, (QWidget*)edMailbox, urlMailbox, protocol->mailboxName(), previousWidget );
-	showHide( KIO_Protocol::password, 0, chPassword, 0, QString::null, previousWidget );
-	showHide( KIO_Protocol::password, lbPassword, (QWidget*)edPassword, 0, protocol->passwordName(), previousWidget );
-	showHide( KIO_Protocol::auth, lbAuth, (QWidget*)cbAuth, 0, protocol->authName(), previousWidget );
-	chPassword->setText( protocol->savePasswordName() );
-	
-	//Filling authlist
-	if( _fields & KIO_Protocol::auth )
-	{
-		cbAuth->clear();
-		cbAuth->insertStringList( protocol->authList() );
-	}
-	
-	edPort->setText( QString::number( protocol->defaultPort() ) );
-	urlPort->setURL( QString::number( protocol->defaultPort() ) );
-}
+	const Protocol *protocol = Protocols::getProto( proto );
+	QStringList *groupBoxes = new QStringList;
+	int counter = 1;
 
-void KornAccountCfgImpl::showHide( int fieldvalue, QLabel *label, QWidget* edit, KURLRequester* url,
-                                   const QString& labelText, QWidget *& previous )
-{
-	if( _fields & fieldvalue )
+	protocol->configFillGroupBoxes( groupBoxes );
+	
+	_accountinput->clear();
+	delete _groupBoxes;
+	delete _protocolLayout;
+	delete _vlayout;
+	_vlayout = new QVBoxLayout( this->server_tab, groupBoxes->count() + 1 );
+	_vlayout->setSpacing( 10 );
+	_vlayout->setMargin( 10 );
+
+	_protocolLayout = new QHBoxLayout( _vlayout );
+	_protocolLayout->addWidget( this->lbProtocol );
+	_protocolLayout->addWidget( this->cbProtocol );
+
+	QStringList::iterator it;
+	counter = 0;
+	_groupBoxes = new QPtrVector< QWidget >( groupBoxes->count() );
+	_groupBoxes->setAutoDelete( true );
+	for( it = groupBoxes->begin(); it != groupBoxes->end(); ++it )
 	{
-		if( label )
-		{
-			label->show();
-			label->setText( labelText );
-		}
-		if( edit )
-		{
-			edit->show();
-			if( previous )
-				setTabOrder( previous, edit );
-			previous = edit;
-		}
-		if( url )
-			url->hide();
-	} else if( _urlfields & fieldvalue )
-	{
-		if( label )
-		{
-			label->show();
-			label->setText( labelText );
-		}
-		if( edit )
-			edit->hide();
-		if( url )
-		{
-			url->show();
-			if( previous )
-				setTabOrder( previous, url );
-			previous = url;
-		}
-	} else {
-		if( label )
-		{
-			label->hide();
-			label->setText( "" );
-		}
-		if( edit )
-			edit->hide();
-		if( url )
-			url->hide();
+		_groupBoxes->insert( counter, new QGroupBox( (*it), this->server_tab, "groupbox" ) );
+		_vlayout->addWidget( _groupBoxes->at( counter ) );
+		++counter;
 	}
+	delete groupBoxes;
+
+	AccountInput *input;
+	protocol->configFields( _groupBoxes, this, _accountinput );
+	
+	for( unsigned int groupCounter = 0; groupCounter < _groupBoxes->count(); ++groupCounter )
+	{
+		int counter = 0;
+		QGridLayout *grid = new QGridLayout( _groupBoxes->at( groupCounter ), 0, 2 );
+		grid->setSpacing( 10 );
+		grid->setMargin( 15 );
+		for( input = _accountinput->first(); input; input = _accountinput->next() )
+		{
+			if( input->leftWidget() && _groupBoxes->at( groupCounter ) == input->leftWidget()->parent() )
+			{
+				grid->addWidget( input->leftWidget(), counter, 0 );
+				if( input->rightWidget() && _groupBoxes->at( groupCounter ) == input->rightWidget()->parent() )
+					grid->addWidget( input->rightWidget(), counter, 1 );
+				++counter;
+			} else {
+				if( input->rightWidget() && _groupBoxes->at( groupCounter ) == input->rightWidget()->parent() )
+				{
+					grid->addWidget( input->rightWidget(), counter, 1 );
+					++counter;
+				}
+			}
+		}
+
+		_groupBoxes->at( groupCounter )->show();
+	}
+
+	this->server_tab->updateGeometry();
 }
 
 #include "kornaccountcfgimpl.moc"

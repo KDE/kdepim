@@ -35,6 +35,9 @@ public:
 	HVItem( QWidget *parent = 0, const char *name = 0 );
 	~HVItem();
 	
+	/**
+	 * This function calles show() to the label.
+	 */
 	virtual void showBox();
 	
 public slots:

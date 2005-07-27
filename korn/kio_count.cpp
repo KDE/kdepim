@@ -52,7 +52,6 @@ KIO_Count::~KIO_Count()
 	// Delete copies of urls.
 	delete _kurl;
 	delete _metadata;
-	delete _protocol;
 }
 
 void KIO_Count::count( KKioDrop *drop )
@@ -62,7 +61,6 @@ void KIO_Count::count( KKioDrop *drop )
 
 	delete _kurl;
 	delete _metadata;
-	delete _protocol;
 	_kio = drop;
 
 	/*
@@ -73,7 +71,7 @@ void KIO_Count::count( KKioDrop *drop )
 	 */
 	_kurl = new KURL( *_kio->_kurl );
 	_metadata = new KIO::MetaData( *_kio->_metadata );
-	_protocol = _kio->_protocol->clone();
+	_protocol = _kio->_protocol;
 
 	KURL kurl = *_kurl;
 	KIO::MetaData metadata = *_metadata;
@@ -121,7 +119,10 @@ void KIO_Count::count( KKioDrop *drop )
 	if( kurl.port() == 0 )
 		kurl.setPort( _protocol->defaultPort() );
 
+	kdDebug() << "_protocol->configName() = " << _protocol->configName() << endl;
+
 	//Making job to fetch file-list
+	
 	_job = KIO::listDir( kurl, false );
 	_job->addMetaData( metadata );
 
@@ -156,7 +157,6 @@ void KIO_Count::stopActiveCount()
 	//Deletings settings
 	delete _kurl; _kurl = 0;
 	delete _metadata; _metadata = 0;
-	delete _protocol; _protocol = 0;
 
 	delete _new_mailurls; _new_mailurls = 0;
 }
@@ -193,7 +193,6 @@ void KIO_Count::disconnectSlave()
 
 	//Disconnect slave
 	KIO::Scheduler::disconnectSlave( _slave );
-	delete _protocol;
 	_slave = 0;
 	_protocol = 0;
 }

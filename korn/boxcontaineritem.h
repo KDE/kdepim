@@ -81,10 +81,24 @@ public slots:
 	 */
 	virtual void setCount( const int count, const bool newMessages ) = 0;
 	
+	/**
+	 * This functions execute a given command
+	 *
+	 * @param cmd The command to be executed.
+	 */
 	virtual void runCommand( const QString& cmd );
 
+	/**
+	 * This function displays the (kde) help dialog
+	 */
 	void help();
+	/**
+	 * This function calls a bug report dialog
+	 */
 	void reportBug();
+	/**
+	 * This function calls the about dialog
+	 */
 	void about();
 	
 	/**

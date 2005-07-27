@@ -135,7 +135,7 @@ private:
 		int reset;
 	};
 	
-	QPtrList< KKioDrop > *_kioList;
+	QPtrList< KMailDrop > *_kioList;
 	QPtrList< DCOPDrop > *_dcopList;
 	
 	QMap< KMailDrop*, Dropinfo* > *_dropInfo;

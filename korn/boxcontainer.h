@@ -41,6 +41,9 @@ public:
 	 * @param name The name of this object
 	 */
 	BoxContainer( QObject *parent = 0, const char * name = 0 );
+	/**
+	 * Destructor
+	 */
 	~BoxContainer();
 	
 	/**

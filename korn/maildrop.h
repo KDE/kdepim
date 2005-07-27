@@ -11,11 +11,16 @@
 #include<qvaluevector.h>
 #include <qptrlist.h>
 
+class Protocol;
+
 class KConfigBase;
+class KConfigGroup;
 class KDropCfgDialog;
 class QColor;
 class KornMailSubject;
 class KornMailId;
+
+template< class T, class R > class QMap;
 
 /**
 * Abstract base class for all mailbox monitors.
@@ -97,6 +102,11 @@ class KMailDrop : public QObject
      */
     virtual void recheck()=0;
 
+    /**
+     * Force a recheck
+     */
+    virtual void forceRecheck() { recheck(); }
+
     /** 
      */
     virtual bool startMonitor()=0;
@@ -150,6 +160,7 @@ class KMailDrop : public QObject
      * @return true if read was successful, false otherwise.
      */
     virtual bool readConfigGroup( const KConfigBase& cfg );
+    virtual bool readConfigGroup( const QMap< QString, QString > &, const Protocol * protocol ) { return true; }
 
     /** 
      * Write box configuration to a config group. Subclasses that
