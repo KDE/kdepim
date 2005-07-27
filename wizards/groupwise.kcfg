@@ -16,6 +16,10 @@
     <entry key="User" type="String" >
       <label>User name</label>
     </entry>
+    <entry key="Path" type="String" >
+      <label>Path to SOAP interface</label>
+      <default>/soap</default>
+    </entry>
     <entry key="Password" type="String" >
       <label>User password</label>
     </entry>

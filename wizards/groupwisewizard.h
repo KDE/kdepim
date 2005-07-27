@@ -44,6 +44,7 @@ class KDE_EXPORT GroupwiseWizard : public KConfigWizard
 
   private:
     KLineEdit *mServerEdit;
+    KLineEdit *mPathEdit;
     QSpinBox *mPortEdit;
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;

@@ -46,7 +46,7 @@ QString serverUrl()
   if ( GroupwiseConfig::self()->useHttps() ) url = "https";
   else url = "http";
   url += "://" + GroupwiseConfig::self()->host() + ":" +
-    QString::number( GroupwiseConfig::self()->port() ) + "/soap/";
+    QString::number( GroupwiseConfig::self()->port() ) + GroupwiseConfig::self()->path();
   return url;
 }
 
@@ -196,7 +196,7 @@ class GroupwisePropagator : public KConfigPropagator
       c->file = "korganizerrc";
       c->group = "FreeBusy";
       c->name = "FreeBusyRetrieveUrl";
-      c->value = "groupwise://" + GroupwiseConfig::self()->host() +
+      c->value = "groupwise://" + GroupwiseConfig::self()->host() + GroupwiseConfig::self()->path() +
         "/freebusy/";
       changes.append( c );
 
@@ -278,24 +278,29 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
   mServerEdit = new KLineEdit( page );
   topLayout->addWidget( mServerEdit, 0, 1 );
 
-  label = new QLabel( i18n("Port:"), page );
+  label = new QLabel( i18n("Path to SOAP interface:"), page );
   topLayout->addWidget( label, 1, 0 );
+  mPathEdit = new KLineEdit( page );
+  topLayout->addWidget( mPathEdit, 1, 1 );
+
+  label = new QLabel( i18n("Port:"), page );
+  topLayout->addWidget( label, 2, 0 );
   mPortEdit = new QSpinBox( 1, 65536, 1, page );
-  topLayout->addWidget( mPortEdit, 1, 1 );
+  topLayout->addWidget( mPortEdit, 2, 1 );
 
   label = new QLabel( i18n("User name:"), page );
-  topLayout->addWidget( label, 2, 0 );
+  topLayout->addWidget( label, 3, 0 );
   mUserEdit = new KLineEdit( page );
-  topLayout->addWidget( mUserEdit, 2, 1 );
+  topLayout->addWidget( mUserEdit, 3, 1 );
 
   label = new QLabel( i18n("Password:"), page );
-  topLayout->addWidget( label, 3, 0 );
+  topLayout->addWidget( label, 4, 0 );
   mPasswordEdit = new KLineEdit( page );
   mPasswordEdit->setEchoMode( KLineEdit::Password );
-  topLayout->addWidget( mPasswordEdit, 3, 1 );
+  topLayout->addWidget( mPasswordEdit, 4, 1 );
 
   mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
-  topLayout->addMultiCellWidget( mSavePasswordCheck, 4, 4, 0, 1 );
+  topLayout->addMultiCellWidget( mSavePasswordCheck, 5, 5, 0, 1 );
 
   mSecureCheck = new QCheckBox( i18n("Encrypt communication with server"),
                                 page );
@@ -352,6 +357,7 @@ GroupwiseWizard::~GroupwiseWizard()
 QString GroupwiseWizard::validate()
 {
   if( mServerEdit->text().isEmpty() ||
+      mPathEdit->text().isEmpty() ||
       mPortEdit->text().isEmpty() ||
       mUserEdit->text().isEmpty() ||
       mPasswordEdit->text().isEmpty() )
@@ -370,6 +376,7 @@ QString GroupwiseWizard::validate()
 void GroupwiseWizard::usrReadConfig()
 {
   mServerEdit->setText( GroupwiseConfig::self()->host() );
+  mPathEdit->setText( GroupwiseConfig::self()->path() );
   mPortEdit->setValue( GroupwiseConfig::self()->port() );
   mUserEdit->setText( GroupwiseConfig::self()->user() );
   mPasswordEdit->setText( GroupwiseConfig::self()->password() );
@@ -383,6 +390,7 @@ void GroupwiseWizard::usrReadConfig()
 void GroupwiseWizard::usrWriteConfig()
 {
   GroupwiseConfig::self()->setHost( mServerEdit->text() );
+  GroupwiseConfig::self()->setPath( mPathEdit->text() );
   GroupwiseConfig::self()->setPort( mPortEdit->value() );
   GroupwiseConfig::self()->setUser( mUserEdit->text() );
   GroupwiseConfig::self()->setPassword( mPasswordEdit->text() );
