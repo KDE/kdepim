@@ -211,8 +211,6 @@ KCal::Todo* IncidenceConverter::convertFromTask( ngwt__Task* task )
   if ( task->completed && (*task->completed) == true )
     todo->setCompleted( true );
 
-  getAttendees( task, todo );
-
   todo->setLocation( i18n( "Novell GroupWise does not support locations for to-dos." ) );
   return todo;
 }
@@ -267,8 +265,6 @@ KCal::Journal* IncidenceConverter::convertFromNote( ngwt__Note* note)
   if ( note->startDate ) {
     journal->setDtStart( stringToQDateTime( note->startDate ) );
   }
-
-  getAttendees( note, journal );
 
   return journal;
 }
@@ -574,9 +570,7 @@ void IncidenceConverter::setItemDescription( KCal::Incidence *incidence,
     str->append( "text/plain" );
     part->contentType = str;
 
-    int * len = (int*)soap_malloc( soap(), sizeof( int ) );
-    *len = incidence->description().utf8().length();
-    part->length = len;
+    part->length = 0; // this is optional and sending the actual length of the source string truncates the data.
 
     message->part.push_back( part );
 
@@ -619,6 +613,7 @@ void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence
   }
 }
 
+#if 0 // rrule is only used on writing to the server.
 void IncidenceConverter::getRecurrence( ngwt__CalendarItem* item, KCal::Incidence* incidence)
 {
   // is it daily, weekly, monthly, yearly - this determine how to proceed
@@ -692,7 +687,6 @@ void IncidenceConverter::getRecurrence( ngwt__CalendarItem* item, KCal::Incidenc
     }
   }
 }
-
 QBitArray IncidenceConverter::getDayBitArray( ngwt__DayOfWeekList * days )
 {
   kdDebug() << k_funcinfo << endl; 
