@@ -387,8 +387,12 @@ static QString eventViewerFormatTodo( Todo *todo )
 static QString eventViewerFormatJournal( Journal *journal )
 {
   if ( !journal ) return QString::null;
-  QString tmpStr( eventViewerAddTag( "h1", i18n("Journal for %1").arg( journal->dtStartDateStr( false ) ) ) );
-  tmpStr += eventViewerAddTag( "p", journal->description() );
+  QString tmpStr;
+	if ( !journal->summary().isEmpty() )
+	  tmpStr+= eventViewerAddTag( "h1", journal->summary() );
+  tmpStr += eventViewerAddTag( "h2", i18n("Journal for %1").arg( journal->dtStartDateStr( false ) ) );
+  if ( !journal->description().isEmpty() )
+    tmpStr += eventViewerAddTag( "p", journal->description() );
   return tmpStr;
 }
 
@@ -612,6 +616,7 @@ static QString invitationDetailsJournal( Journal *journal )
   }
   QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
   html += invitationRow( i18n( "Summary:" ), sSummary );
+	html += invitationRow( i18n( "Date:" ), journal->dtStartDateStr( false ) );
   html += invitationRow( i18n( "Description:" ), sDescr );
   html += "</table>\n";
 
@@ -786,9 +791,61 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
   return QString::null;
 }
 
-static QString invitationHeaderJournal( Journal */*journal*/, ScheduleMessage */*msg*/ )
+static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
 {
-  return i18n("Journal entry");
+  // TODO: Several of the methods are not allowed for journals, so remove them.
+  if ( !msg || !journal )
+    return QString::null;
+  switch ( msg->method() ) {
+    case Scheduler::Publish:
+        return i18n("This journal has been published");
+    case Scheduler::Request:
+        return i18n( "You have been assigned this journal" );
+    case Scheduler::Refresh:
+        return i18n( "This journal was refreshed" );
+    case Scheduler::Cancel:
+        return i18n( "This journal was canceled" );
+    case Scheduler::Add:
+        return i18n( "Addition to the journal" );
+    case Scheduler::Reply: {
+        Attendee::List attendees = journal->attendees();
+        if( attendees.count() == 0 ) {
+          kdDebug(5850) << "No attendees in the iCal reply!\n";
+          return QString::null;
+        }
+        if( attendees.count() != 1 )
+          kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
+                        << "but is " << attendees.count() << endl;
+        Attendee* attendee = *attendees.begin();
+
+        switch( attendee->status() ) {
+          case Attendee::NeedsAction:
+              return i18n( "Sender indicates this journal assignment still needs some action" );
+          case Attendee::Accepted:
+              return i18n( "Sender accepts this journal" );
+          case Attendee::Tentative:
+              return i18n( "Sender tentatively accepts this journal" );
+          case Attendee::Declined:
+              return i18n( "Sender declines this journal" );
+          case Attendee::Delegated:
+              return i18n( "Sender has delegated this request for the journal" );
+          case Attendee::Completed:
+              return i18n( "The request for this journal is now completed" );
+          case Attendee::InProcess:
+              return i18n( "Sender is still processing the invitation" );
+          default:
+              return i18n( "Unknown response to this journal" );
+          }
+        break; }
+    case Scheduler::Counter:
+        return i18n( "Sender makes this counter proposal" );
+    case Scheduler::Declinecounter:
+        return i18n( "Sender declines the counter proposal" );
+    case Scheduler::NoMethod:
+        return i18n("Error: iMIP message with unknown method: '%1'")
+            .arg( msg->method() );
+  }
+  return QString::null;
 }
 
 static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
@@ -1664,10 +1721,12 @@ class IncidenceFormatter::MailBodyVisitor : public IncidenceBase::Visitor
 static QString mailBodyIncidence( Incidence *incidence )
 {
   QString body;
+	if ( !incidence->summary().isEmpty() ) {
+    body += i18n("Summary: %1\n").arg( incidence->summary() );
+  }
   if ( !incidence->organizer().isEmpty() ) {
     body += i18n("Organizer: %1\n").arg( incidence->organizer().fullName() );
   }
-  body += i18n("Summary: %1\n").arg( incidence->summary() );
   if ( !incidence->location().isEmpty() ) {
     body += i18n("Location: %1\n").arg( incidence->location() );
   }
@@ -1750,7 +1809,13 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Todo *todo )
 
 bool IncidenceFormatter::MailBodyVisitor::visit( Journal *journal )
 {
-  mResult = journal->summary() + "\n" + journal->description() + "\n";
+  mResult = mailBodyIncidence( journal );
+  mResult += i18n("Date: %1\n").arg( journal->dtStartDateStr() );
+	if ( !journal->doesFloat() ) {
+    mResult += i18n("Time: %1\n").arg( journal->dtStartTimeStr() );
+	}
+	if ( !journal->description().isEmpty() ) 
+	  mResult += i18n("Text of the journal:\n%1\n").arg( journal->description() );
   return !mResult.isEmpty();
 }
 
