@@ -141,6 +141,9 @@ class LIBKCAL_EXPORT Recurrence
     /** Returns the event's recurrence status.  See the enumeration at the top
      * of this file for possible values. */
     ushort recurrenceType() const;
+    /** Returns the recurrence status for a recurrence rule.
+     * See the enumeration at the top of this file for possible values. */
+    static ushort recurrenceType( const RecurrenceRule *rrule );
     /** Returns true if the date specified is one on which the event will
      * recur. */
     bool recursOn( const QDate &qd ) const;

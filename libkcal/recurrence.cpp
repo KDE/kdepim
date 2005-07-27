@@ -173,9 +173,14 @@ bool Recurrence::doesRecur() const
 
 ushort Recurrence::recurrenceType() const
 {
-  if ( mCachedType != rMax ) return mCachedType;
+  if ( mCachedType == rMax ) {
+    mCachedType = recurrenceType( defaultRRuleConst() );
+  }
+  return mCachedType;
+}
 
-  RecurrenceRule *rrule = defaultRRuleConst();
+ushort Recurrence::recurrenceType( const RecurrenceRule *rrule )
+{
   if ( !rrule ) return rNone;
   RecurrenceRule::PeriodType type = rrule->recurrenceType();
 
@@ -209,7 +214,7 @@ ushort Recurrence::recurrenceType() const
       return rOther;
   }
 
-  switch ( rrule->recurrenceType() ) {
+  switch ( type ) {
     case RecurrenceRule::rNone:     return rNone;
     case RecurrenceRule::rMinutely: return rMinutely;
     case RecurrenceRule::rHourly:   return rHourly;
@@ -289,8 +294,10 @@ bool Recurrence::recursOn(const QDate &qd) const
       break;
     }
   }
-  for ( RecurrenceRule::List::ConstIterator rr = mExRules.begin(); rr != mExRules.end(); ++rr ) {
-    exon = exon || (*rr)->recursOn( qd );
+  if ( !doesFloat() ) {     // we have already checked floating times above
+    for ( RecurrenceRule::List::ConstIterator rr = mExRules.begin(); rr != mExRules.end(); ++rr ) {
+      exon = exon || (*rr)->recursOn( qd );
+    }
   }
 
   if ( !exon ) {
@@ -717,8 +724,10 @@ TimeList Recurrence::recurTimesOn( const QDate &date ) const
       foundDate = true;
     } else if (foundDate) break;
   }
-  for ( RecurrenceRule::List::ConstIterator rr = mExRules.begin(); rr != mExRules.end(); ++rr ) {
-    extimes += (*rr)->recurTimesOn( date );
+  if ( !doesFloat() ) {     // we have already checked floating times above
+    for ( RecurrenceRule::List::ConstIterator rr = mExRules.begin(); rr != mExRules.end(); ++rr ) {
+      extimes += (*rr)->recurTimesOn( date );
+    }
   }
   qHeapSort( extimes );
 
