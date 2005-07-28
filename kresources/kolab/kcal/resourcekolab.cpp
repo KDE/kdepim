@@ -491,10 +491,18 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       mUidMap[ uid ] = StorageReference( subResource, sernum );
     } else {
       /* This is a real add, from KMail, we didn't trigger this ourselves.
-         If this uid already exists in this folder, do conflict resolution */
+       * If this uid already exists in this folder, do conflict resolution, 
+       * unless the folder is read-only, in which case the user should not be
+       * offered a means of putting mails in a folder she'll later be unable to
+       * upload. Skip the incidence, in this case. */
       if ( mUidMap.contains( uid )
           && ( mUidMap[ uid ].resource() == subResource ) ) {
-        resolveConflict( incidence, subResource, sernum );
+        if ( (*map)[ subResource ].writable() ) {
+          resolveConflict( incidence, subResource, sernum );
+        } else {
+          kdWarning( 5650 ) << "Duplicate event in a read-only folder detected! "
+            "Please inform the owner of the folder. " << endl;
+        }
         return true;
       }
       /* Add to the cache if the add didn't come from KOrganizer, in which case
