@@ -71,6 +71,10 @@ int main(int argc, char *argv[])
   // Parenthesis
   checkGetNameAndEmail( "faure@kde.org (David Faure)", "David Faure", "faure@kde.org", true );
   checkGetNameAndEmail( "(David Faure) faure@kde.org", "David Faure", "faure@kde.org", true );
+  checkGetNameAndEmail( "My Name (me) <me@home.net>", "My Name (me)", "me@home.net", true ); // #93513
+
+  // Nested parenthesis as per https://intevation.de/roundup/kolab/issue858
+  checkGetNameAndEmail( "faure@kde.org (David (The Man) Faure)", "David (The Man) Faure", "faure@kde.org", true );
 
   // Double-quotes inside parenthesis
   checkGetNameAndEmail( "faure@kde.org (David \"Crazy\" Faure)", "David \"Crazy\" Faure", "faure@kde.org", true );
