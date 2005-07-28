@@ -318,21 +318,24 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                       const QString &path, KMail::Callback& c ) const
     {
       QString iCal = part->asText();
-
+      bool result = false;
       if ( path == "accept" )
-        return handleInvitation( iCal, Attendee::Accepted, c );
+        result = handleInvitation( iCal, Attendee::Accepted, c );
       if ( path == "accept_conditionally" )
-        return handleInvitation( iCal, Attendee::Tentative, c );
+        result = handleInvitation( iCal, Attendee::Tentative, c );
       if ( path == "ignore" )
-        return handleIgnore( iCal, c );
+        result = handleIgnore( iCal, c );
       if ( path == "decline" )
-        return handleInvitation( iCal, Attendee::Declined, c );
-      if ( path == "reply" || path == "cancel" )
+        result = handleInvitation( iCal, Attendee::Declined, c );
+      if ( path == "reply" || path == "cancel" ) {
         // These should just be saved with their type as the dir
-        if ( saveFile( "Receiver Not Searched", iCal, path ) )
+        if ( saveFile( "Receiver Not Searched", iCal, path ) ) {
           ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
-
-      return false;
+        }
+      }
+      if ( result )
+        c.closeIfSecondaryWindow();
+      return result;
     }
 
     bool handleContextMenuRequest( KMail::Interface::BodyPart *,
