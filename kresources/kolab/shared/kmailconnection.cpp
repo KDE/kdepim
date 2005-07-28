@@ -244,6 +244,7 @@ bool KMailConnection::kmailUpdate( const QString& resource,
                                    const QStringList& attachmentNames,
                                    const QStringList& deletedAttachments )
 {
+  kdDebug(5006) << kdBacktrace() << endl;
   if ( connectToKMail() ) {
     sernum = mKMailIcalIfaceStub->update( resource, sernum, subject, plainTextBody, customHeaders,
                                           attachmentURLs, attachmentMimetypes, attachmentNames,
@@ -262,6 +263,11 @@ bool KMailConnection::kmailStorageFormat( KMailICalIface::StorageFormat& type,
 }
 
 
+bool KMailConnection::kmailTriggerSync( const QString &contentsType )
+{
+  bool ok = connectToKMail();
+  return ok && mKMailIcalIfaceStub->triggerSync( contentsType );
+}
 
 void KMailConnection::unregisteredFromDCOP( const QCString& appId )
 {

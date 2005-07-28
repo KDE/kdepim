@@ -121,6 +121,8 @@ protected:
                         int startIndex,
                         int nbMessages ) const;
 
+  bool kmailTriggerSync( const QString& contentType ) const;
+
 public: // for Contact
   /// Get an attachment from a mail. Returns a URL to it. This can
   /// be called by the resource after obtaining the incidence.

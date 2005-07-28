@@ -68,6 +68,12 @@ bool ResourceKolabBase::kmailSubresources( QValueList<KMailICalIface::SubResourc
   return mConnection->kmailSubresources( lst, contentsType );
 }
 
+bool ResourceKolabBase::kmailTriggerSync( const QString& contentsType ) const
+{
+  return mConnection->kmailTriggerSync( contentsType );
+}
+
+
 bool ResourceKolabBase::kmailIncidencesCount( int &count,
                                               const QString& mimetype,
                                               const QString& resource ) const

@@ -99,6 +99,8 @@ public:
 
   bool kmailStorageFormat( KMailICalIface::StorageFormat& type, const QString& folder);
 
+  bool kmailTriggerSync( const QString& contentsType );
+
 private slots:
   virtual void unregisteredFromDCOP( const QCString& );
 
