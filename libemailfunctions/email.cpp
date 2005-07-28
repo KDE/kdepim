@@ -638,7 +638,7 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
     ++i;
   }
 
-  if( !iAd ){
+  if ( !iAd ) {
     // We suppose the user is typing the string manually and just
     // has not finished typing the mail address part.
     // So we take everything that's left of the '<' as name and the rest as mail
@@ -653,8 +653,7 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
     if ( mail.endsWith( ">" ) )
       mail.truncate( mail.length() - 1 );
 
-  }else{
-
+  } else {
     // Loop backwards until we find the start of the string
     // or a ',' that is outside of a comment
     //          and outside of quoted text before the leading '<'.
@@ -662,12 +661,12 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
     bInQuotesOutsideOfEmail = false;
     for( i = iAd-1; 0 <= i; --i ) {
       c = aStr[i];
-      if( bInComment ){
-        if( '(' == c ){
+      if( bInComment ) {
+        if( '(' == c ) {
           if( !name.isEmpty() )
             name.prepend( ' ' );
           bInComment = false;
-        }else{
+        } else {
           name.prepend( c ); // all comment stuff is part of the name
         }
       }else if( bInQuotesOutsideOfEmail ){
@@ -716,14 +715,24 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
     //          and outside of quoted text behind the trailing '>'.
     bInComment = false;
     bInQuotesOutsideOfEmail = false;
+    int parenthesesNesting = 0;
     for( i = iAd+1; len > i; ++i ) {
       c = aStr[i];
       if( bInComment ){
         if( ')' == c ){
-          if( !name.isEmpty() )
-            name.append( ' ' );
-          bInComment = false;
-        }else{
+          if ( --parenthesesNesting == 0 ) {
+            bInComment = false;
+            if( !name.isEmpty() )
+              name.append( ' ' );
+          } else {
+            // nested ")", add it
+            name.append( ')' ); // name can't be empty here
+          }
+        } else {
+          if( '(' == c ) {
+            // nested "("
+            ++parenthesesNesting;
+          }
           name.append( c ); // all comment stuff is part of the name
         }
       }else if( bInQuotesOutsideOfEmail ){
@@ -749,7 +758,8 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
             case '(':
               if( !name.isEmpty() )
                 name.append( ' ' );
-              bInComment = true;
+              if ( ++parenthesesNesting > 0 )
+                bInComment = true;
               break;
             default:
               if( ' ' != c )
