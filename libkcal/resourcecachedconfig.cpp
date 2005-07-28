@@ -46,7 +46,7 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent,
   new QRadioButton( i18n("Never"), mGroup );
   new QRadioButton( i18n("On startup"), mGroup );
 
-  QRadioButton *intervalRadio = new QRadioButton( i18n("Regular Interval"),
+  QRadioButton *intervalRadio = new QRadioButton( i18n("Regular interval"),
                                                   mGroup );
   connect( intervalRadio, SIGNAL( stateChanged( int ) ),
            SLOT( slotIntervalStateChanged( int ) ) );
@@ -86,7 +86,7 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent,
   new QRadioButton( i18n("Never"), mGroup );
   new QRadioButton( i18n("On exit"), mGroup );
 
-  QRadioButton *intervalRadio = new QRadioButton( i18n("Regular Interval"),
+  QRadioButton *intervalRadio = new QRadioButton( i18n("Regular interval"),
                                                   mGroup );
   connect( intervalRadio, SIGNAL( stateChanged( int ) ),
            SLOT( slotIntervalStateChanged( int ) ) );

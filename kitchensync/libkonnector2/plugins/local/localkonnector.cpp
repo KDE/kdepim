@@ -113,7 +113,7 @@ bool LocalKonnector::readSyncees()
       cHelper.load();
       mProgressItem->setStatus( i18n( "Calendar loaded." ) );
     } else {
-      mProgressItem->setStatus( i18n( "Loading Calendar failed." ) );
+      mProgressItem->setStatus( i18n( "Loading calendar failed." ) );
       emit synceeReadError( this );
       kdDebug() << "Read failed." << endl;
       return false;

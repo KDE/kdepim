@@ -308,7 +308,7 @@ void DistributionListWidget::editList()
   if ( newName.isEmpty() ) return;
 
   if ( alreadyExists( newName ) ) {
-    KMessageBox::sorry( this, i18n( "The name already exists" ) );
+    KMessageBox::sorry( this, i18n( "The name already exists." ) );
     return;
   }
 #ifdef KDEPIM_NEW_DISTRLISTS

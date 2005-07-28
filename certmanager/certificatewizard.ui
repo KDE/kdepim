@@ -418,7 +418,7 @@ there.&lt;/p&gt;&lt;qt&gt;</string>
                     </size>
                 </property>
                 <property name="text">
-                    <string>&amp;Generate Key Pair and Certificate Request</string>
+                    <string>&amp;Generate Key Pair &amp;&amp; Certificate Request</string>
                 </property>
             </widget>
             <spacer row="3" column="2">
@@ -462,7 +462,7 @@ there.&lt;/p&gt;&lt;qt&gt;</string>
             <cstring>finishPage</cstring>
         </property>
         <attribute name="title">
-            <string>Your Certificate Request Is Ready To Be Sent</string>
+            <string>Your Certificate Request is Ready to Be Sent</string>
         </attribute>
         <vbox>
             <property name="name">

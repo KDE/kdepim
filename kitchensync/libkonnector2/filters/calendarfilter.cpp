@@ -158,7 +158,7 @@ CalendarConfigWidget::CalendarConfigWidget( QWidget *parent, const char *name )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  QGroupBox *box = new QGroupBox( 2, Qt::Vertical, i18n( "Events and Todos" ), this );
+  QGroupBox *box = new QGroupBox( 2, Qt::Vertical, i18n( "Events && Todos" ), this );
 
   mView = new KListView( box );
   mView->addColumn( i18n( "Categories" ) );

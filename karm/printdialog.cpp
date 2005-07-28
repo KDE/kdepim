@@ -82,7 +82,7 @@ PrintDialog::PrintDialog()
 
   _perWeek = new QCheckBox( i18n( "Summarize per week" ), page );
   layout->addWidget( _perWeek );
-  _totalsOnly = new QCheckBox( i18n( "Totals Only" ), page );
+  _totalsOnly = new QCheckBox( i18n( "Totals only" ), page );
   layout->addWidget( _totalsOnly );
 
   layout->addSpacing(10);

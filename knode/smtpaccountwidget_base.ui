@@ -24,7 +24,7 @@
                 <cstring>mUseExternalMailer</cstring>
             </property>
             <property name="text">
-                <string>&amp;Use External Mailer</string>
+                <string>&amp;Use external mailer</string>
             </property>
         </widget>
         <widget class="QLabel" row="1" column="0">

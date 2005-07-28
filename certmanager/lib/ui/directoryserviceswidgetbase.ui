@@ -36,7 +36,7 @@
                 <enum>Plain</enum>
             </property>
             <property name="text">
-                <string>X.&amp;500 Directory services:</string>
+                <string>X.&amp;500 directory services:</string>
             </property>
             <property name="buddy" stdset="0">
                 <cstring>x500LV</cstring>
