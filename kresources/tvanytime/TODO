@@ -1,0 +1,9 @@
+EASY
+Parse more fields (email addresses, webpages) and store as attachments.
+Allow the schedule timezone to be specified in the resource config.
+HARDER
+Fix subresource (channel) display at first load. 
+Better caching to improve load times - stat the URL before fetching it.
+REQUIRES PROVIDER HELP
+Arrange a constant URL for the most recent data.
+

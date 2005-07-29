@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=TV Schedules
+X-KDE-Library=kcal_tvanytime
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=calendar
+X-KDE-ResourceType=tvschedule

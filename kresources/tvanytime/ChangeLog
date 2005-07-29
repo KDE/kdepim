@@ -1,0 +1,6 @@
+20050729
+Initial import.
+Supports parsing and displaying BBC Backstage schedule tarballs.
+Displays each channel as a subresource but requires a reload to show the
+subresources in the resource list.
+Takes a long time if every channel is enabled.

@@ -1,0 +1,22 @@
+Aim: 
+Use Kontact as an EPG showing BBC TV and radio programs.  Calendar KResource for BBC TV and radio schedules made available by the backstage.bbc.co.uk open tech portal.  KResource can be used in other programs - kwintv?
+
+DESIGN: Fetch TVAnywhere tarballs via http.  Parse contents using KArchive classes and QDom API.  Present channel listing from tarball in resource config so that user can control which channels are shown in resource.  Use subresources to show channels.  Use categories for genre descriptors?
+
+Set alarms for programmes?
+Bookmark programmes?
+
+PROBLEMS: Tarball is huge.  Ask about subdividing it?
+
+AIM: make generic TVAnywhere capable?
+
+Algorithm:
+Read ServiceInformation.  
+Generate a subresource for each service
+read list of enabled subresources
+if null, assume bbc1, 2, 3, 4, radios 1 - 4?
+for enabled subresources, generate incidences for each program 
+generate in-memory program information table keyed on CRID.
+generate an incidence for each <ScheduleEvent> in the program location table, using the values from the PIT.
+
+

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+ <kcfgfile name="kresources_kcal_bbcschedulerc" />
+ <group name="General" >
+  <entry key="Url" type="String" >
+   <label>Schedule URL</label>
+   <whatsthis>URL of TV AnyWhere schedule</whatsthis>
+  </entry>
+  <entry key="Days" type="Int" >
+   <label>How many days?</label>
+   <whatsthis>Show the next n days</whatsthis>
+   <min>1</min>
+   <default>3</default>
+   <max>7</max>
+  </entry>
+ </group>
+</kcfg>

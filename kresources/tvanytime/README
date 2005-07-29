@@ -1,0 +1,9 @@
+This is a KDE KResource for loading TV and radio schedule data in the TV-Anytime format into KDE applications as a calendar.
+
+Currently it only works with BBC schedule data as provided at http://backstage.bbc.co.uk/feeds/tvradio/
+
+To use, enter the full URL of the schedule tarball you want to view from the URL above.
+
+(C) 2005 Will Stephenson <wstephenson@kde.org>
+
+supported by backstage.bbc.co.uk
