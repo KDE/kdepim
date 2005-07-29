@@ -4,7 +4,7 @@
 
 METASOURCES = AUTO
 
-INCLUDES = $(PISOCK_INCLUDE) -I$(top_srcdir)/libkcal/ $(all_includes)
+INCLUDES = $(PISOCK_INCLUDE) -I$(top_srcdir) $(all_includes)
 
 ### If you must get debugging output on a platform where
 ### the libs are built without debugging support, define
