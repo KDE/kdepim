@@ -56,7 +56,7 @@ public:
   bool launch( const QByteArray & input, RunMode rm=NotifyOnExit );
 
   const QByteArray & output() const { return mOutput; }
-  const QString & stderr() const { return mStderr; }
+  const QString & stdErr() const { return mStderr; }
 
 public slots:
   /*! upgraded to slot */

@@ -137,7 +137,7 @@ GpgME::Error Kleo::ChiasmusJob::slotProcessExited( KProcess * proc ) {
       break;
     default:
     case 1: // Some error occured
-      mStderr = mSymCryptRun->stderr();
+      mStderr = mSymCryptRun->stdErr();
       mError = gpg_error( GPG_ERR_GENERAL );
       break;
     case 2: // No valid passphrase was provided
