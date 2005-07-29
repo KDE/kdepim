@@ -108,6 +108,7 @@ bool ResourceCalendar::load()
   bool success = true;
   if ( !isOpen() ) success = open();
   if ( success ) {
+    kdDebug(5800) << "About to really load." << endl;
     success = doLoad();
   }
   if ( !success && !mReceivedLoadError ) loadError();
