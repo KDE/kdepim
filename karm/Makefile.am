@@ -17,7 +17,7 @@ libkarm_shared_la_SOURCES = kaccelmenuwatch.cpp desktoptracker.cpp \
                 karmstorage.cpp mainwindow.cpp preferences.cpp print.cpp \
                 task.cpp taskview.cpp tray.cpp \
 		csvexportdialog_base.ui csvexportdialog.cpp plannerparser.cpp \
-		karmdcopiface.skel
+		karmdcopiface.skel taskviewwhatsthis.cpp
 libkarm_shared_la_LIBADD = -lkdeprint $(top_builddir)/libkcal/libkcal.la \
 	     $(top_builddir)/kresources/remote/libkcal_resourceremote.la \
              $(top_builddir)/libkdepim/libkdepim.la $(LIBXSS)
@@ -28,7 +28,7 @@ noinst_HEADERS = desktoptracker.h edittaskdialog.h printdialog.h \
                  idletimedetector.h kaccelmenuwatch.h timekard.h \
 		 karmutility.h ktimewidget.h karmstorage.h mainwindow.h \
 		 preferences.h print.h task.h taskview.h toolicons.h \
-		 tray.h version.h csvexportdialog.h plannerparser.h
+		 tray.h version.h csvexportdialog.h plannerparser.h taskviewwhatsthis.h
 
 KDE_ICON = karm
 

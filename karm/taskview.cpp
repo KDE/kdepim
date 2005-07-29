@@ -30,6 +30,7 @@
 #include "task.h"
 #include "taskview.h"
 #include "timekard.h"
+#include "taskviewwhatsthis.h"
 
 #define T_LINESIZE 1023
 #define HIDDEN_COLUMN -10
@@ -107,6 +108,7 @@ TaskView::TaskView(QWidget *parent, const char *name, const QString &icsfile ):K
            this, SLOT( startTimerFor(Task*) ));
   connect( _desktopTracker, SIGNAL( leftActiveDesktop( Task* ) ),
            this, SLOT( stopTimerFor(Task*) ));
+  new TaskViewWhatsThis( this );
 }
 
 KarmStorage* TaskView::storage()
