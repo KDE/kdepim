@@ -413,6 +413,19 @@ void Recurrence::unsetRecurs()
   mRRules.clear();
 }
 
+void Recurrence::clear()
+{
+  if ( mRecurReadOnly ) return;
+  mRRules.clear();
+  mExRules.clear();
+  mRDates.clear();
+  mRDateTimes.clear();
+  mExDates.clear();
+  mExDateTimes.clear();
+  mCachedType = rMax;
+  updated();
+}
+
 void Recurrence::setStartDateTime( const QDateTime &start )
 {
   if ( mRecurReadOnly ) return;
@@ -558,21 +571,23 @@ void Recurrence::setDaily( int _rFreq )
     updated();
 }
 
-void Recurrence::setWeekly( int freq, const QBitArray &days, int _rWeekStart )
+void Recurrence::setWeekly( int freq, int weekStart )
 {
   RecurrenceRule *rrule = setNewRecurrenceType( RecurrenceRule::rWeekly, freq );
   if ( !rrule ) return;
-
-  QValueList<RecurrenceRule::WDayPos> bydays;
-  for ( int i = 0; i < 7; ++i ) {
-    if ( days.testBit(i) ) {
-      RecurrenceRule::WDayPos p( 0, i + 1 );
-      bydays.append( p );
-    }
-  }
-  rrule->setByDays( bydays );
-  rrule->setWeekStart( _rWeekStart );
+  rrule->setWeekStart( weekStart );
   updated();
+}
+
+void Recurrence::setWeekly( int freq, const QBitArray &days, int weekStart )
+{
+  setWeekly( freq, weekStart );
+  addMonthlyPos( 0, days );
+}
+
+void Recurrence::addWeeklyDays( const QBitArray &days )
+{
+  addMonthlyPos( 0, days );
 }
 
 void Recurrence::setMonthly( int freq )

@@ -153,6 +153,8 @@ class LIBKCAL_EXPORT Recurrence
     /** Removes all recurrence rules. Recurrence dates and exceptions are
         not removed. */
     void unsetRecurs();
+    /** Removes all recurrence and exception rules and dates. */
+    void clear();
 
     /** Returns a list of the times on the specified date at which the
      * recurrence will occur.
@@ -261,11 +263,26 @@ class LIBKCAL_EXPORT Recurrence
         date/times, exception date/times and exception rules) are not
         modified.
      * @param freq the frequency to recur, e.g. every other week etc.
+     * @param weekStart the first day of the week (Monday=1 .. Sunday=7, default is Monday).
+     */
+    void setWeekly( int freq, int weekStart = 1 );
+    /** Sets an event to recur weekly. By default infinite recurrence is used.
+        To set an end date use the method setEndDate and to set the number
+        of occurrences use setDuration.
+
+        This method clears all recurrence rules and adds one rule with a
+        weekly recurrence. All other recurrence components (recurrence
+        date/times, exception date/times and exception rules) are not
+        modified.
+     * @param freq the frequency to recur, e.g. every other week etc.
      * @param days a 7 bit array indicating which days on which to recur (bit 0 = Monday).
      * @param weekStart the first day of the week (Monday=1 .. Sunday=7, default is Monday).
      */
     void setWeekly( int freq, const QBitArray &days, int weekStart = 1 );
-
+    /** Adds days to the weekly day recurrence list.
+     * @param days a 7 bit array indicating which days on which to recur (bit 0 = Monday).
+     */
+    void addWeeklyDays( const QBitArray &days );
     /** Returns the first day of the week.  Uses only the
      * first RRULE if present (i.e. a second RRULE as well as all EXRULES are
      * ignored!
