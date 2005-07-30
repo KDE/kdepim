@@ -40,7 +40,7 @@ namespace KCal {
 /**
   This class provides the base class common to all calendar components.
 */
-class LIBKCAL_EXPORT Incidence : public IncidenceBase
+class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
 {
   public:
     /**
@@ -244,6 +244,29 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase
     */
     bool recursAt( const QDateTime &qdt ) const;
 
+    /**
+      Calculates the start date/time for all recurrences that happen at some time
+      on the given date (might start before that date, but end on or after the
+      given date).
+      @param date the date where the incidence should occur
+      @return the start date/time of all occurences that overlap with the given
+          date. Empty list if the incidence does not overlap with the date at all
+    */
+    virtual QValueList<QDateTime> startDateTimesForDate( const QDate &date ) const;
+
+    /**
+      Calculates the start date/time for all recurrences that happen at the given
+      time.
+      @param datetime the date/time where the incidence should occur
+      @return the start date/time of all occurences that overlap with the given
+          date/time. Empty list if the incidence does not happen at the given
+          time at all.
+    */
+    virtual QValueList<QDateTime> startDateTimesForDateTime( const QDateTime &datetime ) const;
+
+    /** Return the end time of the occurrence if it starts at the given date/time */
+    virtual QDateTime endDateForStart( const QDateTime &startDt ) const;
+
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%  Attachment-related methods
@@ -412,6 +435,16 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase
       If this is not set, it will return uid().
     */
     QString schedulingID() const;
+
+    /** Observer interface for the recurrence class. If the recurrence is changed,
+        this method will be called for the incidence the recurrence object
+        belongs to. */
+    virtual void recurrenceUpdated( Recurrence * );
+  protected:
+    /** Return the end date/time of the base incidence (e.g. due date/time for
+       to-dos, end date/time for events).
+       This method needs to be reimplemented by derived classes. */
+    virtual QDateTime endDateRecurrenceBase() const { return dtStart(); }
 
   private:
     int mRevision;

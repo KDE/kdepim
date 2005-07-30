@@ -211,6 +211,10 @@ class LIBKCAL_EXPORT Todo : public Incidence
      */
       bool isOverdue() const;
 
+  protected:
+    /** Return the end date/time of the base incidence. */
+    virtual QDateTime endDateRecurrenceBase() const { return dtDue(); }
+
   private:
     bool accept(Visitor &v) { return v.visit( this ); }
     /** Returns true if the todo got a new date, else false will be returned. */

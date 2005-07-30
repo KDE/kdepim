@@ -32,6 +32,7 @@
 
 using namespace KCal;
 
+
 // FIXME: If Qt is ever changed so that QDateTime:::addSecs takes into account
 //        DST shifts, we need to use our own addSecs method, too, since we
 //        need to caalculate things in UTC!
@@ -474,10 +475,10 @@ bool RecurrenceRule::Constraint::readDateTime( const QDateTime &preDate, PeriodT
 }
 
 
-RecurrenceRule::RecurrenceRule(/*Incidence *parent*/ )
+RecurrenceRule::RecurrenceRule( )
 : mPeriod( rNone ), mFrequency( 0 ), mIsReadOnly( false ),
   mFloating( false ),
-  mWeekStart(1)/*, mParent(parent)*/
+  mWeekStart(1)
 {
 }
 
@@ -503,7 +504,6 @@ RecurrenceRule::RecurrenceRule( const RecurrenceRule &r )
   mByMonths = r.mByMonths;
   mBySetPos = r.mBySetPos;
   mWeekStart = r.mWeekStart;
-//   mParent = r.mParent;
 
   setDirty();
 }
@@ -533,10 +533,23 @@ bool RecurrenceRule::operator==( const RecurrenceRule& r ) const
   if ( mByMonths != r.mByMonths ) return false;
   if ( mBySetPos != r.mBySetPos ) return false;
   if ( mWeekStart != r.mWeekStart ) return false;
-//   if ( mParent != r.mParent ) return false;
 
   return true;
 }
+
+void RecurrenceRule::addObserver( Observer *observer )
+{
+  if ( !mObservers.contains( observer ) )
+    mObservers.append( observer );
+}
+
+void RecurrenceRule::removeObserver( Observer *observer )
+{
+  if ( mObservers.contains( observer ) )
+    mObservers.remove( observer );
+}
+
+
 
 void RecurrenceRule::setRecurrenceType( PeriodType period )
 {
@@ -616,7 +629,10 @@ void RecurrenceRule::setDirty()
   mDirty = true;
   mCached = false;
   mCachedDates.clear();
-  // TODO_Recurrence: Emit some signaal or notify the parent to ensure
+  for ( QValueList<Observer*>::ConstIterator it = mObservers.begin();
+        it != mObservers.end(); ++it ) {
+    if ( (*it) ) (*it)->recurrenceChanged( this );
+  }
 }
 
 void RecurrenceRule::setStartDt( const QDateTime &start )
@@ -1002,7 +1018,7 @@ TimeList RecurrenceRule::recurTimesOn( const QDate &date ) const
   QDateTime dt( date, QTime( 0, 0, 0 ) );
   bool valid = dt.isValid() && ( dt.date() == date );
   while ( valid ) {
-    // TODO_Recurrence: Add a flag so that the date is never increased!
+    // TODO: Add a flag so that the date is never increased!
     dt = getNextDate( dt );
     valid = dt.isValid() && ( dt.date() == date );
     if ( valid ) lst.append( dt.time() );
@@ -1316,7 +1332,7 @@ DateTimeList RecurrenceRule::datesForInterval( const Constraint &interval, Perio
     }
   }
   // Sort it so we can apply the BySetPos. Also some logic relies on this being sorted
-  qHeapSort( lst );
+  qSortUnique( lst );
 
 
 /*if ( lst.isEmpty() ) {
@@ -1328,7 +1344,6 @@ DateTimeList RecurrenceRule::datesForInterval( const Constraint &interval, Perio
   }
   kdDebug(5800) << "       ---------------------" << endl;
 }*/
-  // TODO_Recurrence: make sure lst contains only unique datetimes!
   if ( !mBySetPos.isEmpty() ) {
     DateTimeList tmplst = lst;
     lst.clear();
@@ -1341,8 +1356,7 @@ DateTimeList RecurrenceRule::datesForInterval( const Constraint &interval, Perio
         lst.append( tmplst[pos] );
       }
     }
-    qHeapSort( lst );
-    // TODO_Recurrence: make sure each DateTime appears just once!
+    qSortUnique( lst );
   }
 
   return lst;

@@ -29,41 +29,42 @@
 #include <klocale.h>
 #include <qbitarray.h>
 
-#include "incidence.h"
-
 #include "recurrence.h"
 #include "recurrencerule.h"
 
 using namespace KCal;
 
 
-Recurrence::Recurrence( Incidence *parent )
-: mFloating(parent ? parent->doesFloat() : false ),
+Recurrence::Recurrence()
+: mFloating( false ),
   mRecurReadOnly(false),
-  mCachedType(rMax),
-  mParent(parent)
+  mCachedType(rMax)
 {
   mExRules.setAutoDelete( true );
   mRRules.setAutoDelete( true );
 }
 
-Recurrence::Recurrence( const Recurrence &r, Incidence *parent )
-: mRDateTimes( r.mRDateTimes ), mRDates( r.mRDates ),
+Recurrence::Recurrence( const Recurrence &r )
+: RecurrenceRule::Observer(), 
+  mRDateTimes( r.mRDateTimes ), mRDates( r.mRDates ),
   mExDateTimes( r.mExDateTimes ), mExDates( r.mExDates ),
   mStartDateTime( r.mStartDateTime ),
   mFloating( r.mFloating ),
   mRecurReadOnly(r.mRecurReadOnly),
-  mCachedType( r.mCachedType ),
-  mParent(parent)
+  mCachedType( r.mCachedType )
 {
   mExRules.setAutoDelete( true );
   mRRules.setAutoDelete( true );
   RecurrenceRule::List::ConstIterator rr;
   for ( rr = r.mRRules.begin(); rr != r.mRRules.end(); ++rr ) {
-    mRRules.append( new RecurrenceRule( *(*rr) ) );
+	  RecurrenceRule *rule = new RecurrenceRule( *(*rr) );
+    mRRules.append( rule );
+		rule->addObserver( this );
   }
   for ( rr = r.mExRules.begin(); rr != r.mExRules.end(); ++rr ) {
-    mExRules.append( new RecurrenceRule( *(*rr) ) );
+	  RecurrenceRule *rule = new RecurrenceRule( *(*rr) );
+    mExRules.append( rule );
+		rule->addObserver( this );
   }
 }
 
@@ -83,7 +84,6 @@ bool Recurrence::operator==( const Recurrence& r2 ) const
   if ( mExDateTimes != r2.mExDateTimes ) return false;
   if ( mRDates != r2.mRDates ) return false;
   if ( mRDateTimes != r2.mRDateTimes ) return false;
-  if ( mParent != r2.mParent ) return false;
 
 // Compare the rrules, exrules! Assume they have the same order... This only
 // matters if we have more than one rule (which shouldn't be the default anyway)
@@ -111,6 +111,19 @@ bool Recurrence::operator==( const Recurrence& r2 ) const
   return true;
 }
 
+void Recurrence::addObserver( Observer *observer )
+{
+  if ( !mObservers.contains( observer ) )
+    mObservers.append( observer );
+}
+
+void Recurrence::removeObserver( Observer *observer )
+{
+  if ( mObservers.contains( observer ) )
+    mObservers.remove( observer );
+}
+
+
 QDateTime Recurrence::startDateTime() const
 {
   if ( mFloating )
@@ -137,13 +150,13 @@ void Recurrence::setFloats( bool floats )
   updated();
 }
 
-RecurrenceRule *Recurrence::defaultRRule( bool create )
+RecurrenceRule *Recurrence::defaultRRule( bool create ) const 
 {
   if ( mRRules.isEmpty() ) {
     if ( !create || mRecurReadOnly ) return 0;
     RecurrenceRule *rrule = new RecurrenceRule();
     rrule->setStartDt( startDateTime() );
-    addRRule( rrule );
+    const_cast<KCal::Recurrence*>(this)->addRRule( rrule );
     return rrule;
   } else {
     return mRRules.first();
@@ -163,7 +176,10 @@ void Recurrence::updated()
 {
   // recurrenceType() re-calculates the type if it's rMax
   mCachedType = rMax;
-  if (mParent) mParent->updated();
+  for ( QValueList<Observer*>::ConstIterator it = mObservers.begin();
+        it != mObservers.end(); ++it ) {
+    if ( (*it) ) (*it)->recurrenceUpdated( this );
+  }
 }
 
 bool Recurrence::doesRecur() const
@@ -346,7 +362,7 @@ QDateTime Recurrence::endDateTime() const
     if ( !rl.isValid() ) return QDateTime();
     dts << rl;
   }
-  qHeapSort( dts );
+  qSortUnique( dts );
   if ( dts.isEmpty() ) return QDateTime();
   else return dts.last();
 }
@@ -728,7 +744,7 @@ TimeList Recurrence::recurTimesOn( const QDate &date ) const
   for ( RecurrenceRule::List::ConstIterator rr = mRRules.begin(); rr != mRRules.end(); ++rr ) {
     times += (*rr)->recurTimesOn( date );
   }
-  qHeapSort( times );
+  qSortUnique( times );
 
   foundDate = false;
   TimeList extimes;
@@ -744,7 +760,7 @@ TimeList Recurrence::recurTimesOn( const QDate &date ) const
       extimes += (*rr)->recurTimesOn( date );
     }
   }
-  qHeapSort( extimes );
+  qSortUnique( extimes );
 
   for ( TimeList::Iterator it = extimes.begin(); it != extimes.end(); ++it ) {
     times.remove( (*it) );
@@ -796,7 +812,7 @@ kdDebug(5800) << "   getNextDateTime: found " << dates.count() << " RDATES and D
     }
 
     // Take the first of these (all others can't be used later on)
-    qHeapSort( dates );
+    qSortUnique( dates );
 // kdDebug(5800) << "   getNextDateTime: found " << dates.count() << " dates in loop " << loop << endl;
 
     if ( dates.isEmpty() ) return QDateTime();
@@ -865,7 +881,7 @@ QDateTime Recurrence::getPreviousDateTime( const QDateTime &afterDateTime ) cons
 kdDebug(5800) << "   getPreviousDateTime: found " << dates.count() << " dates in loop " << loop << endl;
 
     // Take the last of these (all others can't be used later on)
-    qHeapSort( dates );
+    qSortUnique( dates );
     if ( dates.isEmpty() ) return QDateTime();
     prevDT = dates.last();
 
@@ -897,12 +913,14 @@ void Recurrence::addRRule( RecurrenceRule *rrule )
   if ( mRecurReadOnly || !rrule ) return;
   rrule->setFloats( mFloating );
   mRRules.append( rrule );
+	rrule->addObserver( this );
 }
 
 void Recurrence::removeRRule( RecurrenceRule *rrule )
 {
   if (mRecurReadOnly) return;
   mRRules.remove( rrule );
+	rrule->removeObserver( this );
 }
 
 RecurrenceRule::List Recurrence::exRules() const
@@ -915,12 +933,14 @@ void Recurrence::addExRule( RecurrenceRule *exrule )
   if ( mRecurReadOnly || !exrule ) return;
   exrule->setFloats( mFloating );
   mExRules.append( exrule );
+	exrule->addObserver( this );
 }
 
 void Recurrence::removeExRule( RecurrenceRule *exrule )
 {
   if (mRecurReadOnly) return;
   mExRules.remove( exrule );
+	exrule->removeObserver( this );
 }
 
 
@@ -933,14 +953,14 @@ void Recurrence::setRDateTimes( const DateTimeList &rdates )
 {
   if ( mRecurReadOnly ) return;
   mRDateTimes = rdates;
-  qHeapSort( mRDateTimes );
+  qSortUnique( mRDateTimes );
 }
 
 void Recurrence::addRDateTime( const QDateTime &rdate )
 {
   if ( mRecurReadOnly ) return;
   mRDateTimes.append( rdate );
-  qHeapSort( mRDateTimes );
+  qSortUnique( mRDateTimes );
 }
 
 
@@ -953,14 +973,14 @@ void Recurrence::setRDates( const DateList &rdates )
 {
   if ( mRecurReadOnly ) return;
   mRDates = rdates;
-  qHeapSort( mRDates );
+  qSortUnique( mRDates );
 }
 
 void Recurrence::addRDate( const QDate &rdate )
 {
   if ( mRecurReadOnly ) return;
   mRDates.append( rdate );
-  qHeapSort( mRDates );
+  qSortUnique( mRDates );
 }
 
 
@@ -973,14 +993,14 @@ void Recurrence::setExDateTimes( const DateTimeList &exdates )
 {
   if ( mRecurReadOnly ) return;
   mExDateTimes = exdates;
-  qHeapSort( mExDateTimes );
+  qSortUnique( mExDateTimes );
 }
 
 void Recurrence::addExDateTime( const QDateTime &exdate )
 {
   if ( mRecurReadOnly ) return;
   mExDateTimes.append( exdate );
-  qHeapSort( mExDateTimes );
+  qSortUnique( mExDateTimes );
 }
 
 
@@ -993,15 +1013,21 @@ void Recurrence::setExDates( const DateList &exdates )
 {
   if ( mRecurReadOnly ) return;
   mExDates = exdates;
-  qHeapSort( mExDates );
+  qSortUnique( mExDates );
 }
 
 void Recurrence::addExDate( const QDate &exdate )
 {
   if ( mRecurReadOnly ) return;
   mExDates.append( exdate );
-  qHeapSort( mExDates );
+  qSortUnique( mExDates );
 }
+
+void Recurrence::recurrenceChanged( RecurrenceRule * )
+{
+  updated();
+}
+
 
 // %%%%%%%%%%%%%%%%%% end:Recurrencerule %%%%%%%%%%%%%%%%%%
 

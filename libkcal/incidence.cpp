@@ -41,7 +41,7 @@ Incidence::Incidence() :
   mAttachments.setAutoDelete(true);
 }
 
-Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
+Incidence::Incidence( const Incidence &i ) : IncidenceBase( i ),Recurrence::Observer()
 {
 // TODO: reenable attributes currently commented out.
   mRevision = i.mRevision;
@@ -78,9 +78,10 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
   }
   mAttachments.setAutoDelete( true );
 
-  if (i.mRecurrence)
-    mRecurrence = new Recurrence( *(i.mRecurrence), this );
-  else
+  if (i.mRecurrence) {
+    mRecurrence = new Recurrence( *(i.mRecurrence) );
+    mRecurrence->addObserver( this );
+  } else
     mRecurrence = 0;
 
   mSchedulingID = i.mSchedulingID;
@@ -332,10 +333,11 @@ Recurrence *Incidence::recurrence() const
 {
   if (!mRecurrence)
   {
-    const_cast<KCal::Incidence*>(this)->mRecurrence = new Recurrence(const_cast<KCal::Incidence*>(this));
+    const_cast<KCal::Incidence*>(this)->mRecurrence = new Recurrence();
     mRecurrence->setStartDateTime( IncidenceBase::dtStart() );
     mRecurrence->setFloats( doesFloat() );
     mRecurrence->setRecurReadOnly( mReadOnly );
+    mRecurrence->addObserver( const_cast<KCal::Incidence*>(this) );
   }
 
   return mRecurrence;
@@ -361,6 +363,111 @@ bool Incidence::recursOn(const QDate &qd) const
 bool Incidence::recursAt(const QDateTime &qdt) const
 {
   return ( mRecurrence && mRecurrence->recursAt(qdt) );
+}
+
+/**
+  Calculates the start date/time for all recurrences that happen at some time
+  on the given date (might start before that date, but end on or after the
+  given date).
+  @param date the date where the incidence should occur
+  @return the start date/time of all occurences that overlap with the given
+      date. Empty list if the incidence does not overlap with the date at all
+*/
+QValueList<QDateTime> Incidence::startDateTimesForDate( const QDate &date ) const
+{
+//kdDebug(5800) << "Incidence::startDateTimesForDate " << date << ", incidence=" << summary() << endl;
+  QDateTime start = dtStart();
+  QDateTime end = endDateRecurrenceBase();
+
+  QValueList<QDateTime> result;
+
+  // TODO_Recurrence: Also work if only due date is given...
+  if ( !start.isValid() && ! end.isValid() ) {
+    return result;
+  }
+
+  // if the incidence doesn't recur, 
+  if ( !doesRecur() ) {
+    if ( !(start.date() > date || end.date() < date ) ) {
+      result << start;
+    }
+    return result;
+  }
+
+  int days = start.daysTo( end );
+  // Account for possible recurrences going over midnight, while the original event doesn't
+  QDate tmpday( date.addDays( -days - 1 ) );
+  QDateTime tmp;
+  while ( tmpday <= date ) {
+    if ( recurrence()->recursOn( tmpday ) ) {
+      QValueList<QTime> times = recurrence()->recurTimesOn( tmpday );
+      for ( QValueList<QTime>::ConstIterator it = times.begin(); it != times.end(); ++it ) {
+        tmp = QDateTime( tmpday, *it );
+        if ( endDateForStart( tmp ).date() >= date )
+          result << tmp;
+      }
+    }
+    tmpday = tmpday.addDays( 1 );
+  }
+  return result;
+}
+
+/**
+  Calculates the start date/time for all recurrences that happen at the given
+  time.
+  @param datetime the date/time where the incidence should occur
+  @return the start date/time of all occurences that overlap with the given
+      date/time. Empty list if the incidence does not happen at the given
+      time at all.
+*/
+QValueList<QDateTime> Incidence::startDateTimesForDateTime( const QDateTime &datetime ) const
+{
+// kdDebug(5800) << "Incidence::startDateTimesForDateTime " << datetime << ", incidence=" << summary() << endl;
+  QDateTime start = dtStart();
+  QDateTime end = endDateRecurrenceBase();
+
+  QValueList<QDateTime> result;
+
+  // TODO_Recurrence: Also work if only due date is given...
+  if ( !start.isValid() && ! end.isValid() ) {
+    return result;
+  }
+
+  // if the incidence doesn't recur, 
+  if ( !doesRecur() ) {
+    if ( !(start > datetime || end < datetime ) ) {
+      result << start;
+    }
+    return result;
+  }
+
+  int days = start.daysTo( end );
+  // Account for possible recurrences going over midnight, while the original event doesn't
+  QDate tmpday( datetime.date().addDays( -days - 1 ) );
+  QDateTime tmp;
+  while ( tmpday <= datetime.date() ) {
+    if ( recurrence()->recursOn( tmpday ) ) {
+      QValueList<QTime> times = recurrence()->recurTimesOn( tmpday );
+      for ( QValueList<QTime>::ConstIterator it = times.begin(); it != times.end(); ++it ) {
+        tmp = QDateTime( tmpday, *it );
+        if ( !(tmp > datetime || endDateForStart( tmp ) < datetime ) )
+          result << tmp;
+      }
+    }
+    tmpday = tmpday.addDays( 1 );
+  }
+  return result;
+}
+
+/** Return the end time of the occurrence if it starts at the given date/time */
+QDateTime Incidence::endDateForStart( const QDateTime &startDt ) const
+{
+  QDateTime start = dtStart();
+  QDateTime end = endDateRecurrenceBase();
+  if ( !end.isValid() ) return start;
+  if ( !start.isValid() ) return end;
+
+  return startDt.addSecs( start.secsTo( end ) );
 }
 
 // %%%%%%%%%%%%%%%%% begin:RecurrenceRule %%%%%%%%%%%%%%%%%
@@ -672,3 +779,13 @@ QString Incidence::schedulingID() const
     return uid();
   return mSchedulingID;
 }
+
+/** Observer interface for the recurrence class. If the recurrence is changed,
+    this method will be called for the incidence the recurrence object
+    belongs to. */
+void Incidence::recurrenceUpdated( Recurrence *recurrence )
+{
+  if ( recurrence == mRecurrence )
+    updated();
+}
+

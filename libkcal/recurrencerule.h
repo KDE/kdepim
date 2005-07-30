@@ -29,6 +29,21 @@
 
 #include "libkcal_export.h"
 
+template <class T> 
+Q_INLINE_TEMPLATES void qSortUnique( QValueList<T> &lst )
+{
+  qHeapSort( lst );
+  // Remove all duplicates from the times list
+  // TODO: Make this more efficient!
+  T last, newlast;
+  for ( QValueListIterator<T> it = lst.begin(); it != lst.end(); ++it ) {
+    newlast = (*it);
+    if ( newlast == last ) it = lst.remove( it );
+    last = newlast;
+  }
+}
+
+
 namespace KCal {
 
 typedef QValueList<QDateTime> DateTimeList;
@@ -36,7 +51,7 @@ typedef QValueList<QDate> DateList;
 typedef QValueList<QTime> TimeList;
 
 
-//class Incidence;
+
 
 /**
   This class represents a recurrence rule for a calendar incidence.
@@ -44,6 +59,11 @@ typedef QValueList<QTime> TimeList;
 class LIBKCAL_EXPORT RecurrenceRule
 {
   public:
+    class Observer {
+      public:
+        /** This method will be called on each change of the recurrence object */
+        virtual void recurrenceChanged( RecurrenceRule * ) = 0;
+    };
     typedef ListBase<RecurrenceRule> List;
     /** enum for describing the frequency how an event recurs, if at all. */
     enum PeriodType { rNone = 0,
@@ -203,6 +223,21 @@ class LIBKCAL_EXPORT RecurrenceRule
 
 
     void setDirty();
+    /** 
+		  Installs an observer. Whenever some setting of this recurrence 
+			object is changed, the recurrenceUpdated( Recurrence* ) method 
+			of each observer will be called to inform it of changes.
+		  @param observer the Recurrence::Observer-derived object, which 
+			will be installed as an observer of this object.
+    */
+    void addObserver( Observer *observer );
+    /** 
+		  Removes an observer that was added with addObserver. If the 
+			given object was not an observer, it does nothing.
+		  @param observer the Recurrence::Observer-derived object to
+			be removed from the list of observers of this object.
+    */
+    void removeObserver( Observer *observer );
 
     /**
       Debug output.
@@ -283,13 +318,12 @@ class LIBKCAL_EXPORT RecurrenceRule
     Constraint::List mConstraints;
     void buildConstraints();
     bool mDirty;
+    QValueList<Observer*> mObservers;
 
     // Cache for duration
     mutable DateTimeList mCachedDates;
     mutable bool mCached;
     mutable QDateTime mCachedDateEnd;
-
-//     Incidence *mParent;
 
     class Private;
     Private *d;

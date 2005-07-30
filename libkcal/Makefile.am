@@ -19,7 +19,7 @@ libkcal_la_LIBADD  = versit/libversit.la $(LIB_KIO) \
 libkcal_la_COMPILE_FIRST = ./libical/src/libical/ical.h ./libical/src/libicalss/icalss.h
 libkcal_la_SOURCES = \
 	incidencebase.cpp incidence.cpp journal.cpp todo.cpp event.cpp \
-	freebusy.cpp attendee.cpp attachment.cpp recurrence.cpp recurrencerule.cpp alarm.cpp \
+	freebusy.cpp attendee.cpp attachment.cpp recurrencerule.cpp recurrence.cpp alarm.cpp \
 	customproperties.cpp calendar.cpp calendarlocal.cpp \
 	calformat.cpp vcalformat.cpp icalformat.cpp icalformatimpl.cpp \
 	incidenceformatter.cpp \
@@ -46,7 +46,7 @@ libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
   calstorage.h customproperties.h dndfactory.h duration.h event.h \
   exceptions.h filestorage.h freebusy.h htmlexportsettings.h htmlexport.h icaldrag.h icalformat.h \
   incidencebase.h incidence.h incidenceformatter.h journal.h kcalversion.h listbase.h period.h person.h \
-  qtopiaformat.h recurrence.h resourcecached.h resourcecalendar.h \
+  qtopiaformat.h recurrencerule.h recurrence.h resourcecached.h resourcecalendar.h \
   resourcelocalconfig.h resourcelocaldirconfig.h resourcelocaldir.h \
   resourcelocal.h scheduler.h libkcal_export.h \
   todo.h vcaldrag.h vcalformat.h

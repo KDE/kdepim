@@ -109,6 +109,9 @@ class LIBKCAL_EXPORT Event : public Incidence
     */
     void setDuration( int seconds );
 
+  protected:
+    /** Return the end date/time of the base incidence. */
+    virtual QDateTime endDateRecurrenceBase() const { return dtEnd(); }
   private:
     bool accept( Visitor &v ) { return v.visit( this ); }
 

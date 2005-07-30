@@ -33,7 +33,6 @@
 
 namespace KCal {
 
-class Incidence;
 class RecurrenceRule;
 
 /**
@@ -87,23 +86,27 @@ class RecurrenceRule;
   the specified type. The add* and the other set* methods will change only
   the first recurrence rule, but leave the others untouched.
 */
-class LIBKCAL_EXPORT Recurrence
+class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
 {
   public:
+    class Observer {
+      public:
+        /** This method will be called on each change of the recurrence object */
+        virtual void recurrenceUpdated( Recurrence * ) = 0;
+    };
+
     /** enumeration for describing how an event recurs, if at all. */
     enum { rNone = 0, rMinutely = 0x001, rHourly = 0x0002, rDaily = 0x0003,
            rWeekly = 0x0004, rMonthlyPos = 0x0005, rMonthlyDay = 0x0006,
            rYearlyMonth = 0x0007, rYearlyDay = 0x0008, rYearlyPos = 0x0009,
            rOther = 0x000A, rMax=0x00FF };
 
-    Recurrence( Incidence *parent/*, int compatVersion = 0*/ );
-    Recurrence( const Recurrence&, Incidence *parent );
-    ~Recurrence();
+    Recurrence();
+    Recurrence( const Recurrence& );
+    virtual ~Recurrence();
 
     bool operator==( const Recurrence& ) const;
     bool operator!=( const Recurrence& r ) const  { return !operator==(r); }
-
-    Incidence *parent() { return mParent; }
 
     /** Return the start date/time of the recurrence (Time for floating incidences will be 0:00).
      @return the current start/time of the recurrence. */
@@ -458,9 +461,27 @@ class LIBKCAL_EXPORT Recurrence
     void addExDateTime( const QDateTime &exdate );
     void addExDate( const QDate &exdate );
 
-    RecurrenceRule *defaultRRule( bool create = false );
+    RecurrenceRule *defaultRRule( bool create = false ) const;
     RecurrenceRule *defaultRRuleConst() const;
     void updated();
+
+    /** 
+		  Installs an observer. Whenever some setting of this recurrence 
+			object is changed, the recurrenceUpdated( Recurrence* ) method 
+			of each observer will be called to inform it of changes.
+		  @param observer the Recurrence::Observer-derived object, which 
+			will be installed as an observer of this object.
+    */
+    void addObserver( Observer *observer );
+    /** 
+		  Removes an observer that was added with addObserver. If the 
+			given object was not an observer, it does nothing.
+		  @param observer the Recurrence::Observer-derived object to
+			be removed from the list of observers of this object.
+    */
+    void removeObserver( Observer *observer );
+		
+		void recurrenceChanged( RecurrenceRule * );
 
   private:
     RecurrenceRule::List mExRules;
@@ -469,10 +490,6 @@ class LIBKCAL_EXPORT Recurrence
     QValueList<QDate> mRDates;
     QValueList<QDateTime> mExDateTimes;
     QValueList<QDate> mExDates;
-
-    // Prohibit copying
-    Recurrence(const Recurrence&);
-    Recurrence &operator=(const Recurrence&);
 
     RecurrenceRule *setNewRecurrenceType( RecurrenceRule::PeriodType type, int freq );
 
@@ -483,7 +500,7 @@ class LIBKCAL_EXPORT Recurrence
     // Cache the type of the recurrence with the old system (e.g. MonthlyPos)
     mutable ushort mCachedType;
 
-    Incidence *mParent;
+    QValueList<Observer*> mObservers;
 
     class Private;
     Private *d;
