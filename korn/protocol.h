@@ -44,7 +44,7 @@ public:
 
 	virtual const Protocol* getProtocol( KConfigGroup* ) const = 0;
 	virtual KMailDrop* createMaildrop( KConfigGroup* ) const = 0;
-	virtual QMap< QString, QString > * createConfig( KConfigGroup* config ) const = 0;
+	virtual QMap< QString, QString > * createConfig( KConfigGroup* config, const QString& password ) const = 0;
 	virtual QString configName() const { return "not specified"; }
 
 	virtual void configFillGroupBoxes( QStringList* ) const = 0;

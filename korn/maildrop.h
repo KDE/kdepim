@@ -160,7 +160,7 @@ class KMailDrop : public QObject
      * @return true if read was successful, false otherwise.
      */
     virtual bool readConfigGroup( const KConfigBase& cfg );
-    virtual bool readConfigGroup( const QMap< QString, QString > &, const Protocol * protocol ) { return true; }
+    virtual bool readConfigGroup( const QMap< QString, QString > &, const Protocol * ) { return true; }
 
     /** 
      * Write box configuration to a config group. Subclasses that

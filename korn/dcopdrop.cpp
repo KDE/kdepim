@@ -75,7 +75,8 @@ bool DCOPDrop::readConfigGroup( const KConfigGroup &cfg )
 bool DCOPDrop::readConfigGroup( const QMap< QString, QString > &map, const Protocol * )
 {
 	if( !map.contains( "dcopname" ) )
-		kdDebug() << "map is niet compleet" << endl;
+		//The mapping MUST contain dcopname.
+		kdDebug() << "mapping is niet compleet" << endl;
 
 	this->setDCOPName( *map.find( "dcopname" ) );
 	

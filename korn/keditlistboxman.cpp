@@ -29,7 +29,8 @@ KEditListBoxManager::KEditListBoxManager(	QWidget *parent, const char *name,
 	: KEditListBox( parent, name, checkAtEntering, buttons ),
 	_config( 0 ),
 	_groupName( 0 ),
-	_subGroupName( 0 )
+	_subGroupName( 0 ),
+	_prevCount( 0 )
 {
 	init();
 }
@@ -40,7 +41,8 @@ KEditListBoxManager::KEditListBoxManager(	const QString& title, QWidget *parent,
 	: KEditListBox( title, parent, name, checkAtEntering, buttons ),
 	_config( 0 ),
 	_groupName( 0 ),
-	_subGroupName( 0 )
+	_subGroupName( 0 ),
+	_prevCount( 0 )
 {
 	init();
 }
@@ -52,7 +54,8 @@ KEditListBoxManager::KEditListBoxManager(	const QString& title,
 	: KEditListBox( title, customEditor, parent, name, checkAtEntering, buttons ),
 	_config( 0 ),
 	_groupName( 0 ),
-	_subGroupName( 0 )
+	_subGroupName( 0 ),
+	_prevCount( 0 )
 {
 	init();
 }
@@ -112,6 +115,8 @@ void KEditListBoxManager::readNames()
 		this->insertItem( _config->readEntry( "name", QString::null ) );
 		++number;
 	}
+
+	_prevCount = this->count();
 }
 
 void KEditListBoxManager::slotChanged()
@@ -121,7 +126,13 @@ void KEditListBoxManager::slotChanged()
 	 * 2. the item has moved up;
 	 * 3. the item has moved down.
 	 */
+
+	//_prevCount is invariant under all of these operation
+	//if _prevCount is changed, is wasn't one of those operations.
 	
+	if( _prevCount != this->count() )
+		return;
+
 	 if( !_config || !_groupName )
 	 	return;
 	
@@ -140,6 +151,9 @@ void KEditListBoxManager::slotChanged()
 
 void KEditListBoxManager::slotAdded( const QString& name )
 {
+	//Update _prevCount
+	_prevCount = this->count();
+	
 	if( !_config || !_groupName )
 	 	return;
 		
@@ -155,6 +169,9 @@ void KEditListBoxManager::slotAdded( const QString& name )
 
 void KEditListBoxManager::slotRemoved( const QString& name )
 {
+	//Update prevCount
+	_prevCount = this->count();
+
 	if( !_config || !_groupName )
 	 	return;
 		
@@ -179,6 +196,7 @@ void KEditListBoxManager::slotRemoved( const QString& name )
 		return; //do nothing
 	
 	_config->deleteGroup( _groupName->arg( number ), true, false );
+	emit elementDeleted( number );
 	while( _subGroupName && _config->hasGroup( _subGroupName->arg( number ).arg( subnumber ) ) )
 	{
 		_config->deleteGroup( _subGroupName->arg( number ).arg( subnumber ) );
@@ -222,6 +240,8 @@ void KEditListBoxManager::moveItem( int src, int dest )
 			
 		++subnumber;
 	}
+
+	emit elementsSwapped( src, dest );
 		
 	delete srcList;
 }
@@ -265,6 +285,8 @@ void KEditListBoxManager::changeItem( int first, int last )
 	
 		++subnumber;
 	}
+
+	emit elementsSwapped( first, last );
 		
 	delete firstList;
 	delete lastList;

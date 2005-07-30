@@ -23,7 +23,7 @@
 
 #include <qmap.h>
 
-QMap< QString, QString >* KIO_Protocol::createConfig( KConfigGroup * group ) const
+QMap< QString, QString >* KIO_Protocol::createConfig( KConfigGroup * group, const QString& password ) const
 {
 	QMap< QString, QString > *result = new QMap< QString, QString >;
 
@@ -31,7 +31,7 @@ QMap< QString, QString >* KIO_Protocol::createConfig( KConfigGroup * group ) con
 	result->insert( "server", group->readEntry( "server", "" ) );
 	result->insert( "port", group->readEntry( "port", "" ) );
 	result->insert( "username", group->readEntry( "username", "" ) );
-	result->insert( "password", group->readEntry( "password", "" ) );
+	result->insert( "password", password );
 	result->insert( "mailbox", group->readEntry( "mailbox", "" ) );
 	result->insert( "savepassword", group->readEntry( "savepassword", "false" ) );
 	result->insert( "ssl", group->readEntry( "ssl", "false" ) );

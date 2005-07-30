@@ -58,7 +58,7 @@ public:
 
 	virtual KMailDrop* createMaildrop( KConfigGroup* config ) const { return new KKioDrop( config ); }
 
-	virtual QMap< QString, QString >* createConfig( KConfigGroup *group ) const;
+	virtual QMap< QString, QString >* createConfig( KConfigGroup *group, const QString& password ) const;
 
 	/*
 	 * @return: the name of the kio_slave

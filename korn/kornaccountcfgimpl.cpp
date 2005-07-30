@@ -20,6 +20,7 @@
 
 #include "account_input.h"
 #include "kio_proto.h"
+#include "password.h"
 #include "protocol.h"
 #include "protocols.h"
 
@@ -41,6 +42,8 @@ KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent, const char * name )
 	_config( 0 ),
 	_fields( 0 ),
 	_urlfields( 0 ),
+	_boxnr( 0 ),
+	_accountnr( 0 ),
 	_vlayout( 0 ),
 	_protocolLayout( 0 ),
 	_groupBoxes( 0 ),
@@ -52,6 +55,7 @@ KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent, const char * name )
 	this->cbProtocol->insertStringList( Protocols::getProtocols() );
 
 	_accountinput->setAutoDelete( true );
+
 }
 	
 KornAccountCfgImpl::~KornAccountCfgImpl()
@@ -59,7 +63,7 @@ KornAccountCfgImpl::~KornAccountCfgImpl()
 	delete _accountinput;
 }
 
-void KornAccountCfgImpl::readConfig( KConfigGroup *config, QMap< QString, QString > *entries )
+void KornAccountCfgImpl::readConfig( KConfigGroup *config, QMap< QString, QString > *entries, int boxnr, int accountnr )
 {
 	AccountInput *input;
 	
@@ -72,6 +76,8 @@ void KornAccountCfgImpl::readConfig( KConfigGroup *config, QMap< QString, QStrin
 	const Protocol *protocol = Protocols::getProto( _config->readEntry( "protocol", "mbox" ) );
 
 	protocol->readEntries( entries );
+
+	(*entries)[ "password" ] = KOrnPassword::readKOrnPassword( boxnr, accountnr, *config );
 	
 	for( input = _accountinput->first(); input; input = _accountinput->next() )
 		if( entries->contains( input->configName() ) )
@@ -84,6 +90,9 @@ void KornAccountCfgImpl::readConfig( KConfigGroup *config, QMap< QString, QStrin
 	this->edPlaySound->setURL( _config->readEntry( "sound", "" ) );
 	this->chPassivePopup->setChecked( _config->readBoolEntry( "passivepopup", false ) );
 	this->chPassiveDate->setChecked( _config->readBoolEntry( "passivedate", false ) );
+
+	_boxnr = boxnr;
+	_accountnr = accountnr;
 }
 
 void KornAccountCfgImpl::writeConfig()
@@ -105,6 +114,12 @@ void KornAccountCfgImpl::writeConfig()
 		map->insert( input->configName(), input->value() );
 
 	protocol->writeEntries( map );
+
+	if( map->contains( "password" ) )
+	{
+		KOrnPassword::writeKOrnPassword( _boxnr, _accountnr, *_config, *map->find( "password" ) );
+		map->erase( "password" );
+	}
 
 	for( it = map->begin(); it != map->end(); ++it )
 		_config->writeEntry( it.key(), it.data() );

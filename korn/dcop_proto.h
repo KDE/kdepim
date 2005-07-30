@@ -72,7 +72,7 @@ public:
 	 * @param config The configuration instance to be mapped
 	 * @return The keys and values of the configuration in a mapping
 	 */
-	virtual QMap< QString, QString > * createConfig( KConfigGroup* config ) const;
+	virtual QMap< QString, QString > * createConfig( KConfigGroup* config, const QString& passwd ) const;
 	/**
 	 * This return the name of this protocol. It is always "dcop".
 	 * @return The name of this protocol: "dcop"

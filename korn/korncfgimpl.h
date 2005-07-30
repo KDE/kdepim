@@ -35,12 +35,13 @@ public:
 
 private slots:
 	virtual void slotDialogDestroyed();
+	void slotElementsSwapped( int box1, int box2 );
+	void slotElementDeleted( int box );
 protected slots:
 	virtual void slotEditBox();
 	virtual void slotActivated( const QString& );
 	virtual void slotActivated( const int );
 	virtual void slotSetDefaults( const QString&, const int, KConfig* );
-
 public slots:
 	virtual void slotOK();
 	virtual void slotCancel();
@@ -49,6 +50,8 @@ public slots:
 private:
 	void readConfig();
 	void writeConfig();
+
+	void rewritePasswords();
 	
 	KConfig *_config;
 	KDialogBase *_base;

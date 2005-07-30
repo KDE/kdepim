@@ -20,6 +20,7 @@
 
 #include "keditlistboxman.h"
 #include "kornboxcfgimpl.h"
+#include "password.h"
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -27,6 +28,7 @@
 #include <klocale.h>
 
 #include <qcolor.h>
+#include <qcheckbox.h>
 #include <qradiobutton.h>
 #include <qstring.h>
 #include <qtimer.h>
@@ -48,6 +50,9 @@ KornCfgImpl::KornCfgImpl( QWidget * parent, const char * name )
 	connect( parent, SIGNAL( okClicked() ), this, SLOT( slotOK() ) );
 	connect( parent, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
 	connect( parent, SIGNAL( applyClicked() ), this, SLOT( slotApply() ) );
+
+	connect( elbBoxes, SIGNAL( elementsSwapped( int, int ) ), this, SLOT( slotElementsSwapped( int, int ) ) );
+	connect( elbBoxes, SIGNAL( elementDeleted( int ) ), this, SLOT( slotElementDeleted( int ) ) );
 	
 	readConfig();
 }
@@ -81,6 +86,28 @@ void KornCfgImpl::slotDialogDestroyed()
 {
 	_base->deleteLater(); _base = 0;
 	elbBoxes->setEnabled( true );
+}
+
+void KornCfgImpl::slotElementsSwapped( int box1, int box2 )
+{
+	int accountnumber1 = 0, accountnumber2 = 0;
+	while( _config->hasGroup( QString( "korn-%1-%2" ).arg( box1 ).arg( accountnumber1 ) ) )
+		++accountnumber1;
+	
+	while( _config->hasGroup( QString( "korn-%1-%2" ).arg( box2 ).arg( accountnumber2 ) ) )
+		++accountnumber2;
+	
+	KOrnPassword::swapKOrnWalletPasswords( box1, accountnumber1, box2, accountnumber2 );
+}
+
+void KornCfgImpl::slotElementDeleted( int box )
+{
+	int accountnumber = 0;
+	while( _config->hasGroup( QString( "korn-%1-%2" ).arg( box ).arg( accountnumber ) ) )
+	{
+		KOrnPassword::deleteKOrnPassword( box, accountnumber );
+		++accountnumber;
+	}
 }
 
 void KornCfgImpl::slotActivated( const QString& )
@@ -137,7 +164,7 @@ void KornCfgImpl::slotSetDefaults( const QString& name, const int index, KConfig
 	config->setGroup( QString( "korn-%1-0" ).arg( index ) );
 	config->writeEntry( "name", name );
 	config->writeEntry( "protocol", "mbox" );
-	config->writeEntry( "host", QString::null );
+	config->writeEntry( "server", QString::null );
 	config->writeEntry( "port", QString::null );
 	config->writeEntry( "username", QString::null );
 	config->writeEntry( "mailbox", "/var/spool/mail/" );
@@ -178,6 +205,8 @@ void KornCfgImpl::readConfig()
 		rbVertical->setChecked( true );
 	else
 		rbDocked->setChecked( true );
+
+	chUseWallet->setChecked( _config->readBoolEntry( "usewallet", true ) );
 }
 
 void KornCfgImpl::writeConfig()
@@ -190,9 +219,35 @@ void KornCfgImpl::writeConfig()
 		_config->writeEntry( "layout", "Vertical" );
 	if( rbDocked->isChecked() )
 		_config->writeEntry( "layout", "Docked" );
+
+	//Default is 'false' here, because if no option is set, KWallet isn't used.
+	if( _config->readBoolEntry( "usewallet", false ) != chUseWallet->isChecked() )
+		//Configuration box changed => setting over configuration
+		rewritePasswords();
+
+	_config->writeEntry( "usewallet", chUseWallet->isChecked() );
 	
 	_config->sync();
 }
 
+void KornCfgImpl::rewritePasswords()
+{
+	int box = 0 - 1;
+	int account = 0 - 1;
+	KConfigGroup *group;
+
+	while( _config->hasGroup( QString( "korn-%1" ).arg( ++box ) ) )
+	{
+		account = 0 - 1;
+		while( _config->hasGroup( QString( "korn-%1-%2" ).arg( box ).arg( ++account ) ) )
+		{
+			group = new KConfigGroup( _config, QString( "korn-%1-%2" ).arg( box ).arg( account ) );
+			KOrnPassword::rewritePassword( box, account, *group, chUseWallet->isChecked() );
+			delete group;
+		}
+	}
+	
+	_config->setGroup( "korn" );
+}
 
 #include "korncfgimpl.moc"

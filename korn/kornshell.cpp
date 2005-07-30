@@ -22,6 +22,7 @@
 #include "dockedcontainer.h"
 #include "korncfgimpl.h"
 #include "hvcontainer.h"
+#include "password.h"
 
 #include <kapplication.h>
 #include <kconfig.h>
@@ -77,6 +78,7 @@ void KornShell::readConfig()
 	
 	_config->setGroup( "korn" );
 	QChar layout = _config->readEntry( "layout", "Docked" )[0].upper();
+	KOrnPassword::setUseWallet( _config->readBoolEntry( "usewallet", false ) );
 	
 	if( layout == 'H' )
 		_box = new HVContainer( Qt::Horizontal, this, "horizontal container" );

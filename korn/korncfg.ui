@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>350</width>
-            <height>310</height>
+            <height>336</height>
         </rect>
     </property>
     <property name="caption">
@@ -45,6 +45,17 @@
                         </property>
                         <property name="text">
                             <string>&amp;Edit</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>chUseWallet</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Use &amp;KWallet if possible</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
                         </property>
                     </widget>
                 </vbox>

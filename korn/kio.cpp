@@ -370,7 +370,6 @@ bool KKioDrop::readConfigGroup( const QMap< QString, QString > &map, const Proto
 bool KKioDrop::writeConfigGroup( KConfigBase& cfg ) const
 {
 	KPollableDrop::writeConfigGroup( cfg );
-	kdDebug() << "KKioDrop::wroteConfigGroup()" << endl;
 	/*QString p;
 
 	if( _kurl->hasPass() ) {

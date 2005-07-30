@@ -119,8 +119,6 @@ void KIO_Count::count( KKioDrop *drop )
 	if( kurl.port() == 0 )
 		kurl.setPort( _protocol->defaultPort() );
 
-	kdDebug() << "_protocol->configName() = " << _protocol->configName() << endl;
-
 	//Making job to fetch file-list
 	
 	_job = KIO::listDir( kurl, false );

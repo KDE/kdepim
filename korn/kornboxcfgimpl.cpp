@@ -21,6 +21,7 @@ class KConfig;
 
 #include "keditlistboxman.h"
 #include "kornaccountcfgimpl.h"
+#include "password.h"
 
 #include <kconfig.h>
 #include <kcolorbutton.h>
@@ -51,6 +52,9 @@ KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent, const char * name )
 	connect( parent, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
 	
 	elbAccounts->setTitle( i18n( "Accounts" ) );
+
+	connect( elbAccounts, SIGNAL( elementsSwapped( int, int ) ), this, SLOT( slotAccountsSwapped( int, int ) ) );
+	connect( elbAccounts, SIGNAL( elementDeleted( int ) ), this, SLOT( slotAccountDeleted( int ) ) );
 }
 
 KornBoxCfgImpl::~KornBoxCfgImpl()
@@ -242,7 +246,7 @@ void KornBoxCfgImpl::slotEditBox()
 	
 	QMap< QString, QString > *map = new QMap< QString, QString >( _config->entryMap( QString( "korn-%1-%2" ).
 			                        arg( _index ).arg(elbAccounts->listBox()->currentItem() ) ) );
-	widget->readConfig( _group, map );
+	widget->readConfig( _group, map, _index, elbAccounts->listBox()->currentItem() );
 	delete map;
 
 	_base->show();
@@ -346,4 +350,15 @@ void KornBoxCfgImpl::slotDialogDestroyed()
 	elbAccounts->setEnabled( true );
 }
 
+void KornBoxCfgImpl::slotAccountsSwapped( int account1, int account2 )
+{
+	KOrnPassword::swapKOrnWalletPassword( _index, account1, _index, account2 );
+}
+
+void KornBoxCfgImpl::slotAccountDeleted( int account )
+{
+	KOrnPassword::deleteKOrnPassword( _index, account );
+}
+
 #include "kornboxcfgimpl.moc"
+

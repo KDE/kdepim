@@ -29,6 +29,7 @@
 //#include "pop3s_proto.h"
 #include "qmail_proto.h"
 #include "dcop_proto.h"
+#include "kmail_proto.h"
 
 #include <qdict.h>
 #include <qstring.h>
@@ -70,14 +71,13 @@ void Protocols::fillProtocols()
 	protocols = new QDict< Protocol>;
 	protocols->setAutoDelete( true );
 	addProtocol( new Imap_Protocol );
-	//addProtocol( new Imaps_Protocol );
 	addProtocol( new MBox_Protocol );
 	addProtocol( new Pop3_Protocol );
-	//addProtocol( new Pop3s_Protocol );
 	addProtocol( new Process_Protocol );
 	addProtocol( new Nntp_Protocol );
 	addProtocol( new QMail_Protocol );
 	addProtocol( new DCOP_Protocol );
+	addProtocol( new KMail_Protocol );
 }
 
 void Protocols::addProtocol( Protocol* proto )

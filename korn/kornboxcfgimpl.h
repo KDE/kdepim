@@ -85,6 +85,9 @@ private slots:
 	void slotOK();
 	void slotCancel();
 	void slotDialogDestroyed();
+	
+	void slotAccountsSwapped( int account1, int account2 );
+	void slotAccountDeleted( int account );
 };
 
 #endif //MK_KORNBOXCFGIMPL_H

@@ -45,6 +45,7 @@ korn_SOURCES = \
   kio_single_subject.cpp \
   kio_read.cpp \
   kio_delete.cpp \
+  kmail_proto.cpp \
   sortedmailsubject.cpp \
   korncfgimpl.cpp \
   kornaccountcfgimpl.cpp \
@@ -52,6 +53,7 @@ korn_SOURCES = \
   kornaccountcfg.ui \
   kornboxcfg.ui \
   korncfg.ui \
+  password.cpp \
   pop3_proto.cpp \
   systemtray.cpp \
   process_proto.cpp \
@@ -70,6 +72,7 @@ noinst_HEADERS = \
   hvcontainer.h \
   hvitem.h \
   keditlistboxman.h \
+  kmail_proto.h \
   kornaccountcfgimpl.h \
   kornboxcfg.h \
   kornboxcfgimpl.h \
@@ -101,6 +104,7 @@ noinst_HEADERS = \
   nntp_proto.h \
   pop3_proto.h \
   pop3s_proto.h \
+  password.h \
   process_proto.h \
   qmail_proto.h \
   systemtray.h

@@ -21,6 +21,7 @@
 #include "dcopdrop.h"
 #include "kio.h"
 #include "maildrop.h"
+#include "password.h"
 #include "protocol.h"
 #include "protocols.h"
 #include "subjectsdlg.h"
@@ -68,10 +69,18 @@ void AccountManager::readConfig( KConfig* config, const int index )
 			++counter;
 			continue;
 		}
-		QMap< QString, QString > *configmap = proto->createConfig( accountGroup );
+		QMap< QString, QString > *configmap = proto->createConfig( accountGroup,
+		                                                   KOrnPassword::readKOrnPassword( index, counter, *accountGroup ) );
 		KMailDrop *kiodrop = proto->createMaildrop( accountGroup );
 		const Protocol *nproto = proto->getProtocol( accountGroup );
 		Dropinfo *info = new Dropinfo;
+
+		if( !kiodrop || !configmap || !nproto )
+		{
+			//Error occured when reading for config
+			++counter;
+			continue;
+		}
 		
 		//TODO: connect some stuff
 		connect( kiodrop, SIGNAL( changed( int, KMailDrop* ) ), this, SLOT( slotChanged( int, KMailDrop* ) ) );
@@ -233,7 +242,6 @@ void AccountManager::slotChanged( int count, KMailDrop* mailDrop )
 	
 	if( count > info->msgnr )
 	{
-		kdDebug() << "Run program" << count << " > " << info->msgnr << endl;
 		if( !mailDrop->soundFile().isEmpty() )
 			playSound( mailDrop->soundFile() );
 		if( !mailDrop->newMailCmd().isEmpty() )

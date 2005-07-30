@@ -41,7 +41,7 @@ public:
 	KornAccountCfgImpl( QWidget * parent = 0, const char * name = 0 );
 	~KornAccountCfgImpl();
 	
-	void readConfig( KConfigGroup *config, QMap< QString, QString > *entries );
+	void readConfig( KConfigGroup *config, QMap< QString, QString > *entries, int boxnr, int accountnr );
 	void writeConfig();
 
 public slots:
@@ -53,11 +53,11 @@ protected slots:
 private slots:
 	void slotOK();
 	void slotCancel();
-	
 private:
 	KConfigGroup *_config;
 	int _fields;
 	int _urlfields;
+	int _boxnr, _accountnr;
 		
 	QVBoxLayout *_vlayout;
 	QHBoxLayout *_protocolLayout;

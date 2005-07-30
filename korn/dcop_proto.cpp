@@ -34,7 +34,7 @@ KMailDrop* DCOP_Protocol::createMaildrop( KConfigGroup* ) const
 	return new DCOPDrop();
 }
 
-QMap< QString, QString > * DCOP_Protocol::createConfig( KConfigGroup* config ) const
+QMap< QString, QString > * DCOP_Protocol::createConfig( KConfigGroup* config, const QString& ) const
 {
 	QMap< QString, QString > *result = new QMap< QString, QString >;
 

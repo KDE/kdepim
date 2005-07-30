@@ -94,6 +94,7 @@ private:
 	KConfig *_config; //Stores the KConfig-object
 	QString *_groupName; //Stores the groupName string.
 	QString *_subGroupName;
+	int _prevCount;
 
 private slots:
 	//These comes directly from the KEditListBox itselfs.
@@ -137,6 +138,9 @@ signals:
 	 * this config is already in the right group.
 	 */
 	void setDefaults( const QString& name, const int index, KConfig* config );
+
+	void elementsSwapped( int, int );
+	void elementDeleted( int );
 	
 };
 
