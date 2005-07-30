@@ -106,8 +106,8 @@ void BloggingCalendarAdaptor::setAPI( KBlog::APIBlog *api )
                                            const QString & ) ),
            SLOT( slotUserInfoRetrieved( const QString &, const QString &,
                                     const QString & ) ) );
-  connect( api, SIGNAL( folderInfoRetrieved( const KURL &, const QString & ) ),
-           SLOT( slotFolderInfoRetrieved( const KURL &, const QString & ) ) );
+  connect( api, SIGNAL( folderInfoRetrieved( const QString &, const QString & ) ),
+           SLOT( slotFolderInfoRetrieved( const QString&, const QString & ) ) );
   connect( api, SIGNAL( itemOnServer( const KURL & ) ),
            SIGNAL( itemOnServer( const KURL & ) ) );
   connect( api, SIGNAL( itemDownloaded( KCal::Incidence *, const QString &,

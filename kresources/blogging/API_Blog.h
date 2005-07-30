@@ -9,9 +9,6 @@
 #ifndef API_BLOG_H
 #define API_BLOG_H
 
-// #include <groupwareresourcejob.h>
-// #include <folderlister.h>
-
 #include <kurl.h>
 #include <kio/job.h>
 #include <libkcal/journal.h>
