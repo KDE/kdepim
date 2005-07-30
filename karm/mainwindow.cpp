@@ -701,14 +701,18 @@ QString MainWindow::stoptimerfor( const QString& taskname )
 QString MainWindow::exportcsvfile( QString filename, QString from, QString to, int type, bool decimalMinutes, bool allTasks, QString delimiter, QString quote )
 {
   ReportCriteria rc;
-  rc.allTasks=allTasks;
-  rc.decimalMinutes=decimalMinutes;
-  rc.delimiter=delimiter;
-  rc.from=QDate::fromString( from );
-  rc.quote=quote;
-  rc.reportType=(ReportCriteria::REPORTTYPE) type;
-  rc.to=QDate::fromString( to );
   rc.url=filename;
+  rc.from=QDate::fromString( from );
+  if ( rc.from.isNull() ) rc.from=QDate::fromString( from, Qt::ISODate );
+  kdDebug(5970) << "rc.from " << rc.from << endl;
+  rc.to=QDate::fromString( to );
+  if ( rc.to.isNull() ) rc.to=QDate::fromString( to, Qt::ISODate );
+  kdDebug(5970) << "rc.to " << rc.to << endl;
+  rc.reportType=(ReportCriteria::REPORTTYPE) type;  // history report or totals report 
+  rc.decimalMinutes=decimalMinutes;
+  rc.allTasks=allTasks;
+  rc.delimiter=delimiter;
+  rc.quote=quote;
   return _taskView->report( rc );
 }
 
