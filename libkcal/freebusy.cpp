@@ -96,6 +96,8 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
 
       if( event->doesRecur() ) {
         if ( event->isMultiDay() ) {
+// FIXME: This doesn't work for sub-daily recurrences or recurrences with
+//        a different time than the original event.
           extraDays = event->dtStart().date().daysTo(event->dtEnd().date());
           for ( x = 0; x <= extraDays; ++x ) {
             if ( event->recursOn(day.addDays(-x))) {
