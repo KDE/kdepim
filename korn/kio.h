@@ -179,6 +179,8 @@ private:
 	
 	void emitShowPassivePopup( QPtrList< KornMailSubject > *subject, int total )
 			{ emit showPassivePopup( subject, total, passiveDate(), this->realName() ); }
+	void emitShowPassivePopup( const QString& error )
+	                { if( passivePopup() ) { emit showPassivePopup( error, this->realName() ); } }
 	void emitValidChanged() { emit validChanged( valid() ); }
 
 private slots:

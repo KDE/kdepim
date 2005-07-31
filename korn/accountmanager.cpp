@@ -86,6 +86,8 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		connect( kiodrop, SIGNAL( changed( int, KMailDrop* ) ), this, SLOT( slotChanged( int, KMailDrop* ) ) );
 		connect( kiodrop, SIGNAL( showPassivePopup( QPtrList< KornMailSubject >*, int, bool, const QString& ) ),
 			 this, SLOT( slotShowPassivePopup( QPtrList< KornMailSubject >*, int, bool, const QString& ) ) );
+		connect( kiodrop, SIGNAL( showPassivePopup( const QString&, const QString& ) ),
+			 this, SLOT( slotShowPassivePopup( const QString&, const QString& ) ) );
 		connect( kiodrop, SIGNAL( validChanged( bool ) ), this, SLOT( slotValidChanged( bool ) ) );
 		
 		kiodrop->readGeneralConfigGroup( *masterGroup );

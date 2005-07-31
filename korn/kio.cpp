@@ -264,7 +264,7 @@ void KKioDrop::forceRecheck()
 
 bool KKioDrop::valid()
 {
-	return _valid && _count->valid( ) && _subjects->valid();
+	return _valid && _count->valid() && _subjects->valid();
 }
 
 KKioDrop::~KKioDrop()
@@ -425,6 +425,8 @@ void KKioDrop::deleteMailsCanceled()
 void KKioDrop::slotConnectionError( int number, const QString& arg )
 {
 	kdError() << KIO::buildErrorString( number, arg ) << endl;
+//	if( passivePopup() )
+		emitShowPassivePopup( KIO::buildErrorString( number, arg ) );
 }
 
 void KKioDrop::slotConnectionWarning( const QString& msg )

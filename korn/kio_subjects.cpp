@@ -102,6 +102,7 @@ void KIO_Subjects::getConnection( )
 		if( ! ( _slave = KIO::Scheduler::getConnectedSlave( kurl, metadata ) ) )
 		{
 			kdWarning() << i18n( "Not able to open a kio-slave for %1." ).arg( _protocol->configName() );
+			_kio->emitShowPassivePopup( i18n( "Not able to open a kio-slave for %1." ).arg( _protocol->configName() ) );
 			_valid = false;
 			_kio->emitValidChanged();
 			_slave = 0;

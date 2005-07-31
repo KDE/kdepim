@@ -362,6 +362,14 @@ signals:
      * some more info that could be used with the popup.
      */
     void showPassivePopup( QPtrList< KornMailSubject >*, int, bool, const QString& realname );
+
+    /**
+     * This signal is emitted when a passive error message should be displayed.
+     *
+     * @param error The error message
+     * @param realName The real name of this object.
+     */
+    void showPassivePopup( const QString& error, const QString& realname );
     
     /**
      * readSubjects() might signal readSubject() if

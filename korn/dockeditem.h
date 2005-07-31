@@ -77,6 +77,8 @@ public slots:
 	virtual void setTooltip( const QString& string );
 	
 	void slotShowPassivePopup( QPtrList< KornMailSubject >* list, int total, bool date, const QString& );
+
+	void slotShowPassivePopup( const QString& error, const QString& );
 	
 protected:
 	/**

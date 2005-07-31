@@ -25,6 +25,7 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kiconloader.h>
+#include <kpassivepopup.h>
 #include <kpopupmenu.h>
 
 #include <qbitmap.h>
@@ -75,6 +76,11 @@ void DockedItem::setTooltip( const QString& tooltip )
 void DockedItem::slotShowPassivePopup( QPtrList< KornMailSubject >* list, int total, bool date, const QString& name )
 {
 	showPassivePopup( _systemtray, list, total, name, date );
+}
+
+void DockedItem::slotShowPassivePopup( const QString& message, const QString& name )
+{
+	KPassivePopup::message( QString( "Korn - %1/%2" ).arg( objId() ).arg( name ), message, _systemtray, "Passive error message" );
 }
 
 void DockedItem::doPopup()

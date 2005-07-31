@@ -23,6 +23,7 @@
 #include <kactioncollection.h>
 #include <kapplication.h>
 #include <kdebug.h>
+#include <kpassivepopup.h>
 #include <kpopupmenu.h>
 #include <kstdaction.h>
 
@@ -66,6 +67,11 @@ void HVItem::setTooltip( const QString& string )
 void HVItem::slotShowPassivePopup( QPtrList< KornMailSubject >* list, int total, bool date, const QString& name )
 {
 	showPassivePopup( _label, list, total, name, date );
+}
+
+void HVItem::slotShowPassivePopup( const QString& errorMessage, const QString& name )
+{
+	KPassivePopup::message( QString( "korn-%1-%2" ).arg( objId() ).arg( name ), errorMessage, _label, "Passive error message" );
 }
 	
 void HVItem::doPopup()

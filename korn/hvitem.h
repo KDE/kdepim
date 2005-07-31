@@ -62,6 +62,12 @@ public slots:
 	void slotShowPassivePopup( QPtrList< KornMailSubject >* list, int total, bool date, const QString& );
 	
 	/**
+	 * This slot triggered when the passive popup is to be shown. It is transported
+	 * to BoxContainerItem, but so it is possible to change the arguments.
+	 */
+	void slotShowPassivePopup( const QString& errorMessage, const QString& name );
+
+	/**
 	 * Trigered if the popup-menu is to be shown
 	 */
 	virtual void doPopup();
