@@ -1,6 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=TV Schedules
+Name[es]=Programación de TV
+Name[et]=Telekavad
+Name[ga]=Sceidil Teilifíse
 X-KDE-Library=kcal_tvanytime
 Type=Service
 ServiceTypes=KResources/Plugin
