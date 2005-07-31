@@ -21,7 +21,7 @@
 #define KORNPASSWORD_H
 
 class KConfigBase;
-namespace KWallet { class Wallet; };
+namespace KWallet { class Wallet; }
 
 class QString;
 
