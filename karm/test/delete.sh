@@ -15,8 +15,8 @@ set_up
 GPOD=`dcop $DCOPID KarmDCOPIface getpromptdelete 2>/dev/null`
 RVAL=`dcop $DCOPID KarmDCOPIface setpromptdelete 0 2>/dev/null`
 
-RVAL=`dcop $DCOPID KarmDCOPIface addtodo todo1 2>/dev/null`
-RVAL=`dcop $DCOPID KarmDCOPIface addtodo todo2 2>/dev/null`
+RVAL=`dcop $DCOPID KarmDCOPIface addTask todo1 2>/dev/null`
+RVAL=`dcop $DCOPID KarmDCOPIface addTask todo2 2>/dev/null`
 RVAL=`dcop $DCOPID KarmDCOPIface deletetodo 2>/dev/null`
 RVAL=`dcop $DCOPID KarmDCOPIface deletetodo 2>/dev/null`
 RVAL=`dcop $DCOPID KarmDCOPIface setpromptdelete $GPOD 2>/dev/null`

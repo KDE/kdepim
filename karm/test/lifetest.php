@@ -181,7 +181,7 @@ else
     funkeysim("Right");
     funkeysim("Down",2);
     funkeysim("Return");
-    sleep(1);
+    sleep(2);
     keysim("/tmp/exporttest.csv");
     sleep(1);
     funkeysim("Tab",6);
@@ -201,17 +201,15 @@ else
     $content=file_get_contents("/tmp/karmtest.ics");
     $lines=explode("\n",$content);
     if (!preg_match("/DTSTAMP:[0-9]{1,8}T[0-9]{1,6}Z/", $lines[4])) $err.="iCal file: wrong dtstamp";
-    if ($lines[12]<>"SUMMARY:example 1") $err.="iCal file: wrong task example 1";
+    if ($lines[12]<>"SUMMARY:example 1") $err.="iCal file: wrong task, should be example 1, but is $lines[12]";
     if ($lines[16]<>"END:VTODO") $err.="iCal file: wrong end of vtodo";
-    if ($lines[27]<>"SUMMARY:task 1") $err.="iCal file: wrong task task 1";
-    if (!preg_match("/^UID:libkcal-[0-9]{1,8}.[0-9]{1,3}/", $lines[39])) $err.="iCal file: wrong uid";
     $content=file_get_contents("/tmp/exporttest.csv");
     $lines=explode("\n",$content);
     if (!preg_match("/\"example 1\",,0[,|.]00,0[,|.]00,0[,|.]00,0[,|.]00/", $lines[0])) $err.="csv export is wrong";
     pclose($process);
-    @unlink ("/tmp/karmtest.ics");
+    if ($err == "") @unlink ("/tmp/karmtest.ics");
     @unlink ("/tmp/example.planner");
-    @unlink ("/tmp/exporttest.csv");
+    if ($err == "") @unlink ("/tmp/exporttest.csv");
   }
 }
   echo $err;
