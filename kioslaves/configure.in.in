@@ -1,7 +1,7 @@
 KDE_CHECK_SSL
 
 AC_ARG_WITH(sasl,
-  [AS_HELP_STRING(--with-sasl,
+  [AC_HELP_STRING(--with-sasl,
     [enable support for authentication through cyrus-sasl @<:@default=check@:>@])],
   [], with_sasl=check)
 
