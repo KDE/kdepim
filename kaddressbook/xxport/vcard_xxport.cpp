@@ -27,7 +27,6 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
-#include <qtextcodec.h>
 
 #include <kabc/vcardconverter.h>
 #include <kdialogbase.h>
@@ -196,14 +195,7 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
           QByteArray rawData = file.readAll();
           file.close();
           if ( rawData.size() > 0 ) {
-            QTextCodec *codec = QTextCodec::codecForContent( rawData.data(), 50 );
-
-            QString data;
-            if ( codec )
-              data = codec->toUnicode( rawData.data(), rawData.size() );
-            else
-              data = QString::fromUtf8( rawData.data(), rawData.size() );
-
+            const QString data = QString::fromUtf8( rawData.data(), rawData.size() );
             addrList += parseVCard( data );
           }
 
