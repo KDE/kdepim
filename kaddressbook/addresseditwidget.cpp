@@ -93,6 +93,7 @@ AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
   mAddressField->setFrameStyle( QFrame::Panel | QFrame::Sunken );
   mAddressField->setMinimumHeight( 20 );
   mAddressField->setAlignment( Qt::AlignTop );
+  mAddressField->setTextFormat( Qt::PlainText );
   layout->addWidget( mAddressField );
 
   mEditButton = new QPushButton( i18n( "&Edit Addresses..." ), this );
@@ -275,6 +276,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
   topLayout->addWidget( label, 1, 0 );
   mStreetTextEdit = new QTextEdit( page );
+  mStreetTextEdit->setTextFormat( Qt::PlainText );
   label->setBuddy( mStreetTextEdit );
   topLayout->addWidget( mStreetTextEdit, 1, 1 );
 
