@@ -29,6 +29,7 @@
 
 #include <addresseelineedit.h>
 #include <kapplication.h>
+#include <kbuttonbox.h>
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <klineedit.h>
@@ -115,7 +116,7 @@ class ContactListItem : public QListViewItem
 LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
                                     QWidget* parent, const char* name )
   : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), Help | User1 |
-    User2 | User3 | Cancel, Default, parent, name, false, true ),
+                 Cancel, Default, parent, name, false, true ),
     mAddressBook( ab ), mCore( core )
 {
   setButtonCancel( KStdGuiItem::close() );
@@ -176,11 +177,15 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   mResultListView->setShowSortIndicator( true );
   topLayout->addWidget( mResultListView );
 
+  KButtonBox *buttons = new KButtonBox( page, Qt::Horizontal );
+  buttons->addButton( i18n( "Select All" ), this, SLOT( slotSelectAll() ) );
+  buttons->addButton( i18n( "Unselect All" ), this, SLOT( slotUnselectAll() ) );
+
+  topLayout->addWidget( buttons );
+
   resize( QSize( 600, 400).expandedTo( minimumSizeHint() ) );
 
-  setButtonText( User1, i18n( "Unselect All" ) );
-  setButtonText( User2, i18n( "Select All" ) );
-  setButtonText( User3, i18n( "Add Selected" ) );
+  setButtonText( User1, i18n( "Add Selected" ) );
 
   mNumHosts = 0;
   mIsOK = false;
@@ -430,17 +435,17 @@ void LDAPSearchDialog::slotHelp()
   kapp->invokeHelp( "ldap-queries" );
 }
 
-void LDAPSearchDialog::slotUser1()
+void LDAPSearchDialog::slotUnselectAll()
 {
   mResultListView->selectAll( false );
 }
 
-void LDAPSearchDialog::slotUser2()
+void LDAPSearchDialog::slotSelectAll()
 {
   mResultListView->selectAll( true );
 }
 
-void LDAPSearchDialog::slotUser3()
+void LDAPSearchDialog::slotUser1()
 {
 
   KABC::Resource *resource = mCore->requestResource( this );

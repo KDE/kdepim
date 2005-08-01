@@ -60,8 +60,8 @@ class LDAPSearchDialog : public KDialogBase
     void slotError( const QString& );
     virtual void slotHelp();
     virtual void slotUser1();
-    virtual void slotUser2();
-    virtual void slotUser3();
+    void slotSelectAll();
+    void slotUnselectAll();
 
   protected:
     QString selectedEMails() const;
