@@ -27,6 +27,8 @@
 
 #include <kabc/resource.h>
 #include <kdialog.h>
+#include <kglobal.h>
+#include <kiconloader.h>
 #include <kinputdialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -58,6 +60,7 @@ class ResourceItem : public QCheckListItem
         mResourceIdentifier()
     {
       setOn( resource->isActive() );
+      setPixmap( 0, KGlobal::iconLoader()->loadIcon( "contents", KIcon::Small ) );
       mChecked = isOn();
     }
 
@@ -70,6 +73,7 @@ class ResourceItem : public QCheckListItem
     {
       KPIM::ResourceABC* res = dynamic_cast<KPIM::ResourceABC *>( mResource );
       setOn( res->subresourceActive( mResourceIdentifier ) );
+      setPixmap( 0, KGlobal::iconLoader()->loadIcon( "contents", KIcon::Small ) );
       mChecked = isOn();
     }
 
