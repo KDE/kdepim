@@ -31,7 +31,9 @@
 #include <qradiobutton.h>
 
 #include <kaccelmanager.h>
+#include <kconfig.h>
 #include <kdebug.h>
+#include <kglobal.h>
 #include <kinputdialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -219,6 +221,8 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   installEventFilter( catcher );
   mContactView->installEventFilter( catcher );
 
+  mContactView->restoreLayout( KGlobal::config(), "DistributionListViewColumns" );
+
   KAcceleratorManager::manage( this );
 }
 
@@ -227,6 +231,8 @@ DistributionListWidget::~DistributionListWidget()
 #ifndef KDEPIM_NEW_DISTRLISTS
   delete mManager;
 #endif
+
+  mContactView->saveLayout( KGlobal::config(), "DistributionListViewColumns" );
 }
 
 void DistributionListWidget::save()
