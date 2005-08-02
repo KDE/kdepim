@@ -1,0 +1,111 @@
+====== PROKO2 release howto =====
+
+David Faure <faure@kde.org>, 02-Aug-2005.
+
+# First ensure that translations are uptodate, running "translate".
+# Packing kdepim doesn't pack the translations themselves, but still, 
+# at release time we have to ensure they are ok.
+
+#
+
+cd kde-common/release
+mkdir clean cache dirty sources
+
+echo kdepim > modules
+
+patch <<EOF
+
+Index: tag_all
+===================================================================
+--- tag_all     (revision 442387)
++++ tag_all     (working copy)
+@@ -90,6 +90,9 @@ fi
+ cd clean
+ for i in `cat ../modules`; do
+   set_urls $i
++  # proko2 hack (can't switch to the tag since it's only a partial one)
++  if test $subname = "kdepim"; then exit; fi
++
+   if test -d $subname; then
+        # svn switch has problems with externals replaced with copies
+        rm -rf $subname/admin $subname/scripts/admin $subname/libltdl
+
+--- common      (revision 442387)
++++ common      (working copy)
+@@ -5,6 +5,8 @@ version=$2
+
+ test -n "$package" || { echo "requires modulename as parameter"; exit 1; }
+
++export UNSERMAKE=no
++
+ if test -z "$version"; then
+
+ case $package in
+@@ -23,6 +25,9 @@ case $package in
+   koffice-l10n)
+     version=1.3.98
+     ;;
++  kdepim)
++    version=3.3.proko2.0.1
++    ;;
+   *)
+     version=3.4.2
+     ;;
+@@ -35,6 +40,11 @@ case $package in
+   *-l10n|*-i18n)
+     isl10n=1
+     ;;
++  kdepim)
++    # proko2 is based on 3.3, UNSERMAKE=no breaks it.
++    unset UNSERMAKE
++    export UNSERMAKE=
++    ;;
+ esac
+
+ if test -z "$scriptpath"; then
+@@ -42,6 +52,5 @@ if test -z "$scriptpath"; then
+ fi
+
+ export CDPATH=""
+-export UNSERMAKE=no  # very important for now :)
+ export package version scriptpath isl10n
+
+--- versions    (revision 442387)
++++ versions    (working copy)
+@@ -20,6 +20,12 @@ case $1 in
+     DESTURL=tags/koffice/1.4.0/$1
+     subname=$1
+     ;;
++  kdepim)
++    HEADURL=branches/kdepim/proko2/$1
++    DESTURL=tags/kdepim/proko2_0_1/$1
++    subname=$1
++    export UNSERMAKE=
++    ;;
+   *)
+     HEADURL=branches/KDE/3.4/$1
+     DESTURL=tags/KDE/3.4.2/$1
+EOF
+
+# Update the version number in "common" and the tagname in "versions"
+
+./tag_all
+# tag_all checks out the proko2 branch of kdepim into a temporary tagging directory
+# and then allows to commit - to create the tag.
+
+# Now check out kdepim in clean/, for instance by running checkout_proko2.sh there.
+# [NOTE: this is specific to proko2, usually tag_all does that]
+
+# If you used the "cache" feature with an older release, remove it first
+rm -rf cache/kdepim
+
+# Ready? OK, let's pack it:
+./pack kdepim
+
+# On failure it's always possible to restart from where it stopped, e.g. with
+# cd dirty ; ../dist kdepim  
+# if the "dist" step failed
+# (and then ../taritup kdepim  for the last step)
+# But if all goes well, "pack" will have done it all.
+
+# You can find the resulting tar.bz2 in sources/, scp it somewhere.
