@@ -290,7 +290,7 @@ ngwt__Note* IncidenceConverter::convertToNote( KCal::Journal* journal )
   }
 
   if ( !note->subject )
-    note->subject = qStringToString( QString("PLACEHOLDER SUBJECT") );
+    note->subject = qStringToString( QString("NO SUBJECT") );
   return note;
 }
 
@@ -613,118 +613,6 @@ void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence
   }
 }
 
-void IncidenceConverter::getRecurrence( ngwt__CalendarItem* item, KCal::Incidence* incidence)
-{
-  // is it daily, weekly, monthly, yearly - this determine how to proceed
-  kdDebug() << k_funcinfo << endl;
-  if ( item->rrule )
-  {
-    // get recurrence frequency ( eg every X units )
-    int rFreq = 1;
-    if ( item->rrule->interval )
-      rFreq = *item->rrule->interval;
-
-    if ( item->rrule->frequency )
-    {
-      KCal::Recurrence * r = incidence->recurrence();
-      switch ( *item->rrule->frequency )
-      {
-        case Daily:
-          kdDebug() << "item recurs daily" << endl;
-          r->setDaily( rFreq );
-          break;
-        case Weekly: {
-          kdDebug() << "item recurs weekly" << endl;
-          QBitArray days = getDayBitArray( item->rrule->byDay );
-          r->setWeekly( rFreq, days );
-          }
-          break;
-        case Monthly:
-          kdDebug() << "item recurs monthly" << endl;
-          // seems that this is not as well developed as the weeks - there's no space in RecurrenceRule for the DayOfMonth
-          // 3rd thursday in month is handled by DayOfWeek's occurrenceType attribute = first, second, third... last
-          r->setMonthly( rFreq );
-          break;
-        case Yearly:
-          kdDebug() << "item recurs yearly" << endl;
-          // annual recurrence
-          r->setYearly( rFreq );
-          // recurs on these months in year (jan, mar, aug) etc - is this in our Recurrence, can korg edit these fsckers?
-          if ( item->rrule->byMonth ) // recurs on the given date in the months given in byMonth
-          { // setYearlyByDate, and addYearlyNum
-            // iterate std::vector<unsigned char >month (from 0 to 11, Recurrence expects months to start at 1)
-            std::vector<unsigned char>::const_iterator it;
-            for ( it = item->rrule->byMonth->month.begin(); it != item->rrule->byMonth->month.end(); ++it )
-              r->addYearlyMonth( *it + 1);
-          }
-          else if ( item->rrule->byYearDay ) // recurs on the given days of the year.
-          {
-            // iterate std::vector<short>day  while ( day list )
-            std::vector<unsigned char>::const_iterator it;
-            for ( it = item->rrule->byMonth->month.begin(); it != item->rrule->byMonth->month.end(); ++it ) {
-              short dayOfYear = *it;
-              if ( dayOfYear < 1 )
-                dayOfYear = 365 - dayOfYear;
-              if ( dayOfYear == 0 ) // hack around 366 days in a Novell year
-                dayOfYear = 1;
-              r->addYearlyDay( dayOfYear );
-            }
-          }
-          break;
-      }
-      // get number of recurrences, defaults to -1 = recurs indefinitely
-      if ( item->rrule->until ) {
-        r->setEndDate( stringToQDate( item->rrule->until ) );
-      }
-      else
-      {
-        int duration = -1;
-        if ( item->rrule->count )
-          duration = *item->rrule->count;
-        r->setDuration( duration );
-      }
-    }
-  }
-}
-QBitArray IncidenceConverter::getDayBitArray( ngwt__DayOfWeekList * days )
-{
-  kdDebug() << k_funcinfo << endl;
-  QBitArray dayArray(7);
-  dayArray.fill( false );
-  if ( days )
-  {
-    std::vector<class ngwt__DayOfWeek * >::const_iterator it;
-    for ( it = days->day.begin(); it != days->day.end(); ++it )
-    {
-      switch ( (*it)->__item )
-      {
-        case Sunday:
-          dayArray[6] = true;
-          break;
-        case Monday:
-          dayArray[0] = true;
-          break;
-        case Tuesday:
-          dayArray[1] = true;
-          break;
-        case Wednesday:
-          dayArray[2] = true;
-          break;
-        case Thursday:
-          dayArray[3] = true;
-          break;
-        case Friday:
-          dayArray[4] = true;
-          break;
-        case Saturday:
-          dayArray[5] = true;
-          break;
-      }
-    }
-  }
-  return dayArray;
-}
-
 void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__CalendarItem * item )
 {
   kdDebug() << k_funcinfo << endl;
@@ -753,7 +641,11 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
       item->rrule->count = (long unsigned int *)soap_malloc( soap(), sizeof( long unsigned int * ) );
       *item->rrule->count = recur->duration();
     }
+#if KDE_IS_VERSION( 3, 4, 89 )
     else if ( recur->endDateTime().isValid() )
+#else
+		else if ( recur->endDate().isValid() )
+#endif
       item->rrule->until = qDateToString( recur->endDate() );
     else // GROUPWISE doesn't accept infinite recurrence so end after GW_MAX_RECURRENCES recurrences
     {
@@ -767,7 +659,11 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     item->rdate = soap_new_ngwt__RecurrenceDateType( soap(), -1 );
     item->rdate->date.push_back( startDate );*/
     // exceptions list - try sending empty list even if no exceptions
+#if KDE_IS_VERSION( 3, 4, 89 )
     KCal::DateList exceptions = recur->exDates();
+#else
+		KCal::DateList exceptions = incidence->exDates();
+#endif
     if ( !exceptions.isEmpty() )
     {
       item->exdate = soap_new_ngwt__RecurrenceDateType( soap(), -1 );
@@ -780,13 +676,21 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     }
   }
 
+#if KDE_IS_VERSION( 3, 4, 89 )
   if ( incidence->recurrenceType() == KCal::Recurrence::rDaily )
+#else
+  if ( incidence->doesRecur() == KCal::Recurrence::rDaily )
+#endif
   {
     kdDebug() << "incidence recurs daily" << endl;
     *freq = Daily;
     item->rrule->frequency = freq;
   }
+#if KDE_IS_VERSION( 3, 4, 89 )
   else if ( incidence->recurrenceType() == KCal::Recurrence::rWeekly )
+#else
+  else if ( incidence->doesRecur() == KCal::Recurrence::rWeekly )
+#endif
   {
     kdDebug() << "incidence recurs weekly" << endl;
     *freq = Weekly;
@@ -830,7 +734,11 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     // add the list of days to the recurrence rule
     item->rrule->byDay = weeklyDays;
   }
+#if KDE_IS_VERSION( 3, 4, 89 )
    else if ( incidence->recurrenceType() == KCal::Recurrence::rMonthlyDay )
+#else
+   else if ( incidence->doesRecur() == KCal::Recurrence::rMonthlyDay )
+#endif
   {
     kdDebug() << "incidence recurs monthly" << endl;
     ;
@@ -839,20 +747,35 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
 
     // TODO: translate '3rd wednesday of month' etc into rdates
   }
+#if KDE_IS_VERSION( 3, 4, 89 )
   else if ( incidence->recurrenceType() == KCal::Recurrence::rYearlyDay )
+#else
+  else if ( incidence->doesRecur() == KCal::Recurrence::rYearlyDay )
+#endif
   {
     kdDebug() << "incidence recurs yearly on day #" << endl;
     *freq = Yearly;
     item->rrule->frequency = freq;
     // TODO: translate '1st sunday in may'
     ngwt__DayOfYearList * daysOfYear = soap_new_ngwt__DayOfYearList( soap(), -1 );
+#if KDE_IS_VERSION( 3, 4, 89 )
     QValueList<int> rmd;
     rmd = recur->yearMonths();
     daysOfYear->day.push_back( rmd.first() );
+#else
+    QPtrList<int> rmd;
+    rmd = recur->yearNums();
+    daysOfYear->day.push_back( *rmd.first() );
+#endif
+
     item->rrule->byYearDay = daysOfYear;
     // no need to do MonthList recurrence as these will appear as separate instances when fetched from GW
   }
+#if KDE_IS_VERSION( 3, 4, 89 )
   else if ( incidence->recurrenceType() == KCal::Recurrence::rYearlyMonth )
+#else
+  else if ( incidence->doesRecur() == KCal::Recurrence::rYearlyMonth )
+#endif
   {
     kdDebug() << "incidence recurs yearly on monthday" << endl;
     *freq = Yearly;
