@@ -13,6 +13,9 @@ TODO: provide template-based, interpreted databases much like the
 TODO: give the knotes conduit a decent test mode.
 TODO: only re-write a local database if it is changed.
 
+2005-08-03  Jason 'vanRijn' Kasper
+* Bumping version number to 4.5.4 in case there's a KDE 3.4.3 release
+
 2005-07-20  Jason 'vanRijn' Kasper
 * D'oh!  Version number should change from 4.5.2 to 4.5.3 since we actually
   did do stuff since KDE 3.4.1, and being that 3.4.2 just got tagged 8
