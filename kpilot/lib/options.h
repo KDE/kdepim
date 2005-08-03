@@ -199,7 +199,7 @@ inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 #define FUNCTIONSETUPL(a) const int fname = a; Q_UNUSED(fname);
 #endif
 
-#define KPILOT_VERSION	"4.5.6 (blivit)"
+#define KPILOT_VERSION	"4.6.0 (blivit)"
 
 
 // Function to expand newlines in rich text to <br>\n
