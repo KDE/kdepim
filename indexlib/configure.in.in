@@ -1,0 +1,21 @@
+dnl The line below isn't really a comment, so don't remove
+dnl AC_OUTPUT(indexlib/indexlib-config)
+
+AC_ARG_WITH(boost-includedir,
+	AC_HELP_STRING([--with-boost-includedir],
+		[Specify the path to boost's headers]),
+	boost_includedir="$withval")
+
+AC_LANG_PUSH(C++)
+if test "x$boost_includedir" != "x"; then
+	CXXFLAGS="-I$boost_includedir $CXXFLAGS"
+fi
+
+AC_CHECK_HEADER(boost/format.hpp, have_boost=yes,have_boost=no)
+
+AC_LANG_POP
+
+#if test "x$have_boost" = "xno"; then
+#	CXXFLAGS="-DHAVE_BOOST $CXXFLAGS"
+#fi
+
