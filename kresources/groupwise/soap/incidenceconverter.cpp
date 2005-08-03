@@ -24,6 +24,7 @@
 #include <libkcal/event.h>
 #include <libkcal/journal.h>
 #include <libkcal/recurrence.h>
+#include <libkcal/kcalversion.h>
 #include <kabc/stdaddressbook.h>
 #include <kabc/addressee.h>
 #include <kdebug.h>
@@ -641,7 +642,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
       item->rrule->count = (long unsigned int *)soap_malloc( soap(), sizeof( long unsigned int * ) );
       *item->rrule->count = recur->duration();
     }
-#if KDE_IS_VERSION( 3, 4, 89 )
+#if LIBKCAL_IS_VERSION( 1, 3, 0 )
     else if ( recur->endDateTime().isValid() )
 #else
 		else if ( recur->endDate().isValid() )
@@ -659,7 +660,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     item->rdate = soap_new_ngwt__RecurrenceDateType( soap(), -1 );
     item->rdate->date.push_back( startDate );*/
     // exceptions list - try sending empty list even if no exceptions
-#if KDE_IS_VERSION( 3, 4, 89 )
+#if LIBKCAL_IS_VERSION( 1, 3, 0 )
     KCal::DateList exceptions = recur->exDates();
 #else
 		KCal::DateList exceptions = incidence->exDates();
@@ -676,7 +677,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     }
   }
 
-#if KDE_IS_VERSION( 3, 4, 89 )
+#if LIBKCAL_IS_VERSION( 1, 3, 0 )
   if ( incidence->recurrenceType() == KCal::Recurrence::rDaily )
 #else
   if ( incidence->doesRecur() == KCal::Recurrence::rDaily )
@@ -686,7 +687,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     *freq = Daily;
     item->rrule->frequency = freq;
   }
-#if KDE_IS_VERSION( 3, 4, 89 )
+#if LIBKCAL_IS_VERSION( 1, 3, 0 )
   else if ( incidence->recurrenceType() == KCal::Recurrence::rWeekly )
 #else
   else if ( incidence->doesRecur() == KCal::Recurrence::rWeekly )
@@ -734,7 +735,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     // add the list of days to the recurrence rule
     item->rrule->byDay = weeklyDays;
   }
-#if KDE_IS_VERSION( 3, 4, 89 )
+#if LIBKCAL_IS_VERSION( 1, 3, 0 )
    else if ( incidence->recurrenceType() == KCal::Recurrence::rMonthlyDay )
 #else
    else if ( incidence->doesRecur() == KCal::Recurrence::rMonthlyDay )
@@ -747,7 +748,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
 
     // TODO: translate '3rd wednesday of month' etc into rdates
   }
-#if KDE_IS_VERSION( 3, 4, 89 )
+#if LIBKCAL_IS_VERSION( 1, 3, 0 )
   else if ( incidence->recurrenceType() == KCal::Recurrence::rYearlyDay )
 #else
   else if ( incidence->doesRecur() == KCal::Recurrence::rYearlyDay )
@@ -758,7 +759,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     item->rrule->frequency = freq;
     // TODO: translate '1st sunday in may'
     ngwt__DayOfYearList * daysOfYear = soap_new_ngwt__DayOfYearList( soap(), -1 );
-#if KDE_IS_VERSION( 3, 4, 89 )
+#if LIBKCAL_IS_VERSION( 1, 3, 0 )
     QValueList<int> rmd;
     rmd = recur->yearMonths();
     daysOfYear->day.push_back( rmd.first() );
@@ -771,7 +772,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     item->rrule->byYearDay = daysOfYear;
     // no need to do MonthList recurrence as these will appear as separate instances when fetched from GW
   }
-#if KDE_IS_VERSION( 3, 4, 89 )
+#if LIBKCAL_IS_VERSION( 1, 3, 0 )
   else if ( incidence->recurrenceType() == KCal::Recurrence::rYearlyMonth )
 #else
   else if ( incidence->doesRecur() == KCal::Recurrence::rYearlyMonth )
