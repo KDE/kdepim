@@ -47,8 +47,12 @@ void quotes::remove( std::string name ) {
 }
 
 void quotes::add( const char * str, const char* doc ) {
-	impl_.add( str, doc );
-	docs_.add( str );
+	try {
+		impl_.add( str, doc );
+		docs_.add( str );
+	} catch ( const std::exception& e ) {
+		std::cerr << "error in quotes::add: " << e.what() << "\n";
+	}
 }
 
 void quotes::remove_doc( const char* doc ) {

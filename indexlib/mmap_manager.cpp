@@ -31,6 +31,7 @@
 
 #include "mmap_manager.h"
 #include "logfile.h"
+#include "exception.h"
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <strings.h>
@@ -39,6 +40,7 @@
 #include <unistd.h>
 #include "format.h"
 
+using indexlib::detail::errno_error;
 
 mmap_manager::mmap_manager( std::string filename )
 	:filename_( filename ),
@@ -51,12 +53,12 @@ mmap_manager::mmap_manager( std::string filename )
 	if ( fd_ > 0 ) {
 		struct stat st;
 		if ( fstat( fd_, &st ) == -1 ) {
-			throw "Error in stat()";
+			throw errno_error( "stat()" );
 		}
 		if ( st.st_size ) map( st.st_size );
 	} else {
 		fd_ = open( filename.c_str(), O_RDWR );
-		if ( !fd_ ) throw "Error opening file";
+		if ( !fd_ ) throw errno_error( "open()" );
 	}
 
 }
@@ -81,7 +83,7 @@ void mmap_manager::resize( unsigned ns ) {
 void mmap_manager::unmap() {
 	if ( !base_ ) return;
 	if ( munmap( base_, size_ ) == -1 ) {
-		throw "Error in munmap()"; // This should be BUG
+		throw errno_error( "munmap()" ); // This should be BUG
 	}
 	base_ = 0;
 	size_ = 0;
@@ -90,7 +92,7 @@ void mmap_manager::unmap() {
 void mmap_manager::map( unsigned size ) {
 	base_ = mmap( 0, size, PROT_READ|PROT_WRITE, MAP_SHARED, fd_, 0 );
 	if ( base_ == reinterpret_cast<void*>( -1 ) ) {
-		throw "Error in mmap()";
+		throw errno_error( "mmap()" );
 	}
 	size_ = size;
 }
