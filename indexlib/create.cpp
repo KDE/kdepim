@@ -58,16 +58,20 @@ indexlib::index_type::type type_of( const char* basename ) {
 std::auto_ptr<indexlib::index> indexlib::create( const char* basename, indexlib::index_type::type flags ) {
 	using namespace indexlib::version;
 	if ( type_of( basename ) !=  indexlib::index_type::none ) return std::auto_ptr<indexlib::index>( 0 );
-	std::ofstream info( path_concat( basename, "info" ).c_str() );
-	info << marker << std::endl;
-	info << "version " << major << '.' << minor << "\n";
-	if ( flags == index_type::quotes ) {
-		info << "quotes" << std::endl;
-		return std::auto_ptr<indexlib::index>( new quotes( basename ) );
-	}
-	if ( flags == index_type::ifile ) {
-		info << "ifile" << std::endl;
-		return std::auto_ptr<indexlib::index>( new ifile( basename ) );
+	try {
+		std::ofstream info( path_concat( basename, "info" ).c_str() );
+		info << marker << std::endl;
+		info << "version " << major << '.' << minor << "\n";
+		if ( flags == index_type::quotes ) {
+			info << "quotes" << std::endl;
+			return std::auto_ptr<indexlib::index>( new quotes( basename ) );
+		}
+		if ( flags == index_type::ifile ) {
+			info << "ifile" << std::endl;
+			return std::auto_ptr<indexlib::index>( new ifile( basename ) );
+		}
+	} catch ( const std::exception& e ) {
+		std::cerr << "index creation failed: " << e.what() << std::endl;
 	}
 	return std::auto_ptr<indexlib::index>( 0 );
 }
