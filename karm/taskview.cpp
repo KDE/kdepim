@@ -121,8 +121,9 @@ void TaskView::contentsMousePressEvent ( QMouseEvent * e )
   kdDebug(5970) << "entering contentsMousePressEvent" << endl;
   KListView::contentsMousePressEvent(e);
   Task *task = current_item();
+  int leftborder = treeStepSize() * ( current_item()->depth() + ( rootIsDecorated() ? 1 : 0)) + itemMargin();
   // if clicked onto the "completed" icon
-  if ( e->x()<=18  )
+  if ((leftborder < e->x()) && (e->x() < 19 + leftborder ))
   {
     if ( task->isComplete() ) task->setPercentComplete( 0, _storage );
     else task->setPercentComplete( 100, _storage );
