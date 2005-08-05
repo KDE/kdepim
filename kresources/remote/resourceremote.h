@@ -73,7 +73,7 @@ class KDE_EXPORT ResourceRemote : public ResourceCached
 
     void setDownloadUrl( const KURL & );
     KURL downloadUrl() const;
-    
+
     void setUploadUrl( const KURL & );
     KURL uploadUrl() const;
 
@@ -88,6 +88,9 @@ class KDE_EXPORT ResourceRemote : public ResourceCached
     bool isSaving();
 
     void dump() const;
+
+    bool setValue( const QString &key, const QString &value );
+
 
   protected slots:
     void slotLoadJobResult( KIO::Job * );

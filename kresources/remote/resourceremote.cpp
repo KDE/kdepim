@@ -64,7 +64,7 @@ ResourceRemote::ResourceRemote( const KURL &downloadUrl, const KURL &uploadUrl )
   : ResourceCached( 0 ), mUseProgressManager( false ), mUseCacheFile( false )
 {
   mDownloadUrl = downloadUrl;
-  
+
   if ( uploadUrl.isEmpty() ) {
     mUploadUrl = mDownloadUrl;
   } else {
@@ -310,6 +310,22 @@ void ResourceRemote::addInfoText( QString &txt ) const
 {
   txt += "<br>";
   txt += i18n("URL: %1").arg( mDownloadUrl.prettyURL() );
+}
+
+bool ResourceRemote::setValue( const QString &key, const QString &value )
+{
+  if ( key == "URL" ) {
+    setUploadUrl( KURL( value ) );
+    setDownloadUrl( KURL( value ) );
+    return true;
+  } else  if ( key == "DownloadURL" ) {
+    setDownloadUrl( KURL( value ) );
+    return true;
+  } else if ( key == "UploadURL" ) {
+    setUploadUrl( KURL( value ) );
+    return true;
+  } else
+    return ResourceCached::setValue( key, value );
 }
 
 #include "resourceremote.moc"

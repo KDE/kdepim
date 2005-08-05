@@ -178,5 +178,10 @@ void ResourceCalendar::saveError( const QString &err )
   emit resourceSaveError( this, msg );
 }
 
+bool ResourceCalendar::setValue( const QString &key, const QString &value )
+{
+  return false;
+}
+
 
 #include "resourcecalendar.moc"

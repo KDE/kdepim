@@ -149,6 +149,7 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     void dump() const;
 
     void setTimeZoneId( const QString &timeZoneId );
+    bool setValue( const QString &key, const QString &value );
 
   protected:
     bool doOpen();

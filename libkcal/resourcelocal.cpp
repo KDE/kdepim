@@ -203,4 +203,27 @@ QString ResourceLocal::fileName() const
   return mURL.path();
 }
 
+bool ResourceLocal::setFileName( const QString &fileName )
+{
+  bool open = isOpen();
+  if ( open ) close();
+  delete mLock;
+  mDirWatch.stopScan();
+  mDirWatch.removeFile( mURL.path() );
+  mURL = KURL( fileName );
+  mLock = new KABC::Lock( mURL.path() );
+  mDirWatch.addFile( mURL.path() );
+  mDirWatch.startScan();
+  return true;
+}
+
+bool ResourceLocal::setValue( const QString &key, const QString &value ) 
+{
+  if ( key == "File" ) {
+    return setFileName( value );
+  } else return false;
+}
+
+
+
 #include "resourcelocal.moc"

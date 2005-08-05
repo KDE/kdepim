@@ -496,4 +496,23 @@ void ResourceKABC::setTimeZoneId( const QString& tzid )
   mCalendar.setTimeZoneId( tzid );
 }
 
+bool ResourceKABC::setValue( const QString &key, const QString &value )
+{
+  if ( key == "AlarmDays" ) {
+    bool ok;
+    int days = value.toInt( &ok );
+    if ( ok ) mAlarmDays = days;
+    return ok;
+  } else if ( key == "Alarm" ) {
+    if ( value == "true" ) {
+      mAlarm = true;
+      return true;
+    } else if ( value == "false" ) {
+      mAlarm = false;
+      return true;
+    } else return false;
+  } else
+    return ResourceCalendar::setValue( key, value );
+}
+
 #include "resourcekabc.moc"

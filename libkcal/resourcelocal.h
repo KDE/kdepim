@@ -64,6 +64,9 @@ class LIBKCAL_EXPORT ResourceLocal : public ResourceCached
     KABC::Lock *lock();
 
     QString fileName() const;
+    bool setFileName( const QString &fileName );
+    bool setValue( const QString &key, const QString &value );
+
 
     void dump() const;
 

@@ -176,6 +176,27 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual Event::List rawEvents( const QDate &start, const QDate &end,
                                    bool inclusive = false ) = 0;
 
+    /**
+      Sets a particular value of the resource's configuration. The possible
+      keys are resource specific.
+
+      This method is provided to make it possible
+      to set resource-type specific settings without actually linking to 
+      the resource's library. Its use is discouraged, but in
+      some situations the only possibility to avoid unwanted compiling and
+      linking dependencies. E.g. if you don't want to link to the remote
+      resource, but need to create a remote resource at the URL given in
+      yourURL, you can use code like the following:
+        KCal::ResourceCalendar *res = manager->createResource( "remote" );
+        if ( res ) {
+          res->setTimeZoneId( timezone );
+          res->setResourceName( i18n("Test resource") );
+          res->setValue( "DownloadURL", yourURL );
+          manager->add( res );
+        }
+    */
+    virtual bool setValue( const QString &key, const QString &value );
+
   signals:
     /**
       This signal is emitted when the data in the resource has changed. The
