@@ -8,8 +8,7 @@
 # don't change these in Makefile.am, but rather in Makefile.am.in!
 COMPILE_BEFORE_libkpimidentities = libkdepim certmanager
 COMPILE_BEFORE_certmanager = libkdenetwork libkpgp
-COMPILE_BEFORE_korganizer = libkdepim libkpimidentities libkpimexchange kgantt kresources
-COMPILE_BEFORE_konsolekalendar = libkpimexchange
+COMPILE_BEFORE_korganizer = libkdepim libkpimidentities libkpimexchange kgantt
 COMPILE_BEFORE_kaddressbook = libkdepim certmanager akregator
 COMPILE_BEFORE_kandy = libkdepim
 COMPILE_BEFORE_kmail= libkdepim libkpimidentities certmanager libkpgp libkmime indexlib
