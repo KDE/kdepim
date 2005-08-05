@@ -65,6 +65,12 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     void setAlarmDays( int );
     int alarmDays();
 
+    void setCategories( const QStringList &categories );
+    QStringList categories() const;
+
+    void setUseCategories( bool useCategories );
+    bool useCategories() const;
+
     bool isSaving();
 
     KABC::Lock *lock();
@@ -159,6 +165,8 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
 
     int mAlarmDays;
     bool mAlarm;
+    QStringList mCategories;
+    bool mUseCategories;
     KABC::AddressBook *mAddressbook;
 
     KABC::Lock *mLock;

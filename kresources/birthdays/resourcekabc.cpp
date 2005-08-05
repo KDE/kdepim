@@ -66,7 +66,7 @@ extern "C"
 
 ResourceKABC::ResourceKABC( const KConfig* config )
   : ResourceCalendar( config ), mCalendar( QString::fromLatin1( "UTC" ) ),
-    mAlarmDays( 1 ), mAlarm( false )
+    mAlarmDays( 1 ), mAlarm( false ), mUseCategories( false )
 {
   if ( config ) {
     readConfig( config );
@@ -77,7 +77,7 @@ ResourceKABC::ResourceKABC( const KConfig* config )
 
 ResourceKABC::ResourceKABC()
   : ResourceCalendar( 0 ), mCalendar( QString::fromLatin1( "UTC" ) ),
-    mAlarmDays( 1 ), mAlarm( false )
+    mAlarmDays( 1 ), mAlarm( false ), mUseCategories( false )
 {
   init();
 }
@@ -102,6 +102,8 @@ void ResourceKABC::readConfig( const KConfig *config )
 {
   mAlarmDays = config->readNumEntry( "AlarmDays", 1 );
   mAlarm = config->readBoolEntry( "Alarm", false );
+  mCategories = config->readListEntry( "Categories" );
+  mUseCategories = config->readBoolEntry( "UseCategories", false );
 }
 
 void ResourceKABC::writeConfig( KConfig *config )
@@ -109,6 +111,8 @@ void ResourceKABC::writeConfig( KConfig *config )
   ResourceCalendar::writeConfig( config );
   config->writeEntry( "AlarmDays", mAlarmDays );
   config->writeEntry( "Alarm", mAlarm );
+  config->writeEntry( "Categories", mCategories );
+  config->writeEntry( "UseCategories", mUseCategories );
 }
 
 
@@ -130,11 +134,27 @@ bool ResourceKABC::doLoad()
 
   // import from kabc
   QString summary;
+  QStringList::ConstIterator strIt;
+  const QStringList::ConstIterator endStrIt = mCategories.end();
   KABC::Addressee::List anniversaries;
   KABC::Addressee::List::Iterator addrIt;
 
   KABC::AddressBook::Iterator it;
-  for ( it = mAddressbook->begin(); it != mAddressbook->end(); ++it ) {
+  const KABC::AddressBook::Iterator endIt = mAddressbook->end();
+  for ( it = mAddressbook->begin(); it != endIt; ++it ) {
+
+    if ( mUseCategories ) {
+      bool hasCategory = false;
+      QStringList categories = (*it).categories();
+      for ( strIt = mCategories.begin(); strIt != endStrIt; ++strIt )
+        if ( categories.contains( *strIt ) ) {
+          hasCategory = true;
+          break;
+        }
+
+      if ( !hasCategory )
+        continue;
+    }
 
     QDate birthdate = (*it).birthday().date();
     QString name_1, email_1, uid_1;
@@ -319,6 +339,26 @@ void ResourceKABC::setAlarmDays( int ad )
 int ResourceKABC::alarmDays()
 {
   return mAlarmDays;
+}
+
+void ResourceKABC::setCategories( const QStringList &categories )
+{
+  mCategories = categories;
+}
+
+QStringList ResourceKABC::categories() const
+{
+  return mCategories;
+}
+
+void ResourceKABC::setUseCategories( bool useCategories )
+{
+  mUseCategories = useCategories;
+}
+
+bool ResourceKABC::useCategories() const
+{
+  return mUseCategories;
 }
 
 bool ResourceKABC::doSave()
