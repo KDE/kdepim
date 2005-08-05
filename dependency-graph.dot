@@ -17,7 +17,6 @@ digraph "inter-dependency graph for kdepim" {
         "korganizer" -> "kontact";
         "korganizer" -> "wizards";
         "kresources" -> "karm";
-        "kresources" -> "korganizer";
         "kresources" -> "wizards";
         "ktnef" -> "libkcal";
         "libemailfunctions" -> "kmail";
@@ -65,7 +64,6 @@ digraph "inter-dependency graph for kdepim" {
         "libkpgp" -> "certmanager";
         "libkpgp" -> "kmail";
         "libkpgp" -> "knode";
-        "libkpimexchange" -> "konsolekalendar";
         "libkpimexchange" -> "korganizer";
         "libkpimexchange" -> "kresources";
         "libkpimidentities" -> "kmail";
