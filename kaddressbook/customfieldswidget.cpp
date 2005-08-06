@@ -221,9 +221,37 @@ void FieldWidget::removeField( const QString &identifier )
   }
 }
 
+void FieldWidget::clearFields()
+{
+  FieldRecordList::ConstIterator fieldIt;
+  for ( fieldIt = mFieldList.begin(); fieldIt != mFieldList.end(); ++fieldIt ) {
+    if ( (*fieldIt).mWidget->isA( "QLineEdit" ) ) {
+      QLineEdit *wdg = static_cast<QLineEdit*>( (*fieldIt).mWidget );
+      wdg->setText( QString() );
+    } else if ( (*fieldIt).mWidget->isA( "QSpinBox" ) ) {
+      QSpinBox *wdg = static_cast<QSpinBox*>( (*fieldIt).mWidget );
+      wdg->setValue( 0 );
+    } else if ( (*fieldIt).mWidget->isA( "QCheckBox" ) ) {
+      QCheckBox *wdg = static_cast<QCheckBox*>( (*fieldIt).mWidget );
+      wdg->setChecked( true );
+    } else if ( (*fieldIt).mWidget->isA( "QDateEdit" ) ) {
+      QDateEdit *wdg = static_cast<QDateEdit*>( (*fieldIt).mWidget );
+      wdg->setDate( QDate::currentDate() );
+    } else if ( (*fieldIt).mWidget->isA( "QTimeEdit" ) ) {
+      QTimeEdit *wdg = static_cast<QTimeEdit*>( (*fieldIt).mWidget );
+      wdg->setTime( QTime::currentTime() );
+    } else if ( (*fieldIt).mWidget->isA( "QDateTimeEdit" ) ) {
+      QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( (*fieldIt).mWidget );
+      wdg->setDateTime( QDateTime::currentDateTime() );
+    }
+  }
+}
+
 void FieldWidget::loadContact( KABC::Addressee *addr )
 {
   const QStringList customs = addr->customs();
+
+  clearFields();
 
   QStringList::ConstIterator it;
   for ( it = customs.begin(); it != customs.end(); ++it ) {

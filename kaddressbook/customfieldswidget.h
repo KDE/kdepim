@@ -101,6 +101,7 @@ class FieldWidget : public QWidget
     FieldRecordList fields() const { return mFieldList; }
 
     void removeLocalFields();
+    void clearFields();
 
   signals:
     void changed();
