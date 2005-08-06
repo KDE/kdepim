@@ -50,7 +50,7 @@ PwDeleteCommand::~PwDeleteCommand()
 
 QString PwDeleteCommand::name() const
 {
-  return i18n( "Delete" );
+  return i18n( "Delete Contact", "Delete Contacts", mUIDList.count() );
 }
 
 void PwDeleteCommand::unexecute()
@@ -101,7 +101,7 @@ PwPasteCommand::PwPasteCommand( KAB::Core *core,
 
 QString PwPasteCommand::name() const
 {
-  return i18n( "Paste" );
+  return i18n( "Paste Contact", "Paste Contacts", mAddresseeList.count() );
 }
 
 void PwPasteCommand::unexecute()
@@ -190,7 +190,7 @@ PwEditCommand::~PwEditCommand()
 
 QString PwEditCommand::name() const
 {
-  return i18n( "Entry Edit" );
+  return i18n( "Edit Contact" );
 }
 
 void PwEditCommand::unexecute()
@@ -217,7 +217,7 @@ PwCutCommand::PwCutCommand( KABC::AddressBook *ab, const QStringList &uidList )
 
 QString PwCutCommand::name() const
 {
-  return i18n( "Cut" );
+  return i18n( "Cut Contact", "Cut Contacts", mUIDList.count() );
 }
 
 void PwCutCommand::unexecute()
