@@ -94,8 +94,7 @@ void XXPortManager::slotImport( const QString &identifier, const QString &data )
     (*it).setResource( resource );
     // We use a PwNewCommand so the user can undo it.
     PwNewCommand *command = new PwNewCommand( mCore->addressBook(), *it );
-    UndoStack::instance()->push( command );
-    RedoStack::instance()->clear();
+    mCore->commandHistory()->addCommand( command );
     imported = true;
   }
 

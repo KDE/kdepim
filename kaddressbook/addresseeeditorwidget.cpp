@@ -33,6 +33,7 @@
 #include <qtooltip.h>
 
 #include <kabc/resource.h>
+#include <kabc/stdaddressbook.h>
 #include <kaccelmanager.h>
 #include <kapplication.h>
 #include <kconfig.h>
@@ -55,7 +56,6 @@
 
 #include "addresseditwidget.h"
 #include "advancedcustomfields.h"
-#include "core.h"
 #include "emaileditwidget.h"
 #include "imeditwidget.h"
 #include "kabprefs.h"
@@ -66,9 +66,8 @@
 
 #include "addresseeeditorwidget.h"
 
-AddresseeEditorWidget::AddresseeEditorWidget( KAB::Core *core, bool isExtension,
-                                              QWidget *parent, const char *name )
-  : AddresseeEditorBase( core, isExtension, parent, name ),
+AddresseeEditorWidget::AddresseeEditorWidget( QWidget *parent, const char *name )
+  : AddresseeEditorBase( parent, name ),
     mBlockSignals( false ), mReadOnly( false )
 {
   kdDebug(5720) << "AddresseeEditorWidget()" << endl;
@@ -456,7 +455,7 @@ void AddresseeEditorWidget::setupAdditionalTabs()
     }
 
     KAB::ContactEditorWidget *widget
-              = manager->factory( i )->createWidget( core()->addressBook(),
+              = manager->factory( i )->createWidget( KABC::StdAddressBook::self( true ),
                                                      page );
     if ( widget )
       page->addWidget( widget );
@@ -478,7 +477,7 @@ void AddresseeEditorWidget::setupCustomFieldsTabs()
       continue;
 
     ContactEditorTabPage *page = new ContactEditorTabPage( mTabWidget );
-    AdvancedCustomFields *wdg = new AdvancedCustomFields( *it, core()->addressBook(), page );
+    AdvancedCustomFields *wdg = new AdvancedCustomFields( *it, KABC::StdAddressBook::self( true ), page );
     if ( wdg ) {
       mTabPages.insert( wdg->pageIdentifier(), page );
       mTabWidget->addTab( page, wdg->pageTitle() );
@@ -795,20 +794,12 @@ void AddresseeEditorWidget::editCategories()
 
 void AddresseeEditorWidget::emitModified()
 {
+  if ( mBlockSignals )
+    return;
+
   mDirty = true;
 
-  if ( !mBlockSignals ) {
-    KABC::Addressee::List list;
-
-    save();
-    list.append( mAddressee );
-
-    // I hate these hacks...
-    if ( !isExtension() )
-      mDirty = true;
-
-    emit modified( list );
-  }
+  emit modified();
 }
 
 void AddresseeEditorWidget::dateChanged( const QDate& )
@@ -825,16 +816,6 @@ void AddresseeEditorWidget::pageChanged( QWidget *wdg )
 {
   if ( wdg )
     KAcceleratorManager::manage( wdg );
-}
-
-QString AddresseeEditorWidget::title() const
-{
-  return i18n( "Contact Editor" );
-}
-
-QString AddresseeEditorWidget::identifier() const
-{
-  return "contact_editor";
 }
 
 void AddresseeEditorWidget::setInitialFocus()

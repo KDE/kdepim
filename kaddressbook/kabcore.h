@@ -136,6 +136,8 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     KAB::SearchManager *searchManager() const { return mSearchManager; }
 
+    KCommandHistory *commandHistory() const { return mCommandHistory; }
+
 #ifdef KDEPIM_NEW_DISTRLISTS
     /**
       Returns all the distribution lists.
@@ -305,16 +307,6 @@ class KDE_EXPORT KABCore : public KAB::Core
     void save();
 
     /**
-      Undos the last command using the undo stack.
-     */
-    void undo();
-
-    /**
-      Redos the last command that was undone, using the redo stack.
-     */
-    void redo();
-
-    /**
       Shows the edit dialog for the given uid. If the uid is QString::null,
       the method will try to find a selected addressee in the view.
      */
@@ -357,7 +349,6 @@ class KDE_EXPORT KABCore : public KAB::Core
     void extensionModified( const KABC::Addressee::List &list );
     void extensionDeleted( const QStringList &uidList );
     void clipboardDataChanged();
-    void updateActionMenu();
     void updateIncSearchWidget();
 
     void slotEditorDestroyed( const QString &uid );
@@ -418,14 +409,14 @@ class KDE_EXPORT KABCore : public KAB::Core
     KAction *mActionMail;
     KAction *mActionMailVCard;
     KAction *mActionChat;
-    KAction *mActionUndo;
-    KAction *mActionRedo;
     KAction *mActionSave;
     KAction *mActionDeleteView;
     KAction *mActionWhoAmI;
     KAction *mActionCategories;
     KToggleAction *mActionJumpBar;
     KToggleAction *mActionDetails;
+
+    KCommandHistory *mCommandHistory;
 
     KAddressBookService *mAddressBookService;
 

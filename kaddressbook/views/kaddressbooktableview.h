@@ -36,7 +36,6 @@
 #include <qstringlist.h>
 #include <qvaluelist.h>
 
-#include "undo.h"
 #include "kaddressbookview.h"
 
 class QListViewItem;

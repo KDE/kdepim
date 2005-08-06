@@ -33,8 +33,7 @@ class SimpleAddresseeEditor : public AddresseeEditorBase
 {
     Q_OBJECT
   public:
-    SimpleAddresseeEditor( KAB::Core *core, bool isExtension,
-                           QWidget *parent, const char *name = 0 );
+    SimpleAddresseeEditor( QWidget *parent, const char *name = 0 );
     ~SimpleAddresseeEditor();
 
     void setAddressee( const KABC::Addressee& );
@@ -46,9 +45,6 @@ class SimpleAddresseeEditor : public AddresseeEditorBase
     bool dirty();
 
     void setInitialFocus();
-
-    QString title() const;
-    QString identifier() const;
 
   protected slots:
     void emitModified();

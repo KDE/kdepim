@@ -30,8 +30,7 @@
 #include <qsignalmapper.h>
 #include <qtimer.h>
 
-#include "addresseeeditorwidget.h"
-#include "simpleaddresseeeditor.h"
+#include "addresseeeditorextension.h"
 #include "core.h"
 #include "kabprefs.h"
 
@@ -181,11 +180,7 @@ void ExtensionManager::createExtensionWidgets()
 
   {
     // add addressee editor as default
-    if ( KABPrefs::instance()->editorType() == KABPrefs::SimpleEditor ) {
-      wdg = new SimpleAddresseeEditor( mCore, true, this );
-    } else {
-      wdg = new AddresseeEditorWidget( mCore, true, this );
-    }
+    wdg = new AddresseeEditorExtension( mCore, this );
     wdg->hide();
 
     connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),

@@ -83,8 +83,8 @@
 KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                   const QString &file, const char *name )
   : KAB::Core( client, parent, name ), mStatusBar( 0 ), mViewManager( 0 ),
-    mExtensionManager( 0 ), mCategorySelectDialog( 0 ), mCategoryEditDialog( 0 ),
-    mLdapSearchDialog( 0 ), mJumpButtonBar( 0 ), mReadWrite( readWrite ),
+    mExtensionManager( 0 ), mJumpButtonBar( 0 ), mCategorySelectDialog( 0 ),
+    mCategoryEditDialog( 0 ), mLdapSearchDialog( 0 ), mReadWrite( readWrite ),
     mModified( false )
 {
   mWidget = new QWidget( parent, name );
@@ -167,6 +167,10 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
            mViewManager, SLOT( scrollDown() ) );
 
   mAddressBookService = new KAddressBookService( this );
+
+  mCommandHistory = new KCommandHistory( actionCollection(), true );
+  connect( mCommandHistory, SIGNAL( commandExecuted() ),
+           mSearchManager, SLOT( reload() ) );
 
   mSearchManager->reload();
 
@@ -403,13 +407,13 @@ void KABCore::deleteContacts( const QStringList &uids )
       ++it;
     }
 
-	    if ( KMessageBox::warningContinueCancelList( mWidget, i18n( "Do you really want to delete this contact?", "Do you really want to delete these %n contacts?", uids.count() ),
-		 names, "", KStdGuiItem::del() ) == KMessageBox::Cancel )
+    if ( KMessageBox::warningContinueCancelList( mWidget, i18n( "Do you really want to delete this contact?",
+                                                 "Do you really want to delete these %n contacts?", uids.count() ),
+                                                 names, "", KStdGuiItem::del() ) == KMessageBox::Cancel )
       return;
 
     PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uids );
-    UndoStack::instance()->push( command );
-    RedoStack::instance()->clear();
+    mCommandHistory->addCommand( command );
 
     // now if we deleted anything, refresh
     setContactSelected( QString::null );
@@ -435,8 +439,7 @@ void KABCore::cutContacts()
 
   if ( uidList.size() > 0 ) {
     PwCutCommand *command = new PwCutCommand( mAddressBook, uidList );
-    UndoStack::instance()->push( command );
-    RedoStack::instance()->clear();
+    mCommandHistory->addCommand( command );
 
     setModified( true );
   }
@@ -460,8 +463,7 @@ void KABCore::pasteContacts( KABC::Addressee::List &list )
     (*it).setResource( resource );
 
   PwPasteCommand *command = new PwPasteCommand( this, list );
-  UndoStack::instance()->push( command );
-  RedoStack::instance()->clear();
+  mCommandHistory->addCommand( command );
 
   setModified( true );
 }
@@ -484,12 +486,10 @@ void KABCore::mergeContacts()
   }
 
   PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uids );
-  UndoStack::instance()->push( command );
-  RedoStack::instance()->clear();
+  mCommandHistory->addCommand( command );
 
   PwEditCommand *editCommand = new PwEditCommand( mAddressBook, origAddr, addr );
-  UndoStack::instance()->push( editCommand );
-  RedoStack::instance()->clear();
+  mCommandHistory->addCommand( editCommand );
 
   mSearchManager->reload();
 }
@@ -562,8 +562,7 @@ void KABCore::contactModified( const KABC::Addressee &addr )
     command = new PwEditCommand( mAddressBook, origAddr, addr );
   }
 
-  UndoStack::instance()->push( command );
-  RedoStack::instance()->clear();
+  mCommandHistory->addCommand( command );
 
   setContactSelected( addr.uid() );
   setModified( true );
@@ -721,22 +720,6 @@ void KABCore::save()
   }
 }
 
-void KABCore::undo()
-{
-  UndoStack::instance()->undo();
-
-  // Refresh the view
-  mViewManager->refreshView();
-}
-
-void KABCore::redo()
-{
-  RedoStack::instance()->redo();
-
-  // Refresh the view
-  mViewManager->refreshView();
-}
-
 void KABCore::setJumpButtonBarVisible( bool visible )
 {
   if ( visible ) {
@@ -770,29 +753,24 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
       else
         command = new PwEditCommand( mAddressBook, origAddr, *it );
 
-      UndoStack::instance()->push( command );
-      RedoStack::instance()->clear();
+      mCommandHistory->blockSignals( true );
+      mCommandHistory->addCommand( command );
+      mCommandHistory->blockSignals( false );
     }
 
-    setModified( true );
+    mModified = true;
+    mActionSave->setEnabled( true );
   }
-
-  if ( list.count() == 0 )
-    mViewManager->refreshView();
-  else
-    mViewManager->refreshView( list[ 0 ].uid() );
 }
 
 void KABCore::extensionDeleted( const QStringList &uidList )
 {
   PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uidList );
-  UndoStack::instance()->push( command );
-  RedoStack::instance()->clear();
+  mCommandHistory->addCommand( command );
 
   // now if we deleted anything, refresh
   setContactSelected( QString::null );
   setModified( true );
-  mViewManager->refreshView();
 }
 
 QString KABCore::getNameByPhone( const QString &phone )
@@ -1069,14 +1047,12 @@ void KABCore::initActions()
   mActionCut = KStdAction::cut( this, SLOT( cutContacts() ), actionCollection() );
   mActionPaste = KStdAction::paste( this, SLOT( pasteContacts() ), actionCollection() );
   action = KStdAction::selectAll( this, SLOT( selectAllContacts() ), actionCollection() );
-  mActionUndo = KStdAction::undo( this, SLOT( undo() ), actionCollection() );
-  mActionRedo = KStdAction::redo( this, SLOT( redo() ), actionCollection() );
   mActionCopy->setWhatsThis( i18n( "Copy the currently selected contact(s) to system clipboard in vCard format." ) );
   mActionCut->setWhatsThis( i18n( "Cuts the currently selected contact(s) to system clipboard in vCard format." ) );
   mActionPaste->setWhatsThis( i18n( "Paste the previously cut or copied contacts from clipboard." ) );
   action->setWhatsThis( i18n( "Selects all visible contacts from current view." ) );
-  mActionUndo->setWhatsThis( i18n( "Undoes the last <b>Cut</b>, <b>Copy</b> or <b>Paste</b>." ) );
-  mActionRedo->setWhatsThis( i18n( "Redoes the last <b>Cut</b>, <b>Copy</b> or <b>Paste</b>." ) );
+//  mActionUndo->setWhatsThis( i18n( "Undoes the last <b>Cut</b>, <b>Copy</b> or <b>Paste</b>." ) );
+//  mActionRedo->setWhatsThis( i18n( "Redoes the last <b>Cut</b>, <b>Copy</b> or <b>Paste</b>." ) );
 
   mActionDelete = new KAction( i18n( "&Delete Contact" ), "editdelete",
                                Key_Delete, this, SLOT( deleteContacts() ),
@@ -1090,8 +1066,8 @@ void KABCore::initActions()
   mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." ) );
 
 
-  mActionUndo->setEnabled( false );
-  mActionRedo->setEnabled( false );
+//  mActionUndo->setEnabled( false );
+//  mActionRedo->setEnabled( false );
 
   // settings menu
   mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,
@@ -1137,35 +1113,12 @@ void KABCore::initActions()
 				     "Clears the content of the quick search bar." ) );
 
   clipboardDataChanged();
-
-  connect( UndoStack::instance(), SIGNAL( changed() ), SLOT( updateActionMenu() ) );
-  connect( RedoStack::instance(), SIGNAL( changed() ), SLOT( updateActionMenu() ) );
 }
 
 void KABCore::clipboardDataChanged()
 {
   if ( mReadWrite )
     mActionPaste->setEnabled( !QApplication::clipboard()->text().isEmpty() );
-}
-
-void KABCore::updateActionMenu()
-{
-  UndoStack *undo = UndoStack::instance();
-  RedoStack *redo = RedoStack::instance();
-
-  if ( undo->isEmpty() )
-    mActionUndo->setText( i18n( "Undo" ) );
-  else
-    mActionUndo->setText( i18n( "Undo %1" ).arg( undo->top()->name() ) );
-
-  mActionUndo->setEnabled( !undo->isEmpty() );
-
-  if ( !redo->top() )
-    mActionRedo->setText( i18n( "Redo" ) );
-  else
-    mActionRedo->setText( i18n( "Redo %1" ).arg( redo->top()->name() ) );
-
-  mActionRedo->setEnabled( !redo->isEmpty() );
 }
 
 void KABCore::updateIncSearchWidget()

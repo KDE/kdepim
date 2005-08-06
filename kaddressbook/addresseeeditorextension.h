@@ -1,6 +1,6 @@
 /*
     This file is part of KAddressBook.
-    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,39 +21,39 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef ADDRESSEEEDITORBASE_H
-#define ADDRESSEEEDITORBASE_H
+#ifndef ADDRESSEEEDITOREXTENSION_H
+#define ADDRESSEEEDITOREXTENSION_H
 
-#include <kabc/addressee.h>
+#include "addresseeeditorbase.h"
+#include "extensionwidget.h"
 
-#include <qwidget.h>
-
-class AddresseeEditorBase : public QWidget
+class AddresseeEditorExtension : public KAB::ExtensionWidget
 {
   Q_OBJECT
 
   public:
-    AddresseeEditorBase( QWidget *parent, const char *name = 0 )
-      : QWidget( parent, name )
-    {
-    }
+    AddresseeEditorExtension( KAB::Core *core, QWidget *parent, const char *name = 0 );
+    ~AddresseeEditorExtension();
 
-    ~AddresseeEditorBase() {}
+    /**
+      This method is called whenever the selection in the view changed.
+     */
+    virtual void contactsSelectionChanged();
 
-    virtual void setAddressee( const KABC::Addressee& ) = 0;
-    virtual const KABC::Addressee &addressee() = 0;
+    /**
+      This method should be reimplemented and return the i18ned title of this
+      widget.
+     */
+    virtual QString title() const;
 
-    virtual void setInitialFocus() = 0;
+    /**
+      This method should be reimplemented and return a unique identifier.
+     */
+    virtual QString identifier() const;
 
-    virtual void load() = 0;
-    virtual void save() = 0;
-
-    virtual bool dirty() = 0;
-
-    virtual bool readyToClose() { return true; }
-
-  signals:
-    void modified();
+  private:
+    AddresseeEditorBase *mAddresseeEditor;
+    bool mDirty;
 };
 
 #endif

@@ -1,6 +1,7 @@
 /*
     This file is part of KAddressBook.
     Copyright (C) 1999 Don Sanders <sanders@kde.org>
+                  2005 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,21 +22,37 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef UNDOCMDS_H
-#define UNDOCMDS_H
+#ifndef COMMANDS_H
+#define COMMANDS_H
 
 // Commands for undo/redo functionality.
 
 #include <qstring.h>
 #include <qstringlist.h>
 
+#include <kabc/addressbook.h>
 #include <kabc/addressee.h>
+#include <kcommand.h>
 
-#include "undo.h"
+#include "kablock.h"
 
 namespace KAB {
 class Core;
 }
+
+class Command : public KCommand
+{
+  public:
+    Command( KABC::AddressBook *addressBook ) { mAddressBook = addressBook; }
+    virtual ~Command() {};
+
+  protected:
+    KABC::AddressBook *addressBook() const { return mAddressBook; }
+    KABLock *lock() const { return KABLock::self( mAddressBook ); }
+
+  private:
+    KABC::AddressBook *mAddressBook;
+};
 
 class PwDeleteCommand : public Command
 {
@@ -43,9 +60,9 @@ class PwDeleteCommand : public Command
     PwDeleteCommand( KABC::AddressBook *ab, const QStringList &uidList );
     virtual ~PwDeleteCommand();
 
-    virtual QString name();
-    virtual bool undo();
-    virtual bool redo();
+    virtual QString name() const;
+    virtual void unexecute();
+    virtual void execute();
 
   private:
     KABC::Addressee::List mAddresseeList;
@@ -57,9 +74,9 @@ class PwPasteCommand : public Command
   public:
     PwPasteCommand( KAB::Core *core, const KABC::Addressee::List &list );
 
-    virtual QString name();
-    virtual bool undo();
-    virtual bool redo();
+    virtual QString name() const;
+    virtual void unexecute();
+    virtual void execute();
 
   private:
     KAB::Core *mCore;
@@ -71,9 +88,9 @@ class PwCutCommand : public Command
   public:
     PwCutCommand( KABC::AddressBook *ab, const QStringList &uidList );
 
-    virtual QString name();
-    virtual bool undo();
-    virtual bool redo();
+    virtual QString name() const;
+    virtual void unexecute();
+    virtual void execute();
 
   private:
     KABC::Addressee::List mAddresseeList;
@@ -88,9 +105,9 @@ class PwNewCommand : public Command
     PwNewCommand( KABC::AddressBook *ab, const KABC::Addressee &a );
     ~PwNewCommand();
 
-    virtual QString name();
-    virtual bool undo();
-    virtual bool redo();
+    virtual QString name() const;
+    virtual void unexecute();
+    virtual void execute();
 
   private:
     KABC::Addressee mAddr;
@@ -103,9 +120,9 @@ class PwEditCommand : public Command
                    const KABC::Addressee &newAddr );
     virtual ~PwEditCommand();
 
-    virtual QString name();
-    virtual bool undo();
-    virtual bool redo();
+    virtual QString name() const;
+    virtual void unexecute();
+    virtual void execute();
 
   private:
     KABC::Addressee mOldAddr;

@@ -1,6 +1,6 @@
 /*
     This file is part of KAddressBook.
-    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,39 +21,4 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef ADDRESSEEEDITORBASE_H
-#define ADDRESSEEEDITORBASE_H
-
-#include <kabc/addressee.h>
-
-#include <qwidget.h>
-
-class AddresseeEditorBase : public QWidget
-{
-  Q_OBJECT
-
-  public:
-    AddresseeEditorBase( QWidget *parent, const char *name = 0 )
-      : QWidget( parent, name )
-    {
-    }
-
-    ~AddresseeEditorBase() {}
-
-    virtual void setAddressee( const KABC::Addressee& ) = 0;
-    virtual const KABC::Addressee &addressee() = 0;
-
-    virtual void setInitialFocus() = 0;
-
-    virtual void load() = 0;
-    virtual void save() = 0;
-
-    virtual bool dirty() = 0;
-
-    virtual bool readyToClose() { return true; }
-
-  signals:
-    void modified();
-};
-
-#endif
+#include "addresseeeditorbase.moc"

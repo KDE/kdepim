@@ -30,19 +30,14 @@
 
 #include "simpleaddresseeeditor.h"
 
-SimpleAddresseeEditor::SimpleAddresseeEditor( KAB::Core *core, bool isExtension,
-                                              QWidget *parent, const char *name )
-  : AddresseeEditorBase( core, isExtension, parent, name ), mDirty( false ),
+SimpleAddresseeEditor::SimpleAddresseeEditor( QWidget *parent, const char *name )
+  : AddresseeEditorBase( parent, name ),
+    mDirty( false ),
     mBlockModified( false )
 {
   kdDebug(5720) << "SimpleAddresseeEditor()" << endl;
 
   initGui();
-
-  // Load the empty addressee as defaults
-  load();
-
-  mDirty = false;
 }
 
 SimpleAddresseeEditor::~SimpleAddresseeEditor()
@@ -72,7 +67,7 @@ void SimpleAddresseeEditor::initGui()
   QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(),
                                             KDialog::spacingHint() );
 
-  QLabel *label = new QLabel( i18n("Name:" ), this );
+  QLabel *label = new QLabel( i18n( "Name:" ), this );
   topLayout->addWidget( label, 0, 0 );
 
   mNameEdit = new KLineEdit( this );
@@ -80,7 +75,7 @@ void SimpleAddresseeEditor::initGui()
   connect( mNameEdit, SIGNAL( textChanged( const QString & ) ),
            SLOT( emitModified() ) );
 
-  label = new QLabel( i18n("Email:" ), this );
+  label = new QLabel( i18n( "Email:" ), this );
   topLayout->addWidget( label, 1, 0 );
 
   mEmailEdit = new KLineEdit( this );
@@ -99,7 +94,6 @@ void SimpleAddresseeEditor::load()
   mBlockModified = true;
 
   mNameEdit->setText( mAddressee.assembledName() );
-
   mEmailEdit->setText( mAddressee.preferredEmail() );
 
   mBlockModified = false;
@@ -122,28 +116,14 @@ bool SimpleAddresseeEditor::dirty()
   return mDirty;
 }
 
-QString SimpleAddresseeEditor::title() const
-{
-  return i18n( "Simple Contact Editor" );
-}
-
-QString SimpleAddresseeEditor::identifier() const
-{
-  return "simple_contact_editor";
-}
-
 void SimpleAddresseeEditor::emitModified()
 {
+  if ( mBlockModified )
+    return;
+
   mDirty = true;
 
-  KABC::Addressee::List list;
-
-  if ( isExtension() && !mBlockModified ) {
-    save();
-    list.append( mAddressee );
-  }
-
-  emit modified( list );
+  emit modified();
 }
 
 #include "simpleaddresseeeditor.moc"

@@ -29,7 +29,7 @@ libkaddressbookpart_la_LIBADD = libkaddressbook.la
 
 lib_LTLIBRARIES = libkaddressbook.la
 libkaddressbook_la_SOURCES = addresseeconfig.cpp addresseeeditordialog.cpp \
-    addresseeeditorwidget.cpp addresseeutil.cpp addresseditwidget.cpp \
+    addresseeeditorwidget.cpp addresseeeditorbase.cpp addresseeeditorextension.cpp addresseeutil.cpp addresseditwidget.cpp \
     addviewdialog.cpp emaileditwidget.cpp extensionmanager.cpp \
     filtereditdialog.cpp filterselectionwidget.cpp geowidget.cpp \
     imagewidget.cpp incsearchwidget.cpp jumpbuttonbar.cpp kabcore.cpp kablock.cpp \
@@ -37,7 +37,7 @@ libkaddressbook_la_SOURCES = addresseeconfig.cpp addresseeeditordialog.cpp \
     kaddressbookview.cpp keywidget.cpp ldapsearchdialog.cpp nameeditdialog.cpp \
     phoneeditwidget.cpp secrecywidget.cpp soundwidget.cpp \
     viewconfigurefieldspage.cpp viewconfigurefilterpage.cpp \
-    viewconfigurewidget.cpp undo.cpp undocmds.cpp viewmanager.cpp \
+    viewconfigurewidget.cpp undocmds.cpp viewmanager.cpp \
     xxportmanager.cpp xxportselectdialog.cpp contacteditorwidgetmanager.cpp \
     simpleaddresseeeditor.cpp advancedcustomfields.cpp customfieldswidget.cpp \
     freebusywidget.cpp searchmanager.cpp imeditwidget.cpp kabtools.cpp
@@ -64,7 +64,7 @@ noinst_HEADERS = \
     incsearchwidget.h jumpbuttonbar.h kablock.h kaddressbook_part.h \
     kaddressbookservice.h kaddressbookview.h keywidget.h \
     ldapsearchdialog.h nameeditdialog.h phoneeditwidget.h secrecywidget.h \
-    soundwidget.h typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \
+    soundwidget.h typecombo.h undocmds.h viewconfigurefieldspage.h \
     viewconfigurefilterpage.h viewconfigurewidget.h viewmanager.h xxportmanager.h \
     xxportselectdialog.h advancedcustomfields.h imeditwidget.h
 

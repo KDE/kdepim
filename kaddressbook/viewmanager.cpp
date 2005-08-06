@@ -112,9 +112,9 @@ void ViewManager::saveSettings()
 
 QStringList ViewManager::selectedUids() const
 {
-  if ( mActiveView )
+  if ( mActiveView ) {
     return mActiveView->selectedUids();
-  else
+  } else
     return QStringList();
 }
 

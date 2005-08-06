@@ -1,6 +1,7 @@
 /*
     This file is part of KAddressBook.
     Copyright (C) 1999 Don Sanders <sanders@kde.org>
+                  2005 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,14 +22,11 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qtextstream.h>
 #include <qapplication.h>
 #include <qclipboard.h>
 
 #include <klocale.h>
-#include <kdebug.h>
 #include <kapplication.h>
-#include <kabc/addressbook.h>
 
 #include "addresseeutil.h"
 #include "addresseeconfig.h"
@@ -44,19 +42,18 @@ PwDeleteCommand::PwDeleteCommand( KABC::AddressBook *ab,
                                   const QStringList &uidList)
   : Command( ab ), mAddresseeList(), mUIDList( uidList )
 {
-  redo();
 }
 
 PwDeleteCommand::~PwDeleteCommand()
 {
 }
 
-QString PwDeleteCommand::name()
+QString PwDeleteCommand::name() const
 {
   return i18n( "Delete" );
 }
 
-bool PwDeleteCommand::undo()
+void PwDeleteCommand::unexecute()
 {
   // Put it back in the document
   KABC::Addressee::List::ConstIterator it;
@@ -71,11 +68,9 @@ bool PwDeleteCommand::undo()
   }
 
   mAddresseeList.clear();
-
-  return true;
 }
 
-bool PwDeleteCommand::redo()
+void PwDeleteCommand::execute()
 {
   KABC::Addressee addr;
   KABC::Addressee::List::ConstIterator addrIt;
@@ -93,8 +88,6 @@ bool PwDeleteCommand::redo()
     addressBook()->removeAddressee( *addrIt );
     lock()->unlock( (*addrIt).resource() );
   }
-
-  return true;
 }
 
 /////////////////////////////////
@@ -104,15 +97,14 @@ PwPasteCommand::PwPasteCommand( KAB::Core *core,
                                 const KABC::Addressee::List &list )
   : Command( core->addressBook() ), mCore( core ), mAddresseeList( list )
 {
-  redo();
 }
 
-QString PwPasteCommand::name()
+QString PwPasteCommand::name() const
 {
   return i18n( "Paste" );
 }
 
-bool PwPasteCommand::undo()
+void PwPasteCommand::unexecute()
 {
   KABC::Addressee::List::ConstIterator it;
 
@@ -124,11 +116,9 @@ bool PwPasteCommand::undo()
     addressBook()->removeAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
-
-  return true;
 }
 
-bool PwPasteCommand::redo()
+void PwPasteCommand::execute()
 {
   QStringList uids;
   KABC::Addressee::List::Iterator it;
@@ -151,8 +141,6 @@ bool PwPasteCommand::redo()
   QStringList::ConstIterator uidIt;
   for ( uidIt = uids.begin(); uidIt != uids.end(); ++uidIt )
     mCore->editContact( *uidIt );
-
-  return true;
 }
 
 /////////////////////////////////
@@ -161,34 +149,29 @@ bool PwPasteCommand::redo()
 PwNewCommand::PwNewCommand( KABC::AddressBook *ab, const KABC::Addressee &addr )
   : Command( ab ), mAddr( addr )
 {
-  redo();
 }
 
 PwNewCommand::~PwNewCommand()
 {
 }
 
-QString PwNewCommand::name()
+QString PwNewCommand::name() const
 {
   return i18n( "New Contact" );
 }
 
-bool PwNewCommand::undo()
+void PwNewCommand::unexecute()
 {
   lock()->lock( mAddr.resource() );
   addressBook()->removeAddressee( mAddr );
   lock()->unlock( mAddr.resource() );
-
-  return true;
 }
 
-bool PwNewCommand::redo()
+void PwNewCommand::execute()
 {
   lock()->lock( mAddr.resource() );
   addressBook()->insertAddressee( mAddr );
   lock()->unlock( mAddr.resource() );
-
-  return true;
 }
 
 /////////////////////////////////
@@ -199,34 +182,29 @@ PwEditCommand::PwEditCommand( KABC::AddressBook *ab,
                               const KABC::Addressee &newAddr )
      : Command( ab ), mOldAddr( oldAddr ), mNewAddr( newAddr )
 {
-  redo();
 }
 
 PwEditCommand::~PwEditCommand()
 {
 }
 
-QString PwEditCommand::name()
+QString PwEditCommand::name() const
 {
   return i18n( "Entry Edit" );
 }
 
-bool PwEditCommand::undo()
+void PwEditCommand::unexecute()
 {
   lock()->lock( mOldAddr.resource() );
   addressBook()->insertAddressee( mOldAddr );
   lock()->unlock( mOldAddr.resource() );
-
-  return true;
 }
 
-bool PwEditCommand::redo()
+void PwEditCommand::execute()
 {
   lock()->lock( mNewAddr.resource() );
   addressBook()->insertAddressee( mNewAddr );
   lock()->unlock( mNewAddr.resource() );
-
-  return true;
 }
 
 /////////////////////////////////
@@ -235,15 +213,14 @@ bool PwEditCommand::redo()
 PwCutCommand::PwCutCommand( KABC::AddressBook *ab, const QStringList &uidList )
     : Command( ab ), mUIDList( uidList )
 {
-  redo();
 }
 
-QString PwCutCommand::name()
+QString PwCutCommand::name() const
 {
   return i18n( "Cut" );
 }
 
-bool PwCutCommand::undo()
+void PwCutCommand::unexecute()
 {
   KABC::Addressee::List::ConstIterator it;
 
@@ -261,11 +238,9 @@ bool PwCutCommand::undo()
   QClipboard *cb = QApplication::clipboard();
   kapp->processEvents();
   cb->setText( mOldText );
-
-  return true;
 }
 
-bool PwCutCommand::redo()
+void PwCutCommand::execute()
 {
   KABC::Addressee addr;
   KABC::Addressee::List::ConstIterator addrIt;
@@ -289,6 +264,4 @@ bool PwCutCommand::redo()
   mOldText = cb->text();
   kapp->processEvents();
   cb->setText( mClipText );
-
-  return true;
 }

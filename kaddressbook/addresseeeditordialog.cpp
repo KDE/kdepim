@@ -51,12 +51,11 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core *core,
   QVBoxLayout *layout = new QVBoxLayout( page );
 
   if ( KABPrefs::instance()->editorType() == KABPrefs::SimpleEditor ) {
-    mEditorWidget = new SimpleAddresseeEditor( core, false, page );
+    mEditorWidget = new SimpleAddresseeEditor( page );
   } else {
-    mEditorWidget = new AddresseeEditorWidget( core, false, page );
+    mEditorWidget = new AddresseeEditorWidget( page );
   }
-  connect( mEditorWidget, SIGNAL( modified( const KABC::Addressee::List& ) ),
-           SLOT( widgetModified( const KABC::Addressee::List& ) ) );
+  connect( mEditorWidget, SIGNAL( modified() ), SLOT( widgetModified() ) );
   layout->addWidget( mEditorWidget );
 
   enableButton( KDialogBase::Apply, false );
@@ -128,10 +127,11 @@ void AddresseeEditorDialog::slotOk()
   delayedDestruct();
 }
 
-void AddresseeEditorDialog::widgetModified( const KABC::Addressee::List &addressees )
+void AddresseeEditorDialog::widgetModified()
 {
-  if ( !addressees.isEmpty() )
-    setTitle( addressees.first() );
+  const KABC::Addressee addressee = mEditorWidget->addressee();
+  if ( !addressee.isEmpty() )
+    setTitle( addressee );
 
   enableButton( KDialogBase::Apply, true );
 }
