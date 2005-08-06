@@ -66,7 +66,7 @@ extern "C"
 
 ResourceKABC::ResourceKABC( const KConfig* config )
   : ResourceCalendar( config ), mCalendar( QString::fromLatin1( "UTC" ) ),
-    mAlarmDays( 1 ), mAlarm( false ), mUseCategories( false )
+    mAlarmDays( 0 ), mAlarm( true ), mUseCategories( false )
 {
   if ( config ) {
     readConfig( config );
@@ -77,7 +77,7 @@ ResourceKABC::ResourceKABC( const KConfig* config )
 
 ResourceKABC::ResourceKABC()
   : ResourceCalendar( 0 ), mCalendar( QString::fromLatin1( "UTC" ) ),
-    mAlarmDays( 1 ), mAlarm( false ), mUseCategories( false )
+    mAlarmDays( 0 ), mAlarm( true ), mUseCategories( false )
 {
   init();
 }
@@ -100,8 +100,8 @@ void ResourceKABC::init()
 
 void ResourceKABC::readConfig( const KConfig *config )
 {
-  mAlarmDays = config->readNumEntry( "AlarmDays", 1 );
-  mAlarm = config->readBoolEntry( "Alarm", false );
+  mAlarmDays = config->readNumEntry( "AlarmDays", 0 );
+  mAlarm = config->readBoolEntry( "Alarm", true );
   mCategories = config->readListEntry( "Categories" );
   mUseCategories = config->readBoolEntry( "UseCategories", false );
 }
