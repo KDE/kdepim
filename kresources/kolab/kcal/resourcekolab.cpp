@@ -272,9 +272,12 @@ void ResourceKolab::removeIncidences( const QCString& incidenceType )
 
 bool ResourceKolab::doSave()
 {
+  return true;
+  /*
   return kmailTriggerSync( kmailCalendarContentsType )
       && kmailTriggerSync( kmailTodoContentsType )
       && kmailTriggerSync( kmailJournalContentsType );
+  */
 }
 
 void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
