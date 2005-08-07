@@ -302,6 +302,8 @@ void Task::setFields( const KCal::Todo* task )
     mHasDueDate = false;
   if ( task->relatedTo() )
     setParent( task->relatedTo()->uid() );
+  else if ( !task->relatedToUid().isEmpty() )
+    setParent( task->relatedToUid( ) );
   else
     setParent( QString::null );
 
