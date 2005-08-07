@@ -52,7 +52,7 @@ bool lockfile::locked() const {
 }
 
 bool lockfile::trylock() {
-	int fd = open( filename_.c_str(), O_RDWR | O_EXCL | O_CREAT, 0600 );
+	int fd = ::open( filename_.c_str(), O_RDWR | O_EXCL | O_CREAT, 0600 );
 	locked_ = false;
 	if ( fd >= 0 ) {
 		locked_ = true;
