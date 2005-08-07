@@ -925,28 +925,10 @@ void
 IMAP4Protocol::mkdir (const KURL & _url, int)
 {
   kdDebug(7116) << "IMAP4::mkdir - " << _url.prettyURL() << endl;
-  QString path = _url.path();
-  int slash = path.findRev('/', (path.at(path.length() - 1) == '/') ?
-    (int)path.length() - 2 : -1);
-  KURL parentUrl = _url;
-  QString newBox;
-  if (slash != -1)
-  {
-    parentUrl.setPath(path.left(slash+1) + ";TYPE=LIST");
-    newBox = path.mid(slash + 1);
-  }
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
-  parseURL(parentUrl, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
-  if ( newBox.isEmpty() ) {
-    newBox = aBox;
-  } else if ( !aBox.isEmpty() ) {
-    if ( !aBox.endsWith( aDelimiter ) )
-      newBox = aBox + aDelimiter + newBox;
-    else
-      newBox = aBox + newBox;
-  }
-  kdDebug(7116) << "IMAP4::mkdir - create " << newBox << endl;
-  imapCommand *cmd = doCommand (imapCommand::clientCreate(newBox));
+  parseURL(_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
+  kdDebug(7116) << "IMAP4::mkdir - create " << aBox << endl;
+  imapCommand *cmd = doCommand (imapCommand::clientCreate(aBox));
 
   if (cmd->result () != "OK")
   {
@@ -957,6 +939,7 @@ IMAP4Protocol::mkdir (const KURL & _url, int)
   }
   completeQueue.removeRef (cmd);
 
+  // start a new listing to find the type of the folder
   enum IMAP_TYPE type =
     parseURL(_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
   if (type == ITYPE_BOX)
@@ -965,13 +948,13 @@ IMAP4Protocol::mkdir (const KURL & _url, int)
     if ( ask && 
         messageBox(QuestionYesNo,
           i18n("The following folder will be created on the server: %1 "
-               "What do you want to store in this folder?").arg( _url.prettyURL() ), 
+               "What do you want to store in this folder?").arg( aBox ), 
           i18n("Create Folder"),
           i18n("&Messages"), i18n("&Subfolders")) == KMessageBox::No )
     {
-      cmd = doCommand(imapCommand::clientDelete(newBox));
+      cmd = doCommand(imapCommand::clientDelete(aBox));
       completeQueue.removeRef (cmd);
-      cmd = doCommand(imapCommand::clientCreate(newBox + aDelimiter));
+      cmd = doCommand(imapCommand::clientCreate(aBox + aDelimiter));
       if (cmd->result () != "OK")
       {
         error (ERR_COULD_NOT_MKDIR, _url.prettyURL());
@@ -982,7 +965,7 @@ IMAP4Protocol::mkdir (const KURL & _url, int)
     }
   }
 
-  cmd = doCommand(imapCommand::clientSubscribe(newBox));
+  cmd = doCommand(imapCommand::clientSubscribe(aBox));
   completeQueue.removeRef(cmd);
 
   finished ();

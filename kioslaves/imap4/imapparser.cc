@@ -1731,6 +1731,7 @@ imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
   QStringList parameters;
 
   _box = _url.path ();
+  kdDebug(7116) << "imapParser::parseURL " << _box << endl;
   int paramStart = _box.find("/;");
   if ( paramStart > -1 )
   {
@@ -1772,7 +1773,8 @@ imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
     if (!_box.isEmpty () && _box[_box.length () - 1] == '/')
       _box.truncate(_box.length() - 1);
   }
-  kdDebug(7116) << "URL: box= " << _box << ", section= " << _section << ", type= " << _type << ", uid= " << _uid << ", validity= " << _validity << endl;
+  kdDebug(7116) << "URL: box= " << _box << ", section= " << _section << ", type= " 
+    << _type << ", uid= " << _uid << ", validity= " << _validity << ", info= " << _info << endl;
 }
 
 
