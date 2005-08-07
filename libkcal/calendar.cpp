@@ -622,6 +622,8 @@ Journal::List Calendar::journals( const QDate &date )
 // This method is only about linking related todos
 void Calendar::setupRelations( Incidence *forincidence )
 {
+  if ( !forincidence ) return;
+// kdDebug(5850) << "Calendar::setupRelations for incidence " << forincidence << " with UID " << forincidence->uid() << ", summary: " << forincidence->summary() << endl;
   QString uid = forincidence->uid();
 
   // First, go over the list of orphans and see if this is their parent
@@ -643,6 +645,8 @@ void Calendar::setupRelations( Incidence *forincidence )
       parent->addRelation( forincidence );
     } else {
       // Not found, put this in the mOrphans list
+      // Note that the mOrphans dict might have several entries with the same key! That are
+      // multiple children that wait for the parent incidence to be inserted.
       mOrphans.insert( forincidence->relatedToUid(), forincidence );
       mOrphanUids.insert( forincidence->uid(), forincidence );
     }
@@ -657,6 +661,7 @@ void Calendar::removeRelations( Incidence *incidence )
     return;
   }
 
+// kdDebug(5850) << "Calendar::removeRelations for incidence " << forincidence << " with UID " << forincidence->uid() << ", summary: " << forincidence->summary() << endl;
   QString uid = incidence->uid();
 
   Incidence::List relations = incidence->relations();
@@ -676,18 +681,41 @@ void Calendar::removeRelations( Incidence *incidence )
     incidence->relatedTo()->removeRelation( incidence );
 
   // Remove this one from the orphans list
-  if ( mOrphanUids.remove( uid ) )
+  if ( mOrphanUids.remove( uid ) ) {
     // This incidence is located in the orphans list - it should be removed
-    if ( !( incidence->relatedTo() != 0 &&
-            mOrphans.remove( incidence->relatedTo()->uid() ) ) ) {
-      // Removing wasn't that easy
-      for ( QDictIterator<Incidence> it( mOrphans ); it.current(); ++it ) {
-        if ( it.current()->uid() == uid ) {
-          mOrphans.remove( it.currentKey() );
-          break;
-        }
+    // Since the mOrphans dict might contain the same key (with different
+    // child incidence pointers!) multiple times, take care that we remove
+    // the correct one. So we need to remove all items with the given
+    // parent UID, and readd those that are not for this item. Also, there
+    // might be other entries with differnet UID that point to this
+    // incidence (this might happen when the relatedTo of the item is
+    // changed before its parent is inserted. This might happen with
+    // groupware servers....). Remove them, too
+    QStringList relatedToUids;
+    // First get the list of all keys in the mOrphans list that point to the removed item
+    relatedToUids << incidence->relatedToUid();
+    for ( QDictIterator<Incidence> it( mOrphans ); it.current(); ++it ) {
+      if ( it.current()->uid() == uid ) {
+        relatedToUids << it.currentKey();
       }
     }
+
+    // now go through all uids that have one entry that point to the incidence
+    for ( QStringList::Iterator uidit = relatedToUids.begin();
+          uidit != relatedToUids.end(); ++uidit ) {
+      Incidence::List tempList;
+      // Remove all to get access to the remaining entries
+      while( Incidence* i = mOrphans[ *uidit ] ) {
+        mOrphans.remove( *uidit );
+        if ( i != incidence ) tempList.append( i );
+      }
+      // Readd those that point to a different orphan incidence
+      for ( Incidence::List::Iterator incit = tempList.begin();
+            incit != tempList.end(); ++incit ) {
+        mOrphans.insert( *uidit, *incit );
+      }
+    }
+  }
 }
 
 void Calendar::registerObserver( Observer *observer )
