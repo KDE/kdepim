@@ -37,12 +37,17 @@ private:
     QDir dir;
     /** Our Filterinfo stuff... important methods for getting the email imported */
     FilterInfo * inf;
-    /** This is were all the real action is gonna be handled.  Gets called once for EACH file imported */
-    void ImportLNotes(const QString& file);
     /** which file (of totalFiles) is now in the work? */
     int currentFile;
     /** total number of files that get imported */
     int totalFiles;
+
+    /** 
+     * This is were all the real action is gonna be handled.  
+     * Gets called once for EACH file imported 
+     */
+    void ImportLNotes(const QString& file);
+    
 };
 
 #endif

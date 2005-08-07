@@ -16,17 +16,16 @@
  ***************************************************************************/
 
 #include <config.h>
+
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <qregexp.h>
 #include <ktempfile.h>
 #include <kdebug.h>
-
 #include <qfileinfo.h>
 
 #include "filter_lnotes.hxx"
 
-
+/** Default constructor. */
 FilterLNotes::FilterLNotes() :
         Filter( i18n("Import Lotus Notes Emails"),
                 "Robert Rockers",
@@ -34,20 +33,28 @@ FilterLNotes::FilterLNotes() :
                      "<p>This filter will import Structure Text files from an exported Lotus Notes email "
                      "client into KMail. Use this filter if you want to import mails from Lotus or other "
                      "mailers that use Lotus Notes' Structured Text format.</p>"
-                     "<p><b>Note:</b> Emails will be imported into folders named after the files they "
-             "came from, prefixed with LNotes-</p>")) {}
+                     "<p><b>Note:</b> Since it is possible to recreate the folder structure, the imported "
+                     "messages will be stored in subfolders named by the files they ame from under: "
+                     "\"Sylpheed-Import\" in your local folder.</p>"))
+{}
 
+/** Destructor. */
 FilterLNotes::~FilterLNotes() {
     endImport();
 }
 
+/** 
+ * Recursive import of The Bat! maildir.
+ * @param info Information storage for the operation.
+ */
 void FilterLNotes::import(FilterInfo *info) {
 
     inf = info;
     currentFile = 1;
     totalFiles = 0;
 
-    QStringList filenames = KFileDialog::getOpenFileNames( QDir::homeDirPath(), "*|" + i18n("All Files (*)"), inf->parent() );
+    QStringList filenames = KFileDialog::getOpenFileNames( QDir::homeDirPath(), "*|" + i18n("All Files (*)"), 
+                                                           inf->parent() );
     totalFiles = filenames.count();
     inf->setOverall(0);
 
@@ -63,6 +70,10 @@ void FilterLNotes::import(FilterInfo *info) {
     }
 }
 
+/**
+ * Import the files within a Folder.
+ * @param file The name of the file to import.
+ */
 void FilterLNotes::ImportLNotes(const QString& file) {
 
     // See Filter_pmail.cxx for better reference
@@ -85,7 +96,7 @@ void FilterLNotes::ImportLNotes(const QString& file) {
 
         // Get folder name
         QFileInfo filenameInfo( file );
-        QString folder("LNotes-" + filenameInfo.baseName(TRUE));
+        QString folder("LNotes-Import/" + filenameInfo.baseName(TRUE));
         inf->setTo(folder);
 
         // State machine to read the data in. The fgetc usage is probably terribly slow ...
