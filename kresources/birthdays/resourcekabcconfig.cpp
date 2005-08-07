@@ -38,12 +38,12 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent,  const char* name )
 {
   QGridLayout *topLayout = new QGridLayout( this, 5, 1, 11, 6 );
 
-  mAlarm = new QCheckBox(i18n("Set alarm"), this);
+  mAlarm = new QCheckBox(i18n("Set reminder"), this);
   topLayout->addWidget(mAlarm, 0, 0);
   QBoxLayout *alarmLayout = new QHBoxLayout(topLayout);
   topLayout->addLayout(alarmLayout, 1, 0);
 
-  mALabel = new QLabel(i18n("Alarm before (in days):"), this);
+  mALabel = new QLabel(i18n("Reminder before (in days):"), this);
   alarmLayout->addWidget(mALabel);
   mAlarmTimeEdit = new KRestrictedLine(this, "alarmTimeEdit", "1234567890");
   mAlarmTimeEdit->setText("0");
