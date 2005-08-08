@@ -85,23 +85,16 @@ void XXPortManager::slotImport( const QString &identifier, const QString &data )
   if ( !resource )
     return;
 
-  KABLock::self( mCore->addressBook() )->lock( resource );
-
   KABC::AddresseeList list = obj->importContacts( data );
   KABC::AddresseeList::Iterator it;
-  bool imported = false;
-  for ( it = list.begin(); it != list.end(); ++it ) {
+  for ( it = list.begin(); it != list.end(); ++it )
     (*it).setResource( resource );
-    // We use a PwNewCommand so the user can undo it.
-    PwNewCommand *command = new PwNewCommand( mCore->addressBook(), *it );
+
+  if ( !list.isEmpty() ) {
+    NewCommand *command = new NewCommand( mCore->addressBook(), list );
     mCore->commandHistory()->addCommand( command );
-    imported = true;
-  }
-
-  KABLock::self( mCore->addressBook() )->unlock( resource );
-
-  if ( imported )
     emit modified();
+  }
 }
 
 void XXPortManager::slotExport( const QString &identifier, const QString &data )

@@ -412,7 +412,7 @@ void KABCore::deleteContacts( const QStringList &uids )
                                                  names, "", KStdGuiItem::del() ) == KMessageBox::Cancel )
       return;
 
-    PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uids );
+    DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
     mCommandHistory->addCommand( command );
 
     // now if we deleted anything, refresh
@@ -438,7 +438,7 @@ void KABCore::cutContacts()
   QStringList uidList = mViewManager->selectedUids();
 
   if ( uidList.size() > 0 ) {
-    PwCutCommand *command = new PwCutCommand( mAddressBook, uidList );
+    CutCommand *command = new CutCommand( mAddressBook, uidList );
     mCommandHistory->addCommand( command );
 
     setModified( true );
@@ -462,7 +462,7 @@ void KABCore::pasteContacts( KABC::Addressee::List &list )
   for ( it = list.begin(); it != list.end(); ++it )
     (*it).setResource( resource );
 
-  PwPasteCommand *command = new PwPasteCommand( this, list );
+  PasteCommand *command = new PasteCommand( this, list );
   mCommandHistory->addCommand( command );
 
   setModified( true );
@@ -485,10 +485,10 @@ void KABCore::mergeContacts()
     ++it;
   }
 
-  PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uids );
+  DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
   mCommandHistory->addCommand( command );
 
-  PwEditCommand *editCommand = new PwEditCommand( mAddressBook, origAddr, addr );
+  EditCommand *editCommand = new EditCommand( mAddressBook, origAddr, addr );
   mCommandHistory->addCommand( editCommand );
 
   mSearchManager->reload();
@@ -557,9 +557,11 @@ void KABCore::contactModified( const KABC::Addressee &addr )
   // check if it exists already
   KABC::Addressee origAddr = mAddressBook->findByUid( addr.uid() );
   if ( origAddr.isEmpty() ) {
-    command = new PwNewCommand( mAddressBook, addr );
+    KABC::Addressee::List addressees;
+    addressees.append( addr );
+    command = new NewCommand( mAddressBook, addressees );
   } else {
-    command = new PwEditCommand( mAddressBook, origAddr, addr );
+    command = new EditCommand( mAddressBook, origAddr, addr );
   }
 
   mCommandHistory->addCommand( command );
@@ -748,10 +750,12 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
 
       // check if it exists already
       KABC::Addressee origAddr = mAddressBook->findByUid( (*it).uid() );
-      if ( origAddr.isEmpty() )
-        command = new PwNewCommand( mAddressBook, *it );
-      else
-        command = new PwEditCommand( mAddressBook, origAddr, *it );
+      if ( origAddr.isEmpty() ) {
+        KABC::Addressee::List addressees;
+        addressees.append( *it );
+        command = new NewCommand( mAddressBook, addressees );
+      } else
+        command = new EditCommand( mAddressBook, origAddr, *it );
 
       mCommandHistory->blockSignals( true );
       mCommandHistory->addCommand( command );
@@ -765,7 +769,7 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
 
 void KABCore::extensionDeleted( const QStringList &uidList )
 {
-  PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uidList );
+  DeleteCommand *command = new DeleteCommand( mAddressBook, uidList );
   mCommandHistory->addCommand( command );
 
   // now if we deleted anything, refresh

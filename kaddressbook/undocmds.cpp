@@ -35,34 +35,28 @@
 
 #include "undocmds.h"
 
-/////////////////////////////////
-// PwDelete Methods
-
-PwDeleteCommand::PwDeleteCommand( KABC::AddressBook *ab,
-                                  const QStringList &uidList)
-  : Command( ab ), mAddresseeList(), mUIDList( uidList )
+DeleteCommand::DeleteCommand( KABC::AddressBook *addressBook,
+                              const QStringList &uidList)
+  : Command( addressBook ), mUIDList( uidList )
 {
 }
 
-PwDeleteCommand::~PwDeleteCommand()
-{
-}
-
-QString PwDeleteCommand::name() const
+QString DeleteCommand::name() const
 {
   return i18n( "Delete Contact", "Delete Contacts", mUIDList.count() );
 }
 
-void PwDeleteCommand::unexecute()
+void DeleteCommand::unexecute()
 {
   // Put it back in the document
   KABC::Addressee::List::ConstIterator it;
+  const KABC::Addressee::List::ConstIterator endIt = mAddresseeList.end();
 
   // lock resources
-  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it )
+  for ( it = mAddresseeList.begin(); it != endIt; ++it )
     lock()->lock( (*it).resource() );
 
-  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
+  for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
     addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
@@ -70,13 +64,13 @@ void PwDeleteCommand::unexecute()
   mAddresseeList.clear();
 }
 
-void PwDeleteCommand::execute()
+void DeleteCommand::execute()
 {
   KABC::Addressee addr;
-  KABC::Addressee::List::ConstIterator addrIt;
 
   QStringList::ConstIterator it;
-  for ( it = mUIDList.begin(); it != mUIDList.end(); ++it ) {
+  const QStringList::ConstIterator endIt = mUIDList.end();
+  for ( it = mUIDList.begin(); it != endIt; ++it ) {
     addr = addressBook()->findByUid( *it );
     lock()->lock( addr.resource() );
     mAddresseeList.append( addr );
@@ -84,52 +78,56 @@ void PwDeleteCommand::execute()
     cfg.remove();
   }
 
-  for ( addrIt = mAddresseeList.begin(); addrIt != mAddresseeList.end(); ++addrIt ) {
+  KABC::Addressee::List::ConstIterator addrIt;
+  const KABC::Addressee::List::ConstIterator addrEndIt = mAddresseeList.end();
+  for ( addrIt = mAddresseeList.begin(); addrIt != addrEndIt; ++addrIt ) {
     addressBook()->removeAddressee( *addrIt );
     lock()->unlock( (*addrIt).resource() );
   }
 }
 
-/////////////////////////////////
-// PwPaste Methods
 
-PwPasteCommand::PwPasteCommand( KAB::Core *core,
-                                const KABC::Addressee::List &list )
-  : Command( core->addressBook() ), mCore( core ), mAddresseeList( list )
+PasteCommand::PasteCommand( KAB::Core *core, const KABC::Addressee::List &addressees )
+  : Command( core->addressBook() ), mAddresseeList( addressees ), mCore( core )
 {
 }
 
-QString PwPasteCommand::name() const
+QString PasteCommand::name() const
 {
   return i18n( "Paste Contact", "Paste Contacts", mAddresseeList.count() );
 }
 
-void PwPasteCommand::unexecute()
+void PasteCommand::unexecute()
 {
   KABC::Addressee::List::ConstIterator it;
+  const KABC::Addressee::List::ConstIterator endIt = mAddresseeList.end();
 
   // lock resources
-  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it )
+  for ( it = mAddresseeList.begin(); it != endIt; ++it )
     lock()->lock( (*it).resource() );
 
-  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
+  for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
     addressBook()->removeAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
 }
 
-void PwPasteCommand::execute()
+void PasteCommand::execute()
 {
   QStringList uids;
-  KABC::Addressee::List::Iterator it;
+
   KABC::Addressee::List::ConstIterator constIt;
+  const KABC::Addressee::List::ConstIterator constEndIt = mAddresseeList.end();
 
   // lock resources
-  for ( constIt = mAddresseeList.begin(); constIt != mAddresseeList.end(); ++constIt )
+  for ( constIt = mAddresseeList.begin(); constIt != constEndIt; ++constIt )
     lock()->lock( (*constIt).resource() );
 
-  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
-    /* we have to set a new uid for the contact, otherwise insertAddressee()
+  KABC::Addressee::List::Iterator it;
+  const KABC::Addressee::List::Iterator endIt = mAddresseeList.end();
+  for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
+    /**
+       We have to set a new uid for the contact, otherwise insertAddressee()
        ignore it.
      */
     (*it).setUid( KApplication::randomString( 10 ) );
@@ -139,96 +137,101 @@ void PwPasteCommand::execute()
   }
 
   QStringList::ConstIterator uidIt;
-  for ( uidIt = uids.begin(); uidIt != uids.end(); ++uidIt )
+  const QStringList::ConstIterator uidEndIt = uids.end();
+  for ( uidIt = uids.begin(); uidIt != uidEndIt; ++uidIt )
     mCore->editContact( *uidIt );
 }
 
-/////////////////////////////////
-// PwNew Methods
 
-PwNewCommand::PwNewCommand( KABC::AddressBook *ab, const KABC::Addressee &addr )
-  : Command( ab ), mAddr( addr )
+NewCommand::NewCommand( KABC::AddressBook *addressBook, const KABC::Addressee::List &addressees )
+  : Command( addressBook ), mAddresseeList( addressees )
 {
 }
 
-PwNewCommand::~PwNewCommand()
+QString NewCommand::name() const
+{
+  return i18n( "New Contact", "New Contacts", mAddresseeList.count() );
+}
+
+void NewCommand::unexecute()
+{
+  KABC::Addressee::List::ConstIterator it;
+  const KABC::Addressee::List::ConstIterator endIt = mAddresseeList.end();
+
+  // lock resources
+  for ( it = mAddresseeList.begin(); it != endIt; ++it )
+    lock()->lock( (*it).resource() );
+
+  for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
+    addressBook()->removeAddressee( *it );
+    lock()->unlock( (*it).resource() );
+  }
+}
+
+void NewCommand::execute()
+{
+  KABC::Addressee::List::Iterator it;
+  const KABC::Addressee::List::Iterator endIt = mAddresseeList.end();
+
+  // lock resources
+  for ( it = mAddresseeList.begin(); it != endIt; ++it )
+    lock()->lock( (*it).resource() );
+
+  for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
+    addressBook()->insertAddressee( *it );
+    lock()->unlock( (*it).resource() );
+  }
+}
+
+
+EditCommand::EditCommand( KABC::AddressBook *addressBook,
+                          const KABC::Addressee &oldAddressee,
+                          const KABC::Addressee &newAddressee )
+  : Command( addressBook ),
+    mOldAddressee( oldAddressee ), mNewAddressee( newAddressee )
 {
 }
 
-QString PwNewCommand::name() const
-{
-  return i18n( "New Contact" );
-}
-
-void PwNewCommand::unexecute()
-{
-  lock()->lock( mAddr.resource() );
-  addressBook()->removeAddressee( mAddr );
-  lock()->unlock( mAddr.resource() );
-}
-
-void PwNewCommand::execute()
-{
-  lock()->lock( mAddr.resource() );
-  addressBook()->insertAddressee( mAddr );
-  lock()->unlock( mAddr.resource() );
-}
-
-/////////////////////////////////
-// PwEdit Methods
-
-PwEditCommand::PwEditCommand( KABC::AddressBook *ab,
-                              const KABC::Addressee &oldAddr,
-                              const KABC::Addressee &newAddr )
-     : Command( ab ), mOldAddr( oldAddr ), mNewAddr( newAddr )
-{
-}
-
-PwEditCommand::~PwEditCommand()
-{
-}
-
-QString PwEditCommand::name() const
+QString EditCommand::name() const
 {
   return i18n( "Edit Contact" );
 }
 
-void PwEditCommand::unexecute()
+void EditCommand::unexecute()
 {
-  lock()->lock( mOldAddr.resource() );
-  addressBook()->insertAddressee( mOldAddr );
-  lock()->unlock( mOldAddr.resource() );
+  lock()->lock( mOldAddressee.resource() );
+  addressBook()->insertAddressee( mOldAddressee );
+  lock()->unlock( mOldAddressee.resource() );
 }
 
-void PwEditCommand::execute()
+void EditCommand::execute()
 {
-  lock()->lock( mNewAddr.resource() );
-  addressBook()->insertAddressee( mNewAddr );
-  lock()->unlock( mNewAddr.resource() );
+  lock()->lock( mNewAddressee.resource() );
+  addressBook()->insertAddressee( mNewAddressee );
+  lock()->unlock( mNewAddressee.resource() );
 }
 
-/////////////////////////////////
-// PwCut Methods
 
-PwCutCommand::PwCutCommand( KABC::AddressBook *ab, const QStringList &uidList )
-    : Command( ab ), mUIDList( uidList )
+CutCommand::CutCommand( KABC::AddressBook *addressBook, const QStringList &uidList )
+  : Command( addressBook ), mUIDList( uidList )
 {
 }
 
-QString PwCutCommand::name() const
+QString CutCommand::name() const
 {
   return i18n( "Cut Contact", "Cut Contacts", mUIDList.count() );
 }
 
-void PwCutCommand::unexecute()
+void CutCommand::unexecute()
 {
   KABC::Addressee::List::ConstIterator it;
+  const KABC::Addressee::List::ConstIterator endIt = mAddresseeList.end();
 
   // lock resources
-  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it )
+  for ( it = mAddresseeList.begin(); it != endIt; ++it )
     lock()->lock( (*it).resource() );
 
-  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
+  for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
     addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
@@ -240,19 +243,21 @@ void PwCutCommand::unexecute()
   cb->setText( mOldText );
 }
 
-void PwCutCommand::execute()
+void CutCommand::execute()
 {
   KABC::Addressee addr;
-  KABC::Addressee::List::ConstIterator addrIt;
 
   QStringList::ConstIterator it;
-  for ( it = mUIDList.begin(); it != mUIDList.end(); ++it ) {
+  const QStringList::ConstIterator endIt = mUIDList.end();
+  for ( it = mUIDList.begin(); it != endIt; ++it ) {
     addr = addressBook()->findByUid( *it );
     mAddresseeList.append( addr );
     lock()->lock( addr.resource() );
   }
 
-  for ( addrIt = mAddresseeList.begin(); addrIt != mAddresseeList.end(); ++addrIt ) {
+  KABC::Addressee::List::ConstIterator addrIt;
+  const KABC::Addressee::List::ConstIterator addrEndIt = mAddresseeList.end();
+  for ( addrIt = mAddresseeList.begin(); addrIt != addrEndIt; ++addrIt ) {
     addressBook()->removeAddressee( *addrIt );
     lock()->unlock( addr.resource() );
   }

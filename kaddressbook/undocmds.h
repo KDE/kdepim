@@ -44,7 +44,6 @@ class Command : public KCommand
 {
   public:
     Command( KABC::AddressBook *addressBook ) { mAddressBook = addressBook; }
-    virtual ~Command() {};
 
   protected:
     KABC::AddressBook *addressBook() const { return mAddressBook; }
@@ -54,11 +53,10 @@ class Command : public KCommand
     KABC::AddressBook *mAddressBook;
 };
 
-class PwDeleteCommand : public Command
+class DeleteCommand : public Command
 {
   public:
-    PwDeleteCommand( KABC::AddressBook *ab, const QStringList &uidList );
-    virtual ~PwDeleteCommand();
+    DeleteCommand( KABC::AddressBook *addressBook, const QStringList &uidList );
 
     virtual QString name() const;
     virtual void unexecute();
@@ -69,24 +67,25 @@ class PwDeleteCommand : public Command
     QStringList mUIDList;
 };
 
-class PwPasteCommand : public Command
+class PasteCommand : public Command
 {
   public:
-    PwPasteCommand( KAB::Core *core, const KABC::Addressee::List &list );
+    PasteCommand( KAB::Core *core,
+                  const KABC::Addressee::List &addressees );
 
     virtual QString name() const;
     virtual void unexecute();
     virtual void execute();
 
   private:
-    KAB::Core *mCore;
     KABC::Addressee::List mAddresseeList;
+    KAB::Core *mCore;
 };
 
-class PwCutCommand : public Command
+class CutCommand : public Command
 {
   public:
-    PwCutCommand( KABC::AddressBook *ab, const QStringList &uidList );
+    CutCommand( KABC::AddressBook *addressBook, const QStringList &uidList );
 
     virtual QString name() const;
     virtual void unexecute();
@@ -99,34 +98,33 @@ class PwCutCommand : public Command
     QString mOldText;
 };
 
-class PwNewCommand : public Command
+class NewCommand : public Command
 {
   public:
-    PwNewCommand( KABC::AddressBook *ab, const KABC::Addressee &a );
-    ~PwNewCommand();
+    NewCommand( KABC::AddressBook *addressBook,
+                const KABC::Addressee::List &addressees );
 
     virtual QString name() const;
     virtual void unexecute();
     virtual void execute();
 
   private:
-    KABC::Addressee mAddr;
+    KABC::Addressee::List mAddresseeList;
 };
 
-class PwEditCommand : public Command
+class EditCommand : public Command
 {
   public:
-    PwEditCommand( KABC::AddressBook *ab, const KABC::Addressee &oldAddr,
-                   const KABC::Addressee &newAddr );
-    virtual ~PwEditCommand();
+    EditCommand( KABC::AddressBook *addressBook, const KABC::Addressee &oldAddressee,
+                 const KABC::Addressee &newAddressee );
 
     virtual QString name() const;
     virtual void unexecute();
     virtual void execute();
 
   private:
-    KABC::Addressee mOldAddr;
-    KABC::Addressee mNewAddr;
+    KABC::Addressee mOldAddressee;
+    KABC::Addressee mNewAddressee;
 };
 
 #endif
