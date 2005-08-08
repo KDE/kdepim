@@ -50,7 +50,7 @@ void DeleteCommand::unexecute()
 {
   // Put it back in the document
   KABC::Addressee::List::ConstIterator it;
-  const KABC::Addressee::List::ConstIterator endIt = mAddresseeList.end();
+  const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.end() );
 
   // lock resources
   for ( it = mAddresseeList.begin(); it != endIt; ++it )
@@ -69,7 +69,7 @@ void DeleteCommand::execute()
   KABC::Addressee addr;
 
   QStringList::ConstIterator it;
-  const QStringList::ConstIterator endIt = mUIDList.end();
+  const QStringList::ConstIterator endIt( mUIDList.end() );
   for ( it = mUIDList.begin(); it != endIt; ++it ) {
     addr = addressBook()->findByUid( *it );
     lock()->lock( addr.resource() );
@@ -79,7 +79,7 @@ void DeleteCommand::execute()
   }
 
   KABC::Addressee::List::ConstIterator addrIt;
-  const KABC::Addressee::List::ConstIterator addrEndIt = mAddresseeList.end();
+  const KABC::Addressee::List::ConstIterator addrEndIt( mAddresseeList.end() );
   for ( addrIt = mAddresseeList.begin(); addrIt != addrEndIt; ++addrIt ) {
     addressBook()->removeAddressee( *addrIt );
     lock()->unlock( (*addrIt).resource() );
@@ -100,7 +100,7 @@ QString PasteCommand::name() const
 void PasteCommand::unexecute()
 {
   KABC::Addressee::List::ConstIterator it;
-  const KABC::Addressee::List::ConstIterator endIt = mAddresseeList.end();
+  const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.end() );
 
   // lock resources
   for ( it = mAddresseeList.begin(); it != endIt; ++it )
@@ -117,14 +117,14 @@ void PasteCommand::execute()
   QStringList uids;
 
   KABC::Addressee::List::ConstIterator constIt;
-  const KABC::Addressee::List::ConstIterator constEndIt = mAddresseeList.end();
+  const KABC::Addressee::List::ConstIterator constEndIt( mAddresseeList.end() );
 
   // lock resources
   for ( constIt = mAddresseeList.begin(); constIt != constEndIt; ++constIt )
     lock()->lock( (*constIt).resource() );
 
   KABC::Addressee::List::Iterator it;
-  const KABC::Addressee::List::Iterator endIt = mAddresseeList.end();
+  const KABC::Addressee::List::Iterator endIt( mAddresseeList.end() );
   for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
     /**
        We have to set a new uid for the contact, otherwise insertAddressee()
@@ -137,7 +137,7 @@ void PasteCommand::execute()
   }
 
   QStringList::ConstIterator uidIt;
-  const QStringList::ConstIterator uidEndIt = uids.end();
+  const QStringList::ConstIterator uidEndIt( uids.end() );
   for ( uidIt = uids.begin(); uidIt != uidEndIt; ++uidIt )
     mCore->editContact( *uidIt );
 }
@@ -156,7 +156,7 @@ QString NewCommand::name() const
 void NewCommand::unexecute()
 {
   KABC::Addressee::List::ConstIterator it;
-  const KABC::Addressee::List::ConstIterator endIt = mAddresseeList.end();
+  const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.end() );
 
   // lock resources
   for ( it = mAddresseeList.begin(); it != endIt; ++it )
@@ -171,7 +171,7 @@ void NewCommand::unexecute()
 void NewCommand::execute()
 {
   KABC::Addressee::List::Iterator it;
-  const KABC::Addressee::List::Iterator endIt = mAddresseeList.end();
+  const KABC::Addressee::List::Iterator endIt( mAddresseeList.end() );
 
   // lock resources
   for ( it = mAddresseeList.begin(); it != endIt; ++it )
@@ -225,7 +225,7 @@ QString CutCommand::name() const
 void CutCommand::unexecute()
 {
   KABC::Addressee::List::ConstIterator it;
-  const KABC::Addressee::List::ConstIterator endIt = mAddresseeList.end();
+  const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.end() );
 
   // lock resources
   for ( it = mAddresseeList.begin(); it != endIt; ++it )
@@ -248,7 +248,7 @@ void CutCommand::execute()
   KABC::Addressee addr;
 
   QStringList::ConstIterator it;
-  const QStringList::ConstIterator endIt = mUIDList.end();
+  const QStringList::ConstIterator endIt( mUIDList.end() );
   for ( it = mUIDList.begin(); it != endIt; ++it ) {
     addr = addressBook()->findByUid( *it );
     mAddresseeList.append( addr );
@@ -256,7 +256,7 @@ void CutCommand::execute()
   }
 
   KABC::Addressee::List::ConstIterator addrIt;
-  const KABC::Addressee::List::ConstIterator addrEndIt = mAddresseeList.end();
+  const KABC::Addressee::List::ConstIterator addrEndIt( mAddresseeList.end() );
   for ( addrIt = mAddresseeList.begin(); addrIt != addrEndIt; ++addrIt ) {
     addressBook()->removeAddressee( *addrIt );
     lock()->unlock( addr.resource() );

@@ -62,7 +62,9 @@ void KABTools::mailVCards( const QStringList &uids, KABC::AddressBook *ab )
   }
 
   QStringList existingFiles;
-  for ( QStringList::ConstIterator it = uids.begin(); it != uids.end(); ++it ) {
+  QStringList::ConstIterator it( uids.begin() );
+  const QStringList::ConstIterator endIt( uids.end() );
+  for ( ; it != endIt; ++it ) {
     KABC::Addressee addressee = ab->findByUid( *it );
 
     if ( addressee.isEmpty() )
@@ -127,13 +129,15 @@ KABC::Addressee KABTools::mergeContacts( const KABC::Addressee::List &list )
 
   KABC::Addressee masterAddressee = list.first();
 
-  KABC::Addressee::List::ConstIterator contactIt = list.begin();
-  for ( ++contactIt; contactIt != list.end(); ++contactIt ) {
+  KABC::Addressee::List::ConstIterator contactIt( list.begin() );
+  const KABC::Addressee::List::ConstIterator contactEndIt( list.end() );
+  for ( ++contactIt; contactIt != contactEndIt; ++contactIt ) {
     // ADR + LABEL
     const KABC::Address::List addresses = (*contactIt).addresses();
     KABC::Address::List masterAddresses = masterAddressee.addresses();
-    KABC::Address::List::ConstIterator addrIt ;
-    for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt ) {
+    KABC::Address::List::ConstIterator addrIt( addresses.begin() );
+    const KABC::Address::List::ConstIterator addrEndIt( addresses.end() );
+    for ( ; addrIt != addrEndIt; ++addrIt ) {
       if ( !masterAddresses.contains( *addrIt ) )
         masterAddressee.insertAddress( *addrIt );
     }
@@ -143,11 +147,12 @@ KABC::Addressee KABTools::mergeContacts( const KABC::Addressee::List &list )
       masterAddressee.setBirthday( (*contactIt).birthday() );
 
     // CATEGORIES
-    QStringList::ConstIterator it;
     const QStringList categories = (*contactIt).categories();
     const QStringList masterCategories = masterAddressee.categories();
     QStringList newCategories( masterCategories );
-    for ( it = categories.begin(); it != categories.end(); ++it )
+    QStringList::ConstIterator it( categories.begin() );
+    QStringList::ConstIterator endIt( categories.end() );
+    for ( it = categories.begin(); it != endIt; ++it )
       if ( !masterCategories.contains( *it ) )
         newCategories.append( *it );
     masterAddressee.setCategories( newCategories );
@@ -159,7 +164,8 @@ KABC::Addressee KABTools::mergeContacts( const KABC::Addressee::List &list )
     // EMAIL
     const QStringList emails = (*contactIt).emails();
     const QStringList masterEmails = masterAddressee.emails();
-    for ( it = emails.begin(); it != emails.end(); ++it )
+    endIt = emails.end();
+    for ( it = emails.begin(); it != endIt; ++it )
       if ( !masterEmails.contains( *it ) )
         masterAddressee.insertEmail( *it, false );
 
@@ -227,8 +233,9 @@ KABC::Addressee KABTools::mergeContacts( const KABC::Addressee::List &list )
     // TEL
     const KABC::PhoneNumber::List phones = (*contactIt).phoneNumbers();
     const KABC::PhoneNumber::List masterPhones = masterAddressee.phoneNumbers();
-    KABC::PhoneNumber::List::ConstIterator phoneIt;
-    for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt )
+    KABC::PhoneNumber::List::ConstIterator phoneIt( phones.begin() );
+    const KABC::PhoneNumber::List::ConstIterator phoneEndIt( phones.end() );
+    for ( ; phoneIt != phoneEndIt; ++phoneIt )
       if ( !masterPhones.contains( *phoneIt ) )
         masterAddressee.insertPhoneNumber( *phoneIt );
 
@@ -250,7 +257,8 @@ KABC::Addressee KABTools::mergeContacts( const KABC::Addressee::List &list )
     const QStringList customs = (*contactIt).customs();
     const QStringList masterCustoms = masterAddressee.customs();
     QStringList newCustoms( masterCustoms );
-    for ( it = customs.begin(); it != customs.end(); ++it )
+    endIt = customs.end();
+    for ( it = customs.begin(); it != endIt; ++it )
       if ( !masterCustoms.contains( *it ) )
         newCustoms.append( *it );
     masterAddressee.setCustoms( newCustoms );
