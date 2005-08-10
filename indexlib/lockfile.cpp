@@ -45,7 +45,7 @@ lockfile::lockfile( std::string filename ):
 
 lockfile::~lockfile() {
        if ( locked() ) unlock();
-};
+}
 
 bool lockfile::locked() const {
 	return locked_;
