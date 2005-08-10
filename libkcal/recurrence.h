@@ -483,6 +483,9 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
 		
 		void recurrenceChanged( RecurrenceRule * );
 
+  protected:
+    RecurrenceRule *setNewRecurrenceType( RecurrenceRule::PeriodType type, int freq );
+
   private:
     RecurrenceRule::List mExRules;
     RecurrenceRule::List mRRules;
@@ -490,8 +493,6 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
     QValueList<QDate> mRDates;
     QValueList<QDateTime> mExDateTimes;
     QValueList<QDate> mExDates;
-
-    RecurrenceRule *setNewRecurrenceType( RecurrenceRule::PeriodType type, int freq );
 
     QDateTime mStartDateTime;            // date/time of first recurrence
     bool mFloating;                      // the recurrence has no time, just a date
