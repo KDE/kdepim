@@ -399,6 +399,7 @@ bool KPilotDeviceLink::open(QString device)
 	if (ret >= 0)
 	{
 		fLinkStatus = DeviceOpen;
+		if( fOpenTimer)
 		fOpenTimer->stop();
 
 		KPilotDeviceLinkPrivate::self()->bindDevice( fRealPilotPath );
@@ -447,8 +448,8 @@ bool KPilotDeviceLink::open(QString device)
 		}
 		e = errno;
 		msg = i18n("Cannot open Pilot port \"%1\". ");
-
-		fOpenTimer->stop();
+		if (fOpenTimer )
+			fOpenTimer->stop();
 
 		// goto errInit;
 	}

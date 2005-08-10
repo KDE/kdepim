@@ -292,7 +292,7 @@ void TodoWidget::setupWidget()
 void TodoWidget::updateWidget()
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!shown || !fTodoAppInfo ) return;
 
 	int listIndex = 0;
 
