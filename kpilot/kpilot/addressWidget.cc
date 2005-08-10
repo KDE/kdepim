@@ -677,7 +677,7 @@ void AddressWidget::writeAddress(PilotAddress * which,
 void AddressWidget::slotExport()
 {
 	FUNCTIONSETUP;
-
+	if( !fAddressAppInfo ) return;
 	int currentCatID = findSelectedCategory(fCatList,
 		fAddressAppInfo->categoryInfo());
 

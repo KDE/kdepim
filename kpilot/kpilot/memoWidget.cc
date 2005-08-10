@@ -608,7 +608,7 @@ void MemoWidget::slotAddMemo()
 void MemoWidget::slotImportMemo()
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!shown || !d->fMemoAppInfo ) return;
 
 	int currentCatID = findSelectedCategory(fCatList,
 		d->fMemoAppInfo->categoryInfo(), true);
