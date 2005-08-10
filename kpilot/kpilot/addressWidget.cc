@@ -295,6 +295,8 @@ void AddressWidget::updateWidget()
 {
 	FUNCTIONSETUP;
 
+	if( !fAddressAppInfo )
+			return;
 	int addressDisplayMode = KPilotSettings::addressDisplayMode();
 
 	int listIndex = 0;

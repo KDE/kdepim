@@ -410,7 +410,7 @@ void MemoWidget::slotDeleteMemo()
 void MemoWidget::updateWidget()
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!shown || !d->fMemoAppInfo ) return;
 
 	if (fCatList->currentItem() == -1)
 	{
