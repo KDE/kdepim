@@ -1,7 +1,6 @@
 /*
-    This file is part of kdepim.
-
-    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2005 by Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2005 by Florian Schröder <florian@deltatauchi.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,35 +16,40 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
-#ifndef SLOXACCOUNTS_H
-#define SLOXACCOUNTS_H
 
-#include <kabc/addressee.h>
-#include <kdepimmacros.h>
+#ifndef SLOXFOLDERMANAGER_H
+#define SLOXFOLDERMANAGER_H
+
+#include <qmap.h>
 #include <qobject.h>
+
+#include <kurl.h>
+
+#include <kdepimmacros.h>
 
 namespace KIO {
 class Job;
+class DavJob;
 }
 
 class SloxBase;
+class SloxFolder;
 
-class KDE_EXPORT SloxAccounts : public QObject
+class KDE_EXPORT SloxFolderManager : public QObject
 {
     Q_OBJECT
   public:
-    SloxAccounts( SloxBase *res, const KURL &baseUrl );
-    ~SloxAccounts();
+    SloxFolderManager( SloxBase *res, const KURL &baseUrl );
+    ~SloxFolderManager();
 
-    void insertUser( const QString &id, const KABC::Addressee &a );
+    QMap<QString, SloxFolder*> folders() const { return mFolders; }
+    void requestFolders();
 
-    KABC::Addressee lookupUser( const QString &id );
-
-    QString lookupId( const QString &email );
+  signals:
+    void foldersUpdated();
 
   protected:
-    void requestAccounts();
-    void readAccounts();
+    void readFolders();
 
     QString cacheFile() const;
 
@@ -53,13 +57,9 @@ class KDE_EXPORT SloxAccounts : public QObject
     void slotResult( KIO::Job * );
 
   private:
-    QString mDomain;
-
-    KIO::Job *mDownloadJob;
-
-    QMap<QString, KABC::Addressee> mUsers; // map users ids to addressees.
-
+    KIO::DavJob *mDownloadJob;
     KURL mBaseUrl;
+    QMap<QString, SloxFolder*> mFolders;
     SloxBase *mRes;
 };
 

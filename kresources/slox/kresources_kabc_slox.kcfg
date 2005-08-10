@@ -19,6 +19,10 @@
       <label>Only load data since last sync</label>
       <default>true</default>
     </entry>
+    <entry type="String" name="FolderId">
+      <label>Folder ID</label>
+      <default></default>
+    </entry>
   </group>
 
 </kcfg>

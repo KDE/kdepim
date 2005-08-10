@@ -25,6 +25,14 @@
       <label>Only load data since last sync</label>
       <default>true</default>
     </entry>
+    <entry type="String" name="CalendarFolderId">
+      <label>Calendar Folder</label>
+      <default></default>
+    </entry>
+    <entry type="String" name="TaskFolderId">
+      <label>Task Folder</label>
+      <default></default>
+    </entry>
   </group>
 
 </kcfg>

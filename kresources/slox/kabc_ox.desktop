@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=OpenXchange Server
+X-KDE-Library=kabc_slox
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=contact
+X-KDE-ResourceType=ox

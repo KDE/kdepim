@@ -22,6 +22,10 @@
 
 #include "kabcresourceslox.h"
 #include "kabcsloxprefs.h"
+#include "sloxbase.h"
+#include "sloxfolder.h"
+#include "sloxfolderdialog.h"
+#include "sloxfoldermanager.h"
 
 #include <kdebug.h>
 #include <kdialog.h>
@@ -35,9 +39,9 @@
 using namespace KABC;
 
 ResourceSloxConfig::ResourceSloxConfig( QWidget* parent,  const char* name )
-  : KRES::ConfigWidget( parent, name )
+  : KRES::ConfigWidget( parent, name ), mRes( 0 )
 {
-  QGridLayout *mainLayout = new QGridLayout( this, 4, 2, 0, KDialog::spacingHint() );
+  QGridLayout *mainLayout = new QGridLayout( this, 5, 2, 0, KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "URL:" ), this );
   mURL = new KURLRequester( this );
@@ -57,26 +61,36 @@ ResourceSloxConfig::ResourceSloxConfig( QWidget* parent,  const char* name )
 
   mainLayout->addWidget( label, 3, 0 );
   mainLayout->addWidget( mPassword, 3, 1 );
+
+  mFolderButton = new KPushButton( i18n("Select Folder..."), this );
+  mainLayout->addMultiCellWidget( mFolderButton, 4, 4, 0, 1 );
+  connect( mFolderButton, SIGNAL( clicked() ), SLOT( selectAddressFolder() ) );
+
 }
 
 void ResourceSloxConfig::loadSettings( KRES::Resource *res )
 {
   ResourceSlox *resource = dynamic_cast<ResourceSlox*>( res );
-  
+  mRes = resource;
+
   if ( !resource ) {
     kdDebug(5700) << "ResourceSloxConfig::loadSettings(): cast failed" << endl;
     return;
   }
 
+  if ( mRes->resType() == "slox" )
+    mFolderButton->setEnabled( false ); // TODO folder selection for SLOX
+
   mURL->setURL( resource->prefs()->url() );
   mUser->setText( resource->prefs()->user() );
   mPassword->setText( resource->prefs()->password() );
+  mFolderId = resource->prefs()->folderId();
 }
 
 void ResourceSloxConfig::saveSettings( KRES::Resource *res )
 {
   ResourceSlox *resource = dynamic_cast<ResourceSlox*>( res );
-  
+
   if ( !resource ) {
     kdDebug(5700) << "ResourceSloxConfig::saveSettings(): cast failed" << endl;
     return;
@@ -85,6 +99,16 @@ void ResourceSloxConfig::saveSettings( KRES::Resource *res )
   resource->prefs()->setUrl( mURL->url() );
   resource->prefs()->setUser( mUser->text() );
   resource->prefs()->setPassword( mPassword->text() );
+  resource->prefs()->setFolderId( mFolderId );
+}
+
+void KABC::ResourceSloxConfig::selectAddressFolder( )
+{
+  SloxFolderManager *manager = new SloxFolderManager( mRes, mURL->url() );
+  SloxFolderDialog *dialog = new SloxFolderDialog( manager, Contacts, this );
+  dialog->setSelectedFolder( mFolderId );
+  if ( dialog->exec() == QDialog::Accepted )
+    mFolderId = dialog->selectedFolder();
 }
 
 #include "kabcresourcesloxconfig.moc"

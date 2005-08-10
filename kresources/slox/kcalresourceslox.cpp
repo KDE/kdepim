@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2005 Volker Krause <volker.krause@rwth-aachen.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -60,7 +61,7 @@
 using namespace KCal;
 
 KCalResourceSlox::KCalResourceSlox( const KConfig *config )
-  : ResourceCached( config )
+  : ResourceCached( config ), SloxBase( this )
 {
   init();
 
@@ -72,7 +73,7 @@ KCalResourceSlox::KCalResourceSlox( const KConfig *config )
 }
 
 KCalResourceSlox::KCalResourceSlox( const KURL &url )
-  : ResourceCached( 0 )
+  : ResourceCached( 0 ), SloxBase( this )
 {
   init();
 
@@ -101,6 +102,7 @@ KCalResourceSlox::~KCalResourceSlox()
 void KCalResourceSlox::init()
 {
   mPrefs = new SloxPrefs;
+  mWebdavHandler.setResource( this );
 
   mLoadEventsJob = 0;
   mLoadTodosJob = 0;
@@ -111,8 +113,6 @@ void KCalResourceSlox::init()
   mLoadTodosProgress = 0;
 
   mAccounts = 0;
-
-  setType( "slox" );
 
   mLock = new KABC::LockNull( true );
 
@@ -132,7 +132,7 @@ void KCalResourceSlox::readConfig( const KConfig *config )
   url.setPass( mPrefs->password() );
 
   delete mAccounts;
-  mAccounts = new SloxAccounts( url ); 
+  mAccounts = new SloxAccounts( this, url );
 }
 
 void KCalResourceSlox::writeConfig( KConfig *config )
@@ -213,9 +213,13 @@ void KCalResourceSlox::requestEvents()
   QDomDocument doc;
   QDomElement root = WebdavHandler::addDavElement( doc, doc, "propfind" );
   QDomElement prop = WebdavHandler::addDavElement( doc, root, "prop" );
-  WebdavHandler::addSloxElement( doc, prop, "lastsync", lastsync );
-  WebdavHandler::addSloxElement( doc, prop, "folderid" );
-  WebdavHandler::addSloxElement( doc, prop, "objecttype", "all" );
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( LastSync ), lastsync );
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( FolderId ), mPrefs->calendarFolderId() );
+  if ( type() == "ox" ) {
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectType ), "NEW_AND_MODIFIED" );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectType ), "DELETED" );
+  } else
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectType ), "all" );
 
   kdDebug() << "REQUEST CALENDAR: \n" << doc.toString( 2 ) << endl;
 
@@ -254,9 +258,13 @@ void KCalResourceSlox::requestTodos()
   QDomDocument doc;
   QDomElement root = WebdavHandler::addDavElement( doc, doc, "propfind" );
   QDomElement prop = WebdavHandler::addDavElement( doc, root, "prop" );
-  WebdavHandler::addSloxElement( doc, prop, "lastsync", lastsync );
-  WebdavHandler::addSloxElement( doc, prop, "folderid" );
-  WebdavHandler::addSloxElement( doc, prop, "objecttype", "all" );
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( LastSync ), lastsync );
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( FolderId ), mPrefs->taskFolderId() );
+  if ( type() == "ox" ) {
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectType ), "NEW_AND_MODIFIED" );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectType ), "DELETED" );
+  } else
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectType ), "all" );
 
   kdDebug() << "REQUEST TASKS: \n" << doc.toString( 2 ) << endl;
 
@@ -278,8 +286,8 @@ void KCalResourceSlox::requestTodos()
 void KCalResourceSlox::uploadIncidences()
 {
   QDomDocument doc;
-  QDomElement ms = WebdavHandler::addDavElement( doc, doc, "D:multistatus" );
-  QDomElement pu = WebdavHandler::addDavElement( doc, ms, "D:propertyupdate" );
+  QDomElement ms = WebdavHandler::addDavElement( doc, doc, "multistatus" );
+  QDomElement pu = WebdavHandler::addDavElement( doc, ms, "propertyupdate" );
   QDomElement set = WebdavHandler::addElement( doc, pu, "D:set" );
   QDomElement prop = WebdavHandler::addElement( doc, set, "D:prop" );
 
@@ -304,7 +312,7 @@ void KCalResourceSlox::uploadIncidences()
   // Don't try to upload recurring incidences as long as the resource doesn't
   // correctly write them in order to avoid corrupting data on the server.
   // FIXME: Remove when recurrences are correctly written.
-  if ( mUploadedIncidence->recurrenceType() ) {
+  if ( mUploadedIncidence->doesRecur() && type() == "slox" ) {
     clearChange( mUploadedIncidence );
     uploadIncidences();
     return;
@@ -314,7 +322,7 @@ void KCalResourceSlox::uploadIncidences()
 
   QString sloxId = mUploadedIncidence->customProperty( "SLOX", "ID" );
   if ( !sloxId.isEmpty() ) {
-    WebdavHandler::addSloxElement( doc, prop, "S:sloxid", sloxId );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectId ), sloxId );
   } else {
     if ( mUploadIsDelete ) {
       kdError() << "Incidence to delete doesn't have a SLOX id" << endl;
@@ -323,7 +331,7 @@ void KCalResourceSlox::uploadIncidences()
       return;
     }
   }
-  WebdavHandler::addSloxElement( doc, prop, "S:clientid",
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( ClientId ),
                                  mUploadedIncidence->uid() );
 
   if ( mUploadIsDelete ) {
@@ -337,15 +345,21 @@ void KCalResourceSlox::uploadIncidences()
       return;
     }
 
-    QDomElement remove = WebdavHandler::addElement( doc, pu, "D:remove" );
-    QDomElement prop = WebdavHandler::addElement( doc, remove, "D:prop" );
-    WebdavHandler::addSloxElement( doc, prop, "S:sloxid", sloxId );
+    if ( type() == "ox" ) {
+      WebdavHandler::addSloxElement( this, doc, prop, "method", "DELETE" );
+    } else {
+      QDomElement remove = WebdavHandler::addElement( doc, pu, "D:remove" );
+      QDomElement prop = WebdavHandler::addElement( doc, remove, "D:prop" );
+      WebdavHandler::addSloxElement( this, doc, prop, "sloxid", sloxId );
+    }
   } else {
     createIncidenceAttributes( doc, prop, mUploadedIncidence );
     // FIXME: Use a visitor
     if ( mUploadedIncidence->type() == "Event" ) {
       url.setPath( "/servlet/webdav.calendar/file.xml" );
       createEventAttributes( doc, prop, static_cast<Event *>( mUploadedIncidence ) );
+      // TODO: OX supports recurrences also for tasks
+      createRecurrenceAttributes( doc, prop, mUploadedIncidence );
     } else if ( mUploadedIncidence->type() == "Todo" ) {
       url.setPath( "/servlet/webdav.tasks/file.xml" );
       createTodoAttributes( doc, prop, static_cast<Todo *>( mUploadedIncidence ) );
@@ -380,23 +394,28 @@ void KCalResourceSlox::createIncidenceAttributes( QDomDocument &doc,
                                                   QDomElement &parent,
                                                   Incidence *incidence )
 {
-  WebdavHandler::addSloxElement( doc, parent, "S:title",
+  WebdavHandler::addSloxElement( this, doc, parent, fieldName( IncidenceTitle ),
                                  incidence->summary() );
 
-  WebdavHandler::addSloxElement( doc, parent, "S:description",
+  WebdavHandler::addSloxElement( this, doc, parent, fieldName( Description ),
                                  incidence->description() );
 
-  WebdavHandler::addSloxElement( doc, parent, "S:folderid" );
-
   if ( incidence->attendeeCount() > 0 ) {
-    QDomElement members = WebdavHandler::addSloxElement( doc, parent,
-                                                          "S:members" );
+    QDomElement members = WebdavHandler::addSloxElement( this, doc, parent,
+        fieldName( Participants ) );
     Attendee::List attendees = incidence->attendees();
     Attendee::List::ConstIterator it;
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
       if ( mAccounts ) {
         QString userId = mAccounts->lookupId( (*it)->email() );
-        WebdavHandler::addSloxElement( doc, members, "S:member", userId );
+        QString status;
+        switch ( (*it)->status() ) {
+          case Attendee::Accepted: status = "accept"; break;
+          case Attendee::Declined: status = "decline"; break;
+          default: status = "none"; break;
+        }
+        QDomElement el = WebdavHandler::addSloxElement( this, doc, members, fieldName( Participant ), userId );
+        el.setAttribute( "confirm", status );
       } else {
         kdError() << "KCalResourceSlox: No accounts set." << endl;
       }
@@ -404,16 +423,20 @@ void KCalResourceSlox::createIncidenceAttributes( QDomDocument &doc,
   }
 
   // set read attributes - if SecrecyPublic, set it to users
-  if ( incidence->secrecy() == Incidence::SecrecyPublic )
+  // TODO OX support
+  if ( incidence->secrecy() == Incidence::SecrecyPublic && type() != "ox" )
   {
-    QDomElement rights = WebdavHandler::addSloxElement( doc, parent, "S:readrights" );
-    WebdavHandler::addSloxElement( doc, rights, "S:group", "users" );
+    QDomElement rights = WebdavHandler::addSloxElement( this, doc, parent, "readrights" );
+    WebdavHandler::addSloxElement( this, doc, rights, "group", "users" );
   }
 
   // set reminder as the number of minutes to the start of the event
   KCal::Alarm::List alarms = incidence->alarms();
   if ( !alarms.isEmpty() && alarms.first()->hasStartOffset() && alarms.first()->enabled() )
-    WebdavHandler::addSloxElement( doc, parent, "S:reminder", QString::number( alarms.first()->startOffset().asSeconds() / 60 ) );;
+    WebdavHandler::addSloxElement( this, doc, parent, fieldName( Reminder ),
+                                   QString::number( (-1) * alarms.first()->startOffset().asSeconds() / 60 ) );
+  else
+    WebdavHandler::addSloxElement( this, doc, parent, fieldName( Reminder ), "0" );
 
 }
 
@@ -421,18 +444,23 @@ void KCalResourceSlox::createEventAttributes( QDomDocument &doc,
                                               QDomElement &parent,
                                               Event *event )
 {
-  WebdavHandler::addSloxElement( doc, parent, "S:begins",
+  QString folderId = mPrefs->calendarFolderId();
+  if ( folderId.isEmpty() && type() == "ox" ) // SLOX and OX use diffrent default folders
+    folderId = "-1";
+  WebdavHandler::addSloxElement( this, doc, parent, fieldName( FolderId ), folderId );
+
+  WebdavHandler::addSloxElement( this, doc, parent, fieldName( EventBegin ),
       WebdavHandler::qDateTimeToSlox( event->dtStart(), timeZoneId() ) );
 
-  WebdavHandler::addSloxElement( doc, parent, "S:ends",
+  WebdavHandler::addSloxElement( this, doc, parent, fieldName( EventEnd ),
       WebdavHandler::qDateTimeToSlox( event->dtEnd(), timeZoneId() ) );
 
-  WebdavHandler::addSloxElement( doc, parent, "S:location", event->location() );
+  WebdavHandler::addSloxElement( this, doc, parent, fieldName( Location ), event->location() );
 
   if ( event->doesFloat() ) {
-    WebdavHandler::addSloxElement( doc, parent, "S:full_time", "yes" );
+    WebdavHandler::addSloxElement( this, doc, parent, fieldName( FullTime ), boolToStr( true ) );
   } else {
-    WebdavHandler::addSloxElement( doc, parent, "S:full_time", "no" );
+    WebdavHandler::addSloxElement( this, doc, parent, fieldName( FullTime ), boolToStr( false ) );
   }
 }
 
@@ -440,36 +468,125 @@ void KCalResourceSlox::createTodoAttributes( QDomDocument &doc,
                                              QDomElement &parent,
                                              Todo *todo )
 {
+  QString folderId = mPrefs->taskFolderId();
+  if ( folderId.isEmpty() && type() == "ox" ) // SLOX and OX use diffrent default folders
+    folderId = "-1";
+  WebdavHandler::addSloxElement( this, doc, parent, fieldName( FolderId ), folderId );
+
   if ( todo->hasStartDate() ) {
-    WebdavHandler::addSloxElement( doc, parent, "S:startdate",
+    WebdavHandler::addSloxElement( this, doc, parent, fieldName( TaskBegin ),
         WebdavHandler::qDateTimeToSlox( todo->dtStart(), timeZoneId() ) );
   }
 
   if ( todo->hasDueDate() ) {
-    WebdavHandler::addSloxElement( doc, parent, "S:deadline",
+    WebdavHandler::addSloxElement( this, doc, parent, fieldName( TaskEnd ),
         WebdavHandler::qDateTimeToSlox( todo->dtDue(), timeZoneId() ) );
   }
 
   int priority = todo->priority();
   QString txt;
   switch ( priority ) {
-    case 5:
-    case 4:
+    case 9:
+    case 8:
       txt = "1";
-      break;
-    default:
-    case 3:
-      txt = "2";
       break;
     case 2:
     case 1:
       txt = "3";
       break;
+    default:
+      txt = "2";
+      break;
   }
-  WebdavHandler::addSloxElement( doc, parent, "S:priority", txt );
+  WebdavHandler::addSloxElement( this, doc, parent, fieldName( Priority ), txt );
 
-  WebdavHandler::addSloxElement( doc, parent, "S:status",
+  WebdavHandler::addSloxElement( this, doc, parent, fieldName( PercentComplete ),
                                  QString::number( todo->percentComplete() ) );
+}
+
+void KCalResourceSlox::createRecurrenceAttributes( QDomDocument &doc,
+                                                   QDomElement &parent,
+                                                   KCal::Incidence *incidence )
+{
+  if ( !incidence->doesRecur() ) {
+    WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceType ),
+                                   type() == "ox" ? "none" : "no" );
+    return;
+  }
+  Recurrence *r = incidence->recurrence();
+  int monthOffset = ( type() == "ox" ? -1 : 0 );
+  switch ( r->recurrenceType() ) {
+    case Recurrence::rDaily:
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceType ), "daily" );
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceDailyFreq ),
+                                     QString::number( r->frequency() ) );
+      break;
+    case Recurrence::rWeekly: {
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceType ), "weekly" );
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceWeeklyFreq ),
+                                     QString::number( r->frequency() ) );
+      // TODO: SLOX support
+      int oxDays = 0;
+      for ( int i = 0; i < 7; ++i ) {
+        if ( r->days()[i] )
+          oxDays += 1 << ( ( i + 1 ) % 7 );
+      }
+      if ( type() == "ox" )
+        WebdavHandler::addSloxElement( this, doc, parent, "days", QString::number( oxDays ) );
+      break; }
+    case Recurrence::rMonthlyDay:
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceType ), "monthly" );
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceMonthlyFreq ),
+                                     QString::number( r->frequency() ) );
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceMonthlyDay ),
+                                     QString::number( r->monthDays().first() ) );
+      break;
+    case Recurrence::rMonthlyPos: {
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceType ),
+                                     type() == "ox" ? "monthly" : "monthly2" );
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceMonthly2Freq ),
+                                     QString::number( r->frequency() ) );
+      RecurrenceRule::WDayPos wdp = r->monthPositions().first();
+      // TODO: SLOX support
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceMonthly2Day ),
+                                     QString::number( 1 << wdp.day() ) );
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceMonthly2Pos ),
+                                     QString::number( wdp.pos() ) );
+      break; }
+    case Recurrence::rYearlyMonth:
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceType ), "yearly" );
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceYearlyDay ),
+                                     QString::number( r->yearDates().first() ) );
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceYearlyMonth ),
+                                     QString::number( r->yearMonths().first() + monthOffset ) );
+      if ( type() == "ox" )
+        WebdavHandler::addSloxElement( this, doc, parent, "interval", "1" );
+      break;
+    case Recurrence::rYearlyPos: {
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceType ),
+                                     type() == "ox" ? "yearly" : "yearly2" );
+      RecurrenceRule::WDayPos wdp = r->monthPositions().first();
+      // TODO: SLOX support
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceYearly2Day ),
+                                     QString::number( 1 << wdp.day() ) );
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceYearly2Pos ),
+                                     QString::number( wdp.pos() ) );
+      WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceYearly2Month ),
+                                     QString::number( r->yearMonths().first() + monthOffset ) );
+      if ( type() == "ox" )
+        WebdavHandler::addSloxElement( this, doc, parent, "interval", "1" );
+      break; }
+    default:
+      kdDebug() << k_funcinfo << "unsupported recurrence type: " << r->recurrenceType() << endl;
+  }
+  WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceEnd ),
+                                 WebdavHandler::qDateTimeToSlox( r->endDateTime() ) );
+  // delete exceptions
+  DateList exlist = r->exDates();
+  QStringList res;
+  for ( DateList::Iterator it = exlist.begin(); it != exlist.end(); ++it )
+    res.append( WebdavHandler::qDateTimeToSlox( *it ) );
+  WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceDelEx ), res.join( "," ) );
 }
 
 void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
@@ -480,7 +597,7 @@ void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
   QDomNode n;
   for( n = e.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     QDomElement memberElement = n.toElement();
-    if ( memberElement.tagName() == "member" ) {
+    if ( memberElement.tagName() == fieldName( Participant ) ) {
       QString member = memberElement.text();
       KABC::Addressee account;
       if ( mAccounts ) account = mAccounts->lookupUser( member );
@@ -504,6 +621,16 @@ void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
         a = new Attendee( name, email );
         a->setUid( member );
         incidence->addAttendee( a );
+      }
+      QString status = memberElement.attribute( "confirm" );
+      if ( !status.isEmpty() ) {
+        if ( status == "accept" ) {
+          a->setStatus( Attendee::Accepted );
+        } else if ( status == "decline" ) {
+          a->setStatus( Attendee::Declined );
+        } else {
+          a->setStatus( Attendee::NeedsAction );
+        }
       }
     } else {
       kdDebug() << "Unknown tag in members attribute: "
@@ -530,16 +657,15 @@ void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
                                                 Incidence *incidence )
 {
   QString tag = e.tagName();
-  QString text = QString::fromUtf8( e.text().latin1() );
+  QString text = decodeText( e.text() );
   if ( text.isEmpty() ) return;
 
-  if ( tag == "title" ) {
+  if ( tag == fieldName( IncidenceTitle ) ) {
     incidence->setSummary( text );
-  } else if ( e.tagName() == "description" ) {
+  } else if ( e.tagName() == fieldName( Description ) ) {
     incidence->setDescription( text );
-  } else if ( tag == "reminder" ) {
+  } else if ( tag == fieldName( Reminder ) ) {
     int minutes = text.toInt();
-    // FIXME: What exactly means a "0" reminder?
     if ( minutes != 0 ) {
       Alarm::List alarms = incidence->alarms();
       Alarm *alarm;
@@ -551,8 +677,11 @@ void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
       Duration d( minutes * -60 );
       alarm->setStartOffset( d );
       alarm->setEnabled( true );
+    } else {
+      // 0 reminder -> disable alarm
+      incidence->clearAlarms();
     }
-  } else if ( tag == "members" ) {
+  } else if ( tag == fieldName( Participants ) ) {
     parseMembersAttribute( e, incidence );
   } else if ( tag == "readrights" ) {
     parseReadRightsAttribute( e, incidence );
@@ -563,15 +692,15 @@ void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
                                             Event *event )
 {
   QString tag = e.tagName();
-  QString text = QString::fromUtf8( e.text().latin1() );
+  QString text = decodeText( e.text() );
   if ( text.isEmpty() ) return;
 
-  if ( tag == "begins" ) {
+  if ( tag == fieldName( EventBegin ) ) {
     QDateTime dt;
     if ( event->doesFloat() ) dt = WebdavHandler::sloxToQDateTime( text );
     else dt = WebdavHandler::sloxToQDateTime( text, timeZoneId() );
     event->setDtStart( dt );
-  } else if ( tag == "ends" ) {
+  } else if ( tag == fieldName( EventEnd ) ) {
     QDateTime dt;
     if ( event->doesFloat() ) {
       dt = WebdavHandler::sloxToQDateTime( text );
@@ -579,7 +708,7 @@ void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
     }
     else dt = WebdavHandler::sloxToQDateTime( text, timeZoneId() );
     event->setDtEnd( dt );
-  } else if ( tag == "location" ) {
+  } else if ( tag == fieldName( Location ) ) {
     event->setLocation( text );
   }
 }
@@ -593,33 +722,37 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
 
   int weeklyValue = -1;
   QBitArray days( 7 ); // days, starting with monday
- 
+  bool daysSet = false;
+
   int monthlyValueDay = -1;
   int monthlyValueMonth = -1;
 
   int yearlyValueDay = -1;
   int yearlyMonth = -1;
-  
+
   int monthly2Recurrency = 0;
   int monthly2Day = 0;
   int monthly2ValueMonth = -1;
-  
+
   int yearly2Recurrency = 0;
   int yearly2Day = 0;
   int yearly2Month = -1;
 
+  DateList deleteExceptions;
+
   QDomNode n;
-  
+
   for( n = node.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     QDomElement e = n.toElement();
     QString tag = e.tagName();
-    QString text = QString::fromUtf8( e.text().latin1() );
-    
-    if ( tag == "date_sequence" ) {
+    QString text = decodeText( e.text() );
+    kdDebug() << k_funcinfo << tag << ": " << text << endl;
+
+    if ( tag == fieldName( RecurrenceType ) ) {
       type = text;
     } else if ( tag == "daily_value" ) {
       dailyValue = text.toInt();
-    } else if ( tag == "ds_ends" ) {
+    } else if ( tag == fieldName( RecurrenceEnd ) ) {
       end = WebdavHandler::sloxToQDateTime( text );
     } else if ( tag == "weekly_value" ) {
       weeklyValue = text.toInt();
@@ -649,11 +782,42 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
       yearly2Day = text.toInt();
     } else if ( tag == "yearly2_month" ) {
       yearly2Month = text.toInt();
+    // OX recurrence fields
+    } else if ( tag == "interval" ) {
+      dailyValue = text.toInt();
+      weeklyValue = text.toInt();
+      monthlyValueMonth = text.toInt();
+      monthly2ValueMonth = text.toInt();
+    } else if ( tag == "days" ) {
+      int tmp = text.toInt();  // OX encodes days binary: 1=Su, 2=Mo, 4=Tu, ...
+      for ( int i = 0; i < 7; ++i ) {
+        if ( tmp & (1 << i) )
+          days.setBit( (i + 6) % 7 );
+      }
+      daysSet = true;
+    } else if ( tag == "day_in_month" ) {
+      monthlyValueDay = text.toInt();
+      monthly2Recurrency = text.toInt();
+      yearlyValueDay = text.toInt();
+      yearly2Day = text.toInt();
+    } else if ( tag == "month" ) {
+      yearlyMonth = text.toInt() + 1; // starts at 0
+      yearly2Month = text.toInt() + 1;
+    } else if ( tag == fieldName( RecurrenceDelEx ) ) {
+      QStringList exdates = QStringList::split( ",", text );
+      QStringList::Iterator it;
+      for ( it = exdates.begin(); it != exdates.end(); ++it )
+        deleteExceptions.append( WebdavHandler::sloxToQDateTime( *it ).date() );
     }
   }
-  
+
+  if ( daysSet && type == "monthly" )
+    type = "monthly2"; // HACK: OX doesn't cleanly distinguish between monthly and monthly2
+  if ( daysSet && type == "yearly" )
+    type = "yearly2";
+
   Recurrence *r = event->recurrence();
-  
+
   if ( type == "daily" ) {
     r->setDaily( dailyValue );
   } else if ( type == "weekly" ) {
@@ -663,41 +827,45 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
     r->addMonthlyDate( monthlyValueDay );
   } else if ( type == "yearly" ) {
     r->setYearly( 1 );
-		r->addYearlyDate( yearlyValueDay );
+    r->addYearlyDate( yearlyValueDay );
     r->addYearlyMonth( yearlyMonth );
   } else if ( type == "monthly2" ) {
     r->setMonthly( monthly2ValueMonth );
-    QBitArray days( 7 );
-    days.setBit( event->dtStart().date().dayOfWeek() );
-    r->addMonthlyPos( monthly2Recurrency, days );
-  } else if ( type == "yearly2" ) {  
+    QBitArray _days( 7 );
+    if ( daysSet )
+      _days = days;
+    else
+      _days.setBit( event->dtStart().date().dayOfWeek() );
+    r->addMonthlyPos( monthly2Recurrency, _days );
+  } else if ( type == "yearly2" ) {
     r->setYearly( 1 );
-		r->addYearlyDate( yearly2Day );
+    r->addYearlyDate( yearly2Day );
     r->addYearlyMonth( yearly2Month );
   }
-	r->setEndDate( end.date() );
+  r->setEndDate( end.date() );
+  r->setExDates( deleteExceptions );
 }
 
 void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
                                            Todo *todo )
 {
   QString tag = e.tagName();
-  QString text = QString::fromUtf8( e.text().latin1() );
+  QString text = decodeText( e.text() );
   if ( text.isEmpty() ) return;
 
-  if ( tag == "startdate" ) {
+  if ( tag == fieldName( TaskBegin ) ) {
     QDateTime dt = WebdavHandler::sloxToQDateTime( text );
     if ( dt.isValid() ) {
       todo->setDtStart( dt );
       todo->setHasStartDate( true );
     }
-  } else if ( tag == "deadline" ) {
+  } else if ( tag == fieldName( TaskEnd ) ) {
     QDateTime dt = WebdavHandler::sloxToQDateTime( text );
     if ( dt.isValid() ) {
       todo->setDtDue( dt );
       todo->setHasDueDate( true );
     }
-  } else if ( tag == "priority" ) {
+  } else if ( tag == fieldName( Priority ) ) {
     int p = text.toInt();
     if ( p < 1 || p > 3 ) {
       kdError() << "Unknown priority: " << text << endl;
@@ -705,11 +873,11 @@ void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
       int priority;
       switch ( p ) {
         case 1:
-          priority = 5;
+          priority = 9;
           break;
         default:
         case 2:
-          priority = 3;
+          priority = 5;
           break;
         case 3:
           priority = 1;
@@ -717,7 +885,7 @@ void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
       }
       todo->setPriority( priority );
     }
-  } else if ( tag == "status" ) {
+  } else if ( tag == fieldName( PercentComplete ) ) {
     int completed = text.toInt();
     todo->setPercentComplete( completed );
   }
@@ -736,7 +904,7 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 
     mWebdavHandler.log( doc.toString( 2 ) );
 
-    QValueList<SloxItem> items = WebdavHandler::getSloxItems( doc );
+    QValueList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
 
     bool changed = false;
 
@@ -810,7 +978,7 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 
     mWebdavHandler.log( doc.toString( 2 ) );
 
-    QValueList<SloxItem> items = WebdavHandler::getSloxItems( doc );
+    QValueList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
 
     bool changed = false;
 
@@ -838,8 +1006,8 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 
         event->setCustomProperty( "SLOX", "ID", item.sloxId );
 
-        QDomNode n = item.domNode.namedItem( "full_time" );
-        event->setFloats( n.toElement().text() == "yes" );
+        QDomNode n = item.domNode.namedItem( fieldName( FullTime ) );
+        event->setFloats( n.toElement().text() == boolToStr( true ) );
 
         bool doesRecur = false;
 
@@ -850,12 +1018,15 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
           mWebdavHandler.parseSloxAttribute( e );
           parseIncidenceAttribute( e, event );
           parseEventAttribute( e, event );
-          if ( e.tagName() == "date_sequence" && e.text() != "no" ) {
+          if ( e.tagName() == fieldName( RecurrenceType ) && e.text() != "no" ) {
             doesRecur = true;
           }
         }
 
-        if ( doesRecur ) parseRecurrence( item.domNode, event );
+        if ( doesRecur )
+          parseRecurrence( item.domNode, event );
+        else
+          event->recurrence()->unsetRecurs();
 
         mWebdavHandler.setSloxAttributes( event );
 
@@ -916,12 +1087,12 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
           kdError() << "Unable to find propstat tag." << endl;
           continue;
         }
-        
+
         QDomNode status = propstat.namedItem( "status" );
         if ( !status.isNull() ) {
           QDomElement statusElement = status.toElement();
           QString response = statusElement.text();
-          if ( response != "HTTP/1.1 200 OK" ) {
+        if ( !response.contains( "200" ) ) {
             QString error = "'" + mUploadedIncidence->summary() + "'\n";
             error += response;
             QDomNode dn = propstat.namedItem( "responsedescription" );
@@ -938,7 +1109,7 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
           continue;
         }
 
-        QDomNode sloxIdNode = prop.namedItem( "sloxid" );
+        QDomNode sloxIdNode = prop.namedItem( fieldName( ObjectId ) );
         if ( sloxIdNode.isNull() ) {
           kdError() << "Unable to find SLOX id." << endl;
           continue;
@@ -950,7 +1121,7 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
         if ( mUploadIsDelete ) {
           kdDebug() << "Incidence deleted" << endl;
         } else {
-          QDomNode clientIdNode = prop.namedItem( "clientid" );
+          QDomNode clientIdNode = prop.namedItem( fieldName( ClientId ) );
           if ( clientIdNode.isNull() ) {
             kdError() << "Unable to find client id." << endl;
             continue;

@@ -28,19 +28,22 @@
 
 class QCheckBox;
 class KLineEdit;
+class KPushButton;
 
 namespace KCal {
 class ResourceCachedReloadConfig;
 class ResourceCachedSaveConfig;
 }
 
+class SloxBase;
+
 /**
   Configuration widget for SLOX resource.
-  
+
   @see KCalResourceSlox
 */
 class KDE_EXPORT KCalResourceSloxConfig : public KRES::ConfigWidget
-{ 
+{
     Q_OBJECT
   public:
     KCalResourceSloxConfig( QWidget *parent = 0, const char *name = 0 );
@@ -49,14 +52,24 @@ class KDE_EXPORT KCalResourceSloxConfig : public KRES::ConfigWidget
     virtual void loadSettings( KRES::Resource *resource );
     virtual void saveSettings( KRES::Resource *resource );
 
+  private slots:
+    void selectCalendarFolder();
+    void selectTaskFolder();
+
   private:
     KURLRequester *mDownloadUrl;
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;
-    QCheckBox *mLastSyncCheck;    
+    QCheckBox *mLastSyncCheck;
+    KPushButton *mCalButton;
+    KPushButton *mTaskButton;
+    QString mCalendarFolderId;
+    QString mTaskFolderId;
 
     KCal::ResourceCachedReloadConfig *mReloadConfig;
     KCal::ResourceCachedSaveConfig *mSaveConfig;
+
+    SloxBase *mRes;
 };
 
 #endif

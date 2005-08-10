@@ -20,6 +20,7 @@
 #ifndef KABC_RESOURCESLOX_H
 #define KABC_RESOURCESLOX_H
 
+#include "sloxbase.h"
 #include "webdavhandler.h"
 
 #include <kabc/resource.h>
@@ -43,7 +44,7 @@ namespace KABC {
 
 class SloxPrefs;
 
-class KDE_EXPORT ResourceSlox : public Resource
+class KDE_EXPORT ResourceSlox : public Resource, public SloxBase
 {
     Q_OBJECT
   public:

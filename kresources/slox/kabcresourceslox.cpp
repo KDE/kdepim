@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2005 Volker Krause <volker.krause@rwth-aachen.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -40,7 +41,7 @@
 using namespace KABC;
 
 ResourceSlox::ResourceSlox( const KConfig *config )
-  : Resource( config )
+  : Resource( config ), SloxBase( this )
 {
   init();
 
@@ -53,7 +54,7 @@ ResourceSlox::ResourceSlox( const KConfig *config )
 
 ResourceSlox::ResourceSlox( const KURL &url,
                             const QString &user, const QString &password )
-  : Resource( 0 )
+  : Resource( 0 ), SloxBase( this )
 {
   init();
 
@@ -67,12 +68,11 @@ ResourceSlox::ResourceSlox( const KURL &url,
 void ResourceSlox::init()
 {
   mPrefs = new SloxPrefs;
-
-  setType( "slox" );
+  mWebdavHandler.setResource( this );
 
   mDownloadJob = 0;
   mProgress = 0;
-  
+
   setReadOnly( true );
 }
 
@@ -156,9 +156,13 @@ bool ResourceSlox::asyncLoad()
   QDomDocument doc;
   QDomElement root = WebdavHandler::addDavElement( doc, doc, "propfind" );
   QDomElement prop = WebdavHandler::addDavElement( doc, root, "prop" );
-  WebdavHandler::addSloxElement( doc, prop, "lastsync", "0" );
-  WebdavHandler::addSloxElement( doc, prop, "folderid" );
-  WebdavHandler::addSloxElement( doc, prop, "objecttype", "all" );
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( LastSync ), "0" );
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( FolderId ), mPrefs->folderId() );
+  if ( type() == "ox" ) {
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectType ), "NEW_AND_MODIFIED" );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectType ), "DELETED" );
+  } else
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectType ), "all" );
 
   kdDebug() << "REQUEST CONTACTS: \n" << doc.toString( 2 ) << endl;
 
@@ -190,7 +194,7 @@ void ResourceSlox::slotResult( KIO::Job *job )
 
     mWebdavHandler.log( doc.toString( 2 ) );
 
-    QValueList<SloxItem> items = WebdavHandler::getSloxItems( doc );
+    QValueList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
 
     bool changed = false;
 
@@ -241,53 +245,75 @@ void ResourceSlox::slotResult( KIO::Job *job )
 
 void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
 {
-  // FIXME: Why is the text still UTF8 encoded?
-  QString text = QString::fromUtf8( e.text().latin1() );
+  QString text = decodeText( e.text() );
   if ( text.isEmpty() ) return;
   QString tag = e.tagName();
 
-  if ( tag == "birthday" ) {
+  if ( tag == fieldName( Birthday ) ) {
     QDateTime dt = WebdavHandler::sloxToQDateTime( text );
     a.setBirthday( dt.date() );
-  } else if ( tag == "position" ) {
+  } else if ( tag == fieldName( Role ) ) {
     a.setRole( text );
-  } else if ( tag == "salutation" ) {
+  } else if ( tag == "salutation" ) { // what's this in OX?
     a.setPrefix( text );
-  } else if ( tag == "title" ) {
+  } else if ( tag == fieldName( Title ) ) {
     a.setTitle( text );
-  } else if ( tag == "department" ) {
+  } else if ( tag == fieldName( Organization ) ) {
     a.setOrganization( text );
-  } else if ( tag == "lastname" ) {
+  } else if ( tag == fieldName( FamilyName ) ) {
     a.setFamilyName( text );
-  } else if ( tag == "firstname" ) {
+  } else if ( tag == fieldName( GivenName) ) {
     a.setGivenName( text );
-  } else if ( tag == "email" ) {
+  } else if ( tag == fieldName( DisplayName ) ) {
+    a.setFormattedName( text );
+  } else if ( tag == fieldName( PrimaryEmail ) ) {
     a.insertEmail( text, true );
-  } else if ( tag == "phone" || tag == "phone2" ) {
+  } else if ( tag == fieldName( WorkPhone1 ) || tag == fieldName( WorkPhone2 ) ) {
     a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Work ) );
-  } else if ( tag == "mobile" || tag == "mobile2" ) {
+  } else if ( tag == fieldName( WorkMobile1 ) || tag == fieldName( WorkMobile2 ) ) {
     a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Cell |
                                       PhoneNumber:: Work ) );
-  } else if ( tag == "fax" || tag == "fax2" ) {
+  } else if ( tag == fieldName( WorkFax1 ) || tag == fieldName( WorkFax2 ) ) {
     a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Fax |
                                       PhoneNumber::Work ) );
-  } else if ( tag == "privatephone" || tag == "privatephone2" ) {
+  } else if ( tag == fieldName( PrivatePhone1 ) || tag == fieldName( PrivatePhone2 ) ) {
     a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Home ) );
-  } else if ( tag == "privatemobile" || tag == "privatemobile2" ) {
+  } else if ( tag == fieldName( PrivateMobile1 ) || tag == fieldName( PrivateMobile2 ) ) {
     a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Home |
                                       PhoneNumber::Cell ) );
-  } else if ( tag == "privatefax" || tag == "privatefax2" ) {
+  } else if ( tag == fieldName( PrivateFax1 ) || tag == fieldName( PrivateFax2 ) ) {
     a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Fax |
                                       PhoneNumber::Home ) );
-  } else if ( tag == "comment" ) {
+  } else if ( tag == fieldName( Comment ) ) {
     a.setNote( text );
-  } else if ( tag == "email2" || tag == "privateemail" ||
-              tag == "privateemail2" ) {
+  } else if ( tag == fieldName( SecondaryEmail1 ) || tag == fieldName( SecondaryEmail2 ) ||
+              tag == fieldName( SecondaryEmail3 ) ) {
     a.insertEmail( text );
-  } else if ( tag == "privateurl" ) {
+  } else if ( tag == fieldName( Url ) ) {
     a.setUrl( text );
+  } else if ( type() == "ox" ) { // FIXME: Address reading is missing for SLOX
+    // read addresses
+    Address addr;
+    if ( tag.startsWith( "business" ) ) {
+      addr = a.address( KABC::Address::Work );
+    } else if ( tag.startsWith( "second" ) ) {
+      addr = a.address( 0 ); // FIXME: other ??
+    } else {
+      addr = a.address( KABC::Address::Home );
+    }
+    if ( tag.endsWith( "street" ) ) {
+      addr.setStreet( text );
+    } else if ( tag.endsWith( "postal_code" ) ) {
+      addr.setPostalCode( text );
+    } else if ( tag.endsWith( "city" ) ) {
+      addr.setLocality( text );
+    } else if ( tag.endsWith( "state" ) ) {
+      addr.setRegion( text );
+    } else if ( tag.endsWith( "country" ) ) {
+      addr.setCountry( text );
+    }
+    a.insertAddress( addr );
   }
-  // FIXME: Read addresses
 }
 
 bool ResourceSlox::save( Ticket* )

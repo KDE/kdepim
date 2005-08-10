@@ -1,7 +1,5 @@
 /*
-    This file is part of kdepim.
-
-    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2005 by Volker Krause <volker.krause@rwth-aachen.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,43 +15,41 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
-#ifndef RESOURCESLOXCONFIG_H
-#define RESOURCESLOXCONFIG_H
 
-#include <kresources/configwidget.h>
-#include <kdepimmacros.h>
+#ifndef SLOXFOLDERDIALOG_H
+#define SLOXFOLDERDIALOG_H
 
-class KLineEdit;
-class KURLRequester;
-class KPushButton;
+#include <qstring.h>
+#include <kdialogbase.h>
 
-class SloxBase;
+#include "sloxfolder.h"
 
-namespace KABC {
+class KListView;
+class SloxFolder;
+class SloxFolderManager;
 
-class KDE_EXPORT ResourceSloxConfig : public KRES::ConfigWidget
+class SloxFolderDialog : public KDialogBase
 {
   Q_OBJECT
-
   public:
-    ResourceSloxConfig( QWidget* parent = 0, const char* name = 0 );
+    SloxFolderDialog( SloxFolderManager *manager, FolderType type, QWidget* parent = 0, const char *name = 0 );
+    ~SloxFolderDialog();
 
-  public slots:
-    void loadSettings( KRES::Resource* );
-    void saveSettings( KRES::Resource* );
+    QString selectedFolder() const;
+    void setSelectedFolder( const QString &id );
 
-  private slots:
-    void selectAddressFolder();
+  protected slots:
+    virtual void slotUser1();
+    void updateFolderView();
 
   private:
-    KURLRequester *mURL;
-    KLineEdit *mUser;
-    KLineEdit *mPassword;
-    KPushButton *mFolderButton;
-    QString mFolderId;
-    SloxBase *mRes;
-};
+    void createFolderViewItem( SloxFolder *folder );
 
-}
+  private:
+    KListView *mListView;
+    SloxFolderManager *mManager;
+    QString mFolderId;
+    FolderType mFolderType;
+};
 
 #endif

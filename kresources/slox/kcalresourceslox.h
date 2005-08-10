@@ -20,6 +20,7 @@
 #ifndef KCALRESOURCESLOX_H
 #define KCALRESOURCESLOX_H
 
+#include "sloxbase.h"
 #include "webdavhandler.h"
 
 #include <qptrlist.h>
@@ -57,7 +58,7 @@ class SloxAccounts;
 /**
   This class provides a calendar stored as a remote file.
 */
-class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached
+class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached, public SloxBase
 {
     Q_OBJECT
 
@@ -66,11 +67,11 @@ class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached
   public:
     /**
       Reload policy.
-      
+
       @see setReloadPolicy(), reloadPolicy()
     */
     enum { ReloadNever, ReloadOnStartup, ReloadOnceADay, ReloadAlways };
-  
+
     /**
       Create resource from configuration information stored in KConfig object.
     */
@@ -93,7 +94,7 @@ class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached
     void slotLoadEventsResult( KIO::Job * );
     void slotLoadTodosResult( KIO::Job * );
     void slotUploadResult( KIO::Job * );
-    
+
     void slotEventsProgress( KIO::Job *job, unsigned long percent );
     void slotTodosProgress( KIO::Job *job, unsigned long percent );
     void slotUploadProgress( KIO::Job *job, unsigned long percent );
@@ -111,7 +112,7 @@ class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached
     void requestTodos();
 
     void uploadIncidences();
- 
+
     void parseMembersAttribute( const QDomElement &e,
                                 KCal::Incidence *incidence );
     void parseReadRightsAttribute( const QDomElement &e,
@@ -131,6 +132,9 @@ class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached
     void createTodoAttributes( QDomDocument &doc,
                                QDomElement &parent,
                                KCal::Todo *todo );
+    void createRecurrenceAttributes( QDomDocument &doc,
+                                     QDomElement &parent,
+                                     KCal::Incidence *incidence );
 
     bool confirmSave();
 

@@ -3,7 +3,9 @@ INCLUDES = -I$(top_srcdir) $(all_includes)
 
 lib_LTLIBRARIES = libkslox.la libkabc_slox.la libkcal_slox.la
 
-libkslox_la_SOURCES = sloxaccounts.cpp webdavhandler.cpp
+libkslox_la_SOURCES = sloxaccounts.cpp webdavhandler.cpp \
+                      sloxfolder.cpp sloxfoldermanager.cpp \
+                      sloxfolderdialog.cpp sloxbase.cpp
 libkslox_la_LDFLAGS = $(all_libraries)
 libkslox_la_LIBADD  = $(top_builddir)/libkcal/libkcal.la \
                       $(top_builddir)/libkdepim/libkdepim.la
@@ -38,10 +40,10 @@ testsloxaccounts_SOURCES = testsloxaccounts.cpp
 
 
 kcal_servicedir = $(kde_servicesdir)/kresources/kcal
-kcal_service_DATA = kcal_slox.desktop
+kcal_service_DATA = kcal_slox.desktop kcal_ox.desktop
 
 kabc_servicedir = $(kde_servicesdir)/kresources/kabc
-kabc_service_DATA = kabc_slox.desktop
+kabc_service_DATA = kabc_slox.desktop kabc_ox.desktop
 
 METASOURCES = AUTO
 

@@ -19,6 +19,7 @@
 */
 
 #include "webdavhandler.h"
+#include "sloxbase.h"
 
 #ifdef HAVE_VALUES_H
 #include <values.h>
@@ -76,14 +77,14 @@ void WebdavHandler::log( const QString &text )
     kdWarning() << "Unable to open log file '" << filename << "'" << endl;
     return;
   }
-  
+
   QCString textUtf8 = text.utf8();
   file.writeBlock( textUtf8.data(), textUtf8.size() - 1 );
-  
+
   if ( ++mLogCount > 5 ) mLogCount = 0;
 }
 
-QValueList<SloxItem> WebdavHandler::getSloxItems( const QDomDocument &doc )
+QValueList<SloxItem> WebdavHandler::getSloxItems( SloxBase *res, const QDomDocument &doc )
 {
   kdDebug() << "getSloxItems" << endl;
 
@@ -108,7 +109,7 @@ QValueList<SloxItem> WebdavHandler::getSloxItems( const QDomDocument &doc )
         continue;
       }
 
-      QDomNode sloxIdNode = prop.namedItem( "sloxid" );
+      QDomNode sloxIdNode = prop.namedItem( res->fieldName( SloxBase::ObjectId ) );
       if ( sloxIdNode.isNull() ) {
         kdError() << "Unable to find SLOX id." << endl;
         continue;
@@ -116,7 +117,7 @@ QValueList<SloxItem> WebdavHandler::getSloxItems( const QDomDocument &doc )
       QDomElement sloxIdElement = sloxIdNode.toElement();
       QString sloxId = sloxIdElement.text();
 
-      QDomNode sloxStatus = prop.namedItem( "sloxstatus" );
+      QDomNode sloxStatus = prop.namedItem( res->fieldName( SloxBase::ObjectStatus ) );
       if ( sloxStatus.isNull() ) {
         kdError() << "Unable to find SLOX status." << endl;
         continue;
@@ -136,7 +137,7 @@ QValueList<SloxItem> WebdavHandler::getSloxItems( const QDomDocument &doc )
       items.append( item );
     }
   }
-  
+
   return items;
 }
 
@@ -153,8 +154,8 @@ QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt,
   QDateTime utc = KPimPrefs::localTimeToUtc( dt, timeZoneId );
 
   // secsTo and toTime_t etc also perform a timezone conversion using the system timezone,
-  // but we want to use the calendar timezone, so we have to convert ourself and spoof the tz to UTC before 
-  // converting to ticks to prevent this 
+  // but we want to use the calendar timezone, so we have to convert ourself and spoof the tz to UTC before
+  // converting to ticks to prevent this
   QCString origTz = getenv("TZ");
   setenv( "TZ", "UTC", 1 );
   uint ticks = utc.toTime_t();
@@ -211,16 +212,21 @@ QDomElement WebdavHandler::addElement( QDomDocument &doc, QDomNode &node,
 QDomElement WebdavHandler::addDavElement( QDomDocument &doc, QDomNode &node,
                                           const QString &tag )
 {
-  QDomElement el = doc.createElementNS( "DAV", tag );
+  QDomElement el = doc.createElementNS( "DAV:", "D:" + tag );
   node.appendChild( el );
   return el;
 }
 
-QDomElement WebdavHandler::addSloxElement( QDomDocument &doc, QDomNode &node,
+QDomElement WebdavHandler::addSloxElement( SloxBase *res,
+                                           QDomDocument &doc, QDomNode &node,
                                            const QString &tag,
                                            const QString &text )
 {
-  QDomElement el = doc.createElementNS( "SLOX", tag );
+  QDomElement el;
+  if ( res->resType() == "ox" )
+    el = doc.createElementNS( "http://www.open-xchange.org", "ox:" + tag );
+  else
+    el = doc.createElementNS( "SLOX", "S:" + tag );
   if ( !text.isEmpty() ) {
     QDomText textnode = doc.createTextNode( text );
     el.appendChild( textnode );
@@ -253,7 +259,10 @@ void WebdavHandler::parseSloxAttribute( const QDomElement &e )
 
 void WebdavHandler::clearSloxAttributeStatus()
 {
-  mWritable = false;
+  if ( mRes->resType() == "ox" )
+    mWritable = true; // parseSloxAttribute() won't work for OX
+  else
+    mWritable = false;
 }
 
 void WebdavHandler::setSloxAttributes( KCal::Incidence *i )

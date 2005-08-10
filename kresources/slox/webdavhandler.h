@@ -32,11 +32,7 @@ namespace KCal {
 class Incidence;
 }
 
-#include <kabc/addressee.h>
-
-namespace KCal {
-class Incidence;
-}
+class SloxBase;
 
 class KDE_EXPORT SloxItem
 {
@@ -57,6 +53,7 @@ class KDE_EXPORT WebdavHandler
 
     void setUserId( const QString & );
     QString userId() const;
+    void setResource( SloxBase *res ) { mRes = res; }
 
     void log( const QString & );
 
@@ -64,7 +61,8 @@ class KDE_EXPORT WebdavHandler
                                    const QString &tag );
     static QDomElement addDavElement( QDomDocument &, QDomNode &,
                                       const QString &tag );
-    static QDomElement addSloxElement( QDomDocument &, QDomNode &,
+    static QDomElement addSloxElement( SloxBase *res,
+                                       QDomDocument &, QDomNode &,
                                        const QString &tag,
                                        const QString &text = QString::null );
 
@@ -75,7 +73,7 @@ class KDE_EXPORT WebdavHandler
     static QString qDateTimeToSlox( const QDateTime &dt,
                                     const QString &timeZoneId );
 
-    static QValueList<SloxItem> getSloxItems( const QDomDocument &doc );
+    static QValueList<SloxItem> getSloxItems( SloxBase *res, const QDomDocument &doc );
 
     void clearSloxAttributeStatus();
     void parseSloxAttribute( const QDomElement & );
@@ -85,9 +83,10 @@ class KDE_EXPORT WebdavHandler
   private:
     QString mLogFile;
     int mLogCount;
+    SloxBase *mRes;
 
     QString mUserId;
-    
+
     bool mWritable;
 };
 
