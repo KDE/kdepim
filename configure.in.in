@@ -12,7 +12,7 @@ if test "$x_includes" != "NONE"; then
   AC_DEFINE(HAVE_X11_HEADERS,1,Define if you have X11 header files)
 fi
 
-KDE_INIT_DOXYGEN([The KDE-PIM API Reference], [Version $VERSION])
+KDE_INIT_DOXYGEN([KDE PIM API Reference], [Version $VERSION])
 
 KDE_CHECK_THREADING
 
