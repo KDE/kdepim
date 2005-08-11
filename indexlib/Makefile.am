@@ -1,4 +1,5 @@
 KDE_CXXFLAGS=$(USE_EXCEPTIONS)
+INCLUDES = $(all_includes)
 
 lib_LTLIBRARIES = libindex.la
 

@@ -11,11 +11,11 @@ if test "x$boost_includedir" != "x"; then
 	CXXFLAGS="-I$boost_includedir $CXXFLAGS"
 fi
 
-AC_CHECK_HEADER(boost/format.hpp, have_boost=yes,have_boost=no)
+KDE_CHECK_HEADER(boost/format.hpp, have_boost=yes,have_boost=no)
 
 AC_LANG_POP
 
-#if test "x$have_boost" = "xno"; then
-#	CXXFLAGS="-DHAVE_BOOST $CXXFLAGS"
-#fi
+if test "x$have_boost" = "xyes"; then
+	CXXFLAGS="-DHAVE_BOOST $CXXFLAGS"
+fi
 

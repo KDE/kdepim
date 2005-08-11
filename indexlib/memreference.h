@@ -34,6 +34,10 @@
 
 #include "bitio.h"
 
+/**
+ * Works like a reference to a memory location
+ * which is written and read in our byte-format.
+ */
 template <typename T>
 struct memory_reference {
 	public:
@@ -57,6 +61,12 @@ struct memory_reference {
 			data_( other.data_ )
 			{
 			}
+		/**
+		 * This is a sneaky method to change pointers
+		 */
+		void assign( const memory_reference& other ) {
+			data_ = other.data_;
+		}
 	private:
 		unsigned char* data_;
 };

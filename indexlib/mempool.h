@@ -42,7 +42,13 @@
 #include <algorithm>
 #include <ostream>
 
-
+/**
+ * @short implement memory management for things
+ *
+ * This class implements memory management for pools of things.
+ * It uses a simple linked list memory management algorithm and
+ * it depends on being supplied the right trait for the type held.
+ */
 template <typename Traits>
 struct mempool /* : boost::noncopyable */ {
 	public:
@@ -58,6 +64,9 @@ struct mempool /* : boost::noncopyable */ {
 
 		unsigned size() const { return manager_->size(); }
 	private:
+		/**
+		 * Basically int( log_2( min( x + 1, min_size() ) ) )
+		 */
 		static unsigned order_of( unsigned x ) {
 			assert( x > 0 );
 			if ( x < traits_type::min_size() ) x = traits_type::min_size();
@@ -69,6 +78,9 @@ struct mempool /* : boost::noncopyable */ {
 			}
 			return res;
 		}
+		/**
+		 * @returns order^2
+		 */
 		static unsigned order_to_size( unsigned order ) {
 			return 1 << order;
 		}
@@ -101,6 +113,9 @@ struct mempool /* : boost::noncopyable */ {
 		END_THING( list_node )
 
 		list_nodeptr get_node( uint32_t p ) const;
+		/**
+		 * Get the free list header for a given order
+		 */
 		memory_reference<uint32_t> free_list( unsigned order );
 		uint32_t free_list( unsigned order ) const {
 			return const_cast<mempool*>( this )->free_list( order );
@@ -116,7 +131,7 @@ struct mempool /* : boost::noncopyable */ {
 		void deallocate( data_typeptr, unsigned order );
 
 		std::auto_ptr<memory_manager> manager_;
-		unsigned max_order_;
+		memory_reference<uint32_t> max_order_;
 };
 
 #include "mempool.tcc"

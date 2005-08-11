@@ -47,6 +47,8 @@ void quotes::remove( std::string name ) {
 }
 
 void quotes::add( const char * str, const char* doc ) {
+	assert( str );
+	assert( doc );
 	try {
 		impl_.add( str, doc );
 		docs_.add( str );

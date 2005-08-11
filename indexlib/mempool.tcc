@@ -5,16 +5,20 @@
 template <typename Traits>
 mempool<Traits>::mempool( std::auto_ptr<memory_manager> source ):
 	manager_( source ),
-	max_order_( order_of( traits_type::max_size() ) )
+	max_order_( 0 )
 {
 	if ( !manager_->size() ) init_memory();
+	max_order_.assign( memory_reference<uint32_t>( manager_->rw_base( 0 ) ) );
+	if ( !max_order_ ) {
+		max_order_ = order_of( traits_type::max_size() );
+	}
 	traits_type::set_manager( manager_.get() );
 }
 
 template <typename Traits>
 typename mempool<Traits>::data_typeptr mempool<Traits>::allocate( unsigned size ) {
 	if ( size < traits_type::min_size() ) size = traits_type::min_size();
-	assert( size <= traits_type::max_size() );
+	max_order_ = std::max<uint32_t>( order_of( size ), max_order_ );
 	const unsigned order = std::max<unsigned>( order_of( size ), min_order_for_free_node );
 	if ( uint32_t res = free_list( order ) ) {
 		free_list( order ) = get_node( res )->next();
@@ -22,6 +26,7 @@ typename mempool<Traits>::data_typeptr mempool<Traits>::allocate( unsigned size 
 		logfile() << format( "%s( %s ): (order %s) Returning %s\n" ) % __PRETTY_FUNCTION__ % size % order % res;
 		return data_typeptr::cast_from_uint32( res );
 	} else {
+		std::cerr << "For size " << size << " going up to " << ( unsigned )max_order_ << std::endl;
 		for ( unsigned bigger = order + 1; bigger <= max_order_; ++bigger ) {
 			if ( uint32_t res = free_list( bigger ) ) {
 				while ( bigger > order ) {
@@ -32,8 +37,9 @@ typename mempool<Traits>::data_typeptr mempool<Traits>::allocate( unsigned size 
 				return allocate( size );
 			}
 		}
-		unsigned old_size = manager_->size();
+		const unsigned old_size = manager_->size();
 		manager_->resize( manager_->size() + order_to_size( order ) );
+		max_order_.assign( memory_reference<uint32_t>( manager_->rw_base( 0 ) ) );
 		fill_into_list( old_size, order );
 		return allocate( size );
 	}
@@ -63,11 +69,7 @@ void mempool<Traits>::fill_into_list( unsigned next_block ) {
 
 template <typename Traits>
 void mempool<Traits>::init_memory() {
-	//const unsigned needed = ( 1 << order_of( max_order_ ) ); // round to the next power of 2
-	manager_->resize( 4096 ); // FIXME;
-	//uint32_t next_block = std::max( traits_type::max_size(), needed );
-	//manager_->resize( next_block );
-	//fill_into_list( next_block );
+	manager_->resize( 4096 );
 }
 
 template <typename Traits>
@@ -80,7 +82,7 @@ void mempool<Traits>::print( std::ostream& out ) const {
 	}
 	out << '\n';
 
-	iterator = std::max( traits_type::max_size(), order_to_size( max_order_ ) );
+	iterator = order_to_size( max_order_ );
 
 	while ( iterator < end ) {
 		data_typeptr p = data_typeptr::cast_from_uint32( iterator );
@@ -102,6 +104,7 @@ void mempool<Traits>::print( std::ostream& out ) const {
 
 template <typename Traits>
 memory_reference<uint32_t> mempool<Traits>::free_list( unsigned order ) {
+	assert( order );
 	return memory_reference<uint32_t>( manager_->rw_base( order * byte_io::byte_lenght<uint32_t>() ) );
 }
 
@@ -190,7 +193,7 @@ void mempool<Traits>::deallocate( data_typeptr data, unsigned order ) {
 template <typename Traits>
 typename mempool<Traits>::data_typeptr mempool<Traits>::reallocate( data_typeptr data, unsigned size ) {
 	logfile() << format( "%s( %s, %s)\n" ) % __PRETTY_FUNCTION__ % data % size;
-	assert( size <= traits_type::max_size() );
+	max_order_ = std::max<uint32_t>( max_order_, order_of( max_order_ ) );
 	const unsigned original_size = size_of( data );
 	unsigned char* temporary = static_cast<unsigned char*>( operator new( original_size ) );
 	std::memmove( temporary, data.raw_pointer(), original_size );
