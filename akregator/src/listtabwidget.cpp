@@ -203,3 +203,4 @@ NodeListView* ListTabWidget::activeView() const
 }
 
 #include "listtabwidget.h"
+#include "listtabwidget.moc"
