@@ -25,6 +25,11 @@
       <tooltip>%N: Fax Number</tooltip>
       <default>kdeprintfax --phone %N</default>
     </entry>
+    <entry type="String" name="SMSHookApplication">
+      <label>SMS</label>
+      <whatsthis>The script used to send a GSM SMS text message to the mobile phone</whatsthis>
+      <tooltip>%N: Phone Number and %F the file containing the text message</tooltip>
+    </entry>
   </group>
 
   <group name="Views">

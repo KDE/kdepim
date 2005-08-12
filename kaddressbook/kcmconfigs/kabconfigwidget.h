@@ -60,6 +60,7 @@ class KABConfigWidget : public QWidget
     QComboBox *mEditorCombo;
     QLineEdit *mPhoneHook;
     QLineEdit *mFaxHook;
+    QLineEdit *mSMSHook;
     QCheckBox *mLimitContactDisplay;
     QComboBox *mLocationMapURL;
 

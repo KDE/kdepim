@@ -97,7 +97,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   layout->addWidget( groupBox );
 
   groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Script-Hooks" ), generalPage );
-  QGridLayout *grid = new QGridLayout( groupBox->layout(), 2, 2,
+  QGridLayout *grid = new QGridLayout( groupBox->layout(), 3, 2,
                                        KDialog::spacingHint() );
   label = new QLabel( i18n( "Phone:" ), groupBox );
   grid->addWidget( label, 0, 0 );
@@ -112,6 +112,16 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   mFaxHook = new QLineEdit( groupBox );
   QToolTip::add( mFaxHook, i18n( "<ul><li>%N: Fax Number</li></ul>" ) );
   grid->addWidget( mFaxHook, 1, 1 );
+
+
+  label = new QLabel( i18n( "SMS Text:" ), groupBox );
+  grid->addWidget( label, 2, 0 );
+
+  mSMSHook = new QLineEdit( groupBox );
+  QToolTip::add( mSMSHook, i18n( "<ul><li>%N: Phone Number</li><li>%F: File containing the text message(s)</li></ul>" ) );
+  grid->addWidget( mSMSHook, 2, 1 );
+
+
   grid->setColStretch( 1, 1 );
 
   layout->addWidget( groupBox );
@@ -136,6 +146,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   connect( mTradeAsFamilyName, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mLimitContactDisplay, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mPhoneHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mSMSHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mFaxHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mLocationMapURL, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mEditorCombo, SIGNAL( activated( int ) ), SLOT( modified() ) );
@@ -156,6 +167,7 @@ void KABConfigWidget::restoreSettings()
   mNameParsing->setChecked( KABPrefs::instance()->automaticNameParsing() );
   mViewsSingleClickBox->setChecked( KABPrefs::instance()->honorSingleClick() );
   mPhoneHook->setText( KABPrefs::instance()->phoneHookApplication() );
+  mSMSHook->setText( KABPrefs::instance()->sMSHookApplication() );
   mFaxHook->setText( KABPrefs::instance()->faxHookApplication() );
   mAddresseeWidget->restoreSettings();
   mEditorCombo->setCurrentItem( KABPrefs::instance()->editorType() );
@@ -177,6 +189,7 @@ void KABConfigWidget::saveSettings()
   KABPrefs::instance()->setAutomaticNameParsing( mNameParsing->isChecked() );
   KABPrefs::instance()->setHonorSingleClick( mViewsSingleClickBox->isChecked() );
   KABPrefs::instance()->setPhoneHookApplication( mPhoneHook->text() );
+  KABPrefs::instance()->setSMSHookApplication( mSMSHook->text() );
   KABPrefs::instance()->setFaxHookApplication( mFaxHook->text() );
   KABPrefs::instance()->setEditorType( mEditorCombo->currentItem() );
   KABPrefs::instance()->setLocationMapURL( mLocationMapURL->currentText() );
