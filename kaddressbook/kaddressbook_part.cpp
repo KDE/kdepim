@@ -147,6 +147,9 @@ void KAddressbookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
 {
   kdDebug(5720) << "KAddressbookPart::guiActivateEvent" << endl;
   KParts::ReadOnlyPart::guiActivateEvent( e );
+
+  if ( e->activated() )
+    mCore->reinitXMLGUI();
 }
 
 #include "kaddressbook_part.moc"

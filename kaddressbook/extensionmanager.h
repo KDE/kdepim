@@ -77,6 +77,7 @@ class ExtensionManager : public QHBox
 
   public slots:
     void setSelectionChanged();
+    void createActions();
 
   signals:
     void modified( const KABC::Addressee::List& );
@@ -84,7 +85,6 @@ class ExtensionManager : public QHBox
 
   private slots:
     void setActiveExtension( int id );
-    void createActions();
 
   private:
     void createExtensionWidgets();

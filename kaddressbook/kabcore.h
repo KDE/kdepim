@@ -342,6 +342,11 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     bool queryClose();
 
+    /**
+      Is called whenever the xmlgui has to be rebuild after a part switch.
+     */
+    void reinitXMLGUI();
+
   private slots:
     void setJumpButtonBarVisible( bool visible );
     void setDetailsVisible( bool visible );

@@ -917,6 +917,10 @@ bool KABCore::queryClose()
   return true;
 }
 
+void KABCore::reinitXMLGUI()
+{
+  mExtensionManager->createActions();
+}
 void KABCore::delayedAddressBookChanged()
 {
   mAddressBookChangedTimer->start( 1000 );
