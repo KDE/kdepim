@@ -1,6 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=OpenXchange Server
+Name[es]=Servidor OpenXchange
+Name[ga]=Freastalaí Openexchange
 X-KDE-Library=kabc_slox
 Type=Service
 ServiceTypes=KResources/Plugin
