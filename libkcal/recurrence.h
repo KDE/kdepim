@@ -91,6 +91,7 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
   public:
     class Observer {
       public:
+        virtual ~Observer() {}
         /** This method will be called on each change of the recurrence object */
         virtual void recurrenceUpdated( Recurrence * ) = 0;
     };

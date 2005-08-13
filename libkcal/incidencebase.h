@@ -85,6 +85,7 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
 
     class Observer {
       public:
+        virtual ~Observer() {}
         virtual void incidenceUpdated( IncidenceBase * ) = 0;
     };
 

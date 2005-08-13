@@ -61,6 +61,7 @@ class LIBKCAL_EXPORT RecurrenceRule
   public:
     class Observer {
       public:
+        virtual ~Observer() {}
         /** This method will be called on each change of the recurrence object */
         virtual void recurrenceChanged( RecurrenceRule * ) = 0;
     };

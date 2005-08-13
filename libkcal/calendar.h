@@ -793,6 +793,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
     class Observer
     {
       public:
+        virtual ~Observer() {}
         /**
            Notify the Observer that a Calendar has been modified.
 
