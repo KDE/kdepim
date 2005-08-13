@@ -18,7 +18,6 @@ Name[sr@Latn]=KitchenSync Konnector-i
 Name[sv]=Kitchensync-anslutningar
 Name[ta]=கிச்சன்கூட்டிணைப்பு இணைப்பான்கள்
 Name[tr]=KitchenSync Konnector bileşenleri
-Name[uk]=Конектори KitchenSync
 Name[xx]=xxKitchenSync Konnectorsxx
 Type=Service
 ServiceTypes=KResources/Manager

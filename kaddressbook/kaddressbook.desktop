@@ -39,7 +39,6 @@ GenericName[sr@Latn]=Menadžer adresa
 GenericName[sv]=Adresshanterare
 GenericName[ta]=முகவரி மேலாளர்
 GenericName[tr]=Adres Yöneticisi
-GenericName[uk]=Менеджер адрес
 GenericName[xx]=xxAddress Managerxx
 GenericName[zh_CN]=地址管理器
 Exec=kaddressbook %u

@@ -23,7 +23,6 @@ Name[sr@Latn]=eGroupware server (preko XML-RPC)
 Name[sv]=eGroupware-server (via XML-RPC)
 Name[ta]=eGroupware சேவகன் (via XML-RPC)
 Name[tr]=eGroupware Sunucusu (XML-RPC ile)
-Name[uk]=Сервер eGroupware (через XML-RPC)
 Name[zh_CN]=eGroupware 服务器(通过 XML-RPC)
 X-KDE-Library=kcal_xmlrpc
 Type=Service

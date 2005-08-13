@@ -29,7 +29,6 @@ GenericName[sr@Latn]=Sinhronizacija
 GenericName[sv]=Synkronisering
 GenericName[ta]=கூட்டிணைப்பு
 GenericName[tr]=Senkronizasyon
-GenericName[uk]=Синхронізація
 GenericName[xx]=xxSynchronizationxx
 GenericName[zh_CN]=同步
 Exec=multisynk
