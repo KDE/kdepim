@@ -22,5 +22,6 @@ kcal_service_DATA = kcal_tvanytime.desktop
 METASOURCES = AUTO
 
 messages: rc.cpp
-	$(XGETTEXT) *.cpp soap/*.cpp -o $(podir)/kres_tvanytime.pot
+	$(EXTRACTRC) `find . -name "*.ui" -o -name "*.kcfg"` >> rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/kres_tvanytime.pot
 noinst_HEADERS = service.h
