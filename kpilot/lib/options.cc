@@ -90,6 +90,7 @@ struct tm writeTm(const QDateTime &dt)
   t.tm_wday = 0; // unimplemented
   t.tm_yday = 0; // unimplemented
   t.tm_isdst = 0; // unimplemented
+  t.tm_zone = 0; // unimplemented
 
   t.tm_year = dt.date().year() - 1900;
   t.tm_mon = dt.date().month() - 1;
@@ -127,14 +128,14 @@ KPilotDepthCount::KPilotDepthCount(int area, int level, const char *s) :
 	fLevel(level),
 	fName(s)
 {
-	if (debug_level>=fLevel) 
-	{ 
+	if (debug_level>=fLevel)
+	{
 #ifdef DEBUG_CERR
-		DEBUGKPILOT 
+		DEBUGKPILOT
 #else
 		debug(area)
 #endif
-		<< indent() << ">" << name() << endl; 
+		<< indent() << ">" << name() << endl;
 	}
 	depth++;
 }

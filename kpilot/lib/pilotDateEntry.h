@@ -72,24 +72,30 @@ public:
 	/** Is this appointment a "floating" appointment?
 	*
 	* Floating appointments are those that have a day assigned, but no time
-	* in that day (birthday appointments are like that).
+	*  in that day (birthday appointments are like that).  You can think of these
+	*  as "events", which don't have a time associated with them for a given day,
+	*  as opposed to a regular "appointment", which does normally have a time
+	*  associated with it.
 	*/
-	bool doesFloat() const { return !fAppointmentInfo.event; }
-	/** Antonym for doesFloat -- if the appointment does not float, then it
-	* has a time associated (and the contrapositive, too).
+	bool doesFloat() const { return fAppointmentInfo.event; }
+	/** Is this a non-time-related event as opposed to an appointment that has a
+	* time associated with it?.
 	*/
-	inline bool isEvent() const { return !doesFloat(); }
-	/** Antonym for doesFloat, deprecated. */
-	int KDE_DEPRECATED getEvent() const { return !doesFloat(); }
+	inline bool isEvent() const { return doesFloat(); }
+	/** A synonym for isEvent, deprecated. */
+	int KDE_DEPRECATED getEvent() const { return doesFloat(); }
 
 	/** Sets this appointment's floating status.
 	*
 	* Floating appointments are those that have a day assigned, but no time
-	* in that day (birthday appointments are like that).
+	*  in that day (birthday appointments are like that).  You can think of these
+	*  as "events", which don't have a time associated with them for a given day,
+	*  as opposed to a regular "appointment", which does normally have a time
+	*  associated with it.
 	*/
-	void setFloats(bool f) { fAppointmentInfo.event = (f ? 0 : 1) /* Force 0 or 1 */ ; }
+	void setFloats(bool f) { fAppointmentInfo.event = (f ? 1 : 0) /* Force 1 or 0 */ ; }
 	/** Synonym for setFloats() */
-	void KDE_DEPRECATED setEvent(int event) { setFloats( !event ); }
+	void KDE_DEPRECATED setEvent(int event) { setFloats( event ); }
 
 	/** Get the start time of this appointment.  See dtStart() for caveats. */
 	struct tm getEventStart() const { return fAppointmentInfo.begin; }
