@@ -36,6 +36,7 @@ extern "C"
   void *init_kabc_groupdav()
   {
     KGlobal::locale()->insertCatalogue( "kdepimresources" );
+    KGlobal::locale()->insertCatalogue( "kres_groupdav" );
     return new GroupDavFactory;
   }
 }
