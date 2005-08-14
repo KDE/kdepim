@@ -53,7 +53,7 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent,  const char* name )
   line->setFrameStyle( QFrame::Sunken | QFrame::HLine );
   topLayout->addMultiCellWidget( line, 2, 2, 0, 1 );
 
-  mUseCategories = new QCheckBox( i18n( "Filter by Categories" ), this );
+  mUseCategories = new QCheckBox( i18n( "Filter by categories" ), this );
   topLayout->addMultiCellWidget( mUseCategories, 3, 3, 0, 1 );
 
   mCategoryView = new KListView( this );
