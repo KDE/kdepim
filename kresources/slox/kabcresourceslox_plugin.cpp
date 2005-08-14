@@ -21,7 +21,19 @@
 #include "kabcresourceslox.h"
 #include "kabcresourcesloxconfig.h"
 
+#include <kglobal.h>
+#include <klocale.h>
+
 using namespace KABC;
 
 typedef KRES::PluginFactory< ResourceSlox, ResourceSloxConfig > SloxFactory;
-K_EXPORT_COMPONENT_FACTORY( kabc_slox, SloxFactory )
+
+extern "C"
+{
+  void *init_kabc_slox()
+  {
+    KGlobal::locale()->insertCatalogue( "libkcal" );
+    KGlobal::locale()->insertCatalogue( "kabc_slox" );
+    return new SloxFactory;
+  }
+}

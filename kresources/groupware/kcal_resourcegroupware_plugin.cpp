@@ -22,7 +22,19 @@
 #include "kcal_resourcegroupware.h"
 #include "kcal_resourcegroupwareconfig.h"
 
+#include <kglobal.h>
+#include <klocale.h>
+
 using namespace KCal;
 
-K_EXPORT_COMPONENT_FACTORY(kcal_groupware, KRES::PluginFactory< ResourceGroupware,
-                                    ResourceGroupwareConfig > );
+typedef KRES::PluginFactory<ResourceGroupware, ResourceGroupwareConfig> GroupwareFactory;
+
+extern "C"
+{
+  void *init_kcal_groupware()
+  {
+    KGlobal::locale()->insertCatalogue( "libkcal" );
+    KGlobal::locale()->insertCatalogue( "kres_groupware" );
+    return new ResourceGroupware;
+  }
+}

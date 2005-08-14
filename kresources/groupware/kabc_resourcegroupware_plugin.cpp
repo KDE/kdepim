@@ -21,6 +21,19 @@
 #include "kabc_resourcegroupware.h"
 #include "kabc_resourcegroupwareconfig.h"
 
+#include <kglobal.h>
+#include <klocale.h>
+
 using namespace KABC;
 
-K_EXPORT_COMPONENT_FACTORY(kabc_groupware, KRES::PluginFactory<ResourceGroupware, ResourceGroupwareConfig> );
+typedef KRES::PluginFactory<ResourceGroupware, ResourceGroupwareConfig> GroupwareFactory;
+
+extern "C"
+{
+  void *init_kabc_groupware()
+  {
+    KGlobal::locale()->insertCatalogue( "libkcal" );
+    KGlobal::locale()->insertCatalogue( "kres_groupware" );
+    return new ResourceGroupware;
+  }
+}
