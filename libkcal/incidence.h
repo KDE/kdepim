@@ -227,6 +227,9 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     */
     Recurrence *recurrence() const;
 
+    /** Removes all recurrence and exception rules and dates. */
+    void clearRecurrence();
+
     /**
       Forward to Recurrence::doesRecur().
     */

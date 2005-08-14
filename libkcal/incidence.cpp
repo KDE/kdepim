@@ -343,6 +343,12 @@ Recurrence *Incidence::recurrence() const
   return mRecurrence;
 }
 
+void Incidence::clearRecurrence()
+{
+  delete mRecurrence;
+  mRecurrence = 0;
+}
+
 uint Incidence::recurrenceType() const
 {
   if ( mRecurrence ) return mRecurrence->recurrenceType();
