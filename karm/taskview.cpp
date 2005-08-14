@@ -128,6 +128,7 @@ void TaskView::contentsMousePressEvent ( QMouseEvent * e )
     if ( task->isComplete() ) task->setPercentComplete( 0, _storage );
     else task->setPercentComplete( 100, _storage );
   }
+  emit updateButtons();
 }
 
 void TaskView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
@@ -630,7 +631,7 @@ void TaskView::deleteTask(bool markingascomplete)
     return;
   }
 
-  int response = KMessageBox::Yes;
+  int response = KMessageBox::Continue;
   if (!markingascomplete && _preferences->promptDelete()) {
     if (task->childCount() == 0) {
       response = KMessageBox::warningContinueCancel( 0,
@@ -673,18 +674,7 @@ void TaskView::deleteTask(bool markingascomplete)
     }
 
     // remove root decoration if there is no more children.
-    bool anyChilds = false;
-    for(Task* child = first_child();
-              child;
-              child = child->nextSibling()) {
-      if (child->childCount() != 0) {
-        anyChilds = true;
-        break;
-      }
-    }
-    if (!anyChilds) {
-      setRootIsDecorated(false);
-    }
+    refresh();
 
     // Stop idle detection if no more counters are running
     if (activeTasks.count() == 0) {
