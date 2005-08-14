@@ -88,7 +88,8 @@ static QString mFieldNameMap[][2] =
   {"privateemail2", "email3"}, // OX has only three email fields
   {"birthday", "birthday"},
   {"privateurl", "url"},
-  {"comment", "note"}
+  {"comment", "note"},
+  {"n/a", "image1"} // not supported by SLOX
 };
 
 SloxBase::SloxBase( KRES::Resource * res ) :

@@ -22,6 +22,7 @@
 #include <qapplication.h>
 
 #include <kabc/addressee.h>
+#include <kabc/picture.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>
@@ -291,6 +292,10 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
     a.insertEmail( text );
   } else if ( tag == fieldName( Url ) ) {
     a.setUrl( text );
+  } else if ( tag == fieldName( Image ) ) {
+    QByteArray decodedPicture;
+    KCodecs::base64Decode( text.utf8(), decodedPicture );
+    a.setPhoto( Picture( QImage( decodedPicture ) ) );
   } else if ( type() == "ox" ) { // FIXME: Address reading is missing for SLOX
     // read addresses
     Address addr;

@@ -88,7 +88,8 @@ class KDE_EXPORT SloxBase {
       SecondaryEmail3,
       Birthday,
       Url,
-      Comment
+      Comment,
+      Image
     };
 
     SloxBase( KRES::Resource *res );
