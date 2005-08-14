@@ -72,4 +72,4 @@ Type=Application
 Terminal=false
 X-KDE-StartupNotify=true
 X-DCOP-ServiceType=Multi
-Categories=Qt;KDE;Utility;X-KDE-More;
+Categories=Qt;KDE;Utility;X-KDE-Utilities-PIM;

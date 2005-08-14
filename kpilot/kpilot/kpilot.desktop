@@ -76,4 +76,4 @@ DocPath=kpilot/index.html
 Terminal=false
 X-KDE-StartupNotify=true
 X-DCOP-ServiceType=Unique
-Categories=Qt;KDE;Utility;
+Categories=Qt;KDE;Utility;X-KDE-Utilities-Peripherals;

@@ -41,4 +41,4 @@ X-DCOP-ServiceType=Unique
 X-DCOP-ServiceName=multisynk
 ServiceTypes=KParts/ReadOnlyPart
 X-KDE-Library=libmultisynkpart
-Categories=Qt;KDE;Utility;
+Categories=Qt;KDE;Utility;X-KDE-Utilities-PIM;

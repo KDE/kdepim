@@ -93,4 +93,4 @@ GenericName[zh_TW]=行動電話工具
 GenericName[zu]=Ithuluzi Lamakhala ekhukhwini
 Terminal=false
 X-DCOP-ServiceType=Multi
-Categories=Qt;KDE;Utility;X-KDE-More;
+Categories=Qt;KDE;Utility;X-KDE-Utilities-Peripherals;
