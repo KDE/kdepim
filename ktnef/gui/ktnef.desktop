@@ -70,4 +70,4 @@ Comment[xx]=xxA viewer/extractor for TNEF filesxx
 Comment[zh_CN]=TNEF 文件的查看/提取器
 Terminal=false
 MimeType=application/ms-tnef;
-Categories=Qt;KDE;Utility;X-KDE-More;
+Categories=Qt;KDE;Utility;X-KDE-Utilities-PIM;
