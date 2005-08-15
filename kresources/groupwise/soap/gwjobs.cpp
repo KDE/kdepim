@@ -248,8 +248,19 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
           kdDebug() << "ITEM is null" << endl;
 #endif
         ngwt__Contact *contact = dynamic_cast<ngwt__Contact *>( item );
-
-        KABC::Addressee addr = converter.convertFromContact( contact );
+        KABC::Addressee addr;
+        if ( contact )
+        {
+          addr = converter.convertFromContact( contact );
+        }
+        else if ( ngwt__Resource *resource = dynamic_cast<ngwt__Resource *>( item ) )
+        {
+          addr = converter.convertFromResource( resource );
+        }
+        else if ( ngwt__Group * group = dynamic_cast<ngwt__Group *>( item ) )
+        {
+          addr = converter.convertFromGroup( group ); 
+        }
         if ( !addr.isEmpty() )
           contacts.append( addr );
       }

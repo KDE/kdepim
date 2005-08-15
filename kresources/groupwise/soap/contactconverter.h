@@ -32,8 +32,11 @@ class ContactConverter : public GWConverter
 
     KABC::Addressee convertFromContact( ngwt__Contact* );
     ngwt__Contact* convertToContact( const KABC::Addressee& );
+    KABC::Addressee convertFromResource( ngwt__Resource* );
+    KABC::Addressee convertFromGroup( ngwt__Group* );
 
   private:
+    KABC::Addressee convertFromAddressBookItem( ngwt__AddressBookItem * );
     KABC::PhoneNumber convertPhoneNumber( ngwt__PhoneNumber* ) const;
     ngwt__PhoneNumber* convertPhoneNumber( const KABC::PhoneNumber& ) const;
 

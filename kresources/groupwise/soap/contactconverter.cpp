@@ -21,6 +21,7 @@
 #include "contactconverter.h"
 
 #include <kdebug.h>
+#include <klocale.h>
 
 ContactConverter::ContactConverter( struct soap* soap )
   : GWConverter( soap )
@@ -207,19 +208,69 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
   return contact;
 }
 
+KABC::Addressee ContactConverter::convertFromAddressBookItem( ngwt__AddressBookItem * addrBkItem )
+{
+  kdDebug() << "ContactConverter::convertFromAddressBookItem()" << endl;
+  KABC::Addressee addr;
+  if ( !addrBkItem )
+  {
+    kdDebug() << "Null AddressBookItem, bailing out!" << endl;
+    return addr;
+  }
+  // gwt:Item
+  addr.insertCustom( "GWRESOURCE", "UID", stringToQString( addrBkItem->id ) );
+  addr.setName( stringToQString( addrBkItem->name ) );
+  // gwt::AddressBookItem
+  addr.insertCustom( "GWRESOURCE", "UUID", stringToQString( addrBkItem->uuid ) );
+  addr.setNote( stringToQString( addrBkItem->comment ) );
+  
+  return addr;
+}
+
+KABC::Addressee ContactConverter::convertFromResource( ngwt__Resource* resource )
+{
+  kdDebug() << "ContactConverter::convertFromResource()" << endl;
+  KABC::Addressee addr = convertFromAddressBookItem( resource );
+  if ( !resource )
+  {
+    kdDebug() << "Null Resource, bailing out!" << endl;
+    return addr;
+  }
+  if ( resource->phone )
+    addr.insertPhoneNumber( KABC::PhoneNumber( stringToQString( resource->phone ), KABC::PhoneNumber::Work ) );
+  if ( resource->email )
+    addr.insertEmail( stringToQString( resource->email ), true );
+  if ( resource->owner )
+    addr.insertCustom( "KADDRESSBOOK", "X-ManagersName", stringToQString( resource->owner->__item ) );
+  
+  addr.insertCategory( i18n( "Resource" ) );
+  return addr;
+}
+
+KABC::Addressee ContactConverter::convertFromGroup( ngwt__Group* group)
+{
+  kdDebug() << "ContactConverter::convertFromGroup()" << endl;
+  KABC::Addressee addr = convertFromAddressBookItem( group );
+  if ( !group )
+  {
+    kdDebug() << "Null Resource, bailing out!" << endl;
+    return addr;
+  }
+  addr.insertCategory( i18n( "Group" ) );
+  return addr;
+}
+
 KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
 {
   kdDebug() << "ContactConverter::convertFromContact()" << endl;
 
-  KABC::Addressee addr;
+  KABC::Addressee addr = convertFromAddressBookItem( contact );
 
   if ( !contact )
   {
     kdDebug() << "Null Contact, bailing out!" << endl;
     return addr;
   }
-  addr.insertCustom( "GWRESOURCE", "UID", stringToQString( contact->id ) );
-  addr.insertCustom( "GWRESOURCE", "UUID", stringToQString( contact->uuid ) );
 
   // Name parts
   ngwt__FullName* fullName = contact->fullName;
