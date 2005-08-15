@@ -221,7 +221,7 @@ void GroupwareDownloadJob::slotDownloadItemData( KIO::Job *, const QByteArray &d
 {
   kdDebug(5800) << "OpenGroupware::slotDownloadItemData()" << endl;
 
-  mDownloadItemsData.append( data.data() );
+  mDownloadItemsData.append( QString::fromUtf8( data.data(), data.size() ) );
 }
 
 void GroupwareDownloadJob::slotItemToDownload( const KURL &remoteURL,

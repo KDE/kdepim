@@ -37,12 +37,20 @@ WebdavHandler::WebdavHandler()
 }
 
 
-KURL WebdavHandler::toDAV( const KURL& url ) {
+KURL WebdavHandler::toDAV( const KURL& url )
+{
   KURL result( url );
-  if ( result.protocol() == "http" )
-    result.setProtocol( "webdav" );
-  else if ( result.protocol() == "https" )
+
+  if ( result.protocol() == "http" ) {
+    if ( result.port() == 443 ) {
+      // OpenGroupware.org returns 'http://server:443' instead of 'https://server'
+      result.setProtocol( "webdavs" );
+      result.setPort( 0 );
+    } else
+      result.setProtocol( "webdav" );
+  } else if ( result.protocol() == "https" )
     result.setProtocol( "webdavs" );
+
   return result;
 }
 
