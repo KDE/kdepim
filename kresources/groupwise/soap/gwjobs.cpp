@@ -265,11 +265,10 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
           contacts.append( addr );
       }
       readItems += readCursorResponse.items->item.size(); // this means that the read count is increased even if the call fails, but at least the while will always end
+      kdDebug() << " just read " << readCursorResponse.items->item.size() << " items" << endl;
     }
     else
       kdDebug() << " readCursor got no Items in Response!" << endl;
-
-    kdDebug() << " just read " << readCursorResponse.items->item.size() << " items" << endl;
 
     // pass the received addressees back to the server
     mServer->emitGotAddressees( contacts );

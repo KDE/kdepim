@@ -219,7 +219,7 @@ KABC::Addressee ContactConverter::convertFromAddressBookItem( ngwt__AddressBookI
   }
   // gwt:Item
   addr.insertCustom( "GWRESOURCE", "UID", stringToQString( addrBkItem->id ) );
-  addr.setName( stringToQString( addrBkItem->name ) );
+  addr.setFormattedName( stringToQString( addrBkItem->name ) );
   // gwt::AddressBookItem
   addr.insertCustom( "GWRESOURCE", "UUID", stringToQString( addrBkItem->uuid ) );
   addr.setNote( stringToQString( addrBkItem->comment ) );
@@ -242,7 +242,7 @@ KABC::Addressee ContactConverter::convertFromResource( ngwt__Resource* resource 
     addr.insertEmail( stringToQString( resource->email ), true );
   if ( resource->owner )
     addr.insertCustom( "KADDRESSBOOK", "X-ManagersName", stringToQString( resource->owner->__item ) );
-  
+
   addr.insertCategory( i18n( "Resource" ) );
   return addr;
 }
@@ -278,7 +278,9 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
   if ( fullName ) {
     if ( fullName->displayName )
       addr.setFormattedName( stringToQString( fullName->displayName ) );
-
+    else
+      addr.setFormattedName( QString::null );
+    
     if ( fullName->namePrefix )
       addr.setPrefix( stringToQString( fullName->namePrefix ) );
 
