@@ -167,11 +167,11 @@ class CardViewPrivate
     // data used for resizing.
     // as they are beeded by each mouse move while resizing, we store them here,
     // saving 8 calculations in each mouse move.
-    int colspace;               // amount of space between items pr column
-    uint first;                 // the first col to anchor at for painting rubber bands
-    int firstX;                 // X position of first in pixel
-    int pressed;                // the colummn that was pressed on at resizing start
-    int span;                   // pressed - first
+    int mColspace;               // amount of space between items pr column
+    uint mFirst;                 // the first col to anchor at for painting rubber bands
+    int mFirstX;                 // X position of first in pixel
+    int mPressed;                // the colummn that was pressed on at resizing start
+    int mSpan;                   // pressed - first
     // key completion
     QString mCompText;          // current completion string
     QDateTime mCompUpdated;     // ...was updated at this time
@@ -234,8 +234,8 @@ void CardViewItem::paintCard( QPainter *p, QColorGroup &cg )
   bool drawLabels = mView->d->mDrawFieldLabels;
   bool drawBorder = mView->d->mDrawCardBorder;
   int mg = mView->itemMargin();
-  int w = mView->itemWidth() - (mg * 2);
-  int h = height() - (mg * 2);
+  int w = mView->itemWidth() - ( mg * 2 );
+  int h = height() - ( mg * 2 );
   const int colonWidth( fm.width( ":" ) );
   int labelXPos = 2 + mg;
   int labelWidth = QMIN( w / 2 - 4 - mg, d->maxLabelWidth + colonWidth + 4 );
@@ -516,7 +516,7 @@ void CardViewItem::showFullString( const QPoint &itempos, CardViewTip *tip )
 
     int colonWidth = mView->d->mFm->width(":");
     lw = drawLabels ? QMIN( w / 2 - 4 - mrg, d->maxLabelWidth + colonWidth + 4 ) : 0;
-    int mw = isLabel ? lw - colonWidth : w - lw - (mrg * 2);
+    int mw = isLabel ? lw - colonWidth : w - lw - ( mrg * 2 );
     if ( isLabel ) {
       trimmed = mView->d->mFm->width( s ) > mw - colonWidth;
     } else {
@@ -998,14 +998,14 @@ void CardView::contentsMousePressEvent( QMouseEvent *e )
     d->mLastClickOnItem = false;
     if ( d->mOnSeparator) {
       d->mResizeAnchor = e->x() + contentsX();
-      d->colspace = (2 * d->mItemSpacing);
-      int ccw = d->mItemWidth + d->colspace + d->mSepWidth;
-      d->first = (contentsX() + d->mSepWidth) / ccw;
-      d->pressed = (d->mResizeAnchor + d->mSepWidth) / ccw;
-      d->span = d->pressed - d->first;
-      d->firstX = d->first * ccw;
-      if ( d->firstX )
-        d->firstX -= d->mSepWidth;
+      d->mColspace = (2 * d->mItemSpacing);
+      int ccw = d->mItemWidth + d->mColspace + d->mSepWidth;
+      d->mFirst = (contentsX() + d->mSepWidth) / ccw;
+      d->mPressed = (d->mResizeAnchor + d->mSepWidth) / ccw;
+      d->mSpan = d->mPressed - d->mFirst;
+      d->mFirstX = d->mFirst * ccw;
+      if ( d->mFirstX )
+        d->mFirstX -= d->mSepWidth;
     } else {
       selectAll( false );
     }
@@ -1104,14 +1104,14 @@ void CardView::contentsMouseReleaseEvent( QMouseEvent *e )
 {
   QScrollView::contentsMouseReleaseEvent( e );
 
-  if ( d->mResizeAnchor && d->span ) {
+  if ( d->mResizeAnchor && d->mSpan ) {
     unsetCursor();
     // hide rubber bands
-    int newiw = d->mItemWidth - ((d->mResizeAnchor - d->mRubberBandAnchor) / d->span);
+    int newiw = d->mItemWidth - ((d->mResizeAnchor - d->mRubberBandAnchor) / d->mSpan);
     drawRubberBands( 0 );
     // we should move to reflect the new position if we are scrolled.
     if ( contentsX() ) {
-      int newX = QMAX( 0, ( d->pressed * ( newiw + d->colspace + d->mSepWidth ) ) - e->x() );
+      int newX = QMAX( 0, ( d->mPressed * ( newiw + d->mColspace + d->mSepWidth ) ) - e->x() );
       setContentsPos( newX, contentsY() );
     }
     // set new item width
@@ -1470,18 +1470,18 @@ void CardView::tryShowFullText()
 void CardView::drawRubberBands( int pos )
 {
   if ( pos && d &&
-       (!d->span || ((pos - d->firstX) / d->span) - d->colspace - d->mSepWidth < MIN_ITEM_WIDTH) )
+       (!d->mSpan || ((pos - d->mFirstX) / d->mSpan) - d->mColspace - d->mSepWidth < MIN_ITEM_WIDTH) )
     return;
 
-  int tmpcw = (d->mRubberBandAnchor - d->firstX) / d->span;
-  int x = d->firstX + tmpcw - d->mSepWidth - contentsX();
+  int tmpcw = (d->mRubberBandAnchor - d->mFirstX) / d->mSpan;
+  int x = d->mFirstX + tmpcw - d->mSepWidth - contentsX();
   int h = visibleHeight();
 
   QPainter p( viewport() );
   p.setRasterOp( XorROP );
   p.setPen( gray );
   p.setBrush( gray );
-  uint n = d->first;
+  uint n = d->mFirst;
   // erase
   if ( d->mRubberBandAnchor )
     do {
@@ -1492,9 +1492,9 @@ void CardView::drawRubberBands( int pos )
   // paint new
   if ( ! pos )
     return;
-  tmpcw = (pos - d->firstX) / d->span;
-  n = d->first;
-  x = d->firstX + tmpcw - d->mSepWidth - contentsX();
+  tmpcw = (pos - d->mFirstX) / d->mSpan;
+  n = d->mFirst;
+  x = d->mFirstX + tmpcw - d->mSepWidth - contentsX();
   do {
       p.drawRect( x, 0, 2, h );
       x += tmpcw;

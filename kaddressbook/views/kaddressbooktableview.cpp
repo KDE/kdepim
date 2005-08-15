@@ -89,7 +89,7 @@ KAddressBookTableView::KAddressBookTableView( KAB::Core *core,
                                               QWidget *parent, const char *name )
   : KAddressBookView( core, parent, name )
 {
-  mainLayout = new QVBoxLayout( viewWidget(), 2 );
+  mMainLayout = new QVBoxLayout( viewWidget(), 2 );
 
   // The list view will be created when the config is read.
   mListView = 0;
@@ -162,8 +162,8 @@ void KAddressBookTableView::reconstructListView()
   refresh();
 
   mListView->setSorting( 0, true );
-  mainLayout->addWidget( mListView );
-  mainLayout->activate();
+  mMainLayout->addWidget( mListView );
+  mMainLayout->activate();
   mListView->show();
 }
 
@@ -214,9 +214,9 @@ void KAddressBookTableView::readConfig( KConfig *config )
   mListView->restoreLayout( config, config->group() );
 }
 
-void KAddressBookTableView::refresh(QString uid)
+void KAddressBookTableView::refresh( const QString &uid )
 {
-  if ( uid.isNull() ) {
+  if ( uid.isEmpty() ) {
     // Clear the list view
     QString currentUID, nextUID;
     ContactListViewItem *currentItem = dynamic_cast<ContactListViewItem*>( mListView->currentItem() );
@@ -283,9 +283,9 @@ QStringList KAddressBookTableView::selectedUids()
   return uidList;
 }
 
-void KAddressBookTableView::setSelected( QString uid, bool selected )
+void KAddressBookTableView::setSelected( const QString &uid, bool selected )
 {
-  if ( uid.isNull() )
+  if ( uid.isEmpty() )
     mListView->selectAll( selected );
   else {
     QListViewItemIterator it( mListView );
@@ -339,9 +339,11 @@ void KAddressBookTableView::addresseeExecuted( QListViewItem *item )
     ContactListViewItem *ceItem = dynamic_cast<ContactListViewItem*>( item );
 
     if ( ceItem )
-      emit executed(ceItem->addressee().uid());
+      emit executed( ceItem->addressee().uid() );
+    else
+      emit executed( QString::null );
   } else {
-    emit executed(QString::null);
+    emit executed( QString::null );
   }
 }
 
@@ -356,7 +358,7 @@ void KAddressBookTableView::updatePresence( const QString &uid )
   QListViewItem *item;
   ContactListViewItem *ceItem;
   for ( item = mListView->firstChild(); item; item = item->itemBelow() ) {
-    ceItem = dynamic_cast<ContactListViewItem*>(item);
+    ceItem = dynamic_cast<ContactListViewItem*>( item );
     if ( ( ceItem != 0L ) && ( ceItem->addressee().uid() == uid ) ) {
       ceItem->setHasIM( true );
       ceItem->refresh();

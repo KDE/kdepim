@@ -164,14 +164,14 @@ class KDE_EXPORT KAddressBookView : public QWidget
       addressee with uid needs to be refreshed. This is an optimization
       only.
      */
-    virtual void refresh( QString uid = QString::null ) = 0;
+    virtual void refresh( const QString &uid = QString() ) = 0;
 
     /**
       This method must be overloaded in subclasses. Select (highlight)
       the addressee matching <i>uid</i>. If uid
       is equal to QString::null, then all addressees should be selected.
      */
-    virtual void setSelected( QString uid = QString::null, bool selected = true ) = 0;
+    virtual void setSelected( const QString &uid = QString(), bool selected = true ) = 0;
 
     /**
       Selects the first contact in the view.

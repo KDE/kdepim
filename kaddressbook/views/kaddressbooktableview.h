@@ -68,14 +68,14 @@ friend class ContactListView;
                            const char *name = 0 );
     virtual ~KAddressBookTableView();
 
-    virtual void refresh(QString uid = QString::null);
+    virtual void refresh( const QString &uid = QString() );
     virtual QStringList selectedUids();
-    virtual void setSelected(QString uid = QString::null, bool selected = false);
+    virtual void setSelected( const QString &uid = QString(), bool selected = false );
     virtual void setFirstSelected( bool selected = true );
     virtual KABC::Field *sortField() const;
 
-    virtual void readConfig(KConfig *config);
-    virtual void writeConfig(KConfig *config);
+    virtual void readConfig( KConfig *config );
+    virtual void writeConfig( KConfig *config );
     virtual QString type() const { return "Table"; }
 
     void scrollUp();
@@ -94,7 +94,7 @@ friend class ContactListView;
       Called whenever the user executes an addressee. In terms of the
       list view, this is probably a double click
     */
-    void addresseeExecuted(QListViewItem*);
+    void addresseeExecuted( QListViewItem* );
 
     /**
       RBM menu called.
@@ -107,7 +107,7 @@ friend class ContactListView;
     void updatePresence( const QString &uid );
 
   private:
-    QVBoxLayout *mainLayout;
+    QVBoxLayout *mMainLayout;
     ContactListView *mListView;
     KIMProxy *mIMProxy;
 };

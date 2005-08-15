@@ -49,9 +49,9 @@ class CardViewFactory : public ViewFactory
     }
 
     QString type() const { return I18N_NOOP("Card"); }
-    
+
     QString description() const { return i18n( "Rolodex style cards represent contacts." ); }
-    
+
     ViewConfigureWidget *configureWidget( KABC::AddressBook *ab, QWidget *parent,
                                           const char *name = 0 )
     {
@@ -66,52 +66,46 @@ extern "C" {
   }
 }
 
-////////////////////////////////
-// AddresseeCardViewItem  (internal class)
 class AddresseeCardViewItem : public CardViewItem
 {
   public:
-    AddresseeCardViewItem(const KABC::Field::List &fields,
-                          bool showEmptyFields,
-                          KABC::AddressBook *doc, const KABC::Addressee &a,
-                          CardView *parent)
-      : CardViewItem( parent, a.realName() ),
-        mFields( fields ), mShowEmptyFields(showEmptyFields),
-        mDocument(doc), mAddressee(a)
+    AddresseeCardViewItem( const KABC::Field::List &fields,
+                           bool showEmptyFields,
+                           KABC::AddressBook *doc, const KABC::Addressee &addr,
+                           CardView *parent )
+      : CardViewItem( parent, addr.realName() ),
+        mFields( fields ), mShowEmptyFields( showEmptyFields ),
+        mDocument( doc ), mAddressee( addr )
       {
-          if ( mFields.isEmpty() ) {
-            mFields = KABC::Field::defaultFields();
-          }
-          refresh();
+        if ( mFields.isEmpty() )
+          mFields = KABC::Field::defaultFields();
+
+        refresh();
       }
 
     const KABC::Addressee &addressee() const { return mAddressee; }
 
     void refresh()
     {
-        // Update our addressee, since it may have changed elsewhere
-        mAddressee = mDocument->findByUid(mAddressee.uid());
+      mAddressee = mDocument->findByUid( mAddressee.uid() );
 
-        if (!mAddressee.isEmpty())
-        {
-          clearFields();
+      if ( !mAddressee.isEmpty() ) {
+        clearFields();
 
-          // Try all the selected fields until we find one with text.
-          // This will limit the number of unlabeled icons in the view
-          KABC::Field::List::ConstIterator iter;
-          for (iter = mFields.begin(); iter != mFields.end(); ++iter)
-          {
-            // insert empty fields or not? not doing so saves a bit of memory and CPU
-            // (during geometry calculations), but prevents having equally
-            // wide label columns in all cards, unless CardViewItem/CardView search
-            // globally for the widest label. (anders)
-            //if (mShowEmptyFields || !(*iter)->value( mAddressee ).isEmpty())
-              insertField((*iter)->label(), (*iter)->value( mAddressee ));
-          }
+        KABC::Field::List::ConstIterator it( mFields.begin() );
+        const KABC::Field::List::ConstIterator endIt( mFields.end() );
+        for ( ; it != endIt; ++it ) {
+          // insert empty fields or not? not doing so saves a bit of memory and CPU
+          // (during geometry calculations), but prevents having equally
+          // wide label columns in all cards, unless CardViewItem/CardView search
+          // globally for the widest label. (anders)
 
-          // We might want to make this the first field. hmm... -mpilone
-          setCaption( mAddressee.realName() );
+          // if ( mShowEmptyFields || !(*it)->value( mAddressee ).isEmpty() )
+          insertField( (*it)->label(), (*it)->value( mAddressee ) );
         }
+
+        setCaption( mAddressee.realName() );
+      }
     }
 
   private:
@@ -121,28 +115,26 @@ class AddresseeCardViewItem : public CardViewItem
     KABC::Addressee mAddressee;
 };
 
-///////////////////////////////
-// AddresseeCardView
 
-AddresseeCardView::AddresseeCardView(QWidget *parent, const char *name)
-  : CardView(parent, name)
+AddresseeCardView::AddresseeCardView( QWidget *parent, const char *name )
+  : CardView( parent, name )
 {
-  setAcceptDrops(true);
+  setAcceptDrops( true );
 }
 
 AddresseeCardView::~AddresseeCardView()
 {
 }
 
-void AddresseeCardView::dragEnterEvent(QDragEnterEvent *e)
+void AddresseeCardView::dragEnterEvent( QDragEnterEvent *event )
 {
-  if (QTextDrag::canDecode(e))
-    e->accept();
+  if ( QTextDrag::canDecode( event ) )
+    event->accept();
 }
 
-void AddresseeCardView::dropEvent(QDropEvent *e)
+void AddresseeCardView::dropEvent( QDropEvent *event )
 {
-  emit addresseeDropped(e);
+  emit addresseeDropped( event );
 }
 
 void AddresseeCardView::startDrag()
@@ -151,33 +143,29 @@ void AddresseeCardView::startDrag()
 }
 
 
-///////////////////////////////
-// KAddressBookCardView
-
 KAddressBookCardView::KAddressBookCardView( KAB::Core *core,
                                             QWidget *parent, const char *name )
     : KAddressBookView( core, parent, name )
 {
-    mShowEmptyFields = false;
+  mShowEmptyFields = false;
 
-    // Init the GUI
-    QVBoxLayout *layout = new QVBoxLayout(viewWidget());
+  QVBoxLayout *layout = new QVBoxLayout( viewWidget() );
 
-    mCardView = new AddresseeCardView(viewWidget(), "mCardView");
-    mCardView->setSelectionMode(CardView::Extended);
-    layout->addWidget(mCardView);
+  mCardView = new AddresseeCardView( viewWidget(), "mCardView" );
+  mCardView->setSelectionMode( CardView::Extended );
+  layout->addWidget( mCardView );
 
-    // Connect up the signals
-    connect(mCardView, SIGNAL(executed(CardViewItem *)),
-            this, SLOT(addresseeExecuted(CardViewItem *)));
-    connect(mCardView, SIGNAL(selectionChanged()),
-            this, SLOT(addresseeSelected()));
-    connect(mCardView, SIGNAL(addresseeDropped(QDropEvent*)),
-            this, SIGNAL(dropped(QDropEvent*)));
-    connect(mCardView, SIGNAL(startAddresseeDrag()),
-            this, SIGNAL(startDrag()));
-    connect( mCardView, SIGNAL( contextMenuRequested( CardViewItem*, const QPoint& ) ),
-             this, SLOT( rmbClicked( CardViewItem*, const QPoint& ) ) );
+  // Connect up the signals
+  connect( mCardView, SIGNAL( executed( CardViewItem* ) ),
+           this, SLOT( addresseeExecuted( CardViewItem* ) ) );
+  connect( mCardView, SIGNAL( selectionChanged() ),
+           this, SLOT( addresseeSelected() ) );
+  connect( mCardView, SIGNAL( addresseeDropped( QDropEvent* ) ),
+           this, SIGNAL( dropped( QDropEvent* ) ) );
+  connect( mCardView, SIGNAL( startAddresseeDrag() ),
+           this, SIGNAL( startDrag() ) );
+  connect( mCardView, SIGNAL( contextMenuRequested( CardViewItem*, const QPoint& ) ),
+           this, SLOT( rmbClicked( CardViewItem*, const QPoint& ) ) );
 }
 
 KAddressBookCardView::~KAddressBookCardView()
@@ -190,72 +178,64 @@ KABC::Field *KAddressBookCardView::sortField() const
   return KABC::Field::allFields()[ 0 ];
 }
 
-void KAddressBookCardView::readConfig(KConfig *config)
+void KAddressBookCardView::readConfig( KConfig *config )
 {
-  KAddressBookView::readConfig(config);
-  
+  KAddressBookView::readConfig( config );
+
   // costum colors?
-  if ( config->readBoolEntry( "EnableCustomColors", false ) )
-  {
+  if ( config->readBoolEntry( "EnableCustomColors", false ) ) {
     QPalette p( mCardView->palette() );
-    QColor c = p.color(QPalette::Normal, QColorGroup::Base );
+    QColor c = p.color( QPalette::Normal, QColorGroup::Base );
     p.setColor( QPalette::Normal, QColorGroup::Base, config->readColorEntry( "BackgroundColor", &c ) );
-    c = p.color(QPalette::Normal, QColorGroup::Text );
+    c = p.color( QPalette::Normal, QColorGroup::Text );
     p.setColor( QPalette::Normal, QColorGroup::Text, config->readColorEntry( "TextColor", &c ) );
-    c = p.color(QPalette::Normal, QColorGroup::Button );
+    c = p.color( QPalette::Normal, QColorGroup::Button );
     p.setColor( QPalette::Normal, QColorGroup::Button, config->readColorEntry( "HeaderColor", &c ) );
-    c = p.color(QPalette::Normal, QColorGroup::ButtonText );
+    c = p.color( QPalette::Normal, QColorGroup::ButtonText );
     p.setColor( QPalette::Normal, QColorGroup::ButtonText, config->readColorEntry( "HeaderTextColor", &c ) );
-    c = p.color(QPalette::Normal, QColorGroup::Highlight );
+    c = p.color( QPalette::Normal, QColorGroup::Highlight );
     p.setColor( QPalette::Normal, QColorGroup::Highlight, config->readColorEntry( "HighlightColor", &c ) );
-    c = p.color(QPalette::Normal, QColorGroup::HighlightedText );
+    c = p.color( QPalette::Normal, QColorGroup::HighlightedText );
     p.setColor( QPalette::Normal, QColorGroup::HighlightedText, config->readColorEntry( "HighlightedTextColor", &c ) );
     mCardView->viewport()->setPalette( p );
-  }
-  else
-  {
+  } else {
     // needed if turned off during a session.
     mCardView->viewport()->setPalette( mCardView->palette() );
   }
-  
+
   //custom fonts?
   QFont f( font() );
-  if ( config->readBoolEntry( "EnableCustomFonts", false ) )
-  {
-    mCardView->setFont( config->readFontEntry( "TextFont", &f) );
+  if ( config->readBoolEntry( "EnableCustomFonts", false ) ) {
+    mCardView->setFont( config->readFontEntry( "TextFont", &f ) );
     f.setBold( true );
     mCardView->setHeaderFont( config->readFontEntry( "HeaderFont", &f ) );
-  }
-  else
-  {
+  } else {
     mCardView->setFont( f );
     f.setBold( true );
     mCardView->setHeaderFont( f );
-  }  
-  
-  mCardView->setDrawCardBorder(config->readBoolEntry("DrawBorder", true));
-  mCardView->setDrawColSeparators(config->readBoolEntry("DrawSeparators",
-                                                        true));
-  mCardView->setDrawFieldLabels(config->readBoolEntry("DrawFieldLabels",false));
-  mShowEmptyFields = config->readBoolEntry("ShowEmptyFields", false);
-  
+  }
+
+  mCardView->setDrawCardBorder( config->readBoolEntry( "DrawBorder", true ) );
+  mCardView->setDrawColSeparators( config->readBoolEntry( "DrawSeparators", true ) );
+  mCardView->setDrawFieldLabels( config->readBoolEntry( "DrawFieldLabels", false ) );
+  mShowEmptyFields = config->readBoolEntry( "ShowEmptyFields", false );
+
   mCardView->setShowEmptyFields( mShowEmptyFields );
-  
+
   mCardView->setItemWidth( config->readNumEntry( "ItemWidth", 200 ) );
   mCardView->setItemMargin( config->readNumEntry( "ItemMargin", 0 ) );
   mCardView->setItemSpacing( config->readNumEntry( "ItemSpacing", 10 ) );
   mCardView->setSeparatorWidth( config->readNumEntry( "SeparatorWidth", 2 ) );
-  
-  disconnect(mCardView, SIGNAL(executed(CardViewItem *)),
-            this, SLOT(addresseeExecuted(CardViewItem *)));
+
+  disconnect( mCardView, SIGNAL( executed( CardViewItem* ) ),
+              this, SLOT( addresseeExecuted( CardViewItem* ) ) );
 
   if ( KABPrefs::instance()->honorSingleClick() )
-    connect(mCardView, SIGNAL(executed(CardViewItem *)),
-            this, SLOT(addresseeExecuted(CardViewItem *)));
+    connect( mCardView, SIGNAL( executed( CardViewItem* ) ),
+             this, SLOT( addresseeExecuted( CardViewItem* ) ) );
   else
-    connect(mCardView, SIGNAL(doubleClicked(CardViewItem *)),
-            this, SLOT(addresseeExecuted(CardViewItem *)));
-  
+    connect( mCardView, SIGNAL( doubleClicked( CardViewItem* ) ),
+             this, SLOT( addresseeExecuted( CardViewItem* ) ) );
 }
 
 void KAddressBookCardView::writeConfig( KConfig *config )
@@ -263,92 +243,78 @@ void KAddressBookCardView::writeConfig( KConfig *config )
   config->writeEntry( "ItemWidth", mCardView->itemWidth() );
   KAddressBookView::writeConfig( config );
 }
-  
+
 QStringList KAddressBookCardView::selectedUids()
 {
-    QStringList uidList;
-    CardViewItem *item;
-    AddresseeCardViewItem *aItem;
+  QStringList uidList;
+  CardViewItem *item;
+  AddresseeCardViewItem *aItem;
 
-    for (item = mCardView->firstItem(); item; item = item->nextItem())
-    {
-        if (item->isSelected())
-        {
-            aItem = dynamic_cast<AddresseeCardViewItem*>(item);
-            if (aItem)
-                uidList << aItem->addressee().uid();
-        }
+  for ( item = mCardView->firstItem(); item; item = item->nextItem() ) {
+    if ( item->isSelected() ) {
+      aItem = dynamic_cast<AddresseeCardViewItem*>( item );
+      if ( aItem )
+        uidList << aItem->addressee().uid();
     }
+  }
 
-    return uidList;
+  return uidList;
 }
 
-void KAddressBookCardView::refresh(QString uid)
+void KAddressBookCardView::refresh( const QString &uid )
 {
-    CardViewItem *item;
-    AddresseeCardViewItem *aItem;
+  CardViewItem *item;
+  AddresseeCardViewItem *aItem;
 
-    if (uid.isNull())
-    {
-        // Rebuild the view
-        mCardView->viewport()->setUpdatesEnabled( false );
-        mCardView->clear();
+  if ( uid.isEmpty() ) {
+    // Rebuild the view
+    mCardView->viewport()->setUpdatesEnabled( false );
+    mCardView->clear();
 
-        const KABC::Addressee::List addresseeList( addressees() );
-        KABC::Addressee::List::ConstIterator iter;
-        for (iter = addresseeList.begin(); iter != addresseeList.end(); ++iter)
-        {
-            aItem = new AddresseeCardViewItem(fields(), mShowEmptyFields,
-                                              core()->addressBook(), *iter, mCardView);
-        }
-        mCardView->viewport()->setUpdatesEnabled( true );
-        mCardView->viewport()->update();
-
-        // by default nothing is selected
-        emit selected(QString::null);
+    const KABC::Addressee::List addresseeList( addressees() );
+    KABC::Addressee::List::ConstIterator it( addresseeList.begin() );
+    const KABC::Addressee::List::ConstIterator endIt( addresseeList.end() );
+    for ( ; it != endIt; ++it ) {
+      aItem = new AddresseeCardViewItem( fields(), mShowEmptyFields,
+                                         core()->addressBook(), *it, mCardView );
     }
-    else
-    {
-        // Try to find the one to refresh
-        bool found = false;
-        for (item = mCardView->firstItem(); item && !found;
-             item = item->nextItem())
-        {
-            aItem = dynamic_cast<AddresseeCardViewItem*>(item);
-            if ((aItem) && (aItem->addressee().uid() == uid))
-            {
-                aItem->refresh();
-                found = true;
-            }
-        }
+    mCardView->viewport()->setUpdatesEnabled( true );
+    mCardView->viewport()->update();
+
+    // by default nothing is selected
+    emit selected( QString::null );
+  } else {
+    // Try to find the one to refresh
+    bool found = false;
+    for ( item = mCardView->firstItem(); item && !found; item = item->nextItem() ) {
+      aItem = dynamic_cast<AddresseeCardViewItem*>( item );
+      if ( aItem && (aItem->addressee().uid() == uid) ) {
+        aItem->refresh();
+        found = true;
+      }
     }
+  }
 }
 
-void KAddressBookCardView::setSelected(QString uid, bool selected)
+void KAddressBookCardView::setSelected( const QString &uid, bool selected )
 {
-    CardViewItem *item;
-    AddresseeCardViewItem *aItem;
+  CardViewItem *item;
+  AddresseeCardViewItem *aItem;
 
-    if (uid.isNull())
-    {
-        mCardView->selectAll(selected);
-    }
-    else
-    {
-        bool found = false;
-        for (item = mCardView->firstItem(); item && !found;
-             item = item->nextItem())
-         {
-             aItem = dynamic_cast<AddresseeCardViewItem*>(item);
+  if ( uid.isEmpty() ) {
+    mCardView->selectAll( selected );
+  } else {
+    bool found = false;
+    for ( item = mCardView->firstItem(); item && !found; item = item->nextItem() ) {
+      aItem = dynamic_cast<AddresseeCardViewItem*>( item );
 
-             if ((aItem) && (aItem->addressee().uid() == uid))
-             {
-                 mCardView->setSelected(aItem, selected);
-                 mCardView->ensureItemVisible(item);
-                 found = true;
-             }
-         }
+      if ( aItem && (aItem->addressee().uid() == uid) ) {
+        mCardView->setSelected( aItem, selected );
+        mCardView->ensureItemVisible( item );
+        found = true;
+      }
     }
+  }
 }
 
 void KAddressBookCardView::setFirstSelected( bool selected )
@@ -359,39 +325,31 @@ void KAddressBookCardView::setFirstSelected( bool selected )
   }
 }
 
-void KAddressBookCardView::addresseeExecuted(CardViewItem *item)
+void KAddressBookCardView::addresseeExecuted( CardViewItem *item )
 {
-    AddresseeCardViewItem *aItem = dynamic_cast<AddresseeCardViewItem*>(item);
-    if (aItem)
-    {
-      //kdDebug(5720)<<"... even has a valid item:)"<<endl;
-      emit executed(aItem->addressee().uid());
-    }
+  AddresseeCardViewItem *aItem = dynamic_cast<AddresseeCardViewItem*>( item );
+  if ( aItem )
+    emit executed( aItem->addressee().uid() );
 }
 
 void KAddressBookCardView::addresseeSelected()
 {
-    CardViewItem *item;
-    AddresseeCardViewItem *aItem;
+  CardViewItem *item;
+  AddresseeCardViewItem *aItem;
 
-    bool found = false;
-    for (item = mCardView->firstItem(); item && !found;
-         item = item->nextItem())
-    {
-        if (item->isSelected())
-        {
-            aItem = dynamic_cast<AddresseeCardViewItem*>(item);
-            if ( aItem )
-            {
-                emit selected(aItem->addressee().uid());
-                found = true;
-            }
-        }
+  bool found = false;
+  for ( item = mCardView->firstItem(); item && !found; item = item->nextItem() ) {
+    if ( item->isSelected() ) {
+      aItem = dynamic_cast<AddresseeCardViewItem*>( item );
+      if ( aItem ) {
+        emit selected( aItem->addressee().uid() );
+        found = true;
+      }
     }
+  }
 
-    if (!found)
-        emit selected(QString::null);
-
+  if ( !found )
+    emit selected( QString::null );
 }
 
 void KAddressBookCardView::rmbClicked( CardViewItem*, const QPoint &point )
