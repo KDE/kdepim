@@ -471,12 +471,17 @@ void VCalConduitBase::slotPCRecToPalm()
 	if (!e)
 	{
 		pilotindex=0;
-		if ( (syncMode()==SyncMode::eCopyHHToPC) || (syncMode()==SyncMode::eCopyPCToHH) )
+		// if we are asked to copy HH to PC, we shouldn't look for deleted records
+		// on the Palm, since we've just copied them all.  =:)  Otherwise, look for
+		// data on the palm that shouldn't be there and delete it if we find it....
+		if ( syncMode()==SyncMode::eCopyHHToPC )
 		{
 			QTimer::singleShot(0, this, SLOT(cleanup()));
-			return;
 		}
-		QTimer::singleShot(0,this,SLOT(slotDeletedIncidence()));
+		else
+		{
+			QTimer::singleShot(0,this,SLOT(slotDeletedIncidence()));
+		}
 		return;
 	}
 
@@ -521,7 +526,7 @@ void VCalConduitBase::slotDeletedIncidence()
 	FUNCTIONSETUP;
 
 	PilotRecord *r = fLocalDatabase->readRecordByIndex(pilotindex++);
-	if (!r || isFullSync() )
+	if (!r || (syncMode()==SyncMode::eCopyHHToPC) )
 	{
 		QTimer::singleShot(0 ,this,SLOT(cleanup()));
 		return;
