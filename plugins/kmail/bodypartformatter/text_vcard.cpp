@@ -89,7 +89,7 @@ namespace {
           KABC::Addressee a = (*it);
           if ( a.isEmpty() ) return AsIcon;
 
-          QString contact = AddresseeView::vCardAsHTML( a, 0L, 0, false, true, true, true, true, true, false );
+          QString contact = AddresseeView::vCardAsHTML( a, 0L, AddresseeView::NoLinks, false, AddresseeView::DefaultFields );
           writer->queue( contact );
 
           QString addToLinkText = i18n( "[Add this contact to the addressbook]" );
