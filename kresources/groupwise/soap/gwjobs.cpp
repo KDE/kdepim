@@ -266,15 +266,16 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
       }
       readItems += readCursorResponse.items->item.size(); // this means that the read count is increased even if the call fails, but at least the while will always end
       kdDebug() << " just read " << readCursorResponse.items->item.size() << " items" << endl;
+      if ( readCursorResponse.items->item.size() == 0 )
+        break;
     }
     else
+    {
       kdDebug() << " readCursor got no Items in Response!" << endl;
-
+      break;
+    }
     // pass the received addressees back to the server
     mServer->emitGotAddressees( contacts );
-
-    if ( readCursorResponse.items->item.size() < *( readCursorRequest.count ) )
-      break;
   }
 
   _ngwm__destroyCursorRequest destReq;
