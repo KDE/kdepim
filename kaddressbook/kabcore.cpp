@@ -129,7 +129,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   mSearchManager = new KAB::SearchManager( mAddressBook, parent );
 
   connect( mSearchManager, SIGNAL( contactsUpdated() ),
-           this, SIGNAL( contactsUpdated() ) );
+           this, SLOT( slotContactsUpdated() ) );
 
   initGUI();
 
@@ -872,8 +872,12 @@ void KABCore::print()
 
 void KABCore::detailsHighlighted( const QString &msg )
 {
-  if ( mStatusBar )
-    mStatusBar->changeItem( msg, 1 );
+  if ( mStatusBar ) {
+    if ( !mStatusBar->hasItem( 2 ) )
+      mStatusBar->insertItem( msg, 2 );
+    else
+      mStatusBar->changeItem( msg, 2 );
+  }
 }
 
 void KABCore::showContactsAddress( const QString &addrUid )
@@ -1089,10 +1093,6 @@ void KABCore::initActions()
                                       actionCollection(), "edit_store_in" );
   mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." ) );
 
-
-//  mActionUndo->setEnabled( false );
-//  mActionRedo->setEnabled( false );
-
   // settings menu
   mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,
                                       actionCollection(), "options_show_jump_bar" );
@@ -1207,7 +1207,7 @@ void KABCore::categoriesSelected( const QStringList &categories )
 {
   bool merge = false;
   QString msg = i18n( "Merge with existing categories?" );
-  if ( KMessageBox::questionYesNo( mWidget, msg, QString::null, i18n("Merge"), i18n("Do Not Merge") ) == KMessageBox::Yes )
+  if ( KMessageBox::questionYesNo( mWidget, msg, QString::null, i18n( "Merge" ), i18n( "Do Not Merge" ) ) == KMessageBox::Yes )
     merge = true;
 
   QStringList uids = mViewManager->selectedUids();
@@ -1253,6 +1253,16 @@ void KABCore::slotClearSearchBar()
 {
   mIncSearchWidget->clear();
   mIncSearchWidget->setFocus();
+}
+
+void KABCore::slotContactsUpdated()
+{
+  if ( mStatusBar ) {
+    QString msg( i18n( "%n contact matches", "%n contacts matching", mSearchManager->contacts().count() ) );
+    mStatusBar->changeItem( msg, 1 );
+  }
+
+  emit contactsUpdated();
 }
 
 bool KABCore::handleCommandLine( KAddressBookIface* iface )

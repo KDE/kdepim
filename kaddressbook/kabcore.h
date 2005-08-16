@@ -363,6 +363,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     void categoriesSelected( const QStringList& );
     void editCategories();
     void slotClearSearchBar();
+    void slotContactsUpdated();
 
   private:
     void initGUI();
