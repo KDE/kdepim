@@ -767,7 +767,10 @@ CleanupAction::~CleanupAction()
 {
 	FUNCTIONSETUP;
 
-	fHandle->finishSync();
+	if (deviceLink())
+	{
+		deviceLink()->finishSync();
+	}
 	emit syncDone(this);
 	return true;
 }
