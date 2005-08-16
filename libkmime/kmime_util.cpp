@@ -712,10 +712,11 @@ DateFormatter::localized(time_t otime, bool shortFormat, bool includeSecs,
 
 
   if ( !localeLanguage.isEmpty() ) {
-    QString olang = locale->language();
-    locale->setLanguage( localeLanguage );
+    locale=new KLocale(localeLanguage);
+    locale->setLanguage(localeLanguage);
+    locale->setCountry(localeLanguage);
     ret = locale->formatDateTime( tmp, shortFormat, includeSecs );
-    locale->setLanguage( olang );
+    delete locale;
   } else {
     ret = locale->formatDateTime( tmp, shortFormat, includeSecs );
   }
