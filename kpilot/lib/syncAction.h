@@ -112,9 +112,12 @@ public:
 	void addLogError( const QString &msg ) { emit logError( msg ); }
 	void addLogProgress( const QString &msg, int prog ) { emit logProgress( msg, prog ); }
 protected:
+	/** Connection to the device. @todo make private. */
 	KPilotDeviceLink *fHandle;
 	int fActionStatus;
 
+	/** Returns a pointer to the connection to the device. */
+	inline KPilotDeviceLink *deviceLink() const { return fHandle; } ;
 	int pilotSocket() const { return fHandle->pilotSocket(); } ;
 
 	int openConduit() { return fHandle->openConduit(); } ;

@@ -275,15 +275,30 @@ bool SyncAction::SyncMode::setMode(SyncAction::SyncMode::Mode m)
 void SyncAction::startTickle(unsigned timeout)
 {
 	FUNCTIONSETUP;
-	connect(fHandle,SIGNAL(timeout()),this,SIGNAL(timeout()));
-	fHandle->startTickle(timeout);
+
+	if (!deviceLink())
+	{
+		kdWarning() << k_funcinfo << ": Trying to tickle without a device." << endl;
+	}
+	else
+	{
+		connect(deviceLink(),SIGNAL(timeout()),this,SIGNAL(timeout()));
+		deviceLink()->startTickle(timeout);
+	}
 }
 
 void SyncAction::stopTickle()
 {
 	FUNCTIONSETUP;
-	disconnect(fHandle,SIGNAL(timeout()),this,SIGNAL(timeout()));
-	fHandle->stopTickle();
+	if (!deviceLink())
+	{
+		kdWarning() << k_funcinfo << ": Trying to tickle without a device." << endl;
+	}
+	else
+	{
+		disconnect(deviceLink(),SIGNAL(timeout()),this,SIGNAL(timeout()));
+		deviceLink()->stopTickle();
+	}
 }
 
 
@@ -315,9 +330,9 @@ int SyncAction::questionYesNo(const QString & text,
 		yes.isEmpty() ? KStdGuiItem::yes() : yes,
 		no.isEmpty() ? KStdGuiItem::no() : no);
 
-	if (timeout > 0)
+	if ( (timeout > 0) && ( deviceLink() ) )
 	{
-		QObject::connect(fHandle, SIGNAL(timeout()),
+		QObject::connect(deviceLink(), SIGNAL(timeout()),
 			dialog, SLOT(slotCancel()));
 		startTickle(timeout);
 	}
@@ -428,9 +443,9 @@ int SyncAction::questionYesNoCancel(const QString & text,
 		(no.isEmpty() ? KStdGuiItem::no() : no),
 		KStdGuiItem::cancel());
 
-	if (timeout > 0)
+	if ( (timeout > 0) && (deviceLink()) )
 	{
-		QObject::connect(fHandle, SIGNAL(timeout()),
+		QObject::connect(deviceLink(), SIGNAL(timeout()),
 			dialog, SLOT(slotCancel()));
 		startTickle(timeout);
 	}
