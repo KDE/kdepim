@@ -43,10 +43,11 @@ indexlib::index_type::type type_of( const char* basename ) {
 	if ( !info ) return indexlib::index_type::none;
 	std::string type;
 	std::string marker;
+	std::string ver;
 	int major, minor;
 	char sep;
 	std::getline( info, marker );
-	info >> major >> sep >> minor;
+	info >> ver >> major >> sep >> minor;
 	info >> type;
 	if ( !info ) return indexlib::index_type::none;
 	if ( type == "quotes" ) return indexlib::index_type::quotes;
