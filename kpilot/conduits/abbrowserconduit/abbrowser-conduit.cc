@@ -69,13 +69,11 @@ const QString AbbrowserConduit::idString=CSL1("RecordID");
 
 AddressBook*AbbrowserConduit::aBook=0L;
 
-/// This macro just sets the phone number of type "type" to "phone"
-/// Use a macro, because that saves two lines for each call, but does not
-/// have the overhead of a function call
+/// This function just sets the phone number of type "type" to "phone"
 static inline void _setPhoneNumber(Addressee &abEntry, int type, const QString &nr)
 {
 	PhoneNumber phone = abEntry.phoneNumber(type);
-	phone.setNumber(nr); \
+	phone.setNumber(nr);
 	abEntry.insertPhoneNumber(phone);
 }
 
