@@ -1259,7 +1259,10 @@ void KABCore::slotContactsUpdated()
 {
   if ( mStatusBar ) {
     QString msg( i18n( "%n contact matches", "%n contacts matching", mSearchManager->contacts().count() ) );
-    mStatusBar->changeItem( msg, 1 );
+    if ( !mStatusBar->hasItem( 1 ) )
+      mStatusBar->insertItem( msg, 1 );
+    else
+      mStatusBar->changeItem( msg, 1 );
   }
 
   emit contactsUpdated();
