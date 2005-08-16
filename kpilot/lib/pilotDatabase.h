@@ -306,7 +306,8 @@ public:
 	} ;
 
 	/** Write this appinfo block to the database @p d; returns
-	* the number of bytes written or -1 on failure.
+	* the number of bytes written or -1 on failure. This
+	* function is robust when called with a NULL database @p d.
 	*/
 	int write(PilotDatabase *d)
 	{
