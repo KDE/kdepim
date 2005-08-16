@@ -35,15 +35,15 @@
 
 #include "plugin.h"
 
-/**
+/** @file
+* This file defines the ActionQueue.
+*
 * This used to be called SyncStack, and while a stack is cool
 * for some things, it actually rather confuses the issue because
 * you _use_ this class for specifying "do this, then that, then ..."
 * and in program code you need to reverse that order when adding
 * items to a stack. So now it's a Queue, FIFO, and program
 * code looks more normal.
-*
-* Also updated to Qt3 in all aspects.
 */
 
 /**
@@ -52,7 +52,8 @@
 * ActionQueue.
 *
 * An ActionQueue is constructed with a @p device. As usual, you should connect
-* the device's deviceReady(KPilotDeviceLink*) signal with the exec() slot -- or something to that effect.
+* the device's deviceReady(KPilotDeviceLink*) signal with the exec() slot --
+* or something to that effect.
 * The ActionQueue will then run all the actions in the queue in sequence.
 *
 */
@@ -61,6 +62,9 @@ class ActionQueue : public SyncAction
 {
 Q_OBJECT
 public:
+	/** Constructor. Pass in a KPilot device link for it to act on.
+	* It is legal to pass in 0 (NULL) as a device.
+	*/
 	ActionQueue(KPilotDeviceLink *device);
 
 	virtual ~ActionQueue();
