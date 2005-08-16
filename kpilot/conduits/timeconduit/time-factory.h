@@ -6,7 +6,7 @@
 **
 ** This file defines the factory for the Time-conduit plugin.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -23,43 +23,18 @@
 ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 ** MA 02110-1301, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <klibloader.h>
-
-class KInstance;
-class KAboutData;
-
 #define DIR_PCToPalm 0
 #define DIR_PalmToPC 1
-
-class TimeConduitFactory : public KLibFactory
-{
-Q_OBJECT
-
-public:
-	TimeConduitFactory(QObject * = 0L,const char * = 0L);
-	virtual ~TimeConduitFactory();
-
-	static KAboutData *about() { return fAbout; } ;
-	
-protected:
-	virtual QObject* createObject( QObject* parent = 0,
-		const char* name = 0,
-		const char* classname = "QObject",
-		const QStringList &args = QStringList() );
-private:
-	KInstance *fInstance;
-	static KAboutData *fAbout;
-} ;
 
 extern "C"
 {
 
-void *init_libtimeconduit();
+void *init_conduit_time();
 
 }
 

@@ -32,14 +32,36 @@
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qbuttongroup.h>
+
 #include <kurlrequester.h>
+#include <kaboutdata.h>
 
 #include "kaddressbookConduit.h"
-#include "abbrowser-factory.h"
 #include "abbrowser-setup.h"
 #include "abbrowserSettings.h"
 
 #include "uiDialog.h"
+
+
+static KAboutData *createAbout()
+{
+	KAboutData *fAbout = new KAboutData("abbrowserconduit",
+		I18N_NOOP("Abbrowser Conduit for KPilot"),
+		KPILOT_VERSION,
+		I18N_NOOP("Configures the Abbrowser Conduit for KPilot"),
+		KAboutData::License_GPL,
+		"(C) 2001, Dan Pilone\n(C) 2002-2003, Reinhold Kainhofer");
+	fAbout->addAuthor("Greg Stern",
+		I18N_NOOP("Primary Author"));
+	fAbout->addAuthor("Adriaan de Groot",
+		I18N_NOOP("Maintainer"),
+		"groot@kde.org",
+		"http://www.cs.kun.nl/~adridg/kpilot");
+	fAbout->addAuthor("Reinhold Kainhofer", I18N_NOOP("Maintainer"),
+		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com");
+	fAbout->addCredit("David Bishop", I18N_NOOP("UI"));
+	return fAbout;
+}
 
 AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n) :
 	ConduitConfigBase(w,n),
@@ -48,7 +70,8 @@ AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n) :
 	FUNCTIONSETUP;
 
 	fConduitName=i18n("Addressbook");
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,AbbrowserConduitFactory::about());
+	fAbout = createAbout();
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,fAbout);
 	fWidget=fConfigWidget;
 	fConfigWidget->fAbookFile->setMode(KFile::File);
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
@@ -76,7 +99,7 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 /* virtual */ void AbbrowserWidgetSetup::commit()
 {
 	FUNCTIONSETUP;
-	
+
 	QButtonGroup*grp=fConfigWidget->fSyncDestination;
 	AbbrowserSettings::setAddressbookType(grp->id(grp->selected()));
 	AbbrowserSettings::setFileName(fConfigWidget->fAbookFile->url());
@@ -133,7 +156,7 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 		<< " eCustom[3]=" << AbbrowserSettings::custom3()
 		<< endl;
 #endif
-	
+
 	// General page
 	fConfigWidget->fSyncDestination->setButton(AbbrowserSettings::addressbookType());
 	fConfigWidget->fAbookFile->setURL(AbbrowserSettings::fileName());

@@ -83,6 +83,15 @@ void TimeConduit::readConfig()
 
 	readConfig();
 
+	if (syncMode().isLocal())
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Would have set time to "
+			<< QDateTime::currentDateTime() << endl;
+#endif
+		return delayDone();
+	}
+
 	emit logMessage(i18n("Setting the clock on the handheld"));
 	syncHHfromPC();
 	return delayDone();

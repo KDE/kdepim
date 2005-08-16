@@ -27,16 +27,10 @@
 */
 
 #include "options.h"
+#include "pluginfactory.h"
 
-#include <kapplication.h>
-#include <kinstance.h>
-#include <kaboutdata.h>
-
-#include <time.h> // Needed by pilot-link include
 #include "time-conduit.h"
 #include "time-setup.h"
-
-#include "time-factory.moc"
 
 
 extern "C"
@@ -44,84 +38,9 @@ extern "C"
 
 void *init_conduit_time()
 {
-	return new TimeConduitFactory;
+	return new ConduitFactory<TimeWidgetConfig,TimeConduit>(0,"Timeconduit");
 }
 
 }
 
-
-// A number of static variables
-KAboutData *TimeConduitFactory::fAbout = 0L;
-
-
-TimeConduitFactory::TimeConduitFactory(QObject *p, const char *n) :
-	KLibFactory(p,n)
-{
-	FUNCTIONSETUP;
-
-	fInstance = new KInstance("Timeconduit");
-	fAbout = new KAboutData("Timeconduit",
-		I18N_NOOP("Time Synchronization Conduit for KPilot"),
-		KPILOT_VERSION,
-		I18N_NOOP("Synchronizes the Time on the Handheld and the PC"),
-		KAboutData::License_GPL,
-		"(C) 2002, Reinhold Kainhofer");
-	fAbout->addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
-}
-
-TimeConduitFactory::~TimeConduitFactory()
-{
-	FUNCTIONSETUP;
-
-	KPILOT_DELETE(fInstance);
-	KPILOT_DELETE(fAbout);
-}
-
-/* virtual */ QObject *TimeConduitFactory::createObject( QObject *p,
-	const char *n,
-	const char *c,
-	const QStringList &a)
-{
-	FUNCTIONSETUP;
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
-		<< ": Creating object of class "
-		<< c
-		<< endl;
-#endif
-
-	if (qstrcmp(c,"ConduitConfigBase")==0)
-	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-		if (w)
-		{
-			return new TimeWidgetConfig(w,"ConduitConfigBase");
-		}
-		else
-		{
-			return 0L;
-		}
-	}
-	else
-	if (qstrcmp(c,"SyncAction")==0)
-	{
-		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
-
-		if (d)
-		{
-			return new TimeConduit(d,n,a);
-		}
-		else
-		{
-			kdError() << k_funcinfo
-				<< ": Couldn't cast parent to KPilotDeviceLink"
-				<< endl;
-			return 0L;
-		}
-	}
-
-	return 0L;
-}
 

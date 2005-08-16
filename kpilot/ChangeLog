@@ -14,6 +14,15 @@ TODO: give the knotes conduit a decent test mode.
 TODO: only re-write a local database if it is changed.
 TODO: move set-category code from subclasses into PilotRecordBase.
 
+
+2005-08-15  Adriaan de Groot
+* Added lots of null-pointer checks so that it may become possible to
+  run conduits without a device link soon. This would be good for testing.
+* Noticed that the factory code needs refactoring into templates.
+  Did so, and ported the abbrowser factory to it. Basically, this
+  removes a lot of cut-and-paste from the whole thing. Same for the
+  timeconduit.
+
 2005-06-05  Adriaan de Groot
 * I learned to make Chinese dumplings yesterday. That's a much better use
   of a saturday afternoon than bug hunting, don't you think?
@@ -23,7 +32,7 @@ TODO: move set-category code from subclasses into PilotRecordBase.
   the data on the Pilot as a sequence of (libkcal) Events instead of as
   binary blobs.
 * Patch from Dylan G applied that replaces 15s and 16s in the code with a
-  defined constant (there already was one, just not used consistently). 
+  defined constant (there already was one, just not used consistently).
   Did some more rationalizing, finally removed the CATEGORY_COUNT define
   which was just a duplicate.
 

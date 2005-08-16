@@ -4,7 +4,7 @@
 **
 ** This file defines the setup dialog for the Time-conduit plugin.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 ** MA 02110-1301, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -31,22 +31,40 @@
 #include <qtabwidget.h>
 #include <qradiobutton.h>
 #include <qbuttongroup.h>
+
 #include <kapplication.h>
+#include <kaboutdata.h>
 
 #include "time-setup_dialog.h"
 
-#include "time-factory.h"
 #include "time-setup.moc"
 #include "timeConduitSettings.h"
 
 #include "uiDialog.h"
+
+
+static KAboutData *createAbout()
+{
+	KAboutData *fAbout = new KAboutData("Timeconduit",
+		I18N_NOOP("Time Synchronization Conduit for KPilot"),
+		KPILOT_VERSION,
+		I18N_NOOP("Synchronizes the Time on the Handheld and the PC"),
+		KAboutData::License_GPL,
+		"(C) 2002, Reinhold Kainhofer");
+	fAbout->addAuthor("Reinhold Kainhofer",
+		I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
+	return fAbout;
+}
+
+
 
 TimeWidgetConfig::TimeWidgetConfig(QWidget *w, const char *n) :
 	ConduitConfigBase(w,n),
 	fConfigWidget(new TimeWidget(w))
 {
 	FUNCTIONSETUP;
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,TimeConduitFactory::about());
+	fAbout = createAbout();
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,fAbout);
 	fWidget=fConfigWidget;
 	fConduitName=i18n("Time");
 }
@@ -54,7 +72,7 @@ TimeWidgetConfig::TimeWidgetConfig(QWidget *w, const char *n) :
 void TimeWidgetConfig::commit()
 {
 	FUNCTIONSETUP;
-	TimeConduitSettings::setDirection( 
+	TimeConduitSettings::setDirection(
 		fConfigWidget->directionGroup->id(fConfigWidget->directionGroup->selected()) );
 	TimeConduitSettings::self()->writeConfig();
 }

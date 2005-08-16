@@ -33,6 +33,7 @@
 #include "plugin.h"
 
 class AbbrowserWidget;
+class KAboutData;
 
 class AbbrowserWidgetSetup : public ConduitConfigBase
 {
@@ -44,6 +45,7 @@ public:
 	static ConduitConfigBase *create(QWidget *,const char *);
 private:
 	AbbrowserWidget *fConfigWidget;
+	KAboutData *fAbout;
 } ;
 
 #endif

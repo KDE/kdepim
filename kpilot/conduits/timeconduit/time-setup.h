@@ -7,7 +7,7 @@
 ** This file defines the widget and behavior for the config dialog
 ** of the KNotes conduit.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 ** MA 02110-1301, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -32,6 +32,7 @@
 #include "plugin.h"
 
 class TimeWidget;
+class KAboutData;
 
 class TimeWidgetConfig : public ConduitConfigBase
 {
@@ -43,6 +44,7 @@ public:
 	static ConduitConfigBase *create(QWidget *,const char *);
 protected:
 	TimeWidget *fConfigWidget;
+	KAboutData *fAbout;
 } ;
 
 #endif
