@@ -345,7 +345,7 @@ void ActionQueue::actionCompleted(SyncAction *b)
 		delayDone();
 		return;
 	}
-	if (!fHandle->tickle())
+	if ( deviceLink() && (!deviceLink()->tickle()) )
 	{
 		emit logError(i18n("The connection to the handheld "
 			"was lost. Synchronization cannot continue."));
