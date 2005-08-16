@@ -194,15 +194,16 @@ void connectStack()
 		logWidget, SLOT(addMessage(const QString &)));
 	QObject::connect(syncStack,SIGNAL(logProgress(const QString &,int)),
 		logWidget, SLOT(addProgress(const QString &,int)));
-
-	QObject::connect(deviceLink, SIGNAL(deviceReady(KPilotDeviceLink*)), syncStack, SLOT(execConduit()));
-
 	QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
 		logWidget, SLOT(syncDone()));
-	QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
-		deviceLink, SLOT(close()));
 
-	QObject::connect(resetButton,SIGNAL(clicked()),deviceLink,SLOT(reset()));
+	if (deviceLink)
+	{
+		QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
+			deviceLink, SLOT(close()));
+		QObject::connect(deviceLink, SIGNAL(deviceReady(KPilotDeviceLink*)), syncStack, SLOT(execConduit()));
+		QObject::connect(resetButton,SIGNAL(clicked()),deviceLink,SLOT(reset()));
+	}
 }
 
 void createConnection(KCmdLineArgs *p)
@@ -267,20 +268,33 @@ int execConduit(KCmdLineArgs *p)
 	l.append(s);
 
 	createLogWidget();
-	createLink();
 
 	SyncAction::SyncMode::Mode syncMode = SyncAction::SyncMode::eHotSync;
 	if (p->isSet("HHtoPC")) syncMode = SyncAction::SyncMode::eCopyHHToPC;
 	if (p->isSet("PCtoHH")) syncMode = SyncAction::SyncMode::eCopyPCToHH;
-
 	SyncAction::SyncMode mode(syncMode,p->isSet("test"),p->isSet("local"));
-	syncStack = new ActionQueue(deviceLink);
-	syncStack->queueInit();
-	syncStack->queueConduits(l,mode,false);
-	syncStack->queueCleanup();
 
-	connectStack();
-	createConnection(p);
+	if (!p->isSet("local"))
+	{
+		createLink();
+
+		syncStack = new ActionQueue(deviceLink);
+		syncStack->queueInit();
+		syncStack->queueConduits(l,mode,false);
+		syncStack->queueCleanup();
+		connectStack();
+		createConnection(p);
+	}
+	else
+	{
+		syncStack = new ActionQueue( 0L );
+		syncStack->queueInit();
+		syncStack->queueConduits(l,mode,false);
+		syncStack->queueCleanup();
+		connectStack();
+		QTimer::singleShot(100,syncStack,SLOT(execConduit()));
+	}
+
 
 	return kapp->exec();
 }
