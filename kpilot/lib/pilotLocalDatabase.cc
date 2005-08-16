@@ -236,17 +236,20 @@ int PilotLocalDatabase::deleteDatabase()
 
 
 // Reads the application block info
-int PilotLocalDatabase::readAppBlock(unsigned char *buffer, int)
+int PilotLocalDatabase::readAppBlock(unsigned char *buffer, int size)
 {
 	FUNCTIONSETUP;
+
+	size_t m = kMin((size_t)size,(size_t)fAppLen);
 
 	if (!isDBOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open!" << endl;
+		memset(buffer,0,m);
 		return -1;
 	}
 
-	memcpy((void *) buffer, fAppInfo, fAppLen);
+	memcpy((void *) buffer, fAppInfo, m);
 	return fAppLen;
 }
 
