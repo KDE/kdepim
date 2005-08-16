@@ -29,38 +29,11 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <klibloader.h>
-
-#include "plugin.h"
-
-class NullWidget;
-class KInstance;
-class KAboutData;
-
-class NullConduitFactory : public KLibFactory
-{
-Q_OBJECT
-
-public:
-	NullConduitFactory(QObject * = 0L,const char * = 0L);
-	virtual ~NullConduitFactory();
-
-	static KAboutData *about() { return fAbout; } ;
-
-protected:
-	virtual QObject* createObject( QObject* parent = 0,
-		const char* name = 0,
-		const char* classname = "QObject",
-		const QStringList &args = QStringList() );
-private:
-	KInstance *fInstance;
-	static KAboutData *fAbout;
-} ;
 
 extern "C"
 {
 
-void *init_libnullconduit();
+void *init_conduit_null();
 
 }
 

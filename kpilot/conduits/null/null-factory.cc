@@ -37,22 +37,13 @@
 #include <kaboutdata.h>
 
 #include "uiDialog.h"
+#include "pluginfactory.h"
 
 #include "setup_base.h"
 #include "null-conduit.h"
-#include "null-factory.moc"
+#include "null-factory.h"
 #include "nullSettings.h"
 
-
-extern "C"
-{
-
-void *init_conduit_null()
-{
-	return new NullConduitFactory;
-}
-
-}
 
 class NullConduitConfig : public ConduitConfigBase
 {
@@ -62,6 +53,7 @@ public:
 	virtual void load();
 protected:
 	NullWidget *fConfigWidget;
+	KAboutData *fAbout;
 } ;
 
 NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
@@ -70,7 +62,18 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("Null");
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,NullConduitFactory::about());
+		fAbout = new KAboutData("nullConduit",
+		I18N_NOOP("Null Conduit for KPilot"),
+		KPILOT_VERSION,
+		I18N_NOOP("Configures the Null Conduit for KPilot"),
+		KAboutData::License_GPL,
+		"(C) 2001, Adriaan de Groot");
+	fAbout->addAuthor("Adriaan de Groot",
+		I18N_NOOP("Primary Author"),
+		"groot@kde.org",
+		"http://www.cs.kun.nl/~adridg/kpilot");
+
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,fAbout);
 	fWidget=fConfigWidget;
 	QObject::connect(fConfigWidget->fLogMessage,SIGNAL(textChanged(const QString&)),
 		this,SLOT(modified()));
@@ -125,77 +128,15 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 	unmodified();
 }
 
-KAboutData *NullConduitFactory::fAbout = 0L;
-NullConduitFactory::NullConduitFactory(QObject *p, const char *n) :
-	KLibFactory(p,n)
-{
-	FUNCTIONSETUP;
 
-	fInstance = new KInstance("nullconduit");
-	fAbout = new KAboutData("nullConduit",
-		I18N_NOOP("Null Conduit for KPilot"),
-		KPILOT_VERSION,
-		I18N_NOOP("Configures the Null Conduit for KPilot"),
-		KAboutData::License_GPL,
-		"(C) 2001, Adriaan de Groot");
-	fAbout->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Primary Author"),
-		"groot@kde.org",
-		"http://www.cs.kun.nl/~adridg/kpilot");
+
+extern "C"
+{
+
+void *init_conduit_null()
+{
+	return new ConduitFactory<NullConduitConfig,NullConduit>(0,"nullconduit");
 }
 
-NullConduitFactory::~NullConduitFactory()
-{
-	FUNCTIONSETUP;
-
-	KPILOT_DELETE(fInstance);
-	KPILOT_DELETE(fAbout);
 }
-
-/* virtual */ QObject *NullConduitFactory::createObject( QObject *p,
-	const char *n,
-	const char *c,
-	const QStringList &a)
-{
-	FUNCTIONSETUP;
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
-		<< ": Creating object of class "
-		<< c
-		<< endl;
-#endif
-
-	if (qstrcmp(c,"ConduitConfigBase")==0)
-	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-		if (w)
-		{
-			return new NullConduitConfig(w);
-		}
-		else
-		{
-			return 0L;
-		}
-	}
-	else if (qstrcmp(c,"SyncAction")==0)
-	{
-		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
-
-		if (d)
-		{
-			return new NullConduit(d,n,a);
-		}
-		else
-		{
-			kdError() << k_funcinfo
-				<< ": Couldn't cast to KPilotDeviceLink"
-				<< endl;
-			return 0L;
-		}
-	}
-
-	return 0L;
-}
-
 
