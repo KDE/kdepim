@@ -107,7 +107,7 @@ protected:
 
 public:
 	void addSyncLogEntry(const QString &e,bool log=true)
-		{ fHandle->addSyncLogEntry(e,log); } ;
+		{ if (deviceLink()) { deviceLink()->addSyncLogEntry(e,log); } } ;
 	void addLogMessage( const QString &msg ) { emit logMessage( msg ); }
 	void addLogError( const QString &msg ) { emit logError( msg ); }
 	void addLogProgress( const QString &msg, int prog ) { emit logProgress( msg, prog ); }
@@ -118,9 +118,18 @@ protected:
 
 	/** Returns a pointer to the connection to the device. */
 	inline KPilotDeviceLink *deviceLink() const { return fHandle; } ;
-	int pilotSocket() const { return fHandle->pilotSocket(); } ;
 
-	int openConduit() { return fHandle->openConduit(); } ;
+	/** Returns the file descriptor for the device link -- that is,
+	* the raw handle to the OS's connection to the device. Use with care.
+	* May return -1 if there is no device.
+	*/
+	int pilotSocket() const { return deviceLink() ? deviceLink()->pilotSocket() : -1 ; } ;
+
+	/** Tells the handheld device that someone is talking to it now.
+	* Useful (repeatedly) to inform the user of what is going on.
+	* May return < 0 on error (or if there is no device attached).
+	*/
+	int openConduit() { return deviceLink() ? deviceLink()->openConduit() : -1; } ;
 public:
 	/**
 	* This class encapsulates the different sync modes that
