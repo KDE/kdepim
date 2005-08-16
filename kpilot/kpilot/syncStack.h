@@ -186,7 +186,6 @@ protected:
 	QString fDesktopName;
 	QString fLibraryName;
 	ConduitAction *fConduit;
-	SyncAction::SyncMode fMode;
 } ;
 
 

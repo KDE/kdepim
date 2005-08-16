@@ -138,9 +138,8 @@ bool LocalBackupAction::exec()
 ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	const QString &name,
 	const SyncAction::SyncMode &m) :
-	ConduitAction(p,name.latin1()),
-	fDesktopName(name),
-	fMode(m)
+	ConduitAction(p,name.latin1(),m.list()),
+	fDesktopName(name)
 {
 	FUNCTIONSETUP;
 }
@@ -187,10 +186,10 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		return true;
 	}
 
-	QStringList l = fMode.list();
+	QStringList l = syncMode().list();
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Flags: " << fMode.name() << endl;
+	DEBUGDAEMON << fname << ": Flags: " << syncMode().name() << endl;
 #endif
 
 	QObject *object = factory->create(fHandle,name(),"SyncAction",l);

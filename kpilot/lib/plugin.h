@@ -202,7 +202,7 @@ protected:
 	bool openDatabases(const QString &dbName, bool*retrieved=0L);
 
 private:
-	SyncMode fSyncDirection; // Stores fast, full, PCToHH or HHToPC
+	SyncMode fSyncDirection;
 	ConflictResolution fConflictResolution;
 
 	// Make these only protected so the conduit can change the variable
