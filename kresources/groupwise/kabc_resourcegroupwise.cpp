@@ -177,21 +177,21 @@ void ResourceGroupwise::retrieveAddressBooks()
   {
     mAddressBooks = server.addressBookList();
     server.logout();
-  
-    if ( firstRetrieve ) {
-      QStringList reads;
-      QString write; 
-      
-      GroupWise::AddressBook::List::ConstIterator it;
-      for( it = mAddressBooks.begin(); it != mAddressBooks.end(); ++it ) {
-        if ( (*it).isPersonal ) {
-          reads.append( (*it).id );
-          if ( write.isEmpty() ) write = (*it).id;
-        }
-        else
-          prefs()->setSystemAddressBook( (*it).id );
+
+    QStringList reads;
+    QString write; 
+
+    GroupWise::AddressBook::List::ConstIterator it;
+    for( it = mAddressBooks.begin(); it != mAddressBooks.end(); ++it ) {
+      if ( (*it).isPersonal ) {
+        reads.append( (*it).id );
+        if ( write.isEmpty() ) write = (*it).id;
       }
-      
+      else
+        prefs()->setSystemAddressBook( (*it).id );
+    }
+
+    if ( firstRetrieve ) {
       prefs()->setReadAddressBooks( reads );
       prefs()->setWriteAddressBook( write );
     }
