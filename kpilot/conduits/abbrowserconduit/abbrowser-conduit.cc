@@ -973,23 +973,33 @@ void AbbrowserConduit::slotDeletedRecord()
 		return;
 	}
 
+	recordid_t id = backupRec->id();
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": now looking at id: [" 
+					<< id << "]." << endl;
+#endif
+
 	// already synced, so skip this record:
-	if(syncedIds.contains(backupRec->id()))
+	if(syncedIds.contains(id))
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": we've already synced id: [" 
+					<< id << "]. skipping it.." << endl;
+#endif
 		KPILOT_DELETE(backupRec);
 		QTimer::singleShot(0, this, SLOT(slotDeletedRecord()));
 		return;
 	}
 
-	QString uid = addresseeMap[backupRec->id()];
+	QString uid = addresseeMap[id];
 	Addressee e = aBook->findByUid(uid);
-	PilotRecord*palmRec=fDatabase->readRecordById(backupRec->id());
+	PilotRecord*palmRec=fDatabase->readRecordById(id);
 	PilotAddress*backupAddr=0L;
 	if (backupRec) backupAddr=new PilotAddress(fAddressAppInfo, backupRec);
 	PilotAddress*palmAddr=0L;
 	if (palmRec) palmAddr=new PilotAddress(fAddressAppInfo, palmRec);
 
-	syncedIds.append(backupRec->id());
+	syncedIds.append(id);
 	syncAddressee(e, backupAddr, palmAddr);
 
 	KPILOT_DELETE(palmAddr);
@@ -1465,19 +1475,33 @@ bool AbbrowserConduit::_savePCAddr(Addressee &pcAddr, PilotAddress*,
 
 int AbbrowserConduit::_compare(const QString & str1, const QString & str2) const
 {
-//	FUNCTIONSETUP;
-	if(str1.isEmpty() && str2.isEmpty()) return 0;
-	else return str1.compare(str2);
+// 	FUNCTIONSETUP;
+	bool ret;
+	if(str1.isEmpty() && str2.isEmpty()) ret = 0;
+	else ret = str1.compare(str2);
+
+	return ret;
 }
 
 
 bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &abEntry,
 	enum eqFlagsType flags) const
 {
-	FUNCTIONSETUPL(8);
+	FUNCTIONSETUP;
+
 	// empty records are never equal!
-	if (!piAddress) return false;
-	if (abEntry.isEmpty()) return false;
+	if (!piAddress) {
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": no pilot address passed" << endl;
+#endif
+		return false;
+	}
+	if (abEntry.isEmpty()) {
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ":abEntry.isEmpty()" << endl;
+#endif
+		return false;
+	}
 	//  Archived records match anything so they won't be copied to the HH again
 	if (flags & eqFlagsFlags)
 		if (isArchived(piAddress) && isArchived(abEntry) ) return true;
@@ -1485,22 +1509,57 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 	if (flags & eqFlagsName)
 	{
 		if(_compare(abEntry.familyName(), piAddress->getField(entryLastname)))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": last name" << endl;
+#endif
 			return false;
-		if(_compare(abEntry.givenName(), piAddress->getField(entryFirstname)))
+		}
+		// goofiness that we do in _copy(), duplicated here for your viewing pleasure... *grrr*
+		QString firstAndMiddle = abEntry.givenName();
+		if(!abEntry.additionalName().isEmpty()) firstAndMiddle += CSL1(" ") + abEntry.additionalName();
+
+		if(_compare(firstAndMiddle, piAddress->getField(entryFirstname)))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": first name" << endl;
+#endif
 			return false;
+		}
 		if(_compare(abEntry.prefix(), piAddress->getField(entryTitle)))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": title/prefix" << endl;
+#endif
 			return false;
+		}
 		if(_compare(abEntry.organization(), piAddress->getField(entryCompany)))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": company/organization" << endl;
+#endif
 			return false;
+		}
 	}
 	if (flags & eqFlagsNote)
 		if(_compare(abEntry.note(), piAddress->getField(entryNote)))
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": note" << endl;
+#endif
 			return false;
+	}
 
 	if (flags & eqFlagsNote)
 	{
 		QString cat = _getCatForHH(abEntry.categories(), piAddress->getCategoryLabel());
-		if(_compare(cat, piAddress->getCategoryLabel())) return false;
+		if(_compare(cat, piAddress->getCategoryLabel()))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": category" << endl;
+#endif
+			return false;
+		}
 	}
 
 	if (flags & eqFlagsPhones)
@@ -1509,12 +1568,30 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 		QStringList abEmails(abEntry.emails());
 		QStringList piEmails(piAddress->getEmails());
 
-		if (abEmails.count() != piEmails.count()) return false;
+		if (abEmails.count() != piEmails.count())
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": email count" << endl;
+#endif
+			return false;
+		}
 		for (QStringList::Iterator it = abEmails.begin(); it != abEmails.end(); it++) {
-			if (!piEmails.contains(*it)) return false;
+			if (!piEmails.contains(*it))
+			{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": pilot e-mail missing" << endl;
+#endif
+			return false;
+			}
 		}
 		for (QStringList::Iterator it = piEmails.begin(); it != piEmails.end(); it++) {
-			if (!abEmails.contains(*it)) return false;
+			if (!abEmails.contains(*it))
+			{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": kabc e-mail missing" << endl;
+#endif
+			return false;
+			}
 		}
 
 		// now look for differences in phone numbers.  Note:  we can't just compare one
@@ -1530,25 +1607,22 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 			for (PhoneNumber::List::Iterator it = abPhones.begin(); it != abPhones.end(); it++) {
 				PhoneNumber abPhone = *it;
 				// see if we have the same number here...
+				// * Note * We used to check for preferred number matching, but
+				//     this seems to have broke in kdepim 3.5 and I don't have time to
+				//     figure out why, so we won't check to see if preferred number match
 				if (_compare(piPhone.number(), abPhone.number()) == 0) {
-					// *sigh*  Okay, now see if the preferred number has changed.
-					// only check this in one direction, since kabc can have more
-					// than one field as preferred and the pilot can only have one
-					if (piPhone.type() & PhoneNumber::Pref &&
-						!(abPhone.type() & PhoneNumber::Pref)) {
-						// if the pilot says this one is preferred and kabc doesn't
-						// agree, the records don't match.
-						return false;
-					} else {
-						found = true;
-						break;
-					}
+					found = true;
+					break;
 				}
 			}
-			if (!found)
+			if (!found) {
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": not equal because kabc phone not found." << endl;
+#endif
 				return false;
+			}
 		}
-		// now the other way (*cringe*  kabc has the capacity to store way more addresses
+		// now the other way.  *cringe*  kabc has the capacity to store way more addresses
 		// than the Pilot, so this might give false positives more than we'd want....
 		for (PhoneNumber::List::Iterator it = abPhones.begin(); it != abPhones.end(); it++) {
 			PhoneNumber abPhone = *it;
@@ -1560,45 +1634,109 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 					break;
 				}
 			}
-			if (!found)
+			if (!found) {
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": not equal because pilot phone not found." << endl;
+#endif
 				return false;
+			}
 		}
 
 		if(_compare(getOtherField(abEntry),
-			piAddress->getPhoneField(PilotAddress::eOther, false))) return false;
+		   piAddress->getPhoneField(PilotAddress::eOther, false))) {
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": not equal because of other phone field." << endl;
+#endif
+		   	return false;
+		}
 	}
 
 	if (flags & eqFlagsAdress)
 	{
 		KABC::Address address = getAddress(abEntry);
 		if(_compare(address.street(), piAddress->getField(entryAddress)))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": address" << endl;
+#endif
 			return false;
+		}
 		if(_compare(address.locality(), piAddress->getField(entryCity)))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": city" << endl;
+#endif
 			return false;
+		}
 		if(_compare(address.region(), piAddress->getField(entryState)))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": state" << endl;
+#endif
 			return false;
+		}
 		if(_compare(address.postalCode(), piAddress->getField(entryZip)))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": zip" << endl;
+#endif
 			return false;
+		}
 		if(_compare(address.country(), piAddress->getField(entryCountry)))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": country" << endl;
+#endif
 			return false;
+		}
 	}
 
 	if (flags & eqFlagsCustom)
 	{
 		if(_compare(getCustomField(abEntry, 0),
-			piAddress->getField(entryCustom1))) return false;
+			piAddress->getField(entryCustom1)))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": custom1" << endl;
+#endif
+			return false;
+		}
 		if(_compare(getCustomField(abEntry, 1),
-			piAddress->getField(entryCustom2))) return false;
+			piAddress->getField(entryCustom2)))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": custom2" << endl;
+#endif
+			return false;
+		}
 		if(_compare(getCustomField(abEntry, 2),
-			piAddress->getField(entryCustom3))) return false;
+			piAddress->getField(entryCustom3)))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": custom3" << endl;
+#endif
+			return false;
+		}
 		if(_compare(getCustomField(abEntry, 3),
-			piAddress->getField(entryCustom4))) return false;
+			piAddress->getField(entryCustom4)))
+		{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": custom4" << endl;
+#endif
+			return false;
+		}
 	}
 
 	// if any side is marked archived, but the other is not, the two
 	// are not equal.
 	if (flags & eqFlagsFlags)
-		if (isArchived(piAddress) || isArchived(abEntry) ) return false;
+		if (isArchived(piAddress) || isArchived(abEntry) )
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname  << ": archived flags don't match" << endl;
+#endif
+			return false;
+	}
 
 	return true;
 }
