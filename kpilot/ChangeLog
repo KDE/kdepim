@@ -14,6 +14,13 @@ TODO: give the knotes conduit a decent test mode.
 TODO: only re-write a local database if it is changed.
 TODO: move set-category code from subclasses into PilotRecordBase.
 
+2005-08-16  Jason 'vanRijn' Kasper
+* Fixed annoyance in vcalconduit (korganizer calendar/todo conduit) that
+  caused it to not clean up duplicates/things that should be deleted from
+  the Palm on a copy PC to Handheld sync.
+* Fixed some majorly ugly bugs in the addressbook conduit that caused 
+  duplicate addressbook records to be generated and not deleted once
+  created. 
 
 2005-08-15  Adriaan de Groot
 * Added lots of null-pointer checks so that it may become possible to
@@ -43,6 +50,12 @@ TODO: move set-category code from subclasses into PilotRecordBase.
   at the same buggy state as in KDE 3.4.0
 * Fairly large-scale deprecation of functions in lib/, finally factored out the
   shared attributes/category/id stuff from records and AppCategory objects.
+
+2005-05-26  Jason 'vanRijn' Kasper
+* Fixing nasty little bug (#106324) causing data loss in memofile conduit
+* isFirstSync() is true for both copyHHtoPC and copyPCtoHH.  memofile
+  conduit only wants to do copyHHtoPC if we're either told to, or we don't
+  have any local memos in the filesystem
 
 2005-05-22  Adriaan de Groot
 * Gratuitously update the version number, call this one "kind" (Dutch for
