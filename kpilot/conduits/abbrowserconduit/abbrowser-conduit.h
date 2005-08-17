@@ -175,7 +175,10 @@ private:
 /*********************************************************************
                    C O P Y   R E C O R D S
  *********************************************************************/
-	int _compare(const QString & str1, const QString & str2) const;
+	inline bool _equal(const QString & str1, const QString & str2) const
+	{
+		return (str1.isEmpty() && str2.isEmpty()) || (str1 == str2);
+	} ;
 	typedef enum eqFlagsType
 	{
 		eqFlagsName=0x1,

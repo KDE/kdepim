@@ -1466,16 +1466,6 @@ bool AbbrowserConduit::_savePCAddr(Addressee &pcAddr, PilotAddress*,
  *********************************************************************/
 
 
-int AbbrowserConduit::_compare(const QString & str1, const QString & str2) const
-{
-// 	FUNCTIONSETUP;
-	bool ret;
-	if(str1.isEmpty() && str2.isEmpty()) ret = 0;
-	else ret = str1.compare(str2);
-
-	return ret;
-}
-
 
 bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &abEntry,
 	enum eqFlagsType flags) const
@@ -1501,7 +1491,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 
 	if (flags & eqFlagsName)
 	{
-		if(_compare(abEntry.familyName(), piAddress->getField(entryLastname)))
+		if(!_equal(abEntry.familyName(), piAddress->getField(entryLastname)))
 		{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname  << ": last name not equal" << endl;
@@ -1512,21 +1502,21 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 		QString firstAndMiddle = abEntry.givenName();
 		if(!abEntry.additionalName().isEmpty()) firstAndMiddle += CSL1(" ") + abEntry.additionalName();
 
-		if(_compare(firstAndMiddle, piAddress->getField(entryFirstname)))
+		if(!_equal(firstAndMiddle, piAddress->getField(entryFirstname)))
 		{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname  << ": first name not equal" << endl;
 #endif
 			return false;
 		}
-		if(_compare(abEntry.prefix(), piAddress->getField(entryTitle)))
+		if(!_equal(abEntry.prefix(), piAddress->getField(entryTitle)))
 		{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname  << ": title/prefix not equal" << endl;
 #endif
 			return false;
 		}
-		if(_compare(abEntry.organization(), piAddress->getField(entryCompany)))
+		if(!_equal(abEntry.organization(), piAddress->getField(entryCompany)))
 		{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname  << ": company/organization not equal" << endl;
@@ -1535,7 +1525,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 		}
 	}
 	if (flags & eqFlagsNote)
-		if(_compare(abEntry.note(), piAddress->getField(entryNote)))
+		if(!_equal(abEntry.note(), piAddress->getField(entryNote)))
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname  << ": note not equal" << endl;
@@ -1546,7 +1536,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 	if (flags & eqFlagsNote)
 	{
 		QString cat = _getCatForHH(abEntry.categories(), piAddress->getCategoryLabel());
-		if(_compare(cat, piAddress->getCategoryLabel()))
+		if(!_equal(cat, piAddress->getCategoryLabel()))
 		{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname  << ": category not equal" << endl;
@@ -1603,7 +1593,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 				// * Note * We used to check for preferred number matching, but
 				//     this seems to have broke in kdepim 3.5 and I don't have time to
 				//     figure out why, so we won't check to see if preferred number match
-				if (_compare(piPhone.number(), abPhone.number()) == 0) {
+				if ( _equal(piPhone.number(), abPhone.number()) ) {
 					found = true;
 					break;
 				}
@@ -1622,7 +1612,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 			bool found=false;
 			for (PhoneNumber::List::Iterator it = piPhones.begin(); it != piPhones.end(); it++) {
 				PhoneNumber piPhone = *it;
-				if (_compare(piPhone.number(), abPhone.number()) == 0) {
+				if ( _equal(piPhone.number(), abPhone.number()) ) {
 					found = true;
 					break;
 				}
@@ -1635,7 +1625,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 			}
 		}
 
-		if(_compare(getOtherField(abEntry),
+		if(!_equal(getOtherField(abEntry),
 		   piAddress->getPhoneField(PilotAddress::eOther, false))) {
 #ifdef DEBUG
 		DEBUGCONDUIT << fname  << ": not equal because of other phone field." << endl;
@@ -1647,35 +1637,35 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 	if (flags & eqFlagsAdress)
 	{
 		KABC::Address address = getAddress(abEntry);
-		if(_compare(address.street(), piAddress->getField(entryAddress)))
+		if(!_equal(address.street(), piAddress->getField(entryAddress)))
 		{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname  << ": address not equal" << endl;
 #endif
 			return false;
 		}
-		if(_compare(address.locality(), piAddress->getField(entryCity)))
+		if(!_equal(address.locality(), piAddress->getField(entryCity)))
 		{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname  << ": city not equal" << endl;
 #endif
 			return false;
 		}
-		if(_compare(address.region(), piAddress->getField(entryState)))
+		if(!_equal(address.region(), piAddress->getField(entryState)))
 		{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname  << ": state not equal" << endl;
 #endif
 			return false;
 		}
-		if(_compare(address.postalCode(), piAddress->getField(entryZip)))
+		if(!_equal(address.postalCode(), piAddress->getField(entryZip)))
 		{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname  << ": zip not equal" << endl;
 #endif
 			return false;
 		}
-		if(_compare(address.country(), piAddress->getField(entryCountry)))
+		if(!_equal(address.country(), piAddress->getField(entryCountry)))
 		{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname  << ": country not equal" << endl;
@@ -1686,7 +1676,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 
 	if (flags & eqFlagsCustom)
 	{
-		if(_compare(getCustomField(abEntry, 0),
+		if(!_equal(getCustomField(abEntry, 0),
 			piAddress->getField(entryCustom1)))
 		{
 #ifdef DEBUG
@@ -1694,7 +1684,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 #endif
 			return false;
 		}
-		if(_compare(getCustomField(abEntry, 1),
+		if(!_equal(getCustomField(abEntry, 1),
 			piAddress->getField(entryCustom2)))
 		{
 #ifdef DEBUG
@@ -1702,7 +1692,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 #endif
 			return false;
 		}
-		if(_compare(getCustomField(abEntry, 2),
+		if(!_equal(getCustomField(abEntry, 2),
 			piAddress->getField(entryCustom3)))
 		{
 #ifdef DEBUG
@@ -1710,7 +1700,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 #endif
 			return false;
 		}
-		if(_compare(getCustomField(abEntry, 3),
+		if(!_equal(getCustomField(abEntry, 3),
 			piAddress->getField(entryCustom4)))
 		{
 #ifdef DEBUG
