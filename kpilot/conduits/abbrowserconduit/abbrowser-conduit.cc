@@ -952,6 +952,9 @@ void AbbrowserConduit::slotPCRecToPalm()
 	}
 	KPILOT_DELETE(backupAddr);
 	KPILOT_DELETE(backupRec);
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": adding id:["<< rid << "] to syncedIds." << endl;
+#endif
 	syncedIds.append(rid);
 	// done with the sync process, go on with the next one:
 	QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
@@ -972,37 +975,43 @@ void AbbrowserConduit::slotDeletedRecord()
 	}
 
 	recordid_t id = backupRec->id();
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": now looking at id: [" 
-					<< id << "]." << endl;
-#endif
-
-	// already synced, so skip this record:
-	if(syncedIds.contains(id))
-	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": we've already synced id: [" 
-					<< id << "]. skipping it.." << endl;
-#endif
-		KPILOT_DELETE(backupRec);
-		QTimer::singleShot(0, this, SLOT(slotDeletedRecord()));
-		return;
-	}
 
 	QString uid = addresseeMap[id];
 	Addressee e = aBook->findByUid(uid);
-	PilotRecord*palmRec=fDatabase->readRecordById(id);
+
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": now looking at palm id: ["
+					<< id << "], kabc uid: [" << uid << "]." << endl;
+#endif
+
 	PilotAddress*backupAddr=0L;
 	if (backupRec) backupAddr=new PilotAddress(fAddressAppInfo, backupRec);
-	PilotAddress*palmAddr=0L;
-	if (palmRec) palmAddr=new PilotAddress(fAddressAppInfo, palmRec);
+	PilotRecord*palmRec=fDatabase->readRecordById(id);
 
-	syncedIds.append(id);
-	syncAddressee(e, backupAddr, palmAddr);
+	if ( e.isEmpty() ) {
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": no Addressee found for this id." << endl;
+		DEBUGCONDUIT << fname << "\n"
+				<< backupAddr->getTextRepresentation(false) << endl;
+#endif
 
-	KPILOT_DELETE(palmAddr);
-	KPILOT_DELETE(backupAddr);
+		if (palmRec) {
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": deleting from database on palm." << endl;
+#endif
+			fDatabase->deleteRecord(id);
+		}
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": deleting from backup database." << endl;
+#endif
+		fLocalDatabase->deleteRecord(id);
+
+		// because we just deleted a record, we need to go back one
+		pilotindex--;
+	}
+
 	KPILOT_DELETE(palmRec);
+	KPILOT_DELETE(backupAddr);
 	KPILOT_DELETE(backupRec);
 	QTimer::singleShot(0, this, SLOT(slotDeletedRecord()));
 }
@@ -1362,26 +1371,24 @@ bool AbbrowserConduit::_deleteAddressee(Addressee &pcAddr, PilotAddress*backupAd
 
 	if (palmAddr)
 	{
-		if (!syncedIds.contains(palmAddr->id())) syncedIds.append(palmAddr->id());
-		palmAddr->setDeleted( true );
-		PilotRecord *pilotRec = palmAddr->pack();
-		pilotRec->setDeleted();
-		pilotindex--;
-		fDatabase->writeRecord(pilotRec);
-		fLocalDatabase->writeRecord(pilotRec);
-		syncedIds.append(pilotRec->id());
-		KPILOT_DELETE(pilotRec);
+		if (!syncedIds.contains(palmAddr->id())) {
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": adding id:["<< palmAddr->id() << "] to syncedIds." << endl;
+#endif
+			syncedIds.append(palmAddr->id());
+		}
+		fDatabase->deleteRecord(palmAddr->id());
+		fLocalDatabase->deleteRecord(palmAddr->id());
 	}
 	else if (backupAddr)
 	{
-		if (!syncedIds.contains(backupAddr->id())) syncedIds.append(backupAddr->id());
-		backupAddr->setDeleted( true );
-		PilotRecord *pilotRec = backupAddr->pack();
-		pilotRec->setDeleted();
-		pilotindex--;
-		fLocalDatabase->writeRecord(pilotRec);
-		syncedIds.append(pilotRec->id());
-		KPILOT_DELETE(pilotRec);
+		if (!syncedIds.contains(backupAddr->id())) {
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": adding id:["<< backupAddr->id() << "] to syncedIds." << endl;
+#endif
+			syncedIds.append(backupAddr->id());
+		}
+		fLocalDatabase->deleteRecord(backupAddr->id());
 	}
 	if (!pcAddr.isEmpty())
 	{
@@ -1429,7 +1436,12 @@ bool AbbrowserConduit::_savePalmAddr(PilotAddress *palmAddr, Addressee &pcAddr)
 	if(pilotId != 0)
 	{
 		palmAddr->setID(pilotId);
-		if (!syncedIds.contains(pilotId)) syncedIds.append(pilotId);
+		if (!syncedIds.contains(pilotId)) {
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": adding id:["<< pilotId << "] to syncedIds." << endl;
+#endif
+			syncedIds.append(pilotId);
+		}
 	}
 
 	recordid_t abId = 0;
@@ -1453,9 +1465,24 @@ bool AbbrowserConduit::_savePCAddr(Addressee &pcAddr, PilotAddress*,
 #ifdef DEBUG
 	DEBUGCONDUIT<<"Before _savePCAddr, pcAddr.custom="<<pcAddr.custom(appString, idString)<<endl;
 #endif
-	if(!pcAddr.custom(appString, idString).isEmpty())
+	QString pilotId = pcAddr.custom(appString, idString);
+	long pilotIdL = pilotId.toLong();
+	if(!pilotId.isEmpty())
 	{
-		addresseeMap.insert(pcAddr.custom(appString, idString).toLong(), pcAddr.uid());
+		// because we maintain a mapping between pilotId -> kabc uid, whenever we add
+		// a new relationship, we have to remove any old mapping that would tie a different
+		// pilot id -> this kabc uid
+		QMap < recordid_t, QString>::iterator it;
+		for ( it = addresseeMap.begin(); it != addresseeMap.end(); ++it ) {
+			QString kabcUid = it.data();
+			if (kabcUid == pcAddr.uid()) {
+				addresseeMap.remove(it);
+				break;
+			}
+		}
+
+		// now put the new mapping in
+		addresseeMap.insert(pilotIdL,  pcAddr.uid());
 	}
 
 	aBook->insertAddressee(pcAddr);
@@ -1509,7 +1536,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 		if(_compare(abEntry.familyName(), piAddress->getField(entryLastname)))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": last name" << endl;
+		DEBUGCONDUIT << fname  << ": last name not equal" << endl;
 #endif
 			return false;
 		}
@@ -1520,21 +1547,21 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 		if(_compare(firstAndMiddle, piAddress->getField(entryFirstname)))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": first name" << endl;
+		DEBUGCONDUIT << fname  << ": first name not equal" << endl;
 #endif
 			return false;
 		}
 		if(_compare(abEntry.prefix(), piAddress->getField(entryTitle)))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": title/prefix" << endl;
+		DEBUGCONDUIT << fname  << ": title/prefix not equal" << endl;
 #endif
 			return false;
 		}
 		if(_compare(abEntry.organization(), piAddress->getField(entryCompany)))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": company/organization" << endl;
+		DEBUGCONDUIT << fname  << ": company/organization not equal" << endl;
 #endif
 			return false;
 		}
@@ -1543,7 +1570,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 		if(_compare(abEntry.note(), piAddress->getField(entryNote)))
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": note" << endl;
+		DEBUGCONDUIT << fname  << ": note not equal" << endl;
 #endif
 			return false;
 	}
@@ -1554,7 +1581,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 		if(_compare(cat, piAddress->getCategoryLabel()))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": category" << endl;
+		DEBUGCONDUIT << fname  << ": category not equal" << endl;
 #endif
 			return false;
 		}
@@ -1569,7 +1596,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 		if (abEmails.count() != piEmails.count())
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": email count" << endl;
+		DEBUGCONDUIT << fname  << ": email count not equal" << endl;
 #endif
 			return false;
 		}
@@ -1655,35 +1682,35 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 		if(_compare(address.street(), piAddress->getField(entryAddress)))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": address" << endl;
+		DEBUGCONDUIT << fname  << ": address not equal" << endl;
 #endif
 			return false;
 		}
 		if(_compare(address.locality(), piAddress->getField(entryCity)))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": city" << endl;
+		DEBUGCONDUIT << fname  << ": city not equal" << endl;
 #endif
 			return false;
 		}
 		if(_compare(address.region(), piAddress->getField(entryState)))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": state" << endl;
+		DEBUGCONDUIT << fname  << ": state not equal" << endl;
 #endif
 			return false;
 		}
 		if(_compare(address.postalCode(), piAddress->getField(entryZip)))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": zip" << endl;
+		DEBUGCONDUIT << fname  << ": zip not equal" << endl;
 #endif
 			return false;
 		}
 		if(_compare(address.country(), piAddress->getField(entryCountry)))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": country" << endl;
+		DEBUGCONDUIT << fname  << ": country not equal" << endl;
 #endif
 			return false;
 		}
@@ -1695,7 +1722,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 			piAddress->getField(entryCustom1)))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": custom1" << endl;
+		DEBUGCONDUIT << fname  << ": custom1 not equal" << endl;
 #endif
 			return false;
 		}
@@ -1703,7 +1730,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 			piAddress->getField(entryCustom2)))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": custom2" << endl;
+		DEBUGCONDUIT << fname  << ": custom2 not equal" << endl;
 #endif
 			return false;
 		}
@@ -1711,7 +1738,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 			piAddress->getField(entryCustom3)))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": custom3" << endl;
+		DEBUGCONDUIT << fname  << ": custom3 not equal" << endl;
 #endif
 			return false;
 		}
@@ -1719,7 +1746,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 			piAddress->getField(entryCustom4)))
 		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname  << ": custom4" << endl;
+		DEBUGCONDUIT << fname  << ": custom4 not equal" << endl;
 #endif
 			return false;
 		}
