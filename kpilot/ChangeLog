@@ -14,13 +14,20 @@ TODO: give the knotes conduit a decent test mode.
 TODO: only re-write a local database if it is changed.
 TODO: move set-category code from subclasses into PilotRecordBase.
 
+2005-08-17  Adriaan de Groot
+* Promote the new Pilot*Info (template) classes which simplify loading
+  AppInfo structures from a database. Deprecate some AddressEntry
+  constructors to do so, and add one that takes a PilotAddressInfo
+  instead. In kpilot/, replace a bunch of error-prone buffer-handling
+  calls by the use of these template classes.
+
 2005-08-16  Jason 'vanRijn' Kasper
 * Fixed annoyance in vcalconduit (korganizer calendar/todo conduit) that
   caused it to not clean up duplicates/things that should be deleted from
   the Palm on a copy PC to Handheld sync.
-* Fixed some majorly ugly bugs in the addressbook conduit that caused 
+* Fixed some majorly ugly bugs in the addressbook conduit that caused
   duplicate addressbook records to be generated and not deleted once
-  created. 
+  created.
 
 2005-08-15  Adriaan de Groot
 * Added lots of null-pointer checks so that it may become possible to

@@ -83,6 +83,37 @@ PilotAddress::PilotAddress(struct AddressAppInfo &appInfo) :
 	_loadMaps();
 }
 
+PilotAddress::PilotAddress(PilotAddressInfo *info, PilotRecord *rec) :
+	PilotAppCategory(rec),
+	fAppInfo(*(info->info())),
+	fAddressInfo()
+{
+	FUNCTIONSETUPL(4);
+	reset();
+
+	if (rec)
+	{
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+		pi_buffer_t b;
+		b.data = (unsigned char *) rec->getData();
+		b.allocated = b.used = rec->size();
+		unpack_Address(&fAddressInfo, &b, address_v1);
+#else
+		unpack_Address(&fAddressInfo, (unsigned char *) rec->data(), rec->size());
+#endif
+	}
+	else
+	{
+		fAddressInfo.phoneLabel[0] = (int) eWork;
+		fAddressInfo.phoneLabel[1] = (int) eHome;
+		fAddressInfo.phoneLabel[2] = (int) eOther;
+		fAddressInfo.phoneLabel[3] = (int) eMobile;
+		fAddressInfo.phoneLabel[4] = (int) eEmail;
+	}
+
+	_loadMaps();
+}
+
 PilotAddress::PilotAddress(const PilotAddress & copyFrom) :
 	PilotAppCategory(copyFrom),
 	fAppInfo(copyFrom.fAppInfo),

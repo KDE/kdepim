@@ -76,6 +76,8 @@ namespace KABC
 	class PhoneNumber;
 }
 
+typedef PilotAppInfo<AddressAppInfo,unpack_AddressAppInfo, pack_AddressAppInfo> PilotAddressInfo;
+
 class KDE_EXPORT PilotAddress : public PilotAppCategory
 {
 public:
@@ -84,8 +86,9 @@ public:
 		ePager, eMobile
 		};
 
-	PilotAddress(struct AddressAppInfo &appInfo);
-	PilotAddress(struct AddressAppInfo &appInfo, PilotRecord* rec);
+	PilotAddress(struct AddressAppInfo &appInfo) KDE_DEPRECATED ;
+	PilotAddress(struct AddressAppInfo &appInfo, PilotRecord* rec) KDE_DEPRECATED ;
+	PilotAddress(PilotAddressInfo *appinfo, PilotRecord *rec = 0L);
 	PilotAddress(const PilotAddress &copyFrom);
 	PilotAddress& operator=( const PilotAddress &r );
 	bool operator==(const PilotAddress &r);
@@ -210,7 +213,6 @@ private:
 };
 
 
-typedef PilotAppInfo<AddressAppInfo,unpack_AddressAppInfo, pack_AddressAppInfo> PilotAddressInfo;
 
 
 #endif

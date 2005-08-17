@@ -107,7 +107,7 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 		if (!(pilotRec->isDeleted()) &&
 			(!(pilotRec->isSecret()) || KPilotSettings::showSecrets()))
 		{
-			address = new PilotAddress(*(fAddressAppInfo->info()), pilotRec);
+			address = new PilotAddress(fAddressAppInfo, pilotRec);
 			if (address == 0L)
 			{
 				kdWarning() << k_funcinfo

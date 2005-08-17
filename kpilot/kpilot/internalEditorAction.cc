@@ -159,14 +159,10 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 
 	if (dbName==CSL1("AddressDB") && db)
 	{
-		struct AddressAppInfo fAppInfo;
-		unsigned char *buffer = new unsigned char[PilotRecord::APP_BUFFER_SIZE];
-		int appLen = db->readAppBlock(buffer, PilotRecord::APP_BUFFER_SIZE);
-		unpack_AddressAppInfo(&fAppInfo, buffer, appLen);
-		delete[] buffer;
+		PilotAddressInfo info(db);
 
-		PilotAddress localAddr(fAppInfo, localrec);
-		PilotAddress serialAddr(fAppInfo, serialrec);
+		PilotAddress localAddr(&info, localrec);
+		PilotAddress serialAddr(&info, serialrec);
 		localEntry=localAddr.getTextRepresentation(true);
 		serialEntry=serialAddr.getTextRepresentation(true);
 		recType=i18n("address");
@@ -174,14 +170,10 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	else
 	if (dbName==CSL1("ToDoDB") && db)
 	{
-		struct ToDoAppInfo fAppInfo;
-		unsigned char *buffer = new unsigned char[PilotRecord::APP_BUFFER_SIZE];
-		int appLen = db->readAppBlock(buffer, PilotRecord::APP_BUFFER_SIZE);
-		unpack_ToDoAppInfo(&fAppInfo, buffer, appLen);
-		delete[] buffer;
+		PilotToDoInfo info(db);
 
-		PilotTodoEntry localTodo(fAppInfo, localrec);
-		PilotTodoEntry serialTodo(fAppInfo, serialrec);
+		PilotTodoEntry localTodo(*(info.info()), localrec);
+		PilotTodoEntry serialTodo(*(info.info()), serialrec);
 		localEntry=localTodo.getTextRepresentation(true);
 		serialEntry=serialTodo.getTextRepresentation(true);
 		recType=i18n("to-do entry");
@@ -198,14 +190,10 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	else
 	if (dbName==CSL1("DatebookDB"))
 	{
-	        struct AppointmentAppInfo fAppInfo;
-		unsigned char *buffer = new unsigned char[PilotRecord::APP_BUFFER_SIZE];
-		int appLen = db->readAppBlock(buffer, PilotRecord::APP_BUFFER_SIZE);
-		unpack_AppointmentAppInfo(&fAppInfo, buffer, appLen);
-		delete[] buffer;
+		PilotDateInfo info(db);
 
-		PilotDateEntry localEvent(fAppInfo, localrec);
-		PilotDateEntry serialEvent(fAppInfo, serialrec);
+		PilotDateEntry localEvent(*(info.info()), localrec);
+		PilotDateEntry serialEvent(*(info.info()), serialrec);
 		localEntry=localEvent.getTextRepresentation(true);
 		serialEntry=serialEvent.getTextRepresentation(true);
 		recType=i18n("calendar entry");
