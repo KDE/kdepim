@@ -20,6 +20,9 @@ TODO: move set-category code from subclasses into PilotRecordBase.
   constructors to do so, and add one that takes a PilotAddressInfo
   instead. In kpilot/, replace a bunch of error-prone buffer-handling
   calls by the use of these template classes.
+* Use PilotAddressInfo also in the abbrowser conduit. This removes a
+  bunch of tricky encoding handling from the conduit and puts it in
+  the base Info class, where it belongs.
 
 2005-08-16  Jason 'vanRijn' Kasper
 * Fixed annoyance in vcalconduit (korganizer calendar/todo conduit) that

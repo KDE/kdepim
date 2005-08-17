@@ -226,7 +226,7 @@ private:
 /*   D A T A   M E M B E R S ,   S E T T I N G S        */
 /********************************************************/
 
-	struct AddressAppInfo fAddressAppInfo;
+	PilotAddressInfo *fAddressAppInfo;
 
 	int pilotindex;
 	bool abChanged;

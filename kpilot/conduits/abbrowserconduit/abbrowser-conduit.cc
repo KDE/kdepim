@@ -88,6 +88,7 @@ static inline void _setPhoneNumber(Addressee &abEntry, int type, const QString &
 
 AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o, const char *n, const QStringList & a):
 		ConduitAction(o, n, a),
+		fAddressAppInfo(0L),
 		addresseeMap(),
 		syncedIds(),
 		abiter(),
@@ -373,37 +374,16 @@ bool AbbrowserConduit::_saveAddressBook()
 void AbbrowserConduit::_getAppInfo()
 {
 	FUNCTIONSETUP;
-	// get the address application header information
-	unsigned char *buffer = new unsigned char[PilotRecord::APP_BUFFER_SIZE];
-	int appLen=fDatabase->readAppBlock(buffer, PilotRecord::APP_BUFFER_SIZE);
 
-	unpack_AddressAppInfo(&fAddressAppInfo, buffer, appLen);
-	delete[]buffer;
-	buffer = NULL;
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << " lastUniqueId" << fAddressAppInfo.category.lastUniqueID << endl;
-	for(int i = 0; i < 16; i++)
-	{
-		DEBUGCONDUIT << fname << " cat " << i << " =" << fAddressAppInfo.category.name[i] << endl;
-	}
-
-	for(int x = 0; x < 8; x++)
-	{
-		DEBUGCONDUIT << fname << " phone[" << x << "] = " << fAddressAppInfo.phoneLabels[x] << endl;
-	}
-#endif
+	delete fAddressAppInfo;
+	fAddressAppInfo = new PilotAddressInfo(fDatabase);
+	fAddressAppInfo->dump();
 }
 void AbbrowserConduit::_setAppInfo()
 {
 	FUNCTIONSETUP;
-	// get the address application header information
-	int appLen = pack_AddressAppInfo(&fAddressAppInfo, 0, 0);
-	unsigned char *buffer = new unsigned char[appLen];
-	pack_AddressAppInfo(&fAddressAppInfo, buffer, appLen);
-	if (fDatabase) fDatabase->writeAppBlock(buffer, appLen);
-	if (fLocalDatabase) fLocalDatabase->writeAppBlock(buffer, appLen);
-	delete[] buffer;
+	if (fDatabase) fAddressAppInfo->write(fDatabase);
+	if (fLocalDatabase) fAddressAppInfo->write(fLocalDatabase);
 }
 
 int AbbrowserConduit::getCustom(const int index)
@@ -621,26 +601,14 @@ KABC::Address AbbrowserConduit::getAddress(const Addressee & abEntry)
 QString AbbrowserConduit::_getCatForHH(const QStringList cats, const QString curr) const
 {
 	FUNCTIONSETUP;
-	int j;
 	if (cats.size()<1) return QString::null;
 	if (cats.contains(curr)) return curr;
 	for(QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it)
 	{
-		for(j = 0; j < PILOT_CATEGORY_MAX; j++)
+		if ( fAddressAppInfo->findCategory( *it, false /* Unknown returns -1 */) >= 0)
 		{
-			QString catName = PilotAppCategory::codec()->
-				toUnicode(fAddressAppInfo.category.name[j]);
-			if(!(*it).isEmpty() && !_compare(*it, catName))
-			{
-				return catName;
-			}
+			return *it;
 		}
-	}
-	// If we have a free label, return the first possible cat
-	for(j = 0; j < PILOT_CATEGORY_MAX; j++)
-	{
-		QString cat = QString::fromLatin1(fAddressAppInfo.category.name[j]);
-		if (cat.isEmpty()) return cats.first();
 	}
 
 	// didn't find anything. return null
@@ -1916,8 +1884,7 @@ void AbbrowserConduit::_copy(Addressee &toAbEntry, PilotAddress *fromPiAddr)
 
 
 	int cat = fromPiAddr->category();
-	QString category;
-	if (0 < cat && cat < PILOT_CATEGORY_MAX) category = fAddressAppInfo.category.name[cat];
+	QString category = fAddressAppInfo->category(cat);
 	_setCategory(toAbEntry, category);
 #ifdef DEBUG
 	showAddressee(toAbEntry);
