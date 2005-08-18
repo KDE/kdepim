@@ -23,7 +23,7 @@ Improvements (things that just need to be improved/rewritten)
 - Redo and move the DCOP interface - 50%
 - Cleanup the tableview more - DONE
 - Relayout the edit contact dialog - DONE
-- Remove ContactEntry*. Impelement supporting classes required 
+- Remove ContactEntry*. Impelement supporting classes required
     for this. - DONE
 - Update the way the ConfigureView dialog gets the view config page - DONE
 - Add a meta data wrapper for views - DONE

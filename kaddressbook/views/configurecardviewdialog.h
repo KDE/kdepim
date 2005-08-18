@@ -50,10 +50,10 @@ class ConfigureCardViewWidget : public ViewConfigureWidget
   public:
     ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget *parent, const char *name );
     virtual ~ConfigureCardViewWidget();
-    
+
     virtual void restoreSettings( KConfig* );
     virtual void saveSettings( KConfig* );
-    
+
   private:
     class CardViewLookNFeelPage *mAdvancedPage;
 };
@@ -64,14 +64,14 @@ class ConfigureCardViewWidget : public ViewConfigureWidget
     Fonts
     * text font
     * header font
-    
+
     Colors
     * background color
     * text color
     * highlight color
     * title/sep text color
     * title/sep bg color
-    
+
     Layout
     * item margin
     * item spacing
@@ -80,25 +80,25 @@ class ConfigureCardViewWidget : public ViewConfigureWidget
 class CardViewLookNFeelPage : public QVBox {
 
   Q_OBJECT
-  
+
   public:
     CardViewLookNFeelPage( QWidget *parent=0, const char *name=0 );
     ~CardViewLookNFeelPage();
-  
+
     void restoreSettings( KConfig* );
     void saveSettings( KConfig* );
-  
+
   private slots:
     void setTextFont();
     void setHeaderFont();
     void enableFonts();
     void enableColors();
-  
+
   private:
     void initGUI();
     void updateFontLabel( QFont, QLabel * );
-    
-    QCheckBox *cbEnableCustomFonts, 
+
+    QCheckBox *cbEnableCustomFonts,
               *cbEnableCustomColors,
               *cbDrawSeps, *cbDrawBorders,
               *cbShowFieldLabels, *cbShowEmptyFields;
@@ -106,7 +106,7 @@ class CardViewLookNFeelPage : public QVBox {
     QLabel *lTextFont, *lHeaderFont;
     class KPushButton *btnFont, *btnHeaderFont;
     class QSpinBox *sbMargin, *sbSpacing, *sbSepWidth;
-    
+
     class QWidget *vbFonts;
 };
 

@@ -61,7 +61,7 @@ static QString join( const KPIM::LdapAttrValue& lst, const QString& sep )
   for ( KPIM::LdapAttrValue::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
     if ( alredy )
       res += sep;
-    alredy = TRUE;
+    alredy = true;
     res += asUtf8( *it );
   }
   return res;

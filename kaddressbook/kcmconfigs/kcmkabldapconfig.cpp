@@ -51,7 +51,7 @@ KCMKabLdapConfig::KCMKabLdapConfig( QWidget *parent, const char *name )
   connect( mConfigWidget, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );
 
   load();
-  
+
   KAboutData *about = new KAboutData( I18N_NOOP( "kcmkabldapconfig" ),
                                       I18N_NOOP( "KAB LDAP Configure Dialog" ),
                                       0, 0, KAboutData::License_GPL,

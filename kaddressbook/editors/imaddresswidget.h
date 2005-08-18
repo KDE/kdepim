@@ -1,8 +1,6 @@
-/*    
-  imaddresswidget.h
-  
+/*
   IM address editor widget for KAddressbook
-  
+
   Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
 
     This program is free software; you can redistribute it and/or modify
@@ -55,7 +53,7 @@ class IMAddressWidget : public IMAddressBase
     IMContext context() const;
     QString address() const ;
     QValueList<KPluginInfo *> mProtocols;
-  
+
   signals:
     void inValidState( bool );
 
@@ -64,7 +62,7 @@ class IMAddressWidget : public IMAddressBase
      * Populate combobox with protocols
      */
     void populateProtocols();
-  
+
   protected slots:
     void slotProtocolChanged();
     void slotAddressChanged( const QString &text );

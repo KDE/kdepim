@@ -17,7 +17,7 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
 
 bin_PROGRAMS = kaddressbook
 
-kaddressbook_SOURCES = main.cpp kaddressbookmain.cpp 
+kaddressbook_SOURCES = main.cpp kaddressbookmain.cpp
 kaddressbook_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kaddressbook_LDADD = libkaddressbook.la
 

@@ -1,25 +1,25 @@
-/*                                                                      
+/*
     This file is part of KAddressBook.
     Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
-                                                                        
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 
 #include <qpaintdevicemetrics.h>
@@ -318,7 +318,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
                                     limits[ counter ].height(),
                                     Qt::AlignTop | Qt::AlignLeft, *list.at( 0 ) );
     } else {
-      painter->drawText( limits[ counter ].left(), limits[ counter ].top() + 
+      painter->drawText( limits[ counter ].left(), limits[ counter ].top() +
                          heights[ counter ] + Offset, limits[ counter ].width(),
                          limits[ counter ].height(), Qt::AlignTop | Qt::AlignLeft,
                          *list.at( 0 ), -1, &rect );
@@ -417,7 +417,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
 
       // print address in american style, this will need localisation:
       line3 = address.locality() + ( address.region().isEmpty() ?
-              QString::fromLatin1( "" ) : QString::fromLatin1( ", " ) + 
+              QString::fromLatin1( "" ) : QString::fromLatin1( ", " ) +
               address.region() ) + ( address.postalCode().isEmpty()
               ? QString::fromLatin1( "" ) : QString::fromLatin1( " " )
               + address.postalCode() );

@@ -50,7 +50,7 @@ KABC::AddresseeList PABXXPort::importContacts( const QString& ) const
 {
   KABC::AddresseeList addrList;
 
-  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(), 
+  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(),
       		"*.[pP][aA][bB]|" + i18n("MS Exchange Personal Address Book Files (*.pab)"), 0 );
   if ( fileName.isEmpty() )
     return addrList;

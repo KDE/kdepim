@@ -1,25 +1,25 @@
-/*                                                                      
+/*
     This file is part of KAddressBook.
     Copyright (c) 2002 Jost Schenck <jost@schenck.de>
-                                                                        
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include "ringbinderstyle.h"
 
@@ -158,7 +158,7 @@ bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
 #else
   KABC::Field* sfield = *(KABC::Field::defaultFields().begin());
 #endif
- 
+
   // we now collect the letter groups. For reverse sorted address books we
   // reverse the sorting of the groups:
   QStringList ltgroups;
@@ -231,7 +231,7 @@ bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
       // get the bounding rect:
       int entryheight = entryMetrics( addressee, window, painter, ypos ).height();
 
-      if ( entryheight > ( window.height() - ypos ) && !( entryheight > window.height() ) ) { 
+      if ( entryheight > ( window.height() - ypos ) && !( entryheight > window.height() ) ) {
         // it does not fit on the page beginning at ypos:
         printer->newPage();
         printPageHeader( mPageAppearance->letterListBox->text( grpnum ), window, painter );
@@ -302,15 +302,15 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact, const QRe
     if ( namestr.isEmpty() ) {
       namestr = contact.familyName() + ", " + contact.givenName();
     }
-    if ( mPageAppearance->cbOrganization->isChecked() 
+    if ( mPageAppearance->cbOrganization->isChecked()
         && !contact.organization().isEmpty() ) {
       namestr += QString( " (" ) + contact.organization() + QString( ")" );
     }
     if ( mPageAppearance->cbBirthday->isChecked() && !contact.birthday().isNull() ) {
-      namestr += QString( " *" ) + KGlobal::locale()->formatDate( 
+      namestr += QString( " *" ) + KGlobal::locale()->formatDate(
           contact.birthday().date(), true );
     }
-    painter->drawText( 5, top + ( linenum * fmnorm.lineSpacing() ) 
+    painter->drawText( 5, top + ( linenum * fmnorm.lineSpacing() )
                               - fmnorm.leading(), namestr );
   }
   painter->setFont( normfont );
@@ -323,8 +323,8 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact, const QRe
       if ( !( *it ).isEmpty() ) {
         //FIXME:draw type label somehow
         // linenum++;
-        // if ( !fake ) 
-        //   painter->drawText(5, top + (linenum*fmnorm.lineSpacing()) 
+        // if ( !fake )
+        //   painter->drawText(5, top + (linenum*fmnorm.lineSpacing())
         //                            - fmnorm.leading(), (*it).typeLabel());
         painter->setFont( normfont );
         QString formattedAddress;
@@ -333,7 +333,7 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact, const QRe
 #else
         formattedAddress = (*it).label();
 #endif
-        const QStringList laddr = QStringList::split( QChar( '\n' ), 
+        const QStringList laddr = QStringList::split( QChar( '\n' ),
                                                 formattedAddress );
         for ( QStringList::ConstIterator it = laddr.begin(); it != laddr.end(); ++it ) {
           linenum++;
@@ -367,7 +367,7 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact, const QRe
       numstr.append( ( *nit ).number() );
       if ( !fake ) {
         painter->drawText( ( int ) ( window.width() * 0.5 ) + 5,
-                         top + ( linenum * fmnorm.lineSpacing() ) 
+                         top + ( linenum * fmnorm.lineSpacing() )
                              - fmnorm.leading(), numstr );
       }
     }
@@ -384,7 +384,7 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact, const QRe
       linenum++;
       if ( !fake ) {
         painter->drawText( ( int ) ( window.width() * 0.5 ) + 5,
-                         top + ( linenum * fmnorm.lineSpacing() ) 
+                         top + ( linenum * fmnorm.lineSpacing() )
                              - fmnorm.leading(), *it );
       }
     }
@@ -395,7 +395,7 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact, const QRe
     maxlines = linenum;
   }
   if ( brect ) {
-    brect->setRect( 0, top, window.width(), 
+    brect->setRect( 0, top, window.width(),
         ( maxlines * fmnorm.lineSpacing() ) + fmnorm.leading() );
   }
   if ( fake ) { // nothing to do anymore as we already have dimensions
@@ -403,11 +403,11 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact, const QRe
   }
   painter->setPen( thickpen );
   if ( !fake )
-    painter->drawRect( 0, top, window.width(), 
+    painter->drawRect( 0, top, window.width(),
         ( maxlines * fmnorm.lineSpacing() ) + fmnorm.leading() );
   if ( !fake )
-    painter->drawLine( ( int ) ( window.width() * 0.5 ), top, 
-        (int)( window.width() * 0.5 ), 
+    painter->drawLine( ( int ) ( window.width() * 0.5 ), top,
+        (int)( window.width() * 0.5 ),
         top + ( maxlines * fmnorm.lineSpacing() ) + fmnorm.leading() );
   painter->setPen( thinpen );
   return true;
@@ -434,14 +434,14 @@ bool RingBinderPrintStyle::printEmptyEntry( const QRect& window, QPainter* paint
   painter->drawRect( 0, top, window.width(), ( 3 * fmnorm.lineSpacing() ) );
   painter->setPen( thinpen );
   for ( int i = 1; i < 3; i++ ) {
-    painter->drawLine( 0, top + i * fmnorm.lineSpacing(), window.width(), 
+    painter->drawLine( 0, top + i * fmnorm.lineSpacing(), window.width(),
         top + i * fmnorm.lineSpacing() );
   }
-  painter->drawLine( (int)( window.width() * 0.5 ), top, 
+  painter->drawLine( (int)( window.width() * 0.5 ), top,
         (int)( window.width() * 0.5 ), top + ( 3 * fmnorm.lineSpacing() ) );
 
   // this line not as deep as we need room for the email field
-  painter->drawLine( (int)( window.width() * 0.75 ), top, 
+  painter->drawLine( (int)( window.width() * 0.75 ), top,
         (int)( window.width() * 0.75 ), top + ( 2 * fmnorm.lineSpacing() ) );
 
   return true;
@@ -461,7 +461,7 @@ bool RingBinderPrintStyle::printPageHeader( const QString section, const QRect& 
   QFont sectfont( "Helvetica", 16, QFont::Normal );
   QFontMetrics fmsect( sectfont );
   painter->setFont( sectfont );
-  painter->drawText( QRect( 0, 0, window.width(), fmsect.height() ), 
+  painter->drawText( QRect( 0, 0, window.width(), fmsect.height() ),
                      Qt::AlignRight, section );
   return true;
 }

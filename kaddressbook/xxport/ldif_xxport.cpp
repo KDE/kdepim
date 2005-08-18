@@ -23,7 +23,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-/* 
+/*
     Description:
     The LDAP Data Interchange Format (LDIF) is a common ASCII-text based
     Internet interchange format. Most programs allow you to export data in
@@ -63,7 +63,7 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
 {
   KABC::AddresseeList addrList;
 
-  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(), 
+  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(),
                       "text/x-ldif", 0 );
   if ( fileName.isEmpty() )
     return addrList;
@@ -91,7 +91,7 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
 
 bool LDIFXXPort::exportContacts( const KABC::AddresseeList &list, const QString& )
 {
-  KURL url = KFileDialog::getSaveURL( QDir::homeDirPath() + "/addressbook.ldif", 
+  KURL url = KFileDialog::getSaveURL( QDir::homeDirPath() + "/addressbook.ldif",
 			"text/x-ldif" );
   if ( url.isEmpty() )
       return true;

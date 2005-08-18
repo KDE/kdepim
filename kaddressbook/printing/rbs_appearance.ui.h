@@ -16,7 +16,7 @@ void RingBinderStyleAppearanceForm::groupLetter()
               , id - 1);
       if ( letterListBox->text(id).length() > 1 ) {
           letterListBox->changeItem(
-                    letterListBox->text(id).right(letterListBox->text(id).length()-1) 
+                    letterListBox->text(id).right(letterListBox->text(id).length()-1)
                   , id
                   );
           letterListBox->setCurrentItem(id);

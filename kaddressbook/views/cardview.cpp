@@ -1323,7 +1323,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
       emit executed( d->mCurrentItem );
       break;
     case Key_Menu:
-      emit contextMenuRequested( d->mCurrentItem, viewport()->mapToGlobal( 
+      emit contextMenuRequested( d->mCurrentItem, viewport()->mapToGlobal(
                                  itemRect(d->mCurrentItem).center() ) );
       break;
     default:

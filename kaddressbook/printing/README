@@ -1,15 +1,15 @@
 This subdircetory implements the printing wizard that handles the
 different styles of printing provided by kaddressbook. To see how
 printing is handled, see printingwizard.h. See kaddressbookprinting.h
-in the kaddressbook main directory, too. 
+in the kaddressbook main directory, too.
 
 Have a look at printstyle.h if you want to create your own print
-style. 
+style.
 
 Files starting with ds_ are part of the detailed print style
-implementation. 
+implementation.
 
 -----
-Feel free to add you comments here. 
+Feel free to add you comments here.
 
---Mirko Boehm. 
+--Mirko Boehm.

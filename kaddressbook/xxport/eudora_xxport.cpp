@@ -46,7 +46,7 @@ EudoraXXPort::EudoraXXPort( KABC::AddressBook *ab, QWidget *parent, const char *
 
 KABC::AddresseeList EudoraXXPort::importContacts( const QString& ) const
 {
-  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(), 
+  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(),
 		"*.[tT][xX][tT]|" + i18n("Eudora Light Addressbook (*.txt)"), 0 );
   if ( fileName.isEmpty() )
     return KABC::AddresseeList();
@@ -126,7 +126,7 @@ QString EudoraXXPort::key( const QString& line) const
   QString result;
   int b = line.find( '\"', 0 );
 
-  if ( b == -1 ) { 
+  if ( b == -1 ) {
     b = line.find( ' ' );
     if ( b == -1 )
       return result;
@@ -153,7 +153,7 @@ QString EudoraXXPort::email( const QString& line ) const
   int b;
   QString result;
   b = line.findRev( '\"' );
-  if ( b == -1 ) { 
+  if ( b == -1 ) {
     b = line.findRev( ' ' );
     if ( b == -1 )
       return result;

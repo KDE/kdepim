@@ -41,17 +41,17 @@
 #include "configuretableviewdialog.h"
 
 ConfigureTableViewWidget::ConfigureTableViewWidget( KABC::AddressBook *ab,
-                                                    QWidget *parent, 
+                                                    QWidget *parent,
                                                     const char *name )
   : ViewConfigureWidget( ab, parent, name )
 {
   QWidget *page = addPage( i18n( "Look & Feel" ), QString::null,
                            KGlobal::iconLoader()->loadIcon( "looknfeel",
                            KIcon::Panel ) );
-  
+
   mPage = new LookAndFeelPage( page );
 }
-                                           
+
 ConfigureTableViewWidget::~ConfigureTableViewWidget()
 {
 }
@@ -76,27 +76,27 @@ LookAndFeelPage::LookAndFeelPage(QWidget *parent, const char *name)
   : QWidget(parent, name)
 {
   initGUI();
-  
+
   // Set initial state
   enableBackgroundToggled(mBackgroundBox->isChecked());
 }
-    
+
 void LookAndFeelPage::restoreSettings( KConfig *config )
 {
   mAlternateButton->setChecked(config->readBoolEntry("ABackground", true));
   mLineButton->setChecked(config->readBoolEntry("SingleLine", false));
   mToolTipBox->setChecked(config->readBoolEntry("ToolTips", true));
-      
+
   if (!mAlternateButton->isChecked() && !mLineButton->isChecked())
     mNoneButton->setChecked(true);
-  
+
   mBackgroundBox->setChecked(config->readBoolEntry("Background", false));
   mBackgroundName->lineEdit()->setText(config->readPathEntry("BackgroundName"));
 #if KDE_IS_VERSION(3,2,90)
   mIMPresenceBox->setChecked( config->readBoolEntry( "InstantMessagingPresence", false ) );
 #endif
 }
-    
+
 void LookAndFeelPage::saveSettings( KConfig *config )
 {
   config->writeEntry("ABackground", mAlternateButton->isChecked());
@@ -108,36 +108,36 @@ void LookAndFeelPage::saveSettings( KConfig *config )
   config->writeEntry( "InstantMessagingPresence", mIMPresenceBox->isChecked() );
 #endif
 }
-    
+
 void LookAndFeelPage::initGUI()
 {
   QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialogBase::spacingHint());
-      
-  QButtonGroup *group = new QButtonGroup(1, Qt::Horizontal, 
+
+  QButtonGroup *group = new QButtonGroup(1, Qt::Horizontal,
                                          i18n("Row Separator"), this);
   layout->addWidget(group);
-      
+
   mAlternateButton = new QRadioButton(i18n("Alternating backgrounds"),
                                       group, "mAlternateButton");
   mLineButton = new QRadioButton(i18n("Single line"), group, "mLineButton");
   mNoneButton = new QRadioButton(i18n("None"), group, "mNoneButton");
-      
+
   // Background Checkbox/Selector
   QHBoxLayout *backgroundLayout = new QHBoxLayout();
   layout->addLayout(backgroundLayout);
-      
+
   mBackgroundBox = new QCheckBox(i18n("Enable background image:"), this,
                                  "mBackgroundBox");
   connect(mBackgroundBox, SIGNAL(toggled(bool)),
           SLOT(enableBackgroundToggled(bool)));
   backgroundLayout->addWidget(mBackgroundBox);
-  
+
   mBackgroundName = new KURLRequester(this, "mBackgroundName");
   mBackgroundName->setMode(KFile::File | KFile::ExistingOnly |
                            KFile::LocalOnly);
   mBackgroundName->setFilter(KImageIO::pattern(KImageIO::Reading));
   backgroundLayout->addWidget(mBackgroundName);
-      
+
   // ToolTip Checkbox
   mToolTipBox = new QCheckBox(i18n("Enable contact tooltips"), this,
                               "mToolTipBox");
@@ -152,5 +152,5 @@ void LookAndFeelPage::enableBackgroundToggled(bool enabled)
 {
   mBackgroundName->setEnabled(enabled);
 }
-    
+
 #include "configuretableviewdialog.moc"

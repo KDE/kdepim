@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir)/kaddressbook/interfaces -I$(top_srcdir)/kaddressbook \
-           -I$(top_srcdir)  $(all_includes) 
+           -I$(top_srcdir)  $(all_includes)
 
 kde_module_LTLIBRARIES = libkaddrbk_distributionlist.la libkaddrbk_resourceselection.la
 

@@ -18,12 +18,12 @@
 #ifndef _MAPIHD_H_
 #define _MAPIHD_H_
 
-#include <qmemarray.h> 
+#include <qmemarray.h>
 
 #include "pab_xxport.h"
 
 #define T_MS_ARRAY         0x1100               // Some sort of array
-#define T_MS_STRING	 ((unsigned long) 0x1e) // definitely a string 
+#define T_MS_STRING	 ((unsigned long) 0x1e) // definitely a string
 
  typedef unsigned long adr_t;
  typedef unsigned long content_t;

@@ -138,7 +138,7 @@ alias "JoAnne Rawls" JRawls@example.com
 note "JoAnne Rawls" <name:JoAnne Rawls>ljrawls@example.com
 alias "Susan Murrow" 75272.730@example.com
 note "Susan Murrow" <name:Susan Murrow>
-alias "Carol Oneill" 
+alias "Carol Oneill"
 note "Carol Oneill" <address:12346 Some AveSome Town, PA 12345-1234><name:Carol Oneill>
 alias "Valerie Webster" I_W_Webster@example.com
 note "Valerie Webster" <address:2 Some CloseSome Town, Some County AB12 3DFEngland><name:Valerie and Ian Webster>Dancer in England

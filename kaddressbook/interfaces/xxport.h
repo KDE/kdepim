@@ -92,7 +92,7 @@ class KDE_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
     void setKApplication( KApplication *app );
 
     /**
-      Processes outstanding KApplication events. It should be called 
+      Processes outstanding KApplication events. It should be called
       occasionally when the import/export filter is busy performing
       a long operation (e.g. reading from slow external devices).
       @see: QApplication::processEvents()

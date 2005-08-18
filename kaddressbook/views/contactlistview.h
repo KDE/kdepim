@@ -48,7 +48,7 @@ class DynamicTip : public QToolTip
 
   protected:
     void maybeTip( const QPoint & );
-    
+
   private:
 };
 
@@ -56,7 +56,7 @@ class ContactListViewItem : public KListViewItem
 {
 
 public:
-  ContactListViewItem(const KABC::Addressee &a, ContactListView* parent, 
+  ContactListViewItem(const KABC::Addressee &a, ContactListView* parent,
                       KABC::AddressBook *doc, const KABC::Field::List &fields, KIMProxy *proxy );
   const KABC::Addressee &addressee() const { return mAddressee; }
   virtual void refresh();
@@ -66,7 +66,7 @@ public:
   /** Adds the border around the cell if the user wants it.
   * This is how the single line config option is implemented.
   */
-  virtual void paintCell(QPainter * p, const QColorGroup & cg, 
+  virtual void paintCell(QPainter * p, const QColorGroup & cg,
                          int column, int width, int align );
 
 private:
@@ -87,26 +87,26 @@ class ContactListView : public KListView
   Q_OBJECT
 
 public:
-  ContactListView(KAddressBookTableView *view, 
+  ContactListView(KAddressBookTableView *view,
                   KABC::AddressBook *doc,
-                  QWidget *parent, 
+                  QWidget *parent,
                   const char *name = 0L );
   virtual ~ContactListView() {}
   //void resort();
-  
+
   /** Returns true if tooltips should be displayed, false otherwise
   */
   bool tooltips() const { return mToolTips; }
   void setToolTipsEnabled(bool enabled) { mToolTips = enabled; }
-  
+
   bool alternateBackground() const { return mABackground; }
   void setAlternateBackgroundEnabled(bool enabled);
-  
+
   bool singleLine() const { return mSingleLine; }
   void setSingleLineEnabled(bool enabled) { mSingleLine = enabled; }
-  
+
   const QColor &alternateColor() const { return mAlternateColor; }
-  
+
   /** Sets the background pixmap to <i>filename</i>. If the
   * QString is empty (QString::isEmpty()), then the background
   * pixmap will be disabled.
@@ -117,12 +117,12 @@ public:
    * Sets whether instant messaging presence should be shown in the first column
    */
   void setShowIM( bool enabled );
-  
+
   /**
    * Is presence being shown?
    */
   bool showIM();
-  
+
   /**
    * Set the column index of the column used for instant messaging presence.
    * This method is necessary because presence, unlike the other fields, is not
@@ -130,12 +130,12 @@ public:
    * TODO: make presence a KABC::Field post 3.3
    */
   void setIMColumn( int column );
-  
+
   /**
    * get the column used for IM presence
    */
   int imColumn();
-  
+
 protected:
   /** Paints the background pixmap in the empty area. This method is needed
   * since Qt::FixedPixmap will not scroll with the list view.
@@ -148,13 +148,13 @@ protected:
 
 protected slots:
   void itemDropped(QDropEvent *e);
-  
+
 public slots:
 
 signals:
   void startAddresseeDrag();
   void addresseeDropped(QDropEvent *);
-  
+
 private:
   KAddressBookTableView *pabWidget;
   int oldColumn;
@@ -165,9 +165,9 @@ private:
   bool mSingleLine;
   bool mToolTips;
   bool mShowIM;
-  
+
   QColor mAlternateColor;
-  
+
   QPoint presspos;
   int mInstantMsgColumn;
 };

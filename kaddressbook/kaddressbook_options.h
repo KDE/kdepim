@@ -34,7 +34,7 @@ static KCmdLineOptions kaddressbook_options[] =
   { "uid <uid>", I18N_NOOP( "Shows contact editor with given uid" ), 0 },
   { "editor-only", I18N_NOOP( "Launches in editor only mode" ), 0 },
   { "new-contact", I18N_NOOP( "Launches editor for the new contact" ), 0 },
-  { "document <file>", I18N_NOOP( "Work on given file" ), 0 }, 
+  { "document <file>", I18N_NOOP( "Work on given file" ), 0 },
   { "+[URL]", I18N_NOOP( "Import the given vCard" ), 0 },
   KCmdLineLastOption
 };

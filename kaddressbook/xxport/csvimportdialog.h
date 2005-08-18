@@ -1,7 +1,7 @@
 /*
    This file is part of KAddressBook.
    Copyright (C) 2003 Tobias Koenig <tokoe@kde.org>
-                 based on the code of KSpread's CSV Import Dialog 
+                 based on the code of KSpread's CSV Import Dialog
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -69,10 +69,10 @@ class CSVImportDialog : public KDialogBase
   private:
     enum { Undefined, FormattedName, FamilyName, GivenName, AdditionalName,
            Prefix, Suffix, NickName, Birthday,
-           HomeAddressStreet, HomeAddressLocality, HomeAddressRegion, 
+           HomeAddressStreet, HomeAddressLocality, HomeAddressRegion,
            HomeAddressPostalCode, HomeAddressCountry, HomeAddressLabel,
            BusinessAddressStreet, BusinessAddressLocality, BusinessAddressRegion,
-           BusinessAddressPostalCode, BusinessAddressCountry, 
+           BusinessAddressPostalCode, BusinessAddressCountry,
            BusinessAddressLabel,
            HomePhone, BusinessPhone, MobilePhone, HomeFax, BusinessFax, CarPhone,
            Isdn, Pager, Email, Mailer, Title, Role, Organization, Note, URL

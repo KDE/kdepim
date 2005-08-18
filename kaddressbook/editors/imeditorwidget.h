@@ -1,6 +1,4 @@
 /*
-  imeditorwidget.h
-
   IM addresses editor widget for KAddressbook
 
   Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
@@ -59,7 +57,7 @@ class IMEditorWidget : public KDialogBase
     void loadContact( KABC::Addressee *addr );
     void storeContact( KABC::Addressee *addr );
     void setReadOnly( bool readOnly );
-    QValueList<KPluginInfo *> availableProtocols() const; 
+    QValueList<KPluginInfo *> availableProtocols() const;
     bool isModified() const;
     QString preferred() const;
 
@@ -115,10 +113,10 @@ class IMAddressLVI : public KListViewItem
 
     void setPreferred( bool preferred );
     bool preferred() const;
-  
+
   protected:
     virtual void paintCell( QPainter *p, const QColorGroup &cg, int column, int width, int alignment );
-     
+
   private:
     KPluginInfo * mProtocol;
     bool mPreferred;

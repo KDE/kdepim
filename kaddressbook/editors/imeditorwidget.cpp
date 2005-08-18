@@ -1,6 +1,4 @@
 /*
-  imeditorwidget.cpp
-
   IM address editor widget for KAddressBook
 
   Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>

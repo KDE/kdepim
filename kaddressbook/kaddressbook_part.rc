@@ -22,7 +22,7 @@
 
     <Menu name="edit" noMerge="1"><text>&amp;Edit</text>
       <Action name="edit_undo"/>
-      <Action name="edit_redo"/> 
+      <Action name="edit_redo"/>
       <Separator/>
       <Action name="edit_cut"/>
       <Action name="edit_copy"/>
@@ -90,7 +90,7 @@
 
   <ToolBar name="addresseeToolBar" noMerge="1"><text>Contact Toolbar</text>
     <Action name="edit_undo"/>
-    <Action name="edit_redo"/> 
+    <Action name="edit_redo"/>
     <Separator/>
     <Action name="edit_cut"/>
     <Action name="edit_copy"/>

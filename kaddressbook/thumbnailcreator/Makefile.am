@@ -5,7 +5,7 @@ kde_module_LTLIBRARIES = ldifvcardthumbnail.la
 
 ldifvcardthumbnail_la_SOURCES = ldifvcardcreator.cpp
 ldifvcardthumbnail_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) -no-undefined
-ldifvcardthumbnail_la_LIBADD = $(LIB_KDECORE) $(LIB_KABC) -lkdefx 
+ldifvcardthumbnail_la_LIBADD = $(LIB_KDECORE) $(LIB_KABC) -lkdefx
 
 noinst_HEADERS = ldifvcardcreator.h
 

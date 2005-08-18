@@ -3,11 +3,11 @@ INCLUDES = -I$(top_srcdir) \
            -I$(top_srcdir)/kaddressbook \
            -I$(top_srcdir)/libkdenetwork \
            $(GPGME_CFLAGS) \
-           $(all_includes) 
+           $(all_includes)
 
 if compile_GNOKIIXXPORT
   gnokii_MODULE = libkaddrbk_gnokii_xxport.la
-  gnokii_RCFILE = gnokii_xxportui.rc 
+  gnokii_RCFILE = gnokii_xxportui.rc
 endif
 
 kde_module_LTLIBRARIES = libkaddrbk_csv_xxport.la libkaddrbk_vcard_xxport.la \

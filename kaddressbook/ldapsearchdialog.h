@@ -37,7 +37,7 @@ class QPushButton;
 class KABCore;
 
 class LDAPSearchDialog : public KDialogBase
-{ 
+{
   Q_OBJECT
 
   public:

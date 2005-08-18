@@ -101,7 +101,7 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
       } else if ( key == QString::fromLatin1( "phone" ) )
         addr.insertPhoneNumber( KABC::PhoneNumber( value ) );
       else if ( key == QString::fromLatin1( "fax" ) )
-        addr.insertPhoneNumber( KABC::PhoneNumber( value, 
+        addr.insertPhoneNumber( KABC::PhoneNumber( value,
                               KABC::PhoneNumber::Fax | KABC::PhoneNumber::Home ) );
       else if ( key == QString::fromLatin1( "postaladdress" ) ) {
         KABC::Address address( KABC::Address::Home );

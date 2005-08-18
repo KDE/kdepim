@@ -1,6 +1,6 @@
 INCLUDES = -I$(top_srcdir) -I$(top_builddir)/kaddressbook -I$(top_srcdir)/kaddressbook \
            -I$(top_srcdir)/kaddressbook/details -I$(top_srcdir)/kaddressbook/common \
-	   -I$(top_builddir)/kaddressbook/common $(all_includes) 
+	   -I$(top_builddir)/kaddressbook/common $(all_includes)
 
 noinst_LTLIBRARIES = libprinter.la
 

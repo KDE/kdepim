@@ -49,7 +49,7 @@ class PABXXPort : public KAB::XXPort
 /////////////////////////////////////////////////////////////////////////////	
 
 /*
- *  MS Windows tags as reengineered from an MS Exchange .PAB and 
+ *  MS Windows tags as reengineered from an MS Exchange .PAB and
  *  Outlook .PAB file.
  */
 
@@ -190,11 +190,11 @@ class PABXXPort : public KAB::XXPort
 		0x3a2e,	\
 		0x3a30,	\
 		0x3a19
-		// 3002 probably address type	
-		// 300b some sort of key		
-		// 3a2e secretary tel number		
-		// 3a30 name of secretary		
-		// 3a19 office location		
+		// 3002 probably address type
+		// 300b some sort of key
+		// 3a2e secretary tel number
+		// 3a30 name of secretary
+		// 3a19 office location
 
 
 

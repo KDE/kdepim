@@ -1,7 +1,7 @@
 INCLUDES = -I$(top_srcdir) -I$(top_builddir)/kaddressbook/common \
            -I$(top_srcdir)/kaddressbook/common \
            -I$(top_srcdir)/kaddressbook/interfaces \
-           -I$(top_srcdir)/kaddressbook $(all_includes) 
+           -I$(top_srcdir)/kaddressbook $(all_includes)
 
 kde_module_LTLIBRARIES = libkaddrbk_cardview.la libkaddrbk_iconview.la \
                          libkaddrbk_tableview.la
@@ -20,7 +20,7 @@ libkaddrbk_iconview_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_tableview_la_SOURCES = configuretableviewdialog.cpp \
                                   contactlistview.cpp \
-                                  kaddressbooktableview.cpp 
+                                  kaddressbooktableview.cpp
 libkaddrbk_tableview_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) -no-undefined
 libkaddrbk_tableview_la_LIBADD = $(XXLIBS)
 

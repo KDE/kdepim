@@ -75,7 +75,7 @@ void ContactEditorWidgetManager::reload()
 {
   mFactories.clear();
   kdDebug(5720) << "ContactEditorWidgetManager::reload()" << endl;
-  const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/ContactEditorWidget", 
+  const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/ContactEditorWidget",
     QString( "[X-KDE-KAddressBook-CEWPluginVersion] == %1" ).arg( KAB_CEW_PLUGIN_VERSION ) );
 
   KTrader::OfferList::ConstIterator it;
@@ -110,7 +110,7 @@ void ContactEditorWidgetManager::reload()
 ContactEditorTabPage::ContactEditorTabPage( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  mLayout = new QGridLayout( this, 0, 2, KDialog::marginHint(), 
+  mLayout = new QGridLayout( this, 0, 2, KDialog::marginHint(),
                              KDialog::spacingHint() );
 }
 

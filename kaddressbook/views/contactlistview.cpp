@@ -104,13 +104,13 @@ void DynamicTip::maybeTip( const QPoint &pos )
     int lastw = 0;
 
     while ( i < int(notes.length()) ) {
-      doBreak = FALSE;
+      doBreak = false;
       if ( notes[i] != '\n' )
         linew += fm.width( notes[i] );
 
       if ( lastSpace >= a && notes[i] != '\n' )
         if  (linew >= parentWidget()->width()) {
-          doBreak = TRUE;
+          doBreak = true;
           if ( lastSpace > a ) {
             i = lastSpace;
             linew = lastw;

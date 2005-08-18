@@ -10,7 +10,7 @@
 #     first latitude (+ is north), then longitude (+ is east).
 # 3.  Zone name used in value of TZ environment variable.
 # 4.  Comments; present if and only if the country has multiple rows.
-#     
+#
 # Columns are separated by a single tab.
 # The table is sorted first by country, then an order within the country that
 # (1) makes some geographical sense, and
