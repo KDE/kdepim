@@ -278,7 +278,6 @@ void KPilotInstaller::setupWidget()
 	setAutoSaveSettings();
 }
 
-
 void KPilotInstaller::initComponents()
 {
 	FUNCTIONSETUP;
@@ -289,43 +288,41 @@ void KPilotInstaller::initComponents()
 	DEBUGKPILOT << fname << ": Creating component pages." << endl;
 #endif
 
+	QPixmap pixmap;
 	QString pixfile;
 	QWidget *w;
 
-#define VIEWICON(a) KGlobal::dirs()->findResource("data",(a))
+#define ADDICONPAGE(a,b) \
+	pixmap = KGlobal::iconLoader()->loadIcon(b, KIcon::Desktop, 64); \
+	w = getManagingWidget()->addVBoxPage(a,QString::null, pixmap) ;
 
-#define ADDICONPAGE(a,b) pixfile = VIEWICON(b); \
-	w = getManagingWidget()->addVBoxPage(a,QString::null, \
-		(pixfile.isEmpty() ? QPixmap() : QPixmap(pixfile))) ;
-
-	ADDICONPAGE(i18n("HotSync"),CSL1("kpilot/icons/kpilot-bhotsync.png"));
+	ADDICONPAGE(i18n("HotSync"),CSL1("kpilotbhotsync"));
 	fLogWidget = new LogWidget(w);
 	addComponentPage(fLogWidget, i18n("HotSync"));
 	fLogWidget->setShowTime(true);
 
-	ADDICONPAGE(i18n("To-do Viewer"),CSL1("kpilot/icons/kpilot-todo.png"));
+	ADDICONPAGE(i18n("To-do Viewer"),CSL1("kpilottodo"));
 	addComponentPage(new TodoWidget(w,defaultDBPath),
 		i18n("To-do Viewer"));
 
-	ADDICONPAGE(i18n("Address Viewer"),CSL1("kpilot/icons/kpilot-address.png"));
+	ADDICONPAGE(i18n("Address Viewer"),CSL1("kpilotaddress"));
 	addComponentPage(new AddressWidget(w,defaultDBPath),
 		i18n("Address Viewer"));
 
-	ADDICONPAGE(i18n("Memo Viewer"),CSL1("kpilot/icons/kpilot-knotes.png"));
+	ADDICONPAGE(i18n("Memo Viewer"),CSL1("kpilotknotes"));
 	addComponentPage(new MemoWidget(w, defaultDBPath),
 		i18n("Memo Viewer"));
 
-	ADDICONPAGE(i18n("File Installer"),CSL1("kpilot/icons/kpilot-fileinstaller.png"));
+	ADDICONPAGE(i18n("File Installer"),CSL1("kpilotfileinstaller"));
 	fFileInstallWidget = new FileInstallWidget(
 		w,defaultDBPath);
 	addComponentPage(fFileInstallWidget, i18n("File Installer"));
 
-	ADDICONPAGE(i18n("Generic DB Viewer"),CSL1("kpilot/icons/kpilot-db.png"));
+	ADDICONPAGE(i18n("Generic DB Viewer"),CSL1("kpilotdb"));
 	addComponentPage(new GenericDBWidget(w,defaultDBPath),
 		i18n("Generic DB Viewer"));
 
 #undef ADDICONPAGE
-#undef VIEWICON
 
 	QTimer::singleShot(500,this,SLOT(initializeComponents()));
 }
