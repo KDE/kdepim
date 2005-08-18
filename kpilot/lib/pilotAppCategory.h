@@ -95,8 +95,9 @@ public:
 	*/
 	PilotAppCategory(const PilotRecord* rec) :
 		PilotRecordBase( ((rec)?rec->attributes():0),
-			((rec)?rec->id():0),
-			((rec)?rec->category():0) )
+			((rec)?rec->category():0),
+			((rec)?rec->id():0)
+			)
 	{} ;
 
 	/** Copy constructor. */
