@@ -277,6 +277,9 @@ KCal::Event *VCalConduit::incidenceFromRecord(KCal::Event *e, const PilotDateEnt
 		KCal::Event::SecrecyPublic);
 
 	e->setPilotId(de->id());
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": set KCal item to pilotId: [" << e->pilotId() << "]..."<<endl;
+#endif
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 
 	setStartEndTimes(e,de);
@@ -771,6 +774,13 @@ void VCalConduit::setCategory(KCal::Event *e, const PilotDateEntry *de)
 		QString newcat=PilotAppCategory::codec()->toUnicode(fAppointmentAppInfo.category.name[cat]);
 		if (!cats.contains(newcat))
 		{
+			// if this event only has one category associated with it, then we can
+			// safely assume that what we should be doing here is changing it to match
+			// the palm.  if there's already more than one category in the event, however, we
+			// won't cause data loss--we'll just append what the palm has to the 
+			// event's categories
+			if (cats.count() <=1) cats.clear();
+			
 			cats.append( newcat );
 			e->setCategories(cats);
 		}

@@ -683,6 +683,9 @@ KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 
 	PilotAppCategory*de=newPilotEntry(r);
 	KCal::Incidence *e = fP->findIncidence(r->id());
+#ifdef DEBUG
+	DEBUGCONDUIT<<fname<<": Pilot Record ID: ["<<r->id() << "]" <<endl;
+#endif
 
 	if (e && de)
 	{

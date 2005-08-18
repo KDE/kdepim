@@ -382,6 +382,9 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
    // We don't want this, do we?
 //	e->setOrganizer(fCalendar->getEmail());
 	e->setPilotId(de->id());
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": set KCal item to pilotId: [" << e->pilotId() << "] ..."<<endl;
+#endif
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 	e->setSecrecy(de->isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic);
 
@@ -401,8 +404,6 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 	}
 
 	// Categories
-	// TODO: Sync categories
-	// first remove all categories and then add only the appropriate one
 	setCategory(e, de);
 
 	// PRIORITY //
@@ -434,6 +435,13 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 		QString newcat=fTodoAppInfo->category(cat);
 		if (!cats.contains(newcat))
 		{
+			// if this event only has one category associated with it, then we can
+			// safely assume that what we should be doing here is changing it to match
+			// the palm.  if there's already more than one category in the event, however, we
+			// won't cause data loss--we'll just append what the palm has to the 
+			// event's categories
+			if (cats.count() <=1) cats.clear();
+			
 			cats.append( newcat );
 			e->setCategories(cats);
 		}
