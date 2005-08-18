@@ -87,7 +87,7 @@ void TimeConduit::readConfig()
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Would have set time to "
-			<< QDateTime::currentDateTime() << endl;
+			<< QDateTime::currentDateTime().toString() << endl;
 #endif
 		return delayDone();
 	}
