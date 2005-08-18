@@ -14,6 +14,13 @@ TODO: give the knotes conduit a decent test mode.
 TODO: only re-write a local database if it is changed.
 TODO: move set-category code from subclasses into PilotRecordBase.
 
+2005-08-18  Adriaan de Groot
+* Found out that the PilotAppCategory constructor that takes
+  a PilotRecord * was passing subsequent parameters in the wrong
+  order, which caused Jason's problem below.
+* Renamed soem icons and fixed up the icon loading code so that
+  the "sidebar" icons in KPilot can now be themed as well.
+
 2005-08-18  Jason 'vanRijn' Kasper
 * Started fixing bug #103581.  Got side-tracked by my discovery that when
   we change ToDos on the palm, we sync them to the PC and then promptly

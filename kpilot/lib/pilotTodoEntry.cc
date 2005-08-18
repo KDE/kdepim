@@ -65,8 +65,6 @@ PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec):P
 			rec->size());
 #endif
 	}
-	setAttributes( rec->attributes() );
-	setID( rec->id() );
 
 	(void) pilotTodoEntry_id;
 }
