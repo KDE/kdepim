@@ -446,7 +446,7 @@ void Recurrence::setStartDateTime( const QDateTime &start )
 {
   if ( mRecurReadOnly ) return;
   mStartDateTime = start;
-  mFloating = false;
+  setFloats( false );   // set all RRULEs and EXRULEs
 
   for ( RecurrenceRule::List::ConstIterator rr = mRRules.begin(); rr != mRRules.end(); ++rr ) {
     (*rr)->setStartDt( start );
