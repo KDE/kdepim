@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=OpenXchange Server
 Name[es]=Servidor OpenXchange
+Name[fr]=Serveur OpenXchange
 Name[ga]=Freastalaí Openexchange
 X-KDE-Library=kcal_slox
 Type=Service

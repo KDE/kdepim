@@ -6,6 +6,7 @@ Name[ca]=Clau no validada
 Name[cs]=Nevalidovaný klíč
 Name[da]=Ikke godkendt nøgle
 Name[de]=Ungeprüfter Schlüssel
+Name[el]=Μη επικυρωμένο κλειδί
 Name[es]=Clave no validada
 Name[et]=Võtme ehtsus kontrollimatu
 Name[fr]=Clé non validée
@@ -25,6 +26,7 @@ Name[sr@Latn]=Neovereni ključ
 Name[sv]=Nyckeln har inte validerats
 Name[ta]=செல்லுபடியாகாத விசை
 Name[tr]=Geçerli Olmayan Anahtar
+Name[uk]=Неперевірений ключ
 Name[zh_CN]=未校验的密钥
 
 [Key Filter #1]
@@ -39,6 +41,7 @@ Name[ca]=Clau expirada
 Name[cs]=Klíš s prošlou platností
 Name[da]=Udløbet nøgle
 Name[de]=Abgelaufener Schlüssel
+Name[el]=Ληγμένο κλειδί
 Name[es]=Clave caducada
 Name[et]=Aegunud võti
 Name[fr]=Clé expirée
@@ -58,6 +61,7 @@ Name[sr@Latn]=Istekli ključ
 Name[sv]=Utgången nyckel
 Name[ta]=காலாவதியான விசை
 Name[tr]=Süresi Dolmuş Anahtar
+Name[uk]=Застарілий ключ
 Name[zh_CN]=过期密钥
 
 [Key Filter #2]
@@ -69,6 +73,7 @@ Name[ca]=Clau revocada
 Name[cs]=Odvolaný klíč
 Name[da]=Fjernet nøgle
 Name[de]=Widerrufener Schlüssel
+Name[el]=Ακυρωμένο κλειδί
 Name[es]=Clave revocada
 Name[et]=Tühistatud võti
 Name[fr]=Clé révoquée
@@ -88,6 +93,7 @@ Name[sr@Latn]=Opozvani ključ
 Name[sv]=Återkallad nyckel
 Name[ta]=நீக்கிய விசை
 Name[tr]=Geri Alınmış Anahtar
+Name[uk]=Анульований ключ
 Name[zh_CN]=吊销的密钥
 
 [Key Filter #3]
@@ -100,6 +106,7 @@ Name[ca]=Certificat arrel de confiança
 Name[cs]=Důvěryhodný kořenový certifikát
 Name[da]=Root-certifikat der stoles på
 Name[de]=Vertrauenswürdiges Stammzertifikat
+Name[el]=Έμπιστο Βασικό Πιστοποιητικό
 Name[es]=Certificado raíz de confianza
 Name[et]=Usaldusväärne juursertifikaat
 Name[fr]=Certificat racine de confiance
@@ -118,6 +125,7 @@ Name[sr@Latn]=Koreni sertifikat od poverenja
 Name[sv]=Pålitligt rotcertifikat
 Name[ta]=நம்பகமான மூல சான்றிதழ்
 Name[tr]=Güvenilir Kök Sertifikası
+Name[uk]=Кореневий сертифікат з довірою
 Name[zh_CN]=可信任的根证书
 
 [Key Filter #4]
@@ -130,6 +138,7 @@ Name[ca]=Certificat arrel sense confiança
 Name[cs]=Nedůvěryhodný kořenový certifikát
 Name[da]=Root-certifikat der ikke stoles på
 Name[de]=Nicht vertrauenswürdiges Stammzertifikat
+Name[el]=Μη έμπιστο Βασικό Πιστοποιητικό
 Name[es]=Certificado raíz no de confianza
 Name[et]=Ebausaldusväärne juursertifikaat
 Name[fr]=Certificat racine non fiable
@@ -148,6 +157,7 @@ Name[sr@Latn]=Koreni sertifikat koji nije od poverenja
 Name[sv]=Opålitligt rotcertifikat
 Name[ta]=நம்பமுடியாத மூல சான்றிதழ்
 Name[tr]=Güvenilmeyen Kök Sertifikası
+Name[uk]=Кореневий сертифікат без довіри
 Name[zh_CN]=未信任的根证书
 
 [Key Filter #5]
@@ -159,6 +169,7 @@ Name[ca]=Altres claus
 Name[cs]=Ostatní klíče
 Name[da]=Andre nøgler
 Name[de]=Andere Schlüssel
+Name[el]=Άλλα κλειδιά
 Name[es]=Otras claves
 Name[et]=Muud võtmed
 Name[fr]=Autres clés
@@ -180,5 +191,6 @@ Name[sr@Latn]=Drugi ključevi
 Name[sv]=Andra nycklar
 Name[ta]=மற்ற விசைகள்
 Name[tr]=Diğer Anahtarlar
+Name[uk]=Інші ключі
 Name[zh_CN]=其它密钥
 
