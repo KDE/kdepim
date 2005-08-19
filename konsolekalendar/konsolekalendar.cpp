@@ -159,7 +159,8 @@ bool KonsoleKalendar::showInstance()
 
 	  Event::List sortedList =
             m_variables->getCalendar()->events( EventSortStartDate );
-
+			if( sortedList.count()>0)
+			{
           QDate dt, firstdate, lastdate;
           firstdate = sortedList.first()->dtStart().date();
           lastdate = sortedList.last()->dtStart().date();
@@ -172,6 +173,7 @@ bool KonsoleKalendar::showInstance()
                                                   SortDirectionAscending );
             status = printEventList( &ts, &events, dt );
           }
+			}
 
 	} else if ( m_variables->isUID() ) {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
