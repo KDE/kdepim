@@ -192,10 +192,10 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
     icaltimetype end;
     if (event->doesFloat()) {
 //      kdDebug(5800) << " Event " << event->summary() << " floats." << endl;
-      if (event->dtEnd().date() != event->dtStart().date()) {
+//      if (event->dtEnd().date() != event->dtStart().date()) {
         // +1 day because end date is non-inclusive.
         end = writeICalDate( event->dtEnd().date().addDays( 1 ) );
-      }
+//      }
     } else {
 //      kdDebug(5800) << " Event " << event->summary() << " has time." << endl;
       if (event->dtEnd() != event->dtStart()) {
