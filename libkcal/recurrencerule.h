@@ -162,14 +162,15 @@ class LIBKCAL_EXPORT RecurrenceRule
 
 
     /** Returns true if the date specified is one on which the event will
-     * recur. */
+     * recur. The start date returns true only if it actually matches the rule. */
     bool recursOn( const QDate &qd ) const;
     /** Returns true if the date/time specified is one at which the event will
-     * recur. Times are rounded down to the nearest minute to determine the result. */
+     * recur. Times are rounded down to the nearest minute to determine the result.
+     * The start date/time returns true only if it actually matches the rule. */
     bool recursAt( const QDateTime & ) const;
     /** Returns true if the date matches the rules. It does not necessarily
         mean that this is an actual occurrence. In particular, the method does
-        not check if the date is after the end date, or if the interval
+        not check if the date is after the end date, or if the frequency interval
         matches */
     bool dateMatchesRules( const QDateTime &qdt ) const;
 
