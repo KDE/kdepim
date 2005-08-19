@@ -1487,8 +1487,8 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
   recur->setFrequency( r.interval );
 
   // Duration & End Date
-  icaltimetype t;
   if ( !icaltime_is_null_time( r.until ) ) {
+    icaltimetype t;
     t = r.until;
     // Convert to the correct time zone! it's in UTC by specification.
     QDateTime endDate( readICalDateTime(t) );
@@ -1701,7 +1701,7 @@ icaldatetimeperiodtype ICalFormatImpl::writeICalDateTimePeriod( const QDateTime 
 
 icaltimetype ICalFormatImpl::writeICalDate(const QDate &date)
 {
-  icaltimetype t;
+  icaltimetype t = icaltime_null_time();
 
   t.year = date.year();
   t.month = date.month();
@@ -1722,7 +1722,7 @@ icaltimetype ICalFormatImpl::writeICalDate(const QDate &date)
 
 icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
 {
-  icaltimetype t;
+  icaltimetype t = icaltime_null_time();
 
   t.year = datetime.date().year();
   t.month = datetime.date().month();
