@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Icon=skype_protocol
+ServiceTypes=KABC/IMProtocol,KPluginInfo
+X-KDE-InstantMessagingKABCField=messaging/skype
+Comment=Skype Internet Telephony
+Name=Skype
