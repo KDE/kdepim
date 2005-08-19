@@ -2107,7 +2107,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
 
 icaltimetype ICalFormatImpl::writeICalDate(const QDate &date)
 {
-  icaltimetype t;
+  icaltimetype t = icaltime_null_time();
 
   t.year = date.year();
   t.month = date.month();
@@ -2128,7 +2128,7 @@ icaltimetype ICalFormatImpl::writeICalDate(const QDate &date)
 
 icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
 {
-  icaltimetype t;
+  icaltimetype t = icaltime_null_time();
 
   t.year = datetime.date().year();
   t.month = datetime.date().month();
