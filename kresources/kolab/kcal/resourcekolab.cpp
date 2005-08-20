@@ -403,7 +403,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   if ( incidence->schedulingID() != incidence->uid() )
     customHeaders.insert( "X-Kolab-SchedulingID", incidence->schedulingID() );
 
-  return kmailUpdate( subresource, sernum, xml, mimetype, incidencebase->uid(), customHeaders );
+  return kmailUpdate( subresource, sernum, xml, mimetype, incidence->schedulingID(), customHeaders );
 }
 
 bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _subresource,

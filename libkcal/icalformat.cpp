@@ -461,15 +461,23 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
     cal->incidenceFromSchedulingID( incidence->uid() );
   if (existingIncidence) {
     // TODO: check, if cast is required, or if it can be done by virtual funcs.
+    bool todoOrEvent = false;
     if (existingIncidence->type() == "Todo") {
       Todo *todo = static_cast<Todo *>(existingIncidence);
       icalcomponent_add_component(calendarComponent,
                                   mImpl->writeTodo(todo));
+      todoOrEvent = true;
     }
     if (existingIncidence->type() == "Event") {
       Event *event = static_cast<Event *>(existingIncidence);
       icalcomponent_add_component(calendarComponent,
                                   mImpl->writeEvent(event));
+      todoOrEvent = true;
+    }
+    if ( todoOrEvent ) {
+        Incidence *inc = static_cast<Incidence*>( incidence );
+        inc->setUid( existingIncidence->uid() );
+        inc->setSchedulingID( existingIncidence->schedulingID() );
     }
   } else {
     calendarComponent = 0;
