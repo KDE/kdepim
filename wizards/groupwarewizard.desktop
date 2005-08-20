@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=KDE Groupware Wizard
+Exec=groupwarewizard
+Type=Application
+Icon=kontact
+Terminal=false
+X-KDE-StartupNotify=true
+Categories=Qt;KDE;Utility;X-KDE-Utilities-PIM;
