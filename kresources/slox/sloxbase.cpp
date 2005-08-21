@@ -66,22 +66,13 @@ static QString mFieldNameMap[][2] =
   // contact fields
   {"lastname", "last_name"},
   {"firstname", "first_name"},
+  {"n/a", "second_name"},
   {"displayname", "displayname"}, // FIXME: what's this in SLOX?
   {"title", "title"},
+  {"n/a", "suffix"},
   {"position", "position"},
-  {"department", "company"},
-  {"phone", "phone_business"},
-  {"phone2", "phone_business2"},
-  {"mobile", "mobile1"},
-  {"mobile2", "mobile1"}, // OX only has two mobile phone fields, the other one is used below
-  {"fax", "fax"},
-  {"fax2", "fax_business"},
-  {"privatephone", "phone_home"},
-  {"privatephone2", "phone_home2"},
-  {"privatemobile", "mobile2"},
-  {"privatemobile2", "mobile2"}, // OX only has two mobile phone fiels, see above
-  {"privatefax", "fax_home"},
-  {"privatefax2", "fax_other"},
+  {"n/a", "company"}, // SLOX handles company separately
+  {"department", "department"},
   {"email", "email1"},
   {"email2", "email2"},
   {"privateemail", "email3"},
@@ -89,7 +80,16 @@ static QString mFieldNameMap[][2] =
   {"birthday", "birthday"},
   {"privateurl", "url"},
   {"comment", "note"},
-  {"n/a", "image1"} // not supported by SLOX
+  {"n/a", "image1"}, // not supported by SLOX
+  {"n/a", "instant_messenger" },
+  {"street", "street"}, // address fields
+  {"zipcode", "postal_code"},
+  {"city", "city"},
+  {"state", "state"},
+  {"country", "country"},
+  {"private", ""}, // address type prefix
+  {"business_", "business_"}, // doesn't work with SLOX
+  {"second_", "second_"},
 };
 
 SloxBase::SloxBase( KRES::Resource * res ) :

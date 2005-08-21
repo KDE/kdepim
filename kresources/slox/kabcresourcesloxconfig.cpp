@@ -33,6 +33,7 @@
 #include <klineedit.h>
 #include <kurlrequester.h>
 
+#include <qcheckbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 
@@ -52,15 +53,19 @@ ResourceSloxConfig::ResourceSloxConfig( QWidget* parent,  const char* name )
   label = new QLabel( i18n( "User:" ), this );
   mUser = new KLineEdit( this );
 
-  mainLayout->addWidget( label, 2, 0 );
-  mainLayout->addWidget( mUser, 2, 1 );
+  mainLayout->addWidget( label, 1, 0 );
+  mainLayout->addWidget( mUser, 1, 1 );
 
   label = new QLabel( i18n( "Password:" ), this );
   mPassword = new KLineEdit( this );
   mPassword->setEchoMode( QLineEdit::Password );
 
-  mainLayout->addWidget( label, 3, 0 );
-  mainLayout->addWidget( mPassword, 3, 1 );
+  mainLayout->addWidget( label, 2, 0 );
+  mainLayout->addWidget( mPassword, 2, 1 );
+
+  mLastSyncCheck = new QCheckBox( i18n("Only load data since last sync"),
+                                  this );
+  mainLayout->addMultiCellWidget( mLastSyncCheck, 3, 3, 0, 1 );
 
   mFolderButton = new KPushButton( i18n("Select Folder..."), this );
   mainLayout->addMultiCellWidget( mFolderButton, 4, 4, 0, 1 );
@@ -84,6 +89,7 @@ void ResourceSloxConfig::loadSettings( KRES::Resource *res )
   mURL->setURL( resource->prefs()->url() );
   mUser->setText( resource->prefs()->user() );
   mPassword->setText( resource->prefs()->password() );
+  mLastSyncCheck->setChecked( resource->prefs()->useLastSync() );
   mFolderId = resource->prefs()->folderId();
 }
 
@@ -99,6 +105,7 @@ void ResourceSloxConfig::saveSettings( KRES::Resource *res )
   resource->prefs()->setUrl( mURL->url() );
   resource->prefs()->setUser( mUser->text() );
   resource->prefs()->setPassword( mPassword->text() );
+  resource->prefs()->setUseLastSync( mLastSyncCheck->isChecked() );
   resource->prefs()->setFolderId( mFolderId );
 }
 

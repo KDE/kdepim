@@ -66,22 +66,13 @@ class KDE_EXPORT SloxBase {
       PercentComplete,
       FamilyName,   // contact fields
       GivenName,
+      SecondName,
       DisplayName,
       Title,
+      Suffix,
       Role,
       Organization,
-      WorkPhone1,
-      WorkPhone2,
-      WorkMobile1,
-      WorkMobile2,
-      WorkFax1,
-      WorkFax2,
-      PrivatePhone1,
-      PrivatePhone2,
-      PrivateMobile1,
-      PrivateMobile2,
-      PrivateFax1,
-      PrivateFax2,
+      Department,
       PrimaryEmail,
       SecondaryEmail1,
       SecondaryEmail2,
@@ -89,7 +80,16 @@ class KDE_EXPORT SloxBase {
       Birthday,
       Url,
       Comment,
-      Image
+      Image,
+      InstantMsg,
+      Street,      // address fields
+      PostalCode,
+      City,
+      State,
+      Country,
+      HomePrefix,  // address type prefixes
+      BusinessPrefix,
+      OtherPrefix
     };
 
     SloxBase( KRES::Resource *res );

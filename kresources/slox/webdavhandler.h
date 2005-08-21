@@ -37,13 +37,16 @@ class SloxBase;
 class KDE_EXPORT SloxItem
 {
   public:
-    enum Status { Invalid, Delete, Create };
+    enum Status { Invalid, Delete, Create, New };
 
     SloxItem();
 
     QDomNode domNode;
     QString sloxId;
+    QString clientId;
     Status status;
+    QString response;
+    QString responseDescription;
 };
 
 class KDE_EXPORT WebdavHandler

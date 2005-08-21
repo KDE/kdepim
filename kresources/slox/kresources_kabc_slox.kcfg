@@ -23,6 +23,9 @@
       <label>Folder ID</label>
       <default></default>
     </entry>
+    <entry type="DateTime" name="LastSync">
+      <label>Last Sync</label>
+    </entry>
   </group>
 
 </kcfg>

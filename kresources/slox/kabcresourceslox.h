@@ -23,8 +23,9 @@
 #include "sloxbase.h"
 #include "webdavhandler.h"
 
-#include <kabc/resource.h>
+#include <libkdepim/kabcresourcecached.h>
 #include <kdepimmacros.h>
+#include <kabc/addressee.h>
 
 #include <qmap.h>
 #include <qdom.h>
@@ -44,7 +45,7 @@ namespace KABC {
 
 class SloxPrefs;
 
-class KDE_EXPORT ResourceSlox : public Resource, public SloxBase
+class KDE_EXPORT ResourceSlox : public ResourceCached, public SloxBase
 {
     Q_OBJECT
   public:
@@ -69,30 +70,42 @@ class KDE_EXPORT ResourceSlox : public Resource, public SloxBase
     bool save( Ticket * );
     bool asyncSave( Ticket * );
 
-    void insertAddressee( const Addressee &addr );
-    void removeAddressee( const Addressee& addr );
-
     void setReadOnly( bool );
     bool readOnly() const;
 
   protected:
     void init();
 
+    int phoneNumberType( const QString &fieldName ) const;
     void parseContactAttribute( const QDomElement &e, Addressee &a );
+
+    void createAddresseeFields( QDomDocument &doc, QDomElement &prop, const Addressee &a );
+    void createAddressFields( QDomDocument &doc, QDomElement &parent,
+                              const QString &prefix, const KABC::Address &addr );
+
+    void uploadContacts();
 
   protected slots:
     void slotResult( KIO::Job *job );
+    void slotUploadResult( KIO::Job *job );
     void slotProgress( KIO::Job *job, unsigned long percent );
 
     void cancelDownload();
+    void cancelUpload();
 
   private:
     SloxPrefs *mPrefs;
 
     KIO::DavJob *mDownloadJob;
-    KPIM::ProgressItem *mProgress;
+    KIO::DavJob *mUploadJob;
+    KPIM::ProgressItem *mDownloadProgress;
+    KPIM::ProgressItem *mUploadProgress;
 
     WebdavHandler mWebdavHandler;
+
+    KABC::Addressee mUploadAddressee;
+
+    QMap<int, QStringList> mPhoneNumberSloxMap, mPhoneNumberOxMap;
 };
 
 }

@@ -23,6 +23,7 @@
 #include <kresources/configwidget.h>
 #include <kdepimmacros.h>
 
+class QCheckBox;
 class KLineEdit;
 class KURLRequester;
 class KPushButton;
@@ -49,6 +50,7 @@ class KDE_EXPORT ResourceSloxConfig : public KRES::ConfigWidget
     KURLRequester *mURL;
     KLineEdit *mUser;
     KLineEdit *mPassword;
+    QCheckBox *mLastSyncCheck;
     KPushButton *mFolderButton;
     QString mFolderId;
     SloxBase *mRes;

@@ -21,7 +21,6 @@
 
 #include <qapplication.h>
 
-#include <kabc/addressee.h>
 #include <kabc/picture.h>
 #include <kconfig.h>
 #include <kdebug.h>
@@ -42,7 +41,7 @@
 using namespace KABC;
 
 ResourceSlox::ResourceSlox( const KConfig *config )
-  : Resource( config ), SloxBase( this )
+  : ResourceCached( config ), SloxBase( this )
 {
   init();
 
@@ -55,7 +54,7 @@ ResourceSlox::ResourceSlox( const KConfig *config )
 
 ResourceSlox::ResourceSlox( const KURL &url,
                             const QString &user, const QString &password )
-  : Resource( 0 ), SloxBase( this )
+  : ResourceCached( 0 ), SloxBase( this )
 {
   init();
 
@@ -72,9 +71,35 @@ void ResourceSlox::init()
   mWebdavHandler.setResource( this );
 
   mDownloadJob = 0;
-  mProgress = 0;
+  mUploadJob = 0;
+  mDownloadProgress = 0;
+  mUploadProgress = 0;
 
-  setReadOnly( true );
+  // phone number mapping for SLOX
+  mPhoneNumberSloxMap[PhoneNumber::Work] << "phone" << "phone2";
+  mPhoneNumberSloxMap[PhoneNumber::Home] << "privatephone" << "privatephone2";
+  mPhoneNumberSloxMap[PhoneNumber::Cell | PhoneNumber::Work] << "mobile" << "mobile2";
+  mPhoneNumberSloxMap[PhoneNumber::Cell | PhoneNumber::Home] << "privatemobile" << "privatemobile2";
+  mPhoneNumberSloxMap[PhoneNumber::Fax | PhoneNumber::Work] << "fax" << "fax2";
+  mPhoneNumberSloxMap[PhoneNumber::Fax | PhoneNumber::Home] << "privatefax" << "privatefax2";
+
+  // phone number mapping for OX (mapping partly taken from Kolab)
+  mPhoneNumberOxMap[PhoneNumber::Work] << "phone_business" << "phone_business2";
+  mPhoneNumberOxMap[PhoneNumber::Home] << "phone_home" << "phone_home2";
+  mPhoneNumberOxMap[PhoneNumber::Cell] << "mobile1"<< "mobile2";
+  mPhoneNumberOxMap[PhoneNumber::Fax | PhoneNumber::Work] << "fax_business";
+  mPhoneNumberOxMap[PhoneNumber::Fax | PhoneNumber::Home] << "fax_home";
+  mPhoneNumberOxMap[PhoneNumber::Fax] << "fax_other";
+  mPhoneNumberOxMap[PhoneNumber::Car] << "phone_car";
+  mPhoneNumberOxMap[PhoneNumber::Isdn] << "isdn";
+  mPhoneNumberOxMap[PhoneNumber::Pager] << "pager";
+  mPhoneNumberOxMap[PhoneNumber::Pref] << "primary";
+  mPhoneNumberOxMap[PhoneNumber::Voice] << "callback";
+  mPhoneNumberOxMap[PhoneNumber::Video] << "radio";
+  mPhoneNumberOxMap[PhoneNumber::Bbs] << "tty_tdd";
+  mPhoneNumberOxMap[PhoneNumber::Modem] << "telex";
+  mPhoneNumberOxMap[PhoneNumber::Pcs] << "phone_assistant";
+  mPhoneNumberOxMap[PhoneNumber::Msg] << "phone_company";
 }
 
 ResourceSlox::~ResourceSlox()
@@ -125,6 +150,8 @@ bool ResourceSlox::doOpen()
 
 void ResourceSlox::doClose()
 {
+  cancelDownload();
+  cancelUpload();
 }
 
 bool ResourceSlox::load()
@@ -149,15 +176,25 @@ bool ResourceSlox::asyncLoad()
     return false;
   }
 
+  loadCache();
+  clearChanges();
+
   KURL url = mPrefs->url();
   url.setPath( "/servlet/webdav.contacts/" );
   url.setUser( mPrefs->user() );
   url.setPass( mPrefs->password() );
 
+  QString lastsync = "0";
+  if ( mPrefs->useLastSync() ) {
+    QDateTime dt = mPrefs->lastSync();
+    if ( dt.isValid() )
+      lastsync = WebdavHandler::qDateTimeToSlox( dt.addDays( -1 ) );
+  }
+
   QDomDocument doc;
   QDomElement root = WebdavHandler::addDavElement( doc, doc, "propfind" );
   QDomElement prop = WebdavHandler::addDavElement( doc, root, "prop" );
-  WebdavHandler::addSloxElement( this, doc, prop, fieldName( LastSync ), "0" );
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( LastSync ), lastsync );
   WebdavHandler::addSloxElement( this, doc, prop, fieldName( FolderId ), mPrefs->folderId() );
   if ( type() == "ox" ) {
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectType ), "NEW_AND_MODIFIED" );
@@ -173,11 +210,13 @@ bool ResourceSlox::asyncLoad()
   connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
            SLOT( slotProgress( KIO::Job *, unsigned long ) ) );
 
-  mProgress = KPIM::ProgressManager::instance()->createProgressItem(
+  mDownloadProgress = KPIM::ProgressManager::instance()->createProgressItem(
       KPIM::ProgressManager::getUniqueID(), i18n("Downloading contacts") );
-  connect( mProgress,
+  connect( mDownloadProgress,
            SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
            SLOT( cancelDownload() ) );
+
+  mPrefs->setLastSync( QDateTime::currentDateTime() );
 
   return true;
 }
@@ -235,13 +274,64 @@ void ResourceSlox::slotResult( KIO::Job *job )
         changed = true;
       }
     }
+
+    clearChanges();
+    saveCache();
   }
 
   mDownloadJob = 0;
-  mProgress->setComplete();
-  mProgress = 0;
+  mDownloadProgress->setComplete();
+  mDownloadProgress = 0;
 
   emit loadingFinished( this );
+}
+
+void ResourceSlox::slotUploadResult( KIO::Job *job )
+{
+  kdDebug() << "ResourceSlox::slotUploadResult()" << endl;
+
+  if ( job->error() ) {
+    job->showErrorDialog( 0 );
+  } else {
+    kdDebug() << "ResourceSlox::slotUploadResult() success" << endl;
+
+    QDomDocument doc = mUploadJob->response();
+    kdDebug() << k_funcinfo << "Upload result: " << endl;
+    kdDebug() << doc.toString() << endl;
+
+    QValueList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
+
+    QValueList<SloxItem>::ConstIterator it;
+    for( it = items.begin(); it != items.end(); ++it ) {
+      SloxItem item = *it;
+      if ( !item.response.contains( "200" ) ) {
+        savingError( this, item.response + "\n" + item.responseDescription );
+        continue;
+      }
+      if ( item.status == SloxItem::New ) {
+        QMap<QString,Addressee>::Iterator search_res;
+        search_res = mAddrMap.find( item.clientId );
+        if ( search_res != mAddrMap.end() ) {
+          // use the id provided by the server
+          Addressee a = *search_res;
+          mAddrMap.remove( search_res );
+          a.setUid( "kresources_slox_kabc_" + item.sloxId );
+          a.setResource( this );
+          a.setChanged( false );
+          mAddrMap.replace( a.uid(), a );
+          saveCache();
+        }
+      }
+    }
+  }
+
+  clearChange( mUploadAddressee );
+
+  mUploadJob = 0;
+  mUploadProgress->setComplete();
+  mUploadProgress = 0;
+
+  uploadContacts();
 }
 
 void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
@@ -249,6 +339,7 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
   QString text = decodeText( e.text() );
   if ( text.isEmpty() ) return;
   QString tag = e.tagName();
+  int pnType = 0;
 
   if ( tag == fieldName( Birthday ) ) {
     QDateTime dt = WebdavHandler::sloxToQDateTime( text );
@@ -261,30 +352,22 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
     a.setTitle( text );
   } else if ( tag == fieldName( Organization ) ) {
     a.setOrganization( text );
+  } else if ( tag == fieldName( Department ) ) {
+    a.insertCustom( "KADDRESSBOOK", "X-Department", text );
   } else if ( tag == fieldName( FamilyName ) ) {
     a.setFamilyName( text );
   } else if ( tag == fieldName( GivenName) ) {
     a.setGivenName( text );
+  } else if ( tag == fieldName( SecondName ) ) {
+    a.setAdditionalName( text );
   } else if ( tag == fieldName( DisplayName ) ) {
     a.setFormattedName( text );
+  } else if ( tag == fieldName( Suffix ) ) {
+    a.setSuffix( text );
   } else if ( tag == fieldName( PrimaryEmail ) ) {
     a.insertEmail( text, true );
-  } else if ( tag == fieldName( WorkPhone1 ) || tag == fieldName( WorkPhone2 ) ) {
-    a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Work ) );
-  } else if ( tag == fieldName( WorkMobile1 ) || tag == fieldName( WorkMobile2 ) ) {
-    a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Cell |
-                                      PhoneNumber:: Work ) );
-  } else if ( tag == fieldName( WorkFax1 ) || tag == fieldName( WorkFax2 ) ) {
-    a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Fax |
-                                      PhoneNumber::Work ) );
-  } else if ( tag == fieldName( PrivatePhone1 ) || tag == fieldName( PrivatePhone2 ) ) {
-    a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Home ) );
-  } else if ( tag == fieldName( PrivateMobile1 ) || tag == fieldName( PrivateMobile2 ) ) {
-    a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Home |
-                                      PhoneNumber::Cell ) );
-  } else if ( tag == fieldName( PrivateFax1 ) || tag == fieldName( PrivateFax2 ) ) {
-    a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Fax |
-                                      PhoneNumber::Home ) );
+  } else if ( (pnType = phoneNumberType( tag )) ) {
+    a.insertPhoneNumber( PhoneNumber( text, pnType ) );
   } else if ( tag == fieldName( Comment ) ) {
     a.setNote( text );
   } else if ( tag == fieldName( SecondaryEmail1 ) || tag == fieldName( SecondaryEmail2 ) ||
@@ -296,34 +379,72 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
     QByteArray decodedPicture;
     KCodecs::base64Decode( text.utf8(), decodedPicture );
     a.setPhoto( Picture( QImage( decodedPicture ) ) );
+  } else if ( tag == fieldName( InstantMsg ) ) {
+    a.insertCustom( "KADDRESSBOOK", "X-IMAddress", text );
   } else if ( type() == "ox" ) { // FIXME: Address reading is missing for SLOX
     // read addresses
     Address addr;
-    if ( tag.startsWith( "business" ) ) {
+    if ( tag.startsWith( fieldName( BusinessPrefix ) ) ) {
       addr = a.address( KABC::Address::Work );
-    } else if ( tag.startsWith( "second" ) ) {
-      addr = a.address( 0 ); // FIXME: other ??
+    } else if ( tag.startsWith( fieldName( OtherPrefix ) ) ) {
+      addr = a.address( 0 );
     } else {
       addr = a.address( KABC::Address::Home );
     }
-    if ( tag.endsWith( "street" ) ) {
+    if ( tag.endsWith( fieldName( Street ) ) ) {
       addr.setStreet( text );
-    } else if ( tag.endsWith( "postal_code" ) ) {
+    } else if ( tag.endsWith( fieldName( PostalCode ) ) ) {
       addr.setPostalCode( text );
-    } else if ( tag.endsWith( "city" ) ) {
+    } else if ( tag.endsWith( fieldName( City ) ) ) {
       addr.setLocality( text );
-    } else if ( tag.endsWith( "state" ) ) {
+    } else if ( tag.endsWith( fieldName( State ) ) ) {
       addr.setRegion( text );
-    } else if ( tag.endsWith( "country" ) ) {
+    } else if ( tag.endsWith( fieldName( Country ) ) ) {
       addr.setCountry( text );
     }
     a.insertAddress( addr );
   }
 }
 
+int ResourceSlox::phoneNumberType( const QString &fieldName ) const
+{
+  QMap<int, QStringList> pnmap;
+  if ( type() == "ox" )
+    pnmap = mPhoneNumberOxMap;
+  else
+    pnmap = mPhoneNumberSloxMap;
+  QMap<int, QStringList>::ConstIterator it;
+  for ( it = pnmap.begin(); it != pnmap.end(); ++it ) {
+    QStringList l = it.data();
+    QStringList::ConstIterator it2;
+    for ( it2 = l.begin(); it2 != l.end(); ++it2 )
+      if ( (*it2) == fieldName )
+        return it.key();
+  }
+  return 0;
+}
+
 bool ResourceSlox::save( Ticket* )
 {
-  return false; // readonly
+  kdDebug() << k_funcinfo << endl;
+
+  if ( readOnly() || !hasChanges() || type() != "ox" ) {
+    emit savingFinished( this );
+    return true;
+  }
+
+  if ( mDownloadJob ) {
+    kdWarning() << k_funcinfo << "download still in progress" << endl;
+    return false;
+  }
+  if ( mUploadJob ) {
+    kdWarning() << k_funcinfo << "upload still in progress" << endl;
+    return false;
+  }
+
+  saveCache();
+  uploadContacts();
+  return true;
 }
 
 bool ResourceSlox::asyncSave( Ticket* )
@@ -331,43 +452,185 @@ bool ResourceSlox::asyncSave( Ticket* )
   return false; // readonly
 }
 
-void ResourceSlox::insertAddressee( const Addressee& addr )
+void ResourceSlox::uploadContacts()
 {
-  Q_UNUSED( addr );
+  QDomDocument doc;
+  QDomElement root = WebdavHandler::addDavElement( doc, doc, "propertyupdate" );
+  QDomElement set = WebdavHandler::addDavElement( doc, root, "set" );
+  QDomElement prop = WebdavHandler::addDavElement( doc, set, "prop" );
+
+  bool isDelete = false;
+
+  KABC::Addressee::List addedAddr = addedAddressees();
+  KABC::Addressee::List changedAddr = changedAddressees();
+  KABC::Addressee::List deletedAddr = deletedAddressees();
+
+  if ( !addedAddr.isEmpty() ) {
+    mUploadAddressee = addedAddr.first();
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ClientId ), mUploadAddressee.uid() );
+  } else if ( !changedAddr.isEmpty() ) {
+    mUploadAddressee = changedAddr.first();
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectId ),
+                                   mUploadAddressee.uid().remove( 0, sizeof("kresources_slox_kabc_") - 1) );
+  } else if ( !deletedAddr.isEmpty() ) {
+    mUploadAddressee = deletedAddr.first();
+    isDelete = true;
+  } else {
+    kdDebug() << k_funcinfo << "Upload finished." << endl;
+    emit savingFinished( this );
+    return;
+  }
+
+  if ( !isDelete ) {
+    createAddresseeFields( doc, prop, mUploadAddressee );
+  } else {
+    QString tmp_uid = mUploadAddressee.uid().remove( 0, sizeof("kresources_slox_kabc_") - 1); // remove prefix from uid
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectId ), tmp_uid );
+    WebdavHandler::addSloxElement( this, doc, prop, "method", "DELETE" );
+  }
+
+  kdDebug() << k_funcinfo << doc.toString() << endl;
+
+  KURL url = mPrefs->url();
+  url.setPath( "/servlet/webdav.contacts/" );
+  url.setUser( mPrefs->user() );
+  url.setPass( mPrefs->password() );
+
+  mUploadJob = KIO::davPropPatch( url, doc, false );
+  connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
+           SLOT( slotUploadResult( KIO::Job * ) ) );
+  connect( mUploadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
+           SLOT( slotProgress( KIO::Job *, unsigned long ) ) );
+
+  mUploadProgress = KPIM::ProgressManager::instance()->createProgressItem(
+      KPIM::ProgressManager::getUniqueID(), i18n("Uploading contacts") );
+  connect( mUploadProgress,
+           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
+           SLOT( cancelUpload() ) );
 }
 
-void ResourceSlox::removeAddressee( const Addressee& addr )
+void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
+                                          const Addressee &a )
 {
-  Q_UNUSED( addr );
+  // choose addressbook
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( FolderId ), mPrefs->folderId() );
+
+  // person
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( GivenName ), a.givenName() );
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( FamilyName ), a.familyName() );
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( Title ), a.title() );
+  if ( !a.birthday().isNull() )
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( Birthday ),
+                                   WebdavHandler::qDateTimeToSlox( a.birthday() ) );
+  else
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( Birthday ) );
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( Role ), a.role() );
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( Department ),
+                                 a.custom( "KADDRESSBOOK", "X-Department" ) );
+  if ( type() == "ox" ) { // OX only fields
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( DisplayName ), a.formattedName() );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( SecondName ), a.additionalName() );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( Suffix ), a.suffix() );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( Organization ), a.organization() );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( InstantMsg ),
+                                   a.custom( "KADDRESSBOOK", "X-IMAddress" ) );
+  }
+
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( Url ), a.url().url() );
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( Comment ), a.note() );
+
+  // emails
+  QStringList email_list = a.emails();
+  QStringList::const_iterator emails_it = email_list.begin();
+  if ( emails_it != email_list.end() )
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( PrimaryEmail ), *(emails_it++) );
+  if ( emails_it != email_list.end() )
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( SecondaryEmail1 ), *(emails_it++) );
+  if ( emails_it != email_list.end() )
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( SecondaryEmail2 ), *(emails_it++) );
+
+  // phone numbers
+  PhoneNumber::List pnlist = a.phoneNumbers();
+  QMap<int, QStringList> pnSaveMap;
+  if ( type() == "ox" )
+    pnSaveMap = mPhoneNumberOxMap;
+  else
+    pnSaveMap = mPhoneNumberSloxMap;
+  for ( PhoneNumber::List::ConstIterator it = pnlist.begin() ; it != pnlist.end(); ++it ) {
+    if ( pnSaveMap.contains( (*it).type() ) ) {
+      QStringList l = pnSaveMap[(*it).type()];
+      QString fn = l.first();
+      l.remove( l.begin() );
+      if ( !l.isEmpty() )
+        pnSaveMap[(*it).type()] = l;
+      else
+        pnSaveMap.remove( (*it).type() );
+      WebdavHandler::addSloxElement( this, doc, prop, fn, (*it).number() );
+    } else
+      kdDebug() << k_funcinfo << "Can't save phone number " << (*it).number() << " of type " << (*it).type() << endl;
+  }
+  // send empty fields for the remaining ohone number fields
+  // it's not possible to delete phone numbers otherwise
+  for ( QMap<int, QStringList>::ConstIterator it = pnSaveMap.begin(); it != pnSaveMap.end(); ++it ) {
+    QStringList l = it.data();
+    for ( QStringList::ConstIterator it2 = l.begin(); it2 != l.end(); ++it2 )
+      WebdavHandler::addSloxElement( this, doc, prop, (*it2) );
+  }
+
+  // write addresses
+  createAddressFields( doc, prop, fieldName( HomePrefix ), a.address( KABC::Address::Home ) );
+  createAddressFields( doc, prop, fieldName( BusinessPrefix ), a.address( KABC::Address::Work ) );
+  createAddressFields( doc, prop, fieldName( OtherPrefix ), a.address( 0 ) );
+}
+
+void KABC::ResourceSlox::createAddressFields( QDomDocument &doc, QDomElement &parent,
+                                               const QString &prefix, const KABC::Address &addr )
+{
+  WebdavHandler::addSloxElement( this, doc, parent, prefix + fieldName( Street ), addr.street() );
+  WebdavHandler::addSloxElement( this, doc, parent, prefix + fieldName( PostalCode ), addr.postalCode() );
+  WebdavHandler::addSloxElement( this, doc, parent, prefix + fieldName( City ), addr.locality() );
+  WebdavHandler::addSloxElement( this, doc, parent, prefix + fieldName( State ), addr.region() );
+  WebdavHandler::addSloxElement( this, doc, parent, prefix + fieldName( Country ), addr.country() );
 }
 
 void ResourceSlox::slotProgress( KIO::Job *job, unsigned long percent )
 {
-#if 0
-  kdDebug() << "PROGRESS: " << int( job ) << ": " << percent << endl;
-#else
-  Q_UNUSED( job );
-  Q_UNUSED( percent );
-#endif
-  if ( mProgress ) mProgress->setProgress( percent );
+  if ( mDownloadProgress && job == mDownloadJob )
+    mDownloadProgress->setProgress( percent );
+  else if ( mUploadProgress && job == mUploadJob )
+    mUploadProgress->setProgress( percent );
 }
 
 void ResourceSlox::cancelDownload()
 {
   if ( mDownloadJob ) mDownloadJob->kill();
   mDownloadJob = 0;
-  if ( mProgress ) mProgress->setComplete();
-  mProgress = 0;
+  if ( mDownloadProgress ) mDownloadProgress->setComplete();
+  mDownloadProgress = 0;
 }
 
-void ResourceSlox::setReadOnly( bool )
+void ResourceSlox::cancelUpload()
 {
-  KRES::Resource::setReadOnly( true );
+  if ( mUploadJob ) mUploadJob->kill();
+  mUploadJob = 0;
+  if ( mUploadProgress ) mUploadProgress->setComplete();
+  mUploadProgress = 0;
+}
+
+void ResourceSlox::setReadOnly( bool b )
+{
+  if ( type() == "ox" )
+    KABC::Resource::setReadOnly( b );
+  else
+    KABC::Resource::setReadOnly( true );
 }
 
 bool ResourceSlox::readOnly() const
 {
-  return true;
+  if ( type() == "ox" )
+    return KABC::Resource::readOnly();
+  else
+    return true;
 }
 
 #include "kabcresourceslox.moc"

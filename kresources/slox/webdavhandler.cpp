@@ -97,6 +97,8 @@ QValueList<SloxItem> WebdavHandler::getSloxItems( SloxBase *res, const QDomDocum
        responseNode = responseNode.nextSibling() ) {
     QDomElement responseElement = responseNode.toElement();
     if ( responseElement.tagName() == "response" ) {
+      SloxItem item;
+
       QDomNode propstat = responseElement.namedItem( "propstat" );
       if ( propstat.isNull() ) {
         kdError() << "Unable to find propstat tag." << endl;
@@ -108,6 +110,7 @@ QValueList<SloxItem> WebdavHandler::getSloxItems( SloxBase *res, const QDomDocum
         kdError() << "Unable to find WebDAV property" << endl;
         continue;
       }
+      item.domNode = prop;
 
       QDomNode sloxIdNode = prop.namedItem( res->fieldName( SloxBase::ObjectId ) );
       if ( sloxIdNode.isNull() ) {
@@ -115,24 +118,39 @@ QValueList<SloxItem> WebdavHandler::getSloxItems( SloxBase *res, const QDomDocum
         continue;
       }
       QDomElement sloxIdElement = sloxIdNode.toElement();
-      QString sloxId = sloxIdElement.text();
+      item.sloxId = sloxIdElement.text();
+
+      QDomNode clientIdNode = prop.namedItem( res->fieldName( SloxBase::ClientId ) );
+      if ( !clientIdNode.isNull() ) {
+        QDomElement clientIdElement = clientIdNode.toElement();
+        item.clientId = clientIdElement.text();
+        if ( item.clientId != item.sloxId )
+          item.status = SloxItem::New;
+      }
 
       QDomNode sloxStatus = prop.namedItem( res->fieldName( SloxBase::ObjectStatus ) );
-      if ( sloxStatus.isNull() ) {
-        kdError() << "Unable to find SLOX status." << endl;
+      if ( !sloxStatus.isNull() ) {
+        QDomElement sloxStatusElement = sloxStatus.toElement();
+        if ( sloxStatusElement.text() == "DELETE" ) {
+          item.status = SloxItem::Delete;
+        } else if ( sloxStatusElement.text() == "CREATE" ) {
+          item.status = SloxItem::Create;
+        }
+      }
+
+      QDomNode status = propstat.namedItem( "status" );
+      if ( status.isNull() ) {
+        kdError() << "Unable to find WebDAV status" << endl;
         continue;
       }
+      item.response = status.toElement().text();
 
-      SloxItem item;
-      item.sloxId = sloxId;
-      item.domNode = prop;
-
-      QDomElement sloxStatusElement = sloxStatus.toElement();
-      if ( sloxStatusElement.text() == "DELETE" ) {
-        item.status = SloxItem::Delete;
-      } else if ( sloxStatusElement.text() == "CREATE" ) {
-        item.status = SloxItem::Create;
+      QDomNode desc = propstat.namedItem( "responsedescription" );
+      if ( desc.isNull() ) {
+        kdError() << "Unable to find WebDAV responsedescription" << endl;
+        continue;
       }
+      item.responseDescription = desc.toElement().text();
 
       items.append( item );
     }
