@@ -16,6 +16,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <cstdlib>
 #include <unistd.h>
 
 #include <qaccel.h>
