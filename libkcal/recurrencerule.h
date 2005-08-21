@@ -33,13 +33,19 @@ template <class T>
 Q_INLINE_TEMPLATES void qSortUnique( QValueList<T> &lst )
 {
   qHeapSort( lst );
+  if ( lst.isEmpty() ) return;
   // Remove all duplicates from the times list
   // TODO: Make this more efficient!
-  T last, newlast;
-  for ( QValueListIterator<T> it = lst.begin(); it != lst.end(); ++it ) {
+  QValueListIterator<T> it = lst.begin();
+  T last = *it++;
+  T newlast;
+  while ( it != lst.end() ) {
     newlast = (*it);
     if ( newlast == last ) it = lst.remove( it );
-    last = newlast;
+    else {
+      last = newlast;
+      ++it;
+    }
   }
 }
 
