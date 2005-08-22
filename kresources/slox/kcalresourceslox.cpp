@@ -776,12 +776,12 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
       monthly2Day = text.toInt();
     } else if ( tag == "monthly2_value_month" ) {
       monthly2ValueMonth = text.toInt();
-    } else if ( tag == "yearly2_recurrency" ) {
+    } else if ( tag == "yearly2_reccurency" ) { // this is not a typo, this is what SLOX really sends!
       yearly2Recurrency = text.toInt();
     } else if ( tag == "yearly2_day" ) {
       yearly2Day = text.toInt();
     } else if ( tag == "yearly2_month" ) {
-      yearly2Month = text.toInt();
+      yearly2Month = text.toInt() + 1;
     // OX recurrence fields
     } else if ( tag == "interval" ) {
       dailyValue = text.toInt();
@@ -799,7 +799,7 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
       monthlyValueDay = text.toInt();
       monthly2Recurrency = text.toInt();
       yearlyValueDay = text.toInt();
-      yearly2Day = text.toInt();
+      yearly2Recurrency = text.toInt();
     } else if ( tag == "month" ) {
       yearlyMonth = text.toInt() + 1; // starts at 0
       yearly2Month = text.toInt() + 1;
@@ -839,8 +839,13 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
     r->addMonthlyPos( monthly2Recurrency, _days );
   } else if ( type == "yearly2" ) {
     r->setYearly( 1 );
-    r->addYearlyDate( yearly2Day );
     r->addYearlyMonth( yearly2Month );
+    QBitArray _days( 7 );
+    if ( daysSet )
+      _days = days;
+    else
+      _days.setBit( ( yearly2Day + 5 ) % 7 );
+    r->addYearlyPos( yearly2Recurrency, _days );
   }
   r->setEndDate( end.date() );
   r->setExDates( deleteExceptions );

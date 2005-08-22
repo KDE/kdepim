@@ -50,7 +50,7 @@ static QString mFieldNameMap[][2] =
   {"monthly2_day", "days"},
   {"monthly2_recurrency", "day_in_month"},
   {"yearly2_day", "days"},
-  {"yearly2_recurrency", "day_in_month"},
+  {"yearly2_reccurency", "day_in_month"}, // this is not a typo, this is what SLOX erally sends!
   {"yearly2_month", "month"},
   {"deleteexceptions", "deleteexceptions"},
   // event fields
