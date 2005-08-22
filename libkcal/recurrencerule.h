@@ -37,7 +37,8 @@ Q_INLINE_TEMPLATES void qSortUnique( QValueList<T> &lst )
   // Remove all duplicates from the times list
   // TODO: Make this more efficient!
   QValueListIterator<T> it = lst.begin();
-  T last = *it++;
+  T last = *it;
+  ++it;
   T newlast;
   while ( it != lst.end() ) {
     newlast = (*it);
