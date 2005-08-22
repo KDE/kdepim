@@ -379,8 +379,23 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
     QByteArray decodedPicture;
     KCodecs::base64Decode( text.utf8(), decodedPicture );
     a.setPhoto( Picture( QImage( decodedPicture ) ) );
+  } else if ( tag == fieldName( NickName ) ) {
+    a.setNickName( text );
   } else if ( tag == fieldName( InstantMsg ) ) {
     a.insertCustom( "KADDRESSBOOK", "X-IMAddress", text );
+  } else if ( tag == fieldName( Office ) ) {
+    a.insertCustom( "KADDRESSBOOK", "X-Office", text );
+  } else if ( tag == fieldName( Profession ) ) {
+    a.insertCustom( "KADDRESSBOOK", "X-Profession", text );
+  } else if ( tag == fieldName( ManagersName ) ) {
+    a.insertCustom( "KADDRESSBOOK", "X-ManagersName", text );
+  } else if ( tag == fieldName( AssistantsName ) ) {
+    a.insertCustom( "KADDRESSBOOK", "X-AssistantsName", text );
+  } else if ( tag == fieldName( SpousesName ) ) {
+    a.insertCustom( "KADDRESSBOOK", "X-SpousesName", text );
+  } else if ( tag == fieldName( Anniversary ) ) {
+    QDateTime dt = WebdavHandler::sloxToQDateTime( text );
+    a.insertCustom( "KADDRESSBOOK", "X-Anniversary", dt.toString( Qt::ISODate ) );
   } else if ( type() == "ox" ) { // FIXME: Address reading is missing for SLOX
     // read addresses
     Address addr;
@@ -532,8 +547,25 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( SecondName ), a.additionalName() );
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( Suffix ), a.suffix() );
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( Organization ), a.organization() );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( NickName ), a.nickName() );
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( InstantMsg ),
                                    a.custom( "KADDRESSBOOK", "X-IMAddress" ) );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( Office ),
+                                   a.custom( "KADDRESSBOOK", "X-Office" ) );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( Profession ),
+                                   a.custom( "KADDRESSBOOK", "X-Profession" ) );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( ManagersName ),
+                                   a.custom( "KADDRESSBOOK", "X-ManagersName" ) );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( AssistantsName ),
+                                   a.custom( "KADDRESSBOOK", "X-AssistantsName" ) );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( SpousesName ),
+                                   a.custom( "KADDRESSBOOK", "X-SpousesName" ) );
+    QString anniversary = a.custom( "KADDRESSBOOK", "X-Anniversary" );
+    if ( !anniversary.isEmpty() )
+      WebdavHandler::addSloxElement( this, doc, prop, fieldName( Anniversary ),
+        WebdavHandler::qDateTimeToSlox( QDateTime::fromString( anniversary, Qt::ISODate ).date() ) );
+    else
+      WebdavHandler::addSloxElement( this, doc, prop, fieldName( Anniversary ) );
   }
 
   WebdavHandler::addSloxElement( this, doc, prop, fieldName( Url ), a.url().url() );
@@ -579,8 +611,10 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
 
   // write addresses
   createAddressFields( doc, prop, fieldName( HomePrefix ), a.address( KABC::Address::Home ) );
-  createAddressFields( doc, prop, fieldName( BusinessPrefix ), a.address( KABC::Address::Work ) );
-  createAddressFields( doc, prop, fieldName( OtherPrefix ), a.address( 0 ) );
+  if ( type() == "ox" ) {
+    createAddressFields( doc, prop, fieldName( BusinessPrefix ), a.address( KABC::Address::Work ) );
+    createAddressFields( doc, prop, fieldName( OtherPrefix ), a.address( 0 ) );
+  }
 }
 
 void KABC::ResourceSlox::createAddressFields( QDomDocument &doc, QDomElement &parent,

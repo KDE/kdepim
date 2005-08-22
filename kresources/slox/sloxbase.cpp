@@ -81,7 +81,14 @@ static QString mFieldNameMap[][2] =
   {"privateurl", "url"},
   {"comment", "note"},
   {"n/a", "image1"}, // not supported by SLOX
-  {"n/a", "instant_messenger" },
+  {"n/a", "instant_messenger"},
+  {"n/a", "room_number"},
+  {"n/a", "profession"},
+  {"n/a", "managers_name"},
+  {"n/a", "assistants_name"},
+  {"n/a", "spouse_name"},
+  {"n/a", "anniversary"},
+  {"n/a", "nickname"},
   {"street", "street"}, // address fields
   {"zipcode", "postal_code"},
   {"city", "city"},

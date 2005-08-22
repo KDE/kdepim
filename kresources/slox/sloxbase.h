@@ -82,6 +82,13 @@ class KDE_EXPORT SloxBase {
       Comment,
       Image,
       InstantMsg,
+      Office,
+      Profession,
+      ManagersName,
+      AssistantsName,
+      SpousesName,
+      Anniversary,
+      NickName,
       Street,      // address fields
       PostalCode,
       City,
