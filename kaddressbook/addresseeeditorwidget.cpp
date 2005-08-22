@@ -573,7 +573,11 @@ void AddresseeEditorWidget::save()
   mAddressee.setRole( mRoleEdit->text() );
   mAddressee.setOrganization( mOrgEdit->text() );
   mAddressee.setUrl( KURL( mURLEdit->text().stripWhiteSpace() ) );
-  mAddressee.insertCustom( "KADDRESSBOOK", "BlogFeed", mBlogEdit->text() );
+  if ( !mBlogEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "BlogFeed", mBlogEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "BlogFeed" );
+
   mAddressee.setNote( mNoteEdit->text() );
   if ( mBirthdayPicker->date().isValid() )
     mAddressee.setBirthday( QDateTime( mBirthdayPicker->date() ) );
