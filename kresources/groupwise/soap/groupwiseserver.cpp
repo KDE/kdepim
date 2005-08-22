@@ -812,15 +812,18 @@ bool GroupwiseServer::acceptIncidence( KCal::Incidence *incidence )
 
   GWConverter conv( mSoap );
 
-  std::string gwUID = incidence->customProperty( "GWRESOURCE", "UID" ).latin1();
+  QString qGwUid = incidence->customProperty( "GWRESOURCE", "UID" );
+  std::string gwUID;
 
-  if ( gwUID.empty() )
+  if ( qGwUid.isEmpty() )
   {
     QString gwRecordIDFromIcal = incidence->nonKDECustomProperty( "X-GWRECORDID" );
     // we need to do a getItem to get the item's complete ID, including the container portion
     // this is only necessary because the Ical GWRECORDID property is incomplete
     gwUID = getFullIDFor( gwRecordIDFromIcal );
   }
+  else
+    gwUID = qGwUid.latin1();
 
   if ( gwUID.empty() )
   {
