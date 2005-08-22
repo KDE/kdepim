@@ -5,5 +5,6 @@ Icon=skype_protocol
 ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/skype
 Comment=Skype Internet Telephony
+Comment[cs]=Internetová telefonie Skype
 Comment[es]=Telefonía por internet con Skype
 Name=Skype
