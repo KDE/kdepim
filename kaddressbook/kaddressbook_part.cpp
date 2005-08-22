@@ -150,6 +150,11 @@ void KAddressbookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
 
   if ( e->activated() )
     mCore->reinitXMLGUI();
+
+  if ( !e->activated() ) {
+    mCore->statusBar()->removeItem( 1 );
+    mCore->statusBar()->removeItem( 2 );
+  }
 }
 
 #include "kaddressbook_part.moc"
