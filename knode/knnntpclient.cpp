@@ -475,11 +475,15 @@ void KNNntpClient::doFetchArticle()
 
   if (!sendCommandWCheck(cmd,220)) {      // 220 n <a> article retrieved - head and body follow
     int code = atoi(getCurrentLine());
-    if ((code == 430) || (code == 423))  // 430 no such article found || 423 no such article number in this group
-      job->setErrorString(
-             errorPrefix + getCurrentLine() +
-             i18n("<br><br>The article you requested is not available on your news server;<br>you could try to get it from <a href=\"http://groups.google.com/groups?q=msgid:%1&ic=1\">groups.google.com</a>.")
-                  .arg(target->messageID()->as7BitString(false)));
+    if ( code == 430 || code == 423 ) { // 430 no such article found || 423 no such article number in this group
+      QString msgId = target->messageID()->as7BitString( false );
+      // strip of '<' and '>'
+      msgId = msgId.mid( 1, msgId.length() - 2 );
+      job->setErrorString( errorPrefix + getCurrentLine() +
+        i18n("<br><br>The article you requested is not available on your news server."
+             "<br>You could try to get it from <a href=\"http://groups.google.com/groups?selm=%1\">groups.google.com</a>.")
+          .arg( msgId ) );
+    }
     return;
   }
 
