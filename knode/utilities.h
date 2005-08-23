@@ -1,8 +1,6 @@
 /*
-    utilities.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -113,7 +111,7 @@ public:
   ~KNLoadHelper();
 
   /** opens a file dialog and returns a file open for reading */
-  KNFile* getFile(QString dialogTitle);
+  KNFile* getFile( const QString &dialogTitle );
   /** tries to access the file specified by the url and returns
       a file open for reading */
   KNFile* setURL(KURL url);

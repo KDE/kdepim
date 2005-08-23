@@ -1,8 +1,6 @@
 /*
-    kncomposer.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -116,17 +114,17 @@ void KNLineEdit::keyPressEvent(QKeyEvent *e)
     if ((e->key() == Key_Enter || e->key() == Key_Return) &&
         !completionBox()->isVisible())
     {
-        composerView->focusNextPrevEdit(this,TRUE);
+        composerView->focusNextPrevEdit( this, true );
       return;
     }
     if (e->key() == Key_Up)
     {
-        composerView->focusNextPrevEdit(this,FALSE); // Go up
+        composerView->focusNextPrevEdit( this, false ); // Go up
       return;
     }
     if (e->key() == Key_Down)
     {
-        composerView->focusNextPrevEdit(this,TRUE); // Go down
+        composerView->focusNextPrevEdit( this, true ); // Go down
       return;
     }
     // ---sven's Return is same Tab and arrow key navigation end ---
@@ -2018,7 +2016,7 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
     {
       deselect();
       m_composerView->focusNextPrevEdit(0, false); //take me up
-      return TRUE;
+      return true;
     }
     // ---sven's Arrow key navigation end ---
 
@@ -2026,7 +2024,7 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
     {
       deselect();
       m_composerView->focusNextPrevEdit(0, false);
-      return TRUE;
+      return true;
     }
   } else if ( e->type() == QEvent::ContextMenu ) {
     QContextMenuEvent *event = (QContextMenuEvent*) e;

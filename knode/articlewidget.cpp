@@ -999,10 +999,10 @@ QString ArticleWidget::writeAttachmentToTempFile( KMime::Content *att, int partN
 
 void ArticleWidget::removeTempFiles( )
 {
-  for ( QStringList::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); it++)
+  for ( QStringList::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it )
     QFile::remove(*it);
   mTempFiles.clear();
-  for ( QStringList::Iterator it = mTempDirs.begin(); it != mTempDirs.end(); it++)
+  for ( QStringList::Iterator it = mTempDirs.begin(); it != mTempDirs.end(); ++it )
     QDir(*it).rmdir(*it);
   mTempDirs.clear();
 }
