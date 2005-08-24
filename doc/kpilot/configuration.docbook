@@ -1268,7 +1268,7 @@ the filename of the text, to search the text for bookmarks. See the
 <ulink
 url="http://reinhold.kainhofer.com/Linux/KPilot/bmkSpecification.txt">
 documentation</ulink>
-for a in depth description of the format of the bmk file.
+for an in-depth description of the bmk file format.
 </para></listitem>
 </varlistentry>
 
@@ -1760,17 +1760,6 @@ that those pieces of mail are <emphasis>really</emphasis> sent.
 </para>
 
 </sect2>
-
-<sect2 id="conduit-null">
-<title>NULL Conduit Setup</title>
-
-<para>
-The NULL conduit is included as a programming example and
-has no practical function whatsoever.
-</para>
-</sect2>
-
 </sect1>
-
 
 </chapter>
