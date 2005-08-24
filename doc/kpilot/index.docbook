@@ -1,23 +1,22 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
-  <!ENTITY kappname "&kpilot;">
-  <!ENTITY kpilotver "4.4.3">
-  <!ENTITY package "kdepim">
-  <!ENTITY USB "<acronym>USB</acronym>">
-  <!ENTITY PalmOne '<trademark class="registered">PalmOne</trademark>'>
-  <!ENTITY Sony '<trademark class="registered">Sony</trademark>'>
-  <!ENTITY Clie "<productname><trademark>Clie</trademark></productname>">
-  <!ENTITY FreeBSD '<trademark class="registered">FreeBSD</trademark>'>
-  <!ENTITY AvantGo '<trademark class="registered">AvantGo</trademark>'>
-  <!ENTITY handheld "&PalmPilot;">
-  <!ENTITY configuring-kpilot SYSTEM "configuration.docbook">
-  <!ENTITY using-kpilot SYSTEM "usage.docbook">
-  <!ENTITY synchronization SYSTEM "sync.docbook">
-  <!ENTITY kpilot-faq SYSTEM "faq.docbook">
-  <!ENTITY % English "INCLUDE" > <!-- Change language ONLY here -->
-  <!ENTITY % addindex "IGNORE">
+<!ENTITY kappname "&kpilot;">
+<!ENTITY kpilotver "4.4.3">
+<!ENTITY package "kdepim">
+<!ENTITY USB "<acronym>USB</acronym>">
+<!ENTITY PalmOne '<trademark class="registered">PalmOne</trademark>'>
+<!ENTITY Sony '<trademark class="registered">Sony</trademark>'>
+<!ENTITY Clie "<productname><trademark>Clie</trademark></productname>">
+<!ENTITY FreeBSD '<trademark class="registered">FreeBSD</trademark>'>
+<!ENTITY AvantGo '<trademark class="registered">AvantGo</trademark>'>
+<!ENTITY handheld "&PalmPilot;">
+<!ENTITY configuring-kpilot SYSTEM "configuration.docbook">
+<!ENTITY using-kpilot SYSTEM "usage.docbook">
+<!ENTITY synchronization SYSTEM "sync.docbook">
+<!ENTITY kpilot-faq SYSTEM "faq.docbook">
+<!ENTITY % English "INCLUDE" ><!-- Change language ONLY here -->
+<!ENTITY % addindex "IGNORE">
 ]>
-
 
 <!--
     From [cw]: This document is nearly finished. I will submit it to the
@@ -84,8 +83,7 @@
 
 <abstract>
 <para>
-&kpilot; &kpilotver;
-is the &kde; version of the Desktop &HotSync; software for
+&kpilot; &kpilotver; is the &kde; version of the Desktop &HotSync; software for
 &PalmOne; handhelds, the &ThreeCom; &PalmPilot; and similar products.
 </para>
 </abstract>
@@ -104,51 +102,28 @@ is the &kde; version of the Desktop &HotSync; software for
 <title>Introduction</title>
 
 <para>
-&kpilot; &kpilotver;
-is an application that
-synchronizes your &PalmPilot; or similar
-device (like the &Handspring; &Visor; or the
-&Sony; &Clie;)
-with your &kde; desktop,
-much like the Palm Desktop &HotSync; software does
-for &Windows;.
-&kpilot; can back-up, restore, and &HotSync;
-your &PalmPilot;.
-It can synchronize the built-in applications
-with their &kde; counterparts.
-It also features additional conduits for
-third-party software.
+&kpilot; &kpilotver; is an application that synchronizes your &PalmPilot; or
+similar device (like the &Handspring; &Visor; or the
+&Sony; &Clie;) with your &kde; desktop, much like the Palm Desktop &HotSync;
+software does for &Windows;. &kpilot; can back-up, restore, and &HotSync; your
+&PalmPilot;. It can synchronize the built-in applications with their &kde;
+counterparts. It also features additional conduits for third-party software.
 </para>
 
 <para>
-There is a web page for &kpilot;: the
-<ulink url="http://www.kpilot.org/">
-Official &kpilot; Home Page
-</ulink>.
-The
-<ulink url="http://pim.kde.org/">
-KDE-PIM website
-</ulink>
-also offers useful information on the subject of
-<acronym>PIM</acronym>
-in general.
-&kpilot; shares the
-kdepim-users mailing list,
-<email>kdepim-users@kde.org</email>.
-See
-<ulink url="http://www.kde.org/mailinglists">
-the mailing lists page</ulink>
-for more information on subscribing and unsubscribing from the list.
+There is a web page for &kpilot;: the <ulink
+url="http://www.kpilot.org/">Official &kpilot; Home Page</ulink>. The <ulink
+url="http://pim.kde.org/">KDE-PIM website</ulink> also offers useful information
+on the subject of <acronym>PIM</acronym> in general. &kpilot; shares the
+kdepim-users mailing list, <email>kdepim-users@kde.org</email>. See <ulink
+url="http://www.kde.org/mailinglists"> the mailing lists page</ulink> for more
+information on subscribing and unsubscribing from the list.
 </para>
 
 <para>
-A word about version numbers:
-&kpilot; 4.4.x is current and still unstable as of June 2004.
-It does not work with KDE versions lower that 3.2.
+A word about version numbers: &kpilot; 4.5.x is current and still unstable as of
+August 2005. It does not work with KDE versions lower than 3.2.
 </para>
-
-
-
 
 
 <sect1 id="trademarks">
@@ -193,27 +168,26 @@ can set up most things for you.
 </para>
 
 <para>
-Once &kpilot; is configured, you should make a <link linkend="backup">backup</link>
-of your &handheld; first. That is to be on the safe side. Once that is done, you
-can just leave the &kpilot; daemon running in the system tray, and all you need to
-do is press the &HotSync; button, and changes in the &handheld; data and the &kde;
-applications will be <link linkend="synchronization">synchronized</link>,
-so that the information matches again on
-both the &handheld; and the desktop.
+Once &kpilot; is configured, you should make a <link
+linkend="backup">backup</link> of your &handheld; first. That is to be on the
+safe side. Once that is done, you can just leave the &kpilot; daemon running in
+the system tray, and all you need to do is press the &HotSync; button, and
+changes in the &handheld; data and the &kde; applications will be <link
+linkend="synchronization">synchronized</link>, so that the information matches
+again on both the &handheld; and the desktop.
 </para>
 
 <para>
 If you want to <link linkend="page-viewers">examine</link> the
-data stored on your &handheld;, the built in
-<link linkend="page-viewers">viewers</link> can be used.
-This allows you to view memos, addresses, &etc;.
-There is a generic hexadecimal database viewer for
+data stored on your &handheld;, the built in <link
+linkend="page-viewers">viewers</link> can be used. This allows you to view
+memos, addresses, &etc;. There is a generic hexadecimal database viewer for
 advanced use.
 </para>
 
 <para>
-Finally, &kpilot; can be used to <link linkend="installer-app">install</link> new programs and databases
-on your &handheld;.
+Finally, &kpilot; can be used to <link linkend="installer-app">install</link>
+new programs and databases on your &handheld;.
 </para>
 
 <caution>
@@ -287,7 +261,8 @@ Jay Summet
 
 <para>
 Documentation copyright 2000,2001 Adriaan de Groot <email>groot@kde.org</email>.
-Documentation copyright 2004 Carlos Leonhard Woelz <email>carloswoelz@imap-mail.com</email>
+Documentation copyright 2004 Carlos Leonhard Woelz
+<email>carloswoelz@imap-mail.com</email>
 </para>
 
 &underFDL;
