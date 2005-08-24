@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>ConfigWizard_base3</class>
 <widget class="QWidget">
     <property name="name">
@@ -12,11 +12,14 @@
             <height>404</height>
         </rect>
     </property>
-    <vbox>
+    <property name="caption">
+        <string>ConfigWizard_base3</string>
+    </property>
+    <grid>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QLabel">
+        <widget class="QLabel" row="0" column="0">
             <property name="name">
                 <cstring>textLabel6</cstring>
             </property>
@@ -29,7 +32,7 @@ Press "Finish" to setup KPilot according to the settings in this configuration W
                 <set>WordBreak|AlignVCenter</set>
             </property>
         </widget>
-        <widget class="QButtonGroup">
+        <widget class="QButtonGroup" row="2" column="0">
             <property name="name">
                 <cstring>fAppType</cstring>
             </property>
@@ -46,6 +49,9 @@ Press "Finish" to setup KPilot according to the settings in this configuration W
                     </property>
                     <property name="text">
                         <string>&amp;KDE-PIM suite (Kontact)</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+K</string>
                     </property>
                     <property name="checked">
                         <bool>true</bool>
@@ -69,7 +75,7 @@ Press "Finish" to setup KPilot according to the settings in this configuration W
                 </widget>
             </vbox>
         </widget>
-        <spacer>
+        <spacer row="3" column="0">
             <property name="name">
                 <cstring>spacer5</cstring>
             </property>
@@ -82,11 +88,31 @@ Press "Finish" to setup KPilot according to the settings in this configuration W
             <property name="sizeHint">
                 <size>
                     <width>20</width>
-                    <height>41</height>
+                    <height>120</height>
                 </size>
             </property>
         </spacer>
-    </vbox>
+        <spacer row="1" column="0">
+            <property name="name">
+                <cstring>spacer5_2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Minimum</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>12</height>
+                </size>
+            </property>
+        </spacer>
+    </grid>
 </widget>
+<tabstops>
+    <tabstop>radioButton6</tabstop>
+</tabstops>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>
