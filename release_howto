@@ -89,6 +89,14 @@ EOF
 
 # Update the version number in "common" and the tagname in "versions"
 
+
+#
+# What about the version number in the following files?
+# ./kmail/kmversion.h:#define KMAIL_VERSION "1.7 (proko2 2.0)"
+# ./kontact/src/main.cpp:static const char version[] = "1.0 (proko2 2.0)";
+# ./korganizer/version.h:static const char korgVersion[] = "3.3 (proko2 branch)";
+# change them manually so far?
+
 ./tag_all
 # tag_all checks out the proko2 branch of kdepim into a temporary tagging directory
 # and then allows to commit - to create the tag.
