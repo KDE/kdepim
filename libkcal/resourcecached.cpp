@@ -284,6 +284,13 @@ void ResourceCached::loadCache()
 
   if ( KStandardDirs::exists( cacheFile() ) ) {
     mCalendar.load( cacheFile() );
+    if ( readOnly() ) {
+      Incidence::List incidences( rawIncidences() );
+      Incidence::List::Iterator it;
+      for ( it = incidences.begin(); it != incidences.end(); ++it ) {
+        (*it)->setReadOnly( true );
+      }
+    }
   }
 }
 
