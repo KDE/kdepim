@@ -329,7 +329,9 @@ PilotRecord *PilotLocalDatabase::readRecordByIndex(int index)
 		kdWarning() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
-	kdDebug() << "Index=" << index << " Count=" << recordCount() << endl;
+#ifdef DEBUG
+	DEBUGKPILOT << "Index=" << index << " Count=" << recordCount() << endl;
+#endif
 	if (index >= recordCount())
 		return 0L;
 	PilotRecord *newRecord = new PilotRecord((*d)[index]);
