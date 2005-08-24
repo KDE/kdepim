@@ -1,9 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KDE Groupware Wizard
+Name[br]=Skoazeller strollant evit KDE
 Name[cs]=Průvodce KDE groupwarem
+Name[da]=KDE Groupware-guide
 Name[es]=Asistente de groupware de KDE
 Name[ga]=Draoi Groupware KDE
+Name[zh_CN]=KDE 群件向导
 Exec=groupwarewizard
 Type=Application
 Icon=kontact
