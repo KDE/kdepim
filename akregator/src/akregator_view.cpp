@@ -248,9 +248,6 @@ View::View( Part *part, QWidget *parent, const char *name)
     m_feedSplitter->setSizes( Settings::splitter1Sizes() );
     m_articleSplitter->setSizes( Settings::splitter2Sizes() );
 
-    m_searchCombo->setCurrentItem(Settings::quickFilter());
-    slotSearchComboChanged(Settings::quickFilter());
-
     switch (Settings::viewMode())
     {
         case CombinedView:
@@ -269,6 +266,9 @@ View::View( Part *part, QWidget *parent, const char *name)
     m_tabs->setTitle(i18n("About"), m_mainTab);
     m_displayingAboutPage = true;
     
+    m_searchCombo->setCurrentItem(Settings::quickFilter());
+    slotSearchComboChanged(Settings::quickFilter());
+
     m_fetchTimer=new QTimer(this);
     connect( m_fetchTimer, SIGNAL(timeout()), this, SLOT(slotDoIntervalFetches()) );
     m_fetchTimer->start(1000*60);
@@ -843,7 +843,7 @@ void View::slotNodeSelected(TreeNode* node)
     
     m_tabs->showPage(m_mainTab);
 
-    slotClearFilter();
+    //slotClearFilter();
 
     if (m_viewMode == CombinedView)
         m_articleViewer->slotShowNode(node);
@@ -1344,11 +1344,8 @@ void View::slotFeedURLDropped(KURL::List &urls, TreeNodeItem* after, FeedGroupIt
 
 void View::slotSearchComboChanged(int index)
 {
-    if (index != Settings::quickFilter())
-    {
-        Settings::setQuickFilter( index );
-        updateSearch();
-    }
+    Settings::setQuickFilter( index );
+    updateSearch();
 }
 
 // from klistviewsearchline
