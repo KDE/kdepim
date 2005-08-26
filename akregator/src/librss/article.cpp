@@ -48,7 +48,7 @@ Article::Article(const Article &other) : d(0)
 	*this = other;
 }
 
-Article::Article(const QDomNode &node, Format format) : d(new Private)
+Article::Article(const QDomNode &node, Format format, Version version) : d(new Private)
 {
 	QString elemText;
 
@@ -99,9 +99,13 @@ Article::Article(const QDomNode &node, Format format) : d(new Private)
 
 	if (format == AtomFeed)
 	{
+		if (version == vAtom_1_0)
+		elemText = extractNode(node, QString::fromLatin1("updated"));
+		else
 		elemText = extractNode(node, QString::fromLatin1("issued"));
-		if (!elemText.isNull())
-			time = parseISO8601Date(elemText); 	
+	
+			if (!elemText.isNull())
+				time = parseISO8601Date(elemText); 	
 	}
 	else 
 	{
