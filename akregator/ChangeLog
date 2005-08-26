@@ -2,6 +2,13 @@ Akregator ChangeLog
 ===================
 (c) 2004, 2005 the Akregator authors.
 
+Changes after 1.1.2
+-----------------------------
+
+Changes: 
+        - unbreak parsing for Atom 1.0 -fo
+        - switch quick filter behaviour back to 3.4.0 style (don√n't reset the filter when switching feeds-fo
+
 Changes after 1.1
 -----------------------------
 
