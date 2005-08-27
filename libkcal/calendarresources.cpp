@@ -413,12 +413,12 @@ Alarm::List CalendarResources::alarmsTo( const QDateTime &to )
   kdDebug(5800) << "CalendarResources::alarmsTo" << endl;
 
   Alarm::List result;
-  CalendarResourceManager::ActiveIterator it;
-  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Alarm::List list = (*it)->alarmsTo( to );
-    Alarm::List::Iterator it;
-    for ( it = list.begin(); it != list.end(); ++it )
-      result.append( *it );
+  CalendarResourceManager::ActiveIterator resit;
+  for ( resit = mManager->activeBegin(); resit != mManager->activeEnd(); ++resit ) {
+    Alarm::List list = (*resit)->alarmsTo( to );
+    Alarm::List::Iterator alarmit;
+    for ( alarmit = list.begin(); alarmit != list.end(); ++alarmit )
+      result.append( *alarmit );
   }
   return result;
 }
@@ -427,12 +427,12 @@ Alarm::List CalendarResources::alarms( const QDateTime &from,
                                        const QDateTime &to )
 {
   Alarm::List result;
-  CalendarResourceManager::ActiveIterator it;
-  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Alarm::List list = (*it)->alarms( from, to );
-    Alarm::List::Iterator it;
-    for ( it = list.begin(); it != list.end(); ++it )
-      result.append( *it );
+  CalendarResourceManager::ActiveIterator resit;
+  for ( resit = mManager->activeBegin(); resit != mManager->activeEnd(); ++resit ) {
+    Alarm::List list = (*resit)->alarms( from, to );
+    Alarm::List::Iterator alarmit;
+    for ( alarmit = list.begin(); alarmit != list.end(); ++alarmit )
+      result.append( *alarmit );
   }
   return result;
 }
