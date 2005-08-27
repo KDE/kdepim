@@ -66,13 +66,11 @@ KNArticleManager::~KNArticleManager()
 
 void KNArticleManager::deleteTempFiles()
 {
-  KTempFile *file;
-
-  while ((file = t_empFiles.first())) {
-    file->unlink();                 // deletes file
-    t_empFiles.removeFirst();
-    delete file;
+  for ( QValueList<KTempFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
+    (*it)->unlink();
+    delete (*it);
   }
+  mTempFiles.clear();
 }
 
 
@@ -125,11 +123,12 @@ QString KNArticleManager::saveContentToTemp(KMime::Content *c)
     bool found=false;
 
     // lets see if the tempfile-path is still valid...
-    for (tmpFile=t_empFiles.first(); tmpFile; tmpFile=t_empFiles.next())
-      if (tmpFile->name()==path) {
+    for ( QValueList<KTempFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
+      if ( (*it)->name() == path ) {
         found = true;
         break;
       }
+    }
 
     if (found)
       return path;
@@ -144,7 +143,7 @@ QString KNArticleManager::saveContentToTemp(KMime::Content *c)
     return QString::null;
   }
 
-  t_empFiles.append(tmpFile);
+  mTempFiles.append(tmpFile);
   QFile *f=tmpFile->file();
   QByteArray data=c->decodedContent();
   f->writeBlock(data.data(), data.size());

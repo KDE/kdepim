@@ -1,8 +1,6 @@
 /*
-    knarticlemanager.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -17,7 +15,7 @@
 #ifndef KNARTICLEMANAGER_H
 #define KNARTICLEMANAGER_H
 
-#include <qptrlist.h>
+#include <qvaluelist.h>
 
 #include "knjobdata.h"
 #include "knarticle.h"
@@ -91,7 +89,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
 
     void rescoreArticles(KNRemoteArticle::List &l);
 
-    // Allow to delay the setup of UI elements, since the knode part may not 
+    // Allow to delay the setup of UI elements, since the knode part may not
     // be available when the config dialog is called
     void setView(KNHeaderView* v);
 
@@ -111,7 +109,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     KNArticleFilter *f_ilter;
     KNFilterManager *f_ilterMgr;
     KNSearchDialog *s_earchDlg;
-    QPtrList<KTempFile> t_empFiles;
+    QValueList<KTempFile*> mTempFiles;
     bool d_isableExpander;
 
   public slots:
