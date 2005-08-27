@@ -526,7 +526,7 @@ int main( int argc, char *argv[] )
    * Set end date for calendar
    */
   if ( args->isSet( "end-date" ) ) {
-    QString option = args->getOption( "end-date" );
+    option = args->getOption( "end-date" );
 
     kdDebug() << "main | parse options | "
               << "End date before conversion: "
