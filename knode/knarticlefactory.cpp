@@ -40,12 +40,13 @@
 KNArticleFactory::KNArticleFactory(QObject *p, const char *n)
   : QObject(p, n), s_endErrDlg(0)
 {
-  c_ompList.setAutoDelete(true);
 }
 
 
 KNArticleFactory::~KNArticleFactory()
 {
+  for ( QValueList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
+    delete (*it);
   delete s_endErrDlg;
 }
 
@@ -64,8 +65,8 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
   art->setDoPost(true);
   art->setDoMail(false);
 
-  KNComposer *c=new KNComposer(art, QString::null, sig, QString::null, true);
-  c_ompList.append(c);
+  KNComposer *c = new KNComposer( art, QString::null, sig, QString::null, true );
+  mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
 }
@@ -94,7 +95,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   art->newsgroups()->fromUnicodeString(g->groupname(), art->defaultCharset());
 
   KNComposer *c=new KNComposer(art, QString::null, sig, QString::null, true);
-  c_ompList.append(c);
+  mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
 }
@@ -264,7 +265,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
 
   //open composer
   KNComposer *c=new KNComposer(art, quoted, sig, notRewraped, true, authorDislikesMailCopies, authorWantsMailCopies);
-  c_ompList.append(c);
+  mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
 }
@@ -349,7 +350,7 @@ void KNArticleFactory::createForward(KNArticle *a)
 
   //open composer
   KNComposer *c=new KNComposer(art, fwd, sig, QString::null, true);
-  c_ompList.append(c);
+  mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
 }
@@ -500,7 +501,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 
   //open composer
   KNComposer *c=new KNComposer(art, text, sig);
-  c_ompList.append(c);
+  mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
 }
@@ -525,7 +526,7 @@ void KNArticleFactory::createMail(KMime::Headers::AddressField *address)
 
   //open composer
   KNComposer *c=new KNComposer(art, QString::null, sig, QString::null, true);
-  c_ompList.append(c);
+  mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
 }
@@ -604,7 +605,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
                                 "following output:<br><br>%1</qt>")
                                 .arg(id->getSigGeneratorStdErr()));
 
-  c_ompList.append(com);
+  mCompList.append( com );
   connect(com, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   com->show();
 }
@@ -682,50 +683,39 @@ void KNArticleFactory::sendOutbox()
 
 bool KNArticleFactory::closeComposeWindows()
 {
-  KNComposer *comp;
-
-  while((comp=c_ompList.first()))
-    if(!comp->close())
+  while ( !mCompList.isEmpty() ) {
+    QValueList<KNComposer*>::Iterator it = mCompList.begin();
+    if ( !(*it)->close() )
       return false;
+  }
 
   return true;
 }
 
 
-void KNArticleFactory::deleteComposersForFolder(KNFolder *f)
-{
-  QPtrList<KNComposer> list=c_ompList;
-
-  for(KNComposer *i=list.first(); i; i=list.next())
-    for(int x=0; x<f->count(); x++)
-      if(i->article()==f->at(x)) {
-        c_ompList.removeRef(i); //auto delete
-        continue;
-      }
-}
-
-
 void KNArticleFactory::deleteComposerForArticle(KNLocalArticle *a)
 {
-  KNComposer *com=findComposer(a);
-  if(com)
-    c_ompList.removeRef(com); //auto delete
+  KNComposer *com = findComposer( a );
+  if ( com ) {
+    mCompList.remove( com );
+    delete com;
+  }
 }
 
 
 KNComposer* KNArticleFactory::findComposer(KNLocalArticle *a)
 {
-  for(KNComposer *i=c_ompList.first(); i; i=c_ompList.next())
-    if(i->article()==a)
-      return i;
+  for ( QValueList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
+    if ( (*it)->article() == a )
+      return (*it);
   return 0;
 }
 
 
 void KNArticleFactory::configChanged()
 {
-  for(KNComposer *c=c_ompList.first(); c; c=c_ompList.next())
-    c->setConfig(false);
+  for ( QValueList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
+    (*it)->setConfig( false );
 }
 
 
@@ -1057,9 +1047,10 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
 
   };
 
-  if(delCom)
-    c_ompList.removeRef(com); //auto delete
-  else
+  if ( delCom ) {
+    mCompList.remove( com );
+    delete com;
+  } else
     KWin::activateWindow(com->winId());
 }
 

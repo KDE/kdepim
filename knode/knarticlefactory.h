@@ -17,7 +17,7 @@
 #ifndef KNARTICLEFACTORY_H
 #define KNARTICLEFACTORY_H
 
-#include <qptrlist.h>
+#include <qvaluelist.h>
 #include <kdialogbase.h>
 
 #include "knjobdata.h"
@@ -67,7 +67,6 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
 
     //composer handling
     bool closeComposeWindows();    // try to close all composers, return false if user objects
-    void deleteComposersForFolder(KNFolder *f);
     void deleteComposerForArticle(KNLocalArticle *a);
     KNComposer* findComposer(KNLocalArticle *a);
     void configChanged();
@@ -86,7 +85,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     //send-errors
     void showSendErrorDialog();
 
-    QPtrList<KNComposer> c_ompList;
+    QValueList<KNComposer*> mCompList;
     KNSendErrorDialog *s_endErrDlg;
 
   protected slots:
