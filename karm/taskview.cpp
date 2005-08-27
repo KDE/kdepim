@@ -221,15 +221,6 @@ void TaskView::itemStateChanged( QListViewItem *item )
   if( _preferences ) _preferences->writeEntry( t->uid(), t->isOpen() );
 }
 
-void TaskView::deleteItemState( QListViewItem *item )
-{
-  if ( !item ) return;
-  Task *t = (Task *)item;
-  kdDebug(5970) << "TaskView:deleteItemState()" 
-    << " uid=" << t->uid() << endl;
-  if( _preferences ) _preferences->deleteEntry( t->uid() );
-}
-
 void TaskView::closeStorage() { _storage->closeStorage( this ); }
 
 void TaskView::iCalFileModified(ResourceCalendar *rc)
@@ -667,9 +658,10 @@ void TaskView::deleteTask(bool markingascomplete)
     }
     else
     {
+      QString uid=task->uid();
       task->remove(activeTasks, _storage);
       task->removeFromView();
-      deleteItemState( task );
+      if( _preferences ) _preferences->deleteEntry( uid ); // forget if the item was expanded or collapsed
       save();
     }
 

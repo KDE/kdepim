@@ -208,8 +208,6 @@ class TaskView : public KListView
     void minuteUpdate();
     /** item state stores if a task is expanded so you can see the subtasks */
     void itemStateChanged( QListViewItem *item );
-    /** item state stores if a task is expanded so you can see the subtasks */
-    void deleteItemState( QListViewItem *item );
     void iCalFileModified(ResourceCalendar *);
 };
 
