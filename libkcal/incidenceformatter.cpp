@@ -150,7 +150,7 @@ static QString linkPerson( const QString& email, QString name,
     mailto.setProtocol( "mailto" );
     mailto.setPath( person.fullName() );
     tmpString += eventViewerAddLink( mailto.url(),
-		"<img src=\"" + iconPath + "\">" );
+                                     "<img src=\"" + iconPath + "\">" );
   }
   tmpString += "</li>\n";
 
@@ -182,15 +182,6 @@ static QString eventViewerFormatAttendees( Incidence *event )
       tmpStr += linkPerson( a->email(), a->name(), a->uid(), iconPath );
     }
     tmpStr += "</ul>";
-  }
-  return tmpStr;
-}
-
-static QString eventViewerFormatReadOnly( Incidence *i )
-{
-  QString tmpStr;
-  if ( i->isReadOnly() ) {
-    tmpStr += eventViewerAddTag( "p", "<em>(" + i18n("read-only") + ")</em>" );
   }
   return tmpStr;
 }
@@ -247,10 +238,50 @@ static QString eventViewerFormatBirthday( Event *event )
   return tmpString;
 }
 
+static QString eventViewerFormatHeader( Incidence *incidence )
+{
+  QString tmpStr = "<table><tr>";
+
+  // show icons
+  {
+    KIconLoader iconLoader;
+
+    tmpStr += "<td>";
+
+    if ( incidence->type() == "Todo" ) {
+      tmpStr += "<img src=\"" +
+                iconLoader.iconPath( "todo", KIcon::Small ) +
+                "\">";
+    }
+    if ( incidence->isAlarmEnabled() ) {
+      tmpStr += "<img src=\"" +
+                iconLoader.iconPath( "bell", KIcon::Small ) +
+                "\">";
+    }
+    if ( incidence->doesRecur() ) {
+      tmpStr += "<img src=\"" +
+                iconLoader.iconPath( "recur", KIcon::Small ) +
+                "\">";
+    }
+    if ( incidence->isReadOnly() ) {
+      tmpStr += "<img src=\"" +
+                iconLoader.iconPath( "readonlyevent", KIcon::Small ) +
+                "\">";
+    }
+
+    tmpStr += "</td>";
+  }
+
+  tmpStr += "<td>" + eventViewerAddTag( "h1", incidence->summary() ) + "</td>";
+  tmpStr += "</tr></table><br>";
+
+  return tmpStr;
+}
+
 static QString eventViewerFormatEvent( Event *event )
 {
   if ( !event ) return QString::null;
-  QString tmpStr( eventViewerAddTag( "h1", event->summary() ) );
+  QString tmpStr = eventViewerFormatHeader( event );
 
   tmpStr += "<table>";
   if ( !event->location().isEmpty() ) {
@@ -263,22 +294,22 @@ static QString eventViewerFormatEvent( Event *event )
   tmpStr += "<tr>";
   if ( event->doesFloat() ) {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td align=\"right\"><b>Time</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
       tmpStr += "<td>" + i18n("<beginTime> - <endTime>","%1 - %2")
                     .arg( event->dtStartDateStr() )
                     .arg( event->dtEndDateStr() ) + "</td>";
     } else {
-      tmpStr += "<td align=\"right\"><b>Date</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Date" ) + "</b></td>";
       tmpStr += "<td>" + i18n("date as string","%1").arg( event->dtStartDateStr() ) + "</td>";
     }
   } else {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td align=\"right\"><b>Time</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
       tmpStr += "<td>" + i18n("<beginTime> - <endTime>","%1 - %2")
                     .arg( event->dtStartStr() )
                     .arg( event->dtEndStr() ) + "</td>";
     } else {
-      tmpStr += "<td align=\"right\"><b>Time</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
       if ( event->hasEndDate() && event->dtStart() != event->dtEnd()) {
         tmpStr += "<td>" + i18n("<beginTime> - <endTime>","%1 - %2")
                       .arg( event->dtStartTimeStr() )
@@ -287,7 +318,7 @@ static QString eventViewerFormatEvent( Event *event )
         tmpStr += "<td>" + event->dtStartTimeStr() + "</td>";
       }
       tmpStr += "</tr><tr>";
-      tmpStr += "<td align=\"right\"><b>Date</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Date" ) + "</b></td>";
       tmpStr += "<td>" + i18n("date as string","%1")
                     .arg( event->dtStartDateStr() ) + "</td>";
     }
@@ -296,7 +327,7 @@ static QString eventViewerFormatEvent( Event *event )
 
   if ( event->customProperty("KABC","BIRTHDAY")== "YES" ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>Birthday</b></td>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Birthday" ) + "</b></td>";
     tmpStr += "<td>" + eventViewerFormatBirthday( event ) + "</td>";
     tmpStr += "</tr>";
     tmpStr += "</table>";
@@ -326,9 +357,9 @@ static QString eventViewerFormatEvent( Event *event )
     tmpStr += "</tr>";
   }
 
-  tmpStr += eventViewerFormatReadOnly( event );
-
+  tmpStr += "<tr><td colspan=\"2\">";
   tmpStr += eventViewerFormatAttendees( event );
+  tmpStr += "</td></tr>";
 
   int attachmentCount = event->attachments().count();
   if ( attachmentCount > 0 ) {
@@ -347,7 +378,7 @@ static QString eventViewerFormatEvent( Event *event )
 static QString eventViewerFormatTodo( Todo *todo )
 {
   if ( !todo ) return QString::null;
-  QString tmpStr( eventViewerAddTag( "h1", todo->summary() ) );
+  QString tmpStr = eventViewerFormatHeader( todo );
 
   if ( !todo->location().isEmpty() ) {
     tmpStr += eventViewerAddTag( "b", i18n("Location:") );
@@ -376,7 +407,6 @@ static QString eventViewerFormatTodo( Todo *todo )
       i18n("This is a recurring to-do. The next occurrence will be on %1.").arg(
       KGlobal::locale()->formatDateTime( dt, true ) ) + "</em>" );
   }
-  tmpStr += eventViewerFormatReadOnly( todo );
   tmpStr += eventViewerFormatAttendees( todo );
   tmpStr += eventViewerFormatAttachments( todo );
   tmpStr += "<p><em>" + i18n( "Creation date: %1.").arg(
@@ -388,8 +418,8 @@ static QString eventViewerFormatJournal( Journal *journal )
 {
   if ( !journal ) return QString::null;
   QString tmpStr;
-	if ( !journal->summary().isEmpty() )
-	  tmpStr+= eventViewerAddTag( "h1", journal->summary() );
+  if ( !journal->summary().isEmpty() )
+    tmpStr+= eventViewerAddTag( "h1", journal->summary() );
   tmpStr += eventViewerAddTag( "h2", i18n("Journal for %1").arg( journal->dtStartDateStr( false ) ) );
   if ( !journal->description().isEmpty() )
     tmpStr += eventViewerAddTag( "p", journal->description() );
@@ -616,7 +646,7 @@ static QString invitationDetailsJournal( Journal *journal )
   }
   QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
   html += invitationRow( i18n( "Summary:" ), sSummary );
-	html += invitationRow( i18n( "Date:" ), journal->dtStartDateStr( false ) );
+  html += invitationRow( i18n( "Date:" ), journal->dtStartDateStr( false ) );
   html += invitationRow( i18n( "Description:" ), sDescr );
   html += "</table>\n";
 
@@ -1721,7 +1751,7 @@ class IncidenceFormatter::MailBodyVisitor : public IncidenceBase::Visitor
 static QString mailBodyIncidence( Incidence *incidence )
 {
   QString body;
-	if ( !incidence->summary().isEmpty() ) {
+  if ( !incidence->summary().isEmpty() ) {
     body += i18n("Summary: %1\n").arg( incidence->summary() );
   }
   if ( !incidence->organizer().isEmpty() ) {
@@ -1811,11 +1841,11 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Journal *journal )
 {
   mResult = mailBodyIncidence( journal );
   mResult += i18n("Date: %1\n").arg( journal->dtStartDateStr() );
-	if ( !journal->doesFloat() ) {
+  if ( !journal->doesFloat() ) {
     mResult += i18n("Time: %1\n").arg( journal->dtStartTimeStr() );
-	}
-	if ( !journal->description().isEmpty() ) 
-	  mResult += i18n("Text of the journal:\n%1\n").arg( journal->description() );
+  }
+  if ( !journal->description().isEmpty() )
+    mResult += i18n("Text of the journal:\n%1\n").arg( journal->description() );
   return !mResult.isEmpty();
 }
 
