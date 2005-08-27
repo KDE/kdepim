@@ -1,8 +1,6 @@
 /*
-    knmemorymanager.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -28,13 +26,15 @@
 KNMemoryManager::KNMemoryManager()
   : c_ollCacheSize(0), a_rtCacheSize(0)
 {
-  c_olList.setAutoDelete(true);
-  a_rtList.setAutoDelete(true);
 }
 
 
 KNMemoryManager::~KNMemoryManager()
 {
+  for ( QValueList<CollectionItem*>::Iterator it = mColList.begin(); it != mColList.end(); ++it )
+    delete (*it);
+  for ( QValueList<ArticleItem*>::Iterator it = mArtList.begin(); it != mArtList.end(); ++it )
+    delete (*it);
 }
 
 
@@ -53,7 +53,7 @@ void KNMemoryManager::updateCacheEntry(KNArticleCollection *c)
     kdDebug(5003) << "KNMemoryManager::updateCacheEntry() : collection (" << c->name() << ") added" << endl;
   }
 
-  c_olList.append(ci);
+  mColList.append(ci);
   c_ollCacheSize += (ci->storageSize - oldSize);
   checkMemoryUsageCollections();
 }
@@ -69,7 +69,7 @@ void KNMemoryManager::removeCacheEntry(KNArticleCollection *c)
     delete ci;
 
     kdDebug(5003) << "KNMemoryManager::removeCacheEntry() : collection removed (" << c->name() << "), "
-                  << c_olList.count() << " collections left in cache" << endl;
+                  << mColList.count() << " collections left in cache" << endl;
   }
 }
 
@@ -99,7 +99,7 @@ void KNMemoryManager::updateCacheEntry(KNArticle *a)
     kdDebug(5003) << "KNMemoryManager::updateCacheEntry() : article added" << endl;
   }
 
-  a_rtList.append(ai);
+  mArtList.append(ai);
   a_rtCacheSize += (ai->storageSize - oldSize);
   checkMemoryUsageArticles();
 }
@@ -114,7 +114,7 @@ void KNMemoryManager::removeCacheEntry(KNArticle *a)
     delete ai;
 
     kdDebug(5003) << "KNMemoryManager::removeCacheEntry() : article removed, "
-                  << a_rtList.count() << " articles left in cache" << endl;
+                  << mArtList.count() << " articles left in cache" << endl;
 
   }
 }
@@ -122,11 +122,11 @@ void KNMemoryManager::removeCacheEntry(KNArticle *a)
 
 KNMemoryManager::CollectionItem* KNMemoryManager::findCacheEntry(KNArticleCollection *c, bool take)
 {
-  for(CollectionItem *i=c_olList.first(); i; i=c_olList.next()) {
-    if(i->col==c) {
-      if(take)
-        c_olList.take();
-      return i;
+  for ( QValueList<CollectionItem*>::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
+    if ( (*it)->col == c ) {
+      if ( take )
+        mColList.remove( it );
+      return (*it);
     }
   }
 
@@ -136,11 +136,11 @@ KNMemoryManager::CollectionItem* KNMemoryManager::findCacheEntry(KNArticleCollec
 
 KNMemoryManager::ArticleItem* KNMemoryManager::findCacheEntry(KNArticle *a, bool take)
 {
-  for(ArticleItem *i=a_rtList.first(); i; i=a_rtList.next()) {
-    if(i->art==a) {
-      if(take)
-        a_rtList.take();
-      return i;
+  for ( QValueList<ArticleItem*>::Iterator it = mArtList.begin(); it != mArtList.end(); ++it ) {
+    if ( (*it)->art == a ) {
+      if ( take )
+        mArtList.remove( it );
+      return (*it);
     }
   }
 
@@ -154,11 +154,15 @@ void KNMemoryManager::checkMemoryUsageCollections()
   KNArticleCollection *c=0;
 
   if (c_ollCacheSize > maxSize) {
-    QPtrList<CollectionItem> tempList(c_olList);  // work on a copy, KNGroup-/Foldermanager will
-                                               // modify the original list
+    QValueList<CollectionItem*> tempList( mColList ); // work on a copy, KNGroup-/Foldermanager will
+                                                      // modify the original list
 
-    for( CollectionItem *ci = tempList.first(); ci && (c_ollCacheSize > maxSize); ci = tempList.next() ) {
-      c=ci->col;
+    for ( QValueList<CollectionItem*>::Iterator it = tempList.begin(); it != tempList.end(); ) {
+      if ( c_ollCacheSize <= maxSize )
+        break;
+      // unloadHeaders() will remove the cache entry and thus invalidate the iterator!
+      c = (*it)->col;
+      ++it;
 
       if (c->type() == KNCollection::CTgroup)
         knGlobals.groupManager()->unloadHeaders(static_cast<KNGroup*>(c), false);   // *try* to unload
@@ -169,7 +173,7 @@ void KNMemoryManager::checkMemoryUsageCollections()
   }
 
   kdDebug(5003) << "KNMemoryManager::checkMemoryUsageCollections() : "
-                << c_olList.count() << " collections in cache => Usage : "
+                << mColList.count() << " collections in cache => Usage : "
                 << ( c_ollCacheSize*100.0 / maxSize ) << "%" << endl;
 }
 
@@ -179,15 +183,21 @@ void KNMemoryManager::checkMemoryUsageArticles()
   int maxSize = knGlobals.configManager()->readNewsGeneral()->artCacheSize() * 1024;
 
   if (a_rtCacheSize > maxSize) {
-    QPtrList<ArticleItem> tempList(a_rtList);  // work on a copy, KNArticlemanager will
-                                            // modify the original list
+    QValueList<ArticleItem*> tempList( mArtList ); // work on a copy, KNArticlemanager will
+                                                   // modify the original list
 
-    for( ArticleItem *ci = tempList.first(); ci && (a_rtCacheSize > maxSize); ci = tempList.next() )
-      knGlobals.articleManager()->unloadArticle(ci->art, false);   // *try* to unload
+    for ( QValueList<ArticleItem*>::Iterator it = mArtList.begin(); it != mArtList.end(); ) {
+      if ( a_rtCacheSize <= maxSize )
+        break;
+      // unloadArticle() will remove the cache entry and thus invalidate the iterator!
+      KNArticle *art = (*it)->art;
+      ++it;
+      knGlobals.articleManager()->unloadArticle( art, false );   // *try* to unload
+    }
   }
 
   kdDebug(5003) << "KNMemoryManager::checkMemoryUsageArticles() : "
-                << a_rtList.count() << " articles in cache => Usage : "
+                << mArtList.count() << " articles in cache => Usage : "
                 << ( a_rtCacheSize*100.0 / maxSize ) << "%" << endl;
 }
 

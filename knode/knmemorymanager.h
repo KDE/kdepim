@@ -1,8 +1,6 @@
 /*
-    knmemorymanager.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -18,7 +16,7 @@
 #define KNMEMORYMANAGER_H
 
 #include <qglobal.h>
-#include <qptrlist.h>
+#include <qvaluelist.h>
 
 class KNArticle;
 class KNArticleCollection;
@@ -67,8 +65,8 @@ class KNMemoryManager {
     void checkMemoryUsageCollections();
     void checkMemoryUsageArticles();
 
-    QPtrList<CollectionItem> c_olList;
-    QPtrList<ArticleItem> a_rtList;
+    QValueList<CollectionItem*> mColList;
+    QValueList<ArticleItem*> mArtList;
     int c_ollCacheSize, a_rtCacheSize;
 };
 
