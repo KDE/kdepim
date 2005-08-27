@@ -1,7 +1,5 @@
 // -*- c-basic-offset: 2 -*-
 /*
-    knarticlewindow.cpp
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -31,16 +29,16 @@
 
 using namespace KNode;
 
-QPtrList<KNArticleWindow> KNArticleWindow::instances;
+QValueList<KNArticleWindow*> KNArticleWindow::mInstances;
 
 
-bool KNArticleWindow::closeAllWindowsForCollection(KNArticleCollection *col, bool force)
+bool KNArticleWindow::closeAllWindowsForCollection( KNArticleCollection *col, bool force )
 {
-  QPtrList<KNArticleWindow> list=instances;
-  for(KNArticleWindow *i=list.first(); i; i=list.next())
-    if(i->artW->article() && i->artW->article()->collection()==col) {
-      if (force)
-        i->close();
+  QValueList<KNArticleWindow*> list = mInstances;
+  for ( QValueList<KNArticleWindow*>::Iterator it = list.begin(); it != list.end(); ++it )
+    if ( (*it)->artW->article() && (*it)->artW->article()->collection() == col ) {
+      if ( force )
+        (*it)->close();
       else
         return false;
     }
@@ -48,13 +46,13 @@ bool KNArticleWindow::closeAllWindowsForCollection(KNArticleCollection *col, boo
 }
 
 
-bool KNArticleWindow::closeAllWindowsForArticle(KNArticle *art, bool force)
+bool KNArticleWindow::closeAllWindowsForArticle( KNArticle *art, bool force )
 {
-  QPtrList<KNArticleWindow> list=instances;
-  for(KNArticleWindow *i=list.first(); i; i=list.next())
-    if(i->artW->article() && i->artW->article() == art) {
-      if (force)
-        i->close();
+  QValueList<KNArticleWindow*> list = mInstances;
+  for ( QValueList<KNArticleWindow*>::Iterator it = list.begin(); it != list.end(); ++it )
+    if ( (*it)->artW->article() && (*it)->artW->article() == art ) {
+      if ( force )
+        (*it)->close();
       else
         return false;
     }
@@ -62,11 +60,11 @@ bool KNArticleWindow::closeAllWindowsForArticle(KNArticle *art, bool force)
 }
 
 
-bool KNArticleWindow::raiseWindowForArticle(KNArticle *art)
+bool KNArticleWindow::raiseWindowForArticle( KNArticle *art )
 {
-  for(KNArticleWindow *i=instances.first(); i; i=instances.next())
-    if(i->artW->article() && i->artW->article() ==art) {
-      KWin::activateWindow(i->winId());
+  for ( QValueList<KNArticleWindow*>::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
+    if ( (*it)->artW->article() && (*it)->artW->article() == art ) {
+      KWin::activateWindow( (*it)->winId() );
       return true;
     }
   return false;
@@ -75,9 +73,9 @@ bool KNArticleWindow::raiseWindowForArticle(KNArticle *art)
 
 bool KNArticleWindow::raiseWindowForArticle(const QCString &mid)
 {
-  for(KNArticleWindow *i=instances.first(); i; i=instances.next())
-    if(i->artW->article() && i->artW->article()->messageID()->as7BitString(false)==mid) {
-      KWin::activateWindow(i->winId());
+  for ( QValueList<KNArticleWindow*>::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
+    if ( (*it)->artW->article() && (*it)->artW->article()->messageID()->as7BitString( false ) == mid ) {
+      KWin::activateWindow( (*it)->winId() );
       return true;
     }
 
@@ -100,7 +98,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
   artW->setArticle(art);
   setCentralWidget(artW);
 
-  instances.append(this);
+  mInstances.append( this );
 
   // file menu
   KStdAction::close( this, SLOT(close()), actionCollection() );
@@ -122,7 +120,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
 
 KNArticleWindow::~KNArticleWindow()
 {
-  instances.removeRef(this);
+  mInstances.remove( this );
   KConfig *conf = knGlobals.config();
   conf->setGroup("articleWindow_options");
   saveMainWindowSettings(conf);
