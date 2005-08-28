@@ -40,7 +40,7 @@ endl
 # wait so FAM and KDirWatcher tell karm and karm refreshes view
 sleep 2
 
-RVAL=`dcop $DCOPID KarmDCOPIface hastodo $TODO_NAME`
+RVAL=`dcop $DCOPID KarmDCOPIface taskIdFromName $TODO_NAME`
 #echo "RVAL = $RVAL"
 
 tear_down
