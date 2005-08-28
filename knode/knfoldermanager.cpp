@@ -1,8 +1,6 @@
 /*
-    knfoldermanager.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -34,8 +32,6 @@
 
 KNFolderManager::KNFolderManager(KNArticleManager *a) : a_rtManager(a)
 {
-  f_List.setAutoDelete(true);
-
   //standard folders
   QString dir(locateLocal("data","knode/")+"folders/");
   if (dir.isNull()) {
@@ -46,19 +42,19 @@ KNFolderManager::KNFolderManager(KNArticleManager *a) : a_rtManager(a)
   KNFolder *f;
 
   f=new KNFolder(0, i18n("Local Folders"), "root");
-  f_List.append(f);
+  mFolderList.append( f );
   f->readInfo();
 
   f=new KNFolder(1, i18n("Drafts"), "drafts", root());
-  f_List.append(f);
+  mFolderList.append( f );
   f->readInfo();
 
   f=new KNFolder(2, i18n("Outbox"), "outbox", root());
-  f_List.append(f);
+  mFolderList.append( f );
   f->readInfo();
 
   f=new KNFolder(3, i18n("Sent"), "sent", root());
-  f_List.append(f);
+  mFolderList.append( f );
   f->readInfo();
 
   l_astId=3;
@@ -72,6 +68,8 @@ KNFolderManager::KNFolderManager(KNArticleManager *a) : a_rtManager(a)
 
 KNFolderManager::~KNFolderManager()
 {
+  for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it )
+    delete (*it);
 }
 
 
@@ -130,10 +128,10 @@ bool KNFolderManager::unloadHeaders(KNFolder *f, bool force)
 
 KNFolder* KNFolderManager::folder(int i)
 {
-  KNFolder *ret=0;
-  for(ret=f_List.first(); ret; ret=f_List.next())
-    if(ret->id()==i) break;
-  return ret;
+  for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it )
+    if ( (*it)->id() == i )
+      return (*it);
+  return 0;
 }
 
 
@@ -142,7 +140,7 @@ KNFolder* KNFolderManager::newFolder(KNFolder *p)
   if (!p)
     p = root();
   KNFolder *f=new KNFolder(++l_astId, i18n("New folder"), p);
-  f_List.append(f);
+  mFolderList.append( f );
   emit folderAdded(f);
   return f;
 }
@@ -153,34 +151,34 @@ bool KNFolderManager::deleteFolder(KNFolder *f)
   if(!f || f->isRootFolder() || f->isStandardFolder() || f->lockedArticles()>0)
     return false;
 
-  QPtrList<KNFolder> del;
-  del.setAutoDelete(false);
-  KNFolder *fol;
+  QValueList<KNFolder*> del;
   KNCollection *p;
 
-  for(fol=f_List.first(); fol; fol=f_List.next()) {
-    p=fol->parent();
-    while(p) {
-      if(p==f) {
-        if(fol->lockedArticles()>0)
+  // find all subfolders of the folder we want to delete
+  for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
+    p = (*it)->parent();
+    while ( p ) {
+      if ( p == f ) {
+        if ( (*it)->lockedArticles() > 0 )
           return false;
-        del.append(fol);
+        del.append( (*it) );
         break;
       }
-      p=p->parent();
+      p = p->parent();
     }
   }
 
   emit folderRemoved(f);
 
   del.append(f);
-  for(fol=del.first(); fol; fol=del.next()) {
-    if(c_urrentFolder==fol)
-      c_urrentFolder=0;
+  for ( QValueList<KNFolder*>::Iterator it = del.begin(); it != del.end(); ++it ) {
+    if ( c_urrentFolder == (*it) )
+      c_urrentFolder = 0;
 
-    if (unloadHeaders(fol, true)) {
-      fol->deleteFiles();
-      f_List.removeRef(fol); // deletes fol
+    if ( unloadHeaders( (*it), true ) ) {
+      (*it)->deleteFiles();
+      mFolderList.remove( (*it) );
+      delete (*it);
     } else
       return false;
   }
@@ -233,10 +231,10 @@ int KNFolderManager::unsentForAccount(int accId)
 {
   int cnt=0;
 
-  for(KNFolder *f=f_List.first(); f; f=f_List.next()) {
-    for(int idx=0; idx < f->length(); idx++) {
-      KNLocalArticle *a=f->at(idx);
-      if(a->serverId()==accId && a->doPost() && !a->posted())
+  for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
+    for ( int idx = 0; idx < (*it)->length(); ++idx ) {
+      KNLocalArticle *a = (*it)->at( idx );
+      if ( a->serverId() == accId && a->doPost() && !a->posted() )
         cnt++;
     }
   }
@@ -257,22 +255,16 @@ void KNFolderManager::compactFolder(KNFolder *f)
 
 void KNFolderManager::compactAll(KNCleanUp *cup)
 {
-  for(KNFolder *f=f_List.first(); f; f=f_List.next()) {
-    if (!f->isRootFolder() && f->lockedArticles()==0)
-      cup->appendCollection(f);
-  }
+  for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it )
+    if ( !(*it)->isRootFolder() && (*it)->lockedArticles() == 0 )
+      cup->appendCollection( (*it) );
 }
 
 
 void KNFolderManager::compactAll()
 {
   KNCleanUp *cup = new KNCleanUp();
-
-  for(KNFolder *f=f_List.first(); f; f=f_List.next()) {
-    if (!f->isRootFolder() && f->lockedArticles()==0)
-      cup->appendCollection(f);
-  }
-
+  compactAll( cup );
   cup->start();
 
   knGlobals.configManager()->cleanup()->setLastCompactDate();
@@ -438,10 +430,10 @@ void KNFolderManager::syncFolders()
   }
 
   //sync
-  for(KNFolder *f=f_List.first(); f; f=f_List.next()) {
-    if (!f->isRootFolder())
-      f->syncIndex();
-    f->saveInfo();
+  for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
+    if ( !(*it)->isRootFolder() )
+      (*it)->syncIndex();
+    (*it)->saveInfo();
   }
 }
 
@@ -464,7 +456,7 @@ int KNFolderManager::loadCustomFolders()
     if(f->readInfo(d.absFilePath(*it))) {
       if(f->id()>l_astId)
         l_astId=f->id();
-      f_List.append(f);
+      mFolderList.append( f );
       cnt++;
     }
     else
@@ -473,14 +465,12 @@ int KNFolderManager::loadCustomFolders()
 
   // set parents
   if(cnt>0) {
-    QPtrList<KNFolder> l(f_List);
-    l.setAutoDelete(false);
-    for(f=l.first(); f; f=l.next()) {
-      if (!f->isRootFolder()) {   // the root folder has no parent
-        KNFolder *par = folder(f->parentId());
-        if (!par)
+    for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
+      if ( !(*it)->isRootFolder() ) {   // the root folder has no parent
+        KNFolder *par = folder( (*it)->parentId() );
+        if ( !par )
           par = root();
-        f->setParent(par);
+        (*it)->setParent( par );
       }
     }
   }
@@ -490,5 +480,3 @@ int KNFolderManager::loadCustomFolders()
 
 
 #include "knfoldermanager.moc"
-
-// kate: space-indent on; indent-width 2;

@@ -1,8 +1,6 @@
 /*
-    knfoldermanager.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -18,7 +16,7 @@
 #define KNFOLDERMANAGER_H
 
 #include <qobject.h>
-#include <qptrlist.h>
+#include <qvaluelist.h>
 
 class KNFolder;
 class KNArticleManager;
@@ -35,16 +33,16 @@ class KNFolderManager : public QObject
 
     //folder access
     void setCurrentFolder(KNFolder *f);
-    KNFolder* currentFolder()const             { return c_urrentFolder; }
-    bool hasCurrentFolder()               { return (c_urrentFolder!=0); }
+    KNFolder* currentFolder() const       { return c_urrentFolder; }
+    bool hasCurrentFolder() const         { return (c_urrentFolder!=0); }
     KNFolder* folder(int id);
-    QPtrList<KNFolder>& folders()         { return f_List; }
+    QValueList<KNFolder*> folders() const { return mFolderList; }
 
     //standard folders
-    KNFolder* root()                     { return f_List.at(0); }
-    KNFolder* drafts()                    { return f_List.at(1); }
-    KNFolder* outbox()                    { return f_List.at(2); }
-    KNFolder* sent()                      { return f_List.at(3); }
+    KNFolder* root() const                { return mFolderList[0]; }
+    KNFolder* drafts() const              { return mFolderList[1]; }
+    KNFolder* outbox() const              { return mFolderList[2]; }
+    KNFolder* sent() const                { return mFolderList[3]; }
 
     //header loading
     bool loadHeaders(KNFolder *f);
@@ -84,7 +82,7 @@ class KNFolderManager : public QObject
     int loadCustomFolders();
 
     KNFolder  *c_urrentFolder;
-    QPtrList<KNFolder> f_List;
+    QValueList<KNFolder*> mFolderList;
     int l_astId;
     KNArticleManager *a_rtManager;
 

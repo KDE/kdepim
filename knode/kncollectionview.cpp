@@ -271,14 +271,14 @@ void KNCollectionView::reloadFolders()
 
 void KNCollectionView::addPendingFolders()
 {
-  QPtrList<KNFolder> folders = knGlobals.folderManager()->folders();
-  for(KNFolder *f = folders.first(); f; f = folders.next())
-    if(!f->listItem())
-      addFolder(f);
+  QValueList<KNFolder*> folders = knGlobals.folderManager()->folders();
+  for ( QValueList<KNFolder*>::Iterator it = folders.begin(); it != folders.end(); ++it )
+    if ( !(*it)->listItem() )
+      addFolder( (*it) );
   // now open the folders if they were open in the last session
-  for(KNFolder *f = folders.first(); f; f = folders.next())
-    if (f->listItem())
-      f->listItem()->setOpen(f->wasOpen());
+  for ( QValueList<KNFolder*>::Iterator it = folders.begin(); it != folders.end(); ++it )
+    if ( (*it)->listItem())
+      (*it)->listItem()->setOpen( (*it)->wasOpen() );
 }
 
 
