@@ -1,8 +1,6 @@
 /*
-    knfiltermanager.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -18,7 +16,7 @@
 #define KNFILTERMANAGER_H
 
 #include <qglobal.h>
-#include <qptrlist.h>
+#include <qvaluelist.h>
 
 #include <kaction.h>
 
@@ -59,14 +57,14 @@ class KNFilterManager : public QObject
   public:
     KNFilterManager(QObject * parent = 0, const char * name = 0);
     ~KNFilterManager();
-    
+
     void readOptions();
     void saveOptions();
 
     void prepareShutdown();
 
     KNArticleFilter* currentFilter()        { return currFilter; }
-      
+
     void startConfig(KNConfig::FilterListWidget *fs);
     void endConfig();
     void commitChanges();
@@ -77,31 +75,31 @@ class KNFilterManager : public QObject
     void deleteFilter(KNArticleFilter *f);
     bool newNameIsOK(KNArticleFilter *f, const QString &newName);
 
-    // Allow to delay the setup of UI elements, since the knode part may not 
+    // Allow to delay the setup of UI elements, since the knode part may not
     // be available when the config dialog is called
     void setMenuAction(KNFilterSelectAction *a, KAction *keybA);
-          
+
   protected:
     void loadFilters();
     void saveFilterLists();
     KNArticleFilter* setFilter(const int id);
     KNArticleFilter* byID(int id);
     void updateMenu();
-    
-    QPtrList<KNArticleFilter> fList;
+
+    QValueList<KNArticleFilter*> mFilterList;
     KNConfig::FilterListWidget *fset;
     KNArticleFilter *currFilter;
     KNFilterSelectAction *a_ctFilter;
-    QValueList<int> menuOrder;  
+    QValueList<int> menuOrder;
     bool commitNeeded;
-  
+
   protected slots:
     void slotMenuActivated(int id);
     void slotShowFilterChooser();
-      
+
   signals:
-    void filterChanged(KNArticleFilter *f);     
-    
+    void filterChanged(KNArticleFilter *f);
+
 };
 
 #endif
