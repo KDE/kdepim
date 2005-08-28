@@ -144,18 +144,16 @@ void KNCollectionView::writeConfig()
 void KNCollectionView::addAccount(KNNntpAccount *a)
 {
   // add account item
-  KNCollectionViewItem* it = new KNCollectionViewItem(this, KFolderTreeItem::News);
-  a->setListItem(it);
-  it->setOpen(a->wasOpen());
+  KNCollectionViewItem* item = new KNCollectionViewItem( this, KFolderTreeItem::News );
+  a->setListItem( item );
+  item->setOpen( a->wasOpen() );
 
   // add groups for this account
-  QPtrList<KNGroup> groups;
-  groups.setAutoDelete(false);
-  knGlobals.groupManager()->getGroupsOfAccount(a, &groups);
-  for(KNGroup *g = groups.first(); g; g = groups.next()) {
-    KNCollectionViewItem *gitem = new KNCollectionViewItem(it, KFolderTreeItem::News);
-    g->setListItem(gitem);
-    g->updateListItem();
+  QValueList<KNGroup*> groups = knGlobals.groupManager()->groupsOfAccount( a );
+  for ( QValueList<KNGroup*>::Iterator it = groups.begin(); it != groups.end(); ++it ) {
+    KNCollectionViewItem *gitem = new KNCollectionViewItem( item, KFolderTreeItem::News );
+    (*it)->setListItem( gitem );
+    (*it)->updateListItem();
   }
 }
 

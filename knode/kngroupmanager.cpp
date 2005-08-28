@@ -1,6 +1,4 @@
 /*
-    kngroupmanager.cpp
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -229,8 +227,6 @@ QSortedList<KNGroupInfo>* KNGroupListData::extractList()
 KNGroupManager::KNGroupManager(QObject * parent, const char * name)
   : QObject(parent,name)
 {
-  g_List=new QPtrList<KNGroup>;
-  g_List->setAutoDelete(true);
   c_urrentGroup=0;
   a_rticleMgr = knGlobals.articleManager();
 }
@@ -238,15 +234,16 @@ KNGroupManager::KNGroupManager(QObject * parent, const char * name)
 
 KNGroupManager::~KNGroupManager()
 {
-  delete g_List;
+  for ( QValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
+    delete (*it);
 }
 
 
 void KNGroupManager::syncGroups()
 {
-  for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
-    var->syncDynamicData();
-    var->saveInfo();
+  for ( QValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
+    (*it)->syncDynamicData();
+    (*it)->saveInfo();
   }
 }
 
@@ -264,7 +261,7 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
   for(QStringList::Iterator it=entries.begin(); it != entries.end(); ++it) {
     group=new KNGroup(a);
     if (group->readInfo(dir+(*it))) {
-      g_List->append(group);
+      mGroupList.append( group );
       emit groupAdded(group);
     } else {
       delete group;
@@ -277,27 +274,19 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
 void KNGroupManager::getSubscribed(KNNntpAccount *a, QStringList &l)
 {
   l.clear();
-  for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
-    if(var->account()==a) l.append(var->groupname());
-  }
+  for ( QValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
+    if ( (*it)->account() == a )
+      l.append( (*it)->groupname() );
 }
 
 
-void KNGroupManager::getGroupsOfAccount(KNNntpAccount *a, QPtrList<KNGroup> *l)
+QValueList<KNGroup*> KNGroupManager::groupsOfAccount( KNNntpAccount *a )
 {
-  l->clear();
-  for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
-    if(var->account()==a) l->append(var);
-  }
-}
-
-
-void KNGroupManager::getAllGroups(QPtrList<KNGroup> *l)
-{
-  l->clear();
-  l->setAutoDelete(false);
-
-  (*l) = (*g_List);
+  QValueList<KNGroup*> ret;
+  for ( QValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
+    if ( (*it)->account() == a )
+      ret.append( (*it) );
+  return ret;
 }
 
 
@@ -343,8 +332,9 @@ bool KNGroupManager::unloadHeaders(KNGroup *g, bool force)
 
 KNGroup* KNGroupManager::group(const QString &gName, const KNServerInfo *s)
 {
-  for(KNGroup *var=g_List->first(); var; var=g_List->next())
-    if(var->account()==s && var->groupname()==gName) return var;
+  for ( QValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
+    if ( (*it)->account() == s && (*it)->groupname() == gName )
+      return (*it);
 
   return 0;
 }
@@ -352,8 +342,9 @@ KNGroup* KNGroupManager::group(const QString &gName, const KNServerInfo *s)
 
 KNGroup* KNGroupManager::firstGroupOfAccount(const KNServerInfo *s)
 {
-  for(KNGroup *var=g_List->first(); var; var=g_List->next())
-    if(var->account()==s) return var;
+  for ( QValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
+    if ( (*it)->account() == s )
+      return (*it);
 
   return 0;
 }
@@ -361,13 +352,12 @@ KNGroup* KNGroupManager::firstGroupOfAccount(const KNServerInfo *s)
 
 void KNGroupManager::expireAll(KNCleanUp *cup)
 {
-  for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
-    if((var->isLocked()) || (var->lockedArticles()>0))
+  for ( QValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
+    if( (*it)->isLocked() || (*it)->lockedArticles() > 0 )
       continue;
-    if (!var->activeCleanupConfig()->expireToday())
+    if ( !(*it)->activeCleanupConfig()->expireToday() )
       continue;
-
-    cup->appendCollection(var);
+    cup->appendCollection( *(it) );
   }
 }
 
@@ -376,23 +366,23 @@ void KNGroupManager::expireAll(KNNntpAccount *a)
 {
   KNCleanUp *cup = new KNCleanUp();
 
-  for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
-    if((var->account()!=a) || (var->isLocked()) || (var->lockedArticles()>0))
+  for ( QValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
+    if( (*it)->account() != a  || (*it)->isLocked() || (*it)->lockedArticles() > 0 )
       continue;
 
-    KNArticleWindow::closeAllWindowsForCollection(var);
-    cup->appendCollection(var);
+    KNArticleWindow::closeAllWindowsForCollection( (*it) );
+    cup->appendCollection( (*it) );
   }
 
   cup->start();
 
-  for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
-    if((var->account()!=a) || (var->isLocked()) || (var->lockedArticles()>0))
+  for ( QValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
+    if( (*it)->account() != a  || (*it)->isLocked() || (*it)->lockedArticles() > 0 )
       continue;
 
-    emit groupUpdated(var);
-    if(var==c_urrentGroup) {
-      if (loadHeaders(var))
+    emit groupUpdated( (*it) );
+    if ( (*it) == c_urrentGroup ) {
+      if ( loadHeaders( (*it) ) )
         a_rticleMgr->showHdrs();
       else
         a_rticleMgr->setGroup(0);
@@ -447,7 +437,7 @@ void KNGroupManager::subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a)
   grp->setDescription(gi->description);
   grp->setStatus(gi->status);
   grp->saveInfo();
-  g_List->append(grp);
+  mGroupList.append( grp );
   emit groupAdded(grp);
 }
 
@@ -490,7 +480,8 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
       kdDebug(5003) << "Files deleted!" << endl;
 
       emit groupRemoved(g);
-      g_List->removeRef(g);
+      mGroupList.remove( g );
+      delete g;
 
       return true;
     }
@@ -579,13 +570,13 @@ void KNGroupManager::checkAll(KNNntpAccount *a, bool silent)
 {
   if(!a) return;
 
-  for(KNGroup *g=g_List->first(); g; g=g_List->next()) {
-    if(g->account()==a) {
-      g->setMaxFetch(knGlobals.configManager()->readNewsGeneral()->maxToFetch());
-      if (silent)
-        emitJob( new KNJobData(KNJobData::JTsilentFetchNewHeaders, this, g->account(), g) );
+  for ( QValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
+    if ( (*it)->account() == a ) {
+      (*it)->setMaxFetch( knGlobals.configManager()->readNewsGeneral()->maxToFetch() );
+      if ( silent )
+        emitJob( new KNJobData(KNJobData::JTsilentFetchNewHeaders, this, (*it)->account(), (*it) ) );
       else
-        emitJob( new KNJobData(KNJobData::JTfetchNewHeaders, this, g->account(), g) );
+        emitJob( new KNJobData(KNJobData::JTfetchNewHeaders, this, (*it)->account(), (*it) ) );
     }
   }
 }
@@ -600,12 +591,12 @@ void KNGroupManager::processJob(KNJobData *j)
       if (j->success()) {
         if ((j->type()==KNJobData::JTFetchGroups)||(j->type()==KNJobData::JTCheckNewGroups)) {
           // update the descriptions of the subscribed groups
-          for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
-            if(var->account()==j->account()) {
-              for (KNGroupInfo* inf = d->groups->first(); inf; inf=d->groups->next())
-                if (inf->name == var->groupname()) {
-                  var->setDescription(inf->description);
-                  var->setStatus(inf->status);
+          for ( QValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
+            if ( (*it)->account() == j->account() ) {
+              for ( KNGroupInfo* inf = d->groups->first(); inf; inf = d->groups->next() )
+                if ( inf->name == (*it)->groupname() ) {
+                  (*it)->setDescription( inf->description );
+                  (*it)->setStatus( inf->status );
                   break;
                 }
             }

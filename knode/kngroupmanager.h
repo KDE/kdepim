@@ -1,8 +1,6 @@
 /*
-    kngroupmanager.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -89,8 +87,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     // group access
     void loadGroups(KNNntpAccount *a);
     void getSubscribed(KNNntpAccount *a, QStringList &l);
-    void getGroupsOfAccount(KNNntpAccount *a, QPtrList<KNGroup> *l);
-    void getAllGroups(QPtrList<KNGroup> *l);
+    QValueList<KNGroup*> groupsOfAccount( KNNntpAccount *a );
 
     bool loadHeaders(KNGroup *g);
     bool unloadHeaders(KNGroup *g, bool force=true);
@@ -110,7 +107,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     void reorganizeGroup(KNGroup *g=0);
 
     void checkGroupForNewHeaders(KNGroup *g=0);
-    void checkAll(KNNntpAccount *a, bool silent=false);    
+    void checkAll(KNNntpAccount *a, bool silent=false);
 
     void expireAll(KNCleanUp *cup);
     void expireAll(KNNntpAccount *a);
@@ -127,7 +124,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
   protected:
     /** reimplemented from @ref KNJobConsumer */
     void processJob(KNJobData *j);
-    QPtrList<KNGroup>  *g_List;
+    QValueList<KNGroup*> mGroupList;
     KNGroup *c_urrentGroup;
     KNArticleManager *a_rticleMgr;
 

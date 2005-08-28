@@ -151,23 +151,20 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
   if(!a) a=c_urrentAccount;
   if(!a) return false;
 
-  QPtrList<KNGroup> *lst;
+  QValueList<KNGroup*> lst;
   if(knGlobals.folderManager()->unsentForAccount(a->id()) > 0) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("This account cannot be deleted since there are some unsent messages for it."));
   }
   else if(KMessageBox::warningContinueCancel(knGlobals.topWidget, i18n("Do you really want to delete this account?"),"",KGuiItem(i18n("&Delete"),"editdelete"))==KMessageBox::Continue) {
-    lst=new QPtrList<KNGroup>;
-    lst->setAutoDelete(false);
-    gManager->getGroupsOfAccount(a, lst);
-    for(KNGroup *g=lst->first(); g; g=lst->next()) {
-      if(g->isLocked()) {
+    lst = gManager->groupsOfAccount( a );
+    for ( QValueList<KNGroup*>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+      if ( (*it)->isLocked() ) {
         KMessageBox::sorry(knGlobals.topWidget, i18n("At least one group of this account is currently in use.\nThe account cannot be deleted at the moment."));
         return false;
       }
     }
-    for(KNGroup *g=lst->first(); g; g=lst->next())
-      gManager->unsubscribeGroup(g);
-    delete lst;
+    for ( QValueList<KNGroup*>::Iterator it = lst.begin(); it != lst.end(); ++it )
+      gManager->unsubscribeGroup( (*it) );
 
     QDir dir(a->path());
     if (dir.exists()) {
