@@ -1,8 +1,6 @@
 /*
-    kncleanup.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -37,7 +35,7 @@ class KNCleanUp {
     KNCleanUp();
     ~KNCleanUp();
 
-    void appendCollection(KNArticleCollection *c)   { c_olList.append(c); }
+    void appendCollection(KNArticleCollection *c)   { mColList.append( c ); }
     void start();
     void reset();
 
@@ -65,7 +63,7 @@ class KNCleanUp {
     };
 
     ProgressDialog *d_lg;
-    QPtrList<KNArticleCollection> c_olList;
+    QValueList<KNArticleCollection*> mColList;
 
 };
 

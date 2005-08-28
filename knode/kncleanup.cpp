@@ -1,8 +1,6 @@
 /*
-    kncleanup.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -39,7 +37,6 @@
 
 KNCleanUp::KNCleanUp() :  d_lg(0)
 {
-  c_olList.setAutoDelete(false);
 }
 
 
@@ -51,23 +48,23 @@ KNCleanUp::~KNCleanUp()
 
 void KNCleanUp::start()
 {
-  if (c_olList.isEmpty())
+  if ( mColList.isEmpty() )
     return;
 
-  d_lg=new ProgressDialog(c_olList.count());
+  d_lg = new ProgressDialog( mColList.count() );
   d_lg->show();
 
-  for(KNArticleCollection *c=c_olList.first(); c; c=c_olList.next()) {
-    if(c->type()==KNCollection::CTgroup) {
-      d_lg->showMessage(i18n("Deleting expired articles in <b>%1</b>").arg(c->name()));
+  for ( QValueList<KNArticleCollection*>::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
+    if ( (*it)->type() == KNCollection::CTgroup ) {
+      d_lg->showMessage( i18n("Deleting expired articles in <b>%1</b>").arg( (*it)->name() ) );
       kapp->processEvents();
-      expireGroup(static_cast<KNGroup*>(c));
+      expireGroup( static_cast<KNGroup*>( (*it) ) );
       d_lg->doProgress();
     }
-    else if(c->type()==KNCollection::CTfolder) {
-      d_lg->showMessage(i18n("Compacting folder <b>%1</b>").arg(c->name()));
+    else if ( (*it)->type() == KNCollection::CTfolder ) {
+      d_lg->showMessage( i18n("Compacting folder <b>%1</b>").arg( (*it)->name() ) );
       kapp->processEvents();
-      compactFolder(static_cast<KNFolder*>(c));
+      compactFolder( static_cast<KNFolder*>( (*it) ) );
       d_lg->doProgress();
     }
   }
@@ -79,7 +76,7 @@ void KNCleanUp::start()
 
 void KNCleanUp::reset()
 {
-  c_olList.clear();
+  mColList.clear();
   if(d_lg) {
     delete d_lg;
     d_lg=0;
