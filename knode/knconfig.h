@@ -334,13 +334,9 @@ class KDE_EXPORT ReadNewsViewer : public Base {
 };
 
 
-class KDE_EXPORT DisplayedHeaders : public Base {
-
-  friend class DisplayedHeadersWidget;
-
+class KDE_EXPORT DisplayedHeaders : public Base
+{
   public:
-    typedef QPtrListIterator<KNDisplayedHeader> Iterator;
-
     DisplayedHeaders();
     ~DisplayedHeaders();
 
@@ -351,11 +347,11 @@ class KDE_EXPORT DisplayedHeaders : public Base {
     void up(KNDisplayedHeader *h);
     void down(KNDisplayedHeader *h);
 
-    Iterator iterator()   { return Iterator(h_drList); }
+    QValueList<KNDisplayedHeader*> headers() const { return mHeaderList; }
 
 
   protected:
-    QPtrList<KNDisplayedHeader> h_drList;
+    QValueList<KNDisplayedHeader*> mHeaderList;
 
 };
 

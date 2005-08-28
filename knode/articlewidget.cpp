@@ -562,10 +562,9 @@ void ArticleWidget::displayHeader()
 
   // standard & fancy header style
   KMime::Headers::Base *hb;
-  KNDisplayedHeader *dh;
-  KNConfig::DisplayedHeaders::Iterator it = knGlobals.configManager()->displayedHeaders()->iterator();
-  for ( ; it.current(); ++it) {
-    dh = it.current();
+  QValueList<KNDisplayedHeader*> dhs = knGlobals.configManager()->displayedHeaders()->headers();
+  for ( QValueList<KNDisplayedHeader*>::Iterator it = dhs.begin(); it != dhs.end(); ++it ) {
+    KNDisplayedHeader *dh = (*it);
     hb = mArticle->getHeaderByType(dh->header().latin1());
     if ( !hb || hb->is("Subject") || hb->is("Organization") )
       continue;

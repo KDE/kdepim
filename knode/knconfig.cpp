@@ -695,8 +695,6 @@ void KNConfig::ReadNewsViewer::save()
 
 KNConfig::DisplayedHeaders::DisplayedHeaders()
 {
-  h_drList.setAutoDelete(true);
-
   QString fname( locate("data","knode/headers.rc") );
 
   if (!fname.isNull()) {
@@ -732,6 +730,8 @@ KNConfig::DisplayedHeaders::DisplayedHeaders()
 
 KNConfig::DisplayedHeaders::~DisplayedHeaders()
 {
+  for ( QValueList<KNDisplayedHeader*>::Iterator it = mHeaderList.begin(); it != mHeaderList.end(); ++it )
+    delete (*it);
 }
 
 
@@ -758,7 +758,7 @@ void KNConfig::DisplayedHeaders::save()
   int idx=0;
   QString group;
 
-  for(Iterator it(h_drList); it.current(); ++it) {
+  for ( QValueList<KNDisplayedHeader*>::Iterator it = mHeaderList.begin(); it != mHeaderList.end(); ++it ) {
     group.setNum(idx++);
     while (group.length()<3)
       group.prepend("0");
@@ -783,7 +783,7 @@ void KNConfig::DisplayedHeaders::save()
 KNDisplayedHeader* KNConfig::DisplayedHeaders::createNewHeader()
 {
   KNDisplayedHeader *h=new KNDisplayedHeader();
-  h_drList.append(h);
+  mHeaderList.append( h );
 
   return h;
 }
@@ -791,7 +791,7 @@ KNDisplayedHeader* KNConfig::DisplayedHeaders::createNewHeader()
 
 void KNConfig::DisplayedHeaders::remove(KNDisplayedHeader *h)
 {
-  if (!h_drList.remove(h))
+  if ( !mHeaderList.remove( h ) )
     kdDebug(5003) << "KNConfig::DisplayedHeaders::remove() : cannot find pointer in list!" << endl;
 
 }
@@ -799,10 +799,10 @@ void KNConfig::DisplayedHeaders::remove(KNDisplayedHeader *h)
 
 void KNConfig::DisplayedHeaders::up(KNDisplayedHeader *h)
 {
-  int idx=h_drList.findRef(h);
-  if(idx!=-1) {
-    h_drList.take(idx);
-    h_drList.insert(idx-1, h);
+  int idx = mHeaderList.findIndex( h );
+  if ( idx != -1 ) {
+    mHeaderList.remove( mHeaderList.at( idx ) );
+    mHeaderList.insert( mHeaderList.at( idx - 1 ), h );
   }
   else kdDebug(5003) << "KNConfig::DisplayedHeaders::up() : item not found in list" << endl;
 }
@@ -810,10 +810,10 @@ void KNConfig::DisplayedHeaders::up(KNDisplayedHeader *h)
 
 void KNConfig::DisplayedHeaders::down(KNDisplayedHeader *h)
 {
-  int idx=h_drList.findRef(h);
-  if(idx!=-1) {
-    h_drList.take(idx);
-    h_drList.insert(idx+1, h);
+  int idx = mHeaderList.findIndex( h );
+  if ( idx != -1 ) {
+    mHeaderList.remove( mHeaderList.at( idx ) );
+    mHeaderList.insert( mHeaderList.at( idx + 1 ), h );
   }
   else kdDebug(5003) << "KNConfig::DisplayedHeaders::down() : item not found in list" << endl;
 }

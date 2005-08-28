@@ -1353,8 +1353,9 @@ KNConfig::DisplayedHeadersWidget::~DisplayedHeadersWidget()
 void KNConfig::DisplayedHeadersWidget::load()
 {
   l_box->clear();
-  for(KNDisplayedHeader *h = d_ata->h_drList.first(); h; h = d_ata->h_drList.next())
-    l_box->insertItem(generateItem(h));
+  QValueList<KNDisplayedHeader*> list = d_ata->headers();
+  for ( QValueList<KNDisplayedHeader*>::Iterator it = list.begin(); it != list.end(); ++it )
+    l_box->insertItem( generateItem( (*it) ) );
 }
 
 void KNConfig::DisplayedHeadersWidget::save()
