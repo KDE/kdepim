@@ -1,8 +1,6 @@
 /*
-    knarticlefactory.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -62,7 +60,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
 
     //article handling
     void edit(KNLocalArticle *a);
-    void sendArticles(KNLocalArticle::List *l, bool now=true);
+    void sendArticles( KNLocalArticle::List &l, bool now = true );
     void sendOutbox();
 
     //composer handling

@@ -1,6 +1,4 @@
 /*
-    knfolder.cpp
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -363,7 +361,7 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
 }
 
 
-bool KNFolder::saveArticles(KNLocalArticle::List *l)
+bool KNFolder::saveArticles( KNLocalArticle::List &l )
 {
   if(!isLoaded())  // loading should not be done here - keep the StorageManager in sync !!
     return false;
@@ -380,63 +378,63 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
   QTextStream ts(&m_boxFile);
   ts.setEncoding(QTextStream::Latin1);
 
-  for(KNLocalArticle *a=l->first(); a; a=l->next()) {
+  for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
 
     clear=false;
-    if(a->id()==-1 || a->collection()!=this) {
-      if(a->id()!=-1) {
-        KNFolder *oldFolder=static_cast<KNFolder*>(a->collection());
-        if(!a->hasContent())
-          if( !( clear=oldFolder->loadArticle(a) ) ) {
-            ret=false;
+    if ( (*it)->id() == -1 || (*it)->collection() != this ) {
+      if ( (*it)->id() != -1 ) {
+        KNFolder *oldFolder = static_cast<KNFolder*>( (*it)->collection() );
+        if ( !(*it)->hasContent() )
+          if( !( clear = oldFolder->loadArticle( (*it) ) ) ) {
+            ret = false;
             continue;
           }
 
         KNLocalArticle::List l;
-        l.append(a);
-        oldFolder->removeArticles(&l, false);
+        l.append( (*it) );
+        oldFolder->removeArticles( l, false );
       }
-      if(!append(a)) {
+      if ( !append( (*it) ) ) {
         kdError(5003) << "KNFolder::saveArticle(KNLocalArticle::List *l) : cannot append article!" << endl;
-        ret=false;
+        ret = false;
         continue;
-        a->setCollection(0);
+        (*it)->setCollection(0);
       }
       else {
-        a->setCollection(this);
+        (*it)->setCollection(this);
         addCnt++;
       }
     }
 
-    if(byId(a->id())==a) {
+    if ( byId( (*it)->id() ) == (*it) ) {
 
       //MBox
       ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
-      a->setStartOffset(m_boxFile.at()); //save offset
+      (*it)->setStartOffset(m_boxFile.at()); //save offset
 
       //write overview information
       ts << "X-KNode-Overview: ";
-      ts << a->subject()->as7BitString(false) << '\t';
+      ts << (*it)->subject()->as7BitString(false) << '\t';
 
       KMime::Headers::Base* h;
-      if( (h=a->newsgroups(false))!=0 )
+      if( ( h = (*it)->newsgroups( false ) ) !=0 )
         ts << h->as7BitString(false);
       ts << '\t';
 
-      if( (h=a->to(false))!=0 )
+      if( (h = (*it)->to( false ) ) != 0 )
         ts << h->as7BitString(false);
       ts << '\t';
 
-      ts << a->lines()->as7BitString(false) << '\n';
+      ts << (*it)->lines()->as7BitString(false) << '\n';
 
       //write article
-      a->toStream(ts);
+      (*it)->toStream( ts );
       ts << "\n";
 
-      a->setEndOffset(m_boxFile.at()); //save offset
+      (*it)->setEndOffset( m_boxFile.at() ); //save offset
 
       //update
-      ArticleWidget::articleChanged( a );
+      ArticleWidget::articleChanged( (*it) );
       i_ndexDirty=true;
 
     }
@@ -445,8 +443,8 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
       ret=false;
     }
 
-    if(clear)
-      a->KMime::Content::clear();
+    if ( clear )
+      (*it)->KMime::Content::clear();
   }
 
   closeFiles();
@@ -462,24 +460,23 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
 }
 
 
-void KNFolder::removeArticles(KNLocalArticle::List *l, bool del)
+void KNFolder::removeArticles( KNLocalArticle::List &l, bool del )
 {
-  if(!isLoaded() || l->isEmpty())
+  if( !isLoaded() || l.isEmpty() )
     return;
 
-  int idx=0, delCnt=0, *positions;
-  positions=new int[l->count()];
-  KNLocalArticle *a=0;
+  int idx = 0, delCnt = 0, *positions;
+  positions = new int[l.count()];
+  KNLocalArticle *a = 0;
 
-  for(a=l->first(); a; a=l->next()) {
-    idx=l->at();
-    if(a->isLocked())
-      positions[idx]=-1;
+  for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it, ++idx ) {
+    if ( (*it)->isLocked() )
+      positions[idx] = -1;
     else
-      positions[idx]=a_rticles.indexForId(a->id());
+      positions[idx] = a_rticles.indexForId( (*it)->id() );
   }
 
-  for(idx=0; idx < (int)(l->count()); idx++) {
+  for ( idx = 0; idx < (int)(l.count()); ++idx ) {
     if(positions[idx]==-1)
       continue;
 

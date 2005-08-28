@@ -1,8 +1,6 @@
 /*
-    knarticlefilter.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -256,20 +254,20 @@ void KNArticleFilter::doFilter(KNGroup *g)
     // try to merge orphant threads by subject
     KNRemoteArticle::List same_subjects;
     QString s;
-    for(art=orphant_threads.first(); art; art=orphant_threads.next()) {
-      if(art->displayedReference()) // already processed
+    for ( KNRemoteArticle::List::Iterator it = orphant_threads.begin(); it != orphant_threads.end(); ++it ) {
+      if ( (*it)->displayedReference() ) // already processed
         continue;
 
-      s=art->subject()->asUnicodeString();
+      s = (*it)->subject()->asUnicodeString();
       same_subjects.clear();
-      for(QPtrListIterator<KNRemoteArticle> it(orphant_threads); it.current(); ++it) {
-        if(it.current()!=art && it.current()->subject()->asUnicodeString()==s)
-          same_subjects.append(it.current());
+      for ( KNRemoteArticle::List::Iterator it2 = orphant_threads.begin(); it2 != orphant_threads.end(); ++it2 ) {
+        if ( (*it2) != (*it) && (*it2)->subject()->asUnicodeString() == s )
+          same_subjects.append( (*it2) );
       }
 
-      art->setVisibleFollowUps( art->hasVisibleFollowUps() || (same_subjects.count()>0) );
-      for(QPtrListIterator<KNRemoteArticle> it(same_subjects); it.current(); ++it) {
-        it.current()->setDisplayedReference(art);
+      (*it)->setVisibleFollowUps( (*it)->hasVisibleFollowUps() || same_subjects.count() > 0 );
+      for ( KNRemoteArticle::List::Iterator it2 = same_subjects.begin(); it2 != same_subjects.end(); ++it2 ) {
+        (*it2)->setDisplayedReference( (*it) );
         mergeCnt++;
       }
     }

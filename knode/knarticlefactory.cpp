@@ -1,8 +1,6 @@
 /*
-    knarticlefactory.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -429,7 +427,7 @@ void KNArticleFactory::createCancel(KNArticle *a)
   //send
   KNLocalArticle::List lst;
   lst.append(art);
-  sendArticles(&lst, sendNow);
+  sendArticles( lst, sendNow );
 }
 
 
@@ -611,23 +609,23 @@ void KNArticleFactory::edit(KNLocalArticle *a)
 }
 
 
-void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
+void KNArticleFactory::sendArticles( KNLocalArticle::List &l, bool now )
 {
   KNJobData *job=0;
   KNServerInfo *ser=0;
 
   KNLocalArticle::List unsent, sent;
-  for(KNLocalArticle *a=l->first(); a; a=l->next()) {
-    if(a->pending())
-      unsent.append(a);
+  for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
+    if ( (*it)->pending() )
+      unsent.append( (*it) );
     else
-      sent.append(a);
+      sent.append( (*it) );
   }
 
   if(!sent.isEmpty()) {
     showSendErrorDialog();
-    for(KNLocalArticle *a=sent.first(); a; a=sent.next())
-      s_endErrDlg->append(a->subject()->asUnicodeString(), i18n("Article has already been sent."));
+    for ( KNLocalArticle::List::Iterator it = sent.begin(); it != sent.end(); ++it )
+      s_endErrDlg->append( (*it)->subject()->asUnicodeString(), i18n("Article has already been sent.") );
   }
 
   if(!now) {
@@ -636,27 +634,27 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
   }
 
 
-  for(KNLocalArticle *a=unsent.first(); a; a=unsent.next()) {
+  for ( KNLocalArticle::List::Iterator it = unsent.begin(); it != unsent.end(); ++it ) {
 
-    if(a->isLocked())
+    if ( (*it)->isLocked() )
       continue;
 
-    if(!a->hasContent()) {
-      if(!knGlobals.articleManager()->loadArticle(a)) {
+    if ( !(*it)->hasContent() ) {
+      if ( !knGlobals.articleManager()->loadArticle( (*it) ) ) {
         showSendErrorDialog();
-        s_endErrDlg->append(a->subject()->asUnicodeString(), i18n("Unable to load article."));
+        s_endErrDlg->append( (*it)->subject()->asUnicodeString(), i18n("Unable to load article.") );
         continue;
       }
     }
 
-    if(a->doPost() && !a->posted()) {
-      ser=knGlobals.accountManager()->account(a->serverId());
-      job=new KNJobData(KNJobData::JTpostArticle, this, ser, a);
+    if ( (*it)->doPost() && !(*it)->posted() ) {
+      ser = knGlobals.accountManager()->account( (*it)->serverId() );
+      job = new KNJobData( KNJobData::JTpostArticle, this, ser, (*it) );
       emitJob(job);
     }
-    else if(a->doMail() && !a->mailed()) {
-      ser=knGlobals.accountManager()->smtp();
-      job=new KNJobData(KNJobData::JTmail, this, ser, a);
+    else if( (*it)->doMail() && !(*it)->mailed() ) {
+      ser = knGlobals.accountManager()->smtp();
+      job = new KNJobData( KNJobData::JTmail, this, ser, (*it) );
       emitJob(job);
     }
   }
@@ -677,7 +675,7 @@ void KNArticleFactory::sendOutbox()
   for(int i=0; i< ob->length(); i++)
     lst.append(ob->at(i));
 
-  sendArticles(&lst, true);
+  sendArticles( lst, true );
 }
 
 
@@ -757,7 +755,7 @@ void KNArticleFactory::processJob(KNJobData *j)
         delete j; //unlock article
         art->setPosted(true);
         if(art->doMail() && !art->mailed()) { //article has been posted, now mail it
-          sendArticles(&lst, true);
+          sendArticles( lst, true );
           return;
         }
       break;
@@ -1010,7 +1008,7 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
       delCom=com->hasValidData();
       if(delCom) {
         if ( com->applyChanges() )
-          sendArticles(&lst, true);
+          sendArticles( lst, true );
         else
           delCom = false;
       }
@@ -1020,7 +1018,7 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
       delCom=com->hasValidData();
       if(delCom) {
         if ( com->applyChanges() )
-          sendArticles(&lst, false);
+          sendArticles( lst, false );
         else
           delCom = false;
       }

@@ -1,8 +1,6 @@
 /*
-    knfolder.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -67,8 +65,8 @@ class KNFolder : public KNArticleCollection  {
     bool loadHdrs();
     bool unloadHdrs(bool force=true);
     bool loadArticle(KNLocalArticle *a);
-    bool saveArticles(KNLocalArticle::List *l);
-    void removeArticles(KNLocalArticle::List *l, bool del=true);
+    bool saveArticles( KNLocalArticle::List &l );
+    void removeArticles( KNLocalArticle::List &l, bool del = true );
     void deleteAll();
     void deleteFiles();
 

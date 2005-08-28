@@ -495,42 +495,42 @@ void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
 {
   if(!f) return;
 
-  KNArticle *org;
   KNLocalArticle *loc;
   KNLocalArticle::List l2;
 
-  for(org=l.first(); org; org=l.next()) {
-    if(!org->hasContent())
+  for ( KNArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
+    if ( !(*it)->hasContent() )
       continue;
     loc=new KNLocalArticle(0);
     loc->setEditDisabled(true);
-    loc->setContent(org->encodedContent());
+    loc->setContent( (*it)->encodedContent() );
     loc->parse();
     l2.append(loc);
   }
 
-  if(!l2.isEmpty()) {
+  if ( !l2.isEmpty() ) {
 
     f->setNotUnloadable(true);
 
-    if (!f->isLoaded() && !knGlobals.folderManager()->loadHeaders(f)) {
-      l2.setAutoDelete(true);
+    if ( !f->isLoaded() && !knGlobals.folderManager()->loadHeaders( f ) ) {
+      for ( KNLocalArticle::List::Iterator it = l2.begin(); it != l2.end(); ++it )
+        delete (*it);
       l2.clear();
       f->setNotUnloadable(false);
       return;
     }
 
-    if(!f->saveArticles(&l2)) {
-      for(KNLocalArticle *a=l2.first(); a; a=l2.next()) {
-        if(a->isOrphant())
-          delete a; // ok, this is ugly; we simply delete orphant articles
+    if( !f->saveArticles( l2 ) ) {
+      for ( KNLocalArticle::List::Iterator it = l2.begin(); it != l2.end(); ++it ) {
+        if ( (*it)->isOrphant() )
+          delete (*it); // ok, this is ugly; we simply delete orphant articles
         else
-          a->KMime::Content::clear(); // no need to keep them in memory
+          (*it)->KMime::Content::clear(); // no need to keep them in memory
       }
       KNHelper::displayInternalFileError();
     } else {
-      for(KNLocalArticle *a=l2.first(); a; a=l2.next())
-        a->KMime::Content::clear(); // no need to keep them in memory
+      for ( KNLocalArticle::List::Iterator it = l2.begin(); it != l2.end(); ++it )
+        (*it)->KMime::Content::clear(); // no need to keep them in memory
       knGlobals.memoryManager()->updateCacheEntry(f);
     }
 
@@ -551,14 +551,14 @@ void KNArticleManager::moveIntoFolder(KNLocalArticle::List &l, KNFolder *f)
     return;
   }
 
-  if(f->saveArticles(&l)) {
-    for(KNLocalArticle *a=l.first(); a; a=l.next())
-      knGlobals.memoryManager()->updateCacheEntry( a );
+  if ( f->saveArticles( l ) ) {
+    for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it )
+      knGlobals.memoryManager()->updateCacheEntry( (*it) );
     knGlobals.memoryManager()->updateCacheEntry(f);
   } else {
-    for(KNLocalArticle *a=l.first(); a; a=l.next())
-      if(a->isOrphant())
-        delete a; // ok, this is ugly; we simply delete orphant articles
+    for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it )
+      if ( (*it)->isOrphant() )
+        delete (*it); // ok, this is ugly; we simply delete orphant articles
     KNHelper::displayInternalFileError();
   }
 
@@ -570,13 +570,13 @@ bool KNArticleManager::deleteArticles(KNLocalArticle::List &l, bool ask)
 {
   if(ask) {
     QStringList lst;
-    for(KNLocalArticle *a=l.first(); a; a=l.next()) {
-      if(a->isLocked())
+    for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
+      if ( (*it)->isLocked() )
         continue;
-      if(a->subject()->isEmpty())
+      if ( (*it)->subject()->isEmpty() )
         lst << i18n("no subject");
       else
-        lst << a->subject()->asUnicodeString();
+        lst << (*it)->subject()->asUnicodeString();
     }
     if( KMessageBox::Cancel == KMessageBox::warningContinueCancelList(
       knGlobals.topWidget, i18n("Do you really want to delete these articles?"), lst,
@@ -584,17 +584,17 @@ bool KNArticleManager::deleteArticles(KNLocalArticle::List &l, bool ask)
       return false;
   }
 
-  for(KNLocalArticle *a=l.first(); a; a=l.next())
-    knGlobals.memoryManager()->removeCacheEntry(a);
+  for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it )
+    knGlobals.memoryManager()->removeCacheEntry( (*it) );
 
   KNFolder *f=static_cast<KNFolder*>(l.first()->collection());
-  if(f) {
-    f->removeArticles(&l, true);
+  if ( f ) {
+    f->removeArticles( l, true );
     knGlobals.memoryManager()->updateCacheEntry( f );
   }
   else {
-    for(KNLocalArticle *a=l.first(); a; a=l.next())
-      delete a;
+    for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it )
+      delete (*it);
   }
 
   return true;
@@ -649,25 +649,25 @@ void KNArticleManager::setAllRead( bool read, int lastcount )
 
 void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPosts)
 {
-  if(l.isEmpty())
+  if ( l.isEmpty() )
     return;
 
-  KNRemoteArticle *a=l.first(), *ref=0;
-  KNGroup *g=static_cast<KNGroup*>(a->collection() );
+  KNRemoteArticle *ref = 0;
+  KNGroup *g=static_cast<KNGroup*>( l.first()->collection() );
   int changeCnt=0, idRef=0;
 
-  for( ; a; a=l.next()) {
+  for ( KNRemoteArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
     if( r && knGlobals.configManager()->readNewsGeneral()->markCrossposts() &&
-        handleXPosts && a->newsgroups()->isCrossposted() ) {
+        handleXPosts && (*it)->newsgroups()->isCrossposted() ) {
 
-      QStringList groups = a->newsgroups()->getGroups();
+      QStringList groups = (*it)->newsgroups()->getGroups();
       KNGroup *targetGroup=0;
       KNRemoteArticle *xp=0;
       KNRemoteArticle::List al;
-      QCString mid=a->messageID()->as7BitString(false);
+      QCString mid = (*it)->messageID()->as7BitString( false );
 
-      for (QStringList::Iterator it = groups.begin(); it != groups.end(); ++it) {
-        targetGroup = knGlobals.groupManager()->group(*it, g->account());
+      for ( QStringList::Iterator it2 = groups.begin(); it2 != groups.end(); ++it2 ) {
+        targetGroup = knGlobals.groupManager()->group(*it2, g->account());
         if (targetGroup) {
           if (targetGroup->isLoaded() && (xp=targetGroup->byMessageId(mid)) ) {
             al.clear();
@@ -680,25 +680,25 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
       }
     }
 
-    else if(a->getReadFlag()!=r) {
-      a->setRead(r);
-      a->setChanged(true);
-      a->updateListItem();
+    else if ( (*it)->getReadFlag() != r ) {
+      (*it)->setRead( r );
+      (*it)->setChanged( true );
+      (*it)->updateListItem();
 
-      if (!a->isIgnored()) {
+      if ( !(*it)->isIgnored() ) {
         changeCnt++;
-        idRef=a->idRef();
+        idRef = (*it)->idRef();
 
-        while(idRef!=0) {
+        while ( idRef != 0 ) {
           ref=g->byId(idRef);
           if(r) {
             ref->decUnreadFollowUps();
-            if(a->isNew())
+            if ( (*it)->isNew() )
               ref->decNewFollowUps();
           }
           else {
             ref->incUnreadFollowUps();
-            if(a->isNew())
+            if ( (*it)->isNew() )
               ref->incNewFollowUps();
           }
 
@@ -712,12 +712,12 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
 
         if(r) {
           g->incReadCount();
-          if(a->isNew())
+          if ( (*it)->isNew() )
             g->decNewCount();
         }
         else {
           g->decReadCount();
-          if(a->isNew())
+          if ( (*it)->isNew() )
             g->incNewCount();
         }
       }
@@ -760,19 +760,19 @@ bool KNArticleManager::toggleWatched(KNRemoteArticle::List &l)
   KNGroup *g=static_cast<KNGroup*>(a->collection() );
   int changeCnt=0, idRef=0;
 
-  for(KNRemoteArticle *a=l.first(); a; a=l.next()) {
-    if (a->isIgnored()) {
-      a->setIgnored(false);
+  for ( KNRemoteArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
+    if ( (*it)->isIgnored() ) {
+      (*it)->setIgnored(false);
 
-      if (!a->getReadFlag()) {
+      if ( !(*it)->getReadFlag() ) {
         changeCnt++;
-        idRef=a->idRef();
+        idRef = (*it)->idRef();
 
-        while(idRef!=0) {
+        while ( idRef != 0 ) {
           ref=g->byId(idRef);
 
           ref->incUnreadFollowUps();
-          if(a->isNew())
+          if ( (*it)->isNew() )
             ref->incNewFollowUps();
 
           if(ref->listItem() &&
@@ -783,14 +783,14 @@ bool KNArticleManager::toggleWatched(KNRemoteArticle::List &l)
           idRef=ref->idRef();
         }
         g->decReadCount();
-        if(a->isNew())
+        if ( (*it)->isNew() )
           g->incNewCount();
       }
     }
 
-    a->setWatched(watch);
-    a->updateListItem();
-    a->setChanged(true);
+    (*it)->setWatched( watch );
+    (*it)->updateListItem();
+    (*it)->setChanged( true );
   }
 
   if(changeCnt>0) {
@@ -808,31 +808,30 @@ bool KNArticleManager::toggleIgnored(KNRemoteArticle::List &l)
   if(l.isEmpty())
     return true;
 
-  KNRemoteArticle *a=l.first(), *ref=0;
-  bool ignore=(!a->isIgnored());
-  KNGroup *g=static_cast<KNGroup*>(a->collection() );
-  int changeCnt=0, idRef=0;
+  KNRemoteArticle *ref = 0;
+  bool ignore = !l.first()->isIgnored();
+  KNGroup *g = static_cast<KNGroup*>( l.first()->collection() );
+  int changeCnt = 0, idRef = 0;
 
-  for(; a; a=l.next()) {
-    a->setWatched(false);
-    if (a->isIgnored() != ignore) {
-      a->setIgnored(ignore);
+  for ( KNRemoteArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
+    (*it)->setWatched(false);
+    if ( (*it)->isIgnored() != ignore ) {
+      (*it)->setIgnored( ignore );
 
-      if (!a->getReadFlag()) {
+      if ( !(*it)->getReadFlag() ) {
         changeCnt++;
-        idRef=a->idRef();
+        idRef = (*it)->idRef();
 
-        while(idRef!=0) {
-          ref=g->byId(idRef);
+        while ( idRef != 0 ) {
+          ref = g->byId( idRef );
 
-          if(ignore) {
+          if ( ignore ) {
             ref->decUnreadFollowUps();
-            if(a->isNew())
+            if ( (*it)->isNew() )
               ref->decNewFollowUps();
-          }
-          else {
+          } else {
             ref->incUnreadFollowUps();
-            if(a->isNew())
+            if ( (*it)->isNew() )
               ref->incNewFollowUps();
           }
 
@@ -844,21 +843,20 @@ bool KNArticleManager::toggleIgnored(KNRemoteArticle::List &l)
           idRef=ref->idRef();
         }
 
-        if(ignore) {
+        if ( ignore ) {
           g->incReadCount();
-          if(a->isNew())
+          if ( (*it)->isNew() )
             g->decNewCount();
-        }
-        else {
+        } else {
           g->decReadCount();
-          if(a->isNew())
+          if ( (*it)->isNew() )
             g->incNewCount();
         }
 
       }
     }
-    a->updateListItem();
-    a->setChanged(true);
+    (*it)->updateListItem();
+    (*it)->setChanged(true);
   }
 
   if(changeCnt>0) {
@@ -873,31 +871,30 @@ bool KNArticleManager::toggleIgnored(KNRemoteArticle::List &l)
 
 void  KNArticleManager::rescoreArticles(KNRemoteArticle::List &l)
 {
-  KNRemoteArticle *a=l.first();
+  if ( l.isEmpty() )
+    return;
 
-  if (a) {
-    KNGroup *g=static_cast<KNGroup*>(a->collection());
-    KScoringManager *sm = knGlobals.scoringManager();
-    sm->initCache(g->groupname());
+  KNGroup *g = static_cast<KNGroup*>( l.first()->collection() );
+  KScoringManager *sm = knGlobals.scoringManager();
+  sm->initCache(g->groupname());
 
-    for(; a; a=l.next()) {
-      int defScore = 0;
-      if (a->isIgnored())
-        defScore = knGlobals.configManager()->scoring()->ignoredThreshold();
-      else if (a->isWatched())
-        defScore = knGlobals.configManager()->scoring()->watchedThreshold();
-      a->setScore(defScore);
+  for ( KNRemoteArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
+    int defScore = 0;
+    if ( (*it)->isIgnored())
+      defScore = knGlobals.configManager()->scoring()->ignoredThreshold();
+    else if ( (*it)->isWatched() )
+      defScore = knGlobals.configManager()->scoring()->watchedThreshold();
+    (*it)->setScore(defScore);
 
-      bool read = a->isRead();
+    bool read = (*it)->isRead();
 
-      KNScorableArticle sa(a);
-      sm->applyRules(sa);
-      a->updateListItem();
-      a->setChanged(true);
+    KNScorableArticle sa( (*it) );
+    sm->applyRules(sa);
+    (*it)->updateListItem();
+    (*it)->setChanged( true );
 
-      if ( !read && a->isRead() != read )
-        g_roup->incReadCount();
-    }
+    if ( !read && (*it)->isRead() != read )
+      g_roup->incReadCount();
   }
 }
 

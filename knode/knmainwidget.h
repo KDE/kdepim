@@ -1,6 +1,4 @@
 /*
-    knmainwidget.h
-
     KNode, the KDE newsreader
     Copyright (c) 2003 Zack Rusin <zack@kde.org>
     Copyright (c) 2004-2005 Volker Krause <volker.krause@rwth-aachen.de>
@@ -184,10 +182,10 @@ protected:
   bool eventFilter(QObject *, QEvent *);
 
   // convenience methods...
-  void getSelectedArticles(QPtrList<KNArticle> &l);
-  void getSelectedArticles(QPtrList<KNRemoteArticle> &l);
-  void getSelectedThreads(QPtrList<KNRemoteArticle> &l);
-  void getSelectedArticles(QPtrList<KNLocalArticle> &l);
+  void getSelectedArticles( QValueList<KNArticle*> &l );
+  void getSelectedArticles( QValueList<KNRemoteArticle*> &l );
+  void getSelectedThreads( QValueList<KNRemoteArticle*> &l );
+  void getSelectedArticles( QValueList<KNLocalArticle*> &l );
   void closeCurrentThread();
 
   //GUI

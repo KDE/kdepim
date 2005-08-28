@@ -962,13 +962,13 @@ void KNMainWidget::getSelectedThreads(KNRemoteArticle::List &l)
       art=static_cast<KNRemoteArticle*> ((static_cast<KNHdrViewItem*>(i))->art);
       // ignore the article if it is already in the list
       // (multiple aritcles are selected in one thread)
-      if (l.findRef(art)==-1)
+      if ( l.find(art) == l.end() )
         art->thread(l);
     }
 }
 
 
-void KNMainWidget::getSelectedArticles(QPtrList<KNLocalArticle> &l)
+void KNMainWidget::getSelectedArticles( KNLocalArticle::List &l )
 {
   if(!f_olManager->currentFolder()) return;
 
@@ -1911,7 +1911,7 @@ void KNMainWidget::slotArtSendNow()
   getSelectedArticles(lst);
 
   if(!lst.isEmpty())
-    a_rtFactory->sendArticles(&lst, true);
+    a_rtFactory->sendArticles( lst, true );
 }
 
 

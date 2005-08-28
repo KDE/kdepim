@@ -1,6 +1,4 @@
 /*
-    knarticle.h
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -23,7 +21,7 @@
 #include <qfont.h>
 #include <qcolor.h>
 #include <qasciidict.h>
-#include <qptrlist.h>
+#include <qvaluelist.h>
 
 #include <kmime_headers.h>
 #include <kmime_newsarticle.h>
@@ -44,7 +42,7 @@ class KNArticleCollection;
 class KNArticle : public KMime::NewsArticle, public KNJobItem {
 
   public:
-    typedef QPtrList<KNArticle> List;
+    typedef QValueList<KNArticle*> List;
 
     KNArticle(KNArticleCollection *c);
     ~KNArticle();
@@ -89,7 +87,7 @@ class KNGroup;
 class KNRemoteArticle : public KNArticle {
 
   public:
-    typedef QPtrList<KNRemoteArticle> List;
+    typedef QValueList<KNRemoteArticle*> List;
 
     KNRemoteArticle(KNGroup *g);
     ~KNRemoteArticle();
@@ -209,7 +207,7 @@ class KNRemoteArticle : public KNArticle {
 class KNLocalArticle : public KNArticle {
 
   public:
-    typedef QPtrList<KNLocalArticle> List;
+    typedef QValueList<KNLocalArticle*> List;
 
     KNLocalArticle(KNArticleCollection *c=0);
     ~KNLocalArticle();
