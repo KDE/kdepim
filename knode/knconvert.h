@@ -1,8 +1,6 @@
 /*
-    knconvert.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -22,7 +20,7 @@
 #include <qdialog.h>
 
 #include <qglobal.h>
-#include <qptrlist.h>
+#include <qvaluelist.h>
 #include <kdepimmacros.h>
 
 class QListBox;
@@ -108,7 +106,7 @@ class KDE_EXPORT KNConvert : public QDialog {
                   *c_ancelBtn;
     QListBox      *l_ogList;
 
-    QPtrList<Converter> c_onverters;
+    QValueList<Converter*> mConverters;
     QStringList l_og;
     bool c_onversionDone;
     QString v_ersion;

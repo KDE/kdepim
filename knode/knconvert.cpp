@@ -1,8 +1,6 @@
 /*
-    knconvert.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -120,14 +118,16 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
 
 KNConvert::~KNConvert()
 {
+  for ( QValueList<Converter*>::Iterator it = mConverters.begin(); it != mConverters.end(); ++it )
+    delete (*it);
 }
 
 
 void KNConvert::convert()
 {
   int errors=0;
-  for(Converter *c=c_onverters.first(); c; c=c_onverters.next())
-    if(!c->doConvert())
+  for ( QValueList<Converter*>::Iterator it = mConverters.begin(); it != mConverters.end(); ++it )
+    if( !(*it)->doConvert() )
       errors++;
 
   if(errors>0)
@@ -160,11 +160,9 @@ void KNConvert::slotStart()
   c_ancelBtn->setEnabled(false);
   s_tack->raiseWidget(w_2);
 
-  c_onverters.setAutoDelete(true);
-
   if(v_ersion.left(3)=="0.3" || v_ersion.left(7)=="0.4beta") {
     //Version 0.4
-    c_onverters.append(new Converter04(&l_og));
+    mConverters.append( new Converter04( &l_og ) );
   }
 
   //create backup of old data using "tar"

@@ -744,8 +744,7 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
     //try to sort by subject
     KNRemoteArticle *oldest;
-    QPtrList<KNRemoteArticle> list;
-    list.setAutoDelete(false);
+    KNRemoteArticle::List list;
 
     for(idx=start; idx<end; idx++) {
 
@@ -771,20 +770,23 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
           //find oldest
           oldest=list.first();
-          for(KNRemoteArticle *var=list.next(); var; var=list.next())
-            if(var->date()->unixTime() < oldest->date()->unixTime()) oldest=var;
+          for ( KNRemoteArticle::List::Iterator it = list.begin(); it != list.end(); ++it )
+            if ( (*it)->date()->unixTime() < oldest->date()->unixTime() )
+              oldest = (*it);
 
           //oldest gets idRef 0
           if(oldest->idRef()==-1) bySubCnt++;
           oldest->setIdRef(0);
           oldest->setThreadingLevel(6);
 
-          for(KNRemoteArticle *var=list.first(); var; var=list.next()) {
-            if(var==oldest) continue;
-            else if(var->idRef()==-1 || (var->idRef()!=-1 && var->threadingLevel()==6)) {
-              var->setIdRef(oldest->id());
-              var->setThreadingLevel(6);
-              if(var->id() >= at(start)->id()) bySubCnt++;
+          for ( KNRemoteArticle::List::Iterator it = list.begin(); it != list.end(); ++it ) {
+            if ( (*it) == oldest )
+              continue;
+            if ( (*it)->idRef() == -1 || ( (*it)->idRef() != -1 && (*it)->threadingLevel() == 6 ) ) {
+              (*it)->setIdRef(oldest->id());
+              (*it)->setThreadingLevel(6);
+              if ( (*it)->id() >= at(start)->id() )
+                bySubCnt++;
             }
           }
         }
