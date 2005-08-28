@@ -63,6 +63,7 @@ int runscripts
 ( const QString &interpreter, const QString &extension, const QString &path )
 {
   int rval = 0;
+  int oneBadApple = 0;
   QStringList files;
 
   QDir dir( path );
@@ -94,7 +95,11 @@ int runscripts
         << " " << ( ! rval ? "PASS" : "FAIL" ) << endl;
 
       // Don't abort if one test files--run them all
-      if ( rval ) rval = 0;
+      if ( rval ) 
+      {
+        oneBadApple = 1;
+        rval = 0;
+      }
 
       delete s;
       s = new Script( dir );
@@ -104,7 +109,7 @@ int runscripts
   delete s;
   s = 0;
   
-  return rval;
+  return oneBadApple;
 }
 
 int main( int, char** )
