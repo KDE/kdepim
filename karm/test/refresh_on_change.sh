@@ -16,6 +16,8 @@ TODO_NAME=$0
 TODO_UID=abc-123
 TODO_TIME=`date +%Y%m%dT%H%M%SZ`
 
+sleep 1 # make sure kdirstat can recognize the change in last change date
+
 cat >> $TESTFILE << endl
 BEGIN:VCALENDAR
 PRODID:-//K Desktop Environment//NONSGML KArm Test Scripts//EN
