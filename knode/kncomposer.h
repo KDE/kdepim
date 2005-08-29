@@ -1,8 +1,6 @@
 /*
-    kncomposer.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -110,7 +108,7 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     SpellingFilter* mSpellingFilter;
 
     //Attachments
-    QPtrList<KNAttachment> d_elAttList;
+    QValueList<KNAttachment*> mDeletedAttachments;
     QPtrList<KAction> m_listAction;
     bool a_ttChanged;
 
@@ -220,7 +218,7 @@ class KNComposer::ComposerView  : public QSplitter {
     void showExternalNotification();
     void hideExternalNotification();
     void restartBackgroundSpellCheck();
-    QPtrList<QWidget> mEdtList;
+    QValueList<QWidget*> mEdtList;
 
     QLabel      *l_to,
                 *l_groups,

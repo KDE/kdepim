@@ -171,7 +171,6 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 {
     mSpellingFilter = 0;
     spellLineEdit = false;
-    d_elAttList.setAutoDelete(true);
     m_listAction.setAutoDelete( true );
 
   if(knGlobals.instance)
@@ -398,6 +397,9 @@ KNComposer::~KNComposer()
     e_ditorTempfile->unlink();
     delete e_ditorTempfile;
   }
+
+  for ( QValueList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
+    delete (*it);
 
   KConfig *conf = knGlobals.config();
   conf->setGroup("composerWindow_options");
@@ -777,10 +779,9 @@ bool KNComposer::applyChanges()
     }
   }
 
-  if(!d_elAttList.isEmpty())
-      for(KNAttachment *a=d_elAttList.first(); a; a=d_elAttList.next())
-        if(a->isAttached())
-          a->detach(a_rticle);
+  for ( QValueList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
+    if ( (*it)->isAttached() )
+      (*it)->detach( a_rticle );
 
   text=a_rticle->textContent();
 
@@ -1107,7 +1108,7 @@ void KNComposer::slotRemoveAttachment()
   if(v_iew->a_ttView->currentItem()) {
     AttachmentViewItem *it=static_cast<AttachmentViewItem*>(v_iew->a_ttView->currentItem());
     if(it->attachment->isAttached()) {
-      d_elAttList.append(it->attachment);
+      mDeletedAttachments.append( it->attachment );
       it->attachment=0;
     }
     delete it;
@@ -1833,26 +1834,33 @@ KNComposer::ComposerView::~ComposerView()
 
 void KNComposer::ComposerView::focusNextPrevEdit(const QWidget* aCur, bool aNext)
 {
-  QWidget* cur;
+  QValueList<QWidget*>::Iterator it;
 
-  if (!aCur)
-  {
-    cur=mEdtList.last();
+  if ( !aCur ) {
+    it = --( mEdtList.end() );
+  } else {
+    for ( QValueList<QWidget*>::Iterator it2 = mEdtList.begin(); it2 != mEdtList.end(); ++it2 ) {
+      if ( (*it2) == aCur ) {
+        it = it2;
+        break;
+      }
+    }
+    if ( it == mEdtList.end() )
+      return;
+    if ( aNext )
+      ++it;
+    else {
+      if ( it != mEdtList.begin() )
+        --it;
+      else
+        return;
+    }
   }
-  else
-  {
-    for (cur=mEdtList.first(); aCur!=cur && cur; cur=mEdtList.next())
-      ;
-    if (!cur) return;
-    if (aNext) cur = mEdtList.next();
-    else cur = mEdtList.prev();
-  }
-  if (cur)
-  {
-      if ( cur->isVisible() )
-          cur->setFocus();
-  }
-  else if (aNext) e_dit->setFocus();
+  if ( it != mEdtList.end() ) {
+    if ( (*it)->isVisible() )
+      (*it)->setFocus();
+  } else if ( aNext )
+    e_dit->setFocus();
 }
 
 
