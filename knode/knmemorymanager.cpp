@@ -124,9 +124,10 @@ KNMemoryManager::CollectionItem* KNMemoryManager::findCacheEntry(KNArticleCollec
 {
   for ( QValueList<CollectionItem*>::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
     if ( (*it)->col == c ) {
+      CollectionItem *ret = (*it);
       if ( take )
         mColList.remove( it );
-      return (*it);
+      return ret;
     }
   }
 
@@ -138,9 +139,10 @@ KNMemoryManager::ArticleItem* KNMemoryManager::findCacheEntry(KNArticle *a, bool
 {
   for ( QValueList<ArticleItem*>::Iterator it = mArtList.begin(); it != mArtList.end(); ++it ) {
     if ( (*it)->art == a ) {
+      ArticleItem *ret = (*it);
       if ( take )
         mArtList.remove( it );
-      return (*it);
+      return ret;
     }
   }
 
