@@ -6,6 +6,17 @@
 # to call Makefile.cvs again. 
 # WARNING: The Makefile.am is auto-generated from Makefile.am.in, so
 # don't change these in Makefile.am, but rather in Makefile.am.in!
+#
+# Libraries and their upwards dependencies
+COMPILE_AFTER_libemailfunctions = libkcal libkpimidentities kmail korganizer
+COMPILE_AFTER_libkholidays = korganizer kontact
+COMPILE_AFTER_libkcal = kalarm kitchensync konsolekalendar korganizer ksync libkpimexchange kpilot libkdepim karm knotes kresources kfile-plugins
+COMPILE_AFTER_mimelib = korn kmail
+COMPILE_AFTER_libkdenetwork = kmail knode
+COMPILE_AFTER_libksieve = kmail
+#
+# Applications and their downward dependencies (ie. the libs they use)
+#
 COMPILE_BEFORE_libkpimidentities = libkdepim certmanager
 COMPILE_BEFORE_certmanager = libkdenetwork libkpgp
 COMPILE_BEFORE_korganizer = libkdepim libkpimidentities libkpimexchange kgantt
@@ -15,10 +26,6 @@ COMPILE_BEFORE_kmail= libkdepim libkpimidentities certmanager libkpgp libkmime i
 COMPILE_BEFORE_knode= libkdepim libkpgp libkmime
 COMPILE_BEFORE_karm = libkdepim kresources
 COMPILE_BEFORE_plugins = kmail libkdepim libkcal
-COMPILE_AFTER_libkcal = kalarm kitchensync konsolekalendar korganizer ksync libkpimexchange kpilot libkdepim karm knotes kresources kfile-plugins
-COMPILE_AFTER_mimelib = korn kmail
-COMPILE_AFTER_libkdenetwork = kmail knode
-COMPILE_AFTER_libksieve = kmail
 COMPILE_BEFORE_kontact = kaddressbook knotes korganizer akregator karm
 COMPILE_BEFORE_kioslaves = libkmime libkdepim
 COMPILE_BEFORE_libkpimexchange = libkdepim
@@ -27,10 +34,9 @@ COMPILE_BEFORE_kresources = libkpimexchange knotes kaddressbook kode
 COMPILE_BEFORE_wizards = libkdepim kresources korganizer kaddressbook kmail
 COMPILE_BEFORE_korn = libkdenetwork
 COMPILE_BEFORE_kitchensync = libkdepim
-COMPILE_AFTER_libemailfunctions = libkcal libkpimidentities kmail korganizer
-COMPILE_AFTER_libkholidays = korganizer kontact
 COMPILE_BEFORE_akregator = libkdepim
 COMPILE_BEFORE_knotes = libkdepim
+COMPILE_BEFORE_konsolekalendar = libkdepim
 
 AUTOMAKE_OPTIONS = foreign 1.5
 DISTCLEANFILES = inst-apps
