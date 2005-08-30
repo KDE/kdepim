@@ -466,23 +466,23 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
     RecurrenceRule *defaultRRuleConst() const;
     void updated();
 
-    /** 
-		  Installs an observer. Whenever some setting of this recurrence 
-			object is changed, the recurrenceUpdated( Recurrence* ) method 
-			of each observer will be called to inform it of changes.
-		  @param observer the Recurrence::Observer-derived object, which 
-			will be installed as an observer of this object.
+    /**
+      Installs an observer. Whenever some setting of this recurrence
+      object is changed, the recurrenceUpdated( Recurrence* ) method
+      of each observer will be called to inform it of changes.
+      @param observer the Recurrence::Observer-derived object, which
+      will be installed as an observer of this object.
     */
     void addObserver( Observer *observer );
-    /** 
-		  Removes an observer that was added with addObserver. If the 
-			given object was not an observer, it does nothing.
-		  @param observer the Recurrence::Observer-derived object to
-			be removed from the list of observers of this object.
+    /**
+      Removes an observer that was added with addObserver. If the
+      given object was not an observer, it does nothing.
+      @param observer the Recurrence::Observer-derived object to
+      be removed from the list of observers of this object.
     */
     void removeObserver( Observer *observer );
-		
-		void recurrenceChanged( RecurrenceRule * );
+
+    void recurrenceChanged( RecurrenceRule * );
 
   protected:
     RecurrenceRule *setNewRecurrenceType( RecurrenceRule::PeriodType type, int freq );

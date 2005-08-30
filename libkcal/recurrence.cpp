@@ -45,7 +45,7 @@ Recurrence::Recurrence()
 }
 
 Recurrence::Recurrence( const Recurrence &r )
-: RecurrenceRule::Observer(), 
+: RecurrenceRule::Observer(),
   mRDateTimes( r.mRDateTimes ), mRDates( r.mRDates ),
   mExDateTimes( r.mExDateTimes ), mExDates( r.mExDates ),
   mStartDateTime( r.mStartDateTime ),
@@ -57,14 +57,14 @@ Recurrence::Recurrence( const Recurrence &r )
   mRRules.setAutoDelete( true );
   RecurrenceRule::List::ConstIterator rr;
   for ( rr = r.mRRules.begin(); rr != r.mRRules.end(); ++rr ) {
-	  RecurrenceRule *rule = new RecurrenceRule( *(*rr) );
+    RecurrenceRule *rule = new RecurrenceRule( *(*rr) );
     mRRules.append( rule );
-		rule->addObserver( this );
+    rule->addObserver( this );
   }
   for ( rr = r.mExRules.begin(); rr != r.mExRules.end(); ++rr ) {
-	  RecurrenceRule *rule = new RecurrenceRule( *(*rr) );
+    RecurrenceRule *rule = new RecurrenceRule( *(*rr) );
     mExRules.append( rule );
-		rule->addObserver( this );
+    rule->addObserver( this );
   }
 }
 
@@ -150,7 +150,7 @@ void Recurrence::setFloats( bool floats )
   updated();
 }
 
-RecurrenceRule *Recurrence::defaultRRule( bool create ) const 
+RecurrenceRule *Recurrence::defaultRRule( bool create ) const
 {
   if ( mRRules.isEmpty() ) {
     if ( !create || mRecurReadOnly ) return 0;
@@ -913,14 +913,14 @@ void Recurrence::addRRule( RecurrenceRule *rrule )
   if ( mRecurReadOnly || !rrule ) return;
   rrule->setFloats( mFloating );
   mRRules.append( rrule );
-	rrule->addObserver( this );
+  rrule->addObserver( this );
 }
 
 void Recurrence::removeRRule( RecurrenceRule *rrule )
 {
   if (mRecurReadOnly) return;
   mRRules.remove( rrule );
-	rrule->removeObserver( this );
+  rrule->removeObserver( this );
 }
 
 RecurrenceRule::List Recurrence::exRules() const
@@ -933,14 +933,14 @@ void Recurrence::addExRule( RecurrenceRule *exrule )
   if ( mRecurReadOnly || !exrule ) return;
   exrule->setFloats( mFloating );
   mExRules.append( exrule );
-	exrule->addObserver( this );
+  exrule->addObserver( this );
 }
 
 void Recurrence::removeExRule( RecurrenceRule *exrule )
 {
   if (mRecurReadOnly) return;
   mExRules.remove( exrule );
-	exrule->removeObserver( this );
+  exrule->removeObserver( this );
 }
 
 
