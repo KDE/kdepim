@@ -2,73 +2,44 @@
 
 <title>Plugins</title>
 
-<sect1 id="plugins-chapter-overview">
-<title>Overview</title>
 <para>
 &korganizer; provides you the possibility of extending the application with plugins.
 </para>
-</sect1>
 
-<sect1 id="plugins-chapter-configuration">
-<title>Configuration</title>
 <para>
-	The plugins for &korganizer; can be configured under <menuchoice><guimenu>Settings</guimenu><guimenuitem>
-Configure Plugins</guimenuitem></menuchoice>.
+The plugins can be configured under the &korganizer; main configuration dialog
+Choose <menuchoice><guimenu>Settings</guimenu><guimenuitem>
+Configure &korganizer;</guimenuitem></menuchoice> or
+<menuchoice><guimenu>Settings</guimenu><guimenuitem>
+Configure Calendar</guimenuitem></menuchoice>, inside &kontact;, and click the
+<guilabel>Plugin</guilabel> icon on the icon list sidebar of the dialog.
 </para>
-</sect1>
 
 <sect1 id="plugins-chapter-availableplugins">
 <title>Available Plugins</title>
 
-<sect2 id="birthdays-import-plugin">
-<title>Birthdays import plugin for &korganizer;</title>
-<para>
-Not yet written	
-</para>
-</sect2>
-
 <sect2 id="date-numbers-plugin">
-<title>Date numbers plugin for Calendars</title>
+<title>Date Numbers Plugin for Calendars</title>
 <para>
-Not yet written	
-</para>
-</sect2>
-
-<sect2 id="holiday-plugin">
-<title>Holiday plugin for Calendars</title>
-<para>
-	The holiday plugin provides you with a set of country-specific holidays.
-	In the configuration dialog of the plugin you are able to select the country the holidays of which will be inserted into your calendar.
+This plugin adds the day number of day in the the year to the agenda view. For
+instance, February 1 is the day number 32.
 </para>
 </sect2>
 
 <sect2 id="jewish-calendar-plugin">
-<title>Jewish calendar plugin</title>
+<title>Jewish Calendar Plugin</title>
 <para>
-Not yet written	
+The plugin provides you a the the Jewish calendar dates in addition to the
+Gregorian calendar dates. In the configuration dialog of the plugin, you can
+choose if you want to display Israeli holidays, weekly prasha, day of Omer and /
+or Chol HaMoed.
 </para>
 </sect2>
 
-<sect2 id="microsoft-exchange-2000-plugin">
-<title>Microsoft Exchange 2000 plugin for KOrganizer</title>
+<sect2 id="journal-print-plugin">
+<title>Journal Print Style</title>
 <para>
-	The Exchange 2000 plugin enables you to place a calendar resource on an Exchange 2000 server.
-	Please note that you need to have Outlook Web Access enabled to activate the WebDAV access &korganizer; uses to connect to the Exchange 2000 server.
-</para>
-</sect2>
-
-<sect2 id="project-view-plugin">
-<title>Project View plugin for &korganizer;</title>
-<para>
-Not yet written	
-</para>
-</sect2>
-
-<sect2 id="web-export-plugin">
-<title>Web export plugin for &korganizer;</title>
-<para>
-	The web export plugin makes it possible to export your calendar to an HTML page.
-	After having activated the plugin in the configuration dialog you'll find the menu entry to export your calendar under <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem><guimenuitem>Export Web Page...</guimenuitem></menuchoice>.
+The plugin allows you to print journal (diary) entries.
 </para>
 </sect2>
 

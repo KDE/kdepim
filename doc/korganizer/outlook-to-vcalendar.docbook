@@ -75,14 +75,14 @@ can scan and export all the appointments to a vCalendar file at one time.
 <title>Installation</title>
 
 <para>
-The <application>Outlook2VCal</application> program is <ulink
-url="http://korganizer.kde.org/importdata.html">delivered as a compress
+The <application>Outlook2VCal 2.0</application> program is <ulink
+url="http://korganizer.kde.org/learning/importdata.html">delivered as a compress
 ZIP file</ulink>, which contains a <application>SETUP.EXE</application>
 application. Merely extract the files using your favorite utility,
 such as <ulink url="http://www.winzip.com">WinZip</ulink> and run the
 <application>SETUP.EXE</application> program to install the program
 on your Windows computer. This should be the same computer where you
-normally run &Microsoft; Outlook 2000&reg;.
+normally run &Microsoft; Outlook 97&reg;, 2000&reg; or 2002&reg;.
 </para>
 
 <para>
@@ -103,10 +103,15 @@ by accessing <menuchoice><guimenu>Start</guimenu>
 this screen appear:
 </para>
 
+<screenshot id="screenshot-outlook2vcal-main">
+<screeninfo>Outlook2VCal main window</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="o2v_main.png" format="PNG"/></imageobject>
-<textobject><para><application>Outlook2VCal main window</application></para></textobject>
+<textobject><phrase>Outlook2VCal main window</phrase></textobject>
+<caption><para>Outlook2VCal main window</para></caption>
 </mediaobject>
+</screenshot>
+
 
 <para>
 The program automatically attempts to communicate with Outlook&reg;
@@ -124,20 +129,28 @@ the desired folder and enter the filename where you wish to create
 the new vCalendar data file.
 </para>
 
+<screenshot id="screenshot-outlook2vcal-save">
+<screeninfo>Outlook2VCal Save File dialog</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="o2v_save.png" format="PNG"/></imageobject>
-<textobject><para><application>Save file dialog</application></para></textobject>
+<textobject><phrase>Outlook2VCal Save File dialog</phrase></textobject>
+<caption><para>Outlook2VCal Save File dialog</para></caption>
 </mediaobject>
+</screenshot>
 
 <para>
 Depending on the security settings in Outlook&reg;, you may see this
 screen next. If so, be sure to allow access for a minute or two.
 </para>
 
+<screenshot id="screenshot-outlook2vcal-warning">
+<screeninfo>Outlook2VCal Warning message</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="o2v_warning.png" format="PNG"/></imageobject>
-<textobject><para><application>Warning message</application></para></textobject>
+<textobject><phrase>Outlook2VCal Warning message</phrase></textobject>
+<caption><para>Outlook2VCal Warning message</para></caption>
 </mediaobject>
+</screenshot>
 
 <para>
 The program will display progress messages in its main window as it
@@ -145,10 +158,14 @@ loads, converts and saves your appointments. Here is a final shot of
 what a successful run looks like:
 </para>
 
+<screenshot id="screenshot-outlook2vcal-progress">
+<screeninfo>Outlook2VCal Progress message</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="o2v_progress.png" format="PNG"/></imageobject>
-<textobject><para><application>Progress message</application></para></textobject>
+<textobject><phrase>Outlook2VCal Progress message</phrase></textobject>
+<caption><para>Outlook2VCal Progress message</para></caption>
 </mediaobject>
+</screenshot>
 
 </sect1>
 
@@ -163,32 +180,52 @@ run &korganizer;. If desired, you can create a new calendar, or open an
 existing one.
 </para>
 
+<screenshot id="screenshot-outlook2vcal-importing1">
+<screeninfo>Outlook2VCal Importing Data #1</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="o2v_importing1.png" format="PNG"/></imageobject>
-<textobject><para><application>Importing data #1</application></para></textobject>
+<textobject><phrase>Outlook2VCal Importing Data #1</phrase></textobject>
+<caption><para>Outlook2VCal Importing Data #1</para></caption>
 </mediaobject>
+</screenshot>
+
 
 <para>
-Now, select <menuchoice><guimenu>File</guimenu> <guimenuitem>Merge
-Calendar</guimenuitem></menuchoice> from the menu. Browse and/or enter
+Now, choose the <menuchoice><guimenu>File</guimenu><guisubmenu>Import</guisubmenu>
+<guimenuitem>Import Calendar</guimenuitem></menuchoice> menu item. Browse and/or enter
 the name of the vCalendar file you just transferred to this computer.
 </para>
 
+<screenshot id="screenshot-outlook2vcal-importing2">
+<screeninfo>Outlook2VCal Importing Data #2</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="o2v_importing2.png" format="PNG"/></imageobject>
-<textobject><para><application>Importing data #2</application></para></textobject>
+<textobject><phrase>Outlook2VCal Importing Data #2</phrase></textobject>
+<caption><para>Outlook2VCal Importing Data #2</para></caption>
 </mediaobject>
+</screenshot>
+
+<para>&korganizer; will ask you if you want to <guilabel>Add as new
+calendar</guilabel>, which adds the calendar file as a new local file resource,
+<guilabel>Merge into existing calendar</guilabel>, which merges the calendar
+items into an existing resource or <guilabel>Open in separate window</guilabel>,
+which will allow you to view and edit the calendar, but will not add to
+its default view. To add the calendar items, select one of the two first
+options, and press <guibutton>OK</guibutton>.</para>
 
 <para>
 After you select the <guibutton>OK</guibutton> button, &korganizer;
 will load the appointments from the file and update its calendar.
 </para>
 
+<screenshot id="screenshot-outlook2vcal-importing3">
+<screeninfo>Outlook2VCal Importing Data #3</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="o2v_importing3.png" format="PNG"/></imageobject>
-<textobject><para><application>Importing data #3</application></para></textobject>
+<textobject><phrase>Outlook2VCal Importing Data #3</phrase></textobject>
+<caption><para>Outlook2VCal Importing Data #3</para></caption>
 </mediaobject>
-
+</screenshot>
 <para>
 Save your modified calendar and enjoy using &korganizer;!
 </para>
@@ -199,19 +236,14 @@ Save your modified calendar and enjoy using &korganizer;!
 <title>Limitations</title>
 
 <para>
-This program was tested on &Microsoft; Windows 2000 Server&reg; and
-Professional&reg; running &Microsoft; Outlook 2000&reg;. When attempting
-to use &Microsoft; Outlook 97&reg;, the program will fail miserably.
+The first version of this program (1.0) was tested on &Microsoft; Windows
+2000 Server&reg; and Professional&reg; running &Microsoft; Outlook 2000&reg;.
+When attempting to use &Microsoft; Outlook 97&reg;, the program failed miserably.
 </para>
 
 <para>
-After a debugging session, it appears that &Microsoft; Outlook 97&reg;
-does not export appointments correctly via OLE Automation, even though
-the documentation states that it will. Instead of providing complete
-information about an appointment, Outlook 97&reg; only provided the
-subject however. It did not include start and stop times or any details,
-therefore this program will probably only work if you have Outlook
-2000&reg;.
+The second (2.0) version, is reported to work (at least) with &Microsoft;
+Outlook 97&reg;, 2000&reg;, and 2002&reg;.
 </para>
 
 <para>
