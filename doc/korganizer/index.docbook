@@ -79,9 +79,10 @@
 <contrib>Reviewer</contrib>
 </othercredit>
 
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+
 </authorgroup>
 
-<!-- TRANS:ROLES_OF_TRANSLATORS -->
 
 
 <copyright>
@@ -1559,7 +1560,7 @@ here.</para>
 
 
 <note><para>To activate the settings, start by checking the
-<guilabel>Enable recurrence</guilabel> checkbox. If it is not checked, you are 
+<guilabel>Enable recurrence</guilabel> check box. If it is not checked, you are 
 not able to make any changes on this tab.</para></note>
 
 <para>The Recurrence tab window is divided into four groups:
@@ -1678,7 +1679,7 @@ selected on this combo box will be used when sending these mails. The default
 identity can be set in the <guilabel>Personal</guilabel> section of the
 &korganizer; configuration, other identities in the <guilabel>Security &amp;
 Privacy</guilabel>-&gt;<guilabel>Password &amp; User Account</guilabel> section
-of the &kcontrolcenter;. In addition, identities are gathered from your KMail
+of the &kcontrolcenter;. In addition, identities are gathered from your &kmail;
 settings and from your address book. If you choose to set it globally for &kde;
 in the &kcontrolcenter;, be sure to check the <guilabel>Use email settings from
 Control Center</guilabel>' box in the <guilabel>Personal</guilabel> section of
@@ -1744,7 +1745,7 @@ manually.</para></listitem>
 
 <varlistentry>
 <term><guilabel>Request Response</guilabel></term>
-<listitem><para>Check the <guilabel>Request Response</guilabel> checkbox if
+<listitem><para>Check the <guilabel>Request Response</guilabel> check box if
 this attendee should respond to your schedule plan. Consequently the attendee
 will be emailed with the event schedule information. A small envelope will
 appear in the details list to indicate this. This feature is specially useful
@@ -1840,7 +1841,7 @@ among the <link linkend="reference-action-buttons">Action Buttons</link>,
 <para>Some to-dos require attachments. You can <guibutton>Add...</guibutton>, 
 <guibutton>Edit...</guibutton>, <guibutton>Remove</guibutton>, and
 <guibutton>Show</guibutton> attachments. You can refer to the attachment by
-entering the URI (path or internet address) to the attachment.</para>
+entering the &URI; (path or Internet address) to the attachment.</para>
 
 <para>When you want to confirm, call off or revert the entered data, choose
 among the <link linkend="reference-action-buttons">Action Buttons</link>,
@@ -2019,7 +2020,7 @@ here.</para>
 
 <note><para> If the to-do does not have a due date, this tab is completely
 disabled. To activate the settings, start by checking the
-<guilabel>Enable recurrence</guilabel> checkbox. If it is not checked, you are
+<guilabel>Enable recurrence</guilabel> check box. If it is not checked, you are
 not able to make any changes on this tab.</para></note>
 
 <para>The Recurrence tab window is divided into four groups:
@@ -2056,7 +2057,7 @@ Buttons</link>, <guibutton>OK</guibutton>,
 <para>Some to-dos require attachments. You can <guibutton>Add...</guibutton>, 
 <guibutton>Edit...</guibutton>, <guibutton>Remove</guibutton>, and
 <guibutton>Show</guibutton> attachments. You can refer to the attachment by
-entering the path to the attachment or internet address.</para>
+entering the path to the attachment or Internet address.</para>
 
 <para>When you want to confirm, call off or revert the entered data, choose
 among the <link linkend="reference-action-buttons">Action Buttons</link>,
@@ -2077,12 +2078,12 @@ empty when entering events and to-dos:</para>
 <listitem><para>In the <guilabel>General</guilabel> Tab, you should at least
 fill the <guilabel>Title</guilabel> field and the description (the large
 rectangle), even though neither is mandatory. If you check the
-<guilabel>Reminder</guilabel> checkbox, you should also specify the time, and
+<guilabel>Reminder</guilabel> check box, you should also specify the time, and
 either the sound to be played or the program to be run.</para></listitem>
 <listitem><para>The <guilabel>Attendees</guilabel> tab may be left completely
 empty.</para></listitem>
 <listitem><para>The <guilabel>Recurrence</guilabel> tab must only be filled if
-you checked the <guilabel>Enable Recurrence</guilabel> checkbox.
+you checked the <guilabel>Enable Recurrence</guilabel> check box.
 </para></listitem>
 <listitem><para>The <guilabel>Attachments</guilabel> tab may be left completely
 empty.</para></listitem>
@@ -2357,7 +2358,7 @@ that you enter <userinput>Product launch event</userinput>.</para></step>
 area. For the sake of this simple example, enter <userinput>Introduction,
 The Plan, Conclusion</userinput> on three separate lines.</para></step>
 
-<step><para>Check the <guilabel>Reminder</guilabel> checkbox.  Set the
+<step><para>Check the <guilabel>Reminder</guilabel> check box.  Set the
 reminder time to 15 minutes, just long enough to brew a cup of tea
 prior to the meeting start.</para></step>
 
@@ -2452,7 +2453,7 @@ the toolbar handle and drag the toolbar to a new position on your the
 &korganizer; window.</para>
 
 <para>Localization information like date and time formats can be
-configured from &kcontrol; within the <menuchoice>
+configured from &kcontrolcenter; within the <menuchoice>
 <guisubmenu>Regional &amp; Accessibility</guisubmenu> <guimenuitem>Country/Region &amp;
 Language</guimenuitem> </menuchoice> module.  This control module can be
 accessed from within &korganizer;: just choose the <menuchoice><guimenu>
@@ -2505,7 +2506,7 @@ will not be able to modify it because it will be read-only.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Export to HTML with every save</guilabel></term>
+<term><guilabel>Export to &HTML; with every save</guilabel></term>
 <listitem><para>By checking this option, you can order &korganizer; to export
 your calendar and to-do list to an html file in your home folder every time you
 save your changes.</para></listitem>
@@ -2576,7 +2577,7 @@ its important dates and holidays in the calendar view.</para></listitem>
 down. It could be the time when you usually get up, or the time when you start
 working. This setting does not prevent you to set or view items before
 this time, it just sets the time that will be displayed by default on the top
-of the calendar view. Use the scroll bar to display earlier or later events
+of the calendar view. Use the scrollbar to display earlier or later events
 in the agenda view.</para></listitem>
 </varlistentry>
 
@@ -2731,8 +2732,8 @@ all resources.</para></listitem>
 
 <varlistentry>
 <term><guilabel>Enable scrollbars in month view cells</guilabel></term>
-<listitem><para>This check box toggles the cell scroll bars in the
-month view on and off. Even if you check this box, the scroll bars will
+<listitem><para>This check box toggles the cell scrollbars in the
+month view on and off. Even if you check this box, the scrollbars will
 only appear when needed.</para></listitem>
 </varlistentry>
 
@@ -3165,7 +3166,7 @@ configuration file for security reasons.</para></warning>
  <guiicon>To-do List view</guiicon> and <guiicon>Journal view</guiicon>
 buttons), a Schedule toolbar (with <guiicon>Publish Item Information</guiicon>,
 <guiicon>Send Invitations to Attendees</guiicon>, <guiicon>Send
-Status Update</guiicon> and <guiicon>Open Addressbook</guiicon> buttons) and a
+Status Update</guiicon> and <guiicon>Open Address Book</guiicon> buttons) and a
 Filters toolbar, which allows you to choose a filter for the &korganizer; views.
 You can customize these toolbars in various ways: you can add new icons,
 change the icon size, change toolbar position and add text description
@@ -4157,10 +4158,10 @@ Other users will then be able to retrieve the information.</para>
 <varlistentry id="menu-settings-show-statusbar">
 <term><menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Show Statusbar</guimenuitem>
+<guimenuitem>Show Status bar</guimenuitem>
 </menuchoice> or <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Hide Statusbar</guimenuitem>
+<guimenuitem>Hide Status bar</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Choose this menu item to toggle the display of the
 status bar on and off</action>.</para></listitem>
@@ -4783,7 +4784,7 @@ automatically, and see who accepted or refused attending the appointment.</para>
 
 <para>Currently, group scheduling features are not working. However, hooks exist
 in the calendar data structures for these features. <guilabel>Private</guilabel>
-checkbox, <guilabel>Require response</guilabel> checkbox and
+check box, <guilabel>Require response</guilabel> check box and
 <guilabel>E-mail</guilabel> field will then be fully employed. These controls
 are described in more detail in <link linkend="entering-data">Entering
 Data</link> chapter, in the <link
@@ -4848,9 +4849,9 @@ On July 3 you talk to your hairdresser and agree on an exact time. Thus the
 original To-do becomes similar to an appointment. </para>
 
 <para>&korganizer; makes adding exact time to a To-do very easy. If you
-check the <guilabel>Due</guilabel> checkbox and/or the <guilabel>Start</guilabel>
-checkbox you can specify the appropriate dates, when you check the
-<guilabel>Time associated</guilabel> checkbox and fill in the associated times, your
+check the <guilabel>Due</guilabel> check box and/or the <guilabel>Start</guilabel>
+check box you can specify the appropriate dates, when you check the
+<guilabel>Time associated</guilabel> check box and fill in the associated times, your
 To-do becomes very similar to an event.</para>
 
 </sect1>
