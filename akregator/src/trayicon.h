@@ -32,7 +32,7 @@
 
 namespace Akregator
 {
-    class TrayIcon : public KSystemTray
+    class KDE_EXPORT TrayIcon : public KSystemTray
     {
         Q_OBJECT
         public:
