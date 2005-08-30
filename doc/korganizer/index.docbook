@@ -36,7 +36,7 @@
 <othername>E.</othername>
 <surname>Ahlquist</surname>
 <lineage>Jr.</lineage>
-<affiliation><address><email>pea@ahlquist.org</email></address></affiliation>
+<affiliation><address>&Paul.E.Ahlquist.Jr.mail;</address></affiliation>
 </author>
 
 <author>
@@ -61,34 +61,36 @@
 <othercredit role="developer">
 <firstname>Cornelius</firstname>
 <surname>Schumacher</surname>
-<affiliation><address><email>schumacher@kde.org</email></address></affiliation>
+<affiliation><address>&Cornelius.Schumacher.mail;</address></affiliation>
 <contrib>Developer</contrib>
 </othercredit>
 
 <othercredit role="developer">
 <firstname>Preston</firstname>
 <surname>Brown</surname>
-<affiliation><address><email>pbrown@kde.org</email></address></affiliation>
+<affiliation><address>&Preston.Brown.mail;</address></affiliation>
 <contrib>Developer</contrib>
 </othercredit>
 
 <othercredit role="reviewer">
 <firstname>Lauri</firstname>
 <surname>Watts</surname>
-<affiliation><address><email>lauri@kde.org</email></address></affiliation>
+<affiliation><address>&Lauri.Watts.mail;</address></affiliation>
 <contrib>Reviewer</contrib>
 </othercredit>
 
-<!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+
+
 <copyright>
-<year>2000</year><holder>Milos Prudek</holder>
+<year>2000</year><holder>&Milos.Prudek;</holder>
 </copyright>
 
 <copyright>
 <year>2001</year>
-<holder>Paul E. Ahlquist Jr.</holder>
+<holder>&Paul.E.Ahlquist.Jr;</holder>
 </copyright>
 
 <copyright>
@@ -103,8 +105,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2004-10-17</date>
-<releaseinfo>2.31.00</releaseinfo>
+<date>2005-08-29</date>
+<releaseinfo>3.00.00</releaseinfo>
 
 <abstract><para>&korganizer; is an easy to use personal information manager
 (<acronym>PIM</acronym>).  You can write journal entries, schedule appointments,
@@ -120,6 +122,9 @@ help you keep your schedule. </para></abstract>
 <keyword>schedule</keyword>
 <keyword>alarm</keyword>
 <keyword>appointment</keyword>
+<keyword>event</keyword>
+<keyword>jornal</keyword>
+<keyword>to-do</keyword>
 </keywordset>
 
 </bookinfo>
@@ -454,7 +459,7 @@ Resources</guilabel> configuration module.</para>
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Birthdays from KAddressBook</guilabel></term>
+<term><guilabel>Birthdays from &kaddressbook;</guilabel></term>
 <listitem><para>Add this resource to view birthdays from contacts in &kaddressbook;
 in your calendar. The birthday appears in your calendar as a read only event and
 without associated time.</para></listitem>
@@ -479,12 +484,12 @@ Development kit.
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>XML Feature Plan</guilabel></term>
-<listitem><para>Add this resource to load a XML Feature Plan as to-dos.
- The XML Feature Plan is a scheme designed to document the new features of
+<term><guilabel>&XML; Feature Plan</guilabel></term>
+<listitem><para>Add this resource to load a &XML; Feature Plan as to-dos.
+The &XML; Feature Plan is a scheme designed to document the new features of
 future software releases. It was designed to fit the &kde; release schedule
 needs, but can be helpful for any software project. The information from the
-XML file can be used to control feature freezes, to report the new
+&XML; file can be used to control feature freezes, to report the new
 features of new release or the status of the new features of a future release.
 </para></listitem>
 </varlistentry>
@@ -504,7 +509,7 @@ storing your calendar information under
 If you have access to a server that supports the
 <ulink url="http://www.groupdav.org">GroupDav protocol</ulink>, add this
 resource in order to be able to to save (and load) events<!--, journals, free/busy information?--> and to-dos
-to the server. To add the resource, you will need to know the server URL, your
+to the server. To add the resource, you will need to know the server &URL;, your
 user name and your password. The GroupDav protocol supports the storage of 
 contacts, so you may want to add and configure the &kaddressbook;
 resource too.</para>
@@ -523,7 +528,7 @@ If you have access to a
 <ulink url="http://www.novell.com/products/groupwise">Novell GroupWise Server</ulink>
 (version 6.5 or later), add this resource in order to be able to to save (and load)
 events, free/busy information <!--,journals ?-->and to-dos to the server. To add the resource, you will
-need to know the server URL, your user name and your password. There is
+need to know the server &URL;, your user name and your password. There is
 support for storage of contacts, so you may want to configure &kaddressbook;
 resource.</para>
 <para>The most practical way to configure the access to a GroupWise server is
@@ -538,7 +543,7 @@ GroupWise resources, but &kmail;, &kaddressbook; too.</para>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Calendar on IMAP Server via KMail</guilabel></term>
+<term><guilabel>Calendar on IMAP Server via &kmail;</guilabel></term>
 <listitem><para>
 If you have access to a server that shares calendar data via IMAP, add this
 resource in order to be able to to save (and load) events, to-dos, free/busy information and journal entries
@@ -596,7 +601,7 @@ If you have access to a
 <ulink url="http://www.microsoft.com/exchange">Exchange 2000 Server</ulink>,
 add this resource in order to be able to to save (and load)
 events <!--,journals, free/busy information and to-dos?--> to the server. To add the resource, you will
-need to know the server URL, <!--port?-->your user name and your password. There
+need to know the server &URL;, <!--port?-->your user name and your password. There
 is support for (read only) contacts, so you may want to configure &kaddressbook;
 resource.</para>
 <!--FIXME: does the wizard work?
@@ -679,13 +684,13 @@ the file, his changes will be lost.
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>SUSE Linux OpenExchange Server</guilabel></term>
+<term><guilabel>SUSE &Linux; OpenExchange Server</guilabel></term>
 <listitem><para>
 If you have access to a
-<ulink url="http://www.novell.com/products/groupwise">SUSE Linux OpenExchange
+<ulink url="http://www.novell.com/products/groupwise">SUSE &Linux; OpenExchange
 Server</ulink>, version 4.1, add this resource in order to be able to to save
 (and load) events, free/busy information <!--,journals ?-->and to-dos to the server. To add the
-resource, you will need to know the server URL, your user name and your
+resource, you will need to know the server &URL;, your user name and your
 password. There is support for storage of contacts, so you may want to configure
 &kaddressbook; resource.</para>
 <para>The most practical way to configure the access to a GroupWise server is
@@ -702,13 +707,13 @@ OpenExchange resources, but &kmail;, &kaddressbook; too.</para>
 <varlistentry>
 
 <!--FIXME: are there other XML-RPC servers?-->
-<term><guilabel>eGroupware Server (via XML-RPC)</guilabel></term>
+<term><guilabel>eGroupware Server (via &XML;-RPC)</guilabel></term>
 <listitem><para>
 If you have access to a
 <ulink url="http://www.egroupware.org">eGroupware
 Server</ulink>, version 1.0, add this resource in order to be able to to save
 (and load) events, free/busy information <!--,journals ?-->and to-dos to the server. To add the
-resource, you will need to know the server URL, your user name and your
+resource, you will need to know the server &URL;, your user name and your
 password. There is support for storage of contacts, so you may want to configure
 &kaddressbook; resource.</para>
 <para>The most practical way to configure the access to a eGroupware server is
@@ -747,7 +752,7 @@ which will allow you to view and edit the calendar, but will not add to
 its default view.</para>
 
 <para>A good time to do this would be if you received a
-vCalendar with a few entries via e-mail, for instance, or if you are planning
+vCalendar with a few entries via email, for instance, or if you are planning
 to import your calendar from another application. In the latter case, the first
 thing to do is to use this application to export the calendar data in one of the
 format above, or use a tool to convert from the application native format. If you
@@ -758,7 +763,7 @@ are migrating from &Microsoft; Outlook&reg;, please check
 older calendar program for &UNIX;, you may wish to <action>import your events,
 journal entries, and to-dos</action> directly to &korganizer;. To do so, choose the
 <menuchoice><guimenu>File</guimenu><guisubmenu>Import</guisubmenu>
-<guimenuitem>Import From UNIX Ical Tool</guimenuitem></menuchoice>.
+<guimenuitem>Import From &UNIX; Ical Tool</guimenuitem></menuchoice>.
 This action will read the <filename>.calendar</filename> file from your home
 folder and merge any entries it contains into your current calendar.
 If any errors or suspicious things occur during the process, you will be
@@ -795,7 +800,7 @@ data as a new vCalendar file choose the <menuchoice><guimenu>File</guimenu>
 Enter the file name and location for the new file to complete the export
 action.</para>
 
-<para>You can export your calendar or a part of it as a HTML
+<para>You can export your calendar or a part of it as a &HTML;
 file, suitable for publishing in the web. Anyone with access to this file,
 using a web browser, will be able to view it. This is an easy way to share
 calendar information with your colleagues and friends.</para>
@@ -1784,8 +1789,6 @@ to publish and retrieve free/busy information, please check the
 will allow you to enter the location of their free/busy information.
 </para>
 
-<para></para>
-
 <variablelist>
 
 <varlistentry>
@@ -2140,7 +2143,7 @@ status to the event's organizer, so you will not need to use the <menuchoice>
 <menuchoice><guimenu>Schedule</guimenu><guimenuitem>Publish
 Item Information...</guimenuitem></menuchoice> menu item, when the item is
 selected. Then a dialog appears, asking you the email addresses which will
-receive the event or to-do. The item will be sent by e-mail, in the iCalendar
+receive the event or to-do. The item will be sent by email, in the iCalendar
 format.</para>
 
 <para>Please note that you can use this action to email any item to
@@ -2916,28 +2919,28 @@ updating or deleting events or to-dos which involve others. This mail can be
 an invitation to attendees of an event you created, a cancellation of an event
 you created, an answer or an update on your invitation status, an event change
 request, etc... Check this option if you you want to use the groupware
-functionality (e.g Configuring Kontact as a KDE
+functionality (e.g Configuring &kontact; as a &kde;
 <guilabel>Kolab</guilabel> client).</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Send copy to owner when mailing events</guilabel></term>
 <listitem><para>When you check the <guilabel>Send copy to owner when mailing
-events</guilabel> box, you will get a copy of all e-mail messages that
+events</guilabel> box, you will get a copy of all email messages that
 &korganizer; sends at your request to the event attendees.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Mail Client</guilabel></term>
 <listitem><para>Here you can choose which type of mail transport you would like
-to use. You can either use &kmail; or the sendmail command (which must be
+to use. You can either use &kmail; or the &Sendmail; command (which must be
 installed on your system in order to work).</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Additional email addresses</guilabel></term>
 <listitem><para>This tells &korganizer; what further email addresses you have.
-You can add, edit or remove additional e-mails addresses. These email addresses
+You can add, edit or remove additional emails addresses. These email addresses
 are the ones you have in addition to the one set in
 <link linkend="config-main-personal">personal preferences</link>.
 If you get an invitation to an event, but use another email address there, you
@@ -3015,7 +3018,7 @@ uploaded automatically. Note that you may skip this option and choose to mail or
 upload your Free/Busy information via the <guilabel>Schedule</guilabel> menu of
 &korganizer;.</para>
 
-<para>If your application is setup to work as a <guilabel>KDE Kolab
+<para>If your application is setup to work as a <guilabel>&kde; Kolab
 client</guilabel>, this is not required. The <guilabel>Kolab2</guilabel> server
 can take care of publishing your Free/Busy information and manage the access to
 it from other users.</para>
@@ -3036,8 +3039,8 @@ and available to others</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Server URL</guilabel></term>
-<listitem><para>Enter the URL for the server on which your Free/Busy information
+<term><guilabel>Server &URL;</guilabel></term>
+<listitem><para>Enter the &URL; for the server on which your Free/Busy information
 shall be published. Ask the server administrator for this information.</para>
 <para>Kolab2 server example:
 <userinput>webdavs://kolab2.com/freebusy/joe@kolab2.com.ifb</userinput>
@@ -3091,13 +3094,13 @@ file called <userinput>user@domain.ifb</userinput>, else it will fetch
 <userinput>user.ifb</userinput>. Ask the server Administrator if you are not
 sure about how to configure this option.</para>
 <para><guilabel>Kolab2 server specificity:</guilabel> If you are configuring
-&korganizer; as a component to a <guilabel>KDE Kolab client
-(Kontact/Kolab)</guilabel> you have to check this option.</para></listitem>
+&korganizer; as a component to a <guilabel>&kde; Kolab client
+(&kontact;/Kolab)</guilabel> you have to check this option.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Server URL</guilabel></term>
-<listitem><para>Enter the URL for the server on which your Free/Busy information
+<term><guilabel>Server &URL;</guilabel></term>
+<listitem><para>Enter the &URL; for the server on which your Free/Busy information
 shall be fetched. Ask the server administrator for this information.</para>
 <para><guilabel>Kolab2 server example:
 </guilabel><userinput>webdavs://kolab2.com/freebusy/</userinput>
@@ -3455,7 +3458,7 @@ Calendar Widget) and the View Type (Day, Week, Month or To-do).</para>
 vCalendar file somewhere, and you would like to <action>merge its contents
 into your own calendar, add as a new resource or open it as a new window</action>,
 choose this menu item.  A good time to do this would be if you received a
-vCalendar with a few entries via e-mail, for instance.</para>
+vCalendar with a few entries via email, for instance.</para>
 <para>For more information about this action, please refer to
 <xref linkend="managing-import" />.</para>
 </listitem>
@@ -3465,7 +3468,7 @@ vCalendar with a few entries via e-mail, for instance.</para>
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guisubmenu>Import</guisubmenu>
-<guimenuitem>Import From UNIX Ical Tool</guimenuitem>
+<guimenuitem>Import From &UNIX; Ical Tool</guimenuitem>
 </menuchoice></term>
 <listitem><para>If you have used <application>ical</application>, a popular but
 older calendar program for &UNIX;, you may wish to <action>import your events,
@@ -3499,7 +3502,7 @@ added to your calendar.</para>
 <guisubmenu>Export</guisubmenu>
 <guimenuitem>Export Web Page...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>You can export your calendar or a part of it as a HTML
+<listitem><para><action>You can export your calendar or a part of it as a &HTML;
 file, suitable for publishing on the World Wide Web.</action></para>
 <para>For more information about this action, please refer to
 <xref linkend="managing-export" />.</para></listitem>
@@ -3640,7 +3643,7 @@ to-dos.</para>
 <para><guimenuitem>Cut</guimenuitem>, <guimenuitem>Copy</guimenuitem>, and
 <guimenuitem>Paste</guimenuitem> menu items behave in the same fashion as in
  other
-KDE applications. With the <guimenuitem>Find</guimenuitem> menu item you can
+&kde; applications. With the <guimenuitem>Find</guimenuitem> menu item you can
 find event and to-dos across the current calendar.</para>
 
 <variablelist>
@@ -4583,7 +4586,7 @@ syncing problems.</para>
 <para>Can I import my old <application>Ical</application> data?</para>
 </question>
 <answer><para>Sure! Follow the instructions in <link
-linkend="menu-file-import-ical">Import From UNIX Ical section</link>.</para>
+linkend="menu-file-import-ical">Import From &UNIX; Ical section</link>.</para>
 </answer>
 </qandaentry>
 <qandaentry>
@@ -4641,32 +4644,33 @@ linkend="config-main-free-busy">Free/Busy</link>.</para>
 
 <para>Program copyright 2000-2004, The &kde; Developers</para>
 
-<para>Contributors:</para>
-
-<itemizedlist>
-<listitem><para>Reinhold Kainhofer <email>reinhold@kainhofer.com</email></para>
-</listitem>
-<listitem><para>Cornelius Schumacher <email>schumacher@kde.org</email></para>
-</listitem>
-<listitem><para>Preston Brown <email>pbrown@kde.org</email></para>
-</listitem>
-</itemizedlist>
-
-<para>Documentation copyright 2000 Milos Prudek</para>
-<para>Documentation copyright 2001 Paul E. Ahlquist, Jr
-<email>pea@ahlquist.org</email></para>
-<para>Documentation copyright 2004 J&uuml;rgen Nagel
-<email>juergen.nagel@student.fh-reutlingen.de</email></para>
-<para>Documentation copyright 2005 Carlos Leonhard Woelz
-<email>carloswoelz@imap-mail.com</email></para>
-<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
-
 <para>&korganizer; homepage is at <ulink
 url="http://korganizer.kde.org">http://korganizer.kde.org</ulink></para>
 
 <para>If you discover bugs or see room for improvement in &korganizer; please
 visit <ulink url="http://korganizer.kde.org/contact/bugswishes.html">
 http://korganizer.kde.org/contact/bugswishes.html</ulink>.</para>
+
+<para>Contributors:</para>
+
+<itemizedlist>
+<listitem><para>Reinhold Kainhofer <email>reinhold@kainhofer.com</email></para>
+</listitem>
+<listitem><para>&Cornelius.Schumacher; &Cornelius.Schumacher.mail;</para>
+</listitem>
+<listitem><para>&Preston.Brown; &Preston.Brown.mail;</para>
+</listitem>
+</itemizedlist>
+
+<para>Documentation copyright 2000 &Milos.Prudek;</para>
+<para>Documentation copyright 2001 Paul E. Ahlquist, Jr
+<email>&Paul.E.Ahlquist.Jr.mail;</email></para>
+<para>Documentation copyright 2004 J&uuml;rgen Nagel
+<email>juergen.nagel@student.fh-reutlingen.de</email></para>
+<para>Documentation copyright 2005 Carlos Leonhard Woelz
+<email>carloswoelz@imap-mail.com</email></para>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
 &underFDL;
 &underGPL;
@@ -4856,6 +4860,7 @@ To-do becomes very similar to an event.</para>
 </glossary>
 
 &documentation.index;
+
 </book>
 <!--
 Local Variables:
