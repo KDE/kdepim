@@ -825,8 +825,10 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
           //kdDebug() << "EVENTFILTER: Key_Up -> skipping " << currentIndex - 1 << endl;
           completionBox()->setCurrentItem( itemAbove->prev() );
           completionBox()->setSelected( currentIndex - 2, true );
-        } else {
-          // nothing to skip to, let's stay where we are
+        } else if ( currentIndex == 1 ) {
+            // nothing to skip to, let's stay where we are, but make sure the
+            // first header becomes visible, if we are the first real entry
+            completionBox()->ensureVisible( 0, 0 );
         }
         return true;
       }
@@ -872,20 +874,23 @@ const QStringList KPIM::AddresseeLineEdit::getAdjustedCompletionItems( bool full
 
   int lastSourceIndex = -1;
   unsigned int i = 0;
+  QMap<int, QStringList> sections;
   for ( QStringList::Iterator it = items.begin(); it != items.end(); ++it, ++i ) {
     CompletionItemsMap::const_iterator cit = s_completionItemMap->find(*it);
     if ( cit == s_completionItemMap->end() )continue;
     int idx = (*cit).second;
-    if ( lastSourceIndex == -1 || lastSourceIndex != idx ) {
-      if ( s_completion->order() == KCompletion::Weighted ) {
-        const QString sourceLabel(  (*s_completionSources)[idx] );
-        items.insert( it, sourceLabel );
-      }
-      lastSourceIndex = idx;
-    }
     if ( s_completion->order() == KCompletion::Weighted ) {
-      (*it) = (*it).prepend( s_completionItemIndentString );
+      if ( lastSourceIndex == -1 || lastSourceIndex != idx ) {
+        const QString sourceLabel(  (*s_completionSources)[idx] );
+        if ( sections.find(idx) == sections.end() ) {
+          items.insert( it, sourceLabel );
+        }
+        lastSourceIndex = idx;
+      }
     }
+    (*it) = (*it).prepend( s_completionItemIndentString );
+    sections[idx].append( *it );
+
     if ( i > beforeDollarCompletionCount ) { 
       // remove the '$$whatever$' part
       int pos = (*it).find( '$', 2 );
@@ -894,6 +899,13 @@ const QStringList KPIM::AddresseeLineEdit::getAdjustedCompletionItems( bool full
       (*it) = (*it).mid( pos + 1 );
     }
   }
-  return items;
+  QStringList sortedItems;
+  for ( QMap<int, QStringList>::Iterator it( sections.begin() ), end( sections.end() ); it != end; ++it ) {
+    sortedItems.append( (*s_completionSources)[it.key()] );
+    for ( QStringList::Iterator sit( (*it).begin() ), send( (*it).end() ); sit != send; ++sit ) {
+      sortedItems.append( *sit );
+    }
+  }
+  return sortedItems;
 }
 #include "addresseelineedit.moc"
