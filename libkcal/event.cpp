@@ -123,7 +123,6 @@ bool Event::isMultiDay() const
     end = end.addSecs(-1);
   }
   bool multi = ( start.date() != end.date() && start <= end );
-kdDebug() <<" Item " << summary() << " is multi: " << multi << endl;
   return multi;
 }
 
