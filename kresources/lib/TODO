@@ -18,18 +18,6 @@ kresources/lib (general):
 -) Better progress bar messages
 
 
-kresources/newexchange:
-=======================
--) handling of errors returned in a valid dav response (Exchange)
--) recurrences on exchange
--) timezone for exchange
--) exdate on exchange
--) notifications from the server (old exchange resource has it!)
--) In Exchange abook: if an address is removed, store the empty string to the
-   server to delete the data from the server
--) Journal upload not working
-
-
 kresources/groupdav:
 ====================
 -) recurrences on ogo

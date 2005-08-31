@@ -1,8 +1,0 @@
-<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="kandy" version="1">
-<MenuBar>
-  <Menu name="show"><text>&amp;Show</text>
-    <Action name="show_terminal" />
-  </Menu>
-</MenuBar>
-</kpartgui>

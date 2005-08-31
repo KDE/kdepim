@@ -1,6 +1,1 @@
-if include_exchange_SUBDIR
-EXCHANGE_SUBDIR=exchange 
-endif
-
-SUBDIRS = lib remote egroupware $(EXCHANGE_SUBDIR) kolab slox groupwise featureplan groupdav birthdays blogging newexchange
-# SUBDIRS = remote egroupware $(EXCHANGE_SUBDIR) kolab slox groupwise featureplan 
+SUBDIRS = lib remote egroupware kolab slox groupwise featureplan groupdav birthdays blogging
