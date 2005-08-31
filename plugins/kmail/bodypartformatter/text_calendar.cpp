@@ -673,6 +673,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         // These should just be saved with their type as the dir
         if ( saveFile( "Receiver Not Searched", iCal, path ) ) {
           ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+          result = true;
         }
       }
       if ( result )
