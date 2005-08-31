@@ -83,6 +83,12 @@ QDateTime Event::dtEnd() const
   return dtStart();
 }
 
+QDate Event::dateEnd() const
+{
+  if ( doesFloat() ) return dtEnd().date();
+  else return dtEnd().addSecs(-1).date();
+}
+
 QString Event::dtEndTimeStr() const
 {
   return KGlobal::locale()->formatTime(dtEnd().time());
@@ -110,7 +116,14 @@ bool Event::hasEndDate() const
 
 bool Event::isMultiDay() const
 {
-  bool multi = !(dtStart().date() == dtEnd().date());
+  // End date is non inclusive, so subtract 1 second...
+  QDateTime start( dtStart() );
+  QDateTime end( dtEnd() );
+  if ( ! doesFloat() ) {
+    end = end.addSecs(-1);
+  }
+  bool multi = ( start.date() != end.date() && start <= end );
+kdDebug() <<" Item " << summary() << " is multi: " << multi << endl;
   return multi;
 }
 

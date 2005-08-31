@@ -34,7 +34,7 @@ class LIBKCAL_EXPORT Event : public Incidence
   public:
     /**
       Transparency of event.
-      
+
       Opaque      - event appears in free/busy time
       Transparent - event doesn't appear in free/busy time
     */
@@ -63,6 +63,12 @@ class LIBKCAL_EXPORT Event : public Incidence
     */
     virtual QDateTime dtEnd() const;
     /**
+      Returns the day when the event ends. This might be different from
+      dtEnd().date, since the end date/time is non-inclusive. So timed events
+      ending at 0:00 have their end date on the day before.
+    */
+    QDate dateEnd() const;
+    /**
       Return end time as string formatted according to the users locale
       settings.
     */
@@ -70,7 +76,7 @@ class LIBKCAL_EXPORT Event : public Incidence
     /**
       Return end date as string formatted according to the users locale
       settings.
-      
+
       @param shortfmt if true return string in short format, if false return
                       long format
     */

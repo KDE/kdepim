@@ -388,7 +388,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
           eventList.append( event );
       }
     } else {
-      if ( event->dtStart().date() <= qd && event->dtEnd().date() >= qd ) {
+      if ( event->dtStart().date() <= qd && event->dateEnd() >= qd ) {
         eventList.append( event );
       }
     }
