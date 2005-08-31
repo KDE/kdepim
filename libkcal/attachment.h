@@ -24,7 +24,9 @@
 #include "listbase.h"
 #include "libkcal_export.h"
 
+#include <qcstring.h>
 #include <qstring.h>
+
 
 namespace KCal {
 
@@ -58,15 +60,21 @@ class KDE_EXPORT Attachment
       @param mime the mime type of the attachment
     */
     Attachment( const char *base64, const QString &mime = QString::null );
+    ~Attachment();
 
     /* The VALUE parameter in iCal */
     bool isUri() const;
     QString uri() const;
     void setUri( const QString &uri );
     
+    /* Data attachments are currently not implemented in iCal. */
     bool isBinary() const;
     char *data() const;
+    QByteArray &decodedData() const;
     void setData( const char *base64 );
+    void setDecodedData( const QByteArray &data );
+    /* size only for binary attachments */
+    uint size() const;
 
     /* The optional FMTTYPE parameter in iCal */
     QString mimeType() const;
@@ -79,12 +87,18 @@ class KDE_EXPORT Attachment
 		/* The custom X-LABEL parameter to show a human-readable title */
 		QString label() const;
 		void setLabel( const QString &label );
+		
+		/* The custom X-KONTACT-TYPE parameter, controls whether the attachment
+		   is 'local', e.g. with hidden path. */
+		bool isLocal() const;
+		void setLocal( bool local );
 
   private:
     QString mMimeType;
     QString mData;
     bool mBinary;
 		bool mShowInline;
+		bool mLocal;
 		QString mLabel;
 
     class Private;

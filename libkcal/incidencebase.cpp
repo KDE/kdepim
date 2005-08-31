@@ -23,6 +23,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <kurl.h>
 
 #include "calformat.h"
 
@@ -378,4 +379,9 @@ void IncidenceBase::updated()
     ++it;
     o->incidenceUpdated( this );
   }
+}
+
+KURL IncidenceBase::uri() const
+{
+  return KURL( QString( "urn:x-ical:" ) + uid() );
 }

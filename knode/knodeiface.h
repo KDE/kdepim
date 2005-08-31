@@ -4,6 +4,7 @@
     KNode, the KDE newsreader
     Copyright (c) 1999-2003 the KNode authors.
     See file AUTHORS for details
+    Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -147,6 +148,10 @@ k_dcop:
    */
   virtual bool handleCommandLine() = 0;
 
+  /**
+   * Open a 'news:' URL.
+   */
+  virtual void openURL( const KURL &url ) = 0;
 };
 
 #endif

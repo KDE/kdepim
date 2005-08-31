@@ -4,6 +4,7 @@
     KNode, the KDE newsreader
     Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
+    Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +20,11 @@
 
 #include <kdeversion.h>
 #include <kdebug.h>
+#include <kmultipledrag.h>
 #include <kstringhandler.h>
+#include <kurldrag.h>
+
+#include <libkdepim/kdepimprotocols.h>
 
 #include "knglobals.h"
 #include "knconfigmanager.h"
@@ -241,7 +246,16 @@ QString KNHdrViewItem::text( int col ) const
 
 QDragObject* KNHdrViewItem::dragObject()
 {
-  QDragObject *d = new QStoredDrag( "x-knode-drag/article" , listView()->viewport() );
+  KMultipleDrag *d = new KMultipleDrag( listView()->viewport() );
+  KURL::List list;
+  QString mid = art->messageID()->asUnicodeString();
+  // for some obscure reason it returns messageid in <>s
+  mid = mid.mid( 1, mid.length() - 2 );
+  list.append( KDEPIMPROTOCOL_NEWSARTICLE + mid );
+  QMap<QString,QString> metadata;
+  metadata["labels"] = KURL::encode_string( art->subject()->asUnicodeString() );
+  d->addDragObject( new KURLDrag( list, metadata, 0L ) );
+  d->addDragObject( new QStoredDrag( "x-knode-drag/article" , 0L ) );
   d->setPixmap( knGlobals.configManager()->appearance()->icon( KNConfig::Appearance::posting ) );
   return d;
 }

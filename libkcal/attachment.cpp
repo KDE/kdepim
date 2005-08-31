@@ -21,33 +21,52 @@
 
 #include "attachment.h"
 
+#include <libkmime/kmime_codecs.h>
+
 using namespace KCal;
 
+class Attachment::Private
+{
+public:
+  mutable QByteArray mDataCache;
+  mutable uint mSize;
+};
+
 Attachment::Attachment( const Attachment &attachment)
+  : d( new Attachment::Private )
 {
   mMimeType = attachment.mMimeType;
   mData = attachment.mData;
   mBinary = attachment.mBinary;
 	mShowInline = attachment.mShowInline;
 	mLabel = attachment.mLabel;
+	mLocal = attachment.mLocal;
 }
 
 Attachment::Attachment(const QString& uri, const QString& mime)
+  : d( new Attachment::Private )
 {
   mMimeType = mime;
   mData = uri;
   mBinary = false;
 	mShowInline = false;
+	mLocal = false;
 	mLabel = QString::null;
 }
 
 Attachment::Attachment(const char *base64, const QString& mime)
+  : d( new Attachment::Private )
 {
   mMimeType = mime;
   mData = QString::fromUtf8(base64);
   mBinary = true;
 	mShowInline = false;
 	mLabel = QString::null;
+}
+
+Attachment::~Attachment()
+{
+  delete d;
 }
 
 bool Attachment::isUri() const
@@ -82,10 +101,43 @@ char *Attachment::data() const
     return 0;
 }
 
+QByteArray &Attachment::decodedData() const
+{
+  if ( !d->mDataCache ) {
+    QByteArray in;
+    const QCString data = mData.utf8();
+    in.setRawData( data.data(), data.size() );
+    KMime::Codec * codec = KMime::Codec::codecForName( "base64" );
+    d->mDataCache = codec->decode( in );
+    in.resetRawData( data.data(), data.size() );
+  }
+  
+  return d->mDataCache;
+}
+
+void Attachment::setDecodedData( const QByteArray &data )
+{
+  KMime::Codec *codec = KMime::Codec::codecForName( "base64" );
+  setData( codec->encode( data ).data() );
+  d->mDataCache = data;
+}
+
 void Attachment::setData(const char *base64)
 {
   mData = QString::fromUtf8(base64);
   mBinary = true;
+  d->mDataCache = QByteArray();
+  d->mSize = 0;
+}
+
+uint Attachment::size() const
+{
+  if ( isUri() )
+    return 0;
+  if ( !d->mSize )
+    d->mSize = decodedData().size();
+  
+  return d->mSize;
 }
 
 QString Attachment::mimeType() const
@@ -118,3 +170,12 @@ void Attachment::setLabel( const QString& label )
   mLabel = label;
 }
 
+bool Attachment::isLocal() const
+{
+  return mLocal;
+}
+
+void Attachment::setLocal( bool local )
+{
+  mLocal = local;
+}

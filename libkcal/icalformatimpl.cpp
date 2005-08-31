@@ -623,6 +623,12 @@ icalproperty *ICalFormatImpl::writeAttachment(Attachment *att)
     icalparameter_set_xname( icalparameter_label, "X-LABEL" );
     icalproperty_add_parameter( p, icalparameter_label );
   }
+  
+  if ( att->isLocal() ) {
+    icalparameter* icalparameter_inline = icalparameter_new_x( "local" );
+    icalparameter_set_xname( icalparameter_inline, "X-KONTACT-TYPE" );
+    icalproperty_add_parameter( p, icalparameter_inline );
+  }
 
   return p;
 }
@@ -1185,6 +1191,19 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   icalparameter *p = icalproperty_get_first_parameter(attach, ICAL_FMTTYPE_PARAMETER);
   if (p)
     attachment->setMimeType(QString(icalparameter_get_fmttype(p)));
+  
+  p = icalproperty_get_first_parameter( attach, ICAL_X_PARAMETER );
+  while (p) {
+    QString xname = QString( icalparameter_get_xname( p ) ).upper();
+    QString xvalue = QString::fromUtf8( icalparameter_get_xvalue( p ) );
+    if ( xname == "X-CONTENT-DISPOSITION" )
+      attachment->setShowInline( xvalue.lower() == "inline" );
+    if ( xname == "X-LABEL" )
+      attachment->setLabel( xvalue );
+    if ( xname == "X-KONTACT-TYPE" )
+      attachment->setLocal( xvalue.lower() == "local" );
+    p = icalproperty_get_next_parameter( attach, ICAL_X_PARAMETER );
+  }
 
   return attachment;
 }

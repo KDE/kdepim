@@ -483,7 +483,8 @@ void KNMainWidget::openURL(const KURL &url)
   }
 
   if (acc) {
-    bool isMID=(url.url().contains('@')==1);
+    QString decodedUrl = KURL::decode_string( url.url() );
+    bool isMID=( decodedUrl.contains('@')==1 );
 
     if (!isMID) {
       QString groupname=url.path(-1);
@@ -511,7 +512,7 @@ void KNMainWidget::openURL(const KURL &url)
         c_olView->setActive( item );
       }
     } else {
-      QString groupname = url.url().mid( url.protocol().length()+1 );
+      QString groupname = decodedUrl.mid( url.protocol().length()+1 );
       KNGroup *g = g_rpManager->currentGroup();
       if (g == 0)
         g = g_rpManager->firstGroupOfAccount(acc);

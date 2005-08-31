@@ -8,6 +8,7 @@ digraph "inter-dependency graph for kdepim" {
         "kaddressbook" -> "kontact";
         "kaddressbook" -> "kresources";
         "kaddressbook" -> "wizards";
+        "kdgantt" -> "korganizer";
         "kgantt" -> "korganizer";
         "kmail" -> "plugins";
         "kmail" -> "wizards";

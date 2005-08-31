@@ -5,6 +5,7 @@ INCLUDES = -I$(srcdir)/libical/src/libical \
   -I./libical/src/libicalss -I$(srcdir)/versit -I$(top_srcdir)/ \
   -I$(top_srcdir)/ktnef \
   -I$(top_srcdir)/libemailfunctions \
+  -I$(top_srcdir)/libkmime \
   $(all_includes)
 
 lib_LTLIBRARIES   = libkcal.la
@@ -14,6 +15,7 @@ libkcal_la_LIBADD  = versit/libversit.la $(LIB_KIO) \
                      ./libical/src/libicalss/libicalss.la \
                      $(top_builddir)/ktnef/lib/libktnef.la \
                      ../libemailfunctions/libemailfunctions.la \
+                     $(top_builddir)/libkmime/libkmime.la \
                      -lkresources -lkabc
 
 libkcal_la_COMPILE_FIRST = ./libical/src/libical/ical.h ./libical/src/libicalss/icalss.h

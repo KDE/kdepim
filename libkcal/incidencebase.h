@@ -3,6 +3,7 @@
 
     Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+    Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -29,6 +30,8 @@
 
 #include "customproperties.h"
 #include "attendee.h"
+
+class KURL;
 
 namespace KCal {
 
@@ -110,6 +113,8 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     void setUid( const QString & );
     /** Return the unique id for the event */
     QString uid() const;
+    /** Return the uri for the event, of form urn:x-ical:<uid> */
+    KURL uri() const;
 
     /** Sets the time the incidence was last modified. */
     void setLastModified( const QDateTime &lm );

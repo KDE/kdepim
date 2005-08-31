@@ -3,6 +3,7 @@
 
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+    Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -194,12 +195,7 @@ static QString eventViewerFormatAttachments( Incidence *i )
     Attachment::List::ConstIterator it;
     for( it = as.begin(); it != as.end(); ++it ) {
       if ( (*it)->isUri() ) {
-        QString name;
-        if ( (*it)->uri().startsWith( "kmail:" ) )
-          name = i18n( "Show mail" );
-        else
-          name = (*it)->uri();
-        tmpStr += eventViewerAddLink( (*it)->uri(), name );
+        tmpStr += eventViewerAddLink( (*it)->uri(), (*it)->label() );
         tmpStr += "<br>";
       }
     }

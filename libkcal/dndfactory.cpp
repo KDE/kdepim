@@ -4,6 +4,7 @@
     Copyright (c) 1998 Preston Brown <pbrown@kde.org>
     Copyright (c) 2001,2002 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+    Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -23,11 +24,14 @@
 
 #include <qapplication.h>
 #include <qclipboard.h>
+#include <qdragobject.h>
 
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
+#include <kmultipledrag.h>
 #include <klocale.h>
+#include <kurldrag.h>
 
 #include "vcaldrag.h"
 #include "icaldrag.h"
@@ -45,19 +49,24 @@ DndFactory::DndFactory( Calendar *cal ) :
 {
 }
 
-ICalDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
+KMultipleDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
 {
   CalendarLocal cal( mCalendar->timeZoneId() );
   Incidence *i = incidence->clone();
   cal.addIncidence( i );
 
-  ICalDrag *icd = new ICalDrag( &cal, owner );
+  KMultipleDrag *kmd = new KMultipleDrag( owner );
+  kmd->addDragObject( new ICalDrag( &cal, 0 ) );
+  QMap<QString, QString> metadata;
+  metadata["labels"] = KURL::encode_string( i->summary() );
+  kmd->addDragObject( new KURLDrag( i->uri(), metadata, 0 ) );
+  
   if ( i->type() == "Event" )
-    icd->setPixmap( BarIcon( "appointment" ) );
+    kmd->setPixmap( BarIcon( "appointment" ) );
   else if ( i->type() == "Todo" )
-    icd->setPixmap( BarIcon( "todo" ) );
+    kmd->setPixmap( BarIcon( "todo" ) );
 
-  return icd;
+  return kmd;
 }
 
 Event *DndFactory::createDrop(QDropEvent *de)

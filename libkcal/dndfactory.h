@@ -26,9 +26,10 @@
 
 #include "libkcal_export.h"
 
+class KMultipleDrag;
+
 namespace KCal {
 
-class ICalDrag;
 class Event;
 class Todo;
 class Calendar;
@@ -47,7 +48,7 @@ class LIBKCAL_EXPORT DndFactory
     /**
       Create a drag object.
     */
-    ICalDrag *createDrag( Incidence *incidence, QWidget *owner );
+    KMultipleDrag *createDrag( Incidence *incidence, QWidget *owner );
 
     /** Create Todo object from drop event */
     Todo *createDropTodo(QDropEvent *de);
