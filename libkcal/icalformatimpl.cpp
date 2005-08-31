@@ -194,7 +194,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
 //      kdDebug(5800) << " Event " << event->summary() << " floats." << endl;
 //      if (event->dtEnd().date() != event->dtStart().date()) {
         // +1 day because end date is non-inclusive.
-        end = writeICalDate( event->dtEnd().date().addDays( 1 ) );
+        end = writeICalDate( event->dtEnd().date() );
 //      }
     } else {
 //      kdDebug(5800) << " Event " << event->summary() << " has time." << endl;
@@ -958,7 +958,7 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
         icaltime = icalproperty_get_dtend(p);
         if (icaltime.is_date) {
           // End date is non-inclusive
-          QDate endDate = readICalDate( icaltime ).addDays( -1 );
+          QDate endDate = readICalDate( icaltime );
           if ( mCompat ) mCompat->fixFloatingEnd( endDate );
           if ( endDate < event->dtStart().date() ) {
             endDate = event->dtStart().date();
