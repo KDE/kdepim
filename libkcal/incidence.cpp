@@ -177,7 +177,7 @@ void Incidence::setReadOnly( bool readOnly )
 void Incidence::setFloats(bool f)
 {
   if (mReadOnly) return;
-  if ( recurrence() ) 
+  if ( recurrence() )
     recurrence()->setFloats( f );
   IncidenceBase::setFloats( f );
 }
@@ -186,6 +186,9 @@ void Incidence::setCreated( const QDateTime &created )
 {
   if (mReadOnly) return;
   mCreated = created;
+
+// FIXME: Shouldn't we call updated for the creation date, too?
+//  updated();
 }
 
 QDateTime Incidence::created() const
@@ -392,7 +395,7 @@ QValueList<QDateTime> Incidence::startDateTimesForDate( const QDate &date ) cons
     return result;
   }
 
-  // if the incidence doesn't recur, 
+  // if the incidence doesn't recur,
   if ( !doesRecur() ) {
     if ( !(start.date() > date || end.date() < date ) ) {
       result << start;
@@ -439,7 +442,7 @@ QValueList<QDateTime> Incidence::startDateTimesForDateTime( const QDateTime &dat
     return result;
   }
 
-  // if the incidence doesn't recur, 
+  // if the incidence doesn't recur,
   if ( !doesRecur() ) {
     if ( !(start > datetime || end < datetime ) ) {
       result << start;
