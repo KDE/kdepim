@@ -6,6 +6,7 @@ Name[es]=Programación de TV
 Name[et]=Telekavad
 Name[fr]=Programmes TV
 Name[ga]=Sceidil Teilifíse
+Name[xx]=xxTV Schedulesxx
 Name[zh_CN]=电视日程安排
 X-KDE-Library=kcal_tvanytime
 Type=Service

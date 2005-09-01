@@ -25,6 +25,7 @@ Name[sv]=Novell Groupwise-server
 Name[ta]=Novell குழுவாரிச் சேவகன்
 Name[tr]=Novell GroupWise Sunucusu
 Name[uk]=Сервер Novell GroupWise
+Name[xx]=xxNovell GroupWise Serverxx
 Name[zh_CN]=Novell GroupWise 服务器
 X-KDE-Library=kabc_groupwise
 Type=Service

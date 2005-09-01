@@ -26,6 +26,7 @@ Name[sr@Latn]=Demonstracioni konnector za nitnu implementaciju
 Name[sv]=Demonstration av Konnector för trådad implementering
 Name[ta]=இணைக்கப்பட்ட நடைமுறைக்கான இணைப்பான் காட்சி
 Name[uk]=Konnector для демонстрації реалізації через нитки
+Name[xx]=xxDemo Konnector for a Threaded Implementationxx
 Name[zh_CN]=线程实现的 Konnector 演示
 Group=Test
 Vendor=Mathias Fröhlich

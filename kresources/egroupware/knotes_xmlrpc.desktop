@@ -25,6 +25,7 @@ Name[sv]=eGroupware-server (via XML-RPC)
 Name[ta]=eGroupware சேவகன் (via XML-RPC)
 Name[tr]=eGroupware Sunucusu (XML-RPC ile)
 Name[uk]=Сервер eGroupware (через XML-RPC)
+Name[xx]=xxeGroupware Server (via XML-RPC)xx
 Name[zh_CN]=eGroupware 服务器(通过 XML-RPC)
 X-KDE-Library=knotes_xmlrpc
 Type=Service

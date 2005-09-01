@@ -28,6 +28,7 @@ Name[sv]=Nyckeln har inte validerats
 Name[ta]=செல்லுபடியாகாத விசை
 Name[tr]=Geçerli Olmayan Anahtar
 Name[uk]=Неперевірений ключ
+Name[xx]=xxNot Validated Keyxx
 Name[zh_CN]=未校验的密钥
 
 [Key Filter #1]
@@ -64,6 +65,7 @@ Name[sv]=Utgången nyckel
 Name[ta]=காலாவதியான விசை
 Name[tr]=Süresi Dolmuş Anahtar
 Name[uk]=Застарілий ключ
+Name[xx]=xxExpired Keyxx
 Name[zh_CN]=过期密钥
 
 [Key Filter #2]
@@ -97,6 +99,7 @@ Name[sv]=Återkallad nyckel
 Name[ta]=நீக்கிய விசை
 Name[tr]=Geri Alınmış Anahtar
 Name[uk]=Анульований ключ
+Name[xx]=xxRevoked Keyxx
 Name[zh_CN]=吊销的密钥
 
 [Key Filter #3]
@@ -130,6 +133,7 @@ Name[sv]=Pålitligt rotcertifikat
 Name[ta]=நம்பகமான மூல சான்றிதழ்
 Name[tr]=Güvenilir Kök Sertifikası
 Name[uk]=Кореневий сертифікат з довірою
+Name[xx]=xxTrusted Root Certificatexx
 Name[zh_CN]=可信任的根证书
 
 [Key Filter #4]
@@ -163,6 +167,7 @@ Name[sv]=Opålitligt rotcertifikat
 Name[ta]=நம்பமுடியாத மூல சான்றிதழ்
 Name[tr]=Güvenilmeyen Kök Sertifikası
 Name[uk]=Кореневий сертифікат без довіри
+Name[xx]=xxNot Trusted Root Certificatexx
 Name[zh_CN]=未信任的根证书
 
 [Key Filter #5]
@@ -198,5 +203,6 @@ Name[sv]=Andra nycklar
 Name[ta]=மற்ற விசைகள்
 Name[tr]=Diğer Anahtarlar
 Name[uk]=Інші ключі
+Name[xx]=xxOther Keysxx
 Name[zh_CN]=其它密钥
 
