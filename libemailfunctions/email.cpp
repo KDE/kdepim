@@ -296,7 +296,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
   } else if ( atCount == 0 ) {
 	  return TooFewAts;
   }
-  
+
   // The main parser, try and catch all weird and wonderful
   // mistakes users and/or machines can create
 
@@ -320,8 +320,8 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
           break;
         case '[' :
           if ( !inQuotedString ) {
-            return InvalidDisplayName; 
-          } 
+            return InvalidDisplayName;
+          }
         case ']' :
           if ( !inQuotedString ) {
             return InvalidDisplayName;
@@ -339,7 +339,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
           ++index; // skip the '\'
           if (( index + 1 )> strlen ) {
             return UnexpectedEnd;
-          } 
+          }
           break;
         case ',' :
           if ( !inQuotedString )
@@ -359,15 +359,14 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
               return MissingLocalPart;
             } else if( index == strlen-1 ) {
               return MissingDomainPart;
-              break;
-              }
-            } else if ( inQuotedString ) {
-              --atCount;
-              if ( atCount == 1 ) {
-                tooManyAtsFlag = false;
-              }
             }
-            break;
+          } else if ( inQuotedString ) {
+            --atCount;
+            if ( atCount == 1 ) {
+              tooManyAtsFlag = false;
+            }
+          }
+          break;
       }
       break;
     }
@@ -384,7 +383,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
           ++index; // skip the '\'
           if (( index + 1 )> strlen ) {
             return UnexpectedEnd;
-          } 
+          }
           break;
         }
         break;
