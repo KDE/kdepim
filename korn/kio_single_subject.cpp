@@ -84,7 +84,7 @@ void KIO_Single_Subject::parseMail( QString * message, KornMailSubject *subject,
 	QRegExp rx_sender_has_name1( "^[fF]rom:\\s*(\\w+[\\w\\s]*)\\<" ); //Ex: From: A name<email@domein.country>
 	QRegExp rx_sender_has_name2( "^[fF]rom:\\s*\\\"\\s*(\\w+[\\w\\s]*)\\\""); //Ex: From: "A name"<a@invalid>
 	QRegExp rx_subject( "^[sS]ubject: " ); //Ex: Subject: ...
-	QRegExp rx_date  ( "^[dD]ate:\\s*(\\w{3},\\s*)?(\\d+)\\s*(\\w{3})\\s*(\\d+)\\s*(\\d+):(\\d+):(\\d+)\\s*([+-])(\\d+)\\s*$");
+	QRegExp rx_date  ( "^[dD]ate: ");
 	bool inheader = true;
 	bool firstLine = true;
 	while ( ! stream.atEnd() )
@@ -109,8 +109,7 @@ void KIO_Single_Subject::parseMail( QString * message, KornMailSubject *subject,
 				subject->setSubject( line.remove( rx_subject ) );
 			else if( rx_date.search( line ) == 0 )
 			{
-				subject->setDate( KRFCDate::parseDate( line.right( line.length() - 6 )  ) +
-				                  KRFCDate::localUTCOffset() * 60 );
+				subject->setDate( KRFCDate::parseDate( line.right( line.length() - 6 ) ) );
 			}
 		}
 	}
