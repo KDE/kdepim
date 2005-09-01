@@ -188,7 +188,6 @@ class TaskView : public KListView
     void autoSavePeriodChanged( int period );
     void minuteUpdate();
     void itemStateChanged( QListViewItem *item );
-    void deleteItemState( QListViewItem *item );
     void iCalFileModified(ResourceCalendar *);
 };
 
