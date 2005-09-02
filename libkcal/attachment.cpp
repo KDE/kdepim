@@ -105,7 +105,7 @@ char *Attachment::data() const
 
 QByteArray &Attachment::decodedData() const
 {
-  if ( !d->mDataCache ) {
+  if ( d->mDataCache.isNull() ) {
     QByteArray in;
     const Q3CString data = mData.utf8();
     in.setRawData( data.data(), data.size() );
