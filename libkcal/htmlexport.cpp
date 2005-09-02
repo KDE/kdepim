@@ -549,8 +549,8 @@ void HtmlExport::formatAttendees( QTextStream *ts, Incidence *event )
 
 QString HtmlExport::breakString(const QString &text)
 {
-  int number = text.contains("\n");
-  if(number < 0) {
+  int number = text.count("\n");
+  if(number <= 0) {
     return text;
   } else {
     QString out;

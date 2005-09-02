@@ -28,6 +28,7 @@
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QBoxLayout>
+#include <QCheckBox>
 
 #include <klocale.h>
 #include <kdebug.h>

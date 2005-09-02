@@ -260,7 +260,7 @@ QString ICalFormat::toString( Calendar *cal )
 
   icalcomponent_free( calendar );
 
-  if (!text) {
+  if ( text.isNull() ) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
                  i18n("libical error")));
     return QString::null;

@@ -166,7 +166,7 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
      * recurrence will occur.
      * @param date the date for which to find the recurrence times.
      */
-    Q3ValueList<QTime> recurTimesOn(const QDate &date) const;
+    TimeList recurTimesOn(const QDate &date) const;
 
     /** Returns the date and time of the next recurrence, after the specified date/time.
      * If the recurrence has no time, the next date after the specified date is returned.
@@ -492,10 +492,10 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
   private:
     RecurrenceRule::List mExRules;
     RecurrenceRule::List mRRules;
-    Q3ValueList<QDateTime>mRDateTimes;
-    Q3ValueList<QDate> mRDates;
-    Q3ValueList<QDateTime> mExDateTimes;
-    Q3ValueList<QDate> mExDates;
+    DateTimeList mRDateTimes;
+    DateList mRDates;
+    DateTimeList mExDateTimes;
+    DateList mExDates;
 
     QDateTime mStartDateTime;            // date/time of first recurrence
     bool mFloating;                      // the recurrence has no time, just a date

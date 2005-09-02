@@ -1148,7 +1148,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
           anEvent->recurrence()->setDuration( rDuration );
       } else if ( tmpStr.find('T', index) != -1 ) {
         QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->recurrence()->setEndDateTime( rEndDate );
+        anEvent->recurrence()->setEndDateTime( QDateTime( rEndDate ) );
       }
 // anEvent->recurrence()->dump();
 

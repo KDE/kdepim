@@ -26,19 +26,19 @@
 
 #include <qdatetime.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 #include <libkcal/listbase.h>
 
 #include "libkcal_export.h"
 
 template <class T>
-Q_INLINE_TEMPLATES void qSortUnique( Q3ValueList<T> &lst )
+/*Q_INLINE_TEMPLATES*/ void qSortUnique( QList<T> &lst )
 {
-  qHeapSort( lst );
+  qSort( lst );
   if ( lst.isEmpty() ) return;
   // Remove all duplicates from the times list
   // TODO: Make this more efficient!
-  Q3ValueListIterator<T> it = lst.begin();
+  QList<T>::Iterator it = lst.begin();
   T last = *it;
   ++it;
   T newlast;
@@ -55,9 +55,9 @@ Q_INLINE_TEMPLATES void qSortUnique( Q3ValueList<T> &lst )
 
 namespace KCal {
 
-typedef Q3ValueList<QDateTime> DateTimeList;
-typedef Q3ValueList<QDate> DateList;
-typedef Q3ValueList<QTime> TimeList;
+typedef QList<QDateTime> DateTimeList;
+typedef QList<QDate> DateList;
+typedef QList<QTime> TimeList;
 
 
 

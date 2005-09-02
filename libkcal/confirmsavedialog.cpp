@@ -36,7 +36,7 @@ ConfirmSaveDialog::ConfirmSaveDialog( const QString &destination,
                                       QWidget *parent, const char *name )
   : KDialogBase( parent, name, true, i18n("Confirm Save"), Ok | Cancel )
 {
-  Q3Frame *topFrame = makeMainWidget();
+  QFrame *topFrame = makeMainWidget();
 
   QBoxLayout *topLayout = new QVBoxLayout( topFrame );
   topLayout->setSpacing( spacingHint() );

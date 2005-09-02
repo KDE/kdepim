@@ -267,7 +267,7 @@ QDateTime RecurrenceRule::Constraint::intervalDateTime( RecurrenceRule::PeriodTy
     case rDaily:
       break;
     case rWeekly:
-      dt = DateHelper::getNthWeek( year, weeknumber, weekstart ); break;
+      dt = QDateTime( DateHelper::getNthWeek( year, weeknumber, weekstart ) ); break;
     case rMonthly:
       dt.setDate( QDate( year, month, 1 ) ); break;
     case rYearly:
@@ -914,10 +914,9 @@ kdDebug(5800) << "         RecurrenceRule::buildCache: " << endl;
     dtnr = dts.count();
     ++loopnr;
   }
-  if ( int(dts.count()) > mDuration ) {
+  while ( dts.count() > mDuration ) {
     // we have picked up more occurrences than necessary, remove them
-    it = dts.at( mDuration );
-    while ( it != dts.end() ) it = dts.remove( it );
+    dts.removeAt( mDuration );
   }
   mCached = true;
   mCachedDates = dts;
@@ -1354,7 +1353,7 @@ DateTimeList RecurrenceRule::datesForInterval( const Constraint &interval, Perio
       int pos = *it;
       if ( pos > 0 ) --pos;
       if ( pos < 0 ) pos += tmplst.count();
-      if ( pos >= 0 && uint(pos) < tmplst.count() ) {
+      if ( pos >= 0 && pos < tmplst.count() ) {
         lst.append( tmplst[pos] );
       }
     }
