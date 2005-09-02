@@ -37,7 +37,9 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <qcstring.h>
+#include <q3cstring.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <unistd.h> // gethostname
 
@@ -156,11 +158,11 @@ namespace MDN {
     return 0;
   }
 
-  static QCString dispositionField( DispositionType d, ActionMode a, SendingMode s,
-				    const QValueList<DispositionModifier> & m ) {
+  static Q3CString dispositionField( DispositionType d, ActionMode a, SendingMode s,
+				    const Q3ValueList<DispositionModifier> & m ) {
 
     // mandatory parts: Disposition: foo/baz; bar
-    QCString result = "Disposition: ";
+    Q3CString result = "Disposition: ";
     result += stringFor( a );
     result += "/";
     result += stringFor( s );
@@ -169,7 +171,7 @@ namespace MDN {
 
     // optional parts: Disposition: foo/baz; bar/mod1,mod2,mod3
     bool first = true;
-    for ( QValueList<DispositionModifier>::const_iterator mt = m.begin() ;
+    for ( Q3ValueList<DispositionModifier>::const_iterator mt = m.begin() ;
 	  mt != m.end() ; ++mt ) {
       if ( first ) {
 	result += "/";
@@ -182,45 +184,45 @@ namespace MDN {
     return result + "\n";
   }
 
-  static QCString finalRecipient( const QString & recipient ) {
+  static Q3CString finalRecipient( const QString & recipient ) {
     if ( recipient.isEmpty() )
-      return QCString();
+      return Q3CString();
     else
       return "Final-Recipient: rfc822; "
 	+ encodeRFC2047String( recipient, "utf-8" ) + "\n";
   }
 
-  static QCString orginalRecipient( const QCString & recipient ) {
+  static Q3CString orginalRecipient( const Q3CString & recipient ) {
     if ( recipient.isEmpty() )
-      return QCString();
+      return Q3CString();
     else
       return "Original-Recipient: " + recipient + "\n";
   }
 
-  static QCString originalMessageID( const QCString & msgid ) {
+  static Q3CString originalMessageID( const Q3CString & msgid ) {
     if ( msgid.isEmpty() )
-      return QCString();
+      return Q3CString();
     else
       return "Original-Message-ID: " + msgid + "\n";
   }
 
-  static QCString reportingUAField() {
+  static Q3CString reportingUAField() {
     char hostName[256];
     if ( gethostname( hostName, 255 ) )
       hostName[0] = '\0'; // gethostname failed: pretend empty string
     else
       hostName[255] = '\0'; // gethostname may have returned 255 chars (man page)
-    return QCString("Reporting-UA: ") + hostName
-      + "; KMime " KMIME_VERSION_STRING "\n";
+    return Q3CString("Reporting-UA: ") + Q3CString( hostName )
+      + Q3CString( "; KMime " KMIME_VERSION_STRING "\n" );
   }
 
-  QCString dispositionNotificationBodyContent( const QString & r,
-					       const QCString & o,
-					       const QCString & omid,
+  Q3CString dispositionNotificationBodyContent( const QString & r,
+					       const Q3CString & o,
+					       const Q3CString & omid,
 					       DispositionType d,
 					       ActionMode a,
 					       SendingMode s,
-					       const QValueList<DispositionModifier> & m,
+					       const Q3ValueList<DispositionModifier> & m,
 					       const QString & special )
   {
     // in Perl: chomp(special) 
@@ -231,7 +233,7 @@ namespace MDN {
       spec = special;
 
     // std headers:
-    QCString result = reportingUAField();
+    Q3CString result = reportingUAField();
     result += orginalRecipient( o );
     result += finalRecipient( r );
     result += originalMessageID( omid );
@@ -249,7 +251,7 @@ namespace MDN {
   }
 
   QString descriptionFor( DispositionType d,
-			  const QValueList<DispositionModifier> & ) {
+			  const Q3ValueList<DispositionModifier> & ) {
     for ( int i = 0 ; i < numDispositionTypes ; ++i )
       if ( dispositionTypes[i].dispositionType == d )
 	return i18n( dispositionTypes[i].description );

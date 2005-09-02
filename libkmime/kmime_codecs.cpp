@@ -39,7 +39,7 @@
 
 #include <kdebug.h>
 
-#include <qcstring.h>
+#include <q3cstring.h>
 #include <kstaticdeleter.h>
 
 #include <cassert>
@@ -50,8 +50,8 @@ using namespace KMime;
 namespace KMime {
 
 // global list of KMime::Codec's
-QAsciiDict<Codec>* Codec::all = 0;
-static KStaticDeleter<QAsciiDict<Codec> > sdAll;
+Q3AsciiDict<Codec>* Codec::all = 0;
+static KStaticDeleter<Q3AsciiDict<Codec> > sdAll;
 #if defined(QT_THREAD_SUPPORT)
 QMutex* Codec::dictLock = 0;
 static KStaticDeleter<QMutex> sdDictLock;
@@ -80,7 +80,7 @@ Codec * Codec::codecForName( const char * name ) {
   dictLock->lock(); // protect "all"
 #endif
   if ( !all ) {
-    sdAll.setObject( all, new QAsciiDict<Codec>( 11, false /* case-insensitive */) );
+    sdAll.setObject( all, new Q3AsciiDict<Codec>( 11, false /* case-insensitive */) );
     fillDictionary();
   }
   Codec * codec = (*all)[ name ];
@@ -94,7 +94,7 @@ Codec * Codec::codecForName( const char * name ) {
   return codec;
 }
 
-Codec * Codec::codecForName( const QCString & name ) {
+Codec * Codec::codecForName( const Q3CString & name ) {
   return codecForName( name.data() );
 }
 
@@ -147,10 +147,10 @@ QByteArray Codec::encode( const QByteArray & src, bool withCRLF ) const
   return result;
 }
 
-QCString Codec::encodeToQCString( const QByteArray & src, bool withCRLF ) const
+Q3CString Codec::encodeToQCString( const QByteArray & src, bool withCRLF ) const
 {
   // allocate buffer for the worst case (remember to add one for the trailing NUL)
-  QCString result( maxEncodedSizeFor( src.size(), withCRLF ) + 1 );
+  Q3CString result( maxEncodedSizeFor( src.size(), withCRLF ) + 1 );
 
   // set up iterators:
   QByteArray::ConstIterator iit = src.begin();

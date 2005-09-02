@@ -41,7 +41,7 @@
 
 #include <qtextcodec.h>
 #include <qmap.h>
-#include <qcstring.h>
+#include <q3cstring.h>
 #include <qstringlist.h>
 
 #include <ctype.h> // for isdigit
@@ -57,7 +57,7 @@ namespace Types {
   QString AddrSpec::asString() const {
     bool needsQuotes = false;
     QString result;
-    for ( unsigned int i = 0 ; i < localPart.length() ; ++i ) {
+    for ( int i = 0 ; i < localPart.length() ; ++i ) {
       const char ch = localPart[i].latin1();
       if ( ch == '.' || isAText( ch ) )
 	result += ch;
@@ -80,7 +80,7 @@ namespace HeaderParsing {
 
 // parse the encoded-word (scursor points to after the initial '=')
 bool parseEncodedWord( const char* & scursor, const char * const send,
-		       QString & result, QCString & language ) {
+		       QString & result, Q3CString & language ) {
 
   // make sure the caller already did a bit of the work.
   assert( *(scursor-1) == '=' );
@@ -120,10 +120,10 @@ bool parseEncodedWord( const char* & scursor, const char * const send,
 
   // extract the language information, if any (if languageStart is 0,
   // language will be null, too):
-  QCString maybeLanguage( languageStart, scursor - languageStart + 1 /*for NUL*/);
+  Q3CString maybeLanguage( languageStart, scursor - languageStart + 1 /*for NUL*/);
   // extract charset information (keep in mind: the size given to the
   // ctor is one off due to the \0 terminator):
-  QCString maybeCharset( charsetStart, ( languageStart ? languageStart : scursor + 1 ) - charsetStart );
+  Q3CString maybeCharset( charsetStart, ( languageStart ? languageStart : scursor + 1 ) - charsetStart );
 
   //
   // STEP 2:
@@ -147,7 +147,7 @@ bool parseEncodedWord( const char* & scursor, const char * const send,
   }
 
   // extract the encoding information:
-  QCString maybeEncoding( encodingStart, scursor - encodingStart + 1 );
+  Q3CString maybeEncoding( encodingStart, scursor - encodingStart + 1 );
 
 
   kdDebug() << "parseEncodedWord: found charset == \"" << maybeCharset
@@ -502,7 +502,7 @@ bool parsePhrase( const char* & scursor, const char * const send,
 {
   enum { None, Phrase, Atom, EncodedWord, QuotedString } found = None;
   QString tmp;
-  QCString lang;
+  Q3CString lang;
   const char * successfullyParsed = 0;
   // only used by the encoded-word branch
   const char * oldscursor;
@@ -1226,7 +1226,7 @@ static void decodeRFC2231Value( Codec* & rfc2231Codec,
       return;
     }
 
-    QCString charset( decBegin, decCursor - decBegin + 1 );
+    Q3CString charset( decBegin, decCursor - decBegin + 1 );
 
     const char * oldDecCursor = ++decCursor;
     // find the second single quote (we ignore the language tag):
@@ -1313,7 +1313,7 @@ bool parseParameterList( const char* & scursor,	const char * const send,
   QString value;
   enum Modes { NoMode = 0x0, Continued = 0x1, Encoded = 0x2 } mode;
 
-  QMapIterator<QString,QStringOrQPair> it, end = rawParameterList.end();
+  QMap<QString,QStringOrQPair>::Iterator it, end = rawParameterList.end();
 
   for ( it = rawParameterList.begin() ; it != end ; ++it ) {
     if ( attribute.isNull() || !it.key().startsWith( attribute ) ) {
@@ -1503,7 +1503,7 @@ static bool parseAlphaNumericTimeZone( const char* & scursor,
     }
 
   // don't choke just because we don't happen to know the time zone
-  KMIME_WARN_UNKNOWN(time zone,QCString( maybeTimeZone.first, maybeTimeZone.second+1 ));
+  KMIME_WARN_UNKNOWN(time zone,Q3CString( maybeTimeZone.first, maybeTimeZone.second+1 ));
   secsEastOfGMT = 0;
   timeZoneKnown = false;
   return true;

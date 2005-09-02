@@ -23,6 +23,10 @@
 #include <kdebug.h>
 
 #include <qtextcodec.h>
+//Added by qt3to4:
+#include <Q3StrList>
+#include <QTextStream>
+#include <Q3CString>
 
 using namespace KMime;
 
@@ -35,7 +39,7 @@ Content::Content()
 }
 
 
-Content::Content(const QCString &h, const QCString &b)
+Content::Content(const Q3CString &h, const Q3CString &b)
  : c_ontents(0), h_eaders(0), f_orceDefaultCS(false)
 {
   d_efaultCS = cachedCharset("ISO-8859-1");
@@ -51,15 +55,15 @@ Content::~Content()
 }
 
 
-void Content::setContent(QStrList *l)
+void Content::setContent(Q3StrList *l)
 {
   //qDebug("Content::setContent(QStrList *l) : start");
   h_ead.resize(0);
   b_ody.resize(0);
 
   //usage of textstreams is much faster than simply appending the strings
-  QTextStream hts(h_ead, IO_WriteOnly),
-              bts(b_ody, IO_WriteOnly);
+  QTextStream hts(h_ead, QIODevice::WriteOnly),
+              bts(b_ody, QIODevice::WriteOnly);
   hts.setEncoding(QTextStream::Latin1);
   bts.setEncoding(QTextStream::Latin1);
 
@@ -83,7 +87,7 @@ void Content::setContent(QStrList *l)
 }
 
 
-void Content::setContent(const QCString &s)
+void Content::setContent(const Q3CString &s)
 {
   int pos=s.find("\n\n", 0);
   if(pos>-1) {
@@ -116,7 +120,7 @@ void Content::parse()
   c_ontents=0;
 
   Headers::ContentType *ct=contentType();
-  QCString tmp;
+  Q3CString tmp;
   Content *c;
   Headers::contentCategory cat;
 
@@ -230,7 +234,7 @@ void Content::parse()
             
             // the bodies of yenc message parts are binary data, not null-terminated strings:            
             QByteArray body = yenc.binaryParts()[i];
-            QCString body_string(body.size());
+            Q3CString body_string(body.size());
             memcpy(body_string.data(), body.data(), body.size());
             c->setBody(body_string);            
     
@@ -255,7 +259,7 @@ void Content::parse()
 
 void Content::assemble()
 {
-  QCString newHead="";
+  Q3CString newHead="";
 
   //Content-Type
   newHead+=contentType()->as7BitString()+"\n";
@@ -288,9 +292,9 @@ void Content::clear()
 }
 
 
-QCString Content::encodedContent(bool useCrLf)
+Q3CString Content::encodedContent(bool useCrLf)
 {
-  QCString e;
+  Q3CString e;
 
   // hack to convert articles with uuencoded or yencoded binaries into
   // proper mime-compliant articles
@@ -345,7 +349,7 @@ QCString Content::encodedContent(bool useCrLf)
   }
   else if(c_ontents && !c_ontents->isEmpty()) { //this is a multipart message
     Headers::ContentType *ct=contentType();
-    QCString boundary="--"+ct->boundary();
+    Q3CString boundary="--"+ct->boundary();
 
     //add all (encoded) contents separated by boundaries
     for(Content *c=c_ontents->first(); c; c=c_ontents->next()) {
@@ -467,7 +471,7 @@ void Content::fromUnicodeString(const QString &s)
 
   if(!ok) { // no suitable codec found => try local settings and hope the best ;-)
     codec=KGlobal::locale()->codecForEncoding();
-    QCString chset=KGlobal::locale()->encoding();
+    Q3CString chset=KGlobal::locale()->encoding();
     contentType()->setCharset(chset);
   }
 
@@ -648,7 +652,7 @@ void Content::changeEncoding(Headers::contentEncoding e)
 
 void Content::toStream(QTextStream &ts, bool scrambleFromLines)
 {
-  QCString ret=encodedContent(false);
+  Q3CString ret=encodedContent(false);
 
   if (scrambleFromLines)
     ret.replace(QRegExp("\\n\\nFrom "), "\n\n>From ");
@@ -657,7 +661,7 @@ void Content::toStream(QTextStream &ts, bool scrambleFromLines)
 }
 
 
-Headers::Generic*  Content::getNextHeader(QCString &head)
+Headers::Generic*  Content::getNextHeader(Q3CString &head)
 {
   int pos1=-1, pos2=0, len=head.length()-1;
   bool folded(false);
@@ -707,7 +711,7 @@ Headers::Base* Content::getHeaderByType(const char *type)
       if(h->is(type)) return h; //found
 
   //now we look for it in the article head
-  QCString raw=rawHeader(type);
+  Q3CString raw=rawHeader(type);
   if(!raw.isEmpty()) { //ok, we found it
     //choose a suitable header class
     if(strcasecmp("Message-Id", type)==0)
@@ -826,7 +830,7 @@ int Content::lineCount()
 }
 
 
-QCString Content::rawHeader(const char *name)
+Q3CString Content::rawHeader(const char *name)
 {
   return extractHeader(h_ead, name);
 }
@@ -854,7 +858,7 @@ bool Content::decodeText()
       b_ody.append("\n");
     break;
     case Headers::CEbinary :
-      b_ody=QCString(b_ody.data(), b_ody.size()+1);
+      b_ody=Q3CString(b_ody.data(), b_ody.size()+1);
       b_ody.append("\n");
     default :
     break;
@@ -865,7 +869,7 @@ bool Content::decodeText()
 }
 
 
-void Content::setDefaultCharset(const QCString &cs)
+void Content::setDefaultCharset(const Q3CString &cs)
 { 
   d_efaultCS = KMime::cachedCharset(cs); 
   

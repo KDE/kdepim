@@ -21,6 +21,10 @@
 #endif
 
 #include <kdepimmacros.h>
+//Added by qt3to4:
+#include <Q3StrList>
+#include <Q3CString>
+#include <Q3PtrList>
 
 /** Represents a "Message-Id" header */
 class KDE_EXPORT MessageID : public Base {
@@ -28,22 +32,22 @@ class KDE_EXPORT MessageID : public Base {
   public:
     MessageID() : Base()  {}
     MessageID(Content *p) : Base(p) {}
-    MessageID(Content *p, const QCString &s) : Base(p) { from7BitString(s); }
+    MessageID(Content *p, const Q3CString &s) : Base(p) { from7BitString(s); }
     MessageID(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
     ~MessageID()  {}
 
-    virtual void from7BitString(const QCString &s);
-    virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QCString&);
+    virtual void from7BitString(const Q3CString &s);
+    virtual Q3CString as7BitString(bool incType=true);
+    virtual void fromUnicodeString(const QString &s, const Q3CString&);
     virtual QString asUnicodeString();
     virtual void clear()            { m_id.resize(0); }
     virtual bool isEmpty()          { return (m_id.isEmpty()); }
     virtual const char* type()      { return "Message-Id"; }
 
-    void generate(const QCString &fqdn);
+    void generate(const Q3CString &fqdn);
 
   protected:
-    QCString m_id;
+    Q3CString m_id;
 
 };
 
@@ -53,7 +57,7 @@ class KDE_EXPORT Supersedes : public MessageID {
   public:
     Supersedes() : MessageID()  {}
     Supersedes(Content *p) : MessageID(p)  {}
-    Supersedes(Content *p, const QCString &s) : MessageID(p,s)  {}
+    Supersedes(Content *p, const Q3CString &s) : MessageID(p,s)  {}
     Supersedes(Content *p, const QString &s)  : MessageID(p,s)  {}
     ~Supersedes()                   {}
 
@@ -68,16 +72,16 @@ class KDE_EXPORT AddressField : public Base {
   public:
     AddressField() : Base()  {}
     AddressField(Content *p) : Base(p)  {}
-    AddressField(Content *p, const QCString &s) : Base(p)  { from7BitString(s); }
-    AddressField(Content *p, const QString &s, const QCString &cs) : Base(p)  { fromUnicodeString(s, cs); }
+    AddressField(Content *p, const Q3CString &s) : Base(p)  { from7BitString(s); }
+    AddressField(Content *p, const QString &s, const Q3CString &cs) : Base(p)  { fromUnicodeString(s, cs); }
     AddressField(const AddressField &a):  Base(a.p_arent)  { n_ame=a.n_ame; e_mail=a.e_mail.copy(); e_ncCS=a.e_ncCS; }
     ~AddressField()  {}
 
     AddressField& operator=(const AddressField &a)  { n_ame=a.n_ame; e_mail=a.e_mail.copy(); e_ncCS=a.e_ncCS; return (*this); }
 
-    virtual void from7BitString(const QCString &s);
-    virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QCString &cs);
+    virtual void from7BitString(const Q3CString &s);
+    virtual Q3CString as7BitString(bool incType=true);
+    virtual void fromUnicodeString(const QString &s, const Q3CString &cs);
     virtual QString asUnicodeString();
     virtual void clear()              { n_ame.truncate(0); e_mail.resize(0); }
     virtual bool isEmpty()            { return (e_mail.isEmpty() && n_ame.isEmpty()); }
@@ -85,17 +89,17 @@ class KDE_EXPORT AddressField : public Base {
     bool hasName()                    { return ( !n_ame.isEmpty() ); }
     bool hasEmail()                   { return ( !e_mail.isEmpty() ); }
     QString name()                    { return n_ame; }
-    QCString nameAs7Bit();
-    QCString email()                  { return e_mail; }
+    Q3CString nameAs7Bit();
+    Q3CString email()                  { return e_mail; }
     void setName(const QString &s)    { n_ame=s; }
-    void setNameFrom7Bit(const QCString &s);
-    void setEmail(const QCString &s)  { e_mail=s; }
+    void setNameFrom7Bit(const Q3CString &s);
+    void setEmail(const Q3CString &s)  { e_mail=s; }
 
   protected:
     QString n_ame;
-    QCString e_mail;
+    Q3CString e_mail;
 };
-typedef QPtrList<AddressField> ObsAddressList;
+typedef Q3PtrList<AddressField> ObsAddressList;
 
 /** Represent a "From" header */
 class KDE_EXPORT From : public AddressField {
@@ -103,8 +107,8 @@ class KDE_EXPORT From : public AddressField {
   public:
     From() : AddressField()  {}
     From(Content *p) : AddressField(p)  {}
-    From(Content *p, const QCString &s) : AddressField(p,s)  {}
-    From(Content *p, const QString &s, const QCString &cs) : AddressField(p,s,cs)  {}
+    From(Content *p, const Q3CString &s) : AddressField(p,s)  {}
+    From(Content *p, const QString &s, const Q3CString &cs) : AddressField(p,s,cs)  {}
     ~From()  {}
 
     virtual const char* type()      { return "From"; }
@@ -117,8 +121,8 @@ class KDE_EXPORT ReplyTo : public AddressField {
   public:
     ReplyTo() : AddressField()  {}
     ReplyTo(Content *p) : AddressField(p)  {}
-    ReplyTo(Content *p, const QCString &s) : AddressField(p,s)  {}
-    ReplyTo(Content *p, const QString &s, const QCString &cs) : AddressField(p,s,cs)  {}
+    ReplyTo(Content *p, const Q3CString &s) : AddressField(p,s)  {}
+    ReplyTo(Content *p, const QString &s, const Q3CString &cs) : AddressField(p,s,cs)  {}
     ~ReplyTo()  {}
 
     virtual const char* type()      { return "Reply-To"; }
@@ -133,8 +137,8 @@ class KDE_EXPORT MailCopiesTo : public AddressField {
   public:
     MailCopiesTo() : AddressField()  {}
     MailCopiesTo(Content *p) : AddressField(p)  {}
-    MailCopiesTo(Content *p, const QCString &s) : AddressField(p,s)  {}
-    MailCopiesTo(Content *p, const QString &s, const QCString &cs) : AddressField(p,s,cs)  {}
+    MailCopiesTo(Content *p, const Q3CString &s) : AddressField(p,s)  {}
+    MailCopiesTo(Content *p, const QString &s, const Q3CString &cs) : AddressField(p,s,cs)  {}
     ~MailCopiesTo()  {}
 
     bool isValid();
@@ -151,13 +155,13 @@ class KDE_EXPORT To : public Base {
   public:
     To() : Base(),a_ddrList(0)  {}
     To(Content *p) : Base(p),a_ddrList(0)  {}
-    To(Content *p, const QCString &s) : Base(p),a_ddrList(0)  { from7BitString(s); }
-    To(Content *p, const QString &s, const QCString &cs) : Base(p),a_ddrList(0)  { fromUnicodeString(s,cs); }
+    To(Content *p, const Q3CString &s) : Base(p),a_ddrList(0)  { from7BitString(s); }
+    To(Content *p, const QString &s, const Q3CString &cs) : Base(p),a_ddrList(0)  { fromUnicodeString(s,cs); }
     ~To()  { delete a_ddrList; }
 
-    virtual void from7BitString(const QCString &s);
-    virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QCString &cs);
+    virtual void from7BitString(const Q3CString &s);
+    virtual Q3CString as7BitString(bool incType=true);
+    virtual void fromUnicodeString(const QString &s, const Q3CString &cs);
     virtual QString asUnicodeString();
     virtual void clear()            { delete a_ddrList; a_ddrList=0; }
     virtual bool isEmpty()          { return (!a_ddrList || a_ddrList->isEmpty()
@@ -165,7 +169,7 @@ class KDE_EXPORT To : public Base {
     virtual const char* type()      { return "To"; }
 
     void addAddress(const AddressField &a);
-    void emails(QStrList *l);
+    void emails(Q3StrList *l);
 
   protected:
     ObsAddressList *a_ddrList;
@@ -179,8 +183,8 @@ class KDE_EXPORT CC : public To {
   public:
     CC() : To()  {}
     CC(Content *p) : To(p)  {}
-    CC(Content *p, const QCString &s) : To(p,s)  {}
-    CC(Content *p, const QString &s, const QCString &cs) : To(p,s,cs)  {}
+    CC(Content *p, const Q3CString &s) : To(p,s)  {}
+    CC(Content *p, const QString &s, const Q3CString &cs) : To(p,s,cs)  {}
     ~CC()  {}
 
     virtual const char* type()      { return "CC"; }
@@ -194,8 +198,8 @@ class KDE_EXPORT BCC : public To {
   public:
     BCC() : To()  {}
     BCC(Content *p) : To(p)  {}
-    BCC(Content *p, const QCString &s) : To(p,s)  {}
-    BCC(Content *p, const QString &s, const QCString &cs) : To(p,s,cs)  {}
+    BCC(Content *p, const Q3CString &s) : To(p,s)  {}
+    BCC(Content *p, const QString &s, const Q3CString &cs) : To(p,s,cs)  {}
     ~BCC()  {}
 
     virtual const char* type()      { return "BCC"; }
@@ -208,26 +212,26 @@ class KDE_EXPORT References : public Base {
   public:
     References() : Base(),p_os(-1)  {}
     References(Content *p) : Base(p),p_os(-1)  {}
-    References(Content *p, const QCString &s) : Base(p),p_os(-1)  { from7BitString(s); }
+    References(Content *p, const Q3CString &s) : Base(p),p_os(-1)  { from7BitString(s); }
     References(Content *p, const QString &s) : Base(p),p_os(-1)  { fromUnicodeString(s, Latin1); }
     ~References()                 {}
 
-    virtual void from7BitString(const QCString &s);
-    virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QCString&);
+    virtual void from7BitString(const Q3CString &s);
+    virtual Q3CString as7BitString(bool incType=true);
+    virtual void fromUnicodeString(const QString &s, const Q3CString&);
     virtual QString asUnicodeString();
     virtual void clear()            { r_ef.resize(0); p_os=0; }
     virtual bool isEmpty()          { return (r_ef.isEmpty()); }
     virtual const char* type()      { return "References"; }
 
     int count();
-    QCString first();
-    QCString next();
-    QCString at(unsigned int i);
-    void append(const QCString &s);
+    Q3CString first();
+    Q3CString next();
+    Q3CString at(unsigned int i);
+    void append(const Q3CString &s);
 
   protected:
-    QCString r_ef;
+    Q3CString r_ef;
     int p_os;
 
 };
@@ -238,13 +242,13 @@ class KDE_EXPORT ContentType : public Base {
   public:
     ContentType() : Base(),m_imeType("invalid/invalid"),c_ategory(CCsingle)  {}
     ContentType(Content *p) : Base(p),m_imeType("invalid/invalid"),c_ategory(CCsingle)  {}
-    ContentType(Content *p, const QCString &s) : Base(p)  { from7BitString(s); }
+    ContentType(Content *p, const Q3CString &s) : Base(p)  { from7BitString(s); }
     ContentType(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
     ~ContentType()  {}
 
-    virtual void from7BitString(const QCString &s);
-    virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QCString&);
+    virtual void from7BitString(const Q3CString &s);
+    virtual Q3CString as7BitString(bool incType=true);
+    virtual void fromUnicodeString(const QString &s, const Q3CString&);
     virtual QString asUnicodeString();
     virtual void clear()            { m_imeType.resize(0); p_arams.resize(0); }
     virtual bool isEmpty()          { return (m_imeType.isEmpty()); }
@@ -252,10 +256,10 @@ class KDE_EXPORT ContentType : public Base {
 
 
     //mime-type handling
-    QCString mimeType()                     { return m_imeType; }
-    QCString mediaType();
-    QCString subType();
-    void setMimeType(const QCString &s);
+    Q3CString mimeType()                     { return m_imeType; }
+    Q3CString mediaType();
+    Q3CString subType();
+    void setMimeType(const Q3CString &s);
     bool isMediatype(const char *s);
     bool isSubtype(const char *s);
     bool isText();
@@ -266,14 +270,14 @@ class KDE_EXPORT ContentType : public Base {
     bool isPartial();
 
     //parameter handling
-    QCString charset();
-    void setCharset(const QCString &s);
-    QCString boundary();
-    void setBoundary(const QCString &s);
+    Q3CString charset();
+    void setCharset(const Q3CString &s);
+    Q3CString boundary();
+    void setBoundary(const Q3CString &s);
     QString name();
-    void setName(const QString &s, const QCString &cs);
-    QCString id();
-    void setId(const QCString &s);
+    void setName(const QString &s, const Q3CString &cs);
+    Q3CString id();
+    void setId(const Q3CString &s);
     int partialNumber();
     int partialCount();
     void setPartialParams(int total, int number);
@@ -283,9 +287,9 @@ class KDE_EXPORT ContentType : public Base {
     void setCategory(contentCategory c)   { c_ategory=c; }
 
   protected:
-    QCString getParameter(const char *name);
-    void setParameter(const QCString &name, const QCString &value, bool doubleQuotes=false);
-    QCString m_imeType, p_arams;
+    Q3CString getParameter(const char *name);
+    void setParameter(const Q3CString &name, const Q3CString &value, bool doubleQuotes=false);
+    Q3CString m_imeType, p_arams;
     contentCategory c_ategory;
 
 };
@@ -297,13 +301,13 @@ class KDE_EXPORT CTEncoding : public Base {
   public:
     CTEncoding() : Base(),c_te(CE7Bit),d_ecoded(true)  {}
     CTEncoding(Content *p) : Base(p),c_te(CE7Bit),d_ecoded(true)  {}
-    CTEncoding(Content *p, const QCString &s) : Base(p)  { from7BitString(s); }
+    CTEncoding(Content *p, const Q3CString &s) : Base(p)  { from7BitString(s); }
     CTEncoding(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
     ~CTEncoding()  {}
 
-    virtual void from7BitString(const QCString &s);
-    virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QCString&);
+    virtual void from7BitString(const Q3CString &s);
+    virtual Q3CString as7BitString(bool incType=true);
+    virtual void fromUnicodeString(const QString &s, const Q3CString&);
     virtual QString asUnicodeString();
     virtual void clear()            { d_ecoded=true; c_te=CE7Bit; }
     virtual const char* type()      { return "Content-Transfer-Encoding"; }
@@ -327,13 +331,13 @@ class KDE_EXPORT CDisposition : public Base {
   public:
     CDisposition() : Base(),d_isp(CDinline)  {}
     CDisposition(Content *p) : Base(p),d_isp(CDinline)  {}
-    CDisposition(Content *p, const QCString &s) : Base(p)  { from7BitString(s); }
-    CDisposition(Content *p, const QString &s, const QCString &cs) : Base(p)  { fromUnicodeString(s, cs); }
+    CDisposition(Content *p, const Q3CString &s) : Base(p)  { from7BitString(s); }
+    CDisposition(Content *p, const QString &s, const Q3CString &cs) : Base(p)  { fromUnicodeString(s, cs); }
     ~CDisposition()  {}
 
-    virtual void from7BitString(const QCString &s);
-    virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QCString &cs);
+    virtual void from7BitString(const Q3CString &s);
+    virtual Q3CString as7BitString(bool incType=true);
+    virtual void fromUnicodeString(const QString &s, const Q3CString &cs);
     virtual QString asUnicodeString();
     virtual void clear()            { f_ilename.truncate(0); d_isp=CDinline; }
     virtual const char* type()      { return "Content-Disposition"; }
@@ -358,9 +362,9 @@ class KDE_EXPORT CDescription : public Generics::GUnstructured {
   public:
     CDescription() : Generics::GUnstructured()  {}
     CDescription( Content * p ) : Generics::GUnstructured( p )  {}
-    CDescription( Content * p, const QCString & s )
+    CDescription( Content * p, const Q3CString & s )
       : Generics::GUnstructured( p, s ) {};
-    CDescription( Content * p, const QString & s, const QCString & cs )
+    CDescription( Content * p, const QString & s, const Q3CString & cs )
       : Generics::GUnstructured( p, s, cs ) {}
     ~CDescription()  {}
 

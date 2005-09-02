@@ -1,3 +1,7 @@
+//Added by qt3to4:
+#include <Q3StrList>
+#include <Q3CString>
+#include <Q3PtrList>
 /*
     kmime_content.h
 
@@ -59,10 +63,10 @@ class Base {
 class KDE_EXPORT Content : public Base {
 
   public:
-    typedef QPtrList<KMime::Content> List;
+    typedef Q3PtrList<KMime::Content> List;
 
     Content();
-    Content(const QCString &h, const QCString &b);
+    Content(const Q3CString &h, const Q3CString &b);
     virtual ~Content();
 
     //type
@@ -70,16 +74,16 @@ class KDE_EXPORT Content : public Base {
 
     //content handling
     bool hasContent()               { return ( !h_ead.isEmpty() && (!b_ody.isEmpty() || (c_ontents && !c_ontents->isEmpty())) ); }
-    void setContent(QStrList *l);
-    void setContent(const QCString &s);
+    void setContent(Q3StrList *l);
+    void setContent(const Q3CString &s);
     virtual void parse();
     virtual void assemble();
     virtual void clear();
 
     //header access
-    QCString head()       { return h_ead; }
+    Q3CString head()       { return h_ead; }
     // extracts and removes the next header from head. The caller has to delete the returned header;
-    Headers::Generic*  getNextHeader(QCString &head);
+    Headers::Generic*  getNextHeader(Q3CString &head);
     virtual Headers::Base* getHeaderByType(const char *type);
     virtual void setHeader(Headers::Base *h);
     virtual bool removeHeader(const char *type);
@@ -93,9 +97,9 @@ class KDE_EXPORT Content : public Base {
     int size();
     int storageSize();
     int lineCount();
-    QCString body()       { return b_ody; }
-    void setBody( const QCString & str ) { b_ody = str; }
-    QCString encodedContent(bool useCrLf=false);
+    Q3CString body()       { return b_ody; }
+    void setBody( const Q3CString & str ) { b_ody = str; }
+    Q3CString encodedContent(bool useCrLf=false);
     QByteArray decodedContent();
     void decodedText(QString &s, bool trimText=false,
 		     bool removeTrailingNewlines=false);
@@ -116,8 +120,8 @@ class KDE_EXPORT Content : public Base {
 
     // this charset is used for all headers and the body
     // if the charset is not declared explictly
-    QCString defaultCharset()                  { return QCString(d_efaultCS); }
-    void setDefaultCharset(const QCString &cs);
+    Q3CString defaultCharset()                  { return Q3CString(d_efaultCS); }
+    void setDefaultCharset(const Q3CString &cs);
 
     // use the default charset even if a different charset is
     // declared in the article
@@ -130,11 +134,11 @@ class KDE_EXPORT Content : public Base {
 
 
   protected:
-    QCString rawHeader(const char *name);
+    Q3CString rawHeader(const char *name);
     bool decodeText();
     template <class T> T* getHeaderInstance(T *ptr, bool create);
 
-    QCString  h_ead,
+    Q3CString  h_ead,
               b_ody;
     List *c_ontents;
     Headers::Base::List *h_eaders;

@@ -16,6 +16,8 @@
 #include "kmime_parsers.h"
 
 #include <qregexp.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 using namespace KMime::Parser;
 
@@ -23,7 +25,7 @@ namespace KMime {
 namespace Parser {
 
 
-MultiPart::MultiPart(const QCString &src, const QCString &boundary)
+MultiPart::MultiPart(const Q3CString &src, const Q3CString &boundary)
 {
   s_rc=src;
   b_oundary=boundary;
@@ -32,7 +34,7 @@ MultiPart::MultiPart(const QCString &src, const QCString &boundary)
 
 bool MultiPart::parse()
 {
-  QCString b="--"+b_oundary, part;
+  Q3CString b="--"+b_oundary, part;
   int pos1=0, pos2=0, blen=b.length();
 
   p_arts.clear();
@@ -95,16 +97,16 @@ bool MultiPart::parse()
 //============================================================================================
 
 
-NonMimeParser::NonMimeParser(const QCString &src) :
+NonMimeParser::NonMimeParser(const Q3CString &src) :
   s_rc(src), p_artNr(-1), t_otalNr(-1)
 {}
 
 /**
  * try to guess the mimetype from the file-extension
  */
-QCString NonMimeParser::guessMimeType(const QCString& fileName)
+Q3CString NonMimeParser::guessMimeType(const Q3CString& fileName)
 {
-  QCString tmp, mimeType;
+  Q3CString tmp, mimeType;
   int pos;
 
   if(!fileName.isEmpty()) {
@@ -137,7 +139,7 @@ QCString NonMimeParser::guessMimeType(const QCString& fileName)
 //============================================================================================
 
 
-UUEncoded::UUEncoded(const QCString &src, const QCString &subject) :
+UUEncoded::UUEncoded(const Q3CString &src, const Q3CString &subject) :
   NonMimeParser(src), s_ubject(subject)
 {}
 
@@ -150,7 +152,7 @@ bool UUEncoded::parse()
   while (success) {
     int beginPos=currentPos, uuStart=currentPos, endPos=0, lineCount=0, MCount=0, pos=0, len=0;
     bool containsBegin=false, containsEnd=false;
-    QCString tmp,fileName;
+    Q3CString tmp,fileName;
 
     if( (beginPos=s_rc.find(QRegExp("begin [0-9][0-9][0-9]"),currentPos))>-1 && (beginPos==0 || s_rc.at(beginPos-1)=='\n') ) {
       containsBegin=true;
@@ -239,15 +241,15 @@ bool UUEncoded::parse()
 //============================================================================================
 
 
-YENCEncoded::YENCEncoded(const QCString &src) :
+YENCEncoded::YENCEncoded(const Q3CString &src) :
   NonMimeParser(src)
 {}
 
 
-bool YENCEncoded::yencMeta(QCString& src, const QCString& name, int* value)
+bool YENCEncoded::yencMeta(Q3CString& src, const Q3CString& name, int* value)
 {
   bool found = false;
-  QCString sought=name + "=";
+  Q3CString sought=name + "=";
 
   int iPos=src.find( sought);
   if (iPos>-1) {
@@ -282,7 +284,7 @@ bool YENCEncoded::parse()
   while (success) {
     int beginPos=currentPos, yencStart=currentPos;
     bool containsPart=false;
-    QCString fileName,mimeType;
+    Q3CString fileName,mimeType;
 
     if ((beginPos=s_rc.find("=ybegin ", currentPos))>-1 && ( beginPos==0 || s_rc.at( beginPos-1)=='\n') ) {
       yencStart=s_rc.find( '\n', beginPos);
@@ -304,7 +306,7 @@ bool YENCEncoded::parse()
       // Try to identify yenc meta data
 
       // Filenames can contain any embedded chars until end of line
-      QCString meta=s_rc.mid(beginPos, yencStart-beginPos);
+      Q3CString meta=s_rc.mid(beginPos, yencStart-beginPos);
       int namePos=meta.find("name=");
       if (namePos== -1) {
         success=false;

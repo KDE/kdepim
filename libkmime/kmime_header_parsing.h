@@ -34,7 +34,9 @@
 
 #include <qstring.h>
 #include <qpair.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <time.h>
 
@@ -59,19 +61,19 @@ namespace Types {
     QString localPart;
     QString domain;
   };
-  typedef QValueList<AddrSpec> AddrSpecList;
+  typedef Q3ValueList<AddrSpec> AddrSpecList;
 
   struct KDE_EXPORT Mailbox {
     QString displayName;
     AddrSpec addrSpec;
   };
-  typedef QValueList<Mailbox> MailboxList;
+  typedef Q3ValueList<Mailbox> MailboxList;
 
   struct KDE_EXPORT Address {
     QString displayName;
     MailboxList mailboxList;
   };
-  typedef QValueList<Address> AddressList;
+  typedef Q3ValueList<Address> AddressList;
 
   struct KDE_EXPORT DateTime {
     time_t time;            // secs since 1.1.1970, 0:00 UTC/GMT
@@ -98,7 +100,7 @@ namespace HeaderParsing {
       @return the decoded string the encoded word represented.
   */
   bool parseEncodedWord( const char* & scursor, const char * const send,
-			 QString & result, QCString & language ) KDE_EXPORT;
+			 QString & result, Q3CString & language ) KDE_EXPORT;
   //
   // The parsing squad:
   //

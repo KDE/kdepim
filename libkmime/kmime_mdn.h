@@ -32,12 +32,14 @@
 #ifndef __KMIME_MDN_H__
 #define __KMIME_MDN_H__
 
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 #include <qstring.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <kdepimmacros.h>
 
-class QCString;
+class Q3CString;
 
 namespace KMime {
 
@@ -178,19 +180,19 @@ namespace KMime {
 
     /** Main function. Generates the content of the
         message/disposition-notification body part. */
-    KDE_EXPORT extern QCString dispositionNotificationBodyContent( const QString & finalRecipient,
-	       const QCString & originalRecipient,
-	       const QCString & originalMsgID,
+    KDE_EXPORT extern Q3CString dispositionNotificationBodyContent( const QString & finalRecipient,
+	       const Q3CString & originalRecipient,
+	       const Q3CString & originalMsgID,
 	       DispositionType disposition,
 	       ActionMode actionMode,
 	       SendingMode sendingMode,
-	       const QValueList<DispositionModifier> & dispositionModifers
-				   =QValueList<DispositionModifier>(),
+	       const Q3ValueList<DispositionModifier> & dispositionModifers
+				   =Q3ValueList<DispositionModifier>(),
 	       const QString & special=QString::null );
 
     KDE_EXPORT extern QString descriptionFor( DispositionType d,
-				   const QValueList<DispositionModifier> & m
-				   =QValueList<DispositionModifier>() );
+				   const Q3ValueList<DispositionModifier> & m
+				   =Q3ValueList<DispositionModifier>() );
 
     enum ReturnContent { Nothing, All, HeadersOnly };
 

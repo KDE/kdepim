@@ -14,6 +14,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 #include "kmime_newsarticle.h"
+//Added by qt3to4:
+#include <Q3CString>
 
 using namespace KMime;
 
@@ -23,7 +25,7 @@ void NewsArticle::parse()
 {
   Message::parse();
 
-  QCString raw;
+  Q3CString raw;
 
   if( !(raw=rawHeader(l_ines.type())).isEmpty() )
     l_ines.from7BitString(raw);
@@ -32,7 +34,7 @@ void NewsArticle::parse()
 void NewsArticle::assemble()
 {
   Headers::Base *h;
-  QCString newHead="";
+  Q3CString newHead="";
 
   //Message-ID
   if( (h=messageID(false))!=0 )

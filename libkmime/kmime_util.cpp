@@ -20,7 +20,7 @@
 
 #include "kmime_util.h"
 
-#include <kmdcodec.h> // for KCodec::{quotedPrintableDe,base64{En,De}}code
+#include <kcodecs.h> // for KCodec::{quotedPrintableDe,base64{En,De}}code
 #include <kglobal.h>
 #include <klocale.h>
 #include <kcharsets.h>
@@ -30,8 +30,10 @@
 #endif
 
 #include <qtextcodec.h>
-#include <qstrlist.h> // for QStrIList
+#include <q3strlist.h> // for QStrIList
 #include <qregexp.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <stdlib.h>
 #include <ctype.h>
@@ -42,10 +44,10 @@ using namespace KMime;
 
 namespace KMime {
 
-QStrIList c_harsetCache;
-QStrIList l_anguageCache;
+Q3StrIList c_harsetCache;
+Q3StrIList l_anguageCache;
 
-const char* cachedCharset(const QCString &name)
+const char* cachedCharset(const Q3CString &name)
 {
   int idx=c_harsetCache.find(name.data());
   if(idx>-1)
@@ -56,7 +58,7 @@ const char* cachedCharset(const QCString &name)
   return c_harsetCache.last();
 }
 
-const char* cachedLanguage(const QCString &name)
+const char* cachedLanguage(const Q3CString &name)
 {
   int idx=l_anguageCache.find(name.data());
   if(idx>-1)
@@ -121,11 +123,11 @@ const uchar eTextMap[16] = {
 #undef truncate
 #endif
 
-QString decodeRFC2047String(const QCString &src, const char **usedCS,
-			    const QCString &defaultCS, bool forceCS)
+QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
+			    const Q3CString &defaultCS, bool forceCS)
 {
-  QCString result, str;
-  QCString declaredCS;
+  Q3CString result, str;
+  Q3CString declaredCS;
   char *pos, *dest, *beg, *end, *mid, *endOfLastEncWord=0;
   char encoding = '\0';
   bool valid, onlySpacesSinceLastWord=false;
@@ -183,7 +185,7 @@ QString decodeRFC2047String(const QCString &src, const char **usedCS,
           dest=endOfLastEncWord;
 
         if (mid < pos) {
-          str = QCString(mid, (int)(pos - mid + 1));
+          str = Q3CString(mid, (int)(pos - mid + 1));
           if (encoding == 'Q')
           {
             // decode quoted printable text
@@ -236,10 +238,10 @@ QString decodeRFC2047String(const QCString &src, const char **usedCS,
 }
 
 
-QCString encodeRFC2047String(const QString &src, const char *charset,
+Q3CString encodeRFC2047String(const QString &src, const char *charset,
 			     bool addressHeader, bool allow8BitHeaders)
 {
-  QCString encoded8Bit, result, usedCS;
+  Q3CString encoded8Bit, result, usedCS;
   unsigned int start=0,end=0;
   bool nonAscii=false, ok=true, useQEncoding=false;
   QTextCodec *codec=0;
@@ -326,11 +328,11 @@ QCString encodeRFC2047String(const QString &src, const char *charset,
   return result;
 }
 
-QCString uniqueString()
+Q3CString uniqueString()
 {
   static char chars[] = "0123456789abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   time_t now;
-  QCString ret;
+  Q3CString ret;
   char p[11];
   int pos, ran;
   unsigned int timeval;
@@ -351,16 +353,16 @@ QCString uniqueString()
 }
 
 
-QCString multiPartBoundary()
+Q3CString multiPartBoundary()
 {
-  QCString ret;
+  Q3CString ret;
   ret="nextPart"+uniqueString();
   return ret;
 }
 
-QCString extractHeader(const QCString &src, const char *name)
+Q3CString extractHeader(const Q3CString &src, const char *name)
 {
-  QCString n=QCString(name)+": ";
+  Q3CString n=Q3CString(name)+": ";
   int pos1=-1, pos2=0, len=src.length()-1;
   bool folded(false);
 
@@ -393,36 +395,36 @@ QCString extractHeader(const QCString &src, const char *name)
       return (src.mid(pos1, pos2-pos1).replace(QRegExp("\\s*\\n\\s*")," "));
   }
   else {
-    return QCString(0); //header not found
+    return Q3CString(0); //header not found
   }
 }
 
 
-QCString CRLFtoLF(const QCString &s)
+Q3CString CRLFtoLF(const Q3CString &s)
 {
-  QCString ret=s.copy();
+  Q3CString ret=s.copy();
   ret.replace(QRegExp("\\r\\n"), "\n");
   return ret;
 }
 
 
-QCString CRLFtoLF(const char *s)
+Q3CString CRLFtoLF(const char *s)
 {
-  QCString ret=s;
+  Q3CString ret=s;
   ret.replace(QRegExp("\\r\\n"), "\n");
   return ret;
 }
 
 
-QCString LFtoCRLF(const QCString &s)
+Q3CString LFtoCRLF(const Q3CString &s)
 {
-  QCString ret=s.copy();
+  Q3CString ret=s.copy();
   ret.replace(QRegExp("\\n"), "\r\n");
   return ret;
 }
 
 
-void removeQuots(QCString &str)
+void removeQuots(Q3CString &str)
 {
   bool inQuote=false;
 
@@ -456,7 +458,7 @@ void removeQuots(QString &str)
 }
 
 
-void addQuotes(QCString &str, bool forceQuotes)
+void addQuotes(Q3CString &str, bool forceQuotes)
 {
   bool needsQuotes=false;
   for (unsigned int i=0; i < str.length(); i++) {
@@ -527,11 +529,11 @@ DateFormatter::dateString(const QDateTime& dtime, const QString& lang,
   return DateFormatter::dateString( qdateToTimeT(dtime), lang, shortFormat, includeSecs );
 }
 
-QCString
+Q3CString
 DateFormatter::rfc2822(time_t otime) const
 {
   QDateTime tmp;
-  QCString  ret;
+  Q3CString  ret;
 
   tmp.setTime_t(otime);
 
@@ -575,10 +577,10 @@ DateFormatter::getCustomFormat() const
 }
 
 
-QCString
+Q3CString
 DateFormatter::zone(time_t otime) const
 {
-  QCString ret;
+  Q3CString ret;
 #if defined(HAVE_TIMEZONE) || defined(HAVE_TM_GMTOFF)
   struct tm *local = localtime( &otime );
 #endif
@@ -767,7 +769,7 @@ DateFormatter::formatCurrentDate( DateFormatter::FormatType t, const QString& da
   return f.dateString( time(0), data, shortFormat, includeSecs );
 }
 
-QCString
+Q3CString
 DateFormatter::rfc2822FormatDate( time_t t )
 {
   DateFormatter f;

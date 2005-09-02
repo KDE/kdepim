@@ -32,12 +32,12 @@
 #ifndef __KMIME_CODECS__
 #define __KMIME_CODECS__
 
-#include <qasciidict.h>
+#include <q3asciidict.h>
 #if defined(QT_THREAD_SUPPORT)
 #  include <qmutex.h>
 #endif
 
-#include <qcstring.h> // QByteArray
+#include <q3cstring.h> // QByteArray
 
 #include <kdebug.h> // for kdFatal()
 #include <kdepimmacros.h>
@@ -57,7 +57,7 @@ class Decoder;
 class KDE_EXPORT Codec {
 protected:
 
-  static QAsciiDict<Codec>* all;
+  static Q3AsciiDict<Codec>* all;
 #if defined(QT_THREAD_SUPPORT)
   static QMutex* dictLock;
 #endif
@@ -68,7 +68,7 @@ private:
 
 public:
   static Codec * codecForName( const char * name );
-  static Codec * codecForName( const QCString & name );
+  static Codec * codecForName( const Q3CString & name );
 
   virtual int maxEncodedSizeFor( int insize, bool withCRLF=false ) const = 0;
   virtual int maxDecodedSizeFor( int insize, bool withCRLF=false ) const = 0;
@@ -168,7 +168,7 @@ public:
    * domain (ie. not in the binary domain). Codecs that do not fall
    * into this category will return a null QCString.
    **/
-  virtual QCString encodeToQCString( const QByteArray & src, bool withCRLF=false ) const;
+  virtual Q3CString encodeToQCString( const QByteArray & src, bool withCRLF=false ) const;
 
   /**
    * Even more convenient, but also a bit slower and more memory

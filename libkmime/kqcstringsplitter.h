@@ -17,7 +17,7 @@
 #ifndef KQCSTRINGSPLITTER_H
 #define KQCSTRINGSPLITTER_H
 
-#include <qcstring.h>
+#include <q3cstring.h>
 
 #include <kdepimmacros.h>
 
@@ -29,7 +29,7 @@ class KDE_EXPORT KQCStringSplitter {
         
     void reset()                  { start=0; end=0; sep=""; incSep=false;}
     
-    void init(const QCString &str, const char *s);
+    void init(const Q3CString &str, const char *s);
     void init(const char *str, const char *s);
     void setIncludeSep(bool inc)  { incSep=inc; }
     
@@ -39,11 +39,11 @@ class KDE_EXPORT KQCStringSplitter {
     bool next();
     bool prev();  
       
-    QCString& string()              { return dst; }
-    const QCString& source()        { return src; }
+    Q3CString& string()              { return dst; }
+    const Q3CString& source()        { return src; }
           
   private:
-    QCString src, dst, sep;
+    Q3CString src, dst, sep;
     int start,end;
     bool incSep;
       
