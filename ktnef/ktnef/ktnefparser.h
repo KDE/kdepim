@@ -18,9 +18,9 @@
 #ifndef KTNEFPARSER_H
 #define	KTNEFPARSER_H
 
-#include <qptrlist.h>
 #include <qstring.h>
 #include <qmap.h>
+#include <QIODevice>
 #include <kdepimmacros.h>
 
 class KTNEFAttach;

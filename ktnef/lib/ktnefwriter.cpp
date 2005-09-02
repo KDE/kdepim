@@ -26,6 +26,9 @@
 #include <qfile.h>
 #include <qdatetime.h>
 #include <qdatastream.h>
+//Added by qt3to4:
+#include <QList>
+#include <Q3CString>
 #include <kdebug.h>
 #include <assert.h>
 
@@ -52,7 +55,7 @@ KTNEFWriter::KTNEFWriter() {
   // Now set the code page to something reasonable. TODO: Use the right one
   QVariant v1( (Q_UINT32)0x4e4 );
   QVariant v2( (Q_UINT32)0x0 );
-  QValueList<QVariant> list;
+  QList<QVariant> list;
   list << v1;
   list << v2;
   v = QVariant( list );
@@ -76,13 +79,13 @@ void addToChecksum( Q_UINT32 i, Q_UINT16 &checksum ) {
   checksum += (i >> 24) & 0xff;
 }
 
-void addToChecksum( QCString &cs, Q_UINT16 &checksum ) {
+void addToChecksum( Q3CString &cs, Q_UINT16 &checksum ) {
   int len = cs.length();
   for (int i=0; i<len; i++)
     checksum += (Q_UINT8)cs[i];
 }
 
-void writeCString( QDataStream &stream, QCString &str ) {
+void writeCString( QDataStream &stream, Q3CString &str ) {
   stream.writeRawBytes( str.data(), str.length() );
   stream << (Q_UINT8)0;
 }
@@ -109,9 +112,9 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
 
   Q_UINT32 i;
   Q_UINT16 checksum = 0;
-  QValueList<QVariant> list;
+  QList<QVariant> list;
   QString s;
-  QCString cs, cs2;
+  Q3CString cs, cs2;
   QDateTime dt;
   QDate date;
   QTime time;
@@ -302,7 +305,7 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
 
 
 bool KTNEFWriter::writeFile( QIODevice &file ) {
-  if ( !file.open( IO_WriteOnly ) )
+  if ( !file.open( QIODevice::WriteOnly ) )
     return false;
 
   QDataStream stream( &file );
@@ -348,7 +351,7 @@ void KTNEFWriter::setSender(const QString &name, const QString &email) {
   QVariant v1( name );
   QVariant v2( email );
 
-  QValueList<QVariant> list;
+  QList<QVariant> list;
   list << v1;
   list << v2;
 

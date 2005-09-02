@@ -17,6 +17,9 @@
 
 #include "ktnef/ktnefpropertyset.h"
 #include "ktnef/ktnefproperty.h"
+
+#include <QList>
+
 #include <kdebug.h>
 
 KTNEFPropertySet::KTNEFPropertySet()
@@ -65,13 +68,14 @@ QString KTNEFPropertySet::findNamedProp(const QString& name, const QString& fall
         s = (*it)->name().asString();
       else
         s = QString().sprintf( "0X%04X", (*it)->name().asUInt() );
-      
+
       if( s.upper() == name.upper() ){
         QVariant value = ( *it )->value();
         if( value.type() == QVariant::List ){
+          QList<QVariant> l = value.toList();
           s = "";
-          for ( QValueList<QVariant>::ConstIterator lit = value.listBegin();
-                lit != value.listEnd();
+          for ( QList<QVariant>::ConstIterator lit = l.begin();
+                lit != l.end();
                 ++lit ){
             if( !s.isEmpty() )
               s += ',';

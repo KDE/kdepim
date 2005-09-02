@@ -20,17 +20,29 @@
 
 #include "lzfu.h"
 #include <qbuffer.h>
+#include <QList>
 
 class KTNEFMessage::MessagePrivate
 {
 public:
-	MessagePrivate()
-	{
-		attachments_.setAutoDelete( true );
-	}
+	MessagePrivate() {}
+        ~MessagePrivate();
 
-	QPtrList<KTNEFAttach> attachments_;
+  void clearAttachments();
+
+	QList<KTNEFAttach*> attachments_;
 };
+
+KTNEFMessage::MessagePrivate::~MessagePrivate()
+{
+  clearAttachments();
+}
+
+void KTNEFMessage::MessagePrivate::clearAttachments()
+{
+  while ( !attachments_.isEmpty() )
+    delete attachments_.takeFirst();
+}
 
 KTNEFMessage::KTNEFMessage()
 {
@@ -42,17 +54,17 @@ KTNEFMessage::~KTNEFMessage()
 	delete d;
 }
 
-const QPtrList<KTNEFAttach>& KTNEFMessage::attachmentList() const
+const QList<KTNEFAttach*>& KTNEFMessage::attachmentList() const
 {
 	return d->attachments_;
 }
 
 KTNEFAttach* KTNEFMessage::attachment( const QString& filename ) const
 {
-	QPtrListIterator<KTNEFAttach> it( d->attachments_ );
-	for ( ; it.current(); ++it )
-		if ( it.current()->name() == filename )
-			return it.current();
+  QList<KTNEFAttach*>::const_iterator it = d->attachments_.begin();
+	for ( ; it != d->attachments_.end(); ++it )
+		if ( (*it)->name() == filename )
+			return *it;
 	return 0;
 }
 
@@ -63,7 +75,7 @@ void KTNEFMessage::addAttachment( KTNEFAttach *attach )
 
 void KTNEFMessage::clearAttachments()
 {
-	d->attachments_.clear();
+  d->clearAttachments();
 }
 
 QString KTNEFMessage::rtfString()
@@ -74,8 +86,8 @@ QString KTNEFMessage::rtfString()
 	else
 	{
 		QByteArray rtf;
-		QBuffer input( prop.asByteArray() ), output( rtf );
-		if ( input.open( IO_ReadOnly ) && output.open( IO_WriteOnly ) )
+		QBuffer input( &prop.asByteArray() ), output( &rtf );
+		if ( input.open( QIODevice::ReadOnly ) && output.open( QIODevice::WriteOnly ) )
 			lzfu_decompress( &input, &output );
 		return QString( rtf );
 	}

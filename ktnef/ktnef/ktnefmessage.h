@@ -19,7 +19,7 @@
 #define KTNEFMESSAGE_H
 
 #include <ktnef/ktnefpropertyset.h>
-#include <qptrlist.h>
+#include <QList>
 #include <kdepimmacros.h>
 
 class KTNEFAttach;
@@ -30,7 +30,7 @@ public:
 	KTNEFMessage();
 	~KTNEFMessage();
 
-	const QPtrList<KTNEFAttach>& attachmentList() const;
+	const QList<KTNEFAttach*>& attachmentList() const;
 	KTNEFAttach* attachment( const QString& filename ) const;
 	void addAttachment( KTNEFAttach* attach );
 	void clearAttachments();
