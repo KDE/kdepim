@@ -26,7 +26,9 @@
 
 #include <qstring.h>
 #include <qbitarray.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include "libkcal_export.h"
 #include "recurrencerule.h"
@@ -164,7 +166,7 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
      * recurrence will occur.
      * @param date the date for which to find the recurrence times.
      */
-    QValueList<QTime> recurTimesOn(const QDate &date) const;
+    Q3ValueList<QTime> recurTimesOn(const QDate &date) const;
 
     /** Returns the date and time of the next recurrence, after the specified date/time.
      * If the recurrence has no time, the next date after the specified date is returned.
@@ -326,10 +328,10 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
      */
     void addMonthlyDate( short day );
     /** Returns list of day positions in months. */
-    QValueList<RecurrenceRule::WDayPos> monthPositions() const;
+    Q3ValueList<RecurrenceRule::WDayPos> monthPositions() const;
     /** Returns list of day numbers of a  month. */
     // Emulate old behavior
-    QValueList<int> monthDays() const;
+    Q3ValueList<int> monthDays() const;
 
     /** Sets an event to recur yearly. By default, this will recur every year
      *  on the same date (e.g. every year on April 15 if the start date was
@@ -399,7 +401,7 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
      *         60, this means the recurrence happens on day 60 of the year, i.e.
      *         on Feb 29 in leap years and March 1 in non-leap years.
      */
-    QValueList<int> yearDays() const;
+    Q3ValueList<int> yearDays() const;
     /** Returns the dates within a yearly recurrence.
      * @return the days of the month for the event. E.g. if the list contains
      *         13, this means the recurrence happens on the 13th of the month.
@@ -407,7 +409,7 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
      *         yearlyMonths(). If this list is empty, the month of the start
      *         date is used.
      */
-    QValueList<int> yearDates() const;
+    Q3ValueList<int> yearDates() const;
     /** Returns the months within a yearly recurrence.
      * @return the months for the event. E.g. if the list contains
      *         11, this means the recurrence happens in November.
@@ -416,7 +418,7 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
      *         through yearlyPositions() if they are given as positions within the
      *         month. If none is specified, the date of the start date is used.
      */
-    QValueList<int> yearMonths() const;
+    Q3ValueList<int> yearMonths() const;
     /** Returns the positions within a yearly recurrence.
      * @return the positions for the event, either within a month (if months
      *         are set through addYearlyMonth()) or within the year.
@@ -426,7 +428,7 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
      *         year.
      */
     /** Returns list of day positions in months, for a recursYearlyPos recurrence rule. */
-    QValueList<RecurrenceRule::WDayPos> yearPositions() const;
+    Q3ValueList<RecurrenceRule::WDayPos> yearPositions() const;
 
     /** Upper date limit for recurrences */
     static const QDate MAX_DATE;
@@ -490,10 +492,10 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
   private:
     RecurrenceRule::List mExRules;
     RecurrenceRule::List mRRules;
-    QValueList<QDateTime>mRDateTimes;
-    QValueList<QDate> mRDates;
-    QValueList<QDateTime> mExDateTimes;
-    QValueList<QDate> mExDates;
+    Q3ValueList<QDateTime>mRDateTimes;
+    Q3ValueList<QDate> mRDates;
+    Q3ValueList<QDateTime> mExDateTimes;
+    Q3ValueList<QDate> mExDates;
 
     QDateTime mStartDateTime;            // date/time of first recurrence
     bool mFloating;                      // the recurrence has no time, just a date
@@ -502,7 +504,7 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
     // Cache the type of the recurrence with the old system (e.g. MonthlyPos)
     mutable ushort mCachedType;
 
-    QValueList<Observer*> mObservers;
+    Q3ValueList<Observer*> mObservers;
 
     class Private;
     Private *d;

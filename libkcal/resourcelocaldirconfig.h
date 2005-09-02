@@ -24,7 +24,7 @@
 #define KCAL_RESOURCELOCALDIRCONFIG_H
 
 #include <qradiobutton.h>
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <kurlrequester.h>
 
 #include <kresources/resource.h>
@@ -53,7 +53,7 @@ class LIBKCAL_EXPORT ResourceLocalDirConfig : public KRES::ConfigWidget
 
   private:
     KURLRequester *mURL;
-    QButtonGroup *formatGroup;
+    Q3ButtonGroup *formatGroup;
     QRadioButton *icalButton;
     QRadioButton *vcalButton;
 

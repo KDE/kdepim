@@ -22,7 +22,7 @@
 #define KCAL_SCHEDULER_H
 
 #include <qstring.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 
 #include "libkcal_export.h"
 
@@ -130,7 +130,7 @@ class LIBKCAL_EXPORT Scheduler
     /**
       Retrieve incoming iTIP transactions.
     */
-    virtual QPtrList<ScheduleMessage> retrieveTransactions() = 0;
+    virtual Q3PtrList<ScheduleMessage> retrieveTransactions() = 0;
 
     /**
       Accept transaction. The incidence argument specifies the iCal compoennt

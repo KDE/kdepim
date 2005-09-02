@@ -694,7 +694,7 @@ void Calendar::removeRelations( Incidence *incidence )
     QStringList relatedToUids;
     // First get the list of all keys in the mOrphans list that point to the removed item
     relatedToUids << incidence->relatedToUid();
-    for ( QDictIterator<Incidence> it( mOrphans ); it.current(); ++it ) {
+    for ( Q3DictIterator<Incidence> it( mOrphans ); it.current(); ++it ) {
       if ( it.current()->uid() == uid ) {
         relatedToUids << it.currentKey();
       }

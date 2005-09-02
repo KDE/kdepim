@@ -24,6 +24,8 @@
 
 #include "incidence.h"
 #include <kdepimmacros.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 namespace KCal {
 
@@ -40,7 +42,7 @@ class LIBKCAL_EXPORT Journal : public Incidence
     bool accept( Visitor &v ) { return v.visit(this); }
     bool operator==( const Journal& ) const;
 
-    QCString type() const { return "Journal"; }
+    Q3CString type() const { return "Journal"; }
     
     /**
       Return copy of this Journal. The caller owns the returned object.

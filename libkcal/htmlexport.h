@@ -25,6 +25,8 @@
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qmap.h>
+//Added by qt3to4:
+#include <QTextStream>
 
 #include <libkcal/calendar.h>
 #include <libkcal/htmlexportsettings.h>

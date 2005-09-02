@@ -27,6 +27,8 @@
 #include "icalformat.h"
 
 #include "imipscheduler.h"
+//Added by qt3to4:
+#include <Q3PtrList>
 
 using namespace KCal;
 
@@ -51,9 +53,9 @@ bool IMIPScheduler::performTransaction(IncidenceBase *incidence,Method method)
   return false;
 }
 
-QPtrList<ScheduleMessage> IMIPScheduler::retrieveTransactions()
+Q3PtrList<ScheduleMessage> IMIPScheduler::retrieveTransactions()
 {
-  QPtrList<ScheduleMessage> messageList;
+  Q3PtrList<ScheduleMessage> messageList;
 
   return messageList;
 }

@@ -21,11 +21,13 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qregexp.h>
 #include <qclipboard.h>
 #include <qfile.h>
 #include <qtextstream.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -81,7 +83,7 @@ bool ICalFormat::load( Calendar *calendar, const QString &fileName)
   clearException();
 
   QFile file( fileName );
-  if (!file.open( IO_ReadOnly ) ) {
+  if (!file.open( QIODevice::ReadOnly ) ) {
     kdDebug(5800) << "ICalFormat::load() load error" << endl;
     setException(new ErrorFormat(ErrorFormat::LoadError));
     return false;
@@ -121,7 +123,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   }
 
   // Convert to UTF8 and save
-  QCString textUtf8 = text.utf8();
+  Q3CString textUtf8 = text.utf8();
   file.file()->writeBlock( textUtf8.data(), textUtf8.size() - 1 );
 
   if ( !file.close() ) {
@@ -138,7 +140,7 @@ bool ICalFormat::fromString( Calendar *cal, const QString &text )
   return fromRawString( cal, text.utf8() );
 }
 
-bool ICalFormat::fromRawString( Calendar *cal, const QCString &text )
+bool ICalFormat::fromRawString( Calendar *cal, const Q3CString &text )
 {
   setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
 

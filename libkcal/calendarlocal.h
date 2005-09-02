@@ -23,7 +23,7 @@
 #define KCAL_CALENDARLOCAL_H
 
 #include "calendar.h"
-#include <qdict.h>
+#include <q3dict.h>
 #include <kdepimmacros.h>
 
 namespace KCal {
@@ -207,8 +207,8 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
   private:
     void init();
 
-    typedef QDict<Event> EventDict;
-    typedef QDictIterator<Event> EventDictIterator;
+    typedef Q3Dict<Event> EventDict;
+    typedef Q3DictIterator<Event> EventDictIterator;
     EventDict mEvents;
     Todo::List mTodoList;
     Journal::List mJournalList;

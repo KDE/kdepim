@@ -22,6 +22,8 @@
 #include "customproperties.h"
 
 #include <kdebug.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 using namespace KCal;
 
@@ -41,9 +43,9 @@ CustomProperties::~CustomProperties()
 bool CustomProperties::operator==( const CustomProperties &other ) const
 {
   if ( mProperties.count() != other.mProperties.count() ) return false;
-  QMap<QCString, QString>::ConstIterator it;
+  QMap<Q3CString, QString>::ConstIterator it;
   for( it = mProperties.begin(); it != mProperties.end(); ++it ) {
-    QMap<QCString, QString>::ConstIterator itOther =
+    QMap<Q3CString, QString>::ConstIterator itOther =
       other.mProperties.find( it.key() );
 
     if ( itOther == other.mProperties.end() ) {
@@ -55,52 +57,52 @@ bool CustomProperties::operator==( const CustomProperties &other ) const
   return true;
 }
 
-void CustomProperties::setCustomProperty(const QCString &app, const QCString &key,
+void CustomProperties::setCustomProperty(const Q3CString &app, const Q3CString &key,
                                          const QString &value)
 {
   if (value.isNull() || key.isEmpty() || app.isEmpty())
     return;
-  QCString property = "X-KDE-" + app + "-" + key;
+  Q3CString property = "X-KDE-" + app + "-" + key;
   if (!checkName(property))
     return;
   mProperties[property] = value;
 }
 
-void CustomProperties::removeCustomProperty(const QCString &app, const QCString &key)
+void CustomProperties::removeCustomProperty(const Q3CString &app, const Q3CString &key)
 {
-  removeNonKDECustomProperty(QCString("X-KDE-" + app + "-" + key));
+  removeNonKDECustomProperty(Q3CString("X-KDE-" + app + "-" + key));
 }
 
-QString CustomProperties::customProperty(const QCString &app, const QCString &key) const
+QString CustomProperties::customProperty(const Q3CString &app, const Q3CString &key) const
 {
-  return nonKDECustomProperty(QCString("X-KDE-" + app + "-" + key));
+  return nonKDECustomProperty(Q3CString("X-KDE-" + app + "-" + key));
 }
 
-void CustomProperties::setNonKDECustomProperty(const QCString &name, const QString &value)
+void CustomProperties::setNonKDECustomProperty(const Q3CString &name, const QString &value)
 {
   if (value.isNull() || !checkName(name))
     return;
   mProperties[name] = value;
 }
 
-void CustomProperties::removeNonKDECustomProperty(const QCString &name)
+void CustomProperties::removeNonKDECustomProperty(const Q3CString &name)
 {
-  QMap<QCString, QString>::Iterator it = mProperties.find(name);
+  QMap<Q3CString, QString>::Iterator it = mProperties.find(name);
   if (it != mProperties.end())
     mProperties.remove(it);
 }
 
-QString CustomProperties::nonKDECustomProperty(const QCString &name) const
+QString CustomProperties::nonKDECustomProperty(const Q3CString &name) const
 {
-  QMap<QCString, QString>::ConstIterator it = mProperties.find(name);
+  QMap<Q3CString, QString>::ConstIterator it = mProperties.find(name);
   if (it == mProperties.end())
     return QString::null;
   return it.data();
 }
 
-void CustomProperties::setCustomProperties(const QMap<QCString, QString> &properties)
+void CustomProperties::setCustomProperties(const QMap<Q3CString, QString> &properties)
 {
-  for (QMap<QCString, QString>::ConstIterator it = properties.begin();  it != properties.end();  ++it) {
+  for (QMap<Q3CString, QString>::ConstIterator it = properties.begin();  it != properties.end();  ++it) {
     // Validate the property name and convert any null string to empty string
     if (checkName(it.key())) {
       mProperties[it.key()] = it.data().isNull() ? QString("") : it.data();
@@ -108,12 +110,12 @@ void CustomProperties::setCustomProperties(const QMap<QCString, QString> &proper
   }
 }
 
-QMap<QCString, QString> CustomProperties::customProperties() const
+QMap<Q3CString, QString> CustomProperties::customProperties() const
 {
   return mProperties;
 }
 
-bool CustomProperties::checkName(const QCString &name)
+bool CustomProperties::checkName(const Q3CString &name)
 {
   // Check that the property name starts with 'X-' and contains
   // only the permitted characters

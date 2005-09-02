@@ -19,12 +19,15 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qlayout.h>
 #include <qradiobutton.h>
 #include <qspinbox.h>
-#include <qhbox.h>
+#include <q3hbox.h>
 #include <qlabel.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QBoxLayout>
 
 #include <klocale.h>
 #include <kdebug.h>
@@ -41,7 +44,7 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent,
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
 
-  mGroup = new QButtonGroup( 1, Horizontal, i18n("Automatic Reload"), this );
+  mGroup = new Q3ButtonGroup( 1, Qt::Horizontal, i18n("Automatic Reload"), this );
   topLayout->addWidget( mGroup );
   new QRadioButton( i18n("Never"), mGroup );
   new QRadioButton( i18n("On startup"), mGroup );
@@ -50,7 +53,7 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent,
                                                   mGroup );
   connect( intervalRadio, SIGNAL( stateChanged( int ) ),
            SLOT( slotIntervalStateChanged( int ) ) );
-  QHBox *intervalBox = new QHBox( mGroup );
+  Q3HBox *intervalBox = new Q3HBox( mGroup );
   new QLabel( i18n("Interval in minutes"), intervalBox );
   mIntervalSpin = new QSpinBox( intervalBox );
   mIntervalSpin->setEnabled( false );
@@ -70,7 +73,7 @@ void ResourceCachedReloadConfig::saveSettings( ResourceCached *resource )
 
 void ResourceCachedReloadConfig::slotIntervalStateChanged( int state )
 {
-  if ( state == QButton::On ) mIntervalSpin->setEnabled( true );
+  if ( state == QCheckBox::On ) mIntervalSpin->setEnabled( true );
   else mIntervalSpin->setEnabled( false );
 }
 
@@ -81,7 +84,7 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent,
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
 
-  mGroup = new QButtonGroup( 1, Horizontal, i18n("Automatic Save"), this );
+  mGroup = new Q3ButtonGroup( 1, Qt::Horizontal, i18n("Automatic Save"), this );
   topLayout->addWidget( mGroup );
   new QRadioButton( i18n("Never"), mGroup );
   new QRadioButton( i18n("On exit"), mGroup );
@@ -90,7 +93,7 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent,
                                                   mGroup );
   connect( intervalRadio, SIGNAL( stateChanged( int ) ),
            SLOT( slotIntervalStateChanged( int ) ) );
-  QHBox *intervalBox = new QHBox( mGroup );
+  Q3HBox *intervalBox = new Q3HBox( mGroup );
   new QLabel( i18n("Interval in minutes"), intervalBox );
   mIntervalSpin = new QSpinBox( intervalBox );
   mIntervalSpin->setEnabled( false );
@@ -113,7 +116,7 @@ void ResourceCachedSaveConfig::saveSettings( ResourceCached *resource )
 
 void ResourceCachedSaveConfig::slotIntervalStateChanged( int state )
 {
-  if ( state == QButton::On ) mIntervalSpin->setEnabled( true );
+  if ( state == QCheckBox::On ) mIntervalSpin->setEnabled( true );
   else mIntervalSpin->setEnabled( false );
 }
 

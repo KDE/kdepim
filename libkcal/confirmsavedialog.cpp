@@ -24,8 +24,11 @@
 #include <klocale.h>
 
 #include <qlayout.h>
-#include <qframe.h>
+#include <q3frame.h>
 #include <qlabel.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QBoxLayout>
 
 using namespace KCal;
 
@@ -33,7 +36,7 @@ ConfirmSaveDialog::ConfirmSaveDialog( const QString &destination,
                                       QWidget *parent, const char *name )
   : KDialogBase( parent, name, true, i18n("Confirm Save"), Ok | Cancel )
 {
-  QFrame *topFrame = makeMainWidget();
+  Q3Frame *topFrame = makeMainWidget();
 
   QBoxLayout *topLayout = new QVBoxLayout( topFrame );
   topLayout->setSpacing( spacingHint() );

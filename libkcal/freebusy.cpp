@@ -23,6 +23,8 @@
 #include <kdebug.h>
 
 #include "freebusy.h"
+//Added by qt3to4:
+#include <Q3ValueList>
 
 using namespace KCal;
 
@@ -145,7 +147,7 @@ QDateTime FreeBusy::dtEnd() const
   return mDtEnd;
 }
 
-QValueList<Period> FreeBusy::busyPeriods() const
+Q3ValueList<Period> FreeBusy::busyPeriods() const
 {
   return mBusyPeriods;
 }
@@ -180,14 +182,14 @@ bool FreeBusy::addLocalPeriod(const QDateTime &eventStart, const QDateTime &even
   return true;
 }
 
-FreeBusy::FreeBusy(QValueList<Period> busyPeriods)
+FreeBusy::FreeBusy(Q3ValueList<Period> busyPeriods)
 {
   mBusyPeriods = busyPeriods;
 }
 
 void FreeBusy::sortList()
 {
-  typedef QValueList<Period> PeriodList;
+  typedef Q3ValueList<Period> PeriodList;
 
   PeriodList::Iterator tmpPeriod, earlyPeriod;
   PeriodList sortedList;
@@ -233,8 +235,8 @@ void FreeBusy::merge( FreeBusy *freeBusy )
   if ( freeBusy->dtEnd() > dtEnd() )
     setDtEnd( freeBusy->dtEnd() );
 
-  QValueList<Period> periods = freeBusy->busyPeriods();
-  QValueList<Period>::ConstIterator it;
+  Q3ValueList<Period> periods = freeBusy->busyPeriods();
+  Q3ValueList<Period>::ConstIterator it;
   for ( it = periods.begin(); it != periods.end(); ++it )
     addPeriod( (*it).start(), (*it).end() );
 }

@@ -27,7 +27,7 @@
 using namespace KCal;
 
 VCalDrag::VCalDrag( Calendar *cal, QWidget *parent, const char *name )
-  : QStoredDrag( "text/x-vCalendar", parent, name )
+  : Q3StoredDrag( "text/x-vCalendar", parent, name )
 {
   VCalFormat format;
   setEncodedData( format.toString( cal ).utf8() );

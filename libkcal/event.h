@@ -23,6 +23,8 @@
 
 #include "incidence.h"
 #include <kdepimmacros.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 namespace KCal {
 
@@ -47,7 +49,7 @@ class LIBKCAL_EXPORT Event : public Incidence
     ~Event();
     bool operator==( const Event & ) const;
 
-    QCString type() const { return "Event"; }
+    Q3CString type() const { return "Event"; }
 
     /**
       Return copy of this Event. The caller owns the returned objet.

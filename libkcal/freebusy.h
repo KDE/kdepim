@@ -23,8 +23,10 @@
 #define KCAL_FREEBUSY_H
 
 #include <qdatetime.h>
-#include <qvaluelist.h>
-#include <qptrlist.h>
+#include <q3valuelist.h>
+#include <q3ptrlist.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include "period.h"
 #include "calendar.h"
@@ -43,16 +45,16 @@ class LIBKCAL_EXPORT FreeBusy : public IncidenceBase
     FreeBusy( const QDateTime &start, const QDateTime &end );
     FreeBusy( Calendar *calendar, const QDateTime &start,
               const QDateTime &end );
-    FreeBusy( QValueList<Period> busyPeriods );
+    FreeBusy( Q3ValueList<Period> busyPeriods );
 
     ~FreeBusy();
     
-    QCString type() const { return "FreeBusy"; }
+    Q3CString type() const { return "FreeBusy"; }
 
     virtual QDateTime dtEnd() const;
     bool setDtEnd( const QDateTime &end );
 
-    QValueList<Period> busyPeriods() const;
+    Q3ValueList<Period> busyPeriods() const;
 
     void addPeriod( const QDateTime &start, const QDateTime &end );
     void addPeriod( const QDateTime &start, const Duration &dur );
@@ -66,7 +68,7 @@ class LIBKCAL_EXPORT FreeBusy : public IncidenceBase
     bool addLocalPeriod( const QDateTime &start, const QDateTime &end );
 
     QDateTime mDtEnd;
-    QValueList<Period> mBusyPeriods;
+    Q3ValueList<Period> mBusyPeriods;
     Calendar *mCalendar;
 
     class Private;

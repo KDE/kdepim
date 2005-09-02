@@ -24,6 +24,8 @@
 
 #include <qstring.h>
 #include <qmap.h>
+//Added by qt3to4:
+#include <Q3CString>
 #include <kdepimmacros.h>
 
 #include "libkcal_export.h"
@@ -59,7 +61,7 @@ class LIBKCAL_EXPORT CustomProperties
       @param value The property's value. A call with a value of QString::null
                    will be ignored.
     */
-    void setCustomProperty( const QCString &app, const QCString &key,
+    void setCustomProperty( const Q3CString &app, const Q3CString &key,
                             const QString &value );
     /**
       Delete a custom calendar property.
@@ -67,7 +69,7 @@ class LIBKCAL_EXPORT CustomProperties
       @param app Application name as it appears in the custom property name.
       @param key Property identifier specific to the application.
     */
-    void removeCustomProperty( const QCString &app, const QCString &key );
+    void removeCustomProperty( const Q3CString &app, const Q3CString &key );
     /**
       Return the value of a custom calendar property.
       
@@ -76,7 +78,7 @@ class LIBKCAL_EXPORT CustomProperties
       @return Property value, or QString::null if (and only if) the property
               does not exist.
     */
-    QString customProperty( const QCString &app, const QCString &key ) const;
+    QString customProperty( const Q3CString &app, const Q3CString &key ) const;
 
     /**
       Create or modify a non-KDE or non-standard custom calendar property.
@@ -85,13 +87,13 @@ class LIBKCAL_EXPORT CustomProperties
       @param value The property's value. A call with a value of QString::null
                    will be ignored.
     */
-    void setNonKDECustomProperty( const QCString &name, const QString &value );
+    void setNonKDECustomProperty( const Q3CString &name, const QString &value );
     /**
       Delete a non-KDE or non-standard custom calendar property.
       
       @param name Full property name
     */
-    void removeNonKDECustomProperty( const QCString &name );
+    void removeNonKDECustomProperty( const Q3CString &name );
     /**
       Return the value of a non-KDE or non-standard custom calendar property.
       
@@ -99,22 +101,22 @@ class LIBKCAL_EXPORT CustomProperties
       @return Property value, or QString::null if (and only if) the property
               does not exist.
     */
-    QString nonKDECustomProperty( const QCString& name ) const;
+    QString nonKDECustomProperty( const Q3CString& name ) const;
 
     /**
       Initialise the alarm's custom calendar properties to the specified
       key/value pairs.
     */
-    void setCustomProperties( const QMap<QCString, QString> &properties );
+    void setCustomProperties( const QMap<Q3CString, QString> &properties );
     /**
       Return all custom calendar property key/value pairs.
     */
-    QMap<QCString, QString> customProperties() const;
+    QMap<Q3CString, QString> customProperties() const;
 
   private:
-    static bool checkName(const QCString& name);
+    static bool checkName(const Q3CString& name);
 
-    QMap<QCString, QString> mProperties;   // custom calendar properties
+    QMap<Q3CString, QString> mProperties;   // custom calendar properties
 
     class Private;
     Private *d;

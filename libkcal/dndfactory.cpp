@@ -24,7 +24,9 @@
 
 #include <qapplication.h>
 #include <qclipboard.h>
-#include <qdragobject.h>
+#include <q3dragobject.h>
+//Added by qt3to4:
+#include <QDropEvent>
 
 #include <kiconloader.h>
 #include <kdebug.h>

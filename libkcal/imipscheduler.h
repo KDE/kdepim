@@ -21,7 +21,7 @@
 #ifndef KCAL_IMIPSCHEDULER_H
 #define KCAL_IMIPSCHEDULER_H
 
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include "libkcal_export.h"
 
 #include "scheduler.h"
@@ -42,7 +42,7 @@ class KDE_EXPORT IMIPScheduler : public Scheduler
     
     bool publish (IncidenceBase *incidence,const QString &recipients);
     bool performTransaction(IncidenceBase *incidence,Method method);
-    QPtrList<ScheduleMessage> retrieveTransactions();
+    Q3PtrList<ScheduleMessage> retrieveTransactions();
 
   private:
     class Private;

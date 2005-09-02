@@ -24,7 +24,7 @@
 #include <qwidget.h>
 #include <kdepimmacros.h>
 
-class QButtonGroup;
+class Q3ButtonGroup;
 class QSpinBox;
 
 namespace KCal {
@@ -50,7 +50,7 @@ class KDE_EXPORT ResourceCachedReloadConfig : public QWidget
     void slotIntervalStateChanged( int );
 
   private:
-    QButtonGroup *mGroup;
+    Q3ButtonGroup *mGroup;
     QSpinBox *mIntervalSpin;
 
     class Private;
@@ -76,7 +76,7 @@ class KDE_EXPORT ResourceCachedSaveConfig : public QWidget
     void slotIntervalStateChanged( int );
 
   private:
-    QButtonGroup *mGroup;
+    Q3ButtonGroup *mGroup;
     QSpinBox *mIntervalSpin;
 
     class Private;

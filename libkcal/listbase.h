@@ -21,7 +21,7 @@
 #ifndef KCAL_LISTBASE_H
 #define KCAL_LISTBASE_H
 
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 namespace KCal {
 
@@ -30,24 +30,24 @@ namespace KCal {
   It extends QValueList<T *> by auto delete funtionality known from QPtrList.
 */
 template<class T>
-class ListBase : public QValueList<T *>
+class ListBase : public Q3ValueList<T *>
 {
   public:
     ListBase()
-      : QValueList<T *>(), mAutoDelete( false )
+      : Q3ValueList<T *>(), mAutoDelete( false )
     {
     }
 
     ListBase( const ListBase &l )
-      : QValueList<T *>( l ), mAutoDelete( false )
+      : Q3ValueList<T *>( l ), mAutoDelete( false )
     {
     }
 
     ~ListBase()
     {
       if ( mAutoDelete ) {
-        QValueListIterator<T *> it;
-        for( it = QValueList<T*>::begin(); it != QValueList<T*>::end(); ++it ) {
+        Q3ValueListIterator<T *> it;
+        for( it = Q3ValueList<T*>::begin(); it != Q3ValueList<T*>::end(); ++it ) {
           delete *it;
         }
       }
@@ -56,7 +56,7 @@ class ListBase : public QValueList<T *>
     ListBase &operator=( const ListBase &l )
     {
       if ( this == &l ) return *this;
-      QValueList<T *>::operator=( l );
+      Q3ValueList<T *>::operator=( l );
       return *this;
     }
 
@@ -67,8 +67,8 @@ class ListBase : public QValueList<T *>
 
     bool removeRef( T *t )
     {
-      QValueListIterator<T *> it = find( t );
-      if ( it == QValueList<T*>::end() ) {
+      Q3ValueListIterator<T *> it = find( t );
+      if ( it == Q3ValueList<T*>::end() ) {
         return false;
       } else {
         if ( mAutoDelete ) delete t;

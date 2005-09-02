@@ -23,7 +23,7 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -136,7 +136,7 @@ bool CalendarLocal::deleteEvent( Event *event )
 void CalendarLocal::deleteAllEvents()
 {
   // kdDebug(5800) << "CalendarLocal::deleteAllEvents" << endl;
-  QDictIterator<Event> it( mEvents );
+  Q3DictIterator<Event> it( mEvents );
   while( it.current() ) {
     notifyIncidenceDeleted( it.current() );
     ++it;

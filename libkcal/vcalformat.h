@@ -27,6 +27,8 @@
 #include "todo.h"
 #include "event.h"
 #include "libkcal_export.h"
+//Added by qt3to4:
+#include <Q3CString>
 
 #define _VCAL_VERSION "1.0"
 
@@ -104,7 +106,7 @@ class LIBKCAL_EXPORT VCalFormat : public CalFormat
     int numFromDay(const QString &day);
 
     Attendee::PartStat readStatus(const char *s) const;
-    QCString writeStatus(Attendee::PartStat status) const;
+    Q3CString writeStatus(Attendee::PartStat status) const;
 
   private:
     Calendar *mCalendar;

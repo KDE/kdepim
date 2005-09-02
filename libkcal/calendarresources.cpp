@@ -30,7 +30,9 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <kdebug.h>
 #include <kstandarddirs.h>
@@ -64,7 +66,7 @@ ResourceCalendar
 ResourceCalendar
 *CalendarResources::AskDestinationPolicy::destination( Incidence * )
 {
-  QPtrList<KRES::Resource> list;
+  Q3PtrList<KRES::Resource> list;
 
   CalendarResourceManager::ActiveIterator it;
   for ( it = resourceManager()->activeBegin();
@@ -133,7 +135,7 @@ void CalendarResources::load()
     (*i1)->setTimeZoneId( timeZoneId() );
   }
 
-  QValueList<ResourceCalendar *> failed;
+  Q3ValueList<ResourceCalendar *> failed;
 
   // Open all active resources
   CalendarResourceManager::ActiveIterator it;
@@ -149,7 +151,7 @@ void CalendarResources::load()
     }
   }
 
-  QValueList<ResourceCalendar *>::ConstIterator it2;
+  Q3ValueList<ResourceCalendar *>::ConstIterator it2;
   for ( it2 = failed.begin(); it2 != failed.end(); ++it2 ) {
     (*it2)->setActive( false );
     emit signalResourceModified( *it2 );

@@ -373,7 +373,7 @@ void IncidenceBase::unRegisterObserver( IncidenceBase::Observer *observer )
 
 void IncidenceBase::updated()
 {
-  QPtrListIterator<Observer> it(mObservers);
+  Q3PtrListIterator<Observer> it(mObservers);
   while( it.current() ) {
     Observer *o = it.current();
     ++it;

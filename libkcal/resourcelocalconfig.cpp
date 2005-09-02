@@ -24,6 +24,8 @@
 
 #include <qlabel.h>
 #include <qlayout.h>
+//Added by qt3to4:
+#include <QGridLayout>
 
 #include <klocale.h>
 #include <kdebug.h>
@@ -50,7 +52,7 @@ ResourceLocalConfig::ResourceLocalConfig( QWidget* parent,  const char* name )
   mainLayout->addWidget( label, 1, 0 );
   mainLayout->addWidget( mURL, 1, 1 );
 
-  formatGroup = new QButtonGroup( 1, Horizontal, i18n( "Calendar Format" ), this );
+  formatGroup = new Q3ButtonGroup( 1, Qt::Horizontal, i18n( "Calendar Format" ), this );
 //  formatGroup->setExclusive( true );
 
 //  formatGroup->setFrameStyle(QFrame::NoFrame);

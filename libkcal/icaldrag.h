@@ -23,7 +23,7 @@
 #ifndef KCAL_ICALDRAG_H
 #define KCAL_ICALDRAG_H
 
-#include <qdragobject.h>
+#include <q3dragobject.h>
 #include "calendar.h"
 #include "libkcal_export.h"
 
@@ -32,7 +32,7 @@ namespace KCal {
 /**
   iCalendar drag&drop class.
 */
-class LIBKCAL_EXPORT ICalDrag : public QStoredDrag
+class LIBKCAL_EXPORT ICalDrag : public Q3StoredDrag
 {
   public:
     /**

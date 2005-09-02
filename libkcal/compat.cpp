@@ -25,6 +25,8 @@
 #include <kdebug.h>
 
 #include <qregexp.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include "incidence.h"
 
@@ -223,10 +225,10 @@ void CompatPre31::fixRecurrence( Incidence *incidence )
     /* addYearlyNum */
     // Dates were stored as day numbers, with a fiddle to take account of leap years.
     // Convert the day number to a month.
-    QValueList<int> days = r->byYearDays();
+    Q3ValueList<int> days = r->byYearDays();
     if ( !days.isEmpty() ) {
-      QValueList<int> months = r->byMonths();
-      for ( QValueListConstIterator<int> it = days.begin(); it != days.end(); ++it ) {
+      Q3ValueList<int> months = r->byMonths();
+      for ( Q3ValueListConstIterator<int> it = days.begin(); it != days.end(); ++it ) {
         int newmonth = QDate( r->startDt().date().year(), 1, 1).addDays( (*it) - 1 ).month();
         if ( !months.contains( newmonth ) )
           months.append( newmonth );

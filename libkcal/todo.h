@@ -22,6 +22,8 @@
 #define KCAL_TODO_H
 
 #include "incidence.h"
+//Added by qt3to4:
+#include <Q3CString>
 
 namespace KCal {
 
@@ -38,7 +40,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
     ~Todo();
     bool operator==( const Todo& ) const;
 
-    QCString type() const { return "Todo"; }
+    Q3CString type() const { return "Todo"; }
 
     /**
       Returns an exact copy of this todo. The returned object is owned by the

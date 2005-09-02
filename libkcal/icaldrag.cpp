@@ -29,7 +29,7 @@
 using namespace KCal;
 
 ICalDrag::ICalDrag( Calendar *cal, QWidget *parent, const char *name )
-  : QStoredDrag( "text/calendar", parent, name )
+  : Q3StoredDrag( "text/calendar", parent, name )
 {
   ICalFormat icf;
   QString scal = icf.toString( cal );

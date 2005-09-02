@@ -49,8 +49,10 @@
 #include <kiconloader.h>
 
 #include <qbuffer.h>
-#include <qstylesheet.h>
+#include <q3stylesheet.h>
 #include <qdatetime.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <time.h>
 
@@ -430,10 +432,10 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
       .arg( KGlobal::locale()->formatDate( fb->dtStart().date(), true ) )
       .arg( KGlobal::locale()->formatDate( fb->dtEnd().date(), true ) ) );
 
-  QValueList<Period> periods = fb->busyPeriods();
+  Q3ValueList<Period> periods = fb->busyPeriods();
 
   QString text = eventViewerAddTag( "em", eventViewerAddTag( "b", i18n("Busy:") ) );
-  QValueList<Period>::iterator it;
+  Q3ValueList<Period>::iterator it;
   for ( it = periods.begin(); it != periods.end(); ++it ) {
     Period per = *it;
     if ( per.hasDuration() ) {
@@ -523,7 +525,7 @@ QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 
 static QString string2HTML( const QString& str )
 {
-  return QStyleSheet::convertFromPlainText(str);
+  return Q3StyleSheet::convertFromPlainText(str);
 }
 
 static QString invitationRow( const QString &cell1, const QString &cell2 )
@@ -662,9 +664,9 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
   html += "<tr><td colspan=2><hr></td></tr>\n";
   html += "<tr><td colspan=2>Busy periods given in this free/busy object:</td></tr>\n";
 
-  QValueList<Period> periods = fb->busyPeriods();
+  Q3ValueList<Period> periods = fb->busyPeriods();
 
-  QValueList<Period>::iterator it;
+  Q3ValueList<Period>::iterator it;
   for ( it = periods.begin(); it != periods.end(); ++it ) {
     Period per = *it;
     if ( per.hasDuration() ) {

@@ -25,8 +25,10 @@
 
 #include <qdatetime.h>
 #include <qstringlist.h>
-#include <qvaluelist.h>
-#include <qptrlist.h>
+#include <q3valuelist.h>
+#include <q3ptrlist.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include "customproperties.h"
 #include "attendee.h"
@@ -35,8 +37,8 @@ class KURL;
 
 namespace KCal {
 
-typedef QValueList<QDate> DateList;
-typedef QValueList<QDateTime> DateTimeList;
+typedef Q3ValueList<QDate> DateList;
+typedef Q3ValueList<QDateTime> DateTimeList;
 class Event;
 class Todo;
 class Journal;
@@ -107,7 +109,7 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     */
     virtual bool accept(Visitor &) { return false; }
 
-    virtual QCString type() const = 0;
+    virtual Q3CString type() const = 0;
 
     /** Set the unique id for the event */
     void setUid( const QString & );
@@ -277,7 +279,7 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     unsigned long mPilotId;                         // unique id for pilot sync
     int mSyncStatus;                      // status (for sync)
 
-    QPtrList<Observer> mObservers;
+    Q3PtrList<Observer> mObservers;
 
     class Private;
     Private *d;

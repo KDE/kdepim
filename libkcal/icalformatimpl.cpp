@@ -22,8 +22,11 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qfile.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 #include <cstdlib>
 
 #include <kdebug.h>
@@ -257,8 +260,8 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
   }
 
   //Loops through all the periods in the freebusy object
-  QValueList<Period> list = freebusy->busyPeriods();
-  QValueList<Period>::Iterator it;
+  Q3ValueList<Period> list = freebusy->busyPeriods();
+  Q3ValueList<Period>::Iterator it;
   icalperiodtype period;
   for (it = list.begin(); it!= list.end(); ++it) {
     period.start = writeICalDateTime((*it).start());
@@ -504,8 +507,8 @@ void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
 
 void ICalFormatImpl::writeCustomProperties(icalcomponent *parent,CustomProperties *properties)
 {
-  QMap<QCString, QString> custom = properties->customProperties();
-  for (QMap<QCString, QString>::Iterator c = custom.begin();  c != custom.end();  ++c) {
+  QMap<Q3CString, QString> custom = properties->customProperties();
+  for (QMap<Q3CString, QString>::Iterator c = custom.begin();  c != custom.end();  ++c) {
     icalproperty *p = icalproperty_new_x(c.data().utf8());
     icalproperty_set_x_name(p,c.key());
     icalcomponent_add_property(parent,p);
@@ -669,8 +672,8 @@ icalrecurrencetype ICalFormatImpl::writeRecurrenceRule( RecurrenceRule *recur )
   }
 
   int index = 0;
-  QValueList<int> bys;
-  QValueList<int>::ConstIterator it;
+  Q3ValueList<int> bys;
+  Q3ValueList<int>::ConstIterator it;
 
   // Now write out the BY* parts:
   bys = recur->bySeconds();
@@ -722,10 +725,10 @@ icalrecurrencetype ICalFormatImpl::writeRecurrenceRule( RecurrenceRule *recur )
   }
 
 
-  QValueList<RecurrenceRule::WDayPos> byd = recur->byDays();
+  Q3ValueList<RecurrenceRule::WDayPos> byd = recur->byDays();
   int day;
   index = 0;
-  for ( QValueList<RecurrenceRule::WDayPos>::ConstIterator dit = byd.begin();
+  for ( Q3ValueList<RecurrenceRule::WDayPos>::ConstIterator dit = byd.begin();
         dit != byd.end(); ++dit ) {
     day = (*dit).day() % 7 + 1;     // convert from Monday=1 to Sunday=1
     if ( (*dit).pos() < 0 ) {
@@ -797,8 +800,8 @@ kdDebug(5800) << " It's an audio action, file: " << alarm->audioFile() << endl;
       break;
     case Alarm::Email: {
       action = ICAL_ACTION_EMAIL;
-      QValueList<Person> addresses = alarm->mailAddresses();
-      for (QValueList<Person>::Iterator ad = addresses.begin();  ad != addresses.end();  ++ad) {
+      Q3ValueList<Person> addresses = alarm->mailAddresses();
+      for (Q3ValueList<Person>::Iterator ad = addresses.begin();  ad != addresses.end();  ++ad) {
         icalproperty *p = icalproperty_new_attendee("MAILTO:" + (*ad).email().utf8());
         if (!(*ad).name().isEmpty()) {
           icalproperty_add_parameter(p,icalparameter_new_cn((*ad).name().utf8()));
@@ -855,8 +858,8 @@ kdDebug(5800) << " It's an audio action, file: " << alarm->audioFile() << endl;
   }
 
   // Custom properties
-  QMap<QCString, QString> custom = alarm->customProperties();
-  for (QMap<QCString, QString>::Iterator c = custom.begin();  c != custom.end();  ++c) {
+  QMap<Q3CString, QString> custom = alarm->customProperties();
+  for (QMap<Q3CString, QString>::Iterator c = custom.begin();  c != custom.end();  ++c) {
     icalproperty *p = icalproperty_new_x(c.data().utf8());
     icalproperty_set_x_name(p,c.key());
     icalcomponent_add_property(a,p);
@@ -1437,7 +1440,7 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
 
 void ICalFormatImpl::readCustomProperties(icalcomponent *parent,CustomProperties *properties)
 {
-  QMap<QCString, QString> customProperties;
+  QMap<Q3CString, QString> customProperties;
 
   icalproperty *p = icalcomponent_get_first_property(parent,ICAL_X_PROPERTY);
 
@@ -1524,7 +1527,7 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
   recur->setWeekStart( wkst );
 
   // And now all BY*
-  QValueList<int> lst;
+  Q3ValueList<int> lst;
   int i;
   int index = 0;
 
@@ -1549,7 +1552,7 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
 #undef readSetByList
 
   // BYDAY is a special case, since it's not an int list
-  QValueList<RecurrenceRule::WDayPos> wdlst;
+  Q3ValueList<RecurrenceRule::WDayPos> wdlst;
   short day;
   index=0;
   while((day = r.by_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {

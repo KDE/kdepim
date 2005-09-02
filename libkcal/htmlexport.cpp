@@ -58,7 +58,7 @@ bool HtmlExport::save( const QString &fileName )
     return false;
   }
   QFile f( fileName );
-  if ( !f.open(IO_WriteOnly)) {
+  if ( !f.open(QIODevice::WriteOnly)) {
     return false;
   }
   QTextStream ts(&f);

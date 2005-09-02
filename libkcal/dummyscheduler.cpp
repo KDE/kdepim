@@ -25,6 +25,8 @@
 
 #include <qfile.h>
 #include <qtextstream.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 #include <kdebug.h>
 #include <kstandarddirs.h>
@@ -70,7 +72,7 @@ bool DummyScheduler::performTransaction(IncidenceBase *incidence,Method method)
 bool DummyScheduler::saveMessage(const QString &message)
 {
   QFile f("dummyscheduler.store");
-  if (f.open(IO_WriteOnly | IO_Append)) {
+  if (f.open(QIODevice::WriteOnly | QIODevice::Append)) {
     QTextStream t(&f);
     t << message << endl;
     f.close();
@@ -80,12 +82,12 @@ bool DummyScheduler::saveMessage(const QString &message)
   }
 }
 
-QPtrList<ScheduleMessage> DummyScheduler::retrieveTransactions()
+Q3PtrList<ScheduleMessage> DummyScheduler::retrieveTransactions()
 {
-  QPtrList<ScheduleMessage> messageList;
+  Q3PtrList<ScheduleMessage> messageList;
 
   QFile f("dummyscheduler.store");
-  if (!f.open(IO_ReadOnly)) {
+  if (!f.open(QIODevice::ReadOnly)) {
     kdDebug(5800) << "DummyScheduler::retrieveTransactions(): Can't open file"
               << endl;
   } else {

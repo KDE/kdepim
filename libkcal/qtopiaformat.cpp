@@ -21,7 +21,7 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qregexp.h>
 #include <qclipboard.h>
 #include <qfile.h>
@@ -292,7 +292,7 @@ bool QtopiaFormat::save( Calendar *calendar, const QString &fileName )
   // TODO: write backup file
 
   QFile file( fileName );
-  if (!file.open( IO_WriteOnly ) ) {
+  if (!file.open( QIODevice::WriteOnly ) ) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
                  i18n("Could not open file '%1'").arg(fileName)));
     return false;

@@ -23,11 +23,14 @@
 #include <qapplication.h>
 #include <qdatetime.h>
 #include <qstring.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qregexp.h>
 #include <qclipboard.h>
 #include <qdialog.h>
 #include <qfile.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 
 #include <kdebug.h>
 #include <kmessagebox.h>
@@ -138,7 +141,7 @@ bool VCalFormat::fromString( Calendar *calendar, const QString &text )
   // TODO: Factor out VCalFormat::fromString()
   mCalendar = calendar;
 
-  QCString data = text.utf8();
+  Q3CString data = text.utf8();
 
   if ( !data.size() ) return false;
 
@@ -443,8 +446,8 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     case Recurrence::rMonthlyPos: {
       tmpStr.sprintf("MP%i ", recur->frequency());
       // write out all rMonthPos's
-      QValueList<RecurrenceRule::WDayPos> tmpPositions = recur->monthPositions();
-      for ( QValueListConstIterator<RecurrenceRule::WDayPos> posit = tmpPositions.begin();
+      Q3ValueList<RecurrenceRule::WDayPos> tmpPositions = recur->monthPositions();
+      for ( Q3ValueListConstIterator<RecurrenceRule::WDayPos> posit = tmpPositions.begin();
             posit != tmpPositions.end(); ++posit ) {
         int pos = (*posit).pos();
         tmpStr2.sprintf("%i", (pos>0) ? pos : (-pos) );
@@ -459,8 +462,8 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     case Recurrence::rMonthlyDay: {
       tmpStr.sprintf("MD%i ", recur->frequency());
       // write out all rMonthDays;
-      QValueList<int> tmpDays = recur->monthDays();
-      for ( QValueListIterator<int> tmpDay = tmpDays.begin();
+      Q3ValueList<int> tmpDays = recur->monthDays();
+      for ( Q3ValueListIterator<int> tmpDay = tmpDays.begin();
             tmpDay != tmpDays.end(); ++tmpDay ) {
         tmpStr2.sprintf( "%i ", *tmpDay );
         tmpStr += tmpStr2;
@@ -470,8 +473,8 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
       tmpStr.sprintf("YM%i ", recur->frequency());
       // write out all the months;'
       // TODO: Any way to write out the day within the month???
-      QValueList<int> months = recur->yearMonths();
-      for ( QValueListIterator<int> mit = months.begin();
+      Q3ValueList<int> months = recur->yearMonths();
+      for ( Q3ValueListIterator<int> mit = months.begin();
             mit != months.end(); ++mit ) {
         tmpStr2.sprintf( "%i ", *mit );
         tmpStr += tmpStr2;
@@ -480,8 +483,8 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     case Recurrence::rYearlyDay: {
       tmpStr.sprintf("YD%i ", recur->frequency());
       // write out all the rYearNums;
-      QValueList<int> tmpDays = recur->yearDays();
-      for ( QValueListIterator<int> tmpDay = tmpDays.begin();
+      Q3ValueList<int> tmpDays = recur->yearDays();
+      for ( Q3ValueListIterator<int> tmpDay = tmpDays.begin();
             tmpDay != tmpDays.end(); ++tmpDay ) {
         tmpStr2.sprintf( "%i ", *tmpDay );
         tmpStr += tmpStr2;
@@ -1594,7 +1597,7 @@ Attendee::PartStat VCalFormat::readStatus(const char *s) const
   return status;
 }
 
-QCString VCalFormat::writeStatus(Attendee::PartStat status) const
+Q3CString VCalFormat::writeStatus(Attendee::PartStat status) const
 {
   switch(status) {
     default:

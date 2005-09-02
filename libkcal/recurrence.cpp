@@ -28,6 +28,8 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <qbitarray.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include "recurrence.h"
 #include "recurrencerule.h"
@@ -176,7 +178,7 @@ void Recurrence::updated()
 {
   // recurrenceType() re-calculates the type if it's rMax
   mCachedType = rMax;
-  for ( QValueList<Observer*>::ConstIterator it = mObservers.begin();
+  for ( Q3ValueList<Observer*>::ConstIterator it = mObservers.begin();
         it != mObservers.end(); ++it ) {
     if ( (*it) ) (*it)->recurrenceUpdated( this );
   }
@@ -498,8 +500,8 @@ QBitArray Recurrence::days() const
   days.fill( 0 );
   RecurrenceRule *rrule = defaultRRuleConst();
   if ( rrule ) {
-    QValueList<RecurrenceRule::WDayPos> bydays = rrule->byDays();
-    for ( QValueListConstIterator<RecurrenceRule::WDayPos> it = bydays.begin();
+    Q3ValueList<RecurrenceRule::WDayPos> bydays = rrule->byDays();
+    for ( Q3ValueListConstIterator<RecurrenceRule::WDayPos> it = bydays.begin();
           it != bydays.end(); ++it ) {
       if ( (*it).pos() == 0 ) {
         days.setBit( (*it).day() - 1 );
@@ -513,44 +515,44 @@ QBitArray Recurrence::days() const
 // MONTHLY
 
 // Emulate the old behavior
-QValueList<int> Recurrence::monthDays() const
+Q3ValueList<int> Recurrence::monthDays() const
 {
   RecurrenceRule *rrule = defaultRRuleConst();
   if ( rrule ) return rrule->byMonthDays();
-  else return QValueList<int>();
+  else return Q3ValueList<int>();
 }
 
 // Emulate the old behavior
-QValueList<RecurrenceRule::WDayPos> Recurrence::monthPositions() const
+Q3ValueList<RecurrenceRule::WDayPos> Recurrence::monthPositions() const
 {
   RecurrenceRule *rrule = defaultRRuleConst();
   if ( rrule ) return rrule->byDays();
-  else return QValueList<RecurrenceRule::WDayPos>();
+  else return Q3ValueList<RecurrenceRule::WDayPos>();
 }
 
 
 // YEARLY
 
-QValueList<int> Recurrence::yearDays() const
+Q3ValueList<int> Recurrence::yearDays() const
 {
   RecurrenceRule *rrule = defaultRRuleConst();
   if ( rrule ) return rrule->byYearDays();
-  else return QValueList<int>();
+  else return Q3ValueList<int>();
 }
 
-QValueList<int> Recurrence::yearDates() const
+Q3ValueList<int> Recurrence::yearDates() const
 {
   return monthDays();
 }
 
-QValueList<int> Recurrence::yearMonths() const
+Q3ValueList<int> Recurrence::yearMonths() const
 {
   RecurrenceRule *rrule = defaultRRuleConst();
   if ( rrule ) return rrule->byMonths();
-  else return QValueList<int>();
+  else return Q3ValueList<int>();
 }
 
-QValueList<RecurrenceRule::WDayPos> Recurrence::yearPositions() const
+Q3ValueList<RecurrenceRule::WDayPos> Recurrence::yearPositions() const
 {
   return monthPositions();
 }
@@ -619,7 +621,7 @@ void Recurrence::addMonthlyPos( short pos, const QBitArray &days )
   RecurrenceRule *rrule = defaultRRule( false );
   if ( !rrule ) return;
   bool changed = false;
-  QValueList<RecurrenceRule::WDayPos> positions = rrule->byDays();
+  Q3ValueList<RecurrenceRule::WDayPos> positions = rrule->byDays();
 
   for ( int i = 0; i < 7; ++i ) {
     if ( days.testBit(i) ) {
@@ -643,7 +645,7 @@ void Recurrence::addMonthlyPos( short pos, ushort day )
   if ( mRecurReadOnly || pos > 53 || pos < -53 ) return;
   RecurrenceRule *rrule = defaultRRule( false );
   if ( !rrule ) return;
-  QValueList<RecurrenceRule::WDayPos> positions = rrule->byDays();
+  Q3ValueList<RecurrenceRule::WDayPos> positions = rrule->byDays();
 
   RecurrenceRule::WDayPos p( pos, day );
   if ( !positions.contains( p ) ) {
@@ -660,7 +662,7 @@ void Recurrence::addMonthlyDate( short day )
   RecurrenceRule *rrule = defaultRRule( true );
   if ( !rrule ) return;
 
-  QValueList<int> monthDays = rrule->byMonthDays();
+  Q3ValueList<int> monthDays = rrule->byMonthDays();
   if ( !monthDays.contains( day ) ) {
     monthDays.append( day );
     rrule->setByMonthDays( monthDays );
@@ -681,7 +683,7 @@ void Recurrence::addYearlyDay( int day )
   RecurrenceRule *rrule = defaultRRule( false ); // It must already exist!
   if ( !rrule ) return;
 
-  QValueList<int> days = rrule->byYearDays();
+  Q3ValueList<int> days = rrule->byYearDays();
   if ( !days.contains( day ) ) {
     days << day;
     rrule->setByYearDays( days );
@@ -709,7 +711,7 @@ void Recurrence::addYearlyMonth( short month )
   RecurrenceRule *rrule = defaultRRule( false );
   if ( !rrule ) return;
 
-  QValueList<int> months = rrule->byMonths();
+  Q3ValueList<int> months = rrule->byMonths();
   if ( !months.contains(month) ) {
     months << month;
     rrule->setByMonths( months );
