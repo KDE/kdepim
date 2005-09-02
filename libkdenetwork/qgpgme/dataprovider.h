@@ -23,7 +23,7 @@
 
 #include <gpgmepp/interfaces/dataprovider.h>
 
-#include <qcstring.h>
+#include <QByteArray>
 #include <kdepimmacros.h>
 
 namespace QGpgME {

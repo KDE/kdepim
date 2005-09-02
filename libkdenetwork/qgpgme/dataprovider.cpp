@@ -30,7 +30,8 @@
 
 static bool resizeAndInit( QByteArray & ba, size_t newSize ) {
   const size_t oldSize = ba.size();
-  bool ok = ba.resize( newSize );
+  ba.resize( newSize );
+  const bool ok = ( newSize == static_cast<size_t>( ba.size() ) );
   if ( ok )
     memset( ba.data() + oldSize, 0, newSize - oldSize );
   return ok;
@@ -52,7 +53,7 @@ ssize_t QGpgME::QByteArrayDataProvider::read( void * buffer, size_t bufSize ) {
     return 0;
   if ( mOff >= mArray.size() )
     return 0; // EOF
-  size_t amount = QMIN( bufSize, mArray.size() - mOff );
+  size_t amount = QMIN( bufSize, static_cast<size_t>( mArray.size() - mOff ) );
   assert( amount > 0 );
   memcpy( buffer, mArray.data() + mOff, amount );
   mOff += amount;
