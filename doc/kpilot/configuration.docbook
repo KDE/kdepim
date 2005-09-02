@@ -407,13 +407,6 @@ databases, but instead of merging the information from both sources, copy the
 handheld data to the PC. <emphasis>Use with care, as this option erases the
 changes you made in your PC since the last sync</emphasis>.
 </para>
-</listitem>
-
-</itemizedlist>
-
-</listitem>
-</varlistentry>
-
 <warning>
 <para>
 Remember, when &kpilot; does a &HotSync; and runs the conduits,
@@ -421,6 +414,14 @@ the databases in the internal viewers are <emphasis>not</emphasis>
 updated. To update the internal viewers, use the FullSync or backup actions.
 </para>
 </warning>
+
+</listitem>
+
+</itemizedlist>
+
+</listitem>
+</varlistentry>
+
 
 <varlistentry>
 <term><guilabel>Do full backup when changing PCs</guilabel></term>
