@@ -1,0 +1,31 @@
+KMAIL:
+WhatIs button should not be in toolbar until we actually have a substantial amount of whatis help.
+KMail has none, for example.
+
+Orig: When trying to find unread messages;
+Orig:     do not loop
+Orig:     loop in current folder
+Orig:     loop in all folders
+
+Propsal: Unread message traversal:
+Propsal:     To end of Folder
+Propsal:     Stay in Folder
+Propsal:     In all Folders
+
+Store IMap password checkbox checked by default in account diag
+
+Go Online / Go Offline  for menu
+
+Remove kmail statusbar entry '0 messages' when leaving the part
+
+GnuPG log viewer (tools->gnupg log viewer) opens in a waaay to small window
+
+korganizer
+- 2 default resources
+
+Summary News Feeds
+- No rss dcop service available.
+  You need rssservice to use this plugin.
+  Oh; my.  That must be the worst (best?) example of using too technical error feedback.
+  Don't use techincal terminology like 'dcop' 'service' 'rssservice' or 'plugin'.
+
