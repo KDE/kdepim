@@ -28,6 +28,7 @@
 #include <qdatastream.h>
 #include <qfile.h>
 #include <qvariant.h>
+#include <QList>
 #include <kdebug.h>
 #include <kmimetype.h>
 #include <ksavefile.h>
@@ -202,7 +203,7 @@ bool KTNEFParser::decodeMessage()
 		case attRECIPTABLE:
 			{
 				Q_UINT32 rows;
-				QValueList<QVariant> recipTable;
+				QList<QVariant> recipTable;
 				d->stream_ >> rows;
 				for ( uint i=0; i<rows; i++ )
 				{
@@ -338,7 +339,7 @@ bool KTNEFParser::parseDevice()
 		d->current_ = 0;
 	}
 
-	if ( !d->device_->open( IO_ReadOnly ) ) {
+	if ( !d->device_->open( QIODevice::ReadOnly ) ) {
 	  kdDebug() << "Couldn't open device" << endl;
 		return false;
 	}
@@ -427,9 +428,10 @@ bool KTNEFParser::extractAttachmentTo(KTNEFAttach *att, const QString& dirname)
 
 bool KTNEFParser::extractAll()
 {
-	QPtrListIterator<KTNEFAttach>	it(d->message_->attachmentList());
-	for (;it.current();++it)
-		if (!extractAttachmentTo(it.current(),d->defaultdir_)) return false;
+  QList<KTNEFAttach*> l = d->message_->attachmentList();
+  QList<KTNEFAttach*>::const_iterator it = l.begin();
+	for ( ; it != l.end(); ++it )
+		if (!extractAttachmentTo(*it,d->defaultdir_)) return false;
 	return true;
 }
 
@@ -670,7 +672,7 @@ Q_UINT16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
 	if ( ISVECTOR( mapi ) )
 	{
 		stream >> n;
-		mapi.value = QValueList<QVariant>();
+		mapi.value = QList<QVariant>();
 	}
 	for ( int i=0; i<n; i++ )
 	{
