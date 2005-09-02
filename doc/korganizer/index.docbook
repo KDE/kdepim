@@ -80,7 +80,6 @@
 </othercredit>
 
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
-
 </authorgroup>
 
 
@@ -364,7 +363,8 @@ should at least skip through the <link linkend="faq">&FAQ;</link>.</para>
 
 <para>&korganizer; can store (and retrieve) events, journals entries
 and to-dos using various methods, and to different locations.
-Each of these locations is called a <firstterm>calendar resource</firstterm>.</para>
+Each of these locations is called a <firstterm>calendar resource</firstterm>.
+</para>
 
 <para>&korganizer; supports calendar files based on standards such as
 iCalendar and vCalendar natively (adding them as new resources), but you can
@@ -414,7 +414,11 @@ information</link> storage. Therefore, some of the resources discussed here
 may be related to other resources from &kmail; and &kaddressbook; (the mail and
 contacts components of &kontact;), or to the
 <link linkend="config-main-free-busy">free/busy settings in the main
-configuration</link>.</para></note>
+configuration</link>.</para>
+<para>Please note that &korganizer;
+<link linkend="group-scheduling">group scheduling</link> communication is
+based on a peer to peer email standard. This means that you do not need a
+groupware server to use it!</para></note>
 
 <screenshot id="screenshot-resources">
 <screeninfo>A screenshot of &korganizer;'s Resource View Sidebar</screeninfo>
@@ -468,19 +472,20 @@ without associated time.</para></listitem>
 
 <varlistentry>
 <term><guilabel>Journal Entries as Blogs on Server</guilabel></term>
-<listitem><para>Add this resource to be able to publish your journal entries as blogs,
-directly on blog servers, such as blogger and drupal.</para></listitem>
+<listitem><para>Add this resource to be able to read your blogs as journal entries,
+directly from blog servers, such as blogger and drupal.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Bugzilla To-do List</guilabel></term>
 <listitem><para>Add this resource to load bugzilla open bugs as to-dos.
-Bugzilla is an open source bug tracking system. If you are a developer
-working on a project that uses bugzilla, you can use this resource to view as
-to-dos the open bugs of the applications or libraries you are interested in
-(they are called <quote>products</quote> and / or <quote>components</quote> in
-bugzilla). This resource is available as part of the &kde; Software
-Development kit.
+This resource is based on the &kbugbuster; application, and uses its bug cache
+information. Bugzilla is an open source bug tracking system.</para>
+
+<para>If you are a developer working on a project that uses bugzilla, you can
+use this resource to view as to-dos the open bugs of the applications or
+libraries you are interested in (they are called <quote>products</quote> and / or <quote>components</quote> in bugzilla). This resource is available as part of
+the &kde; Software Development kit.
 </para></listitem>
 </varlistentry>
 
@@ -547,29 +552,21 @@ GroupWise resources, but &kmail;, &kaddressbook; too.</para>
 <term><guilabel>Calendar on IMAP Server via &kmail;</guilabel></term>
 <listitem><para>
 If you have access to a server that shares calendar data via IMAP, add this
-resource in order to be able to to save (and load) events, to-dos, free/busy information and journal entries
-to the server. To enable IMAP access, you will need to configure &kmail; first,
-then add the &korganizer; resource. Also, since you are using &kmail; to contact
-the server, &korganizer; will open &kmail; automatically, and use it
-to access your data. The <quote>IMAP server via &kmail;</quote> schema supports the storage
+resource in order to be able to to save (and load) events, to-dos, free/busy
+information and journal entries to the IMAP server. To enable IMAP access, you
+will need to configure &kmail; first, then add the &korganizer; resource.
+Also, since you are using &kmail; to contact the server, &korganizer; will
+open &kmail; automatically, and use it to access your data. The
+<quote>IMAP server via &kmail;</quote> schema supports the storage
 of contacts, so you may want to add the &kaddressbook; resource too.</para>
 
-<para>The main implementation of this schema is the
-<ulink url="http://www.kolab.org">Kolab Server</ulink>.
-As of June 2005, the groupware servers that implement the <quote>Kolab 1</quote>
-and <quote>Kolab 2</quote> protocols are the Kolab server, version 1 and 2, and the
-<ulink url="http://www.citadel.org">Citadel server</ulink> (Kolab 1 only). An up
-to date list can be obtained at the
-<ulink url="http://www.kolab.org">Kolab website</ulink>.</para>
+<para>Most IMAP servers can be used to hold calendar and address book resources,
+allowing you to use access your data from just anywhere! If you are an user
+looking for a simple way to access and manage your groupware information,
+this is a simple and very efficient solution.</para>
 
-<para>The most practical way to configure the access to a Kolab server is to use
-the <application>kolabwizard</application> wizard application. You can start it
-from the command line prompt:
-
-<screen><prompt>$</prompt><command>kolabwizard</command></screen>
-
-If you want to configure &kmail; yourself instead of using the wizard, you can
-access the configuration by choosing the <menuchoice><guimenu>Settings</guimenu>
+<para>To use this resource, it is necessary to configure &kmail; first. Choose
+the <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kmail;...</guimenuitem></menuchoice> menu item.
 Click the <guilabel>Accounts</guilabel> icon in the configure dialog sidebar
 and add the IMAP server as a disconnected IMAP incoming account. Now click the
@@ -577,7 +574,26 @@ and add the IMAP server as a disconnected IMAP incoming account. Now click the
 <guilabel>Groupware tab</guilabel> to enable and configure the IMAP resource
 folder options. Only then you can add the &korganizer; (and &kaddressbook;)
 resources. For more information on configuring &kmail;, consult the &kmail;
-handbook.
+handbook.</para>
+
+<para>A more complete implementation of this schema is the
+<ulink url="http://www.kolab.org">Kolab Server</ulink>. This groupware
+implementation offers additional features for system administrators, such as
+support of mixed client environments (&Microsoft; Outlook&reg;, &kde;
+<acronym>PIM</acronym>  and web mail), a web administration interface, shared
+address book, email server, etc... As of June 2005, the groupware servers that
+implement the <quote>Kolab 1</quote> and <quote>Kolab 2</quote> protocols are
+the Kolab server, version 1 and 2, and the 
+<ulink url="http://www.citadel.org">Citadel server</ulink> (Kolab 1 only). An up
+to date list can be obtained at the <ulink url="http://www.kolab.org">Kolab
+website</ulink>.</para>
+
+<para>The most practical way to configure the access to a Kolab server is to use
+the <application>kolabwizard</application> wizard application. You can start it
+from the command line prompt:
+
+<screen><prompt>$</prompt><command>kolabwizard</command></screen>
+
 </para>
 </listitem>
 </varlistentry>
@@ -674,7 +690,7 @@ writable mode, make sure that your connection is stable, configure the
 resource to save the file on each change, (or on frequent intervals)
 and don't reload the file in regular intervals.</para>
 
-<para>A related, but opposite problem, is that two users can not safely edit
+<para>A related, but opposite problem, is that two users cannot safely edit
 the same remote file at the same time, because the remote file resource does not
 offer a conflict resolution mechanism. For instance, if someone else changes
 (and saves) the remote file, after you loaded it, and a some time later you save
@@ -781,7 +797,7 @@ The web page can be used to publish your calendar and to-dos list on the
 web or on the local network. Either way, &korganizer; will export all calendar
 items from the enabled (checked) resources which are
 <link linkend="filters-view">not filtered out</link> (let's call these items
-<quote>active</quote> items). In other words, if you can not see a calendar
+<quote>active</quote> items). In other words, if you cannot see a calendar
 item, it won't be in the exported file. To filter out the undesired items
 before exporting them, you can create
 <link linkend="filters-view">filters</link>. Filters even are more effective
@@ -4672,8 +4688,8 @@ http://korganizer.kde.org/contact/bugswishes.html</ulink>.</para>
 <email>carloswoelz@imap-mail.com</email></para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
-
 &underFDL;
+
 &underGPL;
 
 </chapter>
