@@ -723,7 +723,7 @@ BaseG::parseKeyData( const Q3CString& output, int& offset, Key* key /* = 0 */ )
           QString uidString = QString::fromUtf8( uid.data() );
           // check whether uid was utf-8 encoded
           bool isUtf8 = true;
-          for ( unsigned int i = 0; i + 1 < uidString.length(); ++i ) {
+          for ( int i = 0; i + 1 < uidString.length(); ++i ) {
             if ( uidString[i].unicode() == 0xdbff &&
                  uidString[i+1].row() == 0xde ) {
               // we found a non-Unicode character (see QString::fromUtf8())

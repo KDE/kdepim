@@ -148,7 +148,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
   if (!onlyReadFromPGP) {
     if (!input.isEmpty()) {
       // write to pin[1] one line after the other to prevent dead lock
-      for (unsigned int i=0; i<input.length(); i+=len2) {
+      for (int i=0; i<input.length(); i+=len2) {
         len2 = 0;
 
         // check if writing now to pin[1] will not block (5 ms timeout)
@@ -522,7 +522,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
   }
 
   pid_t waitpidRetVal;
-  unsigned int input_pos = 0;
+  int input_pos = 0;
 
   do {
     //kdDebug(5100) << "Checking if GnuPG is still running..." << endl;
