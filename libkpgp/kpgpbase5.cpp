@@ -27,6 +27,8 @@
 
 #include <qregexp.h>
 #include <qdatetime.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <klocale.h>
 #include <kprocess.h>
@@ -64,7 +66,7 @@ int
 Base5::encsign( Block& block, const KeyIDList& recipients,
                 const char *passphrase )
 {
-  QCString cmd;
+  Q3CString cmd;
   int exitStatus = 0;
   int index;
   // used to work around a bug in pgp5. pgp5 treats files
@@ -111,7 +113,8 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
   if (signonly)
   {
     input.append("\n");
-    input.replace(QRegExp("[ \t]+\n"), "\n");   //strip trailing whitespace
+    //input.replace(QRegExp("[ \t]+\n"), "\n");   //strip trailing whitespace
+    input = input.trimmed();   // PORT: check if that change was ok!
   }
   //We have to do this otherwise it's all in vain
 
@@ -130,7 +133,7 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
   }
 //if(!ignoreUntrusted)
 //{
-    QCString aStr;
+    Q3CString aStr;
     index = -1;
     while((index = error.find("WARNING: The above key",index+1)) != -1)
     {
@@ -155,7 +158,7 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
       else
 	errMsg = i18n("The following key(s) are not trusted:\n%1\n"
                       "Their owner(s) will not be able to decrypt the message.")
-		     .arg(aStr);
+		     .arg(QString::fromLocal8Bit( aStr ));
       status |= ERROR;
       status |= BADKEYS;
     }
@@ -166,7 +169,7 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
     int index2 = error.find('\n',index);
 
     errMsg = i18n("Missing encryption key(s) for:\n%1")
-      .arg(error.mid(index,index2-index));
+      .arg(QString::fromLocal8Bit(error.mid(index,index2-index)));
 //    errMsg = QString("Missing encryption key(s) for: %1")
 //      .arg(error.mid(index,index2-index));
     status |= ERROR;
@@ -251,7 +254,7 @@ Base5::decrypt( Block& block, const char *passphrase )
       int index2;
       while( (index2 = error.find('\n',index+1)) <= end )
       {
-	QCString item = error.mid(index+1,index2-index-1);
+	Q3CString item = error.mid(index+1,index2-index-1);
 	item.stripWhiteSpace();
 	mRecipients.append(item);
 	index = index2;
@@ -358,7 +361,7 @@ Base5::publicKeys( const QStringList & patterns )
 {
   int exitStatus = 0;
 
-  QCString cmd = "pgpk -ll";
+  Q3CString cmd = "pgpk -ll";
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
     cmd += " ";
@@ -388,7 +391,7 @@ Base5::secretKeys( const QStringList & patterns )
   int exitStatus = 0;
 
   status = 0;
-  QCString cmd = "pgpk -ll";
+  Q3CString cmd = "pgpk -ll";
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
     cmd += " ";
@@ -412,19 +415,19 @@ Base5::secretKeys( const QStringList & patterns )
 }
 
 
-QCString Base5::getAsciiPublicKey(const KeyID& keyID)
+Q3CString Base5::getAsciiPublicKey(const KeyID& keyID)
 {
   int exitStatus = 0;
 
   if (keyID.isEmpty())
-    return QCString();
+    return Q3CString();
 
   status = 0;
   exitStatus = run( "pgpk -xa 0x" + keyID, 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
-    return QCString();
+    return Q3CString();
   }
 
   return output;
@@ -434,7 +437,7 @@ QCString Base5::getAsciiPublicKey(const KeyID& keyID)
 int
 Base5::signKey(const KeyID& keyID, const char *passphrase)
 {
-  QCString cmd;
+  Q3CString cmd;
   int exitStatus = 0;
 
   if(passphrase == 0) return false;
@@ -455,7 +458,7 @@ Base5::signKey(const KeyID& keyID, const char *passphrase)
 //-- private functions --------------------------------------------------------
 
 Key*
-Base5::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
+Base5::parseKeyData( const Q3CString& output, int& offset, Key* key /* = 0 */ )
 // This function parses the data for a single key which is output by PGP 5
 // with the following command line:
 //   pgpk -ll
@@ -653,7 +656,7 @@ Base5::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
 
        */
       int pos = output.find( '=', offset+3 ) + 2;
-      QCString fingerprint = output.mid( pos, eol-pos );
+      Q3CString fingerprint = output.mid( pos, eol-pos );
       // remove white space from the fingerprint
       for ( int idx = 0 ; (idx = fingerprint.find(' ', idx)) >= 0 ; )
 	fingerprint.replace( idx, 1, "" );
@@ -663,7 +666,7 @@ Base5::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
     else if( !strncmp( output.data() + offset, "uid", 3 ) )
     { // line contains a uid
       int pos = offset+5;
-      QCString uid = output.mid( pos, eol-pos );
+      Q3CString uid = output.mid( pos, eol-pos );
       key->addUserID( uid );
       // displaying of uids which contain non-ASCII characters is broken in
       // PGP 5.0i; it shows these characters as \ooo and truncates the uid
@@ -689,7 +692,7 @@ Base5::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
 
 
 Key*
-Base5::parseSingleKey( const QCString& output, Key* key /* = 0 */ )
+Base5::parseSingleKey( const Q3CString& output, Key* key /* = 0 */ )
 {
   int offset;
 
@@ -717,7 +720,7 @@ Base5::parseSingleKey( const QCString& output, Key* key /* = 0 */ )
 
 
 KeyList
-Base5::parseKeyList( const QCString& output, bool onlySecretKeys )
+Base5::parseKeyList( const Q3CString& output, bool onlySecretKeys )
 {
   KeyList keys;
   Key *key = 0;
@@ -759,12 +762,12 @@ Base5::parseKeyList( const QCString& output, bool onlySecretKeys )
 
 
 void
-Base5::parseTrustDataForKey( Key* key, const QCString& str )
+Base5::parseTrustDataForKey( Key* key, const Q3CString& str )
 {
   if( ( key == 0 ) || str.isEmpty() )
     return;
 
-  QCString keyID = "0x" + key->primaryKeyID();
+  Q3CString keyID = "0x" + key->primaryKeyID();
   UserIDList userIDs = key->userIDs();
 
   // search the start of the trust data

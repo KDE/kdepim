@@ -18,6 +18,8 @@
 
 #include "kpgpkey.h"
 #include "kdebug.h"
+//Added by qt3to4:
+#include <QByteArray>
 
 namespace Kpgp {
 
@@ -246,7 +248,7 @@ Subkey *Key::getSubkey(const KeyID& keyID)
   return 0;
 }
 
-void Key::setFingerprint(const KeyID& keyID, const QCString &fpr)
+void Key::setFingerprint(const KeyID& keyID, const QByteArray &fpr)
 {
   Subkey *key;
   if ((key = getSubkey(keyID)) != 0) {

@@ -122,7 +122,7 @@ class KDE_EXPORT IdMapper
      */
     void setFingerprint( const QString &localId, const QString &fingerprint );
 
-    const QString &fingerprint( const QString &localId ) const;
+    QString fingerprint( const QString &localId ) const;
 
 
     QMap<QString, QString> remoteIdMap() const;

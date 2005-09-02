@@ -1,3 +1,6 @@
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 /*  -*- mode: C++; c-file-style: "gnu" -*-
     identitymanager.cpp
 
@@ -55,13 +58,13 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 
 using namespace KPIM;
 
-static QCString newDCOPObjectName()
+static Q3CString newDCOPObjectName()
 {
     static int s_count = 0;
-    QCString name( "KPIM::IdentityManager" );
+    Q3CString name( "KPIM::IdentityManager" );
     if ( s_count++ ) {
       name += '-';
-      name += QCString().setNum( s_count );
+      name += Q3CString().setNum( s_count );
     }
     return name;
 }
@@ -108,16 +111,16 @@ void IdentityManager::commit()
   // early out:
   if ( !hasPendingChanges() || mReadOnly ) return;
 
-  QValueList<uint> seenUOIDs;
-  for ( QValueList<Identity>::ConstIterator it = mIdentities.begin() ;
+  Q3ValueList<uint> seenUOIDs;
+  for ( Q3ValueList<Identity>::ConstIterator it = mIdentities.begin() ;
 	it != mIdentities.end() ; ++it )
     seenUOIDs << (*it).uoid();
 
-  QValueList<uint> changedUOIDs;
+  Q3ValueList<uint> changedUOIDs;
   // find added and changed identities:
-  for ( QValueList<Identity>::ConstIterator it = mShadowIdentities.begin() ;
+  for ( Q3ValueList<Identity>::ConstIterator it = mShadowIdentities.begin() ;
 	it != mShadowIdentities.end() ; ++it ) {
-    QValueList<uint>::Iterator uoid = seenUOIDs.find( (*it).uoid() );
+    Q3ValueList<uint>::Iterator uoid = seenUOIDs.find( (*it).uoid() );
     if ( uoid != seenUOIDs.end() ) {
       const Identity & orig = identityForUoid( *uoid ); // look it up in mIdentities
       if ( *it != orig ) {
@@ -135,7 +138,7 @@ void IdentityManager::commit()
   }
 
   // what's left are deleted identities:
-  for ( QValueList<uint>::ConstIterator it = seenUOIDs.begin() ;
+  for ( Q3ValueList<uint>::ConstIterator it = seenUOIDs.begin() ;
 	it != seenUOIDs.end() ; ++it ) {
     kdDebug( 5006 ) << "emitting deleted() for identity " << (*it) << endl;
     emit deleted( *it );
@@ -146,7 +149,7 @@ void IdentityManager::commit()
 
   // now that mIdentities has all the new info, we can emit the added/changed
   // signals that ship a uoid. This is because the slots might use identityForUoid(uoid)...
-  for ( QValueList<uint>::ConstIterator it = changedUOIDs.begin() ;
+  for ( Q3ValueList<uint>::ConstIterator it = changedUOIDs.begin() ;
 	it != changedUOIDs.end() ; ++it )
     emit changed( *it );
 
@@ -155,7 +158,7 @@ void IdentityManager::commit()
   // DCOP signal for other IdentityManager instances
   // The emitter is always set to KPIM::IdentityManager, so that the connect works
   // This is why we can't use k_dcop_signals here, but need to use emitDCOPSignal
-  QByteArray data; QDataStream arg( data, IO_WriteOnly );
+  QByteArray data; QDataStream arg( data, QIODevice::WriteOnly );
   arg << kapp->dcopClient()->appId();
   arg << DCOPObject::objId(); // the real objId, for checking in slotIdentitiesChanged
   kapp->dcopClient()->emitDCOPSignal( "KPIM::IdentityManager", "identitiesChanged(QCString,QCString)", data );
@@ -471,15 +474,15 @@ int IdentityManager::newUoid()
   int uoid;
 
   // determine the UOIDs of all saved identities
-  QValueList<uint> usedUOIDs;
-  for ( QValueList<Identity>::ConstIterator it = mIdentities.begin() ;
+  Q3ValueList<uint> usedUOIDs;
+  for ( Q3ValueList<Identity>::ConstIterator it = mIdentities.begin() ;
 	it != mIdentities.end() ; ++it )
     usedUOIDs << (*it).uoid();
 
   if ( hasPendingChanges() ) {
     // add UOIDs of all shadow identities. Yes, we will add a lot of duplicate
     // UOIDs, but avoiding duplicate UOIDs isn't worth the effort.
-    for ( QValueList<Identity>::ConstIterator it = mShadowIdentities.begin() ;
+    for ( Q3ValueList<Identity>::ConstIterator it = mShadowIdentities.begin() ;
           it != mShadowIdentities.end() ; ++it ) {
       usedUOIDs << (*it).uoid();
     }
@@ -504,7 +507,7 @@ QStringList KPIM::IdentityManager::allEmails() const
   return lst;
 }
 
-void KPIM::IdentityManager::slotIdentitiesChanged( QCString appId, QCString objId )
+void KPIM::IdentityManager::slotIdentitiesChanged( Q3CString appId, Q3CString objId )
 {
   // From standalone kmail to standalone korganizer, the appId will differ
   // From kontact the appId will match, so we need to test the objId

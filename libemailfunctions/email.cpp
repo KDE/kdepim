@@ -26,6 +26,8 @@
 #include <kidna.h>
 
 #include <qregexp.h>
+//Added by qt3to4:
+#include <QByteArray>
 
 //-----------------------------------------------------------------------------
 QStringList KPIM::splitEmailAddrList(const QString& aStr)
@@ -48,10 +50,10 @@ QStringList KPIM::splitEmailAddrList(const QString& aStr)
   int commentlevel = 0;
   bool insidequote = false;
 
-  for (uint index=0; index<aStr.length(); index++) {
+  for (int index=0; index<aStr.length(); index++) {
     // the following conversion to latin1 is o.k. because
     // we can safely ignore all non-latin1 characters
-    switch (aStr[index].latin1()) {
+    switch (aStr[index].toLatin1()) {
     case '"' : // start or end of quoted string
       if (commentlevel == 0)
         insidequote = !insidequote;
@@ -100,10 +102,10 @@ QStringList KPIM::splitEmailAddrList(const QString& aStr)
 
 //-----------------------------------------------------------------------------
 // Used by KPIM::splitAddress(...) and KPIM::getFirstEmailAddress(...).
-KPIM::EmailParseResult splitAddressInternal( const QCString& address,
-                                             QCString & displayName,
-                                             QCString & addrSpec,
-                                             QCString & comment,
+KPIM::EmailParseResult splitAddressInternal( const QByteArray& address,
+                                             QByteArray & displayName,
+                                             QByteArray & addrSpec,
+                                             QByteArray & comment,
                                              bool allowMultipleAddresses )
 {
 //  kdDebug() << "KMMessage::splitAddress( " << address << " )" << endl;
@@ -124,7 +126,7 @@ KPIM::EmailParseResult splitAddressInternal( const QCString& address,
   int commentLevel = 0;
   bool stop = false;
 
-  for ( char* p = address.data(); *p && !stop; ++p ) {
+  for ( const char* p = address.data(); *p && !stop; ++p ) {
     switch ( context ) {
     case TopLevel : {
       switch ( *p ) {
@@ -245,10 +247,10 @@ KPIM::EmailParseResult splitAddressInternal( const QCString& address,
 
 
 //-----------------------------------------------------------------------------
-KPIM::EmailParseResult KPIM::splitAddress( const QCString& address,
-                                           QCString & displayName,
-                                           QCString & addrSpec,
-                                           QCString & comment )
+KPIM::EmailParseResult KPIM::splitAddress( const QByteArray& address,
+                                           QByteArray & displayName,
+                                           QByteArray & addrSpec,
+                                           QByteArray & comment )
 {
   return splitAddressInternal( address, displayName, addrSpec, comment,
                                false /* don't allow multiple addresses */ );
@@ -261,7 +263,7 @@ KPIM::EmailParseResult KPIM::splitAddress( const QString & address,
                                            QString & addrSpec,
                                            QString & comment )
 {
-  QCString d, a, c;
+  QByteArray d, a, c;
   KPIM::EmailParseResult result = splitAddress( address.utf8(), d, a, c );
   if ( result == AddressOk ) {
     displayName = QString::fromUtf8( d );
@@ -290,7 +292,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
 
   bool tooManyAtsFlag = false;
 
-  int atCount = aStr.contains('@');
+  int atCount = aStr.count('@');
   if ( atCount > 1 ) {
     tooManyAtsFlag = true;;
   } else if ( atCount == 0 ) {
@@ -372,7 +374,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
       break;
     }
     case InComment : {
-      switch ( aStr[index] ) {
+      switch ( aStr[index].toLatin1() ) {
         case '(' : ++commentLevel;
           break;
         case ')' : --commentLevel;
@@ -391,7 +393,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
     }
 
     case InAngleAddress : {
-      switch ( aStr[index] ) {
+      switch ( aStr[index].toLatin1() ) {
         case ',' :
           if ( !inQuotedString ) {
             return UnexpectedComma;
@@ -515,7 +517,7 @@ bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
   QString localPart = aStr.left( atChar );
   bool tooManyAtsFlag = false;
   bool inQuotedString = false;
-  int atCount = localPart.contains( '@' );
+  int atCount = localPart.count( '@' );
 
   unsigned int strlen = localPart.length();
   for ( unsigned int index=0; index < strlen; index++ ) {
@@ -554,14 +556,14 @@ QString KPIM::simpleEmailAddressErrorMsg()
                   "something of the form joe@kde.org.");
 }
 //-----------------------------------------------------------------------------
-QCString KPIM::getEmailAddress( const QCString & address )
+QByteArray KPIM::getEmailAddress( const QByteArray & address )
 {
-  QCString dummy1, dummy2, addrSpec;
+  QByteArray dummy1, dummy2, addrSpec;
   KPIM::EmailParseResult result =
     splitAddressInternal( address, dummy1, addrSpec, dummy2,
                           false /* don't allow multiple addresses */ );
   if ( result != AddressOk ) {
-    addrSpec = QCString();
+    addrSpec = QByteArray();
     kdDebug() // << k_funcinfo << "\n"
               << "Input: aStr\nError:"
               << emailParseResultToString( result ) << endl;
@@ -579,14 +581,14 @@ QString KPIM::getEmailAddress( const QString & address )
 
 
 //-----------------------------------------------------------------------------
-QCString KPIM::getFirstEmailAddress( const QCString & addresses )
+QByteArray KPIM::getFirstEmailAddress( const QByteArray & addresses )
 {
-  QCString dummy1, dummy2, addrSpec;
+  QByteArray dummy1, dummy2, addrSpec;
   KPIM::EmailParseResult result =
     splitAddressInternal( addresses, dummy1, addrSpec, dummy2,
                           true /* allow multiple addresses */ );
   if ( result != AddressOk ) {
-    addrSpec = QCString();
+    addrSpec = QByteArray();
     kdDebug() // << k_funcinfo << "\n"
               << "Input: aStr\nError:"
               << emailParseResultToString( result ) << endl;
@@ -685,7 +687,7 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
           else
             name.prepend( c );
         }else{
-          switch( c ){
+          switch( c.toLatin1() ){
             case '<':
               iMailStart = i;
               break;
@@ -751,7 +753,7 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
           else
             name.append( c );
         }else{
-          switch( c ){
+          switch( c.toLatin1() ){
             case '>':
               iMailEnd = i;
               break;
@@ -850,7 +852,7 @@ QString KPIM::normalizeAddressesAndDecodeIDNs( const QString & str )
   const QStringList addressList = KPIM::splitEmailAddrList( str );
   QStringList normalizedAddressList;
 
-  QCString displayName, addrSpec, comment;
+  QByteArray displayName, addrSpec, comment;
 
   for( QStringList::ConstIterator it = addressList.begin();
        ( it != addressList.end() );
@@ -888,7 +890,7 @@ QString KPIM::normalizeAddressesAndEncodeIDNs( const QString & str )
   const QStringList addressList = KPIM::splitEmailAddrList( str );
   QStringList normalizedAddressList;
 
-  QCString displayName, addrSpec, comment;
+  QByteArray displayName, addrSpec, comment;
 
   for( QStringList::ConstIterator it = addressList.begin();
        ( it != addressList.end() );
@@ -928,7 +930,7 @@ static QString escapeQuotes( const QString & str )
   // reserve enough memory for the worst case ( """..."" -> \"\"\"...\"\" )
   escaped.reserve( 2*str.length() );
   unsigned int len = 0;
-  for ( unsigned int i = 0; i < str.length(); ++i, ++len ) {
+  for ( int i = 0; i < str.length(); ++i, ++len ) {
     if ( str[i] == '"' ) { // unescaped doublequote
       escaped[len] = '\\';
       ++len;

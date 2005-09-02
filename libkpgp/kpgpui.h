@@ -22,20 +22,24 @@
 #include <kdialogbase.h>  // base class of all dialogs here
 #include <qwidget.h>      // base class of Config
 #include <qcheckbox.h>    // used in inlined methods
+//Added by qt3to4:
+#include <QPixmap>
+#include <QLabel>
+#include <Q3ValueList>
 #include <kdebug.h>       // used in inlined methods
-#include <qcstring.h>     // used in return-by-value
+#include <q3cstring.h>     // used in return-by-value
 #include <qstring.h>      // is a member in KeyRequester
-#include <qvaluevector.h> // used in KeyApprovalDialog
-
+#include <q3valuevector.h> // used in KeyApprovalDialog
+#include <q3ptrvector.h>
 #include "kpgp.h"
 
 #include <kdepimmacros.h>
 
 class QString;
 class QRegExp;
-class QCString;
+class Q3CString;
 class QCheckBox;            // needed by Config, KeySelectionDialog
-class QMultiLineEdit;       // needed by CipherTextDialog
+class Q3MultiLineEdit;       // needed by CipherTextDialog
 class QComboBox;            // needed by Config
 class QPixmap;              // needed by KeySelectionDialog
 class QPushButton;          // needed by KeyRequester
@@ -139,10 +143,10 @@ class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
 
   protected slots:
     virtual void slotRereadKeys();
-    virtual void slotSelectionChanged( QListViewItem* );
+    virtual void slotSelectionChanged( Q3ListViewItem* );
     virtual void slotSelectionChanged();
-    virtual void slotCheckSelection( QListViewItem* = 0 );
-    virtual void slotRMB( QListViewItem*, const QPoint&, int );
+    virtual void slotCheckSelection( Q3ListViewItem* = 0 );
+    virtual void slotRMB( Q3ListViewItem*, const QPoint&, int );
     virtual void slotRecheckKey();
     virtual void slotOk();
     virtual void slotCancel();
@@ -154,22 +158,22 @@ class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
     void filterByKeyIDOrUID( const QString & keyID );
     void filterByUID( const QString & uid );
     void showAllItems();
-    bool anyChildMatches( const QListViewItem * item, QRegExp & rx ) const;
+    bool anyChildMatches( const Q3ListViewItem * item, QRegExp & rx ) const;
 
     void initKeylist( const KeyList& keyList, const KeyIDList& keyIds );
 
     QString keyInfo( const Kpgp::Key* ) const;
 
-    QString beautifyFingerprint( const QCString& ) const;
+    QString beautifyFingerprint( const Q3CString& ) const;
 
     // Returns the key ID of the key the given QListViewItem belongs to
-    KeyID getKeyId( const QListViewItem* ) const;
+    KeyID getKeyId( const Q3ListViewItem* ) const;
 
     // Returns: -1 = unusable, 0 = unknown, 1 = valid, but untrusted, 2 = trusted
     int keyValidity( const Kpgp::Key* ) const;
 
     // Updates the given QListViewItem with the data of the given key
-    void updateKeyInfo( const Kpgp::Key*, QListViewItem* ) const;
+    void updateKeyInfo( const Kpgp::Key*, Q3ListViewItem* ) const;
 
     /** Checks if choosing the given key is allowed
         Returns:
@@ -178,11 +182,11 @@ class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
              or not,
          1 = key can be chosen
     */
-    int keyAdmissibility( QListViewItem*,
+    int keyAdmissibility( Q3ListViewItem*,
                           TrustCheckMode = NoExpensiveTrustCheck ) const;
 
     // Perform expensive trust checks for the given keys
-    bool checkKeys( const QValueList<QListViewItem*>& ) const;
+    bool checkKeys( const Q3ValueList<Q3ListViewItem*>& ) const;
 
   private:
     KListView *mListView;
@@ -193,7 +197,7 @@ class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
     QTimer* mCheckSelectionTimer;
     QTimer* mStartSearchTimer;
     QString mSearchText;
-    QListViewItem* mCurrentContextMenuItem;
+    Q3ListViewItem* mCurrentContextMenuItem;
 
   static const int sCheckSelectionDelay;
 };
@@ -295,13 +299,13 @@ class KDE_EXPORT KeyApprovalDialog: public KDialogBase
 
   public:
     KeyApprovalDialog( const QStringList&,
-                       const QValueVector<KeyIDList>&,
+                       const Q3ValueVector<KeyIDList>&,
                        const int allowedKeys,
                        QWidget *parent = 0, const char *name = 0,
                        bool modal = true );
     virtual ~KeyApprovalDialog() {};
 
-    QValueVector<KeyIDList> keys() const { return mKeys; };
+    Q3ValueVector<KeyIDList> keys() const { return mKeys; };
 
     bool preferencesChanged() const { return mPrefsChanged; }
 
@@ -312,14 +316,14 @@ class KDE_EXPORT KeyApprovalDialog: public KDialogBase
     virtual void slotCancel();
 
   private:
-    QValueVector<KeyIDList> mKeys;
+    Q3ValueVector<KeyIDList> mKeys;
     int mAllowedKeys;
     int mEncryptToSelf;
     bool mPrefsChanged;
-    QPtrVector<QLabel> mAddressLabels;
-    QPtrVector<QLabel> mKeyIdsLabels;
+    Q3PtrVector<QLabel> mAddressLabels;
+    Q3PtrVector<QLabel> mKeyIdsLabels;
     //QPtrVector<QListBox> mKeyIdListBoxes;
-    QPtrVector<QComboBox> mEncrPrefCombos;
+    Q3PtrVector<QComboBox> mEncrPrefCombos;
 };
 
 
@@ -329,13 +333,13 @@ class KDE_EXPORT CipherTextDialog: public KDialogBase
   Q_OBJECT
 
   public:
-    CipherTextDialog( const QCString & text, const QCString & charset=0,
+    CipherTextDialog( const Q3CString & text, const Q3CString & charset=0,
                       QWidget *parent=0, const char *name=0, bool modal=true );
     virtual ~CipherTextDialog() {};
 
   private:
     void setMinimumSize();
-    QMultiLineEdit *mEditBox;
+    Q3MultiLineEdit *mEditBox;
 };
 
 } // namespace Kpgp

@@ -19,15 +19,19 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qapplication.h>
+#include <kapplication.h>
+#include <kcmdlineargs.h>
 
 #include "idmapper.h"
 
 int main( int argc, char **argv )
 {
-  QApplication app( argc, argv );
+  KApplication::disableAutoDcopRegistration();
+  KCmdLineArgs::init( argc, argv, "testemail", 0, 0, 0, 0 );
+  KApplication app( false, false );
 
   KPIM::IdMapper mapper( "test.uidmap" ) ;
+  mapper.setIdentifier("testidentifier");
 
   mapper.setRemoteId( "foo", "bar" );
   mapper.setRemoteId( "yes", "klar" );

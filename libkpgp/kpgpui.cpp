@@ -18,10 +18,9 @@
 
 //#include <stdio.h>
 
-#include <qvgroupbox.h>
-#include <qvbox.h>
+#include <q3vbox.h>
 #include <qlabel.h>
-#include <qwhatsthis.h>
+#include <q3whatsthis.h>
 #include <qtooltip.h>
 #include <qapplication.h>
 #include <qtextcodec.h>
@@ -29,8 +28,14 @@
 #include <qpixmap.h>
 #include <qlayout.h>
 #include <qtimer.h>
-#include <qpopupmenu.h>
+#include <q3popupmenu.h>
 #include <qregexp.h>
+//Added by qt3to4:
+#include <QFrame>
+#include <Q3CString>
+#include <Q3ValueList>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include <klocale.h>
 #include <kpassdlg.h>
@@ -63,7 +68,7 @@ PassphraseDialog::PassphraseDialog( QWidget *parent,
                                     const QString &keyID )
   :KDialogBase( parent, 0, modal, caption, Ok|Cancel )
 {
-  QHBox *hbox = makeHBoxMainWidget();
+  Q3HBox *hbox = makeHBoxMainWidget();
   hbox->setSpacing( spacingHint() );
   hbox->setMargin( marginHint() );
 
@@ -114,27 +119,30 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 
   QVBoxLayout *topLayout = new QVBoxLayout( this, 0, KDialog::spacingHint() );
 
-  group = new QVGroupBox( i18n("Warning"), this );
-  group->layout()->setSpacing( KDialog::spacingHint() );
+  group = new QGroupBox( i18n("Warning"), this );
+  QVBoxLayout *lay = new QVBoxLayout(group);
+  lay->setSpacing( KDialog::spacingHint() );
   // (mmutz) work around Qt label bug in 3.0.0 (and possibly later):
   // 1. Don't use rich text: No <qt><b>...</b></qt>
   label = new QLabel( i18n("Please check if encryption really "
   	"works before you start using it seriously. Also note that attachments "
 	"are not encrypted by the PGP/GPG module."), group );
+  lay->addWidget( label );
   // 2. instead, set the font to bold:
   QFont labelFont = label->font();
   labelFont.setBold( true );
   label->setFont( labelFont );
   // 3. and activate wordwarp:
-  label->setAlignment( AlignLeft|WordBreak );
+  label->setAlignment( Qt::AlignLeft|Qt::TextWordWrap );
   // end; to remove the workaround, add <qt><b>..</b></qt> around the
   // text and remove lines QFont... -> label->setAlignment(...).
   topLayout->addWidget( group );
+  group = new QGroupBox( i18n("Encryption Tool"), this );
+  lay = new QVBoxLayout(group);
+  lay->setSpacing( KDialog::spacingHint() );
 
-  group = new QVGroupBox( i18n("Encryption Tool"), this );
-  group->layout()->setSpacing( KDialog::spacingHint() );
-
-  QHBox * hbox = new QHBox( group );
+  Q3HBox * hbox = new Q3HBox( group );
+  lay->addWidget( hbox );
   label = new QLabel( i18n("Select encryption tool to &use:"), hbox );
   toolCombo = new QComboBox( false, hbox );
   toolCombo->insertStringList( QStringList()
@@ -152,10 +160,12 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
   // the user for the path to the executable...
   topLayout->addWidget( group );
 
-  mpOptionsGroupBox = new QVGroupBox( i18n("Options"), this );
-  mpOptionsGroupBox->layout()->setSpacing( KDialog::spacingHint() );
+  mpOptionsGroupBox = new QGroupBox( i18n("Options"), this );
+  lay = new QVBoxLayout(group);
+  lay->setSpacing( KDialog::spacingHint() );
   storePass = new QCheckBox( i18n("&Keep passphrase in memory"),
                              mpOptionsGroupBox );
+  lay->addWidget( storePass );
   connect( storePass, SIGNAL( toggled( bool ) ),
            this, SIGNAL( changed( void ) ) );
   msg = i18n( "<qt><p>When this option is enabled, the passphrase of your "
@@ -169,7 +179,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 	      "<p>Note that when using KMail, this setting only applies "
 	      "if you are not using gpg-agent. It is also ignored "
 	      "if you are using crypto plugins.</p></qt>" );
-  QWhatsThis::add( storePass, msg );
+  Q3WhatsThis::add( storePass, msg );
   if( encrypt ) {
     encToSelf = new QCheckBox( i18n("Always encr&ypt to self"),
                                mpOptionsGroupBox );
@@ -181,13 +191,14 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 		"but also with your key. This will enable you to decrypt the "
 		"message/file at a later time. This is generally a good idea."
 		"</p></qt>" );
-    QWhatsThis::add( encToSelf, msg );
+    Q3WhatsThis::add( encToSelf, msg );
   }
   else
     encToSelf = 0;
   showCipherText = new QCheckBox( i18n("&Show signed/encrypted text after "
                                        "composing"),
                                   mpOptionsGroupBox );
+  lay->addWidget( showCipherText );
   connect( showCipherText, SIGNAL( toggled( bool ) ),
            this, SIGNAL( changed( void ) ) );
 
@@ -195,11 +206,12 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 	      "will be shown in a separate window, enabling you to know how "
 	      "it will look before it is sent. This is a good idea when "
 	      "you are verifying that your encryption system works.</p></qt>" );
-  QWhatsThis::add( showCipherText, msg );
+  Q3WhatsThis::add( showCipherText, msg );
   if( encrypt ) {
     showKeyApprovalDlg = new QCheckBox( i18n("Always show the encryption "
                                              "keys &for approval"),
                                         mpOptionsGroupBox );
+    lay->addWidget( showKeyApprovalDlg );
     connect( showKeyApprovalDlg, SIGNAL( toggled( bool ) ),
            this, SIGNAL( changed( void ) ) );
     msg = i18n( "<qt><p>When this option is enabled, the application will "
@@ -208,7 +220,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 		"the application will only show the dialog if it cannot find "
 		"the right key or if there are several which could be used. "
 		"</p></qt>" );
-    QWhatsThis::add( showKeyApprovalDlg, msg );
+    Q3WhatsThis::add( showKeyApprovalDlg, msg );
 }
   else
     showKeyApprovalDlg = 0;
@@ -336,13 +348,13 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   mListView->addColumn( i18n("Key ID") );
   mListView->addColumn( i18n("User ID") );
   mListView->setAllColumnsShowFocus( true );
-  mListView->setResizeMode( QListView::LastColumn );
+  mListView->setResizeMode( Q3ListView::LastColumn );
   mListView->setRootIsDecorated( true );
   mListView->setShowSortIndicator( true );
   mListView->setSorting( 1, true ); // sort by User ID
   mListView->setShowToolTips( true );
   if( extendedSelection ) {
-    mListView->setSelectionMode( QListView::Extended );
+    mListView->setSelectionMode( Q3ListView::Extended );
     //mListView->setSelectionMode( QListView::Multi );
   }
   topLayout->addWidget( mListView, 10 );
@@ -350,7 +362,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   if (rememberChoice) {
     mRememberCB = new QCheckBox( i18n("Remember choice"), page );
     topLayout->addWidget( mRememberCB );
-    QWhatsThis::add(mRememberCB,
+    Q3WhatsThis::add(mRememberCB,
                     i18n("<qt><p>If you check this box your choice will "
                          "be stored and you will not be asked again."
                          "</p></qt>"));
@@ -358,7 +370,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
 
   initKeylist( keyList, keyIds );
 
-  QListViewItem *lvi;
+  Q3ListViewItem *lvi;
   if( extendedSelection ) {
     lvi = mListView->currentItem();
     slotCheckSelection();
@@ -379,14 +391,14 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
              this,      SLOT( slotSelectionChanged() ) );
   }
   else {
-    connect( mListView, SIGNAL( selectionChanged( QListViewItem* ) ),
-             this,      SLOT( slotSelectionChanged( QListViewItem* ) ) );
+    connect( mListView, SIGNAL( selectionChanged( Q3ListViewItem* ) ),
+             this,      SLOT( slotSelectionChanged( Q3ListViewItem* ) ) );
   }
-  connect( mListView, SIGNAL( doubleClicked ( QListViewItem *, const QPoint &, int ) ), this, SLOT( accept() ) );
+  connect( mListView, SIGNAL( doubleClicked ( Q3ListViewItem *, const QPoint &, int ) ), this, SLOT( accept() ) );
 
-  connect( mListView, SIGNAL( contextMenuRequested( QListViewItem*,
+  connect( mListView, SIGNAL( contextMenuRequested( Q3ListViewItem*,
                                                     const QPoint&, int ) ),
-           this,      SLOT( slotRMB( QListViewItem*, const QPoint&, int ) ) );
+           this,      SLOT( slotRMB( Q3ListViewItem*, const QPoint&, int ) ) );
 
   setButtonText( KDialogBase::Default, i18n("&Reread Keys") );
   connect( this, SIGNAL( defaultClicked() ),
@@ -420,7 +432,7 @@ KeyID KeySelectionDialog::key() const
 void KeySelectionDialog::initKeylist( const KeyList& keyList,
                                       const KeyIDList& keyIds )
 {
-  QListViewItem* firstSelectedItem = 0;
+  Q3ListViewItem* firstSelectedItem = 0;
   mKeyIds.clear();
   mListView->clear();
 
@@ -428,7 +440,7 @@ void KeySelectionDialog::initKeylist( const KeyList& keyList,
   for( KeyListIterator it( keyList ); it.current(); ++it ) {
     KeyID curKeyId = (*it)->primaryKeyID();
 
-    QListViewItem* primaryUserID = new QListViewItem( mListView, curKeyId,
+    Q3ListViewItem* primaryUserID = new Q3ListViewItem( mListView, curKeyId,
                                                       (*it)->primaryUserID() );
 
     // select and open the given key
@@ -457,16 +469,16 @@ void KeySelectionDialog::initKeylist( const KeyList& keyList,
         break;
     }
 
-    QListViewItem* childItem;
+    Q3ListViewItem* childItem;
 
-    childItem = new QListViewItem( primaryUserID, "",
+    childItem = new Q3ListViewItem( primaryUserID, "",
                                    i18n( "Fingerprint: %1" )
                                    .arg( beautifyFingerprint( (*it)->primaryFingerprint() ) ) );
     if( primaryUserID->isSelected() && mListView->isMultiSelection() ) {
       mListView->setSelected( childItem, true );
     }
 
-    childItem = new QListViewItem( primaryUserID, "", keyInfo( *it ) );
+    childItem = new Q3ListViewItem( primaryUserID, "", keyInfo( *it ) );
     if( primaryUserID->isSelected() && mListView->isMultiSelection() ) {
       mListView->setSelected( childItem, true );
     }
@@ -476,7 +488,7 @@ void KeySelectionDialog::initKeylist( const KeyList& keyList,
     if( *uidit ) {
       ++uidit; // skip the primary user ID
       for( ; *uidit; ++uidit ) {
-        childItem = new QListViewItem( primaryUserID, "", (*uidit)->text() );
+        childItem = new Q3ListViewItem( primaryUserID, "", (*uidit)->text() );
         if( primaryUserID->isSelected() && mListView->isMultiSelection() ) {
           mListView->setSelected( childItem, true );
         }
@@ -555,9 +567,9 @@ QString KeySelectionDialog::keyInfo( const Kpgp::Key *key ) const
   }
 }
 
-QString KeySelectionDialog::beautifyFingerprint( const QCString& fpr ) const
+QString KeySelectionDialog::beautifyFingerprint( const Q3CString& fpr ) const
 {
-  QCString result;
+  Q3CString result;
 
   if( 40 == fpr.length() ) {
     // convert to this format:
@@ -664,7 +676,7 @@ int KeySelectionDialog::keyValidity( const Kpgp::Key *key ) const
 
 
 void KeySelectionDialog::updateKeyInfo( const Kpgp::Key* key,
-                                        QListViewItem* lvi ) const
+                                        Q3ListViewItem* lvi ) const
 {
   if( 0 == lvi ) {
     return;
@@ -716,7 +728,7 @@ void KeySelectionDialog::updateKeyInfo( const Kpgp::Key* key,
 
 
 int
-KeySelectionDialog::keyAdmissibility( QListViewItem* lvi,
+KeySelectionDialog::keyAdmissibility( Q3ListViewItem* lvi,
                                       TrustCheckMode trustCheckMode ) const
 {
   // Return:
@@ -783,7 +795,7 @@ KeySelectionDialog::keyAdmissibility( QListViewItem* lvi,
 
 
 KeyID
-KeySelectionDialog::getKeyId( const QListViewItem* lvi ) const
+KeySelectionDialog::getKeyId( const Q3ListViewItem* lvi ) const
 {
   KeyID keyId;
 
@@ -827,8 +839,8 @@ void KeySelectionDialog::slotRereadKeys()
                 this,      SLOT( slotSelectionChanged() ) );
   }
   else {
-    disconnect( mListView, SIGNAL( selectionChanged( QListViewItem * ) ),
-                this,      SLOT( slotSelectionChanged( QListViewItem * ) ) );
+    disconnect( mListView, SIGNAL( selectionChanged( Q3ListViewItem * ) ),
+                this,      SLOT( slotSelectionChanged( Q3ListViewItem * ) ) );
   }
 
   initKeylist( keys, KeyIDList( mKeyIds ) );
@@ -840,8 +852,8 @@ void KeySelectionDialog::slotRereadKeys()
     slotSelectionChanged();
   }
   else {
-    connect( mListView, SIGNAL( selectionChanged( QListViewItem * ) ),
-             this,      SLOT( slotSelectionChanged( QListViewItem * ) ) );
+    connect( mListView, SIGNAL( selectionChanged( Q3ListViewItem * ) ),
+             this,      SLOT( slotSelectionChanged( Q3ListViewItem * ) ) );
   }
 
   // restore the saved position of the contents
@@ -849,7 +861,7 @@ void KeySelectionDialog::slotRereadKeys()
 }
 
 
-void KeySelectionDialog::slotSelectionChanged( QListViewItem * lvi )
+void KeySelectionDialog::slotSelectionChanged( Q3ListViewItem * lvi )
 {
   slotCheckSelection( lvi );
 }
@@ -866,7 +878,7 @@ void KeySelectionDialog::slotSelectionChanged()
 }
 
 
-void KeySelectionDialog::slotCheckSelection( QListViewItem* plvi /* = 0 */ )
+void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
 {
   kdDebug(5100) << "KeySelectionDialog::slotCheckSelection()\n";
 
@@ -890,12 +902,12 @@ void KeySelectionDialog::slotCheckSelection( QListViewItem* plvi /* = 0 */ )
                 this,      SLOT( slotSelectionChanged() ) );
 
     KeyIDList newKeyIdList;
-    QValueList<QListViewItem*> keysToBeChecked;
+    Q3ValueList<Q3ListViewItem*> keysToBeChecked;
 
     bool keysAllowed = true;
     enum { UNKNOWN, SELECTED, DESELECTED } userAction = UNKNOWN;
     // Iterate over the tree to find selected keys.
-    for( QListViewItem *lvi = mListView->firstChild();
+    for( Q3ListViewItem *lvi = mListView->firstChild();
          0 != lvi;
          lvi = lvi->nextSibling() ) {
       // We make sure that either all items belonging to a key are selected
@@ -906,7 +918,7 @@ void KeySelectionDialog::slotCheckSelection( QListViewItem* plvi /* = 0 */ )
       // First count the selected items of this key
       int itemCount = 1 + lvi->childCount();
       int selectedCount = lvi->isSelected() ? 1 : 0;
-      for( QListViewItem *clvi = lvi->firstChild();
+      for( Q3ListViewItem *clvi = lvi->firstChild();
            0 != clvi;
            clvi = clvi->nextSibling() ) {
         if( clvi->isSelected() ) {
@@ -955,7 +967,7 @@ void KeySelectionDialog::slotCheckSelection( QListViewItem* plvi /* = 0 */ )
         if( userAction == SELECTED ) {
           // select all items of this key
           mListView->setSelected( lvi, true );
-          for( QListViewItem *clvi = lvi->firstChild();
+          for( Q3ListViewItem *clvi = lvi->firstChild();
                0 != clvi;
                clvi = clvi->nextSibling() ) {
             mListView->setSelected( clvi, true );
@@ -974,7 +986,7 @@ void KeySelectionDialog::slotCheckSelection( QListViewItem* plvi /* = 0 */ )
         else { // userAction == DESELECTED
           // deselect all items of this key
           mListView->setSelected( lvi, false );
-          for( QListViewItem *clvi = lvi->firstChild();
+          for( Q3ListViewItem *clvi = lvi->firstChild();
                0 != clvi;
                clvi = clvi->nextSibling() ) {
             mListView->setSelected( clvi, false );
@@ -995,7 +1007,7 @@ void KeySelectionDialog::slotCheckSelection( QListViewItem* plvi /* = 0 */ )
 }
 
 
-bool KeySelectionDialog::checkKeys( const QValueList<QListViewItem*>& keys ) const
+bool KeySelectionDialog::checkKeys( const Q3ValueList<Q3ListViewItem*>& keys ) const
 {
   KProgressDialog* pProgressDlg = 0;
   bool keysAllowed = true;
@@ -1009,12 +1021,12 @@ bool KeySelectionDialog::checkKeys( const QValueList<QListViewItem*>& keys ) con
   pProgressDlg->setMinimumDuration( 1000 );
   pProgressDlg->show();
 
-  for( QValueList<QListViewItem*>::ConstIterator it = keys.begin();
+  for( Q3ValueList<Q3ListViewItem*>::ConstIterator it = keys.begin();
        it != keys.end();
        ++it ) {
     kdDebug(5100) << "Checking key 0x" << getKeyId( *it ) << "...\n";
     pProgressDlg->setLabel( i18n("Checking key 0x%1...")
-                            .arg( getKeyId( *it ) ) );
+                            .arg( QString::fromAscii( getKeyId( *it ) ) ) );
     kapp->processEvents();
     keysAllowed &= ( -1 != keyAdmissibility( *it, AllowExpensiveTrustCheck ) );
     pProgressDlg->progressBar()->advance( 1 );
@@ -1028,7 +1040,7 @@ bool KeySelectionDialog::checkKeys( const QValueList<QListViewItem*>& keys ) con
 }
 
 
-void KeySelectionDialog::slotRMB( QListViewItem* lvi, const QPoint& pos, int )
+void KeySelectionDialog::slotRMB( Q3ListViewItem* lvi, const QPoint& pos, int )
 {
   if( !lvi ) {
     return;
@@ -1036,7 +1048,7 @@ void KeySelectionDialog::slotRMB( QListViewItem* lvi, const QPoint& pos, int )
 
   mCurrentContextMenuItem = lvi;
 
-  QPopupMenu menu(this);
+  Q3PopupMenu menu(this);
   menu.insertItem( i18n( "Recheck Key" ), this, SLOT( slotRecheckKey() ) );
   menu.exec( pos );
 }
@@ -1105,7 +1117,7 @@ void KeySelectionDialog::filterByKeyID( const QString & keyID )
   if ( keyID.isEmpty() )
     showAllItems();
   else
-    for ( QListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
+    for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
       item->setVisible( item->text( 0 ).upper().startsWith( keyID ) );
 }
 
@@ -1116,7 +1128,7 @@ void KeySelectionDialog::filterByKeyIDOrUID( const QString & str )
   // match beginnings of words:
   QRegExp rx( "\\b" + QRegExp::escape( str ), false );
 
-  for ( QListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
+  for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
     item->setVisible( item->text( 0 ).upper().startsWith( str )
 		      || rx.search( item->text( 1 ) ) >= 0
 		      || anyChildMatches( item, rx ) );
@@ -1130,20 +1142,20 @@ void KeySelectionDialog::filterByUID( const QString & str )
   // match beginnings of words:
   QRegExp rx( "\\b" + QRegExp::escape( str ), false );
 
-  for ( QListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
+  for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
     item->setVisible( rx.search( item->text( 1 ) ) >= 0
 		      || anyChildMatches( item, rx ) );
 }
 
 
-bool KeySelectionDialog::anyChildMatches( const QListViewItem * item, QRegExp & rx ) const
+bool KeySelectionDialog::anyChildMatches( const Q3ListViewItem * item, QRegExp & rx ) const
 {
   if ( !item )
     return false;
 
-  QListViewItem * stop = item->nextSibling(); // It's OK if stop is NULL...
+  Q3ListViewItem * stop = item->nextSibling(); // It's OK if stop is NULL...
 
-  for ( QListViewItemIterator it( item->firstChild() ) ; it.current() && it.current() != stop ; ++it )
+  for ( Q3ListViewItemIterator it( item->firstChild() ) ; it.current() && it.current() != stop ; ++it )
     if ( rx.search( it.current()->text( 1 ) ) >= 0 ) {
       //item->setOpen( true ); // do we want that?
       return true;
@@ -1153,7 +1165,7 @@ bool KeySelectionDialog::anyChildMatches( const QListViewItem * item, QRegExp & 
 
 void KeySelectionDialog::showAllItems()
 {
-  for ( QListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
+  for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
     item->setVisible( true );
 }
 
@@ -1308,7 +1320,7 @@ KeyIDList SecretKeyRequester::keyRequestHook( Module * pgp ) const {
 
 // ------------------------------------------------------------------------
 KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
-                                      const QValueVector<KeyIDList>& keyIDs,
+                                      const Q3ValueVector<KeyIDList>& keyIDs,
                                       const int allowedKeys,
                                       QWidget *parent, const char *name,
                                       bool modal )
@@ -1336,15 +1348,15 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
                               page );
   topLayout->addWidget( label );
 
-  QScrollView* sv = new QScrollView( page );
-  sv->setResizePolicy( QScrollView::AutoOneFit );
+  Q3ScrollView* sv = new Q3ScrollView( page );
+  sv->setResizePolicy( Q3ScrollView::AutoOneFit );
   topLayout->addWidget( sv );
-  QVBox* bigvbox = new QVBox( sv->viewport() );
+  Q3VBox* bigvbox = new Q3VBox( sv->viewport() );
   bigvbox->setMargin( KDialog::marginHint() );
   bigvbox->setSpacing( KDialog::spacingHint() );
   sv->addChild( bigvbox );
 
-  QButtonGroup *mChangeButtonGroup = new QButtonGroup( bigvbox );
+  Q3ButtonGroup *mChangeButtonGroup = new Q3ButtonGroup( bigvbox );
   mChangeButtonGroup->hide();
   mAddressLabels.resize( addresses.count() );
   mKeyIdsLabels.resize( keyIDs.size() );
@@ -1354,7 +1366,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   // the sender's key
   if( pgp->encryptToSelf() ) {
     mEncryptToSelf = 1;
-    QHBox* hbox = new QHBox( bigvbox );
+    Q3HBox* hbox = new Q3HBox( bigvbox );
     new QLabel( i18n("Your keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
     if( keyIDs[0].isEmpty() ) {
@@ -1383,7 +1395,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     //hbox->setStretchFactor( keyidLB, 10 );
     //mKeyIdListBoxes.insert( 0, keyidLB );
 
-    new KSeparator( Horizontal, bigvbox );
+    new KSeparator( Qt::Horizontal, bigvbox );
   }
   else {
     mEncryptToSelf = 0;
@@ -1393,7 +1405,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   }
 
   QStringList::ConstIterator ait;
-  QValueVector<KeyIDList>::const_iterator kit;
+  Q3ValueVector<KeyIDList>::const_iterator kit;
   int i;
   for( ait = addresses.begin(), kit = keyIDs.begin(), i = 0;
        ( ait != addresses.end() ) && ( kit != keyIDs.end() );
@@ -1402,16 +1414,16 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
       ++kit; // skip the sender's key id
     }
     else {
-      new KSeparator( Horizontal, bigvbox );
+      new KSeparator( Qt::Horizontal, bigvbox );
     }
 
-    QHBox *hbox = new QHBox( bigvbox );
+    Q3HBox *hbox = new Q3HBox( bigvbox );
     new QLabel( i18n("Recipient:"), hbox );
     QLabel *addressL = new QLabel( *ait, hbox );
     hbox->setStretchFactor( addressL, 10 );
     mAddressLabels.insert( i, addressL  );
 
-    hbox = new QHBox( bigvbox );
+    hbox = new Q3HBox( bigvbox );
     new QLabel( i18n("Encryption keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
     if( (*kit).isEmpty() ) {
@@ -1440,7 +1452,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     //hbox->setStretchFactor( keyidLB, 10 );
     //mKeyIdListBoxes.insert( i + 1, keyidLB );
 
-    hbox = new QHBox( bigvbox );
+    hbox = new Q3HBox( bigvbox );
     new QLabel( i18n("Encryption preference:"), hbox );
     QComboBox *encrPrefCombo = new QComboBox( hbox );
     encrPrefCombo->insertItem( i18n("<none>") );
@@ -1613,8 +1625,8 @@ KeyApprovalDialog::slotCancel()
 
 
 // ------------------------------------------------------------------------
-CipherTextDialog::CipherTextDialog( const QCString & text,
-                                    const QCString & charset, QWidget *parent,
+CipherTextDialog::CipherTextDialog( const Q3CString & text,
+                                    const Q3CString & charset, QWidget *parent,
                                     const char *name, bool modal )
   :KDialogBase( parent, name, modal, i18n("OpenPGP Information"), Ok|Cancel, Ok)
 {
@@ -1626,7 +1638,7 @@ CipherTextDialog::CipherTextDialog( const QCString & text,
   label->setText(i18n("Result of the last encryption/sign operation:"));
   topLayout->addWidget( label );
 
-  mEditBox = new QMultiLineEdit( page );
+  mEditBox = new Q3MultiLineEdit( page );
   mEditBox->setReadOnly(true);
   topLayout->addWidget( mEditBox, 10 );
 

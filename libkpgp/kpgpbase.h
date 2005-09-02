@@ -20,7 +20,7 @@
 #define KPGPBASE_H
 
 #include <qstring.h>
-#include <qcstring.h>
+#include <q3cstring.h>
 #include <qstringlist.h>
 
 #include "kpgpkey.h"
@@ -73,7 +73,7 @@ public:
 
   /** Returns the ascii armored data of the public key with the
       given key id. */
-  virtual QCString getAsciiPublicKey(const KeyID& ) { return QCString(); }
+  virtual Q3CString getAsciiPublicKey(const KeyID& ) { return Q3CString(); }
 
   /** Signs the given key with the currently set user key. This is currently
       not implemented. */
@@ -92,14 +92,14 @@ protected:
                       bool onlyReadFromGnuPG = false );
   virtual void clear();
 
-  QCString addUserId();
+  Q3CString addUserId();
 
-  QCString input;
-  QCString output;
-  QCString error;
+  Q3CString input;
+  Q3CString output;
+  Q3CString error;
   QString errMsg;
 
-  QCString mVersion;
+  Q3CString mVersion;
 
   int status;
 
@@ -126,17 +126,17 @@ public:
                               Key* key = 0 );
   virtual KeyList publicKeys( const QStringList & patterns = QStringList() );
   virtual KeyList secretKeys( const QStringList & patterns = QStringList() );
-  virtual QCString getAsciiPublicKey( const KeyID& keyID );
+  virtual Q3CString getAsciiPublicKey( const KeyID& keyID );
   virtual int signKey( const KeyID& keyID, const char *passphrase );
 
 protected:
-  KeyList doGetPublicKeys( const QCString & cmd,
+  KeyList doGetPublicKeys( const Q3CString & cmd,
                            const QStringList & patterns );
-  virtual KeyList parseKeyList( const QCString&, bool );
+  virtual KeyList parseKeyList( const Q3CString&, bool );
 
 private:
-  Key* parsePublicKeyData( const QCString& output, Key* key = 0 );
-  void parseTrustDataForKey( Key* key, const QCString& str );
+  Key* parsePublicKeyData( const Q3CString& output, Key* key = 0 );
+  void parseTrustDataForKey( Key* key, const Q3CString& str );
 };
 
 class BaseG : public Base
@@ -158,12 +158,12 @@ public:
                               Key* key = 0 );
   virtual KeyList publicKeys( const QStringList & patterns = QStringList() );
   virtual KeyList secretKeys( const QStringList & patterns = QStringList() );
-  virtual QCString getAsciiPublicKey( const KeyID& keyID );
+  virtual Q3CString getAsciiPublicKey( const KeyID& keyID );
   virtual int signKey( const KeyID& keyID, const char *passphrase );
 
 private:
-  Key* parseKeyData( const QCString& output, int& offset, Key* key = 0 );
-  KeyList parseKeyList( const QCString&, bool );
+  Key* parseKeyData( const Q3CString& output, int& offset, Key* key = 0 );
+  KeyList parseKeyList( const Q3CString&, bool );
 };
 
 
@@ -186,14 +186,14 @@ public:
                               Key* key = 0 );
   virtual KeyList publicKeys( const QStringList & patterns = QStringList() );
   virtual KeyList secretKeys( const QStringList & patterns = QStringList() );
-  virtual QCString getAsciiPublicKey( const KeyID& keyID );
+  virtual Q3CString getAsciiPublicKey( const KeyID& keyID );
   virtual int signKey( const KeyID& keyID, const char *passphrase );
 
 private:
-  Key* parseKeyData( const QCString& output, int& offset, Key* key = 0 );
-  Key* parseSingleKey( const QCString& output, Key* key = 0 );
-  KeyList parseKeyList( const QCString& output, bool );
-  void parseTrustDataForKey( Key* key, const QCString& str );
+  Key* parseKeyData( const Q3CString& output, int& offset, Key* key = 0 );
+  Key* parseSingleKey( const Q3CString& output, Key* key = 0 );
+  KeyList parseKeyList( const Q3CString& output, bool );
+  void parseTrustDataForKey( Key* key, const Q3CString& str );
 };
 
 
@@ -216,12 +216,12 @@ public:
   virtual int isVersion6();
 
 protected:
-  virtual KeyList parseKeyList( const QCString &, bool );
+  virtual KeyList parseKeyList( const Q3CString &, bool );
 
 private:
-  Key* parseKeyData( const QCString& output, int& offset, Key* key = 0 );
-  Key* parseSingleKey( const QCString& output, Key* key = 0 );
-  void parseTrustDataForKey( Key* key, const QCString& str );
+  Key* parseKeyData( const Q3CString& output, int& offset, Key* key = 0 );
+  Key* parseSingleKey( const Q3CString& output, Key* key = 0 );
+  void parseTrustDataForKey( Key* key, const Q3CString& str );
 };
 
 // ---------------------------------------------------------------------------

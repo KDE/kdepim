@@ -32,6 +32,8 @@
 #include <errno.h>
 
 #include <qapplication.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 
 namespace Kpgp {
@@ -50,9 +52,9 @@ Base::~Base()
 void
 Base::clear()
 {
-  input = QCString();
-  output = QCString();
-  error = QCString();
+  input = Q3CString();
+  output = Q3CString();
+  error = Q3CString();
   errMsg = QString::null;
   status = OK;
 }
@@ -85,7 +87,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
     close(ppass[1]);
 
     // tell pgp which fd to use for the passphrase
-    QCString tmp;
+    Q3CString tmp;
     tmp.sprintf("%d",ppass[0]);
     ::setenv("PGPPASSFD",tmp.data(),1);
 
@@ -662,11 +664,11 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
 }
 
 
-QCString
+Q3CString
 Base::addUserId()
 {
-  QCString cmd;
-  QCString pgpUser = Module::getKpgp()->user();
+  Q3CString cmd;
+  Q3CString pgpUser = Module::getKpgp()->user();
 
   if(!pgpUser.isEmpty())
   {
@@ -674,7 +676,7 @@ Base::addUserId()
     cmd += pgpUser;
     return cmd;
   }
-  return QCString();
+  return Q3CString();
 }
 
 

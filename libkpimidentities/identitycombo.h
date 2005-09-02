@@ -33,7 +33,7 @@
 #define _KPIM_IDENTITYCOMBO_H_
 
 #include <qcombobox.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 #include <kdepimmacros.h>
 
 class QString;
@@ -90,7 +90,7 @@ protected:
   void reloadUoidList();
 
 protected:
-  QValueList<uint> mUoidList;
+  Q3ValueList<uint> mUoidList;
   IdentityManager* mIdentityManager;
 };
 

@@ -21,10 +21,12 @@
 
 #include <time.h>
 
-#include <qcstring.h>
+#include <q3cstring.h>
 #include <qstring.h>
 #include <qstringlist.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 namespace Kpgp {
 
@@ -54,14 +56,14 @@ typedef enum
 } EncryptPref;
 
 
-typedef QCString KeyID;
+typedef QByteArray KeyID;
 
-class KeyIDList : public QValueList<KeyID>
+class KeyIDList : public Q3ValueList<KeyID>
 {
  public:
   KeyIDList() { }
-  KeyIDList( const KeyIDList& l ) : QValueList<KeyID>(l) { }
-  KeyIDList( const QValueList<KeyID>& l ) : QValueList<KeyID>(l) { }
+  KeyIDList( const KeyIDList& l ) : Q3ValueList<KeyID>(l) { }
+  KeyIDList( const Q3ValueList<KeyID>& l ) : Q3ValueList<KeyID>(l) { }
   KeyIDList( const KeyID& i ) { append(i); }
 
   QStringList toStringList() const;
@@ -113,8 +115,8 @@ class UserID
   QString mText;
 };
 
-typedef QPtrList<UserID> UserIDList;
-typedef QPtrListIterator<UserID> UserIDListIterator;
+typedef Q3PtrList<UserID> UserIDList;
+typedef Q3PtrListIterator<UserID> UserIDListIterator;
 
 inline QString UserID::text() const
 {
@@ -204,7 +206,7 @@ class Subkey
   KeyID keyID() const;
   
   /** Returns the fingerprint of the subkey. */
-  QCString fingerprint() const;
+  QByteArray fingerprint() const;
 
   /** Returns the creation date of the subkey. */
   time_t creationDate() const;
@@ -249,7 +251,7 @@ class Subkey
   void setKeyID(const KeyID& keyID);
 
   /** Sets the fingerprint of the subkey to <em>fingerprint</em>. */
-  void setFingerprint(const QCString& fingerprint);
+  void setFingerprint(const QByteArray& fingerprint);
 
   /** Sets the creation date of the subkey to <em>creationDate</em> seconds
       since Epoch. */
@@ -273,7 +275,7 @@ class Subkey
   unsigned int mKeyAlgo;
   unsigned int mKeyLen;
   KeyID mKeyID;
-  QCString mFingerprint;
+  QByteArray mFingerprint;
   time_t mTimestamp; /* -1 for invalid, 0 for not available */
   time_t mExpiration; /* -1 for never, 0 for not available */
 };
@@ -338,7 +340,7 @@ inline KeyID Subkey::keyID() const
   return mKeyID.right(8);
 }
 
-inline QCString Subkey::fingerprint() const
+inline QByteArray Subkey::fingerprint() const
 {
   return mFingerprint;
 }
@@ -408,7 +410,7 @@ inline void Subkey::setKeyID(const KeyID& keyID)
   mKeyID = keyID;
 }
 
-inline void Subkey::setFingerprint(const QCString& fingerprint)
+inline void Subkey::setFingerprint(const QByteArray& fingerprint)
 {
   mFingerprint = fingerprint;
 }
@@ -423,8 +425,8 @@ inline void Subkey::setExpirationDate(const time_t expirationDate)
   mExpiration = expirationDate;
 }
 
-typedef QPtrList<Subkey> SubkeyList;
-typedef QPtrListIterator<Subkey> SubkeyListIterator;
+typedef Q3PtrList<Subkey> SubkeyList;
+typedef Q3PtrListIterator<Subkey> SubkeyListIterator;
 
 
 /** This class is used to store information about a PGP key.
@@ -511,7 +513,7 @@ class Key
 
   /** Returns the fingerprint of the primary key or a null string if there
       are no subkeys. */
-  QCString primaryFingerprint() const;
+  QByteArray primaryFingerprint() const;
 
   /** Returns true if there are no user IDs or no subkeys.*/
   bool isNull() const;
@@ -581,7 +583,7 @@ class Key
   Subkey *getSubkey(const KeyID& keyID);
 
   /** Sets the fingerprint of the given subkey to <em>fpr</em>. */
-  void setFingerprint(const KeyID& keyID, const QCString& fpr);
+  void setFingerprint(const KeyID& keyID, const QByteArray& fpr);
 
  protected:
   bool mSecret : 1;
@@ -710,14 +712,14 @@ inline KeyID Key::primaryKeyID() const
     return KeyID();
 }
 
-inline QCString Key::primaryFingerprint() const
+inline QByteArray Key::primaryFingerprint() const
 {
   Subkey *key = mSubkeys.getFirst();
 
   if (key)
     return key->fingerprint();
   else
-    return QCString();
+    return QByteArray();
 }
 
 inline const UserIDList Key::userIDs() const
@@ -757,8 +759,8 @@ inline void Key::addSubkey(const Subkey *subkey)
 
 
 
-typedef QPtrList<Key> KeyListBase;
-typedef QPtrListIterator<Key> KeyListIterator;
+typedef Q3PtrList<Key> KeyListBase;
+typedef Q3PtrListIterator<Key> KeyListIterator;
 
 class KeyList : public KeyListBase
 {
@@ -767,7 +769,7 @@ class KeyList : public KeyListBase
     { clear(); }
 
  private:
-  int compareItems( QPtrCollection::Item s1, QPtrCollection::Item s2 )
+  int compareItems( Q3PtrCollection::Item s1, Q3PtrCollection::Item s2 )
     { 
       // sort case insensitively by the primary User IDs
       return QString::compare((static_cast<Key*>(s1))->primaryUserID().lower(),

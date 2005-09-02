@@ -33,7 +33,9 @@
 
 #include <libkdepim/configmanager.h>
 
-#include <qvaluelist.h>
+#include <q3valuelist.h>
+//Added by qt3to4:
+#include <Q3CString>
 #include <dcopobject.h>
 #include <kdepimmacros.h>
 
@@ -69,8 +71,8 @@ public:
   virtual ~IdentityManager();
 
 public:
-  typedef QValueList<Identity>::Iterator Iterator;
-  typedef QValueList<Identity>::ConstIterator ConstIterator;
+  typedef Q3ValueList<Identity>::Iterator Iterator;
+  typedef Q3ValueList<Identity>::ConstIterator ConstIterator;
 
   /** Commit changes to disk and emit changed() if necessary. */
   void commit();
@@ -212,16 +214,16 @@ protected slots:
 
 protected:
   /** The list that will be seen by everyone */
-  QValueList<Identity> mIdentities;
+  Q3ValueList<Identity> mIdentities;
   /** The list that will be seen by the config dialog */
-  QValueList<Identity> mShadowIdentities;
+  Q3ValueList<Identity> mShadowIdentities;
 
 //k_dcop_signals:
 //  void identitiesChanged( QCString appId, QCString objId );
 
 k_dcop:
   // Connected to the DCOP signal
-  void slotIdentitiesChanged( QCString appId, QCString objId );
+  void slotIdentitiesChanged( Q3CString appId, Q3CString objId );
 
 private:
   void writeConfig() const;

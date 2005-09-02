@@ -12,8 +12,10 @@
 #include <kdepimmacros.h>
 
 #include <qstring.h>
-#include <qcstring.h>
+#include <q3cstring.h>
 #include <qstringlist.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 class KProcess;
 namespace KPIM {
@@ -96,7 +98,7 @@ class KDE_EXPORT Identity
   friend QDataStream & operator>>( QDataStream & stream, KPIM::Identity & ident );
 
 public:
-  typedef QValueList<Identity> List;
+  typedef Q3ValueList<Identity> List;
 
   /** used for comparison */
   bool operator==( const Identity & other ) const;
@@ -179,27 +181,27 @@ public:
   QString organization() const { return mOrganization; }
   void setOrganization(const QString&);
 
-  KDE_DEPRECATED QCString pgpIdentity() const { return pgpEncryptionKey(); }
-  KDE_DEPRECATED void setPgpIdentity( const QCString & key ) {
+  KDE_DEPRECATED Q3CString pgpIdentity() const { return pgpEncryptionKey(); }
+  KDE_DEPRECATED void setPgpIdentity( const Q3CString & key ) {
     setPGPEncryptionKey( key );
     setPGPSigningKey( key );
   }
 
   /** The user's OpenPGP encryption key */
-  QCString pgpEncryptionKey() const { return mPGPEncryptionKey; }
-  void setPGPEncryptionKey( const QCString & key );
+  Q3CString pgpEncryptionKey() const { return mPGPEncryptionKey; }
+  void setPGPEncryptionKey( const Q3CString & key );
 
   /** The user's OpenPGP signing key */
-  QCString pgpSigningKey() const { return mPGPSigningKey; }
-  void setPGPSigningKey( const QCString & key );
+  Q3CString pgpSigningKey() const { return mPGPSigningKey; }
+  void setPGPSigningKey( const Q3CString & key );
 
   /** The user's S/MIME encryption key */
-  QCString smimeEncryptionKey() const { return mSMIMEEncryptionKey; }
-  void setSMIMEEncryptionKey( const QCString & key );
+  Q3CString smimeEncryptionKey() const { return mSMIMEEncryptionKey; }
+  void setSMIMEEncryptionKey( const Q3CString & key );
 
   /** The user's S/MIME signing key */
-  QCString smimeSigningKey() const { return mSMIMESigningKey; }
-  void setSMIMESigningKey( const QCString & key );
+  Q3CString smimeSigningKey() const { return mSMIMESigningKey; }
+  void setSMIMESigningKey( const Q3CString & key );
 
   Kleo::CryptoMessageFormat preferredCryptoMessageFormat() const { return mPreferredCryptoMessageFormat; }
   void setPreferredCryptoMessageFormat( Kleo::CryptoMessageFormat format ) { mPreferredCryptoMessageFormat = format; }
@@ -291,7 +293,7 @@ protected:
   QString mReplyToAddr;
   QString mBcc;
   QString mVCardFile;
-  QCString mPGPEncryptionKey, mPGPSigningKey, mSMIMEEncryptionKey, mSMIMESigningKey;
+  Q3CString mPGPEncryptionKey, mPGPSigningKey, mSMIMEEncryptionKey, mSMIMESigningKey;
   QString mFcc, mDrafts, mTransport;
   QString mDictionary;
   QString mXFace;

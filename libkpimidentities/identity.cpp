@@ -18,6 +18,8 @@
 #include <kurl.h>
 
 #include <qfileinfo.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <sys/types.h>
 #include <stdlib.h>
@@ -440,28 +442,28 @@ void Identity::setOrganization(const QString &str)
   mOrganization = str;
 }
 
-void Identity::setPGPSigningKey(const QCString &str)
+void Identity::setPGPSigningKey(const Q3CString &str)
 {
   mPGPSigningKey = str;
   if ( mPGPSigningKey.isNull() )
     mPGPSigningKey = "";
 }
 
-void Identity::setPGPEncryptionKey(const QCString &str)
+void Identity::setPGPEncryptionKey(const Q3CString &str)
 {
   mPGPEncryptionKey = str;
   if ( mPGPEncryptionKey.isNull() )
     mPGPEncryptionKey = "";
 }
 
-void Identity::setSMIMESigningKey(const QCString &str)
+void Identity::setSMIMESigningKey(const Q3CString &str)
 {
   mSMIMESigningKey = str;
   if ( mSMIMESigningKey.isNull() )
     mSMIMESigningKey = "";
 }
 
-void Identity::setSMIMEEncryptionKey(const QCString &str)
+void Identity::setSMIMEEncryptionKey(const Q3CString &str)
 {
   mSMIMEEncryptionKey = str;
   if ( mSMIMEEncryptionKey.isNull() )

@@ -22,8 +22,8 @@
 #ifndef EMAIL_H
 #define EMAIL_H
 
-#include <qstringlist.h>
-#include <qcstring.h>
+#include <QStringList>
+#include <QByteArray>
 
 #include <kdepimmacros.h>
 
@@ -72,10 +72,10 @@ KDE_EXPORT QStringList splitEmailAddrList(const QString& aStr);
     @return             AddressOk if no error was encountered. Otherwise an
                           appropriate error code is returned.
 */
-KDE_EXPORT EmailParseResult splitAddress( const QCString & address,
-                               QCString & displayName,
-                               QCString & addrSpec,
-                               QCString & comment );
+KDE_EXPORT EmailParseResult splitAddress( const QByteArray & address,
+                               QByteArray & displayName,
+                               QByteArray & addrSpec,
+                               QByteArray & comment );
 
 /** This is an overloaded member function, provided for convenience. It behaves
     essentially like the above function.
@@ -143,7 +143,7 @@ KDE_EXPORT QString simpleEmailAddressErrorMsg();
     @return         the addr-spec of @a address, i.e. joe.user@kde.org in the
                       example
 */
-KDE_EXPORT QCString getEmailAddress( const QCString & address );
+KDE_EXPORT QByteArray getEmailAddress( const QByteArray & address );
 
 /** This is an overloaded member function, provided for convenience. It behaves
     essentially like the above function.
@@ -164,7 +164,7 @@ KDE_EXPORT QString getEmailAddress( const QString & address );
     @return         the addr-spec of @a addresses, i.e. joe.user@kde.org in the
                       example
 */
-KDE_EXPORT QCString getFirstEmailAddress( const QCString & addresses );
+KDE_EXPORT QByteArray getFirstEmailAddress( const QByteArray & addresses );
 
 /** This is an overloaded member function, provided for convenience. It behaves
     essentially like the above function.

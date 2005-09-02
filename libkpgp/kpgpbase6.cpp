@@ -25,6 +25,8 @@
 #include <string.h> /* strncmp */
 
 #include <qdatetime.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <klocale.h>
 #include <kdebug.h>
@@ -136,7 +138,7 @@ Base6::decrypt( Block& block, const char *passphrase )
       kdDebug(5100) << "Message was signed on '" << block.signatureDate() << "'\n";
     }
     else
-      block.setSignatureDate( QCString() );
+      block.setSignatureDate( Q3CString() );
     // determine signature status and signature key
     if( error.find("signature not checked") != -1)
     {
@@ -157,7 +159,7 @@ Base6::decrypt( Block& block, const char *passphrase )
       // get key ID of signer
       index = error.find("KeyID:",index2);
       if (index == -1)
-        block.setSignatureKeyId( QCString() );
+        block.setSignatureKeyId( Q3CString() );
       else
         block.setSignatureKeyId( error.mid(index+9,8) );
     }
@@ -175,7 +177,7 @@ Base6::decrypt( Block& block, const char *passphrase )
     {
       status |= ERROR;
       block.setSignatureUserId( QString::null );
-      block.setSignatureKeyId( QCString() );
+      block.setSignatureKeyId( Q3CString() );
     }
   }
   //kdDebug(5100) << "status = " << status << endl;
@@ -373,7 +375,7 @@ Base6::isVersion6()
 
 
 Key*
-Base6::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
+Base6::parseKeyData( const Q3CString& output, int& offset, Key* key /* = 0 */ )
 // This function parses the data for a single key which is output by PGP 6
 // with the following command line arguments:
 //   +batchmode -compatible +verbose=0 +language=C -kvvc
@@ -536,7 +538,7 @@ Base6::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
         }
         else
         {
-          QCString uid = output.mid( pos, eol-pos );
+          Q3CString uid = output.mid( pos, eol-pos );
           key->addUserID( uid );
           pos = eol;
           //kdDebug(5100) << "User ID:"<<uid<<endl;
@@ -627,7 +629,7 @@ Base6::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
         }
         else
         {
-          QCString uid = output.mid( pos, eol-pos );
+          Q3CString uid = output.mid( pos, eol-pos );
           key->addUserID( uid );
           pos = eol;
           //kdDebug(5100) << "User ID:"<<uid<<endl;
@@ -659,7 +661,7 @@ Base6::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
         fpr = true; // we found a fingerprint
 
         pos += 18;
-        QCString fingerprint = output.mid( pos, eol-pos );
+        Q3CString fingerprint = output.mid( pos, eol-pos );
         // remove white space from the fingerprint
 	for ( int idx = 0 ; (idx = fingerprint.find(' ', idx)) >= 0 ; )
 	  fingerprint.replace( idx, 1, "" );
@@ -701,7 +703,7 @@ Base6::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
 
 
 Key*
-Base6::parseSingleKey( const QCString& output, Key* key /* = 0 */ )
+Base6::parseSingleKey( const Q3CString& output, Key* key /* = 0 */ )
 {
   int offset;
 
@@ -731,7 +733,7 @@ Base6::parseSingleKey( const QCString& output, Key* key /* = 0 */ )
 
 
 KeyList
-Base6::parseKeyList( const QCString& output, bool secretKeys )
+Base6::parseKeyList( const Q3CString& output, bool secretKeys )
 {
   kdDebug(5100) << "Kpgp::Base6::parseKeyList()" << endl;
   KeyList keys;
@@ -771,12 +773,12 @@ Base6::parseKeyList( const QCString& output, bool secretKeys )
 
 
 void
-Base6::parseTrustDataForKey( Key* key, const QCString& str )
+Base6::parseTrustDataForKey( Key* key, const Q3CString& str )
 {
   if( ( key == 0 ) || str.isEmpty() )
     return;
 
-  QCString keyID = "0x" + key->primaryKeyID();
+  Q3CString keyID = "0x" + key->primaryKeyID();
   UserIDList userIDs = key->userIDs();
 
   // search the start of the trust data

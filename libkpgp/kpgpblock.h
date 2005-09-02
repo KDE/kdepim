@@ -19,9 +19,9 @@
 #ifndef KPGPBLOCK_H
 #define KPGPBLOCK_H
 
-#include <qcstring.h>
+#include <q3cstring.h>
 #include <qstring.h>
-#include <qstrlist.h>
+#include <q3strlist.h>
 
 #include <kdepimmacros.h>
 
@@ -94,13 +94,13 @@ class KDE_EXPORT Block
 {
  public:
 
-  Block( const QCString& str = QCString() );
+  Block( const Q3CString& str = Q3CString() );
   ~Block();
 
-  QCString text() const;
-  void setText( const QCString& str );
+  Q3CString text() const;
+  void setText( const Q3CString& str );
 
-  void setProcessedText( const QCString& str );
+  void setProcessedText( const Q3CString& str );
 
   int status() const;
   void setStatus( const int status );
@@ -122,27 +122,27 @@ class KDE_EXPORT Block
   void setSignatureUserId( const QString& userId );
 
   /** keyID of signer */
-  QCString signatureKeyId() const;
-  void setSignatureKeyId( const QCString& keyId );
+  Q3CString signatureKeyId() const;
+  void setSignatureKeyId( const Q3CString& keyId );
 
   /** date of the signature 
       WARNING: Will most likely be changed to QDateTime */
-  QCString signatureDate() const;
-  void setSignatureDate( const QCString& date );
+  Q3CString signatureDate() const;
+  void setSignatureDate( const Q3CString& date );
 
   /** the persons who can decrypt the message */
-  const QStrList encryptedFor() const;
+  const Q3StrList encryptedFor() const;
 
   /** shows the secret key which is needed
     to decrypt the message */
   QString requiredKey() const;
-  void setRequiredKey( const QCString& keyId );
+  void setRequiredKey( const Q3CString& keyId );
 
   QString requiredUserId() const;
   void setRequiredUserId( const QString& userId );
 
-  QCString error() const;
-  void setError( const QCString& str );
+  Q3CString error() const;
+  void setError( const Q3CString& str );
 
   /** Resets all information about this OpenPGP block */
   void reset();
@@ -160,8 +160,8 @@ class KDE_EXPORT Block
       false  if there was an unresolvable error or if signing was canceled
       true   if everything is o.k.
   */
-  Kpgp::Result clearsign( const QCString& keyId,
-                  const QCString& charset = QCString() );
+  Kpgp::Result clearsign( const Q3CString& keyId,
+                  const Q3CString& charset = Q3CString() );
 
   /** encrypts this OpenPGP block for a list of persons. if sign is true then
       the message is signed with the key corresponding to the given key id.
@@ -169,23 +169,23 @@ class KDE_EXPORT Block
       false  if there was an unresolvable error or if encryption was canceled
       true   if everything is o.k.
   */
-  Kpgp::Result encrypt( const QStringList& receivers, const QCString& keyId,
-                const bool sign, const QCString& charset = QCString() );
+  Kpgp::Result encrypt( const QStringList& receivers, const Q3CString& keyId,
+                const bool sign, const Q3CString& charset = Q3CString() );
 
  private:
   void clear();
 
   BlockType determineType() const;
 
-  QCString mText;
-  QCString mProcessedText;
-  QCString mError;
+  Q3CString mText;
+  Q3CString mProcessedText;
+  Q3CString mError;
   QString mSignatureUserId;
-  QCString mSignatureKeyId;
-  QCString mSignatureDate;
-  QCString mRequiredKey;
+  Q3CString mSignatureKeyId;
+  Q3CString mSignatureDate;
+  Q3CString mRequiredKey;
   QString mRequiredUserId;
-  QStrList mEncryptedFor;
+  Q3StrList mEncryptedFor;
   int mStatus;
   bool mHasBeenProcessed;
   BlockType mType;
@@ -193,7 +193,7 @@ class KDE_EXPORT Block
 
 // -- inlined member functions ---------------------------------------------
 
-inline QCString
+inline Q3CString
 Block::text() const
 {
   if( mHasBeenProcessed )
@@ -203,27 +203,27 @@ Block::text() const
 }
 
 inline void
-Block::setText( const QCString& str )
+Block::setText( const Q3CString& str )
 {
   clear();
   mText = str;
 }
 
 inline void
-Block::setProcessedText( const QCString& str )
+Block::setProcessedText( const Q3CString& str )
 {
   mProcessedText = str;
   mHasBeenProcessed = true;
 }
 
-inline QCString
+inline Q3CString
 Block::error() const
 {
   return mError;
 }
 
 inline void
-Block::setError( const QCString& str )
+Block::setError( const Q3CString& str )
 {
   mError = str;
 }
@@ -260,26 +260,26 @@ Block::setSignatureUserId( const QString& userId )
   mSignatureUserId = userId;
 }
 
-inline QCString
+inline Q3CString
 Block::signatureKeyId() const
 {
   return mSignatureKeyId;
 }
 
 inline void
-Block::setSignatureKeyId( const QCString& keyId )
+Block::setSignatureKeyId( const Q3CString& keyId )
 {
   mSignatureKeyId = keyId;
 }
 
-inline QCString
+inline Q3CString
 Block::signatureDate() const
 {
   return mSignatureDate;
 }
 
 inline void
-Block::setSignatureDate( const QCString& date )
+Block::setSignatureDate( const Q3CString& date )
 {
   mSignatureDate = date;
 }
@@ -291,7 +291,7 @@ Block::requiredKey() const
 }
 
 inline void
-Block::setRequiredKey( const QCString& keyId )
+Block::setRequiredKey( const Q3CString& keyId )
 {
   mRequiredKey = keyId;
 }
@@ -308,7 +308,7 @@ Block::setRequiredUserId( const QString& userId )
   mRequiredUserId = userId;
 }
 
-inline const QStrList
+inline const Q3StrList
 Block::encryptedFor() const
 {
   return mEncryptedFor;

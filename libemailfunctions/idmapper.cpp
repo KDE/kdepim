@@ -25,7 +25,8 @@
 #include <kstandarddirs.h>
 #include <kdebug.h>
 
-#include <qfile.h>
+#include <QFile>
+#include <QTextStream>
 
 using namespace KPIM;
 
@@ -64,17 +65,17 @@ QString IdMapper::filename()
 bool IdMapper::load()
 {
   QFile file( filename() );
-  if ( !file.open( IO_ReadOnly ) ) {
+  if ( !file.open( QIODevice::ReadOnly ) ) {
     kdError(5800) << "Can't read uid map file '" << filename() << "'" << endl;
     return false;
   }
 
   clear();
 
+  QTextStream ts(&file);
   QString line;
-  while ( file.readLine( line, 1024 ) != -1 ) {
-    line.truncate( line.length() - 2 ); // strip newline
-
+  while ( !ts.atEnd() ) {
+    line = ts.readLine( 1024 );
     QStringList parts = QStringList::split( "\x02\x02", line, true );
     mIdMap.insert( parts[ 0 ], parts[ 1 ] );
     mFingerprintMap.insert( parts[ 0 ], parts[ 2 ] );
@@ -88,7 +89,7 @@ bool IdMapper::load()
 bool IdMapper::save()
 {
   QFile file( filename() );
-  if ( !file.open( IO_WriteOnly ) ) {
+  if ( !file.open( QIODevice::WriteOnly ) ) {
     kdError(5800) << "Can't write uid map file '" << filename() << "'" << endl;
     return false;
   }
@@ -97,13 +98,13 @@ bool IdMapper::save()
 
   QMap<QString, QVariant>::Iterator it;
   for ( it = mIdMap.begin(); it != mIdMap.end(); ++it ) {
-    QString fingerprint( "" );
+    QString fingerprint;
     if ( mFingerprintMap.contains( it.key() ) )
       fingerprint = mFingerprintMap[ it.key() ];
     content += it.key() + "\x02\x02" + it.data().toString() + "\x02\x02" + fingerprint + "\r\n";
   }
-
-  file.writeBlock( content.latin1(), qstrlen( content.latin1() ) );
+  QTextStream ts(&file);
+  ts << content;
   file.close();
 
   return true;
@@ -172,7 +173,7 @@ void IdMapper::setFingerprint( const QString &localId, const QString &fingerprin
   mFingerprintMap.insert( localId, fingerprint );
 }
 
-const QString& IdMapper::fingerprint( const QString &localId ) const
+QString IdMapper::fingerprint( const QString &localId ) const
 {
   if ( mFingerprintMap.contains( localId ) )
     return mFingerprintMap[ localId ];
