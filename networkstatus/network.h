@@ -23,16 +23,19 @@
 #define NETWORKSTATUS_NETWORK_H
 
 #include <qstringlist.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 #include <ksharedptr.h>
 #include "networkstatuscommon.h"
 
 struct NetworkUsageStruct
 {
-	QCString appId;
+	Q3CString appId;
 	QString host;
 };
 
-typedef QValueList< NetworkUsageStruct > NetworkUsageList;
+typedef Q3ValueList< NetworkUsageStruct > NetworkUsageList;
 
 class Network
 {
@@ -40,8 +43,8 @@ public:
 	Network( const QString name, NetworkStatus::Properties properties );
 	Network( const Network & other );
 	NetworkStatus::EnumStatus reachabilityFor( const QString & host );
-	void registerUsage( const QCString appId, const QString host );
-	void unregisterUsage( const QCString appId, const QString host );
+	void registerUsage( const Q3CString appId, const QString host );
+	void unregisterUsage( const Q3CString appId, const QString host );
 	void setStatus( NetworkStatus::EnumStatus status );
 
 	void removeAllUsage();
@@ -50,7 +53,7 @@ public:
 	QString name() { return m_name; }
 	bool internet() { return m_internet; }
 	QStringList netmasks() { return m_netmasks; }
-	QCString service() { return m_service; }
+	Q3CString service() { return m_service; }
 	NetworkStatus::EnumOnDemandPolicy onDemandPolicy() { return m_onDemandPolicy; }
 	NetworkUsageList usage() { return m_usage; }
 	
@@ -59,7 +62,7 @@ private:
 	QString m_name;
 	bool m_internet;
 	QStringList m_netmasks;
-	QCString m_service;
+	Q3CString m_service;
 	NetworkStatus::EnumOnDemandPolicy m_onDemandPolicy;
 	NetworkUsageList m_usage;
 };

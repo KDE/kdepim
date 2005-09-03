@@ -22,6 +22,8 @@
 #include <qtimer.h>
 #include <dcopclient.h>
 #include <kapplication.h>
+#include <kcmdlineargs.h>
+#include <kaboutdata.h>
 #include "provideriface.h"
 
 #include "testservice.h"
@@ -92,7 +94,9 @@ void TestService::slotStatusChange()
 
 int main( int argc, char** argv )
 {
-	KApplication app(argc, argv, "testdcop");
+    KAboutData aboutData( "testdcop", "testdcop", "1.0" );
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KApplication app;		
 	TestService * test = new TestService;
 	Q_UNUSED( test );
 	return app.exec();

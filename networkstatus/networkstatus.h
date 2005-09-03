@@ -29,6 +29,8 @@
 #include "clientiface.h"
 #include "network.h"
 #include "serviceiface.h"
+//Added by qt3to4:
+#include <Q3CString>
 
 struct NetworkStatusStruct;
 
@@ -37,7 +39,7 @@ class NetworkStatusModule : virtual public KDEDModule/*, public ClientIface, Ser
 Q_OBJECT
 K_DCOP
 public:
-	NetworkStatusModule( const QCString & obj );
+	NetworkStatusModule( const Q3CString & obj );
 	~NetworkStatusModule();
 k_dcop:
 	// Client interface
@@ -66,8 +68,8 @@ k_dcop_signals:
 	 */
 	void shutdownRequested( QString host );
 protected slots:
-	void registeredToDCOP( const QCString& appId );
-	void unregisteredFromDCOP( const QCString& appId );
+	void registeredToDCOP( const Q3CString& appId );
+	void unregisteredFromDCOP( const Q3CString& appId );
 
 protected:
 	// QStringList networkUsers( const QString & networkName );

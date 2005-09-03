@@ -22,6 +22,8 @@
 #include <kdebug.h>
 
 #include "network.h"
+//Added by qt3to4:
+#include <Q3CString>
 
 Network::Network( const QString name, NetworkStatus::Properties properties )
 	: m_name( name )
@@ -53,7 +55,7 @@ NetworkStatus::EnumStatus Network::reachabilityFor( const QString & host )
 	}
 }
 
-void Network::registerUsage( const QCString appId, const QString host )
+void Network::registerUsage( const Q3CString appId, const QString host )
 {
 	NetworkUsageStruct nus;
 	nus.appId = appId;
@@ -68,7 +70,7 @@ void Network::registerUsage( const QCString appId, const QString host )
 	m_usage.append( nus );
 }
 
-void Network::unregisterUsage( const QCString appId, const QString host )
+void Network::unregisterUsage( const Q3CString appId, const QString host )
 {
 	NetworkUsageList::iterator end = m_usage.end();
 	for ( NetworkUsageList::iterator it = m_usage.begin(); it != end; ++it )
