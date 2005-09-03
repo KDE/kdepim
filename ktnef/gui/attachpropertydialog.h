@@ -25,8 +25,8 @@
 class KTNEFAttach;
 class KTNEFProperty;
 class KTNEFPropertySet;
-class QListView;
-class QListViewItem;
+class Q3ListView;
+class Q3ListViewItem;
 
 class AttachPropertyDialog : public AttachPropertyDialogBase
 {
@@ -43,9 +43,9 @@ private:
 	KTNEFAttach *m_attach;
 };
 
-void formatProperties( const QMap<int,KTNEFProperty*>&, QListView*, QListViewItem*, const QString& = "prop" );
-void formatPropertySet( KTNEFPropertySet*, QListView* );
-void saveProperty( QListView*, KTNEFPropertySet*, QWidget* );
+void formatProperties( const QMap<int,KTNEFProperty*>&, Q3ListView*, Q3ListViewItem*, const QString& = "prop" );
+void formatPropertySet( KTNEFPropertySet*, Q3ListView* );
+void saveProperty( Q3ListView*, KTNEFPropertySet*, QWidget* );
 QPixmap loadRenderingPixmap( KTNEFPropertySet*, const QColor& );
 
 #endif

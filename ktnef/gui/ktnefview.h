@@ -19,7 +19,10 @@
 #define	KTNEFWIDGET_H
 
 #include <klistview.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <QResizeEvent>
 #include <kdepimmacros.h>
 
 class KTNEFAttach;
@@ -32,18 +35,18 @@ public:
 	KTNEFView(QWidget *parent = 0, const char *name = 0);
 	~KTNEFView();
 
-	void setAttachments(QPtrList<KTNEFAttach> *list);
-	QPtrList<KTNEFAttach>* getSelection();
+	void setAttachments(Q3PtrList<KTNEFAttach> *list);
+	Q3PtrList<KTNEFAttach>* getSelection();
 
 signals:
-	void dragRequested( const QValueList<KTNEFAttach*>& list );
+	void dragRequested( const Q3ValueList<KTNEFAttach*>& list );
 
 protected:
 	void resizeEvent(QResizeEvent *e);
 	void startDrag();
 
 private:
-	QPtrList<KTNEFAttach>	attachments_;
+	Q3PtrList<KTNEFAttach>	attachments_;
 };
 
 #endif

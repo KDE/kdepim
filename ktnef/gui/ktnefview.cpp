@@ -19,8 +19,13 @@
 #include <ktnef/ktnefattach.h>
 #include "attachpropertydialog.h"
 
-#include <qheader.h>
+#include <q3header.h>
 #include <qpixmap.h>
+//Added by qt3to4:
+#include <Q3Frame>
+#include <Q3ValueList>
+#include <QResizeEvent>
+#include <Q3PtrList>
 
 #include <kapplication.h>
 #include <kiconloader.h>
@@ -29,10 +34,10 @@
 
 #include <kmimetype.h>
 
-class Attachment : public QListViewItem
+class Attachment : public Q3ListViewItem
 {
 public:
-	Attachment(QListView *parent, KTNEFAttach *attach);
+	Attachment(Q3ListView *parent, KTNEFAttach *attach);
 	~Attachment();
 
 	KTNEFAttach* getAttachment() const { return attach_; }
@@ -41,8 +46,8 @@ private:
 	KTNEFAttach	*attach_;
 };
 
-Attachment::Attachment(QListView *parent, KTNEFAttach *attach)
-	: QListViewItem(parent, attach->name()), attach_(attach)
+Attachment::Attachment(Q3ListView *parent, KTNEFAttach *attach)
+	: Q3ListViewItem(parent, attach->name()), attach_(attach)
 {
 	setText(2, QString::number( attach_->size() ));
 	if (!attach_->fileName().isEmpty()) setText(0, attach_->fileName());
@@ -69,23 +74,23 @@ KTNEFView::KTNEFView(QWidget *parent, const char *name)
 	addColumn(i18n("File Name"));
 	addColumn(i18n("File Type"));
 	addColumn(i18n("Size"));
-	setFrameStyle(QFrame::WinPanel|QFrame::Sunken);
+	setFrameStyle(Q3Frame::WinPanel|Q3Frame::Sunken);
 	setLineWidth(1);
-	setSelectionMode(QListView::Extended);
-	setHScrollBarMode(QScrollView::AlwaysOff);
-	setVScrollBarMode(QScrollView::AlwaysOn);
+	setSelectionMode(Q3ListView::Extended);
+	setHScrollBarMode(Q3ScrollView::AlwaysOff);
+	setVScrollBarMode(Q3ScrollView::AlwaysOn);
 }
 
 KTNEFView::~KTNEFView()
 {
 }
 
-void KTNEFView::setAttachments(QPtrList<KTNEFAttach> *list)
+void KTNEFView::setAttachments(Q3PtrList<KTNEFAttach> *list)
 {
 	clear();
 	if (list)
 	{
-		QPtrListIterator<KTNEFAttach>	it(*list);
+		Q3PtrListIterator<KTNEFAttach>	it(*list);
 		for (;it.current();++it)
 			new Attachment(this, it.current());
 	}
@@ -98,13 +103,13 @@ void KTNEFView::resizeEvent(QResizeEvent *e)
 	setColumnWidth(1,w/2);
 	setColumnWidth(2,w/2);
 	resizeContents(visibleWidth(),visibleHeight());
-	if (e) QListView::resizeEvent(e);
+	if (e) Q3ListView::resizeEvent(e);
 }
 
-QPtrList<KTNEFAttach>* KTNEFView::getSelection()
+Q3PtrList<KTNEFAttach>* KTNEFView::getSelection()
 {
 	attachments_.clear();
-	QListViewItem	*item = firstChild();
+	Q3ListViewItem	*item = firstChild();
 	while (item)
 	{
 		if (item->isSelected()) attachments_.append(((Attachment*)item)->getAttachment());
@@ -115,8 +120,8 @@ QPtrList<KTNEFAttach>* KTNEFView::getSelection()
 
 void KTNEFView::startDrag()
 {
-	QListViewItemIterator it( this, QListViewItemIterator::Selected );
-	QValueList<KTNEFAttach*> list;
+	Q3ListViewItemIterator it( this, Q3ListViewItemIterator::Selected );
+	Q3ValueList<KTNEFAttach*> list;
 	while ( it.current() )
 	{
 		list << static_cast<Attachment*>( it.current() )->getAttachment();
