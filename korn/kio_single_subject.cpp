@@ -39,7 +39,7 @@
 
 KIO_Single_Subject::KIO_Single_Subject( QObject * parent, const char * name,
 		    KURL &kurl, KIO::MetaData &metadata, const KIO_Protocol * protocol, KIO::Slave *& slave,
-		    const QString &url, const long size ) 
+		    const QString &url, const long size )
 		: QObject( parent, name )
 {
 	_kurl = new KURL( kurl );
@@ -48,7 +48,7 @@ KIO_Single_Subject::KIO_Single_Subject( QObject * parent, const char * name,
 	_name = new QString( url );
 	_size = size;
 	_message = new QString;
-	
+
 	init( slave );
 }
 
@@ -66,16 +66,16 @@ void KIO_Single_Subject::init( KIO::Slave *& slave)
 {
 	_job = KIO::get( *_kurl, false, false );
 	_job->addMetaData( *_metadata );
-	
+
 	connect( _job, SIGNAL( result( KIO::Job* ) ), this, SLOT( slotResult( KIO::Job* ) ) );
 	connect( _job, SIGNAL( data         (KIO::Job *, const QByteArray &) ),
 	         this, SLOT( slotData(KIO::Job *, const QByteArray &) ) );
-	
+
 	if( _protocol->connectionBased( ) && slave )
 		KIO::Scheduler::assignJobToSlave( slave , _job );
 	else
 		KIO::Scheduler::scheduleJob( _job );
-		 
+
 }
 
 void KIO_Single_Subject::parseMail( QString * message, KornMailSubject *subject, bool fullMessage )
@@ -86,7 +86,7 @@ void KIO_Single_Subject::parseMail( QString * message, KornMailSubject *subject,
 	QRegExp rx_sender_has_name1( "^[fF]rom:\\s*(\\w+[\\w\\s]*)\\<" ); //Ex: From: A name<email@domein.country>
 	QRegExp rx_sender_has_name2( "^[fF]rom:\\s*\\\"\\s*(\\w+[\\w\\s]*)\\\""); //Ex: From: "A name"<a@invalid>
 	QRegExp rx_subject( "^[sS]ubject: " ); //Ex: Subject: ...
-	QRegExp rx_date  ( "^[dD]ate:\\s*(\\w{3},\\s*)?(\\d+)\\s*(\\w{3})\\s*(\\d+)\\s*(\\d+):(\\d+):(\\d+)\\s*([+-])(\\d+)\\s*$");
+	QRegExp rx_date  ( "^[dD]ate: ");
 	bool inheader = true;
 	bool firstLine = true;
 	while ( ! stream.atEnd() )
@@ -94,10 +94,10 @@ void KIO_Single_Subject::parseMail( QString * message, KornMailSubject *subject,
 		line = stream.readLine();
 		if( line.isEmpty() && ! firstLine )
 			inheader = false;
-		
+
 		if( firstLine && !line.isEmpty() )
 			firstLine = false;
-	
+
 		if( inheader )
 		{
 			if( rx_sender.search( line ) == 0 )
@@ -111,8 +111,7 @@ void KIO_Single_Subject::parseMail( QString * message, KornMailSubject *subject,
 				subject->setSubject( line.remove( rx_subject ) );
 			else if( rx_date.search( line ) == 0 )
 			{
-				subject->setDate( KRFCDate::parseDate( line.right( line.length() - 6 )  ) +
-				                  KRFCDate::localUTCOffset() * 60 );
+                              subject->setDate( KRFCDate::parseDate( line.right( line.length() - 6 ) ) );
 			}
 		}
 	}
@@ -133,7 +132,7 @@ void KIO_Single_Subject::slotResult( KIO::Job *job )
 {
 	if( job != _job )
 		kdWarning() << i18n( "Got invalid job; something strange happened?" ) << endl;
-		
+
 	if( job->error() )
 	{
 		kdWarning() << i18n( "Error when fetching %1: %2" ).arg( *_name ).arg( job->errorString() ) << endl;
@@ -143,9 +142,9 @@ void KIO_Single_Subject::slotResult( KIO::Job *job )
 		mailSubject->setSize( _size );
 		emit readSubject( mailSubject );
 	}
-	
+
 	_job = 0;
-	
+
 	emit finished( this );
 }
 
