@@ -317,9 +317,17 @@ Q3CString Content::encodedContent(bool useCrLf)
 
     // add proper mime headers...
     if (convertNonMimeBinaries) {
-      h_ead.replace(QRegExp("MIME-Version: .*\\n"),"");
-      h_ead.replace(QRegExp("Content-Type: .*\\n"),"");
-      h_ead.replace(QRegExp("Content-Transfer-Encoding: .*\\n"),"");
+      int beg = 0, end = 0;
+      beg = h_ead.indexOf( "MIME-Version: " );
+      if ( beg >= 0 ) end = h_ead.indexOf( '\n', beg );
+      if ( beg >= 0 && end > beg ) h_ead.remove( beg, end - beg );
+      beg = h_ead.indexOf( "Content-Type: " );
+      if ( beg >= 0 ) end = h_ead.indexOf( '\n', beg );
+      if ( beg >= 0 && end > beg ) h_ead.remove( beg, end - beg );
+      beg = h_ead.indexOf( "Content-Transfer-Encoding: " );
+      if ( beg >= 0 ) end = h_ead.indexOf( '\n', beg );
+      if ( beg >= 0 && end > beg ) h_ead.remove( beg, end - beg );
+
       h_ead+="MIME-Version: 1.0\n";
       h_ead+=contentType(true)->as7BitString()+"\n";
       h_ead+=contentTransferEncoding(true)->as7BitString()+"\n";
@@ -655,7 +663,7 @@ void Content::toStream(QTextStream &ts, bool scrambleFromLines)
   Q3CString ret=encodedContent(false);
 
   if (scrambleFromLines)
-    ret.replace(QRegExp("\\n\\nFrom "), "\n\n>From ");
+    ret.replace( "\n\nFrom ", "\n\n>From ");
 
   ts << ret;
 }
@@ -686,8 +694,24 @@ Headers::Generic*  Content::getNextHeader(Q3CString &head)
 
     if (!folded)
       header = new Headers::Generic(head.left(pos1-2), this, head.mid(pos1, pos2-pos1));
-    else
-      header = new Headers::Generic(head.left(pos1-2), this, head.mid(pos1, pos2-pos1).replace(QRegExp("\\s*\\n\\s*")," "));
+    else {
+      QByteArray hdrValue = head.mid( pos1, pos2 - pos1 );
+      // unfold header
+      int beg = 0, mid = 0, end = 0;
+      while ( (mid = hdrValue.indexOf( '\n' )) >= 0 ) {
+        beg = end = mid;
+        while ( beg > 0 ) {
+          if ( !QChar( hdrValue[beg] ).isSpace() ) break;
+          --beg;
+        }
+        while ( end < hdrValue.length() - 1 ) {
+          if ( !QChar( hdrValue[end] ).isSpace() ) break;
+          ++end;
+        }
+        hdrValue.remove( beg, end - beg );
+      }
+      header = new Headers::Generic( head.left( pos1 - 2 ), this, hdrValue );
+    }
 
     head.remove(0,pos2+1);
   }

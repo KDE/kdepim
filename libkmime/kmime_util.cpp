@@ -391,8 +391,24 @@ Q3CString extractHeader(const Q3CString &src, const char *name)
 
     if (!folded)
       return src.mid(pos1, pos2-pos1);
-    else
-      return (src.mid(pos1, pos2-pos1).replace(QRegExp("\\s*\\n\\s*")," "));
+    else {
+      QByteArray hdrValue = src.mid( pos1, pos2 - pos1 );
+      // unfold header
+      int beg = 0, mid = 0, end = 0;
+      while ( (mid = hdrValue.indexOf( '\n' )) >= 0 ) {
+        beg = end = mid;
+        while ( beg > 0 ) {
+          if ( !QChar( hdrValue[beg] ).isSpace() ) break;
+          --beg;
+        }
+        while ( end < hdrValue.length() - 1 ) {
+          if ( !QChar( hdrValue[end] ).isSpace() ) break;
+          ++end;
+        }
+        hdrValue.remove( beg, end - beg );
+      }
+      return hdrValue; 
+    }
   }
   else {
     return Q3CString(0); //header not found
@@ -403,7 +419,7 @@ Q3CString extractHeader(const Q3CString &src, const char *name)
 Q3CString CRLFtoLF(const Q3CString &s)
 {
   Q3CString ret=s.copy();
-  ret.replace(QRegExp("\\r\\n"), "\n");
+  ret.replace( "\r\n", "\n" );
   return ret;
 }
 
@@ -411,7 +427,7 @@ Q3CString CRLFtoLF(const Q3CString &s)
 Q3CString CRLFtoLF(const char *s)
 {
   Q3CString ret=s;
-  ret.replace(QRegExp("\\r\\n"), "\n");
+  ret.replace( "\r\n", "\n");
   return ret;
 }
 
@@ -419,7 +435,7 @@ Q3CString CRLFtoLF(const char *s)
 Q3CString LFtoCRLF(const Q3CString &s)
 {
   Q3CString ret=s.copy();
-  ret.replace(QRegExp("\\n"), "\r\n");
+  ret.replace( "\n", "\r\n");
   return ret;
 }
 
