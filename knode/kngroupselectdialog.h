@@ -33,10 +33,10 @@ class KNGroupSelectDialog : public KNGroupBrowser {
 
   protected:
     void updateItemState(CheckItem *it);
-    QListView *selView;
+    Q3ListView *selView;
 
   protected slots:
-    void slotItemSelected(QListViewItem *it);
+    void slotItemSelected(Q3ListViewItem *it);
     /** deactivates the button when a root item is selected */
     void slotSelectionChanged();
     void slotArrowBtn1();

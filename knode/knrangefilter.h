@@ -17,7 +17,9 @@
 #ifndef KNRANGEFILTER_H
 #define KNRANGEFILTER_H
 
-#include <qgroupbox.h>
+#include <q3groupbox.h>
+//Added by qt3to4:
+#include <QLabel>
 
 class QLabel;
 class KIntSpinBox;
@@ -60,7 +62,7 @@ class KNRangeFilter {
 //==================================================================================
       
 
-class KNRangeFilterWidget : public QGroupBox {
+class KNRangeFilterWidget : public Q3GroupBox {
       
   Q_OBJECT
     

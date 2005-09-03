@@ -18,6 +18,8 @@
 #define KNSEARCHDIALOG_H
 
 #include <qdialog.h>
+//Added by qt3to4:
+#include <QCloseEvent>
 
 class QPushButton;
 

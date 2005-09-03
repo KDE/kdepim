@@ -20,12 +20,16 @@
 
 #include "knwidgets.h"
 #include "smtpaccountwidget_base.h"
+//Added by qt3to4:
+#include <QPixmap>
+#include <QLabel>
+#include <Q3ValueList>
 
-class QButtonGroup;
+class Q3ButtonGroup;
 class QCheckBox;
-class QGroupBox;
+class Q3GroupBox;
 class QRadioButton;
-class QTextEdit;
+class Q3TextEdit;
 
 class KScoringEditorWidget;
 class KConfigBase;
@@ -87,8 +91,8 @@ class KDE_EXPORT IdentityWidget : public KCModule {
     QCheckBox       *s_igGenerator;
     QPushButton     *c_hooseBtn,
                     *e_ditBtn;
-    QTextEdit       *s_igEditor;
-    QButtonGroup    *b_uttonGroup;
+    Q3TextEdit       *s_igEditor;
+    Q3ButtonGroup    *b_uttonGroup;
     Kpgp::SecretKeyRequester
                     *s_igningKey;
     KURLCompletion  *c_ompletion;
@@ -228,7 +232,7 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
     //===================================================================================
     // code taken from KMail, Copyright (C) 2000 Espen Sand, espen@kde.org
 
-    class KDE_EXPORT ColorListItem : public QListBoxText {
+    class KDE_EXPORT ColorListItem : public Q3ListBoxText {
 
       public:
         ColorListItem( const QString &text, const QColor &color=Qt::black );
@@ -238,8 +242,8 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
 
       protected:
         virtual void paint( QPainter * );
-        virtual int height( const QListBox * ) const;
-        virtual int width( const QListBox * ) const;
+        virtual int height( const Q3ListBox * ) const;
+        virtual int width( const Q3ListBox * ) const;
 
       private:
         QColor mColor;
@@ -247,7 +251,7 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
 
     //===================================================================================
 
-    class KDE_EXPORT FontListItem : public QListBoxText {
+    class KDE_EXPORT FontListItem : public Q3ListBoxText {
 
       public:
         FontListItem( const QString &name, const QFont & );
@@ -257,7 +261,7 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
 
       protected:
         virtual void paint( QPainter * );
-        virtual int width( const QListBox * ) const;
+        virtual int width( const Q3ListBox * ) const;
 
       private:
         QFont f_ont;
@@ -278,13 +282,13 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
   protected slots:
     //colors
     void slotColCheckBoxToggled(bool b);
-    void slotColItemSelected(QListBoxItem *);   // show color dialog for the entry
+    void slotColItemSelected(Q3ListBoxItem *);   // show color dialog for the entry
     void slotColChangeBtnClicked();
     void slotColSelectionChanged();
 
     //fonts
     void slotFontCheckBoxToggled(bool b);
-    void slotFontItemSelected(QListBoxItem *);  // show font dialog for the entry
+    void slotFontItemSelected(Q3ListBoxItem *);  // show font dialog for the entry
     void slotFontChangeBtnClicked();
     void slotFontSelectionChanged();
 
@@ -380,10 +384,10 @@ class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
 
   protected:
 
-     class HdrItem : public QListBoxText {
+     class HdrItem : public Q3ListBoxText {
 
       public:
-        HdrItem( const QString &t, KNDisplayedHeader *h ) : QListBoxText(t), hdr(h) {}
+        HdrItem( const QString &t, KNDisplayedHeader *h ) : Q3ListBoxText(t), hdr(h) {}
         ~HdrItem() {}
 
         KNDisplayedHeader *hdr;
@@ -473,7 +477,7 @@ class KDE_EXPORT FilterListWidget : public KCModule {
     void updateItem(KNArticleFilter *f);
     void addMenuItem(KNArticleFilter *f);
     void removeMenuItem(KNArticleFilter *f);
-    QValueList<int> menuOrder();
+    Q3ValueList<int> menuOrder();
 
 
   protected:
@@ -486,7 +490,7 @@ class KDE_EXPORT FilterListWidget : public KCModule {
         KNArticleFilter *filter;
     };
 
-    int findItem(QListBox *l, KNArticleFilter *f);
+    int findItem(Q3ListBox *l, KNArticleFilter *f);
 
     KNDialogListBox *f_lb,
                     *m_lb;
@@ -655,7 +659,7 @@ class KDE_EXPORT GroupCleanupWidget : public QWidget {
   private:
     QCheckBox *mDefault, *mExpEnabled, *mExpUnavailable, *mPreserveThreads;
     KIntSpinBox *mExpDays, *mExpReadDays, *mExpUnreadDays;
-    QGroupBox *mExpGroup;
+    Q3GroupBox *mExpGroup;
     Cleanup *mData;
 
   private slots:

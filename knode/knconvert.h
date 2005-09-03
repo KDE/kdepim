@@ -20,12 +20,14 @@
 #include <qdialog.h>
 
 #include <qglobal.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
+//Added by qt3to4:
+#include <QLabel>
 #include <kdepimmacros.h>
 
-class QListBox;
+class Q3ListBox;
 class QLabel;
-class QWidgetStack;
+class Q3WidgetStack;
 class QCheckBox;
 
 class KLineEdit;
@@ -93,7 +95,7 @@ class KDE_EXPORT KNConvert : public QDialog {
 
     //------------ </Converter-classes> --------------
 
-    QWidgetStack  *s_tack;
+    Q3WidgetStack  *s_tack;
     QWidget       *w_1,
                   *w_3;
     QCheckBox     *c_reateBkup;
@@ -104,9 +106,9 @@ class KDE_EXPORT KNConvert : public QDialog {
     QPushButton   *b_rowseBtn,
                   *s_tartBtn,
                   *c_ancelBtn;
-    QListBox      *l_ogList;
+    Q3ListBox      *l_ogList;
 
-    QValueList<Converter*> mConverters;
+    Q3ValueList<Converter*> mConverters;
     QStringList l_og;
     bool c_onversionDone;
     QString v_ersion;

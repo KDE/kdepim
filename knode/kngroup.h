@@ -20,8 +20,11 @@
 #include "knarticlecollection.h"
 #include "knjobdata.h"
 #include "knarticle.h"
+//Added by qt3to4:
+#include <Q3StrList>
+#include <Q3CString>
 
-class QStrList;
+class Q3StrList;
 
 class KNProtocolClient;
 class KNNntpAccount;
@@ -88,12 +91,12 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     /** article access */
     KNRemoteArticle* at(int i)          { return static_cast<KNRemoteArticle*> (KNArticleCollection::at(i)); }
     KNRemoteArticle* byId(int id)       { return static_cast<KNRemoteArticle*> (KNArticleCollection::byId(id)); }
-    KNRemoteArticle* byMessageId(const QCString &mId)
+    KNRemoteArticle* byMessageId(const Q3CString &mId)
                                         { return static_cast<KNRemoteArticle*> (KNArticleCollection::byMessageId(mId)); }
     /** load + save */
     bool loadHdrs();
     bool unloadHdrs(bool force=true);
-    void insortNewHeaders(QStrList *hdrs, QStrList *hdrfmt, KNProtocolClient *client=0);
+    void insortNewHeaders(Q3StrList *hdrs, Q3StrList *hdrfmt, KNProtocolClient *client=0);
     int saveStaticData(int cnt,bool ovr=false);
     void saveDynamicData(int cnt,bool ovr=false);
     void syncDynamicData();
@@ -114,8 +117,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     QString prepareForExecution();
 
     /** charset-handling */
-    const QCString defaultCharset()           { return d_efaultChSet; }
-    void setDefaultCharset(const QCString &s) { d_efaultChSet=s; }
+    const Q3CString defaultCharset()           { return d_efaultChSet; }
+    void setDefaultCharset(const Q3CString &s) { d_efaultChSet=s; }
     bool useCharset()                         { return ( u_seCharset && !d_efaultChSet.isEmpty() ); }
     void setUseCharset(bool b)                { u_seCharset=b; }
 
@@ -146,7 +149,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
               d_ynDataFormat,
               f_irstNew;
 
-    QCString  d_efaultChSet;
+    Q3CString  d_efaultChSet;
     QString   g_roupname,
               d_escription;
 
@@ -160,7 +163,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     /** Optional headers provided by the XOVER command
      *  These headers will be saved within the static data
      */
-    QStrList mOptionalHeaders;
+    Q3StrList mOptionalHeaders;
 
     KNConfig::Identity *i_dentity;
     KNConfig::Cleanup *mCleanupConf;

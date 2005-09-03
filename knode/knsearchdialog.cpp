@@ -16,6 +16,10 @@
 
 #include <qlayout.h>
 #include <qcheckbox.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QCloseEvent>
 
 #include <klocale.h>
 #include <kapplication.h>
@@ -34,7 +38,7 @@ KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
 {
   setCaption(kapp->makeStdCaption( i18n("Search for Articles") ));
   setIcon(SmallIcon("knode"));
-  QGroupBox *bg=new QGroupBox(this);
+  Q3GroupBox *bg=new Q3GroupBox(this);
 
   startBtn=new QPushButton(SmallIcon("mail_find"),i18n("Sea&rch"), bg);
   startBtn->setDefault(true);

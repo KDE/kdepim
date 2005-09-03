@@ -40,6 +40,9 @@
 #include "knarticlewindow.h"
 #include "knfoldermanager.h"
 #include "headerview.h"
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 
 using namespace KNode;
 
@@ -66,7 +69,7 @@ KNArticleManager::~KNArticleManager()
 
 void KNArticleManager::deleteTempFiles()
 {
-  for ( QValueList<KTempFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
+  for ( Q3ValueList<KTempFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
     (*it)->unlink();
     delete (*it);
   }
@@ -105,7 +108,7 @@ void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
   QFile *file = helper.getFile(i18n("Save Article"));
 
   if (file) {
-    QCString tmp=a->encodedContent(false);
+    Q3CString tmp=a->encodedContent(false);
     if ( file->writeBlock(tmp.data(), tmp.size()) == -1 )
       KNHelper::displayExternalFileError( parent );
   }
@@ -123,7 +126,7 @@ QString KNArticleManager::saveContentToTemp(KMime::Content *c)
     bool found=false;
 
     // lets see if the tempfile-path is still valid...
-    for ( QValueList<KTempFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
+    for ( Q3ValueList<KTempFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
       if ( (*it)->name() == path ) {
         found = true;
         break;
@@ -664,7 +667,7 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
       KNGroup *targetGroup=0;
       KNRemoteArticle *xp=0;
       KNRemoteArticle::List al;
-      QCString mid = (*it)->messageID()->as7BitString( false );
+      Q3CString mid = (*it)->messageID()->as7BitString( false );
 
       for ( QStringList::Iterator it2 = groups.begin(); it2 != groups.end(); ++it2 ) {
         targetGroup = knGlobals.groupManager()->group(*it2, g->account());
@@ -1028,7 +1031,7 @@ void KNArticleManager::slotSearchDialogDone()
 }
 
 
-void KNArticleManager::slotItemExpanded(QListViewItem *p)
+void KNArticleManager::slotItemExpanded(Q3ListViewItem *p)
 {
   if (d_isableExpander)  // we don't want to call this method recursively
     return;
@@ -1081,8 +1084,8 @@ void KNArticleManager::slotItemExpanded(QListViewItem *p)
 void KNArticleManager::setView(KNHeaderView* v) {
   v_iew = v;
   if(v) {
-    connect(v, SIGNAL(expanded(QListViewItem*)), this,
-      SLOT(slotItemExpanded(QListViewItem*)));
+    connect(v, SIGNAL(expanded(Q3ListViewItem*)), this,
+      SLOT(slotItemExpanded(Q3ListViewItem*)));
   }
 }
 

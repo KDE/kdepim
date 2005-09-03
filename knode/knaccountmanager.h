@@ -16,7 +16,7 @@
 #define KNACCOUNTMANAGER_H
 
 #include <qglobal.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 namespace KWallet {
   class Wallet;
@@ -49,8 +49,8 @@ class KNAccountManager : public QObject
     KNServerInfo* smtp() const                 { return s_mtp; }
     /** Returns the account with the given id. */
     KNNntpAccount* account( int id );
-    QValueList<KNNntpAccount*>::Iterator begin() { return mAccounts.begin(); }
-    QValueList<KNNntpAccount*>::Iterator end()  { return mAccounts.end(); }
+    Q3ValueList<KNNntpAccount*>::Iterator begin() { return mAccounts.begin(); }
+    Q3ValueList<KNNntpAccount*>::Iterator end()  { return mAccounts.end(); }
     /** Returns the first account (used as fallback sometimes). */
     KNNntpAccount* first() const;
 
@@ -83,7 +83,7 @@ class KNAccountManager : public QObject
     static void prepareWallet();
 
   private:
-    QValueList<KNNntpAccount*> mAccounts;
+    Q3ValueList<KNNntpAccount*> mAccounts;
     static KWallet::Wallet *mWallet;
     static bool mWalletOpenFailed;
     bool mAsyncOpening;

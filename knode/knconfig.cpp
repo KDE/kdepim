@@ -17,6 +17,11 @@
 #include <stdlib.h>
 
 #include <qtextcodec.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <Q3ValueList>
+#include <QTextStream>
+#include <Q3CString>
 
 #include <ksimpleconfig.h>
 #include <kmessagebox.h>
@@ -119,7 +124,7 @@ QString KNConfig::Identity::getSignature()
     if(!s_igPath.isEmpty()) {
       if (!u_seSigGenerator) {
         QFile f(s_igPath);
-        if(f.open(IO_ReadOnly)) {
+        if(f.open(QIODevice::ReadOnly)) {
           QTextStream ts(&f);
           while(!ts.atEnd()) {
             s_igContents += ts.readLine();
@@ -704,7 +709,7 @@ KNConfig::DisplayedHeaders::DisplayedHeaders()
     headers.sort();
 
     KNDisplayedHeader *h;
-    QValueList<int> flags;
+    Q3ValueList<int> flags;
 
     QStringList::Iterator it;
     for( it = headers.begin(); it != headers.end(); ++it ) {
@@ -730,7 +735,7 @@ KNConfig::DisplayedHeaders::DisplayedHeaders()
 
 KNConfig::DisplayedHeaders::~DisplayedHeaders()
 {
-  for ( QValueList<KNDisplayedHeader*>::Iterator it = mHeaderList.begin(); it != mHeaderList.end(); ++it )
+  for ( Q3ValueList<KNDisplayedHeader*>::Iterator it = mHeaderList.begin(); it != mHeaderList.end(); ++it )
     delete (*it);
 }
 
@@ -754,11 +759,11 @@ void KNConfig::DisplayedHeaders::save()
   for( ;oldIt != oldHeaders.end(); ++oldIt )      // remove all old groups
     headerConf.deleteGroup((*oldIt));             // find a better way to do it?
 
-  QValueList<int> flags;
+  Q3ValueList<int> flags;
   int idx=0;
   QString group;
 
-  for ( QValueList<KNDisplayedHeader*>::Iterator it = mHeaderList.begin(); it != mHeaderList.end(); ++it ) {
+  for ( Q3ValueList<KNDisplayedHeader*>::Iterator it = mHeaderList.begin(); it != mHeaderList.end(); ++it ) {
     group.setNum(idx++);
     while (group.length()<3)
       group.prepend("0");
@@ -890,7 +895,7 @@ KNConfig::PostNewsTechnical::PostNewsTechnical()
 
   c_harset=conf->readEntry("Charset").latin1();
   if (c_harset.isEmpty()) {
-    QCString localeCharset(QTextCodec::codecForLocale()->mimeName());
+    Q3CString localeCharset(QTextCodec::codecForLocale()->mimeName());
 
     // special logic for japanese users:
     // "euc-jp" is default encoding for them, but in the news
@@ -913,7 +918,7 @@ KNConfig::PostNewsTechnical::PostNewsTechnical()
   QString dir(locateLocal("data","knode/"));
   if (!dir.isNull()) {
     QFile f(dir+"xheaders");
-    if(f.open(IO_ReadOnly)) {
+    if(f.open(QIODevice::ReadOnly)) {
       QTextStream ts(&f);
       while(!ts.eof())
         x_headers.append( XHeader(ts.readLine()) );
@@ -953,7 +958,7 @@ void KNConfig::PostNewsTechnical::save()
     KNHelper::displayInternalFileError();
   else {
     QFile f(dir+"xheaders");
-    if(f.open(IO_WriteOnly)) {
+    if(f.open(QIODevice::WriteOnly)) {
       QTextStream ts(&f);
       XHeaders::Iterator it;
       for(it=x_headers.begin(); it!=x_headers.end(); ++it)
@@ -968,7 +973,7 @@ void KNConfig::PostNewsTechnical::save()
 }
 
 
-int KNConfig::PostNewsTechnical::indexForCharset(const QCString &str)
+int KNConfig::PostNewsTechnical::indexForCharset(const Q3CString &str)
 {
   int i=0;
   bool found=false;
@@ -995,13 +1000,13 @@ int KNConfig::PostNewsTechnical::indexForCharset(const QCString &str)
 }
 
 
-QCString KNConfig::PostNewsTechnical::findComposerCharset(QCString cs)
+Q3CString KNConfig::PostNewsTechnical::findComposerCharset(Q3CString cs)
 {
-  QCString *ret=findComposerCSCache.find(cs);
+  Q3CString *ret=findComposerCSCache.find(cs);
   if (ret)
     return *ret;
 
-  QCString s;
+  Q3CString s;
 
   QStringList::Iterator it;
   for( it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
@@ -1031,7 +1036,7 @@ QCString KNConfig::PostNewsTechnical::findComposerCharset(QCString cs)
   if (s.isEmpty())
     s = "us-ascii";
 
-  findComposerCSCache.insert(cs, new QCString(s));
+  findComposerCSCache.insert(cs, new Q3CString(s));
 
   return s;
 }

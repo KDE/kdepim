@@ -13,9 +13,16 @@
 */
 
 #include <qlayout.h>
-#include <qwidgetstack.h>
+#include <q3widgetstack.h>
 #include <qlabel.h>
 #include <qcheckbox.h>
+//Added by qt3to4:
+#include <Q3CString>
+#include <QTextStream>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <Q3ValueList>
+#include <QVBoxLayout>
 
 #include <klocale.h>
 #include <kfiledialog.h>
@@ -49,7 +56,7 @@ KNConvert::KNConvert(const QString &version)
 {
   setCaption(kapp->makeStdCaption(i18n("Conversion")));
   QVBoxLayout *topL=new QVBoxLayout(this, 5,5);
-  s_tack=new QWidgetStack(this);
+  s_tack=new Q3WidgetStack(this);
   topL->addWidget(s_tack, 1);
   topL->addWidget(new KSeparator(this));
 
@@ -96,7 +103,7 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
 
   w_2=new QLabel(s_tack);
   w_2->setText(i18n("<b>Converting, please wait...</b>"));
-  w_2->setAlignment(AlignCenter);
+  w_2->setAlignment(Qt::AlignCenter);
   s_tack->addWidget(w_2, 2);
 
   w_3=new QWidget(s_tack);
@@ -106,7 +113,7 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
   r_esultLabel=new QLabel(w_3);
   w3L->addWidget(r_esultLabel);
   QLabel *l2=new QLabel(i18n("Processed tasks:"), w_3);
-  l_ogList=new QListBox(w_3);
+  l_ogList=new Q3ListBox(w_3);
   w3L->addSpacing(15);
   w3L->addWidget(l2);
   w3L->addWidget(l_ogList, 1);
@@ -118,7 +125,7 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
 
 KNConvert::~KNConvert()
 {
-  for ( QValueList<Converter*>::Iterator it = mConverters.begin(); it != mConverters.end(); ++it )
+  for ( Q3ValueList<Converter*>::Iterator it = mConverters.begin(); it != mConverters.end(); ++it )
     delete (*it);
 }
 
@@ -126,7 +133,7 @@ KNConvert::~KNConvert()
 void KNConvert::convert()
 {
   int errors=0;
-  for ( QValueList<Converter*>::Iterator it = mConverters.begin(); it != mConverters.end(); ++it )
+  for ( Q3ValueList<Converter*>::Iterator it = mConverters.begin(); it != mConverters.end(); ++it )
     if( !(*it)->doConvert() )
       errors++;
 
@@ -308,11 +315,11 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
   bool filesOpen;
 
   //open files
-  filesOpen=srcMBox.open(IO_ReadOnly);
-  filesOpen=filesOpen && srcIdx.open(IO_ReadOnly);
+  filesOpen=srcMBox.open(QIODevice::ReadOnly);
+  filesOpen=filesOpen && srcIdx.open(QIODevice::ReadOnly);
 
   if(dstIdx.exists() && dstIdx.size()>0) { //we are converting from 0.4beta*
-    if( (filesOpen=filesOpen && dstIdx.open(IO_ReadOnly)) ) {
+    if( (filesOpen=filesOpen && dstIdx.open(QIODevice::ReadOnly)) ) {
       dstIdx.at( dstIdx.size()-sizeof(NewFolderIndex) ); //set filepointer to last entry
       dstIdx.readBlock( (char*)(&newIdx), sizeof(NewFolderIndex) );
       lastId=newIdx.id;
@@ -320,8 +327,8 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
     }
   }
 
-  filesOpen=filesOpen && dstMBox.open(IO_WriteOnly | IO_Append);
-  filesOpen=filesOpen && dstIdx.open(IO_WriteOnly | IO_Append);
+  filesOpen=filesOpen && dstMBox.open(QIODevice::WriteOnly | QIODevice::Append);
+  filesOpen=filesOpen && dstIdx.open(QIODevice::WriteOnly | QIODevice::Append);
 
   if(!filesOpen) {
     srcMBox.close();
@@ -399,7 +406,7 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
 
     //read mbox-data
     unsigned int size=oldIdx.eo-oldIdx.so;
-    QCString buff(size+10);
+    Q3CString buff(size+10);
     srcMBox.at(oldIdx.so);
     int readBytes=srcMBox.readBlock(buff.data(), size);
     buff.at(readBytes)='\0'; //terminate string;

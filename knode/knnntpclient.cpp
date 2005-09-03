@@ -18,6 +18,9 @@
 #include <klocale.h>
 #include <qtextcodec.h>
 #include <qmutex.h>
+//Added by qt3to4:
+#include <Q3StrList>
+#include <Q3CString>
 
 #include "kngroupmanager.h"
 #include "knnntpclient.h"
@@ -221,7 +224,7 @@ void KNNntpClient::doCheckNewGroups()
   progressValue = 100;
   predictedLines = 30;     // rule of thumb ;-)
 
-  QCString cmd;
+  Q3CString cmd;
   cmd.sprintf("NEWGROUPS %.2d%.2d%.2d 000000",target->fetchSince.year()%100,target->fetchSince.month(),target->fetchSince.day());
   if (!sendCommandWCheck(cmd,231))      // 231 list of new newsgroups follows
     return;
@@ -229,7 +232,7 @@ void KNNntpClient::doCheckNewGroups()
   char *s, *line;
   QString name;
   KNGroup::Status status;
-  QSortedList<KNGroupInfo> tmpList;
+  Q3SortedList<KNGroupInfo> tmpList;
   tmpList.setAutoDelete(true);
 
   while (getNextLine()) {
@@ -279,7 +282,7 @@ void KNNntpClient::doCheckNewGroups()
     sendSignal(TSprogressUpdate);
 
     cmd = "LIST NEWSGROUPS ";
-    QStrList desList;
+    Q3StrList desList;
     char *s;
     int rep;
 
@@ -330,7 +333,7 @@ void KNNntpClient::doFetchNewHeaders()
   KNGroup* target=static_cast<KNGroup*>(job->data());
   char* s;
   int first=0, last=0, oldlast=0, toFetch=0, rep=0;
-  QCString cmd;
+  Q3CString cmd;
 
   target->setLastFetchCount(0);
 
@@ -396,12 +399,12 @@ void KNNntpClient::doFetchNewHeaders()
 
   // get list of additional headers provided by the XOVER command
   // see RFC 2980 section 2.1.7
-  QStrList headerformat;
+  Q3StrList headerformat;
   cmd = "LIST OVERVIEW.FMT";
   if ( sendCommand( cmd, rep ) && rep == 215 ) {
-    QStrList tmp;
+    Q3StrList tmp;
     if (getMsg(tmp)) {
-      for(QCString s = tmp.first(); s; s = tmp.next()) {
+      for(Q3CString s = tmp.first(); s; s = tmp.next()) {
         s = s.stripWhiteSpace();
         // remove the mandatory xover header
         if (s == "Subject:" || s == "From:" || s == "Date:" || s == "Message-ID:"
@@ -427,7 +430,7 @@ void KNNntpClient::doFetchNewHeaders()
     return;
   }
 
-  QStrList headers;
+  Q3StrList headers;
   if (!getMsg(headers)) {
     return;
   }
@@ -447,7 +450,7 @@ void KNNntpClient::doFetchNewHeaders()
 void KNNntpClient::doFetchArticle()
 {
   KNRemoteArticle *target = static_cast<KNRemoteArticle*>(job->data());
-  QCString cmd;
+  Q3CString cmd;
 
   sendSignal(TSdownloadArticle);
   errorPrefix = i18n("Article could not be retrieved.\nThe following error occurred:\n");
@@ -487,7 +490,7 @@ void KNNntpClient::doFetchArticle()
     return;
   }
 
-  QStrList msg;
+  Q3StrList msg;
   if (!getMsg(msg))
     return;
 
@@ -507,7 +510,7 @@ void KNNntpClient::doPostArticle()
 
   if (art->messageID(false)!=0) {
     int rep;
-    if (!sendCommand(QCString("STAT ")+art->messageID(false)->as7BitString(false),rep))
+    if (!sendCommand(Q3CString("STAT ")+art->messageID(false)->as7BitString(false),rep))
       return;
 
     if (rep==223) {   // 223 n <a> article retrieved - request text separately
@@ -522,7 +525,7 @@ void KNNntpClient::doPostArticle()
     return;
 
   if (art->messageID(false)==0) {  // article has no message ID => search for a ID in the response
-    QCString s = getCurrentLine();
+    Q3CString s = getCurrentLine();
     int start = s.findRev(QRegExp("<[^\\s]*@[^\\s]*>"));
     if (start != -1) {        // post response includes a recommended id
       int end = s.find('>',start);
@@ -552,11 +555,11 @@ void KNNntpClient::doFetchSource()
   progressValue = 100;
   predictedLines = target->lines()->numberOfLines()+10;
 
-  QCString cmd = "ARTICLE " + target->messageID()->as7BitString(false);
+  Q3CString cmd = "ARTICLE " + target->messageID()->as7BitString(false);
   if (!sendCommandWCheck(cmd,220))      // 220 n <a> article retrieved - head and body follow
     return;
 
-  QStrList msg;
+  Q3StrList msg;
   if (!getMsg(msg))
     return;
 
@@ -609,7 +612,7 @@ bool KNNntpClient::openConnection()
   if (account.needsLogon() && !account.user().isEmpty()) {
     //qDebug("knode: user: %s",account.user().latin1());
 
-    QCString command = "AUTHINFO USER ";
+    Q3CString command = "AUTHINFO USER ";
     command += account.user().local8Bit();
     if (!KNProtocolClient::sendCommand(command,rep))
       return false;
@@ -669,7 +672,7 @@ bool KNNntpClient::openConnection()
 
 
 // authentication on demand
-bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
+bool KNNntpClient::sendCommand(const Q3CString &cmd, int &rep)
 {
   if (!KNProtocolClient::sendCommand(cmd,rep))
     return false;
@@ -686,7 +689,7 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
 
     //qDebug("knode: user: %s",account.user().data());
 
-    QCString command = "AUTHINFO USER ";
+    Q3CString command = "AUTHINFO USER ";
     command += account.user().local8Bit();
     if (!KNProtocolClient::sendCommand(command,rep))
       return false;

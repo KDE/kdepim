@@ -17,8 +17,13 @@
 #ifndef KNWIDGETS_H
 #define KNWIDGETS_H
 
-#include <qlistbox.h>
+#include <q3listbox.h>
 #include <qbitarray.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QFocusEvent>
+#include <QKeyEvent>
+#include <QPaintEvent>
 
 #include <kdockwidget.h>
 #include <kprogress.h>
@@ -29,7 +34,7 @@ class QPixmap;
 //====================================================================================
 
 
-class KNListBoxItem : public QListBoxItem  {
+class KNListBoxItem : public Q3ListBoxItem  {
 
   public:
     KNListBoxItem(const QString& text, QPixmap *pm=0);
@@ -38,8 +43,8 @@ class KNListBoxItem : public QListBoxItem  {
 
   protected:
     virtual void paint(QPainter *);
-    virtual int height(const QListBox *) const;
-    virtual int width(const QListBox *) const;
+    virtual int height(const Q3ListBox *) const;
+    virtual int width(const Q3ListBox *) const;
 
     QPixmap *p_m;
 };
@@ -49,7 +54,7 @@ class KNListBoxItem : public QListBoxItem  {
 
 
 /** a list box which ignores Enter, useful for dialogs */
-class KNDialogListBox : public QListBox
+class KNDialogListBox : public Q3ListBox
 {
    public:
     // alwaysIgnore==false: enter is ignored when the widget isn't visible/out of focus

@@ -18,6 +18,8 @@
 #define KNCOLLECTIONVIEWITEM_H
 
 #include <kfoldertree.h>
+//Added by qt3to4:
+#include <QDropEvent>
 
 class QPainter;
 class QColorGroup;
@@ -36,7 +38,7 @@ class KNCollectionViewItem : public KFolderTreeItem  {
     void paintCell( QPainter * p, const QColorGroup & cg,
                     int column, int width, int align );
 
-    int compare(QListViewItem *i, int col, bool ascending) const;
+    int compare(Q3ListViewItem *i, int col, bool ascending) const;
 
     // DND
     virtual bool acceptDrag(QDropEvent* event) const;

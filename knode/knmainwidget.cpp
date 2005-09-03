@@ -13,8 +13,16 @@
 */
 #include "knmainwidget.h"
 
-#include <qhbox.h>
+#include <q3hbox.h>
 #include <qlayout.h>
+//Added by qt3to4:
+#include <QEvent>
+#include <QDropEvent>
+#include <QLabel>
+#include <Q3ValueList>
+#include <QShowEvent>
+#include <QVBoxLayout>
+#include <Q3PopupMenu>
 #include <ktoolbar.h>
 
 #include <kinputdialog.h>
@@ -84,7 +92,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   //------------------------------- </CONFIG> ----------------------------------
 
   //-------------------------------- <GUI> ------------------------------------
-  QAccel *accel = new QAccel( this );
+  Q3Accel *accel = new Q3Accel( this );
   initStatusBar();
 
   //setup splitter behavior
@@ -126,19 +134,19 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   connect(c_olDock, SIGNAL(iMBeingClosed()), SLOT(slotGroupDockHidden()));
   connect(c_olDock, SIGNAL(hasUndocked()), SLOT(slotGroupDockHidden()));
   connect(c_olView, SIGNAL(focusChangeRequest(QWidget *)), SLOT(slotDockWidgetFocusChangeRequest(QWidget *)));
-  connect(c_olView, SIGNAL(selectionChanged(QListViewItem*)),
-          SLOT(slotCollectionSelected(QListViewItem*)));
-  connect(c_olView, SIGNAL(contextMenu(KListView*, QListViewItem*, const QPoint&)),
-          SLOT(slotCollectionRMB(KListView*, QListViewItem*, const QPoint&)));
+  connect(c_olView, SIGNAL(selectionChanged(Q3ListViewItem*)),
+          SLOT(slotCollectionSelected(Q3ListViewItem*)));
+  connect(c_olView, SIGNAL(contextMenu(KListView*, Q3ListViewItem*, const QPoint&)),
+          SLOT(slotCollectionRMB(KListView*, Q3ListViewItem*, const QPoint&)));
   connect(c_olView, SIGNAL(folderDrop(QDropEvent*, KNCollectionViewItem*)),
           SLOT(slotCollectionViewDrop(QDropEvent*, KNCollectionViewItem*)));
-  connect(c_olView, SIGNAL(itemRenamed(QListViewItem*)),
-          SLOT(slotCollectionRenamed(QListViewItem*)));
+  connect(c_olView, SIGNAL(itemRenamed(Q3ListViewItem*)),
+          SLOT(slotCollectionRenamed(Q3ListViewItem*)));
 
-  accel->connectItem( accel->insertItem(Key_Up), mArticleViewer, SLOT(scrollUp()) );
-  accel->connectItem( accel->insertItem(Key_Down), mArticleViewer, SLOT(scrollDown()) );
-  accel->connectItem( accel->insertItem(Key_Prior), mArticleViewer, SLOT(scrollPrior()) );
-  accel->connectItem( accel->insertItem(Key_Next), mArticleViewer, SLOT(scrollNext()) );
+  accel->connectItem( accel->insertItem(Qt::Key_Up), mArticleViewer, SLOT(scrollUp()) );
+  accel->connectItem( accel->insertItem(Qt::Key_Down), mArticleViewer, SLOT(scrollDown()) );
+  accel->connectItem( accel->insertItem(Qt::Key_PageUp), mArticleViewer, SLOT(scrollPrior()) );
+  accel->connectItem( accel->insertItem(Qt::Key_PageDown), mArticleViewer, SLOT(scrollNext()) );
 
   //header view
   h_drDock = createDockWidget("header_view", SmallIcon("text_block"), 0,
@@ -180,14 +188,14 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   connect(h_drDock, SIGNAL(hasUndocked()), SLOT(slotHeaderDockHidden()));
   connect(h_drView, SIGNAL(focusChangeRequest(QWidget *)),
           SLOT(slotDockWidgetFocusChangeRequest(QWidget *)));
-  connect(h_drView, SIGNAL(itemSelected(QListViewItem*)),
-          SLOT(slotArticleSelected(QListViewItem*)));
+  connect(h_drView, SIGNAL(itemSelected(Q3ListViewItem*)),
+          SLOT(slotArticleSelected(Q3ListViewItem*)));
   connect(h_drView, SIGNAL(selectionChanged()),
           SLOT(slotArticleSelectionChanged()));
-  connect(h_drView, SIGNAL(contextMenu(KListView*, QListViewItem*, const QPoint&)),
-          SLOT(slotArticleRMB(KListView*, QListViewItem*, const QPoint&)));
-  connect(h_drView, SIGNAL(doubleClick(QListViewItem *)),
-          SLOT(slotOpenArticle(QListViewItem *)));
+  connect(h_drView, SIGNAL(contextMenu(KListView*, Q3ListViewItem*, const QPoint&)),
+          SLOT(slotArticleRMB(KListView*, Q3ListViewItem*, const QPoint&)));
+  connect(h_drView, SIGNAL(doubleClick(Q3ListViewItem *)),
+          SLOT(slotOpenArticle(Q3ListViewItem *)));
   connect(h_drView, SIGNAL(sortingChanged(int)),
           SLOT(slotHdrViewSortingChanged(int)));
 
@@ -245,7 +253,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
 
   // set the keyboard focus indicator on the first item in the Collection View
   if( c_olView->firstChild() ) {
-    QListViewItem *i = c_olView->firstChild();
+    Q3ListViewItem *i = c_olView->firstChild();
     bool open = i->isOpen();
     c_olView->setActive( i );
     i->setOpen( open );
@@ -308,9 +316,9 @@ void KNMainWidget::initStatusBar()
   KMainWindow *mainWin = dynamic_cast<KMainWindow*>(topLevelWidget());
   KStatusBar *sb =  mainWin ? mainWin->statusBar() : 0;
   s_tatusFilter = new KRSqueezedTextLabel( QString::null, sb );
-  s_tatusFilter->setAlignment( AlignLeft | AlignVCenter );
+  s_tatusFilter->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
   s_tatusGroup = new KRSqueezedTextLabel( QString::null, sb );
-  s_tatusGroup->setAlignment( AlignLeft | AlignVCenter );
+  s_tatusGroup->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
 }
 
 //================================== GUI =================================
@@ -366,7 +374,7 @@ void KNMainWidget::updateCaption()
 
 void KNMainWidget::setCursorBusy(bool b)
 {
-  if(b) KApplication::setOverrideCursor(waitCursor);
+  if(b) KApplication::setOverrideCursor(Qt::WaitCursor);
   else  KApplication::restoreOverrideCursor();
 }
 
@@ -446,7 +454,7 @@ void KNMainWidget::openURL(const KURL &url)
   if (url.url().left(7) == "news://") {
 
     // lets see if we already have an account for this host...
-    QValueList<KNNntpAccount*>::Iterator it;
+    Q3ValueList<KNNntpAccount*>::Iterator it;
     for ( it = a_ccManager->begin(); it != a_ccManager->end(); ++it ) {
       if ( (*it)->server().lower() == host.lower() && ( port==0 || (*it)->port() == port ) ) {
         acc = *it;
@@ -490,7 +498,7 @@ void KNMainWidget::openURL(const KURL &url)
       QString groupname=url.path(-1);
       while(groupname.startsWith("/"))
         groupname.remove(0,1);
-      QListViewItem *item=0;
+      Q3ListViewItem *item=0;
       if(groupname.isEmpty())
         item=acc->listItem();
       else {
@@ -555,43 +563,43 @@ void KNMainWidget::initActions()
   a_ctNavPrevArt            = new KAction( KGuiItem(i18n("&Previous Article"), "previous",
                               i18n("Go to previous article")), "P;Left" , h_drView,
                               SLOT(prevArticle()), actionCollection(), "go_prevArticle" );
-  a_ctNavNextUnreadArt      = new KAction(i18n("Next Unread &Article"), "1rightarrow", ALT+SHIFT+Key_Space , this,
+  a_ctNavNextUnreadArt      = new KAction(i18n("Next Unread &Article"), "1rightarrow", Qt::ALT+Qt::SHIFT+Qt::Key_Space , this,
                               SLOT(slotNavNextUnreadArt()), actionCollection(), "go_nextUnreadArticle");
-  a_ctNavNextUnreadThread   = new KAction(i18n("Next Unread &Thread"),"2rightarrow", SHIFT+Key_Space , this,
+  a_ctNavNextUnreadThread   = new KAction(i18n("Next Unread &Thread"),"2rightarrow", Qt::SHIFT+Qt::Key_Space , this,
                               SLOT(slotNavNextUnreadThread()), actionCollection(), "go_nextUnreadThread");
-  a_ctNavNextGroup          = new KAction(i18n("Ne&xt Group"), "down", Key_Plus , c_olView,
+  a_ctNavNextGroup          = new KAction(i18n("Ne&xt Group"), "down", Qt::Key_Plus , c_olView,
                               SLOT(nextGroup()), actionCollection(), "go_nextGroup");
-  a_ctNavPrevGroup          = new KAction(i18n("Pre&vious Group"), "up", Key_Minus , c_olView,
+  a_ctNavPrevGroup          = new KAction(i18n("Pre&vious Group"), "up", Qt::Key_Minus , c_olView,
                               SLOT(prevGroup()), actionCollection(), "go_prevGroup");
-  a_ctNavReadThrough        = new KAction(i18n("Read &Through Articles"), Key_Space , this,
+  a_ctNavReadThrough        = new KAction(i18n("Read &Through Articles"), Qt::Key_Space , this,
                               SLOT(slotNavReadThrough()), actionCollection(), "go_readThrough");
   a_ctNavReadThrough->plugAccel(a_ccel);
 
-  QAccel *accel = new QAccel( this );
-  new KAction( i18n("Focus on Next Folder"), CTRL+Key_Right, c_olView,
+  Q3Accel *accel = new Q3Accel( this );
+  new KAction( i18n("Focus on Next Folder"), Qt::CTRL+Qt::Key_Right, c_olView,
     SLOT(incCurrentFolder()), actionCollection(), "inc_current_folder" );
-  accel->connectItem(accel->insertItem(CTRL+Key_Right),
+  accel->connectItem(accel->insertItem(Qt::CTRL+Qt::Key_Right),
     c_olView, SLOT(incCurrentFolder()));
-  new KAction( i18n("Focus on Previous Folder"), CTRL+Key_Left, c_olView,
+  new KAction( i18n("Focus on Previous Folder"), Qt::CTRL+Qt::Key_Left, c_olView,
     SLOT(decCurrentFolder()), actionCollection(), "dec_current_folder" );
-  accel->connectItem(accel->insertItem(CTRL+Key_Left),
+  accel->connectItem(accel->insertItem(Qt::CTRL+Qt::Key_Left),
     c_olView, SLOT(decCurrentFolder()));
-  new KAction( i18n("Select Folder with Focus"), CTRL+Key_Space, c_olView,
+  new KAction( i18n("Select Folder with Focus"), Qt::CTRL+Qt::Key_Space, c_olView,
     SLOT(selectCurrentFolder()), actionCollection(), "select_current_folder" );
-  accel->connectItem(accel->insertItem(CTRL+Key_Space),
+  accel->connectItem(accel->insertItem(Qt::CTRL+Qt::Key_Space),
     c_olView, SLOT(selectCurrentFolder()));
 
-  new KAction( i18n("Focus on Next Article"), ALT+Key_Right, h_drView,
+  new KAction( i18n("Focus on Next Article"), Qt::ALT+Qt::Key_Right, h_drView,
                SLOT(incCurrentArticle()), actionCollection(), "inc_current_article" );
-  accel->connectItem( accel->insertItem(ALT+Key_Right),
+  accel->connectItem( accel->insertItem(Qt::ALT+Qt::Key_Right),
                       h_drView, SLOT(incCurrentArticle()) );
-  new KAction( i18n("Focus on Previous Article"), ALT+Key_Left, h_drView,
+  new KAction( i18n("Focus on Previous Article"), Qt::ALT+Qt::Key_Left, h_drView,
                SLOT(decCurrentArticle()), actionCollection(), "dec_current_article" );
-  accel->connectItem( accel->insertItem(ALT+Key_Left),
+  accel->connectItem( accel->insertItem(Qt::ALT+Qt::Key_Left),
                       h_drView, SLOT(decCurrentArticle()) );
-  new KAction( i18n("Select Article with Focus"), ALT+Key_Space, h_drView,
+  new KAction( i18n("Select Article with Focus"), Qt::ALT+Qt::Key_Space, h_drView,
                SLOT(selectCurrentArticle()), actionCollection(), "select_current_article" );
-  accel->connectItem( accel->insertItem(ALT+Key_Space),
+  accel->connectItem( accel->insertItem(Qt::ALT+Qt::Key_Space),
                       h_drView, SLOT(selectCurrentArticle()) );
 
   //collection-view - accounts
@@ -609,7 +617,7 @@ void KNMainWidget::initActions()
                                           SLOT(slotAccGetNewHdrsAll()), actionCollection(), "account_dnlAllHeaders");
   a_ctAccDelete             = new KAction(i18n("&Delete Account"), "editdelete", 0, this,
                               SLOT(slotAccDelete()), actionCollection(), "account_delete");
-  a_ctAccPostNewArticle     = new KAction(i18n("&Post to Newsgroup..."), "mail_new", CTRL+Key_N, this,
+  a_ctAccPostNewArticle     = new KAction(i18n("&Post to Newsgroup..."), "mail_new", Qt::CTRL+Qt::Key_N, this,
                               SLOT(slotAccPostNewArticle()), actionCollection(), "article_postNew");
 
   //collection-view - groups
@@ -670,15 +678,15 @@ void KNMainWidget::initActions()
   a_ctArtSortHeaders->setItems(items);
   a_ctArtSortHeaders->setShortcutConfigurable(false);
   connect(a_ctArtSortHeaders, SIGNAL(activated(int)), this, SLOT(slotArtSortHeaders(int)));
-  a_ctArtSortHeadersKeyb   = new KAction(i18n("Sort"), QString::null, Key_F7 , this,
+  a_ctArtSortHeadersKeyb   = new KAction(i18n("Sort"), QString::null, Qt::Key_F7 , this,
                              SLOT(slotArtSortHeadersKeyb()), actionCollection(), "view_Sort_Keyb");
   a_ctArtSortHeadersKeyb->plugAccel(a_ccel);
   a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
                               actionCollection(), "view_Filter");
   a_ctArtFilter->setShortcutConfigurable(false);
-  a_ctArtFilterKeyb         = new KAction(i18n("Filter"), Key_F6, actionCollection(), "view_Filter_Keyb");
+  a_ctArtFilterKeyb         = new KAction(i18n("Filter"), Qt::Key_F6, actionCollection(), "view_Filter_Keyb");
   a_ctArtFilterKeyb->plugAccel(a_ccel);
-  a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"mail_find" , Key_F4 , this,
+  a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"mail_find" , Qt::Key_F4 , this,
                               SLOT(slotArtSearch()), actionCollection(), "article_search");
   a_ctArtRefreshList        = new KAction(i18n("&Refresh List"),"reload", KStdAccel::shortcut(KStdAccel::Reload), this,
                               SLOT(slotArtRefreshList()), actionCollection(), "view_Refresh");
@@ -686,7 +694,7 @@ void KNMainWidget::initActions()
                               SLOT(slotArtCollapseAll()), actionCollection(), "view_CollapseAll");
   a_ctArtExpandAll          = new KAction(i18n("E&xpand All Threads"), 0 , this,
                               SLOT(slotArtExpandAll()), actionCollection(), "view_ExpandAll");
-  a_ctArtToggleThread       = new KAction(i18n("&Toggle Subthread"), Key_T, this,
+  a_ctArtToggleThread       = new KAction(i18n("&Toggle Subthread"), Qt::Key_T, this,
                               SLOT(slotArtToggleThread()), actionCollection(), "thread_toggle");
   a_ctArtToggleShowThreads  = new KToggleAction(i18n("Show T&hreads"), 0 , this,
                               SLOT(slotArtToggleShowThreads()), actionCollection(), "view_showThreads");
@@ -695,39 +703,39 @@ void KNMainWidget::initActions()
   a_ctArtToggleShowThreads->setChecked(c_fgManager->readNewsGeneral()->showThreads());
 
   //header-view - remote articles
-  a_ctArtSetArtRead         = new KAction(i18n("Mark as &Read"), Key_D , this,
+  a_ctArtSetArtRead         = new KAction(i18n("Mark as &Read"), Qt::Key_D , this,
                               SLOT(slotArtSetArtRead()), actionCollection(), "article_read");
-  a_ctArtSetArtUnread       = new KAction(i18n("Mar&k as Unread"), Key_U , this,
+  a_ctArtSetArtUnread       = new KAction(i18n("Mar&k as Unread"), Qt::Key_U , this,
                               SLOT(slotArtSetArtUnread()), actionCollection(), "article_unread");
-  a_ctArtSetThreadRead      = new KAction(i18n("Mark &Thread as Read"), CTRL+Key_D , this,
+  a_ctArtSetThreadRead      = new KAction(i18n("Mark &Thread as Read"), Qt::CTRL+Qt::Key_D , this,
                               SLOT(slotArtSetThreadRead()), actionCollection(), "thread_read");
-  a_ctArtSetThreadUnread    = new KAction(i18n("Mark T&hread as Unread"), CTRL+Key_U , this,
+  a_ctArtSetThreadUnread    = new KAction(i18n("Mark T&hread as Unread"), Qt::CTRL+Qt::Key_U , this,
                               SLOT(slotArtSetThreadUnread()), actionCollection(), "thread_unread");
-  a_ctArtOpenNewWindow      = new KAction(i18n("Open in Own &Window"), "window_new", Key_O , this,
+  a_ctArtOpenNewWindow      = new KAction(i18n("Open in Own &Window"), "window_new", Qt::Key_O , this,
                               SLOT(slotArtOpenNewWindow()), actionCollection(), "article_ownWindow");
 
   // scoring
-  a_ctScoresEdit            = new KAction(i18n("&Edit Scoring Rules..."), "edit", CTRL+Key_E, this,
+  a_ctScoresEdit            = new KAction(i18n("&Edit Scoring Rules..."), "edit", Qt::CTRL+Qt::Key_E, this,
                               SLOT(slotScoreEdit()), actionCollection(), "scoreedit");
   a_ctReScore               = new KAction(i18n("Recalculate &Scores"), 0, this,
                               SLOT(slotReScore()),actionCollection(),"rescore");
-  a_ctScoreLower            = new KAction(i18n("&Lower Score for Author..."), CTRL+Key_L, this,
+  a_ctScoreLower            = new KAction(i18n("&Lower Score for Author..."), Qt::CTRL+Qt::Key_L, this,
                               SLOT(slotScoreLower()), actionCollection(), "scorelower");
-  a_ctScoreRaise            = new KAction(i18n("&Raise Score for Author..."), CTRL+Key_I, this,
+  a_ctScoreRaise            = new KAction(i18n("&Raise Score for Author..."), Qt::CTRL+Qt::Key_I, this,
                               SLOT(slotScoreRaise()),actionCollection(),"scoreraise");
-  a_ctArtToggleIgnored      = new KAction(i18n("&Ignore Thread"), "bottom", Key_I , this,
+  a_ctArtToggleIgnored      = new KAction(i18n("&Ignore Thread"), "bottom", Qt::Key_I , this,
                               SLOT(slotArtToggleIgnored()), actionCollection(), "thread_ignore");
-  a_ctArtToggleWatched      = new KAction(i18n("&Watch Thread"), "top", Key_W , this,
+  a_ctArtToggleWatched      = new KAction(i18n("&Watch Thread"), "top", Qt::Key_W , this,
                               SLOT(slotArtToggleWatched()), actionCollection(), "thread_watch");
 
   //header-view local articles
   a_ctArtSendOutbox         = new KAction(i18n("Sen&d Pending Messages"), "mail_send", 0, this,
                               SLOT(slotArtSendOutbox()), actionCollection(), "net_sendPending");
-  a_ctArtDelete             = new KAction(i18n("&Delete Article"), "editdelete", Key_Delete, this,
+  a_ctArtDelete             = new KAction(i18n("&Delete Article"), "editdelete", Qt::Key_Delete, this,
                               SLOT(slotArtDelete()), actionCollection(), "article_delete");
   a_ctArtSendNow            = new KAction(i18n("Send &Now"),"mail_send", 0 , this,
                               SLOT(slotArtSendNow()), actionCollection(), "article_sendNow");
-  a_ctArtEdit               = new KAction(i18n("edit article","&Edit Article..."), "edit", Key_E , this,
+  a_ctArtEdit               = new KAction(i18n("edit article","&Edit Article..."), "edit", Qt::Key_E , this,
                               SLOT(slotArtEdit()), actionCollection(), "article_edit");
 
   //network
@@ -739,25 +747,25 @@ void KNMainWidget::initActions()
                               SLOT(slotFetchArticleWithID()), actionCollection(), "fetch_article_with_id");
   a_ctFetchArticleWithID->setEnabled(false);
 
-  a_ctToggleGroupView        = new KToggleAction(i18n("Show &Group View"), CTRL+Key_G, this,
+  a_ctToggleGroupView        = new KToggleAction(i18n("Show &Group View"), Qt::CTRL+Qt::Key_G, this,
                                SLOT(slotToggleGroupView()), actionCollection(), "settings_show_groupView");
   a_ctToggleGroupView->setCheckedState(i18n("Hide &Group View"));
-  a_ctToggleHeaderView       = new KToggleAction(i18n("Show &Header View"), CTRL+Key_H, this,
+  a_ctToggleHeaderView       = new KToggleAction(i18n("Show &Header View"), Qt::CTRL+Qt::Key_H, this,
                                SLOT(slotToggleHeaderView()), actionCollection(), "settings_show_headerView");
   a_ctToggleHeaderView->setCheckedState(i18n("Hide &Header View"));
-  a_ctToggleArticleViewer    = new KToggleAction(i18n("Show &Article Viewer"), CTRL+Key_J, this,
+  a_ctToggleArticleViewer    = new KToggleAction(i18n("Show &Article Viewer"), Qt::CTRL+Qt::Key_J, this,
                                SLOT(slotToggleArticleViewer()), actionCollection(), "settings_show_articleViewer");
   a_ctToggleArticleViewer->setCheckedState(i18n("Hide &Article Viewer"));
   a_ctToggleQuickSearch      = new KToggleAction(i18n("Show Quick Search"), QString::null, this,
                                SLOT(slotToggleQuickSearch()), actionCollection(), "settings_show_quickSearch");
   a_ctToggleQuickSearch->setCheckedState(i18n("Hide Quick Search"));
-  a_ctSwitchToGroupView      = new KAction(i18n("Switch to Group View"), Key_G , this,
+  a_ctSwitchToGroupView      = new KAction(i18n("Switch to Group View"), Qt::Key_G , this,
                                SLOT(slotSwitchToGroupView()), actionCollection(), "switch_to_group_view");
   a_ctSwitchToGroupView->plugAccel(a_ccel);
-  a_ctSwitchToHeaderView     = new KAction(i18n("Switch to Header View"), Key_H , this,
+  a_ctSwitchToHeaderView     = new KAction(i18n("Switch to Header View"), Qt::Key_H , this,
                                SLOT(slotSwitchToHeaderView()), actionCollection(), "switch_to_header_view");
   a_ctSwitchToHeaderView->plugAccel(a_ccel);
-  a_ctSwitchToArticleViewer  = new KAction(i18n("Switch to Article Viewer"), Key_J , this,
+  a_ctSwitchToArticleViewer  = new KAction(i18n("Switch to Article Viewer"), Qt::Key_J , this,
                                SLOT(slotSwitchToArticleViewer()), actionCollection(), "switch_to_article_viewer");
   a_ctSwitchToArticleViewer->plugAccel(a_ccel);
 }
@@ -926,8 +934,8 @@ bool KNMainWidget::eventFilter(QObject *o, QEvent *e)
 {
   if (((e->type() == QEvent::KeyPress) ||
        (e->type() == QEvent::KeyRelease) ||
-       (e->type() == QEvent::Accel) ||
-       (e->type() == QEvent::AccelOverride)) &&
+       (e->type() == QEvent::Shortcut) ||
+       (e->type() == QEvent::ShortcutOverride)) &&
        b_lockui)
     return true;
   return KDockArea::eventFilter(o, e);
@@ -939,7 +947,7 @@ void KNMainWidget::getSelectedArticles(KNArticle::List &l)
   if(!g_rpManager->currentGroup() && !f_olManager->currentFolder())
     return;
 
-  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
+  for(Q3ListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
     if(i->isSelected() || (static_cast<KNHdrViewItem*>(i)->isActive()))
       l.append( static_cast<KNArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
 }
@@ -949,7 +957,7 @@ void KNMainWidget::getSelectedArticles(KNRemoteArticle::List &l)
 {
   if(!g_rpManager->currentGroup()) return;
 
-  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
+  for(Q3ListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
     if(i->isSelected() || (static_cast<KNHdrViewItem*>(i)->isActive()))
       l.append( static_cast<KNRemoteArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
 }
@@ -958,7 +966,7 @@ void KNMainWidget::getSelectedArticles(KNRemoteArticle::List &l)
 void KNMainWidget::getSelectedThreads(KNRemoteArticle::List &l)
 {
   KNRemoteArticle *art;
-  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
+  for(Q3ListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
     if(i->isSelected() || (static_cast<KNHdrViewItem*>(i)->isActive())) {
       art=static_cast<KNRemoteArticle*> ((static_cast<KNHdrViewItem*>(i))->art);
       // ignore the article if it is already in the list
@@ -973,7 +981,7 @@ void KNMainWidget::getSelectedArticles( KNLocalArticle::List &l )
 {
   if(!f_olManager->currentFolder()) return;
 
-  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
+  for(Q3ListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
     if(i->isSelected() || (static_cast<KNHdrViewItem*>(i)->isActive()))
       l.append( static_cast<KNLocalArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
 }
@@ -981,7 +989,7 @@ void KNMainWidget::getSelectedArticles( KNLocalArticle::List &l )
 
 void KNMainWidget::closeCurrentThread()
 {
-  QListViewItem *item = h_drView->currentItem();
+  Q3ListViewItem *item = h_drView->currentItem();
   if (item) {
     while (item->parent())
       item = item->parent();
@@ -991,7 +999,7 @@ void KNMainWidget::closeCurrentThread()
   }
 }
 
-void KNMainWidget::slotArticleSelected(QListViewItem *i)
+void KNMainWidget::slotArticleSelected(Q3ListViewItem *i)
 {
   kdDebug(5003) << "KNMainWidget::slotArticleSelected(QListViewItem *i)" << endl;
   if(b_lockui)
@@ -1053,7 +1061,7 @@ void KNMainWidget::slotArticleSelectionChanged()
 }
 
 
-void KNMainWidget::slotCollectionSelected(QListViewItem *i)
+void KNMainWidget::slotCollectionSelected(Q3ListViewItem *i)
 {
   kdDebug(5003) << "KNMainWidget::slotCollectionSelected(QListViewItem *i)" << endl;
   if(b_lockui)
@@ -1170,7 +1178,7 @@ void KNMainWidget::slotCollectionSelected(QListViewItem *i)
 }
 
 
-void KNMainWidget::slotCollectionRenamed(QListViewItem *i)
+void KNMainWidget::slotCollectionRenamed(Q3ListViewItem *i)
 {
   kdDebug(5003) << "KNMainWidget::slotCollectionRenamed(QListViewItem *i)" << endl;
 
@@ -1218,17 +1226,17 @@ void KNMainWidget::slotCollectionViewDrop(QDropEvent* e, KNCollectionViewItem* a
 }
 
 
-void KNMainWidget::slotArticleRMB(KListView*, QListViewItem *i, const QPoint &p)
+void KNMainWidget::slotArticleRMB(KListView*, Q3ListViewItem *i, const QPoint &p)
 {
   if(b_lockui)
     return;
 
   if(i) {
-    QPopupMenu *popup;
+    Q3PopupMenu *popup;
     if( (static_cast<KNHdrViewItem*>(i))->art->type()==KMime::Base::ATremote) {
-     popup = static_cast<QPopupMenu *>(factory()->container("remote_popup", m_GUIClient));
+     popup = static_cast<Q3PopupMenu *>(factory()->container("remote_popup", m_GUIClient));
     } else {
-     popup = static_cast<QPopupMenu *>(factory()->container("local_popup", m_GUIClient));
+     popup = static_cast<Q3PopupMenu *>(factory()->container("local_popup", m_GUIClient));
     }
 
     if ( popup )
@@ -1237,28 +1245,28 @@ void KNMainWidget::slotArticleRMB(KListView*, QListViewItem *i, const QPoint &p)
 }
 
 
-void KNMainWidget::slotCollectionRMB(KListView*, QListViewItem *i, const QPoint &p)
+void KNMainWidget::slotCollectionRMB(KListView*, Q3ListViewItem *i, const QPoint &p)
 {
   if(b_lockui)
     return;
 
   if(i) {
     if( (static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTgroup) {
-      QPopupMenu *popup = static_cast<QPopupMenu *>(factory()->container("group_popup", m_GUIClient));
+      Q3PopupMenu *popup = static_cast<Q3PopupMenu *>(factory()->container("group_popup", m_GUIClient));
       if ( popup )
         popup->popup(p);
     } else if ((static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTfolder) {
       if (static_cast<KNFolder*>(static_cast<KNCollectionViewItem*>(i)->coll)->isRootFolder()) {
-        QPopupMenu *popup = static_cast<QPopupMenu *>(factory()->container("root_folder_popup", m_GUIClient));
+        Q3PopupMenu *popup = static_cast<Q3PopupMenu *>(factory()->container("root_folder_popup", m_GUIClient));
         if ( popup )
           popup->popup(p);
       } else {
-        QPopupMenu *popup  = static_cast<QPopupMenu *>(factory()->container("folder_popup", m_GUIClient));
+        Q3PopupMenu *popup  = static_cast<Q3PopupMenu *>(factory()->container("folder_popup", m_GUIClient));
         if ( popup )
           popup->popup(p);
       }
     } else {
-      QPopupMenu *popup = static_cast<QPopupMenu *>(factory()->container("account_popup", m_GUIClient));
+      Q3PopupMenu *popup = static_cast<Q3PopupMenu *>(factory()->container("account_popup", m_GUIClient));
       if ( popup )
         popup->popup( p );
     }
@@ -1266,7 +1274,7 @@ void KNMainWidget::slotCollectionRMB(KListView*, QListViewItem *i, const QPoint 
 }
 
 
-void KNMainWidget::slotOpenArticle(QListViewItem *item)
+void KNMainWidget::slotOpenArticle(Q3ListViewItem *item)
 {
   if(b_lockui)
     return;
@@ -1446,7 +1454,7 @@ void KNMainWidget::slotAccDelete()
 
 void KNMainWidget::slotAccGetNewHdrsAll()
 {
-  QValueList<KNNntpAccount*>::Iterator it;
+  Q3ValueList<KNNntpAccount*>::Iterator it;
   for ( it = a_ccManager->begin(); it != a_ccManager->end(); ++it )
     g_rpManager->checkAll( *it );
 }
@@ -2044,7 +2052,7 @@ KXMLGUIFactory* KNMainWidget::factory() const
 FetchArticleIdDlg::FetchArticleIdDlg(QWidget *parent, const char */*name*/ )
     :KDialogBase(parent, 0, true, i18n("Fetch Article with ID"), KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Ok)
 {
-  QHBox *page = makeHBoxMainWidget();
+  Q3HBox *page = makeHBoxMainWidget();
 
   QLabel *label = new QLabel(i18n("&Message-ID:"),page);
   edit = new KLineEdit(page);

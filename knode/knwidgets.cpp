@@ -16,6 +16,10 @@
 
 #include <qpainter.h>
 #include <qpixmap.h>
+//Added by qt3to4:
+#include <QFocusEvent>
+#include <QKeyEvent>
+#include <QPaintEvent>
 
 #include "knwidgets.h"
 
@@ -62,7 +66,7 @@ void KNListBoxItem::paint(QPainter *p)
 }
 
 
-int KNListBoxItem::height(const QListBox *lb) const
+int KNListBoxItem::height(const Q3ListBox *lb) const
 {
   if(p_m)
     return QMAX( p_m->height(), lb->fontMetrics().lineSpacing() + 1 );
@@ -71,7 +75,7 @@ int KNListBoxItem::height(const QListBox *lb) const
 }
 
 
-int KNListBoxItem::width(const QListBox *lb) const
+int KNListBoxItem::width(const Q3ListBox *lb) const
 {
   if(p_m)
     return (p_m->width() + lb->fontMetrics().width( text() ) + 6);
@@ -85,7 +89,7 @@ int KNListBoxItem::width(const QListBox *lb) const
 // **** listbox for dialogs **************************************************
 
 KNDialogListBox::KNDialogListBox(bool alwaysIgnore, QWidget * parent, const char * name)
- : QListBox(parent, name), a_lwaysIgnore(alwaysIgnore)
+ : Q3ListBox(parent, name), a_lwaysIgnore(alwaysIgnore)
 {
 }
 
@@ -100,7 +104,7 @@ void KNDialogListBox::keyPressEvent(QKeyEvent *e)
   if ((a_lwaysIgnore || !(hasFocus()&&isVisible()))&&((e->key()==Key_Enter)||(e->key()==Key_Return)))
     e->ignore();
   else
-    QListBox::keyPressEvent(e);
+    Q3ListBox::keyPressEvent(e);
 }
 
 

@@ -28,7 +28,7 @@ class KNGroupDialog : public KNGroupBrowser {
     KNGroupDialog(QWidget *parent, KNNntpAccount *a);
     ~KNGroupDialog();
 
-    void toSubscribe(QSortedList<KNGroupInfo> *l);
+    void toSubscribe(Q3SortedList<KNGroupInfo> *l);
     void toUnsubscribe(QStringList *l);
 
   protected:
@@ -38,11 +38,11 @@ class KNGroupDialog : public KNGroupBrowser {
     void itemChangedState(CheckItem *it, bool s);
     void setButtonDirection(arrowButton b, arrowDirection d);
     QPushButton *newListBtn;
-    QListView *subView, *unsubView;
+    Q3ListView *subView, *unsubView;
     arrowDirection dir1, dir2;
 
   protected slots:
-    void slotItemSelected(QListViewItem *it);
+    void slotItemSelected(Q3ListViewItem *it);
     /** deactivates the button when a root item is selected */
     void slotSelectionChanged();
     void slotArrowBtn1();

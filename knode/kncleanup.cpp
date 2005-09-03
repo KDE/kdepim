@@ -17,7 +17,13 @@
 #include <qdir.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qprogressbar.h>
+#include <q3progressbar.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <Q3ValueList>
+#include <Q3Frame>
+#include <QTextStream>
+#include <QCloseEvent>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -54,7 +60,7 @@ void KNCleanUp::start()
   d_lg = new ProgressDialog( mColList.count() );
   d_lg->show();
 
-  for ( QValueList<KNArticleCollection*>::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
+  for ( Q3ValueList<KNArticleCollection*>::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
     if ( (*it)->type() == KNCollection::CTgroup ) {
       d_lg->showMessage( i18n("Deleting expired articles in <b>%1</b>").arg( (*it)->name() ) );
       kapp->processEvents();
@@ -216,7 +222,7 @@ void KNCleanUp::compactFolder(KNFolder *f)
   QString newName=oldName+".new";
   KNFile newMBoxFile(info.dirPath(true)+"/"+newName);
 
-  if( (f->m_boxFile.open(IO_ReadOnly)) && (newMBoxFile.open(IO_WriteOnly)) ) {
+  if( (f->m_boxFile.open(QIODevice::ReadOnly)) && (newMBoxFile.open(QIODevice::WriteOnly)) ) {
     QTextStream ts(&newMBoxFile);
     ts.setEncoding(QTextStream::Latin1);
     for(int idx=0; idx<f->length(); idx++) {
@@ -258,7 +264,7 @@ KNCleanUp::ProgressDialog::ProgressDialog(int steps)
   setCaption(kapp->makeStdCaption(i18n("Cleaning Up")));
 
   setFixedSize(w,h);
-  QFrame *top=new QFrame(this);
+  Q3Frame *top=new Q3Frame(this);
   top->setGeometry(0,0, w,h);
 
   QVBoxLayout *topL=new QVBoxLayout(top, 10);
@@ -272,7 +278,7 @@ KNCleanUp::ProgressDialog::ProgressDialog(int steps)
   m_sg=new QLabel(top);
   topL->addWidget(m_sg);
 
-  p_bar=new QProgressBar(top);
+  p_bar=new Q3ProgressBar(top);
   topL->addWidget(p_bar);
   p_bar->setTotalSteps(100*s_teps);
   p_bar->setProgress(1);

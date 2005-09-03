@@ -15,12 +15,15 @@
 #ifndef KNCONFIG_H
 #define KNCONFIG_H
 
-#include <qasciidict.h>
+#include <q3asciidict.h>
 #include <qcolor.h>
 #include <qdatetime.h>
 #include <qfont.h>
 #include <qobject.h>
 #include <qpixmap.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 
 #include <kconfig.h>
 
@@ -86,7 +89,7 @@ Q_OBJECT
     bool emailIsValid();
     bool hasEmail()                   { return (!e_mail.isEmpty()); }
     QString email()                   { return e_mail; }
-    void setEmail(const QCString &s)  { e_mail=s; }
+    void setEmail(const Q3CString &s)  { e_mail=s; }
     bool hasReplyTo()                 { return (!r_eplyTo.isEmpty()); }
     QString replyTo()                 { return r_eplyTo; }
     void setReplyTo(const QString &s) { r_eplyTo=s; }
@@ -99,8 +102,8 @@ Q_OBJECT
 
     // OpenPGP signing key
     bool hasSigningKey()                  { return (!s_igningKey.isEmpty()); }
-    QCString signingKey()                 { return s_igningKey; }
-    void setSigningKey(const QCString &s) { s_igningKey=s;}
+    Q3CString signingKey()                 { return s_igningKey; }
+    void setSigningKey(const Q3CString &s) { s_igningKey=s;}
 
     //signature
     bool hasSignature()       { return ( (u_seSigFile && !s_igPath.isEmpty()) || !s_igText.isEmpty() ); }
@@ -126,7 +129,7 @@ Q_OBJECT
               s_igContents,
               s_igStdErr,
               s_igPath;
-    QCString  s_igningKey;
+    Q3CString  s_igningKey;
     bool      u_seSigFile,
               u_seSigGenerator,
               g_lobal;
@@ -347,11 +350,11 @@ class KDE_EXPORT DisplayedHeaders : public Base
     void up(KNDisplayedHeader *h);
     void down(KNDisplayedHeader *h);
 
-    QValueList<KNDisplayedHeader*> headers() const { return mHeaderList; }
+    Q3ValueList<KNDisplayedHeader*> headers() const { return mHeaderList; }
 
 
   protected:
-    QValueList<KNDisplayedHeader*> mHeaderList;
+    Q3ValueList<KNDisplayedHeader*> mHeaderList;
 
 };
 
@@ -386,16 +389,16 @@ class KDE_EXPORT XHeader {
 
     XHeader& operator=(const XHeader &s) { n_ame=s.n_ame; v_alue=s.v_alue; return (*this); }
 
-    QCString name()   { return n_ame; }
+    Q3CString name()   { return n_ame; }
     QString value()   { return v_alue; }
     QString header()  { return (QString::fromLatin1(("X-"+n_ame+": "))+v_alue); }
 
   protected:
-    QCString n_ame;
+    Q3CString n_ame;
     QString v_alue;
 
 };
-typedef QValueList<XHeader> XHeaders;
+typedef Q3ValueList<XHeader> XHeaders;
 
 
 class KDE_EXPORT PostNewsTechnical : public Base {
@@ -409,21 +412,21 @@ class KDE_EXPORT PostNewsTechnical : public Base {
 
     void save();
 
-    QCString charset() const         { return c_harset; }
+    Q3CString charset() const         { return c_harset; }
     QStringList composerCharsets() { return c_omposerCharsets; }
-    int indexForCharset(const QCString &str);
-    QCString findComposerCharset(QCString cs);
+    int indexForCharset(const Q3CString &str);
+    Q3CString findComposerCharset(Q3CString cs);
 
     bool allow8BitBody() const       { return a_llow8BitBody; }
     bool useOwnCharset() const       { return u_seOwnCharset; }
     bool generateMessageID()const    { return g_enerateMID; }
-    QCString hostname()const         { return h_ostname; }
+    Q3CString hostname()const         { return h_ostname; }
     XHeaders& xHeaders()        { return x_headers; }
     bool noUserAgent()const          { return d_ontIncludeUA; }
     bool useExternalMailer()const    { return u_seExternalMailer; }
 
   protected:
-    QCString  c_harset,
+    Q3CString  c_harset,
               h_ostname;
     QStringList c_omposerCharsets;
 
@@ -435,7 +438,7 @@ class KDE_EXPORT PostNewsTechnical : public Base {
 
     XHeaders x_headers;
 
-    QAsciiDict<QCString> findComposerCSCache;
+    Q3AsciiDict<Q3CString> findComposerCSCache;
 };
 
 

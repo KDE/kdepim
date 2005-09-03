@@ -18,6 +18,10 @@
 #include <qcheckbox.h>
 #include <qtimer.h>
 #include <qapplication.h>
+//Added by qt3to4:
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 #include <kseparator.h>
 #include <kiconloader.h>
@@ -41,9 +45,9 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
 {
   refilterTimer = new QTimer();
 
-  allList=new QSortedList<KNGroupInfo>;
+  allList=new Q3SortedList<KNGroupInfo>;
   allList->setAutoDelete(true);
-  matchList=new QSortedList<KNGroupInfo>;
+  matchList=new Q3SortedList<KNGroupInfo>;
   matchList->setAutoDelete(false);
 
   //create Widgets
@@ -83,14 +87,14 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   arrowBtn1->setFixedSize(35,30);
   arrowBtn2->setFixedSize(35,30);
 
-  groupView=new QListView(page);
+  groupView=new Q3ListView(page);
   groupView->setRootIsDecorated(true);
   groupView->addColumn(i18n("Name"));
   groupView->addColumn(i18n("Description"));
   groupView->setTreeStepSize(15);
 
-  connect(groupView, SIGNAL(doubleClicked(QListViewItem*)),
-          this, SLOT(slotItemDoubleClicked(QListViewItem*)));
+  connect(groupView, SIGNAL(doubleClicked(Q3ListViewItem*)),
+          this, SLOT(slotItemDoubleClicked(Q3ListViewItem*)));
 
   //layout
   QGridLayout *topL=new QGridLayout(page,3,1,0,5);
@@ -123,8 +127,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   //connect
   connect(filterEdit, SIGNAL(textChanged(const QString&)),
           SLOT(slotFilterTextChanged(const QString&)));
-  connect(groupView, SIGNAL(expanded(QListViewItem*)),
-          SLOT(slotItemExpand(QListViewItem*)));
+  connect(groupView, SIGNAL(expanded(Q3ListViewItem*)),
+          SLOT(slotItemExpand(Q3ListViewItem*)));
 
   connect(refilterTimer, SIGNAL(timeout()), SLOT(slotRefilter()));
   connect(noTreeCB, SIGNAL(clicked()), SLOT(slotTreeCBToggled()));
@@ -169,7 +173,7 @@ void KNGroupBrowser::slotReceiveList(KNGroupListData* d)
 
 void KNGroupBrowser::changeItemState(const KNGroupInfo &gi, bool s)
 {
-  QListViewItemIterator it(groupView);
+  Q3ListViewItemIterator it(groupView);
 
   for( ; it.current(); ++it)
     if (it.current()->isSelectable() && (static_cast<CheckItem*>(it.current())->info==gi))
@@ -177,10 +181,10 @@ void KNGroupBrowser::changeItemState(const KNGroupInfo &gi, bool s)
 }
 
 
-bool KNGroupBrowser::itemInListView(QListView *view, const KNGroupInfo &gi)
+bool KNGroupBrowser::itemInListView(Q3ListView *view, const KNGroupInfo &gi)
 {
   if(!view) return false;
-  QListViewItemIterator it(view);
+  Q3ListViewItemIterator it(view);
 
   for( ; it.current(); ++it)
     if(static_cast<GroupItem*>(it.current())->info==gi)
@@ -190,16 +194,16 @@ bool KNGroupBrowser::itemInListView(QListView *view, const KNGroupInfo &gi)
 }
 
 
-void KNGroupBrowser::createListItems(QListViewItem *parent)
+void KNGroupBrowser::createListItems(Q3ListViewItem *parent)
 {
   QString prefix, tlgn, compare;
-  QListViewItem *it;
+  Q3ListViewItem *it;
   CheckItem *cit;
   int colon;
   bool expandit=false;
 
   if(parent) {
-    QListViewItem *p=parent;
+    Q3ListViewItem *p=parent;
     while(p) {
       prefix.prepend(p->text(0));
       p=p->parent();
@@ -229,9 +233,9 @@ void KNGroupBrowser::createListItems(QListViewItem *parent)
 
       if(expandit) {
         if(parent)
-          it=new QListViewItem(parent, tlgn);
+          it=new Q3ListViewItem(parent, tlgn);
         else
-          it=new QListViewItem(groupView, tlgn);
+          it=new Q3ListViewItem(groupView, tlgn);
 
         it->setSelectable(false);
         it->setExpandable(true);
@@ -248,10 +252,10 @@ void KNGroupBrowser::createListItems(QListViewItem *parent)
 }
 
 
-void KNGroupBrowser::removeListItem(QListView *view, const KNGroupInfo &gi)
+void KNGroupBrowser::removeListItem(Q3ListView *view, const KNGroupInfo &gi)
 {
   if(!view) return;
-  QListViewItemIterator it(view);
+  Q3ListViewItemIterator it(view);
 
   for( ; it.current(); ++it)
     if(static_cast<GroupItem*>(it.current())->info==gi) {
@@ -267,7 +271,7 @@ void KNGroupBrowser::slotLoadList()
 }
 
 
-void KNGroupBrowser::slotItemExpand(QListViewItem *it)
+void KNGroupBrowser::slotItemExpand(Q3ListViewItem *it)
 {
   if(!it) return;
 
@@ -299,7 +303,7 @@ void KNGroupBrowser::slotCenterDelayed()
 }
 
 
-void KNGroupBrowser::slotItemDoubleClicked(QListViewItem *it)
+void KNGroupBrowser::slotItemDoubleClicked(Q3ListViewItem *it)
 {
   if (it && (it->childCount()==0)) static_cast<CheckItem*>(it)->setOn(!static_cast<CheckItem*>(it)->isOn());
 }
@@ -321,7 +325,7 @@ void KNGroupBrowser::slotFilter(const QString &txt)
   bool doIncrementalUpdate = (!isRegexp && incrementalFilter && (filtertxt.left(lastFilter.length())==lastFilter));
 
   if (doIncrementalUpdate) {
-    QSortedList<KNGroupInfo> *tempList = new QSortedList<KNGroupInfo>();
+    Q3SortedList<KNGroupInfo> *tempList = new Q3SortedList<KNGroupInfo>();
     tempList->setAutoDelete(false);
 
     for(KNGroupInfo *g=matchList->first(); g; g=matchList->next()) {
@@ -405,8 +409,8 @@ void KNGroupBrowser::slotRefilter()
 //=======================================================================================
 
 
-KNGroupBrowser::CheckItem::CheckItem(QListView *v, const KNGroupInfo &gi, KNGroupBrowser *b) :
-  QCheckListItem(v, gi.name, QCheckListItem::CheckBox), info(gi), browser(b)
+KNGroupBrowser::CheckItem::CheckItem(Q3ListView *v, const KNGroupInfo &gi, KNGroupBrowser *b) :
+  Q3CheckListItem(v, gi.name, Q3CheckListItem::CheckBox), info(gi), browser(b)
 {
   QString des(gi.description);
   if (gi.status == KNGroup::moderated) {
@@ -418,8 +422,8 @@ KNGroupBrowser::CheckItem::CheckItem(QListView *v, const KNGroupInfo &gi, KNGrou
 }
 
 
-KNGroupBrowser::CheckItem::CheckItem(QListViewItem *i, const KNGroupInfo &gi, KNGroupBrowser *b) :
-  QCheckListItem(i, gi.name, QCheckListItem::CheckBox), info(gi), browser(b)
+KNGroupBrowser::CheckItem::CheckItem(Q3ListViewItem *i, const KNGroupInfo &gi, KNGroupBrowser *b) :
+  Q3CheckListItem(i, gi.name, Q3CheckListItem::CheckBox), info(gi), browser(b)
 {
   QString des(gi.description);
   if (gi.status == KNGroup::moderated) {
@@ -440,7 +444,7 @@ void KNGroupBrowser::CheckItem::setChecked(bool c)
 {
   KNGroupBrowser *b=browser;
   browser=0;
-  QCheckListItem::setOn(c);
+  Q3CheckListItem::setOn(c);
   browser=b;
 }
 
@@ -457,16 +461,16 @@ void KNGroupBrowser::CheckItem::stateChange(bool s)
 //=======================================================================================
 
 
-KNGroupBrowser::GroupItem::GroupItem(QListView *v, const KNGroupInfo &gi)
- : QListViewItem(v, gi.name), info(gi)
+KNGroupBrowser::GroupItem::GroupItem(Q3ListView *v, const KNGroupInfo &gi)
+ : Q3ListViewItem(v, gi.name), info(gi)
 {
   if (gi.status == KNGroup::moderated)
     setText(0,gi.name+" (m)");
 }
 
 
-KNGroupBrowser::GroupItem::GroupItem(QListViewItem *i, const KNGroupInfo &gi)
- : QListViewItem(i, gi.name), info(gi)
+KNGroupBrowser::GroupItem::GroupItem(Q3ListViewItem *i, const KNGroupInfo &gi)
+ : Q3ListViewItem(i, gi.name), info(gi)
 {
 }
 

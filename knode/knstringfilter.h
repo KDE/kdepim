@@ -17,7 +17,7 @@
 #ifndef KNSTRINGFILTER_H
 #define KNSTRINGFILTER_H
 
-#include <qgroupbox.h>
+#include <q3groupbox.h>
 
 class QCheckBox;
 class QComboBox;
@@ -55,7 +55,7 @@ class KNStringFilter {
 //===============================================================================
 
 
-class KNStringFilterWidget : public QGroupBox  {
+class KNStringFilterWidget : public Q3GroupBox  {
   
   Q_OBJECT
 

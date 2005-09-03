@@ -20,6 +20,8 @@
 #include "utilities.h"
 #include "knarticle.h"
 #include "knarticlecollection.h"
+//Added by qt3to4:
+#include <Q3CString>
 
 
 class KNFolder : public KNArticleCollection  {
@@ -55,7 +57,7 @@ class KNFolder : public KNArticleCollection  {
     //article access
     KNLocalArticle* at(int i)           { return static_cast<KNLocalArticle*>(KNArticleCollection::at(i)); }
     KNLocalArticle* byId(int id)        { return static_cast<KNLocalArticle*>(KNArticleCollection::byId(id)); }
-    KNLocalArticle* byMessageId(const QCString &mid)
+    KNLocalArticle* byMessageId(const Q3CString &mid)
                                         { return static_cast<KNLocalArticle*>(KNArticleCollection::byMessageId(mid)); }
 
     //parent

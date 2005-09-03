@@ -13,6 +13,10 @@
 */
 
 #include <qdir.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <QTextStream>
+#include <Q3CString>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -68,7 +72,7 @@ KNFolderManager::KNFolderManager(KNArticleManager *a) : a_rtManager(a)
 
 KNFolderManager::~KNFolderManager()
 {
-  for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it )
+  for ( Q3ValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it )
     delete (*it);
 }
 
@@ -128,7 +132,7 @@ bool KNFolderManager::unloadHeaders(KNFolder *f, bool force)
 
 KNFolder* KNFolderManager::folder(int i)
 {
-  for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it )
+  for ( Q3ValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it )
     if ( (*it)->id() == i )
       return (*it);
   return 0;
@@ -151,11 +155,11 @@ bool KNFolderManager::deleteFolder(KNFolder *f)
   if(!f || f->isRootFolder() || f->isStandardFolder() || f->lockedArticles()>0)
     return false;
 
-  QValueList<KNFolder*> del;
+  Q3ValueList<KNFolder*> del;
   KNCollection *p;
 
   // find all subfolders of the folder we want to delete
-  for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
+  for ( Q3ValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
     p = (*it)->parent();
     while ( p ) {
       if ( p == f ) {
@@ -171,7 +175,7 @@ bool KNFolderManager::deleteFolder(KNFolder *f)
   emit folderRemoved(f);
 
   del.append(f);
-  for ( QValueList<KNFolder*>::Iterator it = del.begin(); it != del.end(); ++it ) {
+  for ( Q3ValueList<KNFolder*>::Iterator it = del.begin(); it != del.end(); ++it ) {
     if ( c_urrentFolder == (*it) )
       c_urrentFolder = 0;
 
@@ -231,7 +235,7 @@ int KNFolderManager::unsentForAccount(int accId)
 {
   int cnt=0;
 
-  for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
+  for ( Q3ValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
     for ( int idx = 0; idx < (*it)->length(); ++idx ) {
       KNLocalArticle *a = (*it)->at( idx );
       if ( a->serverId() == accId && a->doPost() && !a->posted() )
@@ -255,7 +259,7 @@ void KNFolderManager::compactFolder(KNFolder *f)
 
 void KNFolderManager::compactAll(KNCleanUp *cup)
 {
-  for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it )
+  for ( Q3ValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it )
     if ( !(*it)->isRootFolder() && (*it)->lockedArticles() == 0 )
       cup->appendCollection( (*it) );
 }
@@ -322,7 +326,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
         if (artEnd != -1) {
           file->at(artStart);    // seek the first character of the article
           int size=artEnd-artStart;
-          QCString buff(size+10);
+          Q3CString buff(size+10);
           int readBytes=file->readBlock(buff.data(), size);
 
           if (readBytes != -1) {
@@ -341,7 +345,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
           if ((int)file->size() > artStart) {
             file->at(artStart);    // seek the first character of the article
             int size=file->size()-artStart;
-            QCString buff(size+10);
+            Q3CString buff(size+10);
             int readBytes=file->readBlock(buff.data(), size);
 
             if (readBytes != -1) {
@@ -430,7 +434,7 @@ void KNFolderManager::syncFolders()
   }
 
   //sync
-  for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
+  for ( Q3ValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
     if ( !(*it)->isRootFolder() )
       (*it)->syncIndex();
     (*it)->saveInfo();
@@ -465,7 +469,7 @@ int KNFolderManager::loadCustomFolders()
 
   // set parents
   if(cnt>0) {
-    for ( QValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
+    for ( Q3ValueList<KNFolder*>::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
       if ( !(*it)->isRootFolder() ) {   // the root folder has no parent
         KNFolder *par = folder( (*it)->parentId() );
         if ( !par )

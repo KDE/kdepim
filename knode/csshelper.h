@@ -21,7 +21,7 @@ namespace KNode {
 class CSSHelper : public KPIM::CSSHelper
 {
   public:
-    CSSHelper( const QPaintDeviceMetrics &pdm );
+    CSSHelper( const Q3PaintDeviceMetrics &pdm );
 
 };
 

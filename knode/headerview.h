@@ -16,6 +16,11 @@
 #define KNHEADERVIEW_H
 
 #include <qtooltip.h>
+//Added by qt3to4:
+#include <QMouseEvent>
+#include <QFocusEvent>
+#include <QKeyEvent>
+#include <QEvent>
 
 #include <klistview.h>
 #include <kfoldertree.h>
@@ -34,10 +39,10 @@ class KNHeaderView : public KListView  {
     KNHeaderView( QWidget *parent, const char *name = 0 );
     ~KNHeaderView();
 
-    void setActive( QListViewItem *item );
+    void setActive( Q3ListViewItem *item );
     void clear();
 
-    void ensureItemVisibleWithMargin( const QListViewItem *i );
+    void ensureItemVisibleWithMargin( const Q3ListViewItem *i );
 
     virtual void setSorting( int column, bool ascending = true );
     bool sortByThreadChangeDate() const      { return mSortByThreadChangeDate; }
@@ -52,8 +57,8 @@ class KNHeaderView : public KListView  {
     const KPaintInfo* paintInfo() const { return &mPaintInfo; }
 
   signals:
-    void itemSelected( QListViewItem* );
-    void doubleClick( QListViewItem* );
+    void itemSelected( Q3ListViewItem* );
+    void doubleClick( Q3ListViewItem* );
     void sortingChanged( int );
     void focusChanged( QFocusEvent* );
     void focusChangeRequest( QWidget* );
@@ -82,7 +87,7 @@ class KNHeaderView : public KListView  {
     bool eventFilter( QObject *, QEvent * );
     void focusInEvent( QFocusEvent *e );
     void focusOutEvent( QFocusEvent *e );
-    virtual QDragObject* dragObject();
+    virtual Q3DragObject* dragObject();
 
   private:
     int mSortCol;

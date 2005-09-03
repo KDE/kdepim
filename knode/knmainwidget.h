@@ -21,9 +21,14 @@
 #include "resource.h"
 
 #include <qglobal.h>
+//Added by qt3to4:
+#include <QShowEvent>
+#include <Q3ValueList>
+#include <QEvent>
+#include <QDropEvent>
 #include <kdepimmacros.h>
 
-class QListViewItem;
+class Q3ListViewItem;
 
 class KURL;
 class KAccel;
@@ -182,10 +187,10 @@ protected:
   bool eventFilter(QObject *, QEvent *);
 
   // convenience methods...
-  void getSelectedArticles( QValueList<KNArticle*> &l );
-  void getSelectedArticles( QValueList<KNRemoteArticle*> &l );
-  void getSelectedThreads( QValueList<KNRemoteArticle*> &l );
-  void getSelectedArticles( QValueList<KNLocalArticle*> &l );
+  void getSelectedArticles( Q3ValueList<KNArticle*> &l );
+  void getSelectedArticles( Q3ValueList<KNRemoteArticle*> &l );
+  void getSelectedThreads( Q3ValueList<KNRemoteArticle*> &l );
+  void getSelectedArticles( Q3ValueList<KNLocalArticle*> &l );
   void closeCurrentThread();
 
   //GUI
@@ -214,15 +219,15 @@ protected:
 
 protected slots:
   //listview slots
-  void slotArticleSelected(QListViewItem*);
+  void slotArticleSelected(Q3ListViewItem*);
   void slotArticleSelectionChanged();
-  void slotCollectionSelected(QListViewItem*);
-  void slotCollectionRenamed(QListViewItem*);
+  void slotCollectionSelected(Q3ListViewItem*);
+  void slotCollectionRenamed(Q3ListViewItem*);
   void slotCollectionViewDrop(QDropEvent* e, KNCollectionViewItem* after);
-  void slotArticleRMB(KListView*, QListViewItem *i, const QPoint &p);
-  void slotCollectionRMB(KListView*, QListViewItem *i, const QPoint &p);
+  void slotArticleRMB(KListView*, Q3ListViewItem *i, const QPoint &p);
+  void slotCollectionRMB(KListView*, Q3ListViewItem *i, const QPoint &p);
   /** Open selected article in own composer/reader window */
-  void slotOpenArticle(QListViewItem *item);
+  void slotOpenArticle(Q3ListViewItem *item);
   void slotHdrViewSortingChanged(int i);
 
   //network slots

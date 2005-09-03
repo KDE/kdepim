@@ -21,6 +21,8 @@
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"
 #include "knfoldermanager.h"
+//Added by qt3to4:
+#include <Q3ValueList>
 
 
 KNMemoryManager::KNMemoryManager()
@@ -31,9 +33,9 @@ KNMemoryManager::KNMemoryManager()
 
 KNMemoryManager::~KNMemoryManager()
 {
-  for ( QValueList<CollectionItem*>::Iterator it = mColList.begin(); it != mColList.end(); ++it )
+  for ( Q3ValueList<CollectionItem*>::Iterator it = mColList.begin(); it != mColList.end(); ++it )
     delete (*it);
-  for ( QValueList<ArticleItem*>::Iterator it = mArtList.begin(); it != mArtList.end(); ++it )
+  for ( Q3ValueList<ArticleItem*>::Iterator it = mArtList.begin(); it != mArtList.end(); ++it )
     delete (*it);
 }
 
@@ -122,7 +124,7 @@ void KNMemoryManager::removeCacheEntry(KNArticle *a)
 
 KNMemoryManager::CollectionItem* KNMemoryManager::findCacheEntry(KNArticleCollection *c, bool take)
 {
-  for ( QValueList<CollectionItem*>::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
+  for ( Q3ValueList<CollectionItem*>::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
     if ( (*it)->col == c ) {
       CollectionItem *ret = (*it);
       if ( take )
@@ -137,7 +139,7 @@ KNMemoryManager::CollectionItem* KNMemoryManager::findCacheEntry(KNArticleCollec
 
 KNMemoryManager::ArticleItem* KNMemoryManager::findCacheEntry(KNArticle *a, bool take)
 {
-  for ( QValueList<ArticleItem*>::Iterator it = mArtList.begin(); it != mArtList.end(); ++it ) {
+  for ( Q3ValueList<ArticleItem*>::Iterator it = mArtList.begin(); it != mArtList.end(); ++it ) {
     if ( (*it)->art == a ) {
       ArticleItem *ret = (*it);
       if ( take )
@@ -156,10 +158,10 @@ void KNMemoryManager::checkMemoryUsageCollections()
   KNArticleCollection *c=0;
 
   if (c_ollCacheSize > maxSize) {
-    QValueList<CollectionItem*> tempList( mColList ); // work on a copy, KNGroup-/Foldermanager will
+    Q3ValueList<CollectionItem*> tempList( mColList ); // work on a copy, KNGroup-/Foldermanager will
                                                       // modify the original list
 
-    for ( QValueList<CollectionItem*>::Iterator it = tempList.begin(); it != tempList.end(); ) {
+    for ( Q3ValueList<CollectionItem*>::Iterator it = tempList.begin(); it != tempList.end(); ) {
       if ( c_ollCacheSize <= maxSize )
         break;
       // unloadHeaders() will remove the cache entry and thus invalidate the iterator!
@@ -185,10 +187,10 @@ void KNMemoryManager::checkMemoryUsageArticles()
   int maxSize = knGlobals.configManager()->readNewsGeneral()->artCacheSize() * 1024;
 
   if (a_rtCacheSize > maxSize) {
-    QValueList<ArticleItem*> tempList( mArtList ); // work on a copy, KNArticlemanager will
+    Q3ValueList<ArticleItem*> tempList( mArtList ); // work on a copy, KNArticlemanager will
                                                    // modify the original list
 
-    for ( QValueList<ArticleItem*>::Iterator it = mArtList.begin(); it != mArtList.end(); ) {
+    for ( Q3ValueList<ArticleItem*>::Iterator it = mArtList.begin(); it != mArtList.end(); ) {
       if ( a_rtCacheSize <= maxSize )
         break;
       // unloadArticle() will remove the cache entry and thus invalidate the iterator!

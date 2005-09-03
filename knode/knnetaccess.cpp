@@ -16,6 +16,9 @@
 #include <fcntl.h>
 
 #include <qsocketnotifier.h>
+//Added by qt3to4:
+#include <Q3StrList>
+#include <Q3ValueList>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -119,7 +122,7 @@ void KNNetAccess::addJob(KNJobData *job)
     // avoid duplicate fetchNewHeader jobs...
     bool duplicate = false;
     if ( job->type() == KNJobData::JTfetchNewHeaders || job->type() == KNJobData::JTsilentFetchNewHeaders ) {
-      QValueList<KNJobData*>::ConstIterator it;
+      Q3ValueList<KNJobData*>::ConstIterator it;
       for ( it = nntpJobQueue.begin(); it != nntpJobQueue.end(); ++it ) {
         if ( ( (*it)->type() == KNJobData::JTfetchNewHeaders || (*it)->type() == KNJobData::JTsilentFetchNewHeaders )
           && (*it)->data() == job->data() ) // job works on the same group...
@@ -158,7 +161,7 @@ void KNNetAccess::stopJobsNntp( int type )
 {
   cancelCurrentNntpJob( type );
   KNJobData *tmp = 0;
-  QValueList<KNJobData*>::Iterator it;
+  Q3ValueList<KNJobData*>::Iterator it;
   for ( it = nntpJobQueue.begin(); it != nntpJobQueue.end();) {
     tmp = *it;
     if ( type == 0 || tmp->type() == type ) {
@@ -196,7 +199,7 @@ void KNNetAccess::stopJobsSmtp( int type )
 {
   cancelCurrentSmtpJob( type );
   KNJobData *tmp = 0;
-  QValueList<KNJobData*>::Iterator it;
+  Q3ValueList<KNJobData*>::Iterator it;
   for ( it = smtpJobQueue.begin(); it != smtpJobQueue.end();) {
     tmp = *it;
     if ( type == 0 || tmp->type() == type ) {
@@ -254,7 +257,7 @@ void KNNetAccess::startJobSmtp()
     // create url query part
     QString query("headers=0&from=");
     query += KURL::encode_string( art->from()->email() );
-    QStrList emails;
+    Q3StrList emails;
     art->to()->emails( &emails );
     for ( char *e = emails.first(); e; e = emails.next() ) {
       query += "&to=" + KURL::encode_string( e );
@@ -474,7 +477,7 @@ void KNNetAccess::slotJobResult( KIO::Job *job )
 
 void KNNetAccess::slotPasswordsChanged()
 {
-  QValueList<KNJobData*>::ConstIterator it;
+  Q3ValueList<KNJobData*>::ConstIterator it;
   for ( it = mWalletQueue.begin(); it != mWalletQueue.end(); ++it ) {
     (*it)->setStatus( i18n("Waiting...") );
     if ( (*it)->type() == KNJobData::JTmail )
@@ -493,7 +496,7 @@ void KNNetAccess::slotPasswordsChanged()
 void KNNetAccess::slotCancelJob( KPIM::ProgressItem *item )
 {
   KNJobData *tmp = 0;
-  QValueList<KNJobData*>::Iterator it;
+  Q3ValueList<KNJobData*>::Iterator it;
   for ( it = nntpJobQueue.begin(); it != nntpJobQueue.end();) {
     tmp = *it;
     if ( tmp->progressItem() == item ) {

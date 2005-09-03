@@ -13,6 +13,8 @@
 */
 
 #include <qstring.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <kwin.h>
 #include <kscoringeditor.h>
@@ -109,7 +111,7 @@ QStringList KNScoringManager::getGroups() const
 {
   KNAccountManager *am = knGlobals.accountManager();
   QStringList res;
-  QValueList<KNNntpAccount*>::Iterator it;
+  Q3ValueList<KNNntpAccount*>::Iterator it;
   for ( it = am->begin(); it != am->end(); ++it ) {
     QStringList groups;
     knGlobals.groupManager()->getSubscribed( (*it), groups);

@@ -16,7 +16,9 @@
 #define KNGROUPMANAGER_H
 
 #include <qobject.h>
-#include <qsortedlist.h>
+#include <q3sortedlist.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include "knjobdata.h"
 #include "kngroup.h"
@@ -59,13 +61,13 @@ class KNGroupListData : public KNJobItem {
 
     bool readIn(KNProtocolClient *client=0);
     bool writeOut();
-    void merge(QSortedList<KNGroupInfo>* newGroups);
+    void merge(Q3SortedList<KNGroupInfo>* newGroups);
 
-    QSortedList<KNGroupInfo>* extractList();
+    Q3SortedList<KNGroupInfo>* extractList();
 
     QStringList subscribed;
     QString path;
-    QSortedList<KNGroupInfo> *groups;
+    Q3SortedList<KNGroupInfo> *groups;
     QDate fetchSince;
     bool getDescriptions;
     QTextCodec *codecForDescriptions;
@@ -87,7 +89,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     // group access
     void loadGroups(KNNntpAccount *a);
     void getSubscribed(KNNntpAccount *a, QStringList &l);
-    QValueList<KNGroup*> groupsOfAccount( KNNntpAccount *a );
+    Q3ValueList<KNGroup*> groupsOfAccount( KNNntpAccount *a );
 
     bool loadHeaders(KNGroup *g);
     bool unloadHeaders(KNGroup *g, bool force=true);
@@ -124,7 +126,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
   protected:
     /** reimplemented from @ref KNJobConsumer */
     void processJob(KNJobData *j);
-    QValueList<KNGroup*> mGroupList;
+    Q3ValueList<KNGroup*> mGroupList;
     KNGroup *c_urrentGroup;
     KNArticleManager *a_rticleMgr;
 

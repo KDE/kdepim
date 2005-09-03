@@ -16,6 +16,9 @@
 #define KNARTICLEWINDOW_H
 
 #include <kmainwindow.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 
 class KNArticle;
 class KNArticleCollection;
@@ -36,11 +39,11 @@ class KNArticleWindow : public KMainWindow  {
     static bool closeAllWindowsForCollection(KNArticleCollection *col, bool force=true);
     static bool closeAllWindowsForArticle(KNArticle *art, bool force=true);
     static bool raiseWindowForArticle(KNArticle *art);   // false: no window found
-    static bool raiseWindowForArticle(const QCString &mid);
+    static bool raiseWindowForArticle(const Q3CString &mid);
 
   protected:
     KNode::ArticleWidget *artW;
-    static QValueList<KNArticleWindow*> mInstances;
+    static Q3ValueList<KNArticleWindow*> mInstances;
 
 };
 

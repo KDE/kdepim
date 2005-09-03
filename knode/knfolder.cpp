@@ -13,6 +13,9 @@
 */
 
 #include <qfileinfo.h>
+//Added by qt3to4:
+#include <QTextStream>
+#include <Q3CString>
 
 #include <ksimpleconfig.h>
 #include <kstandarddirs.h>
@@ -169,13 +172,13 @@ bool KNFolder::loadHdrs()
     return true;
   }
 
-  if(!i_ndexFile.open(IO_ReadOnly)) {
+  if(!i_ndexFile.open(QIODevice::ReadOnly)) {
     kdError(5003) << "KNFolder::loadHdrs() : cannot open index-file!" << endl;
     closeFiles();
     return false;
   }
 
-  if(!m_boxFile.open(IO_ReadOnly)) {
+  if(!m_boxFile.open(QIODevice::ReadOnly)) {
     kdError(5003) << "KNFolder::loadHdrs() : cannot open mbox-file!" << endl;
     closeFiles();
     return false;
@@ -186,7 +189,7 @@ bool KNFolder::loadHdrs()
     return false;
   }
 
-  QCString tmp;
+  Q3CString tmp;
   KQCStringSplitter split;
   KNLocalArticle *art;
   DynData dynamic;
@@ -327,7 +330,7 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
     return true;
 
   closeFiles();
-  if(!m_boxFile.open(IO_ReadOnly)) {
+  if(!m_boxFile.open(QIODevice::ReadOnly)) {
     kdError(5003) << "KNFolder::loadArticle(KNLocalArticle *a) : cannot open mbox file: "
                   << m_boxFile.name() << endl;
     return false;
@@ -344,7 +347,7 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
   m_boxFile.readLine(); //skip X-KNode-Overview
 
   unsigned int size=a->endOffset()-m_boxFile.at()-1;
-  QCString buff(size+10);
+  Q3CString buff(size+10);
   int readBytes=m_boxFile.readBlock(buff.data(), size);
   closeFiles();
   if(readBytes < (int)(size) && m_boxFile.status() != IO_Ok) {  //cannot read file
@@ -366,7 +369,7 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
   if(!isLoaded())  // loading should not be done here - keep the StorageManager in sync !!
     return false;
 
-  if(!m_boxFile.open(IO_WriteOnly | IO_Append)) {
+  if(!m_boxFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
     kdError(5003) << "KNFolder::saveArticles() : cannot open mbox-file!" << endl;
     closeFiles();
     return false;
@@ -533,7 +536,7 @@ void KNFolder::syncIndex(bool force)
   if(!i_ndexDirty && !force)
     return;
 
-  if(!i_ndexFile.open(IO_WriteOnly)) {
+  if(!i_ndexFile.open(QIODevice::WriteOnly)) {
     kdError(5003) << "KNFolder::syncIndex(bool force) : cannot open index-file!" << endl;
     closeFiles();
     return;

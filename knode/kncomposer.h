@@ -22,6 +22,18 @@
 #include <keditcl.h>
 #include <qlineedit.h>
 #include <qregexp.h>
+//Added by qt3to4:
+#include <Q3CString>
+#include <QCloseEvent>
+#include <Q3PtrList>
+#include <QKeyEvent>
+#include <QEvent>
+#include <QDropEvent>
+#include <QLabel>
+#include <Q3ValueList>
+#include <QContextMenuEvent>
+#include <Q3PopupMenu>
+#include <QDragEnterEvent>
 
 #include <kdeversion.h>
 #include <keditcl.h>
@@ -29,7 +41,7 @@
 #include <kabc/addresslineedit.h>
 #include <knodecomposeriface.h>
 
-class QGroupBox;
+class Q3GroupBox;
 
 class KProcess;
 class KSpell;
@@ -76,7 +88,7 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     // ask for a filename, handle network urls
     void insertFile(bool clear=false, bool box=false);
 
-    QPopupMenu * popupMenu( const QString& name );
+    Q3PopupMenu * popupMenu( const QString& name );
     int listOfResultOfCheckWord( const QStringList & lst , const QString & selectWord);
 
 //internal classes
@@ -88,13 +100,13 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
 
     //GUI
     ComposerView *v_iew;
-    QPopupMenu *a_ttPopup;
+    Q3PopupMenu *a_ttPopup;
 
     //Data
     composerResult r_esult;
     KNLocalArticle *a_rticle;
     QString s_ignature, u_nwraped;
-    QCString c_harset;
+    Q3CString c_harset;
     MessageMode m_ode;
     bool n_eeds8Bit,    // false: fall back to us-ascii
          v_alidated,    // hasValidData was run and found no problems, n_eeds8Bit is valid
@@ -108,8 +120,8 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     SpellingFilter* mSpellingFilter;
 
     //Attachments
-    QValueList<KNAttachment*> mDeletedAttachments;
-    QPtrList<KAction> m_listAction;
+    Q3ValueList<KNAttachment*> mDeletedAttachments;
+    Q3PtrList<KAction> m_listAction;
     bool a_ttChanged;
 
   //------------------------------ <Actions> -----------------------------
@@ -163,10 +175,10 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     void slotCancelEditor();
 
     // attachment list
-    void slotAttachmentPopup(KListView*, QListViewItem *it, const QPoint &p);
-    void slotAttachmentSelected(QListViewItem *it);
-    void slotAttachmentEdit(QListViewItem *it);
-    void slotAttachmentRemove(QListViewItem *it);
+    void slotAttachmentPopup(KListView*, Q3ListViewItem *it, const QPoint &p);
+    void slotAttachmentSelected(Q3ListViewItem *it);
+    void slotAttachmentEdit(Q3ListViewItem *it);
+    void slotAttachmentRemove(Q3ListViewItem *it);
 
     // spellcheck operation
     void slotSpellStarted(KSpell *);
@@ -218,7 +230,7 @@ class KNComposer::ComposerView  : public QSplitter {
     void showExternalNotification();
     void hideExternalNotification();
     void restartBackgroundSpellCheck();
-    QValueList<QWidget*> mEdtList;
+    Q3ValueList<QWidget*> mEdtList;
 
     QLabel      *l_to,
                 *l_groups,
@@ -233,7 +245,7 @@ class KNComposer::ComposerView  : public QSplitter {
                 *t_oBtn;
 
     Editor      *e_dit;
-    QGroupBox   *n_otification;
+    Q3GroupBox   *n_otification;
     QPushButton *c_ancelEditorBtn;
 
     QWidget         *a_ttWidget;
@@ -312,7 +324,7 @@ class KNComposer::AttachmentView : public KListView {
     void keyPressEvent( QKeyEvent *e );
 
   signals:
-    void delPressed ( QListViewItem * );      // the user used Key_Delete on a list view item
+    void delPressed ( Q3ListViewItem * );      // the user used Key_Delete on a list view item
 };
 
 
@@ -363,7 +375,7 @@ protected:
     // Inherited. Always called by the parent when this widget is created.
     virtual void loadAddresses();
     void keyPressEvent(QKeyEvent *e);
-    virtual QPopupMenu *createPopupMenu();
+    virtual Q3PopupMenu *createPopupMenu();
 private slots:
     void editRecentAddresses();
 private:

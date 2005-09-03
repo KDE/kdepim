@@ -20,8 +20,10 @@
 #include <qfile.h>
 
 #include <qglobal.h>
-#include <qptrvector.h>
-#include <qptrlist.h>
+#include <q3ptrvector.h>
+#include <q3ptrlist.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 class QWidget;
 class QString;
@@ -37,17 +39,17 @@ class KTempFile;
 //*****************************************************************************
 
 /** clone of QSortedList... */
-template<class type> class Q_EXPORT QSortedVector : public QPtrVector<type>
+template<class type> class Q_EXPORT QSortedVector : public Q3PtrVector<type>
 {
 public:
     QSortedVector() {}
-    QSortedVector ( uint size ) : QPtrVector<type>(size) {}
-    QSortedVector( const QSortedVector<type> &l ) : QPtrVector<type>(l) {}
-    ~QSortedVector() { QPtrVector<type>::clear(); }
+    QSortedVector ( uint size ) : Q3PtrVector<type>(size) {}
+    QSortedVector( const QSortedVector<type> &l ) : Q3PtrVector<type>(l) {}
+    ~QSortedVector() { Q3PtrVector<type>::clear(); }
     QSortedVector<type> &operator=(const QSortedVector<type> &l)
-      { return (QSortedVector<type>&)QPtrList<type>::operator=(l); }
+      { return (QSortedVector<type>&)Q3PtrList<type>::operator=(l); }
 
-    virtual int compareItems( QPtrCollection::Item s1, QPtrCollection::Item s2 )
+    virtual int compareItems( Q3PtrCollection::Item s1, Q3PtrCollection::Item s2 )
       { if ( *((type*)s1) == *((type*)s2) ) return 0; return ( *((type*)s1) < *((type*)s2) ? -1 : 1 ); }
 };
 
@@ -60,8 +62,8 @@ class KNFile : public QFile {
   public:
     KNFile(const QString& fname=QString::null);
     ~KNFile();
-    const QCString& readLine();
-    const QCString& readLineWnewLine();
+    const Q3CString& readLine();
+    const Q3CString& readLineWnewLine();
     /** searches for the string from the current file position
 	returns -1 when the string wasn't found. */
     int findString(const char *s);
@@ -69,7 +71,7 @@ class KNFile : public QFile {
    protected:
     bool increaseBuffer();
 
-    QCString buffer;
+    Q3CString buffer;
     char *dataPtr;
     int filePos, readBytes;
 };

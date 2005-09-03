@@ -16,6 +16,10 @@
 #include <qregexp.h>
 #include <qapplication.h>
 #include <qcursor.h>
+//Added by qt3to4:
+#include <Q3Frame>
+#include <QHBoxLayout>
+#include <Q3CString>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -47,7 +51,7 @@ KNFile::~KNFile()
 }
 
 
-const QCString& KNFile::readLine()
+const Q3CString& KNFile::readLine()
 {
   filePos=at();
   readBytes=QFile::readLine(dataPtr, buffer.size()-1);
@@ -68,7 +72,7 @@ const QCString& KNFile::readLine()
 }
 
 
-const QCString& KNFile::readLineWnewLine()
+const Q3CString& KNFile::readLineWnewLine()
 {
   filePos=at();
   readBytes=QFile::readLine(dataPtr, buffer.size()-1);
@@ -90,7 +94,7 @@ const QCString& KNFile::readLineWnewLine()
 
 int KNFile::findString(const char *s)
 {
-  QCString searchBuffer;
+  Q3CString searchBuffer;
   searchBuffer.resize(2048);
   char *buffPtr = searchBuffer.data(), *pos;
   int readBytes, currentFilePos;
@@ -173,7 +177,7 @@ QFile* KNSaveHelper::getFile(const QString &dialogTitle)
     }
 
     file = new QFile(url.path());
-    if(!file->open(IO_WriteOnly)) {
+    if(!file->open(QIODevice::WriteOnly)) {
       KNHelper::displayExternalFileError();
       delete file;
       file = 0;
@@ -248,7 +252,7 @@ KNFile* KNLoadHelper::setURL(KURL url)
     return 0;
 
   f_ile = new KNFile(fileName);
-  if(!f_ile->open(IO_ReadOnly)) {
+  if(!f_ile->open(QIODevice::ReadOnly)) {
     KNHelper::displayExternalFileError();
     delete f_ile;
     f_ile = 0;
@@ -265,7 +269,7 @@ int KNHelper::selectDialog(QWidget *parent, const QString &caption, const QStrin
 {
   KDialogBase *dlg=new KDialogBase(KDialogBase::Plain, caption, KDialogBase::Ok|KDialogBase::Cancel,
                                    KDialogBase::Ok, parent);
-  QFrame *page = dlg->plainPage();
+  Q3Frame *page = dlg->plainPage();
   QHBoxLayout *pageL = new QHBoxLayout(page,8,5);
 
   KNDialogListBox *list = new KNDialogListBox(true, page);
@@ -323,7 +327,7 @@ void KNHelper::restoreWindowSize(const QString &name, QWidget *d, const QSize &d
 const QString KNHelper::encryptStr(const QString& aStr)
 {
   uint i,val,len = aStr.length();
-  QCString result;
+  Q3CString result;
 
   for (i=0; i<len; i++)
   {

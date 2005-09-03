@@ -12,10 +12,24 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qheader.h>
+#include <q3header.h>
 #include <qtextcodec.h>
 #include <qclipboard.h>
 #include <qapplication.h>
+//Added by qt3to4:
+#include <Q3Frame>
+#include <QGridLayout>
+#include <QKeyEvent>
+#include <QEvent>
+#include <QTextStream>
+#include <Q3CString>
+#include <QContextMenuEvent>
+#include <Q3ValueList>
+#include <QVBoxLayout>
+#include <QDropEvent>
+#include <QDragEnterEvent>
+#include <QCloseEvent>
+#include <QLabel>
 #include <kspelldlg.h>
 #include <kdeversion.h>
 #include "addressesdialog.h"
@@ -58,7 +72,7 @@ using KRecentAddress::RecentAddresses;
 #include "knarticlefactory.h"
 #include <kstatusbar.h>
 #include <klocale.h>
-#include <qpopupmenu.h>
+#include <q3popupmenu.h>
 #include <spellingfilter.h>
 #include <kstdguiitem.h>
 
@@ -70,9 +84,9 @@ KNLineEdit::KNLineEdit(KNComposer::ComposerView *_composerView, bool useCompleti
 }
 
 
-QPopupMenu *KNLineEdit::createPopupMenu()
+Q3PopupMenu *KNLineEdit::createPopupMenu()
 {
-    QPopupMenu *menu = KLineEdit::createPopupMenu();
+    Q3PopupMenu *menu = KLineEdit::createPopupMenu();
     if ( !menu )
         return 0;
 
@@ -331,8 +345,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
 
   //attachment popup
-  a_ttPopup=static_cast<QPopupMenu*> (factory()->container("attachment_popup", this));
-  if(!a_ttPopup) a_ttPopup = new QPopupMenu();
+  a_ttPopup=static_cast<Q3PopupMenu*> (factory()->container("attachment_popup", this));
+  if(!a_ttPopup) a_ttPopup = new Q3PopupMenu();
   slotAttachmentSelected(0);
 
   //init
@@ -398,7 +412,7 @@ KNComposer::~KNComposer()
     delete e_ditorTempfile;
   }
 
-  for ( QValueList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
+  for ( Q3ValueList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
     delete (*it);
 
   KConfig *conf = knGlobals.config();
@@ -436,7 +450,7 @@ void KNComposer::slotUndo()
     if (!fw) return;
 
     if (fw->inherits("KEdit"))
-        ((QMultiLineEdit*)fw)->undo();
+        ((Q3MultiLineEdit*)fw)->undo();
     else if (fw->inherits("QLineEdit"))
         ((QLineEdit*)fw)->undo();
 }
@@ -447,7 +461,7 @@ void KNComposer::slotRedo()
     if (!fw) return;
 
     if (fw->inherits("KEdit"))
-        ((QMultiLineEdit*)fw)->redo();
+        ((Q3MultiLineEdit*)fw)->redo();
     else if (fw->inherits("QLineEdit"))
         ((QLineEdit*)fw)->redo();
 }
@@ -458,7 +472,7 @@ void KNComposer::slotCut()
   if (!fw) return;
 
   if (fw->inherits("KEdit"))
-    ((QMultiLineEdit*)fw)->cut();
+    ((Q3MultiLineEdit*)fw)->cut();
   else if (fw->inherits("QLineEdit"))
     ((QLineEdit*)fw)->cut();
   else kdDebug(5003) << "wrong focus widget" << endl;
@@ -470,7 +484,7 @@ void KNComposer::slotCopy()
   if (!fw) return;
 
   if (fw->inherits("KEdit"))
-    ((QMultiLineEdit*)fw)->copy();
+    ((Q3MultiLineEdit*)fw)->copy();
   else if (fw->inherits("QLineEdit"))
     ((QLineEdit*)fw)->copy();
   else kdDebug(5003) << "wrong focus widget" << endl;
@@ -484,7 +498,7 @@ void KNComposer::slotPaste()
   if (!fw) return;
 
   if (fw->inherits("KEdit"))
-    ((QMultiLineEdit*)fw)->paste();
+    ((Q3MultiLineEdit*)fw)->paste();
   else if (fw->inherits("QLineEdit"))
     ((QLineEdit*)fw)->paste();
   else kdDebug(5003) << "wrong focus widget" << endl;
@@ -498,7 +512,7 @@ void KNComposer::slotSelectAll()
   if (fw->inherits("QLineEdit"))
       ((QLineEdit*)fw)->selectAll();
   else if (fw->inherits("QMultiLineEdit"))
-    ((QMultiLineEdit*)fw)->selectAll();
+    ((Q3MultiLineEdit*)fw)->selectAll();
 }
 
 
@@ -506,7 +520,7 @@ void KNComposer::setConfig(bool onlyFonts)
 {
   if (!onlyFonts) {
     v_iew->e_dit->setWordWrap(knGlobals.configManager()->postNewsComposer()->wordWrap()?
-                              QMultiLineEdit::FixedColumnWidth : QMultiLineEdit::NoWrap);
+                              Q3MultiLineEdit::FixedColumnWidth : Q3MultiLineEdit::NoWrap);
     v_iew->e_dit->setWrapColumnOrWidth(knGlobals.configManager()->postNewsComposer()->maxLineLength());
     a_ctWordWrap->setChecked(knGlobals.configManager()->postNewsComposer()->wordWrap());
 
@@ -700,7 +714,7 @@ bool KNComposer::hasValidData()
   // check if article can be signed
   if ( a_ctPGPsign->isChecked() ) {
     // try to get the signing key
-    QCString signingKey = knGlobals.configManager()->identity()->signingKey();
+    Q3CString signingKey = knGlobals.configManager()->identity()->signingKey();
     KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
     if ( acc ) {
       KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
@@ -766,7 +780,7 @@ bool KNComposer::applyChanges()
 
   if(a_ttChanged && (v_iew->a_ttView)) {
 
-    QListViewItemIterator it(v_iew->a_ttView);
+    Q3ListViewItemIterator it(v_iew->a_ttView);
     while(it.current()) {
       a=(static_cast<AttachmentViewItem*> (it.current()))->attachment;
       if(a->hasChanged()) {
@@ -779,7 +793,7 @@ bool KNComposer::applyChanges()
     }
   }
 
-  for ( QValueList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
+  for ( Q3ValueList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
     if ( (*it)->isAttached() )
       (*it)->detach( a_rticle );
 
@@ -825,7 +839,7 @@ bool KNComposer::applyChanges()
   // Sign article if needed
   if ( a_ctPGPsign->isChecked() ) {
       // first get the signing key
-      QCString signingKey = knGlobals.configManager()->identity()->signingKey();
+      Q3CString signingKey = knGlobals.configManager()->identity()->signingKey();
       KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
       if ( acc ) {
           KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
@@ -847,7 +861,7 @@ bool KNComposer::applyChanges()
           block.setText( codec->fromUnicode(tmpText) );
           kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
           if( block.clearsign( signingKey, codec->name() ) == Kpgp::Ok ) {
-              QCString result = block.text();
+              Q3CString result = block.text();
               tmp = codec->toUnicode(result.data(), result.length() );
           } else {
               return false;
@@ -971,7 +985,7 @@ void KNComposer::insertFile(QFile *file, bool clear, bool box, QString boxTitle)
   if (box)
     temp = QString::fromLatin1(",----[ %1 ]\n").arg(boxTitle);
 
-  if (box && (v_iew->e_dit->wordWrap()!=QMultiLineEdit::NoWrap)) {
+  if (box && (v_iew->e_dit->wordWrap()!=Q3MultiLineEdit::NoWrap)) {
     int wrapAt = v_iew->e_dit->wrapColumnOrWidth();
     QStringList lst;
     QString line;
@@ -1225,7 +1239,7 @@ void KNComposer::slotSetCharsetKeyboard()
 
 void KNComposer::slotToggleWordWrap()
 {
-  v_iew->e_dit->setWordWrap(a_ctWordWrap->isChecked()? QMultiLineEdit::FixedColumnWidth : QMultiLineEdit::NoWrap);
+  v_iew->e_dit->setWordWrap(a_ctWordWrap->isChecked()? Q3MultiLineEdit::FixedColumnWidth : Q3MultiLineEdit::NoWrap);
 }
 
 
@@ -1275,7 +1289,7 @@ void KNComposer::slotExternalEditor()
       tmp+="\n";
   }
 
-  QCString local = codec->fromUnicode(tmp);
+  Q3CString local = codec->fromUnicode(tmp);
   e_ditorTempfile->file()->writeBlock(local.data(),local.length());
   e_ditorTempfile->file()->flush();
 
@@ -1409,8 +1423,8 @@ void KNComposer::slotNewToolbarConfig()
 {
   createGUI("kncomposerui.rc");
 
-  a_ttPopup=static_cast<QPopupMenu*> (factory()->container("attachment_popup", this));
-  if(!a_ttPopup) a_ttPopup = new QPopupMenu();
+  a_ttPopup=static_cast<Q3PopupMenu*> (factory()->container("attachment_popup", this));
+  if(!a_ttPopup) a_ttPopup = new Q3PopupMenu();
 
   KConfig *conf = knGlobals.config();
   conf->setGroup("composerWindow_options");
@@ -1524,7 +1538,7 @@ void KNComposer::slotEditorFinished(KProcess *)
 {
   if(e_xternalEditor->normalExit()) {
     e_ditorTempfile->file()->close();
-    e_ditorTempfile->file()->open(IO_ReadOnly);
+    e_ditorTempfile->file()->open(QIODevice::ReadOnly);
     insertFile(e_ditorTempfile->file(), true);
     e_xternalEdited=true;
   }
@@ -1547,14 +1561,14 @@ void KNComposer::slotCancelEditor()
 }
 
 
-void KNComposer::slotAttachmentPopup(KListView*, QListViewItem *it, const QPoint &p)
+void KNComposer::slotAttachmentPopup(KListView*, Q3ListViewItem *it, const QPoint &p)
 {
   if(it)
     a_ttPopup->popup(p);
 }
 
 
-void KNComposer::slotAttachmentSelected(QListViewItem *it)
+void KNComposer::slotAttachmentSelected(Q3ListViewItem *it)
 {
   if(v_iew->a_ttWidget) {
     v_iew->a_ttRemoveBtn->setEnabled((it!=0));
@@ -1563,13 +1577,13 @@ void KNComposer::slotAttachmentSelected(QListViewItem *it)
 }
 
 
-void KNComposer::slotAttachmentEdit(QListViewItem *)
+void KNComposer::slotAttachmentEdit(Q3ListViewItem *)
 {
   slotAttachmentProperties();
 }
 
 
-void KNComposer::slotAttachmentRemove(QListViewItem *)
+void KNComposer::slotAttachmentRemove(Q3ListViewItem *)
 {
   slotRemoveAttachment();
 }
@@ -1712,11 +1726,11 @@ void KNComposer::dropEvent(QDropEvent *ev)
   slotDropEvent(ev);
 }
 
-QPopupMenu * KNComposer::popupMenu( const QString& name )
+Q3PopupMenu * KNComposer::popupMenu( const QString& name )
 {
     Q_ASSERT(factory());
     if ( factory() )
-        return ((QPopupMenu*)factory()->container( name, this ));
+        return ((Q3PopupMenu*)factory()->container( name, this ));
     return 0L;
 }
 
@@ -1725,13 +1739,13 @@ QPopupMenu * KNComposer::popupMenu( const QString& name )
 
 
 KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
-  : QSplitter(QSplitter::Vertical, composer, n), a_ttWidget(0), a_ttView(0), v_iewOpen(false)
+  : QSplitter(Qt::Vertical, composer, n), a_ttWidget(0), a_ttView(0), v_iewOpen(false)
 {
   QWidget *main=new QWidget(this);
 
   //headers
-  QFrame *hdrFrame=new QFrame(main);
-  hdrFrame->setFrameStyle(QFrame::Box | QFrame::Sunken);
+  Q3Frame *hdrFrame=new Q3Frame(main);
+  hdrFrame->setFrameStyle(Q3Frame::Box | Q3Frame::Sunken);
   QGridLayout *hdrL=new QGridLayout(hdrFrame, 4,3, 7,5);
   hdrL->setColStretch(1,1);
 
@@ -1798,10 +1812,10 @@ KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
 
   QVBoxLayout *notL=new QVBoxLayout(e_dit);
   notL->addStretch(1);
-  n_otification=new QGroupBox(2, Qt::Horizontal, e_dit);
+  n_otification=new Q3GroupBox(2, Qt::Horizontal, e_dit);
   l=new QLabel(i18n("You are currently editing the article body\nin an external editor. To continue, you have\nto close the external editor."), n_otification);
   c_ancelEditorBtn=new QPushButton(i18n("&Kill External Editor"), n_otification);
-  n_otification->setFrameStyle(QFrame::Panel | QFrame::Raised);
+  n_otification->setFrameStyle(Q3Frame::Panel | Q3Frame::Raised);
   n_otification->setLineWidth(2);
   n_otification->hide();
   notL->addWidget(n_otification, 0, Qt::AlignHCenter);
@@ -1822,8 +1836,8 @@ KNComposer::ComposerView::~ComposerView()
 
     conf->writeEntry("Att_Splitter",sizes());   // save splitter pos
 
-    QValueList<int> lst;                        // save header sizes
-    QHeader *h=a_ttView->header();
+    Q3ValueList<int> lst;                        // save header sizes
+    Q3Header *h=a_ttView->header();
     for (int i=0; i<5; i++)
       lst << h->sectionSize(i);
     conf->writeEntry("Att_Headers",lst);
@@ -1834,12 +1848,12 @@ KNComposer::ComposerView::~ComposerView()
 
 void KNComposer::ComposerView::focusNextPrevEdit(const QWidget* aCur, bool aNext)
 {
-  QValueList<QWidget*>::Iterator it;
+  Q3ValueList<QWidget*>::Iterator it;
 
   if ( !aCur ) {
     it = --( mEdtList.end() );
   } else {
-    for ( QValueList<QWidget*>::Iterator it2 = mEdtList.begin(); it2 != mEdtList.end(); ++it2 ) {
+    for ( Q3ValueList<QWidget*>::Iterator it2 = mEdtList.begin(); it2 != mEdtList.end(); ++it2 ) {
       if ( (*it2) == aCur ) {
         it = it2;
         break;
@@ -1906,19 +1920,19 @@ void KNComposer::ComposerView::showAttachmentView()
     topL->addMultiCellWidget(a_ttView, 0,2, 0,0);
 
     //connections
-    connect(a_ttView, SIGNAL(currentChanged(QListViewItem*)),
-            parent(), SLOT(slotAttachmentSelected(QListViewItem*)));
-    connect(a_ttView, SIGNAL(clicked ( QListViewItem * )),
-            parent(), SLOT(slotAttachmentSelected(QListViewItem*)));
+    connect(a_ttView, SIGNAL(currentChanged(Q3ListViewItem*)),
+            parent(), SLOT(slotAttachmentSelected(Q3ListViewItem*)));
+    connect(a_ttView, SIGNAL(clicked ( Q3ListViewItem * )),
+            parent(), SLOT(slotAttachmentSelected(Q3ListViewItem*)));
 
-    connect(a_ttView, SIGNAL(contextMenu(KListView*, QListViewItem*, const QPoint&)),
-            parent(), SLOT(slotAttachmentPopup(KListView*, QListViewItem*, const QPoint&)));
-    connect(a_ttView, SIGNAL(delPressed(QListViewItem*)),
-            parent(), SLOT(slotAttachmentRemove(QListViewItem*)));
-    connect(a_ttView, SIGNAL(doubleClicked(QListViewItem*)),
-            parent(), SLOT(slotAttachmentEdit(QListViewItem*)));
-    connect(a_ttView, SIGNAL(returnPressed(QListViewItem*)),
-            parent(), SLOT(slotAttachmentEdit(QListViewItem*)));
+    connect(a_ttView, SIGNAL(contextMenu(KListView*, Q3ListViewItem*, const QPoint&)),
+            parent(), SLOT(slotAttachmentPopup(KListView*, Q3ListViewItem*, const QPoint&)));
+    connect(a_ttView, SIGNAL(delPressed(Q3ListViewItem*)),
+            parent(), SLOT(slotAttachmentRemove(Q3ListViewItem*)));
+    connect(a_ttView, SIGNAL(doubleClicked(Q3ListViewItem*)),
+            parent(), SLOT(slotAttachmentEdit(Q3ListViewItem*)));
+    connect(a_ttView, SIGNAL(returnPressed(Q3ListViewItem*)),
+            parent(), SLOT(slotAttachmentEdit(Q3ListViewItem*)));
 
     //buttons
     a_ttAddBtn=new QPushButton(i18n("A&dd..."),a_ttWidget);
@@ -1946,16 +1960,16 @@ void KNComposer::ComposerView::showAttachmentView()
     KConfig *conf=knGlobals.config();
     conf->setGroup("POSTNEWS");
 
-    QValueList<int> lst=conf->readIntListEntry("Att_Splitter");
+    Q3ValueList<int> lst=conf->readIntListEntry("Att_Splitter");
     if(lst.count()!=2)
       lst << 267 << 112;
     setSizes(lst);
 
     lst=conf->readIntListEntry("Att_Headers");
     if(lst.count()==5) {
-      QValueList<int>::Iterator it=lst.begin();
+      Q3ValueList<int>::Iterator it=lst.begin();
 
-      QHeader *h=a_ttView->header();
+      Q3Header *h=a_ttView->header();
       for(int i=0; i<5; i++) {
         h->resizeSection(i,(*it));
         ++it;
@@ -2019,7 +2033,7 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
     QKeyEvent *k = (QKeyEvent*)e;
     // ---sven's Arrow key navigation start ---
     // Key Up in first line takes you to Subject line.
-    if (k->key() == Key_Up && k->state() != ShiftButton && currentLine() == 0
+    if (k->key() == Qt::Key_Up && k->state() != Qt::ShiftModifier && currentLine() == 0
       && lineOfChar(0, currentColumn()) == 0)
     {
       deselect();
@@ -2028,7 +2042,7 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
     }
     // ---sven's Arrow key navigation end ---
 
-    if (k->key() == Key_Backtab && k->state() == ShiftButton)
+    if (k->key() == Qt::Key_Backtab && k->state() == Qt::ShiftModifier)
     {
       deselect();
       m_composerView->focusNextPrevEdit(0, false);
@@ -2328,7 +2342,7 @@ void KNComposer::Editor::contentsDropEvent(QDropEvent *ev)
 
 void KNComposer::Editor::keyPressEvent ( QKeyEvent *e)
 {
-    if( e->key() == Key_Return ) {
+    if( e->key() == Qt::Key_Return ) {
         int line, col;
         getCursorPosition( &line, &col );
         QString lineText = text( line );
@@ -2389,7 +2403,7 @@ void KNComposer::Editor::keyPressEvent ( QKeyEvent *e)
 void KNComposer::Editor::contentsContextMenuEvent( QContextMenuEvent */*e*/ )
 {
     QString selectWord = selectWordUnderCursor();
-    QPopupMenu* popup = 0L;
+    Q3PopupMenu* popup = 0L;
     if ( selectWord.isEmpty())
     {
         popup = m_composer ? m_composer->popupMenu( "edit" ): 0;
@@ -2461,13 +2475,13 @@ void KNComposer::Editor::slotMisspelling (const QString &, const QStringList &ls
     int countAction = m_composer->listOfResultOfCheckWord( lst , selectWordUnderCursor());
     if ( countAction>0 )
     {
-        QPopupMenu* popup = m_composer ? m_composer->popupMenu( "edit_with_spell" ): 0;
+        Q3PopupMenu* popup = m_composer ? m_composer->popupMenu( "edit_with_spell" ): 0;
         if ( popup )
             popup->popup(QCursor::pos());
     }
     else
     {
-        QPopupMenu* popup = m_composer ? m_composer->popupMenu( "edit" ): 0;
+        Q3PopupMenu* popup = m_composer ? m_composer->popupMenu( "edit" ): 0;
         if ( popup )
             popup->popup(QCursor::pos());
     }
@@ -2493,7 +2507,7 @@ void KNComposer::Editor::slotCorrectWord()
 KNComposer::AttachmentView::AttachmentView(QWidget *parent, char *name)
  : KListView(parent, name)
 {
-  setFrameStyle(QFrame::WinPanel | QFrame::Sunken);  // match the QMultiLineEdit style
+  setFrameStyle(Q3Frame::WinPanel | Q3Frame::Sunken);  // match the QMultiLineEdit style
   addColumn(i18n("File"), 115);
   addColumn(i18n("Type"), 91);
   addColumn(i18n("Size"), 55);
@@ -2514,7 +2528,7 @@ void KNComposer::AttachmentView::keyPressEvent(QKeyEvent *e)
   if(!e)
     return; // subclass bug
 
-  if( (e->key()==Key_Delete) && (currentItem()) )
+  if( (e->key()==Qt::Key_Delete) && (currentItem()) )
     emit(delPressed(currentItem()));
   else
     KListView::keyPressEvent(e);
@@ -2555,7 +2569,7 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg(KNAttachment *a, QW
   QVBoxLayout *topL=new QVBoxLayout(page);
 
   //file info
-  QGroupBox *fileGB=new QGroupBox(i18n("File"), page);
+  Q3GroupBox *fileGB=new Q3GroupBox(i18n("File"), page);
   QGridLayout *fileL=new QGridLayout(fileGB, 3,2, 15,5);
 
   fileL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
@@ -2568,7 +2582,7 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg(KNAttachment *a, QW
   topL->addWidget(fileGB);
 
   //mime info
-  QGroupBox *mimeGB=new QGroupBox(i18n("Mime"), page);
+  Q3GroupBox *mimeGB=new Q3GroupBox(i18n("Mime"), page);
   QGridLayout *mimeL=new QGridLayout(mimeGB, 4,2, 15,5);
 
   mimeL->addRowSpacing(0, fontMetrics().lineSpacing()-9);

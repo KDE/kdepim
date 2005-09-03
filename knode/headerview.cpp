@@ -13,9 +13,14 @@
 */
 
 #include <qcursor.h>
-#include <qheader.h>
-#include <qstylesheet.h>
+#include <q3header.h>
+#include <q3stylesheet.h>
 #include <qtimer.h>
+//Added by qt3to4:
+#include <QFocusEvent>
+#include <QKeyEvent>
+#include <QEvent>
+#include <QMouseEvent>
 
 #include <klocale.h>
 #include <kdebug.h>
@@ -55,7 +60,7 @@ KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
   setAcceptDrops( false );
   setDragEnabled( true );
   setAllColumnsShowFocus( true );
-  setSelectionMode( QListView::Extended );
+  setSelectionMode( Q3ListView::Extended );
   setShowSortIndicator( true );
   setShadeSortColumn ( true );
   setRootIsDecorated( true );
@@ -137,7 +142,7 @@ void KNHeaderView::writeConfig()
 }
 
 
-void KNHeaderView::setActive( QListViewItem *i )
+void KNHeaderView::setActive( Q3ListViewItem *i )
 {
   KNHdrViewItem *item = static_cast<KNHdrViewItem*>( i );
 
@@ -162,16 +167,16 @@ void KNHeaderView::setActive( QListViewItem *i )
 void KNHeaderView::clear()
 {
   mActiveItem = 0;
-  QListView::clear();
+  Q3ListView::clear();
 }
 
 
-void KNHeaderView::ensureItemVisibleWithMargin( const QListViewItem *i )
+void KNHeaderView::ensureItemVisibleWithMargin( const Q3ListViewItem *i )
 {
   if ( !i )
     return;
 
- QListViewItem *parent = i->parent();
+ Q3ListViewItem *parent = i->parent();
   while ( parent ) {
     if ( !parent->isOpen() )
       parent->setOpen( true );
@@ -267,7 +272,7 @@ void KNHeaderView::prevArticle()
 
 void KNHeaderView::incCurrentArticle()
 {
-  QListViewItem *lvi = currentItem();
+  Q3ListViewItem *lvi = currentItem();
   if ( lvi && lvi->isExpandable() )
     lvi->setOpen( true );
   if ( lvi && lvi->itemBelow() ) {
@@ -279,7 +284,7 @@ void KNHeaderView::incCurrentArticle()
 
 void KNHeaderView::decCurrentArticle()
 {
-  QListViewItem *lvi = currentItem();
+  Q3ListViewItem *lvi = currentItem();
   if ( lvi && lvi->itemAbove() ) {
     if ( lvi->itemAbove()->isExpandable() )
       lvi->itemAbove()->setOpen( true );
@@ -456,7 +461,7 @@ bool KNHeaderView::event( QEvent *e )
   // we don't want to have the alternate list background restored
   // to the system defaults!
   if (e->type() == QEvent::ApplicationPaletteChange)
-    return QListView::event(e);
+    return Q3ListView::event(e);
   else
     return KListView::event(e);
 }
@@ -468,7 +473,7 @@ void KNHeaderView::contentsMousePressEvent( QMouseEvent *e )
   bool selectMode=(( e->state() & ShiftButton ) || ( e->state() & ControlButton ));
 
   QPoint vp = contentsToViewport(e->pos());
-  QListViewItem *i = itemAt(vp);
+  Q3ListViewItem *i = itemAt(vp);
 
   KListView::contentsMousePressEvent( e );
 
@@ -489,7 +494,7 @@ void KNHeaderView::contentsMouseDoubleClickEvent( QMouseEvent *e )
 {
   if (!e) return;
 
-  QListViewItem *i = itemAt( contentsToViewport(e->pos()) );
+  Q3ListViewItem *i = itemAt( contentsToViewport(e->pos()) );
   if (i) {
     emit doubleClick( i );
     return;
@@ -503,7 +508,7 @@ void KNHeaderView::keyPressEvent(QKeyEvent *e)
 {
   if (!e) return;
 
-  QListViewItem *i = currentItem();
+  Q3ListViewItem *i = currentItem();
 
   switch(e->key()) {
     case Key_Space:
@@ -522,7 +527,7 @@ void KNHeaderView::keyPressEvent(QKeyEvent *e)
 }
 
 
-QDragObject* KNHeaderView::dragObject()
+Q3DragObject* KNHeaderView::dragObject()
 {
   KNHdrViewItem *item = static_cast<KNHdrViewItem*>( itemAt(viewport()->mapFromGlobal(QCursor::pos())) );
   if (item)
@@ -540,7 +545,7 @@ void KNHeaderView::slotSizeChanged( int section, int, int newSize )
 
 bool KNHeaderView::eventFilter(QObject *o, QEvent *e)
 {
-  if ((e->type() == QEvent::KeyPress) && (static_cast<QKeyEvent*>(e)->key() == Key_Tab)) {
+  if ((e->type() == QEvent::KeyPress) && (static_cast<QKeyEvent*>(e)->key() == Qt::Key_Tab)) {
     emit(focusChangeRequest(this));
     if (!hasFocus())  // focusChangeRequest was successful
       return true;
@@ -548,7 +553,7 @@ bool KNHeaderView::eventFilter(QObject *o, QEvent *e)
 
   // right click on header
   if ( e->type() == QEvent::MouseButtonPress &&
-       static_cast<QMouseEvent*>(e)->button() == RightButton &&
+       static_cast<QMouseEvent*>(e)->button() == Qt::RightButton &&
        o->isA("QHeader") )
   {
     mPopup->popup( static_cast<QMouseEvent*>(e)->globalPos() );
@@ -561,14 +566,14 @@ bool KNHeaderView::eventFilter(QObject *o, QEvent *e)
 
 void KNHeaderView::focusInEvent(QFocusEvent *e)
 {
-  QListView::focusInEvent(e);
+  Q3ListView::focusInEvent(e);
   emit focusChanged(e);
 }
 
 
 void KNHeaderView::focusOutEvent(QFocusEvent *e)
 {
-  QListView::focusOutEvent(e);
+  Q3ListView::focusOutEvent(e);
   emit focusChanged(e);
 }
 
@@ -609,7 +614,7 @@ void KNHeaderViewToolTip::maybeTip( const QPoint &p )
     return;
 
   tip( QRect( headerRect.left(), itemRect.top(), headerRect.width(), itemRect.height() ),
-       QStyleSheet::escape( item->text( column ) ) );
+       Q3StyleSheet::escape( item->text( column ) ) );
 }
 
 //END: KNHeaderViewToolTip ====================================================

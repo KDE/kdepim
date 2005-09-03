@@ -17,7 +17,7 @@
 
 #include <qobject.h>
 #include <qmutex.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 class QSocketNotifier;
 
@@ -68,7 +68,7 @@ class KNNetAccess : public QObject  {
     QString currMsg;
 
     KNNntpClient *nntpClient;
-    QValueList<KNJobData*> nntpJobQueue, smtpJobQueue;
+    Q3ValueList<KNJobData*> nntpJobQueue, smtpJobQueue;
     KNJobData *currentNntpJob, *currentSmtpJob;
     QMutex nntp_Mutex;
     int nntpInPipe[2], nntpOutPipe[2];
@@ -95,7 +95,7 @@ class KNNetAccess : public QObject  {
 
   private:
     /// jobs waiting for async wallet loading
-    QValueList<KNJobData*> mWalletQueue;
+    Q3ValueList<KNJobData*> mWalletQueue;
 
 };
 

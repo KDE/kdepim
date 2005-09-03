@@ -21,7 +21,7 @@
 #include <klocale.h>
 #include <kwin.h>
 
-#include <qhbox.h>
+#include <q3hbox.h>
 
 #include "utilities.h"
 #include "knglobals.h"

@@ -12,10 +12,14 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qgroupbox.h>
+#include <q3groupbox.h>
 #include <qlayout.h>
-#include <qvbox.h>
+#include <q3vbox.h>
 #include <qcheckbox.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <Q3Frame>
+#include <QGridLayout>
 
 #include <klocale.h>
 #include <klineedit.h>
@@ -41,7 +45,7 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   QVBoxLayout *pageL = new QVBoxLayout(page, 3);
 
   // settings
-  QGroupBox *gb=new QGroupBox(i18n("Settings"), page);
+  Q3GroupBox *gb=new Q3GroupBox(i18n("Settings"), page);
   pageL->addWidget(gb);
   QGridLayout *grpL=new QGridLayout(gb, 3, 3, 15, 5);
 
@@ -69,7 +73,7 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   grpL->setColStretch(2,2);
 
   // group name & description
-  gb=new QGroupBox(i18n("Description"), page);
+  gb=new Q3GroupBox(i18n("Description"), page);
   pageL->addWidget(gb);
   grpL=new QGridLayout(gb, 4, 3, 15, 5);
 
@@ -105,7 +109,7 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   grpL->setColStretch(2,1);
 
   // statistics
-  gb=new QGroupBox(i18n("Statistics"), page);
+  gb=new Q3GroupBox(i18n("Statistics"), page);
   pageL->addWidget(gb);
   grpL=new QGridLayout(gb, 6, 3, 15, 5);
 
@@ -145,7 +149,7 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   i_dWidget=new KNConfig::IdentityWidget(g_rp->identity(), addVBoxPage(i18n("&Identity")));
 
   // per server cleanup configuration
-  QFrame* cleanupPage = addPage( i18n("&Cleanup") );
+  Q3Frame* cleanupPage = addPage( i18n("&Cleanup") );
   QVBoxLayout *cleanupLayout = new QVBoxLayout( cleanupPage, KDialog::spacingHint() );
   mCleanupWidget = new KNConfig::GroupCleanupWidget( g_rp->cleanupConfig(), cleanupPage );
   mCleanupWidget->load();

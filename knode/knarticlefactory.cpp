@@ -14,7 +14,10 @@
 
 #include <qlayout.h>
 #include <qlabel.h>
-#include <qvbox.h>
+#include <q3vbox.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -43,7 +46,7 @@ KNArticleFactory::KNArticleFactory(QObject *p, const char *n)
 
 KNArticleFactory::~KNArticleFactory()
 {
-  for ( QValueList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
+  for ( Q3ValueList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
     delete (*it);
   delete s_endErrDlg;
 }
@@ -75,7 +78,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   if(!g)
     return;
 
-  QCString chset;
+  Q3CString chset;
   if (g->useCharset())
     chset = g->defaultCharset();
   else
@@ -106,7 +109,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
 
   KNGroup *g=static_cast<KNGroup*>(a->collection());
 
-  QCString chset;
+  Q3CString chset;
   if (knGlobals.configManager()->postNewsTechnical()->useOwnCharset()) {
     if (g->useCharset())
       chset = g->defaultCharset();
@@ -173,7 +176,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
 
   //References
   KMime::Headers::References *references=a->references(false);
-  QCString refs;
+  Q3CString refs;
   if (references)
     refs=references->as7BitString(false);
   else
@@ -275,7 +278,7 @@ void KNArticleFactory::createForward(KNArticle *a)
     return;
 
   KMime::Headers::ContentType *ct=a->contentType();
-  QCString chset;
+  Q3CString chset;
   bool incAtt = ( !knGlobals.configManager()->postNewsTechnical()->useExternalMailer() &&
                   ct->isMultipart() && ct->isSubtype("mixed") &&
                   KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget,
@@ -404,7 +407,7 @@ void KNArticleFactory::createCancel(KNArticle *a)
 
   //subject
   KMime::Headers::MessageID *msgId=a->messageID();
-  QCString tmp;
+  Q3CString tmp;
   tmp="cancel of "+msgId->as7BitString(false);
   art->subject()->from7BitString(tmp);
 
@@ -682,7 +685,7 @@ void KNArticleFactory::sendOutbox()
 bool KNArticleFactory::closeComposeWindows()
 {
   while ( !mCompList.isEmpty() ) {
-    QValueList<KNComposer*>::Iterator it = mCompList.begin();
+    Q3ValueList<KNComposer*>::Iterator it = mCompList.begin();
     if ( !(*it)->close() )
       return false;
   }
@@ -703,7 +706,7 @@ void KNArticleFactory::deleteComposerForArticle(KNLocalArticle *a)
 
 KNComposer* KNArticleFactory::findComposer(KNLocalArticle *a)
 {
-  for ( QValueList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
+  for ( Q3ValueList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
     if ( (*it)->article() == a )
       return (*it);
   return 0;
@@ -712,7 +715,7 @@ KNComposer* KNArticleFactory::findComposer(KNLocalArticle *a)
 
 void KNArticleFactory::configChanged()
 {
-  for ( QValueList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
+  for ( Q3ValueList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
     (*it)->setConfig( false );
 }
 
@@ -774,7 +777,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 }
 
 
-KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QCString defChset, bool withXHeaders, KNArticle *origPost)
+KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, Q3CString defChset, bool withXHeaders, KNArticle *origPost)
 {
   KNConfig::PostNewsTechnical *pnt=knGlobals.configManager()->postNewsTechnical();
 
@@ -883,7 +886,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
         if(value.find("%NAME") != -1 || value.find("%EMAIL") != -1)
           continue;
 
-      art->setHeader( new KMime::Headers::Generic( (QCString("X-")+(*it).name()), art, value, pnt->charset() ) );
+      art->setHeader( new KMime::Headers::Generic( (Q3CString("X-")+(*it).name()), art, value, pnt->charset() ) );
     }
   }
 
@@ -1068,7 +1071,7 @@ KNSendErrorDialog::KNSendErrorDialog()
 {
   p_ixmap=knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::sendErr);
 
-  QVBox *page = makeVBoxMainWidget();
+  Q3VBox *page = makeVBoxMainWidget();
 
   new QLabel(QString("<b>%1</b><br>%2").arg(i18n("Errors occurred while sending these articles:"))
                                        .arg(i18n("The unsent articles are stored in the \"Outbox\" folder.")), page);

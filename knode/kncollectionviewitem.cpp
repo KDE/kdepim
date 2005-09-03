@@ -18,8 +18,11 @@
 #include <config.h>
 #endif
 
-#include <qdragobject.h>
+#include <q3dragobject.h>
 #include <qpainter.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QDropEvent>
 
 #include <kiconloader.h>
 #include <kstringhandler.h>
@@ -81,7 +84,7 @@ void KNCollectionViewItem::setIcon() {
 }
 
 
-int KNCollectionViewItem::compare(QListViewItem *i, int col, bool ascending) const
+int KNCollectionViewItem::compare(Q3ListViewItem *i, int col, bool ascending) const
 {
   KFolderTreeItem *other = static_cast<KFolderTreeItem*>(i);
 

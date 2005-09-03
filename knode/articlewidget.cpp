@@ -21,11 +21,20 @@
 #include <qfile.h>
 #include <qimage.h>
 #include <qlayout.h>
-#include <qpaintdevicemetrics.h>
-#include <qpopupmenu.h>
+#include <q3paintdevicemetrics.h>
+#include <q3popupmenu.h>
 #include <qstringlist.h>
 #include <qtextcodec.h>
 #include <qtimer.h>
+//Added by qt3to4:
+#include <Q3CString>
+#include <QFocusEvent>
+#include <Q3StrList>
+#include <Q3PtrList>
+#include <QEvent>
+#include <QKeyEvent>
+#include <QHBoxLayout>
+#include <Q3ValueList>
 
 #include <kaction.h>
 #include <kaddrbook.h>
@@ -73,7 +82,7 @@
 
 using namespace KNode;
 
-QValueList<ArticleWidget*> ArticleWidget::mInstances;
+Q3ValueList<ArticleWidget*> ArticleWidget::mInstances;
 
 ArticleWidget::ArticleWidget( QWidget *parent,
                               KXMLGUIClient *guiClient,
@@ -98,13 +107,13 @@ ArticleWidget::ArticleWidget( QWidget *parent,
   QHBoxLayout *box = new QHBoxLayout( this );
   mViewer = new KHTMLPart( this, "mViewer" );
   box->addWidget( mViewer->widget() );
-  mViewer->widget()->setFocusPolicy( WheelFocus );
+  mViewer->widget()->setFocusPolicy( Qt::WheelFocus );
   mViewer->setPluginsEnabled( false );
   mViewer->setJScriptEnabled( false );
   mViewer->setJavaEnabled( false );
   mViewer->setMetaRefreshEnabled( false );
   mViewer->setOnlyLocalReferences( true );
-  mViewer->view()->setFocusPolicy( QWidget::WheelFocus );
+  mViewer->view()->setFocusPolicy( Qt::WheelFocus );
   connect( mViewer->browserExtension(), SIGNAL(openURLRequestDelayed(const KURL&, const KParts::URLArgs&)),
            SLOT(slotURLClicked(const KURL&)) );
   connect( mViewer, SIGNAL(popupMenu(const QString&, const QPoint&)),
@@ -141,22 +150,22 @@ void ArticleWidget::initActions()
   mSelectAllAction = KStdAction::selectAll( this, SLOT(slotSelectAll()), mActionCollection );
   mFindAction = KStdAction::find( this, SLOT(slotFind()), mActionCollection, "find_in_article" );
   mFindAction->setText( i18n("F&ind in Article...") );
-  mViewSourceAction = new KAction( i18n("&View Source"),  Key_V , this,
+  mViewSourceAction = new KAction( i18n("&View Source"),  Qt::Key_V , this,
     SLOT(slotViewSource()), mActionCollection, "article_viewSource" );
   mReplyAction = new KAction( i18n("&Followup to Newsgroup..."), "message_reply",
-    Key_R, this, SLOT(slotReply()), mActionCollection, "article_postReply" );
+    Qt::Key_R, this, SLOT(slotReply()), mActionCollection, "article_postReply" );
   mRemailAction = new KAction( i18n("Reply by E&mail..."), "mail_reply",
-    Key_A, this, SLOT(slotRemail()), mActionCollection, "article_mailReply" );
+    Qt::Key_A, this, SLOT(slotRemail()), mActionCollection, "article_mailReply" );
   mForwardAction = new KAction( i18n("Forw&ard by Email..."), "mail_forward",
-    Key_F, this, SLOT(slotForward()), mActionCollection, "article_forward" );
+    Qt::Key_F, this, SLOT(slotForward()), mActionCollection, "article_forward" );
   mCancelAction = new KAction( i18n("article","&Cancel Article"),
     0, this, SLOT(slotCancel()), mActionCollection, "article_cancel" );
   mSupersedeAction = new KAction(i18n("S&upersede Article"),
     0, this, SLOT(slotSupersede()), mActionCollection, "article_supersede" );
   mFixedFontToggle = new KToggleAction( i18n("U&se Fixed Font"),
-    Key_X ,this, SLOT(slotToggleFixedFont()), mActionCollection, "view_useFixedFont" );
+    Qt::Key_X ,this, SLOT(slotToggleFixedFont()), mActionCollection, "view_useFixedFont" );
   mFancyToggle = new KToggleAction( i18n("Fancy Formating"),
-    Key_Y, this, SLOT(slotToggleFancyFormating()), mActionCollection, "view_fancyFormating" );
+    Qt::Key_Y, this, SLOT(slotToggleFancyFormating()), mActionCollection, "view_fancyFormating" );
   mRot13Toggle = new KToggleAction( i18n("&Unscramble (Rot 13)"), "decrypted", 0 , this,
     SLOT(slotToggleRot13()), mActionCollection, "view_rot13" );
   mRot13Toggle->setChecked( false );
@@ -197,7 +206,7 @@ void ArticleWidget::initActions()
   mCharsetSelect->setItems( cs );
   mCharsetSelect->setCurrentItem( 0 );
   connect( mCharsetSelect, SIGNAL(activated(const QString&)),SLOT(slotSetCharset(const QString&)) );
-  mCharsetSelectKeyb = new KAction( i18n("Charset"), Key_C, this,
+  mCharsetSelectKeyb = new KAction( i18n("Charset"), Qt::Key_C, this,
     SLOT(slotSetCharsetKeyboard()), mActionCollection, "set_charset_keyboard" );
 
   new KAction( i18n("&Open URL"), "fileopen", 0, this, SLOT(slotOpenURL()),
@@ -294,7 +303,7 @@ void ArticleWidget::readConfig()
   ra->setChecked( true );
 
   delete mCSSHelper;
-  mCSSHelper = new CSSHelper( QPaintDeviceMetrics( mViewer->view() ) );
+  mCSSHelper = new CSSHelper( Q3PaintDeviceMetrics( mViewer->view() ) );
 
   if ( !knGlobals.configManager()->readNewsGeneral()->autoMark() )
     mTimer->stop();
@@ -400,21 +409,21 @@ void ArticleWidget::displayArticle()
 
   // if the article is pgp signed and the user asked for verifying the
   // signature, we show a nice header:
-  QPtrList<Kpgp::Block> pgpBlocks;
-  QStrList nonPgpBlocks;
+  Q3PtrList<Kpgp::Block> pgpBlocks;
+  Q3StrList nonPgpBlocks;
   bool containsPGP = Kpgp::Module::prepareMessageForDecryption( mArticle->body(), pgpBlocks, nonPgpBlocks );
 
   mViewer->write ( html );
   html = QString();
 
   if ( containsPGP ) {
-    QPtrListIterator<Kpgp::Block> pbit( pgpBlocks );
+    Q3PtrListIterator<Kpgp::Block> pbit( pgpBlocks );
     QStrListIterator npbit( nonPgpBlocks );
     QTextCodec *codec = KGlobal::charsets()->codecForName( text->contentType()->charset() );
 
     for( ; *pbit != 0; ++pbit, ++npbit ) {
       // handle non-pgp block
-      QCString str( *npbit );
+      Q3CString str( *npbit );
       if( !str.isEmpty() ) {
         QStringList lines = QStringList::split( '\n', codec->toUnicode( str ) );
         displayBodyBlock( lines );
@@ -433,7 +442,7 @@ void ArticleWidget::displayArticle()
       }
     }
     // deal with the last non-pgp block
-    QCString str( *npbit );
+    Q3CString str( *npbit );
     if( !str.isEmpty() ) {
       QStringList lines = QStringList::split( '\n', codec->toUnicode( str ) );
       displayBodyBlock( lines );
@@ -539,7 +548,7 @@ void ArticleWidget::displayHeader()
 
   // full header style
   if ( mHeaderStyle == "all" ) {
-    QCString head = mArticle->head();
+    Q3CString head = mArticle->head();
     KMime::Headers::Generic *header = 0;
 
     while ( !head.isEmpty() ) {
@@ -562,8 +571,8 @@ void ArticleWidget::displayHeader()
 
   // standard & fancy header style
   KMime::Headers::Base *hb;
-  QValueList<KNDisplayedHeader*> dhs = knGlobals.configManager()->displayedHeaders()->headers();
-  for ( QValueList<KNDisplayedHeader*>::Iterator it = dhs.begin(); it != dhs.end(); ++it ) {
+  Q3ValueList<KNDisplayedHeader*> dhs = knGlobals.configManager()->displayedHeaders()->headers();
+  for ( Q3ValueList<KNDisplayedHeader*>::Iterator it = dhs.begin(); it != dhs.end(); ++it ) {
     KNDisplayedHeader *dh = (*it);
     hb = mArticle->getHeaderByType(dh->header().latin1());
     if ( !hb || hb->is("Subject") || hb->is("Organization") )
@@ -644,7 +653,7 @@ void ArticleWidget::displayHeader()
        && knGlobals.configManager()->readNewsViewer()->showRefBar() ) {
     html += "<div class=\"spamheader\">";
     int refCnt = refs->count(), i = 1;
-    QCString id = refs->first();
+    Q3CString id = refs->first();
     id = id.mid( 1, id.length() - 2 );  // remove <>
     html += QString( "<b>%1</b>" ).arg( i18n("References:") );
 
@@ -729,7 +738,7 @@ QString ArticleWidget::displaySigHeader( Kpgp::Block* block )
 {
   QString signClass = "signErr";
   QString signer = block->signatureUserId();
-  QCString signerKey = block->signatureKeyId();
+  Q3CString signerKey = block->signatureKeyId();
   QString message;
   if ( signer.isEmpty() ) {
     message = i18n( "Message was signed with unknown key 0x%1." )
@@ -865,7 +874,7 @@ void ArticleWidget::displayAttachment( KMime::Content *att, int partNum )
       html += "</td></tr></table>";
     }
   } else { // icon
-    QCString mimetype = ct->mimeType();
+    Q3CString mimetype = ct->mimeType();
     KPIM::kAsciiToLower( mimetype.data() );
     QString iconName = KMimeType::mimeType( mimetype )->icon( QString::null, false );
     QString iconFile = KGlobal::instance()->iconLoader()->iconPath( iconName, KIcon::Desktop );
@@ -898,7 +907,7 @@ QString ArticleWidget::imgToDataUrl( const QImage &image, const char* fmt  )
 {
   QByteArray ba;
   QBuffer buffer( ba );
-  buffer.open( IO_WriteOnly );
+  buffer.open( QIODevice::WriteOnly );
   image.save( &buffer, fmt );
   return QString::fromLatin1("data:image/%1;base64,%2")
     .arg( fmt, KCodecs::base64Encode( ba ) );
@@ -929,7 +938,7 @@ bool ArticleWidget::inlinePossible( KMime::Content *c )
 }
 
 
-bool ArticleWidget::canDecodeText( const QCString &charset ) const
+bool ArticleWidget::canDecodeText( const Q3CString &charset ) const
 {
   if ( charset.isEmpty() )
     return false;
@@ -1028,7 +1037,7 @@ void ArticleWidget::processJob( KNJobData * job )
 
 
 
-typedef QValueList<ArticleWidget*>::ConstIterator InstanceIterator;
+typedef Q3ValueList<ArticleWidget*>::ConstIterator InstanceIterator;
 
 void ArticleWidget::configChanged()
 {
@@ -1179,7 +1188,7 @@ void ArticleWidget::slotURLPopup( const QString &url, const QPoint &point )
     return; // skip
   else
     popupName = "url_popup"; // all other URLs
-  QPopupMenu *popup = static_cast<QPopupMenu*>( mGuiClient->factory()->container( popupName, mGuiClient ) );
+  Q3PopupMenu *popup = static_cast<Q3PopupMenu*>( mGuiClient->factory()->container( popupName, mGuiClient ) );
   if ( popup )
     popup->popup( point );
 }
@@ -1456,7 +1465,7 @@ void ArticleWidget::focusOutEvent( QFocusEvent *e )
 
 bool ArticleWidget::eventFilter( QObject *o, QEvent *e )
 {
-  if ( e->type() == QEvent::KeyPress && (static_cast<QKeyEvent*>(e)->key() == Key_Tab) ) {
+  if ( e->type() == QEvent::KeyPress && (static_cast<QKeyEvent*>(e)->key() == Qt::Key_Tab) ) {
     emit focusChangeRequest( this );
     if ( !hasFocus() )  // focusChangeRequest was successful
       return true;

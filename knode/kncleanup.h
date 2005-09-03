@@ -16,8 +16,12 @@
 #define KNCLEANUP_H
 
 #include <qsemimodal.h>
+//Added by qt3to4:
+#include <QLabel>
+#include <Q3ValueList>
+#include <QCloseEvent>
 
-class QProgressBar;
+class Q3ProgressBar;
 class QLabel;
 
 class KNArticleCollection;
@@ -57,13 +61,13 @@ class KNCleanUp {
         void closeEvent(QCloseEvent *e);
 
         QLabel *m_sg;
-        QProgressBar *p_bar;
+        Q3ProgressBar *p_bar;
 
         int s_teps, p_rogress;
     };
 
     ProgressDialog *d_lg;
-    QValueList<KNArticleCollection*> mColList;
+    Q3ValueList<KNArticleCollection*> mColList;
 
 };
 

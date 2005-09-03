@@ -15,8 +15,12 @@
 #define KNODE_ARTICLEWIDGET_H
 
 #include <qmap.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 #include <qwidget.h>
+//Added by qt3to4:
+#include <QFocusEvent>
+#include <QEvent>
+#include <Q3CString>
 
 #include <kurl.h>
 
@@ -157,7 +161,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     /// checks wether the given attachment can be shown inline
     bool inlinePossible( KMime::Content *c );
     /// checks if the given charset is supported
-    bool canDecodeText( const QCString &charset ) const;
+    bool canDecodeText( const Q3CString &charset ) const;
 
     /// regenerated viewer content without changing scrollbar position
     void updateContents();
@@ -230,7 +234,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     bool mShowHtml;
     bool mRot13;
     bool mForceCharset;
-    QCString mOverrideCharset;
+    Q3CString mOverrideCharset;
 
     /// mark as read timer
     QTimer *mTimer;
@@ -239,7 +243,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     KURL mCurrentURL;
 
     /// list of all instances of this class
-    static QValueList<ArticleWidget*> mInstances;
+    static Q3ValueList<ArticleWidget*> mInstances;
 
     KXMLGUIClient *mGuiClient;
     KActionCollection *mActionCollection;

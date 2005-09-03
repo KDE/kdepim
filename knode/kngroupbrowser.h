@@ -17,7 +17,11 @@
 #ifndef KNGROUPBROWSER_H
 #define KNGROUPBROWSER_H
 
-#include <qlistview.h>
+#include <q3listview.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QLabel>
+#include <QGridLayout>
 
 #include <kdialogbase.h>
 
@@ -37,11 +41,11 @@ class KNGroupBrowser : public KDialogBase {
   Q_OBJECT
 
   public:
-    class CheckItem : public QCheckListItem {
+    class CheckItem : public Q3CheckListItem {
 
       public:
-        CheckItem(QListView *v, const KNGroupInfo &gi, KNGroupBrowser *b);
-        CheckItem(QListViewItem *i, const KNGroupInfo &gi, KNGroupBrowser *b);
+        CheckItem(Q3ListView *v, const KNGroupInfo &gi, KNGroupBrowser *b);
+        CheckItem(Q3ListViewItem *i, const KNGroupInfo &gi, KNGroupBrowser *b);
         ~CheckItem();
         void setChecked(bool c);
 
@@ -52,11 +56,11 @@ class KNGroupBrowser : public KDialogBase {
         KNGroupBrowser *browser;
     };
 
-    class GroupItem : public QListViewItem {
+    class GroupItem : public Q3ListViewItem {
 
       public:
-        GroupItem(QListView *v, const KNGroupInfo &gi);
-        GroupItem(QListViewItem *i, const KNGroupInfo &gi);
+        GroupItem(Q3ListView *v, const KNGroupInfo &gi);
+        GroupItem(Q3ListViewItem *i, const KNGroupInfo &gi);
         ~GroupItem();
 
         KNGroupInfo info;
@@ -78,18 +82,18 @@ class KNGroupBrowser : public KDialogBase {
   protected:
     virtual void updateItemState(CheckItem *it)=0;
     void changeItemState(const KNGroupInfo &gi, bool s);
-    bool itemInListView(QListView *view, const KNGroupInfo &gi);
-    void removeListItem(QListView *view, const KNGroupInfo &gi);
-    void createListItems(QListViewItem *parent=0);
+    bool itemInListView(Q3ListView *view, const KNGroupInfo &gi);
+    void removeListItem(Q3ListView *view, const KNGroupInfo &gi);
+    void createListItems(Q3ListViewItem *parent=0);
 
     QWidget *page;
-    QListView *groupView;
+    Q3ListView *groupView;
     int delayedCenter;
     KLineEdit *filterEdit;
     QCheckBox *noTreeCB, *subCB, *newCB;
     QPushButton  *arrowBtn1, *arrowBtn2;
     QPixmap pmGroup, pmNew;
-    QIconSet pmRight, pmLeft;
+    QIcon pmRight, pmLeft;
     QGridLayout *listL;
     QLabel *leftLabel, *rightLabel;
     QTimer *refilterTimer;
@@ -97,14 +101,14 @@ class KNGroupBrowser : public KDialogBase {
     bool incrementalFilter;
 
     KNNntpAccount *a_ccount;
-    QSortedList<KNGroupInfo> *allList, *matchList;
+    Q3SortedList<KNGroupInfo> *allList, *matchList;
 
   protected slots:
     void slotLoadList();
-    void slotItemExpand(QListViewItem *it);
+    void slotItemExpand(Q3ListViewItem *it);
     void slotCenterDelayed();
     /** double click checks/unchecks (opens/closes) item */
-    void slotItemDoubleClicked(QListViewItem *it);
+    void slotItemDoubleClicked(Q3ListViewItem *it);
     void slotFilter(const QString &txt);
     void slotTreeCBToggled();
     void slotSubCBToggled();

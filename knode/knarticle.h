@@ -20,8 +20,10 @@
 #include <qfile.h>
 #include <qfont.h>
 #include <qcolor.h>
-#include <qasciidict.h>
-#include <qvaluelist.h>
+#include <q3asciidict.h>
+#include <q3valuelist.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <kmime_headers.h>
 #include <kmime_newsarticle.h>
@@ -42,7 +44,7 @@ class KNArticleCollection;
 class KNArticle : public KMime::NewsArticle, public KNJobItem {
 
   public:
-    typedef QValueList<KNArticle*> List;
+    typedef Q3ValueList<KNArticle*> List;
 
     KNArticle(KNArticleCollection *c);
     ~KNArticle();
@@ -87,7 +89,7 @@ class KNGroup;
 class KNRemoteArticle : public KNArticle {
 
   public:
-    typedef QValueList<KNRemoteArticle*> List;
+    typedef Q3ValueList<KNRemoteArticle*> List;
 
     KNRemoteArticle(KNGroup *g);
     ~KNRemoteArticle();
@@ -207,7 +209,7 @@ class KNRemoteArticle : public KNArticle {
 class KNLocalArticle : public KNArticle {
 
   public:
-    typedef QValueList<KNLocalArticle*> List;
+    typedef Q3ValueList<KNLocalArticle*> List;
 
     KNLocalArticle(KNArticleCollection *c=0);
     ~KNLocalArticle();
@@ -298,7 +300,7 @@ class KNAttachment {
     void setName(const QString &s)  { n_ame=s; h_asChanged=true; }
 
     //mime type
-    const QCString& mimeType()            { return m_imeType; }
+    const Q3CString& mimeType()            { return m_imeType; }
     void setMimeType(const QString &s);
 
     //Content-Description
@@ -325,7 +327,7 @@ class KNAttachment {
     KMime::Content *c_ontent;
     KNLoadHelper   *l_oadHelper;
     QFile *f_ile;
-    QCString m_imeType;
+    Q3CString m_imeType;
     QString n_ame,
             d_escription;
     KMime::Headers::CTEncoding e_ncoding;

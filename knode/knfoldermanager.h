@@ -16,7 +16,7 @@
 #define KNFOLDERMANAGER_H
 
 #include <qobject.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 class KNFolder;
 class KNArticleManager;
@@ -36,7 +36,7 @@ class KNFolderManager : public QObject
     KNFolder* currentFolder() const       { return c_urrentFolder; }
     bool hasCurrentFolder() const         { return (c_urrentFolder!=0); }
     KNFolder* folder(int id);
-    QValueList<KNFolder*> folders() const { return mFolderList; }
+    Q3ValueList<KNFolder*> folders() const { return mFolderList; }
 
     //standard folders
     KNFolder* root() const                { return mFolderList[0]; }
@@ -82,7 +82,7 @@ class KNFolderManager : public QObject
     int loadCustomFolders();
 
     KNFolder  *c_urrentFolder;
-    QValueList<KNFolder*> mFolderList;
+    Q3ValueList<KNFolder*> mFolderList;
     int l_astId;
     KNArticleManager *a_rtManager;
 

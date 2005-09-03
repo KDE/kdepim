@@ -17,7 +17,7 @@
 #include "knglobals.h"
 
 
-KNode::CSSHelper::CSSHelper( const QPaintDeviceMetrics &pdm ) :
+KNode::CSSHelper::CSSHelper( const Q3PaintDeviceMetrics &pdm ) :
   KPIM::CSSHelper( pdm )
 {
   KNConfig::Appearance *app = knGlobals.configManager()->appearance();

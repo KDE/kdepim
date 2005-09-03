@@ -24,6 +24,8 @@
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "utilities.h"
+//Added by qt3to4:
+#include <Q3CString>
 
 using namespace KMime;
 
@@ -85,7 +87,7 @@ KNRemoteArticle::~KNRemoteArticle()
 void KNRemoteArticle::parse()
 {
   KNArticle::parse();
-  QCString raw;
+  Q3CString raw;
   if( !(raw=rawHeader(m_essageID.type())).isEmpty() )
     m_essageID.from7BitString(raw);
 
@@ -296,7 +298,7 @@ KNLocalArticle::~KNLocalArticle()
 void KNLocalArticle::parse()
 {
   KNArticle::parse();
-  QCString raw;
+  Q3CString raw;
 
   if( !(raw=rawHeader(n_ewsgroups.type())).isEmpty() )
     n_ewsgroups.from7BitString(raw);
@@ -552,7 +554,7 @@ void KNAttachment::attach(Content *c)
       e->setCte(Headers::CEbase64);
       e->setDecoded(false);
     } else  {
-      c_ontent->setBody( QCString(data.data(), data.size()+1) + '\n' );
+      c_ontent->setBody( Q3CString(data.data(), data.size()+1) + '\n' );
       //      c_ontent->b_ody += '\n';
       e->setDecoded(true);
     }

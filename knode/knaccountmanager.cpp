@@ -15,6 +15,8 @@
 #include <stdlib.h>
 
 #include <qdir.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <kdebug.h>
 #include <ksimpleconfig.h>
@@ -51,7 +53,7 @@ KNAccountManager::KNAccountManager(KNGroupManager *gm, QObject * parent, const c
 
 KNAccountManager::~KNAccountManager()
 {
-  QValueList<KNNntpAccount*>::Iterator it;
+  Q3ValueList<KNNntpAccount*>::Iterator it;
   for ( it = mAccounts.begin(); it != mAccounts.end(); ++it )
     delete (*it);
   mAccounts.clear();
@@ -63,7 +65,7 @@ KNAccountManager::~KNAccountManager()
 
 void KNAccountManager::prepareShutdown()
 {
-  QValueList<KNNntpAccount*>::Iterator it;
+  Q3ValueList<KNNntpAccount*>::Iterator it;
   for ( it = mAccounts.begin(); it != mAccounts.end(); ++it )
     (*it)->saveInfo();
 }
@@ -99,7 +101,7 @@ KNNntpAccount* KNAccountManager::account( int id )
 {
   if ( id <= 0 )
     return 0;
-  QValueList<KNNntpAccount*>::ConstIterator it;
+  Q3ValueList<KNNntpAccount*>::ConstIterator it;
   for ( it = mAccounts.begin(); it != mAccounts.end(); ++it )
     if ( (*it)->id() == id )
       return *it;
@@ -151,19 +153,19 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
   if(!a) a=c_urrentAccount;
   if(!a) return false;
 
-  QValueList<KNGroup*> lst;
+  Q3ValueList<KNGroup*> lst;
   if(knGlobals.folderManager()->unsentForAccount(a->id()) > 0) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("This account cannot be deleted since there are some unsent messages for it."));
   }
   else if(KMessageBox::warningContinueCancel(knGlobals.topWidget, i18n("Do you really want to delete this account?"),"",KGuiItem(i18n("&Delete"),"editdelete"))==KMessageBox::Continue) {
     lst = gManager->groupsOfAccount( a );
-    for ( QValueList<KNGroup*>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+    for ( Q3ValueList<KNGroup*>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
       if ( (*it)->isLocked() ) {
         KMessageBox::sorry(knGlobals.topWidget, i18n("At least one group of this account is currently in use.\nThe account cannot be deleted at the moment."));
         return false;
       }
     }
-    for ( QValueList<KNGroup*>::Iterator it = lst.begin(); it != lst.end(); ++it )
+    for ( Q3ValueList<KNGroup*>::Iterator it = lst.begin(); it != lst.end(); ++it )
       gManager->unsubscribeGroup( (*it) );
 
     QDir dir(a->path());
@@ -245,7 +247,7 @@ void KNAccountManager::loadPasswordsAsync()
 void KNAccountManager::loadPasswords()
 {
   s_mtp->readPassword();
-  QValueList<KNNntpAccount*>::Iterator it;
+  Q3ValueList<KNNntpAccount*>::Iterator it;
   for ( it = mAccounts.begin(); it != mAccounts.end(); ++it )
     (*it)->readPassword();
   emit passwordsChanged();

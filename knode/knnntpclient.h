@@ -18,6 +18,8 @@
 #define KNNNTPCLIENT_H
 
 #include <qmutex.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <knprotocolclient.h>
 
@@ -45,7 +47,7 @@ class KNNntpClient : public KNProtocolClient  {
     /** connect, handshake */
     virtual bool openConnection();
     /** authentication on demand */
-    virtual bool sendCommand(const QCString &cmd, int &rep);
+    virtual bool sendCommand(const Q3CString &cmd, int &rep);
     virtual void handleErrors();
     bool switchToGroup(const QString &newGroup);
 

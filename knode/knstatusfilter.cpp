@@ -16,6 +16,8 @@
 
 #include <qlayout.h>
 #include <qcheckbox.h>
+//Added by qt3to4:
+#include <QGridLayout>
 #include <klocale.h>
 #include <ksimpleconfig.h>
 
@@ -95,7 +97,7 @@ bool KNStatusFilter::doFilter(KNRemoteArticle *a)
 //==============================================================================
 
 KNStatusFilterWidget::KNStatusFilterWidget(QWidget *parent) :
-  QButtonGroup(0, parent)
+  Q3ButtonGroup(0, parent)
 {
   setFrameStyle(NoFrame);
   enR=new QCheckBox(i18n("Is read:"), this);

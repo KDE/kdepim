@@ -17,6 +17,10 @@
 #define KNCOLLECTIONTREE_H
 
 #include <kfoldertree.h>
+//Added by qt3to4:
+#include <QFocusEvent>
+#include <QEvent>
+#include <QDropEvent>
 
 class KPopupMenu;
 class KNNntpAccount;
@@ -32,7 +36,7 @@ class KNCollectionView : public KFolderTree {
     KNCollectionView(QWidget *parent, const char *name = 0);
     ~KNCollectionView();
 
-    void setActive(QListViewItem *item);
+    void setActive(Q3ListViewItem *item);
 
     void readConfig();
     void writeConfig();
@@ -76,7 +80,7 @@ class KNCollectionView : public KFolderTree {
 
   protected:
     // dnd
-    virtual QDragObject* dragObject();
+    virtual Q3DragObject* dragObject();
     virtual void contentsDropEvent( QDropEvent *e );
 
     bool eventFilter( QObject *, QEvent * );
@@ -84,7 +88,7 @@ class KNCollectionView : public KFolderTree {
     void focusOutEvent( QFocusEvent *e );
 
   private:
-    QListViewItem *mActiveItem;
+    Q3ListViewItem *mActiveItem;
     KPopupMenu *mPopup;
     int mUnreadPop, mTotalPop;
 

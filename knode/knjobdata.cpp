@@ -23,6 +23,8 @@
 #include "knglobals.h"
 #include "knnetaccess.h"
 #include "knnntpaccount.h"
+//Added by qt3to4:
+#include <Q3ValueList>
 
 KNJobConsumer::KNJobConsumer()
 {
@@ -31,7 +33,7 @@ KNJobConsumer::KNJobConsumer()
 
 KNJobConsumer::~KNJobConsumer()
 {
-  QValueList<KNJobData*>::Iterator it;
+  Q3ValueList<KNJobData*>::Iterator it;
   for ( it = mJobs.begin(); it != mJobs.end(); ++it )
     (*it)->c_onsumer = 0;
 }

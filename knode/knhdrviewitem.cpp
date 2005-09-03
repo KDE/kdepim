@@ -15,8 +15,10 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qdragobject.h>
+#include <q3dragobject.h>
 #include <qpainter.h>
+//Added by qt3to4:
+#include <QPixmap>
 
 #include <kdeversion.h>
 #include <kdebug.h>
@@ -59,7 +61,7 @@ void KNHdrViewItem::init( KNArticle *a )
 KNHdrViewItem::~KNHdrViewItem()
 {
   if (mActive) {
-    QListView *lv = listView();
+    Q3ListView *lv = listView();
     if (lv)
       static_cast<KNHeaderView*>( lv )->activeRemoved();
   }
@@ -70,7 +72,7 @@ KNHdrViewItem::~KNHdrViewItem()
 
 void KNHdrViewItem::expandChildren()
 {
-  QListViewItemIterator it( firstChild() );
+  Q3ListViewItemIterator it( firstChild() );
   for ( ; it.current(); ++it) {
     if (it.current()->depth() <= depth())
       break;
@@ -79,7 +81,7 @@ void KNHdrViewItem::expandChildren()
 }
 
 
-int KNHdrViewItem::compare( QListViewItem *i, int col, bool ) const
+int KNHdrViewItem::compare( Q3ListViewItem *i, int col, bool ) const
 {
   KNArticle *otherArticle = static_cast<KNHdrViewItem*>( i )->art;
   int diff = 0;
@@ -194,7 +196,7 @@ void KNHdrViewItem::paintCell( QPainter *p, const QColorGroup &cg, int column, i
 }
 
 
-int KNHdrViewItem::width( const QFontMetrics &fm, const QListView *, int column )
+int KNHdrViewItem::width( const QFontMetrics &fm, const Q3ListView *, int column )
 {
   int ret = fm.boundingRect( text(column) ).width();
   const KPaintInfo *paintInfo = static_cast<KNHeaderView*>( listView() )->paintInfo();
@@ -244,7 +246,7 @@ QString KNHdrViewItem::text( int col ) const
 }
 
 
-QDragObject* KNHdrViewItem::dragObject()
+Q3DragObject* KNHdrViewItem::dragObject()
 {
   KMultipleDrag *d = new KMultipleDrag( listView()->viewport() );
   KURL::List list;
@@ -255,7 +257,7 @@ QDragObject* KNHdrViewItem::dragObject()
   QMap<QString,QString> metadata;
   metadata["labels"] = KURL::encode_string( art->subject()->asUnicodeString() );
   d->addDragObject( new KURLDrag( list, metadata, 0L ) );
-  d->addDragObject( new QStoredDrag( "x-knode-drag/article" , 0L ) );
+  d->addDragObject( new Q3StoredDrag( "x-knode-drag/article" , 0L ) );
   d->setPixmap( knGlobals.configManager()->appearance()->icon( KNConfig::Appearance::posting ) );
   return d;
 }

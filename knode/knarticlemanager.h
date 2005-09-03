@@ -15,12 +15,12 @@
 #ifndef KNARTICLEMANAGER_H
 #define KNARTICLEMANAGER_H
 
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 #include "knjobdata.h"
 #include "knarticle.h"
 
-class QListViewItem;
+class Q3ListViewItem;
 
 class KTempFile;
 
@@ -109,13 +109,13 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     KNArticleFilter *f_ilter;
     KNFilterManager *f_ilterMgr;
     KNSearchDialog *s_earchDlg;
-    QValueList<KTempFile*> mTempFiles;
+    Q3ValueList<KTempFile*> mTempFiles;
     bool d_isableExpander;
 
   public slots:
     void slotFilterChanged(KNArticleFilter *f);
     void slotSearchDialogDone();
-    void slotItemExpanded(QListViewItem *p);
+    void slotItemExpanded(Q3ListViewItem *p);
 
 };
 

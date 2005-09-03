@@ -18,6 +18,8 @@
 #include <qlayout.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
+//Added by qt3to4:
+#include <QGridLayout>
 
 #include <ksimpleconfig.h>
 #include <knuminput.h>
@@ -97,7 +99,7 @@ void KNRangeFilter::save(KSimpleConfig *conf)
 //=====================================================================================
 
 KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max, QWidget* parent, const QString &unit)
-  : QGroupBox(value, parent)
+  : Q3GroupBox(value, parent)
 {
   enabled=new QCheckBox(this);
 

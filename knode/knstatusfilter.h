@@ -17,7 +17,7 @@
 #ifndef KNSTATUSFILTER_H
 #define KNSTATUSFILTER_H
 
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qcombobox.h>
 #include <qbitarray.h>
 
@@ -51,7 +51,7 @@ class KNStatusFilter {
 //=================================================================================
 
 
-class KNStatusFilterWidget : public QButtonGroup  {
+class KNStatusFilterWidget : public Q3ButtonGroup  {
 
   Q_OBJECT
 

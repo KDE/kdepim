@@ -31,10 +31,10 @@ class KNHdrViewItem : public KListViewItem  {
     KNHdrViewItem( KNHdrViewItem *ref, KNArticle *a = 0 );
     ~KNHdrViewItem();
 
-    virtual int compare(QListViewItem *i, int col, bool ascending) const;
+    virtual int compare(Q3ListViewItem *i, int col, bool ascending) const;
 
     void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
-    int width(const QFontMetrics &fm, const QListView *lv, int column);
+    int width(const QFontMetrics &fm, const Q3ListView *lv, int column);
 
     virtual QString text( int col ) const;
 
@@ -44,7 +44,7 @@ class KNHdrViewItem : public KListViewItem  {
     bool isActive() const     { return mActive; }
 
     // DND
-    QDragObject* dragObject();
+    Q3DragObject* dragObject();
 
     KNArticle *art;
     int countUnreadInThread();

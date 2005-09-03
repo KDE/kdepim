@@ -16,9 +16,12 @@
 
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qradiobutton.h>
 #include <qcheckbox.h>
+//Added by qt3to4:
+#include <QGridLayout>
+#include <QVBoxLayout>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -38,9 +41,9 @@ KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
   KNGroupBrowser(parent, i18n("Subscribe to Newsgroups"),a, User1 | User2, true, i18n("New &List"), i18n("New &Groups...") )
 {
   rightLabel->setText(i18n("Current changes:"));
-  subView=new QListView(page);
+  subView=new Q3ListView(page);
   subView->addColumn(i18n("Subscribe To"));
-  unsubView=new QListView(page);
+  unsubView=new Q3ListView(page);
   unsubView->addColumn(i18n("Unsubscribe From"));
 
   QVBoxLayout *protL=new QVBoxLayout(3);
@@ -51,14 +54,14 @@ KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
   dir1=right;
   dir2=left;
 
-  connect(groupView, SIGNAL(selectionChanged(QListViewItem*)),
-    this, SLOT(slotItemSelected(QListViewItem*)));
+  connect(groupView, SIGNAL(selectionChanged(Q3ListViewItem*)),
+    this, SLOT(slotItemSelected(Q3ListViewItem*)));
   connect(groupView, SIGNAL(selectionChanged()),
     this, SLOT(slotSelectionChanged()));
-  connect(subView, SIGNAL(selectionChanged(QListViewItem*)),
-    this, SLOT(slotItemSelected(QListViewItem*)));
-  connect(unsubView, SIGNAL(selectionChanged(QListViewItem*)),
-    this, SLOT(slotItemSelected(QListViewItem*)));
+  connect(subView, SIGNAL(selectionChanged(Q3ListViewItem*)),
+    this, SLOT(slotItemSelected(Q3ListViewItem*)));
+  connect(unsubView, SIGNAL(selectionChanged(Q3ListViewItem*)),
+    this, SLOT(slotItemSelected(Q3ListViewItem*)));
 
   connect(arrowBtn1, SIGNAL(clicked()), this, SLOT(slotArrowBtn1()));
   connect(arrowBtn2, SIGNAL(clicked()), this, SLOT(slotArrowBtn2()));
@@ -121,14 +124,14 @@ void KNGroupDialog::updateItemState(CheckItem *it)
 
 
 
-void KNGroupDialog::toSubscribe(QSortedList<KNGroupInfo> *l)
+void KNGroupDialog::toSubscribe(Q3SortedList<KNGroupInfo> *l)
 {
   KNGroupInfo *info;
   l->clear();
   l->setAutoDelete(true);
 
   bool moderated=false;
-  QListViewItemIterator it(subView);
+  Q3ListViewItemIterator it(subView);
   for(; it.current(); ++it) {
     info = new KNGroupInfo();
     *info = ((static_cast<GroupItem*>(it.current()))->info);
@@ -146,7 +149,7 @@ void KNGroupDialog::toSubscribe(QSortedList<KNGroupInfo> *l)
 void KNGroupDialog::toUnsubscribe(QStringList *l)
 {
   l->clear();
-  QListViewItemIterator it(unsubView);
+  Q3ListViewItemIterator it(unsubView);
   for(; it.current(); ++it)
     l->append(((static_cast<GroupItem*>(it.current()))->info).name);
 }
@@ -175,7 +178,7 @@ void KNGroupDialog::setButtonDirection(arrowButton b, arrowDirection d)
 
 
 
-void KNGroupDialog::slotItemSelected(QListViewItem *it)
+void KNGroupDialog::slotItemSelected(Q3ListViewItem *it)
 {
   const QObject *s=sender();
 
@@ -284,7 +287,7 @@ void KNGroupDialog::slotUser2()
   QDate lastDate = a_ccount->lastNewFetch();
   KDialogBase *dlg = new KDialogBase( this, 0L, true, i18n("New Groups"), Ok | Cancel, Ok);
 
-  QButtonGroup *btnGrp = new QButtonGroup(i18n("Check for New Groups"),dlg);
+  Q3ButtonGroup *btnGrp = new Q3ButtonGroup(i18n("Check for New Groups"),dlg);
   dlg->setMainWidget(btnGrp);
   QGridLayout *topL = new QGridLayout(btnGrp,4,2,25,10);
 

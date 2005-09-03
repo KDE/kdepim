@@ -17,6 +17,10 @@
 #include <qlabel.h>
 #include <qcheckbox.h>
 #include <qlayout.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <Q3Frame>
+#include <QGridLayout>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -35,9 +39,9 @@ KNFilterDialog::KNFilterDialog(KNArticleFilter *f, QWidget *parent, const char *
                 Ok|Cancel|Help, Ok, parent, name),
     fltr(f)
 {
-  QFrame* page=plainPage();
+  Q3Frame* page=plainPage();
 
-  QGroupBox *gb=new QGroupBox(page);
+  Q3GroupBox *gb=new Q3GroupBox(page);
   fname=new KLineEdit(gb);
   QLabel *l1=new QLabel(fname, i18n("Na&me:"), gb);
   apon=new QComboBox(gb);

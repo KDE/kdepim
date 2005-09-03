@@ -15,7 +15,11 @@
 #ifndef KNARTICLEFACTORY_H
 #define KNARTICLEFACTORY_H
 
-#include <qvaluelist.h>
+#include <q3valuelist.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QLabel>
+#include <Q3CString>
 #include <kdialogbase.h>
 
 #include "knjobdata.h"
@@ -75,7 +79,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
 
     //article generation
     // col: group or account
-    KNLocalArticle* newArticle(KNCollection *col, QString &sig, QCString defChset, bool withXHeaders=true, KNArticle *origPost=0);
+    KNLocalArticle* newArticle(KNCollection *col, QString &sig, Q3CString defChset, bool withXHeaders=true, KNArticle *origPost=0);
 
     //cancel & supersede
     bool cancelAllowed(KNArticle *a);
@@ -83,7 +87,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     //send-errors
     void showSendErrorDialog();
 
-    QValueList<KNComposer*> mCompList;
+    Q3ValueList<KNComposer*> mCompList;
     KNSendErrorDialog *s_endErrDlg;
 
   protected slots:

@@ -12,7 +12,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qaccel.h>
+#include <q3accel.h>
 
 #include <kapplication.h>
 
@@ -26,7 +26,7 @@ KNSourceViewWindow::KNSourceViewWindow( const QString &text )
   : KTextBrowser(0)
 {
   setWFlags(WType_TopLevel | WDestructiveClose);
-  QAccel *accel = new QAccel( this, "browser close-accel" );
+  Q3Accel *accel = new Q3Accel( this, "browser close-accel" );
   accel->connectItem( accel->insertItem( Qt::Key_Escape ), this , SLOT( close() ));
   KNConfig::Appearance *app=knGlobals.configManager()->appearance();
 

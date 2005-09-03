@@ -31,6 +31,10 @@
 #include "kngroupmanager.h"
 #include "knnntpaccount.h"
 #include "headerview.h"
+//Added by qt3to4:
+#include <Q3StrList>
+#include <QTextStream>
+#include <Q3CString>
 
 
 #define SORT_DEPTH 5
@@ -182,7 +186,7 @@ bool KNGroup::loadHdrs()
   }
 
   kdDebug(5003) << "KNGroup::loadHdrs() : loading headers" << endl;
-  QCString buff, hdrValue;
+  Q3CString buff, hdrValue;
   KNFile f;
   KQCStringSplitter split;
   int cnt=0, id, lines, fileFormatVersion, artNumber;
@@ -195,7 +199,7 @@ bool KNGroup::loadHdrs()
 
   f.setName(dir+g_roupname+".static");
 
-  if(f.open(IO_ReadOnly)) {
+  if(f.open(QIODevice::ReadOnly)) {
 
     if(!resize(c_ount)) {
       f.close();
@@ -255,7 +259,7 @@ bool KNGroup::loadHdrs()
         for (uint i = buff.toUInt(); i > 0; --i) {
           buff = f.readLine();
           int pos = buff.find(':');
-          QCString hdrName = buff.left( pos );
+          Q3CString hdrName = buff.left( pos );
           // skip headers we already set above and which we actually never should
           // find here, but however it still happens... (eg. #101355)
           if ( hdrName == "Subject" || hdrName == "From" || hdrName == "Date"
@@ -287,7 +291,7 @@ bool KNGroup::loadHdrs()
 
   f.setName(dir+g_roupname+".dynamic");
 
-  if (f.open(IO_ReadOnly)) {
+  if (f.open(QIODevice::ReadOnly)) {
 
     dynDataVer0 data0;
     dynDataVer1 data1;
@@ -384,10 +388,10 @@ bool KNGroup::unloadHdrs(bool force)
 
 
 // Attention: this method is called from the network thread!
-void KNGroup::insortNewHeaders(QStrList *hdrs, QStrList *hdrfmt, KNProtocolClient *client)
+void KNGroup::insortNewHeaders(Q3StrList *hdrs, Q3StrList *hdrfmt, KNProtocolClient *client)
 {
   KNRemoteArticle *art=0, *art2=0;
-  QCString data, hdr, hdrName;
+  Q3CString data, hdr, hdrName;
   KQCStringSplitter split;
   split.setIncludeSep(false);
   int new_cnt=0, added_cnt=0, todo=hdrs->count();
@@ -520,8 +524,8 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 
   QFile f(dir+g_roupname+".static");
 
-  if(ovr) mode=IO_WriteOnly;
-  else mode=IO_WriteOnly | IO_Append;
+  if(ovr) mode=QIODevice::WriteOnly;
+  else mode=QIODevice::WriteOnly | QIODevice::Append;
 
   if(f.open(mode)) {
 
@@ -557,7 +561,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 
       // optional headers
       ts << mOptionalHeaders.count() << '\n';
-      for (QCString hdrName = mOptionalHeaders.first(); hdrName; hdrName = mOptionalHeaders.next()) {
+      for (Q3CString hdrName = mOptionalHeaders.first(); hdrName; hdrName = mOptionalHeaders.next()) {
         hdrName = hdrName.left( hdrName.find(':') );
         KMime::Headers::Base *hdr = art->getHeaderByType( hdrName );
         if ( hdr )
@@ -589,8 +593,8 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
 
     QFile f(dir+g_roupname+".dynamic");
 
-    if(ovr) mode=IO_WriteOnly;
-    else mode=IO_WriteOnly | IO_Append;
+    if(ovr) mode=QIODevice::WriteOnly;
+    else mode=QIODevice::WriteOnly | QIODevice::Append;
 
     if(f.open(mode)) {
 
@@ -622,7 +626,7 @@ void KNGroup::syncDynamicData()
 
     QFile f(dir+g_roupname+".dynamic");
 
-    if(f.open(IO_ReadWrite)) {
+    if(f.open(QIODevice::ReadWrite)) {
 
       sOfData=sizeof(data);
 
@@ -869,7 +873,7 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 KNRemoteArticle* KNGroup::findReference(KNRemoteArticle *a)
 {
   int found=false;
-  QCString ref_mid;
+  Q3CString ref_mid;
   int ref_nr=0;
   KNRemoteArticle *ref_art=0;
 

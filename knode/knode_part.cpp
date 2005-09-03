@@ -42,6 +42,8 @@
 #include <krsqueezedtextlabel.h>
 
 #include <qlayout.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
 
 
 typedef KParts::GenericFactory< KNodePart > KNodeFactory;

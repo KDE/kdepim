@@ -12,7 +12,14 @@
 */
 
 #include <qcursor.h>
-#include <qheader.h>
+#include <q3header.h>
+//Added by qt3to4:
+#include <QFocusEvent>
+#include <QKeyEvent>
+#include <QEvent>
+#include <QDropEvent>
+#include <Q3ValueList>
+#include <QMouseEvent>
 
 #include <kiconloader.h>
 #include <klistview.h>
@@ -149,8 +156,8 @@ void KNCollectionView::addAccount(KNNntpAccount *a)
   item->setOpen( a->wasOpen() );
 
   // add groups for this account
-  QValueList<KNGroup*> groups = knGlobals.groupManager()->groupsOfAccount( a );
-  for ( QValueList<KNGroup*>::Iterator it = groups.begin(); it != groups.end(); ++it ) {
+  Q3ValueList<KNGroup*> groups = knGlobals.groupManager()->groupsOfAccount( a );
+  for ( Q3ValueList<KNGroup*>::Iterator it = groups.begin(); it != groups.end(); ++it ) {
     KNCollectionViewItem *gitem = new KNCollectionViewItem( item, KFolderTreeItem::News );
     (*it)->setListItem( gitem );
     (*it)->updateListItem();
@@ -179,7 +186,7 @@ void KNCollectionView::updateAccount(KNNntpAccount *a)
 void KNCollectionView::reloadAccounts()
 {
   KNAccountManager* am = knGlobals.accountManager();
-  QValueList<KNNntpAccount*>::Iterator it;
+  Q3ValueList<KNNntpAccount*>::Iterator it;
   for ( it = am->begin(); it != am->end(); ++it ) {
     removeAccount( *it );
     addAccount( *it );
@@ -269,12 +276,12 @@ void KNCollectionView::reloadFolders()
 
 void KNCollectionView::addPendingFolders()
 {
-  QValueList<KNFolder*> folders = knGlobals.folderManager()->folders();
-  for ( QValueList<KNFolder*>::Iterator it = folders.begin(); it != folders.end(); ++it )
+  Q3ValueList<KNFolder*> folders = knGlobals.folderManager()->folders();
+  for ( Q3ValueList<KNFolder*>::Iterator it = folders.begin(); it != folders.end(); ++it )
     if ( !(*it)->listItem() )
       addFolder( (*it) );
   // now open the folders if they were open in the last session
-  for ( QValueList<KNFolder*>::Iterator it = folders.begin(); it != folders.end(); ++it )
+  for ( Q3ValueList<KNFolder*>::Iterator it = folders.begin(); it != folders.end(); ++it )
     if ( (*it)->listItem())
       (*it)->listItem()->setOpen( (*it)->wasOpen() );
 }
@@ -299,7 +306,7 @@ void KNCollectionView::reload()
   reloadFolders();
 }
 
-void KNCollectionView::setActive( QListViewItem *i )
+void KNCollectionView::setActive( Q3ListViewItem *i )
 {
   if (!i || mActiveItem == i)
     return;
@@ -328,7 +335,7 @@ void KNCollectionView::prevGroup()
 
 void KNCollectionView::decCurrentFolder()
 {
-  QListViewItemIterator it( currentItem() );
+  Q3ListViewItemIterator it( currentItem() );
   --it;
   KFolderTreeItem* fti = static_cast<KFolderTreeItem*>(it.current());
   if (fti) {
@@ -341,7 +348,7 @@ void KNCollectionView::decCurrentFolder()
 
 void KNCollectionView::incCurrentFolder()
 {
-  QListViewItemIterator it( currentItem() );
+  Q3ListViewItemIterator it( currentItem() );
   ++it;
   KFolderTreeItem* fti = static_cast<KFolderTreeItem*>(it.current());
   if (fti) {
@@ -362,12 +369,12 @@ void KNCollectionView::selectCurrentFolder()
 }
 
 
-QDragObject* KNCollectionView::dragObject()
+Q3DragObject* KNCollectionView::dragObject()
 {
   KFolderTreeItem *item = static_cast<KFolderTreeItem*>
       (itemAt(viewport()->mapFromGlobal(QCursor::pos())));
   if ( item && item->protocol() == KFolderTreeItem::Local && item->type() == KFolderTreeItem::Other ) {
-    QDragObject *d = new QStoredDrag( "x-knode-drag/folder", viewport() );
+    Q3DragObject *d = new Q3StoredDrag( "x-knode-drag/folder", viewport() );
     d->setPixmap( SmallIcon("folder") );
     return d;
   }
@@ -378,7 +385,7 @@ QDragObject* KNCollectionView::dragObject()
 void KNCollectionView::contentsDropEvent( QDropEvent *e )
 {
   cleanItemHighlighter(); // necessary since we overwrite KListView::contentsDropEvent()
-  QListViewItem *item = itemAt( contentsToViewport(e->pos()) );
+  Q3ListViewItem *item = itemAt( contentsToViewport(e->pos()) );
   KNCollectionViewItem *fti = static_cast<KNCollectionViewItem*>(item);
   if (fti && (fti->coll) && acceptDrag(e)) {
     emit folderDrop( e, fti );
@@ -421,7 +428,7 @@ void KNCollectionView::updatePopup() const
 
 bool KNCollectionView::eventFilter(QObject *o, QEvent *e)
 {
-  if ((e->type() == QEvent::KeyPress) && (static_cast<QKeyEvent*>(e)->key() == Key_Tab)) {
+  if ((e->type() == QEvent::KeyPress) && (static_cast<QKeyEvent*>(e)->key() == Qt::Key_Tab)) {
     emit(focusChangeRequest(this));
     if (!hasFocus())  // focusChangeRequest was successful
       return true;
@@ -429,7 +436,7 @@ bool KNCollectionView::eventFilter(QObject *o, QEvent *e)
 
   // header popup menu
   if ( e->type() == QEvent::MouseButtonPress &&
-       static_cast<QMouseEvent*>(e)->button() == RightButton &&
+       static_cast<QMouseEvent*>(e)->button() == Qt::RightButton &&
        o->isA("QHeader") )
   {
     mPopup->popup( static_cast<QMouseEvent*>(e)->globalPos() );
@@ -442,14 +449,14 @@ bool KNCollectionView::eventFilter(QObject *o, QEvent *e)
 
 void KNCollectionView::focusInEvent(QFocusEvent *e)
 {
-  QListView::focusInEvent(e);
+  Q3ListView::focusInEvent(e);
   emit focusChanged(e);
 }
 
 
 void KNCollectionView::focusOutEvent(QFocusEvent *e)
 {
-  QListView::focusOutEvent(e);
+  Q3ListView::focusOutEvent(e);
   emit focusChanged(e);
 }
 

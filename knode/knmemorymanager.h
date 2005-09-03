@@ -16,7 +16,7 @@
 #define KNMEMORYMANAGER_H
 
 #include <qglobal.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 class KNArticle;
 class KNArticleCollection;
@@ -65,8 +65,8 @@ class KNMemoryManager {
     void checkMemoryUsageCollections();
     void checkMemoryUsageArticles();
 
-    QValueList<CollectionItem*> mColList;
-    QValueList<ArticleItem*> mArtList;
+    Q3ValueList<CollectionItem*> mColList;
+    Q3ValueList<ArticleItem*> mArtList;
     int c_ollCacheSize, a_rtCacheSize;
 };
 

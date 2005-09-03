@@ -26,16 +26,19 @@
 #include "knglobals.h"
 #include "knmainwidget.h"
 #include "knarticlewindow.h"
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 
 using namespace KNode;
 
-QValueList<KNArticleWindow*> KNArticleWindow::mInstances;
+Q3ValueList<KNArticleWindow*> KNArticleWindow::mInstances;
 
 
 bool KNArticleWindow::closeAllWindowsForCollection( KNArticleCollection *col, bool force )
 {
-  QValueList<KNArticleWindow*> list = mInstances;
-  for ( QValueList<KNArticleWindow*>::Iterator it = list.begin(); it != list.end(); ++it )
+  Q3ValueList<KNArticleWindow*> list = mInstances;
+  for ( Q3ValueList<KNArticleWindow*>::Iterator it = list.begin(); it != list.end(); ++it )
     if ( (*it)->artW->article() && (*it)->artW->article()->collection() == col ) {
       if ( force )
         (*it)->close();
@@ -48,8 +51,8 @@ bool KNArticleWindow::closeAllWindowsForCollection( KNArticleCollection *col, bo
 
 bool KNArticleWindow::closeAllWindowsForArticle( KNArticle *art, bool force )
 {
-  QValueList<KNArticleWindow*> list = mInstances;
-  for ( QValueList<KNArticleWindow*>::Iterator it = list.begin(); it != list.end(); ++it )
+  Q3ValueList<KNArticleWindow*> list = mInstances;
+  for ( Q3ValueList<KNArticleWindow*>::Iterator it = list.begin(); it != list.end(); ++it )
     if ( (*it)->artW->article() && (*it)->artW->article() == art ) {
       if ( force )
         (*it)->close();
@@ -62,7 +65,7 @@ bool KNArticleWindow::closeAllWindowsForArticle( KNArticle *art, bool force )
 
 bool KNArticleWindow::raiseWindowForArticle( KNArticle *art )
 {
-  for ( QValueList<KNArticleWindow*>::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
+  for ( Q3ValueList<KNArticleWindow*>::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
     if ( (*it)->artW->article() && (*it)->artW->article() == art ) {
       KWin::activateWindow( (*it)->winId() );
       return true;
@@ -71,9 +74,9 @@ bool KNArticleWindow::raiseWindowForArticle( KNArticle *art )
 }
 
 
-bool KNArticleWindow::raiseWindowForArticle(const QCString &mid)
+bool KNArticleWindow::raiseWindowForArticle(const Q3CString &mid)
 {
-  for ( QValueList<KNArticleWindow*>::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
+  for ( Q3ValueList<KNArticleWindow*>::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
     if ( (*it)->artW->article() && (*it)->artW->article()->messageID()->as7BitString( false ) == mid ) {
       KWin::activateWindow( (*it)->winId() );
       return true;

@@ -16,7 +16,7 @@
 
 #include <qlayout.h>
 #include <qlabel.h>
-#include <qheader.h>
+#include <q3header.h>
 #include <qcheckbox.h>
 
 #include <klocale.h>
@@ -30,7 +30,7 @@
 KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, const QString &act) :
   KNGroupBrowser(parent, i18n("Select Destinations"), a)
 {
-  selView=new QListView(page);
+  selView=new Q3ListView(page);
   selView->addColumn(QString::null);
   selView->header()->hide();
   listL->addWidget(selView, 1,2);
@@ -44,10 +44,10 @@ KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, cons
     new GroupItem(selView, info);
   }
 
-  connect(selView, SIGNAL(selectionChanged(QListViewItem*)),
-    this, SLOT(slotItemSelected(QListViewItem*)));
-  connect(groupView, SIGNAL(selectionChanged(QListViewItem*)),
-    this, SLOT(slotItemSelected(QListViewItem*)));
+  connect(selView, SIGNAL(selectionChanged(Q3ListViewItem*)),
+    this, SLOT(slotItemSelected(Q3ListViewItem*)));
+  connect(groupView, SIGNAL(selectionChanged(Q3ListViewItem*)),
+    this, SLOT(slotItemSelected(Q3ListViewItem*)));
   connect(groupView, SIGNAL(selectionChanged()),
     this, SLOT(slotSelectionChanged()));
   connect(arrowBtn1, SIGNAL(clicked()), this, SLOT(slotArrowBtn1()));
@@ -88,7 +88,7 @@ void KNGroupSelectDialog::updateItemState(CheckItem *it)
 QString KNGroupSelectDialog::selectedGroups()const
 {
   QString ret;
-  QListViewItemIterator it(selView);
+  Q3ListViewItemIterator it(selView);
   bool moderated=false;
   int count=0;
   bool isFirst=true;
@@ -112,7 +112,7 @@ QString KNGroupSelectDialog::selectedGroups()const
 
 
 
-void KNGroupSelectDialog::slotItemSelected(QListViewItem *it)
+void KNGroupSelectDialog::slotItemSelected(Q3ListViewItem *it)
 {
   const QObject *s=sender();
 

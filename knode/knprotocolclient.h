@@ -19,11 +19,13 @@
 
 #include <qdatetime.h>
 #include <qthread.h>
-#include <qcstring.h>
+#include <q3cstring.h>
+//Added by qt3to4:
+#include <Q3StrList>
 
 #include <knserverinfo.h>
 
-class QStrList;
+class Q3StrList;
 class KNJobData;
 struct in_addr;
 
@@ -66,18 +68,18 @@ class KNProtocolClient : public QThread  {
     virtual void closeConnection();
 
     /** sends a command (one line), return code is written to rep */
-    virtual bool sendCommand(const QCString &cmd, int &rep);
+    virtual bool sendCommand(const Q3CString &cmd, int &rep);
     /** checks return code and calls handleErrors() if necessary */
-    bool sendCommandWCheck(const QCString &cmd, int rep);
+    bool sendCommandWCheck(const Q3CString &cmd, int rep);
     /** sends a message (multiple lines) */
-    bool sendMsg(const QCString &msg);
+    bool sendMsg(const Q3CString &msg);
 
     /** reads next complete line of input */
     bool getNextLine();
     /** returns pointer to current line of input */
     char* getCurrentLine()  { return thisLine; };
     /** receives a message (multiple lines) */
-    bool getMsg(QStrList &msg);
+    bool getMsg(Q3StrList &msg);
     /** reads next line and returns the response code */
     bool getNextResponse(int &rep);
     /** checks return code and calls handleErrors() if necessary */
@@ -102,7 +104,7 @@ class KNProtocolClient : public QThread  {
     bool waitForWrite();
     void closeSocket();
     /** sends str to the server */
-    bool sendStr(const QCString &str);
+    bool sendStr(const Q3CString &str);
     /** removes start/stop signal */
     void clearPipe();
 
