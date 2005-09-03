@@ -157,7 +157,7 @@ void KTNEFMain::loadFile(const QString& filename)
 	}
 	else
 	{
-		Q3PtrList<KTNEFAttach>	list = parser_->message()->attachmentList();
+		QList<KTNEFAttach*>	list = parser_->message()->attachmentList();
 		QString			msg;
 		msg = i18n( "%n attachment found", "%n attachments found", list.count() );
 		statusBar()->changeItem(msg, 0);
@@ -290,10 +290,11 @@ void KTNEFMain::enableSingleAction(bool on)
 void KTNEFMain::cleanup()
 {
 	QDir	d(KGlobal::dirs()->localkdedir() + "/share/apps/ktnef/tmp/");
-	const QFileInfoList	*list = d.entryInfoList(QDir::Files|QDir::Hidden,QDir::Unsorted);
-	QFileInfoListIterator	it(*list);
-	for (;it.current();++it)
-		d.remove(it.current()->absFilePath());
+	const QFileInfoList	list = d.entryInfoList(QDir::Files|QDir::Hidden,QDir::Unsorted);
+	for (int i = 0; i < list.size(); ++i)
+	{
+			d.remove(list.at(i).absFilePath());
+	}
 }
 
 void KTNEFMain::extractTo(const QString& dirname)
