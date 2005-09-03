@@ -289,7 +289,7 @@ class KDE_EXPORT ContentType : public Base {
   protected:
     Q3CString getParameter(const char *name);
     void setParameter(const Q3CString &name, const Q3CString &value, bool doubleQuotes=false);
-    Q3CString m_imeType, p_arams;
+    QByteArray m_imeType, p_arams;
     contentCategory c_ategory;
 
 };

@@ -585,9 +585,9 @@ void AddressField::from7BitString(const Q3CString &s)
   Q3CString n;
 
   //so what do we have here ?
-  if(s.find( QRegExp("*@*(*)", false, true) )!=-1) type=2;       // From: foo@bar.com (John Doe)
-  else if(s.find( QRegExp("*<*@*>", false, true) )!=-1) type=1;  // From: John Doe <foo@bar.com>
-  else if(s.find( QRegExp("*@*", false, true) )!=-1) type=0;     // From: foo@bar.com
+  if(QString(s).contains( QRegExp("*@*(*)", false, true) )) type=2;       // From: foo@bar.com (John Doe)
+  else if(QString(s).contains( QRegExp("*<*@*>", false, true) )) type=1;  // From: John Doe <foo@bar.com>
+  else if(QString(s).contains( QRegExp("*@*", false, true) )) type=0;     // From: foo@bar.com
   else { //broken From header => just decode it
     n_ame=decodeRFC2047String(s, &e_ncCS, defaultCS(), forceCS());
     return;
@@ -1439,9 +1439,9 @@ Q3CString ContentType::getParameter(const char *name)
 {
   Q3CString ret;
   int pos1=0, pos2=0;
-  pos1=p_arams.find(name, 0, false);
+  pos1=QString(p_arams).indexOf(name, 0, Qt::CaseInsensitive);
   if(pos1!=-1) {
-    if( (pos2=p_arams.find(';', pos1))==-1 )
+    if( (pos2=p_arams.indexOf(';', pos1))==-1 )
       pos2=p_arams.length();
     pos1+=strlen(name)+1;
     ret=p_arams.mid(pos1, pos2-pos1);
@@ -1454,14 +1454,14 @@ Q3CString ContentType::getParameter(const char *name)
 void ContentType::setParameter(const Q3CString &name, const Q3CString &value, bool doubleQuotes)
 {
   int pos1=0, pos2=0;
-  Q3CString param;
+  QByteArray param;
 
   if(doubleQuotes)
     param=name+"=\""+value+"\"";
   else
     param=name+"="+value;
 
-  pos1=p_arams.find(name, 0, false);
+  pos1=QString(p_arams).indexOf(name, 0, Qt::CaseInsensitive);
   if(pos1==-1) {
     p_arams+="; "+param;
   }
@@ -1545,7 +1545,7 @@ void CDisposition::from7BitString(const Q3CString &s)
     d_isp=CDattachment;
   else d_isp=CDinline;
 
-  int pos=s.find("filename=", 0, false);
+  int pos=QString(s).indexOf("filename=", 0, Qt::CaseInsensitive);
   Q3CString fn;
   if(pos>-1) {
     pos+=9;

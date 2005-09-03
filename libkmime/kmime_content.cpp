@@ -17,7 +17,7 @@
 #include "kmime_parsers.h"
 
 #include <kcharsets.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -220,7 +220,7 @@ void Content::parse()
           b_ody.resize(0);
 
           //binary parts
-          for (unsigned int i=0;i<yenc.binaryParts().count();i++) {
+          for (int i=0;i<yenc.binaryParts().count();i++) {
             c=new Content();
             //generate content with mime-compliant headers
             tmp="Content-Type: ";
@@ -819,8 +819,8 @@ int Content::lineCount()
 {
   int ret=0;
   if(type()==ATmimeContent)
-    ret+=h_ead.contains('\n');
-  ret+=b_ody.contains('\n');
+    ret+=h_ead.count('\n');
+  ret+=b_ody.count('\n');
 
   if(c_ontents && !c_ontents->isEmpty())
     for(Content *c=c_ontents->first(); c; c=c_ontents->next())
