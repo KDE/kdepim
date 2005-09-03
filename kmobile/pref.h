@@ -6,7 +6,7 @@
 #define _KMOBILEPREF_H_
 
 #include <kdialogbase.h>
-#include <qframe.h>
+#include <q3frame.h>
 
 class KMobilePrefPageOne;
 class KMobilePrefPageTwo;
@@ -22,14 +22,14 @@ private:
     KMobilePrefPageTwo *m_pageTwo;
 };
 
-class KMobilePrefPageOne : public QFrame
+class KMobilePrefPageOne : public Q3Frame
 {
     Q_OBJECT
 public:
     KMobilePrefPageOne(QWidget *parent = 0);
 };
 
-class KMobilePrefPageTwo : public QFrame
+class KMobilePrefPageTwo : public Q3Frame
 {
     Q_OBJECT
 public:

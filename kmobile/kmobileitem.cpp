@@ -18,6 +18,8 @@
 */
 
 #include <qobject.h>
+//Added by qt3to4:
+#include <QPixmap>
 
 #include <kiconloader.h>
 #include <klocale.h>
@@ -29,8 +31,8 @@
 
 #define PRINT_DEBUG kdDebug() << "KMobileItem: "
 
-KMobileItem::KMobileItem(QIconView *parent, KConfig *_config, KService::Ptr service)
-	: QObject(parent), QIconViewItem(parent), m_dev(0L)
+KMobileItem::KMobileItem(Q3IconView *parent, KConfig *_config, KService::Ptr service)
+	: QObject(parent), Q3IconViewItem(parent), m_dev(0L)
 {
    config = _config;
 
@@ -51,8 +53,8 @@ KMobileItem::KMobileItem(QIconView *parent, KConfig *_config, KService::Ptr serv
 }
 
 /* restore this item from the config file */
-KMobileItem::KMobileItem(QIconView *parent, KConfig *_config, int reload_index)
-	: QObject(parent), QIconViewItem(parent), m_dev(0L)
+KMobileItem::KMobileItem(Q3IconView *parent, KConfig *_config, int reload_index)
+	: QObject(parent), Q3IconViewItem(parent), m_dev(0L)
 {
    config = _config;
 

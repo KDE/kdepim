@@ -21,6 +21,9 @@
 #define SYSTEMTRAY_H
 
 #include <ksystemtray.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QLabel>
 
 class KMainWindow;
 class KAction;

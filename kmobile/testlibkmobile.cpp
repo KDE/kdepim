@@ -7,6 +7,8 @@
 #include <dcopclient.h>
 #include <qdatastream.h>
 #include <qstring.h>
+//Added by qt3to4:
+#include <Q3CString>
 #include <kdebug.h>
 
 int main(int argc, char **argv)
@@ -20,14 +22,15 @@ int main(int argc, char **argv)
     client->attach();
 
     QByteArray data;
-    QDataStream ds(data, IO_WriteOnly);
+    QDataStream ds( &data,QIODevice::WriteOnly);
+    ds.setVersion(QDataStream::Qt_3_1);
 //     ds << QString("a");
 
-    QCString replyType;
+    Q3CString replyType;
     QByteArray replyData;
     ok = client->call("kmobile", "kmobileIface", "deviceNames()", data, replyType, replyData);
 
-    QDataStream reply(replyData, IO_ReadOnly); 
+    QDataStream reply(replyData, QIODevice::ReadOnly); 
     QStringList deviceNames; 
     reply >> deviceNames;
 

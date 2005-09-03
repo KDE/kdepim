@@ -5,18 +5,18 @@
 #ifndef _KMOBILEITEM_H_
 #define _KMOBILEITEM_H_
 
-#include <qiconview.h>
+#include <q3iconview.h>
 #include <qpixmap.h>
 #include <ktrader.h>
 #include "kmobiledevice.h"
 
-class KMobileItem : public QObject, public QIconViewItem 
+class KMobileItem : public QObject, public Q3IconViewItem 
 {
     Q_OBJECT
     friend class KMobileView;
 public:
-    KMobileItem(QIconView *parent, KConfig *config, KService::Ptr service);
-    KMobileItem(QIconView *parent, KConfig *config, int reload_index);
+    KMobileItem(Q3IconView *parent, KConfig *config, KService::Ptr service);
+    KMobileItem(Q3IconView *parent, KConfig *config, int reload_index);
     virtual ~KMobileItem();
 
     void configSave() const;

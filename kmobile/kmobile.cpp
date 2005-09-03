@@ -17,10 +17,12 @@
 
 */
 
-#include <qdragobject.h>
+#include <q3dragobject.h>
+//Added by qt3to4:
+#include <QPixmap>
 #include <kprinter.h>
 #include <qpainter.h>
-#include <qpaintdevicemetrics.h>
+#include <q3paintdevicemetrics.h>
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -241,7 +243,7 @@ void KMobile::optionsPreferences()
 void KMobile::renameDevice()
 {
     // rename the current selected device
-    QIconViewItem *item = m_view->currentItem();
+    Q3IconViewItem *item = m_view->currentItem();
     if (item)
        item->rename();
 }
@@ -261,7 +263,7 @@ void KMobile::addDevice()
   dialog->helpText->setText( i18n("Please select the category to which your new device belongs:") );
   dialog->addButton->setText( i18n("&Scan for New Devices...") );
   dialog->addButton->setDisabled(true);
-  dialog->iconView->connect( dialog->iconView, SIGNAL(doubleClicked(QIconViewItem*)),
+  dialog->iconView->connect( dialog->iconView, SIGNAL(doubleClicked(Q3IconViewItem*)),
 			dialog, SLOT(accept()) );
   dialog->selectButton->setText( i18n("&Add") );
   dialog->selectButton->connect( dialog->selectButton, SIGNAL(clicked()), dialog, SLOT(accept()) );
@@ -280,8 +282,8 @@ void KMobile::addDevice()
 	iconName = KMOBILE_ICON_UNKNOWN;
     QPixmap pm = KGlobal::instance()->iconLoader()->loadIcon(iconName, KIcon::Desktop );
     
-    QIconViewItem *item;
-    item = new QIconViewItem( dialog->iconView, ptr->name(), pm );
+    Q3IconViewItem *item;
+    item = new Q3IconViewItem( dialog->iconView, ptr->name(), pm );
 
     //if (!ptr->comment().isNull())
     //	QToolTip::add(item->pixmap(), ptr->comment() );
@@ -345,7 +347,7 @@ KMobileDevice * KMobileFactory::chooseDeviceDialog( QWidget *parent,
     return 0L;
 
   dialog->addButton->connect( dialog->addButton, SIGNAL(clicked()), this, SLOT(slotAddDevice()) );
-  dialog->iconView->connect( dialog->iconView, SIGNAL(doubleClicked(QIconViewItem*)),
+  dialog->iconView->connect( dialog->iconView, SIGNAL(doubleClicked(Q3IconViewItem*)),
 			dialog, SLOT(accept()) );
   dialog->selectButton->connect( dialog->selectButton, SIGNAL(clicked()), dialog, SLOT(accept()) );
   dialog->cancelButton->connect( dialog->cancelButton, SIGNAL(clicked()), dialog, SLOT(reject()) );
@@ -364,8 +366,8 @@ KMobileDevice * KMobileFactory::chooseDeviceDialog( QWidget *parent,
 	iconName = KMOBILE_ICON_UNKNOWN;
     QPixmap pm( ::locate("icon", iconName+".png") );
     
-    QIconViewItem *item;
-    item = new QIconViewItem( dialog->iconView, ptr->name(), pm );
+    Q3IconViewItem *item;
+    item = new Q3IconViewItem( dialog->iconView, ptr->name(), pm );
 
   }
 
@@ -385,7 +387,7 @@ KMobileDevice * KMobileFactory::chooseDeviceDialog( QWidget *parent,
 void KMobile::removeDevice()
 {
     // remove the current selected device
-    QIconViewItem *item = m_view->currentItem();
+    Q3IconViewItem *item = m_view->currentItem();
     if (item)
        m_view->removeDevice( item->text() );
 }
@@ -393,7 +395,7 @@ void KMobile::removeDevice()
 void KMobile::configDevice()
 {
     // configure the current selected device
-    QIconViewItem *item = m_view->currentItem();
+    Q3IconViewItem *item = m_view->currentItem();
     if (item)
        m_view->configDevice( item->text() );
 }

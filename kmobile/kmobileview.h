@@ -5,7 +5,7 @@
 #ifndef _KMOBILEVIEW_H_
 #define _KMOBILEVIEW_H_
 
-#include <qiconview.h>
+#include <q3iconview.h>
 
 #include "kmobileiface.h"
 
@@ -20,7 +20,7 @@ class KMobileItem;
  * @author Helge Deller <deller@kde.org>
  * @version 0.1
  */
-class KDE_EXPORT KMobileView : public QIconView, public kmobileIface
+class KDE_EXPORT KMobileView : public Q3IconView, public kmobileIface
 {
     Q_OBJECT
 public:
@@ -73,7 +73,7 @@ protected:
     KMobileItem * findDevice( const QString &deviceName ) const;
 
 protected slots:
-    void slotDoubleClicked( QIconViewItem * item );
+    void slotDoubleClicked( Q3IconViewItem * item );
 
 signals:
     /**

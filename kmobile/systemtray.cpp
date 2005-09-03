@@ -24,10 +24,12 @@
 #include <kiconeffect.h>
 #include <kdebug.h>
 
-#include <qhbox.h>
+#include <q3hbox.h>
 #include <qpushbutton.h>
 #include <qtooltip.h>
 #include <qpainter.h>
+//Added by qt3to4:
+#include <QPixmap>
 
 #include "systemtray.h"
 

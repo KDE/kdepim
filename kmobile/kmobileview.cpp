@@ -17,7 +17,7 @@
 
 */
 
-#include <qiconview.h>
+#include <q3iconview.h>
 #include <qstringlist.h>
 
 #include <ktrader.h>
@@ -33,14 +33,14 @@
 
 
 KMobileView::KMobileView(QWidget *parent, KConfig *_config)
-    : DCOPObject("kmobileIface"), QIconView(parent)
+    : DCOPObject("kmobileIface"), Q3IconView(parent)
 {
    m_config = _config;
-   setSelectionMode(QIconView::Single);
-   setResizeMode(QIconView::Adjust);
+   setSelectionMode(Q3IconView::Single);
+   setResizeMode(Q3IconView::Adjust);
    setAutoArrange(true);
-   connect(this, SIGNAL(doubleClicked(QIconViewItem *)),
-                 SLOT(slotDoubleClicked(QIconViewItem *)));
+   connect(this, SIGNAL(doubleClicked(Q3IconViewItem *)),
+                 SLOT(slotDoubleClicked(Q3IconViewItem *)));
 }
 
 KMobileView::~KMobileView()
@@ -66,7 +66,7 @@ void KMobileView::saveAll()
 {
    m_config->setGroup( "Main" );
    m_config->writeEntry( "Entries", count() );
-   for ( QIconViewItem *item = firstItem(); item; item = item->nextItem() ) {
+   for ( Q3IconViewItem *item = firstItem(); item; item = item->nextItem() ) {
 	KMobileItem *it = static_cast<KMobileItem *>(item);
 	it->driverAvailable();
 	it->configSave();
@@ -91,7 +91,7 @@ void KMobileView::restoreAll()
 
 KMobileItem *KMobileView::findDevice( const QString &deviceName ) const
 {
-   for ( QIconViewItem *item = firstItem(); item; item = item->nextItem() ) {
+   for ( Q3IconViewItem *item = firstItem(); item; item = item->nextItem() ) {
 	if (item->text() == deviceName)
 		return static_cast<KMobileItem *>(item);
    }
@@ -105,7 +105,7 @@ bool KMobileView::startKonqueror( const QString &devName )
    return proc->start();
 }
 
-void KMobileView::slotDoubleClicked( QIconViewItem * item )
+void KMobileView::slotDoubleClicked( Q3IconViewItem * item )
 {
    startKonqueror(item->text());
 }
@@ -122,7 +122,7 @@ void KMobileView::slotDoubleClicked( QIconViewItem * item )
 QStringList KMobileView::deviceNames()
 {
    QStringList names;
-   for ( QIconViewItem *item = firstItem(); item; item = item->nextItem() ) {
+   for ( Q3IconViewItem *item = firstItem(); item; item = item->nextItem() ) {
 	names.append(item->text());
    }
    return names;

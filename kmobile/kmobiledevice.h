@@ -313,6 +313,10 @@ public:
      */
     virtual void special( const QByteArray & );
 
+    enum MessageBoxType { QuestionYesNo = 1, WarningYesNo = 2, WarningContinueCancel = 3,
+			        WarningYesNoCancel = 4, Information = 5, SSLMessageBox = 6 };
+	
+	
 signals:
     /**
      * Call this from stat() to express details about an object, the
@@ -428,8 +432,6 @@ signals:
     void finished();
 
 
-    enum MessageBoxType { QuestionYesNo = 1, WarningYesNo = 2, WarningContinueCancel = 3,
-		WarningYesNoCancel = 4, Information = 5, SSLMessageBox = 6 };
 
     /**
      * Call this to show a message box from the slave (it will in fact be handled

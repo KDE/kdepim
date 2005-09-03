@@ -7,6 +7,8 @@
 
 #include <dcopclient.h>
 #include <kdepimmacros.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 class KDE_EXPORT KMobileClient : public DCOPClient
 {
@@ -15,7 +17,7 @@ public:
     KMobileClient();
     virtual ~KMobileClient();
 
-    QCString appId() const { return m_clientAppId; };
+    Q3CString appId() const { return m_clientAppId; };
 
     bool isKMobileAvailable();
     bool startKMobileApplication();
@@ -53,9 +55,9 @@ public:
     bool storeNote( QString deviceName, int index, QString note );
 
 private:
-    QCString m_clientAppId;
-    QCString m_kmobileApp;
-    QCString m_kmobileObj;
+    Q3CString m_clientAppId;
+    Q3CString m_kmobileApp;
+    Q3CString m_kmobileObj;
 
 };
 

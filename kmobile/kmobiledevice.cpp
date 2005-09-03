@@ -29,6 +29,8 @@
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qfile.h>
+//Added by qt3to4:
+#include <QTextStream>
 
 #include <klibloader.h>
 #include <kstandarddirs.h>
@@ -390,7 +392,7 @@ bool KMobileDevice::lockDevice(const QString &device, QString &err_reason)
   }
   QString lockName = DEVICE_LOCK_PATH_PREFIX + all[all.count()-1];
   QFile file(lockName);
-  if (file.exists() && file.open(IO_ReadOnly)) {
+  if (file.exists() && file.open(QIODevice::ReadOnly)) {
      if (file.size() == 0) {
 	err_reason = i18n("Unable to read lockfile %s. Please check for reason and "
 		"remove the lockfile by hand.").arg(lockName);

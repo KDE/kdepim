@@ -18,6 +18,8 @@
 */
 
 #include <qstringlist.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <ktrader.h>
 #include <klocale.h>
@@ -66,11 +68,12 @@ bool KMobileClient::isKMobileAvailable()
 bool KMobileClient::startKMobileApplication()
 {
   QByteArray data;
-  QDataStream arg(data, IO_WriteOnly);
+  QDataStream arg( &data,QIODevice::WriteOnly);
+  arg.setVersion(QDataStream::Qt_3_1);
   QStringList params;
   params << "--minimized";
   arg << QString("kmobile") << params;
-  QCString replyType;
+  DCOPCString replyType;
   QByteArray replyData;
   bool ok = call("klauncher", "klauncher", "kdeinit_exec_wait(QString,QStringList)", data, replyType, replyData);
   PRINT_DEBUG << QString("DCOP-CALL to klauncher: %1\n").arg(ok?"ok.":"failed.");
@@ -88,16 +91,16 @@ bool KMobileClient::startKMobileApplication()
 
 #define PREPARE( FUNC, PARAMS ) \
   QByteArray data; \
-  QDataStream arg(data, IO_WriteOnly); \
+  QDataStream arg(data, QIODevice::WriteOnly); \
   arg << PARAMS; \
-  QCString replyType; \
+  Q3CString replyType; \
   QByteArray replyData; \
   bool ok = call(m_kmobileApp, m_kmobileObj, FUNC, data, replyType, replyData, KMOBILECLIENT_USE_EVENTLOOP, KMOBILECLIENT_TIMEOUT); \
   PRINT_DEBUG << QString("DCOP-CALL to %1: %2\n").arg(FUNC).arg(ok?"ok.":"FAILED.")
 
 #define RETURN_TYPE( FUNC, PARAMS, RETURN_TYPE ) \
   PREPARE( FUNC, PARAMS ); \
-  QDataStream reply(replyData, IO_ReadOnly); \
+  QDataStream reply(replyData, QIODevice::ReadOnly); \
   RETURN_TYPE ret; \
   if (ok) \
 	reply >> ret; \
@@ -105,7 +108,7 @@ bool KMobileClient::startKMobileApplication()
 
 #define RETURN_TYPE_DEFAULT( FUNC, PARAMS, RETURN_TYPE, RETURN_DEFAULT ) \
   PREPARE( FUNC, PARAMS ); \
-  QDataStream reply(replyData, IO_ReadOnly); \
+  QDataStream reply(replyData, QIODevice::ReadOnly); \
   RETURN_TYPE ret = RETURN_DEFAULT; \
   if (ok) \
 	reply >> ret; \
