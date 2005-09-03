@@ -74,7 +74,7 @@ static QString eventViewerAddLink( const QString &ref, const QString &text,
 
 static QString eventViewerAddTag( const QString & tag, const QString & text )
 {
-  int numLineBreaks = text.contains( "\n" );
+  int numLineBreaks = text.count( "\n" );
   QString str = "<" + tag + ">";
   QString tmpText = text;
   QString tmpStr = str;
@@ -1218,7 +1218,8 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
   bool bOk = false;
 
   KTNEFParser parser;
-  QBuffer buf( tnef );
+  QByteArray b( tnef );
+  QBuffer buf( &b );
   CalendarLocal cal ( QString::fromLatin1( "UTC" ) );
   KABC::Addressee addressee;
   KABC::VCardConverter cardConv;
