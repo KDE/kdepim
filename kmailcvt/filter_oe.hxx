@@ -19,6 +19,8 @@
 #define FILTER_OE_HXX
 
 #include "filters.hxx"
+//Added by qt3to4:
+#include <Q3ValueList>
 
 /**
  *imports outlook text messages into KMail
@@ -72,8 +74,8 @@ private: // Private methods
     */
     typedef FolderStructureBase<4> FolderStructure;
     /** matrix with information about the folder structure*/
-    QValueList<FolderStructure> folderStructure;
-    typedef QValueList<FolderStructure>::Iterator FolderStructureIterator;
+    Q3ValueList<FolderStructure> folderStructure;
+    typedef Q3ValueList<FolderStructure>::Iterator FolderStructureIterator;
 
     /** name of the current folder */
     QString folderName;

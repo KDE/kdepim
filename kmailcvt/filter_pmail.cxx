@@ -161,7 +161,7 @@ void FilterPMail::importMailFolder(const QString& file)
     
     long l = 0;
     QFile f(file);
-    if (!f.open(IO_ReadOnly)) {
+    if (!f.open(QIODevice::ReadOnly)) {
         inf->alert(i18n("Unable to open %1, skipping").arg(file));
     } else {
         // Get folder name
@@ -231,7 +231,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
     s.replace( QRegExp("mbx$"), "pmg");
     s.replace( QRegExp("MBX$"), "PMG");
     f.setName(s);
-    if (! f.open( IO_ReadOnly ) ) {
+    if (! f.open( QIODevice::ReadOnly ) ) {
         inf->alert( i18n("Unable to open %1, skipping").arg( s ) );
         return;
     } else {
@@ -249,7 +249,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
     
     /** Read in the mbox */
     f.setName(file);
-    if (! f.open( IO_ReadOnly ) ) {
+    if (! f.open( QIODevice::ReadOnly ) ) {
         inf->alert( i18n("Unable to open %1, skipping").arg( s ) );
     } else {
         inf->addLog(i18n("Importing %1").arg("../" + QString(pmg_head.folder)));
@@ -290,7 +290,7 @@ bool FilterPMail::parseFolderMatrix()
     inf->addLog(i18n("Parsing the folder structure..."));
     
     QFile hierarch(chosenDir + "/hierarch.pm");
-    if (! hierarch.open( IO_ReadOnly ) ) {
+    if (! hierarch.open( QIODevice::ReadOnly ) ) {
         inf->alert( i18n("Unable to open %1, skipping").arg( chosenDir + "hierarch.pm" ) );
         return false;
     } else {

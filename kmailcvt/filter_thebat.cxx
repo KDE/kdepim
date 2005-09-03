@@ -20,7 +20,7 @@
 #include <config.h>
 
 #include <qregexp.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 #include <klocale.h>
 #include <kfiledialog.h>
@@ -145,9 +145,9 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
     int iFound = 0;
     int count = 0;
     long endOfEmail = 0;
-    QValueList<long> offsets;
+    Q3ValueList<long> offsets;
 
-    if (!tbb.open(IO_ReadOnly)) {
+    if (!tbb.open(QIODevice::ReadOnly)) {
         info->alert(i18n("Unable to open %1, skipping").arg(FileName));
     } else {
         // BUILD the index of messages :
@@ -196,7 +196,7 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
             info->setTo(_path);
             info->setFrom("../" + _info + "/messages.tbb");
 
-            for(QValueList<long>::Iterator it = offsets.begin() ; it != offsets.end() ; ++it) {
+            for(Q3ValueList<long>::Iterator it = offsets.begin() ; it != offsets.end() ; ++it) {
                 if(info->shouldTerminate()) {
                     tbb.close();
                     return;

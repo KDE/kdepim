@@ -85,7 +85,7 @@ void FilterLNotes::ImportLNotes(const QString& file) {
     // open the message
     QFile f(file);
 
-    if (! f.open( IO_ReadOnly ) ) {
+    if (! f.open( QIODevice::ReadOnly ) ) {
         inf->alert( i18n("Unable to open %1, skipping").arg( file ) );
     } else {
 

@@ -19,7 +19,7 @@
 #define FILTER_PMAIL_HXX
 
 #include <qdir.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 #include "filters.hxx"
 
@@ -60,8 +60,8 @@ private:
 	4. "ID:name" of parent folder
 	5. name of folder/archiv
     */
-    QValueList<FolderStructure> folderMatrix;
-    typedef QValueList<FolderStructure>::Iterator FolderStructureIterator;
+    Q3ValueList<FolderStructure> folderMatrix;
+    typedef Q3ValueList<FolderStructure>::Iterator FolderStructureIterator;
     
     bool folderParsed;
     

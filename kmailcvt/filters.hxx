@@ -23,9 +23,9 @@
 #endif
 
 #include <qcombobox.h>
-#include <qprogressbar.h>
-#include <qptrlist.h>
-#include <qlistbox.h>
+#include <q3progressbar.h>
+#include <q3ptrlist.h>
+#include <q3listbox.h>
 #include <qlabel.h>
 
 #include "kimportpagedlg.h"

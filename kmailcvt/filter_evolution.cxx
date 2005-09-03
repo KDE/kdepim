@@ -24,6 +24,8 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktempfile.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 
 /** Default constructor. */
@@ -121,7 +123,7 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
     QFile mbox(mboxName);
     bool first_msg = true;
     QString tmp_from = mboxName;
-    if (!mbox.open(IO_ReadOnly)) {
+    if (!mbox.open(QIODevice::ReadOnly)) {
         info->alert(i18n("Unable to open %1, skipping").arg(mboxName));
     } else {
         QFileInfo filenameInfo(mboxName);
@@ -157,7 +159,7 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
             * (e.g. 8Bit). It also not help to convert the QTextStream to Unicode. By this you
             * get Unicode/UTF-email but KMail can't detect the correct charset.
             */
-            QCString seperate;
+            Q3CString seperate;
 
             if(!first_msg)
                 tmp.file()->writeBlock( input, l );

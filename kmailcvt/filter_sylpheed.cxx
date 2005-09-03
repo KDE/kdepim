@@ -118,7 +118,7 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
     QString _path;
     bool generatedPath = false;
 
-    QDict<unsigned long> msgflags;
+    Q3Dict<unsigned long> msgflags;
     msgflags.setAutoDelete(true);
 
     QDir importDir (dirName);
@@ -164,7 +164,7 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
 }
 
 
-void FilterSylpheed::readMarkFile( FilterInfo *info, const QString &path, QDict<unsigned long> &dict )
+void FilterSylpheed::readMarkFile( FilterInfo *info, const QString &path, Q3Dict<unsigned long> &dict )
 {
     /* Each sylpheed mail directory contains a .sylpheed_mark file which
      * contains all the flags for each messages. The layout of this file
@@ -182,7 +182,7 @@ void FilterSylpheed::readMarkFile( FilterInfo *info, const QString &path, QDict<
     Q_UINT32 in, flags;
     QFile file(path);
 
-    if (!file.open(IO_ReadOnly)) 
+    if (!file.open(QIODevice::ReadOnly)) 
         return;
     
     QDataStream stream(&file);

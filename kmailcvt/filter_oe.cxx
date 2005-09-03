@@ -116,7 +116,7 @@ void FilterOE::importMailBox( FilterInfo *info, const QString& fileName)
     _nameOfFile.remove( "/" );
     info->setFrom(mailfileinfo.fileName());
     
-    if (!mailfile.open(IO_ReadOnly)) {
+    if (!mailfile.open(QIODevice::ReadOnly)) {
         info->addLog(i18n("Unable to open mailbox %1").arg(fileName));
         return;
     }
