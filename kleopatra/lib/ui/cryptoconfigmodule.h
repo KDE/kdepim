@@ -1,14 +1,12 @@
-/*  -*- c++ -*-
-    backendconfigwidget.h
+/*
+    cryptoconfigmodule.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2002,2004 Klarälvdalens Datakonsult AB
-    Copyright (c) 2002,2003 Marc Mutz <mutz@kde.org>
+    This file is part of libkleopatra
+    Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License as
-    published by the Free Software Foundation; either version 2 of the
-    License, or (at your option) any later version.
+    modify it under the terms of the GNU General Public License,
+    version 2, as published by the Free Software Foundation.
 
     Libkleopatra is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,48 +27,42 @@
     your version of the file, but you are not obligated to do so.  If
     you do not wish to do so, delete this exception statement from
     your version.
- */
+*/
 
-#ifndef __KLEO_UI_BACKENDCONFIGWIDGET_H__
-#define __KLEO_UI_BACKENDCONFIGWIDGET_H__
+#ifndef CRYPTOCONFIGMODULE_H
+#define CRYPTOCONFIGMODULE_H
 
-#include <qwidget.h>
-#include <kdepimmacros.h>
+#include <kjanuswidget.h>
 
-namespace Kleo {
-  class CryptoBackendFactory;
-}
-
-class Q3ListViewItem;
+#include <q3valuelist.h>
 
 namespace Kleo {
 
-  class KDE_EXPORT BackendConfigWidget : public QWidget {
+  class CryptoConfig;
+  class CryptoConfigComponentGUI;
+
+  /**
+   * Crypto Config Module widget, dynamically generated from CryptoConfig
+   * It's a simple QWidget so that it can be embedded into a dialog or into a KCModule.
+   */
+  class CryptoConfigModule : public KJanusWidget {
     Q_OBJECT
   public:
-    BackendConfigWidget( CryptoBackendFactory * factory, QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
-    ~BackendConfigWidget();
+    CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0, const char * name=0 );
 
-    void load();
-    void save() const;
-
-    void emitChanged( bool b ) { emit changed( b ); }
+    void save();
+    void reset(); // i.e. reload current settings, discarding user input
+    void defaults();
+    void cancel();
 
   signals:
-    void changed( bool );
-
-  private slots:
-    void slotSelectionChanged( Q3ListViewItem * );
-    void slotRescanButtonClicked();
-    void slotConfigureButtonClicked();
+    void changed();
 
   private:
-    class Private;
-    Private * d;
-  protected:
-    virtual void virtual_hook( int, void* );
+    Kleo::CryptoConfig* mConfig;
+    Q3ValueList<CryptoConfigComponentGUI *> mComponentGUIs;
   };
 
 }
 
-#endif // __KLEO_UI_BACKENDCONFIGWIDGET_H__
+#endif

@@ -1,5 +1,5 @@
-/*  -*- c++ -*-
-    dnattributeorderconfigwidget.h
+/*
+    progressbar.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -28,60 +28,47 @@
     your version of the file, but you are not obligated to do so.  If
     you do not wish to do so, delete this exception statement from
     your version.
- */
+*/
 
-#ifndef __KLEO_UI_DNATTRIBUTEORDERCONFIGWIDGET_H__
-#define __KLEO_UI_DNATTRIBUTEORDERCONFIGWIDGET_H__
+#ifndef __KLEO_PROGRESSBAR_H__
+#define __KLEO_PROGRESSBAR_H__
 
-#include <qwidget.h>
+#include <q3progressbar.h>
 #include <kdepimmacros.h>
-namespace Kleo {
-  class DNAttributeMapper;
-}
-
-class Q3ListViewItem;
+class QTimer;
 
 namespace Kleo {
 
-  class KDE_EXPORT DNAttributeOrderConfigWidget : public QWidget {
+  /**
+     @short A QProgressBar with self-powered busy indicator
+  */
+  class KDE_EXPORT ProgressBar : public Q3ProgressBar {
     Q_OBJECT
   public:
-    /*! Use Kleo::DNAttributeMapper::instance()->configWidget( parent, name ) instead. */
-    DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
-    ~DNAttributeOrderConfigWidget();
+    ProgressBar( QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
 
-    void load();
-    void save() const;
-    void defaults();
-
-  signals:
-    void changed();
-
-    //
-    // only boring stuff below...
-    //
+  public slots:
+    void slotProgress( const QString & message, int type, int current, int total );
+    void slotProgress( const QString & message, int current, int total );
+    /*! reimplementation to support self-powered busy indicator */
+    void setProgress( int progress );
+    /*! reimplementation to support self-powered busy indicator */
+    void setTotalSteps( int total );
+    /*! reimplementation to support self-powered busy indicator */
+    void reset();
+    /*! reimplementation to preserve visibility */
+    void setProgress( int cur, int tot ) { Q3ProgressBar::setProgress( cur, tot ); }
 
   private slots:
-    void slotAvailableSelectionChanged( Q3ListViewItem * );
-    void slotCurrentOrderSelectionChanged( Q3ListViewItem * );
-    void slotDoubleUpButtonClicked();
-    void slotUpButtonClicked();
-    void slotDownButtonClicked();
-    void slotDoubleDownButtonClicked();
-    void slotLeftButtonClicked();
-    void slotRightButtonClicked();
+    void slotBusyTimerTick();
 
   private:
-    void takePlaceHolderItem();
-    void enableDisableButtons( Q3ListViewItem * );
+    void fixup( bool );
 
   private:
-    class Private;
-    Private * d;
-  protected:
-    virtual void virtual_hook( int, void* );
+    QTimer * mBusyTimer;
+    int mRealProgress;
   };
-
 }
 
-#endif // __KLEO_UI_DNATTRIBUTEORDERCONFIGWIDGET_H__
+#endif // __KLEO_PROGRESSBAR_H__

@@ -1,5 +1,5 @@
-/*  -*- c++ -*-
-    dnattributeorderconfigwidget.h
+/*
+    progressdialog.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -28,60 +28,39 @@
     your version of the file, but you are not obligated to do so.  If
     you do not wish to do so, delete this exception statement from
     your version.
- */
+*/
 
-#ifndef __KLEO_UI_DNATTRIBUTEORDERCONFIGWIDGET_H__
-#define __KLEO_UI_DNATTRIBUTEORDERCONFIGWIDGET_H__
+#ifndef __KLEO_PROGRESSDIALOG_H__
+#define __KLEO_PROGRESSDIALOG_H__
 
-#include <qwidget.h>
+#include <q3progressdialog.h>
+#include <qstring.h>
 #include <kdepimmacros.h>
 namespace Kleo {
-  class DNAttributeMapper;
-}
 
-class Q3ListViewItem;
+  class Job;
 
-namespace Kleo {
-
-  class KDE_EXPORT DNAttributeOrderConfigWidget : public QWidget {
+  /**
+     @short A progress dialog for Kleo::Jobs
+  */
+  class KDE_EXPORT ProgressDialog : public Q3ProgressDialog {
     Q_OBJECT
   public:
-    /*! Use Kleo::DNAttributeMapper::instance()->configWidget( parent, name ) instead. */
-    DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
-    ~DNAttributeOrderConfigWidget();
+    ProgressDialog( Job * job, const QString & baseText,
+		    QWidget * creator=0, const char * name=0, Qt::WFlags f=0  );
+    ~ProgressDialog();
 
-    void load();
-    void save() const;
-    void defaults();
-
-  signals:
-    void changed();
-
-    //
-    // only boring stuff below...
-    //
+  public slots:
+    /*! reimplementation */
+    void setMinimumDuration( int ms );
 
   private slots:
-    void slotAvailableSelectionChanged( Q3ListViewItem * );
-    void slotCurrentOrderSelectionChanged( Q3ListViewItem * );
-    void slotDoubleUpButtonClicked();
-    void slotUpButtonClicked();
-    void slotDownButtonClicked();
-    void slotDoubleDownButtonClicked();
-    void slotLeftButtonClicked();
-    void slotRightButtonClicked();
-
+    void slotProgress( const QString & what, int current, int total );
+    void slotDone();
   private:
-    void takePlaceHolderItem();
-    void enableDisableButtons( Q3ListViewItem * );
-
-  private:
-    class Private;
-    Private * d;
-  protected:
-    virtual void virtual_hook( int, void* );
+    QString mBaseText;
   };
 
 }
 
-#endif // __KLEO_UI_DNATTRIBUTEORDERCONFIGWIDGET_H__
+#endif // __KLEO_PROGRESSDIALOG_H__
