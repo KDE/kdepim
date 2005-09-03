@@ -75,7 +75,7 @@ class LIBKCAL_EXPORT CalendarResources :
       public:
         DestinationPolicy( CalendarResourceManager *manager ) :
           mManager( manager ) {}
-
+		virtual ~DestinationPolicy(){}
         virtual ResourceCalendar *destination( Incidence *incidence ) = 0;
 
       protected:
@@ -94,7 +94,7 @@ class LIBKCAL_EXPORT CalendarResources :
       public:
         StandardDestinationPolicy( CalendarResourceManager *manager ) :
           DestinationPolicy( manager ) {}
-
+		virtual ~StandardDestinationPolicy(){}
         ResourceCalendar *destination( Incidence *incidence );
 
       private:
@@ -111,7 +111,7 @@ class LIBKCAL_EXPORT CalendarResources :
         AskDestinationPolicy( CalendarResourceManager *manager,
                               QWidget *parent = 0 ) :
           DestinationPolicy( manager ), mParent( parent ) {}
-
+		virtual ~AskDestinationPolicy(){}
         ResourceCalendar *destination( Incidence *incidence );
 
       private:
