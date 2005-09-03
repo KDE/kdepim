@@ -20,6 +20,8 @@
 #define READMBOX_H
 
 #include "mboxfile.h"
+//Added by qt3to4:
+#include <QTextStream>
 
 class UrlInfo;
 class MBox;

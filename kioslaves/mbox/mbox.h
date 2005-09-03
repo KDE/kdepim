@@ -20,8 +20,10 @@
 #define MBOX_H
 
 #include <kio/slavebase.h>
+//Added by qt3to4:
+#include <Q3CString>
 
-class QCString;
+class Q3CString;
 class KURL;
 
 /**
@@ -34,7 +36,7 @@ public:
 	/**
 	 * Constructor, for the parameters,  See KIO::SlaveBase
 	 */
-	MBoxProtocol( const QCString&, const QCString& );
+	MBoxProtocol( const Q3CString&, const Q3CString& );
 	/**
 	 * Empty destructor
 	 */

@@ -168,7 +168,7 @@ bool ReadMBox::open( bool savetime )
 		return false; //File already open
 
 	m_file = new QFile( m_info->filename() );
-	if( !m_file->open( IO_ReadOnly ) )
+	if( !m_file->open( QIODevice::ReadOnly ) )
 	{
 		delete m_file;
 		return false;

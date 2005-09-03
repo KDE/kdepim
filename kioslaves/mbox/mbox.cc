@@ -23,7 +23,7 @@
 #include "urlinfo.h"
 
 #include <qstring.h>
-#include <qcstring.h>
+#include <q3cstring.h>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -58,7 +58,7 @@ int kdemain( int argc, char * argv[] )
 	return 0;
 }
 
-MBoxProtocol::MBoxProtocol( const QCString& arg1, const QCString& arg2 )
+MBoxProtocol::MBoxProtocol( const Q3CString& arg1, const Q3CString& arg2 )
 	: KIO::SlaveBase( "mbox2", arg1, arg2 ),
 	m_errorState( true )
 {
@@ -94,7 +94,7 @@ void MBoxProtocol::get( const KURL& url )
 	
 	if( !m_errorState )
 	{
-		data( QCString() );
+		data( Q3CString() );
 		finished();
 	}
 }
