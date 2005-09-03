@@ -38,6 +38,8 @@
 #include <ksieve/error.h>
 
 #include <qstring.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <assert.h>
 #include <limits.h> // ULONG_MAX
@@ -617,9 +619,9 @@ namespace KSieve {
 
     // number:
     unsigned long result = 0;
-    unsigned int i = 0;
-    const QCString s = tokenValue().latin1();
-    for ( const unsigned int len = s.length() ; i < len && isdigit( s[i] ) ; ++i ) {
+    int i = 0;
+    const Q3CString s = tokenValue().latin1();
+    for ( const int len = s.length() ; i < len && isdigit( s[i] ) ; ++i ) {
       const unsigned long digitValue = s[i] - '0' ;
       if ( willOverflowULong( result, digitValue ) ) {
 	makeError( Error::NumberOutOfRange );

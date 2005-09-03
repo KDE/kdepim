@@ -38,8 +38,8 @@
 #include <ksieve/lexer.h>
 #include <ksieve/error.h>
 
-#include <qvaluestack.h>
-#include <qcstring.h>
+#include <q3valuestack.h>
+#include <q3cstring.h>
 
 namespace KSieve {
 
@@ -129,7 +129,7 @@ namespace KSieve {
     const char * const mEnd;
     const bool mIgnoreComments : 1;
     const bool mIgnoreLF : 1;
-    QValueStack<State> mStateStack;
+    Q3ValueStack<State> mStateStack;
 
     const char * beginOfLine() const { return mState.beginOfLine; }
 
