@@ -40,6 +40,7 @@
 
 class DwObserver {
 public:
+	virtual ~DwObserver(){}
     virtual void Notify()=0;
 };
 
