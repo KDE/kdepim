@@ -1,9 +1,9 @@
 #include <kmime_mdn.h>
 using namespace KMime::MDN;
 
-#include <qcstring.h>
+#include <q3cstring.h>
 #include <qstring.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 #include <iostream>
 using std::cout;
@@ -28,11 +28,11 @@ int main( int argc, char * argv[] ) {
 
   QString finalRecipient;
   QString originalRecipient;
-  QCString originalMessageId;
+  Q3CString originalMessageId;
   ActionMode actionMode = ManualAction;
   SendingMode sendingMode = SentManually;
   DispositionType dispositionType = Displayed;
-  QValueList<DispositionModifier> dispositionModifiers;
+  Q3ValueList<DispositionModifier> dispositionModifiers;
   QString special;
 
   while ( true ) {
@@ -137,7 +137,7 @@ int main( int argc, char * argv[] ) {
   if ( optind < argc )
     usage( "too many arguments!" );
 
-  QCString result = dispositionNotificationBodyContent( finalRecipient,
+  Q3CString result = dispositionNotificationBodyContent( finalRecipient,
 						       originalRecipient.latin1(),
 						       originalMessageId,
 						       dispositionType,

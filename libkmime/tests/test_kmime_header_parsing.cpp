@@ -5,7 +5,9 @@
 #include <kinstance.h>
 
 #include <qfile.h>
-#include <qcstring.h>
+#include <q3cstring.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 //#include <qstring.h>
 
 //#include <stdio.h>
@@ -123,7 +125,7 @@ int main( int argc, char * argv[] ) {
   KInstance instance( "test_kmime_header_parsing" );
 
   QFile stdIn;
-  stdIn.open( IO_ReadOnly, stdin );
+  stdIn.open( QIODevice::ReadOnly, stdin );
   const QByteArray indata = stdIn.readAll();
   stdIn.close();
   QByteArray::ConstIterator iit = indata.begin();
@@ -133,7 +135,7 @@ int main( int argc, char * argv[] ) {
   case 0:
     { // encoded-word 
       QString result;
-      QCString language;
+      Q3CString language;
       // must have checked for initial '=' already:
       bool ok = indata.size() >= 1 && *iit++ == '=' &&
 	parseEncodedWord( iit, iend, result, language );
@@ -294,7 +296,7 @@ int main( int argc, char * argv[] ) {
       cout << ( ok ? "OK" : "BAD" ) << endl
 	   << "result.displayName:\n" << result.displayName << endl;
       int i = 0;
-      for ( QValueList<KMime::Types::Mailbox>::ConstIterator
+      for ( Q3ValueList<KMime::Types::Mailbox>::ConstIterator
 	      it = result.mailboxList.begin();
 	    it != result.mailboxList.end() ; ++it, ++i )
 	cout << "result.mailboxList[" << i << "].displayName:\n"
@@ -313,7 +315,7 @@ int main( int argc, char * argv[] ) {
       cout << ( ok ? "OK" : "BAD" ) << endl
 	   << "result.displayName:\n" << endl;
       int i = 0;
-      for ( QValueList<KMime::Types::Mailbox>::ConstIterator
+      for ( Q3ValueList<KMime::Types::Mailbox>::ConstIterator
 	      it = result.mailboxList.begin();
 	    it != result.mailboxList.end() ; ++it, ++i )
 	cout << "result.mailboxList[" << i << "].displayName:\n"
@@ -326,17 +328,17 @@ int main( int argc, char * argv[] ) {
     break;
   case 15:
     { // address-list
-      QValueList<KMime::Types::Address> result;
+      Q3ValueList<KMime::Types::Address> result;
       bool ok = parseAddressList( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl;
       int j = 0;
-      for ( QValueList<KMime::Types::Address>::ConstIterator
+      for ( Q3ValueList<KMime::Types::Address>::ConstIterator
 	      jt = result.begin() ; jt != result.end() ; ++jt, ++j ) {
 	cout << "result[" << j << "].displayName:\n"
 	     << (*jt).displayName << endl;
 	int i = 0;
-	for ( QValueList<KMime::Types::Mailbox>::ConstIterator
+	for ( Q3ValueList<KMime::Types::Mailbox>::ConstIterator
 		it = (*jt).mailboxList.begin();
 	      it != (*jt).mailboxList.end() ; ++it, ++i )
 	  cout << "result[" << j << "].mailboxList[" << i << "].displayName:\n"
@@ -357,7 +359,7 @@ int main( int argc, char * argv[] ) {
 	   << "result.first (attribute):\n" << result.first << endl
 	   << "result.second.qstring (value):\n" << result.second.qstring << endl
 	   << "result.second.qpair (value):\n"
-	   << QCString( result.second.qpair.first,
+	   << Q3CString( result.second.qpair.first,
 			result.second.qpair.second+1 ).data() << endl;
     }
     break;
@@ -376,7 +378,7 @@ int main( int argc, char * argv[] ) {
 	     << "result[" << i << "].data().qstring (value):\n"
 	     << it.data().qstring << endl
 	     << "result[" << i << "].data().qpair (value):\n"
-	     << QCString( it.data().qpair.first,
+	     << Q3CString( it.data().qpair.first,
 			  it.data().qpair.second+1 ).data() << endl;
     }
     break;

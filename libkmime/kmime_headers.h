@@ -654,7 +654,7 @@ class KDE_EXPORT Control : public Base {
     virtual bool isEmpty()          { return (c_trlMsg.isEmpty()); }
     virtual const char* type()      { return "Control"; }
 
-    bool isCancel()                 { return (c_trlMsg.find("cancel", 0, false)!=-1); }
+    bool isCancel()                 { return QString(c_trlMsg).contains("cancel", Qt::CaseInsensitive); }
 
   protected:
     Q3CString c_trlMsg;

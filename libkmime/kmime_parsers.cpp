@@ -154,7 +154,7 @@ bool UUEncoded::parse()
     bool containsBegin=false, containsEnd=false;
     Q3CString tmp,fileName;
 
-    if( (beginPos=s_rc.find(QRegExp("begin [0-9][0-9][0-9]"),currentPos))>-1 && (beginPos==0 || s_rc.at(beginPos-1)=='\n') ) {
+    if( (beginPos=QString(s_rc).find(QRegExp("begin [0-9][0-9][0-9]"),currentPos))>-1 && (beginPos==0 || s_rc.at(beginPos-1)=='\n') ) {
       containsBegin=true;
       uuStart=s_rc.find('\n', beginPos);
       if(uuStart==-1) {//no more line breaks found, we give up
@@ -190,7 +190,7 @@ bool UUEncoded::parse()
         break; //too many "non-M-Lines" found, we give up
       }
 
-      if( (!containsBegin || !containsEnd) && s_ubject) {  // message may be split up => parse subject
+      if( (!containsBegin || !containsEnd) && !s_ubject.isNull()) {  // message may be split up => parse subject
 	QRegExp rx("[0-9]+/[0-9]+");
 	pos=rx.search(QString(s_ubject), 0);
 	len=rx.matchedLength();
@@ -393,7 +393,7 @@ bool YENCEncoded::parse()
                 ch+=256;
               if (totalSize>=yencSize)            
                 break;            
-              binary.at(totalSize++)=ch;
+              binary[totalSize++]=ch;
               lineLength++;
             }
             else            
@@ -406,7 +406,7 @@ bool YENCEncoded::parse()
               ch+=256;
             if (totalSize>=yencSize)            
               break;
-            binary.at(totalSize++)=ch;
+            binary[totalSize++]=ch;
             lineLength++;
             pos++;
           }

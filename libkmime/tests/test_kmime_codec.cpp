@@ -25,7 +25,7 @@
 #include <cassert>
 
 #include <qfile.h>
-#include <qcstring.h> // QByteArray
+#include <q3cstring.h> // QByteArray
 
 using namespace KMime;
 using namespace std;
@@ -92,8 +92,8 @@ int main( int argc, char * argv[] ) {
   int iterations = 1;
   bool encode = false;
   bool decode = false;
-  QCString outfilename, infilename;
-  QCString encodingName;
+  Q3CString outfilename, infilename;
+  Q3CString encodingName;
 
   // options parsing:
   while( 1 ) {
@@ -104,12 +104,12 @@ int main( int argc, char * argv[] ) {
     case 0: // encode
       if ( !optarg || !*optarg ) missingParameterTo( "--encode." );
       encode = true;
-      encodingName = QCString(optarg);
+      encodingName = Q3CString(optarg);
       break;
     case 1: // decode
       if ( !optarg || !*optarg ) missingParameterTo( "--decode" );
       decode = true;
-      encodingName = QCString(optarg);
+      encodingName = Q3CString(optarg);
       break;
     case 2: // output-buffer-size
       if ( !optarg || (outbufsize = atoi( optarg )) < 1 )
@@ -121,7 +121,7 @@ int main( int argc, char * argv[] ) {
       break;
     case 4: // outfile
       if ( !optarg || !*optarg ) missingParameterTo( "--outfile" );
-      outfilename = QCString(optarg);
+      outfilename = Q3CString(optarg);
       writing = true;
       break;
     case 5: // with-crlf
@@ -172,7 +172,7 @@ int main( int argc, char * argv[] ) {
     kdDebug() << "infile \"" << infile.name() << "\" does not exist!" << endl;
     return INFILE_READ_ERR;
   }
-  if (!infile.open( IO_ReadOnly )) {
+  if (!infile.open( QIODevice::ReadOnly )) {
     kdDebug() << "cannot open " << infile.name() << " for reading!"
 	      << endl;
     return INFILE_READ_ERR;
@@ -180,7 +180,7 @@ int main( int argc, char * argv[] ) {
 
   QFile outfile( outfilename );
   if ( !outfilename.isEmpty() ) {
-    if (!outfile.open( IO_WriteOnly|IO_Truncate )) {
+    if (!outfile.open( QIODevice::WriteOnly|QIODevice::Truncate )) {
       kdDebug() << "cannot open " << outfile.name() << " for writing!"
 		<< endl;
       return OUTFILE_WRITE_ERR;
@@ -369,9 +369,9 @@ void encode_decode_chunkwise( bool encode, const Codec * codec,
   //
   // Loop over input chunks:
   //
-  uint offset = 0;
+  int offset = 0;
   while ( offset < infile_buffer.size() ) {
-    uint reallyRead = QMIN( indata.size(), infile_buffer.size() - offset );
+    uint reallyRead = qMin( indata.size(), infile_buffer.size() - offset );
     indata.duplicate( infile_buffer.begin() + offset, reallyRead );
     offset += reallyRead;
 
