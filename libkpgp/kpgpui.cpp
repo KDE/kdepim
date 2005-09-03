@@ -48,6 +48,7 @@
 #include <kprogress.h>
 #include <kapplication.h>
 #include <kwin.h>
+#include <kpushbutton.h>
 #if KDE_IS_VERSION( 3, 1, 90 )
 #include <kglobalsettings.h>
 #endif
