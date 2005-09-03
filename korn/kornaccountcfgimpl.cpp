@@ -31,11 +31,16 @@
 
 #include <qcheckbox.h>
 #include <qcombobox.h>
-#include <qptrvector.h>
+#include <q3ptrvector.h>
 #include <qlayout.h>
 #include <qmap.h>
 #include <qlabel.h>
 #include <qwidget.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
+#include <Q3PtrList>
 
 KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent, const char * name )
 	: KornAccountCfg( parent, name ),
@@ -47,7 +52,7 @@ KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent, const char * name )
 	_vlayout( 0 ),
 	_protocolLayout( 0 ),
 	_groupBoxes( 0 ),
-	_accountinput( new QPtrList< AccountInput >() )
+	_accountinput( new Q3PtrList< AccountInput >() )
 {
 	connect( parent, SIGNAL( okClicked() ), this, SLOT( slotOK() ) );
 	connect( parent, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
@@ -184,11 +189,11 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 
 	QStringList::iterator it;
 	counter = 0;
-	_groupBoxes = new QPtrVector< QWidget >( groupBoxes->count() );
+	_groupBoxes = new Q3PtrVector< QWidget >( groupBoxes->count() );
 	_groupBoxes->setAutoDelete( true );
 	for( it = groupBoxes->begin(); it != groupBoxes->end(); ++it )
 	{
-		_groupBoxes->insert( counter, new QGroupBox( (*it), this->server_tab, "groupbox" ) );
+		_groupBoxes->insert( counter, new Q3GroupBox( (*it), this->server_tab, "groupbox" ) );
 		_vlayout->addWidget( _groupBoxes->at( counter ) );
 		++counter;
 	}

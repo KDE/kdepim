@@ -21,6 +21,8 @@
 #define DCOP_PROTO_H
 
 #include "protocol.h"
+//Added by qt3to4:
+#include <Q3PtrList>
 
 class AccountInput;
 class KConfigGroup;
@@ -28,13 +30,13 @@ class KIO_Protocol;
 class KMailDrop;
 class Protocol;
 
-class QGroupBox;
+class Q3GroupBox;
 class QObject;
 class QStringList;
 class QWidget;
 
-template< class T> class QPtrList;
-template< class T> class QPtrVector;
+template< class T> class Q3PtrList;
+template< class T> class Q3PtrVector;
 template< class T, class S> class QMap;
 
 #include <qstring.h>
@@ -93,7 +95,7 @@ public:
 	 * @param obj The pointer to the configDialog to connect signals to.
 	 * @param result A list with AccountInput which is used to reconstruct the configuration.
 	 */
-	virtual void configFields( QPtrVector< QWidget >* vector, const QObject* obj, QPtrList< AccountInput >* result ) const;
+	virtual void configFields( Q3PtrVector< QWidget >* vector, const QObject* obj, Q3PtrList< AccountInput >* result ) const;
 	/**
 	 * This function can edit some configuaration option before reading them.
 	 */

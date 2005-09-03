@@ -30,6 +30,8 @@
 #include <qmap.h>
 #include <qstring.h>
 #include <qtimer.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 DCOPDrop::DCOPDrop()
 	: KMailDrop(),
@@ -98,7 +100,7 @@ QString DCOPDrop::type() const
 	return QString( "dcop" );
 }
 
-QValueVector< KornMailSubject >* DCOPDrop::doReadSubjects( bool * )
+Q3ValueVector< KornMailSubject >* DCOPDrop::doReadSubjects( bool * )
 {
 	emit readSubjectsTotalSteps( 1 );
 	
@@ -113,12 +115,12 @@ QValueVector< KornMailSubject >* DCOPDrop::doReadSubjects( bool * )
          * After that, the size is expanded to the expected number of subjects.
          * This way, reallocation of memmory is minimized, and thus more efficient.
          */
-	QValueVector<KornMailSubject> *vector = new QValueVector<KornMailSubject>( );
+	Q3ValueVector<KornMailSubject> *vector = new Q3ValueVector<KornMailSubject>( );
         vector->reserve( _msgList->count() );
         return vector;
 }
 
-bool DCOPDrop::deleteMails( QPtrList<const KornMailId> * ids, bool * )
+bool DCOPDrop::deleteMails( Q3PtrList<const KornMailId> * ids, bool * )
 {
 	emit deleteMailsTotalSteps( 1 );
 	

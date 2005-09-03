@@ -21,7 +21,7 @@
 
 class Protocol;
 
-template< class T > class QDict;
+template< class T > class Q3Dict;
 class QString;
 class QStringList;
 
@@ -40,7 +40,7 @@ public:
 private:
 	static void addProtocol( Protocol* );
 
-	static QDict<Protocol> *protocols;
+	static Q3Dict<Protocol> *protocols;
 };
 
 #endif //MK_PROTOCOLS_H

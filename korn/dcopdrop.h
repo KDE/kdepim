@@ -22,6 +22,8 @@
 #include "maildrop.h"
 
 #include <dcopobject.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 class DCOPDropInterface;
 //class KDropCfgDialog;
@@ -139,7 +141,7 @@ public:
 	 * @param stop A variable which isn't used: only used for synchrone actions
 	 * @return A QValueVector which KornMailSubject* instance for every new mail.
 	 */
-	virtual QValueVector< KornMailSubject >* doReadSubjects( bool *stop );
+	virtual Q3ValueVector< KornMailSubject >* doReadSubjects( bool *stop );
 	
 	/**
 	 * This function should return true if it is possible to delete emails.
@@ -155,7 +157,7 @@ public:
 	 * @param stop Not used: only for synchrone opererations.
 	 * @return true if deleting was succesfull
 	 */
-	virtual bool deleteMails( QPtrList<const KornMailId> * ids, bool * stop );
+	virtual bool deleteMails( Q3PtrList<const KornMailId> * ids, bool * stop );
 	
 	/**
 	 * This function returns true if it is possible to read emails.

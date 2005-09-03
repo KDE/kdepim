@@ -7,7 +7,7 @@
 class KornMailSubject;
 class KMailDrop;
 
-class QProgressDialog;
+class Q3ProgressDialog;
 class QString;
 
 /**
@@ -41,7 +41,7 @@ class KornMailDlg : public KDialogBase
 	/**
 	 * Progress bar
 	 */
-	QProgressDialog *_progress;
+	Q3ProgressDialog *_progress;
 public:
 	/**
 	 * KornMailDlg Constructor

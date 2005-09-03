@@ -30,14 +30,14 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 
 KornSubjectsDlg* AccountManager::_subjectsDlg = 0;
 
 AccountManager::AccountManager( QObject * parent, const char * name )
 	: QObject( parent, name ),
-	_kioList( new QPtrList< KMailDrop > ),
-	_dcopList( new QPtrList< DCOPDrop > ),
+	_kioList( new Q3PtrList< KMailDrop > ),
+	_dcopList( new Q3PtrList< DCOPDrop > ),
 	_dropInfo( new QMap< KMailDrop*, Dropinfo* > )
 {
 	_kioList->setAutoDelete( true );
@@ -84,8 +84,8 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		
 		//TODO: connect some stuff
 		connect( kiodrop, SIGNAL( changed( int, KMailDrop* ) ), this, SLOT( slotChanged( int, KMailDrop* ) ) );
-		connect( kiodrop, SIGNAL( showPassivePopup( QPtrList< KornMailSubject >*, int, bool, const QString& ) ),
-			 this, SLOT( slotShowPassivePopup( QPtrList< KornMailSubject >*, int, bool, const QString& ) ) );
+		connect( kiodrop, SIGNAL( showPassivePopup( Q3PtrList< KornMailSubject >*, int, bool, const QString& ) ),
+			 this, SLOT( slotShowPassivePopup( Q3PtrList< KornMailSubject >*, int, bool, const QString& ) ) );
 		connect( kiodrop, SIGNAL( showPassivePopup( const QString&, const QString& ) ),
 			 this, SLOT( slotShowPassivePopup( const QString&, const QString& ) ) );
 		connect( kiodrop, SIGNAL( validChanged( bool ) ), this, SLOT( slotValidChanged( bool ) ) );
@@ -118,8 +118,8 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		Dropinfo *info = new Dropinfo;
 		
 		connect( dcopdrop, SIGNAL( changed( int, KMailDrop* ) ), this, SLOT( slotChanged( int, KMailDrop* ) ) );
-		connect( dcopdrop, SIGNAL( showPassivePopup( QPtrList< KornMailSubject >*, int, bool, const QString& ) ),
-			 this, SLOT( slotShowPassivePopup( QPtrList< KornMailSubject >*, int, bool, const QString& ) ) );
+		connect( dcopdrop, SIGNAL( showPassivePopup( Q3PtrList< KornMailSubject >*, int, bool, const QString& ) ),
+			 this, SLOT( slotShowPassivePopup( Q3PtrList< KornMailSubject >*, int, bool, const QString& ) ) );
 		
 		dcopdrop->readConfigGroup( *masterGroup );
 		dcopdrop->setDCOPName( *it );
@@ -157,7 +157,7 @@ QString AccountManager::getTooltip() const
 		else
 			result.append( QString( "%1: invalid" ).arg( it.key()->realName() ) );
 	result.sort();
-	return result.join( QChar( '\n' ) );
+	return result.join( "\n"  );
 }
 	
 void AccountManager::doRecheck()

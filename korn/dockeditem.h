@@ -20,6 +20,9 @@
 #define MK_DOCKEDITEM_H
 
 #include "boxcontaineritem.h"
+//Added by qt3to4:
+#include <QPixmap>
+#include <Q3PtrList>
 
 class SystemTray;
 
@@ -76,7 +79,7 @@ public slots:
 	 */
 	virtual void setTooltip( const QString& string );
 	
-	void slotShowPassivePopup( QPtrList< KornMailSubject >* list, int total, bool date, const QString& );
+	void slotShowPassivePopup( Q3PtrList< KornMailSubject >* list, int total, bool date, const QString& );
 
 	void slotShowPassivePopup( const QString& error, const QString& );
 	

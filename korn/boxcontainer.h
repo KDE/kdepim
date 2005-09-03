@@ -20,10 +20,12 @@
 #define MK_BOXCONTAINER_H
 
 #include <qobject.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 class BoxContainerItem;
 
-template< class T > class QPtrList;
+template< class T > class Q3PtrList;
 
 class KConfig;
 
@@ -90,7 +92,7 @@ protected:
 	/**
 	 * The list of BoxContainerItems.
 	 */
-	QPtrList< BoxContainerItem > *_items;
+	Q3PtrList< BoxContainerItem > *_items;
 	
 signals:
 	/**

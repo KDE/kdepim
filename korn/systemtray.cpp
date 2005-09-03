@@ -23,6 +23,8 @@
 #include <kdebug.h>
 
 #include <qmovie.h>
+//Added by qt3to4:
+#include <QMouseEvent>
 
 SystemTray::SystemTray( QWidget * parent, const char * name )
 	: KSystemTray( parent, name )	

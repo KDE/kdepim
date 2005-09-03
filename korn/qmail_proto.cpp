@@ -18,12 +18,14 @@
 
 
 #include "qmail_proto.h"
+//Added by qt3to4:
+#include <Q3PtrList>
 
 #include <kdebug.h>
 #include <kurlrequester.h>
 
 #include <qlayout.h>
-#include <qptrvector.h>
+#include <q3ptrvector.h>
 #include <qstringlist.h>
 
 #include "account_input.h"
@@ -33,7 +35,7 @@ void QMail_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 	groupBoxes->append( "Maildir" );
 }
 
-void QMail_Protocol::configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput > *result ) const
+void QMail_Protocol::configFields( Q3PtrVector< QWidget >* vector, const QObject*, Q3PtrList< AccountInput > *result ) const
 {
 	result->append( new URLInput( (QWidget*)vector->at( 0 ), i18n( "Path:" ), "", "mailbox" ) );
 	dynamic_cast<KURLRequester*>(result->last()->rightWidget())->setMode( KFile::Directory );

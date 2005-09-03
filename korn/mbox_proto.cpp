@@ -22,8 +22,10 @@
 #include <kdebug.h>
 
 #include <qlayout.h>
-#include <qptrvector.h>
+#include <q3ptrvector.h>
 #include <qstringlist.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 #include "account_input.h"
 
@@ -32,7 +34,7 @@ void MBox_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 	groupBoxes->append( "mbox" );
 }
 
-void MBox_Protocol::configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput > *result ) const
+void MBox_Protocol::configFields( Q3PtrVector< QWidget >* vector, const QObject*, Q3PtrList< AccountInput > *result ) const
 {
 	result->append( new URLInput( (QWidget*)vector->at( 0 ), i18n( "File:" ), "", "mailbox" ) );
 }

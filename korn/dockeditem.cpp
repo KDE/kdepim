@@ -34,6 +34,8 @@
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <qmovie.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 DockedItem::DockedItem( QWidget * parent, const char * name )
 	: BoxContainerItem( parent, name ),
@@ -73,7 +75,7 @@ void DockedItem::setTooltip( const QString& tooltip )
 	QToolTip::add( _systemtray, tooltip );
 }
 
-void DockedItem::slotShowPassivePopup( QPtrList< KornMailSubject >* list, int total, bool date, const QString& name )
+void DockedItem::slotShowPassivePopup( Q3PtrList< KornMailSubject >* list, int total, bool date, const QString& name )
 {
 	showPassivePopup( _systemtray, list, total, name, date );
 }

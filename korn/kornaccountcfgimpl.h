@@ -20,6 +20,11 @@
 #define MK_KORNACCOUNTCFGIMPL_H
 
 #include "kornaccountcfg.h"
+//Added by qt3to4:
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <Q3PtrList>
 
 class KConfigGroup;
 class KURLRequester;
@@ -32,8 +37,8 @@ class QWidget;
 
 class AccountInput;
 
-template< class T > class QPtrList;
-template< class T > class QPtrVector;
+template< class T > class Q3PtrList;
+template< class T > class Q3PtrVector;
 
 class KornAccountCfgImpl : public KornAccountCfg
 { Q_OBJECT
@@ -61,9 +66,9 @@ private:
 		
 	QVBoxLayout *_vlayout;
 	QHBoxLayout *_protocolLayout;
-	QPtrVector< QWidget > *_groupBoxes;
+	Q3PtrVector< QWidget > *_groupBoxes;
 	
-	QPtrList< AccountInput > *_accountinput;
+	Q3PtrList< AccountInput > *_accountinput;
 };
 
 #endif //MK_KORNACCOUNTCFGIMPL_H

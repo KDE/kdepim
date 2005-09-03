@@ -20,7 +20,7 @@
 #include <qregexp.h>
 #include <qtextstream.h>
 #include <qmap.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 #include <stdio.h>
 
@@ -111,18 +111,18 @@ int main( int, char**  )
 	QString password = QString::null;
 	QRegExp interesting_group( "^\\[box-(\\d+)\\]" );
 	QRegExp key_value( "^(\\w*)=(.*)$" );
-	QValueList<QString> tobe_deleted;
+	Q3ValueList<QString> tobe_deleted;
 	int numboxes = -1;
 	bool isKey = false;
 	
-	QTextStream in( stdin, IO_ReadOnly );
-	QTextStream out( stdout, IO_WriteOnly );
+	QTextStream in( stdin, QIODevice::ReadOnly );
+	QTextStream out( stdout, QIODevice::WriteOnly );
 
 	in.setEncoding( QTextStream::UnicodeUTF8 );
         out.setEncoding( QTextStream::UnicodeUTF8 );
 
 	QMap<QString,QString> mapping1;
-	QValueList<QString> mapping2;
+	Q3ValueList<QString> mapping2;
 	QMap<QString,QString> to_printed;
 	
 	mapping1.insert( "caption", "name" );
@@ -250,8 +250,8 @@ int main( int, char**  )
 		printToprint( out, to_printed, type );
 	}
 
-	QValueList<QString>::Iterator it1     = tobe_deleted.begin();
-	QValueList<QString>::Iterator it1_end = tobe_deleted.end();
+	Q3ValueList<QString>::Iterator it1     = tobe_deleted.begin();
+	Q3ValueList<QString>::Iterator it1_end = tobe_deleted.end();
 
 	for( ; it1 != it1_end; ++it1 )
 		out << "# DELETEGROUP " << *it1 << endl;

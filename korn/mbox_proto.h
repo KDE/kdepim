@@ -20,6 +20,8 @@
 #define MK_MBOX_PROTO_H
 
 #include "kio_proto.h"
+//Added by qt3to4:
+#include <Q3PtrList>
 
 /*
  * Protocol for mbox
@@ -50,7 +52,7 @@ public:
 	virtual void readMailKURL( KURL &, KIO::MetaData & ) const   { }
 
 	virtual void configFillGroupBoxes( QStringList* ) const;
-	virtual void configFields( QPtrVector< QWidget >*, const QObject*, QPtrList< AccountInput >* ) const;
+	virtual void configFields( Q3PtrVector< QWidget >*, const QObject*, Q3PtrList< AccountInput >* ) const;
 	virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
 	virtual void writeEntries( QMap< QString, QString >* ) const;
 };

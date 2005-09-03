@@ -100,8 +100,8 @@ void KEditListBoxManager::init()
 	connect( this, SIGNAL( added( const QString& ) ), this, SLOT( slotAdded( const QString& ) ) );
 	connect( this, SIGNAL( removed( const QString& ) ), this, SLOT( slotRemoved( const QString& ) ) );
 	
-	connect( this->listBox(), SIGNAL( doubleClicked( QListBoxItem * ) ), this, SLOT( slotActivated( QListBoxItem * ) ) );
-	connect( this->listBox(), SIGNAL( returnPressed( QListBoxItem * ) ), this, SLOT( slotActivated( QListBoxItem * ) ) );
+	connect( this->listBox(), SIGNAL( doubleClicked( Q3ListBoxItem * ) ), this, SLOT( slotActivated( Q3ListBoxItem * ) ) );
+	connect( this->listBox(), SIGNAL( returnPressed( Q3ListBoxItem * ) ), this, SLOT( slotActivated( Q3ListBoxItem * ) ) );
 }
 
 void KEditListBoxManager::readNames()
@@ -212,7 +212,7 @@ void KEditListBoxManager::slotRemoved( const QString& name )
 	}
 }
 
-void KEditListBoxManager::slotActivated( QListBoxItem* item )
+void KEditListBoxManager::slotActivated( Q3ListBoxItem* item )
 {
 	if( item )
 		emit activated( item->text() );

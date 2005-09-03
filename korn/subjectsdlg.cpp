@@ -1,6 +1,10 @@
 #include "subjectsdlg.h"
 #include "maildrop.h"
 #include <qapplication.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <Q3PtrList>
 #include <kcursor.h>
 #include <kdebug.h>
 #include <qlayout.h>
@@ -8,12 +12,12 @@
 #include <qtimer.h>
 #include "mailsubject.h"
 #include <klocale.h>
-#include <qprogressdialog.h>
+#include <q3progressdialog.h>
 #include <kmessagebox.h>
 #include "maildlg.h"
 #include "progress_dialog.h"
 
-KornSubjectsDlg::SubjectListViewItem::SubjectListViewItem( QListView *parent, KornMailSubject * item)
+KornSubjectsDlg::SubjectListViewItem::SubjectListViewItem( Q3ListView *parent, KornMailSubject * item)
 	// set the column strings except column 2 (date)
 	: KListViewItem(parent, item->getSender(), item->getSubject(), "", KGlobal::locale()->formatNumber(item->getSize(), 0))
 	, _mailSubject( new KornMailSubject( *item ) )
@@ -29,7 +33,7 @@ KornSubjectsDlg::SubjectListViewItem::~SubjectListViewItem()
 	delete _mailSubject;
 }
 
-int KornSubjectsDlg::SubjectListViewItem::compare( QListViewItem* item, int column, bool ascending ) const
+int KornSubjectsDlg::SubjectListViewItem::compare( Q3ListViewItem* item, int column, bool ascending ) const
 {
 	if ( column == 2 )
 	{
@@ -54,7 +58,7 @@ int KornSubjectsDlg::SubjectListViewItem::compare( QListViewItem* item, int colu
 }
 
 KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
-   : KDialogBase( parent, "urldialog", true, "test", Close, Close, true), _mailDrop( new QPtrList< KMailDrop > ), 
+   : KDialogBase( parent, "urldialog", true, "test", Close, Close, true), _mailDrop( new Q3PtrList< KMailDrop > ), 
  	_subjects(0), _delete(0), mailDlg(0), _canDeleteMaildrop( true )
 {
 	_loadSubjectsCanceled = false;
@@ -82,7 +86,7 @@ KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
 	buttons->addStretch(10);
 
 	// feed the list view with its colums
-	_list->setSelectionMode(QListView::Multi);
+	_list->setSelectionMode(Q3ListView::Multi);
 	_list->addColumn(i18n("From"));
 	_list->addColumn(i18n("Subject"));
 	_list->addColumn(i18n("Date"));
@@ -94,7 +98,7 @@ KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
 
 	// connect the selection changed and double click events of the list view
 	connect(_list, SIGNAL(selectionChanged()), this, SLOT(listSelectionChanged()));
-	connect(_list, SIGNAL(executed(QListViewItem *)), this, SLOT(doubleClicked(QListViewItem *)));
+	connect(_list, SIGNAL(executed(Q3ListViewItem *)), this, SLOT(doubleClicked(Q3ListViewItem *)));
 
 	// connect the buttons
 	connect(invertSelButton, SIGNAL(clicked()), this, SLOT(invertSelection()));
@@ -122,7 +126,7 @@ void KornSubjectsDlg::loadMessages()
 
 void KornSubjectsDlg::listSelectionChanged()
 {
-	QPtrList< QListViewItem > list( _list->selectedItems() );
+	Q3PtrList< Q3ListViewItem > list( _list->selectedItems() );
 	
 	if (!_mailDrop)
 		return;
@@ -147,7 +151,7 @@ void KornSubjectsDlg::listSelectionChanged()
 	deleteButton->setEnabled(enableDelete);
 }
 
-void KornSubjectsDlg::doubleClicked(QListViewItem * item)
+void KornSubjectsDlg::doubleClicked(Q3ListViewItem * item)
 {
 	// show the message
 	showMessage(item);
@@ -181,14 +185,14 @@ void KornSubjectsDlg::showMessage()
 		return;
 	
 	// get selcted item
-	QPtrList<QListViewItem> messages = _list->selectedItems();
-	QListViewItem * item = messages.first();
+	Q3PtrList<Q3ListViewItem> messages = _list->selectedItems();
+	Q3ListViewItem * item = messages.first();
 	
 	// and show it
 	showMessage(item);
 }
 
-void KornSubjectsDlg::showMessage(QListViewItem * item )
+void KornSubjectsDlg::showMessage(Q3ListViewItem * item )
 {
 	if (!item)
 		return;
@@ -291,8 +295,8 @@ bool KornSubjectsDlg::makeSubjectsStruct()
 		return false;
 	
 	_subjects = new SubjectsData;
-	_subjects->it = new QPtrListIterator< KMailDrop >( *_mailDrop );
-	_subjects->subjects = new QValueVector< KornMailSubject >;
+	_subjects->it = new Q3PtrListIterator< KMailDrop >( *_mailDrop );
+	_subjects->subjects = new Q3ValueVector< KornMailSubject >;
 	_subjects->progress = new DoubleProgressDialog( this, "progress" );
 	_subjects->atRechecking = true;
 	
@@ -374,7 +378,7 @@ void KornSubjectsDlg::subjectsReady( bool success )
 		_list->clear();
 		
 		//All subjects downloaded
-		for( QValueVector<KornMailSubject>::iterator it = _subjects->subjects->begin(); it != _subjects->subjects->end();
+		for( Q3ValueVector<KornMailSubject>::iterator it = _subjects->subjects->begin(); it != _subjects->subjects->end();
 				   ++it )
 		{ //Draw entry's
 			new SubjectListViewItem(_list, &(*it));
@@ -433,9 +437,9 @@ void KornSubjectsDlg::deleteMessage()
 void KornSubjectsDlg::makeDeleteStruct()
 {
 	_delete = new DeleteData;
-	_delete->messages = new QPtrList< KornMailSubject >;
-	_delete->ids = new QPtrList< const KornMailId >;
-	_delete->progress = new QProgressDialog( this, "progress" );
+	_delete->messages = new Q3PtrList< KornMailSubject >;
+	_delete->ids = new Q3PtrList< const KornMailId >;
+	_delete->progress = new Q3ProgressDialog( this, "progress" );
 	_delete->totalNumberOfMessages = 0;
 
 	connect( _delete->progress, SIGNAL( canceled() ), this, SLOT( slotDeleteCanceled() ) );
@@ -453,8 +457,8 @@ void KornSubjectsDlg::deleteDeleteStruct()
 
 void KornSubjectsDlg::fillDeleteMessageList()
 {
-	QListViewItem *current;
-	QPtrList< QListViewItem > list( _list->selectedItems() );
+	Q3ListViewItem *current;
+	Q3PtrList< Q3ListViewItem > list( _list->selectedItems() );
 	
 	for( current = list.first(); current; current = list.next() )
 		_delete->messages->append( ( ( KornSubjectsDlg::SubjectListViewItem * ) current )->getMailSubject() );
@@ -482,7 +486,7 @@ void KornSubjectsDlg::deleteNextMessage()
 		return;
 	}
 	
-	_delete->ids = new QPtrList< const KornMailId >;
+	_delete->ids = new Q3PtrList< const KornMailId >;
 	_delete->drop = _delete->messages->getFirst()->getMailDrop();
 	
 	fillDeleteIdList( _delete->drop );

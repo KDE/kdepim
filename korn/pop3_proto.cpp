@@ -24,8 +24,8 @@
 #include <qwidget.h>
 #include <qobject.h>
 #include <qstringlist.h>
-#include <qptrvector.h>
-#include <qptrlist.h>
+#include <q3ptrvector.h>
+#include <q3ptrlist.h>
 
 void Pop3_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 {
@@ -33,7 +33,7 @@ void Pop3_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 	groupBoxes->append( "Identify" );
 }
 
-void Pop3_Protocol::configFields( QPtrVector< QWidget >* vector, const QObject* configDialog, QPtrList< AccountInput > * result ) const
+void Pop3_Protocol::configFields( Q3PtrVector< QWidget >* vector, const QObject* configDialog, Q3PtrList< AccountInput > * result ) const
 {
 	QMap< QString, QString > encrList;
 	encrList.insert( "ssl", i18n( "Secure Socket Layer" ) );

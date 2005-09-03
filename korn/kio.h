@@ -24,6 +24,9 @@
 #define KEG_KIODROP_H
 
 #include "polldrop.h"
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3PtrList>
 
 class QWidget;
 class KDropDialog;
@@ -36,8 +39,8 @@ class KIO_Read;
 class KIO_Delete;
 class KConfigGroup;
 class KURL;
-template<class> class QPtrList;
-template<class> class QValueList;
+template<class> class Q3PtrList;
+template<class> class Q3ValueList;
 namespace KIO { class Job; class MetaData; class Slave; class TransferJob; }
 
 /**
@@ -75,7 +78,7 @@ private:
 		QString name;
 		long size;
 	};
-	QValueList<FileInfo> *_mailurls;
+	Q3ValueList<FileInfo> *_mailurls;
 	
 	/*
 	 * The help-classes of this functions are friend functions, because this way, they can
@@ -135,10 +138,10 @@ public:
 	virtual ~KKioDrop();
 
 	virtual bool canReadSubjects(void);
-	virtual QValueVector<KornMailSubject> * doReadSubjects(bool * stop); 
+	virtual Q3ValueVector<KornMailSubject> * doReadSubjects(bool * stop); 
 	
 	virtual bool canDeleteMails();
-	virtual bool deleteMails(QPtrList<const KornMailId> * ids, bool * stop);
+	virtual bool deleteMails(Q3PtrList<const KornMailId> * ids, bool * stop);
 
 	virtual bool canReadMail ();
 	virtual QString readMail(const KornMailId * id, bool * stop);
@@ -177,7 +180,7 @@ private:
 	void emitDeleteMailsTotalSteps( int value ) { _deleteMailsTotalSteps = value; emit deleteMailsTotalSteps( value ); }
 	void emitDeleteMailsProgress( int value ) { emit deleteMailsProgress( _deleteMailsTotalSteps - value ); }
 	
-	void emitShowPassivePopup( QPtrList< KornMailSubject > *subject, int total )
+	void emitShowPassivePopup( Q3PtrList< KornMailSubject > *subject, int total )
 			{ emit showPassivePopup( subject, total, passiveDate(), this->realName() ); }
 	void emitShowPassivePopup( const QString& error )
 	                { if( passivePopup() ) { emit showPassivePopup( error, this->realName() ); } }

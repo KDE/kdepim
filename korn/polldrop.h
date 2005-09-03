@@ -6,6 +6,8 @@
 #define SSK_POLLDROP_H
 
 #include"maildrop.h"
+//Added by qt3to4:
+#include <QTimerEvent>
 
 class QTimerEvent;
 

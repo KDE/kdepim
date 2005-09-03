@@ -37,14 +37,14 @@
 #include <qbitmap.h>
 #include <qcolor.h>
 #include <qfont.h>
-#include <qgrid.h>
+#include <q3grid.h>
 #include <qlabel.h>
 #include <qpainter.h>
 #include <qpixmap.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qstring.h>
 #include <qtooltip.h>
-#include <qvbox.h>
+#include <q3vbox.h>
 
 BoxContainerItem::BoxContainerItem( QObject * parent, const char * name )
 	: AccountManager( parent, name ),
@@ -210,14 +210,14 @@ void BoxContainerItem::fillKPopupMenu( KPopupMenu* popupMenu, KActionCollection*
 	KStdAction::aboutApp(  this, SLOT( about()     ), actions )->plug( popupMenu );
 }
 
-void BoxContainerItem::showPassivePopup( QWidget* parent, QPtrList< KornMailSubject >* list, int total,
+void BoxContainerItem::showPassivePopup( QWidget* parent, Q3PtrList< KornMailSubject >* list, int total,
 					 const QString &accountName, bool date )
 {
 	KPassivePopup *popup = new KPassivePopup( parent, "Passive popup" );
 		
-	QVBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( objId() ).arg( accountName )
+	Q3VBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( objId() ).arg( accountName )
 			.arg( total ), "", QPixmap(), 0 );
-	QGrid *mainglayout = new QGrid( date ? 3 : 2 ,mainvlayout, "Grid-Layout" );
+	Q3Grid *mainglayout = new Q3Grid( date ? 3 : 2 ,mainvlayout, "Grid-Layout" );
 	
 	QLabel *title = new QLabel( "From", mainglayout, "from_label" );
 	QFont font = title->font();

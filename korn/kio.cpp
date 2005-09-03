@@ -46,10 +46,10 @@
 #include<klocale.h>
 #include<kprocess.h>
 
-#include<qptrlist.h>
+#include<q3ptrlist.h>
 #include<qregexp.h>
-#include<qvaluelist.h>
-#include<qvaluevector.h>
+#include<q3valuelist.h>
+#include<q3valuevector.h>
 
 #include<assert.h>
 #include<ctype.h>
@@ -108,7 +108,7 @@ KKioDrop::KKioDrop()
 	//This class can delete mails.
 	_delete = new KIO_Delete( this, "kio_delete" );
 	
-	_mailurls = new QValueList<FileInfo>;
+	_mailurls = new Q3ValueList<FileInfo>;
 }
 
 KKioDrop::KKioDrop( KConfigGroup* )
@@ -145,7 +145,7 @@ KKioDrop::KKioDrop( KConfigGroup* )
 	//This class can delete mails.
 	_delete = new KIO_Delete( this, "kio_delete" );
 	
-	_mailurls = new QValueList<FileInfo>;
+	_mailurls = new Q3ValueList<FileInfo>;
 
 	//readConfigGroup( *config );
 }
@@ -281,7 +281,7 @@ bool KKioDrop::canReadSubjects( )
 	return (_protocol!=0?_protocol->canReadSubjects():false);
 }
 
-QValueVector<KornMailSubject> * KKioDrop::doReadSubjects(bool * )
+Q3ValueVector<KornMailSubject> * KKioDrop::doReadSubjects(bool * )
 {
 	_subjects->doReadSubjects( this );
 	
@@ -290,7 +290,7 @@ QValueVector<KornMailSubject> * KKioDrop::doReadSubjects(bool * )
 	 * After that, the size is expanded to the expected number of subjects.
 	 * This way, reallocation of memmory is minimized, and thus more efficient.
 	 */
-	QValueVector<KornMailSubject> *vector = new QValueVector<KornMailSubject>( );
+	Q3ValueVector<KornMailSubject> *vector = new Q3ValueVector<KornMailSubject>( );
 	vector->reserve( _mailurls->count() );
 	return vector;
 }
@@ -300,7 +300,7 @@ bool KKioDrop::canReadMail( )
 	return (_protocol!=0?_protocol->canReadMail():false);
 }
 
-bool KKioDrop::deleteMails(QPtrList<const KornMailId> * ids, bool * /*stop*/)
+bool KKioDrop::deleteMails(Q3PtrList<const KornMailId> * ids, bool * /*stop*/)
 {
 	_delete->deleteMails( ids, this );
 	return _delete->valid();

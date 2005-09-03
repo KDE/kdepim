@@ -24,8 +24,8 @@
 #include <qwidget.h>
 #include <qobject.h>
 #include <qstringlist.h>
-#include <qptrvector.h>
-#include <qptrlist.h>
+#include <q3ptrvector.h>
+#include <q3ptrlist.h>
 
 void Nntp_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 {
@@ -33,7 +33,7 @@ void Nntp_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 	groupBoxes->append( "user" );
 }
 
-void Nntp_Protocol::configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput > * result ) const
+void Nntp_Protocol::configFields( Q3PtrVector< QWidget >* vector, const QObject*, Q3PtrList< AccountInput > * result ) const
 {
 	result->append( new TextInput( (QWidget*)vector->at( 0 ), i18n( "Server" ), TextInput::text, "", "server" ) );
 	result->append( new TextInput( (QWidget*)vector->at( 0 ), i18n( "Port" ), 0, 65535, "119", "port" ) );

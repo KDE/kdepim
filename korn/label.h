@@ -21,6 +21,8 @@
 
 #include <qlabel.h>
 #include <qevent.h>
+//Added by qt3to4:
+#include <QMouseEvent>
 
 /**
  * A simple overriding of the QLabel class to get a mouseButtonPressed() signal

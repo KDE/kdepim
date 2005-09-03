@@ -22,6 +22,8 @@
 //This function reads a single subject
 
 #include <qobject.h>
+//Added by qt3to4:
+#include <Q3MemArray>
 
 class KornMailSubject;
 
@@ -30,8 +32,8 @@ namespace KIO { class MetaData; class Job; class TransferJob; class Slave; }
 class KIO_Protocol;
 
 class QString;
-template<class T> class QMemArray;
-typedef QMemArray<char> QByteArray;
+template<class T> class Q3MemArray;
+typedef Q3MemArray<char> QByteArray;
 
 class KIO_Single_Subject : public QObject
 { Q_OBJECT

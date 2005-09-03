@@ -22,6 +22,9 @@
 //This class calls other class to read all the subjects
 
 #include <qobject.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3PtrList>
 class KKioDrop;
 class KIO_Single_Subject;
 class KIO_Protocol;
@@ -30,9 +33,9 @@ class KornMailSubject;
 namespace KIO { class MetaData; class Slave; }
 class KURL;
 
-template<class T> class QPtrList;
+template<class T> class Q3PtrList;
 class QString;
-template<class T> class QValueList;
+template<class T> class Q3ValueList;
 
 class KIO_Subjects : public QObject
 { Q_OBJECT
@@ -51,7 +54,7 @@ private:
 	KURL *_kurl;
 	KIO::MetaData *_metadata;
 	const KIO_Protocol *_protocol;
-	QPtrList<KIO_Single_Subject> *_jobs;
+	Q3PtrList<KIO_Single_Subject> *_jobs;
 	KIO::Slave *_slave;
 	bool _valid;
 	

@@ -102,7 +102,7 @@ private slots:
 	void slotAdded( const QString& );
 	void slotRemoved( const QString& );
 	
-	void slotActivated( QListBoxItem* );
+	void slotActivated( Q3ListBoxItem* );
 private:
 	/**
 	 * This private method moves an item. It is called from slotChanged().

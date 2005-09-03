@@ -3,7 +3,9 @@
 
 #include<kdialogbase.h>
 #include <klistview.h>
-#include<qvaluevector.h>
+#include<q3valuevector.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 #include <kpushbutton.h>
 
 class KMailDrop;
@@ -11,10 +13,10 @@ class KornMailSubject;
 class KornMailId;
 class KListView;
 class KornMailDlg;
-class QProgressDialog;
+class Q3ProgressDialog;
 class DoubleProgressDialog;
 
-template< class T > class QPtrList;
+template< class T > class Q3PtrList;
 
 /**
  * KornSubjectsDlg loads all mail subjects and shows them in a list control.
@@ -39,7 +41,7 @@ class KornSubjectsDlg: public KDialogBase
 		* @param item KornMailSubject this item should represent. It is NOT deleted
 		* if SubjectListViewItem is deleted.
 		*/
-		SubjectListViewItem( QListView *parent, KornMailSubject * item);
+		SubjectListViewItem( Q3ListView *parent, KornMailSubject * item);
 
 		/**
 		 * SubjectListViewItem Destructor
@@ -52,7 +54,7 @@ class KornSubjectsDlg: public KDialogBase
 		* @param column column to compare
 		* @param ascending search order
 		*/
-		int compare( QListViewItem* item, int column, bool ascending ) const;
+		int compare( Q3ListViewItem* item, int column, bool ascending ) const;
 
 		/**
 		* Return the mail subject.
@@ -61,20 +63,20 @@ class KornSubjectsDlg: public KDialogBase
 		KornMailSubject * getMailSubject() const {return _mailSubject;}
 	};
 
-	QPtrList< KMailDrop >	*_mailDrop;
+	Q3PtrList< KMailDrop >	*_mailDrop;
 	struct SubjectsData
 	{
-		QPtrListIterator< KMailDrop > *it;
-		QValueVector< KornMailSubject > *subjects;
+		Q3PtrListIterator< KMailDrop > *it;
+		Q3ValueVector< KornMailSubject > *subjects;
 		DoubleProgressDialog *progress;
 		bool atRechecking;
 	} *_subjects;
 	
 	struct DeleteData
 	{
-		QPtrList< KornMailSubject > *messages;
-		QPtrList< const KornMailId > *ids;
-		QProgressDialog *progress;
+		Q3PtrList< KornMailSubject > *messages;
+		Q3PtrList< const KornMailId > *ids;
+		Q3ProgressDialog *progress;
 		KMailDrop *drop;
 		int totalNumberOfMessages;
 	} *_delete;
@@ -99,7 +101,7 @@ class KornSubjectsDlg: public KDialogBase
 	 * Show a message in a separate dialog
 	 * @param item message to show
 	 */
-	void showMessage(QListViewItem * item);
+	void showMessage(Q3ListViewItem * item);
 public:
 	/**
 	 * KornSubjectsDlg Constructor
@@ -164,7 +166,7 @@ private slots:
 	/**
 	 * called if a list view item was double clicked
 	 */
-	void doubleClicked ( QListViewItem *item );
+	void doubleClicked ( Q3ListViewItem *item );
 	
 	void closeDialog();
 	

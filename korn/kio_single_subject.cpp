@@ -32,8 +32,10 @@
 #include <krfcdate.h>
 
 #include <qregexp.h>
-#include <qcstring.h>
+#include <q3cstring.h>
 #include <qstring.h>
+//Added by qt3to4:
+#include <QTextStream>
 
 KIO_Single_Subject::KIO_Single_Subject( QObject * parent, const char * name,
 		    KURL &kurl, KIO::MetaData &metadata, const KIO_Protocol * protocol, KIO::Slave *& slave,
@@ -78,7 +80,7 @@ void KIO_Single_Subject::init( KIO::Slave *& slave)
 
 void KIO_Single_Subject::parseMail( QString * message, KornMailSubject *subject, bool fullMessage )
 {
-	QTextStream stream( message, IO_ReadOnly );
+	QTextStream stream( message, QIODevice::ReadOnly );
 	QString line;
 	QRegExp rx_sender( "^[fF]rom: " ); //Ex: From: ...
 	QRegExp rx_sender_has_name1( "^[fF]rom:\\s*(\\w+[\\w\\s]*)\\<" ); //Ex: From: A name<email@domein.country>

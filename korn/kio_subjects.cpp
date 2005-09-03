@@ -27,8 +27,8 @@
 #include <kio/scheduler.h>
 #include <kdebug.h>
 
-#include <qptrlist.h>
-#include <qvaluelist.h>
+#include <q3ptrlist.h>
+#include <q3valuelist.h>
 #include <qstring.h>
 
 KIO_Subjects::KIO_Subjects( QObject * parent, const char * name )
@@ -37,7 +37,7 @@ KIO_Subjects::KIO_Subjects( QObject * parent, const char * name )
 	_slave( 0 ),
 	_valid( true )
 {
-	_jobs = new QPtrList<KIO_Single_Subject>;
+	_jobs = new Q3PtrList<KIO_Single_Subject>;
 	_kurl = new KURL;
 	_metadata = new KIO::MetaData;
 	
@@ -54,8 +54,8 @@ KIO_Subjects::~KIO_Subjects( )
 
 void KIO_Subjects::doReadSubjects( KKioDrop *drop )
 {
-	QValueList<KKioDrop::FileInfo>::ConstIterator it;
-	QValueList<KKioDrop::FileInfo>::ConstIterator end_it = drop->_mailurls->end();
+	Q3ValueList<KKioDrop::FileInfo>::ConstIterator it;
+	Q3ValueList<KKioDrop::FileInfo>::ConstIterator end_it = drop->_mailurls->end();
 	
 	_kio = drop;
 	_protocol = _kio->_protocol;

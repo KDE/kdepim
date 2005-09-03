@@ -20,6 +20,8 @@
 #define MK_QMAIL_PROTO_H
 
 #include "kio_proto.h"
+//Added by qt3to4:
+#include <Q3PtrList>
 
 class QMail_Protocol : public KIO_Protocol
 {
@@ -50,7 +52,7 @@ public:
 	virtual QString mailboxName() const { return i18n( "Path:" ); }
 
 	virtual void configFillGroupBoxes( QStringList* ) const;
-        virtual void configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput >* ) const;
+        virtual void configFields( Q3PtrVector< QWidget >* vector, const QObject*, Q3PtrList< AccountInput >* ) const;
         virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
         virtual void writeEntries( QMap< QString, QString >* ) const;
 };

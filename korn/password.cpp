@@ -240,7 +240,7 @@ bool KOrnPassword::writeKOrnPassword( int box, int account, const QString& passw
 QString KOrnPassword::KMailDecrypt( const QString& enc )
 {
 	QString result;
-	for (uint i = 0; i < enc.length(); i++)
+	for (int i = 0; i < enc.length(); i++)
 		result += (enc[i].unicode() < 0x20) ? enc[i] : QChar(0x1001F - enc[i].unicode());
 
 	return result;

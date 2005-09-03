@@ -20,21 +20,21 @@
 #define MK_SORTEDMAILSUBJECT_H
 
 #include "mailsubject.h"
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 
 /*
  * This class is a normal QPtrList with an overloaded function compareItems.
  * This way, it is possible to sort this list on date.
  */
 
-class SortedMailSubject : public QPtrList< KornMailSubject >
+class SortedMailSubject : public Q3PtrList< KornMailSubject >
 {
 public:
-	SortedMailSubject() : QPtrList< KornMailSubject >() {}
-	SortedMailSubject( const SortedMailSubject& sms ) : QPtrList< KornMailSubject >( sms ) {}
+	SortedMailSubject() : Q3PtrList< KornMailSubject >() {}
+	SortedMailSubject( const SortedMailSubject& sms ) : Q3PtrList< KornMailSubject >( sms ) {}
 	~SortedMailSubject() {}
 	
-	virtual int compareItems ( QPtrCollection::Item item1, QPtrCollection::Item item2 );
+	virtual int compareItems ( Q3PtrCollection::Item item1, Q3PtrCollection::Item item2 );
 };
 
 #endif //MK_SORTEDMAILSUBJECT_H

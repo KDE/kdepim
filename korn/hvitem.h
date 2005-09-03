@@ -20,6 +20,8 @@
 #define MK_HVITEM_H
 
 #include <boxcontaineritem.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 class KActionCollection;
 class KPopupMenu;
@@ -59,7 +61,7 @@ public slots:
 	 * This slot triggered when the passive popup is to be shown. It is transported
 	 * to BoxContainerItem, but so it is possible to change the arguments.
 	 */
-	void slotShowPassivePopup( QPtrList< KornMailSubject >* list, int total, bool date, const QString& );
+	void slotShowPassivePopup( Q3PtrList< KornMailSubject >* list, int total, bool date, const QString& );
 	
 	/**
 	 * This slot triggered when the passive popup is to be shown. It is transported

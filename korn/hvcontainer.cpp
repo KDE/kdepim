@@ -22,16 +22,16 @@
 
 #include <kdebug.h>
 
-#include <qvbox.h>
+#include <q3vbox.h>
 
 HVContainer::HVContainer( Qt::Orientation orientation, QObject * parent, const char * name )
 	: BoxContainer( parent, name ),
 	box( 0 )	
 {
 	if( orientation == Qt::Horizontal )
-		box = new QHBox( 0, "hbox" );
+		box = new Q3HBox( 0, "hbox" );
 	else
-		box = new QVBox( 0, "vbox" );
+		box = new Q3VBox( 0, "vbox" );
 }
 
 HVContainer::~HVContainer()

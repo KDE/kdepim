@@ -7,6 +7,8 @@
 
 #include<assert.h>
 #include<qapplication.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 #include<kconfigbase.h>
 #include<kdebug.h>
@@ -123,12 +125,12 @@ bool KMailDrop::writeConfigGroup(KConfigBase & c) const
   return true;
 }
 
-QValueVector<KornMailSubject> * KMailDrop::doReadSubjects(bool * /*stop*/)
+Q3ValueVector<KornMailSubject> * KMailDrop::doReadSubjects(bool * /*stop*/)
 {
-	return new QValueVector<KornMailSubject>(); // empty vector
+	return new Q3ValueVector<KornMailSubject>(); // empty vector
 }
 
-QValueVector<KornMailSubject> * KMailDrop::readSubjects(bool * stop)
+Q3ValueVector<KornMailSubject> * KMailDrop::readSubjects(bool * stop)
 {
 	// remember timer status
 	bool timerWasRunning = running();
@@ -138,7 +140,7 @@ QValueVector<KornMailSubject> * KMailDrop::readSubjects(bool * stop)
 		stopMonitor();
 
 	// read the subjects
-	QValueVector<KornMailSubject> * result = doReadSubjects(stop);
+	Q3ValueVector<KornMailSubject> * result = doReadSubjects(stop);
 	int newcount = result->size();
 
 	// if the mail count has changed: notify the button!
@@ -154,7 +156,7 @@ QValueVector<KornMailSubject> * KMailDrop::readSubjects(bool * stop)
 }
 
 
-bool KMailDrop::deleteMails(QPtrList<const KornMailId> * /*ids*/, bool * /*stop*/)
+bool KMailDrop::deleteMails(Q3PtrList<const KornMailId> * /*ids*/, bool * /*stop*/)
 {
 	return false;
 }

@@ -23,7 +23,7 @@
 
 class BoxContainerItem;
 
-class QHBox;
+class Q3HBox;
 
 /**
  * This is a BoxContainer for both Horizontal and Vertical displays.
@@ -52,7 +52,7 @@ protected:
 	 */
 	virtual BoxContainerItem* newBoxInstance() const;
 private:
-	QHBox *box;
+	Q3HBox *box;
 };
 
 #endif //MK_HVCONTAINER_H

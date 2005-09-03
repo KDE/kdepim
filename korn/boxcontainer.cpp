@@ -22,11 +22,11 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 
 BoxContainer::BoxContainer( QObject * parent, const char * name )
 	: QObject( parent, name ),
-	_items( new QPtrList< BoxContainerItem > )
+	_items( new Q3PtrList< BoxContainerItem > )
 {
 	_items->setAutoDelete( true );
 }

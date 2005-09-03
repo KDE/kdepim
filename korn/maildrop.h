@@ -8,8 +8,8 @@
 #include<qobject.h>
 #include<qstring.h>
 #include<qcolor.h>
-#include<qvaluevector.h>
-#include <qptrlist.h>
+#include<q3valuevector.h>
+#include <q3ptrlist.h>
 
 class Protocol;
 
@@ -205,7 +205,7 @@ class KMailDrop : public QObject
      * terminate before all mail subjects are loaded.
      * @return all new mails subjects as a vector.
      */
-    virtual QValueVector<KornMailSubject> * readSubjects(bool * stop);
+    virtual Q3ValueVector<KornMailSubject> * readSubjects(bool * stop);
 
     /**
      * Read the subjects of all new mails. The concrete subclass has
@@ -216,7 +216,7 @@ class KMailDrop : public QObject
      * terminate before all mail subjects are loaded.
      * @return all new mails subjects as a vector.
      */
-    virtual QValueVector<KornMailSubject> * doReadSubjects(bool * stop);
+    virtual Q3ValueVector<KornMailSubject> * doReadSubjects(bool * stop);
 
     /**
      * Return true if the concrete subclass can delete individual mails.
@@ -241,7 +241,7 @@ class KMailDrop : public QObject
      * the KornMailSubject instances of the remaining mails might be used
      * further more.
      */
-    virtual bool deleteMails(QPtrList<const KornMailId> * ids, bool * stop);
+    virtual bool deleteMails(Q3PtrList<const KornMailId> * ids, bool * stop);
 
     /**
      * Return true if the concrete subclass can load individual mails fully.
@@ -361,7 +361,7 @@ signals:
      * As argument, there is a KornSubject, which contains a subject and
      * some more info that could be used with the popup.
      */
-    void showPassivePopup( QPtrList< KornMailSubject >*, int, bool, const QString& realname );
+    void showPassivePopup( Q3PtrList< KornMailSubject >*, int, bool, const QString& realname );
 
     /**
      * This signal is emitted when a passive error message should be displayed.

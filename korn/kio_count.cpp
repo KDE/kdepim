@@ -30,9 +30,11 @@
 #include <kio/slave.h>
 #include <kio/global.h>
 #include <kurl.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 #include <qstring.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 KIO_Count::KIO_Count( QObject * parent, const char * name )
 	: QObject ( parent, name ),
@@ -113,7 +115,7 @@ void KIO_Count::count( KKioDrop *drop )
 	}
 
 	/* Blocking this function: no new counts can be started from now */
-	_new_mailurls = new QValueList< KKioDrop::FileInfo >;
+	_new_mailurls = new Q3ValueList< KKioDrop::FileInfo >;
 
 	_protocol->recheckKURL( kurl, metadata );
 
@@ -253,7 +255,7 @@ void KIO_Count::entries( KIO::Job* job, const KIO::UDSEntryList &list )
 	if( job != _job )
 		kdError() << i18n( "Got unknown job; something must be wrong..." ) << endl;
 
-	for( QValueListConstIterator<KKioDrop::FileInfo> it = _kio->_mailurls->begin(); it != _kio->_mailurls->end(); ++it )
+	for( Q3ValueListConstIterator<KKioDrop::FileInfo> it = _kio->_mailurls->begin(); it != _kio->_mailurls->end(); ++it )
 		old_list.append( (*it).name );
 
 	for ( it1 = list.begin() ; it1 != list.end() ; it1++ )
@@ -314,7 +316,7 @@ void KIO_Count::addtoPassivePopup( KornMailSubject* subject )
 	_total_new_messages++;
 	if( _subjects_pending == 0 )
 	{
-		_kio->emitShowPassivePopup( dynamic_cast< QPtrList<KornMailSubject>* >( _popup_subjects ), _total_new_messages );
+		_kio->emitShowPassivePopup( dynamic_cast< Q3PtrList<KornMailSubject>* >( _popup_subjects ), _total_new_messages );
 		delete _popup_subjects; _popup_subjects = 0;
 		_total_new_messages = 0;
 

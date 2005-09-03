@@ -31,11 +31,11 @@
 #include "dcop_proto.h"
 #include "kmail_proto.h"
 
-#include <qdict.h>
+#include <q3dict.h>
 #include <qstring.h>
 #include <qstringlist.h>
 
-QDict<Protocol>* Protocols::protocols = 0;
+Q3Dict<Protocol>* Protocols::protocols = 0;
 
 const Protocol* Protocols::getProto( const QString& proto )
 {
@@ -57,7 +57,7 @@ QStringList Protocols::getProtocols()
 	if( !protocols )
 		fillProtocols();
 	
-	QDictIterator<Protocol> it( *protocols );
+	Q3DictIterator<Protocol> it( *protocols );
 	for( ; it.current(); ++it )
 		output.append( it.currentKey() );
 
@@ -68,7 +68,7 @@ QStringList Protocols::getProtocols()
 	
 void Protocols::fillProtocols()
 {
-	protocols = new QDict< Protocol>;
+	protocols = new Q3Dict< Protocol>;
 	protocols->setAutoDelete( true );
 	addProtocol( new Imap_Protocol );
 	addProtocol( new MBox_Protocol );

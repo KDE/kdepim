@@ -1,10 +1,12 @@
 #include "maildlg.h"
 #include <qlayout.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
 #include<kdebug.h>
 #include<klocale.h>
 #include<qapplication.h>
 #include "mailsubject.h"
-#include <qprogressdialog.h>
+#include <q3progressdialog.h>
 #include "maildrop.h"
 
 KornMailDlg::KornMailDlg( QWidget *parent )
@@ -36,7 +38,7 @@ void KornMailDlg::showFullMessage()
 	_loadMailCanceled = false;
 	
 	// create progress dialog
-	_progress = new QProgressDialog(this, "bla", TRUE);
+	_progress = new Q3ProgressDialog(this, "bla", TRUE);
 	_progress->setMinimumDuration(0);
 	_progress->setLabelText(i18n("Loading full mail. Please wait..."));
 

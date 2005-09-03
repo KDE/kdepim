@@ -30,7 +30,7 @@
 #include <kio/jobclasses.h>
 #include <kio/scheduler.h>
 
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 
 KIO_Delete::KIO_Delete( QObject * parent, const char * name ) : QObject( parent, name ),
 	_kio( 0 ),
@@ -39,7 +39,7 @@ KIO_Delete::KIO_Delete( QObject * parent, const char * name ) : QObject( parent,
 	_slave( 0 ),
 	_valid( true )
 {
-	_jobs = new QPtrList< KIO::Job >;
+	_jobs = new Q3PtrList< KIO::Job >;
 }
 
 KIO_Delete::~KIO_Delete( )
@@ -48,7 +48,7 @@ KIO_Delete::~KIO_Delete( )
 	delete _jobs;
 }
 
-bool KIO_Delete::deleteMails( QPtrList< const KornMailId > * ids, KKioDrop *drop )
+bool KIO_Delete::deleteMails( Q3PtrList< const KornMailId > * ids, KKioDrop *drop )
 {
 	KURL kurl = *drop->_kurl;
 	KIO::MetaData metadata = *drop->_metadata;

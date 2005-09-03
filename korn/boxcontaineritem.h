@@ -21,6 +21,10 @@
 
 #include "accountmanager.h"
 #include <dcopobject.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QLabel>
+#include <Q3PtrList>
 
 class KornMailSubject;
 
@@ -128,7 +132,7 @@ protected:
 	 * @param accountName The name of the account it belongs to
 	 * @param date Should the date be displayed?
 	 */
-	void showPassivePopup( QWidget* parent, QPtrList< KornMailSubject >* list, int total, const QString& accountName, bool date );
+	void showPassivePopup( QWidget* parent, Q3PtrList< KornMailSubject >* list, int total, const QString& accountName, bool date );
 		
 	//this functions should be reimplemented
 	/**

@@ -21,6 +21,8 @@
 #define MK_KMAILPROTOCOL
 
 #include "protocol.h"
+//Added by qt3to4:
+#include <Q3PtrList>
 
 class KConfig;
 class KConfigBase;
@@ -89,7 +91,7 @@ public:
 	 * @param object An object to connect slots to.
 	 * @param result The resulting object.
 	 */
-        virtual void configFields( QPtrVector< QWidget >* vector, const QObject* object, QPtrList< AccountInput >* result ) const;
+        virtual void configFields( Q3PtrVector< QWidget >* vector, const QObject* object, Q3PtrList< AccountInput >* result ) const;
 	/**
 	 * This can manipulate entries that are readed from the configuartion.
 	 * This function does nothing here.
