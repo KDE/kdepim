@@ -156,7 +156,7 @@ management, news reader, synchronization with portable devices, and news feeds
 reader.  Even if you don't use it inside &kontact;, &korganizer; is
 integrated with the other &kde; <acronym>PIM</acronym> applications.
 For instance, you can configure it to show birthdays from &kaddressbook; in your
-agenda, use &kmail; to send and receive invitations, etc...</para>
+agenda, use &kmail; to send and receive invitations, &etc;</para>
 
 <para>Main features of &korganizer;:</para>
 <para><itemizedlist>
@@ -581,7 +581,7 @@ handbook.</para>
 implementation offers additional features for system administrators, such as
 support of mixed client environments (&Microsoft; Outlook&reg;, &kde;
 <acronym>PIM</acronym>  and web mail), a web administration interface, shared
-address book, email server, etc... As of June 2005, the groupware servers that
+address book, email server, &etc; As of June 2005, the groupware servers that
 implement the <quote>Kolab 1</quote> and <quote>Kolab 2</quote> protocols are
 the Kolab server, version 1 and 2, and the 
 <ulink url="http://www.citadel.org">Citadel server</ulink> (Kolab 1 only). An up
@@ -611,17 +611,18 @@ corruption, you will lose only one calendar item, not the whole calendar.</para>
 </listitem>
 </varlistentry>
 
+<!--
 <varlistentry>
 <term><guilabel>Calendar on Exchange Server (Experimental)</guilabel></term>
 <listitem><para>
 If you have access to a
 <ulink url="http://www.microsoft.com/exchange">Exchange 2000 Server</ulink>,
 add this resource in order to be able to to save (and load)
-events <!--,journals, free/busy information and to-dos?--> to the server. To add the resource, you will
-need to know the server &URL;, <!--port?-->your user name and your password. There
+events FIXME:,journals, free/busy information and to-dos? to the server. To add the resource, you will
+need to know the server &URL;, FIXME:port? your user name and your password. There
 is support for (read only) contacts, so you may want to configure &kaddressbook;
 resource.</para>
-<!--FIXME: does the wizard work?
+FIXME: does the wizard work?
 <para>The most practical way to configure the access to a Exchange server is
 to use the <application>exchangewizard</application> wizard. You can start it
 from the command line prompt:
@@ -629,9 +630,10 @@ from the command line prompt:
 <screen><prompt>$</prompt><command>exchangewizard</command></screen>
 
 The wizard will configure not only &korganizer; to use the
-Exchange resources, but &kmail;, &kaddressbook; too.</para>-->
+Exchange resources, but &kmail;, &kaddressbook; too.</para>
 </listitem>
 </varlistentry>
+-->
 
 <varlistentry>
 <term><guilabel>Calendar in Remote File</guilabel></term>
@@ -1027,7 +1029,7 @@ completely on the screen when using one of the other views.</para>
 (a bell icon displayed in it means the alarm is set),  if it repeats multiple
 times (a chasing-arrows icon means a repeating event), the start and end time
 information. Hovering the mouse over an item will bring up a
-tool tip with detailed information about the item.</para>
+tooltip with detailed information about the item.</para>
 
 <para>Switch the display to the list view by choosing the
 <menuchoice><guimenu>View</guimenu>
@@ -1057,7 +1059,7 @@ screen (which is the usual case). Each rectangle in the view represents an
 individual event or to-do due for that time, and displays the start and end time
 and summary. A <guiicon>bell</guiicon> icon is displayed if an alarm is set, and
 a <guiicon>chasing-arrows</guiicon> icon is displayed if it repeats multiple
-times. Hovering the mouse over an calendar item will bring up a tool tip
+times. Hovering the mouse over an calendar item will bring up a tooltip
 with the item detailed information. To make &korganizer; show a red line
 marking the current-time on the current day (the Marcus Bains line),
 check the <guilabel>Show current-time (Marcus Bains Line)</guilabel> box in the
@@ -2602,7 +2604,7 @@ in the agenda view.</para></listitem>
 <listitem><para>Select the default start time for events from the list on
 the drop down. When you choose <link linkend="menu-actions-new-event">New
 Event</link> from the <link linkend="entering-data-events">Action Menu</link>, or
-create an event in some other manner such that &korganizer; can not guess
+create an event in some other manner such that &korganizer; cannot guess
 when you would like your event to start, &korganizer; will put this hour
 in the start time editor as the default value.</para></listitem>
 </varlistentry>
@@ -2935,7 +2937,7 @@ view.</para></listitem>
 updating or deleting events or to-dos which involve others. This mail can be
 an invitation to attendees of an event you created, a cancellation of an event
 you created, an answer or an update on your invitation status, an event change
-request, etc... Check this option if you you want to use the groupware
+request, &etc; Check this option if you you want to use the groupware
 functionality (e.g Configuring &kontact; as a &kde;
 <guilabel>Kolab</guilabel> client).</para></listitem>
 </varlistentry>
@@ -3207,7 +3209,7 @@ linkend="other-features-drag-and-drop">drag-and-drop operations</link>.
 Settings</guimenu><guimenuitem>Configure
 Toolbars....</guimenuitem></menuchoice> menu item.
 </para></listitem>
-<listitem><para>The graphic style (icon size, text position, etc...) is
+<listitem><para>The graphic style (icon size, text position, &etc;) is
 adjusted through the <guimenu>Toolbar Context Menu</guimenu>. Right click the
 toolbar to access this menu.
 </para></listitem>
@@ -3562,7 +3564,7 @@ file.</para>
 <listitem><para>This action will open the <guilabel>Upload Hot New Stuff</guilabel>
 dialog, which allow you to export calendars containing events which may be
 useful to other people, such as a conference program, a list of holidays,
-special events, etc...</para>
+special events, &etc;</para>
 <para>For more information about this action, please refer to
 <xref linkend="managing-get-hot-new-stuff" />.</para>
 </listitem>
