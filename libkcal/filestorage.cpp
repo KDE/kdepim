@@ -94,7 +94,7 @@ bool FileStorage::load()
   if ( !success ) {
     ICalFormat iCal;
 
-    bool success = iCal.load( calendar(), mFileName);
+    success = iCal.load( calendar(), mFileName);
 
     if ( !success ) {
       if ( iCal.exception() ) {
