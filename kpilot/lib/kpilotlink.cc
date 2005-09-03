@@ -1,3 +1,8 @@
+//Added by qt3to4:
+#include <QEvent>
+#include <Q3CString>
+#include <Q3PtrList>
+#include <QApplication>
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -859,7 +864,7 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 	struct pi_file *pf =
 		pi_file_open(buffer);
 
-	if (!f)
+	if (!f.isEmpty())
 	{
 		kdWarning() << k_funcinfo
 			<< ": Cannot open file " << f << endl;
@@ -1023,7 +1028,7 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 		// Don't even bother trying to convert or retrieve.
 		return false;
 	}
-	QCString encodedName = QFile::encodeName(fullBackupName);
+	Q3CString encodedName = QFile::encodeName(fullBackupName);
 	char filenameBuf[PATH_MAX];
 	memset(filenameBuf,0,PATH_MAX);
 	strlcpy(filenameBuf,(const char *)encodedName,PATH_MAX);
@@ -1054,10 +1059,10 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 }
 
 
-QPtrList<DBInfo> KPilotDeviceLink::getDBList(int cardno, int flags)
+Q3PtrList<DBInfo> KPilotDeviceLink::getDBList(int cardno, int flags)
 {
 	bool cont=true;
-	QPtrList<DBInfo>dbs;
+	Q3PtrList<DBInfo>dbs;
 	int index=0;
 	while (cont)
 	{

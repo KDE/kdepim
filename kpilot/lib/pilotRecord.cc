@@ -38,6 +38,8 @@
 
 #include <qtextcodec.h>
 #include <qregexp.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <kglobal.h>
 #include <kcharsets.h>
@@ -199,7 +201,7 @@ QString PilotAppCategory::fromPilot( const char *c, int len )
 int PilotAppCategory::toPilot( const QString &s, char *buf, int len)
 {
 	int used = len;
-	QCString cbuf = codec()->fromUnicode(s,used);
+	Q3CString cbuf = codec()->fromUnicode(s,used);
 	memset( buf, 0, len );
 	if (used > len) used=len;
 	memcpy( buf, cbuf.data(), used );

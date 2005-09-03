@@ -40,6 +40,8 @@
 #include <qdir.h>
 #include <qregexp.h>
 #include <qtextcodec.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <dcopclient.h>
 #include <kapplication.h>
@@ -382,10 +384,10 @@ bool PluginUtility::isModal(const QStringList &a)
 	return a.contains(CSL1("modal"));
 }
 
-/* static */ bool PluginUtility::isRunning(const QCString &n)
+/* static */ bool PluginUtility::isRunning(const Q3CString &n)
 {
 	DCOPClient *dcop = KApplication::kApplication()->dcopClient();
-	QCStringList apps = dcop->registeredApplications();
+	DCOPCStringList apps = dcop->registeredApplications();
 	return apps.contains(n);
 }
 

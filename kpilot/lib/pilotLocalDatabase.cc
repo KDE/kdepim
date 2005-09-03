@@ -1,3 +1,5 @@
+//Added by qt3to4:
+#include <Q3ValueList>
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -44,7 +46,7 @@ static const char *pilotlocaldatabase_id =
 #include <qregexp.h>
 #include <qdatetime.h>
 #include <qtextcodec.h>
-#include <qvaluevector.h>
+#include <q3valuevector.h>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -53,7 +55,7 @@ static const char *pilotlocaldatabase_id =
 #include "pilotAppCategory.h"
 #include "pilotLocalDatabase.h"
 
-typedef QValueVector<PilotRecord *> Records;
+typedef Q3ValueVector<PilotRecord *> Records;
 
 class PilotLocalDatabase::Private : public Records
 {
@@ -279,10 +281,10 @@ int PilotLocalDatabase::recordCount()
 
 
 // Returns a QValueList of all record ids in the database.
-QValueList<recordid_t> PilotLocalDatabase::idList()
+Q3ValueList<recordid_t> PilotLocalDatabase::idList()
 {
 	int idlen=recordCount();
-	QValueList<recordid_t> idlist;
+	Q3ValueList<recordid_t> idlist;
 	if (idlen<=0) return idlist;
 
 	// now create the QValue list from the idarr:

@@ -35,6 +35,8 @@
 */
 
 #include <qstringlist.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include "syncAction.h"
 
@@ -251,7 +253,7 @@ public:
 	* The current approach is to ask the DCOP server if the application
 	* has registered.
 	*/
-	static bool isRunning(const QCString &appName);
+	static bool isRunning(const Q3CString &appName);
 
 	/**
 	* Check a given library for its version, returning 0 if no

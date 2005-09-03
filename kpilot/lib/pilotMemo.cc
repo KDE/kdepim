@@ -1,3 +1,5 @@
+//Added by qt3to4:
+#include <Q3CString>
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -68,7 +70,7 @@ void *PilotMemo::pack_(void *buf, int *len)
 	if (*len < 0) return NULL; // buffer size being silly
 	if (fText.length() > (unsigned) *len) return NULL; // won't fit either
 
-	QCString s = codec()->fromUnicode(fText);
+	Q3CString s = codec()->fromUnicode(fText);
 
 	int use_length = *len;
 	if (MAX_MEMO_LEN < use_length) use_length = MAX_MEMO_LEN;

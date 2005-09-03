@@ -72,6 +72,8 @@
 
 #include <unistd.h>     /* For size_t for pilot-link */
 #include <qglobal.h>
+//Added by qt3to4:
+#include <Q3CString>
 // For KDE_EXPORT with kdelibs 3.3.x
 #include <kdepimmacros.h>
 
@@ -159,7 +161,7 @@ using namespace std;
 
 inline std::ostream& operator <<(std::ostream &o, const QString &s)
 	{ if (s.isEmpty()) return o<<"<empty>"; else return o<<s.latin1(); }
-inline std::ostream& operator <<(std::ostream &o, const QCString &s)
+inline std::ostream& operator <<(std::ostream &o, const Q3CString &s)
 	{ if (s.isEmpty()) return o<<"<empty>"; else return o << *s; }
 
 

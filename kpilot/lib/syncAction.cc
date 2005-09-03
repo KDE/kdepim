@@ -1,3 +1,5 @@
+//Added by qt3to4:
+#include <QHBoxLayout>
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -37,7 +39,7 @@ static const char *syncAction_id =
 #include <pi-dlp.h>
 
 #include <qtimer.h>
-#include <qvbox.h>
+#include <q3vbox.h>
 #include <qlayout.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
@@ -45,7 +47,7 @@ static const char *syncAction_id =
 #include <qdir.h>
 #include <qfile.h>
 #include <qfileinfo.h>
-#include <qtl.h>
+#include <q3tl.h>
 #include <qstyle.h>
 
 #include <kdialogbase.h>
@@ -352,7 +354,7 @@ int SyncAction::questionYesNo(const QString & text,
 	// by Waldo Bastian.
 	//
 	//
-	QVBox *topcontents = new QVBox(dialog);
+	Q3VBox *topcontents = new Q3VBox(dialog);
 
 	topcontents->setSpacing(KDialog::spacingHint() * 2);
 	topcontents->setMargin(KDialog::marginHint() * 2);
@@ -464,7 +466,7 @@ int SyncAction::questionYesNoCancel(const QString & text,
 	// by Waldo Bastian.
 	//
 	//
-	QVBox *topcontents = new QVBox(dialog);
+	Q3VBox *topcontents = new Q3VBox(dialog);
 
 	topcontents->setSpacing(KDialog::spacingHint() * 2);
 	topcontents->setMargin(KDialog::marginHint() * 2);

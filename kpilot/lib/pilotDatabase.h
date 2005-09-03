@@ -32,7 +32,7 @@
 
 
 #include <qstring.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 // Handle all time.h variations properly.
 // Required because pi-macros.h sometimes forgets it.
@@ -56,7 +56,7 @@
 class PilotRecord;
 struct CategoryAppInfo;
 
-typedef QValueList<recordid_t> RecordIDList;
+typedef Q3ValueList<recordid_t> RecordIDList;
 
 
 

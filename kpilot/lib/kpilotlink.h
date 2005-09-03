@@ -38,7 +38,9 @@
 #include <pi-dlp.h>
 
 #include <qobject.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
+//Added by qt3to4:
+#include <QEvent>
 
 class QTimer;
 class QDateTime;
@@ -448,7 +450,7 @@ public:
 	* local file @p path.
 	*/
 	bool retrieveDatabase(const QString &path, struct DBInfo *db);
-	QPtrList<DBInfo> getDBList(int cardno=0, int flags=dlpDBListRAM);
+	Q3PtrList<DBInfo> getDBList(int cardno=0, int flags=dlpDBListRAM);
 
 public:
 	/**

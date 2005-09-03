@@ -33,6 +33,8 @@
 
 #include <qtextcodec.h>
 #include <qdatetime.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <kglobal.h>
 #include <kdebug.h>
@@ -403,13 +405,13 @@ void PilotDateEntry::setNoteP(const char *note, int l)
 
 void PilotDateEntry::setNote(const QString &s)
 {
-	QCString t = codec()->fromUnicode(s);
+	Q3CString t = codec()->fromUnicode(s);
 	setNoteP( t.data(),t.length() );
 }
 
 void PilotDateEntry::setDescription(const QString &s)
 {
-	QCString t = codec()->fromUnicode(s);
+	Q3CString t = codec()->fromUnicode(s);
 	setDescriptionP( t.data(),t.length() );
 }
 

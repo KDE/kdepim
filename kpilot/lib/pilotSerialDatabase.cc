@@ -36,6 +36,9 @@
 
 #include <qfile.h>
 #include <qtextcodec.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 
 #include <klocale.h>
 #include <kdebug.h>
@@ -126,9 +129,9 @@ int PilotSerialDatabase::recordCount()
 
 
 // Returns a QValueList of all record ids in the database.
-QValueList<recordid_t> PilotSerialDatabase::idList()
+Q3ValueList<recordid_t> PilotSerialDatabase::idList()
 {
-	QValueList<recordid_t> idlist;
+	Q3ValueList<recordid_t> idlist;
 	int idlen=recordCount();
 	if (idlen<=0) return idlist;
 
@@ -378,7 +381,7 @@ void PilotSerialDatabase::openDatabase()
 		return;
 	}
 
-	QCString encodedName = QFile::encodeName(s);
+	Q3CString encodedName = QFile::encodeName(s);
 	if (encodedName.isEmpty())
 	{
 		kdError() << k_funcinfo << ": Bad DB name, "

@@ -34,6 +34,8 @@
 
 #include <qstringlist.h>
 #include <qtextcodec.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <kglobal.h>
 
@@ -195,7 +197,7 @@ bool PilotAppInfoBase::setCategoryName(unsigned int i, const QString &s)
 {
 	if (i>=PILOT_CATEGORY_MAX) return false;
 	int len = PILOT_CATEGORY_SIZE - 1;
-	QCString t = PilotAppCategory::codec()->fromUnicode(s,len);
+	Q3CString t = PilotAppCategory::codec()->fromUnicode(s,len);
 	memset(categoryInfo()->name[i],0,PILOT_CATEGORY_SIZE);
 	qstrncpy(categoryInfo()->name[i],t,PILOT_CATEGORY_SIZE);
 	return true;

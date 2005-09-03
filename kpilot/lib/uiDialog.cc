@@ -34,9 +34,11 @@
 #include <qtabwidget.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qhbox.h>
-#include <qtextview.h>
 #include <qpushbutton.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <Q3ValueList>
+#include <QGridLayout>
 
 #include <kaboutapplication.h>
 #include <kglobal.h>
@@ -123,7 +125,7 @@
 	grid->setColStretch(3,50);
 	linktext->setMinimumSize(linewidth,QMAX(260,60+12*lineheight));
 	linktext->setFixedHeight(QMAX(260,60+12*lineheight));
-	linktext->setVScrollBarMode(QScrollView::Auto/*AlwaysOn*/);
+	linktext->setVScrollBarMode(Q3ScrollView::Auto/*AlwaysOn*/);
 	text = new QLabel(w);
 	grid->addMultiCellWidget(text,0,0,2,3);
 	grid->addMultiCellWidget(linktext,1,2,1,3);
@@ -165,8 +167,8 @@
 
 
 
-	QValueList<KAboutPerson> pl = p->authors();
-	QValueList<KAboutPerson>::ConstIterator i;
+	Q3ValueList<KAboutPerson> pl = p->authors();
+	Q3ValueList<KAboutPerson>::ConstIterator i;
 
 	s = i18n("<b>Authors:</b> ");
 

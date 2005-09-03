@@ -30,6 +30,8 @@
 */
 
 #include "pilotDatabase.h"
+//Added by qt3to4:
+#include <Q3ValueList>
 
 class KDE_EXPORT PilotLocalDatabase : public PilotDatabase
 {
@@ -91,7 +93,7 @@ public:
 	// returns the number of records in the database
 	virtual int recordCount();
 	// Returns a QValueList of all record ids in the database.
-	virtual QValueList<recordid_t> idList();
+	virtual Q3ValueList<recordid_t> idList();
 	// Reads a record from database by id, returns record
 	virtual PilotRecord* readRecordById(recordid_t id);
 	// Reads a record from database, returns the record
