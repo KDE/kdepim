@@ -128,55 +128,55 @@ QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
 {
   Q3CString result, str;
   Q3CString declaredCS;
-  char *pos, *dest, *beg, *end, *mid, *endOfLastEncWord=0;
+  int pos = 0, dest = 0, beg = 0, end = 0, mid = 0, endOfLastEncWord = 0;
   char encoding = '\0';
   bool valid, onlySpacesSinceLastWord=false;
   const int maxLen=400;
   int i;
 
-  if(src.find("=?") < 0)
+  if ( !src.contains( "=?" ) )
     result = src.copy();
   else {
     result.truncate(src.length());
-    for (pos=src.data(), dest=result.data(); *pos; pos++)
+    for (pos = 0, dest = 0; src[pos]; pos++)
     {
-      if (pos[0]!='=' || pos[1]!='?')
+      if ( src[pos] != '=' || src[pos + 1] != '?' )
       {
-        *dest++ = *pos;
+        result[dest++] = src[pos];
         if (onlySpacesSinceLastWord)
-          onlySpacesSinceLastWord = (pos[0]==' ' || pos[1]=='\t');
+          onlySpacesSinceLastWord = (src[pos]==' ' || src[pos]=='\t');
         continue;
       }
       beg = pos+2;
       end = beg;
-      valid = TRUE;
+      valid = true;
       // parse charset name
       declaredCS="";
-      for (i=2,pos+=2; i<maxLen && (*pos!='?'&&(ispunct(*pos)||isalnum(*pos))); i++) {
-        declaredCS+=(*pos);
+      for ( i = 2, pos += 2; i < maxLen && (src[pos] != '?' && (ispunct(src[pos]) || isalnum(src[pos]))); i++ ) {
+        declaredCS += src[pos];
         pos++;
       }
-      if (*pos!='?' || i<4 || i>=maxLen) valid = FALSE;
+      if ( src[pos] != '?' || i < 4 || i >= maxLen) valid = false;
       else
       {
         // get encoding and check delimiting question marks
-        encoding = toupper(pos[1]);
-        if (pos[2]!='?' || (encoding!='Q' && encoding!='B'))
-          valid = FALSE;
-        pos+=3;
+        encoding = toupper(src[pos+1]);
+        if ( src[pos+2] != '?' || (encoding != 'Q' && encoding != 'B'))
+          valid = false;
+        pos += 3;
         i+=3;
       }
       if (valid)
       {
         mid = pos;
         // search for end of encoded part
-        while (i<maxLen && *pos && !(*pos=='?' && *(pos+1)=='='))
+        while ( i < maxLen && src[pos] && ! ( src[pos] == '?' && src[pos + 1] == '=' ) )
         {
           i++;
           pos++;
         }
         end = pos+2;//end now points to the first char after the encoded string
-        if (i>=maxLen || !*pos) valid = FALSE;
+        if ( i >= maxLen || !src[pos] ) valid = false;
       }
 
       if (valid) {
@@ -185,7 +185,7 @@ QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
           dest=endOfLastEncWord;
 
         if (mid < pos) {
-          str = Q3CString(mid, (int)(pos - mid + 1));
+          str = src.mid( mid, (int)(pos - mid + 1) );
           if (encoding == 'Q')
           {
             // decode quoted printable text
@@ -198,7 +198,7 @@ QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
             str = KCodecs::base64Decode(str);
           }
           for (i=0; str[i]; i++) {
-            *dest++ = str[i];
+            result[dest++] = str[i];
           }
         }
 
@@ -210,11 +210,11 @@ QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
       else
       {
         pos = beg - 2;
-        *dest++ = *pos++;
-        *dest++ = *pos;
+        result[dest++] = src[pos++];
+        result[dest++] = src[pos];
       }
     }
-    *dest = '\0';
+    result[dest] = '\0';
   }
 
   //find suitable QTextCodec
@@ -242,7 +242,7 @@ Q3CString encodeRFC2047String(const QString &src, const char *charset,
 			     bool addressHeader, bool allow8BitHeaders)
 {
   Q3CString encoded8Bit, result, usedCS;
-  unsigned int start=0,end=0;
+  int start=0,end=0;
   bool nonAscii=false, ok=true, useQEncoding=false;
   QTextCodec *codec=0;
 
@@ -281,7 +281,7 @@ Q3CString encodeRFC2047String(const QString &src, const char *charset,
     while ((end<encoded8Bit.length())&&(encoded8Bit[end]!=' '))  // we encode complete words
       end++;
 
-    for (unsigned int x=end;x<encoded8Bit.length();x++)
+    for (int x=end;x<encoded8Bit.length();x++)
       if (((signed char)encoded8Bit[x]<0) || (encoded8Bit[x] == '\033') ||
           (addressHeader && (strchr("\"()<>@,.;:\\[]=",encoded8Bit[x])!=0))) {
         end = encoded8Bit.length();     // we found another non-ascii word
@@ -296,7 +296,7 @@ Q3CString encodeRFC2047String(const QString &src, const char *charset,
       result += "?Q?";
 
       char c,hexcode;                       // implementation of the "Q"-encoding described in RFC 2047
-      for (unsigned int i=start;i<end;i++) {
+      for (int i=start;i<end;i++) {
         c = encoded8Bit[i];
         if (c == ' ')       // make the result readable with not MIME-capable readers
           result+='_';
@@ -370,7 +370,7 @@ Q3CString extractHeader(const Q3CString &src, const char *name)
     pos1 = 0;
   } else {
     n.prepend("\n");
-    pos1 = src.find(n,0,false);
+    pos1 = QString(src).indexOf(n,0,Qt::CaseInsensitive);
   }
 
   if (pos1>-1) {    //there is a header with the given name
@@ -461,7 +461,7 @@ void removeQuots(QString &str)
 void addQuotes(Q3CString &str, bool forceQuotes)
 {
   bool needsQuotes=false;
-  for (unsigned int i=0; i < str.length(); i++) {
+  for (int i=0; i < str.length(); i++) {
     if (strchr("()<>@,.;:[]=\\\"",str[i])!=0)
       needsQuotes = true;
     if (str[i]=='\\' || str[i]=='\"') {
