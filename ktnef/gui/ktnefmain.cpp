@@ -25,7 +25,11 @@
 #include "attachpropertydialog.h"
 #include "messagepropertydialog.h"
 
-#include <qpopupmenu.h>
+#include <q3popupmenu.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <QTextStream>
+#include <Q3PtrList>
 #include <klistview.h>
 #include <klocale.h>
 #include <kapplication.h>
@@ -136,9 +140,9 @@ void KTNEFMain::setupTNEF()
 
 	setCentralWidget(view_);
 	connect(view_, SIGNAL(selectionChanged()), SLOT(viewSelectionChanged()));
-	connect(view_, SIGNAL(rightButtonPressed(QListViewItem*,const QPoint&,int)), SLOT(viewRightButtonPressed(QListViewItem*,const QPoint&,int)));
-	connect(view_, SIGNAL(doubleClicked(QListViewItem*)), SLOT(viewDoubleClicked(QListViewItem*)));
-	connect(view_, SIGNAL(dragRequested(const QValueList<KTNEFAttach*>&)), SLOT(viewDragRequested(const QValueList<KTNEFAttach*>&)));
+	connect(view_, SIGNAL(rightButtonPressed(Q3ListViewItem*,const QPoint&,int)), SLOT(viewRightButtonPressed(Q3ListViewItem*,const QPoint&,int)));
+	connect(view_, SIGNAL(doubleClicked(Q3ListViewItem*)), SLOT(viewDoubleClicked(Q3ListViewItem*)));
+	connect(view_, SIGNAL(dragRequested(const Q3ValueList<KTNEFAttach*>&)), SLOT(viewDragRequested(const Q3ValueList<KTNEFAttach*>&)));
 }
 
 void KTNEFMain::loadFile(const QString& filename)
@@ -153,7 +157,7 @@ void KTNEFMain::loadFile(const QString& filename)
 	}
 	else
 	{
-		QPtrList<KTNEFAttach>	list = parser_->message()->attachmentList();
+		Q3PtrList<KTNEFAttach>	list = parser_->message()->attachmentList();
 		QString			msg;
 		msg = i18n( "%n attachment found", "%n attachments found", list.count() );
 		statusBar()->changeItem(msg, 0);
@@ -225,8 +229,8 @@ void KTNEFMain::extractAllFiles()
 	{
 		lastdir_ = dir;
 		dir.append("/");
-		QPtrList<KTNEFAttach>	list = parser_->message()->attachmentList();
-		QPtrListIterator<KTNEFAttach>	it(list);
+		Q3PtrList<KTNEFAttach>	list = parser_->message()->attachmentList();
+		Q3PtrListIterator<KTNEFAttach>	it(list);
 		for (;it.current();++it)
 			if (!parser_->extractFileTo(it.current()->name(), dir))
 			{
@@ -258,7 +262,7 @@ void KTNEFMain::optionDefaultDir()
 
 void KTNEFMain::viewSelectionChanged()
 {
-	QPtrList<KTNEFAttach>	*list = view_->getSelection();
+	Q3PtrList<KTNEFAttach>	*list = view_->getSelection();
 	bool	on1 = (list->count() == 1u), on2 = (list->count() > 0u);
 	actionCollection()->action("view_file")->setEnabled(on1);
 	actionCollection()->action("view_file_as")->setEnabled(on1);
@@ -296,8 +300,8 @@ void KTNEFMain::extractTo(const QString& dirname)
 {
 	QString	dir = dirname;
 	if (dir.right(1) != "/") dir.append("/");
-	QPtrList<KTNEFAttach>	*list = view_->getSelection();
-	QPtrListIterator<KTNEFAttach>	it(*list);
+	Q3PtrList<KTNEFAttach>	*list = view_->getSelection();
+	Q3PtrListIterator<KTNEFAttach>	it(*list);
 	for (;it.current();++it)
 		if (!parser_->extractFileTo(it.current()->name(), dir))
 		{
@@ -313,10 +317,10 @@ void KTNEFMain::extractTo(const QString& dirname)
 	e->accept();
 }*/
 
-void KTNEFMain::viewRightButtonPressed(QListViewItem*, const QPoint& p, int)
+void KTNEFMain::viewRightButtonPressed(Q3ListViewItem*, const QPoint& p, int)
 {
-	QPtrList<KTNEFAttach>	*list = view_->getSelection();
-	QPopupMenu m;
+	Q3PtrList<KTNEFAttach>	*list = view_->getSelection();
+	Q3PopupMenu m;
 	if (list->count() > 0u)
 	{
 		if (list->count() == 1u)
@@ -338,16 +342,16 @@ void KTNEFMain::viewRightButtonPressed(QListViewItem*, const QPoint& p, int)
 	m.exec( p );
 }
 
-void KTNEFMain::viewDoubleClicked(QListViewItem *item)
+void KTNEFMain::viewDoubleClicked(Q3ListViewItem *item)
 {
 	if (item && item->isSelected())
 		viewFile();
 }
 
-void KTNEFMain::viewDragRequested( const QValueList<KTNEFAttach*>& list )
+void KTNEFMain::viewDragRequested( const Q3ValueList<KTNEFAttach*>& list )
 {
 	KURL::List urlList;
-	for ( QValueList<KTNEFAttach*>::ConstIterator it=list.constBegin(); it!=list.constEnd(); ++it )
+	for ( Q3ValueList<KTNEFAttach*>::ConstIterator it=list.constBegin(); it!=list.constEnd(); ++it )
 		urlList << KURL( extractTemp( *it ) );
 	if ( !list.isEmpty() )
 	{
@@ -394,7 +398,7 @@ void KTNEFMain::slotSaveMessageText()
 	if ( !filename.isEmpty() )
 	{
 		QFile f( filename );
-		if ( f.open( IO_WriteOnly ) )
+		if ( f.open( QIODevice::WriteOnly ) )
 		{
 			QTextStream t( &f );
 			t << rtf;

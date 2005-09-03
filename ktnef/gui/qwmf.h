@@ -21,8 +21,8 @@
 
 #include <qstring.h>
 #include <qpainter.h>
-#include <qwmatrix.h>
-#include <qpointarray.h>
+#include <qmatrix.h>
+#include <q3pointarray.h>
 #include <qpen.h>
 #include <qcolor.h>
 #include <qimage.h>
@@ -182,7 +182,7 @@ protected:
     virtual int findFunc( unsigned short aFunc ) const;
 
     /** Fills given parms into mPoints. */
-    QPointArray* pointArray( short num, short* parms );
+    Q3PointArray* pointArray( short num, short* parms );
 
     /** Returns color given by the two parameters */
     QColor color( short* parm );
@@ -210,7 +210,7 @@ protected:
 
     // coordinate system
     bool   mAbsoluteCoord;
-    QWMatrix  mInternalWorldMatrix;   // memorisation of WMF matrix transformation
+    QMatrix  mInternalWorldMatrix;   // memorisation of WMF matrix transformation
     QRect mHeaderBoundingBox;
     QRect mBBox;
 
@@ -221,7 +221,7 @@ protected:
 
     WmfCmd* mFirstCmd;
     WinObjHandle** mObjHandleTab;
-    QPointArray mPoints;
+    Q3PointArray mPoints;
     int mDpi;
 };
 

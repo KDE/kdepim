@@ -20,7 +20,9 @@
 
 #include <kmainwindow.h>
 #include <qstring.h>
-#include <qlistview.h>
+#include <q3listview.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 class KTNEFView;
 class KTNEFParser;
@@ -52,9 +54,9 @@ protected slots:
 	void slotSaveMessageText();
 
 	void viewSelectionChanged();
-	void viewRightButtonPressed(QListViewItem *item, const QPoint& p, int c);
-	void viewDoubleClicked(QListViewItem*);
-	void viewDragRequested( const QValueList<KTNEFAttach*>& list );
+	void viewRightButtonPressed(Q3ListViewItem *item, const QPoint& p, int c);
+	void viewDoubleClicked(Q3ListViewItem*);
+	void viewDragRequested( const Q3ValueList<KTNEFAttach*>& list );
     void slotConfigureKeys();
 //protected:
 //	void closeEvent(QCloseEvent *e);

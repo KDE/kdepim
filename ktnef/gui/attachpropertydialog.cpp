@@ -23,6 +23,10 @@
 #include "qwmf.h"
 
 #include <qlabel.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <Q3ValueList>
+#include <QTextStream>
 #include <klistview.h>
 #include <kmimetype.h>
 #include <kdebug.h>
@@ -31,7 +35,7 @@
 #include <kfiledialog.h>
 #include <qbuffer.h>
 #include <qdatastream.h>
-#include <qpicture.h>
+#include <q3picture.h>
 
 AttachPropertyDialog::AttachPropertyDialog(QWidget *parent, const char *name)
 	: AttachPropertyDialogBase(parent, name, true)
@@ -71,15 +75,15 @@ void AttachPropertyDialog::saveClicked()
 	saveProperty( properties_, m_attach, this );
 }
 
-void formatProperties( const QMap<int,KTNEFProperty*>& props, QListView *lv, QListViewItem *item, const QString& prefix )
+void formatProperties( const QMap<int,KTNEFProperty*>& props, Q3ListView *lv, Q3ListViewItem *item, const QString& prefix )
 {
 	for ( QMap<int,KTNEFProperty*>::ConstIterator it=props.begin(); it!=props.end(); ++it )
 	{
-		QListViewItem *newItem = 0;
+		Q3ListViewItem *newItem = 0;
 		if ( lv )
-			newItem = new QListViewItem( lv, ( *it )->keyString() );
+			newItem = new Q3ListViewItem( lv, ( *it )->keyString() );
 		else if ( item )
-			newItem = new QListViewItem( item, ( *it )->keyString() );
+			newItem = new Q3ListViewItem( item, ( *it )->keyString() );
 		else
 		{
 			kdWarning() << "formatProperties() called with no listview and no item" << endl;
@@ -92,8 +96,8 @@ void formatProperties( const QMap<int,KTNEFProperty*>& props, QListView *lv, QLi
 			newItem->setOpen( true );
 			newItem->setText( 0, newItem->text( 0 ) + " [" + QString::number( value.asList().count() ) + "]" );
 			int i = 0;
-			for ( QValueList<QVariant>::ConstIterator lit=value.listBegin(); lit!=value.listEnd(); ++lit, i++ )
-				new QListViewItem( newItem, "[" + QString::number( i ) + "]", KTNEFProperty::formatValue( *lit ) );
+			for ( Q3ValueList<QVariant>::ConstIterator lit=value.listBegin(); lit!=value.listEnd(); ++lit, i++ )
+				new Q3ListViewItem( newItem, "[" + QString::number( i ) + "]", KTNEFProperty::formatValue( *lit ) );
 		}
 		else if ( value.type() == QVariant::DateTime )
 			newItem->setText( 1, value.asDateTime().toString() );
@@ -105,17 +109,17 @@ void formatProperties( const QMap<int,KTNEFProperty*>& props, QListView *lv, QLi
 	}
 }
 
-void formatPropertySet( KTNEFPropertySet *pSet, QListView *lv )
+void formatPropertySet( KTNEFPropertySet *pSet, Q3ListView *lv )
 {
 	formatProperties( pSet->properties(), lv, 0, "prop" );
-	QListViewItem *item = new QListViewItem( lv, i18n( "TNEF Attributes" ) );
+	Q3ListViewItem *item = new Q3ListViewItem( lv, i18n( "TNEF Attributes" ) );
 	item->setOpen( true );
 	formatProperties( pSet->attributes(), 0, item, "attr" );
 }
 
-void saveProperty( QListView *lv, KTNEFPropertySet *pSet, QWidget *parent )
+void saveProperty( Q3ListView *lv, KTNEFPropertySet *pSet, QWidget *parent )
 {
-	QListViewItem *item = lv->selectedItem();
+	Q3ListViewItem *item = lv->selectedItem();
 	if ( !item )
 		KMessageBox::error( parent, i18n( "Select an item." ) );
 	else if ( item->text( 2 ).isEmpty() )
@@ -129,7 +133,7 @@ void saveProperty( QListView *lv, KTNEFPropertySet *pSet, QWidget *parent )
 		if ( !filename.isEmpty() )
 		{
 			QFile f( filename );
-			if ( f.open( IO_WriteOnly ) )
+			if ( f.open( QIODevice::WriteOnly ) )
 			{
 				switch ( prop.type() )
 				{
@@ -159,7 +163,7 @@ QPixmap loadRenderingPixmap( KTNEFPropertySet *pSet, const QColor& bgColor )
 	{
 		// Get rendering size
 		QBuffer rendBuffer( rendData.asByteArray() );
-		rendBuffer.open( IO_ReadOnly );
+		rendBuffer.open( QIODevice::ReadOnly );
 		QDataStream rendStream( &rendBuffer );
 		rendStream.setByteOrder( QDataStream::LittleEndian );
 		Q_UINT16 type, w, h;
@@ -172,7 +176,7 @@ QPixmap loadRenderingPixmap( KTNEFPropertySet *pSet, const QColor& bgColor )
 			// Load WMF data
 			QWinMetaFile wmfLoader;
 			QBuffer wmfBuffer( wmf.asByteArray() );
-			wmfBuffer.open( IO_ReadOnly );
+			wmfBuffer.open( QIODevice::ReadOnly );
 			wmfLoader.setBbox( QRect( 0, 0, w, h ) );
 			if ( wmfLoader.load( wmfBuffer ) )
 			{
