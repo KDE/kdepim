@@ -20,7 +20,7 @@
 
 #include <q3vbox.h>
 #include <qlabel.h>
-#include <q3whatsthis.h>
+
 #include <qtooltip.h>
 #include <qapplication.h>
 #include <qtextcodec.h>
@@ -179,7 +179,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 	      "<p>Note that when using KMail, this setting only applies "
 	      "if you are not using gpg-agent. It is also ignored "
 	      "if you are using crypto plugins.</p></qt>" );
-  Q3WhatsThis::add( storePass, msg );
+  storePass->setWhatsThis( msg );
   if( encrypt ) {
     encToSelf = new QCheckBox( i18n("Always encr&ypt to self"),
                                mpOptionsGroupBox );
@@ -191,7 +191,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 		"but also with your key. This will enable you to decrypt the "
 		"message/file at a later time. This is generally a good idea."
 		"</p></qt>" );
-    Q3WhatsThis::add( encToSelf, msg );
+    encToSelf->setWhatsThis( msg );
   }
   else
     encToSelf = 0;
@@ -206,7 +206,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 	      "will be shown in a separate window, enabling you to know how "
 	      "it will look before it is sent. This is a good idea when "
 	      "you are verifying that your encryption system works.</p></qt>" );
-  Q3WhatsThis::add( showCipherText, msg );
+  showCipherText->setWhatsThis( msg );
   if( encrypt ) {
     showKeyApprovalDlg = new QCheckBox( i18n("Always show the encryption "
                                              "keys &for approval"),
@@ -220,7 +220,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 		"the application will only show the dialog if it cannot find "
 		"the right key or if there are several which could be used. "
 		"</p></qt>" );
-    Q3WhatsThis::add( showKeyApprovalDlg, msg );
+    showKeyApprovalDlg->setWhatsThis( msg );
 }
   else
     showKeyApprovalDlg = 0;
@@ -362,7 +362,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   if (rememberChoice) {
     mRememberCB = new QCheckBox( i18n("Remember choice"), page );
     topLayout->addWidget( mRememberCB );
-    Q3WhatsThis::add(mRememberCB,
+    mRememberCB->setWhatsThis(
                     i18n("<qt><p>If you check this box your choice will "
                          "be stored and you will not be asked again."
                          "</p></qt>"));
