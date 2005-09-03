@@ -32,7 +32,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kio/http.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 #include <kio/davjob.h>
 
 

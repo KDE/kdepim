@@ -19,7 +19,7 @@
 */
 
 #include <klocale.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 #include <libkdepim/kpimprefs.h>
 #include <libkcal/event.h>
 #include <libkcal/journal.h>

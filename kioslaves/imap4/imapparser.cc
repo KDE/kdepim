@@ -53,7 +53,7 @@ extern "C" {
 #include <qstringlist.h>
 
 #include <kdebug.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 #include <kurl.h>
 
 #include <kasciistricmp.h>

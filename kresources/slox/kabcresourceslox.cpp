@@ -25,7 +25,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
 #include <libkdepim/kpimprefs.h>

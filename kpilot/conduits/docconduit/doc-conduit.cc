@@ -40,7 +40,7 @@
 #include <qdir.h>
 
 #include <kconfig.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 
 #include <pilotLocalDatabase.h>
 #include <pilotSerialDatabase.h>

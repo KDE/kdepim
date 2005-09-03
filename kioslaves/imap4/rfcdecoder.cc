@@ -31,7 +31,7 @@
 #include <qtextcodec.h>
 #include <qbuffer.h>
 #include <qregexp.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 
 // This part taken from rfc 2192 IMAP URL Scheme. C. Newman. September 1997.
 // adapted to QT-Toolkit by Sven Carstens <s.carstens@gmx.de> 2000

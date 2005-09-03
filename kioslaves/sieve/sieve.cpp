@@ -37,7 +37,7 @@ extern "C" {
 #include <kinstance.h>
 #include <klocale.h>
 #include <kurl.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 #include <kglobal.h>
 
 #include <qcstring.h>

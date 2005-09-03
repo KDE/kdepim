@@ -28,7 +28,7 @@
 #include <kiconloader.h>
 #include <kmimetype.h>
 #include <kmimemagic.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 #include <kdebug.h>
 
 mimeHeader::mimeHeader ():

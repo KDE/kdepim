@@ -16,7 +16,7 @@
 
 
 #include <klocale.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 #include <kmimemagic.h>
 
 #include "knhdrviewitem.h"

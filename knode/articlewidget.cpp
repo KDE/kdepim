@@ -36,7 +36,7 @@
 #include <khtmlview.h>
 #include <kiconloader.h>
 #include <klocale.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 #include <kmessagebox.h>
 #include <kmimetype.h>
 #include <krun.h>

@@ -13,7 +13,7 @@
 #include <kdebug.h>
 #include <kio/job.h>
 #include <klocale.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 
 #include "debugdialog.h"
 #include "xmlrpciface.h"

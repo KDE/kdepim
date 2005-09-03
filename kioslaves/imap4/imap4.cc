@@ -89,7 +89,7 @@ extern "C" {
 #include <kio/passdlg.h>
 #include <klocale.h>
 #include <kmimetype.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 
 #include "kdepimmacros.h"
 
