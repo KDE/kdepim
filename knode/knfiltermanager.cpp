@@ -262,7 +262,7 @@ void KNFilterManager::copyFilter(KNArticleFilter *f)
 void KNFilterManager::deleteFilter(KNArticleFilter *f)
 {
   if ( KMessageBox::warningContinueCancel( fset ? fset : knGlobals.topWidget,
-       i18n("Do you really want to delete this filter?"), "", KGuiItem( i18n("&Delete"), "editdelete" ) )
+       i18n("Do you really want to delete this filter?"), QString::null, KGuiItem( i18n("&Delete"), "editdelete" ) )
        == KMessageBox::Continue ) {
     if ( mFilterList.remove( f ) ) { // does not delete surplus config files
       if ( fset ) {                 // we reuse ids to reduce the number of dead files
