@@ -1,3 +1,5 @@
+#KDE_OPTIONS = nofinal
+
 SUBDIRS = kalarmd widgets pixmaps
 
 INCLUDES= -I$(top_srcdir) -I$(top_srcdir)/kalarm \
