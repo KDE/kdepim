@@ -29,6 +29,9 @@
 #include <davgroupwareglobals.h>
 
 #include <kurl.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 
 namespace KIO {
 class Job;
@@ -41,16 +44,16 @@ class GroupDavCalendarAdaptor : public DavCalendarAdaptor
   public:
     GroupDavCalendarAdaptor();
 
-    QValueList<KPIM::FolderLister::ContentType> supportedTypes()
+    Q3ValueList<KPIM::FolderLister::ContentType> supportedTypes()
     {
-      QValueList<KPIM::FolderLister::ContentType> types;
+      Q3ValueList<KPIM::FolderLister::ContentType> types;
       types << KPIM::FolderLister::Event;
       types << KPIM::FolderLister::Todo;
       return types;
     }
     void customAdaptDownloadUrl( KURL &url );
     void customAdaptUploadUrl( KURL &url );
-    QCString identifier() const { return "KCalResourceGroupDAV"; }
+    Q3CString identifier() const { return "KCalResourceGroupDAV"; }
     QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.ics"; }
     long flags() const { return 0; }
 

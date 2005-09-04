@@ -30,6 +30,8 @@
 #include <kurl.h>
 
 #include <qdom.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 namespace KABC {
 
@@ -41,7 +43,7 @@ class GroupDavAddressBookAdaptor : public DavAddressBookAdaptor
     void customAdaptDownloadUrl( KURL &url );
     void customAdaptUploadUrl( KURL &url );
     QString mimeType() const { return "text/x-vcard"; }
-    QCString identifier() const { return "KABCResourceGroupDAV"; }
+    Q3CString identifier() const { return "KABCResourceGroupDAV"; }
     QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.vcf"; }
     long flags() const { return 0; }
 
