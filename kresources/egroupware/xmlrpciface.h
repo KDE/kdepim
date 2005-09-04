@@ -16,7 +16,9 @@
 #include <qdom.h>
 #include <qobject.h>
 #include <qvariant.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 namespace KIO
 {
@@ -41,11 +43,11 @@ namespace KXMLRPC
 
     public slots:
       void call( const QString &server, const QString &method,
-                 const QValueList<QVariant> &args = QValueList<QVariant>(),
+                 const Q3ValueList<QVariant> &args = Q3ValueList<QVariant>(),
                  const QString &userAgent = "KDE-XMLRPC" );
 
     signals:
-      void message( const QValueList<QVariant> &result, const QVariant &id );
+      void message( const Q3ValueList<QVariant> &result, const QVariant &id );
       void fault( int, const QString&, const QVariant &id );
       void finished( Query* );
 
@@ -61,7 +63,7 @@ namespace KXMLRPC
       Result parseFaultResponse( const QDomDocument &doc ) const;
 
       QString markupCall( const QString &method,
-                          const QValueList<QVariant> &args ) const;
+                          const Q3ValueList<QVariant> &args ) const;
       QString marshal( const QVariant &v ) const;
       QVariant demarshal( const QDomElement &e ) const;
 
@@ -71,7 +73,7 @@ namespace KXMLRPC
       QByteArray m_buffer;
       QVariant m_id;
 
-      QValueList<KIO::Job*> m_pendingJobs;
+      Q3ValueList<KIO::Job*> m_pendingJobs;
   };
 
   class Server : public QObject
@@ -89,13 +91,13 @@ namespace KXMLRPC
       void setUserAgent( const QString &userAgent ) { m_userAgent = userAgent; }
 
       template <typename T>
-      void call( const QString &method, const QValueList<T> &arg,
+      void call( const QString &method, const Q3ValueList<T> &arg,
         QObject* obj, const char* faultSlot,
         QObject* obj, const char* messageSlot, const QVariant &id = QVariant() );
 
 
     public slots:
-      void call( const QString &method, const QValueList<QVariant> &args,
+      void call( const QString &method, const Q3ValueList<QVariant> &args,
         QObject* faultObj, const char* faultSlot,
         QObject* msgObj, const char* messageSlot,
         const QVariant &id = QVariant() );
@@ -119,7 +121,7 @@ namespace KXMLRPC
         QObject* faultObj, const char* faultSlot,
         QObject* msgObj, const char* messageSlot,
         const QVariant &id = QVariant() );
-      void call( const QString &method, const QCString &arg ,
+      void call( const QString &method, const Q3CString &arg ,
         QObject* faultObj, const char* faultSlot,
         QObject* msgObj, const char* messageSlot,
         const QVariant &id = QVariant() );
@@ -143,19 +145,19 @@ namespace KXMLRPC
       KURL m_url;
       QString m_userAgent;
 
-      QValueList<Query*> mPendingQueries;
+      Q3ValueList<Query*> mPendingQueries;
   };
 }
 
 template <typename T>
-void KXMLRPC::Server::call( const QString &method, const QValueList<T> &arg,
+void KXMLRPC::Server::call( const QString &method, const Q3ValueList<T> &arg,
         QObject* faultObj, const char* faultSlot,
         QObject* msgObj, const char* messageSlot, const QVariant &id )
 {
-  QValueList<QVariant> args;
+  Q3ValueList<QVariant> args;
 
-  typename QValueList<T>::ConstIterator it = arg.begin();
-  typename QValueList<T>::ConstIterator end = arg.end();
+  typename Q3ValueList<T>::ConstIterator it = arg.begin();
+  typename Q3ValueList<T>::ConstIterator end = arg.end();
   for ( ; it != end; ++it )
     args << QVariant( *it );
 

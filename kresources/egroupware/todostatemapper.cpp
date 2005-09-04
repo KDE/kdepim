@@ -62,7 +62,7 @@ void TodoStateMapper::setIdentifier( const QString &identifier )
 bool TodoStateMapper::load()
 {
   QFile file( filename() );
-  if ( !file.open( IO_ReadOnly ) ) {
+  if ( !file.open( QIODevice::ReadOnly ) ) {
     kdError() << "Can't read uid map file '" << filename() << "'" << endl;
     return false;
   }
@@ -82,7 +82,7 @@ bool TodoStateMapper::load()
 bool TodoStateMapper::save()
 {
   QFile file( filename() );
-  if ( !file.open( IO_WriteOnly ) ) {
+  if ( !file.open( QIODevice::WriteOnly ) ) {
     kdError() << "Can't write uid map file '" << filename() << "'" << endl;
     return false;
   }

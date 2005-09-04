@@ -33,11 +33,16 @@
 #include <kdialog.h>
 
 #include <qlayout.h>
-#include <qgroupbox.h>
+#include <q3groupbox.h>
 #include <qpushbutton.h>
 #include <qcombobox.h>
-#include <qhbox.h>
+#include <q3hbox.h>
 #include <qlabel.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <Q3ValueList>
+#include <QBoxLayout>
+#include <Q3PtrList>
 
 using namespace KPIM;
 
@@ -47,7 +52,7 @@ FolderConfig::FolderConfig( QWidget *parent )
   QBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->addSpacing( KDialog::spacingHint() );
 
-  QGroupBox *topBox = new QGroupBox( 1, Horizontal, i18n("Folder Selection"),
+  Q3GroupBox *topBox = new Q3GroupBox( 1, Qt::Horizontal, i18n("Folder Selection"),
     this );
   topLayout->addWidget( topBox );
   
@@ -71,8 +76,8 @@ void FolderConfig::setFolderLister( FolderLister *f )
 {
   mFolderLister = f;
   
-  QValueList<FolderListView::Property> types;
-  QValueList<FolderLister::ContentType> suptypes( mFolderLister->supportedTypes() );
+  Q3ValueList<FolderListView::Property> types;
+  Q3ValueList<FolderLister::ContentType> suptypes( mFolderLister->supportedTypes() );
   if ( suptypes.contains( FolderLister::Event ) ) types << FolderListView::Event;
   if ( suptypes.contains( FolderLister::Todo ) ) types << FolderListView::Todo;
   if ( suptypes.contains( FolderLister::Journal ) ) types << FolderListView::Journal;
@@ -134,11 +139,11 @@ void FolderConfig::updateFolderList()
 
 void FolderConfig::saveSettings()
 {
-  QPtrList<QListViewItem> lst;
+  Q3PtrList<Q3ListViewItem> lst;
 
   FolderLister::Entry::List folders;
 
-  QListViewItemIterator it( mFolderList );
+  Q3ListViewItemIterator it( mFolderList );
   while ( it.current() ) {
     FolderListItem *item = dynamic_cast<FolderListItem *>( it.current() );
     if ( item ) {

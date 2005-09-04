@@ -22,6 +22,8 @@
 #define KABC_RESOURCEXMLRPC_H
 
 #include <qmap.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 #include <kdepimmacros.h>
 
 #include "libkdepim/kabcresourcecached.h"
@@ -66,15 +68,15 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
     void init();
 
   protected slots:
-    void loginFinished( const QValueList<QVariant>&, const QVariant& );
-    void logoutFinished( const QValueList<QVariant>&, const QVariant& );
+    void loginFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void logoutFinished( const Q3ValueList<QVariant>&, const QVariant& );
 
-    void listContactsFinished( const QValueList<QVariant>&, const QVariant& );
-    void addContactFinished( const QValueList<QVariant>&, const QVariant& );
-    void updateContactFinished( const QValueList<QVariant>&, const QVariant& );
-    void deleteContactFinished( const QValueList<QVariant>&, const QVariant& );
-    void loadCategoriesFinished( const QValueList<QVariant>&, const QVariant& );
-    void loadCustomFieldsFinished( const QValueList<QVariant>&, const QVariant& );
+    void listContactsFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void addContactFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void updateContactFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void deleteContactFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void loadCategoriesFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void loadCustomFieldsFinished( const Q3ValueList<QVariant>&, const QVariant& );
 
     void fault( int, const QString&, const QVariant& );
     void addContactFault( int, const QString&, const QVariant& );

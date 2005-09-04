@@ -19,8 +19,10 @@
 */
 
 #include <qfile.h>
-#include <qfiledialog.h>
+#include <q3filedialog.h>
 #include <qlayout.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
 
 #include <ktextbrowser.h>
 #include <kstaticdeleter.h>
@@ -33,7 +35,7 @@ DebugDialog* DebugDialog::mSelf = 0;
 static KStaticDeleter<DebugDialog> debugDialogDeleter;
 
 DebugDialog::DebugDialog()
- : KDialogBase( Plain, WStyle_DialogBorder | WStyle_StaysOnTop, 0,
+ : KDialogBase( Plain, Qt::WStyle_DialogBorder | Qt::WStyle_StaysOnTop, 0,
                 "Debug Dialog", false, "DebugDialog",
                 User1 | User2 | Ok, Ok, true )
 {
@@ -82,12 +84,12 @@ void DebugDialog::clear()
 
 void DebugDialog::save()
 {
-  QString fileName = QFileDialog::getSaveFileName();
+  QString fileName = Q3FileDialog::getSaveFileName();
   if ( fileName.isEmpty() )
     return;
 
   QFile file( fileName );
-  if ( !file.open( IO_WriteOnly ) ) {
+  if ( !file.open( QIODevice::WriteOnly ) ) {
     qWarning( "Couldn't open file %s", file.name().latin1() );
     return;
   }

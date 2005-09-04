@@ -21,6 +21,8 @@
 
 #include <qapplication.h>
 #include <qstringlist.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -120,7 +122,7 @@ bool ResourceXMLRPC::load()
   args.insert( "password", mPrefs->password() );
 
   mServer->call( "system.login", QVariant( args ),
-                 this, SLOT( loginFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( loginFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   mSynchronizer->start();
@@ -132,7 +134,7 @@ bool ResourceXMLRPC::load()
   args.insert( "order", "id_parent" );
 
   mServer->call( SearchNotesCommand, args,
-                 this, SLOT( listNotesFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( listNotesFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   mSynchronizer->start();
@@ -160,14 +162,14 @@ bool ResourceXMLRPC::addNote( KCal::Journal *journal )
       writeNote( journal, args );
       args.insert( "id", mUidMap[ journal->uid() ].toInt() );
       mServer->call( AddNoteCommand, QVariant( args ),
-                     this, SLOT( updateNoteFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                     this, SLOT( updateNoteFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
                      this, SLOT( fault( int, const QString&, const QVariant& ) ) );
       mCalendar.addJournal( journal );
       added = true;
     }
   } else {
     mServer->call( AddNoteCommand, QVariant( args ),
-                   this, SLOT( addNoteFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                   this, SLOT( addNoteFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
                    this, SLOT( fault( int, const QString&, const QVariant& ) ),
                    QVariant( journal->uid() ) );
 
@@ -186,7 +188,7 @@ bool ResourceXMLRPC::deleteNote( KCal::Journal *journal )
   int id = mUidMap[ journal->uid() ].toInt();
 
   mServer->call( DeleteNoteCommand, id,
-                 this, SLOT( deleteNoteFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( deleteNoteFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ),
                  QVariant( journal->uid() ) );
   mSynchronizer->start();
@@ -217,7 +219,7 @@ KCal::Alarm::List ResourceXMLRPC::alarms( const QDateTime& from, const QDateTime
     return alarms;
 }
 
-void ResourceXMLRPC::loginFinished( const QValueList<QVariant>& variant,
+void ResourceXMLRPC::loginFinished( const Q3ValueList<QVariant>& variant,
                                     const QVariant& )
 {
   QMap<QString, QVariant> map = variant[ 0 ].toMap();
@@ -237,7 +239,7 @@ void ResourceXMLRPC::loginFinished( const QValueList<QVariant>& variant,
   mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::logoutFinished( const QValueList<QVariant>& variant,
+void ResourceXMLRPC::logoutFinished( const Q3ValueList<QVariant>& variant,
                                      const QVariant& )
 {
   QMap<QString, QVariant> map = variant[ 0 ].toMap();
@@ -254,7 +256,7 @@ void ResourceXMLRPC::logoutFinished( const QValueList<QVariant>& variant,
   mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::listNotesFinished( const QValueList<QVariant> &list, const QVariant& )
+void ResourceXMLRPC::listNotesFinished( const Q3ValueList<QVariant> &list, const QVariant& )
 {
   QMap<QString, QString>::Iterator uidIt;
   for ( uidIt = mUidMap.begin(); uidIt != mUidMap.end(); ++uidIt ) {
@@ -264,8 +266,8 @@ void ResourceXMLRPC::listNotesFinished( const QValueList<QVariant> &list, const 
 
   mUidMap.clear();
 
-  QValueList<QVariant> noteList = list[ 0 ].toList();
-  QValueList<QVariant>::Iterator noteIt;
+  Q3ValueList<QVariant> noteList = list[ 0 ].toList();
+  Q3ValueList<QVariant>::Iterator noteIt;
 
   for ( noteIt = noteList.begin(); noteIt != noteList.end(); ++noteIt ) {
     QMap<QString, QVariant> map = (*noteIt).toMap();
@@ -283,7 +285,7 @@ void ResourceXMLRPC::listNotesFinished( const QValueList<QVariant> &list, const 
   mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::addNoteFinished( const QValueList<QVariant> &list, const QVariant &id )
+void ResourceXMLRPC::addNoteFinished( const Q3ValueList<QVariant> &list, const QVariant &id )
 {
   int uid = list[ 0 ].toInt();
   mUidMap.insert( id.toString(), QString::number( uid ) );
@@ -291,12 +293,12 @@ void ResourceXMLRPC::addNoteFinished( const QValueList<QVariant> &list, const QV
   mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::updateNoteFinished( const QValueList<QVariant>&, const QVariant& )
+void ResourceXMLRPC::updateNoteFinished( const Q3ValueList<QVariant>&, const QVariant& )
 {
   mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::deleteNoteFinished( const QValueList<QVariant>&, const QVariant &id )
+void ResourceXMLRPC::deleteNoteFinished( const Q3ValueList<QVariant>&, const QVariant &id )
 {
   mUidMap.erase( id.toString() );
 

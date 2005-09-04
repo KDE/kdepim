@@ -28,7 +28,7 @@
 #include <kurl.h>
 #include <kdepimmacros.h>
 
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qobject.h>
@@ -62,7 +62,7 @@ class KDE_EXPORT FolderLister : public QObject
       public:
         Entry() : active( false ) {}
 
-        typedef QValueList<Entry> List;
+        typedef Q3ValueList<Entry> List;
 
         QString id;
         QString name;
@@ -72,7 +72,7 @@ class KDE_EXPORT FolderLister : public QObject
     static QStringList contentTypeToStrings( ContentType );
     ContentType contentTypeFromString( const QString &type );
 
-    QValueList<ContentType> supportedTypes();
+    Q3ValueList<ContentType> supportedTypes();
 
     FolderLister( Type );
 

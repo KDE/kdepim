@@ -23,8 +23,10 @@
 #define KCAL_RESOURCEXMLRPC_H
 
 #include <qdatetime.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qstring.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <kconfig.h>
 #include <kurl.h>
@@ -177,20 +179,20 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
     void setTimeZoneId( const QString& ) {}
 
   protected slots:
-    void loginFinished( const QValueList<QVariant>&, const QVariant& );
-    void logoutFinished( const QValueList<QVariant>&, const QVariant& );
+    void loginFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void logoutFinished( const Q3ValueList<QVariant>&, const QVariant& );
 
-    void listEventsFinished( const QValueList<QVariant>&, const QVariant& );
-    void addEventFinished( const QValueList<QVariant>&, const QVariant& );
-    void updateEventFinished( const QValueList<QVariant>&, const QVariant& );
-    void deleteEventFinished( const QValueList<QVariant>&, const QVariant& );
-    void loadEventCategoriesFinished( const QValueList<QVariant>&, const QVariant& );
+    void listEventsFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void addEventFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void updateEventFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void deleteEventFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void loadEventCategoriesFinished( const Q3ValueList<QVariant>&, const QVariant& );
 
-    void listTodosFinished( const QValueList<QVariant>&, const QVariant& );
-    void addTodoFinished( const QValueList<QVariant>&, const QVariant& );
-    void updateTodoFinished( const QValueList<QVariant>&, const QVariant& );
-    void deleteTodoFinished( const QValueList<QVariant>&, const QVariant& );
-    void loadTodoCategoriesFinished( const QValueList<QVariant>&, const QVariant& );
+    void listTodosFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void addTodoFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void updateTodoFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void deleteTodoFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void loadTodoCategoriesFinished( const Q3ValueList<QVariant>&, const QVariant& );
 
     void fault( int, const QString&, const QVariant& );
 

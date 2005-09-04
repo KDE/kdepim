@@ -29,6 +29,8 @@
 #include <libkcal/incidence.h>
 #include <kdepimmacros.h>
 #include <kurl.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 namespace KPIM {
 class GroupwareUploadItem;
@@ -55,9 +57,9 @@ class KDE_EXPORT CalendarAdaptor : public KPIM::GroupwareDataAdaptor
   public:
     CalendarAdaptor();
 
-    QValueList<KPIM::FolderLister::ContentType> supportedTypes()
+    Q3ValueList<KPIM::FolderLister::ContentType> supportedTypes()
     {
-      QValueList<KPIM::FolderLister::ContentType> types;
+      Q3ValueList<KPIM::FolderLister::ContentType> types;
       types << KPIM::FolderLister::Event;
       types << KPIM::FolderLister::Todo;
       types << KPIM::FolderLister::Journal;

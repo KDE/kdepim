@@ -30,26 +30,28 @@
 #include <kpopupmenu.h>
 #include <kdebug.h>
 
-#include <qlistview.h>
-#include <qheader.h>
+#include <q3listview.h>
+#include <q3header.h>
 #include <qpainter.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 static const int BoxSize = 16;
 
 
 //BEGIN FolderListView
-FolderListView::FolderListView( QWidget *parent, const QValueList<Property> &types )
+FolderListView::FolderListView( QWidget *parent, const Q3ValueList<Property> &types )
     : KListView( parent )
 {
   setEnabledTypes( types );
 
-  connect( this, SIGNAL(mouseButtonPressed(int, QListViewItem*, const QPoint&, int)),
-           this, SLOT(slotMousePressed(int, QListViewItem*, const QPoint&, int)) );
-  connect( this, SIGNAL(spacePressed(QListViewItem*)),
-           this, SLOT(showPopupMenu(QListViewItem*)) );
+  connect( this, SIGNAL(mouseButtonPressed(int, Q3ListViewItem*, const QPoint&, int)),
+           this, SLOT(slotMousePressed(int, Q3ListViewItem*, const QPoint&, int)) );
+  connect( this, SIGNAL(spacePressed(Q3ListViewItem*)),
+           this, SLOT(showPopupMenu(Q3ListViewItem*)) );
 }
 
-void FolderListView::setEnabledTypes( const QValueList<Property> &types )
+void FolderListView::setEnabledTypes( const Q3ValueList<Property> &types )
 {
 kdDebug() << "FolderListView::setEnabledTypes" << endl;
   for ( int i = 0; i< columns(); ++i ) removeColumn( i );
@@ -131,7 +133,7 @@ void FolderListView::showPopupMenu( FolderListItem *i, const QPoint &globalPos )
   m.exec( globalPos );
 }
 
-void FolderListView::showPopupMenu( QListViewItem *i )
+void FolderListView::showPopupMenu( Q3ListViewItem *i )
 {
   if ( dynamic_cast<FolderListItem*>(i) )
     showPopupMenu( (FolderListItem*)i, viewport()->mapToGlobal(itemRect(i).topLeft()) );
@@ -144,7 +146,7 @@ void FolderListView::slotPopupHandler( int z )
 
 // Because QListViewItem::activatePos() is going to become deprecated,
 // and also because this attempt offers more control, I connect mousePressed to this.
-void FolderListView::slotMousePressed(int btn, QListViewItem* i, const QPoint& pos, int c)
+void FolderListView::slotMousePressed(int btn, Q3ListViewItem* i, const QPoint& pos, int c)
 {
   if ( dynamic_cast<FolderListItem*>(i) ) {
     if ( btn == Qt::RightButton ) {
@@ -166,7 +168,7 @@ void FolderListView::slotMousePressed(int btn, QListViewItem* i, const QPoint& p
 void FolderListItem::activate( int column, const QPoint &localPos )
 {
   if ( !mFolderListView ) return;
-  QListView *lv = listView();
+  Q3ListView *lv = listView();
   int x = 0;
   for( int c = 0; c < column-1; c++ )
     x += lv->columnWidth( c );
@@ -195,7 +197,7 @@ kdDebug() << "FolderListItem::changeProperty( " << p << ")" << endl;
 kdDebug() << "it's folderName" << endl;
     setOn( !isOn() );
   } else if ( typeSupported( p ) ) {
-    QListViewItemIterator it( listView() );
+    Q3ListViewItemIterator it( listView() );
     while ( it.current() ) {
       FolderListItem *item = dynamic_cast<FolderListItem*>( it.current() );
       if ( item ) {
@@ -237,7 +239,7 @@ void FolderListItem::paintCell( QPainter *p, const QColorGroup &cg, int col, int
 {
   if ( !p ) return;
 
-  QListView *lv = listView();
+  Q3ListView *lv = listView();
   Q_ASSERT( lv ); //###
   if ( !lv ) return;
 

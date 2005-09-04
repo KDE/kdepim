@@ -26,6 +26,8 @@
 
 #include <klistview.h>
 #include "folderlister.h"
+//Added by qt3to4:
+#include <Q3ValueList>
 
 class FolderListItem;
 class FolderListCaption;
@@ -45,30 +47,30 @@ class FolderListView : public KListView
     /* mainly for readability */
     enum Property { FolderName, Event, Todo, Journal, Contact, All, Unknown, PROP_MAX };
     
-    FolderListView( QWidget *parent, const QValueList<Property> &types = QValueList<Property>() );
+    FolderListView( QWidget *parent, const Q3ValueList<Property> &types = Q3ValueList<Property>() );
     ~FolderListView() {};
 
     /* Display a popupmenu for item i at the specified global position, eventually with a title,
        promoting the context name of that item */
     void showPopupMenu( FolderListItem *i, const QPoint &globalPos );
     void emitChanged() { emit changed(); };
-    void setEnabledTypes( const QValueList<Property> &types );
+    void setEnabledTypes( const Q3ValueList<Property> &types );
 
     int columnForType( Property prop ) const { if ( mColumnMap.contains(prop) ) return mColumnMap[prop]; else return -1;}
     Property typeForColumn( int col ) const { if ( mTypeMap.contains( col ) ) return mTypeMap[col]; else return Unknown; }
 
   private slots:
     /* Display a popupmenu for item i at item position */
-    void showPopupMenu( QListViewItem *i );
+    void showPopupMenu( Q3ListViewItem *i );
     /* call item to change a property, or display a menu */
-    void slotMousePressed( int, QListViewItem*, const QPoint&, int );
+    void slotMousePressed( int, Q3ListViewItem*, const QPoint&, int );
     /* asks item to change the property in q */
     void slotPopupHandler( int z );
 
   signals:
     void changed();
   private:
-    QValueList<Property> mTypes;
+    Q3ValueList<Property> mTypes;
     QMap<Property,int> mColumnMap;
     QMap<int,Property> mTypeMap;
 };
@@ -77,19 +79,19 @@ class FolderListView : public KListView
     QListViewItem subclass to display/edit a folder on a groupware server. 
     Selection of default destinations will be done via radio items.
 */
-class FolderListItem : public QCheckListItem
+class FolderListItem : public Q3CheckListItem
 {
-  typedef QCheckListItem super;
+  typedef Q3CheckListItem super;
   public:
     FolderListItem( FolderListItem *parent, const KPIM::FolderLister::Entry &folder )
-      : QCheckListItem( parent, folder.name, QCheckListItem::CheckBoxController ), 
+      : Q3CheckListItem( parent, folder.name, Q3CheckListItem::CheckBoxController ), 
         mFolder( folder ), mFolderListView( parent?(parent->folderListView()):0 )
     {
       setOn( mFolder.active );
     }
     FolderListItem( FolderListView *listView, const KPIM::FolderLister::Entry &folder )
-      : QCheckListItem( listView, folder.name,
-          QCheckListItem::CheckBoxController ), mFolder( folder ), mFolderListView( listView )
+      : Q3CheckListItem( listView, folder.name,
+          Q3CheckListItem::CheckBoxController ), mFolder( folder ), mFolderListView( listView )
     {
       setOn( mFolder.active );
     }

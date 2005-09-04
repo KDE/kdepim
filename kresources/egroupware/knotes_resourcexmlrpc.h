@@ -22,8 +22,10 @@
 #ifndef KNOTES_RESOURCEXMLRPC_H
 #define KNOTES_RESOURCEXMLRPC_H
 
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qstring.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <kconfig.h>
 #include <kurl.h>
@@ -69,13 +71,13 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceNotes
     KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to );
 
   protected slots:
-    void loginFinished( const QValueList<QVariant>&, const QVariant& );
-    void logoutFinished( const QValueList<QVariant>&, const QVariant& );
+    void loginFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void logoutFinished( const Q3ValueList<QVariant>&, const QVariant& );
 
-    void listNotesFinished( const QValueList<QVariant>&, const QVariant& );
-    void addNoteFinished( const QValueList<QVariant>&, const QVariant& );
-    void updateNoteFinished( const QValueList<QVariant>&, const QVariant& );
-    void deleteNoteFinished( const QValueList<QVariant>&, const QVariant& );
+    void listNotesFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void addNoteFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void updateNoteFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void deleteNoteFinished( const Q3ValueList<QVariant>&, const QVariant& );
 
     void fault( int, const QString&, const QVariant& );
 

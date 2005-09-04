@@ -30,6 +30,8 @@
 #include <kdebug.h>
 #include <kconfig.h>
 #include <qstringlist.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 using namespace KPIM;
 
@@ -116,12 +118,12 @@ FolderLister::ContentType FolderLister::contentTypeFromString( const QString &ty
   return Unknown;
 }
 
-QValueList<FolderLister::ContentType> FolderLister::supportedTypes()
+Q3ValueList<FolderLister::ContentType> FolderLister::supportedTypes()
 {
   if ( adaptor() ) {
     return adaptor()->supportedTypes();
   } else {
-    return QValueList<ContentType>();
+    return Q3ValueList<ContentType>();
   }
 }
 
