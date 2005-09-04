@@ -33,7 +33,7 @@
 #include <qapplication.h>
 #include <qdom.h>
 #include <qdatetime.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qregexp.h>
 #include <qstringlist.h>
 #include <qtimer.h>
@@ -245,7 +245,7 @@ bool ResourceTVAnytime::readSchedule()
 {
   QString uncompress = "application/x-gzip";
   mScheduleArchive = new KTar( mDestination->name(), uncompress );
-  mScheduleArchive->open( IO_ReadOnly );
+  mScheduleArchive->open( QIODevice::ReadOnly );
 
   QDomDocument serviceInfo = archiveFileXml( "ServiceInformation.xml" );
   if ( !serviceInfo.isNull() )
