@@ -20,12 +20,17 @@
 
 
 #include <qcheckbox.h>
-#include <qgroupbox.h>
-#include <qheader.h>
+#include <q3groupbox.h>
+#include <q3header.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qlistview.h>
+#include <q3listview.h>
 #include <qpushbutton.h>
+//Added by qt3to4:
+#include <QGridLayout>
+#include <QCloseEvent>
+#include <Q3Frame>
+#include <QVBoxLayout>
 
 #include <addresseelineedit.h>
 #include <kapplication.h>
@@ -95,11 +100,11 @@ static QMap<QString, QString>& adrbookattr2ldap()
   return keys;
 }
 
-class ContactListItem : public QListViewItem
+class ContactListItem : public Q3ListViewItem
 {
   public:
-    ContactListItem( QListView* parent, const KPIM::LdapAttrMap& attrs )
-      : QListViewItem( parent ), mAttrs( attrs )
+    ContactListItem( Q3ListView* parent, const KPIM::LdapAttrMap& attrs )
+      : Q3ListViewItem( parent ), mAttrs( attrs )
     { }
 
     KPIM::LdapAttrMap mAttrs;
@@ -120,13 +125,13 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
     mAddressBook( ab ), mCore( core )
 {
   setButtonCancel( KStdGuiItem::close() );
-  QFrame *page = plainPage();
+  Q3Frame *page = plainPage();
   QVBoxLayout *topLayout = new QVBoxLayout( page, marginHint(), spacingHint() );
 
-  QGroupBox *groupBox = new QGroupBox( i18n( "Search for Addresses in Directory" ),
+  Q3GroupBox *groupBox = new Q3GroupBox( i18n( "Search for Addresses in Directory" ),
                                        page );
-  groupBox->setFrameShape( QGroupBox::Box );
-  groupBox->setFrameShadow( QGroupBox::Sunken );
+  groupBox->setFrameShape( Q3GroupBox::Box );
+  groupBox->setFrameShadow( Q3GroupBox::Sunken );
   groupBox->setColumnLayout( 0, Qt::Vertical );
   QGridLayout *boxLayout = new QGridLayout( groupBox->layout(), 2,
                                             5, spacingHint() );
@@ -171,8 +176,8 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
 
   topLayout->addWidget( groupBox );
 
-  mResultListView = new QListView( page );
-  mResultListView->setSelectionMode( QListView::Multi );
+  mResultListView = new Q3ListView( page );
+  mResultListView->setSelectionMode( Q3ListView::Multi );
   mResultListView->setAllColumnsShowFocus( true );
   mResultListView->setShowSortIndicator( true );
   topLayout->addWidget( mResultListView );

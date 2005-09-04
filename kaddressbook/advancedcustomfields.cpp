@@ -25,13 +25,15 @@
 
 #include <qcheckbox.h>
 #include <qcombobox.h>
-#include <qdatetimeedit.h>
+#include <q3datetimeedit.h>
 #include <qlayout.h>
-#include <qobjectlist.h>
+#include <qobject.h>
 #include <qspinbox.h>
 #include <qregexp.h>
-#include <qtextedit.h>
+#include <q3textedit.h>
 #include <qwidgetfactory.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
 
 #include <kdatepicker.h>
 #include <kdatetimewidget.h>

@@ -21,7 +21,9 @@
 #ifndef LDAPSEARCHDIALOG_H
 #define LDAPSEARCHDIALOG_H
 
-#include <qptrlist.h>
+#include <q3ptrlist.h>
+//Added by qt3to4:
+#include <QCloseEvent>
 
 #include <kabc/addressbook.h>
 #include <ldapclient.h>
@@ -32,7 +34,7 @@ class KComboBox;
 class KLineEdit;
 
 class QCheckBox;
-class QListView;
+class Q3ListView;
 class QPushButton;
 class KABCore;
 
@@ -76,7 +78,7 @@ class LDAPSearchDialog : public KDialogBase
     void cancelQuery();
 
     int mNumHosts;
-    QPtrList<KPIM::LdapClient> mLdapClientList;
+    Q3PtrList<KPIM::LdapClient> mLdapClientList;
     bool mIsOK;
     KABC::AddressBook *mAddressBook;
     KABCore *mCore;
@@ -86,7 +88,7 @@ class LDAPSearchDialog : public KDialogBase
     KLineEdit* mSearchEdit;
 
     QCheckBox* mRecursiveCheckbox;
-    QListView* mResultListView;
+    Q3ListView* mResultListView;
     QPushButton* mSearchButton;
 };
 

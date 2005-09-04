@@ -21,13 +21,15 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qgroupbox.h>
-#include <qheader.h>
+#include <q3groupbox.h>
+#include <q3header.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
 #include <qtoolbutton.h>
 #include <qstring.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
 
 #include <kapplication.h>
 #include <kbuttonbox.h>
@@ -37,16 +39,15 @@
 
 #include "addhostdialog.h"
 #include "ldapoptionswidget.h"
-#include <qvgroupbox.h>
-#include <qhbox.h>
-#include <qvbox.h>
+#include <q3hbox.h>
+#include <q3vbox.h>
 #include <kiconloader.h>
 
-class LDAPItem : public QCheckListItem
+class LDAPItem : public Q3CheckListItem
 {
   public:
-    LDAPItem( QListView *parent, const KPIM::LdapServer &server, bool isActive = false )
-      : QCheckListItem( parent, parent->lastItem(), QString::null, QCheckListItem::CheckBox ),
+    LDAPItem( Q3ListView *parent, const KPIM::LdapServer &server, bool isActive = false )
+      : Q3CheckListItem( parent, parent->lastItem(), QString::null, Q3CheckListItem::CheckBox ),
         mIsActive( isActive )
     {
       setServer( server );
@@ -80,11 +81,11 @@ LDAPOptionsWidget::LDAPOptionsWidget( QWidget* parent,  const char* name )
   mHostListView->addColumn( QString::null );
   mHostListView->header()->hide();
 
-  connect( mHostListView, SIGNAL( selectionChanged( QListViewItem* ) ),
-           SLOT( slotSelectionChanged( QListViewItem* ) ) );
-  connect( mHostListView, SIGNAL(doubleClicked( QListViewItem *, const QPoint &, int )), this, SLOT(slotEditHost()));
-  connect( mHostListView, SIGNAL( clicked( QListViewItem* ) ),
-           SLOT( slotItemClicked( QListViewItem* ) ) );
+  connect( mHostListView, SIGNAL( selectionChanged( Q3ListViewItem* ) ),
+           SLOT( slotSelectionChanged( Q3ListViewItem* ) ) );
+  connect( mHostListView, SIGNAL(doubleClicked( Q3ListViewItem *, const QPoint &, int )), this, SLOT(slotEditHost()));
+  connect( mHostListView, SIGNAL( clicked( Q3ListViewItem* ) ),
+           SLOT( slotItemClicked( Q3ListViewItem* ) ) );
 
   connect( mUpButton, SIGNAL( clicked() ), this, SLOT( slotMoveUp() ) );
   connect( mDownButton, SIGNAL( clicked() ), this, SLOT( slotMoveDown() ) );
@@ -94,7 +95,7 @@ LDAPOptionsWidget::~LDAPOptionsWidget()
 {
 }
 
-void LDAPOptionsWidget::slotSelectionChanged( QListViewItem *item )
+void LDAPOptionsWidget::slotSelectionChanged( Q3ListViewItem *item )
 {
   bool state = ( item != 0 );
   mEditButton->setEnabled( state );
@@ -103,7 +104,7 @@ void LDAPOptionsWidget::slotSelectionChanged( QListViewItem *item )
   mUpButton->setEnabled( item && item->itemAbove() );
 }
 
-void LDAPOptionsWidget::slotItemClicked( QListViewItem *item )
+void LDAPOptionsWidget::slotItemClicked( Q3ListViewItem *item )
 {
   LDAPItem *ldapItem = dynamic_cast<LDAPItem*>( item );
   if ( !ldapItem )
@@ -146,7 +147,7 @@ void LDAPOptionsWidget::slotEditHost()
 
 void LDAPOptionsWidget::slotRemoveHost()
 {
-  QListViewItem *item = mHostListView->currentItem();
+  Q3ListViewItem *item = mHostListView->currentItem();
   if ( !item )
     return;
 
@@ -228,7 +229,7 @@ void LDAPOptionsWidget::saveSettings()
   KConfigGroupSaver saver( config, "LDAP" );
 
   uint selected = 0; uint unselected = 0;
-  QListViewItemIterator it( mHostListView );
+  Q3ListViewItemIterator it( mHostListView );
   for ( ; it.current(); ++it ) {
     LDAPItem *item = dynamic_cast<LDAPItem*>( it.current() );
     if ( !item )
@@ -267,12 +268,12 @@ void LDAPOptionsWidget::initGUI()
   // Contents of the QVGroupBox: label and hbox
   /*QLabel *label =*/ new QLabel( i18n( "Check all servers that should be used:" ), groupBox );
 
-  QHBox* hBox = new QHBox( groupBox );
+  Q3HBox* hBox = new Q3HBox( groupBox );
   hBox->setSpacing( 6 );
   // Contents of the hbox: listview and up/down buttons on the right (vbox)
   mHostListView = new KListView( hBox );
 
-  QVBox* upDownBox = new QVBox( hBox );
+  Q3VBox* upDownBox = new Q3VBox( hBox );
   upDownBox->setSpacing( 6 );
   mUpButton = new QToolButton( upDownBox, "mUpButton" );
   mUpButton->setIconSet( BarIconSet( "up", KIcon::SizeSmall ) );

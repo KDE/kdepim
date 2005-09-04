@@ -28,7 +28,10 @@
 #include <qtimer.h>
 #include <qtoolbutton.h>
 #include <qtooltip.h>
-#include <qwhatsthis.h>
+#include <q3whatsthis.h>
+//Added by qt3to4:
+#include <QHBoxLayout>
+#include <QKeyEvent>
 
 #include <kdialog.h>
 #include <kiconloader.h>
@@ -56,7 +59,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
 
   mSearchText = new KLineEdit( this );
   mSearchText->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
-  QWhatsThis::add( mSearchText, i18n( "The incremental search<p>Enter some text here will start the search for the contact, which matches the search pattern best. The part of the contact, which will be used for matching, depends on the field selection." ) );
+  Q3WhatsThis::add( mSearchText, i18n( "The incremental search<p>Enter some text here will start the search for the contact, which matches the search pattern best. The part of the contact, which will be used for matching, depends on the field selection." ) );
   label->setBuddy( mSearchText );
   layout->addWidget( mSearchText );
 
@@ -69,7 +72,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   label->setBuddy(mFieldCombo);
 
   QToolTip::add( mFieldCombo, i18n( "Select incremental search field" ) );
-  QWhatsThis::add( mFieldCombo, i18n( "Here you can choose the field, which shall be used for incremental search." ) );
+  Q3WhatsThis::add( mFieldCombo, i18n( "Here you can choose the field, which shall be used for incremental search." ) );
 
   mInputTimer = new QTimer( this );
 

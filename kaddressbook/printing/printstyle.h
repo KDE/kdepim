@@ -27,6 +27,8 @@
 #include <qwidget.h>
 #include <qstringlist.h>
 #include <qpixmap.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 #include <kabc/field.h>
 
@@ -133,7 +135,7 @@ class PrintStyle : public QObject
   private:
     PrintingWizard *mWizard;
     QPixmap mPreview;
-    QPtrList<QWidget> mPageList;
+    Q3PtrList<QWidget> mPageList;
     QStringList mPageTitles;
 
     KABC::Field *mSortField;

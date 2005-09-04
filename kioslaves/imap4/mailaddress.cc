@@ -26,6 +26,9 @@
 #include "rfcdecoder.h"
 #include "mimehdrline.h"
 #include <kmime_util.h>
+//Added by qt3to4:
+#include <Q3CString>
+#include <Q3PtrList>
 
 mailAddress::mailAddress ()
 {
@@ -93,15 +96,15 @@ mailAddress::parseAddress (char *aCStr)
       {
       case '"':
         advance = mimeHdrLine::parseQuoted ('"', '"', aCStr);
-        rawFullName += QCString (aCStr, advance + 1);
+        rawFullName += Q3CString (aCStr, advance + 1);
         break;
       case '(':
         advance = mimeHdrLine::parseQuoted ('(', ')', aCStr);
-        rawComment += QCString (aCStr, advance + 1);
+        rawComment += Q3CString (aCStr, advance + 1);
         break;
       case '<':
         advance = mimeHdrLine::parseQuoted ('<', '>', aCStr);
-        user = QCString (aCStr, advance + 1); // copy it
+        user = Q3CString (aCStr, advance + 1); // copy it
         len = advance;
         user = user.mid (1, len - 2);  // strip <>
         len -= 2;
@@ -116,7 +119,7 @@ mailAddress::parseAddress (char *aCStr)
         {
           if (*aCStr != ',')
           {
-            rawFullName += QCString (aCStr, advance + 1);
+            rawFullName += Q3CString (aCStr, advance + 1);
             if (mimeHdrLine::skipWS ((const char *) &aCStr[advance]) > 0)
             {
               rawFullName += ' ';
@@ -196,10 +199,10 @@ mailAddress::parseAddress (char *aCStr)
   return retVal;
 }
 
-const QCString
+const Q3CString
 mailAddress::getStr ()
 {
-  QCString retVal(128); // Should be generally big enough
+  Q3CString retVal(128); // Should be generally big enough
 
   if (!rawFullName.isEmpty ())
   {
@@ -242,7 +245,7 @@ mailAddress::getFullName () const
 }
 
 void
-mailAddress::setCommentRaw (const QCString & _str)
+mailAddress::setCommentRaw (const Q3CString & _str)
 {
   rawComment = _str;
 }
@@ -258,7 +261,7 @@ mailAddress::getComment () const
   return rfcDecoder::decodeRFC2047String (rawComment);
 }
 
-const QCString &
+const Q3CString &
 mailAddress::getCommentRaw () const
 {
   return rawComment;
@@ -299,10 +302,10 @@ mailAddress::emailAddrAsAnchor (const mailAddress & adr, bool shortAdr)
 }
 
 QString
-mailAddress::emailAddrAsAnchor (const QPtrList < mailAddress > &list, bool value)
+mailAddress::emailAddrAsAnchor (const Q3PtrList < mailAddress > &list, bool value)
 {
   QString retVal;
-  QPtrListIterator < mailAddress > it (list);
+  Q3PtrListIterator < mailAddress > it (list);
 
   while (it.current ())
   {

@@ -26,7 +26,7 @@
 
 #include <qstring.h>
 #include <qstringlist.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 #include <kabc/addressee.h>
 #include <kconfig.h>
@@ -39,7 +39,7 @@
 class Filter
 {
   public:
-    typedef QValueList<Filter> List;
+    typedef Q3ValueList<Filter> List;
 
     enum MatchRule { Matching = 0, NotMatching = 1 };
 

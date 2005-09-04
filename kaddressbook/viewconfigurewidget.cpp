@@ -22,7 +22,10 @@
 */
 
 #include <qlayout.h>
-#include <qvbox.h>
+#include <q3vbox.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QVBoxLayout>
 
 #include <kapplication.h>
 #include <kconfig.h>
@@ -47,7 +50,7 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
   topLayout->addWidget( mMainWidget );
 
   // Add the first page, the attributes
-  QVBox *page = addPage( i18n( "Fields" ), QString::null,
+  Q3VBox *page = addPage( i18n( "Fields" ), QString::null,
                          KGlobal::iconLoader()->loadIcon( "view_detailed",
                          KIcon::Panel ) );
 
@@ -78,7 +81,7 @@ void ViewConfigureWidget::saveSettings( KConfig *config )
   mFilterPage->saveSettings( config );
 }
 
-QVBox *ViewConfigureWidget::addPage( const QString &item, const QString &header,
+Q3VBox *ViewConfigureWidget::addPage( const QString &item, const QString &header,
                                    const QPixmap &pixmap )
 {
   return mMainWidget->addVBoxPage( item, header, pixmap );

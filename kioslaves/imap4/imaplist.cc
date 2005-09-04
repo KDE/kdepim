@@ -44,6 +44,8 @@
 #include "imapparser.h"
 
 #include <kdebug.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 imapList::imapList ():noInferiors_ (false),
 noSelect_ (false), marked_ (false), unmarked_ (false), 
@@ -105,7 +107,7 @@ hasNoChildren_ (false)
 
 void imapList::parseAttributes( parseString & str )
 {
-  QCString attribute, orig;
+  Q3CString attribute, orig;
 
   while ( !str.isEmpty () && str[0] != ')' )
   {

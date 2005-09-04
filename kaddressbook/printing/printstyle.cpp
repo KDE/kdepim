@@ -25,6 +25,8 @@
 #include <kdebug.h>
 
 #include <qwidget.h>
+//Added by qt3to4:
+#include <QPixmap>
 
 #include "printstyle.h"
 #include "printingwizard.h"

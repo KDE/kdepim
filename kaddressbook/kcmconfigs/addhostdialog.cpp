@@ -26,6 +26,8 @@
 #include <qpushbutton.h>
 #include <qspinbox.h>
 #include <qtooltip.h>
+//Added by qt3to4:
+#include <QHBoxLayout>
 
 #include <kaccelmanager.h>
 #include <kbuttonbox.h>

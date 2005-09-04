@@ -21,6 +21,8 @@
 #include "rfcdecoder.h"
 
 #include <qregexp.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 // #include <iostream.h>
 #include <kglobal.h>
@@ -85,7 +87,7 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
     {
       int skip;
       char *aCStr = addLine->getValue ().data ();
-      QDict < QString > *aList = 0;
+      Q3Dict < QString > *aList = 0;
 
       skip = mimeHdrLine::parseSeparator (';', aCStr);
       if (skip > 0)
@@ -102,7 +104,7 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
           if (aCStr[skip - 1] == ';')
             cut++;
         }
-        QCString mimeValue = QCString (aCStr, skip - cut + 1);  // cutting of one because of 0x00
+        Q3CString mimeValue = Q3CString (aCStr, skip - cut + 1);  // cutting of one because of 0x00
 
 
         if (!qstricmp (addLine->getLabel (), "Content-Disposition"))
@@ -147,9 +149,9 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
         {
           if (skip > 0)
           {
-            addParameter (QCString (aCStr, skip).simplifyWhiteSpace(), aList);
+            addParameter (Q3CString (aCStr, skip).simplifyWhiteSpace(), aList);
 //            cout << "-- '" << aParm.data() << "'" << endl;
-            mimeValue = QCString (addLine->getValue ().data (), skip);
+            mimeValue = Q3CString (addLine->getValue ().data (), skip);
             aCStr += skip;
           }
           else
@@ -161,13 +163,13 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
 }
 
 void
-mimeHeader::addParameter (const QCString& aParameter, QDict < QString > *aList)
+mimeHeader::addParameter (const Q3CString& aParameter, Q3Dict < QString > *aList)
 {
   if ( !aList )
     return;
 
   QString *aValue;
-  QCString aLabel;
+  Q3CString aLabel;
   int pos = aParameter.find ('=');
 //  cout << aParameter.left(pos).data();
   aValue = new QString ();
@@ -181,48 +183,48 @@ mimeHeader::addParameter (const QCString& aParameter, QDict < QString > *aList)
 }
 
 QString
-mimeHeader::getDispositionParm (const QCString& aStr)
+mimeHeader::getDispositionParm (const Q3CString& aStr)
 {
   return getParameter (aStr, &dispositionList);
 }
 
 QString
-mimeHeader::getTypeParm (const QCString& aStr)
+mimeHeader::getTypeParm (const Q3CString& aStr)
 {
   return getParameter (aStr, &typeList);
 }
 
 void
-mimeHeader::setDispositionParm (const QCString& aLabel, const QString& aValue)
+mimeHeader::setDispositionParm (const Q3CString& aLabel, const QString& aValue)
 {
   setParameter (aLabel, aValue, &dispositionList);
   return;
 }
 
 void
-mimeHeader::setTypeParm (const QCString& aLabel, const QString& aValue)
+mimeHeader::setTypeParm (const Q3CString& aLabel, const QString& aValue)
 {
   setParameter (aLabel, aValue, &typeList);
 }
 
-QDictIterator < QString > mimeHeader::getDispositionIterator ()
+Q3DictIterator < QString > mimeHeader::getDispositionIterator ()
 {
-  return QDictIterator < QString > (dispositionList);
+  return Q3DictIterator < QString > (dispositionList);
 }
 
-QDictIterator < QString > mimeHeader::getTypeIterator ()
+Q3DictIterator < QString > mimeHeader::getTypeIterator ()
 {
-  return QDictIterator < QString > (typeList);
+  return Q3DictIterator < QString > (typeList);
 }
 
-QPtrListIterator < mimeHdrLine > mimeHeader::getOriginalIterator ()
+Q3PtrListIterator < mimeHdrLine > mimeHeader::getOriginalIterator ()
 {
-  return QPtrListIterator < mimeHdrLine > (originalHdrLines);
+  return Q3PtrListIterator < mimeHdrLine > (originalHdrLines);
 }
 
-QPtrListIterator < mimeHdrLine > mimeHeader::getAdditionalIterator ()
+Q3PtrListIterator < mimeHdrLine > mimeHeader::getAdditionalIterator ()
 {
-  return QPtrListIterator < mimeHdrLine > (additionalHdrLines);
+  return Q3PtrListIterator < mimeHdrLine > (additionalHdrLines);
 }
 
 void
@@ -230,39 +232,39 @@ mimeHeader::outputHeader (mimeIO & useIO)
 {
   if (!getDisposition ().isEmpty ())
   {
-    useIO.outputMimeLine (QCString ("Content-Disposition: ")
+    useIO.outputMimeLine (Q3CString ("Content-Disposition: ")
                           + getDisposition ()
                           + outputParameter (&dispositionList));
   }
 
   if (!getType ().isEmpty ())
   {
-    useIO.outputMimeLine (QCString ("Content-Type: ")
+    useIO.outputMimeLine (Q3CString ("Content-Type: ")
                           + getType () + outputParameter (&typeList));
   }
   if (!getDescription ().isEmpty ())
-    useIO.outputMimeLine (QCString ("Content-Description: ") +
+    useIO.outputMimeLine (Q3CString ("Content-Description: ") +
                           getDescription ());
   if (!getID ().isEmpty ())
-    useIO.outputMimeLine (QCString ("Content-ID: ") + getID ());
+    useIO.outputMimeLine (Q3CString ("Content-ID: ") + getID ());
   if (!getMD5 ().isEmpty ())
-    useIO.outputMimeLine (QCString ("Content-MD5: ") + getMD5 ());
+    useIO.outputMimeLine (Q3CString ("Content-MD5: ") + getMD5 ());
   if (!getEncoding ().isEmpty ())
-    useIO.outputMimeLine (QCString ("Content-Transfer-Encoding: ") +
+    useIO.outputMimeLine (Q3CString ("Content-Transfer-Encoding: ") +
                           getEncoding ());
 
-  QPtrListIterator < mimeHdrLine > ait = getAdditionalIterator ();
+  Q3PtrListIterator < mimeHdrLine > ait = getAdditionalIterator ();
   while (ait.current ())
   {
     useIO.outputMimeLine (ait.current ()->getLabel () + ": " +
                           ait.current ()->getValue ());
     ++ait;
   }
-  useIO.outputMimeLine (QCString (""));
+  useIO.outputMimeLine (Q3CString (""));
 }
 
 QString
-mimeHeader::getParameter (const QCString& aStr, QDict < QString > *aDict)
+mimeHeader::getParameter (const Q3CString& aStr, Q3Dict < QString > *aDict)
 {
   QString retVal, *found;
   if (aDict)
@@ -281,7 +283,7 @@ mimeHeader::getParameter (const QCString& aStr, QDict < QString > *aDict)
 
         do
         {
-          QCString search;
+          Q3CString search;
           search.setNum (part);
           search = aStr + "*" + search;
           found = aDict->find (search);
@@ -305,7 +307,7 @@ mimeHeader::getParameter (const QCString& aStr, QDict < QString > *aDict)
         else
         {
           retVal =
-            rfcDecoder::decodeRFC2231String (QCString ("''") +
+            rfcDecoder::decodeRFC2231String (Q3CString ("''") +
                                              encoded.local8Bit ());
         }
       }
@@ -324,8 +326,8 @@ mimeHeader::getParameter (const QCString& aStr, QDict < QString > *aDict)
 }
 
 void
-mimeHeader::setParameter (const QCString& aLabel, const QString& aValue,
-                          QDict < QString > *aDict)
+mimeHeader::setParameter (const Q3CString& aLabel, const QString& aValue,
+                          Q3Dict < QString > *aDict)
 {
   bool encoded = true;
   uint vlen, llen;
@@ -347,7 +349,7 @@ mimeHeader::setParameter (const QCString& aLabel, const QString& aValue,
       int limit = 80 - 8 - (int)llen;
       int i = 0;
       QString shortValue;
-      QCString shortLabel;
+      Q3CString shortLabel;
 
       while (!val.isEmpty ())
       {
@@ -388,13 +390,13 @@ mimeHeader::setParameter (const QCString& aLabel, const QString& aValue,
   }
 }
 
-QCString
-mimeHeader::outputParameter (QDict < QString > *aDict)
+Q3CString
+mimeHeader::outputParameter (Q3Dict < QString > *aDict)
 {
-  QCString retVal;
+  Q3CString retVal;
   if (aDict)
   {
-    QDictIterator < QString > it (*aDict);
+    Q3DictIterator < QString > it (*aDict);
     while (it.current ())
     {
       retVal += (";\n\t" + it.currentKey () + "=").latin1 ();
@@ -417,8 +419,8 @@ mimeHeader::outputParameter (QDict < QString > *aDict)
 void
 mimeHeader::outputPart (mimeIO & useIO)
 {
-  QPtrListIterator < mimeHeader > nestedParts = getNestedIterator ();
-  QCString boundary;
+  Q3PtrListIterator < mimeHeader > nestedParts = getNestedIterator ();
+  Q3CString boundary;
   if (!getTypeParm ("boundary").isEmpty ())
     boundary = getTypeParm ("boundary").latin1 ();
 
@@ -445,7 +447,7 @@ mimeHeader::parsePart (mimeIO & useIO, const QString& boundary)
 {
   int retVal = 0;
   bool mbox = false;
-  QCString preNested, postNested;
+  Q3CString preNested, postNested;
   mbox = parseHeader (useIO);
 
   kdDebug(7116) << "mimeHeader::parsePart - parsing part '" << getType () << "'" << endl;
@@ -482,11 +484,11 @@ mimeHeader::parsePart (mimeIO & useIO, const QString& boundary)
 }
 
 int
-mimeHeader::parseBody (mimeIO & useIO, QCString & messageBody,
+mimeHeader::parseBody (mimeIO & useIO, Q3CString & messageBody,
                        const QString& boundary, bool mbox)
 {
-  QCString inputStr;
-  QCString buffer;
+  Q3CString inputStr;
+  Q3CString buffer;
   QString partBoundary;
   QString partEnd;
   int retVal = 0;               //default is last part
@@ -536,7 +538,7 @@ mimeHeader::parseHeader (mimeIO & useIO)
   bool mbox = false;
   bool first = true;
   mimeHdrLine my_line;
-  QCString inputStr;
+  Q3CString inputStr;
 
   kdDebug(7116) << "mimeHeader::parseHeader - starting parsing" << endl;
   while (useIO.inputLine (inputStr))
@@ -617,7 +619,7 @@ void mimeHeader::serialize(QDataStream& stream)
   // serialize nested parts
   if (!nestedParts.isEmpty())
   {
-    QPtrListIterator < mimeHeader > it(nestedParts);
+    Q3PtrListIterator < mimeHeader > it(nestedParts);
     mimeHeader* part;
     while ( (part = it.current()) != 0 )
     {

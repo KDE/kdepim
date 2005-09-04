@@ -25,8 +25,10 @@
 #ifndef PRINTINGWIZARD_H
 #define PRINTINGWIZARD_H
 
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qstringlist.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
 
 #include <kwizard.h>
 
@@ -89,8 +91,8 @@ class PrintingWizard : public KWizard
     void slotStyleSelected(int);
 
   protected:
-    QPtrList<PrintStyleFactory> mStyleFactories;
-    QPtrList<PrintStyle> mStyleList;
+    Q3PtrList<PrintStyleFactory> mStyleFactories;
+    Q3PtrList<PrintStyle> mStyleList;
     Filter::List mFilters;
     KPrinter *mPrinter;
     KABC::AddressBook *mAddressBook;

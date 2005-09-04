@@ -37,7 +37,7 @@
 class QCheckBox;
 class QSpinBox;
 class QTabWidget;
-class QTextEdit;
+class Q3TextEdit;
 
 class KComboBox;
 class KDateEdit;
@@ -160,9 +160,9 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     KPIM::AddresseeLineEdit *mSpouseEdit;
     KDateEdit *mBirthdayPicker;
     KDateEdit *mAnniversaryPicker;
-    QTextEdit *mNoteEdit;
+    Q3TextEdit *mNoteEdit;
 
-    QDict<ContactEditorTabPage> mTabPages;
+    Q3Dict<ContactEditorTabPage> mTabPages;
 };
 
 #endif

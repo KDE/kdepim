@@ -28,7 +28,7 @@
 
 class QToolButton;
 class KListView;
-class QListViewItem;
+class Q3ListViewItem;
 class QPushButton;
 
 class LDAPOptionsWidget : public QWidget
@@ -50,8 +50,8 @@ class LDAPOptionsWidget : public QWidget
     void slotAddHost();
     void slotEditHost();
     void slotRemoveHost();
-    void slotSelectionChanged( QListViewItem* );
-    void slotItemClicked( QListViewItem* );
+    void slotSelectionChanged( Q3ListViewItem* );
+    void slotItemClicked( Q3ListViewItem* );
     void slotMoveUp();
     void slotMoveDown();
 

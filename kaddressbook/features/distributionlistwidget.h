@@ -29,10 +29,15 @@
 #include <klistview.h>
 
 #include "extensionwidget.h"
+//Added by qt3to4:
+#include <QDragEnterEvent>
+#include <QLabel>
+#include <QDragMoveEvent>
+#include <QDropEvent>
 
-class QButtonGroup;
+class Q3ButtonGroup;
 class QComboBox;
-class QListView;
+class Q3ListView;
 
 class DistributionListView;
 
@@ -60,7 +65,7 @@ class DistributionListWidget : public KAB::ExtensionWidget
 
   public slots:
     void save();
-    void dropped( QDropEvent*, QListViewItem* );
+    void dropped( QDropEvent*, Q3ListViewItem* );
 
     void removeContact();
 
@@ -133,7 +138,7 @@ class EmailSelector : public KDialogBase
                              QWidget *parent );
 
   private:
-    QButtonGroup *mButtonGroup;
+    Q3ButtonGroup *mButtonGroup;
     QMap<int, QString> mEmailMap;
 };
 

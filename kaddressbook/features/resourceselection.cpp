@@ -24,6 +24,8 @@
 #include <qlayout.h>
 #include <qpushbutton.h>
 #include <qtimer.h>
+//Added by qt3to4:
+#include <QGridLayout>
 
 #include <kabc/resource.h>
 #include <kdialog.h>
@@ -50,11 +52,11 @@ class AddressBookWrapper : public KABC::AddressBook
     }
 };
 
-class ResourceItem : public QCheckListItem
+class ResourceItem : public Q3CheckListItem
 {
   public:
     ResourceItem( KListView *parent, KABC::Resource *resource )
-      : QCheckListItem( parent, resource->resourceName(), CheckBox ),
+      : Q3CheckListItem( parent, resource->resourceName(), CheckBox ),
         mResource( resource ), mChecked( false ),
         mIsSubresource( false ), mSubItemsCreated( false ),
         mResourceIdentifier()
@@ -66,7 +68,7 @@ class ResourceItem : public QCheckListItem
 
     ResourceItem( KPIM::ResourceABC *resourceABC, ResourceItem* parent,
                   const QString& resourceIdent )
-      : QCheckListItem( parent, resourceABC->subresourceLabel( resourceIdent ), CheckBox ),
+      : Q3CheckListItem( parent, resourceABC->subresourceLabel( resourceIdent ), CheckBox ),
         mResource( resourceABC ), mChecked( false ),
         mIsSubresource( true ), mSubItemsCreated( false ),
         mResourceIdentifier( resourceIdent )
@@ -148,8 +150,8 @@ ResourceSelection::ResourceSelection( KAB::Core *core, QWidget *parent, const ch
   connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
   connect( mRemoveButton, SIGNAL( clicked() ), SLOT( remove() ) );
 
-  connect( mListView, SIGNAL( clicked( QListViewItem* ) ),
-           SLOT( currentChanged( QListViewItem* ) ) );
+  connect( mListView, SIGNAL( clicked( Q3ListViewItem* ) ),
+           SLOT( currentChanged( Q3ListViewItem* ) ) );
 
   QTimer::singleShot( 0, this, SLOT( updateView() ) );
 }
@@ -244,7 +246,7 @@ void ResourceSelection::remove()
   updateView();
 }
 
-void ResourceSelection::currentChanged( QListViewItem *item )
+void ResourceSelection::currentChanged( Q3ListViewItem *item )
 {
   ResourceItem *resItem = static_cast<ResourceItem*>( item );
   bool state = (resItem && !resItem->isSubResource() );
@@ -318,7 +320,7 @@ void ResourceSelection::updateView()
     }
   }
 
-  QListViewItemIterator itemIt( mListView );
+  Q3ListViewItemIterator itemIt( mListView );
   while ( itemIt.current() ) {
     ResourceItem *item = static_cast<ResourceItem*>( itemIt.current() );
     if ( item->resource()->identifier() == mLastResource ) {
@@ -339,7 +341,7 @@ void ResourceSelection::slotSubresourceAdded( KPIM::ResourceABC *resource,
                                               const QString& subResource )
 {
   kdDebug(5720) << k_funcinfo << resource->resourceName() << " " << subResource << endl;
-  QListViewItem *i = mListView->findItem( resource->resourceName(), 0 );
+  Q3ListViewItem *i = mListView->findItem( resource->resourceName(), 0 );
   if ( !i )
     // Not found
     return;

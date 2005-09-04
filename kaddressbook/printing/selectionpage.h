@@ -26,10 +26,10 @@
 
 #include <qwidget.h>
 
-class QButtonGroup;
+class Q3ButtonGroup;
 class QComboBox;
-class QListView;
-class QListViewItem;
+class Q3ListView;
+class Q3ListViewItem;
 class QRadioButton;
 
 class SelectionPage : public QWidget
@@ -53,16 +53,16 @@ class SelectionPage : public QWidget
 
   private slots:
     void filterChanged( int );
-    void categoryClicked( QListViewItem * i );
+    void categoryClicked( Q3ListViewItem * i );
 
   private:
-    QButtonGroup* mButtonGroup;
+    Q3ButtonGroup* mButtonGroup;
     QRadioButton* mUseCategories;
     QRadioButton* mUseFilters;
     QRadioButton* mUseWholeBook;
     QRadioButton* mUseSelection;
     QComboBox* mFiltersCombo;
-    QListView* mCategoriesView;
+    Q3ListView* mCategoriesView;
 };
 
 #endif // SELECTIONPAGE_H

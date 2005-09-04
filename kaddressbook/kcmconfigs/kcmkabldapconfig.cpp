@@ -22,8 +22,10 @@
 */
 
 #include <qcheckbox.h>
-#include <qframe.h>
+#include <q3frame.h>
 #include <qlayout.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
 
 #include <kaboutdata.h>
 #include <klocale.h>

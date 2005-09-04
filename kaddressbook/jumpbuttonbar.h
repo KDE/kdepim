@@ -26,10 +26,12 @@
 
 #include <qsizepolicy.h>
 #include <qwidget.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qstringlist.h>
+//Added by qt3to4:
+#include <QResizeEvent>
 
-class QButtonGroup;
+class Q3ButtonGroup;
 class QResizeEvent;
 class QPushButton;
 
@@ -74,8 +76,8 @@ class JumpButtonBar : public QWidget
 
     KAB::Core *mCore;
 
-    QButtonGroup *mGroupBox;
-    QPtrList<QPushButton> mButtons;
+    Q3ButtonGroup *mGroupBox;
+    Q3PtrList<QPushButton> mButtons;
 };
 
 #endif

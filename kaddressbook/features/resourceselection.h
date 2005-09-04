@@ -28,7 +28,7 @@
 
 #include "extensionwidget.h"
 
-class QListViewItem;
+class Q3ListViewItem;
 class QPushButton;
 
 namespace KPIM { class ResourceABC; }
@@ -52,7 +52,7 @@ class ResourceSelection : public KAB::ExtensionWidget
     void add();
     void edit();
     void remove();
-    void currentChanged( QListViewItem* );
+    void currentChanged( Q3ListViewItem* );
 
     void updateView();
 

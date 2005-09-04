@@ -30,7 +30,7 @@
 #include "filterselectionwidget.h"
 
 FilterSelectionWidget::FilterSelectionWidget( QWidget *parent, const char *name )
-  : QHBox( parent, name )
+  : Q3HBox( parent, name )
 {
   setSpacing( KDialog::spacingHint() );
 

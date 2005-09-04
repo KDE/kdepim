@@ -33,7 +33,7 @@
 class KJanusWidget;
 
 class QString;
-class QVBox;
+class Q3VBox;
 
 class ViewConfigureFieldsPage;
 class ViewConfigureFilterPage;
@@ -74,7 +74,7 @@ class KDE_EXPORT ViewConfigureWidget : public KAB::ConfigureWidget
     /**
       Use this method to add new pages to the widget.
      */
-    QVBox *addPage( const QString &item, const QString &header = QString::null,
+    Q3VBox *addPage( const QString &item, const QString &header = QString::null,
                     const QPixmap &pixmap = QPixmap() );
 
   private:

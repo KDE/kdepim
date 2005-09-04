@@ -21,11 +21,13 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
 #include <qradiobutton.h>
+//Added by qt3to4:
+#include <QGridLayout>
 
 #include <klocale.h>
 
@@ -33,7 +35,7 @@
 
 #include "addviewdialog.h"
 
-AddViewDialog::AddViewDialog( QDict<ViewFactory> *viewFactoryDict,
+AddViewDialog::AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict,
                               QWidget *parent, const char *name )
   : KDialogBase( KDialogBase::Plain, i18n( "Add View" ),
                  KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
@@ -57,14 +59,14 @@ AddViewDialog::AddViewDialog( QDict<ViewFactory> *viewFactoryDict,
            SLOT( textChanged( const QString& ) ) );
   layout->addWidget( mViewNameEdit, 0, 1 );
 
-  mTypeGroup = new QButtonGroup( 0, Qt::Horizontal, i18n( "View Type" ), page );
+  mTypeGroup = new Q3ButtonGroup( 0, Qt::Horizontal, i18n( "View Type" ), page );
   connect( mTypeGroup, SIGNAL( clicked( int ) ), this, SLOT( clicked( int ) ) );
   layout->addMultiCellWidget( mTypeGroup, 1, 1, 0, 1 );
   QGridLayout *groupLayout = new QGridLayout( mTypeGroup->layout(), 3, 2 );
   groupLayout->setSpacing( spacingHint() );
 
   int row = 0;
-  QDictIterator<ViewFactory> iter( *mViewFactoryDict );
+  Q3DictIterator<ViewFactory> iter( *mViewFactoryDict );
   for ( iter.toFirst(); iter.current(); ++iter ) {
     QRadioButton *button = new QRadioButton( i18n((*iter)->type().utf8()),
                                              mTypeGroup, (*iter)->type().latin1() );

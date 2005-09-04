@@ -40,6 +40,10 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
+#include <Q3PtrList>
 
 #ifdef HAVE_LIBSASL2
 extern "C" {
@@ -436,7 +440,7 @@ imapParser::parseUntagged (parseString & result)
       ulong number;
       bool valid;
 
-      number = QCString(what, what.size() + 1).toUInt(&valid);
+      number = Q3CString(what, what.size() + 1).toUInt(&valid);
       if (valid)
       {
         what = parseLiteral (result);
@@ -495,7 +499,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
   if (rest[0] == '[')
   {
     rest.pos++;
-    QCString option = parseOneWordC(rest, TRUE);
+    Q3CString option = parseOneWordC(rest, TRUE);
 
     switch (option[0])
     {
@@ -522,7 +526,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
       else if (option == "PERMANENTFLAGS")
       {
         uint end = rest.data.find(']', rest.pos);
-        QCString flags(rest.data.data() + rest.pos, end - rest.pos);
+        Q3CString flags(rest.data.data() + rest.pos, end - rest.pos);
         selectInfo.setPermanentFlags (flags);
         rest.pos = end;
       }
@@ -632,7 +636,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
 
 void imapParser::parseCapability (parseString & result)
 {
-  QCString temp( result.cstr() );
+  Q3CString temp( result.cstr() );
   imapCapabilities = QStringList::split ( ' ', KPIM::kAsciiToLower( temp.data() ) );
 }
 
@@ -673,7 +677,7 @@ void imapParser::parseListRights (parseString & result)
   parseOneWordC (result); // skip user id
   int outlen = 1;
   while ( outlen ) {
-    QCString word = parseOneWordC (result, false, &outlen);
+    Q3CString word = parseOneWordC (result, false, &outlen);
     lastResults.append (word);
   }
 }
@@ -684,7 +688,7 @@ void imapParser::parseAcl (parseString & result)
   int outlen = 1;
   // The result is user1 perm1 user2 perm2 etc. The caller will sort it out.
   while ( outlen && !result.isEmpty() ) {
-    QCString word = parseLiteralC (result, false, false, &outlen);
+    Q3CString word = parseLiteralC (result, false, false, &outlen);
     lastResults.append (word);
   }
 }
@@ -702,7 +706,7 @@ void imapParser::parseAnnotation (parseString & result)
   int outlen = 1;
   // The result is name1 value1 name2 value2 etc. The caller will sort it out.
   while ( outlen && !result.isEmpty() && result[0] != ')' ) {
-    QCString word = parseLiteralC (result, false, false, &outlen);
+    Q3CString word = parseLiteralC (result, false, false, &outlen);
     lastResults.append (word);
   }
 }
@@ -739,7 +743,7 @@ void imapParser::parseStatus (parseString & inWords)
   {
     ulong value;
 
-    QCString label = parseOneWordC(inWords);
+    Q3CString label = parseOneWordC(inWords);
     if (parseOneNumber (inWords, value))
     {
       if (label == "MESSAGES")
@@ -772,7 +776,7 @@ void imapParser::parseExpunge (ulong value, parseString & result)
   Q_UNUSED(result);
 }
 
-void imapParser::parseAddressList (parseString & inWords, QPtrList<mailAddress>& list)
+void imapParser::parseAddressList (parseString & inWords, Q3PtrList<mailAddress>& list)
 {
   if (inWords[0] != '(')
   {
@@ -834,7 +838,7 @@ mailHeader * imapParser::parseEnvelope (parseString & inWords)
   //subject
   envelope->setSubject(parseLiteralC(inWords));
 
-  QPtrList<mailAddress> list;
+  Q3PtrList<mailAddress> list;
   list.setAutoDelete(true);
 
   //from
@@ -892,10 +896,10 @@ mailHeader * imapParser::parseEnvelope (parseString & inWords)
 
 // parse parameter pairs into a dictionary
 // caller must clean up the dictionary items
-QAsciiDict < QString > imapParser::parseDisposition (parseString & inWords)
+Q3AsciiDict < QString > imapParser::parseDisposition (parseString & inWords)
 {
   QByteArray disposition;
-  QAsciiDict < QString > retVal (17, false);
+  Q3AsciiDict < QString > retVal (17, false);
 
   // return value is a shallow copy
   retVal.setAutoDelete (false);
@@ -930,9 +934,9 @@ QAsciiDict < QString > imapParser::parseDisposition (parseString & inWords)
 
 // parse parameter pairs into a dictionary
 // caller must clean up the dictionary items
-QAsciiDict < QString > imapParser::parseParameters (parseString & inWords)
+Q3AsciiDict < QString > imapParser::parseParameters (parseString & inWords)
 {
-  QAsciiDict < QString > retVal (17, false);
+  Q3AsciiDict < QString > retVal (17, false);
 
   // return value is a shallow copy
   retVal.setAutoDelete (false);
@@ -964,9 +968,9 @@ QAsciiDict < QString > imapParser::parseParameters (parseString & inWords)
 mimeHeader * imapParser::parseSimplePart (parseString & inWords,
   QString & inSection, mimeHeader * localPart)
 {
-  QCString subtype;
-  QCString typeStr;
-  QAsciiDict < QString > parameters (17, false);
+  Q3CString subtype;
+  Q3CString typeStr;
+  Q3AsciiDict < QString > parameters (17, false);
   ulong size;
 
   parameters.setAutoDelete (true);
@@ -993,7 +997,7 @@ mimeHeader * imapParser::parseSimplePart (parseString & inWords,
   //body parameter parenthesized list
   parameters = parseParameters (inWords);
   {
-    QAsciiDictIterator < QString > it (parameters);
+    Q3AsciiDictIterator < QString > it (parameters);
 
     while (it.current ())
     {
@@ -1051,7 +1055,7 @@ mimeHeader * imapParser::parseSimplePart (parseString & inWords,
       if (disposition)
         localPart->setDisposition (disposition->ascii ());
       parameters.remove ("content-disposition");
-      QAsciiDictIterator < QString > it (parameters);
+      Q3AsciiDictIterator < QString > it (parameters);
       while (it.current ())
       {
         localPart->setDispositionParm (it.currentKey (),
@@ -1107,7 +1111,7 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
   if (inWords[0] == '(')
   {
     QByteArray subtype;
-    QAsciiDict < QString > parameters (17, false);
+    Q3AsciiDict < QString > parameters (17, false);
     QString outSection;
     parameters.setAutoDelete (true);
     if (!localPart)
@@ -1149,7 +1153,7 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
     // fetch parameters
     parameters = parseParameters (inWords);
     {
-      QAsciiDictIterator < QString > it (parameters);
+      Q3AsciiDictIterator < QString > it (parameters);
 
       while (it.current ())
       {
@@ -1167,7 +1171,7 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
       if (disposition)
         localPart->setDisposition (disposition->ascii ());
       parameters.remove ("content-disposition");
-      QAsciiDictIterator < QString > it (parameters);
+      Q3AsciiDictIterator < QString > it (parameters);
       while (it.current ())
       {
         localPart->setDispositionParm (it.currentKey (),
@@ -1281,7 +1285,7 @@ void imapParser::parseBody (parseString & inWords)
        }
        else
        {
-         QCString references = parseLiteralC(inWords, true);
+         Q3CString references = parseLiteralC(inWords, true);
          int start = references.find ('<');
          int end = references.findRev ('>');
          if (start < end)
@@ -1296,7 +1300,7 @@ void imapParser::parseBody (parseString & inWords)
     }
     else
     {
-      QCString spec(specifier.data(), specifier.size()+1);
+      Q3CString spec(specifier.data(), specifier.size()+1);
       if (spec.find(".MIME") != -1)
       {
         mailHeader *envelope = new mailHeader;
@@ -1354,7 +1358,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
       parseSentence (inWords);
     else
     {
-      QCString word = parseLiteralC(inWords, false, true);
+      Q3CString word = parseLiteralC(inWords, false, true);
 
       switch (word[0])
       {
@@ -1409,7 +1413,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
           mimeHeader *body =
             parseBodyStructure (inWords, section, envelope);
           QByteArray data;
-          QDataStream stream( data, IO_WriteOnly );
+          QDataStream stream( data, QIODevice::WriteOnly );
           body->serialize(stream);
           parseRelay(data);
 
@@ -1460,7 +1464,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
       case 'I':
         if (word == "INTERNALDATE")
         {
-          QCString date = parseOneWordC(inWords);
+          Q3CString date = parseOneWordC(inWords);
           if (!lastHandled) lastHandled = new imapCache();
           lastHandled->setDate(date);
         }
@@ -1573,9 +1577,9 @@ void imapParser::parseNamespace (parseString & result)
         ++ns;
       }
       // namespace prefix
-      QCString prefix = parseOneWordC( result );
+      Q3CString prefix = parseOneWordC( result );
       // delimiter
-      QCString delim = parseOneWordC( result );
+      Q3CString delim = parseOneWordC( result );
       kdDebug(7116) << "imapParser::parseNamespace ns='" << prefix <<
        "',delim='" << delim << "'" << endl;
       if ( ns == 0 )
@@ -1651,7 +1655,7 @@ int imapParser::parseLoop ()
       break;
     default:
       {
-        QCString tag = parseLiteralC(result);
+        Q3CString tag = parseLiteralC(result);
         if (current->id() == tag.data())
         {
           result.data.resize(result.data.size() - 2);  // tie off CRLF
@@ -1668,7 +1672,7 @@ int imapParser::parseLoop ()
         else
         {
           kdDebug(7116) << "imapParser::parseLoop - unknown tag '" << tag << "'" << endl;
-          QCString cstr = tag + " " + result.cstr();
+          Q3CString cstr = tag + " " + result.cstr();
           result.data = cstr;
           result.pos = 0;
           result.data.resize(cstr.length());
@@ -1778,17 +1782,17 @@ imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
 }
 
 
-QCString imapParser::parseLiteralC(parseString & inWords, bool relay, bool stopAtBracket, int *outlen) {
+Q3CString imapParser::parseLiteralC(parseString & inWords, bool relay, bool stopAtBracket, int *outlen) {
 
   if (inWords[0] == '{')
   {
-    QCString retVal;
+    Q3CString retVal;
     ulong runLen = inWords.find ('}', 1);
     if (runLen > 0)
     {
       bool proper;
       ulong runLenSave = runLen + 1;
-      QCString tmpstr(runLen);
+      Q3CString tmpstr(runLen);
       inWords.takeMidNoResize(tmpstr, 1, runLen - 1);
       runLen = tmpstr.toULong (&proper);
       inWords.pos += runLenSave;
@@ -1828,12 +1832,12 @@ QCString imapParser::parseLiteralC(parseString & inWords, bool relay, bool stopA
 }
 
 // does not know about literals ( {7} literal )
-QCString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, int *outLen)
+Q3CString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, int *outLen)
 {
   uint retValSize = 0;
   uint len = inWords.length();
   if (len == 0) {
-    return QCString();
+    return Q3CString();
   }
 
   if (len > 0 && inWords[0] == '"')
@@ -1848,7 +1852,7 @@ QCString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, i
     }
     if (i < len)
     {
-      QCString retVal(i);
+      Q3CString retVal(i);
       inWords.pos++;
       inWords.takeLeftNoResize(retVal, i - 1);
       len = i - 1;
@@ -1872,7 +1876,7 @@ QCString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, i
     else
     {
       kdDebug(7116) << "imapParser::parseOneWord - error parsing unmatched \"" << endl;
-      QCString retVal = inWords.cstr();
+      Q3CString retVal = inWords.cstr();
       retValSize = len;
       inWords.clear();
       if (outLen) {
@@ -1893,7 +1897,7 @@ QCString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, i
             break;
     }
 
-    QCString retVal(i+1);
+    Q3CString retVal(i+1);
     inWords.takeLeftNoResize(retVal, i);
     retValSize = i;
     inWords.pos += i;
@@ -1944,9 +1948,9 @@ QString imapParser::namespaceForBox( const QString & box )
   QString myNamespace;
   if ( !box.isEmpty() )
   {
-    QValueList<QString> list = namespaceToDelimiter.keys();
+    Q3ValueList<QString> list = namespaceToDelimiter.keys();
     QString cleanPrefix;
-    for ( QValueList<QString>::Iterator it = list.begin(); it != list.end(); ++it )
+    for ( Q3ValueList<QString>::Iterator it = list.begin(); it != list.end(); ++it )
     {
       if ( !(*it).isEmpty() && box.find( *it ) != -1 )
         return (*it);

@@ -25,9 +25,14 @@
 #include <qdir.h>
 #include <qfile.h>
 #include <qlayout.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qregexp.h>
-#include <qvbox.h>
+#include <q3vbox.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <Q3ValueList>
+#include <QHBoxLayout>
+#include <Q3CString>
 
 #include <kabc/addresseelist.h>
 #include <kabc/errorhandler.h>
@@ -206,7 +211,7 @@ void KABCore::restoreSettings()
   updateIncSearchWidget();
   mIncSearchWidget->setCurrentItem( KABPrefs::instance()->currentIncSearchField() );
 
-  QValueList<int> splitterSize = KABPrefs::instance()->extensionsSplitter();
+  Q3ValueList<int> splitterSize = KABPrefs::instance()->extensionsSplitter();
   if ( splitterSize.count() == 0 ) {
     splitterSize.append( mDetailsSplitter->height() / 2 );
     splitterSize.append( mDetailsSplitter->height() / 2 );
@@ -263,10 +268,10 @@ QStringList KABCore::selectedUIDs() const
 
 KABC::Resource *KABCore::requestResource( QWidget *parent )
 {
-  QPtrList<KABC::Resource> kabcResources = addressBook()->resources();
+  Q3PtrList<KABC::Resource> kabcResources = addressBook()->resources();
 
-  QPtrList<KRES::Resource> kresResources;
-  QPtrListIterator<KABC::Resource> resIt( kabcResources );
+  Q3PtrList<KRES::Resource> kresResources;
+  Q3PtrListIterator<KABC::Resource> resIt( kabcResources );
   KABC::Resource *resource;
   while ( ( resource = resIt.current() ) != 0 ) {
     ++resIt;
@@ -710,8 +715,8 @@ void KABCore::storeContactIn( const QString &uid )
 
 void KABCore::save()
 {
-  QPtrList<KABC::Resource> resources = mAddressBook->resources();
-  QPtrListIterator<KABC::Resource> it( resources );
+  Q3PtrList<KABC::Resource> resources = mAddressBook->resources();
+  Q3PtrListIterator<KABC::Resource> it( resources );
   while ( it.current() && !it.current()->readOnly() ) {
     KABC::Ticket *ticket = mAddressBook->requestSaveTicket( it.current() );
     if ( ticket ) {
@@ -911,8 +916,8 @@ bool KABCore::queryClose()
   saveSettings();
   KABPrefs::instance()->writeConfig();
 
-  QPtrList<KABC::Resource> resources = mAddressBook->resources();
-  QPtrListIterator<KABC::Resource> it( resources );
+  Q3PtrList<KABC::Resource> resources = mAddressBook->resources();
+  Q3PtrListIterator<KABC::Resource> it( resources );
   while ( it.current() ) {
     it.current()->close();
     ++it;
@@ -964,7 +969,7 @@ void KABCore::slotEditorDestroyed( const QString &uid )
   KABC::Addressee addr = dialog->addressee();
 
   if ( !addr.resource()->readOnly() ) {
-    QApplication::setOverrideCursor( Qt::waitCursor );
+    QApplication::setOverrideCursor( Qt::WaitCursor );
     KABLock::self( mAddressBook )->unlock( addr.resource() );
     QApplication::restoreOverrideCursor();
   }
@@ -1047,7 +1052,7 @@ void KABCore::initActions()
                              SLOT( save() ), actionCollection(), "file_sync" );
   mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 
-  action = new KAction( i18n( "&New Contact..." ), "identity", CTRL+Key_N, this,
+  action = new KAction( i18n( "&New Contact..." ), "identity", Qt::CTRL+Qt::Key_N, this,
                SLOT( newContact() ), actionCollection(), "file_new_contact" );
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers." ) );
 
@@ -1083,7 +1088,7 @@ void KABCore::initActions()
 //  mActionRedo->setWhatsThis( i18n( "Redoes the last <b>Cut</b>, <b>Copy</b> or <b>Paste</b>." ) );
 
   mActionDelete = new KAction( i18n( "&Delete Contact" ), "editdelete",
-                               Key_Delete, this, SLOT( deleteContacts() ),
+                               Qt::Key_Delete, this, SLOT( deleteContacts() ),
                                actionCollection(), "edit_delete" );
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
@@ -1132,7 +1137,7 @@ void KABCore::initActions()
 
   KAction *clearLocation = new KAction( i18n( "Clear Search Bar" ),
 					QApplication::reverseLayout() ? "clear_left" : "locationbar_erase",
-					CTRL+Key_L, this, SLOT( slotClearSearchBar() ), actionCollection(), "clear_search" );
+					Qt::CTRL+Qt::Key_L, this, SLOT( slotClearSearchBar() ), actionCollection(), "clear_search" );
   clearLocation->setWhatsThis( i18n( "Clear Search Bar<p>"
 				     "Clears the content of the quick search bar." ) );
 
@@ -1271,8 +1276,8 @@ void KABCore::slotContactsUpdated()
 bool KABCore::handleCommandLine( KAddressBookIface* iface )
 {
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  QCString addrStr = args->getOption( "addr" );
-  QCString uidStr = args->getOption( "uid" );
+  Q3CString addrStr = args->getOption( "addr" );
+  Q3CString uidStr = args->getOption( "uid" );
 
   QString addr, uid, vcard;
   if ( !addrStr.isEmpty() )

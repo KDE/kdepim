@@ -22,6 +22,9 @@
 #include "mailaddress.h"
 #include "mimeio.h"
 #include "rfcdecoder.h"
+//Added by qt3to4:
+#include <Q3CString>
+#include <Q3PtrList>
 
 /**
   *@author Sven Carstens
@@ -66,29 +69,29 @@ public:
     replytoAdr = _adr;
   }
 
-  const QCString& getMessageId ()
+  const Q3CString& getMessageId ()
   {
     return messageID;
   }
-  void setMessageId (const QCString & _str)
+  void setMessageId (const Q3CString & _str)
   {
     messageID = _str;
   }
 
-  const QCString& getInReplyTo ()
+  const Q3CString& getInReplyTo ()
   {
     return inReplyTo;
   }
-  void setInReplyTo (const QCString & _str)
+  void setInReplyTo (const Q3CString & _str)
   {
     inReplyTo = _str;
   }
 
-  const QCString& getReferences ()
+  const Q3CString& getReferences ()
   {
     return references;
   }
-  void setReferences (const QCString & _str)
+  void setReferences (const Q3CString & _str)
   {
     references = _str;
   }
@@ -103,7 +106,7 @@ public:
   /** 
    * set a encoded subject
    */
-  void setSubjectEncoded (const QCString & _str)
+  void setSubjectEncoded (const Q3CString & _str)
   {
     _subject = _str.simplifyWhiteSpace();
   }
@@ -118,7 +121,7 @@ public:
   /**
    * get the encoded subject
    */
-  const QCString& getSubjectEncoded ()
+  const Q3CString& getSubjectEncoded ()
   {
     return _subject;
   }
@@ -126,7 +129,7 @@ public:
   /**
    * set the date
    */
-  void setDate (const QCString & _str)
+  void setDate (const Q3CString & _str)
   {
     mDate = _str;
   }
@@ -134,22 +137,22 @@ public:
   /**
    * get the date
    */
-  const QCString& date ()
+  const Q3CString& date ()
   {
     return mDate;
   }
 
-  static int parseAddressList (const char *, QPtrList < mailAddress > *);
-  static QCString getAddressStr (QPtrList < mailAddress > *);
-  QPtrList < mailAddress > &to ()
+  static int parseAddressList (const char *, Q3PtrList < mailAddress > *);
+  static Q3CString getAddressStr (Q3PtrList < mailAddress > *);
+  Q3PtrList < mailAddress > &to ()
   {
     return toAdr;
   }
-  QPtrList < mailAddress > &cc ()
+  Q3PtrList < mailAddress > &cc ()
   {
     return ccAdr;
   }
-  QPtrList < mailAddress > &bcc ()
+  Q3PtrList < mailAddress > &bcc ()
   {
     return bccAdr;
   }
@@ -172,19 +175,19 @@ public:
 #endif
 
 private:
-  QPtrList < mailAddress > toAdr;
-  QPtrList < mailAddress > ccAdr;
-  QPtrList < mailAddress > bccAdr;
+  Q3PtrList < mailAddress > toAdr;
+  Q3PtrList < mailAddress > ccAdr;
+  Q3PtrList < mailAddress > bccAdr;
   mailAddress fromAdr;
   mailAddress senderAdr;
   mailAddress returnpathAdr;
   mailAddress replytoAdr;
-  QCString _subject;
-  QCString mDate;
+  Q3CString _subject;
+  Q3CString mDate;
   int gmt_offset;
-  QCString messageID;
-  QCString inReplyTo;
-  QCString references;
+  Q3CString messageID;
+  Q3CString inReplyTo;
+  Q3CString references;
 };
 
 #endif

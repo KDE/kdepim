@@ -23,7 +23,10 @@
 
 #include <qfile.h>
 #include <qlayout.h>
-#include <qwidgetstack.h>
+#include <q3widgetstack.h>
+//Added by qt3to4:
+#include <QHBoxLayout>
+#include <QDropEvent>
 
 #include <libkdepim/kvcarddrag.h>
 #include <kabc/addressbook.h>
@@ -81,7 +84,7 @@ void ViewManager::restoreSettings()
 
   // Tell the views to reread their config, since they may have
   // been modified by global settings
-  QDictIterator<KAddressBookView> it( mViewDict );
+  Q3DictIterator<KAddressBookView> it( mViewDict );
   for ( it.toFirst(); it.current(); ++it ) {
     KConfigGroupSaver saver( mCore->config(), it.currentKey() );
     it.current()->readConfig( mCore->config() );
@@ -94,7 +97,7 @@ void ViewManager::restoreSettings()
 
 void ViewManager::saveSettings()
 {
-  QDictIterator<KAddressBookView> it( mViewDict );
+  Q3DictIterator<KAddressBookView> it( mViewDict );
   for ( it.toFirst(); it.current(); ++it ) {
     KConfigGroupSaver saver( mCore->config(), it.currentKey() );
     (*it)->writeConfig( mCore->config() );
@@ -470,7 +473,7 @@ void ViewManager::startDrag()
   QString vcards = converter.createVCards( addrList );
 
   // Best text representation is given by textdrag, so it must be first
-  drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToEmails( addrList ), this ) );
+  drag->addDragObject( new Q3TextDrag( AddresseeUtil::addresseesToEmails( addrList ), this ) );
   drag->addDragObject( new KVCardDrag( vcards, this ) );
 
   KTempDir tempDir;
@@ -483,7 +486,7 @@ void ViewManager::startDrag()
       fileName = "contacts.vcf";
 
     QFile tempFile( tempDir.name() + "/" + fileName );
-    if ( tempFile.open( IO_WriteOnly ) ) {
+    if ( tempFile.open( QIODevice::WriteOnly ) ) {
       tempFile.writeBlock( vcards.utf8() );
       tempFile.close();
 
@@ -597,7 +600,7 @@ void ViewManager::initActions()
 void ViewManager::initGUI()
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
-  mViewWidgetStack = new QWidgetStack( this );
+  mViewWidgetStack = new Q3WidgetStack( this );
   layout->addWidget( mViewWidgetStack );
 }
 

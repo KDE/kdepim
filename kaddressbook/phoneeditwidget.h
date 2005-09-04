@@ -28,8 +28,12 @@
 #include <kdialogbase.h>
 
 #include "addresseeconfig.h"
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <Q3ValueList>
+#include <Q3PtrList>
 
-class QButtonGroup;
+class Q3ButtonGroup;
 class QCheckBox;
 class QSignalMapper;
 
@@ -59,7 +63,7 @@ class PhoneTypeCombo : public KComboBox
 
     int mType;
     int mLastSelected;
-    QValueList<int> mTypeList;
+    Q3ValueList<int> mTypeList;
 };
 
 class PhoneNumberWidget : public QWidget
@@ -113,7 +117,7 @@ class PhoneEditWidget : public QWidget
     void updateButtons();
 
     KABC::PhoneNumber::List mPhoneNumberList;
-    QPtrList<PhoneNumberWidget> mWidgets;
+    Q3PtrList<PhoneNumberWidget> mWidgets;
 
     QPushButton *mAddButton;
     QPushButton *mRemoveButton;
@@ -138,7 +142,7 @@ class PhoneTypeDialog : public KDialogBase
     int mType;
     KABC::PhoneNumber::TypeList mTypeList;
 
-    QButtonGroup *mGroup;
+    Q3ButtonGroup *mGroup;
     QCheckBox *mPreferredBox;
 };
 

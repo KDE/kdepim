@@ -22,8 +22,10 @@
 */
 
 
-#include <qpaintdevicemetrics.h>
+#include <q3paintdevicemetrics.h>
 #include <qpainter.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -173,8 +175,8 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
 
   // this is used to prepare some fields for printing and decide about
   // the layout later:
-  QValueList<QStringList> parts;
-  QValueList<QRectList*> contents;
+  Q3ValueList<QStringList> parts;
+  Q3ValueList<QRectList*> contents;
 
   mEmailRects.clear();
   mPhoneRects.clear();
@@ -303,10 +305,10 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
                      QRect( Width / 2, y, Width / 2, Height ) };
   int heights[ 4 ]= { 0, 0, 0, 0 };
 
-  QValueList<QStringList>::iterator pos = parts.begin();
-  QValueList<QRectList*>::iterator rpos = contents.begin();
+  Q3ValueList<QStringList>::iterator pos = parts.begin();
+  Q3ValueList<QRectList*>::iterator rpos = contents.begin();
 
-  for ( uint counter = 0; counter < parts.count(); ++counter ) {
+  for ( int counter = 0; counter < parts.count(); ++counter ) {
     const int Offset = counter > 1 ? QMAX( heights[ 0 ], heights[ 1 ] ) : 0;
     QStringList list = *pos;
 
@@ -498,11 +500,11 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
     y += fmBody.lineSpacing() / 2;
     if ( fake ) {
       rect = painter->boundingRect( 0, y, Width, Height,
-                                    Qt::AlignTop | Qt::AlignLeft | Qt::WordBreak,
+                                    Qt::AlignTop | Qt::AlignLeft | Qt::TextWordWrap,
                                     addr.note() );
     } else {
       painter->drawText( 0, y, Width, Height,
-                         Qt::AlignTop | Qt::AlignLeft | Qt::WordBreak,
+                         Qt::AlignTop | Qt::AlignLeft | Qt::TextWordWrap,
                          addr.note(), -1, &rect );
     }
 

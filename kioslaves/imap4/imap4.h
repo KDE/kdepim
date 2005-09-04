@@ -29,6 +29,8 @@
 
 #include <kio/tcpslavebase.h>
 #include <qbuffer.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #define IMAP_BUFFER 8192
 
@@ -55,7 +57,7 @@ class IMAP4Protocol:public
 public:
 
   // reimplement the TCPSlave
-  IMAP4Protocol (const QCString & pool, const QCString & app, bool isSSL);
+  IMAP4Protocol (const Q3CString & pool, const Q3CString & app, bool isSSL);
   virtual ~IMAP4Protocol ();
 
   virtual void openConnection();
@@ -123,7 +125,7 @@ public:
   virtual void parseWriteLine (const QString &);
 
   /** @brief reimplement the mimeIO */
-  virtual int outputLine (const QCString & _str, int len = -1);
+  virtual int outputLine (const Q3CString & _str, int len = -1);
 
   /** @brief send out cached data to the application */
   virtual void flushOutput(QString contentEncoding = QString::null);

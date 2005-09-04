@@ -31,8 +31,15 @@
 #include <qmap.h>
 #include <qpair.h>
 #include <qstringlist.h>
-#include <qvaluevector.h>
+#include <q3valuevector.h>
 #include <qwidget.h>
+//Added by qt3to4:
+#include <QLabel>
+#include <QVBoxLayout>
+#include <Q3ValueList>
+#include <Q3Frame>
+#include <QHBoxLayout>
+#include <QGridLayout>
 
 #include "contacteditorwidget.h"
 
@@ -56,7 +63,7 @@ typedef struct {
   QHBoxLayout *mLayout;
 } FieldRecord;
 
-typedef QValueList<FieldRecord> FieldRecordList;
+typedef Q3ValueList<FieldRecord> FieldRecordList;
 
 class AddFieldDialog : public KDialogBase
 {
@@ -78,8 +85,8 @@ class AddFieldDialog : public KDialogBase
     KComboBox *mType;
     QCheckBox *mGlobal;
 
-    QValueVector<QString> mTypeList;
-    QValueVector<QString> mTypeName;
+    Q3ValueVector<QString> mTypeList;
+    Q3ValueVector<QString> mTypeName;
 };
 
 class FieldWidget : public QWidget
@@ -111,7 +118,7 @@ class FieldWidget : public QWidget
 
     QVBoxLayout *mGlobalLayout;
     QVBoxLayout *mLocalLayout;
-    QFrame *mSeparator;
+    Q3Frame *mSeparator;
 
     FieldRecordList mFieldList;
 };

@@ -191,7 +191,7 @@ Filter::List Filter::restore( KConfig *config, const QString &baseGroup )
     Filter filter;
     filter.mName = *it;
     filter.mEnabled = true;
-    filter.mCategoryList = *it;
+    filter.mCategoryList = QStringList(*it);
     filter.mMatchRule = Matching;
     filter.mInternal = true;
     filter.mIsEmpty = false;

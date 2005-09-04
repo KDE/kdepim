@@ -30,6 +30,8 @@
 #include <qstring.h>
 #include <qtoolbutton.h>
 #include <qtooltip.h>
+//Added by qt3to4:
+#include <QGridLayout>
 
 #include <kaccelmanager.h>
 #include <kconfig.h>
@@ -55,11 +57,11 @@ class EmailValidator : public QRegExpValidator
     }
 };
 
-class EmailItem : public QListBoxText
+class EmailItem : public Q3ListBoxText
 {
   public:
-    EmailItem( QListBox *parent, const QString &text, bool preferred )
-      : QListBoxText( parent, text ), mPreferred( preferred )
+    EmailItem( Q3ListBox *parent, const QString &text, bool preferred )
+      : Q3ListBoxText( parent, text ), mPreferred( preferred )
     {}
 
     void setPreferred( bool preferred ) { mPreferred = preferred; }
@@ -67,7 +69,7 @@ class EmailItem : public QListBoxText
 
     void setText( const QString &text )
     {
-      QListBoxText::setText( text );
+      Q3ListBoxText::setText( text );
     }
 
   protected:
@@ -79,7 +81,7 @@ class EmailItem : public QListBoxText
         p->setFont( font );
       }
 
-      QListBoxText::paint( p );
+      Q3ListBoxText::paint( p );
     }
 
   private:
@@ -181,7 +183,7 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
 
   QGridLayout *topLayout = new QGridLayout( page, 4, 3, 0, spacingHint() );
 
-  mEmailListBox = new QListBox( page );
+  mEmailListBox = new Q3ListBox( page );
 
   // Make sure there is room for the scrollbar
   mEmailListBox->setMinimumHeight( mEmailListBox->sizeHint().height() + 30 );

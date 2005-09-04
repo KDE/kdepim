@@ -30,8 +30,8 @@
 #include <kabc/addressbook.h>
 
 class KComboBox;
-class QListBox;
-class QListBoxItem;
+class Q3ListBox;
+class Q3ListBoxItem;
 class QPushButton;
 class QToolButton;
 
@@ -59,8 +59,8 @@ class ViewConfigureFieldsPage : public QWidget
     void initGUI();
 
     KComboBox *mCategoryCombo;
-    QListBox *mSelectedBox;
-    QListBox *mUnSelectedBox;
+    Q3ListBox *mSelectedBox;
+    Q3ListBox *mUnSelectedBox;
     QToolButton *mAddButton;
     QToolButton *mRemoveButton;
     QToolButton *mUpButton;

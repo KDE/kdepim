@@ -25,9 +25,11 @@
  *********************************************************************/
 
 #include <qstringlist.h>
-#include <qvaluelist.h>
-#include <qptrlist.h>
-#include <qasciidict.h>
+#include <q3valuelist.h>
+#include <q3ptrlist.h>
+#include <q3asciidict.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <kio/authinfo.h>
 #include <kio/slavebase.h>
@@ -55,10 +57,10 @@ public:
   parseString() { pos = 0; }
   char operator[](uint i) const { return data[i + pos]; }
   bool isEmpty() const { return pos >= data.size(); }
-  QCString cstr() const
+  Q3CString cstr() const
   {
-    if (pos >= data.size()) return QCString();
-    return QCString(data.data() + pos, data.size() - pos + 1);
+    if (pos >= data.size()) return Q3CString();
+    return Q3CString(data.data() + pos, data.size() - pos + 1);
   }
   int find(char c, int index = 0)
   {
@@ -66,24 +68,24 @@ public:
     return (res == -1) ? res : (res - pos);
   }
   // Warning: does not check for going past end of "data"
-  void takeLeft(QCString& dest, uint len) const
+  void takeLeft(Q3CString& dest, uint len) const
   {
     dest.resize(len + 1);
     qmemmove(dest.data(), data.data() + pos, len);
   }
   // Warning: does not check for going past end of "data"
-  void takeLeftNoResize(QCString& dest, uint len) const
+  void takeLeftNoResize(Q3CString& dest, uint len) const
   {
     qmemmove(dest.data(), data.data() + pos, len);
   }
   // Warning: does not check for going past end of "data"
-  void takeMid(QCString& dest, uint start, uint len) const
+  void takeMid(Q3CString& dest, uint start, uint len) const
   {
     dest.resize(len + 1);
     qmemmove(dest.data(), data.data() + pos + start, len);
   }
   // Warning: does not check for going past end of "data"
-  void takeMidNoResize(QCString& dest, uint start, uint len) const
+  void takeMidNoResize(Q3CString& dest, uint start, uint len) const
   {
     qmemmove(dest.data(), data.data() + pos + start, len);
   }
@@ -157,11 +159,11 @@ public:
     myFlags = inFlags;
   }
 
-  QCString getDate ()
+  Q3CString getDate ()
   {
     return myDate;
   }
-  void setDate (const QCString & _str)
+  void setDate (const Q3CString & _str)
   {
     myDate = _str;
   }
@@ -171,7 +173,7 @@ public:
     myHeader = NULL;
     mySize = 0;
     myFlags = 0;
-    myDate = QCString();
+    myDate = Q3CString();
     myUid = 0;
   }
 
@@ -180,7 +182,7 @@ protected:
   ulong mySize;
   ulong myFlags;
   ulong myUid;
-  QCString myDate;
+  Q3CString myDate;
 };
 
 
@@ -300,7 +302,7 @@ public:
   /** read a envelope from imap and parse the addresses */
   mailHeader *parseEnvelope (parseString & inWords);
   /** @brief parse an address list and return a list of addresses */
-  void parseAddressList (parseString & inWords, QPtrList<mailAddress>& list);
+  void parseAddressList (parseString & inWords, Q3PtrList<mailAddress>& list);
   /** @brief parse an address and return the ref again */
   const mailAddress& parseAddress (parseString & inWords, mailAddress& buffer);
 
@@ -316,13 +318,13 @@ public:
       mimeHeader * localPart = 0);
 
   /** parse a parameter list (name value pairs) */
-  QAsciiDict < QString > parseParameters (parseString & inWords);
+  Q3AsciiDict < QString > parseParameters (parseString & inWords);
 
   /**
    * parse the disposition list (disposition (name value pairs))
    * the disposition has the key 'content-disposition'
    */
-  QAsciiDict < QString > parseDisposition (parseString & inWords);
+  Q3AsciiDict < QString > parseDisposition (parseString & inWords);
 
   // reimplement these
 
@@ -348,31 +350,31 @@ public:
   void parseSentence (parseString & inWords);
 
   /** parse a literal or word, may require more data */
-  QCString parseLiteralC(parseString & inWords, bool relay = false,
+  Q3CString parseLiteralC(parseString & inWords, bool relay = false,
                            bool stopAtBracket = false, int *outlen = 0);
   inline QByteArray parseLiteral (parseString & inWords, bool relay = false,
                            bool stopAtBracket = false) {
     int len = 0; // string size
     // Choice: we can create an extra QCString, or we can get the buffer in
     // the wrong size to start.  Let's try option b.
-    QCString tmp = parseLiteralC(inWords, relay, stopAtBracket, &len);
+    Q3CString tmp = parseLiteralC(inWords, relay, stopAtBracket, &len);
     return QByteArray().duplicate(tmp.data(), len);
   }
 
   // static parser routines, can be used elsewhere
 
-  static QCString b2c(const QByteArray &ba)
-  { return QCString(ba.data(), ba.size() + 1); }
+  static Q3CString b2c(const QByteArray &ba)
+  { return Q3CString(ba.data(), ba.size() + 1); }
 
   /** parse one word (maybe quoted) upto next space " ) ] } */
-  static QCString parseOneWordC (parseString & inWords,
+  static Q3CString parseOneWordC (parseString & inWords,
     bool stopAtBracket = FALSE, int *len = 0);
   static inline QByteArray parseOneWord (parseString & inWords,
     bool stopAtBracket = FALSE) {
     int len = 0; // string size
     // Choice: we can create an extra QCString, or we can get the buffer in
     // the wrong size to start.  Let's try option b.
-    QCString tmp = parseOneWordC(inWords, stopAtBracket, &len);
+    Q3CString tmp = parseOneWordC(inWords, stopAtBracket, &len);
     return QByteArray().duplicate(tmp.data(), len);
   }
 
@@ -453,11 +455,11 @@ protected:
   QStringList imapCapabilities;
 
   /** @brief the results from list/lsub/listrights commands */
-  QValueList < imapList > listResponses;
+  Q3ValueList < imapList > listResponses;
 
   /** @brief queues handling the running commands */
-  QPtrList < imapCommand > sentQueue;  // no autodelete
-  QPtrList < imapCommand > completeQueue;  // autodelete !!
+  Q3PtrList < imapCommand > sentQueue;  // no autodelete
+  Q3PtrList < imapCommand > completeQueue;  // autodelete !!
 
   /**
    * everything we didn't handle, everything but the greeting is bogus

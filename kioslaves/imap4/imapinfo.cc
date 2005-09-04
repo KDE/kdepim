@@ -43,6 +43,8 @@
 #include "imapparser.h"
 
 #include <kdebug.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 imapInfo::imapInfo ():count_ (0),
 recent_ (0),
@@ -191,7 +193,7 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
 
 }
 
-ulong imapInfo::_flags (const QCString & inFlags)
+ulong imapInfo::_flags (const Q3CString & inFlags)
 {
   ulong flags = 0;
   parseString flagsString;
@@ -202,7 +204,7 @@ ulong imapInfo::_flags (const QCString & inFlags)
 
   while (!flagsString.isEmpty () && flagsString[0] != ')')
   {
-    QCString entry = imapParser::parseOneWordC(flagsString).upper();
+    Q3CString entry = imapParser::parseOneWordC(flagsString).upper();
 
     if (entry.isEmpty ())
       flagsString.clear();

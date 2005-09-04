@@ -21,12 +21,15 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qcstring.h>
-#include <qgroupbox.h>
+#include <q3cstring.h>
+#include <q3groupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qlistbox.h>
+#include <q3listbox.h>
 #include <qpushbutton.h>
+//Added by qt3to4:
+#include <QHBoxLayout>
+#include <QGridLayout>
 
 #include <dcopclient.h>
 
@@ -46,13 +49,13 @@ NamePartWidget::NamePartWidget( const QString &title, const QString &label,
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
 
-  QGroupBox *group = new QGroupBox( 0, Qt::Vertical, title, this );
+  Q3GroupBox *group = new Q3GroupBox( 0, Qt::Vertical, title, this );
   QGridLayout *groupLayout = new QGridLayout( group->layout(), 2, 2,
                                               KDialog::spacingHint() );
 
-  mBox = new QListBox( group );
-  connect( mBox, SIGNAL( selectionChanged( QListBoxItem* ) ),
-           SLOT( selectionChanged( QListBoxItem* ) ) );
+  mBox = new Q3ListBox( group );
+  connect( mBox, SIGNAL( selectionChanged( Q3ListBoxItem* ) ),
+           SLOT( selectionChanged( Q3ListBoxItem* ) ) );
   groupLayout->addWidget( mBox, 0, 0 );
 
   KButtonBox *bbox = new KButtonBox( group, Qt::Vertical );
@@ -123,7 +126,7 @@ void NamePartWidget::remove()
   emit modified();
 }
 
-void NamePartWidget::selectionChanged( QListBoxItem *item )
+void NamePartWidget::selectionChanged( Q3ListBoxItem *item )
 {
   mEditButton->setEnabled( item != 0 );
   mRemoveButton->setEnabled( item != 0 );

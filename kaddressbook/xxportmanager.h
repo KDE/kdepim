@@ -24,7 +24,7 @@
 #ifndef XXPORTMANAGER_H
 #define XXPORTMANAGER_H
 
-#include <qdict.h>
+#include <q3dict.h>
 #include <qobject.h>
 
 #include <kurl.h>
@@ -65,7 +65,7 @@ class KDE_EXPORT XXPortManager : public QObject
   private:
     void loadPlugins();
 
-    QDict<KAB::XXPort> mXXPortObjects;
+    Q3Dict<KAB::XXPort> mXXPortObjects;
 
     KAB::Core *mCore;
 };

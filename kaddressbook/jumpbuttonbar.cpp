@@ -22,12 +22,17 @@
 */
 
 #include <qapplication.h>
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qevent.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
 #include <qstring.h>
 #include <qstyle.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <Q3Frame>
+#include <Q3ValueList>
+#include <QResizeEvent>
 
 #include <kabc/addressbook.h>
 #include <kabc/field.h>
@@ -72,11 +77,11 @@ JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name
   layout->setAutoAdd( true );
   layout->setResizeMode( QLayout::FreeResize );
 
-  mGroupBox = new QButtonGroup( 1, Qt::Horizontal, this );
+  mGroupBox = new Q3ButtonGroup( 1, Qt::Horizontal, this );
   mGroupBox->setExclusive( true );
   mGroupBox->layout()->setSpacing( 0 );
   mGroupBox->layout()->setMargin( 0 );
-  mGroupBox->setFrameStyle( QFrame::NoFrame );
+  mGroupBox->setFrameStyle( Q3Frame::NoFrame );
 }
 
 JumpButtonBar::~JumpButtonBar()
@@ -221,7 +226,7 @@ class SortContainer
 
 void JumpButtonBar::sortListLocaleAware( QStringList &list )
 {
-  QValueList<SortContainer> sortList;
+  Q3ValueList<SortContainer> sortList;
 
   QStringList::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
@@ -230,7 +235,7 @@ void JumpButtonBar::sortListLocaleAware( QStringList &list )
   qHeapSort( sortList );
   list.clear();
 
-  QValueList<SortContainer>::ConstIterator sortIt;
+  Q3ValueList<SortContainer>::ConstIterator sortIt;
   for ( sortIt = sortList.begin(); sortIt != sortList.end(); ++sortIt )
     list.append( (*sortIt).data() );
 }

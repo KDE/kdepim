@@ -29,9 +29,9 @@
 #include <qcolor.h>
 #include <qfont.h>
 #include <qrect.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
-typedef QValueList<QRect> QRectList;
+typedef Q3ValueList<QRect> QRectList;
 
 class KABEntryPainter
 {

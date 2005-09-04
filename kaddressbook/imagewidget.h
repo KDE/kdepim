@@ -25,6 +25,11 @@
 #define IMAGEWIDGET_H
 
 #include <qlabel.h>
+//Added by qt3to4:
+#include <QDragEnterEvent>
+#include <QMouseEvent>
+#include <QPixmap>
+#include <QDropEvent>
 
 #include <kabc/picture.h>
 #include <kdialogbase.h>

@@ -26,8 +26,10 @@
 
 #include <kabc/field.h>
 
-#include <qdict.h>
+#include <q3dict.h>
 #include <qwidget.h>
+//Added by qt3to4:
+#include <QHBoxLayout>
 
 #include "core.h"
 #include <kdepimmacros.h>
@@ -397,7 +399,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     QSplitter *mExtensionBarSplitter;
 
     LDAPSearchDialog *mLdapSearchDialog;
-    QDict<AddresseeEditorDialog> mEditorDict;
+    Q3Dict<AddresseeEditorDialog> mEditorDict;
 
     bool mReadWrite;
     bool mModified;

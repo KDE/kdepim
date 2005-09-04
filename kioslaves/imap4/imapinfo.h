@@ -25,6 +25,8 @@
 
 #include <qstringlist.h>
 #include <qstring.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 //class handling the info we get on EXAMINE and SELECT
 class imapInfo
@@ -49,7 +51,7 @@ public:
     imapInfo (const imapInfo &);
     imapInfo & operator = (const imapInfo &);
 
-  static ulong _flags (const QCString &);
+  static ulong _flags (const Q3CString &);
 
   void setCount (ulong l)
   {
@@ -87,7 +89,7 @@ public:
     flags_ = l;
   }
 
-  void setFlags (const QCString & inFlag)
+  void setFlags (const Q3CString & inFlag)
   {
     flagsAvailable_ = true;
     flags_ = _flags (inFlag);
@@ -99,7 +101,7 @@ public:
     permanentFlags_ = l;
   }
 
-  void setPermanentFlags (const QCString & inFlag)
+  void setPermanentFlags (const Q3CString & inFlag)
   {
     permanentFlagsAvailable_ = true;
     permanentFlags_ = _flags (inFlag);
@@ -196,14 +198,14 @@ public:
     return readWriteAvailable_;
   }
 
-  QCString alert() const
+  Q3CString alert() const
   {
     return alert_;
   }
 
 private:
 
-  QCString alert_;
+  Q3CString alert_;
 
   ulong count_;
   ulong recent_;

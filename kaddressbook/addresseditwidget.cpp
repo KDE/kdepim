@@ -22,19 +22,27 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qcheckbox.h>
-#include <qhbox.h>
+#include <q3hbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qlistbox.h>
-#include <qlistview.h>
+#include <q3listbox.h>
+#include <q3listview.h>
 #include <qpushbutton.h>
-#include <qsignal.h>
+#include <q3signal.h>
 #include <qstring.h>
-#include <qtextedit.h>
+#include <q3textedit.h>
 #include <qtoolbutton.h>
 #include <qtooltip.h>
+//Added by qt3to4:
+#include <QGridLayout>
+#include <QKeyEvent>
+#include <QEvent>
+#include <Q3Frame>
+#include <QBoxLayout>
+#include <Q3ValueList>
+#include <QVBoxLayout>
 
 #include <kaccelmanager.h>
 #include <kapplication.h>
@@ -90,7 +98,7 @@ AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
   layout->addWidget( mTypeCombo );
 
   mAddressField = new QLabel( this );
-  mAddressField->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  mAddressField->setFrameStyle( Q3Frame::Panel | Q3Frame::Sunken );
   mAddressField->setMinimumHeight( 20 );
   mAddressField->setAlignment( Qt::AlignTop );
   mAddressField->setTextFormat( Qt::PlainText );
@@ -133,13 +141,13 @@ void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
   // Insert types for existing numbers.
   mTypeCombo->insertTypeList( list );
 
-  QValueList<int> defaultTypes;
+  Q3ValueList<int> defaultTypes;
   defaultTypes << KABC::Address::Home;
   defaultTypes << KABC::Address::Work;
 
   AddresseeConfig config( mAddressee );
-  const QValueList<int> configList = config.noDefaultAddrTypes();
-  QValueList<int>::ConstIterator it;
+  const Q3ValueList<int> configList = config.noDefaultAddrTypes();
+  Q3ValueList<int>::ConstIterator it;
   for ( it = configList.begin(); it != configList.end(); ++it )
     defaultTypes.remove( *it );
 
@@ -194,7 +202,7 @@ void AddressEditWidget::edit()
       }
 
       AddresseeConfig config( mAddressee );
-      QValueList<int> configList;
+      Q3ValueList<int> configList;
       if ( !hasHome )
         configList << KABC::Address::Home;
       if ( !hasWork )
@@ -275,7 +283,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   QLabel *label = new QLabel( i18n( "<streetLabel>:", "%1:" ).arg( KABC::Address::streetLabel() ), page );
   label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
   topLayout->addWidget( label, 1, 0 );
-  mStreetTextEdit = new QTextEdit( page );
+  mStreetTextEdit = new Q3TextEdit( page );
   mStreetTextEdit->setTextFormat( Qt::PlainText );
   label->setBuddy( mStreetTextEdit );
   topLayout->addWidget( mStreetTextEdit, 1, 1 );
@@ -329,7 +337,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   KSeparator *sep = new KSeparator( KSeparator::HLine, page );
   topLayout->addMultiCellWidget( sep, 9, 9, 0, 1 );
 
-  QHBox *buttonBox = new QHBox( page );
+  Q3HBox *buttonBox = new Q3HBox( page );
   buttonBox->setSpacing( spacingHint() );
   topLayout->addMultiCellWidget( buttonBox, 10, 10, 0, 1 );
 
@@ -605,7 +613,7 @@ AddressTypeDialog::AddressTypeDialog( int type, QWidget *parent )
   QWidget *page = plainPage();
   QVBoxLayout *layout = new QVBoxLayout( page );
 
-  mGroup = new QButtonGroup( 2, Horizontal, i18n( "Address Types" ), page );
+  mGroup = new Q3ButtonGroup( 2, Horizontal, i18n( "Address Types" ), page );
   layout->addWidget( mGroup );
 
   mTypeList = KABC::Address::typeList();
@@ -658,7 +666,7 @@ static bool operator<( const LocaleAwareString &s1, const LocaleAwareString &s2 
 
 QStringList AddressEditDialog::sortLocaleAware( const QStringList &list )
 {
-  QValueList<LocaleAwareString> sortedList;
+  Q3ValueList<LocaleAwareString> sortedList;
 
   QStringList::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
@@ -667,7 +675,7 @@ QStringList AddressEditDialog::sortLocaleAware( const QStringList &list )
   qHeapSort( sortedList );
 
   QStringList retval;
-  QValueList<LocaleAwareString>::ConstIterator retIt;
+  Q3ValueList<LocaleAwareString>::ConstIterator retIt;
   for ( retIt = sortedList.begin(); retIt != sortedList.end(); ++retIt )
     retval.append( *retIt );
 

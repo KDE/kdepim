@@ -23,13 +23,15 @@
 
 #include <qlayout.h>
 #include <qlabel.h>
-#include <qlistbox.h>
-#include <qlistview.h>
+#include <q3listbox.h>
+#include <q3listview.h>
 #include <qtooltip.h>
 #include <qpushbutton.h>
 #include <qcheckbox.h>
 #include <qstring.h>
-#include <qwhatsthis.h>
+#include <q3whatsthis.h>
+//Added by qt3to4:
+#include <QGridLayout>
 
 #include <kaccelmanager.h>
 #include <kapplication.h>
@@ -65,7 +67,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   label->setBuddy( mPrefixCombo );
   layout->addMultiCellWidget( mPrefixCombo, 0, 0, 1, 2 );
 
-  QWhatsThis::add( mPrefixCombo, i18n( "The predefined honorific prefixes can be extended in the settings dialog." ) );
+  Q3WhatsThis::add( mPrefixCombo, i18n( "The predefined honorific prefixes can be extended in the settings dialog." ) );
 
   label = new QLabel( i18n( "Given name:" ), page );
   layout->addWidget( label, 1, 0 );
@@ -97,7 +99,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   label->setBuddy( mSuffixCombo );
   layout->addMultiCellWidget( mSuffixCombo, 4, 4, 1, 2 );
 
-  QWhatsThis::add( mSuffixCombo, i18n( "The predefined honorific suffixes can be extended in the settings dialog." ) );
+  Q3WhatsThis::add( mSuffixCombo, i18n( "The predefined honorific suffixes can be extended in the settings dialog." ) );
 
   label = new QLabel( i18n( "Formatted name:" ), page );
   layout->addWidget( label, 5, 0 );

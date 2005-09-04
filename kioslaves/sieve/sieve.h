@@ -20,7 +20,7 @@
 #include <kio/authinfo.h>
 
 #include <qstring.h>
-#include <qcstring.h>
+#include <q3cstring.h>
 #include <qstringlist.h>
 
 class KDESasl;
@@ -36,26 +36,26 @@ public:
 
 	const uint& getType() const;
 
-	const QCString& getAction() const;
+	const Q3CString& getAction() const;
 	const uint getQuantity() const;
-	const QCString& getKey() const;
-	const QCString& getVal() const;
-	const QCString& getExtra() const;
+	const Q3CString& getKey() const;
+	const Q3CString& getVal() const;
+	const Q3CString& getExtra() const;
 
 	void setQuantity(const uint& quantity);
-	void setAction(const QCString& newAction);
-	void setKey(const QCString& newKey);
-	void setVal(const QCString& newVal);
-	void setExtra(const QCString& newExtra);
+	void setAction(const Q3CString& newAction);
+	void setKey(const Q3CString& newKey);
+	void setVal(const Q3CString& newVal);
+	void setExtra(const Q3CString& newExtra);
 
 	void clear();
 
 protected:
 	uint		rType;
 	uint		quantity;
-	QCString	key;
-	QCString	val;
-	QCString	extra;
+	Q3CString	key;
+	Q3CString	val;
+	Q3CString	extra;
 };
 
 class kio_sieveProtocol : public KIO::TCPSlaveBase
@@ -65,7 +65,7 @@ public:
 	enum connectionModes { NORMAL, CONNECTION_ORIENTED };
 	enum Results { OK, NO, BYE, OTHER };
 
-	kio_sieveProtocol(const QCString &pool_socket, const QCString &app_socket);
+	kio_sieveProtocol(const Q3CString &pool_socket, const Q3CString &app_socket);
 	virtual ~kio_sieveProtocol();
 
 	virtual void mimetype(const KURL& url);
@@ -98,8 +98,8 @@ protected:
 	void disconnect(bool forcibly = false);
 	void changeCheck( const KURL &url );
 
-	bool sendData(const QCString &data);
-	bool receiveData(bool waitForData = true, QCString *reparse = 0);
+	bool sendData(const Q3CString &data);
+	bool receiveData(bool waitForData = true, Q3CString *reparse = 0);
 	bool operationSuccessful();
 	int operationResult();
 

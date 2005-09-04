@@ -21,16 +21,21 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qlistbox.h>
-#include <qlistview.h>
+#include <q3listbox.h>
+#include <q3listview.h>
 #include <qpushbutton.h>
 #include <qsignalmapper.h>
 #include <qstring.h>
 #include <qtooltip.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <Q3ValueList>
+#include <QHBoxLayout>
+#include <QGridLayout>
 
 #include <kapplication.h>
 #include <kbuttonbox.h>
@@ -86,7 +91,7 @@ void PhoneTypeCombo::update()
   blockSignals( true );
 
   clear();
-  QValueList<int>::ConstIterator it;
+  Q3ValueList<int>::ConstIterator it;
   for ( it = mTypeList.begin(); it != mTypeList.end(); ++it ) {
     if ( *it == -1 ) { // "Other..." entry
       insertItem( i18n( "Other..." ) );
@@ -196,7 +201,7 @@ void PhoneEditWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
 
-  QPtrListIterator<PhoneNumberWidget> it( mWidgets );
+  Q3PtrListIterator<PhoneNumberWidget> it( mWidgets );
   while ( it.current() ) {
     it.current()->setReadOnly( readOnly );
     ++it;
@@ -304,7 +309,7 @@ PhoneTypeDialog::PhoneTypeDialog( int type, QWidget *parent )
   mPreferredBox = new QCheckBox( i18n( "This is the preferred phone number" ), page );
   layout->addWidget( mPreferredBox );
 
-  mGroup = new QButtonGroup( 2, Horizontal, i18n( "Types" ), page );
+  mGroup = new Q3ButtonGroup( 2, Horizontal, i18n( "Types" ), page );
   layout->addWidget( mGroup );
 
   // fill widgets

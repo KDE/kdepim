@@ -16,6 +16,8 @@
  ***************************************************************************/
 
 #include <iostream>
+//Added by qt3to4:
+#include <Q3CString>
 using namespace std;
 
 #include "mimeio.h"
@@ -31,7 +33,7 @@ mimeIO::~mimeIO ()
 }
 
 int
-mimeIO::inputLine (QCString & aLine)
+mimeIO::inputLine (Q3CString & aLine)
 {
   char input;
 
@@ -47,7 +49,7 @@ mimeIO::inputLine (QCString & aLine)
 }
 
 int
-mimeIO::outputLine (const QCString & aLine, int len)
+mimeIO::outputLine (const Q3CString & aLine, int len)
 {
   int i;
 
@@ -62,10 +64,10 @@ mimeIO::outputLine (const QCString & aLine, int len)
 }
 
 int
-mimeIO::outputMimeLine (const QCString & inLine)
+mimeIO::outputMimeLine (const Q3CString & inLine)
 {
   int retVal = 0;
-  QCString aLine = inLine;
+  Q3CString aLine = inLine;
   int len = inLine.length();
 
   int theLF = aLine.findRev ('\n');
@@ -131,7 +133,7 @@ mimeIOQFile::mimeIOQFile (const QString & aName):
 mimeIO (),
 myFile (aName)
 {
-  myFile.open (IO_ReadOnly);
+  myFile.open (QIODevice::ReadOnly);
 }
 
 mimeIOQFile::~mimeIOQFile ()
@@ -140,13 +142,13 @@ mimeIOQFile::~mimeIOQFile ()
 }
 
 int
-mimeIOQFile::outputLine (const QCString &, int)
+mimeIOQFile::outputLine (const Q3CString &, int)
 {
   return 0;
 }
 
 int
-mimeIOQFile::inputLine (QCString & data)
+mimeIOQFile::inputLine (Q3CString & data)
 {
   data.resize( 1024 );
   myFile.readLine (data.data(), 1024);
@@ -163,7 +165,7 @@ mimeIOQString::~mimeIOQString ()
 }
 
 int
-mimeIOQString::outputLine (const QCString & _str, int len)
+mimeIOQString::outputLine (const Q3CString & _str, int len)
 {
   if (len == -1) {
     len = _str.length();
@@ -173,7 +175,7 @@ mimeIOQString::outputLine (const QCString & _str, int len)
 }
 
 int
-mimeIOQString::inputLine (QCString & _str)
+mimeIOQString::inputLine (Q3CString & _str)
 {
   if (theString.isEmpty ())
     return 0;

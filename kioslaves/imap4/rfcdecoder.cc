@@ -31,6 +31,8 @@
 #include <qtextcodec.h>
 #include <qbuffer.h>
 #include <qregexp.h>
+//Added by qt3to4:
+#include <Q3CString>
 #include <kcodecs.h>
 
 // This part taken from rfc 2192 IMAP URL Scheme. C. Newman. September 1997.
@@ -58,8 +60,8 @@ QString rfcDecoder::fromIMAP (const QString & inSrc)
   unsigned long ucs4, utf16, bitbuf;
   unsigned char base64[256], utf8[6];
   unsigned long srcPtr = 0;
-  QCString dst;
-  QCString src = inSrc.ascii ();
+  Q3CString dst;
+  Q3CString src = inSrc.ascii ();
   uint srcLen = inSrc.length();
 
   /* initialize modified base64 decoding table */
@@ -176,7 +178,7 @@ QString rfcDecoder::toIMAP (const QString & inSrc)
 {
   unsigned int utf8pos, utf8total, c, utf7mode, bitstogo, utf16flag;
   unsigned long ucs4, bitbuf;
-  QCString src = inSrc.utf8 ();
+  Q3CString src = inSrc.utf8 ();
   QString dst;
 
   ulong srcPtr = 0;
@@ -341,10 +343,10 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
   if (_str.find("=?") < 0)
     return _str;
 
-  QCString aStr = _str.ascii ();  // QString.length() means Unicode chars
-  QCString result;
+  Q3CString aStr = _str.ascii ();  // QString.length() means Unicode chars
+  Q3CString result;
   char *pos, *beg, *end, *mid = NULL;
-  QCString str;
+  Q3CString str;
   char encoding = 0, ch;
   bool valid;
   const int maxLen = 200;
@@ -370,7 +372,7 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
       valid = FALSE;
     else
     {
-      charset = QCString (beg, i - 1);  // -2 + 1 for the zero
+      charset = Q3CString (beg, i - 1);  // -2 + 1 for the zero
       int pt = charset.findRev('*');
       if (pt != -1)
       {
@@ -407,7 +409,7 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
     {
       ch = *pos;
       *pos = '\0';
-      str = QCString (mid).left ((int) (mid - pos - 1));
+      str = Q3CString (mid).left ((int) (mid - pos - 1));
       if (encoding == 'Q')
       {
         // decode quoted printable text
@@ -468,7 +470,7 @@ rfcDecoder::encodeRFC2047String (const QString & _str)
   int rptr = 0;
   // My stats show this number results in 12 resize() out of 73,000
   int resultLen = 3 * _str.length() / 2;
-  QCString result(resultLen);
+  Q3CString result(resultLen);
   
   while (*latin)
   {
@@ -591,7 +593,7 @@ rfcDecoder::encodeRFC2231String (const QString & _str)
   }
   if (!*l)
     return _str.ascii ();
-  QCString result;
+  Q3CString result;
   l = latin;
   while (*l)
   {

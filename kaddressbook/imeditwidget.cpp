@@ -29,6 +29,8 @@
 #include <qstring.h>
 #include <qtoolbutton.h>
 #include <qtooltip.h>
+//Added by qt3to4:
+#include <QGridLayout>
 
 #include <kaccelmanager.h>
 #include <kconfig.h>

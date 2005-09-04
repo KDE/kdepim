@@ -23,6 +23,8 @@
 
 #include "addresseeconfig.h"
 #include "kabprefs.h"
+//Added by qt3to4:
+#include <Q3ValueList>
 
 using namespace KABC;
 
@@ -62,7 +64,7 @@ bool AddresseeConfig::automaticNameParsing()
                                KABPrefs::instance()->automaticNameParsing() );
 }
 
-void AddresseeConfig::setNoDefaultAddrTypes( const QValueList<int> &types )
+void AddresseeConfig::setNoDefaultAddrTypes( const Q3ValueList<int> &types )
 {
   KConfig config( "kaddressbook_addrconfig" );
   config.setGroup( mAddressee.uid() );
@@ -70,7 +72,7 @@ void AddresseeConfig::setNoDefaultAddrTypes( const QValueList<int> &types )
   config.sync();
 }
 
-QValueList<int> AddresseeConfig::noDefaultAddrTypes() const
+Q3ValueList<int> AddresseeConfig::noDefaultAddrTypes() const
 {
   KConfig config( "kaddressbook_addrconfig" );
   config.setGroup( mAddressee.uid() );

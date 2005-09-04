@@ -32,15 +32,21 @@
 
 #include <qcheckbox.h>
 #include <qfile.h>
-#include <qgroupbox.h>
+#include <q3groupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qlistbox.h>
+#include <q3listbox.h>
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <qpushbutton.h>
 #include <qregexp.h>
 #include <qstring.h>
+//Added by qt3to4:
+#include <QTextStream>
+#include <QPaintEvent>
+#include <QGridLayout>
+#include <Q3Frame>
+#include <QMouseEvent>
 
 #include "geowidget.h"
 
@@ -162,7 +168,7 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
                  parent, name, true, true ),
     mUpdateSexagesimalInput( true )
 {
-  QFrame *page = plainPage();
+  Q3Frame *page = plainPage();
 
   QGridLayout *topLayout = new QGridLayout( page, 2, 2, marginHint(),
                                             spacingHint() );
@@ -174,7 +180,7 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
   mCityCombo = new KComboBox( page );
   topLayout->addWidget( mCityCombo, 0, 1 );
 
-  QGroupBox *sexagesimalGroup = new QGroupBox( 0, Vertical, i18n( "Sexagesimal" ), page );
+  Q3GroupBox *sexagesimalGroup = new Q3GroupBox( 0, Vertical, i18n( "Sexagesimal" ), page );
   QGridLayout *sexagesimalLayout = new QGridLayout( sexagesimalGroup->layout(),
                                                     2, 5, spacingHint() );
 
@@ -382,7 +388,7 @@ void GeoDialog::loadCityList()
 
   QFile file( locate( "data", "kaddressbook/zone.tab" ) );
 
-  if ( file.open( IO_ReadOnly ) ) {
+  if ( file.open( QIODevice::ReadOnly ) ) {
     QTextStream s( &file );
 
     QString line, country;

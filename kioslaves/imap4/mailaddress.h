@@ -23,9 +23,9 @@
  *
  *********************************************************************/
 
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qstring.h>
-#include <qcstring.h>
+#include <q3cstring.h>
 #include "rfcdecoder.h"
 
 class mailAddress
@@ -37,19 +37,19 @@ public:
     mailAddress (const mailAddress &);
     mailAddress & operator = (const mailAddress &);
 
-  void setUser (const QCString & aUser)
+  void setUser (const Q3CString & aUser)
   {
     user = aUser;
   }
-  const QCString & getUser () const
+  const Q3CString & getUser () const
   {
     return user;
   }
-  void setHost (const QCString & aHost)
+  void setHost (const Q3CString & aHost)
   {
     host = aHost;
   }
-  const QCString & getHost () const
+  const Q3CString & getHost () const
   {
     return host;
   }
@@ -58,24 +58,24 @@ public:
   const QString getFullName () const;
 
   void setComment (const QString & aComment);
-  void setCommentRaw (const QCString &);
+  void setCommentRaw (const Q3CString &);
   const QString getComment () const;
-  const QCString & getCommentRaw () const;
+  const Q3CString & getCommentRaw () const;
 
   int parseAddress (char *);
-  const QCString getStr ();
+  const Q3CString getStr ();
   bool isEmpty () const;
 
   static QString emailAddrAsAnchor (const mailAddress &, bool);
-  static QString emailAddrAsAnchor (const QPtrList < mailAddress > &, bool);
+  static QString emailAddrAsAnchor (const Q3PtrList < mailAddress > &, bool);
 
   void clear();
 
 private:
-  QCString user;
-  QCString host;
-  QCString rawFullName;
-  QCString rawComment;
+  Q3CString user;
+  Q3CString host;
+  Q3CString rawFullName;
+  Q3CString rawComment;
 };
 
 #endif

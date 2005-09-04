@@ -22,15 +22,19 @@
 */
 
 #include <qcheckbox.h>
-#include <qhbox.h>
+#include <q3hbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qlistbox.h>
+#include <q3listbox.h>
 #include <qpushbutton.h>
 #include <qtabwidget.h>
-#include <qtextedit.h>
+#include <q3textedit.h>
 #include <qtoolbutton.h>
 #include <qtooltip.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
 
 #include <kabc/resource.h>
 #include <kabc/stdaddressbook.h>
@@ -272,7 +276,7 @@ void AddresseeEditorWidget::setupTab1()
   layout->addMultiCellWidget( bar, 11, 11, 0, 6 );
 
   ///////////////////////////////////////
-  QHBox *categoryBox = new QHBox( tab1 );
+  Q3HBox *categoryBox = new Q3HBox( tab1 );
   categoryBox->setSpacing( KDialogBase::spacingHint() );
 
   // Categories
@@ -419,8 +423,8 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( i18n( "Note:" ), tab2 );
   label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
   layout->addWidget( label, 7, 0 );
-  mNoteEdit = new QTextEdit( tab2 );
-  mNoteEdit->setWordWrap( QTextEdit::WidgetWidth );
+  mNoteEdit = new Q3TextEdit( tab2 );
+  mNoteEdit->setWordWrap( Q3TextEdit::WidgetWidth );
   mNoteEdit->setMinimumSize( mNoteEdit->sizeHint() );
   connect( mNoteEdit, SIGNAL( textChanged() ), SLOT( emitModified() ) );
   label->setBuddy( mNoteEdit );
@@ -462,7 +466,7 @@ void AddresseeEditorWidget::setupAdditionalTabs()
   }
 
   // query the layout update
-  QDictIterator<ContactEditorTabPage> it( mTabPages );
+  Q3DictIterator<ContactEditorTabPage> it( mTabPages );
   for ( ; it.current(); ++it )
     it.current()->updateLayout();
 }
@@ -556,7 +560,7 @@ void AddresseeEditorWidget::load()
   mProfessionEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Profession" ) );
   mTitleEdit->setText( mAddressee.title() );
 
-  QDictIterator<ContactEditorTabPage> it( mTabPages );
+  Q3DictIterator<ContactEditorTabPage> it( mTabPages );
   for ( ; it.current(); ++it )
     it.current()->loadContact( &mAddressee );
 
@@ -657,7 +661,7 @@ void AddresseeEditorWidget::save()
         ++addressIter )
     mAddressee.insertAddress( *addressIter );
 
-  QDictIterator<ContactEditorTabPage> it( mTabPages );
+  Q3DictIterator<ContactEditorTabPage> it( mTabPages );
   for ( ; it.current(); ++it )
     it.current()->storeContact( &mAddressee );
 
@@ -873,7 +877,7 @@ void AddresseeEditorWidget::setReadOnly( bool readOnly )
   mAnniversaryPicker->setEnabled( !readOnly );
   mNoteEdit->setReadOnly( mReadOnly );
 
-  QDictIterator<ContactEditorTabPage> it( mTabPages );
+  Q3DictIterator<ContactEditorTabPage> it( mTabPages );
   for ( ; it.current(); ++it )
     it.current()->setReadOnly( readOnly );
 }

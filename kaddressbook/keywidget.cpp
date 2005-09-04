@@ -25,6 +25,9 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+//Added by qt3to4:
+#include <QGridLayout>
+#include <QTextStream>
 
 #include <kapplication.h>
 #include <kcombobox.h>
@@ -120,7 +123,7 @@ void KeyWidget::addKey()
   QString tmpFile;
   if ( KIO::NetAccess::download( url, tmpFile, this ) ) {
     QFile file( tmpFile );
-    if ( !file.open( IO_ReadOnly ) ) {
+    if ( !file.open( QIODevice::ReadOnly ) ) {
       QString text( i18n( "<qt>Unable to open file <b>%1</b>.</qt>" ) );
       KMessageBox::error( this, text.arg( url.url() ) );
       return;

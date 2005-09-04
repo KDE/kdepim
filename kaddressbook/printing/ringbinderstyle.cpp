@@ -25,7 +25,7 @@
 
 #include <qcheckbox.h>
 #include <qlayout.h>
-#include <qpaintdevicemetrics.h>
+#include <q3paintdevicemetrics.h>
 #include <qpainter.h>
 #include <qspinbox.h>
 #include <qstringlist.h>
@@ -127,7 +127,7 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
   painter.begin( printer );
   painter.setPen( Qt::black );
   printer->setFullPage( true ); // use whole page
-  QPaintDeviceMetrics metrics( printer );
+  Q3PaintDeviceMetrics metrics( printer );
 
   left = QMAX( printer->margins().width(), marginLeft );
   top = QMAX( printer->margins().height(), marginTop );

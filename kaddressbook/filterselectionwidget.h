@@ -24,7 +24,7 @@
 #ifndef FILTERSELECTIONWIDGET_H
 #define FILTERSELECTIONWIDGET_H
 
-#include <qhbox.h>
+#include <q3hbox.h>
 
 class KComboBox;
 
@@ -33,7 +33,7 @@ class KComboBox;
   horizontal line. The combo box allows the user to select the active
   filter.
  */
-class FilterSelectionWidget : public QHBox
+class FilterSelectionWidget : public Q3HBox
 {
   Q_OBJECT
 

@@ -25,6 +25,8 @@
 #define ADDRESSEDITWIDGET_H
 
 #include <qwidget.h>
+//Added by qt3to4:
+#include <QLabel>
 
 #include <kdialogbase.h>
 #include <kabc/address.h>
@@ -33,10 +35,10 @@
 #include "addresseeconfig.h"
 #include "typecombo.h"
 
-class QButtonGroup;
+class Q3ButtonGroup;
 class QCheckBox;
-class QListView;
-class QTextEdit;
+class Q3ListView;
+class Q3TextEdit;
 class QToolButton;
 
 class KComboBox;
@@ -115,7 +117,7 @@ class AddressEditDialog : public KDialogBase
     QStringList sortLocaleAware( const QStringList& );
 
     AddressTypeCombo *mTypeCombo;
-    QTextEdit *mStreetTextEdit;
+    Q3TextEdit *mStreetTextEdit;
     KComboBox *mCountryCombo;
     KLineEdit *mRegionEdit;
     KLineEdit *mLocalityEdit;
@@ -145,7 +147,7 @@ class AddressTypeDialog : public KDialogBase
     int type() const;
 
   private:
-    QButtonGroup *mGroup;
+    Q3ButtonGroup *mGroup;
 
     KABC::Address::TypeList mTypeList;
 };

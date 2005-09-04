@@ -22,7 +22,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qpaintdevicemetrics.h>
+#include <q3paintdevicemetrics.h>
 #include <qpainter.h>
 
 #include <kabc/addressee.h>
@@ -68,7 +68,7 @@ void MikesStyle::print( const KABC::Addressee::List &contacts, PrintProgress *pr
   mBoldFont = p.font();
   mBoldFont.setBold( true );
   QFontMetrics fm( mFont );
-  QPaintDeviceMetrics metrics( p.device() );
+  Q3PaintDeviceMetrics metrics( p.device() );
 
   int height = 0;
   KABC::Addressee::List::ConstIterator it;
@@ -141,7 +141,7 @@ void MikesStyle::doPaint( QPainter &painter, const KABC::Addressee &addr,
 {
   QFontMetrics fm( font );
   QFontMetrics bfm( bFont );
-  QPaintDeviceMetrics metrics( painter.device() );
+  Q3PaintDeviceMetrics metrics( painter.device() );
   int margin = 10;
   int width = metrics.width() - 10;
   int xPos = 5;

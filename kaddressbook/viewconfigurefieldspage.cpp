@@ -23,10 +23,13 @@
 
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qlistbox.h>
+#include <q3listbox.h>
 #include <qpushbutton.h>
 #include <qtoolbutton.h>
 #include <qapplication.h>
+//Added by qt3to4:
+#include <QGridLayout>
+#include <QBoxLayout>
 
 #include <kcombobox.h>
 #include <kdebug.h>
@@ -36,14 +39,14 @@
 
 #include "viewconfigurefieldspage.h"
 
-class FieldItem : public QListBoxText
+class FieldItem : public Q3ListBoxText
 {
   public:
-    FieldItem( QListBox *parent, KABC::Field *field )
-      : QListBoxText( parent, field->label() ), mField( field ) {}
+    FieldItem( Q3ListBox *parent, KABC::Field *field )
+      : Q3ListBoxText( parent, field->label() ), mField( field ) {}
 
-    FieldItem( QListBox *parent, KABC::Field *field, int index )
-      : QListBoxText( parent, field->label(), parent->item( index ) ),
+    FieldItem( Q3ListBox *parent, KABC::Field *field, int index )
+      : Q3ListBoxText( parent, field->label(), parent->item( index ) ),
         mField( field ) {}
 
     KABC::Field *field() { return mField; }
@@ -100,7 +103,7 @@ void ViewConfigureFieldsPage::slotShowFields( int index )
 
   KABC::Field::List::ConstIterator it;
   for ( it = allFields.begin(); it != allFields.end(); ++it ) {
-    QListBoxItem *item = mSelectedBox->firstItem();
+    Q3ListBoxItem *item = mSelectedBox->firstItem();
     while( item ) {
       FieldItem *fieldItem = static_cast<FieldItem *>( item );
       if ( (*it)->equals( fieldItem->field() ) )
@@ -180,7 +183,7 @@ void ViewConfigureFieldsPage::slotMoveUp()
 {
   int i = mSelectedBox->currentItem();
   if ( i > 0 ) {
-    QListBoxItem *item = mSelectedBox->item( i );
+    Q3ListBoxItem *item = mSelectedBox->item( i );
     mSelectedBox->takeItem( item );
     mSelectedBox->insertItem( item, i - 1 );
     mSelectedBox->setCurrentItem( item );
@@ -192,7 +195,7 @@ void ViewConfigureFieldsPage::slotMoveDown()
 {
   int i = mSelectedBox->currentItem();
   if ( i > -1 && i < (int)mSelectedBox->count() - 1 ) {
-    QListBoxItem *item = mSelectedBox->item( i );
+    Q3ListBoxItem *item = mSelectedBox->item( i );
     mSelectedBox->takeItem( item );
     mSelectedBox->insertItem( item, i + 1 );
     mSelectedBox->setCurrentItem( item );
@@ -220,13 +223,13 @@ void ViewConfigureFieldsPage::initGUI()
   QLabel *label = new QLabel( i18n( "&Selected fields:" ), this );
   gl->addWidget( label, 0, 2 );
 
-  mUnSelectedBox = new QListBox( this );
-  mUnSelectedBox->setSelectionMode( QListBox::Extended );
+  mUnSelectedBox = new Q3ListBox( this );
+  mUnSelectedBox->setSelectionMode( Q3ListBox::Extended );
   mUnSelectedBox->setMinimumHeight( 100 );
   gl->addWidget( mUnSelectedBox, 1, 0 );
 
-  mSelectedBox = new QListBox( this );
-  mSelectedBox->setSelectionMode( QListBox::Extended );
+  mSelectedBox = new Q3ListBox( this );
+  mSelectedBox->setSelectionMode( Q3ListBox::Extended );
   label->setBuddy( mSelectedBox );
   gl->addWidget( mSelectedBox, 1, 2 );
 
@@ -277,7 +280,7 @@ void ViewConfigureFieldsPage::initGUI()
 
   connect( mUnSelectedBox, SIGNAL( selectionChanged() ), SLOT( slotButtonsEnabled() ) );
   connect( mSelectedBox, SIGNAL( selectionChanged() ), SLOT( slotButtonsEnabled() ) );
-  connect( mSelectedBox, SIGNAL( currentChanged( QListBoxItem * ) ), SLOT( slotButtonsEnabled() ) );
+  connect( mSelectedBox, SIGNAL( currentChanged( Q3ListBoxItem * ) ), SLOT( slotButtonsEnabled() ) );
 
   slotButtonsEnabled();
 }

@@ -22,12 +22,16 @@
 */
 
 #include <qcheckbox.h>
-#include <qdatetimeedit.h>
-#include <qframe.h>
+#include <q3datetimeedit.h>
+#include <q3frame.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
 #include <qspinbox.h>
+//Added by qt3to4:
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 #include <kaccelmanager.h>
 #include <kcombobox.h>
@@ -128,8 +132,8 @@ FieldWidget::FieldWidget( QWidget *parent, const char *name )
   mGlobalLayout = new QVBoxLayout( layout, KDialog::spacingHint() );
   mGlobalLayout->setAlignment( Qt::AlignTop );
 
-  mSeparator = new QFrame( this );
-  mSeparator->setFrameStyle( QFrame::HLine | QFrame::Sunken );
+  mSeparator = new Q3Frame( this );
+  mSeparator->setFrameStyle( Q3Frame::HLine | Q3Frame::Sunken );
   mSeparator->hide();
   layout->addWidget( mSeparator );
 
@@ -157,17 +161,17 @@ void FieldWidget::addField( const QString &identifier, const QString &title,
     connect( wdg, SIGNAL( toggled( bool ) ),
              this, SIGNAL( changed() ) );
   } else if ( type == "date" ) {
-    QDateEdit *wdg = new QDateEdit( this );
+    Q3DateEdit *wdg = new Q3DateEdit( this );
     record.mWidget = wdg;
     connect( wdg, SIGNAL( valueChanged( const QDate& ) ),
              this, SIGNAL( changed() ) );
   } else if ( type == "time" ) {
-    QTimeEdit *wdg = new QTimeEdit( this );
+    Q3TimeEdit *wdg = new Q3TimeEdit( this );
     record.mWidget = wdg;
     connect( wdg, SIGNAL( valueChanged( const QTime& ) ),
              this, SIGNAL( changed() ) );
   } else if ( type == "datetime" ) {
-    QDateTimeEdit *wdg = new QDateTimeEdit( this );
+    Q3DateTimeEdit *wdg = new Q3DateTimeEdit( this );
     record.mWidget = wdg;
     connect( wdg, SIGNAL( valueChanged( const QDateTime& ) ),
              this, SIGNAL( changed() ) );
@@ -235,13 +239,13 @@ void FieldWidget::clearFields()
       QCheckBox *wdg = static_cast<QCheckBox*>( (*fieldIt).mWidget );
       wdg->setChecked( true );
     } else if ( (*fieldIt).mWidget->isA( "QDateEdit" ) ) {
-      QDateEdit *wdg = static_cast<QDateEdit*>( (*fieldIt).mWidget );
+      Q3DateEdit *wdg = static_cast<Q3DateEdit*>( (*fieldIt).mWidget );
       wdg->setDate( QDate::currentDate() );
     } else if ( (*fieldIt).mWidget->isA( "QTimeEdit" ) ) {
-      QTimeEdit *wdg = static_cast<QTimeEdit*>( (*fieldIt).mWidget );
+      Q3TimeEdit *wdg = static_cast<Q3TimeEdit*>( (*fieldIt).mWidget );
       wdg->setTime( QTime::currentTime() );
     } else if ( (*fieldIt).mWidget->isA( "QDateTimeEdit" ) ) {
-      QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( (*fieldIt).mWidget );
+      Q3DateTimeEdit *wdg = static_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget );
       wdg->setDateTime( QDateTime::currentDateTime() );
     }
   }
@@ -273,13 +277,13 @@ void FieldWidget::loadContact( KABC::Addressee *addr )
           QCheckBox *wdg = static_cast<QCheckBox*>( (*fieldIt).mWidget );
           wdg->setChecked( value == "true" || value == "1" );
         } else if ( (*fieldIt).mWidget->isA( "QDateEdit" ) ) {
-          QDateEdit *wdg = static_cast<QDateEdit*>( (*fieldIt).mWidget );
+          Q3DateEdit *wdg = static_cast<Q3DateEdit*>( (*fieldIt).mWidget );
           wdg->setDate( QDate::fromString( value, Qt::ISODate ) );
         } else if ( (*fieldIt).mWidget->isA( "QTimeEdit" ) ) {
-          QTimeEdit *wdg = static_cast<QTimeEdit*>( (*fieldIt).mWidget );
+          Q3TimeEdit *wdg = static_cast<Q3TimeEdit*>( (*fieldIt).mWidget );
           wdg->setTime( QTime::fromString( value, Qt::ISODate ) );
         } else if ( (*fieldIt).mWidget->isA( "QDateTimeEdit" ) ) {
-          QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( (*fieldIt).mWidget );
+          Q3DateTimeEdit *wdg = static_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget );
           wdg->setDateTime( QDateTime::fromString( value, Qt::ISODate ) );
         }
       }
@@ -302,13 +306,13 @@ void FieldWidget::storeContact( KABC::Addressee *addr )
       QCheckBox *wdg = static_cast<QCheckBox*>( (*it).mWidget );
       value = ( wdg->isChecked() ? "true" : "false" );
     } else if ( (*it).mWidget->isA( "QDateEdit" ) ) {
-      QDateEdit *wdg = static_cast<QDateEdit*>( (*it).mWidget );
+      Q3DateEdit *wdg = static_cast<Q3DateEdit*>( (*it).mWidget );
       value = wdg->date().toString( Qt::ISODate );
     } else if ( (*it).mWidget->isA( "QTimeEdit" ) ) {
-      QTimeEdit *wdg = static_cast<QTimeEdit*>( (*it).mWidget );
+      Q3TimeEdit *wdg = static_cast<Q3TimeEdit*>( (*it).mWidget );
       value = wdg->time().toString( Qt::ISODate );
     } else if ( (*it).mWidget->isA( "QDateTimeEdit" ) ) {
-      QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( (*it).mWidget );
+      Q3DateTimeEdit *wdg = static_cast<Q3DateTimeEdit*>( (*it).mWidget );
       value = wdg->dateTime().toString( Qt::ISODate );
     }
 

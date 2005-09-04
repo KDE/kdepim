@@ -71,6 +71,10 @@ imap://server/folder/
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+//Added by qt3to4:
+#include <Q3CString>
+#include <Q3PtrList>
+#include <Q3ValueList>
 
 #ifdef HAVE_LIBSASL2
 extern "C" {
@@ -175,7 +179,7 @@ sigchld_handler (int signo)
   }
 }
 
-IMAP4Protocol::IMAP4Protocol (const QCString & pool, const QCString & app, bool isSSL):TCPSlaveBase ((isSSL ? 993 : 143),
+IMAP4Protocol::IMAP4Protocol (const Q3CString & pool, const Q3CString & app, bool isSSL):TCPSlaveBase ((isSSL ? 993 : 143),
         (isSSL ? IMAP_SSL_PROTOCOL : IMAP_PROTOCOL), pool,
               app, isSSL), imapParser (), mimeIO (), outputBuffer(outputCache)
 {
@@ -462,13 +466,13 @@ IMAP4Protocol::listDir (const KURL & _url)
       if (myLType == "LSUB")
       {
         // fire the same command as LIST to check if the box really exists
-        QValueList<imapList> listResponsesSave = listResponses;
+        Q3ValueList<imapList> listResponsesSave = listResponses;
         doCommand (imapCommand::clientList ("", listStr, false));
-        for (QValueListIterator < imapList > it = listResponsesSave.begin ();
+        for (Q3ValueListIterator < imapList > it = listResponsesSave.begin ();
             it != listResponsesSave.end (); ++it)
         {
           bool boxOk = false;
-          for (QValueListIterator < imapList > it2 = listResponses.begin ();
+          for (Q3ValueListIterator < imapList > it2 = listResponses.begin ();
               it2 != listResponses.end (); ++it2)
           {
             if ((*it2).name() == (*it).name())
@@ -488,7 +492,7 @@ IMAP4Protocol::listDir (const KURL & _url)
       }
       else // LIST or LSUBNOCHECK
       {
-        for (QValueListIterator < imapList > it = listResponses.begin ();
+        for (Q3ValueListIterator < imapList > it = listResponses.begin ();
             it != listResponses.end (); ++it)
         {
           doListEntry (aURL, myBox, (*it), (mySection != "FOLDERONLY"));
@@ -663,7 +667,7 @@ IMAP4Protocol::parseRelay (const QByteArray & buffer)
   {
     // collect data
     if ( !outputBuffer.isOpen() ) {
-      outputBuffer.open(IO_WriteOnly);
+      outputBuffer.open(QIODevice::WriteOnly);
     }
     outputBuffer.at(outputBufferIndex);
     outputBuffer.writeBlock(buffer, buffer.size());
@@ -704,7 +708,7 @@ bool IMAP4Protocol::parseRead(QByteArray & buffer, ulong len, ulong relay)
     }
     {
       QBuffer stream (buffer);
-      stream.open (IO_WriteOnly);
+      stream.open (QIODevice::WriteOnly);
       stream.at (buffer.size ());
       stream.writeBlock (buf, readLen);
       stream.close ();
@@ -739,7 +743,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, ulong relay)
       {
         QBuffer stream (buffer);
 
-        stream.open (IO_WriteOnly);
+        stream.open (QIODevice::WriteOnly);
         stream.at (buffer.size ());
         stream.writeBlock (readBuffer, copyLen);
         stream.close ();
@@ -810,7 +814,7 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
   }
   else
   {
-    QPtrList < QByteArray > bufferList;
+    Q3PtrList < QByteArray > bufferList;
     int length = 0;
 
     int result;
@@ -1226,7 +1230,7 @@ IMAP4Protocol::special (const QByteArray & aData)
   kdDebug(7116) << "IMAP4Protocol::special" << endl;
   if (!makeLogin()) return;
 
-  QDataStream stream(aData, IO_ReadOnly);
+  QDataStream stream(aData, QIODevice::ReadOnly);
 
   int tmp;
   stream >> tmp;
@@ -1341,7 +1345,7 @@ IMAP4Protocol::special (const QByteArray & aData)
   {
     // status
     KURL _url;
-    QCString newFlags;
+    Q3CString newFlags;
     stream >> _url >> newFlags;
 
     QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
@@ -1706,7 +1710,7 @@ IMAP4Protocol::stat (const KURL & _url)
       imapCommand *cmd = doCommand (imapCommand::clientList ("", aBox));
       if (cmd->result () == "OK")
       {
-        for (QValueListIterator < imapList > it = listResponses.begin ();
+        for (Q3ValueListIterator < imapList > it = listResponses.begin ();
              it != listResponses.end (); ++it)
         {
           if (aBox == (*it).name ()) found = true;
@@ -1987,7 +1991,7 @@ bool IMAP4Protocol::makeLogin ()
     cmd = doCommand( imapCommand::clientList("", "") );
     if (cmd->result () == "OK")
     {
-      QValueListIterator < imapList > it = listResponses.begin();
+      Q3ValueListIterator < imapList > it = listResponses.begin();
       if ( it != listResponses.end() )
       {
         namespaceToDelimiter[QString::null] = (*it).hierarchyDelimiter();
@@ -2014,7 +2018,7 @@ void
 IMAP4Protocol::parseWriteLine (const QString & aStr)
 {
   //kdDebug(7116) << "Writing: " << aStr << endl;
-  QCString writer = aStr.utf8();
+  Q3CString writer = aStr.utf8();
   int len = writer.length();
 
   // append CRLF if necessary
@@ -2298,7 +2302,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
           cmd = doCommand (imapCommand::clientList ("", _box));
           if (cmd->result () == "OK")
           {
-            for (QValueListIterator < imapList > it = listResponses.begin ();
+            for (Q3ValueListIterator < imapList > it = listResponses.begin ();
                 it != listResponses.end (); ++it)
             {
               //kdDebug(7116) << "IMAP4::parseURL - checking " << _box << " to " << (*it).name() << endl;
@@ -2387,7 +2391,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
 }
 
 int
-IMAP4Protocol::outputLine (const QCString & _str, int len)
+IMAP4Protocol::outputLine (const Q3CString & _str, int len)
 {
   if (len == -1) {
     len = _str.length();
@@ -2396,7 +2400,7 @@ IMAP4Protocol::outputLine (const QCString & _str, int len)
   if (cacheOutput)
   {
     if ( !outputBuffer.isOpen() ) {
-      outputBuffer.open(IO_WriteOnly);
+      outputBuffer.open(QIODevice::WriteOnly);
     }
     outputBuffer.at(outputBufferIndex);
     outputBuffer.writeBlock(_str.data(), len);
@@ -2487,7 +2491,7 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
       cmd = doCommand (imapCommand::clientList ("", aBox));
       if (cmd->result () == "OK")
       {
-        for (QValueListIterator < imapList > it = listResponses.begin ();
+        for (Q3ValueListIterator < imapList > it = listResponses.begin ();
              it != listResponses.end (); ++it)
         {
           if (aBox == (*it).name ()) found = true;

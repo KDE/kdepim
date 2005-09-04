@@ -28,7 +28,7 @@
 
 class QCheckBox;
 class QLineEdit;
-class QListViewItem;
+class Q3ListViewItem;
 class QPushButton;
 class QComboBox;
 

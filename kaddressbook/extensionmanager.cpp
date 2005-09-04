@@ -38,7 +38,7 @@
 
 ExtensionManager::ExtensionManager( KAB::Core *core, QWidget *parent,
                                     const char *name )
-  : QHBox( parent, name ), mCore( core ), mCurrentExtensionWidget( 0 ),
+  : Q3HBox( parent, name ), mCore( core ), mCurrentExtensionWidget( 0 ),
     mMapper( 0 )
 {
   createExtensionWidgets();

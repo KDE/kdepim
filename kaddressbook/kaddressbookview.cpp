@@ -22,7 +22,9 @@
 */
 
 #include <qlayout.h>
-#include <qpopupmenu.h>
+#include <q3popupmenu.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
 
 #include <kabc/addressbook.h>
 #include <kabc/distributionlistdialog.h>
@@ -161,7 +163,7 @@ void KAddressBookView::popup( const QPoint &point )
     return;
   }
 
-  QPopupMenu *menu = static_cast<QPopupMenu*>( mCore->guiClient()->factory()->container( "RMBPopup",
+  Q3PopupMenu *menu = static_cast<Q3PopupMenu*>( mCore->guiClient()->factory()->container( "RMBPopup",
                                                mCore->guiClient() ) );
   if ( menu )
     menu->popup( point );

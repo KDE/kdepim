@@ -24,8 +24,10 @@
 #ifndef EXTENSIONMANAGER_H
 #define EXTENSIONMANAGER_H
 
-#include <qhbox.h>
-#include <qptrlist.h>
+#include <q3hbox.h>
+#include <q3ptrlist.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include "extensionwidget.h"
 
@@ -39,14 +41,14 @@ class KActionCollection;
 class ExtensionData
 {
   public:
-    typedef QValueList<ExtensionData> List;
+    typedef Q3ValueList<ExtensionData> List;
 
     KAB::ExtensionWidget *widget;
     QString identifier;
     QString title;
 };
 
-class ExtensionManager : public QHBox
+class ExtensionManager : public Q3HBox
 {
   Q_OBJECT
 
@@ -94,7 +96,7 @@ class ExtensionManager : public QHBox
     KAB::ExtensionWidget *mCurrentExtensionWidget;
     ExtensionData::List mExtensionList;
     QSignalMapper *mMapper;
-    QPtrList<KAction> mActionList;
+    Q3PtrList<KAction> mActionList;
     KActionCollection *mActionCollection;
 };
 

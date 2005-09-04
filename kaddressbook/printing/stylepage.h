@@ -26,6 +26,9 @@
 #define STYLEPAGE_H
 
 #include <qwidget.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QLabel>
 
 #include <kabc/addressbook.h>
 #include <kabc/field.h>

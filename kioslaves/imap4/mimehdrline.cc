@@ -23,6 +23,8 @@
 
 #include "mimehdrline.h"
 #include "rfcdecoder.h"
+//Added by qt3to4:
+#include <Q3CString>
 
 using namespace std;
 
@@ -40,7 +42,7 @@ mimeValue ((const char *) NULL), mimeLabel ((const char *) NULL)
 {
 }
 
-mimeHdrLine::mimeHdrLine (const QCString & aLabel, const QCString & aValue):
+mimeHdrLine::mimeHdrLine (const Q3CString & aLabel, const Q3CString & aValue):
 mimeValue (aValue),
 mimeLabel (aLabel)
 {
@@ -69,11 +71,11 @@ mimeHdrLine::appendStr (const char *inCStr)
     {
       if (skip > 0)
       {
-        mimeValue += QCString (aCStr, skip + 1);
+        mimeValue += Q3CString (aCStr, skip + 1);
         aCStr += skip;
         retVal += skip;
         skip = parseFullLine (aCStr);
-        mimeValue += QCString (aCStr, skip + 1);
+        mimeValue += Q3CString (aCStr, skip + 1);
         retVal += skip;
         aCStr += skip;
       }
@@ -96,8 +98,8 @@ mimeHdrLine::setStr (const char *inCStr)
   int retVal = 0;
   char *aCStr = (char *) inCStr;
 //  char *begin = aCStr;  
-  mimeLabel = QCString ((const char *) NULL);
-  mimeValue = QCString ((const char *) NULL);
+  mimeLabel = Q3CString ((const char *) NULL);
+  mimeValue = Q3CString ((const char *) NULL);
 
   if (aCStr)
   {
@@ -113,7 +115,7 @@ mimeHdrLine::setStr (const char *inCStr)
         retVal = 0;
       else
       {
-        mimeLabel = QCString (aCStr, label);  //length including zero
+        mimeLabel = Q3CString (aCStr, label);  //length including zero
         retVal += label;
         aCStr += label;
       }
@@ -127,7 +129,7 @@ mimeHdrLine::setStr (const char *inCStr)
       aCStr += skip;
       retVal += skip;
       skip = parseFullLine (aCStr);
-      mimeValue = QCString (aCStr, skip + 1);
+      mimeValue = Q3CString (aCStr, skip + 1);
       retVal += skip;
       aCStr += skip;
     }
@@ -465,14 +467,14 @@ mimeHdrLine::parseSeparator (char separator, const char *inCStr)
 
 /** return the label */
 
-const QCString&
+const Q3CString&
 mimeHdrLine::getLabel ()
 {
   return mimeLabel;
 }
 
 /** return the value */
-const QCString&
+const Q3CString&
 mimeHdrLine::getValue ()
 {
   return mimeValue;
@@ -480,11 +482,11 @@ mimeHdrLine::getValue ()
 
 
 // FIXME: very inefficient still
-QCString
-mimeHdrLine::truncateLine(QCString aLine, unsigned int truncate)
+Q3CString
+mimeHdrLine::truncateLine(Q3CString aLine, unsigned int truncate)
 {
   int cutHere;
-  QCString retVal;
+  Q3CString retVal;
   uint len = aLine.length();
 
   // see if we have a line of the form "key: value" (like "Subject: bla")

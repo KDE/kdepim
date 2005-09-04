@@ -25,10 +25,10 @@
 #define ADDVIEWDIALOG_H
 
 #include <kdialogbase.h>
-#include <qdict.h>
+#include <q3dict.h>
 #include <qstring.h>
 
-class QButtonGroup;
+class Q3ButtonGroup;
 class QLineEdit;
 class ViewFactory;
 
@@ -43,7 +43,7 @@ class AddViewDialog : public KDialogBase
   Q_OBJECT
 
   public:
-    AddViewDialog( QDict<ViewFactory> *viewFactoryDict, QWidget *parent,
+    AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict, QWidget *parent,
                    const char *name = 0 );
     ~AddViewDialog();
 
@@ -63,9 +63,9 @@ class AddViewDialog : public KDialogBase
     void textChanged( const QString &text );
 
   private:
-    QDict<ViewFactory> *mViewFactoryDict;
+    Q3Dict<ViewFactory> *mViewFactoryDict;
     QLineEdit *mViewNameEdit;
-    QButtonGroup *mTypeGroup;
+    Q3ButtonGroup *mTypeGroup;
 
     int mTypeId;
 };

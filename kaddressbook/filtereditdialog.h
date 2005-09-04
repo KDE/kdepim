@@ -24,7 +24,7 @@
 #ifndef FILTEREDITDIALOG_H
 #define FILTEREDITDIALOG_H
 
-class QButtonGroup;
+class Q3ButtonGroup;
 class QString;
 class QToolButton;
 class QWidget;
@@ -52,7 +52,7 @@ class FilterDialog : public KDialogBase
     void add();
     void edit();
     void remove();
-    void selectionChanged( QListBoxItem* );
+    void selectionChanged( Q3ListBoxItem* );
 
   private:
     void initGUI();
@@ -88,7 +88,7 @@ class FilterEditDialog : public KDialogBase
 
     KLineEdit *mNameEdit;
     KListView *mCategoriesView;
-    QButtonGroup *mMatchRuleGroup;
+    Q3ButtonGroup *mMatchRuleGroup;
     QPushButton *mEditButton;
     QPushButton *mRemoveButton;
 };

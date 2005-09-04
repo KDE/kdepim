@@ -22,8 +22,8 @@
 */
 
 #include <qcheckbox.h>
-#include <qframe.h>
-#include <qgroupbox.h>
+#include <q3frame.h>
+#include <q3groupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
@@ -31,6 +31,11 @@
 #include <qtabwidget.h>
 #include <qtooltip.h>
 #include <qcombobox.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QBoxLayout>
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -59,7 +64,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   QVBoxLayout *layout = new QVBoxLayout( generalPage, KDialog::marginHint(),
                                             KDialog::spacingHint() );
 
-  QGroupBox *groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "General" ), generalPage );
+  Q3GroupBox *groupBox = new Q3GroupBox( 0, Qt::Vertical, i18n( "General" ), generalPage );
   QBoxLayout *boxLayout = new QVBoxLayout( groupBox->layout() );
   boxLayout->setAlignment( Qt::AlignTop );
 
@@ -96,7 +101,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   layout->addWidget( groupBox );
 
-  groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Script-Hooks" ), generalPage );
+  groupBox = new Q3GroupBox( 0, Qt::Vertical, i18n( "Script-Hooks" ), generalPage );
   QGridLayout *grid = new QGridLayout( groupBox->layout(), 3, 2,
                                        KDialog::spacingHint() );
   label = new QLabel( i18n( "Phone:" ), groupBox );
@@ -126,7 +131,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   layout->addWidget( groupBox );
 
-  groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Location Map" ), generalPage );
+  groupBox = new Q3GroupBox( 0, Qt::Vertical, i18n( "Location Map" ), generalPage );
   boxLayout = new QVBoxLayout( groupBox->layout(), KDialog::spacingHint() );
   boxLayout->setAlignment( Qt::AlignTop );
 

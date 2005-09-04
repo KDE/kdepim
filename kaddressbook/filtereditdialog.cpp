@@ -21,8 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qbuttongroup.h>
-#include <qhbox.h>
+#include <q3buttongroup.h>
+#include <q3hbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
@@ -32,6 +32,10 @@
 #include <qtoolbutton.h>
 #include <qtooltip.h>
 #include <qwidget.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QGridLayout>
+#include <QBoxLayout>
 
 #include <kapplication.h>
 #include <kbuttonbox.h>
@@ -55,7 +59,7 @@ FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
 
   QStringList::ConstIterator it;
   for ( it = cats.begin(); it != cats.end(); ++it )
-    mCategoriesView->insertItem( new QCheckListItem( mCategoriesView, *it, QCheckListItem::CheckBox ) );
+    mCategoriesView->insertItem( new Q3CheckListItem( mCategoriesView, *it, Q3CheckListItem::CheckBox ) );
 
   filterNameTextChanged( mNameEdit->text() );
 }
@@ -69,10 +73,10 @@ void FilterEditDialog::setFilter( const Filter &filter )
   mNameEdit->setText( filter.name() );
 
   QStringList categories = filter.categories();
-  QListViewItem *item = mCategoriesView->firstChild();
+  Q3ListViewItem *item = mCategoriesView->firstChild();
   while ( item != 0 ) {
     if ( categories.contains( item->text( 0 ) ) ) {
-      QCheckListItem *checkItem = static_cast<QCheckListItem*>( item );
+      Q3CheckListItem *checkItem = static_cast<Q3CheckListItem*>( item );
       checkItem->setOn( true );
     }
 
@@ -92,9 +96,9 @@ Filter FilterEditDialog::filter()
   filter.setName( mNameEdit->text() );
 
   QStringList categories;
-  QListViewItem *item = mCategoriesView->firstChild();
+  Q3ListViewItem *item = mCategoriesView->firstChild();
   while ( item != 0 ) {
-    QCheckListItem *checkItem = static_cast<QCheckListItem*>( item );
+    Q3CheckListItem *checkItem = static_cast<Q3CheckListItem*>( item );
     if ( checkItem->isOn() )
       categories.append( item->text( 0 ) );
 
@@ -132,7 +136,7 @@ void FilterEditDialog::initGUI()
   mCategoriesView->setFullWidth( true );
   topLayout->addMultiCellWidget( mCategoriesView, 1, 1, 0, 1 );
 
-  mMatchRuleGroup = new QButtonGroup( page );
+  mMatchRuleGroup = new Q3ButtonGroup( page );
   mMatchRuleGroup->setExclusive( true );
 
   QBoxLayout *gbLayout = new QVBoxLayout( mMatchRuleGroup );
@@ -242,7 +246,7 @@ void FilterDialog::refresh()
     mFilterListBox->insertItem( (*it).name() );
 }
 
-void FilterDialog::selectionChanged( QListBoxItem *item )
+void FilterDialog::selectionChanged( Q3ListBoxItem *item )
 {
   bool state = ( item != 0 );
 
@@ -260,9 +264,9 @@ void FilterDialog::initGUI()
 
   mFilterListBox = new KListBox( page );
   topLayout->addWidget( mFilterListBox, 0, 0 );
-  connect( mFilterListBox, SIGNAL( selectionChanged( QListBoxItem * ) ),
-           SLOT( selectionChanged( QListBoxItem * ) ) );
-  connect( mFilterListBox, SIGNAL( doubleClicked ( QListBoxItem * ) ),
+  connect( mFilterListBox, SIGNAL( selectionChanged( Q3ListBoxItem * ) ),
+           SLOT( selectionChanged( Q3ListBoxItem * ) ) );
+  connect( mFilterListBox, SIGNAL( doubleClicked ( Q3ListBoxItem * ) ),
            SLOT( edit() ) );
 
   KButtonBox *buttonBox = new KButtonBox( page, Vertical );

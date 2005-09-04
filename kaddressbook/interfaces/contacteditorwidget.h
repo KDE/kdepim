@@ -25,6 +25,8 @@
 #define KAB_CONTACTEDITORWIDGET_H
 
 #include <qwidget.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <kabc/addressbook.h>
 #include <klibloader.h>
@@ -39,7 +41,7 @@ class KDE_EXPORT ContactEditorWidget : public QWidget
   Q_OBJECT
 
   public:
-    typedef QValueList<ContactEditorWidget*> List;
+    typedef Q3ValueList<ContactEditorWidget*> List;
 
     ContactEditorWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
     ~ContactEditorWidget();

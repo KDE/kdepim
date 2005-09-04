@@ -22,11 +22,14 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpixmap.h>
 #include <qradiobutton.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QGridLayout>
 
 #include <kcombobox.h>
 #include <kdialog.h>
@@ -120,7 +123,7 @@ void StylePage::initGUI()
                                     "Choose the style that suits your needs below." ), this );
   topLayout->addMultiCellWidget( label, 0, 0, 0, 1 );
 
-  QButtonGroup *group = new QButtonGroup( i18n( "Sorting" ), this );
+  Q3ButtonGroup *group = new Q3ButtonGroup( i18n( "Sorting" ), this );
   group->setColumnLayout( 0, Qt::Vertical );
   QGridLayout *sortLayout = new QGridLayout( group->layout(), 2, 2,
                                              KDialog::spacingHint() );
@@ -140,7 +143,7 @@ void StylePage::initGUI()
 
   topLayout->addWidget( group, 1, 0 );
 
-  group = new QButtonGroup( i18n( "Print Style" ), this );
+  group = new Q3ButtonGroup( i18n( "Print Style" ), this );
   group->setColumnLayout( 0, Qt::Vertical );
   QVBoxLayout *styleLayout = new QVBoxLayout( group->layout(),
                                               KDialog::spacingHint() );

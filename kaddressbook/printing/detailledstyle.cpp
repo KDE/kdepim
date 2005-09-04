@@ -32,7 +32,7 @@
 #include <qlayout.h>
 #include <klocale.h>
 #include <knuminput.h>
-#include <qpaintdevicemetrics.h>
+#include <q3paintdevicemetrics.h>
 #include <qpainter.h>
 #include <kprinter.h>
 #include <kstandarddirs.h>
@@ -107,10 +107,12 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent, const char *na
 
   mPageAppearance->cbBackgroundColor->setChecked(
       config->readBoolEntry( ColoredContactHeaders, true ) );
+  QColor col(Qt::black);
   mPageAppearance->kcbHeaderBGColor->setColor(
-      config->readColorEntry( ContactHeaderBGColor, &Qt::black ) );
+      config->readColorEntry( ContactHeaderBGColor, &col ) );
+  col = QColor(Qt::white);
   mPageAppearance->kcbHeaderTextColor->setColor(
-      config->readColorEntry( ContactHeaderForeColor, &Qt::white ) );
+      config->readColorEntry( ContactHeaderForeColor, &col ) );
 
   mPageAppearance->layout()->setMargin( KDialog::marginHint() );
   mPageAppearance->layout()->setSpacing( KDialog::spacingHint() );
@@ -220,7 +222,7 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
   painter.begin( printer );
   printer->setFullPage( true ); // use whole page
 
-  QPaintDeviceMetrics metrics( printer );
+  Q3PaintDeviceMetrics metrics( printer );
 
   left = QMAX( printer->margins().width(), marginLeft );
   top = QMAX( printer->margins().height(), marginTop );

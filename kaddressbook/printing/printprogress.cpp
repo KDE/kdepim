@@ -22,8 +22,10 @@
 */
 
 #include <qlayout.h>
-#include <qprogressbar.h>
-#include <qtextbrowser.h>
+#include <q3progressbar.h>
+#include <q3textbrowser.h>
+//Added by qt3to4:
+#include <QGridLayout>
 
 #include <kapplication.h>
 #include <kdebug.h>
@@ -42,10 +44,10 @@ PrintProgress::PrintProgress( QWidget *parent, const char *name )
   QGridLayout *topLayout = new QGridLayout( this, 1, 1, KDialog::marginHint(),
                                             KDialog::spacingHint() );
 
-  mLogBrowser = new QTextBrowser( this );
+  mLogBrowser = new Q3TextBrowser( this );
   topLayout->addWidget( mLogBrowser, 0, 0 );
 
-  mProgressBar = new QProgressBar( this );
+  mProgressBar = new Q3ProgressBar( this );
   mProgressBar->setProgress( 0 );
   topLayout->addWidget( mProgressBar, 1, 0 );
 

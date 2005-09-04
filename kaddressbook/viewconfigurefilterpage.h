@@ -26,7 +26,7 @@
 
 #include <qwidget.h>
 
-class QButtonGroup;
+class Q3ButtonGroup;
 
 class KComboBox;
 class KConfig;
@@ -47,7 +47,7 @@ class ViewConfigureFilterPage : public QWidget
 
   private:
     KComboBox *mFilterCombo;
-    QButtonGroup *mFilterGroup;
+    Q3ButtonGroup *mFilterGroup;
 };
 
 #endif

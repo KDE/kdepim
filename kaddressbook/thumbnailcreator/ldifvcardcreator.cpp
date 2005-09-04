@@ -68,7 +68,7 @@ bool VCard_LDIFCreator::readContents( const QString &path )
 {
   // read file contents
   QFile file( path );
-  if ( !file.open( IO_ReadOnly ) )
+  if ( !file.open( QIODevice::ReadOnly ) )
     return false;
 
   QString info;

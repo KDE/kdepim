@@ -27,16 +27,20 @@
 #include <kcombobox.h>
 #include <klocale.h>
 
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qcombobox.h>
-#include <qheader.h>
+#include <q3header.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qlistview.h>
+#include <q3listview.h>
 #include <qpushbutton.h>
 #include <qradiobutton.h>
 #include <qstringlist.h>
-#include <qwhatsthis.h>
+#include <q3whatsthis.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <Q3Frame>
+#include <QGridLayout>
 
 #include "core.h"
 #include "kabprefs.h"
@@ -53,8 +57,8 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
 
   connect( mFiltersCombo, SIGNAL( activated( int ) ),
            SLOT( filterChanged( int ) ) );
-  connect( mCategoriesView, SIGNAL( clicked( QListViewItem* ) ),
-           SLOT( categoryClicked( QListViewItem* ) ) );
+  connect( mCategoriesView, SIGNAL( clicked( Q3ListViewItem* ) ),
+           SLOT( categoryClicked( Q3ListViewItem* ) ) );
 
   // setup filters
   mFilters = Filter::restore( kapp->config(), "Filter" );
@@ -70,7 +74,7 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
   const QStringList categories =  KABPrefs::instance()->customCategories();
   QStringList::ConstIterator it;
   for ( it = categories.begin(); it != categories.end(); ++it )
-    new QCheckListItem( mCategoriesView, *it, QCheckListItem::CheckBox );
+    new Q3CheckListItem( mCategoriesView, *it, Q3CheckListItem::CheckBox );
   mUseCategories->setEnabled( categories.count() > 0 );
 
   int count = mCore->selectedUIDs().count();
@@ -145,9 +149,9 @@ QStringList XXPortSelectDialog::categories() const
 {
   QStringList list;
 
-  QListViewItemIterator it( mCategoriesView );
+  Q3ListViewItemIterator it( mCategoriesView );
   for ( ; it.current(); ++it ) {
-    QCheckListItem* qcli = static_cast<QCheckListItem*>(it.current());
+    Q3CheckListItem* qcli = static_cast<Q3CheckListItem*>(it.current());
     if ( qcli->isOn() )
       list.append( it.current()->text( 0 ) );
   }
@@ -160,12 +164,12 @@ void XXPortSelectDialog::filterChanged( int )
   mUseFilters->setChecked( true );
 }
 
-void XXPortSelectDialog::categoryClicked( QListViewItem *i )
+void XXPortSelectDialog::categoryClicked( Q3ListViewItem *i )
 {
   if ( !i )
     return;
 
-  QCheckListItem *qcli = static_cast<QCheckListItem*>( i );
+  Q3CheckListItem *qcli = static_cast<Q3CheckListItem*>( i );
   if ( qcli->isOn() )
     mUseCategories->setChecked( true );
 }
@@ -177,7 +181,7 @@ void XXPortSelectDialog::slotHelp()
 
 void XXPortSelectDialog::initGUI()
 {
-  QFrame *page = plainPage();
+  Q3Frame *page = plainPage();
 
   QVBoxLayout *topLayout = new QVBoxLayout( page, KDialog::marginHint(),
                                             KDialog::spacingHint() );
@@ -185,7 +189,7 @@ void XXPortSelectDialog::initGUI()
   QLabel *label = new QLabel( i18n( "Which contacts do you want to export?" ), page );
   topLayout->addWidget( label );
 
-  mButtonGroup = new QButtonGroup( i18n( "Selection" ), page );
+  mButtonGroup = new Q3ButtonGroup( i18n( "Selection" ), page );
   mButtonGroup->setColumnLayout( 0, Qt::Vertical );
   mButtonGroup->layout()->setSpacing( KDialog::spacingHint() );
   mButtonGroup->layout()->setMargin( KDialog::marginHint() );
@@ -195,36 +199,36 @@ void XXPortSelectDialog::initGUI()
 
   mUseWholeBook = new QRadioButton( i18n( "&All contacts" ), mButtonGroup );
   mUseWholeBook->setChecked( true );
-  QWhatsThis::add( mUseWholeBook, i18n( "Export the entire address book" ) );
+  Q3WhatsThis::add( mUseWholeBook, i18n( "Export the entire address book" ) );
   groupLayout->addWidget( mUseWholeBook, 0, 0 );
   mUseSelection = new QRadioButton( i18n("&Selected contact", "&Selected contacts (%n selected)", mCore->selectedUIDs().count() ), mButtonGroup );
-  QWhatsThis::add( mUseSelection, i18n( "Only export contacts selected in KAddressBook.\n"
+  Q3WhatsThis::add( mUseSelection, i18n( "Only export contacts selected in KAddressBook.\n"
                                         "This option is disabled if no contacts are selected." ) );
   groupLayout->addWidget( mUseSelection, 1, 0 );
 
   mUseFilters = new QRadioButton( i18n( "Contacts matching &filter" ), mButtonGroup );
-  QWhatsThis::add( mUseFilters, i18n( "Only export contacts matching the selected filter.\n"
+  Q3WhatsThis::add( mUseFilters, i18n( "Only export contacts matching the selected filter.\n"
                                      "This option is disabled if you have not defined any filters" ) );
   groupLayout->addWidget( mUseFilters, 2, 0 );
 
   mUseCategories = new QRadioButton( i18n( "Category &members" ), mButtonGroup );
-  QWhatsThis::add( mUseCategories, i18n( "Only export contacts who are members of a category that is checked on the list to the left.\n"
+  Q3WhatsThis::add( mUseCategories, i18n( "Only export contacts who are members of a category that is checked on the list to the left.\n"
                                        "This option is disabled if you have no categories." ) );
   groupLayout->addWidget( mUseCategories, 3, 0, Qt::AlignTop );
 
   mFiltersCombo = new QComboBox( false, mButtonGroup );
-  QWhatsThis::add( mFiltersCombo, i18n( "Select a filter to decide which contacts to export." ) );
+  Q3WhatsThis::add( mFiltersCombo, i18n( "Select a filter to decide which contacts to export." ) );
   groupLayout->addWidget( mFiltersCombo, 2, 1 );
 
-  mCategoriesView = new QListView( mButtonGroup );
+  mCategoriesView = new Q3ListView( mButtonGroup );
   mCategoriesView->addColumn( "" );
   mCategoriesView->header()->hide();
-  QWhatsThis::add( mCategoriesView, i18n( "Check the categories whose members you want to export." ) );
+  Q3WhatsThis::add( mCategoriesView, i18n( "Check the categories whose members you want to export." ) );
   groupLayout->addWidget( mCategoriesView, 3, 1 );
 
   topLayout->addWidget( mButtonGroup );
 
-  QButtonGroup *sortingGroup = new QButtonGroup( i18n( "Sorting" ), page );
+  Q3ButtonGroup *sortingGroup = new Q3ButtonGroup( i18n( "Sorting" ), page );
   sortingGroup->setColumnLayout( 0, Qt::Vertical );
   QGridLayout *sortLayout = new QGridLayout( sortingGroup->layout(), 2, 2,
                                              KDialog::spacingHint() );

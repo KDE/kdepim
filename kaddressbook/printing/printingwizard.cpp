@@ -23,10 +23,10 @@
 */
 
 #include <qcombobox.h>
-#include <qheader.h>
+#include <q3header.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qlistview.h>
+#include <q3listview.h>
 #include <qpixmap.h>
 #include <qpushbutton.h>
 #include <qradiobutton.h>

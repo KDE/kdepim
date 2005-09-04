@@ -21,10 +21,14 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qradiobutton.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QBoxLayout>
 
 #include <kconfig.h>
 #include <kcombobox.h>
@@ -40,7 +44,7 @@ ViewConfigureFilterPage::ViewConfigureFilterPage( QWidget *parent,
 {
   QBoxLayout *topLayout = new QVBoxLayout( this, 0, KDialog::spacingHint() );
 
-  mFilterGroup = new QButtonGroup();
+  mFilterGroup = new Q3ButtonGroup();
   connect( mFilterGroup, SIGNAL( clicked( int ) ), SLOT( buttonClicked( int ) ) );
 
   QLabel *label = new QLabel( i18n( "The default filter will be activated whenever"

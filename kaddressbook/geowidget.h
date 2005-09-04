@@ -27,6 +27,10 @@
 #include <kdialogbase.h>
 
 #include "contacteditorwidget.h"
+//Added by qt3to4:
+#include <QMouseEvent>
+#include <QLabel>
+#include <QPaintEvent>
 
 namespace KABC {
 class Geo;

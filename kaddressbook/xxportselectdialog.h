@@ -30,10 +30,10 @@
 
 #include "filter.h"
 
-class QButtonGroup;
+class Q3ButtonGroup;
 class QComboBox;
-class QListView;
-class QListViewItem;
+class Q3ListView;
+class Q3ListViewItem;
 class QRadioButton;
 
 namespace KAB {
@@ -54,7 +54,7 @@ class XXPortSelectDialog : public KDialogBase
 
   private slots:
     void filterChanged( int );
-    void categoryClicked( QListViewItem * i );
+    void categoryClicked( Q3ListViewItem * i );
 
   protected slots:
     void slotHelp();
@@ -63,13 +63,13 @@ class XXPortSelectDialog : public KDialogBase
     void initGUI();
     QStringList categories() const;
 
-    QButtonGroup* mButtonGroup;
+    Q3ButtonGroup* mButtonGroup;
     QRadioButton* mUseCategories;
     QRadioButton* mUseFilters;
     QRadioButton* mUseWholeBook;
     QRadioButton* mUseSelection;
     QComboBox* mFiltersCombo;
-    QListView* mCategoriesView;
+    Q3ListView* mCategoriesView;
 
     KComboBox *mFieldCombo;
     KComboBox *mSortTypeCombo;

@@ -40,12 +40,19 @@
 
 #include <qapplication.h>
 #include <qcheckbox.h>
-#include <qdragobject.h>
-#include <qgroupbox.h>
+#include <q3dragobject.h>
+#include <q3groupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpixmap.h>
 #include <qtooltip.h>
+//Added by qt3to4:
+#include <QGridLayout>
+#include <Q3Frame>
+#include <QHBoxLayout>
+#include <QDropEvent>
+#include <QDragEnterEvent>
+#include <QMouseEvent>
 
 #include "imagewidget.h"
 
@@ -63,7 +70,7 @@ void ImageLabel::setReadOnly( bool readOnly )
 void ImageLabel::startDrag()
 {
   if ( pixmap() && !pixmap()->isNull() ) {
-    QImageDrag *drag = new QImageDrag( pixmap()->convertToImage(), this );
+    Q3ImageDrag *drag = new Q3ImageDrag( pixmap()->convertToImage(), this );
     drag->dragCopy();
   }
 }
@@ -72,10 +79,10 @@ void ImageLabel::dragEnterEvent( QDragEnterEvent *event )
 {
   bool accepted = false;
 
-  if ( QImageDrag::canDecode( event ) )
+  if ( Q3ImageDrag::canDecode( event ) )
     accepted = true;
 
-  if ( QUriDrag::canDecode( event ) )
+  if ( Q3UriDrag::canDecode( event ) )
     accepted = true;
 
   event->accept( accepted );
@@ -86,16 +93,16 @@ void ImageLabel::dropEvent( QDropEvent *event )
   if ( mReadOnly )
     return;
 
-  if ( QImageDrag::canDecode( event ) ) {
+  if ( Q3ImageDrag::canDecode( event ) ) {
     QPixmap pm;
 
-    if ( QImageDrag::decode( event, pm ) ) {
+    if ( Q3ImageDrag::decode( event, pm ) ) {
       setPixmap( pm );
       emit changed();
     }
   }
 
-  if ( QUriDrag::canDecode( event ) ) {
+  if ( Q3UriDrag::canDecode( event ) ) {
     KURL::List urls;
     if ( KURLDrag::decode( event, urls ) ) {
       if ( urls.isEmpty() ) { // oops, no data
@@ -131,14 +138,14 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
 {
   QHBoxLayout *topLayout = new QHBoxLayout( this, KDialog::marginHint(),
                                             KDialog::spacingHint() );
-  QGroupBox *box = new QGroupBox( 0, Qt::Vertical, title, this );
+  Q3GroupBox *box = new Q3GroupBox( 0, Qt::Vertical, title, this );
   QGridLayout *boxLayout = new QGridLayout( box->layout(), 3, 3,
                                             KDialog::spacingHint() );
   boxLayout->setRowStretch( 3, 1 );
 
   mImageLabel = new ImageLabel( i18n( "Picture" ), box );
   mImageLabel->setFixedSize( 100, 140 );
-  mImageLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  mImageLabel->setFrameStyle( Q3Frame::Panel | Q3Frame::Sunken );
   boxLayout->addMultiCellWidget( mImageLabel, 0, 3, 0, 0, AlignTop );
 
   mImageUrl = new KURLRequester( box );

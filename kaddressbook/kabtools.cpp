@@ -28,6 +28,8 @@
 #include <ktempdir.h>
 
 #include <qfile.h>
+//Added by qt3to4:
+#include <QTextStream>
 
 #include "kabtools.h"
 
@@ -76,7 +78,7 @@ void KABTools::mailVCards( const QStringList &uids, KABC::AddressBook *ab )
 
     QFile file( path );
 
-    if ( file.open( IO_WriteOnly ) ) {
+    if ( file.open( QIODevice::WriteOnly ) ) {
       KABC::VCardConverter converter;
       KABC::Addressee::List list;
       list.append( addressee );
