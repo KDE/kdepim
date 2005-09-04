@@ -24,7 +24,7 @@
 #define KCAL_RESOURCEREMOTECONFIG_H
 
 #include <qradiobutton.h>
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <kurlrequester.h>
 
 #include <kresources/resource.h>

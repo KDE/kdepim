@@ -21,7 +21,7 @@
 #ifndef KCAL_RESOURCEREMOTEDIR_H
 #define KCAL_RESOURCEREMOTEDIR_H
 
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qstring.h>
 #include <qdatetime.h>
 
