@@ -28,7 +28,7 @@
 
 #include <qapplication.h>
 #include <qdatetime.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qstringlist.h>
 #include <qtimer.h>
 
