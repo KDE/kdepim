@@ -101,7 +101,7 @@ void SloxFolderDialog::createFolderViewItem( SloxFolder *folder )
 
 QString SloxFolderDialog::selectedFolder() const
 {
-  QListViewItem *item = mListView->selectedItem();
+  Q3ListViewItem *item = mListView->selectedItem();
   if ( item )
     return item->text( 1 );
   return "-1"; // OX default folder

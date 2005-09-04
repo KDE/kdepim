@@ -20,6 +20,8 @@
 #include <qfile.h>
 #include <qdom.h>
 #include <qstring.h>
+//Added by qt3to4:
+#include <QTextStream>
 
 #include <kdebug.h>
 #include <kio/job.h>
@@ -92,7 +94,7 @@ void SloxFolderManager::slotResult( KIO::Job *job )
   } else {
     kdDebug() << k_funcinfo << " success, writing to " << cacheFile() << endl;
     QFile f( cacheFile() );
-    if ( !f.open( IO_WriteOnly ) ) {
+    if ( !f.open( QIODevice::WriteOnly ) ) {
       kdDebug() << "Unable to open '" << cacheFile() << "'" << endl;
       return;
     }
@@ -122,7 +124,7 @@ void SloxFolderManager::readFolders()
   kdDebug() << k_funcinfo << endl;
 
   QFile f( cacheFile() );
-  if ( !f.open( IO_ReadOnly ) ) {
+  if ( !f.open( QIODevice::ReadOnly ) ) {
     kdDebug() << "Unable to open '" << cacheFile() << "'" << endl;
     requestFolders();
     return;

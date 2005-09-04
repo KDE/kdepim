@@ -20,7 +20,7 @@
 #ifndef WEBDAVHANDLER_H
 #define WEBDAVHANDLER_H
 
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qdom.h>
@@ -76,7 +76,7 @@ class KDE_EXPORT WebdavHandler
     static QString qDateTimeToSlox( const QDateTime &dt,
                                     const QString &timeZoneId );
 
-    static QValueList<SloxItem> getSloxItems( SloxBase *res, const QDomDocument &doc );
+    static Q3ValueList<SloxItem> getSloxItems( SloxBase *res, const QDomDocument &doc );
 
     void clearSloxAttributeStatus();
     void parseSloxAttribute( const QDomElement & );

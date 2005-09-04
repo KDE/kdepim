@@ -39,6 +39,9 @@
 #include <kconfig.h>
 
 #include <qfile.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 
 SloxItem::SloxItem()
   : status( Invalid )
@@ -73,22 +76,22 @@ void WebdavHandler::log( const QString &text )
 
   QString filename = mLogFile + "-" + QString::number( mLogCount );
   QFile file( filename );
-  if ( !file.open( IO_WriteOnly ) ) {
+  if ( !file.open( QIODevice::WriteOnly ) ) {
     kdWarning() << "Unable to open log file '" << filename << "'" << endl;
     return;
   }
 
-  QCString textUtf8 = text.utf8();
+  Q3CString textUtf8 = text.utf8();
   file.writeBlock( textUtf8.data(), textUtf8.size() - 1 );
 
   if ( ++mLogCount > 5 ) mLogCount = 0;
 }
 
-QValueList<SloxItem> WebdavHandler::getSloxItems( SloxBase *res, const QDomDocument &doc )
+Q3ValueList<SloxItem> WebdavHandler::getSloxItems( SloxBase *res, const QDomDocument &doc )
 {
   kdDebug() << "getSloxItems" << endl;
 
-  QValueList<SloxItem> items;
+  Q3ValueList<SloxItem> items;
 
   QDomElement docElement = doc.documentElement();
 
@@ -174,7 +177,7 @@ QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt,
   // secsTo and toTime_t etc also perform a timezone conversion using the system timezone,
   // but we want to use the calendar timezone, so we have to convert ourself and spoof the tz to UTC before
   // converting to ticks to prevent this
-  QCString origTz = getenv("TZ");
+  Q3CString origTz = getenv("TZ");
   setenv( "TZ", "UTC", 1 );
   uint ticks = utc.toTime_t();
   if ( origTz.isNull() )

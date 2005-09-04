@@ -36,6 +36,8 @@
 #include <qfile.h>
 #include <qdom.h>
 #include <qstring.h>
+//Added by qt3to4:
+#include <QTextStream>
 
 SloxAccounts::SloxAccounts( SloxBase *res, const KURL &baseUrl )
   : mBaseUrl( baseUrl ), mRes( res )
@@ -152,7 +154,7 @@ void SloxAccounts::slotResult( KIO::Job *job )
   } else {
     if ( mRes->resType() == "ox" ) {
       QFile f( cacheFile() );
-      if ( !f.open( IO_WriteOnly ) ) {
+      if ( !f.open( QIODevice::WriteOnly ) ) {
         kdWarning() << "Unable to open '" << cacheFile() << "'" << endl;
         return;
       }
@@ -182,7 +184,7 @@ void SloxAccounts::readAccounts()
   kdDebug() << "SloxAccounts::readAccounts()" << endl;
 
   QFile f( cacheFile() );
-  if ( !f.open( IO_ReadOnly ) ) {
+  if ( !f.open( QIODevice::ReadOnly ) ) {
     kdDebug() << "Unable to open '" << cacheFile() << "'" << endl;
     requestAccounts();
     return;

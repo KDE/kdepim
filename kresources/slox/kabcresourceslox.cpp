@@ -20,6 +20,8 @@
 */
 
 #include <qapplication.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <kabc/picture.h>
 #include <kconfig.h>
@@ -234,11 +236,11 @@ void ResourceSlox::slotResult( KIO::Job *job )
 
     mWebdavHandler.log( doc.toString( 2 ) );
 
-    QValueList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
+    Q3ValueList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
 
     bool changed = false;
 
-    QValueList<SloxItem>::ConstIterator it;
+    Q3ValueList<SloxItem>::ConstIterator it;
     for( it = items.begin(); it != items.end(); ++it ) {
       SloxItem item = *it;
       QString uid = "kresources_slox_kabc_" + item.sloxId;
@@ -299,9 +301,9 @@ void ResourceSlox::slotUploadResult( KIO::Job *job )
     kdDebug() << k_funcinfo << "Upload result: " << endl;
     kdDebug() << doc.toString() << endl;
 
-    QValueList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
+    Q3ValueList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
 
-    QValueList<SloxItem>::ConstIterator it;
+    Q3ValueList<SloxItem>::ConstIterator it;
     for( it = items.begin(); it != items.end(); ++it ) {
       SloxItem item = *it;
       if ( !item.response.contains( "200" ) ) {
