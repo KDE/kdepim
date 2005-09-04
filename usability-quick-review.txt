@@ -1,7 +1,9 @@
-KMAIL:
-WhatIs button should not be in toolbar until we actually have a substantial amount of whatis help.
+Global:
+- WhatIs button should not be in toolbar until we actually have a substantial amount of whatis help.
 KMail has none, for example.
 
+KMAIL:
+- config dialog, misc tab;
 Orig: When trying to find unread messages;
 Orig:     do not loop
 Orig:     loop in current folder
@@ -12,20 +14,38 @@ Propsal:     To end of Folder
 Propsal:     Stay in Folder
 Propsal:     In all Folders
 
-Store IMap password checkbox checked by default in account diag
+- Store IMap password checkbox should checked by default in account diag
 
-Go Online / Go Offline  for menu
+- Rename "network state" to Go Online / Go Offline
 
-Remove kmail statusbar entry '0 messages' when leaving the part
+- Remove kmail statusbar entry '0 messages' when leaving the part (see how kaddressbook removes his '%n contacts matching')
 
-GnuPG log viewer (tools->gnupg log viewer) opens in a waaay to small window
+- GnuPG log viewer (tools->gnupg log viewer) opens in a waaay to small window
+
+- in (d)imap first count the folders to be updated and set the amount of steps for the progress bar in the statubar to be relevant to that so the progressbar will work accross the whole update, and not per folder.  Since the current way makes it unusable from a usability perspective
 
 korganizer
-- 2 default resources
+- why does it start with 2 default resources? One is enough.
+- rename default resource to "Default calendar resource"
+
 
 Summary News Feeds
 - No rss dcop service available.
   You need rssservice to use this plugin.
   Oh; my.  That must be the worst (best?) example of using too technical error feedback.
   Don't use techincal terminology like 'dcop' 'service' 'rssservice' or 'plugin'.
+
+
+TODO viewer:
+- problem:  in the todo-view the categories you can set via the context menu on a todo row does not only come from the user settings, but also from the various resources.  Add a resource and you might see more categories appear in te context menu.  Problems start to appear when you have really old todo's in your resource which categories are auto-added.
+For example; a category named after a project I was on last year, for a different boss.
+Suggestion;  don't add categories from resource-items older than 6mnts.
+Suggestion2: add hierarchical categories and add one submenu 'old'
+
+- The context menu for percent does not add a checkbox in front of the item that is the active one.
+So if I set the completion of a todo to '40%' and open the context menu, I expect the relevant item to be checked.
+naturally when its at '38%' I don't expect any to be set.
+
+- resort ordering of the table colums. Most important things first.
+See the research from Ellen for best feedback what is used.  Recurrence intuitively should be about last.
 
