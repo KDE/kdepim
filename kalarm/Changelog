@@ -1,12 +1,14 @@
 KAlarm
 
+=== Version 1.2.10 --- 4 September 2005 ===
+Prevent session restoration displaying main windows which should be hidden.
+
 === Version 1.2.9 --- 17 July 2005 ===
 Minimise KMix window if KMix is started by KAlarm when displaying a message.
 Fix Plastik style 'enabled' indication for time spinbox left-hand buttons.
 Prevent message windows always being full screen after a big message is shown.
 Prevent message windows being initially larger than the desktop.
 Prevent message windows initially overlapping the KDE panel.
-Prevent session restoration displaying main windows which should be hidden.
 Change --volume command line option short form to -V (-v is used by --version).
 Use 'KAlarm' untranslated in calendar product ID, to cater for locale changes.
 

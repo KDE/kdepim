@@ -1,7 +1,7 @@
 /*
  *  alarmdaemon.h  -  alarm daemon control routines
  *  Program:  KAlarm's alarm daemon (kalarmd)
- *  (C) 2001, 2004 by David Jarvie <software@astrojar.org.uk>
+ *  Copyright (c) 2001, 2004, 2005 by David Jarvie <software@astrojar.org.uk>
  *  Based on the original, (c) 1998, 1999 Preston Brown
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -14,9 +14,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #ifndef ALARMDAEMON_H
@@ -36,6 +36,9 @@ class AlarmDaemon : public QObject, virtual public AlarmDaemonIface
 		AlarmDaemon(QObject* parent = 0, const char* name = 0);
 
 	private slots:
+//#ifdef AUTOSTART_KALARM
+		void    autostartKAlarm();
+//#endif
 		void    calendarLoaded(ADCalendar*, bool success);
 		void    checkAlarmsSlot();
 		void    checkAlarms();
@@ -54,6 +57,7 @@ class AlarmDaemon : public QObject, virtual public AlarmDaemonIface
 		void    registerChange(const QCString& appName, bool startClient);
 		void    quit();
 		// Other methods
+		void    startMonitoring();
 		void    enableCal(const QString& urlString, bool enable);
 		void    reloadCal(const QCString& appname, const QString& urlString, bool reset);
 		void    reloadCal(ADCalendar*, bool reset);

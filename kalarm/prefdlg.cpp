@@ -1,7 +1,7 @@
 /*
  *  prefdlg.cpp  -  program preferences dialog
  *  Program:  kalarm
- *  (C) 2001 - 2005 by David Jarvie <software@astrojar.org.uk>
+ *  Copyright (c) 2001 - 2005 by David Jarvie <software@astrojar.org.uk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -13,9 +13,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #include "kalarm.h"
@@ -253,6 +253,9 @@ MiscPrefTab::MiscPrefTab(QVBox* frame)
 
 	mAutostartTrayIcon1 = new QCheckBox(i18n("Autostart at &login"), group, "autoTray");
 	mAutostartTrayIcon1->setFixedSize(mAutostartTrayIcon1->sizeHint());
+#ifdef AUTOSTART_BY_KALARMD
+	connect(mAutostartTrayIcon1, SIGNAL(toggled(bool)), SLOT(slotAutostartToggled(bool)));
+#endif
 	QWhatsThis::add(mAutostartTrayIcon1,
 	      i18n("Check to run %1 whenever you start KDE.").arg(progname));
 	grid->addMultiCellWidget(mAutostartTrayIcon1, row, row, 1, 2, alignment);
@@ -288,6 +291,9 @@ MiscPrefTab::MiscPrefTab(QVBox* frame)
 
 	mAutostartTrayIcon2 = new QCheckBox(i18n("Autostart system tray &icon at login"), group, "autoRun");
 	mAutostartTrayIcon2->setFixedSize(mAutostartTrayIcon2->sizeHint());
+#ifdef AUTOSTART_BY_KALARMD
+	connect(mAutostartTrayIcon2, SIGNAL(toggled(bool)), SLOT(slotAutostartToggled(bool)));
+#endif
 	QWhatsThis::add(mAutostartTrayIcon2,
 	      i18n("Check to display the system tray icon whenever you start KDE."));
 	grid->addMultiCellWidget(mAutostartTrayIcon2, row, row, 1, 2, alignment);
@@ -480,13 +486,17 @@ void MiscPrefTab::apply(bool syncToDisc)
 		}
 	}
 	Preferences* preferences = Preferences::instance();
-	preferences->mAutostartDaemon = mAutostartDaemon->isChecked();
 	bool systray = mRunInSystemTray->isChecked();
 	preferences->mRunInSystemTray        = systray;
 	preferences->mDisableAlarmsIfStopped = mDisableAlarmsIfStopped->isChecked();
 	if (mQuitWarn->isEnabled())
 		preferences->setQuitWarn(mQuitWarn->isChecked());
 	preferences->mAutostartTrayIcon = systray ? mAutostartTrayIcon1->isChecked() : mAutostartTrayIcon2->isChecked();
+#ifdef AUTOSTART_BY_KALARMD
+	preferences->mAutostartDaemon = mAutostartDaemon->isChecked() || preferences->mAutostartTrayIcon;
+#else
+	preferences->mAutostartDaemon = mAutostartDaemon->isChecked();
+#endif
 	preferences->setConfirmAlarmDeletion(mConfirmAlarmDeletion->isChecked());
 	int sod = mStartOfDay->value();
 	preferences->mStartOfDay.setHMS(sod/60, sod%60, 0);
@@ -534,6 +544,18 @@ void MiscPrefTab::slotRunModeToggled(bool)
 	mAutostartTrayIcon2->setEnabled(!systray);
 	mAutostartTrayIcon1->setEnabled(systray);
 	mDisableAlarmsIfStopped->setEnabled(systray);
+}
+
+/******************************************************************************
+* If autostart at login is selected, the daemon must be autostarted so that it
+* can autostart KAlarm, in which case disable the daemon autostart option.
+*/
+void MiscPrefTab::slotAutostartToggled(bool)
+{
+#ifdef AUTOSTART_BY_KALARMD
+	bool autostart = mRunInSystemTray->isChecked() ? mAutostartTrayIcon1->isChecked() : mAutostartTrayIcon2->isChecked();
+	mAutostartDaemon->setEnabled(!autostart);
+#endif
 }
 
 void MiscPrefTab::slotDisableIfStoppedToggled(bool)
