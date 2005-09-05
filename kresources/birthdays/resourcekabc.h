@@ -21,7 +21,7 @@
 #ifndef KCAL_RESOURCEKABC_H
 #define KCAL_RESOURCEKABC_H
 
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qstring.h>
 #include <qdatetime.h>
 

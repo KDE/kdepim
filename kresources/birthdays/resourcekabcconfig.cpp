@@ -21,8 +21,14 @@
 
 #include <typeinfo>
 
-#include <qheader.h>
+#include <q3header.h>
 #include <qlayout.h>
+//Added by qt3to4:
+#include <QLabel>
+#include <Q3Frame>
+#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QBoxLayout>
 
 #include <kabprefs.h>
 #include <kdebug.h>
@@ -49,8 +55,8 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent,  const char* name )
   mAlarmTimeEdit->setText("0");
   alarmLayout->addWidget(mAlarmTimeEdit);
 
-  QFrame *line = new QFrame( this );
-  line->setFrameStyle( QFrame::Sunken | QFrame::HLine );
+  Q3Frame *line = new Q3Frame( this );
+  line->setFrameStyle( Q3Frame::Sunken | Q3Frame::HLine );
   topLayout->addMultiCellWidget( line, 2, 2, 0, 1 );
 
   mUseCategories = new QCheckBox( i18n( "Filter by categories" ), this );
@@ -76,7 +82,7 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent,  const char* name )
   const QStringList categories = prefs->customCategories();
   QStringList::ConstIterator it;
   for ( it = categories.begin(); it != categories.end(); ++it )
-    new QCheckListItem( mCategoryView, *it, QCheckListItem::CheckBox );
+    new Q3CheckListItem( mCategoryView, *it, Q3CheckListItem::CheckBox );
 }
 
 void ResourceKABCConfig::loadSettings( KRES::Resource *resource )
@@ -91,10 +97,10 @@ void ResourceKABCConfig::loadSettings( KRES::Resource *resource )
     mALabel->setEnabled( res->alarm() );
 
     const QStringList categories = res->categories();
-    QListViewItemIterator it( mCategoryView );
+    Q3ListViewItemIterator it( mCategoryView );
     while ( it.current() ) {
       if ( categories.contains( it.current()->text( 0 ) ) ) {
-        QCheckListItem *item = static_cast<QCheckListItem*>( it.current() );
+        Q3CheckListItem *item = static_cast<Q3CheckListItem*>( it.current() );
         item->setOn( true );
       }
       ++it;
@@ -115,7 +121,7 @@ void ResourceKABCConfig::saveSettings( KRES::Resource *resource )
     setReadOnly( true );
 
     QStringList categories;
-    QListViewItemIterator it( mCategoryView, QListViewItemIterator::Checked );
+    Q3ListViewItemIterator it( mCategoryView, Q3ListViewItemIterator::Checked );
     while ( it.current() ) {
       categories.append( it.current()->text( 0 ) );
       ++it;
