@@ -408,7 +408,7 @@ and retrieving. Access to free/busy information allows an event organizer to
 take the attendee's calendar in consideration when adding him to the the event's
 attendee list.</para>
 
-<note><para>Beside calendar storage, groupware servers typically offer contacts,
+<note><para>Besides calendar storage, groupware servers typically offer contacts,
 mail and <link linkend="glossary" endterm="gloss-freebusy">free/busy
 information</link> storage. Therefore, some of the resources discussed here
 may be related to other resources from &kmail; and &kaddressbook; (the mail and
@@ -432,7 +432,7 @@ groupware server to use it!</para></note>
 <procedure id="procedure-add-resource">
 <title>Adding a New &korganizer; Resource</title>
 
-<step><para>If the resource view is not available on &korganizer; sidebar,
+<step><para>If the resource view is not available on &korganizer;'s sidebar,
 choose the <menuchoice><guimenu>Settings</guimenu>
 <guisubmenu>Sidebar</guisubmenu><guimenuitem>Show Resource
 View</guimenuitem></menuchoice> menu item to display it.
@@ -561,7 +561,7 @@ open &kmail; automatically, and use it to access your data. The
 of contacts, so you may want to add the &kaddressbook; resource too.</para>
 
 <para>Most IMAP servers can be used to hold calendar and address book resources,
-allowing you to use access your data from just anywhere! If you are an user
+allowing you to use access your data from just anywhere! If you are a user
 looking for a simple way to access and manage your groupware information,
 this is a simple and very efficient solution.</para>
 
@@ -671,7 +671,7 @@ the same.
 add or remove individual items from the remote file, it simply saves the
 remote file over local cache when downloading and save the local cache over the
 remote file when uploading. Therefore, if the resource is read only, it makes
-sense to set the <guilabel>Automatic Reload</guilabel> option to an
+sense to set the <guilabel>Automatic Reload</guilabel> option to a
 <guilabel>Regular interval</guilabel>, but if not (if the resource is writable),
 it is recommended to reload the file only before starting to edit it, by setting
 the <guilabel>Automatic Reload</guilabel> option to <guilabel>On
@@ -687,10 +687,10 @@ file will revert to its previous state. This can happen in different scenarios
 (for instance if the system crashes, &korganizer; will reload the remote file on
 the next start, if you set the <guilabel>Automatic Save</guilabel> to
 <guilabel>Never</guilabel>, or if you set the <guilabel>Automatic Reload</guilabel>
-to a regular interval). If you plan to use calendar resource in
+to a regular interval). If you plan to use a calendar resource in
 writable mode, make sure that your connection is stable, configure the
-resource to save the file on each change, (or on frequent intervals)
-and don't reload the file in regular intervals.</para>
+resource to save the file on each change (or at frequent intervals),
+and don't reload the file at regular intervals.</para>
 
 <para>A related, but opposite problem, is that two users cannot safely edit
 the same remote file at the same time, because the remote file resource does not
@@ -773,8 +773,8 @@ its default view.</para>
 <para>A good time to do this would be if you received a
 vCalendar with a few entries via email, for instance, or if you are planning
 to import your calendar from another application. In the latter case, the first
-thing to do is to use this application to export the calendar data in one of the
-format above, or use a tool to convert from the application native format. If you
+thing to do is to use that application to export the calendar data in one of the
+formats above, or use a tool to convert from the application's native format. If you
 are migrating from &Microsoft; Outlook&reg;, please check
 <xref linkend="outlook-to-vcalendar-ws" />.</para>
 
