@@ -39,6 +39,8 @@
 
 #include <qnamespace.h>
 #include <qfile.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include "ksslsocket.h"
 #include "contactconverter.h"
@@ -1074,7 +1076,7 @@ bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
 
   // debug contents of message custom properties
   kdDebug() << "incidence custom properties BEGIN" << endl;
-  typedef QMap<QCString, QString> PropMap;
+  typedef QMap<Q3CString, QString> PropMap;
   PropMap customs = incidence->customProperties();
   PropMap::Iterator it;
   for ( it = customs.begin(); it != customs.end(); ++it )
@@ -1393,7 +1395,7 @@ void GroupwiseServer::log( const QString &prefix, const char *s, size_t n )
   QString log = mLogFile + "_" + QString::number( getpid() ) +
     "_" + prefix + ".log";
   QFile f( log );
-  if ( !f.open( IO_WriteOnly | IO_Append ) ) {
+  if ( !f.open( QIODevice::WriteOnly | QIODevice::Append ) ) {
     kdError() << "Unable to open log file '" << log << "'" << endl;
   } else {
     uint written = 0;

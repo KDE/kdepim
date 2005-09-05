@@ -30,6 +30,9 @@
 #include <kdebug.h>
 
 #include "incidenceconverter.h"
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3PtrList>
 
 #define GW_MAX_RECURRENCES 50
 
@@ -451,7 +454,7 @@ void IncidenceConverter::setAttendees( KCal::Incidence *incidence,
     kdDebug() << "IncidenceConverter::setAttendees(), adding " << (*it)->fullName()
       << endl;
     QString uuid;
-    QValueList<KABC::Addressee> addList = KABC::StdAddressBook::self()->findByEmail( (*it)->email() );
+    Q3ValueList<KABC::Addressee> addList = KABC::StdAddressBook::self()->findByEmail( (*it)->email() );
     if ( !addList.first().isEmpty() )
       uuid = addList.first().custom( "GWRESOURCE", "UUID" ); //uuid may be mandatory for the recipients list to be stored on the server...
     item->distribution->recipients->recipient.push_back( createRecipient( (*it)->name(), (*it)->email(), uuid ) );
@@ -760,11 +763,11 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     // TODO: translate '1st sunday in may'
     ngwt__DayOfYearList * daysOfYear = soap_new_ngwt__DayOfYearList( soap(), -1 );
 #if LIBKCAL_IS_VERSION( 1, 3, 0 )
-    QValueList<int> rmd;
+    Q3ValueList<int> rmd;
     rmd = recur->yearMonths();
     daysOfYear->day.push_back( rmd.first() );
 #else
-    QPtrList<int> rmd;
+    Q3PtrList<int> rmd;
     rmd = recur->yearNums();
     daysOfYear->day.push_back( *rmd.first() );
 #endif

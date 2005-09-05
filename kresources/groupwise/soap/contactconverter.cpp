@@ -65,7 +65,7 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
     std::vector<ngwt__ContainerRef*>* container = soap_new_std__vectorTemplateOfPointerTongwt__ContainerRef( soap(), -1 );
     ngwt__ContainerRef* containerRef = soap_new_ngwt__ContainerRef( soap(), -1 );
     containerRef->deleted = 0;
-    containerRef->__item = addr.custom( "GWRESOURCE", "CONTAINER" ).utf8();
+    containerRef->__item = addr.custom( "GWRESOURCE", "CONTAINER" ).latin1();
     container->push_back( containerRef );
 
     contact->container = *container;
@@ -366,7 +366,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
     ngwt__PersonalInfo* info = contact->personalInfo;
 
     if ( info->birthday ) {
-      QDate date = stringToQDate( info->birthday );
+      QDateTime date = stringToQDateTime( info->birthday );
       if ( date.isValid() )
         addr.setBirthday( date );
     }
@@ -399,7 +399,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
         protocol = "groupwise";
       addr.insertCustom( QString::fromLatin1("messaging/%1").arg( protocol ),
                           QString::fromLatin1( "All" ),
-                          addresses.join( QChar( 0xE000 ) ) );
+                          addresses.join( QString( 0xE000 ) ) );
     }
   }
 
@@ -451,7 +451,7 @@ ngwt__PhoneNumber* ContactConverter::convertPhoneNumber( const KABC::PhoneNumber
     return 0;
 
   ngwt__PhoneNumber* phoneNumber = soap_new_ngwt__PhoneNumber( soap(), -1 );
-  phoneNumber->__item = number.number().utf8();
+  phoneNumber->__item = number.number().latin1();
 
   if ( number.type() & KABC::PhoneNumber::Fax ) {
     phoneNumber->type = Fax;

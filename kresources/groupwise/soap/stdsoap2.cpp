@@ -3111,7 +3111,7 @@ again:
 #ifdef SOCKET_CLOSE_ON_EXEC
 #ifdef WIN32
 #ifndef UNDER_CE
-  SetHandleInformation((HANDLE)fd, HANDLE_FLAG_INHERIT, 0);
+  SetHandleInformation((Qt::HANDLE)fd, HANDLE_FLAG_INHERIT, 0);
 #endif
 #else
   fcntl(fd, F_SETFD, 1);
@@ -3524,7 +3524,7 @@ soap_bind(struct soap *soap, const char *host, int port, int backlog)
 #ifdef SOCKET_CLOSE_ON_EXEC
 #ifdef WIN32
 #ifndef UNDER_CE
-  SetHandleInformation((HANDLE)soap->master, HANDLE_FLAG_INHERIT, 0);
+  SetHandleInformation((Qt::HANDLE)soap->master, HANDLE_FLAG_INHERIT, 0);
 #endif
 #else
   fcntl(soap->master, F_SETFD, 1);
@@ -3669,7 +3669,7 @@ tcp_accept(struct soap *soap, int s, struct sockaddr *a, int *n)
 #ifdef SOCKET_CLOSE_ON_EXEC
 #ifdef WIN32
 #ifndef UNDER_CE
-  SetHandleInformation((HANDLE)fd, HANDLE_FLAG_INHERIT, 0);
+  SetHandleInformation((Qt::HANDLE)fd, HANDLE_FLAG_INHERIT, 0);
 #endif
 #else
   fcntl(fd, F_SETFD, FD_CLOEXEC);

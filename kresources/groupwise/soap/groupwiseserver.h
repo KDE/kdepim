@@ -28,7 +28,7 @@
 #include <qobject.h>
 #include <qstring.h>
 #include <qthread.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 #include <string>
 
@@ -67,7 +67,7 @@ namespace GroupWise {
 class AddressBook
 {
   public:
-    typedef QValueList<AddressBook> List;
+    typedef Q3ValueList<AddressBook> List;
 
     AddressBook() : isPersonal( false ), isFrequentContacts( false ), isSystemAddressBook( false ) {}
 
