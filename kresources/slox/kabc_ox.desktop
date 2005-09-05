@@ -4,6 +4,7 @@ Name=OpenXchange Server
 Name[es]=Servidor OpenXchange
 Name[fr]=Serveur OpenXchange
 Name[ga]=Freastalaí Openexchange
+Name[sv]=Openxchange-server
 Name[xx]=xxOpenXchange Serverxx
 Name[zh_CN]=OpenXchange 服务器
 X-KDE-Library=kabc_slox
