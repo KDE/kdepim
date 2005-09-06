@@ -42,7 +42,6 @@
 // including the styles
 #include "detailledstyle.h"
 #include "mikesstyle.h"
-#include "ringbinderstyle.h"
 
 #include "kabprefs.h"
 #include "printprogress.h"
@@ -99,7 +98,6 @@ void PrintingWizard::registerStyles()
 {
   mStyleFactories.append( new DetailledPrintStyleFactory( this ) );
   mStyleFactories.append( new MikesStyleFactory( this ) );
-  mStyleFactories.append( new RingBinderPrintStyleFactory( this ) );
 
   mStylePage->clearStyleNames();
   for ( uint i = 0; i < mStyleFactories.count(); ++i )
