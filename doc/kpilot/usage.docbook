@@ -149,6 +149,41 @@ before restoring the information from your
 </listitem>
 </varlistentry>
 
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Copy Handheld to PC</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+This runs all conduits and syncs all databases, but instead of merging the
+information from both sources, it will copy the handheld data to the PC.
+<emphasis>Use with care, as this option erases the changes
+you made in your PC since the last sync</emphasis>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Copy PC to Handheld</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+This runs all conduits and syncs all databases, but instead of merging the
+information from both sources, it will copy the PC data to the handheld.
+<emphasis>Use with care, as this option erases the changes
+you made in your handheld since the last sync</emphasis>.</para>
+</listitem>
+</varlistentry>
+
+
+<!--
 <varlistentry>
 <term>
 <menuchoice>
@@ -163,7 +198,7 @@ data will be performed.
 </para>
 </listitem>
 </varlistentry>
-
+-->
 
 <varlistentry>
 <term>
@@ -186,7 +221,7 @@ is enabled.
 
 <para>
 The <guimenu>Settings</guimenu> menu allows you to configure &kpilot; main
-interface and fine tune the synchronization process with the &handheld;.
+interface and fine-tune the synchronization process with the &handheld;.
 </para>
 
 <variablelist>
@@ -199,7 +234,7 @@ interface and fine tune the synchronization process with the &handheld;.
 </term>
 <listitem>
 <para>
-Click this menu item to toggle &kpilot;'s statusbar on and off, or in other
+Click this menu item to toggle &kpilot;'s status bar on and off, or in other
 words, to show it if hidden, or to hide it if shown.  
 </para>
 </listitem>
@@ -289,7 +324,7 @@ about these configuration options.
 Displays &kpilot;'s configuration wizard dialog. The
 <link linkend="configwizard">configuration wizard</link> helps you to set up
 &kpilot; to communicate with the &PalmPilot; and to configure the conduits as
-a group. It's a great start for new users, and you can always fine tune your
+a group. It's a great start for new users, and you can always fine-tune your
 preferences later, using the <link linkend="configure">configure
 dialog</link>.
 </para>
@@ -329,13 +364,9 @@ window.
 You may use the viewer applications to edit the information, by enabling
 this option in the <link linkend="page-viewers">database viewer's
 configuration dialog</link>. The ability to view and edit private records is
-configurable too.
+configurable too.</para>
 
-<important><para>
-In some versions of &kpilot; it is not possible to edit the databases with the
-internal.
-</para></important>
-
+<para>
 Any changes you make to the &PalmPilot; databases with
 the built-in applications (such as deleting a memo)
 do not take effect on the &PalmPilot; until the next HotSync.
@@ -344,7 +375,8 @@ do not take effect on the &PalmPilot; until the next HotSync.
 <important><para>
 If the <guilabel>Make internal viewers editable</guilabel> option is
 not enabled, the changes in the viewers are not synchronized with your
-&handheld;, and will be lost.
+&handheld;, and will be lost. In recent versions of &kpilot; it is not possible
+enable this option, and therefore, to edit the databases with the viewers.
 </para></important>
 
 <sect2 id="todo-app">
@@ -367,11 +399,11 @@ are applied to the &handheld; the next time you &HotSync;.
 </screenshot>
 
 <para>
-The todo application has a drop-down box
+The todo application has a drop down box
 for the memo categories defined in the &PalmPilot;.
 In the screenshot, category <quote>All</quote> is selected.
-Underneath the drop-down box is a list of todo entries, with a checkbox
-indicating if they are completed or not. You can click the checkbox to toggle
+Underneath the drop down box is a list of todo entries, with a check box
+indicating if they are completed or not. You can click the check box to toggle
 the todo item between completed and not completed status. Clicking on one of the
 todo items in the list will display its details in the text box labelled
 <guilabel>Todo info:</guilabel> to the right.
@@ -385,6 +417,7 @@ can use the buttons <guibutton>Edit Record...</guibutton>,
 to edit the todo data from your &handheld;, and sync the data in the next
 &HotSync;.</para>
 
+<!--
 <note><para>
 If you create new todo and decide that
 you do not want to have it on the &PalmPilot;
@@ -393,6 +426,7 @@ to the &PalmPilot;) and then delete the todo record
 from the &PalmPilot; or the viewer, and &HotSync; again. It is not possible to
 delete newly-added records from the built-in applications.
 </para></note>
+-->
 
 <para>
 The <guibutton>Edit Record...</guibutton> button opens a dialog where you can 
@@ -428,7 +462,7 @@ last"</guilabel> format, depending on your
 
 <para>
 The address application resembles the todo application;
-the drop-down box, buttons, list and text area function exactly
+the drop down box, buttons, list and text area function exactly
 the same, allowing you to select, view and edit an address
 as on the &PalmPilot;.
 </para>
@@ -443,7 +477,7 @@ address will be added to the list. Click the
 <guibutton>Delete Record</guibutton> button to remove the selected address
 from the list.
 
-
+<!--
 <note><para>
 If you create new address and decide that
 you do not want to have it on the &PalmPilot;
@@ -452,6 +486,7 @@ to the &PalmPilot;) and then delete the address record
 from the &PalmPilot; or the viewer, and &HotSync; again. It is not possible to
 delete newly-added records from the built-in applications.
 </para></note>
+-->
 
 </para>
 </sect2>
@@ -477,10 +512,10 @@ time you &HotSync;, or edit existing ones.
 </screenshot>
 
 <para>
-The memo application has a drop-down box
+The memo application has a drop down box
 for the memo categories defined in the &PalmPilot;.
 Here category <quote>All</quote> is selected.
-Underneath the drop-down box is a list of memo titles.
+Underneath the drop down box is a list of memo titles.
 These are the first lines of the memos, just like
 in the &PalmPilot; memo application.
 Clicking on one of the memo titles in the list
@@ -510,6 +545,7 @@ add it &mdash; as a memo &mdash; to the &PalmPilot;.
 Importing a memo does not take effect until
 the next &HotSync;.
 
+<!--
 <note><para>
 If you import a memo and decide that
 you do not want to have it on the &PalmPilot;
@@ -518,6 +554,7 @@ to the &PalmPilot;) and then delete the memo record
 from the &PalmPilot; or the viewer, and &HotSync; again. It is not possible to
 delete newly-added records from the built-in applications.
 </para></note>
+-->
 
 </para>
 

@@ -25,15 +25,14 @@ from the main application
 <guimenu>Settings</guimenu>
 <guimenuitem>Configure &kpilot;</guimenuitem>
 </menuchoice>
-menu, from the &kpilot; daemon pop-up menu
+menu, from the &kpilot; daemon popup menu
 <menuchoice>
 <guimenuitem>Configure KPilot...</guimenuitem>
 </menuchoice>
 menu item or by starting &kpilot;
 from the shell
 as follows:
-<screen width="40"><prompt>$ </prompt> <userinput><command>kpilot</command>
-<option>--setup</option></userinput>
+<screen width="40"><prompt>$ </prompt> <userinput><command>kpilot</command><option>--setup</option></userinput>
 </screen>
 In addition, if you upgrade &kpilot; and some new configuration
 options require your attention, this setup dialog will reappear.
@@ -70,7 +69,7 @@ general group of configuration options superfluous.
 <para>
 The configuration wizard helps you to set up &kpilot; to communicate
 with the &PalmPilot; and to configure the conduits as a group. It's a great
-start for new users, and you can always fine tune your preferences later.
+start for new users, and you can always fine-tune your preferences later.
 </para>
 
 <para>
@@ -127,11 +126,11 @@ Dialog</phrase></textobject>
 </screenshot>
 
 <para>
-KPilot has the ability to sync the data on your &handheld; with
+&kpilot; has the ability to sync the data on your &handheld; with
 applications or files on your <acronym>PC</acronym>. The programs that
 perform these actions are called conduits. The sync dialog configures
 all applicable &kpilot; conduits to sync with widely used
-<acronym>PIM</acronym> suites. You can fine tune these settings later, from the
+<acronym>PIM</acronym> suites. You can fine-tune these settings later, from the
 <menuchoice>
 <guimenu>Settings</guimenu>
 <guimenuitem>Configure &kpilot;</guimenuitem>
@@ -324,40 +323,28 @@ should be resolved. A conflict happens when both the desktop application and the
 <para>
 &kpilot; interfaces with your &handheld; in two ways: using the
 the conduits and the internal viewers. Conduits are plug-in programs which
-extend
-the synchronization capabilities of &kpilot;. &kpilot; stores separate copies of
-the
-databases and records for conduits, while the internal viewers and backup
+extend the synchronization capabilities of &kpilot;. &kpilot; stores separate copies of
+the databases and records for conduits, while the internal viewers and backup
 operation share the same copy. This distinction is important to choose your
 update method depending on your usage. If you use mainly the conduits to sync
 your &handheld; with external programs, you may choose as default
-synchronization
-method any option that runs the conduits. However, if you use mainly the
-internal
-viewers, you need to update copy of the databases as well in order to
+synchronization method any option that runs the conduits. However, if you use mainly the
+internal viewers, you need to update copy of the databases as well in order to
 view and edit the information from your &handheld;, so running the conduits only
 is not sufficient.
 </para>
 
-<warning>
-<para>
-Remember, when &kpilot; does a &HotSync; and runs the conduits,
-the databases in the internal viewers are <emphasis>not</emphasis>
-updated. This will be fixed in a future release.
-</para>
-</warning>
-
 <screenshot>
-<screeninfo>The HotSync setup page</screeninfo>
+<screeninfo>The &HotSync; setup page</screeninfo>
 <mediaobject>
 <imageobject>
 <imagedata fileref="setup-hotsync.png" format="PNG"/>
 </imageobject>
 <textobject>
-<phrase>The HotSync Page</phrase>
+<phrase>The &HotSync; Page</phrase>
 </textobject>
 <caption>
-<para>The HotSync setup page</para></caption>
+<para>The &HotSync; setup page</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -420,12 +407,21 @@ databases, but instead of merging the information from both sources, copy the
 handheld data to the PC. <emphasis>Use with care, as this option erases the
 changes you made in your PC since the last sync</emphasis>.
 </para>
+<warning>
+<para>
+Remember, when &kpilot; does a &HotSync; and runs the conduits,
+the databases in the internal viewers are <emphasis>not</emphasis>
+updated. To update the internal viewers, use the FullSync or backup actions.
+</para>
+</warning>
+
 </listitem>
 
 </itemizedlist>
 
 </listitem>
 </varlistentry>
+
 
 <varlistentry>
 <term><guilabel>Do full backup when changing PCs</guilabel></term>
@@ -439,20 +435,20 @@ disable the full sync by unchecking this box.
 </para>
 </listitem>
 </varlistentry>
-
+<!--
 <varlistentry>
-<term><guilabel>Do not sync when screensaver is active</guilabel></term>
+<term><guilabel>Do not sync when screen saver is active</guilabel></term>
 <listitem>
 <para>
 This is a security feature that prevents the &handheld; from synchronization
-while the PC screensaver is active. This prevents other people from
+while the PC screen saver is active. This prevents other people from
 stealing your data through the &handheld; cradle while your PC is
-unattended. The feature only works with the KDE screensavers, though,
-and you will need to disable it to use &kpilot; in non-KDE environments.
+unattended. The feature only works with the &kde; screen savers, though,
+and you will need to disable it to use &kpilot; in non-&kde; environments.
 </para>
 </listitem>
 </varlistentry>
-
+-->
 <varlistentry>
 <term><guilabel>Conflict Resolution</guilabel></term>
 <listitem>
@@ -598,7 +594,7 @@ The backup typically updates the copy of the &handheld; databases.
 Conduits are programs that extend the &kpilot; functionality. Running them
 usually means synchronization the &handheld; to other <acronym>PC</acronym>
 databases,
-like the addressbook or the calender. Check this box to perform both operations
+like the address book or the calender. Check this box to perform both operations
 on
 every backup.
 </para>
@@ -743,10 +739,10 @@ needed if the daemon is docked in the panel.
 <listitem>
 <para>
 <guilabel>Show daemon in panel</guilabel>:
-Check this box to instruct the daemon to place a &HotSync; icon
-<guiicon>HotSync icon
+Check this box to instruct the daemon to place a &kpilot; icon
+<guiicon>
 <inlinemediaobject>
-<imageobject><imagedata fileref="toolbar_hotsync.png" format="PNG"/>
+<imageobject><imagedata fileref="kpilot.png" format="PNG"/>
 </imageobject>
 </inlinemediaobject>
 </guiicon>
@@ -842,6 +838,17 @@ Synchronizes the Memo Pad application with &knotes;.
 </para>
 </listitem>
 </varlistentry>
+
+<varlistentry>
+<term><guilabel>Notepad</guilabel></term>
+<listitem>
+<para>
+Exports the free hand notes  of the &handheld;'s Notepad application as pictures
+to the PC.
+</para>
+</listitem>
+</varlistentry>
+
 
 <varlistentry>
 <term><guilabel>Time Synchronization</guilabel></term>
@@ -999,6 +1006,18 @@ will accumulate on your PC.
 </para>
 </sect2>
 
+<sect2 id="notepad-cond">
+<title>Notepad Conduit Setup</title>
+
+<para>
+The Notepad Conduit exports the free hand notes of the &handheld;'s Notepad
+application  as pictures to the desktop. To set the folder to which the pictures
+should be exported, either enter it in the <guilabel>Output</guilabel> edit
+box or select it clicking the file picker button.
+</para>
+
+</sect2>
+
 <sect2 id="time-cond">
 <title>Time Synchronization Conduit Setup</title>
 
@@ -1026,7 +1045,7 @@ For these systems, the conduit will be simply skipped.
 <title>Calendar Conduit Setup</title>
 
 <para>
-This conduit will synchronize your &PalmPilot; with &korganizer; and Kontact
+This conduit will synchronize your &PalmPilot; with &korganizer; and &kontact;
 or to an iCalendar file of your choice. In the latter case, the conduit will
 need the filename of the calendar file (this will usually be a file that ends in
 <literal role="extension">.ics</literal>) to sync with, of if it uses the
@@ -1076,7 +1095,7 @@ the iCalendar format as a resource. However, some applications, like Evolution,
 do not handle the synchronization gracefully while they are open. As a rule of
 thumb, quit these applications before synchronizing, otherwise you will lose
 data. There is no need to take these precautions when syncing with &korganizer;
-or Kontact.
+or &kontact;.
 </para>
 </warning>
 </listitem>
@@ -1127,8 +1146,8 @@ format="PNG"/></imageobject>
 </screenshot>
 
 <important><para>
-After changing the Palm DOC conduit configuration, you have to restart KPilot to
-let the changes you made take effect.
+After changing the Palm DOC conduit configuration, you have to restart &kpilot;
+to let the changes you made take effect.
 </para></important>
 
 <para>
@@ -1155,7 +1174,7 @@ compatible with your &handheld; encoding. Therefore, if the text file has
 characters that are not being correctly recognized by the Palm DOC reader in
 your &handheld;, try opening the file a text editor, like &kwrite;, and saving
 it in an compatible text encoding using the <guilabel>Save As..</guilabel>
-dialog.
+dialog, or set the encoding in the <guilabel>PC -> Handheld</guilabel> tab.
 </para></important>
 </para>
 </listitem>
@@ -1272,6 +1291,14 @@ for an in-depth description of the bmk file format.
 </para></listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>Encoding</guilabel></term>
+<listitem><para>
+Set here the encoding of your &handheld;. &kpilot; will convert the text
+document to this encoding when exporting the file to the &handheld;.
+</para></listitem>
+</varlistentry>
+
 </variablelist>
 
 <para>
@@ -1354,8 +1381,7 @@ user decide on a file by file, case by case basis.
 conflicts</guilabel></term>
 <listitem><para>
 This option will always bring the conflict resolution dialog, even if there is
-no
-conflicts to solve. The advantage is that you can keep track of all the files
+no conflicts to solve. The advantage is that you can keep track of all the files
 that are being covered by the conduit.
 </para></listitem>
 </varlistentry>
@@ -1378,18 +1404,17 @@ role="extension">.vcf</literal>) to sync with, of if it uses the standard
 &kde; address book file, it will be under the
 <filename class="directory">$KDEHOME/share/apps/kabc/</filename>
 folder, where the <filename class="directory">$KDEHOME</filename> environment
-variable
-(typically <filename class="directory">/home/Login Name/.kde/</filename>)
+variable (typically <filename class="directory">/home/Login Name/.kde/</filename>)
 points to the folder that contains your configuration and data for the &kde;
 applications.
 </para>
 
 <screenshot>
-<screeninfo>The KAddressBook Conduit Setup Dialog</screeninfo>
+<screeninfo>The &kaddressbook; Conduit Setup Dialog</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="setup-address.png" format="PNG"/></imageobject>
-<textobject><phrase>KAddressBook Conduit Setup</phrase></textobject>
-<caption><para>KAddressBook Conduit Setup</para></caption>
+<textobject><phrase>&kaddressbook; Conduit Setup</phrase></textobject>
+<caption><para>&kaddressbook; Conduit Setup</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -1403,7 +1428,7 @@ options.
 <varlistentry>
 <term><guilabel>Sync Destination</guilabel></term>
 <listitem><para>
-Choose between synchronizing with the <guilabel>Standard addressbook</guilabel>,
+Choose between synchronizing with the <guilabel>Standard address book</guilabel>,
 or in other words, the &kde; standard address book or with a
 <guilabel>vCard file</guilabel> of your choice, that you must either
 write in the <guilabel>vCard file</guilabel> edit box or select using the
@@ -1421,11 +1446,11 @@ book.
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Store archived records in the KDE addressbook</guilabel></term>
+<term><guilabel>Store archived records in the KDE address book</guilabel></term>
 <listitem><para>
 The &handheld; offers an option to archive deleted addresses in your desktop.
 If that option is selected, check this box to keep the deleted addresses from
-your &handheld; in your <acronym>PC</acronym> addressbook. These addresses will
+your &handheld; in your <acronym>PC</acronym> address book. These addresses will
 be no longer synchronized with your handheld.
 </para></listitem>
 </varlistentry>
@@ -1434,14 +1459,10 @@ be no longer synchronized with your handheld.
 
 <para>
 In the <guilabel>Conflicts</guilabel> page, you can set the address book conduit
-options,
-overriding &kpilot;'s general settings for conflict resolution when you are
-using
-this conduit. For a detailed description of the different conflict resolution
-possibilities
-available, please refer to the <link linkend="page-hotsync">HotSync Setup
-section</link> of this
-handbook.
+options, overriding &kpilot;'s general settings for conflict resolution when
+you are using this conduit. For a detailed description of the different conflict
+resolution possibilities available, please refer to the
+<link linkend="page-hotsync">HotSync Setup section</link> of this handbook.
 </para>
 
 <para>
@@ -1456,7 +1477,7 @@ counterpart in the &kde; address book.
 <term><guilabel>Handheld other phone:</guilabel></term>
 <listitem><para>
 The <quote>Other</quote> field in the &handheld; address application can be
-used for many things (for instance storing a secondary e-mail address). It is
+used for many things (for instance storing a secondary email address). It is
 not clear how to classify this field in &kde;. Depending on your usage, select
 in
 the dropdown the field from the computer that will be synchronized with the
@@ -1511,11 +1532,10 @@ the <guilabel>Birthdate</guilabel> of your contact or the obvious:
 If you select to store birthdays, remember to use a date format that is
 consistent with the settings in the <guilabel>Date format</guilabel> dropdown,
 so that the conduit can correctly identify the date from the record and vice
-versa.
-Possible placeholders are: %d for the day, %m for the month, %y for the
-two-digit
-year, %Y for the four-digit year. For  example, %d.%m.%Y would generate a date
-like 27.3.1952, while %m/%d/%y would write the same date as 03/27/52.
+versa. Possible placeholders are: %d for the day, %m for the month, %y for the
+two-digit year, %Y for the four-digit year. For  example, %d.%m.%Y would
+generate a date like 27.3.1952, while %m/%d/%y would write the same date as
+03/27/52.
 </para>
 
 
@@ -1527,7 +1547,7 @@ like 27.3.1952, while %m/%d/%y would write the same date as 03/27/52.
 <para>
 This conduit generates a page with your &handheld; information. Some info about
 your &kde;, &kpilot; and Pilot-Link version is included as well. The available
-output formats are <acronym>HTML</acronym>, text or custom template. The conduit
+output formats are &HTML;, text or custom template. The conduit
 output and in special, the debug output section of the output may help the
 developers track down bugs.
 </para>
@@ -1585,7 +1605,7 @@ included in the output, one by one, by checking or unchecking them in the
 
 <para>
 This conduit will synchronize your &PalmPilot; To Do List application with
-&korganizer; and Kontact, or to an iCalendar file of your choice.
+&korganizer; and &kontact;, or to an iCalendar file of your choice.
 The configuration dialog looks and behaves exactly the same as the configuration
 dialog for the <link linkend="vcal-cond">Calendar Conduit</link>. The only
 difference is that instead of synchronizing the Calendar, you will be  syncing
@@ -1622,14 +1642,12 @@ and configure the software on your handheld to find the MAL server.
 
 <para>
 The installation software for the &handheld; client is usually only available
-for
-<trademark>Microsoft</trademark> <trademark>Windows</trademark>, if you
+for &Microsoft; &Windows;, if you
 do not have access to a windows computer, you can try installing the databases
 available in the <ulink url="http://www.tomw.org/malsync/">MalSync
 Homepage</ulink>,
 with different versions, one for <trademark>PalmOS</trademark> 5 and other for
-older
-<trademark>PalmOS</trademark>s.
+older <trademark>PalmOS</trademark>s.
 </para>
 
 <para>
@@ -1659,7 +1677,7 @@ frequency options. It can be  set for <guilabel>Every Sync</guilabel>,
 <guilabel>Once a Week</guilabel> or <guilabel>Once a Month</guilabel>.
 The conduit only runs when you hit &HotSync; on your &handheld;, so
 <guilabel>Once per Hour</guilabel>, for instance, really means that
-KPilot will only try to synchronise with the MAL servers if it is more than an
+&kpilot; will only try to synchronize with the MAL servers if it is more than an
 hour since the last MAL sync.
 </para>
 
@@ -1674,7 +1692,7 @@ page, you can set the proxy settings.
 <varlistentry>
 <term><guilabel>Proxy Type</guilabel></term>
 <listitem><para>
-If you connect the internet directly, select <guilabel>No proxy</guilabel>,
+If you connect the Internet directly, select <guilabel>No proxy</guilabel>,
 requiring no further configuration. But if you use a <guilabel>HTTP
 proxy</guilabel>
 or a <guilabel>SOCKS proxy</guilabel>, select it, to enable the rest of the

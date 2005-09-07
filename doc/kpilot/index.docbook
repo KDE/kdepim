@@ -1,15 +1,17 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
+ "dtd/kdex.dtd" [
 <!ENTITY kappname "&kpilot;">
-<!ENTITY kpilotver "4.4.3">
+<!ENTITY kpilotver "4.4.6">
 <!ENTITY package "kdepim">
 <!ENTITY USB "<acronym>USB</acronym>">
+<!ENTITY PalmOS '<trademark class="registered">Palm OS</trademark>'>
 <!ENTITY PalmOne '<trademark class="registered">PalmOne</trademark>'>
 <!ENTITY Sony '<trademark class="registered">Sony</trademark>'>
 <!ENTITY Clie "<productname><trademark>Clie</trademark></productname>">
 <!ENTITY FreeBSD '<trademark class="registered">FreeBSD</trademark>'>
 <!ENTITY AvantGo '<trademark class="registered">AvantGo</trademark>'>
-<!ENTITY handheld "&PalmPilot;">
+<!ENTITY handheld "handheld">
 <!ENTITY configuring-kpilot SYSTEM "configuration.docbook">
 <!ENTITY using-kpilot SYSTEM "usage.docbook">
 <!ENTITY synchronization SYSTEM "sync.docbook">
@@ -18,13 +20,6 @@
 <!ENTITY % addindex "IGNORE">
 ]>
 
-<!--
-    From [cw]: This document is nearly finished. I will submit it to the
-    doc-english list before stating that it is ready for translation, but
-    you can start to translate if you wish.
-
-      TRANSLATORS YOU CAN START WORKING NOW!
--->
 <!--
     From LW: http://www.palm.com/about/trademark.html According to this,
 	we have have overspecified some of the tradmarks... feel free to
@@ -72,6 +67,7 @@
 
 <copyright>
 <year>2004</year>
+<year>2005</year>
 <holder>Carlos Woelz</holder>
 </copyright>
 
@@ -84,7 +80,7 @@
 <abstract>
 <para>
 &kpilot; &kpilotver; is the &kde; version of the Desktop &HotSync; software for
-&PalmOne; handhelds, the &ThreeCom; &PalmPilot; and similar products.
+&PalmOne; handhelds, the &ThreeCom; &PalmPilot; and other &PalmOS; devices.
 </para>
 </abstract>
 
@@ -103,8 +99,8 @@
 
 <para>
 &kpilot; &kpilotver; is an application that synchronizes your &PalmPilot; or
-similar device (like the &Handspring; &Visor; or the
-&Sony; &Clie;) with your &kde; desktop, much like the Palm Desktop &HotSync;
+similar device (like the &Handspring; &Visor;, the &Sony; &Clie; or other
+&PalmOS; devices) with your &kde; desktop, much like the Palm Desktop &HotSync;
 software does for &Windows;. &kpilot; can back-up, restore, and &HotSync; your
 &PalmPilot;. It can synchronize the built-in applications with their &kde;
 counterparts. It also features additional conduits for third-party software.
@@ -120,11 +116,12 @@ url="http://www.kde.org/mailinglists"> the mailing lists page</ulink> for more
 information on subscribing and unsubscribing from the list.
 </para>
 
+<!--
 <para>
 A word about version numbers: &kpilot; 4.5.x is current and still unstable as of
 August 2005. It does not work with KDE versions lower than 3.2.
 </para>
-
+-->
 
 <sect1 id="trademarks">
 <title>Trademarks</title>
@@ -154,7 +151,7 @@ you configure the daemon and view the databases on your
 &handheld;. In normal operation, you will not need to use &kpilot;
 itself very much, since the daemon handles communication unobtrusively
 and synchronizes your data to &kde; applications like &korganizer;
-and &knotes;. &kpilot; is integrated into Kontact as well.
+and &knotes;. &kpilot; is integrated into &kontact; as well.
 </para>
 
 <para>
@@ -190,6 +187,8 @@ Finally, &kpilot; can be used to <link linkend="installer-app">install</link>
 new programs and databases on your &handheld;.
 </para>
 
+<!--
+FIXME: Old Warnings
 <caution>
 <title>Changes in &kpilotver;</title>
 <para>
@@ -211,7 +210,7 @@ old conduits on your system, &kpilot; will prompt you to remove them.
 Please take the time to review all of the configuration settings.
 </para>
 </caution>
-
+-->
 </chapter>
 
 
@@ -227,18 +226,18 @@ Please take the time to review all of the configuration settings.
 
 <para>
 &kpilot;
-Program copyright 1998-2000 by Dan Pilone
-<email>pilone@slac.com</email>
+Program copyright 1998-2000 by &Dan.Pilone;
+&Dan.Pilone.mail;
 </para>
 <para>
 Contributors:
 <itemizedlist>
 <listitem><para>Adriaan de Groot <email>groot@kde.org</email></para>
 </listitem>
-<listitem><para>Preston Brown <email>pbrown@redhat.com</email></para>
+<listitem><para>&Preston.Brown; <email>pbrown@redhat.com</email></para>
 </listitem>
 <listitem><para>VCal and Todo Conduits by: Herwin Jan Steehouwer,
-Kenneth Albanowski, Michael Kropfberger
+Kenneth Albanowski, &Michael.Kropfberger;
 </para></listitem>
 <listitem><para>Popmail Conduit overhaul: Marko Gr&ouml;nroos
 </para></listitem>
@@ -261,10 +260,11 @@ Jay Summet
 
 <para>
 Documentation copyright 2000,2001 Adriaan de Groot <email>groot@kde.org</email>.
-Documentation copyright 2004 Carlos Leonhard Woelz
+Documentation copyright 2004,2005 Carlos Leonhard Woelz
 <email>carloswoelz@imap-mail.com</email>
 </para>
 
+<!-- TRANS:CREDITS_FOR_TRANSLATORS -->
 &underFDL;
 &underGPL;
 </chapter>

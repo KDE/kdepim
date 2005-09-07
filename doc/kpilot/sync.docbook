@@ -20,11 +20,11 @@ indicating that a sync is under way.
 
 
 <screenshot>
-<screeninfo>KPilot Daemon Pop-Up Menu</screeninfo>
+<screeninfo>&kpilot; Daemon Pop-Up Menu</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="daemon-menu.png" format="PNG"/></imageobject>
-<textobject><phrase>KPilot daemon pop-up menu</phrase></textobject>
-<caption><para>KPilot daemon pop-up menu</para></caption>
+<textobject><phrase>&kpilot; daemon popup menu</phrase></textobject>
+<caption><para>&kpilot; daemon popup menu</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -59,42 +59,62 @@ In short, the sync types are:
 <itemizedlist>
 
 <listitem><para>
-<guilabel>HotSync</guilabel>: this option offers
+<guilabel>HotSync (once)</guilabel>: this option offers
 a nice balance between speed and data safety.
 </para></listitem>
 
 <listitem><para>
-<guilabel>FastSync</guilabel>: only sync those
+<guilabel>FastSync (once)</guilabel>: only sync those
 databases that have conduits.
 </para></listitem>
 
 <listitem><para>
-<guilabel>FullSync</guilabel>: the safest option, but
+<guilabel>FullSync (once)</guilabel>: the safest option, but
 takes the longest time to complete.
 </para></listitem>
 
 <listitem><para>
-<guilabel>Backup</guilabel>: copy all the data from the &handheld; to the
+<guilabel>Backup (once)</guilabel>: copy all the data from the &handheld; to the
 <acronym>PC</acronym>.
 </para></listitem>
 
 <listitem><para>
-<guilabel>Restore</guilabel>: copy the data from a previous backup from the PC to the
+<guilabel>Restore from Backup (once)</guilabel>: copy the data from a previous backup from the PC to the
 &handheld;, erasing the data previously held there.
 
 <warning><para>
 Use the restore functionality with care, as you can lose all the new
 data entered on the &handheld; since the last backup.
 </para></warning>
-
 </para>
 </listitem>
+
+<listitem>
+<para>
+<guilabel>Copy Handheld to PC (once)</guilabel>: run all conduits and
+sync all databases, but instead of merging the information from both sources,
+just copy the handheld data to the PC.
+<warning><para>Use with care, as this option erases the changes
+you made in your PC since the last sync.</para></warning>
+</para>
+</listitem>
+
+<listitem>
+<para>
+<guilabel>Copy PC to Handheld (once)</guilabel>: run all conduits and
+sync all databases, but instead of merging the information from both sources,
+just copy the PC data to the handheld.
+<warning><para>Use with care, as this option erases the changes
+you made in your handheld since the last sync.</para></warning>
+</para>
+</listitem>
+
 </itemizedlist>
 
 
 <para>
 Alternatively, you can change the default syncing behavior of &kpilot; by
-choosing the most suitable option in the <link linkend="page-hotsync">HotSync
+choosing the most suitable option in the <link linkend="page-hotsync">&HotSync;
 configure dialog</link>.
 
 <note><para>
@@ -103,7 +123,7 @@ To configure the conduits or the sync process, you do not need to open the main
 <menuchoice>
 <guimenuitem>Configure KPilot...</guimenuitem>
 </menuchoice>
-menu item is available on the &kpilot; daemon pop-up menu as well.
+menu item is available on the &kpilot; daemon popup menu as well.
 </para></note>
 
 </para>
@@ -127,7 +147,7 @@ the
 <guisubmenu>Next Sync</guisubmenu>
 <guimenuitem>Backup</guimenuitem>
 </menuchoice>
-on the &kpilot; daemon icon pop-up menu or the
+on the &kpilot; daemon icon popup menu or the
 <menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Backup</guimenuitem>
@@ -161,8 +181,8 @@ applications.</para>
 <para>
 The most common use for the restore functionality is to recover from a hardware
 or software failure on the device.
-The restore function can only be accessed from the
-main &kpilot; application, and not from the &kpilot; daemon, as
+The restore function can be accessed from the
+main &kpilot; application, and from the &kpilot; daemon. be careful, as
 restoring the data is not a common operation. In order
 to restore the data at the next sync, click the
 <menuchoice>
@@ -186,26 +206,26 @@ There are three ways to sync your &handheld;, <guilabel>HotSync</guilabel>,
 <para>
 When you press the &HotSync; button on your &handheld;, &kpilot;'s will run the
 default sync operation (usually a <guilabel>HotSync</guilabel>). You can select
-the default sync operation in the <link linkend="page-hotsync">HotSync
+the default sync operation in the <link linkend="page-hotsync">&HotSync;
 configure dialog</link>. Alternatively, you can click one of the sync options on
 the main &kpilot; application
 <menuchoice>
 <guimenu>File</guimenu>
 </menuchoice>
-menu or on the &kpilot; daemon pop-up
+menu or on the &kpilot; daemon popup
 <menuchoice>
 <guisubmenu>Next Sync</guisubmenu>
 </menuchoice>
 submenu.
 
 <important><para>
-Using the <link linkend="page-hotsync">HotSync configure dialog</link>
+Using the <link linkend="page-hotsync">&HotSync; configure dialog</link>
 is the only way to change the default sync operation.
 The main &kpilot; application
 <menuchoice>
 <guimenu>File</guimenu>
 </menuchoice>
-menu items or the &kpilot; daemon pop-up
+menu items or the &kpilot; daemon popup
 <menuchoice>
 <guisubmenu>Next Sync</guisubmenu>
 </menuchoice>
@@ -214,67 +234,19 @@ submenu items change only the type of sync that will be performed <emphasis>next
 </para>
 
 <screenshot>
-<screeninfo>KPilot Daemon Pop-Up Menu</screeninfo>
+<screeninfo>&kpilot; Daemon Pop-Up Menu</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="daemon-menu.png" format="PNG"/></imageobject>
-<textobject><phrase>KPilot daemon pop-up menu</phrase></textobject>
-<caption><para>KPilot daemon pop-up menu</para></caption>
+<textobject><phrase>&kpilot; daemon popup menu</phrase></textobject>
+<caption><para>&kpilot; daemon popup menu</para></caption>
 </mediaobject>
 </screenshot>
 
 
-<itemizedlist>
-
-<listitem><para>
-<guilabel>HotSync</guilabel>: run all selected conduits, sync the databases
-with a modified flag set, updating the modified records only. Performs a fast
-backup, backing up only the databases that were modified. This option offers
-a nice balance between speed and data safety.
-<menuchoice>
-<guimenu>File</guimenu>
-</menuchoice>
-menu and on the daemon pop-up menu
-<menuchoice>
-<guisubmenu>Next Sync</guisubmenu>
-</menuchoice>
-submenu.
-</para></listitem>
-
-<listitem><para>
-<guilabel>FastSync</guilabel>: Only sync those
-databases that have conduits, and perform no backup of the data
-on the &PalmPilot;, reducing greatly the time required for the sync
-operation. This also means that if something goes wrong with your &PalmPilot;,
-you may not be able to recover the databases. This is a classic
-trade-off between speed and safety. Available on the main application
-<menuchoice>
-<guimenu>File</guimenu>
-</menuchoice>
-menu and on the daemon pop-up menu
-<menuchoice>
-<guisubmenu>Next Sync</guisubmenu>
-</menuchoice>
-submenu. This operation only makes sense if you do not use
-<link linkend="using-kpilot">&kpilot; built-in database viewer
-applications</link>, but uses &kpilot; to sync your &handheld; data with
-external applications, using <link linkend="conduits">conduits</link>.
-</para></listitem>
-
-<listitem><para>
-<guilabel>FullSync</guilabel>: run all selected conduits, and sync all databases,
-reading all records, and performing a full backup. It is the safest option, but
-takes the longest time to complete, as it will merge all the records from the
-&handheld; and your desktop. It is the &kpilot; equivalent of the Palm SlowSync.
-</para>
 <para>
-Available on the main application
-<menuchoice>
-<guimenu>File</guimenu>
-</menuchoice>
-menu only.
-</para></listitem>
-
-</itemizedlist>
+For more information on the sync types, please refer to the descriptions
+available in <xref linkend="page-hotsync" />.
+</para>
 
 
 </sect1>
@@ -299,11 +271,11 @@ menu item.
 </para>
 
 <screenshot>
-<screeninfo>KPilot Daemon Pop-Up Menu</screeninfo>
+<screeninfo>&kpilot; Daemon Pop-Up Menu</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="daemon-menu.png" format="PNG"/></imageobject>
-<textobject><phrase>KPilot daemon pop-up menu</phrase></textobject>
-<caption><para>KPilot daemon pop-up menu</para></caption>
+<textobject><phrase>&kpilot; daemon popup menu</phrase></textobject>
+<caption><para>&kpilot; daemon popup menu</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -341,6 +313,18 @@ check if it is already running (tip: look for the &knotes; icon in the system tr
 
 </para></listitem>
 </varlistentry>
+
+
+<varlistentry>
+<term><guilabel>Notepad</guilabel></term>
+<listitem>
+<para>
+Exports the free hand notes  of the &handheld;'s Notepad application as pictures
+to the PC.
+</para>
+</listitem>
+</varlistentry>
+
 
 <varlistentry>
 <term><guilabel>Time Synchronization</guilabel></term>
@@ -454,7 +438,7 @@ that both the &handheld; and the <acronym>PC</acronym> are in sync again.
 </para>
 
 <para>
-A pop-up dialog may appear, asking you how to resolve the
+A popup dialog may appear, asking you how to resolve the
 conflict, or you may have a general rule to automatically handle these
 conflicts (depending on your <link linkend="page-hotsync">conflict resolution
 choice</link>). Note that you can define different resolution choices
