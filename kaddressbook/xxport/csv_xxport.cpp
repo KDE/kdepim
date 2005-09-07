@@ -22,6 +22,8 @@
 */
 
 #include <qfile.h>
+//Added by qt3to4:
+#include <QTextStream>
 
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
@@ -64,7 +66,7 @@ bool CSVXXPort::exportContacts( const KABC::AddresseeList &list, const QString& 
     return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
   } else {
     QFile file( url.path() );
-    if ( !file.open( IO_WriteOnly ) ) {
+    if ( !file.open( QIODevice::WriteOnly ) ) {
       QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>" );
       KMessageBox::error( parentWidget(), txt.arg( url.path() ) );
       return false;

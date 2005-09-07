@@ -26,17 +26,19 @@
 #include <kabc/addresseelist.h>
 #include <kdialogbase.h>
 
-#include <qvaluelist.h>
+#include <q3valuelist.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 class KURLRequester;
 
-class QButtonGroup;
+class Q3ButtonGroup;
 class QComboBox;
 class QCheckBox;
 class QLineEdit;
 class QPushButton;
 class QRadioButton;
-class QTable;
+class Q3Table;
 
 class CSVImportDialog : public KDialogBase
 {
@@ -78,8 +80,8 @@ class CSVImportDialog : public KDialogBase
            Isdn, Pager, Email, Mailer, Title, Role, Organization, Note, URL
          };
 
-    QTable* mTable;
-    QButtonGroup* mDelimiterBox;
+    Q3Table* mTable;
+    Q3ButtonGroup* mDelimiterBox;
     QRadioButton* mRadioComma;
     QRadioButton* mRadioSemicolon;
     QRadioButton* mRadioTab;
@@ -107,7 +109,7 @@ class CSVImportDialog : public KDialogBase
 
     void reloadCodecs();
     QTextCodec *currentCodec();
-    QPtrList<QTextCodec> mCodecs;
+    Q3PtrList<QTextCodec> mCodecs;
 
     bool mAdjustRows;
     int mStartLine;
@@ -118,7 +120,7 @@ class CSVImportDialog : public KDialogBase
     KABC::AddressBook *mAddressBook;
     int mCustomCounter;
     bool mClearTypeStore;
-    QValueList<int> mTypeStore;
+    Q3ValueList<int> mTypeStore;
 };
 
 #endif

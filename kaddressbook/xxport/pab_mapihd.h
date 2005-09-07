@@ -18,7 +18,7 @@
 #ifndef _MAPIHD_H_
 #define _MAPIHD_H_
 
-#include <qmemarray.h>
+#include <q3memarray.h>
 
 #include "pab_xxport.h"
 
@@ -90,7 +90,7 @@
  class pabfields_t
  {
    private:
-     QMemArray<mapitag_t> tags,context_tags;
+     Q3MemArray<mapitag_t> tags,context_tags;
      pabrec            *m_R;
      QString givenName,email,
              title,firstName,additionalName,lastName,

@@ -27,6 +27,10 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <Q3Frame>
+#include <QTextStream>
 
 #include <kabc/vcardconverter.h>
 #include <kdialogbase.h>
@@ -38,7 +42,7 @@
 #include <kurl.h>
 #include <kapplication.h>
 #include <libkdepim/addresseeview.h>
-
+#include <kpushbutton.h>
 #include "config.h" // ??
 
 #include "gpgmepp/context.h"
@@ -191,7 +195,7 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
 
         QFile file( fileName );
 
-        if ( file.open( IO_ReadOnly ) ) {
+        if ( file.open( QIODevice::ReadOnly ) ) {
           QByteArray rawData = file.readAll();
           file.close();
           if ( rawData.size() > 0 ) {
@@ -393,7 +397,7 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list,
                  parent, name, true, true, KStdGuiItem::no(), KStdGuiItem::yes() ),
     mContacts( list )
 {
-  QFrame *page = plainPage();
+  Q3Frame *page = plainPage();
   QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Do you want to import this contact in your address book?" ), page );
@@ -404,7 +408,7 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list,
 
   mView = new KPIM::AddresseeView( page );
   mView->enableLinks( 0 );
-  mView->setVScrollBarMode( QScrollView::Auto );
+  mView->setVScrollBarMode( Q3ScrollView::Auto );
   layout->addWidget( mView );
 
   setButtonText( Apply, i18n( "Import All..." ) );
@@ -465,7 +469,7 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent,
   : KDialogBase( Plain, i18n( "Select vCard Fields" ), Ok | Cancel, Ok,
                  parent, name, true, true )
 {
-  QFrame *page = plainPage();
+  Q3Frame *page = plainPage();
 
   QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );
 

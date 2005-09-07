@@ -24,6 +24,8 @@
 
 #include <qfile.h>
 #include <qregexp.h>
+//Added by qt3to4:
+#include <QTextStream>
 
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
@@ -53,7 +55,7 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
     return addrList;
 
   QFile file( fileName );
-  if ( !file.open( IO_ReadOnly ) ) {
+  if ( !file.open( QIODevice::ReadOnly ) ) {
     QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>" );
     KMessageBox::error( parentWidget(), msg.arg( fileName ) );
     return addrList;

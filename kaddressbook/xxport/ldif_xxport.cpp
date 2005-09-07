@@ -34,6 +34,8 @@
 */
 
 #include <qfile.h>
+//Added by qt3to4:
+#include <QTextStream>
 
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
@@ -69,7 +71,7 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
     return addrList;
 
   QFile file( fileName );
-  if ( !file.open( IO_ReadOnly ) ) {
+  if ( !file.open( QIODevice::ReadOnly ) ) {
     QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>" );
     KMessageBox::error( parentWidget(), msg.arg( fileName ) );
     return addrList;
@@ -113,7 +115,7 @@ bool LDIFXXPort::exportContacts( const KABC::AddresseeList &list, const QString&
     QString filename = url.path();
     QFile file( filename );
 
-    if ( !file.open( IO_WriteOnly ) ) {
+    if ( !file.open( QIODevice::WriteOnly ) ) {
       QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>" );
       KMessageBox::error( parentWidget(), txt.arg( filename ) );
       return false;

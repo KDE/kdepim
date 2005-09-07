@@ -20,7 +20,7 @@
 */
 
 
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qlabel.h>
@@ -28,9 +28,13 @@
 #include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qradiobutton.h>
-#include <qtable.h>
+#include <q3table.h>
 #include <qtextcodec.h>
 #include <qtooltip.h>
+//Added by qt3to4:
+#include <QTextStream>
+#include <QGridLayout>
+#include <QHBoxLayout>
 
 #include <kapplication.h>
 #include <kdebug.h>
@@ -174,7 +178,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
     KABC::Address addrHome( KABC::Address::Home );
     KABC::Address addrWork( KABC::Address::Work );
     for ( int col = 0; col < mTable->numCols(); ++col ) {
-      QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0,
+      Q3ComboTableItem *item = static_cast<Q3ComboTableItem*>( mTable->item( 0,
                                                              col ) );
       if ( !item ) {
         kdError() << "ERROR: item cast failed" << endl;
@@ -378,7 +382,7 @@ void CSVImportDialog::initGUI()
   layout->addMultiCellLayout( hbox, 0, 0, 0, 4 );
 
   // Delimiter: comma, semicolon, tab, space, other
-  mDelimiterBox = new QButtonGroup( i18n( "Delimiter" ), mPage );
+  mDelimiterBox = new Q3ButtonGroup( i18n( "Delimiter" ), mPage );
   mDelimiterBox->setColumnLayout( 0, Qt::Vertical );
   mDelimiterBox->layout()->setSpacing( spacingHint() );
   mDelimiterBox->layout()->setMargin( marginHint() );
@@ -441,8 +445,8 @@ void CSVImportDialog::initGUI()
   mCodecCombo = new QComboBox( mPage );
   layout->addMultiCellWidget( mCodecCombo, 4, 4, 2, 4 );
 
-  mTable = new QTable( 0, 0, mPage );
-  mTable->setSelectionMode( QTable::NoSelection );
+  mTable = new Q3Table( 0, 0, mPage );
+  mTable->setSelectionMode( Q3Table::NoSelection );
   mTable->horizontalHeader()->hide();
   layout->addMultiCellWidget( mTable, 5, 5, 0, 4 );
 
@@ -470,7 +474,7 @@ void CSVImportDialog::fillTable()
   // store previous assignment
   mTypeStore.clear();
   for ( column = 0; column < mTable->numCols(); ++column ) {
-    QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0,
+    Q3ComboTableItem *item = static_cast<Q3ComboTableItem*>( mTable->item( 0,
                                                            column ) );
     if ( !item || mClearTypeStore )
       mTypeStore.append( typeToPos( Undefined ) );
@@ -482,7 +486,7 @@ void CSVImportDialog::fillTable()
 
   row = column = 1;
 
-  QTextStream inputStream( mFileArray, IO_ReadOnly );
+  QTextStream inputStream( mFileArray, QIODevice::ReadOnly );
 
   // find the current codec
   int code = mCodecCombo->currentItem();
@@ -623,7 +627,7 @@ void CSVImportDialog::fillTable()
   mTable->setNumCols( maxColumn );
 
   for ( column = 0; column < mTable->numCols(); ++column ) {
-    QComboTableItem *item = new QComboTableItem( mTable, mTypeMap.keys() );
+    Q3ComboTableItem *item = new Q3ComboTableItem( mTable, mTypeMap.keys() );
     mTable->setItem( 0, column, item );
     if ( column < (int)mTypeStore.count() )
       item->setCurrentItem( mTypeStore[ column ] );
@@ -769,7 +773,7 @@ void CSVImportDialog::slotOk()
   bool assigned = false;
 
   for ( int column = 0; column < mTable->numCols(); ++column ) {
-    QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0,
+    Q3ComboTableItem *item = static_cast<Q3ComboTableItem*>( mTable->item( 0,
                                                            column ) );
     if ( item && posToType( item->currentItem() ) != Undefined )
       assigned = true;
@@ -834,7 +838,7 @@ void CSVImportDialog::applyTemplate()
   // apply the column map
   for ( uint column = 0; column < columnMap.count(); ++column ) {
     int type = columnMap[ column ];
-    QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0,
+    Q3ComboTableItem *item = static_cast<Q3ComboTableItem*>( mTable->item( 0,
                                                            column ) );
     if ( item )
       item->setCurrentItem( typeToPos( type ) );
@@ -872,7 +876,7 @@ void CSVImportDialog::saveTemplate()
   config.setGroup( "csv column map" );
 
   for ( int column = 0; column < mTable->numCols(); ++column ) {
-    QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0,
+    Q3ComboTableItem *item = static_cast<Q3ComboTableItem*>( mTable->item( 0,
                                                            column ) );
     if ( item )
       config.writeEntry( QString::number( column ), posToType(
@@ -922,7 +926,7 @@ void CSVImportDialog::setFile( const QString &fileName )
     return;
 
   QFile file( fileName );
-  if ( !file.open( IO_ReadOnly ) ) {
+  if ( !file.open( QIODevice::ReadOnly ) ) {
     KMessageBox::sorry( this, i18n( "Cannot open input file." ) );
     file.close();
     return;

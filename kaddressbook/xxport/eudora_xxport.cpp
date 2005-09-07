@@ -22,6 +22,8 @@
 */
 
 #include <qfile.h>
+//Added by qt3to4:
+#include <QTextStream>
 
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
@@ -52,7 +54,7 @@ KABC::AddresseeList EudoraXXPort::importContacts( const QString& ) const
     return KABC::AddresseeList();
 
   QFile file( fileName );
-  if ( !file.open( IO_ReadOnly ) )
+  if ( !file.open( QIODevice::ReadOnly ) )
     return KABC::AddresseeList();
 
   QString line;
