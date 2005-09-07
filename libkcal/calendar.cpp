@@ -312,7 +312,7 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
   newInc->setRelatedTo( incidence );
   Recurrence *recur = newInc->recurrence();
   if ( single ) {
-    recur->unsetRecurs();
+    recur->clear();
   } else {
     // Adjust the recurrence for the future incidences. In particular
     // adjust the "end after n occurrences" rules! "No end date" and "end by ..."
@@ -323,7 +323,7 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
       if ( doneduration >= duration ) {
         kdDebug(5850) << "The dissociated event already occurred more often "
                       << "than it was supposed to ever occur. ERROR!" << endl;
-        recur->unsetRecurs();
+        recur->clear();
       } else {
         recur->setDuration( duration - doneduration );
       }
