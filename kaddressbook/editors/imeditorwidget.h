@@ -25,7 +25,7 @@
 #ifndef IMEDITORWIDGET_H
 #define IMEDITORWIDGET_H
 
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 #include <klistview.h>
 #include <kdialogbase.h>
 
@@ -57,7 +57,7 @@ class IMEditorWidget : public KDialogBase
     void loadContact( KABC::Addressee *addr );
     void storeContact( KABC::Addressee *addr );
     void setReadOnly( bool readOnly );
-    QValueList<KPluginInfo *> availableProtocols() const;
+    Q3ValueList<KPluginInfo *> availableProtocols() const;
     bool isModified() const;
     QString preferred() const;
 
@@ -87,8 +87,8 @@ class IMEditorWidget : public KDialogBase
     void setModified( bool modified );
 
     // Used to track changed protocols to reduce KABC writes
-    QValueList<KPluginInfo *> mChangedProtocols;
-    QValueList<KPluginInfo *> mProtocols;
+    Q3ValueList<KPluginInfo *> mChangedProtocols;
+    Q3ValueList<KPluginInfo *> mProtocols;
 };
 
 /**

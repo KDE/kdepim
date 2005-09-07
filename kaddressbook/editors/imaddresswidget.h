@@ -24,7 +24,7 @@
 #ifndef IMADDRESSWIDGET_H
 #define IMADDRESSWIDGET_H
 
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 #include "imaddressbase.h"
 #include "imeditorwidget.h"
@@ -44,15 +44,15 @@ class IMAddressWidget : public IMAddressBase
   Q_OBJECT
 
   public:
-    IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols);
-    IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols,
+    IMAddressWidget( QWidget *parent, Q3ValueList<KPluginInfo *> protocols);
+    IMAddressWidget( QWidget *parent, Q3ValueList<KPluginInfo *> protocols,
                      KPluginInfo *protocol, const QString& address,
                      const IMContext& context = Any );
 
     KPluginInfo * protocol() const;
     IMContext context() const;
     QString address() const ;
-    QValueList<KPluginInfo *> mProtocols;
+    Q3ValueList<KPluginInfo *> mProtocols;
 
   signals:
     void inValidState( bool );

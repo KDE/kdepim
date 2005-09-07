@@ -22,12 +22,14 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qlistview.h>
+#include <q3listview.h>
 #include <qstringlist.h>
-#include <qvbox.h>
+#include <q3vbox.h>
 #include <qlayout.h>
 #include <qfont.h>
 #include <qpainter.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <kdialogbase.h>
 #include <kdebug.h>
@@ -154,7 +156,7 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM, con
   connect( mWidget->btnSetStandard, SIGNAL( clicked()), SLOT( slotSetStandard() ) );
   connect( mWidget->lvAddresses, SIGNAL( selectionChanged() ), SLOT( slotUpdateButtons() ) );
 
-  connect( mWidget->lvAddresses, SIGNAL( doubleClicked( QListViewItem*, const QPoint&, int ) ),
+  connect( mWidget->lvAddresses, SIGNAL( doubleClicked( Q3ListViewItem*, const QPoint&, int ) ),
            SLOT( slotEdit() ) );
 
   setHelp( "managing-contacts-im-addresses" );
@@ -171,8 +173,8 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM, con
 
   // order the protocols by putting them in a qmap, then sorting the set of keys and recreating the list
   QMap<QString, KPluginInfo *> protocolMap;
-  QValueList<KPluginInfo *>::ConstIterator it;
-  QValueList<KPluginInfo *> sorted;
+  Q3ValueList<KPluginInfo *>::ConstIterator it;
+  Q3ValueList<KPluginInfo *> sorted;
   for ( it = mProtocols.begin(); it != mProtocols.end(); ++it )
       protocolMap.insert( (*it)->name(), (*it) );
 
@@ -185,7 +187,7 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM, con
   mProtocols = sorted;
 }
 
-QValueList<KPluginInfo *> IMEditorWidget::availableProtocols() const
+Q3ValueList<KPluginInfo *> IMEditorWidget::availableProtocols() const
 {
   return mProtocols;
 }
@@ -231,10 +233,10 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
 {
   // for each changed protocol, write a new custom field containing the current set of
   // addresses
-  QValueList<KPluginInfo *>::ConstIterator protocolIt;
+  Q3ValueList<KPluginInfo *>::ConstIterator protocolIt;
   for ( protocolIt = mChangedProtocols.begin(); protocolIt != mChangedProtocols.end(); ++protocolIt ) {
     QStringList lst;
-    QListViewItemIterator addressIt( mWidget->lvAddresses );
+    Q3ListViewItemIterator addressIt( mWidget->lvAddresses );
     while ( addressIt.current() ) {
       IMAddressLVI* currentAddress = static_cast<IMAddressLVI*>( *addressIt );
       if ( currentAddress->protocol() == *protocolIt )
@@ -258,11 +260,11 @@ void IMEditorWidget::setReadOnly( bool readOnly )
 
 void IMEditorWidget::slotSetStandard()
 {
-  QListViewItemIterator it( mWidget->lvAddresses, QListViewItemIterator::Selected );
+  Q3ListViewItemIterator it( mWidget->lvAddresses, Q3ListViewItemIterator::Selected );
 
   // Just set the first one selected as standard
   if ( IMAddressLVI *current = static_cast<IMAddressLVI*>( it.current() ) ) {
-    QListViewItemIterator it2( mWidget->lvAddresses );
+    Q3ListViewItemIterator it2( mWidget->lvAddresses );
     while ( it2.current() ) {
       IMAddressLVI *item = static_cast<IMAddressLVI*>( it2.current() );
 
@@ -289,7 +291,7 @@ void IMEditorWidget::slotSetStandard()
 void IMEditorWidget::slotUpdateButtons()
 {
   int num_selected = 0;
-  QListViewItemIterator it( mWidget->lvAddresses, QListViewItemIterator::Selected );
+  Q3ListViewItemIterator it( mWidget->lvAddresses, Q3ListViewItemIterator::Selected );
   while ( it.current() ) {
     ++num_selected;
     if ( num_selected > 1 )
@@ -362,7 +364,7 @@ void IMEditorWidget::slotAdd()
 
 void IMEditorWidget::slotEdit()
 {
-  QListViewItemIterator it( mWidget->lvAddresses, QListViewItemIterator::Selected );
+  Q3ListViewItemIterator it( mWidget->lvAddresses, Q3ListViewItemIterator::Selected );
 
   // Just edit the first one selected.
   if ( IMAddressLVI *current = static_cast<IMAddressLVI*>( it.current() ) ) {
@@ -409,7 +411,7 @@ void IMEditorWidget::slotDelete()
   int num_selected = 0;
 
   {
-    QListViewItemIterator it( mWidget->lvAddresses, QListViewItemIterator::Selected );
+    Q3ListViewItemIterator it( mWidget->lvAddresses, Q3ListViewItemIterator::Selected );
     while ( it.current() ) {
       num_selected++;
       ++it;
@@ -424,7 +426,7 @@ void IMEditorWidget::slotDelete()
                                            i18n( "Confirm Delete" ), KStdGuiItem::del() ) != KMessageBox::Continue )
     return;
 
-  QListViewItemIterator it( mWidget->lvAddresses );
+  Q3ListViewItemIterator it( mWidget->lvAddresses );
   bool deletedPreferred = false;
   while( it.current() ) {
     if ( it.current()->isSelected() ) {
@@ -461,7 +463,7 @@ QString IMEditorWidget::preferred() const
 
 KPluginInfo * IMEditorWidget::protocolFromString( const QString &fieldValue ) const
 {
-  QValueList<KPluginInfo *>::ConstIterator it;
+  Q3ValueList<KPluginInfo *>::ConstIterator it;
   KPluginInfo * protocol = 0;
   for ( it = mProtocols.begin(); it != mProtocols.end(); ++it ) {
     if ( (*it)->property( "X-KDE-InstantMessagingKABCField" ).toString() == fieldValue ) {

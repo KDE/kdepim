@@ -25,6 +25,8 @@
 #include <qcombobox.h>
 #include <qlineedit.h>
 #include <qlabel.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <kdebug.h>
 #include <kiconloader.h>
@@ -33,7 +35,7 @@
 
 #include "imaddresswidget.h"
 
-IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols )
+IMAddressWidget::IMAddressWidget( QWidget *parent, Q3ValueList<KPluginInfo *> protocols )
   : IMAddressBase( parent )
 {
   mProtocols = protocols;
@@ -41,7 +43,7 @@ IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> pro
   init();
 }
 
-IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols,
+IMAddressWidget::IMAddressWidget( QWidget *parent, Q3ValueList<KPluginInfo *> protocols,
                                   KPluginInfo *protocol, const QString& address,
                                   const IMContext& context )
   : IMAddressBase( parent )
@@ -118,7 +120,7 @@ QString IMAddressWidget::address() const
 void IMAddressWidget::populateProtocols()
 {
   // insert the protocols in order
-  QValueList<KPluginInfo *>::ConstIterator it;
+  Q3ValueList<KPluginInfo *>::ConstIterator it;
   for ( it = mProtocols.begin(); it != mProtocols.end(); ++it )
     cmbProtocol->insertItem( SmallIcon( (*it)->icon() ), (*it)->name() );
 }
