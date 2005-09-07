@@ -52,8 +52,6 @@ class JumpButtonBar : public QWidget
     JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name = 0 );
     ~JumpButtonBar();
 
-    virtual QSizePolicy sizePolicy() const;
-
   public slots:
     void updateButtons();
 

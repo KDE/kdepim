@@ -83,12 +83,6 @@ JumpButtonBar::~JumpButtonBar()
 {
 }
 
-QSizePolicy JumpButtonBar::sizePolicy() const
-{
-  return QSizePolicy( QSizePolicy::Maximum, QSizePolicy::Minimum,
-                      QSizePolicy::Vertically );
-}
-
 void JumpButtonBar::updateButtons()
 {
   int currentButton = mGroupBox->selectedId();
@@ -181,6 +175,13 @@ void JumpButtonBar::updateButtons()
     mGroupBox->setButton( currentButton );
   else
     mGroupBox->setButton( 0 );
+
+  int maxWidth = 0;
+  QPushButton *button;
+  for ( button = mButtons.first(); button; button = mButtons.next() )
+    maxWidth = QMAX( maxWidth, button->sizeHint().width() );
+
+  setFixedWidth( maxWidth );
 }
 
 void JumpButtonBar::letterClicked()
