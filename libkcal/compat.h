@@ -63,7 +63,6 @@ class Compat
 class CompatPre35 : public Compat
 {
   public:
-    virtual void fixFloatingEnd( QDate & );
     virtual void fixRecurrence( Incidence * );
   private:
     class Private;
