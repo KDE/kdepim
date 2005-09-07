@@ -80,7 +80,6 @@
 </othercredit>
 
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
-
 </authorgroup>
 
 
@@ -157,7 +156,7 @@ management, news reader, synchronization with portable devices, and news feeds
 reader.  Even if you don't use it inside &kontact;, &korganizer; is
 integrated with the other &kde; <acronym>PIM</acronym> applications.
 For instance, you can configure it to show birthdays from &kaddressbook; in your
-agenda, use &kmail; to send and receive invitations, etc...</para>
+agenda, use &kmail; to send and receive invitations, &etc;</para>
 
 <para>Main features of &korganizer;:</para>
 <para><itemizedlist>
@@ -364,7 +363,8 @@ should at least skip through the <link linkend="faq">&FAQ;</link>.</para>
 
 <para>&korganizer; can store (and retrieve) events, journals entries
 and to-dos using various methods, and to different locations.
-Each of these locations is called a <firstterm>calendar resource</firstterm>.</para>
+Each of these locations is called a <firstterm>calendar resource</firstterm>.
+</para>
 
 <para>&korganizer; supports calendar files based on standards such as
 iCalendar and vCalendar natively (adding them as new resources), but you can
@@ -408,13 +408,17 @@ and retrieving. Access to free/busy information allows an event organizer to
 take the attendee's calendar in consideration when adding him to the the event's
 attendee list.</para>
 
-<note><para>Beside calendar storage, groupware servers typically offer contacts,
+<note><para>Besides calendar storage, groupware servers typically offer contacts,
 mail and <link linkend="glossary" endterm="gloss-freebusy">free/busy
 information</link> storage. Therefore, some of the resources discussed here
 may be related to other resources from &kmail; and &kaddressbook; (the mail and
 contacts components of &kontact;), or to the
 <link linkend="config-main-free-busy">free/busy settings in the main
-configuration</link>.</para></note>
+configuration</link>.</para>
+<para>Please note that &korganizer;
+<link linkend="group-scheduling">group scheduling</link> communication is
+based on a peer to peer email standard. This means that you do not need a
+groupware server to use it!</para></note>
 
 <screenshot id="screenshot-resources">
 <screeninfo>A screenshot of &korganizer;'s Resource View Sidebar</screeninfo>
@@ -428,7 +432,7 @@ configuration</link>.</para></note>
 <procedure id="procedure-add-resource">
 <title>Adding a New &korganizer; Resource</title>
 
-<step><para>If the resource view is not available on &korganizer; sidebar,
+<step><para>If the resource view is not available on &korganizer;'s sidebar,
 choose the <menuchoice><guimenu>Settings</guimenu>
 <guisubmenu>Sidebar</guisubmenu><guimenuitem>Show Resource
 View</guimenuitem></menuchoice> menu item to display it.
@@ -468,19 +472,20 @@ without associated time.</para></listitem>
 
 <varlistentry>
 <term><guilabel>Journal Entries as Blogs on Server</guilabel></term>
-<listitem><para>Add this resource to be able to publish your journal entries as blogs,
-directly on blog servers, such as blogger and drupal.</para></listitem>
+<listitem><para>Add this resource to be able to read your blogs as journal entries,
+directly from blog servers, such as blogger and drupal.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Bugzilla To-do List</guilabel></term>
 <listitem><para>Add this resource to load bugzilla open bugs as to-dos.
-Bugzilla is an open source bug tracking system. If you are a developer
-working on a project that uses bugzilla, you can use this resource to view as
-to-dos the open bugs of the applications or libraries you are interested in
-(they are called <quote>products</quote> and / or <quote>components</quote> in
-bugzilla). This resource is available as part of the &kde; Software
-Development kit.
+This resource is based on the &kbugbuster; application, and uses its bug cache
+information. Bugzilla is an open source bug tracking system.</para>
+
+<para>If you are a developer working on a project that uses bugzilla, you can
+use this resource to view as to-dos the open bugs of the applications or
+libraries you are interested in (they are called <quote>products</quote> and / or <quote>components</quote> in bugzilla). This resource is available as part of
+the &kde; Software Development kit.
 </para></listitem>
 </varlistentry>
 
@@ -547,29 +552,21 @@ GroupWise resources, but &kmail;, &kaddressbook; too.</para>
 <term><guilabel>Calendar on IMAP Server via &kmail;</guilabel></term>
 <listitem><para>
 If you have access to a server that shares calendar data via IMAP, add this
-resource in order to be able to to save (and load) events, to-dos, free/busy information and journal entries
-to the server. To enable IMAP access, you will need to configure &kmail; first,
-then add the &korganizer; resource. Also, since you are using &kmail; to contact
-the server, &korganizer; will open &kmail; automatically, and use it
-to access your data. The <quote>IMAP server via &kmail;</quote> schema supports the storage
+resource in order to be able to to save (and load) events, to-dos, free/busy
+information and journal entries to the IMAP server. To enable IMAP access, you
+will need to configure &kmail; first, then add the &korganizer; resource.
+Also, since you are using &kmail; to contact the server, &korganizer; will
+open &kmail; automatically, and use it to access your data. The
+<quote>IMAP server via &kmail;</quote> schema supports the storage
 of contacts, so you may want to add the &kaddressbook; resource too.</para>
 
-<para>The main implementation of this schema is the
-<ulink url="http://www.kolab.org">Kolab Server</ulink>.
-As of June 2005, the groupware servers that implement the <quote>Kolab 1</quote>
-and <quote>Kolab 2</quote> protocols are the Kolab server, version 1 and 2, and the
-<ulink url="http://www.citadel.org">Citadel server</ulink> (Kolab 1 only). An up
-to date list can be obtained at the
-<ulink url="http://www.kolab.org">Kolab website</ulink>.</para>
+<para>Most IMAP servers can be used to hold calendar and address book resources,
+allowing you to use access your data from just anywhere! If you are a user
+looking for a simple way to access and manage your groupware information,
+this is a simple and very efficient solution.</para>
 
-<para>The most practical way to configure the access to a Kolab server is to use
-the <application>kolabwizard</application> wizard application. You can start it
-from the command line prompt:
-
-<screen><prompt>$</prompt><command>kolabwizard</command></screen>
-
-If you want to configure &kmail; yourself instead of using the wizard, you can
-access the configuration by choosing the <menuchoice><guimenu>Settings</guimenu>
+<para>To use this resource, it is necessary to configure &kmail; first. Choose
+the <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kmail;...</guimenuitem></menuchoice> menu item.
 Click the <guilabel>Accounts</guilabel> icon in the configure dialog sidebar
 and add the IMAP server as a disconnected IMAP incoming account. Now click the
@@ -577,7 +574,26 @@ and add the IMAP server as a disconnected IMAP incoming account. Now click the
 <guilabel>Groupware tab</guilabel> to enable and configure the IMAP resource
 folder options. Only then you can add the &korganizer; (and &kaddressbook;)
 resources. For more information on configuring &kmail;, consult the &kmail;
-handbook.
+handbook.</para>
+
+<para>A more complete implementation of this schema is the
+<ulink url="http://www.kolab.org">Kolab Server</ulink>. This groupware
+implementation offers additional features for system administrators, such as
+support of mixed client environments (&Microsoft; Outlook&reg;, &kde;
+<acronym>PIM</acronym>  and web mail), a web administration interface, shared
+address book, email server, &etc; As of June 2005, the groupware servers that
+implement the <quote>Kolab 1</quote> and <quote>Kolab 2</quote> protocols are
+the Kolab server, version 1 and 2, and the 
+<ulink url="http://www.citadel.org">Citadel server</ulink> (Kolab 1 only). An up
+to date list can be obtained at the <ulink url="http://www.kolab.org">Kolab
+website</ulink>.</para>
+
+<para>The most practical way to configure the access to a Kolab server is to use
+the <application>kolabwizard</application> wizard application. You can start it
+from the command line prompt:
+
+<screen><prompt>$</prompt><command>kolabwizard</command></screen>
+
 </para>
 </listitem>
 </varlistentry>
@@ -595,17 +611,18 @@ corruption, you will lose only one calendar item, not the whole calendar.</para>
 </listitem>
 </varlistentry>
 
+<!--
 <varlistentry>
 <term><guilabel>Calendar on Exchange Server (Experimental)</guilabel></term>
 <listitem><para>
 If you have access to a
 <ulink url="http://www.microsoft.com/exchange">Exchange 2000 Server</ulink>,
 add this resource in order to be able to to save (and load)
-events <!--,journals, free/busy information and to-dos?--> to the server. To add the resource, you will
-need to know the server &URL;, <!--port?-->your user name and your password. There
+events FIXME:,journals, free/busy information and to-dos? to the server. To add the resource, you will
+need to know the server &URL;, FIXME:port? your user name and your password. There
 is support for (read only) contacts, so you may want to configure &kaddressbook;
 resource.</para>
-<!--FIXME: does the wizard work?
+FIXME: does the wizard work?
 <para>The most practical way to configure the access to a Exchange server is
 to use the <application>exchangewizard</application> wizard. You can start it
 from the command line prompt:
@@ -613,9 +630,10 @@ from the command line prompt:
 <screen><prompt>$</prompt><command>exchangewizard</command></screen>
 
 The wizard will configure not only &korganizer; to use the
-Exchange resources, but &kmail;, &kaddressbook; too.</para>-->
+Exchange resources, but &kmail;, &kaddressbook; too.</para>
 </listitem>
 </varlistentry>
+-->
 
 <varlistentry>
 <term><guilabel>Calendar in Remote File</guilabel></term>
@@ -653,7 +671,7 @@ the same.
 add or remove individual items from the remote file, it simply saves the
 remote file over local cache when downloading and save the local cache over the
 remote file when uploading. Therefore, if the resource is read only, it makes
-sense to set the <guilabel>Automatic Reload</guilabel> option to an
+sense to set the <guilabel>Automatic Reload</guilabel> option to a
 <guilabel>Regular interval</guilabel>, but if not (if the resource is writable),
 it is recommended to reload the file only before starting to edit it, by setting
 the <guilabel>Automatic Reload</guilabel> option to <guilabel>On
@@ -669,12 +687,12 @@ file will revert to its previous state. This can happen in different scenarios
 (for instance if the system crashes, &korganizer; will reload the remote file on
 the next start, if you set the <guilabel>Automatic Save</guilabel> to
 <guilabel>Never</guilabel>, or if you set the <guilabel>Automatic Reload</guilabel>
-to a regular interval). If you plan to use calendar resource in
+to a regular interval). If you plan to use a calendar resource in
 writable mode, make sure that your connection is stable, configure the
-resource to save the file on each change, (or on frequent intervals)
-and don't reload the file in regular intervals.</para>
+resource to save the file on each change (or at frequent intervals),
+and don't reload the file at regular intervals.</para>
 
-<para>A related, but opposite problem, is that two users can not safely edit
+<para>A related, but opposite problem, is that two users cannot safely edit
 the same remote file at the same time, because the remote file resource does not
 offer a conflict resolution mechanism. For instance, if someone else changes
 (and saves) the remote file, after you loaded it, and a some time later you save
@@ -755,8 +773,8 @@ its default view.</para>
 <para>A good time to do this would be if you received a
 vCalendar with a few entries via email, for instance, or if you are planning
 to import your calendar from another application. In the latter case, the first
-thing to do is to use this application to export the calendar data in one of the
-format above, or use a tool to convert from the application native format. If you
+thing to do is to use that application to export the calendar data in one of the
+formats above, or use a tool to convert from the application's native format. If you
 are migrating from &Microsoft; Outlook&reg;, please check
 <xref linkend="outlook-to-vcalendar-ws" />.</para>
 
@@ -781,7 +799,7 @@ The web page can be used to publish your calendar and to-dos list on the
 web or on the local network. Either way, &korganizer; will export all calendar
 items from the enabled (checked) resources which are
 <link linkend="filters-view">not filtered out</link> (let's call these items
-<quote>active</quote> items). In other words, if you can not see a calendar
+<quote>active</quote> items). In other words, if you cannot see a calendar
 item, it won't be in the exported file. To filter out the undesired items
 before exporting them, you can create
 <link linkend="filters-view">filters</link>. Filters even are more effective
@@ -1011,7 +1029,7 @@ completely on the screen when using one of the other views.</para>
 (a bell icon displayed in it means the alarm is set),  if it repeats multiple
 times (a chasing-arrows icon means a repeating event), the start and end time
 information. Hovering the mouse over an item will bring up a
-tool tip with detailed information about the item.</para>
+tooltip with detailed information about the item.</para>
 
 <para>Switch the display to the list view by choosing the
 <menuchoice><guimenu>View</guimenu>
@@ -1041,7 +1059,7 @@ screen (which is the usual case). Each rectangle in the view represents an
 individual event or to-do due for that time, and displays the start and end time
 and summary. A <guiicon>bell</guiicon> icon is displayed if an alarm is set, and
 a <guiicon>chasing-arrows</guiicon> icon is displayed if it repeats multiple
-times. Hovering the mouse over an calendar item will bring up a tool tip
+times. Hovering the mouse over an calendar item will bring up a tooltip
 with the item detailed information. To make &korganizer; show a red line
 marking the current-time on the current day (the Marcus Bains line),
 check the <guilabel>Show current-time (Marcus Bains Line)</guilabel> box in the
@@ -2586,7 +2604,7 @@ in the agenda view.</para></listitem>
 <listitem><para>Select the default start time for events from the list on
 the drop down. When you choose <link linkend="menu-actions-new-event">New
 Event</link> from the <link linkend="entering-data-events">Action Menu</link>, or
-create an event in some other manner such that &korganizer; can not guess
+create an event in some other manner such that &korganizer; cannot guess
 when you would like your event to start, &korganizer; will put this hour
 in the start time editor as the default value.</para></listitem>
 </varlistentry>
@@ -2919,7 +2937,7 @@ view.</para></listitem>
 updating or deleting events or to-dos which involve others. This mail can be
 an invitation to attendees of an event you created, a cancellation of an event
 you created, an answer or an update on your invitation status, an event change
-request, etc... Check this option if you you want to use the groupware
+request, &etc; Check this option if you you want to use the groupware
 functionality (e.g Configuring &kontact; as a &kde;
 <guilabel>Kolab</guilabel> client).</para></listitem>
 </varlistentry>
@@ -3191,7 +3209,7 @@ linkend="other-features-drag-and-drop">drag-and-drop operations</link>.
 Settings</guimenu><guimenuitem>Configure
 Toolbars....</guimenuitem></menuchoice> menu item.
 </para></listitem>
-<listitem><para>The graphic style (icon size, text position, etc...) is
+<listitem><para>The graphic style (icon size, text position, &etc;) is
 adjusted through the <guimenu>Toolbar Context Menu</guimenu>. Right click the
 toolbar to access this menu.
 </para></listitem>
@@ -3546,7 +3564,7 @@ file.</para>
 <listitem><para>This action will open the <guilabel>Upload Hot New Stuff</guilabel>
 dialog, which allow you to export calendars containing events which may be
 useful to other people, such as a conference program, a list of holidays,
-special events, etc...</para>
+special events, &etc;</para>
 <para>For more information about this action, please refer to
 <xref linkend="managing-get-hot-new-stuff" />.</para>
 </listitem>
@@ -4672,8 +4690,8 @@ http://korganizer.kde.org/contact/bugswishes.html</ulink>.</para>
 <email>carloswoelz@imap-mail.com</email></para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
-
 &underFDL;
+
 &underGPL;
 
 </chapter>
