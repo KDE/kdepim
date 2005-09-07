@@ -26,10 +26,18 @@
 
 #include <qpair.h>
 #include <qpoint.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qrect.h>
-#include <qscrollview.h>
+#include <q3scrollview.h>
 #include <qstring.h>
+//Added by qt3to4:
+#include <QWheelEvent>
+#include <QFocusEvent>
+#include <QEvent>
+#include <QKeyEvent>
+#include <QLabel>
+#include <QResizeEvent>
+#include <QMouseEvent>
 
 class QLabel;
 class QMouseEvent;
@@ -191,7 +199,7 @@ class CardViewItem
   can be used elsewhere. With the exception of a few simple config checks,
   the CardView is also 100% independant of KDE.
  */
-class CardView : public QScrollView
+class CardView : public Q3ScrollView
 {
   friend class CardViewItem;
 

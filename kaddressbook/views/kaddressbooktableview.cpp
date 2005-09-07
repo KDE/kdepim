@@ -23,18 +23,23 @@
 
 #include <qapplication.h>
 #include <qlayout.h>
-#include <qheader.h>
-#include <qvbox.h>
-#include <qlistbox.h>
+#include <q3header.h>
+#include <q3vbox.h>
+#include <q3listbox.h>
 #include <qwidget.h>
 #include <qfile.h>
 #include <qimage.h>
 #include <qcombobox.h>
 #include <qapplication.h>
-#include <qdragobject.h>
+#include <q3dragobject.h>
 #include <qevent.h>
-#include <qurl.h>
+#include <q3url.h>
 #include <qpixmap.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QKeyEvent>
+#include <QDropEvent>
+#include <Q3PtrList>
 
 #include <kabc/addressbook.h>
 #include <kapplication.h>
@@ -105,10 +110,10 @@ void KAddressBookTableView::reconstructListView()
   if ( mListView ) {
     disconnect( mListView, SIGNAL( selectionChanged() ),
                 this, SLOT( addresseeSelected() ) );
-    disconnect( mListView, SIGNAL( executed( QListViewItem* ) ),
-                this, SLOT( addresseeExecuted( QListViewItem* ) ) );
-    disconnect( mListView, SIGNAL( doubleClicked( QListViewItem* ) ),
-                this, SLOT( addresseeExecuted( QListViewItem* ) ) );
+    disconnect( mListView, SIGNAL( executed( Q3ListViewItem* ) ),
+                this, SLOT( addresseeExecuted( Q3ListViewItem* ) ) );
+    disconnect( mListView, SIGNAL( doubleClicked( Q3ListViewItem* ) ),
+                this, SLOT( addresseeExecuted( Q3ListViewItem* ) ) );
     disconnect( mListView, SIGNAL( startAddresseeDrag() ),
                 this, SIGNAL( startDrag() ) );
     disconnect( mListView, SIGNAL( addresseeDropped( QDropEvent* ) ),
@@ -127,7 +132,7 @@ void KAddressBookTableView::reconstructListView()
   int c = 0;
   for ( it = fieldList.begin(); it != fieldList.end(); ++it ) {
     mListView->addColumn( (*it)->label() );
-    mListView->setColumnWidthMode( c++, QListView::Manual );
+    mListView->setColumnWidthMode( c++, Q3ListView::Manual );
   }
 
   if ( mListView->showIM() ) {
@@ -147,17 +152,17 @@ void KAddressBookTableView::reconstructListView()
            this, SIGNAL( startDrag() ) );
   connect( mListView, SIGNAL( addresseeDropped( QDropEvent* ) ),
            this, SIGNAL( dropped( QDropEvent* ) ) );
-  connect( mListView, SIGNAL( contextMenu( KListView*, QListViewItem*, const QPoint& ) ),
-           this, SLOT( rmbClicked( KListView*, QListViewItem*, const QPoint& ) ) );
+  connect( mListView, SIGNAL( contextMenu( KListView*, Q3ListViewItem*, const QPoint& ) ),
+           this, SLOT( rmbClicked( KListView*, Q3ListViewItem*, const QPoint& ) ) );
   connect( mListView->header(), SIGNAL( clicked( int ) ),
            this, SIGNAL( sortFieldChanged() ) );
 
   if ( KABPrefs::instance()->honorSingleClick() )
-    connect( mListView, SIGNAL( executed( QListViewItem* ) ),
-             this, SLOT( addresseeExecuted( QListViewItem* ) ) );
+    connect( mListView, SIGNAL( executed( Q3ListViewItem* ) ),
+             this, SLOT( addresseeExecuted( Q3ListViewItem* ) ) );
   else
-    connect( mListView, SIGNAL( doubleClicked( QListViewItem* ) ),
-             this, SLOT( addresseeExecuted( QListViewItem* ) ) );
+    connect( mListView, SIGNAL( doubleClicked( Q3ListViewItem* ) ),
+             this, SLOT( addresseeExecuted( Q3ListViewItem* ) ) );
 
   refresh();
 
@@ -253,8 +258,8 @@ void KAddressBookTableView::refresh( const QString &uid )
   } else {
     // Only need to update on entry. Iterate through and try to find it
     ContactListViewItem *ceItem;
-    QPtrList<QListViewItem> selectedItems( mListView->selectedItems() );
-    QListViewItem *it;
+    Q3PtrList<Q3ListViewItem> selectedItems( mListView->selectedItems() );
+    Q3ListViewItem *it;
     for ( it = selectedItems.first(); it; it = selectedItems.next() ) {
       ceItem = dynamic_cast<ContactListViewItem*>( it );
       if ( ceItem && ceItem->addressee().uid() == uid ) {
@@ -271,7 +276,7 @@ QStringList KAddressBookTableView::selectedUids()
   QStringList uidList;
   ContactListViewItem *item;
 
-  QListViewItemIterator it( mListView, QListViewItemIterator::Selected );
+  Q3ListViewItemIterator it( mListView, Q3ListViewItemIterator::Selected );
   while ( it.current() ) {
     item = dynamic_cast<ContactListViewItem*>( it.current() );
     if ( item )
@@ -288,7 +293,7 @@ void KAddressBookTableView::setSelected( const QString &uid, bool selected )
   if ( uid.isEmpty() )
     mListView->selectAll( selected );
   else {
-    QListViewItemIterator it( mListView );
+    Q3ListViewItemIterator it( mListView );
     while ( it.current() ) {
       ContactListViewItem *item = dynamic_cast<ContactListViewItem*>( it.current() );
       if ( item && (item->addressee().uid() == uid) ) {
@@ -319,7 +324,7 @@ void KAddressBookTableView::addresseeSelected()
   // selected last.
   bool found =false;
 
-  QListViewItemIterator it( mListView, QListViewItemIterator::Selected );
+  Q3ListViewItemIterator it( mListView, Q3ListViewItemIterator::Selected );
   while ( it.current() && !found ) {
     found = true;
     ContactListViewItem *item = dynamic_cast<ContactListViewItem*>( it.current() );
@@ -333,7 +338,7 @@ void KAddressBookTableView::addresseeSelected()
       emit selected( QString::null );
 }
 
-void KAddressBookTableView::addresseeExecuted( QListViewItem *item )
+void KAddressBookTableView::addresseeExecuted( Q3ListViewItem *item )
 {
   if ( item ) {
     ContactListViewItem *ceItem = dynamic_cast<ContactListViewItem*>( item );
@@ -347,7 +352,7 @@ void KAddressBookTableView::addresseeExecuted( QListViewItem *item )
   }
 }
 
-void KAddressBookTableView::rmbClicked( KListView*, QListViewItem*, const QPoint &point )
+void KAddressBookTableView::rmbClicked( KListView*, Q3ListViewItem*, const QPoint &point )
 {
   popup( point );
 }
@@ -355,7 +360,7 @@ void KAddressBookTableView::rmbClicked( KListView*, QListViewItem*, const QPoint
 void KAddressBookTableView::updatePresence( const QString &uid )
 {
   // find the LVI to update and refresh() it
-  QListViewItem *item;
+  Q3ListViewItem *item;
   ContactListViewItem *ceItem;
   for ( item = mListView->firstChild(); item; item = item->itemBelow() ) {
     ceItem = dynamic_cast<ContactListViewItem*>( item );

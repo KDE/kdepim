@@ -21,14 +21,18 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qheader.h>
-#include <qiconset.h>
+#include <q3header.h>
+#include <qicon.h>
 #include <qimage.h>
-#include <qdragobject.h>
+#include <q3dragobject.h>
 #include <qcombobox.h>
 #include <qpainter.h>
 #include <qbrush.h>
 #include <qevent.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QDropEvent>
+#include <QMouseEvent>
 
 #include <klocale.h>
 #include <kglobalsettings.h>
@@ -63,7 +67,7 @@ void DynamicTip::maybeTip( const QPoint &pos )
 
   QPoint posVp = plv->viewport()->pos();
 
-  QListViewItem *lvi = plv->itemAt( pos - posVp );
+  Q3ListViewItem *lvi = plv->itemAt( pos - posVp );
   if (!lvi)
     return;
 
@@ -186,7 +190,7 @@ QString ContactListViewItem::key(int column, bool ascending) const
   else
     return mFields[ column ]->sortKey( mAddressee );
 #else
-  return QListViewItem::key( column, ascending ).lower();
+  return Q3ListViewItem::key( column, ascending ).lower();
 #endif
 }
 
@@ -318,7 +322,7 @@ void ContactListView::contentsMouseMoveEvent( QMouseEvent *e )
 
 bool ContactListView::acceptDrag(QDropEvent *e) const
 {
-  return QTextDrag::canDecode(e);
+  return Q3TextDrag::canDecode(e);
 }
 
 void ContactListView::itemDropped(QDropEvent *e)

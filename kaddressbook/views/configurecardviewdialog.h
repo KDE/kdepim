@@ -26,9 +26,11 @@
 
 #include "viewconfigurewidget.h"
 
-#include <qvbox.h>
+#include <q3vbox.h>
 #include <qwidget.h>
 #include <qfont.h>
+//Added by qt3to4:
+#include <QLabel>
 
 class QString;
 class QWidget;
@@ -77,7 +79,7 @@ class ConfigureCardViewWidget : public ViewConfigureWidget
     * item spacing
 */
 
-class CardViewLookNFeelPage : public QVBox {
+class CardViewLookNFeelPage : public Q3VBox {
 
   Q_OBJECT
 

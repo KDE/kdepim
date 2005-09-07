@@ -26,8 +26,11 @@
 #include <qlayout.h>
 #include <qradiobutton.h>
 #include <qcheckbox.h>
-#include <qvbox.h>
-#include <qbuttongroup.h>
+#include <q3vbox.h>
+#include <q3buttongroup.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include <kdeversion.h>
 #include <kglobal.h>
@@ -113,7 +116,7 @@ void LookAndFeelPage::initGUI()
 {
   QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialogBase::spacingHint());
 
-  QButtonGroup *group = new QButtonGroup(1, Qt::Horizontal,
+  Q3ButtonGroup *group = new Q3ButtonGroup(1, Qt::Horizontal,
                                          i18n("Row Separator"), this);
   layout->addWidget(group);
 

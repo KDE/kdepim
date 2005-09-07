@@ -22,11 +22,16 @@
 */
 
 #include <qapplication.h>
-#include <qdragobject.h>
+#include <q3dragobject.h>
 #include <qevent.h>
-#include <qiconview.h>
+#include <q3iconview.h>
 #include <qlayout.h>
 #include <qstringlist.h>
+//Added by qt3to4:
+#include <QDragEnterEvent>
+#include <QVBoxLayout>
+#include <QKeyEvent>
+#include <QDropEvent>
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
@@ -128,7 +133,7 @@ AddresseeCardView::~AddresseeCardView()
 
 void AddresseeCardView::dragEnterEvent( QDragEnterEvent *event )
 {
-  if ( QTextDrag::canDecode( event ) )
+  if ( Q3TextDrag::canDecode( event ) )
     event->accept();
 }
 

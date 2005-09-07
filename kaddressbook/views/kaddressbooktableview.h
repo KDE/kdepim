@@ -29,17 +29,19 @@
 #endif
 
 #include <qwidget.h>
-#include <qlistview.h>
+#include <q3listview.h>
 #include <qstring.h>
 #include <qdialog.h>
-#include <qtabdialog.h>
+#include <q3tabdialog.h>
 #include <qstringlist.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
 
 #include "kaddressbookview.h"
 
-class QListViewItem;
-class QListBox;
+class Q3ListViewItem;
+class Q3ListBox;
 class QVBoxLayout;
 class KConfig;
 class KIMProxy;
@@ -94,12 +96,12 @@ friend class ContactListView;
       Called whenever the user executes an addressee. In terms of the
       list view, this is probably a double click
     */
-    void addresseeExecuted( QListViewItem* );
+    void addresseeExecuted( Q3ListViewItem* );
 
     /**
       RBM menu called.
      */
-    void rmbClicked( KListView*, QListViewItem*, const QPoint& );
+    void rmbClicked( KListView*, Q3ListViewItem*, const QPoint& );
 
     /**
      * Called to update the presence of a single item

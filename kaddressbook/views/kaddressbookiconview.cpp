@@ -22,9 +22,16 @@
 */
 
 #include <qapplication.h>
-#include <qiconview.h>
+#include <q3iconview.h>
 #include <qlayout.h>
 #include <qstringlist.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QKeyEvent>
+#include <QEvent>
+#include <QDropEvent>
+#include <Q3ValueList>
+#include <QVBoxLayout>
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
@@ -62,28 +69,28 @@ extern "C" {
 AddresseeIconView::AddresseeIconView( QWidget *parent, const char *name )
   : KIconView( parent, name )
 {
-  setSelectionMode( QIconView::Extended );
-  setResizeMode( QIconView::Adjust );
+  setSelectionMode( Q3IconView::Extended );
+  setResizeMode( Q3IconView::Adjust );
   setWordWrapIconText( true );
   setGridX( 100 );
   setItemsMovable( false );
   setSorting( true, true );
   setMode( KIconView::Select );
 
-  connect( this, SIGNAL( dropped( QDropEvent*, const QValueList<QIconDragItem>& ) ),
-           this, SLOT( itemDropped( QDropEvent*, const QValueList<QIconDragItem>& ) ) );
+  connect( this, SIGNAL( dropped( QDropEvent*, const Q3ValueList<Q3IconDragItem>& ) ),
+           this, SLOT( itemDropped( QDropEvent*, const Q3ValueList<Q3IconDragItem>& ) ) );
 }
 
 AddresseeIconView::~AddresseeIconView()
 {
 }
 
-void AddresseeIconView::itemDropped( QDropEvent *event, const QValueList<QIconDragItem>& )
+void AddresseeIconView::itemDropped( QDropEvent *event, const Q3ValueList<Q3IconDragItem>& )
 {
   emit addresseeDropped( event );
 }
 
-QDragObject *AddresseeIconView::dragObject()
+Q3DragObject *AddresseeIconView::dragObject()
 {
   emit startAddresseeDrag();
 
@@ -96,7 +103,7 @@ class AddresseeIconViewItem : public KIconViewItem
 {
   public:
     AddresseeIconViewItem( const KABC::Field::List&, KABC::AddressBook *doc,
-                           const KABC::Addressee &addr, QIconView *parent )
+                           const KABC::Addressee &addr, Q3IconView *parent )
       : KIconViewItem( parent ), mDocument( doc ), mAddressee( addr )
       {
         refresh();
@@ -145,16 +152,16 @@ KAddressBookIconView::KAddressBookIconView( KAB::Core *core,
   layout->addWidget( mIconView );
 
   // Connect up the signals
-  connect( mIconView, SIGNAL( executed( QIconViewItem* ) ),
-           this, SLOT( addresseeExecuted( QIconViewItem* ) ) );
+  connect( mIconView, SIGNAL( executed( Q3IconViewItem* ) ),
+           this, SLOT( addresseeExecuted( Q3IconViewItem* ) ) );
   connect( mIconView, SIGNAL( selectionChanged() ),
            this, SLOT( addresseeSelected() ) );
   connect( mIconView, SIGNAL( addresseeDropped( QDropEvent* ) ),
            this, SIGNAL( dropped( QDropEvent* ) ) );
   connect( mIconView, SIGNAL( startAddresseeDrag() ),
            this, SIGNAL( startDrag() ) );
-  connect( mIconView, SIGNAL( contextMenuRequested( QIconViewItem*, const QPoint& ) ),
-           this, SLOT( rmbClicked( QIconViewItem*, const QPoint& ) ) );
+  connect( mIconView, SIGNAL( contextMenuRequested( Q3IconViewItem*, const QPoint& ) ),
+           this, SLOT( rmbClicked( Q3IconViewItem*, const QPoint& ) ) );
 }
 
 KAddressBookIconView::~KAddressBookIconView()
@@ -171,21 +178,21 @@ void KAddressBookIconView::readConfig( KConfig *config )
 {
   KAddressBookView::readConfig( config );
 
-  disconnect( mIconView, SIGNAL( executed( QIconViewItem* ) ),
-              this, SLOT( addresseeExecuted( QIconViewItem* ) ) );
+  disconnect( mIconView, SIGNAL( executed( Q3IconViewItem* ) ),
+              this, SLOT( addresseeExecuted( Q3IconViewItem* ) ) );
 
   if ( KABPrefs::instance()->honorSingleClick() )
-    connect( mIconView, SIGNAL( executed( QIconViewItem* ) ),
-             this, SLOT( addresseeExecuted( QIconViewItem* ) ) );
+    connect( mIconView, SIGNAL( executed( Q3IconViewItem* ) ),
+             this, SLOT( addresseeExecuted( Q3IconViewItem* ) ) );
   else
-    connect( mIconView, SIGNAL( doubleClicked( QIconViewItem* ) ),
-             this, SLOT( addresseeExecuted( QIconViewItem* ) ) );
+    connect( mIconView, SIGNAL( doubleClicked( Q3IconViewItem* ) ),
+             this, SLOT( addresseeExecuted( Q3IconViewItem* ) ) );
 }
 
 QStringList KAddressBookIconView::selectedUids()
 {
   QStringList uidList;
-  QIconViewItem *item;
+  Q3IconViewItem *item;
   AddresseeIconViewItem *aItem;
 
   for ( item = mIconView->firstItem(); item; item = item->nextItem() ) {
@@ -201,7 +208,7 @@ QStringList KAddressBookIconView::selectedUids()
 
 void KAddressBookIconView::refresh( const QString &uid )
 {
-  QIconViewItem *item;
+  Q3IconViewItem *item;
   AddresseeIconViewItem *aItem;
 
   if ( uid.isEmpty() ) {
@@ -239,7 +246,7 @@ void KAddressBookIconView::refresh( const QString &uid )
 
 void KAddressBookIconView::setSelected( const QString &uid, bool selected )
 {
-  QIconViewItem *item;
+  Q3IconViewItem *item;
   AddresseeIconViewItem *aItem;
 
   if ( uid.isEmpty() ) {
@@ -266,7 +273,7 @@ void KAddressBookIconView::setFirstSelected( bool selected )
   }
 }
 
-void KAddressBookIconView::addresseeExecuted( QIconViewItem *item )
+void KAddressBookIconView::addresseeExecuted( Q3IconViewItem *item )
 {
   AddresseeIconViewItem *aItem = dynamic_cast<AddresseeIconViewItem*>( item );
 
@@ -276,7 +283,7 @@ void KAddressBookIconView::addresseeExecuted( QIconViewItem *item )
 
 void KAddressBookIconView::addresseeSelected()
 {
-  QIconViewItem *item;
+  Q3IconViewItem *item;
   AddresseeIconViewItem *aItem;
 
   bool found = false;
@@ -294,7 +301,7 @@ void KAddressBookIconView::addresseeSelected()
     emit selected( QString::null );
 }
 
-void KAddressBookIconView::rmbClicked( QIconViewItem*, const QPoint &point )
+void KAddressBookIconView::rmbClicked( Q3IconViewItem*, const QPoint &point )
 {
   popup( point );
 }

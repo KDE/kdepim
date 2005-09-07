@@ -25,11 +25,14 @@
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qcheckbox.h>
-#include <qvbox.h>
-#include <qgroupbox.h>
+#include <q3vbox.h>
+#include <q3groupbox.h>
 #include <qspinbox.h>
 #include <qtabwidget.h>
-#include <qwhatsthis.h>
+#include <q3whatsthis.h>
+//Added by qt3to4:
+#include <Q3Frame>
+#include <QGridLayout>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -77,7 +80,7 @@ void ConfigureCardViewWidget::saveSettings( KConfig *config )
 ////////////////////////
 // CardViewLookNFeelPage
 CardViewLookNFeelPage::CardViewLookNFeelPage( QWidget *parent, const char *name )
-  : QVBox( parent, name )
+  : Q3VBox( parent, name )
 {
   initGUI();
 }
@@ -196,28 +199,28 @@ void CardViewLookNFeelPage::initGUI()
   QTabWidget *tabs = new QTabWidget( this );
 
   // Layout
-  QVBox *loTab = new QVBox( this, "layouttab" );
+  Q3VBox *loTab = new Q3VBox( this, "layouttab" );
 
   loTab->setSpacing( spacing );
   loTab->setMargin( margin );
 
-  QGroupBox *gbGeneral = new QGroupBox( 1, Qt::Horizontal, i18n("General"), loTab );
+  Q3GroupBox *gbGeneral = new Q3GroupBox( 1, Qt::Horizontal, i18n("General"), loTab );
 
   cbDrawSeps = new QCheckBox( i18n("Draw &separators"), gbGeneral );
 
-  QHBox *hbSW = new QHBox( gbGeneral );
+  Q3HBox *hbSW = new Q3HBox( gbGeneral );
   QLabel *lSW = new QLabel( i18n("Separator &width:"), hbSW );
   sbSepWidth = new QSpinBox( 1, 50, 1, hbSW );
   lSW->setBuddy( sbSepWidth);
 
-  QHBox *hbPadding = new QHBox( gbGeneral );
+  Q3HBox *hbPadding = new Q3HBox( gbGeneral );
   QLabel *lSpacing = new QLabel( i18n("&Padding:"), hbPadding );
   sbSpacing = new QSpinBox( 0, 100, 1, hbPadding );
   lSpacing->setBuddy( sbSpacing );
 
-  QGroupBox *gbCards = new QGroupBox( 1, Qt::Horizontal, i18n("Cards"), loTab );
+  Q3GroupBox *gbCards = new Q3GroupBox( 1, Qt::Horizontal, i18n("Cards"), loTab );
 
-  QHBox *hbMargin = new QHBox( gbCards );
+  Q3HBox *hbMargin = new Q3HBox( gbCards );
   QLabel *lMargin = new QLabel( i18n("&Margin:"), hbMargin );
   sbMargin = new QSpinBox( 0, 100, 1, hbMargin );
   lMargin->setBuddy( sbMargin );
@@ -226,23 +229,23 @@ void CardViewLookNFeelPage::initGUI()
 
   loTab->setStretchFactor( new QWidget( loTab ), 1 );
 
-  QWhatsThis::add( sbMargin, i18n(
+  Q3WhatsThis::add( sbMargin, i18n(
         "The item margin is the distance (in pixels) between the item edge and the item data. Most noticeably, "
         "incrementing the item margin will add space between the focus rectangle and the item data."
         ) );
-  QWhatsThis::add( lMargin, QWhatsThis::textFor( sbMargin ) );
-  QWhatsThis::add( sbSpacing, i18n(
+  Q3WhatsThis::add( lMargin, Q3WhatsThis::textFor( sbMargin ) );
+  Q3WhatsThis::add( sbSpacing, i18n(
         "The item spacing decides the distance (in pixels) between the items and anything else: the view "
         "borders, other items or column separators."
         ) );
-  QWhatsThis::add( lSpacing, QWhatsThis::textFor( sbSpacing ) );
-  QWhatsThis::add( sbSepWidth, i18n("Sets the width of column separators") );
-  QWhatsThis::add( lSW, QWhatsThis::textFor( sbSepWidth ) );
+  Q3WhatsThis::add( lSpacing, Q3WhatsThis::textFor( sbSpacing ) );
+  Q3WhatsThis::add( sbSepWidth, i18n("Sets the width of column separators") );
+  Q3WhatsThis::add( lSW, Q3WhatsThis::textFor( sbSepWidth ) );
 
   tabs->addTab( loTab, i18n("&Layout") );
 
   // Colors
-  QVBox *colorTab = new QVBox( this, "colortab" );
+  Q3VBox *colorTab = new Q3VBox( this, "colortab" );
   colorTab->setSpacing( spacing );
   colorTab->setMargin( spacing );
   cbEnableCustomColors = new QCheckBox( i18n("&Enable custom colors"), colorTab );
@@ -250,16 +253,16 @@ void CardViewLookNFeelPage::initGUI()
   lbColors = new ColorListBox( colorTab );
   tabs->addTab( colorTab, i18n("&Colors") );
 
-  QWhatsThis::add( cbEnableCustomColors, i18n(
+  Q3WhatsThis::add( cbEnableCustomColors, i18n(
         "If custom colors is enabled, you may choose the colors for the view below. "
         "Otherwise colors from your current KDE color scheme are used."
         ) );
-  QWhatsThis::add( lbColors, i18n(
+  Q3WhatsThis::add( lbColors, i18n(
         "Double click or press RETURN on a item to select a color for the related strings in the view."
         ) );
 
   // Fonts
-  QVBox *fntTab = new QVBox( this, "fonttab" );
+  Q3VBox *fntTab = new Q3VBox( this, "fonttab" );
 
   fntTab->setSpacing( spacing );
   fntTab->setMargin( spacing );
@@ -274,21 +277,21 @@ void CardViewLookNFeelPage::initGUI()
   gFnts->setColStretch( 1, 1 );
   QLabel *lTFnt = new QLabel( i18n("&Text font:"), vbFonts );
   lTextFont = new QLabel( vbFonts );
-  lTextFont->setFrameStyle( QFrame::Panel|QFrame::Sunken );
+  lTextFont->setFrameStyle( Q3Frame::Panel|Q3Frame::Sunken );
   btnFont = new KPushButton( i18n("Choose..."), vbFonts );
   lTFnt->setBuddy( btnFont );
   connect( btnFont, SIGNAL(clicked()), this, SLOT(setTextFont()) );
 
   QLabel *lHFnt = new QLabel( i18n("&Header font:"), vbFonts );
   lHeaderFont = new QLabel( vbFonts );
-  lHeaderFont->setFrameStyle( QFrame::Panel|QFrame::Sunken );
+  lHeaderFont->setFrameStyle( Q3Frame::Panel|Q3Frame::Sunken );
   btnHeaderFont = new KPushButton( i18n("Choose..."), vbFonts );
   lHFnt->setBuddy( btnHeaderFont );
   connect( btnHeaderFont, SIGNAL(clicked()), this, SLOT(setHeaderFont()) );
 
   fntTab->setStretchFactor( new QWidget( fntTab ), 1 );
 
-  QWhatsThis::add( cbEnableCustomFonts, i18n(
+  Q3WhatsThis::add( cbEnableCustomFonts, i18n(
         "If custom fonts are enabled, you may choose which fonts to use for this view below. "
         "Otherwise the default KDE font will be used, in bold style for the header and "
         "normal style for the data."
@@ -297,7 +300,7 @@ void CardViewLookNFeelPage::initGUI()
   tabs->addTab( fntTab, i18n("&Fonts") );
 
   // Behaviour
-  QVBox *behaviourTab = new QVBox( this );
+  Q3VBox *behaviourTab = new Q3VBox( this );
   behaviourTab->setMargin( margin );
   behaviourTab->setSpacing( spacing );
 

@@ -28,6 +28,9 @@
 #include <qpixmap.h>
 #include <qtooltip.h>
 #include <qstring.h>
+//Added by qt3to4:
+#include <QMouseEvent>
+#include <QDropEvent>
 
 #include <klistview.h>
 

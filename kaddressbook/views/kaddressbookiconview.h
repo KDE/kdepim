@@ -25,10 +25,14 @@
 #define KADDRESSBOOKICONVIEW_H
 
 #include <qstring.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <QDropEvent>
+#include <Q3PtrList>
 #include <kiconview.h>
 #include "kaddressbookview.h"
 
-class QIconViewItem;
+class Q3IconViewItem;
 class KConfig;
 class AddresseeIconView;
 class AddresseeIconViewItem;
@@ -62,13 +66,13 @@ class KAddressBookIconView : public KAddressBookView
     virtual void setFirstSelected( bool selected = true );
 
   protected slots:
-    void addresseeExecuted( QIconViewItem *item );
+    void addresseeExecuted( Q3IconViewItem *item );
     void addresseeSelected();
-    void rmbClicked( QIconViewItem*, const QPoint& );
+    void rmbClicked( Q3IconViewItem*, const QPoint& );
 
   private:
     AddresseeIconView *mIconView;
-    QPtrList<AddresseeIconViewItem> mIconList;
+    Q3PtrList<AddresseeIconViewItem> mIconList;
 };
 
 
@@ -85,9 +89,9 @@ class AddresseeIconView : public KIconView
     void startAddresseeDrag();
 
   protected:
-    virtual QDragObject *dragObject();
+    virtual Q3DragObject *dragObject();
 
   protected slots:
-    void itemDropped( QDropEvent*, const QValueList<QIconDragItem>& );
+    void itemDropped( QDropEvent*, const Q3ValueList<Q3IconDragItem>& );
 };
 #endif
