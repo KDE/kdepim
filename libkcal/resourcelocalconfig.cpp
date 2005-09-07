@@ -28,6 +28,7 @@
 #include <QGridLayout>
 
 #include <klocale.h>
+#include <kmessagebox.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
 
@@ -80,9 +81,25 @@ void ResourceLocalConfig::loadSettings( KRES::Resource *resource )
 
 void ResourceLocalConfig::saveSettings( KRES::Resource *resource )
 {
+  QString url = mURL->url();
+
+  if( url.isEmpty() ) {
+    KStandardDirs dirs;
+    QString saveFolder = dirs.saveLocation( "data", "korganizer" );
+    QFile file( saveFolder + "/std.ics" );
+    
+    // find a non-existent name
+    for( int i = 0; file.exists(); ++i )
+      file.setName( saveFolder + "/std" + QString::number(i) + ".ics" );
+    
+    KMessageBox::information( this, i18n( "You did not specify a URL for this resource. Therefore, the resource will be saved in %1. It is still possible to change this location by editing the resource properties." ).arg( file.name() ) );
+    
+    url = file.name();
+  }
+
   ResourceLocal* res = static_cast<ResourceLocal*>( resource );
   if (res) {
-    res->mURL = mURL->url();
+    res->mURL = url;
 
     delete res->mFormat;
     if ( icalButton->isOn() ) {
