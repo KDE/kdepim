@@ -133,21 +133,6 @@ void CompatPre35::fixRecurrence( Incidence *incidence )
   Compat::fixRecurrence( incidence );
 }
 
-/** We misunderstood rfc 2445 in this regard. For all-day events, the
-    DTEND is the last day of the event. E.g. a DTEND: 20050831 *does*
-    occure on August 31 (and end on that date). Originally, we also
-    had it that way, but then misunderstood the rfc and for kde 3.1
-    we used the next day after the event as DTEND. Evolution and Mozilla
-    do it similarly, but it's wrong, nonetheless.
-
-    See http://www.imc.org/ietf-calendar/archive1/msg03648.html
- */
-void CompatPre35::fixFloatingEnd( QDate &endDate )
-{
-  endDate = endDate.addDays( -1 );
-}
-
-
 int CompatPre34::fixPriority( int prio )
 {
   if ( 0<prio && prio<6 ) {
@@ -176,7 +161,11 @@ void CompatPre32::fixRecurrence( Incidence *incidence )
     end date for such an event needs to be 29.5.2005 0:00.
 
     Update: We misunderstood rfc 2445 in this regard. For all-day events, the
-    DTEND is the last day of the event. */
+    DTEND is the last day of the event. See a mail from the Author or rfc 2445:
+         http://www.imc.org/ietf-calendar/archive1/msg03648.html
+    However, as all other applications also got this wrong, we'll just leave it 
+    as it is and use the wrong interpretation (was also discussed on 
+    ietf-calsify)*/
 void CompatPre31::fixFloatingEnd( QDate &endDate )
 {
   endDate = endDate.addDays( 1 );
