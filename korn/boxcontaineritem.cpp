@@ -45,7 +45,7 @@
 #include <qstring.h>
 #include <qtooltip.h>
 #include <q3vbox.h>
-
+#include <QMovie>
 BoxContainerItem::BoxContainerItem( QObject * parent, const char * name )
 	: AccountManager( parent, name ),
 	DCOPObject(),
@@ -215,7 +215,7 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, Q3PtrList< KornMailSub
 {
 	KPassivePopup *popup = new KPassivePopup( parent, "Passive popup" );
 		
-	Q3VBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( objId() ).arg( accountName )
+	Q3VBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( objId().data() ).arg( accountName )
 			.arg( total ), "", QPixmap(), 0 );
 	Q3Grid *mainglayout = new Q3Grid( date ? 3 : 2 ,mainvlayout, "Grid-Layout" );
 	
@@ -328,7 +328,8 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 QPixmap BoxContainerItem::calcComplexPixmap( const QPixmap &icon, const QColor& fgColour, const QFont* font, const int count )
 {
 	QPixmap result( icon );
-	QBitmap resultMask( *icon.mask() );
+#warning "kde4 test ? icon.mask ?"
+	QBitmap resultMask( icon.createHeuristicMask() );
 	
 	QPainter p;
 	p.begin( &result, true );
