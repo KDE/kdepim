@@ -38,6 +38,7 @@ Comment[et]=Jälgib võrguliideste olekut ja annab sellest võrgu vahendusel rak
 Comment[fr]=Surveille l'état des interfaces réseaux et fournit des notifications aux applications qui utilisent le réseau
 Comment[hu]=Figyeli a hálózati csatolók állapotát és értesítési lehetőséget biztosít hálózati alkalmazások számára.
 Comment[it]=Controlla lo stato delle interfacce di rete e fornisce notifiche alle applicazioni che usano al rete.
+Comment[lt]=Seka tinklo sąsajų būseną ir informuoja apie jas programas, naudojančias tinklą
 Comment[nl]=Houdt de status bij van de netwerkinterfaces en houdt daar de toepassingen van op de hoogte.
 Comment[pl]=Śledzi stan interfejsów sieciowych i powiadamia programy używające sieci.
 Comment[pt]=Vigia o estado das interfaces de rede e avisa as aplicações que utilizam a rede.
