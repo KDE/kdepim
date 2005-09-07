@@ -429,6 +429,7 @@ void Recurrence::unsetRecurs()
 {
   if ( mRecurReadOnly ) return;
   mRRules.clear();
+  updated();
 }
 
 void Recurrence::clear()
@@ -563,6 +564,7 @@ RecurrenceRule *Recurrence::setNewRecurrenceType( RecurrenceRule::PeriodType typ
 {
   if ( mRecurReadOnly || freq <= 0 ) return 0;
   mRRules.clear();
+  updated();
   RecurrenceRule *rrule = defaultRRule( true );
   if ( !rrule ) return 0;
   rrule->setRecurrenceType( type );
@@ -916,6 +918,7 @@ void Recurrence::addRRule( RecurrenceRule *rrule )
   rrule->setFloats( mFloating );
   mRRules.append( rrule );
   rrule->addObserver( this );
+  updated();
 }
 
 void Recurrence::removeRRule( RecurrenceRule *rrule )
@@ -923,6 +926,7 @@ void Recurrence::removeRRule( RecurrenceRule *rrule )
   if (mRecurReadOnly) return;
   mRRules.remove( rrule );
   rrule->removeObserver( this );
+  updated();
 }
 
 RecurrenceRule::List Recurrence::exRules() const
@@ -936,6 +940,7 @@ void Recurrence::addExRule( RecurrenceRule *exrule )
   exrule->setFloats( mFloating );
   mExRules.append( exrule );
   exrule->addObserver( this );
+  updated();
 }
 
 void Recurrence::removeExRule( RecurrenceRule *exrule )
@@ -943,6 +948,7 @@ void Recurrence::removeExRule( RecurrenceRule *exrule )
   if (mRecurReadOnly) return;
   mExRules.remove( exrule );
   exrule->removeObserver( this );
+  updated();
 }
 
 
@@ -956,6 +962,7 @@ void Recurrence::setRDateTimes( const DateTimeList &rdates )
   if ( mRecurReadOnly ) return;
   mRDateTimes = rdates;
   qSortUnique( mRDateTimes );
+  updated();
 }
 
 void Recurrence::addRDateTime( const QDateTime &rdate )
@@ -963,6 +970,7 @@ void Recurrence::addRDateTime( const QDateTime &rdate )
   if ( mRecurReadOnly ) return;
   mRDateTimes.append( rdate );
   qSortUnique( mRDateTimes );
+  updated();
 }
 
 
@@ -976,6 +984,7 @@ void Recurrence::setRDates( const DateList &rdates )
   if ( mRecurReadOnly ) return;
   mRDates = rdates;
   qSortUnique( mRDates );
+  updated();
 }
 
 void Recurrence::addRDate( const QDate &rdate )
@@ -983,6 +992,7 @@ void Recurrence::addRDate( const QDate &rdate )
   if ( mRecurReadOnly ) return;
   mRDates.append( rdate );
   qSortUnique( mRDates );
+  updated();
 }
 
 
@@ -1003,6 +1013,7 @@ void Recurrence::addExDateTime( const QDateTime &exdate )
   if ( mRecurReadOnly ) return;
   mExDateTimes.append( exdate );
   qSortUnique( mExDateTimes );
+  updated();
 }
 
 
@@ -1016,6 +1027,7 @@ void Recurrence::setExDates( const DateList &exdates )
   if ( mRecurReadOnly ) return;
   mExDates = exdates;
   qSortUnique( mExDates );
+  updated();
 }
 
 void Recurrence::addExDate( const QDate &exdate )
@@ -1023,6 +1035,7 @@ void Recurrence::addExDate( const QDate &exdate )
   if ( mRecurReadOnly ) return;
   mExDates.append( exdate );
   qSortUnique( mExDates );
+  updated();
 }
 
 void Recurrence::recurrenceChanged( RecurrenceRule * )
