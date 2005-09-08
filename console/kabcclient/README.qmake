@@ -1,0 +1,8 @@
+If you want to use qmake for generating your Makefiles you have to edit
+src/src.pro and set KDEINCLUDES and KDELIBS so they point to the
+respective directories on your system.
+
+Default values are Debian's defaults:
+KDEINCLUDES /usr/include/kde
+KDELIBS /usr
+

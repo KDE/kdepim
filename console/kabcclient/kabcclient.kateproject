@@ -1,0 +1,31 @@
+[Dir debian]
+Dirs=
+Files=changelog/compat/control/copyright/dirs/docs/menu/rules
+
+[Dir doc]
+Dirs=examples/man
+Files=examples.html
+
+[Dir doc/examples]
+Dirs=letters
+Files=
+
+[Dir doc/examples/letters]
+Dirs=
+Files=home_address.desktop/latex_letter_home.sh/latex_letter_work.sh/work_address.desktop
+
+[Dir doc/man]
+Dirs=
+Files=kabcclient.1
+
+[Dir src]
+Dirs=
+Files=main.cpp/src.pro/formatfactory.cpp/formatfactory.h/inputformat.h/kabcclient.cpp/kabcclient.h/outputformat.h/outputformatimpls.cpp/outputformatimpls.h/inputformatimpls.cpp/inputformatimpls.h/Makefile.am/csvtemplate.cpp/csvtemplate.h/csvtemplatefactory.cpp/csvtemplatefactory.h
+
+[Project Dir]
+Dirs=src/doc/debian
+Files=kabcclient.pro/ChangeLog/README/README.csv
+
+[Project File]
+Name=KABCClient
+Type=Default

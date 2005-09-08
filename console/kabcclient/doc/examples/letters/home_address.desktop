@@ -1,0 +1,22 @@
+# KAddressBook CSV template file for producting home addresses
+# for example for letters
+
+[Misc]
+Name=Letter home/private address
+
+[General]
+# user defined delimiter
+DelimiterType=4
+# use | as delimiter
+DelimiterOther=|
+# no quotes
+QuoteType=2 
+
+Columns=5
+[csv column map]
+0=0
+1=8
+2=11
+3=9
+4=12
+

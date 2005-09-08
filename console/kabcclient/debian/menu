@@ -1,0 +1,3 @@
+?package(kabcclient):needs="text" section="Apps/Text"\
+  title="KABC Client" longtitle="KDE Addressbook commandline client" \
+  hints="KDE" command="/usr/bin/kabcclient"

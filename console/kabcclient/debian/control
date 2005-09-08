@@ -1,0 +1,19 @@
+Source: kabcclient
+Section: utils
+Priority: optional
+Maintainer: Kevin Krammer <kevin.krammer@gmx.at>
+Build-Depends: debhelper (>= 4.0.0), autotools-dev
+Standards-Version: 3.6.2
+
+Package: kabcclient
+Architecture: any
+Depends: ${shlibs:Depends}
+Suggests: kaddressbook
+Description: commandline client for the KDE addressbook
+ Provides text tool based access to the KDE addressbook.
+ Can read input from optional commandline arguments or from
+ stdin.
+ Input and output are filtered by selectable format filters.
+ .
+ Homepage: http://www.sbox.tugraz.at/home/v/voyager/kabcclient/index.html
+
