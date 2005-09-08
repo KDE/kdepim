@@ -46,6 +46,7 @@
 #include <kdirwatch.h>
 #include <kfiledialog.h>
 #include <kmessagebox.h>
+#include <kprocess.h>
 #include <kio/netaccess.h>
 
 #include "kcmdesignerfields.h"
