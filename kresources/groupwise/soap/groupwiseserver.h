@@ -94,6 +94,7 @@ class GroupwiseServer : public QObject
   Q_OBJECT
 
   public:
+    bool checkResponse( int result, ngwt__Status *status );
     enum RetractCause { DueToResend, Other };
     GroupwiseServer( const QString &url, const QString &user,
                      const QString &password, QObject *parent );
@@ -134,6 +135,12 @@ class GroupwiseServer : public QObject
      * @param causedByResend indicate if the retraction is caused by a resend, suppresses the retraction message in favour of the resent meeting.
      */
     bool retractRequest( KCal::Incidence *, RetractCause cause );
+
+    /**
+     * @brief update a todo's completed state.
+     * @param the todo to set the completed state for.
+     */
+    bool setCompleted( KCal::Todo * todo );
 
     bool readCalendarSynchronous( KCal::Calendar *cal );
 
@@ -191,7 +198,6 @@ class GroupwiseServer : public QObject
     void dumpTask( ngwt__Task * );
     void dumpMail( ngwt__Mail * );
 
-    bool checkResponse( int result, ngwt__Status *status );
 
     /**
      * Given a partial record ID, query the server for the full version from the calendar folder 

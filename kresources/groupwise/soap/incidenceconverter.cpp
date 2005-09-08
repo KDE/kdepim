@@ -209,8 +209,8 @@ KCal::Todo* IncidenceConverter::convertFromTask( ngwt__Task* task )
     todo->setPriority( p );
   }
 
-  if ( task->completed && (*task->completed) == true )
-    todo->setCompleted( true );
+  if ( task->completed )
+    todo->setCompleted( *task->completed );
 
   todo->setLocation( i18n( "Novell GroupWise does not support locations for to-dos." ) );
   return todo;

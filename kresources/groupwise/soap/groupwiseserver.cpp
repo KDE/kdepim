@@ -965,39 +965,8 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   kdDebug() << "GroupwiseServer::changeIncidence() " << incidence->summary()
             << endl;
 
-  if ( iAmTheOrganizer( incidence ) )
-  {
-    if ( incidence->attendeeCount() > 0 ) {
-      kdDebug() << "GroupwiseServer::changeIncidence() - retracting old incidence " << endl;
-      if ( !retractRequest( incidence, DueToResend ) ) {
-        kdDebug() << "GroupwiseServer::changeIncidence() - retracting failed." << endl;
-        return false;
-      }
-      kdDebug() << "GroupwiseServer::changeIncidence() - adding new meeting with attendees" << endl;
-      if ( !addIncidence( incidence, 0 ) ) {
-        kdDebug() << "GroupwiseServer::changeIncidence() - adding failed." << endl;
-        return false;
-      }
-      return true;
-    }
-  }
-  else  // If I am not the organizer restrict my changes to accept or decline requests.
-  {
-    // find myself as attendee.   
-    KCal::Attendee::List attendees = incidence->attendees();
-    KCal::Attendee::List::ConstIterator it;
-    for( it = attendees.begin(); it != attendees.end(); ++it ) {
-      if ( (*it)->email() == mUserEmail ) {
-        if ( (*it)->status() == KCal::Attendee::Accepted )
-          return acceptIncidence( incidence );
-        else if ( (*it)->status() == KCal::Attendee::Declined )
-          return declineIncidence( incidence );
-        break;
-      }
-    }
-    // if we are attending, but not the organiser, and we have not accepted or declined, there's nothing else to do.
-    return true;
-  }
+  bool success = true;
+  bool todoCompletionChanged = false;
 
   IncidenceConverter converter( mSoap );
   converter.setFrom( mUserName, mUserEmail, mUserUuid );
@@ -1014,8 +983,53 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
     item = converter.convertToNote( static_cast<KCal::Journal *>( incidence ) );;
   } else {
     kdError() << "KCal::GroupwiseServer::changeIncidence(): Unknown type: "
-              << incidence->type() << endl;
+        << incidence->type() << endl;
     return false;
+  }
+
+  if ( iAmTheOrganizer( incidence ) )
+  {
+    if ( incidence->attendeeCount() > 0 ) {
+      kdDebug() << "GroupwiseServer::changeIncidence() - retracting old incidence " << endl;
+      if ( !retractRequest( incidence, DueToResend ) ) {
+        kdDebug() << "GroupwiseServer::changeIncidence() - retracting failed." << endl;
+        return false;
+      }
+      kdDebug() << "GroupwiseServer::changeIncidence() - adding new meeting with attendees" << endl;
+      if ( !addIncidence( incidence, 0 ) ) {
+        kdDebug() << "GroupwiseServer::changeIncidence() - adding failed." << endl;
+        return false;
+      }
+      return true;
+    }
+  }
+  else  // If I am not the organizer restrict my changes to accept or decline requests or task completion
+  {
+    // find myself as attendee.   
+    KCal::Attendee::List attendees = incidence->attendees();
+    KCal::Attendee::List::ConstIterator it;
+    for( it = attendees.begin(); it != attendees.end(); ++it ) {
+      if ( (*it)->email() == mUserEmail ) {
+        if ( (*it)->status() == KCal::Attendee::Accepted )
+          success &= acceptIncidence( incidence );
+        else if ( (*it)->status() == KCal::Attendee::Declined )
+          success &= declineIncidence( incidence );
+        return success;
+        break;
+      }
+    }
+
+      // task completion
+    if ( incidence->type() == "Todo" )
+    {
+      KCal::Todo * todo = static_cast<KCal::Todo *>( incidence );
+      success &= setCompleted( todo );
+    //assume nothing else to change
+      return true;
+    }
+
+    // if we are attending, but not the organiser, and we have not accepted or declined, there's nothing else to do.
+    return true;
   }
 
   _ngwm__modifyItemRequest request;
@@ -1034,7 +1048,17 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
 
   int result = soap_call___ngw__modifyItemRequest( mSoap, mUrl.latin1(), 0,
                                                     &request, &response );
-  return checkResponse( result, response.status );
+
+  success &= checkResponse( result, response.status );
+
+  // task completion after modify
+  if ( incidence->type() == "Todo" )
+  {
+    KCal::Todo * todo = static_cast<KCal::Todo *>( incidence );
+    success &= setCompleted( todo );
+  }
+
+  return success;
 }
 
 bool GroupwiseServer::checkResponse( int result, ngwt__Status *status )
@@ -1120,10 +1144,30 @@ bool GroupwiseServer::retractRequest( KCal::Incidence *incidence, RetractCause c
 
   kdDebug() << "GroupwiseServer::retractRequest(): " << incidence->summary()
             << endl;
+  IncidenceConverter converter( mSoap );
+  converter.setFrom( mUserName, mUserEmail, mUserUuid );
+
+  incidence->setCustomProperty( "GWRESOURCE", "CONTAINER",
+								converter.stringToQString( mCalendarFolder ) );
+
+  ngwt__Item *item;
+  if ( incidence->type() == "Event" ) {
+      item = converter.convertToAppointment( static_cast<KCal::Event *>( incidence ) );
+  } else if ( incidence->type() == "Todo" ) {
+      item = converter.convertToTask( static_cast<KCal::Todo *>( incidence ) );
+  } else if ( incidence->type() == "Journal" ) {
+      item = converter.convertToNote( static_cast<KCal::Journal *>( incidence ) );;
+  } else {
+      kdError() << "KCal::GroupwiseServer::addIncidence(): Unknown type: "
+              << incidence->type() << endl;
+      return false;
+  }
 
   _ngwm__retractRequest request;
   _ngwm__retractResponse response;
   mSoap->header->ngwt__session = mSession;
+  request.items = soap_new_ngwt__ItemRefList( mSoap, 1 );
+  request.items->item.push_back( *( item->id ) );
   request.comment = 0;
   request.retractCausedByResend = (bool*)soap_malloc( mSoap, 1 );
   request.retractingAllInstances = (bool*)soap_malloc( mSoap, 1 );
@@ -1518,6 +1562,38 @@ bool GroupwiseServer::modifyUserSettings( QMap<QString, QString> & settings  )
 bool GroupwiseServer::iAmTheOrganizer( KCal::Incidence * incidence )
 {
   return ( incidence->organizer().email() == mUserEmail );
+}
+
+bool GroupwiseServer::setCompleted( KCal::Todo * todo )
+{
+  if ( todo )
+  {
+    GWConverter conv( mSoap );
+    QString id = todo->customProperty( "GWRESOURCE", "UID" );
+    ngwt__ItemRefList * items = soap_new_ngwt__ItemRefList( mSoap, 1 );
+    items->item.push_back( *( conv.qStringToString( id ) ) );
+    if ( todo->isCompleted() )
+    {
+      _ngwm__completeRequest request;
+      _ngwm__completeResponse response;
+      mSoap->header->ngwt__session = mSession;
+      request.items = items;
+      int result = soap_call___ngw__completeRequest( mSoap, mUrl.latin1(), 0,
+          &request, &response );
+      return checkResponse( result, response.status );
+    }
+    else
+    {
+      _ngwm__uncompleteRequest request;
+      _ngwm__uncompleteResponse response;
+      mSoap->header->ngwt__session = mSession;
+      request.items = items;
+      int result = soap_call___ngw__uncompleteRequest( mSoap, mUrl.latin1(), 0,
+          &request, &response );
+      return checkResponse( result, response.status );
+    }
+  }
+  return false;
 }
 
 #include "groupwiseserver.moc"

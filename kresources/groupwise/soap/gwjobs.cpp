@@ -327,10 +327,15 @@ void ReadCalendarJob::run()
   folderListReq.view = 0;
   folderListReq.recurse = true;
   _ngwm__getFolderListResponse folderListRes;
-  soap_call___ngw__getFolderListRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ngw__getFolderListRequest( mSoap, mUrl.latin1(), 0,
                                          &folderListReq,
                                          &folderListRes );
 
+  if ( !mServer->checkResponse( result, folderListRes.status ) )
+  {
+    kdError() << "Server did not return the folder list" << endl;
+    return;
+  }
   // consistency check variables
   unsigned int totalItems = 0;
   ReadItemCounts totals;
@@ -489,7 +494,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
   cursorRequest.container = id;
 #if 1
   cursorRequest.view = soap_new_std__string( mSoap, -1 );
-  cursorRequest.view->append( "default message recipients attachments recipientStatus peek" /*"container status source security distribution acceptLevel startDate endDate subject alarm allDayEvent place timezone iCalId recipients message recurrenceKey"*/ );
+  cursorRequest.view->append( "default message recipients attachments recipientStatus peek completed status" /*"container status source security distribution acceptLevel startDate endDate subject alarm allDayEvent place timezone iCalId recipients message recurrenceKey"*/ );
 
 #else
   cursorRequest.view = 0;
