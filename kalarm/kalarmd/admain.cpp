@@ -1,7 +1,7 @@
 /*
  *  admain.cpp  -  kalarmd main program
  *  Program:  KAlarm's alarm daemon (kalarmd)
- *  (C) 2001, 2004 by David Jarvie <software@astrojar.org.uk>
+ *  Copyright (c) 2001, 2004, 2005 by David Jarvie <software@astrojar.org.uk>
  *  Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
  *  Copyright (c) 1997-1999 Preston Brown
  *
@@ -15,9 +15,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #include "kalarmd.h"
@@ -33,7 +33,8 @@
 
 static const KCmdLineOptions options[] =
 {
-	{ 0, 0, 0 }
+	{ "autostart", "", 0 },
+	KCmdLineLastOption
 };
 
 int main(int argc, char** argv)
