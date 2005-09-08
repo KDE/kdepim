@@ -132,8 +132,8 @@ bool ResourceGroupwise::doLoad()
   }
 
   if ( mDownloadJob ) {
-    kdWarning() << "Download still in progress" << endl;
-    return false;
+    kdDebug() << "Download still in progress" << endl;
+    return true;
   }
 
   mCalendar.close();
