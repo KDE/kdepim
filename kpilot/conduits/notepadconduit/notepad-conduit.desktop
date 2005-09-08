@@ -30,6 +30,7 @@ Comment[et]=See kanal teeb NotePadi joonistustest varukoopia kohalikku kataloogi
 Comment[fr]=Ce conduit sauvegarde les dessins (Notes) dans un dossier local
 Comment[hu]=Bővítőmodul NotePad-rajzok helyi könyvtárba való lementéséhez.
 Comment[it]=Questo conduit archivia i disegni NotePad drawings in una cartella locale.
+Comment[lt]=Šis kanalas padaro NotePad piešinių atsargines kopijas į vietinį aplanką.
 Comment[nl]=Dit conduit maakt een backup van de notitie-aantekeningen naar een lokale map.
 Comment[pl]=Ten łącznik robi kopię zapasową rysunków z Notatnika do lokalnego katalogu.
 Comment[pt]=Esta conduta salvaguarda desenhos NotePad para uma pasta local.
