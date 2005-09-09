@@ -10,7 +10,7 @@ DelimiterType=4
 # use | as delimiter
 DelimiterOther=|
 # no quotes
-QuoteType=2 
+QuoteType=2
 
 Columns=5
 [csv column map]
