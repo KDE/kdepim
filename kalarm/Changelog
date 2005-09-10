@@ -1,7 +1,8 @@
 KAlarm
 
-=== Version 1.2.10 --- 4 September 2005 ===
+=== Version 1.2.10 --- 10 September 2005 ===
 Prevent session restoration displaying main windows which should be hidden.
+Fix alarms getting stuck if due during a daylight savings clock change.
 
 === Version 1.2.9 --- 17 July 2005 ===
 Minimise KMix window if KMix is started by KAlarm when displaying a message.
