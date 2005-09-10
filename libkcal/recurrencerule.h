@@ -38,7 +38,7 @@ template <class T>
   if ( lst.isEmpty() ) return;
   // Remove all duplicates from the times list
   // TODO: Make this more efficient!
-  QList<T>::Iterator it = lst.begin();
+  typename QList<T>::Iterator it = lst.begin();
   T last = *it;
   ++it;
   T newlast;
