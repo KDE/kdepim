@@ -95,9 +95,7 @@ void LookAndFeelPage::restoreSettings( KConfig *config )
 
   mBackgroundBox->setChecked(config->readBoolEntry("Background", false));
   mBackgroundName->lineEdit()->setText(config->readPathEntry("BackgroundName"));
-#if KDE_IS_VERSION(3,2,90)
   mIMPresenceBox->setChecked( config->readBoolEntry( "InstantMessagingPresence", false ) );
-#endif
 }
 
 void LookAndFeelPage::saveSettings( KConfig *config )
@@ -107,9 +105,7 @@ void LookAndFeelPage::saveSettings( KConfig *config )
   config->writeEntry("ToolTips", mToolTipBox->isChecked());
   config->writeEntry("Background", mBackgroundBox->isChecked());
   config->writePathEntry("BackgroundName", mBackgroundName->lineEdit()->text());
-#if KDE_IS_VERSION(3,2,90)
   config->writeEntry( "InstantMessagingPresence", mIMPresenceBox->isChecked() );
-#endif
 }
 
 void LookAndFeelPage::initGUI()
@@ -145,10 +141,8 @@ void LookAndFeelPage::initGUI()
   mToolTipBox = new QCheckBox(i18n("Enable contact tooltips"), this,
                               "mToolTipBox");
   layout->addWidget(mToolTipBox);
-#if KDE_IS_VERSION(3,2,90)
   mIMPresenceBox = new QCheckBox( i18n( "Show instant messaging presence" ), this, "mIMPresenceBox" );
   layout->addWidget( mIMPresenceBox );
-#endif
 }
 
 void LookAndFeelPage::enableBackgroundToggled(bool enabled)

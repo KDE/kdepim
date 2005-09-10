@@ -25,7 +25,6 @@
 
 #include "printsortmode.h"
 
-#if KDE_IS_VERSION(3,3,91)
 
 PrintSortMode::PrintSortMode( KABC::Field *field, bool ascending )
   : mSortField( field ), mAscending( ascending )
@@ -73,4 +72,3 @@ bool PrintSortMode::lesser( const KABC::Addressee &first,
   return lesser;
 }
 
-#endif

@@ -26,7 +26,6 @@
 
 #include <kdeversion.h>
 
-#if KDE_IS_VERSION(3,3,91)
 
 #include <kabc/sortmode.h>
 
@@ -45,6 +44,5 @@ class PrintSortMode : public KABC::SortMode
     bool mAscending;
 };
 
-#endif // KDE_IS_VERSION
 
 #endif // PRINTSORTMODE_H

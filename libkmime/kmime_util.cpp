@@ -25,9 +25,7 @@
 #include <klocale.h>
 #include <kcharsets.h>
 #include <kdeversion.h>
-#if KDE_IS_VERSION( 3, 1, 90 )
 #include <kcalendarsystem.h>
-#endif
 
 #include <qtextcodec.h>
 #include <q3strlist.h> // for QStrIList
@@ -705,11 +703,7 @@ DateFormatter::fancy(time_t otime) const
 	if ( old.date().year() == weekday.date().year() &&
 	     old.date().dayOfYear() == weekday.date().dayOfYear() )
 	  return i18n( "1. weekday, 2. time", "%1 %2" ).
-#if KDE_IS_VERSION( 3, 1, 90 )
 	    arg( locale->calendar()->weekDayName( old.date() ) ).
-#else
-	    arg( locale->weekDayName( old.date().dayOfWeek() ) ).
-#endif
 	    arg( locale->formatTime( old.time(), true) );
       }
   }

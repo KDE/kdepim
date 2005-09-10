@@ -41,7 +41,7 @@
 //Added by qt3to4:
 #include <Q3ValueList>
 #include <Q3CString>
-
+#include <QValueList>
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -87,7 +87,7 @@ bool Kleo::GnuPGProcessBase::start( RunMode runmode, Communication comm ) {
     ::fcntl( d->statusFD[0], F_SETFD, FD_CLOEXEC );
     ::fcntl( d->statusFD[1], F_SETFD, FD_CLOEXEC );
     if ( !arguments.empty() ) {
-      Q3ValueList<Q3CString>::iterator it = arguments.begin();
+      QValueList<QString>::iterator it = arguments.begin();
       ++it;
       arguments.insert( it, "--status-fd" );
       char buf[25];

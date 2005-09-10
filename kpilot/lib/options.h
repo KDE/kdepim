@@ -85,9 +85,6 @@
 #include <kdeversion.h>
 #endif
 
-#if !(KDE_IS_VERSION(3,3,0))
-#error "This is KPilot for KDE 3.3 and won't compile with KDE < 3.3.0"
-#endif
 
 #include "pilotLinkVersion.h"
 

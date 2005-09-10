@@ -202,12 +202,8 @@ void PrintingWizard::print()
 
     list.setReverseSorting( !mStylePage->sortAscending() );
 
-#if KDE_IS_VERSION(3,3,91)
     PrintSortMode sortMode( mStylePage->sortField() );
     list.sortByMode( &sortMode );
-#else
-    list.sortByField( mStylePage->sortField() );
-#endif
   }
 
   kdDebug(5720) << "PrintingWizardImpl::print: printing "

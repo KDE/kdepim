@@ -10,15 +10,4 @@
 #include <kdeversion.h>
 #endif
 
-#if KDE_IS_VERSION(3,1,90)
 #include <ktimewidget.h>
-#else
-#warning "Workaround for KTimeWidget in KDE 3.1"
-class KTimeWidget : public QWidget
-{
-public:
-	KTimeWidget(QWidget *p, const char *n) : QWidget(p,n) {};
-} ;
-
-
-#endif

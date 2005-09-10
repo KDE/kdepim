@@ -18,11 +18,4 @@
 
 #include <kdeversion.h>
 
-#if KDE_IS_VERSION(3,3,89)
-// get kasciistricmp from kglobal.h
 #include <kglobal.h>
-#else
-// define kasciistricmp to this kdepim symbol (renamed to avoid problems when upgrading kdelibs later)
-int kdepim_kasciistricmp( const char *str1, const char *str2 );
-#define kasciistricmp kdepim_kasciistricmp
-#endif
