@@ -383,57 +383,69 @@ void KNNetAccess::slotThreadSignal(int i)
       case KNProtocolClient::TSconnect:
         currMsg = i18n(" Connecting to server...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        if ( mNNTPProgressItem )
+          mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSloadGrouplist:
         currMsg = i18n(" Loading group list from disk...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        if ( mNNTPProgressItem )
+          mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSwriteGrouplist:
         currMsg = i18n(" Writing group list to disk...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        if ( mNNTPProgressItem )
+          mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadGrouplist:
         currMsg = i18n(" Downloading group list...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        if ( mNNTPProgressItem )
+          mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadNewGroups:
         currMsg = i18n(" Looking for new groups...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        if ( mNNTPProgressItem )
+          mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadDesc:
         currMsg = i18n(" Downloading group descriptions...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        if ( mNNTPProgressItem )
+          mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadNew:
         currMsg = i18n(" Downloading new headers...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        if ( mNNTPProgressItem )
+          mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSsortNew:
         currMsg = i18n(" Sorting...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        if ( mNNTPProgressItem )
+          mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadArticle:
         currMsg = i18n(" Downloading article...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        if ( mNNTPProgressItem )
+          mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSsendArticle:
         currMsg = i18n(" Sending article...");
         knGlobals.setStatusMsg(currMsg);
-        mNNTPProgressItem->setStatus(currMsg);
+        if ( mNNTPProgressItem )
+          mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSjobStarted:
-        mNNTPProgressItem->setProgress(0);
+        if ( mNNTPProgressItem )
+          mNNTPProgressItem->setProgress(0);
       break;
       case KNProtocolClient::TSprogressUpdate:
+        if ( mNNTPProgressItem )
           mNNTPProgressItem->setProgress(nntpClient->getProgressValue()/10);
       break;
     };
@@ -456,13 +468,16 @@ void KNNetAccess::slotThreadSignal(int i)
           currMsg = unshownMsg;
           knGlobals.setStatusMsg(currMsg);
         }
-        mSMTPProgressItem->setStatus(unshownMsg);
+        if ( mSMTPProgressItem )
+          mSMTPProgressItem->setStatus(unshownMsg);
       break;
       case KNProtocolClient::TSjobStarted:
-        mSMTPProgressItem->setProgress(0);
+        if ( mSMTPProgressItem )
+          mSMTPProgressItem->setProgress(0);
       break;
       case KNProtocolClient::TSprogressUpdate:
-        mSMTPProgressItem->setProgress(smtpClient->getProgressValue()/10);
+        if ( mSMTPProgressItem )
+          mSMTPProgressItem->setProgress(smtpClient->getProgressValue()/10);
       break;
     }
   }
