@@ -409,7 +409,7 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
     Q3CString buff(size+10);
     srcMBox.at(oldIdx.so);
     int readBytes=srcMBox.readBlock(buff.data(), size);
-    buff.at(readBytes)='\0'; //terminate string;
+    buff[readBytes] = '\0'; //terminate string;
 
     //remove "X-KNode-Overview"
     int pos=buff.find('\n');

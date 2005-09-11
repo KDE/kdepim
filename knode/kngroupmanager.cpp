@@ -469,16 +469,13 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
         a_rticleMgr->updateStatusString();
       }
 
-      const QFileInfoList *list = dir.entryInfoList();  // get list of matching files and delete all
-      if (list) {
-        QFileInfoListIterator it( *list );
-        while (it.current()) {
-          if (it.current()->fileName() == g->groupname()+".dynamic" ||
-              it.current()->fileName() == g->groupname()+".static" ||
-              it.current()->fileName() == g->groupname()+".grpinfo")
-          dir.remove(it.current()->fileName());
-          ++it;
-        }
+      QFileInfoList list = dir.entryInfoList();  // get list of matching files and delete all
+      QFileInfo it;
+      Q_FOREACH( it, list ) {
+        if ( it.fileName() == g->groupname()+".dynamic" ||
+             it.fileName() == g->groupname()+".static" ||
+             it.fileName() == g->groupname()+".grpinfo" )
+          dir.remove( it.fileName() );
       }
       kdDebug(5003) << "Files deleted!" << endl;
 

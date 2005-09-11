@@ -300,7 +300,7 @@ class KNAttachment {
     void setName(const QString &s)  { n_ame=s; h_asChanged=true; }
 
     //mime type
-    const Q3CString& mimeType()            { return m_imeType; }
+    QString mimeType()            { return mMimeType; }
     void setMimeType(const QString &s);
 
     //Content-Description
@@ -327,7 +327,7 @@ class KNAttachment {
     KMime::Content *c_ontent;
     KNLoadHelper   *l_oadHelper;
     QFile *f_ile;
-    Q3CString m_imeType;
+    QString mMimeType;
     QString n_ame,
             d_escription;
     KMime::Headers::CTEncoding e_ncoding;

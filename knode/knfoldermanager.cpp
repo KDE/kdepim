@@ -330,7 +330,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
           int readBytes=file->readBlock(buff.data(), size);
 
           if (readBytes != -1) {
-            buff.at(readBytes)='\0'; //terminate string
+            buff[readBytes] = '\0'; //terminate string
             art = new KNLocalArticle(0);
             art->setEditDisabled(true);
             art->setContent(buff);
@@ -349,7 +349,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
             int readBytes=file->readBlock(buff.data(), size);
 
             if (readBytes != -1) {
-              buff.at(readBytes)='\0'; //terminate string
+              buff[readBytes] = '\0'; //terminate string
               art = new KNLocalArticle(0);
               art->setEditDisabled(true);
               art->setContent(buff);

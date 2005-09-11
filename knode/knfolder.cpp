@@ -356,7 +356,7 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
   }
 
   //set content
-  buff.at(readBytes)='\0'; //terminate string
+  buff[readBytes] = '\0'; //terminate string
   a->setContent(buff);
   a->parse();
 

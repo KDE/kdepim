@@ -32,8 +32,8 @@ libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   knconfigwidgets.cpp \
                   \
                   knnetaccess.cpp \
-                  knprotocolclient.cpp \
-                  knnntpclient.cpp \
+#                  knprotocolclient.cpp \
+#                  knnntpclient.cpp \
                   knjobdata.cpp \
                   \
                   knaccountmanager.cpp \

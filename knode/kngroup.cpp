@@ -457,7 +457,7 @@ void KNGroup::insortNewHeaders(Q3StrList *hdrs, Q3StrList *hdrfmt, KNProtocolCli
 
     // optinal additional headers
     mOptionalHeaders = *hdrfmt;
-    for (hdr = hdrfmt->first(); hdr; hdr = hdrfmt->next()) {
+    for (hdr = hdrfmt->first(); !hdr.isNull(); hdr = hdrfmt->next()) {
       if (!split.next())
         break;
       data = split.string();
@@ -515,7 +515,7 @@ void KNGroup::insortNewHeaders(Q3StrList *hdrs, Q3StrList *hdrfmt, KNProtocolCli
 
 int KNGroup::saveStaticData(int cnt,bool ovr)
 {
-  int idx, savedCnt=0, mode;
+  int idx, savedCnt = 0;
   KNRemoteArticle *art;
 
   QString dir(path());
@@ -524,6 +524,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 
   QFile f(dir+g_roupname+".static");
 
+  QIODevice::OpenMode mode;
   if(ovr) mode=QIODevice::WriteOnly;
   else mode=QIODevice::WriteOnly | QIODevice::Append;
 
@@ -561,7 +562,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 
       // optional headers
       ts << mOptionalHeaders.count() << '\n';
-      for (Q3CString hdrName = mOptionalHeaders.first(); hdrName; hdrName = mOptionalHeaders.next()) {
+      for (Q3CString hdrName = mOptionalHeaders.first(); !hdrName.isNull(); hdrName = mOptionalHeaders.next()) {
         hdrName = hdrName.left( hdrName.find(':') );
         KMime::Headers::Base *hdr = art->getHeaderByType( hdrName );
         if ( hdr )
@@ -583,7 +584,6 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 void KNGroup::saveDynamicData(int cnt,bool ovr)
 {
   dynDataVer1 data;
-  int mode;
   KNRemoteArticle *art;
 
   if(length()>0) {
@@ -593,6 +593,7 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
 
     QFile f(dir+g_roupname+".dynamic");
 
+    QIODevice::OpenMode mode;
     if(ovr) mode=QIODevice::WriteOnly;
     else mode=QIODevice::WriteOnly | QIODevice::Append;
 

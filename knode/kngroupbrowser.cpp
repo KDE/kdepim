@@ -1,8 +1,6 @@
 /*
-    kngroupbrowser.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -121,8 +119,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   listL->setColStretch(0,5);
   listL->setColStretch(2,2);
 
-  arrL->addWidget(arrowBtn1, AlignCenter);
-  arrL->addWidget(arrowBtn2, AlignCenter);
+  arrL->addWidget( arrowBtn1, Qt::AlignCenter );
+  arrL->addWidget( arrowBtn2, Qt::AlignCenter );
 
   //connect
   connect(filterEdit, SIGNAL(textChanged(const QString&)),

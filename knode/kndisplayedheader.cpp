@@ -75,7 +75,7 @@ KNDisplayedHeader::~KNDisplayedHeader()
 
 
 // some common headers
-const char** KNDisplayedHeader::predefs()
+QStringList KNDisplayedHeader::predefs()
 {
   if ( predef.isEmpty() )
     predef << "Approved"
@@ -134,7 +134,7 @@ void KNDisplayedHeader::setTranslatedName(const QString &s)
   QString c;
   QStringList pd = predefs();
   Q_FOREACH( c, pd ) {
-    if ( s == i18n("collection of article headers", c) ) {
+    if ( s == i18n("collection of article headers", c.toLatin1()) ) {
       n_ame = c;
       retranslated = true;
       break;

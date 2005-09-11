@@ -1,6 +1,4 @@
 /*
-    knmime.cpp
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -452,10 +450,10 @@ KNAttachment::~KNAttachment()
 
 void KNAttachment::setMimeType(const QString &s)
 {
-  m_imeType=s.latin1();
+  mMimeType = s;
   h_asChanged=true;
 
-  if(m_imeType.find("text/", 0, false)==-1) {
+  if ( !mMimeType.contains( "text/", Qt::CaseInsensitive ) ) {
     f_b64=true;
     e_ncoding.setCte(Headers::CEbase64);
   }
@@ -502,7 +500,7 @@ void KNAttachment::updateContentInfo()
 
   //Content-Type
   Headers::ContentType *t=c_ontent->contentType();
-  t->setMimeType(m_imeType);
+  t->setMimeType( mMimeType.toLatin1() );
   t->setName(n_ame, "UTF-8");
   t->setCategory(Headers::CCmixedPart);
 

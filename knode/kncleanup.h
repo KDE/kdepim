@@ -15,7 +15,6 @@
 #ifndef KNCLEANUP_H
 #define KNCLEANUP_H
 
-#include <qsemimodal.h>
 //Added by qt3to4:
 #include <QLabel>
 #include <Q3ValueList>
