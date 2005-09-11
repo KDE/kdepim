@@ -168,7 +168,7 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
                  parent, name, true, true ),
     mUpdateSexagesimalInput( true )
 {
-  Q3Frame *page = plainPage();
+  QFrame *page = plainPage();
 
   QGridLayout *topLayout = new QGridLayout( page, 2, 2, marginHint(),
                                             spacingHint() );

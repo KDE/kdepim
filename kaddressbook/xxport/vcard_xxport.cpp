@@ -397,7 +397,7 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list,
                  parent, name, true, true, KStdGuiItem::no(), KStdGuiItem::yes() ),
     mContacts( list )
 {
-  Q3Frame *page = plainPage();
+  QFrame *page = plainPage();
   QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Do you want to import this contact in your address book?" ), page );
@@ -469,7 +469,7 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent,
   : KDialogBase( Plain, i18n( "Select vCard Fields" ), Ok | Cancel, Ok,
                  parent, name, true, true )
 {
-  Q3Frame *page = plainPage();
+  QFrame *page = plainPage();
 
   QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );
 

@@ -39,7 +39,7 @@ KNFilterDialog::KNFilterDialog(KNArticleFilter *f, QWidget *parent, const char *
                 Ok|Cancel|Help, Ok, parent, name),
     fltr(f)
 {
-  Q3Frame* page=plainPage();
+  QFrame* page=plainPage();
 
   Q3GroupBox *gb=new Q3GroupBox(page);
   fname=new KLineEdit(gb);

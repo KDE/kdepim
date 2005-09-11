@@ -125,7 +125,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
     mAddressBook( ab ), mCore( core )
 {
   setButtonCancel( KStdGuiItem::close() );
-  Q3Frame *page = plainPage();
+  QFrame *page = plainPage();
   QVBoxLayout *topLayout = new QVBoxLayout( page, marginHint(), spacingHint() );
 
   Q3GroupBox *groupBox = new Q3GroupBox( i18n( "Search for Addresses in Directory" ),

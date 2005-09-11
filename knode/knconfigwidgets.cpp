@@ -472,7 +472,7 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
                 Ok|Cancel|Help, Ok, p, n),
     a_ccount(a)
 {
-  Q3Frame* page=addPage(i18n("Ser&ver"));
+  QFrame* page=addPage(i18n("Ser&ver"));
   QGridLayout *topL=new QGridLayout(page, 11, 3, 5);
 
   n_ame=new KLineEdit(page);
@@ -559,7 +559,7 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   i_dWidget=new KNConfig::IdentityWidget(a->identity(), addVBoxPage(i18n("&Identity")));
 
   // per server cleanup configuration
-  Q3Frame* cleanupPage = addPage( i18n("&Cleanup") );
+  QFrame* cleanupPage = addPage( i18n("&Cleanup") );
   QVBoxLayout *cleanupLayout = new QVBoxLayout( cleanupPage, KDialog::spacingHint() );
   mCleanupWidget = new GroupCleanupWidget( a->cleanupConfig(), cleanupPage );
   mCleanupWidget->load();
@@ -1497,7 +1497,7 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
   : KDialogBase(Plain, i18n("Header Properties"),Ok|Cancel|Help, Ok, p, n),
     h_dr(h)
 {
-  Q3Frame* page=plainPage();
+  QFrame* page=plainPage();
   QGridLayout *topL=new QGridLayout(page, 2, 2, 0, 5);
 
   QWidget *nameW = new QWidget(page);
@@ -2128,7 +2128,7 @@ void KNConfig::PostNewsTechnicalWidget::slotEditBtnClicked()
 KNConfig::XHeaderConfDialog::XHeaderConfDialog(const QString &h, QWidget *p, const char *n)
   : KDialogBase(Plain, i18n("X-Headers"),Ok|Cancel, Ok, p, n)
 {
-  Q3Frame* page=plainPage();
+  QFrame* page=plainPage();
   QHBoxLayout *topL=new QHBoxLayout(page, 5,8);
   topL->setAutoAdd(true);
 

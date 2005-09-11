@@ -181,7 +181,7 @@ void XXPortSelectDialog::slotHelp()
 
 void XXPortSelectDialog::initGUI()
 {
-  Q3Frame *page = plainPage();
+  QFrame *page = plainPage();
 
   QVBoxLayout *topLayout = new QVBoxLayout( page, KDialog::marginHint(),
                                             KDialog::spacingHint() );

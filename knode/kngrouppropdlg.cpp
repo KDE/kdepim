@@ -149,7 +149,7 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   i_dWidget=new KNConfig::IdentityWidget(g_rp->identity(), addVBoxPage(i18n("&Identity")));
 
   // per server cleanup configuration
-  Q3Frame* cleanupPage = addPage( i18n("&Cleanup") );
+  QFrame* cleanupPage = addPage( i18n("&Cleanup") );
   QVBoxLayout *cleanupLayout = new QVBoxLayout( cleanupPage, KDialog::spacingHint() );
   mCleanupWidget = new KNConfig::GroupCleanupWidget( g_rp->cleanupConfig(), cleanupPage );
   mCleanupWidget->load();

@@ -269,7 +269,7 @@ int KNHelper::selectDialog(QWidget *parent, const QString &caption, const QStrin
 {
   KDialogBase *dlg=new KDialogBase(KDialogBase::Plain, caption, KDialogBase::Ok|KDialogBase::Cancel,
                                    KDialogBase::Ok, parent);
-  Q3Frame *page = dlg->plainPage();
+  QFrame *page = dlg->plainPage();
   QHBoxLayout *pageL = new QHBoxLayout(page,8,5);
 
   KNDialogListBox *list = new KNDialogListBox(true, page);
