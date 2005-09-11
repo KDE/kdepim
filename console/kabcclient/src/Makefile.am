@@ -11,5 +11,3 @@ kabcclient_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 kabcclient_LDADD = $(LIB_KABC)
 
-messages:
-	$(XGETTEXT) *.cpp *.h -o $(podir)/kabcclient.pot

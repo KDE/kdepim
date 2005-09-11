@@ -1,6 +1,9 @@
 2005-09-06 krake:
+    * Imported kabcclient into KDE's SVN module kdereview
+    
+2005-09-06 krake:
     * Updated FSF address
-    * Fixed Debian packagin files
+    * Fixed Debian packaging files
 
 # Version 0.8.1
 2005-08-30 krake:
