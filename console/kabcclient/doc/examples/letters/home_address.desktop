@@ -3,6 +3,8 @@
 
 [Misc]
 Name=Letter home/private address
+Name[pt]=Endereço privado/residencial para cartas
+Name[sv]=Brev hem/privat adress
 
 [General]
 # user defined delimiter

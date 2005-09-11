@@ -3,6 +3,8 @@
 
 [Misc]
 Name=Letter business/work address
+Name[pt]=Endereço de trabalho/negócios para cartas
+Name[sv]=Brev företag/arbetsadress
 
 [General]
 # user defined delimiter
