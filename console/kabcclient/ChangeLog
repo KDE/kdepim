@@ -1,3 +1,6 @@
+2005-09-11 krake:
+    * Removed duplicate entry for --search in manpage
+    
 2005-09-06 krake:
     * Imported kabcclient into KDE's SVN module kdereview
     
