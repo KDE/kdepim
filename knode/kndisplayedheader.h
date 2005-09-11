@@ -16,6 +16,7 @@
 #define KNDISPLAYEDHEADER_H
 
 #include <qbitarray.h>
+#include <qstringlist.h>
 
 
 class KNDisplayedHeader {
@@ -25,7 +26,7 @@ class KNDisplayedHeader {
     ~KNDisplayedHeader();
 
     //some common headers
-    static const char** predefs();
+    static QStringList predefs();
 
     //name
     const QString& name()               { return n_ame; }

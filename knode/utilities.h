@@ -39,6 +39,7 @@ class KTempFile;
 //*****************************************************************************
 
 /** clone of QSortedList... */
+#if 0
 template<class type> class Q_EXPORT QSortedVector : public Q3PtrVector<type>
 {
 public:
@@ -52,6 +53,7 @@ public:
     virtual int compareItems( Q3PtrCollection::Item s1, Q3PtrCollection::Item s2 )
       { if ( *((type*)s1) == *((type*)s2) ) return 0; return ( *((type*)s1) < *((type*)s2) ? -1 : 1 ); }
 };
+#endif
 
 
 //==============================================================================

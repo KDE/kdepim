@@ -920,7 +920,7 @@ KNConfig::PostNewsTechnical::PostNewsTechnical()
     QFile f(dir+"xheaders");
     if(f.open(QIODevice::ReadOnly)) {
       QTextStream ts(&f);
-      while(!ts.eof())
+      while(!ts.atEnd())
         x_headers.append( XHeader(ts.readLine()) );
 
       f.close();
@@ -1187,7 +1187,7 @@ bool KNConfig::Cleanup::expireToday()
 
 void KNConfig::Cleanup::setLastExpireDate()
 {
-  mLastExpDate = QDateTime::currentDateTime();
+  mLastExpDate = QDateTime::currentDateTime().date();
 }
 
 
@@ -1206,7 +1206,7 @@ bool KNConfig::Cleanup::compactToday()
 
 void KNConfig::Cleanup::setLastCompactDate()
 {
-  mLastCompDate = QDateTime::currentDateTime();
+  mLastCompDate = QDateTime::currentDateTime().date();
 }
 
 

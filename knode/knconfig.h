@@ -527,7 +527,7 @@ class KDE_EXPORT Cleanup : public Base {
     /** use default cleanup configuration */
     bool mDefault;
     /** last expiration and last comapction date */
-    QDateTime mLastExpDate, mLastCompDate;
+    QDate mLastExpDate, mLastCompDate;
 
 };
 

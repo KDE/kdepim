@@ -29,8 +29,6 @@
 #include "kncollectionview.h"
 #include "knwidgets.h"
 
-#include "sidebarextension.h"
-
 #include <kapplication.h>
 #include <kparts/genericfactory.h>
 #include <kparts/statusbarextension.h>
@@ -69,19 +67,15 @@ KNodePart::KNodePart(QWidget *parentWidget, const char *widgetName,
 
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget(parentWidget, widgetName);
-  canvas->setFocusPolicy(QWidget::ClickFocus);
+  canvas->setFocusPolicy( Qt::ClickFocus );
   setWidget(canvas);
 
   mainWidget = new KNMainWidget( this, false, canvas, "knode_widget" );
   QVBoxLayout *topLayout = new QVBoxLayout(canvas);
   topLayout->addWidget(mainWidget);
-  mainWidget->setFocusPolicy(QWidget::ClickFocus);
+  mainWidget->setFocusPolicy( Qt::ClickFocus );
 
   kapp->dcopClient()->resume(); // Ok. We are ready for DCOP requests.
-
-  new KParts::SideBarExtension( mainWidget->collectionView(),
-                                this,
-                                "KNodeSidebar" );
 
   KParts::StatusBarExtension* statusBar = new KParts::StatusBarExtension(this);
   statusBar->addStatusBarItem(mainWidget->statusBarLabelFilter(), 10, false);

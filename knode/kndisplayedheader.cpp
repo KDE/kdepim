@@ -18,10 +18,7 @@
 
 
 // some standard headers
-static const char *predef[] = { "Approved","Content-Transfer-Encoding","Content-Type","Control","Date","Distribution",
-                                "Expires","Followup-To","From","Lines","Mail-Copies-To","Message-ID","Mime-Version","NNTP-Posting-Host",
-                                "Newsgroups","Organization","Path","References","Reply-To", "Sender","Subject",
-                                "Supersedes","To", "User-Agent","X-Mailer","X-Newsreader","X-No-Archive","XRef",0 };
+static QStringList predef;
 
 // default display names KNode uses
 static const char *disp[] = { "Groups", 0 };
@@ -80,6 +77,35 @@ KNDisplayedHeader::~KNDisplayedHeader()
 // some common headers
 const char** KNDisplayedHeader::predefs()
 {
+  if ( predef.isEmpty() )
+    predef << "Approved"
+        << "Content-Transfer-Encoding"
+        << "Content-Type"
+        << "Control"
+        << "Date"
+        << "Distribution"
+        << "Expires"
+        << "Followup-To"
+        << "From"
+        << "Lines"
+        << "Mail-Copies-To"
+        << "Message-ID"
+        << "Mime-Version"
+        << "NNTP-Posting-Host"
+        << "Newsgroups"
+        << "Organization"
+        << "Path"
+        << "References"
+        << "Reply-To"
+        << "Sender"
+        << "Subject"
+        << "Supersedes"
+        << "To"
+        << "User-Agent"
+        << "X-Mailer"
+        << "X-Newsreader"
+        << "X-No-Archive"
+        << "XRef";
   return predef;
 }
 
@@ -105,9 +131,11 @@ QString KNDisplayedHeader::translatedName()
 void KNDisplayedHeader::setTranslatedName(const QString &s)
 {
   bool retranslated = false;
-  for (const char **c=predef;(*c)!=0;c++) {  // ok, first the standard header names
-    if (s==i18n("collection of article headers",*c)) {
-      n_ame = QString::fromLatin1(*c);
+  QString c;
+  QStringList pd = predefs();
+  Q_FOREACH( c, pd ) {
+    if ( s == i18n("collection of article headers", c) ) {
+      n_ame = c;
       retranslated = true;
       break;
     }

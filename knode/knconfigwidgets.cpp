@@ -494,14 +494,14 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   topL->addWidget(l, 2,0);
   topL->addWidget(p_ort, 2,1);
 
-  h_old = new KIntSpinBox(5,1800,5,5,10,page);
+  h_old = new KIntSpinBox( 5, 1800, 5, 5, page );
   l = new QLabel(h_old,i18n("Hol&d connection for:"), page);
   h_old->setSuffix(i18n(" sec"));
   h_old->setValue(a->hold());
   topL->addWidget(l,3,0);
   topL->addWidget(h_old,3,1);
 
-  t_imeout = new KIntSpinBox(15,600,5,15,10,page);
+  t_imeout = new KIntSpinBox( 15, 600, 5, 15, page );
   l = new QLabel(t_imeout, i18n("&Timeout:"), page);
   t_imeout->setValue(a->timeout());
   t_imeout->setSuffix(i18n(" sec"));
@@ -541,7 +541,7 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   connect(i_nterval, SIGNAL(toggled(bool)), this, SLOT(slotIntervalChecked(bool)));
   topL->addMultiCellWidget(i_nterval, 9,9, 0,3);
 
-  c_heckInterval=new KIntSpinBox(1,10000,1,1,10,page);
+  c_heckInterval=new KIntSpinBox( 1, 10000, 1, 1, page );
   c_heckIntervalLabel=new QLabel(c_heckInterval, i18n("Check inter&val:"), page);
   c_heckInterval->setSuffix(i18n(" min") );
   c_heckInterval->setValue(a->checkInterval());
@@ -1007,10 +1007,10 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget( ReadNewsGeneral *d, QWid
   QLabel *l1, *l2, *l3;
 
   a_utoCB=new QCheckBox(i18n("Check for new articles a&utomatically"), hgb);
-  m_axFetch=new KIntSpinBox(0, 100000, 1, 0, 10, hgb);
+  m_axFetch=new KIntSpinBox( 0, 100000, 1, 0, hgb );
   l1=new QLabel(m_axFetch, i18n("&Maximum number of articles to fetch:"), hgb);
   m_arkCB=new QCheckBox(i18n("Mar&k article as read after:"), hgb);
-  m_arkSecs=new KIntSpinBox(0, 9999, 1, 0, 10, hgb);
+  m_arkSecs=new KIntSpinBox( 0, 9999, 1, 0, hgb );
   connect(m_arkCB, SIGNAL(toggled(bool)), m_arkSecs, SLOT(setEnabled(bool)));
   m_arkSecs->setSuffix(i18n(" sec"));
   m_arkCrossCB=new QCheckBox(i18n("Mark c&rossposted articles as read"), hgb);
@@ -1022,10 +1022,10 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget( ReadNewsGeneral *d, QWid
   l_inesCB=new QCheckBox(i18n("Show &line count"), lgb);
   u_nreadCB=new QCheckBox(i18n("Show unread count in &thread"), lgb);
 
-  c_ollCacheSize=new KIntSpinBox(0, 99999, 1, 1, 10, cgb);
+  c_ollCacheSize=new KIntSpinBox( 0, 99999, 1, 1, cgb );
   c_ollCacheSize->setSuffix(" KB");
   l2=new QLabel(c_ollCacheSize, i18n("Cach&e size for headers:"), cgb);
-  a_rtCacheSize=new KIntSpinBox(0, 99999, 1, 1, 10, cgb);
+  a_rtCacheSize=new KIntSpinBox( 0, 99999, 1, 1, cgb );
   a_rtCacheSize->setSuffix(" KB");
   l3=new QLabel(a_rtCacheSize, i18n("Cache si&ze for articles:"), cgb);
 
@@ -1546,7 +1546,7 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
   topL->setColStretch(1,1);
 
   // preset values...
-  h_drC->insertStrList(KNDisplayedHeader::predefs());
+  h_drC->addItems( KNDisplayedHeader::predefs() );
   h_drC->lineEdit()->setText(h->header());
   n_ameE->setText(h->translatedName());
   for(int i=0; i<4; i++) {
@@ -1612,13 +1612,13 @@ KNConfig::ScoringWidget::ScoringWidget( Scoring *d, QWidget *p, const char *n ) 
 
   topL->addRowSpacing(1, 10);
 
-  i_gnored=new KIntSpinBox(-100000, 100000, 1, 0, 10, this);
+  i_gnored=new KIntSpinBox( -100000, 100000, 1, 0, this );
   QLabel *l=new QLabel(i_gnored, i18n("Default score for &ignored threads:"), this);
   topL->addWidget(l, 2, 0);
   topL->addWidget(i_gnored, 2, 1);
   connect(i_gnored, SIGNAL(valueChanged(int)), SLOT(changed()));
 
-  w_atched=new KIntSpinBox(-100000, 100000, 1, 0, 10, this);
+  w_atched=new KIntSpinBox( -100000, 100000, 1, 0, this );
   l=new QLabel(w_atched, i18n("Default score for &watched threads:"), this);
   topL->addWidget(l, 3, 0);
   topL->addWidget(w_atched, 3, 1);
@@ -2184,7 +2184,7 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget( PostNewsComposer *d, Q
 
   w_ordWrapCB=new QCheckBox(i18n("Word &wrap at column:"), generalB);
   generalL->addWidget(w_ordWrapCB,1,0);
-  m_axLen=new KIntSpinBox(20, 200, 1, 20, 10, generalB);
+  m_axLen=new KIntSpinBox( 20, 200, 1, 20, generalB );
   generalL->addWidget(m_axLen,1,2);
   connect(w_ordWrapCB, SIGNAL(toggled(bool)), m_axLen, SLOT(setEnabled(bool)));
   connect(w_ordWrapCB, SIGNAL(toggled(bool)), SLOT(changed()));
@@ -2387,7 +2387,7 @@ KNConfig::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent
   grid->addMultiCellWidget( mExpEnabled, 1, 1, 0, 1 );
   connect( mExpEnabled, SIGNAL(toggled(bool)), SIGNAL(changed()) );
 
-  mExpDays = new KIntSpinBox( 0, 99999, 1, 0, 10, mExpGroup );
+  mExpDays = new KIntSpinBox( 0, 99999, 1, 0, mExpGroup );
   mExpDays->setSuffix( i18n(" days") );
   QLabel *label = new QLabel( mExpDays, i18n("&Purge groups every:"), mExpGroup );
   grid->addWidget( label, 2, 0 );
@@ -2396,14 +2396,14 @@ KNConfig::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent
   connect( mExpEnabled, SIGNAL(toggled(bool)), label, SLOT(setEnabled(bool)) );
   connect( mExpEnabled, SIGNAL(toggled(bool)), mExpDays, SLOT(setEnabled(bool)) );
 
-  mExpReadDays = new KIntSpinBox( 0, 99999, 1, 0, 10, mExpGroup );
+  mExpReadDays = new KIntSpinBox( 0, 99999, 1, 0, mExpGroup );
   mExpReadDays->setSuffix( i18n(" days") );
   label = new QLabel( mExpReadDays, i18n("&Keep read articles:"), mExpGroup );
   grid->addWidget( label, 3, 0 );
   grid->addWidget( mExpReadDays, 3, 1, Qt::AlignRight );
   connect( mExpReadDays, SIGNAL(valueChanged(int)), SIGNAL(changed()) );
 
-  mExpUnreadDays = new KIntSpinBox( 0, 99999, 1, 0, 10, mExpGroup );
+  mExpUnreadDays = new KIntSpinBox( 0, 99999, 1, 0, mExpGroup );
   mExpUnreadDays->setSuffix( i18n(" days") );
   label = new QLabel( mExpUnreadDays, i18n("Keep u&nread articles:"), mExpGroup );
   grid->addWidget( label, 4, 0 );
@@ -2483,7 +2483,7 @@ KNConfig::CleanupWidget::CleanupWidget( QWidget *p, const char *n ) :
   connect(f_olderCB, SIGNAL(toggled(bool)), this, SLOT(slotFolderCBtoggled(bool)));
   foldersL->addMultiCellWidget(f_olderCB,1,1,0,1);
 
-  f_olderDays=new KIntSpinBox(0, 99999, 1, 0, 10, foldersB);
+  f_olderDays=new KIntSpinBox( 0, 99999, 1, 0, foldersB );
   f_olderDays->setSuffix(i18n(" days"));
   f_olderDaysL=new QLabel(f_olderDays,i18n("P&urge folders every:"), foldersB);
   foldersL->addWidget(f_olderDaysL,2,0);

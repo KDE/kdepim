@@ -143,9 +143,10 @@ void KNNntpClient::doFetchGroups()
   if (!job->success() || job->canceled())
     return;     // stopped...
 
-  QSortedVector<KNGroupInfo> tempVector;
-  target->groups->toVector(&tempVector);
-  tempVector.sort();
+#warning Port me!
+//   QSortedVector<KNGroupInfo*> tempVector;
+//   target->groups->toVector(&tempVector);
+//   tempVector.sort();
 
   if (target->getDescriptions) {
     errorPrefix = i18n("The group descriptions could not be retrieved.\nThe following error occurred:\n");
@@ -192,8 +193,9 @@ void KNNntpClient::doFetchGroups()
             description = QString::fromLocal8Bit(s);
           info.name = name;
 
-          if ((pos=tempVector.bsearch(&info))!=-1)
-            tempVector[pos]->description = description;
+#warning Port me!
+//           if ((pos=tempVector.bsearch(&info))!=-1)
+//             tempVector[pos]->description = description;
         }
         doneLines++;
       }
