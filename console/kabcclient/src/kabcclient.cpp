@@ -760,3 +760,5 @@ void KABCClient::slotAddressBookLoaded()
 }
 
 // End of file
+
+#include "kabcclient.moc"
