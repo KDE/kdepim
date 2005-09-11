@@ -108,7 +108,7 @@ class KNHeaderView : public KListView  {
 
 };
 
-
+#if 0
 class KNHeaderViewToolTip : public QToolTip {
 
   public:
@@ -121,5 +121,6 @@ class KNHeaderViewToolTip : public QToolTip {
     KNHeaderView *listView;
 
 };
+#endif
 
 #endif

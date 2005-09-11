@@ -1,8 +1,6 @@
 /*
-    knrangefilter.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -103,9 +101,9 @@ KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max,
 {
   enabled=new QCheckBox(this);
 
-  val1=new KIntSpinBox(min, max, 1, min, 10, this);
+  val1=new KIntSpinBox(min, max, 1, min, this);
   val1->setSuffix(unit);
-  val2=new KIntSpinBox(min, max, 1, min, 10, this);
+  val2=new KIntSpinBox(min, max, 1, min, this);
   val2->setSuffix(unit);
 
   op1=new QComboBox(this);
@@ -120,7 +118,7 @@ KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max,
   op2->insertItem("<=");
 
   des=new QLabel(value, this);
-  des->setAlignment(AlignCenter);
+  des->setAlignment( Qt::AlignCenter );
 
   QGridLayout *topL=new QGridLayout(this, 2,6, 8,5 );
 

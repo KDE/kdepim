@@ -756,7 +756,7 @@ void KNMainWidget::initActions()
   a_ctToggleArticleViewer    = new KToggleAction(i18n("Show &Article Viewer"), Qt::CTRL+Qt::Key_J, this,
                                SLOT(slotToggleArticleViewer()), actionCollection(), "settings_show_articleViewer");
   a_ctToggleArticleViewer->setCheckedState(i18n("Hide &Article Viewer"));
-  a_ctToggleQuickSearch      = new KToggleAction(i18n("Show Quick Search"), QString::null, this,
+  a_ctToggleQuickSearch      = new KToggleAction(i18n("Show Quick Search"), KShortcut(), this,
                                SLOT(slotToggleQuickSearch()), actionCollection(), "settings_show_quickSearch");
   a_ctToggleQuickSearch->setCheckedState(i18n("Hide Quick Search"));
   a_ctSwitchToGroupView      = new KAction(i18n("Switch to Group View"), Qt::Key_G , this,

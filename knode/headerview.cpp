@@ -87,7 +87,8 @@ KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
   connect( knGlobals.articleManager(), SIGNAL(aboutToShowGroup()), SLOT(prepareForGroup()) );
   connect( knGlobals.articleManager(), SIGNAL(aboutToShowFolder()), SLOT(prepareForFolder()) );
 
-  new KNHeaderViewToolTip( this );
+#warning Port me!
+//   new KNHeaderViewToolTip( this );
 
   installEventFilter( this );
 }
@@ -470,7 +471,7 @@ void KNHeaderView::contentsMousePressEvent( QMouseEvent *e )
 {
   if (!e) return;
 
-  bool selectMode=(( e->state() & ShiftButton ) || ( e->state() & ControlButton ));
+  bool selectMode=(( e->state() & Qt::ShiftModifier ) || ( e->state() & Qt::ControlModifier ));
 
   QPoint vp = contentsToViewport(e->pos());
   Q3ListViewItem *i = itemAt(vp);
@@ -511,13 +512,13 @@ void KNHeaderView::keyPressEvent(QKeyEvent *e)
   Q3ListViewItem *i = currentItem();
 
   switch(e->key()) {
-    case Key_Space:
-    case Key_Backspace:
-    case Key_Delete:
+    case Qt::Key_Space:
+    case Qt::Key_Backspace:
+    case Qt::Key_Delete:
       e->ignore(); // don't eat them
     break;
-    case Key_Enter:
-    case Key_Return:
+    case Qt::Key_Enter:
+    case Qt::Key_Return:
       setActive( i );
     break;
 
@@ -587,6 +588,8 @@ void KNHeaderView::resetCurrentTime()
 
 //BEGIN: KNHeaderViewToolTip ==================================================
 
+#warning Port me!
+#if 0
 KNHeaderViewToolTip::KNHeaderViewToolTip( KNHeaderView *parent ) :
   QToolTip( parent->viewport() ),
   listView( parent )
@@ -616,6 +619,7 @@ void KNHeaderViewToolTip::maybeTip( const QPoint &p )
   tip( QRect( headerRect.left(), itemRect.top(), headerRect.width(), itemRect.height() ),
        Q3StyleSheet::escape( item->text( column ) ) );
 }
+#endif
 
 //END: KNHeaderViewToolTip ====================================================
 

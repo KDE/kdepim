@@ -86,7 +86,8 @@ KNLineEdit::KNLineEdit(KNComposer::ComposerView *_composerView, bool useCompleti
 
 Q3PopupMenu *KNLineEdit::createPopupMenu()
 {
-    Q3PopupMenu *menu = KLineEdit::createPopupMenu();
+#warning Port me!
+    Q3PopupMenu *menu = 0;//KLineEdit::createPopupMenu();
     if ( !menu )
         return 0;
 
@@ -125,18 +126,18 @@ void KNLineEdit::loadAddresses()
 void KNLineEdit::keyPressEvent(QKeyEvent *e)
 {
     // ---sven's Return is same Tab and arrow key navigation start ---
-    if ((e->key() == Key_Enter || e->key() == Key_Return) &&
+  if ((e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) &&
         !completionBox()->isVisible())
     {
         composerView->focusNextPrevEdit( this, true );
       return;
     }
-    if (e->key() == Key_Up)
+    if (e->key() == Qt::Key_Up)
     {
         composerView->focusNextPrevEdit( this, false ); // Go up
       return;
     }
-    if (e->key() == Key_Down)
+    if (e->key() == Qt::Key_Down)
     {
         composerView->focusNextPrevEdit( this, true ); // Go down
       return;
@@ -204,22 +205,22 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   //statusbar
   KStatusBar *sb=statusBar();
   sb->insertItem(QString::null, 1,1);                 // type
-  sb->setItemAlignment (1,AlignLeft | AlignVCenter);
+  sb->setItemAlignment( 1, Qt::AlignLeft | Qt::AlignVCenter );
   sb->insertItem(QString::null, 2,1);                 // charset
-  sb->setItemAlignment (2,AlignLeft | AlignVCenter);
+  sb->setItemAlignment( 2, Qt::AlignLeft | Qt::AlignVCenter );
   sb->insertItem(QString::null, 3,0);                 // column
-  sb->setItemAlignment (3,AlignCenter | AlignVCenter);
+  sb->setItemAlignment(3, Qt::AlignCenter | Qt::AlignVCenter );
   sb->insertItem(QString::null, 4,0);                 // column
-  sb->setItemAlignment (4,AlignCenter | AlignVCenter);
+  sb->setItemAlignment(4, Qt::AlignCenter | Qt::AlignVCenter );
   sb->insertItem(QString::null, 5,0);                 // line
-  sb->setItemAlignment (5,AlignCenter | AlignVCenter);
+  sb->setItemAlignment( 5, Qt::AlignCenter | Qt::AlignVCenter );
   connect(v_iew->e_dit, SIGNAL(CursorPositionChanged()), SLOT(slotUpdateCursorPos()));
   connect(v_iew->e_dit, SIGNAL(toggle_overwrite_signal()), SLOT(slotUpdateStatusBar()));
 
   //------------------------------- <Actions> --------------------------------------
 
   //file menu
-  new KAction(i18n("&Send Now"),"mail_send", CTRL + Key_Return , this,
+  new KAction(i18n("&Send Now"),"mail_send", Qt::CTRL + Qt::Key_Return , this,
     SLOT(slotSendNow()), actionCollection(), "send_now");
 
   new KAction(i18n("Send &Later"), "queue", 0, this,
@@ -357,7 +358,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   if (firstEdit) {   // now we place the cursor at the end of the quoted text / below the attribution line
     if (knGlobals.configManager()->postNewsComposer()->cursorOnTop()) {
-      int numLines = knGlobals.configManager()->postNewsComposer()->intro().contains("%L");
+      int numLines = knGlobals.configManager()->postNewsComposer()->intro().count("%L");
       v_iew->e_dit->setCursorPosition(numLines+1,0);
     }
     else
@@ -1232,7 +1233,7 @@ void KNComposer::slotSetCharsetKeyboard()
   int newCS = KNHelper::selectDialog(this, i18n("Select Charset"), a_ctSetCharset->items(), a_ctSetCharset->currentItem());
   if (newCS != -1) {
     a_ctSetCharset->setCurrentItem(newCS);
-    slotSetCharset(*(a_ctSetCharset->items().at(newCS)));
+    slotSetCharset( a_ctSetCharset->items()[newCS] );
   }
 }
 
@@ -1389,7 +1390,7 @@ void KNComposer::slotUpdateStatusBar()
     overwriteDesc = i18n(" INS ");
 
   statusBar()->changeItem(i18n(" Type: %1 ").arg(typeDesc), 1);
-  statusBar()->changeItem(i18n(" Charset: %1 ").arg(c_harset), 2);
+  statusBar()->changeItem(i18n(" Charset: %1 ").arg( QString( c_harset ) ), 2);
   statusBar()->changeItem(overwriteDesc, 3);
   statusBar()->changeItem(i18n(" Column: %1 ").arg(v_iew->e_dit->currentColumn() + 1), 4);
   statusBar()->changeItem(i18n(" Line: %1 ").arg(v_iew->e_dit->currentLine() + 1), 5);
@@ -1815,8 +1816,9 @@ KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
   n_otification=new Q3GroupBox(2, Qt::Horizontal, e_dit);
   l=new QLabel(i18n("You are currently editing the article body\nin an external editor. To continue, you have\nto close the external editor."), n_otification);
   c_ancelEditorBtn=new QPushButton(i18n("&Kill External Editor"), n_otification);
-  n_otification->setFrameStyle(Q3Frame::Panel | Q3Frame::Raised);
-  n_otification->setLineWidth(2);
+#warning Port me?
+//   n_otification->setFrameStyle(Q3Frame::Panel | Q3Frame::Raised);
+//   n_otification->setLineWidth(2);
   n_otification->hide();
   notL->addWidget(n_otification, 0, Qt::AlignHCenter);
   notL->addStretch(1);

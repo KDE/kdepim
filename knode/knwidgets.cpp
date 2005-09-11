@@ -1,8 +1,6 @@
 /*
-    knwidgets.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -101,7 +99,7 @@ KNDialogListBox::~KNDialogListBox()
 
 void KNDialogListBox::keyPressEvent(QKeyEvent *e)
 {
-  if ((a_lwaysIgnore || !(hasFocus()&&isVisible()))&&((e->key()==Key_Enter)||(e->key()==Key_Return)))
+  if ((a_lwaysIgnore || !(hasFocus()&&isVisible()))&&((e->key() == Qt::Key_Enter)||(e->key() == Qt::Key_Return)))
     e->ignore();
   else
     Q3ListBox::keyPressEvent(e);

@@ -124,13 +124,11 @@ int KNFile::findString(const char *s)
 
 bool KNFile::increaseBuffer()
 {
-  if(buffer.resize(2*buffer.size())) {;
-    dataPtr=buffer.data();
-    dataPtr[0]='\0';
-    kdDebug(5003) << "KNFile::increaseBuffer() : buffer doubled" << endl;
-    return true;
-  }
-  else return false;
+  buffer.resize( 2 * buffer.size() );
+  dataPtr=buffer.data();
+  dataPtr[0] = '\0';
+  kdDebug(5003) << "KNFile::increaseBuffer() : buffer doubled" << endl;
+  return true;
 }
 
 
@@ -331,7 +329,8 @@ const QString KNHelper::encryptStr(const QString& aStr)
 
   for (i=0; i<len; i++)
   {
-    val = aStr[i] - ' ';
+    val = aStr[i].toLatin1();
+    val -= ' ';
     val = (255-' ') - val;
     result += (char)(val + ' ');
   }
@@ -354,11 +353,11 @@ QString KNHelper::rot13(const QString &s)
   for (int i=0; (uint)i<r.length(); i++) {
     if ( r[i] >= QChar('A') && r[i] <= QChar('M') ||
          r[i] >= QChar('a') && r[i] <= QChar('m') )
-         r[i] = (char)((int)QChar(r[i]) + 13);
+      r[i] = (char)((int)QChar(r[i]).toLatin1() + 13);
     else
       if  ( r[i] >= QChar('N') && r[i] <= QChar('Z') ||
             r[i] >= QChar('n') && r[i] <= QChar('z') )
-        r[i] = (char)((int)QChar(r[i]) - 13);
+        r[i] = (char)((int)QChar(r[i]).toLatin1() - 13);
   }
 
   return r;
@@ -414,7 +413,7 @@ QString KNHelper::rewrapStringList(QStringList text, int wrapAt, QChar quoteChar
     if (!alwaysSpace && (thisLine[0]==quoteChar))
       thisLine.prepend(quoteChar);  // second quote level without space
     else
-      thisLine.prepend(quoteChar+' ');
+      thisLine.prepend( quoteChar + QString( ' ' ) );
 
     thisPrefix=QString::null;
     QChar c;

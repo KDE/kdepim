@@ -1,8 +1,6 @@
 /*
-    knhdrviewitem.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
     Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
@@ -179,7 +177,7 @@ void KNHdrViewItem::paintCell( QPainter *p, const QColorGroup &cg, int column, i
     else
       mShowToolTip[column] = false;
 
-    p->drawText( xText, 0, width - xText - 5, height(), alignment | AlignVCenter,  t );
+    p->drawText( xText, 0, width - xText - 5, height(), alignment | Qt::AlignVCenter,  t );
     if (cntWidth) {
       QFont orig = p->font();
       p->setFont( f2 );
@@ -190,7 +188,7 @@ void KNHdrViewItem::paintCell( QPainter *p, const QColorGroup &cg, int column, i
         pen.setColor( cg.link() );
       }
       p->setPen( pen );
-      p->drawText( xText + QFontMetrics( orig ).width( t, -1 ), 0, width - xText - 5, height(), alignment | AlignVCenter,  t2 );
+      p->drawText( xText + QFontMetrics( orig ).width( t, -1 ), 0, width - xText - 5, height(), alignment | Qt::AlignVCenter,  t2 );
     }
   }
 }

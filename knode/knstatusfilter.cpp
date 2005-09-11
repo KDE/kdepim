@@ -1,8 +1,6 @@
 /*
-    knstatusfilter.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -42,16 +40,16 @@ void KNStatusFilter::load(KSimpleConfig *conf)
 {
   data.setBit(EN_R, conf->readBoolEntry("EN_R", false));
   data.setBit(DAT_R, conf->readBoolEntry("DAT_R", false));
-  
+
   data.setBit(EN_N, conf->readBoolEntry("EN_N", false));
   data.setBit(DAT_N, conf->readBoolEntry("DAT_N", false));
-  
+
   data.setBit(EN_US, conf->readBoolEntry("EN_US", false));
   data.setBit(DAT_US, conf->readBoolEntry("DAT_US", false));
-  
+
   data.setBit(EN_NS, conf->readBoolEntry("EN_NS", false));
   data.setBit(DAT_NS, conf->readBoolEntry("DAT_NS", false));
-  
+
 }
 
 
@@ -60,13 +58,13 @@ void KNStatusFilter::save(KSimpleConfig *conf)
 {
   conf->writeEntry("EN_R", data.at(EN_R));
   conf->writeEntry("DAT_R", data.at(DAT_R));
-  
+
   conf->writeEntry("EN_N", data.at(EN_N));
   conf->writeEntry("DAT_N", data.at(DAT_N));
-  
+
   conf->writeEntry("EN_US", data.at(EN_US));
   conf->writeEntry("DAT_US", data.at(DAT_US));
-  
+
   conf->writeEntry("EN_NS", data.at(EN_NS));
   conf->writeEntry("DAT_NS", data.at(DAT_NS));
 }
@@ -75,20 +73,20 @@ void KNStatusFilter::save(KSimpleConfig *conf)
 
 bool KNStatusFilter::doFilter(KNRemoteArticle *a)
 {
-  bool ret=true;  
+  bool ret=true;
 
   if(data.at(EN_R) && ret)
     ret=(a->isRead() == data.at(DAT_R));
-  
+
   if(data.at(EN_N) && ret)
     ret=(a->isNew() == data.at(DAT_N));
-  
+
   if(data.at(EN_US) && ret)
     ret=(a->hasUnreadFollowUps() == data.at(DAT_US));
-  
+
   if(data.at(EN_NS) && ret)
     ret=(a->hasNewFollowUps() == data.at(DAT_NS));
-  
+
   return ret;
 }
 
@@ -99,17 +97,18 @@ bool KNStatusFilter::doFilter(KNRemoteArticle *a)
 KNStatusFilterWidget::KNStatusFilterWidget(QWidget *parent) :
   Q3ButtonGroup(0, parent)
 {
-  setFrameStyle(NoFrame);
+#warning Port me?
+//   setFrameStyle(NoFrame);
   enR=new QCheckBox(i18n("Is read:"), this);
   enN=new QCheckBox(i18n("Is new:"), this);
   enUS=new QCheckBox(i18n("Has unread followups:"), this);
   enNS=new QCheckBox(i18n("Has new followups:"), this);
-  
+
   rCom=new TFCombo(this);
   nCom=new TFCombo(this);
   usCom=new TFCombo(this);
   nsCom=new TFCombo(this);
-    
+
   QGridLayout *topL=new QGridLayout(this, 5, 3, 15,5);
   topL->addWidget(enR,0,0); topL->addWidget(rCom,0,1);
   topL->addWidget(enN,1,0); topL->addWidget(nCom,1,1);
@@ -132,19 +131,19 @@ KNStatusFilterWidget::~KNStatusFilterWidget()
 KNStatusFilter KNStatusFilterWidget::filter()
 {
   KNStatusFilter f;
-  
+
   f.data.setBit(EN_R, enR->isChecked());
   f.data.setBit(DAT_R, rCom->value());
-  
+
   f.data.setBit(EN_N, enN->isChecked());
   f.data.setBit(DAT_N, nCom->value());
-  
+
   f.data.setBit(EN_US, enUS->isChecked());
   f.data.setBit(DAT_US, usCom->value());
-  
+
   f.data.setBit(EN_NS, enNS->isChecked());
   f.data.setBit(DAT_NS, nsCom->value());
-  
+
   return f;
 }
 
@@ -154,16 +153,16 @@ void KNStatusFilterWidget::setFilter(KNStatusFilter &f)
 {
   enR->setChecked(f.data.at(EN_R));
   rCom->setValue(f.data.at(DAT_R));
-  
+
   enN->setChecked(f.data.at(EN_N));
   nCom->setValue(f.data.at(DAT_N));
-  
+
   enUS->setChecked(f.data.at(EN_US));
   usCom->setValue(f.data.at(DAT_US));
-  
+
   enNS->setChecked(f.data.at(EN_NS));
   nsCom->setValue(f.data.at(DAT_NS));
-  
+
   for(int i=0; i<4; i++) slotEnabled(i);
 }
 
@@ -178,7 +177,7 @@ void KNStatusFilterWidget::clear()
   nCom->setValue(true);
   nsCom->setValue(true);
   usCom->setValue(true);
-  
+
   for(int i=0; i<4; i++) slotEnabled(i);
 }
 
@@ -187,7 +186,7 @@ void KNStatusFilterWidget::clear()
 void KNStatusFilterWidget::slotEnabled(int c)
 {
   switch(c) {
-  
+
     case 0: rCom->setEnabled(enR->isChecked());     break;
     case 1: nCom->setEnabled(enN->isChecked());     break;
     case 2: usCom->setEnabled(enUS->isChecked());   break;

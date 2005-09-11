@@ -25,12 +25,13 @@
 KNSourceViewWindow::KNSourceViewWindow( const QString &text )
   : KTextBrowser(0)
 {
-  setWFlags(WType_TopLevel | WDestructiveClose);
+  setWindowFlags( Qt::Window );
+  setAttribute( Qt::WA_DeleteOnClose );
   Q3Accel *accel = new Q3Accel( this, "browser close-accel" );
   accel->connectItem( accel->insertItem( Qt::Key_Escape ), this , SLOT( close() ));
   KNConfig::Appearance *app=knGlobals.configManager()->appearance();
 
-  setTextFormat( PlainText );
+  setTextFormat( Qt::PlainText );
 
   setCaption(kapp->makeStdCaption(i18n("Article Source")));
   setPaper( QBrush(app->backgroundColor()) );
