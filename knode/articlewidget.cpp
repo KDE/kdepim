@@ -418,7 +418,7 @@ void ArticleWidget::displayArticle()
 
   if ( containsPGP ) {
     Q3PtrListIterator<Kpgp::Block> pbit( pgpBlocks );
-    QStrListIterator npbit( nonPgpBlocks );
+    Q3PtrListIterator<char> npbit( nonPgpBlocks );
     QTextCodec *codec = KGlobal::charsets()->codecForName( text->contentType()->charset() );
 
     for( ; *pbit != 0; ++pbit, ++npbit ) {
@@ -653,7 +653,7 @@ void ArticleWidget::displayHeader()
        && knGlobals.configManager()->readNewsViewer()->showRefBar() ) {
     html += "<div class=\"spamheader\">";
     int refCnt = refs->count(), i = 1;
-    Q3CString id = refs->first();
+    QString id = refs->first();
     id = id.mid( 1, id.length() - 2 );  // remove <>
     html += QString( "<b>%1</b>" ).arg( i18n("References:") );
 
@@ -738,7 +738,7 @@ QString ArticleWidget::displaySigHeader( Kpgp::Block* block )
 {
   QString signClass = "signErr";
   QString signer = block->signatureUserId();
-  Q3CString signerKey = block->signatureKeyId();
+  QString signerKey = block->signatureKeyId();
   QString message;
   if ( signer.isEmpty() ) {
     message = i18n( "Message was signed with unknown key 0x%1." )
@@ -831,7 +831,7 @@ void ArticleWidget::displayAttachment( KMime::Content *att, int partNum )
   if ( label.isEmpty() )
     label = i18n("unnamed" );
   // if label consists of only whitespace replace them by underscores
-  if ( (uint)label.contains( ' ' ) == label.length() )
+  if ( label.count( ' ' ) == label.length() )
     label.replace( QRegExp( " ", true, true ), "_" );
   label = toHtmlString( label, None );
 
@@ -906,11 +906,11 @@ QString ArticleWidget::toHtmlString( const QString &line, int flags )
 QString ArticleWidget::imgToDataUrl( const QImage &image, const char* fmt  )
 {
   QByteArray ba;
-  QBuffer buffer( ba );
+  QBuffer buffer( &ba );
   buffer.open( QIODevice::WriteOnly );
   image.save( &buffer, fmt );
   return QString::fromLatin1("data:image/%1;base64,%2")
-    .arg( fmt, KCodecs::base64Encode( ba ) );
+      .arg( fmt ).arg( QString( KCodecs::base64Encode( ba ) ) );
 }
 
 
@@ -918,7 +918,7 @@ QString ArticleWidget::imgToDataUrl( const QImage &image, const char* fmt  )
 int ArticleWidget::quotingDepth( const QString &line, const QString &quoteChars )
 {
   int level = -1;
-  for ( uint i = 0; i < line.length(); ++i ) {
+  for ( int i = 0; i < line.length(); ++i ) {
     // skip spaces
     if ( line[i].isSpace() )
       continue;
@@ -1383,7 +1383,7 @@ void ArticleWidget::slotSetCharsetKeyboard( )
     mCharsetSelect->items(), mCharsetSelect->currentItem() );
   if ( charset != -1 ) {
     mCharsetSelect->setCurrentItem( charset );
-    slotSetCharset( *(mCharsetSelect->items().at( charset )) );
+    slotSetCharset( mCharsetSelect->items()[charset] );
   }
 }
 

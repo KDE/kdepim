@@ -60,8 +60,9 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
   // strange effects on FreeBSD
   (void) KSocks::self();
 
-  nntpClient=new KNNntpClient(nntpOutPipe[0],nntpInPipe[1],nntp_Mutex);
-  nntpClient->start();
+#warning Port me!
+//  nntpClient=new KNNntpClient(nntpOutPipe[0],nntpInPipe[1],nntp_Mutex);
+//  nntpClient->start();
 
   connect( knGlobals.accountManager(), SIGNAL(passwordsChanged()), SLOT(slotPasswordsChanged()) );
 }
@@ -72,10 +73,11 @@ KNNetAccess::~KNNetAccess()
 {
   disconnect(nntpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
 
-  nntpClient->terminateClient();
-  nntpClient->wait();
+#warning Port me!
+//  nntpClient->terminateClient();
+//  nntpClient->wait();
 
-  delete nntpClient;
+//  delete nntpClient;
   delete nntpNotifier;
 
   if ( ::close(nntpInPipe[0]) == -1 ||
@@ -234,7 +236,8 @@ void KNNetAccess::startJobNntp()
   nntpJobQueue.remove( nntpJobQueue.begin() );
   currentNntpJob->prepareForExecution();
   if (currentNntpJob->success()) {
-    nntpClient->insertJob(currentNntpJob);
+#warning Port me!
+//    nntpClient->insertJob(currentNntpJob);
     triggerAsyncThread(nntpOutPipe[1]);
     kdDebug(5003) << "KNNetAccess::startJobNntp(): job started" << endl;
   } else {
@@ -330,7 +333,8 @@ void KNNetAccess::threadDoneNntp()
     }
   }
 
-  nntpClient->removeJob();
+#warning Port me!
+//  nntpClient->removeJob();
   currentNntpJob = 0L;
 
   currMsg = QString::null;
@@ -452,7 +456,8 @@ void KNNetAccess::slotThreadSignal(int i)
         currentNntpJob->setProgress(0);
       break;
       case KNProtocolClient::TSprogressUpdate:
-          currentNntpJob->setProgress(nntpClient->getProgressValue()/10);
+#warning Port me!
+//          currentNntpJob->setProgress(nntpClient->getProgressValue()/10);
       break;
     };
   }

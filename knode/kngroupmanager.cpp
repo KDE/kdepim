@@ -109,7 +109,8 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
   uint size=f.size()+2;
 
   timer.start();
-  if (client) client->updatePercentage(0);
+#warning Port me!
+//  if (client) client->updatePercentage(0);
 
   if(f.open(QIODevice::ReadOnly)) {
     while(!f.atEnd()) {
@@ -152,7 +153,8 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
 
       if (timer.elapsed() > 200) {           // don't flicker
         timer.restart();
-        if (client) client->updatePercentage((f.at()*100)/size);
+#warning Port me!
+//        if (client) client->updatePercentage((f.at()*100)/size);
       }
     }
 

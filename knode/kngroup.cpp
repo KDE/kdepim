@@ -491,7 +491,8 @@ void KNGroup::insortNewHeaders(Q3StrList *hdrs, Q3StrList *hdrfmt, KNProtocolCli
 
     if (timer.elapsed() > 200) {           // don't flicker
       timer.restart();
-      if (client) client->updatePercentage((new_cnt*30)/todo);
+#warning Port me!
+//      if (client) client->updatePercentage((new_cnt*30)/todo);
     }
   }
 
@@ -739,8 +740,9 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
     if (timer.elapsed() > 200) {           // don't flicker
       timer.restart();
-      if(client)
-        client->updatePercentage(30+((foundCnt)*70)/cnt);
+#warning Port me!
+//      if(client)
+//        client->updatePercentage(30+((foundCnt)*70)/cnt);
     }
   }
 
@@ -799,7 +801,8 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
       if (timer.elapsed() > 200) {           // don't flicker
         timer.restart();
-        if (client) client->updatePercentage(30+((bySubCnt+foundCnt)*70)/cnt);
+#warning Port me!
+//        if (client) client->updatePercentage(30+((bySubCnt+foundCnt)*70)/cnt);
       }
     }
   }

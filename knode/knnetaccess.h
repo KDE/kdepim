@@ -67,7 +67,7 @@ class KNNetAccess : public QObject  {
         so that it can be restored by the mainwindow */
     QString currMsg;
 
-    KNNntpClient *nntpClient;
+//    KNNntpClient *nntpClient;
     Q3ValueList<KNJobData*> nntpJobQueue, smtpJobQueue;
     KNJobData *currentNntpJob, *currentSmtpJob;
     QMutex nntp_Mutex;
