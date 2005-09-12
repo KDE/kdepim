@@ -14,22 +14,19 @@ small	"Mercredi des cendres"	weekend on easter minus 46 days
 small	"Les rameaux"		on easter minus 7 days
 small	"Jeudi saint"		weekend on easter minus 3 days
 small	"Vendredi Saint"        weekend on easter minus 2 days
-small	"Pâques"		weekend on easter
-small	"Lundi de Pâques"	weekend on easter plus 1 day
-small	"Fête du travail"	on 1.5
+small	"PÃ¢ques"		weekend on easter
+small	"Lundi de PÃ¢ques"	weekend on easter plus 1 day
+small	"FÃªte du travail"	on 1.5
 small	"Ascension"		weekend on easter plus 39 days
-small	"Fête des mères"	on every second sunday in may
-small	"Pentecôte"		weekend on easter plus 49 days
-small	"Lundi de Pentecôte"	weekend on easter plus 50 days
-small	"Fête des pères"	on every third sunday in june
+small	"FÃªte des mÃ¨res"	on every second sunday in may
+small	"PentecÃ´te"		weekend on easter plus 49 days
+small	"Lundi de PentecÃ´te"	weekend on easter plus 50 days
+small	"FÃªte des pÃ¨res"	on every third sunday in june
 small	"Vlaamse feestdag"	weekend on 11.7
-small	"Fête Nationale Belge"	on 21.7
+small	"FÃªte Nationale Belge"	on 21.7
 small	"Assomption"		on 15.8
-small	"Fête de Wallonie"	weekend on 27.9
+small	"FÃªte de Wallonie"	weekend on 27.9
 small	"Toussaint"		on 1.11
 small	"Jour des morts"	weekend on 2.11
 small	"Armistice de 1918"	weekend on 11.11
-small	"Noël"			on 25.12.
-
-
-
+small	"NoÃ«l"			on 25.12.
