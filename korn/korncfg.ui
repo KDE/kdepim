@@ -173,7 +173,4 @@
     <slot access="protected">slotEditBox()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
-<includehints>
-    <includehint>keditlistboxmanager.h</includehint>
-</includehints>
 </UI>
