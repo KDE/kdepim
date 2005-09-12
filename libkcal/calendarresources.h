@@ -158,7 +158,7 @@ class LIBKCAL_EXPORT CalendarResources :
     */
     CalendarResources(
       const QString &timeZoneId,
-      const QString &family = QString::fromLatin1( "calendar" ) );
+      const QString &family = QLatin1String( "calendar" ) );
 
     /**
        Destructor

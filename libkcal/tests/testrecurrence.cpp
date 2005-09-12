@@ -73,7 +73,7 @@ int main( int argc, char **argv )
     outstream = new QTextStream( &outfile );
   }
 
-  CalendarLocal cal( QString::fromLatin1("UTC") );
+  CalendarLocal cal( QLatin1String("UTC") );
 
   if ( !cal.load( input ) ) return 1;
 	QString tz = cal.nonKDECustomProperty( "X-LibKCal-Testsuite-OutTZ" );

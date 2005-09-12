@@ -48,15 +48,15 @@ int main(int argc,char **argv)
 
   Q_UNUSED(args)
 
-  CalendarLocal cal( QString::fromLatin1("UTC") );
+  CalendarLocal cal( QLatin1String("UTC") );
 
-  QString file = QString::fromLatin1( INPUT );
+  QString file = QLatin1String( INPUT );
   if (!cal.load( file ) ) {
     kdError() << "Can't load " << file << endl;
     return 1;
   }
 
-  QString uid = QString::fromLatin1("KOrganizer-1345486115.965");
+  QString uid = QLatin1String("KOrganizer-1345486115.965");
   Event *e = cal.event( uid );
   if (!e) {
     kdError() << "No event " << uid << endl;

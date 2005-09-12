@@ -391,7 +391,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   if (messageText.isEmpty())
   {
-    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QString::fromLatin1( "messageText was empty, unable to parse into a ScheduleMessage" ) ) );
+    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QLatin1String( "messageText was empty, unable to parse into a ScheduleMessage" ) ) );
     return 0;
   }
   icalcomponent *message;
@@ -399,7 +399,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   if (!message)
   {
-    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QString::fromLatin1( "icalparser was unable to parse messageText into a ScheduleMessage" ) ) );
+    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QLatin1String( "icalparser was unable to parse messageText into a ScheduleMessage" ) ) );
     return 0;
   }
 
@@ -407,7 +407,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
                                                      ICAL_METHOD_PROPERTY);
   if (!m)
   {
-    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QString::fromLatin1( "message didn't contain an ICAL_METHOD_PROPERTY" ) ) );
+    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QLatin1String( "message didn't contain an ICAL_METHOD_PROPERTY" ) ) );
     return 0;
   }
 
@@ -445,7 +445,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   if (!incidence) {
     kdDebug(5800) << "ICalFormat:parseScheduleMessage: object is not a freebusy, event, todo or journal" << endl;
-    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QString::fromLatin1( "object is not a freebusy, event, todo or journal" ) ) );
+    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QLatin1String( "object is not a freebusy, event, todo or journal" ) ) );
     return 0;
   }
 

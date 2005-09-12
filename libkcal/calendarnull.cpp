@@ -36,7 +36,7 @@ CalendarNull *CalendarNull::mSelf = 0;
 
 CalendarNull *CalendarNull::self()
 {
-  if ( !mSelf ) mSelf = new CalendarNull( QString::fromLatin1( "UTC" ) );
+  if ( !mSelf ) mSelf = new CalendarNull( QLatin1String( "UTC" ) );
 
   return mSelf;
 }

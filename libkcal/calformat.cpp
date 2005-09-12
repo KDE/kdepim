@@ -27,8 +27,8 @@
 
 using namespace KCal;
 
-QString CalFormat::mApplication = QString::fromLatin1("libkcal");
-QString CalFormat::mProductId = QString::fromLatin1("-//K Desktop Environment//NONSGML libkcal 3.5//EN");
+QString CalFormat::mApplication = QLatin1String("libkcal");
+QString CalFormat::mProductId = QLatin1String("-//K Desktop Environment//NONSGML libkcal 3.5//EN");
 
 
 CalFormat::CalFormat()

@@ -1220,7 +1220,7 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
   KTNEFParser parser;
   QByteArray b( tnef );
   QBuffer buf( &b );
-  CalendarLocal cal ( QString::fromLatin1( "UTC" ) );
+  CalendarLocal cal ( QLatin1String( "UTC" ) );
   KABC::Addressee addressee;
   KABC::VCardConverter cardConv;
   ICalFormat calFormat;

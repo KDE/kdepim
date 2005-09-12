@@ -42,7 +42,7 @@
 using namespace KCal;
 
 ResourceCached::ResourceCached( const KConfig* config )
-  : ResourceCalendar( config ), mCalendar( QString::fromLatin1( "UTC" ) ),
+  : ResourceCalendar( config ), mCalendar( QLatin1String( "UTC" ) ),
     mReloadPolicy( ReloadNever ),  mReloadInterval( 10 ), mReloaded( false ),
     mSavePolicy( SaveNever ), mSaveInterval( 10 ),
     mIdMapper( "kcal/uidmaps/" )
@@ -316,7 +316,7 @@ void ResourceCached::clearCache()
 
 void ResourceCached::cleanUpEventCache( const Event::List &eventList )
 {
-  CalendarLocal calendar ( QString::fromLatin1( "UTC" ) );
+  CalendarLocal calendar ( QLatin1String( "UTC" ) );
 
   if ( KStandardDirs::exists( cacheFile() ) )
     calendar.load( cacheFile() );
@@ -345,7 +345,7 @@ void ResourceCached::cleanUpEventCache( const Event::List &eventList )
 
 void ResourceCached::cleanUpTodoCache( const Todo::List &todoList )
 {
-  CalendarLocal calendar ( QString::fromLatin1( "UTC" ) );
+  CalendarLocal calendar ( QLatin1String( "UTC" ) );
 
   if ( KStandardDirs::exists( cacheFile() ) )
     calendar.load( cacheFile() );
@@ -390,7 +390,7 @@ QString ResourceCached::changesCacheFile( const QString &type ) const
 
 void ResourceCached::saveChangesCache( const QMap<Incidence*, bool> &map, const QString &type )
 {
-  CalendarLocal calendar ( QString::fromLatin1( "UTC" ) );
+  CalendarLocal calendar ( QLatin1String( "UTC" ) );
 
   bool isEmpty = true;
   QMap<Incidence *,bool>::ConstIterator it;
@@ -418,7 +418,7 @@ void ResourceCached::saveChangesCache()
 
 void ResourceCached::loadChangesCache( QMap<Incidence*, bool> &map, const QString &type )
 {
-  CalendarLocal calendar ( QString::fromLatin1( "UTC" ) );
+  CalendarLocal calendar ( QLatin1String( "UTC" ) );
 
   if ( KStandardDirs::exists( changesCacheFile( type ) ) )
     calendar.load( changesCacheFile( type ) );

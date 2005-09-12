@@ -126,23 +126,23 @@ QString Scheduler::methodName(Method method)
 {
   switch (method) {
     case Publish:
-      return QString::fromLatin1("Publish");
+      return QLatin1String("Publish");
     case Request:
-      return QString::fromLatin1("Request");
+      return QLatin1String("Request");
     case Refresh:
-      return QString::fromLatin1("Refresh");
+      return QLatin1String("Refresh");
     case Cancel:
-      return QString::fromLatin1("Cancel");
+      return QLatin1String("Cancel");
     case Add:
-      return QString::fromLatin1("Add");
+      return QLatin1String("Add");
     case Reply:
-      return QString::fromLatin1("Reply");
+      return QLatin1String("Reply");
     case Counter:
-      return QString::fromLatin1("Counter");
+      return QLatin1String("Counter");
     case Declinecounter:
-      return QString::fromLatin1("Decline Counter");
+      return QLatin1String("Decline Counter");
     default:
-      return QString::fromLatin1("Unknown");
+      return QLatin1String("Unknown");
   }
 }
 

@@ -48,7 +48,7 @@ int main(int argc,char **argv)
 
   Q_UNUSED( args );
 
-  CalendarLocal cal( QString::fromLatin1("UTC") );
+  CalendarLocal cal( QLatin1String("UTC") );
   
   cal.save("mycal");
 }
