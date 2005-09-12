@@ -218,10 +218,14 @@ QString Person::fullName() const
       // Taken from KABC::Addressee::fullEmail
       QString name = mName;
       QRegExp needQuotes( "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
-      if ( name.find( needQuotes ) != -1 )
-        return "\"" + name + "\" <" + mEmail + ">";
-      else
-        return name + " <" + mEmail + ">";
+      bool weNeedToQuote = name.find( needQuotes ) != -1;
+      if ( weNeedToQuote ) {
+          if ( name[0] != '"' )
+              name.prepend( '"' );
+          if ( name[ name.length()-1 ] != '"' )
+              name.append( '"' );
+      }
+      return name + " <" + mEmail + ">";
     }
   }
 }
