@@ -127,7 +127,7 @@ void KCalResourceSloxConfig::saveSettings( KRES::Resource *resource )
 void KCalResourceSloxConfig::selectCalendarFolder()
 {
   SloxFolderManager *manager = new SloxFolderManager( mRes, mDownloadUrl->url() );
-  SloxFolderDialog *dialog = new SloxFolderDialog( manager, Calendar, this );
+  SloxFolderDialog *dialog = new SloxFolderDialog( manager, ::Calendar, this );
   dialog->setSelectedFolder( mCalendarFolderId );
   if ( dialog->exec() == QDialog::Accepted )
     mCalendarFolderId = dialog->selectedFolder();
