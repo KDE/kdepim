@@ -1,7 +1,7 @@
 /*
  *  functions.cpp  -  miscellaneous functions
  *  Program:  kalarm
- *  (C) 2001 - 2004 by David Jarvie <software@astrojar.org.uk>
+ *  Copyright (c) 2001 - 2005 by David Jarvie <software@astrojar.org.uk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #include <kaction.h>
 #include <kglobal.h>
 #include <klocale.h>
+#include <kstdaccel.h>
 #include <kdebug.h>
 
 #include <libkcal/event.h>
@@ -83,7 +84,7 @@ MainWindow* displayMainWindowSelected(const QString& eventID)
 */
 KAction* createNewAlarmAction(const QString& label, QObject* receiver, const char* slot, KActionCollection* actions, const char* name)
 {
-	return new KAction(label, "filenew", Qt::Key_Insert, receiver, slot, actions, name);
+	return new KAction(label, "filenew", KStdAccel::openNew(), receiver, slot, actions, name);
 }
 
 /******************************************************************************
