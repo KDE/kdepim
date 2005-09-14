@@ -52,9 +52,7 @@ class Identity;
  * @short Manages the list of identities.
  * @author Marc Mutz <mutz@kde.org>
  **/
-#define IdentityManager KDE_EXPORT IdentityManager
-class IdentityManager : public ConfigManager, public DCOPObject
-#undef IdentityManager
+class KDE_EXPORT IdentityManager : public ConfigManager, public DCOPObject
 {
   Q_OBJECT
   K_DCOP
@@ -71,8 +69,8 @@ public:
   virtual ~IdentityManager();
 
 public:
-  typedef Q3ValueList<Identity>::Iterator Iterator;
-  typedef Q3ValueList<Identity>::ConstIterator ConstIterator;
+  typedef QList<Identity>::Iterator Iterator;
+  typedef QList<Identity>::ConstIterator ConstIterator;
 
   /** Commit changes to disk and emit changed() if necessary. */
   void commit();
@@ -214,16 +212,16 @@ protected slots:
 
 protected:
   /** The list that will be seen by everyone */
-  Q3ValueList<Identity> mIdentities;
+  QList<Identity> mIdentities;
   /** The list that will be seen by the config dialog */
-  Q3ValueList<Identity> mShadowIdentities;
+  QList<Identity> mShadowIdentities;
 
 //k_dcop_signals:
 //  void identitiesChanged( QCString appId, QCString objId );
 
 k_dcop:
   // Connected to the DCOP signal
-  void slotIdentitiesChanged( Q3CString appId, Q3CString objId );
+  void slotIdentitiesChanged( DCOPCString appId, DCOPCString objId );
 
 private:
   void writeConfig() const;

@@ -9,8 +9,6 @@ libkpimidentities_la_LIBADD = ../certmanager/lib/libkleopatra.la \
 libkpimidentities_la_LDFLAGS = $(all_libraries) -no-undefined \
     -version-info 1:0:0
 
-identitymanager_DCOPIDLNG = true
-
 METASOURCES = AUTO
 
 include $(top_srcdir)/admin/Doxyfile.am

@@ -112,13 +112,13 @@ void IdentityManager::commit()
   if ( !hasPendingChanges() || mReadOnly ) return;
 
   Q3ValueList<uint> seenUOIDs;
-  for ( Q3ValueList<Identity>::ConstIterator it = mIdentities.begin() ;
+  for ( QList<Identity>::ConstIterator it = mIdentities.begin() ;
 	it != mIdentities.end() ; ++it )
     seenUOIDs << (*it).uoid();
 
   Q3ValueList<uint> changedUOIDs;
   // find added and changed identities:
-  for ( Q3ValueList<Identity>::ConstIterator it = mShadowIdentities.begin() ;
+  for ( QList<Identity>::ConstIterator it = mShadowIdentities.begin() ;
 	it != mShadowIdentities.end() ; ++it ) {
     Q3ValueList<uint>::Iterator uoid = seenUOIDs.find( (*it).uoid() );
     if ( uoid != seenUOIDs.end() ) {
@@ -158,7 +158,7 @@ void IdentityManager::commit()
   // DCOP signal for other IdentityManager instances
   // The emitter is always set to KPIM::IdentityManager, so that the connect works
   // This is why we can't use k_dcop_signals here, but need to use emitDCOPSignal
-  QByteArray data; QDataStream arg( data, QIODevice::WriteOnly );
+  QByteArray data; QDataStream arg( &data, QIODevice::WriteOnly );
   arg << kapp->dcopClient()->appId();
   arg << DCOPObject::objId(); // the real objId, for checking in slotIdentitiesChanged
   kapp->dcopClient()->emitDCOPSignal( "KPIM::IdentityManager", "identitiesChanged(QCString,QCString)", data );
@@ -193,7 +193,7 @@ QStringList IdentityManager::shadowIdentities() const
 }
 
 void IdentityManager::sort() {
-  qHeapSort( mShadowIdentities );
+  qSort( mShadowIdentities );
 }
 
 void IdentityManager::writeConfig() const {
@@ -247,7 +247,7 @@ void IdentityManager::readConfig(KConfigBase* config) {
     kdWarning( 5006 ) << "IdentityManager: There was no default identity. Marking first one as default." << endl;
     mIdentities.first().setIsDefault( true );
   }
-  qHeapSort( mIdentities );
+  qSort( mIdentities );
 
   mShadowIdentities = mIdentities;
 }
@@ -475,14 +475,14 @@ int IdentityManager::newUoid()
 
   // determine the UOIDs of all saved identities
   Q3ValueList<uint> usedUOIDs;
-  for ( Q3ValueList<Identity>::ConstIterator it = mIdentities.begin() ;
+  for ( QList<Identity>::ConstIterator it = mIdentities.begin() ;
 	it != mIdentities.end() ; ++it )
     usedUOIDs << (*it).uoid();
 
   if ( hasPendingChanges() ) {
     // add UOIDs of all shadow identities. Yes, we will add a lot of duplicate
     // UOIDs, but avoiding duplicate UOIDs isn't worth the effort.
-    for ( Q3ValueList<Identity>::ConstIterator it = mShadowIdentities.begin() ;
+    for ( QList<Identity>::ConstIterator it = mShadowIdentities.begin() ;
           it != mShadowIdentities.end() ; ++it ) {
       usedUOIDs << (*it).uoid();
     }
@@ -507,7 +507,7 @@ QStringList KPIM::IdentityManager::allEmails() const
   return lst;
 }
 
-void KPIM::IdentityManager::slotIdentitiesChanged( Q3CString appId, Q3CString objId )
+void KPIM::IdentityManager::slotIdentitiesChanged( DCOPCString appId, DCOPCString objId )
 {
   // From standalone kmail to standalone korganizer, the appId will differ
   // From kontact the appId will match, so we need to test the objId
