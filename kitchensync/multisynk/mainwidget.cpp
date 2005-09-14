@@ -145,6 +145,18 @@ void MainWidget::startSync()
 
   KonnectorPair *pair = mManager->pair( uid );
 
+  disconnect( pair->manager(), SIGNAL( synceesRead( KSync::Konnector* ) ),
+              mEngine, SLOT( slotSynceesRead( KSync::Konnector* ) ) );
+  disconnect( pair->manager(), SIGNAL( synceeReadError( KSync::Konnector* ) ),
+              mEngine, SLOT( slotSynceeReadError( KSync::Konnector* ) ) );
+  disconnect( pair->manager(), SIGNAL( synceesWritten( KSync::Konnector* ) ),
+              mEngine, SLOT( slotSynceesWritten( KSync::Konnector* ) ) );
+  disconnect( pair->manager(), SIGNAL( synceeWriteError( KSync::Konnector* ) ),
+              mEngine, SLOT( slotSynceeWriteError( KSync::Konnector* ) ) );
+  disconnect( mEngine, SIGNAL( doneSync() ),
+              this, SLOT( syncDone() ) );
+
+
   connect( pair->manager(), SIGNAL( synceesRead( KSync::Konnector* ) ),
            mEngine, SLOT( slotSynceesRead( KSync::Konnector* ) ) );
   connect( pair->manager(), SIGNAL( synceeReadError( KSync::Konnector* ) ),
