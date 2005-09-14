@@ -53,12 +53,13 @@ struct icalclassify_parts {
 char* icalclassify_lowercase(const char* str)
 {
     char* p = 0;
+    char *xnew;
 
     if(str ==0){
 	return 0;
     }
 
-    char* xnew = icalmemory_strdup(str);
+    xnew = icalmemory_strdup(str);
     for(p = xnew; *p!=0; p++){
 	*p = tolower(*p);
     }
