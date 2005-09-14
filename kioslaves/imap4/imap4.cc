@@ -1684,7 +1684,7 @@ IMAP4Protocol::stat (const KURL & _url)
       completeQueue.removeRef(cmd);
       if (!ok)
       {
-        error(ERR_COULD_NOT_STAT, i18n("Unable to close mailbox."));
+        error(ERR_COULD_NOT_STAT, aBox);
         return;
       }
       setState(ISTATE_LOGIN);
@@ -1714,7 +1714,7 @@ IMAP4Protocol::stat (const KURL & _url)
       }
       completeQueue.removeRef (cmd);
       if (found)
-        error(ERR_COULD_NOT_STAT, i18n("Unable to get information about folder %1. The server replied: %2").arg(aBox).arg(cmdInfo));
+        error(ERR_COULD_NOT_STAT, aBox);
       else
         error(KIO::ERR_DOES_NOT_EXIST, aBox);
       return;
