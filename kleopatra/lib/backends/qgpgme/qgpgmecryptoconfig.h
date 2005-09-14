@@ -38,8 +38,6 @@
 #include <qstringlist.h>
 #include <qobject.h>
 #include <qvariant.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 class KProcIO;
 
 class QGpgMECryptoConfigComponent;
@@ -148,8 +146,8 @@ public:
   KURL urlValue() const;
   unsigned int numberOfTimesSet() const;
   QStringList stringValueList() const;
-  Q3ValueList<int> intValueList() const;
-  Q3ValueList<unsigned int> uintValueList() const;
+  QList<int> intValueList() const;
+  QList<unsigned int> uintValueList() const;
   KURL::List urlValueList() const;
   void resetToDefault();
   void setBoolValue( bool );
@@ -159,8 +157,8 @@ public:
   void setURLValue( const KURL& );
   void setNumberOfTimesSet( unsigned int );
   void setStringValueList( const QStringList& );
-  void setIntValueList( const Q3ValueList<int>& );
-  void setUIntValueList( const Q3ValueList<unsigned int>& );
+  void setIntValueList( const QList<int>& );
+  void setUIntValueList( const QList<unsigned int>& );
   void setURLValueList( const KURL::List& );
   bool isDirty() const { return mDirty; }
 

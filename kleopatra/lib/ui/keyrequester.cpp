@@ -189,7 +189,7 @@ QStringList Kleo::KeyRequester::fingerprints() const {
 }
 
 void Kleo::KeyRequester::setFingerprint( const QString & fingerprint ) {
-  startKeyListJob( fingerprint );
+  startKeyListJob( QStringList( fingerprint ) );
 }
 
 void Kleo::KeyRequester::setFingerprints( const QStringList & fingerprints ) {

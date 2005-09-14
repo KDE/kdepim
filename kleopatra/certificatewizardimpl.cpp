@@ -35,7 +35,6 @@
 #endif
 
 #include "certificatewizardimpl.h"
-#include "storedtransferjob.h"
 
 // libkleopatra
 #include <kleo/oidmap.h>
@@ -65,13 +64,16 @@
 
 // Qt
 #include <qlineedit.h>
-#include <qtextedit.h>
+#include <q3textedit.h>
 #include <qpushbutton.h>
 #include <qcheckbox.h>
 #include <qradiobutton.h>
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qcombobox.h>
+//Added by qt3to4:
+#include <QGridLayout>
+#include <Q3CString>
 
 #include <assert.h>
 #include <dcopref.h>
@@ -114,8 +116,8 @@ static bool availForMod( const QLineEdit * le ) {
  *  The wizard will by default be modeless, unless you set 'modal' to
  *  TRUE to construct a modal wizard.
  */
-CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name, bool modal, WFlags fl )
-    : CertificateWizard( parent, name, modal, fl )
+CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name, bool modal, Qt::WFlags fl )
+    : CertificateWizard( parent, name )
 {
     // don't allow to go to last page until a key has been generated
     setNextEnabled( generatePage, false );
@@ -180,7 +182,7 @@ CertificateWizardImpl::~CertificateWizardImpl()
 }
 
 static const char * oidForAttributeName( const QString & attr ) {
-  QCString attrUtf8 = attr.utf8();
+  Q3CString attrUtf8 = attr.utf8();
   for ( unsigned int i = 0 ; i < numOidMaps ; ++i )
     if ( qstricmp( attrUtf8, oidmap[i].name ) == 0 )
       return oidmap[i].oid;
@@ -419,7 +421,7 @@ static const char* const dcopObjectId = "KMailIface";
 void CertificateWizardImpl::sendCertificate( const QString& email, const QByteArray& certificateData )
 {
   QString error;
-  QCString dcopService;
+  DCOPCString dcopService;
   int result = KDCOPServiceStarter::self()->
     findServiceFor( "DCOP/Mailer", QString::null,
                     QString::null, &error, &dcopService );
@@ -430,7 +432,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
     return;
   }
 
-  QCString dummy;
+  DCOPCString dummy;
   // OK, so kmail (or kontact) is running. Now ensure the object we want is available.
   // [that's not the case when kontact was already running, but kmail not loaded into it... in theory.]
   if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) ) {
@@ -444,7 +446,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
 
   DCOPClient* dcopClient = kapp->dcopClient();
   QByteArray data;
-  QDataStream arg( data, IO_WriteOnly );
+  QDataStream arg( &data, QIODevice::WriteOnly );
   arg << email;
   arg << certificateData;
   if( !dcopClient->send( dcopService, dcopObjectId,
@@ -480,7 +482,7 @@ void CertificateWizardImpl::accept()
       overwrite = true;
     }
 
-    KIO::Job* uploadJob = KIOext::put( _keyData, url, -1, overwrite, false /*resume*/ );
+    KIO::Job* uploadJob = KIO::storedPut( _keyData, url, -1, overwrite, false /*resume*/ );
     uploadJob->setWindow( this );
     connect( uploadJob, SIGNAL( result( KIO::Job* ) ),
              this, SLOT( slotUploadResult( KIO::Job* ) ) );

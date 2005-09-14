@@ -134,7 +134,8 @@ void KWatchGnuPGMainWindow::startWatcher()
   if( mWatcher->isRunning() ) {
 	mWatcher->kill();
 	while( mWatcher->isRunning() ) {
-	  kapp->eventLoop()->processEvents(QEventLoop::ExcludeUserInput);
+#warning Port me!
+//	  kapp->eventLoop()->processEvents(QEventLoop::ExcludeUserInput);
 	}
 	mCentralWidget->append(tr("[%1] Log stopped")
 						   .arg( QDateTime::currentDateTime().toString(Qt::ISODate)));

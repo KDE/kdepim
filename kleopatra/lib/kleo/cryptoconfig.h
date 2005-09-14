@@ -1,5 +1,3 @@
-//Added by qt3to4:
-#include <Q3ValueList>
 /*
     cryptoconfig.h
 
@@ -169,12 +167,12 @@ namespace Kleo {
     /**
      * Return value as a list of signed ints
      */
-    virtual Q3ValueList<int> intValueList() const = 0;
+    virtual QList<int> intValueList() const = 0;
 
     /**
      * Return value as a list of unsigned ints
      */
-    virtual Q3ValueList<unsigned int> uintValueList() const = 0;
+    virtual QList<unsigned int> uintValueList() const = 0;
 
     /**
      * Return value as a list of URLs (only meaningful for Path and URL argtypes, if isList())
@@ -225,12 +223,12 @@ namespace Kleo {
     /**
      * Set a new list of signed int values
      */
-    virtual void setIntValueList( const Q3ValueList<int>& ) = 0;
+    virtual void setIntValueList( const QList<int>& ) = 0;
 
     /**
      * Set a new list of unsigned int values
      */
-    virtual void setUIntValueList( const Q3ValueList<unsigned int>& ) = 0;
+    virtual void setUIntValueList( const QList<unsigned int>& ) = 0;
 
     /**
      * Set value as a URL list (only meaningful for Path (if all URLs are local) and URL argtypes, if isList())

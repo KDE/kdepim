@@ -81,7 +81,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
 
   QVBoxLayout * vlay = new QVBoxLayout( top, 0, spacingHint() );
 
-  group = new QVGroupBox( i18n("WatchGnuPG"), top );
+  group = new Q3GroupBox( i18n("WatchGnuPG"), top );
   group->layout()->setSpacing( spacingHint() );
 
   w = new QWidget( group );
@@ -117,7 +117,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   vlay->addWidget( group );
 
   /******************* Log Window group *******************/
-  group = new QVGroupBox( i18n("Log Window"), top );
+  group = new Q3GroupBox( i18n("Log Window"), top );
   group->layout()->setSpacing( spacingHint() );
 
   w = new QWidget( group );

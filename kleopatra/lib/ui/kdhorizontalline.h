@@ -76,7 +76,7 @@ private:
 
 private:
   QString mTitle;
-  Qt::AlignmentFlags mAlign;
+  Qt::Alignment mAlign;
   int mLenVisible;
 };
 

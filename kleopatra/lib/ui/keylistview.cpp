@@ -63,6 +63,8 @@ static const int updateDelayMilliSecs = 500;
 
 namespace {
 
+#warning Port me!
+#if 0
   class ItemToolTip : public QToolTip {
   public:
     ItemToolTip( Kleo::KeyListView * parent );
@@ -107,6 +109,7 @@ namespace {
     if ( !tipStr.isEmpty() )
       tip( cellRect, tipStr );
   }
+#endif
 
 } // anon namespace
 
@@ -143,7 +146,7 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
     mDisplayStrategy ( displayStrategy  ),
     mHierarchical( false )
 {
-  setWFlags( f );
+  setWindowFlags( f );
 
   d = new Private();
 
@@ -170,7 +173,8 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
 
   QToolTip::remove( this );
   QToolTip::remove( viewport() ); // make double sure :)
-  d->itemToolTip = new ItemToolTip( this );
+#warning Port me!
+//  d->itemToolTip = new ItemToolTip( this );
 }
 
 Kleo::KeyListView::~KeyListView() {
