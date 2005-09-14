@@ -665,7 +665,7 @@ icalcomponent* icalparser_add_line(icalparser* parser,
        starting or ending a new component */
 
 
-    if(strcmp(str,"BEGIN") == 0){
+    if(strcasecmp(str,"BEGIN") == 0){
 	icalcomponent *c;
         icalcomponent_kind comp_kind;
 
@@ -698,7 +698,7 @@ icalcomponent* icalparser_add_line(icalparser* parser,
 	parser->state = ICALPARSER_BEGIN_COMP;
 	return 0;
 
-    } else if (strcmp(str,"END") == 0 ) {
+    } else if (strcasecmp(str,"END") == 0 ) {
 	icalcomponent* tail;
 
 	parser->level--;
