@@ -1,0 +1,38 @@
+//
+//--------- namespaces for KDE PIM
+//
+
+
+/** @namespace KPIM
+*
+* The KPIM namespace holds all kinds of KDE PIM-specific
+* functions and classes.
+*/
+
+/** @namespace Komposer
+*
+* The plugin system for replacing KMail's message composer lives
+* in the Komposer namespace.
+*/
+
+
+
+//
+//--------- generic namespaces from kdelibs
+//
+
+
+/** @namespace KParts
+*
+* KParts is the namespace for KDE's component model. The actual
+* contents of KParts are defined in kdelibs; KDE PIM refers to
+* the namespace only to use particular classes and structs from it.
+*/
+
+
+/** @namespace KSettings
+*
+* The KSettings namespace encompasses classes for configuring
+* applications; these include configuration dialogs and configuration
+* backends.
+*/
