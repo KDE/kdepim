@@ -27,6 +27,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kglobal.h>
+#include <kiconeffect.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kpassivepopup.h>
@@ -325,24 +326,46 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 		label->hide();
 }
 
+//This function makes a pixmap which is based on icon, but has a number painted on it.
 QPixmap BoxContainerItem::calcComplexPixmap( const QPixmap &icon, const QColor& fgColour, const QFont* font, const int count )
 {
 	QPixmap result( icon );
-	QBitmap resultMask( *icon.mask() );
-	
+	QPixmap numberPixmap( icon.size() );
+	QImage iconImage( icon.convertToImage() );
+	QImage numberImage;
+	QRgb *rgbline;
 	QPainter p;
-	p.begin( &result, true );
-	p.setPen( fgColour );
+	
+	//Make a transparent number; first make a white number on a black background.
+	//This pixmap also is the base alpha-channel, the foreground colour is added later.
+	numberPixmap.fill( Qt::black );
+	p.begin( &numberPixmap, false );
+	p.setPen( Qt::white );
 	if( font )
 		p.setFont( *font );
-	p.drawText( 0, 0, 24, 24, Qt::AlignHCenter | Qt::AlignVCenter, QString::number( count ) );
+	p.drawText( icon.rect(), Qt::AlignCenter, QString::number( count ) );
 	p.end();
+
+	//Convert to image and add the alpha channel.
+	numberImage = numberPixmap.convertToImage();
+	if( numberImage.depth() != 32 ) //Make sure depth is 32 (and thus can have an alpha channel)
+		numberImage = numberImage.convertDepth( 32 );
+	numberImage.setAlphaBuffer( true ); //Enable alpha channel
+	for( int xx = 0; xx < numberImage.height(); ++xx )
+	{
+		rgbline = (QRgb*)numberImage.scanLine( xx );
+
+		for( int yy = 0; yy < numberImage.width(); ++yy )
+		{
+			//Set colour and alpha channel
+			rgbline[ yy ] = qRgba( fgColour.red(), fgColour.green(), fgColour.blue(), qRed( rgbline[ yy ] ) ); 
+		}
+	}
+
+	//Merge icon and number and convert to result.
+	KIconEffect::overlay( iconImage, numberImage );
+	result.convertFromImage( iconImage );
 	
-	p.begin( &resultMask, true );
-	p.setPen( Qt::color1 );
-	p.drawText( 0, 0, 24, 24, Qt::AlignHCenter | Qt::AlignVCenter, QString::number( count ) );
-	
-	result.setMask( resultMask );
 	return result;
 }
 
