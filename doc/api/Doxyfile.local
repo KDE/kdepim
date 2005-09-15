@@ -1,0 +1,8 @@
+## Warn about everything in PIM, too, just like in kdelibs.
+WARN_IF_UNDOCUMENTED = YES
+## In PIM we're even stricter and want all parameters
+## to be documented as well.
+WARN_NO_PARAMDOC = YES
+
+## Sort methods to make 'same as above' easier.
+SORT_MEMBER_DOCS = YES
