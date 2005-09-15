@@ -152,7 +152,7 @@ void KTNEFMain::loadFile(const QString& filename)
 	if (!parser_->openFile(filename))
 	{
 		QMessageBox::critical(this, i18n("Error"), i18n("Unable to open file."), QMessageBox::Ok|QMessageBox::Default, 0);
-		view_->setAttachments(0);
+		view_->setAttachments( QList<KTNEFAttach*>() );
 		enableExtractAll(false);
 	}
 	else
@@ -161,7 +161,7 @@ void KTNEFMain::loadFile(const QString& filename)
 		QString			msg;
 		msg = i18n( "%n attachment found", "%n attachments found", list.count() );
 		statusBar()->changeItem(msg, 0);
-		view_->setAttachments(&list);
+		view_->setAttachments(list);
 		enableExtractAll((list.count() > 0));
 		enableSingleAction(false);
 	}
@@ -229,15 +229,17 @@ void KTNEFMain::extractAllFiles()
 	{
 		lastdir_ = dir;
 		dir.append("/");
-		Q3PtrList<KTNEFAttach>	list = parser_->message()->attachmentList();
-		Q3PtrListIterator<KTNEFAttach>	it(list);
-		for (;it.current();++it)
-			if (!parser_->extractFileTo(it.current()->name(), dir))
+		QList<KTNEFAttach*> list = parser_->message()->attachmentList();
+		KTNEFAttach *it;
+		Q_FOREACH( it, list )
+		{
+			if (!parser_->extractFileTo(it->name(), dir))
 			{
-				QString	msg = i18n( "Unable to extract file \"%1\"" ).arg( it.current()->name() );
+				QString	msg = i18n( "Unable to extract file \"%1\"" ).arg( it->name() );
 				QMessageBox::critical(this,i18n("Error"),msg,QMessageBox::Ok|QMessageBox::Default,0);
 				return;
 			}
+		}
 	}
 }
 

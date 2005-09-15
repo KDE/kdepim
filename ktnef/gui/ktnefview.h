@@ -35,7 +35,7 @@ public:
 	KTNEFView(QWidget *parent = 0, const char *name = 0);
 	~KTNEFView();
 
-	void setAttachments(Q3PtrList<KTNEFAttach> *list);
+	void setAttachments(const QList<KTNEFAttach*> &list);
 	Q3PtrList<KTNEFAttach>* getSelection();
 
 signals:

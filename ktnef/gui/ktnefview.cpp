@@ -85,15 +85,12 @@ KTNEFView::~KTNEFView()
 {
 }
 
-void KTNEFView::setAttachments(Q3PtrList<KTNEFAttach> *list)
+void KTNEFView::setAttachments(const QList<KTNEFAttach*> &list)
 {
 	clear();
-	if (list)
-	{
-		Q3PtrListIterator<KTNEFAttach>	it(*list);
-		for (;it.current();++it)
-			new Attachment(this, it.current());
-	}
+	KTNEFAttach *it;
+	Q_FOREACH( it, list )
+		new Attachment(this, it);
 }
 
 void KTNEFView::resizeEvent(QResizeEvent *e)

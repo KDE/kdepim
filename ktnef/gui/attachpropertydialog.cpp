@@ -20,7 +20,8 @@
 #include <ktnef/ktnefproperty.h>
 #include <ktnef/ktnefpropertyset.h>
 #include <ktnef/ktnefdefs.h>
-#include "qwmf.h"
+#warning Port me!
+//#include "qwmf.h"
 
 #include <qlabel.h>
 //Added by qt3to4:
@@ -94,9 +95,10 @@ void formatProperties( const QMap<int,KTNEFProperty*>& props, Q3ListView *lv, Q3
 		if ( value.type() == QVariant::List )
 		{
 			newItem->setOpen( true );
-			newItem->setText( 0, newItem->text( 0 ) + " [" + QString::number( value.asList().count() ) + "]" );
+			newItem->setText( 0, newItem->text( 0 ) + " [" + QString::number( value.toList().count() ) + "]" );
 			int i = 0;
-			for ( Q3ValueList<QVariant>::ConstIterator lit=value.listBegin(); lit!=value.listEnd(); ++lit, i++ )
+			QList<QVariant> list = value.toList();
+			for ( QList<QVariant>::ConstIterator lit=list.begin(); lit!=list.end(); ++lit, i++ )
 				new Q3ListViewItem( newItem, "[" + QString::number( i ) + "]", KTNEFProperty::formatValue( *lit ) );
 		}
 		else if ( value.type() == QVariant::DateTime )
@@ -162,7 +164,7 @@ QPixmap loadRenderingPixmap( KTNEFPropertySet *pSet, const QColor& bgColor )
 	if ( !rendData.isNull() && !wmf.isNull() )
 	{
 		// Get rendering size
-		QBuffer rendBuffer( rendData.asByteArray() );
+		QBuffer rendBuffer( &rendData.asByteArray() );
 		rendBuffer.open( QIODevice::ReadOnly );
 		QDataStream rendStream( &rendBuffer );
 		rendStream.setByteOrder( QDataStream::LittleEndian );
@@ -174,16 +176,17 @@ QPixmap loadRenderingPixmap( KTNEFPropertySet *pSet, const QColor& bgColor )
 		if ( type == 1 && w > 0 && h > 0 )
 		{
 			// Load WMF data
-			QWinMetaFile wmfLoader;
-			QBuffer wmfBuffer( wmf.asByteArray() );
-			wmfBuffer.open( QIODevice::ReadOnly );
-			wmfLoader.setBbox( QRect( 0, 0, w, h ) );
-			if ( wmfLoader.load( wmfBuffer ) )
-			{
-				pix.resize( w, h );
-				pix.fill( bgColor );
-				wmfLoader.paint( &pix );
-			}
+#warning Port me!
+//			QWinMetaFile wmfLoader;
+			QBuffer wmfBuffer( &wmf.asByteArray() );
+//			wmfBuffer.open( QIODevice::ReadOnly );
+//			wmfLoader.setBbox( QRect( 0, 0, w, h ) );
+//			if ( wmfLoader.load( wmfBuffer ) )
+//			{
+//				pix.resize( w, h );
+//				pix.fill( bgColor );
+//				wmfLoader.paint( &pix );
+//			}
 			wmfBuffer.close();
 		}
 	}
