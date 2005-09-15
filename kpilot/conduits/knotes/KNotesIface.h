@@ -19,8 +19,8 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 *******************************************************************/
 
-#ifndef __KNotesIface_h__
-#define __KNotesIface_h__
+#ifndef KNotesIface_h
+#define KNotesIface_h
 
 #include <qstring.h>
 #include <qmap.h>
