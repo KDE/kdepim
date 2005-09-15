@@ -8,7 +8,8 @@ ktnef_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 ktnef_LDADD   = $(LIB_KFILE) $(top_builddir)/ktnef/lib/libktnef.la
 ktnef_SOURCES = ktnefmain.cpp ktnefview.cpp attachpropertydialogbase.ui \
                 attachpropertydialog.cpp messagepropertydialog.cpp \
-                qwmf.cpp main.cpp
+                main.cpp
+                #qwmf.cpp main.cpp
 ktnef_METASOURCES = AUTO
 
 noinst_HEADERS = ktnefmain.h ktnefview.h attachpropertydialog.h \
