@@ -18,7 +18,7 @@ if test "x$with_sasl" != xno; then
   fi
 
   if test "x$with_sasl" != xcheck && test -z "$SASL2_LIBS"; then
-    AC_MSG_FAILURE([--with-sasl was given, but test for cyrus-sasl failed])
+    AC_MSG_ERROR([--with-sasl was given, but test for cyrus-sasl failed])
   fi
 fi
 
