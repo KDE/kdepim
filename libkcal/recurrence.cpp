@@ -773,7 +773,7 @@ TimeList Recurrence::recurTimesOn( const QDate &date ) const
 
 QDateTime Recurrence::getNextDateTime( const QDateTime &preDateTime ) const
 {
-kdDebug(5800) << " Recurrence::getNextDateTime after " << preDateTime << endl;
+//kdDebug(5800) << " Recurrence::getNextDateTime after " << preDateTime << endl;
   QDateTime nextDT = preDateTime;
   // prevent infinite loops, e.g. when an exrule extinguishes an rrule (e.g.
   // the exrule is identical to the rrule). If an occurrence is found, break
@@ -880,7 +880,7 @@ QDateTime Recurrence::getPreviousDateTime( const QDateTime &afterDateTime ) cons
       QDateTime dt = (*rr)->getPreviousDate( prevDT );
       if ( dt.isValid() ) dates << dt;
     }
-kdDebug(5800) << "   getPreviousDateTime: found " << dates.count() << " dates in loop " << loop << endl;
+//kdDebug(5800) << "   getPreviousDateTime: found " << dates.count() << " dates in loop " << loop << endl;
 
     // Take the last of these (all others can't be used later on)
     qSortUnique( dates );
