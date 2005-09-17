@@ -37,9 +37,8 @@
 
 #include <ksieve/error.h>
 
-#include <qstring.h>
-//Added by qt3to4:
-#include <Q3CString>
+#include <QString>
+#include <QByteArray>
 
 #include <assert.h>
 #include <limits.h> // ULONG_MAX
@@ -140,28 +139,28 @@ namespace KSieve {
     while ( !mToken && !lexer.atEnd() && !lexer.error() ) {
       mToken = lexer.nextToken( mTokenValue );
       if ( lexer.error() )
-	break;
+        break;
       // comments and line feeds are semantically invisible and may
       // appear anywhere, so we handle them here centrally:
       switch ( token() ) {
       case Lexer::HashComment:
-	if ( scriptBuilder() )
-	  scriptBuilder()->hashComment( tokenValue() );
-	consumeToken();
-	break;
+        if ( scriptBuilder() )
+          scriptBuilder()->hashComment( tokenValue() );
+        consumeToken();
+        break;
       case Lexer::BracketComment:
-	if ( scriptBuilder() )
-	  scriptBuilder()->bracketComment( tokenValue() );
-	consumeToken();
-	break;
+        if ( scriptBuilder() )
+          scriptBuilder()->bracketComment( tokenValue() );
+        consumeToken();
+        break;
       case Lexer::LineFeeds:
-	for ( unsigned int i = 0, end = tokenValue().toUInt() ; i < end ; ++i )
-	  if ( scriptBuilder() ) // better check every iteration, b/c
-				 // we call out to ScriptBuilder,
-				 // where nasty things might happen!
-	    scriptBuilder()->lineFeed();
-	consumeToken();
-	break;
+        for ( unsigned int i = 0, end = tokenValue().toUInt() ; i < end ; ++i )
+          if ( scriptBuilder() ) // better check every iteration, b/c
+                                 // we call out to ScriptBuilder,
+                                 // where nasty things might happen!
+            scriptBuilder()->lineFeed();
+        consumeToken();
+        break;
       default: ; // make compiler happy
       }
     }
@@ -190,14 +189,14 @@ namespace KSieve {
 
     while ( !atEnd() ) {
       if ( !obtainToken() )
-	return false;
+        return false;
       if ( token() == Lexer::None )
-	continue;
+        continue;
       if ( token() != Lexer::Identifier )
-	return true;
+        return true;
       if ( !parseCommand() ) {
-	assert( error() );
-	return false;
+        assert( error() );
+        return false;
       }
     }
     return true;
@@ -256,13 +255,13 @@ namespace KSieve {
 
     if ( token() == Lexer::Special && tokenValue() == "(" ) { // test-list
       if ( !parseTestList() ) {
-	assert( error() );
-	return false;
+        assert( error() );
+        return false;
       }
     } else if ( token() == Lexer::Identifier ) { // should be test:
       if ( !parseTest() ) {
-	assert( error() );
-	return false;
+        assert( error() );
+        return false;
       }
     }
 
@@ -287,7 +286,7 @@ namespace KSieve {
       consumeToken();
     else if ( tokenValue() == "{" ) { // block
       if ( !parseBlock() )
-	return false; // it's an error since we saw '{'
+        return false; // it's an error since we saw '{'
     } else {
       makeError( Error::MissingSemicolonOrBlock );
       return false;
@@ -305,11 +304,11 @@ namespace KSieve {
 
     while ( !atEnd() ) {
       if ( !obtainToken() )
-	return false;
+        return false;
       if ( !isArgumentToken() )
-	return true;
+        return true;
       if ( !parseArgument() )
-	return !error();
+        return !error();
     }
     return true;
   }
@@ -323,24 +322,24 @@ namespace KSieve {
 
     if ( token() == Lexer::Number ) {
       if ( !parseNumber() ) {
-	assert( error() );
-	return false;
+        assert( error() );
+        return false;
       }
       return true;
     } else if ( token() == Lexer::Tag ) {
       if ( scriptBuilder() )
-	scriptBuilder()->taggedArgument( tokenValue() );
+        scriptBuilder()->taggedArgument( tokenValue() );
       consumeToken();
       return true;
     } else if ( isStringToken() ) {
       if ( scriptBuilder() )
-	scriptBuilder()->stringArgument( tokenValue(), token() == Lexer::MultiLineString, QString::null );
+        scriptBuilder()->stringArgument( tokenValue(), token() == Lexer::MultiLineString, QString::null );
       consumeToken();
       return true;
     } else if ( token() == Lexer::Special && tokenValue() == "[" ) {
       if ( !parseStringList() ) {
-	assert( error() );
-	return false;
+        assert( error() );
+        return false;
       }
       return true;
     }
@@ -366,54 +365,54 @@ namespace KSieve {
     bool lastWasComma = true;
     while ( !atEnd() ) {
       if ( !obtainToken() )
-	return false;
+        return false;
       
       switch ( token() ) {
       case Lexer::None:
-	break;
+        break;
       case Lexer::Special:
-	assert( tokenValue().length() == 1 );
-	assert( tokenValue()[0].latin1() );
-	switch ( tokenValue()[0].latin1() ) {
-	case ')':
-	  consumeToken();
-	  if ( lastWasComma ) {
-	    makeError( Error::ConsecutiveCommasInTestList );
-	    return false;
-	  }
-	  if ( scriptBuilder() )
-	    scriptBuilder()->testListEnd();
-	  return true;
-	case ',':
-	  consumeToken();
-	  if( lastWasComma ) {
-	    makeError( Error::ConsecutiveCommasInTestList );
-	    return false;
-	  }
-	  lastWasComma = true;
-	  break;
-	default:
-	  makeError( Error::NonStringInStringList );
-	  return false;
-	}
-	break;
-	
+        assert( tokenValue().length() == 1 );
+        assert( tokenValue()[0].latin1() );
+        switch ( tokenValue()[0].latin1() ) {
+        case ')':
+          consumeToken();
+          if ( lastWasComma ) {
+            makeError( Error::ConsecutiveCommasInTestList );
+            return false;
+          }
+          if ( scriptBuilder() )
+            scriptBuilder()->testListEnd();
+          return true;
+        case ',':
+          consumeToken();
+          if( lastWasComma ) {
+            makeError( Error::ConsecutiveCommasInTestList );
+            return false;
+          }
+          lastWasComma = true;
+          break;
+        default:
+          makeError( Error::NonStringInStringList );
+          return false;
+        }
+        break;
+        
       case Lexer::Identifier:
-	if ( !lastWasComma ) {
-	  makeError( Error::MissingCommaInTestList );
-	  return false;
-	} else {
-	  lastWasComma = false;
-	  if ( !parseTest() ) {
-	    assert( error() );
-	    return false;
-	  }
-	}
-	break;
-	
+        if ( !lastWasComma ) {
+          makeError( Error::MissingCommaInTestList );
+          return false;
+        } else {
+          lastWasComma = false;
+          if ( !parseTest() ) {
+            assert( error() );
+            return false;
+          }
+        }
+        break;
+        
       default:
-	makeUnexpectedTokenError( Error::NonTestInTestList );
-	return false;
+        makeUnexpectedTokenError( Error::NonTestInTestList );
+        return false;
       }
     }
     
@@ -467,13 +466,13 @@ namespace KSieve {
 
     if ( token() == Lexer::Special && tokenValue() == "(" ) { // test-list
       if ( !parseTestList() ) {
-	assert( error() );
-	return false;
+        assert( error() );
+        return false;
       }
     } else if ( token() == Lexer::Identifier ) { // should be test:
       if ( !parseTest() ) {
-	assert( error() );
-	return false;
+        assert( error() );
+        return false;
       }
     }
 
@@ -507,8 +506,8 @@ namespace KSieve {
 
     if ( token() == Lexer::Identifier ) {
       if ( !parseCommandList() ) {
-	assert( error() );
-	return false;
+        assert( error() );
+        return false;
       }
     }
 
@@ -553,52 +552,52 @@ namespace KSieve {
     bool lastWasComma = true;
     while ( !atEnd() ) {
       if ( !obtainToken() )
-	return false;
+        return false;
 
       switch ( token() ) {
       case Lexer::None:
-	break;
+        break;
       case Lexer::Special:
-	assert( tokenValue().length() == 1 );
-	switch ( tokenValue()[0].latin1() ) {
-	case ']':
-	  consumeToken();
-	  if ( lastWasComma ) {
-	    makeError( Error::ConsecutiveCommasInStringList );
-	    return false;
-	  }
-	  if ( scriptBuilder() )
-	    scriptBuilder()->stringListArgumentEnd();
-	  return true;
-	case ',':
-	  consumeToken();
-	  if ( lastWasComma ) {
-	    makeError( Error::ConsecutiveCommasInStringList );
-	    return false;
-	  }
-	  lastWasComma = true;
-	  break;
-	default:
-	  makeError( Error::NonStringInStringList );
-	  return false;
-	}
-	break;
+        assert( tokenValue().length() == 1 );
+        switch ( tokenValue()[0].latin1() ) {
+        case ']':
+          consumeToken();
+          if ( lastWasComma ) {
+            makeError( Error::ConsecutiveCommasInStringList );
+            return false;
+          }
+          if ( scriptBuilder() )
+            scriptBuilder()->stringListArgumentEnd();
+          return true;
+        case ',':
+          consumeToken();
+          if ( lastWasComma ) {
+            makeError( Error::ConsecutiveCommasInStringList );
+            return false;
+          }
+          lastWasComma = true;
+          break;
+        default:
+          makeError( Error::NonStringInStringList );
+          return false;
+        }
+        break;
 
       case Lexer::QuotedString:
       case Lexer::MultiLineString:
-	if ( !lastWasComma ) {
-	  makeError( Error::MissingCommaInStringList );
-	  return false;
-	}
-	lastWasComma = false;
-	if ( scriptBuilder() )
-	  scriptBuilder()->stringListEntry( tokenValue(), token() == Lexer::MultiLineString, QString::null );
-	consumeToken();
-	break;
+        if ( !lastWasComma ) {
+          makeError( Error::MissingCommaInStringList );
+          return false;
+        }
+        lastWasComma = false;
+        if ( scriptBuilder() )
+          scriptBuilder()->stringListEntry( tokenValue(), token() == Lexer::MultiLineString, QString::null );
+        consumeToken();
+        break;
 
       default:
-	makeError( Error::NonStringInStringList );
-	return false;
+        makeError( Error::NonStringInStringList );
+        return false;
       }
     }
 
@@ -620,14 +619,14 @@ namespace KSieve {
     // number:
     unsigned long result = 0;
     int i = 0;
-    const Q3CString s = tokenValue().latin1();
+    const QByteArray s = tokenValue().latin1();
     for ( const int len = s.length() ; i < len && isdigit( s[i] ) ; ++i ) {
       const unsigned long digitValue = s[i] - '0' ;
       if ( willOverflowULong( result, digitValue ) ) {
-	makeError( Error::NumberOutOfRange );
-	return false;
+        makeError( Error::NumberOutOfRange );
+        return false;
       } else {
-	result *= 10 ; result += digitValue ;
+        result *= 10 ; result += digitValue ;
       }
     }
 
@@ -638,8 +637,8 @@ namespace KSieve {
       quantifier = s[i];
       const unsigned long factor = factorForQuantifier( quantifier );
       if ( result > double(ULONG_MAX) / double(factor) ) {
-	makeError( Error::NumberOutOfRange );
-	return false;
+        makeError( Error::NumberOutOfRange );
+        return false;
       }
       result *= factor;
     }
