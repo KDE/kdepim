@@ -1,6 +1,12 @@
+kabcclient (0.8.1-3) unstable; urgency=low
+
+  * C++ ABI transition and KDE 3.4.2 dependencies
+
+ -- Kevin Krammer <kevin.krammer@gmx.at>  Sat, 17 Sep 2005 18:33:31 +0200
+
 kabcclient (0.8.1-2) unstable; urgency=low
 
-  * Initial release
+  * Improved debian package
 
  -- Kevin Krammer <kevin.krammer@gmx.at>  Tue, 06 Sep 2005 23:32:14 +0200
 
