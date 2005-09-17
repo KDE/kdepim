@@ -495,7 +495,7 @@ QString Identity::fullEmailAddr(void) const
 
   // add DQUOTE's if necessary:
   bool needsQuotes=false;
-  for (unsigned int i=0; i < mFullName.length(); i++) {
+  for (int i=0; i < mFullName.length(); i++) {
     if ( specials.contains( mFullName[i] ) )
       needsQuotes = true;
     else if ( mFullName[i] == '\\' || mFullName[i] == '"' ) {
