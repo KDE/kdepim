@@ -125,12 +125,12 @@ bool KMailDrop::writeConfigGroup(KConfigBase & c) const
   return true;
 }
 
-Q3ValueVector<KornMailSubject> * KMailDrop::doReadSubjects(bool * /*stop*/)
+QVector<KornMailSubject> * KMailDrop::doReadSubjects(bool * /*stop*/)
 {
-	return new Q3ValueVector<KornMailSubject>(); // empty vector
+	return new QVector<KornMailSubject>(); // empty vector
 }
 
-Q3ValueVector<KornMailSubject> * KMailDrop::readSubjects(bool * stop)
+QVector<KornMailSubject> * KMailDrop::readSubjects(bool * stop)
 {
 	// remember timer status
 	bool timerWasRunning = running();
@@ -140,7 +140,7 @@ Q3ValueVector<KornMailSubject> * KMailDrop::readSubjects(bool * stop)
 		stopMonitor();
 
 	// read the subjects
-	Q3ValueVector<KornMailSubject> * result = doReadSubjects(stop);
+	QVector<KornMailSubject> * result = doReadSubjects(stop);
 	int newcount = result->size();
 
 	// if the mail count has changed: notify the button!

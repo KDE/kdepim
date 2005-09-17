@@ -30,7 +30,6 @@
 #include <kio/jobclasses.h>
 #include <kio/scheduler.h>
 
-#include <q3cstring.h>
 #include <qstring.h>
 
 KIO_Read::KIO_Read( QObject * parent, const char * name )

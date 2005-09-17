@@ -31,18 +31,21 @@
 #include "dcop_proto.h"
 #include "kmail_proto.h"
 
-#include <q3dict.h>
+#include <QHash>
 #include <qstring.h>
 #include <qstringlist.h>
 
-Q3Dict<Protocol>* Protocols::protocols = 0;
+QHash< QString, Protocol* >* Protocols::protocols = 0;
 
 const Protocol* Protocols::getProto( const QString& proto )
 {
 	if( !protocols )
 		fillProtocols();
+
+	if( !protocols->contains( proto ) )
+		return 0;
 		
-	return protocols->find( proto );
+	return protocols->value( proto );
 }
 
 const Protocol* Protocols::firstProtocol()
@@ -57,9 +60,9 @@ QStringList Protocols::getProtocols()
 	if( !protocols )
 		fillProtocols();
 	
-	Q3DictIterator<Protocol> it( *protocols );
-	for( ; it.current(); ++it )
-		output.append( it.currentKey() );
+	QHash< QString, Protocol* >::const_iterator it;
+	for( it = protocols->constBegin(); it != protocols->constEnd(); ++it )
+		output.append( it.key() );
 
 	output.sort();
 	
@@ -68,8 +71,7 @@ QStringList Protocols::getProtocols()
 	
 void Protocols::fillProtocols()
 {
-	protocols = new Q3Dict< Protocol>;
-	protocols->setAutoDelete( true );
+	protocols = new QHash< QString, Protocol* >;
 	addProtocol( new Imap_Protocol );
 	addProtocol( new MBox_Protocol );
 	addProtocol( new Pop3_Protocol );

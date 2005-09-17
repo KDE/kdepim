@@ -141,7 +141,7 @@ public:
 	 * @param stop A variable which isn't used: only used for synchrone actions
 	 * @return A QValueVector which KornMailSubject* instance for every new mail.
 	 */
-	virtual Q3ValueVector< KornMailSubject >* doReadSubjects( bool *stop );
+	virtual QVector< KornMailSubject >* doReadSubjects( bool *stop );
 	
 	/**
 	 * This function should return true if it is possible to delete emails.

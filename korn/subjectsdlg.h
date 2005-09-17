@@ -3,7 +3,7 @@
 
 #include<kdialogbase.h>
 #include <klistview.h>
-#include<q3valuevector.h>
+#include <QVector>
 //Added by qt3to4:
 #include <Q3PtrList>
 #include <kpushbutton.h>
@@ -67,7 +67,7 @@ class KornSubjectsDlg: public KDialogBase
 	struct SubjectsData
 	{
 		Q3PtrListIterator< KMailDrop > *it;
-		Q3ValueVector< KornMailSubject > *subjects;
+		QVector< KornMailSubject > *subjects;
 		DoubleProgressDialog *progress;
 		bool atRechecking;
 	} *_subjects;

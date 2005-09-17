@@ -297,7 +297,7 @@ bool KornSubjectsDlg::makeSubjectsStruct()
 	
 	_subjects = new SubjectsData;
 	_subjects->it = new Q3PtrListIterator< KMailDrop >( *_mailDrop );
-	_subjects->subjects = new Q3ValueVector< KornMailSubject >;
+	_subjects->subjects = new QVector< KornMailSubject >;
 	_subjects->progress = new DoubleProgressDialog( this, "progress" );
 	_subjects->atRechecking = true;
 	
@@ -379,7 +379,7 @@ void KornSubjectsDlg::subjectsReady( bool success )
 		_list->clear();
 		
 		//All subjects downloaded
-		for( Q3ValueVector<KornMailSubject>::iterator it = _subjects->subjects->begin(); it != _subjects->subjects->end();
+		for( QVector<KornMailSubject>::iterator it = _subjects->subjects->begin(); it != _subjects->subjects->end();
 				   ++it )
 		{ //Draw entry's
 			new SubjectListViewItem(_list, &(*it));

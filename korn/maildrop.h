@@ -8,7 +8,7 @@
 #include<qobject.h>
 #include<qstring.h>
 #include<qcolor.h>
-#include<q3valuevector.h>
+#include<qvector.h>
 #include <q3ptrlist.h>
 
 class Protocol;
@@ -205,7 +205,7 @@ class KMailDrop : public QObject
      * terminate before all mail subjects are loaded.
      * @return all new mails subjects as a vector.
      */
-    virtual Q3ValueVector<KornMailSubject> * readSubjects(bool * stop);
+    virtual QVector<KornMailSubject> * readSubjects(bool * stop);
 
     /**
      * Read the subjects of all new mails. The concrete subclass has
@@ -216,7 +216,7 @@ class KMailDrop : public QObject
      * terminate before all mail subjects are loaded.
      * @return all new mails subjects as a vector.
      */
-    virtual Q3ValueVector<KornMailSubject> * doReadSubjects(bool * stop);
+    virtual QVector<KornMailSubject> * doReadSubjects(bool * stop);
 
     /**
      * Return true if the concrete subclass can delete individual mails.

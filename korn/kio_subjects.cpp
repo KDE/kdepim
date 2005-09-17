@@ -28,7 +28,6 @@
 #include <kdebug.h>
 
 #include <q3ptrlist.h>
-#include <q3valuelist.h>
 #include <qstring.h>
 
 KIO_Subjects::KIO_Subjects( QObject * parent, const char * name )
@@ -54,8 +53,8 @@ KIO_Subjects::~KIO_Subjects( )
 
 void KIO_Subjects::doReadSubjects( KKioDrop *drop )
 {
-	Q3ValueList<KKioDrop::FileInfo>::ConstIterator it;
-	Q3ValueList<KKioDrop::FileInfo>::ConstIterator end_it = drop->_mailurls->end();
+	QList<KKioDrop::FileInfo>::ConstIterator it;
+	QList<KKioDrop::FileInfo>::ConstIterator end_it = drop->_mailurls->end();
 	
 	_kio = drop;
 	_protocol = _kio->_protocol;

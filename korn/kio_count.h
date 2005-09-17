@@ -22,8 +22,6 @@
 //This class count the number of message available.
 
 #include <qobject.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 #include "kio.h" //Alsewise, no access to KKioDrop::FileInfo (needed in template)
 
@@ -36,7 +34,7 @@ class KKioDrop;
 class KornMailSubject;
 class SortedMailSubject;
 
-template<class T> class Q3ValueList;
+template<class T> class QList;
 namespace KIO { class Job; class ListJob; class MetaData; class Slave; }
 
 class KURL;
@@ -64,7 +62,7 @@ private:
 	KIO::MetaData *_metadata;
 	const KIO_Protocol *_protocol;
 	bool _valid;
-	Q3ValueList<KKioDrop::FileInfo> *_new_mailurls; //entries can come with more function calls.
+	QList<KKioDrop::FileInfo> *_new_mailurls; //entries can come with more function calls.
 	int _subjects_pending;
 	int _total_new_messages;
 	SortedMailSubject *_popup_subjects;

@@ -8,13 +8,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>340</width>
-    <height>448</height>
+    <width>314</width>
+    <height>439</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
    <property name="margin" >
-    <number>10</number>
+    <number>8</number>
    </property>
    <property name="spacing" >
     <number>6</number>
@@ -367,7 +367,7 @@
       </attribute>
       <layout class="QVBoxLayout" >
        <property name="margin" >
-        <number>10</number>
+        <number>8</number>
        </property>
        <property name="spacing" >
         <number>6</number>
@@ -375,133 +375,22 @@
        <item>
         <layout class="QGridLayout" >
          <property name="margin" >
-          <number>11</number>
+          <number>0</number>
          </property>
          <property name="spacing" >
           <number>6</number>
          </property>
-         <item row="1" column="1" >
-          <widget class="QLabel" name="lbLeft" >
+         <item row="5" column="0" >
+          <widget class="QLabel" name="lbRun" >
            <property name="text" >
-            <string>Left</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignCenter</set>
+            <string>Run command:</string>
            </property>
           </widget>
-         </item>
-         <item row="5" column="2" >
-          <layout class="QHBoxLayout" >
-           <property name="margin" >
-            <number>11</number>
-           </property>
-           <property name="spacing" >
-            <number>6</number>
-           </property>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="chMiddleRun" >
-             <property name="text" >
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>21</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="3" >
-          <widget class="QLabel" name="lbRight" >
-           <property name="text" >
-            <string>Right</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2" >
-          <layout class="QHBoxLayout" >
-           <property name="margin" >
-            <number>11</number>
-           </property>
-           <property name="spacing" >
-            <number>6</number>
-           </property>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="chMiddleRecheck" >
-             <property name="text" >
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>21</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
          </item>
          <item row="3" column="1" >
           <layout class="QHBoxLayout" >
            <property name="margin" >
-            <number>11</number>
+            <number>0</number>
            </property>
            <property name="spacing" >
             <number>6</number>
@@ -547,289 +436,10 @@
            </item>
           </layout>
          </item>
-         <item row="5" column="3" >
-          <layout class="QHBoxLayout" >
-           <property name="margin" >
-            <number>11</number>
-           </property>
-           <property name="spacing" >
-            <number>6</number>
-           </property>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="chRightRun" >
-             <property name="text" >
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>21</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="2" column="1" >
-          <layout class="QHBoxLayout" >
-           <property name="margin" >
-            <number>11</number>
-           </property>
-           <property name="spacing" >
-            <number>6</number>
-           </property>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="chLeftRecheck" >
-             <property name="text" >
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>21</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="3" column="0" >
-          <widget class="QLabel" name="lbReset" >
-           <property name="text" >
-            <string>Reset counter:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1" colspan="3" >
-          <widget class="QLabel" name="lbMouseButton" >
-           <property name="text" >
-            <string>Mousebutton</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="3" >
-          <layout class="QHBoxLayout" >
-           <property name="margin" >
-            <number>11</number>
-           </property>
-           <property name="spacing" >
-            <number>6</number>
-           </property>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="chRightView" >
-             <property name="text" >
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>21</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="5" column="1" >
-          <layout class="QHBoxLayout" >
-           <property name="margin" >
-            <number>11</number>
-           </property>
-           <property name="spacing" >
-            <number>6</number>
-           </property>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="chLeftRun" >
-             <property name="text" >
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>21</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="2" >
-          <widget class="QLabel" name="lbMiddle" >
-           <property name="text" >
-            <string>Middle</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1" >
-          <layout class="QHBoxLayout" >
-           <property name="margin" >
-            <number>11</number>
-           </property>
-           <property name="spacing" >
-            <number>6</number>
-           </property>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="chLeftPopup" >
-             <property name="text" >
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType" >
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" >
-              <size>
-               <width>21</width>
-               <height>21</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="6" column="0" >
-          <widget class="QLabel" name="lbPopup" >
-           <property name="text" >
-            <string>Popup:</string>
-           </property>
-          </widget>
-         </item>
          <item row="3" column="3" >
           <layout class="QHBoxLayout" >
            <property name="margin" >
-            <number>11</number>
+            <number>0</number>
            </property>
            <property name="spacing" >
             <number>6</number>
@@ -875,17 +485,10 @@
            </item>
           </layout>
          </item>
-         <item row="4" column="0" >
-          <widget class="QLabel" name="lbView" >
-           <property name="text" >
-            <string>View emails:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="2" >
+         <item row="5" column="1" >
           <layout class="QHBoxLayout" >
            <property name="margin" >
-            <number>11</number>
+            <number>0</number>
            </property>
            <property name="spacing" >
             <number>6</number>
@@ -907,7 +510,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QCheckBox" name="chMiddlePopup" >
+            <widget class="QCheckBox" name="chLeftRun" >
              <property name="text" >
               <string/>
              </property>
@@ -931,17 +534,226 @@
            </item>
           </layout>
          </item>
-         <item row="2" column="0" >
-          <widget class="QLabel" name="lbRecheck" >
+         <item row="2" column="1" >
+          <layout class="QHBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chLeftRecheck" >
+             <property name="text" >
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>21</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="1" >
+          <widget class="QLabel" name="lbLeft" >
            <property name="text" >
-            <string>Recheck:</string>
+            <string>Left</string>
+           </property>
+           <property name="alignment" >
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
+         </item>
+         <item row="2" column="2" >
+          <layout class="QHBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chMiddleRecheck" >
+             <property name="text" >
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>21</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="2" >
+          <widget class="QLabel" name="lbMiddle" >
+           <property name="text" >
+            <string>Middle</string>
+           </property>
+           <property name="alignment" >
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1" >
+          <layout class="QHBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chLeftPopup" >
+             <property name="text" >
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>21</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="5" column="2" >
+          <layout class="QHBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chMiddleRun" >
+             <property name="text" >
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>21</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
          </item>
          <item row="4" column="1" >
           <layout class="QHBoxLayout" >
            <property name="margin" >
-            <number>11</number>
+            <number>0</number>
            </property>
            <property name="spacing" >
             <number>6</number>
@@ -987,10 +799,34 @@
            </item>
           </layout>
          </item>
+         <item row="1" column="3" >
+          <widget class="QLabel" name="lbRight" >
+           <property name="text" >
+            <string>Right</string>
+           </property>
+           <property name="alignment" >
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0" >
+          <widget class="QLabel" name="lbPopup" >
+           <property name="text" >
+            <string>Popup:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0" >
+          <widget class="QLabel" name="lbReset" >
+           <property name="text" >
+            <string>Reset counter:</string>
+           </property>
+          </widget>
+         </item>
          <item row="2" column="3" >
           <layout class="QHBoxLayout" >
            <property name="margin" >
-            <number>11</number>
+            <number>0</number>
            </property>
            <property name="spacing" >
             <number>6</number>
@@ -1036,10 +872,10 @@
            </item>
           </layout>
          </item>
-         <item row="3" column="2" >
+         <item row="5" column="3" >
           <layout class="QHBoxLayout" >
            <property name="margin" >
-            <number>11</number>
+            <number>0</number>
            </property>
            <property name="spacing" >
             <number>6</number>
@@ -1061,7 +897,66 @@
             </spacer>
            </item>
            <item>
-            <widget class="QCheckBox" name="chMiddleReset" >
+            <widget class="QCheckBox" name="chRightRun" >
+             <property name="text" >
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>21</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="0" column="1" colspan="3" >
+          <widget class="QLabel" name="lbMouseButton" >
+           <property name="text" >
+            <string>Mousebutton</string>
+           </property>
+           <property name="alignment" >
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="3" >
+          <layout class="QHBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chRightView" >
              <property name="text" >
               <string/>
              </property>
@@ -1088,7 +983,7 @@
          <item row="4" column="2" >
           <layout class="QHBoxLayout" >
            <property name="margin" >
-            <number>11</number>
+            <number>0</number>
            </property>
            <property name="spacing" >
             <number>6</number>
@@ -1134,17 +1029,10 @@
            </item>
           </layout>
          </item>
-         <item row="5" column="0" >
-          <widget class="QLabel" name="lbRun" >
-           <property name="text" >
-            <string>Run command:</string>
-           </property>
-          </widget>
-         </item>
          <item row="6" column="3" >
           <layout class="QHBoxLayout" >
            <property name="margin" >
-            <number>11</number>
+            <number>0</number>
            </property>
            <property name="spacing" >
             <number>6</number>
@@ -1190,6 +1078,118 @@
            </item>
           </layout>
          </item>
+         <item row="6" column="2" >
+          <layout class="QHBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chMiddlePopup" >
+             <property name="text" >
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>21</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="3" column="2" >
+          <layout class="QHBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chMiddleReset" >
+             <property name="text" >
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>21</width>
+               <height>21</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="0" >
+          <widget class="QLabel" name="lbRecheck" >
+           <property name="text" >
+            <string>Recheck:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0" >
+          <widget class="QLabel" name="lbView" >
+           <property name="text" >
+            <string>View emails:</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>
@@ -1220,16 +1220,13 @@
         </layout>
        </item>
        <item>
-        <widget class="Q3GroupBox" name="gbNewMail" >
+        <widget class="QGroupBox" name="gbNewMail" >
          <property name="title" >
           <string>On &amp;New Mail</string>
          </property>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
          <layout class="QVBoxLayout" >
           <property name="margin" >
-           <number>10</number>
+           <number>8</number>
           </property>
           <property name="spacing" >
            <number>6</number>
@@ -1343,9 +1340,16 @@
  <pixmapfunction></pixmapfunction>
  <customwidgets>
   <customwidget>
-   <class>KEditListBox</class>
-   <extends>Q3ListBox</extends>
-   <header>keditlistbox.h</header>
+   <class>KURLRequester</class>
+   <extends>QWidget</extends>
+   <header>kurlrequester.h</header>
+   <container>1</container>
+   <pixmap></pixmap>
+  </customwidget>
+  <customwidget>
+   <class>KEditListBoxManager</class>
+   <extends></extends>
+   <header>keditlistboxman.h</header>
    <container>0</container>
    <pixmap></pixmap>
   </customwidget>
@@ -1357,10 +1361,10 @@
    <pixmap></pixmap>
   </customwidget>
   <customwidget>
-   <class>KURLRequester</class>
-   <extends>QWidget</extends>
-   <header>kurlrequester.h</header>
-   <container>1</container>
+   <class>KEditListBox</class>
+   <extends>Q3ListBox</extends>
+   <header>keditlistbox.h</header>
+   <container>0</container>
    <pixmap></pixmap>
   </customwidget>
   <customwidget>
@@ -1368,20 +1372,6 @@
    <extends>QWidget</extends>
    <header>kicondialog.h</header>
    <container>1</container>
-   <pixmap></pixmap>
-  </customwidget>
-  <customwidget>
-   <class>Q3GroupBox</class>
-   <extends></extends>
-   <header>Qt3Support/Q3GroupBox</header>
-   <container>1</container>
-   <pixmap></pixmap>
-  </customwidget>
-  <customwidget>
-   <class>KEditListBoxManager</class>
-   <extends></extends>
-   <header>keditlistboxman.h</header>
-   <container>0</container>
    <pixmap></pixmap>
   </customwidget>
  </customwidgets>

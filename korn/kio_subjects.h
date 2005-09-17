@@ -23,7 +23,6 @@
 
 #include <qobject.h>
 //Added by qt3to4:
-#include <Q3ValueList>
 #include <Q3PtrList>
 class KKioDrop;
 class KIO_Single_Subject;
@@ -35,7 +34,6 @@ class KURL;
 
 template<class T> class Q3PtrList;
 class QString;
-template<class T> class Q3ValueList;
 
 class KIO_Subjects : public QObject
 { Q_OBJECT

@@ -100,7 +100,7 @@ QString DCOPDrop::type() const
 	return QString( "dcop" );
 }
 
-Q3ValueVector< KornMailSubject >* DCOPDrop::doReadSubjects( bool * )
+QVector< KornMailSubject >* DCOPDrop::doReadSubjects( bool * )
 {
 	emit readSubjectsTotalSteps( 1 );
 	
@@ -115,7 +115,7 @@ Q3ValueVector< KornMailSubject >* DCOPDrop::doReadSubjects( bool * )
          * After that, the size is expanded to the expected number of subjects.
          * This way, reallocation of memmory is minimized, and thus more efficient.
          */
-	Q3ValueVector<KornMailSubject> *vector = new Q3ValueVector<KornMailSubject>( );
+	QVector<KornMailSubject> *vector = new QVector<KornMailSubject>( );
         vector->reserve( _msgList->count() );
         return vector;
 }

@@ -25,7 +25,7 @@
 
 #include "polldrop.h"
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 #include <Q3PtrList>
 
 class QWidget;
@@ -40,7 +40,8 @@ class KIO_Delete;
 class KConfigGroup;
 class KURL;
 template<class> class Q3PtrList;
-template<class> class Q3ValueList;
+template<class> class QList;
+template<class> class QVector;
 namespace KIO { class Job; class MetaData; class Slave; class TransferJob; }
 
 /**
@@ -78,7 +79,7 @@ private:
 		QString name;
 		long size;
 	};
-	Q3ValueList<FileInfo> *_mailurls;
+	QList<FileInfo> *_mailurls;
 	
 	/*
 	 * The help-classes of this functions are friend functions, because this way, they can
@@ -138,7 +139,7 @@ public:
 	virtual ~KKioDrop();
 
 	virtual bool canReadSubjects(void);
-	virtual Q3ValueVector<KornMailSubject> * doReadSubjects(bool * stop); 
+	virtual QVector<KornMailSubject> * doReadSubjects(bool * stop); 
 	
 	virtual bool canDeleteMails();
 	virtual bool deleteMails(Q3PtrList<const KornMailId> * ids, bool * stop);
