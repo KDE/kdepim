@@ -7,4 +7,8 @@ non-latin1 upper- and lower-case conversions.
 
 Everything lives in the KPIM namespace.
 
+  - @ref emailvalidation
+  - @ref emailextraction
+  - @ref emailidn
+
 */

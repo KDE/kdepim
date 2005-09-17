@@ -29,28 +29,53 @@
 
 /** @file */
 
-/** 
-    \brief KPIM holds all kinds of functions specific to KDE PIM.
-
-    The KPIM namespace hides away functions, enums, and other things
-    that are KDE PIM specific and that we don't want to have polluting
-    the global namespace.
-*/
 namespace KPIM {
 
-/**
-    Result type for splitAddress, isValidEmailAddress and isValidSimpleEmailAddress.
-*/
-enum EmailParseResult { AddressOk, AddressEmpty, UnexpectedEnd,
-                        UnbalancedParens, MissingDomainPart,
-                        UnclosedAngleAddr, UnopenedAngleAddr,
-                        TooManyAts, UnexpectedComma,
-                        TooFewAts, MissingLocalPart,
-                        UnbalancedQuote, NoAddressSpec,
-                        DisallowedChar, InvalidDisplayName };
+/** 
+    @defgroup emailvalidation Email Validation Functions
 
-// Helper functions
-/** Split a comma separated list of email addresses. */
+    This collection of methods is located in the KPIM namespace --
+    just to keep it out of the way. Methods are supplied that can
+    validate email addresses as supplied by the user (typically,
+    user input from a text box). There are also functions for
+    splitting an RFC2822 address into its component parts.
+
+    @{
+*/
+
+
+/** Email validation result. The only 'success' code in
+    this enumeration is AddressOK; all the other values
+    indicate some specific problem with the address which
+    is being validated.
+
+    Result type for splitAddress(), isValidEmailAddress() 
+    and isValidSimpleEmailAddress().
+*/
+enum EmailParseResult { 
+	AddressOk,          /**< Email is valid */
+	AddressEmpty,       /**< The address is empty */
+	UnexpectedEnd,      /**< Something is unbalanced */
+	UnbalancedParens,   /**< Unbalanced ( ) */
+	MissingDomainPart,  /**< No domain in address */
+	UnclosedAngleAddr,  /**< \< with no matching \> */
+	UnopenedAngleAddr,  /**< \> with no preceding \< */
+	TooManyAts,         /**< More than one \@ in address */
+	UnexpectedComma,    /**< Comma not allowed here */
+	TooFewAts,          /**< Missing \@ in address */
+	MissingLocalPart,
+	UnbalancedQuote,    /**< Quotes (single or double) not matched */
+	NoAddressSpec,
+	DisallowedChar, 
+	InvalidDisplayName
+	};
+
+/** Split a comma separated list of email addresses. 
+
+    @param aStr a single string representing a list of addresses
+    @return a list of strings, where each string is one address
+	    from the original list
+*/
 KDE_EXPORT QStringList splitEmailAddrList(const QString& aStr);
 
 /** Splits the given address into display name, email address and comment.
@@ -117,10 +142,13 @@ KDE_EXPORT EmailParseResult isValidEmailAddress( const QString& aStr );
 
 /** Translate the enum errorcodes from emailParseResult
     into i18n'd strings that can be used for msg boxes. 
-    
-    @param errorCode    the errorCode from isValidEmailEmailAddress().
 
-    @return             An i18n ready string for use in msgboxes. 
+    @param errorCode an @em error code returned from one of the
+		       email validation functions. Do not pass 
+		       AddressOk as a value, since that will yield
+		       a misleading error message
+    @return human-readable and already translated message describing
+	      the validation error.
 */
 KDE_EXPORT QString emailParseResultToString( EmailParseResult errorCode );
 
@@ -133,6 +161,10 @@ KDE_EXPORT QString emailParseResultToString( EmailParseResult errorCode );
     @param aStr         a single email address,
                           example: joe.user@example.org
     @return             true if no error was encountered. 
+
+    @note This method differs from calling isValidEmailAddress()
+	  and checking that that returns AddressOk in two ways:
+	  it is faster, and it does @em not allow fancy addresses.
 */
 KDE_EXPORT bool isValidSimpleEmailAddress( const QString& aStr );
 
@@ -144,6 +176,14 @@ KDE_EXPORT bool isValidSimpleEmailAddress( const QString& aStr );
 */
 
 KDE_EXPORT QString simpleEmailAddressErrorMsg(); 
+
+/** @}  */
+
+
+
+/** @defgroup emailextraction Email Extraction Functions
+    @{
+*/
 
 /** Returns the pure email address (addr-spec in RFC2822) of the given address
     (mailbox in RFC2822).
@@ -221,6 +261,13 @@ KDE_EXPORT QString normalizedAddress( const QString & displayName,
                            const QString & addrSpec,
                            const QString & comment );
 
+/** @} */
+
+
+/** @defgroup emailidn Email IDN (punycode) handling
+    @{
+*/
+
 /** Decodes the punycode domain part of the given addr-spec if it's an IDN.
 
     @param addrSpec  a pure 7-bit email address (addr-spec in RFC2822)
@@ -241,20 +288,26 @@ KDE_EXPORT QString encodeIDN( const QString & addrSpec );
     @param addresses  a list of email addresses with punycoded IDNs
     @return           the email addresses in normalized form with Unicode IDNs
 
- */
+*/
 KDE_EXPORT QString normalizeAddressesAndDecodeIDNs( const QString & addresses );
 
 /** Normalizes all email addresses in the given list and encodes all IDNs
     in punycode.
- */
+*/
 KDE_EXPORT QString normalizeAddressesAndEncodeIDNs( const QString & str );
 
-/** Add quote characters around the given string if it contains a 
- * character that makes that necessary, in an email name, such as ",".
- */
+/** @} */
+
+/** @ingroup emailextraction
+
+    Add quote characters around the given string if it contains a 
+    character that makes that necessary, in an email name, such as ",".
+*/
 KDE_EXPORT QString quoteNameIfNecessary( const QString& str );
 
 } // namespace
 
 #endif /* EMAIL_H */
+
+
 
