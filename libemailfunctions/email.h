@@ -59,11 +59,11 @@ KDE_EXPORT QStringList splitEmailAddrList(const QString& aStr);
     addrSpec and comment are undefined.
 
     @param address      a single email address,
-                          example: Joe User (comment1) <joe.user@kde.org> (comment2)
+                          example: Joe User (comment1) <joe.user@example.org> (comment2)
     @param displayName  only out: the display-name of the email address, i.e.
                           "Joe User" in the example; in case of an error the
                           return value is undefined
-    @param addrSpec     only out: the addr-spec, i.e. "joe.user@kde.org" in the
+    @param addrSpec     only out: the addr-spec, i.e. "joe.user@example.org" in the
                           example; in case of an error the return value is
                           undefined
     @param comment      only out: the space-separated comments, i.e.
@@ -86,11 +86,11 @@ KDE_EXPORT EmailParseResult splitAddress( const QByteArray & address,
     addrSpec and comment are undefined.
 
     @param address      a single email address,
-                          example: Joe User (comment1) <joe.user@kde.org> (comment2)
+                          example: Joe User (comment1) <joe.user@example.org> (comment2)
     @param displayName  only out: the display-name of the email address, i.e.
                           "Joe User" in the example; in case of an error the
                           return value is undefined
-    @param addrSpec     only out: the addr-spec, i.e. "joe.user@kde.org" in the
+    @param addrSpec     only out: the addr-spec, i.e. "joe.user@example.org" in the
                           example; in case of an error the return value is
                           undefined
     @param comment      only out: the space-separated comments, i.e.
@@ -104,12 +104,12 @@ KDE_EXPORT EmailParseResult splitAddress( const QString & address,
                                QString & addrSpec,
                                QString & comment );
 
-/** Validates an email address in the form of "Joe User" <joe@kde.org>.
+/** Validates an email address in the form of "Joe User" <joe@example.org>.
     Returns AddressOk if no error was encountered. Otherwise an appropriate
     error code is returned.
 
     @param aStr         a single email address,
-                          example: Joe User (comment1) <joe.user@kde.org>
+                          example: Joe User (comment1) <joe.user@example.org>
     @return             AddressOk if no error was encountered. Otherwise an
                           appropriate error code is returned.
 */
@@ -119,14 +119,14 @@ KDE_EXPORT EmailParseResult isValidEmailAddress( const QString& aStr );
  * into i18n'd strings that can be used for msg boxes. */
 KDE_EXPORT QString emailParseResultToString( EmailParseResult errorCode );
 
-/** Validates an email address in the form of joe@kde.org.
+/** Validates an email address in the form of joe@example.org.
     Returns true if no error was encountered.
     This method should be used when the input field should not
     allow a "full" email address with comments and other special
     cases that normally are valid in an email address.
 
     @param aStr         a single email address,
-                          example: joe.user@kde.org
+                          example: joe.user@example.org
     @return             true if no error was encountered. 
 */
 KDE_EXPORT bool isValidSimpleEmailAddress( const QString& aStr );
@@ -139,8 +139,8 @@ KDE_EXPORT QString simpleEmailAddressErrorMsg();
 /** Returns the pure email address (addr-spec in RFC2822) of the given address
     (mailbox in RFC2822).
 
-    @param address  an email address, e.g. "Joe User <joe.user@kde.org>"
-    @return         the addr-spec of @a address, i.e. joe.user@kde.org in the
+    @param address  an email address, e.g. "Joe User <joe.user@example.org>"
+    @return         the addr-spec of @a address, i.e. joe.user@example.org in the
                       example
 */
 KDE_EXPORT QByteArray getEmailAddress( const QByteArray & address );
@@ -151,8 +151,8 @@ KDE_EXPORT QByteArray getEmailAddress( const QByteArray & address );
     Returns the pure email address (addr-spec in RFC2822) of the given address
     (mailbox in RFC2822).
 
-    @param address  an email address, e.g. "Joe User <joe.user@kde.org>"
-    @return         the addr-spec of @a address, i.e. joe.user@kde.org in the
+    @param address  an email address, e.g. "Joe User <joe.user@example.org>"
+    @return         the addr-spec of @a address, i.e. joe.user@example.org in the
                       example
 */
 KDE_EXPORT QString getEmailAddress( const QString & address );
@@ -160,8 +160,8 @@ KDE_EXPORT QString getEmailAddress( const QString & address );
 /** Returns the pure email address (addr-spec in RFC2822) of the first
     email address of a list of addresses.
 
-    @param addresses  an email address, e.g. "Joe User <joe.user@kde.org>"
-    @return         the addr-spec of @a addresses, i.e. joe.user@kde.org in the
+    @param addresses  an email address, e.g. "Joe User <joe.user@example.org>"
+    @return         the addr-spec of @a addresses, i.e. joe.user@example.org in the
                       example
 */
 KDE_EXPORT QByteArray getFirstEmailAddress( const QByteArray & addresses );
@@ -172,15 +172,15 @@ KDE_EXPORT QByteArray getFirstEmailAddress( const QByteArray & addresses );
     Returns the pure email address (addr-spec in RFC2822) of the first
     email address of a list of addresses.
 
-    @param addresses  an email address, e.g. "Joe User <joe.user@kde.org>"
-    @return         the addr-spec of @a addresses, i.e. joe.user@kde.org in the
+    @param addresses  an email address, e.g. "Joe User <joe.user@example.org>"
+    @return         the addr-spec of @a addresses, i.e. joe.user@example.org in the
                       example
 */
 KDE_EXPORT QString getFirstEmailAddress( const QString & addresses );
 
 /** Return email address and name from string. Examples:
- * "Stefan Taferner <taferner@kde.org>" returns "taferner@kde.org"
- * and "Stefan Taferner". "joe@nowhere.com" returns "joe@nowhere.com"
+ * "Stefan Taferner <taferner@example.org>" returns "taferner@example.org"
+ * and "Stefan Taferner". "joe@example.com" returns "joe@example.com"
  * and "". Note that this only returns the first address.
  * Also note that the return value is TRUE if both the name and the
  * mail are not empty: this does NOT tell you if mail contains a
