@@ -492,7 +492,7 @@ QString KPIM::emailParseResultToString( EmailParseResult errorCode )
     case NoAddressSpec :
       return i18n("The email address you entered is not valid because it "
                   "does not seem to contain an actual email address, i.e. "
-                  "something of the form joe@kde.org.");
+                  "something of the form joe@example.org.");
     case DisallowedChar :
       return i18n("The email address you entered is not valid because it "
                   "contains an illegal character.");
@@ -553,7 +553,7 @@ QString KPIM::simpleEmailAddressErrorMsg()
 {
       return i18n("The email address you entered is not valid because it "
                   "does not seem to contain an actual email address, i.e. "
-                  "something of the form joe@kde.org.");
+                  "something of the form joe@example.org.");
 }
 //-----------------------------------------------------------------------------
 QByteArray KPIM::getEmailAddress( const QByteArray & address )
