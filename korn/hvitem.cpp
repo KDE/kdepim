@@ -29,16 +29,17 @@
 
 #include <qcursor.h>
 #include <qtooltip.h>
+#include <QIcon>
 //Added by qt3to4:
 #include <Q3PtrList>
 
 HVItem::HVItem( QWidget *parent, const char *name )
 	: BoxContainerItem( 0, name ),
 	_label( new Label( parent, "label" ) ),
-	_popup( new KPopupMenu( _label, "popupmenu" ) ),
+	_popup( new KPopupMenu( _label/*, "popupmenu"*/ ) ),
 	_actions( new KActionCollection( _popup, "actions" ) )
 {
-	_popup->insertTitle( kapp->miniIcon(), kapp->caption() );
+	_popup->addTitle( QIcon( kapp->miniIcon() ), kapp->caption() );
 	this->fillKPopupMenu( _popup, _actions );
 	_popup->insertSeparator();
 	KStdAction::quit( kapp, SLOT( quit() ), _actions )->plug( _popup );
@@ -73,7 +74,7 @@ void HVItem::slotShowPassivePopup( Q3PtrList< KornMailSubject >* list, int total
 
 void HVItem::slotShowPassivePopup( const QString& errorMessage, const QString& name )
 {
-	KPassivePopup::message( QString( "korn-%1-%2" ).arg( objId() ).arg( name ), errorMessage, _label, "Passive error message" );
+	KPassivePopup::message( QString( "korn-%1-%2" ).arg( objId().constData() ).arg( name ), errorMessage, _label, "Passive error message" );
 }
 	
 void HVItem::doPopup()

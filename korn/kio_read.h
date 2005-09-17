@@ -40,7 +40,7 @@ public:
 
 public slots:
 	//This is the function which makes the nessesairy slaves for reading a message
-	void readMail( const KornMailId *&, KKioDrop* );
+	void readMail( const KornMailId *, KKioDrop* );
 	//This function should be called if the user presses canceled.
 	void canceled();
 private:

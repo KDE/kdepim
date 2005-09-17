@@ -2,6 +2,7 @@
 #include <qlayout.h>
 //Added by qt3to4:
 #include <QVBoxLayout>
+#include <QDesktopWidget>
 #include<kdebug.h>
 #include<klocale.h>
 #include<qapplication.h>

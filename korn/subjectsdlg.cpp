@@ -1,6 +1,7 @@
 #include "subjectsdlg.h"
 #include "maildrop.h"
 #include <qapplication.h>
+#include <QDesktopWidget>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -15,7 +16,7 @@
 #include <q3progressdialog.h>
 #include <kmessagebox.h>
 #include "maildlg.h"
-#include "progress_dialog.h"
+#include "progress_dialog_impl.h"
 
 KornSubjectsDlg::SubjectListViewItem::SubjectListViewItem( Q3ListView *parent, KornMailSubject * item)
 	// set the column strings except column 2 (date)
@@ -105,7 +106,7 @@ KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
 	connect(clearSelButton, SIGNAL(clicked()), this, SLOT(removeSelection()));
 	connect(showButton, SIGNAL(clicked()), this, SLOT(showMessage()));
 	connect(deleteButton, SIGNAL(clicked()), this, SLOT(deleteMessage()));
-	setInitialSize(QSize(QApplication::desktop()->width(), QApplication::desktop()->height()));
+	setInitialSize(QApplication::desktop()->size());
 }
 
 void KornSubjectsDlg::clear()

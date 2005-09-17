@@ -82,7 +82,7 @@ void DockedItem::slotShowPassivePopup( Q3PtrList< KornMailSubject >* list, int t
 
 void DockedItem::slotShowPassivePopup( const QString& message, const QString& name )
 {
-	KPassivePopup::message( QString( "Korn - %1/%2" ).arg( objId() ).arg( name ), message, _systemtray, "Passive error message" );
+	KPassivePopup::message( QString( "Korn - %1/%2" ).arg( objId().constData() ).arg( name ), message, _systemtray, "Passive error message" );
 }
 
 void DockedItem::doPopup()

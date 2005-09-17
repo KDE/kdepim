@@ -19,6 +19,8 @@
 #ifndef MK_KORNCFGIMPL_H
 #define MK_KORNCFGIMPL_H
 
+#include <QWidget>
+
 class KConfig;
 #include "korncfg.h"
 
@@ -27,11 +29,11 @@ class KDialogBase;
 class QObject;
 class QString;
 
-class KornCfgImpl : public KornCfgWidget
+class KornCfgImpl : public QWidget, public Ui_KornCfgWidget
 { Q_OBJECT
 public:
 	KornCfgImpl( QWidget * parent = 0, const char * name = 0 );
-	~KornCfgImpl();
+	virtual ~KornCfgImpl();
 
 private slots:
 	virtual void slotDialogDestroyed();

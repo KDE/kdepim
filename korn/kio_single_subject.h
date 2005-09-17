@@ -33,7 +33,7 @@ class KIO_Protocol;
 
 class QString;
 template<class T> class Q3MemArray;
-typedef Q3MemArray<char> QByteArray;
+class QByteArray;
 
 class KIO_Single_Subject : public QObject
 { Q_OBJECT

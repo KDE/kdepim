@@ -20,6 +20,7 @@
 #define MK_KORNACCOUNTCFGIMPL_H
 
 #include "kornaccountcfg.h"
+#include <QWidget>
 //Added by qt3to4:
 #include <QLabel>
 #include <QVBoxLayout>
@@ -40,7 +41,7 @@ class AccountInput;
 template< class T > class Q3PtrList;
 template< class T > class Q3PtrVector;
 
-class KornAccountCfgImpl : public KornAccountCfg
+class KornAccountCfgImpl : public QWidget, public Ui_KornAccountCfg
 { Q_OBJECT
 public:
 	KornAccountCfgImpl( QWidget * parent = 0, const char * name = 0 );

@@ -47,7 +47,7 @@ KIO_Read::~KIO_Read()
 	delete _job;
 }
 
-void KIO_Read::readMail( const KornMailId *& mailid, KKioDrop* drop )
+void KIO_Read::readMail( const KornMailId * mailid, KKioDrop* drop )
 {
 	_kio = drop;
 	KURL kurl = *_kio->_kurl;

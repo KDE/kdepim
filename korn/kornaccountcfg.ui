@@ -1,231 +1,158 @@
-<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
-<class>KornAccountCfg</class>
-<widget class="QWidget">
-    <property name="name">
-        <cstring>KornAccountCfg</cstring>
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>KornAccountCfg</class>
+  <widget class="QWidget" name="KornAccountCfg" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>472</width>
+        <height>471</height>
+      </rect>
     </property>
-    <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>472</width>
-            <height>471</height>
-        </rect>
-    </property>
-    <grid>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
-        <widget class="QTabWidget" row="0" column="0">
-            <property name="name">
-                <cstring>tab</cstring>
-            </property>
-            <widget class="QWidget">
-                <property name="name">
-                    <cstring>server_tab</cstring>
-                </property>
-                <attribute name="title">
-                    <string>&amp;Server</string>
-                </attribute>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>lbProtocol</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>11</x>
-                            <y>41</y>
-                            <width>206</width>
-                            <height>24</height>
-                        </rect>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Protocol:</string>
-                    </property>
-                    <property name="buddy" stdset="0">
-                        <cstring>cbProtocol</cstring>
-                    </property>
+    <layout class="QGridLayout" >
+      <item row="0" column="0" >
+        <widget class="QTabWidget" name="tab" >
+          <widget class="QWidget" name="server_tab" >
+            <attribute name="title" >
+              <string>&amp;Server</string>
+            </attribute>
+            <widget class="QLabel" name="lbProtocol" >
+              <property name="geometry" >
+                <rect>
+                  <x>11</x>
+                  <y>41</y>
+                  <width>206</width>
+                  <height>24</height>
+                </rect>
+              </property>
+              <property name="text" >
+                <string>&amp;Protocol:</string>
+              </property>
+              <property name="buddy" stdset="0" >
+                <cstring>cbProtocol</cstring>
+              </property>
+            </widget>
+            <widget class="QComboBox" name="cbProtocol" >
+              <property name="geometry" >
+                <rect>
+                  <x>223</x>
+                  <y>41</y>
+                  <width>206</width>
+                  <height>24</height>
+                </rect>
+              </property>
+            </widget>
+          </widget>
+          <widget class="QWidget" name="TabPage" >
+            <attribute name="title" >
+              <string>&amp;Account</string>
+            </attribute>
+            <layout class="QVBoxLayout" >
+              <item>
+                <layout class="QHBoxLayout" >
+                  <item>
+                    <widget class="QLabel" name="lbInterval" >
+                      <property name="text" >
+                        <string>C&amp;heck every (sec):</string>
+                      </property>
+                      <property name="buddy" stdset="0" >
+                        <cstring>edInterval</cstring>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QLineEdit" name="edInterval" />
+                  </item>
+                </layout>
+              </item>
+            </layout>
+          </widget>
+          <widget class="QWidget" name="TabPage" >
+            <attribute name="title" >
+              <string>&amp;Events</string>
+            </attribute>
+            <layout class="QVBoxLayout" >
+              <item>
+                <widget class="QCheckBox" name="chUseBox" >
+                  <property name="text" >
+                    <string>&amp;Use settings of box</string>
+                  </property>
+                  <property name="checked" >
+                    <bool>true</bool>
+                  </property>
                 </widget>
-                <widget class="QComboBox">
-                    <property name="name">
-                        <cstring>cbProtocol</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>223</x>
-                            <y>41</y>
-                            <width>206</width>
-                            <height>24</height>
-                        </rect>
-                    </property>
+              </item>
+              <item>
+                <widget class="Q3GroupBox" name="gbNewMail" >
+                  <property name="enabled" >
+                    <bool>false</bool>
+                  </property>
+                  <property name="title" >
+                    <string>On New Mail</string>
+                  </property>
+                  <layout class="QVBoxLayout" >
+                    <item>
+                      <layout class="QGridLayout" >
+                        <item row="0" column="1" >
+                          <widget class="KURLRequester" name="edRunCommand" />
+                        </item>
+                        <item row="0" column="0" >
+                          <widget class="QLabel" name="lbRunCommand" >
+                            <property name="text" >
+                              <string>Run &amp;command:</string>
+                            </property>
+                            <property name="buddy" stdset="0" >
+                              <cstring>edRunCommand</cstring>
+                            </property>
+                          </widget>
+                        </item>
+                        <item row="1" column="1" >
+                          <widget class="KURLRequester" name="edPlaySound" />
+                        </item>
+                        <item row="1" column="0" >
+                          <widget class="QLabel" name="lbPlaySound" >
+                            <property name="text" >
+                              <string>Play sou&amp;nd:</string>
+                            </property>
+                            <property name="buddy" stdset="0" >
+                              <cstring>edPlaySound</cstring>
+                            </property>
+                          </widget>
+                        </item>
+                      </layout>
+                    </item>
+                    <item>
+                      <widget class="QCheckBox" name="chPassivePopup" >
+                        <property name="text" >
+                          <string>Show &amp;passive popup</string>
+                        </property>
+                      </widget>
+                    </item>
+                    <item>
+                      <widget class="QCheckBox" name="chPassiveDate" >
+                        <property name="enabled" >
+                          <bool>false</bool>
+                        </property>
+                        <property name="text" >
+                          <string>Add &amp;date to passive popup</string>
+                        </property>
+                      </widget>
+                    </item>
+                  </layout>
                 </widget>
-            </widget>
-            <widget class="QWidget">
-                <property name="name">
-                    <cstring>TabPage</cstring>
-                </property>
-                <attribute name="title">
-                    <string>&amp;Account</string>
-                </attribute>
-                <vbox>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <widget class="QLayoutWidget">
-                        <property name="name">
-                            <cstring>layout35</cstring>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QLabel">
-                                <property name="name">
-                                    <cstring>lbInterval</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>C&amp;heck every (sec):</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>edInterval</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLineEdit">
-                                <property name="name">
-                                    <cstring>edInterval</cstring>
-                                </property>
-                            </widget>
-                        </hbox>
-                    </widget>
-                </vbox>
-            </widget>
-            <widget class="QWidget">
-                <property name="name">
-                    <cstring>TabPage</cstring>
-                </property>
-                <attribute name="title">
-                    <string>&amp;Events</string>
-                </attribute>
-                <vbox>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <widget class="QCheckBox">
-                        <property name="name">
-                            <cstring>chUseBox</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Use settings of box</string>
-                        </property>
-                        <property name="checked">
-                            <bool>true</bool>
-                        </property>
-                    </widget>
-                    <widget class="QGroupBox">
-                        <property name="name">
-                            <cstring>gbNewMail</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="title">
-                            <string>On New Mail</string>
-                        </property>
-                        <vbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QLayoutWidget">
-                                <property name="name">
-                                    <cstring>layout33</cstring>
-                                </property>
-                                <grid>
-                                    <property name="name">
-                                        <cstring>unnamed</cstring>
-                                    </property>
-                                    <widget class="KURLRequester" row="0" column="1">
-                                        <property name="name">
-                                            <cstring>edRunCommand</cstring>
-                                        </property>
-                                    </widget>
-                                    <widget class="QLabel" row="0" column="0">
-                                        <property name="name">
-                                            <cstring>lbRunCommand</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>Run &amp;command:</string>
-                                        </property>
-                                        <property name="buddy" stdset="0">
-                                            <cstring>edRunCommand</cstring>
-                                        </property>
-                                    </widget>
-                                    <widget class="KURLRequester" row="1" column="1">
-                                        <property name="name">
-                                            <cstring>edPlaySound</cstring>
-                                        </property>
-                                    </widget>
-                                    <widget class="QLabel" row="1" column="0">
-                                        <property name="name">
-                                            <cstring>lbPlaySound</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>Play sou&amp;nd:</string>
-                                        </property>
-                                        <property name="buddy" stdset="0">
-                                            <cstring>edPlaySound</cstring>
-                                        </property>
-                                    </widget>
-                                </grid>
-                            </widget>
-                            <widget class="QCheckBox">
-                                <property name="name">
-                                    <cstring>chPassivePopup</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Show &amp;passive popup</string>
-                                </property>
-                            </widget>
-                            <widget class="QCheckBox">
-                                <property name="name">
-                                    <cstring>chPassiveDate</cstring>
-                                </property>
-                                <property name="enabled">
-                                    <bool>false</bool>
-                                </property>
-                                <property name="text">
-                                    <string>Add &amp;date to passive popup</string>
-                                </property>
-                            </widget>
-                        </vbox>
-                    </widget>
-                </vbox>
-            </widget>
+              </item>
+            </layout>
+          </widget>
         </widget>
-    </grid>
-</widget>
-<customwidgets>
-</customwidgets>
-<connections>
-    <connection>
-        <sender>chUseBox</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>gbNewMail</receiver>
-        <slot>setDisabled(bool)</slot>
-    </connection>
-    <connection>
-        <sender>chPassivePopup</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>chPassiveDate</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
-    <connection>
-        <sender>cbProtocol</sender>
-        <signal>activated(const QString&amp;)</signal>
-        <receiver>KornAccountCfg</receiver>
-        <slot>slotProtocolChanged(const QString&amp;)</slot>
-    </connection>
-</connections>
-<tabstops>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <tabstops>
     <tabstop>tab</tabstop>
     <tabstop>edInterval</tabstop>
     <tabstop>chUseBox</tabstop>
@@ -233,17 +160,5 @@
     <tabstop>edPlaySound</tabstop>
     <tabstop>chPassivePopup</tabstop>
     <tabstop>chPassiveDate</tabstop>
-</tabstops>
-<slots>
-    <slot access="protected">slotProtocolChanged( const QString&amp; )</slot>
-</slots>
-<layoutdefaults spacing="6" margin="11"/>
-<includehints>
-    <includehint>kurlrequester.h</includehint>
-    <includehint>klineedit.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kurlrequester.h</includehint>
-    <includehint>klineedit.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-</includehints>
-</UI>
+  </tabstops>
+</ui>

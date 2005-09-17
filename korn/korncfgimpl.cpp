@@ -38,10 +38,13 @@
  * parent should be of type KDialogBase
  */
 KornCfgImpl::KornCfgImpl( QWidget * parent, const char * name )
-	: KornCfgWidget( parent, name ),	
+	: QWidget( parent, name ),
+	Ui_KornCfgWidget(),	
 	_config( new KConfig( "kornrc" ) ),
 	_base( 0 )
 {
+	setupUi( this );
+		
 	elbBoxes->setSubGroupName( "korn-%1-%2" );
 	elbBoxes->setGroupName( "korn-%1" );
 	elbBoxes->setConfig( _config );

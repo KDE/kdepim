@@ -19,6 +19,7 @@
 #ifndef MK_KORNBOXCFGIMPL_H
 #define MK_KORNBOXCFGIMPL_H
 
+#include <QWidget>
 #include "kornboxcfg.h"
 
 class KConfig;
@@ -29,7 +30,7 @@ class QFont;
 class QString;
 class QWidget;
 
-class KornBoxCfgImpl : public KornBoxCfg
+class KornBoxCfgImpl : public QWidget, public Ui_KornBoxCfg
 { Q_OBJECT
 public:
 	KornBoxCfgImpl( QWidget *parent, const char * name );

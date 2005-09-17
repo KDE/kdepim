@@ -58,6 +58,7 @@ korn_SOURCES = \
   systemtray.cpp \
   process_proto.cpp \
   progress_dialog.ui \
+  progress_dialog_impl.cpp \
   qmail_proto.cpp
 
 noinst_HEADERS = \
@@ -106,6 +107,7 @@ noinst_HEADERS = \
   pop3s_proto.h \
   password.h \
   process_proto.h \
+  progress_dialog_impl.h \
   qmail_proto.h \
   systemtray.h
 

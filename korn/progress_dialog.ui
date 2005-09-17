@@ -1,120 +1,82 @@
-<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
-<class>DoubleProgressDialog</class>
-<widget class="QDialog">
-    <property name="name">
-        <cstring>DoubleProgressDialog</cstring>
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>DoubleProgressDialog</class>
+  <widget class="QDialog" name="DoubleProgressDialog" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>286</width>
+        <height>140</height>
+      </rect>
     </property>
-    <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>286</width>
-            <height>140</height>
-        </rect>
+    <property name="windowTitle" >
+      <string>Progress</string>
     </property>
-    <property name="caption">
-        <string>Progress</string>
-    </property>
-    <vbox>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
-        <widget class="QLabel">
-            <property name="name">
-                <cstring>lbText</cstring>
-            </property>
-            <property name="text">
-                <string></string>
-            </property>
+    <layout class="QVBoxLayout" >
+      <item>
+        <widget class="QLabel" name="lbText" >
+          <property name="text" >
+            <string/>
+          </property>
         </widget>
-        <widget class="QProgressBar">
-            <property name="name">
-                <cstring>pbBoxes</cstring>
-            </property>
-        </widget>
-        <widget class="QProgressBar">
-            <property name="name">
-                <cstring>pbProgress</cstring>
-            </property>
-        </widget>
-        <widget class="QLayoutWidget">
-            <property name="name">
-                <cstring>layout1</cstring>
-            </property>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <spacer>
-                    <property name="name">
-                        <cstring>spacer1</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>41</width>
-                            <height>20</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>pbCancel</cstring>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Cancel</string>
-                    </property>
-                </widget>
-                <spacer>
-                    <property name="name">
-                        <cstring>spacer2</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>41</width>
-                            <height>31</height>
-                        </size>
-                    </property>
-                </spacer>
-            </hbox>
-        </widget>
-    </vbox>
-</widget>
-<connections>
-    <connection>
-        <sender>pbCancel</sender>
-        <signal>clicked()</signal>
-        <receiver>DoubleProgressDialog</receiver>
-        <slot>cancelbutton()</slot>
-    </connection>
-</connections>
-<tabstops>
+      </item>
+      <item>
+        <widget class="Q3ProgressBar" name="pbBoxes" />
+      </item>
+      <item>
+        <widget class="Q3ProgressBar" name="pbProgress" />
+      </item>
+      <item>
+        <layout class="QHBoxLayout" >
+          <item>
+            <spacer name="spacer1" >
+              <property name="sizeHint" >
+                <size>
+                  <width>41</width>
+                  <height>20</height>
+                </size>
+              </property>
+              <property name="sizeType" >
+                <enum>Expanding</enum>
+              </property>
+              <property name="orientation" >
+                <enum>Horizontal</enum>
+              </property>
+            </spacer>
+          </item>
+          <item>
+            <widget class="QPushButton" name="pbCancel" >
+              <property name="text" >
+                <string>&amp;Cancel</string>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <spacer name="spacer2" >
+              <property name="sizeHint" >
+                <size>
+                  <width>41</width>
+                  <height>31</height>
+                </size>
+              </property>
+              <property name="sizeType" >
+                <enum>Expanding</enum>
+              </property>
+              <property name="orientation" >
+                <enum>Horizontal</enum>
+              </property>
+            </spacer>
+          </item>
+        </layout>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <tabstops>
     <tabstop>pbCancel</tabstop>
-</tabstops>
-<includes>
-    <include location="local" impldecl="in implementation">progress_dialog.ui.h</include>
-</includes>
-<signals>
-    <signal>cancelPressed()</signal>
-</signals>
-<slots>
-    <slot>setText( const QString &amp; str )</slot>
-    <slot>setNumberOfBoxes( int number )</slot>
-    <slot>setProgressOfBoxes( int number )</slot>
-    <slot>setNumberOfSteps( int number )</slot>
-    <slot>setProgress( int number )</slot>
-    <slot access="private" specifier="non virtual">cancelbutton()</slot>
-</slots>
-<layoutdefaults spacing="6" margin="11"/>
-</UI>
+  </tabstops>
+</ui>

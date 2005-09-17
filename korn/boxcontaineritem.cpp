@@ -268,6 +268,10 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	
 	QPixmap pixmap;
 	
+	if( label->movie() ) //Delete movie pointer
+		delete label->movie();
+	label->setMovie( 0 );
+	
 	label->setText( "" );
 	//QToolTip::add( label, this->getTooltip() );
 	
@@ -328,29 +332,29 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 QPixmap BoxContainerItem::calcComplexPixmap( const QPixmap &icon, const QColor& fgColour, const QFont* font, const int count )
 {
 	QPixmap result( icon );
-#warning "kde4 test ? icon.mask ?"
-	QBitmap resultMask( icon.createHeuristicMask() );
+//#warning "kde4 test ? icon.mask ?"
+//	QBitmap resultMask( icon.createHeuristicMask() );
 	
 	QPainter p;
-	p.begin( &result, true );
+	p.begin( &result );
 	p.setPen( fgColour );
 	if( font )
 		p.setFont( *font );
 	p.drawText( 0, 0, 24, 24, Qt::AlignHCenter | Qt::AlignVCenter, QString::number( count ) );
 	p.end();
 	
-	p.begin( &resultMask, true );
-	p.setPen( Qt::color1 );
-	p.drawText( 0, 0, 24, 24, Qt::AlignHCenter | Qt::AlignVCenter, QString::number( count ) );
+	//p.begin( &resultMask, true );
+	//p.setPen( Qt::color1 );
+	//p.drawText( 0, 0, 24, 24, Qt::AlignHCenter | Qt::AlignVCenter, QString::number( count ) );
 	
-	result.setMask( resultMask );
+	//result.setMask( resultMask );
 	return result;
 }
 
 void BoxContainerItem::setAnimIcon( QLabel* label, const QString& anim )
 {
 	label->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
-	label->setMovie( QMovie( anim ) );
+	label->setMovie( new QMovie( anim ) );
 	label->show();
 }
 

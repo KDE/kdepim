@@ -38,11 +38,14 @@ class KConfig;
 #include <qstring.h>
 
 KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent, const char * name )
-	: KornBoxCfg( parent, name ),
+	: QWidget( parent, name ),
+	Ui_KornBoxCfg(),
 	_config( 0 ),
 	_base( 0 ),
 	_index( -1 )
 {
+	setupUi( this );
+	
 	_fonts[ 0 ] = new QFont;
 	_fonts[ 1 ] = new QFont;
 	_anims[ 0 ] = new QString;
@@ -91,14 +94,17 @@ void KornBoxCfgImpl::writeConfig( KConfig * config, const int index )
 //private
 void KornBoxCfgImpl::readViewConfig()
 {
+	QColor black( Qt::black );
+	QColor white( Qt::white );
+	
 	this->chNormalText->setChecked(_config->readBoolEntry ( "hasnormalfgcolour", true ) );
-	this->cbNormalText->setColor(  _config->readColorEntry( "normalfgcolour", &Qt::black ) );
+	this->cbNormalText->setColor(  _config->readColorEntry( "normalfgcolour", &black ) );
 	this->chNewText->setChecked(   _config->readBoolEntry ( "hasnewfgcolour", true ) );
-	this->cbNewText->setColor(     _config->readColorEntry( "newfgcolour", &Qt::black ) );
+	this->cbNewText->setColor(     _config->readColorEntry( "newfgcolour", &black ) );
 	this->chNormalBack->setChecked(_config->readBoolEntry ( "hasnormalbgcolour", false ) );
-	this->cbNormalBack->setColor(  _config->readColorEntry( "normalbgcolour", &Qt::white ) );
+	this->cbNormalBack->setColor(  _config->readColorEntry( "normalbgcolour", &white ) );
 	this->chNewBack->setChecked(   _config->readBoolEntry ( "hasnewbgcolour", false ) );
-	this->cbNewBack->setColor(     _config->readColorEntry( "newbgcolour", &Qt::white ) );
+	this->cbNewBack->setColor(     _config->readColorEntry( "newbgcolour", &white ) );
 	
 	this->chNormalIcon->setChecked(_config->readBoolEntry( "hasnormalicon", false ) );
 	this->ibNormalIcon->setIcon(   _config->readEntry    ( "normalicon", "" ) );

@@ -43,7 +43,8 @@
 #include <Q3PtrList>
 
 KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent, const char * name )
-	: KornAccountCfg( parent, name ),
+	: QWidget( parent, name ),
+	Ui_KornAccountCfg(),
 	_config( 0 ),
 	_fields( 0 ),
 	_urlfields( 0 ),
@@ -54,6 +55,8 @@ KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent, const char * name )
 	_groupBoxes( 0 ),
 	_accountinput( new Q3PtrList< AccountInput >() )
 {
+	setupUi( this );
+	
 	connect( parent, SIGNAL( okClicked() ), this, SLOT( slotOK() ) );
 	connect( parent, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
 	
