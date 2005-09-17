@@ -116,7 +116,12 @@ KDE_EXPORT EmailParseResult splitAddress( const QString & address,
 KDE_EXPORT EmailParseResult isValidEmailAddress( const QString& aStr );
 
 /** Translate the enum errorcodes from emailParseResult
- * into i18n'd strings that can be used for msg boxes. */
+    into i18n'd strings that can be used for msg boxes. 
+    
+    @param errorCode    the errorCode from isValidEmailEmailAddress().
+
+    @return             An i18n ready string for use in msgboxes. 
+*/
 KDE_EXPORT QString emailParseResultToString( EmailParseResult errorCode );
 
 /** Validates an email address in the form of joe@example.org.
@@ -132,8 +137,12 @@ KDE_EXPORT QString emailParseResultToString( EmailParseResult errorCode );
 KDE_EXPORT bool isValidSimpleEmailAddress( const QString& aStr );
 
 /** Returns a i18n string to be used in msgboxes 
- * this allows for error messages to be the same
- * across the board. */
+    this allows for error messages to be the same
+    across the board. 
+   
+    @return             An i18n ready string for use in msgboxes.
+*/
+
 KDE_EXPORT QString simpleEmailAddressErrorMsg(); 
 
 /** Returns the pure email address (addr-spec in RFC2822) of the given address
