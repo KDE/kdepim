@@ -13,7 +13,7 @@ class KornMailSubject;
 class KornMailId;
 class KListView;
 class KornMailDlg;
-class Q3ProgressDialog;
+class QProgressDialog;
 class DoubleProgressDialog;
 
 template< class T > class Q3PtrList;
@@ -76,7 +76,7 @@ class KornSubjectsDlg: public KDialogBase
 	{
 		Q3PtrList< KornMailSubject > *messages;
 		Q3PtrList< const KornMailId > *ids;
-		Q3ProgressDialog *progress;
+		QProgressDialog *progress;
 		KMailDrop *drop;
 		int totalNumberOfMessages;
 	} *_delete;

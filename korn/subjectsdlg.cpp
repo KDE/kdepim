@@ -13,7 +13,7 @@
 #include <qtimer.h>
 #include "mailsubject.h"
 #include <klocale.h>
-#include <q3progressdialog.h>
+#include <QProgressDialog>
 #include <kmessagebox.h>
 #include "maildlg.h"
 #include "progress_dialog_impl.h"
@@ -426,9 +426,8 @@ void KornSubjectsDlg::deleteMessage()
 		return; //Not excepted
 	}
 	
-	_delete->progress->setLabelText( i18n( "Deleting mail; please wait...." ) );
-	_delete->progress->setTotalSteps( _delete->totalNumberOfMessages );
-	_delete->progress->setProgress( 0 );
+	_delete->progress->setMaximum( _delete->totalNumberOfMessages );
+	_delete->progress->setValue( 0 );
 	_delete->progress->show();
 
 	deleteNextMessage();
@@ -440,7 +439,7 @@ void KornSubjectsDlg::makeDeleteStruct()
 	_delete = new DeleteData;
 	_delete->messages = new Q3PtrList< KornMailSubject >;
 	_delete->ids = new Q3PtrList< const KornMailId >;
-	_delete->progress = new Q3ProgressDialog( this, "progress" );
+	_delete->progress = new QProgressDialog( i18n( "Deleting mail; please wait...." ), "&Cancel", 0, 1, this );
 	_delete->totalNumberOfMessages = 0;
 
 	connect( _delete->progress, SIGNAL( canceled() ), this, SLOT( slotDeleteCanceled() ) );

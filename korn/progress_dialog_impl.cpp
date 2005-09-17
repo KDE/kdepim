@@ -29,7 +29,7 @@
 *****************************************************************************/
 
 #include "progress_dialog_impl.h"
-#include <Qt3Support/Q3ProgressBar>
+#include <QProgressBar>
 
 DoubleProgressDialog::DoubleProgressDialog( QWidget *parent, const char* name )
 	: QDialog( parent, name ),
@@ -50,27 +50,27 @@ void DoubleProgressDialog::setText( const QString & str )
 
 void DoubleProgressDialog::setNumberOfBoxes( int number )
 {
-    pbBoxes->setTotalSteps( number );
-    pbBoxes->setProgress( 0 );
+    pbBoxes->setRange( 0, number );
+    pbBoxes->setValue( 0 );
 }
 
 
 void DoubleProgressDialog::setProgressOfBoxes( int number )
 {
-    pbBoxes->setProgress( number );
+    pbBoxes->setValue( number );
 }
 
 
 void DoubleProgressDialog::setNumberOfSteps( int number )
 {
-    pbProgress->setTotalSteps( number );
-    pbProgress->setProgress( 0 );
+    pbProgress->setRange( 0, number );
+    pbProgress->setValue( 0 );
 }
 
 
 void DoubleProgressDialog::setProgress( int number )
 {
-    pbProgress->setProgress( number );
+    pbProgress->setValue( number );
 }
 
 

@@ -7,7 +7,7 @@
 #include<klocale.h>
 #include<qapplication.h>
 #include "mailsubject.h"
-#include <q3progressdialog.h>
+#include <QProgressDialog>
 #include "maildrop.h"
 
 KornMailDlg::KornMailDlg( QWidget *parent )
@@ -39,18 +39,13 @@ void KornMailDlg::showFullMessage()
 	_loadMailCanceled = false;
 	
 	// create progress dialog
-	_progress = new Q3ProgressDialog(this, "bla", TRUE);
-	_progress->setMinimumDuration(0);
-	_progress->setLabelText(i18n("Loading full mail. Please wait..."));
-
-	// this should show it even if the mailbox does not support progress bars
-	_progress->setTotalSteps(1000);
-	_progress->setProgress(1);
+	_progress = new QProgressDialog(i18n("Loading full mail. Please wait..."), "&Cancel", 0, 1000, this);
+	_progress->setValue(1);
 	qApp->processEvents();
 
 	// connect the mailbox with the progress dialog in case it supports progress bars
-	connect(_mailDrop, SIGNAL(readMailTotalSteps(int)), _progress, SLOT(setTotalSteps(int)));
-	connect(_mailDrop, SIGNAL(readMailProgress(int)), _progress, SLOT(setProgress(int)));
+	connect(_mailDrop, SIGNAL(readMailTotalSteps(int)), _progress, SLOT(setMaximum(int)));
+	connect(_mailDrop, SIGNAL(readMailProgress(int)), _progress, SLOT(setValue(int)));
 	qApp->processEvents();
 
 	// connect the mailbox's cancel button
@@ -100,7 +95,7 @@ void KornMailDlg::readMailReady( QString* mail )
 
 void KornMailDlg::deleteProgress()
 {
-	_progress->setProgress(_progress->totalSteps());
+	_progress->setValue(_progress->maximum());
 	_progress->hide();
 	
 	disconnect( _mailDrop, SIGNAL(readMailReady(QString*)), this, SLOT(readMailReady(QString*)));
