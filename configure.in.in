@@ -64,7 +64,7 @@ if test "x$with_gnokii" != xno; then
   KDE_CHECK_GNOKII
 
   if test "x$with_gnokii" != xcheck && test -z "$LIB_GNOKII"; then
-    AC_MSG_FAILURE([--with-gnokii was given, but test for gnokii failed])
+    AC_MSG_ERROR([--with-gnokii was given, but test for gnokii failed])
   fi
 fi
 
@@ -115,3 +115,18 @@ if test $ac_cv_struct_tm_gmtoff = yes; then
 	AC_DEFINE(HAVE_TM_GMTOFF, 1, [Define if you have a tm_gmtoff member in struct tm])
 fi
 
+AC_LANG_PUSH(C++)
+AC_CACHE_CHECK(for stl coping with namespace std, ac_cv_var_stlnamespace,
+        AC_TRY_COMPILE([
+                #include <iterator>
+		struct s : public std::iterator<std::forward_iterator_tag, int> {};
+        ], [
+        ], ac_cv_var_stlnamespace=yes, ac_cv_var_stlnamespace=no))
+if test $ac_cv_var_stlnamespace = yes; then
+        AC_DEFINE(HAVE_STLNAMESPACE, 1, [Define if your version of stl is defined in namespace std])
+	AC_DEFINE(STD_NAMESPACE_PREFIX, [std::], [Namespace prefix the stl is defined in])
+else
+	AC_DEFINE(STD_NAMESPACE_PREFIX, [], [Namespace prefix the stl is defined in])
+fi
+
+AC_LANG_POP
