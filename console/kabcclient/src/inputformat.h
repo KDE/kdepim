@@ -31,17 +31,19 @@ namespace KABC
 };
 
 /**
+* @short Interface for input format parsers
+*
 * This is the interface for input format parsers.
 *
 * @note Implementations should return a KABC::Addressee object on each call to
-* their readAddressee method. If the parsing failes they are supposed to
+* their readAddressee() method. If the parsing failes they are supposed to
 * return an empty object.
-* readAddressee will be called repeatetly until the input stream is at
-* its end (istream::eof() returns true) or it the stream is in condition bad
-* (istream::bad() returns true)
+* readAddressee() will be called repeatetly until the input stream is at
+* its end (istream::eof() returns @c true) or it the stream is in condition bad
+* (istream::bad() returns @c true)
 *
 * @author Kevin Krammer, <kevin.krammer@gmx.at>
-* @short Interface for input format parsers
+* @see OutputFormat
 */
 class InputFormat
 {
@@ -55,9 +57,8 @@ public:
     /**
     * @short Returns a translate description of the input format
     *
-    * Returns a translate description of the parser and its
+    * Returns a translated description of the parser and its
     * general capabilities.
-    * 
     *
     * @return a short descriptive string what kind of input format it can handle
     *
@@ -118,14 +119,15 @@ public:
     *         the input format does not allow configuration options
     *
     * @note Implementations can return any formatting in the string, but
-    * it is recommended to stay consistent with the othr format implementations
-    * and return the following format:
+    * it is recommended to stay consistent with the other format
+    * implementations and return the following format:
     * one line per option and each line formatted like this
     * @code
     * option-name tabs option-description
     * @endcode
     * where tabs is either one or two tab characters depending on the length
     * of the option-name, e.g. two tabs for length < 8
+    * Default implementation returns @c QString::null
     */
     virtual QString optionUsage() const { return QString::null; }
 
