@@ -64,7 +64,7 @@
 #include <qdatetime.h>
 //Added by qt3to4:
 #include <Q3ValueList>
-#include <Q3CString>
+#include <QByteArray>
 
 // other
 #include <assert.h>
@@ -275,12 +275,12 @@ void CertificateInfoWidgetImpl::startCertificateDump() {
 
 void CertificateInfoWidgetImpl::slotCollectStdout(KProcess *, char *buffer, int buflen)
 {
-  mDumpOutput += Q3CString(buffer, buflen+1); // like KProcIO does
+  mDumpOutput += QByteArray(buffer, buflen+1); // like KProcIO does
 }
 
 void CertificateInfoWidgetImpl::slotCollectStderr(KProcess *, char *buffer, int buflen)
 {
-  mDumpError += Q3CString(buffer, buflen+1); // like KProcIO does
+  mDumpError += QByteArray(buffer, buflen+1); // like KProcIO does
 }
 
 void CertificateInfoWidgetImpl::slotDumpProcessExited(KProcess* proc) {

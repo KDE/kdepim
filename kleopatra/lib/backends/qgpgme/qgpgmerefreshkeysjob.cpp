@@ -36,7 +36,7 @@
 
 #include "qgpgmerefreshkeysjob.h"
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include "gnupgprocessbase.h"
 #include "qgpgmeprogresstokenmapper.h"
@@ -96,7 +96,7 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
     strlen("--with-validation") + 1 + strlen("--force-crl-refresh") + 1 +
     strlen("--enable-crl-checks") + 1;
   while ( !mPatternsToDo.empty() ) {
-    const Q3CString pat = mPatternsToDo.front().utf8().stripWhiteSpace();
+    const QByteArray pat = mPatternsToDo.front().utf8().stripWhiteSpace();
     const unsigned int patLength = pat.length();
     if ( patLength >= commandLineLength )
       break;

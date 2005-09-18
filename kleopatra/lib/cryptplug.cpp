@@ -53,7 +53,7 @@
 
 #include <qstring.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include <string>
 #include <vector>
@@ -572,10 +572,10 @@ parse_dn (const unsigned char *string)
 }
 
 static void
-add_dn_part( Q3CString& result, struct CryptPlug::DnPair& dnPair )
+add_dn_part( QByteArray& result, struct CryptPlug::DnPair& dnPair )
 {
   /* email hack */
-  Q3CString mappedPart( dnPair.key );
+  QByteArray mappedPart( dnPair.key );
   for ( unsigned int i = 0 ; i < numOidMaps ; ++i ){
     if( !strcasecmp( dnPair.key, oidmap[i].oid ) ) {
       mappedPart = oidmap[i].name;
@@ -588,7 +588,7 @@ add_dn_part( Q3CString& result, struct CryptPlug::DnPair& dnPair )
 }
 
 static int
-add_dn_parts( Q3CString& result, struct CryptPlug::DnPair* dn, const char* part )
+add_dn_parts( QByteArray& result, struct CryptPlug::DnPair* dn, const char* part )
 {
   int any = 0;
 
@@ -624,8 +624,8 @@ reorder_dn( struct CryptPlug::DnPair *dn,
   };
   const char** stdpart = attrOrder ? ((const char**)attrOrder) : defaultpart;
   int any=0, any2=0, found_X_=0, i;
-  Q3CString result;
-  Q3CString resultUnknowns;
+  QByteArray result;
+  QByteArray resultUnknowns;
 
   /* find and save the non-standard parts in their original order */
   if( dn ){

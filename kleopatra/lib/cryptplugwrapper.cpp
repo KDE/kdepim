@@ -54,7 +54,7 @@
 // qgpgme
 #include <qgpgme/dataprovider.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 #include <Q3PtrList>
 #include <Q3ValueList>
 
@@ -293,7 +293,7 @@ private:
   QStringList _attrOrder;
   char**      _attrOrderChar;
   UnknownAttrsHandling _unknownAttrsHandling;
-  Q3CString    _unknownAttrsHandlingChar;
+  QByteArray    _unknownAttrsHandlingChar;
 };
 
 

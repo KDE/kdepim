@@ -73,7 +73,7 @@
 #include <qcombobox.h>
 //Added by qt3to4:
 #include <QGridLayout>
-#include <Q3CString>
+#include <QByteArray>
 
 #include <assert.h>
 #include <dcopref.h>
@@ -182,7 +182,7 @@ CertificateWizardImpl::~CertificateWizardImpl()
 }
 
 static const char * oidForAttributeName( const QString & attr ) {
-  Q3CString attrUtf8 = attr.utf8();
+  QByteArray attrUtf8 = attr.utf8();
   for ( unsigned int i = 0 ; i < numOidMaps ; ++i )
     if ( qstricmp( attrUtf8, oidmap[i].name ) == 0 )
       return oidmap[i].oid;

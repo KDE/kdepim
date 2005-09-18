@@ -33,7 +33,7 @@
 #include "qgpgmecryptoconfig.h"
 //Added by qt3to4:
 #include <Q3ValueList>
-#include <Q3CString>
+#include <QByteArray>
 #include <kdebug.h>
 #include <kprocio.h>
 #include <errno.h>
@@ -267,7 +267,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
           line += ":16:";
         }
         line += '\n';
-        Q3CString line8bit = line.utf8(); // encode with utf8, and KProcIO uses utf8 when reading.
+        QByteArray line8bit = line.utf8(); // encode with utf8, and KProcIO uses utf8 when reading.
         tmpFile.file()->writeBlock( line8bit.data(), line8bit.size()-1 /*no 0*/ );
         dirtyEntries.append( it.current() );
       }

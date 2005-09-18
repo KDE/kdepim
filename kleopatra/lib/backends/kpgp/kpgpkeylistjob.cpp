@@ -46,7 +46,7 @@
 
 #include <qtimer.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include <stdlib.h>
 #include <string.h>
@@ -171,7 +171,7 @@ gpgme_user_id_t KpgpUserID2GPGMEUserID( const Kpgp::UserID * kUserId )
 {
   // inspired by _gpgme_key_append_name
 
-  const Q3CString text = kUserId->text().utf8();
+  const QByteArray text = kUserId->text().utf8();
   const int src_len = text.length();
 
   gpgme_user_id_t uid;
@@ -198,9 +198,9 @@ gpgme_subkey_t KpgpSubkey2GPGMESubKey( const Kpgp::Subkey * kSubkey )
 {
   gpgme_subkey_t subkey;
 
-  const Q3CString fpr = kSubkey->fingerprint();
+  const QByteArray fpr = kSubkey->fingerprint();
   const unsigned int fpr_len = fpr.length();
-  const Q3CString keyId = kSubkey->longKeyID();
+  const QByteArray keyId = kSubkey->longKeyID();
 
   subkey = (gpgme_subkey_t) calloc( 1, sizeof( *subkey ) + fpr_len + 1 );
   subkey->revoked = kSubkey->revoked();

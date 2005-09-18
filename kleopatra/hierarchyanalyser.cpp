@@ -39,7 +39,7 @@
 #include <algorithm>
 #include <iterator>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 HierarchyAnalyser::HierarchyAnalyser( QObject * parent, const char * name )
   : QObject( parent, name )
@@ -64,7 +64,7 @@ void HierarchyAnalyser::slotNextKey( const GpgME::Key & key ) {
 
 const std::vector<GpgME::Key> & HierarchyAnalyser::subjectsForIssuer( const char * issuer_dn ) const {
   static const std::vector<GpgME::Key> empty;
-  std::map< Q3CString, std::vector<GpgME::Key> >::const_iterator it =
+  std::map< QByteArray, std::vector<GpgME::Key> >::const_iterator it =
     mSubjectsByIssuer.find( issuer_dn );
   return it == mSubjectsByIssuer.end() ? empty : it->second ;
 }

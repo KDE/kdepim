@@ -39,7 +39,7 @@
 
 #include <q3valuelist.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 class KProcess;
 class Q3ListViewItem;
@@ -78,8 +78,8 @@ private:
   void updateChainView();
 
 private:
-  Q3CString mDumpOutput;
-  Q3CString mDumpError;
+  QByteArray mDumpOutput;
+  QByteArray mDumpError;
   Q3ValueList<GpgME::Key> mChain;
   bool mExternal;
   bool mFoundIssuer;

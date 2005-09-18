@@ -59,7 +59,7 @@ public slots:
   void slotNextKey( const GpgME::Key & key );
 
 private:
-  std::map< Q3CString, std::vector<GpgME::Key> > mSubjectsByIssuer;
+  std::map< QByteArray, std::vector<GpgME::Key> > mSubjectsByIssuer;
 };
 
 

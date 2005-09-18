@@ -119,7 +119,7 @@ struct Kleo::KeyListView::Private {
   std::vector<GpgME::Key> keyBuffer;
   QTimer * updateTimer;
   QToolTip * itemToolTip;
-  std::map<Q3CString,KeyListViewItem*> itemMap;
+  std::map<QByteArray,KeyListViewItem*> itemMap;
 };
 
 // a list of signals where we want to replace QListViewItem with
@@ -257,7 +257,7 @@ void Kleo::KeyListView::registerItem( KeyListViewItem * item ) {
   //kdDebug() << "registerItem( " << item << " )" << endl;
   if ( !item )
     return;
-  const Q3CString fpr = item->key().primaryFingerprint();
+  const QByteArray fpr = item->key().primaryFingerprint();
   if ( !fpr.isEmpty() )
     d->itemMap.insert( std::make_pair( fpr, item ) );
 }
@@ -266,7 +266,7 @@ void Kleo::KeyListView::deregisterItem( const KeyListViewItem * item ) {
   //kdDebug() << "deregisterItem( KeyLVI: " << item << " )" << endl;
   if ( !item )
     return;
-  std::map<Q3CString,KeyListViewItem*>::iterator it
+  std::map<QByteArray,KeyListViewItem*>::iterator it
     = d->itemMap.find( item->key().primaryFingerprint() );
   if ( it == d->itemMap.end() )
     return;
@@ -277,7 +277,7 @@ void Kleo::KeyListView::deregisterItem( const KeyListViewItem * item ) {
 }
 
 void Kleo::KeyListView::doHierarchicalInsert( const GpgME::Key & key ) {
-  const Q3CString fpr = key.primaryFingerprint();
+  const QByteArray fpr = key.primaryFingerprint();
   if ( fpr.isEmpty() )
     return;
   KeyListViewItem * item = 0;
@@ -327,10 +327,10 @@ void Kleo::KeyListView::scatterGathered( Q3ListViewItem * start ) {
   }
 }
 
-Kleo::KeyListViewItem * Kleo::KeyListView::itemByFingerprint( const Q3CString & s ) const {
+Kleo::KeyListViewItem * Kleo::KeyListView::itemByFingerprint( const QByteArray & s ) const {
   if ( s.isEmpty() )
     return 0;
-  const std::map<Q3CString,KeyListViewItem*>::const_iterator it = d->itemMap.find( s );
+  const std::map<QByteArray,KeyListViewItem*>::const_iterator it = d->itemMap.find( s );
   if ( it == d->itemMap.end() )
     return 0;
   return it->second;

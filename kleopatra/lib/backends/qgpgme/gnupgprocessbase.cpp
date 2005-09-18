@@ -40,7 +40,7 @@
 #include <qstringlist.h>
 //Added by qt3to4:
 #include <Q3ValueList>
-#include <Q3CString>
+#include <QByteArray>
 #include <Q3ValueList>
 #include <unistd.h>
 #include <fcntl.h>
@@ -56,7 +56,7 @@ struct Kleo::GnuPGProcessBase::Private {
   bool useStatusFD;
   int statusFD[2];
   QSocketNotifier * statnot;
-  Q3CString statusBuffer;
+  QByteArray statusBuffer;
 };
 
 
@@ -153,7 +153,7 @@ int Kleo::GnuPGProcessBase::childStatus( int fd ) {
   return len;
 }
 
-static QString fromHexEscapedUtf8( const Q3CString & str ) {
+static QString fromHexEscapedUtf8( const QByteArray & str ) {
   return KURL::decode_string( str.data(), 106 /* utf-8 */ );
 }
 
@@ -164,7 +164,7 @@ void Kleo::GnuPGProcessBase::parseStatusOutput() {
   int lineStart = 0;
   for ( int lineEnd = d->statusBuffer.find( '\n' ) ; lineEnd >= 0 ; lineEnd = d->statusBuffer.find( '\n', lineStart = lineEnd+1 ) ) {
     // get next line:
-    const Q3CString line = d->statusBuffer.mid( lineStart, lineEnd - lineStart ).stripWhiteSpace();
+    const QByteArray line = d->statusBuffer.mid( lineStart, lineEnd - lineStart ).stripWhiteSpace();
     if ( line.isEmpty() )
       continue;
     // check status token
@@ -174,7 +174,7 @@ void Kleo::GnuPGProcessBase::parseStatusOutput() {
       continue;
     }
     // remove status token:
-    const Q3CString command = line.mid( startTokenLen ).simplifyWhiteSpace() + ' ';
+    const QByteArray command = line.mid( startTokenLen ).simplifyWhiteSpace() + ' ';
     if ( command == " " ) {
       kdDebug( 5150 ) << "Kleo::GnuPGProcessBase::childStatus: status-fd protocol error: line without content." << endl;
       continue;
@@ -184,7 +184,7 @@ void Kleo::GnuPGProcessBase::parseStatusOutput() {
     QStringList args;
     int tagStart = 0;
     for ( int tagEnd = command.find( ' ' ) ; tagEnd >= 0 ; tagEnd = command.find( ' ', tagStart = tagEnd+1 ) ) {
-      const Q3CString tag = command.mid( tagStart, tagEnd - tagStart );
+      const QByteArray tag = command.mid( tagStart, tagEnd - tagStart );
       if ( cmd.isNull() )
 	cmd = fromHexEscapedUtf8( tag );
       else
