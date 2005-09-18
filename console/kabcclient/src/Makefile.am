@@ -11,3 +11,6 @@ kabcclient_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 kabcclient_LDADD = $(LIB_KABC)
 
+DOXYGEN_REFERENCES = kabc
+DOXYGEN_EXCLUDE = main.cpp src.pro
+include $(top_srcdir)/admin/Doxyfile.am
