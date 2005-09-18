@@ -24,7 +24,7 @@
 #include "incidence.h"
 #include <kdepimmacros.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 namespace KCal {
 
@@ -49,7 +49,7 @@ class LIBKCAL_EXPORT Event : public Incidence
     ~Event();
     bool operator==( const Event & ) const;
 
-    Q3CString type() const { return "Event"; }
+    QByteArray type() const { return "Event"; }
 
     /**
       Return copy of this Event. The caller owns the returned objet.

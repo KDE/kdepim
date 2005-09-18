@@ -23,7 +23,7 @@
 
 #include "incidence.h"
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 namespace KCal {
 
@@ -40,7 +40,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
     ~Todo();
     bool operator==( const Todo& ) const;
 
-    Q3CString type() const { return "Todo"; }
+    QByteArray type() const { return "Todo"; }
 
     /**
       Returns an exact copy of this todo. The returned object is owned by the

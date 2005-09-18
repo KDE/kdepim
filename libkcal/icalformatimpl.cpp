@@ -26,7 +26,7 @@
 #include <qfile.h>
 //Added by qt3to4:
 #include <Q3ValueList>
-#include <Q3CString>
+#include <QByteArray>
 #include <cstdlib>
 
 #include <kdebug.h>
@@ -507,8 +507,8 @@ void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
 
 void ICalFormatImpl::writeCustomProperties(icalcomponent *parent,CustomProperties *properties)
 {
-  QMap<Q3CString, QString> custom = properties->customProperties();
-  for (QMap<Q3CString, QString>::Iterator c = custom.begin();  c != custom.end();  ++c) {
+  QMap<QByteArray, QString> custom = properties->customProperties();
+  for (QMap<QByteArray, QString>::Iterator c = custom.begin();  c != custom.end();  ++c) {
     icalproperty *p = icalproperty_new_x(c.data().utf8());
     icalproperty_set_x_name(p,c.key());
     icalcomponent_add_property(parent,p);
@@ -858,8 +858,8 @@ kdDebug(5800) << " It's an audio action, file: " << alarm->audioFile() << endl;
   }
 
   // Custom properties
-  QMap<Q3CString, QString> custom = alarm->customProperties();
-  for (QMap<Q3CString, QString>::Iterator c = custom.begin();  c != custom.end();  ++c) {
+  QMap<QByteArray, QString> custom = alarm->customProperties();
+  for (QMap<QByteArray, QString>::Iterator c = custom.begin();  c != custom.end();  ++c) {
     icalproperty *p = icalproperty_new_x(c.data().utf8());
     icalproperty_set_x_name(p,c.key());
     icalcomponent_add_property(a,p);
@@ -1440,7 +1440,7 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
 
 void ICalFormatImpl::readCustomProperties(icalcomponent *parent,CustomProperties *properties)
 {
-  QMap<Q3CString, QString> customProperties;
+  QMap<QByteArray, QString> customProperties;
 
   icalproperty *p = icalcomponent_get_first_property(parent,ICAL_X_PROPERTY);
 

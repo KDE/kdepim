@@ -27,7 +27,7 @@
 #include <qfile.h>
 #include <qtextstream.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -123,7 +123,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   }
 
   // Convert to UTF8 and save
-  Q3CString textUtf8 = text.utf8();
+  QByteArray textUtf8 = text.utf8();
   file.file()->writeBlock( textUtf8.data(), textUtf8.size() - 1 );
 
   if ( !file.close() ) {
@@ -140,7 +140,7 @@ bool ICalFormat::fromString( Calendar *cal, const QString &text )
   return fromRawString( cal, text.utf8() );
 }
 
-bool ICalFormat::fromRawString( Calendar *cal, const Q3CString &text )
+bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &text )
 {
   setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
 

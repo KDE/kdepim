@@ -23,7 +23,7 @@
 
 #include <qstring.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include "scheduler.h"
 
@@ -131,7 +131,7 @@ class LIBKCAL_EXPORT ICalFormat : public CalFormat
       a utf8 encoded string. This is an overload used for efficiency reading
       to avoid utf8 conversions, which are expensive, when reading from disk.
     */
-    bool fromRawString( Calendar * calendar, const Q3CString & );
+    bool fromRawString( Calendar * calendar, const QByteArray & );
     void setImplementation( ICalFormatImpl *impl );
 
   private:

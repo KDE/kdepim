@@ -30,7 +30,7 @@
 #include <qfile.h>
 //Added by qt3to4:
 #include <Q3ValueList>
-#include <Q3CString>
+#include <QByteArray>
 
 #include <kdebug.h>
 #include <kmessagebox.h>
@@ -141,7 +141,7 @@ bool VCalFormat::fromString( Calendar *calendar, const QString &text )
   // TODO: Factor out VCalFormat::fromString()
   mCalendar = calendar;
 
-  Q3CString data = text.utf8();
+  QByteArray data = text.utf8();
 
   if ( !data.size() ) return false;
 
@@ -1597,7 +1597,7 @@ Attendee::PartStat VCalFormat::readStatus(const char *s) const
   return status;
 }
 
-Q3CString VCalFormat::writeStatus(Attendee::PartStat status) const
+QByteArray VCalFormat::writeStatus(Attendee::PartStat status) const
 {
   switch(status) {
     default:

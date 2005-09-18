@@ -30,7 +30,8 @@ class FreeBusy;
 class FreeBusyCache
 {
   public:
-    /**
+	virtual ~FreeBusyCache(){}
+	/**
       Save freebusy information belonging to an email.
     */
     virtual bool saveFreeBusy( FreeBusy *freebusy, const Person &person ) = 0;

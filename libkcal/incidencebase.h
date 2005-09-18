@@ -28,7 +28,7 @@
 #include <q3valuelist.h>
 #include <q3ptrlist.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include "customproperties.h"
 #include "attendee.h"
@@ -109,7 +109,7 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     */
     virtual bool accept(Visitor &) { return false; }
 
-    virtual Q3CString type() const = 0;
+    virtual QByteArray type() const = 0;
 
     /** Set the unique id for the event */
     void setUid( const QString & );

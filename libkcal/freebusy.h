@@ -26,7 +26,7 @@
 #include <q3valuelist.h>
 #include <q3ptrlist.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include "period.h"
 #include "calendar.h"
@@ -49,7 +49,7 @@ class LIBKCAL_EXPORT FreeBusy : public IncidenceBase
 
     ~FreeBusy();
     
-    Q3CString type() const { return "FreeBusy"; }
+    QByteArray type() const { return "FreeBusy"; }
 
     virtual QDateTime dtEnd() const;
     bool setDtEnd( const QDateTime &end );
