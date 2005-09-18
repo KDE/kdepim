@@ -29,9 +29,11 @@
 
 
 #include <plugin.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 class docSyncInfo;
-typedef QValueList<docSyncInfo> syncInfoList;
+typedef Q3ValueList<docSyncInfo> syncInfoList;
 
 typedef enum eSyncDirectionEnum {
 		eSyncNone,

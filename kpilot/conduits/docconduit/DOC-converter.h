@@ -36,7 +36,7 @@
 #define BMK_SUFFIX ".bmk"
 #define PDBBMK_SUFFIX ".bm"
 
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qobject.h>
 
 class PilotDatabase;
@@ -49,8 +49,8 @@ class PilotDatabase;
  ****************************************************************************************************/
 
 class docBookmark;
-#define bmkList QPtrList<docBookmark>
-#define bmkSortedList QSortedList<docBookmark>
+#define bmkList Q3PtrList<docBookmark>
+#define bmkSortedList Q3SortedList<docBookmark>
 
 class docBookmark {
 public:

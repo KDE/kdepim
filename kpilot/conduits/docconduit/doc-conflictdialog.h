@@ -30,11 +30,15 @@
 
 #include <kdialogbase.h>
 #include "doc-conduit.h"
+//Added by qt3to4:
+#include <QLabel>
+#include <Q3ValueList>
+#include <QGridLayout>
 
 
 class QComboBox;
 class QGridLayout;
-class QGroupBox;
+class Q3GroupBox;
 
 class QLabel;
 class QPushButton;
@@ -67,11 +71,11 @@ protected:
 	KPilotDeviceLink* fHandle;
 
 protected:
-	QGroupBox* resolutionGroupBox;
+	Q3GroupBox* resolutionGroupBox;
 	QGridLayout*resolutionGroupBoxLayout;
 
 	syncInfoList*syncInfo;
-	QValueList<conflictEntry> conflictEntries;
+	Q3ValueList<conflictEntry> conflictEntries;
 	QLabel *textLabel1,*textLabel2;
 
 protected slots:
