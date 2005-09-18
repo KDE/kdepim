@@ -73,7 +73,7 @@ public:
 
   /** Returns the ascii armored data of the public key with the
       given key id. */
-  virtual Q3CString getAsciiPublicKey(const KeyID& ) { return Q3CString(); }
+  virtual QByteArray getAsciiPublicKey(const KeyID& ) { return QByteArray(); }
 
   /** Signs the given key with the currently set user key. This is currently
       not implemented. */
@@ -92,14 +92,14 @@ protected:
                       bool onlyReadFromGnuPG = false );
   virtual void clear();
 
-  Q3CString addUserId();
+  QByteArray addUserId();
 
-  Q3CString input;
-  Q3CString output;
-  Q3CString error;
+  QByteArray input;
+  QByteArray output;
+  QByteArray error;
   QString errMsg;
 
-  Q3CString mVersion;
+  QByteArray mVersion;
 
   int status;
 
@@ -126,17 +126,17 @@ public:
                               Key* key = 0 );
   virtual KeyList publicKeys( const QStringList & patterns = QStringList() );
   virtual KeyList secretKeys( const QStringList & patterns = QStringList() );
-  virtual Q3CString getAsciiPublicKey( const KeyID& keyID );
+  virtual QByteArray getAsciiPublicKey( const KeyID& keyID );
   virtual int signKey( const KeyID& keyID, const char *passphrase );
 
 protected:
-  KeyList doGetPublicKeys( const Q3CString & cmd,
+  KeyList doGetPublicKeys( const QByteArray & cmd,
                            const QStringList & patterns );
-  virtual KeyList parseKeyList( const Q3CString&, bool );
+  virtual KeyList parseKeyList( const QByteArray&, bool );
 
 private:
-  Key* parsePublicKeyData( const Q3CString& output, Key* key = 0 );
-  void parseTrustDataForKey( Key* key, const Q3CString& str );
+  Key* parsePublicKeyData( const QByteArray& output, Key* key = 0 );
+  void parseTrustDataForKey( Key* key, const QByteArray& str );
 };
 
 class BaseG : public Base
@@ -158,12 +158,12 @@ public:
                               Key* key = 0 );
   virtual KeyList publicKeys( const QStringList & patterns = QStringList() );
   virtual KeyList secretKeys( const QStringList & patterns = QStringList() );
-  virtual Q3CString getAsciiPublicKey( const KeyID& keyID );
+  virtual QByteArray getAsciiPublicKey( const KeyID& keyID );
   virtual int signKey( const KeyID& keyID, const char *passphrase );
 
 private:
-  Key* parseKeyData( const Q3CString& output, int& offset, Key* key = 0 );
-  KeyList parseKeyList( const Q3CString&, bool );
+  Key* parseKeyData( const QByteArray& output, int& offset, Key* key = 0 );
+  KeyList parseKeyList( const QByteArray&, bool );
 };
 
 
@@ -186,14 +186,14 @@ public:
                               Key* key = 0 );
   virtual KeyList publicKeys( const QStringList & patterns = QStringList() );
   virtual KeyList secretKeys( const QStringList & patterns = QStringList() );
-  virtual Q3CString getAsciiPublicKey( const KeyID& keyID );
+  virtual QByteArray getAsciiPublicKey( const KeyID& keyID );
   virtual int signKey( const KeyID& keyID, const char *passphrase );
 
 private:
-  Key* parseKeyData( const Q3CString& output, int& offset, Key* key = 0 );
-  Key* parseSingleKey( const Q3CString& output, Key* key = 0 );
-  KeyList parseKeyList( const Q3CString& output, bool );
-  void parseTrustDataForKey( Key* key, const Q3CString& str );
+  Key* parseKeyData( const QByteArray& output, int& offset, Key* key = 0 );
+  Key* parseSingleKey( const QByteArray& output, Key* key = 0 );
+  KeyList parseKeyList( const QByteArray& output, bool );
+  void parseTrustDataForKey( Key* key, const QByteArray& str );
 };
 
 
@@ -216,12 +216,12 @@ public:
   virtual int isVersion6();
 
 protected:
-  virtual KeyList parseKeyList( const Q3CString &, bool );
+  virtual KeyList parseKeyList( const QByteArray &, bool );
 
 private:
-  Key* parseKeyData( const Q3CString& output, int& offset, Key* key = 0 );
-  Key* parseSingleKey( const Q3CString& output, Key* key = 0 );
-  void parseTrustDataForKey( Key* key, const Q3CString& str );
+  Key* parseKeyData( const QByteArray& output, int& offset, Key* key = 0 );
+  Key* parseSingleKey( const QByteArray& output, Key* key = 0 );
+  void parseTrustDataForKey( Key* key, const QByteArray& str );
 };
 
 // ---------------------------------------------------------------------------

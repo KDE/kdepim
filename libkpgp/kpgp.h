@@ -34,7 +34,7 @@
 #include <qcheckbox.h>
 //Added by qt3to4:
 #include <QGridLayout>
-#include <Q3CString>
+#include <QByteArray>
 #include <Q3PtrList>
 
 #include <kdialogbase.h>
@@ -116,7 +116,7 @@ public:
       Ok       if everything is o.k.
   */
   Kpgp::Result clearsign( Block& block,
-                  const KeyID& keyId, const Q3CString& charset = 0 );
+                  const KeyID& keyId, const QByteArray& charset = 0 );
 
   /** encrypts the given OpenPGP block for a list of persons. if sign is true
       then the block is clearsigned with the key corresponding to the given
@@ -128,7 +128,7 @@ public:
   */
   Kpgp::Result encrypt( Block& block,
                 const QStringList& receivers, const KeyID& keyId,
-                bool sign, const Q3CString& charset = 0 );
+                bool sign, const QByteArray& charset = 0 );
 
   /** Determines the keys which should be used for encrypting the message
       to the given list of recipients.
@@ -174,7 +174,7 @@ public:
   void readSecretKeys( bool reread = false );
 
   /** try to get an ascii armored key block for the given public key */
-  Q3CString getAsciiPublicKey( const KeyID& keyID );
+  QByteArray getAsciiPublicKey( const KeyID& keyID );
 
   /** Returns the public key with the given key ID or null if no matching
       key is found.
@@ -324,7 +324,7 @@ public:
       (n+1)-th Non-OpenPGP block
       </pre>
   */
-  static bool prepareMessageForDecryption( const Q3CString& msg,
+  static bool prepareMessageForDecryption( const QByteArray& msg,
                                            Q3PtrList<Block>& pgpBlocks,
                                            Q3StrList& nonPgpBlocks );
 

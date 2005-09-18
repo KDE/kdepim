@@ -28,7 +28,7 @@
 #include <qregexp.h>
 #include <qdatetime.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include <klocale.h>
 #include <kprocess.h>
@@ -66,7 +66,7 @@ int
 Base5::encsign( Block& block, const KeyIDList& recipients,
                 const char *passphrase )
 {
-  Q3CString cmd;
+  QByteArray cmd;
   int exitStatus = 0;
   int index;
   // used to work around a bug in pgp5. pgp5 treats files
@@ -133,7 +133,7 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
   }
 //if(!ignoreUntrusted)
 //{
-    Q3CString aStr;
+    QByteArray aStr;
     index = -1;
     while((index = error.find("WARNING: The above key",index+1)) != -1)
     {
@@ -254,7 +254,7 @@ Base5::decrypt( Block& block, const char *passphrase )
       int index2;
       while( (index2 = error.find('\n',index+1)) <= end )
       {
-	Q3CString item = error.mid(index+1,index2-index-1);
+	QByteArray item = error.mid(index+1,index2-index-1);
 	item.stripWhiteSpace();
 	mRecipients.append(item);
 	index = index2;
@@ -361,7 +361,7 @@ Base5::publicKeys( const QStringList & patterns )
 {
   int exitStatus = 0;
 
-  Q3CString cmd = "pgpk -ll";
+  QByteArray cmd = "pgpk -ll";
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
     cmd += " ";
@@ -391,7 +391,7 @@ Base5::secretKeys( const QStringList & patterns )
   int exitStatus = 0;
 
   status = 0;
-  Q3CString cmd = "pgpk -ll";
+  QByteArray cmd = "pgpk -ll";
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
     cmd += " ";
@@ -415,19 +415,19 @@ Base5::secretKeys( const QStringList & patterns )
 }
 
 
-Q3CString Base5::getAsciiPublicKey(const KeyID& keyID)
+QByteArray Base5::getAsciiPublicKey(const KeyID& keyID)
 {
   int exitStatus = 0;
 
   if (keyID.isEmpty())
-    return Q3CString();
+    return QByteArray();
 
   status = 0;
   exitStatus = run( "pgpk -xa 0x" + keyID, 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
-    return Q3CString();
+    return QByteArray();
   }
 
   return output;
@@ -437,7 +437,7 @@ Q3CString Base5::getAsciiPublicKey(const KeyID& keyID)
 int
 Base5::signKey(const KeyID& keyID, const char *passphrase)
 {
-  Q3CString cmd;
+  QByteArray cmd;
   int exitStatus = 0;
 
   if(passphrase == 0) return false;
@@ -458,7 +458,7 @@ Base5::signKey(const KeyID& keyID, const char *passphrase)
 //-- private functions --------------------------------------------------------
 
 Key*
-Base5::parseKeyData( const Q3CString& output, int& offset, Key* key /* = 0 */ )
+Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
 // This function parses the data for a single key which is output by PGP 5
 // with the following command line:
 //   pgpk -ll
@@ -656,7 +656,7 @@ Base5::parseKeyData( const Q3CString& output, int& offset, Key* key /* = 0 */ )
 
        */
       int pos = output.find( '=', offset+3 ) + 2;
-      Q3CString fingerprint = output.mid( pos, eol-pos );
+      QByteArray fingerprint = output.mid( pos, eol-pos );
       // remove white space from the fingerprint
       for ( int idx = 0 ; (idx = fingerprint.find(' ', idx)) >= 0 ; )
 	fingerprint.replace( idx, 1, "" );
@@ -666,7 +666,7 @@ Base5::parseKeyData( const Q3CString& output, int& offset, Key* key /* = 0 */ )
     else if( !strncmp( output.data() + offset, "uid", 3 ) )
     { // line contains a uid
       int pos = offset+5;
-      Q3CString uid = output.mid( pos, eol-pos );
+      QByteArray uid = output.mid( pos, eol-pos );
       key->addUserID( uid );
       // displaying of uids which contain non-ASCII characters is broken in
       // PGP 5.0i; it shows these characters as \ooo and truncates the uid
@@ -692,7 +692,7 @@ Base5::parseKeyData( const Q3CString& output, int& offset, Key* key /* = 0 */ )
 
 
 Key*
-Base5::parseSingleKey( const Q3CString& output, Key* key /* = 0 */ )
+Base5::parseSingleKey( const QByteArray& output, Key* key /* = 0 */ )
 {
   int offset;
 
@@ -720,7 +720,7 @@ Base5::parseSingleKey( const Q3CString& output, Key* key /* = 0 */ )
 
 
 KeyList
-Base5::parseKeyList( const Q3CString& output, bool onlySecretKeys )
+Base5::parseKeyList( const QByteArray& output, bool onlySecretKeys )
 {
   KeyList keys;
   Key *key = 0;
@@ -762,12 +762,12 @@ Base5::parseKeyList( const Q3CString& output, bool onlySecretKeys )
 
 
 void
-Base5::parseTrustDataForKey( Key* key, const Q3CString& str )
+Base5::parseTrustDataForKey( Key* key, const QByteArray& str )
 {
   if( ( key == 0 ) || str.isEmpty() )
     return;
 
-  Q3CString keyID = "0x" + key->primaryKeyID();
+  QByteArray keyID = "0x" + key->primaryKeyID();
   UserIDList userIDs = key->userIDs();
 
   // search the start of the trust data

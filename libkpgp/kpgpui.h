@@ -37,7 +37,7 @@
 
 class QString;
 class QRegExp;
-class Q3CString;
+class QByteArray;
 class QCheckBox;            // needed by Config, KeySelectionDialog
 class Q3MultiLineEdit;       // needed by CipherTextDialog
 class QComboBox;            // needed by Config
@@ -164,7 +164,7 @@ class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
 
     QString keyInfo( const Kpgp::Key* ) const;
 
-    QString beautifyFingerprint( const Q3CString& ) const;
+    QString beautifyFingerprint( const QByteArray& ) const;
 
     // Returns the key ID of the key the given QListViewItem belongs to
     KeyID getKeyId( const Q3ListViewItem* ) const;
@@ -333,7 +333,7 @@ class KDE_EXPORT CipherTextDialog: public KDialogBase
   Q_OBJECT
 
   public:
-    CipherTextDialog( const Q3CString & text, const Q3CString & charset=0,
+    CipherTextDialog( const QByteArray & text, const QByteArray & charset=0,
                       QWidget *parent=0, const char *name=0, bool modal=true );
     virtual ~CipherTextDialog() {};
 

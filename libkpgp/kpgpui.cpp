@@ -32,7 +32,7 @@
 #include <qregexp.h>
 //Added by qt3to4:
 #include <QFrame>
-#include <Q3CString>
+#include <QByteArray>
 #include <Q3ValueList>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -566,9 +566,9 @@ QString KeySelectionDialog::keyInfo( const Kpgp::Key *key ) const
   }
 }
 
-QString KeySelectionDialog::beautifyFingerprint( const Q3CString& fpr ) const
+QString KeySelectionDialog::beautifyFingerprint( const QByteArray& fpr ) const
 {
-  Q3CString result;
+  QByteArray result;
 
   if( 40 == fpr.length() ) {
     // convert to this format:
@@ -1624,8 +1624,8 @@ KeyApprovalDialog::slotCancel()
 
 
 // ------------------------------------------------------------------------
-CipherTextDialog::CipherTextDialog( const Q3CString & text,
-                                    const Q3CString & charset, QWidget *parent,
+CipherTextDialog::CipherTextDialog( const QByteArray & text,
+                                    const QByteArray & charset, QWidget *parent,
                                     const char *name, bool modal )
   :KDialogBase( parent, name, modal, i18n("OpenPGP Information"), Ok|Cancel, Ok)
 {

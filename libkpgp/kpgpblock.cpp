@@ -21,11 +21,11 @@
 
 #include <string.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 namespace Kpgp {
 
-Block::Block( const Q3CString& str )
+Block::Block( const QByteArray& str )
   : mText(str), mProcessedText(), mError(),
     mSignatureUserId(), mSignatureKeyId(), mSignatureDate(),
     mRequiredKey(), mEncryptedFor(),
@@ -41,12 +41,12 @@ Block::~Block()
 void
 Block::reset()
 {
-  mProcessedText = Q3CString();
-  mError = Q3CString();
+  mProcessedText = QByteArray();
+  mError = QByteArray();
   mSignatureUserId = QString::null;
-  mSignatureKeyId = Q3CString();
-  mSignatureDate = Q3CString();
-  mRequiredKey = Q3CString();
+  mSignatureKeyId = QByteArray();
+  mSignatureDate = QByteArray();
+  mRequiredKey = QByteArray();
   mEncryptedFor.clear();
   mStatus = 0;
   mHasBeenProcessed = false;
@@ -56,7 +56,7 @@ void
 Block::clear()
 {
   reset();
-  mText = Q3CString();
+  mText = QByteArray();
   mType = NoPgpBlock;
 }
 
@@ -113,7 +113,7 @@ Block::verify()
 }
 
 Kpgp::Result
-Block::clearsign( const Q3CString& keyId, const Q3CString& charset )
+Block::clearsign( const QByteArray& keyId, const QByteArray& charset )
 {
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
 
@@ -124,8 +124,8 @@ Block::clearsign( const Q3CString& keyId, const Q3CString& charset )
 }
 
 Kpgp::Result
-Block::encrypt( const QStringList& receivers, const Q3CString& keyId,
-                const bool sign, const Q3CString& charset )
+Block::encrypt( const QStringList& receivers, const QByteArray& keyId,
+                const bool sign, const QByteArray& charset )
 {
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
 

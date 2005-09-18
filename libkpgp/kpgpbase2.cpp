@@ -27,7 +27,7 @@
 
 #include <qdatetime.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include <klocale.h>
 #include <kprocess.h>
@@ -66,7 +66,7 @@ int
 Base2::encsign( Block& block, const KeyIDList& recipients,
                 const char *passphrase )
 {
-  Q3CString cmd;
+  QByteArray cmd;
   int exitStatus = 0;
 
   if(!recipients.isEmpty() && passphrase != 0)
@@ -118,7 +118,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
     int index = 0;
     bool bad = FALSE;
     unsigned int num = 0;
-    Q3CString badkeys = "";
+    QByteArray badkeys = "";
     if (error.find("Cannot find the public key") != -1)
     {
       index = 0;
@@ -324,7 +324,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       mRecipients.clear();
       while( (index2 = error.find('\n',index+1)) <= end )
       {
-	Q3CString item = error.mid(index+1,index2-index-1);
+	QByteArray item = error.mid(index+1,index2-index-1);
 	item.stripWhiteSpace();
 	mRecipients.append(item);
 	index = index2;
@@ -511,7 +511,7 @@ Base2::publicKeys( const QStringList & patterns )
 }
 
 KeyList
-Base2::doGetPublicKeys( const Q3CString & cmd, const QStringList & patterns )
+Base2::doGetPublicKeys( const QByteArray & cmd, const QStringList & patterns )
 {
   int exitStatus = 0;
   KeyList publicKeys;
@@ -529,7 +529,7 @@ Base2::doGetPublicKeys( const Q3CString & cmd, const QStringList & patterns )
     publicKeys = parseKeyList( output, false );
   }
   else {
-    typedef QMap<Q3CString, Key*> KeyMap;
+    typedef QMap<QByteArray, Key*> KeyMap;
     KeyMap map;
 
     for ( QStringList::ConstIterator it = patterns.begin();
@@ -576,7 +576,7 @@ Base2::secretKeys( const QStringList & patterns )
 int
 Base2::signKey(const KeyID& keyID, const char *passphrase)
 {
-  Q3CString cmd;
+  QByteArray cmd;
   int exitStatus = 0;
 
   cmd = PGP2 " +batchmode +language=en -ks -f ";
@@ -593,12 +593,12 @@ Base2::signKey(const KeyID& keyID, const char *passphrase)
 }
 
 
-Q3CString Base2::getAsciiPublicKey(const KeyID& keyID)
+QByteArray Base2::getAsciiPublicKey(const KeyID& keyID)
 {
   int exitStatus = 0;
 
   if (keyID.isEmpty())
-    return Q3CString();
+    return QByteArray();
 
   status = 0;
   exitStatus = run( PGP2 " +batchmode +force +language=en -kxaf 0x" + keyID,
@@ -606,7 +606,7 @@ Q3CString Base2::getAsciiPublicKey(const KeyID& keyID)
 
   if(exitStatus != 0) {
     status = ERROR;
-    return Q3CString();
+    return QByteArray();
   }
 
   return output;
@@ -614,7 +614,7 @@ Q3CString Base2::getAsciiPublicKey(const KeyID& keyID)
 
 
 Key*
-Base2::parsePublicKeyData( const Q3CString& output, Key* key /* = 0 */ )
+Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
 {
   Subkey *subkey = 0;
   int index;
@@ -728,7 +728,7 @@ Base2::parsePublicKeyData( const Q3CString& output, Key* key /* = 0 */ )
       pos = pos2 + 1;
       while( output[pos] == ' ' )
         pos++;
-      Q3CString uid = output.mid( pos, index2-pos );
+      QByteArray uid = output.mid( pos, index2-pos );
       if( uid != "*** KEY REVOKED ***" )
         key->addUserID( uid );
       else
@@ -752,7 +752,7 @@ Base2::parsePublicKeyData( const Q3CString& output, Key* key /* = 0 */ )
         // Example:
         //             Key fingerprint = 47 30 7C 76 05 BF 5E FB  72 41 00 F2 7D 0B D0 49
 
-        Q3CString fingerprint = output.mid( pos, index2-pos );
+        QByteArray fingerprint = output.mid( pos, index2-pos );
         // remove white space from the fingerprint
 	for ( int idx = 0 ; (idx = fingerprint.find(' ', idx)) >= 0 ; )
 	  fingerprint.replace( idx, 1, "" );
@@ -818,12 +818,12 @@ Base2::parsePublicKeyData( const Q3CString& output, Key* key /* = 0 */ )
 
 
 void
-Base2::parseTrustDataForKey( Key* key, const Q3CString& str )
+Base2::parseTrustDataForKey( Key* key, const QByteArray& str )
 {
   if( ( key == 0 ) || str.isEmpty() )
     return;
 
-  Q3CString keyID = key->primaryKeyID();
+  QByteArray keyID = key->primaryKeyID();
   UserIDList userIDs = key->userIDs();
 
   // search the trust data belonging to this key
@@ -893,7 +893,7 @@ Base2::parseTrustDataForKey( Key* key, const Q3CString& str )
 
 
 KeyList
-Base2::parseKeyList( const Q3CString& output, bool secretKeys )
+Base2::parseKeyList( const QByteArray& output, bool secretKeys )
 {
   kdDebug(5100) << "Kpgp::Base2::parseKeyList()" << endl;
   KeyList keys;
@@ -1007,7 +1007,7 @@ Base2::parseKeyList( const Q3CString& output, bool secretKeys )
       pos = pos2 + 1;
       while( output[pos] == ' ' )
         pos++;
-      Q3CString uid = output.mid( pos, index2-pos );
+      QByteArray uid = output.mid( pos, index2-pos );
       if( uid != "*** KEY REVOKED ***" )
         key->addUserID( uid );
       else
@@ -1033,7 +1033,7 @@ Base2::parseKeyList( const Q3CString& output, bool secretKeys )
 
         int pos2;
         pos2 = pos + 18;
-        Q3CString fingerprint = output.mid( pos, index2-pos );
+        QByteArray fingerprint = output.mid( pos, index2-pos );
         // remove white space from the fingerprint
 	for ( int idx = 0 ; (idx = fingerprint.find(' ', idx)) >= 0 ; )
 	  fingerprint.replace( idx, 1, "" );

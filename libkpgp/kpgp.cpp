@@ -35,7 +35,7 @@
 #include <qapplication.h>
 //Added by qt3to4:
 #include <Q3StrList>
-#include <Q3CString>
+#include <QByteArray>
 #include <Q3PtrList>
 
 #include <kdebug.h>
@@ -309,7 +309,7 @@ Module::decrypt( Block& block )
 
 Kpgp::Result
 Module::clearsign( Block& block,
-                   const KeyID& keyId, const Q3CString& charset )
+                   const KeyID& keyId, const QByteArray& charset )
 {
   return encrypt( block, QStringList(), keyId, true, charset );
 }
@@ -317,7 +317,7 @@ Module::clearsign( Block& block,
 Kpgp::Result
 Module::encrypt( Block& block,
                  const QStringList& receivers, const KeyID& keyId,
-                 bool sign, const Q3CString& charset )
+                 bool sign, const QByteArray& charset )
 {
   KeyIDList encryptionKeyIds; // list of keys which are used for encryption
   int status = 0;
@@ -831,7 +831,7 @@ Module::rereadKey( const KeyID& keyID, const bool readTrust /* = true */ )
   return newKey;
 }
 
-Q3CString
+QByteArray
 Module::getAsciiPublicKey(const KeyID& keyID)
 {
   if (0 == pgp) assignPGPBase();
@@ -1024,7 +1024,7 @@ Module::getConfig()
 
 
 bool
-Module::prepareMessageForDecryption( const Q3CString& msg,
+Module::prepareMessageForDecryption( const QByteArray& msg,
                                      Q3PtrList<Block>& pgpBlocks,
                                      Q3StrList& nonPgpBlocks )
 {

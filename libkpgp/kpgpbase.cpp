@@ -33,7 +33,7 @@
 
 #include <qapplication.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 
 namespace Kpgp {
@@ -52,9 +52,9 @@ Base::~Base()
 void
 Base::clear()
 {
-  input = Q3CString();
-  output = Q3CString();
-  error = Q3CString();
+  input = QByteArray();
+  output = QByteArray();
+  error = QByteArray();
   errMsg = QString::null;
   status = OK;
 }
@@ -87,9 +87,9 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
     close(ppass[1]);
 
     // tell pgp which fd to use for the passphrase
-    Q3CString tmp;
+    QString tmp;
     tmp.sprintf("%d",ppass[0]);
-    ::setenv("PGPPASSFD",tmp.data(),1);
+    ::setenv("PGPPASSFD",tmp.toUtf8()/*.data()*/,1);
 
     //Uncomment these lines for testing only! Doing so will decrease security!
     //kdDebug(5100) << "pgp PGPPASSFD = " << tmp << endl;
@@ -664,11 +664,11 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
 }
 
 
-Q3CString
+QByteArray
 Base::addUserId()
 {
-  Q3CString cmd;
-  Q3CString pgpUser = Module::getKpgp()->user();
+  QByteArray cmd;
+  QByteArray pgpUser = Module::getKpgp()->user();
 
   if(!pgpUser.isEmpty())
   {
@@ -676,7 +676,7 @@ Base::addUserId()
     cmd += pgpUser;
     return cmd;
   }
-  return Q3CString();
+  return QByteArray();
 }
 
 

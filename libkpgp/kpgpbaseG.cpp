@@ -29,7 +29,7 @@
 
 #include <qtextcodec.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include <string.h> /* strncmp */
 
@@ -74,7 +74,7 @@ int
 BaseG::encsign( Block& block, const KeyIDList& recipients,
                 const char *passphrase )
 {
-  Q3CString cmd;
+  QByteArray cmd;
   int exitStatus = 0;
 
   if(!recipients.isEmpty() && passphrase != 0)
@@ -96,7 +96,7 @@ BaseG::encsign( Block& block, const KeyIDList& recipients,
   {
     cmd += " --set-filename stdin";
 
-    Q3CString pgpUser = Module::getKpgp()->user();
+    QByteArray pgpUser = Module::getKpgp()->user();
     if(Module::getKpgp()->encryptToSelf() && !pgpUser.isEmpty()) {
       cmd += " -r 0x";
       cmd += pgpUser;
@@ -132,7 +132,7 @@ BaseG::encsign( Block& block, const KeyIDList& recipients,
     int index = 0;
     bool bad = FALSE;
     unsigned int num = 0;
-    Q3CString badkeys = "";
+    QByteArray badkeys = "";
     // Examples:
     // gpg: 0x12345678: skipped: public key not found
     // gpg: 0x12345678: skipped: public key is disabled
@@ -294,7 +294,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
       mRecipients.clear();
       while( (index2 = error.find('\n',index+1)) <= end )
       {
-	Q3CString item = error.mid(index+1,index2-index-1);
+	QByteArray item = error.mid(index+1,index2-index-1);
 	item.stripWhiteSpace();
 	mRecipients.append(item);
 	index = index2;
@@ -411,7 +411,7 @@ BaseG::publicKeys( const QStringList & patterns )
 
   // the option --with-colons should be used for interprocess communication
   // with gpg (according to Werner Koch)
-  Q3CString cmd = "--batch --list-public-keys --with-fingerprint --with-colons "
+  QByteArray cmd = "--batch --list-public-keys --with-fingerprint --with-colons "
                  "--fixed-list-mode --no-expensive-trust-checks";
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
@@ -443,7 +443,7 @@ BaseG::secretKeys( const QStringList & patterns )
 
   // the option --with-colons should be used for interprocess communication
   // with gpg (according to Werner Koch)
-  Q3CString cmd = "--batch --list-secret-keys --with-fingerprint --with-colons "
+  QByteArray cmd = "--batch --list-secret-keys --with-fingerprint --with-colons "
                  "--fixed-list-mode";
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
@@ -471,7 +471,7 @@ BaseG::secretKeys( const QStringList & patterns )
 int
 BaseG::signKey(const KeyID& keyID, const char *passphrase)
 {
-  Q3CString cmd;
+  QByteArray cmd;
   int exitStatus = 0;
 
   cmd = "--batch";
@@ -489,20 +489,20 @@ BaseG::signKey(const KeyID& keyID, const char *passphrase)
 }
 
 
-Q3CString
+QByteArray
 BaseG::getAsciiPublicKey(const KeyID& keyID)
 {
   int exitStatus = 0;
 
   if (keyID.isEmpty())
-    return Q3CString();
+    return QByteArray();
 
   status = 0;
   exitStatus = runGpg("--batch --armor --export 0x" + keyID, 0, true);
 
   if(exitStatus != 0) {
     status = ERROR;
-    return Q3CString();
+    return QByteArray();
   }
 
   return output;
@@ -510,7 +510,7 @@ BaseG::getAsciiPublicKey(const KeyID& keyID)
 
 
 Key*
-BaseG::parseKeyData( const Q3CString& output, int& offset, Key* key /* = 0 */ )
+BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
 // This function parses the data for a single key which is output by GnuPG
 // with the following command line arguments:
 //   --batch --list-public-keys --with-fingerprint --with-colons
@@ -531,7 +531,7 @@ BaseG::parseKeyData( const Q3CString& output, int& offset, Key* key /* = 0 */ )
   else
     key->clear();
 
-  Q3CString keyID;
+  QByteArray keyID;
   bool firstKey = true;
 
   while( true )
@@ -554,7 +554,7 @@ BaseG::parseKeyData( const Q3CString& output, int& offset, Key* key /* = 0 */ )
 
       key->setSecret( !bIsPublicKey );
 
-      Subkey *subkey = new Subkey( Q3CString(), !bIsPublicKey );
+      Subkey *subkey = new Subkey( QByteArray(), !bIsPublicKey );
 
       int pos = index + 4; // begin of 2nd field
       int pos2 = output.find( ':', pos );
@@ -613,11 +613,11 @@ BaseG::parseKeyData( const Q3CString& output, int& offset, Key* key /* = 0 */ )
           break;
         case 6: // the creation date (in seconds since 1970-01-01 00:00:00)
           if( pos2 > pos )
-            subkey->setCreationDate( output.mid( pos, pos2-pos ).toLong() );
+            subkey->setCreationDate( QString(output.mid( pos, pos2-pos )).toLong() );
           break;
         case 7: // the expiration date (in seconds since 1970-01-01 00:00:00)
           if( pos2 > pos )
-            subkey->setExpirationDate( output.mid( pos, pos2-pos ).toLong() );
+            subkey->setExpirationDate( QString(output.mid( pos, pos2-pos )).toLong() );
           else
             subkey->setExpirationDate( -1 ); // key expires never
           break;
@@ -711,7 +711,7 @@ BaseG::parseKeyData( const Q3CString& output, int& offset, Key* key /* = 0 */ )
         case 9:
           break;
         case 10: // User-ID
-          Q3CString uid = output.mid( pos, pos2-pos );
+          QByteArray uid = output.mid( pos, pos2-pos );
           // replace "\xXX" with the corresponding character;
           // other escaped characters, i.e. \n, \r etc., are ignored
           // because they shouldn't appear in user IDs
@@ -820,7 +820,7 @@ BaseG::parseKeyData( const Q3CString& output, int& offset, Key* key /* = 0 */ )
 
 
 KeyList
-BaseG::parseKeyList( const Q3CString& output, bool secretKeys )
+BaseG::parseKeyList( const QByteArray& output, bool secretKeys )
 {
   KeyList keys;
   Key *key = 0;
