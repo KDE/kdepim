@@ -114,11 +114,11 @@ public:
 
   /** @brief reimplement the parser
    * read at least len bytes */
-  virtual bool parseRead (QByteArray &buffer,ulong len,ulong relay=0);
+  virtual bool parseRead (QByteArray &buffer, long len, long relay=0);
 
   /** @brief reimplement the parser
    * @brief read at least a line (up to CRLF) */
-  virtual bool parseReadLine (QByteArray & buffer, ulong relay = 0);
+  virtual bool parseReadLine (QByteArray & buffer, long relay = 0);
 
   /** @brief reimplement the parser
    * @brief write argument to the server */
@@ -184,7 +184,7 @@ private:
   void doListEntry (const QString & encodedUrl, int stretch, imapCache * cache = NULL,
     bool withFlags = FALSE, bool withSubject = FALSE);
 
-  QString myHost, myUser, myPass, myAuth, myTLS;
+  QString myHost, myUser, myPass, myAuth, myTLS, myService;
   int myPort;
   bool mySSL;
 

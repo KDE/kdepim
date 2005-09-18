@@ -33,8 +33,10 @@
 #include <kcodecs.h>
 #include <kdebug.h>
 
-mimeHeader::mimeHeader ():
-typeList (17, false), dispositionList (17, false)
+mimeHeader::mimeHeader ()
+    : typeList (17, false), dispositionList (17, false),
+      _contentType("application/octet-stream"),
+      _contentDisposition(), _contentDescription()
 {
   // Case insensitive hashes are killing us.  Also are they too small?
   originalHdrLines.setAutoDelete (true);
@@ -44,7 +46,6 @@ typeList (17, false), dispositionList (17, false)
   dispositionList.setAutoDelete (true);
   nestedMessage = NULL;
   contentLength = 0;
-  contentType = "application/octet-stream";
 }
 
 mimeHeader::~mimeHeader ()
@@ -86,7 +87,7 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
     else
     {
       int skip;
-      char *aCStr = addLine->getValue ().data ();
+      const char *aCStr = addLine->getValue ().data ();
       Q3Dict < QString > *aList = 0;
 
       skip = mimeHdrLine::parseSeparator (';', aCStr);
@@ -104,39 +105,39 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
           if (aCStr[skip - 1] == ';')
             cut++;
         }
-        Q3CString mimeValue = Q3CString (aCStr, skip - cut + 1);  // cutting of one because of 0x00
+        QByteArray mimeValue(aCStr, skip - cut + 1);  // cutting of one because of 0x00
 
 
         if (!qstricmp (addLine->getLabel (), "Content-Disposition"))
         {
           aList = &dispositionList;
-          _contentDisposition = mimeValue;
+          setDisposition( mimeValue );
         }
         else if (!qstricmp (addLine->getLabel (), "Content-Type"))
         {
           aList = &typeList;
-          contentType = mimeValue;
+          setType( mimeValue );
         }
         else
           if (!qstricmp (addLine->getLabel (), "Content-Transfer-Encoding"))
         {
-          contentEncoding = mimeValue;
+          setEncoding( mimeValue );
         }
         else if (!qstricmp (addLine->getLabel (), "Content-ID"))
         {
-          contentID = mimeValue;
+          setID( mimeValue );
         }
         else if (!qstricmp (addLine->getLabel (), "Content-Description"))
         {
-          _contentDescription = mimeValue;
+          setDescription( mimeValue );
         }
         else if (!qstricmp (addLine->getLabel (), "Content-MD5"))
         {
-          contentMD5 = mimeValue;
+          setMD5( mimeValue );
         }
         else if (!qstricmp (addLine->getLabel (), "Content-Length"))
         {
-          contentLength = mimeValue.toULong ();
+          contentLength = mimeValue.toUInt ();
         }
         else
         {
@@ -610,8 +611,14 @@ void mimeHeader::serialize(QDataStream& stream)
   int nestedcount = nestedParts.count();
   if (nestedParts.isEmpty() && nestedMessage)
     nestedcount = 1;
-  stream << nestedcount << contentType << QString (getTypeParm ("name")) << _contentDescription
-    << _contentDisposition << contentEncoding << contentLength << partSpecifier;
+  stream << nestedcount;
+  stream << _contentType;
+  stream << QString (getTypeParm ("name"));
+  stream << _contentDescription;
+  stream << _contentDisposition;
+  stream << _contentEncoding;
+  stream << contentLength;
+  stream << partSpecifier;
   // serialize nested message
   if (nestedMessage)
     nestedMessage->serialize(stream);

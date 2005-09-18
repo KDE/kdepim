@@ -57,10 +57,10 @@ public:
   parseString() { pos = 0; }
   char operator[](uint i) const { return data[i + pos]; }
   bool isEmpty() const { return pos >= data.size(); }
-  Q3CString cstr() const
+  QByteArray cstr() const
   {
-    if (pos >= data.size()) return Q3CString();
-    return Q3CString(data.data() + pos, data.size() - pos + 1);
+    if (pos >= data.size()) return QByteArray();
+    return QByteArray(data.data() + pos, data.size() - pos + 1);
   }
   int find(char c, int index = 0)
   {
@@ -104,7 +104,7 @@ public:
     data.duplicate(s.latin1(), s.length());
   }
   QByteArray data;
-  uint pos;
+  int pos;
 };
 
 class imapCache
@@ -336,10 +336,10 @@ public:
   virtual void parseRelay (ulong);
 
   /** read at least len bytes */
-  virtual bool parseRead (QByteArray & buffer, ulong len, ulong relay = 0);
+  virtual bool parseRead (QByteArray & buffer, long len, long relay = 0);
 
   /** read at least a line (up to CRLF) */
-  virtual bool parseReadLine (QByteArray & buffer, ulong relay = 0);
+  virtual bool parseReadLine (QByteArray & buffer, long relay = 0);
 
   /** write argument to server */
   virtual void parseWriteLine (const QString &);

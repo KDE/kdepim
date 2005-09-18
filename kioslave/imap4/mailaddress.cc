@@ -72,7 +72,7 @@ mailAddress::mailAddress (char *aCStr)
 }
 
 int
-mailAddress::parseAddress (char *aCStr)
+mailAddress::parseAddress (const char *aCStr)
 {
   int retVal = 0;
   int skip;
@@ -82,7 +82,7 @@ mailAddress::parseAddress (char *aCStr)
   if (aCStr)
   {
     //skip leading white space
-    skip = mimeHdrLine::skipWS ((const char *) aCStr);
+    skip = mimeHdrLine::skipWS (aCStr);
     if (skip > 0)
     {
       aCStr += skip;

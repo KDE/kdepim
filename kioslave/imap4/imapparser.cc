@@ -1413,7 +1413,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
           mimeHeader *body =
             parseBodyStructure (inWords, section, envelope);
           QByteArray data;
-          QDataStream stream( data, QIODevice::WriteOnly );
+          QDataStream stream( &data, QIODevice::WriteOnly );
           body->serialize(stream);
           parseRelay(data);
 
@@ -1701,7 +1701,7 @@ imapParser::parseRelay (ulong len)
     ("imapParser::parseRelay - virtual function not reimplemented - announcement lost");
 }
 
-bool imapParser::parseRead (QByteArray & buffer, ulong len, ulong relay)
+bool imapParser::parseRead (QByteArray & buffer, long len, long relay)
 {
   Q_UNUSED(buffer);
   Q_UNUSED(len);
@@ -1711,7 +1711,7 @@ bool imapParser::parseRead (QByteArray & buffer, ulong len, ulong relay)
   return FALSE;
 }
 
-bool imapParser::parseReadLine (QByteArray & buffer, ulong relay)
+bool imapParser::parseReadLine (QByteArray & buffer, long relay)
 {
   Q_UNUSED(buffer);
   Q_UNUSED(relay);
@@ -1787,11 +1787,11 @@ Q3CString imapParser::parseLiteralC(parseString & inWords, bool relay, bool stop
   if (inWords[0] == '{')
   {
     Q3CString retVal;
-    ulong runLen = inWords.find ('}', 1);
+    int runLen = inWords.find ('}', 1);
     if (runLen > 0)
     {
       bool proper;
-      ulong runLenSave = runLen + 1;
+      long runLenSave = runLen + 1;
       Q3CString tmpstr(runLen);
       inWords.takeMidNoResize(tmpstr, 1, runLen - 1);
       runLen = tmpstr.toULong (&proper);

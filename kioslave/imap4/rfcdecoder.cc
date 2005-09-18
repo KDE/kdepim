@@ -33,6 +33,7 @@
 #include <qregexp.h>
 //Added by qt3to4:
 #include <Q3CString>
+#include <QLatin1Char>
 #include <kcodecs.h>
 
 // This part taken from rfc 2192 IMAP URL Scheme. C. Newman. September 1997.
@@ -59,9 +60,9 @@ QString rfcDecoder::fromIMAP (const QString & inSrc)
   unsigned char c, i, bitcount;
   unsigned long ucs4, utf16, bitbuf;
   unsigned char base64[256], utf8[6];
-  unsigned long srcPtr = 0;
-  Q3CString dst;
-  Q3CString src = inSrc.ascii ();
+  unsigned int srcPtr = 0;
+  QByteArray dst;
+  QByteArray src = inSrc.ascii ();
   uint srcLen = inSrc.length();
 
   /* initialize modified base64 decoding table */
@@ -177,11 +178,11 @@ QString rfcDecoder::quoteIMAP(const QString &src)
 QString rfcDecoder::toIMAP (const QString & inSrc)
 {
   unsigned int utf8pos, utf8total, c, utf7mode, bitstogo, utf16flag;
-  unsigned long ucs4, bitbuf;
+  unsigned int ucs4, bitbuf;
   Q3CString src = inSrc.utf8 ();
   QString dst;
 
-  ulong srcPtr = 0;
+  int srcPtr = 0;
   utf7mode = 0;
   utf8total = 0;
   bitstogo = 0;
@@ -294,19 +295,6 @@ QString rfcDecoder::toIMAP (const QString & inSrc)
 }
 
 //-----------------------------------------------------------------------------
-QString rfcDecoder::decodeQuoting(const QString &aStr)
-{
-  QString result;
-  unsigned int strLength(aStr.length());
-  for (unsigned int i = 0; i < strLength ; i++)
-  {
-    if (aStr[i] == "\\") i++;
-    result += aStr[i];
-  }
-  return result;
-}
-
-//-----------------------------------------------------------------------------
 QTextCodec *
 rfcDecoder::codecForName (const QString & _str)
 {
@@ -343,8 +331,9 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
   if (_str.find("=?") < 0)
     return _str;
 
-  Q3CString aStr = _str.ascii ();  // QString.length() means Unicode chars
-  Q3CString result;
+  // FIXME get rid of the conversion?
+  QByteArray aStr = _str.ascii ();  // QString.length() means Unicode chars
+  QByteArray result;
   char *pos, *beg, *end, *mid = NULL;
   Q3CString str;
   char encoding = 0, ch;
@@ -429,7 +418,7 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
       *pos = ch;
       int len = str.length();
       for (i = 0; i < len; i++)
-        result += (char) (QChar) str[i];
+        result += str[i];
 
       pos = end - 1;
     }
@@ -470,7 +459,7 @@ rfcDecoder::encodeRFC2047String (const QString & _str)
   int rptr = 0;
   // My stats show this number results in 12 resize() out of 73,000
   int resultLen = 3 * _str.length() / 2;
-  Q3CString result(resultLen);
+  QByteArray result(resultLen);
   
   while (*latin)
   {
@@ -519,7 +508,8 @@ rfcDecoder::encodeRFC2047String (const QString & _str)
         result[rptr++] = *latin;
         latin++;
       }
-      strcpy(&result[rptr], "=?iso-8859-1?q?"); rptr += 15;
+      result.replace( rptr, 15, "=?iso-8859-1?q?" );
+      rptr += 15;
       if (resultLen - rptr - 1 <= 3*(stop - latin + 1)) {
         resultLen += (stop - latin + 1) * 4 + 20; // more space
 	result.resize(resultLen);
@@ -659,8 +649,8 @@ rfcDecoder::decodeRFC2231String (const QString & _str)
       ch2 = st.at (p + 2).latin1 () - 48;
       if (ch2 > 16)
         ch2 -= 7;
-      st.at (p) = ch * 16 + ch2;
-      st.remove (p + 1, 2);
+      st.replace( p, 1, ch * 16 + ch2 );
+      st.remove ( p + 1, 2 );
     }
     p++;
   }

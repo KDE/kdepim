@@ -179,18 +179,21 @@ sigchld_handler (int signo)
   }
 }
 
-IMAP4Protocol::IMAP4Protocol (const Q3CString & pool, const Q3CString & app, bool isSSL):TCPSlaveBase ((isSSL ? 993 : 143),
-        (isSSL ? IMAP_SSL_PROTOCOL : IMAP_PROTOCOL), pool,
-              app, isSSL), imapParser (), mimeIO (), outputBuffer(outputCache)
+IMAP4Protocol::IMAP4Protocol (const Q3CString & pool, const Q3CString & app, bool isSSL)
+  :TCPSlaveBase ((isSSL ? 993 : 143), (isSSL ? IMAP_SSL_PROTOCOL : IMAP_PROTOCOL), pool, app, isSSL),
+   imapParser (),
+   mimeIO (),
+   mySSL( isSSL ),
+   relayEnabled( false ),
+   cacheOutput( false ),
+   decodeContent( false ),
+   outputBuffer(&outputCache),
+   outputBufferIndex(0),
+   mProcessedSize( 0 ),
+   readBufferLen( 0 ),
+   mTimeOfLastNoop( QDateTime() )
 {
-  outputBufferIndex = 0;
-  mySSL = isSSL;
   readBuffer[0] = 0x00;
-  relayEnabled = false;
-  readBufferLen = 0;
-  cacheOutput = false;
-  decodeContent = false;
-  mTimeOfLastNoop = QDateTime();
 }
 
 IMAP4Protocol::~IMAP4Protocol ()
@@ -652,6 +655,8 @@ IMAP4Protocol::setHost (const QString & _host, int _port,
     myPort = _port;
     myUser = _user;
     myPass = _pass;
+    // FIXME pass it in?
+    myService = _port==143?QLatin1String( "imap" ):QLatin1String( "imaps" );
   }
 }
 
@@ -683,12 +688,14 @@ IMAP4Protocol::parseRelay (ulong len)
 }
 
 
-bool IMAP4Protocol::parseRead(QByteArray & buffer, ulong len, ulong relay)
+bool IMAP4Protocol::parseRead(QByteArray & buffer, long len, long relay)
 {
-  char buf[8192];
-  while (buffer.size() < len)
+  const long int bufLen = 8192;
+  char buf[bufLen];
+  // FIXME
+  while (buffer.size() < len )
   {
-    ssize_t readLen = myRead(buf, QMIN(len - buffer.size(), sizeof(buf) - 1));
+    ssize_t readLen = myRead(buf, QMIN(len - buffer.size(), bufLen - 1));
     if (readLen == 0)
     {
       kdDebug(7116) << "parseRead: readLen == 0 - connection broken" << endl;
@@ -707,7 +714,7 @@ bool IMAP4Protocol::parseRead(QByteArray & buffer, ulong len, ulong relay)
       relayData.resetRawData(buf, currentRelay);
     }
     {
-      QBuffer stream (buffer);
+      QBuffer stream( &buffer );
       stream.open (QIODevice::WriteOnly);
       stream.at (buffer.size ());
       stream.writeBlock (buf, readLen);
@@ -718,7 +725,7 @@ bool IMAP4Protocol::parseRead(QByteArray & buffer, ulong len, ulong relay)
 }
 
 
-bool IMAP4Protocol::parseReadLine (QByteArray & buffer, ulong relay)
+bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
 {
   if (myHost.isEmpty()) return FALSE;
 
@@ -741,7 +748,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, ulong relay)
       }
       // append to buffer
       {
-        QBuffer stream (buffer);
+        QBuffer stream (&buffer);
 
         stream.open (QIODevice::WriteOnly);
         stream.at (buffer.size ());
@@ -1230,7 +1237,7 @@ IMAP4Protocol::special (const QByteArray & aData)
   kdDebug(7116) << "IMAP4Protocol::special" << endl;
   if (!makeLogin()) return;
 
-  QDataStream stream(aData, QIODevice::ReadOnly);
+  QDataStream stream( aData );
 
   int tmp;
   stream >> tmp;
@@ -1856,7 +1863,7 @@ bool IMAP4Protocol::makeLogin ()
   kdDebug(7116) << "IMAP4::makeLogin - checking login" << endl;
   bool alreadyConnected = getState() == ISTATE_CONNECT;
   kdDebug(7116) << "IMAP4::makeLogin - alreadyConnected " << alreadyConnected << endl;
-  if (alreadyConnected || connectToHost (myHost.latin1(), myPort))
+  if (alreadyConnected || connectToHost (myHost, myService))
   {
 //      fcntl (m_iSock, F_SETFL, (fcntl (m_iSock, F_GETFL) | O_NDELAY));
 
@@ -2450,7 +2457,7 @@ void IMAP4Protocol::flushOutput(QString contentEncoding)
   processedSize( mProcessedSize );
   outputBufferIndex = 0;
   outputCache[0] = '\0';
-  outputBuffer.setBuffer(outputCache);
+  outputBuffer.setBuffer(&outputCache);
 }
 
 ssize_t IMAP4Protocol::myRead(void *data, ssize_t len)
@@ -2465,7 +2472,7 @@ ssize_t IMAP4Protocol::myRead(void *data, ssize_t len)
   }
   if (!isConnectionValid()) return 0;
   waitForResponse( responseTimeout() );
-  return read(data, len);
+  return read((char*)data, len);
 }
 
 bool

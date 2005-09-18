@@ -47,11 +47,6 @@ public:
 /** replace " with \" and \ with \\ " and \ characters */
   static QString quoteIMAP (const QString & src);
 
-  /** remove \ from a string 
-   * @bug I'm pretty sure this doesn't do what the author meant it to do
-   */
-  static QString decodeQuoting(const QString &aStr);
-
   /**
    * fetch a codec by name
    * @return Text Codec object

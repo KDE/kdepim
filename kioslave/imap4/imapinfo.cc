@@ -193,7 +193,7 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
 
 }
 
-ulong imapInfo::_flags (const Q3CString & inFlags)
+ulong imapInfo::_flags (const QByteArray & inFlags)
 {
   ulong flags = 0;
   parseString flagsString;

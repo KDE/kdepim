@@ -61,58 +61,58 @@ public:
   // recursively serialize all important contents to the QDataStream
   void serialize(QDataStream& stream);
 
-  const Q3CString& getType ()
+  const QByteArray& getType ()
   {
-    return contentType;
+    return _contentType;
   }
-  void setType (const Q3CString & _str)
+  void setType (const QByteArray& _str)
   {
-    contentType = _str;
+    _contentType = _str;
   }
 
-  const Q3CString& getDescription ()
+  const QByteArray& getDescription ()
   {
     return _contentDescription;
   }
-  void setDescription (const Q3CString & _str)
+  void setDescription( const QByteArray& _str )
   {
     _contentDescription = _str;
   }
 
-  Q3CString getDisposition ()
+  const QByteArray& getDisposition ()
   {
     return _contentDisposition;
   }
-  void setDisposition (const Q3CString & _str)
+  void setDisposition( const QByteArray& _str )
   {
     _contentDisposition = _str;
   }
 
-  Q3CString getEncoding ()
+  const QByteArray& getEncoding ()
   {
-    return contentEncoding;
+    return _contentEncoding;
   }
-  void setEncoding (const Q3CString & _str)
+  void setEncoding (const QByteArray &_str )
   {
-    contentEncoding = _str;
-  }
-
-  Q3CString getMD5 ()
-  {
-    return contentMD5;
-  }
-  void setMD5 (const Q3CString & _str)
-  {
-    contentMD5 = _str;
+    _contentEncoding = _str;
   }
 
-  Q3CString getID ()
+  const QByteArray& getMD5 ()
   {
-    return contentID;
+    return _contentMD5;
   }
-  void setID (const Q3CString & _str)
+  void setMD5 (const QByteArray & _str)
   {
-    contentID = _str;
+    _contentMD5 = _str;
+  }
+
+  const QByteArray& getID ()
+  {
+    return _contentID;
+  }
+  void setID (const QByteArray & _str)
+  {
+    _contentID = _str;
   }
 
   unsigned long getLength ()
@@ -320,13 +320,13 @@ private:
   Q3PtrList < mimeHdrLine > additionalHdrLines;
   Q3Dict < QString > typeList;
   Q3Dict < QString > dispositionList;
-  Q3CString contentType;
-  Q3CString _contentDisposition;
-  Q3CString contentEncoding;
-  Q3CString _contentDescription;
-  Q3CString contentID;
-  Q3CString contentMD5;
-  unsigned long contentLength;
+  QByteArray _contentType;
+  QByteArray _contentDisposition;
+  QByteArray _contentEncoding;
+  QByteArray _contentDescription;
+  QByteArray _contentID;
+  QByteArray _contentMD5;
+  unsigned int contentLength;
   Q3CString mimeContent;
   Q3CString preMultipartBody;
   Q3CString postMultipartBody;

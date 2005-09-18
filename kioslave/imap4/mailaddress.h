@@ -62,7 +62,7 @@ public:
   const QString getComment () const;
   const Q3CString & getCommentRaw () const;
 
-  int parseAddress (char *);
+  int parseAddress (const char *);
   const Q3CString getStr ();
   bool isEmpty () const;
 
