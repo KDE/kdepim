@@ -63,7 +63,7 @@
 #include <qapplication.h>
 #include <qdatetime.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 #include <QByteArray>
 
 // other
@@ -323,7 +323,7 @@ void CertificateInfoWidgetImpl::updateChainView() {
     return;
   Q3ListViewItem * item = 0;
 
-  Q3ValueList<GpgME::Key>::const_iterator it = mChain.begin();
+  QList<GpgME::Key>::const_iterator it = mChain.begin();
   // root item:
   if ( (*it).chainID() && qstrcmp( (*it).chainID(), (*it).primaryFingerprint() ) == 0 )
     item = new Q3ListViewItem( pathView, Kleo::DN( (*it++).userID(0).id() ).prettyDN() );
@@ -361,7 +361,7 @@ void CertificateInfoWidgetImpl::slotShowCertPathDetails( Q3ListViewItem * item )
   // necessary if pathView was a Kleo::KeyListView, but it's
   // Qt-Designer-generated and I don't feel like creating a custom
   // widget spec for Kleo::KeyListView.
-  unsigned int totalCount = 0;
+  int totalCount = 0;
   int itemIndex = -1;
   for ( const Q3ListViewItem * i = pathView->firstChild() ; i ; i = i->firstChild() ) {
     if ( i == item )

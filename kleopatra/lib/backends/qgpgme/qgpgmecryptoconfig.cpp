@@ -32,7 +32,7 @@
 
 #include "qgpgmecryptoconfig.h"
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 #include <QByteArray>
 #include <kdebug.h>
 #include <kprocio.h>
@@ -250,7 +250,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   KTempFile tmpFile;
   tmpFile.setAutoDelete( true );
 
-  Q3ValueList<QGpgMECryptoConfigEntry *> dirtyEntries;
+  QList<QGpgMECryptoConfigEntry *> dirtyEntries;
 
   // Collect all dirty entries
   Q3DictIterator<QGpgMECryptoConfigGroup> groupit( mGroups );
@@ -314,7 +314,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   }
   else
   {
-    Q3ValueList<QGpgMECryptoConfigEntry *>::Iterator it = dirtyEntries.begin();
+    QList<QGpgMECryptoConfigEntry *>::Iterator it = dirtyEntries.begin();
     for( ; it != dirtyEntries.end(); ++it ) {
       (*it)->setDirty( false );
     }

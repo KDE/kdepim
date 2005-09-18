@@ -55,7 +55,7 @@
 //Added by qt3to4:
 #include <QPixmap>
 #include <QVBoxLayout>
-#include <Q3ValueList>
+#include <QList>
 #include <QHBoxLayout>
 #include <QGridLayout>
 
@@ -102,7 +102,7 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
 void Kleo::CryptoConfigModule::save()
 {
   bool changed = false;
-  Q3ValueList<CryptoConfigComponentGUI *>::Iterator it = mComponentGUIs.begin();
+  QList<CryptoConfigComponentGUI *>::Iterator it = mComponentGUIs.begin();
   for( ; it != mComponentGUIs.end(); ++it ) {
     if ( (*it)->save() )
       changed = true;
@@ -113,7 +113,7 @@ void Kleo::CryptoConfigModule::save()
 
 void Kleo::CryptoConfigModule::reset()
 {
-  Q3ValueList<CryptoConfigComponentGUI *>::Iterator it = mComponentGUIs.begin();
+  QList<CryptoConfigComponentGUI *>::Iterator it = mComponentGUIs.begin();
   for( ; it != mComponentGUIs.end(); ++it ) {
     (*it)->load();
   }
@@ -121,7 +121,7 @@ void Kleo::CryptoConfigModule::reset()
 
 void Kleo::CryptoConfigModule::defaults()
 {
-  Q3ValueList<CryptoConfigComponentGUI *>::Iterator it = mComponentGUIs.begin();
+  QList<CryptoConfigComponentGUI *>::Iterator it = mComponentGUIs.begin();
   for( ; it != mComponentGUIs.end(); ++it ) {
     (*it)->defaults();
   }
@@ -164,7 +164,7 @@ Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
 bool Kleo::CryptoConfigComponentGUI::save()
 {
   bool changed = false;
-  Q3ValueList<CryptoConfigGroupGUI *>::Iterator it = mGroupGUIs.begin();
+  QList<CryptoConfigGroupGUI *>::Iterator it = mGroupGUIs.begin();
   for( ; it != mGroupGUIs.end(); ++it ) {
     if ( (*it)->save() )
       changed = true;
@@ -174,14 +174,14 @@ bool Kleo::CryptoConfigComponentGUI::save()
 
 void Kleo::CryptoConfigComponentGUI::load()
 {
-  Q3ValueList<CryptoConfigGroupGUI *>::Iterator it = mGroupGUIs.begin();
+  QList<CryptoConfigGroupGUI *>::Iterator it = mGroupGUIs.begin();
   for( ; it != mGroupGUIs.end(); ++it )
     (*it)->load();
 }
 
 void Kleo::CryptoConfigComponentGUI::defaults()
 {
-  Q3ValueList<CryptoConfigGroupGUI *>::Iterator it = mGroupGUIs.begin();
+  QList<CryptoConfigGroupGUI *>::Iterator it = mGroupGUIs.begin();
   for( ; it != mGroupGUIs.end(); ++it )
     (*it)->defaults();
 }
@@ -222,7 +222,7 @@ Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
 bool Kleo::CryptoConfigGroupGUI::save()
 {
   bool changed = false;
-  Q3ValueList<CryptoConfigEntryGUI *>::Iterator it = mEntryGUIs.begin();
+  QList<CryptoConfigEntryGUI *>::Iterator it = mEntryGUIs.begin();
   for( ; it != mEntryGUIs.end(); ++it ) {
     if ( (*it)->isChanged() ) {
       (*it)->save();
@@ -234,14 +234,14 @@ bool Kleo::CryptoConfigGroupGUI::save()
 
 void Kleo::CryptoConfigGroupGUI::load()
 {
-  Q3ValueList<CryptoConfigEntryGUI *>::Iterator it = mEntryGUIs.begin();
+  QList<CryptoConfigEntryGUI *>::Iterator it = mEntryGUIs.begin();
   for( ; it != mEntryGUIs.end(); ++it )
     (*it)->load();
 }
 
 void Kleo::CryptoConfigGroupGUI::defaults()
 {
-  Q3ValueList<CryptoConfigEntryGUI *>::Iterator it = mEntryGUIs.begin();
+  QList<CryptoConfigEntryGUI *>::Iterator it = mEntryGUIs.begin();
   for( ; it != mEntryGUIs.end(); ++it )
     (*it)->resetToDefault();
 }

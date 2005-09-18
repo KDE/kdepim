@@ -37,7 +37,7 @@
 #include <qcheckbox.h>
 //Added by qt3to4:
 #include <QLabel>
-#include <Q3ValueList>
+#include <QList>
 #include <QGridLayout>
 #include <kurl.h>
 
@@ -73,7 +73,7 @@ namespace Kleo {
 
   private:
     Kleo::CryptoConfigComponent* mComponent;
-    Q3ValueList<CryptoConfigGroupGUI *> mGroupGUIs;
+    QList<CryptoConfigGroupGUI *> mGroupGUIs;
   };
 
   /**
@@ -92,7 +92,7 @@ namespace Kleo {
 
   private:
     Kleo::CryptoConfigGroup* mGroup;
-    Q3ValueList<CryptoConfigEntryGUI *> mEntryGUIs;
+    QList<CryptoConfigEntryGUI *> mEntryGUIs;
   };
 
   /**

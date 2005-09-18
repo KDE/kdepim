@@ -35,6 +35,7 @@
 #include <kjanuswidget.h>
 
 #include <q3valuelist.h>
+#include <QList>
 
 namespace Kleo {
 
@@ -60,7 +61,7 @@ namespace Kleo {
 
   private:
     Kleo::CryptoConfig* mConfig;
-    Q3ValueList<CryptoConfigComponentGUI *> mComponentGUIs;
+    QList<CryptoConfigComponentGUI *> mComponentGUIs;
   };
 
 }

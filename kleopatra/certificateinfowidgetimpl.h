@@ -40,6 +40,7 @@
 #include <q3valuelist.h>
 //Added by qt3to4:
 #include <QByteArray>
+#include <QList>
 
 class KProcess;
 class Q3ListViewItem;
@@ -80,7 +81,7 @@ private:
 private:
   QByteArray mDumpOutput;
   QByteArray mDumpError;
-  Q3ValueList<GpgME::Key> mChain;
+  QList<GpgME::Key> mChain;
   bool mExternal;
   bool mFoundIssuer;
   bool mHaveKeyLocally;
