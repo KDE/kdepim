@@ -27,7 +27,7 @@
 #include <qdatetime.h>
 #include <qstringlist.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 
 #include <limits.h>
 #include <math.h>
@@ -631,7 +631,7 @@ void RecurrenceRule::setDirty()
   mDirty = true;
   mCached = false;
   mCachedDates.clear();
-  for ( Q3ValueList<Observer*>::ConstIterator it = mObservers.begin();
+  for ( QList<Observer*>::ConstIterator it = mObservers.begin();
         it != mObservers.end(); ++it ) {
     if ( (*it) ) (*it)->recurrenceChanged( this );
   }
@@ -651,21 +651,21 @@ void RecurrenceRule::setFrequency(int freq)
   setDirty();
 }
 
-void RecurrenceRule::setBySeconds( const Q3ValueList<int> bySeconds )
+void RecurrenceRule::setBySeconds( const QList<int> bySeconds )
 {
   if ( isReadOnly() ) return;
   mBySeconds = bySeconds;
   setDirty();
 }
 
-void RecurrenceRule::setByMinutes( const Q3ValueList<int> byMinutes )
+void RecurrenceRule::setByMinutes( const QList<int> byMinutes )
 {
   if ( isReadOnly() ) return;
   mByMinutes = byMinutes;
   setDirty();
 }
 
-void RecurrenceRule::setByHours( const Q3ValueList<int> byHours )
+void RecurrenceRule::setByHours( const QList<int> byHours )
 {
   if ( isReadOnly() ) return;
   mByHours = byHours;
@@ -673,42 +673,42 @@ void RecurrenceRule::setByHours( const Q3ValueList<int> byHours )
 }
 
 
-void RecurrenceRule::setByDays( const Q3ValueList<WDayPos> byDays )
+void RecurrenceRule::setByDays( const QList<WDayPos> byDays )
 {
   if ( isReadOnly() ) return;
   mByDays = byDays;
   setDirty();
 }
 
-void RecurrenceRule::setByMonthDays( const Q3ValueList<int> byMonthDays )
+void RecurrenceRule::setByMonthDays( const QList<int> byMonthDays )
 {
   if ( isReadOnly() ) return;
   mByMonthDays = byMonthDays;
   setDirty();
 }
 
-void RecurrenceRule::setByYearDays( const Q3ValueList<int> byYearDays )
+void RecurrenceRule::setByYearDays( const QList<int> byYearDays )
 {
   if ( isReadOnly() ) return;
   mByYearDays = byYearDays;
   setDirty();
 }
 
-void RecurrenceRule::setByWeekNumbers( const Q3ValueList<int> byWeekNumbers )
+void RecurrenceRule::setByWeekNumbers( const QList<int> byWeekNumbers )
 {
   if ( isReadOnly() ) return;
   mByWeekNumbers = byWeekNumbers;
   setDirty();
 }
 
-void RecurrenceRule::setByMonths( const Q3ValueList<int> byMonths )
+void RecurrenceRule::setByMonths( const QList<int> byMonths )
 {
   if ( isReadOnly() ) return;
   mByMonths = byMonths;
   setDirty();
 }
 
-void RecurrenceRule::setBySetPos( const Q3ValueList<int> bySetPos )
+void RecurrenceRule::setBySetPos( const QList<int> bySetPos )
 {
   if ( isReadOnly() ) return;
   mBySetPos = bySetPos;
@@ -789,7 +789,7 @@ void RecurrenceRule::buildConstraints()
 
   Constraint::List tmp;
   Constraint::List::const_iterator it;
-  Q3ValueList<int>::const_iterator intit;
+  QList<int>::const_iterator intit;
 
   #define intConstraint( list, element ) \
   if ( !list.isEmpty() ) { \
@@ -815,7 +815,7 @@ void RecurrenceRule::buildConstraints()
 
   if ( !mByDays.isEmpty() ) {
     for ( it = mConstraints.constBegin(); it != mConstraints.constEnd(); ++it ) {
-      Q3ValueList<WDayPos>::const_iterator dayit;
+      QList<WDayPos>::const_iterator dayit;
       for ( dayit = mByDays.constBegin(); dayit != mByDays.constEnd(); ++dayit ) {
         con = (*it);
         con.weekday = (*dayit).day();
@@ -1348,7 +1348,7 @@ DateTimeList RecurrenceRule::datesForInterval( const Constraint &interval, Perio
   if ( !mBySetPos.isEmpty() ) {
     DateTimeList tmplst = lst;
     lst.clear();
-    Q3ValueList<int>::ConstIterator it;
+    QList<int>::ConstIterator it;
     for ( it = mBySetPos.begin(); it != mBySetPos.end(); ++it ) {
       int pos = *it;
       if ( pos > 0 ) --pos;
@@ -1381,7 +1381,7 @@ void RecurrenceRule::dump() const
 #define dumpByIntList(list,label) \
   if ( !list.isEmpty() ) {\
     QStringList lst;\
-    for ( Q3ValueList<int>::ConstIterator it = list.begin();\
+    for ( QList<int>::ConstIterator it = list.begin();\
           it != list.end(); ++it ) {\
       lst.append( QString::number( *it ) );\
     }\
@@ -1392,7 +1392,7 @@ void RecurrenceRule::dump() const
   dumpByIntList( mByHours,      "ByHours:    " );
   if ( !mByDays.isEmpty() ) {
     QStringList lst;
-    for ( Q3ValueList<WDayPos>::ConstIterator it = mByDays.begin();
+    for ( QList<WDayPos>::ConstIterator it = mByDays.begin();
           it != mByDays.end(); ++it ) {
       lst.append( ( ((*it).pos()!=0) ? QString::number( (*it).pos() ) : "" ) +
                    DateHelper::dayName( (*it).day() ) );

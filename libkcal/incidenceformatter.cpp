@@ -52,7 +52,7 @@
 #include <q3stylesheet.h>
 #include <qdatetime.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 
 #include <time.h>
 
@@ -432,10 +432,10 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
       .arg( KGlobal::locale()->formatDate( fb->dtStart().date(), true ) )
       .arg( KGlobal::locale()->formatDate( fb->dtEnd().date(), true ) ) );
 
-  Q3ValueList<Period> periods = fb->busyPeriods();
+  QList<Period> periods = fb->busyPeriods();
 
   QString text = eventViewerAddTag( "em", eventViewerAddTag( "b", i18n("Busy:") ) );
-  Q3ValueList<Period>::iterator it;
+  QList<Period>::iterator it;
   for ( it = periods.begin(); it != periods.end(); ++it ) {
     Period per = *it;
     if ( per.hasDuration() ) {
@@ -664,9 +664,9 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
   html += "<tr><td colspan=2><hr></td></tr>\n";
   html += "<tr><td colspan=2>Busy periods given in this free/busy object:</td></tr>\n";
 
-  Q3ValueList<Period> periods = fb->busyPeriods();
+  QList<Period> periods = fb->busyPeriods();
 
-  Q3ValueList<Period>::iterator it;
+  QList<Period>::iterator it;
   for ( it = periods.begin(); it != periods.end(); ++it ) {
     Period per = *it;
     if ( per.hasDuration() ) {

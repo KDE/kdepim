@@ -33,6 +33,7 @@
 
 #include "incidencebase.h"
 #include <kdepimmacros.h>
+#include <QList>
 
 namespace KCal {
 
@@ -255,7 +256,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
       @return the start date/time of all occurences that overlap with the given
           date. Empty list if the incidence does not overlap with the date at all
     */
-    virtual Q3ValueList<QDateTime> startDateTimesForDate( const QDate &date ) const;
+    virtual QList<QDateTime> startDateTimesForDate( const QDate &date ) const;
 
     /**
       Calculates the start date/time for all recurrences that happen at the given
@@ -265,7 +266,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
           date/time. Empty list if the incidence does not happen at the given
           time at all.
     */
-    virtual Q3ValueList<QDateTime> startDateTimesForDateTime( const QDateTime &datetime ) const;
+    virtual QList<QDateTime> startDateTimesForDateTime( const QDateTime &datetime ) const;
 
     /** Return the end time of the occurrence if it starts at the given date/time */
     virtual QDateTime endDateForStart( const QDateTime &startDt ) const;

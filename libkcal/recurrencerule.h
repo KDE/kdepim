@@ -208,28 +208,28 @@ class LIBKCAL_EXPORT RecurrenceRule
 
 
 
-    void setBySeconds( const Q3ValueList<int> bySeconds );
-    void setByMinutes( const Q3ValueList<int> byMinutes );
-    void setByHours( const Q3ValueList<int> byHours );
+    void setBySeconds( const QList<int> bySeconds );
+    void setByMinutes( const QList<int> byMinutes );
+    void setByHours( const QList<int> byHours );
 
-    void setByDays( const Q3ValueList<WDayPos> byDays );
-    void setByMonthDays( const Q3ValueList<int> byMonthDays );
-    void setByYearDays( const Q3ValueList<int> byYearDays );
-    void setByWeekNumbers( const Q3ValueList<int> byWeekNumbers );
-    void setByMonths( const Q3ValueList<int> byMonths );
-    void setBySetPos( const Q3ValueList<int> bySetPos );
+    void setByDays( const QList<WDayPos> byDays );
+    void setByMonthDays( const QList<int> byMonthDays );
+    void setByYearDays( const QList<int> byYearDays );
+    void setByWeekNumbers( const QList<int> byWeekNumbers );
+    void setByMonths( const QList<int> byMonths );
+    void setBySetPos( const QList<int> bySetPos );
     void setWeekStart( short weekStart );
 
-    const Q3ValueList<int> &bySeconds() const { return mBySeconds; }
-    const Q3ValueList<int> &byMinutes() const { return mByMinutes; }
-    const Q3ValueList<int> &byHours() const { return mByHours; }
+    const QList<int> &bySeconds() const { return mBySeconds; }
+    const QList<int> &byMinutes() const { return mByMinutes; }
+    const QList<int> &byHours() const { return mByHours; }
 
-    const Q3ValueList<WDayPos> &byDays() const { return mByDays; }
-    const Q3ValueList<int> &byMonthDays() const { return mByMonthDays; }
-    const Q3ValueList<int> &byYearDays() const { return mByYearDays; }
-    const Q3ValueList<int> &byWeekNumbers() const { return mByWeekNumbers; }
-    const Q3ValueList<int> &byMonths() const { return mByMonths; }
-    const Q3ValueList<int> &bySetPos() const { return mBySetPos; }
+    const QList<WDayPos> &byDays() const { return mByDays; }
+    const QList<int> &byMonthDays() const { return mByMonthDays; }
+    const QList<int> &byYearDays() const { return mByYearDays; }
+    const QList<int> &byWeekNumbers() const { return mByWeekNumbers; }
+    const QList<int> &byMonths() const { return mByMonths; }
+    const QList<int> &bySetPos() const { return mBySetPos; }
     short weekStart() const { return mWeekStart; }
 
 
@@ -259,7 +259,7 @@ class LIBKCAL_EXPORT RecurrenceRule
   private:
     class Constraint {
       public:
-        typedef Q3ValueList<Constraint> List;
+        typedef QList<Constraint> List;
 
         Constraint( int wkst = 1 );
 /*         Constraint( const Constraint &con ) :
@@ -314,22 +314,22 @@ class LIBKCAL_EXPORT RecurrenceRule
     bool mIsReadOnly;
     bool mFloating;
 
-    Q3ValueList<int> mBySeconds;     // values: second 0-59
-    Q3ValueList<int> mByMinutes;     // values: minute 0-59
-    Q3ValueList<int> mByHours;       // values: hour 0-23
+    QList<int> mBySeconds;     // values: second 0-59
+    QList<int> mByMinutes;     // values: minute 0-59
+    QList<int> mByHours;       // values: hour 0-23
 
-    Q3ValueList<WDayPos> mByDays;   // n-th weekday of the month or year
-    Q3ValueList<int> mByMonthDays;   // values: day -31 to -1 and 1-31
-    Q3ValueList<int> mByYearDays;    // values: day -366 to -1 and 1-366
-    Q3ValueList<int> mByWeekNumbers; // values: week -53 to -1 and 1-53
-    Q3ValueList<int> mByMonths;      // values: month 1-12
-    Q3ValueList<int> mBySetPos;      // values: position -366 to -1 and 1-366
+    QList<WDayPos> mByDays;   // n-th weekday of the month or year
+    QList<int> mByMonthDays;   // values: day -31 to -1 and 1-31
+    QList<int> mByYearDays;    // values: day -366 to -1 and 1-366
+    QList<int> mByWeekNumbers; // values: week -53 to -1 and 1-53
+    QList<int> mByMonths;      // values: month 1-12
+    QList<int> mBySetPos;      // values: position -366 to -1 and 1-366
     short mWeekStart;               // first day of the week (1=Monday, 7=Sunday)
 
     Constraint::List mConstraints;
     void buildConstraints();
     bool mDirty;
-    Q3ValueList<Observer*> mObservers;
+    QList<Observer*> mObservers;
 
     // Cache for duration
     mutable DateTimeList mCachedDates;

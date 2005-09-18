@@ -27,7 +27,7 @@
 
 #include "alarm.h"
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 
 using namespace KCal;
 
@@ -179,7 +179,7 @@ QString Alarm::programArguments() const
 }
 
 void Alarm::setEmailAlarm(const QString &subject, const QString &text,
-                          const Q3ValueList<Person> &addressees, const QStringList &attachments)
+                          const QList<Person> &addressees, const QStringList &attachments)
 {
   mType = Email;
   mMailSubject = subject;
@@ -198,7 +198,7 @@ void Alarm::setMailAddress(const Person &mailAddress)
   }
 }
 
-void Alarm::setMailAddresses(const Q3ValueList<Person> &mailAddresses)
+void Alarm::setMailAddresses(const QList<Person> &mailAddresses)
 {
   if (mType == Email) {
     mMailAddresses = mailAddresses;
@@ -214,9 +214,9 @@ void Alarm::addMailAddress(const Person &mailAddress)
   }
 }
 
-Q3ValueList<Person> Alarm::mailAddresses() const
+QList<Person> Alarm::mailAddresses() const
 {
-  return (mType == Email) ? mMailAddresses : Q3ValueList<Person>();
+  return (mType == Email) ? mMailAddresses : QList<Person>();
 }
 
 void Alarm::setMailSubject(const QString &mailAlarmSubject)

@@ -27,6 +27,7 @@
 #include <q3ptrlist.h>
 //Added by qt3to4:
 #include <QByteArray>
+#include <QList>
 
 #include "period.h"
 #include "calendar.h"
@@ -45,7 +46,7 @@ class LIBKCAL_EXPORT FreeBusy : public IncidenceBase
     FreeBusy( const QDateTime &start, const QDateTime &end );
     FreeBusy( Calendar *calendar, const QDateTime &start,
               const QDateTime &end );
-    FreeBusy( Q3ValueList<Period> busyPeriods );
+    FreeBusy( QList<Period> busyPeriods );
 
     ~FreeBusy();
     
@@ -54,7 +55,7 @@ class LIBKCAL_EXPORT FreeBusy : public IncidenceBase
     virtual QDateTime dtEnd() const;
     bool setDtEnd( const QDateTime &end );
 
-    Q3ValueList<Period> busyPeriods() const;
+    QList<Period> busyPeriods() const;
 
     void addPeriod( const QDateTime &start, const QDateTime &end );
     void addPeriod( const QDateTime &start, const Duration &dur );
@@ -68,7 +69,7 @@ class LIBKCAL_EXPORT FreeBusy : public IncidenceBase
     bool addLocalPeriod( const QDateTime &start, const QDateTime &end );
 
     QDateTime mDtEnd;
-    Q3ValueList<Period> mBusyPeriods;
+    QList<Period> mBusyPeriods;
     Calendar *mCalendar;
 
     class Private;

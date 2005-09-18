@@ -26,7 +26,7 @@
 
 #include <qregexp.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 
 #include "incidence.h"
 
@@ -214,14 +214,15 @@ void CompatPre31::fixRecurrence( Incidence *incidence )
     /* addYearlyNum */
     // Dates were stored as day numbers, with a fiddle to take account of leap years.
     // Convert the day number to a month.
-    Q3ValueList<int> days = r->byYearDays();
+    QList<int> days = r->byYearDays();
     if ( !days.isEmpty() ) {
-      Q3ValueList<int> months = r->byMonths();
-      for ( Q3ValueListConstIterator<int> it = days.begin(); it != days.end(); ++it ) {
-        int newmonth = QDate( r->startDt().date().year(), 1, 1).addDays( (*it) - 1 ).month();
-        if ( !months.contains( newmonth ) )
-          months.append( newmonth );
-      }
+      QList<int> months = r->byMonths();
+		for (int i = 0; i < months.size(); ++i) {
+				int newmonth = QDate( r->startDt().date().year(), 1, 1).addDays( months.at(i) - 1 ).month();
+       			if ( !months.contains( newmonth ) )
+          			months.append( newmonth );	
+		}
+	  
       r->setByMonths( months );
       days.clear();
       r->setByYearDays( days );

@@ -28,7 +28,7 @@
 
 #include "incidence.h"
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 
 using namespace KCal;
 
@@ -384,13 +384,13 @@ bool Incidence::recursAt(const QDateTime &qdt) const
   @return the start date/time of all occurences that overlap with the given
       date. Empty list if the incidence does not overlap with the date at all
 */
-Q3ValueList<QDateTime> Incidence::startDateTimesForDate( const QDate &date ) const
+QList<QDateTime> Incidence::startDateTimesForDate( const QDate &date ) const
 {
 //kdDebug(5800) << "Incidence::startDateTimesForDate " << date << ", incidence=" << summary() << endl;
   QDateTime start = dtStart();
   QDateTime end = endDateRecurrenceBase();
 
-  Q3ValueList<QDateTime> result;
+  QList<QDateTime> result;
 
   // TODO_Recurrence: Also work if only due date is given...
   if ( !start.isValid() && ! end.isValid() ) {
@@ -411,8 +411,8 @@ Q3ValueList<QDateTime> Incidence::startDateTimesForDate( const QDate &date ) con
   QDateTime tmp;
   while ( tmpday <= date ) {
     if ( recurrence()->recursOn( tmpday ) ) {
-      Q3ValueList<QTime> times = recurrence()->recurTimesOn( tmpday );
-      for ( Q3ValueList<QTime>::ConstIterator it = times.begin(); it != times.end(); ++it ) {
+      QList<QTime> times = recurrence()->recurTimesOn( tmpday );
+      for ( QList<QTime>::ConstIterator it = times.begin(); it != times.end(); ++it ) {
         tmp = QDateTime( tmpday, *it );
         if ( endDateForStart( tmp ).date() >= date )
           result << tmp;
@@ -431,13 +431,13 @@ Q3ValueList<QDateTime> Incidence::startDateTimesForDate( const QDate &date ) con
       date/time. Empty list if the incidence does not happen at the given
       time at all.
 */
-Q3ValueList<QDateTime> Incidence::startDateTimesForDateTime( const QDateTime &datetime ) const
+QList<QDateTime> Incidence::startDateTimesForDateTime( const QDateTime &datetime ) const
 {
 // kdDebug(5800) << "Incidence::startDateTimesForDateTime " << datetime << ", incidence=" << summary() << endl;
   QDateTime start = dtStart();
   QDateTime end = endDateRecurrenceBase();
 
-  Q3ValueList<QDateTime> result;
+  QList<QDateTime> result;
 
   // TODO_Recurrence: Also work if only due date is given...
   if ( !start.isValid() && ! end.isValid() ) {
@@ -458,8 +458,8 @@ Q3ValueList<QDateTime> Incidence::startDateTimesForDateTime( const QDateTime &da
   QDateTime tmp;
   while ( tmpday <= datetime.date() ) {
     if ( recurrence()->recursOn( tmpday ) ) {
-      Q3ValueList<QTime> times = recurrence()->recurTimesOn( tmpday );
-      for ( Q3ValueList<QTime>::ConstIterator it = times.begin(); it != times.end(); ++it ) {
+      QList<QTime> times = recurrence()->recurTimesOn( tmpday );
+      for ( QList<QTime>::ConstIterator it = times.begin(); it != times.end(); ++it ) {
         tmp = QDateTime( tmpday, *it );
         if ( !(tmp > datetime || endDateForStart( tmp ) < datetime ) )
           result << tmp;

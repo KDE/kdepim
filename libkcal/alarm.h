@@ -33,6 +33,7 @@
 #include "libkcal_export.h"
 
 #include <kdepimmacros.h>
+#include <QList>
 
 namespace KCal {
 
@@ -150,7 +151,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       @param attachments optional names of files to attach to the email.
     */
     void setEmailAlarm( const QString &subject, const QString &text,
-                        const Q3ValueList<Person> &addressees,
+                        const QList<Person> &addressees,
                         const QStringList &attachments = QStringList() );
 
     /**
@@ -162,7 +163,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       Send mail to these addresses when the alarm is triggered.
       Ignored if the alarm is not an email alarm.
     */
-    void setMailAddresses( const Q3ValueList<Person> &mailAlarmAddresses );
+    void setMailAddresses( const QList<Person> &mailAlarmAddresses );
     /**
       Add this address to the list of addresses to send mail to when the alarm is triggered.
       Ignored if the alarm is not an email alarm.
@@ -171,7 +172,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     /**
       Return the addresses to send mail to when an alarm goes off.
     */
-    Q3ValueList<Person> mailAddresses() const;
+    QList<Person> mailAddresses() const;
 
     /**
       Set the subject line of the mail.
@@ -340,7 +341,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     QString mDescription;        // text to display/email body/procedure arguments
     QString mFile;               // procedure program to run/optional audio file to play
     QStringList mMailAttachFiles;      // filenames to attach to email
-    Q3ValueList<Person> mMailAddresses; // who to mail for reminder
+    QList<Person> mMailAddresses; // who to mail for reminder
     QString mMailSubject;        // subject of email
 
     int mAlarmSnoozeTime;        // number of minutes after alarm to
