@@ -531,7 +531,7 @@ void sspm_build_header(struct sspm_header *header, char* line)
     val = sspm_strdup(sspm_value(line));
     prop = sspm_strdup(sspm_property_name(line));
 
-    if(strcmp(prop,"Content-Type") == 0){
+    if(strcasecmp(prop,"Content-Type") == 0){
 	
 	/* Create a new mime_header, fill in content-type
 	   and possibly boundary */
@@ -558,19 +558,19 @@ void sspm_build_header(struct sspm_header *header, char* line)
 	    header->boundary = sspm_strdup(boundary);
 	}
 	
-    } else if(strcmp(prop,"Content-Transfer-Encoding")==0){
+    } else if(strcasecmp(prop,"Content-Transfer-Encoding")==0){
 	char* encoding = sspm_value(line);
 	char* lencoding = sspm_lowercase(encoding);
 
-	if(strcmp(lencoding,"base64")==0){
+	if(strcasecmp(lencoding,"base64")==0){
 	    header->encoding = SSPM_BASE64_ENCODING;
-	} else 	if(strcmp(lencoding,"quoted-printable")==0){
+	} else 	if(strcasecmp(lencoding,"quoted-printable")==0){
 	    header->encoding = SSPM_QUOTED_PRINTABLE_ENCODING;
-	} else 	if(strcmp(lencoding,"binary")==0){
+	} else 	if(strcasecmp(lencoding,"binary")==0){
 	    header->encoding = SSPM_BINARY_ENCODING;
-	} else 	if(strcmp(lencoding,"7bit")==0){
+	} else 	if(strcasecmp(lencoding,"7bit")==0){
 	    header->encoding = SSPM_7BIT_ENCODING;
-	} else 	if(strcmp(lencoding,"8bit")==0){
+	} else 	if(strcasecmp(lencoding,"8bit")==0){
 	    header->encoding = SSPM_8BIT_ENCODING;
 	} else {
 	    header->encoding = SSPM_UNKNOWN_ENCODING;
@@ -581,7 +581,7 @@ void sspm_build_header(struct sspm_header *header, char* line)
 
 	header->def = 0;
 	
-    } else if(strcmp(prop,"Content-Id")==0){
+    } else if(strcasecmp(prop,"Content-Id")==0){
 	char* cid = sspm_value(line);
 	header->content_id = sspm_strdup(cid);
 	header->def = 0;

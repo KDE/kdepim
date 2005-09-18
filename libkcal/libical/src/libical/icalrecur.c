@@ -396,40 +396,40 @@ struct icalrecurrencetype icalrecurrencetype_from_string(const char* str)
 	    return parser.rt;
 	}
 
-	if (strcmp(name,"FREQ") == 0){
+	if (strcasecmp(name,"FREQ") == 0){
 	    parser.rt.freq = icalrecur_string_to_freq(value);
-	} else if (strcmp(name,"COUNT") == 0){
+	} else if (strcasecmp(name,"COUNT") == 0){
 	    parser.rt.count = atoi(value);
-	} else if (strcmp(name,"UNTIL") == 0){
+	} else if (strcasecmp(name,"UNTIL") == 0){
 	    parser.rt.until = icaltime_from_string(value);
-	} else if (strcmp(name,"INTERVAL") == 0){
+	} else if (strcasecmp(name,"INTERVAL") == 0){
 	    parser.rt.interval = (short)atoi(value);
-	} else if (strcmp(name,"WKST") == 0){
+	} else if (strcasecmp(name,"WKST") == 0){
 	    parser.rt.week_start = icalrecur_string_to_weekday(value);
-	} else if (strcmp(name,"BYSECOND") == 0){
+	} else if (strcasecmp(name,"BYSECOND") == 0){
 	    icalrecur_add_byrules(&parser,parser.rt.by_second,
 				  ICAL_BY_SECOND_SIZE,value);
-	} else if (strcmp(name,"BYMINUTE") == 0){
+	} else if (strcasecmp(name,"BYMINUTE") == 0){
 	    icalrecur_add_byrules(&parser,parser.rt.by_minute,
 				  ICAL_BY_MINUTE_SIZE,value);
-	} else if (strcmp(name,"BYHOUR") == 0){
+	} else if (strcasecmp(name,"BYHOUR") == 0){
 	    icalrecur_add_byrules(&parser,parser.rt.by_hour,
 				  ICAL_BY_HOUR_SIZE,value);
-	} else if (strcmp(name,"BYDAY") == 0){
+	} else if (strcasecmp(name,"BYDAY") == 0){
 	    icalrecur_add_bydayrules(&parser,value);
-	} else if (strcmp(name,"BYMONTHDAY") == 0){
+	} else if (strcasecmp(name,"BYMONTHDAY") == 0){
 	    icalrecur_add_byrules(&parser,parser.rt.by_month_day,
 				  ICAL_BY_MONTHDAY_SIZE,value);
-	} else if (strcmp(name,"BYYEARDAY") == 0){
+	} else if (strcasecmp(name,"BYYEARDAY") == 0){
 	    icalrecur_add_byrules(&parser,parser.rt.by_year_day,
 				  ICAL_BY_YEARDAY_SIZE,value);
-	} else if (strcmp(name,"BYWEEKNO") == 0){
+	} else if (strcasecmp(name,"BYWEEKNO") == 0){
 	    icalrecur_add_byrules(&parser,parser.rt.by_week_no,
 				  ICAL_BY_WEEKNO_SIZE,value);
-	} else if (strcmp(name,"BYMONTH") == 0){
+	} else if (strcasecmp(name,"BYMONTH") == 0){
 	    icalrecur_add_byrules(&parser,parser.rt.by_month,
 				  ICAL_BY_MONTH_SIZE,value);
-	} else if (strcmp(name,"BYSETPOS") == 0){
+	} else if (strcasecmp(name,"BYSETPOS") == 0){
 	    icalrecur_add_byrules(&parser,parser.rt.by_set_pos,
 				  ICAL_BY_SETPOS_SIZE,value);
 	} else {
@@ -2312,7 +2312,7 @@ icalrecurrencetype_weekday icalrecur_string_to_weekday(const char* str)
     int i;
 
     for (i=0; wd_map[i].wd  != ICAL_NO_WEEKDAY; i++) {
-	if ( strcmp(str,wd_map[i].str) == 0){
+	if ( strcasecmp(str,wd_map[i].str) == 0){
 	    return wd_map[i].wd;
 	}
     }
@@ -2353,7 +2353,7 @@ icalrecurrencetype_frequency icalrecur_string_to_freq(const char* str)
     int i;
 
     for (i=0; freq_map[i].kind != ICAL_NO_RECURRENCE ; i++) {
-	if ( strcmp(str,freq_map[i].str) == 0){
+	if ( strcasecmp(str,freq_map[i].str) == 0){
 	    return freq_map[i].kind;
 	}
     }
