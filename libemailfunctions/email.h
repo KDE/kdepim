@@ -63,11 +63,11 @@ enum EmailParseResult {
 	TooManyAts,         /**< More than one \@ in address */
 	UnexpectedComma,    /**< Comma not allowed here */
 	TooFewAts,          /**< Missing \@ in address */
-	MissingLocalPart,
+	MissingLocalPart,   /**< No address specified, only domain */
 	UnbalancedQuote,    /**< Quotes (single or double) not matched */
 	NoAddressSpec,
-	DisallowedChar, 
-	InvalidDisplayName
+	DisallowedChar,     /**< An invalid character detected in address */
+	InvalidDisplayName  /**< An invalid displayname detected in address */
 	};
 
 /** Split a comma separated list of email addresses. 
@@ -228,19 +228,35 @@ KDE_EXPORT QByteArray getFirstEmailAddress( const QByteArray & addresses );
 KDE_EXPORT QString getFirstEmailAddress( const QString & addresses );
 
 /** Return email address and name from string. Examples:
- * "Stefan Taferner <taferner@example.org>" returns "taferner@example.org"
- * and "Stefan Taferner". "joe@example.com" returns "joe@example.com"
- * and "". Note that this only returns the first address.
- * Also note that the return value is TRUE if both the name and the
- * mail are not empty: this does NOT tell you if mail contains a
- * valid email address or just some rubbish.
+  "Stefan Taferner <taferner@example.org>" returns "taferner@example.org"
+  and "Stefan Taferner". "joe@example.com" returns "joe@example.com"
+  and "". Note that this only returns the first address.
+  Also note that the return value is TRUE if both the name and the
+  mail are not empty: this does NOT tell you if mail contains a
+  valid email address or just some rubbish.
+
+  @param aStr  an email address, e.g "Joe User <joe.user@example.org>"
+
+  @param name  only out: returns the displayname, "Joe User" in the example
+
+  @param mail  only out: returns the email address "joe.user@example.org" in the example
+
+  @return true if both name and email address are not empty
  */
 KDE_EXPORT bool getNameAndMail(const QString& aStr, QString& name, QString& mail);
 
 /**
- * Compare two email addresses. If matchName is false, it just checks
- * the email address, and returns true if this matches. If matchName
- * is true, both the name and the email must be the same.
+  Compare two email addresses. If matchName is false, it just checks
+  the email address, and returns true if this matches. If matchName
+  is true, both the name and the email must be the same.
+
+  @param email1  the first email address to use for comparison
+
+  @param email2  the second email address to use for comparison
+
+  @param matchName  if set to true email address and displayname must match 
+
+  @return true if the comparison matches true in all other cases
  */
 KDE_EXPORT bool compareEmail( const QString& email1, const QString& email2,
                    bool matchName );
@@ -293,6 +309,9 @@ KDE_EXPORT QString normalizeAddressesAndDecodeIDNs( const QString & addresses );
 
 /** Normalizes all email addresses in the given list and encodes all IDNs
     in punycode.
+
+  @param str  a list of email addresses
+  @return     the email addresses in normalized form 
 */
 KDE_EXPORT QString normalizeAddressesAndEncodeIDNs( const QString & str );
 
@@ -302,6 +321,9 @@ KDE_EXPORT QString normalizeAddressesAndEncodeIDNs( const QString & str );
 
     Add quote characters around the given string if it contains a 
     character that makes that necessary, in an email name, such as ",".
+
+  @param str  a string that may need quoting
+  @return     the string quoted if necessary
 */
 KDE_EXPORT QString quoteNameIfNecessary( const QString& str );
 
