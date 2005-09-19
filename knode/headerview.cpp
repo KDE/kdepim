@@ -17,7 +17,6 @@
 #include <q3stylesheet.h>
 #include <qtimer.h>
 //Added by qt3to4:
-#include <QFocusEvent>
 #include <QKeyEvent>
 #include <QEvent>
 #include <QMouseEvent>
@@ -546,12 +545,6 @@ void KNHeaderView::slotSizeChanged( int section, int, int newSize )
 
 bool KNHeaderView::eventFilter(QObject *o, QEvent *e)
 {
-  if ((e->type() == QEvent::KeyPress) && (static_cast<QKeyEvent*>(e)->key() == Qt::Key_Tab)) {
-    emit(focusChangeRequest(this));
-    if (!hasFocus())  // focusChangeRequest was successful
-      return true;
-  }
-
   // right click on header
   if ( e->type() == QEvent::MouseButtonPress &&
        static_cast<QMouseEvent*>(e)->button() == Qt::RightButton &&
@@ -562,20 +555,6 @@ bool KNHeaderView::eventFilter(QObject *o, QEvent *e)
   }
 
   return KListView::eventFilter(o, e);
-}
-
-
-void KNHeaderView::focusInEvent(QFocusEvent *e)
-{
-  Q3ListView::focusInEvent(e);
-  emit focusChanged(e);
-}
-
-
-void KNHeaderView::focusOutEvent(QFocusEvent *e)
-{
-  Q3ListView::focusOutEvent(e);
-  emit focusChanged(e);
 }
 
 

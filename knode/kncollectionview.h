@@ -75,17 +75,12 @@ class KNCollectionView : public KFolderTree {
   signals:
     void folderDrop( QDropEvent *e, KNCollectionViewItem *item );
 
-    void focusChanged( QFocusEvent* );
-    void focusChangeRequest( QWidget* );
-
   protected:
     // dnd
     virtual Q3DragObject* dragObject();
     virtual void contentsDropEvent( QDropEvent *e );
 
     bool eventFilter( QObject *, QEvent * );
-    void focusInEvent( QFocusEvent *e );
-    void focusOutEvent( QFocusEvent *e );
 
   private:
     Q3ListViewItem *mActiveItem;

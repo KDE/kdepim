@@ -20,9 +20,9 @@
 #include <QDropEvent>
 #include <QLabel>
 #include <Q3ValueList>
-#include <QShowEvent>
 #include <QVBoxLayout>
 #include <Q3PopupMenu>
+#include <QSplitter>
 #include <ktoolbar.h>
 
 #include <kinputdialog.h>
@@ -78,9 +78,11 @@ using namespace KNode;
 
 KNGlobals knGlobals;
 
-KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* parent )
-  : DCOPObject("KNodeIface"), KDockArea( parent ),
-    b_lockui( false ), m_GUIClient( client )
+KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
+  DCOPObject("KNodeIface"),
+  KVBox( parent ),
+  b_lockui( false ),
+  m_GUIClient( client )
 {
   knGlobals.top=this;
   knGlobals.guiClient=client;
@@ -93,46 +95,19 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   //-------------------------------- <GUI> ------------------------------------
   Q3Accel *accel = new Q3Accel( this );
   initStatusBar();
+  setSpacing( 0 );
 
-  //setup splitter behavior
-  manager()->setSplitterHighResolution(true);
-  manager()->setSplitterOpaqueResize(true);
+  // splitters
+  mPrimarySplitter = new QSplitter( Qt::Horizontal, this );
+  mSecondSplitter = new QSplitter( Qt::Vertical, mPrimarySplitter );
 
   //article view
-  a_rtDock = createDockWidget("article_viewer", SmallIcon("contents"), 0,
-                              kapp->makeStdCaption(i18n("Article Viewer")), i18n("Article Viewer"));
-  if (!detachable) {
-    a_rtDock->setEnableDocking(KDockWidget::DockFullSite);
-  }
-  KDockWidgetHeader *header = new KDockWidgetHeader(a_rtDock, "artDockHeader");
-  a_rtDock->setHeader(header);
-  mArticleViewer = new ArticleWidget( a_rtDock, knGlobals.guiClient, actionCollection() );
-  header->setDragPanel( new KNDockWidgetHeaderDrag( mArticleViewer, header, a_rtDock ) );
+  mArticleViewer = new ArticleWidget( mPrimarySplitter, knGlobals.guiClient, actionCollection() );
   knGlobals.artWidget = mArticleViewer;
-  a_rtDock->setWidget( mArticleViewer );
-  //setView(a_rtDock);
-  setMainDockWidget(a_rtDock);
-
-  connect(a_rtDock, SIGNAL(iMBeingClosed()), SLOT(slotArticleDockHidden()));
-  connect(a_rtDock, SIGNAL(hasUndocked()), SLOT(slotArticleDockHidden()));
-  connect( mArticleViewer, SIGNAL(focusChangeRequest(QWidget*)), SLOT(slotDockWidgetFocusChangeRequest(QWidget*)) );
 
   //collection view
-  c_olDock = createDockWidget("group_view", UserIcon("group"), 0,
-                              kapp->makeStdCaption(i18n("Group View")), i18n("Group View"));
-  if (!detachable) {
-    c_olDock->setEnableDocking(KDockWidget::DockFullSite);
-  }
-  header = new KDockWidgetHeader(c_olDock, "colDockHeader");
-  c_olDock->setHeader(header);
-  c_olView = new KNCollectionView( this );
-  header->setDragPanel(new KNDockWidgetHeaderDrag(c_olView, header, c_olDock));
-  c_olDock->setWidget(c_olView);
-  c_olDock->manualDock(a_rtDock, KDockWidget::DockLeft, 3000);
+  c_olView = new KNCollectionView( mSecondSplitter );
 
-  connect(c_olDock, SIGNAL(iMBeingClosed()), SLOT(slotGroupDockHidden()));
-  connect(c_olDock, SIGNAL(hasUndocked()), SLOT(slotGroupDockHidden()));
-  connect(c_olView, SIGNAL(focusChangeRequest(QWidget *)), SLOT(slotDockWidgetFocusChangeRequest(QWidget *)));
   connect(c_olView, SIGNAL(selectionChanged(Q3ListViewItem*)),
           SLOT(slotCollectionSelected(Q3ListViewItem*)));
   connect(c_olView, SIGNAL(contextMenu(KListView*, Q3ListViewItem*, const QPoint&)),
@@ -148,19 +123,9 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   accel->connectItem( accel->insertItem(Qt::Key_PageDown), mArticleViewer, SLOT(scrollNext()) );
 
   //header view
-  h_drDock = createDockWidget("header_view", SmallIcon("text_block"), 0,
-                              kapp->makeStdCaption(i18n("Header View")), i18n("Header View"));
-  if (!detachable) {
-    h_drDock->setEnableDocking(KDockWidget::DockFullSite);
-  }
-  header = new KDockWidgetHeader(h_drDock, "headerDockHeader");
-  h_drDock->setHeader(header);
-  QWidget *dummy = new QWidget(h_drDock);
+  QWidget *dummy = new QWidget( mSecondSplitter );
   QVBoxLayout *vlay = new QVBoxLayout(dummy);
   h_drView = new KNHeaderView( dummy );
-  header->setDragPanel(new KNDockWidgetHeaderDrag(h_drView, header, h_drDock));
-  h_drDock->setWidget(dummy);
-  h_drDock->manualDock(a_rtDock, KDockWidget::DockTop, 5000);
 
   q_uicksearch = new KToolBar(dummy, "search toolbar");
   KAction *resetQuickSearch = new KAction( i18n( "Reset Quick Search" ),
@@ -183,10 +148,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   vlay->addWidget(q_uicksearch);
   vlay->addWidget(h_drView);
 
-  connect(h_drDock, SIGNAL(iMBeingClosed()), SLOT(slotHeaderDockHidden()));
-  connect(h_drDock, SIGNAL(hasUndocked()), SLOT(slotHeaderDockHidden()));
-  connect(h_drView, SIGNAL(focusChangeRequest(QWidget *)),
-          SLOT(slotDockWidgetFocusChangeRequest(QWidget *)));
   connect(h_drView, SIGNAL(itemSelected(Q3ListViewItem*)),
           SLOT(slotArticleSelected(Q3ListViewItem*)));
   connect(h_drView, SIGNAL(selectionChanged()),
@@ -200,6 +161,13 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
 
   //actions
   initActions();
+
+  // splitter setup
+  mPrimarySplitter->addWidget( c_olView );
+  mPrimarySplitter->addWidget( mSecondSplitter );
+  mSecondSplitter->addWidget( dummy );
+  mSecondSplitter->addWidget( mArticleViewer );
+
 
   //-------------------------------- </GUI> ------------------------------------
 
@@ -303,10 +271,6 @@ KNMainWidget::~KNMainWidget()
 
   delete p_gp;
   kdDebug(5003) << "KNMainWidget::~KNMainWidget() : PGP deleted" << endl;
-
-  delete c_olDock;
-  delete h_drDock;
-  delete a_rtDock;
 }
 
 void KNMainWidget::initStatusBar()
@@ -746,27 +710,9 @@ void KNMainWidget::initActions()
                               SLOT(slotFetchArticleWithID()), actionCollection(), "fetch_article_with_id");
   a_ctFetchArticleWithID->setEnabled(false);
 
-  a_ctToggleGroupView        = new KToggleAction(i18n("Show &Group View"), Qt::CTRL+Qt::Key_G, this,
-                               SLOT(slotToggleGroupView()), actionCollection(), "settings_show_groupView");
-  a_ctToggleGroupView->setCheckedState(i18n("Hide &Group View"));
-  a_ctToggleHeaderView       = new KToggleAction(i18n("Show &Header View"), Qt::CTRL+Qt::Key_H, this,
-                               SLOT(slotToggleHeaderView()), actionCollection(), "settings_show_headerView");
-  a_ctToggleHeaderView->setCheckedState(i18n("Hide &Header View"));
-  a_ctToggleArticleViewer    = new KToggleAction(i18n("Show &Article Viewer"), Qt::CTRL+Qt::Key_J, this,
-                               SLOT(slotToggleArticleViewer()), actionCollection(), "settings_show_articleViewer");
-  a_ctToggleArticleViewer->setCheckedState(i18n("Hide &Article Viewer"));
   a_ctToggleQuickSearch      = new KToggleAction(i18n("Show Quick Search"), KShortcut(), this,
                                SLOT(slotToggleQuickSearch()), actionCollection(), "settings_show_quickSearch");
   a_ctToggleQuickSearch->setCheckedState(i18n("Hide Quick Search"));
-  a_ctSwitchToGroupView      = new KAction(i18n("Switch to Group View"), Qt::Key_G , this,
-                               SLOT(slotSwitchToGroupView()), actionCollection(), "switch_to_group_view");
-  a_ctSwitchToGroupView->plugAccel(a_ccel);
-  a_ctSwitchToHeaderView     = new KAction(i18n("Switch to Header View"), Qt::Key_H , this,
-                               SLOT(slotSwitchToHeaderView()), actionCollection(), "switch_to_header_view");
-  a_ctSwitchToHeaderView->plugAccel(a_ccel);
-  a_ctSwitchToArticleViewer  = new KAction(i18n("Switch to Article Viewer"), Qt::Key_J , this,
-                               SLOT(slotSwitchToArticleViewer()), actionCollection(), "switch_to_article_viewer");
-  a_ctSwitchToArticleViewer->plugAccel(a_ccel);
 }
 
 bool KNMainWidget::firstStart()
@@ -818,9 +764,6 @@ void KNMainWidget::readOptions()
 
   resize(787,478);  // default optimized for 800x600
   //applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
-
-  // restore dock configuration
-  manager()->readConfig(knGlobals.config(),"dock_configuration");
 }
 
 
@@ -835,9 +778,6 @@ void KNMainWidget::saveOptions()
   c_olView->writeConfig();
   h_drView->writeConfig();
   mArticleViewer->writeConfig();
-
-  // store dock configuration
-  manager()->writeConfig(knGlobals.config(),"dock_configuration");
 }
 
 
@@ -908,12 +848,6 @@ bool KNMainWidget::queryClose()
 }
 
 
-void KNMainWidget::showEvent(QShowEvent *)
-{
-  slotCheckDockWidgetStatus();
-}
-
-
 void KNMainWidget::fontChange( const QFont & )
 {
   a_rtFactory->configChanged();
@@ -937,7 +871,7 @@ bool KNMainWidget::eventFilter(QObject *o, QEvent *e)
        (e->type() == QEvent::ShortcutOverride)) &&
        b_lockui)
     return true;
-  return KDockArea::eventFilter(o, e);
+  return QWidget::eventFilter(o, e);
 }
 
 
@@ -1303,70 +1237,6 @@ void KNMainWidget::slotHdrViewSortingChanged(int i)
 void KNMainWidget::slotNetworkActive(bool b)
 {
   a_ctNetCancel->setEnabled(b);
-}
-
-
-void KNMainWidget::slotCheckDockWidgetStatus()
-{
-  a_ctToggleGroupView->setChecked(c_olDock->isVisible());
-  a_ctToggleArticleViewer->setChecked(a_rtDock->isVisible());
-  a_ctToggleHeaderView->setChecked(h_drDock->isVisible());
-}
-
-
-void KNMainWidget::slotGroupDockHidden()
-{
-  a_ctToggleGroupView->setChecked(false);
-}
-
-
-void KNMainWidget::slotHeaderDockHidden()
-{
-  a_ctToggleHeaderView->setChecked(false);
-}
-
-
-void KNMainWidget::slotArticleDockHidden()
-{
-  a_ctToggleArticleViewer->setChecked(false);
-}
-
-
-void KNMainWidget::slotDockWidgetFocusChangeRequest(QWidget *w)
-{
-  if ( w == mArticleViewer ) {
-    if (c_olView->isVisible()) {
-      c_olView->setFocus();
-      if (!w->hasFocus())  // fails if the view is visible but floating
-        return;
-    }
-    if (h_drView->isVisible()) {
-      h_drView->setFocus();
-      return;
-    }
-  }
-  if (w == c_olView) {
-    if (h_drView->isVisible()) {
-      h_drView->setFocus();
-      if (!w->hasFocus())  // fails if the view is visible but floating
-        return;
-    }
-    if ( mArticleViewer->isVisible() ) {
-      mArticleViewer->setFocus();
-      return;
-    }
-  }
-  if (w == h_drView) {
-    if ( mArticleViewer->isVisible() ) {
-      mArticleViewer->setFocus();
-      if (!w->hasFocus())  // fails if the view is visible but floating
-        return;
-    }
-    if (c_olView->isVisible()) {
-      c_olView->setFocus();
-      return;
-    }
-  }
 }
 
 
@@ -1968,34 +1838,6 @@ void KNMainWidget::slotFetchArticleWithID()
   delete dlg;
 }
 
-void KNMainWidget::slotToggleGroupView()
-{
-  c_olDock->changeHideShowState();
-  slotCheckDockWidgetStatus();
-}
-
-
-void KNMainWidget::slotToggleHeaderView()
-{
-
-  if ( !h_drDock->isVisible() )
-      if ( !h_drDock->isDockBackPossible() ) {
-          h_drDock->manualDock( a_rtDock, KDockWidget::DockTop );
-          h_drDock->makeDockVisible();
-          slotCheckDockWidgetStatus();
-          return;
-      }
-
-  h_drDock->changeHideShowState();
-  slotCheckDockWidgetStatus();
-}
-
-
-void KNMainWidget::slotToggleArticleViewer()
-{
-  a_rtDock->changeHideShowState();
-  slotCheckDockWidgetStatus();
-}
 
 void KNMainWidget::slotToggleQuickSearch()
 {
@@ -2003,28 +1845,6 @@ void KNMainWidget::slotToggleQuickSearch()
     q_uicksearch->show();
   else
     q_uicksearch->hide();
-}
-
-void KNMainWidget::slotSwitchToGroupView()
-{
-  if (!c_olView->isVisible())
-    slotToggleGroupView();
-  c_olView->setFocus();
-}
-
-
-void KNMainWidget::slotSwitchToHeaderView()
-{
-  if (!h_drView->isVisible())
-    slotToggleHeaderView();
-  h_drView->setFocus();
-}
-
-void KNMainWidget::slotSwitchToArticleViewer()
-{
-  if ( !mArticleViewer->isVisible() )
-    slotToggleArticleViewer();
-  mArticleViewer->setFocus();
 }
 
 

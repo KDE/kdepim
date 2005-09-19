@@ -28,7 +28,6 @@
 #include <qtimer.h>
 //Added by qt3to4:
 #include <Q3CString>
-#include <QFocusEvent>
 #include <Q3StrList>
 #include <Q3PtrList>
 #include <QEvent>
@@ -124,8 +123,6 @@ ArticleWidget::ArticleWidget( QWidget *parent,
 
   mTimer = new QTimer( this );
   connect( mTimer, SIGNAL(timeout()), SLOT(slotTimeout()) );
-
-  installEventFilter( this );
 }
 
 
@@ -1446,30 +1443,6 @@ void ArticleWidget::slotSaveAttachment()
   if ( !c )
     return;
   knGlobals.articleManager()->saveContentToFile( c, this );
-}
-
-
-
-void ArticleWidget::focusInEvent( QFocusEvent *e )
-{
-  emit focusChanged(e);
-  QWidget::focusInEvent(e);
-}
-
-void ArticleWidget::focusOutEvent( QFocusEvent *e )
-{
-  emit focusChanged(e);
-  QWidget::focusOutEvent(e);
-}
-
-bool ArticleWidget::eventFilter( QObject *o, QEvent *e )
-{
-  if ( e->type() == QEvent::KeyPress && (static_cast<QKeyEvent*>(e)->key() == Qt::Key_Tab) ) {
-    emit focusChangeRequest( this );
-    if ( !hasFocus() )  // focusChangeRequest was successful
-      return true;
-  }
-  return QWidget::eventFilter(o, e);
 }
 
 #include "articlewidget.moc"

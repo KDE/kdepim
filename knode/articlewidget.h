@@ -101,17 +101,9 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     void scrollPrior();
     void scrollNext();
 
-  signals:
-    void focusChanged( QFocusEvent* );
-    void focusChangeRequest( QWidget* );
-
   protected:
     /// process download jobs for view source action
     void processJob( KNJobData *j );
-
-    virtual void focusInEvent( QFocusEvent *e );
-    virtual void focusOutEvent( QFocusEvent *e );
-    virtual bool eventFilter( QObject *o, QEvent *e );
 
   private:
     void initActions();

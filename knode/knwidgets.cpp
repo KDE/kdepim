@@ -15,7 +15,6 @@
 #include <qpainter.h>
 #include <qpixmap.h>
 //Added by qt3to4:
-#include <QFocusEvent>
 #include <QKeyEvent>
 #include <QPaintEvent>
 
@@ -104,58 +103,3 @@ void KNDialogListBox::keyPressEvent(QKeyEvent *e)
   else
     Q3ListBox::keyPressEvent(e);
 }
-
-
-//====================================================================================
-
-
-KNDockWidgetHeaderDrag::KNDockWidgetHeaderDrag( QWidget *focusWidget, KDockWidgetAbstractHeader* parent, KDockWidget* dock )
-  : KDockWidgetHeaderDrag( parent, dock ), f_ocus(false)
-{
-  connect(focusWidget, SIGNAL(focusChanged(QFocusEvent*)), SLOT(slotFocusChanged(QFocusEvent*)));
-}
-
-
-KNDockWidgetHeaderDrag::~KNDockWidgetHeaderDrag()
-{
-}
-
-
-void KNDockWidgetHeaderDrag::slotFocusChanged(QFocusEvent *e)
-{
-  if(e->gotFocus()) {
-    f_ocus = true;
-  } else if(e->lostFocus()) {
-    f_ocus = false;
-  }
-  update();
-}
-
-
-void KNDockWidgetHeaderDrag::paintEvent(QPaintEvent* ev)
-{
-  if (!f_ocus) {
-    KDockWidgetHeaderDrag::paintEvent(ev);
-    return;
-  }
-
-  QPixmap drawBuffer(width(), height());
-  QPainter paint;
-
-  paint.begin(&drawBuffer);
-  paint.fillRect(drawBuffer.rect(), QBrush(colorGroup().brush(QColorGroup::Background)));
-
-  paint.setPen(palette().active().highlight());
-  paint.drawLine(1, 2, width(), 2);
-  paint.drawLine(1, 3, width(), 3);
-  paint.drawLine(1, 5, width(), 5);
-  paint.drawLine(1, 6, width(), 6);
-
-  bitBlt( this,0,0,&drawBuffer,0,0,width(),height());
-  paint.end();
-}
-
-
-//====================================================================================
-
-#include "knwidgets.moc"

@@ -16,19 +16,19 @@
 
 #include "knodeiface.h"
 
-#include <kdockwidget.h>
 #include <kdialogbase.h>
+#include <kvbox.h>
 #include "resource.h"
 
 #include <qglobal.h>
 //Added by qt3to4:
-#include <QShowEvent>
 #include <Q3ValueList>
 #include <QEvent>
 #include <QDropEvent>
 #include <kdepimmacros.h>
 
 class Q3ListViewItem;
+class QLineEdit;
 
 class KURL;
 class KAccel;
@@ -37,7 +37,9 @@ class KToggleAction;
 class KSelectAction;
 class KRSqueezedTextLabel;
 class KLineEdit;
+class KToolBar;
 class KXMLGUIClient;
+class KXMLGUIFactory;
 
 class KNHeaderView;
 class KNCollectionView;
@@ -65,11 +67,11 @@ class KNLocalArticle;
 class KNRemoteArticle;
 class KActionCollection;
 
-class KDE_EXPORT KNMainWidget : public KDockArea, virtual public KNodeIface
+class KDE_EXPORT KNMainWidget : public KVBox, virtual public KNodeIface
 {
   Q_OBJECT
 public:
-  KNMainWidget( KXMLGUIClient *client, bool detachable, QWidget* parent );
+  KNMainWidget( KXMLGUIClient *client, QWidget* parent );
   ~KNMainWidget();
 
   /** exit */
@@ -178,8 +180,6 @@ protected:
 
   bool requestShutdown();
 
-  virtual void showEvent(QShowEvent *);
-
   /** update appearance */
   virtual void fontChange( const QFont & );
   virtual void paletteChange ( const QPalette & );
@@ -199,7 +199,6 @@ protected:
   KNode::ArticleWidget *mArticleViewer;
   KNCollectionView *c_olView;
   KNHeaderView      *h_drView;
-  KDockWidget     *c_olDock, *h_drDock, *a_rtDock;
   bool b_lockui;
   KToolBar        *q_uicksearch;
   QLineEdit       *s_earchLineEdit;
@@ -232,13 +231,6 @@ protected slots:
 
   //network slots
   void slotNetworkActive(bool b);
-
-  //dock widget slots
-  void slotCheckDockWidgetStatus();
-  void slotGroupDockHidden();
-  void slotHeaderDockHidden();
-  void slotArticleDockHidden();
-  void slotDockWidgetFocusChangeRequest(QWidget *w);
 
   //---------------------------------- <Actions> ----------------------------------
 
@@ -324,13 +316,7 @@ protected:
   KAction *a_ctFetchArticleWithID;
 
   // settings menu
-  KToggleAction *a_ctToggleGroupView,
-    *a_ctToggleHeaderView,
-    *a_ctToggleArticleViewer,
-    *a_ctToggleQuickSearch;
-  KAction *a_ctSwitchToGroupView,
-    *a_ctSwitchToHeaderView,
-    *a_ctSwitchToArticleViewer;
+  KToggleAction *a_ctToggleQuickSearch;
 
 protected slots:
   void slotNavNextUnreadArt();
@@ -397,13 +383,7 @@ protected slots:
 
   void slotFetchArticleWithID();
 
-  void slotToggleGroupView();
-  void slotToggleHeaderView();
-  void slotToggleArticleViewer();
   void slotToggleQuickSearch();
-  void slotSwitchToGroupView();
-  void slotSwitchToHeaderView();
-  void slotSwitchToArticleViewer();
   void slotSettings();
 
   //--------------------------- </Actions> -----------------------------
@@ -412,6 +392,7 @@ private:
   KRSqueezedTextLabel *s_tatusGroup; // widget used in the statusBar() for the group status
   KRSqueezedTextLabel *s_tatusFilter;
   KXMLGUIClient *m_GUIClient;
+  QSplitter *mPrimarySplitter, *mSecondSplitter;
 };
 
 

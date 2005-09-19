@@ -60,8 +60,6 @@ class KNHeaderView : public KListView  {
     void itemSelected( Q3ListViewItem* );
     void doubleClick( Q3ListViewItem* );
     void sortingChanged( int );
-    void focusChanged( QFocusEvent* );
-    void focusChangeRequest( QWidget* );
 
   public slots:
     void nextArticle();
@@ -85,8 +83,6 @@ class KNHeaderView : public KListView  {
     void contentsMouseDoubleClickEvent( QMouseEvent *e );
     void keyPressEvent( QKeyEvent *e );
     bool eventFilter( QObject *, QEvent * );
-    void focusInEvent( QFocusEvent *e );
-    void focusOutEvent( QFocusEvent *e );
     virtual Q3DragObject* dragObject();
 
   private:

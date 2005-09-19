@@ -14,7 +14,6 @@
 #include <qcursor.h>
 #include <q3header.h>
 //Added by qt3to4:
-#include <QFocusEvent>
 #include <QKeyEvent>
 #include <QEvent>
 #include <QDropEvent>
@@ -428,12 +427,6 @@ void KNCollectionView::updatePopup() const
 
 bool KNCollectionView::eventFilter(QObject *o, QEvent *e)
 {
-  if ((e->type() == QEvent::KeyPress) && (static_cast<QKeyEvent*>(e)->key() == Qt::Key_Tab)) {
-    emit(focusChangeRequest(this));
-    if (!hasFocus())  // focusChangeRequest was successful
-      return true;
-  }
-
   // header popup menu
   if ( e->type() == QEvent::MouseButtonPress &&
        static_cast<QMouseEvent*>(e)->button() == Qt::RightButton &&
@@ -444,20 +437,6 @@ bool KNCollectionView::eventFilter(QObject *o, QEvent *e)
   }
 
   return KFolderTree::eventFilter(o, e);
-}
-
-
-void KNCollectionView::focusInEvent(QFocusEvent *e)
-{
-  Q3ListView::focusInEvent(e);
-  emit focusChanged(e);
-}
-
-
-void KNCollectionView::focusOutEvent(QFocusEvent *e)
-{
-  Q3ListView::focusOutEvent(e);
-  emit focusChanged(e);
 }
 
 

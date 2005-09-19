@@ -48,7 +48,7 @@ KNMainWindow::KNMainWindow( QWidget* parent )
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
 
-  m_mainWidget = new KNMainWidget( this, true, this );
+  m_mainWidget = new KNMainWidget( this, this );
   connect( m_mainWidget, SIGNAL(signalCaptionChangeRequest(const QString&)),
            SLOT( setCaption(const QString&)) );
   setCentralWidget( m_mainWidget );

@@ -66,25 +66,4 @@ class KNDialogListBox : public Q3ListBox
 };
 
 
-//====================================================================================
-
-
-class KNDockWidgetHeaderDrag : public KDockWidgetHeaderDrag
-{
-  Q_OBJECT
-
-  public:
-    KNDockWidgetHeaderDrag( QWidget *focusWidget, KDockWidgetAbstractHeader* parent, KDockWidget* dock );
-    virtual ~KNDockWidgetHeaderDrag();
-
-  protected slots:
-    void slotFocusChanged(QFocusEvent *e);
-
-  protected:
-    virtual void paintEvent( QPaintEvent* );
-
-    bool f_ocus;
-};
-
-
 #endif
