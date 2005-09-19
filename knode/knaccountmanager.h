@@ -32,7 +32,7 @@ class KNAccountManager : public QObject
   Q_OBJECT
 
   public:
-    KNAccountManager(KNGroupManager *gm, QObject * parent=0, const char * name=0);
+    KNAccountManager( KNGroupManager *gm, QObject * parent = 0 );
     ~KNAccountManager();
 
     void prepareShutdown();

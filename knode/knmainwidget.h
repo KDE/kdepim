@@ -69,7 +69,7 @@ class KDE_EXPORT KNMainWidget : public KDockArea, virtual public KNodeIface
 {
   Q_OBJECT
 public:
-  KNMainWidget( KXMLGUIClient *client, bool detachable, QWidget* parent, const char* name );
+  KNMainWidget( KXMLGUIClient *client, bool detachable, QWidget* parent );
   ~KNMainWidget();
 
   /** exit */

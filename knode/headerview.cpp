@@ -37,8 +37,8 @@
 #include "knmainwidget.h"
 
 
-KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
-  KListView(parent,name),
+KNHeaderView::KNHeaderView( QWidget *parent ) :
+  KListView( parent ),
   mSortCol( -1 ),
   mSortAsc( true ),
   mSortByThreadChangeDate( false ),

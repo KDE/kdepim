@@ -648,7 +648,7 @@ class KDE_EXPORT GroupCleanupWidget : public QWidget {
   Q_OBJECT
 
   public:
-    GroupCleanupWidget( Cleanup *data, QWidget *parent = 0, const char *name = 0 );
+    GroupCleanupWidget( Cleanup *data, QWidget *parent = 0 );
 
     void load();
     void save();

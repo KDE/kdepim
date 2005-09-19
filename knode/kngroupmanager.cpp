@@ -229,8 +229,8 @@ Q3SortedList<KNGroupInfo>* KNGroupListData::extractList()
 //===============================================================================
 
 
-KNGroupManager::KNGroupManager(QObject * parent, const char * name)
-  : QObject(parent,name)
+KNGroupManager::KNGroupManager( QObject * parent )
+  : QObject( parent )
 {
   c_urrentGroup=0;
   a_rticleMgr = knGlobals.articleManager();

@@ -55,7 +55,7 @@ class KNFilterManager : public QObject
   Q_OBJECT
 
   public:
-    KNFilterManager(QObject * parent = 0, const char * name = 0);
+    KNFilterManager( QObject * parent = 0 );
     ~KNFilterManager();
 
     void readOptions();

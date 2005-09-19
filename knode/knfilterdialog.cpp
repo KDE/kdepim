@@ -1,8 +1,6 @@
 /*
-    knfilterdialog.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -34,9 +32,9 @@
 #include "knfilterdialog.h"
 
 
-KNFilterDialog::KNFilterDialog(KNArticleFilter *f, QWidget *parent, const char *name)
+KNFilterDialog::KNFilterDialog( KNArticleFilter *f, QWidget *parent )
   : KDialogBase(Plain, (f->id()==-1)? i18n("New Filter"):i18n("Properties of %1").arg(f->name()),
-                Ok|Cancel|Help, Ok, parent, name),
+                Ok|Cancel|Help, Ok, parent ),
     fltr(f)
 {
   QFrame* page=plainPage();

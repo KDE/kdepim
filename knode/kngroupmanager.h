@@ -83,7 +83,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
 
   public:
 
-    KNGroupManager(QObject * parent=0, const char * name=0);
+    KNGroupManager( QObject * parent = 0 );
     ~KNGroupManager();
 
     // group access

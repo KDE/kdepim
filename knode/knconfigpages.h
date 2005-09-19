@@ -1,8 +1,6 @@
 /*
-    knconfigpages.h
-
     KNode, the KDE newsreader
-    Copyright (c) 2004 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2004-2005 Volker Krause <volker.krause@rwth-aachen.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,7 +30,7 @@ namespace KNConfig {
 class KDE_EXPORT BasePageWithTabs : public KCModule {
   Q_OBJECT
   public:
-    BasePageWithTabs( QWidget * parent=0, const char * name=0 );
+    BasePageWithTabs( QWidget * parent = 0 );
     ~BasePageWithTabs() {};
 
     virtual void load();
@@ -41,7 +39,7 @@ class KDE_EXPORT BasePageWithTabs : public KCModule {
 
   protected:
     void addTab( KCModule* tab, const QString & title );
-    
+
   private:
     QTabWidget *mTabWidget;
 
@@ -53,16 +51,16 @@ class AccountsPage : public BasePageWithTabs {
   Q_OBJECT
 
   public:
-    AccountsPage(QWidget *parent = 0, const char *name = 0);
+    AccountsPage( QWidget *parent = 0 );
 };
 
 
 // read news page
 class KDE_EXPORT ReadNewsPage : public BasePageWithTabs {
   Q_OBJECT
- 
+
   public:
-    ReadNewsPage(QWidget *parent = 0, const char *name = 0);
+    ReadNewsPage( QWidget *parent = 0 );
 };
 
 // post news page
@@ -70,7 +68,7 @@ class KDE_EXPORT PostNewsPage : public BasePageWithTabs {
   Q_OBJECT
 
   public:
-    PostNewsPage(QWidget *parent = 0, const char *name = 0);
+    PostNewsPage( QWidget *parent = 0 );
 };
 
 

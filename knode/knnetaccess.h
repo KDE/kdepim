@@ -40,7 +40,7 @@ class KNNetAccess : public QObject  {
 
   public:
 
-    KNNetAccess(QObject *parent=0, const char *name=0);
+    KNNetAccess( QObject *parent = 0 );
     ~KNNetAccess();
 
     void addJob(KNJobData *job);

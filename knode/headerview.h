@@ -36,7 +36,7 @@ class KNHeaderView : public KListView  {
   friend class KNHdrViewItem;
 
   public:
-    KNHeaderView( QWidget *parent, const char *name = 0 );
+    KNHeaderView( QWidget *parent );
     ~KNHeaderView();
 
     void setActive( Q3ListViewItem *item );

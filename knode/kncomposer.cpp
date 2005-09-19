@@ -76,9 +76,9 @@ using KRecentAddress::RecentAddresses;
 #include <spellingfilter.h>
 #include <kstdguiitem.h>
 
-KNLineEdit::KNLineEdit(KNComposer::ComposerView *_composerView, bool useCompletion,
-                       QWidget *parent, const char *name)
-    : KNLineEditInherited(parent,useCompletion,name)    , composerView(_composerView)
+KNLineEdit::KNLineEdit( KNComposer::ComposerView *_composerView, bool useCompletion,
+                        QWidget *parent )
+    : KNLineEditInherited( parent,useCompletion ), composerView( _composerView )
 
 {
 }
@@ -146,8 +146,8 @@ void KNLineEdit::keyPressEvent(QKeyEvent *e)
   KNLineEditInherited::keyPressEvent(e);
 }
 
-KNLineEditSpell::KNLineEditSpell( KNComposer::ComposerView *_composerView, bool useCompletion,QWidget * parent, const char * name)
-    :KNLineEdit( _composerView, useCompletion, parent,name )
+KNLineEditSpell::KNLineEditSpell( KNComposer::ComposerView *_composerView, bool useCompletion,QWidget * parent )
+    :KNLineEdit( _composerView, useCompletion, parent )
 {
 }
 
@@ -2007,8 +2007,8 @@ void KNComposer::ComposerView::hideExternalNotification()
 //=====================================================================================
 
 #include <kcursor.h>
-KNComposer::Editor::Editor(KNComposer::ComposerView *_composerView, KNComposer *_composer, QWidget *parent, char *name)
-    : KEdit(parent, name), m_composer( _composer ), m_composerView(_composerView)
+KNComposer::Editor::Editor( KNComposer::ComposerView *_composerView, KNComposer *_composer, QWidget *parent )
+    : KEdit( parent ), m_composer( _composer ), m_composerView( _composerView )
 {
   setOverwriteEnabled(true);
   spell = 0L;
@@ -2506,8 +2506,8 @@ void KNComposer::Editor::slotCorrectWord()
 //=====================================================================================
 
 
-KNComposer::AttachmentView::AttachmentView(QWidget *parent, char *name)
- : KListView(parent, name)
+KNComposer::AttachmentView::AttachmentView( QWidget *parent )
+ : KListView( parent )
 {
   setFrameStyle(Q3Frame::WinPanel | Q3Frame::Sunken);  // match the QMultiLineEdit style
   addColumn(i18n("File"), 115);

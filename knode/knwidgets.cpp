@@ -86,8 +86,8 @@ int KNListBoxItem::width(const Q3ListBox *lb) const
 
 // **** listbox for dialogs **************************************************
 
-KNDialogListBox::KNDialogListBox(bool alwaysIgnore, QWidget * parent, const char * name)
- : Q3ListBox(parent, name), a_lwaysIgnore(alwaysIgnore)
+KNDialogListBox::KNDialogListBox( bool alwaysIgnore, QWidget * parent )
+ : Q3ListBox( parent ), a_lwaysIgnore( alwaysIgnore )
 {
 }
 
@@ -109,8 +109,8 @@ void KNDialogListBox::keyPressEvent(QKeyEvent *e)
 //====================================================================================
 
 
-KNDockWidgetHeaderDrag::KNDockWidgetHeaderDrag(QWidget *focusWidget, KDockWidgetAbstractHeader* parent, KDockWidget* dock, const char* name )
-  : KDockWidgetHeaderDrag(parent, dock, name), f_ocus(false)
+KNDockWidgetHeaderDrag::KNDockWidgetHeaderDrag( QWidget *focusWidget, KDockWidgetAbstractHeader* parent, KDockWidget* dock )
+  : KDockWidgetHeaderDrag( parent, dock ), f_ocus(false)
 {
   connect(focusWidget, SIGNAL(focusChanged(QFocusEvent*)), SLOT(slotFocusChanged(QFocusEvent*)));
 }

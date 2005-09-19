@@ -33,7 +33,7 @@ class KNCollectionView : public KFolderTree {
   Q_OBJECT
 
   public:
-    KNCollectionView(QWidget *parent, const char *name = 0);
+    KNCollectionView( QWidget *parent );
     ~KNCollectionView();
 
     void setActive(Q3ListViewItem *item);

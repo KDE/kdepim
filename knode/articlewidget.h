@@ -62,8 +62,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     /// Construct a new article widget
     ArticleWidget( QWidget *parent,
                    KXMLGUIClient *guiClient,
-                   KActionCollection *actionCollection,
-                   const char *name = 0 );
+                   KActionCollection *actionCollection );
     ~ArticleWidget();
 
     /// read config settings

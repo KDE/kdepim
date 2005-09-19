@@ -39,8 +39,8 @@
 #include "kncollectionview.h"
 #include "kncollectionviewitem.h"
 
-KNCollectionView::KNCollectionView(QWidget *parent, const char* name) :
-  KFolderTree(parent, name),
+KNCollectionView::KNCollectionView( QWidget *parent ) :
+  KFolderTree( parent ),
   mActiveItem( 0 ),
   mPopup( 0 )
 {

@@ -265,7 +265,7 @@ class KNComposer::Editor : public KEdit {
   Q_OBJECT
 
   public:
-    Editor(KNComposer::ComposerView *_composerView, KNComposer *_composer, QWidget *parent=0, char *name=0);
+    Editor( KNComposer::ComposerView *_composerView, KNComposer *_composer, QWidget *parent = 0 );
     ~Editor();
     QStringList processedText();
 
@@ -317,7 +317,7 @@ class KNComposer::AttachmentView : public KListView {
   Q_OBJECT
 
   public:
-    AttachmentView(QWidget *parent, char *name=0);
+    AttachmentView( QWidget *parent );
     ~AttachmentView();
 
   protected:
@@ -369,8 +369,7 @@ class KNLineEdit : public KABC::AddressLineEdit
     typedef KABC::AddressLineEdit KNLineEditInherited;
 public:
 
-    KNLineEdit(KNComposer::ComposerView *_composerView, bool useCompletion, QWidget *parent = 0,
-               const char *name = 0);
+    KNLineEdit( KNComposer::ComposerView *_composerView, bool useCompletion, QWidget *parent = 0 );
 protected:
     // Inherited. Always called by the parent when this widget is created.
     virtual void loadAddresses();
@@ -386,7 +385,7 @@ class KNLineEditSpell : public KNLineEdit
 {
     Q_OBJECT
 public:
-    KNLineEditSpell(KNComposer::ComposerView *_composerView, bool useCompletion,QWidget * parent, const char * name = 0);
+    KNLineEditSpell( KNComposer::ComposerView *_composerView, bool useCompletion, QWidget * parent );
     void highLightWord( unsigned int length, unsigned int pos );
     void spellCheckDone( const QString &s );
     void spellCheckerMisspelling( const QString &text, const QStringList &, unsigned int pos);

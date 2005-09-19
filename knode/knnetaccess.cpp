@@ -40,8 +40,8 @@
 using KPIM::ProgressManager;
 
 
-KNNetAccess::KNNetAccess(QObject *parent, const char *name )
-  : QObject(parent,name), currentNntpJob(0), currentSmtpJob(0)
+KNNetAccess::KNNetAccess( QObject *parent )
+  : QObject( parent ), currentNntpJob(0), currentSmtpJob(0)
 {
   if ( pipe(nntpInPipe) == -1 || pipe(nntpOutPipe) == -1 ) {
     KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nFailed to open pipes for internal communication."));

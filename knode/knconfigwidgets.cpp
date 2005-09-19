@@ -2363,8 +2363,8 @@ void KNConfig::PrivacyWidget::save()
 //BEGIN: Cleanup configuration widgets ---------------------------------------
 
 
-KNConfig::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent, const char *name )
-  : QWidget( parent, name ), mData( data )
+KNConfig::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent )
+  : QWidget( parent ), mData( data )
 {
   QVBoxLayout *top = new QVBoxLayout( this );
 

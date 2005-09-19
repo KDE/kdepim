@@ -63,8 +63,8 @@ void KNFilterSelectAction::slotMenuActivated(int id)
 
 //==============================================================================
 
-KNFilterManager::KNFilterManager(QObject * parent, const char * name)
- : QObject(parent,name), fset(0), currFilter(0), a_ctFilter(0)
+KNFilterManager::KNFilterManager( QObject * parent )
+ : QObject( parent ), fset(0), currFilter(0), a_ctFilter(0)
 {
   loadFilters();
 

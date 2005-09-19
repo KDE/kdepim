@@ -1,8 +1,6 @@
 /*
-    knode.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -38,8 +36,8 @@
 #include "kncollectionviewitem.h"
 #include "knhdrviewitem.h"
 
-KNMainWindow::KNMainWindow( QWidget* pWidget )
-  : KMainWindow(pWidget,"mainWindow")
+KNMainWindow::KNMainWindow( QWidget* parent )
+  : KMainWindow( parent )
 {
   //setupStatusBar();
   createStandardStatusBarAction();
@@ -50,7 +48,7 @@ KNMainWindow::KNMainWindow( QWidget* pWidget )
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
 
-  m_mainWidget = new KNMainWidget( this, true, this, 0 );
+  m_mainWidget = new KNMainWidget( this, true, this );
   connect( m_mainWidget, SIGNAL(signalCaptionChangeRequest(const QString&)),
            SLOT( setCaption(const QString&)) );
   setCentralWidget( m_mainWidget );

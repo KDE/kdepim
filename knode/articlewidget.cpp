@@ -86,9 +86,8 @@ Q3ValueList<ArticleWidget*> ArticleWidget::mInstances;
 
 ArticleWidget::ArticleWidget( QWidget *parent,
                               KXMLGUIClient *guiClient,
-                              KActionCollection *actionCollection,
-                              const char *name ) :
-  QWidget( parent, name ),
+                              KActionCollection *actionCollection ) :
+  QWidget( parent ),
   mArticle( 0 ),
   mViewer( 0 ),
   mCSSHelper( 0 ),

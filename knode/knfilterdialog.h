@@ -1,8 +1,6 @@
 /*
-    knfilterdialog.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -33,7 +31,7 @@ class KNFilterDialog : public KDialogBase {
   friend class KNFilterManager;
 
   public:
-    KNFilterDialog(KNArticleFilter *f=0, QWidget *parent=0, const char *name=0);
+    KNFilterDialog( KNArticleFilter *f = 0, QWidget *parent = 0 );
     ~KNFilterDialog();
 
     KNArticleFilter* filter() { return fltr; }

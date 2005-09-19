@@ -36,8 +36,8 @@
 KWallet::Wallet* KNAccountManager::mWallet = 0;
 bool KNAccountManager::mWalletOpenFailed = false;
 
-KNAccountManager::KNAccountManager(KNGroupManager *gm, QObject * parent, const char * name)
-  : QObject(parent, name), gManager(gm), c_urrentAccount(0),
+KNAccountManager::KNAccountManager( KNGroupManager *gm, QObject * parent )
+  : QObject( parent ), gManager( gm ), c_urrentAccount( 0 ),
   mAsyncOpening( false )
 {
   s_mtp = new KNServerInfo();

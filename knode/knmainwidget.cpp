@@ -78,9 +78,8 @@ using namespace KNode;
 
 KNGlobals knGlobals;
 
-KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* parent,
-                            const char* name  )
-  : DCOPObject("KNodeIface"), KDockArea( parent, name ),
+KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* parent )
+  : DCOPObject("KNodeIface"), KDockArea( parent ),
     b_lockui( false ), m_GUIClient( client )
 {
   knGlobals.top=this;
@@ -107,7 +106,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   }
   KDockWidgetHeader *header = new KDockWidgetHeader(a_rtDock, "artDockHeader");
   a_rtDock->setHeader(header);
-  mArticleViewer = new ArticleWidget( a_rtDock, knGlobals.guiClient, actionCollection(), "articleViewer");
+  mArticleViewer = new ArticleWidget( a_rtDock, knGlobals.guiClient, actionCollection() );
   header->setDragPanel( new KNDockWidgetHeaderDrag( mArticleViewer, header, a_rtDock ) );
   knGlobals.artWidget = mArticleViewer;
   a_rtDock->setWidget( mArticleViewer );
@@ -126,7 +125,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   }
   header = new KDockWidgetHeader(c_olDock, "colDockHeader");
   c_olDock->setHeader(header);
-  c_olView = new KNCollectionView(this, "collectionView");
+  c_olView = new KNCollectionView( this );
   header->setDragPanel(new KNDockWidgetHeaderDrag(c_olView, header, c_olDock));
   c_olDock->setWidget(c_olView);
   c_olDock->manualDock(a_rtDock, KDockWidget::DockLeft, 3000);
@@ -158,7 +157,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   h_drDock->setHeader(header);
   QWidget *dummy = new QWidget(h_drDock);
   QVBoxLayout *vlay = new QVBoxLayout(dummy);
-  h_drView = new KNHeaderView( dummy, "hdrView" );
+  h_drView = new KNHeaderView( dummy );
   header->setDragPanel(new KNDockWidgetHeaderDrag(h_drView, header, h_drDock));
   h_drDock->setWidget(dummy);
   h_drDock->manualDock(a_rtDock, KDockWidget::DockTop, 5000);

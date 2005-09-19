@@ -1,6 +1,4 @@
 /*
-    knode.h
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -29,9 +27,9 @@
 
 class KURL;
 
-namespace KPIM { 
-  class StatusbarProgressWidget; 
-  class ProgressDialog; 
+namespace KPIM {
+  class StatusbarProgressWidget;
+  class ProgressDialog;
 }
 using KPIM::StatusbarProgressWidget;
 using KPIM::ProgressDialog;
@@ -46,7 +44,7 @@ class KNMainWindow : public KMainWindow
   Q_OBJECT
 
 public:
-  KNMainWindow( QWidget* parentWidget=0 );
+  KNMainWindow( QWidget* parent = 0 );
   ~KNMainWindow();
   void openURL( const KURL& );
   KNMainWidget *mainWidget() { return m_mainWidget; }

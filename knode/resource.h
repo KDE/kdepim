@@ -1,6 +1,4 @@
 /*
-    resource.h
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -24,7 +22,7 @@
 
 //========= KNode Version Information ============
 
-#define KNODE_VERSION "0.9.90"
+#define KNODE_VERSION "0.99.01"
 
 //================= StatusBar ====================
 

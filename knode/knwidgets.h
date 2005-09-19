@@ -1,8 +1,6 @@
 /*
-    knwidgets.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -58,7 +56,7 @@ class KNDialogListBox : public Q3ListBox
 {
    public:
     // alwaysIgnore==false: enter is ignored when the widget isn't visible/out of focus
-    KNDialogListBox(bool alwaysIgnore=false, QWidget * parent=0, const char * name=0);
+    KNDialogListBox( bool alwaysIgnore = false, QWidget * parent = 0 );
     ~KNDialogListBox();
 
   protected:
@@ -76,8 +74,7 @@ class KNDockWidgetHeaderDrag : public KDockWidgetHeaderDrag
   Q_OBJECT
 
   public:
-    KNDockWidgetHeaderDrag(QWidget *focusWidget, KDockWidgetAbstractHeader* parent, KDockWidget* dock,
-                            const char* name = 0);
+    KNDockWidgetHeaderDrag( QWidget *focusWidget, KDockWidgetAbstractHeader* parent, KDockWidget* dock );
     virtual ~KNDockWidgetHeaderDrag();
 
   protected slots:

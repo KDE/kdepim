@@ -33,9 +33,9 @@
 #include <qlabel.h>
 
 
-KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name )
-  : KDialogBase(Tabbed, i18n("Properties of %1").arg(group->groupname()),
-                Ok|Cancel|Help, Ok, parent, name),
+KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
+  : KDialogBase( Tabbed, i18n("Properties of %1").arg(group->groupname()),
+                 Ok|Cancel|Help, Ok, parent ),
     g_rp(group), n_ickChanged(false)
 {
 

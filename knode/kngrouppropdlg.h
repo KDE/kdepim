@@ -1,8 +1,6 @@
 /*
-    kngrouppropdlg.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -35,7 +33,7 @@ namespace KNConfig {
 class KNGroupPropDlg : public KDialogBase  {
 
   public:
-    KNGroupPropDlg(KNGroup *group, QWidget *parent=0, const char *name=0);
+    KNGroupPropDlg( KNGroup *group, QWidget *parent=0 );
     ~KNGroupPropDlg();
 
     bool nickHasChanged()const { return n_ickChanged; }
