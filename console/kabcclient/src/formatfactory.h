@@ -28,24 +28,164 @@ class CSVTemplateFactory;
 class InputFormat;
 class OutputFormat;
 
+/**
+* A list of strings for format names
+*/
 typedef QValueList<QCString> QCStringList;
 
+/**
+* @defgroup formathandling Handling of various input and output formats
+*
+* In order to be useful address data input and output has to be possible
+* in various formats, for example full VCards or just email addresses.
+*
+* The three main classes involved in the format handling are:
+* - FormatFactory: creating format implementation instances
+* - InputFormat: base interface for input format handlers
+* - OutputFormat: base interface for output format handlers
+*
+* Implementations of the InputFormat interface read the text data from
+* an C++ input stream and parse it for contact data according to the
+* format they implement.
+*
+* Implementations of the OutputFormat interface format the contact data
+* into a pure text form according to the format they implement and then
+* write this to a C++ output stream
+*
+* Both kinds of implementations need to be added to the FormatFactory
+* so they can be created by name.
+*
+* @example converter.cpp
+*/
+
+/**
+* @short Factory for input parsers and output formatters
+*
+* The factory can be queried for the InputFormat and OutputFormat
+* implementations it knows and can create.
+*
+* Example: displaying all format names and their respective description
+* @code
+* FormatFactory factory;
+*
+* QCStringList inputFormats = factory.inputFormatList();
+* QCStringList::const_iterator it = inputFormats.being();
+* for (; it != inputFormats.end(); ++it)
+* {
+*     InputFormat* inputFormat = factory.inputFormat(*it);
+*     cout << *it << endl;
+*     cout << inputFormat->description().local8Bit() << endl;
+*     delete inputFormat;
+* }
+*
+* QCStringList outputFormats = factory.outputFormatList();
+* it = outputFormats.being();
+* for (; it != outputFormats.end(); ++it)
+* {
+*     OutputFormat* outputFormat = factory.outputFormat(*it);
+*     cout << *it << endl;
+*     cout << outputFormat->description().local8Bit() << endl;
+*     delete outputFormat;
+* }
+* @endcode
+*
+* @author Kevin Krammer, <kevin.krammer@gmx.at>
+*
+* @see InputFormat
+* @see OutputFormat
+*/
 class FormatFactory
 {
 public:
+    /**
+    * @short Creates and initializes the factory
+    */
     FormatFactory();
+
+    /**
+    * @short Destroys the factory and its internal data
+    */
     ~FormatFactory();
 
+    /**
+    * @short Returns a list of input parser names
+    *
+    * Each list entry is a simple string that can be used to identify
+    * the parser on the commandline.
+    * The factory method inputFormat() will check for exactly those strings.
+    *
+    * @return a list of input parser names
+    *
+    * @see inputFormat()
+    * @see InputFormat
+    * @see outputFormatList()
+    */
     inline QCStringList inputFormatList() const  { return m_inputFormats;  }
+
+    /**
+    * @short Returns a list of output formatter names
+    *
+    * Each list entry is a simple string that can be used to identify
+    * the formatter on the commandline.
+    * The factory method outputFormat() will check for exactly those strings.
+    *
+    * @return a list of output formatter names
+    *
+    * @see outputFormat()
+    * @see OutputFormat
+    * @see inputFormatList()
+    */
     inline QCStringList outputFormatList() const { return m_outputFormats; }
 
-    InputFormat*  inputFormat(const QCString& name);
+    /**
+    * @short Creates an InputFormat instance for the given name
+    *
+    * @warning Every call creates a new instance and the caller gains its
+    * ownership, i.e. has to delete it when it isn't used any longer.
+    *
+    * @param name the input format name, as taken from the commandline
+    * @return a new InputFormat instance of the input parser associated with
+    *         the given name or @c 0 if the name is unkown to the factory
+    *
+    * @see inputFormatList()
+    * @see InputFormat
+    * @see outputFormat
+    */
+    InputFormat* inputFormat(const QCString& name);
+
+    /**
+    * @short Creates an OutputFormat instance for the given name
+    *
+    * @warning Every call creates a new instance and the caller gains its
+    * ownership, i.e. has to delete it when it isn't used any longer.
+    *
+    * @param name the output format name, as taken from the commandline
+    * @return a new OutputFormat instance of the output formatter associated
+    *         with the given name or @c 0 if the name is unkown to the factory
+    *
+    * @see inputFormatList()
+    * @see InputFormat
+    * @see outputFormat
+    */
     OutputFormat* outputFormat(const QCString& name);
-    
+
 private:
+    /**
+    * The list of the known InputFormat names
+    */
     QCStringList m_inputFormats;
+
+    /**
+    * The list if the known OutputFormat names
+    */
     QCStringList m_outputFormats;
 
+    /**
+    * Factory for the templates of the CSV Input and Output format
+    * implementations
+    *
+    * @see CSVTemplate
+    */
     CSVTemplateFactory* m_csvtemplateFactory;
 
 private:

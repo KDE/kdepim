@@ -143,9 +143,9 @@ public:
     * can of course implement the writing in this method and just call
     * it from writeAddresseeList() when iterating over the list
     *
-    * @see writeAddresseeList
+    * @see writeAddresseeList()
     * @see KABC::Addressee
-    * @see setCodec
+    * @see setCodec()
     * @see std::ostream
     */
     virtual bool writeAddressee(const KABC::Addressee& addressee, std::ostream& stream) = 0;
@@ -164,9 +164,9 @@ public:
     * differently for example numbering them, can call the writeAddressee()
     * method on each entry of the given list
     *
-    * @see writeAddressee
+    * @see writeAddressee()
     * @see KABC::Addressee
-    * @see setCodec
+    * @see setCodec()
     * @see std::ostream
     */
     virtual bool writeAddresseeList(const KABC::AddresseeList& addresseeList,

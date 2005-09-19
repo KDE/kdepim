@@ -79,7 +79,7 @@ public:
     * @return a KABC::Addressee object containing the read data
     *
     * @see KABC::Addressee
-    * @see setCodec
+    * @see setCodec()
     * @see std::ios_base
     *
     * @note This method is called until the stream is either at its end or

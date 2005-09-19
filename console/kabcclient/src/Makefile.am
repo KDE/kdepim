@@ -1,3 +1,5 @@
+SUBDIRS = examples
+
 INCLUDES= $(all_includes)
 
 bin_PROGRAMS = kabcclient

@@ -19,12 +19,16 @@ Dirs=
 Files=kabcclient.1
 
 [Dir src]
-Dirs=
+Dirs=examples
 Files=main.cpp/src.pro/formatfactory.cpp/formatfactory.h/inputformat.h/kabcclient.cpp/kabcclient.h/outputformat.h/outputformatimpls.cpp/outputformatimpls.h/inputformatimpls.cpp/inputformatimpls.h/Makefile.am/csvtemplate.cpp/csvtemplate.h/csvtemplatefactory.cpp/csvtemplatefactory.h
+
+[Dir src/examples]
+Dirs=
+Files=converter.cpp/Makefile.am
 
 [Project Dir]
 Dirs=src/doc/debian
-Files=kabcclient.pro/ChangeLog/README/README.csv
+Files=kabcclient.pro/ChangeLog/README/README.csv/Makefile.am
 
 [Project File]
 Name=KABCClient
