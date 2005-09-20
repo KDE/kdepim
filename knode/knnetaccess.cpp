@@ -30,6 +30,7 @@
 
 #include "knaccountmanager.h"
 #include "knarticle.h"
+#include "kngroupmanager.h"
 #include "knmainwidget.h"
 #include "knjobdata.h"
 #include "knnntpclient.h"
@@ -236,10 +237,11 @@ void KNNetAccess::startJobNntp()
   nntpJobQueue.remove( nntpJobQueue.begin() );
   currentNntpJob->prepareForExecution();
   if (currentNntpJob->success()) {
-    if ( currentNntpJob->type() == KNJobData::JTFetchGroups ) {
+    if ( currentNntpJob->type() == KNJobData::JTFetchGroups
+         || currentNntpJob->type() == KNJobData::JTLoadGroups ) {
       currentNntpJob->execute();
-      connect( currentNntpJob->job(), SIGNAL( result(KIO::Job*) ),
-               SLOT( slotJobResult(KIO::Job*) ) );
+      connect( currentNntpJob, SIGNAL( finished(KNJobData*) ),
+               SLOT( slotJobFinished(KNJobData*) ) );
     } else {
 #warning Port me!
 //    nntpClient->insertJob(currentNntpJob);
@@ -479,13 +481,17 @@ void KNNetAccess::slotJobResult( KIO::Job *job )
     threadDoneSmtp();
     return;
   }
-  if ( currentNntpJob && job == currentNntpJob->job() ) {
-    if ( job->error() )
-      currentNntpJob->setErrorString( job->errorString() );
+  kdError(5003) << k_funcinfo << "unknown job" << endl;
+}
+
+
+void KNNetAccess::slotJobFinished( KNJobData * job )
+{
+  if ( currentNntpJob && job == currentNntpJob ) {
     threadDoneNntp();
     return;
   }
-  kdError(5003) << k_funcinfo << "unknown job" << endl;
+  kdDebug(5003) << k_funcinfo << "unknown job" << endl;
 }
 
 

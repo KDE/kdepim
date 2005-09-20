@@ -16,6 +16,7 @@
 #include "knserverinfo.h"
 
 #include <kdebug.h>
+#include <klocale.h>
 
 KNode::GroupFetchJob::GroupFetchJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
   KNJobData( KNJobData::JTFetchGroups, c, a, i )
@@ -44,11 +45,14 @@ void KNode::GroupFetchJob::execute()
   KIO::Job* job = KIO::listDir( destination, false, true );
   connect( job, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)),
            SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)) );
+  connect( job, SIGNAL( result(KIO::Job*) ),
+           SLOT( slotResult(KIO::Job*) ) );
   if ( account()->encryption() == KNServerInfo::TLS )
     job->addMetaData( "TLS", "on" );
   else
     job->addMetaData( "TLS", "off" );
   setJob( job );
+  setStatus( i18n("Downloading group list...") );
 }
 
 void KNode::GroupFetchJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList & list )
@@ -85,5 +89,41 @@ void KNode::GroupFetchJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList 
     target->groups->append( new KNGroupInfo( name, desc, false, subscribed, access ) );
   }
 }
+
+void KNode::GroupFetchJob::slotResult( KIO::Job * job )
+{
+  if ( job->error() )
+    setErrorString( job->errorString() );
+  else {
+    // TODO: use thread weaver here?
+    setStatus( i18n("Writing group list to disk...") );
+
+    KNGroupListData *target = static_cast<KNGroupListData *>( data() );
+    if ( !target->writeOut() )
+      setErrorString( i18n("Unable to write the group list file") );
+  }
+
+  emitFinished();
+}
+
+
+
+KNode::GroupLoadJob::GroupLoadJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
+  KNJobData( KNJobData::JTLoadGroups, c, a, i )
+{
+}
+
+void KNode::GroupLoadJob::execute( )
+{
+  KNGroupListData *target = static_cast<KNGroupListData *>( data() );
+
+  setStatus( i18n("Loading group list from disk...") );
+  // TODO: use the thread weaver here
+  if ( !target->readIn() )
+    setErrorString(i18n("Unable to read the group list file"));
+
+  emitFinished();
+}
+
 
 #include "nntpjobs.moc"

@@ -669,7 +669,7 @@ void KNGroupManager::slotLoadGroupList(KNNntpAccount *a)
   getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
 
-  emitJob( new KNJobData(KNJobData::JTLoadGroups, this, a, d) );
+  emitJob( new GroupLoadJob( this, a, d ) );
 }
 
 

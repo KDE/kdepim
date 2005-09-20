@@ -24,6 +24,7 @@
 #include "knnetaccess.h"
 #include "knnntpaccount.h"
 //Added by qt3to4:
+#include <QTimer>
 #include <Q3ValueList>
 
 KNJobConsumer::KNJobConsumer()
@@ -101,6 +102,11 @@ void KNJobData::cancel()
   }
 }
 
+void KNJobData::emitFinished()
+{
+  QTimer::singleShot( 0, this, SLOT(slotEmitFinished()) );
+}
+
 void KNJobData::setJob( KIO::Job *job )
 {
   mJob = job;
@@ -141,6 +147,11 @@ void KNJobData::slotJobInfoMessage( KIO::Job*, const QString &msg )
 {
   kdDebug(5003) << k_funcinfo << "Status: " << msg << endl;
   setStatus( msg );
+}
+
+void KNJobData::slotEmitFinished( )
+{
+  emit finished( this );
 }
 
 

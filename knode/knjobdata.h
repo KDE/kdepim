@@ -120,6 +120,12 @@ class KNJobData : public QObject
     void setProgress( unsigned int progress ) { if ( mProgressItem ) mProgressItem->setProgress( progress ); }
     void setComplete() { if ( mProgressItem ) { mProgressItem->setComplete(); mProgressItem = 0; } }
 
+  signals:
+    void finished( KNJobData* );
+
+  protected:
+    void emitFinished();
+
   protected:
     jobType t_ype;
     KNJobItem *d_ata;
@@ -132,6 +138,7 @@ class KNJobData : public QObject
   private slots:
     void slotJobPercent( KIO::Job *job, unsigned long percent );
     void slotJobInfoMessage( KIO::Job *job, const QString &msg );
+    void slotEmitFinished();
 
   private:
     KIO::Job *mJob;

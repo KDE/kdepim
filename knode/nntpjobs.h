@@ -29,6 +29,16 @@ class GroupFetchJob : public KNJobData
 
   private slots:
     void slotEntries( KIO::Job *job, const KIO::UDSEntryList &list );
+    void slotResult( KIO::Job *job );
+};
+
+
+class GroupLoadJob : public KNJobData
+{
+  public:
+    GroupLoadJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
+
+    void execute();
 };
 
 }

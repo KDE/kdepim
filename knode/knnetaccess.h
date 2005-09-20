@@ -88,6 +88,7 @@ class KNNetAccess : public QObject  {
 
   private slots:
     void slotJobResult( KIO::Job *job );
+    void slotJobFinished( KNJobData *job );
 
     void slotCancelJob( KPIM::ProgressItem *item );
 
