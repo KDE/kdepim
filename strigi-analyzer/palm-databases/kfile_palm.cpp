@@ -27,7 +27,7 @@
 #include <qfile.h>
 #include <qdatetime.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 #include <pi-file.h>
 
 
@@ -70,7 +70,7 @@ bool KPalmPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
 {
     int nrRec;
     QString tempName = info.path();
-    Q3CString fileName = QFile::encodeName(tempName);
+    QByteArray fileName = QFile::encodeName(tempName);
     pi_file *dbFile = pi_file_open(const_cast < char *>((const char *) fileName));
     if (dbFile == 0L) return false;
     
