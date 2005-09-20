@@ -107,6 +107,7 @@ class KNJobData : public QObject
     void prepareForExecution()           { e_rrorString = d_ata->prepareForExecution(); }
     void notifyConsumer();
 
+    /** Performs the actual operation of a job, needs to be reimplemented for every job. */
     virtual void execute() {}
 
     KIO::Job* job() const                { return mJob; }
@@ -121,9 +122,13 @@ class KNJobData : public QObject
     void setComplete() { if ( mProgressItem ) { mProgressItem->setComplete(); mProgressItem = 0; } }
 
   signals:
+    /** Emitted when a job has been finished.
+     *  It's recommended to to emit it via emitFinished().
+     */
     void finished( KNJobData* );
 
   protected:
+    /** Emits the finished() signal via a single-shot timer. */
     void emitFinished();
 
   protected:
