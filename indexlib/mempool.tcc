@@ -26,7 +26,7 @@ typename mempool<Traits>::data_typeptr mempool<Traits>::allocate( unsigned size 
 		logfile() << format( "%s( %s ): (order %s) Returning %s\n" ) % __PRETTY_FUNCTION__ % size % order % res;
 		return data_typeptr::cast_from_uint32( res );
 	} else {
-		std::cerr << "For size " << size << " going up to " << ( unsigned )max_order_ << std::endl;
+		logfile() << format( "For size %s going up to %s\n") % size % max_order_;
 		for ( unsigned bigger = order + 1; bigger <= max_order_; ++bigger ) {
 			if ( uint32_t res = free_list( bigger ) ) {
 				while ( bigger > order ) {
@@ -163,6 +163,7 @@ bool mempool<Traits>::join( data_typeptr& node, unsigned order ) {
 	} else {
 		partner = byte_idx + block_idx;
 	}
+	if ( partner >= manager_->size() ) return false;
 	bool res = traits_type::is_free( data_typeptr::cast_from_uint32( partner ) )
 		&& get_node( partner )->order() == order;
 	if ( res ) {
