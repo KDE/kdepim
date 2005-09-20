@@ -38,10 +38,15 @@ void KNode::GroupFetchJob::execute()
     destination.setUser( account()->user() );
     destination.setPass( account()->pass() );
   }
-  QString query;
+  QStringList query;
   if ( target->getDescriptions )
-    query = "desc=true";
-  destination.setQuery( query );
+    query << "desc=true";
+  if ( type() == JTCheckNewGroups )
+    query << QString( "since=%1%2%3 000000" )
+        .arg( target->fetchSince.year() % 100, 2, 10, QChar( '0' ) )
+        .arg( target->fetchSince.month(), 2, 10, QChar( '0' ) )
+        .arg( target->fetchSince.day(), 2, 10, QChar( '0' ) );
+  destination.setQuery( query.join( "&" ) );
   KIO::Job* job = KIO::listDir( destination, false, true );
   connect( job, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)),
            SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)) );
@@ -84,9 +89,13 @@ void KNode::GroupFetchJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList 
     if ( target->subscribed.contains( name ) ) {
       target->subscribed.remove( name );    // group names are unique, we wont find it again anyway...
       subscribed = true;
-    } else
+    } else {
       subscribed = false;
-    target->groups->append( new KNGroupInfo( name, desc, false, subscribed, access ) );
+    }
+    if ( type() == JTCheckNewGroups )
+      mGroupList.append( new KNGroupInfo( name, desc, true, subscribed, access ) );
+    else
+      target->groups->append( new KNGroupInfo( name, desc, false, subscribed, access ) );
   }
 }
 
@@ -95,15 +104,33 @@ void KNode::GroupFetchJob::slotResult( KIO::Job * job )
   if ( job->error() )
     setErrorString( job->errorString() );
   else {
+    KNGroupListData *target = static_cast<KNGroupListData *>( data() );
+
     // TODO: use thread weaver here?
+    if ( type() == JTCheckNewGroups ) {
+      setStatus( i18n("Loading group list from disk...") );
+      if ( !target->readIn() ) {
+        setErrorString( i18n("Unable to read the group list file") );
+        emitFinished();
+        return;
+      }
+      target->merge( &mGroupList );
+    }
     setStatus( i18n("Writing group list to disk...") );
 
-    KNGroupListData *target = static_cast<KNGroupListData *>( data() );
     if ( !target->writeOut() )
       setErrorString( i18n("Unable to write the group list file") );
   }
 
   emitFinished();
+}
+
+
+
+KNode::GroupUpdateJob::GroupUpdateJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
+  KNode::GroupFetchJob( c, a, i )
+{
+  t_ype = JTCheckNewGroups;
 }
 
 
@@ -124,6 +151,5 @@ void KNode::GroupLoadJob::execute( )
 
   emitFinished();
 }
-
 
 #include "nntpjobs.moc"

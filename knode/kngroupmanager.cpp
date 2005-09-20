@@ -696,12 +696,10 @@ void KNGroupManager::slotCheckForNewGroups(KNNntpAccount *a, QDate date)
   d->fetchSince = date;
   d->codecForDescriptions=KGlobal::charsets()->codecForName(knGlobals.configManager()->postNewsTechnical()->charset());
 
-  emitJob( new KNJobData(KNJobData::JTCheckNewGroups, this, a, d) );
+  emitJob( new GroupUpdateJob( this, a, d ) );
 }
 
 
 //--------------------------------
 
 #include "kngroupmanager.moc"
-
-// kate: space-indent on; indent-width 2;

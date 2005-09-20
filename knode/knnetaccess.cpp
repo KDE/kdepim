@@ -238,6 +238,7 @@ void KNNetAccess::startJobNntp()
   currentNntpJob->prepareForExecution();
   if (currentNntpJob->success()) {
     if ( currentNntpJob->type() == KNJobData::JTFetchGroups
+         || currentNntpJob->type() == KNJobData::JTCheckNewGroups
          || currentNntpJob->type() == KNJobData::JTLoadGroups ) {
       currentNntpJob->execute();
       connect( currentNntpJob, SIGNAL( finished(KNJobData*) ),

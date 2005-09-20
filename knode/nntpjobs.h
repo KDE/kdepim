@@ -17,28 +17,47 @@
 
 #include <kio/job.h>
 
+#include <Q3SortedList>
+
+class KNGroupInfo;
+
 namespace KNode {
 
+/** Download and update newsgroups lists */
 class GroupFetchJob : public KNJobData
 {
   Q_OBJECT
   public:
     GroupFetchJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
 
-    void execute();
+    virtual void execute();
 
   private slots:
     void slotEntries( KIO::Job *job, const KIO::UDSEntryList &list );
     void slotResult( KIO::Job *job );
+
+  private:
+    Q3SortedList<KNGroupInfo> mGroupList;
 };
 
 
+
+/** Update newsgroup list (convenience wrapper for GroupFetchJob). */
+class GroupUpdateJob : public GroupFetchJob
+{
+  public:
+    GroupUpdateJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
+};
+
+
+
+/** Loads the newsgroup list from the disk. */
 class GroupLoadJob : public KNJobData
 {
   public:
     GroupLoadJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
 
-    void execute();
+    virtual void execute();
 };
 
 }
