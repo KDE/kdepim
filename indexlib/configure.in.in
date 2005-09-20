@@ -19,3 +19,4 @@ if test "x$have_boost" = "xyes"; then
 	CXXFLAGS="-DHAVE_BOOST $CXXFLAGS"
 fi
 
+								

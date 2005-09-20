@@ -27,33 +27,31 @@ template <typename T>
 void memvector<T>::resize( size_type n_s ) {
 	if ( size() >= n_s ) return;
 
-	using namespace byte_io;
-	data_->resize( n_s * byte_lenght<value_type>() + byte_lenght<unsigned>() );
+	data_->resize( n_s * byte_io::byte_lenght<value_type>() + byte_io::byte_lenght<unsigned>() );
 	iterator p_end = end();
-	write<unsigned>( data_->rw_base( 0 ), n_s );
-	while ( p_end != end() ) {
+	byte_io::write<unsigned>( data_->rw_base( 0 ), n_s );
+	while ( operator !=<unsigned, unsigned>(p_end, end()) ) {
 		*p_end = value_type();
 		++p_end;
+		
 	}
 }
 
 template<typename T>
 void memvector<T>::insert( const_iterator where, const value_type v ) {
-	using namespace byte_io;
 	assert( !( where < begin() ) );
 	assert( where <= end() );
 	const unsigned to_idx = where.raw() - data_->ronly_base( 0 );
-	data_->resize( ( size() + 1 ) * byte_lenght<value_type>() + byte_lenght<unsigned>() );
+	data_->resize( ( size() + 1 ) * byte_io::byte_lenght<value_type>() + byte_io::byte_lenght<unsigned>() );
 	unsigned char* to = data_->rw_base( to_idx );
 	// make space:
-	std::memmove( to + byte_lenght<value_type>(), to, end().raw() - to );
-	write<value_type>( to, v );
-	write<unsigned>( data_->rw_base( 0 ), size() + 1 );
+	std::memmove( to + byte_io::byte_lenght<value_type>(), to, end().raw() - to );
+	byte_io::write<value_type>( to, v );
+	byte_io::write<unsigned>( data_->rw_base( 0 ), size() + 1 );
 }
 
 template <typename T>
 void memvector<T>::erase( iterator where ) {
-	using namespace byte_io;
 
 	assert( size() );
 	assert( !( where < begin() ) );
@@ -62,7 +60,7 @@ void memvector<T>::erase( iterator where ) {
 	iterator next = where;
 	++next;
 	std::memmove( const_cast<unsigned char*>( where.raw() ), next.raw(), end().raw() - next.raw() );
-	write<uint32_t>( data_->rw_base( 0 ), size() - 1 );
+	byte_io::write<uint32_t>( data_->rw_base( 0 ), size() - 1 );
 }
 
 template <typename T>

@@ -31,7 +31,6 @@
  * your version.
  */
 
-
 #include "memreference.h"
 #include "bitio.h"
 #include "manager.h"
@@ -40,15 +39,16 @@
 #ifdef HAVE_BOOST
 #include <boost/type_traits/is_convertible.hpp>
 #endif
-#include <ostream>
+#include <iostream>
 #include <iterator>
+#include <string>
 #include <assert.h>
 
 template <typename> class memory_iterator;
 template <typename> class memvector;
 
 template <typename T>
-struct memory_iterator : public std::iterator<std::random_access_iterator_tag,T> {
+struct memory_iterator : public std::iterator<STD_NAMESPACE_PREFIX random_access_iterator_tag,T> {
 	private:
 	public:
 		template <typename U>

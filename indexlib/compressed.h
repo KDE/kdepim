@@ -86,6 +86,8 @@ struct compressed_page_traits {
 };
 
 class compressed_file : public memory_manager {
+		struct page;
+		friend struct page;
 	public:
 		compressed_file( std::string );
 		~compressed_file();
@@ -112,7 +114,6 @@ class compressed_file : public memory_manager {
 			bool dirty_;
 			unsigned char data_[ compressed_file::page_bytes ];
 		};
-		friend class page;
 		mutable std::vector<page*> pages_;
 		mutable memvector<uint32_t> auxdata_;
 		memory_reference<uint32_t> compressed_data_for( unsigned idx ) const {

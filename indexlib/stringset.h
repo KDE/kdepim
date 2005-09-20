@@ -35,12 +35,12 @@
 #include "memvector.h"
 #include "stringarray.h"
 #include <iterator>
-#include <ostream>
+#include <iostream>
 #include <utility>
 
 struct stringset {
 	public:
-		struct const_iterator : public std::iterator<std::random_access_iterator_tag,const char*> {
+		struct const_iterator : public std::iterator<STD_NAMESPACE_PREFIX random_access_iterator_tag,const char*> {
 				const char* operator*() const {
 					return mother_->strings_.get_cstr( mother_->ordered_[ idx_ ] );
 				}

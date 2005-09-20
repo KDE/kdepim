@@ -75,7 +75,8 @@ void stringarray::erase( index_type idx ) {
 		const char* next = get_cstr( idx + 1 );
 		unsigned delta = strlen( target ) + 1;
 		std::memmove( target, next, data_->size() - indeces_[ idx + 1 ] );
-		for ( memvector<uint32_t>::iterator first = indeces_.begin() + idx, past = indeces_.end(); first != past; ++first ) {
+		// Hack: Don't compare the iterators directly, it ices gcc-2.95
+		for ( memvector<uint32_t>::iterator first = indeces_.begin() + idx, past = indeces_.end(); first.raw() != past.raw(); ++first ) {
 			*first -= delta;
 		}
 	}

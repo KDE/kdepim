@@ -42,7 +42,7 @@
 void  set_leafdata_manager( memory_manager* );
 memory_manager* get_leafdata_manager();
 
-struct leafdata_iterator : public std::iterator<std::input_iterator_tag,uint32_t> {
+struct leafdata_iterator : public std::iterator<STD_NAMESPACE_PREFIX input_iterator_tag,uint32_t> {
 	public:
 		explicit leafdata_iterator( const unsigned char* d ):
 			data_( d ),
@@ -50,7 +50,6 @@ struct leafdata_iterator : public std::iterator<std::input_iterator_tag,uint32_t
 			valid_( true )
 			{
 			}
-		typedef uint32_t value_type;
 
 		value_type operator *() {
 			assert( valid_ );

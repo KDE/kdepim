@@ -1,4 +1,5 @@
 #include "tokenizer.h"
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <cassert>
