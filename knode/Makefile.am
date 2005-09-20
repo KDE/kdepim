@@ -35,6 +35,7 @@ libknodecommon_la_SOURCES =   knconfigmanager.cpp \
 #                  knprotocolclient.cpp \
 #                  knnntpclient.cpp \
                   knjobdata.cpp \
+                  nntpjobs.cpp \
                   \
                   knaccountmanager.cpp \
                   kncollection.cpp \
@@ -106,6 +107,7 @@ noinst_HEADERS =  knconfigmanager.h \
                   knprotocolclient.h \
                   knnntpclient.h \
                   knjobdata.h \
+                  nntpjobs.h \
                   \
                   knaccountmanager.h \
                   kncollection.h \

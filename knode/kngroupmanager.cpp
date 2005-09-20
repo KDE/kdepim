@@ -35,6 +35,7 @@
 #include "knnetaccess.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
+#include "nntpjobs.h"
 #include "resource.h"
 #include "utilities.h"
 #include "knarticlewindow.h"
@@ -681,7 +682,7 @@ void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
   d->getDescriptions = a->fetchDescriptions();
   d->codecForDescriptions=KGlobal::charsets()->codecForName(knGlobals.configManager()->postNewsTechnical()->charset());
 
-  emitJob( new KNJobData(KNJobData::JTFetchGroups, this, a, d) );
+  emitJob( new GroupFetchJob( this, a, d ) );
 }
 
 

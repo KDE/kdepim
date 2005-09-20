@@ -236,10 +236,16 @@ void KNNetAccess::startJobNntp()
   nntpJobQueue.remove( nntpJobQueue.begin() );
   currentNntpJob->prepareForExecution();
   if (currentNntpJob->success()) {
+    if ( currentNntpJob->type() == KNJobData::JTFetchGroups ) {
+      currentNntpJob->execute();
+      connect( currentNntpJob->job(), SIGNAL( result(KIO::Job*) ),
+               SLOT( slotJobResult(KIO::Job*) ) );
+    } else {
 #warning Port me!
 //    nntpClient->insertJob(currentNntpJob);
-    triggerAsyncThread(nntpOutPipe[1]);
-    kdDebug(5003) << "KNNetAccess::startJobNntp(): job started" << endl;
+      triggerAsyncThread(nntpOutPipe[1]);
+      kdDebug(5003) << "KNNetAccess::startJobNntp(): job started" << endl;
+    }
   } else {
     threadDoneNntp();
   }
@@ -466,14 +472,17 @@ void KNNetAccess::slotThreadSignal(int i)
 
 void KNNetAccess::slotJobResult( KIO::Job *job )
 {
-  if ( job == currentSmtpJob->job() ) {
+  kdDebug(5003) << k_funcinfo << endl;
+  if ( currentSmtpJob && job == currentSmtpJob->job() ) {
     if ( job->error() )
       currentSmtpJob->setErrorString( job->errorString() );
     threadDoneSmtp();
     return;
   }
-  if ( job == currentNntpJob->job() ) {
-    // TODO
+  if ( currentNntpJob && job == currentNntpJob->job() ) {
+    if ( job->error() )
+      currentNntpJob->setErrorString( job->errorString() );
+    threadDoneNntp();
     return;
   }
   kdError(5003) << k_funcinfo << "unknown job" << endl;

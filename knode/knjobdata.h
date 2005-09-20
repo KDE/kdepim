@@ -107,6 +107,8 @@ class KNJobData : public QObject
     void prepareForExecution()           { e_rrorString = d_ata->prepareForExecution(); }
     void notifyConsumer();
 
+    virtual void execute() {}
+
     KIO::Job* job() const                { return mJob; }
     void setJob( KIO::Job *job );
 
