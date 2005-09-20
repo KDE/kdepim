@@ -1,5 +1,6 @@
 #include <boost/test/unit_test.hpp>
 #include "tokenizer.h"
+#include <cassert>
 
 using namespace ::boost::unit_test;
 namespace indexlib { namespace tests { namespace tokenizer_test {
@@ -8,8 +9,9 @@ using indexlib::detail::tokenizer;
 using indexlib::detail::get_tokenizer;
 
 void simple() {
-	std::auto_ptr<tokenizer> tokenizer = get_tokenizer( "default" );
-	std::vector<std::string> tokens = tokenizer->string_to_words( "one     ,as, ''#`:ThReE,  בבבאחי" );
+	std::auto_ptr<tokenizer> tokenizer = get_tokenizer( "latin-1:european" );
+	assert(tokenizer.get());
+	std::vector<std::string> tokens = tokenizer->string_to_words( "one     ,as, ''#`:ThReE,  בבאחי" );
 	std::vector<std::string> expected;
 	expected.push_back( "ONE" );
 	expected.push_back( "AS" );
