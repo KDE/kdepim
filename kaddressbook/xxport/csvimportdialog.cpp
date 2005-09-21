@@ -182,6 +182,10 @@ KABC::AddresseeList CSVImportDialog::contacts() const
       }
 
       QString value = mTable->text( row, col );
+      if ( 1 == row && item->text() == value )
+        // we are looking at a header row, stop now
+        break;
+
       if ( !value.isEmpty() )
         emptyRow = false;
 
