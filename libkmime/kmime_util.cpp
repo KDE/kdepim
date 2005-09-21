@@ -136,7 +136,7 @@ QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
     result = src.copy();
   else {
     result.truncate(src.length());
-    for (pos = 0, dest = 0; src[pos]; pos++)
+    for (pos = 0, dest = 0; pos < src.size(); pos++)
     {
       if ( src[pos] != '=' || src[pos + 1] != '?' )
       {
@@ -168,13 +168,13 @@ QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
       {
         mid = pos;
         // search for end of encoded part
-        while ( i < maxLen && src[pos] && ! ( src[pos] == '?' && src[pos + 1] == '=' ) )
+        while ( i < maxLen && pos < src.size() && ! ( src[pos] == '?' && src[pos + 1] == '=' ) )
         {
           i++;
           pos++;
         }
         end = pos+2;//end now points to the first char after the encoded string
-        if ( i >= maxLen || !src[pos] ) valid = false;
+        if ( i >= maxLen || src.size() <= pos ) valid = false;
       }
 
       if (valid) {
