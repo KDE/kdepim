@@ -12,6 +12,7 @@
 
 #include "nntpjobs.h"
 
+#include "kngroup.h"
 #include "kngroupmanager.h"
 #include "knserverinfo.h"
 
@@ -27,17 +28,7 @@ void KNode::GroupFetchJob::execute()
 {
   KNGroupListData *target = static_cast<KNGroupListData *>( data() );
 
-  KURL destination;
-  if ( account()->encryption() == KNServerInfo::SSL )
-    destination.setProtocol( "nntps" );
-  else
-    destination.setProtocol( "nntp" );
-  destination.setHost( account()->server() );
-  destination.setPort( account()->port() );
-  if ( account()->needsLogon() ) {
-    destination.setUser( account()->user() );
-    destination.setPass( account()->pass() );
-  }
+  KURL destination = baseUrl();
   QStringList query;
   if ( target->getDescriptions )
     query << "desc=true";
@@ -148,6 +139,57 @@ void KNode::GroupLoadJob::execute( )
   // TODO: use the thread weaver here
   if ( !target->readIn() )
     setErrorString(i18n("Unable to read the group list file"));
+
+  emitFinished();
+}
+
+
+
+KNode::ArticleListJob::ArticleListJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
+    KNJobData( JTfetchNewHeaders, c, a, i )
+{
+}
+
+void KNode::ArticleListJob::execute()
+{
+  KNGroup* target = static_cast<KNGroup*>( data() );
+
+  KURL destination = baseUrl();
+  destination.setPath( target->groupname() );
+  QStringList query;
+  query << "first=" + QString::number( target->lastNr() + 1 );
+  if ( target->lastNr() <= 0 ) // first fetch
+    query << "max=" + QString::number( target->maxFetch() );
+  destination.setQuery( query.join( "&" ) );
+  KIO::Job* job = KIO::listDir( destination, false, true );
+  connect( job, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)),
+           SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)) );
+  connect( job, SIGNAL( result(KIO::Job*) ),
+           SLOT( slotResult(KIO::Job*) ) );
+  if ( account()->encryption() == KNServerInfo::TLS )
+    job->addMetaData( "TLS", "on" );
+  else
+    job->addMetaData( "TLS", "off" );
+  setJob( job );
+  setStatus( i18n("Downloading new headers...") );
+}
+
+void KNode::ArticleListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList & list )
+{
+  mArticleList += list;
+}
+
+void KNode::ArticleListJob::slotResult( KIO::Job * job )
+{
+  kdDebug(5003) << k_funcinfo << mArticleList.count() << endl;
+  KNGroup* target = static_cast<KNGroup*>( data() );
+
+  target->insortNewHeaders( mArticleList );
+
+  int lastSerNum = 0;
+  if ( job->metaData().contains( "LastSerialNumber" ) )
+    lastSerNum = job->metaData()["LastSerialNumber"].toInt();
+  target->setLastNr( lastSerNum );
 
   emitFinished();
 }

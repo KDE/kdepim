@@ -237,18 +237,13 @@ void KNNetAccess::startJobNntp()
   nntpJobQueue.remove( nntpJobQueue.begin() );
   currentNntpJob->prepareForExecution();
   if (currentNntpJob->success()) {
-    if ( currentNntpJob->type() == KNJobData::JTFetchGroups
-         || currentNntpJob->type() == KNJobData::JTCheckNewGroups
-         || currentNntpJob->type() == KNJobData::JTLoadGroups ) {
-      currentNntpJob->execute();
-      connect( currentNntpJob, SIGNAL( finished(KNJobData*) ),
-               SLOT( slotJobFinished(KNJobData*) ) );
-    } else {
+    currentNntpJob->execute();
+    connect( currentNntpJob, SIGNAL( finished(KNJobData*) ),
+             SLOT( slotJobFinished(KNJobData*) ) );
 #warning Port me!
 //    nntpClient->insertJob(currentNntpJob);
-      triggerAsyncThread(nntpOutPipe[1]);
+//       triggerAsyncThread(nntpOutPipe[1]);
       kdDebug(5003) << "KNNetAccess::startJobNntp(): job started" << endl;
-    }
   } else {
     threadDoneNntp();
   }

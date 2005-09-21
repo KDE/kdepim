@@ -60,5 +60,26 @@ class GroupLoadJob : public KNJobData
     virtual void execute();
 };
 
+
+
+/** Downloads all or a selected part of the article list for a specific
+ *  newsgroup.
+ */
+class ArticleListJob : public KNJobData
+{
+  Q_OBJECT
+  public:
+    ArticleListJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
+
+    virtual void execute();
+
+  private slots:
+    void slotEntries( KIO::Job *job, const KIO::UDSEntryList &list );
+    void slotResult( KIO::Job *job );
+
+  private:
+    KIO::UDSEntryList mArticleList;
+};
+
 }
 #endif

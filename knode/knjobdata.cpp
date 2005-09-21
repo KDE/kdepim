@@ -154,5 +154,22 @@ void KNJobData::slotEmitFinished( )
   emit finished( this );
 }
 
+KURL KNJobData::baseUrl() const
+{
+  KURL url;
+  // TODO: handle smtp here as well
+  if ( account()->encryption() == KNServerInfo::SSL )
+    url.setProtocol( "nntps" );
+  else
+    url.setProtocol( "nntp" );
+  url.setHost( account()->server() );
+  url.setPort( account()->port() );
+  if ( account()->needsLogon() ) {
+    url.setUser( account()->user() );
+    url.setPass( account()->pass() );
+  }
+  return url;
+}
+
 
 #include "knjobdata.moc"

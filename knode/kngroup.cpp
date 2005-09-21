@@ -388,24 +388,21 @@ bool KNGroup::unloadHdrs(bool force)
 
 
 // Attention: this method is called from the network thread!
-void KNGroup::insortNewHeaders(Q3StrList *hdrs, Q3StrList *hdrfmt, KNProtocolClient *client)
+void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient *client)
 {
   KNRemoteArticle *art=0, *art2=0;
-  Q3CString data, hdr, hdrName;
-  KQCStringSplitter split;
-  split.setIncludeSep(false);
-  int new_cnt=0, added_cnt=0, todo=hdrs->count();
+  int new_cnt=0, added_cnt=0, todo = list.count();
   QTime timer;
 
   l_astFetchCount=0;
 
-  if(!hdrs || hdrs->count()==0)
+  if ( list.count() == 0 )
     return;
 
   timer.start();
 
   //resize the list
-  if(!resize(size()+hdrs->count())) return;
+  if ( !resize( size() + list.count() ) ) return;
 
   // recreate msg-ID index
   syncSearchIndex();
@@ -414,61 +411,44 @@ void KNGroup::insortNewHeaders(Q3StrList *hdrs, Q3StrList *hdrfmt, KNProtocolCli
   if(f_irstNew == -1)
     f_irstNew = length(); // index of last + 1
 
-  for(char *line=hdrs->first(); line; line=hdrs->next()) {
-    split.init(line, "\t");
+//   for(char *line=hdrs->first(); line; line=hdrs->next()) {
+  QString hdrName, hdrValue;
+  for( KIO::UDSEntryListConstIterator it = list.begin(); it != list.end(); ++it ) {
 
     //new Header-Object
     art=new KNRemoteArticle(this);
     art->setNew(true);
 
-    //Article Number
-    split.first();
-    art->setArticleNumber(split.string().toInt());
+    for ( KIO::UDSEntry::ConstIterator it2 = (*it).begin(); it2 != (*it).end(); ++it2 ) {
 
-    //Subject
-    split.next();
-    art->subject()->from7BitString(split.string());
-    if(art->subject()->isEmpty())
-      art->subject()->fromUnicodeString(i18n("no subject"), art->defaultCharset());
+      if ( (*it2).m_uds == KIO::UDS_NAME ) {
+        //Article Number
+        art->setArticleNumber( (*it2).m_str.toInt() );
+      } else if ( (*it2).m_uds == KIO::UDS_EXTRA ) {
+        int pos = (*it2).m_str.indexOf( ':' );
+        hdrName = (*it2).m_str.left( pos );
+        hdrValue = (*it2).m_str.right( (*it2).m_str.length() - ( hdrName.length() + 2 ) );
 
-    //From and Email
-    split.next();
-    art->from()->from7BitString(split.string());
-
-    //Date
-    split.next();
-    art->date()->from7BitString(split.string());
-
-    //Message-ID
-    split.next();
-    art->messageID()->from7BitString(split.string().simplifyWhiteSpace());
-
-    //References
-    split.next();
-    if(!split.string().isEmpty())
-      art->references()->from7BitString(split.string()); //use QCString::copy() ?
-
-    // Bytes
-    split.next();
-
-    //Lines
-    split.next();
-    art->lines()->setNumberOfLines(split.string().toInt());
-
-    // optinal additional headers
-    mOptionalHeaders = *hdrfmt;
-    for (hdr = hdrfmt->first(); !hdr.isNull(); hdr = hdrfmt->next()) {
-      if (!split.next())
-        break;
-      data = split.string();
-      int pos = hdr.find(':');
-      hdrName = hdr.left( pos );
-      // if the header format is 'full' we have to strip the header name
-      if (hdr.findRev("full") == (int)(hdr.length() - 4))
-        data = data.right( data.length() - (hdrName.length() + 2) );
-
-      // add header
-      art->setHeader( new KMime::Headers::Generic( hdrName, art, data ) );
+        if ( hdrName == "Subject" ) {
+          art->subject()->from7BitString( hdrValue.toLatin1() );
+          if ( art->subject()->isEmpty() )
+            art->subject()->fromUnicodeString( i18n("no subject"), art->defaultCharset() );
+        } else if ( hdrName == "From" ) {
+          art->from()->from7BitString( hdrValue.toLatin1() );
+        } else if ( hdrName == "Date" ) {
+          art->date()->from7BitString( hdrValue.toLatin1() );
+        } else if ( hdrName == "Message-ID" ) {
+          art->messageID()->from7BitString( hdrValue.simplifyWhiteSpace().toLatin1() );
+        } else if ( hdrName == "References" ) {
+          if( !hdrValue.isEmpty() )
+            art->references()->from7BitString( hdrValue.toLatin1() );
+        } else if ( hdrName == "Lines" ) {
+          art->lines()->setNumberOfLines( hdrValue.toInt() );
+        } else {
+          // optional extra headers
+          art->setHeader( new KMime::Headers::Generic( hdrName.toLatin1(), art, hdrValue.toLatin1() ) );
+        }
+      }
     }
 
     // check if we have this article already in this group,

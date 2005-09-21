@@ -20,6 +20,9 @@
 #include "knarticlecollection.h"
 #include "knjobdata.h"
 #include "knarticle.h"
+
+#include <kio/job.h>
+
 //Added by qt3to4:
 #include <Q3StrList>
 #include <Q3CString>
@@ -96,7 +99,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     /** load + save */
     bool loadHdrs();
     bool unloadHdrs(bool force=true);
-    void insortNewHeaders(Q3StrList *hdrs, Q3StrList *hdrfmt, KNProtocolClient *client=0);
+    void insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient *client = 0 );
     int saveStaticData(int cnt,bool ovr=false);
     void saveDynamicData(int cnt,bool ovr=false);
     void syncDynamicData();

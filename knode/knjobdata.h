@@ -15,6 +15,8 @@
 #ifndef KNJOBDATA_H
 #define KNJOBDATA_H
 
+#include <kurl.h>
+
 #include <qobject.h>
 #include <q3valuelist.h>
 
@@ -108,7 +110,7 @@ class KNJobData : public QObject
     void notifyConsumer();
 
     /** Performs the actual operation of a job, needs to be reimplemented for every job. */
-    virtual void execute() {}
+    virtual void execute() { emitFinished(); }
 
     KIO::Job* job() const                { return mJob; }
     void setJob( KIO::Job *job );
@@ -130,6 +132,11 @@ class KNJobData : public QObject
   protected:
     /** Emits the finished() signal via a single-shot timer. */
     void emitFinished();
+
+    /** Returns a correctly set up KURL according to the encryption and
+     *  authentication settings for KIO slave operations.
+     */
+    KURL baseUrl() const;
 
   protected:
     jobType t_ype;

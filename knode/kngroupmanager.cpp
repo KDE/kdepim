@@ -512,7 +512,7 @@ void KNGroupManager::checkGroupForNewHeaders(KNGroup *g)
   }
 
   g->setMaxFetch(knGlobals.configManager()->readNewsGeneral()->maxToFetch());
-  emitJob( new KNJobData(KNJobData::JTfetchNewHeaders, this, g->account(), g) );
+  emitJob( new ArticleListJob( this, g->account(), g ) );
 }
 
 
@@ -579,7 +579,7 @@ void KNGroupManager::checkAll(KNNntpAccount *a, bool silent)
       if ( silent )
         emitJob( new KNJobData(KNJobData::JTsilentFetchNewHeaders, this, (*it)->account(), (*it) ) );
       else
-        emitJob( new KNJobData(KNJobData::JTfetchNewHeaders, this, (*it)->account(), (*it) ) );
+        emitJob( new ArticleListJob( this, (*it)->account(), (*it) ) );
     }
   }
 }
