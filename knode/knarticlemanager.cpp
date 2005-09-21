@@ -40,6 +40,7 @@
 #include "knarticlewindow.h"
 #include "knfoldermanager.h"
 #include "headerview.h"
+#include "nntpjobs.h"
 //Added by qt3to4:
 #include <Q3ValueList>
 #include <Q3CString>
@@ -447,7 +448,7 @@ bool KNArticleManager::loadArticle(KNArticle *a)
   if(a->type()==KMime::Base::ATremote) {
     KNGroup *g=static_cast<KNGroup*>(a->collection());
     if(g)
-      emitJob( new KNJobData(KNJobData::JTfetchArticle, this, g->account(), a) );
+      emitJob( new ArticleFetchJob( this, g->account(), a ) );
     else
       return false;
   }

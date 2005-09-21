@@ -19,6 +19,8 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+#include <QDir>
+
 KNode::GroupFetchJob::GroupFetchJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
   KNJobData( KNJobData::JTFetchGroups, c, a, i )
 {
@@ -181,15 +183,60 @@ void KNode::ArticleListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList
 
 void KNode::ArticleListJob::slotResult( KIO::Job * job )
 {
-  kdDebug(5003) << k_funcinfo << mArticleList.count() << endl;
-  KNGroup* target = static_cast<KNGroup*>( data() );
+  if ( job->error() )
+    setErrorString( job->errorString() );
+  else {
+    KNGroup* target = static_cast<KNGroup*>( data() );
 
-  target->insortNewHeaders( mArticleList );
+    target->insortNewHeaders( mArticleList );
 
-  int lastSerNum = 0;
-  if ( job->metaData().contains( "LastSerialNumber" ) )
-    lastSerNum = job->metaData()["LastSerialNumber"].toInt();
-  target->setLastNr( lastSerNum );
+    int lastSerNum = 0;
+    if ( job->metaData().contains( "LastSerialNumber" ) )
+      lastSerNum = job->metaData()["LastSerialNumber"].toInt();
+    target->setLastNr( lastSerNum );
+  }
+
+  emitFinished();
+}
+
+
+
+KNode::ArticleFetchJob::ArticleFetchJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
+    KNJobData( JTfetchArticle, c, a, i )
+{
+}
+
+void KNode::ArticleFetchJob::execute()
+{
+  KNRemoteArticle *target = static_cast<KNRemoteArticle*>( data() );
+  QString path = static_cast<KNGroup*>( target->collection() )->groupname();
+
+  KURL url = baseUrl();
+  path += QDir::separator();
+  path += target->messageID()->as7BitString( false );
+  url.setPath( path );
+
+  KIO::Job* job = KIO::storedGet( url, false, false );
+  connect( job, SIGNAL( result(KIO::Job*) ), SLOT( slotResult(KIO::Job*) ) );
+  if ( account()->encryption() == KNServerInfo::TLS )
+    job->addMetaData( "TLS", "on" );
+  else
+    job->addMetaData( "TLS", "off" );
+  setJob( job );
+}
+
+void KNode::ArticleFetchJob::slotResult( KIO::Job * job )
+{
+  if ( job->error() )
+    setErrorString( job->errorString() );
+  else {
+    KNRemoteArticle *target = static_cast<KNRemoteArticle*>( data() );
+    KIO::StoredTransferJob *j = static_cast<KIO::StoredTransferJob*>( job );
+    QByteArray buffer = j->data();
+    buffer.replace( "\r\n", "\n" ); // TODO: do this in the io-slave?
+    target->setContent( buffer );
+    kdDebug(5003) << k_funcinfo << buffer.size() << endl;
+  }
 
   emitFinished();
 }

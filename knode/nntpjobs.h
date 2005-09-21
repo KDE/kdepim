@@ -81,5 +81,20 @@ class ArticleListJob : public KNJobData
     KIO::UDSEntryList mArticleList;
 };
 
+
+
+/** Downloads one specific article from the news server. */
+class ArticleFetchJob : public KNJobData
+{
+  Q_OBJECT
+  public:
+    ArticleFetchJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
+
+    virtual void execute();
+
+  private slots:
+    void slotResult( KIO::Job *job );
+};
+
 }
 #endif
