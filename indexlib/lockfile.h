@@ -35,15 +35,29 @@
 
 namespace indexlib { namespace detail {
 
+/**
+ * Implements a simple, file based lock.
+ *
+ * Given a filename, it can be used to ensure that only one such file is in use at the time.
+ */
 class lockfile {
 	public:
+		/** Creates the object, doesn't actually do anything */
 		explicit lockfile( std::string name );
+
+		/** if locked, unlocks */
 		~lockfile();
 
+		/** Returns whether the file is locked */
 		bool locked() const;
+
+		/** Tries to lock the file returning true in case of success */
 		bool trylock();
+
+		/** Unlocks if you own the lock, otherwise it's a nop. */
 		void unlock();
 
+		/** This removes the lock, no matter what. */
 		void force_unlock();
 	private:
 		std::string filename_;

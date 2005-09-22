@@ -30,6 +30,7 @@
 
 #include "lockfile.h"
 #include "format.h"
+#include "logfile.h"
 #include <iostream>
 #include <fcntl.h>
 #include <unistd.h>
@@ -58,17 +59,19 @@ bool lockfile::trylock() {
 		locked_ = true;
 		close( fd );
 	}
-	std::cerr << format( "trylock(%s) returning %s (fd:%s) (error:%s)\n" ) % filename_ % locked_ %fd % strerror( errno );
+	logfile() << format( "trylock(%s) returning %s (fd:%s) (error:%s)\n" ) % filename_ % locked_ %fd % strerror( errno );
 	return locked_;
 }
 
 void lockfile::unlock() {
 	if ( locked() ) {
 		unlink( filename_.c_str() );
+		locked_ = false;
 	}
 }
 
 void lockfile::force_unlock() {
 	unlink( filename_.c_str() );
+	locked_ = false;
 }
 
