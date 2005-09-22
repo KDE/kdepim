@@ -35,7 +35,7 @@ FilterLNotes::FilterLNotes() :
                      "mailers that use Lotus Notes' Structured Text format.</p>"
                      "<p><b>Note:</b> Since it is possible to recreate the folder structure, the imported "
                      "messages will be stored in subfolders named by the files they ame from under: "
-                     "\"Sylpheed-Import\" in your local folder.</p>"))
+                     "\"LNotes-Import\" in your local folder.</p>"))
 {}
 
 /** Destructor. */
@@ -43,7 +43,7 @@ FilterLNotes::~FilterLNotes() {
     endImport();
 }
 
-/** 
+/**
  * Recursive import of The Bat! maildir.
  * @param info Information storage for the operation.
  */
@@ -53,7 +53,7 @@ void FilterLNotes::import(FilterInfo *info) {
     currentFile = 1;
     totalFiles = 0;
 
-    QStringList filenames = KFileDialog::getOpenFileNames( QDir::homeDirPath(), "*|" + i18n("All Files (*)"), 
+    QStringList filenames = KFileDialog::getOpenFileNames( QDir::homeDirPath(), "*|" + i18n("All Files (*)"),
                                                            inf->parent() );
     totalFiles = filenames.count();
     inf->setOverall(0);
