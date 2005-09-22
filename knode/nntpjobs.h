@@ -96,5 +96,20 @@ class ArticleFetchJob : public KNJobData
     void slotResult( KIO::Job *job );
 };
 
+
+
+/** Post a article to the given news server. */
+class ArticlePostJob : public KNJobData
+{
+  Q_OBJECT
+  public:
+    ArticlePostJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
+
+    virtual void execute();
+
+  private slots:
+    void slotResult( KIO::Job *job );
+};
+
 }
 #endif

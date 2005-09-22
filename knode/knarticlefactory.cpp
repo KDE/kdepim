@@ -34,9 +34,11 @@
 #include "knfolder.h"
 #include "kncomposer.h"
 #include "knnntpaccount.h"
+#include "nntpjobs.h"
 #include "utilities.h"
 #include "resource.h"
 
+using namespace KNode;
 
 KNArticleFactory::KNArticleFactory(QObject *p, const char *n)
   : QObject(p, n), s_endErrDlg(0)
@@ -652,7 +654,7 @@ void KNArticleFactory::sendArticles( KNLocalArticle::List &l, bool now )
 
     if ( (*it)->doPost() && !(*it)->posted() ) {
       ser = knGlobals.accountManager()->account( (*it)->serverId() );
-      job = new KNJobData( KNJobData::JTpostArticle, this, ser, (*it) );
+      job = new ArticlePostJob( this, ser, (*it) );
       emitJob(job);
     }
     else if( (*it)->doMail() && !(*it)->mailed() ) {

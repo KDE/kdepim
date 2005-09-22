@@ -241,4 +241,34 @@ void KNode::ArticleFetchJob::slotResult( KIO::Job * job )
   emitFinished();
 }
 
+
+
+KNode::ArticlePostJob::ArticlePostJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
+    KNJobData( JTpostArticle, c, a, i )
+{
+}
+
+void KNode::ArticlePostJob::execute( )
+{
+  KNLocalArticle *target = static_cast<KNLocalArticle*>( data() );
+
+  KURL url = baseUrl();
+
+  KIO::Job* job = KIO::storedPut( target->encodedContent( true ), url, -1, true, false, false );
+  connect( job, SIGNAL( result(KIO::Job*) ), SLOT( slotResult(KIO::Job*) ) );
+  if ( account()->encryption() == KNServerInfo::TLS )
+    job->addMetaData( "TLS", "on" );
+  else
+    job->addMetaData( "TLS", "off" );
+  setJob( job );
+}
+
+void KNode::ArticlePostJob::slotResult( KIO::Job * job )
+{
+  if ( job->error() )
+    setErrorString( job->errorString() );
+
+  emitFinished();
+}
+
 #include "nntpjobs.moc"
