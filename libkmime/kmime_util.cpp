@@ -212,7 +212,7 @@ QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
         result[dest++] = src[pos];
       }
     }
-    result[dest] = '\0';
+    result.resize( dest - 1 );
   }
 
   //find suitable QTextCodec
