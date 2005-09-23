@@ -27,11 +27,6 @@
 
 #include <kdepimmacros.h>
 
-/** @file */
-
-/**
-    \brief KPIM holds all kinds of functions specific to KDE PIM.
-*/
 namespace KPIM {
 
 /**
@@ -58,6 +53,7 @@ class KDE_EXPORT IdMapper
       $(KDEHOME)/share/apps/\<path\>/\<identifier\>.
     */
     IdMapper( const QString &path, const QString &identifier = QString::null );
+    /** Destructor. */
     ~IdMapper();
 
     /**
@@ -122,18 +118,32 @@ class KDE_EXPORT IdMapper
      */
     void setFingerprint( const QString &localId, const QString &fingerprint );
 
+    /**
+     * Returns the fingerprint for the map.
+     *
+     * @todo Figure out if this applies to the last set fingerprint
+     *       or if anything else can change it.
+     */
     const QString &fingerprint( const QString &localId ) const;
 
 
+    /**
+     * Returns the entire map for the Id mapper.
+     *
+     * @todo Document what the map means.
+     */
     QMap<QString, QString> remoteIdMap() const;
 
     /**
-      Returns a string representation of the id pairs, that's usefull
-      for debugging.
+     * Returns a string representation of the id pairs, that's usefull
+     * for debugging.
      */
     QString asString() const;
 
   protected:
+    /**
+     * Returns the filename this mapper is (or will be) stored in.
+     */
     QString filename();
 
   private:
