@@ -154,6 +154,11 @@ memory_iterator<T> operator ++ ( memory_iterator<T>& ref, int ) {
 	return copy;
 }
 
+/**
+ * A vector of T kept on disk.
+ *
+ * The interface is a subset of std::vector<T>'s interface.
+ */
 template <typename T>
 struct memvector {
 	public:
@@ -181,6 +186,9 @@ struct memvector {
 			return memory_reference<T>( address_of( idx ) );
 		}
 
+		/**
+		 * For debugging, nothing else
+		 */
 		void print( std::ostream& ) const;
 		size_type size() const { return byte_io::read<uint32_t>( data_->ronly_base( 0 ) ); }
 		bool empty() const { return !size(); }
@@ -191,7 +199,9 @@ struct memvector {
 		void clear();
 		void push_back( value_type v ) { insert( end(), v ); }
 
-
+		/**
+		 * Removes from disk
+		 */
 		static void remove( std::string );
 
 	private:

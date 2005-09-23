@@ -38,13 +38,21 @@
 
 namespace indexlib {
 	namespace index_type {
-		enum type { none,
+		enum type {
+			none,
 			ifile = 1,
 			quotes = 2
 		};
 	}
 	/**
-	 * Use this function to construct an index from a basename.
+	 * Construct an index from a basename.
+	 *
+	 * Basename can be either a directory in which case the index will consist of a bunch of 
+	 * files in that directory all starting with "index" (this is the prefered usage: an index is a directory)
+	 * or it can be any other partial file name in which casethis name will be the starting name of all the 
+	 * index files.
+	 * 
+	 * If basename ends with '/' a directory is created if it does not exist.
 	 *
 	 * This will return something like "new quotes(basename)" but by using this, you do not need to include quotes.h
 	 * which needs boost headers also.
@@ -58,7 +66,13 @@ namespace indexlib {
 	}
 	std::auto_ptr<index> open( const char* basename, unsigned flags = open_flags::fail_if_nonexistant );
 
+	/**
+	 * Removes the index.
+	 */
 	void remove( const char* basename );
+	/**
+	 * Returns true if an index with that name exists, false otherwise
+	 */
 	bool exists( const char* basename );
 }
 

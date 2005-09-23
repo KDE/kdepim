@@ -31,13 +31,28 @@
  * your version.
  */
 
-
+/**
+ * This gets memory and accesses it.
+ *
+ */
 class memory_manager  {
 	public:
 		virtual ~memory_manager() { }
-		virtual const unsigned char* ronly_base( unsigned ) const = 0;
+		/**
+		 * Return a reference to the memory at position \idx.
+		 * An important interface bug is that it is not specified how far from \idx you
+		 * can safely access.
+		 */
+		virtual const unsigned char* ronly_base( unsigned idx ) const = 0;
+		/**
+		 * Like \ref ronly_base except you can write on the block
+		 */
 		virtual unsigned char* rw_base( unsigned ) const = 0;
+		/** Returns the size of the block */
 		virtual unsigned size() const = 0;
+		/** Resizes the block.
+		  * This invalidates all previously returned pointers
+		  */
 		virtual void resize( unsigned ) = 0;
 };
 

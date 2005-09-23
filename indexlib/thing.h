@@ -36,7 +36,32 @@
 #include "bitio.h"
 #include "pointer.h"
 
-
+/**
+ * \class thing
+ *
+ * This is perhaps one of the most important classes in the system.
+ *
+ * Ideally one would like to have something like:
+ *
+ *     struct_on_disk X {
+ *                int32_t a;
+ *                int32_t b;
+ *     };
+ *
+ *     X var;
+ *
+ * And var would be accessed in our exact format. Since I want to control the exact format
+ * to be able to use the same index even in different architechtures, it's not really possible.
+ *
+ * So we would do:
+ *
+ *     START_THING( X, simple_accessor )
+ *		MEMBER( int32_t, a, 0 )
+ *		MEMBER( int32_t, b, 4 )
+ *     END_THING( X )
+ *
+ * This base class provides the machinery for this.
+ */
 template <typename accessor>
 struct thing : protected accessor { // this allow the emtpy base optimization
 	protected:
