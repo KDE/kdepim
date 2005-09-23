@@ -1,0 +1,26 @@
+WHAT'S THIS?
+
+This is indexlib, an indexing library.
+
+HOW TO USE INDEXLIB
+
+The most important files are index.h and create.h which are the programmer's interface (API).
+
+HOW TO START HACKING INDEXLIB INTERNALS
+
+1. Understand the basics about how everything is really kept on disk and the file formats.
+   Reading the docs in the docs/ directory should be good enough.
+
+2. Email me (luis@luispedro.org) if you have any doubts.
+
+HOW TO DEBUG
+
+1. Get boost (http://www.boost.org/) and install it. There are packages for most linux distros.
+
+2. Enable debugging output (Recompile with boost, define DEBUG).
+
+3. Run the test suite (compile test.cpp and link with indexlib and boost_unit_test).
+
+4. If the unit tests are all OK, but you still think the code is broken, try to write a test case which catches it.
+
+
