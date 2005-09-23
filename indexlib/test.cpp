@@ -37,6 +37,7 @@
 #include "ifile-test.tcc"
 #include "mempool-test.tcc"
 #include "tokenizer-test.tcc"
+#include "create-test.tcc"
 #include "logfile.h"
 
 test_suite* init_unit_test_suite(  int argc, char* argv[] )
@@ -53,6 +54,7 @@ test_suite* init_unit_test_suite(  int argc, char* argv[] )
 	test->add( ifile_test::get_suite() );
 	test->add( mempool_test::get_suite() );
 	test->add( tokenizer_test::get_suite() );
+	test->add( create_test::get_suite() );
 
 	return test;
 }

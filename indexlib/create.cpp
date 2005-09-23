@@ -60,6 +60,9 @@ std::auto_ptr<indexlib::index> indexlib::create( const char* basename, indexlib:
 	using namespace indexlib::version;
 	if ( type_of( basename ) !=  indexlib::index_type::none ) return std::auto_ptr<indexlib::index>( 0 );
 	try {
+		if ( basename[ strlen( basename ) - 1 ] == '/' && !isdir( basename ) ) {
+			if ( !indexlib::detail::mkdir_trailing( basename ) ) return std::auto_ptr<indexlib::index>( 0 );
+		}
 		std::ofstream info( path_concat( basename, "info" ).c_str() );
 		info << marker << std::endl;
 		info << "version " << major << '.' << minor << "\n";
