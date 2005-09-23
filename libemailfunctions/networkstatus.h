@@ -25,11 +25,6 @@
 #include <qobject.h>
 #include <dcopobject.h>
 
-/** @file */
-
-/**
-    \brief KPIM holds all kinds of functions specific to KDE PIM.
-*/
 namespace KPIM {
 
 /**
@@ -46,8 +41,8 @@ class NetworkStatus : public QObject, public DCOPObject
      * The possible states.
      */
     enum Status {
-      Online,
-      Offline
+      Online,     //< The machine now has internet connectivity
+      Offline     //< The machine has no internet connectivity
     };
 
     /**
@@ -87,6 +82,10 @@ class NetworkStatus : public QObject, public DCOPObject
     void statusChanged( Status status );
 
   protected:
+    /**
+     * Constructor. This is protected, so you must use self()
+     * to get the singleton object of this class.
+     */
     NetworkStatus();
 
   private:
