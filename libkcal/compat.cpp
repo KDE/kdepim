@@ -97,7 +97,7 @@ void Compat::fixEmptySummary( Incidence *incidence )
   // line, move it)
   if (incidence->summary().isEmpty() &&
       !(incidence->description().isEmpty())) {
-    QString oldDescription = incidence->description().stripWhiteSpace();
+    QString oldDescription = incidence->description().trimmed();
     QString newSummary( oldDescription );
     newSummary.remove( QRegExp("\n.*") );
     incidence->setSummary( newSummary );

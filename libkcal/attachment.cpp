@@ -98,7 +98,7 @@ bool Attachment::isBinary() const
 char *Attachment::data() const
 {
   if (mBinary)
-    return mData.utf8().data();
+    return mData.toUtf8().data();
   else
     return 0;
 }
@@ -107,7 +107,7 @@ QByteArray &Attachment::decodedData() const
 {
   if ( d->mDataCache.isNull() ) {
     QByteArray in;
-    const QByteArray data = mData.utf8();
+    const QByteArray data = mData.toUtf8();
     in.setRawData( data.data(), data.size() );
     KMime::Codec * codec = KMime::Codec::codecForName( "base64" );
     d->mDataCache = codec->decode( in );

@@ -34,7 +34,7 @@ ICalDrag::ICalDrag( Calendar *cal, QWidget *parent, const char *name )
   ICalFormat icf;
   QString scal = icf.toString( cal );
 
-  setEncodedData( scal.utf8() );
+  setEncodedData( scal.toUtf8() );
 }
 
 bool ICalDrag::canDecode( QMimeSource *me )

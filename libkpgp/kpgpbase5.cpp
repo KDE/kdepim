@@ -255,7 +255,7 @@ Base5::decrypt( Block& block, const char *passphrase )
       while( (index2 = error.find('\n',index+1)) <= end )
       {
 	QByteArray item = error.mid(index+1,index2-index-1);
-	item.stripWhiteSpace();
+	item.trimmed();
 	mRecipients.append(item);
 	index = index2;
       }
@@ -365,7 +365,7 @@ Base5::publicKeys( const QStringList & patterns )
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
     cmd += " ";
-    cmd += KProcess::quote( *it ).local8Bit();
+    cmd += KProcess::quote( *it ).toLocal8Bit();
   }
   status = 0;
   exitStatus = run( cmd, 0, true );
@@ -395,7 +395,7 @@ Base5::secretKeys( const QStringList & patterns )
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
     cmd += " ";
-    cmd += KProcess::quote( *it ).local8Bit();
+    cmd += KProcess::quote( *it ).toLocal8Bit();
   }
   status = 0;
   exitStatus = run( cmd, 0, true );

@@ -1310,7 +1310,7 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
             // Skip all entries that have no '@' since these are
             // no mail addresses
             if( (*it).find('@') == -1 ) {
-              s = (*it).stripWhiteSpace();
+              s = (*it).trimmed();
 
               Attendee *attendee = new Attendee( s, s, true );
               if( bIsReply ) {

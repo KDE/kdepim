@@ -93,7 +93,7 @@ bool ICalFormat::load( Calendar *calendar, const QString &fileName)
   QString text = ts.read();
   file.close();
 
-  if ( text.stripWhiteSpace().isEmpty() ) // empty files are valid
+  if ( text.trimmed().isEmpty() ) // empty files are valid
     return true;
   else
     return fromRawString( calendar, text.latin1() );
@@ -123,7 +123,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   }
 
   // Convert to UTF8 and save
-  QByteArray textUtf8 = text.utf8();
+  QByteArray textUtf8 = text.toUtf8();
   file.file()->writeBlock( textUtf8.data(), textUtf8.size() - 1 );
 
   if ( !file.close() ) {
@@ -137,7 +137,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
 
 bool ICalFormat::fromString( Calendar *cal, const QString &text )
 {
-  return fromRawString( cal, text.utf8() );
+  return fromRawString( cal, text.toUtf8() );
 }
 
 bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &text )
@@ -358,7 +358,7 @@ FreeBusy *ICalFormat::parseFreeBusy( const QString &str )
   clearException();
 
   icalcomponent *message;
-  message = icalparser_parse_string( str.utf8() );
+  message = icalparser_parse_string( str.toUtf8() );
 
   if ( !message ) return 0;
 
@@ -395,7 +395,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
     return 0;
   }
   icalcomponent *message;
-  message = icalparser_parse_string(messageText.utf8());
+  message = icalparser_parse_string(messageText.toUtf8());
 
   if (!message)
   {

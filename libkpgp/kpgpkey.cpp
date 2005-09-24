@@ -42,7 +42,7 @@ KeyIDList KeyIDList::fromStringList( const QStringList& l )
 {
   KeyIDList res;
   for( QStringList::ConstIterator it = l.begin(); it != l.end(); ++it ) {
-    res << (*it).local8Bit();
+    res << (*it).toLocal8Bit();
   }
   return res;
 }

@@ -1475,8 +1475,8 @@ Module::canonicalAddress( const QString& _adress )
 {
   int index,index2;
 
-  QString address = _adress.simplifyWhiteSpace();
-  address = address.stripWhiteSpace();
+  QString address = _adress.simplified();
+  address = address.trimmed();
 
   // just leave pure e-mail address.
   if((index = address.find("<")) != -1)
@@ -1494,7 +1494,7 @@ Module::canonicalAddress( const QString& _adress )
   }
   else
   {
-    int index1 = address.findRev(" ",index);
+    int index1 = address.lastIndexOf(" ",index);
     int index2 = address.find(" ",index);
     if(index2 == -1) index2 = address.length();
     return "<" + address.mid(index1+1 ,index2-index1-1) + ">";
@@ -1736,7 +1736,7 @@ Module::readAddressData()
 
   addressDataDict.clear();
   for( int i=1; i<=num; i++ ) {
-    KConfigGroup addrGroup( config, QString("Address #%1").arg(i).local8Bit() );
+    KConfigGroup addrGroup( config, QString("Address #%1").arg(i).toLocal8Bit() );
     address = addrGroup.readEntry( "Address" );
     data.keyIds = KeyIDList::fromStringList( addrGroup.readListEntry( "Key IDs" ) );
     data.encrPref = (EncryptPref) addrGroup.readNumEntry( "EncryptionPreference",
@@ -1761,7 +1761,7 @@ Module::writeAddressData()
   for ( i=1, it = addressDataDict.begin();
         it != addressDataDict.end();
         ++it, i++ ) {
-    KConfigGroup addrGroup( config, QString("Address #%1").arg(i).local8Bit() );
+    KConfigGroup addrGroup( config, QString("Address #%1").arg(i).toLocal8Bit() );
     addrGroup.writeEntry( "Address", it.key() );
     addrGroup.writeEntry( "Key IDs", it.data().keyIds.toStringList() );
     addrGroup.writeEntry( "EncryptionPreference", it.data().encrPref );

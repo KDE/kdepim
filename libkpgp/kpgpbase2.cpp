@@ -135,7 +135,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       }
       if(bad)
       {
-        badkeys.stripWhiteSpace();
+        badkeys.trimmed();
         if(num == recipients.count())
 	  errMsg = i18n("Could not find public keys matching the userid(s)\n"
                         "%1;\n"
@@ -166,7 +166,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       }
       if(bad)
       {
-        badkeys.stripWhiteSpace();
+        badkeys.trimmed();
         if(num == recipients.count())
 	  errMsg = i18n("Public keys not certified with trusted signature "
                         "for userid(s)\n"
@@ -325,7 +325,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       while( (index2 = error.find('\n',index+1)) <= end )
       {
 	QByteArray item = error.mid(index+1,index2-index-1);
-	item.stripWhiteSpace();
+	item.trimmed();
 	mRecipients.append(item);
 	index = index2;
       }
@@ -534,7 +534,7 @@ Base2::doGetPublicKeys( const QByteArray & cmd, const QStringList & patterns )
 
     for ( QStringList::ConstIterator it = patterns.begin();
           it != patterns.end(); ++it ) {
-      exitStatus = run( cmd + " " + KProcess::quote( *it ).local8Bit(),
+      exitStatus = run( cmd + " " + KProcess::quote( *it ).toLocal8Bit(),
                         0, true );
 
       if ( exitStatus != 0 ) {

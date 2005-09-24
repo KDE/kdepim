@@ -299,7 +299,7 @@ Base6::pubKeys()
       {
 	// second address for the same key
 	line = error.mid(index+1,index2-index-1);
-	line = line.stripWhiteSpace();
+	line = line.trimmed();
       } else {
 	// line with new key
 	int index4 = error.find(QRegExp("/\\d{2}/\\d{2} "), index);
@@ -332,7 +332,7 @@ Base6::pubKeys()
     QCString line;
     index += 4;
     index2 = error.find(" \"", index);
-    line = error.mid(index, index2-index+1).stripWhiteSpace();
+    line = error.mid(index, index2-index+1).trimmed();
 
     //kdDebug(5100) << "Base6: found key group for " << line << endl;
     publicKeys.append(line);

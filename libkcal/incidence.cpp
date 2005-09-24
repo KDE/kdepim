@@ -264,7 +264,7 @@ void Incidence::setCategories(const QString &catStr)
 
   QStringList::Iterator it;
   for(it = mCategories.begin();it != mCategories.end(); ++it) {
-    *it = (*it).stripWhiteSpace();
+    *it = (*it).trimmed();
   }
 
   updated();

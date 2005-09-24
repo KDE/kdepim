@@ -30,7 +30,7 @@ VCalDrag::VCalDrag( Calendar *cal, QWidget *parent, const char *name )
   : Q3StoredDrag( "text/x-vCalendar", parent, name )
 {
   VCalFormat format;
-  setEncodedData( format.toString( cal ).utf8() );
+  setEncodedData( format.toString( cal ).toUtf8() );
 }
 
 bool VCalDrag::canDecode( QMimeSource *me )

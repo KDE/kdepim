@@ -800,10 +800,10 @@ KeySelectionDialog::getKeyId( const Q3ListViewItem* lvi ) const
 
   if( 0 != lvi ) {
     if( 0 != lvi->parent() ) {
-      keyId = lvi->parent()->text(0).local8Bit();
+      keyId = lvi->parent()->text(0).toLocal8Bit();
     }
     else {
-      keyId = lvi->text(0).local8Bit();
+      keyId = lvi->text(0).toLocal8Bit();
     }
   }
 
@@ -931,7 +931,7 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
         //         extended selection mode a normal left click deselects
         //         the not clicked items.
         if( 0 < selectedCount ) {
-          if( -1 == mKeyIds.findIndex( lvi->text(0).local8Bit() ) ) {
+          if( -1 == mKeyIds.findIndex( lvi->text(0).toLocal8Bit() ) ) {
             // some items of this key are selected and the key wasn't selected
             // before => the user selected something
             kdDebug(5100) << "selectedCount: "<<selectedCount<<"/"<<itemCount
@@ -939,7 +939,7 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
             userAction = SELECTED;
           }
           else if( ( itemCount > selectedCount ) &&
-                   ( -1 != mKeyIds.findIndex( lvi->text(0).local8Bit() ) ) ) {
+                   ( -1 != mKeyIds.findIndex( lvi->text(0).toLocal8Bit() ) ) ) {
             // some items of this key are unselected and the key was selected
             // before => the user deselected something
             kdDebug(5100) << "selectedCount: "<<selectedCount<<"/"<<itemCount
@@ -950,7 +950,7 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
       }
       if( itemCount == selectedCount ) {
         // add key to the list of selected keys
-        KeyID keyId = lvi->text(0).local8Bit();
+        KeyID keyId = lvi->text(0).toLocal8Bit();
         newKeyIdList.append( keyId );
         int admissibility = keyAdmissibility( lvi, NoExpensiveTrustCheck );
         if( -1 == admissibility ) {
@@ -972,7 +972,7 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
             mListView->setSelected( clvi, true );
           }
           // add key to the list of selected keys
-          KeyID keyId = lvi->text(0).local8Bit();
+          KeyID keyId = lvi->text(0).toLocal8Bit();
           newKeyIdList.append( keyId );
           int admissibility = keyAdmissibility( lvi, NoExpensiveTrustCheck );
           if( -1 == admissibility ) {
@@ -1083,7 +1083,7 @@ void KeySelectionDialog::slotCancel()
 
 void KeySelectionDialog::slotSearch( const QString & text )
 {
-  mSearchText = text.stripWhiteSpace().upper();
+  mSearchText = text.trimmed().upper();
   mStartSearchTimer->start( sCheckSelectionDelay, true /*single-shot*/ );
 }
 

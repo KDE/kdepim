@@ -42,7 +42,7 @@ BaseG::BaseG()
   runGpg( "--version", 0 );
   int eol = output.find( '\n' );
   if( eol > 0 ) {
-    int pos = output.findRev( ' ', eol - 1 );
+    int pos = output.lastIndexOf( ' ', eol - 1 );
     if( pos != -1 ) {
       mVersion = output.mid( pos + 1, eol - pos - 1 );
       kdDebug(5100) << "found GnuPG " << mVersion << endl;
@@ -150,7 +150,7 @@ BaseG::encsign( Block& block, const KeyIDList& recipients,
     }
     if(bad)
     {
-      badkeys.stripWhiteSpace();
+      badkeys.trimmed();
       if(num == recipients.count())
         errMsg = i18n("Could not find public keys matching the userid(s)\n"
                       "%1;\n"
@@ -264,8 +264,8 @@ BaseG::decrypt( Block& block, const char *passphrase )
         else
         {
           // Search backwards the user ID of the needed key
-          index2 = error.findRev('"', index) - 1;
-          index = error.findRev("      \"", index2) + 7;
+          index2 = error.lastIndexOf('"', index) - 1;
+          index = error.lastIndexOf("      \"", index2) + 7;
           // The conversion from UTF8 is necessary because gpg stores and
           // prints user IDs in UTF8
           block.setRequiredUserId( QString::fromUtf8( error.mid( index, index2 - index + 1 ) ) );
@@ -295,7 +295,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
       while( (index2 = error.find('\n',index+1)) <= end )
       {
 	QByteArray item = error.mid(index+1,index2-index-1);
-	item.stripWhiteSpace();
+	item.trimmed();
 	mRecipients.append(item);
 	index = index2;
       }
@@ -334,7 +334,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
       // get the primary user ID of the signer
       index = error.find('"',index);
       index2 = error.find('\n',index+1);
-      index2 = error.findRev('"', index2-1);
+      index2 = error.lastIndexOf('"', index2-1);
       block.setSignatureUserId( error.mid( index+1, index2-index-1 ) );
     }
     else if( error.find("BAD signature", index) != -1 )
@@ -344,7 +344,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
       // get the primary user ID of the signer
       index = error.find('"',index);
       index2 = error.find('\n',index+1);
-      index2 = error.findRev('"', index2-1);
+      index2 = error.lastIndexOf('"', index2-1);
       block.setSignatureUserId( error.mid( index+1, index2-index-1 ) );
     }
     else if( error.find("Can't find the right public key", index) != -1 )
@@ -416,7 +416,7 @@ BaseG::publicKeys( const QStringList & patterns )
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
     cmd += " ";
-    cmd += KProcess::quote( *it ).local8Bit();
+    cmd += KProcess::quote( *it ).toLocal8Bit();
   }
   status = 0;
   exitStatus = runGpg( cmd, 0, true );
@@ -448,7 +448,7 @@ BaseG::secretKeys( const QStringList & patterns )
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
     cmd += " ";
-    cmd += KProcess::quote( *it ).local8Bit();
+    cmd += KProcess::quote( *it ).toLocal8Bit();
   }
   status = 0;
   exitStatus = runGpg( cmd, 0, true );
