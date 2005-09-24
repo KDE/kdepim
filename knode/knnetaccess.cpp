@@ -277,9 +277,9 @@ void KNNetAccess::startJobSmtp()
     connect( job, SIGNAL( result(KIO::Job*) ),
              SLOT( slotJobResult(KIO::Job*) ) );
     if ( account->encryption() == KNServerInfo::TLS )
-      job->addMetaData( "TLS", "on" );
+      job->addMetaData( "tls", "on" );
     else
-      job->addMetaData( "TLS", "off" );
+      job->addMetaData( "tls", "off" );
     currentSmtpJob->setJob( job );
 
     kdDebug(5003) << "KNNetAccess::startJobSmtp(): job started" << endl;
