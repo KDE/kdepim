@@ -3,6 +3,13 @@ Global:
 KMail has none, for example.
 
 KMAIL:
+- Composer window:
+The settings menu has a 'configure kontact'.  Which should be 'configure kmail' for consistency with the name in the main kmail settings menu.
+- Composer window:
+Options -> Automatic spellchecking  should be moved to the settings menu since its application wide, and not limited to only the current email as the options are for current email only.
+ I suggest to put it under the configure of the spellchecker, but have a separator in between.
+
+
 - config dialog, misc tab;
 Orig: When trying to find unread messages;
 Orig:     do not loop
