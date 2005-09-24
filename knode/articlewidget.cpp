@@ -78,6 +78,7 @@
 #include "knmainwidget.h"
 #include "knnntpaccount.h"
 #include "knsourceviewwindow.h"
+#include "nntpjobs.h"
 
 using namespace KNode;
 
@@ -1015,7 +1016,7 @@ void ArticleWidget::removeTempFiles( )
 
 void ArticleWidget::processJob( KNJobData * job )
 {
-  if ( job->type() == KNJobData::JTfetchSource ) {
+  if ( job->type() == KNJobData::JTfetchSource || job->type() == KNJobData::JTfetchArticle ) {
     KNRemoteArticle *a = static_cast<KNRemoteArticle*>( job->data() );
     if ( !job->canceled() ) {
       if ( !job->success() )
@@ -1246,7 +1247,7 @@ void ArticleWidget::slotViewSource()
       a->messageID( true )->from7BitString( mArticle->messageID()->as7BitString( false ) );
       a->lines( true )->from7BitString( mArticle->lines( true )->as7BitString( false ) );
       a->setArticleNumber( static_cast<KNRemoteArticle*>( mArticle)->articleNumber() );
-      emitJob( new KNJobData( KNJobData::JTfetchSource, this, g->account(), a) );
+      emitJob( new ArticleFetchJob( this, g->account(), a) );
     }
   }
 }

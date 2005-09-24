@@ -68,10 +68,13 @@ void KNServerInfo::readConf(KConfig *conf)
   p_ass = KNHelper::decryptStr(conf->readEntry("pass"));
 
   // migration to KWallet
-  if (Wallet::isEnabled() && !p_ass.isEmpty()) {
-    conf->deleteEntry( "pass" );
-    p_assDirty = true;
-  }
+  if ( Wallet::isEnabled() ) {
+    if ( !p_ass.isEmpty() ) {
+      conf->deleteEntry( "pass" );
+      p_assDirty = true;
+    }
+  } else
+    mPassLoaded = true;
 
   // if the wallet is open, no need to delay the password loading
   if (Wallet::isOpen( Wallet::NetworkWallet() ))

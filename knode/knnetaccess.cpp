@@ -17,13 +17,11 @@
 
 #include <qsocketnotifier.h>
 //Added by qt3to4:
-#include <Q3StrList>
 #include <Q3ValueList>
 
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
-#include <kio/job.h>
 #include <kio/passdlg.h>
 #include <ksocks.h>
 #include <kapplication.h>
@@ -260,38 +258,9 @@ void KNNetAccess::startJobSmtp()
   smtpJobQueue.remove( smtpJobQueue.begin() );
   currentSmtpJob->prepareForExecution();
   if (currentSmtpJob->success()) {
-    KNLocalArticle *art = static_cast<KNLocalArticle*>( currentSmtpJob->data() );
-    // create url query part
-    QString query("headers=0&from=");
-    query += KURL::encode_string( art->from()->email() );
-    Q3StrList emails;
-    art->to()->emails( &emails );
-    for ( char *e = emails.first(); e; e = emails.next() ) {
-      query += "&to=" + KURL::encode_string( e );
-    }
-    // create url
-    KURL destination;
-    KNServerInfo *account = currentSmtpJob->account();
-    if ( account->encryption() == KNServerInfo::SSL )
-      destination.setProtocol( "smtps" );
-    else
-      destination.setProtocol( "smtp" );
-    destination.setHost( account->server() );
-    destination.setPort( account->port() );
-    destination.setQuery( query );
-    if ( account->needsLogon() ) {
-      destination.setUser( account->user() );
-      destination.setPass( account->pass() );
-    }
-    KIO::Job* job = KIO::storedPut( art->encodedContent(true), destination, -1, false, false, false );
-    connect( job, SIGNAL( result(KIO::Job*) ),
-             SLOT( slotJobResult(KIO::Job*) ) );
-    if ( account->encryption() == KNServerInfo::TLS )
-      job->addMetaData( "TLS", "on" );
-    else
-      job->addMetaData( "TLS", "off" );
-    currentSmtpJob->setJob( job );
-
+    currentSmtpJob->execute();
+    connect( currentSmtpJob, SIGNAL( finished(KNJobData*) ),
+             SLOT( slotJobFinished(KNJobData*) ) );
     kdDebug(5003) << "KNNetAccess::startJobSmtp(): job started" << endl;
   } else {
     threadDoneSmtp();
@@ -468,26 +437,17 @@ void KNNetAccess::slotThreadSignal(int i)
 }
 
 
-void KNNetAccess::slotJobResult( KIO::Job *job )
-{
-  kdDebug(5003) << k_funcinfo << endl;
-  if ( currentSmtpJob && job == currentSmtpJob->job() ) {
-    if ( job->error() )
-      currentSmtpJob->setErrorString( job->errorString() );
-    threadDoneSmtp();
-    return;
-  }
-  kdError(5003) << k_funcinfo << "unknown job" << endl;
-}
-
-
 void KNNetAccess::slotJobFinished( KNJobData * job )
 {
   if ( currentNntpJob && job == currentNntpJob ) {
     threadDoneNntp();
     return;
   }
-  kdDebug(5003) << k_funcinfo << "unknown job" << endl;
+  if ( currentSmtpJob && job == currentSmtpJob ) {
+    threadDoneSmtp();
+    return;
+  }
+  kdError(5003) << k_funcinfo << "unknown job" << endl;
 }
 
 

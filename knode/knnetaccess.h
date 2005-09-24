@@ -21,10 +21,6 @@
 
 class QSocketNotifier;
 
-namespace KIO {
-  class Job;
-}
-
 namespace KPIM {
   class ProgressItem;
 }
@@ -87,7 +83,6 @@ class KNNetAccess : public QObject  {
     void updateStatus();
 
   private slots:
-    void slotJobResult( KIO::Job *job );
     void slotJobFinished( KNJobData *job );
 
     void slotCancelJob( KPIM::ProgressItem *item );

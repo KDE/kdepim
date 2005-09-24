@@ -50,7 +50,6 @@ void KNode::GroupFetchJob::execute()
   else
     job->addMetaData( "TLS", "off" );
   setJob( job );
-  setStatus( i18n("Downloading group list...") );
 }
 
 void KNode::GroupFetchJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList & list )
@@ -173,7 +172,6 @@ void KNode::ArticleListJob::execute()
   else
     job->addMetaData( "TLS", "off" );
   setJob( job );
-  setStatus( i18n("Downloading new headers...") );
 }
 
 void KNode::ArticleListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList & list )

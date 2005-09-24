@@ -34,6 +34,7 @@
 #include "knfolder.h"
 #include "kncomposer.h"
 #include "knnntpaccount.h"
+#include "mailsendjob.h"
 #include "nntpjobs.h"
 #include "utilities.h"
 #include "resource.h"
@@ -659,7 +660,7 @@ void KNArticleFactory::sendArticles( KNLocalArticle::List &l, bool now )
     }
     else if( (*it)->doMail() && !(*it)->mailed() ) {
       ser = knGlobals.accountManager()->smtp();
-      job = new KNJobData( KNJobData::JTmail, this, ser, (*it) );
+      job = new MailSendJob( this, ser, (*it) );
       emitJob(job);
     }
   }
