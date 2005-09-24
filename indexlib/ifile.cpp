@@ -113,7 +113,8 @@ std::auto_ptr<indexlib::result> ifile::search( const char* str ) const {
 		std::set_intersection( now.begin(), now.end(), values.begin(), values.end(), std::inserter( next, next.begin() ) );
 		next.swap( values );
 	}
-	return std::auto_ptr<result>( new simple_result( std::vector<unsigned>( values.begin(), values.end() ) ) );
+	std::auto_ptr<result> r(new simple_result( std::vector<unsigned>( values.begin(), values.end() ) ) );
+	return r;
 }
 
 void ifile::maintenance() {

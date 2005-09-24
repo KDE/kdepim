@@ -21,7 +21,7 @@ void deallocate() {
 	const unsigned size =  pool.size();
 
 	for ( int i = 0; i != pointers.size(); ++i ) {
-		pool.deallocate( pointers[ i ] );
+		pool.deallocate(pointers.at(i));
 	}
 
 	for ( int i = 0; i != 32; ++i ) {

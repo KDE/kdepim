@@ -40,7 +40,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
-#include <ostream>
+#include <iostream>
 
 /**
  * @short implement memory management for things

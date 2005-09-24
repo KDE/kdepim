@@ -39,6 +39,17 @@
 #include <boost/type_traits.hpp>
 #endif
 
+/**
+ * \class pointer
+ *
+ * Works with \ref thing in providing disk translucency (not transparency, but half-way there).
+ *
+ * This is a pointer like object which is really an index into a memory block which must be deferenced
+ * every time it is accessed. The main advantage of this is that it allows the pointer to remain valid even
+ * if the base memory block changes place.
+ *
+ * Actually, implementation-wise, thing does all this already and this is mainly an adapter.
+ */
 template <typename Thing >
 struct pointer: private Thing {
 	private:

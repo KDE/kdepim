@@ -34,6 +34,14 @@
 #include <stdint.h>
 #include "boost-compat/remove_cv.hpp"
 
+/**
+ * \namespace byte_io
+ *
+ * This namespace aggregates all input/output functions
+ * for our in-disk format, as well as information relating to
+ * that format.
+ *
+ */
 namespace byte_io {
 	template <typename T>
 	void write( unsigned char*, const T );
@@ -50,6 +58,10 @@ namespace byte_io {
 	};
 	
 
+	/**
+	 * Returns how many bytes type T occupies on disk. It's only defined
+	 * for supported types.
+	 */
 	template<typename T>
 	unsigned byte_lenght() {
 		return byte_lenght_struct<T>::value;

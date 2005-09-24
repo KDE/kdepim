@@ -36,6 +36,9 @@
 #include "slow.h"
 #include "boost-compat/noncopyable.hpp"
 
+/**
+ * \see class slow which should be merged into this one.
+ */
 class index_slow : public indexlib::index , public boost::noncopyable {
 	public:
 		index_slow( std::string name ):

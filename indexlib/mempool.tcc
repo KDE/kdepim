@@ -1,6 +1,7 @@
 #include "format.h"
 #include <iostream>
 #include "logfile.h"
+#include "compat.h"
 
 template <typename Traits>
 mempool<Traits>::mempool( std::auto_ptr<memory_manager> source ):
@@ -18,15 +19,15 @@ mempool<Traits>::mempool( std::auto_ptr<memory_manager> source ):
 template <typename Traits>
 typename mempool<Traits>::data_typeptr mempool<Traits>::allocate( unsigned size ) {
 	if ( size < traits_type::min_size() ) size = traits_type::min_size();
-	max_order_ = std::max<uint32_t>( order_of( size ), max_order_ );
-	const unsigned order = std::max<unsigned>( order_of( size ), min_order_for_free_node );
+	max_order_ = kMax<uint32_t>( order_of( size ), max_order_ );
+	const unsigned order = kMax<unsigned>( order_of( size ), min_order_for_free_node );
 	if ( uint32_t res = free_list( order ) ) {
 		free_list( order ) = get_node( res )->next();
 		if ( free_list( order ) ) get_node( free_list( order ) )->set_prev( 0 );
 		logfile() << format( "%s( %s ): (order %s) Returning %s\n" ) % __PRETTY_FUNCTION__ % size % order % res;
 		return data_typeptr::cast_from_uint32( res );
 	} else {
-		std::cerr << "For size " << size << " going up to " << ( unsigned )max_order_ << std::endl;
+		logfile() << format( "For size %s going up to %s\n") % size % max_order_;
 		for ( unsigned bigger = order + 1; bigger <= max_order_; ++bigger ) {
 			if ( uint32_t res = free_list( bigger ) ) {
 				while ( bigger > order ) {
@@ -51,7 +52,7 @@ void mempool<Traits>::fill_into_list( unsigned next_block, unsigned order ) {
 	logfile() << format( "%s( %s, %s )\n" ) % __PRETTY_FUNCTION__ % next_block % order;
 	const unsigned size = manager_->size();
 	const unsigned min_order =
-		std::max<unsigned>( min_order_for_free_node, order_of( traits_type::min_size() ) );
+		kMax<unsigned>( min_order_for_free_node, order_of( traits_type::min_size() ) );
 	while ( next_block < size && order >= min_order ) {
 		const unsigned block_size = order_to_size( order );
 		while ( ( size - next_block ) >= block_size ) {
@@ -163,6 +164,7 @@ bool mempool<Traits>::join( data_typeptr& node, unsigned order ) {
 	} else {
 		partner = byte_idx + block_idx;
 	}
+	if ( partner >= manager_->size() ) return false;
 	bool res = traits_type::is_free( data_typeptr::cast_from_uint32( partner ) )
 		&& get_node( partner )->order() == order;
 	if ( res ) {
@@ -193,7 +195,7 @@ void mempool<Traits>::deallocate( data_typeptr data, unsigned order ) {
 template <typename Traits>
 typename mempool<Traits>::data_typeptr mempool<Traits>::reallocate( data_typeptr data, unsigned size ) {
 	logfile() << format( "%s( %s, %s)\n" ) % __PRETTY_FUNCTION__ % data % size;
-	max_order_ = std::max<uint32_t>( max_order_, order_of( max_order_ ) );
+	max_order_ = kMax<uint32_t>( max_order_, order_of( max_order_ ) );
 	const unsigned original_size = size_of( data );
 	unsigned char* temporary = static_cast<unsigned char*>( operator new( original_size ) );
 	std::memmove( temporary, data.raw_pointer(), original_size );

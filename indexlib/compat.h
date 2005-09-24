@@ -1,5 +1,8 @@
+#ifndef LPC_COMPAT_H_INCLUDE_GUARD_
+#define LPC_COMPAT_H_INCLUDE_GUARD_
+
 /* This file is part of indexlib.
- * Copyright (C) 2005 Luís Pedro Coelho <luis@luispedro.org>
+ * Copyright (C) 2005 Leo Savernik <l.savernik@aon.at>
  *
  * Indexlib is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License, version 2, as
@@ -28,50 +31,28 @@
  * your version.
  */
 
-#include "lockfile.h"
-#include "format.h"
-#include "logfile.h"
-#include <iostream>
-#include <fcntl.h>
-#include <unistd.h>
-#include <string.h>
-#include <errno.h>
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
-using indexlib::detail::lockfile;
-
-lockfile::lockfile( std::string filename ):
-	filename_( filename ),
-	locked_( false ) {
-	}
-
-lockfile::~lockfile() {
-       if ( locked() ) unlock();
+#ifndef HAVE_STLNAMESPACE
+#  include <stddef.h>
+// fake std::iterator
+namespace std {
+template <class _Category, class _Tp, class _Distance = ptrdiff_t,
+          class _Pointer = _Tp*, class _Reference = _Tp&>
+struct iterator {
+  typedef _Category  iterator_category;
+  typedef _Tp        value_type;
+  typedef _Distance  difference_type;
+  typedef _Pointer   pointer;
+  typedef _Reference reference;
+};
 }
+#endif
 
-bool lockfile::locked() const {
-	return locked_;
-}
+/* compatibility replacements for functions not defined in older libstdc++ */
+template<class T> T kMin(const T &a, const T &b) { return a < b ? a : b; }
+template<class T> T kMax(const T &a, const T &b) { return a > b ? a : b; }
 
-bool lockfile::trylock() {
-	int fd = ::open( filename_.c_str(), O_RDWR | O_EXCL | O_CREAT, 0600 );
-	locked_ = false;
-	if ( fd >= 0 ) {
-		locked_ = true;
-		close( fd );
-	}
-	logfile() << format( "trylock(%s) returning %s (fd:%s) (error:%s)\n" ) % filename_ % locked_ %fd % strerror( errno );
-	return locked_;
-}
-
-void lockfile::unlock() {
-	if ( locked() ) {
-		unlink( filename_.c_str() );
-		locked_ = false;
-	}
-}
-
-void lockfile::force_unlock() {
-	unlink( filename_.c_str() );
-	locked_ = false;
-}
-
+#endif /* LPC_COMPAT_H_INCLUDE_GUARD_ */

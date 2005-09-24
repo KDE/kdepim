@@ -1,4 +1,4 @@
-KDE_CXXFLAGS=$(USE_EXCEPTIONS)
+KDE_CXXFLAGS=-include $(srcdir)/compat.h $(USE_EXCEPTIONS)
 INCLUDES = $(all_includes)
 
 lib_LTLIBRARIES = libindex.la

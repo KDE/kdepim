@@ -36,6 +36,15 @@
 #include <string>
 #include "stringarray.h"
 
+/**
+ * \brief A test index
+ *
+ * This is an "index" which just saves all the documents on disk and
+ * searches over them.
+ *
+ * This was intended as a benchmark. It should \em not be used in practice.
+ * The interface is similar to \ref class index
+ */
 struct slow {
 	public:
 		slow( std::string );

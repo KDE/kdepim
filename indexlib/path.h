@@ -1,7 +1,5 @@
 #ifndef LPC_PATH_H1118420718_INCLUDE_GUARD_
 #define LPC_PATH_H1118420718_INCLUDE_GUARD_
-
-
 /* This file is part of indexlib.
  * Copyright (C) 2005 Luís Pedro Coelho <luis@luispedro.org>
  *
@@ -37,6 +35,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+/**
+ * Returns whether \param p is the name of a directory
+ */
 inline
 bool isdir( const char* p ) {
 	struct stat st;
@@ -47,6 +48,24 @@ bool isdir( const char* p ) {
 inline
 bool isdir( std::string p ) { return isdir( p.c_str() ); }
 
+namespace indexlib { namespace detail {
+/**
+ * Wrapper around mkdir which handles trailing slashes.
+ */
+inline 
+bool mkdir_trailing( std::string p ) {
+	while ( p.size() > 1 && p[ p.size() - 1 ] == '/' ) p.resize( p.size() - 1 );
+	if ( p.empty() ) return false;
+	return ::mkdir( p.c_str(), 0755 ) == 0;
+
+}
+
+}}
+/**
+ * If \param base is the basename of an index and \param ext the filename,
+ * then this returns strcat( basename, ext ) but it's smart enough to
+ * handle the case where basename is a directory differently.
+ */
 inline
 std::string path_concat( std::string base, std::string ext ) {
 	if ( isdir( base ) ) {

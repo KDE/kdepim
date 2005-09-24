@@ -69,12 +69,14 @@ stringarray::index_type stringarray::add( std::string str ) {
 }
 
 void stringarray::erase( index_type idx ) {
+	assert( idx < size() );
 	char* target = const_cast<char*>( get_cstr( idx ) );
 	if ( idx != size() - 1 ) {
 		const char* next = get_cstr( idx + 1 );
 		unsigned delta = strlen( target ) + 1;
-		std::memmove( target, next, reinterpret_cast<const unsigned char*>( next ) - data_->rw_base( data_->size() ) );
-		for ( memvector<uint32_t>::iterator first = indeces_.begin() + idx, past = indeces_.end(); first != past; ++first ) {
+		std::memmove( target, next, data_->size() - indeces_[ idx + 1 ] );
+		// Hack: Don't compare the iterators directly, it ices gcc-2.95
+		for ( memvector<uint32_t>::iterator first = indeces_.begin() + idx, past = indeces_.end(); first.raw() != past.raw(); ++first ) {
 			*first -= delta;
 		}
 	}

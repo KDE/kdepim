@@ -34,6 +34,9 @@
 #include <string>
 
 namespace indexlib { namespace detail {
+/**
+ * \brief Base class for indexlib exceptions
+ */
 class exception : public std::exception {
 	public:
 		~exception() throw() { }

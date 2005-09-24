@@ -67,15 +67,44 @@ struct result {
 struct index {
 	public:
 		virtual ~index() { }
-		virtual void add( const char* str, const char* doc ) = 0;
+		/**
+		 * Adds the document \param str under the name \param docname
+		 */
+		virtual void add( const char* str, const char* docname ) = 0;
+		/**
+		 * \see add( const char*, const char* );
+		 */
 		virtual void add( std::string s, std::string d ) { add( s.c_str(), d.c_str() ); }
+
+		/**
+		 * Removes the doc known as docname.
+		 *
+		 * In most implementations of index, this will probably be implemented by marking
+		 * the document as deleted in some way and maintenance() will need to be called later.
+		 */
 		virtual void remove_doc( const char* doc ) = 0;
 		void remove_doc( std::string doc ) { remove_doc( doc.c_str() ); }
+
+		/**
+		 * Perform any maintenance tasks necessary.
+		 *
+		 * Should be called every so often, but it can take some time to perform these operations,
+		 * so call them when the app is idle.
+		 */
 		virtual void maintenance() { }
 
-		virtual std::auto_ptr<result> search( const char* ) const = 0;
+		/**
+		 * Returns all documents matching \param pattern.
+		 */
+		virtual std::auto_ptr<result> search( const char* pattern ) const = 0;
 
+		/**
+		 * Returns the number of docs indexed.
+		 */
 		virtual unsigned ndocs() const = 0;
+		/**
+		 * Since docs are returned by index, there names need to be looked up.
+		 */
 		virtual std::string lookup_docname( unsigned ) const = 0;
 	private:
 };
