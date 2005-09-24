@@ -89,7 +89,7 @@ AddFieldDialog::AddFieldDialog( QWidget *parent, const char *name )
   mTypeList.append( "datetime" );
   mTypeName.append( i18n( "Date & Time" ) );
 
-  for ( uint i = 0; i < mTypeName.count(); ++i )
+  for ( int i = 0; i < mTypeName.count(); ++i )
     mType->insertItem( mTypeName[ i ] );
 
   nameChanged( "" );
@@ -373,7 +373,7 @@ void CustomFieldsWidget::loadContact( KABC::Addressee *addr )
   QStringList fields = addrConfig.customFields();
 
   if ( !fields.isEmpty() ) {
-    for ( uint i = 0; i < fields.count(); i += 3 ) {
+    for ( int i = 0; i < fields.count(); i += 3 ) {
       mFieldWidget->addField( fields[ i ], fields[ i + 1 ],
                               fields[ i + 2 ] , false );
       mRemoveButton->setEnabled( true );
@@ -478,7 +478,7 @@ void CustomFieldsWidget::initGUI()
   if ( globalFields.isEmpty() )
     return;
 
-  for ( uint i = 0; i < globalFields.count(); i += 3 ) {
+  for ( int i = 0; i < globalFields.count(); i += 3 ) {
     mFieldWidget->addField( globalFields[ i ], globalFields[ i + 1 ],
                             globalFields[ i + 2 ] , true );
     mRemoveButton->setEnabled( true );

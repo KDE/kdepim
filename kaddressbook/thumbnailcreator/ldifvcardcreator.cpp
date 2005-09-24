@@ -81,18 +81,25 @@ bool VCard_LDIFCreator::readContents( const QString &path )
   file.close();
 
   // convert the file contents to a KABC::Addressee address
-  KABC::AddresseeList addrList;
+  KABC::Addressee::List addrList;
   KABC::Addressee addr;
   KABC::VCardConverter converter;
 
   addrList = converter.parseVCards( contents );
-  if ( addrList.count() == 0 )
-    if ( !KABC::LDIFConverter::LDIFToAddressee( contents, addrList ) )
+  if ( addrList.count() == 0 ) {
+    KABC::AddresseeList l; // FIXME porting
+    if ( !KABC::LDIFConverter::LDIFToAddressee( contents, l ) )
 	return false;
+    // FIXME porting
+    KABC::AddresseeList::ConstIterator it( l.constBegin() );
+    for ( ; it != l.constEnd(); ++ it ) {
+        addrList.append( *it );
+    }
+  }
   if ( addrList.count()>1 ) {
     // create an overview (list of all names)
     name = i18n("One contact found:", "%n contacts found:", addrList.count());
-    unsigned int no, linenr;
+    int no, linenr;
     for (linenr=no=0; linenr<30 && no<addrList.count(); ++no) {
        addr = addrList[no];
        info = addr.formattedName().simplifyWhiteSpace();
@@ -120,7 +127,7 @@ bool VCard_LDIFCreator::readContents( const QString &path )
 
   KABC::PhoneNumber::List pnList = addr.phoneNumbers();
   QStringList phoneNumbers;
-  for (unsigned int no=0; no<pnList.count(); ++no) {
+  for (int no=0; no<pnList.count(); ++no) {
     QString pn = pnList[no].number().simplifyWhiteSpace();
     if (!pn.isEmpty() && !phoneNumbers.contains(pn))
       phoneNumbers.append(pn);
@@ -186,7 +193,7 @@ bool VCard_LDIFCreator::createImageSmall()
   Q_ASSERT( posNewLine > 0 );
   const QPixmap *fontPixmap = &(mSplitter->pixmap());
 
-  for ( uint i = 0; i < text.length(); i++ ) {
+  for ( int i = 0; i < text.length(); i++ ) {
     if ( x > posNewLine || newLine ) {  // start a new line?
       x = xborder;
       y += yOffset;
@@ -217,8 +224,10 @@ bool VCard_LDIFCreator::createImageSmall()
     }
 
     rect = mSplitter->coordinates( ch );
+    /* FIXME porting
     if ( !rect.isEmpty() )
       bitBlt( &mPixmap, QPoint(x,y), fontPixmap, rect, Qt::CopyROP );
+     */
 
     x += xOffset; // next character
   }

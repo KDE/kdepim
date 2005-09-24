@@ -48,13 +48,13 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   QToolButton *button = new QToolButton( this );
   button->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
   button->setPixmap( SmallIcon( QApplication::reverseLayout() ? "clear_left" : "locationbar_erase" ) );
-  button->setAccel( QKeySequence( CTRL+ALT+Key_S ) );
+  button->setAccel( QKeySequence( Qt::CTRL+Qt::ALT+Qt::Key_S ) );
   button->setAutoRaise( true );
   QToolTip::add( button, i18n( "Reset" ) );
   layout->addWidget( button );
 
   QLabel *label = new QLabel( i18n( "Search:" ), this, "kde toolbar widget" );
-  label->setAlignment( QLabel::AlignVCenter | QLabel::AlignRight );
+  label->setAlignment( Qt::AlignVCenter | Qt::AlignRight );
   layout->addWidget( label );
 
   mSearchText = new KLineEdit( this );
@@ -64,7 +64,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   layout->addWidget( mSearchText );
 
   label = new QLabel( i18n( "as in 'Search in:'", "&in:" ), this, "kde toolbar widget" );
-  label->setAlignment( QLabel::AlignVCenter | QLabel::AlignRight );
+  label->setAlignment( Qt::AlignVCenter | Qt::AlignRight );
   layout->addWidget( label );
 
   mFieldCombo = new QComboBox( false, this );

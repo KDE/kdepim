@@ -31,7 +31,6 @@
 #include <qspinbox.h>
 #include <qregexp.h>
 #include <q3textedit.h>
-#include <qwidgetfactory.h>
 //Added by qt3to4:
 #include <QVBoxLayout>
 

@@ -52,9 +52,9 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
   QLabel *label = new QLabel( i18n( "Which contacts do you want to print?" ), this );
   topLayout->addWidget( label );
 
-  mButtonGroup = new Q3ButtonGroup( this );
-  mButtonGroup->setFrameShape( Qt::NoFrame );
-  mButtonGroup->setColumnLayout( 0, Qt::Vertical );
+  mButtonGroup = new QGroupBox( this );
+  //mButtonGroup->setFrameShape( QFrame::NoFrame );
+ // mButtonGroup->setColumnLayout( 0, Qt::Vertical );
   mButtonGroup->layout()->setSpacing( KDialog::spacingHint() );
   mButtonGroup->layout()->setMargin( KDialog::marginHint() );
 

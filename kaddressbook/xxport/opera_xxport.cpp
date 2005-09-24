@@ -46,9 +46,9 @@ OperaXXPort::OperaXXPort( KABC::AddressBook *ab, QWidget *parent, const char *na
   createImportAction( i18n( "Import Opera Addressbook..." ) );
 }
 
-KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
+KABC::Addressee::List OperaXXPort::importContacts( const QString& ) const
 {
-  KABC::AddresseeList addrList;
+  KABC::Addressee::List addrList;
 
   QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath() + QString::fromLatin1( "/.opera/contacts.adr" ) );
   if ( fileName.isEmpty() )

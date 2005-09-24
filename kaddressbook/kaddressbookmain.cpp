@@ -39,7 +39,7 @@ KAddressBookMain::KAddressBookMain( const QString &file )
 {
   // Set this to be the group leader for all subdialogs - this means
   // modal subdialogs will only affect this dialog, not the other windows
-  setWFlags( getWFlags() | WGroupLeader );
+  setAttribute( Qt::WA_GroupLeader );
 
   setCaption( i18n( "Address Book Browser" ) );
 
@@ -89,7 +89,7 @@ void KAddressBookMain::importVCard( const QString& file )
   mCore->importVCard( KURL( file ) );
 }
 
-ASYNC KAddressBookMain::showContactEditor( QString uid )
+void KAddressBookMain::showContactEditor( QString uid )
 {
   mCore->editContact( uid );
 }

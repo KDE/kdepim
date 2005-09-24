@@ -528,7 +528,13 @@ void KABCore::incrementalJumpButtonSearch( const QString& character )
 {
   mViewManager->setSelected( QString::null, false );
 
-  KABC::AddresseeList list = mSearchManager->contacts();
+  KABC::AddresseeList list;
+  // FIXME this conversion is only temporarily necessary, until 
+  // KABC::AddresseeList has been ported to QList 
+  KABC::Addressee::List::ConstIterator tmpIt( mSearchManager->contacts().constBegin() );
+  for ( ; tmpIt != mSearchManager->contacts().constEnd(); ++tmpIt ) {
+    list.append( *tmpIt );
+  }
   KABC::Field *field = mViewManager->currentSortField();
   if ( field ) {
     list.sortByField( field );
@@ -655,7 +661,7 @@ void KABCore::editContact( const QString &uid )
   if ( localUID.isNull() ) {
     QStringList uidList = mViewManager->selectedUids();
     if ( uidList.count() > 0 )
-      localUID = *( uidList.at( 0 ) );
+      localUID = uidList.at( 0 );
   }
 
   KABC::Addressee addr = mAddressBook->findByUid( localUID );

@@ -23,6 +23,8 @@
 #ifndef KADDRESSBOOK_PART_H
 #define KADDRESSBOOK_PART_H
 
+#include <dcopobject.h>
+
 #include <kparts/event.h>
 #include <kparts/factory.h>
 #include <kparts/part.h>
@@ -48,7 +50,8 @@ class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBook
   public slots:
     virtual void addEmail( QString addr );
     virtual void importVCard( const QString& vCardURL );
-    virtual ASYNC showContactEditor( QString uid );
+    // FIXME the below used to be ASYNC, but moc seems to not like that, at present
+    virtual void showContactEditor( QString uid );
     virtual void newContact();
     virtual QString getNameByPhone( QString phone );
     virtual void save();

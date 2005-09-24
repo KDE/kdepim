@@ -28,7 +28,6 @@
 #include <qpushbutton.h>
 #include <qtoolbutton.h>
 #include <qstring.h>
-//Added by qt3to4:
 #include <QVBoxLayout>
 
 #include <kapplication.h>
@@ -36,6 +35,8 @@
 #include <kconfig.h>
 #include <klistview.h>
 #include <klocale.h>
+#include <khbox.h>
+#include <kvbox.h>
 
 #include "addhostdialog.h"
 #include "ldapoptionswidget.h"
@@ -261,19 +262,22 @@ void LDAPOptionsWidget::initGUI()
 {
   QVBoxLayout *layout = new QVBoxLayout( this, 0, KDialog::spacingHint() );
 
-  QVGroupBox *groupBox = new QVGroupBox( i18n( "LDAP Servers" ), this );
+  QGroupBox *groupBox = new QGroupBox( i18n( "LDAP Servers" ), this );
+  /*
+   * FIXME porting
   groupBox->setInsideSpacing( KDialog::spacingHint() );
   groupBox->setInsideMargin( KDialog::marginHint() );
-
+*/
+  
   // Contents of the QVGroupBox: label and hbox
   /*QLabel *label =*/ new QLabel( i18n( "Check all servers that should be used:" ), groupBox );
 
-  Q3HBox* hBox = new Q3HBox( groupBox );
+  KHBox* hBox = new KHBox( groupBox );
   hBox->setSpacing( 6 );
   // Contents of the hbox: listview and up/down buttons on the right (vbox)
   mHostListView = new KListView( hBox );
 
-  Q3VBox* upDownBox = new Q3VBox( hBox );
+  KVBox* upDownBox = new KVBox( hBox );
   upDownBox->setSpacing( 6 );
   mUpButton = new QToolButton( upDownBox, "mUpButton" );
   mUpButton->setIconSet( BarIconSet( "up", KIcon::SizeSmall ) );

@@ -26,7 +26,7 @@
 
 #include <qwidget.h>
 
-class Q3ButtonGroup;
+class QGroupBox;
 class QComboBox;
 class Q3ListView;
 class Q3ListViewItem;
@@ -56,7 +56,7 @@ class SelectionPage : public QWidget
     void categoryClicked( Q3ListViewItem * i );
 
   private:
-    Q3ButtonGroup* mButtonGroup;
+    QGroupBox* mButtonGroup;
     QRadioButton* mUseCategories;
     QRadioButton* mUseFilters;
     QRadioButton* mUseWholeBook;

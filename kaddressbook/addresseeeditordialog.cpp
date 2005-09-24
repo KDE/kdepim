@@ -36,7 +36,7 @@
 
 #include "addresseeeditordialog.h"
 
-AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core *core,
+AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core * /*core*/,
                                               QWidget *parent, const char *name )
   : KDialogBase( KDialogBase::Plain, i18n( "Edit Contact" ),
                  KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply,
@@ -44,7 +44,7 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core *core,
 {
   // Set this to be the group leader for all subdialogs - this means
   // modal subdialogs will only affect this dialog, not the other windows
-  setWFlags( getWFlags() | WGroupLeader );
+  setAttribute( Qt::WA_GroupLeader );
 
   kdDebug(5720) << "AddresseeEditorDialog()" << endl;
 

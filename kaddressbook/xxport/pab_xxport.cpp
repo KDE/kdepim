@@ -46,9 +46,9 @@ PABXXPort::PABXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   createImportAction( i18n("Import MS Exchange Personal Address Book (.PAB)") );
 }
 
-KABC::AddresseeList PABXXPort::importContacts( const QString& ) const
+KABC::Addressee::List PABXXPort::importContacts( const QString& ) const
 {
-  KABC::AddresseeList addrList;
+  KABC::Addressee::List addrList;
 
   QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(),
       		"*.[pP][aA][bB]|" + i18n("MS Exchange Personal Address Book Files (*.pab)"), 0 );

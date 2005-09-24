@@ -108,7 +108,7 @@ class KDE_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
     /**
       Reimplement this method for importing the contacts.
      */
-    virtual KABC::AddresseeList importContacts( const QString& identifier ) const;
+    virtual KABC::Addressee::List importContacts( const QString& identifier ) const;
 
   signals:
     /**

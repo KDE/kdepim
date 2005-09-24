@@ -44,6 +44,7 @@ class KIMProxy;
 /** The whole tooltip design needs a lot of work. Currently it is
 * hacked together to function.
 */
+#if 0
 class DynamicTip : public QToolTip
 {
   public:
@@ -54,6 +55,7 @@ class DynamicTip : public QToolTip
 
   private:
 };
+#endif
 
 class ContactListViewItem : public KListViewItem
 {

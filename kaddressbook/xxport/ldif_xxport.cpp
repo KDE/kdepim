@@ -61,9 +61,9 @@ LDIFXXPort::LDIFXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name
 
 /* import */
 
-KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
+KABC::Addressee::List LDIFXXPort::importContacts( const QString& ) const
 {
-  KABC::AddresseeList addrList;
+  KABC::Addressee::List addrList;
 
   QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(),
                       "text/x-ldif", 0 );
@@ -83,7 +83,14 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
   QDateTime dtDefault = QFileInfo(file).lastModified();
   file.close();
 
-  KABC::LDIFConverter::LDIFToAddressee( wholeFile, addrList, dtDefault );
+  // FIXME porting conversion temporarily needed
+  KABC::AddresseeList l;
+  KABC::LDIFConverter::LDIFToAddressee( wholeFile, l, dtDefault );
+
+  KABC::AddresseeList::ConstIterator it( l.constBegin() );
+  for ( ; it != l.constEnd(); ++ it ) {
+    addrList.append( *it );
+  }
 
   return addrList;
 }

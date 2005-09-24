@@ -24,8 +24,7 @@
 #ifndef ADDRESSEDITWIDGET_H
 #define ADDRESSEDITWIDGET_H
 
-#include <qwidget.h>
-//Added by qt3to4:
+#include <QWidget>
 #include <QLabel>
 
 #include <kdialogbase.h>
@@ -35,7 +34,7 @@
 #include "addresseeconfig.h"
 #include "typecombo.h"
 
-class Q3ButtonGroup;
+class QButtonGroup;
 class QCheckBox;
 class Q3ListView;
 class Q3TextEdit;
@@ -147,7 +146,7 @@ class AddressTypeDialog : public KDialogBase
     int type() const;
 
   private:
-    Q3ButtonGroup *mGroup;
+    QButtonGroup *mGroup;
 
     KABC::Address::TypeList mTypeList;
 };

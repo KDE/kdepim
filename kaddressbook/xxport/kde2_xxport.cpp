@@ -45,7 +45,7 @@ KDE2XXPort::KDE2XXPort( KABC::AddressBook *ab, QWidget *parent, const char *name
   createImportAction( i18n( "Import KDE 2 Addressbook..." ) );
 }
 
-KABC::AddresseeList KDE2XXPort::importContacts( const QString& ) const
+KABC::Addressee::List KDE2XXPort::importContacts( const QString& ) const
 {
   QString fileName = locateLocal( "data", "kabc/std.vcf" );
   if ( !QFile::exists( fileName ) ) {

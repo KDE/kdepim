@@ -142,7 +142,7 @@ class PhoneTypeDialog : public KDialogBase
     int mType;
     KABC::PhoneNumber::TypeList mTypeList;
 
-    Q3ButtonGroup *mGroup;
+    QButtonGroup *mGroup;
     QCheckBox *mPreferredBox;
 };
 

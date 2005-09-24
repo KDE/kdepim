@@ -661,7 +661,7 @@ EmailSelector::EmailSelector( const QStringList &emails,
 
 QString EmailSelector::selected() const
 {
-  Q3Button *button = mButtonGroup->selected();
+  QAbstractButton *button = mButtonGroup->selected();
   if ( button )
     return mEmailMap[ mButtonGroup->id( button ) ];
 

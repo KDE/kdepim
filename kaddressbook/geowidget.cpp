@@ -71,7 +71,12 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
   label = new QLabel( i18n( "Latitude:" ), this );
   topLayout->addWidget( label, 1, 1 );
 
-  mLatitudeBox = new KDoubleSpinBox( -90, 90, 1, 0, 6, this );
+  mLatitudeBox = new QDoubleSpinBox( this );
+  mLatitudeBox->setMinimum( -90 );
+  mLatitudeBox->setMaximum( 90 );
+  mLatitudeBox->setSingleStep( 1 );
+  mLatitudeBox->setValue( 0 );
+  mLatitudeBox->setDecimals( 6 );
   mLatitudeBox->setEnabled( false );
   mLatitudeBox->setSuffix( "°" );
   topLayout->addWidget( mLatitudeBox, 1, 2 );
@@ -80,7 +85,12 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
   label = new QLabel( i18n( "Longitude:" ), this );
   topLayout->addWidget( label, 2, 1 );
 
-  mLongitudeBox = new KDoubleSpinBox( -180, 180, 1, 0, 6, this );
+  mLongitudeBox = new QDoubleSpinBox( this );
+  mLongitudeBox->setMinimum( -180 );
+  mLongitudeBox->setMaximum( 180 );
+  mLongitudeBox->setSingleStep( 1 );
+  mLongitudeBox->setValue( 0 );
+  mLongitudeBox->setDecimals( 6 );
   mLongitudeBox->setEnabled( false );
   mLongitudeBox->setSuffix( "°" );
   topLayout->addWidget( mLongitudeBox, 2, 2 );
@@ -180,24 +190,34 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
   mCityCombo = new KComboBox( page );
   topLayout->addWidget( mCityCombo, 0, 1 );
 
-  Q3GroupBox *sexagesimalGroup = new Q3GroupBox( 0, Vertical, i18n( "Sexagesimal" ), page );
+  QGroupBox *sexagesimalGroup = new QGroupBox( i18n( "Sexagesimal" ), page );
   QGridLayout *sexagesimalLayout = new QGridLayout( sexagesimalGroup->layout(),
                                                     2, 5, spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Latitude:" ), sexagesimalGroup );
   sexagesimalLayout->addWidget( label, 0, 0 );
 
-  mLatDegrees = new QSpinBox( 0, 90, 1, sexagesimalGroup );
+  mLatDegrees = new QSpinBox( sexagesimalGroup );
+  mLatDegrees->setMinimum( 0 );
+  mLatDegrees->setMaximum( 90 );
+  mLatDegrees->setValue( 1 );
   mLatDegrees->setSuffix( "°" );
   mLatDegrees->setWrapping( false );
   label->setBuddy( mLatDegrees );
   sexagesimalLayout->addWidget( mLatDegrees, 0, 1 );
 
-  mLatMinutes = new QSpinBox( 0, 59, 1, sexagesimalGroup );
+  mLatMinutes = new QSpinBox( sexagesimalGroup );
+  mLatMinutes->setMinimum( 0 );
+  mLatMinutes->setMaximum( 59 );
+  mLatMinutes->setValue( 1 );
+
   mLatMinutes->setSuffix( "'" );
   sexagesimalLayout->addWidget( mLatMinutes, 0, 2 );
 
-  mLatSeconds = new QSpinBox( 0, 59, 1, sexagesimalGroup );
+  mLatSeconds = new QSpinBox( sexagesimalGroup );
+  mLatSeconds->setMinimum( 0 );
+  mLatSeconds->setMaximum( 59 );
+  mLatSeconds->setValue( 1 );
   mLatSeconds->setSuffix( "\"" );
   sexagesimalLayout->addWidget( mLatSeconds, 0, 3 );
 
@@ -209,16 +229,25 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
   label = new QLabel( i18n( "Longitude:" ), sexagesimalGroup );
   sexagesimalLayout->addWidget( label, 1, 0 );
 
-  mLongDegrees = new QSpinBox( 0, 180, 1, sexagesimalGroup );
+  mLongDegrees = new QSpinBox( sexagesimalGroup );
+  mLongDegrees->setMinimum( 0 );
+  mLongDegrees->setMaximum( 180 );
+  mLongDegrees->setValue( 1 );
   mLongDegrees->setSuffix( "°" );
   label->setBuddy( mLongDegrees );
   sexagesimalLayout->addWidget( mLongDegrees, 1, 1 );
 
-  mLongMinutes = new QSpinBox( 0, 59, 1, sexagesimalGroup );
+  mLongMinutes = new QSpinBox( sexagesimalGroup );
+  mLongMinutes->setMinimum( 0 );
+  mLongMinutes->setMaximum( 59 );
+  mLongMinutes->setValue( 1 );
   mLongMinutes->setSuffix( "'" );
   sexagesimalLayout->addWidget( mLongMinutes, 1, 2 );
 
-  mLongSeconds = new QSpinBox( 0, 59, 1, sexagesimalGroup );
+  mLongSeconds = new QSpinBox( sexagesimalGroup );
+  mLongSeconds->setMinimum( 0 );
+  mLongSeconds->setMaximum( 59 );
+  mLongSeconds->setValue( 1 );
   mLongSeconds->setSuffix( "\"" );
   sexagesimalLayout->addWidget( mLongSeconds, 1, 3 );
 
@@ -396,7 +425,7 @@ void GeoDialog::loadCityList()
     QRegExp name( "[^\\s]+/[^\\s]+" );
     int pos;
 
-    while ( !s.eof() ) {
+    while ( !s.atEnd() ) {
       line = s.readLine().stripWhiteSpace();
       if ( line.isEmpty() || line[ 0 ] == '#' )
         continue;
@@ -491,7 +520,7 @@ int GeoDialog::nearestCity( double x, double y ) const
 GeoMapWidget::GeoMapWidget( QWidget *parent, const char *name )
   : QWidget( parent, name ), mLatitude( 0 ), mLongitude( 0 )
 {
-  setBackgroundMode( NoBackground );
+  setBackgroundMode( Qt::NoBackground );
 
   setFixedSize( 400, 200 );
 

@@ -53,7 +53,8 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
   public slots:
     virtual void addEmail( QString addr );
     virtual void importVCard( const QString& vCardURL );
-    virtual ASYNC showContactEditor( QString uid );
+    // FIXME the below was ASYNC, but moc seems to not like that, at present
+    virtual void showContactEditor( QString uid );
     virtual void newContact();
     virtual QString getNameByPhone( QString phone );
     virtual void save();

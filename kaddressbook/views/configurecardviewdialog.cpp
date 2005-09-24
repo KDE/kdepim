@@ -228,19 +228,21 @@ void CardViewLookNFeelPage::initGUI()
   cbDrawBorders = new QCheckBox( i18n("Draw &borders"), gbCards );
 
   loTab->setStretchFactor( new QWidget( loTab ), 1 );
-
-  Q3WhatsThis::add( sbMargin, i18n(
+  QString text = i18n(
         "The item margin is the distance (in pixels) between the item edge and the item data. Most noticeably, "
         "incrementing the item margin will add space between the focus rectangle and the item data."
-        ) );
-  Q3WhatsThis::add( lMargin, Q3WhatsThis::textFor( sbMargin ) );
-  Q3WhatsThis::add( sbSpacing, i18n(
+        );
+  Q3WhatsThis::add( sbMargin, text  );
+  Q3WhatsThis::add( lMargin, text );
+  text = i18n(
         "The item spacing decides the distance (in pixels) between the items and anything else: the view "
         "borders, other items or column separators."
-        ) );
-  Q3WhatsThis::add( lSpacing, Q3WhatsThis::textFor( sbSpacing ) );
-  Q3WhatsThis::add( sbSepWidth, i18n("Sets the width of column separators") );
-  Q3WhatsThis::add( lSW, Q3WhatsThis::textFor( sbSepWidth ) );
+        );
+  Q3WhatsThis::add( sbSpacing, text );
+  Q3WhatsThis::add( lSpacing, text );
+  text = i18n("Sets the width of column separators");
+  Q3WhatsThis::add( sbSepWidth, text );
+  Q3WhatsThis::add( lSW, text );
 
   tabs->addTab( loTab, i18n("&Layout") );
 

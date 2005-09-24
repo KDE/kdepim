@@ -32,7 +32,7 @@
 #include <kmessagebox.h>
 #include <kurldrag.h>
 #include <kurlrequester.h>
-#include <libkdepim/kpixmapregionselectordialog.h>
+#include <kpixmapregionselectordialog.h>
 
 #include <librss/loader.h>
 #include <librss/document.h>
@@ -124,7 +124,7 @@ void ImageLabel::mousePressEvent( QMouseEvent *event )
 
 void ImageLabel::mouseMoveEvent( QMouseEvent *event )
 {
-  if ( (event->state() & LeftButton) &&
+  if ( (event->state() & Qt::LeftButton) &&
        (event->pos() - mDragStartPos).manhattanLength() >
        KGlobalSettings::dndEventDelay() ) {
     startDrag();
@@ -146,7 +146,7 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
   mImageLabel = new ImageLabel( i18n( "Picture" ), box );
   mImageLabel->setFixedSize( 100, 140 );
   mImageLabel->setFrameStyle( Q3Frame::Panel | Q3Frame::Sunken );
-  boxLayout->addMultiCellWidget( mImageLabel, 0, 3, 0, 0, AlignTop );
+  boxLayout->addMultiCellWidget( mImageLabel, 0, 3, 0, 0, Qt::AlignTop );
 
   mImageUrl = new KURLRequester( box );
   mImageUrl->setFilter( KImageIO::pattern() );
@@ -223,7 +223,7 @@ void ImageBaseWidget::setImage( const KABC::Picture &photo )
   blockSignals( true );
 
   if ( photo.isIntern() ) {
-    QPixmap px = photo.data();
+    QPixmap px = QPixmap::fromImage( photo.data() );
 
     if ( px.height() != 140 || px.width() != 100 ) {
       if ( px.height() > px.width() )
@@ -324,7 +324,7 @@ QPixmap ImageBaseWidget::loadPixmap( const KURL &url )
     return pixmap;
   }
 
-  QPixmap selectedPixmap = KPIM::KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, this );
+  QPixmap selectedPixmap = QPixmap::fromImage( KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, this ) );
   if ( selectedPixmap.isNull() )
     return QPixmap();
   pixmap = selectedPixmap;

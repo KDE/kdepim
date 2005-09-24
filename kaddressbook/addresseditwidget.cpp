@@ -609,19 +609,22 @@ AddressTypeDialog::AddressTypeDialog( int type, QWidget *parent )
   QWidget *page = plainPage();
   QVBoxLayout *layout = new QVBoxLayout( page );
 
-  mGroup = new Q3ButtonGroup( 2, Horizontal, i18n( "Address Types" ), page );
-  layout->addWidget( mGroup );
+  QGroupBox *box  = new QGroupBox( i18n( "Address Types" ), page );
+  layout->addWidget( box );
+  mGroup = new QButtonGroup( box );
+
+  QHBoxLayout *buttonLayout = new QHBoxLayout( box );
 
   mTypeList = KABC::Address::typeList();
   mTypeList.remove( KABC::Address::Pref );
 
   KABC::Address::TypeList::ConstIterator it;
-  for ( it = mTypeList.begin(); it != mTypeList.end(); ++it )
-    new QCheckBox( KABC::Address::typeLabel( *it ), mGroup );
-
-  for ( int i = 0; i < mGroup->count(); ++i ) {
-    QCheckBox *box = (QCheckBox*)mGroup->find( i );
-    box->setChecked( type & mTypeList[ i ] );
+  int i = 0;
+  for ( it = mTypeList.begin(); it != mTypeList.end(); ++it, ++i ) {
+    QCheckBox *cb = new QCheckBox( KABC::Address::typeLabel( *it ), box );
+    cb->setChecked( type & mTypeList[ i ] );
+    buttonLayout->addWidget( cb );
+    mGroup->addButton( cb );
   }
 }
 
@@ -632,9 +635,9 @@ AddressTypeDialog::~AddressTypeDialog()
 int AddressTypeDialog::type() const
 {
   int type = 0;
-  for ( int i = 0; i < mGroup->count(); ++i ) {
-    QCheckBox *box = (QCheckBox*)mGroup->find( i );
-    if ( box->isChecked() )
+  for ( int i = 0; i < mGroup->buttons().count(); ++i ) {
+    QCheckBox *box = dynamic_cast<QCheckBox*>( mGroup->buttons().at( i ) );
+    if ( box && box->isChecked() )
       type += mTypeList[ i ];
   }
 
@@ -662,16 +665,16 @@ static bool operator<( const LocaleAwareString &s1, const LocaleAwareString &s2 
 
 QStringList AddressEditDialog::sortLocaleAware( const QStringList &list )
 {
-  Q3ValueList<LocaleAwareString> sortedList;
+  QList<LocaleAwareString> sortedList;
 
   QStringList::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
     sortedList.append( LocaleAwareString( *it ) );
 
-  qHeapSort( sortedList );
+  qSort( sortedList.begin(), sortedList.end() );
 
   QStringList retval;
-  Q3ValueList<LocaleAwareString>::ConstIterator retIt;
+  QList<LocaleAwareString>::ConstIterator retIt;
   for ( retIt = sortedList.begin(); retIt != sortedList.end(); ++retIt )
     retval.append( *retIt );
 

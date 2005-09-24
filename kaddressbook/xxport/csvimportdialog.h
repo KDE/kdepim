@@ -26,9 +26,7 @@
 #include <kabc/addresseelist.h>
 #include <kdialogbase.h>
 
-#include <q3valuelist.h>
-//Added by qt3to4:
-#include <Q3PtrList>
+#include <QList>
 
 class KURLRequester;
 
@@ -109,7 +107,7 @@ class CSVImportDialog : public KDialogBase
 
     void reloadCodecs();
     QTextCodec *currentCodec();
-    Q3PtrList<QTextCodec> mCodecs;
+    QList<QTextCodec*> mCodecs;
 
     bool mAdjustRows;
     int mStartLine;
@@ -120,7 +118,7 @@ class CSVImportDialog : public KDialogBase
     KABC::AddressBook *mAddressBook;
     int mCustomCounter;
     bool mClearTypeStore;
-    Q3ValueList<int> mTypeStore;
+    QList<int> mTypeStore;
 };
 
 #endif

@@ -177,14 +177,14 @@ bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
   int count = 0;
 
   // counter for the letter group in which we currently are:
-  uint grpnum = 0;
+  int grpnum = 0;
 
   // iterate through the contacts
   printPageHeader( ltgroups[ grpnum ], window, painter );
   ypos = pageHeaderMetrics( window, painter ).height();
 
-  KABC::AddresseeList::ConstIterator it;
-  for ( it = contacts.begin(); it != contacts.end(); ++it ) {
+  KABC::Addressee::List::ConstIterator it;
+  for ( it = contacts.constBegin(); it != contacts.constEnd(); ++it ) {
     KABC::Addressee addressee = ( *it );
     if ( !addressee.isEmpty() ) {
       // let's see if we have to open the next group:

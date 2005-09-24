@@ -219,7 +219,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
           a.setNickName( value );
           break;
         case Birthday:
-          a.setBirthday( dateParser.parse( value ) );
+          a.setBirthday( QDateTime( dateParser.parse( value ) ) );
           break;
         case Email:
           if ( !value.isEmpty() )
@@ -507,7 +507,7 @@ void CSVImportDialog::fillTable()
   else if ( code == Guess ) {
     QTextCodec* codec = QTextCodec::codecForContent( mFileArray.data(), mFileArray.size() );
     if ( codec ) {
-      KMessageBox::information( this, i18n( "Using codec '%1'" ).arg( codec->name() ), i18n( "Encoding" ) );
+      KMessageBox::information( this, i18n( "Using codec '%1'" ).arg( QLatin1String( codec->name() ) ), i18n( "Encoding" ) );
       inputStream.setCodec( codec );
     }
   }
@@ -522,7 +522,7 @@ void CSVImportDialog::fillTable()
      case S_START :
       if ( x == mTextQuote ) {
         state = S_QUOTED_FIELD;
-      } else if ( x == mDelimiter ) {
+      } else if ( QString( x ) == mDelimiter ) {
         if ( ( ignoreDups == false ) || ( lastCharDelimiter == false ) )
           ++column;
         lastCharDelimiter = true;
@@ -557,7 +557,7 @@ void CSVImportDialog::fillTable()
       if ( x == mTextQuote ) {
         field += x;
         state = S_QUOTED_FIELD;
-      } else if ( x == mDelimiter || x == '\n' ) {
+      } else if ( QString( x ) == mDelimiter || x == '\n' ) {
         setText( row - mStartLine + 1, column, field );
         field = "";
         if ( x == '\n' ) {
@@ -574,7 +574,7 @@ void CSVImportDialog::fillTable()
       }
       break;
      case S_END_OF_QUOTED_FIELD :
-      if ( x == mDelimiter || x == '\n' ) {
+      if ( QString( x ) == mDelimiter || x == '\n' ) {
         setText( row - mStartLine + 1, column, field );
         field = "";
         if ( x == '\n' ) {
@@ -597,7 +597,7 @@ void CSVImportDialog::fillTable()
         break;
       }
      case S_NORMAL_FIELD :
-      if ( x == mDelimiter || x == '\n' ) {
+      if ( QString( x ) == mDelimiter || x == '\n' ) {
         setText( row - mStartLine + 1, column, field );
         field = "";
         if ( x == '\n' ) {
@@ -613,7 +613,7 @@ void CSVImportDialog::fillTable()
         field += x;
       }
     }
-    if ( x != mDelimiter )
+    if ( QString( x ) != mDelimiter )
       lastCharDelimiter = false;
 
     if ( column > maxColumn )
@@ -667,7 +667,7 @@ void CSVImportDialog::reloadCodecs()
   for ( int i = 0; ( codec = QTextCodec::codecForIndex( i ) ); i++ )
     mCodecs.append( codec );
 
-  mCodecCombo->insertItem( i18n( "Local (%1)" ).arg( QTextCodec::codecForLocale()->name() ), Local );
+  mCodecCombo->insertItem( i18n( "Local (%1)" ).arg( QLatin1String( QTextCodec::codecForLocale()->name() ) ), Local );
   mCodecCombo->insertItem( i18n( "[guess]" ), Guess );
   mCodecCombo->insertItem( i18n( "Latin1" ), Latin1 );
   mCodecCombo->insertItem( i18n( "Unicode" ), Uni );
@@ -840,7 +840,7 @@ void CSVImportDialog::applyTemplate()
   }
 
   // apply the column map
-  for ( uint column = 0; column < columnMap.count(); ++column ) {
+  for ( int column = 0; column < columnMap.count(); ++column ) {
     int type = columnMap[ column ];
     Q3ComboTableItem *item = static_cast<Q3ComboTableItem*>( mTable->item( 0,
                                                            column ) );

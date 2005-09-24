@@ -29,6 +29,7 @@
 #include <q3ptrlist.h>
 #include <qrect.h>
 #include <q3scrollview.h>
+#include <q3listbox.h>
 #include <qstring.h>
 //Added by qt3to4:
 #include <QWheelEvent>
@@ -329,7 +330,7 @@ class CardView : public Q3ScrollView
       @return The first matching item, or 0 if no items match.
      */
     CardViewItem *findItem( const QString &text, const QString &label,
-                            Qt::StringComparisonMode compare = Qt::BeginsWith ) const;
+                            Q3ListBox::StringComparisonMode compare = Q3ListBox::BeginsWith ) const;
 
     /**
       Returns the amounts of pixels required for one column.

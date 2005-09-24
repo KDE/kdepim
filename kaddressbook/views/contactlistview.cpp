@@ -51,6 +51,8 @@
 /////////////////////////////////
 // DynamicTip Methods
 
+#if 0
+
 DynamicTip::DynamicTip( ContactListView *parent)
   : QToolTip( parent )
 {
@@ -146,6 +148,8 @@ void DynamicTip::maybeTip( const QPoint &pos )
 
   tip( r, s );
 }
+
+#endif
 
 ///////////////////////////
 // ContactListViewItem Methods
@@ -279,8 +283,10 @@ ContactListView::ContactListView(KAddressBookTableView *view,
 
   connect(this, SIGNAL(dropped(QDropEvent*)),
           this, SLOT(itemDropped(QDropEvent*)));
-
+/*
+ * FIXME porting
   new DynamicTip( this );
+  */
 }
 
 void ContactListView::paintEmptyArea( QPainter * p, const QRect & rect )
@@ -313,7 +319,7 @@ void ContactListView::contentsMousePressEvent(QMouseEvent* e)
 // To initiate a drag operation
 void ContactListView::contentsMouseMoveEvent( QMouseEvent *e )
 {
-  if ((e->state() & LeftButton) && (e->pos() - presspos).manhattanLength() > 4 ) {
+  if ((e->state() & Qt::LeftButton) && (e->pos() - presspos).manhattanLength() > 4 ) {
     emit startAddresseeDrag();
   }
   else

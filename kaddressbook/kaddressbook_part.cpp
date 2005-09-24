@@ -53,7 +53,7 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
 
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget( parentWidget, widgetName );
-  canvas->setFocusPolicy( QWidget::ClickFocus );
+  canvas->setFocusPolicy( Qt::ClickFocus );
   setWidget( canvas );
 
   QVBoxLayout *topLayout = new QVBoxLayout( canvas );
@@ -94,7 +94,7 @@ void KAddressbookPart::importVCard( const QString& vCardURL )
   mCore->importVCard( vCardURL );
 }
 
-ASYNC KAddressbookPart::showContactEditor( QString uid )
+void KAddressbookPart::showContactEditor( QString uid )
 {
   mCore->editContact( uid );
 }

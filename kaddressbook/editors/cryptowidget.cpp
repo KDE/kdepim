@@ -40,9 +40,8 @@
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qpushbutton.h>
-#include <qvgroupbox.h>
-#include <q3hbox.h>
-//Added by qt3to4:
+#include <QGroupBox>
+#include <khbox.h>
 #include <QGridLayout>
 
 #include "cryptowidget.h"
@@ -78,7 +77,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   topLayout->setColStretch( 1, 1 );
   topLayout->setRowStretch( 4, 1 );
 
-  QVGroupBox* protGB = new QVGroupBox( i18n( "Allowed Protocols" ), this );
+  QGroupBox* protGB = new QGroupBox( i18n( "Allowed Protocols" ), this );
   topLayout->addMultiCellWidget( protGB, 0, 0, 0, 1 );
 
   uint msgFormat = 1;
@@ -103,12 +102,12 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   mSmimeCert = new Kleo::EncryptionKeyRequester( true, Kleo::EncryptionKeyRequester::SMIME, this );
   topLayout->addWidget( mSmimeCert, 2, 1 );
 
-  Q3GroupBox* box = new QVGroupBox( i18n( "Message Preference" ), this );
+  QGroupBox* box = new QGroupBox( i18n( "Message Preference" ), this );
   topLayout->addMultiCellWidget( box, 3, 3, 0, 1 );
 
 
   // Send preferences/sign (see certmanager/lib/kleo/enum.h)
-  Q3HBox* hbox = new Q3HBox( box );
+  KHBox* hbox = new KHBox( box );
 
   l = new QLabel( i18n( "Sign:" ), hbox );
 
@@ -118,7 +117,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
                            static_cast<Kleo::SigningPreference>( i ) ) );
 
   // Send preferences/encrypt (see certmanager/lib/kleo/enum.h)
-  hbox = new Q3HBox( box );
+  hbox = new KHBox( box );
 
   l = new QLabel( i18n("Encrypt:"), hbox );
 

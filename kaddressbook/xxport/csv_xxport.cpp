@@ -81,13 +81,13 @@ bool CSVXXPort::exportContacts( const KABC::AddresseeList &list, const QString& 
   }
 }
 
-KABC::AddresseeList CSVXXPort::importContacts( const QString& ) const
+KABC::Addressee::List CSVXXPort::importContacts( const QString& ) const
 {
   CSVImportDialog dlg( addressBook(), parentWidget() );
   if ( dlg.exec() )
     return dlg.contacts();
   else
-    return KABC::AddresseeList();
+    return KABC::Addressee::List();
 }
 
 void CSVXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )

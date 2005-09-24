@@ -309,22 +309,24 @@ PhoneTypeDialog::PhoneTypeDialog( int type, QWidget *parent )
   mPreferredBox = new QCheckBox( i18n( "This is the preferred phone number" ), page );
   layout->addWidget( mPreferredBox );
 
-  mGroup = new Q3ButtonGroup( 2, Horizontal, i18n( "Types" ), page );
-  layout->addWidget( mGroup );
+  QGroupBox *box  = new QGroupBox( i18n( "Types" ), page );
+  layout->addWidget( box );
+
+  QHBoxLayout *buttonLayout = new QHBoxLayout( box );
 
   // fill widgets
   mTypeList = KABC::PhoneNumber::typeList();
   mTypeList.remove( KABC::PhoneNumber::Pref );
 
   KABC::PhoneNumber::TypeList::ConstIterator it;
-  for ( it = mTypeList.begin(); it != mTypeList.end(); ++it )
-    new QCheckBox( KABC::PhoneNumber::typeLabel( *it ), mGroup );
-
-  for ( int i = 0; i < mGroup->count(); ++i ) {
-    QCheckBox *box = (QCheckBox*)mGroup->find( i );
-    box->setChecked( mType & mTypeList[ i ] );
+  mGroup = new QButtonGroup( box );
+  int i = 0;
+  for ( it = mTypeList.begin(); it != mTypeList.end(); ++it, ++i ) {
+    QCheckBox *cb = new QCheckBox( KABC::PhoneNumber::typeLabel( *it ), box );
+    cb->setChecked( type & mTypeList[ i ] );
+    buttonLayout->addWidget( cb );
+    mGroup->addButton( cb );
   }
-
   mPreferredBox->setChecked( mType & KABC::PhoneNumber::Pref );
 }
 
@@ -332,9 +334,9 @@ int PhoneTypeDialog::type() const
 {
   int type = 0;
 
-  for ( int i = 0; i < mGroup->count(); ++i ) {
-    QCheckBox *box = (QCheckBox*)mGroup->find( i );
-    if ( box->isChecked() )
+  for ( int i = 0; i < mGroup->buttons().count(); ++i ) {
+    QCheckBox *box = dynamic_cast<QCheckBox*>( mGroup->buttons().at( i ) ) ;
+    if ( box && box->isChecked() )
       type += mTypeList[ i ];
   }
 

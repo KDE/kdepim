@@ -85,8 +85,8 @@ void XXPortManager::slotImport( const QString &identifier, const QString &data )
   if ( !resource )
     return;
 
-  KABC::AddresseeList list = obj->importContacts( data );
-  KABC::AddresseeList::Iterator it;
+  KABC::Addressee::List list = obj->importContacts( data );
+  KABC::Addressee::List::Iterator it;
   for ( it = list.begin(); it != list.end(); ++it )
     (*it).setResource( resource );
 

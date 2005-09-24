@@ -452,9 +452,9 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 
 
 
-KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
+KABC::Addressee::List GNOKIIXXPort::importContacts( const QString& ) const
 {
-	KABC::AddresseeList addrList;
+	KABC::Addressee::List addrList;
 
 #ifndef HAVE_GNOKII_H
 
@@ -498,13 +498,23 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 	GNOKII_DEBUG("GNOKII import filter started.\n");
 	m_progressDlg->setButtonText(i18n("&Stop Import"));
 
-	read_phone_entries("ME", GN_MT_ME, &addrList); // internal phone memory
-	read_phone_entries("SM", GN_MT_SM, &addrList); // SIM card
+    // FIXME porting
+    KABC::AddresseeList l;
+	read_phone_entries("ME", GN_MT_ME, &l ); // internal phone memory
+	read_phone_entries("SM", GN_MT_SM, &l ); // SIM card
 
 	GNOKII_DEBUG("GNOKII import filter finished.\n");
 
 	busterminate();
 	delete m_progressDlg;
+
+    // FIXME porting
+
+    KABC::AddresseeList::ConstIterator it( l.constBegin() );
+    for ( ; it != l.constEnd(); ++ it ) {
+        addrList.append( *it );
+    }
+
 
 #endif
 
@@ -611,7 +621,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 	}
 	// add E-Mails
 	QStringList emails = addr->emails();
-	for (unsigned int n=0; n<emails.count(); n++) {
+	for (int n=0; n<emails.count(); n++) {
 		if (entry.subentries_count >= GN_PHONEBOOK_SUBENTRIES_MAX_NUMBER)
 			break; // Phonebook full
 		s = emails[n].simplifyWhiteSpace();
@@ -646,7 +656,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 		a.append( Addr->region()       .replace( sem, sem_repl ) );
 		a.append( Addr->postalCode()   .replace( sem, sem_repl ) );
 		a.append( Addr->country()      .replace( sem, sem_repl ) );
-		s = a.join(sem);
+		s = a.join( QString(sem) );
 		strncpy(subentry->data.number, GN_TO(s), sizeof(subentry->data.number)-1);
 		entry.subentries_count++;
 		subentry++;

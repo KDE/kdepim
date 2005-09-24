@@ -169,10 +169,10 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
   return ok;
 }
 
-KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
+KABC::Addressee::List VCardXXPort::importContacts( const QString& ) const
 {
   QString fileName;
-  KABC::AddresseeList addrList;
+  KABC::Addressee::List addrList;
   KURL::List urls;
 
   if ( !XXPortManager::importData.isEmpty() )
@@ -238,7 +238,7 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
   return addrList;
 }
 
-KABC::AddresseeList VCardXXPort::parseVCard( const QString &data ) const
+KABC::Addressee::List VCardXXPort::parseVCard( const QString &data ) const
 {
   KABC::VCardConverter converter;
 

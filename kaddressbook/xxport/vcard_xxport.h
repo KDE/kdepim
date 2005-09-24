@@ -37,10 +37,10 @@ class VCardXXPort : public KAB::XXPort
 
   public slots:
     bool exportContacts( const KABC::AddresseeList &list, const QString &data );
-    KABC::AddresseeList importContacts( const QString &data ) const;
+    KABC::Addressee::List importContacts( const QString &data ) const;
 
   private:
-    KABC::AddresseeList parseVCard( const QString &data ) const;
+    KABC::Addressee::List parseVCard( const QString &data ) const;
     bool doExport( const KURL &url, const QString &data );
     void addKey( KABC::Addressee &addr, KABC::Key::Types type );
 

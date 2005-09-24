@@ -246,7 +246,7 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
 
     QString addrBookField = (*protocolIt)->property( "X-KDE-InstantMessagingKABCField" ).toString();
     if ( !lst.isEmpty() )
-      addr->insertCustom( addrBookField, QString::fromLatin1( "All" ), lst.join( QChar( 0xE000 ) ) );
+      addr->insertCustom( addrBookField, QString::fromLatin1( "All" ), lst.join( QString( 0xE000 ) ) );
     else
       addr->removeCustom( addrBookField, QString::fromLatin1( "All" ) );
   }

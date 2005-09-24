@@ -226,14 +226,14 @@ int MikesStyle::calcHeight( const KABC::Addressee &addr,
 
   // Determine which half of the fields is higher
   for ( int i = 0; i < numFields / 2; i++ )
-    halfHeight += fm.height() * (fieldList[ i ]->value( addr ).contains( '\n' ) + 1);
+    halfHeight += fm.height() * (fieldList[ i ]->value( addr ).count( '\n' ) + 1);
 
   height = halfHeight;
 
   // now the second half
   halfHeight = 0;
   for ( int i = numFields / 2; i < numFields; i++ )
-    halfHeight += fm.height() * (fieldList[ i ]->value( addr ).contains( '\n' ) + 1);
+    halfHeight += fm.height() * (fieldList[ i ]->value( addr ).count( '\n' ) + 1);
 
   height = QMAX( height, halfHeight );
 

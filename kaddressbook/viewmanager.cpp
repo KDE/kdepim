@@ -124,7 +124,7 @@ QStringList ViewManager::selectedUids() const
 QStringList ViewManager::selectedEmails() const
 {
   if ( mActiveView )
-    return mActiveView->selectedEmails();
+    return QStringList( mActiveView->selectedEmails() );
   else
     return QStringList();
 }

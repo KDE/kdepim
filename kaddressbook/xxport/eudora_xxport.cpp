@@ -46,7 +46,7 @@ EudoraXXPort::EudoraXXPort( KABC::AddressBook *ab, QWidget *parent, const char *
   createImportAction( i18n( "Import Eudora Addressbook..." ) );
 }
 
-KABC::AddresseeList EudoraXXPort::importContacts( const QString& ) const
+KABC::Addressee::List EudoraXXPort::importContacts( const QString& ) const
 {
   QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(),
 		"*.[tT][xX][tT]|" + i18n("Eudora Light Addressbook (*.txt)"), 0 );
@@ -64,7 +64,7 @@ KABC::AddresseeList EudoraXXPort::importContacts( const QString& ) const
 
   KABC::AddresseeList list;
 
-  while( !stream.eof() ) {
+  while( !stream.atEnd() ) {
     line = stream.readLine();
     bytesRead += line.length();
     QString tmp;
@@ -169,7 +169,7 @@ QString EudoraXXPort::comment( const QString& line ) const
 {
   int b;
   QString result;
-  uint i;
+  int i;
   b = line.findRev( '>' );
   if ( b == -1 ) {
     b = line.findRev( '\"' );
@@ -190,7 +190,6 @@ QString EudoraXXPort::get( const QString& line, const QString& key ) const
 {
   QString fd = "<" + key + ":";
   int b, e;
-  uint i;
 
   // Find formatted key, return on error
   b = line.find( fd );
@@ -204,7 +203,7 @@ QString EudoraXXPort::get( const QString& line, const QString& key ) const
 
   e--;
   QString result = line.mid( b, e - b + 1 );
-  for ( i = 0; i < result.length(); i++ ) {
+  for ( int i = 0; i < result.length(); i++ ) {
     if ( result[ i ] == CTRL_C )
       result[ i ] = '\n';
   }

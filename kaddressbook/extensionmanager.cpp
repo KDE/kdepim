@@ -54,7 +54,7 @@ ExtensionManager::~ExtensionManager()
 
 void ExtensionManager::restoreSettings()
 {
-  for ( uint index = 0; index < mExtensionList.size(); ++index ) {
+  for ( int index = 0; index < mExtensionList.size(); ++index ) {
     ExtensionData data = mExtensionList[ index ];
     if ( data.identifier == KABPrefs::instance()->currentExtension() ) {
       KToggleAction *action = static_cast<KToggleAction*>( mActionList.at( index ) );
@@ -73,7 +73,7 @@ void ExtensionManager::restoreSettings()
 void ExtensionManager::saveSettings()
 {
   KAction *action;
-  uint index = 0;
+  int index = 0;
   for ( action = mActionList.first(); action; action = mActionList.next(), index++ )
     if ( static_cast<KToggleAction*>( action )->isChecked() )
       break;

@@ -68,10 +68,10 @@ bool XXPort::exportContacts( const KABC::AddresseeList&, const QString& )
   return false;
 }
 
-KABC::AddresseeList XXPort::importContacts( const QString& ) const
+KABC::Addressee::List XXPort::importContacts( const QString& ) const
 {
   // do nothing
-  return KABC::AddresseeList();
+  return KABC::Addressee::List();
 }
 
 void XXPort::createImportAction( const QString &label, const QString &data )

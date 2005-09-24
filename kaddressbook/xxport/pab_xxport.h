@@ -37,7 +37,7 @@ class PABXXPort : public KAB::XXPort
     QString identifier() const { return "pab"; }
 
   public slots:
-    KABC::AddresseeList importContacts( const QString &data ) const;
+    KABC::Addressee::List importContacts( const QString &data ) const;
 
   private:
     void doExport( QFile *fp, const KABC::AddresseeList &list );

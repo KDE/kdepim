@@ -37,7 +37,7 @@ class OperaXXPort : public KAB::XXPort
     QString identifier() const { return "opera"; }
 
   public slots:
-    KABC::AddresseeList importContacts( const QString &data ) const;
+    KABC::Addressee::List importContacts( const QString &data ) const;
 };
 
 #endif

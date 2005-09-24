@@ -269,7 +269,7 @@ void FilterDialog::initGUI()
   connect( mFilterListBox, SIGNAL( doubleClicked ( Q3ListBoxItem * ) ),
            SLOT( edit() ) );
 
-  KButtonBox *buttonBox = new KButtonBox( page, Vertical );
+  KButtonBox *buttonBox = new KButtonBox( page, Qt::Vertical );
   buttonBox->addButton( i18n( "&Add..." ), this, SLOT( add() ) );
   mEditButton = buttonBox->addButton( i18n( "&Edit..." ), this, SLOT( edit() ) );
   mEditButton->setEnabled( false );

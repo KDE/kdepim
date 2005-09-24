@@ -28,7 +28,8 @@
 #include <qdatetime.h>
 #include <qlabel.h>
 #include <qpainter.h>
-#include <qstyle.h>
+#include <QStyle>
+#include <QStyleOption>
 #include <qtimer.h>
 #include <qtooltip.h>
 //Added by qt3to4:
@@ -324,10 +325,14 @@ void CardViewItem::paintCard( QPainter *p, QColorGroup &cg )
 
   // if we are the current item and the view has focus, draw focus rect
   if ( mView->currentItem() == this && mView->hasFocus() ) {
-    mView->style().drawPrimitive( QStyle::PE_FocusRect, p,
+
+    QStyleOption opt;
+    /* FIXME port me properly
         QRect( 0, 0, mView->itemWidth(), h + (2 * mg) ), cg,
-        QStyle::Style_FocusAtBorder,
+        QStyle::State_FocusAtBorder,
         QStyleOption( isSelected() ? cg.highlight() : cg.base() ) );
+    */
+    mView->style()->drawPrimitive( QStyle::PE_FrameFocusRect, &opt, p, 0 );
   }
 }
 
@@ -363,7 +368,7 @@ int CardViewItem::height( bool allowCache ) const
   for ( iter.toFirst(); iter.current(); ++iter ) {
     if ( !sef && (*iter)->second.isEmpty() )
       continue;
-    lines = QMIN( (*iter)->second.contains( '\n' ) + 1, maxLines );
+    lines = QMIN( (*iter)->second.count( '\n' ) + 1, maxLines );
     fieldHeight += ( lines * fh ) + 2;
   }
 
@@ -515,7 +520,7 @@ void CardViewItem::showFullString( const QPoint &itempos, CardViewTip *tip )
     Field *_f;
     for ( _f = d->mFieldList.first(); _f != f; _f = d->mFieldList.next() )
       if ( se || ! _f->second.isEmpty() )
-        y += ( QMIN( _f->second.contains( '\n' ) + 1, maxLines ) * fh ) + 2;
+        y += ( QMIN( _f->second.count( '\n' ) + 1, maxLines ) * fh ) + 2;
 
     if ( isLabel && itempos.y() > y + fh )
       return;
@@ -529,7 +534,7 @@ void CardViewItem::showFullString( const QPoint &itempos, CardViewTip *tip )
       trimmed = mView->d->mFm->width( s ) > mw - colonWidth;
     } else {
       QRect r( mView->d->mFm->boundingRect( 0, 0, INT_MAX, INT_MAX, Qt::AlignTop|Qt::AlignLeft, s ) );
-      trimmed = r.width() > mw || r.height() / fh >  QMIN( s.contains( '\n' ) + 1, maxLines );
+      trimmed = r.width() > mw || r.height() / fh >  QMIN( s.count( '\n' ) + 1, maxLines );
     }
   }
 
@@ -568,7 +573,7 @@ CardViewItem::Field *CardViewItem::fieldAt( const QPoint & itempos ) const
   Field *f;
   for ( f = d->mFieldList.first(); f; f = d->mFieldList.next() ) {
     if ( showEmpty || !f->second.isEmpty() )
-      ypos += (QMIN( f->second.contains( '\n' )+1, maxLines ) * fh) + 2;
+      ypos += (QMIN( f->second.count( '\n' )+1, maxLines ) * fh) + 2;
     if ( iy <= ypos )
       break;
   }
@@ -595,12 +600,12 @@ CardView::CardView( QWidget *parent, const char *name )
 
   viewport()->setMouseTracking( true );
   viewport()->setFocusProxy( this );
-  viewport()->setFocusPolicy( WheelFocus );
-  viewport()->setBackgroundMode( PaletteBase );
+  viewport()->setFocusPolicy( Qt::WheelFocus );
+  viewport()->setBackgroundMode( Qt::PaletteBase );
 
   connect( d->mTimer, SIGNAL( timeout() ), this, SLOT( tryShowFullText() ) );
 
-  setBackgroundMode( PaletteBackground, PaletteBase );
+  setBackgroundMode( Qt::PaletteBackground, Qt::PaletteBase );
 
   // no reason for a vertical scrollbar
   setVScrollBarMode( AlwaysOff );
@@ -813,7 +818,7 @@ int CardView::childCount() const
 }
 
 CardViewItem *CardView::findItem( const QString &text, const QString &label,
-                                  Qt::StringComparisonMode compare ) const
+                                  Q3ListBox::StringComparisonMode compare ) const
 {
   // If the text is empty, we will return null, since empty text will
   // match anything!
@@ -821,7 +826,7 @@ CardViewItem *CardView::findItem( const QString &text, const QString &label,
     return 0;
 
   Q3PtrListIterator<CardViewItem> iter( d->mItemList );
-  if ( compare & Qt::BeginsWith ) {
+  if ( compare & Q3ListBox::BeginsWith ) {
     QString value;
     for ( iter.toFirst(); iter.current(); ++iter ) {
       value = (*iter)->fieldValue( label ).upper();
@@ -1070,7 +1075,7 @@ void CardView::contentsMousePressEvent( QMouseEvent *e )
 
       bool s = !item->isSelected();
 
-      if ( s && !(e->state() & ControlButton) ) {
+      if ( s && !(e->state() & Qt::ControlButton) ) {
         bool b = signalsBlocked();
         blockSignals( true );
         selectAll( false );
@@ -1182,10 +1187,10 @@ void CardView::contentsMouseMoveEvent( QMouseEvent *e )
     int colw = colcontentw + d->mSepWidth;
     int m = e->x() % colw;
     if ( m >= colcontentw && m > 0 ) {
-      setCursor( SplitHCursor );
+      setCursor( Qt::SplitHCursor );
       d->mOnSeparator = true;
     } else {
-      setCursor( ArrowCursor );
+      setCursor( Qt::ArrowCursor );
       d->mOnSeparator = false;
     }
   }
@@ -1201,7 +1206,7 @@ void CardView::leaveEvent( QEvent* )
   d->mTimer->stop();
   if ( d->mOnSeparator ) {
     d->mOnSeparator = false;
-    setCursor( ArrowCursor );
+    setCursor( Qt::ArrowCursor );
   }
 }
 
@@ -1231,19 +1236,19 @@ void CardView::keyPressEvent( QKeyEvent *e )
   CardViewItem *old = d->mCurrentItem;
 
   switch ( e->key() ) {
-    case Key_Up:
+    case Qt::Key_Up:
       if ( pos > 0 ) {
         aItem = d->mItemList.at( pos - 1 );
         setCurrentItem( aItem );
       }
       break;
-    case Key_Down:
+    case Qt::Key_Down:
       if ( pos < d->mItemList.count() - 1 ) {
         aItem = d->mItemList.at( pos + 1 );
         setCurrentItem( aItem );
       }
       break;
-    case Key_Left:
+    case Qt::Key_Left:
     {
       // look for an item in the previous/next column, starting from
       // the vertical middle of the current item.
@@ -1261,7 +1266,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
 
       break;
     }
-    case Key_Right:
+    case Qt::Key_Right:
     {
       // FIXME use nice calculated measures!!!
       QPoint aPoint( d->mCurrentItem->d->x + d->mItemWidth, d->mCurrentItem->d->y );
@@ -1276,15 +1281,15 @@ void CardView::keyPressEvent( QKeyEvent *e )
 
       break;
     }
-    case Key_Home:
+    case Qt::Key_Home:
       aItem = d->mItemList.first();
       setCurrentItem( aItem );
       break;
-    case Key_End:
+    case Qt::Key_End:
       aItem = d->mItemList.last();
       setCurrentItem( aItem );
       break;
-    case Key_Prior: // PageUp
+    case Qt::Key_Prior: // PageUp
     {
       // QListView: "Make the item above the top visible and current"
       // TODO if contentsY(), pick the top item of the leftmost visible column
@@ -1298,7 +1303,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
 
       break;
     }
-    case Key_Next:  // PageDown
+    case Qt::Key_Next:  // PageDown
     {
       // QListView: "Make the item below the bottom visible and current"
       // find the first not fully visible column.
@@ -1321,7 +1326,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
 
       break;
     }
-    case Key_Space:
+    case Qt::Key_Space:
       setSelected( d->mCurrentItem, !d->mCurrentItem->isSelected() );
       emit selectionChanged();
       break;
@@ -1335,7 +1340,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
                                  itemRect(d->mCurrentItem).center() ) );
       break;
     default:
-      if ( (e->state() & ControlButton) && e->key() == Key_A ) {
+      if ( (e->state() & Qt::ControlButton) && e->key() == Qt::Key_A ) {
         // select all
         selectAll( true );
         break;
@@ -1348,7 +1353,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
   // handle selection
   if ( aItem ) {
     if ( d->mSelectionMode == CardView::Extended ) {
-      if ( e->state() & ShiftButton ) {
+      if ( e->state() & Qt::ShiftButton ) {
         // shift button: toggle range
         // if control button is pressed, leave all items
         // and toggle selection current->old current
@@ -1375,7 +1380,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
         }
 
         emit selectionChanged();
-      } else if ( e->state() & ControlButton ) {
+      } else if ( e->state() & Qt::ControlButton ) {
         // control button: do nothing
       } else {
         // no button: move selection to this item
@@ -1486,9 +1491,10 @@ void CardView::drawRubberBands( int pos )
   int h = visibleHeight();
 
   QPainter p( viewport() );
-  p.setRasterOp( XorROP );
-  p.setPen( gray );
-  p.setBrush( gray );
+  // FIXME porting 
+  //p.setRasterOp( XorROP );
+  p.setPen( Qt::gray );
+  p.setBrush( Qt::gray );
   uint n = d->mFirst;
   // erase
   if ( d->mRubberBandAnchor )

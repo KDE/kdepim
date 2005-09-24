@@ -137,7 +137,7 @@ KABC::AddresseeList XXPortSelectDialog::contacts()
 
   if ( mUseSorting ) {
     list.setReverseSorting( mSortTypeCombo->currentItem() == 1 );
-    uint pos = mFieldCombo->currentItem();
+    int pos = mFieldCombo->currentItem();
     if ( pos < mFields.count() )
       list.sortByField( mFields[ pos ] );
   }

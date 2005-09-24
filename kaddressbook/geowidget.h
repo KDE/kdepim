@@ -27,7 +27,6 @@
 #include <kdialogbase.h>
 
 #include "contacteditorwidget.h"
-//Added by qt3to4:
 #include <QMouseEvent>
 #include <QLabel>
 #include <QPaintEvent>
@@ -39,7 +38,7 @@ class Geo;
 class GeoMapWidget;
 
 class KComboBox;
-class KDoubleSpinBox;
+class QDoubleSpinBox;
 
 class QCheckBox;
 class QLabel;
@@ -69,8 +68,8 @@ class GeoWidget : public KAB::ContactEditorWidget
     void editGeoData();
 
   private:
-    KDoubleSpinBox *mLatitudeBox;
-    KDoubleSpinBox *mLongitudeBox;
+    QDoubleSpinBox *mLatitudeBox;
+    QDoubleSpinBox *mLongitudeBox;
 
     QCheckBox *mGeoIsValid;
     QPushButton *mExtendedButton;

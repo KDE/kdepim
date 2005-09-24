@@ -27,7 +27,8 @@
 #include <qlayout.h>
 #include <qpushbutton.h>
 #include <qstring.h>
-#include <qstyle.h>
+#include <QStyle>
+#include <QStyleOption>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <Q3Frame>
@@ -81,7 +82,8 @@ JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name
   mGroupBox->setExclusive( true );
   mGroupBox->layout()->setSpacing( 0 );
   mGroupBox->layout()->setMargin( 0 );
-  mGroupBox->setFrameStyle( Q3Frame::NoFrame );
+  // FIXME port me
+  //mGroupBox->setFrameStyle( Q3Frame::NoFrame );
 }
 
 JumpButtonBar::~JumpButtonBar()
@@ -109,13 +111,14 @@ void JumpButtonBar::updateButtons()
   QFontMetrics fm = fontMetrics();
   QPushButton *btn = new QPushButton( "", this );
   btn->hide();
-  QSize buttonSize = style().sizeFromContents( QStyle::CT_PushButton, btn,
-                     fm.size( ShowPrefix, "X - X") ).
-                     expandedTo( QApplication::globalStrut() );
+  QStyleOption opt;
+  QSize buttonSize = style()->sizeFromContents( QStyle::CT_PushButton, &opt,
+                     fm.size( Qt::ShowPrefix, "X - X").expandedTo( QApplication::globalStrut() ),
+                     btn );
   delete btn;
 
   int buttonHeight = buttonSize.height() + 8;
-  uint possibleButtons = (height() / buttonHeight) - 1;
+  int possibleButtons = (height() / buttonHeight) - 1;
 
   QString character;
   KABC::AddressBook *ab = mCore->addressBook();
@@ -140,7 +143,7 @@ void JumpButtonBar::updateButtons()
 
   if ( characters.count() <= possibleButtons ) {
     // at first the easy case: all buttons fits in window
-    for ( uint i = 0; i < characters.count(); ++i ) {
+    for ( int i = 0; i < characters.count(); ++i ) {
       JumpButton *button = new JumpButton( characters[ i ], QString::null,
                                            mGroupBox );
       connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
@@ -156,7 +159,7 @@ void JumpButtonBar::updateButtons()
       offset++;
 
     int current = 0;
-    for ( uint i = 0; i < possibleButtons; ++i ) {
+    for ( int i = 0; i < possibleButtons; ++i ) {
       if ( characters.count() - current == 0 )
         continue;
       if ( characters.count() - current <= possibleButtons - i ) {
@@ -210,7 +213,7 @@ class SortContainer
     {
     }
 
-    bool operator< ( const SortContainer &cnt )
+    bool operator< ( const SortContainer &cnt ) const
     {
       return ( QString::localeAwareCompare( mString, cnt.mString ) < 0 );
     }
@@ -226,16 +229,16 @@ class SortContainer
 
 void JumpButtonBar::sortListLocaleAware( QStringList &list )
 {
-  Q3ValueList<SortContainer> sortList;
+  QList<SortContainer> sortList;
 
   QStringList::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
     sortList.append( SortContainer( *it ) );
 
-  qHeapSort( sortList );
+  qSort( sortList.begin(), sortList.end() );
   list.clear();
 
-  Q3ValueList<SortContainer>::ConstIterator sortIt;
+  QList<SortContainer>::ConstIterator sortIt;
   for ( sortIt = sortList.begin(); sortIt != sortList.end(); ++sortIt )
     list.append( (*sortIt).data() );
 }

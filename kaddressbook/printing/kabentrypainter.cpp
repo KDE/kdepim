@@ -24,8 +24,6 @@
 
 #include <q3paintdevicemetrics.h>
 #include <qpainter.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -175,8 +173,8 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
 
   // this is used to prepare some fields for printing and decide about
   // the layout later:
-  Q3ValueList<QStringList> parts;
-  Q3ValueList<QRectList*> contents;
+  QList<QStringList> parts;
+  QList<QRectList*> contents;
 
   mEmailRects.clear();
   mPhoneRects.clear();
@@ -305,8 +303,8 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
                      QRect( Width / 2, y, Width / 2, Height ) };
   int heights[ 4 ]= { 0, 0, 0, 0 };
 
-  Q3ValueList<QStringList>::iterator pos = parts.begin();
-  Q3ValueList<QRectList*>::iterator rpos = contents.begin();
+  QList<QStringList>::iterator pos = parts.begin();
+  QList<QRectList*>::iterator rpos = contents.begin();
 
   for ( int counter = 0; counter < parts.count(); ++counter ) {
     const int Offset = counter > 1 ? QMAX( heights[ 0 ], heights[ 1 ] ) : 0;
@@ -318,31 +316,31 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
                                     limits[ counter ].top() + heights[counter]
                                     + Offset, limits[ counter ].width(),
                                     limits[ counter ].height(),
-                                    Qt::AlignTop | Qt::AlignLeft, *list.at( 0 ) );
+                                    Qt::AlignTop | Qt::AlignLeft, list.at( 0 ) );
     } else {
       painter->drawText( limits[ counter ].left(), limits[ counter ].top() +
                          heights[ counter ] + Offset, limits[ counter ].width(),
                          limits[ counter ].height(), Qt::AlignTop | Qt::AlignLeft,
-                         *list.at( 0 ), -1, &rect );
+                         list.at( 0 ), -1, &rect );
     }
 
     heights[ counter ] += rect.height();
 
     // paint the other elements at Ruler1:
     painter->setFont( mFixedFont );
-    for ( uint c2 = 1; c2 < list.count(); ++c2 ) {
+    for ( int c2 = 1; c2 < list.count(); ++c2 ) {
       // TODO: implement proper line breaking!
       if ( fake ) {
         rect = painter->boundingRect ( limits[ counter ].left() + Ruler1,
                                        limits[ counter ].top() + heights[ counter ]
                                        + Offset, limits[ counter ].width() - Ruler1,
                                        limits[ counter ].height(), Qt::AlignTop | Qt::AlignLeft,
-                                       *list.at( c2 ) );
+                                       list.at( c2 ) );
       } else {
         painter->drawText( limits[ counter ].left() + Ruler1, limits[ counter ].top()
                            + heights[ counter ] + Offset, limits[ counter ].width()
                            - Ruler1, limits[ counter ].height(), Qt::AlignTop | Qt::AlignLeft,
-                           *list.at( c2 ), -1, &rect );
+                           list.at( c2 ), -1, &rect );
       }
       (*rpos)->push_back( rect );
       heights[ counter ] += rect.height();

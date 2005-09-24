@@ -186,12 +186,12 @@
                                 <set>AlignVCenter|AlignRight</set>
                             </property>
                         </widget>
-                        <widget class="KIntSpinBox" row="3" column="3">
+                        <widget class="QSpinBox" row="3" column="3">
                             <property name="name">
                                 <cstring>kisbDetailsFontSize</cstring>
                             </property>
                         </widget>
-                        <widget class="KIntSpinBox" row="4" column="3">
+                        <widget class="QSpinBox" row="4" column="3">
                             <property name="name">
                                 <cstring>kisbFixedFontSize</cstring>
                             </property>
@@ -289,7 +289,7 @@
                                 <set>AlignVCenter|AlignRight</set>
                             </property>
                         </widget>
-                        <widget class="KIntSpinBox" row="2" column="3">
+                        <widget class="QSpinBox" row="2" column="3">
                             <property name="name">
                                 <cstring>kisbBodyFontSize</cstring>
                             </property>
@@ -305,12 +305,12 @@
                                 <set>AlignVCenter|AlignRight</set>
                             </property>
                         </widget>
-                        <widget class="KIntSpinBox" row="0" column="3">
+                        <widget class="QSpinBox" row="0" column="3">
                             <property name="name">
                                 <cstring>kisbHeaderFontSize</cstring>
                             </property>
                         </widget>
-                        <widget class="KIntSpinBox" row="1" column="3">
+                        <widget class="QSpinBox" row="1" column="3">
                             <property name="name">
                                 <cstring>kisbHeadlineFontSize</cstring>
                             </property>
