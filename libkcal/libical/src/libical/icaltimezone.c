@@ -305,7 +305,7 @@ icaltimezone_get_location_from_vtimezone (icalcomponent *component)
     prop = icalcomponent_get_first_property (component, ICAL_X_PROPERTY);
     while (prop) {
 	name = icalproperty_get_x_name (prop);
-	if (name && !strcmp (name, "X-LIC-LOCATION")) {
+	if (name && !strcasecmp (name, "X-LIC-LOCATION")) {
 	    location = icalproperty_get_x (prop);
 	    if (location)
 		return strdup (location);

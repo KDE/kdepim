@@ -200,7 +200,7 @@ int icalproperty_string_to_enum(const char* str)
     }
 
     for (i=ICALPROPERTY_FIRST_ENUM; i != ICALPROPERTY_LAST_ENUM; i++) {
-	if ( strcmp(enum_map[i-ICALPROPERTY_FIRST_ENUM].str, str) == 0) {
+	if ( strcasecmp(enum_map[i-ICALPROPERTY_FIRST_ENUM].str, str) == 0) {
 	    return enum_map[i-ICALPROPERTY_FIRST_ENUM].prop_enum;
 	}
     }

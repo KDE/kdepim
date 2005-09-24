@@ -88,7 +88,7 @@ icalvalue_kind icalvalue_string_to_kind(const char* str)
     int i;
 
     for (i=0; value_map[i].kind != ICAL_NO_VALUE; i++) {
-	if (strcmp(value_map[i].name,str) == 0) {
+	if (strcasecmp(value_map[i].name,str) == 0) {
 	    return value_map[i].kind;
 	}
     }
