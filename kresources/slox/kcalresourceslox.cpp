@@ -153,10 +153,9 @@ bool KCalResourceSlox::doLoad()
   kdDebug() << "KCalResourceSlox::load() " << long( this ) << endl;
 
   if ( mLoadEventsJob || mLoadTodosJob ) {
-    kdWarning() << "KCalResourceSlox::load(): download still in progress."
+    kdDebug() << "KCalResourceSlox::load(): download still in progress."
                 << endl;
-    loadError( "Download still in progress." );
-    return false;
+    return true;
   }
   if ( mUploadJob ) {
     kdWarning() << "KCalResourceSlox::load(): upload still in progress."

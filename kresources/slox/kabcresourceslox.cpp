@@ -173,9 +173,9 @@ bool ResourceSlox::asyncLoad()
   kdDebug() << "KABC::ResourceSlox::asyncLoad()" << endl;
 
   if ( mDownloadJob ) {
-    kdWarning() << "KABC::ResourceSlox::asyncLoad(): Loading still in progress."
+    kdDebug() << "KABC::ResourceSlox::asyncLoad(): Loading still in progress."
                 << endl;
-    return false;
+    return true;
   }
 
   loadCache();
