@@ -58,7 +58,7 @@ int main( int argc, char **argv )
   QString output = QFile::decodeName( args->arg( 1 ) );
 
   QFileInfo outputFileInfo( output );
-  output = outputFileInfo.absFilePath();
+  output = outputFileInfo.absoluteFilePath();
 
   kdDebug(5800) << "Input file: " << input << endl;
   kdDebug(5800) << "Output file: " << output << endl;
