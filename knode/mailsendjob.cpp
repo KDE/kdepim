@@ -49,11 +49,7 @@ void KNode::MailSendJob::execute()
   // create job
   KIO::Job* job = KIO::storedPut( art->encodedContent( true ), destination, -1, false, false, false );
   connect( job, SIGNAL( result(KIO::Job*) ), SLOT( slotResult(KIO::Job*) ) );
-  if ( account()->encryption() == KNServerInfo::TLS )
-    job->addMetaData( "TLS", "on" );
-  else
-    job->addMetaData( "TLS", "off" );
-  setJob( job );
+  setupKIOJob( job );
 }
 
 void KNode::MailSendJob::slotResult( KIO::Job * job )

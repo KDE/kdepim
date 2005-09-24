@@ -107,10 +107,16 @@ void KNJobData::emitFinished()
   QTimer::singleShot( 0, this, SLOT(slotEmitFinished()) );
 }
 
-void KNJobData::setJob( KIO::Job *job )
+void KNJobData::setupKIOJob( KIO::Job *job )
 {
   mJob = job;
   if ( job ) {
+    if ( account() ) {
+      if ( account()->encryption() == KNServerInfo::TLS )
+        job->addMetaData( "tls", "on" );
+      else
+        job->addMetaData( "tls", "off" );
+    }
     connect( job, SIGNAL( percent(KIO::Job*, unsigned long) ),
              SLOT( slotJobPercent(KIO::Job*, unsigned long) ) );
     connect( job, SIGNAL( infoMessage(KIO::Job*, const QString&) ),

@@ -80,9 +80,7 @@ class KNJobData : public QObject
 
     enum jobType {  JTLoadGroups=1,
                     JTFetchGroups,
-                    JTCheckNewGroups,
                     JTfetchNewHeaders,
-                    JTsilentFetchNewHeaders,
                     JTfetchArticle,
                     JTpostArticle,
                     JTmail,
@@ -93,7 +91,6 @@ class KNJobData : public QObject
 
     jobType type() const                  { return t_ype; }
 
-    bool net() const                      { return (t_ype!=JTLoadGroups); }
     KNServerInfo* account() const         { return a_ccount; }
     KNJobItem* data() const               { return d_ata; }
 
@@ -110,12 +107,11 @@ class KNJobData : public QObject
     void notifyConsumer();
 
     /** Performs the actual operation of a job, needs to be reimplemented for every job. */
-    virtual void execute() { emitFinished(); }
+    virtual void execute() = 0;
 
-    KIO::Job* job() const                { return mJob; }
-    void setJob( KIO::Job *job );
-
+    /** Returns the progress item for this job. */
     KPIM::ProgressItem* progressItem() const { return mProgressItem; }
+    /** Creates a KPIM::ProgressItem for this job. */
     void createProgressItem();
 
     // safe forwards to the progress item
@@ -138,6 +134,11 @@ class KNJobData : public QObject
      */
     KURL baseUrl() const;
 
+    /** Sets TLS metadata and connects the given KIO job to the progress item.
+     *  @param job The KIO job to setup.
+     */
+    void setupKIOJob( KIO::Job *job );
+
   protected:
     jobType t_ype;
     KNJobItem *d_ata;
@@ -146,15 +147,13 @@ class KNJobData : public QObject
     bool c_anceled;
     bool a_uthError;
     KNJobConsumer *c_onsumer;
+    KIO::Job *mJob;
+    KPIM::ProgressItem *mProgressItem;
 
   private slots:
     void slotJobPercent( KIO::Job *job, unsigned long percent );
     void slotJobInfoMessage( KIO::Job *job, const QString &msg );
     void slotEmitFinished();
-
-  private:
-    KIO::Job *mJob;
-    KPIM::ProgressItem *mProgressItem;
 
 };
 

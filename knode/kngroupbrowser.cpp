@@ -147,7 +147,6 @@ KNGroupBrowser::~KNGroupBrowser()
 
   knGlobals.netAccess()->stopJobsNntp(KNJobData::JTLoadGroups);
   knGlobals.netAccess()->stopJobsNntp(KNJobData::JTFetchGroups);
-  knGlobals.netAccess()->stopJobsNntp(KNJobData::JTCheckNewGroups);
 
   delete matchList;
   delete allList;

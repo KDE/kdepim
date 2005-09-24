@@ -24,11 +24,11 @@ class KNGroupInfo;
 namespace KNode {
 
 /** Download and update newsgroups lists */
-class GroupFetchJob : public KNJobData
+class GroupListJob : public KNJobData
 {
   Q_OBJECT
   public:
-    GroupFetchJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
+    GroupListJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i, bool incremental = false );
 
     virtual void execute();
 
@@ -38,15 +38,7 @@ class GroupFetchJob : public KNJobData
 
   private:
     Q3SortedList<KNGroupInfo> mGroupList;
-};
-
-
-
-/** Update newsgroup list (convenience wrapper for GroupFetchJob). */
-class GroupUpdateJob : public GroupFetchJob
-{
-  public:
-    GroupUpdateJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
+    bool mIncremental;
 };
 
 
@@ -69,9 +61,11 @@ class ArticleListJob : public KNJobData
 {
   Q_OBJECT
   public:
-    ArticleListJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
+    ArticleListJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i, bool silent = false );
 
     virtual void execute();
+    /** Returns wether an error message should be shown. */
+    bool silent() { return mSilent; }
 
   private slots:
     void slotEntries( KIO::Job *job, const KIO::UDSEntryList &list );
@@ -79,6 +73,7 @@ class ArticleListJob : public KNJobData
 
   private:
     KIO::UDSEntryList mArticleList;
+    bool mSilent;
 };
 
 

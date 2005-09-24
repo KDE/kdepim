@@ -577,7 +577,7 @@ void KNGroupManager::checkAll(KNNntpAccount *a, bool silent)
     if ( (*it)->account() == a ) {
       (*it)->setMaxFetch( knGlobals.configManager()->readNewsGeneral()->maxToFetch() );
       if ( silent )
-        emitJob( new KNJobData(KNJobData::JTsilentFetchNewHeaders, this, (*it)->account(), (*it) ) );
+        emitJob( new ArticleListJob( this, (*it)->account(), (*it), true ) );
       else
         emitJob( new ArticleListJob( this, (*it)->account(), (*it) ) );
     }
@@ -587,12 +587,12 @@ void KNGroupManager::checkAll(KNNntpAccount *a, bool silent)
 
 void KNGroupManager::processJob(KNJobData *j)
 {
-  if((j->type()==KNJobData::JTLoadGroups)||(j->type()==KNJobData::JTFetchGroups)||(j->type()==KNJobData::JTCheckNewGroups)) {
+  if ( j->type()==KNJobData::JTLoadGroups || j->type()==KNJobData::JTFetchGroups ) {
     KNGroupListData *d=static_cast<KNGroupListData*>(j->data());
 
     if (!j->canceled()) {
       if (j->success()) {
-        if ((j->type()==KNJobData::JTFetchGroups)||(j->type()==KNJobData::JTCheckNewGroups)) {
+        if ( j->type() == KNJobData::JTFetchGroups ) {
           // update the descriptions of the subscribed groups
           for ( Q3ValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
             if ( (*it)->account() == j->account() ) {
@@ -617,7 +617,7 @@ void KNGroupManager::processJob(KNJobData *j)
     delete d;
 
 
-  } else {               //KNJobData::JTfetchNewHeaders or KNJobData::JTsilentFetchNewHeaders
+  } else {               //KNJobData::JTfetchNewHeaders
     KNGroup *group=static_cast<KNGroup*>(j->data());
 
     if (!j->canceled()) {
@@ -634,8 +634,8 @@ void KNGroupManager::processJob(KNJobData *j)
         // stop all other active fetch jobs, this prevents that
         // we show multiple error dialogs if a server is unavailable
         knGlobals.netAccess()->stopJobsNntp(KNJobData::JTfetchNewHeaders);
-        knGlobals.netAccess()->stopJobsNntp(KNJobData::JTsilentFetchNewHeaders);
-        if(!(j->type()==KNJobData::JTsilentFetchNewHeaders)) {
+        ArticleListJob *lj = static_cast<ArticleListJob*>( j );
+        if ( !lj->silent() ) {
           KMessageBox::error(knGlobals.topWidget, j->errorString());
         }
       }
@@ -682,7 +682,7 @@ void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
   d->getDescriptions = a->fetchDescriptions();
   d->codecForDescriptions=KGlobal::charsets()->codecForName(knGlobals.configManager()->postNewsTechnical()->charset());
 
-  emitJob( new GroupFetchJob( this, a, d ) );
+  emitJob( new GroupListJob( this, a, d ) );
 }
 
 
@@ -696,7 +696,7 @@ void KNGroupManager::slotCheckForNewGroups(KNNntpAccount *a, QDate date)
   d->fetchSince = date;
   d->codecForDescriptions=KGlobal::charsets()->codecForName(knGlobals.configManager()->postNewsTechnical()->charset());
 
-  emitJob( new GroupUpdateJob( this, a, d ) );
+  emitJob( new GroupListJob( this, a, d, true ) );
 }
 
 

@@ -21,12 +21,13 @@
 
 #include <QDir>
 
-KNode::GroupFetchJob::GroupFetchJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
-  KNJobData( KNJobData::JTFetchGroups, c, a, i )
+KNode::GroupListJob::GroupListJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i, bool incremental ) :
+  KNJobData( KNJobData::JTFetchGroups, c, a, i ),
+  mIncremental( incremental )
 {
 }
 
-void KNode::GroupFetchJob::execute()
+void KNode::GroupListJob::execute()
 {
   KNGroupListData *target = static_cast<KNGroupListData *>( data() );
 
@@ -34,7 +35,7 @@ void KNode::GroupFetchJob::execute()
   QStringList query;
   if ( target->getDescriptions )
     query << "desc=true";
-  if ( type() == JTCheckNewGroups )
+  if ( mIncremental )
     query << QString( "since=%1%2%3 000000" )
         .arg( target->fetchSince.year() % 100, 2, 10, QChar( '0' ) )
         .arg( target->fetchSince.month(), 2, 10, QChar( '0' ) )
@@ -45,14 +46,10 @@ void KNode::GroupFetchJob::execute()
            SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)) );
   connect( job, SIGNAL( result(KIO::Job*) ),
            SLOT( slotResult(KIO::Job*) ) );
-  if ( account()->encryption() == KNServerInfo::TLS )
-    job->addMetaData( "TLS", "on" );
-  else
-    job->addMetaData( "TLS", "off" );
-  setJob( job );
+  setupKIOJob( job );
 }
 
-void KNode::GroupFetchJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList & list )
+void KNode::GroupListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList & list )
 {
    KNGroupListData *target = static_cast<KNGroupListData *>( data() );
 
@@ -84,14 +81,14 @@ void KNode::GroupFetchJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList 
     } else {
       subscribed = false;
     }
-    if ( type() == JTCheckNewGroups )
+    if ( mIncremental )
       mGroupList.append( new KNGroupInfo( name, desc, true, subscribed, access ) );
     else
       target->groups->append( new KNGroupInfo( name, desc, false, subscribed, access ) );
   }
 }
 
-void KNode::GroupFetchJob::slotResult( KIO::Job * job )
+void KNode::GroupListJob::slotResult( KIO::Job * job )
 {
   if ( job->error() )
     setErrorString( job->errorString() );
@@ -99,7 +96,7 @@ void KNode::GroupFetchJob::slotResult( KIO::Job * job )
     KNGroupListData *target = static_cast<KNGroupListData *>( data() );
 
     // TODO: use thread weaver here?
-    if ( type() == JTCheckNewGroups ) {
+    if ( mIncremental ) {
       setStatus( i18n("Loading group list from disk...") );
       if ( !target->readIn() ) {
         setErrorString( i18n("Unable to read the group list file") );
@@ -115,14 +112,6 @@ void KNode::GroupFetchJob::slotResult( KIO::Job * job )
   }
 
   emitFinished();
-}
-
-
-
-KNode::GroupUpdateJob::GroupUpdateJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
-  KNode::GroupFetchJob( c, a, i )
-{
-  t_ype = JTCheckNewGroups;
 }
 
 
@@ -146,8 +135,9 @@ void KNode::GroupLoadJob::execute( )
 
 
 
-KNode::ArticleListJob::ArticleListJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
-    KNJobData( JTfetchNewHeaders, c, a, i )
+KNode::ArticleListJob::ArticleListJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i, bool silent ) :
+    KNJobData( JTfetchNewHeaders, c, a, i ),
+    mSilent( silent )
 {
 }
 
@@ -167,11 +157,7 @@ void KNode::ArticleListJob::execute()
            SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)) );
   connect( job, SIGNAL( result(KIO::Job*) ),
            SLOT( slotResult(KIO::Job*) ) );
-  if ( account()->encryption() == KNServerInfo::TLS )
-    job->addMetaData( "TLS", "on" );
-  else
-    job->addMetaData( "TLS", "off" );
-  setJob( job );
+  setupKIOJob( job );
 }
 
 void KNode::ArticleListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList & list )
@@ -186,6 +172,7 @@ void KNode::ArticleListJob::slotResult( KIO::Job * job )
   else {
     KNGroup* target = static_cast<KNGroup*>( data() );
 
+    setStatus( i18n("Sorting...") );
     target->insortNewHeaders( mArticleList );
 
     int lastSerNum = 0;
@@ -216,11 +203,7 @@ void KNode::ArticleFetchJob::execute()
 
   KIO::Job* job = KIO::storedGet( url, false, false );
   connect( job, SIGNAL( result(KIO::Job*) ), SLOT( slotResult(KIO::Job*) ) );
-  if ( account()->encryption() == KNServerInfo::TLS )
-    job->addMetaData( "TLS", "on" );
-  else
-    job->addMetaData( "TLS", "off" );
-  setJob( job );
+  setupKIOJob( job );
 }
 
 void KNode::ArticleFetchJob::slotResult( KIO::Job * job )
@@ -254,11 +237,7 @@ void KNode::ArticlePostJob::execute( )
 
   KIO::Job* job = KIO::storedPut( target->encodedContent( true ), url, -1, true, false, false );
   connect( job, SIGNAL( result(KIO::Job*) ), SLOT( slotResult(KIO::Job*) ) );
-  if ( account()->encryption() == KNServerInfo::TLS )
-    job->addMetaData( "TLS", "on" );
-  else
-    job->addMetaData( "TLS", "off" );
-  setJob( job );
+  setupKIOJob( job );
 }
 
 void KNode::ArticlePostJob::slotResult( KIO::Job * job )

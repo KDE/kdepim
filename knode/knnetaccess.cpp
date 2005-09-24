@@ -122,10 +122,10 @@ void KNNetAccess::addJob(KNJobData *job)
 
     // avoid duplicate fetchNewHeader jobs...
     bool duplicate = false;
-    if ( job->type() == KNJobData::JTfetchNewHeaders || job->type() == KNJobData::JTsilentFetchNewHeaders ) {
+    if ( job->type() == KNJobData::JTfetchNewHeaders ) {
       Q3ValueList<KNJobData*>::ConstIterator it;
       for ( it = nntpJobQueue.begin(); it != nntpJobQueue.end(); ++it ) {
-        if ( ( (*it)->type() == KNJobData::JTfetchNewHeaders || (*it)->type() == KNJobData::JTsilentFetchNewHeaders )
+        if ( ( (*it)->type() == KNJobData::JTfetchNewHeaders )
           && (*it)->data() == job->data() ) // job works on the same group...
           duplicate = true;
       }
@@ -134,7 +134,6 @@ void KNNetAccess::addJob(KNJobData *job)
     if (!duplicate) {
       // give a lower priority to fetchNewHeaders and postArticle jobs
       if ( job->type() == KNJobData::JTfetchNewHeaders
-           || job->type() == KNJobData::JTsilentFetchNewHeaders
            || job->type() == KNJobData::JTpostArticle ) {
         nntpJobQueue.append( job );
       } else {
