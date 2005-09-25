@@ -32,7 +32,7 @@
 #include "knnntpaccount.h"
 #include "knprotocolclient.h"
 #include "kncleanup.h"
-#include "knnetaccess.h"
+#include "scheduler.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "nntpjobs.h"
@@ -633,7 +633,7 @@ void KNGroupManager::processJob(KNJobData *j)
         // ok, hack (?):
         // stop all other active fetch jobs, this prevents that
         // we show multiple error dialogs if a server is unavailable
-        knGlobals.netAccess()->stopJobsNntp(KNJobData::JTfetchNewHeaders);
+        knGlobals.scheduler()->cancelJobs( KNJobData::JTfetchNewHeaders );
         ArticleListJob *lj = static_cast<ArticleListJob*>( j );
         if ( !lj->silent() ) {
           KMessageBox::error(knGlobals.topWidget, j->errorString());

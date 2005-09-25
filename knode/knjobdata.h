@@ -36,16 +36,19 @@ class KNJobConsumer {
     KNJobConsumer();
     virtual ~KNJobConsumer();
 
-    /** Send the job to KNNetAccess and append it to the
-	joblist */
+    /** Send the job to the scheduler and append it to the
+     *  job queue.
+     */
     void emitJob(KNJobData *j);
 
     /** Remove the job from the joblist and process it by
-	calling @ref processJob */
+     *  calling @ref processJob
+     */
     void jobDone(KNJobData *j);
 
     /** Returns true if we are waiting for at least one job
-	to be completed */
+     *  to be completed
+     */
     bool jobsPending() const { return !mJobs.isEmpty(); }
 
   protected:
@@ -100,13 +103,22 @@ class KNJobData : public QObject
     bool authError() const                { return a_uthError; }
 
     void setErrorString(const QString& s) { e_rrorString=s; }
+
+    /** Cancels this job.
+     *  If the job is currently active, this cancels the assosiated KIO job and
+     *  emits the finished signal.
+     */
     void cancel();
     void setAuthError(bool b)             { a_uthError=b; }
 
     void prepareForExecution()           { e_rrorString = d_ata->prepareForExecution(); }
     void notifyConsumer();
 
-    /** Performs the actual operation of a job, needs to be reimplemented for every job. */
+    /** Performs the actual operation of a job, needs to be reimplemented for
+     *  every job.
+     *  Note that a job might be executed multiple times e.g. in case of an
+     *  authentication error.
+     */
     virtual void execute() = 0;
 
     /** Returns the progress item for this job. */

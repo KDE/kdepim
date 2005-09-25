@@ -24,7 +24,6 @@
 
 class KInstance;
 class KNConfigManager;
-class KNNetAccess;
 class KNProgress;
 class KNAccountManager;
 class KNGroupManager;
@@ -42,6 +41,7 @@ namespace Kpgp {
 }
 namespace KNode {
   class ArticleWidget;
+  class Scheduler;
 }
 
 
@@ -63,7 +63,7 @@ class KDE_EXPORT KNGlobals {
     KInstance             *instance;
 
     KNConfigManager       *configManager();
-    KNNetAccess           *netAccess();
+    KNode::Scheduler      *scheduler();
     KNAccountManager      *accountManager();
     KNGroupManager        *groupManager();
     KNArticleManager      *articleManager();
@@ -78,7 +78,7 @@ class KDE_EXPORT KNGlobals {
 private:
     KSharedConfig::Ptr c_onfig;
 
-    KNNetAccess           *mNetAccess;
+    KNode::Scheduler      *mScheduler;
     KNConfigManager       *mCfgManager;
     KNAccountManager      *mAccManager;
     KNGroupManager        *mGrpManager;

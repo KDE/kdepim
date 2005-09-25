@@ -29,6 +29,8 @@ KNode::GroupListJob::GroupListJob( KNJobConsumer * c, KNServerInfo * a, KNJobIte
 
 void KNode::GroupListJob::execute()
 {
+  mGroupList.clear();
+
   KNGroupListData *target = static_cast<KNGroupListData *>( data() );
 
   KURL destination = baseUrl();
@@ -143,6 +145,8 @@ KNode::ArticleListJob::ArticleListJob( KNJobConsumer * c, KNServerInfo * a, KNJo
 
 void KNode::ArticleListJob::execute()
 {
+  mArticleList.clear();
+
   KNGroup* target = static_cast<KNGroup*>( data() );
 
   KURL destination = baseUrl();
@@ -216,7 +220,6 @@ void KNode::ArticleFetchJob::slotResult( KIO::Job * job )
     QByteArray buffer = j->data();
     buffer.replace( "\r\n", "\n" ); // TODO: do this in the io-slave?
     target->setContent( buffer );
-    kdDebug(5003) << k_funcinfo << buffer.size() << endl;
   }
 
   emitFinished();

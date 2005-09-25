@@ -27,7 +27,7 @@
 #include <kdebug.h>
 #include <klineedit.h>
 
-#include "knnetaccess.h"
+#include "scheduler.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "knnntpaccount.h"
@@ -145,8 +145,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
 KNGroupBrowser::~KNGroupBrowser()
 {
 
-  knGlobals.netAccess()->stopJobsNntp(KNJobData::JTLoadGroups);
-  knGlobals.netAccess()->stopJobsNntp(KNJobData::JTFetchGroups);
+  knGlobals.scheduler()->cancelJobs( KNJobData::JTLoadGroups );
+  knGlobals.scheduler()->cancelJobs( KNJobData::JTFetchGroups );
 
   delete matchList;
   delete allList;

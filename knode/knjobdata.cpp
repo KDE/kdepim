@@ -21,8 +21,9 @@
 
 #include "knarticle.h"
 #include "knglobals.h"
-#include "knnetaccess.h"
 #include "knnntpaccount.h"
+#include "scheduler.h"
+
 //Added by qt3to4:
 #include <QTimer>
 #include <Q3ValueList>
@@ -44,7 +45,7 @@ void KNJobConsumer::emitJob( KNJobData *j )
 {
   if ( j ) {
     mJobs.append( j );
-    knGlobals.netAccess()->addJob( j );
+    knGlobals.scheduler()->addJob( j );
   }
 }
 
@@ -100,6 +101,7 @@ void KNJobData::cancel()
     mProgressItem->setComplete();
     mProgressItem = 0;
   }
+  emitFinished();
 }
 
 void KNJobData::emitFinished()

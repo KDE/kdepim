@@ -21,7 +21,6 @@
 #include <kstaticdeleter.h>
 
 #include "knconfigmanager.h"
-#include "knnetaccess.h"
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
 #include "knarticlemanager.h"
@@ -31,6 +30,7 @@
 #include "knmemorymanager.h"
 #include "knmainwidget.h"
 #include "knwidgets.h"
+#include "scheduler.h"
 
 KConfig* KNGlobals::config()
 {
@@ -47,11 +47,11 @@ KNConfigManager* KNGlobals::configManager()
   return mCfgManager;
 }
 
-KNNetAccess* KNGlobals::netAccess()
+KNode::Scheduler* KNGlobals::scheduler()
 {
-  if(!mNetAccess)
-    mNetAccess = new KNNetAccess();
-  return mNetAccess;
+  if ( !mScheduler )
+    mScheduler = new KNode::Scheduler();
+  return mScheduler;
 }
 
 KNAccountManager* KNGlobals::accountManager()

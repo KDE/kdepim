@@ -38,6 +38,8 @@
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <kapplication.h>
+#include <kcmdlineargs.h>
+#include <klistviewsearchline.h>
 
 #include "broadcaststatus.h"
 #include "krsqueezedtextlabel.h"
@@ -61,7 +63,6 @@ using KRecentAddress::RecentAddresses;
 #include "kngroupmanager.h"
 #include "knnntpaccount.h"
 #include "knaccountmanager.h"
-#include "knnetaccess.h"
 #include "knfiltermanager.h"
 #include "knfoldermanager.h"
 #include "knfolder.h"
@@ -70,9 +71,7 @@ using KRecentAddress::RecentAddresses;
 #include "knscoring.h"
 #include <kpgp.h>
 #include "knmemorymanager.h"
-#include <kcmdlineargs.h>
-
-#include <klistviewsearchline.h>
+#include "scheduler.h"
 
 using namespace KNode;
 
@@ -174,8 +173,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   //-------------------------------- <CORE> ------------------------------------
 
   //Network
-  n_etAccess = knGlobals.netAccess();
-  connect(n_etAccess, SIGNAL(netActive(bool)), this, SLOT(slotNetworkActive(bool)));
+  connect( knGlobals.scheduler(), SIGNAL(netActive(bool)), this, SLOT(slotNetworkActive(bool)) );
 
   //Filter Manager
   f_ilManager = knGlobals.filterManager();
@@ -242,8 +240,8 @@ KNMainWidget::~KNMainWidget()
 
   h_drView->clear(); //avoid some random crashes in KNHdrViewItem::~KNHdrViewItem()
 
-  delete n_etAccess;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Net deleted" << endl;
+  delete knGlobals.scheduler();
+  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Scheduler deleted" << endl;
 
   delete a_rtManager;
   kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Article Manager deleted" << endl;
@@ -294,10 +292,7 @@ void KNMainWidget::setStatusMsg(const QString& text, int id)
     return;
   bar->clear();
   if (text.isEmpty() && (id==SB_MAIN)) {
-    if (knGlobals.netAccess()->currentMsg().isEmpty())
-      BroadcastStatus::instance()->setStatusMsg(i18n(" Ready"));
-    else
-      BroadcastStatus::instance()->setStatusMsg(knGlobals.netAccess()->currentMsg());
+    BroadcastStatus::instance()->setStatusMsg(i18n(" Ready"));
   } else {
     switch(id) {
       case SB_MAIN:
@@ -1807,7 +1802,7 @@ void KNMainWidget::slotArtEdit()
 void KNMainWidget::slotNetCancel()
 {
   kdDebug(5003) << "KNMainWidget::slotNetCancel()" << endl;
-  n_etAccess->cancelAllJobs();
+  knGlobals.scheduler()->cancelJobs();
 }
 
 

@@ -55,7 +55,6 @@ class KNFilterManager;
 class KNScoringManager;
 class KNMemoryManager;
 class KNFilterSelectAction;
-class KNNetAccess;
 namespace Kpgp {
     class Module;
 }
@@ -205,7 +204,6 @@ protected:
 
   //Core
   KNConfigManager   *c_fgManager;
-  KNNetAccess       *n_etAccess;
   KNAccountManager  *a_ccManager;
   KNGroupManager    *g_rpManager;
   KNArticleManager  *a_rtManager;

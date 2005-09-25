@@ -32,7 +32,7 @@
 #include "knfolder.h"
 #include "knarticlefilter.h"
 #include "knhdrviewitem.h"
-#include "knnetaccess.h"
+#include "scheduler.h"
 #include "knnntpaccount.h"
 #include "knscoring.h"
 #include "knmemorymanager.h"
@@ -204,7 +204,7 @@ void KNArticleManager::showHdrs(bool clear)
     }
 
     if(g_roup->isLocked())
-      knGlobals.netAccess()->nntpMutex().lock();
+      knGlobals.scheduler()->nntpMutex().lock();
 
     if(f_ilter)
       f_ilter->doFilter(g_roup);
@@ -296,7 +296,7 @@ void KNArticleManager::showHdrs(bool clear)
     d_isableExpander=false;
 
     if (g_roup->isLocked())
-      knGlobals.netAccess()->nntpMutex().unlock();
+      knGlobals.scheduler()->nntpMutex().unlock();
   }
 
   else { //folder
