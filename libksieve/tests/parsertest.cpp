@@ -477,7 +477,7 @@ private:
     }
     write( "<" + key + ">" );
     ++indent;
-    write( value.utf8().data() );
+    write( value.toUtf8().data() );
     --indent;
     write( "</" + key + ">" );
   }
@@ -603,7 +603,7 @@ private:
     if ( s != QString::fromUtf8( currentResponse().string ) ) {
       cerr << " expected string arg \""
 	   << ( currentResponse().string ? currentResponse().string : "<null>" )
-	   << "\", got \"" << ( s.isNull() ? "<null>" : s.utf8().data() ) << "\"";
+	   << "\", got \"" << ( s.isNull() ? "<null>" : s.toUtf8().data() ) << "\"";
       mOk = false;
     }
   }

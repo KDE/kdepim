@@ -413,7 +413,7 @@ int main( int argc, char * argv[]  ) {
 	break;
       } else
 	cout << "Got " << token2string( token ) << ": \""
-	     << result.utf8().data() << "\" at ("
+	     << result.toUtf8().data() << "\" at ("
 	     << lexer.line() << "," << lexer.column() << ")" << endl;
     }
     cout << "End" << endl;
@@ -441,8 +441,8 @@ int main( int argc, char * argv[]  ) {
 	    cerr << " expected string \"" << t.expected[j].result << "\"";
 	  else
 	    cerr << " expected null string";
-	  if ( !result.utf8().isNull() )
-	    cerr << ", got \"" << result.utf8().data() << "\"";
+	  if ( !result.toUtf8().isNull() )
+	    cerr << ", got \"" << result.toUtf8().data() << "\"";
 	  else
 	    cerr << ", got null string";
 	}
