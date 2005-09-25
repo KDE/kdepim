@@ -407,7 +407,7 @@ void ArticleWidget::displayArticle()
   // if the article is pgp signed and the user asked for verifying the
   // signature, we show a nice header:
   Q3PtrList<Kpgp::Block> pgpBlocks;
-  Q3StrList nonPgpBlocks;
+  QList<QByteArray> nonPgpBlocks;
   bool containsPGP = Kpgp::Module::prepareMessageForDecryption( mArticle->body(), pgpBlocks, nonPgpBlocks );
 
   mViewer->write ( html );
@@ -415,12 +415,12 @@ void ArticleWidget::displayArticle()
 
   if ( containsPGP ) {
     Q3PtrListIterator<Kpgp::Block> pbit( pgpBlocks );
-    Q3PtrListIterator<char> npbit( nonPgpBlocks );
+    QList<QByteArray>::Iterator npbit = nonPgpBlocks.begin();
     QTextCodec *codec = KGlobal::charsets()->codecForName( text->contentType()->charset() );
 
     for( ; *pbit != 0; ++pbit, ++npbit ) {
       // handle non-pgp block
-      Q3CString str( *npbit );
+      QByteArray str = *npbit;
       if( !str.isEmpty() ) {
         QStringList lines = QStringList::split( '\n', codec->toUnicode( str ) );
         displayBodyBlock( lines );
@@ -439,7 +439,7 @@ void ArticleWidget::displayArticle()
       }
     }
     // deal with the last non-pgp block
-    Q3CString str( *npbit );
+    QByteArray str = *npbit;
     if( !str.isEmpty() ) {
       QStringList lines = QStringList::split( '\n', codec->toUnicode( str ) );
       displayBodyBlock( lines );
