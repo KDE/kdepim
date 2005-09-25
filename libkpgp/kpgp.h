@@ -326,7 +326,7 @@ public:
   */
   static bool prepareMessageForDecryption( const QByteArray& msg,
                                            Q3PtrList<Block>& pgpBlocks,
-                                           Q3StrList& nonPgpBlocks );
+                                           QList<QByteArray>& nonPgpBlocks );
 
 private:
   /** check if we have a trusted encryption key for the given person */

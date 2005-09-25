@@ -1026,7 +1026,7 @@ Module::getConfig()
 bool
 Module::prepareMessageForDecryption( const QByteArray& msg,
                                      Q3PtrList<Block>& pgpBlocks,
-                                     Q3StrList& nonPgpBlocks )
+                                     QList<QByteArray>& nonPgpBlocks )
 {
   BlockType pgpBlock = NoPgpBlock;
   int start = -1;   // start of the current PGP block
@@ -1034,7 +1034,6 @@ Module::prepareMessageForDecryption( const QByteArray& msg,
 
   pgpBlocks.setAutoDelete( true );
   pgpBlocks.clear();
-  nonPgpBlocks.setAutoDelete( true );
   nonPgpBlocks.clear();
 
   if( msg.isEmpty() )
