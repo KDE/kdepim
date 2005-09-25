@@ -314,8 +314,8 @@ const Identity & IdentityManager::identityForAddress( const QString & addresses 
       // I use QString::utf8() instead of QString::latin1() because I want
       // a QCString and not a char*. It doesn't matter because emailAddr()
       // returns a 7-bit string.
-      if( (*it).emailAddr().lower() ==
-          KPIM::getEmailAddress( *addrIt ).lower() ) {
+      if( (*it).emailAddr().toLower() ==
+          KPIM::getEmailAddress( *addrIt ).toLower() ) {
         return (*it);
       }
     }
