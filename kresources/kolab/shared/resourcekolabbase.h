@@ -41,7 +41,7 @@
 #include "subresource.h"
 #include <kmail/kmailicalIface.h>
 
-class QCString;
+class QString;
 class KURL;
 
 namespace Kolab {
@@ -73,7 +73,7 @@ class KMailConnection;
 */
 class ResourceKolabBase {
 public:
-  ResourceKolabBase( const QCString& objId );
+  ResourceKolabBase( const DCOPCString& objId );
   virtual ~ResourceKolabBase();
 
   // These are the methods called by KMail when the resource changes
@@ -106,7 +106,7 @@ protected:
 
   /// List all folders with a certain contentsType. Returns a QMap with
   /// resourcename/writable pairs
-  bool kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
+  bool kmailSubresources( QList<KMailICalIface::SubResource>& lst,
                           const QString& contentsType ) const;
 
   /// Get the number of messages in this folder.
@@ -137,7 +137,7 @@ protected:
 
   KMailICalIface::StorageFormat kmailStorageFormat( const QString& folder ) const;
 
-  typedef QMap<QCString, QString> CustomHeaderMap;
+  typedef QMap<QByteArray, QString> CustomHeaderMap;
 
   /// Update an incidence. The list of attachments are URLs.
   /// The parameter sernum is updated with the right KMail serial number

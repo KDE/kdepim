@@ -47,7 +47,7 @@ using namespace Kolab;
 
 
 KMailConnection::KMailConnection( ResourceKolabBase* resource,
-                                  const QCString& objId )
+                                  const DCOPCString& objId )
   : DCOPObject( objId ), mResource( resource ), mKMailIcalIfaceStub( 0 )
 {
   // Make the connection to KMail ready
@@ -56,8 +56,8 @@ KMailConnection::KMailConnection( ResourceKolabBase* resource,
   mDCOPClient->registerAs( objId, true );
 
   kapp->dcopClient()->setNotifications( true );
-  connect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QCString& ) ),
-           this, SLOT( unregisteredFromDCOP( const QCString& ) ) );
+  connect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QByteArray& ) ),
+           this, SLOT( unregisteredFromDCOP( const QByteArray& ) ) );
 }
 
 KMailConnection::~KMailConnection()
@@ -69,12 +69,12 @@ KMailConnection::~KMailConnection()
   mDCOPClient = 0;
 }
 
-static const QCString dcopObjectId = "KMailICalIface";
+static const DCOPCString dcopObjectId = "KMailICalIface";
 bool KMailConnection::connectToKMail()
 {
   if ( !mKMailIcalIfaceStub ) {
     QString error;
-    QCString dcopService;
+    DCOPCString dcopService;
     int result = KDCOPServiceStarter::self()->
       findServiceFor( "DCOP/ResourceBackend/IMAP", QString::null,
                       QString::null, &error, &dcopService );
@@ -172,14 +172,14 @@ void KMailConnection::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& m
   mResource->fromKMailAsyncLoadResult( map, type, folder );
 }
 
-bool KMailConnection::connectKMailSignal( const QCString& signal,
-                                          const QCString& method )
+bool KMailConnection::connectKMailSignal( const QByteArray& signal,
+                                          const QByteArray& method )
 {
   return connectDCOPSignal( "kmail", dcopObjectId, signal, method, false )
     && connectDCOPSignal( "kontact", dcopObjectId, signal, method, false );
 }
 
-bool KMailConnection::kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
+bool KMailConnection::kmailSubresources( QList<KMailICalIface::SubResource>& lst,
                                          const QString& contentsType )
 {
   if ( !connectToKMail() )
@@ -238,7 +238,7 @@ bool KMailConnection::kmailUpdate( const QString& resource,
                                    Q_UINT32& sernum,
                                    const QString& subject,
                                    const QString& plainTextBody,
-                                   const QMap<QCString, QString>& customHeaders,
+                                   const QMap<QByteArray, QString>& customHeaders,
                                    const QStringList& attachmentURLs,
                                    const QStringList& attachmentMimetypes,
                                    const QStringList& attachmentNames,
@@ -269,7 +269,7 @@ bool KMailConnection::kmailTriggerSync( const QString &contentsType )
   return ok && mKMailIcalIfaceStub->triggerSync( contentsType );
 }
 
-void KMailConnection::unregisteredFromDCOP( const QCString& appId )
+void KMailConnection::unregisteredFromDCOP( const DCOPCString& appId )
 {
   if ( mKMailIcalIfaceStub && mKMailIcalIfaceStub->app() == appId ) {
     // Delete the stub so that the next time we need to talk to kmail,

@@ -42,18 +42,19 @@
 #include <kmessagebox.h>
 #include <qtextstream.h>
 #include <kdebug.h>
+#include <dcopobject.h>
 
 using namespace Kolab;
 
 static unsigned int uniquifier = 0;
 
-ResourceKolabBase::ResourceKolabBase( const QCString& objId )
+ResourceKolabBase::ResourceKolabBase( const DCOPCString& objId )
   : mSilent( false )
 {
   KGlobal::locale()->insertCatalogue( "kres_kolab" );
   KGlobal::locale()->insertCatalogue( "libkcal" );
-  QString uniqueObjId = QString( objId ) + QString::number( uniquifier++ );
-  mConnection = new KMailConnection( this, uniqueObjId.utf8() );
+  DCOPCString uniqueObjId = objId + QString::number( uniquifier++ ).latin1();
+  mConnection = new KMailConnection( this, uniqueObjId );
 }
 
 ResourceKolabBase::~ResourceKolabBase()
@@ -62,7 +63,7 @@ ResourceKolabBase::~ResourceKolabBase()
 }
 
 
-bool ResourceKolabBase::kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
+bool ResourceKolabBase::kmailSubresources( QList<KMailICalIface::SubResource>& lst,
                                            const QString& contentsType ) const
 {
   return mConnection->kmailSubresources( lst, contentsType );

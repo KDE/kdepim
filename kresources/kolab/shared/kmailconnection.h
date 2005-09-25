@@ -39,6 +39,7 @@
 
 class KURL;
 class DCOPClient;
+class DCOPCString;
 class KMailICalIface_stub;
 
 namespace Kolab {
@@ -65,7 +66,7 @@ k_dcop:
                                  const QString& folder );
 
 public:
-  KMailConnection( ResourceKolabBase* resource, const QCString& objId );
+  KMailConnection( ResourceKolabBase* resource, const DCOPCString& objId );
   virtual ~KMailConnection();
 
   /**
@@ -74,7 +75,7 @@ public:
   bool connectToKMail();
 
   // Call the DCOP methods
-  bool kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
+  bool kmailSubresources( QList<KMailICalIface::SubResource>& lst,
                           const QString& contentsType );
   bool kmailIncidencesCount( int& count,
                              const QString& mimetype,
@@ -91,7 +92,7 @@ public:
                     Q_UINT32& sernum,
                     const QString& subject,
                     const QString& plainTextBody,
-                    const QMap<QCString, QString>& customHeaders,
+                    const QMap<QByteArray, QString>& customHeaders,
                     const QStringList& attachmentURLs,
                     const QStringList& attachmentMimetypes,
                     const QStringList& attachmentNames,
@@ -102,11 +103,11 @@ public:
   bool kmailTriggerSync( const QString& contentsType );
 
 private slots:
-  virtual void unregisteredFromDCOP( const QCString& );
+  virtual void unregisteredFromDCOP( const DCOPCString& );
 
 private:
   /** Connect a signal from KMail to a local slot. */
-  bool connectKMailSignal( const QCString&, const QCString& );
+  bool connectKMailSignal( const QByteArray&, const QByteArray& );
 
   ResourceKolabBase* mResource;
   DCOPClient* mDCOPClient;
