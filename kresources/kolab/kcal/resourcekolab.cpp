@@ -98,11 +98,11 @@ bool ResourceKolab::openResource( KConfig& config, const char* contentType,
                                   ResourceMap& map )
 {
   // Read the subresource entries from KMail
-  QValueList<KMailICalIface::SubResource> subResources;
+  QList<KMailICalIface::SubResource> subResources;
   if ( !kmailSubresources( subResources, contentType ) )
     return false;
   map.clear();
-  QValueList<KMailICalIface::SubResource>::ConstIterator it;
+  QList<KMailICalIface::SubResource>::ConstIterator it;
   for ( it = subResources.begin(); it != subResources.end(); ++it )
     loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable, map );
   return true;
@@ -248,7 +248,7 @@ bool ResourceKolab::loadAllJournals()
   return doLoadAll( mJournalSubResources, journalAttachmentMimeType );
 }
 
-void ResourceKolab::removeIncidences( const QCString& incidenceType )
+void ResourceKolab::removeIncidences( const QByteArray& incidenceType )
 {
   Kolab::UidMap::Iterator mapIt = mUidMap.begin();
   while ( mapIt != mUidMap.end() )
@@ -295,7 +295,8 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
     /* We are currently processing this event ( removing and readding or
      * adding it ). If so, ignore this update. Keep the last of these around
      * and process once we hear back from KMail on this event. */
-    mPendingUpdates.replace( uid, incidencebase );
+    mPendingUpdates.remove( uid );
+    mPendingUpdates.insert( uid, incidencebase );
     return;
   }
 
@@ -522,7 +523,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       }
     }
     /* Check if there are updates for this uid pending and if so process them. */
-    if ( KCal::IncidenceBase *update = mPendingUpdates.find( uid ) ) {
+    if ( KCal::IncidenceBase *update = mPendingUpdates.value( uid ) ) {
       mSilent = false; // we do want to tell KMail
       mPendingUpdates.remove( uid );
       incidenceUpdated( update );

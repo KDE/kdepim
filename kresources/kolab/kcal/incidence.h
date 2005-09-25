@@ -62,7 +62,7 @@ public:
     QString month;
     QString rangeType;
     QString range; // date or number or nothing
-    QValueList<QDate> exclusions;
+    QList<QDate> exclusions;
   };
 
   struct Attendee : Email {
@@ -99,8 +99,8 @@ public:
   virtual Recurrence recurrence() const;
 
   virtual void addAttendee( const Attendee& attendee );
-  QValueList<Attendee>& attendees();
-  const QValueList<Attendee>& attendees() const;
+  QList<Attendee>& attendees();
+  const QList<Attendee>& attendees() const;
 
   virtual void setSchedulingID( const QString& sid );
   virtual QString schedulingID() const;
@@ -141,16 +141,16 @@ protected:
   float mAlarm;
   bool mHasAlarm;
   Recurrence mRecurrence;
-  QValueList<Attendee> mAttendees;
-  QValueList<KCal::Attachment*> mAttachments;
+  QList<Attendee> mAttendees;
+  QList<KCal::Attachment*> mAttachments;
   QString mSchedulingID;
   int mRevision;
 
   struct Custom {
-    QCString key;
+    QByteArray key;
     QString value;
   };
-  QValueList<Custom> mCustomList;
+  QList<Custom> mCustomList;
 };
 
 }

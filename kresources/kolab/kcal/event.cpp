@@ -86,7 +86,7 @@ void Event::setEndDate( const QDateTime& date )
 
 void Event::setEndDate( const QDate& date )
 {
-  mEndDate = date;
+  mEndDate = QDateTime( date );
   mHasEndDate = true;
   if ( mFloatingStatus == HasTime )
     kdDebug() << "ERROR: No time on end date but time on the event\n";

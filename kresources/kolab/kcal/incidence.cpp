@@ -33,7 +33,7 @@
 
 #include "incidence.h"
 
-#include <qvaluelist.h>
+#include <QList>
 
 #include <libkcal/journal.h>
 #include <korganizer/version.h>
@@ -94,7 +94,7 @@ void Incidence::setStartDate( const QDateTime& startDate )
 
 void Incidence::setStartDate( const QDate& startDate )
 {
-  mStartDate = startDate;
+  mStartDate = QDateTime( startDate );
   if ( mFloatingStatus == HasTime )
     kdDebug() << "ERROR: No time on start date but time on the event\n";
   mFloatingStatus = AllDay;
@@ -136,12 +136,12 @@ void Incidence::addAttendee( const Attendee& attendee )
   mAttendees.append( attendee );
 }
 
-QValueList<Incidence::Attendee>& Incidence::attendees()
+QList<Incidence::Attendee>& Incidence::attendees()
 {
   return mAttendees;
 }
 
-const QValueList<Incidence::Attendee>& Incidence::attendees() const
+const QList<Incidence::Attendee>& Incidence::attendees() const
 {
   return mAttendees;
 }
@@ -218,7 +218,7 @@ void Incidence::saveAttendeeAttribute( QDomElement& element,
 
 void Incidence::saveAttendees( QDomElement& element ) const
 {
-  QValueList<Attendee>::ConstIterator it = mAttendees.begin();
+  QList<Attendee>::ConstIterator it = mAttendees.begin();
   for ( ; it != mAttendees.end(); ++it )
     saveAttendeeAttribute( element, *it );
 }
@@ -258,7 +258,7 @@ void Incidence::saveRecurrence( QDomElement& element ) const
     QDomText t = element.ownerDocument().createTextNode( mRecurrence.range );
     range.appendChild( t );
   }
-  for( QValueList<QDate>::ConstIterator it = mRecurrence.exclusions.begin();
+  for( QList<QDate>::ConstIterator it = mRecurrence.exclusions.begin();
        it != mRecurrence.exclusions.end(); ++it ) {
     writeString( e, "exclusion", dateToString( *it ) );
   }
@@ -344,7 +344,7 @@ bool Incidence::loadAttribute( QDomElement& element )
         // Unhandled tag - save for later storage
         kdDebug() << "Saving unhandled tag " << element.tagName() << endl;
         Custom c;
-        c.key = QCString( "X-KDE-KolabUnhandled-" ) + element.tagName().latin1();
+        c.key = QByteArray( "X-KDE-KolabUnhandled-" ) + element.tagName().latin1();
         c.value = element.text();
         mCustomList.append( c );
     }
@@ -382,7 +382,7 @@ bool Incidence::saveAttributes( QDomElement& element ) const
 
 void Incidence::saveCustomAttributes( QDomElement& element ) const
 {
-  QValueList<Custom>::ConstIterator it = mCustomList.begin();
+  QList<Custom>::ConstIterator it = mCustomList.begin();
   for ( ; it != mCustomList.end(); ++it ) {
     QString key = (*it).key;
     Q_ASSERT( !key.isEmpty() );
@@ -506,7 +506,7 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
   case KCal::Recurrence::rMonthlyPos: {
     mRecurrence.cycle = "monthly";
     mRecurrence.type = "weekday";
-    QValueList<KCal::RecurrenceRule::WDayPos> monthPositions = recur->monthPositions();
+    QList<KCal::RecurrenceRule::WDayPos> monthPositions = recur->monthPositions();
     if ( !monthPositions.isEmpty() ) {
       KCal::RecurrenceRule::WDayPos monthPos = monthPositions.first();
       // TODO: Handle multiple days in the same week
@@ -519,7 +519,7 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
   case KCal::Recurrence::rMonthlyDay: {
     mRecurrence.cycle = "monthly";
     mRecurrence.type = "daynumber";
-    QValueList<int> monthDays = recur->monthDays();
+    QList<int> monthDays = recur->monthDays();
     // ####### Kolab XML limitation: only the first month day is used
     if ( !monthDays.isEmpty() )
       mRecurrence.dayNumber = QString::number( monthDays.first() );
@@ -529,10 +529,10 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
   {
     mRecurrence.cycle = "yearly";
     mRecurrence.type = "monthday";
-    QValueList<int> rmd = recur->yearDates();
+    QList<int> rmd = recur->yearDates();
     int day = !rmd.isEmpty() ? rmd.first() : recur->startDate().day();
     mRecurrence.dayNumber = QString::number( day );
-    QValueList<int> months = recur->yearMonths();
+    QList<int> months = recur->yearMonths();
     if ( !months.isEmpty() )
       mRecurrence.month = s_monthName[ months.first() - 1 ]; // #### Kolab XML limitation: only one month specified
     break;
@@ -545,10 +545,10 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
   case KCal::Recurrence::rYearlyPos: // (weekday X of week N of month Y)
     mRecurrence.cycle = "yearly";
     mRecurrence.type = "weekday";
-    QValueList<int> months = recur->yearMonths();
+    QList<int> months = recur->yearMonths();
     if ( !months.isEmpty() )
       mRecurrence.month = s_monthName[ months.first() - 1 ]; // #### Kolab XML limitation: only one month specified
-    QValueList<KCal::RecurrenceRule::WDayPos> monthPositions = recur->yearPositions();
+    QList<KCal::RecurrenceRule::WDayPos> monthPositions = recur->yearPositions();
     if ( !monthPositions.isEmpty() ) {
       KCal::RecurrenceRule::WDayPos monthPos = monthPositions.first();
       // TODO: Handle multiple days in the same week
@@ -646,8 +646,8 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     setSchedulingID( incidence->schedulingID() );
 
   // Unhandled tags and other custom properties (see libkcal/customproperties.h)
-  const QMap<QCString, QString> map = incidence->customProperties();
-  QMap<QCString, QString>::ConstIterator cit = map.begin();
+  const QMap<QByteArray, QString> map = incidence->customProperties();
+  QMap<QByteArray, QString>::ConstIterator cit = map.begin();
   for ( ; cit != map.end() ; ++cit ) {
     Custom c;
     c.key = cit.key();
@@ -698,7 +698,7 @@ void Incidence::saveTo( KCal::Incidence* incidence )
                              + organizer().smtpAddress + ">" );
 
   incidence->clearAttendees();
-  QValueList<Attendee>::ConstIterator it;
+  QList<Attendee>::ConstIterator it;
   for ( it = mAttendees.begin(); it != mAttendees.end(); ++it ) {
     KCal::Attendee::PartStat status = attendeeStringToStatus( (*it).status );
     KCal::Attendee::Role role = attendeeStringToRole( (*it).role );
@@ -763,7 +763,7 @@ void Incidence::saveTo( KCal::Incidence* incidence )
 
   incidence->setSchedulingID( schedulingID() );
 
-  for( QValueList<Custom>::ConstIterator it = mCustomList.begin(); it != mCustomList.end(); ++it ) {
+  for( QList<Custom>::ConstIterator it = mCustomList.begin(); it != mCustomList.end(); ++it ) {
     incidence->setNonKDECustomProperty( (*it).key, (*it).value );
   }
 

@@ -35,7 +35,8 @@
 #ifndef KCAL_RESOURCEKOLAB_H
 #define KCAL_RESOURCEKOLAB_H
 
-#include <qtimer.h>
+#include <QTimer>
+#include <QHash>
 
 #include <kdepimmacros.h>
 #include <libkcal/calendarlocal.h>
@@ -138,7 +139,7 @@ protected slots:
    void slotEmitResourceChanged();
 
 private:
-  void removeIncidences( const QCString& incidenceType );
+  void removeIncidences( const QByteArray& incidenceType );
   void resolveConflict( KCal::Incidence*, const QString& subresource, Q_UINT32 sernum );
   void addIncidence( const char* mimetype, const QString& xml,
                      const QString& subResource, Q_UINT32 sernum );
@@ -186,7 +187,7 @@ private:
   Kolab::ResourceMap mEventSubResources, mTodoSubResources, mJournalSubResources;
 
   bool mOpen; // If the resource is open, this is true
-  QDict<KCal::IncidenceBase> mPendingUpdates;
+  QHash<QString, KCal::IncidenceBase*> mPendingUpdates;
   QTimer mResourceChangedTimer;
   ICalFormat mFormat;
 
