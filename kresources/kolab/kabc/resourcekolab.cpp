@@ -110,11 +110,11 @@ bool KABC::ResourceKolab::doOpen()
   KConfig config( configFile() );
 
   // Read the calendar entries
-  QValueList<KMailICalIface::SubResource> subResources;
+  QList<KMailICalIface::SubResource> subResources;
   if ( !kmailSubresources( subResources, s_kmailContentsType ) )
     return false;
   mSubResources.clear();
-  QValueList<KMailICalIface::SubResource>::ConstIterator it;
+  QList<KMailICalIface::SubResource>::ConstIterator it;
   for ( it = subResources.begin(); it != subResources.end(); ++it ) {
     loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable );
   }
@@ -279,7 +279,7 @@ struct AttachmentList {
   QStringList attachmentNames;
   QStringList attachmentMimeTypes;
   QStringList deletedAttachments;
-  QValueList<KTempFile *> tempFiles;
+  QList<KTempFile *> tempFiles;
 
   void addAttachment( const QString& url, const QString& name, const QString& mimetype ) {
     attachmentURLs.append( url );
@@ -388,7 +388,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     const_cast<Addressee&>(addr).setChanged( false );
   }
 
-  for( QValueList<KTempFile *>::Iterator it = att.tempFiles.begin(); it != att.tempFiles.end(); ++it ) {
+  for( QList<KTempFile *>::Iterator it = att.tempFiles.begin(); it != att.tempFiles.end(); ++it ) {
     (*it)->setAutoDelete( true );
     delete (*it);
   }

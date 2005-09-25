@@ -160,16 +160,16 @@ public:
   QString language() const;
 
   void addPhoneNumber( const PhoneNumber& number );
-  QValueList<PhoneNumber>& phoneNumbers();
-  const QValueList<PhoneNumber>& phoneNumbers() const;
+  QList<PhoneNumber>& phoneNumbers();
+  const QList<PhoneNumber>& phoneNumbers() const;
 
   void addEmail( const Email& email );
-  QValueList<Email>& emails();
-  const QValueList<Email>& emails() const;
+  QList<Email>& emails();
+  const QList<Email>& emails() const;
 
   void addAddress( const Address& address );
-  QValueList<Address>& addresses();
-  const QValueList<Address>& addresses() const;
+  QList<Address>& addresses();
+  const QList<Address>& addresses() const;
 
   // which address is preferred: home or business or other
   void setPreferredAddress( const QString& address );
@@ -256,9 +256,9 @@ private:
   QString mChildren;
   QString mGender;
   QString mLanguage;
-  QValueList<PhoneNumber> mPhoneNumbers;
-  QValueList<Email> mEmails;
-  QValueList<Address> mAddresses;
+  QList<PhoneNumber> mPhoneNumbers;
+  QList<Email> mEmails;
+  QList<Address> mAddresses;
   QString mPreferredAddress;
   float mLatitude;
   float mLongitude;
@@ -269,12 +269,12 @@ private:
     QString name;
     QString value;
   };
-  QValueList<Custom> mCustomList;
+  QList<Custom> mCustomList;
   struct Member {
     QString displayName;
     QString email;
   };
-  QValueList<Member> mDistrListMembers;
+  QList<Member> mDistrListMembers;
 };
 
 }
