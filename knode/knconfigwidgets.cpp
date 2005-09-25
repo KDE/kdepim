@@ -467,13 +467,13 @@ void KNConfig::NntpAccountListWidget::slotSubBtnClicked()
 //=======================================================================================
 
 
-KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget *p, const char *n)
+KNConfig::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *parent )
   : KDialogBase(Tabbed, (a->id()!=-1)? i18n("Properties of %1").arg(a->name()):i18n("New Account"),
-                Ok|Cancel|Help, Ok, p, n),
+                Ok|Cancel|Help, Ok, parent ),
     a_ccount(a)
 {
   QFrame* page=addPage(i18n("Ser&ver"));
-  QGridLayout *topL=new QGridLayout(page, 11, 3, 5);
+  QGridLayout *topL = new QGridLayout( page, 10, 3, 5 );
 
   n_ame=new KLineEdit(page);
   QLabel *l=new QLabel(n_ame,i18n("&Name:"),page);
@@ -494,23 +494,9 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   topL->addWidget(l, 2,0);
   topL->addWidget(p_ort, 2,1);
 
-  h_old = new KIntSpinBox( 5, 1800, 5, 5, page );
-  l = new QLabel(h_old,i18n("Hol&d connection for:"), page);
-  h_old->setSuffix(i18n(" sec"));
-  h_old->setValue(a->hold());
-  topL->addWidget(l,3,0);
-  topL->addWidget(h_old,3,1);
-
-  t_imeout = new KIntSpinBox( 15, 600, 5, 15, page );
-  l = new QLabel(t_imeout, i18n("&Timeout:"), page);
-  t_imeout->setValue(a->timeout());
-  t_imeout->setSuffix(i18n(" sec"));
-  topL->addWidget(l,4,0);
-  topL->addWidget(t_imeout,4,1);
-
   f_etchDes=new QCheckBox(i18n("&Fetch group descriptions"), page);
   f_etchDes->setChecked(a->fetchDescriptions());
-  topL->addMultiCellWidget(f_etchDes, 5,5, 0,3);
+  topL->addMultiCellWidget( f_etchDes, 3, 3, 0, 3 );
 
   /*u_seDiskCache=new QCheckBox(i18n("&Cache articles on disk"), page);
   u_seDiskCache->setChecked(a->useDiskCache());
@@ -518,13 +504,13 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
 
   a_uth=new QCheckBox(i18n("Server requires &authentication"), page);
   connect(a_uth, SIGNAL(toggled(bool)), this, SLOT(slotAuthChecked(bool)));
-  topL->addMultiCellWidget(a_uth, 6,6, 0,3);
+  topL->addMultiCellWidget( a_uth, 4, 4, 0, 3 );
 
   u_ser=new KLineEdit(page);
   u_serLabel=new QLabel(u_ser,i18n("&User:"), page);
   u_ser->setText(a->user());
-  topL->addWidget(u_serLabel, 7,0);
-  topL->addMultiCellWidget(u_ser, 7,7, 1,2);
+  topL->addWidget( u_serLabel, 5, 0 );
+  topL->addMultiCellWidget( u_ser, 5, 5, 1, 2 );
 
   p_ass=new KLineEdit(page);
   p_assLabel=new QLabel(p_ass, i18n("Pass&word:"), page);
@@ -534,26 +520,27 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   else
     if ( a->needsLogon() )
       knGlobals.accountManager()->loadPasswordsAsync();
-  topL->addWidget(p_assLabel, 8,0);
-  topL->addMultiCellWidget(p_ass, 8,8, 1,2);
+  topL->addWidget( p_assLabel, 6, 0 );
+  topL->addMultiCellWidget( p_ass, 6, 6, 1, 2 );
 
   i_nterval=new QCheckBox(i18n("Enable &interval news checking"), page);
   connect(i_nterval, SIGNAL(toggled(bool)), this, SLOT(slotIntervalChecked(bool)));
-  topL->addMultiCellWidget(i_nterval, 9,9, 0,3);
+  topL->addMultiCellWidget( i_nterval, 7, 7, 0, 3 );
 
   c_heckInterval=new KIntSpinBox( 1, 10000, 1, 1, page );
   c_heckIntervalLabel=new QLabel(c_heckInterval, i18n("Check inter&val:"), page);
   c_heckInterval->setSuffix(i18n(" min") );
   c_heckInterval->setValue(a->checkInterval());
   c_heckIntervalLabel->setBuddy(c_heckInterval);
-  topL->addWidget(c_heckIntervalLabel, 10,0);
-  topL->addMultiCellWidget(c_heckInterval, 10,10, 1,2);
+  topL->addWidget( c_heckIntervalLabel, 8, 0 );
+  topL->addMultiCellWidget( c_heckInterval, 8, 8, 1, 2 );
 
   slotAuthChecked(a->needsLogon());
   slotIntervalChecked(a->intervalChecking());
 
   topL->setColStretch(1, 1);
   topL->setColStretch(2, 1);
+  topL->setRowStretch( 9, 1 );
 
   // Specfic Identity tab =========================================
   i_dWidget=new KNConfig::IdentityWidget(a->identity(), addVBoxPage(i18n("&Identity")));
@@ -591,8 +578,6 @@ void KNConfig::NntpAccountConfDialog::slotOk()
   a_ccount->setName(n_ame->text());
   a_ccount->setServer(s_erver->text().stripWhiteSpace());
   a_ccount->setPort(p_ort->text().toInt());
-  a_ccount->setHold(h_old->value());
-  a_ccount->setTimeout(t_imeout->value());
   a_ccount->setFetchDescriptions(f_etchDes->isChecked());
   //a_ccount->setUseDiskCache(u_seDiskCache->isChecked());
   a_ccount->setNeedsLogon(a_uth->isChecked());

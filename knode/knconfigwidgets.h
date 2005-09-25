@@ -160,7 +160,7 @@ class KDE_EXPORT NntpAccountConfDialog : public KDialogBase  {
   Q_OBJECT
 
   public:
-    NntpAccountConfDialog(KNNntpAccount* acc, QWidget *p=0, const char *n=0);
+    NntpAccountConfDialog( KNNntpAccount* acc, QWidget *parent = 0 );
     ~NntpAccountConfDialog();
 
   protected:
@@ -172,9 +172,7 @@ class KDE_EXPORT NntpAccountConfDialog : public KDialogBase  {
     QLabel      *u_serLabel,
                 *p_assLabel,
                 *c_heckIntervalLabel;
-    KIntSpinBox *h_old,
-                *t_imeout,
-                *c_heckInterval;
+    KIntSpinBox *c_heckInterval;
     QCheckBox   *f_etchDes,
                 *a_uth,
                 *u_seDiskCache,

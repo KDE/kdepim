@@ -42,8 +42,6 @@ class KNServerInfo {
     const QString& user()     { return u_ser; }
     const QString& pass();
     int port() const                { return p_ort; }
-    int hold() const               { return h_old; }
-    int timeout() const            { return t_imeout; }
     bool needsLogon()const         { return n_eedsLogon; }
     bool isEmpty()const            { return s_erver.isEmpty(); }
     bool readyForLogin() const { return !n_eedsLogon || mPassLoaded; }
@@ -56,8 +54,6 @@ class KNServerInfo {
     void setUser(const QString &s)    { u_ser=s; }
     void setPass(const QString &s);
     void setPort(int p)               { p_ort=p; }
-    void setHold(int h)               { h_old=h; }
-    void setTimeout(int t)            { t_imeout=t; }
     void setNeedsLogon(bool b)        { n_eedsLogon=b; }
     void setEncryption( Encryption enc ) { mEncryption = enc; }
 
@@ -73,10 +69,7 @@ class KNServerInfo {
              u_ser,
              p_ass;
 
-    int i_d,
-        p_ort,
-        h_old,
-        t_imeout;
+    int i_d, p_ort;
 
     bool n_eedsLogon,
          p_assDirty;
