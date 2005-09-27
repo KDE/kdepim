@@ -194,8 +194,7 @@ bool ResourceXMLRPC::asyncLoad()
   loadCache();
 
   QMap<QString, QVariant> args;
-  args.insert( "start", "1" );
-  args.insert( "limit", "1000" );
+  args.insert( "start", "0" );
   args.insert( "query", "" );
   args.insert( "filter", "" );
   args.insert( "sort", "" );
