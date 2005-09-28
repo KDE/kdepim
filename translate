@@ -5,6 +5,13 @@ KDEI18N=$KDESRC/proko2/kde-i18n
 test -L po || ( rm -f po ; ln -s ../kde-i18n/templates/kdepim po )
 test -d po || exit 1
 
+gettext_version=`xgettext --version | grep 0.10.35`
+if test -z "$gettext_version"; then
+    echo "No xgettext installed or wrong xgettext version: "`xgettext --version | head -n1`
+    exit 1
+fi
+
+
 make -f admin/Makefile.common package-messages || exit 1
 
 cd $KDEI18N || exit 1
