@@ -13,7 +13,7 @@ mkdir clean cache dirty sources
 
 echo kdepim > modules
 
-patch <<EOF
+# Now save the patch below to a file, and apply it.
 
 Index: tag_all
 ===================================================================
@@ -46,7 +46,7 @@ Index: tag_all
      version=1.3.98
      ;;
 +  kdepim)
-+    version=3.3.proko2.0.1
++    version=3.3.proko2.0.4
 +    ;;
    *)
      version=3.4.2
@@ -78,24 +78,27 @@ Index: tag_all
      ;;
 +  kdepim)
 +    HEADURL=branches/kdepim/proko2/$1
-+    DESTURL=tags/kdepim/proko2_0_1/$1
++    DESTURL=tags/kdepim/proko2_0_4/$1
 +    subname=$1
 +    export UNSERMAKE=
 +    ;;
    *)
      HEADURL=branches/KDE/3.4/$1
      DESTURL=tags/KDE/3.4.2/$1
-EOF
+
+
+### --- end of patch ---
+
 
 # Update the version number in "common" and the tagname in "versions"
 
 
 #
-# What about the version number in the following files?
-# ./kmail/kmversion.h:#define KMAIL_VERSION "1.7 (proko2 2.0)"
-# ./kontact/src/main.cpp:static const char version[] = "1.0 (proko2 2.0)";
-# ./korganizer/version.h:static const char korgVersion[] = "3.3 (proko2 branch)";
-# change them manually so far?
+# Also update the version number in those files:
+# ./kmail/kmversion.h:#define KMAIL_VERSION "1.7 (proko2 2.0.4)"
+# ./kontact/src/main.cpp:static const char version[] = "1.0 (proko2 2.0.4)";
+# ./korganizer/version.h:static const char korgVersion[] = "3.3 (proko2 2.0.4)";
+
 
 ./tag_all
 # tag_all checks out the proko2 branch of kdepim into a temporary tagging directory
