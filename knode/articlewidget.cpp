@@ -300,7 +300,7 @@ void ArticleWidget::readConfig()
   ra->setChecked( true );
 
   delete mCSSHelper;
-  mCSSHelper = new CSSHelper( Q3PaintDeviceMetrics( mViewer->view() ) );
+  mCSSHelper = new CSSHelper( mViewer->view() );
 
   if ( !knGlobals.configManager()->readNewsGeneral()->autoMark() )
     mTimer->stop();
