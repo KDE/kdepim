@@ -345,7 +345,7 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
 
   if ( tag == fieldName( Birthday ) ) {
     QDateTime dt = WebdavHandler::sloxToQDateTime( text );
-    a.setBirthday( dt.date() );
+    a.setBirthday( dt );
   } else if ( tag == fieldName( Role ) ) {
     a.setRole( text );
   } else if ( tag == "salutation" ) { // what's this in OX?
@@ -565,7 +565,7 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
     QString anniversary = a.custom( "KADDRESSBOOK", "X-Anniversary" );
     if ( !anniversary.isEmpty() )
       WebdavHandler::addSloxElement( this, doc, prop, fieldName( Anniversary ),
-        WebdavHandler::qDateTimeToSlox( QDateTime::fromString( anniversary, Qt::ISODate ).date() ) );
+        WebdavHandler::qDateTimeToSlox( QDateTime::fromString( anniversary, Qt::ISODate ) ) );
     else
       WebdavHandler::addSloxElement( this, doc, prop, fieldName( Anniversary ) );
   }

@@ -586,7 +586,7 @@ void KCalResourceSlox::createRecurrenceAttributes( QDomDocument &doc,
   DateList exlist = r->exDates();
   QStringList res;
   for ( DateList::Iterator it = exlist.begin(); it != exlist.end(); ++it )
-    res.append( WebdavHandler::qDateTimeToSlox( *it ) );
+    res.append( WebdavHandler::qDateTimeToSlox( QDateTime( *it ) ) );
   WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceDelEx ), res.join( "," ) );
 }
 
