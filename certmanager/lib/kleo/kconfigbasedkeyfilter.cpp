@@ -82,6 +82,7 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigBase & config )
     mCanSign( DoesNotMatter ),
     mCanCertify( DoesNotMatter ),
     mCanAuthenticate( DoesNotMatter ),
+    mQualified( DoesNotMatter ),
     mHasSecret( DoesNotMatter ),
     mIsOpenPGP( DoesNotMatter ),
     mWasValidated( DoesNotMatter ),
@@ -118,6 +119,7 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigBase & config )
   SET( mCanSign, "can-sign" );
   SET( mCanCertify, "can-certify" );
   SET( mCanAuthenticate, "can-authenticate" );
+  SET( mQualified, "is-qualified" );
   SET( mHasSecret, "has-secret-key" );
   SET( mIsOpenPGP, "is-openpgp-key" );
   SET( mWasValidated, "was-validated" );
@@ -172,6 +174,7 @@ bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
   CAN_MATCH( Sign );
   CAN_MATCH( Certify );
   CAN_MATCH( Authenticate );
+  IS_MATCH( Qualified );
   MATCH( mHasSecret, isSecret );
 #undef MATCH
   if ( mIsOpenPGP != DoesNotMatter &&
