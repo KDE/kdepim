@@ -23,8 +23,6 @@ Propsal:     In all Folders
 
 - Store IMap password checkbox should checked by default in account diag
 
-- Rename "network state" to Go Online / Go Offline
-
 - Remove kmail statusbar entry '0 messages' when leaving the part (see how kaddressbook removes his '%n contacts matching')
 
 - GnuPG log viewer (tools->gnupg log viewer) opens in a waaay to small window
