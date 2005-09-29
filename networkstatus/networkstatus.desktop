@@ -45,6 +45,7 @@ Comment[pl]=Śledzi stan interfejsów sieciowych i powiadamia programy używają
 Comment[pt]=Vigia o estado das interfaces de rede e avisa as aplicações que utilizam a rede.
 Comment[pt_BR]=Controla o status das interfaces de rede e fornece notificações para aplicativos utilizando a rede.
 Comment[ru]=Служба отслеживания состояния сетевых интерфейсов и обращения приложений к сети.
+Comment[sl]=Sledi stanju omrežnim vmesnikom in omogoča obvestila programom, ki uporabljajo omrežje
 Comment[sr]=Прати статус мрежних интерфејса и пружа обавештења програмима који користе мрежу.
 Comment[sr@Latn]=Prati status mrežnih interfejsa i pruža obaveštenja programima koji koriste mrežu.
 Comment[sv]=Bevakar status för nätverksgränssnitt och tillhandahåller underrättelser till program som använder nätverket.

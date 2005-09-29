@@ -28,6 +28,7 @@ Description[pl]=Wtyczka protokołu filtrowania poczty Sieve
 Description[pt]=Um 'ioslave' para o protocolo de filtragem de correio Sieve
 Description[pt_BR]=Um IO-Slave para o protocolo de filtragem de email Sieve
 Description[ru]=Канал протокола фильтра почты Sieve
+Description[sl]=ioslave za protokol poštnega filtriranja Sieve
 Description[sr]=IOslave протокола за филтрирање поште Sieve
 Description[sr@Latn]=IOslave protokola za filtriranje pošte Sieve
 Description[sv]=En I/O-slav för brevfiltreringsprotokollet Sieve
