@@ -78,10 +78,11 @@ public:
       url.setQuery( base );
 
       const QString bindDN = mConfig.readEntry( QString( "SelectedBind" ) + num ).stripWhiteSpace();
-      url.setUser( bindDN );
+      url.setUser( bindDN.isEmpty()?QString::null:bindDN ); // otherwise KURL::operator== fails
 
       const QString pwdBindDN = mConfig.readEntry( QString( "SelectedPwdBind" ) + num ).stripWhiteSpace();
-      url.setPass( pwdBindDN );
+      url.setPass( pwdBindDN.isEmpty()?QString::null:pwdBindDN ); // otherwise KURL::operator== fails
+
       lst.append( url );
     }
     return lst;
