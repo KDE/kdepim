@@ -25,7 +25,7 @@ kcm_kabldapconfig_la_LIBADD = $(LIB_KIO) $(LIB_KABC) $(top_builddir)/libkdepim/l
 kcm_kabcustomfields_la_SOURCES = kcmkabcustomfields.cpp
 kcm_kabcustomfields_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) \
                                -avoid-version -no-undefined
-kcm_kabcustomfields_la_LIBADD = $(LIB_KDEUI) -lqui \
+kcm_kabcustomfields_la_LIBADD = $(LIB_KDEUI) $(LIB_QTDESIGNER) \
                                 $(top_builddir)/kaddressbook/common/libkabcommon.la
 kcm_kabcustomfields_la_COMPILE_FIRST = $(top_builddir)/kaddressbook/common/kabprefs_base.h
 

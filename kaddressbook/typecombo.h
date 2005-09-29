@@ -129,7 +129,11 @@ int TypeCombo<T>::selectedType()
 template <class T>
 typename TypeCombo<T>::Iterator TypeCombo<T>::selectedElement()
 {
-  return mTypeList.at( currentItem() );
+#warning Ugly porting hack!
+  TypeCombo<T>::Iterator it = mTypeList.begin();
+  for ( int i = 0; i < currentItem(); ++i, ++it );
+  return it;
+//  return mTypeList.at( currentItem() );
 }
 
 template <class T>

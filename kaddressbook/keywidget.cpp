@@ -168,7 +168,7 @@ void KeyWidget::removeKey()
 
 void KeyWidget::exportKey()
 {
-  KABC::Key key = (*mKeyList.at( mKeyCombo->currentItem() ) );
+  KABC::Key key = mKeyList.at( mKeyCombo->currentItem() );
 
   KURL url = KFileDialog::getSaveURL();
 
