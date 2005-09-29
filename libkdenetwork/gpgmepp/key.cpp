@@ -1,13 +1,13 @@
 /* key.cpp - wraps a gpgme key
-   Copyright (C) 2003 Klarälvdalens Datakonsult AB
+   Copyright (C) 2003, 2005 Klarälvdalens Datakonsult AB
 
    This file is part of GPGME++.
- 
+
    GPGME++ is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
- 
+
    GPGME++ is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -226,6 +226,14 @@ namespace GpgME {
     return d->key && d->key->can_authenticate;
   }
 
+  bool Key::isQualified() const {
+#ifdef HAVE_GPGME_KEY_T_IS_QUALIFIED
+    return d->key && d->key->is_qualified;
+#else
+    return false;
+#endif
+  }
+
   const char * Key::issuerSerial() const {
     return d->key ? d->key->issuer_serial : 0 ;
   }
@@ -379,9 +387,17 @@ namespace GpgME {
   bool Subkey::canCertify() const {
     return d->subkey && d->subkey->can_certify;
   }
-  
+
   bool Subkey::canAuthenticate() const {
     return d->subkey && d->subkey->can_authenticate;
+  }
+
+  bool Subkey::isQualified() const {
+#ifdef HAVE_GPGME_SUBKEY_T_IS_QUALIFIED
+    return d->subkey && d->subkey->is_qualified;
+#else
+    return false;
+#endif
   }
 
   unsigned int Subkey::length() const {
@@ -599,7 +615,7 @@ namespace GpgME {
 	key = 0;
       }
     }
-	  
+
     Private( gpgme_key_t aKey, gpgme_user_id_t aUid, gpgme_key_sig_t aSig )
       : key( aKey ), uid( 0 ), sig( 0 )
     {
@@ -620,7 +636,7 @@ namespace GpgME {
 	key = 0;
       }
     }
-	  
+
     gpgme_key_t key;
     gpgme_user_id_t uid;
     gpgme_key_sig_t sig;
@@ -761,7 +777,7 @@ namespace GpgME {
 #endif
     return count;
   }
-      
+
   vector<UserID::Signature::Notation> UserID::Signature::notations() const {
     if ( !d->sig )
       return vector<Notation>();
@@ -787,7 +803,7 @@ namespace GpgME {
   }
 
 
-  
+
   //
   //
   // class Notation
@@ -826,7 +842,7 @@ namespace GpgME {
 	nota = 0;
       }
     }
-	  
+
     Private( gpgme_key_t aKey, gpgme_user_id_t aUid,
 	     gpgme_key_sig_t aSig, gpgme_sig_notation_t aNota )
       : key( aKey ), uid( 0 ), sig( 0 ), nota( 0 )
@@ -858,7 +874,7 @@ namespace GpgME {
 	nota = 0;
       }
     }
-	  
+
     gpgme_key_t key;
     gpgme_user_id_t uid;
     gpgme_key_sig_t sig;
