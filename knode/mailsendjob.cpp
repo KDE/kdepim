@@ -55,7 +55,7 @@ void KNode::MailSendJob::execute()
 void KNode::MailSendJob::slotResult( KIO::Job * job )
 {
   if ( job->error() )
-    setErrorString( job->errorString() );
+    setError( job->error(), job->errorString() );
   emitFinished();
 }
 

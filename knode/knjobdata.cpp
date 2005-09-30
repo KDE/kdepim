@@ -64,8 +64,11 @@ void KNJobConsumer::processJob( KNJobData *j )
 
 
 // the assingment of a_ccount may cause race conditions, check again.... (CG)
-KNJobData::KNJobData(jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem *i)
- : t_ype(t), d_ata(i), a_ccount(a), c_anceled(false), a_uthError(false), c_onsumer(c),
+KNJobData::KNJobData(jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem *i) :
+  t_ype(t), d_ata(i), a_ccount(a),
+  mError( 0 ),
+  mCanceled( false ),
+  c_onsumer( c ),
   mJob( 0 ),
   mProgressItem( 0 )
 {
@@ -91,7 +94,7 @@ void KNJobData::notifyConsumer()
 
 void KNJobData::cancel()
 {
-  c_anceled = true;
+  mCanceled = true;
   if ( mJob ) {
     mJob->kill();
     mJob = 0;
@@ -179,5 +182,10 @@ KURL KNJobData::baseUrl() const
   return url;
 }
 
+void KNJobData::setError( int err, const QString & errMsg )
+{
+  mError = err;
+  mErrorString = errMsg;
+}
 
 #include "knjobdata.moc"

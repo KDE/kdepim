@@ -48,7 +48,7 @@ void Scheduler::addJob(KNJobData *job)
 {
   // kdDebug(5003) << "Scheduler::addJob() : job queued" << endl;
   if(job->account()==0) {
-    job->setErrorString(i18n("Internal Error: No account set for this job."));
+    job->setError( KIO::ERR_INTERNAL, i18n("Internal Error: No account set for this job.") );
     job->notifyConsumer();
     return;
   }
@@ -174,7 +174,7 @@ void Scheduler::cancelJobs( int type, KPIM::ProgressItem * item )
 void Scheduler::slotJobFinished( KNJobData * job )
 {
   // handle authentication errors, ie. request password and try again
-  if ( !job->success() && job->authError() ) {
+  if ( job->error() == KIO::ERR_COULD_NOT_LOGIN ) {
     kdDebug(5003) << k_funcinfo << "authentication error" << endl;
     KNServerInfo *account = job->account();
     if ( account ) {
@@ -187,8 +187,7 @@ void Scheduler::slotJobFinished( KNJobData * job )
         account->setNeedsLogon( true );
         account->setUser( user );
         account->setPass( pass );
-        job->setAuthError( false );
-        job->setErrorString( QString::null );
+        job->setError( 0, QString::null );
         // restart job
         job->execute();
         return;

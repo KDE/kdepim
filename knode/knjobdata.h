@@ -20,6 +20,8 @@
 #include <qobject.h>
 #include <q3valuelist.h>
 
+#include <kio/global.h>
+
 #include <libkdepim/progressmanager.h>
 
 namespace KIO {
@@ -73,6 +75,14 @@ class KNJobItem {
 };
 
 
+/** Abstract base class for all KNode internal jobs.
+ *  This class takes care of:
+ *  - progress/status reporting and user interaction (cancelation).
+ *  - error handling/reporting.
+ *  - easy handling of associated KIO jobs.
+ *  To imlpement a new job class, you need to sub-class this class and
+ *  implement the execute() method.
+ */
 class KNJobData : public QObject
 {
   Q_OBJECT
@@ -97,21 +107,28 @@ class KNJobData : public QObject
     KNServerInfo* account() const         { return a_ccount; }
     KNJobItem* data() const               { return d_ata; }
 
-    const QString& errorString() const    { return e_rrorString; }
-    bool success() const                  { return e_rrorString.isEmpty(); }
-    bool canceled() const                 { return c_anceled; }
-    bool authError() const                { return a_uthError; }
-
-    void setErrorString(const QString& s) { e_rrorString=s; }
+    /** Returns the error code (see KIO::Error). */
+    int error() const { return mError; }
+    /** Returns the error message. */
+    QString errorString() const { return mErrorString; }
+    /** Returns true if the job finished successfully. */
+    bool success() const { return mErrorString.isEmpty() && mError == 0; }
+    /** Returns true if the job has been canceled by the user. */
+    bool canceled() const { return mCanceled; }
 
     /** Cancels this job.
-     *  If the job is currently active, this cancels the assosiated KIO job and
+     *  If the job is currently active, this cancels the associated KIO job and
      *  emits the finished signal.
      */
     void cancel();
-    void setAuthError(bool b)             { a_uthError=b; }
 
-    void prepareForExecution()           { e_rrorString = d_ata->prepareForExecution(); }
+    /** Set job error information.
+     *  @param err The error code (see KIO::Error).
+     *  @param errMsg A translated error message.
+     */
+    void setError( int err, const QString &errMsg );
+
+    void prepareForExecution()           { mErrorString = d_ata->prepareForExecution(); }
     void notifyConsumer();
 
     /** Performs the actual operation of a job, needs to be reimplemented for
@@ -126,9 +143,17 @@ class KNJobData : public QObject
     /** Creates a KPIM::ProgressItem for this job. */
     void createProgressItem();
 
-    // safe forwards to the progress item
+    /** Set the status message of the progress item if available.
+     *  @param msg The new status message.
+     */
     void setStatus( const QString &msg ) { if ( mProgressItem ) mProgressItem->setStatus( msg ); }
+    /** Set the progress value of the progress item if available.
+     *  @param progress The new progress value.
+     */
     void setProgress( unsigned int progress ) { if ( mProgressItem ) mProgressItem->setProgress( progress ); }
+    /** Tells the progress item to indicate that the job has finished if
+     *  available. This causes the destruction of the progress item.
+     */
     void setComplete() { if ( mProgressItem ) { mProgressItem->setComplete(); mProgressItem = 0; } }
 
   signals:
@@ -155,16 +180,24 @@ class KNJobData : public QObject
     jobType t_ype;
     KNJobItem *d_ata;
     KNServerInfo *a_ccount;
-    QString e_rrorString;
-    bool c_anceled;
-    bool a_uthError;
+    /** The job error code (see KIO::Error). */
+    int mError;
+    /** The error message. */
+    QString mErrorString;
+    /** Cancel status flag. */
+    bool mCanceled;
     KNJobConsumer *c_onsumer;
+    /** An associated KIO job. */
     KIO::Job *mJob;
+    /** The progress item representing this job to the user. */
     KPIM::ProgressItem *mProgressItem;
 
   private slots:
+    /** Connected to the progress signal of mJob to update the progress item. */
     void slotJobPercent( KIO::Job *job, unsigned long percent );
+    /** Connected to the info message signal if mJob to update the progress item. */
     void slotJobInfoMessage( KIO::Job *job, const QString &msg );
+    /** Emits the finished signal. @see emitFinished() */
     void slotEmitFinished();
 
 };

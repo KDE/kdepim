@@ -53,6 +53,7 @@ void KNode::GroupListJob::execute()
 
 void KNode::GroupListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList & list )
 {
+  Q_UNUSED( job );
    KNGroupListData *target = static_cast<KNGroupListData *>( data() );
 
   QString name, desc;
@@ -93,7 +94,7 @@ void KNode::GroupListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList &
 void KNode::GroupListJob::slotResult( KIO::Job * job )
 {
   if ( job->error() )
-    setErrorString( job->errorString() );
+    setError( job->error(), job->errorString() );
   else {
     KNGroupListData *target = static_cast<KNGroupListData *>( data() );
 
@@ -101,7 +102,7 @@ void KNode::GroupListJob::slotResult( KIO::Job * job )
     if ( mIncremental ) {
       setStatus( i18n("Loading group list from disk...") );
       if ( !target->readIn() ) {
-        setErrorString( i18n("Unable to read the group list file") );
+        setError( KIO::ERR_COULD_NOT_READ, i18n("Unable to read the group list file") );
         emitFinished();
         return;
       }
@@ -110,7 +111,7 @@ void KNode::GroupListJob::slotResult( KIO::Job * job )
     setStatus( i18n("Writing group list to disk...") );
 
     if ( !target->writeOut() )
-      setErrorString( i18n("Unable to write the group list file") );
+      setError( KIO::ERR_COULD_NOT_WRITE, i18n("Unable to write the group list file") );
   }
 
   emitFinished();
@@ -130,7 +131,7 @@ void KNode::GroupLoadJob::execute( )
   setStatus( i18n("Loading group list from disk...") );
   // TODO: use the thread weaver here
   if ( !target->readIn() )
-    setErrorString(i18n("Unable to read the group list file"));
+    setError( KIO::ERR_COULD_NOT_READ, i18n("Unable to read the group list file") );
 
   emitFinished();
 }
@@ -166,13 +167,14 @@ void KNode::ArticleListJob::execute()
 
 void KNode::ArticleListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList & list )
 {
+  Q_UNUSED( job );
   mArticleList += list;
 }
 
 void KNode::ArticleListJob::slotResult( KIO::Job * job )
 {
   if ( job->error() )
-    setErrorString( job->errorString() );
+    setError( job->error(), job->errorString() );
   else {
     KNGroup* target = static_cast<KNGroup*>( data() );
 
@@ -213,7 +215,7 @@ void KNode::ArticleFetchJob::execute()
 void KNode::ArticleFetchJob::slotResult( KIO::Job * job )
 {
   if ( job->error() )
-    setErrorString( job->errorString() );
+    setError( job->error(), job->errorString() );
   else {
     KNRemoteArticle *target = static_cast<KNRemoteArticle*>( data() );
     KIO::StoredTransferJob *j = static_cast<KIO::StoredTransferJob*>( job );
@@ -246,7 +248,7 @@ void KNode::ArticlePostJob::execute( )
 void KNode::ArticlePostJob::slotResult( KIO::Job * job )
 {
   if ( job->error() )
-    setErrorString( job->errorString() );
+    setError( job->error(), job->errorString() );
 
   emitFinished();
 }
