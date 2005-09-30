@@ -530,33 +530,33 @@ void Feed::loadFavicon()
 
 void Feed::slotDeleteExpiredArticles()
 {
-    bool changed = false;
     if ( !usesExpiryByAge() )
         return;
 
-    ArticleSequence::ConstIterator it = m_articles.end();
+    ArticleSequence::ConstIterator it = m_articles.begin();
     ArticleSequence::ConstIterator tmp;
-    ArticleSequence::ConstIterator begin = m_articles.begin();
-    // when we found an article which is not yet expired, we can stop, since articles are sorted by date
-    bool foundNotYetExpired = false;
+    ArticleSequence::ConstIterator end = m_articles.end();
 
-    while ( !foundNotYetExpired && it != begin )
+    ArticleSequence toBeDeleted;
+
+    for ( ; it != end; ++it)
     {
-        --it;
-        if (!(*it).keep())
+        if (!(*it).keep() && isExpired(*it) )
         {
-            if ( isExpired(*it) )
-            {
-                tmp = it;
-                m_articles.remove(*tmp);
-                changed = true;
-            }
-            else
-                foundNotYetExpired = true;
+            toBeDeleted.append(*it);
         }
+        
     }
-    if (changed)
+
+    if (!toBeDeleted.isEmpty())
+    {
+        end = toBeDeleted.end();
+        for (it = toBeDeleted.begin(); it != end; ++it)
+        {
+            m_articles.remove(*it);
+        }
         modified();
+    }
 }
 
 void Feed::setFavicon(const QPixmap &p)
