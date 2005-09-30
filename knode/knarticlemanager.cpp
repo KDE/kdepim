@@ -97,7 +97,7 @@ void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
   QString fName = a->subject()->asUnicodeString();
   QString s = "";
 
-  for (unsigned int i=0; i<fName.length(); i++)
+  for ( int i = 0; i < fName.length(); ++i )
     if (fName[i].isLetterOrNumber())
       s.append(fName[i]);
     else
@@ -906,16 +906,32 @@ void  KNArticleManager::rescoreArticles(KNRemoteArticle::List &l)
 void KNArticleManager::processJob(KNJobData *j)
 {
   if(j->type()==KNJobData::JTfetchArticle && !j->canceled()) {
+    KNRemoteArticle *a = static_cast<KNRemoteArticle*>( j->data() );
     if(j->success()) {
-      KNRemoteArticle *a=static_cast<KNRemoteArticle*>(j->data());
       ArticleWidget::articleChanged( a );
       if(!a->isOrphant()) //orphant articles are deleted by the displaying widget
         knGlobals.memoryManager()->updateCacheEntry(a);
       if(a->listItem())
         a->updateListItem();
+    } else {
+      if ( j->error() == KIO::ERR_DOES_NOT_EXIST ) {
+        // article is not available at the server anymore
+        QString msgId = a->messageID()->as7BitString( false );
+        // strip of '<' and '>'
+        msgId = msgId.mid( 1, msgId.length() - 2 );
+        ArticleWidget::articleLoadError( a,
+            i18n("The article you requested is not available on your news server."
+            "<br>You could try to get it from <a href=\"http://groups.google.com/groups?selm=%1\">groups.google.com</a>.")
+            .arg( msgId ) );
+        // mark article as read
+        if ( knGlobals.configManager()->readNewsGeneral()->autoMark() && !a->isOrphant() ) {
+          KNRemoteArticle::List l;
+          l.append( a );
+          setRead( l, true );
+        }
+      } else
+        ArticleWidget::articleLoadError( a, j->errorString() );
     }
-    else
-      ArticleWidget::articleLoadError(static_cast<KNRemoteArticle*>(j->data()), j->errorString());
   }
 
   delete j;
