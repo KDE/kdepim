@@ -27,6 +27,7 @@
 #include "feedgroup.h"
 #include "feediconmanager.h"
 #include "treenode.h"
+#include "myarticle.h"
 
 #include <kurl.h>
 #include <kdebug.h>
@@ -112,13 +113,17 @@ void Archive::load_p(Feed *f)
         f->setFavicon(QPixmap(KGlobal::dirs()->findResource("cache", iconFile+".png")));
 
     // images are cache, articles is data.. good I think.
-    QString u=f->xmlUrl();
-    
-    QString imageFileName=KGlobal::dirs()->saveLocation("cache", "akregator/Media/")+u.replace("/", "_").replace(":", "_")+".png";
+    QString u = url.prettyURL(-1);
+
+    if (u.length() > 255)
+        u = u.left(200) + QString::number(MyArticle::calcHash(u), 16);
+
+    QString imageFileName=KGlobal::dirs()->saveLocation("cache", "akregator/Media/") + QString(u).replace("/", "_").replace(":", "_")+".png";
     f->setImage(QPixmap(imageFileName, "PNG")); 
     
-    QString filePath = KGlobal::dirs()->saveLocation("data", "akregator/Archive/") + url.prettyURL(-1).replace("/", "_").replace(":", "_") + ".xml";
+    QString filePath = KGlobal::dirs()->saveLocation("data", "akregator/Archive/") + QString(u).replace("/", "_").replace(":", "_") + ".xml";
 
+   
     //kdDebug() << "Will read feed from " << filePath << endl;
     //kdDebug() << "merged :"<<f->isMerged()<<endl;
 
@@ -170,8 +175,12 @@ void Archive::save_p(Feed *f)
         
 
     KURL url( f->xmlUrl() );
+    
+    QString u = url.prettyURL(-1);
+    if (u.length() > 255)
+        u = u.left(200) + QString::number(MyArticle::calcHash(u), 16);
 
-    QString filePath = KGlobal::dirs()->saveLocation("data", "akregator/Archive/") + url.prettyURL(-1).replace("/", "_").replace(":", "_") + ".xml";
+    QString filePath = KGlobal::dirs()->saveLocation("data", "akregator/Archive/") + u.replace("/", "_").replace(":", "_") + ".xml";
 
     //kdDebug() << "Will save feed to " << filePath << endl;
 

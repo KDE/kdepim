@@ -96,8 +96,10 @@ namespace Akregator
             bool operator>(const MyArticle &other) const;
             bool operator>=(const MyArticle &other) const;
             
-        private:
             static uint calcHash(const QString& str);
+
+        private:
+            
             struct Private;
             Private *d;
             QString buildTitle();
