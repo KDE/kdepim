@@ -988,9 +988,8 @@ QString ArticleWidget::writeAttachmentToTempFile( KMime::Content *att, int partN
   fname += "/" + attName;
 
   QByteArray data = att->decodedContent();
-  size_t size = data.size();
   // ### KMail does crlf2lf conversion here before writing the file
-  if( !KPIM::kBytesToFile( data.data(), size, fname, false, false, false ) )
+  if( !KPIM::kByteArrayToFile( data, fname, false, false, false ) )
     return QString::null;
 
   mTempFiles.append( fname );
