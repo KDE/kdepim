@@ -646,7 +646,7 @@ void ArticleWidget::displayHeader()
     html += QString( "<b>%1</b>" ).arg( i18n("References:") );
 
     while ( i <= refCnt ) {
-      html += " <a href=\"news:" + QString( "%1\">%2</a>" ).arg( id ).arg( i );
+      html += " <a href=\"news:" + id + "\">" + QString::number( i ) + "</a>";
       id = refs->next();
       id = id.mid( 1, id.length() - 2 );  // remove <>
       i++;
