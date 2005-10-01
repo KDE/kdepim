@@ -202,7 +202,8 @@ QString Query::marshal( const QVariant &arg ) const
   switch ( arg.type() )
   {
       case QVariant::String:
-      case QVariant::CString:
+#warning Port me!
+      //case QVariant::CString: 
       return "<value><string>" + arg.toString() + "</string></value>\r\n";
       case QVariant::Int:
       return "<value><int>" + QString::number( arg.toInt() ) + "</int></value>\r\n";
