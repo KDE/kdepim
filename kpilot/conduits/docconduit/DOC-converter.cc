@@ -33,8 +33,8 @@
 #include <qdir.h>
 #include <qfileinfo.h>
 #include <qregexp.h>
-#include <qsortedlist.h>
-
+#include <q3sortedlist.h>
+#include <qtextstream.h>
 #include <pilotDatabase.h>
 #include <pilotLocalDatabase.h>
 #include <pilotSerialDatabase.h>

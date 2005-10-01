@@ -68,7 +68,7 @@ void *PilotMemo::pack_(void *buf, int *len)
 	FUNCTIONSETUP;
 	if (!*len) return NULL;
 	if (*len < 0) return NULL; // buffer size being silly
-	if (fText.length() > (unsigned) *len) return NULL; // won't fit either
+	if (fText.length() >  *len) return NULL; // won't fit either
 
 	Q3CString s = codec()->fromUnicode(fText);
 

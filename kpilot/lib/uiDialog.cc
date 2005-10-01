@@ -174,7 +174,7 @@
 
 	QString comma = CSL1(", ");
 
-	unsigned int count=1;
+	int count=1;
 	for (i=pl.begin(); i!=pl.end(); ++i)
 	{
 		s.append(CSL1("%1 (<i>%2</i>)%3")
