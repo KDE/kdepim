@@ -49,6 +49,7 @@
 
 #include <kdepimmacros.h>
 
+#if 0 // disabled, since it is apparently confusing
 // For sync'ing kabldaprc
 class KABSynchronizer
 {
@@ -117,6 +118,8 @@ public:
 private:
   KConfig mConfig;
 };
+
+#endif
 
 static const char s_dirserv_componentName[] = "dirmngr";
 static const char s_dirserv_groupName[] = "LDAP";
@@ -222,6 +225,7 @@ void DirectoryServicesConfigurationPage::save()
 
   mConfig->sync( true );
 
+#if 0
   // Also write the LDAP URLs to kabldaprc so that they are used by kaddressbook
   KABSynchronizer sync;
   const KURL::List toAdd = mWidget->urlList();
@@ -236,6 +240,7 @@ void DirectoryServicesConfigurationPage::save()
       currentList.append( *it );
   }
   sync.writeList( currentList );
+#endif
 }
 
 void DirectoryServicesConfigurationPage::defaults()
