@@ -28,7 +28,7 @@
 #include <qdatastream.h>
 //Added by qt3to4:
 #include <QList>
-#include <Q3CString>
+#include <QByteArray>
 #include <kdebug.h>
 #include <assert.h>
 
@@ -79,13 +79,13 @@ void addToChecksum( Q_UINT32 i, Q_UINT16 &checksum ) {
   checksum += (i >> 24) & 0xff;
 }
 
-void addToChecksum( Q3CString &cs, Q_UINT16 &checksum ) {
+void addToChecksum( QByteArray &cs, Q_UINT16 &checksum ) {
   int len = cs.length();
   for (int i=0; i<len; i++)
     checksum += (Q_UINT8)cs[i];
 }
 
-void writeCString( QDataStream &stream, Q3CString &str ) {
+void writeCString( QDataStream &stream, QByteArray &str ) {
   stream.writeRawBytes( str.data(), str.length() );
   stream << (Q_UINT8)0;
 }
@@ -114,7 +114,7 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
   Q_UINT16 checksum = 0;
   QList<QVariant> list;
   QString s;
-  Q3CString cs, cs2;
+  QByteArray cs, cs2;
   QDateTime dt;
   QDate date;
   QTime time;
