@@ -18,7 +18,7 @@
 
 //#include <stdio.h>
 
-#include <q3vbox.h>
+
 #include <qlabel.h>
 
 #include <qtooltip.h>
@@ -54,9 +54,10 @@
 #include "kpgp.h"
 #include "kpgpui.h"
 #include "kpgpkey.h"
-
+#include <Q3HBox>
 #include <assert.h>
 #include <string.h> // for memcpy(3)
+#include <kvbox.h>
 
 const int Kpgp::KeySelectionDialog::sCheckSelectionDelay = 250;
 
@@ -140,7 +141,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
   lay = new QVBoxLayout(group);
   lay->setSpacing( KDialog::spacingHint() );
 
-  Q3HBox * hbox = new Q3HBox( group );
+  KHBox * hbox = new KHBox( group );
   lay->addWidget( hbox );
   label = new QLabel( i18n("Select encryption tool to &use:"), hbox );
   toolCombo = new QComboBox( false, hbox );
@@ -1350,8 +1351,8 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   Q3ScrollView* sv = new Q3ScrollView( page );
   sv->setResizePolicy( Q3ScrollView::AutoOneFit );
   topLayout->addWidget( sv );
-  Q3VBox* bigvbox = new Q3VBox( sv->viewport() );
-  bigvbox->setMargin( KDialog::marginHint() );
+  KVBox* bigvbox = new KVBox( sv->viewport() );
+  //bigvbox->setMargin( KDialog::marginHint() );
   bigvbox->setSpacing( KDialog::spacingHint() );
   sv->addChild( bigvbox );
 
@@ -1365,7 +1366,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   // the sender's key
   if( pgp->encryptToSelf() ) {
     mEncryptToSelf = 1;
-    Q3HBox* hbox = new Q3HBox( bigvbox );
+    KHBox* hbox = new KHBox( bigvbox );
     new QLabel( i18n("Your keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
     if( keyIDs[0].isEmpty() ) {
@@ -1416,13 +1417,13 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
       new KSeparator( Qt::Horizontal, bigvbox );
     }
 
-    Q3HBox *hbox = new Q3HBox( bigvbox );
+    KHBox *hbox = new KHBox( bigvbox );
     new QLabel( i18n("Recipient:"), hbox );
     QLabel *addressL = new QLabel( *ait, hbox );
     hbox->setStretchFactor( addressL, 10 );
     mAddressLabels.insert( i, addressL  );
 
-    hbox = new Q3HBox( bigvbox );
+    hbox = new KHBox( bigvbox );
     new QLabel( i18n("Encryption keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
     if( (*kit).isEmpty() ) {
@@ -1451,7 +1452,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     //hbox->setStretchFactor( keyidLB, 10 );
     //mKeyIdListBoxes.insert( i + 1, keyidLB );
 
-    hbox = new Q3HBox( bigvbox );
+    hbox = new KHBox( bigvbox );
     new QLabel( i18n("Encryption preference:"), hbox );
     QComboBox *encrPrefCombo = new QComboBox( hbox );
     encrPrefCombo->insertItem( i18n("<none>") );
