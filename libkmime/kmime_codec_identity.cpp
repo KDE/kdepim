@@ -34,10 +34,10 @@
 #include <kdebug.h>
 #include <kglobal.h>
 
+#include <QByteArray>
+
 #include <cassert>
 #include <cstring>
-//Added by qt3to4:
-#include <Q3CString>
 
 using namespace KMime;
 
@@ -101,11 +101,6 @@ QByteArray IdentityCodec::encode( const QByteArray & src, bool withCRLF ) const 
 QByteArray IdentityCodec::decode( const QByteArray & src, bool withCRLF ) const {
   kdWarning( withCRLF, 5100 ) << "IdentityCodec::decode(): withCRLF not yet supported!" << endl;
   return src;
-}
-
-Q3CString IdentityCodec::encodeToQCString( const QByteArray & src, bool withCRLF ) const {
-  kdWarning( withCRLF, 5100 ) << "IdentityCodec::encodeToQCString(): withCRLF not yet supported!" << endl;
-  return Q3CString( src.data(), src.size() + 1 );
 }
 
 } // namespace KMime
