@@ -128,6 +128,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   config.setGroup( "General" );
 
   QStringList sTitle;
+  sTitle += "";
   sTitle += i18n( "Dr." );
   sTitle += i18n( "Miss" );
   sTitle += i18n( "Mr." );
@@ -138,6 +139,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   sTitle.sort();
 
   QStringList sSuffix;
+  sSuffix += "";
   sSuffix += i18n( "I" );
   sSuffix += i18n( "II" );
   sSuffix += i18n( "III" );
