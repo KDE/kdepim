@@ -168,7 +168,6 @@ void KNJobData::slotEmitFinished( )
 KURL KNJobData::baseUrl() const
 {
   KURL url;
-  // TODO: handle smtp here as well
   if ( account()->encryption() == KNServerInfo::SSL )
     url.setProtocol( "nntps" );
   else

@@ -622,8 +622,10 @@ void KNConfig::NntpAccountConfDialog::slotPasswordChanged()
 //=============================================================================================
 
 KNConfig::SmtpAccountWidget::SmtpAccountWidget( QWidget *p, const char *n ) :
-  SmtpAccountWidgetBase( p, n )
+    KCModule( p, n )
 {
+  setupUi( this );
+
   mAccount = knGlobals.accountManager()->smtp();
   connect( knGlobals.accountManager(), SIGNAL(passwordsChanged()), SLOT(slotPasswordChanged()) );
   load();

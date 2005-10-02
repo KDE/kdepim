@@ -194,7 +194,7 @@ class KDE_EXPORT NntpAccountConfDialog : public KDialogBase  {
 };
 
 
-class KDE_EXPORT SmtpAccountWidget : public SmtpAccountWidgetBase {
+class KDE_EXPORT SmtpAccountWidget : public KCModule, private Ui::SmtpAccountWidgetBase {
 
 Q_OBJECT
 
