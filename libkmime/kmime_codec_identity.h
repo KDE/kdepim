@@ -33,8 +33,10 @@
 #define __KMIME_CODEC_IDENTITY_H__
 
 #include "kmime_codecs.h"
-//Added by qt3to4:
-#include <Q3CString>
+
+//#include <QByteArray>
+
+class QByteArray;
 
 namespace KMime {
 
@@ -47,7 +49,6 @@ public:
   ~IdentityCodec() {}
 
   QByteArray encode( const QByteArray & src, bool withCRLF ) const;
-  Q3CString encodeToQCString( const QByteArray & src, bool withCRLF ) const;
   QByteArray decode( const QByteArray & src, bool withCRLF ) const;
 
   int maxEncodedSizeFor( int insize, bool withCRLF ) const {
@@ -106,11 +107,6 @@ public:
   int maxDecodedSizeFor( int insize, bool ) {
     return insize;
   }
-
-  Q3CString encodeToQCString( const QByteArray &, bool ) const {
-    return Q3CString();
-  }
-
 };
 
 } // namespace KMime
