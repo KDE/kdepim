@@ -27,7 +27,7 @@
 #include <qbuffer.h>
 //Added by qt3to4:
 #include <Q3CString>
-#include <QPolygone>
+#include <QPolygon>
 #include <kdebug.h>
 
 bool qwmfDebug = false;
@@ -482,7 +482,7 @@ void QWinMetaFile::ellipse( long, short* parm )
 //-----------------------------------------------------------------------------
 void QWinMetaFile::polygon( long, short* parm )
 {
-    QPolygone* pa;
+    QPolygon* pa;
 
     pa = pointArray( parm[ 0 ], &parm[ 1 ] );
     mPainter.drawPolygon( *pa, mWinding );
@@ -501,7 +501,7 @@ void QWinMetaFile::polyPolygon( long, short* parm )
     QRect win = bbox();
     startPolygon = 1+parm[ 0 ];
     for ( i=0 ; i < parm[ 0 ] ; i++ ) {
-        QPolygone pa1( parm[ 1+i ] );
+        QPolygon pa1( parm[ 1+i ] );
         for ( j=0 ; j < parm[ 1+i ] ; j++) {
             pa1.setPoint ( j, parm[ startPolygon ], parm[ startPolygon+1 ] );
             startPolygon += 2;
@@ -519,7 +519,7 @@ void QWinMetaFile::polyPolygon( long, short* parm )
         mPainter.setClipping( false );
         mPainter.setBrush( Qt::NoBrush );
 
-        QPolygone* pa;
+        QPolygon* pa;
         int idxPolygon = 1 + parm[ 0 ];
         for ( i=0 ; i < parm[ 0 ] ; i++ ) {
             pa = pointArray( parm[ 1+i ], &parm[ idxPolygon ] );
@@ -535,7 +535,7 @@ void QWinMetaFile::polyPolygon( long, short* parm )
 //-----------------------------------------------------------------------------
 void QWinMetaFile::polyline( long, short* parm )
 {
-    QPolygone* pa;
+    QPolygon* pa;
 
     pa = pointArray( parm[ 0 ], &parm[ 1 ] );
     mPainter.drawPolyline( *pa );
@@ -1077,7 +1077,7 @@ int QWinMetaFile::findFunc( unsigned short aFunc ) const
 }
 
 //-----------------------------------------------------------------------------
-QPolygone* QWinMetaFile::pointArray( short num, short* parm )
+QPolygon* QWinMetaFile::pointArray( short num, short* parm )
 {
     int i;
 
