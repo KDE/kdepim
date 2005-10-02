@@ -1,7 +1,7 @@
 /*  -*- c++ -*-
-    kmime_codecs.cpp
 
     This file is part of KMime, the KDE internet mail/usenet news message library.
+
     Copyright (c) 2001-2002 Marc Mutz <mutz@kde.org>
 
     KMime is free software; you can redistribute it and/or modify it
@@ -37,30 +37,29 @@
 #include "kmime_codec_uuencode.h"
 #include "kmime_codec_identity.h"
 
-#include <kdebug.h>
+#include "kautodeletehash.h"
 
-#include <q3cstring.h>
+#include <kasciistringtools.h>
+#include <kdebug.h>
 #include <kstaticdeleter.h>
 
 #include <cassert>
 #include <cstring>
 
 using namespace KMime;
+using namespace KPIM;
 
 namespace KMime {
 
 // global list of KMime::Codec's
-Q3AsciiDict<Codec>* Codec::all = 0;
-static KStaticDeleter<Q3AsciiDict<Codec> > sdAll;
+KAutoDeleteHash<QByteArray, Codec> * Codec::all = 0;
+static KStaticDeleter< KAutoDeleteHash<QByteArray, Codec> > sdAll;
 #if defined(QT_THREAD_SUPPORT)
 QMutex* Codec::dictLock = 0;
 static KStaticDeleter<QMutex> sdDictLock;
 #endif
 
 void Codec::fillDictionary() {
-
-  all->setAutoDelete(true);
-
   //all->insert( "7bit", new SevenBitCodec() );
   //all->insert( "8bit", new EightBitCodec() );
   all->insert( "base64", new Base64Codec() );
@@ -74,15 +73,22 @@ void Codec::fillDictionary() {
 }
 
 Codec * Codec::codecForName( const char * name ) {
+  const QByteArray ba( name );
+  return codecForName( ba );
+}
+
+Codec * Codec::codecForName( const QByteArray & name ) {
 #if defined(QT_THREAD_SUPPORT)
   if ( !dictLock )
     sdDictLock.setObject( dictLock, new QMutex );
   dictLock->lock(); // protect "all"
 #endif
   if ( !all ) {
-    sdAll.setObject( all, new Q3AsciiDict<Codec>( 11, false /* case-insensitive */) );
+    sdAll.setObject( all, new KAutoDeleteHash<QByteArray, Codec>() );
     fillDictionary();
   }
+  QByteArray lowerName = name;
+  KPIM::kAsciiToLower( lowerName.data() );
   Codec * codec = (*all)[ name ];
 #if defined(QT_THREAD_SUPPORT)
   dictLock->unlock();
@@ -94,13 +100,9 @@ Codec * Codec::codecForName( const char * name ) {
   return codec;
 }
 
-Codec * Codec::codecForName( const Q3CString & name ) {
-  return codecForName( name.data() );
-}
-
 bool Codec::encode( const char* & scursor, const char * const send,
-		    char* & dcursor, const char * const dend,
-		    bool withCRLF ) const
+                    char* & dcursor, const char * const dend,
+                    bool withCRLF ) const
 {
   // get an encoder:
   Encoder * enc = makeEncoder( withCRLF );
@@ -139,29 +141,7 @@ QByteArray Codec::encode( const QByteArray & src, bool withCRLF ) const
   // encode
   if ( !encode( iit, iend, oit, oend, withCRLF ) )
     kdFatal() << name() << " codec lies about it's mEncodedSizeFor()"
-	      << endl;
-
-  // shrink result to actual size:
-  result.truncate( oit - result.begin() );
-
-  return result;
-}
-
-Q3CString Codec::encodeToQCString( const QByteArray & src, bool withCRLF ) const
-{
-  // allocate buffer for the worst case (remember to add one for the trailing NUL)
-  Q3CString result( maxEncodedSizeFor( src.size(), withCRLF ) + 1 );
-
-  // set up iterators:
-  QByteArray::ConstIterator iit = src.begin();
-  QByteArray::ConstIterator iend = src.end();
-  QByteArray::Iterator oit = result.begin();
-  QByteArray::ConstIterator oend = result.end() - 1;
-
-  // encode
-  if ( !encode( iit, iend, oit, oend, withCRLF ) )
-    kdFatal() << name() << " codec lies about it's mEncodedSizeFor()"
-	      << endl;
+              << endl;
 
   // shrink result to actual size:
   result.truncate( oit - result.begin() );
@@ -183,7 +163,7 @@ QByteArray Codec::decode( const QByteArray & src, bool withCRLF ) const
   // decode
   if ( !decode( iit, iend, oit, oend, withCRLF ) )
     kdFatal() << name() << " codec lies about it's maxDecodedSizeFor()"
-	      << endl;
+              << endl;
 
   // shrink result to actual size:
   result.truncate( oit - result.begin() );
@@ -192,8 +172,8 @@ QByteArray Codec::decode( const QByteArray & src, bool withCRLF ) const
 }
 
 bool Codec::decode( const char* & scursor, const char * const send,
-		    char* & dcursor, const char * const dend,
-		    bool withCRLF ) const
+                    char* & dcursor, const char * const dend,
+                    bool withCRLF ) const
 {
   // get a decoder:
   Decoder * dec = makeDecoder( withCRLF );

@@ -1,7 +1,7 @@
 /*  -*- c++ -*-
-    kmime_codecs.h
 
     This file is part of KMime, the KDE internet mail/usenet news message library.
+
     Copyright (c) 2001-2002 Marc Mutz <mutz@kde.org>
 
     KMime is free software; you can redistribute it and/or modify it
@@ -32,15 +32,20 @@
 #ifndef __KMIME_CODECS__
 #define __KMIME_CODECS__
 
-#include <q3asciidict.h>
 #if defined(QT_THREAD_SUPPORT)
 #  include <qmutex.h>
 #endif
 
-#include <q3cstring.h> // QByteArray
+//#include <QHash>
+#include <QByteArray>
 
 #include <kdebug.h> // for kdFatal()
 #include <kdepimmacros.h>
+
+namespace KPIM {
+  template <class Key, class T> class KAutoDeleteHash;
+}
+using namespace KPIM;
 
 namespace KMime {
 
@@ -57,7 +62,7 @@ class Decoder;
 class KDE_EXPORT Codec {
 protected:
 
-  static Q3AsciiDict<Codec>* all;
+  static KAutoDeleteHash<QByteArray, Codec> * all;
 #if defined(QT_THREAD_SUPPORT)
   static QMutex* dictLock;
 #endif
@@ -68,7 +73,7 @@ private:
 
 public:
   static Codec * codecForName( const char * name );
-  static Codec * codecForName( const Q3CString & name );
+  static Codec * codecForName( const QByteArray & name );
 
   virtual int maxEncodedSizeFor( int insize, bool withCRLF=false ) const = 0;
   virtual int maxDecodedSizeFor( int insize, bool withCRLF=false ) const = 0;
@@ -109,8 +114,8 @@ public:
    * buffer.
    **/
   virtual bool encode( const char* & scursor, const char * const send,
-		       char* & dcursor, const char * const dend,
-		       bool withCRLF=false ) const;
+                       char* & dcursor, const char * const dend,
+                       bool withCRLF=false ) const;
 
   /**
    * Convenience wrapper that can be used for small chunks of data
@@ -145,8 +150,8 @@ public:
    * buffer.
    **/
   virtual bool decode( const char* & scursor, const char * const send,
-		       char* & dcursor, const char * const dend,
-		       bool withCRLF=false ) const;
+                       char* & dcursor, const char * const dend,
+                       bool withCRLF=false ) const;
 
   /**
    * Even more convenient, but also a bit slower and more memory
@@ -156,19 +161,6 @@ public:
    * For use with small @p src.
    **/
   virtual QByteArray encode( const QByteArray & src, bool withCRLF=false ) const;
-
-  /**
-   * Even more convenient, but also a bit slower and more memory
-   * intensive, since it allocates storage for the worst case and then
-   * shrinks the result QCString to the actual size again.
-   *
-   * For use with small @p src.
-   *
-   * This method only works for codecs whose output is in the 8bit
-   * domain (ie. not in the binary domain). Codecs that do not fall
-   * into this category will return a null QCString.
-   **/
-  virtual Q3CString encodeToQCString( const QByteArray & src, bool withCRLF=false ) const;
 
   /**
    * Even more convenient, but also a bit slower and more memory
@@ -282,7 +274,7 @@ public:
    *  calls. See class decumentation for calling conventions.
    **/
   virtual bool decode( const char* & scursor, const char * const send,
-		       char* & dcursor, const char * const dend ) = 0;
+                       char* & dcursor, const char * const dend ) = 0;
   /** Call this method to finalize the output stream. Writes all
    *  remaining data and resets the decoder. See KMime::Codec for
    *  calling conventions.
@@ -311,7 +303,7 @@ public:
   /** Encode a chunk of data, maintaining state information between
       calls. See KMime::Codec for calling conventions. */
   virtual bool encode( const char* & scursor, const char * const send,
-		       char* & dcursor, const char * const dend ) = 0;
+                       char* & dcursor, const char * const dend ) = 0;
 
   /** Call this method to finalize the output stream. Writes all
       remaining data and resets the encoder. See KMime::Codec for
@@ -333,7 +325,7 @@ protected:
     } else {
       // else buffer the output:
       kdFatal( mOutputBufferCursor >= maxBufferedChars )
-	<< "KMime::Encoder: internal buffer overflow!" << endl;
+        << "KMime::Encoder: internal buffer overflow!" << endl;
       mOutputBuffer[ mOutputBufferCursor++ ] = ch;
       return false;
     }
