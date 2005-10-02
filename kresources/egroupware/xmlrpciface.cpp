@@ -204,7 +204,7 @@ QString Query::marshal( const QVariant &arg ) const
       case QVariant::String:
 #warning Port me!
       //case QVariant::CString: 
-      return "<value><string>" + arg.toString() + "</string></value>\r\n";
+      //return "<value><string>" + arg.toString() + "</string></value>\r\n";
       case QVariant::Int:
       return "<value><int>" + QString::number( arg.toInt() ) + "</int></value>\r\n";
       case QVariant::Double:
