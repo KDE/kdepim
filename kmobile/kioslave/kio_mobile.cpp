@@ -246,7 +246,7 @@ void KMobileProtocol::listRoot(const KURL& url)
   if (url.protocol() == "organizer" ||		// organizer:/
       url.protocol() == "pda")			// pda:/
 	classMask = KMobileDevice::Organizer;
-  if (url.protocol() == "camera")		// camera:/
+  if (url.protocol() == "phonecamera")		// camera:/
 	classMask = KMobileDevice::Camera;
 
   for (unsigned int i=0; i<dirs; i++) {
