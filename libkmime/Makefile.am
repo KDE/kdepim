@@ -1,4 +1,5 @@
-INCLUDES= $(all_includes)
+INCLUDES= -I$(top_srcdir)/libemailfunctions \
+        $(all_includes)
 
 lib_LTLIBRARIES = libkmime.la
 
@@ -18,11 +19,13 @@ libkmime_la_SOURCES = \
 			  kmime_message.cpp \
 			  kmime_newsarticle.cpp \
 			  boolflags.cpp \
-			  kqcstringsplitter.cpp
+			  kqcstringsplitter.cpp \
+			  kautodeletehash.cpp
 
 libkmime_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 4:0:2
 
-libkmime_la_LIBADD = $(LIB_KDECORE) $(LIB_POLL)
+libkmime_la_LIBADD = $(top_builddir)/libemailfunctions/libemailfunctions.la \
+                     $(LIB_KDECORE) $(LIB_POLL)
 
 METASOURCES = AUTO
 
