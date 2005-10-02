@@ -19,6 +19,7 @@
 #include <kcmodule.h>
 
 #include "knwidgets.h"
+#include "nntpaccountdialog_base.h"
 #include "smtpaccountwidget_base.h"
 //Added by qt3to4:
 #include <QPixmap>
@@ -155,41 +156,24 @@ class KDE_EXPORT NntpAccountListWidget : public KCModule {
 };
 
 
-class KDE_EXPORT NntpAccountConfDialog : public KDialogBase  {
+/** News server configuration dialog. */
+class KDE_EXPORT NntpAccountConfDialog : public KDialogBase, private Ui::NntpAccountDialogBase  {
 
   Q_OBJECT
 
   public:
-    NntpAccountConfDialog( KNNntpAccount* acc, QWidget *parent = 0 );
+    NntpAccountConfDialog( KNNntpAccount *a, QWidget *parent = 0 );
     ~NntpAccountConfDialog();
 
-  protected:
-    KLineEdit   *n_ame,
-                *s_erver,
-                *u_ser,
-                *p_ass,
-                *p_ort;
-    QLabel      *u_serLabel,
-                *p_assLabel,
-                *c_heckIntervalLabel;
-    KIntSpinBox *c_heckInterval;
-    QCheckBox   *f_etchDes,
-                *a_uth,
-                *u_seDiskCache,
-                *i_nterval;
-    KNConfig::IdentityWidget* i_dWidget;
-
-    KNNntpAccount *a_ccount;
-
   protected slots:
-    void slotOk();
-    void slotAuthChecked(bool b);
-    void slotIntervalChecked(bool b);
+    virtual void slotOk();
 
   private slots:
     void slotPasswordChanged();
 
   private:
+    KNNntpAccount *mAccount;
+    IdentityWidget* mIdentityWidget;
     GroupCleanupWidget *mCleanupWidget;
 };
 

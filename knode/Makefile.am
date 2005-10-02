@@ -23,7 +23,7 @@ knode_LDADD   = libknodecommon.la
 kcm_knode_la_SOURCES = knconfigpages.cpp
 kcm_knode_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
 kcm_knode_la_LIBADD = libknodecommon.la $(LIB_KDECORE)
-knconfigpages.lo: smtpaccountwidget_base.h
+knconfigpages.lo: nntpaccountdialog_base.h smtpaccountwidget_base.h
 
 libknodecommon_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
 libknodecommon_la_LIBADD = -lkdeprint -lkwalletclient $(top_builddir)/libkmime/libkmime.la $(top_builddir)/libkpgp/libkpgp.la $(top_builddir)/libkdepim/libkdepim.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIB_KUTILS) $(LIBRESOLV) $(LIB_KHTML)
@@ -90,8 +90,9 @@ libknodecommon_la_SOURCES =   knconfigmanager.cpp \
 		  kncollectionview.cpp \
                   articlewidget.cpp \
                   csshelper.cpp \
-                  smtpaccountwidget_base.ui
-libknodecommon_la_COMPILE_FIRST = smtpaccountwidget_base.h
+                  smtpaccountwidget_base.ui \
+                  nntpaccountdialog_base.ui
+libknodecommon_la_COMPILE_FIRST = nntpaccountdialog_base.ui smtpaccountwidget_base.h
 
 knode_SOURCES = knode.cpp knapplication.cpp main.cpp
 

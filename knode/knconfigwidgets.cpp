@@ -467,83 +467,47 @@ void KNConfig::NntpAccountListWidget::slotSubBtnClicked()
 //=======================================================================================
 
 
-KNConfig::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *parent )
-  : KDialogBase(Tabbed, (a->id()!=-1)? i18n("Properties of %1").arg(a->name()):i18n("New Account"),
-                Ok|Cancel|Help, Ok, parent ),
-    a_ccount(a)
+KNConfig::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *parent ) :
+    KDialogBase( Tabbed, (a->id() != -1) ? i18n("Properties of %1").arg(a->name()) : i18n("New Account"),
+                 Ok | Cancel | Help, Ok, parent ),
+    mAccount( a )
 {
-  QFrame* page=addPage(i18n("Ser&ver"));
-  QGridLayout *topL = new QGridLayout( page, 10, 3, 5 );
+  // server config tab
+  QFrame* page = addPage( i18n("Ser&ver") );
+  setupUi( page );
 
-  n_ame=new KLineEdit(page);
-  QLabel *l=new QLabel(n_ame,i18n("&Name:"),page);
-  topL->addWidget(l, 0,0);
-  n_ame->setText(a->name());
-  topL->addMultiCellWidget(n_ame, 0, 0, 1, 2);
+  mName->setText( a->name() );
+  mServer->setText( a->server() );
+  mPort->setValue( a->port() );
+  mFetchDesc->setChecked( a->fetchDescriptions() );
 
-  s_erver=new KLineEdit(page);
-  l=new QLabel(s_erver,i18n("&Server:"), page);
-  s_erver->setText(a->server());
-  topL->addWidget(l, 1,0);
-  topL->addMultiCellWidget(s_erver, 1, 1, 1, 2);
+  mLogin->setChecked( a->needsLogon() );
+  mUser->setText( a->user() );
 
-  p_ort=new KLineEdit(page);
-  l=new QLabel(p_ort, i18n("&Port:"), page);
-  p_ort->setValidator(new KIntValidator(0,65536,this));
-  p_ort->setText(QString::number(a->port()));
-  topL->addWidget(l, 2,0);
-  topL->addWidget(p_ort, 2,1);
-
-  f_etchDes=new QCheckBox(i18n("&Fetch group descriptions"), page);
-  f_etchDes->setChecked(a->fetchDescriptions());
-  topL->addMultiCellWidget( f_etchDes, 3, 3, 0, 3 );
-
-  /*u_seDiskCache=new QCheckBox(i18n("&Cache articles on disk"), page);
-  u_seDiskCache->setChecked(a->useDiskCache());
-  topL->addMultiCellWidget(u_seDiskCache, 6,6, 0,3);*/
-
-  a_uth=new QCheckBox(i18n("Server requires &authentication"), page);
-  connect(a_uth, SIGNAL(toggled(bool)), this, SLOT(slotAuthChecked(bool)));
-  topL->addMultiCellWidget( a_uth, 4, 4, 0, 3 );
-
-  u_ser=new KLineEdit(page);
-  u_serLabel=new QLabel(u_ser,i18n("&User:"), page);
-  u_ser->setText(a->user());
-  topL->addWidget( u_serLabel, 5, 0 );
-  topL->addMultiCellWidget( u_ser, 5, 5, 1, 2 );
-
-  p_ass=new KLineEdit(page);
-  p_assLabel=new QLabel(p_ass, i18n("Pass&word:"), page);
-  p_ass->setEchoMode(KLineEdit::Password);
+  connect( knGlobals.accountManager(), SIGNAL(passwordsChanged()), SLOT(slotPasswordChanged()) );
   if ( a->readyForLogin() )
-    p_ass->setText(a->pass());
+    mPassword->setText( a->pass() );
   else
     if ( a->needsLogon() )
       knGlobals.accountManager()->loadPasswordsAsync();
-  topL->addWidget( p_assLabel, 6, 0 );
-  topL->addMultiCellWidget( p_ass, 6, 6, 1, 2 );
 
-  i_nterval=new QCheckBox(i18n("Enable &interval news checking"), page);
-  connect(i_nterval, SIGNAL(toggled(bool)), this, SLOT(slotIntervalChecked(bool)));
-  topL->addMultiCellWidget( i_nterval, 7, 7, 0, 3 );
+  switch ( mAccount->encryption() ) {
+    case KNServerInfo::None:
+      mEncNone->setChecked( true );
+      break;
+    case KNServerInfo::SSL:
+      mEncSSL->setChecked( true );
+      break;
+    case KNServerInfo::TLS:
+      mEncTLS->setChecked( true );
+      break;
+  }
 
-  c_heckInterval=new KIntSpinBox( 1, 10000, 1, 1, page );
-  c_heckIntervalLabel=new QLabel(c_heckInterval, i18n("Check inter&val:"), page);
-  c_heckInterval->setSuffix(i18n(" min") );
-  c_heckInterval->setValue(a->checkInterval());
-  c_heckIntervalLabel->setBuddy(c_heckInterval);
-  topL->addWidget( c_heckIntervalLabel, 8, 0 );
-  topL->addMultiCellWidget( c_heckInterval, 8, 8, 1, 2 );
+  mIntervalChecking->setChecked( a->intervalChecking() );
+  mInterval->setValue( a->checkInterval() );
 
-  slotAuthChecked(a->needsLogon());
-  slotIntervalChecked(a->intervalChecking());
-
-  topL->setColStretch(1, 1);
-  topL->setColStretch(2, 1);
-  topL->setRowStretch( 9, 1 );
-
-  // Specfic Identity tab =========================================
-  i_dWidget=new KNConfig::IdentityWidget(a->identity(), addVBoxPage(i18n("&Identity")));
+  // identity tab
+  mIdentityWidget = new KNConfig::IdentityWidget( a->identity(), addVBoxPage(i18n("&Identity") ) );
 
   // per server cleanup configuration
   QFrame* cleanupPage = addPage( i18n("&Cleanup") );
@@ -553,13 +517,11 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidge
   cleanupLayout->addWidget( mCleanupWidget );
   cleanupLayout->addStretch( 1 );
 
-  connect( knGlobals.accountManager(), SIGNAL(passwordsChanged()), SLOT(slotPasswordChanged()) );
 
   KNHelper::restoreWindowSize("accNewsPropDLG", this, sizeHint());
 
   setHelp("anc-setting-the-news-account");
 }
-
 
 
 KNConfig::NntpAccountConfDialog::~NntpAccountConfDialog()
@@ -570,51 +532,43 @@ KNConfig::NntpAccountConfDialog::~NntpAccountConfDialog()
 
 void KNConfig::NntpAccountConfDialog::slotOk()
 {
-  if (n_ame->text().isEmpty() || s_erver->text().stripWhiteSpace().isEmpty()) {
+  if ( mName->text().isEmpty() || mServer->text().trimmed().isEmpty() ) {
     KMessageBox::sorry(this, i18n("Please enter an arbitrary name for the account and the\nhostname of the news server."));
     return;
   }
 
-  a_ccount->setName(n_ame->text());
-  a_ccount->setServer(s_erver->text().stripWhiteSpace());
-  a_ccount->setPort(p_ort->text().toInt());
-  a_ccount->setFetchDescriptions(f_etchDes->isChecked());
-  //a_ccount->setUseDiskCache(u_seDiskCache->isChecked());
-  a_ccount->setNeedsLogon(a_uth->isChecked());
-  a_ccount->setUser(u_ser->text());
-  a_ccount->setPass(p_ass->text());
-  a_ccount->setIntervalChecking(i_nterval->isChecked());
-  a_ccount->setCheckInterval(c_heckInterval->value());
-  if (a_ccount->id() != -1) // only save if account has a valid id
-    a_ccount->saveInfo();
+  mAccount->setName( mName->text() );
+  mAccount->setServer( mServer->text().trimmed() );
+  mAccount->setPort( mPort->value() );
+  mAccount->setFetchDescriptions( mFetchDesc->isChecked() );
+  mAccount->setNeedsLogon( mLogin->isChecked() );
+  mAccount->setUser( mUser->text() );
+  mAccount->setPass( mPassword->text() );
 
-  i_dWidget->save();
+  if ( mEncNone->isChecked() )
+    mAccount->setEncryption( KNServerInfo::None );
+  if ( mEncSSL->isChecked() )
+    mAccount->setEncryption( KNServerInfo::SSL );
+  if ( mEncTLS->isChecked() )
+    mAccount->setEncryption( KNServerInfo::TLS );
+
+  mAccount->setIntervalChecking( mIntervalChecking->isChecked() );
+  mAccount->setCheckInterval( mInterval->value() );
+
+  if ( mAccount->id() != -1 ) // only save if account has a valid id
+    mAccount->saveInfo();
+
+  mIdentityWidget->save();
   mCleanupWidget->save();
 
   accept();
 }
 
 
-void KNConfig::NntpAccountConfDialog::slotAuthChecked(bool b)
-{
-  a_uth->setChecked(b);
-  u_ser->setEnabled(b);
-  u_serLabel->setEnabled(b);
-  p_ass->setEnabled(b);
-  p_assLabel->setEnabled(b);
-}
-
-void KNConfig::NntpAccountConfDialog::slotIntervalChecked(bool b)
-{
-  i_nterval->setChecked(b);
-  c_heckInterval->setEnabled(b);
-  c_heckIntervalLabel->setEnabled(b);
-}
-
 void KNConfig::NntpAccountConfDialog::slotPasswordChanged()
 {
-  if ( p_ass->text().isEmpty() )
-    p_ass->setText( a_ccount->pass() );
+  if ( mPassword->text().isEmpty() )
+    mPassword->setText( mAccount->pass() );
 }
 
 //END: NNTP account configuration widgets ------------------------------------
