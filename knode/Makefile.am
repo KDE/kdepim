@@ -183,3 +183,5 @@ EXTRA_DIST = KNode.desktop
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp *.h -o $(podir)/knode.pot
+
+include $(top_srcdir)/admin/Doxyfile.am
