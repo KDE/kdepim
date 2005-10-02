@@ -182,7 +182,7 @@ protected:
     virtual int findFunc( unsigned short aFunc ) const;
 
     /** Fills given parms into mPoints. */
-    QPolygone* pointArray( short num, short* parms );
+    QPolygon* pointArray( short num, short* parms );
 
     /** Returns color given by the two parameters */
     QColor color( short* parm );
@@ -221,7 +221,7 @@ protected:
 
     WmfCmd* mFirstCmd;
     WinObjHandle** mObjHandleTab;
-    QPolygone mPoints;
+    QPolygon mPoints;
     int mDpi;
 };
 
