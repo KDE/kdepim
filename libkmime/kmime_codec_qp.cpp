@@ -130,6 +130,9 @@ class QuotedPrintableDecoder : public Decoder {
   bool mFlushing;
   bool mExpectLF;
   bool mHaveAccu;
+  /** @p mLastChar holds the first char of an encoded char, so that
+      we are able to keep the first char if the second char is invalid. */
+  char mLastChar;
 protected:
   friend class QuotedPrintableCodec;
   friend class Rfc2047QEncodingCodec;
@@ -144,14 +147,14 @@ protected:
       mInsideHexChar(false),
       mFlushing(false),
       mExpectLF(false),
-      mHaveAccu(false) {}
+      mHaveAccu(false),
+      mLastChar(0) {}
 public:
   virtual ~QuotedPrintableDecoder() {}
 
   bool decode( const char* & scursor, const char * const send,
 	       char* & dcursor, const char * const dend );
-  // ### really no finishing needed???
-  bool finish( char* &, const char * const ) { return true; }
+  bool finish( char* &, const char * const );
 };
 
 
@@ -266,15 +269,16 @@ bool QuotedPrintableDecoder::decode( const char* & scursor, const char * const s
 	mInsideHexChar = false;
       } else if ( mHaveAccu ) {
 	// output the high nibble of the accumulator:
-	*dcursor++ = binToHex( highNibble( mAccu ) );
+	*dcursor++ = mLastChar;
 	mHaveAccu = false;
 	mAccu = 0;
       } else {
 	// output mBadChar
 	assert( mAccu == 0 );
 	if ( mBadChar ) {
-	  if ( mBadChar >= '>' && mBadChar <= '~' ||
-	       mBadChar >= '!' && mBadChar <= '<' )
+	  if ( mBadChar == '=' )
+            mInsideHexChar = true;
+          else
 	    *dcursor++ = mBadChar;
 	  mBadChar = 0;
 	}
@@ -353,6 +357,7 @@ bool QuotedPrintableDecoder::decode( const char* & scursor, const char * const s
       } else {
 	mHaveAccu = true;
 	mAccu = value << 4;
+        mLastChar = ch;
       }
     } else { // not mInsideHexChar
       if ( ch <= '~' && ch >= ' ' || ch == '\t' ) {
@@ -376,6 +381,35 @@ bool QuotedPrintableDecoder::decode( const char* & scursor, const char * const s
   }
 
   return (scursor == send);
+}
+
+bool QuotedPrintableDecoder::finish( char* & dcursor, const char * const dend ) {
+  while ( ( mInsideHexChar || mHaveAccu || mFlushing ) && dcursor != dend ) {
+    // we have to flush chars
+    if ( mInsideHexChar ) {
+      // output '='
+      *dcursor++ = mEscapeChar;
+      mInsideHexChar = false;
+    }
+    else if ( mHaveAccu ) {
+      // output the high nibble of the accumulator:
+      *dcursor++ = mLastChar;
+      mHaveAccu = false;
+      mAccu = 0;
+    }
+    else {
+      // output mBadChar
+      assert( mAccu == 0 );
+      if ( mBadChar ) {
+        *dcursor++ = mBadChar;
+        mBadChar = 0;
+      }
+      mFlushing = false;
+    }
+  }
+
+  // return false if we are not finished yet; note that mInsideHexChar is always false
+  return !( mHaveAccu || mFlushing );
 }
 
 bool QuotedPrintableEncoder::fillInputBuffer( const char* & scursor,
