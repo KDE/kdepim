@@ -194,20 +194,21 @@ class KDE_EXPORT NntpAccountConfDialog : public KDialogBase  {
 };
 
 
+/** Configuration dialog for the SMTP account */
 class KDE_EXPORT SmtpAccountWidget : public KCModule, private Ui::SmtpAccountWidgetBase {
 
 Q_OBJECT
 
   public:
-    SmtpAccountWidget(QWidget *p=0, const char *n=0);
+    SmtpAccountWidget( QWidget *parent = 0 );
     ~SmtpAccountWidget() {}
 
     virtual void load();
     virtual void save();
 
   protected slots:
-    virtual void useExternalMailerToggled( bool b );
-    virtual void loginToggled( bool b );
+    void useExternalMailerToggled( bool b );
+    void loginToggled( bool b );
     void slotPasswordChanged();
 
   protected:

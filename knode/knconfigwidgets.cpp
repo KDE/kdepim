@@ -621,10 +621,13 @@ void KNConfig::NntpAccountConfDialog::slotPasswordChanged()
 
 //=============================================================================================
 
-KNConfig::SmtpAccountWidget::SmtpAccountWidget( QWidget *p, const char *n ) :
-    KCModule( p, n )
+KNConfig::SmtpAccountWidget::SmtpAccountWidget( QWidget *parent ) :
+    KCModule( parent )
 {
   setupUi( this );
+
+  connect( mUseExternalMailer, SIGNAL( toggled(bool) ), SLOT( useExternalMailerToggled(bool) ) );
+  connect( mLogin, SIGNAL( toggled(bool) ), SLOT( loginToggled(bool) ) );
 
   mAccount = knGlobals.accountManager()->smtp();
   connect( knGlobals.accountManager(), SIGNAL(passwordsChanged()), SLOT(slotPasswordChanged()) );
