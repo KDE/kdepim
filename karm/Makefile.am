@@ -18,9 +18,9 @@ libkarm_shared_la_SOURCES = kaccelmenuwatch.cpp desktoptracker.cpp \
                 task.cpp taskview.cpp tray.cpp \
 		csvexportdialog_base.ui csvexportdialog.cpp plannerparser.cpp \
 		karmdcopiface.skel taskviewwhatsthis.cpp
-libkarm_shared_la_LIBADD = -lkdeprint $(top_builddir)/libkcal/libkcal.la \
+libkarm_shared_la_LIBADD = $(top_builddir)/libkcal/libkcal.la \
 	     $(top_builddir)/kresources/remote/libkcal_resourceremote.la \
-             $(top_builddir)/libkdepim/libkdepim.la $(LIBXSS)
+             $(top_builddir)/libkdepim/libkdepim.la $(LIBXSS) -lkdeprint 
 karm_SOURCES = main.cpp
 karm_LDADD = libkarm_shared.la 
 karm_LDFLAGS = $(all_libraries) $(KDE_RPATH)
