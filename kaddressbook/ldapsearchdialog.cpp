@@ -40,6 +40,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <ktoolinvocation.h>
 
 #include "kabcore.h"
 #include "ldapsearchdialog.h"
@@ -437,7 +438,7 @@ QString LDAPSearchDialog::selectedEMails() const
 
 void LDAPSearchDialog::slotHelp()
 {
-  kapp->invokeHelp( "ldap-queries" );
+  KToolInvocation::invokeHelp( "ldap-queries" );
 }
 
 void LDAPSearchDialog::slotUnselectAll()

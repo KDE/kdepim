@@ -33,7 +33,7 @@
 //Added by qt3to4:
 #include <QGridLayout>
 
-#include <kaccelmanager.h>
+#include <kacceleratormanager.h>
 #include <kconfig.h>
 #include <kcombobox.h>
 #include <kdebug.h>

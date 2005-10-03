@@ -41,7 +41,7 @@
 #include <kabc/vcardconverter.h>
 #include <kabc/resourcefile.h>
 #include <kaboutdata.h>
-#include <kaccelmanager.h>
+#include <kacceleratormanager.h>
 #include <kapplication.h>
 #include <dcopclient.h>
 #include <kactionclasses.h>
@@ -63,6 +63,8 @@
 #include <libkdepim/addresseeview.h>
 #include <libkdepim/categoryeditdialog.h>
 #include <libkdepim/categoryselectdialog.h>
+#include <ktoolinvocation.h>
+#include <krandom.h>
 
 #include "addresseeutil.h"
 #include "addresseeeditordialog.h"
@@ -362,7 +364,7 @@ void KABCore::sendMail()
 
 void KABCore::sendMail( const QString& email )
 {
-  kapp->invokeMailer( email, "" );
+  KToolInvocation::invokeMailer( email, "" );
 }
 
 void KABCore::mailVCard()
@@ -386,7 +388,7 @@ void KABCore::startChat()
 
 void KABCore::browse( const QString& url )
 {
-  kapp->invokeBrowser( url );
+  KToolInvocation::invokeBrowser( url );
 }
 
 void KABCore::selectAllContacts()
@@ -708,7 +710,7 @@ void KABCore::storeContactIn( const QString &uid )
       KABC::Addressee newAddr( addr );
       // We need to set a new uid, otherwise the insert below is
       // ignored. This is bad for syncing, but unavoidable, afaiks
-      newAddr.setUid( KApplication::randomString( 10 ) );
+      newAddr.setUid( KRandom::randomString( 10 ) );
       newAddr.setResource( resource );
       addressBook()->insertAddressee( newAddr );
       KABLock::self( mAddressBook )->lock( addr.resource() );

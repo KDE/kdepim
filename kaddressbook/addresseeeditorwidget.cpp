@@ -38,7 +38,7 @@
 
 #include <kabc/resource.h>
 #include <kabc/stdaddressbook.h>
-#include <kaccelmanager.h>
+#include <kacceleratormanager.h>
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kcombobox.h>

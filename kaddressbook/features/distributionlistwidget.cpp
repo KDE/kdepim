@@ -41,7 +41,7 @@
 #include <QVBoxLayout>
 #include <QDragEnterEvent>
 
-#include <kaccelmanager.h>
+#include <kacceleratormanager.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kglobal.h>

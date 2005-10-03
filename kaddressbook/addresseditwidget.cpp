@@ -44,7 +44,7 @@
 #include <Q3ValueList>
 #include <QVBoxLayout>
 
-#include <kaccelmanager.h>
+#include <kacceleratormanager.h>
 #include <kapplication.h>
 #include <kbuttonbox.h>
 #include <kcombobox.h>

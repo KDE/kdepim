@@ -30,6 +30,7 @@
 #include <qfile.h>
 //Added by qt3to4:
 #include <QTextStream>
+#include <ktoolinvocation.h>
 
 #include "kabtools.h"
 
@@ -96,7 +97,7 @@ void KABTools::mailVCards( const QStringList &uids, KABC::AddressBook *ab )
     }
   }
 
-  kapp->invokeMailer( QString::null, QString::null, QString::null,
+  KToolInvocation::invokeMailer( QString::null, QString::null, QString::null,
                       QString::null,
                       QString::null,
                       QString::null,

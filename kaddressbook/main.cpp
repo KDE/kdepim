@@ -106,7 +106,7 @@ int KAddressBookApp::newInstance()
 
 int main( int argc, char *argv[] )
 {
-  KLocale::setMainCatalogue( "kaddressbook" );
+  KLocale::setMainCatalog( "kaddressbook" );
 
   KCmdLineArgs::init( argc, argv, KABCore::createAboutData() );
   KCmdLineArgs::addCmdLineOptions( kaddressbook_options );
@@ -116,7 +116,7 @@ int main( int argc, char *argv[] )
     return 0;
 
   KAddressBookApp app;
-  KGlobal::locale()->insertCatalogue( "libkdepim" );
+  KGlobal::locale()->insertCatalog( "libkdepim" );
 
   bool ret = app.exec();
   while (KMainWindow::memberList()->first())

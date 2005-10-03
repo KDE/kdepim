@@ -29,7 +29,7 @@
 //Added by qt3to4:
 #include <QHBoxLayout>
 
-#include <kaccelmanager.h>
+#include <kacceleratormanager.h>
 #include <kbuttonbox.h>
 #include <klineedit.h>
 #include <klocale.h>

@@ -47,7 +47,7 @@ class KApplication;
  class KDE_NO_EXPORT localXXPortFactory : public KAB::XXPortFactory { \
 	KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name ) \
 	 { const char *cat = catalog; \
-	   if (cat) KGlobal::locale()->insertCatalogue(cat); \
+	   if (cat) KGlobal::locale()->insertCatalog(cat); \
 	   return new XXPortClass( ab, parent, name ); \
          } \
  }; \

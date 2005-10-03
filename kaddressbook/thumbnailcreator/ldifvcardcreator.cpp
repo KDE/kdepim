@@ -48,7 +48,7 @@ extern "C"
 {
   ThumbCreator *new_creator()
   {
-    KGlobal::locale()->insertCatalogue( "kaddressbook" );
+    KGlobal::locale()->insertCatalog( "kaddressbook" );
     return new VCard_LDIFCreator;
   }
 }

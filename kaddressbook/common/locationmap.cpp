@@ -29,6 +29,7 @@
 #include <kmessagebox.h>
 #include <kstaticdeleter.h>
 #include <kurl.h>
+#include <ktoolinvocation.h>
 
 #include "kabprefs.h"
 #include "locationmap.h"
@@ -58,7 +59,7 @@ void LocationMap::showAddress( const KABC::Address &addr )
   if ( url.isEmpty() )
     return;
 
-  kapp->invokeBrowser( url.url() );
+  KToolInvocation::invokeBrowser( url.url() );
 }
 
 QString LocationMap::createUrl( const KABC::Address &addr )

@@ -41,6 +41,7 @@
 #include <QVBoxLayout>
 #include <Q3Frame>
 #include <QGridLayout>
+#include <ktoolinvocation.h>
 
 #include "core.h"
 #include "kabprefs.h"
@@ -176,7 +177,7 @@ void XXPortSelectDialog::categoryClicked( Q3ListViewItem *i )
 
 void XXPortSelectDialog::slotHelp()
 {
-  kapp->invokeHelp( "import-and-export" );
+  KToolInvocation::invokeHelp( "import-and-export" );
 }
 
 void XXPortSelectDialog::initGUI()

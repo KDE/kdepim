@@ -45,6 +45,7 @@
 #include <klistbox.h>
 #include <klistview.h>
 #include <klocale.h>
+#include <ktoolinvocation.h>
 
 #include "kabprefs.h"
 #include "filtereditdialog.h"
@@ -162,7 +163,7 @@ void FilterEditDialog::filterNameTextChanged( const QString &text )
 
 void FilterEditDialog::slotHelp()
 {
-  kapp->invokeHelp( "using-filters" );
+  KToolInvocation::invokeHelp( "using-filters" );
 }
 
 FilterDialog::FilterDialog( QWidget *parent, const char *name )

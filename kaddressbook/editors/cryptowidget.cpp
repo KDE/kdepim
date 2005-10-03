@@ -55,7 +55,7 @@ extern "C" {
 
 CryptoWidgetFactory::CryptoWidgetFactory()
 {
-  KGlobal::locale()->insertCatalogue( "libkleopatra" );
+  KGlobal::locale()->insertCatalog( "libkleopatra" );
   KGlobal::iconLoader()->addAppDir( "libkleopatra" );
 }
 

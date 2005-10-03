@@ -26,7 +26,7 @@
 #include <QDropEvent>
 
 #include <kcolordialog.h>
-#include <kcolordrag.h>
+#include <k3colordrag.h>
 
 #include "colorlistbox.h"
 
@@ -98,7 +98,7 @@ void ColorListBox::newColor( int index )
 
 void ColorListBox::dragEnterEvent( QDragEnterEvent *e )
 {
-  if( KColorDrag::canDecode(e) && isEnabled() )
+  if( K3ColorDrag::canDecode(e) && isEnabled() )
   {
     mCurrentOnDragEnter = currentItem();
     e->accept( true );
@@ -123,7 +123,7 @@ void ColorListBox::dragLeaveEvent( QDragLeaveEvent * )
 
 void ColorListBox::dragMoveEvent( QDragMoveEvent *e )
 {
-  if( KColorDrag::canDecode(e) && isEnabled() )
+  if( K3ColorDrag::canDecode(e) && isEnabled() )
   {
     ColorListItem *item = (ColorListItem*)itemAt( e->pos() );
     if( item != 0 )
@@ -137,7 +137,7 @@ void ColorListBox::dragMoveEvent( QDragMoveEvent *e )
 void ColorListBox::dropEvent( QDropEvent *e )
 {
   QColor color;
-  if( KColorDrag::decode( e, color ) )
+  if( K3ColorDrag::decode( e, color ) )
   {
     int index = currentItem();
     if( index != -1 )

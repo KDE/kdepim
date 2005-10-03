@@ -33,7 +33,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include <kaccelmanager.h>
+#include <kacceleratormanager.h>
 #include <kcombobox.h>
 #include <kinputdialog.h>
 #include <klineedit.h>

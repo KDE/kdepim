@@ -33,6 +33,7 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <klocale.h>
+#include <ktoolinvocation.h>
 
 #include "viewconfigurefieldspage.h"
 #include "viewconfigurefilterpage.h"
@@ -113,7 +114,7 @@ void ViewConfigureDialog::saveSettings( KConfig *config )
 
 void ViewConfigureDialog::slotHelp()
 {
-  kapp->invokeHelp( "using-views" );
+  KToolInvocation::invokeHelp( "using-views" );
 }
 
 #include "viewconfigurewidget.moc"

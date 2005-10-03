@@ -22,7 +22,7 @@
 */
 
 #include <kabc/geo.h>
-#include <kaccelmanager.h>
+#include <kacceleratormanager.h>
 #include <kcombobox.h>
 #include <kdebug.h>
 #include <kiconloader.h>

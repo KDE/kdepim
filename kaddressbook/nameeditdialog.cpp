@@ -33,7 +33,7 @@
 //Added by qt3to4:
 #include <QGridLayout>
 
-#include <kaccelmanager.h>
+#include <kacceleratormanager.h>
 #include <kapplication.h>
 #include <kbuttonbox.h>
 #include <kconfig.h>
@@ -44,6 +44,7 @@
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <kmessagebox.h>
+#include <ktoolinvocation.h>
 
 #include "nameeditdialog.h"
 
@@ -315,7 +316,7 @@ void NameEditDialog::initTypeCombo()
 
 void NameEditDialog::slotHelp()
 {
-  kapp->invokeHelp( "managing-contacts-automatic-nameparsing" );
+  KToolInvocation::invokeHelp( "managing-contacts-automatic-nameparsing" );
 }
 
 #include "nameeditdialog.moc"

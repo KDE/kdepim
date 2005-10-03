@@ -27,6 +27,7 @@
 
 #include <klocale.h>
 #include <kapplication.h>
+#include <krandom.h>
 
 #include "addresseeutil.h"
 #include "addresseeconfig.h"
@@ -130,7 +131,7 @@ void PasteCommand::execute()
        We have to set a new uid for the contact, otherwise insertAddressee()
        ignore it.
      */
-    (*it).setUid( KApplication::randomString( 10 ) );
+    (*it).setUid( KRandom::randomString( 10 ) );
     uids.append( (*it).uid() );
     addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
