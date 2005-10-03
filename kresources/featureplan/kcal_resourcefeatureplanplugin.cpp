@@ -34,7 +34,7 @@ extern "C"
 {
   void* init_kcal_resourcefeatureplan()
   {
-    KGlobal::locale()->insertCatalogue( "kres_featureplan" );
+    KGlobal::locale()->insertCatalog( "kres_featureplan" );
     return new FeatureplanFactory;
   }
 }

@@ -32,8 +32,8 @@ extern "C"
 {
   void *init_kabc_slox()
   {
-    KGlobal::locale()->insertCatalogue( "libkcal" );
-    KGlobal::locale()->insertCatalogue( "kabc_slox" );
+    KGlobal::locale()->insertCatalog( "libkcal" );
+    KGlobal::locale()->insertCatalog( "kabc_slox" );
     return new SloxFactory;
   }
 }

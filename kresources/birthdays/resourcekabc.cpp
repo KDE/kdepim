@@ -58,8 +58,8 @@ extern "C"
 {
   void *init_kcal_kabc()
   {
-	  KGlobal::locale()->insertCatalogue( "kres_birthday" );
-    KGlobal::locale()->insertCatalogue( "libkcal" );
+	  KGlobal::locale()->insertCatalog( "kres_birthday" );
+    KGlobal::locale()->insertCatalog( "libkcal" );
     return new KRES::PluginFactory<ResourceKABC,ResourceKABCConfig>();
   }
 }

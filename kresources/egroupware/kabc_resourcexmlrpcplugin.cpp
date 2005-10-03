@@ -34,7 +34,7 @@ extern "C"
 {
   void *init_kabc_xmlrpc()
   {
-    KGlobal::locale()->insertCatalogue( "kres_xmlrpc" );
+    KGlobal::locale()->insertCatalog( "kres_xmlrpc" );
     return new XMLRPCFactory;
   }
 }

@@ -34,8 +34,8 @@ extern "C"
 {
   void *init_kcal_blogging()
   {
-    KGlobal::locale()->insertCatalogue( "kdepimresources" );
-    KGlobal::locale()->insertCatalogue( "kres_blogging" );
+    KGlobal::locale()->insertCatalog( "kdepimresources" );
+    KGlobal::locale()->insertCatalog( "kres_blogging" );
     return new BloggingFactory;
   }
 }

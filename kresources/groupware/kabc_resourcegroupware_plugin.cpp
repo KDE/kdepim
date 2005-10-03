@@ -32,8 +32,8 @@ extern "C"
 {
   void *init_kabc_groupware()
   {
-    KGlobal::locale()->insertCatalogue( "libkcal" );
-    KGlobal::locale()->insertCatalogue( "kres_groupware" );
+    KGlobal::locale()->insertCatalog( "libkcal" );
+    KGlobal::locale()->insertCatalog( "kres_groupware" );
     return new ResourceGroupware;
   }
 }

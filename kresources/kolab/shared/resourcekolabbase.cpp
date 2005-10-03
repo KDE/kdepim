@@ -51,8 +51,8 @@ static unsigned int uniquifier = 0;
 ResourceKolabBase::ResourceKolabBase( const DCOPCString& objId )
   : mSilent( false )
 {
-  KGlobal::locale()->insertCatalogue( "kres_kolab" );
-  KGlobal::locale()->insertCatalogue( "libkcal" );
+  KGlobal::locale()->insertCatalog( "kres_kolab" );
+  KGlobal::locale()->insertCatalog( "libkcal" );
   DCOPCString uniqueObjId = objId + QString::number( uniquifier++ ).latin1();
   mConnection = new KMailConnection( this, uniqueObjId );
 }

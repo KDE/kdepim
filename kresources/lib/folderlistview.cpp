@@ -27,7 +27,7 @@
 #include <klistview.h>
 #include <klocale.h>
 #include <kiconloader.h>
-#include <kpopupmenu.h>
+#include <kmenu.h>
 #include <kdebug.h>
 
 #include <q3listview.h>
@@ -97,7 +97,7 @@ void FolderListView::showPopupMenu( FolderListItem *i, const QPoint &globalPos )
   if ( !i ) return;
   KPIM::FolderLister::Entry folder( i->folder() );
 
-  KPopupMenu m( this );
+  KMenu m( this );
   int id;
 
   m.insertTitle( folder.name, 9999 );

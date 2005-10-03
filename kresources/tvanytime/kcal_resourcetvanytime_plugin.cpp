@@ -33,8 +33,8 @@ extern "C"
 {
   void *init_kcal_tvanytime()
   {
-    KGlobal::locale()->insertCatalogue( "libkcal" );
-    KGlobal::locale()->insertCatalogue( "kres_tvanytime" );
+    KGlobal::locale()->insertCatalog( "libkcal" );
+    KGlobal::locale()->insertCatalog( "kres_tvanytime" );
     return new TVAnytimeFactory;
   }
 }
