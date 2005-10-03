@@ -17,8 +17,6 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <kqcstringsplitter.h>
-
 #include "knprotocolclient.h"
 #include "knglobals.h"
 #include "kncollectionviewitem.h"
@@ -186,9 +184,8 @@ bool KNGroup::loadHdrs()
   }
 
   kdDebug(5003) << "KNGroup::loadHdrs() : loading headers" << endl;
-  Q3CString buff, hdrValue;
-  KNFile f;
-  KQCStringSplitter split;
+  QByteArray buffer, hdrValue;
+  QFile f;
   int cnt=0, id, lines, fileFormatVersion, artNumber;
   time_t timeT;//, fTimeT;
   KNRemoteArticle *art;
@@ -206,10 +203,10 @@ bool KNGroup::loadHdrs()
       return false;
     }
 
-    while(!f.atEnd()) {
-      buff=f.readLine();
-      if(buff.isEmpty()){
-        if (f.status() == IO_Ok) {
+    while ( !f.atEnd() ) {
+      buffer = f.readLine();
+      if ( buffer.isEmpty() ){
+        if ( f.error() == QFile::NoError ) {
           kdWarning(5003) << "Found broken line in static-file: Ignored!" << endl;
           continue;
         } else {
@@ -219,55 +216,61 @@ bool KNGroup::loadHdrs()
         }
       }
 
-      split.init(buff, "\t");
+      QList<QByteArray> splits = buffer.split( '\t' );
+      if ( splits.size() < 4 ) {
+        kdWarning(5003) << "Found broken line in static-file: Ignored!" << endl;
+        continue;
+      }
+      QList<QByteArray>::ConstIterator it = splits.constBegin();
 
-      art=new KNRemoteArticle(this);
+      art = new KNRemoteArticle( this );
 
-      split.first();
-      art->messageID()->from7BitString(split.string());
+      art->messageID()->from7BitString( *it );
+      ++it;
 
-      split.next();
-      art->subject()->from7BitString(split.string());
+      art->subject()->from7BitString( *it );
+      ++it;
 
-      split.next();
-      art->from()->setEmail(split.string());
-      split.next();
-      if(split.string()!="0")
-        art->from()->setNameFrom7Bit(split.string());
+      art->from()->setEmail( *it );
+      ++it;
 
-      buff=f.readLine();
-      if(buff!="0") art->references()->from7BitString(buff.copy());
+      if ( (*it) != "0\n" ) // last item has the line ending
+        art->from()->setNameFrom7Bit( (*it).trimmed() );
 
-      buff=f.readLine();
-      if (sscanf(buff,"%d %d %u %d", &id, &lines, (uint*) &timeT, &fileFormatVersion) < 4)
+      buffer = f.readLine().trimmed();
+      if ( buffer != "0" )
+        art->references()->from7BitString( buffer );
+
+      buffer = f.readLine();
+      if ( sscanf( buffer, "%d %d %u %d", &id, &lines, (uint*) &timeT, &fileFormatVersion) < 4 )
         fileFormatVersion = 0;          // KNode <= 0.4 had no version number
       art->setId(id);
       art->lines()->setNumberOfLines(lines);
       art->date()->setUnixTime(timeT);
 
-      if (fileFormatVersion > 0) {
-        buff=f.readLine();
-        sscanf(buff,"%d", &artNumber);
+      if ( fileFormatVersion > 0 ) {
+        buffer = f.readLine();
+        sscanf( buffer, "%d", &artNumber );
         art->setArticleNumber(artNumber);
       }
 
       // optional headers
-      if (fileFormatVersion > 1) {
+      if ( fileFormatVersion > 1 ) {
         // first line is the number of addiotion headers
-        buff = f.readLine();
+        buffer = f.readLine().trimmed();
         // following lines contain one header per line
-        for (uint i = buff.toUInt(); i > 0; --i) {
-          buff = f.readLine();
-          int pos = buff.find(':');
-          Q3CString hdrName = buff.left( pos );
+        for ( uint i = buffer.toUInt(); i > 0; --i ) {
+          buffer = f.readLine().trimmed();
+          int pos = buffer.find(':');
+          QByteArray hdrName = buffer.left( pos );
           // skip headers we already set above and which we actually never should
           // find here, but however it still happens... (eg. #101355)
           if ( hdrName == "Subject" || hdrName == "From" || hdrName == "Date"
               || hdrName == "Message-ID" || hdrName == "References"
               || hdrName == "Bytes" || hdrName == "Lines" )
             continue;
-          hdrValue = buff.right( buff.length() - (pos + 2) );
-          if (hdrValue.length() > 0)
+          hdrValue = buffer.right( buffer.length() - (pos + 2) );
+          if ( hdrValue.length() > 0 )
             art->setHeader( new KMime::Headers::Generic( hdrName, art, hdrValue ) );
         }
       }
@@ -308,7 +311,7 @@ bool KNGroup::loadHdrs()
       else
         byteCount = f.readBlock((char*)(&data1), dataSize);
       if ((byteCount == -1)||(byteCount!=dataSize))
-        if (f.status() == IO_Ok) {
+        if ( f.error() == QFile::NoError ) {
           kdWarning(5003) << "Found broken entry in dynamic-file: Ignored!" << endl;
           continue;
         } else {

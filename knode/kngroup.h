@@ -38,6 +38,12 @@ namespace KNConfig {
 }
 
 
+/** Representation of a news group. This class contains:
+ * - Static information about a news group (eg. the name and account)
+ * - Dynamic information about a news group (eg. article serial numbers)
+ * - Group specific settings (eg. identities or cleanup settings)
+ * - Load and store methods for the header list of this group
+ */
 class KNGroup : public KNArticleCollection , public KNJobItem  {
 
   public:
@@ -96,7 +102,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     KNRemoteArticle* byId(int id)       { return static_cast<KNRemoteArticle*> (KNArticleCollection::byId(id)); }
     KNRemoteArticle* byMessageId(const Q3CString &mId)
                                         { return static_cast<KNRemoteArticle*> (KNArticleCollection::byMessageId(mId)); }
-    /** load + save */
+
+    /** Load the stored headers from disk. */
     bool loadHdrs();
     bool unloadHdrs(bool force=true);
     void insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient *client = 0 );
