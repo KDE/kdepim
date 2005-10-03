@@ -28,12 +28,14 @@ class KNJobData;
 namespace KNode {
 
 /** This class manages three diffrent queues of all created jobs:
- *  - a queue for all NNTP jobs
- *  - a queue for all SMTP jobs
- *  - a queue for jobs that are waiting for KWallet
+ * - a queue for all NNTP jobs
+ * - a queue for all SMTP jobs
+ * - a queue for jobs that are waiting for KWallet
  * At most two jobs (one NNTP, one SMTP job) are executed at once.
  *
  * @todo Add per-account queues and execute one job per account.
+ *
+ * @see KNGlobals::scheduler()
  */
 class Scheduler : public QObject  {
 
@@ -41,9 +43,15 @@ class Scheduler : public QObject  {
 
   public:
 
+    /** Create a new Scheduler object
+     * @param parent The parent QObject.
+     */
     Scheduler( QObject *parent = 0 );
     ~Scheduler();
 
+    /** Adds a new job to the scheduler queue.
+     * @param job The new job.
+     */
     void addJob(KNJobData *job);
 
     QMutex& nntpMutex() { return nntp_Mutex; }
@@ -56,10 +64,16 @@ class Scheduler : public QObject  {
     void cancelJobs( int type = 0, KPIM::ProgressItem* item = 0 );
 
   protected:
-    KNJobData *currentNntpJob, *currentSmtpJob;
+    /// the currently active NNTP job
+    KNJobData *currentNntpJob;
+    /// the currently active SMTP job
+    KNJobData *currentSmtpJob;
     QMutex nntp_Mutex;
 
   signals:
+    /** Indicates wether there are currently active jobs, useful to e.g. enable
+     * a cancel button.
+     */
     void netActive(bool);
 
   private:

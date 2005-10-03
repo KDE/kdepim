@@ -55,21 +55,32 @@ class KDE_EXPORT KNGlobals {
     QWidget               *topWidget;
     /** no need to include knode.h everywhere */
     KNMainWidget          *top;
+    /** Returns the KXMLGUIClient of the main window. */
     KXMLGUIClient         *guiClient;
+    /** Returns the article widget of the main window. */
     KNode::ArticleWidget  *artWidget;
+    /** Returns the article factory. */
     KNArticleFactory      *artFactory;
     Kpgp::Module          *pgp;
     KConfig               *config();
     KInstance             *instance;
 
     KNConfigManager       *configManager();
+    /** Returns the scheduler. */
     KNode::Scheduler      *scheduler();
+    /** Returns the account manager. */
     KNAccountManager      *accountManager();
+    /** Returns the group manager. */
     KNGroupManager        *groupManager();
+    /** Returns the article manager.  */
     KNArticleManager      *articleManager();
+    /** Returns the filter manager. */
     KNFilterManager       *filterManager();
+    /** Returns the folder manager. */
     KNFolderManager       *folderManager();
+    /** Returns the scoring manager. */
     KNScoringManager      *scoringManager();
+    /** Returns the memory manager. */
     KNMemoryManager       *memoryManager();
 
     /** forwarded to top->setStatusMsg() if available */

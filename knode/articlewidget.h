@@ -70,7 +70,9 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     /// write config settings (call only for the main viewer)
     void writeConfig();
 
-    /// display the given article
+    /** display the given article
+     * @param article The article to display.
+     */
     void setArticle( KNArticle *article );
     /// returns the currently shown article
     KNArticle *article() const { return mArticle; }
@@ -79,15 +81,26 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
 
     /// notify all instances about a config change
     static void configChanged();
-    /// check wether the given article is displayed in any instance
+    /** check wether the given article is displayed in any instance
+     * @param article The article to check.
+     */
     static bool articleVisible( KNArticle *article );
-    /// notify all instances that the given article has been removed
+    /** notify all instances that the given article has been removed
+     * @param article The removed article.
+     */
     static void articleRemoved( KNArticle *article );
-    /// notify all instances that the given article has changed
+    /** notify all instances that the given article has changed
+     * @param article The changed article.
+     */
     static void articleChanged( KNArticle *article );
-    /// notify all instances about an error during loading the given article
+    /** notify all instances about an error during loading the given article
+     * @param article The article that couldn't be loaded.
+     * @param error The error message.
+     */
     static void articleLoadError( KNArticle *article, const QString &error );
-    /// notify all instances that the given collection has been removed
+    /** notify all instances that the given collection has been removed
+     * @param coll The removed article collection (a group or a folder).
+     */
     static void collectionRemoved( KNArticleCollection *coll );
     /// cleanup all instances
     static void cleanup();
@@ -96,9 +109,13 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     bool atBottom() const;
 
   public slots:
+    /// scroll up by one line
     void scrollUp();
+    /// scroll down by one line
     void scrollDown();
+    /// scroll up by one page
     void scrollPrior();
+    /// scroll down by one page
     void scrollNext();
 
   protected:
