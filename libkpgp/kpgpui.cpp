@@ -68,7 +68,7 @@ PassphraseDialog::PassphraseDialog( QWidget *parent,
                                     const QString &keyID )
   :KDialogBase( parent, 0, modal, caption, Ok|Cancel )
 {
-  Q3HBox *hbox = makeHBoxMainWidget();
+  KHBox *hbox = makeHBoxMainWidget();
   hbox->setSpacing( spacingHint() );
   hbox->setMargin( marginHint() );
 
