@@ -28,7 +28,7 @@ static const KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
-  KLocale::setMainCatalogue("kmailcvt");
+  KLocale::setMainCatalog("kmailcvt");
 
   KAboutData aboutData( "kmailcvt", I18N_NOOP("KMailCVT"),
     "3", I18N_NOOP("KMail Import Filters"), KAboutData::License_GPL_V2,
