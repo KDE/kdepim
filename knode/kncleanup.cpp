@@ -231,7 +231,7 @@ void KNCleanUp::compactFolder(KNFolder *f)
         ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
         art->setStartOffset(newMBoxFile.at());
         while(f->m_boxFile.at() < (uint)art->endOffset())
-          ts << f->m_boxFile.readLineWnewLine();
+          ts << f->m_boxFile.readLine();
         art->setEndOffset(newMBoxFile.at());
         newMBoxFile.putch('\n');
       }

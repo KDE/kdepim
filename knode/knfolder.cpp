@@ -12,17 +12,14 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include <QByteArray>
 #include <qfileinfo.h>
-//Added by qt3to4:
 #include <QTextStream>
-#include <Q3CString>
 
 #include <ksimpleconfig.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
 #include <klocale.h>
-
-#include <kqcstringsplitter.h>
 
 #include "articlewidget.h"
 #include "knarticlemanager.h"
@@ -189,8 +186,7 @@ bool KNFolder::loadHdrs()
     return false;
   }
 
-  Q3CString tmp;
-  KQCStringSplitter split;
+  QByteArray tmp;
   KNLocalArticle *art;
   DynData dynamic;
   int pos1=0, pos2=0, cnt=0, byteCount;
@@ -204,7 +200,7 @@ bool KNFolder::loadHdrs()
     //read index-data
     byteCount=i_ndexFile.readBlock((char*)(&dynamic), sizeof(DynData));
     if(byteCount!=sizeof(DynData))
-      if(i_ndexFile.status() == IO_Ok) {
+      if( i_ndexFile.error() == QFile::NoError ) {
         kdWarning(5003) << "KNFolder::loadHeaders() : found broken entry in index-file: Ignored!" << endl;
         continue;
       }
@@ -227,9 +223,11 @@ bool KNFolder::loadHdrs()
       clear();
       return false;
     }
-    tmp=m_boxFile.readLine(); //KNFile::readLine()
+    tmp = m_boxFile.readLine();
+    if ( tmp.endsWith( '\n' ) )
+      tmp.resize( tmp.length() - 1 );
     if(tmp.isEmpty()) {
-      if(m_boxFile.status() == IO_Ok) {
+      if( m_boxFile.error() == QFile::NoError ) {
         kdWarning(5003) << "found broken entry in mbox-file: Ignored!" << endl;
         delete art;
         continue;
@@ -347,16 +345,17 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
   m_boxFile.readLine(); //skip X-KNode-Overview
 
   unsigned int size=a->endOffset()-m_boxFile.at()-1;
-  Q3CString buff(size+10);
+  QByteArray buff;
+  buff.resize( size + 10 );
   int readBytes=m_boxFile.readBlock(buff.data(), size);
   closeFiles();
-  if(readBytes < (int)(size) && m_boxFile.status() != IO_Ok) {  //cannot read file
+  if ( readBytes < (int)(size) && m_boxFile.error() != QFile::NoError ) {  // cannot read file
     kdError(5003) << "KNFolder::loadArticle(KNLocalArticle *a) : corrupted mbox file, IO-error!" << endl;
     return false;
   }
 
   //set content
-  buff[readBytes] = '\0'; //terminate string
+  buff.resize( readBytes );
   a->setContent(buff);
   a->parse();
 
@@ -413,6 +412,7 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
 
       //MBox
       ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
+      ts.flush();
       (*it)->setStartOffset(m_boxFile.at()); //save offset
 
       //write overview information
@@ -433,6 +433,7 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
       //write article
       (*it)->toStream( ts );
       ts << "\n";
+      ts.flush();
 
       (*it)->setEndOffset( m_boxFile.at() ); //save offset
 

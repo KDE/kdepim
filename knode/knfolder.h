@@ -24,6 +24,11 @@
 #include <Q3CString>
 
 
+/** Representation of a folder. This includes:
+ * - Information about the folder (eg. name, parent)
+ * - Methods to load the folder content from a mbox file.
+ * - Methods to store the folder content in a mbox file.
+ */
 class KNFolder : public KNArticleCollection  {
 
   friend class KNCleanUp;
@@ -81,7 +86,7 @@ class KNFolder : public KNArticleCollection  {
       int p_arentId;      // -1 for the root folder
       bool i_ndexDirty;   // do we need to sync?
       bool w_asOpen;      // was this folder open in the listview on the last shutdown?
-      KNFile m_boxFile;
+      QFile m_boxFile;
       QFile i_ndexFile;
       QString i_nfoPath;
 
