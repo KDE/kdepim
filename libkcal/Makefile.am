@@ -16,7 +16,7 @@ libkcal_la_LIBADD  = versit/libversit.la $(LIB_KIO) \
                      $(top_builddir)/ktnef/lib/libktnef.la \
                      ../libemailfunctions/libemailfunctions.la \
                      $(top_builddir)/libkmime/libkmime.la \
-                     -lkresources -lkabc
+                     -lkresources -lkabc $(LIB_KDE3SUPPORT)
 
 libkcal_la_COMPILE_FIRST = ./libical/src/libical/ical.h ./libical/src/libicalss/icalss.h
 libkcal_la_SOURCES = \

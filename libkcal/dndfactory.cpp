@@ -27,13 +27,14 @@
 #include <q3dragobject.h>
 //Added by qt3to4:
 #include <QDropEvent>
+#include <QPixmap>
 
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <kmultipledrag.h>
 #include <klocale.h>
-#include <kurldrag.h>
+#include <k3urldrag.h>
 
 #include "vcaldrag.h"
 #include "icaldrag.h"
@@ -61,7 +62,7 @@ KMultipleDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
   kmd->addDragObject( new ICalDrag( &cal, 0 ) );
   QMap<QString, QString> metadata;
   metadata["labels"] = KURL::encode_string( i->summary() );
-  kmd->addDragObject( new KURLDrag( i->uri(), metadata, 0 ) );
+  kmd->addDragObject( new K3URLDrag( i->uri(), metadata, 0 ) );
   
   if ( i->type() == "Event" )
     kmd->setPixmap( BarIcon( "appointment" ) );
