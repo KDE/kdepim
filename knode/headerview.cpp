@@ -24,7 +24,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kdeversion.h>
-#include <kpopupmenu.h>
+#include <kmenu.h>
 
 #include "knglobals.h"
 #include "knconfigmanager.h"
@@ -74,7 +74,7 @@ KNHeaderView::KNHeaderView( QWidget *parent ) :
            SLOT(slotSizeChanged(int, int, int)) );
 
   // column selection RMB menu
-  mPopup = new KPopupMenu( this );
+  mPopup = new KMenu( this );
   mPopup->insertTitle( i18n("View Columns") );
   mPopup->setCheckable( true );
   mPopup->insertItem( i18n("Line Count"),  KPaintInfo::COL_SIZE );

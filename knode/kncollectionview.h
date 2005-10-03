@@ -22,7 +22,7 @@
 #include <QEvent>
 #include <QDropEvent>
 
-class KPopupMenu;
+class KMenu;
 class KNNntpAccount;
 class KNGroup;
 class KNFolder;
@@ -84,7 +84,7 @@ class KNCollectionView : public KFolderTree {
 
   private:
     Q3ListViewItem *mActiveItem;
-    KPopupMenu *mPopup;
+    KMenu *mPopup;
     int mUnreadPop, mTotalPop;
 
 };

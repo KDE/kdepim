@@ -26,7 +26,7 @@
 #include <kfoldertree.h>
 #include <kmime_util.h>
 
-class KPopupMenu;
+class KMenu;
 class KNHdrViewItem;
 
 class KNHeaderView : public KListView  {
@@ -93,7 +93,7 @@ class KNHeaderView : public KListView  {
     KNHdrViewItem *mActiveItem;
     KPaintInfo mPaintInfo;
     KMime::DateFormatter mDateFormatter;
-    KPopupMenu *mPopup;
+    KMenu *mPopup;
     bool mShowingFolder;
     bool mInitDone;
 

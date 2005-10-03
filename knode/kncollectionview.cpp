@@ -23,7 +23,7 @@
 #include <kiconloader.h>
 #include <klistview.h>
 #include <klocale.h>
-#include <kpopupmenu.h>
+#include <kmenu.h>
 
 #include "knglobals.h"
 #include "knconfig.h"
@@ -52,7 +52,7 @@ KNCollectionView::KNCollectionView( QWidget *parent ) :
   // popup menu to enable/disable unread and total columns
   header()->setClickEnabled( true );
   header()->installEventFilter( this );
-  mPopup = new KPopupMenu( this );
+  mPopup = new KMenu( this );
   mPopup->insertTitle( i18n("View Columns") );
   mPopup->setCheckable( true );
   mUnreadPop = mPopup->insertItem( i18n("Unread Column"), this, SLOT(toggleUnreadColumn()) );

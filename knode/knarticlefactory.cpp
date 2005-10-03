@@ -23,6 +23,7 @@
 #include <kmessagebox.h>
 #include <kwin.h>
 #include <kapplication.h>
+#include <ktoolinvocation.h>
 
 #include "knarticlefactory.h"
 #include "knglobals.h"
@@ -562,7 +563,7 @@ void KNArticleFactory::sendMailExternal(const QString &address, const QString &s
   if (!query.isEmpty())
     mailtoURL.setQuery(query);
 
-  kapp->invokeMailer(mailtoURL);
+  KToolInvocation::invokeMailer(mailtoURL);
 }
 
 

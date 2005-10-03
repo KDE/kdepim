@@ -44,7 +44,7 @@ using KRecentAddress::RecentAddresses;
 #include <kstdaction.h>
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
-#include <kpopupmenu.h>
+#include <kmenu.h>
 #include <kfiledialog.h>
 #include <kdebug.h>
 #include <klineedit.h>
@@ -2070,7 +2070,7 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
       //Continue if this word was misspelled
       if( !word.isEmpty() && m_replacements.contains( word ) )
       {
-        KPopupMenu p;
+        KMenu p;
         p.insertTitle( i18n("Suggestions") );
 
         //Add the suggestions to the popup menu

@@ -60,7 +60,7 @@ KNodePart::KNodePart(QWidget *parentWidget, const char *widgetName,
   kdDebug(5003) << "KNodePart()..." << endl;
   kdDebug(5003) << "  InstanceName: " << kapp->instanceName() << endl;
 
-  KGlobal::locale()->insertCatalogue("libkdenetwork");
+  KGlobal::locale()->insertCatalog("libkdenetwork");
   kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
   KGlobal::iconLoader()->addAppDir("knode");
   knGlobals.instance = KNodeFactory::instance();

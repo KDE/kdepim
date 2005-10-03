@@ -23,7 +23,7 @@
 #include <QKeyEvent>
 #include <QPaintEvent>
 
-#include <kdockwidget.h>
+#include <k3dockwidget.h>
 #include <kprogress.h>
 
 class QPainter;
