@@ -15,7 +15,20 @@
 * in the Komposer namespace.
 */
 
+/** @namespace KMail
+*
+* The KMail namespace contains all KMail-internal classes. Due to historic
+* reasons there are also KMail classes without a namespace and a 'KM' prefix
+* instead.
+*/
 
+/** @namespace KNode
+*
+* The KNode namespace contains all KNode-internal classes. Due to historic
+* reasons there are also KNode classes without a namespace and a 'KN' prefix
+* instead. However, all new KNode classes should be put here (without any
+* name prefix).
+*/
 
 //
 //--------- generic namespaces from kdelibs
