@@ -27,11 +27,6 @@
 
 #include <kdepimmacros.h>
 
-/** @file */
-
-/**
-    \brief KPIM holds all kinds of functions specific to KDE PIM.
-*/
 namespace KPIM {
 
 /**
@@ -58,6 +53,7 @@ class KDE_EXPORT IdMapper
       $(KDEHOME)/share/apps/\<path\>/\<identifier\>.
     */
     IdMapper( const QString &path, const QString &identifier = QString::null );
+    /** Destructor. */
     ~IdMapper();
 
     /**
@@ -118,10 +114,16 @@ class KDE_EXPORT IdMapper
      * Stores a fingerprint for an id which can be used to detect if 
      * the locally held version differs from what is on the server.
      * This can be a sequence number of an md5 hash depending on what
-     * the server provides
+     * the server provides.
      */
     void setFingerprint( const QString &localId, const QString &fingerprint );
 
+    /**
+     * Returns the fingerprint for the map.
+     *
+     * @todo Figure out if this returns the last fingerprint set
+     *       by setFingerprint() only or if anything else can change it.
+     */
     QString fingerprint( const QString &localId ) const;
 
 

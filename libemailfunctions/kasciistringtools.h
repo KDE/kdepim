@@ -24,16 +24,12 @@
 #ifndef KPIM_KASCIISTRINGTOOLS_H
 #define KPIM_KASCIISTRINGTOOLS_H
 
-/** @file */
-
-/**
-    \brief KPIM holds all kinds of functions specific to KDE PIM.
-*/
 namespace KPIM {
 
 /**
   Locale-independent function to convert ASCII strings to lower case ASCII
-  strings.
+  strings. This means that it affects @em only the ASCII characters A-Z.
+
   @param str  pointer to the string which should be converted to lower case
   @return     pointer to the converted string (same as @a str)
 */
@@ -41,7 +37,8 @@ char * kAsciiToLower( char *str );
 
 /**
   Locale-independent function to convert ASCII strings to upper case ASCII
-  strings.
+  strings. This means that it affects @em only the ASCII characters a-z.
+
   @param str  pointer to the string which should be converted to upper case
   @return     pointer to the converted string (same as @a str)
 */

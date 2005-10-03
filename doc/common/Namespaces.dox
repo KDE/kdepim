@@ -4,15 +4,19 @@
 
 
 /** @namespace KPIM
-*
-* The KPIM namespace holds all kinds of KDE PIM-specific
-* functions and classes.
+
+The KPIM namespace holds all kinds of KDE PIM-specific functions and classes.
+The KPIM namespace hides away functions, enums, and other things
+that are KDE PIM specific and that we don't want to have polluting
+the global namespace.
+
 */
 
 /** @namespace Komposer
-*
-* The plugin system for replacing KMail's message composer lives
-* in the Komposer namespace.
+
+The plugin system for replacing KMail's message composer lives
+in the Komposer namespace.
+
 */
 
 /** @namespace KMail
