@@ -16,7 +16,7 @@ class CertKeyListView : public Kleo::KeyListView {
 public:
   CertKeyListView( const ColumnStrategy * strategy,
                    const DisplayStrategy * display=0,
-                   QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
+                   QWidget * parent=0, Qt::WFlags f=0 );
 
 signals:
   void dropped( const KURL::List& urls );

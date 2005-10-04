@@ -1,5 +1,5 @@
 /*
-    certificatewizardimpl.h
+    main.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2001,2002,2004 Klar�vdalens Datakonsult AB
@@ -30,59 +30,55 @@
     your version.
 */
 
-#ifndef CERTIFICATEWIZARDIMPL_H
-#define CERTIFICATEWIZARDIMPL_H
-#include "certificatewizard.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#include <q3cstring.h>
-#include <q3valuevector.h>
-#include <qlineedit.h>
-#include <kurl.h>
+#include "aboutdata.h"
+#include "certmanager.h"
 
-namespace GpgME {
-  class KeyGenerationResult;
-}
-namespace KIO {
-  class Job;
-}
+#include <kleo/cryptobackendfactory.h>
 
-class CertificateWizardImpl : public CertificateWizard
+#include <kapplication.h>
+#include <kcmdlineargs.h>
+#include <kmessagebox.h>
+#include <klocale.h>
+#include <kglobal.h>
+#include <kiconloader.h>
+
+int main( int argc, char** argv )
 {
-    Q_OBJECT
+  AboutData aboutData;
 
-public:
-    CertificateWizardImpl( QWidget* parent = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
-    ~CertificateWizardImpl();
+  KCmdLineArgs::init(argc, argv, &aboutData);
+  static const KCmdLineOptions options[] = {
+            { "external" , I18N_NOOP("Search for external certificates initially"), 0 },
+            { "query " , I18N_NOOP("Initial query string"), 0 },
+	    { "import-certificate ", I18N_NOOP("Name of certificate file to import"), 0 },
+	    KCmdLineLastOption// End of options.
+  };
+  KCmdLineArgs::addCmdLineOptions( options );
 
-    bool sendToCA() const;
-    QString caEMailAddress() const;
-    KURL saveFileUrl() const;
+  KApplication app;
 
-    typedef QPair<QString, QLineEdit*> StringLEPair;
-    typedef Q3ValueVector< StringLEPair > AttrPairList;
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-public:
-    virtual void showPage( QWidget * page );
-    virtual void accept();
+  KGlobal::locale()->insertCatalog( "libkleopatra" );
+  KGlobal::iconLoader()->addAppDir( "libkleopatra" );
 
-private slots:
-    void slotGenerateCertificate();
-    void slotResult( const GpgME::KeyGenerationResult & res, const QByteArray & keyData );
-    void slotSetValuesFromWhoAmI();
-    void slotEnablePersonalDataPageExit();
-    void slotURLSelected( const QString& );
+  if( !Kleo::CryptoBackendFactory::instance()->smime() ) {
+    KMessageBox::error(0,
+			i18n( "<qt>The crypto plugin could not be initialized.<br>"
+			      "Certificate Manager will terminate now.</qt>") );
+    return -2;
+  }
 
-    void slotHelpClicked();
+  CertManager* manager = new CertManager( args->isSet("external"),
+					  QString::fromLocal8Bit(args->getOption("query")),
+					  QString::fromLocal8Bit(args->getOption("import-certificate")) );
 
-    void slotUploadResult( KIO::Job* );
+  args->clear();
+  manager->show();
 
-private:
-    void createPersonalDataPage();
-    void sendCertificate( const QString& email, const QByteArray& certificateData );
-
-private:
-    AttrPairList _attrPairList;
-    QByteArray _keyData;
-};
-
-#endif // CERTIFICATEWIZARDIMPL_H
+  return app.exec();
+}

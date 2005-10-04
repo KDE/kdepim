@@ -2,7 +2,7 @@
     customactions.cpp
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2001,2002,2004 Klarï¿½vdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@
 #include "customactions.h"
 
 #include <ktoolbar.h>
-#include <kapplication.h>
+#include <kauthorized.h>
 
 #include <qlineedit.h>
 #include <qlabel.h>
@@ -47,7 +47,7 @@ LabelAction::LabelAction( const QString & text,  KActionCollection * parent,
 }
 
 int LabelAction::plug( QWidget * widget, int index ) {
-  if ( kapp && !kapp->authorizeKAction( name() ) )
+  if ( !KAuthorized::authorizeKAction( name() ) )
     return -1;
   if ( widget->inherits( "KToolBar" ) ) {
     KToolBar * bar = (KToolBar *)widget;
@@ -71,7 +71,7 @@ LineEditAction::LineEditAction( const QString & text, KActionCollection * parent
 }
 
 int LineEditAction::plug( QWidget * widget, int index ) {
-  if ( kapp && !kapp->authorizeKAction( name() ) )
+  if ( !KAuthorized::authorizeKAction( name() ) )
     return -1;
   if ( widget->inherits( "KToolBar" ) ) {
     KToolBar *bar = (KToolBar *)widget;
@@ -117,7 +117,7 @@ ComboAction::ComboAction( const QStringList & lst,  KActionCollection * parent,
 }
 
 int ComboAction::plug( QWidget * widget, int index ) {
-  if ( kapp && !kapp->authorizeKAction( name() ) )
+  if ( !KAuthorized::authorizeKAction( name() ) )
     return -1;
   if ( widget->inherits( "KToolBar" ) ) {
     KToolBar *bar = (KToolBar *)widget;

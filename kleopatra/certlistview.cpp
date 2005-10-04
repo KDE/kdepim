@@ -1,17 +1,18 @@
 #include <config.h>
 #include "certlistview.h"
-#include <kurldrag.h>
+#include <kurl.h>
 #include <kdebug.h>
 //Added by qt3to4:
 #include <QDragEnterEvent>
 #include <QDragLeaveEvent>
 #include <QDragMoveEvent>
 #include <QDropEvent>
+#include <Q3UriDrag>
 
 CertKeyListView::CertKeyListView( const ColumnStrategy * strategy,
                                   const DisplayStrategy * display,
-                                  QWidget * parent, const char * name, Qt::WFlags f )
-  : Kleo::KeyListView( strategy, display, parent, name, f )
+                                  QWidget * parent, Qt::WFlags f )
+  : Kleo::KeyListView( strategy, display, parent, f )
 {
   viewport()->setAcceptDrops( true );
 }
@@ -39,8 +40,8 @@ void CertKeyListView::contentsDragLeaveEvent( QDragLeaveEvent * )
 
 void CertKeyListView::contentsDropEvent( QDropEvent * event )
 {
-  KURL::List lst;
-  if ( KURLDrag::decode( event, lst ) ) {
+  KURL::List lst = KURL::List::fromMimeData( event->mimeData() );
+  if ( !lst.isEmpty() ) {
     event->accept();
     emit dropped( lst );
   }

@@ -43,6 +43,7 @@
 #include <knuminput.h>
 #include <kiconloader.h>
 #include <kglobal.h>
+#include <kinstance.h>
 #include <kurlrequester.h>
 
 #include <q3grid.h>

@@ -1,5 +1,5 @@
 /*
-    qgpgmerefreshkeysjob.cpp
+    qgpgmesecretexportjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klar�vdalens Datakonsult AB
@@ -34,9 +34,7 @@
 #include <config.h>
 #endif
 
-#include "qgpgmerefreshkeysjob.h"
-//Added by qt3to4:
-#include <QByteArray>
+#include "qgpgmesecretkeyexportjob.h"
 
 #include "gnupgprocessbase.h"
 #include "qgpgmeprogresstokenmapper.h"
@@ -44,6 +42,7 @@
 #include <kdebug.h>
 
 #include <gpgmepp/context.h>
+#include <gpgmepp/data.h>
 
 #include <qgpgme/eventloopinteractor.h>
 
@@ -51,73 +50,52 @@
 
 #include <gpg-error.h>
 
+#include <string.h>
 #include <assert.h>
 
-Kleo::QGpgMERefreshKeysJob::QGpgMERefreshKeysJob()
-  : RefreshKeysJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMERefreshKeysJob" ),
+Kleo::QGpgMESecretKeyExportJob::QGpgMESecretKeyExportJob( bool armour )
+  : ExportJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMESecretKeyExportJob" ),
     mProcess( 0 ),
-    mError( 0 )
+    mError( 0 ),
+    mArmour( armour )
 {
 
 }
 
-Kleo::QGpgMERefreshKeysJob::~QGpgMERefreshKeysJob() {
+Kleo::QGpgMESecretKeyExportJob::~QGpgMESecretKeyExportJob() {
 
 }
 
-GpgME::Error Kleo::QGpgMERefreshKeysJob::start( const QStringList & patterns ) {
-  assert( mPatternsToDo.empty() );
+GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns ) {
+  assert( mKeyData.isEmpty() );
 
-  mPatternsToDo = patterns;
-  if ( mPatternsToDo.empty() )
-    mPatternsToDo.push_back( " " ); // empty list means all -> mae
-				    // sure to fail the first
-				    // startAProcess() guard clause
+  if ( patterns.size() != 1 || patterns.front().isEmpty() ) {
+    deleteLater();
+    return mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_INV_VALUE );
+  }
 
-  return startAProcess();
-}
-
-#if MAX_CMD_LENGTH < 65 + 128
-#error MAX_CMD_LENGTH is too low
-#endif
-
-GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
-  if ( mPatternsToDo.empty() )
-    return 0;
   // create and start gpgsm process:
   mProcess = new GnuPGProcessBase( this );
-  mProcess->setObjectName( "gpgsm -k --with-validation --force-crl-refresh --enable-crl-checks" );
+  mProcess->setObjectName( "gpgsm --export-secret-key-p12" );
 
   // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
-  *mProcess << "gpgsm" << "-k" << "--with-validation" << "--force-crl-refresh"
-	    << "--enable-crl-checks";
-  unsigned int commandLineLength = MAX_CMD_LENGTH;
-  commandLineLength -=
-    strlen("gpgsm") + 1 + strlen("-k") + 1 +
-    strlen("--with-validation") + 1 + strlen("--force-crl-refresh") + 1 +
-    strlen("--enable-crl-checks") + 1;
-  while ( !mPatternsToDo.empty() ) {
-    const QByteArray pat = mPatternsToDo.front().utf8().stripWhiteSpace();
-    const unsigned int patLength = pat.length();
-    if ( patLength >= commandLineLength )
-      break;
-    mPatternsToDo.pop_front();
-    if ( pat.isEmpty() )
-      continue;
-    *mProcess << pat;
-    commandLineLength -= patLength + 1;
-  }
+  *mProcess << "gpgsm" << "--export-secret-key-p12";
+  if ( mArmour )
+    *mProcess << "--armor";
+  *mProcess << patterns.front().utf8();
 
   mProcess->setUseStatusFD( true );
 
   connect( mProcess, SIGNAL(processExited(KProcess*)),
 	   SLOT(slotProcessExited(KProcess*)) );
+  connect( mProcess, SIGNAL(receivedStdout(KProcess*,char*,int)),
+	   SLOT(slotStdout(KProcess*,char*,int)) );
   connect( mProcess, SIGNAL(receivedStderr(KProcess*,char*,int)),
 	   SLOT(slotStderr(KProcess*,char*,int)) );
   connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)),
 	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)) );
 
-  if ( !mProcess->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) {
+  if ( !mProcess->start( KProcess::NotifyOnExit, KProcess::AllOutput ) ) {
     mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_ENOENT ); // what else?
     deleteLater();
     return mError;
@@ -125,14 +103,14 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
     return 0;
 }
 
-void Kleo::QGpgMERefreshKeysJob::slotCancel() {
+void Kleo::QGpgMESecretKeyExportJob::slotCancel() {
   if ( mProcess )
     mProcess->kill();
   mProcess = 0;
   mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_CANCELED );
 }
 
-void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QString & type, const QStringList & args ) {
+void Kleo::QGpgMESecretKeyExportJob::slotStatus( GnuPGProcessBase * proc, const QString & type, const QStringList & args ) {
   if ( proc != mProcess )
     return;
   QStringList::const_iterator it = args.begin();
@@ -142,18 +120,18 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QStr
 
 
     if ( args.size() < 2 ) {
-      kdDebug( 5150 ) << "Kleo::QGpgMERefreshKeysJob::slotStatus() not recognising ERROR with < 2 args!" << endl;
+      kdDebug( 5150 ) << "Kleo::QGpgMESecretKeyExportJob::slotStatus() not recognising ERROR with < 2 args!" << endl;
       return;
     }
     const int source = (*++it).toInt( &ok );
     if ( !ok ) {
-      kdDebug( 5150 ) << "Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for first ERROR arg, got something else" << endl;
+      kdDebug( 5150 ) << "Kleo::QGpgMESecretKeyExportJob::slotStatus() expected number for first ERROR arg, got something else" << endl;
       return;
     }
     ok = false;
     const int code = (*++it).toInt( &ok );
     if ( !ok ) {
-      kdDebug( 5150 ) << "Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for second ERROR arg, got something else" << endl;
+      kdDebug( 5150 ) << "Kleo::QGpgMESecretKeyExportJob::slotStatus() expected number for second ERROR arg, got something else" << endl;
       return;
     }
     mError = gpg_err_make( (gpg_err_source_t)source, (gpg_err_code_t)code );
@@ -163,20 +141,20 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QStr
 
 
     if ( args.size() < 4 ) {
-      kdDebug( 5150 ) << "Kleo::QGpgMERefreshKeysJob::slotStatus() not recognising PROGRESS with < 4 args!" << endl;
+      kdDebug( 5150 ) << "Kleo::QGpgMESecretKeyExportJob::slotStatus() not recognising PROGRESS with < 4 args!" << endl;
       return;
     }
     const QString what = *++it;
     ++it; // don't use "type"...
     const int cur = (*++it).toInt( &ok );
     if ( !ok ) {
-      kdDebug( 5150 ) << "Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for \"cur\", got something else" << endl;
+      kdDebug( 5150 ) << "Kleo::QGpgMESecretKeyExportJob::slotStatus() expected number for \"cur\", got something else" << endl;
       return;
     }
     ok = false;
     const int total = (*++it).toInt( &ok );
     if ( !ok ) {
-      kdDebug( 5150 ) << "Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for \"total\", got something else" << endl;
+      kdDebug( 5150 ) << "Kleo::QGpgMESecretKeyExportJob::slotStatus() expected number for \"total\", got something else" << endl;
       return;
     }
     emit progress( QGpgMEProgressTokenMapper::instance()->map( what, 0, cur, total ), cur, total );
@@ -185,26 +163,32 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QStr
   }
 }
 
-void Kleo::QGpgMERefreshKeysJob::slotStderr( KProcess *, char *, int ) {
+void Kleo::QGpgMESecretKeyExportJob::slotStdout( KProcess * proc, char * buf, int buflen ) {
+  if ( proc != mProcess )
+    return;
+  if ( buflen <= 0 )
+    return;
+  if ( !buf )
+    return;
+  const unsigned int oldlen = mKeyData.size();
+  mKeyData.resize( oldlen + buflen );
+  memcpy( mKeyData.data() + oldlen, buf, buflen );
+}
+
+void Kleo::QGpgMESecretKeyExportJob::slotStderr( KProcess *, char *, int ) {
   // implement? or not?
 }
 
-void Kleo::QGpgMERefreshKeysJob::slotProcessExited( KProcess * proc ) {
+void Kleo::QGpgMESecretKeyExportJob::slotProcessExited( KProcess * proc ) {
   if ( proc != mProcess )
     return;
-
-  if ( !mError && !mPatternsToDo.empty() )
-    if ( const GpgME::Error err = startAProcess() )
-      mError = err;
-    else
-      return;
 
   emit done();
   if ( !mError &&
        ( !mProcess->normalExit() || mProcess->exitStatus() != 0 ) )
     mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_GENERAL );
-  emit result( mError );
+  emit result( mError, mKeyData );
   deleteLater();
 }
 
-#include "qgpgmerefreshkeysjob.moc"
+#include "qgpgmesecretkeyexportjob.moc"

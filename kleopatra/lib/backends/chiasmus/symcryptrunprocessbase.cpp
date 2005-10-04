@@ -2,7 +2,7 @@
     symcryptrunbackend.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2005 Klarï¿½vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -38,14 +38,15 @@
 
 #include <qtimer.h>
 #include <qfile.h>
+#include <QStringList>
 
 #include <cstring>
 
 Kleo::SymCryptRunProcessBase::SymCryptRunProcessBase( const QString & class_, const QString & program,
                                                       const QString & keyFile, const QString & options,
                                                       Operation mode,
-                                                      QObject * parent, const char * name )
-  : KProcess( parent, name ),
+                                                      QObject * parent )
+  : KProcess( parent ),
     mOperation( mode ), mOptions( options )
 {
   *this << "symcryptrun"

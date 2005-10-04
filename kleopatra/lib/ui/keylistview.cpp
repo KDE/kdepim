@@ -2,7 +2,7 @@
     keylistview.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -140,8 +140,8 @@ static const struct {
 static const int numSignalReplacements = sizeof signalReplacements / sizeof *signalReplacements;
 
 
-Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const DisplayStrategy * displayStrategy, QWidget * parent, const char * name, Qt::WFlags f )
-  : KListView( parent, name ),
+Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const DisplayStrategy * displayStrategy, QWidget * parent, Qt::WFlags f )
+  : KListView( parent ),
     mColumnStrategy( columnStrategy ),
     mDisplayStrategy ( displayStrategy  ),
     mHierarchical( false )
@@ -335,7 +335,7 @@ Kleo::KeyListViewItem * Kleo::KeyListView::itemByFingerprint( const QByteArray &
     return 0;
   return it->second;
 }
-  
+
 
 void Kleo::KeyListView::slotRefreshKey( const GpgME::Key & key ) {
   const char * fpr = key.primaryFingerprint();

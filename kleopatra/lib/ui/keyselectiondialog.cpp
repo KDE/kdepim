@@ -2,7 +2,7 @@
     keyselectiondialog.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Based on kpgpui.cpp
     Copyright (C) 2001,2002 the KPGP authors
@@ -69,6 +69,7 @@
 #include <qtimer.h>
 #include <qlayout.h>
 #include <qlineedit.h>
+#include <QDateTime>
 
 #include <q3popupmenu.h>
 #include <qregexp.h>
@@ -370,7 +371,8 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 	   this, SLOT(slotSearch(const QString&)) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
 
-  mKeyListView = new KeyListView( new ColumnStrategy( mKeyUsage ), 0, page, "mKeyListView" );
+  mKeyListView = new KeyListView( new ColumnStrategy( mKeyUsage ), 0, page );
+  mKeyListView->setObjectName( "mKeyListView" );
   mKeyListView->setResizeMode( Q3ListView::LastColumn );
   mKeyListView->setRootIsDecorated( true );
   mKeyListView->setShowSortIndicator( true );

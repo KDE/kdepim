@@ -56,6 +56,7 @@
 #include <qtextcodec.h>
 //Added by qt3to4:
 #include <QTextStream>
+#include <QDateTime>
 
 #define WATCHGNUPGBINARY "watchgnupg"
 #define WATCHGNUPGSOCKET ( QDir::home().canonicalPath() + "/.gnupg/log-socket")

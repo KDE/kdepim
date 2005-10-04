@@ -1,8 +1,8 @@
 /*
-    symcryptrunbackend.h
+    gnupgprocessbase.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2005 Klar�vdalens Datakonsult AB
+    Copyright (c) 2004 Klar�vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,52 +30,62 @@
     your version.
 */
 
-#ifndef __KLEO_BACKEND_CHIASMUS__SYMCRYPTRUNPROCESSBASE_H__
-#define __KLEO_BACKEND_CHIASMUS__SYMCRYPTRUNPROCESSBASE_H__
+#ifndef __KLEO_GNUPGPROCESSBASE_H__
+#define __KLEO_GNUPGPROCESSBASE_H__
 
 #include <kprocess.h>
 
-#include <q3cstring.h>
-
-class QString;
-
 namespace Kleo {
 
-class SymCryptRunProcessBase : public KProcess {
-  Q_OBJECT
-public:
-  enum Operation {
-    Encrypt, Decrypt
+  /**
+   * @short a base class for GPG and GPGSM processes.
+   *
+   * This KProcess subclass implements the status-fd handling common
+   * to GPG and GPGSM.
+   *
+   * @author Marc Mutz <mutz@kde.org>
+   */
+  class GnuPGProcessBase : public KProcess {
+    Q_OBJECT
+  public:
+    GnuPGProcessBase( QObject * parent=0 );
+    ~GnuPGProcessBase();
+
+    void setUseStatusFD( bool use );
+
+    /*! reimplementation */
+    bool start( RunMode runmode, Communication comm );
+
+    bool closeStatus();
+
+  signals:
+    void status( Kleo::GnuPGProcessBase * proc, const QString & type, const QStringList & args );
+
+  protected:
+    /*! reimplementation */
+    int setupCommunication( Communication comm );
+    /*! reimplementation */
+    int commSetupDoneP();
+    /*! reimplementation */
+    int commSetupDoneC();
+
+    int childStatus( int fd );
+
+
+  private slots:
+    void slotChildStatus( int fd );
+
+  private:
+    void parseStatusOutput();
+
+  private:
+    class Private;
+    Private * d;
+  protected:
+    /*! reimplementation */
+    void virtual_hook( int id, void * data );
   };
-  SymCryptRunProcessBase( const QString & class_, const QString & program,
-                          const QString & keyFile, const QString& options,
-                          Operation op,
-                          QObject * parent=0 );
-  ~SymCryptRunProcessBase();
-
-  bool launch( const QByteArray & input, RunMode rm=NotifyOnExit );
-
-  const QByteArray & output() const { return mOutput; }
-  const QString & stdErr() const { return mStderr; }
-
-public slots:
-  /*! upgraded to slot */
-  void closeStdin() { KProcess::closeStdin(); }
-
-private slots:
-  void slotReceivedStdout( KProcess *, char *, int );
-  void slotReceivedStderr( KProcess *, char *, int );
-
-private:
-  void addOptions();
-
-  QByteArray mInput;
-  QByteArray mOutput;
-  QString mStderr;
-  const Operation mOperation;
-  QString mOptions;
-};
 
 }
 
-#endif // __KLEO_BACKEND_CHIASMUS__SYMCRYPTRUNPROCESSBASE_H__
+#endif // __KLEO_GNUPGPROCESSBASE_H__

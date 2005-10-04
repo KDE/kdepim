@@ -61,6 +61,7 @@
 #include <dcopclient.h>
 #include <kio/job.h>
 #include <kio/netaccess.h>
+#include <ktoolinvocation.h>
 
 // Qt
 #include <qlineedit.h>
@@ -116,8 +117,8 @@ static bool availForMod( const QLineEdit * le ) {
  *  The wizard will by default be modeless, unless you set 'modal' to
  *  TRUE to construct a modal wizard.
  */
-CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name, bool modal, Qt::WFlags fl )
-    : CertificateWizard( parent, name )
+CertificateWizardImpl::CertificateWizardImpl( QWidget* parent, bool modal, Qt::WFlags fl )
+    : CertificateWizard( parent )
 {
     // don't allow to go to last page until a key has been generated
     setNextEnabled( generatePage, false );
@@ -292,7 +293,7 @@ void CertificateWizardImpl::slotResult( const GpgME::KeyGenerationResult & res,
 
 void CertificateWizardImpl::slotHelpClicked()
 {
-  kapp->invokeHelp( "newcert" );
+  KToolInvocation::invokeHelp( "newcert" );
 }
 
 void CertificateWizardImpl::slotSetValuesFromWhoAmI()

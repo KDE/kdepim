@@ -2,7 +2,7 @@
     keylistview.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -257,7 +257,7 @@ namespace Kleo {
 
     KeyListView( const ColumnStrategy * strategy,
 		 const DisplayStrategy * display=0,
-		 QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
+		 QWidget * parent=0, Qt::WFlags f=0 );
 
     ~KeyListView();
 

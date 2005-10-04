@@ -2,7 +2,7 @@
     gnupgprocessbase.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -60,8 +60,8 @@ struct Kleo::GnuPGProcessBase::Private {
 };
 
 
-Kleo::GnuPGProcessBase::GnuPGProcessBase( QObject * parent, const char * name )
-  : KProcess( parent, name )
+Kleo::GnuPGProcessBase::GnuPGProcessBase( QObject * parent )
+  : KProcess( parent )
 {
   d = new Private();
 }

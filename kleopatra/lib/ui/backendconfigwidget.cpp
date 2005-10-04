@@ -2,7 +2,7 @@
     backendconfigwidget.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2002,2004,2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2002,2004,2005 Klarï¿½vdalens Datakonsult AB
     Copyright (c) 2002,2003 Marc Mutz <mutz@kde.org>
 
     Libkleopatra is free software; you can redistribute it and/or
@@ -79,8 +79,8 @@ namespace Kleo {
 class Kleo::BackendListView : public KListView
 {
 public:
-  BackendListView( BackendConfigWidget* parent, const char* name = 0 )
-    : KListView( parent, name ) {}
+  BackendListView( BackendConfigWidget* parent )
+    : KListView( parent ) {}
 
   /// return backend for currently selected (/current) item. Used by Configure button.
   const Kleo::CryptoBackend* currentBackend() const;
@@ -209,7 +209,8 @@ Kleo::BackendConfigWidget::BackendConfigWidget( CryptoBackendFactory * factory, 
   QHBoxLayout * hlay =
     new QHBoxLayout( this, 0, KDialog::spacingHint() );
 
-  d->listView = new BackendListView( this, "d->listView" );
+  d->listView = new BackendListView( this );
+  d->listView->setObjectName( "d->listView" );
   d->listView->addColumn( i18n("Available Backends") );
   d->listView->setAllColumnsShowFocus( true );
   d->listView->setSorting( -1 );

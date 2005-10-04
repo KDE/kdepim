@@ -2,7 +2,7 @@
     certmanager.cpp
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2001,2002,2004 Klarï¿½vdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -87,6 +87,7 @@
 #include <kio/job.h>
 #include <kio/netaccess.h>
 #include <kstdaccel.h>
+#include <kxmlguifactory.h>
 
 // Qt
 #include <qfontmetrics.h>
@@ -183,7 +184,8 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
   setAutoSaveSettings();
 
   // Main Window --------------------------------------------------
-  mKeyListView = new CertKeyListView( new ColumnStrategy(), new DisplayStrategy(), this, "mKeyListView" );
+  mKeyListView = new CertKeyListView( new ColumnStrategy(), new DisplayStrategy(), this );
+  mKeyListView->setObjectName( "mKeyListView" );
   mKeyListView->setSelectionMode( Q3ListView::Extended );
   setCentralWidget( mKeyListView );
 
@@ -422,7 +424,7 @@ void CertManager::slotToggleHierarchicalView( bool hier ) {
     act->setEnabled( hier );
   if ( KAction * act = action("view_collapseall" ) )
     act->setEnabled( hier );
-  if ( KToggleAction * act = 
+  if ( KToggleAction * act =
       static_cast<KToggleAction*>( action("view_hierarchical") ) )
     act->setChecked( hier );
 
