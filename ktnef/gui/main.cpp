@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
   aboutData.addAuthor("Michael Goffioul",0, "kdeprint@swing.be");
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
-  KApplication::addCmdLineOptions();
+  KCmdLineArgs::addStdCmdLineOptions();
 
   KApplication a;
   KTNEFMain *tnef = new KTNEFMain();

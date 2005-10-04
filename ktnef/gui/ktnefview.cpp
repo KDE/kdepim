@@ -67,8 +67,8 @@ Attachment::~Attachment()
 
 //------------------------------------------------------------------------------------------------------
 
-KTNEFView::KTNEFView(QWidget *parent, const char *name)
-	: KListView(parent,name)
+KTNEFView::KTNEFView( QWidget *parent )
+	: KListView( parent )
 {
 	attachments_.setAutoDelete(false);
 	addColumn(i18n("File Name"));

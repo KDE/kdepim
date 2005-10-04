@@ -37,6 +37,7 @@
 #include <qbuffer.h>
 #include <qdatastream.h>
 #include <q3picture.h>
+#include <QDateTime>
 
 AttachPropertyDialog::AttachPropertyDialog(QWidget *parent, const char *name)
 	: AttachPropertyDialogBase(parent, name, true)
