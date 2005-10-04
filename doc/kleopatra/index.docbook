@@ -1242,6 +1242,16 @@ C=DE
 	      </entry>
 	    </row>
 	    <row>
+	      <entry><varname>is-qualified</varname></entry>
+	      <entry>boolean</entry>
+	      <entry>
+		the key can be used for performing a so-called
+		Qualified Signature. Qualified Signatures are digital
+		signatures that are considered equivalent to
+		hand-written signatures by your country's law.
+	      </entry>
+	    </row>
+	    <row>
 	      <entry><varname>has-secret-key</varname></entry>
 	      <entry>boolean</entry>
 	      <entry>
