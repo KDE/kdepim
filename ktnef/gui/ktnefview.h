@@ -32,7 +32,7 @@ class KDE_EXPORT KTNEFView : public KListView
 	Q_OBJECT
 
 public:
-	KTNEFView(QWidget *parent = 0, const char *name = 0);
+	KTNEFView( QWidget *parent = 0 );
 	~KTNEFView();
 
 	void setAttachments(const QList<KTNEFAttach*> &list);

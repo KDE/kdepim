@@ -56,7 +56,7 @@
 #include <kopenwith.h>
 #include <kedittoolbar.h>
 #include <kstatusbar.h>
-#include <kurldrag.h>
+#include <kurl.h>
 
 
 #define	NOT_IMPLEMENTED QMessageBox::information(this, "ktnef", "Not implemented yet", QMessageBox::Ok|QMessageBox::Default, 0)
@@ -358,8 +358,9 @@ void KTNEFMain::viewDragRequested( const Q3ValueList<KTNEFAttach*>& list )
 		urlList << KURL( extractTemp( *it ) );
 	if ( !list.isEmpty() )
 	{
-		KURLDrag *urlDrag = new KURLDrag( urlList, this );
-		urlDrag->dragCopy();
+#warning Port KURLDrag usage
+//                KURLDrag *urlDrag = new KURLDrag( urlList, this );
+//                urlDrag->dragCopy();
 	}
 }
 
