@@ -1,6 +1,4 @@
 /*
-    aboutdata.h
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -17,6 +15,8 @@
 #include "aboutdata.h"
 
 #include "resource.h"
+
+#include <klocale.h>
 
 namespace KNode
 {

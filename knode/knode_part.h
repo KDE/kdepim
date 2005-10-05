@@ -39,6 +39,7 @@ class KAboutData;
 class ActionManager;
 class KNMainWidget;
 
+/** KNode part, used for embedding in Kontact. */
 class KNodePart: public KParts::ReadOnlyPart
 {
     Q_OBJECT

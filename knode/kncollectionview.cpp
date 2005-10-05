@@ -53,7 +53,7 @@ KNCollectionView::KNCollectionView( QWidget *parent ) :
   header()->setClickEnabled( true );
   header()->installEventFilter( this );
   mPopup = new KMenu( this );
-  mPopup->insertTitle( i18n("View Columns") );
+  mPopup->addTitle( i18n("View Columns") );
   mPopup->setCheckable( true );
   mUnreadPop = mPopup->insertItem( i18n("Unread Column"), this, SLOT(toggleUnreadColumn()) );
   mTotalPop = mPopup->insertItem( i18n("Total Column"), this, SLOT(toggleTotalColumn()) );

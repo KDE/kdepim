@@ -13,7 +13,6 @@
 */
 #include "knmainwidget.h"
 
-#include <q3hbox.h>
 #include <qlayout.h>
 //Added by qt3to4:
 #include <QEvent>
@@ -27,7 +26,6 @@
 
 #include <kinputdialog.h>
 #include <kaccel.h>
-#include <kxmlguiclient.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
 #include <kedittoolbar.h>
@@ -40,6 +38,9 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <klistviewsearchline.h>
+#include <khbox.h>
+#include <kxmlguiclient.h>
+#include <kxmlguifactory.h>
 
 #include "broadcaststatus.h"
 #include "krsqueezedtextlabel.h"
@@ -131,7 +132,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
                                            QApplication::reverseLayout()
                                            ? "clear_left"
                                            : "locationbar_erase",
-                                           0, actionCollection(),
+                                           KShortcut(), 0, 0, actionCollection(),
                                            "reset_quicksearch" );
   resetQuickSearch->plug( q_uicksearch );
   resetQuickSearch->setWhatsThis( i18n( "<b>Reset Quick Search</b><br>"
@@ -139,7 +140,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
                                         "all messages are shown again." ) );
 
   QLabel *lbl = new QLabel(i18n("&Search:"), q_uicksearch, "kde toolbar widget");
-  s_earchLineEdit = new KListViewSearchLine(q_uicksearch, h_drView, "KListViewSearchLine");
+  s_earchLineEdit = new KListViewSearchLine( q_uicksearch, h_drView );
   q_uicksearch->setStretchableWidget(s_earchLineEdit);
   lbl->setBuddy(s_earchLineEdit);
   connect( resetQuickSearch, SIGNAL( activated() ), s_earchLineEdit, SLOT( clear() ));
@@ -642,7 +643,7 @@ void KNMainWidget::initActions()
   a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
                               actionCollection(), "view_Filter");
   a_ctArtFilter->setShortcutConfigurable(false);
-  a_ctArtFilterKeyb         = new KAction(i18n("Filter"), Qt::Key_F6, actionCollection(), "view_Filter_Keyb");
+  a_ctArtFilterKeyb         = new KAction(i18n("Filter"), Qt::Key_F6, 0, 0, actionCollection(), "view_Filter_Keyb");
   a_ctArtFilterKeyb->plugAccel(a_ccel);
   a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"mail_find" , Qt::Key_F4 , this,
                               SLOT(slotArtSearch()), actionCollection(), "article_search");
@@ -1866,7 +1867,7 @@ KXMLGUIFactory* KNMainWidget::factory() const
 FetchArticleIdDlg::FetchArticleIdDlg(QWidget *parent, const char */*name*/ )
     :KDialogBase(parent, 0, true, i18n("Fetch Article with ID"), KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Ok)
 {
-  Q3HBox *page = makeHBoxMainWidget();
+  KHBox *page = makeHBoxMainWidget();
 
   QLabel *label = new QLabel(i18n("&Message-ID:"),page);
   edit = new KLineEdit(page);

@@ -34,6 +34,7 @@
 #include <QContextMenuEvent>
 #include <Q3PopupMenu>
 #include <QDragEnterEvent>
+#include <QSplitter>
 
 #include <kdeversion.h>
 #include <keditcl.h>
@@ -53,6 +54,7 @@ class KNLocalArticle;
 class KNAttachment;
 class SpellingFilter;
 
+/** Message composer window. */
 class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
 
   Q_OBJECT
@@ -85,7 +87,7 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     // "file" is already open for reading
     void insertFile(QFile *file, bool clear=false, bool box=false, QString boxTitle=QString::null);
 
-    // ask for a filename, handle network urls
+    /// ask for a filename, handle network urls
     void insertFile(bool clear=false, bool box=false);
 
     Q3PopupMenu * popupMenu( const QString& name );
@@ -218,6 +220,7 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
 class KNLineEditSpell;
 class KNLineEdit;
 
+/** Message composer view. */
 class KNComposer::ComposerView  : public QSplitter {
 
   public:
@@ -259,7 +262,7 @@ class KNComposer::ComposerView  : public QSplitter {
 };
 
 
-//internal class : handle Tabs... (expanding them in textLine(), etc.)
+/** Message Compser editor, handles tabs (expanding them in textLine(), etc.) */
 class KNComposer::Editor : public KEdit {
 
   Q_OBJECT
@@ -312,6 +315,7 @@ private:
 };
 
 
+/** Attachment view of the message composer. */
 class KNComposer::AttachmentView : public KListView {
 
   Q_OBJECT
@@ -328,6 +332,7 @@ class KNComposer::AttachmentView : public KListView {
 };
 
 
+/** Attachment view item. */
 class KNComposer::AttachmentViewItem : public KListViewItem {
 
   public:

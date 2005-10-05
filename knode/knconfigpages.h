@@ -22,7 +22,7 @@ class IdentityWidget;
 
 namespace KNConfig {
 
-/*
+/**
  * BasePageWithTabs represents a kcm with several tabs.
  * It simply forwards load and save operations to all tabs.
  * Code mostly taken from kmail.
@@ -46,7 +46,7 @@ class KDE_EXPORT BasePageWithTabs : public KCModule {
 };
 
 
-// accounts page
+/** Accounts config page. */
 class AccountsPage : public BasePageWithTabs {
   Q_OBJECT
 
@@ -55,7 +55,7 @@ class AccountsPage : public BasePageWithTabs {
 };
 
 
-// read news page
+/** Read news page. */
 class KDE_EXPORT ReadNewsPage : public BasePageWithTabs {
   Q_OBJECT
 
@@ -63,7 +63,7 @@ class KDE_EXPORT ReadNewsPage : public BasePageWithTabs {
     ReadNewsPage( QWidget *parent = 0 );
 };
 
-// post news page
+/** Post news page. */
 class KDE_EXPORT PostNewsPage : public BasePageWithTabs {
   Q_OBJECT
 

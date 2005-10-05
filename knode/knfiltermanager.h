@@ -28,13 +28,14 @@ class KNArticleFilter;
 class KNFilterDialog;
 
 
+/** Filter selection action. */
 class KNFilterSelectAction : public KActionMenu
 {
   Q_OBJECT
 
   public:
     KNFilterSelectAction( const QString& text, const QString& pix,
-                          QObject* parent, const char *name );
+                          KActionCollection* parent, const char *name );
     ~KNFilterSelectAction();
 
     void setCurrentItem(int id);
@@ -50,6 +51,7 @@ class KNFilterSelectAction : public KActionMenu
 };
 
 
+/** Filter manager. */
 class KNFilterManager : public QObject
 {
   Q_OBJECT
@@ -75,8 +77,9 @@ class KNFilterManager : public QObject
     void deleteFilter(KNArticleFilter *f);
     bool newNameIsOK(KNArticleFilter *f, const QString &newName);
 
-    // Allow to delay the setup of UI elements, since the knode part may not
-    // be available when the config dialog is called
+    /** Allow to delay the setup of UI elements, since the knode part may not
+     * be available when the config dialog is called.
+     */
     void setMenuAction(KNFilterSelectAction *a, KAction *keybA);
 
   protected:

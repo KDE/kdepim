@@ -40,6 +40,7 @@ namespace KNConfig {
 }
 
 
+/** Article factory, responsible for creating and sending news articles. */
 class KNArticleFactory : public QObject , public KNJobConsumer {
 
   Q_OBJECT
@@ -59,7 +60,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     void createSupersede(KNArticle *a);
     void createMail(KMime::Headers::AddressField *address);
 
-    // send a mail via an external program...
+    /// Send a mail via an external program.
     void sendMailExternal(const QString &address=QString::null, const QString &subject=QString::null, const QString &body=QString::null);
 
     //article handling
@@ -97,6 +98,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
 };
 
 
+/** Message send error dialog. */
 class KNSendErrorDialog : public KDialogBase  {
 
   Q_OBJECT

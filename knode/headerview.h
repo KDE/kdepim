@@ -29,6 +29,9 @@
 class KMenu;
 class KNHdrViewItem;
 
+/** Header view, displays the article listing of the currently selected
+ *  news group or folder.
+ */
 class KNHeaderView : public KListView  {
 
   Q_OBJECT

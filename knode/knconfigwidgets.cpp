@@ -41,6 +41,7 @@
 #include <kiconloader.h>
 #include <kpushbutton.h>
 #include <kstdguiitem.h>
+#include <kvbox.h>
 
 #include "knaccountmanager.h"
 #include "knconfig.h"
@@ -57,8 +58,8 @@
 #include <kpgp.h>
 
 
-KNConfig::IdentityWidget::IdentityWidget( Identity *d, QWidget *p, const char *n ) :
-  KCModule( p, n ),
+KNConfig::IdentityWidget::IdentityWidget( Identity *d, QWidget *parent ) :
+  KCModule( parent ),
   d_ata( d )
 {
   QString msg;
@@ -2250,12 +2251,12 @@ void KNConfig::PostNewsComposerWidget::slotChooseEditor()
 //===================================================================================================
 
 
-KNConfig::PostNewsSpellingWidget::PostNewsSpellingWidget( QWidget *p, const char *n ) :
-  KCModule( p, n )
+KNConfig::PostNewsSpellingWidget::PostNewsSpellingWidget( QWidget *parent ) :
+  KCModule( parent )
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
 
-  c_onf = new KSpellConfig( this, "spell", 0, false );
+  c_onf = new KSpellConfig( this, 0, false );
   topL->addWidget(c_onf);
   connect(c_onf, SIGNAL(configChanged()), SLOT(changed()));
 

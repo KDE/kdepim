@@ -1,8 +1,6 @@
 /*
-    kncollectionview.h
-
     KNode, the KDE newsreader
-    Copyright (c) 2004 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2004-2005 Volker Krause <volker.krause@rwth-aachen.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,6 +26,7 @@ class KNGroup;
 class KNFolder;
 class KNCollectionViewItem;
 
+/** The group/folder tree. */
 class KNCollectionView : public KFolderTree {
 
   Q_OBJECT

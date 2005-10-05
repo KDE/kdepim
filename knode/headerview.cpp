@@ -75,7 +75,7 @@ KNHeaderView::KNHeaderView( QWidget *parent ) :
 
   // column selection RMB menu
   mPopup = new KMenu( this );
-  mPopup->insertTitle( i18n("View Columns") );
+  mPopup->addTitle( i18n("View Columns") );
   mPopup->setCheckable( true );
   mPopup->insertItem( i18n("Line Count"),  KPaintInfo::COL_SIZE );
   mPopup->insertItem( i18n("Score"), KPaintInfo::COL_SCORE );

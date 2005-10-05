@@ -51,6 +51,7 @@
 #include <kstandarddirs.h>
 #include <ktempfile.h>
 #include <kurl.h>
+#include <kxmlguifactory.h>
 
 #include <libemailfunctions/email.h>
 #include <libemailfunctions/kasciistringtools.h>
@@ -1156,7 +1157,7 @@ void ArticleWidget::slotURLClicked( const KURL &url, bool forceOpen)
     return;
   }
   // let KDE take care of the remaing protocols (http, ftp, etc.)
-  new KRun( url );
+  new KRun( url, this );
 }
 
 

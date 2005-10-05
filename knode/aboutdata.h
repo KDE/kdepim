@@ -1,6 +1,4 @@
 /*
-    aboutdata.h
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -14,14 +12,15 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <kaboutdata.h>
-#include <kdepimmacros.h>
-
 #ifndef KNODE_ABOUTDATA_H
 #define KNODE_ABOUTDATA_H
 
+#include <kaboutdata.h>
+#include <kdepimmacros.h>
+
 namespace KNode
 {
+  /** Content of the about dialog. */
   class KDE_EXPORT AboutData : public KAboutData
   {
   public:

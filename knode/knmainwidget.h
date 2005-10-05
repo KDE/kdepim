@@ -29,6 +29,7 @@
 
 class Q3ListViewItem;
 class QLineEdit;
+class QSplitter;
 
 class KURL;
 class KAccel;
@@ -66,6 +67,7 @@ class KNLocalArticle;
 class KNRemoteArticle;
 class KActionCollection;
 
+/** This is the central part of the KNode GUI. */
 class KDE_EXPORT KNMainWidget : public KVBox, virtual public KNodeIface
 {
   Q_OBJECT
@@ -394,6 +396,7 @@ private:
 };
 
 
+/** Dialog to request a message ID. */
 class  FetchArticleIdDlg : public KDialogBase
 {
     Q_OBJECT

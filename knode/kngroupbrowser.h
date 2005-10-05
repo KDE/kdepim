@@ -19,6 +19,7 @@
 
 #include <q3listview.h>
 //Added by qt3to4:
+#include <QIcon>
 #include <QPixmap>
 #include <QLabel>
 #include <QGridLayout>

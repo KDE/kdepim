@@ -78,8 +78,7 @@ extern "C"
   {
     KNConfig::IdentityWidget *page = new KNConfig::IdentityWidget(
       knGlobals.configManager()->identity(),
-      parent,
-      "kcmknode_config_identity" );
+      parent );
     return page;
   }
 }

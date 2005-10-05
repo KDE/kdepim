@@ -18,6 +18,9 @@
 
 namespace KNode {
 
+/** Helper class to generate a CSS style sheet for article widget.
+ *  @see KNode::ArticleWidget
+ */
 class CSSHelper : public KPIM::CSSHelper
 {
   public:

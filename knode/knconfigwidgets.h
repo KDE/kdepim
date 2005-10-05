@@ -68,12 +68,14 @@ namespace KNConfig {
 
 namespace KNConfig {
 
+/** Configuration widget for an dentity.
+ */
 class KDE_EXPORT IdentityWidget : public KCModule {
 
   Q_OBJECT
 
   public:
-    IdentityWidget(Identity *d, QWidget *p=0, const char *n=0);
+    IdentityWidget( Identity *d, QWidget *parent = 0 );
     ~IdentityWidget();
 
     void load();
@@ -595,7 +597,7 @@ class KDE_EXPORT PostNewsComposerWidget : public KCModule {
 class KDE_EXPORT PostNewsSpellingWidget : public KCModule {
 
   public:
-    PostNewsSpellingWidget(QWidget *p=0, const char *n=0);
+    PostNewsSpellingWidget( QWidget *parent = 0 );
     ~PostNewsSpellingWidget();
 
     void save();

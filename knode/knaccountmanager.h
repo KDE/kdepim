@@ -27,6 +27,8 @@ class KNNntpAccount;
 class KNServerInfo;
 
 
+/** Account manager.
+ */
 class KNAccountManager : public QObject
 {
   Q_OBJECT
@@ -39,8 +41,15 @@ class KNAccountManager : public QObject
 
     void setCurrentAccount(KNNntpAccount *a);
 
-    bool newAccount(KNNntpAccount *a);       // a is new account allocated and configured by the caller
-    bool removeAccount(KNNntpAccount *a=0);  // a==0: remove current account
+    /** Add a new account.
+     *  @param a A new account allocated and configured by the caller.
+     */
+    bool newAccount( KNNntpAccount *a );
+    /** Remove an existing account.
+     *  @param a The account to remove, if @p a is 0, the current account will
+     *  be removed.
+     */
+    bool removeAccount( KNNntpAccount *a = 0 );
     void editProperties(KNNntpAccount *a=0);
     void accountRenamed(KNNntpAccount *a=0);
 

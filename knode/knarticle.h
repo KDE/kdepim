@@ -200,12 +200,11 @@ class KNRemoteArticle : public KNArticle {
 
 
 
-/* This class encapsulates an article, that is
+/** This class encapsulates an article, that is
    stored locally in an MBOX-file. All own and
    saved articles are represented by instances
-   of this class. */
-
-
+   of this class.
+*/
 class KNLocalArticle : public KNArticle {
 
   public:
@@ -285,9 +284,9 @@ class KNLocalArticle : public KNArticle {
 };
 
 
-/* KNAttachment represents a file that is
-   or will be attached to an article. */
-
+/** KNAttachment represents a file that is
+ *  or will be attached to an article.
+ */
 class KNAttachment {
 
   public:

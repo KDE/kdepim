@@ -27,7 +27,8 @@ class KNJobData;
 
 namespace KNode {
 
-/** This class manages three diffrent queues of all created jobs:
+/** The job scheduler.
+ * This class manages three diffrent queues of all created jobs:
  * - a queue for all NNTP jobs
  * - a queue for all SMTP jobs
  * - a queue for jobs that are waiting for KWallet

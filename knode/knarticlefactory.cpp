@@ -14,7 +14,6 @@
 
 #include <qlayout.h>
 #include <qlabel.h>
-#include <q3vbox.h>
 //Added by qt3to4:
 #include <Q3ValueList>
 #include <Q3CString>
@@ -24,6 +23,7 @@
 #include <kwin.h>
 #include <kapplication.h>
 #include <ktoolinvocation.h>
+#include <kvbox.h>
 
 #include "knarticlefactory.h"
 #include "knglobals.h"
@@ -1075,7 +1075,7 @@ KNSendErrorDialog::KNSendErrorDialog()
 {
   p_ixmap=knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::sendErr);
 
-  Q3VBox *page = makeVBoxMainWidget();
+  KVBox *page = makeVBoxMainWidget();
 
   new QLabel(QString("<b>%1</b><br>%2").arg(i18n("Errors occurred while sending these articles:"))
                                        .arg(i18n("The unsent articles are stored in the \"Outbox\" folder.")), page);

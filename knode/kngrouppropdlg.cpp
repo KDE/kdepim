@@ -20,9 +20,11 @@
 #include <QVBoxLayout>
 #include <Q3Frame>
 #include <QGridLayout>
+#include <QComboBox>
 
 #include <klocale.h>
 #include <klineedit.h>
+#include <kvbox.h>
 
 #include "knglobals.h"
 #include "knconfigmanager.h"

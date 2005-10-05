@@ -57,8 +57,9 @@ using KRecentAddress::RecentAddresses;
 #include <kqcstringsplitter.h>
 #include <ksyntaxhighlighter.h>
 #include <qcursor.h>
-#include <kurldrag.h>
+#include <k3urldrag.h>
 #include <kcompletionbox.h>
+#include <kxmlguifactory.h>
 
 #include <kapplication.h>
 #include "kngroupselectdialog.h"
@@ -433,9 +434,9 @@ int KNComposer::listOfResultOfCheckWord( const QStringList & lst , const QString
         {
             if ( !(*it).isEmpty() ) // in case of removed subtypes or placeholders
             {
-                KAction * act = new KAction( *it );
+                KAction * act = new KAction( *it, KShortcut(), v_iew->e_dit,
+                                             SLOT( slotCorrectWord() ), 0, 0 );
 
-                connect( act, SIGNAL(activated()), v_iew->e_dit, SLOT(slotCorrectWord()) );
                 m_listAction.append( act );
             }
         }
@@ -1687,7 +1688,7 @@ void KNComposer::slotSpellFinished()
 void KNComposer::slotDragEnterEvent(QDragEnterEvent *ev)
 {
   QStringList files;
-  ev->accept(KURLDrag::canDecode(ev));
+  ev->accept(K3URLDrag::canDecode(ev));
 }
 
 
@@ -1695,7 +1696,7 @@ void KNComposer::slotDropEvent(QDropEvent *ev)
 {
   KURL::List urls;
 
-  if (!KURLDrag::decode(ev, urls))
+  if (!K3URLDrag::decode(ev, urls))
     return;
 
   for (KURL::List::ConstIterator it = urls.begin(); it != urls.end(); ++it) {
@@ -2071,7 +2072,7 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
       if( !word.isEmpty() && m_replacements.contains( word ) )
       {
         KMenu p;
-        p.insertTitle( i18n("Suggestions") );
+        p.addTitle( i18n("Suggestions") );
 
         //Add the suggestions to the popup menu
         QStringList reps = m_replacements[word];
@@ -2089,7 +2090,8 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
         }
 
         //Execute the popup inline
-        int id = p.exec( mapToGlobal( event->pos() ) );
+#warning Port me!
+        int id = -1;//p.exec( mapToGlobal( event->pos() ) );
 
         if( id > -1 )
         {
@@ -2327,7 +2329,7 @@ void KNComposer::Editor::slotRot13()
 
 void KNComposer::Editor::contentsDragEnterEvent(QDragEnterEvent *ev)
 {
-  if (KURLDrag::canDecode(ev))
+  if (K3URLDrag::canDecode(ev))
     emit(sigDragEnterEvent(ev));
   else
     KEdit::dragEnterEvent(ev);
@@ -2336,7 +2338,7 @@ void KNComposer::Editor::contentsDragEnterEvent(QDragEnterEvent *ev)
 
 void KNComposer::Editor::contentsDropEvent(QDropEvent *ev)
 {
-  if (KURLDrag::canDecode(ev))
+  if (K3URLDrag::canDecode(ev))
     emit(sigDropEvent(ev));
   else
     KEdit::dropEvent(ev);

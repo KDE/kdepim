@@ -30,6 +30,7 @@ namespace KNConfig {
 }
 
 
+/** News group properties dialog. */
 class KNGroupPropDlg : public KDialogBase  {
 
   public:
@@ -53,5 +54,3 @@ class KNGroupPropDlg : public KDialogBase  {
 };
 
 #endif
-
-// kate: space-indent on; indent-width 2;

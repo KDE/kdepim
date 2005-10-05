@@ -32,7 +32,7 @@ class KNCleanUp;
 
 //=================================================================================
 
-/** helper classes for the group selection dialog
+/** Helper classes for the group selection dialog,
     contains info about a newsgroup (name, description) */
 
 class KNGroupInfo {
@@ -77,6 +77,7 @@ class KNGroupListData : public KNJobItem {
 //===============================================================================
 
 
+/** Group manager. */
 class KNGroupManager : public QObject , public KNJobConsumer {
 
   Q_OBJECT
@@ -124,7 +125,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     void slotCheckForNewGroups(KNNntpAccount *a, QDate date);
 
   protected:
-    /** reimplemented from @ref KNJobConsumer */
+    /** Reimplemented from KNJobConsumer */
     void processJob(KNJobData *j);
     Q3ValueList<KNGroup*> mGroupList;
     KNGroup *c_urrentGroup;

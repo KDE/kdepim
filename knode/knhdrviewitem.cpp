@@ -22,7 +22,7 @@
 #include <kdebug.h>
 #include <kmultipledrag.h>
 #include <kstringhandler.h>
-#include <kurldrag.h>
+#include <k3urldrag.h>
 
 #include <libkdepim/kdepimprotocols.h>
 
@@ -254,7 +254,7 @@ Q3DragObject* KNHdrViewItem::dragObject()
   list.append( KDEPIMPROTOCOL_NEWSARTICLE + mid );
   QMap<QString,QString> metadata;
   metadata["labels"] = KURL::encode_string( art->subject()->asUnicodeString() );
-  d->addDragObject( new KURLDrag( list, metadata, 0L ) );
+  d->addDragObject( new K3URLDrag( list, metadata, 0L ) );
   d->addDragObject( new Q3StoredDrag( "x-knode-drag/article" , 0L ) );
   d->setPixmap( knGlobals.configManager()->appearance()->icon( KNConfig::Appearance::posting ) );
   return d;
