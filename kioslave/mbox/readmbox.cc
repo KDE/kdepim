@@ -24,6 +24,7 @@
 #include <kdebug.h>
 #include <kio/global.h>
 
+#include <QDateTime>
 #include <qfile.h>
 #include <qfileinfo.h>
 #include <qstring.h>

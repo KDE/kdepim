@@ -29,6 +29,7 @@
 
 #include <kio/tcpslavebase.h>
 #include <qbuffer.h>
+#include <QDateTime>
 //Added by qt3to4:
 #include <Q3CString>
 
