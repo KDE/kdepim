@@ -32,7 +32,7 @@
 #include "cryptoconfigdialog.h"
 #include "cryptoconfigmodule.h"
 #include <klocale.h>
-#include <kaccelmanager.h>
+#include <kacceleratormanager.h>
 
 Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent, const char* name )
   : KDialogBase( Swallow,
