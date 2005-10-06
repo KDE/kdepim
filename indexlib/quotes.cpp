@@ -75,7 +75,7 @@ std::auto_ptr<indexlib::result> quotes::search( const char* cstr ) const {
 	if ( str.size() && str[ str.size() - 1 ] == '\"' ) str.erase( str.size() - 1 );
 	std::auto_ptr<indexlib::result> prev = impl_.search( str.c_str() );
 	if ( str.find( ' ' ) != std::string::npos ) {
-		Match m( str );
+		indexlib::Match m( str );
 		std::vector<unsigned> candidates = prev->list();
 		std::vector<unsigned> res;
 		res.reserve( candidates.size() );

@@ -30,9 +30,10 @@
  */
 
 #include "match.h"
+#include "format.h"
+#include "compat.h"
 #include <iostream>
 #include <assert.h>
-#include "format.h"
 
 namespace {
 	inline
@@ -45,12 +46,13 @@ namespace {
 	}
 }
 
-Match::Match( std::string str, unsigned flags ):
+indexlib::Match::Match( std::string str, unsigned flags ):
 	masks_( 256 ),
-	caseinsensitive_( flags & caseinsensitive ){
-	assert( str.size() <= sizeof( unsigned ) * 8 );
-	pat_len_ = str.size();
-	for ( unsigned i = 0; i != pat_len_; ++i ) {
+	caseinsensitive_( flags & caseinsensitive ),
+	pattern_rest_( str, kMin( str.size(), sizeof( unsigned ) * 8 - 1 ) )
+{
+	hot_bit_ = kMin( str.size(), sizeof( unsigned ) * 8 - 1 );
+	for ( unsigned i = 0; i != hot_bit_; ++i ) {
 		if ( caseinsensitive_ ) {
 			setbit( masks_[ ( unsigned char )std::toupper( str[ i ] ) ], i );
 			setbit( masks_[ ( unsigned char )std::tolower( str[ i ] ) ], i );
@@ -60,18 +62,18 @@ Match::Match( std::string str, unsigned flags ):
 	}
 }
 
-Match::~Match() {
+indexlib::Match::~Match() {
 }
 
-bool Match::process( const char* string ) const {
+bool indexlib::Match::process( const char* string ) const {
 	unsigned state = 0;
 	while ( *string ) {
 		state |= 1;
 		state &= masks_[ ( unsigned char )*string ];
 		state <<= 1;
-		if ( getbit( state, pat_len_ ) ) return true;
 		++string;
+		if ( getbit( state, hot_bit_ ) && ( pattern_rest_ == std::string( string, pattern_rest_.size() ) ) ) return true;
 	}
-	return !pat_len_;
+	return !hot_bit_;
 }
 

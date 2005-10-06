@@ -36,20 +36,41 @@
 #include <vector>
 #include <map>
 
+namespace indexlib {
+
+/**
+ * \brief A class for string matching
+ *
+ * This class represents a pattern in a pre-processed form so that searching for it in larger textes is
+ * very fast. This allows for a very fast way to ask "does this pattern appear in this text?"
+ *
+ * The implementation uses the shift-or algorithm which is very fast, but especially designed for
+ * patterns which are shorter than the number of bits in a word ( 32 bits on most architechtures ). For
+ * larger patterns, the first 32 characters are matched using shift-or and the next characters are strcmp()ed.
+ * Even for patterns larger than 32 characters, this should be a fast strategy.
+ */
 class Match {
 	public:
 		enum flags { caseinsensitive = 1 };
+		/** Construct an object to match string \param pattern
+		 */
 		Match( std::string pattern, unsigned flags = 0 );
 		~Match();
 
-		bool process( const char* ) const;
+		/**
+		 * Returns true if the pattern appears in \param string
+		 * It has no memory
+		 */
+		bool process( const char* string ) const;
 		bool process( std::string str ) const { return process( str.c_str() ); }
 	private:
 		typedef std::vector<unsigned> masks_type;
 		masks_type masks_;
-		unsigned pat_len_;
+		unsigned hot_bit_;
 		bool caseinsensitive_;
+		std::string pattern_rest_;
 };
+}
 
 
 #endif /* LPC_MATCH_H1105564052_INCLUDE_GUARD_ */
