@@ -15,6 +15,7 @@
 #include <stdlib.h>
 
 #include <qdir.h>
+#include <QFile>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <q3progressbar.h>
@@ -220,7 +221,7 @@ void KNCleanUp::compactFolder(KNFolder *f)
   QFileInfo info(f->m_boxFile);
   QString oldName=info.fileName();
   QString newName=oldName+".new";
-  KNFile newMBoxFile(info.dirPath(true)+"/"+newName);
+  QFile newMBoxFile( info.dirPath( true ) + "/" + newName );
 
   if( (f->m_boxFile.open(QIODevice::ReadOnly)) && (newMBoxFile.open(QIODevice::WriteOnly)) ) {
     QTextStream ts(&newMBoxFile);
@@ -229,9 +230,11 @@ void KNCleanUp::compactFolder(KNFolder *f)
       art=f->at(idx);
       if(f->m_boxFile.at(art->startOffset())) {
         ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
+        ts.flush();
         art->setStartOffset(newMBoxFile.at());
         while(f->m_boxFile.at() < (uint)art->endOffset())
           ts << f->m_boxFile.readLine();
+        ts.flush();
         art->setEndOffset(newMBoxFile.at());
         newMBoxFile.putch('\n');
       }

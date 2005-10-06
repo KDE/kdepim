@@ -38,8 +38,8 @@ class KTempFile;
 // utility classes
 //*****************************************************************************
 
-/** clone of QSortedList... */
 #if 0
+/** clone of QSortedList... */
 template<class type> class Q_EXPORT QSortedVector : public Q3PtrVector<type>
 {
 public:
@@ -64,18 +64,9 @@ class KNFile : public QFile {
   public:
     KNFile(const QString& fname=QString::null);
     ~KNFile();
-    const Q3CString& readLine();
-    const Q3CString& readLineWnewLine();
     /** searches for the string from the current file position
-	returns -1 when the string wasn't found. */
+        returns -1 when the string wasn't found. */
     int findString(const char *s);
-
-   protected:
-    bool increaseBuffer();
-
-    Q3CString buffer;
-    char *dataPtr;
-    int filePos, readBytes;
 };
 
 
@@ -137,6 +128,7 @@ private:
 //========================================================================================
 
 
+/** Some static helper methods. */
 class KNHelper {
 
 public:

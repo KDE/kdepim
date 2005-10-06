@@ -38,57 +38,13 @@
 //================================================================================
 
 KNFile::KNFile(const QString& fname)
- : QFile(fname), filePos(0), readBytes(0)
+ : QFile(fname)
 {
-  buffer.resize(512);
-  dataPtr=buffer.data();
-  dataPtr[0]='\0';
 }
 
 
 KNFile::~KNFile()
 {
-}
-
-
-const Q3CString& KNFile::readLine()
-{
-  filePos=at();
-  readBytes=QFile::readLine(dataPtr, buffer.size()-1);
-  if(readBytes!=-1) {
-    while ((dataPtr[readBytes-1]!='\n')&&(static_cast<uint>(readBytes+2)==buffer.size())) {  // don't get tricked by files without newline
-      at(filePos);
-      if (!increaseBuffer() ||
-         (readBytes=QFile::readLine(dataPtr, buffer.size()-1))==-1) {
-        readBytes=1;
-        break;
-      }
-    }
-  } else
-    readBytes=1;
-
-  dataPtr[readBytes-1] = '\0';
-  return buffer;
-}
-
-
-const Q3CString& KNFile::readLineWnewLine()
-{
-  filePos=at();
-  readBytes=QFile::readLine(dataPtr, buffer.size()-1);
-  if(readBytes!=-1) {
-    while ((dataPtr[readBytes-1]!='\n')&&(static_cast<uint>(readBytes+2)==buffer.size())) {  // don't get tricked by files without newline
-      at(filePos);
-      if (!increaseBuffer() ||
-         (readBytes=QFile::readLine(dataPtr, buffer.size()-1))==-1) {
-        dataPtr[0] = '\0';
-        break;
-      }
-    }
-  }
-  else dataPtr[0] = '\0';
-
-  return buffer;
 }
 
 
@@ -119,16 +75,6 @@ int KNFile::findString(const char *s)
   }
 
   return -1;
-}
-
-
-bool KNFile::increaseBuffer()
-{
-  buffer.resize( 2 * buffer.size() );
-  dataPtr=buffer.data();
-  dataPtr[0] = '\0';
-  kdDebug(5003) << "KNFile::increaseBuffer() : buffer doubled" << endl;
-  return true;
 }
 
 

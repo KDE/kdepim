@@ -96,6 +96,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   Q3Accel *accel = new Q3Accel( this );
   initStatusBar();
   setSpacing( 0 );
+  setMargin( 0 );
+  setLineWidth( 0 );
 
   // splitters
   mPrimarySplitter = new QSplitter( Qt::Horizontal, this );
@@ -125,6 +127,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   //header view
   QWidget *dummy = new QWidget( mSecondSplitter );
   QVBoxLayout *vlay = new QVBoxLayout(dummy);
+  vlay->setSpacing( 0 );
+  vlay->setMargin( 0 );
   h_drView = new KNHeaderView( dummy );
 
   q_uicksearch = new KToolBar(dummy, "search toolbar");

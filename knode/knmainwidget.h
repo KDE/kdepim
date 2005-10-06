@@ -98,59 +98,61 @@ public:
   /** update fonts and colors */
   void configChanged();
 
-  /** access to GUI-elements */
+  /** Returns the folder tree widget. */
   KNCollectionView* collectionView()const  { return c_olView; }
+  /** Returns the article list view. */
   KNHeaderView*       headerView()const      { return h_drView; }
+  /** Returns the article viewer. */
   KNode::ArticleWidget* articleViewer() const     { return mArticleViewer; }
   KRSqueezedTextLabel*  statusBarLabelGroup() const { return s_tatusGroup; }
   KRSqueezedTextLabel*  statusBarLabelFilter() const { return s_tatusFilter; }
   public: //The dcop interface
   // Implementation of KNodeIface
   /* Navigation */
-  // Move to the next article
+  /// Move to the next article
   virtual void nextArticle();
-  // Move to the previous article
+  /// Move to the previous article
   virtual void previousArticle();
-  // Move to the next unread article
+  /// Move to the next unread article
   virtual void nextUnreadArticle();
-  // Move to the next unread thread
+  /// Move to the next unread thread
   virtual void nextUnreadThread();
-  // Move to the next group
+  /// Move to the next group
   virtual void nextGroup();
-  // Move to the previous group
+  /// Move to the previous group
   virtual void previousGroup();
 
   /* Group options */
-  // Open the editor to post a new article in the selected group
+  /// Open the editor to post a new article in the selected group
   virtual void postArticle();
-  // Fetch the new headers in the selected groups
+  /// Fetch the new headers in the selected groups
   virtual void fetchHeadersInCurrentGroup();
-  // Expire the articles in the current group
+  /// Expire the articles in the current group
   virtual void expireArticlesInCurrentGroup();
-  // Mark all the articles in the current group as read
+  /// Mark all the articles in the current group as read
   virtual void markAllAsRead();
-  // Mark all the articles in the current group as unread
+  /// Mark all the articles in the current group as unread
   virtual void markAllAsUnread();
 
   /* Header view */
-  // Mark the current article as read
+  /// Mark the current article as read
   virtual void markAsRead();
-  // Mark the current article as unread
+  /// Mark the current article as unread
   virtual void markAsUnread();
-  // Mark the current thread as read
+  /// Mark the current thread as read
   virtual void markThreadAsRead();
-  // Mark the current thread as unread
+  /// Mark the current thread as unread
   virtual void markThreadAsUnread();
 
   /* Articles */
 
-  // Send the pending articles
+  /// Send the pending articles
   virtual void sendPendingMessages();
-  // Delete the current article
+  /// Delete the current article
   virtual void deleteArticle();
-  // Send the current article
+  /// Send the current article
   virtual void sendNow();
-  // Edit the current article
+  /// Edit the current article
   virtual void editArticle();
   /// Fetch all the new article headers
   virtual void fetchHeaders();

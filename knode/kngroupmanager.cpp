@@ -14,10 +14,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <QByteArray>
 #include <qdir.h>
+#include <QFile>
 //Added by qt3to4:
 #include <Q3ValueList>
-#include <Q3CString>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -37,7 +39,6 @@
 #include "knconfigmanager.h"
 #include "nntpjobs.h"
 #include "resource.h"
-#include "utilities.h"
 #include "knarticlewindow.h"
 #include "knmemorymanager.h"
 
@@ -100,8 +101,8 @@ KNGroupListData::~KNGroupListData()
 
 bool KNGroupListData::readIn(KNProtocolClient *client)
 {
-  KNFile f(path+"groups");
-  Q3CString line;
+  QFile f( path + "groups" );
+  QByteArray line;
   int sepPos1,sepPos2;
   QString name,description;
   bool sub;
@@ -130,7 +131,7 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
           description = QString::fromUtf8(line.right(line.length()-sepPos1-1));
           status = KNGroup::unknown;
         } else {
-          description = QString::fromUtf8(line.right(line.length()-sepPos2-1));
+          description = QString::fromUtf8( line.right( line.length() - sepPos2 - 1 ).trimmed() );
           switch (line[sepPos1+1]) {
             case 'u':   status = KNGroup::unknown;
                         break;
@@ -172,7 +173,7 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
 bool KNGroupListData::writeOut()
 {
   QFile f(path+"groups");
-  Q3CString temp;
+  QByteArray temp;
 
   if(f.open(QIODevice::WriteOnly)) {
     for (KNGroupInfo *i=groups->first(); i; i=groups->next()) {

@@ -16,7 +16,6 @@
 #define KNCLEANUP_H
 
 //Added by qt3to4:
-#include <QLabel>
 #include <Q3ValueList>
 #include <QCloseEvent>
 
@@ -32,6 +31,7 @@ class Cleanup;
 }
 
 
+/** This class handles group expiration and folder compaction. */
 class KNCleanUp {
 
   public:
@@ -43,6 +43,10 @@ class KNCleanUp {
     void reset();
 
     void expireGroup( KNGroup *g, bool showResult = false );
+    /** Compacts the given folder, ie. remove all deleted messages from the
+     * mbox file.
+     * @param f The folder to compact.
+     */
     void compactFolder(KNFolder *f);
 
   protected:
@@ -71,5 +75,3 @@ class KNCleanUp {
 };
 
 #endif
-
-// kate: space-indent on; indent-width 2;

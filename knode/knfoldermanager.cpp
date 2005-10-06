@@ -292,7 +292,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
   KNFile *file = helper.getFile(i18n("Import MBox Folder"));
   KNLocalArticle::List list;
   KNLocalArticle *art;
-  QString s;
+  QByteArray str;
   int artStart=0, artEnd=0;
   bool done=true;
 
@@ -302,15 +302,15 @@ void KNFolderManager::importFromMBox(KNFolder *f)
     knGlobals.top->secureProcessEvents();
 
     if (!file->atEnd()) {                // search for the first article...
-      s = file->readLine();
-      if (s.left(5) == "From ") {
+      str = file->readLine();
+      if ( str.left( 5 ) == "From " ) {
         artStart = file->at();
         done = false;
       } else {
         artStart = file->findString("\n\nFrom ");
         if (artStart != -1) {
           file->at(artStart+1);
-          s = file->readLine();
+          str = file->readLine();
           artStart = file->at();
           done = false;
         }
@@ -339,7 +339,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
           }
 
           file->at(artEnd+1);
-          s = file->readLine();
+          str = file->readLine();
           artStart = file->at();
         } else {
           if ((int)file->size() > artStart) {

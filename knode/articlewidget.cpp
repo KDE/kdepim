@@ -105,6 +105,8 @@ ArticleWidget::ArticleWidget( QWidget *parent,
   mInstances.append( this );
 
   QHBoxLayout *box = new QHBoxLayout( this );
+  box->setMargin( 0 );
+  box->setSpacing( 0 );
   mViewer = new KHTMLPart( this, "mViewer" );
   box->addWidget( mViewer->widget() );
   mViewer->widget()->setFocusPolicy( Qt::WheelFocus );
