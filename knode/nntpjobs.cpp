@@ -177,14 +177,21 @@ void KNode::ArticleListJob::slotResult( KIO::Job * job )
     setError( job->error(), job->errorString() );
   else {
     KNGroup* target = static_cast<KNGroup*>( data() );
+    target->setLastFetchCount( 0 );
 
     setStatus( i18n("Sorting...") );
+
+    if ( job->metaData().contains( "FirstSerialNumber" ) ) {
+      int firstSerNum = job->metaData()["FirstSerialNumber"].toInt();
+      target->setFirstNr( firstSerNum );
+    }
+
     target->insortNewHeaders( mArticleList );
 
-    int lastSerNum = 0;
-    if ( job->metaData().contains( "LastSerialNumber" ) )
-      lastSerNum = job->metaData()["LastSerialNumber"].toInt();
-    target->setLastNr( lastSerNum );
+    if ( job->metaData().contains( "LastSerialNumber" ) ) {
+      int lastSerNum = job->metaData()["LastSerialNumber"].toInt();
+      target->setLastNr( lastSerNum );
+    }
   }
 
   emitFinished();

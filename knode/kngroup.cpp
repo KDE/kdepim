@@ -30,7 +30,6 @@
 #include "knnntpaccount.h"
 #include "headerview.h"
 //Added by qt3to4:
-#include <Q3StrList>
 #include <QTextStream>
 #include <Q3CString>
 
@@ -39,7 +38,7 @@
 
 KNGroup::KNGroup(KNCollection *p)
   : KNArticleCollection(p), n_ewCount(0), l_astFetchCount(0), r_eadCount(0), i_gnoreCount(0),
-    l_astNr(0), m_axFetch(0), d_ynDataFormat(1), f_irstNew(-1), l_ocked(false),
+    f_irstNr(0), l_astNr(0), m_axFetch(0), d_ynDataFormat(1), f_irstNew(-1), l_ocked(false),
     u_seCharset(false), s_tatus(unknown), i_dentity(0)
 {
   mCleanupConf = new KNConfig::Cleanup( false );
@@ -399,7 +398,7 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
 
   l_astFetchCount=0;
 
-  if ( list.count() == 0 )
+  if ( list.isEmpty() )
     return;
 
   timer.start();
@@ -414,7 +413,23 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
   if(f_irstNew == -1)
     f_irstNew = length(); // index of last + 1
 
-//   for(char *line=hdrs->first(); line; line=hdrs->next()) {
+  // get a list of additional headers provided in the listing
+  if ( mOptionalHeaders.isEmpty() ) {
+    KIO::UDSEntry entry = list.first();
+    Q_FOREACH( KIO::UDSAtom atom, entry ) {
+      if ( atom.m_uds != KIO::UDS_EXTRA )
+        continue;
+      kdDebug(5003) << k_funcinfo << atom.m_str << endl;
+      QString hdrName = atom.m_str.left( atom.m_str.indexOf( ':' ) );
+      if ( hdrName == "Subject" || hdrName == "From" || hdrName == "Date"
+           || hdrName == "Message-ID" || hdrName == "References"
+           || hdrName == "Bytes" || hdrName == "Lines" )
+        continue;
+      kdDebug(5003) << k_funcinfo << "Adding optional header: " << hdrName << endl;
+      mOptionalHeaders.append( hdrName.toLatin1() );
+    }
+  }
+
   QString hdrName, hdrValue;
   for( KIO::UDSEntryListConstIterator it = list.begin(); it != list.end(); ++it ) {
 
@@ -429,6 +444,8 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
         art->setArticleNumber( (*it2).m_str.toInt() );
       } else if ( (*it2).m_uds == KIO::UDS_EXTRA ) {
         int pos = (*it2).m_str.indexOf( ':' );
+        if ( pos >= (*it2).m_str.length() - 1 )
+          continue; // value is empty
         hdrName = (*it2).m_str.left( pos );
         hdrValue = (*it2).m_str.right( (*it2).m_str.length() - ( hdrName.length() + 2 ) );
 
@@ -546,9 +563,8 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 
       // optional headers
       ts << mOptionalHeaders.count() << '\n';
-      for (Q3CString hdrName = mOptionalHeaders.first(); !hdrName.isNull(); hdrName = mOptionalHeaders.next()) {
-        hdrName = hdrName.left( hdrName.find(':') );
-        KMime::Headers::Base *hdr = art->getHeaderByType( hdrName );
+      Q_FOREACH( QByteArray hdrName, mOptionalHeaders ) {
+        KMime::Headers::Base *hdr = art->getHeaderByType( hdrName.data() );
         if ( hdr )
           ts << hdrName << ": " << hdr->asUnicodeString() << '\n';
         else

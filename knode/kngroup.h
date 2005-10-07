@@ -23,11 +23,10 @@
 
 #include <kio/job.h>
 
+#include <QByteArray>
+#include <QList>
 //Added by qt3to4:
-#include <Q3StrList>
 #include <Q3CString>
-
-class Q3StrList;
 
 class KNProtocolClient;
 class KNNntpAccount;
@@ -47,6 +46,7 @@ namespace KNConfig {
 class KNGroup : public KNArticleCollection , public KNJobItem  {
 
   public:
+    /** The posting rights status of this group. */
     enum Status { unknown=0, readOnly=1, postingAllowed=2, moderated=3 };
 
     KNGroup(KNCollection *p=0);
@@ -68,8 +68,12 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     const QString& name();
     const QString& groupname()              { return g_roupname; }
     void setGroupname(const QString &s)     { g_roupname=s; }
-    const QString& description()            { return d_escription; }
-    void setDescription(const QString &s)   { d_escription=s; }
+    /** Returns the group description. */
+    QString description() const { return d_escription; }
+    /** Sets the group description.
+     * @param s The group description.
+     */
+    void setDescription( const QString &s ) { d_escription = s; }
 
     /** count + numbers */
     int newCount() const               { return n_ewCount; }
@@ -87,12 +91,24 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void incReadCount(int i=1)    { r_eadCount+=i; }
     void decReadCount(int i=1)    { r_eadCount-=i; }
 
-    int firstNr() const                { return f_irstNr; }
-    void setFirstNr(int i)        { f_irstNr=i; }
-    int lastNr() const                 { return l_astNr; }
-    void setLastNr(int i)         { l_astNr=i; }
-    int maxFetch() const               { return m_axFetch; }
-    void setMaxFetch(int i)       { m_axFetch=i; }
+    /** Returns the smallest available article serial number in this group. */
+    int firstNr() const { return f_irstNr; }
+    /** Sets the smallest available serial number.
+     * @param i The serial number.
+     */
+    void setFirstNr( int i ) { f_irstNr = i; }
+    /** Returns the largest used article serial number in this group. */
+    int lastNr() const { return l_astNr; }
+    /** Sets the largest used serial number.
+     * @param i The serial number.
+     */
+    void setLastNr( int i ) { l_astNr = i; }
+    /** Returns the maximal number of articles to download from the server. */
+    int maxFetch() const { return m_axFetch; }
+    /** Sets the maximal number of articles to download from the server.
+     * @param i The maximal number of articles to download.
+     */
+    void setMaxFetch( int i ) { m_axFetch = i; }
 
     int statThrWithNew();
     int statThrWithUnread();
@@ -132,16 +148,31 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     bool useCharset()                         { return ( u_seCharset && !d_efaultChSet.isEmpty() ); }
     void setUseCharset(bool b)                { u_seCharset=b; }
 
-    // misc
+    /** Returns the account this group belongs to. */
     KNNntpAccount* account();
-    KNConfig::Identity* identity()const          { return i_dentity; }
-    void setIdentity(KNConfig::Identity *i) { i_dentity=i; }
-    Status status()const                         { return s_tatus; }
-    void setStatus(Status s)                { s_tatus=s; }
+    /** Returns the identity configured for this group (might be empty). */
+    KNConfig::Identity* identity() const { return i_dentity; }
+    /** Sets the identity for this group.
+     * @param i The identity.
+     */
+    void setIdentity(KNConfig::Identity *i) { i_dentity = i; }
+    /** Returns the posting rights of this group.
+     */
+    Status status() const { return s_tatus; }
+    /** Sets the posting rights for this group.
+     * @param s The new posting rights.
+     */
+    void setStatus(Status s) { s_tatus = s; }
+    /** Shows the group properties dialog.
+     * @see KNGroupPropDlg
+     */
     void showProperties();
 
-    // cleanup configuration
+    /** Returns the cleanup configuration of this group (might be empty). */
     KNConfig::Cleanup *cleanupConfig() const { return mCleanupConf; }
+    /** Returns the active cleanup configuration of this group, ie. the
+     * "lowest" available cleanup configuration.
+     */
     KNConfig::Cleanup *activeCleanupConfig();
 
 
@@ -170,10 +201,10 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
 
     QStringList c_rosspostIDBuffer;
 
-    /** Optional headers provided by the XOVER command
-     *  These headers will be saved within the static data
+    /** Optional headers provided by the XOVER command.
+     *  These headers will be saved within the static data.
      */
-    Q3StrList mOptionalHeaders;
+    QList<QByteArray> mOptionalHeaders;
 
     KNConfig::Identity *i_dentity;
     KNConfig::Cleanup *mCleanupConf;

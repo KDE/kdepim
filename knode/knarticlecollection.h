@@ -1,8 +1,6 @@
 /*
-    knarticlecollection.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -24,6 +22,8 @@
 class KNArticle;
 
 
+/** Article storage used by KNArticleCollection.
+ */
 class KNArticleVector {
 
   public:
@@ -73,13 +73,15 @@ class KNArticleVector {
 };
 
 
+/** Abstract base class for article collections, ie. news groups and folders.
+ */
 class KNArticleCollection : public KNCollection {
 
   public:
     KNArticleCollection(KNCollection *p=0);
     ~KNArticleCollection();
 
-    // info
+    /** Returns true if this collection doesn't contain any article. */
     bool isEmpty()                { return a_rticles.isEmpty(); }
     bool isLoaded()               { return (c_ount==0 || a_rticles.length()>0); }
     int size()                    { return a_rticles.size(); }

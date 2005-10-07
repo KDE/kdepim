@@ -1,8 +1,6 @@
 /*
-    kncollection.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -22,6 +20,12 @@
 class KNCollectionViewItem;
 
 
+/** Abstract base class for everything that is visible in the folder tree.
+ * This includes:
+ * - news groups
+ * - folders
+ * - news server accounts
+ */
 class KNCollection {
 
   public:
@@ -29,29 +33,42 @@ class KNCollection {
                             CTfolder, CTcategory,
                             CTvirtualGroup };
 
+    /** Create a new collection.
+     * @param p The parent collection.
+     */
     KNCollection(KNCollection *p);
     virtual ~KNCollection();
 
-    // type
-    virtual collectionType type()=0;
+    /// Returns the collection type.
+    virtual collectionType type() = 0;
 
-    // list item handling
-    KNCollectionViewItem* listItem()const  { return l_istItem; }
+    /** Returns the listview item representing this collection in the
+     * folder tree.
+     */
+    KNCollectionViewItem* listItem() const { return l_istItem; }
+    /** Sets the listview item which represents this collection in the
+     * folder tree.
+     */
     void setListItem(KNCollectionViewItem *i);
+    /** Updates the listview item after the collection has changed. */
     virtual void updateListItem();
 
     // info
-    virtual QString path()=0;
-    virtual bool readInfo(const QString &confPath)=0;
-    virtual void saveInfo()=0;
+    virtual QString path() = 0;
+    /** Load the properties/settings of this collection. */
+    virtual bool readInfo( const QString &confPath ) = 0;
+    /** Save the properties/settings of this collection. */
+    virtual void saveInfo() = 0;
 
-    // parent
-    KNCollection* parent()const                    { return p_arent; }
-    virtual void setParent(KNCollection *p)   { p_arent=p; }
+    /// Returns the parent collection.
+    KNCollection* parent() const { return p_arent; }
+    /// Sets the parent collection.
+    virtual void setParent( KNCollection *p ) { p_arent = p; }
 
-    // name
-    virtual const QString& name()     { return n_ame; }
-    void setName(const QString &s)    { n_ame=s; }
+    /// Returns the collection name.
+    virtual const QString& name() { return n_ame; }
+    /// Sets the collection name.
+    void setName( const QString &s ) { n_ame = s; }
 
     // count
     int count()const                       { return c_ount; }
@@ -60,8 +77,11 @@ class KNCollection {
     void decCount(int i)              { c_ount-=i; }
 
   protected:
+    /// A pointer to the parent collection.
     KNCollection *p_arent;
+    /// The list view item representing this collection in the folder tree.
     KNCollectionViewItem *l_istItem;
+    /// The name of this collection.
     QString n_ame;
     int c_ount;
 
