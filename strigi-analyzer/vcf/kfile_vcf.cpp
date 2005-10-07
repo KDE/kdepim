@@ -45,8 +45,9 @@ K_EXPORT_COMPONENT_FACTORY(kfile_vcf, VcfFactory( "kfile_vcf" ))
 KVcfPlugin::KVcfPlugin(QObject *parent, const char *name,
                        const QStringList &args)
 
-    : KFilePlugin(parent, name, args)
+    : KFilePlugin(parent, args)
 {
+	setObjectName(name);
     KFileMimeTypeInfo* info = addMimeTypeInfo( "text/x-vcard" );
 
     KFileMimeTypeInfo::GroupInfo* group = 0L;
