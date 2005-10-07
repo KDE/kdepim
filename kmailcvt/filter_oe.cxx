@@ -124,7 +124,7 @@ void FilterOE::importMailBox( FilterInfo *info, const QString& fileName)
     mailbox.setByteOrder(QDataStream::LittleEndian);
 
     // Parse magic
-    Q_UINT32 sig_block1, sig_block2;
+    quint32 sig_block1, sig_block2;
     mailbox >> sig_block1 >> sig_block2;
     if (sig_block1 == OE4_SIG_1 && sig_block2 == OE4_SIG_2) {
         folderName = "OE-Import/" + mailfileinfo.baseName(TRUE);
@@ -133,7 +133,7 @@ void FilterOE::importMailBox( FilterInfo *info, const QString& fileName)
         mbxImport(info, mailbox);
         return;
     } else {
-        Q_UINT32 sig_block3, sig_block4;
+        quint32 sig_block3, sig_block4;
         mailbox >> sig_block3 >> sig_block4;
         if (sig_block1 == OE5_SIG_1 && sig_block3 == OE5_SIG_3 && sig_block4 == OE5_SIG_4) {
             if (sig_block2 == OE5_EMAIL_SIG_2) {
@@ -164,7 +164,7 @@ void FilterOE::importMailBox( FilterInfo *info, const QString& fileName)
 
 void FilterOE::mbxImport( FilterInfo *info, QDataStream& ds)
 {
-    Q_UINT32 msgCount, lastMsgNum, fileSize;
+    quint32 msgCount, lastMsgNum, fileSize;
 
     // Read the header
     ds >> msgCount >> lastMsgNum >> fileSize;
@@ -173,11 +173,11 @@ void FilterOE::mbxImport( FilterInfo *info, QDataStream& ds)
     if (msgCount == 0)
         return; // Don't import empty mailbox
 
-    Q_UINT32 msgMagic;
+    quint32 msgMagic;
     ds >> msgMagic; // Read first magic
 
     while (!ds.atEnd()) {
-        Q_UINT32 msgNumber, msgSize, msgTextSize;
+        quint32 msgNumber, msgSize, msgTextSize;
         KTempFile tmp;
         tmp.dataStream()->setByteOrder(QDataStream::LittleEndian);
 
@@ -212,7 +212,7 @@ void FilterOE::mbxImport( FilterInfo *info, QDataStream& ds)
 void FilterOE::dbxImport( FilterInfo *info, QDataStream& ds)
 {
     // Get item count & offset of index
-    Q_UINT32 itemCount, indexPtr;
+    quint32 itemCount, indexPtr;
     ds.device()->at(0xc4);
     ds >> itemCount;
     ds.device()->at(0xe4);
@@ -232,9 +232,9 @@ void FilterOE::dbxReadIndex( FilterInfo *info, QDataStream& ds, int filePos)
 {
     
     if(info->shouldTerminate()) return;
-    Q_UINT32 self, unknown, nextIndexPtr, parent, indexCount;
-    Q_UINT8 unknown2, ptrCount;
-    Q_UINT16 unknown3;
+    quint32 self, unknown, nextIndexPtr, parent, indexCount;
+    quint8 unknown2, ptrCount;
+    quint16 unknown3;
     int wasAt = ds.device()->at();
     ds.device()->at(filePos);
 
@@ -245,7 +245,7 @@ void FilterOE::dbxReadIndex( FilterInfo *info, QDataStream& ds, int filePos)
     kdDebug() << "This index has " << (int) ptrCount << " data pointers" << endl;
     for (int count = 0; count < ptrCount; count++) {
         if(info->shouldTerminate()) return;
-        Q_UINT32 dataIndexPtr, anotherIndexPtr, anotherIndexCount; // _dbx_indexstruct
+        quint32 dataIndexPtr, anotherIndexPtr, anotherIndexCount; // _dbx_indexstruct
         ds >> dataIndexPtr >> anotherIndexPtr >> anotherIndexCount;
 
         if (anotherIndexCount > 0) {
@@ -266,9 +266,9 @@ void FilterOE::dbxReadIndex( FilterInfo *info, QDataStream& ds, int filePos)
 
 void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
 {
-    Q_UINT32 curOffset, blockSize;
-    Q_UINT16 unknown;
-    Q_UINT8 count, unknown2;
+    quint32 curOffset, blockSize;
+    quint16 unknown;
+    quint8 count, unknown2;
     int wasAt = ds.device()->at();
     
     QString folderEntry[4];
@@ -280,8 +280,8 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
 
     for (int c = 0; c < count; c++) {
         if(info->shouldTerminate()) return;
-        Q_UINT8 type;  // _dbx_email_pointerstruct
-        Q_UINT32 value; // Actually 24 bit
+        quint8 type;  // _dbx_email_pointerstruct
+        quint32 value; // Actually 24 bit
 
         ds >> type >> value;
         value &= 0xffffff;
@@ -295,7 +295,7 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
             } else if( type == 0x04) {
                 int currentFilePos = ds.device()->at();
                 ds.device()->at(filePos + 12 + value + (count*4) );
-                Q_UINT32 newOFF;
+                quint32 newOFF;
                 ds >> newOFF;
                 kdDebug() << "**** Offset of emaildata (0x04) " <<  newOFF << endl;
                 ds.device()->at(currentFilePos);
@@ -331,9 +331,9 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
 void FilterOE::dbxReadEmail( FilterInfo *info, QDataStream& ds, int filePos)
 {
     if(info->shouldTerminate()) return;
-    Q_UINT32 self, nextAddressOffset, nextAddress=0;
-    Q_UINT16 blockSize;
-    Q_UINT8 intCount, unknown;
+    quint32 self, nextAddressOffset, nextAddress=0;
+    quint16 blockSize;
+    quint8 intCount, unknown;
     KTempFile tmp;
     bool _break = false;
     int wasAt = ds.device()->at();

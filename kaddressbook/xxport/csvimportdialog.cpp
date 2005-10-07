@@ -711,11 +711,11 @@ void CSVImportDialog::resizeColumns()
 
   QMap<QString, uint>::ConstIterator it;
   for ( it = mTypeMap.begin(); it != mTypeMap.end(); ++it ) {
-    width = QMAX( width, fm.width( it.key() ) );
+    width = qMax( width, fm.width( it.key() ) );
   }
 
   for ( int i = 0; i < mTable->numCols(); ++i )
-    mTable->setColumnWidth( i, QMAX( width + 15, mTable->columnWidth( i ) ) );
+    mTable->setColumnWidth( i, qMax( width + 15, mTable->columnWidth( i ) ) );
 }
 
 void CSVImportDialog::returnPressed()

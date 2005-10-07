@@ -122,7 +122,7 @@ void DynamicTip::maybeTip( const QPoint &pos )
             linew = lastw;
           }
           else
-            i = QMAX( a, i-1 );
+            i = qMax( a, i-1 );
         }
 
       if ( notes[i] == '\n' || doBreak ) {

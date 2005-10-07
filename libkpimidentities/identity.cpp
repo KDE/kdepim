@@ -214,13 +214,13 @@ void Signature::writeConfig( KConfigBase * config ) const
 }
 
 QDataStream & KPIM::operator<<( QDataStream & stream, const KPIM::Signature & sig ) {
-  return stream << static_cast<Q_UINT8>(sig.mType)
+  return stream << static_cast<quint8>(sig.mType)
 		<< sig.mUrl
 		<< sig.mText;
 }
 
 QDataStream & KPIM::operator>>( QDataStream & stream, KPIM::Signature & sig ) {
-    Q_UINT8 s;
+    quint8 s;
     stream >> s
            >> sig.mUrl
            >> sig.mText;
@@ -367,7 +367,7 @@ void Identity::writeConfig( KConfigBase * config ) const
 }
 
 QDataStream & KPIM::operator<<( QDataStream & stream, const KPIM::Identity & i ) {
-  return stream << static_cast<Q_UINT32>(i.uoid())
+  return stream << static_cast<quint32>(i.uoid())
 		<< i.identityName()
 		<< i.fullName()
 		<< i.organization()
@@ -389,7 +389,7 @@ QDataStream & KPIM::operator<<( QDataStream & stream, const KPIM::Identity & i )
 }
 
 QDataStream & KPIM::operator>>( QDataStream & stream, KPIM::Identity & i ) {
-  Q_UINT32 uoid;
+  quint32 uoid;
   QString format;
   stream        >> uoid
 		>> i.mIdentity

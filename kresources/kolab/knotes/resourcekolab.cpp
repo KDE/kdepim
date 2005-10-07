@@ -101,7 +101,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
     return false;
   }
 
-  QMap<Q_UINT32, QString> lst;
+  QMap<quint32, QString> lst;
   if( !kmailIncidences( lst, mimetype, subResource, 0, count ) ) {
     kdError(5500) << "Communication problem in "
                   << "ResourceKolab::getIncidenceList()\n";
@@ -113,7 +113,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   // Populate with the new entries
   const bool silent = mSilent;
   mSilent = true;
-  QMap<Q_UINT32, QString>::Iterator it;
+  QMap<quint32, QString>::Iterator it;
   for ( it = lst.begin(); it != lst.end(); ++it ) {
     KCal::Journal* journal = addNote( it.data(), subResource, it.key(), mimetype );
     if ( !journal )
@@ -160,7 +160,7 @@ bool ResourceKolab::addNote( KCal::Journal* journal )
 }
 
 KCal::Journal* ResourceKolab::addNote( const QString& data, const QString& subresource,
-                             Q_UINT32 sernum, const QString &mimetype )
+                             quint32 sernum, const QString &mimetype )
 {
   KCal::Journal* journal = 0;
     // FIXME: This does not take into account the time zone!
@@ -180,7 +180,7 @@ KCal::Journal* ResourceKolab::addNote( const QString& data, const QString& subre
 }
 
 bool ResourceKolab::addNote( KCal::Journal* journal,
-                             const QString& subresource, Q_UINT32 sernum )
+                             const QString& subresource, quint32 sernum )
 {
   kdDebug(5500) << "ResourceKolab::addNote( KCal::Journal*, '" << subresource << "', " << sernum << " )\n";
 
@@ -256,7 +256,7 @@ KCal::Alarm::List ResourceKolab::alarms( const QDateTime& from, const QDateTime&
 void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
 {
   QString subResource;
-  Q_UINT32 sernum;
+  quint32 sernum;
   if ( mUidMap.contains( i->uid() ) ) {
     subResource = mUidMap[ i->uid() ].resource();
     sernum = mUidMap[ i->uid() ].serialNumber();
@@ -279,7 +279,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
  */
 bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            const QString& subResource,
-                                           Q_UINT32 sernum,
+                                           quint32 sernum,
                                            int format,
                                            const QString& note )
 {
@@ -390,7 +390,7 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
   emit signalSubresourceRemoved( this, type, subResource );
 }
 
-void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+void ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
                                               const QString& type,
                                               const QString& folder )
 {
@@ -404,7 +404,7 @@ void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map
     mimetype = attachmentMimeType;
   else
     mimetype = inlineMimeType;
-  for( QMap<Q_UINT32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
+  for( QMap<quint32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
     KCal::Journal* journal = addNote( it.data(), folder, it.key(), mimetype );
     if ( !journal )
       kdDebug(5500) << "loading note " << it.key() << " failed" << endl;

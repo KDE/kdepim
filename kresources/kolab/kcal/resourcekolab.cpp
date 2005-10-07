@@ -172,7 +172,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   }
 
   for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
-    QMap<Q_UINT32, QString> lst;
+    QMap<quint32, QString> lst;
     if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
       kdError(5650) << "Communication problem in ResourceKolab::load()\n";
       if ( progressId )
@@ -182,7 +182,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
 
     { // for RAII scoping below
       TemporarySilencer t( this );
-      for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+      for( QMap<quint32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
         addIncidence( mimetype, it.data(), subResource, it.key() );
       }
     }
@@ -301,7 +301,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
   }
 
   QString subResource;
-  Q_UINT32 sernum = 0;
+  quint32 sernum = 0;
   if ( mUidMap.contains( uid ) ) {
     subResource = mUidMap[ uid ].resource();
     sernum = mUidMap[ uid ].serialNumber();
@@ -310,7 +310,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
   sendKMailUpdate( incidencebase, subResource, sernum );
 }
 
-void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subresource, Q_UINT32 sernum )
+void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subresource, quint32 sernum )
 {
     if ( ! inc )
         return;
@@ -360,7 +360,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
   }
 }
 void ResourceKolab::addIncidence( const char* mimetype, const QString& data,
-                                  const QString& subResource, Q_UINT32 sernum )
+                                  const QString& subResource, quint32 sernum )
 {
   // This uses pointer comparison, so it only works if we use the static
   // objects defined in the top of the file
@@ -378,7 +378,7 @@ void ResourceKolab::addIncidence( const char* mimetype, const QString& data,
 
 
 bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const QString& subresource,
-                                     Q_UINT32 sernum )
+                                     quint32 sernum )
 {
   const QString& type = incidencebase->type();
   const char* mimetype = 0;
@@ -438,7 +438,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
 }
 
 bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _subresource,
-                                  Q_UINT32 sernum )
+                                  quint32 sernum )
 {
   Q_ASSERT( incidence );
   if ( !incidence ) return false;
@@ -552,7 +552,7 @@ bool ResourceKolab::addEvent( KCal::Event* event )
 }
 
 void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
-                              Q_UINT32 sernum )
+                              quint32 sernum )
 {
   KCal::Event* event = Kolab::Event::xmlToEvent( xml, mCalendar.timeZoneId() );
   Q_ASSERT( event );
@@ -624,7 +624,7 @@ bool ResourceKolab::addTodo( KCal::Todo* todo )
 }
 
 void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
-                             Q_UINT32 sernum )
+                             quint32 sernum )
 {
   KCal::Todo* todo = Kolab::Task::xmlToTask( xml, mCalendar.timeZoneId() );
   Q_ASSERT( todo );
@@ -661,7 +661,7 @@ bool ResourceKolab::addJournal( KCal::Journal* journal )
 }
 
 void ResourceKolab::addJournal( const QString& xml, const QString& subresource,
-                                Q_UINT32 sernum )
+                                quint32 sernum )
 {
   KCal::Journal* journal =
     Kolab::Journal::xmlToJournal( xml, mCalendar.timeZoneId() );
@@ -710,7 +710,7 @@ void ResourceKolab::setTimeZoneId( const QString& tzid )
 
 bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            const QString& subResource,
-                                           Q_UINT32 sernum,
+                                           quint32 sernum,
                                            int format,
                                            const QString& data )
 {
@@ -892,12 +892,12 @@ QString ResourceKolab::subresourceIdentifier( Incidence *incidence )
       return QString();
 }
 
-void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+void ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
                                               const QString& type,
                                               const QString& folder )
 {
   TemporarySilencer t( this );
-  for( QMap<Q_UINT32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it )
+  for( QMap<quint32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it )
     addIncidence( type.latin1(), it.data(), folder, it.key() );
 }
 

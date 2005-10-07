@@ -1,5 +1,5 @@
 /* dataprovider.cpp
-   Copyright (C) 2004 Klarälvdalens Datakonsult AB
+   Copyright (C) 2004 Klarï¿½vdalens Datakonsult AB
 
    This file is part of QGPGME.
  
@@ -53,7 +53,7 @@ ssize_t QGpgME::QByteArrayDataProvider::read( void * buffer, size_t bufSize ) {
     return 0;
   if ( mOff >= mArray.size() )
     return 0; // EOF
-  size_t amount = QMIN( bufSize, static_cast<size_t>( mArray.size() - mOff ) );
+  size_t amount = qMin( bufSize, static_cast<size_t>( mArray.size() - mOff ) );
   assert( amount > 0 );
   memcpy( buffer, mArray.data() + mOff, amount );
   mOff += amount;

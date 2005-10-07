@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -85,7 +85,7 @@ int SubResource::completionWeight() const
   return mCompletionWeight;
 }
 
-StorageReference::StorageReference( const QString& resource, Q_UINT32 sernum )
+StorageReference::StorageReference( const QString& resource, quint32 sernum )
   : mResource( resource ), mSerialNumber( sernum )
 {
 }
@@ -104,12 +104,12 @@ QString StorageReference::resource() const
   return mResource;
 }
 
-void StorageReference::setSerialNumber( Q_UINT32 serialNumber )
+void StorageReference::setSerialNumber( quint32 serialNumber )
 {
   mSerialNumber = serialNumber;
 }
 
-Q_UINT32 StorageReference::serialNumber() const
+quint32 StorageReference::serialNumber() const
 {
   return mSerialNumber;
 }

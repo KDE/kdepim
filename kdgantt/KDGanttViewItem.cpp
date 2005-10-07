@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
- ** Copyright (C)  2002-2004 Klarälvdalens Datakonsult AB.  All rights reserved.
+ ** Copyright (C)  2002-2004 Klarï¿½vdalens Datakonsult AB.  All rights reserved.
  **
  ** This file is part of the KDGantt library.
  **
@@ -2522,8 +2522,8 @@ bool KDGanttViewItem::isMyTextCanvas(QCanvasItem *tc)
 
 void KDGanttViewItem::setProgress(int percent)
 {
-    myProgress = QMAX(0, percent);
-    myProgress = QMIN(100, myProgress);
+    myProgress = qMax(0, percent);
+    myProgress = qMin(100, myProgress);
 }
 
 /*!

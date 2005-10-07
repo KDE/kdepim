@@ -82,7 +82,7 @@ bool ResourceKolabBase::kmailIncidencesCount( int &count,
   return mConnection->kmailIncidencesCount( count, mimetype, resource );
 }
 
-bool ResourceKolabBase::kmailIncidences( QMap<Q_UINT32, QString>& lst,
+bool ResourceKolabBase::kmailIncidences( QMap<quint32, QString>& lst,
                                          const QString& mimetype,
                                          const QString& resource,
                                          int startIndex,
@@ -92,14 +92,14 @@ bool ResourceKolabBase::kmailIncidences( QMap<Q_UINT32, QString>& lst,
 }
 
 bool ResourceKolabBase::kmailGetAttachment( KURL& url, const QString& resource,
-                                            Q_UINT32 sernum,
+                                            quint32 sernum,
                                             const QString& filename ) const
 {
   return mConnection->kmailGetAttachment( url, resource, sernum, filename );
 }
 
 bool ResourceKolabBase::kmailDeleteIncidence( const QString& resource,
-                                              Q_UINT32 sernum )
+                                              quint32 sernum )
 {
   return mSilent || mConnection->kmailDeleteIncidence( resource, sernum );
 }
@@ -122,7 +122,7 @@ static QString plainTextBody()
 }
 
 bool ResourceKolabBase::kmailUpdate( const QString& resource,
-                                     Q_UINT32& sernum,
+                                     quint32& sernum,
                                      const QString& xml,
                                      const QString& mimetype,
                                      const QString& subject,

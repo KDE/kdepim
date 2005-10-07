@@ -81,7 +81,7 @@ public:
 
   /// The ResourceKolabBase methods called by KMail
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                              Q_UINT32 sernum, int format, const QString& note );
+                              quint32 sernum, int format, const QString& note );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& uid );
   void fromKMailRefresh( const QString& type, const QString& resource );
@@ -91,7 +91,7 @@ public:
                                 const QString& label, bool writable );
   void fromKMailDelSubresource( const QString& type, const QString& resource );
 
-  void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+  void fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
                                  const QString& type,
                                  const QString& folder );
 
@@ -107,9 +107,9 @@ signals:
 
 private:
   bool addNote( KCal::Journal* journal, const QString& resource,
-                Q_UINT32 sernum );
+                quint32 sernum );
   KCal::Journal* addNote( const QString& data, const QString& subresource,
-                          Q_UINT32 sernum, const QString &mimetype );
+                          quint32 sernum, const QString &mimetype );
 
   bool loadSubResource( const QString& resource, const QString& mimetype );
 

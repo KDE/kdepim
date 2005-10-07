@@ -179,7 +179,7 @@ void FilterSylpheed::readMarkFile( FilterInfo *info, const QString &path, Q3Dict
      * the first one with the message file name (which is a number), 
      * and the second one with the actual message flags */
 
-    Q_UINT32 in, flags;
+    quint32 in, flags;
     QFile file(path);
 
     if (!file.open(QIODevice::ReadOnly)) 
@@ -196,7 +196,7 @@ void FilterSylpheed::readMarkFile( FilterInfo *info, const QString &path, Q3Dict
      * at a file created on another platform. I don't have any test 
      * marks/folders, so just ignoring this case */
     stream >> in;
-    if (in > (Q_UINT32) 0xffff) 
+    if (in > (quint32) 0xffff) 
         return;
 
     while (!stream.atEnd()) {

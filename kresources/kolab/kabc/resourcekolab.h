@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2002 - 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2002 - 2004 Klarï¿½vdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -111,12 +111,12 @@ public:
   void fromKMailDelSubresource( const QString& type, const QString& id );
 
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                              Q_UINT32 sernum, int format, const QString& contact );
+                              quint32 sernum, int format, const QString& contact );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& contact );
   void fromKMailRefresh( const QString& type, const QString& resource );
 
-  void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+  void fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
                                  const QString& type,
                                  const QString& folder );
 
@@ -152,7 +152,7 @@ protected:
   bool loadSubResource( const QString& subResource );
   bool loadSubResourceHelper( const QString& subResource, const char* mimetype, KMailICalIface::StorageFormat format );
   QString loadContact( const QString& contactData, const QString& subResource,
-                       Q_UINT32 sernum, const KMailICalIface::StorageFormat format );
+                       quint32 sernum, const KMailICalIface::StorageFormat format );
 
   QString configFile() const {
     return Kolab::ResourceKolabBase::configFile( "kabc" );

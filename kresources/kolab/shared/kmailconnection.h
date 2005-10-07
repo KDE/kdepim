@@ -56,13 +56,13 @@ class KMailConnection : public QObject, public DCOPObject {
   // These are the methods called by KMail when the resource changes
 k_dcop:
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                              Q_UINT32 sernum, int format, const QString& xml );
+                              quint32 sernum, int format, const QString& xml );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& xml );
   void fromKMailRefresh( const QString& type, const QString& resource );
   void fromKMailAddSubresource( const QString& type, const QString& resource, const QString& label );
   void fromKMailDelSubresource( const QString& type, const QString& resource );
-  void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map, const QString& type,
+  void fromKMailAsyncLoadResult( const QMap<quint32, QString>& map, const QString& type,
                                  const QString& folder );
 
 public:
@@ -80,16 +80,16 @@ public:
   bool kmailIncidencesCount( int& count,
                              const QString& mimetype,
                              const QString& resource );
-  bool kmailIncidences( QMap<Q_UINT32, QString>& lst, const QString& mimetype,
+  bool kmailIncidences( QMap<quint32, QString>& lst, const QString& mimetype,
                         const QString& resource,
                         int startIndex,
                         int nbMessages );
 
-  bool kmailGetAttachment( KURL& url, const QString& resource, Q_UINT32 sernum,
+  bool kmailGetAttachment( KURL& url, const QString& resource, quint32 sernum,
                            const QString& filename );
-  bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
+  bool kmailDeleteIncidence( const QString& resource, quint32 sernum );
   bool kmailUpdate( const QString& resource,
-                    Q_UINT32& sernum,
+                    quint32& sernum,
                     const QString& subject,
                     const QString& plainTextBody,
                     const QMap<QByteArray, QString>& customHeaders,

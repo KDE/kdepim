@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2002 - 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2002 - 2004 Klarï¿½vdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -64,7 +64,7 @@ public:
   };
 
   explicit Contact( const KABC::Addressee* address );
-  Contact( const QString& xml, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
+  Contact( const QString& xml, KABC::ResourceKolab* resource, const QString& subResource, quint32 sernum );
   ~Contact();
 
   void saveTo( KABC::Addressee* address );
@@ -217,10 +217,10 @@ private:
   void loadDistrListMember( const QDomElement& element );
   void saveDistrListMembers( QDomElement& element ) const;
 
-  QImage loadPictureFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
+  QImage loadPictureFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, quint32 sernum );
   QImage loadPictureFromAddressee( const KABC::Picture& picture );
 
-  QByteArray loadDataFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
+  QByteArray loadDataFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, quint32 sernum );
   QByteArray loadSoundFromAddressee( const KABC::Sound& sound );
 
   QString productID() const;

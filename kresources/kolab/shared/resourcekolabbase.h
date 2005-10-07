@@ -79,7 +79,7 @@ public:
   // These are the methods called by KMail when the resource changes
   virtual bool fromKMailAddIncidence( const QString& type,
                                       const QString& resource,
-                                      Q_UINT32 sernum,
+                                      quint32 sernum,
                                       int format,
                                       const QString& data ) = 0;
   virtual void fromKMailDelIncidence( const QString& type,
@@ -94,7 +94,7 @@ public:
   virtual void fromKMailDelSubresource( const QString& type,
                                         const QString& resource ) = 0;
 
-  virtual void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+  virtual void fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
                                          const QString& type,
                                          const QString& folder ) = 0;
 protected:
@@ -116,7 +116,7 @@ protected:
 
   /// Get the mimetype attachments from a chunk of messages from this folder.
   /// Returns a QMap with serialNumber/attachment pairs.
-  bool kmailIncidences( QMap<Q_UINT32, QString>& lst, const QString& mimetype,
+  bool kmailIncidences( QMap<quint32, QString>& lst, const QString& mimetype,
                         const QString& resource,
                         int startIndex,
                         int nbMessages ) const;
@@ -128,12 +128,12 @@ public: // for Contact
   /// be called by the resource after obtaining the incidence.
   /// The resource must delete the temp file.
   bool kmailGetAttachment( KURL& url, const QString& resource,
-                           Q_UINT32 sernum,
+                           quint32 sernum,
                            const QString& filename ) const;
 
 protected:
   /// Delete an incidence.
-  bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
+  bool kmailDeleteIncidence( const QString& resource, quint32 sernum );
 
   KMailICalIface::StorageFormat kmailStorageFormat( const QString& folder ) const;
 
@@ -141,7 +141,7 @@ protected:
 
   /// Update an incidence. The list of attachments are URLs.
   /// The parameter sernum is updated with the right KMail serial number
-  bool kmailUpdate( const QString& resource, Q_UINT32& sernum,
+  bool kmailUpdate( const QString& resource, quint32& sernum,
                     const QString& xml,
                     const QString& mimetype,
                     const QString& subject,

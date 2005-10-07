@@ -3,7 +3,7 @@
 */
 
 /****************************************************************************
-** Copyright (C) 2005 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2005 Klarï¿½vdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KD Tools library.
 **
@@ -126,7 +126,7 @@ QSize KDHorizontalLine::minimumSizeHint() const {
   const int w = fontMetrics().width( mTitle, mLenVisible ) +
                 fontMetrics().width( QChar( ' ' ) );
   const int h = fontMetrics().height();
-  return QSize( QMAX( w, indentHint() ), h ).expandedTo( qApp->globalStrut() );
+  return QSize( qMax( w, indentHint() ), h ).expandedTo( qApp->globalStrut() );
 }
 
 void KDHorizontalLine::paintEvent( QPaintEvent * e ) {

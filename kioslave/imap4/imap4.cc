@@ -695,7 +695,7 @@ bool IMAP4Protocol::parseRead(QByteArray & buffer, long len, long relay)
   // FIXME
   while (buffer.size() < len )
   {
-    ssize_t readLen = myRead(buf, QMIN(len - buffer.size(), bufLen - 1));
+    ssize_t readLen = myRead(buf, qMin(len - buffer.size(), bufLen - 1));
     if (readLen == 0)
     {
       kdDebug(7116) << "parseRead: readLen == 0 - connection broken" << endl;
@@ -708,7 +708,7 @@ bool IMAP4Protocol::parseRead(QByteArray & buffer, long len, long relay)
     {
       QByteArray relayData;
       ssize_t relbuf = relay - buffer.size();
-      int currentRelay = QMIN(relbuf, readLen);
+      int currentRelay = qMin(relbuf, readLen);
       relayData.setRawData(buf, currentRelay);
       parseRelay(relayData);
       relayData.resetRawData(buf, currentRelay);

@@ -41,11 +41,11 @@
 
 
 typedef struct {
-	Q_UINT16 type;
-	Q_UINT16 tag;
+	quint16 type;
+	quint16 tag;
 	QVariant value;
 	struct {
-		Q_UINT32 type;
+		quint32 type;
 		QVariant value;
 	} name;
 } MAPI_value;
@@ -53,12 +53,12 @@ typedef struct {
 void clearMAPIName( MAPI_value& mapi );
 void clearMAPIValue(MAPI_value& mapi, bool clearName = true);
 QString readMAPIString( QDataStream& stream, bool isUnicode = false, bool align = true, int len = -1 );
-Q_UINT16 readMAPIValue(QDataStream& stream, MAPI_value& mapi);
+quint16 readMAPIValue(QDataStream& stream, MAPI_value& mapi);
 QDateTime readTNEFDate( QDataStream& stream );
 QString readTNEFAddress( QDataStream& stream );
-QByteArray readTNEFData( QDataStream& stream, Q_UINT32 len );
-QVariant readTNEFAttribute( QDataStream& stream, Q_UINT16 type, Q_UINT32 len );
-QDateTime formatTime( Q_UINT32 lowB, Q_UINT32 highB );
+QByteArray readTNEFData( QDataStream& stream, quint32 len );
+QVariant readTNEFAttribute( QDataStream& stream, quint16 type, quint32 len );
+QDateTime formatTime( quint32 lowB, quint32 highB );
 QString formatRecipient( const QMap<int,KTNEFProperty*>& props );
 
 //------------------------------------------------------------------------------------
@@ -113,8 +113,8 @@ void KTNEFParser::deleteDevice()
 
 bool KTNEFParser::decodeMessage()
 {
-	Q_UINT32	i1, i2, off;
-	Q_UINT16	u, tag, type;
+	quint32	i1, i2, off;
+	quint16	u, tag, type;
 	QVariant value;
 
 	// read (type+name)
@@ -187,8 +187,8 @@ bool KTNEFParser::decodeMessage()
 			break;
 		case attMSGSTATUS:
 			{
-				Q_UINT8 c;
-				Q_UINT32 flag = 0;
+				quint8 c;
+				quint32 flag = 0;
 				d->stream_ >> c;
 				if ( c & fmsRead ) flag |= MSGFLAG_READ;
 				if ( !( c & fmsModified ) ) flag |= MSGFLAG_UNMODIFIED;
@@ -202,7 +202,7 @@ bool KTNEFParser::decodeMessage()
 			break;
 		case attRECIPTABLE:
 			{
-				Q_UINT32 rows;
+				quint32 rows;
 				QList<QVariant> recipTable;
 				d->stream_ >> rows;
 				for ( uint i=0; i<rows; i++ )
@@ -254,8 +254,8 @@ bool KTNEFParser::decodeMessage()
 
 bool KTNEFParser::decodeAttachment()
 {
-	Q_UINT32	i;
-	Q_UINT16	tag, type, u;
+	quint32	i;
+	quint16	tag, type, u;
 	QVariant value;
 	QString str;
 
@@ -328,9 +328,9 @@ void KTNEFParser::setDefaultExtractDir(const QString& dirname)
 
 bool KTNEFParser::parseDevice()
 {
-	Q_UINT16	u;
-	Q_UINT32	i;
-	Q_UINT8		c;
+	quint16	u;
+	quint32	i;
+	quint8		c;
 
 	d->message_->clearAttachments();
 	if (d->current_)
@@ -405,13 +405,13 @@ bool KTNEFParser::extractAttachmentTo(KTNEFAttach *att, const QString& dirname)
 	if ( !outfile )
 		return false;
 
-	Q_UINT32	len = att->size(), sz(16384);
+	quint32	len = att->size(), sz(16384);
 	int		n(0);
 	char		*buf = new char[sz];
 	bool		ok(true);
 	while (ok && len > 0)
 	{
-		n = d->device_->readBlock(buf,QMIN(sz,len));
+		n = d->device_->readBlock(buf,qMin(sz,len));
 		if (n < 0)
 			ok = false;
 		else
@@ -482,7 +482,7 @@ void KTNEFParser::checkCurrent( int key )
 					if ( mimetype->name() == "application/octet-stream" && d->current_->size() > 0 )
 					{
 						int oldOffset = d->device_->at();
-						QByteArray buffer( QMIN( 32, d->current_->size() ) );
+						QByteArray buffer( qMin( 32, d->current_->size() ) );
 						d->device_->at( d->current_->offset() );
 						d->device_->readBlock( buffer.data(), buffer.size() );
 						mimetype = KMimeType::findByContent( buffer );
@@ -520,7 +520,7 @@ void clearMAPIValue(MAPI_value& mapi, bool clearName)
 		clearMAPIName( mapi );
 }
 
-QDateTime formatTime( Q_UINT32 lowB, Q_UINT32 highB )
+QDateTime formatTime( quint32 lowB, quint32 highB )
 {
 	QDateTime dt;
 #if ( SIZEOF_UINT64_T == 8 )
@@ -579,27 +579,27 @@ QString formatRecipient( const QMap<int,KTNEFProperty*>& props )
 QDateTime readTNEFDate( QDataStream& stream )
 {
 	// 14-bytes long
-	Q_UINT16 y, m, d, hh, mm, ss, dm;
+	quint16 y, m, d, hh, mm, ss, dm;
 	stream >> y >> m >> d >> hh >> mm >> ss >> dm;
 	return QDateTime( QDate( y, m, d ), QTime( hh, mm, ss ) );
 }
 
 QString readTNEFAddress( QDataStream& stream )
 {
-	Q_UINT16 totalLen, strLen, addrLen;
+	quint16 totalLen, strLen, addrLen;
 	QString s;
 	stream >> totalLen >> totalLen >> strLen >> addrLen;
 	s.append( readMAPIString( stream, false, false, strLen ) );
 	s.append( " <" );
 	s.append( readMAPIString( stream, false, false, addrLen ) );
 	s.append( ">" );
-	Q_UINT8 c;
+	quint8 c;
 	for ( int i=8+strLen+addrLen; i<totalLen; i++ )
 		stream >> c;
 	return s;
 }
 
-QByteArray readTNEFData( QDataStream& stream, Q_UINT32 len )
+QByteArray readTNEFData( QDataStream& stream, quint32 len )
 {
 	QByteArray array( len );
 	if ( len > 0 )
@@ -607,7 +607,7 @@ QByteArray readTNEFData( QDataStream& stream, Q_UINT32 len )
 	return array;
 }
 
-QVariant readTNEFAttribute( QDataStream& stream, Q_UINT16 type, Q_UINT32 len )
+QVariant readTNEFAttribute( QDataStream& stream, quint16 type, quint32 len )
 {
 	switch ( type )
 	{
@@ -623,18 +623,18 @@ QVariant readTNEFAttribute( QDataStream& stream, Q_UINT16 type, Q_UINT32 len )
 
 QString readMAPIString( QDataStream& stream, bool isUnicode, bool align, int len_ )
 {
-	Q_UINT32 len;
+	quint32 len;
 	char *buf = 0;
 	if ( len_ == -1 )
 		stream >> len;
 	else
 		len = len_;
-	Q_UINT32 fullLen = len;
+	quint32 fullLen = len;
 	if ( align )
 		ALIGN( fullLen, 4 );
 	buf = new char[ len ];
 	stream.readRawBytes( buf, len );
-	Q_UINT8 c;
+	quint8 c;
 	for ( uint i=len; i<fullLen; i++ )
 		stream >> c;
 	QString res;
@@ -646,9 +646,9 @@ QString readMAPIString( QDataStream& stream, bool isUnicode, bool align, int len
 	return res;
 }
 
-Q_UINT16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
+quint16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
 {
-	Q_UINT32	d;
+	quint32	d;
 
 	clearMAPIValue(mapi);
 	stream >> d;
@@ -695,7 +695,7 @@ Q_UINT16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
 			break;
 		   case MAPI_TYPE_TIME:
 			{
-				Q_UINT32 lowB, highB;
+				quint32 lowB, highB;
 				stream >> lowB >> highB;
 				value = formatTime( lowB, highB );
 			}
@@ -725,7 +725,7 @@ Q_UINT16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
 			for (uint i=0;i<d;i++)
 			{
 				value.clear();
-				Q_UINT32 len;
+				quint32 len;
 				stream >> len;
 				value = QByteArray( len );
 				if (len > 0)
@@ -733,7 +733,7 @@ Q_UINT16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
 					int fullLen = len;
 					ALIGN(fullLen, 4);
 					stream.readRawBytes(value.asByteArray().data(), len);
-					Q_UINT8 c;
+					quint8 c;
 					for ( int i=len; i<fullLen; i++ )
 						stream >> c;
 				}
@@ -753,7 +753,7 @@ Q_UINT16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
 
 bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAttach *attach )
 {
-	Q_UINT32	n;
+	quint32	n;
 	MAPI_value	mapi;
 	KTNEFProperty *p;
 	QMap<int,KTNEFProperty*>::ConstIterator it;
@@ -790,7 +790,7 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 					int len = data.size();
 					ALIGN( len, 4 );
 					d->device_->at( d->device_->at()-len );
-					Q_UINT32 interface_ID;
+					quint32 interface_ID;
 					d->stream_ >> interface_ID;
 					if ( interface_ID == MAPI_IID_IMessage )
 					{

@@ -1803,7 +1803,7 @@ Q3CString imapParser::parseLiteralC(parseString & inWords, bool relay, bool stop
           parseRelay (runLen);
         QByteArray rv;
         parseRead (rv, runLen, relay ? runLen : 0);
-        rv.resize(QMAX(runLen, rv.size())); // what's the point?
+        rv.resize(qMax(runLen, rv.size())); // what's the point?
         retVal = b2c(rv);
         inWords.clear();
         parseReadLine (inWords.data); // must get more

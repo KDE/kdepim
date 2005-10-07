@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2002 - 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2002 - 2004 Klarï¿½vdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -154,7 +154,7 @@ void KABC::ResourceKolab::releaseSaveTicket( Ticket* ticket )
 
 QString KABC::ResourceKolab::loadContact( const QString& contactData,
                                           const QString& subResource,
-                                          Q_UINT32 sernum,
+                                          quint32 sernum,
                                           KMailICalIface::StorageFormat format )
 {
   KABC::Addressee addr;
@@ -210,7 +210,7 @@ bool KABC::ResourceKolab::loadSubResourceHelper( const QString& subResource,
   }
 
   for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
-    QMap<Q_UINT32, QString> lst;
+    QMap<quint32, QString> lst;
 
     if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
       kdError() << "Communication problem in ResourceKolab::load()\n";
@@ -219,7 +219,7 @@ bool KABC::ResourceKolab::loadSubResourceHelper( const QString& subResource,
       return false;
     }
 
-    for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+    for( QMap<quint32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
       loadContact( it.data(), subResource, it.key(), format );
     }
     if ( progressId ) {
@@ -328,7 +328,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
 {
   const QString uid = addr.uid();
   QString subResource;
-  Q_UINT32 sernum;
+  quint32 sernum;
   if ( mUidMap.find( uid ) != mUidMap.end() ) {
     subResource = mUidMap[ uid ].resource();
     if ( !subresourceWritable( subResource ) ) {
@@ -437,7 +437,7 @@ void KABC::ResourceKolab::removeAddressee( const Addressee& addr )
  */
 bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
                                                  const QString& subResource,
-                                                 Q_UINT32 sernum,
+                                                 quint32 sernum,
                                                  int format,
                                                  const QString& contactXML )
 {
@@ -558,13 +558,13 @@ void KABC::ResourceKolab::fromKMailDelSubresource( const QString& type,
 
 
 
-void KABC::ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+void KABC::ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
                                                     const QString& /* type */,
                                                     const QString& folder )
 {
   // FIXME
   KMailICalIface::StorageFormat format = KMailICalIface::StorageXML;
-  for( QMap<Q_UINT32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
+  for( QMap<quint32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
     loadContact( it.data(), folder, it.key(), format );
   }
   if ( !addressBook() ){

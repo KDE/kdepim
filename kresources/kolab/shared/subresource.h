@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -88,18 +88,18 @@ public:
   // Just for QMap
   StorageReference() {}
 
-  StorageReference( const QString& resource, Q_UINT32 sernum );
+  StorageReference( const QString& resource, quint32 sernum );
   virtual ~StorageReference();
 
   virtual void setResource( const QString& resource );
   virtual QString resource() const;
 
-  virtual void setSerialNumber( Q_UINT32 serialNumber );
-  virtual Q_UINT32 serialNumber() const;
+  virtual void setSerialNumber( quint32 serialNumber );
+  virtual quint32 serialNumber() const;
 
 private:
   QString mResource;
-  Q_UINT32 mSerialNumber;
+  quint32 mSerialNumber;
 };
 
 typedef QMap<QString, StorageReference> UidMap;

@@ -247,7 +247,7 @@ void CardViewItem::paintCard( QPainter *p, QColorGroup &cg )
   int h = height() - ( mg * 2 );
   const int colonWidth( fm.width( ":" ) );
   int labelXPos = 2 + mg;
-  int labelWidth = QMIN( w / 2 - 4 - mg, d->maxLabelWidth + colonWidth + 4 );
+  int labelWidth = qMin( w / 2 - 4 - mg, d->maxLabelWidth + colonWidth + 4 );
   int valueXPos = labelWidth + 4 + mg;
   int valueWidth = w - labelWidth - 4 - mg;
 
@@ -368,7 +368,7 @@ int CardViewItem::height( bool allowCache ) const
   for ( iter.toFirst(); iter.current(); ++iter ) {
     if ( !sef && (*iter)->second.isEmpty() )
       continue;
-    lines = QMIN( (*iter)->second.count( '\n' ) + 1, maxLines );
+    lines = qMin( (*iter)->second.count( '\n' ) + 1, maxLines );
     fieldHeight += ( lines * fh ) + 2;
   }
 
@@ -396,7 +396,7 @@ void CardViewItem::insertField( const QString &label, const QString &value )
 
   if ( mView ) {
     mView->setLayoutDirty( true );
-    d->maxLabelWidth = QMAX( mView->d->mFm->width( label ), d->maxLabelWidth );
+    d->maxLabelWidth = qMax( mView->d->mFm->width( label ), d->maxLabelWidth );
   }
 }
 
@@ -520,7 +520,7 @@ void CardViewItem::showFullString( const QPoint &itempos, CardViewTip *tip )
     Field *_f;
     for ( _f = d->mFieldList.first(); _f != f; _f = d->mFieldList.next() )
       if ( se || ! _f->second.isEmpty() )
-        y += ( QMIN( _f->second.count( '\n' ) + 1, maxLines ) * fh ) + 2;
+        y += ( qMin( _f->second.count( '\n' ) + 1, maxLines ) * fh ) + 2;
 
     if ( isLabel && itempos.y() > y + fh )
       return;
@@ -528,13 +528,13 @@ void CardViewItem::showFullString( const QPoint &itempos, CardViewTip *tip )
     s = isLabel ? f->first : f->second;
 
     int colonWidth = mView->d->mFm->width(":");
-    lw = drawLabels ? QMIN( w / 2 - 4 - mrg, d->maxLabelWidth + colonWidth + 4 ) : 0;
+    lw = drawLabels ? qMin( w / 2 - 4 - mrg, d->maxLabelWidth + colonWidth + 4 ) : 0;
     int mw = isLabel ? lw - colonWidth : w - lw - ( mrg * 2 );
     if ( isLabel ) {
       trimmed = mView->d->mFm->width( s ) > mw - colonWidth;
     } else {
       QRect r( mView->d->mFm->boundingRect( 0, 0, INT_MAX, INT_MAX, Qt::AlignTop|Qt::AlignLeft, s ) );
-      trimmed = r.width() > mw || r.height() / fh >  QMIN( s.count( '\n' ) + 1, maxLines );
+      trimmed = r.width() > mw || r.height() / fh >  qMin( s.count( '\n' ) + 1, maxLines );
     }
   }
 
@@ -552,7 +552,7 @@ void CardViewItem::showFullString( const QPoint &itempos, CardViewTip *tip )
     if ( pnt.x() + tip->width() > mView->visibleWidth() )
       pnt.setX( mView->visibleWidth() - tip->width() );
     if ( pnt.y() + tip->height() > mView->visibleHeight() )
-      pnt.setY( QMAX( 0, mView->visibleHeight() - tip->height() ) );
+      pnt.setY( qMax( 0, mView->visibleHeight() - tip->height() ) );
     // show
     tip->move( pnt );
     tip->show();
@@ -573,7 +573,7 @@ CardViewItem::Field *CardViewItem::fieldAt( const QPoint & itempos ) const
   Field *f;
   for ( f = d->mFieldList.first(); f; f = d->mFieldList.next() ) {
     if ( showEmpty || !f->second.isEmpty() )
-      ypos += (QMIN( f->second.count( '\n' )+1, maxLines ) * fh) + 2;
+      ypos += (qMin( f->second.count( '\n' )+1, maxLines ) * fh) + 2;
     if ( iy <= ypos )
       break;
   }
@@ -928,7 +928,7 @@ void CardView::calcLayout()
     yPos += cardSpacing;
 
     if ( yPos + item->height() + cardSpacing >= height() - horizontalScrollBar()->height() ) {
-      maxHeight = QMAX( maxHeight, yPos );
+      maxHeight = qMax( maxHeight, yPos );
 
       // Drawing in this column would be greater than the height
       // of the scroll view, so move to next column
@@ -949,7 +949,7 @@ void CardView::calcLayout()
     item->d->y = yPos;
 
     yPos += item->height();
-    maxWidth = QMAX( maxWidth, d->mItemWidth );
+    maxWidth = qMax( maxWidth, d->mItemWidth );
   }
 
   xPos += maxWidth;
@@ -1124,7 +1124,7 @@ void CardView::contentsMouseReleaseEvent( QMouseEvent *e )
     drawRubberBands( 0 );
     // we should move to reflect the new position if we are scrolled.
     if ( contentsX() ) {
-      int newX = QMAX( 0, ( d->mPressed * ( newiw + d->mColspace + d->mSepWidth ) ) - e->x() );
+      int newX = qMax( 0, ( d->mPressed * ( newiw + d->mColspace + d->mSepWidth ) ) - e->x() );
       setContentsPos( newX, contentsY() );
     }
     // set new item width
@@ -1296,7 +1296,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
       if ( contentsX() <= 0 )
         return;
       int cw = columnWidth();
-      int theCol = ( QMAX( 0, ( contentsX() / cw) * cw ) ) + d->mItemSpacing;
+      int theCol = ( qMax( 0, ( contentsX() / cw) * cw ) ) + d->mItemSpacing;
       aItem = itemAt( QPoint( theCol + 1, d->mItemSpacing + 1 ) );
       if ( aItem )
         setCurrentItem( aItem );

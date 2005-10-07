@@ -115,16 +115,16 @@
 
 
 	KActiveLabel *linktext = new KActiveLabel(w);
-	grid->addRowSpacing(1,QMAX(100,6*lineheight));
-	grid->addRowSpacing(2,QMAX(100,6*lineheight));
+	grid->addRowSpacing(1,qMax(100,6*lineheight));
+	grid->addRowSpacing(2,qMax(100,6*lineheight));
 	grid->addColSpacing(2,SPACING+linewidth/2);
 	grid->addColSpacing(3,SPACING+linewidth/2);
 	grid->setRowStretch(1,50);
 	grid->setRowStretch(2,50);
 	grid->setColStretch(2,50);
 	grid->setColStretch(3,50);
-	linktext->setMinimumSize(linewidth,QMAX(260,60+12*lineheight));
-	linktext->setFixedHeight(QMAX(260,60+12*lineheight));
+	linktext->setMinimumSize(linewidth,qMax(260,60+12*lineheight));
+	linktext->setFixedHeight(qMax(260,60+12*lineheight));
 	linktext->setVScrollBarMode(Q3ScrollView::Auto/*AlwaysOn*/);
 	text = new QLabel(w);
 	grid->addMultiCellWidget(text,0,0,2,3);

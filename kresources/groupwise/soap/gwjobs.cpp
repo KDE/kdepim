@@ -224,7 +224,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
       kdDebug() << "Faults according to GSOAP:" << endl;
       soap_print_fault(mSoap, stderr);
       kdDebug() << "Unable to read " << *( readCursorRequest.count ) << " items at once, halving number and retrying request" << endl;
-      *( readCursorRequest.count ) = QMAX( 1, *( readCursorRequest.count )/2 );
+      *( readCursorRequest.count ) = qMax( 1, *( readCursorRequest.count )/2 );
       continue;
     }
   

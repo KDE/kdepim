@@ -531,7 +531,7 @@ void DistributionListWidget::updateNameCombo()
   const QStringList names = mManager->listNames();
 #endif
   mNameCombo->insertStringList( names );
-  mNameCombo->setCurrentItem( QMIN( pos, (int)names.count() - 1 ) );
+  mNameCombo->setCurrentItem( qMin( pos, (int)names.count() - 1 ) );
 
   updateContactView();
 }

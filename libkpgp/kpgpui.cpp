@@ -1673,7 +1673,7 @@ void CipherTextDialog::setMinimumSize()
 
   int maxWidth = KGlobalSettings::desktopGeometry(parentWidget()).width()-100;
 
-  mEditBox->setMinimumWidth( QMIN( textWidth, maxWidth ) );
+  mEditBox->setMinimumWidth( qMin( textWidth, maxWidth ) );
 }
 
 void KeyRequester::virtual_hook( int, void* ) {}

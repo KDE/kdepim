@@ -235,7 +235,7 @@ int MikesStyle::calcHeight( const KABC::Addressee &addr,
   for ( int i = numFields / 2; i < numFields; i++ )
     halfHeight += fm.height() * (fieldList[ i ]->value( addr ).count( '\n' ) + 1);
 
-  height = QMAX( height, halfHeight );
+  height = qMax( height, halfHeight );
 
   // Add the title and the spacing
   height += bfm.height() + ((numFields / 2 + 3) * mFieldSpacingHint);

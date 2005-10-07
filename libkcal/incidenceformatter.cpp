@@ -1089,7 +1089,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
 //-----------------------------------------------------------------------------
 
-static QString stringProp( KTNEFMessage* tnefMsg, const Q_UINT32& key,
+static QString stringProp( KTNEFMessage* tnefMsg, const quint32& key,
                            const QString& fallback = QString::null)
 {
   return tnefMsg->findProp( key < 0x10000 ? key & 0xFFFF : key >> 16,

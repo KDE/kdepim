@@ -89,8 +89,8 @@ bool KMailConnection::connectToKMail()
                                                    dcopService, dcopObjectId );
 
     // Attach to the KMail signals
-    if ( !connectKMailSignal( "incidenceAdded(QString,QString,Q_UINT32,int,QString)",
-                              "fromKMailAddIncidence(QString,QString,Q_UINT32,int,QString)" ) )
+    if ( !connectKMailSignal( "incidenceAdded(QString,QString,quint32,int,QString)",
+                              "fromKMailAddIncidence(QString,QString,quint32,int,QString)" ) )
       kdError(5650) << "DCOP connection to incidenceAdded failed" << endl;
     if ( !connectKMailSignal( "incidenceDeleted(QString,QString,QString)",
                               "fromKMailDelIncidence(QString,QString,QString)" ) )
@@ -104,8 +104,8 @@ bool KMailConnection::connectToKMail()
     if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
                               "fromKMailDelSubresource(QString,QString)" ) )
       kdError(5650) << "DCOP connection to subresourceDeleted failed" << endl;
-    if ( !connectKMailSignal( "asyncLoadResult(QMap<Q_UINT32, QString>, QString, QString)",
-                              "fromKMailAsyncLoadResult(QMap<Q_UINT32, QString>, QString, QString)" ) )
+    if ( !connectKMailSignal( "asyncLoadResult(QMap<quint32, QString>, QString, QString)",
+                              "fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString)" ) )
       kdError(5650) << "DCOP connection to asyncLoadResult failed" << endl;
   }
 
@@ -114,7 +114,7 @@ bool KMailConnection::connectToKMail()
 
 bool KMailConnection::fromKMailAddIncidence( const QString& type,
                                              const QString& folder,
-                                             Q_UINT32 sernum,
+                                             quint32 sernum,
                                              int format,
                                              const QString& data )
 {
@@ -165,7 +165,7 @@ void KMailConnection::fromKMailDelSubresource( const QString& type,
   mResource->fromKMailDelSubresource( type, resource );
 }
 
-void KMailConnection::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+void KMailConnection::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
                                                 const QString& type,
                                                 const QString& folder )
 {
@@ -200,7 +200,7 @@ bool KMailConnection::kmailIncidencesCount( int& count,
   return mKMailIcalIfaceStub->ok();
 }
 
-bool KMailConnection::kmailIncidences( QMap<Q_UINT32, QString>& lst,
+bool KMailConnection::kmailIncidences( QMap<quint32, QString>& lst,
                                        const QString& mimetype,
                                        const QString& resource,
                                        int startIndex,
@@ -216,7 +216,7 @@ bool KMailConnection::kmailIncidences( QMap<Q_UINT32, QString>& lst,
 
 bool KMailConnection::kmailGetAttachment( KURL& url,
                                           const QString& resource,
-                                          Q_UINT32 sernum,
+                                          quint32 sernum,
                                           const QString& filename )
 {
   if ( !connectToKMail() )
@@ -227,7 +227,7 @@ bool KMailConnection::kmailGetAttachment( KURL& url,
 }
 
 bool KMailConnection::kmailDeleteIncidence( const QString& resource,
-                                            Q_UINT32 sernum )
+                                            quint32 sernum )
 {
   return connectToKMail()
     && mKMailIcalIfaceStub->deleteIncidenceKolab( resource, sernum )
@@ -235,7 +235,7 @@ bool KMailConnection::kmailDeleteIncidence( const QString& resource,
 }
 
 bool KMailConnection::kmailUpdate( const QString& resource,
-                                   Q_UINT32& sernum,
+                                   quint32& sernum,
                                    const QString& subject,
                                    const QString& plainTextBody,
                                    const QMap<QByteArray, QString>& customHeaders,

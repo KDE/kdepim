@@ -307,7 +307,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
   QList<QRectList*>::iterator rpos = contents.begin();
 
   for ( int counter = 0; counter < parts.count(); ++counter ) {
-    const int Offset = counter > 1 ? QMAX( heights[ 0 ], heights[ 1 ] ) : 0;
+    const int Offset = counter > 1 ? qMax( heights[ 0 ], heights[ 1 ] ) : 0;
     QStringList list = *pos;
 
     painter->setFont( mHeadLineFont );
@@ -350,7 +350,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
     ++rpos;
   }
 
-  y = y + QMAX( heights[ 0 ], heights[ 1 ] ) + QMAX( heights[ 2 ], heights[ 3 ] );
+  y = y + qMax( heights[ 0 ], heights[ 1 ] ) + qMax( heights[ 2 ], heights[ 3 ] );
   // ^^^^^ done with emails, telephone, URLs and talk addresses
 
   // now print the addresses:

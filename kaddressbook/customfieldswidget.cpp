@@ -345,7 +345,7 @@ void FieldWidget::recalculateLayout()
 
   FieldRecordList::ConstIterator it;
   for ( it = mFieldList.begin(); it != mFieldList.end(); ++it )
-    maxWidth = QMAX( maxWidth, (*it).mLabel->minimumSizeHint().width() );
+    maxWidth = qMax( maxWidth, (*it).mLabel->minimumSizeHint().width() );
 
   for ( it = mFieldList.begin(); it != mFieldList.end(); ++it )
     (*it).mLabel->setMinimumWidth( maxWidth );

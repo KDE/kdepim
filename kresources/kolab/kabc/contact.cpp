@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ Contact::Contact( const KABC::Addressee* addr )
 }
 
 // loading (xml->addressee)
-Contact::Contact( const QString& xml, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum )
+Contact::Contact( const QString& xml, KABC::ResourceKolab* resource, const QString& subResource, quint32 sernum )
   : mHasGeo( false )
 {
   load( xml );
@@ -1223,7 +1223,7 @@ void Contact::saveTo( KABC::Addressee* addressee )
   //kdDebug(5006) << addressee->customs() << endl;
 }
 
-QImage Contact::loadPictureFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum )
+QImage Contact::loadPictureFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, quint32 sernum )
 {
   QImage img;
   KURL url;
@@ -1249,7 +1249,7 @@ QImage Contact::loadPictureFromAddressee( const KABC::Picture& picture )
   return img;
 }
 
-QByteArray Kolab::Contact::loadDataFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum )
+QByteArray Kolab::Contact::loadDataFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, quint32 sernum )
 {
   QByteArray data;
   KURL url;

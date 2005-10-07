@@ -224,10 +224,10 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
 
   Q3PaintDeviceMetrics metrics( printer );
 
-  left = QMAX( printer->margins().width(), marginLeft );
-  top = QMAX( printer->margins().height(), marginTop );
-  width = metrics.width() - left - QMAX( printer->margins().width(), marginRight );
-  height = metrics.height() - top - QMAX( printer->margins().height(), marginBottom );
+  left = qMax( printer->margins().width(), marginLeft );
+  top = qMax( printer->margins().height(), marginTop );
+  width = metrics.width() - left - qMax( printer->margins().width(), marginRight );
+  height = metrics.height() - top - qMax( printer->margins().height(), marginBottom );
 
   painter.setViewport( left, top, width, height );
   progress->addMessage( i18n( "Printing" ) );

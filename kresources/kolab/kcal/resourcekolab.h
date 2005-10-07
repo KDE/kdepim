@@ -104,7 +104,7 @@ public:
 
   /// The ResourceKolabBase methods called by KMail
   bool fromKMailAddIncidence( const QString& type, const QString& subResource,
-                              Q_UINT32 sernum, int format, const QString& data );
+                              quint32 sernum, int format, const QString& data );
   void fromKMailDelIncidence( const QString& type, const QString& subResource,
                               const QString& uid );
   void fromKMailRefresh( const QString& type, const QString& subResource );
@@ -114,7 +114,7 @@ public:
                                 const QString& label, bool writable );
   void fromKMailDelSubresource( const QString& type, const QString& subResource );
 
-  void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+  void fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
                                  const QString& type,
                                  const QString& folder );
 
@@ -140,19 +140,19 @@ protected slots:
 
 private:
   void removeIncidences( const QByteArray& incidenceType );
-  void resolveConflict( KCal::Incidence*, const QString& subresource, Q_UINT32 sernum );
+  void resolveConflict( KCal::Incidence*, const QString& subresource, quint32 sernum );
   void addIncidence( const char* mimetype, const QString& xml,
-                     const QString& subResource, Q_UINT32 sernum );
+                     const QString& subResource, quint32 sernum );
 
   bool addIncidence( KCal::Incidence* i, const QString& subresource,
-                     Q_UINT32 sernum );
+                     quint32 sernum );
 
   void addEvent( const QString& xml, const QString& subresource,
-                 Q_UINT32 sernum );
+                 quint32 sernum );
   void addTodo( const QString& xml, const QString& subresource,
-                Q_UINT32 sernum );
+                quint32 sernum );
   void addJournal( const QString& xml, const QString& subresource,
-                   Q_UINT32 sernum );
+                   quint32 sernum );
 
 
   bool loadAllEvents();
@@ -178,7 +178,7 @@ private:
   Kolab::ResourceMap* subResourceMap( const QString& contentsType );
 
   bool sendKMailUpdate( KCal::IncidenceBase* incidence, const QString& _subresource,
-                        Q_UINT32 sernum );
+                        quint32 sernum );
 
 
   KCal::CalendarLocal mCalendar;

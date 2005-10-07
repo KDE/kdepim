@@ -66,7 +66,7 @@ void KNListBoxItem::paint(QPainter *p)
 int KNListBoxItem::height(const Q3ListBox *lb) const
 {
   if(p_m)
-    return QMAX( p_m->height(), lb->fontMetrics().lineSpacing() + 1 );
+    return qMax( p_m->height(), lb->fontMetrics().lineSpacing() + 1 );
   else
     return (lb->fontMetrics().lineSpacing() + 1);
 }
