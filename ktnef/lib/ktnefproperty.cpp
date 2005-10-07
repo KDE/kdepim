@@ -55,13 +55,13 @@ QString KTNEFProperty::formatValue( const QVariant& value, bool beautify )
 		// printable characters
 		QByteArray arr = value.toByteArray();
 		bool printable = true;
-		for ( int i=QMIN( arr.size(), 8 )-1; i>=0 && printable; i-- )
+		for ( int i=qMin( arr.size(), 8 )-1; i>=0 && printable; i-- )
 			printable = ( isprint( arr[ i ] ) != 0 );
 		if ( !printable )
 		{
 			QString s;
 			uint i;
-      uint txtCount = beautify ? QMIN( arr.size(), 32 ) : arr.size();
+      uint txtCount = beautify ? qMin( arr.size(), 32 ) : arr.size();
 			for ( i=0; i < txtCount; ++i )
 			{
 				s.append( QString().sprintf( "%02X", ( uchar )arr[ i ] ) );

@@ -40,7 +40,7 @@ public:
   PrivateData() { mFirstAttachNum = QDateTime::currentDateTime().toTime_t(); }
 
   KTNEFPropertySet properties;
-  Q_UINT16 mFirstAttachNum;
+  quint16 mFirstAttachNum;
 };
 
 
@@ -53,8 +53,8 @@ KTNEFWriter::KTNEFWriter() {
   addProperty( attTNEFVERSION, atpDWORD, v );
 
   // Now set the code page to something reasonable. TODO: Use the right one
-  QVariant v1( (Q_UINT32)0x4e4 );
-  QVariant v2( (Q_UINT32)0x0 );
+  QVariant v1( (quint32)0x4e4 );
+  QVariant v2( (quint32)0x0 );
   QList<QVariant> list;
   list << v1;
   list << v2;
@@ -72,25 +72,25 @@ void KTNEFWriter::addProperty( int tag, int type, const QVariant& value ) {
 }
 
 
-void addToChecksum( Q_UINT32 i, Q_UINT16 &checksum ) {
+void addToChecksum( quint32 i, quint16 &checksum ) {
   checksum += i & 0xff;
   checksum += (i >> 8) & 0xff;
   checksum += (i >> 16) & 0xff;
   checksum += (i >> 24) & 0xff;
 }
 
-void addToChecksum( QByteArray &cs, Q_UINT16 &checksum ) {
+void addToChecksum( QByteArray &cs, quint16 &checksum ) {
   int len = cs.length();
   for (int i=0; i<len; i++)
-    checksum += (Q_UINT8)cs[i];
+    checksum += (quint8)cs[i];
 }
 
 void writeCString( QDataStream &stream, QByteArray &str ) {
   stream.writeRawBytes( str.data(), str.length() );
-  stream << (Q_UINT8)0;
+  stream << (quint8)0;
 }
 
-Q_UINT32 mergeTagAndType( Q_UINT32 tag, Q_UINT32 type ) {
+quint32 mergeTagAndType( quint32 tag, quint32 type ) {
   return ( ( type & 0xffff ) << 16 ) | ( tag & 0xffff );
 }
 
@@ -110,8 +110,8 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
 
   KTNEFProperty *property = *it;
 
-  Q_UINT32 i;
-  Q_UINT16 checksum = 0;
+  quint32 i;
+  quint16 checksum = 0;
   QList<QVariant> list;
   QString s;
   QByteArray cs, cs2;
@@ -120,60 +120,60 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
   QTime time;
   switch( tag ) {
   case attMSGSTATUS:
-    // Q_UINT8
+    // quint8
     i = property->value().toUInt() & 0xff;
     checksum = i;
 
-    stream << (Q_UINT8)LVL_MESSAGE;
+    stream << (quint8)LVL_MESSAGE;
     stream << mergeTagAndType( tag, property->type() );
-    stream << (Q_UINT32)1;
-    stream << (Q_UINT8)i;
+    stream << (quint32)1;
+    stream << (quint8)i;
 
     bytes += 10;
     break;
 
   case attMSGPRIORITY:
   case attREQUESTRES:
-    // Q_UINT16
+    // quint16
     i = property->value().toUInt() & 0xffff;
     addToChecksum( i, checksum );
 
-    stream << (Q_UINT8)LVL_MESSAGE;
+    stream << (quint8)LVL_MESSAGE;
     stream << mergeTagAndType( tag, property->type() );
-    stream << (Q_UINT32)2;
-    stream << (Q_UINT16)i;
+    stream << (quint32)2;
+    stream << (quint16)i;
 
     bytes += 11;
     break;
 
   case attTNEFVERSION:
-    // Q_UINT32
+    // quint32
     i = property->value().toUInt();
     addToChecksum( i, checksum );
 
-    stream << (Q_UINT8)LVL_MESSAGE;
+    stream << (quint8)LVL_MESSAGE;
     stream << mergeTagAndType( tag, property->type() );
-    stream << (Q_UINT32)4;
-    stream << (Q_UINT32)i;
+    stream << (quint32)4;
+    stream << (quint32)i;
 
     bytes += 13;
     break;
 
   case attOEMCODEPAGE:
-    // 2 Q_UINT32
+    // 2 quint32
     list = property->value().toList();
     assert( list.count() == 2 );
 
-    stream << (Q_UINT8)LVL_MESSAGE;
+    stream << (quint8)LVL_MESSAGE;
     stream << mergeTagAndType( tag, property->type() );
-    stream << (Q_UINT32)8;
+    stream << (quint32)8;
 
     i = list[0].toInt();
     addToChecksum( i, checksum );
-    stream << (Q_UINT32)i;
+    stream << (quint32)i;
     i = list[1].toInt();
     addToChecksum( i, checksum );
-    stream << (Q_UINT32)i;
+    stream << (quint32)i;
 
     bytes += 17;
     break;
@@ -186,9 +186,9 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
     cs = property->value().toString().local8Bit();
     addToChecksum( cs, checksum );
 
-    stream << (Q_UINT8)LVL_MESSAGE;
+    stream << (quint8)LVL_MESSAGE;
     stream << mergeTagAndType( tag, property->type() );
-    stream << (Q_UINT32)cs.length()+1;
+    stream << (quint32)cs.length()+1;
     writeCString( stream, cs );
 
     bytes += 9 + cs.length()+1;
@@ -203,18 +203,18 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
     cs2 = (QString("smtp:") + list[1].toString()).local8Bit(); // Email address
     i = 18 + cs.length() + cs2.length(); // 2 * sizof(TRP) + strings + 2x'\0'
 
-    stream << (Q_UINT8)LVL_MESSAGE;
+    stream << (quint8)LVL_MESSAGE;
     stream << mergeTagAndType( tag, property->type() );
-    stream << (Q_UINT32)i;
+    stream << (quint32)i;
 
     // The stream has to be aligned to 4 bytes for the strings
     // TODO: Or does it? Looks like Outlook doesn't do this
     // bytes += 17;
     // Write the first TRP structure
-    stream << (Q_UINT16)4;                 // trpidOneOff
-    stream << (Q_UINT16)i;                 // totalsize
-    stream << (Q_UINT16)(cs.length()+1);   // sizeof name
-    stream << (Q_UINT16)(cs2.length()+1);  // sizeof address
+    stream << (quint16)4;                 // trpidOneOff
+    stream << (quint16)i;                 // totalsize
+    stream << (quint16)(cs.length()+1);   // sizeof name
+    stream << (quint16)(cs2.length()+1);  // sizeof address
 
     // if ( bytes % 4 != 0 )
       // Align the buffer
@@ -224,7 +224,7 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
     writeCString( stream, cs2 );
 
     // Write the empty padding TRP structure (just zeroes)
-    stream << (Q_UINT32)0 << (Q_UINT32)0;
+    stream << (quint32)0 << (quint32)0;
 
     addToChecksum( 4, checksum );
     addToChecksum( i, checksum );
@@ -244,37 +244,37 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
     time = dt.time();
     date = dt.date();
 
-    stream << (Q_UINT8)LVL_MESSAGE;
+    stream << (quint8)LVL_MESSAGE;
     stream << mergeTagAndType( tag, property->type() );
-    stream << (Q_UINT32)14;
+    stream << (quint32)14;
 
-    i = (Q_UINT16)date.year();
+    i = (quint16)date.year();
     addToChecksum( i, checksum );
-    stream << (Q_UINT16)i;
-    i = (Q_UINT16)date.month();
+    stream << (quint16)i;
+    i = (quint16)date.month();
     addToChecksum( i, checksum );
-    stream << (Q_UINT16)i;
-    i = (Q_UINT16)date.day();
+    stream << (quint16)i;
+    i = (quint16)date.day();
     addToChecksum( i, checksum );
-    stream << (Q_UINT16)i;
-    i = (Q_UINT16)time.hour();
+    stream << (quint16)i;
+    i = (quint16)time.hour();
     addToChecksum( i, checksum );
-    stream << (Q_UINT16)i;
-    i = (Q_UINT16)time.minute();
+    stream << (quint16)i;
+    i = (quint16)time.minute();
     addToChecksum( i, checksum );
-    stream << (Q_UINT16)i;
-    i = (Q_UINT16)time.second();
+    stream << (quint16)i;
+    i = (quint16)time.second();
     addToChecksum( i, checksum );
-    stream << (Q_UINT16)i;
-    i = (Q_UINT16)date.dayOfWeek();
+    stream << (quint16)i;
+    i = (quint16)date.dayOfWeek();
     addToChecksum( i, checksum );
-    stream << (Q_UINT16)i;
+    stream << (quint16)i;
     break;
 /*
   case attMSGSTATUS:
     {
-      Q_UINT8 c;
-      Q_UINT32 flag = 0;
+      quint8 c;
+      quint32 flag = 0;
       if ( c & fmsRead ) flag |= MSGFLAG_READ;
       if ( !( c & fmsModified ) ) flag |= MSGFLAG_UNMODIFIED;
       if ( c & fmsSubmitted ) flag |= MSGFLAG_SUBMIT;
@@ -283,10 +283,10 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
       d->stream_ >> c;
 
       i = property->value().toUInt();
-      stream << (Q_UINT8)LVL_MESSAGE;
-      stream << (Q_UINT32)type;
-      stream << (Q_UINT32)2;
-      stream << (Q_UINT8)i;
+      stream << (quint8)LVL_MESSAGE;
+      stream << (quint32)type;
+      stream << (quint32)2;
+      stream << (quint8)i;
       addToChecksum( i, checksum );
       // from reader: d->message_->addProperty( 0x0E07, MAPI_TYPE_ULONG, flag );
     }
@@ -299,7 +299,7 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
     return false;
   }
 
-  stream << (Q_UINT16)checksum;
+  stream << (quint16)checksum;
   return true;
 }
 
@@ -488,7 +488,7 @@ void KTNEFWriter::setSummary( const QString &s ) {
 // TNEF encoding: Normal =  3, high = 2, low = 1
 // MAPI encoding: Normal = -1, high = 0, low = 1
 void KTNEFWriter::setPriority( Priority p ) {
-  QVariant v( (Q_UINT32)p );
+  QVariant v( (quint32)p );
   addProperty( attMSGPRIORITY, atpSHORT, v );
 }
 

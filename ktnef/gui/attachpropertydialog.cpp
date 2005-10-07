@@ -169,7 +169,7 @@ QPixmap loadRenderingPixmap( KTNEFPropertySet *pSet, const QColor& bgColor )
 		rendBuffer.open( QIODevice::ReadOnly );
 		QDataStream rendStream( &rendBuffer );
 		rendStream.setByteOrder( QDataStream::LittleEndian );
-		Q_UINT16 type, w, h;
+		quint16 type, w, h;
 		rendStream >> type >> w >> w; // read type and skip 4 bytes
 		rendStream >> w >> h;
 		rendBuffer.close();
