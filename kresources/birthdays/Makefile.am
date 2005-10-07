@@ -20,3 +20,5 @@ METASOURCES = AUTO
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kres_birthday.pot
+
+resourcekabcconfig.lo: ../../kaddressbook/common/kabprefs_base.h

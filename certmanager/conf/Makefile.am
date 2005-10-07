@@ -22,3 +22,5 @@ kde_services_DATA = \
 	kleopatra_config_dirserv.desktop \
 	kleopatra_config_appear.desktop \
 	kleopatra_config_dnorder.desktop
+
+dirservconfigpage.lo: ../lib/ui/directoryserviceswidgetbase.h

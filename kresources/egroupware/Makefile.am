@@ -69,3 +69,5 @@ METASOURCES = AUTO
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kres_xmlrpc.pot
+
+kabc_resourcexmlrpc.lo: ../../kaddressbook/common/kabprefs_base.h

@@ -33,3 +33,6 @@ METASOURCES = AUTO
 
 servicedir  = $(kde_servicesdir)/kaddressbook
 service_DATA = cardview.desktop iconview.desktop tableview.desktop
+
+kaddressbookiconview.lo kaddressbooktableview.lo kaddressbookcardview.lo: ../common/kabprefs_base.h
+

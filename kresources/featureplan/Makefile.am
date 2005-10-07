@@ -54,3 +54,8 @@ DISTCLEANFILES = kde-features.h kde-features.cpp \
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kres_featureplan.pot
+
+kcal_resourcefeatureplan.lo: kde-features_parser.h
+kde-features.lo: kde-features.h
+kde-features_parser.lo: kde-features_parser.h kde-features.h
+

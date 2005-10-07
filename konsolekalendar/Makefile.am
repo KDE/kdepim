@@ -22,3 +22,5 @@ messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/konsolekalendar.pot
 
 include $(top_srcdir)/admin/Doxyfile.am
+
+konsolekalendar.o: ../libkcal/htmlexportsettings.h

@@ -47,3 +47,6 @@ install-data-local: uninstall.desktop
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kres_groupdav.pot
+
+kabc_resourcegroupdav.lo: ../lib/kresources_groupwareprefs.h
+

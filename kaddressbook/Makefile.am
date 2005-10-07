@@ -92,3 +92,5 @@ srcdoc:
 	kdoc -H -d $(SRCDOC_DEST) kaddressbook $(noinst_HEADERS) -lqt
 
 include $(top_srcdir)/admin/Doxyfile.am
+
+kaddressbook_part.lo: common/kabprefs_base.h

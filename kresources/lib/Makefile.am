@@ -35,3 +35,5 @@ KDE_OPTIONS = nofinal
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kdepimresources.pot
+
+webdavhandler.lo: ../../libkcal/libical/src/libical/ical.h

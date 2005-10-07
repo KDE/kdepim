@@ -40,3 +40,6 @@ kabc_servicedir = $(kde_servicesdir)/kresources/kabc
 kabc_service_DATA = kabc_newexchange.desktop
 
 METASOURCES = AUTO
+
+kcal_resourceexchange.lo kabc_resourceexchange.lo: ../lib/kresources_groupwareprefs.h
+
