@@ -240,7 +240,7 @@ void RichListViewItem::computeHeight(int c)
 	for (int i=0; i<fColumns; i++)
 	{
 		computeHeight(i);
-		h = QMAX(h,fRect[i].height()+2*RVPAD);
+		h = qMax(h,fRect[i].height()+2*RVPAD);
 	}
 
 	setHeight(h);
