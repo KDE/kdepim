@@ -39,6 +39,7 @@ korn_SOURCES = \
   stringid.cpp \
   kornapp.cpp \
   kio.cpp \
+  kio_conn.cpp \
   kio_count.cpp \
   kio_proto.cpp \
   kio_subjects.cpp \
@@ -91,6 +92,7 @@ noinst_HEADERS = \
   stringid.h \
   kornapp.h \
   kio.h \
+  kio_conn.h \
   kio_count.h \
   kio_subjects.h \
   kio_single_subject.h \

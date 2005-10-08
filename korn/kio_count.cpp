@@ -19,6 +19,7 @@
 #include "kio_count.h"
 
 #include "kio.h"
+#include "kio_conn.h"
 #include "kio_proto.h"
 #include "kio_single_subject.h"
 #include "mailsubject.h"
@@ -84,7 +85,8 @@ void KIO_Count::count( KKioDrop *drop )
 		if( kurl.port() == 0 )
 			kurl.setPort( _protocol->defaultPort() );
 
-		if( ! ( _slave = KIO::Scheduler::getConnectedSlave( kurl, metadata ) ) ) //Forcing reload
+		//if( ! ( _slave = KIO::Scheduler::getConnectedSlave( kurl, metadata ) ) ) //Forcing reload
+		if( ! ( _slave = KIO_Connection::getSlave( kurl, metadata, _protocol ) ) ) //Reusing connection
 		{
 			kdWarning() << i18n( "Not able to open a kio slave for %1." ).arg( _protocol->configName() ) << endl;
 			_kio->emitShowPassivePopup( i18n( "Not able to open a kio slave for %1." ).arg( _protocol->configName() ) );
@@ -191,7 +193,8 @@ void KIO_Count::disconnectSlave()
 		return; //Slave doens't exist
 
 	//Disconnect slave
-	KIO::Scheduler::disconnectSlave( _slave );
+	//KIO::Scheduler::disconnectSlave( _slave );
+	KIO_Connection::removeSlave( _slave );
 	_slave = 0;
 	_protocol = 0;
 }
