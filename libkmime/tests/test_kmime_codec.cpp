@@ -239,8 +239,8 @@ void encode_decode_convenience_qba( bool encode, const Codec * codec,
   else
     out = codec->decode( infile_buffer, withCRLF );
   if ( writing ) {
-    Q_LONG written = outfile.writeBlock( out );
-    assert( written == (Q_LONG)out.size() );
+    qint64 written = outfile.write( out );
+    assert( written == (qint64)out.size() );
   }
 }
 
@@ -304,8 +304,8 @@ void encode_decode_kio( bool encode, const Codec * codec,
     else
       decode_kio_internal( dec, iit, iend, out );
     if ( writing && out.size() ) {
-      Q_LONG written = outfile.writeBlock( out );
-      assert( written == (Q_LONG)out.size() );
+      qint64 written = outfile.write( out );
+      assert( written == (qint64)out.size() );
     }
   } while ( out.size() );
 
@@ -329,8 +329,8 @@ void encode_decode_chunkwise( bool encode, const Codec * codec,
 #define write_full_outdata_then_reset  do { \
      kdDebug( verbose ) << "  flushing output buffer." << endl; \
      if ( writing ) { \
-       Q_LONG outlen = outfile.writeBlock( outdata.data(), \
-					   outdata.size() ); \
+       qint64 outlen = outfile.write( outdata.data(), \
+                                      outdata.size() ); \
        if ( outlen != (int)outdata.size() ) \
          exit(OUTFILE_WRITE_ERR); \
      } \
@@ -377,11 +377,11 @@ void encode_decode_chunkwise( bool encode, const Codec * codec,
 
     kdDebug( verbose ) << " read " << reallyRead << " bytes (max: "
 		       << indata.size() << ") from input." << endl;
-    
+
     // setup input iterators:
     QByteArray::ConstIterator iit = indata.begin();
     QByteArray::ConstIterator iend = indata.begin() + reallyRead;
-    
+
     if ( encode ) {
       //
       // Loop over encode() calls:
@@ -427,17 +427,16 @@ void encode_decode_chunkwise( bool encode, const Codec * codec,
       }
       report_finish_status( true );
     }
-  
+
   //
   // Write out last (partial) output chunk:
   //
   if ( writing ) {
-    Q_LONG outlen = outfile.writeBlock( outdata.data(),
-					oit - outdata.begin() );
+    qint64 outlen = outfile.write( outdata.data(), oit - outdata.begin() );
     if ( outlen != oit - outdata.begin() )
       exit(OUTFILE_WRITE_ERR);
   }
-  
+
   //
   // Delete en/decoder:
   //
