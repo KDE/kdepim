@@ -156,7 +156,7 @@ kdemain (int argc, char **argv)
 #ifdef HAVE_LIBSASL2
   sasl_done();
 #endif
-  
+
   return 0;
 }
 
@@ -674,7 +674,7 @@ IMAP4Protocol::parseRelay (const QByteArray & buffer)
     if ( !outputBuffer.isOpen() ) {
       outputBuffer.open(QIODevice::WriteOnly);
     }
-    outputBuffer.at(outputBufferIndex);
+    outputBuffer.seek( outputBufferIndex );
     outputBuffer.writeBlock(buffer, buffer.size());
     outputBufferIndex += buffer.size();
   }
@@ -758,7 +758,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
       }
 
       readBufferLen -= copyLen;
-      if (readBufferLen) 
+      if (readBufferLen)
         memmove(readBuffer, &readBuffer[copyLen], readBufferLen);
       if (buffer[buffer.size() - 1] == '\n') return TRUE;
     }
@@ -956,10 +956,10 @@ IMAP4Protocol::mkdir (const KURL & _url, int)
   if (type == ITYPE_BOX)
   {
     bool ask = ( aInfo.find( "ASKUSER" ) != -1 );
-    if ( ask && 
+    if ( ask &&
         messageBox(QuestionYesNo,
           i18n("The following folder will be created on the server: %1 "
-               "What do you want to store in this folder?").arg( aBox ), 
+               "What do you want to store in this folder?").arg( aBox ),
           i18n("Create Folder"),
           i18n("&Messages"), i18n("&Subfolders")) == KMessageBox::No )
     {
@@ -1223,7 +1223,7 @@ IMAP4Protocol::del (const KURL & _url, bool isFile)
  * No-op: data = 'N'
  * Namespace: data = 'n'. Result shipped in infoMessage() signal
  *                        The format is: section=namespace=delimiter
- *                        Note that the namespace can be empty               
+ *                        Note that the namespace can be empty
  * Unsubscribe: data = 'U' + URL (KURL)
  * Subscribe: data = 'u' + URL (KURL)
  * Change the status: data = 'S' + URL (KURL) + Flags (QCString)
@@ -1275,7 +1275,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     break;
   }
   case 'n':
-  { 
+  {
     // namespace in the form "section=namespace=delimiter"
     // entries are separated by ,
     infoMessage( imapNamespaces.join(",") );
@@ -1324,7 +1324,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     finished();
     break;
   }
-  case 'A': 
+  case 'A':
   {
     // acl
     int cmd;
@@ -1336,7 +1336,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     }
     break;
   }
-  case 'M': 
+  case 'M':
   {
     // annotatemore
     int cmd;
@@ -1348,7 +1348,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     }
     break;
   }
-  case 'S': 
+  case 'S':
   {
     // status
     KURL _url;
@@ -1385,7 +1385,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     finished();
     break;
   }
-  case 'E': 
+  case 'E':
   {
     // search
     specialSearchCommand( stream );
@@ -1676,7 +1676,7 @@ IMAP4Protocol::stat (const KURL & _url)
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   // parseURL with caching
   enum IMAP_TYPE aType =
-    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, 
+    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter,
         aInfo, true);
 
   UDSEntry entry;
@@ -1972,7 +1972,7 @@ bool IMAP4Protocol::makeLogin ()
     }
     else
     {
-#ifdef HAVE_LIBSASL2      
+#ifdef HAVE_LIBSASL2
       if (!clientAuthenticate (this, authInfo, myHost, myAuth, mySSL, resultInfo))
         error(KIO::ERR_COULD_NOT_LOGIN, i18n("Unable to authenticate via %1.\n"
 	"The server %2 replied:\n%3").arg(myAuth).arg(myHost).arg(resultInfo));
@@ -2002,12 +2002,12 @@ bool IMAP4Protocol::makeLogin ()
       if ( it != listResponses.end() )
       {
         namespaceToDelimiter[QString::null] = (*it).hierarchyDelimiter();
-        kdDebug(7116) << "makeLogin - delimiter for empty ns='" << 
+        kdDebug(7116) << "makeLogin - delimiter for empty ns='" <<
           (*it).hierarchyDelimiter() << "'" << endl;
         if ( !hasCapability("NAMESPACE") )
         {
           // server does not support namespaces
-          QString nsentry = QString::number( 0 ) + "==" 
+          QString nsentry = QString::number( 0 ) + "=="
             + (*it).hierarchyDelimiter();
           imapNamespaces.append( nsentry );
         }
@@ -2332,7 +2332,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
               }
             }
             // if we got no list response for the box see if it's a prefix
-            if ( retVal == ITYPE_UNKNOWN && 
+            if ( retVal == ITYPE_UNKNOWN &&
                  namespaceToDelimiter.contains(_box) ) {
               retVal = ITYPE_DIR;
             }
@@ -2350,7 +2350,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
     else
       kdDebug(7116) << "IMAP4::parseURL: no login!" << endl;
 
-  } 
+  }
   else // empty box
   {
     // the root is just a dir
@@ -2379,7 +2379,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
   if ( _hierarchyDelimiter.isEmpty() &&
        (_type == "LIST" || _type == "LSUB" || _type == "LSUBNOCHECK") )
   {
-    // this shouldn't happen but when the delimiter is really empty 
+    // this shouldn't happen but when the delimiter is really empty
     // we try to reconstruct it from the URL
     if (!_box.isEmpty())
     {
@@ -2409,7 +2409,7 @@ IMAP4Protocol::outputLine (const Q3CString & _str, int len)
     if ( !outputBuffer.isOpen() ) {
       outputBuffer.open(QIODevice::WriteOnly);
     }
-    outputBuffer.at(outputBufferIndex);
+    outputBuffer.seek( outputBufferIndex );
     outputBuffer.writeBlock(_str.data(), len);
     outputBufferIndex += len;
     return 0;

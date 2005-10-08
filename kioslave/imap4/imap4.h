@@ -161,9 +161,9 @@ protected:
   void doListEntry (const KURL & _url, int stretch, imapCache * cache = NULL,
     bool withFlags = FALSE, bool withSubject = FALSE);
 
-  /** 
-   * Send a list entry (folder) to the application 
-   * If @p appendPath is true the foldername will be appended 
+  /**
+   * Send a list entry (folder) to the application
+   * If @p appendPath is true the foldername will be appended
    * to the path of @p url
    */
   void doListEntry (const KURL & url, const QString & myBox,
@@ -192,7 +192,7 @@ private:
   bool relayEnabled, cacheOutput, decodeContent;
   QByteArray outputCache;
   QBuffer outputBuffer;
-  Q_ULONG outputBufferIndex;
+  int outputBufferIndex;
   KIO::filesize_t mProcessedSize;
 
   char readBuffer[IMAP_BUFFER];
