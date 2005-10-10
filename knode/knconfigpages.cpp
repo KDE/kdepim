@@ -141,7 +141,7 @@ KNConfig::ReadNewsPage::ReadNewsPage( QWidget *parent )
   addTab(new KNConfig::ScoringWidget(cfgMgr->scoring(), this), i18n("Scoring"));
   addTab(new KNConfig::FilterListWidget(this), i18n("Filters"));
   addTab(new KNConfig::DisplayedHeadersWidget(cfgMgr->displayedHeaders(), this), i18n("Headers"));
-  addTab(new KNConfig::ReadNewsViewerWidget(cfgMgr->readNewsViewer(), this), i18n("Viewer"));
+  addTab( new KNConfig::ReadNewsViewerWidget( this ), i18n("Viewer") );
 }
 
 

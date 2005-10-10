@@ -37,7 +37,6 @@ KNConfigManager::KNConfigManager(QObject *p, const char *n)
   i_dentity           = new KNConfig::Identity();
   a_ppearance         = new KNConfig::Appearance();
   r_eadNewsGeneral    = new KNConfig::ReadNewsGeneral();
-  r_eadNewsViewer     = new KNConfig::ReadNewsViewer();
   d_isplayedHeaders   = new KNConfig::DisplayedHeaders();
   s_coring            = new KNConfig::Scoring();
   p_ostNewsTechnical  = new KNConfig::PostNewsTechnical();
@@ -52,7 +51,6 @@ KNConfigManager::~KNConfigManager()
   delete i_dentity;
   delete a_ppearance;
   delete r_eadNewsGeneral;
-  delete r_eadNewsViewer;
   delete d_isplayedHeaders;
   delete s_coring;
   delete p_ostNewsTechnical;
@@ -78,7 +76,6 @@ void KNConfigManager::syncConfig()
 {
   a_ppearance->save();
   r_eadNewsGeneral->save();
-  r_eadNewsViewer->save();
   d_isplayedHeaders->save();
   s_coring->save();
   p_ostNewsTechnical->save();

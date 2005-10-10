@@ -4,6 +4,50 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <kcfgfile name="knoderc"/>
+  <!-- News reading options -->
+  <group name="READNEWS">
+    <!-- Viewer options -->
+    <entry name="rewrapBody" type="Bool">
+      <label>Rewrap text when necessary</label>
+      <default>true</default>
+    </entry>
+    <entry name="removeTrailingNewlines" type="Bool">
+      <label>Remove trailing empty lines</label>
+      <default>true</default>
+    </entry>
+    <entry name="showSignature" key="showSig" type="Bool">
+      <label>Show signature</label>
+      <default>true</default>
+    </entry>
+    <entry name="interpretFormatTags" type="Bool">
+      <label>Interpret emoticons and other formating</label>
+      <default>true</default>
+    </entry>
+    <entry name="quoteCharacters" type="String">
+      <label>Recognized quote characters</label>
+      <default>&gt;:</default>
+    </entry>
+    <entry name="openAttachmentsOnClick" key="openAtt" type="Bool">
+      <label>Open attachments on click</label>
+      <default>false</default>
+    </entry>
+    <entry name="showAlternativeContents" key="showAlts" type="Bool">
+      <label>Show alternative contents as attachments</label>
+      <default>false</default>
+    </entry>
+    <entry name="useFixedFont" key="articleBodyFixedFont" type="Bool">
+      <label>Use fixed font</label>
+      <default>false</default>
+    </entry>
+    <entry name="showRefBar" type="Bool">
+      <label>Show reference bar</label>
+      <default>true</default>
+    </entry>
+    <entry name="alwaysShowHTML" type="Bool">
+      <label>Prefer HTML to plain text</label>
+      <default>false</default>
+    </entry>
+  </group>
     <!-- Navigation options -->
     <group name="READNEWS_NAVIGATION">
       <entry name="markAllReadGoNext" type="Bool">

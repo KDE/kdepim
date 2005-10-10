@@ -80,6 +80,7 @@
 #include "knnntpaccount.h"
 #include "knsourceviewwindow.h"
 #include "nntpjobs.h"
+#include "settings.h"
 
 using namespace KNode;
 
@@ -287,10 +288,10 @@ void ArticleWidget::disableActions()
 
 void ArticleWidget::readConfig()
 {
-  mFixedFontToggle->setChecked( knGlobals.configManager()->readNewsViewer()->useFixedFont() );
-  mFancyToggle->setChecked( knGlobals.configManager()->readNewsViewer()->interpretFormatTags() );
+  mFixedFontToggle->setChecked( knGlobals.settings()->useFixedFont() );
+  mFancyToggle->setChecked( knGlobals.settings()->interpretFormatTags() );
 
-  mShowHtml = knGlobals.configManager()->readNewsViewer()->alwaysShowHTML();
+  mShowHtml = knGlobals.settings()->alwaysShowHTML();
 
   KConfig *conf = knGlobals.config();
   conf->setGroup( "READNEWS" );
@@ -321,8 +322,8 @@ void ArticleWidget::writeConfig()
   conf->writeEntry( "attachmentStyle", mAttachmentStyle );
   conf->writeEntry( "headerStyle", mHeaderStyle );
 
-  knGlobals.configManager()->readNewsViewer()->setUseFixedFont( mFixedFontToggle->isChecked() );
-  knGlobals.configManager()->readNewsViewer()->setInterpretFormatTags( mFancyToggle->isChecked() );
+  knGlobals.settings()->setUseFixedFont( mFixedFontToggle->isChecked() );
+  knGlobals.settings()->setInterpretFormatTags( mFancyToggle->isChecked() );
 }
 
 
@@ -333,7 +334,7 @@ void ArticleWidget::setArticle( KNArticle *article )
   if ( mArticle && mArticle->isOrphant() )
     delete mArticle;
 
-  mShowHtml = knGlobals.configManager()->readNewsViewer()->alwaysShowHTML();
+  mShowHtml = knGlobals.settings()->alwaysShowHTML();
   mRot13 = false;
   mRot13Toggle->setChecked( false );
   mTimer->stop();
@@ -386,7 +387,6 @@ void ArticleWidget::displayArticle()
         mArticle->setForceDefaultCS( mForceCharset );
   }
 
-  KNConfig::ReadNewsViewer *rnv = knGlobals.configManager()->readNewsViewer();
   removeTempFiles();
 
   mViewer->begin();
@@ -455,7 +455,7 @@ void ArticleWidget::displayArticle()
   mAttachments.clear();
   mAttachementMap.clear();
   if( !text || ct->isMultipart() )
-    mArticle->attachments( &mAttachments, rnv->showAlternativeContents() );
+    mArticle->attachments( &mAttachments, knGlobals.settings()->showAlternativeContents() );
 
   // partial message
   if(ct->isPartial()) {
@@ -467,7 +467,7 @@ void ArticleWidget::displayArticle()
     // handle HTML messages
     if ( text->contentType()->isHTMLText() ) {
       QString htmlTxt;
-      text->decodedText( htmlTxt, true, knGlobals.configManager()->readNewsViewer()->removeTrailingNewlines() );
+      text->decodedText( htmlTxt, true, knGlobals.settings()->removeTrailingNewlines() );
       if ( mShowHtml ) {
         // strip </html> & </body>
         int i = kMin( htmlTxt.findRev( "</html>", -1, false ), htmlTxt.findRev( "</body>", -1, false ) );
@@ -489,7 +489,7 @@ void ArticleWidget::displayArticle()
     else {
       if ( !containsPGP ) {
         QStringList lines;
-        text->decodedText( lines, true, knGlobals.configManager()->readNewsViewer()->removeTrailingNewlines() );
+        text->decodedText( lines, true, knGlobals.settings()->removeTrailingNewlines() );
         displayBodyBlock( lines );
       }
     }
@@ -641,7 +641,7 @@ void ArticleWidget::displayHeader()
   // references
   KMime::Headers::References *refs = mArticle->references( false );
   if ( mArticle->type() == KMime::Base::ATremote && refs
-       && knGlobals.configManager()->readNewsViewer()->showRefBar() ) {
+       && knGlobals.settings()->showRefBar() ) {
     html += "<div class=\"spamheader\">";
     int refCnt = refs->count(), i = 1;
     QString id = refs->first();
@@ -667,8 +667,7 @@ void ArticleWidget::displayBodyBlock( const QStringList &lines )
   int oldLevel = -2, newLevel = -2;
   bool isSig = false;
   QString line, html;
-  KNConfig::ReadNewsViewer *rnv = knGlobals.configManager()->readNewsViewer();
-  QString quoteChars = rnv->quoteCharacters().simplifyWhiteSpace();
+  QString quoteChars = knGlobals.settings()->quoteCharacters().simplifyWhiteSpace();
   if (quoteChars.isEmpty())
     quoteChars = ">";
 
@@ -683,7 +682,7 @@ void ArticleWidget::displayBodyBlock( const QStringList &lines )
           html += "</div>";
         html += mCSSHelper->nonQuotedFontTag();
         newLevel = -1;
-        if ( rnv->showSignature() ) {
+        if ( knGlobals.settings()->showSignature() ) {
           html += "<hr size=\"1\"/>";
           continue;
         }
@@ -1152,7 +1151,7 @@ void ArticleWidget::slotURLClicked( const KURL &url, bool forceOpen)
     if ( !c )
       return;
     // TODO: replace with message box as done in KMail
-    if ( forceOpen || knGlobals.configManager()->readNewsViewer()->openAttachmentsOnClick() )
+    if ( forceOpen || knGlobals.settings()->openAttachmentsOnClick() )
       knGlobals.articleManager()->openContent( c );
     else
       knGlobals.articleManager()->saveContentToFile( c, this );

@@ -268,49 +268,6 @@ class KDE_EXPORT ReadNewsGeneral : public Base {
 };
 
 
-class KDE_EXPORT ReadNewsViewer : public Base {
-
-  friend class ReadNewsViewerWidget;
-
-  public:
-    ReadNewsViewer();
-    ~ReadNewsViewer();
-
-    void save();
-
-    bool rewrapBody()const                { return r_ewrapBody; }
-    bool removeTrailingNewlines()const    { return r_emoveTrailingNewlines; }
-    bool showSignature()const             { return s_howSig; }
-    bool interpretFormatTags()const       { return i_nterpretFormatTags; }
-    void setInterpretFormatTags( bool f ) { d_irty = true; i_nterpretFormatTags = f; }
-    QString quoteCharacters()const        { return q_uoteCharacters; }
-
-    bool openAttachmentsOnClick()const    { return o_penAtt; }
-    bool showAlternativeContents()const   { return s_howAlts; }
-
-    bool useFixedFont() const             { return u_seFixedFont; }
-    void setUseFixedFont(bool b)     { d_irty = true; u_seFixedFont=b; }
-
-    bool showRefBar() const                { return mShowRefBar; }
-    void setShowRefBar( bool b )           { d_irty = true; mShowRefBar = b; }
-
-    bool alwaysShowHTML() const            { return mAlwaysShowHTML; }
-    void setAlwaysShowHTML( bool b )       { d_irty = true; mAlwaysShowHTML = b; }
-
-  protected:
-    bool  r_ewrapBody,
-          r_emoveTrailingNewlines,
-          s_howSig,
-          i_nterpretFormatTags,
-          o_penAtt,
-          s_howAlts,
-          u_seFixedFont,
-          mShowRefBar,
-          mAlwaysShowHTML;
-    QString q_uoteCharacters;
-};
-
-
 class KDE_EXPORT DisplayedHeaders : public Base
 {
   public:

@@ -39,6 +39,7 @@
 #include "nntpjobs.h"
 #include "utilities.h"
 #include "resource.h"
+#include "settings.h"
 
 using namespace KNode;
 
@@ -234,7 +235,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   if (selectedText.isEmpty()) {
     KMime::Content *tc = a->textContent();
     if(tc)
-      tc->decodedText(text, true, knGlobals.configManager()->readNewsViewer()->removeTrailingNewlines());
+      tc->decodedText( text, true, knGlobals.settings()->removeTrailingNewlines() );
   }
   else
     text = QStringList::split('\n',selectedText,true);

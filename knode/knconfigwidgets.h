@@ -319,29 +319,14 @@ class KDE_EXPORT ReadNewsNavigationWidget : public KCModule
 };
 
 
-class KDE_EXPORT ReadNewsViewerWidget : public KCModule {
-
-  Q_OBJECT
-
+/** Article viewer configuration page. */
+class KDE_EXPORT ReadNewsViewerWidget : public KCModule
+{
   public:
-    ReadNewsViewerWidget(ReadNewsViewer *d, QWidget *p=0, const char *n=0);
-    ~ReadNewsViewerWidget();
-
-    void load();
-    void save();
-
-  protected:
-    QCheckBox   *r_ewrapCB,
-                *r_emoveTrailingCB,
-                *s_igCB,
-                *o_penAttCB,
-                *a_ltAttCB,
-                *mShowRefBar,
-                *mAlwaysShowHTML;
-    KLineEdit *q_uoteCharacters;
-
-    ReadNewsViewer *d_ata;
-
+    /** Create a new article viewer configuration page.
+     * @param parent The QWidget parent.
+     */
+    ReadNewsViewerWidget( QWidget *parent = 0 );
 };
 
 

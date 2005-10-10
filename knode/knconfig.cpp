@@ -606,57 +606,6 @@ void KNConfig::ReadNewsGeneral::save()
 //==============================================================================================================
 
 
-KNConfig::ReadNewsViewer::ReadNewsViewer()
-{
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("READNEWS");
-
-  r_ewrapBody=conf->readBoolEntry("rewrapBody", true);
-  r_emoveTrailingNewlines=conf->readBoolEntry("removeTrailingNewlines", true);
-  s_howSig=conf->readBoolEntry("showSig", true);
-  i_nterpretFormatTags=conf->readBoolEntry("interpretFormatTags", true);
-  q_uoteCharacters=conf->readEntry("quoteCharacters",">:");
-  o_penAtt=conf->readBoolEntry("openAtt", false) ;
-  s_howAlts=conf->readBoolEntry("showAlts", false);
-  u_seFixedFont=conf->readBoolEntry("articleBodyFixedFont", false);
-  mShowRefBar = conf->readBoolEntry( "showRefBar", true );
-  mAlwaysShowHTML = conf->readBoolEntry( "alwaysShowHTML", false );
-}
-
-
-KNConfig::ReadNewsViewer::~ReadNewsViewer()
-{
-}
-
-
-void KNConfig::ReadNewsViewer::save()
-{
-  if(!d_irty)
-    return;
-
-  kdDebug(5003) << "KNConfig::ReadNewsViewer::save()" << endl;
-
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("READNEWS");
-
-  conf->writeEntry("rewrapBody", r_ewrapBody);
-  conf->writeEntry("removeTrailingNewlines", r_emoveTrailingNewlines);
-  conf->writeEntry("showSig", s_howSig);
-  conf->writeEntry("interpretFormatTags", i_nterpretFormatTags);
-  conf->writeEntry("quoteCharacters",q_uoteCharacters);
-  conf->writeEntry("openAtt", o_penAtt);
-  conf->writeEntry("showAlts", s_howAlts);
-  conf->writeEntry("articleBodyFixedFont", u_seFixedFont);
-  conf->writeEntry("showRefBar", mShowRefBar );
-  conf->writeEntry( "alwaysShowHTML", mAlwaysShowHTML );
-  conf->sync();
-  d_irty = false;
-}
-
-
-//==============================================================================================================
-
-
 KNConfig::DisplayedHeaders::DisplayedHeaders()
 {
   QString fname( locate("data","knode/headers.rc") );
