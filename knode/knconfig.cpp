@@ -606,47 +606,6 @@ void KNConfig::ReadNewsGeneral::save()
 //==============================================================================================================
 
 
-KNConfig::ReadNewsNavigation::ReadNewsNavigation()
-{
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("READNEWS_NAVIGATION");
-
-  m_arkAllReadGoNext=conf->readBoolEntry("markAllReadGoNext", false);
-  m_arkThreadReadGoNext=conf->readBoolEntry("markThreadReadGoNext", false);
-  m_arkThreadReadCloseThread=conf->readBoolEntry("markThreadReadCloseThread", false);
-  i_gnoreThreadGoNext=conf->readBoolEntry("ignoreThreadGoNext", false);
-  i_gnoreThreadCloseThread=conf->readBoolEntry("ignoreThreadCloseThread", false);
-}
-
-
-KNConfig::ReadNewsNavigation::~ReadNewsNavigation()
-{
-}
-
-
-void KNConfig::ReadNewsNavigation::save()
-{
-  if(!d_irty)
-    return;
-
-  kdDebug(5003) << "KNConfig::ReadNewsNavigation::save()" << endl;
-
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("READNEWS_NAVIGATION");
-
-  conf->writeEntry("markAllReadGoNext", m_arkAllReadGoNext);
-  conf->writeEntry("markThreadReadGoNext", m_arkThreadReadGoNext);
-  conf->writeEntry("markThreadReadCloseThread", m_arkThreadReadCloseThread);
-  conf->writeEntry("ignoreThreadGoNext", i_gnoreThreadGoNext);
-  conf->writeEntry("ignoreThreadCloseThread", i_gnoreThreadCloseThread);
-  conf->sync();
-  d_irty = false;
-}
-
-
-//==============================================================================================================
-
-
 KNConfig::ReadNewsViewer::ReadNewsViewer()
 {
   KConfig *conf=knGlobals.config();

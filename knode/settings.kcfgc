@@ -1,0 +1,7 @@
+File=knode.kcfg
+NameSpace=KNode
+ClassName=Settings
+Mutators=true
+ItemAccessors=true
+SetUserTexts=true
+Visibility=KDE_EXPORT

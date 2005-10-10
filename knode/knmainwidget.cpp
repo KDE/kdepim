@@ -73,10 +73,9 @@ using KRecentAddress::RecentAddresses;
 #include <kpgp.h>
 #include "knmemorymanager.h"
 #include "scheduler.h"
+#include "settings.h"
 
 using namespace KNode;
-
-KNGlobals knGlobals;
 
 KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   DCOPObject("KNodeIface"),
@@ -1398,7 +1397,7 @@ void KNMainWidget::slotGrpSetAllRead()
   kdDebug(5003) << "KNMainWidget::slotGrpSetAllRead()" << endl;
 
   a_rtManager->setAllRead(true);
-  if (c_fgManager->readNewsNavigation()->markAllReadGoNext())
+  if ( knGlobals.settings()->markAllReadGoNext() )
     c_olView->nextGroup();
 }
 
@@ -1645,9 +1644,9 @@ void KNMainWidget::slotArtSetThreadRead()
   a_rtManager->setRead(l, true);
 
   if (h_drView->currentItem()) {
-    if (c_fgManager->readNewsNavigation()->markThreadReadCloseThread())
+    if ( knGlobals.settings()->markThreadReadCloseThread() )
       closeCurrentThread();
-    if (c_fgManager->readNewsNavigation()->markThreadReadGoNext())
+    if ( knGlobals.settings()->markThreadReadGoNext() )
       slotNavNextUnreadThread();
   }
 }
@@ -1721,9 +1720,9 @@ void KNMainWidget::slotArtToggleIgnored()
   a_rtManager->rescoreArticles(l);
 
   if (h_drView->currentItem() && !revert) {
-    if (c_fgManager->readNewsNavigation()->ignoreThreadCloseThread())
+    if ( knGlobals.settings()->ignoreThreadCloseThread() )
       closeCurrentThread();
-    if (c_fgManager->readNewsNavigation()->ignoreThreadGoNext())
+    if ( knGlobals.settings()->ignoreThreadGoNext() )
       slotNavNextUnreadThread();
   }
 }

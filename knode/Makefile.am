@@ -30,6 +30,7 @@ libknodecommon_la_LIBADD = -lkdeprint -lkwalletclient $(top_builddir)/libkmime/l
 libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   knconfig.cpp \
                   knconfigwidgets.cpp \
+                  settings.kcfgc \
                   \
                   scheduler.cpp \
                   knjobdata.cpp \
@@ -91,7 +92,8 @@ libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   articlewidget.cpp \
                   csshelper.cpp \
                   smtpaccountwidget_base.ui \
-                  nntpaccountdialog_base.ui
+                  nntpaccountdialog_base.ui \
+                  readnewsnavigationwidget_base.ui
 libknodecommon_la_COMPILE_FIRST = nntpaccountdialog_base.ui smtpaccountwidget_base.h
 
 knode_SOURCES = knode.cpp knapplication.cpp main.cpp

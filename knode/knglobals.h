@@ -1,6 +1,4 @@
 /*
-    knglobals.h
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -22,6 +20,9 @@
 
 #include <kdepimmacros.h>
 
+// keep compatibility with the old way
+#define knGlobals (*KNGlobals::self())
+
 class KInstance;
 class KNConfigManager;
 class KNProgress;
@@ -42,6 +43,7 @@ namespace Kpgp {
 namespace KNode {
   class ArticleWidget;
   class Scheduler;
+  class Settings;
 }
 
 
@@ -49,8 +51,13 @@ namespace KNode {
     via KNodeApp. Now they can be accessed directly,
     this removes many header dependencies.
     (knode.h isn't include everywhere) */
-class KDE_EXPORT KNGlobals {
+class KDE_EXPORT KNGlobals
+{
   public:
+    ~KNGlobals();
+    /** Return the KNGlobals instance. */
+    static KNGlobals *self();
+
     /** topWidget == top, used for message boxes, */
     QWidget               *topWidget;
     /** no need to include knode.h everywhere */
@@ -82,11 +89,18 @@ class KDE_EXPORT KNGlobals {
     KNScoringManager      *scoringManager();
     /** Returns the memory manager. */
     KNMemoryManager       *memoryManager();
+    /** Returns the KConfigXT generated settings object. */
+    KNode::Settings *settings();
 
     /** forwarded to top->setStatusMsg() if available */
     void setStatusMsg(const QString& text = QString::null, int id = SB_MAIN);
 
-private:
+  private:
+    /// Create a new KNGlobals object, should only be called by self().
+    KNGlobals();
+
+    static KNGlobals *mSelf;
+
     KSharedConfig::Ptr c_onfig;
 
     KNode::Scheduler      *mScheduler;
@@ -96,11 +110,9 @@ private:
     KNArticleManager      *mArtManager;
     KNFilterManager       *mFilManager;
     KNFolderManager       *mFolManager;
-    static KNScoringManager  *mScoreManager;
+    KNScoringManager *mScoreManager;
     KNMemoryManager       *mMemManager;
+    KNode::Settings *mSettings;
 };
-
-
-extern KNGlobals knGlobals KDE_EXPORT;
 
 #endif

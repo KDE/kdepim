@@ -60,7 +60,6 @@ namespace KNConfig {
   class GroupCleanupWidget;
   class PostNewsTechnical;
   class ReadNewsGeneral;
-  class ReadNewsNavigation;
   class PostNewsComposer;
   class ReadNewsViewer;
   class Scoring;
@@ -309,24 +308,14 @@ class KDE_EXPORT ReadNewsGeneralWidget : public KCModule {
 };
 
 
-class KDE_EXPORT ReadNewsNavigationWidget : public KCModule {
-
+/** Read news navigation configuration page. */
+class KDE_EXPORT ReadNewsNavigationWidget : public KCModule
+{
   public:
-    ReadNewsNavigationWidget(ReadNewsNavigation *d, QWidget *p=0, const char *n=0);
-    ~ReadNewsNavigationWidget();
-
-    void load();
-    void save();
-
-  protected:
-    QCheckBox   *m_arkAllReadGoNextCB,
-                *m_arkThreadReadGoNextCB,
-                *m_arkThreadReadCloseThreadCB,
-                *i_gnoreThreadGoNextCB,
-                *i_gnoreThreadCloseThreadCB;
-
-    ReadNewsNavigation *d_ata;
-
+    /** Create a new navigation configuration page.
+     * @param parent The QWidget parent.
+     */
+    ReadNewsNavigationWidget( QWidget *parent = 0 );
 };
 
 

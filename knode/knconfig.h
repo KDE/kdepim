@@ -268,32 +268,6 @@ class KDE_EXPORT ReadNewsGeneral : public Base {
 };
 
 
-class KDE_EXPORT ReadNewsNavigation : public Base {
-
-  friend class ReadNewsNavigationWidget;
-
-  public:
-    ReadNewsNavigation();
-    ~ReadNewsNavigation();
-
-    void save();
-
-    bool markAllReadGoNext()const          { return m_arkAllReadGoNext; }
-    bool markThreadReadGoNext() const      { return m_arkThreadReadGoNext; }
-    bool markThreadReadCloseThread()const  { return m_arkThreadReadCloseThread; }
-    bool ignoreThreadGoNext()const         { return i_gnoreThreadGoNext; }
-    bool ignoreThreadCloseThread()const   { return i_gnoreThreadCloseThread; }
-
-  protected:
-    bool  m_arkAllReadGoNext,
-          m_arkThreadReadGoNext,
-          m_arkThreadReadCloseThread,
-          i_gnoreThreadGoNext,
-          i_gnoreThreadCloseThread;
-
-};
-
-
 class KDE_EXPORT ReadNewsViewer : public Base {
 
   friend class ReadNewsViewerWidget;

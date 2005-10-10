@@ -28,6 +28,7 @@
 #include "articlewidget.h"
 #include "knarticlefactory.h"
 #include "knmainwidget.h"
+#include "settings.h"
 
 
 KNConfigManager::KNConfigManager(QObject *p, const char *n)
@@ -36,7 +37,6 @@ KNConfigManager::KNConfigManager(QObject *p, const char *n)
   i_dentity           = new KNConfig::Identity();
   a_ppearance         = new KNConfig::Appearance();
   r_eadNewsGeneral    = new KNConfig::ReadNewsGeneral();
-  r_eadNewsNavigation = new KNConfig::ReadNewsNavigation();
   r_eadNewsViewer     = new KNConfig::ReadNewsViewer();
   d_isplayedHeaders   = new KNConfig::DisplayedHeaders();
   s_coring            = new KNConfig::Scoring();
@@ -52,7 +52,6 @@ KNConfigManager::~KNConfigManager()
   delete i_dentity;
   delete a_ppearance;
   delete r_eadNewsGeneral;
-  delete r_eadNewsNavigation;
   delete r_eadNewsViewer;
   delete d_isplayedHeaders;
   delete s_coring;
@@ -79,7 +78,6 @@ void KNConfigManager::syncConfig()
 {
   a_ppearance->save();
   r_eadNewsGeneral->save();
-  r_eadNewsNavigation->save();
   r_eadNewsViewer->save();
   d_isplayedHeaders->save();
   s_coring->save();
@@ -87,6 +85,7 @@ void KNConfigManager::syncConfig()
   p_ostNewsCompose->save();
   c_leanup->save();
   //c_ache->save();
+  knGlobals.settings()->writeConfig();
 }
 
 

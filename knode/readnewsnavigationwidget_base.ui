@@ -1,0 +1,130 @@
+<ui version="4.0" >
+ <author>Volker Krause &lt;volker.krause@rwth-aachen.de></author>
+ <comment></comment>
+ <exportmacro></exportmacro>
+ <class>KNode::ReadNewsNavigationWidgetBase</class>
+ <widget class="KCModule" name="ReadNewsNavigationWidgetBase" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>306</width>
+    <height>263</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="margin" >
+    <number>8</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="markAllReadBox" >
+     <property name="title" >
+      <string>&quot;Mark All as Read&quot; Triggers Following Actions</string>
+     </property>
+     <layout class="QVBoxLayout" >
+      <property name="margin" >
+       <number>8</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QCheckBox" name="kcfg_markAllReadGoNext" >
+        <property name="text" >
+         <string>&amp;Switch to the next group</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="markThreadReadBox" >
+     <property name="title" >
+      <string>&quot;Mark Thread as Read&quot; Triggers Following Actions</string>
+     </property>
+     <layout class="QVBoxLayout" >
+      <property name="margin" >
+       <number>8</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QCheckBox" name="kcfg_markThreadReadCloseThread" >
+        <property name="text" >
+         <string>Clos&amp;e the current thread</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_markThreadReadGoNext" >
+        <property name="text" >
+         <string>Go &amp;to the next unread thread</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="ignoreThreadBox" >
+     <property name="title" >
+      <string>&quot;Ignore Thread&quot; Triggers Following Actions</string>
+     </property>
+     <layout class="QVBoxLayout" >
+      <property name="margin" >
+       <number>8</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QCheckBox" name="kcfg_ignoreThreadCloseThread" >
+        <property name="text" >
+         <string>Close the cu&amp;rrent thread</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_ignoreThreadGoNext" >
+        <property name="text" >
+         <string>Go to the next &amp;unread thread</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>20</width>
+       <height>16</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <layoutfunction spacing="KDialog::spacingHint()" margin="KDialog::marginHint()" />
+ <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>KCModule</class>
+   <extends></extends>
+   <header>kcmodule.h</header>
+   <container>1</container>
+   <pixmap></pixmap>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name="knoderc"/>
+    <!-- Navigation options -->
+    <group name="READNEWS_NAVIGATION">
+      <entry name="markAllReadGoNext" type="Bool">
+        <label>Mark group as read goes to next group</label>
+        <whatsthis></whatsthis>
+        <default>false</default>
+      </entry>
+      <entry name="markThreadReadGoNext" type="Bool">
+        <label>Mark thread as read goes to next unread thread</label>
+        <default>false</default>
+      </entry>
+      <entry name="markThreadReadCloseThread" type="Bool">
+        <label>Mark thread as read closes the current thread</label>
+        <default>false</default>
+      </entry>
+      <entry name="ignoreThreadGoNext" type="Bool">
+        <label>Ignore thread goes to the next unread thread</label>
+        <default>false</default>
+      </entry>
+      <entry name="ignoreThreadCloseThread" type="Bool">
+        <label>Ignore thread closes the current thread</label>
+        <default>false</default>
+      </entry>
+    </group>
+</kcfg>

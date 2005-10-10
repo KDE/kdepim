@@ -55,6 +55,8 @@
 #include "knfiltermanager.h"
 #include "knarticlefilter.h"
 #include "knscoring.h"
+#include "readnewsnavigationwidget_base.h"
+#include "settings.h"
 #include <kpgp.h>
 
 
@@ -1073,84 +1075,13 @@ void KNConfig::ReadNewsGeneralWidget::save()
 //=============================================================================================
 
 
-KNConfig::ReadNewsNavigationWidget::ReadNewsNavigationWidget( ReadNewsNavigation *d, QWidget *p, const char *n ) :
-  KCModule( p, n ),
-  d_ata( d )
+KNConfig::ReadNewsNavigationWidget::ReadNewsNavigationWidget( QWidget *parent ) :
+  KCModule( parent )
 {
-  QVBoxLayout *topL=new QVBoxLayout(this, 5);
-
-  // ==== Mark All as Read ====================================================
-
-  Q3GroupBox *gb=new Q3GroupBox(i18n("\"Mark All as Read\" Triggers Following Actions"), this);
-  QVBoxLayout *gbL=new QVBoxLayout(gb, 8, 5);
-  topL->addWidget(gb);
-
-  gbL->addSpacing(fontMetrics().lineSpacing()-4);
-  m_arkAllReadGoNextCB=new QCheckBox(i18n("&Switch to the next group"), gb);
-  gbL->addWidget(m_arkAllReadGoNextCB);
-
-  connect(m_arkAllReadGoNextCB, SIGNAL(toggled(bool)), SLOT(changed()));
-
-  // ==== Mark Thread as Read =================================================
-
-  gb=new Q3GroupBox(i18n("\"Mark Thread as Read\" Triggers Following Actions"), this);
-  gbL=new QVBoxLayout(gb, 8, 5);
-  topL->addWidget(gb);
-
-  gbL->addSpacing(fontMetrics().lineSpacing()-4);
-  m_arkThreadReadCloseThreadCB=new QCheckBox(i18n("Clos&e the current thread"), gb);
-  gbL->addWidget(m_arkThreadReadCloseThreadCB);
-  m_arkThreadReadGoNextCB=new QCheckBox(i18n("Go &to the next unread thread"), gb);
-  gbL->addWidget(m_arkThreadReadGoNextCB);
-
-  connect(m_arkThreadReadCloseThreadCB, SIGNAL(toggled(bool)), SLOT(changed()));
-  connect(m_arkThreadReadGoNextCB, SIGNAL(toggled(bool)), SLOT(changed()));
-
-  // ==== Ignore Thread =======================================================
-
-  gb=new Q3GroupBox(i18n("\"Ignore Thread\" Triggers Following Actions"), this);
-  gbL=new QVBoxLayout(gb, 8, 5);
-  topL->addWidget(gb);
-
-  gbL->addSpacing(fontMetrics().lineSpacing()-4);
-  i_gnoreThreadCloseThreadCB=new QCheckBox(i18n("Close the cu&rrent thread"), gb);
-  gbL->addWidget(i_gnoreThreadCloseThreadCB);
-  i_gnoreThreadGoNextCB=new QCheckBox(i18n("Go to the next &unread thread"), gb);
-  gbL->addWidget(i_gnoreThreadGoNextCB);
-
-  connect(i_gnoreThreadCloseThreadCB, SIGNAL(toggled(bool)), SLOT(changed()));
-  connect(i_gnoreThreadGoNextCB, SIGNAL(toggled(bool)), SLOT(changed()));
-
-  topL->addStretch(1);
-  topL->setResizeMode(QLayout::SetMinimumSize);
-
+  KNode::Ui::ReadNewsNavigationWidgetBase ui;
+  ui.setupUi( this );
+  addConfig( knGlobals.settings(), this );
   load();
-}
-
-
-KNConfig::ReadNewsNavigationWidget::~ReadNewsNavigationWidget()
-{
-}
-
-
-void KNConfig::ReadNewsNavigationWidget::load()
-{
-  m_arkAllReadGoNextCB->setChecked(d_ata->m_arkAllReadGoNext);
-  m_arkThreadReadGoNextCB->setChecked(d_ata->m_arkThreadReadGoNext);
-  m_arkThreadReadCloseThreadCB->setChecked(d_ata->m_arkThreadReadCloseThread);
-  i_gnoreThreadGoNextCB->setChecked(d_ata->i_gnoreThreadGoNext);
-  i_gnoreThreadCloseThreadCB->setChecked(d_ata->i_gnoreThreadCloseThread);
-}
-
-void KNConfig::ReadNewsNavigationWidget::save()
-{
-  d_ata->m_arkAllReadGoNext = m_arkAllReadGoNextCB->isChecked();
-  d_ata->m_arkThreadReadGoNext = m_arkThreadReadGoNextCB->isChecked();
-  d_ata->m_arkThreadReadCloseThread = m_arkThreadReadCloseThreadCB->isChecked();
-  d_ata->i_gnoreThreadGoNext = i_gnoreThreadGoNextCB->isChecked();
-  d_ata->i_gnoreThreadCloseThread = i_gnoreThreadCloseThreadCB->isChecked();
-
-  d_ata->setDirty(true);
 }
 
 

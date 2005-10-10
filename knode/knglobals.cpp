@@ -1,8 +1,6 @@
 /*
-    knglobals.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -15,7 +13,6 @@
 */
 
 #include "knglobals.h"
-
 
 #include <kconfig.h>
 #include <kstaticdeleter.h>
@@ -31,6 +28,40 @@
 #include "knmainwidget.h"
 #include "knwidgets.h"
 #include "scheduler.h"
+#include "settings.h"
+
+KNGlobals* KNGlobals::mSelf = 0;
+static KStaticDeleter<KNGlobals> staticKNGlobalsDeleter;
+
+KNGlobals::KNGlobals() :
+  mScheduler( 0 ),
+  mCfgManager( 0 ),
+  mAccManager( 0 ),
+  mGrpManager( 0 ),
+  mArtManager( 0 ),
+  mFilManager( 0 ),
+  mFolManager( 0 ),
+  mScoreManager( 0 ),
+  mMemManager( 0 ),
+  mSettings( 0 )
+{
+  kdDebug(5003) << k_funcinfo << endl;
+}
+
+KNGlobals::~KNGlobals( )
+{
+  kdDebug(5003) << k_funcinfo << endl;
+  delete mScoreManager;
+  delete mSettings;
+}
+
+KNGlobals * KNGlobals::self()
+{
+  if ( !mSelf )
+    mSelf = staticKNGlobalsDeleter.setObject( mSelf, new KNGlobals() );
+  return mSelf;
+}
+
 
 KConfig* KNGlobals::config()
 {
@@ -89,13 +120,10 @@ KNFolderManager* KNGlobals::folderManager()
   return mFolManager;
 }
 
-KNScoringManager* KNGlobals::mScoreManager = 0;
-
 KNScoringManager* KNGlobals::scoringManager()
 {
-  static  KStaticDeleter<KNScoringManager> sd;
   if (!mScoreManager)
-    sd.setObject(mScoreManager, new KNScoringManager());
+    mScoreManager = new KNScoringManager();
   return mScoreManager;
 }
 
@@ -111,4 +139,13 @@ void KNGlobals::setStatusMsg(const QString &text, int id)
 {
   if(top)
     top->setStatusMsg(text, id);
+}
+
+KNode::Settings * KNGlobals::settings( )
+{
+  if ( !mSettings ) {
+    mSettings = new KNode::Settings();
+    mSettings->readConfig();
+  }
+  return mSettings;
 }
