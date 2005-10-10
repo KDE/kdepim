@@ -19,6 +19,7 @@
 
 #include <kiconloader.h>
 #include <kguiitem.h>
+#include <kinstance.h>
 #include <klistview.h>
 #include <klocale.h>
 

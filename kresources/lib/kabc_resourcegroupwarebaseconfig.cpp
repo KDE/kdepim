@@ -41,8 +41,9 @@
 using namespace KABC;
 
 ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,  const char* name )
-  : KRES::ConfigWidget( parent, name )
+  : KRES::ConfigWidget( parent )
 {
+  setObjectName(name);
   QGridLayout *mainLayout = new QGridLayout( this, 7, 2, 0, KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "URL:" ), this );

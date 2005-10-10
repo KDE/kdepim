@@ -43,8 +43,9 @@
 #include "kcalresourcesloxconfig.h"
 
 KCalResourceSloxConfig::KCalResourceSloxConfig( QWidget* parent,  const char* name ) :
-  KRES::ConfigWidget( parent, name ), mRes( 0 )
+  KRES::ConfigWidget( parent ), mRes( 0 )
 {
+  setObjectName(name);
   resize( 245, 115 );
   QGridLayout *mainLayout = new QGridLayout( this, 6, 2, KDialog::spacingHint(), KDialog::spacingHint() );
 

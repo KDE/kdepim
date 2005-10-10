@@ -42,8 +42,9 @@
 using namespace KABC;
 
 ResourceSloxConfig::ResourceSloxConfig( QWidget* parent,  const char* name )
-  : KRES::ConfigWidget( parent, name ), mRes( 0 )
+  : KRES::ConfigWidget( parent ), mRes( 0 )
 {
+  setObjectName(name);
   QGridLayout *mainLayout = new QGridLayout( this, 5, 2, 0, KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "URL:" ), this );

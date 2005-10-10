@@ -8,7 +8,8 @@
 *   (at your option) any later version.                                   *
 ***************************************************************************/
 
-#include <qfile.h>
+#include <QFile>
+#include <QDateTime>
 //Added by qt3to4:
 #include <Q3CString>
 #include <Q3ValueList>
