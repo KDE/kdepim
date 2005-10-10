@@ -100,7 +100,7 @@ void FolderListView::showPopupMenu( FolderListItem *i, const QPoint &globalPos )
   KMenu m( this );
   int id;
 
-  m.insertTitle( folder.name, 9999 );
+  m.setTitle( folder.name);
   id = m.insertItem( i18n("&Enabled"), this, SLOT(slotPopupHandler(int)), 0, FolderName );
   m.setItemChecked( id, i->isOn() );
   m.insertSeparator();
