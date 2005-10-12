@@ -36,7 +36,7 @@
 #include <qtimer.h>
 #include <qlabel.h>
 
-#include <kpopupmenu.h> 
+#include <kmenu.h> 
 #include <ktoolbar.h> 
 
 #include <qptrdict.h>
@@ -144,7 +144,7 @@ public:
 
 
 
-  KPopupMenu* menu() {
+  KMenu* menu() {
     return _menu;
   }
 
@@ -268,8 +268,8 @@ private:
 
   static KGanttItem* _currentItem;
 
-  KPopupMenu* _menu;
-  KPopupMenu* _selectMenu;
+  KMenu* _menu;
+  KMenu* _selectMenu;
   
   KIconLoader* _iconloader;
 

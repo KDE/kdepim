@@ -35,7 +35,7 @@ static const KCmdLineOptions options[] =
 
 int main(int argc,char **argv)
 {
-  KLocale::setMainCatalogue( "kdepimwizards" ); 
+  KLocale::setMainCatalog( "kdepimwizards" ); 
 
   KAboutData aboutData( "groupwisewizard",
                         I18N_NOOP( "Novell GroupWise Configuration Wizard" ),
@@ -45,7 +45,7 @@ int main(int argc,char **argv)
 
   KApplication app;
 
-  KGlobal::locale()->insertCatalogue( "libkdepim" );
+  KGlobal::locale()->insertCatalog( "libkdepim" );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 

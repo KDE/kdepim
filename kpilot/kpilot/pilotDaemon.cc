@@ -44,7 +44,7 @@ static const char *pilotdaemon_id =
 #include <kcmdlineargs.h>
 #include <kwin.h>
 #include <kurl.h>
-#include <kpopupmenu.h>
+#include <kmenu.h>
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <kprocess.h>
@@ -53,6 +53,7 @@ static const char *pilotdaemon_id =
 #include <kservice.h>
 #include <kapplication.h>
 #include <khelpmenu.h>
+#include <ktoolinvocation.h>
 
 #include "pilotAppCategory.h"
 
@@ -125,7 +126,7 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 	{
 		case RightButton:
 			{
-				KPopupMenu *menu = contextMenu();
+				KMenu *menu = contextMenu();
 				contextMenuAboutToShow(menu);
 				menu->popup(e->globalPos());
 			}
@@ -156,7 +157,7 @@ void PilotDaemonTray::setupWidget()
 	slotShowNotListening();
 	QTimer::singleShot(2000,this,SLOT(slotShowNormal()));
 
-	KPopupMenu *menu = contextMenu();
+	KMenu *menu = contextMenu();
 
 	menuKPilotItem = menu->insertItem(i18n("Start &KPilot"), daemon,
 		SLOT(slotRunKPilot()));
@@ -164,7 +165,7 @@ void PilotDaemonTray::setupWidget()
 		daemon, SLOT(slotRunConfig()));
 	menu->insertSeparator();
 
-	fSyncTypeMenu = new KPopupMenu(menu,"sync_type_menu");
+	fSyncTypeMenu = new KMenu(menu,"sync_type_menu");
 	QString once = i18n("Appended to names of sync types to indicate the sync will happen just one time"," (once)");
 #define MI(a) fSyncTypeMenu->insertItem( \
 		SyncAction::SyncMode::name(SyncAction::SyncMode::a) + once, \
@@ -1170,7 +1171,7 @@ void PilotDaemon::slotRunKPilot()
 	QCString kpilotDCOP;
 	int kpilotPID;
 
-	if (KApplication::startServiceByDesktopName(CSL1("kpilot"),
+	if (KToolInvocation::startServiceByDesktopName(CSL1("kpilot"),
 			QString::null, &kpilotError, &kpilotDCOP, &kpilotPID
 #if (KDE_VERSION >= 220)
 			// Startup notification added in 2.2
@@ -1269,7 +1270,7 @@ int main(int argc, char **argv)
 {
 	FUNCTIONSETUP;
 
-	KLocale::setMainCatalogue("kpilot");
+	KLocale::setMainCatalog("kpilot");
 
 	KAboutData about("kpilotDaemon",
 		I18N_NOOP("KPilot Daemon"),

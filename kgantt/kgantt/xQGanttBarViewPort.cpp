@@ -120,7 +120,7 @@ xQGanttBarViewPort::toolbar(QMainWindow* mw)
 			 this, SLOT(setSelect()),
 			 true, i18n("Select") );
 
-  KPopupMenu *selectMenu = new KPopupMenu(_toolbar);
+  KMenu *selectMenu = new KMenu(_toolbar);
 
 
   /*
@@ -148,7 +148,7 @@ xQGanttBarViewPort::toolbar(QMainWindow* mw)
 			 this, SLOT(setZoom()),
 			 true, i18n("Zoom") );
   
-  KPopupMenu* zoomMenu = new KPopupMenu(_toolbar);
+  KMenu* zoomMenu = new KMenu(_toolbar);
  
   pix = _iconloader->loadIcon("viewmag.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("viewmag.png not found !\n");
@@ -181,13 +181,13 @@ void
 xQGanttBarViewPort::initMenu()
 /////////////////////////////////
 {
-  _menu = new KPopupMenu(this);
+  _menu = new KMenu(this);
 
   /*
       select
   */
 
-  _selectMenu = new KPopupMenu(_menu);
+  _selectMenu = new KMenu(_menu);
 
   QPixmap pix = _iconloader->loadIcon("ganttSelect.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("ganttSelect.png not found !\n");
@@ -210,7 +210,7 @@ xQGanttBarViewPort::initMenu()
       zoom
   */
 
-  KPopupMenu* _zoomMenu = new KPopupMenu(_menu);
+  KMenu* _zoomMenu = new KMenu(_menu);
 
   pix = _iconloader->loadIcon("viewmag.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("viewmag.png not found !\n");

@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 		"groot@kde.org", "http://www.kpilot.org/");
 
 	KCmdLineArgs::init(argc, argv, &about);
-	KApplication::addCmdLineOptions();
+	KCmdLineArgs::addStdCmdLineOptions();
 
 	KApplication app;
 	ConverterDlg *dlg=new ConverterDlg(0L, i18n("PalmDOC Converter"));

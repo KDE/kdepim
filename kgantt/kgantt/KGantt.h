@@ -37,7 +37,7 @@
 #include <qwidget.h>
 #include <qsplitter.h> 
 
-#include <kpopupmenu.h>
+#include <kmenu.h>
 #include <kdepimmacros.h>
 
 #include "KGanttItem.h"
@@ -178,7 +178,7 @@ public:
   /*!
    *
    */
-  KPopupMenu* menu() {
+  KMenu* menu() {
     return _ganttbar->viewport()->menu();
   }
 

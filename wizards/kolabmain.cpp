@@ -36,7 +36,7 @@ static const KCmdLineOptions options[] =
 
 int main(int argc,char **argv)
 {
-  KLocale::setMainCatalogue( "kdepimwizards" );
+  KLocale::setMainCatalog( "kdepimwizards" );
 
   KAboutData aboutData( "kolabwizard", I18N_NOOP( "Kolab Configuration Wizard" ), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
@@ -44,7 +44,7 @@ int main(int argc,char **argv)
 
   KApplication app;
 
-  KGlobal::locale()->insertCatalogue( "libkdepim" );
+  KGlobal::locale()->insertCatalog( "libkdepim" );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 

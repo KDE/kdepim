@@ -22,6 +22,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kapplication.h>
+#include <krandom.h>
 
 #include "calformat.h"
 
@@ -71,7 +72,7 @@ QString CalFormat::createUniqueId()
                  QTime::currentTime().msec();
   QString uidStr = QString("%1-%2.%3")
                            .arg(mApplication)
-                           .arg(KApplication::random())
+                           .arg(KRandom::random())
                            .arg(hashTime);
   return uidStr;
 }

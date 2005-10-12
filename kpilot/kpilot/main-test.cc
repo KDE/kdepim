@@ -344,7 +344,7 @@ int main(int argc, char **argv)
 
 	KCmdLineArgs::init(argc, argv, &about);
 	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilottest");
-	KApplication::addCmdLineOptions();
+	KCmdLineArgs::addStdCmdLineOptions();
 
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 

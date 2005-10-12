@@ -24,7 +24,7 @@
 #include <qlayout.h>
 #include <qradiobutton.h>
 
-#include <kaccelmanager.h>
+#include <kacceleratormanager.h>
 #include <kdialog.h>
 #include <kglobal.h>
 #include <kiconloader.h>

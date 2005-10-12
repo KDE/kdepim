@@ -34,7 +34,7 @@ static const KCmdLineOptions options[] =
 
 int main(int argc,char **argv)
 {
-  KLocale::setMainCatalogue( "kdepimwizards" );
+  KLocale::setMainCatalog( "kdepimwizards" );
 
   KAboutData aboutData( "egroupwarewizard",
                         "eGroupware Server Configuration Wizard",
@@ -44,7 +44,7 @@ int main(int argc,char **argv)
 
   KApplication app;
 
-  KGlobal::locale()->insertCatalogue( "libkdepim" );
+  KGlobal::locale()->insertCatalog( "libkdepim" );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 

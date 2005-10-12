@@ -24,7 +24,7 @@
 #include <Q3PtrList>
 
 class KActionCollection;
-class KPopupMenu;
+class KMenu;
 
 class Label;
 
@@ -75,7 +75,7 @@ public slots:
 	virtual void doPopup();
 private:
 	Label *_label;
-	KPopupMenu *_popup;
+	KMenu *_popup;
 	KActionCollection *_actions;
 };
 

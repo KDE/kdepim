@@ -63,6 +63,7 @@ static const char *kpilot_id =
 #include <kcmultidialog.h>
 #include <kprogress.h>
 #include <klibloader.h>
+#include <ktoolinvocation.h>
 
 
 #include "kpilotConfigDialog.h"
@@ -190,7 +191,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 		fDaemonWasRunning = true;
 	}
 
-	if (!fDaemonWasRunning && KApplication::startServiceByDesktopName(
+	if (!fDaemonWasRunning && KToolInvocation::startServiceByDesktopName(
 		CSL1("kpilotdaemon"),
 		QString::null, &daemonError, &daemonDCOP, &daemonPID
 			, "0" /* no notify */

@@ -41,7 +41,7 @@ protected slots:
     void menuItemSelected();
 
 protected:
-    void contextMenuAboutToShow( KPopupMenu* menu );
+    void contextMenuAboutToShow( KMenu* menu );
 
 private:
     void setToolTip(const QString &tip = QString::null);

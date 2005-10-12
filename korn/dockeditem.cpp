@@ -26,7 +26,7 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kpassivepopup.h>
-#include <kpopupmenu.h>
+#include <kmenu.h>
 
 #include <qbitmap.h>
 #include <qcursor.h>
@@ -41,7 +41,7 @@ DockedItem::DockedItem( QWidget * parent, const char * name )
 	: BoxContainerItem( parent, name ),
 	_systemtray( new SystemTray( parent, "System tray" ) )	
 {
-	this->fillKPopupMenu( _systemtray->contextMenu(), _systemtray->actionCollection() );
+	this->fillKMenu( _systemtray->contextMenu(), _systemtray->actionCollection() );
 	
 	connect( _systemtray, SIGNAL( quitSelected() ), kapp, SLOT( quit() ) );
 	connect( _systemtray, SIGNAL( mouseButtonPressed( Qt::ButtonState ) ),

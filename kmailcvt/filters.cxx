@@ -21,6 +21,7 @@
 #include <dcopref.h>
 #include <kurl.h>
 #include <kdebug.h>
+#include <ktoolinvocation.h>
 
 #include "filters.hxx"
 #include "kmailcvt.h"
@@ -136,7 +137,7 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
   msgURL.setPath( msgPath );
   
   if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
-    KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
+    KToolInvocation::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
 
   DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopAddMessage", folderName, msgURL, msgStatusFlags );
   
@@ -172,7 +173,7 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
   msgURL.setPath( msgPath );
   
   if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
-    KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
+    KToolInvocation::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
 
   DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopAddMessage_fastImport", folderName, msgURL, msgStatusFlags );
   if ( !reply.isValid() )
@@ -200,7 +201,7 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
 bool Filter::endImport()
 {
     if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
-    KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
+    KToolInvocation::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
 
     DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call(  "dcopAddMessage", QString::null, QString::null);
     if ( !reply.isValid() ) return false;

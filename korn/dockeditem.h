@@ -85,7 +85,7 @@ public slots:
 	
 protected:
 	/**
-	 * This function popup's the KPopupMenu inmideately.
+	 * This function popup's the KMenu inmideately.
 	 */
 	virtual void doPopup();
 	

@@ -37,6 +37,7 @@
 
 
 #include <kapplication.h>
+#include <ktoolinvocation.h>
 #include "kroupware.h"
 #include "kpilotConfig.h"
 
@@ -273,7 +274,7 @@ void KroupwareSync::end_syncNotesWithKMail()
 	QString mess;
 	int pid;
 
-	return KApplication::startServiceByDesktopName(CSL1("kmail"),
+	return KToolInvocation::startServiceByDesktopName(CSL1("kmail"),
 						      QString::null,
 						      error,
 						      &kmdcop,

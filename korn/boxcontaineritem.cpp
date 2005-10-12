@@ -30,7 +30,7 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kpassivepopup.h>
-#include <kpopupmenu.h>
+#include <kmenu.h>
 #include <kprocess.h>
 #include <kshortcut.h>
 
@@ -46,6 +46,7 @@
 #include <qtooltip.h>
 #include <q3vbox.h>
 #include <QMovie>
+#include <ktoolinvocation.h>
 BoxContainerItem::BoxContainerItem( QObject * parent, const char * name )
 	: AccountManager( parent, name ),
 	DCOPObject(),
@@ -191,7 +192,7 @@ void BoxContainerItem::mouseButtonPressed( Qt::ButtonState state )
 		doPopup();
 }
 
-void BoxContainerItem::fillKPopupMenu( KPopupMenu* popupMenu, KActionCollection* actions ) const
+void BoxContainerItem::fillKMenu( KMenu* popupMenu, KActionCollection* actions ) const
 {
 	/*popupMenu->insertItem( i18n( "&Configure" ), this, SLOT( slotConfigure() ) );
 	popupMenu->insertItem( i18n( "&Recheck" ), this, SLOT( slotRecheck() ) );
@@ -382,7 +383,7 @@ void BoxContainerItem::runCommand()//Possible_unsafe?
 
 void BoxContainerItem::help()
 {
-	kapp->invokeHelp();
+	KToolInvocation::invokeHelp();
 }
 
 void BoxContainerItem::reportBug()

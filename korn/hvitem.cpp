@@ -24,7 +24,7 @@
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kpassivepopup.h>
-#include <kpopupmenu.h>
+#include <kmenu.h>
 #include <kstdaction.h>
 
 #include <qcursor.h>
@@ -36,11 +36,11 @@
 HVItem::HVItem( QWidget *parent, const char *name )
 	: BoxContainerItem( 0, name ),
 	_label( new Label( parent, "label" ) ),
-	_popup( new KPopupMenu( _label/*, "popupmenu"*/ ) ),
+	_popup( new KMenu( _label/*, "popupmenu"*/ ) ),
 	_actions( new KActionCollection( _popup, "actions" ) )
 {
 	_popup->addTitle( QIcon( kapp->miniIcon() ), kapp->caption() );
-	this->fillKPopupMenu( _popup, _actions );
+	this->fillKMenu( _popup, _actions );
 	_popup->insertSeparator();
 	KStdAction::quit( kapp, SLOT( quit() ), _actions )->plug( _popup );
 	

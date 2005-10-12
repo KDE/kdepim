@@ -17,7 +17,7 @@
 */
 
 #include <kiconloader.h>
-#include <kpopupmenu.h>
+#include <kmenu.h>
 #include <kpassivepopup.h>
 #include <kaction.h>
 #include <kmainwindow.h>
@@ -48,7 +48,7 @@ SystemTray::SystemTray(KMainWindow *parent, const char *name) : KSystemTray(pare
     m_actionCollection = parent->actionCollection();
     KAction *addAction = m_actionCollection->action("device_add");
     
-    KPopupMenu* menu = contextMenu();
+    KMenu* menu = contextMenu();
     addAction->plug(menu);
     menu->insertSeparator();
 }
@@ -60,7 +60,7 @@ SystemTray::~SystemTray()
 
 #define SYSTEMTRAY_STARTID 1000
 
-void SystemTray::contextMenuAboutToShow(KPopupMenu *menu)
+void SystemTray::contextMenuAboutToShow(KMenu *menu)
 {
     KMobile *main = static_cast<KMobile *>(parent());
 

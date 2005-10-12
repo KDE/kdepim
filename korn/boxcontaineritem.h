@@ -30,7 +30,7 @@ class KornMailSubject;
 
 class KActionCollection;
 class KConfig;
-class KPopupMenu;
+class KMenu;
 class KProcess;
 
 class QColor;
@@ -114,14 +114,14 @@ public slots:
 	void mouseButtonPressed( Qt::ButtonState button );
 protected:
 	/**
-	 * This function filles a KPopupMenu-reference. The target is
-	 * to set in all implementations the same KPopupMenu-content.
-	 * Because some implementations (DockedItem) got a KPopupMenu
-	 * by itself, this only changes a KPopupMenu instance.
+	 * This function filles a KMenu-reference. The target is
+	 * to set in all implementations the same KMenu-content.
+	 * Because some implementations (DockedItem) got a KMenu
+	 * by itself, this only changes a KMenu instance.
 	 * @param menu The menu to be changed.
 	 * @param actions The actions to which the items should be added.
 	 */
-	void fillKPopupMenu( KPopupMenu* menu, KActionCollection* actions ) const;
+	void fillKMenu( KMenu* menu, KActionCollection* actions ) const;
 
 	/**
 	 * This displays the passive popup.
