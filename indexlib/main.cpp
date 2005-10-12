@@ -34,11 +34,11 @@
 #include "manager.h"
 #include "mmap_manager.h"
 #include "mempool.h"
-#include "index_tree.h"
 #include "index_slow.h"
 #include "ifile.h"
 #include "quotes.h"
 #include "compressed.h"
+#include "create.h"
 #include <map>
 #include <iostream>
 #include <cstdlib>
@@ -51,7 +51,7 @@
 typedef std::auto_ptr<indexlib::index> index_smart;
 
 index_smart get_index( std::string name ) {
-	return index_smart( new quotes( name ) );
+	return indexlib::open( name.c_str(), indexlib::open_flags::create_quotes );
 }
 
 std::string read_stream( std::istream& in ) {
