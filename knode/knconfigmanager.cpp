@@ -36,7 +36,6 @@ KNConfigManager::KNConfigManager(QObject *p, const char *n)
   a_ppearance         = new KNConfig::Appearance();
   d_isplayedHeaders   = new KNConfig::DisplayedHeaders();
   p_ostNewsTechnical  = new KNConfig::PostNewsTechnical();
-  p_ostNewsCompose    = new KNConfig::PostNewsComposer();
   c_leanup            = new KNConfig::Cleanup();
   //c_ache              = new KNConfig::Cache();
 }
@@ -48,7 +47,6 @@ KNConfigManager::~KNConfigManager()
   delete a_ppearance;
   delete d_isplayedHeaders;
   delete p_ostNewsTechnical;
-  delete p_ostNewsCompose;
   delete c_leanup;
   //delete c_ache;
 }
@@ -71,7 +69,6 @@ void KNConfigManager::syncConfig()
   a_ppearance->save();
   d_isplayedHeaders->save();
   p_ostNewsTechnical->save();
-  p_ostNewsCompose->save();
   c_leanup->save();
   //c_ache->save();
   knGlobals.settings()->writeConfig();

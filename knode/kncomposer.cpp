@@ -60,6 +60,11 @@ using KRecentAddress::RecentAddresses;
 #include <k3urldrag.h>
 #include <kcompletionbox.h>
 #include <kxmlguifactory.h>
+#include <kstatusbar.h>
+#include <klocale.h>
+#include <q3popupmenu.h>
+#include <spellingfilter.h>
+#include <kstdguiitem.h>
 
 #include <kapplication.h>
 #include "kngroupselectdialog.h"
@@ -71,11 +76,7 @@ using KRecentAddress::RecentAddresses;
 #include "knaccountmanager.h"
 #include "knnntpaccount.h"
 #include "knarticlefactory.h"
-#include <kstatusbar.h>
-#include <klocale.h>
-#include <q3popupmenu.h>
-#include <spellingfilter.h>
-#include <kstdguiitem.h>
+#include "settings.h"
 
 KNLineEdit::KNLineEdit( KNComposer::ComposerView *_composerView, bool useCompletion,
                         QWidget *parent )
@@ -358,8 +359,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   setConfig(false);
 
   if (firstEdit) {   // now we place the cursor at the end of the quoted text / below the attribution line
-    if (knGlobals.configManager()->postNewsComposer()->cursorOnTop()) {
-      int numLines = knGlobals.configManager()->postNewsComposer()->intro().count("%L");
+    if ( knGlobals.settings()->cursorOnTop() ) {
+      int numLines = knGlobals.settings()->intro().count( "%L" );
       v_iew->e_dit->setCursorPosition(numLines+1,0);
     }
     else
@@ -381,7 +382,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
     v_iew->t_o->setFocus();
   }
 
-  if(firstEdit && knGlobals.configManager()->postNewsComposer()->appendOwnSignature())
+  if( firstEdit && knGlobals.settings()->appendOwnSignature() )
     slotAppendSig();
 
   if (createCopy && (m_ode==news)) {
@@ -398,7 +399,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   applyMainWindowSettings(conf);
 
   // starting the external editor
-  if(knGlobals.configManager()->postNewsComposer()->useExternalEditor())
+  if ( knGlobals.settings()->useExternalEditor() )
     slotExternalEditor();
 }
 
@@ -521,10 +522,10 @@ void KNComposer::slotSelectAll()
 void KNComposer::setConfig(bool onlyFonts)
 {
   if (!onlyFonts) {
-    v_iew->e_dit->setWordWrap(knGlobals.configManager()->postNewsComposer()->wordWrap()?
+    v_iew->e_dit->setWordWrap( knGlobals.settings()->wordWrap() ?
                               Q3MultiLineEdit::FixedColumnWidth : Q3MultiLineEdit::NoWrap);
-    v_iew->e_dit->setWrapColumnOrWidth(knGlobals.configManager()->postNewsComposer()->maxLineLength());
-    a_ctWordWrap->setChecked(knGlobals.configManager()->postNewsComposer()->wordWrap());
+    v_iew->e_dit->setWrapColumnOrWidth( knGlobals.settings()->maxLineLength() );
+    a_ctWordWrap->setChecked( knGlobals.settings()->wordWrap() );
 
     Kpgp::Module *pgp = Kpgp::Module::getKpgp();
     a_ctPGPsign->setEnabled(pgp->usePGP());
@@ -1258,7 +1259,7 @@ void KNComposer::slotExternalEditor()
   if(e_xternalEditor)   // in progress...
     return;
 
-  QString editorCommand=knGlobals.configManager()->postNewsComposer()->externalEditor();
+  QString editorCommand = knGlobals.settings()->externalEditor();
 
   if(editorCommand.isEmpty())
     KMessageBox::sorry(this, i18n("No editor configured.\nPlease do this in the settings dialog."));

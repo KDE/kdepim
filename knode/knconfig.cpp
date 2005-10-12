@@ -849,58 +849,8 @@ Q3CString KNConfig::PostNewsTechnical::findComposerCharset(Q3CString cs)
 //==============================================================================================================
 
 
-KNConfig::PostNewsComposer::PostNewsComposer()
-{
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("POSTNEWS");
 
-  w_ordWrap=conf->readBoolEntry("wordWrap",true);
-  m_axLen=conf->readNumEntry("maxLength", 76);
-  a_ppSig=conf->readBoolEntry("appSig",true);
-  r_ewrap=conf->readBoolEntry("rewrap",true);
-  i_ncSig=conf->readBoolEntry("incSig",false);
-  c_ursorOnTop=conf->readBoolEntry("cursorOnTop",false);
-  u_seExtEditor=conf->readBoolEntry("useExternalEditor",false);
-  i_ntro=conf->readEntry("Intro","%NAME wrote:");
-  e_xternalEditor=conf->readEntry("externalEditor","kwrite %f");
-}
-
-
-KNConfig::PostNewsComposer::~PostNewsComposer()
-{
-}
-
-
-void KNConfig::PostNewsComposer::save()
-{
-  if(!d_irty)
-    return;
-
-  kdDebug(5003) << "KNConfig::PostNewsComposer::save()" << endl;
-
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("POSTNEWS");
-
-  conf->writeEntry("wordWrap", w_ordWrap);
-  conf->writeEntry("maxLength", m_axLen);
-  conf->writeEntry("appSig", a_ppSig);
-  conf->writeEntry("rewrap",r_ewrap);
-  conf->writeEntry("incSig", i_ncSig);
-  conf->writeEntry("cursorOnTop", c_ursorOnTop);
-  conf->writeEntry("useExternalEditor", u_seExtEditor);
-  conf->writeEntry("Intro", i_ntro);
-  conf->writeEntry("externalEditor", e_xternalEditor);
-  conf->sync();
-
-  d_irty = false;
-}
-
-//==============================================================================================================
-
-
-
-
-// BEGIN: Cleanup configuration ===============================================
+//BEGIN: Cleanup configuration ===============================================
 
 
 KNConfig::Cleanup::Cleanup( bool global ) :
@@ -1014,7 +964,7 @@ void KNConfig::Cleanup::setLastCompactDate()
 }
 
 
-// END: Cleanup configuration =================================================
+//END: Cleanup configuration =================================================
 
 
 

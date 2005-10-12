@@ -34,7 +34,6 @@ class KNConfigManager : QObject {
     KNConfig::Appearance*           appearance()const          { return a_ppearance; }
     KNConfig::DisplayedHeaders*     displayedHeaders()const    { return d_isplayedHeaders; }
     KNConfig::PostNewsTechnical*    postNewsTechnical()const   { return p_ostNewsTechnical; }
-    KNConfig::PostNewsComposer*     postNewsComposer() const   { return p_ostNewsCompose; }
     KNConfig::Cleanup*              cleanup()const             { return c_leanup; }
     //KNConfig::Cache*                cache()const               { return c_ache; }
 
@@ -46,7 +45,6 @@ class KNConfigManager : QObject {
     KNConfig::Appearance           *a_ppearance;
     KNConfig::DisplayedHeaders     *d_isplayedHeaders;
     KNConfig::PostNewsTechnical    *p_ostNewsTechnical;
-    KNConfig::PostNewsComposer     *p_ostNewsCompose;
     KNConfig::Cleanup              *c_leanup;
     //KNConfig::Cache                *c_ache;
 

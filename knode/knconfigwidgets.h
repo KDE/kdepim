@@ -524,33 +524,14 @@ class KDE_EXPORT XHeaderConfDialog : public KDialogBase {
 };
 
 
-class KDE_EXPORT PostNewsComposerWidget : public KCModule {
-
-  Q_OBJECT
-
+/** Composer configuration widget. */
+class KDE_EXPORT PostNewsComposerWidget : public KCModule
+{
   public:
-    PostNewsComposerWidget(PostNewsComposer *d, QWidget *p=0, const char *n=0);
-    ~PostNewsComposerWidget();
-
-    void load();
-    void save();
-
-  protected:
-    KIntSpinBox *m_axLen;
-    QCheckBox   *w_ordWrapCB,
-                *o_wnSigCB,
-                *r_ewrapCB,
-                *a_uthSigCB,
-                *c_ursorOnTopCB,
-                *e_xternCB;
-    KLineEdit   *i_ntro,
-                *e_ditor;
-
-    PostNewsComposer *d_ata;
-
-  protected slots:
-    void slotChooseEditor();
-
+    /** Create a new composer configuration widget.
+     * @param parent The parent widget.
+     */
+    PostNewsComposerWidget( QWidget *parent = 0 );
 };
 
 

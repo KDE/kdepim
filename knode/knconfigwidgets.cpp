@@ -55,6 +55,7 @@
 #include "knfiltermanager.h"
 #include "knarticlefilter.h"
 #include "knscoring.h"
+#include "postnewscomposerwidget_base.h"
 #include "readnewsnavigationwidget_base.h"
 #include "readnewsviewerwidget_base.h"
 #include "settings.h"
@@ -1858,138 +1859,13 @@ QString KNConfig::XHeaderConfDialog::result()
 //===================================================================================================
 
 
-KNConfig::PostNewsComposerWidget::PostNewsComposerWidget( PostNewsComposer *d, QWidget *p, const char *n ) :
-  KCModule( p, n ),
-  d_ata( d )
+KNConfig::PostNewsComposerWidget::PostNewsComposerWidget( QWidget *parent ) :
+  KCModule( parent )
 {
-  QVBoxLayout *topL=new QVBoxLayout(this, 5);
-
-  // === general ===========================================================
-
-  Q3GroupBox *generalB=new Q3GroupBox(i18n("General"), this);
-  topL->addWidget(generalB);
-  QGridLayout *generalL=new QGridLayout(generalB, 3,3, 8,5);
-
-  generalL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-
-  w_ordWrapCB=new QCheckBox(i18n("Word &wrap at column:"), generalB);
-  generalL->addWidget(w_ordWrapCB,1,0);
-  m_axLen=new KIntSpinBox( 20, 200, 1, 20, generalB );
-  generalL->addWidget(m_axLen,1,2);
-  connect(w_ordWrapCB, SIGNAL(toggled(bool)), m_axLen, SLOT(setEnabled(bool)));
-  connect(w_ordWrapCB, SIGNAL(toggled(bool)), SLOT(changed()));
-  connect(m_axLen, SIGNAL(valueChanged(int)), SLOT(changed()));
-
-  o_wnSigCB=new QCheckBox(i18n("Appe&nd signature automatically"), generalB);
-  generalL->addMultiCellWidget(o_wnSigCB,2,2,0,1);
-  connect(o_wnSigCB, SIGNAL(toggled(bool)), SLOT(changed()));
-
-  generalL->setColStretch(1,1);
-
-  // === reply =============================================================
-
-  Q3GroupBox *replyB=new Q3GroupBox(i18n("Reply"), this);
-  topL->addWidget(replyB);
-  QGridLayout *replyL=new QGridLayout(replyB, 7,2, 8,5);
-
-  replyL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-
-  i_ntro=new KLineEdit(replyB);
-  replyL->addMultiCellWidget(new QLabel(i_ntro,i18n("&Introduction phrase:"), replyB),1,1,0,1);
-  replyL->addMultiCellWidget(i_ntro, 2,2,0,1);
-  replyL->addMultiCellWidget(new QLabel(i18n("<qt>Placeholders: <b>%NAME</b>=sender's name, <b>%EMAIL</b>=sender's address,<br><b>%DATE</b>=date, <b>%MSID</b>=message-id, <b>%GROUP</b>=group name, <b>%L</b>=line break</qt>"), replyB),3,3,0,1);
-  connect(i_ntro, SIGNAL(textChanged(const QString&)), SLOT(changed()));
-
-  r_ewrapCB=new QCheckBox(i18n("Rewrap quoted te&xt automatically"), replyB);
-  replyL->addMultiCellWidget(r_ewrapCB, 4,4,0,1);
-  connect(r_ewrapCB, SIGNAL(toggled(bool)), SLOT(changed()));
-
-  a_uthSigCB=new QCheckBox(i18n("Include the a&uthor's signature"), replyB);
-  replyL->addMultiCellWidget(a_uthSigCB, 5,5,0,1);
-  connect(a_uthSigCB, SIGNAL(toggled(bool)), SLOT(changed()));
-
-  c_ursorOnTopCB=new QCheckBox(i18n("Put the cursor &below the introduction phrase"), replyB);
-  replyL->addMultiCellWidget(c_ursorOnTopCB, 6,6,0,1);
-  connect(c_ursorOnTopCB, SIGNAL(toggled(bool)), SLOT(changed()));
-
-  replyL->setColStretch(1,1);
-
-  // === external editor ========================================================
-
-  Q3GroupBox *editorB=new Q3GroupBox(i18n("External Editor"), this);
-  topL->addWidget(editorB);
-  QGridLayout *editorL=new QGridLayout(editorB, 6,3, 8,5);
-
-  editorL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-
-  e_ditor=new KLineEdit(editorB);
-  editorL->addWidget(new QLabel(e_ditor, i18n("Specify edi&tor:"), editorB),1,0);
-  editorL->addWidget(e_ditor,1,1);
-  QPushButton *btn = new QPushButton(i18n("Choo&se..."),editorB);
-  connect(btn, SIGNAL(clicked()), SLOT(slotChooseEditor()));
-  connect(e_ditor, SIGNAL(textChanged(const QString&)), SLOT(changed()));
-  editorL->addWidget(btn,1,2);
-
-  editorL->addMultiCellWidget(new QLabel(i18n("%f will be replaced with the filename to edit."), editorB),2,2,0,2);
-
-  e_xternCB=new QCheckBox(i18n("Start exte&rnal editor automatically"), editorB);
-  editorL->addMultiCellWidget(e_xternCB, 3,3,0,2);
-  connect(e_xternCB, SIGNAL(clicked()), SLOT(changed()));
-
-  editorL->setColStretch(1,1);
-
-  topL->addStretch(1);
-
+  KNode::Ui::PostNewsComposerWidgetBase ui;
+  ui.setupUi( this );
+  addConfig( knGlobals.settings(), this );
   load();
-}
-
-
-KNConfig::PostNewsComposerWidget::~PostNewsComposerWidget()
-{
-}
-
-
-void KNConfig::PostNewsComposerWidget::load()
-{
-  w_ordWrapCB->setChecked(d_ata->w_ordWrap);
-  m_axLen->setEnabled(d_ata->w_ordWrap);
-  a_uthSigCB->setChecked(d_ata->i_ncSig);
-  c_ursorOnTopCB->setChecked(d_ata->c_ursorOnTop);
-  e_xternCB->setChecked(d_ata->u_seExtEditor);
-  o_wnSigCB->setChecked(d_ata->a_ppSig);
-  r_ewrapCB->setChecked(d_ata->r_ewrap);
-  m_axLen->setValue(d_ata->m_axLen);
-  i_ntro->setText(d_ata->i_ntro);
-  e_ditor->setText(d_ata->e_xternalEditor);
-}
-
-
-void KNConfig::PostNewsComposerWidget::save()
-{
-  d_ata->w_ordWrap=w_ordWrapCB->isChecked();
-  d_ata->m_axLen=m_axLen->value();
-  d_ata->r_ewrap=r_ewrapCB->isChecked();
-  d_ata->a_ppSig=o_wnSigCB->isChecked();
-  d_ata->i_ntro=i_ntro->text();
-  d_ata->i_ncSig=a_uthSigCB->isChecked();
-  d_ata->c_ursorOnTop=c_ursorOnTopCB->isChecked();
-  d_ata->e_xternalEditor=e_ditor->text();
-  d_ata->u_seExtEditor=e_xternCB->isChecked();
-
-  d_ata->setDirty(true);
-}
-
-
-void KNConfig::PostNewsComposerWidget::slotChooseEditor()
-{
-  QString path=e_ditor->text().simplifyWhiteSpace();
-  if (path.right(3) == " %f")
-    path.truncate(path.length()-3);
-
-  path=KFileDialog::getOpenFileName(path, QString::null, this, i18n("Choose Editor"));
-
-  if (!path.isEmpty())
-    e_ditor->setText(path+" %f");
 }
 
 

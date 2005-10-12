@@ -197,4 +197,43 @@
       <default>1024</default>
     </entry>
   </group>
+  <!-- posting settings -->
+  <group name="POSTNEWS">
+    <entry name="wordWrap" type="Bool">
+      <label>Word wrap at column</label>
+      <default>true</default>
+    </entry>
+    <entry name="maxLineLength" key="maxLength" type="Int">
+      <label>Maximum line length if word wrap is enabled</label>
+      <default>76</default>
+    </entry>
+    <entry name="appendOwnSignature" key="appSig" type="Bool">
+      <label>Append own signature automatically</label>
+      <default>true</default>
+    </entry>
+    <entry name="rewrap" type="Bool">
+      <label>Rewrap quoted text automatically</label>
+      <default>true</default>
+    </entry>
+    <entry name="includeSignature" key="incSig" type="Bool">
+      <label>Include the original author's signature in replies</label>
+      <default>false</default>
+    </entry>
+    <entry name="cursorOnTop" type="Bool">
+      <label>Put the cursor below the introduction phrase</label>
+      <default>false</default>
+    </entry>
+    <entry name="useExternalEditor" type="Bool">
+      <label>Start external editor automatically</label>
+      <default>false</default>
+    </entry>
+    <entry name="Intro" type="String">
+      <label>Introduction phrase</label>
+      <default>%NAME wrote:</default>
+    </entry>
+    <entry name="externalEditor" type="String">
+      <label>Path to external editor</label>
+      <default>kwrite %f</default>
+    </entry>
+  </group>
 </kcfg>

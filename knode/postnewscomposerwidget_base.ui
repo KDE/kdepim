@@ -1,0 +1,198 @@
+<ui version="4.0" >
+ <author>Volker Krause &lt;volker.krause@rwth-aachen.de></author>
+ <comment></comment>
+ <exportmacro></exportmacro>
+ <class>KNode::PostNewsComposerWidgetBase</class>
+ <widget class="KCModule" name="PostNewsComposerWidgetBase" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>412</width>
+    <height>443</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="margin" >
+    <number>8</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="" >
+     <property name="title" >
+      <string>General</string>
+     </property>
+     <layout class="QGridLayout" >
+      <property name="margin" >
+       <number>8</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item row="1" column="0" colspan="2" >
+       <widget class="QCheckBox" name="kcfg_appendOwnSignature" >
+        <property name="text" >
+         <string>Appe&amp;nd signature automatically</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="KIntSpinBox" name="kcfg_maxLineLength" />
+      </item>
+      <item row="0" column="0" >
+       <widget class="QCheckBox" name="kcfg_wordWrap" >
+        <property name="text" >
+         <string>Word &amp;wrap at column:</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="" >
+     <property name="title" >
+      <string>Reply</string>
+     </property>
+     <layout class="QVBoxLayout" >
+      <property name="margin" >
+       <number>8</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="" >
+        <property name="text" >
+         <string>&amp;Introduction phrase:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>kcfg_Intro</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="KLineEdit" name="kcfg_Intro" />
+      </item>
+      <item>
+       <widget class="QLabel" name="" >
+        <property name="text" >
+         <string>&lt;qt>Placeholders: &lt;b>%NAME&lt;/b>=sender's name, &lt;b>%EMAIL&lt;/b>=sender's address,&lt;br>&lt;b>%DATE&lt;/b>=date, &lt;b>%MSID&lt;/b>=message-id, &lt;b>%GROUP&lt;/b>=group name, &lt;b>%L&lt;/b>=line break&lt;/qt></string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_rewrap" >
+        <property name="text" >
+         <string>Rewrap quoted te&amp;xt automatically</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_includeSignature" >
+        <property name="text" >
+         <string>Include the a&amp;uthor's signature</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_cursorOnTop" >
+        <property name="text" >
+         <string>Put the cursor &amp;below the introduction phrase</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="" >
+     <property name="title" >
+      <string>External Editor</string>
+     </property>
+     <layout class="QGridLayout" >
+      <property name="margin" >
+       <number>8</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item row="2" column="0" colspan="2" >
+       <widget class="QCheckBox" name="kcfg_useExternalEditor" >
+        <property name="text" >
+         <string>Start exte&amp;rnal editor automatically</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2" >
+       <widget class="QLabel" name="label_2" >
+        <property name="text" >
+         <string>&lt;qt>&lt;b>%f&lt;/b> will be replaced with the filename to edit&lt;/qt></string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="KURLRequester" name="kcfg_externalEditor" />
+      </item>
+      <item row="0" column="0" >
+       <widget class="QLabel" name="label" >
+        <property name="text" >
+         <string>Specify editor:</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <layoutfunction spacing="KDialog::spacingHint()" margin="KDialog::marginHint()" />
+ <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>KURLRequester</class>
+   <extends></extends>
+   <header>kurlrequester.h</header>
+   <container>0</container>
+   <pixmap></pixmap>
+  </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends></extends>
+   <header>klineedit.h</header>
+   <container>0</container>
+   <pixmap></pixmap>
+  </customwidget>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends></extends>
+   <header>knuminput.h</header>
+   <container>0</container>
+   <pixmap></pixmap>
+  </customwidget>
+  <customwidget>
+   <class>KCModule</class>
+   <extends></extends>
+   <header>kcmodule.h</header>
+   <container>1</container>
+   <pixmap></pixmap>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

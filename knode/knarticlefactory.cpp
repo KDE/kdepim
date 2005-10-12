@@ -214,7 +214,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   //--------------------------- <Body> -----------------------------
 
   // attribution line
-  QString attribution=knGlobals.configManager()->postNewsComposer()->intro();
+  QString attribution = knGlobals.settings()->intro();
   QString name(a->from()->name());
   if (name.isEmpty())
     name = QString::fromLatin1(a->from()->email());
@@ -230,7 +230,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   QString notRewraped=QString::null;
   QStringList text;
   QStringList::Iterator line;
-  bool incSig=knGlobals.configManager()->postNewsComposer()->includeSignature();
+  bool incSig = knGlobals.settings()->includeSignature();
 
   if (selectedText.isEmpty()) {
     KMime::Content *tc = a->textContent();
@@ -250,12 +250,12 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
       quoted+="> "+(*line)+"\n";
   }
 
-  if(knGlobals.configManager()->postNewsComposer()->rewrap()) {  //rewrap original article
+  if ( knGlobals.settings()->rewrap() ) {  //rewrap original article
 
     notRewraped=quoted;     // store the original text in here, the user can request it in the composer
     quoted=attribution;
 
-    quoted += KNHelper::rewrapStringList(text, knGlobals.configManager()->postNewsComposer()->maxLineLength(), '>', !incSig, false);
+    quoted += KNHelper::rewrapStringList( text, knGlobals.settings()->maxLineLength(), '>', !incSig, false );
   }
 
   //-------------------------- </Body> -----------------------------

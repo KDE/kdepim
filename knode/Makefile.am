@@ -95,7 +95,8 @@ libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   nntpaccountdialog_base.ui \
                   readnewsgeneralwidget_base.ui \
                   readnewsnavigationwidget_base.ui \
-                  readnewsviewerwidget_base.ui
+                  readnewsviewerwidget_base.ui \
+                  postnewscomposerwidget_base.ui
 libknodecommon_la_COMPILE_FIRST = nntpaccountdialog_base.ui smtpaccountwidget_base.h
 
 knode_SOURCES = knode.cpp knapplication.cpp main.cpp

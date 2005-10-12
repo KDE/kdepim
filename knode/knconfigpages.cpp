@@ -162,7 +162,7 @@ KNConfig::PostNewsPage::PostNewsPage( QWidget *parent )
 
   KNConfigManager *cfgMgr = knGlobals.configManager();
   addTab(new KNConfig::PostNewsTechnicalWidget(cfgMgr->postNewsTechnical(), this), i18n("Technical"));
-  addTab(new KNConfig::PostNewsComposerWidget(cfgMgr->postNewsComposer(), this), i18n("Composer"));
+  addTab( new KNConfig::PostNewsComposerWidget( this ), i18n("Composer") );
   addTab(new KNConfig::PostNewsSpellingWidget(this), i18n("Spelling"));
 }
 

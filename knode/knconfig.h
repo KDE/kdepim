@@ -295,43 +295,6 @@ class KDE_EXPORT PostNewsTechnical : public Base {
 };
 
 
-class PostNewsComposer : public Base {
-
-  friend class PostNewsComposerWidget;
-
-  public:
-    PostNewsComposer();
-    ~PostNewsComposer();
-
-    void save();
-
-    bool wordWrap()const             { return w_ordWrap; }
-    int maxLineLength()const         { return m_axLen; }
-    bool appendOwnSignature()const   { return a_ppSig; }
-
-    QString intro()const             { return i_ntro; }
-    bool rewrap()const               { return r_ewrap; }
-    bool includeSignature()const     { return i_ncSig; }
-    bool cursorOnTop()const          { return c_ursorOnTop; }
-
-    QString externalEditor()const    { return e_xternalEditor; }
-    bool useExternalEditor()const    { return u_seExtEditor; }
-
-
-  protected:
-    int     m_axLen;
-    bool    w_ordWrap,
-            a_ppSig,
-            r_ewrap,
-            i_ncSig,
-            c_ursorOnTop,
-            u_seExtEditor;
-    QString i_ntro,
-            e_xternalEditor;
-
-};
-
-
 //BEGIN: Cleanup configuration -----------------------------------------------
 
 class KDE_EXPORT Cleanup : public Base {
