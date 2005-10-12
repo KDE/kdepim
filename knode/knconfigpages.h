@@ -23,21 +23,30 @@ class IdentityWidget;
 namespace KNConfig {
 
 /**
- * BasePageWithTabs represents a kcm with several tabs.
+ * A tab-based KCModule container.
  * It simply forwards load and save operations to all tabs.
  * Code mostly taken from kmail.
  */
-class KDE_EXPORT BasePageWithTabs : public KCModule {
-  Q_OBJECT
+class KDE_EXPORT BasePageWithTabs : public KCModule
+{
   public:
+    /** Create a new tab-based KCModule container.
+     * @param parent The parent widget.
+     */
     BasePageWithTabs( QWidget * parent = 0 );
-    ~BasePageWithTabs() {};
 
+    /** Reimplemented to forward load() to all tabs. */
     virtual void load();
+    /** Reimplemented to forward save() to all tabs. */
     virtual void save();
+    /** Reimplemented to forward defaults() to the current tab. */
     virtual void defaults();
 
   protected:
+    /** Add a new tab.
+     * @param tab A KCModule to add.
+     * @param title The tab title.
+     */
     void addTab( KCModule* tab, const QString & title );
 
   private:

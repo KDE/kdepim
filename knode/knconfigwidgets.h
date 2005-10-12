@@ -388,23 +388,21 @@ class KDE_EXPORT DisplayedHeaderConfDialog : public KDialogBase {
 };
 
 
-class KDE_EXPORT ScoringWidget : public KCModule {
-
-  Q_OBJECT
-
+/** Scoring configuration widget. */
+class KDE_EXPORT ScoringWidget : public KCModule
+{
   public:
-    ScoringWidget(Scoring *d, QWidget *p=0, const char *n=0);
-    ~ScoringWidget();
+    /** Create a new scoring configuration widget.
+     * @param parent The QWidget parent.
+     */
+    ScoringWidget( QWidget *parent = 0 );
 
-    void load();
-    void save();
+    virtual void load();
+    virtual void save();
 
   private:
-    KScoringEditorWidget *ksc;
-    KIntSpinBox *i_gnored,
-                *w_atched;
-
-    Scoring *d_ata;
+    KScoringEditorWidget *mKsc;
+    KIntSpinBox *mIgnored, *mWatched;
 };
 
 

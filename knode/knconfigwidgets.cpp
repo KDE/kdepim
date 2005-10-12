@@ -1300,27 +1300,26 @@ void KNConfig::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
 //=============================================================================================
 
 
-KNConfig::ScoringWidget::ScoringWidget( Scoring *d, QWidget *p, const char *n ) :
-  KCModule( p, n ),
-  d_ata( d )
+KNConfig::ScoringWidget::ScoringWidget( QWidget *parent ) :
+  KCModule( parent )
 {
   QGridLayout *topL = new QGridLayout(this,4,2, 5,5);
-  ksc = new KScoringEditorWidget(knGlobals.scoringManager(), this);
-  topL->addMultiCellWidget(ksc, 0,0, 0,1);
+  mKsc = new KScoringEditorWidget( knGlobals.scoringManager(), this );
+  topL->addMultiCellWidget( mKsc, 0, 0, 0, 1 );
 
   topL->addRowSpacing(1, 10);
 
-  i_gnored=new KIntSpinBox( -100000, 100000, 1, 0, this );
-  QLabel *l=new QLabel(i_gnored, i18n("Default score for &ignored threads:"), this);
+  mIgnored = new KIntSpinBox( -100000, 100000, 1, 0, this );
+  QLabel *l = new QLabel( mIgnored, i18n("Default score for &ignored threads:"), this );
   topL->addWidget(l, 2, 0);
-  topL->addWidget(i_gnored, 2, 1);
-  connect(i_gnored, SIGNAL(valueChanged(int)), SLOT(changed()));
+  topL->addWidget( mIgnored, 2, 1 );
+  connect( mIgnored, SIGNAL(valueChanged(int)), SLOT(changed()) );
 
-  w_atched=new KIntSpinBox( -100000, 100000, 1, 0, this );
-  l=new QLabel(w_atched, i18n("Default score for &watched threads:"), this);
+  mWatched = new KIntSpinBox( -100000, 100000, 1, 0, this );
+  l = new QLabel( mWatched, i18n("Default score for &watched threads:"), this );
   topL->addWidget(l, 3, 0);
-  topL->addWidget(w_atched, 3, 1);
-  connect(w_atched, SIGNAL(valueChanged(int)), SLOT(changed()));
+  topL->addWidget( mWatched, 3, 1);
+  connect( mWatched, SIGNAL(valueChanged(int)), SLOT(changed()) );
 
   topL->setColStretch(0, 1);
 
@@ -1328,23 +1327,16 @@ KNConfig::ScoringWidget::ScoringWidget( Scoring *d, QWidget *p, const char *n ) 
 }
 
 
-KNConfig::ScoringWidget::~ScoringWidget()
-{
-}
-
-
 void KNConfig::ScoringWidget::load()
 {
-  i_gnored->setValue(d_ata->i_gnoredThreshold);
-  w_atched->setValue(d_ata->w_atchedThreshold);
+  mIgnored->setValue( knGlobals.settings()->ignoredThreshold() );
+  mWatched->setValue( knGlobals.settings()->watchedThreshold() );
 }
 
 void KNConfig::ScoringWidget::save()
 {
-  d_ata->i_gnoredThreshold = i_gnored->value();
-  d_ata->w_atchedThreshold = w_atched->value();
-
-  d_ata->setDirty(true);
+  knGlobals.settings()->setIgnoredThreshold( mIgnored->value() );
+  knGlobals.settings()->setWatchedThreshold( mWatched->value() );
 }
 
 

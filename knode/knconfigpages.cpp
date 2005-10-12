@@ -59,12 +59,11 @@ void KNConfig::BasePageWithTabs::save() {
   }
 }
 
-void KNConfig::BasePageWithTabs::defaults() {
-  for ( int i = 0 ; i < mTabWidget->count() ; ++i ) {
-    KCModule *tab = (KCModule*) mTabWidget->page(i);
-    if ( tab )
-      tab->defaults();
-  }
+void KNConfig::BasePageWithTabs::defaults()
+{
+  KCModule *tab = static_cast<KCModule*>( mTabWidget->currentWidget() );
+  if ( tab )
+    tab->defaults();
 }
 
 
@@ -138,7 +137,7 @@ KNConfig::ReadNewsPage::ReadNewsPage( QWidget *parent )
   KNConfigManager *cfgMgr = knGlobals.configManager();
   addTab( new KNConfig::ReadNewsGeneralWidget( this ), i18n("General") );
   addTab( new KNConfig::ReadNewsNavigationWidget( this ), i18n("Navigation") );
-  addTab(new KNConfig::ScoringWidget(cfgMgr->scoring(), this), i18n("Scoring"));
+  addTab( new KNConfig::ScoringWidget( this ), i18n("Scoring") );
   addTab(new KNConfig::FilterListWidget(this), i18n("Filters"));
   addTab(new KNConfig::DisplayedHeadersWidget(cfgMgr->displayedHeaders(), this), i18n("Headers"));
   addTab( new KNConfig::ReadNewsViewerWidget( this ), i18n("Viewer") );

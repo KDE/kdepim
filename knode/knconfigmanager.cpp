@@ -1,6 +1,4 @@
 /*
-    knconfigmanager.cpp
-
     KNode, the KDE newsreader
     Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
@@ -37,7 +35,6 @@ KNConfigManager::KNConfigManager(QObject *p, const char *n)
   i_dentity           = new KNConfig::Identity();
   a_ppearance         = new KNConfig::Appearance();
   d_isplayedHeaders   = new KNConfig::DisplayedHeaders();
-  s_coring            = new KNConfig::Scoring();
   p_ostNewsTechnical  = new KNConfig::PostNewsTechnical();
   p_ostNewsCompose    = new KNConfig::PostNewsComposer();
   c_leanup            = new KNConfig::Cleanup();
@@ -50,7 +47,6 @@ KNConfigManager::~KNConfigManager()
   delete i_dentity;
   delete a_ppearance;
   delete d_isplayedHeaders;
-  delete s_coring;
   delete p_ostNewsTechnical;
   delete p_ostNewsCompose;
   delete c_leanup;
@@ -74,7 +70,6 @@ void KNConfigManager::syncConfig()
 {
   a_ppearance->save();
   d_isplayedHeaders->save();
-  s_coring->save();
   p_ostNewsTechnical->save();
   p_ostNewsCompose->save();
   c_leanup->save();

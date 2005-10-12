@@ -1,8 +1,6 @@
 /*
-    knconfigmanager.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -35,7 +33,6 @@ class KNConfigManager : QObject {
     KNConfig::Identity*             identity() const           { return i_dentity; }
     KNConfig::Appearance*           appearance()const          { return a_ppearance; }
     KNConfig::DisplayedHeaders*     displayedHeaders()const    { return d_isplayedHeaders; }
-    KNConfig::Scoring*              scoring()const             { return s_coring; }
     KNConfig::PostNewsTechnical*    postNewsTechnical()const   { return p_ostNewsTechnical; }
     KNConfig::PostNewsComposer*     postNewsComposer() const   { return p_ostNewsCompose; }
     KNConfig::Cleanup*              cleanup()const             { return c_leanup; }
@@ -48,7 +45,6 @@ class KNConfigManager : QObject {
     KNConfig::Identity             *i_dentity;
     KNConfig::Appearance           *a_ppearance;
     KNConfig::DisplayedHeaders     *d_isplayedHeaders;
-    KNConfig::Scoring              *s_coring;
     KNConfig::PostNewsTechnical    *p_ostNewsTechnical;
     KNConfig::PostNewsComposer     *p_ostNewsCompose;
     KNConfig::Cleanup              *c_leanup;

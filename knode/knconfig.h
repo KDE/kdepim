@@ -232,26 +232,6 @@ class KDE_EXPORT DisplayedHeaders : public Base
 };
 
 
-class KDE_EXPORT Scoring : public Base {
-
-  friend class ScoringWidget;
-
-  public:
-    Scoring();
-    ~Scoring();
-
-    void save();
-
-    int ignoredThreshold()   { return i_gnoredThreshold; }
-    int watchedThreshold()   { return w_atchedThreshold; }
-
-  protected:
-    int i_gnoredThreshold,
-        w_atchedThreshold;
-
-};
-
-
 class KDE_EXPORT XHeader {
 
   public:

@@ -20,15 +20,17 @@
 #include "knprotocolclient.h"
 #include "knglobals.h"
 #include "kncollectionviewitem.h"
+#include "knconfig.h"
 #include "kngrouppropdlg.h"
 #include "utilities.h"
-#include "knconfigmanager.h"
 #include "knmainwidget.h"
 #include "knscoring.h"
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"
 #include "knnntpaccount.h"
 #include "headerview.h"
+#include "settings.h"
+
 //Added by qt3to4:
 #include <QTextStream>
 #include <Q3CString>
@@ -925,9 +927,9 @@ void KNGroup::scoreArticles(bool onlynew)
 
       defScore = 0;
       if (a->isIgnored())
-        defScore = knGlobals.configManager()->scoring()->ignoredThreshold();
+        defScore = knGlobals.settings()->ignoredThreshold();
       else if (a->isWatched())
-        defScore = knGlobals.configManager()->scoring()->watchedThreshold();
+        defScore = knGlobals.settings()->watchedThreshold();
 
       if (a->score() != defScore) {
         a->setScore(defScore);

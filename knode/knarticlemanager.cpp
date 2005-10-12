@@ -23,7 +23,6 @@
 #include "articlewidget.h"
 #include "knmainwidget.h"
 #include "knglobals.h"
-#include "knconfigmanager.h"
 #include "utilities.h"
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"
@@ -887,9 +886,9 @@ void  KNArticleManager::rescoreArticles(KNRemoteArticle::List &l)
   for ( KNRemoteArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
     int defScore = 0;
     if ( (*it)->isIgnored())
-      defScore = knGlobals.configManager()->scoring()->ignoredThreshold();
+      defScore = knGlobals.settings()->ignoredThreshold();
     else if ( (*it)->isWatched() )
-      defScore = knGlobals.configManager()->scoring()->watchedThreshold();
+      defScore = knGlobals.settings()->watchedThreshold();
     (*it)->setScore(defScore);
 
     bool read = (*it)->isRead();
