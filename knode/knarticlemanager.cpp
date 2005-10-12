@@ -41,6 +41,8 @@
 #include "knfoldermanager.h"
 #include "headerview.h"
 #include "nntpjobs.h"
+#include "settings.h"
+
 //Added by qt3to4:
 #include <Q3ValueList>
 #include <Q3CString>
@@ -183,8 +185,8 @@ void KNArticleManager::showHdrs(bool clear)
   if(!g_roup && !f_older) return;
 
   bool setFirstChild=true;
-  bool showThreads=knGlobals.configManager()->readNewsGeneral()->showThreads();
-  bool expandThreads=knGlobals.configManager()->readNewsGeneral()->defaultToExpandedThreads();
+  bool showThreads=knGlobals.settings()->showThreads();
+  bool expandThreads=knGlobals.settings()->defaultToExpandedThreads();
 
   if(clear)
     v_iew->clear();
@@ -661,7 +663,7 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
   int changeCnt=0, idRef=0;
 
   for ( KNRemoteArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
-    if( r && knGlobals.configManager()->readNewsGeneral()->markCrossposts() &&
+    if( r && knGlobals.settings()->markCrossposts() &&
         handleXPosts && (*it)->newsgroups()->isCrossposted() ) {
 
       QStringList groups = (*it)->newsgroups()->getGroups();
@@ -924,7 +926,7 @@ void KNArticleManager::processJob(KNJobData *j)
             "<br>You could try to get it from <a href=\"http://groups.google.com/groups?selm=%1\">groups.google.com</a>.")
             .arg( msgId ) );
         // mark article as read
-        if ( knGlobals.configManager()->readNewsGeneral()->autoMark() && !a->isOrphant() ) {
+        if ( knGlobals.settings()->autoMark() && !a->isOrphant() ) {
           KNRemoteArticle::List l;
           l.append( a );
           setRead( l, true );
@@ -950,7 +952,7 @@ void KNArticleManager::createThread(KNRemoteArticle *a)
   else
     a->setListItem(new KNHdrViewItem(v_iew));
 
-  a->setThreadMode(knGlobals.configManager()->readNewsGeneral()->showThreads());
+  a->setThreadMode( knGlobals.settings()->showThreads() );
   a->initListItem();
 }
 
@@ -959,8 +961,7 @@ void KNArticleManager::createCompleteThread(KNRemoteArticle *a)
 {
   KNRemoteArticle *ref=a->displayedReference(), *art, *top;
   bool inThread=false;
-  bool showThreads=knGlobals.configManager()->readNewsGeneral()->showThreads();
-  KNConfig::ReadNewsGeneral *rng=knGlobals.configManager()->readNewsGeneral();
+  bool showThreads = knGlobals.settings()->showThreads();
 
   while (ref->displayedReference() != 0)
     ref=ref->displayedReference();
@@ -992,7 +993,7 @@ void KNArticleManager::createCompleteThread(KNRemoteArticle *a)
     }
   }
 
-  if(rng->totalExpandThreads())
+  if ( knGlobals.settings()->totalExpandThreads() )
     top->listItem()->expandChildren();
 }
 
@@ -1057,8 +1058,7 @@ void KNArticleManager::slotItemExpanded(Q3ListViewItem *p)
   KNRemoteArticle *top, *art, *ref;
   KNHdrViewItem *hdrItem;
   bool inThread=false;
-  bool showThreads=knGlobals.configManager()->readNewsGeneral()->showThreads();
-  KNConfig::ReadNewsGeneral *rng=knGlobals.configManager()->readNewsGeneral();
+  bool showThreads = knGlobals.settings()->showThreads();
   hdrItem=static_cast<KNHdrViewItem*>(p);
   top=static_cast<KNRemoteArticle*>(hdrItem->art);
 
@@ -1075,7 +1075,7 @@ void KNArticleManager::slotItemExpanded(Q3ListViewItem *p)
           art->setThreadMode(showThreads);
           art->initListItem();
         }
-        else if(rng->totalExpandThreads()) { //totalExpand
+        else if( knGlobals.settings()->totalExpandThreads() ) { //totalExpand
           ref=art->displayedReference();
           inThread=false;
           while(ref && !inThread) {
@@ -1091,7 +1091,7 @@ void KNArticleManager::slotItemExpanded(Q3ListViewItem *p)
     knGlobals.top->setCursorBusy(false);
   }
 
-  if(rng->totalExpandThreads())
+  if ( knGlobals.settings()->totalExpandThreads() )
     hdrItem->expandChildren();
 
   d_isableExpander = false;

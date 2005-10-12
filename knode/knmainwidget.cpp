@@ -662,7 +662,7 @@ void KNMainWidget::initActions()
                               SLOT(slotArtToggleShowThreads()), actionCollection(), "view_showThreads");
   a_ctArtToggleShowThreads->setCheckedState(i18n("Hide T&hreads"));
 
-  a_ctArtToggleShowThreads->setChecked(c_fgManager->readNewsGeneral()->showThreads());
+  a_ctArtToggleShowThreads->setChecked( knGlobals.settings()->showThreads() );
 
   //header-view - remote articles
   a_ctArtSetArtRead         = new KAction(i18n("Mark as &Read"), Qt::Key_D , this,
@@ -1603,7 +1603,7 @@ void KNMainWidget::slotArtToggleShowThreads()
 {
   kdDebug(5003) << "KNMainWidget::slotArtToggleShowThreads()" << endl;
   if(g_rpManager->currentGroup()) {
-    c_fgManager->readNewsGeneral()->setShowThreads(!c_fgManager->readNewsGeneral()->showThreads());
+    knGlobals.settings()->setShowThreads( !knGlobals.settings()->showThreads() );
     a_rtManager->showHdrs(true);
   }
 }

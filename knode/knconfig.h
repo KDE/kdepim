@@ -210,64 +210,6 @@ class KDE_EXPORT Appearance : public Base {
 };
 
 
-class KDE_EXPORT ReadNewsGeneral : public Base {
-
-  friend class ReadNewsGeneralWidget;
-
-  public:
-    ReadNewsGeneral();
-    ~ReadNewsGeneral();
-
-    void save();
-
-    bool autoCheckGroups()const           { return a_utoCheck; }
-    int maxToFetch()const                 { return m_axFetch; }
-    bool autoMark()const                  { return a_utoMark; }
-    int autoMarkSeconds()const            { return m_arkSecs; }
-    bool markCrossposts()const            { return m_arkCrossposts; }
-
-    bool smartScrolling()const            { return s_martScrolling; }
-    bool totalExpandThreads()const        { return t_otalExpand; }
-    bool defaultToExpandedThreads()const  { return d_efaultExpand; }
-    bool showLines()const                 { return s_howLines; }
-    bool showScore()const                 { return s_howScore; }
-    bool showUnread()const                { return s_howUnread; }
-
-    int collCacheSize()const              { return c_ollCacheSize; }
-    int artCacheSize()const               { return a_rtCacheSize; }
-
-    bool showThreads()const               { return s_howThreads; }
-    void setShowThreads(bool b)      { d_irty=true; s_howThreads=b;}
-
-    KMime::DateFormatter::FormatType dateFormat() const { return mDateFormat; }
-    QString dateCustomFormat() const { return mDateCustomFormat; }
-
-    void setShowLines( bool show ) { d_irty = true; s_howLines = show; }
-    void setShowScore( bool show ) { d_irty = true; s_howScore = show; }
-
-  protected:
-    bool  a_utoCheck,
-          a_utoMark,
-          m_arkCrossposts,
-          s_martScrolling,
-          t_otalExpand,
-          d_efaultExpand,
-          s_howLines,
-          s_howScore,
-          s_howUnread,
-          s_howThreads;
-
-    int   m_axFetch,
-          m_arkSecs,
-          c_ollCacheSize,
-          a_rtCacheSize;
-
-    KMime::DateFormatter::FormatType mDateFormat;
-    QString mDateCustomFormat;
-
-};
-
-
 class KDE_EXPORT DisplayedHeaders : public Base
 {
   public:

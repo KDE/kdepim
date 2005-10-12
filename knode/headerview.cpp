@@ -34,6 +34,7 @@
 #include "knarticle.h"
 #include "knarticlemanager.h"
 #include "knmainwidget.h"
+#include "settings.h"
 
 
 KNHeaderView::KNHeaderView( QWidget *parent ) :
@@ -110,13 +111,12 @@ void KNHeaderView::readConfig()
     mInitDone = true;
   }
 
-  KNConfig::ReadNewsGeneral *rngConf = knGlobals.configManager()->readNewsGeneral();
-  toggleColumn( KPaintInfo::COL_SIZE, rngConf->showLines() );
+  toggleColumn( KPaintInfo::COL_SIZE, knGlobals.settings()->showLines() );
   if ( !mShowingFolder ) // score column is always hidden when showing a folder
-    toggleColumn( KPaintInfo::COL_SCORE, rngConf->showScore() );
+    toggleColumn( KPaintInfo::COL_SCORE, knGlobals.settings()->showScore() );
 
-  mDateFormatter.setCustomFormat( rngConf->dateCustomFormat() );
-  mDateFormatter.setFormat( rngConf->dateFormat() );
+  mDateFormatter.setCustomFormat( knGlobals.settings()->customDateFormat() );
+  mDateFormatter.setFormat( (KMime::DateFormatter::FormatType)knGlobals.settings()->dateFormat() );
 
   KNConfig::Appearance *app = knGlobals.configManager()->appearance();
   QPalette p = palette();
@@ -135,10 +135,9 @@ void KNHeaderView::writeConfig()
   conf->writeEntry( "sortByThreadChangeDate", mSortByThreadChangeDate );
   saveLayout( conf, "HeaderView" );
 
-  KNConfig::ReadNewsGeneral *rngConf = knGlobals.configManager()->readNewsGeneral();
-  rngConf->setShowLines( mPaintInfo.showSize );
+  knGlobals.settings()->setShowLines( mPaintInfo.showSize );
   if ( !mShowingFolder ) // score column is always hidden when showing a folder
-    rngConf->setShowScore( mPaintInfo.showScore );
+    knGlobals.settings()->setShowScore( mPaintInfo.showScore );
 }
 
 
@@ -187,7 +186,7 @@ void KNHeaderView::ensureItemVisibleWithMargin( const Q3ListViewItem *i )
   int y = itemPos( i );
   int h = i->height();
 
-  if ( knGlobals.configManager()->readNewsGeneral()->smartScrolling() &&
+  if ( knGlobals.settings()->smartScrolling() &&
       ((y + h + 5) >= (contentsY() + visibleHeight()) ||
        (y - 5 < contentsY())) )
   {
@@ -443,8 +442,7 @@ void KNHeaderView::prepareForGroup()
 {
   mShowingFolder = false;
   header()->setLabel( mPaintInfo.senderCol, i18n("From") );
-  KNConfig::ReadNewsGeneral *rngConf = knGlobals.configManager()->readNewsGeneral();
-  toggleColumn( KPaintInfo::COL_SCORE, rngConf->showScore() );
+  toggleColumn( KPaintInfo::COL_SCORE, knGlobals.settings()->showScore() );
 }
 
 

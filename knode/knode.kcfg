@@ -6,6 +6,109 @@
   <kcfgfile name="knoderc"/>
   <!-- News reading options -->
   <group name="READNEWS">
+    <!-- General options -->
+    <entry name="autoCheckGroups" key="autoCheck" type="Bool">
+      <label>Check for new articles automatically</label>
+      <default>true</default>
+    </entry>
+    <entry name="maxToFetch" key="maxFetch" type="Int">
+      <label>Maximum number of articles to fetch</label>
+      <default>1000</default>
+    </entry>
+    <entry name="autoMark" type="Bool">
+      <label>Automatically mark articles as read</label>
+      <default>true</default>
+    </entry>
+    <entry name="autoMarkSeconds" key="markSecs" type="Int">
+      <label>Mark article as read after</label>
+      <default>0</default>
+    </entry>
+    <entry name="markCrossposts" type="Bool">
+      <label>Mark crossposted articles as read</label>
+      <default>true</default>
+    </entry>
+    <entry name="smartScrolling" type="Bool">
+      <label>Smart scrolling</label>
+      <default>true</default>
+    </entry>
+    <entry name="totalExpandThreads" key="totalExpand" type="Bool">
+      <label>Show whole thread on expanding</label>
+      <default>true</default>
+    </entry>
+    <entry name="defaultToExpandedThreads" key="defaultExpand" type="Bool">
+      <label>Default to expanded threads</label>
+      <default>false</default>
+    </entry>
+    <entry name="showLines" key="showLines3" type="Bool">
+      <label>Show line count column</label>
+      <default>true</default>
+    </entry>
+    <entry name="showScore" key="showScore3" type="Bool">
+      <label>Show score column</label>
+      <default>true</default>
+    </entry>
+    <entry name="showUnread" type="Bool">
+      <label>Show unread count in thread</label>
+      <default>true</default>
+    </entry>
+    <entry name="showThreads" type="Bool">
+      <label>Show Threads</label>
+      <default>true</default>
+    </entry>
+    <entry name="dateFormat" type="Enum"><!-- taken from kmime_util.h -->
+      <choices>
+        <choice name="CTime">
+          <label>Standard format</label>
+        </choice>
+        <choice name="Localized">
+          <label>Localized format</label>
+        </choice>
+        <choice name="Fancy">
+          <label>Fance format</label>
+        </choice>
+        <choice name="Iso">
+          <label>ISO format</label>
+        </choice>
+        <choice name="Custom">
+          <label>Custom format</label>
+        </choice>
+      </choices>
+      <label>Date format</label>
+      <default>Localized</default>
+    </entry>
+    <entry name="customDateFormat" type="String">
+      <label>Custom date format</label>
+      <whatsthis><!-- taken from KMail -->
+&lt;qt&gt;&lt;p&gt;&lt;strong&gt;These expressions may be used for the date:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;d - the day as a number without a leading zero (1-31)&lt;/li&gt;
+&lt;li&gt;dd - the day as a number with a leading zero (01-31)&lt;/li&gt;
+&lt;li&gt;ddd - the abbreviated day name (Mon - Sun)&lt;/li&gt;
+&lt;li&gt;dddd - the long day name (Monday - Sunday)&lt;/li&gt;
+&lt;li&gt;M - the month as a number without a leading zero (1-12)&lt;/li&gt;
+&lt;li&gt;MM - the month as a number with a leading zero (01-12)&lt;/li&gt;
+&lt;li&gt;MMM - the abbreviated month name (Jan - Dec)&lt;/li&gt;
+&lt;li&gt;MMMM - the long month name (January - December)&lt;/li&gt;
+&lt;li&gt;yy - the year as a two digit number (00-99)&lt;/li&gt;
+&lt;li&gt;yyyy - the year as a four digit number (0000-9999)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;These expressions may be used for the time:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;h - the hour without a leading zero (0-23 or 1-12 if AM/PM display)&lt;/li&gt;
+&lt;li&gt;hh - the hour with a leading zero (00-23 or 01-12 if AM/PM display)&lt;/li&gt;
+&lt;li&gt;m - the minutes without a leading zero (0-59)&lt;/li&gt;
+&lt;li&gt;mm - the minutes with a leading zero (00-59)&lt;/li&gt;
+&lt;li&gt;s - the seconds without a leading zero (0-59)&lt;/li&gt;
+&lt;li&gt;ss - the seconds with a leading zero (00-59)&lt;/li&gt;
+&lt;li&gt;z - the milliseconds without leading zeroes (0-999)&lt;/li&gt;
+&lt;li&gt;zzz - the milliseconds with leading zeroes (000-999)&lt;/li&gt;
+&lt;li&gt;AP - switch to AM/PM display. AP will be replaced by either "AM" or "PM".&lt;/li&gt;
+&lt;li&gt;ap - switch to AM/PM display. ap will be replaced by either "am" or "pm".&lt;/li&gt;
+&lt;li&gt;Z - time zone in numeric form (-0500)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;All other input characters will be ignored.&lt;/strong&gt;&lt;/p&gt;&lt;/qt&gt;
+      </whatsthis>
+    </entry>
     <!-- Viewer options -->
     <entry name="rewrapBody" type="Bool">
       <label>Rewrap text when necessary</label>
@@ -72,4 +175,15 @@
         <default>false</default>
       </entry>
     </group>
+  <!-- Caching options -->
+  <group name="CACHE">
+    <entry name="collCacheSize" key="collMemSize" type="Int">
+      <label>Cache size for headers</label>
+      <default>2048</default>
+    </entry>
+    <entry name="artCacheSize" key="artMemSize" type="Int">
+      <label>Cache size for articles</label>
+      <default>1024</default>
+    </entry>
+  </group>
 </kcfg>

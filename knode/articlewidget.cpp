@@ -306,7 +306,7 @@ void ArticleWidget::readConfig()
   delete mCSSHelper;
   mCSSHelper = new CSSHelper( mViewer->view() );
 
-  if ( !knGlobals.configManager()->readNewsGeneral()->autoMark() )
+  if ( !knGlobals.settings()->autoMark() )
     mTimer->stop();
 }
 
@@ -510,8 +510,8 @@ void ArticleWidget::displayArticle()
   mViewer->end();
 
   enableActions();
-  if( mArticle->type() == KMime::Base::ATremote && knGlobals.configManager()->readNewsGeneral()->autoMark() )
-    mTimer->start( knGlobals.configManager()->readNewsGeneral()->autoMarkSeconds() * 1000, true );
+  if( mArticle->type() == KMime::Base::ATremote && knGlobals.settings()->autoMark() )
+    mTimer->start( knGlobals.settings()->autoMarkSeconds() * 1000, true );
 }
 
 

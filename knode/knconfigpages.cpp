@@ -136,8 +136,8 @@ KNConfig::ReadNewsPage::ReadNewsPage( QWidget *parent )
   : BasePageWithTabs( parent ) {
 
   KNConfigManager *cfgMgr = knGlobals.configManager();
-  addTab(new KNConfig::ReadNewsGeneralWidget(cfgMgr->readNewsGeneral(), this), i18n("General"));
-  addTab(new KNConfig::ReadNewsNavigationWidget( this ), i18n("Navigation"));
+  addTab( new KNConfig::ReadNewsGeneralWidget( this ), i18n("General") );
+  addTab( new KNConfig::ReadNewsNavigationWidget( this ), i18n("Navigation") );
   addTab(new KNConfig::ScoringWidget(cfgMgr->scoring(), this), i18n("Scoring"));
   addTab(new KNConfig::FilterListWidget(this), i18n("Filters"));
   addTab(new KNConfig::DisplayedHeadersWidget(cfgMgr->displayedHeaders(), this), i18n("Headers"));

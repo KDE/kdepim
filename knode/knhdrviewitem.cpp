@@ -31,6 +31,7 @@
 #include "knhdrviewitem.h"
 #include "knarticle.h"
 #include "headerview.h"
+#include "settings.h"
 
 
 KNHdrViewItem::KNHdrViewItem( KNHeaderView *ref, KNArticle *a ) :
@@ -264,7 +265,7 @@ Q3DragObject* KNHdrViewItem::dragObject()
 int KNHdrViewItem::countUnreadInThread()
 {
   int count = 0;
-  if (knGlobals.configManager()->readNewsGeneral()->showUnread()) {
+  if ( knGlobals.settings()->showUnread() ) {
     if (art->type() == KMime::Base::ATremote) {
       count = static_cast<KNRemoteArticle*>( art )->unreadFollowUps();
     }

@@ -17,10 +17,11 @@
 #include "knmemorymanager.h"
 #include "knfolder.h"
 #include "knglobals.h"
-#include "knconfigmanager.h"
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"
 #include "knfoldermanager.h"
+#include "settings.h"
+
 //Added by qt3to4:
 #include <Q3ValueList>
 
@@ -154,7 +155,7 @@ KNMemoryManager::ArticleItem* KNMemoryManager::findCacheEntry(KNArticle *a, bool
 
 void KNMemoryManager::checkMemoryUsageCollections()
 {
-  int maxSize = knGlobals.configManager()->readNewsGeneral()->collCacheSize() * 1024;
+  int maxSize = knGlobals.settings()->collCacheSize() * 1024;
   KNArticleCollection *c=0;
 
   if (c_ollCacheSize > maxSize) {
@@ -184,7 +185,7 @@ void KNMemoryManager::checkMemoryUsageCollections()
 
 void KNMemoryManager::checkMemoryUsageArticles()
 {
-  int maxSize = knGlobals.configManager()->readNewsGeneral()->artCacheSize() * 1024;
+  int maxSize = knGlobals.settings()->artCacheSize() * 1024;
 
   if (a_rtCacheSize > maxSize) {
     Q3ValueList<ArticleItem*> tempList( mArtList ); // work on a copy, KNArticlemanager will

@@ -21,6 +21,8 @@
 #include "knwidgets.h"
 #include "nntpaccountdialog_base.h"
 #include "smtpaccountwidget_base.h"
+#include "readnewsgeneralwidget_base.h"
+
 //Added by qt3to4:
 #include <QPixmap>
 #include <QLabel>
@@ -59,7 +61,6 @@ namespace KNConfig {
   class DisplayedHeaders;
   class GroupCleanupWidget;
   class PostNewsTechnical;
-  class ReadNewsGeneral;
   class PostNewsComposer;
   class ReadNewsViewer;
   class Scoring;
@@ -279,32 +280,19 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
 };
 
 
-class KDE_EXPORT ReadNewsGeneralWidget : public KCModule {
-
+/** General read news configuration page.
+ * @todo Use KConfigXT also for handling the date format button group.
+ */
+class KDE_EXPORT ReadNewsGeneralWidget : public KCModule, KNode::Ui::ReadNewsGeneralWidgetBase
+{
   public:
-    ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidget *p=0, const char *n=0);
-    ~ReadNewsGeneralWidget();
+    /** Create a new general configuration page.
+     * @param parent The QWidget parent.
+     */
+    ReadNewsGeneralWidget( QWidget *parent = 0 );
 
-    void load();
-    void save();
-
-  protected:
-    QCheckBox   *a_utoCB,
-                *m_arkCB,
-                *m_arkCrossCB,
-                *s_martScrollingCB,
-                *e_xpThrCB,
-                *d_efaultExpandCB,
-                *l_inesCB,
-                *u_nreadCB,
-                *s_coreCB;
-    KIntSpinBox *m_arkSecs,
-                *m_axFetch,
-                *c_ollCacheSize,
-                *a_rtCacheSize;
-
-    ReadNewsGeneral *d_ata;
-
+    virtual void load();
+    virtual void save();
 };
 
 

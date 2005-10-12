@@ -41,6 +41,7 @@
 #include "resource.h"
 #include "knarticlewindow.h"
 #include "knmemorymanager.h"
+#include "settings.h"
 
 using namespace KNode;
 
@@ -512,7 +513,7 @@ void KNGroupManager::checkGroupForNewHeaders(KNGroup *g)
     return;
   }
 
-  g->setMaxFetch(knGlobals.configManager()->readNewsGeneral()->maxToFetch());
+  g->setMaxFetch( knGlobals.settings()->maxToFetch() );
   emitJob( new ArticleListJob( this, g->account(), g ) );
 }
 
@@ -564,7 +565,7 @@ void KNGroupManager::setCurrentGroup(KNGroup *g)
       return;
     }
     a_rticleMgr->showHdrs();
-    if(knGlobals.configManager()->readNewsGeneral()->autoCheckGroups())
+    if ( knGlobals.settings()->autoCheckGroups() )
       checkGroupForNewHeaders(g);
   }
 }
@@ -576,7 +577,7 @@ void KNGroupManager::checkAll(KNNntpAccount *a, bool silent)
 
   for ( Q3ValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
     if ( (*it)->account() == a ) {
-      (*it)->setMaxFetch( knGlobals.configManager()->readNewsGeneral()->maxToFetch() );
+      (*it)->setMaxFetch( knGlobals.settings()->maxToFetch() );
       if ( silent )
         emitJob( new ArticleListJob( this, (*it)->account(), (*it), true ) );
       else

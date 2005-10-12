@@ -944,132 +944,37 @@ void KNConfig::AppearanceWidget::slotFontSelectionChanged()
 //=============================================================================================
 
 
-KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget( ReadNewsGeneral *d, QWidget *p, const char *n ) :
-  KCModule( p, n ),
-  d_ata( d )
+KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget( QWidget *parent ) :
+  KCModule( parent )
 {
-  Q3GroupBox *hgb=new Q3GroupBox(i18n("Article Handling"), this);
-  Q3GroupBox *lgb=new Q3GroupBox(i18n("Article List"), this);
-  Q3GroupBox *cgb=new Q3GroupBox(i18n("Memory Consumption"), this);
-  QLabel *l1, *l2, *l3;
-
-  a_utoCB=new QCheckBox(i18n("Check for new articles a&utomatically"), hgb);
-  m_axFetch=new KIntSpinBox( 0, 100000, 1, 0, hgb );
-  l1=new QLabel(m_axFetch, i18n("&Maximum number of articles to fetch:"), hgb);
-  m_arkCB=new QCheckBox(i18n("Mar&k article as read after:"), hgb);
-  m_arkSecs=new KIntSpinBox( 0, 9999, 1, 0, hgb );
-  connect(m_arkCB, SIGNAL(toggled(bool)), m_arkSecs, SLOT(setEnabled(bool)));
-  m_arkSecs->setSuffix(i18n(" sec"));
-  m_arkCrossCB=new QCheckBox(i18n("Mark c&rossposted articles as read"), hgb);
-
-  s_martScrollingCB=new QCheckBox(i18n("Smart scrolli&ng"), lgb);
-  e_xpThrCB=new QCheckBox(i18n("Show &whole thread on expanding"), lgb);
-  d_efaultExpandCB=new QCheckBox(i18n("Default to e&xpanded threads"), lgb);
-  s_coreCB=new QCheckBox(i18n("Show article &score"), lgb);
-  l_inesCB=new QCheckBox(i18n("Show &line count"), lgb);
-  u_nreadCB=new QCheckBox(i18n("Show unread count in &thread"), lgb);
-
-  c_ollCacheSize=new KIntSpinBox( 0, 99999, 1, 1, cgb );
-  c_ollCacheSize->setSuffix(" KB");
-  l2=new QLabel(c_ollCacheSize, i18n("Cach&e size for headers:"), cgb);
-  a_rtCacheSize=new KIntSpinBox( 0, 99999, 1, 1, cgb );
-  a_rtCacheSize->setSuffix(" KB");
-  l3=new QLabel(a_rtCacheSize, i18n("Cache si&ze for articles:"), cgb);
-
-  QVBoxLayout *topL=new QVBoxLayout(this, 5);
-  QGridLayout *hgbL=new QGridLayout(hgb, 5,2, 8,5);
-  QVBoxLayout *lgbL=new QVBoxLayout(lgb, 8, 5);
-  QGridLayout *cgbL=new QGridLayout(cgb, 3,2, 8,5);
-
-  topL->addWidget(hgb);
-  topL->addWidget(lgb);
-  topL->addWidget(cgb);
-  topL->addStretch(1);
-
-  hgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  hgbL->addMultiCellWidget(a_utoCB, 1,1, 0,1);
-  hgbL->addWidget(l1, 2, 0);
-  hgbL->addWidget(m_axFetch, 2,1);
-  hgbL->addWidget(m_arkCB, 3,0);
-  hgbL->addWidget(m_arkSecs, 3,1);
-  hgbL->addMultiCellWidget(m_arkCrossCB, 4,4, 0,1);
-  hgbL->setColStretch(0,1);
-
-  lgbL->addSpacing(fontMetrics().lineSpacing()-4);
-  lgbL->addWidget(s_martScrollingCB);
-  lgbL->addWidget(e_xpThrCB);
-  lgbL->addWidget(d_efaultExpandCB);
-  lgbL->addWidget(s_coreCB);
-  lgbL->addWidget(l_inesCB);
-  lgbL->addWidget(u_nreadCB);
-
-  cgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  cgbL->addWidget(l2, 1,0);
-  cgbL->addWidget(c_ollCacheSize, 1,1);
-  cgbL->addWidget(l3, 2,0);
-  cgbL->addWidget(a_rtCacheSize, 2,1);
-  cgbL->setColStretch(0,1);
-
-  topL->setResizeMode(QLayout::SetMinimumSize);
-
-  connect(a_utoCB,           SIGNAL(toggled(bool)),     SLOT(changed()));
-  connect(m_axFetch,         SIGNAL(valueChanged(int)), SLOT(changed()));
-  connect(m_arkCB,           SIGNAL(toggled(bool)),     SLOT(changed()));
-  connect(m_arkSecs,         SIGNAL(valueChanged(int)), SLOT(changed()));
-  connect(m_arkCrossCB,      SIGNAL(toggled(bool)),     SLOT(changed()));
-  connect(s_martScrollingCB, SIGNAL(toggled(bool)),     SLOT(changed()));
-  connect(e_xpThrCB,         SIGNAL(toggled(bool)),     SLOT(changed()));
-  connect(d_efaultExpandCB,  SIGNAL(toggled(bool)),     SLOT(changed()));
-  connect(l_inesCB,          SIGNAL(toggled(bool)),     SLOT(changed()));
-  connect(s_coreCB,          SIGNAL(toggled(bool)),     SLOT(changed()));
-  connect(u_nreadCB,         SIGNAL(toggled(bool)),     SLOT(changed()));
-  connect(c_ollCacheSize,    SIGNAL(valueChanged(int)), SLOT(changed()));
-  connect(a_rtCacheSize,     SIGNAL(valueChanged(int)), SLOT(changed()));
-
+  setupUi( this );
+  addConfig( knGlobals.settings(), this );
   load();
-}
-
-
-KNConfig::ReadNewsGeneralWidget::~ReadNewsGeneralWidget()
-{
 }
 
 
 void KNConfig::ReadNewsGeneralWidget::load()
 {
-  a_utoCB->setChecked(d_ata->a_utoCheck);
-  m_axFetch->setValue(d_ata->m_axFetch);
-  m_arkCB->setChecked(d_ata->a_utoMark);
-  m_arkSecs->setValue(d_ata->m_arkSecs);
-  m_arkSecs->setEnabled(d_ata->a_utoMark);
-  m_arkCrossCB->setChecked(d_ata->m_arkCrossposts);
-  s_martScrollingCB->setChecked(d_ata->s_martScrolling);
-  e_xpThrCB->setChecked(d_ata->t_otalExpand);
-  d_efaultExpandCB->setChecked(d_ata->d_efaultExpand);
-  l_inesCB->setChecked(d_ata->s_howLines);
-  s_coreCB->setChecked(d_ata->s_howScore);
-  u_nreadCB->setChecked(d_ata->s_howUnread);
-  c_ollCacheSize->setValue(d_ata->c_ollCacheSize);
-  a_rtCacheSize->setValue(d_ata->a_rtCacheSize);
+  KCModule::load();
+  switch ( knGlobals.settings()->dateFormat() ) {
+    case KNode::Settings::EnumDateFormat::CTime: mStandardDateFormat->setChecked( true ); break;
+    case KNode::Settings::EnumDateFormat::Localized: mLocalizedDateFormat->setChecked( true ); break;
+    case KNode::Settings::EnumDateFormat::Fancy: mFancyDateFormat->setChecked( true ); break;
+    case KNode::Settings::EnumDateFormat::Custom: mCustomDateFormat->setChecked( true ); break;
+  }
 }
 
 void KNConfig::ReadNewsGeneralWidget::save()
 {
-  d_ata->a_utoCheck=a_utoCB->isChecked();
-  d_ata->m_axFetch=m_axFetch->value();
-  d_ata->a_utoMark=m_arkCB->isChecked();
-  d_ata->m_arkSecs=m_arkSecs->value();
-  d_ata->m_arkCrossposts=m_arkCrossCB->isChecked();
-  d_ata->s_martScrolling=s_martScrollingCB->isChecked();
-  d_ata->t_otalExpand=e_xpThrCB->isChecked();
-  d_ata->d_efaultExpand=d_efaultExpandCB->isChecked();
-  d_ata->s_howLines=l_inesCB->isChecked();
-  d_ata->s_howScore=s_coreCB->isChecked();
-  d_ata->s_howUnread=u_nreadCB->isChecked();
-  d_ata->c_ollCacheSize=c_ollCacheSize->value();
-  d_ata->a_rtCacheSize=a_rtCacheSize->value();
-
-  d_ata->setDirty(true);
+  if ( mStandardDateFormat->isChecked() )
+    knGlobals.settings()->setDateFormat( KNode::Settings::EnumDateFormat::CTime );
+  if ( mLocalizedDateFormat->isChecked() )
+    knGlobals.settings()->setDateFormat( KNode::Settings::EnumDateFormat::Localized );
+  if ( mFancyDateFormat->isChecked() )
+    knGlobals.settings()->setDateFormat( KNode::Settings::EnumDateFormat::Fancy );
+  if ( mCustomDateFormat->isChecked() )
+    knGlobals.settings()->setDateFormat( KNode::Settings::EnumDateFormat::Custom );
+  KCModule::save();
 }
 
 //=============================================================================================
