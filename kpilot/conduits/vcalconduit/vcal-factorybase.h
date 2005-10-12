@@ -49,7 +49,10 @@ class VCalConduitFactoryBase : public KLibFactory
   Q_OBJECT
 
 public:
-	VCalConduitFactoryBase(QObject * p= 0L,const char * n= 0L):KLibFactory(p,n){};
+	VCalConduitFactoryBase(QObject * p= 0L,const char * n= 0L):KLibFactory(p)
+	{
+			setObjectName(n);
+	};
 	virtual ~VCalConduitFactoryBase();
 	static KAboutData *about() { return fAbout; };
 

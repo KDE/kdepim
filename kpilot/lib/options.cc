@@ -48,7 +48,8 @@ static const char *options_id =
 #endif
 
 #include <qsize.h>
-
+#include <QDate>
+	
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kcmdlineargs.h>
