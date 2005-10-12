@@ -215,6 +215,12 @@ void icalmemory_free_ring()
    br = get_buffer_ring();
 
    icalmemory_free_ring_byval(br);
+#ifdef HAVE_PTHREAD
+  pthread_setspecific(ring_key, 0);
+#else
+  global_buffer_ring = 0;
+#endif
+
 }
 
 
