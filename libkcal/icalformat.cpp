@@ -37,6 +37,7 @@ extern "C" {
   #include <icalss.h>
   #include <icalparser.h>
   #include <icalrestriction.h>
+  #include <icalmemory.h>
 }
 
 #include "calendar.h"
@@ -190,6 +191,7 @@ bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &text )
   }
 
   icalcomponent_free( calendar );
+  icalmemory_free_ring();
 
   return success;
 }
@@ -259,6 +261,7 @@ QString ICalFormat::toString( Calendar *cal )
   QString text = QString::fromUtf8( icalcomponent_as_ical_string( calendar ) );
 
   icalcomponent_free( calendar );
+  icalmemory_free_ring();
 
   if ( text.isNull() ) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
@@ -300,7 +303,7 @@ QString ICalFormat::toString( RecurrenceRule *recurrence )
 
 bool ICalFormat::fromString( RecurrenceRule * recurrence, const QString& rrule )
 {
-	if ( !recurrence ) return false;
+  if ( !recurrence ) return false;
   bool success = true;
   icalerror_clear_errno();
   struct icalrecurrencetype recur = icalrecurrencetype_from_string( rrule.latin1() );
@@ -342,6 +345,7 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
   if ( message == 0 )
     message = mImpl->createScheduleComponent(incidence,method);
 
+  // FIXME TODO: Don't we have to free message? What about the ical_string? MEMLEAK
   QString messageText = QString::fromUtf8( icalcomponent_as_ical_string(message) );
 
 #if 0
@@ -394,6 +398,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
     setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QLatin1String( "messageText was empty, unable to parse into a ScheduleMessage" ) ) );
     return 0;
   }
+  // TODO FIXME: Don't we have to ical-free message??? MEMLEAK
   icalcomponent *message;
   message = icalparser_parse_string(messageText.toUtf8());
 
@@ -552,6 +557,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   }
 
   kdDebug(5800) << "ICalFormat::parseScheduleMessage(), status = " << status << endl;
+// TODO FIXME: Don't we have to free calendarComponent??? MEMLEAK
 
   return new ScheduleMessage(incidence,method,status);
 }
