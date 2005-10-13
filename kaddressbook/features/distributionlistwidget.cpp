@@ -300,6 +300,7 @@ void DistributionListWidget::createList()
 
 #else
   new KABC::DistributionList( mManager, newName );
+  changed();
 
   updateNameCombo();
 #endif
@@ -308,10 +309,6 @@ void DistributionListWidget::createList()
   mNameCombo->setCurrentText( newName );
   // Display the contents of the list we just selected (well, it's empty)
   updateContactView();
-
-#ifndef KDEPIM_NEW_DISTRLISTS
-  changed();
-#endif
 }
 
 void DistributionListWidget::editList()
