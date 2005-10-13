@@ -54,7 +54,7 @@ void slow::add( string str, string doc ) {
 
 std::vector<unsigned> slow::search( string str ) const {
 	std::vector<unsigned> res;
-	Match m( str );
+	indexlib::Match m( str );
 
 	for ( unsigned i = 0; i != strings_.size(); ++i ) {
 		if ( m.process( strings_.get_cstr( i ) ) ) res.push_back( i );

@@ -38,6 +38,7 @@
 #include <iostream>
 #include <utility>
 
+
 struct stringset {
 	public:
 		struct const_iterator : public std::iterator<STD_NAMESPACE_PREFIX random_access_iterator_tag,const char*> {
@@ -127,7 +128,10 @@ struct stringset {
 
 		void clear();
 
-
+		/**
+		 * Returns std::make_pair( find( word ), find( word + 'Z' ) ) which makes it easy
+		 * to implement word* searches
+		 */
 		std::pair<const_iterator, const_iterator> upper_lower( const char* ) const;
 
 		const_iterator begin() const { return const_iterator( this, 0 ); }
