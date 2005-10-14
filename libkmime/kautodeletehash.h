@@ -63,9 +63,9 @@ public:
    * Destroys the hash and deletes all values. References to the values in the
    * hash and all iterators of this hash become invalid.
    */
-  ~KAutoDeleteHash() { while ( ! isEmpty() ) {
-                         T *value = *begin();
-                         erase( begin() );
+  ~KAutoDeleteHash() { while ( ! QHash<Key, T *>::isEmpty() ) {
+                         T *value = *QHash<Key, T *>::begin();
+                         erase( QHash<Key, T *>::begin() );
                          delete value;
                        }
                      }
