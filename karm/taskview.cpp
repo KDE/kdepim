@@ -121,10 +121,14 @@ void TaskView::contentsMousePressEvent ( QMouseEvent * e )
   kdDebug(5970) << "entering contentsMousePressEvent" << endl;
   KListView::contentsMousePressEvent(e);
   Task* task = current_item();
-  if ( task != 0 )  // zero can happen e.g. if there is no task!
-  { // see if we mark the task as completed
+  // This checks that there has been a click onto an item,  
+  // not into an empty part of the KListView.
+  if ( task != 0 &&  // zero can happen if there is no task
+        e->pos().y() >= current_item()->itemPos() &&
+        e->pos().y() < current_item()->itemPos()+current_item()->height() )
+  { 
+    // see if the click was on the completed icon
     int leftborder = treeStepSize() * ( task->depth() + ( rootIsDecorated() ? 1 : 0)) + itemMargin();
-    // if clicked onto the "completed" icon
     if ((leftborder < e->x()) && (e->x() < 19 + leftborder ))
     {
       if ( task->isComplete() ) task->setPercentComplete( 0, _storage );
