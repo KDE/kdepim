@@ -668,13 +668,11 @@ void KNConfig::DisplayedHeaders::down(KNDisplayedHeader *h)
 
 KNConfig::XHeader::XHeader(const QString &s)
 {
-  if(s.left(2)=="X-") {
-    int pos=s.find(": ");
-    if(pos!=-1) {
-      n_ame=s.mid(2, pos-2).latin1();
-      pos+=2;
-      v_alue=s.mid(pos, s.length()-pos);
-    }
+  int pos = s.indexOf(": ");
+  if ( pos != -1 ) {
+    mName = s.left( pos );
+    pos += 2;
+    mValue = s.right( s.length() - pos );
   }
 }
 
@@ -718,7 +716,7 @@ KNConfig::PostNewsTechnical::PostNewsTechnical()
     if(f.open(QIODevice::ReadOnly)) {
       QTextStream ts(&f);
       while(!ts.atEnd())
-        x_headers.append( XHeader(ts.readLine()) );
+        mXheaders.append( XHeader( ts.readLine() ) );
 
       f.close();
     }
@@ -752,8 +750,9 @@ void KNConfig::PostNewsTechnical::save()
     if(f.open(QIODevice::WriteOnly)) {
       QTextStream ts(&f);
       XHeaders::Iterator it;
-      for(it=x_headers.begin(); it!=x_headers.end(); ++it)
+      for ( it = mXheaders.begin(); it != mXheaders.end(); ++it )
         ts << (*it).header() << "\n";
+      ts.flush();
       f.close();
     }
     else

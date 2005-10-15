@@ -875,9 +875,8 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, Q3
 
   //X-Headers
   if(withXHeaders) {
-    KNConfig::XHeaders::Iterator it;
-    for ( it = knGlobals.configManager()->postNewsTechnical()->xHeaders().begin();
-          it != knGlobals.configManager()->postNewsTechnical()->xHeaders().end(); ++it ) {
+    KNConfig::XHeaders xhdr = knGlobals.configManager()->postNewsTechnical()->xHeaders();
+    for ( KNConfig::XHeaders::Iterator it = xhdr.begin(); it != xhdr.end(); ++it ) {
       QString value = (*it).value();
       if(origPost) {
         QString name(origPost->from()->name());
@@ -890,7 +889,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, Q3
         if(value.find("%NAME") != -1 || value.find("%EMAIL") != -1)
           continue;
 
-      art->setHeader( new KMime::Headers::Generic( (Q3CString("X-")+(*it).name()), art, value,
+      art->setHeader( new KMime::Headers::Generic( (*it).name().toLatin1(), art, value,
                       knGlobals.configManager()->postNewsTechnical()->charset() ) );
     }
   }

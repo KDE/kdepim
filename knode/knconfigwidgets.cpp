@@ -1657,7 +1657,7 @@ void KNConfig::PostNewsTechnicalWidget::load()
   mEncoding->setCurrentItem( knGlobals.settings()->allow8BitBody() ? 0 : 1 );
 
   mHeaderList->clear();
-  for ( XHeaders::Iterator it = mData->x_headers.begin(); it != mData->x_headers.end(); ++it )
+  for ( XHeaders::Iterator it = mData->mXheaders.begin(); it != mData->mXheaders.end(); ++it )
     mHeaderList->addItem( (*it).header() );
 }
 
@@ -1667,9 +1667,9 @@ void KNConfig::PostNewsTechnicalWidget::save()
   mData->c_harset = mCharset->currentText().latin1();
   knGlobals.settings()->setAllow8BitBody( mEncoding->currentItem() == 0 );
 
-  mData->x_headers.clear();
+  mData->mXheaders.clear();
   for ( int i = 0; i < mHeaderList->count(); ++i )
-    mData->x_headers.append( XHeader( mHeaderList->item( i )->text() ) );
+    mData->mXheaders.append( XHeader( mHeaderList->item( i )->text() ) );
 
   mData->setDirty( true );
   KCModule::save();
@@ -1727,31 +1727,27 @@ void KNConfig::PostNewsTechnicalWidget::slotEditBtnClicked()
 //===================================================================================================
 
 
-KNConfig::XHeaderConfDialog::XHeaderConfDialog(const QString &h, QWidget *p, const char *n)
-  : KDialogBase(Plain, i18n("X-Headers"),Ok|Cancel, Ok, p, n)
+KNConfig::XHeaderConfDialog::XHeaderConfDialog( const QString &h, QWidget *parent ) :
+  KDialogBase( parent, 0, true, i18n("Additional Header"), Ok | Cancel, Ok )
 {
-  QFrame* page=plainPage();
-  QHBoxLayout *topL=new QHBoxLayout(page, 5,8);
-  topL->setAutoAdd(true);
+  KHBox* page = makeHBoxMainWidget();
 
-  new QLabel("X-", page);
-  n_ame=new KLineEdit(page);
-  new QLabel(":", page);
-  v_alue=new KLineEdit(page);
+  mNameEdit = new KLineEdit( page );
+  new QLabel( ":", page );
+  mValueEdit = new KLineEdit( page );
 
-  int pos=h.find(": ", 2);
-  if(pos!=-1) {
-    n_ame->setText(h.mid(2, pos-2));
-    pos+=2;
-    v_alue->setText(h.mid(pos, h.length()-pos));
+  int pos = h.indexOf( ": " );
+  if ( pos != -1 ) {
+    mNameEdit->setText( h.left( pos ) );
+    pos += 2;
+    mValueEdit->setText( h.right( h.length() - pos ) );
   }
 
   setFixedHeight(sizeHint().height());
   KNHelper::restoreWindowSize("XHeaderDlg", this, sizeHint());
 
-  n_ame->setFocus();
+  mNameEdit->setFocus();
 }
-
 
 
 KNConfig::XHeaderConfDialog::~XHeaderConfDialog()
@@ -1760,10 +1756,9 @@ KNConfig::XHeaderConfDialog::~XHeaderConfDialog()
 }
 
 
-
-QString KNConfig::XHeaderConfDialog::result()
+QString KNConfig::XHeaderConfDialog::result() const
 {
-  return QString("X-%1: %2").arg(n_ame->text()).arg(v_alue->text());
+  return mNameEdit->text() + ": " + mValueEdit->text();
 }
 
 

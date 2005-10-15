@@ -19,10 +19,11 @@
 #include <qcolor.h>
 #include <qdatetime.h>
 #include <qfont.h>
+#include <QList>
 #include <qobject.h>
 #include <qpixmap.h>
+
 //Added by qt3to4:
-#include <Q3ValueList>
 #include <Q3CString>
 
 #include <kconfig.h>
@@ -232,28 +233,32 @@ class KDE_EXPORT DisplayedHeaders : public Base
 };
 
 
-class KDE_EXPORT XHeader {
-
+/** Represents an additional header added by the composer. */
+class KDE_EXPORT XHeader
+{
   public:
-    XHeader()                  {}
-    XHeader(const QString &s);
-    XHeader(const XHeader &s)  { n_ame=s.n_ame; v_alue=s.v_alue; }
-    ~XHeader()                 {}
+    /** Create a new XHeader object from the given string representation.
+     * @param s String representation of a MIME header (i.e. "Name: Value").
+     */
+    XHeader( const QString &s );
 
-    XHeader& operator=(const XHeader &s) { n_ame=s.n_ame; v_alue=s.v_alue; return (*this); }
+    /** Returns the header name. */
+    QString name() const { return mName; }
+    /** Returns the header value. */
+    QString value() const { return mValue; }
+    /** Returns a string representation of the header, ie. "Name: Value". */
+    QString header() const { return mName + ": " + mValue; }
 
-    Q3CString name()   { return n_ame; }
-    QString value()   { return v_alue; }
-    QString header()  { return (QString::fromLatin1(("X-"+n_ame+": "))+v_alue); }
-
-  protected:
-    Q3CString n_ame;
-    QString v_alue;
-
+  private:
+    QString mName;
+    QString mValue;
 };
-typedef Q3ValueList<XHeader> XHeaders;
+
+/** A list of additional headers. */
+typedef QList<XHeader> XHeaders;
 
 
+/** Technical posting settings. */
 class KDE_EXPORT PostNewsTechnical : public Base
 {
   friend class PostNewsTechnicalWidget;
@@ -269,12 +274,13 @@ class KDE_EXPORT PostNewsTechnical : public Base
     int indexForCharset(const Q3CString &str);
     Q3CString findComposerCharset(Q3CString cs);
 
-    XHeaders& xHeaders()        { return x_headers; }
+    /** Returns a list of additional headers. */
+    XHeaders xHeaders() const { return mXheaders; }
 
   protected:
     Q3CString  c_harset;
     QStringList c_omposerCharsets;
-    XHeaders x_headers;
+    XHeaders mXheaders;
 
     Q3AsciiDict<Q3CString> findComposerCSCache;
 };

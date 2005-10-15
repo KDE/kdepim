@@ -494,19 +494,23 @@ class KDE_EXPORT PostNewsTechnicalWidget : public KCModule, KNode::Ui::PostNewsT
 };
 
 
-class KDE_EXPORT XHeaderConfDialog : public KDialogBase {
-
+/** Dialog to edit additional headers. */
+class KDE_EXPORT XHeaderConfDialog : public KDialogBase
+{
   public:
-    XHeaderConfDialog(const QString &h=QString::null, QWidget *p=0, const char *n=0);
+    /** Create a new dialog to edit an additional header.
+     * @param h The header to edit.
+     * @param parent The parent widget.
+     */
+    XHeaderConfDialog( const QString &h = QString::null, QWidget *parent = 0 );
+    /** Destructor. */
     ~XHeaderConfDialog();
 
-    QString result();
+    /** Returns the entered/modified header. */
+    QString result() const;
 
-
-  protected:
-    KLineEdit *n_ame,
-              *v_alue;
-
+  private:
+    KLineEdit *mNameEdit, *mValueEdit;
 };
 
 
