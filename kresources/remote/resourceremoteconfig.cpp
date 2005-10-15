@@ -40,8 +40,8 @@
 
 using namespace KCal;
 
-ResourceRemoteConfig::ResourceRemoteConfig( QWidget* parent,  const char* name )
-    : KRES::ConfigWidget( parent, name )
+ResourceRemoteConfig::ResourceRemoteConfig( QWidget* parent )
+    : KRES::ConfigWidget( parent )
 {
   resize( 245, 115 ); 
   QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
