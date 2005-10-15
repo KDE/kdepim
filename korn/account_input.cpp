@@ -48,7 +48,7 @@ TextInput::TextInput( QWidget *parent, const QString& title, Type type, const QS
 	: AccountInput( configName )
 {
 	_left = new QLabel( title, parent, "label" );
-	_right = new KLineEdit( "", parent, "edit" );
+	_right = new KLineEdit( "", parent );
 	switch( type )
 	{
 	case text:
@@ -64,7 +64,7 @@ TextInput::TextInput( QWidget *parent, const QString& title, int min, int max, c
 	: AccountInput( configName )
 {
 	_left = new QLabel( title, parent, "label" );
-	_right = new KLineEdit( "", parent, "edit" );
+	_right = new KLineEdit( "", parent );
 	_right->setValidator( new QIntValidator( min, max, _right, "validator" ) );
 	setValue( defaul );
 }
@@ -89,7 +89,7 @@ URLInput::URLInput( QWidget *parent, const QString& title, const QString& defaul
 	: AccountInput( configName )
 {
 	_left = new QLabel( title, parent, "label" );
-	_right = new KURLRequester( "", parent, "kurledit" );
+	_right = new KURLRequester( "", parent );
 	setValue( defaul );
 }
 

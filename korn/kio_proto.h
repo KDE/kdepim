@@ -27,6 +27,7 @@
  */
 
 class QString;
+#include <kurl.h>
 #include <kio/global.h>
 #include <klocale.h>
 #include <qstringlist.h>

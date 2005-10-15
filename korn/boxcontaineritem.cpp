@@ -21,6 +21,7 @@
 #include "mailsubject.h"
 
 #include <kaboutapplication.h>
+#include <kaction.h>
 #include <kactioncollection.h>
 #include <kapplication.h>
 #include <kbugreport.h>
@@ -33,10 +34,12 @@
 #include <kmenu.h>
 #include <kprocess.h>
 #include <kshortcut.h>
+#include <ktoolinvocation.h>
 
 #include <qbitmap.h>
 #include <qcolor.h>
 #include <qfont.h>
+#include <qdatetime.h>
 #include <q3grid.h>
 #include <qlabel.h>
 #include <qpainter.h>
@@ -46,7 +49,7 @@
 #include <qtooltip.h>
 #include <q3vbox.h>
 #include <QMovie>
-#include <ktoolinvocation.h>
+
 BoxContainerItem::BoxContainerItem( QObject * parent, const char * name )
 	: AccountManager( parent, name ),
 	DCOPObject(),
@@ -200,11 +203,11 @@ void BoxContainerItem::fillKMenu( KMenu* popupMenu, KActionCollection* actions )
 	popupMenu->insertItem( i18n( "&View Emails" ), this, SLOT( slotView() ) );
 	popupMenu->insertItem( i18n( "R&un Command" ), this, SLOT( slotRunCommand() ) );*/
 	
-	(new KAction( i18n("&Configure"),     KShortcut(), this, SLOT( slotConfigure()  ), actions ))->plug( popupMenu );
-	(new KAction( i18n("&Recheck"),       KShortcut(), this, SLOT( slotRecheck()    ), actions ))->plug( popupMenu );
-	(new KAction( i18n("R&eset Counter"), KShortcut(), this, SLOT( slotReset()      ), actions ))->plug( popupMenu );
-	(new KAction( i18n("&View Emails"),   KShortcut(), this, SLOT( slotView()       ), actions ))->plug( popupMenu );
-	(new KAction( i18n("R&un Command"),   KShortcut(), this, SLOT( slotRunCommand() ), actions ))->plug( popupMenu );
+	(new KAction( i18n("&Configure"),     KShortcut(), this, SLOT( slotConfigure()  ), actions, "configure" ))->plug( popupMenu );
+	(new KAction( i18n("&Recheck"),       KShortcut(), this, SLOT( slotRecheck()    ), actions, "recheck"   ))->plug( popupMenu );
+	(new KAction( i18n("R&eset Counter"), KShortcut(), this, SLOT( slotReset()      ), actions, "reset"     ))->plug( popupMenu );
+	(new KAction( i18n("&View Emails"),   KShortcut(), this, SLOT( slotView()       ), actions, "view"      ))->plug( popupMenu );
+	(new KAction( i18n("R&un Command"),   KShortcut(), this, SLOT( slotRunCommand() ), actions, "run"       ))->plug( popupMenu );
 	popupMenu->insertSeparator();
 	KStdAction::help(      this, SLOT( help()      ), actions )->plug( popupMenu );
 	KStdAction::reportBug( this, SLOT( reportBug() ), actions )->plug( popupMenu );
@@ -216,7 +219,7 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, Q3PtrList< KornMailSub
 {
 	KPassivePopup *popup = new KPassivePopup( parent, "Passive popup" );
 		
-	Q3VBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( objId().data() ).arg( accountName )
+	KVBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( objId().data() ).arg( accountName )
 			.arg( total ), "", QPixmap(), 0 );
 	Q3Grid *mainglayout = new Q3Grid( date ? 3 : 2 ,mainvlayout, "Grid-Layout" );
 	

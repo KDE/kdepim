@@ -20,6 +20,7 @@
 
 #include "label.h"
 
+#include <kaction.h>
 #include <kactioncollection.h>
 #include <kapplication.h>
 #include <kdebug.h>
@@ -36,8 +37,8 @@
 HVItem::HVItem( QWidget *parent, const char *name )
 	: BoxContainerItem( 0, name ),
 	_label( new Label( parent, "label" ) ),
-	_popup( new KMenu( _label/*, "popupmenu"*/ ) ),
-	_actions( new KActionCollection( _popup, "actions" ) )
+	_popup( new KMenu( _label ) ),
+	_actions( new KActionCollection( _popup ) )
 {
 	_popup->addTitle( QIcon( kapp->miniIcon() ), kapp->caption() );
 	this->fillKMenu( _popup, _actions );
