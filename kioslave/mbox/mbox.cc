@@ -75,6 +75,7 @@ void MBoxProtocol::get( const KURL& url )
 	
 	UrlInfo info( url, UrlInfo::message );
 	QString line;
+	QByteArray ba_line;
 
 	if( info.type() == UrlInfo::invalid && !m_errorState )
 	{
@@ -88,13 +89,15 @@ void MBoxProtocol::get( const KURL& url )
 	{
 		line = mbox.currentLine();
 		line += '\n';
-		data( line.utf8() );
+		ba_line = Q3CString( line.utf8() );
+		ba_line.truncate( ba_line.size() - 1 ); //Removing training '\0'
+		data( ba_line );
 		mbox.nextLine();
 	};
 	
 	if( !m_errorState )
 	{
-		data( Q3CString() );
+		data( QByteArray() );
 		finished();
 	}
 }
