@@ -595,8 +595,8 @@ KNConfig::SmtpAccountWidget::SmtpAccountWidget( QWidget *parent ) :
 
 void KNConfig::SmtpAccountWidget::load()
 {
-  mUseExternalMailer->setChecked( knGlobals.configManager()->postNewsTechnical()->useExternalMailer() );
-  useExternalMailerToggled( knGlobals.configManager()->postNewsTechnical()->useExternalMailer() );
+  mUseExternalMailer->setChecked( knGlobals.settings()->useExternalMailer() );
+  useExternalMailerToggled( knGlobals.settings()->useExternalMailer() );
   mServer->setText( mAccount->server() );
   mPort->setValue( mAccount->port() );
   mLogin->setChecked( mAccount->needsLogon() );
@@ -623,8 +623,7 @@ void KNConfig::SmtpAccountWidget::load()
 
 void KNConfig::SmtpAccountWidget::save()
 {
-  knGlobals.configManager()->postNewsTechnical()->u_seExternalMailer = mUseExternalMailer->isChecked();
-  knGlobals.configManager()->postNewsTechnical()->setDirty(true);
+  knGlobals.settings()->setUseExternalMailer( mUseExternalMailer->isChecked() );
 
   mAccount->setServer( mServer->text() );
   mAccount->setPort( mPort->value() );
@@ -1626,190 +1625,102 @@ void KNConfig::FilterListWidget::slotSelectionChangedMenu()
 //=============================================================================================
 
 
-KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget( PostNewsTechnical *d, QWidget *p, const char *n ) :
-  KCModule( p, n ),
-  d_ata( d )
+KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget( PostNewsTechnical *d, QWidget *parent ) :
+  KCModule( parent ),
+  mData( d )
 {
-  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+  setupUi( this );
 
-  // ==== General =============================================================
+  mCharset->insertStringList( mData->composerCharsets() );
+  mEncoding->insertItem( i18n("Allow 8-bit") );
+  mEncoding->insertItem( i18n("7-bit (Quoted-Printable)") );
 
-  Q3GroupBox *ggb=new Q3GroupBox(i18n("General"), this);
-  QGridLayout *ggbL=new QGridLayout(ggb, 6,2, 8,5);
-  topL->addWidget(ggb);
+  connect( mHeaderList, SIGNAL( itemActivated(QListWidgetItem*) ), SLOT( slotEditBtnClicked() ) );
+  connect( mHeaderList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChanged() ) );
 
-  ggbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  c_harset=new QComboBox(ggb);
-  c_harset->insertStringList(d->composerCharsets());
-  ggbL->addWidget(new QLabel(c_harset, i18n("Cha&rset:"), ggb), 1,0);
-  ggbL->addWidget(c_harset, 1,1);
-  connect(c_harset, SIGNAL(activated(int)), SLOT(changed()));
+  connect( mAddButton, SIGNAL( clicked() ), SLOT( slotAddBtnClicked() ) );
+  connect( mEditButton, SIGNAL( clicked() ), SLOT( slotEditBtnClicked() ) );
+  connect( mDeleteButton, SIGNAL( clicked() ), SLOT( slotDelBtnClicked() ) );
 
-  e_ncoding=new QComboBox(ggb);
-  e_ncoding->insertItem(i18n("Allow 8-bit"));
-  e_ncoding->insertItem(i18n("7-bit (Quoted-Printable)"));
-  ggbL->addWidget(new QLabel(e_ncoding, i18n("Enco&ding:"), ggb), 2,0);
-  ggbL->addWidget(e_ncoding, 2,1);
-  connect(e_ncoding, SIGNAL(activated(int)), SLOT(changed()));
-
-  u_seOwnCSCB=new QCheckBox(i18n("Use o&wn default charset when replying"), ggb);
-  ggbL->addMultiCellWidget(u_seOwnCSCB, 3,3, 0,1);
-  connect(u_seOwnCSCB, SIGNAL(toggled(bool)), SLOT(changed()));
-
-  g_enMIdCB=new QCheckBox(i18n("&Generate message-id"), ggb);
-  connect(g_enMIdCB, SIGNAL(toggled(bool)), this, SLOT(slotGenMIdCBToggled(bool)));
-  ggbL->addMultiCellWidget(g_enMIdCB, 4,4, 0,1);
-  h_ost=new KLineEdit(ggb);
-  h_ost->setEnabled(false);
-  h_ostL=new QLabel(h_ost, i18n("Ho&st name:"), ggb);
-  h_ostL->setEnabled(false);
-  ggbL->addWidget(h_ostL, 5,0);
-  ggbL->addWidget(h_ost, 5,1);
-  ggbL->setColStretch(1,1);
-  connect(h_ost, SIGNAL(textChanged(const QString&)), SLOT(changed()));
-
-  // ==== X-Headers =============================================================
-
-  Q3GroupBox *xgb=new Q3GroupBox(i18n("X-Headers"), this);
-  topL->addWidget(xgb, 1);
-  QGridLayout *xgbL=new QGridLayout(xgb, 7,2, 8,5);
-
-  xgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-
-  l_box=new KNDialogListBox(false, xgb);
-  connect(l_box, SIGNAL(selected(int)), SLOT(slotItemSelected(int)));
-  connect(l_box, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()));
-  xgbL->addMultiCellWidget(l_box, 1,4, 0,0);
-
-  a_ddBtn=new QPushButton(i18n("&Add..."), xgb);
-  connect(a_ddBtn, SIGNAL(clicked()), SLOT(slotAddBtnClicked()));
-  xgbL->addWidget(a_ddBtn, 1,1);
-
-  d_elBtn=new QPushButton(i18n("Dele&te"), xgb);
-  connect(d_elBtn, SIGNAL(clicked()), SLOT(slotDelBtnClicked()));
-  xgbL->addWidget(d_elBtn, 2,1);
-
-  e_ditBtn=new QPushButton(i18n("modify something","&Edit..."), xgb);
-  connect(e_ditBtn, SIGNAL(clicked()), SLOT(slotEditBtnClicked()));
-  xgbL->addWidget(e_ditBtn, 3,1);
-
-  QLabel *placeHolders = new QLabel(i18n("<qt>Placeholders for replies: <b>%NAME</b>=sender's name, <b>%EMAIL</b>=sender's address</qt>"), xgb);
-  xgbL->addMultiCellWidget(placeHolders, 5, 5, 0, 1);
-
-  i_ncUaCB=new QCheckBox(i18n("Do not add the \"&User-Agent\" identification header"), xgb);
-  xgbL->addMultiCellWidget(i_ncUaCB, 6,6, 0,1);
-  connect(i_ncUaCB, SIGNAL(toggled(bool)), SLOT(changed()));
-
-  xgbL->setRowStretch(4,1);
-  xgbL->setColStretch(0,1);
-
+  addConfig( knGlobals.settings(), this );
   load();
 
   slotSelectionChanged();
 }
 
 
-KNConfig::PostNewsTechnicalWidget::~PostNewsTechnicalWidget()
-{
-}
-
-
 void KNConfig::PostNewsTechnicalWidget::load()
 {
-  c_harset->setCurrentItem(d_ata->indexForCharset(d_ata->charset()));
-  e_ncoding->setCurrentItem(d_ata->a_llow8BitBody? 0:1);
-  u_seOwnCSCB->setChecked(d_ata->u_seOwnCharset);
-  g_enMIdCB->setChecked(d_ata->g_enerateMID);
-  h_ost->setText(d_ata->h_ostname);
-  i_ncUaCB->setChecked(d_ata->d_ontIncludeUA);
+  KCModule::load();
 
-  l_box->clear();
-  for(XHeaders::Iterator it=d_ata->x_headers.begin(); it!=d_ata->x_headers.end(); ++it)
-    l_box->insertItem((*it).header());
+  mCharset->setCurrentItem( mData->indexForCharset( mData->charset() ) );
+  mEncoding->setCurrentItem( knGlobals.settings()->allow8BitBody() ? 0 : 1 );
+
+  mHeaderList->clear();
+  for ( XHeaders::Iterator it = mData->x_headers.begin(); it != mData->x_headers.end(); ++it )
+    mHeaderList->addItem( (*it).header() );
 }
+
 
 void KNConfig::PostNewsTechnicalWidget::save()
 {
-  d_ata->c_harset=c_harset->currentText().latin1();
-  d_ata->a_llow8BitBody=(e_ncoding->currentItem()==0);
-  d_ata->u_seOwnCharset=u_seOwnCSCB->isChecked();
-  d_ata->g_enerateMID=g_enMIdCB->isChecked();
-  d_ata->h_ostname=h_ost->text().latin1();
-  d_ata->d_ontIncludeUA=i_ncUaCB->isChecked();
-  d_ata->x_headers.clear();
-  for(unsigned int idx=0; idx<l_box->count(); idx++)
-    d_ata->x_headers.append( XHeader(l_box->text(idx)) );
+  mData->c_harset = mCharset->currentText().latin1();
+  knGlobals.settings()->setAllow8BitBody( mEncoding->currentItem() == 0 );
 
-  d_ata->setDirty(true);
+  mData->x_headers.clear();
+  for ( int i = 0; i < mHeaderList->count(); ++i )
+    mData->x_headers.append( XHeader( mHeaderList->item( i )->text() ) );
+
+  mData->setDirty( true );
+  KCModule::save();
 }
-
-
-
-void KNConfig::PostNewsTechnicalWidget::slotGenMIdCBToggled(bool b)
-{
-  h_ost->setEnabled(b);
-  h_ostL->setEnabled(b);
-  emit changed(true);
-}
-
 
 
 void KNConfig::PostNewsTechnicalWidget::slotSelectionChanged()
 {
-  d_elBtn->setEnabled(l_box->currentItem()!=-1);
-  e_ditBtn->setEnabled(l_box->currentItem()!=-1);
+  mDeleteButton->setEnabled( mHeaderList->currentItem() != 0 );
+  mEditButton->setEnabled( mHeaderList->currentItem() != 0 );
 }
-
-
-
-void KNConfig::PostNewsTechnicalWidget::slotItemSelected(int)
-{
-  slotEditBtnClicked();
-}
-
 
 
 void KNConfig::PostNewsTechnicalWidget::slotAddBtnClicked()
 {
-  XHeaderConfDialog *dlg=new XHeaderConfDialog(QString::null, this);
-  if (dlg->exec())
-    l_box->insertItem(dlg->result());
+  XHeaderConfDialog *dlg = new XHeaderConfDialog( QString::null, this );
+  if ( dlg->exec() )
+    mHeaderList->addItem( dlg->result() );
 
   delete dlg;
 
   slotSelectionChanged();
-  emit changed(true);
+  emit changed( true );
 }
-
 
 
 void KNConfig::PostNewsTechnicalWidget::slotDelBtnClicked()
 {
-  int c=l_box->currentItem();
-  if (c == -1)
+  QListWidgetItem *item = mHeaderList->currentItem();
+  if ( !item )
     return;
-
-  l_box->removeItem(c);
+  delete item;
   slotSelectionChanged();
-  emit changed(true);
+  emit changed( true );
 }
-
 
 
 void KNConfig::PostNewsTechnicalWidget::slotEditBtnClicked()
 {
-  int c=l_box->currentItem();
-  if (c == -1)
+  QListWidgetItem *item = mHeaderList->currentItem();
+  if ( !item )
     return;
 
-  XHeaderConfDialog *dlg=new XHeaderConfDialog(l_box->text(c), this);
-  if (dlg->exec())
-    l_box->changeItem(dlg->result(),c);
+  XHeaderConfDialog *dlg = new XHeaderConfDialog( item->text(), this );
+  if ( dlg->exec() )
+    item->setText( dlg->result() );
 
   delete dlg;
 
   slotSelectionChanged();
-  emit changed(true);
+  emit changed( true );
 }
 
 

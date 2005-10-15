@@ -115,7 +115,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   KNGroup *g=static_cast<KNGroup*>(a->collection());
 
   Q3CString chset;
-  if (knGlobals.configManager()->postNewsTechnical()->useOwnCharset()) {
+  if ( knGlobals.settings()->useOwnCharset() ) {
     if (g->useCharset())
       chset = g->defaultCharset();
     else
@@ -260,7 +260,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
 
   //-------------------------- </Body> -----------------------------
 
-  if (art->doMail() && knGlobals.configManager()->postNewsTechnical()->useExternalMailer()) {
+  if ( art->doMail() && knGlobals.settings()->useExternalMailer() ) {
     sendMailExternal(address.asUnicodeString(), subject, quoted);
     art->setDoMail(false);
     if (!art->doPost()) {
@@ -284,13 +284,13 @@ void KNArticleFactory::createForward(KNArticle *a)
 
   KMime::Headers::ContentType *ct=a->contentType();
   Q3CString chset;
-  bool incAtt = ( !knGlobals.configManager()->postNewsTechnical()->useExternalMailer() &&
+  bool incAtt = ( !knGlobals.settings()->useExternalMailer() &&
                   ct->isMultipart() && ct->isSubtype("mixed") &&
                   KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget,
                   i18n("This article contains attachments. Do you want them to be forwarded as well?"), QString::null, i18n("Forward"), i18n("Do Not Forward"))
                 );
 
-  if (knGlobals.configManager()->postNewsTechnical()->useOwnCharset())
+  if ( knGlobals.settings()->useOwnCharset() )
     chset = knGlobals.configManager()->postNewsTechnical()->charset();
   else
     chset = knGlobals.configManager()->postNewsTechnical()->findComposerCharset(a->contentType()->charset());
@@ -348,7 +348,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   //------------------------ </Attachments> ------------------------
 
 
-  if (knGlobals.configManager()->postNewsTechnical()->useExternalMailer()) {
+  if ( knGlobals.settings()->useExternalMailer() ) {
     sendMailExternal(QString::null, subject, fwd);
     delete art;
     return;
@@ -515,7 +515,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 
 void KNArticleFactory::createMail(KMime::Headers::AddressField *address)
 {
-  if (knGlobals.configManager()->postNewsTechnical()->useExternalMailer()) {
+  if ( knGlobals.settings()->useExternalMailer() ) {
     sendMailExternal(address->asUnicodeString());
     return;
   }
@@ -784,9 +784,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 
 KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, Q3CString defChset, bool withXHeaders, KNArticle *origPost)
 {
-  KNConfig::PostNewsTechnical *pnt=knGlobals.configManager()->postNewsTechnical();
-
-  if(pnt->generateMessageID() && pnt->hostname().isEmpty()) {
+  if ( knGlobals.settings()->generateMessageID() && knGlobals.settings()->hostname().isEmpty() ) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
     return 0;
   }
@@ -813,12 +811,12 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, Q3
   }
 
   //Message-id
-  if(pnt->generateMessageID())
-    art->messageID()->generate(pnt->hostname());
+  if ( knGlobals.settings()->generateMessageID() )
+    art->messageID()->generate( knGlobals.settings()->hostname().toLatin1() );
 
   //From
   KMime::Headers::From *from=art->from();
-  from->setRFC2047Charset(pnt->charset());
+  from->setRFC2047Charset( knGlobals.configManager()->postNewsTechnical()->charset() );
 
   //name
   if(id->hasName())
@@ -840,27 +838,27 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, Q3
 
   //Reply-To
   if(id->hasReplyTo()) {
-    art->replyTo()->fromUnicodeString(id->replyTo(), pnt->charset());
+    art->replyTo()->fromUnicodeString( id->replyTo(), knGlobals.configManager()->postNewsTechnical()->charset() );
     if (!art->replyTo()->hasEmail())   // the header is invalid => drop it
       art->removeHeader("Reply-To");
   }
 
   //Mail-Copies-To
   if(id->hasMailCopiesTo()) {
-    art->mailCopiesTo()->fromUnicodeString(id->mailCopiesTo(), pnt->charset());
+    art->mailCopiesTo()->fromUnicodeString( id->mailCopiesTo(), knGlobals.configManager()->postNewsTechnical()->charset() );
     if (!art->mailCopiesTo()->isValid())   // the header is invalid => drop it
       art->removeHeader("Mail-Copies-To");
   }
 
   //Organization
   if(id->hasOrga())
-    art->organization()->fromUnicodeString(id->orga(), pnt->charset());
+    art->organization()->fromUnicodeString( id->orga(), knGlobals.configManager()->postNewsTechnical()->charset() );
 
   //Date
   art->date()->setUnixTime(); //set current date+time
 
   //User-Agent
-  if( !pnt->noUserAgent() ) {
+  if( !knGlobals.settings()->noUserAgent() ) {
     art->userAgent()->from7BitString("KNode/" KNODE_VERSION);
   }
 
@@ -873,12 +871,13 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, Q3
   if (defChset.lower()=="us-ascii")
     art->contentTransferEncoding()->setCte(KMime::Headers::CE7Bit);
   else
-    art->contentTransferEncoding()->setCte(pnt->allow8BitBody()? KMime::Headers::CE8Bit : KMime::Headers::CEquPr);
+    art->contentTransferEncoding()->setCte( knGlobals.settings()->allow8BitBody() ? KMime::Headers::CE8Bit : KMime::Headers::CEquPr );
 
   //X-Headers
   if(withXHeaders) {
     KNConfig::XHeaders::Iterator it;
-    for(it=pnt->xHeaders().begin(); it!=pnt->xHeaders().end(); ++it) {
+    for ( it = knGlobals.configManager()->postNewsTechnical()->xHeaders().begin();
+          it != knGlobals.configManager()->postNewsTechnical()->xHeaders().end(); ++it ) {
       QString value = (*it).value();
       if(origPost) {
         QString name(origPost->from()->name());
@@ -891,7 +890,8 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, Q3
         if(value.find("%NAME") != -1 || value.find("%EMAIL") != -1)
           continue;
 
-      art->setHeader( new KMime::Headers::Generic( (Q3CString("X-")+(*it).name()), art, value, pnt->charset() ) );
+      art->setHeader( new KMime::Headers::Generic( (Q3CString("X-")+(*it).name()), art, value,
+                      knGlobals.configManager()->postNewsTechnical()->charset() ) );
     }
   }
 

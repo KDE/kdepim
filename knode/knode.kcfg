@@ -199,6 +199,31 @@
   </group>
   <!-- posting settings -->
   <group name="POSTNEWS">
+    <!-- technical settings -->
+    <entry name="UseOwnCharset" type="Bool">
+      <label>Use own default charset when replying</label>
+      <default>true</default>
+    </entry>
+    <entry name="hostname" key="MIdhost" type="String">
+      <label>Host name used to generade the message ID.</label>
+    </entry>
+    <entry name="generateMessageID" key="generateMId" type="Bool">
+      <label>Generate message-id</label>
+      <default>false</default>
+    </entry>
+    <entry name="noUserAgent" key="dontIncludeUA" type="Bool">
+      <label>Do not add the "User-Agent" identification header</label>
+      <default>false</default>
+    </entry>
+    <entry name="useExternalMailer" type="Bool">
+      <label>Use external mailer</label>
+      <default>false</default>
+    </entry>
+    <entry name="allow8BitBody" key="8BitEncoding" type="Bool">
+      <label>Allow 8-bit encoding</label>
+      <default>true</default>
+    </entry>
+    <!-- composer settings -->
     <entry name="wordWrap" type="Bool">
       <label>Word wrap at column</label>
       <default>true</default>

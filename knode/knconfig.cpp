@@ -712,13 +712,6 @@ KNConfig::PostNewsTechnical::PostNewsTechnical()
       c_harset="iso-8859-1";  // shit
   }
 
-  h_ostname=conf->readEntry("MIdhost").latin1();
-  a_llow8BitBody=conf->readBoolEntry("8BitEncoding",true);
-  u_seOwnCharset=conf->readBoolEntry("UseOwnCharset",true);
-  g_enerateMID=conf->readBoolEntry("generateMId", false);
-  d_ontIncludeUA=conf->readBoolEntry("dontIncludeUA", false);
-  u_seExternalMailer=conf->readBoolEntry("useExternalMailer", false);
-
   QString dir(locateLocal("data","knode/"));
   if (!dir.isNull()) {
     QFile f(dir+"xheaders");
@@ -750,12 +743,6 @@ void KNConfig::PostNewsTechnical::save()
 
   conf->writeEntry("ComposerCharsets", c_omposerCharsets);
   conf->writeEntry("Charset", QString::fromLatin1(c_harset));
-  conf->writeEntry("8BitEncoding", a_llow8BitBody);
-  conf->writeEntry("UseOwnCharset", u_seOwnCharset);
-  conf->writeEntry("generateMId", g_enerateMID);
-  conf->writeEntry("MIdhost", QString::fromLatin1(h_ostname));
-  conf->writeEntry("dontIncludeUA", d_ontIncludeUA);
-  conf->writeEntry("useExternalMailer", u_seExternalMailer);
 
   QString dir(locateLocal("data","knode/"));
   if (dir.isNull())

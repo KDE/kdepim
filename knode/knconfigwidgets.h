@@ -20,8 +20,9 @@
 
 #include "knwidgets.h"
 #include "nntpaccountdialog_base.h"
-#include "smtpaccountwidget_base.h"
+#include "postnewstechnicalwidget_base.h"
 #include "readnewsgeneralwidget_base.h"
+#include "smtpaccountwidget_base.h"
 
 //Added by qt3to4:
 #include <QPixmap>
@@ -471,36 +472,21 @@ class KDE_EXPORT FilterListWidget : public KCModule {
 };
 
 
-class KDE_EXPORT PostNewsTechnicalWidget : public KCModule {
-
+/** Configuration widget for technical posting settings. */
+class KDE_EXPORT PostNewsTechnicalWidget : public KCModule, KNode::Ui::PostNewsTechnicalWidgetBase
+{
   Q_OBJECT
-
   public:
-    PostNewsTechnicalWidget(PostNewsTechnical *d, QWidget *p=0, const char *n=0);
-    ~PostNewsTechnicalWidget();
+    PostNewsTechnicalWidget( PostNewsTechnical *d, QWidget *parent = 0 );
 
     void load();
     void save();
 
   protected:
-    QComboBox   *c_harset,
-                *e_ncoding;
-    QCheckBox   *u_seOwnCSCB,
-                *g_enMIdCB,
-                *i_ncUaCB;
-    KNDialogListBox *l_box;
-    QPushButton *a_ddBtn,
-                *d_elBtn,
-                *e_ditBtn;
-    KLineEdit   *h_ost;
-    QLabel      *h_ostL;
+    PostNewsTechnical *mData;
 
-    PostNewsTechnical *d_ata;
-
-  protected slots:
-    void slotGenMIdCBToggled(bool b);
+  private slots:
     void slotSelectionChanged();
-    void slotItemSelected(int id);
     void slotAddBtnClicked();
     void slotDelBtnClicked();
     void slotEditBtnClicked();

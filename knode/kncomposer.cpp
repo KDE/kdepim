@@ -813,11 +813,10 @@ bool KNComposer::applyChanges()
   }
 
   //set text
-  KNConfig::PostNewsTechnical *pnt=knGlobals.configManager()->postNewsTechnical();
   if (v_alidated) {
     if (n_eeds8Bit) {
       text->contentType()->setCharset(c_harset);
-      if (pnt->allow8BitBody())
+      if ( knGlobals.settings()->allow8BitBody() )
         text->contentTransferEncoding()->setCte(KMime::Headers::CE8Bit);
       else
         text->contentTransferEncoding()->setCte(KMime::Headers::CEquPr);
@@ -830,7 +829,8 @@ bool KNComposer::applyChanges()
     if (c_harset.lower()=="us-ascii")
       text->contentTransferEncoding()->setCte(KMime::Headers::CE7Bit);
     else
-      text->contentTransferEncoding()->setCte(pnt->allow8BitBody()? KMime::Headers::CE8Bit : KMime::Headers::CEquPr);
+      text->contentTransferEncoding()->setCte( knGlobals.settings()->allow8BitBody()
+          ? KMime::Headers::CE8Bit : KMime::Headers::CEquPr );
   }
 
   //assemble the text line by line
@@ -1188,7 +1188,7 @@ void KNComposer::slotToggleDoMail()
       }
     }
 
-    if (knGlobals.configManager()->postNewsTechnical()->useExternalMailer()) {
+    if ( knGlobals.settings()->useExternalMailer() ) {
       QString s = v_iew->e_dit->textLine(0);
       if (!s.contains(i18n("<posted & mailed>")))
         v_iew->e_dit->insertAt(i18n("<posted & mailed>\n\n"),0,0);

@@ -22,6 +22,8 @@
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "utilities.h"
+#include "settings.h"
+
 //Added by qt3to4:
 #include <Q3CString>
 
@@ -459,7 +461,7 @@ void KNAttachment::setMimeType(const QString &s)
   }
   else {
     f_b64=false;
-    if (knGlobals.configManager()->postNewsTechnical()->allow8BitBody())
+    if ( knGlobals.settings()->allow8BitBody() )
       setCte(Headers::CE8Bit);
     else
       setCte(Headers::CEquPr);

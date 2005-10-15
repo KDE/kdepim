@@ -254,10 +254,9 @@ class KDE_EXPORT XHeader {
 typedef Q3ValueList<XHeader> XHeaders;
 
 
-class KDE_EXPORT PostNewsTechnical : public Base {
-
+class KDE_EXPORT PostNewsTechnical : public Base
+{
   friend class PostNewsTechnicalWidget;
-  friend class SmtpAccountWidget;
 
   public:
     PostNewsTechnical();
@@ -270,25 +269,11 @@ class KDE_EXPORT PostNewsTechnical : public Base {
     int indexForCharset(const Q3CString &str);
     Q3CString findComposerCharset(Q3CString cs);
 
-    bool allow8BitBody() const       { return a_llow8BitBody; }
-    bool useOwnCharset() const       { return u_seOwnCharset; }
-    bool generateMessageID()const    { return g_enerateMID; }
-    Q3CString hostname()const         { return h_ostname; }
     XHeaders& xHeaders()        { return x_headers; }
-    bool noUserAgent()const          { return d_ontIncludeUA; }
-    bool useExternalMailer()const    { return u_seExternalMailer; }
 
   protected:
-    Q3CString  c_harset,
-              h_ostname;
+    Q3CString  c_harset;
     QStringList c_omposerCharsets;
-
-    bool      a_llow8BitBody,
-              u_seOwnCharset,
-              g_enerateMID,
-              d_ontIncludeUA,
-              u_seExternalMailer;
-
     XHeaders x_headers;
 
     Q3AsciiDict<Q3CString> findComposerCSCache;
