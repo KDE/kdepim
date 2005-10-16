@@ -251,7 +251,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     KURL mCurrentURL;
 
     /// list of all instances of this class
-    static Q3ValueList<ArticleWidget*> mInstances;
+    static QList<ArticleWidget*> mInstances;
 
     KXMLGUIClient *mGuiClient;
     KActionCollection *mActionCollection;

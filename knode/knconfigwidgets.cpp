@@ -13,13 +13,11 @@
 */
 
 
-#include <q3vbox.h>
 #include <qpainter.h>
 
 #include <qlabel.h>
 //Added by qt3to4:
 #include <QGridLayout>
-#include <Q3Frame>
 #include <QHBoxLayout>
 #include <QBoxLayout>
 #include <Q3ValueList>
@@ -207,7 +205,7 @@ void KNode::IdentityWidget::load()
   e_mail->setText(d_ata->e_mail);
   r_eplyTo->setText(d_ata->r_eplyTo);
   m_ailCopiesTo->setText(d_ata->m_ailCopiesTo);
-  s_igningKey->setKeyIDs(Kpgp::KeyIDList() << d_ata->s_igningKey);
+  s_igningKey->setKeyIDs( Kpgp::KeyIDList() << d_ata->s_igningKey.toLatin1() );
   s_ig->setText(d_ata->s_igPath);
   s_igGenerator->setChecked(d_ata->useSigGenerator());
   s_igEditor->setText(d_ata->s_igText);
@@ -1058,8 +1056,8 @@ KNode::DisplayedHeadersWidget::~DisplayedHeadersWidget()
 void KNode::DisplayedHeadersWidget::load()
 {
   l_box->clear();
-  Q3ValueList<KNDisplayedHeader*> list = d_ata->headers();
-  for ( Q3ValueList<KNDisplayedHeader*>::Iterator it = list.begin(); it != list.end(); ++it )
+  KNDisplayedHeader::List list = d_ata->headers();
+  for ( KNDisplayedHeader::List::Iterator it = list.begin(); it != list.end(); ++it )
     l_box->insertItem( generateItem( (*it) ) );
 }
 

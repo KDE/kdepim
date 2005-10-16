@@ -19,6 +19,7 @@
 #include <qstringlist.h>
 
 
+/** A header displayed in the article viewer. */
 class KNDisplayedHeader {
 
   public:
@@ -53,6 +54,8 @@ class KNDisplayedHeader {
     const QString& nameCloseTag()       { return t_ags[1]; }
     const QString& headerOpenTag()      { return t_ags[2]; }
     const QString& headerCloseTag()     { return t_ags[3]; }
+
+    typedef QList<KNDisplayedHeader*> List;
 
   protected:
     bool t_ranslateName;

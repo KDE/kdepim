@@ -88,30 +88,30 @@ Q_OBJECT
     bool isGlobal()const           { return g_lobal; }
 
     //personal information
-    bool hasName()                    { return (!n_ame.isEmpty()); }
+    bool hasName() const { return !n_ame.isEmpty(); }
     QString name() const                   { return n_ame; }
     void setName(const QString &s)    { n_ame=s; }
     bool emailIsValid();
-    bool hasEmail()                   { return (!e_mail.isEmpty()); }
-    QString email()                   { return e_mail; }
-    void setEmail(const Q3CString &s)  { e_mail=s; }
-    bool hasReplyTo()                 { return (!r_eplyTo.isEmpty()); }
-    QString replyTo()                 { return r_eplyTo; }
+    bool hasEmail() const { return !e_mail.isEmpty(); }
+    QString email() const { return e_mail; }
+    void setEmail( const QString &s ) { e_mail = s; }
+    bool hasReplyTo() const { return !r_eplyTo.isEmpty(); }
+    QString replyTo() const { return r_eplyTo; }
     void setReplyTo(const QString &s) { r_eplyTo=s; }
-    bool hasMailCopiesTo()            { return (!m_ailCopiesTo.isEmpty()); }
-    QString mailCopiesTo()            { return m_ailCopiesTo; }
+    bool hasMailCopiesTo() const { return !m_ailCopiesTo.isEmpty(); }
+    QString mailCopiesTo() const { return m_ailCopiesTo; }
     void setMailCopiesTo(const QString &s) { m_ailCopiesTo=s; }
-    bool hasOrga()                    { return (!o_rga.isEmpty()); }
+    bool hasOrga() const { return !o_rga.isEmpty(); }
     QString orga() const                   { return o_rga; }
     void setOrga(const QString &s)    { o_rga=s; }
 
     // OpenPGP signing key
-    bool hasSigningKey()                  { return (!s_igningKey.isEmpty()); }
-    Q3CString signingKey()                 { return s_igningKey; }
-    void setSigningKey(const Q3CString &s) { s_igningKey=s;}
+    bool hasSigningKey() const { return !s_igningKey.isEmpty(); }
+    QString signingKey() const            { return s_igningKey; }
+    void setSigningKey( const QString &s ) { s_igningKey = s;}
 
     //signature
-    bool hasSignature()       { return ( (u_seSigFile && !s_igPath.isEmpty()) || !s_igText.isEmpty() ); }
+    bool hasSignature() const { return (u_seSigFile && !s_igPath.isEmpty()) || !s_igText.isEmpty(); }
     bool useSigFile() const        { return u_seSigFile; }
     bool useSigGenerator()const    { return u_seSigGenerator; }
     QString sigPath()const         { return s_igPath; }
@@ -134,7 +134,7 @@ Q_OBJECT
               s_igContents,
               s_igStdErr,
               s_igPath;
-    Q3CString  s_igningKey;
+    QString  s_igningKey;
     bool      u_seSigFile,
               u_seSigGenerator,
               g_lobal;
@@ -230,11 +230,12 @@ class KDE_EXPORT DisplayedHeaders : public ConfigBase
     void up(KNDisplayedHeader *h);
     void down(KNDisplayedHeader *h);
 
-    Q3ValueList<KNDisplayedHeader*> headers() const { return mHeaderList; }
+    /** Returns the list of headers displayed in the article viewer. */
+    QList<KNDisplayedHeader*> headers() const { return mHeaderList; }
 
 
   protected:
-    Q3ValueList<KNDisplayedHeader*> mHeaderList;
+    QList<KNDisplayedHeader*> mHeaderList;
 
 };
 

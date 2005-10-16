@@ -21,7 +21,6 @@
 #include <qfile.h>
 #include <qimage.h>
 #include <qlayout.h>
-#include <q3paintdevicemetrics.h>
 #include <q3popupmenu.h>
 #include <qstringlist.h>
 #include <qtextcodec.h>
@@ -84,7 +83,7 @@
 
 using namespace KNode;
 
-Q3ValueList<ArticleWidget*> ArticleWidget::mInstances;
+QList<ArticleWidget*> ArticleWidget::mInstances;
 
 ArticleWidget::ArticleWidget( QWidget *parent,
                               KXMLGUIClient *guiClient,
@@ -562,8 +561,8 @@ void ArticleWidget::displayHeader()
 
   // standard & fancy header style
   KMime::Headers::Base *hb;
-  Q3ValueList<KNDisplayedHeader*> dhs = knGlobals.configManager()->displayedHeaders()->headers();
-  for ( Q3ValueList<KNDisplayedHeader*>::Iterator it = dhs.begin(); it != dhs.end(); ++it ) {
+  KNDisplayedHeader::List dhs = knGlobals.configManager()->displayedHeaders()->headers();
+  for ( KNDisplayedHeader::List::Iterator it = dhs.begin(); it != dhs.end(); ++it ) {
     KNDisplayedHeader *dh = (*it);
     hb = mArticle->getHeaderByType(dh->header().latin1());
     if ( !hb || hb->is("Subject") || hb->is("Organization") )
@@ -1026,7 +1025,7 @@ void ArticleWidget::processJob( KNJobData * job )
 
 
 
-typedef Q3ValueList<ArticleWidget*>::ConstIterator InstanceIterator;
+typedef QList<ArticleWidget*>::ConstIterator InstanceIterator;
 
 void ArticleWidget::configChanged()
 {

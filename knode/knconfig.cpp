@@ -574,7 +574,7 @@ KNode::DisplayedHeaders::DisplayedHeaders()
 
 KNode::DisplayedHeaders::~DisplayedHeaders()
 {
-  for ( Q3ValueList<KNDisplayedHeader*>::Iterator it = mHeaderList.begin(); it != mHeaderList.end(); ++it )
+  for ( KNDisplayedHeader::List::Iterator it = mHeaderList.begin(); it != mHeaderList.end(); ++it )
     delete (*it);
 }
 
@@ -602,7 +602,7 @@ void KNode::DisplayedHeaders::save()
   int idx=0;
   QString group;
 
-  for ( Q3ValueList<KNDisplayedHeader*>::Iterator it = mHeaderList.begin(); it != mHeaderList.end(); ++it ) {
+  for ( KNDisplayedHeader::List::Iterator it = mHeaderList.begin(); it != mHeaderList.end(); ++it ) {
     group.setNum(idx++);
     while (group.length()<3)
       group.prepend("0");
@@ -643,10 +643,10 @@ void KNode::DisplayedHeaders::remove(KNDisplayedHeader *h)
 
 void KNode::DisplayedHeaders::up(KNDisplayedHeader *h)
 {
-  int idx = mHeaderList.findIndex( h );
+  int idx = mHeaderList.indexOf( h );
   if ( idx != -1 ) {
-    mHeaderList.remove( mHeaderList.at( idx ) );
-    mHeaderList.insert( mHeaderList.at( idx - 1 ), h );
+    mHeaderList.takeAt( idx );
+    mHeaderList.insert( idx - 1, h );
   }
   else kdDebug(5003) << "KNConfig::DisplayedHeaders::up() : item not found in list" << endl;
 }
@@ -654,10 +654,10 @@ void KNode::DisplayedHeaders::up(KNDisplayedHeader *h)
 
 void KNode::DisplayedHeaders::down(KNDisplayedHeader *h)
 {
-  int idx = mHeaderList.findIndex( h );
+  int idx = mHeaderList.indexOf( h );
   if ( idx != -1 ) {
-    mHeaderList.remove( mHeaderList.at( idx ) );
-    mHeaderList.insert( mHeaderList.at( idx + 1 ), h );
+    mHeaderList.takeAt( idx );
+    mHeaderList.insert( idx + 1, h );
   }
   else kdDebug(5003) << "KNConfig::DisplayedHeaders::down() : item not found in list" << endl;
 }

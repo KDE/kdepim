@@ -717,15 +717,15 @@ bool KNComposer::hasValidData()
   // check if article can be signed
   if ( a_ctPGPsign->isChecked() ) {
     // try to get the signing key
-    Q3CString signingKey = knGlobals.configManager()->identity()->signingKey();
+    QByteArray signingKey = knGlobals.configManager()->identity()->signingKey().toLatin1();
     KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
     if ( acc ) {
       KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
       KNGroup *grp = knGlobals.groupManager()->group( grps->firstGroup(), acc );
       if (grp && grp->identity())
-        signingKey = grp->identity()->signingKey();
+        signingKey = grp->identity()->signingKey().toLatin1();
       else if (acc->identity())
-        signingKey = acc->identity()->signingKey();
+        signingKey = acc->identity()->signingKey().toLatin1();
     }
 
     // the article can only be signed if we have a key
@@ -842,15 +842,15 @@ bool KNComposer::applyChanges()
   // Sign article if needed
   if ( a_ctPGPsign->isChecked() ) {
       // first get the signing key
-      Q3CString signingKey = knGlobals.configManager()->identity()->signingKey();
+      QByteArray signingKey = knGlobals.configManager()->identity()->signingKey().toLatin1();
       KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
       if ( acc ) {
           KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
           KNGroup *grp = knGlobals.groupManager()->group( grps->firstGroup(), acc );
           if (grp && grp->identity())
-              signingKey = grp->identity()->signingKey();
+              signingKey = grp->identity()->signingKey().toLatin1();
           else if (acc->identity())
-              signingKey = acc->identity()->signingKey();
+               signingKey = acc->identity()->signingKey().toLatin1();
       }
       // now try to sign the article
       if (!signingKey.isEmpty()) {
