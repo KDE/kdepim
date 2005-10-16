@@ -26,7 +26,7 @@ class KNArticleCollection;
 class KNGroup;
 class KNFolder;
 
-namespace KNConfig {
+namespace KNode {
 class Cleanup;
 }
 

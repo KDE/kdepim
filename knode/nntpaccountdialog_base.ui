@@ -2,7 +2,7 @@
  <author>Volker Krause &lt;volker.krause@rwth-aachen.de></author>
  <comment></comment>
  <exportmacro></exportmacro>
- <class>KNConfig::NntpAccountDialogBase</class>
+ <class>KNode::NntpAccountDialogBase</class>
  <widget class="QFrame" name="NntpAccountDialogBase" >
   <property name="geometry" >
    <rect>

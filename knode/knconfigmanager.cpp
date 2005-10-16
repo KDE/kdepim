@@ -29,15 +29,14 @@
 #include "settings.h"
 
 
-KNConfigManager::KNConfigManager(QObject *p, const char *n)
-    : QObject(p, n), d_ialog(0)
+KNConfigManager::KNConfigManager( QObject *parent )
+    : QObject( parent ), d_ialog(0)
 {
-  i_dentity           = new KNConfig::Identity();
-  a_ppearance         = new KNConfig::Appearance();
-  d_isplayedHeaders   = new KNConfig::DisplayedHeaders();
-  p_ostNewsTechnical  = new KNConfig::PostNewsTechnical();
-  c_leanup            = new KNConfig::Cleanup();
-  //c_ache              = new KNConfig::Cache();
+  i_dentity           = new KNode::Identity();
+  a_ppearance         = new KNode::Appearance();
+  d_isplayedHeaders   = new KNode::DisplayedHeaders();
+  p_ostNewsTechnical  = new KNode::PostNewsTechnical();
+  c_leanup            = new KNode::Cleanup();
 }
 
 
@@ -48,14 +47,14 @@ KNConfigManager::~KNConfigManager()
   delete d_isplayedHeaders;
   delete p_ostNewsTechnical;
   delete c_leanup;
-  //delete c_ache;
 }
 
 
 void KNConfigManager::configure()
 {
   if(!d_ialog) {
-    d_ialog=new KNConfigDialog(knGlobals.topWidget, "Preferences_Dlg");
+    d_ialog = new KNConfigDialog( knGlobals.topWidget );
+    d_ialog->setObjectName( "Preferences_Dlg" );
     connect(d_ialog, SIGNAL(finished()), this, SLOT(slotDialogDone()));
     d_ialog->show();
   }
@@ -85,8 +84,8 @@ void KNConfigManager::slotDialogDone()
 //===================================================================================================
 
 
-KNConfigDialog::KNConfigDialog(QWidget *p, const char *n)
-  : KCMultiDialog(p, n)
+KNConfigDialog::KNConfigDialog( QWidget *parent )
+  : KCMultiDialog( parent )
 {
   addModule ( "knode_config_identity", false );
   addModule ( "knode_config_accounts", false );

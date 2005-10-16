@@ -20,7 +20,7 @@
 
 #include <kaction.h>
 
-namespace KNConfig {
+namespace KNode {
 class FilterListWidget;
 }
 
@@ -67,7 +67,7 @@ class KNFilterManager : public QObject
 
     KNArticleFilter* currentFilter()        { return currFilter; }
 
-    void startConfig(KNConfig::FilterListWidget *fs);
+    void startConfig(KNode::FilterListWidget *fs);
     void endConfig();
     void commitChanges();
     void newFilter();
@@ -90,7 +90,7 @@ class KNFilterManager : public QObject
     void updateMenu();
 
     Q3ValueList<KNArticleFilter*> mFilterList;
-    KNConfig::FilterListWidget *fset;
+    KNode::FilterListWidget *fset;
     KNArticleFilter *currFilter;
     KNFilterSelectAction *a_ctFilter;
     Q3ValueList<int> menuOrder;

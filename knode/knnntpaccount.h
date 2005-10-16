@@ -1,8 +1,6 @@
 /*
-    knnntpaccount.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -26,12 +24,13 @@
 
 class KNNntpAccount;
 
-namespace KNConfig {
+namespace KNode {
   class Identity;
   class Cleanup;
 }
 
 
+/** Handles the interval checking of an news server account. */
 class KNNntpAccountIntervalChecking : public QObject  {
 
   Q_OBJECT
@@ -51,6 +50,8 @@ class KNNntpAccountIntervalChecking : public QObject  {
 
 };
 
+
+/** Represents an account on a news server. */
 class KNNntpAccount : public KNCollection , public KNServerInfo {
 
   public:
@@ -75,13 +76,13 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     QDate lastNewFetch() const             { return l_astNewFetch; }
     bool wasOpen() const                   { return w_asOpen; }
     bool useDiskCache() const              { return u_seDiskCache; }
-    KNConfig::Identity* identity() const   { return i_dentity; }
+    KNode::Identity* identity() const   { return i_dentity; }
     bool intervalChecking() const          { return i_ntervalChecking; }
     int checkInterval() const              { return c_heckInterval; }
-    KNConfig::Cleanup *cleanupConfig() const { return mCleanupConf; }
+    KNode::Cleanup *cleanupConfig() const { return mCleanupConf; }
 
     /** Returns the cleanup configuration that should be used for this account */
-    KNConfig::Cleanup *activeCleanupConfig() const;
+    KNode::Cleanup *activeCleanupConfig() const;
 
     //set
     void setFetchDescriptions(bool b) { f_etchDescriptions = b; }
@@ -92,9 +93,9 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
 
   protected:
     /** server specific identity */
-    KNConfig::Identity *i_dentity;
+    KNode::Identity *i_dentity;
     /** account specific cleanup configuration */
-    KNConfig::Cleanup *mCleanupConf;
+    KNode::Cleanup *mCleanupConf;
     /** use an additional "list newsgroups" command to fetch the newsgroup descriptions */
     bool f_etchDescriptions;
     /** last use of "newgroups" */
@@ -113,5 +114,3 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
 };
 
 #endif
-
-// kate: space-indent on; indent-width 2;

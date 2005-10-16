@@ -148,7 +148,7 @@ void KNFilterManager::saveFilterLists()
 
 
 
-void KNFilterManager::startConfig(KNConfig::FilterListWidget *fs)
+void KNFilterManager::startConfig(KNode::FilterListWidget *fs)
 {
   fset=fs;
   commitNeeded = false;

@@ -62,7 +62,7 @@ bool KNStringFilter::doFilter(const QString &s)
 // replace placeholders
 void KNStringFilter::expand(KNGroup *g)
 {
-  KNConfig::Identity *id = (g) ? g->identity() : 0;
+  KNode::Identity *id = (g) ? g->identity() : 0;
 
   if (!id) {
     id = (g) ? g->account()->identity() : 0;

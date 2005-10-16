@@ -43,8 +43,8 @@
 
 using namespace KNode;
 
-KNArticleFactory::KNArticleFactory(QObject *p, const char *n)
-  : QObject(p, n), s_endErrDlg(0)
+KNArticleFactory::KNArticleFactory( QObject *parent )
+  : QObject( parent ), s_endErrDlg(0)
 {
 }
 
@@ -585,7 +585,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
   }
 
   //find signature
-  KNConfig::Identity *id=knGlobals.configManager()->identity();
+  KNode::Identity *id=knGlobals.configManager()->identity();
 
   if(a->doPost()) {
     KNNntpAccount *acc=knGlobals.accountManager()->account(a->serverId());
@@ -790,7 +790,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, Q3
   }
 
   KNLocalArticle *art=new KNLocalArticle(0);
-  KNConfig::Identity *tmpId=0, *id=0;
+  KNode::Identity *tmpId=0, *id=0;
 
   if (col) {
     if (col->type() == KNCollection::CTgroup) {
@@ -875,8 +875,8 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, Q3
 
   //X-Headers
   if(withXHeaders) {
-    KNConfig::XHeaders xhdr = knGlobals.configManager()->postNewsTechnical()->xHeaders();
-    for ( KNConfig::XHeaders::Iterator it = xhdr.begin(); it != xhdr.end(); ++it ) {
+    KNode::XHeaders xhdr = knGlobals.configManager()->postNewsTechnical()->xHeaders();
+    for ( KNode::XHeaders::Iterator it = xhdr.begin(); it != xhdr.end(); ++it ) {
       QString value = (*it).value();
       if(origPost) {
         QString name(origPost->from()->name());
@@ -956,7 +956,7 @@ and cancel (or supersede) it there."));
 
     KNRemoteArticle *remArt=static_cast<KNRemoteArticle*>(a);
     KNGroup *g=static_cast<KNGroup*>(a->collection());
-    KNConfig::Identity  *defId=knGlobals.configManager()->identity(),
+    KNode::Identity  *defId=knGlobals.configManager()->identity(),
                         *gid=g->identity(),
                         *accId=g->account()->identity();
     bool ownArticle = false;
@@ -1073,7 +1073,7 @@ void KNArticleFactory::slotSendErrorDialogDone()
 KNSendErrorDialog::KNSendErrorDialog()
   : KDialogBase(knGlobals.topWidget, 0, true, i18n("Errors While Sending"), Close, Close, true)
 {
-  p_ixmap=knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::sendErr);
+  p_ixmap=knGlobals.configManager()->appearance()->icon(KNode::Appearance::sendErr);
 
   KVBox *page = makeVBoxMainWidget();
 

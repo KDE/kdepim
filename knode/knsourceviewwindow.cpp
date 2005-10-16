@@ -29,7 +29,7 @@ KNSourceViewWindow::KNSourceViewWindow( const QString &text )
   setAttribute( Qt::WA_DeleteOnClose );
   Q3Accel *accel = new Q3Accel( this, "browser close-accel" );
   accel->connectItem( accel->insertItem( Qt::Key_Escape ), this , SLOT( close() ));
-  KNConfig::Appearance *app=knGlobals.configManager()->appearance();
+  KNode::Appearance *app=knGlobals.configManager()->appearance();
 
   setTextFormat( Qt::PlainText );
 

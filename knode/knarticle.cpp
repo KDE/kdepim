@@ -180,33 +180,33 @@ void KNRemoteArticle::updateListItem()
 {
   if(!i_tem) return;
 
-  KNConfig::Appearance *app=knGlobals.configManager()->appearance();
+  KNode::Appearance *app=knGlobals.configManager()->appearance();
 
   if(isRead()) {
     if(hasContent())
-      i_tem->setPixmap(0, app->icon(KNConfig::Appearance::greyBallChkd));
+      i_tem->setPixmap(0, app->icon(KNode::Appearance::greyBallChkd));
     else
-      i_tem->setPixmap(0, app->icon(KNConfig::Appearance::greyBall));
+      i_tem->setPixmap(0, app->icon(KNode::Appearance::greyBall));
   }
   else {
     if(hasContent())
-      i_tem->setPixmap(0,app->icon(KNConfig::Appearance::redBallChkd));
+      i_tem->setPixmap(0,app->icon(KNode::Appearance::redBallChkd));
     else
-      i_tem->setPixmap(0, app->icon(KNConfig::Appearance::redBall));
+      i_tem->setPixmap(0, app->icon(KNode::Appearance::redBall));
   }
 
   if(hasNewFollowUps())
-    i_tem->setPixmap(1, app->icon(KNConfig::Appearance::newFups));
+    i_tem->setPixmap(1, app->icon(KNode::Appearance::newFups));
   else
-    i_tem->setPixmap(1, app->icon(KNConfig::Appearance::null));
+    i_tem->setPixmap(1, app->icon(KNode::Appearance::null));
 
   if(isWatched())
-    i_tem->setPixmap(2, app->icon(KNConfig::Appearance::eyes));
+    i_tem->setPixmap(2, app->icon(KNode::Appearance::eyes));
   else {
     if(isIgnored())
-      i_tem->setPixmap(2, app->icon(KNConfig::Appearance::ignore));
+      i_tem->setPixmap(2, app->icon(KNode::Appearance::ignore));
     else
-      i_tem->setPixmap(2, app->icon(KNConfig::Appearance::null));
+      i_tem->setPixmap(2, app->icon(KNode::Appearance::null));
   }
 
   i_tem->setExpandable( (threadMode() && hasVisibleFollowUps()) );
@@ -363,10 +363,10 @@ void KNLocalArticle::updateListItem()
 
   QString tmp;
   int idx=0;
-  KNConfig::Appearance *app=knGlobals.configManager()->appearance();
+  KNode::Appearance *app=knGlobals.configManager()->appearance();
 
   if(isSavedRemoteArticle()) {
-    i_tem->setPixmap(0, app->icon(KNConfig::Appearance::savedRemote));
+    i_tem->setPixmap(0, app->icon(KNode::Appearance::savedRemote));
     if (!n_ewsgroups.isEmpty())
       tmp=n_ewsgroups.asUnicodeString();
     else
@@ -377,13 +377,13 @@ void KNLocalArticle::updateListItem()
     if(doPost()) {
       tmp+=n_ewsgroups.asUnicodeString();
       if(canceled())
-        i_tem->setPixmap(idx++, app->icon(KNConfig::Appearance::canceledPosting));
+        i_tem->setPixmap(idx++, app->icon(KNode::Appearance::canceledPosting));
       else
-        i_tem->setPixmap(idx++, app->icon(KNConfig::Appearance::posting));
+        i_tem->setPixmap(idx++, app->icon(KNode::Appearance::posting));
     }
 
     if(doMail()) {
-      i_tem->setPixmap(idx++, app->icon(KNConfig::Appearance::mail));
+      i_tem->setPixmap(idx++, app->icon(KNode::Appearance::mail));
       if(doPost())
         tmp+=" / ";
       tmp+=t_o.asUnicodeString();

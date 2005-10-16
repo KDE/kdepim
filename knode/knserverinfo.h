@@ -23,6 +23,8 @@ namespace KWallet {
 }
 using KWallet::Wallet;
 
+
+/** Represents an account on a mail or news server. */
 class KNServerInfo {
 
   public:

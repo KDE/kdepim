@@ -121,7 +121,7 @@ void KNCollectionView::readConfig()
   }
 
   // font & color settings
-  KNConfig::Appearance *app = knGlobals.configManager()->appearance();
+  KNode::Appearance *app = knGlobals.configManager()->appearance();
   setFont( app->groupListFont() );
 
   QPalette p = palette();

@@ -148,12 +148,12 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   pageL->addStretch(1);
 
   // Specfic Identity tab =========================================
-  i_dWidget=new KNConfig::IdentityWidget(g_rp->identity(), addVBoxPage(i18n("&Identity")));
+  i_dWidget=new KNode::IdentityWidget(g_rp->identity(), addVBoxPage(i18n("&Identity")));
 
   // per server cleanup configuration
   QFrame* cleanupPage = addPage( i18n("&Cleanup") );
   QVBoxLayout *cleanupLayout = new QVBoxLayout( cleanupPage, KDialog::spacingHint() );
-  mCleanupWidget = new KNConfig::GroupCleanupWidget( g_rp->cleanupConfig(), cleanupPage );
+  mCleanupWidget = new KNode::GroupCleanupWidget( g_rp->cleanupConfig(), cleanupPage );
   mCleanupWidget->load();
   cleanupLayout->addWidget( mCleanupWidget );
   cleanupLayout->addStretch( 1 );

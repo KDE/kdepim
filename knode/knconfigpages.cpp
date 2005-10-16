@@ -30,7 +30,7 @@
 //
 // common config page with tabs (code mostly taken from kmail)
 //
-KNConfig::BasePageWithTabs::BasePageWithTabs( QWidget * parent )
+KNode::KCMTabContainer::KCMTabContainer( QWidget * parent )
   : KCModule( parent )
 {
   QVBoxLayout *vlay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
@@ -38,12 +38,12 @@ KNConfig::BasePageWithTabs::BasePageWithTabs( QWidget * parent )
   vlay->addWidget( mTabWidget );
 }
 
-void KNConfig::BasePageWithTabs::addTab( KCModule* tab, const QString & title ) {
+void KNode::KCMTabContainer::addTab( KCModule* tab, const QString & title ) {
   mTabWidget->addTab( tab, title );
   connect( tab, SIGNAL(changed( bool )), this, SIGNAL(changed( bool )) );
 }
 
-void KNConfig::BasePageWithTabs::load() {
+void KNode::KCMTabContainer::load() {
   for ( int i = 0 ; i < mTabWidget->count() ; ++i ) {
     KCModule *tab = (KCModule*) mTabWidget->page(i);
     if ( tab )
@@ -51,7 +51,7 @@ void KNConfig::BasePageWithTabs::load() {
   }
 }
 
-void KNConfig::BasePageWithTabs::save() {
+void KNode::KCMTabContainer::save() {
   for ( int i = 0 ; i < mTabWidget->count() ; ++i ) {
     KCModule *tab = (KCModule*) mTabWidget->page(i);
     if ( tab )
@@ -59,7 +59,7 @@ void KNConfig::BasePageWithTabs::save() {
   }
 }
 
-void KNConfig::BasePageWithTabs::defaults()
+void KNode::KCMTabContainer::defaults()
 {
   KCModule *tab = static_cast<KCModule*>( mTabWidget->currentWidget() );
   if ( tab )
@@ -75,7 +75,7 @@ extern "C"
 {
   KDE_EXPORT KCModule *create_knode_config_identity( QWidget *parent, const char * )
   {
-    KNConfig::IdentityWidget *page = new KNConfig::IdentityWidget(
+    KNode::IdentityWidget *page = new KNode::IdentityWidget(
       knGlobals.configManager()->identity(),
       parent );
     return page;
@@ -91,16 +91,16 @@ extern "C"
 {
   KCModule *create_knode_config_accounts( QWidget *parent, const char * )
   {
-    KNConfig::AccountsPage *page = new KNConfig::AccountsPage( parent );
+    KNode::AccountsPage *page = new KNode::AccountsPage( parent );
     return page;
   }
 }
 
-KNConfig::AccountsPage::AccountsPage( QWidget *parent )
-  : BasePageWithTabs( parent ) {
+KNode::AccountsPage::AccountsPage( QWidget *parent )
+  : KCMTabContainer( parent ) {
 
-  addTab(new KNConfig::NntpAccountListWidget(this), i18n("Newsgroup Servers"));
-  addTab(new KNConfig::SmtpAccountWidget(this), i18n("Mail Server (SMTP)"));
+  addTab( new NntpAccountListWidget(this), i18n("Newsgroup Servers") );
+  addTab( new SmtpAccountWidget(this), i18n("Mail Server (SMTP)") );
 }
 
 
@@ -112,7 +112,7 @@ extern "C"
 {
   KCModule *create_knode_config_appearance( QWidget *parent, const char * )
   {
-    KNConfig::AppearanceWidget *page = new KNConfig::AppearanceWidget( parent );
+    KNode::AppearanceWidget *page = new KNode::AppearanceWidget( parent );
     return page;
   }
 }
@@ -126,21 +126,20 @@ extern "C"
 {
   KCModule *create_knode_config_read_news( QWidget *parent, const char * )
   {
-    KNConfig::ReadNewsPage *page = new KNConfig::ReadNewsPage( parent );
+    KNode::ReadNewsPage *page = new KNode::ReadNewsPage( parent );
     return page;
   }
 }
 
-KNConfig::ReadNewsPage::ReadNewsPage( QWidget *parent )
-  : BasePageWithTabs( parent ) {
-
-  KNConfigManager *cfgMgr = knGlobals.configManager();
-  addTab( new KNConfig::ReadNewsGeneralWidget( this ), i18n("General") );
-  addTab( new KNConfig::ReadNewsNavigationWidget( this ), i18n("Navigation") );
-  addTab( new KNConfig::ScoringWidget( this ), i18n("Scoring") );
-  addTab(new KNConfig::FilterListWidget(this), i18n("Filters"));
-  addTab(new KNConfig::DisplayedHeadersWidget(cfgMgr->displayedHeaders(), this), i18n("Headers"));
-  addTab( new KNConfig::ReadNewsViewerWidget( this ), i18n("Viewer") );
+KNode::ReadNewsPage::ReadNewsPage( QWidget *parent )
+  : KCMTabContainer( parent )
+{
+  addTab( new ReadNewsGeneralWidget( this ), i18n("General") );
+  addTab( new ReadNewsNavigationWidget( this ), i18n("Navigation") );
+  addTab( new ScoringWidget( this ), i18n("Scoring") );
+  addTab( new FilterListWidget(this), i18n("Filters") );
+  addTab( new DisplayedHeadersWidget( knGlobals.configManager()->displayedHeaders(), this), i18n("Headers") );
+  addTab( new ReadNewsViewerWidget( this ), i18n("Viewer") );
 }
 
 
@@ -152,18 +151,17 @@ extern "C"
 {
   KCModule *create_knode_config_post_news( QWidget *parent, const char * )
   {
-    KNConfig::PostNewsPage *page = new KNConfig::PostNewsPage( parent );
+    KNode::PostNewsPage *page = new KNode::PostNewsPage( parent );
     return page;
   }
 }
 
-KNConfig::PostNewsPage::PostNewsPage( QWidget *parent )
-  : BasePageWithTabs( parent ) {
-
-  KNConfigManager *cfgMgr = knGlobals.configManager();
-  addTab(new KNConfig::PostNewsTechnicalWidget(cfgMgr->postNewsTechnical(), this), i18n("Technical"));
-  addTab( new KNConfig::PostNewsComposerWidget( this ), i18n("Composer") );
-  addTab(new KNConfig::PostNewsSpellingWidget(this), i18n("Spelling"));
+KNode::PostNewsPage::PostNewsPage( QWidget *parent )
+  : KCMTabContainer( parent )
+{
+  addTab( new PostNewsTechnicalWidget( knGlobals.configManager()->postNewsTechnical(), this ), i18n("Technical") );
+  addTab( new PostNewsComposerWidget( this ), i18n("Composer") );
+  addTab( new PostNewsSpellingWidget(this), i18n("Spelling") );
 }
 
 
@@ -175,7 +173,7 @@ extern "C"
 {
   KCModule *create_knode_config_privacy( QWidget *parent, const char * )
   {
-    KNConfig::PrivacyWidget *page = new KNConfig::PrivacyWidget( parent );
+    KNode::PrivacyWidget *page = new KNode::PrivacyWidget( parent );
     return page;
   }
 }
@@ -189,7 +187,7 @@ extern "C"
 {
   KCModule *create_knode_config_cleanup( QWidget *parent )
   {
-    KNConfig::CleanupWidget *page = new KNConfig::CleanupWidget( parent );
+    KNode::CleanupWidget *page = new KNode::CleanupWidget( parent );
     return page;
   }
 }

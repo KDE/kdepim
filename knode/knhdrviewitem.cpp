@@ -257,7 +257,7 @@ Q3DragObject* KNHdrViewItem::dragObject()
   metadata["labels"] = KURL::encode_string( art->subject()->asUnicodeString() );
   d->addDragObject( new K3URLDrag( list, metadata, 0L ) );
   d->addDragObject( new Q3StoredDrag( "x-knode-drag/article" , 0L ) );
-  d->setPixmap( knGlobals.configManager()->appearance()->icon( KNConfig::Appearance::posting ) );
+  d->setPixmap( knGlobals.configManager()->appearance()->icon( KNode::Appearance::posting ) );
   return d;
 }
 

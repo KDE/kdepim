@@ -1,8 +1,6 @@
 /*
-    kngroup.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -31,7 +29,7 @@
 class KNProtocolClient;
 class KNNntpAccount;
 
-namespace KNConfig {
+namespace KNode {
   class Identity;
   class Cleanup;
 }
@@ -151,11 +149,11 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     /** Returns the account this group belongs to. */
     KNNntpAccount* account();
     /** Returns the identity configured for this group (might be empty). */
-    KNConfig::Identity* identity() const { return i_dentity; }
+    KNode::Identity* identity() const { return i_dentity; }
     /** Sets the identity for this group.
      * @param i The identity.
      */
-    void setIdentity(KNConfig::Identity *i) { i_dentity = i; }
+    void setIdentity(KNode::Identity *i) { i_dentity = i; }
     /** Returns the posting rights of this group.
      */
     Status status() const { return s_tatus; }
@@ -169,11 +167,11 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void showProperties();
 
     /** Returns the cleanup configuration of this group (might be empty). */
-    KNConfig::Cleanup *cleanupConfig() const { return mCleanupConf; }
+    KNode::Cleanup *cleanupConfig() const { return mCleanupConf; }
     /** Returns the active cleanup configuration of this group, ie. the
      * "lowest" available cleanup configuration.
      */
-    KNConfig::Cleanup *activeCleanupConfig();
+    KNode::Cleanup *activeCleanupConfig();
 
 
   protected:
@@ -206,8 +204,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
      */
     QList<QByteArray> mOptionalHeaders;
 
-    KNConfig::Identity *i_dentity;
-    KNConfig::Cleanup *mCleanupConf;
+    KNode::Identity *i_dentity;
+    KNode::Cleanup *mCleanupConf;
 
     class dynDataVer0 {
 

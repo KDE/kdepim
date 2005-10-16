@@ -100,7 +100,7 @@ void KNCleanUp::expireGroup( KNGroup *g, bool showResult )
   if (!g)
     return;
 
-  KNConfig::Cleanup *conf = g->activeCleanupConfig();
+  KNode::Cleanup *conf = g->activeCleanupConfig();
 
   g->setNotUnloadable(true);
 

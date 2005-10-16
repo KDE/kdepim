@@ -55,19 +55,17 @@ class KNFilterManager;
 class KNNntpAccount;
 class KNServerInfo;
 
-namespace KNConfig {
+namespace KNode {
   class Appearance;
   class Cleanup;
   class Identity;
   class DisplayedHeaders;
   class GroupCleanupWidget;
   class PostNewsTechnical;
-  class PostNewsComposer;
-  class ReadNewsViewer;
   class Scoring;
 }
 
-namespace KNConfig {
+namespace KNode {
 
 /** Configuration widget for an dentity.
  */
@@ -112,12 +110,13 @@ class KDE_EXPORT IdentityWidget : public KCModule {
 };
 
 
+/** News server account list widget. */
 class KDE_EXPORT NntpAccountListWidget : public KCModule {
 
   Q_OBJECT
 
   public:
-    NntpAccountListWidget(QWidget *p=0, const char *n=0);
+    NntpAccountListWidget( QWidget *parent = 0 );
     ~NntpAccountListWidget();
 
     void load();
@@ -203,12 +202,13 @@ Q_OBJECT
 };
 
 
+/** Appearance configuration widget. */
 class KDE_EXPORT AppearanceWidget : public KCModule {
 
   Q_OBJECT
 
   public:
-    AppearanceWidget(QWidget *p=0, const char *n=0);
+    AppearanceWidget( QWidget *parent = 0 );
     ~AppearanceWidget();
 
     void load();
@@ -319,12 +319,13 @@ class KDE_EXPORT ReadNewsViewerWidget : public KCModule
 };
 
 
+/** Configuration widget for headers displayed in the article viewer. */
 class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
 
   Q_OBJECT
 
   public:
-    DisplayedHeadersWidget(DisplayedHeaders *d, QWidget *p=0, const char *n=0);
+    DisplayedHeadersWidget( DisplayedHeaders *d, QWidget *parent = 0 );
     ~DisplayedHeadersWidget();
 
     void load();
@@ -365,12 +366,13 @@ class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
 };
 
 
+/** Configuration dialog for a single header displayed in the article viewer. */
 class KDE_EXPORT DisplayedHeaderConfDialog : public KDialogBase {
 
   Q_OBJECT
 
   public:
-    DisplayedHeaderConfDialog(KNDisplayedHeader *h, QWidget *p=0, char *n=0);
+    DisplayedHeaderConfDialog( KNDisplayedHeader *h, QWidget *parent = 0 );
     ~DisplayedHeaderConfDialog();
 
 
@@ -407,12 +409,13 @@ class KDE_EXPORT ScoringWidget : public KCModule
 };
 
 
+/** Configuration widget for filters. */
 class KDE_EXPORT FilterListWidget : public KCModule {
 
   Q_OBJECT
 
   public:
-    FilterListWidget(QWidget *p=0, const char *n=0);
+    FilterListWidget( QWidget *parent = 0 );
     ~FilterListWidget();
 
     void load();
@@ -525,6 +528,7 @@ class KDE_EXPORT PostNewsComposerWidget : public KCModule
 };
 
 
+/** Spell-checking configuration widget. */
 class KDE_EXPORT PostNewsSpellingWidget : public KCModule {
 
   public:
@@ -539,13 +543,13 @@ class KDE_EXPORT PostNewsSpellingWidget : public KCModule {
 };
 
 
-
+/** Privacy configuration widget. */
 class KDE_EXPORT PrivacyWidget : public KCModule {
 
   Q_OBJECT
 
   public:
-    PrivacyWidget(QWidget *p=0, const char *n=0);
+    PrivacyWidget( QWidget *parent = 0 );
     ~PrivacyWidget();
 
     void save();
@@ -590,7 +594,7 @@ class KDE_EXPORT CleanupWidget : public KCModule {
   Q_OBJECT
 
   public:
-    CleanupWidget(QWidget *p=0, const char *n=0);
+    CleanupWidget( QWidget *parent = 0 );
     ~CleanupWidget();
 
     void load();
@@ -614,34 +618,6 @@ class KDE_EXPORT CleanupWidget : public KCModule {
 
 //END: Cleanup configuration -------------------------------------------------
 
-
-/*class CacheWidget : public KCModule  {
-
-
-  Q_OBJECT
-
-  public:
-    CacheWidget(Cache *d, QWidget *p=0, const char *n=0);
-    ~CacheWidget();
-
-    void apply();
-
-
-  protected:
-    KIntSpinBox *m_emMaxArt,
-                *m_emMaxKB,
-                *d_iskMaxArt,
-                *d_iskMaxKB;
-
-    QLabel      *d_iskMaxArtL,
-                *d_iskMaxKBL;
-
-    Cache *d_ata;
-
-
-}; */
-
-
-} //KNConfig
+} //KNode
 
 #endif //KNCONFIGWIDGETS_H

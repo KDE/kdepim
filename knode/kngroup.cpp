@@ -43,7 +43,7 @@ KNGroup::KNGroup(KNCollection *p)
     f_irstNr(0), l_astNr(0), m_axFetch(0), d_ynDataFormat(1), f_irstNew(-1), l_ocked(false),
     u_seCharset(false), s_tatus(unknown), i_dentity(0)
 {
-  mCleanupConf = new KNConfig::Cleanup( false );
+  mCleanupConf = new KNode::Cleanup( false );
 }
 
 
@@ -104,7 +104,7 @@ bool KNGroup::readInfo(const QString &confPath)
     s_tatus = unknown;
   c_rosspostIDBuffer = info.readListEntry("crosspostIDBuffer");
 
-  i_dentity=new KNConfig::Identity(false);
+  i_dentity=new KNode::Identity(false);
   i_dentity->loadConfig(&info);
   if(!i_dentity->isEmpty()) {
     kdDebug(5003) << "KNGroup::readInfo(const QString &confPath) : using alternative user for " << g_roupname << endl;
@@ -1023,7 +1023,7 @@ void KNGroup::updateThreadInfo()
 
 void KNGroup::showProperties()
 {
-  if(!i_dentity) i_dentity=new KNConfig::Identity(false);
+  if(!i_dentity) i_dentity=new KNode::Identity(false);
   KNGroupPropDlg *d=new KNGroupPropDlg(this, knGlobals.topWidget);
 
   if(d->exec())
@@ -1113,7 +1113,7 @@ void KNGroup::dynDataVer1::getData(KNRemoteArticle *a)
 }
 
 
-KNConfig::Cleanup * KNGroup::activeCleanupConfig()
+KNode::Cleanup * KNGroup::activeCleanupConfig()
 {
   if (!cleanupConfig()->useDefault())
     return cleanupConfig();

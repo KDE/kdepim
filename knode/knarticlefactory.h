@@ -35,7 +35,7 @@ class KNComposer;
 class KNSendErrorDialog;
 class KNNntpAccount;
 
-namespace KNConfig {
+namespace KNode {
   class Identity;
 }
 
@@ -48,7 +48,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
   public:
     enum replyType { RTgroup, RTmail, RTboth };
 
-    KNArticleFactory(QObject *p=0, const char *n=0);
+    KNArticleFactory( QObject *parent = 0 );
     ~KNArticleFactory();
 
     //factory methods

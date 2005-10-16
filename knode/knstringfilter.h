@@ -1,8 +1,6 @@
 /*
-    knstringfilter.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -29,8 +27,8 @@ class KNGroup;
 
 
 class KNStringFilter {
-  
-  friend class KNStringFilterWidget;  
+
+  friend class KNStringFilterWidget;
 
   public:
     KNStringFilter()  { con=true; regExp=false;}
@@ -39,16 +37,16 @@ class KNStringFilter {
     KNStringFilter& operator=(const KNStringFilter &sf);
     /** replace placeholders */
     void expand(KNGroup *g);
-          
+
     void load(KSimpleConfig *conf);
-    void save(KSimpleConfig *conf);     
-          
+    void save(KSimpleConfig *conf);
+
     bool doFilter(const QString &s);
-                
+
   protected:
     QString data, expanded;
     bool con, regExp;
-    
+
 };
 
 
@@ -56,20 +54,20 @@ class KNStringFilter {
 
 
 class KNStringFilterWidget : public Q3GroupBox  {
-  
+
   Q_OBJECT
 
   public:
     KNStringFilterWidget(const QString& title, QWidget *parent);
     ~KNStringFilterWidget();
-    
+
     KNStringFilter filter();
     void setFilter(KNStringFilter &f);
     void clear();
 
     /** usablity hack for the search dialog */
     void setStartFocus();
-    
+
   protected:
     QCheckBox *regExp;
     QComboBox *fType;

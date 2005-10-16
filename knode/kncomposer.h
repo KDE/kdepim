@@ -224,7 +224,7 @@ class KNLineEdit;
 class KNComposer::ComposerView  : public QSplitter {
 
   public:
-    ComposerView(KNComposer *_composer, const char *n=0);
+    ComposerView( KNComposer *_composer );
     ~ComposerView();
     void focusNextPrevEdit(const QWidget* aCur, bool aNext);
     void setMessageMode(KNComposer::MessageMode mode);
@@ -344,12 +344,13 @@ class KNComposer::AttachmentViewItem : public KListViewItem {
 };
 
 
+/** Attachment properties dialog. */
 class KNComposer::AttachmentPropertiesDlg : public KDialogBase {
 
   Q_OBJECT
 
   public:
-    AttachmentPropertiesDlg( KNAttachment *a, QWidget *p=0, const char *n=0);
+    AttachmentPropertiesDlg( KNAttachment *a, QWidget *parent = 0 );
     ~AttachmentPropertiesDlg();
 
     void apply();

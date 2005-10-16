@@ -118,7 +118,7 @@ void KNHeaderView::readConfig()
   mDateFormatter.setCustomFormat( knGlobals.settings()->customDateFormat() );
   mDateFormatter.setFormat( (KMime::DateFormatter::FormatType)knGlobals.settings()->dateFormat() );
 
-  KNConfig::Appearance *app = knGlobals.configManager()->appearance();
+  KNode::Appearance *app = knGlobals.configManager()->appearance();
   QPalette p = palette();
   p.setColor( QColorGroup::Base, app->backgroundColor() );
   p.setColor( QColorGroup::Text, app->textColor() );

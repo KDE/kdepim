@@ -24,7 +24,7 @@ class KLineEdit;
 
 class KNGroup;
 
-namespace KNConfig {
+namespace KNode {
   class IdentityWidget;
   class GroupCleanupWidget;
 }
@@ -42,8 +42,8 @@ class KNGroupPropDlg : public KDialogBase  {
   protected:
     KNGroup *g_rp;
     bool n_ickChanged;
-    KNConfig::IdentityWidget* i_dWidget;
-    KNConfig::GroupCleanupWidget *mCleanupWidget;
+    KNode::IdentityWidget* i_dWidget;
+    KNode::GroupCleanupWidget *mCleanupWidget;
     KLineEdit *n_ick;
     QCheckBox *u_seCharset;
     QComboBox *c_harset;

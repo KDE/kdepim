@@ -43,7 +43,7 @@
 
 
 
-KNConfig::Identity::Identity(bool g)
+KNode::Identity::Identity(bool g)
  :  u_seSigFile(false), u_seSigGenerator(false), g_lobal(g)
 {
   if(g_lobal) {
@@ -54,11 +54,11 @@ KNConfig::Identity::Identity(bool g)
 }
 
 
-KNConfig::Identity::~Identity()
+KNode::Identity::~Identity()
 {}
 
 
-void KNConfig::Identity::loadConfig(KConfigBase *c)
+void KNode::Identity::loadConfig(KConfigBase *c)
 {
   n_ame=c->readEntry("Name");
   e_mail=c->readEntry("Email");
@@ -73,7 +73,7 @@ void KNConfig::Identity::loadConfig(KConfigBase *c)
 }
 
 
-void KNConfig::Identity::saveConfig(KConfigBase *c)
+void KNode::Identity::saveConfig(KConfigBase *c)
 {
   c->writeEntry("Name", n_ame);
   c->writeEntry("Email", e_mail);
@@ -89,7 +89,7 @@ void KNConfig::Identity::saveConfig(KConfigBase *c)
 }
 
 
-void KNConfig::Identity::save()
+void KNode::Identity::save()
 {
   kdDebug(5003) << "KNConfig::Identity::save()" << endl;
   if(g_lobal) {
@@ -100,7 +100,7 @@ void KNConfig::Identity::save()
 }
 
 
-bool KNConfig::Identity::isEmpty()
+bool KNode::Identity::isEmpty()
 {
   return (  n_ame.isEmpty() &&  e_mail.isEmpty() &&
             r_eplyTo.isEmpty() && m_ailCopiesTo.isEmpty() &&
@@ -109,13 +109,13 @@ bool KNConfig::Identity::isEmpty()
 }
 
 
-bool KNConfig::Identity::emailIsValid()
+bool KNode::Identity::emailIsValid()
 {
   return KPIM::isValidSimpleEmailAddress( e_mail );
 }
 
 
-QString KNConfig::Identity::getSignature()
+QString KNode::Identity::getSignature()
 {
   s_igContents = QString::null;      // don't cache file contents
   s_igStdErr = QString::null;
@@ -161,13 +161,13 @@ QString KNConfig::Identity::getSignature()
 }
 
 
-void KNConfig::Identity::slotReceiveStdout(KProcess *, char *buffer, int buflen)
+void KNode::Identity::slotReceiveStdout(KProcess *, char *buffer, int buflen)
 {
   s_igContents.append(QString::fromLocal8Bit(buffer,buflen));
 }
 
 
-void KNConfig::Identity::slotReceiveStderr(KProcess *, char *buffer, int buflen)
+void KNode::Identity::slotReceiveStderr(KProcess *, char *buffer, int buflen)
 {
   s_igStdErr.append(QString::fromLocal8Bit(buffer,buflen));
 }
@@ -176,7 +176,7 @@ void KNConfig::Identity::slotReceiveStderr(KProcess *, char *buffer, int buflen)
 //==============================================================================================================
 
 
-KNConfig::Appearance::Appearance()
+KNode::Appearance::Appearance()
 {
   KConfig *c=knGlobals.config();
   c->setGroup("VISUAL_APPEARANCE");
@@ -280,12 +280,12 @@ KNConfig::Appearance::Appearance()
 }
 
 
-KNConfig::Appearance::~Appearance()
+KNode::Appearance::~Appearance()
 {
 }
 
 
-void KNConfig::Appearance::save()
+void KNode::Appearance::save()
 {
   if(!d_irty)
     return;
@@ -324,7 +324,7 @@ void KNConfig::Appearance::save()
 }
 
 
-QColor KNConfig::Appearance::backgroundColor() const
+QColor KNode::Appearance::backgroundColor() const
 {
   if(u_seColors)
     return c_olors[background];
@@ -333,7 +333,7 @@ QColor KNConfig::Appearance::backgroundColor() const
 }
 
 
-QColor KNConfig::Appearance::alternateBackgroundColor() const
+QColor KNode::Appearance::alternateBackgroundColor() const
 {
   if(u_seColors)
     return c_olors[alternateBackground];
@@ -342,7 +342,7 @@ QColor KNConfig::Appearance::alternateBackgroundColor() const
 }
 
 
-QColor KNConfig::Appearance::textColor() const
+QColor KNode::Appearance::textColor() const
 {
   if(u_seColors)
     return c_olors[normalText];
@@ -351,7 +351,7 @@ QColor KNConfig::Appearance::textColor() const
 }
 
 
-QColor KNConfig::Appearance::quoteColor( int depth ) const
+QColor KNode::Appearance::quoteColor( int depth ) const
 {
   if ( u_seColors )
     return c_olors[quoted1 + depth];
@@ -360,7 +360,7 @@ QColor KNConfig::Appearance::quoteColor( int depth ) const
 }
 
 
-QColor KNConfig::Appearance::linkColor() const
+QColor KNode::Appearance::linkColor() const
 {
   if(u_seColors)
     return c_olors[url];
@@ -370,7 +370,7 @@ QColor KNConfig::Appearance::linkColor() const
 }
 
 
-QColor KNConfig::Appearance::unreadThreadColor() const
+QColor KNode::Appearance::unreadThreadColor() const
 {
   if(u_seColors)
     return c_olors[unreadThread];
@@ -379,7 +379,7 @@ QColor KNConfig::Appearance::unreadThreadColor() const
 }
 
 
-QColor KNConfig::Appearance::readThreadColor() const
+QColor KNode::Appearance::readThreadColor() const
 {
   if(u_seColors)
     return c_olors[readThread];
@@ -388,7 +388,7 @@ QColor KNConfig::Appearance::readThreadColor() const
 }
 
 
-QColor KNConfig::Appearance::unreadArticleColor() const
+QColor KNode::Appearance::unreadArticleColor() const
 {
   if(u_seColors)
     return c_olors[unreadArticle];
@@ -397,7 +397,7 @@ QColor KNConfig::Appearance::unreadArticleColor() const
 }
 
 
-QColor KNConfig::Appearance::readArticleColor() const
+QColor KNode::Appearance::readArticleColor() const
 {
   if(u_seColors)
     return c_olors[readArticle];
@@ -406,7 +406,7 @@ QColor KNConfig::Appearance::readArticleColor() const
 }
 
 
-QFont KNConfig::Appearance::articleFont() const
+QFont KNode::Appearance::articleFont() const
 {
   if(u_seFonts)
     return f_onts[article];
@@ -415,7 +415,7 @@ QFont KNConfig::Appearance::articleFont() const
 }
 
 
-QFont KNConfig::Appearance::articleFixedFont() const
+QFont KNode::Appearance::articleFixedFont() const
 {
   if(u_seFonts)
     return f_onts[articleFixed];
@@ -424,7 +424,7 @@ QFont KNConfig::Appearance::articleFixedFont() const
 }
 
 
-QFont KNConfig::Appearance::composerFont() const
+QFont KNode::Appearance::composerFont() const
 {
   if(u_seFonts)
     return f_onts[composer];
@@ -433,7 +433,7 @@ QFont KNConfig::Appearance::composerFont() const
 }
 
 
-QFont KNConfig::Appearance::groupListFont() const
+QFont KNode::Appearance::groupListFont() const
 {
   if(u_seFonts)
     return f_onts[groupList];
@@ -442,7 +442,7 @@ QFont KNConfig::Appearance::groupListFont() const
 }
 
 
-QFont KNConfig::Appearance::articleListFont() const
+QFont KNode::Appearance::articleListFont() const
 {
   if(u_seFonts)
     return f_onts[articleList];
@@ -451,7 +451,7 @@ QFont KNConfig::Appearance::articleListFont() const
 }
 
 
-QColor KNConfig::Appearance::defaultColor(int i) const
+QColor KNode::Appearance::defaultColor(int i) const
 {
   // defaults should match libkdepim/csshelper.cpp
   switch(i) {
@@ -501,7 +501,7 @@ QColor KNConfig::Appearance::defaultColor(int i) const
 }
 
 
-QFont KNConfig::Appearance::defaultFont(int i) const
+QFont KNode::Appearance::defaultFont(int i) const
 {
   if ( i == articleFixed || i == composer )
     return KGlobalSettings::fixedFont();
@@ -510,7 +510,7 @@ QFont KNConfig::Appearance::defaultFont(int i) const
 }
 
 
-void KNConfig::Appearance::recreateLVIcons()
+void KNode::Appearance::recreateLVIcons()
 {
   QPixmap tempPix = UserIcon("greyball");
 
@@ -537,7 +537,7 @@ void KNConfig::Appearance::recreateLVIcons()
 //==============================================================================================================
 
 
-KNConfig::DisplayedHeaders::DisplayedHeaders()
+KNode::DisplayedHeaders::DisplayedHeaders()
 {
   QString fname( locate("data","knode/headers.rc") );
 
@@ -572,14 +572,14 @@ KNConfig::DisplayedHeaders::DisplayedHeaders()
 }
 
 
-KNConfig::DisplayedHeaders::~DisplayedHeaders()
+KNode::DisplayedHeaders::~DisplayedHeaders()
 {
   for ( Q3ValueList<KNDisplayedHeader*>::Iterator it = mHeaderList.begin(); it != mHeaderList.end(); ++it )
     delete (*it);
 }
 
 
-void KNConfig::DisplayedHeaders::save()
+void KNode::DisplayedHeaders::save()
 {
   if(!d_irty)
     return;
@@ -624,7 +624,7 @@ void KNConfig::DisplayedHeaders::save()
 }
 
 
-KNDisplayedHeader* KNConfig::DisplayedHeaders::createNewHeader()
+KNDisplayedHeader* KNode::DisplayedHeaders::createNewHeader()
 {
   KNDisplayedHeader *h=new KNDisplayedHeader();
   mHeaderList.append( h );
@@ -633,7 +633,7 @@ KNDisplayedHeader* KNConfig::DisplayedHeaders::createNewHeader()
 }
 
 
-void KNConfig::DisplayedHeaders::remove(KNDisplayedHeader *h)
+void KNode::DisplayedHeaders::remove(KNDisplayedHeader *h)
 {
   if ( !mHeaderList.remove( h ) )
     kdDebug(5003) << "KNConfig::DisplayedHeaders::remove() : cannot find pointer in list!" << endl;
@@ -641,7 +641,7 @@ void KNConfig::DisplayedHeaders::remove(KNDisplayedHeader *h)
 }
 
 
-void KNConfig::DisplayedHeaders::up(KNDisplayedHeader *h)
+void KNode::DisplayedHeaders::up(KNDisplayedHeader *h)
 {
   int idx = mHeaderList.findIndex( h );
   if ( idx != -1 ) {
@@ -652,7 +652,7 @@ void KNConfig::DisplayedHeaders::up(KNDisplayedHeader *h)
 }
 
 
-void KNConfig::DisplayedHeaders::down(KNDisplayedHeader *h)
+void KNode::DisplayedHeaders::down(KNDisplayedHeader *h)
 {
   int idx = mHeaderList.findIndex( h );
   if ( idx != -1 ) {
@@ -666,7 +666,7 @@ void KNConfig::DisplayedHeaders::down(KNDisplayedHeader *h)
 //==============================================================================================================
 
 
-KNConfig::XHeader::XHeader(const QString &s)
+KNode::XHeader::XHeader(const QString &s)
 {
   int pos = s.indexOf(": ");
   if ( pos != -1 ) {
@@ -680,7 +680,7 @@ KNConfig::XHeader::XHeader(const QString &s)
 //==============================================================================================================
 
 
-KNConfig::PostNewsTechnical::PostNewsTechnical()
+KNode::PostNewsTechnical::PostNewsTechnical()
  : findComposerCSCache(113)
 {
   findComposerCSCache.setAutoDelete(true);
@@ -724,12 +724,12 @@ KNConfig::PostNewsTechnical::PostNewsTechnical()
 }
 
 
-KNConfig::PostNewsTechnical::~PostNewsTechnical()
+KNode::PostNewsTechnical::~PostNewsTechnical()
 {
 }
 
 
-void KNConfig::PostNewsTechnical::save()
+void KNode::PostNewsTechnical::save()
 {
   if(!d_irty)
     return;
@@ -763,7 +763,7 @@ void KNConfig::PostNewsTechnical::save()
 }
 
 
-int KNConfig::PostNewsTechnical::indexForCharset(const Q3CString &str)
+int KNode::PostNewsTechnical::indexForCharset(const Q3CString &str)
 {
   int i=0;
   bool found=false;
@@ -790,7 +790,7 @@ int KNConfig::PostNewsTechnical::indexForCharset(const Q3CString &str)
 }
 
 
-Q3CString KNConfig::PostNewsTechnical::findComposerCharset(Q3CString cs)
+Q3CString KNode::PostNewsTechnical::findComposerCharset(Q3CString cs)
 {
   Q3CString *ret=findComposerCSCache.find(cs);
   if (ret)
@@ -839,7 +839,7 @@ Q3CString KNConfig::PostNewsTechnical::findComposerCharset(Q3CString cs)
 //BEGIN: Cleanup configuration ===============================================
 
 
-KNConfig::Cleanup::Cleanup( bool global ) :
+KNode::Cleanup::Cleanup( bool global ) :
   // default values for new accounts / groups
   d_oExpire( true ), r_emoveUnavailable( true ), p_reserveThr( true ),
   e_xpireInterval( 5 ), r_eadMaxAge( 10 ), u_nreadMaxAge( 15 ),
@@ -853,7 +853,7 @@ KNConfig::Cleanup::Cleanup( bool global ) :
 }
 
 
-void KNConfig::Cleanup::loadConfig(KConfigBase *conf)
+void KNode::Cleanup::loadConfig(KConfigBase *conf)
 {
   // group expire settings
   d_oExpire = conf->readBoolEntry( "doExpire", true );
@@ -876,7 +876,7 @@ void KNConfig::Cleanup::loadConfig(KConfigBase *conf)
 }
 
 
-void KNConfig::Cleanup::saveConfig(KConfigBase *conf)
+void KNode::Cleanup::saveConfig(KConfigBase *conf)
 {
   // group expire settings
   conf->writeEntry( "doExpire", d_oExpire );
@@ -901,7 +901,7 @@ void KNConfig::Cleanup::saveConfig(KConfigBase *conf)
 }
 
 
-void KNConfig::Cleanup::save()
+void KNode::Cleanup::save()
 {
   kdDebug(5003) << "KNConfig::Cleanup::save()" << endl;
   if (mGlobal) {
@@ -912,7 +912,7 @@ void KNConfig::Cleanup::save()
 }
 
 
-bool KNConfig::Cleanup::expireToday()
+bool KNode::Cleanup::expireToday()
 {
   if (!d_oExpire)
     return false;
@@ -925,13 +925,13 @@ bool KNConfig::Cleanup::expireToday()
 }
 
 
-void KNConfig::Cleanup::setLastExpireDate()
+void KNode::Cleanup::setLastExpireDate()
 {
   mLastExpDate = QDateTime::currentDateTime().date();
 }
 
 
-bool KNConfig::Cleanup::compactToday()
+bool KNode::Cleanup::compactToday()
 {
   if (!d_oCompact)
     return false;
@@ -944,7 +944,7 @@ bool KNConfig::Cleanup::compactToday()
 }
 
 
-void KNConfig::Cleanup::setLastCompactDate()
+void KNode::Cleanup::setLastCompactDate()
 {
   mLastCompDate = QDateTime::currentDateTime().date();
 }
@@ -952,44 +952,5 @@ void KNConfig::Cleanup::setLastCompactDate()
 
 //END: Cleanup configuration =================================================
 
-
-
-/*KNConfig::Cache::Cache()
-{
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("CACHE");
-
-  m_emMaxArt=conf->readNumEntry("memMaxArt", 1000);
-  m_emMaxKB=conf->readNumEntry("memMaxKB", 1024);
-
-  d_iskMaxArt=conf->readNumEntry("diskMaxArt", 1000);
-  d_iskMaxKB=conf->readNumEntry("diskMaxKB", 1024);
-}
-
-
-KNConfig::Cache::~Cache()
-{
-}
-
-
-void KNConfig::Cache::save()
-{
-  if(!d_irty)
-    return;
-
-  kdDebug(5003) << "KNConfig::Cache::save()" << endl;
-
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("CACHE");
-
-  conf->writeEntry("memMaxArt", m_emMaxArt);
-  conf->writeEntry("memMaxKB", m_emMaxKB);
-
-  conf->writeEntry("diskMaxArt", d_iskMaxArt);
-  conf->writeEntry("diskMaxKB", d_iskMaxKB);
-
-  d_irty = false;
-}
-*/
 
 #include "knconfig.moc"

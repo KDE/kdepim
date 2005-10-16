@@ -22,31 +22,32 @@
 class KNConfigDialog;
 
 
+/** Manages config objects.
+ * @todo Move to the KConfigXT generated KNode::Settings class.
+ */
 class KNConfigManager : QObject {
 
   Q_OBJECT
 
   public:
-    KNConfigManager(QObject *p=0, const char *n=0);
+    KNConfigManager( QObject *parent = 0 );
     ~KNConfigManager();
 
-    KNConfig::Identity*             identity() const           { return i_dentity; }
-    KNConfig::Appearance*           appearance()const          { return a_ppearance; }
-    KNConfig::DisplayedHeaders*     displayedHeaders()const    { return d_isplayedHeaders; }
-    KNConfig::PostNewsTechnical*    postNewsTechnical()const   { return p_ostNewsTechnical; }
-    KNConfig::Cleanup*              cleanup()const             { return c_leanup; }
-    //KNConfig::Cache*                cache()const               { return c_ache; }
+    KNode::Identity*             identity() const           { return i_dentity; }
+    KNode::Appearance*           appearance()const          { return a_ppearance; }
+    KNode::DisplayedHeaders*     displayedHeaders()const    { return d_isplayedHeaders; }
+    KNode::PostNewsTechnical*    postNewsTechnical()const   { return p_ostNewsTechnical; }
+    KNode::Cleanup*              cleanup()const             { return c_leanup; }
 
     void configure();
     void syncConfig();
 
   protected:
-    KNConfig::Identity             *i_dentity;
-    KNConfig::Appearance           *a_ppearance;
-    KNConfig::DisplayedHeaders     *d_isplayedHeaders;
-    KNConfig::PostNewsTechnical    *p_ostNewsTechnical;
-    KNConfig::Cleanup              *c_leanup;
-    //KNConfig::Cache                *c_ache;
+    KNode::Identity             *i_dentity;
+    KNode::Appearance           *a_ppearance;
+    KNode::DisplayedHeaders     *d_isplayedHeaders;
+    KNode::PostNewsTechnical    *p_ostNewsTechnical;
+    KNode::Cleanup              *c_leanup;
 
     KNConfigDialog  *d_ialog;
 
@@ -56,14 +57,18 @@ class KNConfigManager : QObject {
 };
 
 
-class KNConfigDialog : public KCMultiDialog {
-
+/** The configuration dialog. */
+class KNConfigDialog : public KCMultiDialog
+{
   Q_OBJECT
-
   public:
-    KNConfigDialog(QWidget *p=0, const char *n=0);
+    /** Create a new configuration dialog.
+     * @param parent The parent widget.
+     */
+    KNConfigDialog( QWidget *parent = 0 );
 
   protected slots:
+    /** Update and reload configuration settings. */
     void slotConfigCommitted();
 
 };

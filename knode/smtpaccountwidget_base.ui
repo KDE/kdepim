@@ -2,7 +2,7 @@
  <author>Volker Krause &lt;volker.krause@rwth-aachen.de></author>
  <comment></comment>
  <exportmacro></exportmacro>
- <class>KNConfig::SmtpAccountWidgetBase</class>
+ <class>KNode::SmtpAccountWidgetBase</class>
  <widget class="KCModule" name="SmtpAccountWidgetBase" >
   <property name="geometry" >
    <rect>

@@ -44,17 +44,20 @@ class KNFilterManager;
 class KNDisplayedHeader;
 class KNServerInfo;
 class KNScoringManager;
-namespace KNConfig {
+namespace KNode {
   class IdentityWidget;
 }
 
-namespace KNConfig {
+namespace KNode {
 
-class Base {
+/** Base class for config settings.
+ * @deprecated Use KConfigXT instead.
+ */
+class ConfigBase {
 
   public:
-    Base() : d_irty(false) {}
-    virtual ~Base()        {}
+    ConfigBase() : d_irty(false) {}
+    virtual ~ConfigBase()        {}
 
     virtual void save()    {}
 
@@ -67,7 +70,8 @@ class Base {
 };
 
 
-class KDE_EXPORT Identity : public QObject, public Base {
+/** A user identity. */
+class KDE_EXPORT Identity : public QObject, public ConfigBase {
 
 Q_OBJECT
 
@@ -137,7 +141,8 @@ Q_OBJECT
 };
 
 
-class KDE_EXPORT Appearance : public Base {
+/** Appearance settings. */
+class KDE_EXPORT Appearance : public ConfigBase {
 
 #define COL_CNT 16
 #define FNT_CNT 5
@@ -211,7 +216,8 @@ class KDE_EXPORT Appearance : public Base {
 };
 
 
-class KDE_EXPORT DisplayedHeaders : public Base
+/** Headers displayed in the article viewer. */
+class KDE_EXPORT DisplayedHeaders : public ConfigBase
 {
   public:
     DisplayedHeaders();
@@ -259,7 +265,7 @@ typedef QList<XHeader> XHeaders;
 
 
 /** Technical posting settings. */
-class KDE_EXPORT PostNewsTechnical : public Base
+class KDE_EXPORT PostNewsTechnical : public ConfigBase
 {
   friend class PostNewsTechnicalWidget;
 
@@ -288,7 +294,8 @@ class KDE_EXPORT PostNewsTechnical : public Base
 
 //BEGIN: Cleanup configuration -----------------------------------------------
 
-class KDE_EXPORT Cleanup : public Base {
+/** Expirery/cleaup settings (globally or per account/group/folder). */
+class KDE_EXPORT Cleanup : public ConfigBase {
 
   friend class CleanupWidget;
   friend class GroupCleanupWidget;
@@ -340,35 +347,6 @@ class KDE_EXPORT Cleanup : public Base {
 
 //END: Cleanup configuration -------------------------------------------------
 
-
-/*class Cache : public Base {
-
-  friend class CacheWidget;
-
-  public:
-    Cache();
-    ~Cache();
-
-    void save();
-
-    // memory-cache
-    int memoryMaxArticles()   { return m_emMaxArt; }
-    int memoryMaxKBytes()     { return m_emMaxKB; }
-
-    // disk-cache
-    int diskMaxArticles()     { return d_iskMaxArt; }
-    int diskMaxKBytes()       { return d_iskMaxKB; }
-
-
-  protected:
-    int m_emMaxArt,
-        m_emMaxKB,
-        d_iskMaxArt,
-        d_iskMaxKB;
-
-};*/
-
-
-} //KNConfig
+} //KNode
 
 #endif //KNCONFIG_H

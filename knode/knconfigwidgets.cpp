@@ -61,7 +61,7 @@
 #include "settings.h"
 #include <kpgp.h>
 
-KNConfig::IdentityWidget::IdentityWidget( Identity *d, QWidget *parent ) :
+KNode::IdentityWidget::IdentityWidget( Identity *d, QWidget *parent ) :
   KCModule( parent ),
   d_ata( d )
 {
@@ -188,18 +188,18 @@ KNConfig::IdentityWidget::IdentityWidget( Identity *d, QWidget *parent ) :
 }
 
 
-KNConfig::IdentityWidget::~IdentityWidget()
+KNode::IdentityWidget::~IdentityWidget()
 {
   delete c_ompletion;
 }
 
-void KNConfig::IdentityWidget::textFileNameChanged(const QString &text)
+void KNode::IdentityWidget::textFileNameChanged(const QString &text)
 {
     e_ditBtn->setEnabled(!text.isEmpty());
     emit changed( true );
 }
 
-void KNConfig::IdentityWidget::load()
+void KNode::IdentityWidget::load()
 {
   kdDebug() << "void KNConfig::IdentityWidget::load()" << endl;
   n_ame->setText(d_ata->n_ame);
@@ -214,7 +214,7 @@ void KNConfig::IdentityWidget::load()
   slotSignatureType(d_ata->useSigFile()? 0:1);
 }
 
-void KNConfig::IdentityWidget::save()
+void KNode::IdentityWidget::save()
 {
   d_ata->n_ame=n_ame->text();
   d_ata->o_rga=o_rga->text();
@@ -231,7 +231,7 @@ void KNConfig::IdentityWidget::save()
     d_ata->save();
 }
 
-void KNConfig::IdentityWidget::slotSignatureType(int type)
+void KNode::IdentityWidget::slotSignatureType(int type)
 {
   bool sigFromFile = (type==0);
 
@@ -251,7 +251,7 @@ void KNConfig::IdentityWidget::slotSignatureType(int type)
 }
 
 
-void KNConfig::IdentityWidget::slotSignatureChoose()
+void KNode::IdentityWidget::slotSignatureChoose()
 {
   QString tmp=KFileDialog::getOpenFileName(c_ompletion->replacedPath(s_ig->text()),QString::null,this,i18n("Choose Signature"));
   if(!tmp.isEmpty()) s_ig->setText(tmp);
@@ -259,7 +259,7 @@ void KNConfig::IdentityWidget::slotSignatureChoose()
 }
 
 
-void KNConfig::IdentityWidget::slotSignatureEdit()
+void KNode::IdentityWidget::slotSignatureEdit()
 {
   QString fileName = c_ompletion->replacedPath(s_ig->text()).stripWhiteSpace();
 
@@ -290,8 +290,8 @@ void KNConfig::IdentityWidget::slotSignatureEdit()
 
 //BEGIN: NNTP account configuration widgets ----------------------------------
 
-KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n) :
-  KCModule( p, n ),
+KNode::NntpAccountListWidget::NntpAccountListWidget( QWidget *parent ) :
+  KCModule( parent ),
   a_ccManager( knGlobals.accountManager() )
 {
   p_ixmap = SmallIcon("server");
@@ -342,12 +342,12 @@ KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n
 }
 
 
-KNConfig::NntpAccountListWidget::~NntpAccountListWidget()
+KNode::NntpAccountListWidget::~NntpAccountListWidget()
 {
 }
 
 
-void KNConfig::NntpAccountListWidget::load()
+void KNode::NntpAccountListWidget::load()
 {
   l_box->clear();
   Q3ValueList<KNNntpAccount*>::Iterator it;
@@ -356,7 +356,7 @@ void KNConfig::NntpAccountListWidget::load()
 }
 
 
-void KNConfig::NntpAccountListWidget::slotAddItem(KNNntpAccount *a)
+void KNode::NntpAccountListWidget::slotAddItem(KNNntpAccount *a)
 {
   LBoxItem *it;
   it=new LBoxItem(a, a->name(), &p_ixmap);
@@ -365,7 +365,7 @@ void KNConfig::NntpAccountListWidget::slotAddItem(KNNntpAccount *a)
 }
 
 
-void KNConfig::NntpAccountListWidget::slotRemoveItem(KNNntpAccount *a)
+void KNode::NntpAccountListWidget::slotRemoveItem(KNNntpAccount *a)
 {
   LBoxItem *it;
   for(uint i=0; i<l_box->count(); i++) {
@@ -380,7 +380,7 @@ void KNConfig::NntpAccountListWidget::slotRemoveItem(KNNntpAccount *a)
 }
 
 
-void KNConfig::NntpAccountListWidget::slotUpdateItem(KNNntpAccount *a)
+void KNode::NntpAccountListWidget::slotUpdateItem(KNNntpAccount *a)
 {
   LBoxItem *it;
   for(uint i=0; i<l_box->count(); i++) {
@@ -397,7 +397,7 @@ void KNConfig::NntpAccountListWidget::slotUpdateItem(KNNntpAccount *a)
 
 
 
-void KNConfig::NntpAccountListWidget::slotSelectionChanged()
+void KNode::NntpAccountListWidget::slotSelectionChanged()
 {
   int curr=l_box->currentItem();
   d_elBtn->setEnabled(curr!=-1);
@@ -417,14 +417,14 @@ void KNConfig::NntpAccountListWidget::slotSelectionChanged()
 
 
 
-void KNConfig::NntpAccountListWidget::slotItemSelected(int)
+void KNode::NntpAccountListWidget::slotItemSelected(int)
 {
   slotEditBtnClicked();
 }
 
 
 
-void KNConfig::NntpAccountListWidget::slotAddBtnClicked()
+void KNode::NntpAccountListWidget::slotAddBtnClicked()
 {
   KNNntpAccount *acc = new KNNntpAccount();
 
@@ -438,7 +438,7 @@ void KNConfig::NntpAccountListWidget::slotAddBtnClicked()
 
 
 
-void KNConfig::NntpAccountListWidget::slotDelBtnClicked()
+void KNode::NntpAccountListWidget::slotDelBtnClicked()
 {
   LBoxItem *it = static_cast<LBoxItem*>(l_box->item(l_box->currentItem()));
 
@@ -448,7 +448,7 @@ void KNConfig::NntpAccountListWidget::slotDelBtnClicked()
 
 
 
-void KNConfig::NntpAccountListWidget::slotEditBtnClicked()
+void KNode::NntpAccountListWidget::slotEditBtnClicked()
 {
   LBoxItem *it = static_cast<LBoxItem*>(l_box->item(l_box->currentItem()));
 
@@ -459,7 +459,7 @@ void KNConfig::NntpAccountListWidget::slotEditBtnClicked()
 }
 
 
-void KNConfig::NntpAccountListWidget::slotSubBtnClicked()
+void KNode::NntpAccountListWidget::slotSubBtnClicked()
 {
   LBoxItem *it = static_cast<LBoxItem*>(l_box->item(l_box->currentItem()));
 
@@ -471,7 +471,7 @@ void KNConfig::NntpAccountListWidget::slotSubBtnClicked()
 //=======================================================================================
 
 
-KNConfig::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *parent ) :
+KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *parent ) :
     KDialogBase( Tabbed, (a->id() != -1) ? i18n("Properties of %1").arg(a->name()) : i18n("New Account"),
                  Ok | Cancel | Help, Ok, parent ),
     mAccount( a )
@@ -511,7 +511,7 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidge
   mInterval->setValue( a->checkInterval() );
 
   // identity tab
-  mIdentityWidget = new KNConfig::IdentityWidget( a->identity(), addVBoxPage(i18n("&Identity") ) );
+  mIdentityWidget = new KNode::IdentityWidget( a->identity(), addVBoxPage(i18n("&Identity") ) );
 
   // per server cleanup configuration
   QFrame* cleanupPage = addPage( i18n("&Cleanup") );
@@ -528,13 +528,13 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidge
 }
 
 
-KNConfig::NntpAccountConfDialog::~NntpAccountConfDialog()
+KNode::NntpAccountConfDialog::~NntpAccountConfDialog()
 {
   KNHelper::saveWindowSize("accNewsPropDLG", size());
 }
 
 
-void KNConfig::NntpAccountConfDialog::slotOk()
+void KNode::NntpAccountConfDialog::slotOk()
 {
   if ( mName->text().isEmpty() || mServer->text().trimmed().isEmpty() ) {
     KMessageBox::sorry(this, i18n("Please enter an arbitrary name for the account and the\nhostname of the news server."));
@@ -569,7 +569,7 @@ void KNConfig::NntpAccountConfDialog::slotOk()
 }
 
 
-void KNConfig::NntpAccountConfDialog::slotPasswordChanged()
+void KNode::NntpAccountConfDialog::slotPasswordChanged()
 {
   if ( mPassword->text().isEmpty() )
     mPassword->setText( mAccount->pass() );
@@ -579,7 +579,7 @@ void KNConfig::NntpAccountConfDialog::slotPasswordChanged()
 
 //=============================================================================================
 
-KNConfig::SmtpAccountWidget::SmtpAccountWidget( QWidget *parent ) :
+KNode::SmtpAccountWidget::SmtpAccountWidget( QWidget *parent ) :
     KCModule( parent )
 {
   setupUi( this );
@@ -593,7 +593,7 @@ KNConfig::SmtpAccountWidget::SmtpAccountWidget( QWidget *parent ) :
 }
 
 
-void KNConfig::SmtpAccountWidget::load()
+void KNode::SmtpAccountWidget::load()
 {
   mUseExternalMailer->setChecked( knGlobals.settings()->useExternalMailer() );
   useExternalMailerToggled( knGlobals.settings()->useExternalMailer() );
@@ -621,7 +621,7 @@ void KNConfig::SmtpAccountWidget::load()
 }
 
 
-void KNConfig::SmtpAccountWidget::save()
+void KNode::SmtpAccountWidget::save()
 {
   knGlobals.settings()->setUseExternalMailer( mUseExternalMailer->isChecked() );
 
@@ -645,7 +645,7 @@ void KNConfig::SmtpAccountWidget::save()
 }
 
 
-void KNConfig::SmtpAccountWidget::useExternalMailerToggled( bool b )
+void KNode::SmtpAccountWidget::useExternalMailerToggled( bool b )
 {
   mServer->setEnabled( !b );
   mPort->setEnabled( !b );
@@ -661,7 +661,7 @@ void KNConfig::SmtpAccountWidget::useExternalMailerToggled( bool b )
 }
 
 
-void KNConfig::SmtpAccountWidget::loginToggled( bool b )
+void KNode::SmtpAccountWidget::loginToggled( bool b )
 {
   mUser->setEnabled( b );
   mUserLabel->setEnabled( b );
@@ -671,7 +671,7 @@ void KNConfig::SmtpAccountWidget::loginToggled( bool b )
 }
 
 
-void KNConfig::SmtpAccountWidget::slotPasswordChanged()
+void KNode::SmtpAccountWidget::slotPasswordChanged()
 {
   if ( mPassword->text().isEmpty() )
     mPassword->setText( mAccount->pass() );
@@ -684,18 +684,18 @@ void KNConfig::SmtpAccountWidget::slotPasswordChanged()
 //===================================================================================
 // code taken from KMail, Copyright (C) 2000 Espen Sand, espen@kde.org
 
-KNConfig::AppearanceWidget::ColorListItem::ColorListItem( const QString &text, const QColor &color )
+KNode::AppearanceWidget::ColorListItem::ColorListItem( const QString &text, const QColor &color )
   : Q3ListBoxText(text), mColor( color )
 {
 }
 
 
-KNConfig::AppearanceWidget::ColorListItem::~ColorListItem()
+KNode::AppearanceWidget::ColorListItem::~ColorListItem()
 {
 }
 
 
-void KNConfig::AppearanceWidget::ColorListItem::paint( QPainter *p )
+void KNode::AppearanceWidget::ColorListItem::paint( QPainter *p )
 {
   QFontMetrics fm = p->fontMetrics();
   int h = fm.height();
@@ -708,13 +708,13 @@ void KNConfig::AppearanceWidget::ColorListItem::paint( QPainter *p )
 }
 
 
-int KNConfig::AppearanceWidget::ColorListItem::height(const Q3ListBox *lb ) const
+int KNode::AppearanceWidget::ColorListItem::height(const Q3ListBox *lb ) const
 {
   return( lb->fontMetrics().lineSpacing()+1 );
 }
 
 
-int KNConfig::AppearanceWidget::ColorListItem::width(const Q3ListBox *lb ) const
+int KNode::AppearanceWidget::ColorListItem::width(const Q3ListBox *lb ) const
 {
   return( 30 + lb->fontMetrics().width( text() ) + 6 );
 }
@@ -723,26 +723,26 @@ int KNConfig::AppearanceWidget::ColorListItem::width(const Q3ListBox *lb ) const
 //===================================================================================
 
 
-KNConfig::AppearanceWidget::FontListItem::FontListItem( const QString &name, const QFont &font )
+KNode::AppearanceWidget::FontListItem::FontListItem( const QString &name, const QFont &font )
   : Q3ListBoxText(name), f_ont(font)
 {
   fontInfo = QString("[%1 %2]").arg(f_ont.family()).arg(f_ont.pointSize());
 }
 
 
-KNConfig::AppearanceWidget::FontListItem::~FontListItem()
+KNode::AppearanceWidget::FontListItem::~FontListItem()
 {
 }
 
 
-void KNConfig::AppearanceWidget::FontListItem::setFont(const QFont &font)
+void KNode::AppearanceWidget::FontListItem::setFont(const QFont &font)
 {
   f_ont = font;
   fontInfo = QString("[%1 %2]").arg(f_ont.family()).arg(f_ont.pointSize());
 }
 
 
-void KNConfig::AppearanceWidget::FontListItem::paint( QPainter *p )
+void KNode::AppearanceWidget::FontListItem::paint( QPainter *p )
 {
   QFont fnt = p->font();
   fnt.setWeight(QFont::Bold);
@@ -756,7 +756,7 @@ void KNConfig::AppearanceWidget::FontListItem::paint( QPainter *p )
 }
 
 
-int KNConfig::AppearanceWidget::FontListItem::width(const Q3ListBox *lb ) const
+int KNode::AppearanceWidget::FontListItem::width(const Q3ListBox *lb ) const
 {
   return( lb->fontMetrics().width(fontInfo) + lb->fontMetrics().width(text()) + 20 );
 }
@@ -765,8 +765,8 @@ int KNConfig::AppearanceWidget::FontListItem::width(const Q3ListBox *lb ) const
 //===================================================================================
 
 
-KNConfig::AppearanceWidget::AppearanceWidget( QWidget *p, const char *n ) :
-  KCModule( p, n ),
+KNode::AppearanceWidget::AppearanceWidget( QWidget *parent ) :
+  KCModule( parent ),
   d_ata( knGlobals.configManager()->appearance() )
 {
   QGridLayout *topL=new QGridLayout(this, 8,2, 5,5);
@@ -803,12 +803,12 @@ KNConfig::AppearanceWidget::AppearanceWidget( QWidget *p, const char *n ) :
 }
 
 
-KNConfig::AppearanceWidget::~AppearanceWidget()
+KNode::AppearanceWidget::~AppearanceWidget()
 {
 }
 
 
-void KNConfig::AppearanceWidget::load()
+void KNode::AppearanceWidget::load()
 {
   c_olorCB->setChecked(d_ata->u_seColors);
   slotColCheckBoxToggled(d_ata->u_seColors);
@@ -824,7 +824,7 @@ void KNConfig::AppearanceWidget::load()
 }
 
 
-void KNConfig::AppearanceWidget::save()
+void KNode::AppearanceWidget::save()
 {
   d_ata->u_seColors=c_olorCB->isChecked();
   for(int i=0; i<d_ata->colorCount(); i++)
@@ -840,7 +840,7 @@ void KNConfig::AppearanceWidget::save()
 }
 
 
-void KNConfig::AppearanceWidget::defaults()
+void KNode::AppearanceWidget::defaults()
 {
   // default colors
   ColorListItem *colorItem;
@@ -863,7 +863,7 @@ void KNConfig::AppearanceWidget::defaults()
 }
 
 
-void KNConfig::AppearanceWidget::slotColCheckBoxToggled(bool b)
+void KNode::AppearanceWidget::slotColCheckBoxToggled(bool b)
 {
   c_List->setEnabled(b);
   c_olChngBtn->setEnabled(b && (c_List->currentItem()!=-1));
@@ -873,7 +873,7 @@ void KNConfig::AppearanceWidget::slotColCheckBoxToggled(bool b)
 
 
 // show color dialog for the entry
-void KNConfig::AppearanceWidget::slotColItemSelected(Q3ListBoxItem *it)
+void KNode::AppearanceWidget::slotColItemSelected(Q3ListBoxItem *it)
 {
   if (it) {
     ColorListItem *colorItem = static_cast<ColorListItem*>(it);
@@ -889,20 +889,20 @@ void KNConfig::AppearanceWidget::slotColItemSelected(Q3ListBoxItem *it)
 }
 
 
-void KNConfig::AppearanceWidget::slotColChangeBtnClicked()
+void KNode::AppearanceWidget::slotColChangeBtnClicked()
 {
   if(c_List->currentItem()!=-1)
     slotColItemSelected(c_List->item(c_List->currentItem()));
 }
 
 
-void KNConfig::AppearanceWidget::slotColSelectionChanged()
+void KNode::AppearanceWidget::slotColSelectionChanged()
 {
   c_olChngBtn->setEnabled(c_List->currentItem()!=-1);
 }
 
 
-void KNConfig::AppearanceWidget::slotFontCheckBoxToggled(bool b)
+void KNode::AppearanceWidget::slotFontCheckBoxToggled(bool b)
 {
   f_List->setEnabled(b);
   f_ntChngBtn->setEnabled(b && (f_List->currentItem()!=-1));
@@ -912,7 +912,7 @@ void KNConfig::AppearanceWidget::slotFontCheckBoxToggled(bool b)
 
 
 // show font dialog for the entry
-void KNConfig::AppearanceWidget::slotFontItemSelected(Q3ListBoxItem *it)
+void KNode::AppearanceWidget::slotFontItemSelected(Q3ListBoxItem *it)
 {
   if (it) {
     FontListItem *fontItem = static_cast<FontListItem*>(it);
@@ -928,14 +928,14 @@ void KNConfig::AppearanceWidget::slotFontItemSelected(Q3ListBoxItem *it)
 }
 
 
-void KNConfig::AppearanceWidget::slotFontChangeBtnClicked()
+void KNode::AppearanceWidget::slotFontChangeBtnClicked()
 {
   if(f_List->currentItem()!=-1)
     slotFontItemSelected(f_List->item(f_List->currentItem()));
 }
 
 
-void KNConfig::AppearanceWidget::slotFontSelectionChanged()
+void KNode::AppearanceWidget::slotFontSelectionChanged()
 {
   f_ntChngBtn->setEnabled(f_List->currentItem()!=-1);
 }
@@ -944,7 +944,7 @@ void KNConfig::AppearanceWidget::slotFontSelectionChanged()
 //=============================================================================================
 
 
-KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget( QWidget *parent ) :
+KNode::ReadNewsGeneralWidget::ReadNewsGeneralWidget( QWidget *parent ) :
   KCModule( parent )
 {
   setupUi( this );
@@ -953,7 +953,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget( QWidget *parent ) :
 }
 
 
-void KNConfig::ReadNewsGeneralWidget::load()
+void KNode::ReadNewsGeneralWidget::load()
 {
   KCModule::load();
   switch ( knGlobals.settings()->dateFormat() ) {
@@ -964,7 +964,7 @@ void KNConfig::ReadNewsGeneralWidget::load()
   }
 }
 
-void KNConfig::ReadNewsGeneralWidget::save()
+void KNode::ReadNewsGeneralWidget::save()
 {
   if ( mStandardDateFormat->isChecked() )
     knGlobals.settings()->setDateFormat( KNode::Settings::EnumDateFormat::CTime );
@@ -980,7 +980,7 @@ void KNConfig::ReadNewsGeneralWidget::save()
 //=============================================================================================
 
 
-KNConfig::ReadNewsNavigationWidget::ReadNewsNavigationWidget( QWidget *parent ) :
+KNode::ReadNewsNavigationWidget::ReadNewsNavigationWidget( QWidget *parent ) :
   KCModule( parent )
 {
   KNode::Ui::ReadNewsNavigationWidgetBase ui;
@@ -993,7 +993,7 @@ KNConfig::ReadNewsNavigationWidget::ReadNewsNavigationWidget( QWidget *parent ) 
 //=============================================================================================
 
 
-KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget( QWidget *parent ) :
+KNode::ReadNewsViewerWidget::ReadNewsViewerWidget( QWidget *parent ) :
   KCModule( parent )
 {
   KNode::Ui::ReadNewsViewerWidgetBase ui;
@@ -1006,8 +1006,8 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget( QWidget *parent ) :
 //=============================================================================================
 
 
-KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, QWidget *p, const char *n ) :
-  KCModule( p, n ),
+KNode::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, QWidget *parent ) :
+  KCModule( parent ),
   s_ave( false ),
   d_ata( d )
 {
@@ -1050,12 +1050,12 @@ KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, Q
 
 
 
-KNConfig::DisplayedHeadersWidget::~DisplayedHeadersWidget()
+KNode::DisplayedHeadersWidget::~DisplayedHeadersWidget()
 {
 }
 
 
-void KNConfig::DisplayedHeadersWidget::load()
+void KNode::DisplayedHeadersWidget::load()
 {
   l_box->clear();
   Q3ValueList<KNDisplayedHeader*> list = d_ata->headers();
@@ -1063,7 +1063,7 @@ void KNConfig::DisplayedHeadersWidget::load()
     l_box->insertItem( generateItem( (*it) ) );
 }
 
-void KNConfig::DisplayedHeadersWidget::save()
+void KNode::DisplayedHeadersWidget::save()
 {
   if(s_ave) {
     d_ata->setDirty(true);
@@ -1074,7 +1074,7 @@ void KNConfig::DisplayedHeadersWidget::save()
 
 
 
-KNConfig::DisplayedHeadersWidget::HdrItem* KNConfig::DisplayedHeadersWidget::generateItem(KNDisplayedHeader *h)
+KNode::DisplayedHeadersWidget::HdrItem* KNode::DisplayedHeadersWidget::generateItem(KNDisplayedHeader *h)
 {
   QString text;
   if(h->hasName()) {
@@ -1089,14 +1089,14 @@ KNConfig::DisplayedHeadersWidget::HdrItem* KNConfig::DisplayedHeadersWidget::gen
 
 
 
-void KNConfig::DisplayedHeadersWidget::slotItemSelected(int)
+void KNode::DisplayedHeadersWidget::slotItemSelected(int)
 {
   slotEditBtnClicked();
 }
 
 
 
-void KNConfig::DisplayedHeadersWidget::slotSelectionChanged()
+void KNode::DisplayedHeadersWidget::slotSelectionChanged()
 {
   int curr = l_box->currentItem();
   d_elBtn->setEnabled(curr!=-1);
@@ -1107,7 +1107,7 @@ void KNConfig::DisplayedHeadersWidget::slotSelectionChanged()
 
 
 
-void KNConfig::DisplayedHeadersWidget::slotAddBtnClicked()
+void KNode::DisplayedHeadersWidget::slotAddBtnClicked()
 {
   KNDisplayedHeader *h=d_ata->createNewHeader();
 
@@ -1123,7 +1123,7 @@ void KNConfig::DisplayedHeadersWidget::slotAddBtnClicked()
 
 
 
-void KNConfig::DisplayedHeadersWidget::slotDelBtnClicked()
+void KNode::DisplayedHeadersWidget::slotDelBtnClicked()
 {
   if(l_box->currentItem()==-1)
     return;
@@ -1139,7 +1139,7 @@ void KNConfig::DisplayedHeadersWidget::slotDelBtnClicked()
 
 
 
-void KNConfig::DisplayedHeadersWidget::slotEditBtnClicked()
+void KNode::DisplayedHeadersWidget::slotEditBtnClicked()
 {
   if (l_box->currentItem()==-1) return;
   KNDisplayedHeader *h = (static_cast<HdrItem*>(l_box->item(l_box->currentItem())))->hdr;
@@ -1155,7 +1155,7 @@ void KNConfig::DisplayedHeadersWidget::slotEditBtnClicked()
 
 
 
-void KNConfig::DisplayedHeadersWidget::slotUpBtnClicked()
+void KNode::DisplayedHeadersWidget::slotUpBtnClicked()
 {
   int c=l_box->currentItem();
   if(c==0 || c==-1) return;
@@ -1172,7 +1172,7 @@ void KNConfig::DisplayedHeadersWidget::slotUpBtnClicked()
 
 
 
-void KNConfig::DisplayedHeadersWidget::slotDownBtnClicked()
+void KNode::DisplayedHeadersWidget::slotDownBtnClicked()
 {
   int c=l_box->currentItem();
   if(c==-1 || c==(int) l_box->count()-1) return;
@@ -1191,8 +1191,8 @@ void KNConfig::DisplayedHeadersWidget::slotDownBtnClicked()
 //=============================================================================================
 
 
-KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader *h, QWidget *p, char *n)
-  : KDialogBase(Plain, i18n("Header Properties"),Ok|Cancel|Help, Ok, p, n),
+KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *h, QWidget *parent )
+  : KDialogBase( Plain, i18n("Header Properties"), Ok | Cancel | Help, Ok, parent ),
     h_dr(h)
 {
   QFrame* page=plainPage();
@@ -1262,13 +1262,13 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
 }
 
 
-KNConfig::DisplayedHeaderConfDialog::~DisplayedHeaderConfDialog()
+KNode::DisplayedHeaderConfDialog::~DisplayedHeaderConfDialog()
 {
   KNHelper::saveWindowSize("accReadHdrPropDLG", size());
 }
 
 
-void KNConfig::DisplayedHeaderConfDialog::slotOk()
+void KNode::DisplayedHeaderConfDialog::slotOk()
 {
   h_dr->setHeader(h_drC->currentText());
   h_dr->setTranslatedName(n_ameE->text());
@@ -1284,14 +1284,14 @@ void KNConfig::DisplayedHeaderConfDialog::slotOk()
 
 
 // the user selected one of the presets, insert the *translated* string as display name:
-void KNConfig::DisplayedHeaderConfDialog::slotActivated(int pos)
+void KNode::DisplayedHeaderConfDialog::slotActivated(int pos)
 {
   n_ameE->setText(i18n(h_drC->text(pos).local8Bit()));  // I think it's save here, the combobox has only english defaults
 }
 
 
 // disable the name format options when the name is empty
-void KNConfig::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
+void KNode::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
 {
   for(int i=0; i<4; i++)
       n_ameCB[i]->setEnabled(!str.isEmpty());
@@ -1300,7 +1300,7 @@ void KNConfig::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
 //=============================================================================================
 
 
-KNConfig::ScoringWidget::ScoringWidget( QWidget *parent ) :
+KNode::ScoringWidget::ScoringWidget( QWidget *parent ) :
   KCModule( parent )
 {
   QGridLayout *topL = new QGridLayout(this,4,2, 5,5);
@@ -1327,13 +1327,13 @@ KNConfig::ScoringWidget::ScoringWidget( QWidget *parent ) :
 }
 
 
-void KNConfig::ScoringWidget::load()
+void KNode::ScoringWidget::load()
 {
   mIgnored->setValue( knGlobals.settings()->ignoredThreshold() );
   mWatched->setValue( knGlobals.settings()->watchedThreshold() );
 }
 
-void KNConfig::ScoringWidget::save()
+void KNode::ScoringWidget::save()
 {
   knGlobals.settings()->setIgnoredThreshold( mIgnored->value() );
   knGlobals.settings()->setWatchedThreshold( mWatched->value() );
@@ -1343,8 +1343,8 @@ void KNConfig::ScoringWidget::save()
 //=============================================================================================
 
 
-KNConfig::FilterListWidget::FilterListWidget( QWidget *p, const char *n ) :
-  KCModule( p, n ),
+KNode::FilterListWidget::FilterListWidget( QWidget *parent ) :
+  KCModule( parent ),
   f_ilManager( knGlobals.filterManager() )
 {
   QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
@@ -1411,26 +1411,26 @@ KNConfig::FilterListWidget::FilterListWidget( QWidget *p, const char *n ) :
 }
 
 
-KNConfig::FilterListWidget::~FilterListWidget()
+KNode::FilterListWidget::~FilterListWidget()
 {
   f_ilManager->endConfig();
 }
 
 
-void KNConfig::FilterListWidget::load()
+void KNode::FilterListWidget::load()
 {
   f_lb->clear();
   m_lb->clear();
   f_ilManager->startConfig(this);
 }
 
-void KNConfig::FilterListWidget::save()
+void KNode::FilterListWidget::save()
 {
   f_ilManager->commitChanges();
 }
 
 
-void KNConfig::FilterListWidget::addItem(KNArticleFilter *f)
+void KNode::FilterListWidget::addItem(KNArticleFilter *f)
 {
   if(f->isEnabled())
     f_lb->insertItem(new LBoxItem(f, f->translatedName(), &a_ctive));
@@ -1441,7 +1441,7 @@ void KNConfig::FilterListWidget::addItem(KNArticleFilter *f)
 }
 
 
-void KNConfig::FilterListWidget::removeItem(KNArticleFilter *f)
+void KNode::FilterListWidget::removeItem(KNArticleFilter *f)
 {
   int i=findItem(f_lb, f);
   if (i!=-1) f_lb->removeItem(i);
@@ -1450,7 +1450,7 @@ void KNConfig::FilterListWidget::removeItem(KNArticleFilter *f)
 }
 
 
-void KNConfig::FilterListWidget::updateItem(KNArticleFilter *f)
+void KNode::FilterListWidget::updateItem(KNArticleFilter *f)
 {
   int i=findItem(f_lb, f);
 
@@ -1466,7 +1466,7 @@ void KNConfig::FilterListWidget::updateItem(KNArticleFilter *f)
 }
 
 
-void KNConfig::FilterListWidget::addMenuItem(KNArticleFilter *f)
+void KNode::FilterListWidget::addMenuItem(KNArticleFilter *f)
 {
   if (f) {
     if (findItem(m_lb, f)==-1)
@@ -1478,7 +1478,7 @@ void KNConfig::FilterListWidget::addMenuItem(KNArticleFilter *f)
 }
 
 
-void KNConfig::FilterListWidget::removeMenuItem(KNArticleFilter *f)
+void KNode::FilterListWidget::removeMenuItem(KNArticleFilter *f)
 {
   int i=findItem(m_lb, f);
   if(i!=-1) m_lb->removeItem(i);
@@ -1487,7 +1487,7 @@ void KNConfig::FilterListWidget::removeMenuItem(KNArticleFilter *f)
 }
 
 
-Q3ValueList<int> KNConfig::FilterListWidget::menuOrder()
+Q3ValueList<int> KNode::FilterListWidget::menuOrder()
 {
   KNArticleFilter *f;
   Q3ValueList<int> lst;
@@ -1503,7 +1503,7 @@ Q3ValueList<int> KNConfig::FilterListWidget::menuOrder()
 }
 
 
-int KNConfig::FilterListWidget::findItem(Q3ListBox *l, KNArticleFilter *f)
+int KNode::FilterListWidget::findItem(Q3ListBox *l, KNArticleFilter *f)
 {
   int idx=0;
   bool found=false;
@@ -1516,34 +1516,34 @@ int KNConfig::FilterListWidget::findItem(Q3ListBox *l, KNArticleFilter *f)
 }
 
 
-void KNConfig::FilterListWidget::slotAddBtnClicked()
+void KNode::FilterListWidget::slotAddBtnClicked()
 {
   f_ilManager->newFilter();
 }
 
 
-void KNConfig::FilterListWidget::slotDelBtnClicked()
+void KNode::FilterListWidget::slotDelBtnClicked()
 {
   if (f_lb->currentItem()!=-1)
     f_ilManager->deleteFilter( (static_cast<LBoxItem*>(f_lb->item(f_lb->currentItem())))->filter );
 }
 
 
-void KNConfig::FilterListWidget::slotEditBtnClicked()
+void KNode::FilterListWidget::slotEditBtnClicked()
 {
   if (f_lb->currentItem()!=-1)
     f_ilManager->editFilter( (static_cast<LBoxItem*>(f_lb->item(f_lb->currentItem())))->filter );
 }
 
 
-void KNConfig::FilterListWidget::slotCopyBtnClicked()
+void KNode::FilterListWidget::slotCopyBtnClicked()
 {
   if (f_lb->currentItem()!=-1)
     f_ilManager->copyFilter( (static_cast<LBoxItem*>(f_lb->item(f_lb->currentItem())))->filter );
 }
 
 
-void KNConfig::FilterListWidget::slotUpBtnClicked()
+void KNode::FilterListWidget::slotUpBtnClicked()
 {
   int c=m_lb->currentItem();
   KNArticleFilter *f=0;
@@ -1560,7 +1560,7 @@ void KNConfig::FilterListWidget::slotUpBtnClicked()
 }
 
 
-void KNConfig::FilterListWidget::slotDownBtnClicked()
+void KNode::FilterListWidget::slotDownBtnClicked()
 {
   int c=m_lb->currentItem();
   KNArticleFilter *f=0;
@@ -1577,7 +1577,7 @@ void KNConfig::FilterListWidget::slotDownBtnClicked()
 }
 
 
-void KNConfig::FilterListWidget::slotSepAddBtnClicked()
+void KNode::FilterListWidget::slotSepAddBtnClicked()
 {
   m_lb->insertItem(new LBoxItem(0, "==="), m_lb->currentItem());
   slotSelectionChangedMenu();
@@ -1585,7 +1585,7 @@ void KNConfig::FilterListWidget::slotSepAddBtnClicked()
 }
 
 
-void KNConfig::FilterListWidget::slotSepRemBtnClicked()
+void KNode::FilterListWidget::slotSepRemBtnClicked()
 {
   int c=m_lb->currentItem();
 
@@ -1596,13 +1596,13 @@ void KNConfig::FilterListWidget::slotSepRemBtnClicked()
 }
 
 
-void KNConfig::FilterListWidget::slotItemSelectedFilter(int)
+void KNode::FilterListWidget::slotItemSelectedFilter(int)
 {
   slotEditBtnClicked();
 }
 
 
-void KNConfig::FilterListWidget::slotSelectionChangedFilter()
+void KNode::FilterListWidget::slotSelectionChangedFilter()
 {
   int curr = f_lb->currentItem();
 
@@ -1612,7 +1612,7 @@ void KNConfig::FilterListWidget::slotSelectionChangedFilter()
 }
 
 
-void KNConfig::FilterListWidget::slotSelectionChangedMenu()
+void KNode::FilterListWidget::slotSelectionChangedMenu()
 {
   int curr = m_lb->currentItem();
 
@@ -1625,7 +1625,7 @@ void KNConfig::FilterListWidget::slotSelectionChangedMenu()
 //=============================================================================================
 
 
-KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget( PostNewsTechnical *d, QWidget *parent ) :
+KNode::PostNewsTechnicalWidget::PostNewsTechnicalWidget( PostNewsTechnical *d, QWidget *parent ) :
   KCModule( parent ),
   mData( d )
 {
@@ -1649,7 +1649,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget( PostNewsTechnical *d
 }
 
 
-void KNConfig::PostNewsTechnicalWidget::load()
+void KNode::PostNewsTechnicalWidget::load()
 {
   KCModule::load();
 
@@ -1662,7 +1662,7 @@ void KNConfig::PostNewsTechnicalWidget::load()
 }
 
 
-void KNConfig::PostNewsTechnicalWidget::save()
+void KNode::PostNewsTechnicalWidget::save()
 {
   mData->c_harset = mCharset->currentText().latin1();
   knGlobals.settings()->setAllow8BitBody( mEncoding->currentItem() == 0 );
@@ -1676,14 +1676,14 @@ void KNConfig::PostNewsTechnicalWidget::save()
 }
 
 
-void KNConfig::PostNewsTechnicalWidget::slotSelectionChanged()
+void KNode::PostNewsTechnicalWidget::slotSelectionChanged()
 {
   mDeleteButton->setEnabled( mHeaderList->currentItem() != 0 );
   mEditButton->setEnabled( mHeaderList->currentItem() != 0 );
 }
 
 
-void KNConfig::PostNewsTechnicalWidget::slotAddBtnClicked()
+void KNode::PostNewsTechnicalWidget::slotAddBtnClicked()
 {
   XHeaderConfDialog *dlg = new XHeaderConfDialog( QString::null, this );
   if ( dlg->exec() )
@@ -1696,7 +1696,7 @@ void KNConfig::PostNewsTechnicalWidget::slotAddBtnClicked()
 }
 
 
-void KNConfig::PostNewsTechnicalWidget::slotDelBtnClicked()
+void KNode::PostNewsTechnicalWidget::slotDelBtnClicked()
 {
   QListWidgetItem *item = mHeaderList->currentItem();
   if ( !item )
@@ -1707,7 +1707,7 @@ void KNConfig::PostNewsTechnicalWidget::slotDelBtnClicked()
 }
 
 
-void KNConfig::PostNewsTechnicalWidget::slotEditBtnClicked()
+void KNode::PostNewsTechnicalWidget::slotEditBtnClicked()
 {
   QListWidgetItem *item = mHeaderList->currentItem();
   if ( !item )
@@ -1727,7 +1727,7 @@ void KNConfig::PostNewsTechnicalWidget::slotEditBtnClicked()
 //===================================================================================================
 
 
-KNConfig::XHeaderConfDialog::XHeaderConfDialog( const QString &h, QWidget *parent ) :
+KNode::XHeaderConfDialog::XHeaderConfDialog( const QString &h, QWidget *parent ) :
   KDialogBase( parent, 0, true, i18n("Additional Header"), Ok | Cancel, Ok )
 {
   KHBox* page = makeHBoxMainWidget();
@@ -1750,13 +1750,13 @@ KNConfig::XHeaderConfDialog::XHeaderConfDialog( const QString &h, QWidget *paren
 }
 
 
-KNConfig::XHeaderConfDialog::~XHeaderConfDialog()
+KNode::XHeaderConfDialog::~XHeaderConfDialog()
 {
   KNHelper::saveWindowSize("XHeaderDlg", size());
 }
 
 
-QString KNConfig::XHeaderConfDialog::result() const
+QString KNode::XHeaderConfDialog::result() const
 {
   return mNameEdit->text() + ": " + mValueEdit->text();
 }
@@ -1765,7 +1765,7 @@ QString KNConfig::XHeaderConfDialog::result() const
 //===================================================================================================
 
 
-KNConfig::PostNewsComposerWidget::PostNewsComposerWidget( QWidget *parent ) :
+KNode::PostNewsComposerWidget::PostNewsComposerWidget( QWidget *parent ) :
   KCModule( parent )
 {
   KNode::Ui::PostNewsComposerWidgetBase ui;
@@ -1778,7 +1778,7 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget( QWidget *parent ) :
 //===================================================================================================
 
 
-KNConfig::PostNewsSpellingWidget::PostNewsSpellingWidget( QWidget *parent ) :
+KNode::PostNewsSpellingWidget::PostNewsSpellingWidget( QWidget *parent ) :
   KCModule( parent )
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
@@ -1791,12 +1791,12 @@ KNConfig::PostNewsSpellingWidget::PostNewsSpellingWidget( QWidget *parent ) :
 }
 
 
-KNConfig::PostNewsSpellingWidget::~PostNewsSpellingWidget()
+KNode::PostNewsSpellingWidget::~PostNewsSpellingWidget()
 {
 }
 
 
-void KNConfig::PostNewsSpellingWidget::save()
+void KNode::PostNewsSpellingWidget::save()
 {
   c_onf->writeGlobalSettings();
 }
@@ -1804,8 +1804,8 @@ void KNConfig::PostNewsSpellingWidget::save()
 
 //==============================================================================================================
 
-KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n) :
-  KCModule( p, n )
+KNode::PrivacyWidget::PrivacyWidget( QWidget *parent ) :
+  KCModule( parent )
 {
   QBoxLayout *topLayout = new QVBoxLayout(this, 5);
   c_onf = new Kpgp::Config(this,"knode pgp config",false);
@@ -1818,12 +1818,12 @@ KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n) :
 }
 
 
-KNConfig::PrivacyWidget::~PrivacyWidget()
+KNode::PrivacyWidget::~PrivacyWidget()
 {
 }
 
 
-void KNConfig::PrivacyWidget::save()
+void KNode::PrivacyWidget::save()
 {
   c_onf->applySettings();
 }
@@ -1835,7 +1835,7 @@ void KNConfig::PrivacyWidget::save()
 //BEGIN: Cleanup configuration widgets ---------------------------------------
 
 
-KNConfig::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent )
+KNode::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent )
   : QWidget( parent ), mData( data )
 {
   QVBoxLayout *top = new QVBoxLayout( this );
@@ -1894,7 +1894,7 @@ KNConfig::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent
 }
 
 
-void KNConfig::GroupCleanupWidget::load()
+void KNode::GroupCleanupWidget::load()
 {
   if (!mData->isGlobal()) {
     mDefault->setChecked( mData->useDefault() );
@@ -1910,7 +1910,7 @@ void KNConfig::GroupCleanupWidget::load()
 }
 
 
-void KNConfig::GroupCleanupWidget::save()
+void KNode::GroupCleanupWidget::save()
 {
   if (!mData->isGlobal())
     mData->setUseDefault( mDefault->isChecked() );
@@ -1923,14 +1923,14 @@ void KNConfig::GroupCleanupWidget::save()
 }
 
 
-void KNConfig::GroupCleanupWidget::slotDefaultToggled( bool state )
+void KNode::GroupCleanupWidget::slotDefaultToggled( bool state )
 {
     mExpGroup->setEnabled( !state );
 }
 
 
-KNConfig::CleanupWidget::CleanupWidget( QWidget *p, const char *n ) :
-  KCModule( p, n ),
+KNode::CleanupWidget::CleanupWidget( QWidget *parent ) :
+  KCModule( parent ),
   d_ata( knGlobals.configManager()->cleanup() )
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
@@ -1970,12 +1970,12 @@ KNConfig::CleanupWidget::CleanupWidget( QWidget *p, const char *n ) :
 }
 
 
-KNConfig::CleanupWidget::~CleanupWidget()
+KNode::CleanupWidget::~CleanupWidget()
 {
 }
 
 
-void KNConfig::CleanupWidget::load()
+void KNode::CleanupWidget::load()
 {
   f_olderCB->setChecked(d_ata->d_oCompact);
   slotFolderCBtoggled(d_ata->d_oCompact);
@@ -1984,7 +1984,7 @@ void KNConfig::CleanupWidget::load()
 }
 
 
-void KNConfig::CleanupWidget::save()
+void KNode::CleanupWidget::save()
 {
   d_ata->d_oCompact=f_olderCB->isChecked();
   d_ata->c_ompactInterval=f_olderDays->value();
@@ -1995,7 +1995,7 @@ void KNConfig::CleanupWidget::save()
 }
 
 
-void KNConfig::CleanupWidget::slotFolderCBtoggled(bool b)
+void KNode::CleanupWidget::slotFolderCBtoggled(bool b)
 {
   f_olderDaysL->setEnabled(b);
   f_olderDays->setEnabled(b);
@@ -2004,81 +2004,6 @@ void KNConfig::CleanupWidget::slotFolderCBtoggled(bool b)
 
 
 //END: Cleanup configuration widgets -----------------------------------------
-
-//==============================================================================================================
-
-/*
-KNConfig::CacheWidget::CacheWidget(Cache *d, QWidget *p, const char *n)
-  : KCModule p, n), d_ata(d)
-{
-  QVBoxLayout *topL=new QVBoxLayout(this, 5);
-
-  // memory
-  QGroupBox *memGB=new QGroupBox(i18n("Memory Cache"), this);
-  topL->addWidget(memGB);
-  QGridLayout *memL=new QGridLayout(memGB, 3,2, 8,5);
-  memL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-
-  memL->addWidget(new QLabel(i18n("Max articles to keep:"), memGB), 1,0);
-  m_emMaxArt=new KIntSpinBox(0, 99999, 1, 1, 10, memGB);
-  memL->addWidget(m_emMaxArt, 1,1);
-
-  memL->addWidget(new QLabel(i18n("Max memory usage:"), memGB), 2,0);
-  m_emMaxKB=new KIntSpinBox(0, 99999, 1, 1, 10, memGB);
-  m_emMaxKB->setSuffix(" KB");
-  memL->addWidget(m_emMaxKB, 2,1);
-
-  memL->setColStretch(0,1);
-
-
-  // disk
-  QGroupBox *diskGB=new QGroupBox(i18n("Disk Cache"), this);
-  topL->addWidget(diskGB);
-  QGridLayout *diskL=new QGridLayout(diskGB, 3,2, 8,5);
-  diskL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-
-  d_iskMaxArtL=new QLabel(i18n("Max articles to keep:"), diskGB);
-  diskL->addWidget(d_iskMaxArtL, 2,0);
-  d_iskMaxArt=new KIntSpinBox(0, 99999, 1, 1, 10, diskGB);
-  diskL->addWidget(d_iskMaxArt, 2,1);
-
-  d_iskMaxKBL=new QLabel(i18n("Max disk usage:"), diskGB);
-  diskL->addWidget(d_iskMaxKBL, 3,0);
-  d_iskMaxKB=new KIntSpinBox(0, 99999, 1, 1, 10, diskGB);
-  d_iskMaxKB->setSuffix(" KB");
-  diskL->addWidget(d_iskMaxKB, 3,1);
-
-  diskL->setColStretch(0,1);
-  7
-
-  topL->addStretch(1);
-
-
-  // init
-  m_emMaxArt->setValue(d->memoryMaxArticles());
-  m_emMaxKB->setValue(d->memoryMaxKBytes());
-  d_iskMaxArt->setValue(d->diskMaxArticles());
-  d_iskMaxKB->setValue(d->diskMaxKBytes());
-}
-
-
-KNConfig::CacheWidget::~CacheWidget()
-{
-}
-
-
-void KNConfig::CacheWidget::apply()
-{
-  d_ata->m_emMaxArt=m_emMaxArt->value();
-  d_ata->m_emMaxKB=m_emMaxKB->value();
-
-  d_ata->d_iskMaxArt=d_iskMaxArt->value();
-  d_ata->d_iskMaxKB=d_iskMaxKB->value();
-
-  d_ata->setDirty(true);
-}
-*/
-
 
 //------------------------
 #include "knconfigwidgets.moc"

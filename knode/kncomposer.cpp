@@ -1741,8 +1741,8 @@ Q3PopupMenu * KNComposer::popupMenu( const QString& name )
 //=====================================================================================
 
 
-KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
-  : QSplitter(Qt::Vertical, composer, n), a_ttWidget(0), a_ttView(0), v_iewOpen(false)
+KNComposer::ComposerView::ComposerView( KNComposer *composer )
+  : QSplitter( Qt::Vertical, composer ), a_ttWidget(0), a_ttView(0), v_iewOpen(false)
 {
   QWidget *main=new QWidget(this);
 
@@ -2564,8 +2564,8 @@ KNComposer::AttachmentViewItem::~AttachmentViewItem()
 //=====================================================================================
 
 
-KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg(KNAttachment *a, QWidget *p, const char *n) :
-  KDialogBase(p, n, true, i18n("Attachment Properties"), Help|Ok|Cancel, Ok), a_ttachment(a),
+KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, QWidget *parent ) :
+  KDialogBase( parent, 0, true, i18n("Attachment Properties"), Help | Ok | Cancel, Ok ), a_ttachment(a),
   n_onTextAsText(false)
 {
   //init GUI

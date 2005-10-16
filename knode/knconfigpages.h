@@ -20,20 +20,20 @@
 class BaseWidget;
 class IdentityWidget;
 
-namespace KNConfig {
+namespace KNode {
 
 /**
  * A tab-based KCModule container.
  * It simply forwards load and save operations to all tabs.
  * Code mostly taken from kmail.
  */
-class KDE_EXPORT BasePageWithTabs : public KCModule
+class KDE_EXPORT KCMTabContainer : public KCModule
 {
   public:
     /** Create a new tab-based KCModule container.
      * @param parent The parent widget.
      */
-    BasePageWithTabs( QWidget * parent = 0 );
+    KCMTabContainer( QWidget * parent = 0 );
 
     /** Reimplemented to forward load() to all tabs. */
     virtual void load();
@@ -56,7 +56,7 @@ class KDE_EXPORT BasePageWithTabs : public KCModule
 
 
 /** Accounts config page. */
-class AccountsPage : public BasePageWithTabs {
+class AccountsPage : public KCMTabContainer {
   Q_OBJECT
 
   public:
@@ -65,7 +65,7 @@ class AccountsPage : public BasePageWithTabs {
 
 
 /** Read news page. */
-class KDE_EXPORT ReadNewsPage : public BasePageWithTabs {
+class KDE_EXPORT ReadNewsPage : public KCMTabContainer {
   Q_OBJECT
 
   public:
@@ -73,7 +73,7 @@ class KDE_EXPORT ReadNewsPage : public BasePageWithTabs {
 };
 
 /** Post news page. */
-class KDE_EXPORT PostNewsPage : public BasePageWithTabs {
+class KDE_EXPORT PostNewsPage : public KCMTabContainer {
   Q_OBJECT
 
   public:
@@ -81,6 +81,6 @@ class KDE_EXPORT PostNewsPage : public BasePageWithTabs {
 };
 
 
-} //KNConfig
+} //KNode
 
 #endif //KNCONFIGPAGES_H

@@ -77,7 +77,7 @@ KNNntpAccount::KNNntpAccount()
 {
   l_astNewFetch = QDate::currentDate();
   a_ccountIntervalChecking = new KNNntpAccountIntervalChecking(this);
-  mCleanupConf = new KNConfig::Cleanup( false );
+  mCleanupConf = new KNode::Cleanup( false );
 }
 
 
@@ -106,7 +106,7 @@ bool KNNntpAccount::readInfo(const QString &confPath)
 
   startTimer();
 
-  i_dentity=new KNConfig::Identity(false);
+  i_dentity=new KNode::Identity(false);
   i_dentity->loadConfig(&conf);
   if(!i_dentity->isEmpty()) {
     kdDebug(5003) << "KNGroup::readInfo(const QString &confPath) : using alternative user for " << n_ame << endl;
@@ -183,8 +183,8 @@ QString KNNntpAccount::path()
 
 bool KNNntpAccount::editProperties(QWidget *parent)
 {
-  if(!i_dentity) i_dentity=new KNConfig::Identity(false);
-  KNConfig::NntpAccountConfDialog *d = new KNConfig::NntpAccountConfDialog(this, parent);
+  if(!i_dentity) i_dentity=new KNode::Identity(false);
+  KNode::NntpAccountConfDialog *d = new KNode::NntpAccountConfDialog(this, parent);
 
   bool ret=false;
   if (d->exec()) {
@@ -219,7 +219,7 @@ void KNNntpAccount::setCheckInterval(int c)
   startTimer();
 }
 
-KNConfig::Cleanup *KNNntpAccount::activeCleanupConfig() const
+KNode::Cleanup *KNNntpAccount::activeCleanupConfig() const
 {
   if (cleanupConfig()->useDefault())
     return knGlobals.configManager()->cleanup();

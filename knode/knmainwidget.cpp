@@ -728,7 +728,7 @@ bool KNMainWidget::firstStart()
   QString group = emailConf.readEntry("Profile","Default");
 
   emailConf.setGroup(QString("PROFILE_%1").arg(group));
-  KNConfig::Identity *id=knGlobals.configManager()->identity();
+  KNode::Identity *id=knGlobals.configManager()->identity();
   id->setName(emailConf.readEntry("FullName"));
   id->setEmail(emailConf.readEntry("EmailAddress").latin1());
   id->setOrga(emailConf.readEntry("Organization"));
@@ -811,7 +811,7 @@ void KNMainWidget::prepareShutdown()
   cup->start();
 
   // compact folders
-  KNConfig::Cleanup *conf=c_fgManager->cleanup();
+  KNode::Cleanup *conf=c_fgManager->cleanup();
   if (conf->compactToday()) {
     cup->reset();
     f_olManager->compactAll(cup);

@@ -20,7 +20,7 @@
 KNode::CSSHelper::CSSHelper( const QPaintDevice *pd ) :
   KPIM::CSSHelper( pd )
 {
-  KNConfig::Appearance *app = knGlobals.configManager()->appearance();
+  Appearance *app = knGlobals.configManager()->appearance();
 
   mForegroundColor = app->textColor();
   mLinkColor = app->linkColor();
