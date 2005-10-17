@@ -3,6 +3,7 @@
 
 using namespace ::boost::unit_test;
 namespace ifile_test {
+using indexlib::detail::ifile;
 const char* fname = "ifile-test-delete-me";
 void cleanup() {
 	ifile::remove( fname );
@@ -55,6 +56,17 @@ void space() {
 	BOOST_CHECK_EQUAL( ifi.search( "two" )->list().size(), 1 );
 }
 
+void numbers() {
+	cleanup();
+	ifile ifi( fname );
+
+	ifi.add( "one 123 123456789 four444 five", "doc" );
+	BOOST_CHECK_EQUAL( ifi.search( "123" )->list().size(), 1 );
+	BOOST_CHECK_EQUAL( ifi.search( "123456789" )->list().size(), 1 );
+	BOOST_CHECK_EQUAL( ifi.search( "four444" )->list().size(), 1 );
+	BOOST_CHECK_EQUAL( ifi.search( "five" )->list().size(), 1 );
+}
+
 void partial() {
 	cleanup();
 	ifile ifi( fname );
@@ -100,6 +112,7 @@ test_suite* get_suite() {
 	test->add( BOOST_TEST_CASE( &simple ) );
 	test->add( BOOST_TEST_CASE( &ndocs ) );
 	test->add( BOOST_TEST_CASE( &space ) );
+	test->add( BOOST_TEST_CASE( &numbers ) );
 	test->add( BOOST_TEST_CASE( &partial ) );
 	test->add( BOOST_TEST_CASE( &several ) );
 	return test;
