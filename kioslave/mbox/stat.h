@@ -74,9 +74,6 @@ public:
 	 * @return Information shipped in an UDSEntry.
 	 */
 	static KIO::UDSEntry statMessage( const UrlInfo& info );
-private:
-	static void addAtom( KIO::UDSEntry& entry, unsigned int key, const QString& value );
-	static void addAtom( KIO::UDSEntry& entry, unsigned int key, const long value );
 };
 
 #endif
