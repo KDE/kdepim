@@ -247,8 +247,8 @@ void KIO_Count::result( KIO::Job* job )
 void KIO_Count::entries( KIO::Job* job, const KIO::UDSEntryList &list )
 {
 	QStringList old_list;
-	KIO::UDSEntryListConstIterator  it1 ;
-	KIO::UDSEntry::ConstIterator it2 ;
+	KIO::UDSEntryList::ConstIterator  it1 ;
+	//KIO::UDSEntry::ConstIterator it2 ;
 	KIO::MetaData metadata;
 	KURL kurl;
 	bool isFile;
@@ -268,13 +268,23 @@ void KIO_Count::entries( KIO::Job* job, const KIO::UDSEntryList &list )
 		 */
 		isFile=false;
 		KKioDrop::FileInfo fileinfo;
-		fileinfo.name = QString::null;
-		fileinfo.size = 0;
+		fileinfo.name = (*it1).contains( KIO::UDS_URL ) ? (*it1).stringValue( KIO::UDS_URL ) : QString::null;
+		fileinfo.size = (*it1).numberValue( KIO::UDS_SIZE, 0 );
 
-		for ( it2 = (*it1).begin() ; it2 != (*it1).end() ; it2++ )
+		if( (*it1).contains( KIO::UDS_NAME ) )
+		{ //The file kioslave doesn't return UDS_URL.
+			kurl = *_kurl;
+			metadata = *_metadata;
+			_protocol->recheckKURL( kurl, metadata );
+			kurl.setPath ( kurl.path() + '/' + (*it1).stringValue( KIO::UDS_NAME ) );
+			fileinfo.name = kurl.url();
+		}
+
+		isFile = (bool)( (*it1).numberValue( KIO::UDS_FILE_TYPE, 0 ) & S_IFREG );
+		/*for ( it2 = (*it1).begin() ; it2 != (*it1).end() ; it2++ )
 		{
 			if( (*it2).m_uds == KIO::UDS_FILE_TYPE &&
-			    ((long)(*it2).m_long & S_IFREG ) )
+			   ((long)(*it2).m_long & S_IFREG ) )
 				isFile=true;
 			else if( (*it2).m_uds == KIO::UDS_URL )
 				fileinfo.name = (*it2).m_str;
@@ -290,7 +300,7 @@ void KIO_Count::entries( KIO::Job* job, const KIO::UDSEntryList &list )
 			{
 				fileinfo.size = (*it2).m_long;
 			}
-		}
+		}*/
 
 		//Add the entry.
 		if( ! fileinfo.name.isNull() && isFile )
