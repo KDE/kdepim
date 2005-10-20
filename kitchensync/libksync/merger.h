@@ -23,6 +23,7 @@
 #define KITCHENSYNC_KSYNC_MERGER_H
 
 #include "syncentry.h"
+#include "syncee.h"
 
 #include <qbitarray.h>
 #include <qstring.h>
