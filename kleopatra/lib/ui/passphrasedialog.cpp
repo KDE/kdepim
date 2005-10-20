@@ -2,7 +2,7 @@
     passphrasedialog.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -87,7 +87,8 @@ Kleo::PassphraseDialog::PassphraseDialog( const QString & msg, const QString & c
 
   vlay->addWidget( new QLabel( msg.isEmpty() ? i18n("Please enter your passphrase:") : msg, w ) );
 
-  d->lineedit = new KPasswordEdit( KPasswordEdit::OneStar, w, "d->lineedit" );
+  d->lineedit = new KPasswordEdit( KPasswordEdit::OneStar, w);
+  d->lineedit->setObjectName("d->lineedit");
   d->lineedit->setMinimumWidth( fontMetrics().width("*") * 20 );
   d->lineedit->setFocus();
 
