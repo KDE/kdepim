@@ -24,8 +24,12 @@ expected=( \
 	debian 'three'
 	'12345678' 'numbers'
 	)
+driver=./indexlibadmin
+unittests=./testdriver
 
-driver=../indexlibadmin
+$unittests
+
+echo "Running tests on the command line..."
 
 mkdir $index
 for name data in $files; do
@@ -45,3 +49,4 @@ done
 
 rm -rf $index
 
+echo "done."
