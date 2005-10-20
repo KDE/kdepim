@@ -1,0 +1,8 @@
+AC_ARG_ENABLE(indexlib-unittests,
+	[  --enable-indexlib-unittests Enables indexlib's unittests (used for debugging only, needs boost::unit_test)],
+	[case "${enableval}" in
+	  yes) indexlib_unittests=true ;;
+	  no) indexlib_unittests=false;;
+	  *) AC_MSG_ERROR(bad value ${enableval} for --enable-indexlib-unittests) ;;
+	esac],[indexlib_unittests=false])
+	AM_CONDITIONAL(enable_indexlib_unittests, test x$indexlib_unittests = xtrue)
