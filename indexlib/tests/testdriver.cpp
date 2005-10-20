@@ -1,4 +1,3 @@
-
 /* This file is part of indexlib.
  * Copyright (C) 2005 Luís Pedro Coelho <luis@luispedro.org>
  *
@@ -28,21 +27,22 @@
  * you do not wish to do so, delete this exception statement from
  * your version.
  */
-
-#include "memvector-test.tcc"
-#include "stringarray-test.tcc"
-#include "match-test.tcc"
-#include "stringset-test.tcc"
-#include "leafdatavector-test.tcc"
-#include "ifile-test.tcc"
-#include "mempool-test.tcc"
-#include "tokenizer-test.tcc"
-#include "create-test.tcc"
+#include <boost/test/unit_test.hpp>
 #include "logfile.h"
+using namespace ::boost::unit_test;
+
+namespace memvector_test { test_suite* get_suite(); }
+namespace stringarray_test { test_suite* get_suite(); }
+namespace match_test { test_suite* get_suite(); }
+namespace stringset_test { test_suite* get_suite(); }
+namespace leafdatavector_test { test_suite* get_suite(); }
+namespace ifile_test { test_suite* get_suite(); }
+namespace mempool_test { test_suite* get_suite(); }
+namespace tokenizer_test { test_suite* get_suite(); }
+namespace create_test { test_suite* get_suite(); }
 
 test_suite* init_unit_test_suite(  int argc, char* argv[] )
 {
-	using namespace indexlib::tests;
 	redirectlog( "unittest.log" );
 	test_suite* test = BOOST_TEST_SUITE(  "Master test suite" );
 
@@ -58,3 +58,4 @@ test_suite* init_unit_test_suite(  int argc, char* argv[] )
 
 	return test;
 }
+
