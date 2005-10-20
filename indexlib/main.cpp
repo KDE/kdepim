@@ -34,9 +34,6 @@
 #include "manager.h"
 #include "mmap_manager.h"
 #include "mempool.h"
-#include "index_slow.h"
-#include "ifile.h"
-#include "quotes.h"
 #include "compressed.h"
 #include "create.h"
 #include <map>
@@ -46,7 +43,6 @@
 #include <fstream>
 #include <memory>
 #include <string.h>
-#include "format.h"
 
 typedef std::auto_ptr<indexlib::index> index_smart;
 
@@ -116,7 +112,6 @@ int add( int argc, char* argv[] ) {
 	if ( argv[ 4 ] ) input = argv[ 4 ];
 	else input = argv[ 3 ];
 	t->add( read_string( input ), argv[ 3 ] );
-	//std::cout << format( "%s indexed as %s\n" ) % argv[ 3 ] % -1; //FIXME
 
 	return 0;
 }
@@ -132,7 +127,7 @@ int search( int argc, char* argv[] ) {
 	else {
 		for ( std::vector<unsigned>::const_iterator first = files.begin(), past = files.end();
 				first != past; ++first ) {
-			std::cout << format( "%s\n" ) % t->lookup_docname( *first );
+			std::cout << t->lookup_docname( *first ) << std::endl;
 		}
 	}
 	return 0;
@@ -143,7 +138,7 @@ int list( int argc, char* argv[] ) {
 
 	unsigned ndocs = t->ndocs();
 	for ( unsigned i = 0; i != ndocs; ++i ) {
-		std::cout << format( "%s\n" ) % t->lookup_docname( i );
+		std::cout << t->lookup_docname( i ) << std::endl;
 	}
 	return 0;
 }
@@ -168,7 +163,7 @@ int main( int argc, char* argv[]) try {
 
 	if ( handle ) return handle( argc, argv );
 	else {
-		std::cerr << format( "Unkown command: %s\n" ) % argv[ 1 ];
+		std::cerr << "Unkown command: " << argv[ 1 ] << std::endl;
 		return 1;
 
 	}
