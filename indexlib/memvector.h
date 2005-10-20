@@ -33,6 +33,7 @@
 
 #include "memreference.h"
 #include "bitio.h"
+#include "compat.h"
 #include "manager.h"
 #include "boost-compat/static_assert.hpp"
 #include "boost-compat/scoped_ptr.hpp"
