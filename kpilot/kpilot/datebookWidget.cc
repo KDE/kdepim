@@ -64,7 +64,8 @@ DatebookWidget::DatebookWidget(QWidget *parent, const QString &dbpath) :
 	fDeleteButton = new QPushButton( i18n( "&Delete..." ), this, "pushButton3" );
 	g->addWidget( fDeleteButton, 2, 2 );
 
-	fEventList = new KListView( this, "kListView1" );
+	fEventList = new KListView( this );
+	fEventList->setObjectName( "kListView1" );
 	fEventList->addColumn( i18n( "Time" ) );
 	fEventList->addColumn( i18n( "Al" ) );
 	fEventList->addColumn( i18n( "Rec" ) );
