@@ -1,5 +1,5 @@
 /*
-    dnorderconfigpage.cpp
+    dnorderconfigpage.h
 
     This file is part of kleopatra, the KDE key manager
     Copyright (c) 2004 Klar�vdalens Datakonsult AB
@@ -29,53 +29,35 @@
     your version.
 */
 
-#include "dnorderconfigpage.h"
+#ifndef __KLEOPATRA_CONF_DNORDERCONFIGPAGE_H__
+#define __KLEOPATRA_CONF_DNORDERCONFIGPAGE_H__
 
-#include <ui/dnattributeorderconfigwidget.h>
-#include <kleo/dn.h>
+#include <kcmodule.h>
 
-#include <kdepimmacros.h>
-
-#include <qlayout.h>
-//Added by qt3to4:
-#include <QVBoxLayout>
-
-DNOrderConfigPage::DNOrderConfigPage( KInstance *instance, QWidget *parent, const QStringList &args )
-  : KCModule( instance, parent, args )
-{
-  QVBoxLayout * vlay = new QVBoxLayout( this );
-  mWidget = Kleo::DNAttributeMapper::instance()->configWidget( this, "mWidget" );
-  vlay->addWidget( mWidget );
-
-  connect( mWidget, SIGNAL(changed()), SLOT(slotChanged()) );
-
-#ifndef HAVE_UNBROKEN_KCMULTIDIALOG
-  load();
-#endif
+namespace Kleo {
+  class DNAttributeOrderConfigWidget;
 }
 
+/**
+ * "DN Order" configuration page for kleopatra's configuration dialog
+ */
+class DNOrderConfigPage : public KCModule {
+  Q_OBJECT
+public:
+  DNOrderConfigPage( KInstance *instance, QWidget *parent=0, const QStringList &args=QStringList() );
 
-void DNOrderConfigPage::load() {
-  mWidget->load();
-}
+  /*! reimplementation */
+  void load();
+  /*! reimplementation */
+  void save();
+  /*! reimplementation */
+  void defaults();
 
-void DNOrderConfigPage::save() {
-  mWidget->save();
-}
+private slots:
+  void slotChanged();
 
-void DNOrderConfigPage::defaults() {
-  mWidget->defaults();
-}
+private:
+  Kleo::DNAttributeOrderConfigWidget * mWidget;
+};
 
-// kdelibs-3.2 didn't have the changed signal in KCModule...
-void DNOrderConfigPage::slotChanged() {
-  emit changed(true);
-}
-
-extern "C" KDE_EXPORT KCModule * create_kleopatra_config_dnorder( KInstance *instance, QWidget *parent=0, const QStringList &args=QStringList() ) {
-    DNOrderConfigPage *page = new DNOrderConfigPage( instance, parent, args );
-    page->setObjectName( "kleopatra_config_dnorder" );
-    return page;
-}
-
-#include "dnorderconfigpage.moc"
+#endif // __KLEOPATRA_CONF_DNORDERCONFIGPAGE_H__

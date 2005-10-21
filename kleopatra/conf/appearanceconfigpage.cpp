@@ -2,7 +2,7 @@
     appearanceconfigpage.cpp
 
     This file is part of kleopatra, the KDE key manager
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License,
@@ -40,8 +40,8 @@
 
 #include <kdepimmacros.h>
 
-AppearanceConfigurationPage::AppearanceConfigurationPage( QWidget * parent, const char * name )
-    : KCModule( parent, name )
+AppearanceConfigurationPage::AppearanceConfigurationPage( KInstance *instance, QWidget *parent, const QStringList &args )
+    : KCModule( instance, parent, args )
 {
   QVBoxLayout* lay = new QVBoxLayout( this );
   mWidget = new Kleo::AppearanceConfigWidget( this );
@@ -72,10 +72,11 @@ void AppearanceConfigurationPage::defaults()
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kleopatra_config_appear( QWidget *parent, const char * )
+  KDE_EXPORT KCModule *create_kleopatra_config_appear( KInstance *instance, QWidget *parent=0, const QStringList &args=QStringList() )
   {
     AppearanceConfigurationPage *page =
-      new AppearanceConfigurationPage( parent, "kleopatra_config_appear" );
+      new AppearanceConfigurationPage( instance, parent, args );
+    page->setObjectName( "kleopatra_config_appear" );
     return page;
   }
 }

@@ -1,5 +1,5 @@
 /*
-    dnorderconfigpage.cpp
+    appearanceconfigpage.h
 
     This file is part of kleopatra, the KDE key manager
     Copyright (c) 2004 Klar�vdalens Datakonsult AB
@@ -29,53 +29,32 @@
     your version.
 */
 
-#include "dnorderconfigpage.h"
+#ifndef _APPEARANCE_CONFIGURE_PAGE_H_
+#define _APPEARANCE_CONFIGURE_PAGE_H_
 
-#include <ui/dnattributeorderconfigwidget.h>
-#include <kleo/dn.h>
+#include <kcmodule.h>
 
-#include <kdepimmacros.h>
-
-#include <qlayout.h>
-//Added by qt3to4:
-#include <QVBoxLayout>
-
-DNOrderConfigPage::DNOrderConfigPage( KInstance *instance, QWidget *parent, const QStringList &args )
-  : KCModule( instance, parent, args )
-{
-  QVBoxLayout * vlay = new QVBoxLayout( this );
-  mWidget = Kleo::DNAttributeMapper::instance()->configWidget( this, "mWidget" );
-  vlay->addWidget( mWidget );
-
-  connect( mWidget, SIGNAL(changed()), SLOT(slotChanged()) );
-
-#ifndef HAVE_UNBROKEN_KCMULTIDIALOG
-  load();
-#endif
+namespace Kleo {
+  class AppearanceConfigWidget;
 }
 
+/**
+ * "Appearance" configuration page for kleopatra's configuration dialog
+ */
+class AppearanceConfigurationPage : public KCModule {
+  Q_OBJECT
+public:
+  AppearanceConfigurationPage( KInstance *instance, QWidget *parent=0, const QStringList &args=QStringList() );
 
-void DNOrderConfigPage::load() {
-  mWidget->load();
-}
+  virtual void load();
+  virtual void save();
+  virtual void defaults();
 
-void DNOrderConfigPage::save() {
-  mWidget->save();
-}
+private slots:
+  void slotChanged();
 
-void DNOrderConfigPage::defaults() {
-  mWidget->defaults();
-}
+private:
+  Kleo::AppearanceConfigWidget* mWidget;
+};
 
-// kdelibs-3.2 didn't have the changed signal in KCModule...
-void DNOrderConfigPage::slotChanged() {
-  emit changed(true);
-}
-
-extern "C" KDE_EXPORT KCModule * create_kleopatra_config_dnorder( KInstance *instance, QWidget *parent=0, const QStringList &args=QStringList() ) {
-    DNOrderConfigPage *page = new DNOrderConfigPage( instance, parent, args );
-    page->setObjectName( "kleopatra_config_dnorder" );
-    return page;
-}
-
-#include "dnorderconfigpage.moc"
+#endif // _APPEARANCE_CONFIGURE_DIALOG_PRIVATE_H_

@@ -2,7 +2,7 @@
     dirservconfigpage.cpp
 
     This file is part of kleopatra
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License,
@@ -139,8 +139,8 @@ static const char s_addnewservers_componentName[] = "dirmngr";
 static const char s_addnewservers_groupName[] = "LDAP";
 static const char s_addnewservers_entryName[] = "add-servers";
 
-DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( QWidget * parent, const char * name )
-    : KCModule( parent, name )
+DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( KInstance *instance, QWidget *parent, const QStringList &args )
+    : KCModule( instance, parent, args )
 {
   mConfig = Kleo::CryptoBackendFactory::instance()->config();
   QVBoxLayout* lay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
@@ -261,10 +261,11 @@ void DirectoryServicesConfigurationPage::defaults()
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kleopatra_config_dirserv( QWidget *parent, const char * )
+  KDE_EXPORT KCModule *create_kleopatra_config_dirserv( KInstance *instance, QWidget *parent=0, const QStringList &args=QStringList() )
   {
     DirectoryServicesConfigurationPage *page =
-      new DirectoryServicesConfigurationPage( parent, "kleopatra_config_dirserv" );
+      new DirectoryServicesConfigurationPage( instance, parent, args );
+    page->setObjectName( "kleopatra_config_dirserv" );
     return page;
   }
 }

@@ -2,7 +2,7 @@
     dirservconfigpage.h
 
     This file is part of kleopatra
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License,
@@ -53,7 +53,7 @@ namespace Kleo {
 class KDE_EXPORT DirectoryServicesConfigurationPage : public KCModule {
   Q_OBJECT
 public:
-  DirectoryServicesConfigurationPage( QWidget * parent=0, const char * name=0 );
+  DirectoryServicesConfigurationPage( KInstance *instance, QWidget *parent=0, const QStringList &args=QStringList() );
 
   virtual void load();
   virtual void save();
