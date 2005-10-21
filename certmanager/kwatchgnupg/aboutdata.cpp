@@ -51,6 +51,7 @@ static const about_data authors[] = {
 
 static const about_data credits[] = {
   // PENDING(steffen) add stuff
+  ""
 };
 
 AboutData::AboutData()
