@@ -169,7 +169,7 @@ void KNNetAccess::stopJobsNntp( int type )
       ++it;
   }
   for ( it = mWalletQueue.begin(); it != mWalletQueue.end();) {
-    tmp == *it;
+      tmp = *it;
     if ( type == 0 || tmp->type() == type ) {
       it = mWalletQueue.remove( it );
       tmp->cancel();
