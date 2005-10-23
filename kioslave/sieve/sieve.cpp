@@ -802,18 +802,11 @@ void kio_sieveProtocol::stat(const KURL& url)
 	QString filename = url.fileName(false);
 
 	if (filename.isEmpty()) {
-		UDSAtom atom;
-		atom.m_uds = KIO::UDS_NAME;
-		atom.m_str = "/";
-		entry.append(atom);
+		entry.insert(KIO::UDS_NAME, "/");
 
-		atom.m_uds = KIO::UDS_FILE_TYPE;
-		atom.m_long = S_IFDIR;
-		entry.append(atom);
+		entry.insert(KIO::UDS_FILE_TYPE, S_IFDIR);
 
-		atom.m_uds = KIO::UDS_ACCESS;
-		atom.m_long = 0700;
-		entry.append(atom);
+		entry.insert(KIO::UDS_ACCESS, 0700);
 
 		statEntry(entry);
 
@@ -831,25 +824,16 @@ void kio_sieveProtocol::stat(const KURL& url)
 				if (filename == QString::fromUtf8(r.getKey())) {
 					entry.clear();
 
-					UDSAtom atom;
-					atom.m_uds = KIO::UDS_NAME;
-					atom.m_str = QString::fromUtf8(r.getKey());
-					entry.append(atom);
+					entry.insert(KIO::UDS_NAME,QString::fromUtf8(r.getKey()));
 
-					atom.m_uds = KIO::UDS_FILE_TYPE;
-					atom.m_long = S_IFREG;
-					entry.append(atom);
+					entry.insert(KIO::UDS_FILE_TYPE, S_IFREG);
 
-					atom.m_uds = KIO::UDS_ACCESS;
 					if ( r.getExtra() == "ACTIVE" )
-					  atom.m_long = 0700; // mark exec'able
+						entry.insert(KIO::UDS_ACCESS,0700);
 					else
-					  atom.m_long = 0600;
-					entry.append(atom);
+						entry.insert(KIO::UDS_ACCESS,0600);
 
-					atom.m_uds = KIO::UDS_MIME_TYPE;
-					atom.m_str = "application/sieve";
-					entry.append(atom);
+					entry.insert(KIO::UDS_MIME_TYPE,"application/sieve");
 
 					//setMetaData("active", (r.getExtra() == "ACTIVE") ? "yes" : "no");
 
@@ -882,26 +866,17 @@ void kio_sieveProtocol::listDir(const KURL& url)
 
 		} else {
 			entry.clear();
+			entry.insert(KIO::UDS_NAME,QString::fromUtf8(r.getKey()));
 
-			UDSAtom atom;
-			atom.m_uds = KIO::UDS_NAME;
-			atom.m_str = QString::fromUtf8(r.getKey());
-			entry.append(atom);
-
-			atom.m_uds = KIO::UDS_FILE_TYPE;
-			atom.m_long = S_IFREG;
-			entry.append(atom);
+			entry.insert(KIO::UDS_FILE_TYPE,S_IFREG);
 
 			atom.m_uds = KIO::UDS_ACCESS;
 			if ( r.getExtra() == "ACTIVE" )
-			  atom.m_long = 0700; // mark exec'able
+				entry.insert(KIO::UDS_ACCESS, 0700);// mark exec'able
 			else
-			  atom.m_long = 0600;
-			entry.append(atom);
+				entry.insert(KIO::UDS_ACCESS,0600);
 
-			atom.m_uds = KIO::UDS_MIME_TYPE;
-			atom.m_str = "application/sieve";
-			entry.append(atom);
+			entry.insert(KIO::UDS_MIME_TYPE, "application/sieve");
 
 			//asetMetaData("active", (r.getExtra() == "ACTIVE") ? "true" : "false");
 
