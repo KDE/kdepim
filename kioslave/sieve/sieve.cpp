@@ -802,7 +802,7 @@ void kio_sieveProtocol::stat(const KURL& url)
 	QString filename = url.fileName(false);
 
 	if (filename.isEmpty()) {
-		entry.insert(KIO::UDS_NAME, "/");
+		entry.insert(KIO::UDS_NAME, QString::fromLatin1("/"));
 
 		entry.insert(KIO::UDS_FILE_TYPE, S_IFDIR);
 
