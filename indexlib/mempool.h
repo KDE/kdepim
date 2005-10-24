@@ -56,12 +56,33 @@ struct mempool /* : boost::noncopyable */ {
 		typedef typename traits_type::value_type data_type;
 		typedef typename traits_type::pointer data_typeptr;
 		explicit mempool( std::auto_ptr<memory_manager> source );
-		data_typeptr allocate( unsigned );
-		data_typeptr reallocate( data_typeptr, unsigned );
-		void deallocate( data_typeptr );
 
+		/**
+		 * Returns a memory block of size \param s.
+		 * Analogous to malloc()
+		 */
+		data_typeptr allocate( unsigned s );
+		/**
+		 * Makes the memory pointed to by \param p of size \s or allocates a new block of size \s
+		 * and moves the held data.
+		 *
+		 * Analogous to realloc()
+		 * Unlike realloc(), does not support either reallocate( 0, s ) nor reallocate( p, 0 )
+		 */
+		data_typeptr reallocate( data_typeptr, unsigned );
+		/** Releases the memory pointed to by \param p
+		  * Analogous to free()
+		  */
+		void deallocate( data_typeptr p );
+
+		/** Prints a half-readable description to \param out
+		 * Mainly for debugging 
+		 */
 		void print( std::ostream& out ) const;
 
+		/**
+		 * How big (in bytes) is the memory managed?
+		 */
 		unsigned size() const { return manager_->size(); }
 	private:
 		/**
