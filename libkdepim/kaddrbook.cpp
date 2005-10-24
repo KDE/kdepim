@@ -66,6 +66,18 @@ void KAddrBookExternal::addEmail( const QString& addr, QWidget *parent) {
   // by other programs are loaded
   ab->asyncLoad();
 
+  // if we have to reload the address book then we should also wait until
+  // it's completely reloaded
+#if KDE_IS_VERSION(3,4,89)
+  // This ugly hack will be removed in 4.0
+  while ( !ab->loadingHasFinished() ) {
+    QApplication::eventLoop()->processEvents( QEventLoop::ExcludeUserInput );
+
+    // use sleep here to reduce cpu usage
+    usleep( 100 );
+  }
+#endif
+
   KABC::Addressee::List addressees = ab->findByEmail( email );
 
   if ( addressees.isEmpty() ) {
