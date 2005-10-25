@@ -136,7 +136,7 @@ void SloxFolderManager::readFolders()
   mFolders.clear();
 
   QDomNodeList nodes = doc.elementsByTagName( "D:prop" );
-  for( uint i = 0; i < nodes.count(); ++i ) {
+  for( int i = 0; i < nodes.count(); ++i ) {
     QDomElement element = nodes.item(i).toElement();
     QString id = "-1", parentId = "-1"; // OX default folder
     bool def = false;
