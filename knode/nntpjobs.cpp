@@ -59,7 +59,7 @@ void KNode::GroupListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList &
   QString name, desc;
   bool subscribed;
   KNGroup::Status access;
-  for( KIO::UDSEntryListConstIterator it = list.begin(); it != list.end(); ++it ) {
+  for( KIO::UDSEntryList::ConstIterator it = list.begin(); it != list.end(); ++it ) {
     name = QString::null;
     desc = QString::null;
     access = KNGroup::unknown;
