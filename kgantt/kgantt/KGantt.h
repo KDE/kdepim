@@ -233,43 +233,53 @@ public:
 public slots:
 
 
+  /** Proxy slot to set the selection on the viewport. @internal */
   void setSelect() {
     _ganttbar->viewport()->setSelect();
   }
 
+  /** Proxy slot to set the zoom on the viewport. @internal */
   void setZoom() {
     _ganttbar->viewport()->setZoom();
   }
 
+  /** Proxy slot to set the move (?) on the viewport. @internal */
   void setMove() {
     _ganttbar->viewport()->setMove();
   }
 
 
+  /** Proxy slot to zoom in on the viewport. @internal */
   void zoomIn() {
     _ganttbar->viewport()->zoomIn();
   }
 
+  /** Proxy slot to zoom out on the viewport. @internal */
   void zoomOut() {
     _ganttbar->viewport()->zoomOut();
   }
 
+  /** Proxy slot to zoom on all in the viewport. @internal */
   void zoomAll() {
     _ganttbar->viewport()->zoomAll();
   }
 
+  /** Proxy slot to select everything in the viewport. @internal */
   void selectAll() {
     _ganttbar->viewport()->selectAll();
   }
 
+  /** Proxy slot to unset the selection on the viewport. @internal */
   void unselectAll() {
     _ganttbar->viewport()->unselectAll();
   }
 
+  /** Proxy slot to delete the selection on the viewport. @internal */
   void deleteSelectedItems() {
     _ganttbar->viewport()->deleteSelectedItems();
   }
 
+  /** Proxy slot to insert into the selection on the viewport. @internal */
   void insertIntoSelectedItem() {
     _ganttbar->viewport()->insertIntoSelectedItem();
   }
