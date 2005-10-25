@@ -43,7 +43,7 @@
 using namespace KCal;
 
 ResourceTVAnytimeConfig::ResourceTVAnytimeConfig( QWidget* parent,  const char* name )
-    : KRES::ConfigWidget( parent, name )
+    : KRES::ConfigWidget( parent )
 {
   resize( 245, 115 ); 
   QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
