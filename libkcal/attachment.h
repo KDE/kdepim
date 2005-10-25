@@ -36,6 +36,10 @@ namespace KCal {
 class KDE_EXPORT Attachment
 {
   public:
+    /** 
+      Type for a list of attachements, since most documents will
+      have one-or-more attachements. 
+    */
     typedef ListBase<Attachment> List;
 
     /**
@@ -62,9 +66,13 @@ class KDE_EXPORT Attachment
     Attachment( const char *base64, const QString &mime = QString::null );
     ~Attachment();
 
-    /* The VALUE parameter in iCal */
-    bool isUri() const;
+    /** The VALUE parameter in iCal may represent a URI for the attachment. */
     QString uri() const;
+    /** Is the VALUE parameter one that represents a URI? */
+    bool isUri() const;
+    /** Sets the VALUE parameter for the attachment to the given URI.
+        @param uri The URI to use for this attachment.
+    */
     void setUri( const QString &uri );
     
     /* Data attachments are currently not implemented in iCal. */

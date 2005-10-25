@@ -51,6 +51,9 @@ class KDE_EXPORT IdMapper
       
       The current implementation stores the data at
       $(KDEHOME)/share/apps/\<path\>/\<identifier\>.
+
+      @param path Category of mapping (path into the mapping namespace)
+      @param identifier The concrete mapping object (filename in namespace)
     */
     IdMapper( const QString &path, const QString &identifier = QString::null );
     /** Destructor. */
@@ -115,6 +118,10 @@ class KDE_EXPORT IdMapper
      * the locally held version differs from what is on the server.
      * This can be a sequence number of an md5 hash depending on what
      * the server provides.
+     *
+     * @param localId Local Id to set the fingerprint on.
+     * @param fingerprint Fingerprint (any string will do, though
+     *        an md5 hash is probably a good idea) of the Id.
      */
     void setFingerprint( const QString &localId, const QString &fingerprint );
 
@@ -127,6 +134,9 @@ class KDE_EXPORT IdMapper
     QString fingerprint( const QString &localId ) const;
 
 
+    /**
+     * Returns the entire map of local-to-remote Ids.
+     */
     QMap<QString, QString> remoteIdMap() const;
 
     /**
@@ -136,6 +146,10 @@ class KDE_EXPORT IdMapper
     QString asString() const;
 
   protected:
+    /**
+     * Filename of the map when stored on disk. Used in save() and load(),
+     * see also documentation for constructor IdMapper( const QString &path, const QString &identifier )
+     */
     QString filename();
 
   private:
