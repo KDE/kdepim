@@ -600,7 +600,7 @@ void DistributionListWidget::changed()
 #endif
 
 DistributionListView::DistributionListView( QWidget *parent, const char* name )
-  : KListView( parent, name )
+  : KListView( parent )
 {
   setDragEnabled( true );
   setAcceptDrops( true );
