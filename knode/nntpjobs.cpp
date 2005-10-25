@@ -15,10 +15,8 @@
 #include "kngroup.h"
 #include "kngroupmanager.h"
 #include "knserverinfo.h"
-
 #include <kdebug.h>
 #include <klocale.h>
-
 #include <QDir>
 
 KNode::GroupListJob::GroupListJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i, bool incremental ) :
@@ -60,22 +58,37 @@ void KNode::GroupListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList &
   bool subscribed;
   KNGroup::Status access;
   for( KIO::UDSEntryList::ConstIterator it = list.begin(); it != list.end(); ++it ) {
-    name = QString::null;
-    desc = QString::null;
     access = KNGroup::unknown;
+	name = (*it).stringValue(KIO::UDS_NAME);
+	desc = (*it).stringValue(KIO::UDS_EXTRA);
+
+	int	value = (*it).numberValue(KIO::UDS_ACCESS, -1);
+	if( value != -1 )
+	{
+		if( value & S_IWOTH )
+				access = KNGroup::postingAllowed;
+		else if ( value & S_IWGRP )
+				access = KNGroup::moderated;
+		else
+				access = KNGroup::readOnly;
+	}
+			
+	//access = (*it).numberValue();
+#if 0	
     for ( KIO::UDSEntry::ConstIterator it2 = (*it).begin(); it2 != (*it).end(); ++it2 ) {
       if ( (*it2).m_uds == KIO::UDS_NAME )
-        name = (*it2).m_str;
+        name = (*it2).toString();
       else if ( (*it2).m_uds == KIO::UDS_ACCESS ) {
-        if ( (*it2).m_long & S_IWOTH )
+        if ( (*it2).toNumber() & S_IWOTH )
           access = KNGroup::postingAllowed;
-        else if ( (*it2).m_long & S_IWGRP )
+        else if ( (*it2).toNumber() & S_IWGRP )
           access = KNGroup::moderated;
         else
           access = KNGroup::readOnly;
       } else if ( (*it2).m_uds == KIO::UDS_EXTRA )
-        desc = (*it2).m_str;
+        desc = (*it2).toString();
     }
+#endif	
     if ( name.isEmpty() )
       continue;
     if ( target->subscribed.contains( name ) ) {

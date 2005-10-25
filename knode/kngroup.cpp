@@ -433,7 +433,7 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
   }
 
   QString hdrName, hdrValue;
-  for( KIO::UDSEntryListConstIterator it = list.begin(); it != list.end(); ++it ) {
+  for( KIO::UDSEntryList::ConstIterator it = list.begin(); it != list.end(); ++it ) {
 
     //new Header-Object
     art=new KNRemoteArticle(this);
