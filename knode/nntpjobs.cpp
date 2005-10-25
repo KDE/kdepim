@@ -73,22 +73,6 @@ void KNode::GroupListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList &
 				access = KNGroup::readOnly;
 	}
 			
-	//access = (*it).numberValue();
-#if 0	
-    for ( KIO::UDSEntry::ConstIterator it2 = (*it).begin(); it2 != (*it).end(); ++it2 ) {
-      if ( (*it2).m_uds == KIO::UDS_NAME )
-        name = (*it2).toString();
-      else if ( (*it2).m_uds == KIO::UDS_ACCESS ) {
-        if ( (*it2).toNumber() & S_IWOTH )
-          access = KNGroup::postingAllowed;
-        else if ( (*it2).toNumber() & S_IWGRP )
-          access = KNGroup::moderated;
-        else
-          access = KNGroup::readOnly;
-      } else if ( (*it2).m_uds == KIO::UDS_EXTRA )
-        desc = (*it2).toString();
-    }
-#endif	
     if ( name.isEmpty() )
       continue;
     if ( target->subscribed.contains( name ) ) {
