@@ -28,7 +28,7 @@
 #include <kaboutdata.h>
 #include <kdebug.h>
 #include <klocale.h>
-
+#include <kinstance.h>
 #include "kabconfigwidget.h"
 
 #include "kcmkabconfig.h"
@@ -38,12 +38,13 @@
 extern "C"
 {
   KDE_EXPORT KCModule *create_kabconfig( QWidget *parent, const char * ) {
-    return new KCMKabConfig( parent, "kcmkabconfig" );
+	KInstance *inst = new KInstance("kcmkabconfig" );
+    return new KCMKabConfig( inst , parent );
   }
 }
 
-KCMKabConfig::KCMKabConfig( QWidget *parent, const char *name )
-  : KCModule( parent, name )
+KCMKabConfig::KCMKabConfig( KInstance *inst, QWidget *parent )
+  : KCModule( inst, parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   mConfigWidget = new KABConfigWidget( this, "mConfigWidget" );

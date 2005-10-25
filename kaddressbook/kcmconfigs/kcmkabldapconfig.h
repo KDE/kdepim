@@ -25,7 +25,7 @@
 #define KCMKABLDAPCONFIG_H
 
 #include <kcmodule.h>
-
+#include <kinstance.h>
 #include <qwidget.h>
 
 class LDAPOptionsWidget;
@@ -35,7 +35,7 @@ class KCMKabLdapConfig : public KCModule
   Q_OBJECT
 
   public:
-    KCMKabLdapConfig( QWidget *parent = 0, const char *name = 0 );
+    KCMKabLdapConfig( KInstance *inst, QWidget *parent = 0);
 
     virtual void load();
     virtual void save();

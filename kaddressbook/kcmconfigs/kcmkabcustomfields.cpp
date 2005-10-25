@@ -34,12 +34,13 @@
 extern "C"
 {
   KDE_EXPORT KCModule *create_kabcustomfields( QWidget *parent, const char * ) {
-    return new KCMKabCustomFields( parent, "kcmkabcustomfields" );
+	KInstance *inst= new KInstance("kcmkabcustomfields");
+    return new KCMKabCustomFields( inst, parent );
   }
 }
 
-KCMKabCustomFields::KCMKabCustomFields( QWidget *parent, const char *name )
-  : KCMDesignerFields( parent, name )
+KCMKabCustomFields::KCMKabCustomFields( KInstance *inst, QWidget *parent )
+  : KCMDesignerFields( inst,parent )
 {
 }
 

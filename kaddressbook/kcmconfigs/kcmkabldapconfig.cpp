@@ -29,7 +29,7 @@
 
 #include <kaboutdata.h>
 #include <klocale.h>
-
+#include <kinstance.h>
 #include "ldapoptionswidget.h"
 
 #include "kcmkabldapconfig.h"
@@ -39,12 +39,13 @@
 extern "C"
 {
   KDE_EXPORT KCModule *create_kabldapconfig( QWidget *parent, const char * ) {
-    return new KCMKabLdapConfig( parent, "kcmkabldapconfig" );
+	KInstance *inst = new KInstance("kcmkabldapconfig" );
+    return new KCMKabLdapConfig( inst, parent );
   }
 }
 
-KCMKabLdapConfig::KCMKabLdapConfig( QWidget *parent, const char *name )
-  : KCModule( parent, name )
+KCMKabLdapConfig::KCMKabLdapConfig( KInstance *inst, QWidget *parent )
+  : KCModule( inst, parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   mConfigWidget = new LDAPOptionsWidget( this );
