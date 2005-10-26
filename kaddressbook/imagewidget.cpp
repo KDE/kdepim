@@ -30,7 +30,6 @@
 #include <kio/netaccess.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kurldrag.h>
 #include <kurlrequester.h>
 #include <kpixmapregionselectordialog.h>
 
@@ -103,7 +102,7 @@ void ImageLabel::dropEvent( QDropEvent *event )
   }
 
   if ( Q3UriDrag::canDecode( event ) ) {
-    KURL::List urls;
+	KURL::List urls = KURL::List::fromMimeData( event->mimeData() );
     if ( KURLDrag::decode( event, urls ) ) {
       if ( urls.isEmpty() ) { // oops, no data
         event->accept( false );

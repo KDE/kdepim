@@ -43,7 +43,8 @@ ExtensionManager::ExtensionManager( KAB::Core *core, QWidget *parent,
 {
   createExtensionWidgets();
 
-  mActionCollection = new KActionCollection( this, "ActionCollection" );
+  mActionCollection = new KActionCollection( this);
+  mActionCollection->setObjectName("ActionCollection" );
 
   QTimer::singleShot( 0, this, SLOT( createActions() ) );
 }
