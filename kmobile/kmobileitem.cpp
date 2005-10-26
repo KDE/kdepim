@@ -25,7 +25,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kconfig.h>
-
+#include <kinstance.h>
 #include "kmobileitem.h"
 
 

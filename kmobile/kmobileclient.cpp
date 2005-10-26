@@ -91,16 +91,18 @@ bool KMobileClient::startKMobileApplication()
 
 #define PREPARE( FUNC, PARAMS ) \
   QByteArray data; \
-  QDataStream arg(data, QIODevice::WriteOnly); \
+  QDataStream arg(&data, QIODevice::WriteOnly); \
+  arg.setVersion(QDataStream::Qt_3_1); \
   arg << PARAMS; \
-  Q3CString replyType; \
+  DCOPCString replyType; \
   QByteArray replyData; \
   bool ok = call(m_kmobileApp, m_kmobileObj, FUNC, data, replyType, replyData, KMOBILECLIENT_USE_EVENTLOOP, KMOBILECLIENT_TIMEOUT); \
   PRINT_DEBUG << QString("DCOP-CALL to %1: %2\n").arg(FUNC).arg(ok?"ok.":"FAILED.")
 
 #define RETURN_TYPE( FUNC, PARAMS, RETURN_TYPE ) \
   PREPARE( FUNC, PARAMS ); \
-  QDataStream reply(replyData, QIODevice::ReadOnly); \
+  QDataStream reply(&replyData, QIODevice::ReadOnly); \
+  reply.setVersion(QDataStream::Qt_3_1); \
   RETURN_TYPE ret; \
   if (ok) \
 	reply >> ret; \
@@ -108,7 +110,8 @@ bool KMobileClient::startKMobileApplication()
 
 #define RETURN_TYPE_DEFAULT( FUNC, PARAMS, RETURN_TYPE, RETURN_DEFAULT ) \
   PREPARE( FUNC, PARAMS ); \
-  QDataStream reply(replyData, QIODevice::ReadOnly); \
+  QDataStream reply(&replyData, QIODevice::ReadOnly); \
+  reply.setVersion(QDataStream::Qt_3_1); \
   RETURN_TYPE ret = RETURN_DEFAULT; \
   if (ok) \
 	reply >> ret; \

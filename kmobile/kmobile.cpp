@@ -97,8 +97,10 @@ void KMobile::setupActions()
 {
     KStdAction::close(this, SLOT(dockApplication()), actionCollection());
     KStdAction::quit(kapp, SLOT(quit()), actionCollection());
-
+#warning "kde4 ! showToolbar was removed";	
+#if 0
     m_toolbarAction = KStdAction::showToolbar(this, SLOT(optionsShowToolbar()), actionCollection());
+#endif	
     optionsShowToolbar();
     m_statusbarAction = KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()), actionCollection());
 
@@ -110,7 +112,7 @@ void KMobile::setupActions()
 		this, SLOT(addDevice()), actionCollection(), "device_add");
     new KAction( KGuiItem( i18n("&Remove Device"), "edittrash", i18n("Remove this device") ),
 		"Delete", this,  SLOT(removeDevice()), actionCollection(), "device_remove");
-    new KAction(i18n("Re&name Device..."), 0, Key_F2,
+    new KAction(i18n("Re&name Device..."), 0, Qt::Key_F2,
 		this, SLOT(renameDevice()), actionCollection(), "device_rename");
     new KAction(i18n("&Configure Device..."), "configure", 0,
 		this, SLOT(configDevice()), actionCollection(), "device_configure");

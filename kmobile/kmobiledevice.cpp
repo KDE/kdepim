@@ -50,9 +50,10 @@
  */
 
 KMobileDevice::KMobileDevice(QObject *obj, const char *name, const QStringList &args)
-	: KLibFactory(obj,name),
+	: KLibFactory(obj),
            m_config(0L), d(0L)
 {
+  setObjectName(name);
   setClassType(Unclassified);
   setCapabilities(hasNothing);
   m_deviceName = i18n("Unknown Device");
@@ -244,40 +245,31 @@ int KMobileDevice::storeNote( int, const QString & )
  * @param fileName  path and name of a file in the mobile device, e.g. "/MYFILE.TXT", "/mp3/song1.mp3"
  */
 
-static
-void addAtom(KIO::UDSEntry& entry, unsigned int ID, long l, const QString& s = QString::null)
-{
-	KIO::UDSAtom atom;
-	atom.m_uds = ID;
-	atom.m_long = l;
-	atom.m_str = s;
-	entry.append(atom);
-}
-
 void KMobileDevice::createDirEntry(KIO::UDSEntry& entry, const QString& name, const QString& url, const QString& mime) const
 {
 	entry.clear();
-	addAtom(entry, KIO::UDS_NAME, 0, name);
-	addAtom(entry, KIO::UDS_FILE_TYPE, S_IFDIR);
-	addAtom(entry, KIO::UDS_ACCESS, 0500);
-	addAtom(entry, KIO::UDS_MIME_TYPE, 0, mime);
-	addAtom(entry, KIO::UDS_URL, 0, url);
+	entry.insert(KIO::UDS_NAME, name);
+	entry.insert( KIO::UDS_FILE_TYPE, S_IFDIR);
+	entry.insert( KIO::UDS_ACCESS, 0500);
+	entry.insert( KIO::UDS_MIME_TYPE, mime);
+	entry.insert( KIO::UDS_URL, url);
 	PRINT_DEBUG << QString("createDirEntry: File: %1  MIME: %2  URL: %3\n").arg(name).arg(mime).arg(url);
 //	addAtom(entry, KIO::UDS_SIZE, 0);
-	addAtom(entry, KIO::UDS_GUESSED_MIME_TYPE, 0, mime);
+	entry.insert( KIO::UDS_GUESSED_MIME_TYPE, mime);
 }
 
 void KMobileDevice::createFileEntry(KIO::UDSEntry& entry, const QString& name, const QString& url, const QString& mime,
 		const unsigned long size) const
 {
 	entry.clear();
-	addAtom(entry, KIO::UDS_NAME, 0, name);
-	addAtom(entry, KIO::UDS_FILE_TYPE, S_IFREG);
-	addAtom(entry, KIO::UDS_URL, 0, url);
-	addAtom(entry, KIO::UDS_ACCESS, 0400);
-	addAtom(entry, KIO::UDS_MIME_TYPE, 0, mime);
-	if (size) addAtom(entry, KIO::UDS_SIZE, size);
-	addAtom(entry, KIO::UDS_GUESSED_MIME_TYPE, 0, mime);
+	entry.insert( KIO::UDS_NAME, name);
+	entry.insert( KIO::UDS_FILE_TYPE, S_IFREG);
+	entry.insert( KIO::UDS_URL, url);
+	entry.insert(KIO::UDS_ACCESS, 0400);
+	entry.insert( KIO::UDS_MIME_TYPE, mime);
+	if (size) 
+			entry.insert( KIO::UDS_SIZE, size);
+	entry.insert( KIO::UDS_GUESSED_MIME_TYPE, mime);
 	PRINT_DEBUG << QString("createFileEntry: File: %1, Size: %2,  MIME: %3\n").arg(name).arg(size).arg(mime);
 }
 
