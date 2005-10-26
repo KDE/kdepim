@@ -55,6 +55,7 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 #include <qregexp.h>
 
 #include <assert.h>
+#include <krandom.h>
 
 using namespace KPIM;
 
@@ -492,7 +493,7 @@ int IdentityManager::newUoid()
                   // default identity
 
   do {
-    uoid = kapp->random();
+    uoid = KRandom::random();
   } while ( usedUOIDs.find( uoid ) != usedUOIDs.end() );
 
   return uoid;
