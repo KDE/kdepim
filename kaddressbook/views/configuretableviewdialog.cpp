@@ -131,7 +131,8 @@ void LookAndFeelPage::initGUI()
           SLOT(enableBackgroundToggled(bool)));
   backgroundLayout->addWidget(mBackgroundBox);
 
-  mBackgroundName = new KURLRequester(this, "mBackgroundName");
+  mBackgroundName = new KURLRequester(this);
+  mBackgroundName->setObjectName( "mBackgroundName");
   mBackgroundName->setMode(KFile::File | KFile::ExistingOnly |
                            KFile::LocalOnly);
   mBackgroundName->setFilter(KImageIO::pattern(KImageIO::Reading));

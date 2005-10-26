@@ -39,8 +39,8 @@ QDate DateParser::parse( const QString &dateStr ) const
   int year, month, day;
   year = month = day = 0;
 
-  uint currPos = 0;
-  for ( uint i = 0; i < mPattern.length(); ++i ) {
+  int currPos = 0;
+  for ( int i = 0; i < mPattern.length(); ++i ) {
     if ( mPattern[ i ] == 'y' ) { // 19YY
       if ( currPos + 1 < dateStr.length() ) {
         year = 1900 + dateStr.mid( currPos, 2 ).toInt();

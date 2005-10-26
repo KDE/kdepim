@@ -64,9 +64,10 @@ class TypeCombo : public KComboBox
 template <class T>
 TypeCombo<T>::TypeCombo( TypeCombo::List &list, QWidget *parent,
                       const char *name )
-  : KComboBox( parent, name ),
+  : KComboBox( parent ),
     mTypeList( list )
 {
+	setObjectName(name);
 }
 
 template <class T>
@@ -130,7 +131,7 @@ template <class T>
 typename TypeCombo<T>::Iterator TypeCombo<T>::selectedElement()
 {
 #warning Ugly porting hack!
-  TypeCombo<T>::Iterator it = mTypeList.begin();
+   typename TypeCombo<T>::Iterator it = mTypeList.begin();
   for ( int i = 0; i < currentItem(); ++i, ++it );
   return it;
 //  return mTypeList.at( currentItem() );

@@ -555,7 +555,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 	if (s.isEmpty())
 		s = addr->phoneNumber(KABC::PhoneNumber::Cell).number();
 	if (s.isEmpty() && addr->phoneNumbers().count()>0)
-		s = (*addr->phoneNumbers().at(0)).number();
+		s = (addr->phoneNumbers().at(0)).number();
 	s = makeValidPhone(s);
 	strncpy(entry.number, s.ascii(), sizeof(entry.number)-1);
 	entry.memory_type = memtype;

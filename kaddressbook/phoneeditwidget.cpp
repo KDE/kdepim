@@ -52,11 +52,12 @@
 #include "phoneeditwidget.h"
 
 PhoneTypeCombo::PhoneTypeCombo( QWidget *parent )
-  : KComboBox( parent, "TypeCombo" ),
+  : KComboBox( parent ),
     mType( KABC::PhoneNumber::Home ),
     mLastSelected( 0 ),
     mTypeList( KABC::PhoneNumber::typeList() )
 {
+  setObjectName("TypeCombo" );
   mTypeList.append( -1 ); // Others...
 
   update();

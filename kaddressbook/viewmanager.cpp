@@ -27,7 +27,7 @@
 //Added by qt3to4:
 #include <QHBoxLayout>
 #include <QDropEvent>
-
+#include <k3urldrag.h>
 #include <libkdepim/kvcarddrag.h>
 #include <kabc/addressbook.h>
 #include <kabc/vcardconverter.h>
@@ -41,7 +41,6 @@
 #include <kmultipledrag.h>
 #include <ktempdir.h>
 #include <ktrader.h>
-#include <kurldrag.h>
 
 #include "addviewdialog.h"
 #include "addresseeutil.h"
@@ -423,9 +422,8 @@ void ViewManager::dropped( QDropEvent *e )
     return;
 
   QString clipText, vcards;
-  KURL::List urls;
-
-  if ( KURLDrag::decode( e, urls) ) {
+	KURL::List urls = KURL::List::fromMimeData( e->mimeData() );
+  if ( !urls.isEmpty() ) {
     KURL::List::ConstIterator it = urls.begin();
     int c = urls.count();
     if ( c > 1 ) {
@@ -490,7 +488,7 @@ void ViewManager::startDrag()
       tempFile.writeBlock( vcards.utf8() );
       tempFile.close();
 
-      KURLDrag *urlDrag = new KURLDrag( KURL( tempFile.name() ), this );
+      K3URLDrag *urlDrag = new K3URLDrag( KURL( tempFile.name() ), this );
       drag->addDragObject( urlDrag );
     }
   }

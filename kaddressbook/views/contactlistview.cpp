@@ -263,10 +263,11 @@ ContactListView::ContactListView(KAddressBookTableView *view,
                                  KABC::AddressBook* /* doc */,
                                  QWidget *parent,
                                  const char *name )
-  : KListView( parent, name ),
+  : KListView( parent ),
     pabWidget( view ),
     oldColumn( 0 )
 {
+  setObjectName(name);
   mABackground = true;
   mSingleLine = false;
   mToolTips = true;

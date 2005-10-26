@@ -25,7 +25,7 @@
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qcheckbox.h>
-#include <q3vbox.h>
+#include <kvbox.h>
 #include <q3groupbox.h>
 #include <qspinbox.h>
 #include <qtabwidget.h>

@@ -101,18 +101,14 @@ void ImageLabel::dropEvent( QDropEvent *event )
     }
   }
 
-  if ( Q3UriDrag::canDecode( event ) ) {
 	KURL::List urls = KURL::List::fromMimeData( event->mimeData() );
-    if ( KURLDrag::decode( event, urls ) ) {
-      if ( urls.isEmpty() ) { // oops, no data
+    if ( urls.isEmpty() ) { // oops, no data
         event->accept( false );
         return;
-      }
-    }
+	}
 
     emit urlDropped( urls.first() );
     emit changed();
-  }
 }
 
 void ImageLabel::mousePressEvent( QMouseEvent *event )

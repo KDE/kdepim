@@ -47,7 +47,7 @@ K_EXPORT_COMPONENT_FACTORY( libkaddressbookpart, KAddressbookFactory )
 KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetName,
                                     QObject *parent, const char *name,
                                     const QStringList & )
-  : DCOPObject( "KAddressBookIface" ), KParts::ReadOnlyPart( parent, name )
+  : DCOPObject( "KAddressBookIface" ), KParts::ReadOnlyPart( parent )
 {
   setInstance( KAddressbookFactory::instance() );
 

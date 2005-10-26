@@ -74,7 +74,7 @@ class KDE_EXPORT ViewConfigureWidget : public KAB::ConfigureWidget
     /**
       Use this method to add new pages to the widget.
      */
-    Q3VBox *addPage( const QString &item, const QString &header = QString::null,
+	KVBox *addPage( const QString &item, const QString &header = QString::null,
                     const QPixmap &pixmap = QPixmap() );
 
   private:
