@@ -1,3 +1,8 @@
+//Added by qt3to4:
+#include <Q3CString>
+#include <Q3Frame>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 /* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
@@ -33,17 +38,17 @@ static const char *conduitconfigdialog_id =
 
 #include "options.h"
 
-#include <qlistview.h>
+#include <q3listview.h>
 #include <qlabel.h>
 #include <qtooltip.h>
 #include <qfile.h>
 #include <qpushbutton.h>
-#include <qhbox.h>
+#include <q3hbox.h>
 #include <qlayout.h>
-#include <qwidgetstack.h>
-#include <qvbox.h>
+#include <q3widgetstack.h>
+#include <q3vbox.h>
 #include <qsplitter.h>
-#include <qheader.h>
+#include <q3header.h>
 #include <qtimer.h>
 
 #include <kservice.h>
@@ -91,17 +96,17 @@ extern "C"
 class ConduitTip : public QToolTip
 {
 public:
-	ConduitTip(QListView *parent);
+	ConduitTip(Q3ListView *parent);
 	virtual ~ConduitTip();
 
 protected:
 	virtual void maybeTip(const QPoint &);
 
-	QListView *fListView;
+	Q3ListView *fListView;
 } ;
 
 
-ConduitTip::ConduitTip(QListView *p) :
+ConduitTip::ConduitTip(Q3ListView *p) :
 	QToolTip(p->viewport(),0L),
 	fListView(p)
 {
@@ -117,7 +122,7 @@ ConduitTip::~ConduitTip()
 {
 	FUNCTIONSETUP;
 
-	QListViewItem *l = fListView->itemAt(p);
+	Q3ListViewItem *l = fListView->itemAt(p);
 
 	if (!l) return;
 
@@ -147,10 +152,10 @@ ConduitTip::~ConduitTip()
 // implement our own check list items so we can detect if a given item was checked/unchecked. We need
 // this to prevent the modified signal if one only wants to display a conduit's config widget. Currently,
 // KListView doesn't provide any signal that indicates that the checked state of a checklist item was changed.
-class KPilotCheckListItem : public QCheckListItem
+class KPilotCheckListItem : public Q3CheckListItem
 {
 public:
-	KPilotCheckListItem ( QListViewItem * parent, const QString & text, Type tt = RadioButtonController ) : QCheckListItem(parent, text, tt),mOriginalState(false) {}
+	KPilotCheckListItem ( Q3ListViewItem * parent, const QString & text, Type tt = RadioButtonController ) : Q3CheckListItem(parent, text, tt),mOriginalState(false) {}
 	~KPilotCheckListItem() {}
 
 	void setOriginalState(bool state) { mOriginalState=state; setOn(state);}
@@ -180,13 +185,13 @@ protected:
 **     for displaying a row of buttons in on the page.
 **  @p label set to non-null to return the QLabel used to display @p text.
 */
-static void addDescriptionPage(QWidgetStack *parent,
+static void addDescriptionPage(Q3WidgetStack *parent,
 	int pageno,
 	const QString &text,
-	QHBox **buttons = 0L,
+	Q3HBox **buttons = 0L,
 	QLabel **label = 0L)
 {
-	QVBox *v = new QVBox(parent);
+	Q3VBox *v = new Q3VBox(parent);
 	QLabel *l = 0L;
 
 	v->setFrameShape(QLabel::NoFrame);
@@ -200,7 +205,7 @@ static void addDescriptionPage(QWidgetStack *parent,
 
 	if (buttons)
 	{
-		*buttons = new QHBox(v);
+		*buttons = new Q3HBox(v);
 		l = new QLabel(v);
 	}
 
@@ -208,8 +213,8 @@ static void addDescriptionPage(QWidgetStack *parent,
 }
 
 
-ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n) :
-	KCModule(parent, n),
+ConduitConfigWidgetBase::ConduitConfigWidgetBase(KInstance *inst,QWidget *parent) :
+	KCModule(KInstance * inst, parent),
 	fConduitList(0L),
 	fStack(0L),
 	fConfigureButton(0L),
@@ -218,13 +223,13 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	fActionDescription(0L)
 {
 	QWidget *w = 0L; // For spacing purposes only.
-	QHBox *btns = 0L;
+	Q3HBox *btns = 0L;
 
 	QHBoxLayout *mainLayout = new QHBoxLayout(this);
 	mainLayout->setSpacing(10);
 
 	// Create the left hand column
-	fConduitList = new QListView(this ,"ConduitList");
+	fConduitList = new Q3ListView(this ,"ConduitList");
 	fConduitList->addColumn(QString::null);
 	fConduitList->header()->hide();
 	fConduitList->setSizePolicy(
@@ -239,10 +244,10 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	titleFont.setBold(true);
 	fTitleText->setFont(titleFont);
 	vbox->addWidget(fTitleText, 0, AlignLeft);
-	vbox->addWidget(new KSeparator(QFrame::HLine|QFrame::Plain, this));
+	vbox->addWidget(new KSeparator(Q3Frame::HLine|Q3Frame::Plain, this));
 
 	// Right hand column
-	fStack = new QWidgetStack(this, "RightPart");
+	fStack = new Q3WidgetStack(this, "RightPart");
 	vbox->addWidget(fStack, 10);
 
 	mainLayout->addLayout(vbox);
@@ -319,17 +324,17 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 	fConduitList->resize(fConduitList->sizeHint());
 	fConduitList->setMinimumSize(fConduitList->sizeHint());
 	fConduitList->setColumnWidth(0, fConduitList->sizeHint().width());
-	fConduitList->setResizeMode(QListView::AllColumns);
+	fConduitList->setResizeMode(Q3ListView::AllColumns);
 
 	fStack->resize(fStack->sizeHint()+QSize(10,40));
 	fStack->setMinimumSize(fStack->sizeHint()+QSize(10,40));
 
 	QObject::connect(fConduitList,
-		SIGNAL(selectionChanged(QListViewItem *)),
-		this,SLOT(selected(QListViewItem *)));
+		SIGNAL(selectionChanged(Q3ListViewItem *)),
+		this,SLOT(selected(Q3ListViewItem *)));
 	QObject::connect(fConduitList,
-		SIGNAL(clicked(QListViewItem*)),
-		this, SLOT(conduitsChanged(QListViewItem*)));
+		SIGNAL(clicked(Q3ListViewItem*)),
+		this, SLOT(conduitsChanged(Q3ListViewItem*)));
 
 	// Deprecated?
 	QObject::connect(fConfigureButton,
@@ -360,19 +365,19 @@ void ConduitConfigWidget::fillLists()
 	FUNCTIONSETUP;
 
 	// 3 QListViewItems for the three headings in the list
-	QListViewItem *general,*conduits;
+	Q3ListViewItem *general,*conduits;
 
 	// And two generic pointers for the rest.
-	QListViewItem *q = 0L;
+	Q3ListViewItem *q = 0L;
 	KPilotCheckListItem *p = 0L;
 
-	q = new QListViewItem(fConduitList, i18n("About"));
+	q = new Q3ListViewItem(fConduitList, i18n("About"));
 	q->setText(CONDUIT_COMMENT, i18n("About KPilot. Credits."));
 	q->setText(CONDUIT_LIBRARY, CSL1("general_about"));
 
-	conduits = new QListViewItem(fConduitList, i18n("Conduits"));
+	conduits = new Q3ListViewItem(fConduitList, i18n("Conduits"));
 
-	general = new QListViewItem( fConduitList, i18n("General Setup" ) );
+	general = new Q3ListViewItem( fConduitList, i18n("General Setup" ) );
 	fGeneralPage = general;
 
 	// Give them identifiers so they can be handled specially when selected.
@@ -389,7 +394,7 @@ void ConduitConfigWidget::fillLists()
 
 
 	// Create entries under general.
-#define CE(a,b,c) q = new QListViewItem(general,a) ; \
+#define CE(a,b,c) q = new Q3ListViewItem(general,a) ; \
 	q->setText(CONDUIT_COMMENT,b) ; \
 	q->setText(CONDUIT_LIBRARY,c) ;
 
@@ -409,7 +414,7 @@ void ConduitConfigWidget::fillLists()
 	//
 	//
 
-#define IC(a,b,c) p = new KPilotCheckListItem(conduits,i18n(a),QCheckListItem::CheckBox); \
+#define IC(a,b,c) p = new KPilotCheckListItem(conduits,i18n(a),Q3CheckListItem::CheckBox); \
 	p->setText(CONDUIT_COMMENT,i18n(c)); \
 	p->setText(CONDUIT_LIBRARY,CSL1("internal_" b)); \
 	p->setText(CONDUIT_DESKTOP,CSL1("internal_" b)); \
@@ -425,7 +430,7 @@ void ConduitConfigWidget::fillLists()
 	KServiceTypeProfile::OfferList offers =
 		KServiceTypeProfile::offers(CSL1("KPilotConduit"));
 
-	QValueListIterator < KServiceOffer > availList(offers.begin());
+	Q3ValueListIterator < KServiceOffer > availList(offers.begin());
 	while (availList != offers.end())
 	{
 		KSharedPtr < KService > o = (*availList).service();
@@ -446,7 +451,7 @@ void ConduitConfigWidget::fillLists()
 
 		p = new KPilotCheckListItem(conduits,
 			o->name(),
-			QCheckListItem::CheckBox);
+			Q3CheckListItem::CheckBox);
 		p->setMultiLinesEnabled(true);
 		p->setText(CONDUIT_COMMENT,o->comment());
 		p->setText(CONDUIT_DESKTOP,o->desktopEntryName());
@@ -474,7 +479,7 @@ static void dumpConduitInfo(const KLibrary *lib)
 #endif
 }
 
-static ConduitConfigBase *handleGeneralPages(QWidget *w, QListViewItem *p)
+static ConduitConfigBase *handleGeneralPages(QWidget *w, Q3ListViewItem *p)
 {
 	ConduitConfigBase *o = 0L;
 
@@ -504,7 +509,7 @@ static ConduitConfigBase *handleGeneralPages(QWidget *w, QListViewItem *p)
 	return o;
 }
 
-void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
+void ConduitConfigWidget::loadAndConfigure(Q3ListViewItem *p) // ,bool exec)
 {
 	FUNCTIONSETUP;
 
@@ -570,7 +575,7 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 	}
 	else
 	{
-		QCString library = QFile::encodeName(p->text(CONDUIT_LIBRARY));
+		Q3CString library = QFile::encodeName(p->text(CONDUIT_LIBRARY));
 
 		KLibFactory *f = KLibLoader::self()->factory(library);
 		if (!f)
@@ -677,7 +682,7 @@ void ConduitConfigWidget::unselect()
 	fConduitList->setCurrentItem( fCurrentConduit );
 }
 
-void ConduitConfigWidget::selected(QListViewItem *p)
+void ConduitConfigWidget::selected(Q3ListViewItem *p)
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
@@ -712,7 +717,7 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 #endif
 
 	// set the dialog title to the selected item
-	QListViewItem *pParent = p->parent();
+	Q3ListViewItem *pParent = p->parent();
 	QString title;
 	title = pParent ? pParent->text(CONDUIT_NAME) + CSL1(" - ") : QString() ;
 	title += p ? p->text(CONDUIT_NAME) : i18n("KPilot Setup");
@@ -724,7 +729,7 @@ void ConduitConfigWidget::configure()
 	loadAndConfigure(fConduitList->selectedItem());
 }
 
-void ConduitConfigWidget::warnNoExec(const QListViewItem * p)
+void ConduitConfigWidget::warnNoExec(const Q3ListViewItem * p)
 {
 	FUNCTIONSETUP;
 
@@ -741,7 +746,7 @@ void ConduitConfigWidget::warnNoExec(const QListViewItem * p)
 	KMessageBox::error(this, msg, i18n("Conduit Error"));
 }
 
-void ConduitConfigWidget::warnNoLibrary(const QListViewItem *p)
+void ConduitConfigWidget::warnNoLibrary(const Q3ListViewItem *p)
 {
 	FUNCTIONSETUP;
 
@@ -770,7 +775,7 @@ void ConduitConfigWidget::save()
 	}
 
 	QStringList activeConduits;
-	QListViewItemIterator it( fConduitList );
+	Q3ListViewItemIterator it( fConduitList );
 	while ( it.current() ) {
 		KPilotCheckListItem*p = dynamic_cast<KPilotCheckListItem*>(it.current());
 		if ( p )
@@ -792,13 +797,13 @@ void ConduitConfigWidget::load()
 	KPilotSettings::self()->readConfig();
 
 	QStringList potentiallyInstalled = KPilotSettings::installedConduits();
-	QListViewItem*p = fConduitList->firstChild();
+	Q3ListViewItem*p = fConduitList->firstChild();
 	while (p)
 	{
-		QListViewItem*q = p->firstChild();
+		Q3ListViewItem*q = p->firstChild();
 		while (q)
 		{
-			QCheckListItem*qq=dynamic_cast<QCheckListItem*>(q);
+			Q3CheckListItem*qq=dynamic_cast<Q3CheckListItem*>(q);
 			if (qq)
 			{
 				qq->setOn(! (potentiallyInstalled.findIndex(qq->text(CONDUIT_DESKTOP))<0) );
@@ -818,7 +823,7 @@ void ConduitConfigWidget::load()
 }
 
 
-void ConduitConfigWidget::conduitsChanged(QListViewItem*item)
+void ConduitConfigWidget::conduitsChanged(Q3ListViewItem*item)
 {
 	KPilotCheckListItem*i=dynamic_cast<KPilotCheckListItem*>(item);
 	if (i)
@@ -827,7 +832,7 @@ void ConduitConfigWidget::conduitsChanged(QListViewItem*item)
 	}
 }
 
-void ConduitConfigWidget::reopenItem(QListViewItem *i)
+void ConduitConfigWidget::reopenItem(Q3ListViewItem *i)
 {
 	i->setOpen(true);
 }

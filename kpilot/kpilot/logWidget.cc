@@ -1,3 +1,5 @@
+//Added by qt3to4:
+#include <QGridLayout>
 /* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
@@ -33,14 +35,14 @@ static const char *logw_id =
 
 #include <qfile.h>
 #include <qlayout.h>
-#include <qtextedit.h>
-#include <qwhatsthis.h>
+#include <q3textedit.h>
+#include <q3whatsthis.h>
 #include <qdatetime.h>
 #include <qlabel.h>
 #include <qpixmap.h>
 #include <qtimer.h>
 #include <qpushbutton.h>
-#include <qhbox.h>
+#include <q3hbox.h>
 #include <qtextstream.h>
 #include <qpainter.h>
 
@@ -87,17 +89,17 @@ LogWidget::LogWidget(QWidget * parent) :
 	grid->setRowStretch(1, 50);
 	grid->setColStretch(2, 50);
 
-	fLog = new QTextEdit(this);
+	fLog = new Q3TextEdit(this);
 	fLog->setReadOnly(true);
-	fLog->setWordWrap(QTextEdit::WidgetWidth);
-	fLog->setWrapPolicy(QTextEdit::AtWordOrDocumentBoundary);
+	fLog->setWordWrap(Q3TextEdit::WidgetWidth);
+	fLog->setWrapPolicy(Q3TextEdit::AtWordOrDocumentBoundary);
 #if QT_VERSION < 0x030100
 	/* nothing, use AutoText */
 #else
 	fLog->setTextFormat(Qt::LogText);
 #endif
 
-	QWhatsThis::add(fLog, i18n("<qt>This lists all the messages received "
+	Q3WhatsThis::add(fLog, i18n("<qt>This lists all the messages received "
 			"during the current HotSync</qt>"));
 	grid->addMultiCellWidget(fLog, 1, 1,1,2);
 
@@ -133,17 +135,17 @@ LogWidget::LogWidget(QWidget * parent) :
 	fLog->setText(initialText);
 	fLog->scrollToBottom();
 
-	QHBox *h = new QHBox(this);
+	Q3HBox *h = new Q3HBox(this);
 	h->setSpacing(SPACING);
 	QPushButton *b = new QPushButton(
 		i18n("Clear the text of HotSync messages","Clear Log"),
 		h);
-	QWhatsThis::add(b,i18n("<qt>Clears the list of messages from the "
+	Q3WhatsThis::add(b,i18n("<qt>Clears the list of messages from the "
 		"current HotSync.</qt>"));
 	connect(b,SIGNAL(clicked()),this,SLOT(clearLog()));
 
 	b = new QPushButton(i18n("Save Log..."),h);
-	QWhatsThis::add(b,i18n("<qt>You can save the list of messages received "
+	Q3WhatsThis::add(b,i18n("<qt>You can save the list of messages received "
 		"during this HotSync to a file (for example for use in a "
 		"bug report) by clicking here.</qt>"));
 	connect(b,SIGNAL(clicked()),this,SLOT(saveLog()));
@@ -155,7 +157,7 @@ LogWidget::LogWidget(QWidget * parent) :
 	fLabel = new QLabel(i18n("Sync progress:"),this);
 	grid->addWidget(fLabel,3,1);
 	fProgress = new KProgress(this);
-	QWhatsThis::add(fProgress,i18n("<qt>The (estimated) percentage "
+	Q3WhatsThis::add(fProgress,i18n("<qt>The (estimated) percentage "
 		"completed in the current HotSync.</qt>"));
 	grid->addWidget(fProgress,3,2);
 
@@ -191,13 +193,13 @@ LogWidget::LogWidget(QWidget * parent) :
 			splash.height() - 6 - textHeight,
 			textWidth + 6,
 			textHeight + 4,
-			black);
+			Qt::black);
 		painter.drawText(splash.width() -  25 - textWidth,
 			splash.height() - 8,
 			QString::fromLatin1(KPILOT_VERSION));
 		fSplash = new QLabel(this);
 		fSplash->setPixmap(splash);
-		fSplash->setAlignment(AlignCenter);
+		fSplash->setAlignment(Qt::AlignCenter);
 		QTimer::singleShot(3000,this,SLOT(hideSplash()));
 		grid->addMultiCellWidget(fSplash,1,3,1,2);
 		grid->addColSpacing(0,10);
@@ -372,7 +374,7 @@ bool LogWidget::saveFile(const QString &saveFileName)
 	FUNCTIONSETUP;
 
 	QFile f(saveFileName);
-	if (!f.open(IO_WriteOnly))
+	if (!f.open(QIODevice::WriteOnly))
 	{
 		int r = KMessageBox::questionYesNo(this,
 			i18n("<qt>Cannot open the file &quot;%1&quot; "

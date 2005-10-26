@@ -30,11 +30,14 @@
 #include <qlineedit.h>
 #include <qcheckbox.h>
 #include <qtooltip.h>
-#include <qwhatsthis.h>
-#include <qbuttongroup.h>
+#include <q3whatsthis.h>
+#include <q3buttongroup.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
+//Added by qt3to4:
+#include <Q3Frame>
+#include <QGridLayout>
 
 #include <kmessagebox.h>
 
@@ -143,7 +146,7 @@ void DBRecordEditor::initWidgets()
 
 	DBRecordEditorBaseLayout->addWidget( fRecordID, 0, 3 );
 
-	fFlagsGroup = new QButtonGroup( fWidget, "fFlagsGroup" );
+	fFlagsGroup = new Q3ButtonGroup( fWidget, "fFlagsGroup" );
 	fFlagsGroup->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5,
 		(QSizePolicy::SizeType)4, 0, 0, fFlagsGroup->sizePolicy().hasHeightForWidth() ) );
 	fFlagsGroup->setColumnLayout(0, Qt::Vertical );
@@ -199,9 +202,9 @@ void DBRecordEditor::initWidgets()
 	{
 		QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. kbytesedit from kdeutils)."), fWidget );
 		tmpW->setBackgroundMode( Qt::PaletteMid );
-		tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::WordBreak);
-		tmpW->setFrameShape( QFrame::Panel );
-		tmpW->setFrameShadow( QFrame::Sunken );
+		tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextWordWrap);
+		tmpW->setFrameShape( Q3Frame::Panel );
+		tmpW->setFrameShadow( Q3Frame::Sunken );
 		fRecordData = tmpW;
 		fRecordDataIf = 0;
 	}

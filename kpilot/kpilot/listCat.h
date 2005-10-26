@@ -35,6 +35,8 @@
 */
 
 #include <klistview.h>
+//Added by qt3to4:
+#include <QDropEvent>
 class QStringList;
 
 /**
@@ -102,7 +104,7 @@ public:
 	 *
 	 * @return the QListViewItem created for the category
 	 */
-	QListViewItem *addCategory(const QString& name,
+	Q3ListViewItem *addCategory(const QString& name,
 		const QString& description = QString::null);
 	/**
 	 * Returns the list of names of the categories in
@@ -121,7 +123,7 @@ public:
 	 * constructor. That way you can also hide more data in
 	 * the remaining columns.
 	 */
-	QListViewItem *addItem(const QString& category,
+	Q3ListViewItem *addItem(const QString& category,
 		const QString& name,
 		const QString& description = QString::null);
 	/**
@@ -143,7 +145,7 @@ public:
 	 * since just remembering the pointer addCategory gives
 	 * you is faster and uses hardly any memory.
 	 */
-	QListViewItem *findCategory(const QString& categoryName) const;
+	Q3ListViewItem *findCategory(const QString& categoryName) const;
 	/**
 	 * Return the list of strings in column @p column of all siblings
 	 * of the given item @p p. If you remembered a pointer to a
@@ -154,7 +156,7 @@ public:
 	 * to get the list of strings in hidden column 2 under
 	 * the category you remembered.
 	 */
-	QStringList listSiblings(const QListViewItem *p,int column=0) const;
+	QStringList listSiblings(const Q3ListViewItem *p,int column=0) const;
 
 	/**
 	 * @return whether new categories are inserted in an
@@ -197,10 +199,10 @@ private:
 } ;
 
 
-class RichListViewItem : public QListViewItem
+class RichListViewItem : public Q3ListViewItem
 {
 public:
-	RichListViewItem(QListViewItem *parent,
+	RichListViewItem(Q3ListViewItem *parent,
 		QString,
 		int);
 	virtual ~RichListViewItem();

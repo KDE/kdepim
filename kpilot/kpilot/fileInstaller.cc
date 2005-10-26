@@ -38,7 +38,7 @@ static const char *fileinstaller_id =
 #include <unistd.h>
 
 #include <qstring.h>
-#include <qstrlist.h>
+#include <q3strlist.h>
 #include <qdir.h>
 
 #include <kglobal.h>

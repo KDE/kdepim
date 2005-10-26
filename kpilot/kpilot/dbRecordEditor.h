@@ -29,6 +29,11 @@
 
 #include "options.h"
 #include <kdialogbase.h>
+//Added by qt3to4:
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
 
 class QVBoxLayout;
 class QHBoxLayout;
@@ -41,7 +46,7 @@ class BytesEditInterface;
 using namespace KHE;
 #endif
 
-class QButtonGroup;
+class Q3ButtonGroup;
 class QCheckBox;
 class QLabel;
 class QLineEdit;
@@ -64,7 +69,7 @@ protected:
 	QLabel* fRecordIDLabel;
 	QLineEdit* fRecordIndex;
 	QLineEdit* fRecordID;
-	QButtonGroup* fFlagsGroup;
+	Q3ButtonGroup* fFlagsGroup;
 	QCheckBox* fDirty;
 	QCheckBox* fDeleted;
 	QCheckBox* fBusy;

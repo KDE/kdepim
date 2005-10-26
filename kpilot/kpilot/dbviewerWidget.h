@@ -31,6 +31,8 @@
 */
 
 #include "pilotComponent.h"
+//Added by qt3to4:
+#include <Q3PtrList>
 
 class KListBox;
 class KTextEdit;
@@ -62,7 +64,7 @@ protected slots:
 	void reset();
 	void slotAddRecord();
 	void slotEditRecord();
-	bool slotEditRecord(QListViewItem*);
+	bool slotEditRecord(Q3ListViewItem*);
 	void slotDeleteRecord();
 	void slotShowAppInfo();
 	void slotShowDBInfo();
@@ -84,7 +86,7 @@ private:
 
 	PilotLocalDatabase*fDB;
 	QString currentDB;
-	QPtrList<PilotRecord> fRecList;
+	Q3PtrList<PilotRecord> fRecList;
 };
 
 

@@ -1,3 +1,10 @@
+//Added by qt3to4:
+#include <QGridLayout>
+#include <QEvent>
+#include <QDropEvent>
+#include <Q3ValueList>
+#include <QDragEnterEvent>
+#include <QMouseEvent>
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -37,15 +44,15 @@ static const char *fileinstallwidget_id =
 
 #include <unistd.h>
 
-#include <qlistbox.h>
+#include <q3listbox.h>
 #include <qstring.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
-#include <qwhatsthis.h>
-#include <qmultilineedit.h>
+#include <q3whatsthis.h>
+#include <q3multilineedit.h>
 #include <qpixmap.h>
-#include <qpopupmenu.h>
+#include <q3popupmenu.h>
 
 #include <kfiledialog.h>
 #include <kurldrag.h>
@@ -79,24 +86,24 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
     abutton = addButton = new QPushButton(i18n("Add File..."), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
 	grid->addWidget(abutton, 3, 1);
-	QWhatsThis::add(abutton,
+	Q3WhatsThis::add(abutton,
 		i18n("<qt>Choose a file to add to the list of files to install.</qt>"));
 
 	abutton = clearButton= new QPushButton(i18n("Clear List"), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
 	grid->addWidget(abutton, 4, 1);
-	QWhatsThis::add(abutton,
+	Q3WhatsThis::add(abutton,
 		i18n("<qt>Clear the list of files to install. No files will be installed.</qt>"));
 
 	fIconView = new KIconView(this);
-	connect(fIconView, SIGNAL(dropped(QDropEvent *, const QValueList<QIconDragItem> &)),
-		this, SLOT(slotDropEvent(QDropEvent *, const QValueList<QIconDragItem> &)));
+	connect(fIconView, SIGNAL(dropped(QDropEvent *, const Q3ValueList<Q3IconDragItem> &)),
+		this, SLOT(slotDropEvent(QDropEvent *, const Q3ValueList<Q3IconDragItem> &)));
 	grid->addMultiCellWidget(fIconView, 1, 4, 2, 3);
-	QWhatsThis::add(fIconView,
+	Q3WhatsThis::add(fIconView,
 		i18n
 		("<qt>This lists files that will be installed on the Pilot during the next HotSync. Drag files here or use the Add button.</qt>"));
 	fIconView->setAcceptDrops(true);
-    fIconView->setSelectionMode(QIconView::Extended);
+    fIconView->setSelectionMode(Q3IconView::Extended);
 	fIconView->viewport()->installEventFilter(this);
 
 	grid->setRowStretch(2, 100);
@@ -193,7 +200,7 @@ void FileInstallWidget::dropEvent(QDropEvent * drop)
 	fInstaller->addFiles(files, this );
 }
 
-void FileInstallWidget::slotDropEvent(QDropEvent * drop, const QValueList<QIconDragItem> & /*lst*/)
+void FileInstallWidget::slotDropEvent(QDropEvent * drop, const Q3ValueList<Q3IconDragItem> & /*lst*/)
 {
 	FUNCTIONSETUP;
 	dropEvent(drop);
@@ -278,7 +285,7 @@ void FileInstallWidget::contextMenu(QMouseEvent *event)
     if(event->button() == Qt::LeftButton)
         return;
 
-    QIconViewItem *item;
+    Q3IconViewItem *item;
     QStringList files;
     for(item = fIconView->firstItem(); item; item = item->nextItem())
     {
@@ -286,7 +293,7 @@ void FileInstallWidget::contextMenu(QMouseEvent *event)
             files.append(item->text());
     }
 
-    QPopupMenu popup(fIconView);
+    Q3PopupMenu popup(fIconView);
 
     item = fIconView->findItem(event->pos());
     if(item) {

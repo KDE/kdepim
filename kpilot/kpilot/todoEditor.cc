@@ -34,7 +34,7 @@
 #include <qcombobox.h>
 #include <qlayout.h>
 #include <qlabel.h>
-#include <qtextedit.h>
+#include <q3textedit.h>
 #include <qcheckbox.h>
 
 #include <kdatewidget.h>

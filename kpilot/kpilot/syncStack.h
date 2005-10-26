@@ -31,7 +31,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <qptrqueue.h>
+#include <q3ptrqueue.h>
 
 #include "plugin.h"
 
@@ -70,7 +70,7 @@ public:
 	virtual ~ActionQueue();
 
 private:
-	QPtrQueue < SyncAction > SyncActionQueue;
+	Q3PtrQueue < SyncAction > SyncActionQueue;
 
 public:
 	bool isEmpty() const { return SyncActionQueue.isEmpty(); };

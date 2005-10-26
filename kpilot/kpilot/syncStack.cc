@@ -37,7 +37,7 @@ static const char *syncStack_id = "$Id$";
 #include <qfile.h>
 #include <qdir.h>
 #include <qtextcodec.h>
-
+#include <QApplication>
 #include <kservice.h>
 #include <kservicetype.h>
 #include <kuserprofile.h>

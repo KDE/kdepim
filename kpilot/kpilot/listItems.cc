@@ -34,8 +34,8 @@ static const char *listitems_id =
 
 
 #include <qstring.h>
-#include <qlistbox.h>
-#include <qlistview.h>
+#include <q3listbox.h>
+#include <q3listview.h>
 
 
 #ifndef _KPILOT_LISTITEMS_H
@@ -57,7 +57,7 @@ static const char *listitems_id =
 
 PilotListItem::PilotListItem(const QString & text,
 	recordid_t pilotid, void *r) :
-	QListBoxText(text),
+	Q3ListBoxText(text),
 	fid(pilotid),
 	fr(r)
 {
@@ -98,8 +98,8 @@ PilotListItem::~PilotListItem()
 }
 #endif
 
-PilotCheckListItem::PilotCheckListItem(QListView * parent, const QString & text, recordid_t pilotid, void *r) :
-	QCheckListItem(parent, text, QCheckListItem::CheckBox),
+PilotCheckListItem::PilotCheckListItem(Q3ListView * parent, const QString & text, recordid_t pilotid, void *r) :
+	Q3CheckListItem(parent, text, Q3CheckListItem::CheckBox),
 	fid(pilotid),
 	fr(r)
 {
@@ -127,7 +127,7 @@ PilotCheckListItem::~PilotCheckListItem()
 void PilotCheckListItem::stateChange ( bool on)
 {
 	// FUNCTIONSETUP;
-	QCheckListItem::stateChange(on);
+	Q3CheckListItem::stateChange(on);
 
 }
 
@@ -147,10 +147,10 @@ void PilotCheckListItem::stateChange ( bool on)
 }
 #endif
 
-PilotListViewItem::PilotListViewItem( QListView * parent,
+PilotListViewItem::PilotListViewItem( Q3ListView * parent,
 	QString label1, QString label2, QString label3, QString label4,
 	recordid_t pilotid, void *r):
-	QListViewItem(parent, label1, label2, label3, label4,
+	Q3ListViewItem(parent, label1, label2, label3, label4,
 		QString::null, QString::null, QString::null, QString::null),
 	fid(pilotid),
 	fr(r),
@@ -210,7 +210,7 @@ unsigned long PilotListViewItem::colValue(int col, bool *ok) const
 	return d->val;
 }
 
-int PilotListViewItem::compare( QListViewItem *i, int col, bool ascending ) const
+int PilotListViewItem::compare( Q3ListViewItem *i, int col, bool ascending ) const
 {
 // 	FUNCTIONSETUP;
 	PilotListViewItem*item=dynamic_cast<PilotListViewItem*>(i);
@@ -243,6 +243,6 @@ int PilotListViewItem::compare( QListViewItem *i, int col, bool ascending ) cons
 			return res;
 		}
 	}
-	return QListViewItem::compare(i, col, ascending);
+	return Q3ListViewItem::compare(i, col, ascending);
 }
 

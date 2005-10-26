@@ -32,7 +32,7 @@ static const char *conduitconfigwizard_id =
 //#include "options.h"
 
 #include <qpushbutton.h>
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qcheckbox.h>
 #include <qlineedit.h>
 

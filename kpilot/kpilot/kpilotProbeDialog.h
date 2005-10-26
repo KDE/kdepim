@@ -29,17 +29,21 @@
 */
 
 #include "kdialogbase.h"
+//Added by qt3to4:
+#include <QLabel>
+#include <Q3ValueList>
+#include <QGridLayout>
 
 class KPilotDeviceLink;
 class QLabel;
-class QGroupBox;
+class Q3GroupBox;
 class KProgress;
 class QTimer;
 class QGridLayout;
-template <class T> class QValueList;
+template <class T> class Q3ValueList;
 template<class Key, class T> class QMap;
 
-typedef QValueList<KPilotDeviceLink*> PilotLinkList;
+typedef Q3ValueList<KPilotDeviceLink*> PilotLinkList;
 
 typedef QMap<QString, KPilotDeviceLink*> PilotLinkMap;
 
@@ -72,12 +76,12 @@ public slots:
 	void slotUser1 () { startDetection(); }
 protected:
 	QLabel* fInfoText;
-	QGroupBox* fResultsGroup;
+	Q3GroupBox* fResultsGroup;
 	QLabel* fUserLabel;
 	QLabel* fDeviceLabel;
 	QLabel* fUser;
 	QLabel* fDevice;
-	QGroupBox* fStatusGroup;
+	Q3GroupBox* fStatusGroup;
 	QLabel* fStatus;
 	KProgress* fProgress;
 

@@ -1,3 +1,5 @@
+//Added by qt3to4:
+#include <QGridLayout>
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -41,17 +43,17 @@ static const char *addresswidget_id =
 #include <cstring>
 #include <cstdlib>
 
-#include <qptrlist.h>
-#include <qlistbox.h>
+#include <q3ptrlist.h>
+#include <q3listbox.h>
 #include <qfile.h>
 #include <qpushbutton.h>
 #include <qtextstream.h>
 #include <qlayout.h>
 #include <qlabel.h>
-#include <qmultilineedit.h>
+#include <q3multilineedit.h>
 #include <qcombobox.h>
-#include <qwhatsthis.h>
-#include <qtextview.h>
+#include <q3whatsthis.h>
+#include <q3textview.h>
 #include <qtextcodec.h>
 #include <qregexp.h>
 
@@ -228,20 +230,20 @@ void AddressWidget::setupWidget()
 	grid->addWidget(fCatList, 0, 1);
 	connect(fCatList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
-	QWhatsThis::add(fCatList,
+	Q3WhatsThis::add(fCatList,
 		i18n("<qt>Select the category of addresses to display here.</qt>"));
 
 	label = new QLabel(i18n("Category:"), this);
 	label->setBuddy(fCatList);
 	grid->addWidget(label, 0, 0);
 
-	fListBox = new QListBox(this);
+	fListBox = new Q3ListBox(this);
 	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
 	connect(fListBox, SIGNAL(highlighted(int)),
 		this, SLOT(slotShowAddress(int)));
 	connect(fListBox, SIGNAL(selected(int)),
 		this, SLOT(slotEditRecord()));
-	QWhatsThis::add(fListBox,
+	Q3WhatsThis::add(fListBox,
 		i18n("<qt>This list displays all the addresses "
 			"in the selected category. Click on "
 			"one to display it to the right.</qt>"));
@@ -250,7 +252,7 @@ void AddressWidget::setupWidget()
 	grid->addWidget(label, 0, 2);
 
 	// address info text view
-	fAddrInfo = new QTextView(this);
+	fAddrInfo = new Q3TextView(this);
 	grid->addMultiCellWidget(fAddrInfo, 1, 4, 2, 2);
 
 	QPushButton *button;
@@ -262,7 +264,7 @@ void AddressWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("<qt>You can edit an address when it is selected.</qt>") :
 		i18n("<qt><i>Editing is disabled by the 'internal editors' setting.</i></qt>");
-	QWhatsThis::add(fEditButton,wt);
+	Q3WhatsThis::add(fEditButton,wt);
 
 	button = new QPushButton(i18n("New Record..."), this);
 	grid->addWidget(button, 2, 1);
@@ -270,7 +272,7 @@ void AddressWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("<qt>Add a new address to the address book.</qt>") :
 		i18n("<qt><i>Adding is disabled by the 'internal editors' setting.</i></qt>") ;
-	QWhatsThis::add(button, wt);
+	Q3WhatsThis::add(button, wt);
 	button->setEnabled(KPilotSettings::internalEditors());
 
 
@@ -285,10 +287,10 @@ void AddressWidget::setupWidget()
 	button = new QPushButton(TODO_I18N("Export..."), this);
 	grid->addWidget(button, 3,1);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotExport()));
-	QWhatsThis::add(button,
+	Q3WhatsThis::add(button,
 		TODO_I18N("<qt>Export all addresses in the selected category to CSV format.</qt>") );
 
-	QWhatsThis::add(fDeleteButton,wt);
+	Q3WhatsThis::add(fDeleteButton,wt);
 }
 
 void AddressWidget::updateWidget()

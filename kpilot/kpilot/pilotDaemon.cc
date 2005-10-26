@@ -1,3 +1,9 @@
+//Added by qt3to4:
+#include <Q3CString>
+#include <QCloseEvent>
+#include <QDropEvent>
+#include <QDragEnterEvent>
+#include <QMouseEvent>
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -735,13 +741,13 @@ QDateTime PilotDaemon::lastSyncDate()
 }
 
 
-static QDict<QString> *conduitNameMap = 0L;
+static Q3Dict<QString> *conduitNameMap = 0L;
 
 static void fillConduitNameMap()
 {
 	if ( !conduitNameMap )
 	{
-		conduitNameMap = new QDict<QString>;
+		conduitNameMap = new Q3Dict<QString>;
 		conduitNameMap->setAutoDelete(true);
 	}
 	conduitNameMap->clear();
@@ -780,7 +786,7 @@ QStringList PilotDaemon::configuredConduitList()
 
 	QStringList keys;
 
-	QDictIterator<QString> it(*conduitNameMap);
+	Q3DictIterator<QString> it(*conduitNameMap);
 	for ( ; *it; ++it)
 	{
 		keys << it.currentKey();
@@ -832,7 +838,7 @@ static KDesktopLockStatus isKDesktopLockRunning()
 	}
 
 	QByteArray data,returnValue;
-	QCString returnType;
+	Q3CString returnType;
 
 	if (!dcopptr->call("kdesktop","KScreensaverIface","isBlanked()",
 		data,returnType,returnValue,true))
@@ -846,7 +852,7 @@ static KDesktopLockStatus isKDesktopLockRunning()
 	if (returnType == "bool")
 	{
 		bool b;
-		QDataStream reply(returnValue,IO_ReadOnly);
+		QDataStream reply(returnValue,QIODevice::ReadOnly);
 		reply >> b;
 		return (b ? Locked : NotLocked);
 	}
@@ -1168,7 +1174,7 @@ void PilotDaemon::slotRunKPilot()
 	FUNCTIONSETUP;
 
 	QString kpilotError;
-	QCString kpilotDCOP;
+	Q3CString kpilotDCOP;
 	int kpilotPID;
 
 	if (KToolInvocation::startServiceByDesktopName(CSL1("kpilot"),
@@ -1244,7 +1250,7 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 	emitDCOPSignal( "kpilotDaemonStatusChanged()", QByteArray() );
 	// emit the same dcop signal but including the information needed by Kontact to update its kpilot summary widget
 	QByteArray data;
-	QDataStream arg(data, IO_WriteOnly);
+	QDataStream arg(data, QIODevice::WriteOnly);
 	arg << lastSyncDate();
 	arg << shortStatusString();
 	arg << configuredConduitList();
@@ -1309,7 +1315,7 @@ int main(int argc, char **argv)
 			DCOPClient d;
 			QString dev(p->getOption("device"));
 			QByteArray data;
-			QDataStream arg(data, IO_WriteOnly);
+			QDataStream arg(data, QIODevice::WriteOnly);
 			arg << dev;
 			if (d.attach()){
 				d.send("kpilotDaemon", "KPilotDaemonIface", "setTempDevice(QString)", data );

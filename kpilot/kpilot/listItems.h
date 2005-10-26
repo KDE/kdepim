@@ -32,10 +32,12 @@
 #ifndef _KPILOT_LISTITEMS_H
 #define _KPILOT_LISTITEMS_H
 
-#include <qlistview.h>
+#include <q3listview.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 #include <pi-dlp.h>
 
-class PilotListItem : public QListBoxText
+class PilotListItem : public Q3ListBoxText
 {
 public:
 	PilotListItem(const QString &text, recordid_t pilotid=0, void *r=0);
@@ -56,10 +58,10 @@ private:
 #endif
 };
 
-class PilotCheckListItem : public QCheckListItem
+class PilotCheckListItem : public Q3CheckListItem
 {
 public:
-	PilotCheckListItem( QListView * parent, const QString & text, recordid_t pilotid=0, void *r=0);
+	PilotCheckListItem( Q3ListView * parent, const QString & text, recordid_t pilotid=0, void *r=0);
 	virtual ~PilotCheckListItem();
 	recordid_t id() const {return fid;};
 	const void  *rec() const {return fr;};
@@ -82,10 +84,10 @@ struct PilotListViewItemData
 	unsigned long val;
 };
 
-class PilotListViewItem : public QListViewItem
+class PilotListViewItem : public Q3ListViewItem
 {
 public:
-	PilotListViewItem( QListView * parent,
+	PilotListViewItem( Q3ListView * parent,
 		QString label1, QString label2 = QString::null,
 		QString label3 = QString::null, QString label4 = QString::null,
 		recordid_t pilotid=0, void *r=0);
@@ -94,9 +96,9 @@ public:
 	const void  *rec() const {return fr;};
 public:
 	void setNumericCol(int col, bool numeric);
-	int compare( QListViewItem *i, int col, bool ascending ) const;
+	int compare( Q3ListViewItem *i, int col, bool ascending ) const;
 protected:
-	QValueList<int> numericCols;
+	Q3ValueList<int> numericCols;
 	recordid_t fid;
 	void *fr;
 	// Caching to make sorting faster:

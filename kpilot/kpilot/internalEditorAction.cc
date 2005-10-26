@@ -30,6 +30,9 @@
 #include <qtimer.h>
 #include <qlayout.h>
 #include <qlabel.h>
+//Added by qt3to4:
+#include <Q3Frame>
+#include <QGridLayout>
 #include <kmessagebox.h>
 #include <kdialog.h>
 #include <ktextedit.h>
@@ -217,7 +220,7 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	QGridLayout*layout = new QGridLayout( page, 1, 1);
 
 	QLabel *label=new QLabel(dialogText, page);
-	label->setAlignment( QLabel::WordBreak );
+	label->setAlignment( Qt::TextWordWrap );
 	layout->addMultiCellWidget( label,  0,0, 0,1 );
 
  	layout->addItem( new QSpacerItem( 20, 10, QSizePolicy::Minimum,
@@ -228,14 +231,14 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 		label=new QLabel(i18n("Entry in KPilot"), page);
 		layout->addWidget( label, 2,0);
 
-		KTextEdit*textBrowser = new KTextEdit(CSL1("<qt>")+localEntry+CSL1("</qt>"), QString::null, page);
+		KTextEdit*textBrowser = new KTextEdit(CSL1("<qt>")+localEntry+CSL1("</qt>"), page);
 		textBrowser->setReadOnly(true);
 		layout->addWidget( textBrowser, 3,0);
 
 		label=new QLabel(i18n("Entry on Handheld"), page);
 		layout->addWidget( label, 2,1);
 
-		textBrowser = new KTextEdit(CSL1("<qt>")+serialEntry+CSL1("</qt>"), QString::null, page);
+		textBrowser = new KTextEdit(CSL1("<qt>")+serialEntry+CSL1("</qt>"), page);
 		textBrowser->setReadOnly(true);
 		layout->addWidget( textBrowser, 3,1);
 	}
@@ -249,7 +252,9 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 		QWidget *hexEdit = KHE::createBytesEditWidget( page, "LocalBufferEdit" );
 		if( hexEdit )
 		{
-			KHE::BytesEditInterface* hexEditIf = KHE::bytesEditInterface( hexEdit );
+#warning "KDE4: porting ?";
+#if 0				
+				KHE::BytesEditInterface* hexEditIf = KHE::bytesEditInterface( hexEdit );
 			Q_ASSERT( hexEditIf ); // This should not fail!
 			if( hexEditIf )
 			{
@@ -258,14 +263,15 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 //				hexEditIf->setMaxDataSize( localrec->getLen() );
 				hexEditIf->setReadOnly( true );
 			}
+#endif			
 		}
 		else
 		{
 			QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. khexedit from kdeutils)."), page );
 			tmpW->setBackgroundMode( Qt::PaletteMid );
-			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::WordBreak);
-			tmpW->setFrameShape( QFrame::Panel );
-			tmpW->setFrameShadow( QFrame::Sunken );
+			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextWordWrap);
+			tmpW->setFrameShape( Q3Frame::Panel );
+			tmpW->setFrameShadow( Q3Frame::Sunken );
 			hexEdit = tmpW;
 		}
 		layout->addMultiCellWidget( hexEdit, 3,3,0,1);
@@ -277,7 +283,9 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 		hexEdit = KHE::createBytesEditWidget( page, "SerialBufferEdit" );
 		if( hexEdit )
 		{
-			KHE::BytesEditInterface* hexEditIf = KHE::bytesEditInterface( hexEdit );
+#warning "kde4: porting ?"
+#if 0			
+				KHE::BytesEditInterface* hexEditIf = KHE::bytesEditInterface( hexEdit );
 			Q_ASSERT( hexEditIf ); // This should not fail!
 			if( hexEditIf )
 			{
@@ -286,14 +294,15 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 //				hexEditIf->setMaxDataSize( serialrec->getLen() );
 				hexEditIf->setReadOnly( true );
 			}
+#endif			
 		}
 		else
 		{
 			QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. khexedit from kdeutils)."), page );
 			tmpW->setBackgroundMode( Qt::PaletteMid );
-			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::WordBreak);
-			tmpW->setFrameShape( QFrame::Panel );
-			tmpW->setFrameShadow( QFrame::Sunken );
+			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextWordWrap);
+			tmpW->setFrameShape( Q3Frame::Panel );
+			tmpW->setFrameShadow( Q3Frame::Sunken );
 			hexEdit = tmpW;
 		}
 		layout->addMultiCellWidget( hexEdit, 5,5,0,1);

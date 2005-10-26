@@ -31,6 +31,8 @@
 #include "options.h"
 
 #include <qfile.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <dcopclient.h>
 #include <ktempfile.h>
@@ -109,8 +111,8 @@ void KroupwareSync::start_syncCal_TodosWithKMail( bool cal, bool todos )
   KTempFile  tempfile;
   QString filename = tempfile.name();
   QByteArray  data, reply_data;
-  QCString reply_type;
-  QDataStream arg(data, IO_WriteOnly);
+  Q3CString reply_type;
+  QDataStream arg(data, QIODevice::WriteOnly);
   arg << filename;
   if (!client->call( "kmail" ,
 		     "KOrganizerSyncIface",
@@ -155,8 +157,8 @@ void KroupwareSync::start_syncAddWithKMail()
   KTempFile  tempfile;
   QString filename = tempfile.name();
   QByteArray  data, reply_data;
-  QCString reply_type;
-  QDataStream arg(data, IO_WriteOnly);
+  Q3CString reply_type;
+  QDataStream arg(data, QIODevice::WriteOnly);
   arg << filename;
   if (!client->call( "kmail" ,
 		     "KMailIface",
@@ -209,8 +211,8 @@ void KroupwareSync::end_syncCal_TodosWithKMail( bool cal, bool todos)
    // try DCOP connection to KMail
    DCOPClient *client = kapp->dcopClient();
    QByteArray  data, reply_data;
-   QCString reply_type;
-   QDataStream arg(data, IO_WriteOnly);
+   Q3CString reply_type;
+   QDataStream arg(data, QIODevice::WriteOnly);
    arg << filename;
    if (!client->call( "kmail" /*"korganizer" kmdcop */,
 		      "KOrganizerSyncIface",
@@ -240,8 +242,8 @@ void KroupwareSync::end_syncAddWithKMail()
   c->writeEntry( "KMailTempFile" , "empty" );
   KPilotSettings::writeConfig();
   QByteArray  data, reply_data;
-  QCString reply_type;
-  QDataStream arg(data, IO_WriteOnly);
+  Q3CString reply_type;
+  QDataStream arg(data, QIODevice::WriteOnly);
   arg << filename;
   arg << QStringList();
   if (!client->call( "kmail" ,
@@ -270,7 +272,7 @@ void KroupwareSync::end_syncNotesWithKMail()
 {
 	FUNCTIONSETUP;
 
-	QCString kmdcop;
+	Q3CString kmdcop;
 	QString mess;
 	int pid;
 

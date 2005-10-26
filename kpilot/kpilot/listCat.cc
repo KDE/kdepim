@@ -1,3 +1,5 @@
+//Added by qt3to4:
+#include <QDropEvent>
 /* KPilot
 **
 ** Copyright (C) 2000-2001 by Adriaan de Groot
@@ -71,11 +73,11 @@ void ListCategorizer::addCategories(const QStringList & l)
 	}
 }
 
-QListViewItem *ListCategorizer::addCategory(const QString & name,
+Q3ListViewItem *ListCategorizer::addCategory(const QString & name,
 	const QString & desc)
 {
 	FUNCTIONSETUP;
-	QListViewItem *m = new QListViewItem(this, name, desc);
+	Q3ListViewItem *m = new Q3ListViewItem(this, name, desc);
 
 	m->setSelectable(false);
 	m->setOpen(fStartOpen);
@@ -99,7 +101,7 @@ void ListCategorizer::setupWidget()
 	FUNCTIONSETUP;
 	if (!(event->source()))
 		return false;
-	QListViewItem *p = itemAt(event->pos());
+	Q3ListViewItem *p = itemAt(event->pos());
 
 	if (!p)
 		return false;
@@ -116,8 +118,8 @@ void ListCategorizer::setupWidget()
 		return;
 	e->accept();
 
-	QListViewItem *p = itemAt(e->pos());
-	QListViewItem *selection = currentItem();
+	Q3ListViewItem *p = itemAt(e->pos());
+	Q3ListViewItem *selection = currentItem();
 
 	if (!p)
 	{
@@ -125,7 +127,7 @@ void ListCategorizer::setupWidget()
 		return;
 	}
 
-	QListViewItem *category = p->parent();
+	Q3ListViewItem *category = p->parent();
 
 	if (!category)
 	{
@@ -138,7 +140,7 @@ void ListCategorizer::setupWidget()
 /* virtual */ void ListCategorizer::startDrag()
 {
 	FUNCTIONSETUP;
-	QListViewItem *p = currentItem();
+	Q3ListViewItem *p = currentItem();
 
 	if (!p || !p->parent())
 		return;
@@ -146,7 +148,7 @@ void ListCategorizer::setupWidget()
 	KListView::startDrag();
 }
 
-QStringList ListCategorizer::listSiblings(const QListViewItem * p, int column) const
+QStringList ListCategorizer::listSiblings(const Q3ListViewItem * p, int column) const
 {
 	FUNCTIONSETUP;
 	QStringList l;
@@ -160,10 +162,10 @@ QStringList ListCategorizer::listSiblings(const QListViewItem * p, int column) c
 	return l;
 }
 
-QListViewItem *ListCategorizer::findCategory(const QString & category) const
+Q3ListViewItem *ListCategorizer::findCategory(const QString & category) const
 {
 	FUNCTIONSETUP;
-	QListViewItem *p = firstChild();
+	Q3ListViewItem *p = firstChild();
 
 	while (p)
 	{
@@ -175,24 +177,24 @@ QListViewItem *ListCategorizer::findCategory(const QString & category) const
 	return 0L;
 }
 
-QListViewItem *ListCategorizer::addItem(const QString & category,
+Q3ListViewItem *ListCategorizer::addItem(const QString & category,
 	const QString & name, const QString & description)
 {
 	FUNCTIONSETUP;
-	QListViewItem *p = findCategory(category);
+	Q3ListViewItem *p = findCategory(category);
 
 	if (!p)
 		return 0L;
 
-	return new QListViewItem(p, name, description);
+	return new Q3ListViewItem(p, name, description);
 }
 
 #define RVPAD	(4)
 
-RichListViewItem::RichListViewItem(QListViewItem *p,
+RichListViewItem::RichListViewItem(Q3ListViewItem *p,
 	QString l,
 	int c) :
-	QListViewItem(p,l)
+	Q3ListViewItem(p,l)
 {
 	FUNCTIONSETUP;
 
@@ -220,11 +222,11 @@ void RichListViewItem::computeHeight(int c)
 
 	if (!fIsRich[c]) return;
 
-	QListView *v = listView();
+	Q3ListView *v = listView();
 	
 	fRect[c] = v->fontMetrics().boundingRect(v->itemMargin()+RVPAD,0+RVPAD,
 		v->columnWidth(c)-v->itemMargin()-RVPAD,300,
-		AlignLeft | AlignTop | WordBreak,
+		Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap,
 		text(c));
 }
 
@@ -233,7 +235,7 @@ void RichListViewItem::computeHeight(int c)
 {
 	FUNCTIONSETUP;
 
-	QListViewItem::setup();
+	Q3ListViewItem::setup();
 
 	int h = height();
 
@@ -257,11 +259,11 @@ void RichListViewItem::computeHeight(int c)
 
 	if ((!column) || (!fIsRich[column]))
 	{
-		QListViewItem::paintCell(p,gc,column,width,alignment);
+		Q3ListViewItem::paintCell(p,gc,column,width,alignment);
 		return;
 	}
 
-	QListView *v = listView();
+	Q3ListView *v = listView();
 
 	p->eraseRect(0,0,width,height());
 	p->setBackgroundColor(gc.background());
@@ -269,7 +271,7 @@ void RichListViewItem::computeHeight(int c)
 	p->setPen(gc.text());
 	p->drawText(v->itemMargin()+RVPAD,0+RVPAD,
 		width-v->itemMargin()-RVPAD,height()-RVPAD,
-		AlignTop | AlignLeft | WordBreak,
+		Qt::AlignTop | Qt::AlignLeft | Qt::TextWordWrap,
 		text(column),
 		-1,
 		&fRect[column]);

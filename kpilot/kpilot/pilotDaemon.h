@@ -35,11 +35,18 @@
 #include "kpilotlink.h"
 #include "syncAction.h"
 #include "pilotDaemonDCOP.h"
+//Added by qt3to4:
+#include <QPixmap>
+#include <QDragEnterEvent>
+#include <QMouseEvent>
+#include <Q3PopupMenu>
+#include <QDropEvent>
+#include <QCloseEvent>
 
 class QPixmap;
 class QTimer;
 class KAboutApplication;
-class QPopupMenu;
+class Q3PopupMenu;
 
 class PilotDaemon;
 class ActionQueue;
@@ -71,7 +78,7 @@ protected:
 	/**
 	* Menu of sync types.
 	*/
-	QPopupMenu *fSyncTypeMenu;
+	Q3PopupMenu *fSyncTypeMenu;
 
 protected slots:
 	void slotShowAbout();

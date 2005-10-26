@@ -1,3 +1,5 @@
+//Added by qt3to4:
+#include <Q3CString>
 /* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
@@ -45,7 +47,7 @@ static const char *hotsync_id =
 #include <qfile.h>
 #include <qfileinfo.h>
 #include <qdir.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 #include <qregexp.h>
 #include <qtextcodec.h>
 #include <qstringlist.h>
@@ -173,7 +175,7 @@ BackupAction::BackupAction(KPilotDeviceLink * p, bool full) :
 
 static inline bool dontBackup(struct DBInfo *info,
 	const QStringList &dbnames,
-	const QValueList<unsigned long> &dbcreators)
+	const Q3ValueList<unsigned long> &dbcreators)
 {
 	// Special case - skip database Unsaved Preferences
 	if (   (info->creator == pi_mktag('p','s','y','s'))  &&
@@ -192,7 +194,7 @@ static inline bool dontBackup(struct DBInfo *info,
 }
 
 static inline void initNoBackup(QStringList &dbnames,
-	QValueList<unsigned long> &dbcreators)
+	Q3ValueList<unsigned long> &dbcreators)
 {
 	FUNCTIONSETUP;
 	dbnames.clear();
@@ -212,7 +214,7 @@ static inline void initNoBackup(QStringList &dbnames,
 			}
 			else
 			{
-				QCString data =  s.mid(1,4).latin1();
+				Q3CString data =  s.mid(1,4).latin1();
 				unsigned long creator = pi_mktag(data[0],data[1],data[2],data[3]);
 				dbcreators.append(creator);
 			}
@@ -227,7 +229,7 @@ static inline void initNoBackup(QStringList &dbnames,
 	DEBUGCONDUIT << fname << ": Will skip databases "
 		<< dbnames.join(CSL1(",")) << endl;
 	QString creatorids;
-	for (QValueList<unsigned long>::const_iterator i = dbcreators.begin();
+	for (Q3ValueList<unsigned long>::const_iterator i = dbcreators.begin();
 		i != dbcreators.end(); ++i)
 	{
 		creatorids.append(CSL1("[%1]").arg(*i,0,16));
@@ -605,7 +607,7 @@ FileInstallAction::~FileInstallAction()
 	FUNCTIONSETUP;
 
 	Q_ASSERT(fDBIndex >= 0);
-	Q_ASSERT((unsigned) fDBIndex <= fList.count());
+	Q_ASSERT( fDBIndex <= fList.count());
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -613,7 +615,7 @@ FileInstallAction::~FileInstallAction()
 		<< fDBIndex << " (of " << fList.count() << ")" << endl;
 #endif
 
-	if ((!fList.count()) || ((unsigned) fDBIndex >= fList.count()))
+	if ((!fList.count()) || ( fDBIndex >= fList.count()))
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
@@ -738,7 +740,7 @@ bool FileInstallAction::resourceOK(const QString &fileName, const QString &fileP
 	}
 	else
 	{
-		if ((unsigned) fDBIndex >= fList.count())
+		if ( fDBIndex >= fList.count())
 		{
 			return QString(CSL1("Index out of range"));
 		}

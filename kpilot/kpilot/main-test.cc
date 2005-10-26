@@ -39,7 +39,7 @@ static const char *test_id =
 #include <iostream>
 
 #include <qpushbutton.h>
-#include <qhbox.h>
+#include <q3hbox.h>
 #include <qtimer.h>
 
 #include <kapplication.h>
@@ -310,7 +310,7 @@ int listConduits(KCmdLineArgs *)
 	// sure that nothing gets listed in both.
 	//
 	//
-	QValueListIterator < KServiceOffer > availList(offers.begin());
+	Q3ValueListIterator < KServiceOffer > availList(offers.begin());
 	while (availList != offers.end())
 	{
 		KSharedPtr < KService > o = (*availList).service();

@@ -30,9 +30,13 @@
 */
 
 #include <kmainwindow.h>
+//Added by qt3to4:
+#include <Q3StrList>
+#include <Q3PopupMenu>
+#include <QCloseEvent>
 
 
-class QPopupMenu;
+class Q3PopupMenu;
 class QComboBox;
 class KAction;
 class KProgress;
@@ -54,7 +58,7 @@ Q_OBJECT
 
 public:
 	KPilotInstaller();
-	KPilotInstaller(QStrList& fileList);
+	KPilotInstaller(Q3StrList& fileList);
 	~KPilotInstaller();
 
 	/**

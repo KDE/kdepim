@@ -62,7 +62,7 @@ LogFile::LogFile() : DCOPObject("LogIface"), QObject(), fOutfile(0L), fSyncing(f
 	
 	fOutfile = new QFile(KPilotSettings::logFileName());
 	
-	if (!fOutfile || !fOutfile->open(IO_WriteOnly)) 
+	if (!fOutfile || !fOutfile->open(QIODevice::WriteOnly)) 
 	{
 		DEBUGKPILOT<<"Unable to open log file "<<KPilotSettings::logFileName()<<endl;
 		kdWarning()<<"Unable to open log file "<<KPilotSettings::logFileName()<<endl;

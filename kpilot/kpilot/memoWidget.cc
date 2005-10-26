@@ -1,3 +1,5 @@
+//Added by qt3to4:
+#include <QGridLayout>
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -38,18 +40,18 @@ static const char *memowidget_id =
 #include <pi-dlp.h>
 
 #include <qdir.h>
-#include <qptrlist.h>
-#include <qlistbox.h>
+#include <q3ptrlist.h>
+#include <q3listbox.h>
 #include <qfile.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
 #include <qdom.h>
 #include <qtextstream.h>
-#include <qwhatsthis.h>
+#include <q3whatsthis.h>
 #include <qlabel.h>
 #include <qtextcodec.h>
 #include <qdatetime.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 
 #include <kapplication.h>
 #include <kmessagebox.h>
@@ -73,7 +75,7 @@ public:
 	~Private() { KPILOT_DELETE(fMemoAppInfo); } ;
 
 	PilotMemoInfo	*fMemoAppInfo;
-	QPtrList<PilotMemo>	fMemoList;
+	Q3PtrList<PilotMemo>	fMemoList;
 } ;
 
 
@@ -237,7 +239,7 @@ void MemoWidget::setupWidget()
 	grid->addWidget(fCatList, 0, 1);
 	connect(fCatList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
-	QWhatsThis::add(fCatList,
+	Q3WhatsThis::add(fCatList,
 		i18n("Select the category of addresses\n"
 			"to display here."));
 
@@ -246,13 +248,13 @@ void MemoWidget::setupWidget()
 	label->setBuddy(fCatList);
 	grid->addWidget(label, 0, 0);
 
-	fListBox = new QListBox(this);
+	fListBox = new Q3ListBox(this);
 	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
 	connect(fListBox, SIGNAL(highlighted(int)),
 		this, SLOT(slotShowMemo(int)));
 	connect(fListBox, SIGNAL(selectionChanged()),
 		this,SLOT(slotUpdateButtons()));
-	QWhatsThis::add(fListBox,
+	Q3WhatsThis::add(fListBox,
 		i18n("This list displays all the memos\n"
 			"in the selected category. Click on\n"
 			"one to display it to the right."));
@@ -264,7 +266,7 @@ void MemoWidget::setupWidget()
 	fTextWidget->setWordWrap(KTextEdit::WidgetWidth);
 	fTextWidget->setTextFormat(Qt::PlainText);
 	grid->addMultiCellWidget(fTextWidget, 1, 4, 2, 2);
-	QWhatsThis::add(fTextWidget,
+	Q3WhatsThis::add(fTextWidget,
 		i18n("The text of the selected memo appears here."));
 	fTextWidget->setReadOnly(!KPilotSettings::internalEditors());
 
@@ -274,13 +276,13 @@ void MemoWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n	("Read a text file and add it to the Pilot's memo database.") :
 		i18n("<qt><i>Import is disabled by the 'internal editors' setting.</i></qt>");
-	QWhatsThis::add(button,wt);
+	Q3WhatsThis::add(button,wt);
 
 	fExportButton = new QPushButton(i18n("Export Memo..."), this);
 	grid->addWidget(fExportButton, 2, 1);
 	connect(fExportButton, SIGNAL(clicked()), this,
 		SLOT(slotExportMemo()));
-	QWhatsThis::add(fExportButton,
+	Q3WhatsThis::add(fExportButton,
 		i18n("Write the selected memo to a file."));
 
 	fDeleteButton = new QPushButton(i18n("Delete Memo"), this);
@@ -290,12 +292,12 @@ void MemoWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("Delete the selected memo.") :
 		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
-	QWhatsThis::add(fDeleteButton, wt);
+	Q3WhatsThis::add(fDeleteButton, wt);
 
 	button = new QPushButton(i18n("Add Memo"), this);
 	grid->addWidget(button, 3, 0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotAddMemo()));
-	QWhatsThis::add(button,i18n("Add a new memo to the database."));
+	Q3WhatsThis::add(button,i18n("Add a new memo to the database."));
 }
 
 void MemoWidget::slotUpdateButtons()
@@ -619,7 +621,7 @@ void MemoWidget::slotImportMemo()
 	{
 		QFile importFile(fileName);
 
-		if (importFile.open(IO_ReadOnly) == FALSE)
+		if (importFile.open(QIODevice::ReadOnly) == FALSE)
 		{
 			// show error!
 			return;
@@ -661,7 +663,7 @@ void MemoWidget::slotExportMemo()
 	if (fileName.isEmpty())
 		return;
 
-	QPtrList<PilotListItem> menu_items;
+	Q3PtrList<PilotListItem> menu_items;
 
 	for (int x = 0; x < index; x++){
 		if (fListBox->item(x)->isSelected()){
@@ -682,27 +684,27 @@ void MemoWidget::slotExportMemo()
 	return;
 }
 
-bool MemoWidget::saveAsText(const QString &fileName,const QPtrList<PilotListItem> &memo_list)
+bool MemoWidget::saveAsText(const QString &fileName,const Q3PtrList<PilotListItem> &memo_list)
 {
 	QFile f( fileName );
 	QTextStream stream(&f);
 
 	if ( QFile::exists( fileName ) )
 	{
-		if( !f.open(IO_ReadWrite | IO_Append) )
+		if( !f.open(QIODevice::ReadWrite | QIODevice::Append) )
 		{
 			return false;
 		}
 	}
 	else
 	{
-		if( !f.open(IO_WriteOnly) )
+		if( !f.open(QIODevice::WriteOnly) )
 		{
 			return false;
 		}
 	}
 
-	QPtrListIterator<PilotListItem> it(memo_list);
+	Q3PtrListIterator<PilotListItem> it(memo_list);
 	for ( ; it.current(); ++it )
 	{
 		PilotListItem *p = it.current();
@@ -714,7 +716,7 @@ bool MemoWidget::saveAsText(const QString &fileName,const QPtrList<PilotListItem
 	return true;
 }
 
-bool MemoWidget::saveAsXML(const QString &fileName,const QPtrList<PilotListItem> &memo_list)
+bool MemoWidget::saveAsXML(const QString &fileName,const Q3PtrList<PilotListItem> &memo_list)
 {
 	QDomDocument doc( CSL1("kpilotmemos") );
 	QFile f( fileName );
@@ -725,7 +727,7 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QPtrList<PilotListItem>
 
 	if ( f.exists() )
 	{
-		if ( !f.open(IO_ReadOnly ) ) return false;
+		if ( !f.open(QIODevice::ReadOnly ) ) return false;
 
 		if ( doc.setContent( &f ) )
 		{
@@ -758,7 +760,7 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QPtrList<PilotListItem>
 	}
 	else
 	{
-		if ( !f.open(IO_ReadWrite ) ) return false;
+		if ( !f.open(QIODevice::ReadWrite ) ) return false;
 		//
 		//
 		//If there's no such file, we are not appending, just opening the file to read/write.
@@ -780,7 +782,7 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QPtrList<PilotListItem>
 		doc.appendChild ( memos );
 	}
 
-	QPtrListIterator<PilotListItem> it(memo_list);
+	Q3PtrListIterator<PilotListItem> it(memo_list);
 	for ( ; it.current(); ++it )
 	{
 		PilotListItem *p = it.current();
@@ -807,7 +809,7 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QPtrList<PilotListItem>
 		QDomText body = doc.createTextNode( theMemo->text() );
 		memo.appendChild ( body );
 	}
-	if ( !f.open(IO_WriteOnly ) ) return false;
+	if ( !f.open(QIODevice::WriteOnly ) ) return false;
 	stream << doc.toString();
 	return true;
 }

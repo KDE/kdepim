@@ -1,3 +1,5 @@
+//Added by qt3to4:
+#include <Q3PtrList>
 /* todoWidget.h			KPilot
 **
 ** Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -32,7 +34,7 @@
 
 class QComboBox;
 class QPushButton;
-class QTextView;
+class Q3TextView;
 
 #include "pilotComponent.h"
 #include "pilotTodoEntry.h"
@@ -42,14 +44,14 @@ class TodoListView : public KListView
 {
 Q_OBJECT
 public:
-	TodoListView(QWidget * parent = 0, const char * name = 0 ):KListView(parent, name){};
+	TodoListView(QWidget * parent = 0, const char * name = 0 ):KListView(parent){};
 	~TodoListView() {};
 signals:
-	void itemChecked(QCheckListItem*item);
-	void itemChecked(QCheckListItem*item, bool on);
+	void itemChecked(Q3CheckListItem*item);
+	void itemChecked(Q3CheckListItem*item, bool on);
 //protected:
 public:
-	void itemWasChecked(QCheckListItem*item, bool on) {
+	void itemWasChecked(Q3CheckListItem*item, bool on) {
 		emit itemChecked(item);
 		emit itemChecked(item, on);
 	}
@@ -58,7 +60,7 @@ public:
 class TodoCheckListItem : public PilotCheckListItem
 {
 public:
-	TodoCheckListItem(QListView*parent, const QString&text, recordid_t pilotid, void*r);
+	TodoCheckListItem(Q3ListView*parent, const QString&text, recordid_t pilotid, void*r);
 	~TodoCheckListItem()  {};
 	virtual void  stateChange(bool state);
 };
@@ -82,8 +84,8 @@ public slots:
 	* Called when a particular todo is selected. This slot displays
 	* it in the viewer widget.
 	*/
-	void slotShowTodo(QListViewItem*);
-	void slotEditRecord(QListViewItem*item);
+	void slotShowTodo(Q3ListViewItem*);
+	void slotEditRecord(Q3ListViewItem*item);
 	void slotEditRecord();
 	void slotCreateNewRecord();
 	void slotDeleteRecord();
@@ -113,8 +115,8 @@ protected slots:
 	void slotSetCategory(int);
 
 
-	void slotItemChecked(QCheckListItem*item, bool on);
-	void slotItemRenamed(QListViewItem*item, const QString &txt, int nr);
+	void slotItemChecked(Q3CheckListItem*item, bool on);
+	void slotItemRenamed(Q3ListViewItem*item, const QString &txt, int nr);
 private:
 	void setupWidget();
 	void updateWidget(); // Called with the lists have changed..
@@ -149,9 +151,9 @@ private:
 	* The two buttons should speak for themselves.
 	*/
 	QComboBox		*fCatList;
-	QTextView		*fTodoInfo;
+	Q3TextView		*fTodoInfo;
 	PilotToDoInfo 		*fTodoAppInfo;
-	QPtrList<PilotTodoEntry>	fTodoList;
+	Q3PtrList<PilotTodoEntry>	fTodoList;
 	TodoListView		*fListBox;
 	QPushButton		*fEditButton,*fDeleteButton;
 	PilotDatabase		*fTodoDB;

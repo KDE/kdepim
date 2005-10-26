@@ -32,12 +32,14 @@
 
 // #include "conduitConfigDialog_base.h"
 #include "kcmodule.h"
+//Added by qt3to4:
+#include <QLabel>
 
-class QListView;
-class QListViewItem;
+class Q3ListView;
+class Q3ListViewItem;
 class QPushButton;
 class QLabel;
-class QWidgetStack;
+class Q3WidgetStack;
 class KProcess;
 class ConduitConfigBase;
 class ConduitConfig;
@@ -46,10 +48,10 @@ class ConduitConfigWidgetBase : public KCModule
 {
 Q_OBJECT
 public:
-	ConduitConfigWidgetBase(QWidget *p=0L,const char *n=0L);
+	ConduitConfigWidgetBase(KInstance *inst,QWidget *p=0L);
 
-	QListView *fConduitList;
-	QWidgetStack *fStack;
+	Q3ListView *fConduitList;
+	Q3WidgetStack *fStack;
 	QPushButton *fConfigureButton;
 	QPushButton *fConfigureWizard,*fConfigureKontact;
 	QLabel *fActionDescription;
@@ -67,10 +69,10 @@ public:
 protected:
 	void fillLists();
 
-	void warnNoExec(const QListViewItem *);
-	void warnNoLibrary(const QListViewItem *);
+	void warnNoExec(const Q3ListViewItem *);
+	void warnNoLibrary(const Q3ListViewItem *);
 
-	void loadAndConfigure(QListViewItem *); // ,bool);
+	void loadAndConfigure(Q3ListViewItem *); // ,bool);
 
 public:
 	/**
@@ -90,7 +92,7 @@ public slots:
 //	void slotApply();
 
 signals:
-	void selectionChanged(QListViewItem *);
+	void selectionChanged(Q3ListViewItem *);
 	void sizeChanged();
 
 protected slots:
@@ -98,14 +100,14 @@ protected slots:
 	void configureWizard();
 
 	void unselect(); // Helper slot when cancelling a change in selection
-	void selected(QListViewItem *);
-	void conduitsChanged(QListViewItem*);
-	void reopenItem(QListViewItem *);
+	void selected(Q3ListViewItem *);
+	void conduitsChanged(Q3ListViewItem*);
+	void reopenItem(Q3ListViewItem *);
 
 private:
 	QPushButton *fConfigure;
-	QListViewItem *fCurrentConduit;
-	QListViewItem *fGeneralPage;
+	Q3ListViewItem *fCurrentConduit;
+	Q3ListViewItem *fGeneralPage;
 	ConduitConfigBase *fCurrentConfig;
 };
 

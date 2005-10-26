@@ -29,9 +29,11 @@
 */
 
 #include "pilotComponent.h"
+//Added by qt3to4:
+#include <Q3PtrList>
 
 class KPilotInstaller;
-class QListBox;
+class Q3ListBox;
 class QComboBox;
 class QPushButton;
 class KTextEdit;
@@ -54,8 +56,8 @@ public:
 	/* virtual */ void postHotSync();
 
 	// Added by David Bishop, please move to correct location!
-	bool saveAsXML(const QString &fileName,const QPtrList<PilotListItem> &menu_item );
-	bool saveAsText(const QString &fileName,const QPtrList<PilotListItem> &menu_item );
+	bool saveAsXML(const QString &fileName,const Q3PtrList<PilotListItem> &menu_item );
+	bool saveAsText(const QString &fileName,const Q3PtrList<PilotListItem> &menu_item );
 
 	typedef enum {
 		MAX_MEMO_LEN = 8192
@@ -101,7 +103,7 @@ private:
 
 	KTextEdit*		fTextWidget;
 	Private *d;
-	QListBox*		fListBox;
+	Q3ListBox*		fListBox;
 
 	QPushButton *fExportButton,*fDeleteButton;
 

@@ -33,10 +33,16 @@
 */
 
 #include "pilotComponent.h"
+//Added by qt3to4:
+#include <QDragEnterEvent>
+#include <QMouseEvent>
+#include <Q3ValueList>
+#include <QEvent>
+#include <QDropEvent>
 
-class QMultiLineEdit;
+class Q3MultiLineEdit;
 class QPushButton;
-class QIconDragItem;
+class Q3IconDragItem;
 
 class KIconView;
 class KPilotInstaller;
@@ -83,7 +89,7 @@ protected slots:
 	void slotClearButton();
 	void slotAddFile();
 
-	void slotDropEvent(QDropEvent * drop, const QValueList<QIconDragItem> & lst);
+	void slotDropEvent(QDropEvent * drop, const Q3ValueList<Q3IconDragItem> & lst);
 
 public slots:
 	void refreshFileInstallList();

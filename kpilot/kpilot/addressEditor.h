@@ -31,6 +31,8 @@
 #define _KPILOT_ADDRESSEDITOR_H
 
 #include <kdialogbase.h>
+//Added by qt3to4:
+#include <QLabel>
 
 class QLineEdit;
 class PilotAddress;

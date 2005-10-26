@@ -1,3 +1,5 @@
+//Added by qt3to4:
+#include <Q3PtrList>
 /* addressWidget.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -30,10 +32,10 @@
 #ifndef _KPILOT_ADDRESSWIDGET_H
 #define _KPILOT_ADDRESSWIDGET_H
 
-class QMultiLineEdit;
-class QListBox;
+class Q3MultiLineEdit;
+class Q3ListBox;
 class QComboBox;
-class QTextView;
+class Q3TextView;
 
 class PilotDatabase;
 
@@ -124,10 +126,10 @@ private:
 	* The two buttons should speak for themselves.
 	*/
 	QComboBox            *fCatList;
-	QTextView            *fAddrInfo;
+	Q3TextView            *fAddrInfo;
 	PilotAddressInfo     *fAddressAppInfo;
-	QPtrList<PilotAddress>   fAddressList;
-	QListBox             *fListBox;
+	Q3PtrList<PilotAddress>   fAddressList;
+	Q3ListBox             *fListBox;
 	QPushButton	     *fEditButton,*fDeleteButton;
 
 protected:

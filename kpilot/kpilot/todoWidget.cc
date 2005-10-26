@@ -1,3 +1,5 @@
+//Added by qt3to4:
+#include <QGridLayout>
 /* KPilot
 **
 ** Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -32,14 +34,14 @@ static const char *todowidget_id =
 
 #include "options.h"
 
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <klistview.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
 #include <qlabel.h>
-#include <qtextview.h>
+#include <q3textview.h>
 #include <qcombobox.h>
-#include <qwhatsthis.h>
+#include <q3whatsthis.h>
 #include <qtextcodec.h>
 
 #include <kmessagebox.h>
@@ -52,7 +54,7 @@ static const char *todowidget_id =
 
 
 
-TodoCheckListItem::TodoCheckListItem(QListView*parent, const QString&text,
+TodoCheckListItem::TodoCheckListItem(Q3ListView*parent, const QString&text,
 	recordid_t pilotid, void*r):PilotCheckListItem(parent, text, pilotid, r)
 {
 
@@ -221,7 +223,7 @@ void TodoWidget::setupWidget()
 	grid->addWidget(fCatList, 0, 1);
 	connect(fCatList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
-	QWhatsThis::add(fCatList,
+	Q3WhatsThis::add(fCatList,
 		i18n("<qt>Select the category of to-dos to display here.</qt>"));
 
 	label = new QLabel(i18n("Category:"), this);
@@ -236,17 +238,17 @@ void TodoWidget::setupWidget()
 	fListBox->setItemsMovable( FALSE );
 	fListBox->setItemsRenameable (TRUE);
 	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
-	connect(fListBox, SIGNAL(selectionChanged(QListViewItem*)),
-		this, SLOT(slotShowTodo(QListViewItem*)));
-	connect(fListBox, SIGNAL(doubleClicked(QListViewItem*)),
-		this, SLOT(slotEditRecord(QListViewItem*)));
-	connect(fListBox, SIGNAL(returnPressed(QListViewItem*)),
-		this, SLOT(slotEditRecord(QListViewItem*)));
-	connect(fListBox, SIGNAL(itemChecked(QCheckListItem*, bool)),
-		this, SLOT(slotItemChecked(QCheckListItem*, bool)));
-	connect(fListBox, SIGNAL(itemRenamed(QListViewItem*, const QString &, int)),
-		this, SLOT(slotItemRenamed(QListViewItem*, const QString &, int)));
-	QWhatsThis::add(fListBox,
+	connect(fListBox, SIGNAL(selectionChanged(Q3ListViewItem*)),
+		this, SLOT(slotShowTodo(Q3ListViewItem*)));
+	connect(fListBox, SIGNAL(doubleClicked(Q3ListViewItem*)),
+		this, SLOT(slotEditRecord(Q3ListViewItem*)));
+	connect(fListBox, SIGNAL(returnPressed(Q3ListViewItem*)),
+		this, SLOT(slotEditRecord(Q3ListViewItem*)));
+	connect(fListBox, SIGNAL(itemChecked(Q3CheckListItem*, bool)),
+		this, SLOT(slotItemChecked(Q3CheckListItem*, bool)));
+	connect(fListBox, SIGNAL(itemRenamed(Q3ListViewItem*, const QString &, int)),
+		this, SLOT(slotItemRenamed(Q3ListViewItem*, const QString &, int)));
+	Q3WhatsThis::add(fListBox,
 		i18n("<qt>This list displays all the to-dos "
 			"in the selected category. Click on "
 			"one to display it to the right.</qt>"));
@@ -255,7 +257,7 @@ void TodoWidget::setupWidget()
 	grid->addWidget(label, 0, 2);
 
 	// todo info text view
-	fTodoInfo = new QTextView(this);
+	fTodoInfo = new Q3TextView(this);
 	grid->addMultiCellWidget(fTodoInfo, 1, 4, 2, 2);
 
 	QPushButton *button;
@@ -268,7 +270,7 @@ void TodoWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("<qt>You can edit a to-do when it is selected.</qt>") :
 		i18n("<qt><i>Editing is disabled by the 'internal editors' setting.</i></qt>");
-	QWhatsThis::add(fEditButton,wt);
+	Q3WhatsThis::add(fEditButton,wt);
 
 	button = new QPushButton(i18n("New Record..."), this);
 	grid->addWidget(button, 2, 1);
@@ -276,7 +278,7 @@ void TodoWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("<qt>Add a new to-do to the to-do list.</qt>") :
 		i18n("<qt><i>Adding new to-dos is disabled by the 'internal editors' setting.</i></qt>");
-	QWhatsThis::add(button, wt);
+	Q3WhatsThis::add(button, wt);
 	button->setEnabled(KPilotSettings::internalEditors());
 
 	fDeleteButton = new QPushButton(i18n("Delete Record"), this);
@@ -286,7 +288,7 @@ void TodoWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("<qt>Delete the selected to-do from the to-do list.</qt>") :
 		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
-	QWhatsThis::add(fDeleteButton,wt);
+	Q3WhatsThis::add(fDeleteButton,wt);
 }
 
 void TodoWidget::updateWidget()
@@ -355,7 +357,7 @@ void TodoWidget::slotEditRecord()
 {
 	slotEditRecord(fListBox->currentItem());
 }
-void TodoWidget::slotEditRecord(QListViewItem*item)
+void TodoWidget::slotEditRecord(Q3ListViewItem*item)
 {
 	FUNCTIONSETUP;
 	if (!shown) return;
@@ -519,7 +521,7 @@ void TodoWidget::slotDeleteRecord()
 
 
 
-void TodoWidget::slotShowTodo(QListViewItem*item)
+void TodoWidget::slotShowTodo(Q3ListViewItem*item)
 {
 	FUNCTIONSETUP;
 	if (!shown) return;
@@ -591,7 +593,7 @@ void TodoWidget::writeTodo(PilotTodoEntry * which,
 	}
 }
 
-void TodoWidget::slotItemChecked(QCheckListItem*item, bool on)
+void TodoWidget::slotItemChecked(Q3CheckListItem*item, bool on)
 {
 	TodoCheckListItem*p = static_cast<TodoCheckListItem*>(item);
 	if (!p) return;
@@ -601,7 +603,7 @@ void TodoWidget::slotItemChecked(QCheckListItem*item, bool on)
 	slotShowTodo(item);
 }
 
-void TodoWidget::slotItemRenamed(QListViewItem*item, const QString &txt, int nr)
+void TodoWidget::slotItemRenamed(Q3ListViewItem*item, const QString &txt, int nr)
 {
 	TodoCheckListItem*p = static_cast<TodoCheckListItem*>(item);
 	if (!p) return;

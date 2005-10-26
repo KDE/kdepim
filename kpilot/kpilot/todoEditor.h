@@ -36,7 +36,7 @@ class PilotTodoEntry;
 struct ToDoAppInfo;
 
 class QComboBox;
-class QTextEdit;
+class Q3TextEdit;
 class QCheckBox;
 class KDateWidget;
 class TodoEditorBase;

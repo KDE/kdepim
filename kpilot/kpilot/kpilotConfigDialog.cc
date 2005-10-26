@@ -41,7 +41,7 @@ static const char *kpilotconfigdialog_id =
 #include <qcheckbox.h>
 #include <qradiobutton.h>
 #include <qpushbutton.h>
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qlineedit.h>
 #include <qtabwidget.h>
 #include <qspinbox.h>

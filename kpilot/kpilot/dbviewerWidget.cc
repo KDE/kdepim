@@ -40,7 +40,10 @@
 #include <qlayout.h>
 #include <qdir.h>
 #include <qregexp.h>
-#include <qlistview.h>
+#include <q3listview.h>
+//Added by qt3to4:
+#include <QGridLayout>
+#include <Q3CString>
 
 #include <klistbox.h>
 #include <ktextedit.h>
@@ -133,8 +136,8 @@ void GenericDBWidget::setupWidget()
 		this, SLOT(slotEditRecord()));
 	connect(fDeleteRecord,  SIGNAL(clicked()),
 		this, SLOT(slotDeleteRecord()));
-	connect(fRecordList, SIGNAL(executed(QListViewItem*)),
-		this, SLOT(slotEditRecord(QListViewItem*)));
+	connect(fRecordList, SIGNAL(executed(Q3ListViewItem*)),
+		this, SLOT(slotEditRecord(Q3ListViewItem*)));
 
 }
 
@@ -238,7 +241,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 		// we are dealing with an application
 		currentDBtype=eApplication;
 
-		QCString filename = QFile::encodeName(dbPath() + CSL1("/") + dbname);
+		Q3CString filename = QFile::encodeName(dbPath() + CSL1("/") + dbname);
 		const char *s = filename;
 		struct pi_file *pf = pi_file_open(const_cast<char *>(s));
 		if (!pf)
@@ -326,7 +329,7 @@ void GenericDBWidget::slotAddRecord()
 	}
 }
 
-bool GenericDBWidget::slotEditRecord(QListViewItem*item)
+bool GenericDBWidget::slotEditRecord(Q3ListViewItem*item)
 {
 	FUNCTIONSETUP;
 	PilotListViewItem*currRecItem=dynamic_cast<PilotListViewItem*>(item);

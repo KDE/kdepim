@@ -1,3 +1,7 @@
+//Added by qt3to4:
+#include <QPixmap>
+#include <Q3CString>
+#include <QCloseEvent>
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -36,9 +40,9 @@ static const char *kpilot_id =
 #include "options.h"
 
 #include <qfile.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qstring.h>
-#include <qvbox.h>
+#include <q3vbox.h>
 #include <qtimer.h>
 
 #include <kjanuswidget.h>
@@ -96,7 +100,7 @@ static const char *kpilot_id =
 class KPilotInstaller::KPilotPrivate
 {
 public:
-	typedef QPtrList<PilotComponent> ComponentList;
+	typedef Q3PtrList<PilotComponent> ComponentList;
 
 private:
 	ComponentList  fPilotComponentList;
@@ -166,7 +170,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 	fAppStatus=WaitingForDaemon;
 
 	QString daemonError;
-	QCString daemonDCOP;
+	Q3CString daemonDCOP;
 	int daemonPID;
 
 	QString s = getDaemon().statusString();

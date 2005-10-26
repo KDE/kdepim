@@ -30,7 +30,7 @@
 
 #include "options.h"
 
-#include <qlistview.h>
+#include <q3listview.h>
 #include <qpushbutton.h>
 #include <klistview.h>
 #include <kmessagebox.h>
@@ -65,8 +65,8 @@ KPilotDBSelectionDialog::KPilotDBSelectionDialog(QStringList &selectedDBs, QStri
 	items.sort();
 
 	for ( QStringList::Iterator it = items.begin(); it != items.end(); ++it ) {
-		QCheckListItem*checkitem=new QCheckListItem(fSelectionWidget->fDatabaseList,
-			*it, QCheckListItem::CheckBox);
+		Q3CheckListItem*checkitem=new Q3CheckListItem(fSelectionWidget->fDatabaseList,
+			*it, Q3CheckListItem::CheckBox);
 		if (fSelectedDBs.contains(*it)) checkitem->setOn(true);
 	}
 
@@ -90,8 +90,8 @@ void KPilotDBSelectionDialog::addDB()
 	if (!dbname.isEmpty())
 	{
 		fSelectionWidget->fNameEdit->clear();
-		new QCheckListItem(fSelectionWidget->fDatabaseList, dbname,
-			QCheckListItem::CheckBox);
+		new Q3CheckListItem(fSelectionWidget->fDatabaseList, dbname,
+			Q3CheckListItem::CheckBox);
 		fAddedDBs << dbname;
 	}
 }
@@ -99,7 +99,7 @@ void KPilotDBSelectionDialog::addDB()
 void KPilotDBSelectionDialog::removeDB()
 {
 	FUNCTIONSETUP;
-	QListViewItem*item(fSelectionWidget->fDatabaseList->selectedItem());
+	Q3ListViewItem*item(fSelectionWidget->fDatabaseList->selectedItem());
 	if (item)
 	{
 		QString dbname=item->text(0);
@@ -125,9 +125,9 @@ QStringList KPilotDBSelectionDialog::getSelectedDBs()
 	fSelectedDBs.clear();
 
 	//  update the list of selected databases
-	QListViewItemIterator it( fSelectionWidget->fDatabaseList );
+	Q3ListViewItemIterator it( fSelectionWidget->fDatabaseList );
 	while ( it.current() ) {
-		QCheckListItem *item = dynamic_cast<QCheckListItem*>(it.current());
+		Q3CheckListItem *item = dynamic_cast<Q3CheckListItem*>(it.current());
 		++it;
 
 		if ( item && item->isOn() )

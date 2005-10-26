@@ -31,10 +31,12 @@
 
 #include "loggerDCOP.h"
 #include "pilotComponent.h"
+//Added by qt3to4:
+#include <QLabel>
 
 class QLabel;
-class QTextEdit;
-class QHBox;
+class Q3TextEdit;
+class Q3HBox;
 class KProgress;
 
 class LogWidget : public PilotComponent , public LoggerDCOP
@@ -62,7 +64,7 @@ public:
 	// GUI customization hooks
 	//
 	//
-	QHBox *buttonBox() const { return fButtonBox; } ;
+	Q3HBox *buttonBox() const { return fButtonBox; } ;
 
 public slots:
 	void addMessage(const QString &);
@@ -79,12 +81,12 @@ private:
 	bool saveFile(const QString &);
 
 private:
-	QTextEdit *fLog;
+	Q3TextEdit *fLog;
 	bool fShowTime;
 	QLabel *fSplash;
 	QLabel *fLabel;
 	KProgress *fProgress;
-	QHBox *fButtonBox;
+	Q3HBox *fButtonBox;
 } ;
 
 #endif

@@ -1,3 +1,6 @@
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 /* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
@@ -41,14 +44,14 @@ static const char *interactivesync_id =
 #include <pi-file.h>
 
 #include <qtimer.h>
-#include <qvbox.h>
+#include <q3vbox.h>
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qmessagebox.h>
 #include <qdir.h>
 #include <qfile.h>
 #include <qfileinfo.h>
-#include <qtl.h>
+#include <q3tl.h>
 #include <qstyle.h>
 #include <qtextcodec.h>
 
@@ -151,7 +154,7 @@ CheckUser::~CheckUser()
 					<< guiUserName << endl;
 #endif
 
-				QCString l1 = PilotAppCategory::codec()->fromUnicode(guiUserName);
+				Q3CString l1 = PilotAppCategory::codec()->fromUnicode(guiUserName);
 
 				fHandle->getPilotUser()->setUserName(l1.data());
 				pilotUserName=guiUserName;
@@ -235,9 +238,9 @@ class RestoreAction::RestoreActionPrivate
 {
 public:
 	QString fDatabaseDir;
-	QValueList<RestoreInfo *> fDBList;
+	Q3ValueList<RestoreInfo *> fDBList;
 	QTimer fTimer;
-	QValueList<RestoreInfo *>::ConstIterator fDBIterator;
+	Q3ValueList<RestoreInfo *>::ConstIterator fDBIterator;
 	int fDBIndex;
 };
 

@@ -29,13 +29,15 @@
 #include "options.h"
 
 #include <qlayout.h>
-#include <qgroupbox.h>
+#include <q3groupbox.h>
 #include <qlabel.h>
-#include <qvbox.h>
+#include <q3vbox.h>
 #include <qtimer.h>
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qmap.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
+//Added by qt3to4:
+#include <QGridLayout>
 
 #include <kmessagebox.h>
 #include <kglobal.h>
@@ -92,12 +94,12 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	KDialogBase(parent, n, true, i18n("Autodetecting Your Handheld"), KDialogBase::Ok|KDialogBase::Cancel|KDialogBase::User1, KDialogBase::Cancel, true, i18n("Restart Detection")),
 	mDetected(false), mUserName(""), mDevice(""), mUID(0)
 {
-	QVBox *mainWidget = makeVBoxMainWidget();
+	Q3VBox *mainWidget = makeVBoxMainWidget();
 
 	fInfoText = new QLabel( i18n( "KPilot is now trying to automatically detect the device of your handheld. Please press the hotsync button if you have not done so already." ), mainWidget, "fInfoText" );
 	fInfoText->setAlignment( QLabel::WordBreak );
 
-	fStatusGroup = new QGroupBox( i18n("Status"), mainWidget, "fStatusGroup" );
+	fStatusGroup = new Q3GroupBox( i18n("Status"), mainWidget, "fStatusGroup" );
 	fStatusGroup->setColumnLayout(0, Qt::Vertical );
 	fStatusGroupLayout = new QGridLayout( fStatusGroup->layout() );
 
@@ -110,7 +112,7 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 
 
 
-	fResultsGroup = new QGroupBox( i18n( "Detected Values" ), mainWidget, "fResultsGroup" );
+	fResultsGroup = new Q3GroupBox( i18n( "Detected Values" ), mainWidget, "fResultsGroup" );
 	fResultsGroup->setEnabled( FALSE );
 	fResultsGroup->setColumnLayout(0, Qt::Vertical );
 	fResultsGroupLayout = new QGridLayout( fResultsGroup->layout() );
@@ -296,7 +298,7 @@ void ProbeDialog::connection( KPilotDeviceLink*lnk)
 
 void ProbeDialog::retrieveDBList()
 {
-	QPtrList<DBInfo> dbs = mActiveLink->getDBList();
+	Q3PtrList<DBInfo> dbs = mActiveLink->getDBList();
 	mDBs.clear();
 	dbs.setAutoDelete( true );
 	char buff[7];
