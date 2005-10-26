@@ -595,7 +595,7 @@ int KMobileGnokii::readAddress( int index, KABC::Addressee &addr )
   // now get our addressbook entry
 
   // do we have this entry in the cache already ?
-  if (m_addrList.count() > (unsigned)index && !m_addrList[index].isEmpty()) {
+  if (m_addrList.count() > index && !m_addrList[index].isEmpty()) {
 	addr = m_addrList[index];
 	return 0;
   }
@@ -798,7 +798,7 @@ int KMobileGnokii::storeCalendarEntry( int index, const KCal::Event &event )
   // alarm:
   entry.alarm.enabled = 0;
   if (event.isAlarmEnabled()) {
-	const KCal::Alarm *eventalarm = *event.alarms().at(0);
+	KCal::Alarm *eventalarm = event.alarms().at(0);
 	if (eventalarm) {
 		if (eventalarm->hasTime()) {
 
