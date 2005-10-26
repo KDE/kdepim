@@ -99,11 +99,19 @@ class KDE_EXPORT IdMapper
 
     /**
       Removes the remote id.
+      @param remoteId remote Id to remove.
+      @todo So what does that do? Remove local Ids with only that
+            one remote Id? Remove the remote Id from all local Ids
+            that have it?
+      @see setRemoteId()
      */
     void removeRemoteId( const QString &remoteId );
 
     /**
       Returns the remote id of the given local id.
+      @param localId Local Id to get the remote Id from.
+      @see setRemoteId()
+      @see removeRemoteId()
      */
     QString remoteId( const QString &localId ) const;
 
@@ -128,6 +136,7 @@ class KDE_EXPORT IdMapper
     /**
      * Returns the fingerprint for the map.
      *
+     * @param localId Local Id to get the fingerprint for.
      * @todo Figure out if this returns the last fingerprint set
      *       by setFingerprint() only or if anything else can change it.
      */

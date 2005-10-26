@@ -26,6 +26,7 @@
 namespace KPIM {
 
 /** Convert a single ASCII character to lowercase.
+    @param ch Character to convert
     @internal
 */
 static unsigned char ASCIIToLower( unsigned char ch )
@@ -46,6 +47,7 @@ char * kAsciiToLower( char *s )
 }
 
 /** Convert a single ASCII character to uppercase.
+    @param ch Character to convert
     @internal
 */
 static unsigned char ASCIIToUpper( unsigned char ch )
