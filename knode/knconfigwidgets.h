@@ -208,7 +208,7 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
   Q_OBJECT
 
   public:
-    AppearanceWidget( QWidget *parent = 0 );
+    AppearanceWidget( KInstance *inst,QWidget *parent = 0 );
     ~AppearanceWidget();
 
     void load();
@@ -549,7 +549,7 @@ class KDE_EXPORT PrivacyWidget : public KCModule {
   Q_OBJECT
 
   public:
-    PrivacyWidget( QWidget *parent = 0 );
+    PrivacyWidget( KInstance *inst,QWidget *parent = 0 );
     ~PrivacyWidget();
 
     void save();
@@ -594,7 +594,7 @@ class KDE_EXPORT CleanupWidget : public KCModule {
   Q_OBJECT
 
   public:
-    CleanupWidget( QWidget *parent = 0 );
+    CleanupWidget( KInstance *inst,QWidget *parent = 0 );
     ~CleanupWidget();
 
     void load();

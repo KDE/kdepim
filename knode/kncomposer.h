@@ -53,7 +53,8 @@ class KToggleAction;
 class KNLocalArticle;
 class KNAttachment;
 class SpellingFilter;
-
+class KComboBox;
+class QComboBox;
 /** Message composer window. */
 class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
 

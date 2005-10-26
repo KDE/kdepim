@@ -2173,7 +2173,7 @@ void KNComposer::Editor::slotPasteAsQuotation()
 {
   QString s = QApplication::clipboard()->text();
   if (!s.isEmpty()) {
-    for (int i=0; (uint)i<s.length(); i++) {
+    for (int i=0; i<s.length(); i++) {
       if ( s[i] < ' ' && s[i] != '\n' && s[i] != '\t' )
         s[i] = ' ';
     }
@@ -2357,7 +2357,7 @@ void KNComposer::Editor::keyPressEvent ( QKeyEvent *e)
         // the begin nor at the end of the line
         if( ( col > 0 ) && ( col < int( lineText.length() ) ) ) {
             bool isQuotedLine = false;
-            uint bot = 0; // bot = begin of text after quote indicators
+            int bot = 0; // bot = begin of text after quote indicators
             while( bot < lineText.length() ) {
                 if( ( lineText[bot] == '>' ) || ( lineText[bot] == '|' ) ) {
                     isQuotedLine = true;
@@ -2382,7 +2382,7 @@ void KNComposer::Editor::keyPressEvent ( QKeyEvent *e)
                 QString newLine = text( line + 1 );
                 // remove leading white space from the new line and instead
                 // add the quote indicators of the previous line
-                unsigned int leadingWhiteSpaceCount = 0;
+                int leadingWhiteSpaceCount = 0;
                 while( ( leadingWhiteSpaceCount < newLine.length() )
                        && newLine[leadingWhiteSpaceCount].isSpace() ) {
                     ++leadingWhiteSpaceCount;

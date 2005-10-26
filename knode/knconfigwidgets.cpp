@@ -763,8 +763,8 @@ int KNode::AppearanceWidget::FontListItem::width(const Q3ListBox *lb ) const
 //===================================================================================
 
 
-KNode::AppearanceWidget::AppearanceWidget( QWidget *parent ) :
-  KCModule(knGlobals.instance, parent ),
+KNode::AppearanceWidget::AppearanceWidget( KInstance *inst, QWidget *parent ) :
+  KCModule(inst, parent ),
   d_ata( knGlobals.configManager()->appearance() )
 {
   QGridLayout *topL=new QGridLayout(this, 8,2, 5,5);
@@ -1802,8 +1802,8 @@ void KNode::PostNewsSpellingWidget::save()
 
 //==============================================================================================================
 
-KNode::PrivacyWidget::PrivacyWidget( QWidget *parent ) :
-  KCModule(knGlobals.instance, parent )
+KNode::PrivacyWidget::PrivacyWidget( KInstance *inst,QWidget *parent ) :
+  KCModule(inst, parent )
 {
   QBoxLayout *topLayout = new QVBoxLayout(this, 5);
   c_onf = new Kpgp::Config(this,"knode pgp config",false);
@@ -1927,8 +1927,8 @@ void KNode::GroupCleanupWidget::slotDefaultToggled( bool state )
 }
 
 
-KNode::CleanupWidget::CleanupWidget( QWidget *parent ) :
-  KCModule(knGlobals.instance, parent ),
+KNode::CleanupWidget::CleanupWidget( KInstance *inst,QWidget *parent ) :
+  KCModule(inst, parent ),
   d_ata( knGlobals.configManager()->cleanup() )
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
