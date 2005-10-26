@@ -62,8 +62,8 @@ class ConduitConfigWidget : public ConduitConfigWidgetBase
 {
 Q_OBJECT
 public:
-	ConduitConfigWidget(QWidget *,
-		const char *name=0L, bool ownButtons=false);
+	ConduitConfigWidget(KInstance *inst, QWidget *,
+		 bool ownButtons=false);
 	virtual ~ConduitConfigWidget();
 
 protected:

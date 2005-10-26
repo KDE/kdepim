@@ -40,7 +40,7 @@ Q_OBJECT
 public:
 	enum Mode { InDialog=0, Standalone=1 } ;
 
-	ConfigWizard(QWidget *p=0L,const char *n=0L, int mode=(int)InDialog);
+	ConfigWizard(KInstance *inst, QWidget *p=0L, int mode=(int)InDialog);
 	~ConfigWizard();
 
 protected slots:

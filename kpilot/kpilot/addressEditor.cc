@@ -189,7 +189,7 @@ void AddressEditor::initLayout()
 {
 	FUNCTIONSETUP;
 
-	Q3Frame *p = plainPage();
+	QFrame *p = plainPage();
 	QGridLayout *grid = new QGridLayout(p, 10, 5, 0, SPACING);
 
 	QLabel *t;

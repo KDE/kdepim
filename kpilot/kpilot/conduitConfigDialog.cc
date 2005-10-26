@@ -62,7 +62,8 @@ static const char *conduitconfigdialog_id =
 #include <kseparator.h>
 #include <kconfigskeleton.h>
 #include <kdialogbase.h>
-
+#include <kinstance.h>
+	
 #include "uiDialog.h"
 #include "plugin.h"
 #include "kpilotConfig.h"
@@ -83,12 +84,14 @@ extern "C"
 {
 	KDE_EXPORT KCModule *create_kpilotconfig( QWidget *parent, const char * )
 	{
-		return new ConduitConfigWidget( parent, "kcmkpilotconfig" );
+		KInstance *inst = new KInstance("kcmkpilotconfig" );
+		return new ConduitConfigWidget( inst, parent);
 	}
 
 	KDE_EXPORT ConfigWizard *create_wizard(QWidget *parent, int m)
 	{
-		return new ConfigWizard(parent,"Wizard", m);
+		KInstance *inst = new KInstance("Wizard");
+		return new ConfigWizard(inst,parent, m);
 	}
 }
 
@@ -214,7 +217,7 @@ static void addDescriptionPage(Q3WidgetStack *parent,
 
 
 ConduitConfigWidgetBase::ConduitConfigWidgetBase(KInstance *inst,QWidget *parent) :
-	KCModule(KInstance * inst, parent),
+	KCModule(inst, parent),
 	fConduitList(0L),
 	fStack(0L),
 	fConfigureButton(0L),
@@ -243,7 +246,7 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(KInstance *inst,QWidget *parent
 	QFont titleFont(fTitleText->font());
 	titleFont.setBold(true);
 	fTitleText->setFont(titleFont);
-	vbox->addWidget(fTitleText, 0, AlignLeft);
+	vbox->addWidget(fTitleText, 0, Qt::AlignLeft);
 	vbox->addWidget(new KSeparator(Q3Frame::HLine|Q3Frame::Plain, this));
 
 	// Right hand column
@@ -305,9 +308,9 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(KInstance *inst,QWidget *parent
 	fStack->addWidget(UIDialog::aboutPage(fStack,0L),GENERAL_ABOUT);
 }
 
-ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
+ConduitConfigWidget::ConduitConfigWidget(KInstance *inst, QWidget *parent,
 	bool) :
-	ConduitConfigWidgetBase(parent,n),
+	ConduitConfigWidgetBase(inst,parent),
 	fConfigure(0L),
 	fCurrentConduit(0L),
 	fGeneralPage(0L),
@@ -840,7 +843,8 @@ void ConduitConfigWidget::reopenItem(Q3ListViewItem *i)
 void ConduitConfigWidget::configureWizard()
 {
 	FUNCTIONSETUP;
-	ConfigWizard wiz(this, "Wizard");
+	KInstance *inst = new KInstance("Wizard");
+	ConfigWizard wiz(inst, this);
 	if (wiz.exec()) {
 		KPilotSettings::self()->readConfig();
 		load();

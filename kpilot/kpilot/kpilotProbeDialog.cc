@@ -31,7 +31,7 @@
 #include <qlayout.h>
 #include <q3groupbox.h>
 #include <qlabel.h>
-#include <q3vbox.h>
+#include <kvbox.h>
 #include <qtimer.h>
 #include <q3ptrlist.h>
 #include <qmap.h>
@@ -94,7 +94,7 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	KDialogBase(parent, n, true, i18n("Autodetecting Your Handheld"), KDialogBase::Ok|KDialogBase::Cancel|KDialogBase::User1, KDialogBase::Cancel, true, i18n("Restart Detection")),
 	mDetected(false), mUserName(""), mDevice(""), mUID(0)
 {
-	Q3VBox *mainWidget = makeVBoxMainWidget();
+	KVBox *mainWidget = makeVBoxMainWidget();
 
 	fInfoText = new QLabel( i18n( "KPilot is now trying to automatically detect the device of your handheld. Please press the hotsync button if you have not done so already." ), mainWidget, "fInfoText" );
 	fInfoText->setAlignment( QLabel::WordBreak );
