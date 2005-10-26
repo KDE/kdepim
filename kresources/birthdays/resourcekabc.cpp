@@ -489,6 +489,7 @@ void ResourceKABC::dump() const
 void ResourceKABC::reload()
 {
   load();
+  emit resourceChanged( this );
 }
 
 void ResourceKABC::setTimeZoneId( const QString& tzid )
