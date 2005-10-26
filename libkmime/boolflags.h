@@ -31,12 +31,26 @@ public:
   BoolFlags()       { clear(); }
   ~BoolFlags()      {}
 
+  /** Sets bit number @p i to the value @p b.
+      @param i bit number. Valid values are 0 through 15.
+             Higher values will be silently ignored.
+      @param b value to set bit @p i to.
+  */
   void set(unsigned int i, bool b=true);
+  /** Get bit number @p.
+      @param i bit number. Valid values are 0 through 15.
+	     Higher values all return @c false.
+      @return Value of the single bit @p i. Invalid bit
+	      numbers return @c false.
+  */
   bool get(unsigned int i);
+  /** Set all bits to false. */
   void clear()            { bits[0]=0; bits[1]=0; }
+  /** Returns a pointer to the data structure used to store the bits. */
   unsigned char *data()   { return bits; }
 
 protected:
+  /** Two bytes (at least) of storage for the bits. */
   unsigned char bits[2];  //space for 16 flags
 };
 
