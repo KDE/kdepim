@@ -60,8 +60,8 @@ QString KTNEFProperty::formatValue( const QVariant& value, bool beautify )
 		if ( !printable )
 		{
 			QString s;
-			uint i;
-      uint txtCount = beautify ? qMin( arr.size(), 32 ) : arr.size();
+			int i;
+      int txtCount = beautify ? qMin( arr.size(), 32 ) : arr.size();
 			for ( i=0; i < txtCount; ++i )
 			{
 				s.append( QString().sprintf( "%02X", ( uchar )arr[ i ] ) );
