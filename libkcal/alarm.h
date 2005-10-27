@@ -45,8 +45,16 @@ class Incidence;
 class LIBKCAL_EXPORT Alarm : public CustomProperties
 {
   public:
-    enum Type { Invalid, Display, Procedure, Email, Audio };
+    /** Kinds of alarms that can be (user) defined. */
+    enum Type { 
+        Invalid    /**< Invalid, or no alarm */, 
+        Display    /**< Display a dialog box */, 
+        Procedure  /**< Call a script */, 
+        Email      /**< Send email */, 
+        Audio      /**< Play an audio file */
+    };
 
+    /** List of alarms */
     typedef ListBase<Alarm> List;
 
     /**

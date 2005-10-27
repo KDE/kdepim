@@ -61,6 +61,8 @@ class KDE_EXPORT IdMapper
 
     /**
       Set id map path.
+      @param path Path to use into mapping namespace.
+      @see IdMapper()
     */
     void setPath( const QString &path );
     /**
@@ -94,6 +96,12 @@ class KDE_EXPORT IdMapper
 
     /**
       Stores the remote id for the given local id.
+      @param localId Local Id to set remote for.
+      @param remoteId Remote Id to associate with this local Id.
+      @see remoteId()
+      @see localId()
+      @todo What happens when you set the same remote Id for more than
+            one localId?
      */
     void setRemoteId( const QString &localId, const QString &remoteId );
 
@@ -117,6 +125,7 @@ class KDE_EXPORT IdMapper
 
     /**
       Returns the local id for the given remote id.
+      @param remoteId Remote Id to get the local Id for.
      */
     QString localId( const QString &remoteId ) const;
 

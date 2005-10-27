@@ -134,6 +134,14 @@ class LIBKCAL_EXPORT Attendee : public Person
     Private *d;
 };
 
+/** Comparison operator (for QMap and the like).
+    @param a1 Attendee
+    @param a2 Other Attendee
+    @return @c true if the attendees @p a1 and @p a2 are exactly
+            the same; this means they are the same person ( see
+            Person::operator== ) and the role, status, UID and
+            RSVP values are the same as well.
+*/
 bool operator==( const Attendee& a1, const Attendee& a2 );
 
 }

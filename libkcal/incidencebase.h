@@ -37,7 +37,9 @@ class KURL;
 
 namespace KCal {
 
+/** List of dates */
 typedef QList<QDate> DateList;
+/** List of times */
 typedef QList<QDateTime> DateTimeList;
 class Event;
 class Todo;

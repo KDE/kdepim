@@ -55,8 +55,10 @@ template <class T>
 
 namespace KCal {
 
+// These two are duplicates wrt. incidencebase.h
 typedef QList<QDateTime> DateTimeList;
 typedef QList<QDate> DateList;
+/* List of times */
 typedef QList<QTime> TimeList;
 
 

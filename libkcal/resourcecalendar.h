@@ -382,6 +382,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     Private *d;
 };
 
+/** Type representing the manager of a ResourceCalendar. */
 typedef KRES::Manager<ResourceCalendar> CalendarResourceManager;
 
 }
