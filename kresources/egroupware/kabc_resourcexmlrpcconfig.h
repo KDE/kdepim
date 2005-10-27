@@ -34,7 +34,7 @@ class KDE_EXPORT ResourceXMLRPCConfig : public KRES::ConfigWidget
   Q_OBJECT
 
   public:
-    ResourceXMLRPCConfig( QWidget* parent = 0, const char* name = 0 );
+    ResourceXMLRPCConfig( QWidget* parent );
 
   public slots:
     void loadSettings( KRES::Resource* );

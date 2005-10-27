@@ -35,8 +35,8 @@
 
 using namespace KABC;
 
-ResourceXMLRPCConfig::ResourceXMLRPCConfig( QWidget* parent,  const char* name )
-  : KRES::ConfigWidget( parent, name )
+ResourceXMLRPCConfig::ResourceXMLRPCConfig( QWidget* parent )
+  : KRES::ConfigWidget( parent )
 {
   QGridLayout *mainLayout = new QGridLayout( this, 4, 2, 0, KDialog::spacingHint() );
 
