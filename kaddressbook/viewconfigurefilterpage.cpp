@@ -51,7 +51,7 @@ ViewConfigureFilterPage::ViewConfigureFilterPage( QWidget *parent,
   " this view is displayed. This feature allows you to configure views that only"
   " interact with certain types of information based on the filter. Once the view"
   " is activated, the filter can be changed at anytime." ), this );
-  label->setAlignment( Qt::AlignLeft | Qt::AlignTop | Qt::WordBreak );
+  label->setAlignment( Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap );
   topLayout->addWidget( label );
 
   QWidget *spacer = new QWidget( this );

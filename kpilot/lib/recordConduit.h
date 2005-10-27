@@ -29,6 +29,7 @@
 
 #include <qtimer.h>
 #include <klocale.h>
+#include <QMap>
 
 #include "plugin.h"
 #include "pilotAppCategory.h"

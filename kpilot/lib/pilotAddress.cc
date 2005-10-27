@@ -709,8 +709,8 @@ void *PilotAddress::pack_(void *buf, int *len)
 #if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	pi_buffer_t b = { 0,0,0 } ;
 	i = pack_Address(&fAddressInfo, &b, address_v1);
-	memcpy(buf,b.data,kMin(i,*len));
-	*len = kMin(i,*len);
+	memcpy(buf,b.data,qMin(i,*len));
+	*len = qMin(i,*len);
 #else
 	i = pack_Address(&fAddressInfo, (unsigned char *) buf, *len);
 	*len = i;

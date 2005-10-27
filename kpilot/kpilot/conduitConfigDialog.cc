@@ -202,7 +202,7 @@ static void addDescriptionPage(Q3WidgetStack *parent,
 
 	l = new QLabel(v);
 	l->setText(text);
-	l->setAlignment(Qt::AlignLeft | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
+	l->setAlignment(Qt::AlignLeft | Qt::AlignVCenter | Qt::TextExpandTabs | Qt::TextWordWrap);
 
 	if (label) { *label = l; }
 

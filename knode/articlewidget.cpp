@@ -469,7 +469,7 @@ void ArticleWidget::displayArticle()
       text->decodedText( htmlTxt, true, knGlobals.settings()->removeTrailingNewlines() );
       if ( mShowHtml ) {
         // strip </html> & </body>
-        int i = kMin( htmlTxt.findRev( "</html>", -1, false ), htmlTxt.findRev( "</body>", -1, false ) );
+        int i = qMin( htmlTxt.findRev( "</html>", -1, false ), htmlTxt.findRev( "</body>", -1, false ) );
         if ( i >= 0 )
           htmlTxt.truncate( i );
         html += htmlTxt;

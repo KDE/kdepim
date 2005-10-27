@@ -84,7 +84,7 @@ Decoder * IdentityCodec::makeDecoder( bool withCRLF ) const {
 bool IdentityEnDecoder::decode( const char* & scursor, const char * const send,
 				char* & dcursor, const char * const dend )
 {
-  const int size = kMin( send - scursor, dcursor - dend );
+  const int size = qMin( send - scursor, dcursor - dend );
   if ( size > 0 ) {
     std::memmove( dcursor, scursor, size );
     dcursor += size;

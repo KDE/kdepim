@@ -193,8 +193,8 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
 
   // don't make the dialog too large
   const QRect desk = KGlobalSettings::desktopGeometry( this );
-  setInitialSize( QSize( kMin( dialogWidth, 3 * desk.width() / 4 ),
-			 kMin( dialogHeight, 7 * desk.height() / 8 ) ) );
+  setInitialSize( QSize( qMin( dialogWidth, 3 * desk.width() / 4 ),
+			 qMin( dialogHeight, 7 * desk.height() / 8 ) ) );
 }
 
 Kleo::KeyApprovalDialog::~KeyApprovalDialog() {

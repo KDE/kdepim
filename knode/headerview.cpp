@@ -478,7 +478,7 @@ void KNHeaderView::contentsMousePressEvent( QMouseEvent *e )
   if ( i ) {
     int decoLeft = header()->sectionPos( 0 ) +
         treeStepSize() * ( (i->depth() - 1) + ( rootIsDecorated() ? 1 : 0) );
-    int decoRight = kMin( decoLeft + treeStepSize() + itemMargin(),
+    int decoRight = qMin( decoLeft + treeStepSize() + itemMargin(),
         header()->sectionPos( 0 ) + header()->sectionSize( 0 ) );
     bool rootDecoClicked = vp.x() > decoLeft && vp.x() < decoRight;
 

@@ -242,7 +242,7 @@ int PilotLocalDatabase::readAppBlock(unsigned char *buffer, int size)
 {
 	FUNCTIONSETUP;
 
-	size_t m = kMin((size_t)size,(size_t)fAppLen);
+	size_t m = qMin((size_t)size,(size_t)fAppLen);
 
 	if (!isDBOpen())
 	{

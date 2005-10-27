@@ -1289,7 +1289,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
       aItem = d->mItemList.last();
       setCurrentItem( aItem );
       break;
-    case Qt::Key_Prior: // PageUp
+    case Qt::Key_PageUp: // PageUp
     {
       // QListView: "Make the item above the top visible and current"
       // TODO if contentsY(), pick the top item of the leftmost visible column
@@ -1303,7 +1303,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
 
       break;
     }
-    case Qt::Key_Next:  // PageDown
+    case Qt::Key_PageDown:  // PageDown
     {
       // QListView: "Make the item below the bottom visible and current"
       // find the first not fully visible column.

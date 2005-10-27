@@ -96,7 +96,7 @@ int PilotSerialDatabase::readAppBlock(unsigned char *buffer, int maxLen)
 	int r = dlp_ReadAppBlock(fDBSocket, getDBHandle(), 0 /* offset */, maxLen, buf);
 	if (r>=0)
 	{
-		memcpy(buffer, buf->data, KMAX(maxLen, r));
+		memcpy(buffer, buf->data, qMax(maxLen, r));
 	}
 	pi_buffer_free(buf);
 	return r;

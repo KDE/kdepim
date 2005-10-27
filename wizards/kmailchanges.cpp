@@ -30,6 +30,7 @@
 #include <identity.h>
 #include <kdebug.h>
 #include <kstringhandler.h>
+#include <krandom.h>
 
 CreateDisconnectedImapAccount::CreateDisconnectedImapAccount( const QString &accountName )
   : KConfigPropagator::Change( i18n("Create Disconnected IMAP Account for KMail") ),
@@ -144,7 +145,7 @@ void CreateDisconnectedImapAccount::apply()
   c.setGroup( QString("Account %1").arg( accountId ) );
   int uid;
   if ( mExistingAccountId < 0 ) {
-    uid = kapp->random();
+    uid = KRandom::random();
     c.writeEntry( "Folder", uid );
   } else {
     uid = c.readNumEntry( "Folder" );

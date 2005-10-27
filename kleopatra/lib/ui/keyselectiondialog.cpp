@@ -204,7 +204,7 @@ namespace {
       static const char hexchars[] = "0123456789ABCDEF";
       int maxWidth = 0;
       for ( unsigned int i = 0 ; i < 16 ; ++i )
-	maxWidth = kMax( fm.width( QChar( hexchars[i] ) ), maxWidth );
+	maxWidth = qMax( fm.width( QChar( hexchars[i] ) ), maxWidth );
       return 8 * maxWidth + 2 * mKeyGoodPix.width();
     }
     return Kleo::KeyListView::ColumnStrategy::width( col, fm );

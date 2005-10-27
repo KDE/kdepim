@@ -50,7 +50,7 @@ int main(int argc, char **argv)
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     // see if we are starting with session management
-    if (app.isRestored())
+    if (app.isSessionRestored())
     {
         RESTORE(KMobile);
     }
