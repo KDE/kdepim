@@ -98,7 +98,12 @@ int KAddressBookApp::newInstance()
   // We do it ourselves instead of calling KUniqueApplication::newInstance
   // to avoid the show() call there.
 #if defined Q_WS_X11 && ! defined K_WS_QTONLY
-  KStartupInfo::setNewStartupId( mMainWin, kapp->startupId() );
+  static bool firstInstance = true;
+
+  if ( !firstInstance )
+    KStartupInfo::setNewStartupId( mMainWin, kapp->startupId() );
+
+  firstInstance = false;
 #endif
 
   return 0;
