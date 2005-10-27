@@ -41,7 +41,7 @@ class KDE_EXPORT ResourceGroupwiseConfig : public KRES::ConfigWidget
   Q_OBJECT
 
   public:
-    ResourceGroupwiseConfig( QWidget* parent = 0, const char* name = 0 );
+    ResourceGroupwiseConfig( QWidget* parent );
 
   public slots:
     void loadSettings( KRES::Resource* );

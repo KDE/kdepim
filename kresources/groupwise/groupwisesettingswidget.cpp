@@ -27,11 +27,11 @@
 GroupWiseSettingsWidget::GroupWiseSettingsWidget( QWidget * parent )
 : GroupWiseSettingsWidgetBase( parent )
 {
-  connect( m_settingsList, SIGNAL( itemRenamed( QListViewItem *, int ) ),
-          this, SLOT( slotItemRenamed( QListViewItem *, int ) ) );
+  connect( m_settingsList, SIGNAL( itemRenamed( Q3ListViewItem *, int ) ),
+          this, SLOT( slotItemRenamed( Q3ListViewItem *, int ) ) );
 }
 
-void GroupWiseSettingsWidget::slotItemRenamed( QListViewItem * item, int )
+void GroupWiseSettingsWidget::slotItemRenamed( Q3ListViewItem * item, int )
 {
   kdDebug() << "GroupWiseSettingsWidget::slotItemRenamed() - " << item->text( 1 ) << " changed to " << item->text( 2 ) << endl;
   m_dirtySettings.insert( item->text( 1 ), item->text( 2 ) );

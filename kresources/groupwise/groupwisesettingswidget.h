@@ -24,7 +24,7 @@
 
 #include <qmap.h>
 
-class QListViewItem;
+class Q3ListViewItem;
 
 #include "groupwisesettingswidgetbase.h"
 
@@ -39,7 +39,7 @@ protected slots:
   /**
    * Add the renamed item to the list of dirty (changed) settings
    */
-  void slotItemRenamed( QListViewItem *Item, int ColumnRenamed );
+  void slotItemRenamed( Q3ListViewItem *Item, int ColumnRenamed );
 private: 
   QMap<QString, QString> m_dirtySettings;
 };

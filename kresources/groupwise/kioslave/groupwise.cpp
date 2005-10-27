@@ -97,7 +97,7 @@ void Groupwise::get( const KURL &url )
   kdDebug(7000) << " Path: " << url.path() << endl;
   kdDebug(7000) << " Query: " << url.query() << endl;
   kdDebug(7000) << " Protocol: " << url.protocol() << endl;
-  kdDebug(7000) << " Filename: " << url.filename() << endl;
+  kdDebug(7000) << " Filename: " << url.fileName() << endl;
   #endif
 
   mimeType( "text/plain" );
@@ -159,7 +159,7 @@ QString Groupwise::soapUrl( const KURL &url )
 
 void Groupwise::getFreeBusy( const KURL &url )
 {
-  QString file = url.filename();
+  QString file = url.fileName();
   if ( file.right( 4 ) != ".ifb" ) {
     QString error = i18n("Illegal filename. File has to have '.ifb' suffix.");
     errorMessage( error );
@@ -187,8 +187,8 @@ void Groupwise::getFreeBusy( const KURL &url )
       QDate start = QDate::currentDate().addDays( -3 );
       QDate end = QDate::currentDate().addDays( 60 );
 
-      fb->setDtStart( start );
-      fb->setDtEnd( end );
+      fb->setDtStart( QDateTime( start ) );
+      fb->setDtEnd( QDateTime( end ) );
 
       kdDebug() << "Login" << endl;
 

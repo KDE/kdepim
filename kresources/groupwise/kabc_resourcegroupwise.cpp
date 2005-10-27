@@ -135,7 +135,7 @@ void ResourceGroupwise::readAddressBooks()
 
   mAddressBooks.clear();
 
-  for( uint i = 0; i < ids.count(); ++i ) {
+  for( int i = 0; i < ids.count(); ++i ) {
     GroupWise::AddressBook ab;
     ab.id = ids[ i ];
     ab.name = names[ i ];

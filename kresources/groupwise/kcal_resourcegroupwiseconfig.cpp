@@ -23,6 +23,8 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qcheckbox.h>
+//Added by qt3to4:
+#include <QGridLayout>
 
 #include <klocale.h>
 #include <klistview.h>
@@ -41,8 +43,8 @@
 
 using namespace KCal;
 
-ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent,  const char* name )
-    : KRES::ConfigWidget( parent, name )
+ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent )
+    : KRES::ConfigWidget( parent )
 {
   resize( 245, 115 ); 
   QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
@@ -122,7 +124,7 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
 
     if ( s )
     {
-      KDialogBase * dialog = new KDialogBase( ::qt_cast<QWidget*>(parent() ), "gwsettingswidget", true, i18n( "GroupWise Settings" ) );
+      KDialogBase * dialog = new KDialogBase( qobject_cast<QWidget*>(parent() ), "gwsettingswidget", true, i18n( "GroupWise Settings" ) );
 //       QVBoxLayout * layout = new QVBoxLayout( dialog );
       GroupWiseSettingsWidget * settingsWidget = new GroupWiseSettingsWidget( dialog );
       dialog->setMainWidget( settingsWidget );

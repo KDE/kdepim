@@ -33,14 +33,17 @@
 
 #include <qlabel.h>
 #include <qlayout.h>
+//Added by qt3to4:
+#include <Q3Frame>
+#include <QGridLayout>
 
 using namespace KABC;
 
-class AddressBookItem : public QCheckListItem
+class AddressBookItem : public Q3CheckListItem
 {
   public:
     AddressBookItem( KListView *parent, GroupWise::AddressBook ab )
-      : QCheckListItem( parent, "", CheckBox ),
+      : Q3CheckListItem( parent, "", CheckBox ),
         mId( ab.id )
     {
       setText( 0, ab.name );
@@ -56,8 +59,8 @@ class AddressBookItem : public QCheckListItem
     QString mId;
 };
 
-ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent,  const char* name )
-  : KRES::ConfigWidget( parent, name )
+ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent )
+  : KRES::ConfigWidget( parent )
 {
   QGridLayout *mainLayout = new QGridLayout( this, 7, 2, 0, KDialog::spacingHint() );
 
@@ -80,8 +83,8 @@ ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent,  const char* 
   mainLayout->addWidget( label, 2, 0 );
   mainLayout->addWidget( mPassword, 2, 1 );
 
-  QFrame *hline = new QFrame( this );
-  hline->setFrameStyle( QFrame::HLine | QFrame::Sunken );
+  Q3Frame *hline = new Q3Frame( this );
+  hline->setFrameStyle( Q3Frame::HLine | Q3Frame::Sunken );
 
   mainLayout->addMultiCellWidget( hline, 3, 3, 0, 1 );
 
@@ -156,7 +159,7 @@ void ResourceGroupwiseConfig::saveAddressBookSettings()
   QStringList selectedRead;
   QString selectedWrite;
 
-  QListViewItemIterator it2( mAddressBookView );
+  Q3ListViewItemIterator it2( mAddressBookView );
   while ( it2.current() ) {
     AddressBookItem *item = static_cast<AddressBookItem*>( it2.current() );
     if ( item->isOn() )
