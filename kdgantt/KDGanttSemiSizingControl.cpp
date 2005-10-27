@@ -34,11 +34,16 @@
 
 #include "KDGanttSemiSizingControl.h"
 #include <qpushbutton.h>
-#include <qpointarray.h>
+#include <q3pointarray.h>
 #include <qpainter.h>
 #include <qbitmap.h>
 #include <qtooltip.h>
-#include <qwhatsthis.h>
+#include <q3whatsthis.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QBoxLayout>
 /*!
   \class KDGanttSemiSizingControl KDGanttSemiSizingControl.h
   This class provides exactly one child widget with a button for
@@ -65,7 +70,7 @@
 
 KDGanttSemiSizingControl::KDGanttSemiSizingControl( QWidget* parent,
                                           const char* name ) :
-    KDGanttSizingControl( parent, name ), _orient( Horizontal ), 
+    KDGanttSizingControl( parent, name ), _orient( Qt::Horizontal ), 
     _arrowPos( Before ), _minimizedWidget(0), _maximizedWidget(0)
 {
     init();
@@ -84,7 +89,7 @@ KDGanttSemiSizingControl::KDGanttSemiSizingControl( QWidget* parent,
   the base class.
 */
 
-KDGanttSemiSizingControl::KDGanttSemiSizingControl( Orientation orientation,
+KDGanttSemiSizingControl::KDGanttSemiSizingControl( Qt::Orientation orientation,
                                           QWidget* parent,
                                           const char* name ) :
     KDGanttSizingControl( parent, name ), _orient( orientation ), 
@@ -108,7 +113,7 @@ KDGanttSemiSizingControl::KDGanttSemiSizingControl( Orientation orientation,
 */
 
 KDGanttSemiSizingControl::KDGanttSemiSizingControl( ArrowPosition arrowPosition,
-                                          Orientation orientation,
+                                          Qt::Orientation orientation,
                                           QWidget* parent,
                                           const char* name ) :
     KDGanttSizingControl( parent, name ), _orient( orientation ), 
@@ -250,7 +255,7 @@ void KDGanttSemiSizingControl::init()
     _but->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     connect( _but, SIGNAL( clicked() ), this, SLOT(changeState()) );
     _layout = 0;
-    QWhatsThis::add( _but, "Click on this button to show the \nlegend at the bottom of the widget");
+    Q3WhatsThis::add( _but, "Click on this button to show the \nlegend at the bottom of the widget");
     QToolTip::add( _but, "Show / hide legend");
 
 
@@ -380,29 +385,29 @@ void KDGanttSemiSizingControl::minimize( bool minimize )
     }
 }
 
-QPixmap KDGanttSemiSizingControl::pixmap( Direction direction ) {
+QPixmap KDGanttSemiSizingControl::pixmap( Qt::Orientation direction ) {
     int s = 10;
     QPixmap pix( s, s );
-    pix.fill( blue );
+    pix.fill( Qt::blue );
 
-    QPointArray arr;
+    Q3PointArray arr;
     switch ( direction ) {
     case Up:    arr.setPoints( 3,   0, s-1,   s-1, s-1,   0, s/2   ); ;break;
     case Down:  arr.setPoints( 3,   0, 0,     s-1, 0,     s/2, s-1 ); break;
-    case Left:  arr.setPoints( 3,   s-1, 0,   s-1, s-1,   0, s/2   ); break;
-    case Right: arr.setPoints( 3,   0,0,      s-1, s/2,   0, s-1   ); break;
+    case Qt::DockLeft:  arr.setPoints( 3,   s-1, 0,   s-1, s-1,   0, s/2   ); break;
+    case Qt::DockRight: arr.setPoints( 3,   0,0,      s-1, s/2,   0, s-1   ); break;
     }
 
     QPainter p( &pix );
-    p.setPen( black );
+    p.setPen( Qt::black );
     p.setBrush( colorGroup().button() );
     p.drawPolygon( arr );
     QBitmap bit( s, s );
-    bit.fill( color0 );
+    bit.fill( Qt::color0 );
 
     QPainter p2( &bit );
-    p2.setPen( color1 );
-    p2.setBrush( color1 );
+    p2.setPen( Qt::color1 );
+    p2.setBrush( Qt::color1 );
     p2.drawPolygon( arr );
     pix.setMask( bit );
     return pix;

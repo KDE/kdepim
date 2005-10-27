@@ -36,6 +36,9 @@
 #include "KDGanttViewTaskLinkGroup.h"
 #include "KDGanttViewSubwidgets.h"
 #include "KDGanttXMLTools.h"
+//Added by qt3to4:
+#include <Q3PointArray>
+#include <Q3PtrList>
 
 
 /*! \class KDGanttViewTaskLink KDGanttViewTaskLink.h
@@ -62,8 +65,8 @@
   \param to the target items
   \param type the link type for the connection
 */
-KDGanttViewTaskLink::KDGanttViewTaskLink( QPtrList<KDGanttViewItem> from,
-                                          QPtrList<KDGanttViewItem> to,
+KDGanttViewTaskLink::KDGanttViewTaskLink( Q3PtrList<KDGanttViewItem> from,
+                                          Q3PtrList<KDGanttViewItem> to,
                                           LinkType type )
 {
   fromList= from;
@@ -109,8 +112,8 @@ KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewItem*  from,
 */
 
 KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
-                                          QPtrList<KDGanttViewItem> from,
-                                          QPtrList<KDGanttViewItem> to,
+                                          Q3PtrList<KDGanttViewItem> from,
+                                          Q3PtrList<KDGanttViewItem> to,
                                           LinkType type )
 {
   fromList = from;
@@ -166,14 +169,14 @@ KDGanttViewTaskLink::~KDGanttViewTaskLink( )
 
 void KDGanttViewTaskLink::initTaskLink()
 {
-  horLineList = new QPtrList<KDCanvasLine>;
-  verLineList = new QPtrList<KDCanvasLine>;
-  horLineList2 = new QPtrList<KDCanvasLine>;
-  verLineList2 = new QPtrList<KDCanvasLine>;
-  horLineList3 = new QPtrList<KDCanvasLine>;
-  topList = new QPtrList<KDCanvasPolygon>;
-  topLeftList = new QPtrList<KDCanvasPolygon>;
-  topRightList = new QPtrList<KDCanvasPolygon>;
+  horLineList = new Q3PtrList<KDCanvasLine>;
+  verLineList = new Q3PtrList<KDCanvasLine>;
+  horLineList2 = new Q3PtrList<KDCanvasLine>;
+  verLineList2 = new Q3PtrList<KDCanvasLine>;
+  horLineList3 = new Q3PtrList<KDCanvasLine>;
+  topList = new Q3PtrList<KDCanvasPolygon>;
+  topLeftList = new Q3PtrList<KDCanvasPolygon>;
+  topRightList = new Q3PtrList<KDCanvasPolygon>;
   horLineList->setAutoDelete( true );
   verLineList->setAutoDelete( true );
   horLineList2->setAutoDelete( true );
@@ -200,7 +203,7 @@ void KDGanttViewTaskLink::initTaskLink()
       top = new KDCanvasPolygon(myTimeTable,this,Type_is_KDGanttTaskLink);
       topLeft = new KDCanvasPolygon(myTimeTable,this,Type_is_KDGanttTaskLink);
       topRight = new KDCanvasPolygon(myTimeTable,this,Type_is_KDGanttTaskLink);
-      QPointArray arr = QPointArray(3);
+      Q3PointArray arr = Q3PointArray(3);
       arr.setPoint(0,-4,-5);
       arr.setPoint(1,4,-5);
       arr.setPoint(2,0,0);
@@ -278,11 +281,11 @@ void KDGanttViewTaskLink::showMe( bool visible )
         p.setColor(myColor);
     }
     QPoint start, end;
-    QPtrListIterator<KDCanvasLine> horIt(*horLineList);
-    QPtrListIterator<KDCanvasLine> verIt(*verLineList);
-    QPtrListIterator<KDCanvasPolygon> topIt(*topList);
-    QPtrListIterator<KDGanttViewItem> fromIt(fromList);
-    QPtrListIterator<KDGanttViewItem> toIt(toList);
+    Q3PtrListIterator<KDCanvasLine> horIt(*horLineList);
+    Q3PtrListIterator<KDCanvasLine> verIt(*verLineList);
+    Q3PtrListIterator<KDCanvasPolygon> topIt(*topList);
+    Q3PtrListIterator<KDGanttViewItem> fromIt(fromList);
+    Q3PtrListIterator<KDGanttViewItem> toIt(toList);
     for ( ; fromIt.current(); ++fromIt ) {
         (*fromIt)->setTextOffset(QPoint(0,0));
         toIt.toFirst();
@@ -343,16 +346,16 @@ void KDGanttViewTaskLink::showMeType( bool visible )
         p.setColor(myColor);
     }
     QPoint start, end;
-    QPtrListIterator<KDCanvasLine> horIt(*horLineList);
-    QPtrListIterator<KDCanvasLine> verIt(*verLineList);
-    QPtrListIterator<KDCanvasLine> horIt2(*horLineList2);
-    QPtrListIterator<KDCanvasLine> verIt2(*verLineList2);
-    QPtrListIterator<KDCanvasLine> horIt3(*horLineList3);
-    QPtrListIterator<KDCanvasPolygon> topIt(*topList);
-    QPtrListIterator<KDCanvasPolygon> topLeftIt(*topLeftList);
-    QPtrListIterator<KDCanvasPolygon> topRightIt(*topRightList);
-    QPtrListIterator<KDGanttViewItem> fromIt(fromList);
-    QPtrListIterator<KDGanttViewItem> toIt(toList);
+    Q3PtrListIterator<KDCanvasLine> horIt(*horLineList);
+    Q3PtrListIterator<KDCanvasLine> verIt(*verLineList);
+    Q3PtrListIterator<KDCanvasLine> horIt2(*horLineList2);
+    Q3PtrListIterator<KDCanvasLine> verIt2(*verLineList2);
+    Q3PtrListIterator<KDCanvasLine> horIt3(*horLineList3);
+    Q3PtrListIterator<KDCanvasPolygon> topIt(*topList);
+    Q3PtrListIterator<KDCanvasPolygon> topLeftIt(*topLeftList);
+    Q3PtrListIterator<KDCanvasPolygon> topRightIt(*topRightList);
+    Q3PtrListIterator<KDGanttViewItem> fromIt(fromList);
+    Q3PtrListIterator<KDGanttViewItem> toIt(toList);
     for ( ; fromIt.current(); ++fromIt ) {
         (*fromIt)->setTextOffset(QPoint(30,0));
         (*fromIt)->moveTextCanvas();
@@ -690,7 +693,7 @@ QString KDGanttViewTaskLink::whatsThisText() const
   \return the ist of source item of this task link
   \sa to()
 */
-QPtrList<KDGanttViewItem>  KDGanttViewTaskLink::from() const
+Q3PtrList<KDGanttViewItem>  KDGanttViewTaskLink::from() const
 {
     return fromList;
 }
@@ -722,7 +725,7 @@ void KDGanttViewTaskLink::removeItemFromList( KDGanttViewItem* item )
   \return the list of target item of this task link
   \sa from()
 */
-QPtrList<KDGanttViewItem> KDGanttViewTaskLink::to() const
+Q3PtrList<KDGanttViewItem> KDGanttViewTaskLink::to() const
 {
     return toList;
 }
@@ -742,7 +745,7 @@ void KDGanttViewTaskLink::createNode( QDomDocument& doc,
 
     QDomElement fromItemsElement = doc.createElement( "FromItems" );
     taskLinkElement.appendChild( fromItemsElement );
-    QPtrList<KDGanttViewItem> fromList = from();
+    Q3PtrList<KDGanttViewItem> fromList = from();
     KDGanttViewItem* item;
     for( item = fromList.first(); item;
          item = fromList.next() )
@@ -750,7 +753,7 @@ void KDGanttViewTaskLink::createNode( QDomDocument& doc,
 
     QDomElement toItemsElement = doc.createElement( "ToItems" );
     taskLinkElement.appendChild( toItemsElement );
-    QPtrList<KDGanttViewItem> toList = to();
+    Q3PtrList<KDGanttViewItem> toList = to();
     for( item = toList.first(); item;
          item = toList.next() )
         KDGanttXML::createStringNode( doc, toItemsElement, "Item", item->name() );
@@ -866,8 +869,8 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
         node = node.nextSibling();
     }
 
-    QPtrList<KDGanttViewItem> fromItemList;
-    QPtrList<KDGanttViewItem> toItemList;
+    Q3PtrList<KDGanttViewItem> fromItemList;
+    Q3PtrList<KDGanttViewItem> toItemList;
     for( QStringList::const_iterator fromIt = fromList.begin();
          fromIt != fromList.end(); ++fromIt ) {
         KDGanttViewItem* item = KDGanttViewItem::find( *fromIt );
@@ -935,16 +938,16 @@ int KDGanttViewTaskLink::xOffset(KDGanttViewItem *item)
 
 void KDGanttViewTaskLink::hide()
 {
-    QPtrListIterator<KDCanvasLine> horIt(*horLineList);
-    QPtrListIterator<KDCanvasLine> verIt(*verLineList);
-    QPtrListIterator<KDCanvasLine> horIt2(*horLineList2);
-    QPtrListIterator<KDCanvasLine> verIt2(*verLineList2);
-    QPtrListIterator<KDCanvasLine> horIt3(*horLineList3);
-    QPtrListIterator<KDCanvasPolygon> topIt(*topList);
-    QPtrListIterator<KDCanvasPolygon> topLeftIt(*topLeftList);
-    QPtrListIterator<KDCanvasPolygon> topRightIt(*topRightList);
-    QPtrListIterator<KDGanttViewItem> fromIt(fromList);
-    QPtrListIterator<KDGanttViewItem> toIt(toList);
+    Q3PtrListIterator<KDCanvasLine> horIt(*horLineList);
+    Q3PtrListIterator<KDCanvasLine> verIt(*verLineList);
+    Q3PtrListIterator<KDCanvasLine> horIt2(*horLineList2);
+    Q3PtrListIterator<KDCanvasLine> verIt2(*verLineList2);
+    Q3PtrListIterator<KDCanvasLine> horIt3(*horLineList3);
+    Q3PtrListIterator<KDCanvasPolygon> topIt(*topList);
+    Q3PtrListIterator<KDCanvasPolygon> topLeftIt(*topLeftList);
+    Q3PtrListIterator<KDCanvasPolygon> topRightIt(*topRightList);
+    Q3PtrListIterator<KDGanttViewItem> fromIt(fromList);
+    Q3PtrListIterator<KDGanttViewItem> toIt(toList);
     for ( ; fromIt.current(); ++fromIt ) {
         toIt.toFirst();
         for ( ; toIt.current(); ++toIt ) {

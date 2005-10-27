@@ -42,16 +42,26 @@
 #include <qprinter.h>
 #include <qpainter.h>
 #include <qlayout.h>
-#include <qpaintdevicemetrics.h>
+#include <q3paintdevicemetrics.h>
 #include <qfile.h>
-#include <qheader.h>
-#include <qscrollview.h>
+#include <q3header.h>
+#include <q3scrollview.h>
 #include <qapplication.h>
 #include <qevent.h>
-#include <qiconview.h>
+#include <q3iconview.h>
 
 #include <qmessagebox.h>
 #include <qfileinfo.h>
+//Added by qt3to4:
+#include <Q3Frame>
+#include <QTextStream>
+#include <QDragMoveEvent>
+#include <Q3ValueList>
+#include <QDropEvent>
+#include <QDragEnterEvent>
+#include <Q3PtrList>
+#include <QPixmap>
+#include <Q3PointArray>
 
 #ifndef KDGANTT_MASTER_CVS
 #include "KDGanttView.moc"
@@ -89,35 +99,35 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  ) : KDGanttMinimize
     setMinimizeDirection ( KDGanttMinimizeSplitter::Down );
     mySplitter = new KDGanttMinimizeSplitter( this );
     mySplitter->setMinimizeDirection ( KDGanttMinimizeSplitter::Left );
-    leftWidget = new QVBox( mySplitter );
-    rightWidget = new QVBox( mySplitter );
+    leftWidget = new Q3VBox( mySplitter );
+    rightWidget = new Q3VBox( mySplitter );
 
     myLegend = new KDLegendWidget( leftWidget, this );
-    spacerLeft = new QHBox( leftWidget );
+    spacerLeft = new Q3HBox( leftWidget );
     myListView = new KDListView(leftWidget, this);
-    myListView->setVScrollBarMode (QScrollView::AlwaysOff );
-    connect( myListView, SIGNAL( selectionChanged( QListViewItem* ) ),
-             this, SLOT( slotSelectionChanged( QListViewItem* ) ) );
+    myListView->setVScrollBarMode (Q3ScrollView::AlwaysOff );
+    connect( myListView, SIGNAL( selectionChanged( Q3ListViewItem* ) ),
+             this, SLOT( slotSelectionChanged( Q3ListViewItem* ) ) );
 
-    connect( myListView, SIGNAL( mouseButtonClicked ( int, QListViewItem * , const QPoint &, int ) ), this, SLOT( slotmouseButtonClicked ( int , QListViewItem * , const QPoint &, int ) ) );
-    connect( myListView, SIGNAL( contextMenuRequested ( QListViewItem * , const QPoint &, int  ) ), this, SLOT( slotcontextMenuRequested ( QListViewItem * , const QPoint & , int ) ) );
-    connect( myListView, SIGNAL(doubleClicked ( QListViewItem *  ) ), this, SLOT(slotdoubleClicked ( QListViewItem * ) ) );
+    connect( myListView, SIGNAL( mouseButtonClicked ( int, Q3ListViewItem * , const QPoint &, int ) ), this, SLOT( slotmouseButtonClicked ( int , Q3ListViewItem * , const QPoint &, int ) ) );
+    connect( myListView, SIGNAL( contextMenuRequested ( Q3ListViewItem * , const QPoint &, int  ) ), this, SLOT( slotcontextMenuRequested ( Q3ListViewItem * , const QPoint & , int ) ) );
+    connect( myListView, SIGNAL(doubleClicked ( Q3ListViewItem *  ) ), this, SLOT(slotdoubleClicked ( Q3ListViewItem * ) ) );
 
-  connect( myListView, SIGNAL(currentChanged( QListViewItem *  ) ), this, SLOT(slotCurrentChanged ( QListViewItem * ) ) );
-  connect( myListView, SIGNAL(itemRenamed ( QListViewItem * , int , const QString &  ) ), this, SLOT(slotItemRenamed ( QListViewItem *, int , const QString &  ) ) );
-  connect( myListView, SIGNAL(mouseButtonPressed(  int, QListViewItem * , const QPoint &, int ) ), this, SLOT(slotMouseButtonPressed (  int , QListViewItem * , const QPoint & , int ) ) );
+  connect( myListView, SIGNAL(currentChanged( Q3ListViewItem *  ) ), this, SLOT(slotCurrentChanged ( Q3ListViewItem * ) ) );
+  connect( myListView, SIGNAL(itemRenamed ( Q3ListViewItem * , int , const QString &  ) ), this, SLOT(slotItemRenamed ( Q3ListViewItem *, int , const QString &  ) ) );
+  connect( myListView, SIGNAL(mouseButtonPressed(  int, Q3ListViewItem * , const QPoint &, int ) ), this, SLOT(slotMouseButtonPressed (  int , Q3ListViewItem * , const QPoint & , int ) ) );
 
     //connect( myListView, SIGNAL( ), this, SLOT( ) );
     myTimeTable = new KDTimeTableWidget (rightWidget,this);
 
     spacerRight = new QWidget(  rightWidget );
 
-    myTimeHeaderContainer = new QHBox( rightWidget );
-    myTimeHeaderContainer->setFrameStyle( QFrame::NoFrame  );
+    myTimeHeaderContainer = new Q3HBox( rightWidget );
+    myTimeHeaderContainer->setFrameStyle( Q3Frame::NoFrame  );
     myTimeHeaderContainer->setMargin( 0 );
-    myTimeHeaderScroll = new QScrollView ( myTimeHeaderContainer );
-    myTimeHeaderScroll->setHScrollBarMode( QScrollView::AlwaysOff );
-    myTimeHeaderScroll->setVScrollBarMode( QScrollView::AlwaysOff );
+    myTimeHeaderScroll = new Q3ScrollView ( myTimeHeaderContainer );
+    myTimeHeaderScroll->setHScrollBarMode( Q3ScrollView::AlwaysOff );
+    myTimeHeaderScroll->setVScrollBarMode( Q3ScrollView::AlwaysOff );
     timeHeaderSpacerWidget = new QWidget( myTimeHeaderContainer );
 
 
@@ -132,18 +142,18 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  ) : KDGanttMinimize
     myTimeHeaderScroll->viewport()->setBackgroundColor( myTimeHeader->backgroundColor() );
     timeHeaderSpacerWidget->setBackgroundColor( myTimeHeader->backgroundColor() );
     myCanvasView = new KDGanttCanvasView (this,myTimeTable,rightWidget);
-    myTimeHeaderScroll->setFrameStyle( QFrame::NoFrame  );
+    myTimeHeaderScroll->setFrameStyle( Q3Frame::NoFrame  );
     //
-    myCanvasView->setFrameStyle( QFrame::NoFrame  );
+    myCanvasView->setFrameStyle( Q3Frame::NoFrame  );
     myCanvasView->setMargin( 0 );
     //
     myTimeHeaderScroll->setMargin( 0 );//myCanvasView->frameWidth() );
     setFrameStyle(myListView->frameStyle());
     setLineWidth( 2 );
-    myListView->setFrameStyle( QFrame::NoFrame  );
+    myListView->setFrameStyle( Q3Frame::NoFrame  );
     myListView->setMargin( 0 );
-    QObject::connect(myListView, SIGNAL (  expanded ( QListViewItem * ) ) , myTimeTable , SLOT( expandItem(QListViewItem * ))) ;
-    QObject::connect(myListView, SIGNAL (collapsed ( QListViewItem * ) ) , myTimeTable , SLOT(collapseItem(QListViewItem * ))) ;
+    QObject::connect(myListView, SIGNAL (  expanded ( Q3ListViewItem * ) ) , myTimeTable , SLOT( expandItem(Q3ListViewItem * ))) ;
+    QObject::connect(myListView, SIGNAL (collapsed ( Q3ListViewItem * ) ) , myTimeTable , SLOT(collapseItem(Q3ListViewItem * ))) ;
 
     timeHeaderSpacerWidget->setFixedWidth(myCanvasView->verticalScrollBar()->width() );
     listViewIsVisible = true;
@@ -154,7 +164,7 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  ) : KDGanttMinimize
     _showHeader = false;
 
     myTextColor = Qt::black;
-    myLegendItems = new QPtrList<legendItem>;
+    myLegendItems = new Q3PtrList<legendItem>;
     //QObject::connect( this, SIGNAL (itemDoubleClicked( KDGanttViewItem* ) ) , this, SLOT( editItem( KDGanttViewItem*  ))) ;
     myItemAttributeDialog = new itemAttributeDialog();
     setRepaintMode( KDGanttView::Medium );
@@ -185,7 +195,7 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  ) : KDGanttMinimize
    myTimeHeader->computeTicks();
    centerTimelineAfterShow( QDateTime::currentDateTime () );
    setDisplayEmptyTasksAsLine( false );
-   QValueList<int> list;
+   Q3ValueList<int> list;
    list.append(240);
    list.append(530);
    mySplitter->setSizes( list );
@@ -420,7 +430,7 @@ QDateTime KDGanttView::getDateTimeForCoordX(int coordX, bool global ) const
 /*!
   Implements a casted pass-through of the selectionChanged() signal.
 */
-void KDGanttView::slotSelectionChanged( QListViewItem* item )
+void KDGanttView::slotSelectionChanged( Q3ListViewItem* item )
 {
     KDGanttViewItem* gItem = static_cast<KDGanttViewItem*>( item );
     Q_ASSERT( gItem );
@@ -432,7 +442,7 @@ void KDGanttView::slotSelectionChanged( QListViewItem* item )
   Implements a casted pass-through of the mouseButtonClicked() signal.
   Signals itemLeftClicked() , itemMidClicked() are emitted as well.
 */
-void KDGanttView::slotmouseButtonClicked ( int button, QListViewItem * item,
+void KDGanttView::slotmouseButtonClicked ( int button, Q3ListViewItem * item,
                                            const QPoint & pos, int c )
 {
   KDGanttViewItem* gItem = static_cast<KDGanttViewItem*>( item );
@@ -450,11 +460,11 @@ void KDGanttView::slotmouseButtonClicked ( int button, QListViewItem * item,
   //emit mouseButtonClicked ( button , gItem,  pos,  c );
    {
     switch ( button ) {
-    case  LeftButton:
+    case  Qt::LeftButton:
       emit lvItemLeftClicked( gItem );
       emit itemLeftClicked( gItem );
       break;
-    case  MidButton:
+    case  Qt::MidButton:
       emit lvItemMidClicked( gItem );
       emit itemMidClicked( gItem );
       break;
@@ -468,7 +478,7 @@ void KDGanttView::slotmouseButtonClicked ( int button, QListViewItem * item,
   The signal itemRightClicked() is emitted as well;
   the position is the global position.
 */
-void KDGanttView::slotcontextMenuRequested ( QListViewItem * item, const QPoint & pos, int col )
+void KDGanttView::slotcontextMenuRequested ( Q3ListViewItem * item, const QPoint & pos, int col )
 {
     KDGanttViewItem* gItem = static_cast<KDGanttViewItem*>( item );
     emit lvContextMenuRequested ( gItem,  pos,  col );
@@ -480,7 +490,7 @@ void KDGanttView::slotcontextMenuRequested ( QListViewItem * item, const QPoint 
 /*
   Implements a casted pass-through of the doubleClicked() signal.
 */
-void KDGanttView::slotdoubleClicked ( QListViewItem * item )
+void KDGanttView::slotdoubleClicked ( Q3ListViewItem * item )
 {
    {
     KDGanttViewItem* gItem = static_cast<KDGanttViewItem*>( item );
@@ -493,7 +503,7 @@ void KDGanttView::slotdoubleClicked ( QListViewItem * item )
 /*
   Implements a casted pass-through of the currentChanged() signal.
 */
-void KDGanttView::slotCurrentChanged ( QListViewItem * item )
+void KDGanttView::slotCurrentChanged ( Q3ListViewItem * item )
 {
     KDGanttViewItem* gItem = static_cast<KDGanttViewItem*>( item );
     myCurrentItem = gItem;
@@ -504,7 +514,7 @@ void KDGanttView::slotCurrentChanged ( QListViewItem * item )
 /*
   Implements a casted pass-through of the itemRenamed() signal.
 */
-void KDGanttView::slotItemRenamed ( QListViewItem * item , int col,
+void KDGanttView::slotItemRenamed ( Q3ListViewItem * item , int col,
                                     const QString & text )
 {
     KDGanttViewItem* gItem = static_cast<KDGanttViewItem*>( item );
@@ -515,7 +525,7 @@ void KDGanttView::slotItemRenamed ( QListViewItem * item , int col,
 /*
   Implements a casted pass-through of the mouseButtonPressed() signal.
 */
-void KDGanttView::slotMouseButtonPressed ( int button, QListViewItem * item,
+void KDGanttView::slotMouseButtonPressed ( int button, Q3ListViewItem * item,
                                            const QPoint & pos, int c )
 {
     KDGanttViewItem* gItem = static_cast<KDGanttViewItem*>( item );
@@ -643,7 +653,7 @@ void KDGanttView::slotHeaderSizeChanged()
           DO NOT DELETE THIS POINTER!
   \sa setShowLegend(), setLegendIsDockwindow(),legendIsDockwindow()
 */
-QDockWindow* KDGanttView::legendDockwindow() const
+Q3DockWindow* KDGanttView::legendDockwindow() const
 {
   return myLegend->dockwindow();
 }
@@ -782,7 +792,7 @@ bool KDGanttView::saveProject( QIODevice* device )
     QDomDocument doc = saveXML();
     if( device->isOpen() )
         device->close();
-    if( device->open( IO_WriteOnly ) ) {
+    if( device->open( QIODevice::WriteOnly ) ) {
         QTextStream ts( device );
         ts << doc.toString();
         return true;
@@ -808,7 +818,7 @@ bool KDGanttView::loadProject( QIODevice* device )
 
     if( device->isOpen() )
         device->close();
-    if( device->open( IO_ReadOnly ) ) {
+    if( device->open( QIODevice::ReadOnly ) ) {
         QDomDocument doc( "GanttView" );
         QString err;
         int errline, errcol;
@@ -859,7 +869,7 @@ void KDGanttView::print( QPrinter* printer ,
   // now we have a printer to print on
   QPainter p( printer );
   // get the paper metrics
-  QPaintDeviceMetrics m = QPaintDeviceMetrics ( printer );
+  Q3PaintDeviceMetrics m = Q3PaintDeviceMetrics ( printer );
   float dx, dy;
   // get the size of the desired output for scaling.
   // here we want to print all: ListView, TimeLine, and Legend
@@ -1318,7 +1328,7 @@ void KDGanttView::setShapes( KDGanttViewItem::Type type,
                              bool overwriteExisting )
 {
     if ( overwriteExisting ) {
-      QListViewItemIterator it(myListView);
+      Q3ListViewItemIterator it(myListView);
       for ( ; it.current(); ++it ) {
         if ( ((KDGanttViewItem*)it.current())->type() == type)
           ((KDGanttViewItem*)it.current())->setShapes(start,middle, end );
@@ -1380,7 +1390,7 @@ void KDGanttView::setColors( KDGanttViewItem::Type type,
                              bool overwriteExisting )
 {
     if ( overwriteExisting ) {
-      QListViewItemIterator it(myListView);
+      Q3ListViewItemIterator it(myListView);
       for ( ; it.current(); ++it ) {
         if ( ((KDGanttViewItem*)it.current())->type() == type)
           ((KDGanttViewItem*)it.current())->setColors(start,middle, end );
@@ -1443,7 +1453,7 @@ void KDGanttView::setHighlightColors( KDGanttViewItem::Type type,
                                       bool overwriteExisting )
 {
     if ( overwriteExisting ) {
-      QListViewItemIterator it(myListView);
+      Q3ListViewItemIterator it(myListView);
       for ( ; it.current(); ++it ) {
         if ( ((KDGanttViewItem*)it.current())->type() == type)
           ((KDGanttViewItem*)it.current())->setHighlightColors(start,middle, end );
@@ -1493,7 +1503,7 @@ bool KDGanttView::highlightColors( KDGanttViewItem::Type type,
 */
 void KDGanttView::setTextColor( const QColor& color )
 {
-    QListViewItemIterator it(myListView);
+    Q3ListViewItemIterator it(myListView);
     for ( ; it.current(); ++it ) {
         ((KDGanttViewItem*)it.current())->setTextColor(color);
     }
@@ -1551,7 +1561,7 @@ void KDGanttView::clearLegend( )
     myLegend->clearLegend();
     myLegendItems->setAutoDelete( true );
     delete myLegendItems;
-    myLegendItems = new QPtrList<legendItem>;
+    myLegendItems = new Q3PtrList<legendItem>;
 }
 
 
@@ -2239,7 +2249,7 @@ void KDGanttView::setDefaultColor( KDGanttViewItem::Type type,
                                    bool overwriteExisting )
 {
     if ( overwriteExisting ) {
-      QListViewItemIterator it(myListView);
+      Q3ListViewItemIterator it(myListView);
       for ( ; it.current(); ++it ) {
         if ( ((KDGanttViewItem*)it.current())->type() == type)
           ((KDGanttViewItem*)it.current())->setDefaultColor(color );
@@ -2285,7 +2295,7 @@ void KDGanttView::setDefaultHighlightColor( KDGanttViewItem::Type type,
                                             bool overwriteExisting )
 {
     if ( overwriteExisting ) {
-      QListViewItemIterator it(myListView);
+      Q3ListViewItemIterator it(myListView);
       for ( ; it.current(); ++it ) {
         if ( ((KDGanttViewItem*)it.current())->type() == type)
           ((KDGanttViewItem*)it.current())->setDefaultHighlightColor(color );
@@ -2372,7 +2382,7 @@ bool  KDGanttView::calendarMode() const
 */
 void KDGanttView::setDisplaySubitemsAsGroup( bool show )
 {
- QListViewItemIterator it( myListView );
+ Q3ListViewItemIterator it( myListView );
  for ( ; it.current(); ++it ) {
    KDGanttViewItem* currentItem = ( KDGanttViewItem* )it.current();
    currentItem->setDisplaySubitemsAsGroup( show );
@@ -2471,7 +2481,7 @@ KDGanttViewItem* KDGanttView::lastItem() const
 
   \return the list of task links in the Gantt view
 */
-QPtrList<KDGanttViewTaskLink> KDGanttView::taskLinks() const
+Q3PtrList<KDGanttViewTaskLink> KDGanttView::taskLinks() const
 {
 
     return myTimeTable->taskLinks();
@@ -2483,7 +2493,7 @@ QPtrList<KDGanttViewTaskLink> KDGanttView::taskLinks() const
 
   \return the list of task link groups in the Gantt view
 */
-QPtrList<KDGanttViewTaskLinkGroup> KDGanttView::taskLinkGroups() const
+Q3PtrList<KDGanttViewTaskLinkGroup> KDGanttView::taskLinkGroups() const
 {
     return myTaskLinkGroupList;
 }
@@ -3547,7 +3557,7 @@ QDomDocument KDGanttView::saveXML( bool withPI ) const
     // the TaskLinks element
     QDomElement taskLinksElement = doc.createElement( "TaskLinks" );
     docRoot.appendChild( taskLinksElement );
-    QPtrList<KDGanttViewTaskLink> taskLinkList = taskLinks();
+    Q3PtrList<KDGanttViewTaskLink> taskLinkList = taskLinks();
     KDGanttViewTaskLink* currentTL = 0;
     for( currentTL = taskLinkList.first(); currentTL;
          currentTL = taskLinkList.next() )
@@ -3556,7 +3566,7 @@ QDomDocument KDGanttView::saveXML( bool withPI ) const
     // the TaskLinkGroups element
     QDomElement taskLinkGroupsElement = doc.createElement( "TaskLinkGroups" );
     docRoot.appendChild( taskLinkGroupsElement );
-    QPtrList<KDGanttViewTaskLinkGroup> taskLinkGroupList = taskLinkGroups();
+    Q3PtrList<KDGanttViewTaskLinkGroup> taskLinkGroupList = taskLinkGroups();
     KDGanttViewTaskLinkGroup* currentTLG = 0;
     for( currentTLG = taskLinkGroupList.first(); currentTLG;
          currentTLG = taskLinkGroupList.next() )
@@ -3584,7 +3594,7 @@ QDomDocument KDGanttView::saveXML( bool withPI ) const
         doc.createElement( "LegendItems" );
     docRoot.appendChild( legendItemsElement );
     legendItem* current;
-    QPtrListIterator<legendItem> lit( *myLegendItems );
+    Q3PtrListIterator<legendItem> lit( *myLegendItems );
     while( ( current = lit.current() ) ) {
         ++lit;
         QDomElement legendItemElement = doc.createElement( "LegendItem" );
@@ -3769,7 +3779,7 @@ QPixmap KDGanttView::getPixmap( KDGanttViewItem::Shape shape,
   paint.setPen( pen );
   switch (shape) {
   case KDGanttViewItem::TriangleDown:{
-    QPointArray arr = QPointArray(3);
+    Q3PointArray arr = Q3PointArray(3);
     arr.setPoint(0,-size/2,-hei);
     arr.setPoint(1,size/2,-hei);
     arr.setPoint(2,0,((size/2)-hei));
@@ -3778,7 +3788,7 @@ QPixmap KDGanttView::getPixmap( KDGanttViewItem::Shape shape,
     break;
   }
   case KDGanttViewItem::TriangleUp :{
-    QPointArray arr = QPointArray(3);
+    Q3PointArray arr = Q3PointArray(3);
     arr.setPoint(0,-size/2,hei);
     arr.setPoint(1,size/2,hei);
     arr.setPoint(2,0,(-size/2)+hei);
@@ -3787,7 +3797,7 @@ QPixmap KDGanttView::getPixmap( KDGanttViewItem::Shape shape,
     break;
   }
   case  KDGanttViewItem::Diamond :{
-    QPointArray arr = QPointArray(4);
+    Q3PointArray arr = Q3PointArray(4);
     arr.setPoint(0,0,-size/2);
     arr.setPoint(1,size/2,0);
     arr.setPoint(2,0,size/2);
@@ -3797,7 +3807,7 @@ QPixmap KDGanttView::getPixmap( KDGanttViewItem::Shape shape,
     break;
   }
   case KDGanttViewItem::Square :{
-    QPointArray arr = QPointArray(4);
+    Q3PointArray arr = Q3PointArray(4);
     arr.setPoint(0,-size/2,-size/2);
     arr.setPoint(1,size/2,-size/2);
     arr.setPoint(2,size/2,size/2);
@@ -3875,7 +3885,7 @@ int KDGanttView::addColumn( const QString& label, int width )
   Calls to this method are passed through to the underlying \a QListView.
 */
 
-int KDGanttView::addColumn( const QIconSet& iconset, const QString& label,
+int KDGanttView::addColumn( const QIcon& iconset, const QString& label,
                             int width )
 {
     return myListView->addColumn( iconset, label, width );
@@ -3969,8 +3979,8 @@ KDGanttViewItem* KDGanttView::getItemByGanttViewPos( const QPoint& pos ) const
   KDGanttViewItem* item;
   QPoint local = myCanvasView->mapFromGlobal(pos);
 
-    QCanvasItemList il = myTimeTable->collisions( myCanvasView->viewportToContents( local ));
-    QCanvasItemList::Iterator it;
+    Q3CanvasItemList il = myTimeTable->collisions( myCanvasView->viewportToContents( local ));
+    Q3CanvasItemList::Iterator it;
     for ( it = il.begin(); it != il.end(); ++it ) {
       if ( myCanvasView->getType(*it) == Type_is_KDGanttViewItem) {
         item = myCanvasView->getItem(*it);
@@ -4092,7 +4102,7 @@ void KDGanttView::slot_lvDropped(QDropEvent* e, KDGanttViewItem* droppedItem, KD
 /*!
   Implements a pass-through to the list view.
 */
-QDragObject * KDGanttView::dragObject ()
+Q3DragObject * KDGanttView::dragObject ()
 {
   return myListView->dragObject ();
 }
@@ -4249,7 +4259,7 @@ void KDGanttView::addUserdefinedLegendHeaderWidget( QWidget * w )
 void KDGanttView::setDragEnabled( bool b )
 {
   fDragEnabled = b;
- QListViewItemIterator it( myListView );
+ Q3ListViewItemIterator it( myListView );
  for ( ; it.current(); ++it ) {
    (( KDGanttViewItem* )it.current())->setDragEnabled(b);
  }
@@ -4270,7 +4280,7 @@ void KDGanttView::setDropEnabled( bool b )
   fDropEnabled = b;
 
   //myListView->setAcceptDrops( b );
- QListViewItemIterator it( myListView );
+ Q3ListViewItemIterator it( myListView );
  for ( ; it.current(); ++it ) {
    (( KDGanttViewItem* )it.current())->setDropEnabled(b);
  }
@@ -4520,7 +4530,7 @@ bool  KDGanttView::lvDragMoveEvent ( QDragMoveEvent* /*e*/,
 */
 void  KDGanttView::lvStartDrag (KDGanttViewItem* item)
 {
-  QDragObject* d = new KDGanttViewItemDrag(item, this, "itemdrag" );
+  Q3DragObject* d = new KDGanttViewItemDrag(item, this, "itemdrag" );
   // call d->drag() to start the dragging
   // d->drag() returns true, if a move was requested as a drag
   // if a copy (by pressing the <Ctrl>-key) was performed, d->drag() returns false
@@ -4546,7 +4556,7 @@ void  KDGanttView::lvStartDrag (KDGanttViewItem* item)
 void  KDGanttView::setListViewWidth( int w )
 {
   int sw = mySplitter->width();
-  QValueList<int> list;
+  Q3ValueList<int> list;
   list.append(w);
   list.append(sw-w);
   mySplitter->setSizes( list );
@@ -4574,7 +4584,7 @@ int  KDGanttView::listViewWidth( )
   \param m the scrollbar mode.
   \sa setGvVScrollBarMode( )
 */
-void  KDGanttView::setLvVScrollBarMode( QScrollView::ScrollBarMode m )
+void  KDGanttView::setLvVScrollBarMode( Q3ScrollView::ScrollBarMode m )
 {
   myListView->setVScrollBarMode ( m );
 }
@@ -4589,14 +4599,14 @@ void  KDGanttView::setLvVScrollBarMode( QScrollView::ScrollBarMode m )
   \param m The scrollbar mode.
   \sa setLvVScrollBarMode( )
 */
-void  KDGanttView::setGvVScrollBarMode( QScrollView::ScrollBarMode m )
+void  KDGanttView::setGvVScrollBarMode( Q3ScrollView::ScrollBarMode m )
 {
-  if ( m == QScrollView::Auto )
+  if ( m == Q3ScrollView::Auto )
     qDebug("KDGanttView::setListViewVScrollBarMode: QScrollView::Auto not supported. Nothing changed. ");
   else
     {
       myCanvasView->setVScrollBarMode ( m );
-      if ( m == QScrollView::AlwaysOn )
+      if ( m == Q3ScrollView::AlwaysOn )
         timeHeaderSpacerWidget->setFixedWidth(myCanvasView->verticalScrollBar()->width() );
       else
         timeHeaderSpacerWidget->setFixedWidth( 0 );

@@ -37,6 +37,9 @@
 
 #include "KDGanttSizingControl.h"
 #include <qlayout.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QBoxLayout>
 class QPushButton;
 class QBoxLayout;
 
@@ -50,10 +53,10 @@ public:
     enum ArrowPosition { Before, After };
 
     KDGanttSemiSizingControl( QWidget* parent = 0, const char* name = 0 );
-    KDGanttSemiSizingControl( Orientation orientation, QWidget* parent = 0,
+    KDGanttSemiSizingControl( Qt::Orientation orientation, QWidget* parent = 0,
                            const char* name = 0 );
     KDGanttSemiSizingControl( ArrowPosition arrowPosition,
-                         Orientation orientation, QWidget* parent = 0,
+                         Qt::Orientation orientation, QWidget* parent = 0,
                          const char* name = 0 );
 
     void setMinimizedWidget( QWidget* widget );
@@ -75,10 +78,10 @@ protected:
     void setup();
     void init();
     enum Direction {Left, Right, Up, Down };
-    QPixmap pixmap( Direction );
+    QPixmap pixmap( Qt::Orientation );
 
 private:
-    Orientation _orient;
+    Qt::Orientation _orient;
     ArrowPosition _arrowPos;
     QWidget* _minimizedWidget;
     QWidget* _maximizedWidget;

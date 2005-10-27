@@ -36,7 +36,7 @@
 #include "KDGanttXMLTools.h"
 #include "KDGanttView.h"
 
-QDict<KDGanttViewTaskLinkGroup> KDGanttViewTaskLinkGroup::sGroupDict;
+Q3Dict<KDGanttViewTaskLinkGroup> KDGanttViewTaskLinkGroup::sGroupDict;
 
 /*! \class KDGanttViewTaskLinkGroup KDGanttViewTaskLinkGroup.h
   A group of task links.
@@ -121,7 +121,7 @@ bool KDGanttViewTaskLinkGroup::remove (KDGanttViewTaskLink* link)
 void KDGanttViewTaskLinkGroup::setVisible( bool show )
 {
     isvisible = show;
-    QPtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
+    Q3PtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
     for ( ; it.current(); ++it ) {
         it.current()->setVisible(show);
     }
@@ -151,7 +151,7 @@ bool KDGanttViewTaskLinkGroup::visible() const
 void KDGanttViewTaskLinkGroup::setHighlight( bool highlight )
 {
     ishighlighted=  highlight;
-    QPtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
+    Q3PtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
     for ( ; it.current(); ++it )
         it.current()->setHighlight(highlight );
 
@@ -182,7 +182,7 @@ bool KDGanttViewTaskLinkGroup::highlight() const
 void KDGanttViewTaskLinkGroup::setColor( const QColor& color )
 {
     myColor = color;
-    QPtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
+    Q3PtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
     for ( ; it.current(); ++it )
         it.current()->setColor(color);
 }
@@ -214,7 +214,7 @@ void KDGanttViewTaskLinkGroup::setHighlightColor( const QColor& color )
 {
 
     myColorHL = color;
-    QPtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
+    Q3PtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
     for ( ; it.current(); ++it )
         it.current()->setHighlightColor(color);
 }

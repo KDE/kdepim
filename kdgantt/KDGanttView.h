@@ -35,15 +35,20 @@
 #ifndef KDGANTTVIEW_H
 #define KDGANTTVIEW_H
 
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 #include <qwidget.h>
-#include <qlistview.h>
+#include <q3listview.h>
 #include <qsplitter.h>
 #include <qlayout.h>
 #include <qfont.h>
 #include <qdom.h>
-#include <qvbox.h>
-
+#include <q3vbox.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QDragMoveEvent>
+#include <QDropEvent>
+#include <QDragEnterEvent>
+#include <Q3DockWindow>
 
 #include "KDGanttViewItem.h"
 #include "KDGanttViewTaskLinkGroup.h"
@@ -132,7 +137,7 @@ public:
     bool showLegend() const;
     void setLegendIsDockwindow( bool dock );
     bool legendIsDockwindow( ) const;
-    QDockWindow* legendDockwindow( ) const;
+    Q3DockWindow* legendDockwindow( ) const;
     void setShowListView( bool show );
     bool showListView() const;
     void setEditorEnabled( bool enable );
@@ -222,8 +227,8 @@ public:
     QBrush noInformationBrush() const;
 
     // Link-related stuff
-    QPtrList<KDGanttViewTaskLink> taskLinks() const;
-    QPtrList<KDGanttViewTaskLinkGroup> taskLinkGroups() const;
+    Q3PtrList<KDGanttViewTaskLink> taskLinks() const;
+    Q3PtrList<KDGanttViewTaskLinkGroup> taskLinkGroups() const;
 
     // Legend-related stuff
     void addLegendItem( KDGanttViewItem::Shape shape, const QColor& shapeColor, const QString& text );
@@ -302,7 +307,7 @@ public:
 
     // Pass-through methods from QListView
     virtual int addColumn( const QString& label, int width = -1 );
-    virtual int addColumn( const QIconSet& iconset, const QString& label,
+    virtual int addColumn( const QIcon& iconset, const QString& label,
                            int width = -1 );
     virtual void removeColumn( int index );
     KDGanttViewItem* selectedItem() const;
@@ -333,8 +338,8 @@ public:
 
     // setting the vertical scrollbars of the listview and the timetable
     // default values: always off for the listview, always on for the timetable
-    void setLvVScrollBarMode( QScrollView::ScrollBarMode );
-    void setGvVScrollBarMode( QScrollView::ScrollBarMode );
+    void setLvVScrollBarMode( Q3ScrollView::ScrollBarMode );
+    void setGvVScrollBarMode( Q3ScrollView::ScrollBarMode );
 
     void setLinkItemsEnabled(bool on);
     bool isLinkItemsEnabled() const;
@@ -394,13 +399,13 @@ signals:
     void dropped ( QDropEvent * e, KDGanttViewItem* droppedItem, KDGanttViewItem* itemBelowMouse);
 private slots:
     void forceRepaint( int val = 0 );
-    void slotSelectionChanged( QListViewItem* item );
-    void slotCurrentChanged ( QListViewItem * item );
-    void slotItemRenamed ( QListViewItem * item, int col, const QString & text  );
-  void slotMouseButtonPressed (  int button, QListViewItem * item, const QPoint & pos, int c );
-    void slotmouseButtonClicked ( int button, QListViewItem * item, const QPoint & pos, int c );
-    void slotcontextMenuRequested ( QListViewItem * item, const QPoint & pos, int col );
-    void slotdoubleClicked ( QListViewItem * item );
+    void slotSelectionChanged( Q3ListViewItem* item );
+    void slotCurrentChanged ( Q3ListViewItem * item );
+    void slotItemRenamed ( Q3ListViewItem * item, int col, const QString & text  );
+  void slotMouseButtonPressed (  int button, Q3ListViewItem * item, const QPoint & pos, int c );
+    void slotmouseButtonClicked ( int button, Q3ListViewItem * item, const QPoint & pos, int c );
+    void slotcontextMenuRequested ( Q3ListViewItem * item, const QPoint & pos, int col );
+    void slotdoubleClicked ( Q3ListViewItem * item );
     void slotHeaderSizeChanged();
     void addTickRight();
     void addTickLeft();
@@ -442,10 +447,10 @@ private:
     KDTimeTableWidget * myTimeTable;
     KDLegendWidget * myLegend;
     itemAttributeDialog* myItemAttributeDialog;
-    QVBox * leftWidget,  * rightWidget;
-    QHBox * spacerLeft;
-    QScrollView* myTimeHeaderScroll;
-    QHBox* myTimeHeaderContainer ;
+    Q3VBox * leftWidget,  * rightWidget;
+    Q3HBox * spacerLeft;
+    Q3ScrollView* myTimeHeaderScroll;
+    Q3HBox* myTimeHeaderContainer ;
     QWidget* timeHeaderSpacerWidget;
     QWidget *spacerRight;
 
@@ -467,8 +472,8 @@ private:
     bool undefinedShape[3],undefinedColor[3],undefinedColorHL[3];
     QColor myTextColor;
     QColor myDefaultColor[3],myDefaultColorHL[3];
-    QPtrList<KDGanttViewTaskLinkGroup> myTaskLinkGroupList;
-    QPtrList<legendItem> *myLegendItems;
+    Q3PtrList<KDGanttViewTaskLinkGroup> myTaskLinkGroupList;
+    Q3PtrList<legendItem> *myLegendItems;
     void addTaskLinkGroup(KDGanttViewTaskLinkGroup*);
     void removeTaskLinkGroup(KDGanttViewTaskLinkGroup*);
     int getIndex( KDGanttViewItem::Type ) const;
@@ -477,7 +482,7 @@ private:
     KDGanttViewItem* myCurrentItem;
     KDGanttMinimizeSplitter *mySplitter;
 protected:
-  virtual QDragObject * dragObject ();
+  virtual Q3DragObject * dragObject ();
   virtual void startDrag ();
 };
 

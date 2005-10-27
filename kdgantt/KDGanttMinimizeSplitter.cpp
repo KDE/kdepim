@@ -38,20 +38,29 @@
 #include "qdrawutil.h"
 #include "qbitmap.h"
 #if QT_VERSION >= 300
-#include "qptrlist.h"
-#include "qmemarray.h"
+#include "q3ptrlist.h"
+#include "q3memarray.h"
 #else
 #include <qlist.h>
 #include <qarray.h>
-#define QPtrList QList
-#define QMemArray QArray
+#define Q3PtrList QList
+#define Q3MemArray QArray
 #endif
 #include "qlayoutengine_p.h"
-#include "qobjectlist.h"
+#include "qobject.h"
 #include "qstyle.h"
 #include "qapplication.h" //sendPostedEvents
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 #include <qcursor.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QPaintEvent>
+#include <Q3PointArray>
+#include <QChildEvent>
+#include <QEvent>
+#include <Q3Frame>
+#include <QResizeEvent>
+#include <QMouseEvent>
 #ifndef KDGANTT_MASTER_CVS
 #include "KDGanttMinimizeSplitter.moc"
 #endif
@@ -83,9 +92,9 @@ void KDGanttSplitterHandle::setOrientation( Qt::Orientation o )
     orient = o;
 #ifndef QT_NO_CURSOR
     if ( o == KDGanttMinimizeSplitter::Horizontal )
-	setCursor( splitHCursor );
+	setCursor( Qt::SplitHCursor );
     else
-	setCursor( splitVCursor );
+	setCursor( Qt::SplitVCursor );
 #endif
 }
 
@@ -93,7 +102,7 @@ void KDGanttSplitterHandle::setOrientation( Qt::Orientation o )
 void KDGanttSplitterHandle::mouseMoveEvent( QMouseEvent *e )
 {
     updateCursor( e->pos() );
-    if ( !(e->state()&LeftButton) )
+    if ( !(e->state()&Qt::LeftButton) )
 	return;
 
     if ( _activeButton != 0)
@@ -113,7 +122,7 @@ void KDGanttSplitterHandle::mouseMoveEvent( QMouseEvent *e )
 
 void KDGanttSplitterHandle::mousePressEvent( QMouseEvent *e )
 {
-    if ( e->button() == LeftButton ) {
+    if ( e->button() == Qt::LeftButton ) {
         _activeButton = onButton( e->pos() );
         mouseOffset = s->pick(e->pos());
         if ( _activeButton != 0)
@@ -125,13 +134,13 @@ void KDGanttSplitterHandle::mousePressEvent( QMouseEvent *e )
 void KDGanttSplitterHandle::updateCursor( const QPoint& p)
 {
     if ( onButton( p ) != 0 ) {
-        setCursor( arrowCursor );
+        setCursor( Qt::ArrowCursor );
     }
     else {
         if ( orient == KDGanttMinimizeSplitter::Horizontal )
-            setCursor( splitHCursor );
+            setCursor( Qt::SplitHCursor );
         else
-            setCursor( splitVCursor );
+            setCursor( Qt::SplitVCursor );
     }
 }
 
@@ -167,7 +176,7 @@ void KDGanttSplitterHandle::mouseReleaseEvent( QMouseEvent *e )
         updateCursor( e->pos() );
     }
     else {
-        if ( !opaque() && e->button() == LeftButton ) {
+        if ( !opaque() && e->button() == Qt::LeftButton ) {
             QCOORD pos = s->pick(parentWidget()->mapFromGlobal(e->globalPos()))
                 - mouseOffset;
             s->setRubberband( -1 );
@@ -179,9 +188,9 @@ void KDGanttSplitterHandle::mouseReleaseEvent( QMouseEvent *e )
 
 int KDGanttSplitterHandle::onButton( const QPoint& p )
 {
-    QValueList<QPointArray> list = buttonRegions();
+    Q3ValueList<Q3PointArray> list = buttonRegions();
     int index = 1;
-    for( QValueList<QPointArray>::Iterator it = list.begin(); it != list.end(); ++it ) {
+    for( Q3ValueList<Q3PointArray>::Iterator it = list.begin(); it != list.end(); ++it ) {
         QRect rect = (*it).boundingRect();
         rect.setLeft( rect.left()- 4 );
         rect.setRight( rect.right() + 4);
@@ -196,14 +205,14 @@ int KDGanttSplitterHandle::onButton( const QPoint& p )
 }
 
 
-QValueList<QPointArray> KDGanttSplitterHandle::buttonRegions()
+Q3ValueList<Q3PointArray> KDGanttSplitterHandle::buttonRegions()
 {
-    QValueList<QPointArray> list;
+    Q3ValueList<Q3PointArray> list;
 
     int sw = 8;
     int voffset[] = { (int) -sw*3, (int) sw*3 };
     for ( int i = 0; i < 2; i++ ) {
-        QPointArray arr;
+        Q3PointArray arr;
         if ( !_collapsed && s->minimizeDirection() == KDGanttMinimizeSplitter::Right ||
              _collapsed  && s->minimizeDirection() == KDGanttMinimizeSplitter::Left) {
             int mid = height()/2 + voffset[i];
@@ -260,9 +269,9 @@ void KDGanttSplitterHandle::paintEvent( QPaintEvent * )
     p.setBrush( col );
     p.setPen( col  );
 
-    QValueList<QPointArray> list = buttonRegions();
+    Q3ValueList<Q3PointArray> list = buttonRegions();
     int index = 1;
-    for ( QValueList<QPointArray>::Iterator it = list.begin(); it != list.end(); ++it ) {
+    for ( Q3ValueList<Q3PointArray>::Iterator it = list.begin(); it != list.end(); ++it ) {
         if ( index == _activeButton ) {
             p.save();
             p.translate( parentWidget()->style().pixelMetric( QStyle::PM_ButtonShiftHorizontal ),
@@ -307,12 +316,12 @@ class QSplitterData
 public:
     QSplitterData() : opaque( FALSE ), firstShow( TRUE ) {}
 
-    QPtrList<QSplitterLayoutStruct> list;
+    Q3PtrList<QSplitterLayoutStruct> list;
     bool opaque;
     bool firstShow;
 };
 
-void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
+void kdganttGeomCalc( Q3MemArray<QLayoutStruct> &chain, int start, int count, int pos,
                  int space, int spacer );
 #endif // DOXYGEN_SKIP_INTERNAL
 
@@ -392,10 +401,10 @@ static QSize minSizeHint( const QWidget* w )
   name arguments being passed on to the QFrame constructor.
 */
 KDGanttMinimizeSplitter::KDGanttMinimizeSplitter( QWidget *parent, const char *name )
-    :QFrame(parent,name,WPaintUnclipped)
+    :Q3Frame(parent,name,WPaintUnclipped)
 {
 #if QT_VERSION >= 300
-     orient = Horizontal;
+     orient = Qt::Horizontal;
      init();
 #endif
 }
@@ -404,8 +413,8 @@ KDGanttMinimizeSplitter::KDGanttMinimizeSplitter( QWidget *parent, const char *n
   Constructs a splitter with orientation \a o with the \a parent
   and \a name arguments being passed on to the QFrame constructor.
 */
-KDGanttMinimizeSplitter::KDGanttMinimizeSplitter( Orientation o, QWidget *parent, const char *name )
-    :QFrame(parent,name,WPaintUnclipped)
+KDGanttMinimizeSplitter::KDGanttMinimizeSplitter( Qt::Orientation o, QWidget *parent, const char *name )
+    :Q3Frame(parent,name,WPaintUnclipped)
 {
 #if QT_VERSION >= 300
      orient = o;
@@ -429,7 +438,7 @@ KDGanttMinimizeSplitter::~KDGanttMinimizeSplitter()
 void KDGanttMinimizeSplitter::init()
 {
     data = new QSplitterData;
-    if ( orient == Horizontal )
+    if ( orient == Qt::Horizontal )
 	setSizePolicy( QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Minimum) );
     else
 	setSizePolicy( QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Expanding) );
@@ -444,14 +453,14 @@ void KDGanttMinimizeSplitter::init()
   By default the orientation is horizontal (the widgets are side by side).
   The possible orientations are Qt:Vertical and Qt::Horizontal (the default).
 */
-void KDGanttMinimizeSplitter::setOrientation( Orientation o )
+void KDGanttMinimizeSplitter::setOrientation( Qt::Orientation o )
 {
 #if QT_VERSION >= 300
     if ( orient == o )
 	return;
     orient = o;
 
-    if ( orient == Horizontal )
+    if ( orient == Qt::Horizontal )
 	setSizePolicy( QSizePolicy( QSizePolicy::Expanding, QSizePolicy::Minimum ) );
     else
 	setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding ) );
@@ -529,11 +538,11 @@ QSplitterLayoutStruct *KDGanttMinimizeSplitter::addWidget( QWidget *w, bool firs
 */
 void KDGanttMinimizeSplitter::childEvent( QChildEvent *c )
 {
-    if ( c->type() == QEvent::ChildInserted ) {
+    if ( c->type() == QEvent::ChildAdded ) {
 	if ( !c->child()->isWidgetType() )
 	    return;
 
-	if ( ((QWidget*)c->child())->testWFlags( WType_TopLevel ) )
+	if ( ((QWidget*)c->child())->testWFlags( Qt::WType_TopLevel ) )
 	    return;
 
 	QSplitterLayoutStruct *s = data->list.first();
@@ -577,13 +586,13 @@ void KDGanttMinimizeSplitter::childEvent( QChildEvent *c )
 void KDGanttMinimizeSplitter::setRubberband( int p )
 {
     QPainter paint( this );
-    paint.setPen( gray );
-    paint.setBrush( gray );
+    paint.setPen( Qt::gray );
+    paint.setBrush( Qt::gray );
     paint.setRasterOp( XorROP );
     QRect r = contentsRect();
     const int rBord = 3; //Themable????
     int sw = style().pixelMetric(QStyle::PM_SplitterWidth, this);
-    if ( orient == Horizontal ) {
+    if ( orient == Qt::Horizontal ) {
 	if ( opaqueOldPos >= 0 )
 	    paint.drawRect( opaqueOldPos + sw/2 - rBord , r.y(),
 			    2*rBord, r.height() );
@@ -603,7 +612,7 @@ void KDGanttMinimizeSplitter::setRubberband( int p )
 /*! Reimplemented from superclass. */
 bool KDGanttMinimizeSplitter::event( QEvent *e )
 {
-    if ( e->type() == QEvent::LayoutHint || ( e->type() == QEvent::Show && data->firstShow ) ) {
+    if ( e->type() == QEvent::LayoutRequest || ( e->type() == QEvent::Show && data->firstShow ) ) {
 	recalc( isVisible() );
 	if ( e->type() == QEvent::Show )
 	    data->firstShow = FALSE;
@@ -624,7 +633,7 @@ void KDGanttMinimizeSplitter::drawSplitter( QPainter *p,
 {
     style().drawPrimitive(QStyle::PE_Splitter, p, QRect(x, y, w, h), colorGroup(),
 			  (orientation() == Qt::Horizontal ?
-			   QStyle::Style_Horizontal : 0));
+			   QStyle::State_Horizontal : 0));
 }
 
 
@@ -665,9 +674,9 @@ void KDGanttMinimizeSplitter::moveSplitter( QCOORD p, int id )
     p = adjustPos( p, id );
 
     QSplitterLayoutStruct *s = data->list.at(id);
-    int oldP = orient == Horizontal ? s->wid->x() : s->wid->y();
+    int oldP = orient == Qt::Horizontal ? s->wid->x() : s->wid->y();
     bool upLeft;
-    if ( QApplication::reverseLayout() && orient == Horizontal ) {
+    if ( QApplication::reverseLayout() && orient == Qt::Horizontal ) {
 	p += s->wid->width();
 	upLeft = p > oldP;
     } else
@@ -682,8 +691,8 @@ void KDGanttMinimizeSplitter::moveSplitter( QCOORD p, int id )
 
 void KDGanttMinimizeSplitter::setG( QWidget *w, int p, int s, bool isSplitter )
 {
-    if ( orient == Horizontal ) {
-	if ( QApplication::reverseLayout() && orient == Horizontal && !isSplitter )
+    if ( orient == Qt::Horizontal ) {
+	if ( QApplication::reverseLayout() && orient == Qt::Horizontal && !isSplitter )
 	    p = contentsRect().width() - p - s;
 	w->setGeometry( p, contentsRect().y(), s, contentsRect().height() );
     } else
@@ -709,7 +718,7 @@ void KDGanttMinimizeSplitter::moveBefore( int pos, int id, bool upLeft )
     } else if ( s->isSplitter ) {
 	int pos1, pos2;
 	int dd = s->sizer;
-	if( QApplication::reverseLayout() && orient == Horizontal ) {
+	if( QApplication::reverseLayout() && orient == Qt::Horizontal ) {
 	    pos1 = pos;
 	    pos2 = pos + dd;
 	} else {
@@ -725,7 +734,7 @@ void KDGanttMinimizeSplitter::moveBefore( int pos, int id, bool upLeft )
 	}
     } else {
 	int dd, newLeft, nextPos;
-	if( QApplication::reverseLayout() && orient == Horizontal ) {
+	if( QApplication::reverseLayout() && orient == Qt::Horizontal ) {
 	    dd = w->geometry().right() - pos;
 	    dd = qMax( pick(minSize(w)), qMin(dd, pick(w->maximumSize())));
 	    newLeft = pos+1;
@@ -762,7 +771,7 @@ void KDGanttMinimizeSplitter::moveAfter( int pos, int id, bool upLeft )
     } else if ( s->isSplitter ) {
 	int dd = s->sizer;
 	int pos1, pos2;
-	if( QApplication::reverseLayout() && orient == Horizontal ) {
+	if( QApplication::reverseLayout() && orient == Qt::Horizontal ) {
 	    pos2 = pos - dd;
 	    pos1 = pos2 + 1;
 	} else {
@@ -779,7 +788,7 @@ void KDGanttMinimizeSplitter::moveAfter( int pos, int id, bool upLeft )
     } else {
 	int left = pick( w->pos() );
 	int right, dd,/* newRight,*/ newLeft, nextPos;
-	if ( QApplication::reverseLayout() && orient == Horizontal ) {
+	if ( QApplication::reverseLayout() && orient == Qt::Horizontal ) {
 	    dd = pos - left + 1;
 	    dd = qMax( pick(minSize(w)), qMin(dd, pick(w->maximumSize())));
 	    newLeft = pos-dd+1;
@@ -857,7 +866,7 @@ void KDGanttMinimizeSplitter::getRange( int id, int *min, int *max )
 	}
     }
     QRect r = contentsRect();
-    if ( orient == Horizontal && QApplication::reverseLayout() ) {
+    if ( orient == Qt::Horizontal && QApplication::reverseLayout() ) {
 	int splitterWidth = style().pixelMetric(QStyle::PM_SplitterWidth, this);
 	if ( min )
 	    *min = pick(r.topRight()) - qMin( maxB, pick(r.size())-minA ) - splitterWidth;
@@ -894,7 +903,7 @@ void KDGanttMinimizeSplitter::doResize()
     QRect r = contentsRect();
     int i;
     int n = data->list.count();
-    QMemArray<QLayoutStruct> a( n );
+    Q3MemArray<QLayoutStruct> a( n );
     for ( i = 0; i< n; i++ ) {
 	a[i].init();
 	QSplitterLayoutStruct *s = data->list.at(i);
@@ -996,7 +1005,7 @@ void KDGanttMinimizeSplitter::recalc( bool update )
     if ( maxt < mint )
 	maxt = mint;
 
-    if ( orient == Horizontal ) {
+    if ( orient == Qt::Horizontal ) {
 	setMaximumSize( maxl, maxt );
 	setMinimumSize( minl, mint );
     } else {
@@ -1148,7 +1157,7 @@ QSize KDGanttMinimizeSplitter::sizeHint() const
 	    }
 	}
     }
-    return orientation() == Horizontal ? QSize( l, t ) : QSize( t, l );
+    return orientation() == Qt::Horizontal ? QSize( l, t ) : QSize( t, l );
 }
 
 
@@ -1178,7 +1187,7 @@ QSize KDGanttMinimizeSplitter::minimumSizeHint() const
 	    }
 	}
     }
-    return orientation() == Horizontal ? QSize( l, t ) : QSize( t, l );
+    return orientation() == Qt::Horizontal ? QSize( l, t ) : QSize( t, l );
 }
 
 
@@ -1266,13 +1275,13 @@ bool KDGanttMinimizeSplitter::isHidden( QWidget *w ) const
   \sa setSizes()
 */
 
-QValueList<int> KDGanttMinimizeSplitter::sizes() const
+Q3ValueList<int> KDGanttMinimizeSplitter::sizes() const
 {
     if ( !testWState(WState_Polished) ) {
 	QWidget* that = (QWidget*) this;
 	that->polish();
     }
-    QValueList<int> list;
+    Q3ValueList<int> list;
     QSplitterLayoutStruct *s = data->list.first();
     while ( s ) {
 	if ( !s->isSplitter )
@@ -1297,10 +1306,10 @@ QValueList<int> KDGanttMinimizeSplitter::sizes() const
   \sa sizes()
 */
 
-void KDGanttMinimizeSplitter::setSizes( QValueList<int> list )
+void KDGanttMinimizeSplitter::setSizes( Q3ValueList<int> list )
 {
     processChildEvents();
-    QValueList<int>::Iterator it = list.begin();
+    Q3ValueList<int>::Iterator it = list.begin();
     QSplitterLayoutStruct *s = data->list.first();
     while ( s && it != list.end() ) {
 	if ( !s->isSplitter ) {
@@ -1320,7 +1329,7 @@ void KDGanttMinimizeSplitter::setSizes( QValueList<int> list )
 
 void KDGanttMinimizeSplitter::processChildEvents()
 {
-    QApplication::sendPostedEvents( this, QEvent::ChildInserted );
+    QApplication::sendPostedEvents( this, QEvent::ChildAdded );
 }
 
 
@@ -1338,7 +1347,7 @@ void KDGanttMinimizeSplitter::styleChange( QStyle& old )
 	s = data->list.next();
     }
     doResize();
-    QFrame::styleChange( old );
+    Q3Frame::styleChange( old );
 }
 
 #endif
@@ -1350,7 +1359,7 @@ void KDGanttMinimizeSplitter::styleChange( QStyle& old )
   otherwise either KDGanttMinimizeSplitter::Up or KDGanttMinimizeSplitter::Down
   should be used.
 */
-void KDGanttMinimizeSplitter::setMinimizeDirection( Direction direction )
+void KDGanttMinimizeSplitter::setMinimizeDirection( Qt::Orientation direction )
 {
     _direction = direction;
 }
@@ -1371,7 +1380,7 @@ static inline int toFixed( int i ) { return i * 256; }
 static inline int fRound( int i ) {
     return ( i % 256 < 128 ) ? i / 256 : 1 + i / 256;
 }
-void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
+void kdganttGeomCalc( Q3MemArray<QLayoutStruct> &chain, int start, int count, int pos,
 		int space, int spacer )
 {
     typedef int fixed;

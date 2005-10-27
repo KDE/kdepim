@@ -1,3 +1,5 @@
+//Added by qt3to4:
+#include <Q3MemArray>
 // THIS IS A COPY OF THE FILE FOUND IN $QTDIR/src/kernel. Needed to modify qsplitter
 
 /****************************************************************************
@@ -81,7 +83,7 @@ struct QLayoutStruct
 };
 
 
-void qGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
+void qGeomCalc( Q3MemArray<QLayoutStruct> &chain, int start, int count, int pos,
 		      int space, int spacer );
 
 

@@ -56,7 +56,7 @@
 
 */
 
-KDGanttSizingControl::KDGanttSizingControl( QWidget* parent, const char* name, WFlags f )
+KDGanttSizingControl::KDGanttSizingControl( QWidget* parent, const char* name, Qt::WFlags f )
     :QWidget( parent, name, f ), _isMinimized( false )
 {
 }

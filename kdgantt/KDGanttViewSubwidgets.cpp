@@ -42,22 +42,35 @@
 #endif
 
 #include <qlabel.h>
-#include <qheader.h>
+#include <q3header.h>
 #include <qpainter.h>
 #include <qrect.h>
 #include <qtooltip.h>
 #include <qapplication.h>
 #include <qdrawutil.h>
 #include <qpalette.h>
-#include <qdragobject.h>
-#include <qptrlist.h>
+#include <q3dragobject.h>
+#include <q3ptrlist.h>
+//Added by qt3to4:
+#include <QPaintEvent>
+#include <QResizeEvent>
+#include <Q3PopupMenu>
+#include <QMouseEvent>
+#include <Q3Frame>
+#include <QDragMoveEvent>
+#include <QDragLeaveEvent>
+#include <Q3ValueList>
+#include <QDropEvent>
+#include <QDragEnterEvent>
+#include <QHBoxLayout>
+#include <QPixmap>
 
 #include <kglobal.h>
 #include <klocale.h>
 #include <kcalendarsystem.h>
 #include <kdebug.h>
 
-KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):QCanvas (parent)
+KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):Q3Canvas (parent)
 {
     myGanttView = myGantt;
     taskLinksVisible = true;
@@ -75,7 +88,7 @@ KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):QCa
     resize(1,1);
 }
 
-QPtrList<KDGanttViewTaskLink> KDTimeTableWidget::taskLinks()
+Q3PtrList<KDGanttViewTaskLink> KDTimeTableWidget::taskLinks()
 {
     return myTaskLinkList;
 }
@@ -83,7 +96,7 @@ QPtrList<KDGanttViewTaskLink> KDTimeTableWidget::taskLinks()
 void KDTimeTableWidget::clearTaskLinks()
 {
     // cannot use clear() here, as tasklinks will remove themselves from my list when deleted!
-    QPtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
+    Q3PtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
     while (it.current()) {
         delete it.current();
     }
@@ -130,26 +143,26 @@ QBrush KDTimeTableWidget::noInformationBrush() const
 
 void KDTimeTableWidget::removeItemFromTasklinks( KDGanttViewItem* item)
 {
-    QPtrListIterator<KDGanttViewTaskLink> it((myTaskLinkList));
+    Q3PtrListIterator<KDGanttViewTaskLink> it((myTaskLinkList));
     for ( ; it.current(); ++it ) {
         it.current()->removeItemFromList( item );
     }
 }
 
-void KDTimeTableWidget::expandItem( QListViewItem * item)
+void KDTimeTableWidget::expandItem( Q3ListViewItem * item)
 {
     item->invalidateHeight () ;
     //qApp->processEvents();
     updateMyContent();
 }
-void KDTimeTableWidget::collapseItem( QListViewItem * item)
+void KDTimeTableWidget::collapseItem( Q3ListViewItem * item)
 {
     item->invalidateHeight () ;
     //qApp->processEvents();
     updateMyContent();
 }
 
-void KDTimeTableWidget::highlightItem( QListViewItem * item )
+void KDTimeTableWidget::highlightItem( Q3ListViewItem * item )
 {
     static bool itemwashighlighted;
     static KDGanttViewItem* highlightedItem = 0;
@@ -208,8 +221,8 @@ void KDTimeTableWidget::computeVerticalGrid()
 
     if (myGanttView->showMinorTicks()){//minor
         colPen.setWidth(cw);
-        QPtrListIterator<KDCanvasRectangle> itcol(columnColorList);
-        QPtrListIterator<KDCanvasLine> itgrid(verGridList);
+        Q3PtrListIterator<KDCanvasRectangle> itcol(columnColorList);
+        Q3PtrListIterator<KDCanvasLine> itgrid(verGridList);
         for ( ; itgrid.current(); ++itgrid ) {
             if (i < wid) {
                 itgrid.current()->setPoints(i,0,i,h);
@@ -304,10 +317,10 @@ void KDTimeTableWidget::computeVerticalGrid()
                 itcol.current()->hide();
     } else {//major
         if (myGanttView->showMajorTicks()) {
-            QValueList<int>::iterator intIt = myGanttView->myTimeHeader->majorTicks.begin();
-            QValueList<int>::iterator intItEnd = myGanttView->myTimeHeader->majorTicks.end();
-            QPtrListIterator<KDCanvasRectangle> itcol(columnColorList);
-            QPtrListIterator<KDCanvasLine> itgrid(verGridList);
+            Q3ValueList<int>::iterator intIt = myGanttView->myTimeHeader->majorTicks.begin();
+            Q3ValueList<int>::iterator intItEnd = myGanttView->myTimeHeader->majorTicks.end();
+            Q3PtrListIterator<KDCanvasRectangle> itcol(columnColorList);
+            Q3PtrListIterator<KDCanvasLine> itgrid(verGridList);
             int left = 0;
             for ( ; itgrid.current(); ++itgrid ) {
                 if (intIt != intItEnd) {
@@ -418,11 +431,11 @@ void KDTimeTableWidget::computeVerticalGrid()
         }
         else {
             //hideall
-            QPtrListIterator<KDCanvasLine> itgrid(verGridList);
+            Q3PtrListIterator<KDCanvasLine> itgrid(verGridList);
             for ( ; itgrid.current(); ++itgrid ) {
                 itgrid.current()->hide();
             }
-            QPtrListIterator<KDCanvasRectangle> itcol(columnColorList);
+            Q3PtrListIterator<KDCanvasRectangle> itcol(columnColorList);
             for ( ; itcol.current(); ++itcol ) {
                 itcol.current()->hide();
             }
@@ -440,7 +453,7 @@ void KDTimeTableWidget::computeHorizontalGrid()
     else
         wid = width();
     KDCanvasLine* templine;
-    QPtrListIterator<KDCanvasLine> ithor(horGridList);
+    Q3PtrListIterator<KDCanvasLine> ithor(horGridList);
     if ( ithor.current() ) {
         templine = ithor.current();
         ++ithor;
@@ -491,7 +504,7 @@ void KDTimeTableWidget::computeDenseLines()
         wid = pendingWidth;
     else
         wid = width();
-    QPtrListIterator<KDCanvasRectangle> ithordense(horDenseList);
+    Q3PtrListIterator<KDCanvasRectangle> ithordense(horDenseList);
     KDCanvasRectangle* denseLine;
     int tempDenseLineCount = 0;
     while ( temp ) {
@@ -539,7 +552,7 @@ void KDTimeTableWidget::computeShowNoInformation()
         wid = pendingWidth;
     else
         wid = width();
-    QPtrListIterator<KDCanvasRectangle> itnoinfo(showNoInfoList);
+    Q3PtrListIterator<KDCanvasRectangle> itnoinfo(showNoInfoList);
     KDCanvasRectangle* noInfoLine;
     while ( temp ) {
         if ( temp->showNoInformation() ) {
@@ -569,7 +582,7 @@ void KDTimeTableWidget::computeShowNoInformation()
 void KDTimeTableWidget::computeTaskLinks()
 {
     //compute and show tasklinks
-    QPtrListIterator<KDGanttViewTaskLink> it((myTaskLinkList));
+    Q3PtrListIterator<KDGanttViewTaskLink> it((myTaskLinkList));
     for ( ; it.current(); ++it ) {
         if (it.current()->isVisible())
             it.current()->showMe(true);
@@ -720,8 +733,8 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant )
     setWeekendBackgroundColor(QColor(220,220,220) );
     setWeekendDays( 6, 7 );
     myGridMinorWidth = 0;
-    myPopupMenu = new QPopupMenu(this);
-    QPopupMenu * zoomPopupMenu = new QPopupMenu(this);
+    myPopupMenu = new Q3PopupMenu(this);
+    Q3PopupMenu * zoomPopupMenu = new Q3PopupMenu(this);
     myPopupMenu->insertItem (i18n("Zoom"),zoomPopupMenu, 1);
     zoomPopupMenu->insertItem( i18n("Zoom to 100%"),this, SLOT(setSettings(int)),0 ,21,21 );
     zoomPopupMenu->insertItem( i18n("Zoom to Fit"),this, SLOT(setSettings(int)),0 ,20,20 );
@@ -731,7 +744,7 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant )
     zoomPopupMenu->insertItem( i18n("Zoom Out (x 1/2)"),this, SLOT(setSettings(int)),0 ,23,23 );
     zoomPopupMenu->insertItem( i18n("Zoom Out (x 1/6)"),this, SLOT(setSettings(int)),0 ,25,25 );
     zoomPopupMenu->insertItem( i18n("Zoom Out (x 1/12)"),this, SLOT(setSettings(int)),0 ,27,27 );
-    scalePopupMenu = new QPopupMenu(this);
+    scalePopupMenu = new Q3PopupMenu(this);
     myPopupMenu->insertItem (i18n("Scale"),scalePopupMenu, 2);
     scalePopupMenu->insertItem( i18n("Minute"),this, SLOT(setSettings(int)),0 ,1,1 );
     scalePopupMenu->insertItem( i18n("Hour"),this, SLOT(setSettings(int)),0 ,2,2 );
@@ -740,19 +753,19 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant )
     scalePopupMenu->insertItem( i18n("Month"),this, SLOT(setSettings(int)),0 ,5,5 );
     scalePopupMenu->insertItem( i18n("Auto"),this, SLOT(setSettings(int)),0 ,6,6 );
     scalePopupMenu->setCheckable ( true );
-    timePopupMenu = new QPopupMenu(this);
+    timePopupMenu = new Q3PopupMenu(this);
     myPopupMenu->insertItem (i18n("Time Format"),timePopupMenu, 3);
     timePopupMenu->insertItem( i18n("24 Hour"),this, SLOT(setSettings(int)),0 ,40,40 );
     timePopupMenu->insertItem( i18n("12 PM Hour"),this, SLOT(setSettings(int)),0 ,41,41 );
     timePopupMenu->insertItem( i18n("24:00 Hour"),this, SLOT(setSettings(int)),0 ,42,42 );
-    yearPopupMenu = new QPopupMenu(this);
+    yearPopupMenu = new Q3PopupMenu(this);
     myPopupMenu->insertItem (i18n("Year Format"),yearPopupMenu, 4);
     yearPopupMenu->insertItem( i18n("Four Digit"),this, SLOT(setSettings(int)),0 ,50,50 );
     yearPopupMenu->insertItem( i18n("Two Digit"),this, SLOT(setSettings(int)),0 ,51,51 );
     yearPopupMenu->insertItem( i18n("Two Digit Apostrophe"),this, SLOT(setSettings(int)),0 ,52,52 );
     yearPopupMenu->insertItem( i18n("No Date on Minute/Hour Scale"),this, SLOT(setSettings(int)),0 ,53,53 );
 
-    gridPopupMenu = new QPopupMenu(this);
+    gridPopupMenu = new Q3PopupMenu(this);
     myPopupMenu->insertItem (i18n("Grid"),gridPopupMenu,5);
     gridPopupMenu->insertItem( i18n("Show Minor Grid"),this, SLOT(setSettings(int)),0 ,10,10 );
     gridPopupMenu->insertItem( i18n("Show Major Grid"),this, SLOT(setSettings(int)),0 ,11,11 );
@@ -859,7 +872,7 @@ void KDTimeHeaderWidget::checkWidth( int wid )
 bool KDTimeHeaderWidget::registerStartTime()
 {
 
-    QListViewItemIterator it( myGanttView->myListView );
+    Q3ListViewItemIterator it( myGanttView->myListView );
     if (!flagStartTimeSet) {
         QDateTime temp , time;
         KDGanttViewItem* item;
@@ -914,7 +927,7 @@ bool KDTimeHeaderWidget::registerEndTime()
         if ( item ) {
             temp = item->startTime();
             time = temp;
-            QListViewItemIterator it( myGanttView->myListView );
+            Q3ListViewItemIterator it( myGanttView->myListView );
             for ( ; it.current(); ++it ) {
                 item = ( KDGanttViewItem* )it.current();
                 if (item->isVisibleInGanttView) {
@@ -1824,7 +1837,7 @@ void KDTimeHeaderWidget::updateTimeTable()
     // setting the scrolling steps
     int scrollLineStep = myGridMinorWidth;
     if (showMajorTicks()) {
-        QValueList<int>::iterator intIt = majorTicks.begin();
+        Q3ValueList<int>::iterator intIt = majorTicks.begin();
         scrollLineStep = 5 * myGridMinorWidth;
         if (intIt != majorTicks.end()) {
             int left = *intIt;
@@ -1857,7 +1870,7 @@ int KDTimeHeaderWidget::autoScaleMinorTickCount()
 void KDTimeHeaderWidget::repaintMe(int left,int paintwid, QPainter* painter)
 {
     if (flagDoNotRecomputeAfterChange) return;
-    QColorGroup qcg =QColorGroup( white, black,white, darkGray,black,gray,gray) ;
+    QColorGroup qcg =QColorGroup( Qt::white, Qt::black,Qt::white, Qt::darkGray,Qt::black,Qt::gray,Qt::gray) ;
     QPainter* p;
     int offsetLeft = 0;
     if ( paintwid > paintPix.width()-100 )
@@ -1894,8 +1907,8 @@ void KDTimeHeaderWidget::repaintMe(int left,int paintwid, QPainter* painter)
     int xCoord;
     int lwid = 1;
 
-    QValueList<QString>::iterator it;
-    QValueList<int>::iterator intIt = majorTicks.begin();
+    Q3ValueList<QString>::iterator it;
+    Q3ValueList<int>::iterator intIt = majorTicks.begin();
     for ( it =  majorText.begin(); it !=  majorText.end(); ++it ) {
         xCoord  = (*intIt++);
         if (((*intIt)>= left && xCoord <= left+paintwid)) {
@@ -1912,7 +1925,7 @@ void KDTimeHeaderWidget::repaintMe(int left,int paintwid, QPainter* painter)
         }
         ++i;
     }
-    p->setPen(black);
+    p->setPen(Qt::black);
     p->drawLine(left-offsetLeft,hei1,left+paintwid-offsetLeft,hei1);
     qDrawShadeLine ( p,left-offsetLeft  ,hei2-1, left+paintwid-offsetLeft, hei2-1, qcg, true, lwid, 1 );
     p->drawLine(left-offsetLeft,hei2-1,left+paintwid-offsetLeft,hei2-1);
@@ -2532,12 +2545,12 @@ void KDTimeHeaderWidget::mouseMoveEvent ( QMouseEvent * e )
    ***************************************************************** */
 KDLegendWidget:: KDLegendWidget( QWidget* parent,
                                  KDGanttMinimizeSplitter* legendParent ) :
-    KDGanttSemiSizingControl ( KDGanttSemiSizingControl::Before, Vertical,
+    KDGanttSemiSizingControl ( KDGanttSemiSizingControl::Before, Qt::Vertical,
                                parent)
 {
     myLegendParent = legendParent;
     dock = 0;
-    scroll = new QScrollView( legendParent );
+    scroll = new Q3ScrollView( legendParent );
     setMaximizedWidget( scroll );
 
     setMinimizedWidget( myLabel = new QLabel( i18n( " Legend is hidden" ), this) );
@@ -2555,7 +2568,7 @@ void KDLegendWidget::setAsDockwindow( bool dockwin )
             setMaximizedWidget( 0 );
             showMe ( false );
             if ( dock ) delete dock;
-            dock = new QDockWindow(QDockWindow:: OutsideDock,0 );
+            dock = new Q3DockWindow(Q3DockWindow:: OutsideDock,0 );
             dock->resize( 200, 100 );
             dock->setHorizontallyStretchable( true );
             dock->setVerticallyStretchable( true );
@@ -2564,7 +2577,7 @@ void KDLegendWidget::setAsDockwindow( bool dockwin )
             delete myLegend;
             myLegend = 0;
             delete scroll;
-            scroll = new QScrollView( dock );
+            scroll = new Q3ScrollView( dock );
             clearLegend();
             dock->setWidget(scroll);
             setMaximizedWidget( dock );
@@ -2578,7 +2591,7 @@ void KDLegendWidget::setAsDockwindow( bool dockwin )
             delete scroll;
             delete dock;
             dock = 0;
-            scroll = new QScrollView( myLegendParent );
+            scroll = new Q3ScrollView( myLegendParent );
             clearLegend();
             setMaximizedWidget( scroll );
             showMe ( false );
@@ -2595,7 +2608,7 @@ bool KDLegendWidget::asDockwindow( )
 }
 
 
-QDockWindow* KDLegendWidget::dockwindow( )
+Q3DockWindow* KDLegendWidget::dockwindow( )
 {
     return dock;
 }
@@ -2639,15 +2652,15 @@ void KDLegendWidget::clearLegend ( )
 {
     if ( myLegend ) delete myLegend;
     if ( dock )
-        myLegend = new QGroupBox( 1, Qt::Horizontal, scroll->viewport() );
+        myLegend = new Q3GroupBox( 1, Qt::Horizontal, scroll->viewport() );
     else
-        myLegend = new QGroupBox( 1, Qt::Horizontal, i18n( "Legend" ), scroll->viewport() );
+        myLegend = new Q3GroupBox( 1, Qt::Horizontal, i18n( "Legend" ), scroll->viewport() );
     myLegend->setBackgroundColor( Qt::white );
     myLegend->setFont( font() );
     scroll->addChild(  myLegend );
-    scroll->setResizePolicy( QScrollView::AutoOneFit );
+    scroll->setResizePolicy( Q3ScrollView::AutoOneFit );
     myLegend->layout()->setMargin( 11 );
-    myLegend->setFrameStyle( QFrame::NoFrame );
+    myLegend->setFrameStyle( Q3Frame::NoFrame );
     if ( dock )
         scroll->setMaximumHeight( 32000 );
     else
@@ -2682,7 +2695,7 @@ bool KDLegendWidget::isShown ( )
 }
 
 
-KDListView::KDListView(QWidget* parent, KDGanttView* gantView):QListView (parent)
+KDListView::KDListView(QWidget* parent, KDGanttView* gantView):Q3ListView (parent)
 {
     myGanttView = gantView;
     setAcceptDrops(true);
@@ -2692,15 +2705,15 @@ KDListView::KDListView(QWidget* parent, KDGanttView* gantView):QListView (parent
     addColumn( i18n( "Task Name" ) );
     setSorting( -1 );
     //setVScrollBarMode (QScrollView::AlwaysOn );
-    setHScrollBarMode (QScrollView::AlwaysOn );
-    setDefaultRenameAction(QListView::Accept);
+    setHScrollBarMode (Q3ScrollView::AlwaysOn );
+    setDefaultRenameAction(Q3ListView::Accept);
     setColumnWidthMode ( 0,Maximum  );
     _calendarMode = false;
     // QObject::connect(this, SIGNAL (  pressed ( QListViewItem * )) , this, SLOT( dragItem( QListViewItem *))) ;
 }
 
 
-void  KDListView::dragItem( QListViewItem *  )
+void  KDListView::dragItem( Q3ListViewItem *  )
 {
     // qDebug("drag ");
     // startDrag();
@@ -2719,18 +2732,18 @@ void  KDListView::setCalendarMode( bool mode )
     // setRootIsDecorated ( ! mode );
 }
 
-void  KDListView::setOpen(QListViewItem * item, bool open )
+void  KDListView::setOpen(Q3ListViewItem * item, bool open )
 {
     if (! _calendarMode || ! open ) {
         (( KDGanttViewItem*)item)->setCallListViewOnSetOpen( false );
-        QListView::setOpen ( item, open );
+        Q3ListView::setOpen ( item, open );
         (( KDGanttViewItem*)item)->setCallListViewOnSetOpen( true );
         return;
     }
     // we are in calendarmode
     // in calendarmode only items can be opened which have subitems which have subitems
 
-    QListViewItem* temp;
+    Q3ListViewItem* temp;
     temp = item->firstChild();
     bool openItem = false;
     while (temp) {
@@ -2746,7 +2759,7 @@ void  KDListView::setOpen(QListViewItem * item, bool open )
     }
     if ( openItem ) {
         (( KDGanttViewItem*)item)->setCallListViewOnSetOpen( false );
-        QListView::setOpen ( item, open );
+        Q3ListView::setOpen ( item, open );
         (( KDGanttViewItem*)item)->setCallListViewOnSetOpen( true );
     }
 }
@@ -2754,7 +2767,7 @@ void  KDListView::setOpen(QListViewItem * item, bool open )
 
 void  KDListView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
 {
-    QListView::contentsMouseDoubleClickEvent ( e );
+    Q3ListView::contentsMouseDoubleClickEvent ( e );
     //if ( ! _calendarMode )
     // QListView::contentsMouseDoubleClickEvent ( e );
     // else
@@ -2892,9 +2905,9 @@ void KDListView::dropEvent ( QDropEvent *e )
     return;
 }
 
-QDragObject * KDListView::dragObject ()
+Q3DragObject * KDListView::dragObject ()
 {
-    return QListView::dragObject ();
+    return Q3ListView::dragObject ();
 }
 
 void KDListView::startDrag ()
@@ -2909,7 +2922,7 @@ void KDListView::startDrag ()
 KDCanvasText::KDCanvasText( KDTimeTableWidget* canvas,
                             void* parentItem,
                             int type ) :
-    QCanvasText(canvas)
+    Q3CanvasText(canvas)
 {
     myParentType = type;
     myParentItem = parentItem;
@@ -2919,7 +2932,7 @@ KDCanvasText::KDCanvasText( KDTimeTableWidget* canvas,
 KDCanvasLine::KDCanvasLine( KDTimeTableWidget* canvas,
                             void* parentItem,
                             int type ) :
-    QCanvasLine(canvas)
+    Q3CanvasLine(canvas)
 {
     myParentType = type;
     myParentItem = parentItem;
@@ -2929,7 +2942,7 @@ KDCanvasLine::KDCanvasLine( KDTimeTableWidget* canvas,
 KDCanvasPolygonItem::KDCanvasPolygonItem( KDTimeTableWidget* canvas,
                                           void* parentItem,
                                           int type ) :
-    QCanvasPolygonalItem( canvas )
+    Q3CanvasPolygonalItem( canvas )
 {
     myParentType = type;
     myParentItem = parentItem;
@@ -2939,7 +2952,7 @@ KDCanvasPolygonItem::KDCanvasPolygonItem( KDTimeTableWidget* canvas,
 KDCanvasPolygon::KDCanvasPolygon( KDTimeTableWidget* canvas,
                                   void* parentItem,
                                   int type ) :
-    QCanvasPolygon( canvas )
+    Q3CanvasPolygon( canvas )
 {
     myParentType = type;
     myParentItem = parentItem;
@@ -2949,7 +2962,7 @@ KDCanvasPolygon::KDCanvasPolygon( KDTimeTableWidget* canvas,
 KDCanvasEllipse::KDCanvasEllipse( KDTimeTableWidget* canvas,
                                   void* parentItem,
                                   int type ) :
-    QCanvasEllipse( canvas )
+    Q3CanvasEllipse( canvas )
 {
     myParentType = type;
     myParentItem = parentItem;
@@ -2959,7 +2972,7 @@ KDCanvasEllipse::KDCanvasEllipse( KDTimeTableWidget* canvas,
 KDCanvasRectangle::KDCanvasRectangle( KDTimeTableWidget* canvas,
                                       void* parentItem,
                                       int type ) :
-    QCanvasRectangle( canvas )
+    Q3CanvasRectangle( canvas )
 {
     myParentType = type;
     myParentItem = parentItem;
@@ -2968,10 +2981,10 @@ KDCanvasRectangle::KDCanvasRectangle( KDTimeTableWidget* canvas,
 
 
 
-KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidget* parent,  const char* name ) : QCanvasView ( canvas, parent, name )
+KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,Q3Canvas* canvas, QWidget* parent,  const char* name ) : Q3CanvasView ( canvas, parent, name )
 {
-    setHScrollBarMode (QScrollView::AlwaysOn );
-    setVScrollBarMode( QScrollView::AlwaysOn );
+    setHScrollBarMode (Q3ScrollView::AlwaysOn );
+    setVScrollBarMode( Q3ScrollView::AlwaysOn );
     myToolTip = new KDCanvasToolTip(viewport(),this);
     mySignalSender =  sender;
     currentItem = 0;
@@ -2980,14 +2993,14 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     fromItem = 0;
     fromArea = 0;
     linkItemsEnabled = false;
-    linkLine = new QCanvasLine(canvas);
+    linkLine = new Q3CanvasLine(canvas);
     linkLine->hide();
     linkLine->setZ(1000);
     //set_Mouse_Tracking(true);
     new KDCanvasWhatsThis(viewport(),this);
-    onItem = new QPopupMenu( this );
-    QPopupMenu * newMenu = new QPopupMenu( this );
-    QPopupMenu * onView = new QPopupMenu( this );
+    onItem = new Q3PopupMenu( this );
+    Q3PopupMenu * newMenu = new Q3PopupMenu( this );
+    Q3PopupMenu * onView = new Q3PopupMenu( this );
     onView->insertItem( i18n( "Summary" ), this,
                         SLOT ( newRootItem( int ) ), 0, 0 );
     onView->insertItem( i18n( "Event" ), this,
@@ -3004,7 +3017,7 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
                          this, SLOT ( newChildItem( int ) ), 0, 2 );
 
     onItem->insertItem( i18n( "New Child" ), newMenu );
-    QPopupMenu * afterMenu = new QPopupMenu( this );
+    Q3PopupMenu * afterMenu = new Q3PopupMenu( this );
     afterMenu->insertItem( i18n( "Summary" ),
                            this, SLOT ( newChildItem(  int) ), 0, 0+4 );
     afterMenu->insertItem( i18n( "Event" ),
@@ -3012,7 +3025,7 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     afterMenu->insertItem( i18n( "Task" ),
                            this, SLOT ( newChildItem( int ) ), 0, 2+4 );
     onItem->insertItem( i18n( "New After" ), afterMenu );
-    QPopupMenu *pasteMenu = new QPopupMenu( this );
+    Q3PopupMenu *pasteMenu = new Q3PopupMenu( this );
     pasteMenu->insertItem( i18n( "As Root" ),
                            this, SLOT ( pasteItem( int ) ), 0, 0 );
     pasteMenu->insertItem( i18n( "As Child" ),
@@ -3061,7 +3074,7 @@ void KDGanttCanvasView::resizeEvent ( QResizeEvent * e )
     //QScrollView::blockSignals( true );
 
     verticalScrollBar()->setUpdatesEnabled( false );
-    QScrollView::resizeEvent ( e ) ;
+    Q3ScrollView::resizeEvent ( e ) ;
     if ( ho != hi )
         emit heightResized( viewport()->height());
     if ( wo != wi )
@@ -3241,8 +3254,8 @@ void  KDGanttCanvasView::drawToPainter ( QPainter * p )
 }
 QString  KDGanttCanvasView::getToolTipText(QPoint p)
 {
-    QCanvasItemList il = canvas()->collisions ( viewportToContents( p ));
-    QCanvasItemList::Iterator it;
+    Q3CanvasItemList il = canvas()->collisions ( viewportToContents( p ));
+    Q3CanvasItemList::Iterator it;
     for ( it = il.begin(); it != il.end(); ++it ) {
         switch (getType(*it)) {
         case Type_is_KDGanttViewItem:
@@ -3260,8 +3273,8 @@ QString  KDGanttCanvasView::getToolTipText(QPoint p)
 
 QString  KDGanttCanvasView::getWhatsThisText(QPoint p)
 {
-    QCanvasItemList il = canvas() ->collisions (viewportToContents( p ));
-    QCanvasItemList::Iterator it;
+    Q3CanvasItemList il = canvas() ->collisions (viewportToContents( p ));
+    Q3CanvasItemList::Iterator it;
     for ( it = il.begin(); it != il.end(); ++it ) {
         switch (getType(*it)) {
         case Type_is_KDGanttViewItem:
@@ -3297,8 +3310,8 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
         if ( lastClickedItem ) {
             if ( lastClickedItem->displaySubitemsAsGroup() && ! lastClickedItem->isOpen() ) {
                 // findSub subitem
-                QCanvasItemList il = canvas() ->collisions ( e->pos() );
-                QCanvasItemList::Iterator it;
+                Q3CanvasItemList il = canvas() ->collisions ( e->pos() );
+                Q3CanvasItemList::Iterator it;
                 for ( it = il.begin(); it != il.end(); ++it ) {
                     if ( getType(*it) == Type_is_KDGanttViewItem ) {
                         lastClickedItem = getItem(*it);
@@ -3309,8 +3322,8 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
                 onItem->popup(e->globalPos());
         }
     }
-    QCanvasItemList il = canvas() ->collisions ( e->pos() );
-    QCanvasItemList::Iterator it;
+    Q3CanvasItemList il = canvas() ->collisions ( e->pos() );
+    Q3CanvasItemList::Iterator it;
     for ( it = il.begin(); it != il.end(); ++it ) {
         switch ( e->button() ) {
         case LeftButton:
@@ -3399,8 +3412,8 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
             if (linkItemsEnabled && fromItem) {
                 linkLine->hide();
                 canvas()->update();
-                QCanvasItemList il = canvas() ->collisions ( e->pos() );
-                QCanvasItemList::Iterator it;
+                Q3CanvasItemList il = canvas() ->collisions ( e->pos() );
+                Q3CanvasItemList::Iterator it;
                 for ( it = il.begin(); it != il.end(); ++it ) {
                     if (getType(*it) == Type_is_KDGanttViewItem) {
                         KDGanttViewItem *toItem = getItem(*it);
@@ -3452,8 +3465,8 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
 
 void KDGanttCanvasView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
 {
-    QCanvasItemList il = canvas() ->collisions ( e->pos() );
-    QCanvasItemList::Iterator it;
+    Q3CanvasItemList il = canvas() ->collisions ( e->pos() );
+    Q3CanvasItemList::Iterator it;
     for ( it = il.begin(); it != il.end(); ++it ) {
         switch ( e->button() ) {
         case LeftButton:
@@ -3548,42 +3561,42 @@ void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent *e )
 }
 void KDGanttCanvasView::viewportPaintEvent ( QPaintEvent * pe )
 {
-    QCanvasView::viewportPaintEvent ( pe );
+    Q3CanvasView::viewportPaintEvent ( pe );
 }
 void KDGanttCanvasView::set_Mouse_Tracking(bool on)
 {
     viewport()->setMouseTracking(on);
 }
-int  KDGanttCanvasView::getType(QCanvasItem* it)
+int  KDGanttCanvasView::getType(Q3CanvasItem* it)
 {
     switch (it->rtti()) {
-    case QCanvasItem::Rtti_Line: return ((KDCanvasLine*)it)->myParentType;
-    case QCanvasItem::Rtti_Ellipse: return ((KDCanvasEllipse *)it)->myParentType;
-    case QCanvasItem::Rtti_Text: return ((KDCanvasText *)it)->myParentType;
-    case QCanvasItem::Rtti_Polygon: return ((KDCanvasPolygon *)it)->myParentType;
-    case QCanvasItem::Rtti_Rectangle: return ((KDCanvasRectangle *)it)->myParentType;
+    case Q3CanvasItem::Rtti_Line: return ((KDCanvasLine*)it)->myParentType;
+    case Q3CanvasItem::Rtti_Ellipse: return ((KDCanvasEllipse *)it)->myParentType;
+    case Q3CanvasItem::Rtti_Text: return ((KDCanvasText *)it)->myParentType;
+    case Q3CanvasItem::Rtti_Polygon: return ((KDCanvasPolygon *)it)->myParentType;
+    case Q3CanvasItem::Rtti_Rectangle: return ((KDCanvasRectangle *)it)->myParentType;
     }
     return -1;
 }
-KDGanttViewItem*  KDGanttCanvasView::getItem(QCanvasItem* it)
+KDGanttViewItem*  KDGanttCanvasView::getItem(Q3CanvasItem* it)
 {
     switch (it->rtti()) {
-    case QCanvasItem::Rtti_Line: return (KDGanttViewItem*)  ((KDCanvasLine*)it)->myParentItem;
-    case QCanvasItem::Rtti_Ellipse: return (KDGanttViewItem*)  ((KDCanvasEllipse *)it)->myParentItem;
-    case QCanvasItem::Rtti_Text: return (KDGanttViewItem*) ((KDCanvasText *)it)->myParentItem;
-    case QCanvasItem::Rtti_Polygon: return (KDGanttViewItem*) ((KDCanvasPolygon *)it)->myParentItem;
-    case QCanvasItem::Rtti_Rectangle: return (KDGanttViewItem*) ((KDCanvasRectangle *)it)->myParentItem;
+    case Q3CanvasItem::Rtti_Line: return (KDGanttViewItem*)  ((KDCanvasLine*)it)->myParentItem;
+    case Q3CanvasItem::Rtti_Ellipse: return (KDGanttViewItem*)  ((KDCanvasEllipse *)it)->myParentItem;
+    case Q3CanvasItem::Rtti_Text: return (KDGanttViewItem*) ((KDCanvasText *)it)->myParentItem;
+    case Q3CanvasItem::Rtti_Polygon: return (KDGanttViewItem*) ((KDCanvasPolygon *)it)->myParentItem;
+    case Q3CanvasItem::Rtti_Rectangle: return (KDGanttViewItem*) ((KDCanvasRectangle *)it)->myParentItem;
 
     }
     return 0;
 }
-KDGanttViewTaskLink*  KDGanttCanvasView::getLink(QCanvasItem* it)
+KDGanttViewTaskLink*  KDGanttCanvasView::getLink(Q3CanvasItem* it)
 {
     switch (it->rtti()) {
-    case QCanvasItem::Rtti_Line: return (KDGanttViewTaskLink*)  ((KDCanvasLine*)it)->myParentItem;
-    case QCanvasItem::Rtti_Ellipse: return (KDGanttViewTaskLink*)  ((KDCanvasEllipse *)it)->myParentItem;
-    case QCanvasItem::Rtti_Text: return (KDGanttViewTaskLink*) ((KDCanvasText *)it)->myParentItem;
-    case QCanvasItem::Rtti_Polygon: return (KDGanttViewTaskLink*) ((KDCanvasPolygon *)it)->myParentItem;
+    case Q3CanvasItem::Rtti_Line: return (KDGanttViewTaskLink*)  ((KDCanvasLine*)it)->myParentItem;
+    case Q3CanvasItem::Rtti_Ellipse: return (KDGanttViewTaskLink*)  ((KDCanvasEllipse *)it)->myParentItem;
+    case Q3CanvasItem::Rtti_Text: return (KDGanttViewTaskLink*) ((KDCanvasText *)it)->myParentItem;
+    case Q3CanvasItem::Rtti_Polygon: return (KDGanttViewTaskLink*) ((KDCanvasPolygon *)it)->myParentItem;
     }
     return 0;
 }

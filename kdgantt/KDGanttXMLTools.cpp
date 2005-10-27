@@ -36,6 +36,9 @@
 #include <qbrush.h>
 #include <qbuffer.h>
 #include <qimage.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QImageIO>
 #include <zlib.h>
 
 namespace KDGanttXML {
@@ -140,7 +143,7 @@ void createPixmapNode( QDomDocument& doc, QDomNode& parent,
     // conforms to the file format Qt Designer uses.
     QByteArray ba;
     QBuffer buffer( ba );
-    buffer.open( IO_WriteOnly );
+    buffer.open( QIODevice::WriteOnly );
     QImageIO imgio( &buffer, "XPM" );
     QImage image = pixmap.convertToImage();
     imgio.setImage( image );

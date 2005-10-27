@@ -41,10 +41,10 @@
 #include <qcolor.h>
 #include <qpixmap.h>
 #include <qfont.h>
-#include <qlistview.h>
-#include <qcanvas.h>
+#include <q3listview.h>
+#include <q3canvas.h>
 #include <qdom.h>
-#include <qdict.h>
+#include <q3dict.h>
 
 class KDGanttView;
 class KDTimeTableWidget;
@@ -55,7 +55,7 @@ class KDCanvasText;
 class KDCanvasPolygonItem;
 class KDGanttViewTaskLinkGroup;
 
-class KDGanttViewItem : public QListViewItem
+class KDGanttViewItem : public Q3ListViewItem
 {
 public:
     enum Type { Event, Task, Summary };
@@ -233,12 +233,12 @@ private:
     QPoint middleRight();
     void moveTextCanvas();
     void setTextOffset(QPoint p);
-    bool isMyTextCanvas(QCanvasItem *tc);
+    bool isMyTextCanvas(Q3CanvasItem *tc);
     QPoint myTextOffset;
     QString _name;
     bool shapeDefined;
     int _priority;
-    static QDict<KDGanttViewItem> sItemDict;
+    static Q3Dict<KDGanttViewItem> sItemDict;
 };
 
 

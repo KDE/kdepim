@@ -37,8 +37,8 @@
 
 #include <qcolor.h>
 #include <qstring.h>
-#include <qptrlist.h>
-#include <qcanvas.h>
+#include <q3ptrlist.h>
+#include <q3canvas.h>
 
 #include "KDGanttViewItem.h"
 class KDGanttViewTaskLinkGroup;
@@ -50,12 +50,12 @@ class KDGanttViewTaskLink
 public:
     enum LinkType { None, FinishStart, StartStart, FinishFinish, StartFinish };
     
-    KDGanttViewTaskLink( QPtrList<KDGanttViewItem> from,
-                         QPtrList<KDGanttViewItem> to,
+    KDGanttViewTaskLink( Q3PtrList<KDGanttViewItem> from,
+                         Q3PtrList<KDGanttViewItem> to,
                          LinkType type=None );
     KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
-                         QPtrList<KDGanttViewItem> from,
-                         QPtrList<KDGanttViewItem> to,
+                         Q3PtrList<KDGanttViewItem> from,
+                         Q3PtrList<KDGanttViewItem> to,
                          LinkType type=None );
     KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
                          KDGanttViewItem*  from,
@@ -65,8 +65,8 @@ public:
                          KDGanttViewItem* to,
                          LinkType type=None );
     ~KDGanttViewTaskLink();
-    QPtrList<KDGanttViewItem> from() const;
-    QPtrList<KDGanttViewItem> to() const;
+    Q3PtrList<KDGanttViewItem> from() const;
+    Q3PtrList<KDGanttViewItem> to() const;
     void removeItemFromList( KDGanttViewItem* );
 
     void setVisible( bool );
@@ -98,17 +98,17 @@ public:
 private:
     friend class KDGanttViewTaskLinkGroup;
     friend class KDTimeTableWidget;
-    QPtrList<KDGanttViewItem> fromList,toList;
-    QPtrList<KDCanvasLine>* horLineList;
-    QPtrList<KDCanvasLine>* verLineList;
-    QPtrList<KDCanvasPolygon>* topList;
+    Q3PtrList<KDGanttViewItem> fromList,toList;
+    Q3PtrList<KDCanvasLine>* horLineList;
+    Q3PtrList<KDCanvasLine>* verLineList;
+    Q3PtrList<KDCanvasPolygon>* topList;
 
     // also used when linkType != None    
-    QPtrList<KDCanvasLine>* horLineList2;
-    QPtrList<KDCanvasLine>* verLineList2;
-    QPtrList<KDCanvasLine>* horLineList3;
-    QPtrList<KDCanvasPolygon>* topLeftList;
-    QPtrList<KDCanvasPolygon>* topRightList;
+    Q3PtrList<KDCanvasLine>* horLineList2;
+    Q3PtrList<KDCanvasLine>* verLineList2;
+    Q3PtrList<KDCanvasLine>* horLineList3;
+    Q3PtrList<KDCanvasPolygon>* topLeftList;
+    Q3PtrList<KDCanvasPolygon>* topRightList;
     
     KDGanttViewTaskLinkGroup* myGroup;
     bool isvisible,ishighlighted;

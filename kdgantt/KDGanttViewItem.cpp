@@ -40,6 +40,9 @@
 #include "itemAttributeDialog.h"
 
 #include "qpainter.h"
+//Added by qt3to4:
+#include <QPixmap>
+#include <Q3PointArray>
 
 #include "KDGanttXMLTools.h"
 
@@ -157,7 +160,7 @@
 */
 
 
-QDict<KDGanttViewItem> KDGanttViewItem::sItemDict;
+Q3Dict<KDGanttViewItem> KDGanttViewItem::sItemDict;
 
 /*!
   Constructs an empty Gantt item.
@@ -171,7 +174,7 @@ QDict<KDGanttViewItem> KDGanttViewItem::sItemDict;
 KDGanttViewItem::KDGanttViewItem( Type type, KDGanttView* view,
                                   const QString& lvtext,
                                   const QString& name ) :
-    QListViewItem(view->myListView,lvtext)
+    Q3ListViewItem(view->myListView,lvtext)
 {
     initColorAndShapes(type);
     generateAndInsertName( name );
@@ -191,7 +194,7 @@ KDGanttViewItem::KDGanttViewItem( Type type, KDGanttView* view,
 KDGanttViewItem::KDGanttViewItem( Type type, KDGanttViewItem* parentItem,
                                   const QString& lvtext,
                                   const QString& name ) :
-    QListViewItem(parentItem,lvtext)
+    Q3ListViewItem(parentItem,lvtext)
 {
     initColorAndShapes(type);
     generateAndInsertName( name );
@@ -213,7 +216,7 @@ KDGanttViewItem::KDGanttViewItem( Type type, KDGanttView* view,
                                   KDGanttViewItem* after,
                                   const QString& lvtext,
                                   const QString& name ) :
-    QListViewItem(view->myListView,after, lvtext)
+    Q3ListViewItem(view->myListView,after, lvtext)
 {
     initColorAndShapes(type);
     generateAndInsertName( name );
@@ -235,7 +238,7 @@ KDGanttViewItem::KDGanttViewItem( Type type, KDGanttViewItem* parentItem,
                                   KDGanttViewItem* after,
                                   const QString& lvtext,
                                   const QString& name ) :
-    QListViewItem( parentItem, after, lvtext )
+    Q3ListViewItem( parentItem, after, lvtext )
 {
     initColorAndShapes(type);
     generateAndInsertName( name );
@@ -369,7 +372,7 @@ void KDGanttViewItem::setEnabled( bool on )
       temp->setEnabled(  on );
       temp = temp->nextSibling();
     }
-    QListViewItem::setEnabled( on );
+    Q3ListViewItem::setEnabled( on );
     myGanttView->myTimeTable->dec_blockUpdating();
   }
   updateCanvasItems();
@@ -414,7 +417,7 @@ void KDGanttViewItem::setItemVisible( bool on )
 */
 bool KDGanttViewItem::itemVisible () const
 {
-  return QListViewItem::isVisible();
+  return Q3ListViewItem::isVisible();
 }
 
 
@@ -626,7 +629,7 @@ QString KDGanttViewItem::text() const
 */
 void KDGanttViewItem::setListViewText( const QString& text, int column )
 {
-    QListViewItem::setText( column, text );
+    Q3ListViewItem::setText( column, text );
 }
 
 
@@ -639,7 +642,7 @@ void KDGanttViewItem::setListViewText( const QString& text, int column )
 */
 void KDGanttViewItem::setListViewText( int column, const QString& text )
 {
-    QListViewItem::setText( column, text );
+    Q3ListViewItem::setText( column, text );
 }
 
 
@@ -653,7 +656,7 @@ void KDGanttViewItem::setListViewText( int column, const QString& text )
 */
 QString KDGanttViewItem::listViewText( int column ) const
 {
-    return QListViewItem::text( column );
+    return Q3ListViewItem::text( column );
 }
 
 
@@ -819,25 +822,25 @@ void KDGanttViewItem::createShape( KDCanvasPolygonItem* &itemShape,
     if (itemShape) delete itemShape;
     if (itemShapeBack) delete itemShapeBack;
 
-    QCanvasPolygonalItem * item;
-    QCanvasPolygonalItem * itemBack;
+    Q3CanvasPolygonalItem * item;
+    Q3CanvasPolygonalItem * itemBack;
     int size = myItemSize+2;
     int hei = (myItemSize/3)/2;
     switch (shape) {
     case TriangleDown:
         {
             item = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
-            QPointArray arr = QPointArray(3);
+            Q3PointArray arr = Q3PointArray(3);
             arr.setPoint(0,-size/2,-hei);
             arr.setPoint(1,size/2,-hei);
             arr.setPoint(2,0,((size/2)-hei));
-            ((QCanvasPolygon*)item)->setPoints(arr);
+            ((Q3CanvasPolygon*)item)->setPoints(arr);
             size += 4;hei +=1;
             itemBack = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
             arr.setPoint(0,-size/2,-hei);
             arr.setPoint(1,size/2,-hei);
             arr.setPoint(2,0,((size/2)-hei));
-            ((QCanvasPolygon*)itemBack)->setPoints(arr);
+            ((Q3CanvasPolygon*)itemBack)->setPoints(arr);
 
             break;
         }
@@ -847,17 +850,17 @@ void KDGanttViewItem::createShape( KDCanvasPolygonItem* &itemShape,
             // of the same size as a TriangleDown-icon, if we increment the size by 2
             size+=2;
             item = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
-            QPointArray arr = QPointArray(3);
+            Q3PointArray arr = Q3PointArray(3);
             arr.setPoint(0,-size/2,hei);
             arr.setPoint(1,size/2,hei);
             arr.setPoint(2,0,(-size/2)+hei);
-            ((QCanvasPolygon*)item)->setPoints(arr);
+            ((Q3CanvasPolygon*)item)->setPoints(arr);
             size += 4;hei +=1;
             itemBack = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
             arr.setPoint(0,-size/2,hei);
             arr.setPoint(1,size/2,hei);
             arr.setPoint(2,0,(-size/2)+hei);
-            ((QCanvasPolygon*)itemBack)->setPoints(arr);
+            ((Q3CanvasPolygon*)itemBack)->setPoints(arr);
 
             break;
         }
@@ -865,19 +868,19 @@ void KDGanttViewItem::createShape( KDCanvasPolygonItem* &itemShape,
     case Diamond:
         {
             item = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
-            QPointArray arr = QPointArray(4);
+            Q3PointArray arr = Q3PointArray(4);
             arr.setPoint(0,0,-size/2);
             arr.setPoint(1,size/2,0);
             arr.setPoint(2,0,size/2);
             arr.setPoint(3,-size/2,0);
-            ((QCanvasPolygon*)item)->setPoints(arr);
+            ((Q3CanvasPolygon*)item)->setPoints(arr);
             size += 2;hei +=1;
             itemBack = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
             arr.setPoint(0,0,-size/2);
             arr.setPoint(1,size/2,0);
             arr.setPoint(2,0,size/2);
             arr.setPoint(3,-size/2,0);
-            ((QCanvasPolygon*)itemBack)->setPoints(arr);
+            ((Q3CanvasPolygon*)itemBack)->setPoints(arr);
             break;
         }
 
@@ -885,19 +888,19 @@ void KDGanttViewItem::createShape( KDCanvasPolygonItem* &itemShape,
         {
             size -=2;
             item = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
-            QPointArray arr = QPointArray(4);
+            Q3PointArray arr = Q3PointArray(4);
             arr.setPoint(0,-size/2,-size/2);
             arr.setPoint(1,size/2,-size/2);
             arr.setPoint(2,size/2,size/2);
             arr.setPoint(3,-size/2,size/2);
-            ((QCanvasPolygon*)item)->setPoints(arr);
+            ((Q3CanvasPolygon*)item)->setPoints(arr);
             size += 2;hei +=1;
             itemBack = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
             arr.setPoint(0,-size/2,-size/2);
             arr.setPoint(1,size/2,-size/2);
             arr.setPoint(2,size/2,size/2);
             arr.setPoint(3,-size/2,size/2);
-            ((QCanvasPolygon*)itemBack)->setPoints(arr);
+            ((Q3CanvasPolygon*)itemBack)->setPoints(arr);
             break;
         }
 
@@ -1107,7 +1110,7 @@ QColor KDGanttViewItem::textColor() const
 */
 void KDGanttViewItem::setPixmap( int column, const QPixmap& pixmap )
 {
-    QListViewItem::setPixmap( column, pixmap );
+    Q3ListViewItem::setPixmap( column, pixmap );
 }
 
 /*!
@@ -1115,7 +1118,7 @@ void KDGanttViewItem::setPixmap( int column, const QPixmap& pixmap )
 */
 void KDGanttViewItem::setPixmap( const QPixmap& pixmap )
 {
-    QListViewItem::setPixmap( 0, pixmap );
+    Q3ListViewItem::setPixmap( 0, pixmap );
 }
 
 
@@ -1128,7 +1131,7 @@ void KDGanttViewItem::setPixmap( const QPixmap& pixmap )
 */
 const QPixmap* KDGanttViewItem::pixmap( int column ) const
 {
-    return QListViewItem::pixmap( column );
+    return Q3ListViewItem::pixmap( column );
 }
 
 
@@ -1231,7 +1234,7 @@ QColor KDGanttViewItem::defaultHighlightColor() const
 KDGanttViewItem* KDGanttViewItem::firstChild() const
 {
 
-    return (KDGanttViewItem* )QListViewItem::firstChild();
+    return (KDGanttViewItem* )Q3ListViewItem::firstChild();
 }
 
 
@@ -1243,7 +1246,7 @@ KDGanttViewItem* KDGanttViewItem::firstChild() const
 */
 KDGanttViewItem* KDGanttViewItem::nextSibling() const
 {
-    return (KDGanttViewItem* )QListViewItem::nextSibling();
+    return (KDGanttViewItem* )Q3ListViewItem::nextSibling();
 }
 
 
@@ -1255,7 +1258,7 @@ KDGanttViewItem* KDGanttViewItem::nextSibling() const
 */
 KDGanttViewItem* KDGanttViewItem::parent() const
 {
-    return (KDGanttViewItem*)QListViewItem::parent();
+    return (KDGanttViewItem*)Q3ListViewItem::parent();
 }
 
 
@@ -1266,7 +1269,7 @@ KDGanttViewItem* KDGanttViewItem::parent() const
 */
 KDGanttViewItem* KDGanttViewItem::itemAbove()
 {
-    return (KDGanttViewItem* )QListViewItem::itemAbove();
+    return (KDGanttViewItem* )Q3ListViewItem::itemAbove();
 }
 
 
@@ -1281,7 +1284,7 @@ KDGanttViewItem* KDGanttViewItem::itemAbove()
 KDGanttViewItem* KDGanttViewItem::itemBelow( bool includeDisabled )
 {
 
-  KDGanttViewItem*  retItem = (KDGanttViewItem* )QListViewItem::itemBelow();
+  KDGanttViewItem*  retItem = (KDGanttViewItem* )Q3ListViewItem::itemBelow();
   if ( !includeDisabled ) {
     return  retItem;
   }
@@ -1290,7 +1293,7 @@ KDGanttViewItem* KDGanttViewItem::itemBelow( bool includeDisabled )
       return retItem;
     }
   }
-  KDGanttViewItem*  Item2 = (KDGanttViewItem* )QListViewItem::listView()->itemAt(QPoint (2, QListViewItem::itemPos() + QListViewItem::height() +2) );
+  KDGanttViewItem*  Item2 = (KDGanttViewItem* )Q3ListViewItem::listView()->itemAt(QPoint (2, Q3ListViewItem::itemPos() + Q3ListViewItem::height() +2) );
   if ( Item2 != 0 )
     if (!Item2->enabled() )
       return Item2;
@@ -1380,7 +1383,7 @@ void KDGanttViewItem::setOpen( bool open )
 
   } else {
 
-    QListViewItem::setOpen( open );
+    Q3ListViewItem::setOpen( open );
   }
 }
 
@@ -1443,8 +1446,8 @@ void KDGanttViewItem::initColorAndShapes(Type t)
     myGanttView->myTimeHeader->saveCenterDateTime();
     myStartTime = myGanttView->myTimeHeader->myCenterDateTime;
     myEndTime = myStartTime;
-    myToolTipText =QListViewItem::text(0);
-    myWhatsThisText = QListViewItem::text(0);
+    myToolTipText =Q3ListViewItem::text(0);
+    myWhatsThisText = Q3ListViewItem::text(0);
     isHighlighted = false;
     isEditable = true;
     _displaySubitemsAsGroup = myGanttView->displaySubitemsAsGroup();
@@ -2210,7 +2213,7 @@ bool  KDGanttViewItem::showNoCross()
 void  KDGanttViewItem::paintBranches ( QPainter* p, const QColorGroup& cg,
                                        int w, int y, int h )
 {
-  QListViewItem::paintBranches (  p,  cg, w,  y,  h);
+  Q3ListViewItem::paintBranches (  p,  cg, w,  y,  h);
   if ( !myGanttView->calendarMode() )
     return;
   else {
@@ -2508,7 +2511,7 @@ void KDGanttViewItem::setTextOffset(QPoint p)
     myTextOffset.setY(p.y());
 }
 
-bool KDGanttViewItem::isMyTextCanvas(QCanvasItem *tc)
+bool KDGanttViewItem::isMyTextCanvas(Q3CanvasItem *tc)
 {
     return tc == textCanvas;
 }

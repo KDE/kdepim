@@ -54,7 +54,7 @@
   \param source the source widget
   \param name the internal object name
 */
-KDGanttViewItemDrag::KDGanttViewItemDrag( KDGanttViewItem* item , QWidget *source,  const char * name  ) : QStoredDrag("x-application/x-KDGanttViewItemDrag", source,  name )
+KDGanttViewItemDrag::KDGanttViewItemDrag( KDGanttViewItem* item , QWidget *source,  const char * name  ) : Q3StoredDrag("x-application/x-KDGanttViewItemDrag", source,  name )
 {
     myItem = item;
 
@@ -75,7 +75,7 @@ KDGanttViewItemDrag::KDGanttViewItemDrag( KDGanttViewItem* item , QWidget *sourc
     QDomElement itemsElement = doc.createElement( "Items" );
     doc.documentElement().appendChild( itemsElement );
     item->createNode( doc, itemsElement );
-    QDataStream s( array, IO_WriteOnly );
+    QDataStream s( &array, QIODevice::WriteOnly );
     s << doc.toString();
 }
 
@@ -133,7 +133,7 @@ bool KDGanttViewItemDrag::decode (  const QMimeSource * e , QString &  string)
 {
     QByteArray arr;
     arr = e->encodedData( "x-application/x-KDGanttViewItemDrag");
-    QDataStream s( arr, IO_ReadOnly );
+    QDataStream s( &arr, QIODevice::ReadOnly );
     s >> string;
     return true;
 }

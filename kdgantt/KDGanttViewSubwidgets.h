@@ -38,23 +38,32 @@
 
 
 #include <qwidget.h>
-#include <qlistview.h>
+#include <q3listview.h>
 #include <qsplitter.h>
 #include <qevent.h>
-#include <qvaluelist.h>
-#include <qcanvas.h>
-#include <qwhatsthis.h>
-#include <qpopupmenu.h>
+#include <q3valuelist.h>
+#include <q3canvas.h>
+#include <q3whatsthis.h>
+#include <q3popupmenu.h>
 #include <qtooltip.h>
 #include <qtimer.h>
-#include <qgroupbox.h>
-#include <qvgroupbox.h>
+#include <q3groupbox.h>
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qbrush.h>
-#include <qvbox.h>
-#include <qdockwindow.h>
+#include <q3vbox.h>
+#include <q3dockwindow.h>
 #include <qtimer.h>
+//Added by qt3to4:
+#include <QPaintEvent>
+#include <QResizeEvent>
+#include <QMouseEvent>
+#include <QDragMoveEvent>
+#include <QDragLeaveEvent>
+#include <QDropEvent>
+#include <QDragEnterEvent>
+#include <Q3PtrList>
+#include <QPixmap>
 
 #include "KDGanttView.h"
 #include "KDGanttViewTaskLink.h"
@@ -89,8 +98,8 @@ public:
      //KDCanvasLine* canvasLine;
      KDCanvasRectangle* canvasRect;
    };
-   typedef QValueList<DateTimeColor> ColumnColorList;
-  typedef QValueList<DateTimeColor> IntervalColorList;
+   typedef Q3ValueList<DateTimeColor> ColumnColorList;
+  typedef Q3ValueList<DateTimeColor> IntervalColorList;
    /*
      enum Scale { Minute, Hour, Day, Week, Month, Auto };
      enum YearFormat { FourDigit, TwoDigit, TwoDigitApostrophe };
@@ -197,9 +206,9 @@ private:
     void moveTimeLineTo(int x);
     //void  mousePressEvent ( QMouseEvent * ) ;
     void resizeEvent ( QResizeEvent * ) ;
-    QValueList<int> majorTicks;
-    QValueList<QString> minorText;
-    QValueList<QString> majorText;
+    Q3ValueList<int> majorTicks;
+    Q3ValueList<QString> minorText;
+    Q3ValueList<QString> majorText;
     QDateTime myHorizonStart, myHorizonEnd, myRealEnd,myRealStart;
     QDateTime myCenterDateTime;
     void saveCenterDateTime();
@@ -224,8 +233,8 @@ private:
     void computeRealScale(QDateTime start);
     int myGridMinorWidth;
     int myMajorGridHeight;
-    QPopupMenu * myPopupMenu, *scalePopupMenu, *timePopupMenu;
-    QPopupMenu * yearPopupMenu, *gridPopupMenu;
+    Q3PopupMenu * myPopupMenu, *scalePopupMenu, *timePopupMenu;
+    Q3PopupMenu * yearPopupMenu, *gridPopupMenu;
     KDGanttView* myGanttView;
     double myZoomFactor;
     int myAutoScaleMinorTickcount;
@@ -244,7 +253,7 @@ private:
 /* KDTimeTableWidget */
 class KDListView ;
 
-class KDTimeTableWidget : public QCanvas
+class KDTimeTableWidget : public Q3Canvas
 {
    Q_OBJECT
 
@@ -257,7 +266,7 @@ public:
     void dec_blockUpdating();
     void setShowTaskLinks( bool show );
     bool showTaskLinks();
-    QPtrList<KDGanttViewTaskLink>taskLinks();
+    Q3PtrList<KDGanttViewTaskLink>taskLinks();
     void clearTaskLinks();
     void updateMyContent();
     void removeItemFromTasklinks( KDGanttViewItem * );
@@ -273,9 +282,9 @@ signals:
    void   heightComputed( int );
 
 public slots:
-  void expandItem(QListViewItem * );
-  void collapseItem(QListViewItem * );
-  void highlightItem(QListViewItem * );
+  void expandItem(Q3ListViewItem * );
+  void collapseItem(Q3ListViewItem * );
+  void highlightItem(Q3ListViewItem * );
   void resetWidth( int );
   void checkHeight( int );
 private:
@@ -287,15 +296,15 @@ private:
 
    bool taskLinksVisible;
 
-   QPtrList<KDGanttViewTaskLink> myTaskLinkList;
+   Q3PtrList<KDGanttViewTaskLink> myTaskLinkList;
 
-   QPtrList<KDCanvasLine> verGridList;
-   QPtrList<KDCanvasLine> horGridList;
-   QPtrList<KDCanvasRectangle> horDenseList;
-   QPtrList<KDCanvasRectangle> showNoInfoList;
+   Q3PtrList<KDCanvasLine> verGridList;
+   Q3PtrList<KDCanvasLine> horGridList;
+   Q3PtrList<KDCanvasRectangle> horDenseList;
+   Q3PtrList<KDCanvasRectangle> showNoInfoList;
    int denseLineCount;
    QBrush denseLineBrush, noInfoLineBrush;
-   QPtrList<KDCanvasRectangle> columnColorList;
+   Q3PtrList<KDCanvasRectangle> columnColorList;
 
   int computeHeight();
   void computeVerticalGrid();
@@ -334,19 +343,19 @@ public:
   void drawToPainter( QPainter *p );
   void setAsDockwindow( bool dockwin );
   bool asDockwindow();
-  QDockWindow* dockwindow();
+  Q3DockWindow* dockwindow();
   QSize legendSize();
   QSize legendSizeHint();
  private:
-  QGroupBox * myLegend;
+  Q3GroupBox * myLegend;
   QLabel* myLabel;
-  QScrollView * scroll;
-  QDockWindow* dock;
+  Q3ScrollView * scroll;
+  Q3DockWindow* dock;
   KDGanttMinimizeSplitter* myLegendParent;
 };
 
 class KDGanttView;
-class KDListView : public QListView
+class KDListView : public Q3ListView
 {
    Q_OBJECT
 
@@ -357,16 +366,16 @@ public:
    void setCalendarMode( bool mode );
   bool calendarMode() { return _calendarMode; };
   QString getWhatsThisText(QPoint p);
-  void setOpen ( QListViewItem * item, bool open );
+  void setOpen ( Q3ListViewItem * item, bool open );
   void dragEnterEvent ( QDragEnterEvent * );
   void dragMoveEvent ( QDragMoveEvent * );
   void dragLeaveEvent ( QDragLeaveEvent * );
   void dropEvent ( QDropEvent * );
-  QDragObject * dragObject ();
+  Q3DragObject * dragObject ();
   void startDrag ();
-  void paintemptyarea ( QPainter * p, const QRect & rect ){ QListView::paintEmptyArea( p, rect );};
+  void paintemptyarea ( QPainter * p, const QRect & rect ){ Q3ListView::paintEmptyArea( p, rect );};
 private slots:
-  void dragItem( QListViewItem * );
+  void dragItem( Q3ListViewItem * );
  private:
    void resizeEvent ( QResizeEvent * ) ;
   void contentsMouseDoubleClickEvent ( QMouseEvent * e );
@@ -377,7 +386,7 @@ private slots:
 };
 
 
-class KDCanvasText : public QCanvasText
+class KDCanvasText : public Q3CanvasText
 {
 public:
     KDCanvasText( KDTimeTableWidget* canvas, void* parentItem, int type );
@@ -386,7 +395,7 @@ public:
 };
 
 
-class KDCanvasLine : public QCanvasLine
+class KDCanvasLine : public Q3CanvasLine
 {
 public:
     KDCanvasLine( KDTimeTableWidget* canvas, void* parentItem, int type );
@@ -395,7 +404,7 @@ public:
 };
 
 
-class KDCanvasPolygonItem: public QCanvasPolygonalItem
+class KDCanvasPolygonItem: public Q3CanvasPolygonalItem
 {
 public:
     KDCanvasPolygonItem( KDTimeTableWidget* canvas, void* parentItem,
@@ -405,7 +414,7 @@ public:
 };
 
 
-class KDCanvasPolygon: public QCanvasPolygon
+class KDCanvasPolygon: public Q3CanvasPolygon
 {
 public:
     KDCanvasPolygon( KDTimeTableWidget* canvas, void* parentItem, int type );
@@ -414,7 +423,7 @@ public:
 };
 
 
-class KDCanvasEllipse: public QCanvasEllipse
+class KDCanvasEllipse: public Q3CanvasEllipse
 {
 public:
     KDCanvasEllipse( KDTimeTableWidget* canvas, void* parentItem, int type );
@@ -423,7 +432,7 @@ public:
 };
 
 
-class KDCanvasRectangle: public QCanvasRectangle
+class KDCanvasRectangle: public Q3CanvasRectangle
 {
 public:
     KDCanvasRectangle( KDTimeTableWidget* canvas, void* parentItem, int type );
@@ -434,12 +443,12 @@ public:
 
 class KDCanvasToolTip;
 
-class KDGanttCanvasView : public QCanvasView
+class KDGanttCanvasView : public Q3CanvasView
 {
     Q_OBJECT
 
 public:
-    KDGanttCanvasView(KDGanttView* sender, QCanvas* canvas = 0, QWidget* parent = 0, const char* name = 0 );
+    KDGanttCanvasView(KDGanttView* sender, Q3Canvas* canvas = 0, QWidget* parent = 0, const char* name = 0 );
     ~KDGanttCanvasView();
     QString getToolTipText(QPoint p);
     QString getWhatsThisText(QPoint p);
@@ -464,16 +473,16 @@ protected:
     KDGanttView* mySignalSender;
     KDGanttViewItem* currentItem, *lastClickedItem, *cuttedItem;
     KDGanttViewTaskLink* currentLink;
-    int getType(QCanvasItem*);
-    KDGanttViewItem* getItem(QCanvasItem*);
-    KDGanttViewTaskLink* getLink(QCanvasItem*);
+    int getType(Q3CanvasItem*);
+    KDGanttViewItem* getItem(Q3CanvasItem*);
+    KDGanttViewTaskLink* getLink(Q3CanvasItem*);
     KDCanvasWhatsThis* myWhatsThis;
-    QPopupMenu* onItem;
+    Q3PopupMenu* onItem;
     bool _showItemAddPopupMenu;
     int myMyContentsHeight;
     KDGanttViewItem *fromItem;
     bool linkItemsEnabled;
-    QCanvasLine *linkLine;
+    Q3CanvasLine *linkLine;
     int fromArea;
     bool autoScrollEnabled;
     int getItemArea(KDGanttViewItem *item, int x);
@@ -503,9 +512,7 @@ class KDTimeHeaderToolTip :public QToolTip
 {
 
 public:
-  KDTimeHeaderToolTip( QWidget *wid, KDTimeHeaderWidget* header ) : QToolTip( wid ), _wid(wid),_header (header) {
-
-};
+  KDTimeHeaderToolTip( QWidget *wid, KDTimeHeaderWidget* header ) : QToolTip( wid ), _wid(wid),_header (header) { }
 
 protected:
   virtual void maybeTip( const QPoint& p)
@@ -551,10 +558,10 @@ private:
   KDGanttCanvasView * _canview;
 };
 
-class KDCanvasWhatsThis :public QWhatsThis
+class KDCanvasWhatsThis :public Q3WhatsThis
 {
 public:
-  KDCanvasWhatsThis( QWidget *wid, KDGanttCanvasView* canview ) : QWhatsThis( wid ), _wid(wid),_canview (canview) { };
+  KDCanvasWhatsThis( QWidget *wid, KDGanttCanvasView* canview ) : Q3WhatsThis( wid ), _wid(wid),_canview (canview) { };
 
 protected:
   virtual QString text( const QPoint& p)
@@ -566,10 +573,10 @@ private:
   KDGanttCanvasView * _canview;
 };
 
-class KDListViewWhatsThis :public QWhatsThis
+class KDListViewWhatsThis :public Q3WhatsThis
 {
 public:
-  KDListViewWhatsThis( QWidget *wid, KDListView* view ) : QWhatsThis( wid ), _wid(wid),_view (view) { };
+  KDListViewWhatsThis( QWidget *wid, KDListView* view ) : Q3WhatsThis( wid ), _wid(wid),_view (view) { };
 
 protected:
   virtual QString text( const QPoint& p)

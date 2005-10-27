@@ -37,6 +37,8 @@
 *****************************************************************************/
 
 #include <qcolordialog.h>
+//Added by qt3to4:
+#include <QPixmap>
 void itemAttributeDialog::init( )
 {
 
@@ -237,8 +239,8 @@ void itemAttributeDialog::reset( KDGanttViewItem * item )
     TimeEdit1->setTime( item->startTime().time() );
     if ( item->pixmap() != 0 )	
 	setIcon( *(item->pixmap()) );
-    setCaption( "Properties of " + ((QListViewItem*)item)->text(0) );
-    itemName->setText(((QListViewItem*)item)->text(0) );
+    setCaption( "Properties of " + ((Q3ListViewItem*)item)->text(0) );
+    itemName->setText(((Q3ListViewItem*)item)->text(0) );
 
 //    DateEdit1->setRange(item->startTime().date().addYears(-10), item->endTime().date() );
   //  DateEdit3->setRange(item->startTime().date(), item->endTime().date().addYears(10));
@@ -494,7 +496,7 @@ void itemAttributeDialog::TimeEdit5_valueChanged( const QTime & )
 void itemAttributeDialog::itemName_textChanged( const QString & )
 {
     if ( !myItem) return;
-    ((QListViewItem*)myItem)->setText( 0, itemName->text() );
+    ((Q3ListViewItem*)myItem)->setText( 0, itemName->text() );
     setCaption( "Properties of " + itemName->text() );
 }
 

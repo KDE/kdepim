@@ -1,3 +1,10 @@
+//Added by qt3to4:
+#include <QPaintEvent>
+#include <Q3PointArray>
+#include <QChildEvent>
+#include <QEvent>
+#include <QResizeEvent>
+#include <QMouseEvent>
 /* -*- Mode: C++ -*-
    $Id$
 */
@@ -35,8 +42,8 @@
 #define KDGANTTMINIMIZESPLITTER_H
 
 #ifndef QT_H
-#include "qframe.h"
-#include "qvaluelist.h"
+#include "q3frame.h"
+#include "q3valuelist.h"
 #endif // QT_H
 
 #ifndef QT_NO_SPLITTER
@@ -44,25 +51,25 @@
 class QSplitterData;
 class QSplitterLayoutStruct;
 
-class KDGanttMinimizeSplitter : public QFrame
+class KDGanttMinimizeSplitter : public Q3Frame
 {
     Q_OBJECT
-    Q_ENUMS( Direction )
-    Q_PROPERTY( Orientation orientation READ orientation WRITE setOrientation )
-    Q_PROPERTY( Direction minimizeDirection READ minimizeDirection WRITE setMinimizeDirection )
+    Q_ENUMS( Qt::Orientation )
+    Q_PROPERTY( Qt::Orientation orientation READ orientation WRITE setOrientation )
+    Q_PROPERTY( Qt::Orientation minimizeDirection READ minimizeDirection WRITE setMinimizeDirection )
 
 public:
     enum ResizeMode { Stretch, KeepSize, FollowSizeHint };
     enum Direction { Left, Right, Up, Down };
 
     KDGanttMinimizeSplitter( QWidget* parent=0, const char* name=0 );
-    KDGanttMinimizeSplitter( Orientation, QWidget* parent=0, const char* name=0 );
+    KDGanttMinimizeSplitter( Qt::Orientation, QWidget* parent=0, const char* name=0 );
     ~KDGanttMinimizeSplitter();
 
-    virtual void setOrientation( Orientation );
-    Orientation orientation() const { return orient; }
+    virtual void setOrientation( Qt::Orientation );
+    Qt::Orientation orientation() const { return orient; }
 
-    void setMinimizeDirection( Direction );
+    void setMinimizeDirection( Qt::Orientation );
     Direction minimizeDirection() const;
 
 #if QT_VERSION >= 300
@@ -77,8 +84,8 @@ public:
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
 
-    QValueList<int> sizes() const;
-    void setSizes( QValueList<int> );
+    Q3ValueList<int> sizes() const;
+    void setSizes( Q3ValueList<int> );
 
     void expandPos( int id, int* min, int* max );
 protected:
@@ -110,20 +117,20 @@ private:
     void setG( QWidget *w, int p, int s, bool isSplitter = FALSE );
 
     QCOORD pick( const QPoint &p ) const
-    { return orient == Horizontal ? p.x() : p.y(); }
+    { return orient == Qt::Horizontal ? p.x() : p.y(); }
     QCOORD pick( const QSize &s ) const
-    { return orient == Horizontal ? s.width() : s.height(); }
+    { return orient == Qt::Horizontal ? s.width() : s.height(); }
 
     QCOORD trans( const QPoint &p ) const
-    { return orient == Vertical ? p.x() : p.y(); }
+    { return orient == Qt::Vertical ? p.x() : p.y(); }
     QCOORD trans( const QSize &s ) const
-    { return orient == Vertical ? s.width() : s.height(); }
+    { return orient == Qt::Vertical ? s.width() : s.height(); }
 
     QSplitterData *data;
 #endif
 
 private:
-    Orientation orient;
+    Qt::Orientation orient;
     Direction _direction;
 #ifndef DOXYGEN_SKIP_INTERNAL
     friend class KDGanttSplitterHandle;
@@ -158,7 +165,7 @@ public:
     void setId( int i ) { myId = i; }
 
 protected:
-    QValueList<QPointArray> buttonRegions();
+    Q3ValueList<Q3PointArray> buttonRegions();
     void paintEvent( QPaintEvent * );
     void mouseMoveEvent( QMouseEvent * );
     void mousePressEvent( QMouseEvent * );

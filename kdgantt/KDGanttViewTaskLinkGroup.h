@@ -36,8 +36,8 @@
 #define KDGANTTVIEWTASKLINKGROUP_H
 
 #include "KDGanttViewTaskLink.h"
-#include <qptrlist.h>
-#include <qdict.h>
+#include <q3ptrlist.h>
+#include <q3dict.h>
 
 class KDTimeTableWidget;
 class KDGanttView;
@@ -76,13 +76,13 @@ private:
 
     bool isvisible,ishighlighted;
     QColor myColor, myColorHL;
-    QPtrList<KDGanttViewTaskLink> myTaskLinkList;
+    Q3PtrList<KDGanttViewTaskLink> myTaskLinkList;
     QString _name;
 
     void insertItem(KDGanttViewTaskLink*);
     void removeItem (KDGanttViewTaskLink*);
 
-    static QDict<KDGanttViewTaskLinkGroup> sGroupDict;
+    static Q3Dict<KDGanttViewTaskLinkGroup> sGroupDict;
 };
 
 #endif

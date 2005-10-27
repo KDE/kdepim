@@ -296,7 +296,7 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
     KDCanvasRectangle* floatStartTemp = (KDCanvasRectangle*) floatStartShape;
     int floatStartX = myGanttView->myTimeHeader->getCoordX(myFloatStartTime);
     // FIXME: Configurable colors
-    QBrush b(temp->brush().color(), Dense4Pattern);
+    QBrush b(temp->brush().color(), Qt::Dense4Pattern);
     floatStartTemp->setBrush(b);
     floatStartTemp->setPen(QPen(gray));
     if (floatStartX < startX) {
@@ -312,7 +312,7 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
     KDCanvasRectangle* floatEndTemp = (KDCanvasRectangle*) floatEndShape;
     int floatEndX = myGanttView->myTimeHeader->getCoordX(myFloatEndTime);
     // FIXME: Configurable colors
-    QBrush b(temp->brush().color(), Dense4Pattern);
+    QBrush b(temp->brush().color(), Qt::Dense4Pattern);
     floatEndTemp->setBrush(b);
     floatEndTemp->setPen(QPen(gray));
     int ex = startX + temp->size().width();

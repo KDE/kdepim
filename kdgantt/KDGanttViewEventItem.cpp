@@ -255,7 +255,7 @@ void KDGanttViewEventItem::showItem(bool show, int coordY)
     int floatStartX = myGanttView->myTimeHeader->getCoordX(myFloatStartTime);
     int hei = startShape->boundingRect().height();
     // FIXME: Configurable colors
-    QBrush b(startShape->brush().color(), Dense4Pattern);
+    QBrush b(startShape->brush().color(), Qt::Dense4Pattern);
     floatStartTemp->setBrush(b);
     floatStartTemp->setPen(QPen(gray));
     if (floatStartX < startX) {
@@ -272,7 +272,7 @@ void KDGanttViewEventItem::showItem(bool show, int coordY)
     int floatEndX = myGanttView->myTimeHeader->getCoordX(myFloatEndTime);
     int hei = startShape->boundingRect().height();
     // FIXME: Configurable colors
-    QBrush b(startShape->brush().color(), Dense4Pattern);
+    QBrush b(startShape->brush().color(), Qt::Dense4Pattern);
     floatEndTemp->setBrush(b);
     floatEndTemp->setPen(QPen(gray));
     if (floatEndX > startX) {
