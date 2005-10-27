@@ -15,7 +15,7 @@
 
 #include <qobject.h>
 #include <qstring.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 #include <qdatetime.h>
 
 /**
@@ -120,7 +120,7 @@ class APIBlog : public QObject
     };
 
     virtual QString getFunctionName( blogFunctions type ) = 0;
-    virtual QValueList<QVariant> defaultArgs( const QString &id = QString::null );
+    virtual Q3ValueList<QVariant> defaultArgs( const QString &id = QString::null );
 
     virtual KIO::Job *createUserInfoJob() = 0;
     virtual KIO::Job *createListFoldersJob() = 0;

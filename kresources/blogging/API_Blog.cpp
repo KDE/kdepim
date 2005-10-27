@@ -9,6 +9,8 @@
 #include "API_Blog.h"
 #include <kdebug.h>
 #include <qvariant.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 using namespace KBlog;
 
@@ -50,9 +52,9 @@ BlogTemplate APIBlog::templateTags() const
   delete post;
 }*/
 
-QValueList<QVariant> APIBlog::defaultArgs( const QString &id )
+Q3ValueList<QVariant> APIBlog::defaultArgs( const QString &id )
 {
-  QValueList<QVariant> args;
+  Q3ValueList<QVariant> args;
   args << QVariant( mAppID );
   if ( !id.isNull() ) {
     args << QVariant( id );

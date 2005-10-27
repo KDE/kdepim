@@ -25,7 +25,7 @@
 
 #include <qstring.h>
 #include <qvariant.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 namespace KBlog {
 

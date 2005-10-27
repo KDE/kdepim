@@ -25,6 +25,9 @@
 #include "groupwareuploadjob.h"
 #include "API_Blog.h"
 #include <kurl.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 
 namespace KIO {
 class Job;
@@ -53,14 +56,14 @@ class BloggingCalendarAdaptor : public CalendarAdaptor
 Q_OBJECT
   public:
     BloggingCalendarAdaptor();
-    QValueList<KPIM::FolderLister::ContentType> supportedTypes()
+    Q3ValueList<KPIM::FolderLister::ContentType> supportedTypes()
     {
-      QValueList<KPIM::FolderLister::ContentType> types;
+      Q3ValueList<KPIM::FolderLister::ContentType> types;
       types << KPIM::FolderLister::Journal;
       return types;
     }
 
-    QCString identifier() const { return "KCalResourceBlogging"; }
+    Q3CString identifier() const { return "KCalResourceBlogging"; }
     long flags() const { return GWResNeedsLogon; }
 
     void setBaseURL( const KURL &url );

@@ -22,6 +22,8 @@
 #include "API_Blogger.h"
 #include "xmlrpcjob.h"
 #include <kdebug.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 using namespace KBlog;
 
@@ -47,7 +49,7 @@ QString APIBlogger::getFunctionName( blogFunctions type )
 KIO::Job *APIBlogger::createUserInfoJob()
 {
   kdDebug() << "read user info..." << endl;
-  QValueList<QVariant> args( defaultArgs() );
+  Q3ValueList<QVariant> args( defaultArgs() );
   return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerGetUserInfo ), args, false );
 }
 
@@ -56,7 +58,7 @@ KIO::Job *APIBlogger::createListFoldersJob()
   // TODO: Check if we're already authenticated. If not, do it!
 //   if ( isValid() ) {
     kdDebug() << "Fetch List of Blogs..." << endl;
-    QValueList<QVariant> args( defaultArgs() );
+    Q3ValueList<QVariant> args( defaultArgs() );
     return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerGetUsersBlogs ), args, false );
 //   } else {
 //     warningNotInitialized();
@@ -69,7 +71,7 @@ KIO::TransferJob *APIBlogger::createListItemsJob( const KURL &url )
   // TODO: Check if we're already authenticated. If not, do it!
 //   if ( isValid() ) {
     kdDebug() << "Fetch List of Posts..." << endl;
-    QValueList<QVariant> args( defaultArgs( url.url() ) );
+    Q3ValueList<QVariant> args( defaultArgs( url.url() ) );
     args << QVariant( mDownloadCount );
     return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerGetRecentPosts ), args, false );
 //   } else {
@@ -82,7 +84,7 @@ KIO::TransferJob *APIBlogger::createDownloadJob( const KURL &url )
 {
 //   if ( isValid() ){
     kdDebug() << "Fetch Posting with url " << url.url() << endl;
-    QValueList<QVariant> args( defaultArgs( url.url() ) );
+    Q3ValueList<QVariant> args( defaultArgs( url.url() ) );
     return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerGetPost ), args, false );
 //   } else {
 //     warningNotInitialized();
@@ -98,7 +100,7 @@ KIO::TransferJob *APIBlogger::createUploadJob( const KURL &url, KBlog::BlogPosti
   }
 //   if ( isValid() ){
     kdDebug() << "Uploading Posting with url " << url.url() << endl;
-    QValueList<QVariant> args( defaultArgs( posting->postID() ) );
+    Q3ValueList<QVariant> args( defaultArgs( posting->postID() ) );
     args << QVariant( posting->content() );
     args << QVariant( /*publish=*/true, 0 );
     return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerEditPost ), args, false );
@@ -116,7 +118,7 @@ KIO::TransferJob *APIBlogger::createUploadNewJob( KBlog::BlogPosting *posting )
   }
 //   if ( isValid() ){
     kdDebug() << "Creating new Posting with blogid " << posting->blogID() << " at url " << mServerURL << endl;
-    QValueList<QVariant> args( defaultArgs( posting->blogID() ) );
+    Q3ValueList<QVariant> args( defaultArgs( posting->blogID() ) );
     args << QVariant( posting->content() );
     args << QVariant( /*publish=*/true, 0 );
     return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerNewPost ), args, false );
@@ -130,7 +132,7 @@ KIO::Job *APIBlogger::createRemoveJob( const KURL &/*url*/, const QString &posti
 {
 kdDebug() << "APIBlogger::createRemoveJob: postid=" << postid << endl;
 //   if ( isValid() ){
-    QValueList<QVariant> args( defaultArgs( postid ) );
+    Q3ValueList<QVariant> args( defaultArgs( postid ) );
     args << QVariant( /*publish=*/true, 0 );
     return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerDeletePost ), args, false );
 //   } else {
@@ -151,12 +153,12 @@ bool APIBlogger::interpretUserInfoJob( KIO::Job *job )
     // TODO: Error handling
     return false;
   } else if ( trfjob ) {
-    QValueList<QVariant> message( trfjob->response() );
+    Q3ValueList<QVariant> message( trfjob->response() );
 
     kdDebug () << "TOP: " << message[ 0 ].typeName() << endl;
-    const QValueList<QVariant> posts = message;
-    QValueList<QVariant>::ConstIterator it = posts.begin();
-    QValueList<QVariant>::ConstIterator end = posts.end();
+    const Q3ValueList<QVariant> posts = message;
+    Q3ValueList<QVariant>::ConstIterator it = posts.begin();
+    Q3ValueList<QVariant>::ConstIterator end = posts.end();
     for ( ; it != end; ++it ) {
       kdDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
@@ -180,12 +182,12 @@ kdDebug() << "APIBlogger::interpretListFoldersJob" << endl;
     // TODO: Error handling
   } else {
 kdDebug() << "APIBlogger::interpretListFoldersJob, no error!" << endl;
-    QValueList<QVariant> message( trfjob->response() );
+    Q3ValueList<QVariant> message( trfjob->response() );
     kdDebug () << "TOP: " << message[ 0 ].typeName() << endl;
 
-    const QValueList<QVariant> posts = message[ 0 ].toList();
-    QValueList<QVariant>::ConstIterator it = posts.begin();
-    QValueList<QVariant>::ConstIterator end = posts.end();
+    const Q3ValueList<QVariant> posts = message[ 0 ].toList();
+    Q3ValueList<QVariant>::ConstIterator it = posts.begin();
+    Q3ValueList<QVariant>::ConstIterator end = posts.end();
     for ( ; it != end; ++it ) {
       kdDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
@@ -220,12 +222,12 @@ bool APIBlogger::interpretDownloadItemsJob( KIO::Job *job )
   } else {
     //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
     // TODO: Time zone for the dateCreated!
-    QValueList<QVariant> message( trfjob->response() );
+    Q3ValueList<QVariant> message( trfjob->response() );
     kdDebug () << "TOP: " << message[ 0 ].typeName() << endl;
 
-    const QValueList<QVariant> postReceived = message[ 0 ].toList();
-    QValueList<QVariant>::ConstIterator it = postReceived.begin();
-    QValueList<QVariant>::ConstIterator end = postReceived.end();
+    const Q3ValueList<QVariant> postReceived = message[ 0 ].toList();
+    Q3ValueList<QVariant>::ConstIterator it = postReceived.begin();
+    Q3ValueList<QVariant>::ConstIterator end = postReceived.end();
     success = true;
     for ( ; it != end; ++it ) {
       BlogPosting posting;

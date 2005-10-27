@@ -23,7 +23,7 @@
 
 #include <qstring.h>
 #include <qvariant.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 class BloggingGlobals
 {
@@ -43,7 +43,7 @@ class BloggingGlobals
     };
     
     static QString getFunctionName( blogFunctions type );
-    static QValueList<QVariant> defaultArgs( const QString &user, const QString &pw, const QString &id = QString::null );
+    static Q3ValueList<QVariant> defaultArgs( const QString &user, const QString &pw, const QString &id = QString::null );
     static QString mAppID;
 };
 
