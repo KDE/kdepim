@@ -171,8 +171,8 @@ bool ResourceKABC::doLoad()
       Event *ev = new Event();
       ev->setUid( uid_1+"_KABC_Birthday");
 
-      ev->setDtStart(birthdate);
-      ev->setDtEnd(birthdate);
+      ev->setDtStart(QDateTime(birthdate));
+      ev->setDtEnd(QDateTime(birthdate));
       ev->setHasEndDate(true);
       ev->setFloats(true);
       ev->setTransparency( Event::Transparent );
@@ -199,7 +199,7 @@ bool ResourceKABC::doLoad()
         // Set the alarm
         Alarm* vAlarm = ev->newAlarm();
         vAlarm->setText(summary);
-        vAlarm->setTime(birthdate);
+        vAlarm->setTime(QDateTime(birthdate));
         // 24 hours before
         vAlarm->setStartOffset( -1440 * mAlarmDays );
         vAlarm->setEnabled(true);
@@ -216,7 +216,7 @@ bool ResourceKABC::doLoad()
     QString anniversary_string = (*it).custom( "KADDRESSBOOK", "X-Anniversary" );
     if (anniversary_string.isEmpty() )
       continue;
-    QDateTime anniversary = QDate::fromString( anniversary_string, Qt::ISODate );
+    QDate anniversary = QDate::fromString( anniversary_string, Qt::ISODate );
     if ( !anniversary.isValid() )
       continue;
 
@@ -227,7 +227,7 @@ bool ResourceKABC::doLoad()
       bool found = false;
       for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
         if ( name == (*addrIt).realName() ) {
-          QDateTime spouseAnniversary = QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
+          QDate spouseAnniversary = QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
           if ( anniversary == spouseAnniversary ) {
             found = true;
             break;
@@ -242,7 +242,7 @@ bool ResourceKABC::doLoad()
   }
 
   for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
-    QDate anniversary = QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
+    QDateTime anniversary = QDateTime( QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate ) );
     kdDebug(5800) << "found a anniversary " << anniversary.toString() << endl;
     QString name;
     QString name_1 = (*addrIt).nickName();
@@ -292,9 +292,9 @@ bool ResourceKABC::doLoad()
     }
     // Set the recurrence
     Recurrence *vRecurrence = ev->recurrence();
-    vRecurrence->setStartDate( anniversary );
+    vRecurrence->setStartDate( anniversary.date() );
     vRecurrence->setYearly( 1 );
-    if ( anniversary.month()==2 && anniversary.day()==29 ) {
+    if ( anniversary.date().month()==2 && anniversary.date().day()==29 ) {
       vRecurrence->addYearlyDay( 60 );
     }
 

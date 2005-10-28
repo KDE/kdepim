@@ -39,8 +39,8 @@
 
 using namespace KCal;
 
-ResourceKABCConfig::ResourceKABCConfig( QWidget* parent,  const char* name )
-    : KRES::ConfigWidget( parent, name )
+ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
+    : KRES::ConfigWidget( parent )
 {
   QGridLayout *topLayout = new QGridLayout( this, 5, 1, 11, 6 );
 
@@ -51,7 +51,9 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent,  const char* name )
 
   mALabel = new QLabel(i18n("Reminder before (in days):"), this);
   alarmLayout->addWidget(mALabel);
-  mAlarmTimeEdit = new KRestrictedLine(this, "alarmTimeEdit", "1234567890");
+  mAlarmTimeEdit = new KRestrictedLine(this);
+  mAlarmTimeEdit->setValidChars("1234567890");
+  mAlarmTimeEdit->setObjectName("alarmTimeEdit");
   mAlarmTimeEdit->setText("0");
   alarmLayout->addWidget(mAlarmTimeEdit);
 

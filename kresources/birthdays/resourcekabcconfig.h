@@ -42,7 +42,7 @@ class ResourceKABCConfig : public KRES::ConfigWidget
 {
     Q_OBJECT
   public:
-    ResourceKABCConfig( QWidget* parent = 0, const char* name = 0 );
+    ResourceKABCConfig( QWidget* parent );
 
   public slots:
     virtual void loadSettings( KRES::Resource *resource);

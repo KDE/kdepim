@@ -16,7 +16,7 @@ KDE_CHECK_HEADER(boost/format.hpp, have_boost=yes,have_boost=no)
 AC_LANG_POP
 
 if test "x$have_boost" = "xyes"; then
-	CXXFLAGS="-DHAVE_BOOST $CXXFLAGS"
+	AC_DEFINE(HAVE_BOOST, 1, [have boost])
 fi
+AC_DEFINE(HAVE_STLNAMESPACE, 1, [old STL])
 
-								
