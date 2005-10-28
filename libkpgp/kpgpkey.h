@@ -76,7 +76,14 @@ class KeyIDList : public Q3ValueList<KeyID>
 class UserID
 {
  public:
-  /** Constructs a new user id with the given values. */
+  /** Constructs a new user id with the given values. 
+   *  @param str User Id (descriptive text)
+   *  @param validity Validity of key, relevant mostly if @p invalid is @c false
+   *  @param revoked Is the key revoked?
+   *  @param invalid Is the key invalid?
+   *
+   *  @todo How exactly do invalid and validity affect each other?
+   */
   UserID(const QString& str,
              const Validity validity = KPGP_VALIDITY_UNKNOWN,
              const bool revoked = false,
@@ -95,23 +102,40 @@ class UserID
   /** Returns the validity of resp. the trust in the user id. */
   Validity validity() const;
 
-  /** Sets the text of the user id to <em>str</em>. */
+  /** Sets the text of the user id to @p str. 
+   *  @param str The new user id text.
+   */
   void setText(const QString& str);
 
-  /** Sets the flag if the user id has been revoked to <em>revoked</em>. */
+  /** Sets the flag if the user id has been revoked to @p revoked. 
+   *  @param revoked Whether the user id has been revoked or not.
+   *  @todo Does one revoke a user id or a key? See also comments
+   *        for setInvalid() and setText().
+   */
   void setRevoked(const bool revoked);
 
-  /** Sets the flag if the user id is invalid to <em>invalid</em>. */
+  /** Sets the flag if the user id is invalid to @p invalid. 
+   *  @param invalid Whether the user id is invalid or not.
+   *  @todo Is it the <em>user id</em> that is invalid or the
+   *        key itself? This should then also be documented in
+   *        setText().
+   */
   void setInvalid(const bool invalid);
 
-  /** Sets the validity of resp. the trust in the user id to 
-      <em>validity</em>. */
+  /** Sets the validity of resp. the trust in the user id to @p validity . 
+   *  @param validity New validity value.
+   *  @todo Are there any restrictions on how you can change validities?
+   */
   void setValidity(const Validity validity);
 
  protected:
+  /** Revoked flag. @see setRevoked() @see revoked() */
   bool mRevoked : 1;
+  /** Invalid flag. @see setInvalid() @see invalid() */
   bool mInvalid : 1;
+  /** Validity (assuming invalid flag is @c false). @see setValidity() @see validity() */
   Validity mValidity;
+  /** User id (descriptive text). @see setText() @see text() */
   QString mText;
 };
 
