@@ -39,7 +39,7 @@ using namespace KCal;
 
 ResourceFeaturePlanConfig::ResourceFeaturePlanConfig( QWidget *parent,
                                                       const char *name )
-  : KRES::ConfigWidget( parent, name )
+  : KRES::ConfigWidget( parent )
 {
   QGridLayout *topLayout = new QGridLayout( this, 3, 2, 0,
                                             KDialog::spacingHint() );
