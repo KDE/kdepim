@@ -36,7 +36,7 @@
 
 #include "doc-conduit.h"
 #include "doc-setup.h"
-
+#include <QWidget>
 
 extern "C" {
 	void *init_conduit_doc() {
@@ -55,8 +55,9 @@ const char *DOCConduitFactory::dbDOCcreator = "REAd";
 
 
 DOCConduitFactory::DOCConduitFactory(QObject * p, const char *n):
-KLibFactory(p, n)
+KLibFactory(p)
 {
+	setObjectName(n);
 	FUNCTIONSETUP;
 	fInstance = new KInstance("docconduit");
 	fAbout =new KAboutData("docconduit",

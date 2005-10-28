@@ -531,14 +531,16 @@ void DOCConduit::checkPDBFiles() {
 
 	QDir dr(DOCConduitSettings::pDBDirectory());
 	QFileInfo fl(dr, fn );
-	QString pdbfilename=fl.absFilePath();
+	QStringList lst;
+	QString pdbfilename = fl.absFilePath();
+	lst << pdbfilename;
 	++dociterator;
 
 	//  Get the doc title and check if it has already been synced (in the synced docs list of in fDBNames to be synced)
 	// If the doc title doesn't appear in either list, install it to the Handheld, and add it to the list of dbs to be synced.
 	QString dbname=fl.baseName(TRUE).left(30);
 	if (!fDBNames.contains(dbname) && !fDBListSynced.contains(dbname)) {
-		if (fHandle->installFiles(pdbfilename, false)) {
+		if (fHandle->installFiles(lst, false)) {
 			DBInfo dbinfo;
 			// Include all "extensions" except the last. This allows full stops inside the database name (e.g. abbreviations)
 			// first fill everything with 0, so we won't have a buffer overflow.
@@ -981,9 +983,11 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 					<<sinfo.handheldDB<<") to the handheld"<<endl;
 #endif
 				QString dbpathname=localdb->dbPathName();
+				QStringList lst;
+				lst << dbpathname;
 				// This deletes localdb as well, which is just a cast from database
 				KPILOT_DELETE(database);
-				if (!fHandle->installFiles(dbpathname, false))
+				if (!fHandle->installFiles(lst, false))
 				{
 					rs = false;
 #ifdef DEBUG

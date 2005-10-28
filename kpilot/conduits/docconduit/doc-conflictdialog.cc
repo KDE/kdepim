@@ -144,7 +144,7 @@ ResolutionDialog::~ResolutionDialog()
 
 /* virtual slot */ void ResolutionDialog::slotOk() {
 	FUNCTIONSETUP;
-	QValueList<conflictEntry>::Iterator ceIt;
+	Q3ValueList<conflictEntry>::Iterator ceIt;
 	for (ceIt=conflictEntries.begin(); ceIt!=conflictEntries.end(); ++ceIt) {
 		(*syncInfo)[(*ceIt).index].direction=(eSyncDirectionEnum)((*ceIt).resolution->currentItem());
 	}
