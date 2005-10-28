@@ -52,6 +52,7 @@ protected:
 	KCal::Calendar *fCalendar;
 public:
 	VCalConduitPrivateBase(KCal::Calendar *buddy):fCalendar(buddy) { reading=false;};
+	virtual ~VCalConduitPrivateBase() {}
 
 	virtual int updateIncidences()=0;
 	virtual void addIncidence(KCal::Incidence*)=0;

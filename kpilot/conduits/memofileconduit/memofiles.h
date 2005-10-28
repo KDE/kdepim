@@ -28,6 +28,8 @@
 
 #include "plugin.h"
 #include <qmap.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 #include "memofile.h"
 
@@ -45,7 +47,7 @@ public:
 	void load(bool loadAll);
 	void save();
 	void eraseLocalMemos();
-	void setPilotMemos (QPtrList<PilotMemo> & memos);
+	void setPilotMemos (Q3PtrList<PilotMemo> & memos);
 	void addModifiedMemo (PilotMemo * memo);
 	void deleteMemo (PilotMemo * memo);
 
@@ -54,8 +56,8 @@ public:
 	bool isFirstSync();
 	bool isReady() { return _ready; };
 
-	QPtrList<Memofile> getModified();
-	QPtrList<Memofile> getAll() { return _memofiles; } ;
+	Q3PtrList<Memofile> getModified();
+	Q3PtrList<Memofile> getAll() { return _memofiles; } ;
 	Memofile * find (const QString & category, const QString & filename);
 	Memofile * find (recordid_t id);
 
@@ -70,7 +72,7 @@ private:
 	MemoCategoryMap _categories;
 	PilotMemoInfo &_memoAppInfo;
 	QString & _baseDirectory;
-	QPtrList<Memofile> _memofiles;
+	Q3PtrList<Memofile> _memofiles;
 
 	bool  loadFromMetadata();
 	bool  ensureDirectoryReady();

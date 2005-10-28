@@ -31,6 +31,8 @@
 #include "plugin.h"
 
 #include "memofiles.h"
+//Added by qt3to4:
+#include <Q3PtrList>
 
 class PilotMemo;
 
@@ -64,7 +66,7 @@ private:
 	int _countNewToPilot;
 
 	PilotMemoInfo	*fMemoAppInfo;
-	QPtrList<PilotMemo> fMemoList;
+	Q3PtrList<PilotMemo> fMemoList;
 
 	// our categories
 	MemoCategoryMap fCategories;

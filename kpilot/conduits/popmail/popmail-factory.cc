@@ -53,10 +53,11 @@ void *init_conduit_popmail()
 
 KAboutData *PopMailConduitFactory::fAbout = 0L;
 PopMailConduitFactory::PopMailConduitFactory(QObject *p, const char *n) :
-	KLibFactory(p,n)
+	KLibFactory(p)
 {
+	setObjectName(n);
 	FUNCTIONSETUP;
-
+	
 	fInstance = new KInstance("popmailconduit");
 	fAbout = new KAboutData("popmailConduit",
 		I18N_NOOP("Mail Conduit for KPilot"),

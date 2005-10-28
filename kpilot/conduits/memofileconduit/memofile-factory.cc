@@ -118,8 +118,9 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 
 KAboutData *MemofileConduitFactory::fAbout = 0L;
 MemofileConduitFactory::MemofileConduitFactory(QObject *p, const char *n) :
-	KLibFactory(p,n)
+	KLibFactory(p)
 {
+	setObjectName(n);
 	FUNCTIONSETUP;
 
 	fInstance = new KInstance("Memofileconduit");

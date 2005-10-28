@@ -33,6 +33,8 @@
 #include <kabc/addressbook.h>
 #include <pilotAddress.h>
 #include <plugin.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 
 #define SYNCNONE 0
@@ -50,7 +52,7 @@ class Ticket;
 
 using namespace KABC;
 
-typedef QValueList<recordid_t> RecordIDList;
+typedef Q3ValueList<recordid_t> RecordIDList;
 
 class AbbrowserConduit : public ConduitAction
 {

@@ -29,7 +29,9 @@
 */
 
 
-#include <qvaluelist.h>
+#include <q3valuelist.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 #include "syncAction.h"
 
 typedef enum eExistItems {
@@ -54,10 +56,10 @@ public:
 /**
 @author Reinhold Kainhofer
 */
-class ResolutionTable : public QPtrList<ResolutionItem>
+class ResolutionTable : public Q3PtrList<ResolutionItem>
 {
 public:
-	ResolutionTable():QPtrList<ResolutionItem>() {fResolution=SyncAction::eAskUser;};
+	ResolutionTable():Q3PtrList<ResolutionItem>() {fResolution=SyncAction::eAskUser;};
 
 	~ResolutionTable() {};
 
