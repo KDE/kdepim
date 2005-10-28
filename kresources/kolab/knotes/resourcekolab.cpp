@@ -41,6 +41,7 @@
 
 #include <kdebug.h>
 #include <kglobal.h>
+#include <QList>
 
 using namespace Kolab;
 
@@ -51,7 +52,7 @@ static const char* inlineMimeType = "text/calendar";
 
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceNotes( config ), ResourceKolabBase( "ResourceKolab-KNotes" ),
-    mCalendar( QString::fromLatin1("UTC") )
+    mCalendar( QLatin1String("UTC") )
 {
   setType( "imap" );
 }
@@ -66,12 +67,12 @@ bool ResourceKolab::doOpen()
   config.setGroup( configGroupName );
 
   // Get the list of Notes folders from KMail
-  QValueList<KMailICalIface::SubResource> subResources;
-  if ( !kmailSubresources( subResources, kmailContentsType ) )
+  QList<KMailICalIface::SubResource> subResources;
+  if ( !kmailSubresources( subResources, QString::fromLatin1(kmailContentsType) ) )
     return false;
 
   // Make the resource map from the folder list
-  QValueList<KMailICalIface::SubResource>::ConstIterator it;
+  QList<KMailICalIface::SubResource>::ConstIterator it;
   mSubResources.clear();
   for ( it = subResources.begin(); it != subResources.end(); ++it ) {
     const QString subResource = (*it).location;

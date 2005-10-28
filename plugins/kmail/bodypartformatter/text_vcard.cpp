@@ -83,10 +83,8 @@ namespace {
              "</h2></div>"
                 );
 
-       QValueListIterator<KABC::Addressee> it = al.begin();
        int count = 0;
-       for ( ; it != al.end(); ++it ) {
-          KABC::Addressee a = (*it);
+       foreach (KABC::Addressee a, al ) {
           if ( a.isEmpty() ) return AsIcon;
 
           QString contact = AddresseeView::vCardAsHTML( a, 0L, AddresseeView::NoLinks, false, AddresseeView::DefaultFields );

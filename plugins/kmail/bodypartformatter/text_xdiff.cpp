@@ -50,7 +50,7 @@
 #include <qurl.h>
 #include <qfile.h>
 #include <qdir.h>
-#include <qstylesheet.h>
+#include <qtextdocument.h>
 
 namespace {
 
@@ -98,7 +98,7 @@ namespace {
 
       QStringList lines = QStringList::split( '\n', diff, true );
       for ( QStringList::Iterator it = lines.begin(); it != lines.end(); ++it ) {
-        QString line( QStyleSheet::escape( *it ) );
+        QString line( Qt::escape( *it ) );
         QString style;
         if ( line.length() > 0 ) {
           if ( line.startsWith( "+++" ) ) {

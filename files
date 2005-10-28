@@ -96,7 +96,3 @@ korganizer/navigatorbar.lo
 kresources/groupwise/kabc_resourcegroupwise.lo
 kresources/groupwise/soap/groupwiseserver.lo
 kresources/groupwise/soap/ksslsocket.lo
-kresources/kolab/knotes/resourcekolab.lo
-plugins/kmail/bodypartformatter/text_calendar.lo
-plugins/kmail/bodypartformatter/text_vcard.lo
-plugins/kmail/bodypartformatter/text_xdiff.lo
