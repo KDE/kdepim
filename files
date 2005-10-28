@@ -36,10 +36,6 @@ knotes/knoteslegacy.lo
 knotes/knotesnetrecv.lo
 knotes/knotesnetsend.lo
 knotes/main.o
-konsolekalendar/konsolekalendaradd.o
-konsolekalendar/konsolekalendarchange.o
-konsolekalendar/konsolekalendar.o
-konsolekalendar/main.o
 kontact/plugins/knotes/knotes_part.lo
 kontact/plugins/knotes/knotes_plugin.lo
 kontact/plugins/knotes/knotetip.lo
