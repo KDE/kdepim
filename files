@@ -134,6 +134,3 @@ kresources/kolab/knotes/resourcekolab.lo
 plugins/kmail/bodypartformatter/text_calendar.lo
 plugins/kmail/bodypartformatter/text_vcard.lo
 plugins/kmail/bodypartformatter/text_xdiff.lo
-wizards/egroupwaremain.o
-wizards/groupwisewizard.lo
-wizards/kolabwizard.lo

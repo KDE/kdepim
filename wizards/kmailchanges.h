@@ -31,12 +31,13 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
     class CustomWriter
     {
       public:
+        virtual ~CustomWriter() {}
         virtual void writeFolder( KConfig &, int folderId ) = 0;
         virtual void writeIds( int accountId, int transportId ) = 0;
     };
 
     CreateDisconnectedImapAccount( const QString &accountName );
-    ~CreateDisconnectedImapAccount();
+    virtual ~CreateDisconnectedImapAccount();
 
     void apply();
 

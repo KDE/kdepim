@@ -36,11 +36,11 @@
 #include <klocale.h>
 
 #include <qcheckbox.h>
-#include <qhbuttongroup.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qradiobutton.h>
 #include <qwhatsthis.h>
+#include <Q3ButtonGroup>
 
 class SetupLDAPSearchAccount : public KConfigPropagator::Change
 {
@@ -287,7 +287,7 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
 
   topLayout->setRowStretch( 4, 1 );
 
-  QButtonGroup *bg = new QHButtonGroup(i18n("Server Version"), page );
+  Q3ButtonGroup *bg = new Q3HButtonGroup(i18n("Server Version"), page );
   QWhatsThis::add( bg, i18n("Choose the version of the Kolab Server you are using.") );
   mKolab1 = new QRadioButton( i18n ( "Kolab 1" ), bg );
   mKolab2 = new QRadioButton( i18n ( "Kolab 2" ), bg );
