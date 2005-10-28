@@ -178,7 +178,8 @@ int KSSLSocket::messageBox( KIO::SlaveBase::MessageBoxType type, const QString &
 	kdDebug(0) << "messageBox " << type << " " << text << " - " << caption << buttonYes << buttonNo << endl;
 	QByteArray data, result;
 	Q3CString returnType;
-	QDataStream arg(data, QIODevice::WriteOnly);
+	QDataStream arg( &data,QIODevice::WriteOnly);
+	arg.setVersion(QDataStream::Qt_3_1);
 	arg << (int)1 << (int)type << text << caption << buttonYes << buttonNo;
 
 	if ( ! d->dcc ){
@@ -196,7 +197,8 @@ int KSSLSocket::messageBox( KIO::SlaveBase::MessageBoxType type, const QString &
 	if( returnType == "int" )
 	{
 		int res;
-		QDataStream r(result, QIODevice::ReadOnly);
+		QDataStream r( &result,QIODevice::ReadOnly);
+		r.setVersion(QDataStream::Qt_3_1);
 		r >> res;
 		return res;
 	}

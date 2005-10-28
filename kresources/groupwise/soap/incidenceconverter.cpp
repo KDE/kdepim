@@ -350,7 +350,7 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt
     std::vector<ngwt__ContainerRef*>* container = soap_new_std__vectorTemplateOfPointerTongwt__ContainerRef( soap(), -1 );
     ngwt__ContainerRef* containerRef = soap_new_ngwt__ContainerRef( soap(), -1 );
     containerRef->deleted = 0;
-    containerRef->__item = incidence->customProperty( "GWRESOURCE", "CONTAINER" ).utf8();
+    containerRef->__item = incidence->customProperty( "GWRESOURCE", "CONTAINER" ).toUtf8().data()/*.utf8()*/;
     container->push_back( containerRef );
 
     item->container = *container;

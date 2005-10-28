@@ -289,7 +289,7 @@ bool GroupwiseServer::login()
 
   ngwt__PlainText pt;
 
-  pt.username = mUser.utf8();
+  pt.username = mUser.toUtf8().data();
   pt.password = conv.qStringToString( mPassword );
   loginReq.auth = &pt;
   mSoap->userid = strdup( mUser.utf8() );
