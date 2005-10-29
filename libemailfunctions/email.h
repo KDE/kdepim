@@ -39,7 +39,7 @@
 namespace KPIM {
 
 /**
-    Result type for splitAddress, isValidEmailAddress and isValidSimpleEmailAddress.
+    Result type for splitAddress, isValidEmailAddress.
 */
 enum EmailParseResult { AddressOk, AddressEmpty, UnexpectedEnd,
                         UnbalancedParens, MissingDomainPart,
