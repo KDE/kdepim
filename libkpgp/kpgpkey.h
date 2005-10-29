@@ -238,50 +238,84 @@ class Subkey
   /** Returns the expiration date of the subkey. */
   time_t expirationDate() const;
 
-  /** Sets the flag if the subkey is a secret subkey to <em>secret</em>. */
+  /** Sets the flag if the subkey is a secret subkey to @p secret . 
+   *  @param secret Whether this subkey is secret or not.
+   *  @see secret()
+   */
   void setSecret(const bool secret);
 
-  /** Sets the flag if the subkey has been revoked to <em>revoked</em>. */
+  /** Sets the flag if the subkey has been revoked to @p revoked . 
+   *  @param revoked Whether this subkey is revoked or not.
+   *  @see revoked()
+   */
   void setRevoked(const bool revoked);
 
-  /** Sets the flag if the subkey has expired to <em>expired</em>. */
+  /** Sets the flag if the subkey has expired to @p expired . 
+   *  @param expired Whether this subkey has expired or not.
+   *  @see expired()
+   */
   void setExpired(const bool expired);
 
-  /** Sets the flag if the subkey has been disabled to <em>disabled</em>. */
+  /** Sets the flag if the subkey has been disabled to @p disabled . 
+   *  @param disabled Whether this subkey is disabled or not.
+   *  @see disabled()
+   */
   void setDisabled(const bool disabled);
 
-  /** Sets the flag if the subkey is invalid to <em>invalid</em>. */
+  /** Sets the flag if the subkey is invalid to @p invalid . 
+   *  @param invalid Whether this subkey is invalid or not.
+   *  @see invalid()
+   */
   void setInvalid(const bool invalid);
 
-  /** Sets the flag if the subkey can be used to encrypt data to
-      <em>canEncrypt</em>. */
+  /** Sets the flag if the subkey can be used to encrypt data to @p canEncrypt .
+      @param canEncrypt Whether this subkey can encrypt or not.
+      @see canEncrypt()
+  */
   void setCanEncrypt(const bool canEncrypt);
 
-  /** Sets the flag if the subkey can be used to sign data to
-      <em>canSign</em>. */
+  /** Sets the flag if the subkey can be used to sign data to @p canSign . 
+      @param canSign Whether this subkey can sign or not.
+      @see canSign()
+  */
   void setCanSign(const bool canSign);
 
-  /** Sets the flag if the subkey can be used to certify keys to
-      <em>canCertify</em>. */
+  /** Sets the flag if the subkey can be used to certify keys to @p canCertify .
+      @param canCertify Whether this subkey can certify or not.
+      @see canCertify()
+  */
   void setCanCertify(const bool canCertify);
 
-  /** Sets the key algorithm of the subkey to <em>keyAlgo</em>. */
+  /** Sets the key algorithm of the subkey to @p keyAlgo . 
+      @param keyAlgo The key algorithm to use.
+      @see keyAlgorithm
+      @todo What are legal values? What do they mean? 
+            Where are they documented?
+  */
   void setKeyAlgorithm(const unsigned int keyAlgo);
 
-  /** Sets the key length of the subkey to <em>keyLen</em> bits. */
+  /** Sets the key length of the subkey to @p keyLen  bits.
+      @param keyLength Length of the subkey.
+      @see keyLength()
+      @todo What are the valid lengths? Is 0 ok?
+  */
   void setKeyLength(const unsigned int keyLen);
 
-  /** Sets the key ID of the subkey to <em>keyID</em>. */
+  /** Sets the key ID of the subkey to @p keyID . 
+      @param keyID the key ID for this subkey (just a string)
+      @see keyID()
+      @todo What are legal key IDs? How about NULL IDs?
+  */
   void setKeyID(const KeyID& keyID);
 
-  /** Sets the fingerprint of the subkey to <em>fingerprint</em>. */
+  /** Sets the fingerprint of the subkey to <em>fingerprint . */
   void setFingerprint(const QByteArray& fingerprint);
 
-  /** Sets the creation date of the subkey to <em>creationDate</em> seconds
+  /** Sets the creation date of the subkey to <em>creationDate  seconds
       since Epoch. */
   void setCreationDate(const time_t creationDate);
 
-  /** Sets the expiration date of the subkey to <em>expirationDate</em> seconds
+  /** Sets the expiration date of the subkey to <em>expirationDate  seconds
       since Epoch. */
   void setExpirationDate(const time_t expirationDate);
 
@@ -458,8 +492,12 @@ typedef Q3PtrListIterator<Subkey> SubkeyListIterator;
 class Key
 {
  public:
-  /** Constructs a new PGP key with <em>keyid</em> as key ID of the
-      primary key and <em>uid</em> as primary user ID. */
+  /** Constructs a new PGP key with @p keyid  as key ID of the
+      primary key and @p uid  as primary user ID. 
+      @param keyid Key ID for this Key
+      @param uid   UID for this key (user ID)
+      @param secret Is this key secret?
+  */
   Key( const KeyID& keyid = KeyID(),
        const QString& uid = QString::null,
        const bool secret = false);
@@ -492,38 +530,44 @@ class Key
   /** Returns true if the key can be used to certify keys. */
   bool canCertify() const;
 
-  /** Sets the flag if the key is a secret key to <em>secret</em>. */
+  /** Sets the flag if the key is a secret key to @p secret . 
+      @param secret Whether this key is secret or not
+      @see secret()
+  */
   void setSecret(const bool secret);
 
-  /** Sets the flag if the key has been revoked to <em>revoked</em>. */
+  /** Sets the flag if the key has been revoked to @p revoked . 
+      @param revoked Whether the key is revoked or not
+      @see revoked()
+  */
   void setRevoked(const bool revoked);
 
-  /** Sets the flag if the key has expired to <em>expired</em>. */
+  /** Sets the flag if the key has expired to <em>expired . */
   void setExpired(const bool expired);
 
-  /** Sets the flag if the key has been disabled to <em>disabled</em>. */
+  /** Sets the flag if the key has been disabled to <em>disabled . */
   void setDisabled(const bool disabled);
 
-  /** Sets the flag if the key is invalid to <em>invalid</em>. */
+  /** Sets the flag if the key is invalid to <em>invalid . */
   void setInvalid(const bool invalid);
 
   /** Sets the flag if the key can be used to encrypt data to
-      <em>canEncrypt</em>. */
+      <em>canEncrypt . */
   void setCanEncrypt(const bool canEncrypt);
 
   /** Sets the flag if the key can be used to sign data to
-      <em>canSign</em>. */
+      <em>canSign . */
   void setCanSign(const bool canSign);
 
   /** Sets the flag if the key can be used to certify keys to
-      <em>canCertify</em>. */
+      <em>canCertify . */
   void setCanCertify(const bool canCertify);
 
 
   /** Returns the encryption preference for this key. */
   EncryptPref encryptionPreference();
 
-  /** Sets the encryption preference for this key to <em>encrPref</em>. */
+  /** Sets the encryption preference for this key to <em>encrPref . */
   void setEncryptionPreference( const EncryptPref encrPref );
 
 
@@ -581,7 +625,7 @@ class Key
   /** Returns the list of subkeys. */
   const SubkeyList subkeys() const;
 
-  /** Adds a user ID with the given values to the key if <em>uid</em> isn't
+  /** Adds a user ID with the given values to the key if <em>uid  isn't
       an empty string. */
   void addUserID(const QString& uid,
                  const Validity validity = KPGP_VALIDITY_UNKNOWN,
@@ -592,11 +636,11 @@ class Key
   void addUserID(const UserID *userID);
 
   /** Returns true if the given string matches one of the user IDs.
-      The match is case sensitive if <em>cs</em> is true or case insensitive
-      if <em>cs</em> is false. */
+      The match is case sensitive if <em>cs  is true or case insensitive
+      if <em>cs  is false. */
   bool matchesUserID(const QString& str, bool cs = true);
 
-  /** Adds a subkey with the given values to the key if <em>keyID</em> isn't
+  /** Adds a subkey with the given values to the key if <em>keyID  isn't
       an empty string. */
   void addSubkey(const KeyID& keyID, const bool secret = false);
 
@@ -606,7 +650,7 @@ class Key
   /** Returns a pointer to the subkey with the given key ID. */
   Subkey *getSubkey(const KeyID& keyID);
 
-  /** Sets the fingerprint of the given subkey to <em>fpr</em>. */
+  /** Sets the fingerprint of the given subkey to <em>fpr . */
   void setFingerprint(const KeyID& keyID, const QByteArray& fpr);
 
  protected:
