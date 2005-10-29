@@ -96,9 +96,6 @@ rc_DATA = kpilotui.rc
 update_DATA = kpilot.upd
 updatedir = $(kde_datadir)/kconf_update
 
-DOXYGEN_REFERENCES = kdeui kpilot/lib
-include $(top_srcdir)/admin/Doxyfile.am
-
 ### Some additional dependencies:
 
 kpilotConfigDialog.lo : kpilotSettings.h
