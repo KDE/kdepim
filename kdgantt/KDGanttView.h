@@ -133,6 +133,9 @@ public:
 
     void setGanttMaximumWidth( int w );
     int ganttMaximumWidth() const;
+    /** Sets whether the legend should be shown for this view.
+     *  @param show If @c true, show the legend.
+     */
     void setShowLegend( bool show );
     bool showLegend() const;
     void setLegendIsDockwindow( bool dock );

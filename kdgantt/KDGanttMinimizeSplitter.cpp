@@ -399,6 +399,11 @@ static QSize minSizeHint( const QWidget* w )
 /*!
   Constructs a horizontal splitter with the \a parent and \a
   name arguments being passed on to the QFrame constructor.
+
+  \param parent parent widget
+  \param name name of this object (deprecated in Qt4)
+
+  \todo Clean up for Qt4
 */
 KDGanttMinimizeSplitter::KDGanttMinimizeSplitter( QWidget *parent, const char *name )
     :Q3Frame(parent,name,WPaintUnclipped)

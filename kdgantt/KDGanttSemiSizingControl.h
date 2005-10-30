@@ -77,6 +77,7 @@ public slots:
 protected:
     void setup();
     void init();
+    /** Direction; seems to be superceded by Qt::Orientation. */
     enum Direction {Left, Right, Up, Down };
     QPixmap pixmap( Qt::Orientation );
 
