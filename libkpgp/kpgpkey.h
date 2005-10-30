@@ -308,34 +308,54 @@ class Subkey
   */
   void setKeyID(const KeyID& keyID);
 
-  /** Sets the fingerprint of the subkey to <em>fingerprint . */
+  /** Sets the fingerprint of the subkey to @p fingerprint . 
+      @param fingerprint to use for this subkey
+      @see fingerprint()
+      @todo What are legal fingerprints?
+  */
   void setFingerprint(const QByteArray& fingerprint);
 
-  /** Sets the creation date of the subkey to <em>creationDate  seconds
-      since Epoch. */
+  /** Sets the creation date of the subkey to @p creationDate  seconds
+      since Epoch. 
+      @param creationDate Creation time of this subkey, in seconds
+             since the epoch (still midnight, january 1, 1970 in most
+             places).
+  */
   void setCreationDate(const time_t creationDate);
 
-  /** Sets the expiration date of the subkey to <em>expirationDate  seconds
-      since Epoch. */
+  /** Sets the expiration date of the subkey to @p expirationDate  seconds
+      since Epoch.
+      @param expirationDate Expiry time of this subkey, in seconds
+             since the epoch (still midnight, january 1, 1970 in most
+             places).
+      @todo Does this expiry influence any of the other flags?
+  */
   void setExpirationDate(const time_t expirationDate);
 
  protected:
+  /** Is this subkey secret? @see secret() @see setSecret() */
   bool mSecret : 1;
-  /* various flags */
+  /** Is this subkey revoked? @see revoked() @see setRevoked() */
   bool mRevoked : 1;
+  /** Is this subkey expired? @see expired() @see setExpired() */
   bool mExpired : 1;
+  /** Is this subkey disabled? @see disabled() @see setDisabled() */
   bool mDisabled : 1;
+  /** Is this subkey invalid? @see invalid() @see setInvalid() */
   bool mInvalid : 1;
+  /** Can this subkey encrypt? @see canEncrypt() @see setCanEncrypt() */
   bool mCanEncrypt : 1;
+  /** Can this subkey sign? @see canSign() @see setCanSign() */
   bool mCanSign : 1;
+  /** Can this subkey certify? @see canCertify() @see setCanCertify() */
   bool mCanCertify : 1;
 
   unsigned int mKeyAlgo;
   unsigned int mKeyLen;
   KeyID mKeyID;
   QByteArray mFingerprint;
-  time_t mTimestamp; /* -1 for invalid, 0 for not available */
-  time_t mExpiration; /* -1 for never, 0 for not available */
+  time_t mTimestamp; /**< -1 for invalid, 0 for not available */
+  time_t mExpiration; /**< -1 for never, 0 for not available */
 };
 
 inline bool Subkey::secret() const
