@@ -158,15 +158,20 @@ public:
 
 
 
+  /*!
+   * Returns the splitter for this view.
+   */
   QSplitter* splitter() {
     return _splitter;
   }
 
 
   
-  ///
-  /*!
-   *
+  /**
+   * Zooms the view to factor @p factor.
+   * @param factor the zoom factor. 1.0 is no zoom; use smaller numbers
+   *        to zoom out (making the view smaller). Do not use zoom 
+   *        values less than or equal to zero.
    */
   void zoom(double factor) {
     barView()->viewport()->zoom(factor);
@@ -218,12 +223,34 @@ public:
 
 
 
+  /**
+   * Add a holiday indicator on the given year @p y, month @p m
+   * and day @p d. It might be a bad idea to use negative values
+   * for any of the parameters; how months, days and years are 
+   * interpreted (zero-based? one-based? relative to 1970, 1AD,
+   * or elsewhere?) is a closely guarded secret. Perhaps they
+   * are QDate-related.
+   *
+   * @param y the year the holiday falls in.
+   * @param m the month the holiday falls in.
+   * @param d the day the holiday falls on.
+   */
   void addHoliday(int y, int m, int d) {
     _ganttbar->viewport()->addHoliday(y,m,d);
   }
 
 
 
+  /**
+   * Remove a holiday.
+   *
+   * @param y the year the holiday falls in.
+   * @param m the month the holiday falls in.
+   * @param d the day the holiday falls on.
+   *
+   * @note Presumably there must have been a holiday added for there
+   *       to be one that can be removed.
+   */
   void removeHoliday(int y, int m, int d) {
     _ganttbar->viewport()->addHoliday(y,m,d);
   }
