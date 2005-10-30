@@ -156,23 +156,6 @@ namespace KCal
     bool isEndDateTime();
 
     /**
-     * Sets the timezone from the user or system environment.
-     */
-    void setTimeZoneId();
-
-    /**
-     * Get timezone id string.
-     * @return timezone id string.
-     */
-    QString getTimeZoneId();
-
-    /**
-     * Is there a timezone set?
-     * @return true if there is false if there isn't.
-     */
-    bool isTimeZoneId();
-
-    /**
      * Sets the UID, the unique tag for VCard entry.
      * @param uid unique tag for VCard entry.
      */
@@ -225,7 +208,7 @@ namespace KCal
     bool isDryRun();
 
     /**
-     * Set calendar file (Kinda obsolete!)
+     * Set calendar file
      * @param calendar Calendar files full path.
      */
     void setCalendarFile( QString calendar );
@@ -327,26 +310,16 @@ namespace KCal
     bool getFloating();
 
     /**
-     * Set is calendar default resource.
+     * Set calendar resources for global use.
      */
-    void setDefault( bool def );
+
+    void setCalendar( CalendarResources *resources );
 
     /**
-     * Return if calendar is default resource.
-     */
-    bool isDefault();
-
-    /**
-     * Set calendar file for global use.
+     * Get global calendar resources.
      */
 
-    void setCalendar( CalendarLocal *calendar );
-
-    /**
-     * Get global calendar.
-     */
-
-    CalendarLocal *getCalendar();
+    CalendarResources *getCalendar();
 
     /**
      * Set output file.
@@ -374,36 +347,6 @@ namespace KCal
     ExportType getExportType();
 
     /**
-     * Do we use CalendarResources or LocalCalendar?
-     */
-    bool isCalendarResources();
-
-    /**
-     * Add to Calendar Resources.
-     */
-    CalendarResourceManager *getCalendarResourceManager();
-
-    /**
-     * Add to Calendar Resources.
-     */
-    bool addCalendarResources( ResourceCalendar *cal );
-
-    /**
-     * Calendar resource is the new way.
-     */
-    void setCalendarResources( CalendarResources *resource );
-
-    /**
-     * Calendar resource is the new way.
-     */
-    CalendarResources *getCalendarResources();
-
-    /**
-     * Loads calendar resources.
-     */
-    bool loadCalendarResources( KConfig *config );
-
-    /**
      * Set how many day should be seen.
      */
 
@@ -421,45 +364,34 @@ namespace KCal
     int getDaysCount();
 
   private:
-    bool m_bIsTimeZoneId;
-    QString m_TimeZoneId;
-    QDateTime m_startDateTime;
-    QDateTime m_endDateTime;
-    bool m_bIsStartDateTime;
-    bool m_bIsEndDateTime;
-    QString m_calendar;
-    QString m_import;
-    QString m_description;
-    QString m_location;
-    QString m_summary;
-    QString m_export_file;
+    bool m_bIsUID;
     QString m_UID;
-    bool m_bUseEvents;
-    bool m_bUseTodos;
-    bool m_bUseJournals;
-    bool m_bSummary;
+    bool m_bIsStartDateTime;
+    QDateTime m_startDateTime;
+    bool m_bIsEndDateTime;
+    QDateTime m_endDateTime;
     bool m_bNext;
     bool m_bVerbose;
     bool m_bDryRun;
+    bool m_bUseEvents;
+    bool m_bUseTodos;
+    bool m_bUseJournals;
+    QString m_calendar;
+    QString m_import;
+    ExportType m_exportType;
+    bool m_bIsExportFile;
+    QString m_exportFile;
     bool m_bAll;
     bool m_bDescription;
+    QString m_description;
     bool m_bLocation;
+    QString m_location;
+    bool m_bSummary;
+    QString m_summary;
     bool m_bFloating;
     bool m_bDaysCount;
-    bool m_bIsUID;
-    int str_length;
-    ExportType m_exportType;
     int m_daysCount;
-    QString m_exportFile;
-    bool m_bIsExportFile;
-    bool m_bIsDefault;
-    bool m_bIsCalendarResources;
-    // New resource stuff will over-ride old pne
-    CalendarResources *m_resource;
-    // We can use this from everywhere
-    CalendarLocal *m_calendarLocal;
-    Event::List m_eventList;
-    Todo::List m_todoList;
+    CalendarResources *m_calendarResources;
   };
 
 }

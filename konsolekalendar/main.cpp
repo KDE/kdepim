@@ -62,6 +62,7 @@
 #include <stdlib.h>
 #include <iostream>
 
+#include "stdcalendar.h"
 #include "konsolekalendar.h"
 #include "konsolekalendarepoch.h"
 
@@ -664,7 +665,15 @@ int main( int argc, char *argv[] )
      * All modes need to know if the calendar file exists
      * This must be done before we get to opening biz
      */
-    bool exists = QFile::exists( variables.getCalendarFile() );
+    bool exists, remote;
+    KURL url( variables.getCalendarFile() );
+    if ( url.isLocalFile() ) {
+      variables.setCalendarFile( url.path() );
+      exists = QFile::exists( variables.getCalendarFile() );
+      remote = false;
+    } else {
+      remote = true;
+    }
 
     if ( create ) {
 
@@ -672,12 +681,20 @@ int main( int argc, char *argv[] )
                 << "check if calendar file already exists"
                 << endl;
 
+      if ( remote ) {
+        //TODO: uncomment after 3.5 string freeze
+        //cout << i18n( "Attempting to create a remote file %1" ).
+        // arg( variables.getCalendarFile() ).local8Bit() << endl;
+        return 1;
+      }
+
       if ( exists ) {
         cout << i18n( "Calendar %1 already exists" ).
           arg( variables.getCalendarFile() ).local8Bit()
              << endl;
         return 1;
       }
+
       if ( konsolekalendar->createCalendar() ) {
         cout << i18n( "Calendar %1 successfully created" ).
           arg( variables.getCalendarFile() ).local8Bit()
@@ -693,7 +710,7 @@ int main( int argc, char *argv[] )
 
     if ( !exists ) {
       cout << i18n( "Calendar file not found %1" ).
-        arg( option ).local8Bit()
+        arg( variables.getCalendarFile() ).local8Bit()
            << endl;
       cout << i18n( "Try --create to create new calendar file" ).local8Bit()
            << endl;
@@ -702,21 +719,18 @@ int main( int argc, char *argv[] )
   }
 
   CalendarResources *calendarResource = NULL;
-  CalendarLocal *localCalendar = NULL;
-
   /*
    * Should we use local calendar or resource?
    */
-  variables.setTimeZoneId();
   if ( args->isSet( "file" ) ) {
-    localCalendar = new CalendarLocal( variables.getTimeZoneId() );
-    localCalendar->load( variables.getCalendarFile() );
-    variables.setCalendar( localCalendar );
+    calendarResource = new StdCalendar( variables.getCalendarFile(),
+                                        i18n( "Active Calendar" ) );
   } else {
-    calendarResource = new CalendarResources( variables.getTimeZoneId() );
-    calendarResource->readConfig();
+    calendarResource = new StdCalendar();
+  }
+  if ( !args->isSet( "import" ) ) {
+    variables.setCalendar( calendarResource );
     calendarResource->load();
-    variables.setCalendarResources( calendarResource );
   }
 
   /***************************************************************************
@@ -961,13 +975,8 @@ int main( int argc, char *argv[] )
 
   delete konsolekalendar;
 
-  if ( calendarFile ) {
-    localCalendar->close();
-    delete localCalendar;
-  } else {
-    calendarResource->close();
-    delete calendarResource;
-  }
+  calendarResource->close();
+  delete calendarResource;
 
   kdDebug() << "main | exiting"
             << endl;
