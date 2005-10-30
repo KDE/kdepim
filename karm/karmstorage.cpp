@@ -220,8 +220,21 @@ QString KarmStorage::buildTaskView(KCal::ResourceCalendar *rc, TaskView *view)
   KCal::Todo::List todoList;
   KCal::Todo::List::ConstIterator todo;
   QDict< Task > map;
+  vector<QString> runningTasks;
+  vector<QDateTime> startTimes;
 
-  // 1. delete old tasks
+  // remember tasks that are running and their start times
+  for ( int i=0; i<view->count(); i++)
+  {
+    if ( view->item_at_index(i)->isRunning() )
+    {
+      runningTasks.push_back( view->item_at_index(i)->uid() );
+      startTimes.push_back( view->item_at_index(i)->lastStart() );
+    }
+  }
+
+  //view->stopAllTimers();
+  // delete old tasks
   while (view->item_at_index(0)) view->item_at_index(0)->cut();
 
   // 1. insert tasks form rc into taskview
@@ -255,6 +268,22 @@ QString KarmStorage::buildTaskView(KCal::ResourceCalendar *rc, TaskView *view)
       if (!err) task->move( newParent);
     }
   }
+
+  view->clearActiveTasks();
+  // restart tasks that have been running with their start times
+  for ( int i=0; i<view->count(); i++)
+  {
+    for ( int n=0; n<runningTasks.size(); n++)
+    {
+      if ( runningTasks[n] == view->item_at_index(i)->uid() )
+      {
+        view->startTimerFor( view->item_at_index(i), startTimes[n] ); 
+      }
+    }
+  }
+  
+  view->refresh();
+
   return err;
 }
 
