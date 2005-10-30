@@ -32,4 +32,5 @@ METASOURCES = AUTO
 messages: 
 	$(XGETTEXT) *.cpp *.h -o $(podir)/libkmime.pot
 
+DOXYGEN_EXCLUDE =  kmime_headers_obs.h
 include $(top_srcdir)/admin/Doxyfile.am
