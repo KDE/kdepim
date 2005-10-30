@@ -139,24 +139,28 @@ void TaskView::contentsMousePressEvent ( QMouseEvent * e )
 }
 
 void TaskView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
+// if the user double-clicks onto a tasks, he says "I am now working exclusively
+// on that task". That means, on a doubleclick, we check if it occurs on an item
+// not in the blank space, if yes, stop all other tasks and start the new timer.
 {
   kdDebug(5970) << "entering contentsMouseDoubleClickEvent" << endl;
   KListView::contentsMouseDoubleClickEvent(e);
   
-  // start/stop timer
   Task *task = current_item();
 
-  if ( task != 0 && activeTasks.findRef(task) == -1 )
+  if ( task != 0 )  // current_item() exists
   {
-    // Stop all the other timers.
-    for (unsigned int i=0; i<activeTasks.count();i++)
-      (activeTasks.at(i))->setRunning(false, _storage);
-    activeTasks.clear();
-
-    // Start the new timer.
-    startCurrentTimer();
+    if ( e->pos().y() >= task->itemPos() &&  // doubleclick was onto current_item()
+          e->pos().y() < task->itemPos()+task->height() )
+    {
+      if ( activeTasks.findRef(task) == -1 )  // task is active
+      {
+        stopAllTimers();
+        startCurrentTimer();
+      }
+      else stopCurrentTimer();
+    }
   }
-  else stopCurrentTimer();
 }
 
 TaskView::~TaskView()
