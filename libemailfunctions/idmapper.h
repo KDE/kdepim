@@ -72,6 +72,7 @@ class KDE_EXPORT IdMapper
 
     /**
       Set id map identifier.
+      @param identifier the identifier (filename) within the mapping namespace
     */
     void setIdentifier( const QString &identifier );
     /**
