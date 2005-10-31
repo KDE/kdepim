@@ -32,7 +32,7 @@
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
-#include <kmultipledrag.h>
+#include <k3multipledrag.h>
 #include <klocale.h>
 #include <k3urldrag.h>
 
@@ -52,13 +52,13 @@ DndFactory::DndFactory( Calendar *cal ) :
 {
 }
 
-KMultipleDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
+K3MultipleDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
 {
   CalendarLocal cal( mCalendar->timeZoneId() );
   Incidence *i = incidence->clone();
   cal.addIncidence( i );
 
-  KMultipleDrag *kmd = new KMultipleDrag( owner );
+  K3MultipleDrag *kmd = new K3MultipleDrag( owner );
   kmd->addDragObject( new ICalDrag( &cal, 0 ) );
   QMap<QString, QString> metadata;
   metadata["labels"] = KURL::encode_string( i->summary() );

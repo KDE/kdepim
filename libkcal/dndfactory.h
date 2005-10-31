@@ -28,7 +28,7 @@
 //Added by qt3to4:
 #include <QDropEvent>
 
-class KMultipleDrag;
+class K3MultipleDrag;
 
 namespace KCal {
 
@@ -50,7 +50,7 @@ class LIBKCAL_EXPORT DndFactory
     /**
       Create a drag object.
     */
-    KMultipleDrag *createDrag( Incidence *incidence, QWidget *owner );
+    K3MultipleDrag *createDrag( Incidence *incidence, QWidget *owner );
 
     /** Create Todo object from drop event */
     Todo *createDropTodo(QDropEvent *de);
