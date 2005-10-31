@@ -32,7 +32,7 @@
  */
 
 
-#include <stdint.h>
+#include <inttypes.h>
 #include <iostream>
 #include "boost-compat/static_assert.hpp"
 #ifdef HAVE_BOOST

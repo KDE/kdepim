@@ -34,7 +34,7 @@
 
 #include <iostream>
 #include <iterator>
-#include <stdint.h>
+#include <inttypes.h>
 #include "pointer.h"
 #include "memvector.h"
 #include "thing.h"

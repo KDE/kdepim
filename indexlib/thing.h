@@ -32,7 +32,7 @@
  */
 
 
-#include <stdint.h>
+#include <inttypes.h>
 #include "bitio.h"
 #include "pointer.h"
 

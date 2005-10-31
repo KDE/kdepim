@@ -31,7 +31,7 @@
  * your version.
  */
 
-#include <stdint.h>
+#include <inttypes.h>
 #include "boost-compat/remove_cv.hpp"
 
 /**

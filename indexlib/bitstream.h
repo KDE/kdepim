@@ -30,7 +30,7 @@
  * your version.
  */
 #include <vector>
-#include <stdint.h>
+#include <inttypes.h>
 
 struct bitstream {
 	public:
