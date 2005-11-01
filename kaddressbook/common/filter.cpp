@@ -142,10 +142,10 @@ void Filter::restore( KConfig *config )
 void Filter::save( KConfig *config, const QString &baseGroup, Filter::List &list )
 {
   {
-    KConfigGroupSaver s( config, baseGroup );
+    KConfigGroup s( config, baseGroup );
 
     // remove the old filters
-    uint count = config->readNumEntry( "Count" );
+    uint count = s.readNumEntry( "Count" );
     for ( uint i = 0; i < count; ++i )
       config->deleteGroup( QString( "%1_%2" ).arg( baseGroup ).arg( i ) );
 
@@ -155,15 +155,15 @@ void Filter::save( KConfig *config, const QString &baseGroup, Filter::List &list
   Filter::List::Iterator iter;
   for ( iter = list.begin(); iter != list.end(); ++iter ) {
     if ( !(*iter).mInternal ) {
-      KConfigGroupSaver s( config, QString( "%1_%2" ).arg( baseGroup )
+      KConfigGroup s( config, QString( "%1_%2" ).arg( baseGroup )
                                                      .arg( index ) );
       (*iter).save( config );
       index++;
     }
   }
 
-  KConfigGroupSaver s( config, baseGroup );
-  config->writeEntry( "Count", index );
+  KConfigGroup s( config, baseGroup );
+  s.writeEntry( "Count", index );
 }
 
 Filter::List Filter::restore( KConfig *config, const QString &baseGroup )
@@ -173,13 +173,13 @@ Filter::List Filter::restore( KConfig *config, const QString &baseGroup )
   Filter f;
 
   {
-    KConfigGroupSaver s( config, baseGroup );
-    count = config->readNumEntry( "Count", 0 );
+    KConfigGroup s( config, baseGroup );
+    count = s.readNumEntry( "Count", 0 );
   }
 
   for ( int i = 0; i < count; i++ ) {
     {
-      KConfigGroupSaver s( config, QString( "%1_%2" ).arg( baseGroup ).arg( i ) );
+      KConfigGroup s( config, QString( "%1_%2" ).arg( baseGroup ).arg( i ) );
       f.restore( config );
     }
 
