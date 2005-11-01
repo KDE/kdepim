@@ -38,6 +38,7 @@
 #include <kdialogbase.h>
 #include <klocale.h>
 #include <kprinter.h>
+#include <kglobal.h>
 
 // including the styles
 #include "detailledstyle.h"
@@ -63,7 +64,7 @@ PrintingWizard::PrintingWizard( KPrinter *printer, KABC::AddressBook* ab,
   mSelectionPage->setUseSelection( !selection.isEmpty() );
   insertPage( mSelectionPage, i18n("Choose Contacts to Print"), -1 );
 
-  mFilters = Filter::restore( kapp->config(), "Filter" );
+  mFilters = Filter::restore( KGlobal::config(), "Filter" );
   QStringList filters;
   for ( Filter::List::ConstIterator it = mFilters.begin(); it != mFilters.end(); ++it )
     filters.append( (*it).name() );

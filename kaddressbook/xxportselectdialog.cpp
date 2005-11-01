@@ -42,6 +42,7 @@
 #include <Q3Frame>
 #include <QGridLayout>
 #include <ktoolinvocation.h>
+#include <kglobal.h>
 
 #include "core.h"
 #include "kabprefs.h"
@@ -62,7 +63,7 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
            SLOT( categoryClicked( Q3ListViewItem* ) ) );
 
   // setup filters
-  mFilters = Filter::restore( kapp->config(), "Filter" );
+  mFilters = Filter::restore( KGlobal::config(), "Filter" );
   Filter::List::ConstIterator filterIt;
   QStringList filters;
   for ( filterIt = mFilters.begin(); filterIt != mFilters.end(); ++filterIt )

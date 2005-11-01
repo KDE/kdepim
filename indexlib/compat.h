@@ -52,7 +52,7 @@ struct iterator {
 #endif
 
 /* compatibility replacements for functions not defined in older libstdc++ */
-template<class T> T kMin(const T &a, const T &b) { return a < b ? a : b; }
-template<class T> T kMax(const T &a, const T &b) { return a > b ? a : b; }
+template<class T> T qMin(const T &a, const T &b) { return a < b ? a : b; }
+template<class T> T qMax(const T &a, const T &b) { return a > b ? a : b; }
 
 #endif /* LPC_COMPAT_H_INCLUDE_GUARD_ */

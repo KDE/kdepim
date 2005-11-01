@@ -54,6 +54,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <kglobal.h>
 
 struct Kleo::DN::Private {
   Private() : mRefCount( 0 ) {}
@@ -458,7 +459,7 @@ Kleo::DNAttributeMapper::Private::Private()
 
 Kleo::DNAttributeMapper::DNAttributeMapper() {
   d = new Private();
-  const KConfigGroup config( kapp->config(), "DN" );
+  const KConfigGroup config( KGlobal::config(), "DN" );
   d->attributeOrder = config.readListEntry( "AttributeOrder" );
   if ( d->attributeOrder.empty() )
     std::copy( defaultOrder, defaultOrder + sizeof defaultOrder / sizeof *defaultOrder,
@@ -503,7 +504,7 @@ void Kleo::DNAttributeMapper::setAttributeOrder( const QStringList & order ) {
   if ( order.empty() )
     std::copy( defaultOrder, defaultOrder + sizeof defaultOrder / sizeof *defaultOrder,
 	       std::back_inserter( d->attributeOrder ) );
-  KConfigGroup config( kapp->config(), "DN" );
+  KConfigGroup config( KGlobal::config(), "DN" );
   config.writeEntry( "AttributeOrder", order );
 }
 

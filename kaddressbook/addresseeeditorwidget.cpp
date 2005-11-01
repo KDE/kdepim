@@ -197,7 +197,7 @@ void AddresseeEditorWidget::setupTab1()
 
   // Left hand separator. This separator doesn't go all the way
   // across so the dialog still flows from top to bottom
-  bar = new KSeparator( KSeparator::HLine, tab1 );
+  bar = new KSeparator( Qt::Horizontal, tab1 );
   layout->addMultiCellWidget( bar, 4, 4, 0, 2 );
 
   //////////////////////////////////////
@@ -211,7 +211,7 @@ void AddresseeEditorWidget::setupTab1()
   connect( mPhoneEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
   layout->addMultiCellWidget( mPhoneEditWidget, 0, 3, 4, 6 );
 
-  bar = new KSeparator( KSeparator::HLine, tab1 );
+  bar = new KSeparator( Qt::Horizontal, tab1 );
   layout->addMultiCellWidget( bar, 4, 4, 3, 6 );
 
   //////////////////////////////////////
@@ -237,7 +237,7 @@ void AddresseeEditorWidget::setupTab1()
   layout->addMultiCellWidget( mEmailWidget, 5, 6, 4, 6 );
 
   // add the separator
-  bar = new KSeparator( KSeparator::HLine, tab1 );
+  bar = new KSeparator( Qt::Horizontal, tab1 );
   layout->addMultiCellWidget( bar, 7, 7, 3, 6 );
 
   QHBoxLayout *homePageLayout = new QHBoxLayout( 0, 11, 7 );
@@ -272,7 +272,7 @@ void AddresseeEditorWidget::setupTab1()
 
   layout->addColSpacing( 6, 50 );
 
-  bar = new KSeparator( KSeparator::HLine, tab1 );
+  bar = new KSeparator( Qt::Horizontal, tab1 );
   layout->addMultiCellWidget( bar, 11, 11, 0, 6 );
 
   ///////////////////////////////////////
@@ -368,7 +368,7 @@ void AddresseeEditorWidget::setupTab2()
   label->setBuddy( mTitleEdit );
   layout->addMultiCellWidget( mTitleEdit, 2, 2, 4, 5 );
 
-  bar = new KSeparator( KSeparator::HLine, tab2 );
+  bar = new KSeparator( Qt::Horizontal, tab2 );
   layout->addMultiCellWidget( bar, 3, 3, 0, 5 );
 
   /////////////////////////////////////////////////
@@ -415,7 +415,7 @@ void AddresseeEditorWidget::setupTab2()
   label->setBuddy( mAnniversaryPicker );
   layout->addWidget( mAnniversaryPicker, 5, 4 );
 
-  bar = new KSeparator( KSeparator::HLine, tab2 );
+  bar = new KSeparator( Qt::Horizontal, tab2 );
   layout->addMultiCellWidget( bar, 6, 6, 0, 5 );
 
    //////////////////////////////////////

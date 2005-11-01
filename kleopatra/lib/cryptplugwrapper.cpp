@@ -573,7 +573,7 @@ bool CryptPlugWrapper::checkMessageSignature( char** cleartext,
                                               int signatureLen,
                                               CryptPlug::SignatureMetaData* sigmeta )
 {
-  DNBeautifier dnBeautifier( kapp->config(),
+  DNBeautifier dnBeautifier( KGlobal::config(),
                              "DN",
                              "AttributeOrder",
                              "UnknownAttributes" );
@@ -611,7 +611,7 @@ bool CryptPlugWrapper::decryptAndCheckMessage(
                             int*   errId,
                             char** errTxt )
 {
-  DNBeautifier dnBeautifier( kapp->config(),
+  DNBeautifier dnBeautifier( KGlobal::config(),
                              "DN",
                              "AttributeOrder",
                              "UnknownAttributes" );

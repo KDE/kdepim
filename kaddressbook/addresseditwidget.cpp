@@ -332,7 +332,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   mPreferredCheckBox = new QCheckBox( i18n( "This is the preferred address" ), page );
   topLayout->addMultiCellWidget( mPreferredCheckBox, 8, 8, 0, 1 );
 
-  KSeparator *sep = new KSeparator( KSeparator::HLine, page );
+  KSeparator *sep = new KSeparator( Qt::Horizontal, page );
   topLayout->addMultiCellWidget( sep, 9, 9, 0, 1 );
 
   Q3HBox *buttonBox = new Q3HBox( page );

@@ -33,6 +33,7 @@
 #include <QIcon>
 //Added by qt3to4:
 #include <Q3PtrList>
+#include <kiconloader.h>
 
 HVItem::HVItem( QWidget *parent, const char *name )
 	: BoxContainerItem( 0, name ),
@@ -40,7 +41,7 @@ HVItem::HVItem( QWidget *parent, const char *name )
 	_popup( new KMenu( _label ) ),
 	_actions( new KActionCollection( _popup ) )
 {
-	_popup->addTitle( QIcon( kapp->miniIcon() ), kapp->caption() );
+	_popup->addTitle( QIcon( qApp->windowIcon().pixmap(IconSize(KIcon::Small),IconSize(KIcon::Small)) ), kapp->caption() );
 	this->fillKMenu( _popup, _actions );
 	_popup->insertSeparator();
 	KStdAction::quit( kapp, SLOT( quit() ), _actions )->plug( _popup );

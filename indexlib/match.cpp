@@ -49,9 +49,9 @@ namespace {
 indexlib::Match::Match( std::string str, unsigned flags ):
 	masks_( 256 ),
 	caseinsensitive_( flags & caseinsensitive ),
-	pattern_rest_( str, kMin( str.size(), sizeof( unsigned ) * 8 - 1 ) )
+	pattern_rest_( str, qMin( str.size(), sizeof( unsigned ) * 8 - 1 ) )
 {
-	hot_bit_ = kMin( str.size(), sizeof( unsigned ) * 8 - 1 );
+	hot_bit_ = qMin( str.size(), sizeof( unsigned ) * 8 - 1 );
 	for ( unsigned i = 0; i != hot_bit_; ++i ) {
 		if ( caseinsensitive_ ) {
 			setbit( masks_[ ( unsigned char )std::toupper( str[ i ] ) ], i );

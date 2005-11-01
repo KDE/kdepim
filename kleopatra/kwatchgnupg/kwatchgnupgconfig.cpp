@@ -47,6 +47,7 @@
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QGridLayout>
+#include <kglobal.h>
 
 static const char* log_levels[] = { "none", "basic", "advanced", "expert", "guru" };
 
@@ -159,7 +160,7 @@ void KWatchGnuPGConfig::slotSetHistorySizeUnlimited() {
 
 void KWatchGnuPGConfig::loadConfig()
 {
-  KConfig* config = kapp->config();
+  KConfig* config = KGlobal::config();
   config->setGroup("WatchGnuPG");
   mExeED->setURL( config->readEntry( "Executable", "watchgnupg" ) );
   mSocketED->setURL( config->readEntry( "Socket", QDir::home().canonicalPath()
@@ -177,7 +178,7 @@ void KWatchGnuPGConfig::loadConfig()
 
 void KWatchGnuPGConfig::saveConfig()
 {
-  KConfig* config = kapp->config();
+  KConfig* config = KGlobal::config();
   config->setGroup("WatchGnuPG");
   config->writeEntry( "Executable", mExeED->url() );
   config->writeEntry( "Socket", mSocketED->url() );
