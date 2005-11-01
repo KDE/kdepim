@@ -305,8 +305,9 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
     mAllowedKeys( allowedKeys ),
     mCurrentContextMenuItem( 0 )
 {
-  if ( kapp )
-    KWin::setIcons( winId(), kapp->icon(), kapp->miniIcon() );
+  if ( qApp )
+    KWin::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( KIcon::Desktop ), IconSize( KIcon::Desktop ) ),
+                    qApp->windowIcon().pixmap( IconSize( KIcon::Small ), IconSize( KIcon::Small ) ) );
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
   KConfig *config = pgp->getConfig();
   KConfigGroup dialogConfig( config, "Key Selection Dialog" );
