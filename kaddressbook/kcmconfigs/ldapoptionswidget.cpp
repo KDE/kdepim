@@ -200,11 +200,11 @@ void LDAPOptionsWidget::restoreSettings()
 {
   mHostListView->clear();
   KConfig *config = KPIM::LdapSearch::config();
-  KConfigGroupSaver saver( config, "LDAP" );
+  KConfigGroup group( config, "LDAP" );
 
   QString host;
 
-  uint count = config->readUnsignedNumEntry( "NumSelectedHosts");
+  uint count = group.readUnsignedNumEntry( "NumSelectedHosts");
   for ( uint i = 0; i < count; ++i ) {
     KPIM::LdapServer server;
     KPIM::LdapSearch::readConfig( server, config, i, true );
@@ -212,7 +212,7 @@ void LDAPOptionsWidget::restoreSettings()
     item->setOn( true );
   }
 
-  count = config->readUnsignedNumEntry( "NumHosts" );
+  count = group.readUnsignedNumEntry( "NumHosts" );
   for ( uint i = 0; i < count; ++i ) {
     KPIM::LdapServer server;
     KPIM::LdapSearch::readConfig( server, config, i, false );
@@ -227,7 +227,7 @@ void LDAPOptionsWidget::saveSettings()
   KConfig *config = KPIM::LdapSearch::config();
   config->deleteGroup( "LDAP" );
 
-  KConfigGroupSaver saver( config, "LDAP" );
+  KConfigGroup group( config, "LDAP" );
 
   uint selected = 0; uint unselected = 0;
   Q3ListViewItemIterator it( mHostListView );
@@ -246,8 +246,8 @@ void LDAPOptionsWidget::saveSettings()
     }
   }
 
-  config->writeEntry( "NumSelectedHosts", selected );
-  config->writeEntry( "NumHosts", unselected );
+  group.writeEntry( "NumSelectedHosts", selected );
+  group.writeEntry( "NumHosts", unselected );
   config->sync();
 
   emit changed( false );

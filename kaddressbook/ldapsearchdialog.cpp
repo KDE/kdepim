@@ -229,8 +229,8 @@ void LDAPSearchDialog::restoreSettings()
   // then read the config file and register all selected
   // server in the list
   KConfig* config = KPIM::LdapSearch::config();
-  KConfigGroupSaver saver( config, "LDAP" );
-  mNumHosts = config->readUnsignedNumEntry( "NumSelectedHosts" );
+  KConfigGroup group( config, "LDAP" );
+  mNumHosts = group.readUnsignedNumEntry( "NumSelectedHosts" );
   if ( !mNumHosts ) {
     KMessageBox::error( this, i18n( "You must select a LDAP server before searching.\nYou can do this from the menu Settings/Configure KAddressBook." ) );
     mIsOK = false;

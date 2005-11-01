@@ -85,7 +85,7 @@ void ViewManager::restoreSettings()
   // been modified by global settings
   Q3DictIterator<KAddressBookView> it( mViewDict );
   for ( it.toFirst(); it.current(); ++it ) {
-    KConfigGroupSaver saver( mCore->config(), it.currentKey() );
+    KConfigGroup group( mCore->config(), it.currentKey() );
     it.current()->readConfig( mCore->config() );
   }
 
@@ -98,7 +98,7 @@ void ViewManager::saveSettings()
 {
   Q3DictIterator<KAddressBookView> it( mViewDict );
   for ( it.toFirst(); it.current(); ++it ) {
-    KConfigGroupSaver saver( mCore->config(), it.currentKey() );
+    KConfigGroup group( mCore->config(), it.currentKey() );
     (*it)->writeConfig( mCore->config() );
   }
 
@@ -202,8 +202,8 @@ void ViewManager::setActiveView( const QString &name )
   // Check if we found the view. If we didn't, then we need to create it
   if ( view == 0 ) {
     KConfig *config = mCore->config();
-    KConfigGroupSaver saver( config, name );
-    QString type = config->readEntry( "Type", "Table" );
+    KConfigGroup group( config, name );
+    QString type = group.readEntry( "Type", "Table" );
 
     kdDebug(5720) << "ViewManager::setActiveView: creating view - " << name << endl;
 
@@ -280,7 +280,7 @@ void ViewManager::editView()
   if ( wdg ) {
     ViewConfigureDialog dlg( wdg, mActiveView->caption(), this );
 
-    KConfigGroupSaver saver( mCore->config(), mActiveView->caption() );
+    KConfigGroup group( mCore->config(), mActiveView->caption() );
     dlg.restoreSettings( mCore->config() );
 
     if ( dlg.exec() ) {
@@ -360,8 +360,8 @@ void ViewManager::addView()
     // write the view to the config file,
     KConfig *config = mCore->config();
     config->deleteGroup( newName );
-    KConfigGroupSaver saver( config, newName );
-    config->writeEntry( "Type", type );
+    KConfigGroup group( config, newName );
+    group.writeEntry( "Type", type );
 
     // try to set the active view
     mActionSelectView->setItems( mViewNameList );
