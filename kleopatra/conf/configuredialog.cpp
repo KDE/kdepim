@@ -34,16 +34,19 @@
 #include "configuredialog.h"
 
 #include <kwin.h>
-#include <kapplication.h>
 #include <kconfig.h>
+#include <kiconloader.h>
 #include <klocale.h>
 //Added by qt3to4:
+#include <QApplication>
+#include <QIcon>
 #include <QHideEvent>
 
 ConfigureDialog::ConfigureDialog( QWidget *parent, const char *name, bool modal )
   : KCMultiDialog( KDialogBase::IconList, i18n( "Configure" ), parent, name, modal )
 {
-  KWin::setIcons( winId(), kapp->icon(), kapp->miniIcon() );
+  KWin::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( KIcon::Desktop ), IconSize( KIcon::Desktop ) ),
+                  qApp->windowIcon().pixmap( IconSize( KIcon::Small ), IconSize( KIcon::Small ) ) );
   showButton( User1, true );
 
   addModule( "kleopatra_config_dirserv", false );
