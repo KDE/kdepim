@@ -190,23 +190,14 @@ int main( int argc, char *argv[] )
     0                                // home page or relevant link
     );
 
-
-
-  // KCmdLineArgs::init() final 'true' argument indicates no commandline options
-  // for QApplication/KApplication (no KDE or Qt options)
-  KCmdLineArgs::init( argc, argv, &aboutData, true );
+  //TODO: KDE 4.0, add the StdCmdLineArgs option to init()
+  KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
-  KInstance ins( progName );
-
-// Replace the KApplication call below with the three lines above
-// will make this a pure non-GUI application
-//   -- thanks for the info Stephan Kulow.
-
-//  KApplication app(
-//      false, //do not allowstyles - disable the loading on plugin based styles
-//      false  //GUI is not enabled - disable all GUI stuff
-//      );
+  KApplication app(
+    false, //do not allowstyles - disable the loading on plugin based styles
+    false  //GUI is not enabled - disable all GUI stuff
+    );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
