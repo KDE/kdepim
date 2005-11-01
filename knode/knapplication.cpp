@@ -53,7 +53,7 @@ int KNApplication::newInstance()
   }
 
   if (!mainWidget()) {
-    if (isRestored()) {
+    if ( isSessionRestored() ) {
       int n = 1;
       while (KNMainWindow::canBeRestored(n)){
         if (KNMainWindow::classNameOfToplevel(n)=="KNMainWindow") {

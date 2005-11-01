@@ -68,7 +68,7 @@ KConfig* KNGlobals::config()
   if (!c_onfig) {
       c_onfig = KSharedConfig::openConfig( "knoderc" );
   }
-  return c_onfig;
+  return c_onfig.data();
 }
 
 KNConfigManager* KNGlobals::configManager()

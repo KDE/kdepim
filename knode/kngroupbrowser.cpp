@@ -62,7 +62,7 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   if (!newCBact)
     newCB->hide();
   newCB->setChecked(false);
-  KSeparator *sep=new KSeparator(KSeparator::HLine, page);
+  KSeparator *sep = new KSeparator( Qt::Horizontal, page );
 
   QFont fnt=font();
   fnt.setBold(true);

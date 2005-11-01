@@ -1605,10 +1605,9 @@ void KNComposer::slotSpellStarted( KSpell *)
         s_pellChecker->setProgressResolution(2);
 
         // read the quote indicator from the preferences
-        KConfig *config=knGlobals.config();
-        KConfigGroupSaver saver(config, "READNEWS");
+        KConfigGroup config( knGlobals.config(), "READNEWS" );
         QString quotePrefix;
-        quotePrefix = config->readEntry("quoteCharacters",">");
+        quotePrefix = config.readEntry("quoteCharacters",">");
 //todo fixme
 //quotePrefix = mComposer->msg()->formatString(quotePrefix);
 
@@ -1796,19 +1795,18 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   e_dit=new Editor(this, composer, main);
   e_dit->setMinimumHeight(50);
 
-  KConfig *config = knGlobals.config();
-  KConfigGroupSaver saver(config, "VISUAL_APPEARANCE");
+  KConfigGroup config( knGlobals.config(), "VISUAL_APPEARANCE" );
   QColor defaultColor1( kapp->palette().active().text()); // defaults from kmreaderwin.cpp
   QColor defaultColor2( kapp->palette().active().text() );
   QColor defaultColor3( kapp->palette().active().text() );
   QColor defaultForeground( kapp->palette().active().text() );
-  QColor col1 = config->readColorEntry( "ForegroundColor", &defaultForeground );
-  QColor col2 = config->readColorEntry( "quote3Color", &defaultColor3 );
-  QColor col3 = config->readColorEntry( "quote2Color", &defaultColor2 );
-  QColor col4 = config->readColorEntry( "quote1Color", &defaultColor1 );
+  QColor col1 = config.readColorEntry( "ForegroundColor", &defaultForeground );
+  QColor col2 = config.readColorEntry( "quote3Color", &defaultColor3 );
+  QColor col3 = config.readColorEntry( "quote2Color", &defaultColor2 );
+  QColor col4 = config.readColorEntry( "quote1Color", &defaultColor1 );
   QColor c = QColor("red");
   mSpellChecker = new KDictSpellingHighlighter(e_dit, /*active*/ true, /*autoEnabled*/ true,
-                                       /*spellColor*/ config->readColorEntry("NewMessage", &c),
+                                       /*spellColor*/ config.readColorEntry("NewMessage", &c),
                                        /*colorQuoting*/ true, col1, col2, col3, col4);
   connect( mSpellChecker, SIGNAL(newSuggestions(const QString&, const QStringList&, unsigned int)), e_dit,
            SLOT(slotAddSuggestion(const QString&, const QStringList&, unsigned int)) );

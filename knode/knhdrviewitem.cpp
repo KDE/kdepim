@@ -20,7 +20,7 @@
 
 #include <kdeversion.h>
 #include <kdebug.h>
-#include <kmultipledrag.h>
+#include <k3multipledrag.h>
 #include <kstringhandler.h>
 #include <k3urldrag.h>
 
@@ -247,7 +247,7 @@ QString KNHdrViewItem::text( int col ) const
 
 Q3DragObject* KNHdrViewItem::dragObject()
 {
-  KMultipleDrag *d = new KMultipleDrag( listView()->viewport() );
+  K3MultipleDrag *d = new K3MultipleDrag( listView()->viewport() );
   KURL::List list;
   QString mid = art->messageID()->asUnicodeString();
   // for some obscure reason it returns messageid in <>s
