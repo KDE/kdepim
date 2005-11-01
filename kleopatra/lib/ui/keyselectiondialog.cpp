@@ -339,7 +339,10 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 
   QSize dialogSize( 580, 400 );
   if ( kapp ) {
-    KWin::setIcons( winId(), kapp->icon(), kapp->miniIcon() );
+    int iconSize = IconSize(KIcon::Desktop);
+    int miniSize = IconSize(KIcon::Small);
+    KWin::setIcons( winId(), kapp->windowIcon().pixmap(iconSize, iconSize), 
+kapp->windowIcon().pixmap(miniSize, miniSize) );
 
     KConfigGroup dialogConfig( KGlobal::config(), "Key Selection Dialog" );
     dialogSize = dialogConfig.readSizeEntry( "Dialog size", &dialogSize );
